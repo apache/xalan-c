@@ -190,6 +190,109 @@ XalanDOMString::operator=(const XalanDOMChar*	theRHS)
 
 
 
+void
+XalanDOMString::resize(
+			size_type		theCount,
+			XalanDOMChar	theChar)
+{
+	invariants();
+
+	const size_type		theOldSize = size();
+
+	if (theCount != theOldSize)
+	{
+		if (theOldSize == 0)
+		{
+			// If the string is of 0 length, resize but add an
+			// extra byte for the terminating byte.
+			m_data.resize(theCount + 1, theChar);
+		}
+		else
+		{
+			// If the string is not of 0 length, resize but
+			// put a copy of theChar where the terminating
+			// byte used to be.
+			m_data.resize(theCount, theChar);
+
+			m_data[theOldSize] = theChar;
+		}
+
+#if defined(XALAN_DOMSTRING_CACHE_SIZE)
+		m_size = theCount;
+#endif
+
+		// Terminate...
+		m_data.back() = 0;
+	}
+
+	invariants();
+}
+
+
+
+void
+XalanDOMString::erase(
+			size_type	theStartPosition,
+			size_type	theCount)
+{
+	invariants();
+
+	const size_type		theActualCount =
+			theCount == size_type(npos) ? length() : theCount;
+
+	if (theStartPosition == 0 && theCount >= size())
+	{
+		m_data.erase(m_data.begin(), m_data.end());
+
+#if defined(XALAN_DOMSTRING_CACHE_SIZE)
+		m_size = 0;
+#endif
+	}
+	else
+	{
+		const iterator		i = getIteratorForPosition(theStartPosition);
+
+		m_data.erase(i, i + (theActualCount));
+
+#if defined(XALAN_DOMSTRING_CACHE_SIZE)
+		const size_type		theNewSize = m_data.size();
+
+		if (theNewSize < 2)
+		{
+			m_size = 0;
+		}
+		else
+		{
+			m_size = theNewSize - 1;
+		}
+#endif
+	}
+
+	invariants();
+}
+
+
+
+XalanDOMString&
+XalanDOMString::assign(
+		const_iterator	theFirstPosition,
+		const_iterator	theLastPosition)
+{
+	invariants();
+
+	erase();
+
+	invariants();
+
+	insert(begin(), theFirstPosition, theLastPosition);
+
+	invariants();
+
+	return *this;
+}
+
+
+
 XalanDOMString&
 XalanDOMString::append(
 			const XalanDOMChar*		theString,
@@ -452,7 +555,7 @@ XalanDOMString::transcode() const
 
 
 
-static inline unsigned int
+static inline XalanDOMString::size_type
 length(const XalanDOMChar*	theString)
 {
 	assert(theString != 0);
@@ -472,9 +575,9 @@ length(const XalanDOMChar*	theString)
 bool
 XalanDOMString::equals(
 			const XalanDOMChar*		theLHS,
-			unsigned int			theLHSLength,
+			size_type				theLHSLength,
 			const XalanDOMChar*		theRHS,
-			unsigned int			theRHSLength)
+			size_type				theRHSLength)
 {
 	if (theLHSLength != theRHSLength)
 	{
@@ -503,6 +606,26 @@ XalanDOMString::equals(
 		}
 
 		return false;
+	}
+}
+
+
+
+bool
+XalanDOMString::equals(
+			const XalanDOMString&	theLHS,
+			const XalanDOMString&	theRHS)
+{
+	const XalanDOMString::size_type		theLHSLength = theLHS.size();
+	const XalanDOMString::size_type		theRHSLength = theRHS.size();
+
+	if (theLHSLength != theRHSLength)
+	{
+		return false;
+	}
+	else
+	{
+		return equals(theLHS.c_str(), theLHSLength, theRHS.c_str(), theRHSLength);
 	}
 }
 

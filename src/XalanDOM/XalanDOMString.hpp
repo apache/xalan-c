@@ -72,7 +72,7 @@ typedef unsigned short	XalanDOMChar;
 
 
 
-//#define XALAN_DOMSTRING_CACHE_SIZE
+#define XALAN_DOMSTRING_CACHE_SIZE
 
 
 
@@ -233,37 +233,7 @@ public:
 	void
 	resize(
 			size_type		theCount,
-			XalanDOMChar	theChar)
-	{
-		invariants();
-
-		const size_type		theOldSize = size();
-
-		if (theOldSize == 0)
-		{
-			// If the string is of 0 length, resize but add an
-			// extra byte for the terminating byte.
-			m_data.resize(theCount + 1, theChar);
-		}
-		else
-		{
-			// If the string is not of 0 length, resize but
-			// put a copy of theChar where the terminating
-			// byte used to be.
-			m_data.resize(theCount, theChar);
-
-			m_data[theOldSize] = theChar;
-		}
-
-#if defined(XALAN_DOMSTRING_CACHE_SIZE)
-		m_size += theCount;
-#endif
-
-		// Terminate...
-		m_data.back() = 0;
-
-		invariants();
-	}
+			XalanDOMChar	theChar);
 
 	void
 	resize(size_type	theCount)
@@ -306,41 +276,18 @@ public:
 	void
 	erase(
 			size_type	theStartPosition = 0,
-			size_type	theCount = size_type(npos))
-	{
-		invariants();
-
-		const size_type		theActualCount =
-			theCount == size_type(npos) ? length() : theCount;
-
-		if (theStartPosition == 0 && theCount == size())
-		{
-			m_data.erase(m_data.begin(), m_data.end());
-
-#if defined(XALAN_DOMSTRING_CACHE_SIZE)
-			m_size = 0;
-#endif
-		}
-		else
-		{
-			const iterator		i = getIteratorForPosition(theStartPosition);
-
-			m_data.erase(i, i + (theActualCount));
-
-#if defined(XALAN_DOMSTRING_CACHE_SIZE)
-			m_size -= theActualCount;
-#endif
-		}
-
-		invariants();
-	}
+			size_type	theCount = size_type(npos));
 
 	bool
 	empty() const
 	{
 		invariants();
 
+#if defined(XALAN_DOMSTRING_CACHE_SIZE)
+		return m_size == 0 ? true : false;
+#else
 		return m_data.size() < 2 ? true : false;
+#endif
 	}
 
 	const_reference
@@ -451,8 +398,6 @@ public:
 		invariants();
 
 		return append(theSource);
-
-		invariants();
 	}
 
 	XalanDOMString&
@@ -513,20 +458,7 @@ public:
 	XalanDOMString&
 	assign(
 		const_iterator	theFirstPosition,
-		const_iterator	theLastPosition)
-	{
-		invariants();
-
-		erase();
-
-		invariants();
-
-		insert(begin(), theFirstPosition, theLastPosition);
-
-		invariants();
-
-		return *this;
-	}
+		const_iterator	theLastPosition);
 
 	XalanDOMString&
 	append(const XalanDOMString&	theSource)
@@ -719,9 +651,9 @@ public:
 	static bool
 	equals(
 			const XalanDOMChar*		theLHS,
-			unsigned int			theLHSLength,
+			size_type				theLHSLength,
 			const XalanDOMChar*		theRHS,
-			unsigned int			theRHSLength);
+			size_type				theRHSLength);
 
 	static bool
 	equals(
@@ -734,20 +666,7 @@ public:
 	static bool
 	equals(
 			const XalanDOMString&	theLHS,
-			const XalanDOMString&	theRHS)
-	{
-		const unsigned int	theLHSLength = theLHS.size();
-		const unsigned int	theRHSLength = theRHS.size();
-
-		if (theLHSLength != theRHSLength)
-		{
-			return false;
-		}
-		else
-		{
-			return equals(theLHS.c_str(), theLHSLength, theRHS.c_str(), theRHSLength);
-		}
-	}
+			const XalanDOMString&	theRHS);
 
 	static bool
 	equals(
@@ -788,7 +707,7 @@ protected:
 #if !defined(NDEBUG)
 
 #if defined(XALAN_DOMSTRING_CACHE_SIZE)
-		assert(m_data.size() == 0 || m_size == m_data.size() - 1);
+		assert((m_data.size() == 0 && m_size == 0) || m_size == m_data.size() - 1);
 #endif
 
 		assert(m_data.size() == 0 || m_data.back() == 0);
