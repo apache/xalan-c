@@ -207,7 +207,7 @@ EnumerateDirectory(
 			StringConversionFunction	theConversionFunction)
 {
 #if defined(_MSC_VER)
-	StringType	theSearchSpec(clone(theDirectory));
+	StringType	theSearchSpec(theDirectory);
 
 	append(theSearchSpec, "\\*");
 
