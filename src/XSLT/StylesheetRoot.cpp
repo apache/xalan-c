@@ -481,13 +481,16 @@ StylesheetRoot::processOutputSpec(
 
 			XalanDOMString	theToken;
 
+			const Locator* const	theLocator = constructionContext.getLocatorFromStack();
+
 			while(theTokenCount > 0)
 			{
 				theTokenizer.nextToken(theToken);
 
 				--theTokenCount;
 
-				m_cdataSectionElems.push_back(XalanQNameByValue(theToken, getNamespaces()));
+				m_cdataSectionElems.push_back(
+					XalanQNameByValue(theToken, getNamespaces(), theLocator, true));
 			}
 
 			assert(theTokenizer.hasMoreTokens() == false);

@@ -2513,7 +2513,17 @@ XSLTEngineImpl::isCDataResultElem(const XalanDOMString&		elementName) const
 
 		if(indexOfNSSep == length(elementName))
 		{
-			fResult = m_stylesheetRoot->isCDATASectionElementName(XalanQNameByReference(s_emptyString, elementName));
+			const XalanDOMString* const		elemNS =
+					getResultNamespaceForPrefix(s_emptyString);
+
+			if (elemNS != 0)
+			{
+				fResult = m_stylesheetRoot->isCDATASectionElementName(XalanQNameByReference(*elemNS, elementName));
+			}
+			else
+			{
+				fResult = m_stylesheetRoot->isCDATASectionElementName(XalanQNameByReference(s_emptyString, elementName));
+			}
 		}
 		else
 		{
