@@ -216,19 +216,9 @@ FunctionSubstring::execute(
 	}
 	else
 	{
-		volatile double		foo = 0.0;
-
-		fprintf(stderr, "arg2->num() = '%f'\n", arg2->num());
-		fprintf(stderr, "0 / 0 = '%f'\n", 0.0 / foo);
-		fprintf(stderr, "-1 / 0 = '%f'\n", 1.0 / foo);
-		fprintf(stderr, "1 / 0 = '%f'\n", 1.0 / foo);
-		fprintf(stderr, "sqrt(-2.01) = '%f'\n", sqrt(-2.01));
-
 		// Get the value of the second argument...
 		const double	theSecondArgValue =
 			DoubleSupport::round(arg2->num());
-
-		fprintf(stderr, "theSecondArgValue = '%f'\n", theSecondArgValue);
 
 		// XPath indexes from 1, so this is the first XPath index....
 		const XalanDOMString::size_type		theStartIndex = getStartIndex(theSecondArgValue, theSourceStringLength);
