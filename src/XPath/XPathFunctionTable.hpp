@@ -183,15 +183,10 @@ public:
 	const Function&
 	operator[](int	theFunctionID) const
 	{
-		if (theFunctionID >= 0 &&
-			CollectionType::size_type(theFunctionID) < m_FunctionCollection.size())
-		{
-			return *m_FunctionCollection[theFunctionID];
-		}
-		else
-		{
-			throw XPathExceptionFunctionNotAvailable(theFunctionID);
-		}
+		assert(theFunctionID >= 0 &&
+			   CollectionType::size_type(theFunctionID) < m_FunctionCollection.size());
+
+		return *m_FunctionCollection[theFunctionID];
 	}
 
 	enum { InvalidFunctionNumberID = -1 };
