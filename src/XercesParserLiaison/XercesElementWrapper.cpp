@@ -379,6 +379,8 @@ XalanAttr*
 XercesElementWrapper::setAttributeNode(XalanAttr*	/* newAttr */)
 {
 	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
+
+	return 0;
 }
 
 
@@ -387,6 +389,8 @@ XalanAttr*
 XercesElementWrapper::removeAttributeNode(XalanAttr*	/* oldAttr */)
 {
 	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
+
+	return 0;
 }
 
 
