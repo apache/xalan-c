@@ -282,7 +282,7 @@ Package=<4>
 
 ###############################################################################
 
-Project: "XPathWrapper"="..\..\..\samples\XPathWrapper\XPathWrapper.dsp" - Package Owner=<4>
+Project: "XPathWrapper"=".\XPathWrapper\XPathWrapper.dsp" - Package Owner=<4>
 
 Package=<5>
 {{{
