@@ -155,7 +155,7 @@ theProcessor.process(
 <p>If you are using the same stylesheet to perform multiple transformations, for efficiency you should compile the stylesheet and use the appropriate XSLTEngineImpl process() method. Compiled stylesheet (StylesheetRoot) objects are also thread-safe. A single StylesheetRoot object may be called concurrently from multiple threads. For more information, see <link anchor="compiled">Compiling stylesheets</link>.</p>
 </s3>
 <s3 title="7. Shut down Xerces.">
-<p>When you are done performing transformationsw, shut down Xerces.</p>
+<p>When you are done performing transformations, shut down Xerces.</p>
 <source>// Call the static terminator for Xerces.
 XMLPlatformUtils::Terminate();
 </source>
@@ -247,7 +247,7 @@ StylesheetConstructionContextDefault  theConstructionContext(
             theXSLTProcessorEnvSupport,
             theXPathSupport,
             theXObjectFactory);</source>
-<p>Compile the stylesheet, add the StylesheetRoot object to the execution context, and start performing transformations. Use the XSLTEngineImpl process() method (see below) that takes advantage of the compiled stylesheet. Be sure to reset the processer and execution context between each transformation. For example:</p>
+<p>Compile the stylesheet, add the StylesheetRoot object to the execution context, and start performing transformations. Use the XSLTEngineImpl process() method (see below) that takes advantage of the compiled stylesheet. Be sure to reset the processor and execution context between each transformation. For example:</p>
 <source>
 // Compile the stylesheet.
 StylesheetRoot* const	theStylesheetRoot =
@@ -288,7 +288,7 @@ theExecutionContext.setStylesheetRoot(theStylesheetRoot);
 <p>For an example that executes XPath expressions against XML source files, see <link idref="samples" anchor="xpath">XPathWrapper</link>.</p>
 </s2><anchor name="tracelistener"/>
 <s2 title="Using TraceListener">
-<p>TraceListener is a debugging abstract base class implemented by TraceListenerDefault. You can use TraceListener to trace any combination of the folllowing:</p>
+<p>TraceListener is a debugging abstract base class implemented by TraceListenerDefault. You can use TraceListener to trace any combination of the following:</p>
 <ul>
   <li>Calls to templates</li>
   <li>Calls to template children</li>
@@ -315,7 +315,7 @@ theExecutionContext.setStylesheetRoot(theStylesheetRoot);
       pattern and optional decimal-format name. If you install ICU support for format-number(), 
       this function is fully supported with all its arguments.<br/><br/></li>
       <li><em>xsl:sort</em>
-      <br/>If you install ICU spport for xml:sort, &xslt4c; applies the Unicode sorting
+      <br/>If you install ICU support for xml:sort, &xslt4c; applies the Unicode sorting
       algorithm.</li>
      </ul>
 
@@ -342,7 +342,7 @@ theExecutionContext.setStylesheetRoot(theStylesheetRoot);
     want to enable ICU support:</p>
     <ol>
       <li>Include the ICUBridge headers.<br/><br/></li>
-      <li>Substitue ICU support for format-number(), xsl:number, and/or xsl:sort.<br/><br/></li>
+      <li>Substitute ICU support for format-number(), xsl:number, and/or xsl:sort.<br/><br/></li>
       <li>Windows: Provide your application access to the ICUBridge library.<br/>
       Linux or AIX: Rebuild the Xalan library to include the ICUBridge.</li>
       </ol>
@@ -358,6 +358,7 @@ theExecutionContext.setStylesheetRoot(theStylesheetRoot);
     (LD_LIBRARY_PATH for Red Hat Linux 6.1) or copy it to /usr/lib.</p> 
     <p>For AIX, rebuild &xslt4c-linuxlib;/&xslt4c-aixlib; with XALAN_USE_ICU defined, and place it on the load library
     path (LIB_PATH) or copy it to /usr/lib.</p>
+    <p><em>Number formatting</em></p>
     <p>To enable ICU support for the xsl:number element and the XSLT format-number() function, do
      the following:</p>
 <source>// Install ICU support for the format-number() function.

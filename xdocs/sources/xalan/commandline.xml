@@ -123,7 +123,7 @@ The -XML or -HTML flag must be set:
      support for output encoding. See <resource-ref idref="xerces-build-icu"/>.</p>     
      <p>TestXSLT also conditionally includes ICU support for number formatting and sorting. Look in process.cpp for the
      <code>#if defined(XALAN_USE_ICU)</code> blocks. In these blocks, process.cpp #includes the ICUBridge headers, and
-     substitues ICU support for xsl:number, format-number(), and xsl:sort. To activate this support:</p>
+     substitutes ICU support for xsl:number, format-number(), and xsl:sort. To activate this support:</p>
      <ol>
        <li>Download and build the ICU (see <link idref="usagepatterns" anchor="icu">Using the ICU</link>).<br/><br/></li>
        <li>Rebuild TestXSLT with the ICU enabled (see below).</li>

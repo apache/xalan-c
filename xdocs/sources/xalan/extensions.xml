@@ -72,7 +72,7 @@ data types: node-set, result-tree-fragment, string, boolean, or number.</p>
 <p>You can send arguments to an extension function in the form of XPath expressions, literals (for string, boolean, and number), the values returned by other functions, and XSL variables or parameters set to any of the preceding.</p>
 <p>For an example that implements, installs, and uses three extension functions, see the 
 <link idref="samples" anchor="externalfunc">External Functions</link> sample.</p>
-<note>&xslt4c; does not yet support extension elements. Support for extension elements will be added in the near future.</note>
+<note>&xslt4c; does not yet support extension elements. Support for extension elements will be added soon.</note>
 </s2><anchor name="implement"/>
 <s2 title="Implementing an extension function">
   <p>Like the standard XPath functions, the functions you create derive from the Function base class. Set up your 
@@ -82,7 +82,7 @@ data types: node-set, result-tree-fragment, string, boolean, or number.</p>
   in the example below -- to create an XObject corresponding to the XSLT data type the function returns.<br/><br/></li>
   <li>Implement a clone() method to enable Xalan to create and maintain a copy of the extension
   function.<br/><br/></li> 
-  <li>(Optional) As is the practice for the XPath functions, you may want to prevent the compiler from generating 
+  <li>(Optional) As Xalan does for the XPath functions, you may want to prevent the compiler from generating 
   an assignment or equality operator for this function.</li>
   </ol>
   <p>These features all appear in the following example.</p>
@@ -214,7 +214,7 @@ use<br/><br/>
 in the stylesheet element or<br/><br/>
 <code>xsl:exclude-result-prefixes="<ref>prefix-1 prefix-2 ...</ref>"</code><br/><br/>
 in a literal result element or extension element.<br/><br/></li>
-<li>Call the extension function in the same manner you would call an XPath function. The function name you use in the stylesheet is a Qualified Name (QName) made up of the prefix you delcared in step 1 and the function name you specified when you installed the function.<br/><br/>
+<li>Call the extension function in the same manner you would call an XPath function. The function name you use in the stylesheet is a Qualified Name (QName) made up of the prefix you declared in step 1 and the function name you specified when you installed the function.<br/><br/>
 You can use XPath expressions, literals (for string, boolean, and number), and values returned by other functions to
 specify function arguments.</li></ol>
 <p>Suppose, for example, you are working with XML documents containing area elements like

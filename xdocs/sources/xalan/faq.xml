@@ -29,7 +29,7 @@
     <p>The XSLTEngineImpl stores running state information, so it is not thread-safe. If you want to use the XSLTEngineImpl
     to perform multiple simultaneous transformations, create a separate instance for each transformation. 
     If you want to perform multiple serial transformations with a single XSLTEngineImpl object, call the XSLTEngineImpl reset()
-    method after each transformation. You may want to serialize access to this object, so it can't accidently start another
+    method after each transformation. You may want to serialize access to this object, so it can't accidentally start another
     transformation while a transformation is in progress.</p>
     <p>StylesheetRoot objects, on the other hand, are thread-safe. A single StylesheetRoot object may be called concurrently
     from multiple threads. Keep in mind, however, that the StylesheetRoot uses an XSLTEgineImpl to store running state
