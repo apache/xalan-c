@@ -67,6 +67,8 @@
 #include "HPUXDefinitions.hpp"
 #elif defined(SOLARIS)
 #include "SolarisDefinitions.hpp"
+#elif defined(OS390)     
+#include "OS390Definitions.hpp"              
 #endif
 
 #endif	// PLATFORMDEFINITIONS_HEADER_GUARD_1357924680
