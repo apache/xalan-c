@@ -82,6 +82,7 @@ class XALAN_XERCESPARSERLIAISON_EXPORT XercesBridgeNavigator
 {
 public:
 
+	explicit
 	XercesBridgeNavigator(XercesDocumentBridge*		theOwnerDocument);
 
 	XercesBridgeNavigator(const XercesBridgeNavigator&	theSource);
