@@ -226,6 +226,12 @@ public:
 
 private:
 
+	// Not implemented...
+	XSLTInputSource(const XSLTInputSource&);
+
+	void
+	operator=(const XSLTInputSource&);
+
 #if defined(XALAN_NO_NAMESPACES)
 	istream*		m_stream;
 #else
