@@ -67,7 +67,7 @@
 
 
 
-const double	DoubleSupport::s_NaN = sqrt(-2);
+const double	DoubleSupport::s_NaN = sqrt(-2.01);
 const double	DoubleSupport::s_positiveInfinity = HUGE_VAL;
 const double	DoubleSupport::s_negativeInfinity = -DoubleSupport::s_positiveInfinity;
 
