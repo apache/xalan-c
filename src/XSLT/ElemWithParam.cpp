@@ -84,7 +84,7 @@ ElemWithParam::ElemWithParam(
 						name,
 						lineNumber,
 						columnNumber,
-						Constants::ELEMNAME_PARAM),
+						Constants::ELEMNAME_WITHPARAM),
 	m_selectPattern(0),
 	m_qname(0)
 {
