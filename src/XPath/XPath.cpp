@@ -1420,6 +1420,7 @@ XPath::function(
 	assert(m_expression.getToken(funcID) != 0);
 
 	const DOMString		theFunctionName(m_expression.getToken(funcID)->str());
+	assert(!isEmpty(theFunctionName));
 
 	return s_functions[theFunctionName].execute(executionContext, context, opPos, argVec);
 }
