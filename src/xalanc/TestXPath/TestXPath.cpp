@@ -1326,7 +1326,7 @@ main(
 		XPathInit						theXPathInit( theManager );
 
 		XPathEnvSupportDefault			theXPathEnvSupport( theManager );
-		XalanSourceTreeDOMSupport		theDOMSupport( theManager );
+		XalanSourceTreeDOMSupport		theDOMSupport;
 		XObjectFactoryDefault			theXObjectFactory( theManager );
 		XPathFactoryDefault				theXPathFactory( theManager );
 		XPathProcessorImpl				theXPathProcessor( theManager );
