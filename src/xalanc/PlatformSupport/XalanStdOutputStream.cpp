@@ -159,12 +159,51 @@ FormatMessageLocal(
 }
 
 
+const XalanDOMChar	XalanStdOutputStream::XalanStdOutputStreamWriteException::m_type[] = 
+{	
+	XalanUnicode::charLetter_X,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_l,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_n,
+	XalanUnicode::charLetter_S,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_d,
+	XalanUnicode::charLetter_O,
+	XalanUnicode::charLetter_u,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_p,
+	XalanUnicode::charLetter_u,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_S,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_r,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_m,
+	XalanUnicode::charLetter_W,
+	XalanUnicode::charLetter_r,
+	XalanUnicode::charLetter_i,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_E,
+	XalanUnicode::charLetter_x,
+	XalanUnicode::charLetter_c,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_p,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_i,
+	XalanUnicode::charLetter_o,
+	XalanUnicode::charLetter_n,
+	0
+};
+
+
 
 XalanStdOutputStream::XalanStdOutputStreamWriteException::XalanStdOutputStreamWriteException(
 		int					theErrorCode) :
 	XalanOutputStreamException(FormatMessageLocal(XalanMessageLoader::getMessage(XalanMessages::ErrorWritingToStdStream),
-													   theErrorCode),
-								    TranscodeFromLocalCodePage("XercesStdOutputStreamWriteException"))
+													   theErrorCode))
 {
 }
 

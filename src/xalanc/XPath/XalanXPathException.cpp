@@ -24,24 +24,44 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 const XalanDOMString	XalanXPathException::s_emptyString;
 
-
+const XalanDOMChar	XalanXPathException::m_type[] = 
+{	
+	XalanUnicode::charLetter_X,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_l,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_n,
+	XalanUnicode::charLetter_X,
+	XalanUnicode::charLetter_P,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_h,
+	XalanUnicode::charLetter_E,
+	XalanUnicode::charLetter_x,
+	XalanUnicode::charLetter_c,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_p,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_i,
+	XalanUnicode::charLetter_o,
+	XalanUnicode::charLetter_n,
+	0
+};
 
 XalanXPathException::XalanXPathException(
 			const XalanDOMString&	message,
 			const XalanDOMString&	theURI,
 			int						theLineNumber,
-			int						theColumnNumber,
-			const XalanDOMString&	theType) :
-	XSLException(message, theURI, theLineNumber, theColumnNumber, theType)
+			int						theColumnNumber) :
+	XSLException(message, theURI, theLineNumber, theColumnNumber)
 {
 }
 
 
 
 XalanXPathException::XalanXPathException(
-			const XalanDOMString&	message,
-			const XalanDOMString&	theType) :
-	XSLException(message, theType)
+			const XalanDOMString&	message) :
+	XSLException(message)
 {
 }
 
@@ -49,16 +69,15 @@ XalanXPathException::XalanXPathException(
 
 XalanXPathException::XalanXPathException(
 			const LocatorType&		theLocator,
-			const XalanDOMString&	theMessage,
-			const XalanDOMString&	theType) :
-	XSLException(theLocator, theMessage, theType)
+			const XalanDOMString&	theMessage) :
+	XSLException(theLocator, theMessage)
 {
 }
 
 
 
 XalanXPathException::XalanXPathException() :
-	XSLException(s_emptyString, s_emptyString)
+	XSLException(s_emptyString)
 {
 }
 

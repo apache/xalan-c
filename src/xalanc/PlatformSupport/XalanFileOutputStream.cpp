@@ -31,6 +31,85 @@
 
 XALAN_CPP_NAMESPACE_BEGIN
 
+const XalanDOMChar	XalanFileOutputStream::XalanFileOutputStreamOpenException::m_type[] = 
+{	
+	XalanUnicode::charLetter_X,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_l,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_n,
+	XalanUnicode::charLetter_F,
+	XalanUnicode::charLetter_i,
+	XalanUnicode::charLetter_l,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_O,
+	XalanUnicode::charLetter_u,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_p,
+	XalanUnicode::charLetter_u,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_S,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_r,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_m,
+	XalanUnicode::charLetter_O,
+	XalanUnicode::charLetter_p,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_n,
+	XalanUnicode::charLetter_E,
+	XalanUnicode::charLetter_x,
+	XalanUnicode::charLetter_c,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_p,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_i,
+	XalanUnicode::charLetter_o,
+	XalanUnicode::charLetter_n,
+	0
+};
+
+
+const XalanDOMChar	XalanFileOutputStream::XalanFileOutputStreamWriteException::m_type[] = 
+{	
+	XalanUnicode::charLetter_X,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_l,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_n,
+	XalanUnicode::charLetter_F,
+	XalanUnicode::charLetter_i,
+	XalanUnicode::charLetter_l,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_O,
+	XalanUnicode::charLetter_u,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_p,
+	XalanUnicode::charLetter_u,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_S,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_r,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_m,
+	XalanUnicode::charLetter_W,
+	XalanUnicode::charLetter_r,
+	XalanUnicode::charLetter_i,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_E,
+	XalanUnicode::charLetter_x,
+	XalanUnicode::charLetter_c,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_p,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_i,
+	XalanUnicode::charLetter_o,
+	XalanUnicode::charLetter_n,
+	0
+};
 
 
 static  XalanFileOutputStream::HandleType
@@ -198,36 +277,19 @@ XalanFileOutputStream::writeData(
 }
 
 
-/*
-static XalanDOMString
-FormatMessageLocal(
-			const XalanDOMString&	theMessage,
-
-			int						theErrorCode)
-{
-	return XalanMessageLoader::getMessage(
-#if defined(WIN32)
-				XalanMessages::WindowsErrorCodeIs_3Params,
-#else
-				XalanMessages::CPPRunTimeErrorCode_3Params,
-#endif
-				theMessage,
-				theFileName,
-				LongToDOMString(theErrorCode));
-}
-*/
 extern XalanDOMString
 FormatMessageLocal(
 			const XalanDOMString&	theMessage,
 			int				theErrorCode);
+
+
 
 XalanFileOutputStream::XalanFileOutputStreamOpenException::XalanFileOutputStreamOpenException(
 		const XalanDOMString&	theFileName,
 		int					theErrorCode) :
 	XalanOutputStreamException(FormatMessageLocal(
 				XalanMessageLoader::getMessage(XalanMessages::ErrorOpeningFile_1Param, theFileName ),
-				theErrorCode),
-			TranscodeFromLocalCodePage("XalanFileOutputStreamOpenException"))
+				theErrorCode))
 {
 }
 
@@ -244,8 +306,7 @@ XalanFileOutputStream::XalanFileOutputStreamWriteException::XalanFileOutputStrea
 		int					theErrorCode) :
 	XalanOutputStreamException(FormatMessageLocal(
 				XalanMessageLoader::getMessage(XalanMessages::ErrorWritingFile_1Param,theFileName),
-				theErrorCode),
-			TranscodeFromLocalCodePage("XalanFileOutputStreamWriteException"))
+				theErrorCode))
 {
 }
 

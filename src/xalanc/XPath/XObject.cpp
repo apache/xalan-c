@@ -1116,11 +1116,31 @@ XObject::greaterThanOrEquals(
 }
 
 
+const XalanDOMChar	XObject::XObjectException::m_type[] = 
+{	
+	XalanUnicode::charLetter_X,
+	XalanUnicode::charLetter_O,
+	XalanUnicode::charLetter_b,
+	XalanUnicode::charLetter_j,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_c,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_E,
+	XalanUnicode::charLetter_x,
+	XalanUnicode::charLetter_c,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_p,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_i,
+	XalanUnicode::charLetter_o,
+	XalanUnicode::charLetter_n,
+	0
+};
+
 
 XObject::XObjectException::XObjectException(
-				const XalanDOMString&	message,
-				const XalanDOMString&	theType) :
-	XalanXPathException(message, theType)
+				const XalanDOMString&	message) :
+	XalanXPathException(message)
 {
 }
 
@@ -1130,14 +1150,51 @@ XObject::XObjectException::~XObjectException()
 {
 }
 
-
+const XalanDOMChar	XObject::XObjectInvalidConversionException::m_type[] = 
+{	
+	XalanUnicode::charLetter_X,
+	XalanUnicode::charLetter_O,
+	XalanUnicode::charLetter_b,
+	XalanUnicode::charLetter_j,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_c,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_I,
+	XalanUnicode::charLetter_n,
+	XalanUnicode::charLetter_v,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_l,
+	XalanUnicode::charLetter_i,
+	XalanUnicode::charLetter_d,
+	XalanUnicode::charLetter_C,
+	XalanUnicode::charLetter_o,
+	XalanUnicode::charLetter_n,
+	XalanUnicode::charLetter_v,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_r,
+	XalanUnicode::charLetter_s,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_i,
+	XalanUnicode::charLetter_o,
+	XalanUnicode::charLetter_n,
+	XalanUnicode::charLetter_E,
+	XalanUnicode::charLetter_x,
+	XalanUnicode::charLetter_c,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_p,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_i,
+	XalanUnicode::charLetter_o,
+	XalanUnicode::charLetter_n,
+	0
+};
 
 XObject::XObjectInvalidConversionException::XObjectInvalidConversionException(
 				const XalanDOMString&	fromType,
 				const XalanDOMString&	toType) :
 	XObjectException(
-			formatErrorString(fromType, toType),
-			StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("XObjectInvalidConversionException"))),
+			formatErrorString(fromType, toType)),
 	m_fromType(fromType),
 	m_toType(toType)
 {

@@ -255,7 +255,16 @@ public:
 			return m_encoding;
 		}
 
+		virtual const XalanDOMChar*
+		getType() const
+		{
+			return m_type;
+		}
+
 	private:
+
+		static const XalanDOMChar	m_type[];
+
 
 		const UnicodeCharType	m_badCharacter;
 

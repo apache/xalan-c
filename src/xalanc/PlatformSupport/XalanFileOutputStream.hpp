@@ -83,6 +83,16 @@ public :
 
 		virtual
 		~XalanFileOutputStreamOpenException();
+
+		virtual const XalanDOMChar*
+		getType() const
+		{
+			return m_type;
+		}
+
+	private:
+		static const XalanDOMChar	m_type[];
+
 	};
 
 	class XALAN_PLATFORMSUPPORT_EXPORT XalanFileOutputStreamWriteException : public XalanOutputStream::XalanOutputStreamException
@@ -102,6 +112,16 @@ public :
 
 		virtual
 		~XalanFileOutputStreamWriteException();
+
+		virtual const XalanDOMChar*
+		getType() const
+		{
+			return m_type;
+		}
+
+	private:
+		static const XalanDOMChar	m_type[];
+
 	};
 
 protected:

@@ -297,6 +297,33 @@ XalanQName::isValidQName(
 }
 
 
+const XalanDOMChar	XalanQName::InvalidQNameException::m_type[] = 
+{	
+	XalanUnicode::charLetter_I,
+	XalanUnicode::charLetter_n,
+	XalanUnicode::charLetter_v,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_l,
+	XalanUnicode::charLetter_i,
+	XalanUnicode::charLetter_d,
+	XalanUnicode::charLetter_Q,
+	XalanUnicode::charLetter_N,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_m,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_E,
+	XalanUnicode::charLetter_x,
+	XalanUnicode::charLetter_c,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_p,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_i,
+	XalanUnicode::charLetter_o,
+	XalanUnicode::charLetter_n,
+	0
+};
+
+
 
 XalanQName::InvalidQNameException::InvalidQNameException(
 			const XalanDOMChar*			theQName,
@@ -304,7 +331,7 @@ XalanQName::InvalidQNameException::InvalidQNameException(
 			const XalanDOMString&		theURI,
 			int							theLineNumber,
 			int							theColumnNumber) :
-	XSLException(format(theQName, theQNameLength), theURI, theLineNumber, theColumnNumber, XalanDOMString("InvalidQNameException"))
+	XSLException(format(theQName, theQNameLength), theURI, theLineNumber, theColumnNumber)
 {
 }
 
@@ -314,7 +341,7 @@ XalanQName::InvalidQNameException::InvalidQNameException(
 			const LocatorType&			theLocator,
 			const XalanDOMChar*			theQName,
 			XalanDOMString::size_type	theQNameLength) :
-	XSLException(theLocator, format(theQName, theQNameLength), XalanDOMString("InvalidQNameException"))
+	XSLException(theLocator, format(theQName, theQNameLength))
 {
 }
 
@@ -323,7 +350,7 @@ XalanQName::InvalidQNameException::InvalidQNameException(
 XalanQName::InvalidQNameException::InvalidQNameException(
 			const XalanDOMChar*			theQName,
 			XalanDOMString::size_type	theQNameLength) :
-	XSLException(format(theQName, theQNameLength), XalanDOMString("InvalidQNameException"))
+	XSLException(format(theQName, theQNameLength))
 {
 }
 

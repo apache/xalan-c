@@ -24,15 +24,39 @@
 
 XALAN_CPP_NAMESPACE_BEGIN
 
-
+const XalanDOMChar	XSLTProcessorException::m_type[] = 
+{	
+	XalanUnicode::charLetter_X,
+	XalanUnicode::charLetter_S,
+	XalanUnicode::charLetter_L,
+	XalanUnicode::charLetter_T,
+	XalanUnicode::charLetter_P,
+	XalanUnicode::charLetter_r,
+	XalanUnicode::charLetter_o,
+	XalanUnicode::charLetter_c,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_s,
+	XalanUnicode::charLetter_s,
+	XalanUnicode::charLetter_o,
+	XalanUnicode::charLetter_r,
+	XalanUnicode::charLetter_E,
+	XalanUnicode::charLetter_x,
+	XalanUnicode::charLetter_c,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_p,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_i,
+	XalanUnicode::charLetter_o,
+	XalanUnicode::charLetter_n,
+	0
+};
 
 XSLTProcessorException::XSLTProcessorException(
 		const XalanDOMString&	theMessage,
 		const XalanDOMString&	theURI,
 		int						theLineNumber,
-		int						theColumnNumber,
-		const XalanDOMString&	theType) :
-	XSLException(theMessage, theURI, theLineNumber, theColumnNumber, theType)
+		int						theColumnNumber) :
+	XSLException(theMessage, theURI, theLineNumber, theColumnNumber)
 {
 }
 
@@ -40,18 +64,16 @@ XSLTProcessorException::XSLTProcessorException(
 
 XSLTProcessorException::XSLTProcessorException(
 			const LocatorType&		theLocator,
-			const XalanDOMString&	theMessage,
-			const XalanDOMString&	theType) :
-	XSLException(theLocator, theMessage, theType)
+			const XalanDOMString&	theMessage) :
+	XSLException(theLocator, theMessage)
 {
 }
 
 
 
 XSLTProcessorException::XSLTProcessorException(
-		const XalanDOMString&	theMessage,
-		const XalanDOMString&	theType) :
-	XSLException(theMessage, theType)
+		const XalanDOMString&	theMessage) :
+	XSLException(theMessage)
 {
 }
 

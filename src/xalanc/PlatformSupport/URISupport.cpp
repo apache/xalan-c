@@ -216,11 +216,34 @@ URISupport::NormalizeURIText(const XalanDOMString&	uriString)
 	return theCopy;
 }
 
+const XalanDOMChar	URISupport::InvalidURIException::m_type[] = 
+{	
+	XalanUnicode::charLetter_I,
+	XalanUnicode::charLetter_n,
+	XalanUnicode::charLetter_v,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_l,
+	XalanUnicode::charLetter_i,
+	XalanUnicode::charLetter_d,
+	XalanUnicode::charLetter_U,
+	XalanUnicode::charLetter_R,
+	XalanUnicode::charLetter_I,
+	XalanUnicode::charLetter_E,
+	XalanUnicode::charLetter_x,
+	XalanUnicode::charLetter_c,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_p,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_i,
+	XalanUnicode::charLetter_o,
+	XalanUnicode::charLetter_n,
+	0
+};
+
 
 
 URISupport::InvalidURIException::InvalidURIException(const XalanDOMString&	theMessage) :
-	XSLException(theMessage,
-				 TranscodeFromLocalCodePage("InvalidURIException"))
+	XSLException(theMessage)
 {
 }
 

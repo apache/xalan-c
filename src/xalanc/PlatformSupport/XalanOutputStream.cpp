@@ -427,12 +427,45 @@ XalanOutputStream::getNewlineString() const
 #endif
 }
 
+const XalanDOMChar	XalanOutputStream::XalanOutputStreamException::m_type[] = 
+{	
+	XalanUnicode::charLetter_X,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_l,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_n,
+	XalanUnicode::charLetter_F,
+	XalanUnicode::charLetter_i,
+	XalanUnicode::charLetter_l,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_O,
+	XalanUnicode::charLetter_u,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_p,
+	XalanUnicode::charLetter_u,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_S,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_r,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_m,
+	XalanUnicode::charLetter_E,
+	XalanUnicode::charLetter_x,
+	XalanUnicode::charLetter_c,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_p,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_i,
+	XalanUnicode::charLetter_o,
+	XalanUnicode::charLetter_n,
+	0
+};
 
 
 XalanOutputStream::XalanOutputStreamException::XalanOutputStreamException(
-			const XalanDOMString&	theMessage,
-			const XalanDOMString&	theType) :
-	XSLException(theMessage, theType)
+			const XalanDOMString&	theMessage) :
+	XSLException(theMessage)
 {
 }
 
@@ -442,12 +475,38 @@ XalanOutputStream::XalanOutputStreamException::~XalanOutputStreamException()
 {
 }
 
-
+const XalanDOMChar	XalanOutputStream::UnknownEncodingException::m_type[] = 
+{	
+	XalanUnicode::charLetter_U,
+	XalanUnicode::charLetter_n,
+	XalanUnicode::charLetter_k,
+	XalanUnicode::charLetter_n,
+	XalanUnicode::charLetter_o,
+	XalanUnicode::charLetter_w,
+	XalanUnicode::charLetter_n,
+	XalanUnicode::charLetter_E,
+	XalanUnicode::charLetter_n,
+	XalanUnicode::charLetter_c,
+	XalanUnicode::charLetter_o,
+	XalanUnicode::charLetter_d,
+	XalanUnicode::charLetter_i,
+	XalanUnicode::charLetter_n,
+	XalanUnicode::charLetter_g,
+	XalanUnicode::charLetter_E,
+	XalanUnicode::charLetter_x,
+	XalanUnicode::charLetter_c,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_p,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_i,
+	XalanUnicode::charLetter_o,
+	XalanUnicode::charLetter_n,
+	0
+};
 
 XalanOutputStream::UnknownEncodingException::UnknownEncodingException() :
 	XalanOutputStreamException(
-			XalanMessageLoader::getMessage(XalanMessages::AnErrorOccurredWhileTranscoding),
-			TranscodeFromLocalCodePage("UnknownEncodingException"))
+			XalanMessageLoader::getMessage(XalanMessages::AnErrorOccurredWhileTranscoding))
 {
 }
 
@@ -458,11 +517,42 @@ XalanOutputStream::UnknownEncodingException::~UnknownEncodingException()
 }
 
 
+const XalanDOMChar	XalanOutputStream::UnsupportedEncodingException::m_type[] = 
+{	
+	XalanUnicode::charLetter_U,
+	XalanUnicode::charLetter_n,
+	XalanUnicode::charLetter_s,
+	XalanUnicode::charLetter_u,
+	XalanUnicode::charLetter_p,
+	XalanUnicode::charLetter_p,
+	XalanUnicode::charLetter_o,
+	XalanUnicode::charLetter_r,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_d,
+	XalanUnicode::charLetter_E,
+	XalanUnicode::charLetter_n,
+	XalanUnicode::charLetter_c,
+	XalanUnicode::charLetter_o,
+	XalanUnicode::charLetter_d,
+	XalanUnicode::charLetter_i,
+	XalanUnicode::charLetter_n,
+	XalanUnicode::charLetter_g,
+	XalanUnicode::charLetter_E,
+	XalanUnicode::charLetter_x,
+	XalanUnicode::charLetter_c,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_p,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_i,
+	XalanUnicode::charLetter_o,
+	XalanUnicode::charLetter_n,
+	0
+};
 
 XalanOutputStream::UnsupportedEncodingException::UnsupportedEncodingException(const XalanDOMString&	theEncoding) :
 	XalanOutputStreamException(
-			XalanMessageLoader::getMessage(XalanMessages::UnsupportedEncoding_1Param,theEncoding),
-			TranscodeFromLocalCodePage("UnsupportedEncodingException")),
+			XalanMessageLoader::getMessage(XalanMessages::UnsupportedEncoding_1Param,theEncoding)),
 	m_encoding(theEncoding)
 {
 }
@@ -477,9 +567,8 @@ XalanOutputStream::UnsupportedEncodingException::~UnsupportedEncodingException()
 
 XalanOutputStream::TranscoderInternalFailureException::TranscoderInternalFailureException(const XalanDOMString&	theEncoding) :
 	XalanOutputStreamException(
-			XalanMessageLoader::getMessage(XalanMessages::UnknownErrorOccurredWhileTranscodingToEncoding_1Param,theEncoding),
-			TranscodeFromLocalCodePage("TranscoderInternalFailureException")),
-	m_encoding(theEncoding)
+			XalanMessageLoader::getMessage(XalanMessages::UnknownErrorOccurredWhileTranscodingToEncoding_1Param,theEncoding)),
+			m_encoding(theEncoding)
 {
 }
 
@@ -493,8 +582,7 @@ XalanOutputStream::TranscoderInternalFailureException::~TranscoderInternalFailur
 
 XalanOutputStream::TranscodingException::TranscodingException() :
 	XalanOutputStreamException(
-			XalanMessageLoader::getMessage(XalanMessages::AnErrorOccurredWhileTranscoding),
-			TranscodeFromLocalCodePage("TranscodingException"))
+			XalanMessageLoader::getMessage(XalanMessages::AnErrorOccurredWhileTranscoding))
 {
 }
 

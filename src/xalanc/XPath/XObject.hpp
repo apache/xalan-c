@@ -482,11 +482,19 @@ public:
 
 		explicit
 		XObjectException(
-				const XalanDOMString&	message = XalanDOMString(),
-				const XalanDOMString&	theType = XalanDOMString(XALAN_STATIC_UCODE_STRING("XObjectException")));
+				const XalanDOMString&	message);
 
 		virtual
 		~XObjectException();
+
+		virtual const XalanDOMChar*
+		getType() const
+		{
+			return m_type;
+		}
+	private:
+
+		static const XalanDOMChar	m_type[];
 	};
 
 	class XObjectInvalidConversionException : public XObjectException
@@ -512,7 +520,15 @@ public:
 			return m_toType;
 		}
 
+
+		virtual const XalanDOMChar*
+		getType() const
+		{
+			return m_type;
+		}
 	private:
+
+		static const XalanDOMChar	m_type[];
 
 		static const XalanDOMString
 		formatErrorString(

@@ -51,8 +51,7 @@ public:
 			const XalanDOMString&	theMessage,
 			const XalanDOMString&	theURI,
 			int						theLineNumber,
-			int						theColumnNumber,
-			const XalanDOMString&	theType = XalanDOMString(XALAN_STATIC_UCODE_STRING("XPathParserException")));
+			int						theColumnNumber);
 
 	/**
 	 * Constructor
@@ -63,8 +62,7 @@ public:
 	 */
 	XPathParserException(
 			const LocatorType&		theLocator,
-			const XalanDOMString&	theMessage,
-			const XalanDOMString&	theType = XalanDOMString(XALAN_STATIC_UCODE_STRING("XPathParserException")));
+			const XalanDOMString&	theMessage);
 
 	/**
 	 * Constructor
@@ -73,11 +71,19 @@ public:
 	 * @param theType type of exception, default is "XPathParserException"
 	 */
 	XPathParserException(
-			const XalanDOMString&	theMessage,
-			const XalanDOMString&	theType = XalanDOMString(XALAN_STATIC_UCODE_STRING("XPathParserException")));
+			const XalanDOMString&	theMessage);
 
 	virtual
-	~XPathParserException();
+		~XPathParserException();
+	
+	virtual const XalanDOMChar*
+		getType() const
+	{
+		return m_type;
+	}
+private:
+	
+	static const XalanDOMChar	m_type[];
 };
 
 

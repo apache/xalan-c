@@ -173,11 +173,46 @@ ElemMessage::execute(StylesheetExecutionContext&	executionContext) const
 }
 #endif
 
+const XalanDOMChar	ElemMessage::ElemMessageTerminateException::m_type[] = 
+{	
+	XalanUnicode::charLetter_E,
+	XalanUnicode::charLetter_l,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_m,
+	XalanUnicode::charLetter_M,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_s,
+	XalanUnicode::charLetter_s,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_g,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_T,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_r,
+	XalanUnicode::charLetter_m,
+	XalanUnicode::charLetter_i,
+	XalanUnicode::charLetter_n,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_E,
+	XalanUnicode::charLetter_x,
+	XalanUnicode::charLetter_p,
+	XalanUnicode::charLetter_r,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_s,
+	XalanUnicode::charLetter_s,
+	XalanUnicode::charLetter_i,
+	XalanUnicode::charLetter_o,
+	XalanUnicode::charLetter_n,
+	0
+};
+
+
 
 ElemMessage::ElemMessageTerminateException::ElemMessageTerminateException(const XalanDOMString&		theMessage) :
 	XSLTProcessorException(
-			theMessage,
-			TranscodeFromLocalCodePage("ElemMessageTerminateException"))
+			theMessage)
 {
 }
 
@@ -188,8 +223,7 @@ ElemMessage::ElemMessageTerminateException::ElemMessageTerminateException(
 			const XalanDOMString&	theMessage) :
 	XSLTProcessorException(
 			theLocator,
-			theMessage,
-			TranscodeFromLocalCodePage("ElemMessageTerminateException"))
+			theMessage)
 {
 }
 

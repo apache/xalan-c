@@ -281,11 +281,20 @@ public :
 	public:
 
 		XalanOutputStreamException(
-			const XalanDOMString&	theMessage,
-			const XalanDOMString&	theType);
+			const XalanDOMString&	theMessage);
 
 		virtual
 		~XalanOutputStreamException();
+
+		virtual const XalanDOMChar*
+		getType() const
+		{
+			return m_type;
+		}
+
+	private:
+		static const XalanDOMChar	m_type[];
+
 	};
 
 	class XALAN_PLATFORMSUPPORT_EXPORT UnknownEncodingException : public XalanOutputStreamException
@@ -297,6 +306,16 @@ public :
 
 		virtual
 		~UnknownEncodingException();
+
+		virtual const XalanDOMChar*
+		getType() const
+		{
+			return m_type;
+		}
+
+	private:
+		static const XalanDOMChar	m_type[];
+
 	};
 
 	class XALAN_PLATFORMSUPPORT_EXPORT UnsupportedEncodingException : public XalanOutputStreamException
@@ -314,7 +333,15 @@ public :
 			return m_encoding;
 		}
 
+
+		virtual const XalanDOMChar*
+		getType() const
+		{
+			return m_type;
+		}
 	private:
+
+		static const XalanDOMChar	m_type[];
 
 		const XalanDOMString	m_encoding;
 	};

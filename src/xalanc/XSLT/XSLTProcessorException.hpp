@@ -43,39 +43,43 @@ public:
 	 * @param theURI the URI of the related document, if known
 	 * @param theLineNumber the line number of the related document.
 	 * @param theColumnNumber the column number of the related document.
-	 * @param theType    type of exception string, default is "XSLTProcessorException"
 	 */
 	XSLTProcessorException(
 		const XalanDOMString&	theMessage,
 		const XalanDOMString&	theURI,
 		int						theLineNumber,
-		int						theColumnNumber,
-		const XalanDOMString&	theType = XalanDOMString(XALAN_STATIC_UCODE_STRING("XSLTProcessorException")));
+		int						theColumnNumber);
 
 	/**
 	 * Constructor
 	 * 
 	 * @param theLocator The locator instance for error reporting.
 	 * @param theMessage message to write when exception thrown
-	 * @param theType type of exception, default is "XSLTProcessorException"
 	 */
 	XSLTProcessorException(
 			const LocatorType&		theLocator,
-			const XalanDOMString&	theMessage,
-			const XalanDOMString&	theType = XalanDOMString(XALAN_STATIC_UCODE_STRING("XSLTProcessorException")));
+			const XalanDOMString&	theMessage);
 
 	/**
 	 * Construct an XSLT Processor exception object
 	 * 
 	 * @param theMessage message to print when exception thrown
-	 * @param theType    type of exception string, default is "XSLTProcessorException"
 	 */
 	XSLTProcessorException(
-		const XalanDOMString&	theMessage,
-		const XalanDOMString&	theType = XalanDOMString(XALAN_STATIC_UCODE_STRING("XSLTProcessorException")));
+		const XalanDOMString&	theMessage);
 
 	virtual
 	~XSLTProcessorException();
+
+	virtual const XalanDOMChar*
+	getType() const
+	{
+		return m_type;
+	}
+
+private:
+
+	static const XalanDOMChar	m_type[];
 };
 
 

@@ -20,9 +20,8 @@
 
 #include <xalanc/PlatformSupport/PrefixResolver.hpp>
 #include <xalanc/PlatformSupport/XalanMessageLoader.hpp>
-#include <xalanc/PlatformSupport/XSLException.hpp>
 
-
+#include <xalanc/XPath/XalanQName.hpp>
 
 #include <xalanc/DOMSupport/DOMServices.hpp>
 #include <xalanc/DOMSupport/DOMSupport.hpp>
@@ -246,11 +245,11 @@ throwException(
 {
 	if (theLocator == 0)
 	{
-		throw XSLException(theMessage);
+		throw XalanQName::InvalidQNameException(theMessage.c_str(), theMessage.length());
 	}
 	else
 	{
-		throw XSLException(*theLocator, theMessage);
+		throw XalanQName::InvalidQNameException(*theLocator,theMessage.c_str(), theMessage.length());
 	}
 }
 

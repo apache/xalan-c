@@ -422,6 +422,41 @@ XalanTranscodingServices::getBytesEqualChars(const XalanDOMString&	theEncoding)
 }
 
 
+const XalanDOMChar	XalanTranscodingServices::UnrepresentableCharacterException::m_type[] = 
+{	
+	XalanUnicode::charLetter_U,
+	XalanUnicode::charLetter_n,
+	XalanUnicode::charLetter_p,
+	XalanUnicode::charLetter_r,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_n,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_b,
+	XalanUnicode::charLetter_l,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_C,
+	XalanUnicode::charLetter_h,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_r,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_c,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_r,
+	XalanUnicode::charLetter_E,
+	XalanUnicode::charLetter_x,
+	XalanUnicode::charLetter_c,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_p,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_i,
+	XalanUnicode::charLetter_o,
+	XalanUnicode::charLetter_n,
+	0
+};
+
 
 XalanTranscodingServices::UnrepresentableCharacterException::UnrepresentableCharacterException(
 			UnicodeCharType			theCharacter,
@@ -430,8 +465,7 @@ XalanTranscodingServices::UnrepresentableCharacterException::UnrepresentableChar
 		XalanMessageLoader::getMessage(
 			XalanMessages::UnrepresentableCharacter_2Param,
 			UnsignedLongToHexDOMString(theCharacter),
-			theEncoding),
-		TranscodeFromLocalCodePage("UnrepresentableCharacterException")),
+			theEncoding)),
 	m_badCharacter(theCharacter),
 	m_encoding(theEncoding)
 {

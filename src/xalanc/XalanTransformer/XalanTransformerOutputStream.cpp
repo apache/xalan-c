@@ -67,8 +67,7 @@ XalanTransformerOutputStream::writeData(
 	if(theBytesWritten != theBufferLength)
 	{
 		throw XalanOutputStreamException(
-			XalanMessageLoader::getMessage(XalanMessages::NumberBytesWrittenDoesNotEqual),
-			TranscodeFromLocalCodePage("UnknownOutputHandlerException"));
+			XalanMessageLoader::getMessage(XalanMessages::NumberBytesWrittenDoesNotEqual));
 	}
 }
 

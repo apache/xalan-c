@@ -55,9 +55,7 @@ public:
 			const XalanDOMString&	theMessage,
 			const XalanDOMString&	theURI,
 			int						theLineNumber,
-			int						theColumnNumber,
-			const XalanDOMString&	theType = XalanDOMString(XALAN_STATIC_UCODE_STRING("XSLException")));
-
+			int						theColumnNumber);
 	/**
 	 * Constructor
 	 * 
@@ -67,9 +65,7 @@ public:
 	 */
 	XSLException(
 			const LocatorType&		theLocator,
-			const XalanDOMString&	theMessage,
-			const XalanDOMString&	theType = XalanDOMString(XALAN_STATIC_UCODE_STRING("XSLException")));
-
+			const XalanDOMString&	theMessage);
 	/**
 	 * Constructor
 	 * 
@@ -77,8 +73,7 @@ public:
 	 * @param theType type of exception, default is "XSLException"
 	 */
 	XSLException(
-			const XalanDOMString&	theMessage,
-			const XalanDOMString&	theType = XalanDOMString(XALAN_STATIC_UCODE_STRING("XSLException")));
+			const XalanDOMString&	theMessage);
 
 	virtual
 	~XSLException();
@@ -88,11 +83,8 @@ public:
 	 * 
 	 * @return type of exception
 	 */
-	const XalanDOMString&
-	getType() const
-	{
-		return m_type;
-	}
+	virtual const XalanDOMChar*
+	getType() const = 0;
 
 	/**
 	 * Retrieve message for exception
@@ -150,7 +142,7 @@ public:
 			const XalanDOMString&	theURI,
 			size_type				theLineNumber,
 			size_type				theColumnNumber,
-			const XalanDOMString&	theType,
+			const XalanDOMChar*		theType,
 			XalanDOMString&			theBuffer)
 	{
 		defaultFormat(
@@ -160,8 +152,8 @@ public:
 			theURI.size(),
 			theLineNumber,
 			theColumnNumber,
-			theType.c_str(),
-			theType.size(),
+			theType,
+			XalanDOMString::length(theType),
 			theBuffer);
 	}
 
@@ -208,7 +200,6 @@ private:
 	const size_type			m_lineNumber;
 	const size_type			m_columnNumber;
 
-	const XalanDOMString	m_type;
 };
 
 

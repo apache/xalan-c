@@ -359,7 +359,15 @@ public:
 		virtual
 		~InvalidQNameException();
 
+		virtual const XalanDOMChar*
+		getType() const
+		{
+			return m_type;
+		}
+
 	private:
+
+		static const XalanDOMChar	m_type[];
 
 		static const XalanDOMString
 		format(

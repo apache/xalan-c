@@ -18,7 +18,7 @@
 
 
 
-#include "xalanc/PlatformSupport/XSLException.hpp"
+#include "xalanc/XPath/XPathParserException.hpp"
 
 
 
@@ -92,11 +92,11 @@ XPathConstructionContextDefault::error(
 {
 	if (locator != 0)
 	{
-		throw XSLException(*locator, msg);
+		throw XPathParserException(*locator, msg);
 	}
 	else
 	{
-		throw XSLException(msg);
+		throw XPathParserException(msg);
 	}
 }
 

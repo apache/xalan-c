@@ -734,10 +734,43 @@ VariablesStack::StackEntry::deactivate()
 }
 
 
+const XalanDOMChar	VariablesStack::InvalidStackContextException::m_type[] = 
+{	
+	XalanUnicode::charLetter_I,
+	XalanUnicode::charLetter_n,
+	XalanUnicode::charLetter_v,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_l,
+	XalanUnicode::charLetter_i,
+	XalanUnicode::charLetter_d,
+	XalanUnicode::charLetter_S,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_c,
+	XalanUnicode::charLetter_k,
+	XalanUnicode::charLetter_C,
+	XalanUnicode::charLetter_o,
+	XalanUnicode::charLetter_n,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_x,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_E,
+	XalanUnicode::charLetter_x,
+	XalanUnicode::charLetter_c,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_p,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_i,
+	XalanUnicode::charLetter_o,
+	XalanUnicode::charLetter_n,
+	0
+};
+
+
 
 VariablesStack::InvalidStackContextException::InvalidStackContextException() :
-	XSLTProcessorException(XalanMessageLoader::getMessage(XalanMessages::InvalidStackContext),
-						   TranscodeFromLocalCodePage("InvalidStackContextException"))
+	XSLTProcessorException(XalanMessageLoader::getMessage(XalanMessages::InvalidStackContext))
 {
 }
 

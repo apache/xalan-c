@@ -301,7 +301,16 @@ public:
 		virtual
 		~InvalidStackContextException();
 
+
+		virtual const XalanDOMChar*
+			getType() const
+		{
+			return m_type;
+		}
+		
 	private:
+		
+		static const XalanDOMChar	m_type[];
 
 	};
 

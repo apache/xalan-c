@@ -25,50 +25,40 @@
 
 XALAN_CPP_NAMESPACE_BEGIN
 
-
+static const XalanDOMChar	s_dummy = 0;
 
 XSLException::XSLException(
 		const XalanDOMString&	theMessage,
 		const XalanDOMString&	theURI,
 		int						theLineNumber,
-		int						theColumnNumber,
-		const XalanDOMString&	theType) :
+		int						theColumnNumber) :
 	m_message(theMessage),
 	m_uri(theURI),
 	m_lineNumber(theLineNumber),
-	m_columnNumber(theColumnNumber),
-	m_type(theType)
+	m_columnNumber(theColumnNumber)
 {
 }
-
-
-
-static const XalanDOMChar	s_dummy = 0;
 
 
 
 XSLException::XSLException(
 			const LocatorType&		theLocator,
-			const XalanDOMString&	theMessage,
-			const XalanDOMString&	theType) :
+			const XalanDOMString&	theMessage) :
 	m_message(theMessage),
 	m_uri(theLocator.getSystemId() == 0 ? &s_dummy : theLocator.getSystemId()),
 	m_lineNumber(theLocator.getLineNumber()),
-	m_columnNumber(theLocator.getColumnNumber()),
-	m_type(theType)
+	m_columnNumber(theLocator.getColumnNumber())
 {
 }
 
 
 
 XSLException::XSLException(
-		const XalanDOMString&	theMessage,
-		const XalanDOMString&	theType) :
+		const XalanDOMString&	theMessage) :
 	m_message(theMessage),
 	m_uri(),
 	m_lineNumber(XalanLocator::getUnknownValue()),
-	m_columnNumber(XalanLocator::getUnknownValue()),
-	m_type(theType)
+	m_columnNumber(XalanLocator::getUnknownValue())
 {
 }
 
@@ -95,7 +85,7 @@ XSLException::defaultFormat() const
 void
 XSLException::defaultFormat(XalanDOMString&		theBuffer) const
 {
-	defaultFormat(m_message, m_uri, m_lineNumber, m_columnNumber, m_type, theBuffer);
+	defaultFormat(m_message, m_uri, m_lineNumber, m_columnNumber, getType(), theBuffer);
 }
 
 
@@ -166,7 +156,6 @@ XSLException::defaultFormat(
 	LongToDOMString(theColumnNumber, theBuffer);
 	theBuffer += XalanDOMChar(XalanUnicode::charRightParenthesis);
 }
-
 
 
 XALAN_CPP_NAMESPACE_END
