@@ -1,6 +1,6 @@
 <?xml version="1.0"?> 
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0"
-				xmlns:external="http://ExternalFunction.xalan-c++.xml.apache.org.xxx"
+				xmlns:external="http://ExternalFunction.xalan-c++.xml.apache.org"
         exclude-result-prefixes="external">
   
   <xsl:template match="/">
