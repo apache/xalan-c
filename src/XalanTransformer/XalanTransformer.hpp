@@ -354,9 +354,13 @@ public:
 #if defined(XALAN_NO_NAMESPACES)
 	typedef vector<const XalanCompiledStylesheet*>		CompiledStylesheetPtrVectorType;
 	typedef vector<const XalanParsedSource*>			ParsedSourcePtrVectorType;
+	typedef pair<XalanDOMString, XalanDOMString>    	ParamPairType;
+	typedef vector<ParamPairType>		                ParamPairVectorType;
 #else
 	typedef std::vector<const XalanCompiledStylesheet*>	CompiledStylesheetPtrVectorType;
 	typedef std::vector<const XalanParsedSource*>		ParsedSourcePtrVectorType;
+	typedef std::pair<XalanDOMString, XalanDOMString>	ParamPairType;
+	typedef std::vector<ParamPairType>	                ParamPairVectorType;
 #endif
 
 protected:
@@ -371,6 +375,8 @@ private:
 	CompiledStylesheetPtrVectorType			m_compiledStylesheets;
 
 	ParsedSourcePtrVectorType				m_parsedSources;
+
+    ParamPairVectorType                     m_paramPairs;
 
 	CharVectorType							m_errorMessage;
 
