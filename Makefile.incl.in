@@ -313,6 +313,11 @@ ifeq ($(PLATFORM), SOLARIS)
   
   export LD_LIBRARY_PATH := $(XERCESCROOT)/lib:$(ICULIB_LOC):$(LD_LIBRARY_PATH)
 
+  # if there is a LD_LIBRARY_PATH_64, we need to set this also
+  ifdef LD_LIBRARY_PATH_64
+  	export LD_LIBRARY_PATH_64 := $(XERCESCROOT)/lib:$(ICUROOT)/lib:$(LD_LIBRARY_PATH_64)
+  endif
+
   MAKE_SHARED_LOC = ${CXX} -D${PLATFORM} -G -ptr$(ALL_OBJECTS_DIR) ${LDFLAGS} -h ${LOC_SONAME}
 
 endif
