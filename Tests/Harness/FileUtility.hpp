@@ -136,6 +136,7 @@ public:
 		XalanDOMString  xmlFileURL;
 		XalanDOMString  xslFileURL;
 		XalanDOMString  testBase;
+		XalanDOMString  xmlFormat;
 		char* msg;
 		XalanDOMString	currentNode;
 		XalanDOMString	actual;

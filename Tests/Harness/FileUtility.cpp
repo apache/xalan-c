@@ -995,6 +995,7 @@ FileUtility::reportPassFail(XMLFileReporter& logfile, const XalanDOMString& runi
 	runResults.insert(Hashtable::value_type(XalanDOMString("ICU-Enabled "), XalanDOMString("No")));
 	runResults.insert(Hashtable::value_type(XalanDOMString("BaseDrive "), XalanDOMString(getDrive())));
 	runResults.insert(Hashtable::value_type(XalanDOMString("TestBase "), XalanDOMString(data.testBase)));
+	runResults.insert(Hashtable::value_type(XalanDOMString("xmlFormat "), data.xmlFormat));
 
 #if defined(XALAN_USE_ICU)
 	// At some point in time I want to be able to programatically check it the ICU is enabled.
