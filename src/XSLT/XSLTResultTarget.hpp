@@ -165,6 +165,8 @@ public:
 	 */
 	XSLTResultTarget(FormatterListener&		flistener);
 
+	~XSLTResultTarget();
+
 	/**
 	 * Set the file name where the results will be written.
 	 *

@@ -223,3 +223,9 @@ XSLTResultTarget::XSLTResultTarget(FormatterListener&		flistener) :
 	m_formatterListener(&flistener)
 {
 }
+
+
+
+XSLTResultTarget::~XSLTResultTarget()
+{
+}
