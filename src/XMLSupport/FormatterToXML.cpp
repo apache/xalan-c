@@ -1212,14 +1212,14 @@ FormatterToXML::accumCommentData(const XalanDOMChar*	data)
 
 void
 FormatterToXML::writeNormalizedChars(
-			const XalanDOMChar	ch[],
-			unsigned int		start,
-			unsigned int		length,
-			bool				isCData)
+			const XalanDOMChar			ch[],
+			XalanDOMString::size_type	start,
+			XalanDOMString::size_type	length,
+			bool						isCData)
 {
-    unsigned int	end = start + length;
+    XalanDOMString::size_type	end = start + length;
 
-    for(unsigned int i = start; i < end; i++)
+    for(XalanDOMString::size_type i = start; i < end; i++)
     {
 		const XalanDOMChar	c = ch[i];
 
@@ -1632,14 +1632,14 @@ FormatterToXML::indent(int 	n)
 
 void
 FormatterToXML::accumNormalizedPIData(
-			const XalanDOMChar*		theData,
-			unsigned int			theLength)
+			const XalanDOMChar*			theData,
+			XalanDOMString::size_type	theLength)
 {
 	// If there are any "?>" pairs in the string,
 	// we have to normalize them to "? >", so they
 	// won't be confused with the end tag.
 
-	for (unsigned int i = 0; i < theLength; ++i)
+	for (XalanDOMString::size_type i = 0; i < theLength; ++i)
 	{
 		const XalanDOMChar	theChar = theData[i];
 

@@ -64,6 +64,10 @@
 
 
 
+#include <cstddef>
+
+
+
 class XalanNode;
 
 
