@@ -87,23 +87,21 @@ FunctionID::execute(
 			XPathExecutionContext&	executionContext,
 			XalanNode*				context,
 			const XObjectPtr		arg1,
-			const LocatorType*		locator) const
+			const LocatorType*		/* locator */) const
 {
 	assert(arg1.null() == false);	
+	assert(context != 0);
 
-	if (context == 0)
-	{
-		executionContext.error(
-			"The id() function requires a non-null context node!",
-			context,
-			locator);
-	}	
+	typedef XPathExecutionContext::GetAndReleaseCachedString	GetAndReleaseCachedString;
+
+	GetAndReleaseCachedString	theGuard1(executionContext);
+
+	XalanDOMString&				theResultString = theGuard1.get();
 
 	// Do the callback to get the data.
-	FunctionIDXObjectTypeCallback	theCallback(executionContext);
+	FunctionIDXObjectTypeCallback	theCallback(executionContext, theResultString);
 
-	const XalanDOMString	theResultString =
-		theCallback.processCallback(*arg1);
+	theCallback.processCallback(*arg1);
 
 	// Get the context document, so we can search for nodes.
 	const XalanDocument* const	theDocContext = context->getNodeType() == XalanNode::DOCUMENT_NODE ?
@@ -118,36 +116,15 @@ FunctionID::execute(
 	typedef XPathExecutionContext::BorrowReturnMutableNodeRefList	BorrowReturnMutableNodeRefList;
 
 	// This list will hold the nodes we find.
-
 	BorrowReturnMutableNodeRefList	theNodeList(executionContext);
 
-	// If there is no context, we cannot continue.
-	if(0 == theDocContext)
+	if (length(theResultString) > 0)
 	{
-		executionContext.error(
-			"The context node does not have an owner document!",
-			context,
-			locator);
-    }
-	else if (length(theResultString) > 0)
-	{
-#if defined(XALAN_NO_STD_NAMESPACE)
-		typedef set<XalanDOMString, less<XalanDOMString> >	TokenSetType;
-#else
-		typedef std::set<XalanDOMString>	TokenSetType;
-#endif
-
-		// This set will hold tokens that we've previously found, so
-		// we can avoid looking more than once.
-		TokenSetType		thePreviousTokens;
-
 		StringTokenizer		theTokenizer(theResultString);
 
-		typedef XPathExecutionContext::GetAndReleaseCachedString	GetAndReleaseCachedString;
+		GetAndReleaseCachedString	theGuard2(executionContext);
 
-		GetAndReleaseCachedString	theGuard(executionContext);
-
-		XalanDOMString&				theToken = theGuard.get();
+		XalanDOMString&				theToken = theGuard2.get();
 
 		// Parse the result string...
 		while(theTokenizer.hasMoreTokens() == true)
@@ -156,20 +133,11 @@ FunctionID::execute(
 
 			if (length(theToken) > 0)
 			{
-				// See if we've already seen this one...
-				TokenSetType::const_iterator	i =
-					thePreviousTokens.find(theToken);
+				XalanNode* const	theNode = theDocContext->getElementById(theToken);
 
-				if (i == thePreviousTokens.end())
+				if (theNode != 0)
 				{
-					thePreviousTokens.insert(theToken);
-
-					XalanNode* const	theNode = theDocContext->getElementById(theToken);
-
-					if (theNode != 0)
-					{
-						theNodeList->addNodeInDocOrder(theNode, executionContext);
-					}
+					theNodeList->addNodeInDocOrder(theNode, executionContext);
 				}
 			}
 		}
@@ -200,21 +168,21 @@ FunctionID::getError() const
 
 
 
-FunctionID::FunctionIDXObjectTypeCallback::FunctionIDXObjectTypeCallback(XPathExecutionContext&	theExecutionContext) :
+FunctionID::FunctionIDXObjectTypeCallback::FunctionIDXObjectTypeCallback(
+			XPathExecutionContext&	theExecutionContext,
+			XalanDOMString&			theResultString) :
 	XObjectTypeCallback(),
-	m_resultString(),
-	m_executionContext(theExecutionContext)			
+	m_resultString(theResultString),
+	m_executionContext(theExecutionContext)
 {
 }
 
 
 
-const XalanDOMString&
+void
 FunctionID::FunctionIDXObjectTypeCallback::processCallback(const XObject&	theXObject)
 {
 	theXObject.ProcessXObjectTypeCallback(*this);
-
-	return m_resultString;
 }
 
 

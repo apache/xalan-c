@@ -133,9 +133,11 @@ private:
 	{
 	public:
 
-		FunctionIDXObjectTypeCallback(XPathExecutionContext&	theExecutionContext);
+		FunctionIDXObjectTypeCallback(
+				XPathExecutionContext&	theExecutionContext,
+				XalanDOMString&			theString);
 
-		const XalanDOMString&
+		void
 		processCallback(const XObject&	theXObject);
 
 		// These methods are inherited from XObjectTypeCallback ...
@@ -180,7 +182,7 @@ private:
 
 	private:
 
-		XalanDOMString			m_resultString;
+		XalanDOMString&			m_resultString;
 
 		XPathExecutionContext&	m_executionContext;
 	};
