@@ -93,8 +93,7 @@ DOMSupportDefault          theDOMSupport;
 XercesParserLiaison        theParserLiaison(theDOMSupport);
 XPathSupportDefault        theXPathSupport(theDOMSupport);
 XSLTProcessorEnvSupportDefault  theXSLTProcessorEnvSupport;
-XObjectFactoryDefault      theXObjectFactory(theXSLTProcessorEnvSupport, 
-                                             theXPathSupport);
+XObjectFactoryDefault      theXObjectFactory;
 XPathFactoryDefault        theXPathFactory;
 
 // Create the processor.
@@ -114,7 +113,6 @@ theXSLTProcessorEnvSupport.setProcessor(&amp;theProcessor);</source>
 StylesheetConstructionContextDefault  theConstructionContext(
             theProcessor,
             theXSLTProcessorEnvSupport,
-            theXObjectFactory,
             theXPathFactory);
 StylesheetExecutionContextDefault      theExecutionContext(
             theProcessor,
@@ -209,8 +207,7 @@ DOMSupportDefault          theDOMSupport;
 XercesParserLiaison        theParserLiaison(theDOMSupport);
 XPathSupportDefault        theXPathSupport(theDOMSupport);
 XSLTProcessorEnvSupportDefault  theXSLTProcessorEnvSupport;
-XObjectFactoryDefault      theXObjectFactory(theXSLTProcessorEnvSupport, 
-                                             theXPathSupport);
+XObjectFactoryDefault      theXObjectFactory;
 XPathFactoryDefault        theXPathFactory;
 
 // Create the processor and connect to the
@@ -223,20 +220,16 @@ XSLTEngineImpl  theProcessor(
           theXPathFactory);
 theXSLTProcessorEnvSupport.setProcessor(&amp;theProcessor);
 ...
-// Create factory support objects for the stylesheet, so it will
-// have its own factory-created XObject and XPath instances 
-// (separate from the XSLT processor XObject and XPath objects).
-XObjectFactoryDefault      theStylesheetXObjectFactory(
-            theXSLTProcessorEnvSupport,
-            theXPathSupport);
- XPathFactoryDefault        theStylesheetXPathFactory;
+// Create an XPath factory support object for the stylesheet,
+// so it will have its own factory-created XPath instances
+// (separate from the XSLT processor XPath objects).
+XPathFactoryDefault        theStylesheetXPathFactory;
 
- // Use these factory support objects to create a stylesheet 
- // construction context.
- StylesheetConstructionContextDefault  theConstructionContext(
+// Use this XPath factory support object to create a stylesheet 
+// construction context.
+StylesheetConstructionContextDefault  theConstructionContext(
             theProcessor,
             theXSLTProcessorEnvSupport,
-            theStylesheetXObjectFactory,
             theStylesheetXPathFactory);
 
  // The execution context uses the same factory support objects as
@@ -269,8 +262,12 @@ theProcessor.process(
 
 // Reset the processor and the execution context
 // so we can perform the next transformation.
+// Reset the parser liaison to clear out the
+// source document we just transformed.
+
 theProcessor.reset();
 theExecutionContext.reset();
+theParserLiaison.reset();
 theExecutionContext.setStylesheetRoot(theStylesheetRoot);
 
 // Perform the next transformation.

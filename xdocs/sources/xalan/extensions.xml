@@ -86,9 +86,30 @@ data types: node-set, result-tree-fragment, string, boolean, or number.</p>
   an assignment or equality operator for this function.</li>
   </ol>
   <p>These features all appear in the following example.</p>
-<source>#include &lt;cmath&gt;
+<source>// Base header file.  Must be first.
+#include &lt;Include/PlatformDefinitions.hpp&gt;
+
+#include &lt;cmath&gt;
+#include &lt;ctime&gt;
+#include &lt;iostream&gt;
+#include &lt;fstream&gt;
+
+#include &lt;util/PlatformUtils.hpp&gt;
+#include &lt;PlatformSupport/DOMStringHelper.hpp&gt;
+#include &lt;DOMSupport/DOMSupportDefault.hpp&gt;
 #include &lt;XPath/XObjectFactoryDefault.hpp&gt;
 #include &lt;XPath/XPath.hpp&gt;
+#include &lt;XPath/XPathSupportDefault.hpp&gt;
+#include &lt;XPath/XPathFactoryDefault.hpp&gt;
+#include &lt;XSLT/StylesheetConstructionContextDefault.hpp&gt;
+#include &lt;XSLT/StylesheetExecutionContextDefault.hpp&gt;
+#include &lt;XSLT/XSLTEngineImpl.hpp&gt;
+#include &lt;XSLT/XSLTInputSource.hpp&gt;
+#include &lt;XSLT/XSLTProcessorEnvSupportDefault.hpp&gt;
+#include &lt;XSLT/XSLTResultTarget.hpp&gt;
+#include &lt;XercesParserLiaison/XercesParserLiaison.hpp&gt;
+#include &lt;XercesPlatformSupport/TextFileOutputStream.hpp&gt;
+#include &lt;XercesPlatformSupport/XercesDOMPrintWriter.hpp&gt;
 
 // This class defines a function that will return the square root
 // of its argument.
