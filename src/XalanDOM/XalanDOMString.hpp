@@ -76,10 +76,6 @@ typedef unsigned short	XalanDOMChar;
 
 
 
-#define XALAN_DOMSTRING_CACHE_SIZE
-
-
-
 #include <cassert>
 
 
@@ -104,8 +100,9 @@ public:
 
 	// We're stuck with 32-bit lengths because of the DOMs IDL
 	// bindings.  Ideally, we'ed like to re-visit this in the
-	// future.
+	// future.  See typedef below of real_size_type.
 	typedef unsigned int									size_type;
+	typedef XalanDOMCharVectorType::size_type				real_size_type;
 
 	typedef XalanDOMCharVectorType::iterator				iterator;
 	typedef XalanDOMCharVectorType::const_iterator			const_iterator;
@@ -113,7 +110,7 @@ public:
 	typedef XalanDOMCharVectorType::const_reverse_iterator	const_reverse_iterator;
 
 #if defined(XALAN_INLINE_INITIALIZATION)
-	static const size_type	npos = size_type(-1);
+	static const size_type	npos = ~0u;
 #else
 	enum { npos = -1 };
 #endif
@@ -205,11 +202,7 @@ public:
 	{
 		invariants();
 
-#if defined(XALAN_DOMSTRING_CACHE_SIZE)
 		return m_size;
-#else
-		return m_data.empty() == true ? 0 : m_data.size() - 1;
-#endif
 	}
 
 	size_type
@@ -246,7 +239,9 @@ public:
 	{
 		invariants();
 
-		return m_data.capacity() - 1;
+		assert(real_size_type(size_type(m_data.capacity())) == m_data.capacity());
+
+		return size_type(m_data.capacity()) - 1;
 	}
 
 	void
@@ -254,7 +249,7 @@ public:
 	{
 		invariants();
 
-		m_data.reserve(theCount + 1);
+		m_data.reserve(real_size_type(theCount) + 1);
 	}
 
 	void
@@ -264,9 +259,7 @@ public:
 
 		m_data.erase(m_data.begin(), m_data.end());
 
-#if defined(XALAN_DOMSTRING_CACHE_SIZE)
 		m_size = 0;
-#endif
 
 		invariants();
 	}
@@ -281,11 +274,7 @@ public:
 	{
 		invariants();
 
-#if defined(XALAN_DOMSTRING_CACHE_SIZE)
 		return m_size == 0 ? true : false;
-#else
-		return m_data.size() < 2 ? true : false;
-#endif
 	}
 
 	const_reference
@@ -293,7 +282,7 @@ public:
 	{
 		invariants();
 
-		return m_data[theIndex];
+		return m_data[real_size_type(theIndex)];
 	}
 
 	reference
@@ -301,7 +290,7 @@ public:
 	{
 		invariants();
 
-		return m_data[theIndex];
+		return m_data[real_size_type(theIndex)];
 	}
 
 #if 0
@@ -312,7 +301,7 @@ public:
 	{
 		invariants();
 
-		return m_data.at(theIndex);
+		return m_data.at(real_size_type(theIndex));
 	}
 
 	reference
@@ -320,7 +309,7 @@ public:
 	{
 		invariants();
 
-		return m_data.at(theIndex);
+		return m_data.at(real_size_type(theIndex));
 	}
 #endif
 
@@ -351,12 +340,10 @@ public:
 
 		m_data.swap(theOther.m_data);
 
-#if defined(XALAN_DOMSTRING_CACHE_SIZE)
 #if defined(XALAN_NO_NAMESPACES)
 		::swap(m_size, theOther.m_size);
 #else
 		std::swap(m_size, theOther.m_size);
-#endif
 #endif
 	}
 
@@ -461,9 +448,7 @@ public:
 		{
 			m_data = theSource.m_data;
 
-#if defined(XALAN_DOMSTRING_CACHE_SIZE)
 			m_size = theSource.m_size;
-#endif
 		}
 
 		invariants();
@@ -774,11 +759,7 @@ protected:
 	invariants() const
 	{
 #if !defined(NDEBUG)
-
-#if defined(XALAN_DOMSTRING_CACHE_SIZE)
 		assert((m_data.size() == 0 && m_size == 0) || m_size == m_data.size() - 1);
-#endif
-
 		assert(m_data.size() == 0 || m_data.back() == 0);
 #endif
 	}
@@ -824,9 +805,7 @@ private:
 
 	XalanDOMCharVectorType		m_data;
 
-#if defined(XALAN_DOMSTRING_CACHE_SIZE)
-	unsigned long				m_size;
-#endif
+	size_type					m_size;
 
 	static const XalanDOMChar	s_empty;
 };
@@ -976,10 +955,10 @@ typedef std::vector<char>			CharVectorType;
  */
 XALAN_DOM_EXPORT_FUNCTION(bool)
 TranscodeToLocalCodePage(
-			const XalanDOMChar*		theSourceString,
-			unsigned int			theSourceStringLength,
-			CharVectorType&			targetVector,
-			bool					terminate = false);
+			const XalanDOMChar*			theSourceString,
+			XalanDOMString::size_type	theSourceStringLength,
+			CharVectorType&				targetVector,
+			bool						terminate = false);
 
 
 
@@ -1071,8 +1050,8 @@ TranscodeToLocalCodePage(const XalanDOMString&	theSourceString)
  */
 inline const XalanDOMString
 TranscodeFromLocalCodePage(
-			const char*		theSourceString,
-			unsigned int	theSourceStringLength = unsigned(-1))
+			const char*					theSourceString,
+			XalanDOMString::size_type	theSourceStringLength = XalanDOMString::npos)
 {
 	return XalanDOMString(theSourceString, theSourceStringLength);
 }
@@ -1093,7 +1072,7 @@ TranscodeFromLocalCodePage(
 XALAN_DOM_EXPORT_FUNCTION(bool)
 TranscodeFromLocalCodePage(
 			const char*					theSourceString,
-			unsigned int				theSourceStringLength,
+			XalanDOMString::size_type	theSourceStringLength,
 			XalanDOMCharVectorType&		theTargetVector,
 			bool						terminate = false);
 
@@ -1127,15 +1106,19 @@ TranscodeFromLocalCodePage(
 inline const XalanDOMString
 TranscodeFromLocalCodePage(const CharVectorType&	theSourceString)
 {
+	typedef XalanDOMString::size_type		size_type;
+	typedef XalanDOMString::real_size_type	real_size_type;
+
 	const CharVectorType::size_type		theSize = theSourceString.size();
+	assert(real_size_type(size_type(theSize)) == theSize);
 
 	if (theSourceString[theSize - 1] == CharVectorType::value_type(0))
 	{
-		return TranscodeFromLocalCodePage(&*theSourceString.begin(), theSize - 1);
+		return TranscodeFromLocalCodePage(&*theSourceString.begin(), size_type(theSize) - 1);
 	}
 	else
 	{
-		return TranscodeFromLocalCodePage(&*theSourceString.begin(), theSize);
+		return TranscodeFromLocalCodePage(&*theSourceString.begin(), size_type(theSize));
 	}
 }
 
