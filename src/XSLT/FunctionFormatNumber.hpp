@@ -72,6 +72,10 @@
 
 
 
+#include <PlatformSupport/XalanDecimalFormatSymbols.hpp>
+
+
+
 #include <XPath/Function.hpp>
 
 
@@ -87,6 +91,18 @@ class XPathExecutionContext;
 class XALAN_XSLT_EXPORT FunctionFormatNumber : public Function
 {
 public:
+
+	/**
+	 * Perform static initialization.  See class XSLTInit.
+	 */
+	static void
+	initialize();
+
+	/**
+	 * Perform static shut down.  See class XSLTInit.
+	 */
+	static void
+	terminate();
 
 	FunctionFormatNumber();
 
@@ -137,13 +153,14 @@ public:
 
 protected:
 
-	virtual XalanDOMString
+	virtual void
 	doFormat(
 			XPathExecutionContext&				executionContext,
 			XalanNode*							context,
 			double								theNumber,
 			const XalanDOMString&				thePattern,
-			const XalanDecimalFormatSymbols*	theDFS);
+			const XalanDecimalFormatSymbols*	theDFS,
+			XalanDOMString&						theResult);
 
 private:
 
@@ -156,6 +173,14 @@ private:
 
 	bool
 	operator==(const FunctionFormatNumber&) const;
+
+	const XalanDecimalFormatSymbols		m_decimalFormatSymbols;
+
+	static const XalanDOMString&		s_warningNotImplementedString;
+
+	static const XalanDOMString&		s_warningNotFoundString;
+
+	static const XalanDOMString			s_emptyString;
 };
 
 

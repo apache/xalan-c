@@ -129,12 +129,17 @@ FunctionFormatNumber::execute(
 		theDFS = executionContext.getDecimalFormatSymbols(Constants::DEFAULT_DECIMAL_FORMAT);
 	}
 
-	const XalanDOMString	theString = doFormat(
-					executionContext,
-					context,
-					theNumber,
-					thePattern,
-					theDFS);
+	typedef XPathExecutionContext::GetAndReleaseCachedString	GetAndReleaseCachedString;
+
+	GetAndReleaseCachedString	theString(executionContext);
+
+	doFormat(
+			executionContext,
+			context,
+			theNumber,
+			thePattern,
+			theDFS,
+			theString.get());
 
 	return executionContext.getXObjectFactory().createString(theString);
 }
@@ -154,27 +159,32 @@ FunctionFormatNumber::execute(
 	const double						theNumber = arg1->num();
 	const XalanDOMString&				thePattern = arg2->str();
 
-	const XalanDecimalFormatSymbols*	theDFS = 0;
-	
 	const XalanDOMString&				theDecimalFormatName = arg3->str();
 	assert(length(theDecimalFormatName) != 0);
 
-	theDFS = executionContext.getDecimalFormatSymbols(theDecimalFormatName);
+	const XalanDecimalFormatSymbols*	theDFS =
+			executionContext.getDecimalFormatSymbols(theDecimalFormatName);
 
 	if (theDFS == 0)
 	{
-		executionContext.warn("format-number:  Specified decimal-format element not found!!!",
-							  context);		
+		executionContext.warn(s_warningNotFoundString,
+							  context);
+
 		theDFS = executionContext.getDecimalFormatSymbols(Constants::DEFAULT_DECIMAL_FORMAT);
 	
 	}	
 
-	const XalanDOMString	theString = doFormat(
-					executionContext,
-					context,
-					theNumber,
-					thePattern,
-					theDFS);
+	typedef XPathExecutionContext::GetAndReleaseCachedString	GetAndReleaseCachedString;
+
+	GetAndReleaseCachedString	theString(executionContext);
+
+	doFormat(
+			executionContext,
+			context,
+			theNumber,
+			thePattern,
+			theDFS,
+			theString.get());
 
 	return executionContext.getXObjectFactory().createString(theString);
 }
@@ -195,33 +205,41 @@ FunctionFormatNumber::execute(
 
 
 
-XalanDOMString
+void
 FunctionFormatNumber::doFormat(
 			XPathExecutionContext&				executionContext,
 			XalanNode*							context,
 			double								theNumber,
 			const XalanDOMString&				thePattern,
-			const XalanDecimalFormatSymbols*	theDFS)
+			const XalanDecimalFormatSymbols*	theDFS,
+			XalanDOMString&						theResult)
 {
 	if (DoubleSupport::isNaN(theNumber) == true ||
 		DoubleSupport::isNegativeInfinity(theNumber) == true ||
 		DoubleSupport::isPositiveInfinity(theNumber) == true )
 	{
-		return DoubleToDOMString(theNumber);
+		DoubleToDOMString(theNumber, theResult);
 	}
 	else
 	{
-		executionContext.warn(
-			StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("format-number() is not fully implemented!")),
-			context);
+		executionContext.warn(s_warningNotImplementedString, context);
 
-		XalanDecimalFormat	theFormatter;
+		if (theDFS != 0)
+		{
+			XalanDecimalFormat	theFormatter(s_emptyString, *theDFS);
 
-		theFormatter.setDecimalFormatSymbols(theDFS != 0 ? *theDFS : XalanDecimalFormatSymbols());
+			theFormatter.applyLocalizedPattern(thePattern);
 
-		theFormatter.applyLocalizedPattern(thePattern);
+			theFormatter.format(theNumber, theResult);
+		}
+		else
+		{
+			XalanDecimalFormat	theFormatter(s_emptyString, m_decimalFormatSymbols);
 
-		return theFormatter.format(theNumber);
+			theFormatter.applyLocalizedPattern(thePattern);
+
+			theFormatter.format(theNumber, theResult);
+		}
 	}
 }
 
@@ -242,6 +260,38 @@ FunctionFormatNumber::clone() const
 const XalanDOMString
 FunctionFormatNumber::getError() const
 {
-	return XALAN_STATIC_UCODE_STRING(
-		"The format-number() function takes two or three arguments!");
+	return XALAN_STATIC_UCODE_STRING("The format-number() function takes two or three arguments!");
+}
+
+
+
+static XalanDOMString	s_warningNotImplementedString;
+static XalanDOMString	s_warningNotFoundString;
+
+
+const XalanDOMString&	FunctionFormatNumber::s_warningNotImplementedString =
+		s_warningNotImplementedString;
+
+const XalanDOMString&	FunctionFormatNumber::s_warningNotFoundString =
+		s_warningNotFoundString;
+
+const XalanDOMString	FunctionFormatNumber::s_emptyString;
+
+
+void
+FunctionFormatNumber::initialize()
+{
+	::s_warningNotImplementedString = XALAN_STATIC_UCODE_STRING("format-number() is not fully implemented!");
+
+	::s_warningNotFoundString = XALAN_STATIC_UCODE_STRING("format-number: Specified decimal-format element not found!");
+}
+
+
+
+void
+FunctionFormatNumber::terminate()
+{
+	releaseMemory(::s_warningNotImplementedString);
+
+	releaseMemory(::s_warningNotFoundString);
 }
