@@ -139,6 +139,7 @@ const XalanDOMChar 	XalanTranscodingServices::s_windows1250String[] =
 	XalanUnicode::charDigit_2,
 	XalanUnicode::charDigit_5,
 	XalanUnicode::charDigit_0,
+	0
 };
 
 
