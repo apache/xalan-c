@@ -1,23 +1,28 @@
 #include <cassert>
-#include <climits>
-#include <fstream>
 #include <iostream>
-#include <strstream>
 
-#include <process.h>
+
 
 #include <util/PlatformUtils.hpp>
 #include <util/Mutexes.hpp>
+
+
 
 #include <PlatformSupport/DOMStringHelper.hpp>
 #include <PlatformSupport/XalanFileOutputStream.hpp>
 #include <PlatformSupport/XalanOutputStreamPrintWriter.hpp>
 
+
+
 #include <XalanSourceTree/XalanSourceTreeDOMSupport.hpp>
 #include <XalanSourceTree/XalanSourceTreeParserLiaison.hpp>
 
+
+
 #include <XPath/XObjectFactoryDefault.hpp>
 #include <XPath/XPathFactoryDefault.hpp>
+
+
 
 #include <XSLT/StylesheetConstructionContextDefault.hpp>
 #include <XSLT/StylesheetExecutionContextDefault.hpp>
@@ -29,22 +34,30 @@
 #include <XSLT/XSLTResultTarget.hpp>
 
 
+
+#if defined(WIN32)
 //This is here for the threads.
+#include <process.h>
+
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
-#include <winbase.h>
+#elif defined(XALAN_POSIX2_AVAILABLE)
+#include <pthread.h>
+#include <unistd.h>
+#else
+#error Unsupported platform!
+#endif
+
 
 
 #if !defined(XALAN_NO_NAMESPACES)
 	using std::cerr;
 	using std::cout;
 	using std::endl;
-	using std::ifstream;
-	using std::ios_base;
-	using std::ostrstream;
-	using std::string;
 #endif
 
+
+	
 // This is here for memory leak testing.
 #if defined(_DEBUG)
 #include <crtdbg.h>
@@ -52,8 +65,6 @@
 
 // Used to hold compiled stylesheet
 StylesheetRoot* glbStylesheetRoot;
-
-extern "C" void theThreadRoutine(void* param);
 
 
 class SynchronizedCounter
@@ -148,7 +159,19 @@ ThreadInfo
 
 
 
+#if defined(WIN32)
+
+extern "C" void theThreadRoutine(void* param);
+
 void
+#elif defined(XALAN_POSIX2_AVAILABLE)
+
+extern "C" void* theThreadRoutine(void* param);
+
+void*
+#else
+#error Unsupported platform!
+#endif
 theThreadRoutine(void*		param)
 {
 // This routine uses compiled stylesheet (glbStylesheetRoot), which is set using the 
@@ -222,6 +245,24 @@ theThreadRoutine(void*		param)
 
 	// Decrement the counter because we're done...
 	theInfo->m_counter->decrement();
+
+#if defined(XALAN_POSIX2_AVAILABLE)
+	return 0;
+#endif
+}
+
+
+
+inline void
+doSleep(unsigned int	theMilliseconds)
+{
+#if defined(WIN32)
+	Sleep(theMilliseconds);
+#elif defined(XALAN_POSIX2_AVAILABLE)
+	usleep(theMilliseconds * 10);
+#else
+#error Unsupported platform!
+#endif
 }
 
 
@@ -247,6 +288,8 @@ doThreads(long	theThreadCount)
 		{
 			theThreadInfo.push_back(ThreadInfoVectorType::value_type(i, &theCounter));
 
+#if defined(WIN32)
+
 			const unsigned long		theThreadID =
 					_beginthread(theThreadRoutine, 4096, reinterpret_cast<LPVOID>(&theThreadInfo.back()));
 
@@ -254,6 +297,24 @@ doThreads(long	theThreadCount)
 			{
 				cerr << endl << "Unable to create thread number " << i + 1 << "." << endl;
 			}
+
+#elif defined(XALAN_POSIX2_AVAILABLE)
+
+			pthread_t	theThread;
+
+			const int	theResult = pthread_create(&theThread, 0, theThreadRoutine, (void*)&theThreadInfo.back());
+
+			if (theResult != 0)
+			{
+				cerr << endl << "Unable to create thread number " << i + 1 << "." << endl;
+			}
+			else
+			{
+				pthread_detach(theThread);
+			}
+#else
+#error Unsupported platform!
+#endif
 		}
 
 		clock_t		theClock = 0;
@@ -268,7 +329,7 @@ doThreads(long	theThreadCount)
 
 			do
 			{
-				Sleep(2000);
+				doSleep(2000);
 
 				// Check a couple of times, just in case, since
 				// getCounter() is not synchronized...
