@@ -105,14 +105,14 @@ const XalanDOMChar	FormatterToXMLBase::s_specialChars[kSpecialsSize] =
 
 
 FormatterToXMLBase::FormatterToXMLBase(
-            MemoryManagerType&      theManager,
 			Writer&					writer,
 			const XalanDOMString&	version,
 			const XalanDOMString&	mediaType,
 			const XalanDOMString&	doctypeSystem,
 			const XalanDOMString&	doctypePublic,
 			bool					xmlDecl,
-			const XalanDOMString&	standalone) :
+			const XalanDOMString&	standalone,
+            MemoryManagerType&      theManager) :
 	FormatterListener(OUTPUT_METHOD_XML),
 	m_writer(&writer),
 	m_nextIsRaw(false),

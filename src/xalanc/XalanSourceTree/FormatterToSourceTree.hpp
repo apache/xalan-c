@@ -81,7 +81,7 @@ public:
 	 * @param theDocument The document for nodes
 	 */
 	explicit
-	FormatterToSourceTree(MemoryManagerType& theManager,
+	FormatterToSourceTree(  MemoryManagerType&          theManager XALAN_DEFAULT_CONSTRACTOR_MEMORY_MGR,
                             XalanSourceTreeDocument*	theDocument = 0);
 
 	/**
@@ -92,9 +92,9 @@ public:
 	 * @param theDocumentFragment The document fragment for nodes
 	 */
 	FormatterToSourceTree(
-            MemoryManagerType&                  theManager,
 			XalanSourceTreeDocument*			theDocument,
-			XalanSourceTreeDocumentFragment*	theDocumentFragment);
+			XalanSourceTreeDocumentFragment*	theDocumentFragment,
+            MemoryManagerType&                  theManager XALAN_DEFAULT_MEMMGR);
 
 	virtual
 	~FormatterToSourceTree();

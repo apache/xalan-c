@@ -73,7 +73,6 @@ public:
 	 * @param omitMetaTag   Whether or not to output a META TAG according to the recommendation.  The default is false.
 	 */
 	FormatterToHTML(
-            MemoryManagerType&      theManager,
 			Writer&					writer,
 			const XalanDOMString&	encoding = XalanDOMString(XalanMemMgrs::getDummyMemMgr()),
 			const XalanDOMString&	mediaType = XalanDOMString(XalanMemMgrs::getDummyMemMgr()),
@@ -82,7 +81,8 @@ public:
 			bool					doIndent = true,
 			int						indent = eDefaultIndentAmount,
 			bool					escapeURLs = true,
-			bool					omitMetaTag = false);
+			bool					omitMetaTag = false,
+            MemoryManagerType&      theManager XALAN_DEFAULT_MEMMGR);
 
     static FormatterToHTML*
     create(

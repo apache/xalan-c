@@ -55,11 +55,11 @@ const XalanDOMString	FormatterToDOM::s_emptyString(XalanMemMgrs::getDummyMemMgr(
 
 
 
-FormatterToDOM::FormatterToDOM(
-            MemoryManagerType&      theManager ,                   
+FormatterToDOM::FormatterToDOM(                               
 			XalanDocument*			doc,
 			XalanDocumentFragment*	docFrag,
-			XalanElement*			currentElement) :
+			XalanElement*			currentElement,
+            MemoryManagerType&      theManager ) :
 	FormatterListener(OUTPUT_METHOD_DOM),
 	m_doc(doc),
 	m_docFrag(docFrag),
@@ -74,9 +74,9 @@ FormatterToDOM::FormatterToDOM(
 
 
 FormatterToDOM::FormatterToDOM(
-            MemoryManagerType& theManager,
 			XalanDocument*	doc,
-			XalanElement*	elem) :
+			XalanElement*	elem,
+            MemoryManagerType& theManager) :
 	FormatterListener(OUTPUT_METHOD_DOM),
 	m_doc(doc),
 	m_docFrag(0),

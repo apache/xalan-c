@@ -68,10 +68,10 @@ public:
 	 * @param currentElement current element for nodes
 	 */
 	FormatterToDOM(
-            MemoryManagerType& theManager,
 			XalanDocument*			doc,
 			XalanDocumentFragment*	docFrag,
-			XalanElement*			currentElement);
+			XalanElement*			currentElement,
+            MemoryManagerType&      theManager XALAN_DEFAULT_MEMMGR);
 
 	/**
 	 * Construct a FormatterToDOM instance.  it will add the DOM nodes 
@@ -81,9 +81,9 @@ public:
 	 * @param elem current element for nodes
 	 */
 	FormatterToDOM(
-            MemoryManagerType& theManager,
-			XalanDocument*	doc,
-			XalanElement*	elem);
+			XalanDocument*	        doc,
+			XalanElement*	        elem,
+            MemoryManagerType&      theManager XALAN_DEFAULT_MEMMGR);
 
 	virtual
 	~FormatterToDOM();

@@ -58,7 +58,6 @@ const XalanDOMString	FormatterToHTML::s_emptyString(XalanMemMgrs::getDummyMemMgr
 
 
 FormatterToHTML::FormatterToHTML(
-            MemoryManagerType&      theManager,
 			Writer&					writer,
 			const XalanDOMString&	encoding, 
 			const XalanDOMString&	mediaType,
@@ -67,7 +66,8 @@ FormatterToHTML::FormatterToHTML(
 			bool					doIndent,
 			int						indent,
 			bool					escapeURLs,
-			bool					omitMetaTag) :
+			bool					omitMetaTag,
+            MemoryManagerType&      theManager) :
 	FormatterToXML(
 			writer,
 			s_emptyString,
@@ -122,8 +122,7 @@ FormatterToHTML::create(
     ThisType* theResult = theGuard.get();
 
     new (theResult) ThisType(           
-                        theManager,
-			            writer,
+  			            writer,
 			            encoding, 
 			            mediaType,
 			            doctypeSystem,
@@ -131,7 +130,8 @@ FormatterToHTML::create(
 			            doIndent,
 			            indent,
 			            escapeURLs,
-			            omitMetaTag);
+			            omitMetaTag,
+                        theManager);
 
    theGuard.release();
 

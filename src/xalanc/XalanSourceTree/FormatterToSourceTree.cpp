@@ -50,7 +50,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-FormatterToSourceTree::FormatterToSourceTree(MemoryManagerType& theManager,
+FormatterToSourceTree::FormatterToSourceTree(MemoryManagerType&         theManager,
                                              XalanSourceTreeDocument*	theDocument) :
 	FormatterListener(OUTPUT_METHOD_DOM),
 	m_document(theDocument),
@@ -66,9 +66,9 @@ FormatterToSourceTree::FormatterToSourceTree(MemoryManagerType& theManager,
 
 
 FormatterToSourceTree::FormatterToSourceTree(
-            MemoryManagerType&                  theManager,
 			XalanSourceTreeDocument*			theDocument,
-			XalanSourceTreeDocumentFragment*	theDocumentFragment) :
+			XalanSourceTreeDocumentFragment*	theDocumentFragment,
+            MemoryManagerType&                  theManager) :
 	FormatterListener(OUTPUT_METHOD_DOM),
 	m_document(theDocument),
 	m_documentFragment(theDocumentFragment),

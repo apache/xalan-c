@@ -51,7 +51,7 @@ public:
 	/**
 	 * FormatterToText instance constructor.
 	 */
-	FormatterToText(MemoryManagerType& theManager);
+	FormatterToText(MemoryManagerType& theManager XALAN_DEFAULT_CONSTRACTOR_MEMORY_MGR);
 
 	/**
 	 * FormatterToText instance constructor.
@@ -61,10 +61,10 @@ public:
 	 * @param handleIgnorableWhitespace If true ignorableWhitespace() will write data to the Writer
 	 */
 	FormatterToText(
-            MemoryManagerType& theManager,
-			Writer&		writer,
-			bool		normalizeLinefeed = true,
-			bool		handleIgnorableWhitespace = true);
+			Writer&		        writer,
+			bool		        normalizeLinefeed = true,
+			bool		        handleIgnorableWhitespace = true,
+            MemoryManagerType&  theManager XALAN_DEFAULT_MEMMGR);
 
 	/**
 	 * FormatterToText instance constructor.
@@ -75,11 +75,11 @@ public:
 	 * @param handleIgnorableWhitespace If true ignorableWhitespace() will write data to the Writer
 	 */
 	FormatterToText(
-            MemoryManagerType&      theManager,
 			Writer&					writer,
 			const XalanDOMString&	encoding,
 			bool					normalizeLinefeed = true,
-			bool					handleIgnorableWhitespace = true);
+			bool					handleIgnorableWhitespace = true,
+            MemoryManagerType&      theManager XALAN_DEFAULT_MEMMGR);
 
 	static FormatterToText*
     create(

@@ -46,23 +46,23 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 FormatterToXML_UTF8::FormatterToXML_UTF8(
-            MemoryManagerType&      theManager,
 			Writer&					writer,
 			const XalanDOMString&	version,
 			const XalanDOMString&	mediaType,
 			const XalanDOMString&	doctypeSystem,
 			const XalanDOMString&	doctypePublic,
 			bool					xmlDecl,
-			const XalanDOMString&	standalone) :
+			const XalanDOMString&	standalone,
+            MemoryManagerType&      theManager) :
 	FormatterToXMLBase(
-        theManager,
 		writer,
 		version,
 		mediaType,
 		doctypeSystem,
 		doctypePublic,
 		xmlDecl,
-		standalone),
+		standalone,
+        theManager),
 	m_nameFunction(0),
 	m_buffer(),
 	m_bufferPosition(m_buffer),
@@ -96,14 +96,15 @@ FormatterToXML_UTF8::create(
 
     ThisType* theResult = theGuard.get();
 
-    new (theResult) ThisType(theManager,
+    new (theResult) ThisType(
                             writer,
                             version,
                             mediaType, 
                             doctypeSystem,
                             doctypePublic,
                             xmlDecl,
-                            standalone);
+                            standalone,
+                            theManager);
 
     theGuard.release();
 

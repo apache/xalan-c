@@ -74,14 +74,14 @@ public:
 	 *                          the standalone document declaration
 	 */
 	FormatterToXML_UTF16(
-            MemoryManagerType&      theManager,
-			Writer&					writer,
+ 			Writer&					writer,
 			const XalanDOMString&	version = XalanDOMString(XalanMemMgrs::getDummyMemMgr()),
 			const XalanDOMString&	mediaType = XalanDOMString(XalanMemMgrs::getDummyMemMgr()),
 			const XalanDOMString&	doctypeSystem = XalanDOMString(XalanMemMgrs::getDummyMemMgr()),
 			const XalanDOMString&	doctypePublic = XalanDOMString(XalanMemMgrs::getDummyMemMgr()),
 			bool					xmlDecl = true,
-			const XalanDOMString&	standalone = XalanDOMString(XalanMemMgrs::getDummyMemMgr()));
+			const XalanDOMString&	standalone = XalanDOMString(XalanMemMgrs::getDummyMemMgr()),
+            MemoryManagerType&      theManager XALAN_DEFAULT_MEMMGR);
 
     static FormatterToXML_UTF16*
     create(

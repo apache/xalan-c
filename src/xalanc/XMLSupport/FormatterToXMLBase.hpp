@@ -68,14 +68,14 @@ public:
 	 *                          the standalone document declaration
 	 */
 	FormatterToXMLBase(
-            MemoryManagerType&      theManager,
 			Writer&					writer,
 			const XalanDOMString&	version,
 			const XalanDOMString&	mediaType,
 			const XalanDOMString&	doctypeSystem,
 			const XalanDOMString&	doctypePublic,
 			bool					xmlDecl,
-			const XalanDOMString&	standalone);
+			const XalanDOMString&	standalone,
+            MemoryManagerType&      theManager XALAN_DEFAULT_MEMMGR);
 
 	virtual
 	~FormatterToXMLBase();
