@@ -170,6 +170,10 @@ SOURCE=..\..\..\..\src\XercesParserLiaison\XercesEntityReferenceBridge.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesLiaisonXalanDOMStringPool.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\XercesParserLiaison\XercesNamedNodeListCache.cpp
 # End Source File
 # Begin Source File
@@ -295,6 +299,10 @@ SOURCE=..\..\..\..\src\XercesParserLiaison\XercesEntityBridge.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\XercesParserLiaison\XercesEntityReferenceBridge.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesLiaisonXalanDOMStringPool.hpp
 # End Source File
 # Begin Source File
 
