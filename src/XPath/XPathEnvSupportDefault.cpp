@@ -92,11 +92,8 @@
 
 
 
-#if !defined(XALAN_NO_STD_NAMESPACE)
-using std::cerr;
-using std::endl;
-using std::for_each;
-#endif
+XALAN_USING_STD(cerr)
+XALAN_USING_STD(endl)
 
 
 
@@ -118,6 +115,8 @@ XPathEnvSupportDefault::initialize()
 void
 XPathEnvSupportDefault::terminate()
 {
+	XALAN_USING_STD(for_each)
+
 	// Clean up the extension namespaces vector
 	for_each(s_externalFunctions.begin(),
 			 s_externalFunctions.end(),
@@ -139,6 +138,8 @@ XPathEnvSupportDefault::XPathEnvSupportDefault() :
 
 XPathEnvSupportDefault::~XPathEnvSupportDefault()
 {
+	XALAN_USING_STD(for_each)
+
 	// Clean up the extension namespaces vector
 	for_each(m_externalFunctions.begin(),
 			 m_externalFunctions.end(),
@@ -514,6 +515,8 @@ XPathEnvSupportDefault::NamespaceFunctionTableDeleteFunctor::operator()(const Na
 		++i;
 	}
 #else
+	XALAN_USING_STD(for_each)
+
 	// Clean up the extension namespaces vector
 	for_each(thePair.second.begin(),
 			 thePair.second.end(),
