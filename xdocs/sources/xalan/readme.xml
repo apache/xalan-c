@@ -1,0 +1,197 @@
+<?xml version="1.0" standalone="no"?> 
+<!DOCTYPE s1 SYSTEM "sbk:/style/dtd/document.dtd"[
+<!ENTITY done-c SYSTEM "DONE">
+<!ENTITY status-c SYSTEM "STATUS">
+<!ENTITY bugs-c SYSTEM "BUGS">
+<!ENTITY history-c SYSTEM "history.xml">]>
+
+<!--
+ * The Apache Software License, Version 1.1
+ *
+ *
+ * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer. 
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in
+ *    the documentation and/or other materials provided with the
+ *    distribution.
+ *
+ * 3. The end-user documentation included with the redistribution,
+ *    if any, must include the following acknowledgment:  
+ *       "This product includes software developed by the
+ *        Apache Software Foundation (http://www.apache.org/)."
+ *    Alternately, this acknowledgment may appear in the software itself,
+ *    if and wherever such third-party acknowledgments normally appear.
+ *
+ * 4. The names "Xalan" and "Apache Software Foundation" must
+ *    not be used to endorse or promote products derived from this
+ *    software without prior written permission. For written 
+ *    permission, please contact apache@apache.org.
+ *
+ * 5. Products derived from this software may not be called "Apache",
+ *    nor may "Apache" appear in their name, without prior written
+ *    permission of the Apache Software Foundation.
+ *
+ * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+ * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED.  IN NO EVENT SHALL THE APACHE SOFTWARE FOUNDATION OR
+ * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
+ * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
+ * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+ * SUCH DAMAGE.
+ * ====================================================================
+ *
+ * This software consists of voluntary contributions made by many
+ * individuals on behalf of the Apache Software Foundation and was
+ * originally based on software copyright (c) 1999, Lotus
+ * Development Corporation., http://www.lotus.com.  For more
+ * information on the Apache Software Foundation, please see
+ * <http://www.apache.org/>.
+ -->
+<s1 title="&xslt4c; Release Notes">
+<p>Release notes for &xslt4c-current;</p>
+ <ul>
+  <li><link anchor="status">Status</link></li>
+  <li><link anchor="build">Build Notes</link></li>
+  <li><link anchor="contact">Getting in touch</link></li>
+  <li><link anchor="history">History of software changes</link></li>  
+ </ul>
+ <anchor name="status"/>
+ <s2 title="Status">
+   <ul>
+    <li><link anchor="done">Changes since &xslt4c; version 1.0</link></li>    
+    <li><link anchor="bugs">Bug reporting</link></li>    
+    <li><link anchor="xml4j">Version of &xml4c; to use</link></li>
+    <li><link anchor="to-do">To-do tasks for future &xslt4c; releases</link></li>
+   </ul>
+     <anchor name="done"/>
+     &done-c;
+     <anchor name="bugs"/>
+     &bugs-c;     
+     <anchor name="xml4j"/>
+     &status-c;
+     
+  </s2><anchor name="build"/>
+  <s2 title="Build Notes">
+<ul>
+<li><link anchor="jar">Rebuilding &xslt4c;</link></li>
+<li><link anchor="samples">Rebuilding sample applications</link></li>
+</ul>
+<anchor name="jar"/> 
+   <s3 title="Rebuilding &xslt4c;">
+   <ul>
+    <li><link anchor="layout">Layout of Xerces-C and ICU</link></li>      
+    <li><link anchor="win32">Steps for doing a Windows build</link></li>
+    <li><link anchor="unix">Steps for doing a UNIX build</link></li>       
+   </ul>
+   <p>If you want to rebuild &xslt4c;, you need the following:</p>
+   <ul>
+     <li>The &xslt4c; source files</li>
+     <li>The &xml4c; header and (for Windows) .lib files</li>
+     <li>(Optional) The ICU header and (for Windows) .lib files</li>
+   </ul>
+   <p>The &xslt4c; source files and The required &xml4c; files are in the distribution.</p>
+   <p>For information on using the <resource-ref idref="icu"/>, see  
+   <link idref="usagepatterns" anchor="icu">Using the ICU</link>.</p>
+   <note>If you are not rebuilding with the ICU, you do not need the ICU header or .lib files.</note>
+   <p>To rebuild the Windows32 release, use the Microsoft Visual C++ 6.0 project files. To rebuild
+    the Linux or AIX release, use the make file in the root of the source directory. The builds look
+    for &xml4c; and ICU in directories parallel to the
+    xml-xalan directory.</p>
+    </s3><anchor name="layout"/>
+    <s3 title="Layout">
+   <p><em>Important</em> We have set up the Visual C++ projects and the UNIX make files to look for Xerces in the directory structure replicated in our distribution files (see <link idref="getstarted" anchor="xalandists">&xslt4c; Distributions</link>). This matches the structure that results from downloading xml-xerces/c from the <jump href="http://xml.apache.org/websrc/cvsweb.cgi/">Apache XML CVS repository</jump> and building with the Visual C++ project files or the UNIX make file.</p>
+<p>If you are using a &xml4c; binary distribution that you have obtained independently from this &xslt4c; distribution, you must either modify the &xslt4c; project files or makefile, or rearrange the build directory structure as indicated in the following illustration.</p>
+<p>For UNIX, the XERCESROOT environment variable points to the Xerces-C root directory. For Windows, the Xerces-C root directory must be named xml-xerces, and it must be at the same level as the &xslt4c; root directory. For all environments, the ICU root directory must be named icu, and it must be at the same level as the &xslt4c; root directory.</p>
+<s4 title="ICU layout for &xslt4c; build">
+<p><img src="icu.gif" alt="icu.gif"/></p>
+</s4>
+<note>Keep in mind that at any given point in time the &xslt4c; and &xml4c; source trees in the Apache XML repository may not be consistent. When we release a version of &xslt4c; we certify that it is compatible with a given version of &xml4c;. To be safe, stick with distributions that we certify to be compatible. Reminder: &xslt4c-current; is compatible with the &xml4c; that is included with the distribution..<br/><br/>
+&xslt4c-current; has been tested with &icu-used;. You may be able to use newer ICU releases as they appear.</note>
+  </s3><anchor name="win32"/>
+  <s3 title="Steps for doing a Windows build">
+  <ol>
+     <li>(Optional) If you are rebuilding the ICUBridge, install the ICU so the icu root directory
+      is at the same level as the xml-xerces root directory (see <link 
+      idref="usagepatterns" anchor="icu">Using the ICU</link>.<br/><br/>
+      If you want TestXSLT to use ICU support for number formatting and sorting, install the ICU,
+      uncomment the <code>#define XALAN_USE_ICU</code> statement in process.cpp, and use the Visual C++ 
+      Project Dependencies command to add ICUBridge to the list of TestXSLT dependencies (see <link idref="commandline"
+      anchor="icu">Enabling ICU support for TestXSLT</link>).<br/><br/></li>
+    <li>Use Visual C++ to open the Xalan workspace from the xml-xalan\c\Projects\Win32\VC6.
+    <br/><br/></li>
+    <li>Select Project Dependencies and check <br/><br/></li>
+    <li>Use Visual C++ to rebuild everything or specific dynamic link libraries and executables of
+    interest.<br/><br/></li>
+  </ol>
+  </s3><anchor name="unix"/>
+<s3 title="Steps for doing a UNIX build">
+    <ol>
+      <li>Set the XERCESCROOT environment variable to the root of xml-xerces.<br/><br/></li>    
+      <li>Set the XALANCROOT environment variable to the complete path to the root of the &xslt4c;
+       distribution.<br/><br/></li>
+      <li>AIX only: Download <resource-ref idref="stlport"/> and set the STLPORTROOT environment
+       variable to the complete path to the STLPort distribution. <br/>
+       (This step is not required for Linux or HP-UX 11 because The Linux GNU compiler and HP aCC compiler include the STL (Standard Template
+        Library.)<br/><br/></li>
+      <li>(Optional) If you are including the ICUBridge, install the ICU (see <link idref="usagepatterns"
+      anchor="icu">Using the ICU</link>) and use the shell to define XALAN_USE_ICU.<br/><br/>
+      If you are using Bourne Shell, K Shell, or Bash:
+      <br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<code>export XALAN_USE_ICU "1"</code><br/><br/>
+      If you are using C Shell:
+      <br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<code>setenv XALAN_USE_ICU="1"</code><br/><br/></li>
+      <li>Change directory to xml-xalan/c/src in the &xslt4c; distribution.<br/><br/></li>      
+      <li>Use the chmod +x command to set the executable flags for conf* and runConfigure.<br/><br/>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<code>chmod +x runConfigure</code><br/>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<code>chmod +x conf*</code><br/><br/></li>
+      <li>Run the runConfigure utility with at least the platform flag (Linux) or the platform, C compilier, and C++ compiler flags (AIX) as indicated below.<br/><br/>
+      <ref>Linux:</ref>&nbsp;&nbsp;<code>runConfigure -p linux</code><br/>
+      <ref>AIX:</ref>&nbsp;&nbsp;&nbsp;&nbsp;<code>runConfigure -p aix -c xlc_r -x xlC_r</code><br/><br/>
+      <ref>HP-UX 11:</ref>&nbsp;&nbsp;<code>runConfigure -p hp-11 -c cc -x aCC</code><br/><br/>      
+      To see the other runConfigure flags you may include, use the help flag:<br/><br/>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<code>runConfigure -h</code><br/><br/></li>
+      <li>Purge the previous build:<br/><br/>
+         <code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;make clean</code><br/><br/></li>
+      <li>Run the new build:<br/><br/>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<code>make</code><br/>
+      or<br/>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<code>make <ref>targ</ref></code><br/><br/>
+      where <ref>targ</ref> is ommitted or is <code>all</code> (rebuild all), <code>lib</code> (the XSLT libary), or
+      <code>TestXSLT</code> (the TestSXSLT executable). ICUBridge is included in the build of TestXSLT if XALAN_USE_ICU is
+      defined.<br/><br/></li>
+    </ol>
+    <note>The command you use for setting environment variables depends on the shell you are
+     using.<br/>
+     For Bourne Shell, K Shell, or Bash use <em>export</em> ENVAR "val"<br/>
+     For C Shell, use <em>setenv</em> ENVAR="val"<br/>
+     where ENVAR is the environment variable name and val is the environment variable
+     setting. You can check the setting of an environment variable with <em>echo</em> $ENVAR</note>
+   </s3><anchor name="samples"/>
+   <s3 title="Rebuilding a sample application">
+   <p>The Windows32 distribution includes Visual C++ project files for each of the sample applications. The project files are in the samples subdirectories along with the source files. If you modify a sample and want to recompile it, you can recompile the .cpp file(s) and rebuild the executable.</p>
+<p>The make files that come with the Linux and AIX distributions include targets for rebuilding one or all of the sample applications (with the exception of the ThreadSafe sample, which in its current form only runs under Windows). To rebuild one or more sample applications, go to the xml-xalan/c/src directory and run<br/><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<code>make <ref>targ</ref></code><br/><br/>
+where <ref>targ</ref> is <code>Samples</code> (all the samples), <code>CompileStylesheet</code>, <code>ExternalFunction</code>, <code>SimpleTransform</code>, <code>TraceListen</code>, <code>UseStylesheetParam</code>, or <code>XPathWrapper</code>.</p>
+   </s3>
+ </s2><anchor name="contact"/>
+ <s2 title="Getting in Touch">
+  <p>Your feedback is more than welcome. Offers of help are even more so! Perhaps you would like to contribute to the ongoing development, testing, or documentation of &xslt4c;.</p> 
+<p>Please email your comments, questions, suggestions, bug reports, and offers to help to <human-resource-ref idref="xalandev"/>.</p>
+ </s2><anchor name="history"/>
+ <s2 title="Cumulative history of software changes">
+   &history-c;
+ </s2> 
+</s1>
