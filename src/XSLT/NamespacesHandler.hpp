@@ -92,18 +92,31 @@ class XALAN_XSLT_EXPORT NamespacesHandler
 {
 public:
 
-	class NamespaceExtended
+	class PrefixChecker
 	{
 	public:
 
-		NamespaceExtended() :
+		PrefixChecker();
+
+		virtual
+		~PrefixChecker();
+
+		virtual bool
+		isActive(const XalanDOMString&	thePrefix) const = 0;
+	};
+
+	class Namespace
+	{
+	public:
+
+		Namespace() :
 			m_prefix(&s_emptyString),
 			m_uri(&s_emptyString),
 			m_resultAttributeName(&s_emptyString)
 		{
 		}
 
-		NamespaceExtended(
+		Namespace(
 					const XalanDOMString&	prefix,
 					const XalanDOMString&	uri) :
 			m_prefix(&prefix),
@@ -204,7 +217,7 @@ public:
 				DOMStringPointerLessThanFunction>		ExcludedResultPrefixesMapType;
 
 	typedef map<const XalanDOMString*,
-				NamespaceExtended,
+				Namespace,
 				DOMStringPointerLessThanFunction>		NamespacesMapType;
 
 	typedef map<const XalanDOMString*,
@@ -218,7 +231,7 @@ public:
 					 DOMStringPointerLessThanFunction>	ExcludedResultPrefixesMapType;
 
 	typedef std::map<const XalanDOMString*,
-					 NamespaceExtended,
+					 Namespace,
 					 DOMStringPointerLessThanFunction>	NamespacesMapType;
 
 	typedef std::map<const XalanDOMString*,
@@ -281,14 +294,18 @@ public:
 	 * Notify the instance that the stylesheet is fully constructed.
 	 *
 	 * @param theConstructionContext The current construction context.
+	 * @param fProcessNamespaceAliases If true, process any namespace aliases
 	 * @param theElementName The name of the owning element.
 	 * @param parentNamespacesHandler The parent handler, if any.
+	 * @param prefixChecker A pointer to a PrefixChecker instance to use, if any.
 	 */
 	void
 	postConstruction(
 			StylesheetConstructionContext&	theConstructionContext,
+			bool							fProcessNamespaceAliases = true,
 			const XalanDOMString&			theElementName = XalanDOMString(),
-			const NamespacesHandler*		parentNamespacesHandler = 0);
+			const NamespacesHandler*		parentNamespacesHandler = 0,
+			const PrefixChecker*			prefixChecker = 0);
 
 	NamespacesHandler&
 	operator=(const NamespacesHandler&	theRHS);
@@ -348,17 +365,6 @@ public:
 			const XalanDOMString&			theResultNamespace);
 
 	/**
-	 * Add a prefix to the list of active prefixes.
-	 *
-	 * @param theConstructionContext The current construction context.
-	 * @param thePrefix The prefix that is active and requires a namespace declaration.
-	 */
-	void
-	addActivePrefix(
-			StylesheetConstructionContext&	theConstructionContext,
-			const XalanDOMString&			thePrefix);
-
-	/**
 	 * Copy the aliases from the given NamespacesHandler.
 	 *
 	 * @param parentNamespacesHandler The parent handler.
@@ -391,18 +397,6 @@ public:
 	void
 	swap(NamespacesHandler&		theOther);
 
-	bool
-	getProcessNamespaceAliaises() const
-	{
-		return m_processAliases;
-	}
-
-	void
-	setProcessNamespaceAliaises(bool	fValue)
-	{
-		m_processAliases = fValue;
-	}
-
 	NamespacesMapType::size_type
 	getNamespaceDeclarationsCount() const
 	{
@@ -424,11 +418,13 @@ private:
 	 *
 	 * @param theConstructionContext The current construction context.
 	 * @param theElementPrefix The prefix of the owning element.
+	 * @param prefixChecker A pointer to a PrefixChecker instance to use, if any.
 	 */
 	void
 	processExcludeResultPrefixes(
 			StylesheetConstructionContext&	theConstructionContext,
-			const XalanDOMString&			theElementPrefix);
+			const XalanDOMString&			theElementPrefix,
+			const PrefixChecker*			prefixChecker);
 
 	/**
 	 * Process the namespace aliases data.
@@ -498,18 +494,6 @@ private:
 	}
 
 	/**
-	 * Determine if a given prefix is active.
-	 *
-	 * @param thePrefix The prefix to check.
-	 * @return true if the prefix is active, false if not.
-	 */
-	bool
-	isActivePrefix(const XalanDOMString&	thePrefix) const
-	{
-		return findString(thePrefix, m_activePrefixes);
-	}
-
-	/**
 	 * Determine if a given string is present in the vector
 	 *
 	 * @param theString The string to find.
@@ -519,6 +503,7 @@ private:
 	findString(
 			const XalanDOMString&					theString,
 			const XalanDOMStringPointerVectorType&	theVector);
+
 
 	// Not implemented...
 	bool
@@ -532,11 +517,6 @@ private:
 	XalanDOMStringPointerVectorType		m_extensionNamespaceURIs;
 
 	NamespaceAliasesMapType				m_namespaceAliases;
-
-	XalanDOMStringPointerVectorType		m_activePrefixes;
-
-	// If true namespace aliases will be processed.  If false, they will not.
-	bool								m_processAliases;
 };
 
 

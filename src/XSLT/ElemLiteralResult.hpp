@@ -155,6 +155,12 @@ protected:
 			int								columnNumber,
 			int								xslToken);
 
+	virtual void
+	postConstruction(
+			StylesheetConstructionContext&	constructionContext,
+			const NamespacesHandler&		theParentHandler,
+			NamespacesHandler&				theHandler);
+
 private:
 
 	// not implemented

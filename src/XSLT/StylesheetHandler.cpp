@@ -295,15 +295,23 @@ StylesheetHandler::startElement(
 		// First push namespaces
 		m_stylesheet.pushNamespaces(atts);
 
-		const XalanDOMString&	ns = getNamespaceFromStack(name);
-
 		const XalanDOMString::size_type		nameLength = length(name);
 		const XalanDOMString::size_type		index = indexOf(name, XalanUnicode::charColon);
 
-		if(length(ns) == 0 && index < nameLength)
+		const XalanDOMString*	ns = getNamespaceFromStack(name);
+
+		if(ns == 0)
 		{
-			error("Could not resolve prefix.", locator);
+			if (index < nameLength)
+			{
+				error("Could not resolve prefix", locator);
+			}
+			else
+			{
+				ns = &s_emptyString;
+			}
 		}
+		assert(ns != 0);
 
 		if (index < nameLength)
 		{
@@ -318,10 +326,10 @@ StylesheetHandler::startElement(
 
 		const ElemTemplateStackType::size_type	origStackSize = m_elemStack.size();
 
-		if(equals(ns, m_constructionContext.getXSLTNamespaceURI()))
+		if(equals(*ns, m_constructionContext.getXSLTNamespaceURI()))
 		{
 			if(!isEmpty(m_stylesheet.getXSLTNamespaceURI()))
-				m_stylesheet.setXSLTNamespaceURI(ns);
+				m_stylesheet.setXSLTNamespaceURI(*ns);
 
 			const StylesheetConstructionContext::eElementToken	xslToken =
 				m_constructionContext.getElementToken(m_elementLocalName);
@@ -530,7 +538,7 @@ StylesheetHandler::startElement(
 				m_inScopeVariableNamesStack.push_back(QNameSetVectorType::value_type());
 			}
 		}
-		else if (!m_inTemplate && startsWith(ns, m_constructionContext.getXalanXSLNameSpaceURL()))
+		else if (!m_inTemplate && startsWith(*ns, m_constructionContext.getXalanXSLNameSpaceURL()))
 		{
 			processExtensionElement(name, m_elementLocalName, atts, locator);
 		}
@@ -543,7 +551,7 @@ StylesheetHandler::startElement(
 				{
 					elem = initWrapperless(name, atts, locator);
 				}
-				else if (length(ns) == 0 && m_elemStack.size() == 1)
+				else if (length(*ns) == 0 && m_elemStack.size() == 1)
 				{
 					error("Illegal top level element", locator);
 				}
@@ -560,8 +568,8 @@ StylesheetHandler::startElement(
 				// is this an extension element call?
 				ExtensionNSHandler*		nsh = 0;
 
-				if (!isEmpty(ns) &&
-					((nsh = m_stylesheet.lookupExtensionNSHandler(ns)) != 0))
+				if (!isEmpty(*ns) &&
+					((nsh = m_stylesheet.lookupExtensionNSHandler(*ns)) != 0))
 				{
 					elem = m_constructionContext.createElement(
 												m_stylesheet,
@@ -669,38 +677,18 @@ StylesheetHandler::initWrapperless(
 
 
 
-const XalanDOMString&
+const XalanDOMString*
 StylesheetHandler::getNamespaceFromStack(const XalanDOMChar*	theName) const
 {
-	const XalanDOMString* const		theNamespace =
-		m_stylesheet.getNamespaceFromStack(theName);
-
-	if (theNamespace == 0)
-	{
-		return s_emptyString;
-	}
-	else
-	{
-		return *theNamespace;
-	}
+	return m_stylesheet.getNamespaceFromStack(theName);
 }
 
 
 
-const XalanDOMString&
+const XalanDOMString*
 StylesheetHandler::getNamespaceForPrefixFromStack(const XalanDOMString&		thePrefix) const
 {
-	const XalanDOMString* const		theNamespace =
-		m_stylesheet.getNamespaceForPrefixFromStack(thePrefix);
-
-	if (theNamespace == 0)
-	{
-		return s_emptyString;
-	}
-	else
-	{
-		return *theNamespace;
-	}
+	return m_stylesheet.getNamespaceForPrefixFromStack(thePrefix);
 }
 
 
@@ -882,9 +870,14 @@ StylesheetHandler::processStylesheet(
 			{
 				tokenizer.nextToken(prefix);
 
-				const XalanDOMString&	extns = getNamespaceForPrefixFromStack(prefix);
+				const XalanDOMString* const		extns = getNamespaceForPrefixFromStack(prefix);
 
-				m_stylesheet.processExtensionNamespace(m_constructionContext, extns);
+				if (extns == 0)
+				{
+					error("Undeclared prefix in extension-element-prefixes", locator);
+				}
+
+				m_stylesheet.processExtensionNamespace(m_constructionContext, *extns);
 			}
 		}
  		else if(equals(aname, Constants::ATTRNAME_ID))

@@ -758,10 +758,10 @@ private:
 			const AttributeList&	atts,
 			const Locator*			locator);
 
-	const XalanDOMString&
+	const XalanDOMString*
 	getNamespaceFromStack(const XalanDOMChar*	theName) const;
 
-	const XalanDOMString&
+	const XalanDOMString*
 	getNamespaceForPrefixFromStack(const XalanDOMString&	thePrefix) const;
 
 	class PushPopIncludeState;

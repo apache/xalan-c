@@ -90,7 +90,7 @@ ElemElement::ElemElement(
 {
 	// Namespace aliases are not used for xsl:element, so
 	// turn them off...
-	m_namespacesHandler.setProcessNamespaceAliaises(false);
+//	m_namespacesHandler.setProcessNamespaceAliaises(false);
 
 	const unsigned int	nAttrs = atts.getLength();
 
@@ -344,6 +344,21 @@ ElemElement::execute(StylesheetExecutionContext&		executionContext) const
 			executionContext.endElement(c_wstr(elemName));
 		}
 	}
+}
+
+
+
+void
+ElemElement::postConstruction(
+			StylesheetConstructionContext&	constructionContext,
+			const NamespacesHandler&		theParentHandler,
+			NamespacesHandler&				theHandler)
+{
+	theHandler.postConstruction(
+			constructionContext,
+			false,
+			getElementName(),
+			&theParentHandler);
 }
 
 

@@ -877,6 +877,18 @@ protected:
 	virtual bool
 	childTypeAllowed(int	xslToken) const;
 
+	/**
+	 * Called after construction is completed.  This is a hook for
+	 * deriving classes to handle post-constructio with the
+	 * instances HamespaceHandler instance, which is otherwise only
+	 * available through a const accessor.
+	 */
+	virtual void
+	postConstruction(
+			StylesheetConstructionContext&	constructionContext,
+			const NamespacesHandler&		theParentHandler,
+			NamespacesHandler&				theHandler);
+
 	/*
 	 * This object handles all result tree namespace processing.
 	 */

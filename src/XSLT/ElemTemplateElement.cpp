@@ -1074,10 +1074,10 @@ ElemTemplateElement::postConstruction(
 			StylesheetConstructionContext&	constructionContext,
 			const NamespacesHandler&		theParentHandler)
 {
-	m_namespacesHandler.postConstruction(
+	postConstruction(
 			constructionContext,
-			getElementName(),
-			&theParentHandler);
+			theParentHandler,
+			m_namespacesHandler);
 
 	if (hasChildren() == true)
 	{
@@ -1130,8 +1130,6 @@ ElemTemplateElement::postConstruction(
 #endif
 
 				m_directTemplate = theCallTemplateChild->getTemplate();
-
-//				delete theCallTemplateChild;
 			}
 		}
 		else if (canGenerateAttributes() == false &&
@@ -1140,6 +1138,21 @@ ElemTemplateElement::postConstruction(
 			m_flags |= eCanGenerateAttributes;
 		}
 	}
+}
+
+
+
+void
+ElemTemplateElement::postConstruction(
+			StylesheetConstructionContext&	constructionContext,
+			const NamespacesHandler&		theParentHandler,
+			NamespacesHandler&				theHandler)
+{
+	theHandler.postConstruction(
+			constructionContext,
+			true,
+			getElementName(),
+			&theParentHandler);
 }
 
 

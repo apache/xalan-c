@@ -221,34 +221,66 @@ ElemLiteralResult::getElementName() const
 
 
 
+class AVTPrefixChecker : public NamespacesHandler::PrefixChecker
+{
+public:
+
+	AVTPrefixChecker(
+			const AVT**			theAVTs,
+			unsigned int		theAVTsCount) :
+		m_avts(theAVTs),
+		m_avtsCount(theAVTsCount)
+	{
+	}
+
+	virtual bool
+	isActive(const XalanDOMString&	thePrefix) const
+	{
+		bool	fActive = false;
+
+		for(unsigned int i = 0; i < m_avtsCount; ++i)
+		{
+			const AVT* const	avt = m_avts[i];
+
+			const XalanDOMString&	theName = avt->getName();
+
+			const XalanDOMString::size_type		theColonIndex = indexOf(theName, XalanUnicode::charColon);
+
+			if (theColonIndex != length(theName))
+			{
+				if (thePrefix.length() == theColonIndex &&
+					startsWith(theName, thePrefix) == true)
+				{
+					fActive = true;
+
+					break;
+				}
+			}
+		}
+
+		return fActive;
+	}
+
+private:
+
+	// Not implemented...
+	AVTPrefixChecker&
+	operator=(const AVTPrefixChecker&);
+
+
+	// Data members...
+	const AVT** const	m_avts;
+
+	const unsigned int	m_avtsCount;
+};
+
+
+
 void
 ElemLiteralResult::postConstruction(
 			StylesheetConstructionContext&	constructionContext,
 			const NamespacesHandler&		theParentHandler)
 {
-	// OK, now check all attribute AVTs to make sure
-	// our NamespacesHandler knows about any prefixes
-	// that will need namespace declarations...
-	const StylesheetConstructionContext::GetAndReleaseCachedString	theGuard(constructionContext);
-
-	XalanDOMString&		thePrefix = theGuard.get();
-
-	for(unsigned int i = 0; i < m_avtsCount; ++i)
-	{
-		const AVT* const	avt = m_avts[i];
-
-		const XalanDOMString&	theName = avt->getName();
-
-		const XalanDOMString::size_type		theColonIndex = indexOf(theName, XalanUnicode::charColon);
-
-		if (theColonIndex != length(theName))
-		{
-			theName.substr(thePrefix, 0, theColonIndex);
-
-			m_namespacesHandler.addActivePrefix(constructionContext, thePrefix);
-		}
-	}
-
 	if (m_avtsCount != 0 ||
 		m_namespacesHandler.getNamespaceDeclarationsCount() != 0)
 	{
@@ -283,6 +315,24 @@ ElemLiteralResult::postConstruction(
 			}
 		}
 	}
+}
+
+
+
+void
+ElemLiteralResult::postConstruction(
+			StylesheetConstructionContext&	constructionContext,
+			const NamespacesHandler&		theParentHandler,
+			NamespacesHandler&				theHandler)
+{
+	const AVTPrefixChecker	theChecker(m_avts, m_avtsCount);
+
+	theHandler.postConstruction(
+			constructionContext,
+			true,
+			getElementName(),
+			&theParentHandler,
+			&theChecker);
 }
 
 

@@ -124,6 +124,12 @@ protected:
 			StylesheetExecutionContext&		executionContext,
 			bool							skipAttributeChildren) const;
 
+	virtual void
+	postConstruction(
+			StylesheetConstructionContext&	constructionContext,
+			const NamespacesHandler&		theParentHandler,
+			NamespacesHandler&				theHandler);
+
 private:
 
 	/** 

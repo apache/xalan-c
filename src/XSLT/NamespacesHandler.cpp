@@ -72,13 +72,26 @@
 
 
 
+#include "AVT.hpp"
 #include "Constants.hpp"
 #include "StylesheetConstructionContext.hpp"
 #include "StylesheetExecutionContext.hpp"
 
 
 
-const XalanDOMString		NamespacesHandler::NamespaceExtended::s_emptyString;
+const XalanDOMString		NamespacesHandler::Namespace::s_emptyString;
+
+
+
+NamespacesHandler::PrefixChecker::PrefixChecker()
+{
+}
+
+
+
+NamespacesHandler::PrefixChecker::~PrefixChecker()
+{
+}
 
 
 
@@ -86,9 +99,7 @@ NamespacesHandler::NamespacesHandler() :
 	m_excludedResultPrefixes(),
 	m_namespaceDeclarations(),
 	m_extensionNamespaceURIs(),
-	m_namespaceAliases(),
-	m_activePrefixes(),
-	m_processAliases(true)
+	m_namespaceAliases()
 {
 }
 
@@ -102,9 +113,7 @@ NamespacesHandler::NamespacesHandler(
 	m_excludedResultPrefixes(),
 	m_namespaceDeclarations(),
 	m_extensionNamespaceURIs(),
-	m_namespaceAliases(),
-	m_activePrefixes(),
-	m_processAliases(true)
+	m_namespaceAliases()
 {
 	// Go through the namespaces stack in reverse order...
 	const NamespacesStackType::const_reverse_iterator	theEnd =
@@ -139,7 +148,7 @@ NamespacesHandler::NamespacesHandler(
 					m_namespaceDeclarations.insert(
 						NamespacesMapType::value_type(
 							&theConstructionContext.getPooledString(thePrefix),
-							NamespaceExtended(
+							Namespace(
 								theConstructionContext.getPooledString(theNamespace.getPrefix()),
 								theConstructionContext.getPooledString(theNamespace.getURI()))));
 				}
@@ -166,7 +175,7 @@ NamespacesHandler::~NamespacesHandler()
 void
 NamespacesHandler::addExtensionNamespaceURI(
 			StylesheetConstructionContext&	theConstructionContext,
-			const XalanDOMString&	theURI)
+			const XalanDOMString&			theURI)
 {
 	m_extensionNamespaceURIs.push_back(&theConstructionContext.getPooledString(theURI));
 }
@@ -249,27 +258,20 @@ NamespacesHandler::setNamespaceAlias(
 
 
 void
-NamespacesHandler::addActivePrefix(
-			StylesheetConstructionContext&	theConstructionContext,
-			const XalanDOMString&			thePrefix)
-{
-	m_activePrefixes.push_back(
-		&theConstructionContext.getPooledString(thePrefix));
-}
-
-
-
-void
 NamespacesHandler::processExcludeResultPrefixes(
 		StylesheetConstructionContext&	theConstructionContext,
 		const XalanDOMChar*				theValue,
 		const NamespacesStackType&		theCurrentNamespaces)
 {
+	typedef StylesheetConstructionContext::GetAndReleaseCachedString	GetAndReleaseCachedString;
+
 	StringTokenizer		tokenizer(
 					theValue,
 					Constants::DEFAULT_WHITESPACE_SEPARATOR_STRING);
 
-	XalanDOMString	thePrefix;
+	const GetAndReleaseCachedString		theGuard(theConstructionContext);
+
+	XalanDOMString&		thePrefix = theGuard.get();
 
     while(tokenizer.hasMoreTokens() == true)
     {
@@ -285,11 +287,7 @@ NamespacesHandler::processExcludeResultPrefixes(
 
 		if(theNamespace == 0)
 		{
-			XalanDOMString	theMessage(TranscodeFromLocalCodePage("Invalid prefix in exclude-result-prefixes: "));
-
-			theMessage += thePrefix;
-
-			theConstructionContext.error(theMessage);
+			theConstructionContext.error("Undeclared prefix in exclude-result-prefixes");
 		}
 
 		m_excludedResultPrefixes[&theConstructionContext.getPooledString(thePrefix)] =
@@ -305,13 +303,19 @@ NamespacesHandler::processExtensionElementPrefixes(
 			const XalanDOMChar*				theValue,
 			const NamespacesStackType&		theCurrentNamespaces)
 {
+	typedef StylesheetConstructionContext::GetAndReleaseCachedString	GetAndReleaseCachedString;
+
 	StringTokenizer		tokenizer(
 					theValue,
 					Constants::DEFAULT_WHITESPACE_SEPARATOR_STRING);
 
-    while(tokenizer.hasMoreTokens() == true)
+	const GetAndReleaseCachedString		theGuard(theConstructionContext);
+
+	XalanDOMString&		thePrefix = theGuard.get();
+
+	while(tokenizer.hasMoreTokens() == true)
     {
-		XalanDOMString	thePrefix = tokenizer.nextToken();
+		tokenizer.nextToken(thePrefix);
 
 		if(equalsIgnoreCaseASCII(thePrefix, Constants::ATTRVAL_DEFAULT_PREFIX) == true)
 		{
@@ -323,11 +327,7 @@ NamespacesHandler::processExtensionElementPrefixes(
 
 		if(theNamespace == 0)
 		{
-			XalanDOMString	theMessage(TranscodeFromLocalCodePage("Invalid prefix in extension-element-prefixes: "));
-
-			theMessage += thePrefix;
-
-			theConstructionContext.error(theMessage);
+			theConstructionContext.error("Undeclared prefix in extension-element-prefixes");
 		}
 
 		assert(theNamespace != 0);
@@ -341,8 +341,10 @@ NamespacesHandler::processExtensionElementPrefixes(
 void
 NamespacesHandler::postConstruction(
 			StylesheetConstructionContext&	theConstructionContext,
+			bool							fProcessNamespaceAliases,
 			const XalanDOMString&			theElementName,
-			const NamespacesHandler*		parentNamespacesHandler)
+			const NamespacesHandler*		parentNamespacesHandler,
+			const PrefixChecker*			prefixChecker)
 {
 	// Copy everything from the parent handler, if there is one...
 	if (parentNamespacesHandler != 0)
@@ -358,22 +360,26 @@ NamespacesHandler::postConstruction(
 	// don't exclude its prefix.
 	const XalanDOMString::size_type		indexOfNSSep = indexOf(theElementName, XalanUnicode::charColon);
 
-	XalanDOMString	thePrefix;
-	
+	typedef StylesheetConstructionContext::GetAndReleaseCachedString	GetAndReleaseCachedString;
+
+	const GetAndReleaseCachedString		theGuard(theConstructionContext);
+
+	XalanDOMString&		thePrefix = theGuard.get();
+
 	if (indexOfNSSep < length(theElementName))
 	{
 		substring(theElementName, thePrefix, 0, indexOfNSSep);
 	}
 
-	processExcludeResultPrefixes(theConstructionContext, thePrefix);
+	processExcludeResultPrefixes(theConstructionContext, thePrefix, prefixChecker);
 
-	// $$ ToDo: Does this happen before or after exclude-result-prefixes?
-	processNamespaceAliases();
+	if (fProcessNamespaceAliases == true)
+	{
+		// $$ ToDo: Does this happen before or after exclude-result-prefixes?
+		processNamespaceAliases();
+	}
 
 	createResultAttributeNames(theConstructionContext);
-
-	// We don't need these any more...
-	m_activePrefixes.clear();
 }
 
 
@@ -438,9 +444,9 @@ NamespacesHandler::outputResultNamespaces(
 
 		for(; i != theEnd; ++i)
 		{
-			const NamespaceExtended&	theNamespace = (*i).second;
+			const Namespace&		theNamespace = (*i).second;
 
-			const XalanDOMString&		thePrefix = theNamespace.getPrefix();
+			const XalanDOMString&	thePrefix = theNamespace.getPrefix();
 
 			// If we're not supposed to suppress the default namespace, or
 			// there's a prefix (so it's not the default), we can continue
@@ -554,8 +560,6 @@ NamespacesHandler::clear()
 	m_extensionNamespaceURIs.clear();
 
 	m_namespaceAliases.clear();
-
-	m_activePrefixes.clear();
 }
 
 
@@ -570,8 +574,6 @@ NamespacesHandler::swap(NamespacesHandler&	theOther)
 	m_extensionNamespaceURIs.swap(theOther.m_extensionNamespaceURIs);
 
 	m_namespaceAliases.swap(theOther.m_namespaceAliases);
-
-	m_activePrefixes.swap(theOther.m_activePrefixes);
 }
 
 
@@ -594,7 +596,7 @@ NamespacesHandler::createResultAttributeNames(StylesheetConstructionContext&	the
 
 		for(; i != theEnd; ++i)
 		{
-			NamespaceExtended&		theNamespace = (*i).second;
+			Namespace&				theNamespace = (*i).second;
 
 			const XalanDOMString&	thePrefix = theNamespace.getPrefix();
 
@@ -624,7 +626,8 @@ NamespacesHandler::createResultAttributeNames(StylesheetConstructionContext&	the
 void
 NamespacesHandler::processExcludeResultPrefixes(
 			StylesheetConstructionContext&	theConstructionContext,
-			const XalanDOMString&			theElementPrefix)
+			const XalanDOMString&			theElementPrefix,
+			const PrefixChecker*			prefixChecker)
 {
 	if (m_excludedResultPrefixes.empty() == false)
 	{
@@ -648,7 +651,7 @@ NamespacesHandler::processExcludeResultPrefixes(
 		// Check for any result prefixes we should exclude...
 		while(i != theEnd)
 		{
-			const NamespaceExtended&	theNamespace = (*i).second;
+			const Namespace&		theNamespace = (*i).second;
 
 			const XalanDOMString&	thePrefix = theNamespace.getPrefix();
 			const XalanDOMString&	theURI = theNamespace.getURI();
@@ -656,7 +659,7 @@ NamespacesHandler::processExcludeResultPrefixes(
 			// We can never exclude the prefix of our owner element, so
 			// check that first...
 			if (equals(thePrefix, theElementPrefix) == false &&
-				isActivePrefix(thePrefix) == false &&
+				(prefixChecker == 0 || prefixChecker->isActive(thePrefix) == false) &&
 				(isExcludedNamespaceURI(theURI) == true ||
 				 isExtensionNamespaceURI(theURI) == true))
 			{
@@ -687,7 +690,7 @@ NamespacesHandler::processExcludeResultPrefixes(
 void
 NamespacesHandler::processNamespaceAliases()
 {
-	if (m_processAliases == true && m_namespaceDeclarations.empty() == false)
+	if (m_namespaceDeclarations.empty() == false)
 	{
 		const NamespacesMapType::iterator	theEnd =
 				m_namespaceDeclarations.end();
@@ -699,7 +702,7 @@ NamespacesHandler::processNamespaceAliases()
 		// alias as appropriate...
 		for(; i != theEnd; ++i)
 		{
-			NamespaceExtended&	theNamespace = (*i).second;
+			Namespace&	theNamespace = (*i).second;
 
 			const XalanDOMString&			theURI =
 						theNamespace.getURI();
