@@ -1300,11 +1300,24 @@ XPath::step(
 				{
 					if(queryResults.getLength() == 0)
 					{
+						if (mnl->getReverseDocumentOrder() == true)
+						{
+							mnl->reverse();
+
+							queryResults.setDocumentOrder();
+						}
+						else if (mnl->getDocumentOrder() == true)
+						{
+							queryResults.setDocumentOrder();
+						}
+
 						queryResults = *mnl;
 					}
 					else
 					{
 						queryResults.addNodesInDocOrder(*mnl, executionContext);
+
+						queryResults.setDocumentOrder();
 					}
 				}
 			}
@@ -1314,7 +1327,30 @@ XPath::step(
 	{
 		if (shouldReorder == true)
 		{
-			queryResults.addNodesInDocOrder(*subQueryResults, executionContext);
+			if (queryResults.getLength() != 0 ||
+				subQueryResults->getUnknownOrder() == true)
+			{
+				queryResults.addNodesInDocOrder(*subQueryResults, executionContext);
+			}
+			else
+			{
+				if (subQueryResults->getReverseDocumentOrder() == true)
+				{
+					subQueryResults->reverse();
+
+					queryResults = *subQueryResults;
+				}
+				else if (subQueryResults->getDocumentOrder() == true)
+				{
+					queryResults = *subQueryResults;
+				}
+				else
+				{
+					assert(false);
+				}
+			}
+
+			queryResults.setDocumentOrder();
 		}
 		else
 		{
@@ -1739,6 +1775,8 @@ XPath::findRoot(
 
 	subQueryResults.addNode(docContext);
 
+	subQueryResults.setDocumentOrder();
+
 	return argLen + 3;
 }
 
@@ -1997,6 +2035,8 @@ XPath::findAttributes(
 				}
 			}
 		}
+
+		subQueryResults.setDocumentOrder();
 	}
 
 	return argLen + 3;
