@@ -83,8 +83,10 @@ XResultTreeFrag::XResultTreeFrag(BorrowReturnResultTreeFrag&	val) :
 	XObject(eTypeResultTreeFrag),
 	m_value(val),
 	m_cachedStringValue(),
-	m_cachedNumberValue(0.0),
-	m_nodeRefListBaseProxy(*this)
+	m_cachedNumberValue(0.0)
+#if XALAN_RTREEFRAG_TO_NODESET_CONVERSION
+	, m_nodeRefListBaseProxy(*this)
+#endif
 {
 }
 
@@ -96,8 +98,10 @@ XResultTreeFrag::XResultTreeFrag(
 	XObject(source),	
 	m_value(source.m_value.clone(deepClone)),
 	m_cachedStringValue(source.m_cachedStringValue),
-	m_cachedNumberValue(source.m_cachedNumberValue),	
-	m_nodeRefListBaseProxy(*this)
+	m_cachedNumberValue(source.m_cachedNumberValue)
+#if XALAN_RTREEFRAG_TO_NODESET_CONVERSION
+	, m_nodeRefListBaseProxy(*this)
+#endif
 {
 }
 
@@ -191,7 +195,11 @@ XResultTreeFrag::rtree() const
 const NodeRefListBase&
 XResultTreeFrag::nodeset() const
 {
+#if XALAN_RTREEFRAG_TO_NODESET_CONVERSION
 	return m_nodeRefListBaseProxy;
+#else
+	return ParentType::nodeset();
+#endif
 }
 
 

@@ -96,6 +96,7 @@ class XALAN_XPATH_EXPORT XResultTreeFrag : public XObject
 {
 public:
 
+	typedef XObject												ParentType;
 	typedef XPathExecutionContext::BorrowReturnResultTreeFrag	BorrowReturnResultTreeFrag;
 
 
@@ -200,7 +201,9 @@ private:
 
 	mutable double					m_cachedNumberValue;
 
+#if XALAN_RTREEFRAG_TO_NODESET_CONVERSION
 	const NodeRefListBaseProxy		m_nodeRefListBaseProxy;
+#endif
 };
 
 
