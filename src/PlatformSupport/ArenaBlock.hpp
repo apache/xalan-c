@@ -195,7 +195,11 @@ public:
 			// If no memory has yet been allocated, then allocate it...
 			if (m_objectBlock == 0)
 			{
+#if defined(XALAN_NEW_STD_ALLOCATOR)
 				m_objectBlock = m_allocator.allocate(m_blockSize);
+#else
+				m_objectBlock = m_allocator.allocate(m_blockSize, 0);
+#endif
 			}
 			assert(m_objectBlock != 0);
 
