@@ -195,7 +195,8 @@ XSLTEngineImpl::XSLTEngineImpl(
 	m_executionContext(0),
 	m_outputContextStack(),
 	m_resultNamespacesStack(),
-	m_dummyAttributesList()
+	m_dummyAttributesList(),
+	m_scratchString()
 {
 	m_outputContextStack.pushContext();
 }
@@ -3087,9 +3088,14 @@ XSLTEngineImpl::getUniqueNamespaceValue()
 void
 XSLTEngineImpl::getUniqueNamespaceValue(XalanDOMString&		theValue)
 {
-	append(theValue, s_uniqueNamespacePrefix);
+	do
+	{
+		assign(m_scratchString, s_uniqueNamespacePrefix);
 
-	UnsignedLongToDOMString(m_uniqueNSValue++, theValue);
+		UnsignedLongToDOMString(m_uniqueNSValue++, m_scratchString);
+	} while(getResultNamespaceForPrefix(m_scratchString) != 0);
+
+	append(theValue, m_scratchString);
 }
 
 

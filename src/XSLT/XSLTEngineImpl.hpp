@@ -1662,6 +1662,8 @@ private:
 	 */
 	AttributeListImpl				m_dummyAttributesList;
 
+	XalanDOMString					m_scratchString;
+
 	static void
 	installFunctions();
 
