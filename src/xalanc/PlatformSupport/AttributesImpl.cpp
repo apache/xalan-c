@@ -212,11 +212,11 @@ AttributesImpl::operator=(const AttributesType&		theRHS)
 		for(unsigned int i = 0; i < theLength; i++)
 		{
 			theTempList.addAttribute(
+					theRHS.getURI(i),
+					theRHS.getLocalName(i),
 					theRHS.getQName(i),
 					theRHS.getType(i),
-					theRHS.getValue(i),
-					theRHS.getURI(i),
-					theRHS.getLocalName(i));
+					theRHS.getValue(i));
 		}
 
 		// Now that the temp list is built, swap everything. This is
