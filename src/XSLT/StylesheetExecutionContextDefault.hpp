@@ -236,9 +236,7 @@ public:
 			const XalanDOMString&	value);
 
 	virtual void
-	copyNamespaceAttributes(
-			const XalanNode&	src,
-			bool				srcIsStylesheetTree);
+	copyNamespaceAttributes(const XalanNode&	src);
 
 	virtual const XalanDOMString&
 	getResultPrefixForNamespace(const XalanDOMString&	theNamespace) const;
@@ -547,12 +545,12 @@ public:
 	virtual int
 	collationCompare(
 			const XalanDOMString&	theLHS,
-			const XalanDOMString&	theRHS) const;
+			const XalanDOMString&	theRHS);
 
 	virtual int
 	collationCompare(
 			const XalanDOMChar*		theLHS,
-			const XalanDOMChar*		theRHS) const;
+			const XalanDOMChar*		theRHS);
 
 	class XALAN_XSLT_EXPORT CollationCompareFunctor
 	{
@@ -563,6 +561,15 @@ public:
 		virtual
 		~CollationCompareFunctor();
 
+		// Non-const version is suitable for use by
+		// a singe thread.
+		virtual int
+		operator()(
+			const XalanDOMChar*		theLHS,
+			const XalanDOMChar*		theRHS) = 0;
+
+		// Const version is suitable for use by
+		// multiple threads.
 		virtual int
 		operator()(
 			const XalanDOMChar*		theLHS,
@@ -581,20 +588,25 @@ public:
 		virtual int
 		operator()(
 			const XalanDOMChar*		theLHS,
+			const XalanDOMChar*		theRHS);
+
+		virtual int
+		operator()(
+			const XalanDOMChar*		theLHS,
 			const XalanDOMChar*		theRHS) const;
 	};
 
-	const CollationCompareFunctor*
-	installCollationCompareFunctor(const CollationCompareFunctor*	theFunctor);
+	CollationCompareFunctor*
+	installCollationCompareFunctor(CollationCompareFunctor*		theFunctor);
 
 	virtual	bool
-	getInConstruction(const KeyDeclaration& keyDeclaration) const;
+	getInConstruction(const KeyDeclaration&		keyDeclaration) const;
 
 	virtual	void
-	beginConstruction(const KeyDeclaration& keyDeclaration);
+	beginConstruction(const KeyDeclaration&		keyDeclaration);
 
 	virtual	void
-	endConstruction(const KeyDeclaration& keyDeclaration);
+	endConstruction(const KeyDeclaration&	keyDeclaration);
 
 	virtual const XalanDecimalFormatSymbols*
 	getDecimalFormatSymbols(const XalanDOMString&	name);
@@ -868,7 +880,7 @@ private:
 
 	OutputStreamSetType					m_outputStreams;
 
-	const CollationCompareFunctor*		m_collationCompareFunctor;
+	CollationCompareFunctor*			m_collationCompareFunctor;
 
 	/**
 	 * Holds all information about variables during execution.
@@ -897,7 +909,7 @@ private:
 
 	static XalanNumberFormatFactory*	s_xalanNumberFormatFactory;
 
-	const static DefaultCollationCompareFunctor		s_defaultFunctor;
+	const static DefaultCollationCompareFunctor		s_defaultCollationFunctor;
 };
 
 

@@ -339,13 +339,9 @@ public:
 	 * Add namespace attributes for a node to the list of pending attributes.
 	 * 
 	 * @param src                 source node
-	 * @param srcIsStylesheetTree true if source node corresponds to a
-	 *                            stylesheet
 	 */
 	virtual void
-	copyNamespaceAttributes(
-			const XalanNode&	src,
-			bool				srcIsStylesheetTree) = 0;
+	copyNamespaceAttributes(const XalanNode&	src) = 0;
 
 	/**
 	 * Retrieve the result prefix corresponding to a namespace.
@@ -1273,7 +1269,7 @@ public:
 	virtual int
 	collationCompare(
 			const XalanDOMString&	theLHS,
-			const XalanDOMString&	theRHS) const = 0;
+			const XalanDOMString&	theRHS) = 0;
 
 	/**
 	 * Compare two strings using the collation of the
@@ -1286,7 +1282,7 @@ public:
 	virtual int
 	collationCompare(
 			const XalanDOMChar*		theLHS,
-			const XalanDOMChar*		theRHS) const = 0;
+			const XalanDOMChar*		theRHS) = 0;
 
 	/**
 	 * Determine if a KeyDeclaration is being constructed.

@@ -112,7 +112,7 @@ StylesheetExecutionContextDefault::XalanNumberFormatFactory			StylesheetExecutio
 StylesheetExecutionContextDefault::XalanNumberFormatFactory*		StylesheetExecutionContextDefault::s_xalanNumberFormatFactory =
 		&StylesheetExecutionContextDefault::getDefaultXalanNumberFormatFactory();
 
-const StylesheetExecutionContextDefault::DefaultCollationCompareFunctor		StylesheetExecutionContextDefault::s_defaultFunctor;
+const StylesheetExecutionContextDefault::DefaultCollationCompareFunctor		StylesheetExecutionContextDefault::s_defaultCollationFunctor;
 
 
 
@@ -139,7 +139,7 @@ StylesheetExecutionContextDefault::StylesheetExecutionContextDefault(
 	m_formatterListeners(),
 	m_printWriters(),
 	m_outputStreams(),
-	m_collationCompareFunctor(&s_defaultFunctor),
+	m_collationCompareFunctor(0),
 	m_variablesStack(),
 	m_matchPatternCache(),
 	m_keyTables(),
@@ -303,11 +303,9 @@ StylesheetExecutionContextDefault::addResultAttribute(
 
 
 void
-StylesheetExecutionContextDefault::copyNamespaceAttributes(
-			const XalanNode&	src,
-			bool				srcIsStylesheetTree)
+StylesheetExecutionContextDefault::copyNamespaceAttributes(const XalanNode&		src)
 {
-	m_xsltProcessor.copyNamespaceAttributes(src, srcIsStylesheetTree);
+	m_xsltProcessor.copyNamespaceAttributes(src);
 }
 
 
@@ -1174,31 +1172,11 @@ StylesheetExecutionContextDefault::installXalanNumberFormatFactory(XalanNumberFo
 int
 StylesheetExecutionContextDefault::collationCompare(
 			const XalanDOMString&	theLHS,
-			const XalanDOMString&	theRHS) const
+			const XalanDOMString&	theRHS)
 {
-	assert(m_collationCompareFunctor != 0);
-
-	if (length(theLHS) == 0)
+	if (m_collationCompareFunctor == 0)
 	{
-		if (length(theRHS) == 0)
-		{
-			return 0;
-		}
-		else
-		{
-			return -1;
-		}
-	}
-	else if (length(theRHS) == 0)
-	{
-		if (length(theLHS) == 0)
-		{
-			return 0;
-		}
-		else
-		{
-			return 1;
-		}
+		return s_defaultCollationFunctor(c_wstr(theLHS), c_wstr(theRHS));
 	}
 	else
 	{
@@ -1211,11 +1189,18 @@ StylesheetExecutionContextDefault::collationCompare(
 int
 StylesheetExecutionContextDefault::collationCompare(
 			const XalanDOMChar*		theLHS,
-			const XalanDOMChar*		theRHS) const
+			const XalanDOMChar*		theRHS)
 {
-	assert(m_collationCompareFunctor != 0);
+	assert(theLHS != 0 && theRHS != 0);
 
-	return (*m_collationCompareFunctor)(theLHS, theRHS);
+	if (m_collationCompareFunctor == 0)
+	{
+		return s_defaultCollationFunctor(theLHS, theRHS);
+	}
+	else
+	{
+		return (*m_collationCompareFunctor)(theLHS, theRHS);
+	}
 }
 
 
@@ -1247,6 +1232,16 @@ StylesheetExecutionContextDefault::DefaultCollationCompareFunctor::~DefaultColla
 int
 StylesheetExecutionContextDefault::DefaultCollationCompareFunctor::operator()(
 			const XalanDOMChar*		theLHS,
+			const XalanDOMChar*		theRHS)
+{
+	return ::collationCompare(theLHS, theRHS);
+}
+
+
+
+int
+StylesheetExecutionContextDefault::DefaultCollationCompareFunctor::operator()(
+			const XalanDOMChar*		theLHS,
 			const XalanDOMChar*		theRHS) const
 {
 	return ::collationCompare(theLHS, theRHS);
@@ -1254,12 +1249,12 @@ StylesheetExecutionContextDefault::DefaultCollationCompareFunctor::operator()(
 
 
 
-const StylesheetExecutionContextDefault::CollationCompareFunctor*
-StylesheetExecutionContextDefault::installCollationCompareFunctor(const CollationCompareFunctor*	theFunctor)
+StylesheetExecutionContextDefault::CollationCompareFunctor*
+StylesheetExecutionContextDefault::installCollationCompareFunctor(CollationCompareFunctor*	theFunctor)
 {
 	assert(theFunctor != 0);
 
-	const CollationCompareFunctor* const	temp = m_collationCompareFunctor;
+	CollationCompareFunctor* const	temp = m_collationCompareFunctor;
 
 	m_collationCompareFunctor = theFunctor;
 
