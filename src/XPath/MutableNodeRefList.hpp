@@ -227,6 +227,11 @@ public:
 	clearNulls();
 
 	typedef NodeListVectorType::iterator	NodeListIteratorType;
+
+private:
+
+	void
+	ensureAllocation(NodeListVectorType::size_type	theSize = 0);
 };
 
 

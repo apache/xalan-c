@@ -165,7 +165,7 @@ MutableNodeRefList::addNode(XalanNode*	n)
 {
 	if (n != 0)
 	{
-		ensureAllocation();
+		// ensureAllocation();
 
 		m_nodeList.push_back(n);
 	}
@@ -182,7 +182,7 @@ MutableNodeRefList::insertNode(
 
 	if (n != 0)
 	{
-		ensureAllocation();
+		// ensureAllocation();
 
 		m_nodeList.insert(m_nodeList.begin() + pos, n);
 	}
@@ -240,16 +240,42 @@ MutableNodeRefList::setNode(
 
 
 
+inline void
+MutableNodeRefList::ensureAllocation(NodeListVectorType::size_type	/* theSize */)
+{
+	// This code is commmented out for now, since it appears to actual hurt
+	// performance, rather than help.
+#if 0
+	const unsigned int	theNodeListSize = m_nodeList.size();
+
+	if (theSize > theNodeListSize)
+	{
+		const unsigned int	theNewSize = theNodeListSize * 2;
+
+		if (theSize > theNewSize)
+		{
+			m_nodeList.reserve(theSize * 2);
+		}
+		else
+		{
+			m_nodeList.reserve(theNewSize);
+		}
+	}
+	else
+	{
+		m_nodeList.reserve(eDefaultVectorSize);
+	}
+#endif
+}
+
+
+
 void
 MutableNodeRefList::addNodes(const XalanNodeList&	nodelist)
 {
 	const unsigned int	theLength = nodelist.getLength();
 
-	// Reserve the space at the start.  We may end up reserving
-	// more space than necessary, but it's a small price to
-	// pay for the increased speed.  We can always shrink by
-	// swapping if we have way too much space.
-	ensureAllocation(m_nodeList.size() + theLength);
+	// ensureAllocation(m_nodeList.size() + theLength);
 
 	for (unsigned int i = 0; i < theLength; i++)
 	{
@@ -264,11 +290,7 @@ MutableNodeRefList::addNodes(const NodeRefListBase&		nodelist)
 {
 	const unsigned int	theLength = nodelist.getLength();
 
-	// Reserve the space at the start.  We may end up reserving
-	// more space than necessary, but it's a small price to
-	// pay for the increased speed.  We can always shrink by
-	// swapping if we have way too much space.
-	ensureAllocation(m_nodeList.size() + theLength);
+	// ensureAllocation(m_nodeList.size() + theLength);
 
 	for (unsigned int i = 0; i < theLength; i++)
 	{
@@ -285,11 +307,7 @@ MutableNodeRefList::addNodesInDocOrder(
 {
 	const unsigned int	theLength = nodelist.getLength();
 
-	// Reserve the space at the start.  We may end up reserving
-	// more space than necessary, but it's a small price to
-	// pay for the increased speed.  We can always shrink by
-	// swapping if we have way too much space.
-	ensureAllocation(m_nodeList.size() + theLength);
+	// ensureAllocation(m_nodeList.size() + theLength);
 
 	for(unsigned int i = 0; i < theLength; i++)
 	{
@@ -306,11 +324,7 @@ MutableNodeRefList::addNodesInDocOrder(
 {
 	const unsigned int	theLength = nodelist.getLength();
 
-	// Reserve the space at the start.  We may end up reserving
-	// more space than necessary, but it's a small price to
-	// pay for the increased speed.  We can always shrink by
-	// swapping if we have way too much space.
-	ensureAllocation(m_nodeList.size() + theLength);
+	// ensureAllocation(m_nodeList.size() + theLength);
 
 	for(unsigned int i = 0; i < theLength; i++)
 	{
@@ -539,9 +553,9 @@ MutableNodeRefList::addNodeInDocOrder(
 {
 	if (node != 0)
 	{
-		ensureAllocation();
-
 		const unsigned int	size = m_nodeList.size();
+
+		// ensureAllocation(size + 1);
 
 		if (size == 0)
 		{
