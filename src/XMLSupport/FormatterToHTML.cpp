@@ -54,11 +54,8 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-/**
- * $Id$
- * 
- * $State$
- * 
+
+ /**
  * @author David N. Bertoni <david_n_bertoni@lotus.com>
  */
 
@@ -1503,11 +1500,36 @@ FormatterToHTML::initializeElementFlagsMap(ElementFlagsMapType&		theElementFlags
 		ElementFlagsMapType::value_type(
 			c_wstr(XALAN_STATIC_UCODE_STRING("NOSCRIPT")),
 			ElemDesc(0|ElemDesc::BLOCK|ElemDesc::BLOCKFORM|ElemDesc::BLOCKFORMFIELDSET)));
-	
+
 	theElementFlags.insert(
 		ElementFlagsMapType::value_type(
 			c_wstr(XALAN_STATIC_UCODE_STRING("HTML")),
 			ElemDesc(0|ElemDesc::BLOCK)));
+
+	theElementFlags.insert(
+		ElementFlagsMapType::value_type(
+			c_wstr(XALAN_STATIC_UCODE_STRING("FONT")),
+			ElemDesc(0 | ElemDesc::FONTSTYLE)));
+
+	theElementFlags.insert(
+		ElementFlagsMapType::value_type(
+			c_wstr(XALAN_STATIC_UCODE_STRING("S")),
+			ElemDesc(0 | ElemDesc::FONTSTYLE)));
+
+	theElementFlags.insert(
+		ElementFlagsMapType::value_type(
+			c_wstr(XALAN_STATIC_UCODE_STRING("STRIKE")),
+			ElemDesc(0 | ElemDesc::FONTSTYLE)));
+
+	theElementFlags.insert(
+		ElementFlagsMapType::value_type(
+			c_wstr(XALAN_STATIC_UCODE_STRING("U")),
+			ElemDesc(0 | ElemDesc::FONTSTYLE)));
+
+	theElementFlags.insert(
+		ElementFlagsMapType::value_type(
+			c_wstr(XALAN_STATIC_UCODE_STRING("NOBR")),
+			ElemDesc(0 | ElemDesc::FONTSTYLE)));
 }
 
 
