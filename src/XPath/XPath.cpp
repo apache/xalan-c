@@ -2965,7 +2965,7 @@ XPath::nodeTest(
 										assert(theAttrNode != 0);
 
 										const XalanDOMString&	theNamespace =
-													theAttrNode->getValue();
+													theAttrNode->getLocalName();
 
 										assert(queueIndex >= 0);
 
@@ -3660,7 +3660,7 @@ XPath::NodeTester::matchNamespace(const XalanNode&	context) const
 {
 	assert(m_targetLocalName != 0);
 
-	return ::equals(context.getNodeValue(), *m_targetLocalName);
+	return ::equals(context.getLocalName(), *m_targetLocalName);
 }
 
 
