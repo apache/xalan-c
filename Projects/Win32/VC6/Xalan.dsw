@@ -3,6 +3,18 @@ Microsoft Developer Studio Workspace File, Format Version 6.00
 
 ###############################################################################
 
+Project: "AllInOne"=".\AllInOne\AllInOne.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
 Project: "ApacheModuleXSLT"="..\..\..\samples\ApacheModuleXSLT\ApacheModuleXSLT.dsp" - Package Owner=<4>
 
 Package=<5>
