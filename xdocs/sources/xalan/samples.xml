@@ -66,6 +66,7 @@
     <li><link anchor="usestylesheetparam">UseStylesheetParam</link></li>
     <li><link anchor="tracelisten">TraceListen</link></li>        
     <li><link anchor="compilestylesheet">CompileStylesheet</link></li>
+     <li><link anchor="documentbuilder">DocumentBuilder</link></li>
     <li><link anchor="threadsafe">ThreadSafe</link></li>  
     <li><link anchor="xpathwrapper">XPathWrapper</link></li>
     <li><link anchor="externalfunctions">ExternalFunctions</link></li>
@@ -168,7 +169,13 @@ theProcessor.addTraceListener(&amp;theTraceListener);
     <p>You can run it from the CompileStylesheet subdirectory with</p>
     <p><code>CompileStylesheet</code></p>
     <p>See also: <link idref="usagepatterns" anchor="compiled">Compiling stylesheets</link>.</p>
-  </s2>  <anchor name="threadsafe"/>
+  </s2>  <anchor name="documentbuilder"/>
+  <s2 title="DocumentBuilder">
+  <p>What it does: Use a DocumentBuilder to programmatically construct an XML document, apply the foo.xsl stylesheet to
+  this document, and write the ouput to foo.out.</p>
+  <p>You can run it from the DocumentBuilder subdirectory with</p>
+  <p><code>DocumentBuilder</code></p>
+  </s2><anchor name="threadsafe"/>
   <s2 title="ThreadSafe (Windows32 Only)">
   <p>What it does: multiple threads use a single compiled stylesheet (StylesheetRoot) and DOM source tree (XalanNode) to perform
   transformations concurrently. The application tracks the progress of the threads in messages to the screen, and each thread
