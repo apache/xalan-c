@@ -308,12 +308,12 @@ endif
 ifeq ($(PLATFORM), TRU64)
 
   SUPPORTED = TRUE
-  PLATFORM_COMPILE_OPTIONS = -D${PLATFORM} -ptr ${ALL_OBJECTS_DIR}/.cxx_repository -ieee -pthread
+  PLATFORM_COMPILE_OPTIONS = -D${PLATFORM} -ptr ${ALL_OBJECTS_DIR}/.cxx_repository -ieee -pthread -std strict_ansi_errors
   ALLLIBS = ${LIBS} -L/usr/lib -lm
   SHLIBSUFFIX = .so
   CC1 = $(CXX) ${CXXFLAGS} $(PLATFORM_COMPILE_OPTIONS) -nocxxstd
   CC4 = $(CC) $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS)
-  MAKE_SHARED = ${CXX} ${CXXFLAGS} -shared -D${PLATFORM} -ptr ${ALL_OBJECTS_DIR}/.cxx_repository -ieee -pthread -nocxxstd
+  MAKE_SHARED = ${CXX} ${CXXFLAGS} -shared -D${PLATFORM} -ptr ${ALL_OBJECTS_DIR}/.cxx_repository -ieee -pthread -std strict_ansi_errors -nocxxstd
   LINK = ${CXX} $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS)
 
 endif
