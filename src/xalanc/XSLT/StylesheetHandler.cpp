@@ -1233,10 +1233,14 @@ StylesheetHandler::processImport(
 
 			href = atts.getValue(i);
 
-			Stylesheet::URLStackType&	includeStack = m_stylesheet.getIncludeStack();
+			const Stylesheet::URLStackType&     includeStack =
+                m_stylesheet.getIncludeStack();
 			assert(includeStack.empty() == false);
 
-			hrefUrl = m_constructionContext.getURLStringFromString(href, includeStack.back());
+			hrefUrl = m_constructionContext.getURLStringFromString(
+                            href,
+                            includeStack.back(),
+                            hrefUrl);
 
 			assert(length(hrefUrl) != 0);
 
