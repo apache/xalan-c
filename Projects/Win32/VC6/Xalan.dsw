@@ -75,9 +75,6 @@ Package=<4>
     Project_Dep_Name DOMSupport
     End Project Dependency
     Begin Project Dependency
-    Project_Dep_Name XercesParserLiaison
-    End Project Dependency
-    Begin Project Dependency
     Project_Dep_Name XMLSupport
     End Project Dependency
     Begin Project Dependency
