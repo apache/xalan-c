@@ -344,7 +344,8 @@ public:
 			const AttributeList&		attrs,
 			XalanSourceTreeElement*		theParentElement = 0,
 			XalanNode*					thePreviousSibling = 0,
-			XalanNode*					theNextSibling = 0);
+			XalanNode*					theNextSibling = 0,
+			bool						fAddXMLNamespaceAttribute = false);
 
 	XalanSourceTreeElement*
 	createElementNode(
@@ -354,7 +355,8 @@ public:
 			const Attributes&			attrs,
 			XalanSourceTreeElement*		theParentElement = 0,
 			XalanNode*					thePreviousSibling = 0,
-			XalanNode*					theNextSibling = 0);
+			XalanNode*					theNextSibling = 0,
+			bool						fAddXMLNamespaceAttribute = false);
 
 	XalanSourceTreeElement*
 	createElementNode(
@@ -363,7 +365,8 @@ public:
 			const PrefixResolver&		thePrefixResolver,
 			XalanSourceTreeElement*		theParentElement = 0,
 			XalanNode*					thePreviousSibling = 0,
-			XalanNode*					theNextSibling = 0);
+			XalanNode*					theNextSibling = 0,
+			bool						fAddXMLNamespaceAttribute = false);
 
 	XalanSourceTreeElement*
 	createElementNode(
@@ -371,7 +374,8 @@ public:
 			const Attributes&			attrs,
 			XalanSourceTreeElement*		theParentElement = 0,
 			XalanNode*					thePreviousSibling = 0,
-			XalanNode*					theNextSibling = 0);
+			XalanNode*					theNextSibling = 0,
+			bool						fAddXMLNamespaceAttribute = false);
 
 	XalanSourceTreeComment*
 	createCommentNode(
@@ -448,7 +452,8 @@ private:
 			AttributesCountType			theAttributeCount,
 			XalanSourceTreeElement*		theParentElement,
 			XalanNode*					thePreviousSibling,
-			XalanNode*					theNextSibling);
+			XalanNode*					theNextSibling,
+			bool						fAddXMLNamespaceAttribute);
 
 	XalanSourceTreeElement*
 	createElement(
@@ -464,8 +469,8 @@ private:
 	createAttributes(
 			const Attributes&			theAttributes,
 			XalanSourceTreeAttr**		theAttributeVector,
-			AttributesCountType			theAttributeCount,
-			XalanSourceTreeElement*		theOwnerElement);
+			XalanSourceTreeElement*		theOwnerElement,
+			bool						fAddXMLNamespaceAttribute);
 
 	const XalanDOMString&
 	getTextNodeString(

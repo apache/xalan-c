@@ -499,13 +499,16 @@ XalanSourceTreeContentHandler::createElement(
 {
 	assert(m_inDTD == false);
 
+	// If we're creating the document element, add the special xml namespace attribute...
+	const bool	fAddXMLNamespaceAttribute = theOwnerElement == 0 ? true : false;
+
 	if (length(uri) != 0)
 	{
-		return m_document->createElementNode(uri, localname, qname, attrs, theOwnerElement);
+		return m_document->createElementNode(uri, localname, qname, attrs, theOwnerElement, 0, 0, fAddXMLNamespaceAttribute);
 	}
 	else
 	{
-		return m_document->createElementNode(qname, attrs, theOwnerElement);
+		return m_document->createElementNode(qname, attrs, theOwnerElement, 0, 0, fAddXMLNamespaceAttribute);
 	}
 }
 

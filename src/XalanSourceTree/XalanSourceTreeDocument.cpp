@@ -72,6 +72,10 @@
 
 
 
+#include <DOMSupport/DOMServices.hpp>
+
+
+
 #include "XalanSourceTreeHelper.hpp"
 
 
@@ -556,13 +560,19 @@ XalanSourceTreeDocument::createElementNode(
 			const AttributeList&		attrs,
 			XalanSourceTreeElement*		theParentElement,
 			XalanNode*					thePreviousSibling,
-			XalanNode*					theNextSibling)
+			XalanNode*					theNextSibling,
+			bool						fAddXMLNamespaceAttribute)
 {
 	// We might have typedef'ed this to something smaller than unsigned int.
-	const AttributesCountType	theAttributeCount = AttributesCountType(attrs.getLength());
+	AttributesCountType		theAttributeCount = AttributesCountType(attrs.getLength());
 
 	// assert that we didn't lose anything...
 	assert(theAttributeCount == attrs.getLength());
+
+	if (fAddXMLNamespaceAttribute == true)
+	{
+		++theAttributeCount;
+	}
 
 	XalanSourceTreeAttr** const		theAttributeVector =
 		theAttributeCount == 0 ? 0 : m_attributesVector.allocate(theAttributeCount);
@@ -578,8 +588,39 @@ XalanSourceTreeDocument::createElementNode(
 				theNextSibling,
 				m_nextIndexValue++);
 
+	size_t	theIndex = 0;
+
+	if (fAddXMLNamespaceAttribute == true)
+	{
+		// The constructor parameters for AttrNS are:
+		//
+		// name
+		// local name
+		// namespace URI
+		// prefix
+		// value
+		// owner element
+		// index
+		//
+		theAttributeVector[theIndex] =
+				m_attributeNSAllocator.create(
+						m_namesStringPool.get(DOMServices::s_XMLNamespacePrefix),
+						m_namesStringPool.get(DOMServices::s_XMLString),
+						m_namesStringPool.get(DOMServices::s_XMLNamespacePrefixURI),
+						m_namesStringPool.get(DOMServices::s_XMLNamespace),
+						m_valuesStringPool.get(DOMServices::s_XMLNamespaceURI),
+						theNewElement,
+						m_nextIndexValue++);
+
+		assert(theAttributeVector[theIndex] != 0);
+
+		++theIndex;
+	}
+
+	const AttributesCountType	theSAXAttributeCount = attrs.getLength();
+
 	// Now, create the attributes...
-	for(AttributesCountType i = 0; i < theAttributeCount; ++i)
+	for(AttributesCountType i = 0; i < theSAXAttributeCount; ++i, ++theIndex)
 	{
 		const XalanDOMChar* const	theName =
 			attrs.getName(i);
@@ -589,12 +630,14 @@ XalanSourceTreeDocument::createElementNode(
 			attrs.getValue(i);
 		assert(theValue != 0);
 
-		theAttributeVector[i] =
+		theAttributeVector[theIndex] =
 			m_attributeAllocator.create(
 				m_namesStringPool.get(theName),
 				m_valuesStringPool.get(theValue),
 				theNewElement,
 				m_nextIndexValue++);
+
+		assert(theAttributeVector[theIndex] != 0);
 	}
 
 	return theNewElement;
@@ -609,13 +652,19 @@ XalanSourceTreeDocument::createElementNode(
 			const PrefixResolver&		thePrefixResolver,
 			XalanSourceTreeElement*		theParentElement,
 			XalanNode*					thePreviousSibling,
-			XalanNode*					theNextSibling)
+			XalanNode*					theNextSibling,
+			bool						fAddXMLNamespaceAttribute)
 {
 	// We might have typedef'ed this to something smaller than unsigned int.
-	const AttributesCountType	theAttributeCount = AttributesCountType(attrs.getLength());
+	AttributesCountType		theAttributeCount = AttributesCountType(attrs.getLength());
 
 	// assert that we didn't lose anything...
 	assert(theAttributeCount == attrs.getLength());
+
+	if (fAddXMLNamespaceAttribute == true)
+	{
+		++theAttributeCount;
+	}
 
 	XalanSourceTreeAttr** const		theAttributeVector =
 		theAttributeCount == 0 ? 0 : m_attributesVector.allocate(theAttributeCount);
@@ -629,10 +678,42 @@ XalanSourceTreeDocument::createElementNode(
 			thePreviousSibling,
 			theNextSibling,
 			thePrefixResolver);
+
 	assert(theNewElement != 0);
 
+	size_t	theIndex = 0;
+
+	if (fAddXMLNamespaceAttribute == true)
+	{
+		// The constructor parameters for AttrNS are:
+		//
+		// name
+		// local name
+		// namespace URI
+		// prefix
+		// value
+		// owner element
+		// index
+		//
+		theAttributeVector[theIndex] =
+				m_attributeNSAllocator.create(
+						m_namesStringPool.get(DOMServices::s_XMLNamespacePrefix),
+						m_namesStringPool.get(DOMServices::s_XMLString),
+						m_namesStringPool.get(DOMServices::s_XMLNamespacePrefixURI),
+						m_namesStringPool.get(DOMServices::s_XMLNamespace),
+						m_valuesStringPool.get(DOMServices::s_XMLNamespaceURI),
+						theNewElement,
+						m_nextIndexValue++);
+
+		assert(theAttributeVector[theIndex] != 0);
+
+		++theIndex;
+	}
+
+	const AttributesCountType	theSAXAttributeCount = attrs.getLength();
+
 	// Now, create the attributes...
-	for(AttributesCountType i = 0; i < theAttributeCount; ++i)
+	for(AttributesCountType i = 0; i < theSAXAttributeCount; ++i, ++theIndex)
 	{
 		const XalanDOMChar* const	theName =
 			attrs.getName(i);
@@ -642,14 +723,14 @@ XalanSourceTreeDocument::createElementNode(
 			attrs.getValue(i);
 		assert(theValue != 0);
 
-		theAttributeVector[i] =
+		theAttributeVector[theIndex] =
 			createAttribute(
 				theName,
 				theValue,
 				theNewElement,
 				thePrefixResolver);
 
-		assert(theAttributeVector[i] != 0);
+		assert(theAttributeVector[theIndex] != 0);
 	}
 
 	return theNewElement;
@@ -686,14 +767,20 @@ XalanSourceTreeDocument::createElementNode(
 			const Attributes&			attrs,
 			XalanSourceTreeElement*		theParentElement,
 			XalanNode*					thePreviousSibling,
-			XalanNode*					theNextSibling)
+			XalanNode*					theNextSibling,
+			bool						fAddXMLNamespaceAttribute)
 {
 
 	// We might have typedef'ed this to something smaller than unsigned int.
-	const AttributesCountType	theAttributeCount = AttributesCountType(attrs.getLength());
+	AttributesCountType		theAttributeCount = AttributesCountType(attrs.getLength());
 
 	// assert that we didn't lose anything...
 	assert(theAttributeCount == attrs.getLength());
+
+	if (fAddXMLNamespaceAttribute == true)
+	{
+		++theAttributeCount;
+	}
 
 	XalanSourceTreeAttr** const		theAttributeVector =
 		theAttributeCount == 0 ? 0 : m_attributesVector.allocate(theAttributeCount);
@@ -718,7 +805,7 @@ XalanSourceTreeDocument::createElementNode(
 
 	if (theAttributeCount != 0)
 	{
-		createAttributes(attrs, theAttributeVector, theAttributeCount, theNewElement);
+		createAttributes(attrs, theAttributeVector, theNewElement, fAddXMLNamespaceAttribute);
 	}
 
 	return theNewElement;
@@ -732,13 +819,19 @@ XalanSourceTreeDocument::createElementNode(
 			const Attributes&			attrs,
 			XalanSourceTreeElement*		theParentElement,
 			XalanNode*					thePreviousSibling,
-			XalanNode*					theNextSibling)
+			XalanNode*					theNextSibling,
+			bool						fAddXMLNamespaceAttribute)
 {
 	// We might have typedef'ed this to something smaller than unsigned int.
-	const AttributesCountType	theAttributeCount = AttributesCountType(attrs.getLength());
+	AttributesCountType		theAttributeCount = AttributesCountType(attrs.getLength());
 
 	// assert that we didn't lose anything...
 	assert(theAttributeCount == attrs.getLength());
+
+	if (fAddXMLNamespaceAttribute == true)
+	{
+		++theAttributeCount;
+	}
 
 	XalanSourceTreeAttr** const		theAttributeVector =
 		theAttributeCount == 0 ? 0 : m_attributesVector.allocate(theAttributeCount);
@@ -758,7 +851,7 @@ XalanSourceTreeDocument::createElementNode(
 
 	if (theAttributeCount != 0)
 	{
-		createAttributes(attrs, theAttributeVector, theAttributeCount, theNewElement);
+		createAttributes(attrs, theAttributeVector, theNewElement, fAddXMLNamespaceAttribute);
 	}
 
 	return theNewElement;
@@ -1087,11 +1180,40 @@ void
 XalanSourceTreeDocument::createAttributes(
 			const Attributes&			theAttributes,
 			XalanSourceTreeAttr**		theAttributeVector,
-			AttributesCountType			theAttributeCount,
-			XalanSourceTreeElement*		theOwnerElement)
+			XalanSourceTreeElement*		theOwnerElement,
+			bool						fAddXMLNamespaceAttribute)
 {
+	size_t	theIndex = 0;
+
+	if (fAddXMLNamespaceAttribute == true)
+	{
+		// The constructor parameters for AttrNS are:
+		//
+		// name
+		// local name
+		// namespace URI
+		// prefix
+		// value
+		// owner element
+		// index
+		//
+		theAttributeVector[theIndex] =
+				m_attributeNSAllocator.create(
+						m_namesStringPool.get(DOMServices::s_XMLNamespacePrefix),
+						m_namesStringPool.get(DOMServices::s_XMLString),
+						m_namesStringPool.get(DOMServices::s_XMLNamespacePrefixURI),
+						m_namesStringPool.get(DOMServices::s_XMLNamespace),
+						m_valuesStringPool.get(DOMServices::s_XMLNamespaceURI),
+						theOwnerElement,
+						m_nextIndexValue++);
+
+		++theIndex;
+	}
+
+	const AttributesCountType	theSAXAttributeCount = theAttributes.getLength();
+
 	// Now, create the attributes...
-	for(AttributesCountType i = 0; i < theAttributeCount; ++i)
+	for(AttributesCountType i = 0; i < theSAXAttributeCount; ++i, ++theIndex)
 	{
 		const XalanDOMChar* const	theQName =
 			theAttributes.getQName(i);
@@ -1106,7 +1228,7 @@ XalanSourceTreeDocument::createAttributes(
 
 		if (length(theURI) == 0)
 		{
-			theAttributeVector[i] =
+			theAttributeVector[theIndex] =
 				m_attributeAllocator.create(
 					m_namesStringPool.get(theQName),
 					m_valuesStringPool.get(theValue),
@@ -1132,7 +1254,7 @@ XalanSourceTreeDocument::createAttributes(
 			// owner element
 			// index
 			//
-			theAttributeVector[i] =
+			theAttributeVector[theIndex] =
 				m_attributeNSAllocator.create(
 						m_namesStringPool.get(theQName),
 						m_namesStringPool.get(theLocalName),
@@ -1160,7 +1282,7 @@ XalanSourceTreeDocument::createAttributes(
 			// always returned, so use insert(), rather than []
 			m_elementsByID.insert(
 				ElementByIDMapType::value_type(
-					c_wstr(theAttributeVector[i]->getValue()),
+					c_wstr(theAttributeVector[theIndex]->getValue()),
 					theOwnerElement));
 		}
 	}
