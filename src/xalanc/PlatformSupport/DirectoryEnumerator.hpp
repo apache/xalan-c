@@ -178,7 +178,7 @@ public:
 	 */
 	bool isDirectory() const
 	{
-#if defined(AIX) || defined(HPUX) || defined(SOLARIS) || defined(OS390) || defined(TRU64)
+#if defined(AIX) || defined(HPUX) || defined(SOLARIS) || defined(OS390) || defined(OS400) || defined(TRU64)
 		return false;
 #else		
 		if (d_type == DT_DIR || d_type == DT_UNKNOWN)
@@ -195,7 +195,7 @@ public:
 	bool
 	isSelfOrParent() const
 	{
-#if defined(AIX) || defined(HPUX) || defined(SOLARIS) || defined(OS390) || defined(TRU64)
+#if defined(AIX) || defined(HPUX) || defined(SOLARIS) || defined(OS390) || defined(OS400) || defined(TRU64)
 		return false;
 #else		
 		if (isDirectory() == false)

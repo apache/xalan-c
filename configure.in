@@ -7,8 +7,6 @@ AC_PROG_CXX
 AC_PROG_INSTALL
 AC_CHECK_PROG(AUTOCONF, autoconf, autoconf, true)
 
-dnl Checks for libraries
-AC_CHECK_LIB(m, floor)
 
 dnl  Check for gcc problems
 
@@ -59,8 +57,15 @@ case "${host}" in
         *-*-mvs*)       platform=OS390 ;;
         *-*-osf*)       platform=TRU64 ;;
         *-apple-darwin*)       platform=MACOSX ;;
+        *-*-os400*)     platform=OS400 ;;
+        *-*-OS400*)     platform=OS400 ;;
         *)              platform=UNKNOWN ;;
 esac
+
+dnl Checks for libraries
+if test "$platform" != "OS400"; then
+	AC_CHECK_LIB(m, floor)
+fi
 
 dnl check if mbstowcs is available and can correctly count only
 AC_HEADER_STDC

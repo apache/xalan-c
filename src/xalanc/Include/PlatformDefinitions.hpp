@@ -69,6 +69,8 @@
 #include "SolarisDefinitions.hpp"
 #elif defined(OS390)
 #include "OS390Definitions.hpp"
+#elif defined(OS400)
+#include "OS400Definitions.hpp"
 #elif defined(__DECCXX)
 #include "TRU64Definitions.hpp"
 #elif defined(__INTEL_COMPILER)
