@@ -513,6 +513,7 @@ const XalanDOMString&		Constants::ELEMNAME_WITHPARAM_WITH_PREFIX_STRING = ::ELEM
 
 const XalanDOMString&		Constants::PSEUDONAME_ANY = ::PSEUDONAME_ANY;
 const XalanDOMString&		Constants::PSEUDONAME_COMMENT = ::PSEUDONAME_COMMENT;
+const XalanDOMString&		Constants::PSEUDONAME_NODE = ::PSEUDONAME_NODE;
 const XalanDOMString&		Constants::PSEUDONAME_OTHER = ::PSEUDONAME_OTHER;
 const XalanDOMString&		Constants::PSEUDONAME_PI = ::PSEUDONAME_PI;
 const XalanDOMString&		Constants::PSEUDONAME_ROOT = ::PSEUDONAME_ROOT;
