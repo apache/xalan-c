@@ -341,11 +341,21 @@ public:
 	 * Normalizes the string passed in, replacing
 	 * \ with /.
 	 *
-	 * @param urlString string to qualify
+	 * @param urlString string to normalize
 	 * @return a reference to the passed parameter
 	 */
 	static XalanDOMString&
 	NormalizeURIText(XalanDOMString&	uriString);
+
+	/**
+	 * Normalizes the string passed in, replacing
+	 * \ with /.
+	 *
+	 * @param urlString string to normalize
+	 * @return a copy of the normalized URI
+	 */
+	static const XalanDOMString
+	NormalizeURIText(const XalanDOMString&	uriString);
 
 
 	class InvalidURIException : public XSLException

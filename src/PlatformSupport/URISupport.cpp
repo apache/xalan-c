@@ -319,6 +319,18 @@ URISupport::NormalizeURIText(XalanDOMString&	uriString)
 
 
 
+const XalanDOMString
+URISupport::NormalizeURIText(const XalanDOMString&	uriString)
+{
+	XalanDOMString	theCopy(uriString);
+
+	NormalizeURIText(theCopy);
+
+	return theCopy;
+}
+
+
+
 URISupport::InvalidURIException::InvalidURIException(const XalanDOMString&	theMessage) :
 	XSLException(theMessage,
 				 TranscodeFromLocalCodePage("InvalidURIException"))
