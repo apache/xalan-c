@@ -420,7 +420,14 @@ findInsertionPointBinarySearch(
 
 			if (theIndex < theCurrentIndex)
 			{
-				last = current - 1;
+				if (current == begin)
+				{
+					break;
+				}
+				else
+				{
+					last = current - 1;
+				}
 			}
 			else if (theIndex > theCurrentIndex)
 			{

@@ -682,7 +682,7 @@ doCompareNumber(
 			const double			theRHS,
 			const CompareFunction&	theCompareFunction)
 {
-	bool				theResult = false;
+	bool	theResult = false;
 
 	const NodeRefListBase::size_type	len1 = theLHSNodeSet.getLength();
 
