@@ -113,9 +113,9 @@
 <!ENTITY xml4c-win2003c_64-dist "&xml4c-dist;&win2003c_64-dist;&win_ext;">
 
 <!ENTITY xslt4j "Xalan-Java">
-<!ENTITY icu-used "International Components for Unicode(ICU) 3.0 source files">
-<!ENTITY icu-current "International Components for Unicode(ICU) version 3.0">
-<!ENTITY icu-windlls "icui30n.dll, icuuc.dll">
+<!ENTITY icu-used "International Components for Unicode(ICU) 3.2 source files">
+<!ENTITY icu-current "International Components for Unicode(ICU) version 3.2">
+<!ENTITY icu-windlls "icui32n.dll, icuuc.dll">
 <!ENTITY icubridge-win "ICUBridge.dll">
 <!ENTITY done SYSTEM "xalan/DONE">
 <!ENTITY status SYSTEM "xalan/STATUS">
