@@ -113,6 +113,10 @@
 
 
 
+#include <XalanExtensions/XalanExtensions.hpp>
+
+
+
 #include <XercesParserLiaison/XercesParserLiaison.hpp>
 #include <XercesParserLiaison/XercesDOMSupport.hpp>
 
@@ -236,7 +240,12 @@ printArgOptions()
 		 << " [-PARAM name expression (Sets a stylesheet parameter.)]"
 		 << endl
 		 << endl
-		 << " [-XD Use Xerces DOM instead of Xalan source tree.]"
+		 << " [-XD (Use Xerces DOM instead of Xalan source tree.)]"
+		 << endl
+		 << endl
+		 << " [-DE (Disable built-in extension functions.)]"
+		 << endl
+		 << " [-EN (Specify the namespace URI for Xalan extension functions.  The default is 'http://xml.apache.org/xslt')]"
 		 << endl
 		 << endl
 		 << "The following options are valid only with -HTML or -XML."
@@ -269,31 +278,34 @@ typedef vector<pair<const char*, const char*> >	StringPairVectorType;
 struct CmdLineParams
 {
 	StringPairVectorType params;
-	bool doStackDumpOnError;
-	bool escapeCData;
-	bool setQuietConflictWarnings;
-	bool setQuietMode;
-	bool stripCData;
-	bool versionOnly;
-	bool traceTemplates;
-	bool traceGenerationEvent;
-	bool traceSelectionEvent;
-	bool traceTemplateChildren;
-	bool shouldWriteXMLHeader;
-	bool doValidation;
-	bool noIndent;
-	bool formatToNull;
-	bool formatToSourceTree;
-	bool useDOM;
-	int indentAmount;
-	int outputType;
-	const char* outFileName;
-	const char* xslFileName;
-	const char* inFileName;
+
+	bool		escapeCData;
+	bool		setQuietConflictWarnings;
+	bool		setQuietMode;
+	bool		stripCData;
+	bool		versionOnly;
+	bool		traceTemplates;
+	bool		traceGenerationEvent;
+	bool		traceSelectionEvent;
+	bool		traceTemplateChildren;
+	bool		shouldWriteXMLHeader;
+	bool		doValidation;
+	bool		noIndent;
+	bool		formatToNull;
+	bool		formatToSourceTree;
+	bool		useDOM;
+	bool		disableExtensions;
+
+	int			indentAmount;
+	int			outputType;
+
+	const char*		outFileName;
+	const char*		xslFileName;
+	const char*		inFileName;
+	const char*		extentionsNamespace;
 
 	CmdLineParams() :
 		params(),
-		doStackDumpOnError(false),
 		escapeCData(false),
 		setQuietConflictWarnings(false),
 		setQuietMode(false),
@@ -309,11 +321,13 @@ struct CmdLineParams
 		formatToNull(false),
 		formatToSourceTree(false),
 		useDOM(false),
+		disableExtensions(false),
 		indentAmount(-1),
 		outputType(-1),
 		outFileName(0),
 		xslFileName(0),
-		inFileName(0)
+		inFileName(0),
+		extentionsNamespace(0)
 	{
 	}
 };
@@ -571,6 +585,28 @@ getArgs(
 		{
 			p.useDOM = true;
 		}
+		else if (!compareNoCase("-DE", argv[i]))
+		{
+			p.disableExtensions = true;
+		}
+		else if (!compareNoCase("-EN", argv[i]))
+		{
+			++i;
+
+			if(i < argc)
+			{
+				p.extentionsNamespace = argv[i];
+
+				if (strlen(p.extentionsNamespace) == 0)
+				{
+					fSuccess = false;
+				}
+			}
+			else
+			{
+				fSuccess = false;
+			}
+		}
 		else
 		{
 			cerr << endl << "Warning: Ignoring unknown option \"" << argv[i] << "\"." << endl << endl;
@@ -793,6 +829,56 @@ getParserLiaison(
 
 
 
+void
+installExtensions(
+			const CmdLineParams&				params,
+			XSLTProcessorEnvSupportDefault&		theXSLProcessorSupport)
+{
+	XalanDOMString	theXalanNamespace;
+
+	if (params.extentionsNamespace != 0)
+	{
+		theXalanNamespace = XalanDOMString(params.extentionsNamespace);
+		assert(length(theXalanNamespace) > 0);
+	}
+	else
+	{
+		theXalanNamespace = XALAN_STATIC_UCODE_STRING("http://xml.apache.org/xslt");
+	}
+
+	theXSLProcessorSupport.installExternalFunctionLocal(
+			theXalanNamespace,
+			StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("difference")),
+			FunctionDifference());
+
+	theXSLProcessorSupport.installExternalFunctionLocal(
+			theXalanNamespace,
+			StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("distinct")),
+			FunctionDistinct());
+
+	theXSLProcessorSupport.installExternalFunctionLocal(
+			theXalanNamespace,
+			StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("evaluate")),
+			FunctionEvaluate());
+
+	theXSLProcessorSupport.installExternalFunctionLocal(
+			theXalanNamespace,
+			StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("hasSameNodes")),
+			FunctionHasSameNodes());
+
+	theXSLProcessorSupport.installExternalFunctionLocal(
+			theXalanNamespace,
+			StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("intersection")),
+			FunctionIntersection());
+
+	theXSLProcessorSupport.installExternalFunctionLocal(
+			theXalanNamespace,
+			StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("nodeset")),
+			FunctionNodeSet());
+}
+
+
+
 int
 xsltMain(const CmdLineParams&	params)
 {
@@ -841,6 +927,11 @@ xsltMain(const CmdLineParams&	params)
 		params);
 
 	XSLTProcessorEnvSupportDefault	theXSLProcessorSupport;
+
+	if (params.disableExtensions == false)
+	{
+		installExtensions(params, theXSLProcessorSupport);
+	}
 
 	XObjectFactoryDefault	theXObjectFactory;
 
