@@ -958,7 +958,7 @@ WideStringToDouble(const XalanDOMChar*	theString)
 
 		VectorType				theVector;
 
-		CopyWideStringToVector(theString,
+		CopyWideStringToVector(c_wstr(trim(theString)),
 							   theVector);
 
 		if (theVector.size() > 0)
