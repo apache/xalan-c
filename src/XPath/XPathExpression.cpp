@@ -82,27 +82,115 @@
 
 
 
-const XPathExpression::OpCodeLengthMapType	XPathExpression::s_opCodeLengths =
-				XPathExpression::IntializeOpCodeLengthMap();
-
-
-
-const unsigned int	s_nodeTestOpCodesArraySize = 100;
-
-
-const bool	XPathExpression::s_nodeTestOpCodesArray[] =
+// This is an array which indicates which of the value defined by
+// XPathExpression::eOpCodes are node tests.
+static const bool	theNodeTestOpCodesArray[] =
 {
 	false, false, true,  false, false, false, false, false, false, false,
 	false, false, false, false, false, false, false, false, false, false,
 	false, false, false, false, false, false, false, false, false, false,
-	false, false, false, false, false, false, false, true,  true,  true,
-	true,  true,  true,  true,  true,  true,  true,  true,  true,  true,
-	false, false, false, false, false, false, false, false, false, false,
-	false, false, false, false, false, false, false, false, false, false,
-	false, false, false, false, false, false, false, false, false, false,
-	false, false, false, false, false, false, false, false, false, false,
-	false, false, false, false, true,  true,  true,  false, false, false
+	false, false, false, false, true,  true,  true,  true,  true,  true,
+	true,  true,  true,  true,  true,  true,  true,  false, false, false, 
+	true,  true,  true
 };
+
+static const unsigned int	theNodeTestOpCodesArraySize =
+		sizeof(theNodeTestOpCodesArray) / sizeof(theNodeTestOpCodesArray[0]);
+
+
+// This is an array for all of the opcode defined by XPathExpression::eOpCodes.
+// It is offset by 3, because there opcode values are -3, -2, and -1.  So,
+// when getting the length of an opcode, we add three to get the correct index.
+static const int	theOpCodeLengthArray[] =
+{
+	1,
+	1,
+	1,
+
+	0,
+	XPathExpression::s_opCodeMapLengthIndex + 1,
+	XPathExpression::s_opCodeMapLengthIndex + 1,
+	XPathExpression::s_opCodeMapLengthIndex + 1,
+	XPathExpression::s_opCodeMapLengthIndex + 1,
+	XPathExpression::s_opCodeMapLengthIndex + 1,
+	XPathExpression::s_opCodeMapLengthIndex + 1,
+	XPathExpression::s_opCodeMapLengthIndex + 1,
+	XPathExpression::s_opCodeMapLengthIndex + 1,
+	XPathExpression::s_opCodeMapLengthIndex + 1,
+
+	XPathExpression::s_opCodeMapLengthIndex + 1,
+	XPathExpression::s_opCodeMapLengthIndex + 1,
+	XPathExpression::s_opCodeMapLengthIndex + 1,
+	XPathExpression::s_opCodeMapLengthIndex + 1,
+	XPathExpression::s_opCodeMapLengthIndex + 1,
+	XPathExpression::s_opCodeMapLengthIndex + 1,
+	XPathExpression::s_opCodeMapLengthIndex + 1,
+	XPathExpression::s_opCodeMapLengthIndex + 1,
+	XPathExpression::s_opCodeMapLengthIndex + 1,
+	XPathExpression::s_opCodeMapLengthIndex + 1,
+
+	XPathExpression::s_opCodeMapLengthIndex + 1,
+	XPathExpression::s_opCodeMapLengthIndex + 1,
+	XPathExpression::s_opCodeMapLengthIndex + 1,
+	XPathExpression::s_opCodeMapLengthIndex + 3,
+	XPathExpression::s_opCodeMapLengthIndex + 3,
+	XPathExpression::s_opCodeMapLengthIndex + 1,
+	XPathExpression::s_opCodeMapLengthIndex + 1,
+	1,
+	1,
+
+	1,
+	1,
+	1,
+	1,
+	1,
+	XPathExpression::s_opCodeMapLengthIndex + 2,
+	XPathExpression::s_opCodeMapLengthIndex + 2,
+	XPathExpression::s_opCodeMapLengthIndex + 2,
+	XPathExpression::s_opCodeMapLengthIndex + 2,
+	XPathExpression::s_opCodeMapLengthIndex + 2,
+
+	XPathExpression::s_opCodeMapLengthIndex + 2,
+	XPathExpression::s_opCodeMapLengthIndex + 2,
+	XPathExpression::s_opCodeMapLengthIndex + 2,
+	XPathExpression::s_opCodeMapLengthIndex + 2,
+	XPathExpression::s_opCodeMapLengthIndex + 2,
+	XPathExpression::s_opCodeMapLengthIndex + 2,
+	XPathExpression::s_opCodeMapLengthIndex + 2,
+	XPathExpression::s_opCodeMapLengthIndex + 2,
+	XPathExpression::s_opCodeMapLengthIndex + 2,
+	XPathExpression::s_opCodeMapLengthIndex + 1,
+
+	XPathExpression::s_opCodeMapLengthIndex + 1,
+	XPathExpression::s_opCodeMapLengthIndex + 1,
+	XPathExpression::s_opCodeMapLengthIndex + 1,
+	XPathExpression::s_opCodeMapLengthIndex + 1,
+	XPathExpression::s_opCodeMapLengthIndex + 2,
+	XPathExpression::s_opCodeMapLengthIndex + 2
+};
+
+static const int	theOpCodeLengthArraySize =
+		sizeof(theOpCodeLengthArray) / sizeof(theOpCodeLengthArray[0]);
+
+
+
+inline int
+getOpCodeLength(int		theOpCode)
+{
+	assert(theOpCodeLengthArraySize == XPathExpression::eOpCodeNextAvailable + 3);
+
+	// Add 3 to get the correct index into the array...
+	theOpCode += 3;
+
+	if (theOpCode < 0 || theOpCode >= theOpCodeLengthArraySize)
+	{
+		return 0;
+	}
+	else
+	{
+		return theOpCodeLengthArray[theOpCode];
+	}
+}
 
 
 
@@ -326,7 +414,7 @@ XPathExpression::shrink()
 
 
 XPathExpression::OpCodeMapValueType
-XPathExpression::getOpCodeLength(OpCodeMapSizeType	opPos) const
+XPathExpression::getOpCodeLengthFromOpMap(OpCodeMapSizeType		opPos) const
 {
 	OpCodeMapValueType	theResult = 0;
 
@@ -337,20 +425,19 @@ XPathExpression::getOpCodeLength(OpCodeMapSizeType	opPos) const
 	else
 	{
 		// Is there a valid opcode?
-		OpCodeLengthMapType::const_iterator		i =
-					s_opCodeLengths.find(m_opMap[opPos]);
+		const int	theOpCodeLength = getOpCodeLength(m_opMap[opPos]);
 
-		if (i == s_opCodeLengths.end())
+		if (theOpCodeLength == 0)
 		{
 			throw InvalidOpCodeException(-1);
 		}
 		else
 		{
 			// Does the Op code have a length > 1?
-			if ((*i).second > 1)
+			if (theOpCodeLength > 1)
 			{
 				// Yes, so get the length.
-				theResult = m_opMap[opPos + s__opCodeMapLengthIndex];
+				theResult = m_opMap[opPos + s_opCodeMapLengthIndex];
 			}
 		}
 	}
@@ -370,27 +457,24 @@ XPathExpression::setOpCodeArgs(
 	// and the length indicator.
 	assert(opCodeMapSize() > theIndex + 1);
 
-	OpCodeLengthMapType::const_iterator	i =
-			s_opCodeLengths.find(theOpCode);
+	const int	theOpCodeLength = getOpCodeLength(theOpCode);
 
 	// Make sure it's a valid op code and that it
 	// matches the op code at supplied index.
-	if (i == s_opCodeLengths.end() ||
+	if (theOpCodeLength == 0 ||
 		m_opMap[theIndex] != theOpCode)
 	{
 		throw InvalidOpCodeException(theOpCode);
 	}
 	else
 	{
-		assert((*i).second > 0);
-
 		const OpCodeMapSizeType		theArgCount =
-				(*i).second - 1 - s__opCodeMapLengthIndex;
+				theOpCodeLength - 1 - s_opCodeMapLengthIndex;
 
 		if (theArgCount != theArgs.size())
 		{
 			throw InvalidArgumentCountException(theOpCode,
-												(*i).second,
+												theOpCodeLength,
 												theArgCount);
 		}
 		else
@@ -406,7 +490,7 @@ XPathExpression::setOpCodeArgs(
 				}
 				else
 				{
-					m_opMap[i + theIndex + s__opCodeMapLengthIndex + 1] =
+					m_opMap[i + theIndex + s_opCodeMapLengthIndex + 1] =
 						theArgs[i];
 				}
 			}
@@ -419,36 +503,28 @@ XPathExpression::setOpCodeArgs(
 void
 XPathExpression::appendOpCode(eOpCodes	theOpCode)
 {
-	OpCodeLengthMapType::const_iterator	i =
-			s_opCodeLengths.find(theOpCode);
+	const int	theOpCodeLength = getOpCodeLength(theOpCode);
 
-	if (i == s_opCodeLengths.end())
+	if (theOpCodeLength == 0)
 	{
 		throw InvalidOpCodeException(theOpCode);
 	}
 	else
 	{
-		assert((*i).second > 0);
-
 		// Set the current index before pushing, by
-		// getting the size, which will be correct
+		// getting the length, which will be correct
 		// after the push.
 		m_lastOpCodeIndex = opCodeMapSize();
 
 		m_opMap.push_back(theOpCode);
 
-		assert(s__opCodeMapLengthIndex == 1);
+		assert(s_opCodeMapLengthIndex == 1);
 
-		const OpCodeMapSizeType	theSize =
-					(*i).second;
-
-		if (theSize > 1)
+		if (theOpCodeLength > 1)
 		{
-			m_opMap.push_back(theSize);
+			m_opMap.push_back(theOpCodeLength);
 
-			for (OpCodeMapSizeType	i = 2;
-						i < theSize;
-								i++)
+			for (int i = 2; i < theOpCodeLength; ++i)
 			{
 				m_opMap.push_back(eENDOP);
 			}
@@ -456,7 +532,7 @@ XPathExpression::appendOpCode(eOpCodes	theOpCode)
 
 		if (m_lastOpCodeIndex != 0)
 		{
-			m_opMap[s__opCodeMapLengthIndex] += theSize;
+			m_opMap[s_opCodeMapLengthIndex] += theOpCodeLength;
 		}
 	}
 
@@ -470,19 +546,16 @@ XPathExpression::insertOpCode(
 			eOpCodes			theOpCode,
 			OpCodeMapSizeType	theIndex)
 {
-	OpCodeLengthMapType::const_iterator	i =
-				s_opCodeLengths.find(theOpCode);
+	const int	theOpCodeLength = getOpCodeLength(theOpCode);
 
-	if (i == s_opCodeLengths.end())
+	if (theOpCodeLength == 0)
 	{
 		throw InvalidOpCodeException(theOpCode);
 	}
 	else
 	{
-		assert((*i).second > 0);
-
 		// Insert -1 for each element of the opcode.
-		m_opMap.insert(m_opMap.begin() + theIndex, (*i).second, -1);
+		m_opMap.insert(m_opMap.begin() + theIndex, theOpCodeLength, -1);
 
 		// Set the member that contains the last insert/appended
 		// index.
@@ -492,10 +565,10 @@ XPathExpression::insertOpCode(
 		m_opMap[theIndex] = theOpCode;
 
 		// Update the entire expression length.
-		m_opMap[s__opCodeMapLengthIndex] += (*i).second;
+		m_opMap[s_opCodeMapLengthIndex] += theOpCodeLength;
 	}
 
-	return (*i).second;
+	return theOpCodeLength;
 }
 
 
@@ -512,24 +585,21 @@ XPathExpression::updateShiftedOpCodeLength(
 
 	assert(theNewIndex > theOriginalIndex);
 
-	OpCodeLengthMapType::const_iterator	i =
-			s_opCodeLengths.find(theOpCode);
+	const int	theOpCodeLength = getOpCodeLength(theOpCode);
 
 	// Make sure it's a valid op code and that it
 	// matches the op code at supplied index.
-	if (i == s_opCodeLengths.end() ||
+	if (theOpCodeLength == 0 ||
 		m_opMap[theNewIndex] != theOpCode)
 	{
 		throw InvalidOpCodeException(theOpCode);
 	}
 	else
 	{
-		assert((*i).second > 0);
-
 		// Determine where the length position of the op code
 		// is.
 		const	OpCodeMapSizeType	theLengthIndex =
-						theNewIndex + s__opCodeMapLengthIndex;
+						theNewIndex + s_opCodeMapLengthIndex;
 
 		// Too long, then throw an exception.
 		if (theLengthIndex >= opCodeMapSize())
@@ -546,7 +616,7 @@ XPathExpression::updateShiftedOpCodeLength(
 			// adding that size in.
 			if (theNextOpCodePosition < opCodeMapSize())
 			{
-				m_opMap[theLengthIndex] += getOpCodeLength(theNextOpCodePosition);
+				m_opMap[theLengthIndex] += getOpCodeLengthFromOpMap(theNextOpCodePosition);
 			}
 		}
 	}
@@ -563,27 +633,24 @@ XPathExpression::updateOpCodeLength(
 	// the buffer...
 	assert(opCodeMapSize() > theIndex + 1);
 
-	OpCodeLengthMapType::const_iterator	i =
-				s_opCodeLengths.find(theOpCode);
+	const int	theOpCodeLength = getOpCodeLength(theOpCode);
 
 	// Make sure it's a valid op code and that it
 	// matches the op code at supplied index.
-	if (i == s_opCodeLengths.end() ||
+	if (theOpCodeLength == 0 ||
 		m_opMap[theIndex] != theOpCode)
 	{
 		throw InvalidOpCodeException(theOpCode);
 	}
 	else
 	{
-		assert((*i).second > 0);
-
 		// This presumes that the other opcodes
 		// have been appended to the expression,
 		// and that the specified op code's length
 		// needs to be set.  The size includes the
 		// normal length of the opcode, plus the
 		// length of its subexpressions.
-		m_opMap[theIndex + s__opCodeMapLengthIndex] =
+		m_opMap[theIndex + s_opCodeMapLengthIndex] =
 							opCodeMapLength() - theIndex;
 	}
 }
@@ -593,9 +660,9 @@ XPathExpression::updateOpCodeLength(
 bool
 XPathExpression::isNodeTestOpCode(OpCodeMapValueType	theOpCode)
 {
-	if (theOpCode < s_nodeTestOpCodesArraySize)
+	if (theOpCode < theNodeTestOpCodesArraySize)
 	{
-		return s_nodeTestOpCodesArray[theOpCode];
+		return theNodeTestOpCodesArray[theOpCode];
 	}
 	else
 	{
@@ -615,21 +682,18 @@ XPathExpression::updateOpCodeLengthAfterNodeTest(OpCodeMapSizeType	theIndex)
 	const OpCodeMapValueType	theOpCode =
 						m_opMap[theIndex];
 
-	OpCodeLengthMapType::const_iterator	i =
-				s_opCodeLengths.find(theOpCode);
+	const int	theOpCodeLength = getOpCodeLength(theOpCode);
 
 	// Make sure it's a valid op code and that it
 	// is a node test op code.
-	if (i == s_opCodeLengths.end() ||
+	if (theOpCodeLength == 0 ||
 		isNodeTestOpCode(theOpCode) == false)
 	{
 		throw InvalidOpCodeException(theOpCode);
 	}
 	else
 	{
-		assert((*i).second > 0);
-
-		m_opMap[theIndex + s__opCodeMapLengthIndex + 1] =
+		m_opMap[theIndex + s_opCodeMapLengthIndex + 1] =
 							opCodeMapLength() - theIndex;
 	}
 }
@@ -762,7 +826,7 @@ XPathExpression::pushArgumentOnOpCodeMap(const XalanDOMString&	theToken)
 	m_opMap.push_back(thePosition);
 
 	// Update the op map length.
-	m_opMap[s__opCodeMapLengthIndex]++;
+	m_opMap[s_opCodeMapLengthIndex]++;
 }
 
 
@@ -783,7 +847,7 @@ XPathExpression::pushArgumentOnOpCodeMap(double		theToken)
 	m_opMap.push_back(thePosition);
 
 	// Update the op map length.
-	m_opMap[s__opCodeMapLengthIndex]++;
+	m_opMap[s_opCodeMapLengthIndex]++;
 }
 
 
@@ -800,7 +864,7 @@ XPathExpression::pushNumberLiteralOnOpCodeMap(double	theNumber)
 	m_opMap.push_back(theIndex);
 
 	// Update the op map length.
-	m_opMap[s__opCodeMapLengthIndex]++;
+	m_opMap[s_opCodeMapLengthIndex]++;
 
 	m_numberLiteralValues.push_back(theNumber);
 }
@@ -820,74 +884,5 @@ XPathExpression::pushCurrentTokenOnOpCodeMap()
 	m_opMap.push_back(thePosition);
 
 	// Update the op map length.
-	m_opMap[s__opCodeMapLengthIndex]++;
-}
-
-
-
-XPathExpression::OpCodeLengthMapType
-XPathExpression::IntializeOpCodeLengthMap()
-{
-	OpCodeLengthMapType		theMap;
-
-	theMap[eENDOP] = 1;
-	theMap[eEMPTY] = 1;
-	theMap[eELEMWILDCARD] = 1;
-	theMap[eOP_XPATH] = 1 + s__opCodeMapLengthIndex;
-	theMap[eOP_OR] = 1 + s__opCodeMapLengthIndex;
-	theMap[eOP_AND] = 1 + s__opCodeMapLengthIndex;
-	theMap[eOP_NOTEQUALS] = 1 + s__opCodeMapLengthIndex;
-	theMap[eOP_EQUALS] = 1 + s__opCodeMapLengthIndex;
-	theMap[eOP_LTE] = 1 + s__opCodeMapLengthIndex;
-	theMap[eOP_LT] = 1 + s__opCodeMapLengthIndex;
-	theMap[eOP_GTE] = 1 + s__opCodeMapLengthIndex;
-	theMap[eOP_GT] = 1 + s__opCodeMapLengthIndex;
-	theMap[eOP_PLUS] = 1 + s__opCodeMapLengthIndex;
-	theMap[eOP_MINUS] = 1 + s__opCodeMapLengthIndex;
-	theMap[eOP_MULT] = 1 + s__opCodeMapLengthIndex;
-	theMap[eOP_DIV] = 1 + s__opCodeMapLengthIndex;
-	theMap[eOP_MOD] = 1 + s__opCodeMapLengthIndex;
-	theMap[eOP_NEG] = 1 + s__opCodeMapLengthIndex;
-	theMap[eOP_BOOL] = 1 + s__opCodeMapLengthIndex;
-	theMap[eOP_NUMBER] = 1 + s__opCodeMapLengthIndex;
-	theMap[eOP_UNION] = 1 + s__opCodeMapLengthIndex;
-	theMap[eOP_LITERAL] = 1 + s__opCodeMapLengthIndex;
-	theMap[eOP_VARIABLE] = 1 + s__opCodeMapLengthIndex;
-	theMap[eOP_GROUP] = 1 + s__opCodeMapLengthIndex;
-	theMap[eOP_NUMBERLIT] = 1 + s__opCodeMapLengthIndex;
-	theMap[eOP_ARGUMENT] = 1 + s__opCodeMapLengthIndex;
-	theMap[eOP_EXTFUNCTION] = 3 + s__opCodeMapLengthIndex;
-	theMap[eOP_FUNCTION] = 3 + s__opCodeMapLengthIndex;
-	theMap[eOP_LOCATIONPATH] = 1 + s__opCodeMapLengthIndex;
-	theMap[eOP_PREDICATE] = 1 + s__opCodeMapLengthIndex;
-	theMap[eNODETYPE_COMMENT] = 1;
-	theMap[eNODETYPE_TEXT] = 1;
-	theMap[eNODETYPE_PI] = 1;
-	theMap[eNODETYPE_NODE] = 1;
-	theMap[eNODENAME] = 1;
-	theMap[eNODETYPE_ROOT] = 1;
-	theMap[eNODETYPE_ANYELEMENT] = 1;
-	theMap[eFROM_ANCESTORS] = 2 + s__opCodeMapLengthIndex;
-	theMap[eFROM_ANCESTORS_OR_SELF] = 2 + s__opCodeMapLengthIndex;
-	theMap[eFROM_ATTRIBUTES] = 2 + s__opCodeMapLengthIndex;
-	theMap[eFROM_CHILDREN] = 2 + s__opCodeMapLengthIndex;
-	theMap[eFROM_DESCENDANTS] = 2 + s__opCodeMapLengthIndex;
-	theMap[eFROM_DESCENDANTS_OR_SELF] = 2 + s__opCodeMapLengthIndex;
-	theMap[eFROM_FOLLOWING] = 2 + s__opCodeMapLengthIndex;
-	theMap[eFROM_FOLLOWING_SIBLINGS] = 2 + s__opCodeMapLengthIndex;
-	theMap[eFROM_PARENT] = 2 + s__opCodeMapLengthIndex;
-	theMap[eFROM_PRECEDING] = 2 + s__opCodeMapLengthIndex;
-	theMap[eFROM_PRECEDING_SIBLINGS] = 2 + s__opCodeMapLengthIndex;
-	theMap[eFROM_SELF] = 2 + s__opCodeMapLengthIndex;
-	theMap[eFROM_NAMESPACE] = 2 + s__opCodeMapLengthIndex;
-	theMap[eFROM_ROOT] = 2 + s__opCodeMapLengthIndex;
-	theMap[eOP_MATCHPATTERN] = 1 + s__opCodeMapLengthIndex;
-	theMap[eOP_LOCATIONPATHPATTERN] = 1 + s__opCodeMapLengthIndex;
-	theMap[eMATCH_ATTRIBUTE] = 1 + s__opCodeMapLengthIndex;
-	theMap[eMATCH_ANY_ANCESTOR] = 1 + s__opCodeMapLengthIndex;
-	theMap[eMATCH_IMMEDIATE_ANCESTOR] = 1 + s__opCodeMapLengthIndex;
-	theMap[eMATCH_ANY_ANCESTOR_WITH_PREDICATE] = 2 + s__opCodeMapLengthIndex;
-	theMap[eMATCH_ANY_ANCESTOR_WITH_FUNCTION_CALL] = 2 + s__opCodeMapLengthIndex;
-
-	return theMap;
+	m_opMap[s_opCodeMapLengthIndex]++;
 }

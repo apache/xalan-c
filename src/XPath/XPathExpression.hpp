@@ -64,9 +64,6 @@
 
 
 
-#include <deque>
-#include <map>
-#include <set>
 #include <vector>
 
 #if defined(XALAN_NO_IOSFWD)
@@ -120,10 +117,11 @@ public:
 	enum eOpCodes
 	{
 		/**
-		 * [ENDOP]
-		 * Some operators may like to have a terminator.
+		 * [ELEMWILDCARD]
+		 * Means ELEMWILDCARD ("*"), used instead 
+		 * of string index in some places.
 		 */
-		eENDOP = -1,
+		eELEMWILDCARD = -3,
 
 		/**
 		 * [EMPTY]
@@ -132,11 +130,10 @@ public:
 		eEMPTY = -2,
 
 		/**
-		 * [ELEMWILDCARD]
-		 * Means ELEMWILDCARD ("*"), used instead 
-		 * of string index in some places.
+		 * [ENDOP]
+		 * Some operators may like to have a terminator.
 		 */
-		eELEMWILDCARD = -3,
+		eENDOP = -1,
 
 		/**
 		 * [OP_XPATH]
@@ -297,18 +294,6 @@ public:
 		eOP_MOD = 14,
 
 		/**
-		 * [OP_QUO]
-		 * [length]
-		 *	{number expression}
-		 *	{number expression}
-		 * 
-		 * returns: 
-		 *	XNumber
-		 */
-// No longer supported...
-//		eOP_QUO = 15,
-
-		/**
 		 * [OP_NEG]
 		 * [length]
 		 *	{number expression}
@@ -316,18 +301,7 @@ public:
 		 * returns: 
 		 *	XNumber
 		 */
-		eOP_NEG = 16,
-
-		/**
-		 * [OP_STRING] (cast operation)
-		 * [length]
-		 *	{expression}
-		 * 
-		 * returns: 
-		 *	XString
-		 */
-// No longer supported...
-//		eOP_STRING = 17,
+		eOP_NEG = 15,
 
 		/**
 		 * [OP_BOOL] (cast operation)
@@ -337,17 +311,7 @@ public:
 		 * returns: 
 		 *	XBoolean
 		 */
-		eOP_BOOL = 18,
-
-		/**
-		 * [OP_NUMBER] (cast operation)
-		 * [length]
-		 *	{expression}
-		 * 
-		 * returns: 
-		 *	XBoolean
-		 */
-		eOP_NUMBER = 19,
+		eOP_BOOL = 16,
 
 		/**
 		 * [OP_UNION]
@@ -357,7 +321,7 @@ public:
 		 * returns: 
 		 *	XNodeSet
 		 */
-		eOP_UNION = 20,
+		eOP_UNION = 17,
 
 		/**
 		 * [OP_LITERAL]
@@ -367,7 +331,7 @@ public:
 		 * returns: 
 		 *	XString
 		 */
-		eOP_LITERAL = 21,
+		eOP_LITERAL = 18,
 
 		/**
 		 * [OP_VARIABLE]
@@ -377,7 +341,7 @@ public:
 		 * returns: 
 		 *	XString
 		 */
-		eOP_VARIABLE = 22,
+		eOP_VARIABLE = 19,
 
 		/**
 		 * [OP_GROUP]
@@ -392,7 +356,7 @@ public:
 		 *	XRTree
 		 *	XObject
 		 */
-		eOP_GROUP = 23,
+		eOP_GROUP = 20,
 
 		/**
 		 * [OP_NUMBERLIT] (Number literal.)
@@ -402,7 +366,7 @@ public:
 		 * returns: 
 		 *	XString
 		 */
-		eOP_NUMBERLIT = 24,
+		eOP_NUMBERLIT = 21,
 
 		/**
 		 * [OP_ARGUMENT] (Function argument.)
@@ -417,7 +381,7 @@ public:
 		 *	XRTree
 		 *	XObject
 		 */
-		eOP_ARGUMENT = 25,
+		eOP_ARGUMENT = 22,
 
 		/**
 		 * [OP_EXTFUNCTION] (Extension function.)
@@ -434,7 +398,7 @@ public:
 		 *  XRTree
 		 *  XObject
 		 */
-		eOP_EXTFUNCTION = 26,
+		eOP_EXTFUNCTION = 23,
 
 		/**
 		 * [OP_FUNCTION]
@@ -451,7 +415,7 @@ public:
 		 *  XRTree
 		 *  XObject
 		 */
-		eOP_FUNCTION = 27,
+		eOP_FUNCTION = 24,
 
 		/**
 		 * [OP_LOCATIONPATH]
@@ -466,7 +430,7 @@ public:
 		 * returns: 
 		 *	XNodeSet
 		 */
-		eOP_LOCATIONPATH = 28,
+		eOP_LOCATIONPATH = 25,
 
 		/**
 		 * [OP_PREDICATE]
@@ -477,7 +441,7 @@ public:
 		 * returns: 
 		 *	XBoolean or XNumber
 		 */
-		eOP_PREDICATE = 29,
+		eOP_PREDICATE = 26,
   
 		/**
 		 * [NODETYPE_COMMENT]
@@ -486,7 +450,7 @@ public:
 		 * returns: 
 		 *	XBoolean
 		 */
-		eNODETYPE_COMMENT = 1030,
+		eNODETYPE_COMMENT = 27,
 		
 		/**
 		 * [NODETYPE_TEXT]
@@ -495,7 +459,7 @@ public:
 		 * returns: 
 		 *	XBoolean
 		 */
-		eNODETYPE_TEXT = 1031,
+		eNODETYPE_TEXT = 28,
 		
 		/**
 		 * [NODETYPE_PI]
@@ -504,7 +468,7 @@ public:
 		 * returns: 
 		 *	XBoolean
 		 */
-		eNODETYPE_PI = 1032,
+		eNODETYPE_PI = 29,
 		
 		/**
 		 * [NODETYPE_NODE]
@@ -513,7 +477,7 @@ public:
 		 * returns: 
 		 *	XBoolean
 		 */
-		eNODETYPE_NODE = 1033,
+		eNODETYPE_NODE = 30,
 		
 		/**
 		 * [NODENAME]
@@ -523,7 +487,7 @@ public:
 		 * returns: 
 		 *	XBoolean
 		 */
-		eNODENAME = 34,
+		eNODENAME = 31,
 		
 		/**
 		 * [NODETYPE_ROOT]
@@ -532,7 +496,7 @@ public:
 		 * returns: 
 		 *	XBoolean
 		 */
-		eNODETYPE_ROOT = 35,
+		eNODETYPE_ROOT = 32,
 		
 		/**
 		 * [NODETYPE_ANY]
@@ -541,7 +505,7 @@ public:
 		 * returns: 
 		 *	XBoolean
 		 */
-		eNODETYPE_ANYELEMENT = 36,
+		eNODETYPE_ANYELEMENT = 33,
 
 		/**
 		 * [FROM_stepType]
@@ -553,25 +517,20 @@ public:
 		 * returns: 
 		 *	XBoolean
 		 */
-		eFROM_ANCESTORS = 37,
-		eFROM_ANCESTORS_OR_SELF = 38,
-		eFROM_ATTRIBUTES = 39,
-		eFROM_CHILDREN = 40,
-		eFROM_DESCENDANTS = 41,
-		eFROM_DESCENDANTS_OR_SELF = 42,
-		eFROM_FOLLOWING = 43,
-		eFROM_FOLLOWING_SIBLINGS = 44,
-		eFROM_PARENT = 45,
-		eFROM_PRECEDING = 46,
-		eFROM_PRECEDING_SIBLINGS = 47,
-		eFROM_SELF = 48,
-		eFROM_NAMESPACE = 49,
-		// eFROM_ATTRIBUTE = 50,
-		// eFROM_DOC = 51,
-		// eFROM_DOCREF = 52,
-		// eFROM_ID = 53,
-		// eFROM_IDREF = 54,
-		eFROM_ROOT = 55,
+		eFROM_ANCESTORS = 34,
+		eFROM_ANCESTORS_OR_SELF = 35,
+		eFROM_ATTRIBUTES = 36,
+		eFROM_CHILDREN = 37,
+		eFROM_DESCENDANTS = 38,
+		eFROM_DESCENDANTS_OR_SELF = 39,
+		eFROM_FOLLOWING = 40,
+		eFROM_FOLLOWING_SIBLINGS = 41,
+		eFROM_PARENT = 42,
+		eFROM_PRECEDING = 43,
+		eFROM_PRECEDING_SIBLINGS = 44,
+		eFROM_SELF = 45,
+		eFROM_NAMESPACE = 46,
+		eFROM_ROOT = 47,
 
 		/**
 		 * [OP_UNION]
@@ -581,7 +540,7 @@ public:
 		 * returns: 
 		 *  XNodeSet
 		 */
-		eOP_MATCHPATTERN = 92,
+		eOP_MATCHPATTERN = 48,
 
 		/**
 		 * [OP_UNION]
@@ -591,16 +550,17 @@ public:
 		 * returns: 
 		 *  XNodeSet
 		 */
-		eOP_LOCATIONPATHPATTERN = 93,
+		eOP_LOCATIONPATHPATTERN = 49,
 
 		// For match patterns
-		eMATCH_ATTRIBUTE = 94,
-		eMATCH_ANY_ANCESTOR = 95,
-		eMATCH_IMMEDIATE_ANCESTOR = 96,
-		eMATCH_ANY_ANCESTOR_WITH_PREDICATE = 97,
-		eMATCH_ANY_ANCESTOR_WITH_FUNCTION_CALL = 98,
+		eMATCH_ATTRIBUTE = 50,
+		eMATCH_ANY_ANCESTOR = 51,
+		eMATCH_IMMEDIATE_ANCESTOR = 52,
+		eMATCH_ANY_ANCESTOR_WITH_PREDICATE = 53,
+		eMATCH_ANY_ANCESTOR_WITH_FUNCTION_CALL = 54,
 
-		// Always add _before_ this one.
+		// Always add _before_ this one and update
+		// s_opCodeLengthArray.
 		eOpCodeNextAvailable
 	};	// enum eOpCodes
 
@@ -611,11 +571,11 @@ public:
 	 * remain one.
 	 */
 #if defined(XALAN_INLINE_INITIALIZATION)
-	const int	s__opCodeMapLengthIndex = 1;
+	const int	s_opCodeMapLengthIndex = 1;
 #else
 	enum eDummy
 	{
-		s__opCodeMapLengthIndex = 1
+		s_opCodeMapLengthIndex = 1
 	};
 #endif
 
@@ -750,8 +710,6 @@ public:
 	typedef vector<XToken>					TokenQueueType;
 	typedef vector<int>						PatternMapType;
 
-	typedef map<int, int, less<int> >		OpCodeLengthMapType;
-
 	typedef OpCodeMapType::value_type		OpCodeMapValueType;
 	typedef OpCodeMapType::size_type		OpCodeMapSizeType;
 
@@ -763,7 +721,6 @@ public:
 	typedef std::vector<int>				OpCodeMapType;
 	typedef std::vector<XToken>				TokenQueueType;
 	typedef std::vector<int>				PatternMapType;
-	typedef std::map<int, int>				OpCodeLengthMapType;
 
 	typedef OpCodeMapType::value_type		OpCodeMapValueType;
 	typedef OpCodeMapType::size_type		OpCodeMapSizeType;
@@ -822,12 +779,12 @@ public:
 	{
 		const OpCodeMapSizeType		theSize = opCodeMapSize();
 
-		if (theSize > s__opCodeMapLengthIndex)
+		if (theSize > s_opCodeMapLengthIndex)
 		{
 			assert(theSize ==
-				OpCodeMapSizeType(m_opMap[s__opCodeMapLengthIndex]));
+				OpCodeMapSizeType(m_opMap[s_opCodeMapLengthIndex]));
 
-			return m_opMap[s__opCodeMapLengthIndex];
+			return m_opMap[s_opCodeMapLengthIndex];
 		}
 		else
 		{
@@ -870,15 +827,21 @@ public:
 		return m_opMap[opPos];
 	}
 
+	OpCodeMapValueType
+	getOpCodeArgumentLength(OpCodeMapSizeType	opPos) const
+	{
+		return getOpCodeMapValue(opPos + XPathExpression::s_opCodeMapLengthIndex + 1) - 3;
+	}
+
 	/**
 	 * Retrieve the length of an operation code at a specified position in the
-	 * list.
+	 * op map.
 	 * 
-	 * @param opPos position in list
+	 * @param opPos position in the op map
 	 * @return length of operation code
 	 */
 	OpCodeMapValueType
-	getOpCodeLength(OpCodeMapSizeType	opPos) const;
+	getOpCodeLengthFromOpMap(OpCodeMapSizeType	opPos) const;
 
 	/**
 	 * Retrieve the position of the next operation code at a specified position
@@ -892,7 +855,7 @@ public:
 	{
 		assert(opPos < opCodeMapSize());
 
-		return opPos + m_opMap[opPos + s__opCodeMapLengthIndex];
+		return opPos + m_opMap[opPos + s_opCodeMapLengthIndex];
 	}
 
 	/**
@@ -1314,7 +1277,7 @@ public:
 		m_opMap.push_back(theValue);
 
 		// Update the op map length.
-		m_opMap[s__opCodeMapLengthIndex]++;
+		m_opMap[s_opCodeMapLengthIndex]++;
 	}
 
 	/**
@@ -1493,14 +1456,6 @@ private:
 	};
 
 	NumberLiteralValueVectorType	m_numberLiteralValues;
-
-	// A map of Op codes to op code lengths.
-	const static OpCodeLengthMapType	s_opCodeLengths;
-
-	static OpCodeLengthMapType
-	IntializeOpCodeLengthMap();
-
-	const static bool	s_nodeTestOpCodesArray[];
 };
 
 
