@@ -7,30 +7,31 @@
 * Rights for U.S. government users and applicable export regulations.
 */
 #include "XMLFileReporter.hpp" 
+#include <stdlib.h>
 
 
-const string const XMLFileReporter::OPT_FILENAME = "filename";
+const string  XMLFileReporter::OPT_FILENAME = "filename";
 
-const string const XMLFileReporter::ELEM_RESULTSFILE = "resultsfile";
-const string const XMLFileReporter::ELEM_TESTFILE = "testfile";
-const string const XMLFileReporter::ELEM_FILERESULT = "fileresult";
-const string const XMLFileReporter::ELEM_TESTCASE = "testcase";
-const string const XMLFileReporter::ELEM_CASERESULT = "caseresult";
-const string const XMLFileReporter::ELEM_CHECKRESULT = "checkresult";
-const string const XMLFileReporter::ELEM_STATISTIC = "statistic";
-const string const XMLFileReporter::ELEM_LONGVAL = "longval";
-const string const XMLFileReporter::ELEM_DOUBLEVAL = "doubleval";
-const string const XMLFileReporter::ELEM_MESSAGE = "message";
-const string const XMLFileReporter::ELEM_ARBITRARY = "arbitrary";
-const string const XMLFileReporter::ELEM_HASHTABLE = "hashtable";
-const string const XMLFileReporter::ELEM_HASHITEM = "hashitem";
+const string  XMLFileReporter::ELEM_RESULTSFILE = "resultsfile";
+const string  XMLFileReporter::ELEM_TESTFILE = "testfile";
+const string  XMLFileReporter::ELEM_FILERESULT = "fileresult";
+const string  XMLFileReporter::ELEM_TESTCASE = "testcase";
+const string  XMLFileReporter::ELEM_CASERESULT = "caseresult";
+const string  XMLFileReporter::ELEM_CHECKRESULT = "checkresult";
+const string  XMLFileReporter::ELEM_STATISTIC = "statistic";
+const string  XMLFileReporter::ELEM_LONGVAL = "longval";
+const string  XMLFileReporter::ELEM_DOUBLEVAL = "doubleval";
+const string  XMLFileReporter::ELEM_MESSAGE = "message";
+const string  XMLFileReporter::ELEM_ARBITRARY = "arbitrary";
+const string  XMLFileReporter::ELEM_HASHTABLE = "hashtable";
+const string  XMLFileReporter::ELEM_HASHITEM = "hashitem";
 
-const string const XMLFileReporter::ATTR_LEVEL = "level";
-const string const XMLFileReporter::ATTR_DESC = "desc";
-const string const XMLFileReporter::ATTR_TIME = "time";
-const string const XMLFileReporter::ATTR_RESULT = "result";
-const string const XMLFileReporter::ATTR_KEY = "key";
-const string const XMLFileReporter::ATTR_FILENAME = XMLFileReporter::OPT_FILENAME;
+const string  XMLFileReporter::ATTR_LEVEL = "level";
+const string  XMLFileReporter::ATTR_DESC = "desc";
+const string  XMLFileReporter::ATTR_TIME = "time";
+const string  XMLFileReporter::ATTR_RESULT = "result";
+const string  XMLFileReporter::ATTR_KEY = "key";
+const string  XMLFileReporter::ATTR_FILENAME = XMLFileReporter::OPT_FILENAME;
 
 const string XMLFileReporter::TESTCASEINIT_HDR = "<" + ELEM_TESTCASE + " " + ATTR_DESC + "=\"";
 const string XMLFileReporter::TESTCASECLOSE_HDR = "<" + ELEM_CASERESULT + " " + ATTR_DESC + "=\"";
@@ -240,9 +241,12 @@ XMLFileReporter::logTestCaseClose(const string& msg, const string& result)
 void 
 XMLFileReporter::logMessage(int level, const string& msg)
 {
+	char tmp[20];
+	sprintf(tmp, "%d", level);
+
     if (isReady())
     {
-        printToFile(MESSAGE_HDR + (char)level + "\">");
+        printToFile(MESSAGE_HDR + tmp + "\">");
         printToFile(escapestring(msg));
         printToFile("</" + ELEM_MESSAGE +">");
     }
@@ -256,11 +260,11 @@ XMLFileReporter::logStatistic (int level, long lVal, double dVal, const string& 
     if (isReady())
     {
         //printToFile(STATISTIC_HDR + level + "\" " + ATTR_DESC + "=\"" + escapestring(msg) + "\">");
-        fprintf(m_fileHandle, "%s%d%s%s%s%s", STATISTIC_HDR, level, "\" ", ATTR_DESC, "=\"", escapestring(msg), "\">\n");
+        fprintf(m_fileHandle, "%s%d%s%s%s%s%s", STATISTIC_HDR.c_str(), level, "\" ", ATTR_DESC.c_str(), "=\"", escapestring(msg).c_str(), "\">\n");
 		//printToFile("<" + ELEM_LONGVAL + ">" + lVal + "</" + ELEM_LONGVAL + ">");
-		fprintf(m_fileHandle, "%s%s%d%s%s", "<", ELEM_LONGVAL, ">", lVal, "</", ELEM_LONGVAL, ">\n");
+		fprintf(m_fileHandle, "%s%s%s%d%s%s%s", "<", ELEM_LONGVAL.c_str(), ">", lVal, "</", ELEM_LONGVAL.c_str(), ">\n");
         //printToFile("<" + ELEM_DOUBLEVAL + ">" + dVal + "</" + ELEM_DOUBLEVAL + ">");
-		fprintf(m_fileHandle, "%s%s%d%s%s", "<", ELEM_DOUBLEVAL, ">", dVal, "</", ELEM_DOUBLEVAL + ">\n");
+		fprintf(m_fileHandle, "%s%s%s%f%s%s%s", "<", ELEM_DOUBLEVAL.c_str(), ">", dVal, "</", ELEM_DOUBLEVAL.c_str(), ">\n");
         printToFile("</" + ELEM_STATISTIC + ">");
 		
     }
@@ -271,15 +275,16 @@ XMLFileReporter::logStatistic (int level, long lVal, double dVal, const string& 
 void 
 XMLFileReporter::logArbitraryMessage (int level, const string& msg)
 {
+	char tmp[20];
+	sprintf(tmp, "%d", level);
+
     if (isReady())
     {            
-		fprintf(m_fileHandle, "%s%d%s", ARBITRARY_HDR, level, "\">\n");
+		printToFile(ARBITRARY_HDR + tmp + "\">");
         printToFile(escapestring(msg));
         printToFile("</" + ELEM_ARBITRARY +">");
     }
 }
-
-
 
 /*
 void logHashtable (int level, Hashtable hash, string msg)
