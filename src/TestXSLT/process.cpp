@@ -143,6 +143,13 @@
 
 
 
+//#define XALAN_VQ_SPECIAL_TRACE
+#if defined(XALAN_VQ_SPECIAL_TRACE)
+#include "d:/Rational/Quantify/pure.h"
+#endif
+
+
+
 #if !defined (XALAN_NO_NAMESPACES)
 using std::cerr;
 using std::cout;
@@ -952,6 +959,10 @@ main(
 
 	_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_FILE);
 	_CrtSetReportFile(_CRT_WARN, _CRTDBG_FILE_STDERR);
+#endif
+
+#if defined(XALAN_VQ_SPECIAL_TRACE)
+	QuantifyStopRecordingData();
 #endif
 
    /**
