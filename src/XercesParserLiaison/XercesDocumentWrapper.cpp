@@ -1293,13 +1293,22 @@ XercesDocumentWrapper::getElementsByTagNameNS(
 
 
 XalanElement*
-XercesDocumentWrapper::getElementById(const XalanDOMString&		/* elementId */) const
+XercesDocumentWrapper::getElementById(const XalanDOMString&		elementId) const
 {
-	// Not supported...
-	throw XercesDOMWrapperException(XercesDOMWrapperException::NOT_SUPPORTED_ERR);
+	const DOMNode* const	theXercesNode = m_xercesDocument->getElementById(c_wstr(elementId));
 
-	// Dummy return value...
-	return 0;
+	if (theXercesNode == 0)
+	{
+		return 0;
+	}
+	else
+	{
+#if defined(XALAN_OLD_STYLE_CASTS)
+		return (XalanElement*)mapNode(theXercesNode);
+#else
+		return static_cast<XalanElement*>(mapNode(theXercesNode));
+#endif
+	}
 }
 
 
