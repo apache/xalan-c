@@ -1,5 +1,17 @@
+// Base header file.  Must be first.
+#include <Include/PlatformDefinitions.hpp>
+
+
+
 #include <cassert>
+
+
+
+#if defined(XALAN_OLD_STREAM_HEADERS)
+#include <iostream.h>
+#else
 #include <iostream>
+#endif
 
 
 
@@ -54,6 +66,7 @@
 	using std::cerr;
 	using std::cout;
 	using std::endl;
+	using std::vector;
 #endif
 
 
@@ -272,7 +285,7 @@ doThreads(long	theThreadCount)
 {
 	cout << endl << "Starting " << theThreadCount << " threads." << endl;
 
-	typedef std::vector<ThreadInfo>		ThreadInfoVectorType;
+	typedef vector<ThreadInfo>		ThreadInfoVectorType;
 
 	ThreadInfoVectorType	theThreadInfo;
 
