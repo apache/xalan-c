@@ -163,7 +163,7 @@ char buffer[_MAX_PATH];
 //	Notes:	
 */	
 
-XalanDOMString FileUtility::GenerateFileName(const XalanDOMString&  theXMLFileName, char* suffix)
+XalanDOMString FileUtility::generateFileName(const XalanDOMString&  theXMLFileName, char* suffix)
 {
 	XalanDOMString	theResult;
 	int				thePeriodIndex = -1;
@@ -199,7 +199,7 @@ XalanDOMString FileUtility::GenerateFileName(const XalanDOMString&  theXMLFileNa
 //		   03151046 is "Mar 15 10:46"	
 */
 
-XalanDOMString FileUtility::GenerateUniqRunid()
+XalanDOMString FileUtility::generateUniqRunid()
 {
 
 		struct tm *newtime;
@@ -1018,7 +1018,7 @@ FileUtility::reportPassFail(XMLFileReporter& logfile, const XalanDOMString& runi
 //	Returns: Void						
 */
 void
-FileUtility::analyzeResults(XalanTransformer& xalan, const XalanDOMString& resultsFile)
+FileUtility::analyzeResults(XalanTransformer& xalan, const XalanDOMString& base, const XalanDOMString& resultsFile)
 {
 	XalanDOMString paramValue;
 
@@ -1028,12 +1028,20 @@ FileUtility::analyzeResults(XalanTransformer& xalan, const XalanDOMString& resul
 
 	xalan.setStylesheetParam(XalanDOMString("testfile"), paramValue);
 
-	int result = xalan.transform("\\xml-xalan\\c\\Tests\\cconf.xml", 
-								"\\xml-xalan\\c\\Tests\\cconf.xsl",
-								"\\xml-xalan\\c\\Tests\\cconf.html");
+
+	const XalanDOMString  theHTMLFile = generateFileName(resultsFile,"html");
+	const XalanDOMString  theStylesheet = base + XalanDOMString("\cconf.xsl");
+	const XalanDOMString  theXMLSource = base + XalanDOMString("\cconf.xml");
+
+	const XSLTInputSource	xslInputSource(c_wstr(theStylesheet));
+	const XSLTInputSource	xmlInputSource(c_wstr(theXMLSource));
+	const XSLTResultTarget	resultFile(theHTMLFile);
+
+
+	int result = xalan.transform(xmlInputSource, xslInputSource, resultFile);
 	if (!result)
 	{
-		system("\\xml-xalan\\c\\Tests\\cconf.html");
+		system(c_str(TranscodeToLocalCodePage(theHTMLFile)));
 	}
 	else 
 	{

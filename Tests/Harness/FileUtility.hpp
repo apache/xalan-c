@@ -190,19 +190,19 @@ public:
 	* Utility method used to get XSL file based on XML file.
 	* @returns a XalanDOMString.
 	*/
-	XalanDOMString FileUtility::GetXSLFileName(const XalanDOMString&	theXMLFileName);
+	XalanDOMString FileUtility::getXSLFileName(const XalanDOMString&	theXMLFileName);
 
 	/** 
 	* Utility method used to get OUT file based on XML file.
 	* @returns a XalanDOMString.
 	*/
-	XalanDOMString FileUtility::GenerateFileName(const XalanDOMString&  theXMLFileName, char* suffix);
+	XalanDOMString FileUtility::generateFileName(const XalanDOMString&  theXMLFileName, char* suffix);
 
 	/** 
 	* Utility method used to generate UniqRunid.
 	* @returns a XalanDOMString.
 	*/
-	XalanDOMString FileUtility::GenerateUniqRunid();
+	XalanDOMString FileUtility::generateUniqRunid();
 
 	/** 
 	* Utility methods used to get Xerces Version number.
@@ -301,7 +301,7 @@ public:
 	FileUtility::reportPassFail(XMLFileReporter& logfile, const XalanDOMString& runid);
 
 	void
-	FileUtility::analyzeResults(XalanTransformer& xalan, const XalanDOMString& resultsFile);
+	FileUtility::analyzeResults(XalanTransformer& xalan, const XalanDOMString& base, const XalanDOMString& resultsFile);
 //	FileUtility::analyzeResults(const XalanDOMString& resultsFile);
 
 private:
