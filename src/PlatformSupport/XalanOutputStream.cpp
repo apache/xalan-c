@@ -374,19 +374,18 @@ XalanOutputStream::setOutputEncoding(const XalanDOMString&	theEncoding)
 
 	m_encoding = theEncoding;
 
-	typedef XalanTranscodingServices::XalanXMLByteVectorType	XalanXMLByteVectorType;
-
 	const XalanTranscodingServices::XalanXMLByte*	theProlog =
 		XalanTranscodingServices::getStreamProlog(theEncoding);
+	assert(theProlog != 0);
 
-	const unsigned int	theSize = XalanTranscodingServices::length(theProlog);
+	const unsigned int	theLength = XalanTranscodingServices::length(theProlog);
 
-	if (theSize > 0)
+	if (theLength > 0)
 	{
 #if defined(XALAN_OLD_STYLE_CASTS)
-		write((const char*)theProlog, theSize);
+		write((const char*)theProlog, theLength);
 #else
-		write(reinterpret_cast<const char*>(theProlog), theSize);
+		write(reinterpret_cast<const char*>(theProlog), theLength);
 #endif
 	}
 }
