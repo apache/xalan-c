@@ -82,8 +82,8 @@ XercesDocumentWrapper::XercesDocumentWrapper(
 	m_documentElement(0),
 	m_nodeMap(),
 	m_domImplementation(new XercesDOMImplementationWrapper(theXercesDocument->getImplementation())),
-	m_navigators(1, XercesWrapperNavigator(this)),
-	m_navigator(&m_navigators.front()),
+	m_navigatorAllocator(25),
+	m_navigator(0),
 	m_children(theXercesDocument->getChildNodes(),
 			   *m_navigator),
 	m_nodes(),
@@ -97,6 +97,8 @@ XercesDocumentWrapper::XercesDocumentWrapper(
 	m_stringPool(threadSafe == true ? new XercesLiaisonXalanDOMStringPool : new XalanDOMStringPool)
 {
 	assert(theXercesDocument != 0);
+
+    m_navigator = m_navigatorAllocator.create(this);
 
 	if (m_mappingMode == false)
 	{
@@ -321,9 +323,9 @@ XercesDocumentWrapper::destroyWrapper()
 	m_nodes.clear();
 
 	// Clear out all of the navigators, except ours...
-	m_navigators.erase(m_navigators.begin() + 1, m_navigators.end());
+	m_navigatorAllocator.reset();
 
-	m_navigator = &m_navigators.front();
+	m_navigator = m_navigatorAllocator.create(this);
 
 	// Clear the node map...
 	m_nodeMap.clear();
@@ -348,7 +350,7 @@ XercesDocumentWrapper::rebuildWrapper()
 
 
 XercesWrapperNavigator&
-XercesDocumentWrapper::pushNavigator() const
+XercesDocumentWrapper::createNavigator() const
 {
 	XercesDocumentWrapper* const		This =
 #if defined(XALAN_OLD_STYLE_CASTS)
@@ -357,9 +359,7 @@ XercesDocumentWrapper::pushNavigator() const
 		const_cast<XercesDocumentWrapper*>(this);
 #endif
 
-	This->m_navigators.push_back(XercesWrapperNavigator(This));
-
-	return This->m_navigators.back();
+	return *This->m_navigatorAllocator.create(This);
 }
 
 
@@ -368,7 +368,8 @@ XercesDocumentTypeWrapper*
 XercesDocumentWrapper::createWrapperNode(
 			const DOMDocumentType_Type*		theDoctype,
 			IndexType						theIndex,
-			bool							mapNode) const
+			bool							mapNode,
+            XercesWrapperNavigator**        theWrapperNodeNavigator) const
 {
 	// This is a special case, since there is only one
 	// doctype node allowed...
@@ -377,7 +378,7 @@ XercesDocumentWrapper::createWrapperNode(
 		   m_xercesDocument->getDoctype() == theDoctype);
 
 	// Create a navigator...
-	XercesWrapperNavigator&	theNavigator = pushNavigator();
+	XercesWrapperNavigator&	theNavigator = createNavigator();
 
 	theNavigator.setIndex(theIndex);
 
@@ -399,6 +400,11 @@ XercesDocumentWrapper::createWrapperNode(
 
 	This->m_nodes.push_back(m_doctype);
 
+    if (theWrapperNodeNavigator != 0)
+    {
+        *theWrapperNodeNavigator = &theNavigator;
+    }
+
 	return m_doctype;
 }
 
@@ -406,12 +412,13 @@ XercesDocumentWrapper::createWrapperNode(
 
 XercesElementWrapper*
 XercesDocumentWrapper::createWrapperNode(
-			const DOMElementType* 	theXercesNode,
-			IndexType				theIndex,
-			bool					mapNode) const
+			const DOMElementType* 	    theXercesNode,
+			IndexType				    theIndex,
+			bool					    mapNode,
+            XercesWrapperNavigator**    theWrapperNodeNavigator) const
 {
 	// Create a navigator...
-	XercesWrapperNavigator&	theNavigator = pushNavigator();
+	XercesWrapperNavigator&	theNavigator = createNavigator();
 
 	theNavigator.setIndex(theIndex);
 
@@ -434,6 +441,11 @@ XercesDocumentWrapper::createWrapperNode(
 		This->m_nodeMap.addAssociation(theXercesNode, theWrapper);
 	}
 
+    if (theWrapperNodeNavigator != 0)
+    {
+        *theWrapperNodeNavigator = &theNavigator;
+    }
+
 	return theWrapper;
 }
 
@@ -441,12 +453,13 @@ XercesDocumentWrapper::createWrapperNode(
 
 XercesTextWrapper*
 XercesDocumentWrapper::createWrapperNode(
-			const DOMTextType*	theXercesNode,
-			IndexType			theIndex,
-			bool				mapNode) const
+			const DOMTextType*	        theXercesNode,
+			IndexType			        theIndex,
+			bool				        mapNode,
+            XercesWrapperNavigator**    theWrapperNodeNavigator) const
 {
 	// Create a navigator...
-	XercesWrapperNavigator&	theNavigator = pushNavigator();
+	XercesWrapperNavigator&	theNavigator = createNavigator();
 
 	theNavigator.setIndex(theIndex);
 
@@ -468,6 +481,11 @@ XercesDocumentWrapper::createWrapperNode(
 		This->m_nodeMap.addAssociation(theXercesNode, theWrapper);
 	}
 
+    if (theWrapperNodeNavigator != 0)
+    {
+        *theWrapperNodeNavigator = &theNavigator;
+    }
+
 	return theWrapper;
 }
 
@@ -475,12 +493,13 @@ XercesDocumentWrapper::createWrapperNode(
 
 XercesCommentWrapper*
 XercesDocumentWrapper::createWrapperNode(
-			const DOMCommentType*	theXercesNode,
-			IndexType				theIndex,
-			bool					mapNode) const
+			const DOMCommentType*	    theXercesNode,
+			IndexType				    theIndex,
+			bool					    mapNode,
+            XercesWrapperNavigator**    theWrapperNodeNavigator) const
 {
 	// Create a navigator...
-	XercesWrapperNavigator&	theNavigator = pushNavigator();
+	XercesWrapperNavigator&	theNavigator = createNavigator();
 
 	theNavigator.setIndex(theIndex);
 
@@ -504,6 +523,11 @@ XercesDocumentWrapper::createWrapperNode(
 		This->m_nodeMap.addAssociation(theXercesNode, theWrapper);
 	}
 
+    if (theWrapperNodeNavigator != 0)
+    {
+        *theWrapperNodeNavigator = &theNavigator;
+    }
+
 	return theWrapper;
 }
 
@@ -513,10 +537,11 @@ XercesCDATASectionWrapper*
 XercesDocumentWrapper::createWrapperNode(
 			const DOMCDATASectionType*	theXercesNode,
 			IndexType					theIndex,
-			bool						mapNode) const
+			bool						mapNode,
+            XercesWrapperNavigator**    theWrapperNodeNavigator) const
 {
 	// Create a navigator...
-	XercesWrapperNavigator&	theNavigator = pushNavigator();
+	XercesWrapperNavigator&	theNavigator = createNavigator();
 
 	theNavigator.setIndex(theIndex);
 
@@ -540,6 +565,11 @@ XercesDocumentWrapper::createWrapperNode(
 		This->m_nodeMap.addAssociation(theXercesNode, theWrapper);
 	}
 
+    if (theWrapperNodeNavigator != 0)
+    {
+        *theWrapperNodeNavigator = &theNavigator;
+    }
+
 	return theWrapper;
 }
 
@@ -549,10 +579,11 @@ XercesProcessingInstructionWrapper*
 XercesDocumentWrapper::createWrapperNode(
 			const DOMProcessingInstructionType*		theXercesNode,
 			IndexType								theIndex,
-			bool									mapNode) const
+			bool									mapNode,
+            XercesWrapperNavigator**                theWrapperNodeNavigator) const
 {
 	// Create a navigator...
-	XercesWrapperNavigator&	theNavigator = pushNavigator();
+	XercesWrapperNavigator&	theNavigator = createNavigator();
 
 	theNavigator.setIndex(theIndex);
 
@@ -576,6 +607,11 @@ XercesDocumentWrapper::createWrapperNode(
 		This->m_nodeMap.addAssociation(theXercesNode, theWrapper);
 	}
 
+    if (theWrapperNodeNavigator != 0)
+    {
+        *theWrapperNodeNavigator = &theNavigator;
+    }
+
 	return theWrapper;
 }
 
@@ -583,12 +619,13 @@ XercesDocumentWrapper::createWrapperNode(
 
 XercesAttrWrapper*
 XercesDocumentWrapper::createWrapperNode(
-			const DOMAttrType*	theXercesNode,
-			IndexType			theIndex,
-			bool				/* mapNode */) const
+			const DOMAttrType*	        theXercesNode,
+			IndexType			        theIndex,
+			bool				        /* mapNode */,
+            XercesWrapperNavigator**    theWrapperNodeNavigator) const
 {
 	// Create a navigator...
-	XercesWrapperNavigator&	theNavigator = pushNavigator();
+	XercesWrapperNavigator&	theNavigator = createNavigator();
 
 	theNavigator.setIndex(theIndex);
 
@@ -608,6 +645,11 @@ XercesDocumentWrapper::createWrapperNode(
 	// for now...
 	This->m_nodeMap.addAssociation(theXercesNode, theWrapper);
 
+    if (theWrapperNodeNavigator != 0)
+    {
+        *theWrapperNodeNavigator = &theNavigator;
+    }
+
 	return theWrapper;
 }
 
@@ -615,12 +657,13 @@ XercesDocumentWrapper::createWrapperNode(
 
 XercesEntityWrapper*
 XercesDocumentWrapper::createWrapperNode(
-			const DOMEntityType*	theXercesNode,
-			IndexType				theIndex,
-			bool					/* mapNode */) const
+			const DOMEntityType*	    theXercesNode,
+			IndexType				    theIndex,
+			bool					    /* mapNode */,
+            XercesWrapperNavigator**    theWrapperNodeNavigator) const
 {
 	// Create a navigator...
-	XercesWrapperNavigator&	theNavigator = pushNavigator();
+	XercesWrapperNavigator&	theNavigator = createNavigator();
 
 	theNavigator.setIndex(theIndex);
 
@@ -642,6 +685,11 @@ XercesDocumentWrapper::createWrapperNode(
 	// for now...
 	This->m_nodeMap.addAssociation(theXercesNode, theWrapper);
 
+    if (theWrapperNodeNavigator != 0)
+    {
+        *theWrapperNodeNavigator = &theNavigator;
+    }
+
 	return theWrapper;
 }
 
@@ -651,10 +699,11 @@ XercesEntityReferenceWrapper*
 XercesDocumentWrapper::createWrapperNode(
 			const DOMEntityReferenceType* 	theXercesNode,
 			IndexType						theIndex,
-			bool							mapNode) const
+			bool							mapNode,
+            XercesWrapperNavigator**        theWrapperNodeNavigator) const
 {
 	// Create a navigator...
-	XercesWrapperNavigator&	theNavigator = pushNavigator();
+	XercesWrapperNavigator&	theNavigator = createNavigator();
 
 	theNavigator.setIndex(theIndex);
 
@@ -678,6 +727,11 @@ XercesDocumentWrapper::createWrapperNode(
 		This->m_nodeMap.addAssociation(theXercesNode, theWrapper);
 	}
 
+    if (theWrapperNodeNavigator != 0)
+    {
+        *theWrapperNodeNavigator = &theNavigator;
+    }
+
 	return theWrapper;
 }
 
@@ -685,12 +739,13 @@ XercesDocumentWrapper::createWrapperNode(
 
 XercesNotationWrapper*
 XercesDocumentWrapper::createWrapperNode(
-			const DOMNotationType*	theXercesNode,
-			IndexType				theIndex,
-			bool					/* mapNode */) const
+			const DOMNotationType*	    theXercesNode,
+			IndexType				    theIndex,
+			bool					    /* mapNode */,
+            XercesWrapperNavigator**    theWrapperNodeNavigator) const
 {
 	// Create a navigator...
-	XercesWrapperNavigator&	theNavigator = pushNavigator();
+	XercesWrapperNavigator&	theNavigator = createNavigator();
 
 	theNavigator.setIndex(theIndex);
 
@@ -712,6 +767,11 @@ XercesDocumentWrapper::createWrapperNode(
 	// for now...
 	This->m_nodeMap.addAssociation(theXercesNode, theWrapper);
 
+    if (theWrapperNodeNavigator != 0)
+    {
+        *theWrapperNodeNavigator = &theNavigator;
+    }
+
 	return theWrapper;
 }
 
@@ -719,9 +779,10 @@ XercesDocumentWrapper::createWrapperNode(
 
 XalanNode*
 XercesDocumentWrapper::createWrapperNode(
-			const DOMNodeType*	theXercesNode,
-			IndexType			theIndex,
-			bool				mapNode) const
+			const DOMNodeType*	        theXercesNode,
+			IndexType			        theIndex,
+			bool				        mapNode,
+            XercesWrapperNavigator**    theWrapperNodeNavigator) const
 {
 	assert(theXercesNode != 0);
 
@@ -738,7 +799,7 @@ XercesDocumentWrapper::createWrapperNode(
 						static_cast<const DOMAttrType*>(theXercesNode);
 #endif
 
-			theNewNode = createWrapperNode(theAttrNode, theIndex, mapNode);
+			theNewNode = createWrapperNode(theAttrNode, theIndex, mapNode, theWrapperNodeNavigator);
 			assert(theNewNode != 0);
 		}
 		break;
@@ -752,7 +813,7 @@ XercesDocumentWrapper::createWrapperNode(
 						static_cast<const DOMCDATASectionType*>(theXercesNode);
 #endif
 
-			theNewNode = createWrapperNode(theCDATASectionNode, theIndex, mapNode);
+			theNewNode = createWrapperNode(theCDATASectionNode, theIndex, mapNode, theWrapperNodeNavigator);
 			assert(theNewNode != 0);
 
 		}
@@ -767,7 +828,7 @@ XercesDocumentWrapper::createWrapperNode(
 						static_cast<const DOMCommentType*>(theXercesNode);
 #endif
 
-			theNewNode = createWrapperNode(theCommentNode, theIndex, mapNode);
+			theNewNode = createWrapperNode(theCommentNode, theIndex, mapNode, theWrapperNodeNavigator);
 			assert(theNewNode != 0);
 		}
 		break;
@@ -785,7 +846,7 @@ XercesDocumentWrapper::createWrapperNode(
 						static_cast<const DOMElementType*>(theXercesNode);
 #endif
 
-			theNewNode = createWrapperNode(theElementNode, theIndex, mapNode);
+			theNewNode = createWrapperNode(theElementNode, theIndex, mapNode, theWrapperNodeNavigator);
 			assert(theNewNode != 0);
 		}
 		break;
@@ -799,7 +860,7 @@ XercesDocumentWrapper::createWrapperNode(
 						static_cast<const DOMEntityType*>(theXercesNode);
 #endif
 
-			theNewNode = createWrapperNode(theEntityNode, theIndex, mapNode);
+			theNewNode = createWrapperNode(theEntityNode, theIndex, mapNode, theWrapperNodeNavigator);
 			assert(theNewNode != 0);
 		}
 		break;
@@ -813,7 +874,7 @@ XercesDocumentWrapper::createWrapperNode(
 						static_cast<const DOMEntityReferenceType*>(theXercesNode);
 #endif
 
-			theNewNode = createWrapperNode(theEntityReferenceNode, theIndex, mapNode);
+			theNewNode = createWrapperNode(theEntityReferenceNode, theIndex, mapNode, theWrapperNodeNavigator);
 			assert(theNewNode != 0);
 		}
 		break;
@@ -827,7 +888,7 @@ XercesDocumentWrapper::createWrapperNode(
 						static_cast<const DOMNotationType*>(theXercesNode);
 #endif
 
-			theNewNode = createWrapperNode(theNotationNode, theIndex, mapNode);
+			theNewNode = createWrapperNode(theNotationNode, theIndex, mapNode, theWrapperNodeNavigator);
 			assert(theNewNode != 0);
 		}
 		break;
@@ -841,7 +902,7 @@ XercesDocumentWrapper::createWrapperNode(
 						static_cast<const DOMProcessingInstructionType*>(theXercesNode);
 #endif
 
-			theNewNode = createWrapperNode(thePINode, theIndex, mapNode);
+			theNewNode = createWrapperNode(thePINode, theIndex, mapNode, theWrapperNodeNavigator);
 			assert(theNewNode != 0);
 		}
 		break;
@@ -855,7 +916,7 @@ XercesDocumentWrapper::createWrapperNode(
 						static_cast<const DOMTextType*>(theXercesNode);
 #endif
 
-			theNewNode = createWrapperNode(theTextNode, theIndex, mapNode);
+			theNewNode = createWrapperNode(theTextNode, theIndex, mapNode, theWrapperNodeNavigator);
 			assert(theNewNode != 0);
 		}
 		break;
@@ -869,7 +930,7 @@ XercesDocumentWrapper::createWrapperNode(
 						static_cast<const DOMDocumentType_Type*>(theXercesNode);
 #endif
 
-			theNewNode = createWrapperNode(theDoctypeNode, theIndex, mapNode);
+			theNewNode = createWrapperNode(theDoctypeNode, theIndex, mapNode, theWrapperNodeNavigator);
 
 			assert(theNewNode != 0);
 		}
@@ -1358,15 +1419,13 @@ XercesDocumentWrapper::buildWrapperNodes()
 	if (theStartChild != 0)
 	{
 		assert(m_navigator != 0);
-		assert(m_navigators.size() == 1);
 
 		m_navigator->setIndex(1);
 		m_navigator->setFirstChild(0);
 
 		BuildWrapperTreeWalker	theTreeWalker(
 				this,
-				&m_navigators.back(),
-				m_navigators,
+				m_navigator,
 				2,
 				m_buildMaps);
 
@@ -1395,13 +1454,11 @@ XercesDocumentWrapper::buildWrapperNodes()
 
 
 XercesDocumentWrapper::BuildWrapperTreeWalker::BuildWrapperTreeWalker(
-			XercesDocumentWrapper*			theDocument,
-			XercesWrapperNavigator*			theDocumentNavigator,
-			WrapperNavigatorVectorType&		theNavigators,
-			IndexType						theStartIndex,
-			bool							theBuildMapsFlag) :
+			XercesDocumentWrapper*			    theDocument,
+			XercesWrapperNavigator*			    theDocumentNavigator,
+			IndexType						    theStartIndex,
+			bool							    theBuildMapsFlag) :
 	m_document(theDocument),
-	m_navigators(theNavigators),
 	m_currentIndex(theStartIndex),
 	m_parentNavigatorStack(),
 	m_siblingNavigatorStack(),
@@ -1431,10 +1488,15 @@ XercesDocumentWrapper::BuildWrapperTreeWalker::~BuildWrapperTreeWalker()
 bool
 XercesDocumentWrapper::BuildWrapperTreeWalker::startNode(const DOMNodeType*		node)
 {
-	XalanNode* const	theWrapperNode =
-		m_document->createWrapperNode(node, m_currentIndex, m_buildMaps);
+    XercesWrapperNavigator*     theWrapperNodeNavigator;
 
-	XercesWrapperNavigator&	theCurrentNodeNavigator = m_navigators.back();
+	XalanNode* const	theWrapperNode =
+		m_document->createWrapperNode(
+                node,
+                m_currentIndex,
+                m_buildMaps,
+                &theWrapperNodeNavigator);
+    assert(theWrapperNodeNavigator != 0);
 
 	assert(m_parentNavigatorStack.empty() == false);
 	assert(m_siblingNavigatorStack.empty() == false);
@@ -1443,7 +1505,7 @@ XercesDocumentWrapper::BuildWrapperTreeWalker::startNode(const DOMNodeType*		nod
 	NavigatorStackEntryType&	theParentEntry = m_parentNavigatorStack.back();
 	NavigatorStackEntryType&	theSiblingEntry = m_siblingNavigatorStack.back();
 
-	theCurrentNodeNavigator.setParentNode(theParentEntry.m_node);
+	theWrapperNodeNavigator->setParentNode(theParentEntry.m_node);
 
 	// If the first child has not been set, then set it
 	// now...
@@ -1457,7 +1519,7 @@ XercesDocumentWrapper::BuildWrapperTreeWalker::startNode(const DOMNodeType*		nod
 	// Always set the last child...
 	theParentEntry.m_navigator->setLastChild(theWrapperNode);
 
-	theCurrentNodeNavigator.setPreviousSibling(theSiblingEntry.m_node);
+	theWrapperNodeNavigator->setPreviousSibling(theSiblingEntry.m_node);
 
 	if (theSiblingEntry.m_navigator != 0)
 	{
@@ -1465,7 +1527,7 @@ XercesDocumentWrapper::BuildWrapperTreeWalker::startNode(const DOMNodeType*		nod
 	}
 
 	// Build an entry for the stacks...
-	const NavigatorStackEntryType	theCurrentEntry(&theCurrentNodeNavigator, theWrapperNode);
+	const NavigatorStackEntryType	theCurrentEntry(theWrapperNodeNavigator, theWrapperNode);
 
 	// My child nodes will now be visited, so push the current
 	// context on the parent stack...
@@ -1532,31 +1594,33 @@ XercesDocumentWrapper::BuildWrapperTreeWalker::startNode(const DOMNodeType*		nod
 			const DOMNodeType* const	theAttr = theAttributes->item(i);
 			assert(theAttr != 0);
 
+            XercesWrapperNavigator*     theCurrentAttrNavigator;
+
 			// Create a wrapper node.
 			XalanNode* const	theCurrentAttr =
-				m_document->createWrapperNode(theAttr, m_currentIndex, m_buildMaps);
-			assert(theCurrentAttr != 0);
-
-			// Get the attribute node's navigator...
-			XercesWrapperNavigator&	theCurrentAttrNavigator =
-				m_navigators.back();
+				m_document->createWrapperNode(
+                    theAttr,
+                    m_currentIndex,
+                    m_buildMaps,
+                    &theCurrentAttrNavigator);
+			assert(theCurrentAttr != 0 && theCurrentAttrNavigator != 0);
 
 			// Set the parent node...
-			theCurrentAttrNavigator.setParentNode(theWrapperNode);
+			theCurrentAttrNavigator->setParentNode(theWrapperNode);
 
 			if (thePreviousAttr != 0)
 			{
 				assert(thePreviousAttrNavigator != 0);
 
 				// Link in the previous attribute...
-				theCurrentAttrNavigator.setPreviousSibling(thePreviousAttr);
+				theCurrentAttrNavigator->setPreviousSibling(thePreviousAttr);
 
 				thePreviousAttrNavigator->setNextSibling(theCurrentAttr);
 			}
 
 			// Update the pointers so they point to this attribute...
 			thePreviousAttr = theCurrentAttr;
-			thePreviousAttrNavigator = &theCurrentAttrNavigator;
+			thePreviousAttrNavigator = theCurrentAttrNavigator;
 
 			// Finally, increment the index...
 			++m_currentIndex;

@@ -23,15 +23,15 @@
 
 
 
-#include <deque>
-
-
-
 #include <xalanc/Include/XalanVector.hpp>
 
 
 
 #include <xalanc/XalanDOM/XalanDOMString.hpp>
+
+
+
+#include <xalanc/PlatformSupport/XalanDOMStringReusableAllocator.hpp>
 
 
 
@@ -45,7 +45,7 @@ public:
 
 	enum { eDefaultMaximumSize = 100 };
 
-	typedef XalanVector<XalanDOMString*>			StringListType;
+	typedef XalanVector<XalanDOMString*>	StringListType;
 
 	explicit
 	XalanDOMStringCache(unsigned int	theMaximumSize = eDefaultMaximumSize);
@@ -127,14 +127,16 @@ private:
 	/**
 	 * A list to hold the strings that are available...
 	 */
-	StringListType	m_availableList;
+	StringListType	                    m_availableList;
 
 	/**
 	 * A list to hold the strings that are busy...
 	 */
-	StringListType	m_busyList;
+	StringListType	                    m_busyList;
 
-	unsigned int	m_maximumSize;
+	unsigned int	                    m_maximumSize;
+
+    XalanDOMStringReusableAllocator     m_allocator;
 };
 
 

@@ -69,6 +69,14 @@ public:
 	/**
 	 * Create a XalanDOMString object.
 	 * 
+	 * @return pointer to the new instance
+	 */
+	data_type*
+	create();
+
+	/**
+	 * Create a XalanDOMString object.
+	 * 
 	 * @param theString A pointer to a character string
 	 * @param theCount The number of characters in the string, or npos if the string is null-terminated.
 	 *
@@ -77,11 +85,11 @@ public:
 	data_type*
 	create(
 			const char*				theString,
-#if defined(_MSC_VER)
+#if defined(_MSC_VER) && (_MSC_VER <= 1300)
 			// $$$ ToDo: Some strange bug in MSVC++ complains when using data_type::npos here.
 			data_type_size_type		theCount = data_type_size_type(-1));
 #else
-	data_type_size_type		theCount = data_type_size_type(data_type::npos));
+	        data_type_size_type		theCount = data_type_size_type(data_type::npos));
 #endif
 
 	/**

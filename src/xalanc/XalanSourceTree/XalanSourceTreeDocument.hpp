@@ -22,7 +22,6 @@
 
 
 
-#include <deque>
 #include <map>
 
 
@@ -36,6 +35,7 @@
 
 
 #include <xalanc/PlatformSupport/XalanArrayAllocator.hpp>
+#include <xalanc/PlatformSupport/XalanDOMStringAllocator.hpp>
 #include <xalanc/PlatformSupport/XalanDOMStringPool.hpp>
 
 
@@ -89,8 +89,6 @@ public:
 				XalanDOMString,
 				XalanDOMString,
 				less<XalanDOMString> >							UnparsedEntityURIMapType;
-
-	typedef deque<XalanDOMString>								StringCollectionType;
 #else
 	typedef std::map<
 				const XalanDOMChar*,
@@ -100,8 +98,6 @@ public:
 	typedef std::map<
 				XalanDOMString,
 				XalanDOMString>									UnparsedEntityURIMapType;
-
-	typedef std::deque<XalanDOMString>							StringCollectionType;
 #endif
 
 	/**
@@ -545,7 +541,7 @@ private:
 
 	UnparsedEntityURIMapType						m_unparsedEntityURIs;
 
-	StringCollectionType							m_nonPooledStrings;
+	XalanDOMStringAllocator							m_nonPooledStrings;
 
 	XalanDOMString									m_stringBuffer;
 

@@ -75,7 +75,7 @@ XalanSourceTreeDocument::XalanSourceTreeDocument(
 	m_poolAllText(fPoolAllText),
 	m_elementsByID(),
 	m_unparsedEntityURIs(),
-	m_nonPooledStrings(),
+	m_nonPooledStrings(theValuesStringPoolBlockSize),
 	m_stringBuffer()
 {
 }
@@ -112,7 +112,7 @@ XalanSourceTreeDocument::XalanSourceTreeDocument(
 	m_poolAllText(fPoolAllText),
 	m_elementsByID(),
 	m_unparsedEntityURIs(),
-	m_nonPooledStrings(),
+	m_nonPooledStrings(eDefaultValuesStringPoolBlockSize),
 	m_stringBuffer()
 {
 }
@@ -1101,16 +1101,11 @@ XalanSourceTreeDocument::getTextNodeString(
 	}
 	else
 	{
-		const StringCollectionType::iterator	theIterator =
-				m_nonPooledStrings.insert(m_nonPooledStrings.end(), XalanDOMString());
+		XalanDOMString* const   theString =
+				m_nonPooledStrings.create(chars, length);
+        assert(theString != 0);
 
-		XalanDOMString&		theString = *theIterator;
-
-		assign(theString, chars, length);
-
-		assert(length == theString.length());
-
-		return theString;
+		return *theString;
 	}
 }
 

@@ -37,6 +37,20 @@ XalanDOMStringAllocator::~XalanDOMStringAllocator()
 
 
 XalanDOMStringAllocator::data_type*
+XalanDOMStringAllocator::create()
+{
+	data_type* const	theBlock = m_allocator.allocateBlock();
+	assert(theBlock != 0);
+
+	data_type* const	theResult = new(theBlock) data_type;
+
+	m_allocator.commitAllocation(theBlock);
+
+	return theResult;
+}
+
+
+XalanDOMStringAllocator::data_type*
 XalanDOMStringAllocator::create(
 			const char*				theString,
 			data_type_size_type		theCount)
