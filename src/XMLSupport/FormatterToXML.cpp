@@ -101,8 +101,10 @@ FormatterToXML::FormatterToXML(
 	FormatterListener(format),
 	m_writer(writer),
 	m_maxCharacter(0),
+#if !defined(XALAN_NO_DEFAULT_BUILTIN_ARRAY_INITIALIZATION)
 	m_attrCharsMap(),
 	m_charsMap(),
+#endif
 	m_shouldWriteXMLHeader(xmlDecl),
 	m_ispreserve(false),
 	m_doIndent(doIndent),
@@ -479,12 +481,12 @@ FormatterToXML::accumDefaultEscape(
 			{
 				next = chars[++i];
 
-				if (!(0xdc00 <= next && next < 0xe000))
+				if (!(0xdc00u <= next && next < 0xe000u))
 				{
 					throwInvalidUTF16SurrogateException(ch, next);
 				}
 
-				next = ((ch-0xd800) << 10) + next - 0xdc00 + 0x00010000;
+				next = ((ch - 0xd800u) << 10) + next - 0xdc00u + 0x00010000u;
 			}
 
 			writeNumberedEntityReference(next);
@@ -514,24 +516,9 @@ FormatterToXML::accumDefaultEntity(
 			bool				escLF)
 {
 	if (escLF == false &&
-		0x0D == ch &&
+		XalanUnicode::charCR == ch &&
 		i + 1 < len &&
-		0x0A == chars[i + 1]) 
-	{
-		outputLineSep();
-
-		i++;
-	}
-	else if (escLF == false &&
-			 0x0A == ch &&
-			 i + 1 < len &&
-			 0x0D == chars[i + 1])
-	{
-		outputLineSep();
-
-		i++;
-	}
-	else if (escLF == false && 0x0D == ch) 
+		XalanUnicode::charLF == chars[i + 1]) 
 	{
 		outputLineSep();
 
@@ -974,17 +961,9 @@ FormatterToXML::writeNormalizedChars(
     {
 		const XalanDOMChar	c = ch[i];
 
-		if (0x0D == c &&
+		if (XalanUnicode::charCR == c &&
 			i + 1 < end &&
-			0x0A == ch[i + 1])
-		{
-			outputLineSep();
-
-			i++;
-		}
-		else if (0x0A == c &&
-				 i + 1 < end &&
-				 0x0D == ch[i + 1]) 
+			XalanUnicode::charLF == ch[i + 1])
 		{
 			outputLineSep();
 
@@ -1002,7 +981,7 @@ FormatterToXML::writeNormalizedChars(
 			}
 
 			// This needs to go into a function... 
-			if (0xd800 <= ((int)c) && ((int)c) < 0xdc00) 
+			if (0xd800u <= unsigned(c) && unsigned(c) < 0xdc00) 
 			{
 				// UTF-16 surrogate
 				unsigned int	next = 0;
@@ -1020,7 +999,7 @@ FormatterToXML::writeNormalizedChars(
 						throwInvalidUTF16SurrogateException(c, next);
 					}
 
-					next = ((c-0xd800) << 10) + next - 0xdc00 + 0x00010000;
+					next = ((c - 0xd800) << 10) + next - 0xdc00 + 0x00010000;
 				}
 
 				writeNumberedEntityReference(next);
