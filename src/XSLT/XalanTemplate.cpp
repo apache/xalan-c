@@ -371,22 +371,6 @@ foo(XPathExecutionContext&	theExecutionContext)
 	}
 
 	{
-		AVT::AVTPartPtrVectorType	theVector;
-		
-		for_each(theVector.begin(),
-			 theVector.end(),
-			 DeleteFunctor<AVTPart>());
-	}
-
-	{
-		ElemLiteralResult::AVTVectorType	theVector;
-		
-		for_each(theVector.begin(),
-			 theVector.end(),
-			 DeleteFunctor<AVT>());
-	}
-
-	{
 		StylesheetConstructionContextDefault::StylesheetVectorType	theVector;
 		
 		StylesheetRoot*		theStylesheetRoot;
@@ -408,12 +392,12 @@ foo(XPathExecutionContext&	theExecutionContext)
 		using std::less;
 #endif
 
-		StylesheetRoot::QNameVectorType		theVector;
+		StylesheetRoot::XalanQNameVectorType	theVector;
 
 		sort(
 				theVector.begin(),
 				theVector.end(),
-				less<XalanQName>());
+				pointer_less<XalanQName>());
 	}
 
 	{
@@ -783,12 +767,12 @@ foo(XPathExecutionContext&	theExecutionContext)
 	{
 		const XalanQName*	theQName;
 
-		const StylesheetRoot::QNameVectorType	theVector;
+		const StylesheetRoot::XalanQNameVectorType	theVector;
 
-		find(
+		find_if(
 			theVector.begin(),
 			theVector.end(),
-			*theQName);
+			pointer_equals_predicate<XalanQName>(theQName));
 	}
 
 	{
