@@ -358,9 +358,9 @@ public:
 	 * Execute an XPath and return the resulting XObject. The lifetime of this
 	 * XObject is not necessarily that of the Stylesheet.
 	 *
-	 * @param str string expression for XPath evaluation
-	 * @param contextNode the current node in the source tree
-	 * @param resolver resolver for namespace resolution
+	 * @param str         string expression for XPath evaluation
+	 * @param contextNode current node in the source tree
+	 * @param resolver    resolver for namespace resolution
 	 * @return pointer to resulting XObject
 	 */
 	virtual XObject*
@@ -373,9 +373,9 @@ public:
 	 * Execute an XPath and return the resulting XObject. The lifetime of this
 	 * XObject is not necessarily that of the Stylesheet.
 	 *
-	 * @param str string expression for XPath evaluation
-	 * @param contextNode the current node in the source tree
-	 * @param resolver resolver for namespace resolution
+	 * @param str         string expression for XPath evaluation
+	 * @param contextNode current node in the source tree
+	 * @param resolver    resolver for namespace resolution
 	 * @return pointer to resulting XObject
 	 */
 	virtual XObject*
@@ -388,7 +388,7 @@ public:
 	 * Create and initialize an xpath and return it. This is to be used to
 	 * create an XPath that is only used during execution.
 	 *
-	 * @param str string expression for XPath evaluation
+	 * @param str      string expression for XPath evaluation
 	 * @param resolver resolver for namespace resolution
 	 * @return pointer to resulting XPath
 	 */
@@ -563,8 +563,8 @@ public:
 	 * ignorableWhitespace() method rather than this one (validating
 	 * parsers must do so).</p>
 	 *
-	 * @param ch pointer to characters from the XML document
-	 * @param start start position in the array
+	 * @param ch     pointer to characters from the XML document
+	 * @param start  start position in the array
 	 * @param length number of characters to read from the array
 	 * @exception SAXException
 	 */
@@ -579,8 +579,8 @@ public:
 	 * disable-output-escaping attribute is used, output raw text without
 	 * escaping.
 	 *
-	 * @param ch pointer to characters from the XML document
-	 * @param start start position in the array
+	 * @param ch     pointer to characters from the XML document
+	 * @param start  start position in the array
 	 * @param length number of characters to read from the array
 	 * @exception SAXException
 	 */
@@ -611,9 +611,8 @@ public:
 	 * section 2.8) or a text declaration (XML 1.0, section 4.3.1)
 	 * using this method.</p>
 	 *
-	 * @param target The processing instruction target.
-	 * @param data The processing instruction data, or null if
-	 *		none was supplied.
+	 * @param target processing instruction target
+	 * @param data   processing instruction data, or null if none was supplied
 	 * @exception SAXException
 	 */
 	virtual void

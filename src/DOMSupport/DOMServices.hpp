@@ -104,9 +104,8 @@ public:
 		~WhitespaceSupport();
 
 		/**
-		 * Tell if the node is ignorable whitespace.
-		 * This should be in the DOM.  Return false if the 
-		 * parser doesn't handle this.
+		 * Tell if the node is ignorable whitespace. This should be in the DOM.
+		 * Return false if the parser doesn't handle this.
 		 * 
 		 * @param node	text node queried
 		 * @return true if white space can be ignored

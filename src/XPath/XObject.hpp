@@ -179,6 +179,11 @@ public:
 	virtual void
 	ProcessXObjectTypeCallback(XObjectTypeCallback&		theCallbackObject) = 0;
 
+	/**
+	 * Process a callback request for preferred type information.
+	 *
+	 * @param theCallbackObject object to call back
+	 */
 	virtual void
 	ProcessXObjectTypeCallback(XObjectTypeCallback&		theCallbackObject) const = 0;
 

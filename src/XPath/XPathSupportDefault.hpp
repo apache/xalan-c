@@ -82,97 +82,53 @@ public:
 	virtual
 	~XPathSupportDefault();
 
-	// These interfaces are inherited from Resettable...
-
-	/**
-	 * Reset the instance.
-	 */
-	virtual void
-	reset();
-
+	
 	// These interfaces are inherited from DOMServices::WhitespaceSupport...
 
-	/**
-	 * Tell if the node is ignorable whitespace.
-	 * This should be in the DOM.  Return false if the 
-	 * parser doesn't handle this.
-	 */
 	virtual bool
 	isIgnorableWhitespace(const DOM_Text&	node) const;
 
+	
 	// These intefaces are inherited from XPathSupport...
 
-	/**
-	 * Given a namespace, get the corresponding prefix.
-	 */
 	virtual DOMString
 	getNamespaceForPrefix(
 			const DOMString&	prefix, 
 			const DOM_Element&	namespaceContext) const;
 
-	/**
-	 * Returns the namespace of the given node.
-	 */
 	virtual DOMString
 	getNamespaceOfNode(const DOM_Node&	n) const;
 
-	/**
-	 * Returns the local name of the given node.
-	 */
 	virtual DOMString
 	getLocalNameOfNode(const DOM_Node&	n) const;
 
-	/**
-	 * Get node data recursively.
-	 * (Note whitespace issues.)
-	 */
 	virtual DOMString
 	getNodeData(const DOM_Node&		n) const;
 
-	/**
-	 * This function has to be implemented, 
-	 * because the DOM WG decided that attributes don't 
-	 * have parents.
-	 */
 	virtual DOM_Node
 	getParentOfNode(const DOM_Node&		node) const;
 
-	/**
-	 * Get an element from an ID.
-	 */
 	virtual DOM_Element
 	getElementByID(
 			const DOMString&		id,
 			const DOM_Document&		doc) const;
 
-	/**
-	 * Set whether or not the liaison attempts to expand namespaces.	Used 
-	 * for optimization.
-	 */
 	virtual void
 	setProcessNamespaces(bool	processNamespaces);
 
-	/**
-	 * Tells if namespaces should be supported.  For optimization purposes.
-	 */
 	virtual bool
 	getProcessNamespaces() const;
 
-	/**
-	 * The getUnparsedEntityURI function returns the URI of the unparsed
-	 * entity with the specified name in the same document as the context
-	 * node (see [3.3 Unparsed Entities]). It returns the empty string if
-	 * there is no such entity.
-	 *
-	 * Since it states in the DOM draft: "An XML processor may choose to
-	 * completely expand entities before the structure model is passed
-	 * to the DOM; in this case, there will be no EntityReferences in the DOM tree."
-	 * So I'm not sure how well this is going to work.
-	 */
 	virtual DOMString
 	getUnparsedEntityURI(
 			const DOMString&		theName,
 			const DOM_Document&		theDocument) const;
+
+
+	// These interfaces are inherited from Resettable...
+
+	virtual void
+	reset();
 
 private:
 

@@ -76,12 +76,16 @@ public:
 
 	/**
 	 * Gets a span from an XPointer string.
+	 *
+	 * @param xpointer XPointer string
 	 */
 	static XSpan*
 	getNode(const DOMString&	xpointer);
 
 	/**
 	 * Get a span from an XPath (compiled XPointer) object.
+	 *
+	 * @param xpath XPath object
 	 */
 	static XSpan*
 	getNode(XPath&	xpath);

@@ -77,6 +77,12 @@ class XALAN_XPATH_EXPORT XUnknown : public XObject
 {
 public:
 
+	/**
+	 * Construct an XUnknown object from a string.
+	 * 
+	 * @param envSupport XPath environment support class instance
+	 * @param name       source string
+	 */
 	XUnknown(
 			XPathEnvSupport&	envSupport,
 			const DOMString&	name);
@@ -86,74 +92,44 @@ public:
 	virtual
 	~XUnknown();
 
-	/**
-	 * Tell what kind of class this is.
-	 */
+	// These methods are inherited from XObject ...
+
 	virtual eObjectType
 	getType() const;
 
-	/**
-	 * Given a request type, return the equivalent string. 
-	 * For diagnostic purposes.
-	 */
 	virtual DOMString
 	getTypeString() const;
   
-	/**
-	 * Cast result object to a number.
-	 */
 	virtual double
 	num() const;
 
-	/**
-	 * Cast result object to a boolean.
-	 */
 	virtual bool
 	boolean() const;
 
-	/**
-	 * Cast result object to a string.
-	 */
 	virtual DOMString
 	str() const;
 
-	/**
-	 * Cast result object to a result tree fragment.
-	 */
 	virtual const ResultTreeFragBase&
 	rtree() const;
 
 	virtual ResultTreeFragBase&
 	rtree();
 
-	/**
-	 * Cast result object to a nodelist.
-	 */
 	virtual const NodeRefListBase&
 	nodeset() const;
 
-	/**
-	 * Cast result object to a nodelist.
-	 */
 	virtual const MutableNodeRefList&
 	mutableNodeset() const;
 
 	virtual MutableNodeRefList&
 	mutableNodeset();
 
-	/**
-	 * Process a callback request for preferred type information
-	 *
-	 */
 	virtual void
 	ProcessXObjectTypeCallback(XObjectTypeCallback&		theCallbackObject);
 
 	virtual void
 	ProcessXObjectTypeCallback(XObjectTypeCallback&		theCallbackObject) const;
 
-	/**
-	 * Tell if two objects are functionally equal.
-	 */
 	virtual bool
 	equals(const XObject&	theRHS) const;
 

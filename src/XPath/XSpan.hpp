@@ -73,16 +73,37 @@ class XALAN_XPATH_EXPORT XSpan : public XNodeSet
 {
 public:
 
+	/**
+	 * Construct an XSpan object from a node list.
+	 * 
+	 * @param envSupport XPath environment support class instance
+	 * @param support    XPath support class instance
+	 * @param value      source node list
+	 */
 	XSpan(
 			XPathEnvSupport&		envSupport,
 			XPathSupport&			support,
 			const NodeRefListBase&	value = MutableNodeRefList());
 
+	/**
+	 * Construct an XSpan object from a node list.
+	 * 
+	 * @param envSupport XPath environment support class instance
+	 * @param support    XPath support class instance
+	 * @param value      source node list
+	 */
 	XSpan(
 			XPathEnvSupport&			envSupport,
 			XPathSupport&				support,
 			const MutableNodeRefList&	value = MutableNodeRefList());
 
+	/**
+	 * Construct an XSpan object from a DOM node.
+	 * 
+	 * @param envSupport XPath environment support class instance
+	 * @param support    XPath support class instance
+	 * @param value      source node
+	 */
 	XSpan(
 			XPathEnvSupport&	envSupport,
 			XPathSupport&		support,
@@ -94,36 +115,47 @@ public:
 	~XSpan();
 
 	/**
-	 * Get the start span offset from the first node, 
-	 * or -1 if offset isn't set.
+	 * Get the start span offset from the first node, or -1 if offset isn't
+	 * set.
+	 *
+	 * @return starting offset
 	 */
 	virtual int
 	getStart() const;
 
 	/**
-	 * Set the start span offset from the first node, 
-	 * or pass -1 if offset isn't set.
+	 * Set the start span offset from the first node, or pass -1 if offset
+	 * isn't set.
+	 *
+	 * @param start starting offset
 	 */
 	virtual void
 	setStart(int	start);
 
 	/**
-	 * Get the end span offset from start of the last node, 
-	 * or -1 if offset isn't set.
+	 * Get the end span offset from start of the last node, or -1 if offset
+	 * isn't set.
+	 *
+	 * @return ending offset
 	 */
 	virtual int
 	getEnd() const;
 
 	/**
-	 * Set the end span offset from start of the last node, 
-	 * or -1 if offset isn't set.
+	 * Set the end span offset from start of the last node, or -1 if offset
+	 * isn't set.
+	 *
+	 * @param end ending offset
 	 */
 	virtual void
 	setEnd(int	end);
   
 	/**
-	 * Set the range of the span, based on offsets from the 
-	 * first node and offsets from the last node.
+	 * Set the range of the span, based on offsets from the first node and
+	 * offsets from the last node.
+	 *
+	 * @param firstNodeOffset offset of first node
+	 * @param lastNodeOffset  offset of last node   
 	 */
 	virtual void
 	setSpan(

@@ -190,6 +190,10 @@ public:
 	 * @param theDocument document containing entity
 	 * @return URI for the entity
 	 */
+	 // Since it states in the DOM draft: "An XML processor may choose to
+	 // completely expand entities before the structure model is passed to the
+	 // DOM; in this case, there will be no EntityReferences in the DOM tree."
+	 // So I'm not sure how well this is going to work.
 	virtual DOMString
 	getUnparsedEntityURI(
 			const DOMString&		theName,

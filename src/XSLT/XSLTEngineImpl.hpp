@@ -671,7 +671,6 @@ typedef XALAN_STD runtime_error               RuntimeError;
 	 * @param start  start position in the array
 	 * @param length number of characters to read from the array
 	 * @exception SAXException
-	 * @see #ignorableWhitespace 
 	 */
 	virtual void
 	cdata(
@@ -1550,9 +1549,9 @@ typedef XALAN_STD runtime_error               RuntimeError;
 	}
 
 	/**
-	 * Retrieve the XPath envronment support object
+	 * Retrieve the XPath environment support object
 	 *
-	 * @return XPath envronment support object
+	 * @return XPath environment support object
 	 */
 	XPathEnvSupport& getXPathEnvSupport()
 	{

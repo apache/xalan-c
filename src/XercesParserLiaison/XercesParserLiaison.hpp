@@ -95,6 +95,12 @@ class XALAN_XERCESPARSERLIAISON_EXPORT XercesParserLiaison : public XMLParserLia
 {
 public:
 
+	/**
+	 * Construct a XercesParserLiaison instance.
+	 *
+	 * @param theSupport           instance of DOMSupport object
+	 * @param fUseValidatingParser true if a validating parser is to be used
+	 */
 	XercesParserLiaison(
 			DOMSupport& 	theSupport,
 			bool			fUseValidatingParser = false);
@@ -104,79 +110,31 @@ public:
 
 	// These interfaces are inherited from XMLParserLiaison...
 
-	/**
-	 * Returns true if the liaison supports the SAX DocumentHandler 
-	 * interface.
-	 */
 	virtual bool
 	supportsSAX() const;
 
-	/**
-	 * Parse the text pointed at by the reader as XML, and return 
-	 * a DOM Document interface.  May return null if not 
-	 * supported.  It is recommended that you pass in some sort 
-	 * of recognizable name, such as the filename or URI, with 
-	 * which the reader can be recognized if the parse fails.
-	 * @param reader A stream that should hold valid XML.
-	 * @param identifier Used for diagnostic purposes only, 
-	 * some sort of identification for error reporting, may be 
-	 * an empty string.
-	 */
 	virtual DOM_Document
 	parseXMLStream(
 			InputSource&		reader,
 			const DOMString&	identifier = DOMString());
 
-	/**
-	 * Parse the text pointed at by the reader as XML, and return 
-	 * a DOM Document interface.  May return null if not 
-	 * supported.  It is recommended that you pass in some sort 
-	 * of recognizable name, such as the filename or URI, with 
-	 * which the reader can be recognized if the parse fails.
-	 * @param reader A URL input source that should hold valid XML.
-	 * @param identifier Used for diagnostic purposes only, 
-	 * some sort of identification for error reporting, may be 
-	 * an empty string.
-	 */
 	virtual DOM_Document
 	parseXMLStream(
 			URLInputSource& 	reader,
 			const DOMString&	identifier = DOMString());
 
-	/**
-	 * Parse the text pointed at by the reader as XML.
-	 *
-	 * @param reader A URL input source that should hold valid XML.
-	 * @param handler An instance of a DocumentHandler.
-	 * @param identifier Used for diagnostic purposes only, 
-	 * some sort of identification for error reporting, may be 
-	 * an empty string.
-	 */
 	virtual void
 	parseXMLStream(
 			InputSource&		urlInputSource,
 			DocumentHandler&	handler,
 			const DOMString&	identifier = DOMString());
 
-	/**
-	 * Parse the text pointed at by the reader as XML.
-	 *
-	 * @param reader A URL input source that should hold valid XML.
-	 * @param handler An instance of a DocumentHandler.
-	 * @param identifier Used for diagnostic purposes only, 
-	 * some sort of identification for error reporting, may be 
-	 * an empty string.
-	 */
 	virtual void
 	parseXMLStream(
 			URLInputSource& 	urlInputSource,
 			DocumentHandler&	handler,
 			const DOMString&	identifier = DOMString());
 
-	/**
-	 * Create an empty DOM Document.  Mainly used for creating an 
-	 * output document.
-	 */
 	virtual DOM_Document
 	createDocument();
 
@@ -191,13 +149,6 @@ public:
 	virtual void
 	fatalError(const SAXParseException& exception);
 
-	/**
-	 * Reset the Error handler object on its reuse
-	 *
-	 * <p>This method helps in reseting the Error handler object
-	 * implementational defaults each time the Error handler is begun.</p>
-	 *
-	 */
 	virtual void
 	resetErrors();
 
