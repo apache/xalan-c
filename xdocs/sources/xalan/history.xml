@@ -1,3 +1,13 @@
+  <s3 title="Changes for &xslt4c; version 1.3">
+    <p>Major updates since version 1.2 include:</p>
+     <ul>
+       <li>A new and simplified command-line utility: <link idref="commandline" anchor="xalanexe">the Xalan executable</link></li>
+       <li>New XPath samples exploiting the XPathEvaluator C API and illustrating serialization of an XPath result set: <link idref="samples" anchor="simplexpathcapi">SimpleXPathCAPI</link> and <link idref="samples" anchor="serializenodeset">SerializeNodeSet</link></li>
+       <li>A new <link idref="usagepatterns" anchor="xercesdomwrapperparsedsource">wrapper class</link> that lets you pass in a Xerces DOM as input for a transformation</li>
+<li>Bug fixes.</li>
+<li>Changed XPathException to XalanXPathException because of a clash with a new Xerces class of the same name.</li>
+      </ul>
+   </s3>  
   <s3 title="Changes for &xslt4c; version 1.2">
     <p>Major updates since version 1.1 include:</p>
      <ul>
