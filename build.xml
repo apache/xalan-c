@@ -30,7 +30,7 @@
   <property name="xdocs.book" value="${xdocs.dir}/sources/xalanLocal.xml"/>
   <property name="xdocs.site" value="${xdocs.dir}/sources/xalan.xml"/>  
   <property name="xdocs.style" value="${xdocs.dir}/style"/>
-  <property name="xdocs.apidocs" value="${xdocs.dir}/html/apidocs"/>  
+  <property name="xdocs.apidocs" value="${xdocs.dir}/html/apiDocs"/>  
 
   <property name="doc.generator" value="org.apache.stylebook.StyleBook"/>
   <property name="doc.generator.styletargz" value="${xdocs.dir}/xml-site-style.tar.gz"/>
