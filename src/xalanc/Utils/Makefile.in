@@ -95,10 +95,10 @@ ifeq ($(MESSAGELOADER),INMEM)
 
 locale: $(MESSAGELIB)
 
-$(MESSAGELIB): $(XALANMSGLIB_SRC)/LocalMsgData.hpp
+$(MESSAGELIB): $(XSL_NLS_DIR)/include/LocalMsgData.hpp
 	$(MAKE) -C XalanMsgLib 
 
-$(XALANMSGLIB_SRC)/LocalMsgData.hpp : $(XSL_BIN_DIR)/MsgCreator $(XLIFF_FILE_NAME)
+$(XSL_NLS_DIR)/include/LocalMsgData.hpp : $(XSL_BIN_DIR)/MsgCreator $(XLIFF_FILE_NAME)
 	$(XSL_BIN_DIR)/MsgCreator $(XLIFF_FILE_NAME) -TYPE $(MESSAGELOADER) -LOCALE $(LOCALE)
 	@$(MOVE) LocalMsgIndex.hpp $(XSL_NLS_DIR)/include
 	@$(MOVE) LocalMsgData.hpp  $(XSL_NLS_DIR)/include		
