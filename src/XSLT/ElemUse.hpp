@@ -81,6 +81,12 @@ class ElemUse : public ElemTemplateElement
 {
 public:
 
+#if defined(XALAN_NO_NAMESPACES)
+	typedef vector<XalanQNameByValue>		QNameVectorType;
+#else
+	typedef std::vector<XalanQNameByValue>	QNameVectorType;
+#endif
+
 	/**
 	 * Construct an object corresponding to an "use-attribute-sets" attribute.
 	 * This is a base class for "xsl:element," "xsl:copy" and
@@ -131,13 +137,21 @@ public:
 	virtual void
 	execute(StylesheetExecutionContext&		executionContext) const;
 
-private:
+protected:
 
-#if defined(XALAN_NO_NAMESPACES)
-	typedef vector<XalanQNameByValue>		QNameVectorType;
-#else
-	typedef std::vector<XalanQNameByValue>	QNameVectorType;
-#endif
+	/** 
+	 * Execute and conditionally apply any attribute sets.  To be used
+	 * by deriving classes who want ElemUse to do any default execution
+	 * but skip applying attribute sets.  Typically, this would be done
+	 * when attempting to recover from an error.
+	 *
+	 * @param executionContext The current execution context.
+	 * @param applyAttributeSets If true, attribute sets will be applied.
+	 */
+	virtual void
+	doExecute(
+			StylesheetExecutionContext&		executionContext,
+			bool							applyAttributeSets) const;
 
 private:
 

@@ -128,11 +128,21 @@ ElemUse::postConstruction(
 
 
 void
-ElemUse::execute(StylesheetExecutionContext&		executionContext) const
+ElemUse::execute(StylesheetExecutionContext&	executionContext) const
+{
+	doExecute(executionContext, true);
+}
+
+
+
+void
+ElemUse::doExecute(
+			StylesheetExecutionContext&		executionContext,
+			bool							applyAttributeSets) const
 {
 	ElemTemplateElement::execute(executionContext);
 
-	if(0 != m_attributeSetsNames.size())
+	if(applyAttributeSets == true && 0 != m_attributeSetsNames.size())
 	{
 		assert(canGenerateAttributes() == true);
 
