@@ -107,20 +107,18 @@ public:
 	virtual XalanDOMString
 	getNamespaceOfNode(const XalanNode&	theNode) const;
 
-protected:
-
 #if defined(XALAN_NO_NAMESPACES)
 	typedef map<const XalanNode*, NSInfo, less<const XalanNode*> >	NSInfoMapType;
 #else
 	typedef std::map<const XalanNode*, NSInfo>	NSInfoMapType;
 #endif
 
+protected:
+
 	void
 	updateNamespace(
 			const XalanNode*	theNode,
 			const NSInfo&		theNamespace) const;
-
-protected:
 
 	// Default vector allocation size.
 	enum
