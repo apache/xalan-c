@@ -243,7 +243,7 @@ DOMString QName::getNamespaceForPrefix(const NamespacesStackType& nsStack,
 }
       
 DOMString QName::getPrefixForNamespace(const NamespaceVectorType& namespaces,
-		const DOMString& uri, bool reverse /* true */)
+		const DOMString& uri, bool /* reverse */ /* true */)
 {
 	for(int j = namespaces.size()-1; j >= 0; j--)
 	{
