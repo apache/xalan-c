@@ -716,7 +716,7 @@ FormatterToHTML::cdata(
 	}
 	else
 	{
-		cdata(ch, length);
+		FormatterToXML::cdata(ch, length);
 	}
 }
 
