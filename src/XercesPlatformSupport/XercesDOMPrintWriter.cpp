@@ -128,8 +128,7 @@ XercesDOMPrintWriter::write(
 			unsigned int	theLength)
 {
 	assert(s != 0);
-	assert(theOffset >= 0 && theOffset < length(s));
-	assert(theLength >= 0 || theLength == -1);
+	assert(length(s) == 0 || theOffset < length(s));
 
 	if (theLength == -1)
 	{
@@ -169,28 +168,7 @@ XercesDOMPrintWriter::write(
 			unsigned int		theOffset,
 			unsigned int		theLength)
 {
-	assert(theOffset >= 0);
-	assert(theLength >= 0 || theLength == -1);
-	assert(theLength == -1 && length(s) > theOffset || length(s) >= theOffset + theLength);
-
-#if 1
 	write(c_wstr(s), theOffset, theLength);
-#else
-	if (theOffset == 0 && theLength == -1)
-	{
-		m_OutputStream << s;
-	}
-	else
-	{
-		const long	theStopIndex = (theLength == -1) ? length(s) :
-													   theOffset + theLength;
-
-		for (long i = theOffset; i < theStopIndex; i++)
-		{
-			m_OutputStream << s.charAt(i);
-		}
-	}
-#endif
 }
 
 
