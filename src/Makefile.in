@@ -163,7 +163,7 @@ ifeq ($(PLATFORM), LINUX)
   else
 
     PIC_OPTION=-fPIC
-    PLATFORM_COMPILE_OPTIONS = -Wall -fno-elide-constructors
+    PLATFORM_COMPILE_OPTIONS = -Wall
 
   endif
 
@@ -207,7 +207,7 @@ ifeq ($(PLATFORM), SOLARIS)
 
   ifeq (${CXX}, g++)
 
-	PLATFORM_COMPILE_OPTIONS = -Wall -fPIC -D${PLATFORM} -D_REENTRANT  -fno-elide-constructors
+	PLATFORM_COMPILE_OPTIONS = -Wall -fPIC -D${PLATFORM} -D_REENTRANT
 
 	ifdef XALAN_USE_ICU
 	LD_RPATH_PRE=  -Wl,-rpath,
@@ -246,7 +246,7 @@ ifeq ($(PLATFORM), AIX)
 
   ifeq (${CXX}, g++)
 
-	PLATFORM_COMPILE_OPTIONS = -Wall -fPIC -D${PLATFORM} -D_REENTRANT -fno-elide-constructors
+	PLATFORM_COMPILE_OPTIONS = -Wall -fPIC -D${PLATFORM} -D_REENTRANT
 	ALLLIBS = ${LIBS} -L/usr/lib -L/usr/local/lib -lc
 
 	EXTRA_LINK_OPTIONS=-lc

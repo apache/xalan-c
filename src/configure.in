@@ -10,6 +10,26 @@ AC_CHECK_PROG(AUTOCONF, autoconf, autoconf, true)
 dnl Checks for libraries
 AC_CHECK_LIB(m, floor)
 
+# Check for gcc problems
+
+if test "$CXX" = "g++"; then
+
+AC_MSG_CHECKING([whether -fno-elide-constructors works correctly])
+
+old_cxxflags=$CXXFLAGS
+CXXFLAGS="$CXXFLAGS -fno-elide-constructors"
+
+AC_LANG_CPLUSPLUS
+
+AC_TRY_COMPILE([#include <vector>],
+  [], 
+  [AC_MSG_RESULT([yes])], 
+  CXXFLAGS=$old_cxxflags
+  [AC_MSG_RESULT([no])]);
+
+fi
+
+
 dnl
 dnl Do not know how to use this macro, so comment it out.
 dnl
