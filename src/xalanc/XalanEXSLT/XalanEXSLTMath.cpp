@@ -103,41 +103,44 @@ findNodes(
 		XalanNode*			theCurrentNode = theNodeSet.item(0);
 		assert(theCurrentNode != 0);
 
-		theNodes->addNode(theCurrentNode);
-
 		DOMServices::getNodeData(*theCurrentNode, theStringValue);
 
 		double	theNumericValue = DOMStringToDouble(theStringValue);
 
-		for (NodeRefListBase::size_type i = 1; i < theLength; ++i)
+		if (DoubleSupport::isNaN(theNumericValue) == false)
 		{
-			theCurrentNode = theNodeSet.item(i);
-			assert(theCurrentNode != 0);
+			theNodes->addNode(theCurrentNode);
 
-			DOMServices::getNodeData(*theCurrentNode, theStringValue);
-
-			const double	theCurrent = DOMStringToDouble(theStringValue);
-
-			if (DoubleSupport::isNaN(theCurrent) == true)
+			for (NodeRefListBase::size_type i = 1; i < theLength; ++i)
 			{
-				theNodes->clear();
+				theCurrentNode = theNodeSet.item(i);
+				assert(theCurrentNode != 0);
 
-				break;
+				theStringValue.clear();
+
+				DOMServices::getNodeData(*theCurrentNode, theStringValue);
+
+				const double	theCurrent = DOMStringToDouble(theStringValue);
+
+				if (DoubleSupport::isNaN(theCurrent) == true)
+				{
+					theNodes->clear();
+
+					break;
+				}
+				else if (DoubleSupport::equal(theCurrent, theNumericValue) == true)
+				{
+					theNodes->addNodeInDocOrder(theCurrentNode, executionContext);
+				}
+				else if (theCompareFunction(theCurrent, theNumericValue) == true)
+				{
+					theNodes->clear();
+
+					theNodes->addNode(theCurrentNode);
+
+					theNumericValue = theCurrent;
+				}
 			}
-			else if (DoubleSupport::equal(theCurrent, theNumericValue) == true)
-			{
-				theNodes->addNodeInDocOrder(theCurrentNode, executionContext);
-			}
-			else if (theCompareFunction(theCurrent, theNumericValue) == true)
-			{
-				theNodes->clear();
-
-				theNodes->addNode(theCurrentNode);
-
-				theNumericValue = theCurrent;
-			}
-
-			theStringValue.clear();
 		}
 	}
 
