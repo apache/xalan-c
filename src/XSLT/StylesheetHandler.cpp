@@ -1004,11 +1004,6 @@ StylesheetHandler::processTopLevelElement(
 	case Constants::ELEMNAME_VALUEOF:
 	case Constants::ELEMNAME_WHEN:
 	case Constants::ELEMNAME_ELEMENT:
-	case Constants::ELEMNAME_COUNTER:
-	case Constants::ELEMNAME_COUNTERS:
-	case Constants::ELEMNAME_COUNTERINCREMENT:
-	case Constants::ELEMNAME_COUNTERRESET:
-	case Constants::ELEMNAME_COUNTERSCOPE:
 	case Constants::ELEMNAME_APPLY_IMPORTS:
 		if (inExtensionElement() == false)
 		{
