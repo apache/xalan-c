@@ -1158,6 +1158,21 @@ void Stylesheet::pushTopLevelVariables(
 
 
 
+const XalanDOMString
+Stylesheet::getCurrentIncludeBaseIdentifier() const
+{
+	if (m_includeStack.size() == 0)
+	{
+		return getBaseIdentifier();
+	}
+	else
+	{
+		return m_includeStack.back()->getURLText();
+	}
+}
+
+
+
 void
 Stylesheet::processNSAliasElement(
 			const XalanDOMString&			name,

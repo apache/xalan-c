@@ -365,6 +365,17 @@ typedef XALAN_STD vector<ElemDecimalFormat*>			ElemDecimalFormatVectorType;
 	}
 
 	/**
+	 * Retrieve the base identifier for the most recently
+	 * included stylesheet.  This will return the same value
+	 * as getBaseIdentifier(), if no include is being
+	 * processed.
+	 * 
+	 * @return string for base identifier
+	 */
+	const XalanDOMString
+	getCurrentIncludeBaseIdentifier() const;
+
+	/**
 	 * Process an xsl:namespace-alias element.
 	 *
 	 * @param name   the element name.
