@@ -1341,8 +1341,6 @@ XPath::runFunction(
 
 	opPos++;
 
-	XObjectFactory&		theFactory = executionContext.getXObjectFactory();
-
 	if (argCount == 0)
 	{
 		assert(opPos == endFunc);
