@@ -86,13 +86,13 @@ ElemDecimalFormat::ElemDecimalFormat(
 	m_countMatchPattern(0),
 	m_fromMatchPattern(0),
 	m_valueExpr(0),
-	m_name_avt(),
+	m_qname(),
 	m_decimalFormatSymbols()
 {
 	m_decimalFormatSymbols.setInfinity(XalanDOMString());
 	m_decimalFormatSymbols.setNaN(XalanDOMString());
 
-	const unsigned	int nAttrs = atts.getLength();
+	const unsigned int	nAttrs = atts.getLength();
 
 	for(unsigned int i = 0; i < nAttrs; i++)
 	{
@@ -102,7 +102,7 @@ ElemDecimalFormat::ElemDecimalFormat(
 		{
 			assert(atts.getValue(i) != 0);
 
-			m_name_avt = atts.getValue(i);
+			m_qname = XalanQNameByValue(atts.getValue(i), getStylesheet().getNamespaces());;
 		}
 		else if(equals(aname, Constants::ATTRNAME_DECIMALSEPARATOR))
 		{
@@ -115,7 +115,10 @@ ElemDecimalFormat::ElemDecimalFormat(
 			}
 			else
 			{
-				constructionContext.warn("Illegal attribute value", 0, this);
+				constructionContext.warn(
+					"xsl:decimal-format has an illegal decimal-separator attribute value",
+					0,
+					this);
 			}
 		}
 		else if(equals(aname, Constants::ATTRNAME_GROUPINGSEPARATOR))
@@ -129,7 +132,10 @@ ElemDecimalFormat::ElemDecimalFormat(
 			}
 			else
 			{
-				constructionContext.warn("Illegal attribute value", 0, this);
+				constructionContext.warn(
+					"xsl:decimal-format has an illegal 'grouping-separator' value",
+					0,
+					this);
 			}
 		}
 		else if(equals(aname, Constants::ATTRNAME_INFINITY))
@@ -149,7 +155,10 @@ ElemDecimalFormat::ElemDecimalFormat(
 			}
 			else
 			{
-				constructionContext.warn("Illegal attribute value", 0, this);
+				constructionContext.warn(
+					"xsl:decimal-format has an illegal 'minus-sign' value",
+					0,
+					this);
 			}
 		}
 		else if(equals(aname, Constants::ATTRNAME_NAN))
@@ -169,7 +178,10 @@ ElemDecimalFormat::ElemDecimalFormat(
 			}
 			else
 			{
-				constructionContext.warn("Illegal attribute value", 0, this);
+				constructionContext.warn(
+					"xsl:decimal-format has an illegal 'percent' value",
+					0,
+					this);
 			}
 		}
 		else if(equals(aname, Constants::ATTRNAME_PERMILLE))
@@ -183,7 +195,10 @@ ElemDecimalFormat::ElemDecimalFormat(
 			}
 			else
 			{
-				constructionContext.warn("Illegal attribute value", 0, this);
+				constructionContext.warn(
+					"xsl:decimal-format has an illegal 'per-mille' value",
+					0,
+					this);
 			}
 		}
 		else if(equals(aname, Constants::ATTRNAME_ZERODIGIT))
@@ -197,7 +212,10 @@ ElemDecimalFormat::ElemDecimalFormat(
 			}
 			else
 			{
-				constructionContext.warn("Illegal attribute value", 0, this);
+				constructionContext.warn(
+					"xsl:decimal-format has an illegal 'zero-digit' value",
+					0,
+					this);
 			}
 		}
 		else if(equals(aname, Constants::ATTRNAME_DIGIT))
@@ -211,7 +229,10 @@ ElemDecimalFormat::ElemDecimalFormat(
 			}
 			else
 			{
-				constructionContext.warn("Illegal attribute value", 0, this);
+				constructionContext.warn(
+					"xsl:decimal-format has an illegal 'digit' value",
+					0,
+					this);
 			}
 		}
 		else if(equals(aname, Constants::ATTRNAME_PATTERNSEPARATOR))
@@ -225,12 +246,18 @@ ElemDecimalFormat::ElemDecimalFormat(
 			}
 			else
 			{
-				constructionContext.warn("Illegal attribute value", 0, this);
+				constructionContext.warn(
+					"xsl:decimal-format has an illegal 'pattern-separator' value",
+					0,
+					this);
 			}
 		}
 		else if(!isAttrOK(aname, atts, i, constructionContext))
 		{
-			constructionContext.error("xsl:decimal-format has an illegal attribute", 0, this);
+			constructionContext.error(
+				"xsl:decimal-format has an illegal attribute",
+				0,
+				this);
 		}
 	}
 
@@ -244,23 +271,16 @@ ElemDecimalFormat::ElemDecimalFormat(
 		m_decimalFormatSymbols.setNaN(Constants::ATTRVAL_NAN);
 	}
 
-	// Look for the default decimal-format element
-	if (length(m_name_avt) == 0)
-	{
-		if (getStylesheet().getDecimalFormatSymbols(Constants::DEFAULT_DECIMAL_FORMAT) != 0)
-		{
-			constructionContext.warn("Only one default xsl:decimal-format is allowed", 0, this);
-		}
-
-		m_name_avt = Constants::DEFAULT_DECIMAL_FORMAT;
-	}
 	// Look for duplicate decimal-format names
-	else
+	const XalanDecimalFormatSymbols* const	theOther =
+			stylesheetTree.getDecimalFormatSymbols(m_qname);
+
+	if (theOther != 0 && *theOther != m_decimalFormatSymbols)
 	{
-		if (getStylesheet().getDecimalFormatSymbols(m_name_avt) != 0)
-		{
-			constructionContext.warn("All xsl:decimal-format elements must be unique", 0, this);
-		}
+		constructionContext.error(
+			"Duplicate definition of xsl:decimal-format element",
+			0,
+			this);
 	}
 }
 
