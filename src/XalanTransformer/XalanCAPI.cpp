@@ -131,7 +131,7 @@ getStylesheet(XalanCSSHandle	theHandle)
 #if defined(XALAN_OLD_STYLE_CASTS)
 	return (const XalanCompiledStylesheet*)theHandle;
 #else
-	return static_cast<const XalanCompiledStylesheet*>(theHandle);
+	return reinterpret_cast<const XalanCompiledStylesheet*>(theHandle);
 #endif
 }
 
@@ -145,7 +145,7 @@ getParsedSource(XalanPSHandle	theHandle)
 #if defined(XALAN_OLD_STYLE_CASTS)
 	return (const XalanParsedSource*)theHandle;
 #else
-	return static_cast<const XalanParsedSource*>(theHandle);
+	return reinterpret_cast<const XalanParsedSource*>(theHandle);
 #endif
 }
 
