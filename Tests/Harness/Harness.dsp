@@ -163,6 +163,10 @@ SOURCE=.\FileUtility.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\HarnessInit.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\XMLFileReporter.hpp
 # End Source File
 # End Group
