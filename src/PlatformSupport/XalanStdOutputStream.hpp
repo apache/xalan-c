@@ -68,7 +68,9 @@
 #include <iostream.h>
 #else
 #include <iosfwd>
+#if !defined(XALAN_OLD_STREAM_HEADERS)
 #include <ios>
+#endif
 #endif
 
 

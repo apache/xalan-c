@@ -67,7 +67,8 @@
 
 
 #if defined(XALAN_OLD_STREAMS)
-#include <iostream.h>
+class ostream;
+#else
 #include <iosfwd>
 #endif
 
