@@ -171,24 +171,6 @@ XPathProcessorImpl::initMatchPattern(
 
 	nextToken();
 
-	// This is an optimization, but it's mostly a hacky
-	// bug fix. We don't handle match patterns with
-	// leading "//" correctly. Since the semantics
-	// of a match pattern with "//" are identical to
-	// those of one without "//", there's no point
-	// in even encoding them, so we just re-parse
-	// the XPath stripping off the leading "//".
-	// Parsing once _with_ the "//" ensures that
-	// we detect any errors with the unmodified
-	// match pattern.
-	bool	fStripAndReparse = false;
-
-	if (tokenIs(XalanUnicode::charSolidus) == true &&
-		lookahead(XalanUnicode::charSolidus, 1) == true)
-	{
-		fStripAndReparse = true;
-	}
-
 	Pattern();
 
 	if (length(m_token) != 0)
@@ -196,27 +178,16 @@ XPathProcessorImpl::initMatchPattern(
 		error("Extra illegal tokens!");
 	}
 
-	if (fStripAndReparse == true)
-	{
-		initMatchPattern(
-			pathObj,
-			XalanDOMString(expression, 2, expression.length() - 2),
-			prefixResolver,
-			locator);
-	}
-	else
-	{
-		// Terminate for safety.
-		m_expression->appendOpCode(XPathExpression::eENDOP);
+	// Terminate for safety.
+	m_expression->appendOpCode(XPathExpression::eENDOP);
 
-		m_expression->shrink();
+	m_expression->shrink();
 
-		m_xpath = 0;
-		m_expression = 0;
-		m_prefixResolver = 0;
-		m_locator = 0;
-		m_positionPredicateStack.clear();
-	}
+	m_xpath = 0;
+	m_expression = 0;
+	m_prefixResolver = 0;
+	m_locator = 0;
+	m_positionPredicateStack.clear();
 }
 
 
@@ -2353,16 +2324,21 @@ XPathProcessorImpl::LocationPathPattern()
 
 		if(lookahead(XalanUnicode::charSolidus, 1) == true)
 		{
-			m_expression->appendOpCode(XPathExpression::eMATCH_ANY_ANCESTOR_WITH_PREDICATE,
-									   theArgs);
+			m_expression->appendOpCode(
+				XPathExpression::eMATCH_ANY_ANCESTOR_WITH_PREDICATE,
+				theArgs);
+
+			m_expression->appendOpCode(XPathExpression::eNODETYPE_NODE);
+
+			nextToken();
 		}
 		else
 		{
 			m_expression->appendOpCode(XPathExpression::eFROM_ROOT,
 									   theArgs);
-		}
 
-		m_expression->appendOpCode(XPathExpression::eNODETYPE_ROOT);
+			m_expression->appendOpCode(XPathExpression::eNODETYPE_ROOT);
+		}
 
 		m_expression->updateOpCodeLength(newOpPos);
 
@@ -2465,9 +2441,11 @@ XPathProcessorImpl::AbbreviatedNodeTestStep()
 	}
 	else if(tokenIs(XalanUnicode::charSolidus) == true)
 	{
+		matchTypePos = m_expression->opCodeMapLength();
+
 		if(lookahead(s_axisString, 2) == false)
 		{
-			axisType = XPathExpression::eMATCH_ANY_ANCESTOR;
+			axisType = XPathExpression::eMATCH_IMMEDIATE_ANCESTOR;
 
 			m_expression->appendOpCode(axisType);
 		}
@@ -2483,7 +2461,7 @@ XPathProcessorImpl::AbbreviatedNodeTestStep()
 			}
 			else if(tokenIs(s_childString) == true)
 			{
-				axisType = XPathExpression::eMATCH_ANY_ANCESTOR;
+				axisType = XPathExpression::eMATCH_IMMEDIATE_ANCESTOR;
 
 				m_expression->appendOpCode(axisType);
 			}
