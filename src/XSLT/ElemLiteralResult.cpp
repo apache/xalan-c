@@ -72,7 +72,6 @@
 
 
 #include <PlatformSupport/DoubleSupport.hpp>
-#include <PlatformSupport/StringTokenizer.hpp>
 
 
 
