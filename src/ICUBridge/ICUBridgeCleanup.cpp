@@ -60,9 +60,7 @@
 
 
 #include <unicode/utypes.h>
-#if (U_ICU_VERSION_MAJOR_NUM >= 2)
 #include <unicode/uclean.h>
-#endif
 
 
 
@@ -73,10 +71,8 @@ XALAN_CPP_NAMESPACE_BEGIN
 void
 ICUBridgeCleanup::cleanup()
 {
-#if (U_ICU_VERSION_MAJOR_NUM >= 2)
 	// release all lasily allocated data
 	u_cleanup();
-#endif
 }
 
 

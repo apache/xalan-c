@@ -306,7 +306,7 @@ doFormatNumber(
 			XalanDOMString&						theResult)
 {
 	if (theStatus == U_ZERO_ERROR ||
-		theStatus == U_USING_DEFAULT_ERROR)
+		theStatus == U_USING_DEFAULT_WARNING)
 	{
 		// Use a XalanAutoPtr, to keep this safe until we construct the DecimalFormat instance.
 		XalanAutoPtr<DecimalFormatSymbols>	theDFS(new DecimalFormatSymbols(theStatus));
@@ -316,11 +316,7 @@ doFormatNumber(
 		theDFS->setSymbol(DecimalFormatSymbols::kZeroDigitSymbol, UChar(theXalanDFS.getZeroDigit()));
 		theDFS->setSymbol(DecimalFormatSymbols::kGroupingSeparatorSymbol, UChar(theXalanDFS.getGroupingSeparator()));
 		theDFS->setSymbol(DecimalFormatSymbols::kDecimalSeparatorSymbol, UChar(theXalanDFS.getDecimalSeparator()));
-#if U_ICU_VERSION_MAJOR_NUM < 2
-		theDFS->setSymbol(DecimalFormatSymbols::kPermillSymbol, UChar(theXalanDFS.getPerMill()));
-#else
 		theDFS->setSymbol(DecimalFormatSymbols::kPerMillSymbol, UChar(theXalanDFS.getPerMill()));
-#endif
 		theDFS->setSymbol(DecimalFormatSymbols::kPercentSymbol, UChar(theXalanDFS.getPercent()));
 		theDFS->setSymbol(DecimalFormatSymbols::kDigitSymbol, UChar(theXalanDFS.getDigit()));
 		theDFS->setSymbol(DecimalFormatSymbols::kPatternSeparatorSymbol, UChar(theXalanDFS.getPatternSeparator()));
