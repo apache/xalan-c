@@ -205,13 +205,13 @@ ElemValueOf::execute(
 	{
 		const XObjectPtr	value(m_selectPattern->execute(sourceNode, *this, executionContext));
 
-		if(0 != executionContext.getTraceListeners())
-		{
-			fireSelectionEvent(executionContext, sourceNode, value);
-		}
-		
 		if(value.null() == false)	
 		{
+			if(0 != executionContext.getTraceListeners())
+			{
+				fireSelectionEvent(executionContext, sourceNode, value);
+			}
+
 			const XObject::eObjectType	type = value->getType();
 
 			if (XObject::eTypeNull != type)
