@@ -94,7 +94,7 @@ ElemWithParam::ElemWithParam(
 
 		if(equals(aname, Constants::ATTRNAME_SELECT))
 		{
-			m_selectPattern = constructionContext.createXPath(atts.getValue(i), *this);
+			m_selectPattern = constructionContext.createXPath(this, atts.getValue(i), *this);
 		}
 		else if(equals(aname, Constants::ATTRNAME_NAME))
 		{
@@ -102,13 +102,19 @@ ElemWithParam::ElemWithParam(
 		}
 		else if(!isAttrOK(aname, atts, i, constructionContext))
 		{
-			constructionContext.error(Constants::ELEMNAME_WITHPARAM_WITH_PREFIX_STRING + " has an illegal attribute: " + aname);
+			constructionContext.error(
+				"xsl:with-param has an illegal attribute",
+				0,
+				this);
 		}
 	}
 
 	if(m_qname.isEmpty() == true)
 	{
-		constructionContext.error("xsl:with-param must have a 'name' attribute.");  
+		constructionContext.error(
+			"xsl:with-param must have a 'name' attribute",
+			0,
+			this);
 	}
 }
 

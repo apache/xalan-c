@@ -105,7 +105,7 @@ ElemIf::ElemIf(
 		switch(tok)
 		{
 		case Constants::TATTRNAME_TEST:
-			m_test = constructionContext.createXPath(atts.getValue(i), *this);
+			m_test = constructionContext.createXPath(this, atts.getValue(i), *this);
 			break;
 
 		case Constants::TATTRNAME_XMLSPACE:
@@ -115,14 +115,20 @@ ElemIf::ElemIf(
 		default:
 			if(!isAttrOK(aname, atts, i, constructionContext))
 			{
-				constructionContext.error(Constants::ELEMNAME_IF_WITH_PREFIX_STRING + " has an illegal attribute: " + aname);
+				constructionContext.error(
+					XalanDOMString("xsl:if has an illegal attribute"),
+					0,
+					this);
 			}
 		}
 	}
 
 	if(0 == m_test)
 	{
-		constructionContext.error(Constants::ELEMNAME_IF_WITH_PREFIX_STRING + " must have a 'test' attribute.");
+		constructionContext.error(
+			Constants::ELEMNAME_IF_WITH_PREFIX_STRING + " must have a 'test' attribute.",
+					0,
+					this);
 	}
 }
 

@@ -121,6 +121,7 @@ ElemTemplateElement::ElemTemplateElement(
 			int								xslToken) :
 	XalanElement(),
 	PrefixResolver(),
+	Locator(),
 	m_finishedConstruction(false),
 	m_namespacesHandler(stylesheetTree.getNamespacesHandler(),
 						stylesheetTree.getNamespaces(),
@@ -1497,6 +1498,38 @@ const XalanDOMString&
 ElemTemplateElement::getURI() const
 {
 	return m_baseIndentifier;
+}
+
+
+
+int
+ElemTemplateElement::getLineNumber() const
+{
+	return m_lineNumber;
+}
+
+
+
+int
+ElemTemplateElement::getColumnNumber() const
+{
+	return m_columnNumber;
+}
+
+
+
+const XMLCh*
+ElemTemplateElement::getPublicId() const
+{
+	return 0;
+}
+
+
+
+const XMLCh*
+ElemTemplateElement::getSystemId() const
+{
+	return c_wstr(m_baseIndentifier);
 }
 
 

@@ -80,6 +80,7 @@
 
 
 
+#include "ElemTemplateElement.hpp"
 #include "StylesheetRoot.hpp"
 #include "XSLTEngineImpl.hpp"
 #include "XSLTInputSource.hpp"
@@ -124,20 +125,20 @@ StylesheetConstructionContextDefault::~StylesheetConstructionContextDefault()
 
 void
 StylesheetConstructionContextDefault::error(
-			const XalanDOMString&	msg,
-			const XalanNode* 		sourceNode,
-			const XalanNode*		styleNode) const
+			const XalanDOMString&		msg,
+			const XalanNode* 			sourceNode,
+			const ElemTemplateElement*	styleNode) const
 {
-	m_processor.error(msg, styleNode, sourceNode);
+	m_processor.error(msg, sourceNode, styleNode);
 }
 
 
 
 void
 StylesheetConstructionContextDefault::error(
-			const char*			msg,
-			const XalanNode*	sourceNode,
-			const XalanNode*	styleNode) const
+			const char*					msg,
+			const XalanNode* 			sourceNode,
+			const ElemTemplateElement*	styleNode) const
 {
 	error(TranscodeFromLocalCodePage(msg), sourceNode, styleNode);
 }
@@ -146,20 +147,20 @@ StylesheetConstructionContextDefault::error(
 
 void
 StylesheetConstructionContextDefault::warn(
-			const XalanDOMString&	msg,
-			const XalanNode* 		sourceNode,
-			const XalanNode*		styleNode) const
+			const XalanDOMString&		msg,
+			const XalanNode* 			sourceNode,
+			const ElemTemplateElement*	styleNode) const
 {
-	m_processor.warn(msg, styleNode, sourceNode);
+	m_processor.warn(msg, sourceNode, styleNode);
 }
 
 
 
 void
 StylesheetConstructionContextDefault::warn(
-			const char*			msg,
-			const XalanNode*	sourceNode,
-			const XalanNode*	styleNode) const
+			const char*					msg,
+			const XalanNode* 			sourceNode,
+			const ElemTemplateElement*	styleNode) const
 {
 	warn(TranscodeFromLocalCodePage(msg), sourceNode, styleNode);
 }
@@ -168,20 +169,20 @@ StylesheetConstructionContextDefault::warn(
 
 void
 StylesheetConstructionContextDefault::message(
-			const XalanDOMString&	msg,
-			const XalanNode* 		sourceNode,
-			const XalanNode*		styleNode) const
+			const XalanDOMString&		msg,
+			const XalanNode* 			sourceNode,
+			const ElemTemplateElement*	styleNode) const
 {
-	m_processor.message(msg, styleNode, sourceNode);
+	m_processor.message(msg, sourceNode, styleNode);
 }
 
 
 
 void
 StylesheetConstructionContextDefault::message(
-			const char*			msg,
-			const XalanNode*	sourceNode,
-			const XalanNode*	styleNode) const
+			const char*					msg,
+			const XalanNode* 			sourceNode,
+			const ElemTemplateElement*	styleNode) const
 {
 	message(TranscodeFromLocalCodePage(msg), sourceNode, styleNode);
 }
@@ -337,16 +338,26 @@ StylesheetConstructionContextDefault::getXSLTNamespaceURI() const
 
 XPath*
 StylesheetConstructionContextDefault::createMatchPattern(
+			const Locator*			locator,
 			const XalanDOMString&	str,
 			const PrefixResolver&	resolver)
 {
 	XPath* const	xpath = m_xpathFactory.create();
 
-	m_xpathProcessor->initMatchPattern(*xpath,
-									   str,
-									   resolver);
+	// Note that we use the current locator from the
+	// processing stack, and not the locator passed in.
+	// This is because the locator on the stack is active,
+	// during construction, while the locator passed in
+	// will be used at run-time.
+	m_xpathProcessor->initMatchPattern(
+			*xpath,
+			str,
+			resolver,
+			getLocatorFromStack());
 
 	xpath->setInStylesheet(true);
+
+	xpath->setLocator(locator);
 
 	return xpath;
 }
@@ -355,6 +366,7 @@ StylesheetConstructionContextDefault::createMatchPattern(
 
 XPath*
 StylesheetConstructionContextDefault::createMatchPattern(
+			const Locator*			locator,
 			const XalanDOMChar*		str,
 			const PrefixResolver&	resolver)
 {
@@ -362,23 +374,33 @@ StylesheetConstructionContextDefault::createMatchPattern(
 
 	assign(m_tempBuffer, str);
 
-	return createMatchPattern(m_tempBuffer, resolver);
+	return createMatchPattern(locator, m_tempBuffer, resolver);
 }
 
 
 
 XPath*
 StylesheetConstructionContextDefault::createXPath(
+			const Locator*			locator,
 			const XalanDOMString&	str,
 			const PrefixResolver&	resolver)
 {
 	XPath* const	xpath = m_xpathFactory.create();
 
-	m_xpathProcessor->initXPath(*xpath,
-								str,
-								resolver);
+	// Note that we use the current locator from the
+	// processing stack, and not the locator passed in.
+	// This is because the locator on the stack is active,
+	// during construction, while the locator passed in
+	// will be used at run-time.
+	m_xpathProcessor->initXPath(
+			*xpath,
+			str,
+			resolver,
+			getLocatorFromStack());
 
 	xpath->setInStylesheet(true);
+
+	xpath->setLocator(locator);
 
 	return xpath;
 }
@@ -387,6 +409,7 @@ StylesheetConstructionContextDefault::createXPath(
 
 XPath*
 StylesheetConstructionContextDefault::createXPath(
+			const Locator*			locator,
 			const XalanDOMChar*		str,
 			const PrefixResolver&	resolver)
 {
@@ -394,7 +417,7 @@ StylesheetConstructionContextDefault::createXPath(
 
 	assign(m_tempBuffer, str);
 
-	return createXPath(m_tempBuffer, resolver);
+	return createXPath(locator, m_tempBuffer, resolver);
 }
 
 

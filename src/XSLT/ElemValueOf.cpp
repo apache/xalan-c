@@ -120,8 +120,11 @@ ElemValueOf::ElemValueOf(
 					m_isDot = true;
 				}
 
-				m_selectPattern = constructionContext.createXPath(avalue, 
-																  *this);
+				m_selectPattern =
+					constructionContext.createXPath(
+						this,
+						avalue,
+						*this);
 			}
 			break;
 

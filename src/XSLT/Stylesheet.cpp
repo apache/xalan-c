@@ -251,6 +251,7 @@ Stylesheet::processKeyElement(
 		{
 			matchAttr =
 					constructionContext.createMatchPattern(
+						0,
 						XalanDOMString(atts.getValue(i)),
 						*nsContext);
 		}
@@ -258,6 +259,7 @@ Stylesheet::processKeyElement(
 		{
 			useAttr =
 					constructionContext.createXPath(
+						0,
 						atts.getValue(i),
 						*nsContext);
 		}
@@ -891,8 +893,6 @@ Stylesheet::findTemplate(
 	}
 	else
 	{
-		const ElemTemplate*		theResult = 0;
-
 		const ElemTemplate*		bestMatchedRule = 0;
 		const MatchPattern2*	bestMatchedPattern = 0; // Syncs with bestMatchedRule
 		const double			matchScoreNoneValue = 
@@ -1162,17 +1162,19 @@ Stylesheet::pushTopLevelVariables(
 
 					if (arg.getXObject().null() == false)
 					{
-						executionContext.pushVariable(arg.getName(),
-													  arg.getXObject(),
-													  0);
+						executionContext.pushVariable(
+							arg.getName(),
+							arg.getXObject(),
+							0);
 					}
 					else
 					{
-						executionContext.pushVariable(arg.getName(),
-													  0,
-													  arg.getExpression(),
-													  executionContext.getRootDocument(),
-													  *this);
+						executionContext.pushVariable(
+							arg.getName(),
+							0,
+							arg.getExpression(),
+							executionContext.getRootDocument(),
+							*this);
 					}
 
 					break;
@@ -1187,7 +1189,6 @@ Stylesheet::pushTopLevelVariables(
 										  var->getParentNodeElem());
 		}
 	}
-
 }
 
 

@@ -78,6 +78,7 @@
 
 
 class AVTPart;
+class Locator;
 class PrefixResolver;
 class XPathExecutionContext;
 class XalanNode;
@@ -96,7 +97,8 @@ public:
 	 * Construct an Attribute Value Template(AVT) by parsing the string, and
 	 * either constructing a vector of AVTParts, or simply hold on to the
 	 * string if the AVT is simple.
-	 * 
+	 *
+	 * @param ownerElement		  the Locator for the AVT.  May be null.
 	 * @param name                name of AVT
 	 * @param type                type of AVT
 	 * @param stringedValue       string value to parse
@@ -104,6 +106,7 @@ public:
 	 * @param constructionContext context for construction of AVT
 	 */
 	AVT(
+			const Locator*					locator,
 			const XalanDOMChar*				name,
 			const XalanDOMChar*				type,
 			const XalanDOMChar*				stringedValue,

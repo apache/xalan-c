@@ -230,7 +230,7 @@ ElemDecimalFormat::ElemDecimalFormat(
 		}
 		else if(!isAttrOK(aname, atts, i, constructionContext))
 		{
-			constructionContext.error("Illegal attribute value", 0, this);
+			constructionContext.error("xsl:decimal-format has an illegal attribute", 0, this);
 		}
 	}
 
@@ -249,7 +249,7 @@ ElemDecimalFormat::ElemDecimalFormat(
 	{
 		if (getStylesheet().getDecimalFormatSymbols(Constants::DEFAULT_DECIMAL_FORMAT) != 0)
 		{
-			constructionContext.warn("Only one default xsl:decimal-format is allowed!!!", 0, this);
+			constructionContext.warn("Only one default xsl:decimal-format is allowed", 0, this);
 		}
 
 		m_name_avt = Constants::DEFAULT_DECIMAL_FORMAT;
@@ -259,7 +259,7 @@ ElemDecimalFormat::ElemDecimalFormat(
 	{
 		if (getStylesheet().getDecimalFormatSymbols(m_name_avt) != 0)
 		{
-			constructionContext.warn("All xsl:decimal-format elements must be unique!!!", 0, this);
+			constructionContext.warn("All xsl:decimal-format elements must be unique", 0, this);
 		}
 	}
 }
@@ -281,7 +281,7 @@ ElemDecimalFormat::getElementName() const
 
 
 void
-ElemDecimalFormat::execute(StylesheetExecutionContext&		executionContext) const
-{	
+ElemDecimalFormat::execute(StylesheetExecutionContext&	executionContext) const
+{
 	ElemTemplateElement::execute(executionContext);
 }

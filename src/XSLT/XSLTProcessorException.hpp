@@ -77,8 +77,23 @@ public:
 	 * Construct an XSLT Processor exception object
 	 * 
 	 * @param theMessage message to print when exception thrown
-	 * @param theType    type of exception string, default
-	 *                   "XSLTProcessorException"
+	 * @param theURI the URI of the related document, if known
+	 * @param theLineNumber the line number of the related document, or -1 if not known
+	 * @param theColumnNumber the column number of the related document, or -1 if not known
+	 * @param theType    type of exception string, default is "XSLTProcessorException"
+	 */
+	XSLTProcessorException(
+		const XalanDOMString&	theMessage,
+		const XalanDOMString&	theURI,
+		int						theLineNumber,
+		int						theColumnNumber,
+		const XalanDOMString&	theType = XalanDOMString(XALAN_STATIC_UCODE_STRING("XSLTProcessorException")));
+
+	/**
+	 * Construct an XSLT Processor exception object
+	 * 
+	 * @param theMessage message to print when exception thrown
+	 * @param theType    type of exception string, default is "XSLTProcessorException"
 	 */
 	XSLTProcessorException(
 		const XalanDOMString&	theMessage,

@@ -108,17 +108,23 @@ ElemCopyOf::ElemCopyOf(
 				m_isDot = true;
 			}
 
-			m_selectPattern = constructionContext.createXPath(avalue, *this);
+			m_selectPattern = constructionContext.createXPath(this, avalue, *this);
 		}
 		else if(!isAttrOK(aname, atts, i, constructionContext))
 		{
-			constructionContext.error(XalanDOMString("xsl:copy-of has an illegal attribute: ") + aname);
+			constructionContext.error(
+				"xsl:copy-of has an illegal attribute",
+				0,
+				this);
 		}
 	}
 
 	if (m_selectPattern == 0)
 	{
-		constructionContext.error("xsl:copy-of must have a \"select\" attribute.");
+		constructionContext.error(
+			"xsl:copy-of must have a \"select\" attribute",
+			0,
+			this);
 	}
 }
 

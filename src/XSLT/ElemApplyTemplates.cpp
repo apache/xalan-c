@@ -98,7 +98,7 @@ ElemApplyTemplates::ElemApplyTemplates(
 		switch(tok)
 		{
 		case Constants::TATTRNAME_SELECT:
-			m_selectPattern = constructionContext.createXPath(atts.getValue(i), *this);
+			m_selectPattern = constructionContext.createXPath(this, atts.getValue(i), *this);
 			break;
 
 		case Constants::TATTRNAME_MODE:
@@ -108,7 +108,10 @@ ElemApplyTemplates::ElemApplyTemplates(
 		default:
 			if(!isAttrOK(aname, atts, i, constructionContext))
 			{
-				constructionContext.error(Constants::ELEMNAME_APPLY_TEMPLATES_WITH_PREFIX_STRING + " has an illegal attribute: " + aname);
+				constructionContext.error(
+					"xsl:apply-templates has an illegal attribute",
+					0,
+					this);
 			}
 			break;
 		}
@@ -116,7 +119,10 @@ ElemApplyTemplates::ElemApplyTemplates(
 
 	if(0 == m_selectPattern)
 	{
-		m_selectPattern = constructionContext.createXPath(XALAN_STATIC_UCODE_STRING("node()"), *this);
+		m_selectPattern = constructionContext.createXPath(
+			this,
+			Constants::PSEUDONAME_NODE,
+			*this);
 	}
 
 	assert(m_selectPattern != 0);

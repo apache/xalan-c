@@ -421,7 +421,7 @@ public:
 	setDiagnosticsOutput(PrintWriter* pw) = 0;
 
 	/**
-	 * Give the user a message.
+	 * Report a message.
 	 * 
 	 * @param msg		 text of message to output
 	 * @param sourceNode node in source where message occurred
@@ -430,36 +430,73 @@ public:
 	virtual void
 	message(
 			const XalanDOMString&	msg,
-			const XalanNode*		styleNode = 0,
-			const XalanNode*		sourceNode = 0) const = 0;
+			const XalanNode*		sourceNode = 0,
+			const XalanNode*		styleNode = 0) const = 0;
 
 	/**
-	 * Tell the user of an warning, and probably throw an exception.
+	 * Report a message.
+	 * 
+	 * @param msg		 text of message to output
+	 * @param sourceNode node in source where message occurred
+	 * @param styleNode  node in stylesheet where message occurred
+	 */
+	virtual void
+	message(
+			const XalanDOMString&		msg,
+			const XalanNode*			sourceNode,
+			const ElemTemplateElement*	styleNode) const = 0;
+
+	/**
+	 * Report a warning.
 	 * 
 	 * @param msg		 text of message to output
 	 * @param sourceNode node in source where error occurred
 	 * @param styleNode  node in stylesheet where error occurred
-	 * @exception XSLProcessorException
 	 */
 	virtual void
 	warn(
 			const XalanDOMString&	msg,
-			const XalanNode*		styleNode = 0,
-			const XalanNode*		sourceNode = 0) const = 0;
+			const XalanNode*		sourceNode = 0,
+			const XalanNode*		styleNode = 0) const = 0;
 
 	/**
-	 * Tell the user of an error, and probably throw an exception.
+	 * Report a warning.
 	 * 
 	 * @param msg		 text of message to output
 	 * @param sourceNode node in source where error occurred
 	 * @param styleNode  node in stylesheet where error occurred
-	 * @exception XSLProcessorException
+	 */
+	virtual void
+	warn(
+			const XalanDOMString&		msg,
+			const XalanNode*			sourceNode,
+			const ElemTemplateElement*	styleNode) const = 0;
+
+	/**
+	 * Report an error and throw an exception.
+	 * 
+	 * @param msg		 text of message to output
+	 * @param sourceNode node in source where error occurred
+	 * @param styleNode  node in stylesheet where error occurred
 	 */
 	virtual void
 	error(
 			const XalanDOMString&	msg,
-			const XalanNode*		styleNode = 0,
-			const XalanNode*		sourceNode = 0) const = 0;
+			const XalanNode*		sourceNode = 0,
+			const XalanNode*		styleNode = 0) const = 0;
+
+	/**
+	 * Report an error and throw an exception.
+	 * 
+	 * @param msg		 text of message to output
+	 * @param sourceNode node in source where error occurred
+	 * @param styleNode  node in stylesheet where error occurred
+	 */
+	virtual void
+	error(
+			const XalanDOMString&		msg,
+			const XalanNode*			sourceNode,
+			const ElemTemplateElement*	styleNode) const = 0;
 };
 
 

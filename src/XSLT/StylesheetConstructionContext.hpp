@@ -66,11 +66,6 @@
 
 
 
-// Base class header file...
-#include <PlatformSupport/ExecutionContext.hpp>
-
-
-
 #include <PlatformSupport/URISupport.hpp>
 
 
@@ -80,11 +75,13 @@
 
 
 class DocumentHandler;
+class ElemTemplateElement;
 class Locator;
 class PrefixResolver;
 class Stylesheet;
 class StylesheetRoot;
 class XalanDocument;
+class XalanNode;
 class XPath;
 class XMLURL;
 class XSLTInputSource;
@@ -95,7 +92,7 @@ class XSLTInputSource;
 // An abstract class which provides support for constructing the internal
 // representation  of a stylesheet.
 //
-class XALAN_XSLT_EXPORT StylesheetConstructionContext : public ExecutionContext
+class XALAN_XSLT_EXPORT StylesheetConstructionContext
 {
 public:
 
@@ -238,12 +235,14 @@ public:
 	 * is to be used by stylesheet elements that need an XPath that is
 	 * guaranteed to persist while it lives.
 	 *
-	 * @param str      string to match
+	 * @param locator the locator for the XPath. May be null.
+	 * @param str string to match
 	 * @param resolver resolver for namespace resolution
 	 * @return XPath for match pattern
 	 */
 	virtual XPath*
 	createMatchPattern(
+			const Locator*			locator,
 			const XalanDOMString&	str,
 			const PrefixResolver&	resolver) = 0;
 
@@ -252,12 +251,14 @@ public:
 	 * is to be used by stylesheet elements that need an XPath that is
 	 * guaranteed to persist while it lives.
 	 *
-	 * @param str      string to match
+	 * @param locator the locator for the XPath. May be null.
+	 * @param str string to match
 	 * @param resolver resolver for namespace resolution
 	 * @return XPath for match pattern
 	 */
 	virtual XPath*
 	createMatchPattern(
+			const Locator*			locator,
 			const XalanDOMChar*		str,
 			const PrefixResolver&	resolver) = 0;
 
@@ -266,12 +267,14 @@ public:
 	 * stylesheet elements that need an XPath that is guaranteed to persist
 	 * while it lives.
 	 *
-	 * @param str      string to match
+	 * @param locator the locator for the XPath. May be null.
+	 * @param str string to match
 	 * @param resolver resolver for namespace resolution
 	 * @return XPath for string matched
 	 */
 	virtual XPath*
 	createXPath(
+			const Locator*			locator,
 			const XalanDOMString&	str,
 			const PrefixResolver&	resolver) = 0;
 
@@ -280,12 +283,14 @@ public:
 	 * stylesheet elements that need an XPath that is guaranteed to persist
 	 * while it lives.
 	 *
-	 * @param str      string to match
+	 * @param locator the locator for the XPath. May be null.
+	 * @param str string to match
 	 * @param resolver resolver for namespace resolution
 	 * @return XPath for string matched
 	 */
 	virtual XPath*
 	createXPath(
+			const Locator*			locator,
 			const XalanDOMChar*		str,
 			const PrefixResolver&	resolver) = 0;
 
@@ -360,39 +365,39 @@ public:
 
 	virtual void
 	error(
-			const XalanDOMString&	msg,
-			const XalanNode* 		sourceNode = 0,
-			const XalanNode*		styleNode = 0) const = 0;
+			const XalanDOMString&		msg,
+			const XalanNode* 			sourceNode = 0,
+			const ElemTemplateElement*	styleNode = 0) const = 0;
 
 	virtual void
 	error(
-			const char*			msg,
-			const XalanNode* 	sourceNode = 0,
-			const XalanNode* 	styleNode = 0) const = 0;
+			const char*					msg,
+			const XalanNode* 			sourceNode = 0,
+			const ElemTemplateElement* 	styleNode = 0) const = 0;
 
 	virtual void
 	warn(
-			const XalanDOMString&	msg,
-			const XalanNode* 		sourceNode = 0,
-			const XalanNode* 		styleNode = 0) const = 0;
+			const XalanDOMString&		msg,
+			const XalanNode* 			sourceNode = 0,
+			const ElemTemplateElement* 	styleNode = 0) const = 0;
 
 	virtual void
 	warn(
-			const char*			msg,
-			const XalanNode* 	sourceNode = 0,
-			const XalanNode* 	styleNode = 0) const = 0;
+			const char*					msg,
+			const XalanNode* 			sourceNode = 0,
+			const ElemTemplateElement* 	styleNode = 0) const = 0;
 
 	virtual void
 	message(
-			const XalanDOMString&	msg,
-			const XalanNode* 		sourceNode = 0,
-			const XalanNode* 		styleNode = 0) const = 0;
+			const XalanDOMString&		msg,
+			const XalanNode* 			sourceNode = 0,
+			const ElemTemplateElement* 	styleNode = 0) const = 0;
 
 	virtual void
 	message(
-			const char*			msg,
-			const XalanNode* 	sourceNode = 0,
-			const XalanNode* 	styleNode = 0) const = 0;
+			const char*					msg,
+			const XalanNode* 			sourceNode = 0,
+			const ElemTemplateElement* 	styleNode = 0) const = 0;
 };
 
 

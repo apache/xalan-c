@@ -105,7 +105,7 @@ ElemTemplate::ElemTemplate(
 		switch(tok)
 		{
 		case Constants::TATTRNAME_MATCH:
-			m_matchPattern = constructionContext.createMatchPattern(atts.getValue(i), *this);
+			m_matchPattern = constructionContext.createMatchPattern(this, atts.getValue(i), *this);
 			break; 
 
 		case Constants::TATTRNAME_NAME:
@@ -131,14 +131,20 @@ ElemTemplate::ElemTemplate(
 		default:
 			if(!isAttrOK(aname, atts, i, constructionContext))
 			{
-				constructionContext.error(Constants::ELEMNAME_TEMPLATE_WITH_PREFIX_STRING + " has an illegal attribute: " + aname);
+				constructionContext.error(
+					"xsl:template has an illegal attribute",
+					0,
+					this);
 			}
 		}
 	}
 
 	if(0 == m_matchPattern && m_name.isEmpty() == true)
 	{
-		constructionContext.error(Constants::ELEMNAME_TEMPLATE_WITH_PREFIX_STRING + " requires either a name or a match attribute.");
+		constructionContext.error(
+				"xsl:template requires either a name or a match attribute",
+				0,
+				this);
 	}
 }
 

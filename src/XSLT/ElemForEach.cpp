@@ -103,7 +103,7 @@ ElemForEach::ElemForEach(
 
 		if(equals(aname, Constants::ATTRNAME_SELECT))
 		{
-			m_selectPattern = constructionContext.createXPath(atts.getValue(i), *this);
+			m_selectPattern = constructionContext.createXPath(this, atts.getValue(i), *this);
 		}
 		else if(!(isAttrOK(aname, atts, i, constructionContext) || processSpaceAttr(aname, atts, i)))
 		{

@@ -1253,7 +1253,7 @@ StylesheetHandler::processPreserveStripSpace(
 				 * to make sure it's a WildcardName.
 				 */
 				const XPath* const	matchPat =
-						m_constructionContext.createMatchPattern(wildcardName, nsNode);
+						m_constructionContext.createMatchPattern(0, wildcardName, nsNode);
 
 				if(Constants::ELEMNAME_PRESERVESPACE == xslToken)
 				{

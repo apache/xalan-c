@@ -143,39 +143,39 @@ ElemNumber::ElemNumber(
 		}
 		else if(equals(aname, Constants::ATTRNAME_COUNT))
 		{
-			m_countMatchPattern = constructionContext.createMatchPattern(atts.getValue(i), *this);
+			m_countMatchPattern = constructionContext.createMatchPattern(this, atts.getValue(i), *this);
 		}
 		else if(equals(aname, Constants::ATTRNAME_FROM))
 		{
-			m_fromMatchPattern = constructionContext.createMatchPattern(atts.getValue(i), *this);
+			m_fromMatchPattern = constructionContext.createMatchPattern(this, atts.getValue(i), *this);
 		}
 		else if(equals(aname, Constants::ATTRNAME_VALUE))
 		{
-			m_valueExpr = constructionContext.createXPath(atts.getValue(i), *this);
+			m_valueExpr = constructionContext.createXPath(this, atts.getValue(i), *this);
 		}
 		else if(equals(aname, Constants::ATTRNAME_FORMAT))
 		{
-			m_format_avt = new AVT(aname, atts.getType(i),
+			m_format_avt = new AVT(this, aname, atts.getType(i),
 						atts.getValue(i), *this, constructionContext);
 		}
 		else if(equals(aname, Constants::ATTRNAME_LANG))
 		{
-			m_lang_avt = new AVT(aname, atts.getType(i),
+			m_lang_avt = new AVT(this, aname, atts.getType(i),
 						atts.getValue(i), *this, constructionContext);
 		}
 		else if(equals(aname, Constants::ATTRNAME_LETTERVALUE))
 		{
-			m_lettervalue_avt = new AVT(aname, atts.getType(i),
+			m_lettervalue_avt = new AVT(this, aname, atts.getType(i),
 						atts.getValue(i), *this, constructionContext);
 		}
 		else if(equals(aname,Constants::ATTRNAME_GROUPINGSEPARATOR))
 		{
-			m_groupingSeparator_avt = new AVT(aname, atts.getType(i),
+			m_groupingSeparator_avt = new AVT(this, aname, atts.getType(i),
 						atts.getValue(i), *this, constructionContext);
 		}
 		else if(equals(aname,Constants::ATTRNAME_GROUPINGSIZE))
 		{
-			m_groupingSize_avt = new AVT(aname, atts.getType(i),
+			m_groupingSize_avt = new AVT(this, aname, atts.getType(i),
 						atts.getValue(i), *this, constructionContext);
 		}
 		else if(!isAttrOK(aname, atts, i, constructionContext))

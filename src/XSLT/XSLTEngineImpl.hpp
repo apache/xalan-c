@@ -748,70 +748,77 @@ public:
 	virtual void
 	message(
 			const XalanDOMString&	msg,
-			const XalanNode*		styleNode = 0,
-			const XalanNode*		sourceNode = 0) const;
+			const XalanNode*		sourceNode = 0,
+			const XalanNode*		styleNode = 0) const;
 
 	virtual void
 	message(
-			const char*			msg,
-			const XalanNode*	styleNode = 0,
-			const XalanNode*	sourceNode = 0) const;
+			const XalanDOMString&		msg,
+			const XalanNode*			sourceNode,
+			const ElemTemplateElement*	styleNode) const;
 
 	/**
-	 * Tell the user of an warning, and probably throw an exception.
+	 * Report a message
 	 * 
 	 * @param msg		 text of message to output
 	 * @param sourceNode node in source where error occurred
 	 * @param styleNode  node in stylesheet where error occurred
-	 * @exception XSLProcessorException
 	 */
+	virtual void
+	message(
+			const char*			msg,
+			const XalanNode*	sourceNode = 0,
+			const XalanNode*	styleNode = 0) const;
+
 	virtual void
 	warn(
 			const XalanDOMString&	msg,
-			const XalanNode*		styleNode = 0,
-			const XalanNode*		sourceNode = 0) const;
+			const XalanNode*		sourceNode = 0,
+			const XalanNode*		styleNode = 0) const;
+
+	virtual void
+	warn(
+			const XalanDOMString&		msg,
+			const XalanNode*			sourceNode,
+			const ElemTemplateElement*	styleNode) const;
 
 	/**
-	 * Tell the user of an warning, and probably throw an exception.
+	 * Report a warning.
 	 * 
 	 * @param msg		 text of message to output
 	 * @param sourceNode node in source where error occurred
 	 * @param styleNode  node in stylesheet where error occurred
-	 * @exception XSLProcessorException
 	 */
 	virtual void
 	warn(
 			const char*			msg,
-			const XalanNode*	styleNode = 0,
-			const XalanNode*	sourceNode = 0) const;
+			const XalanNode*	sourceNode = 0,
+			const XalanNode*	styleNode = 0) const;
 
-	/**
-	 * Tell the user of an error, and probably throw an exception.
-	 * 
-	 * @param msg		 text of message to output
-	 * @param sourceNode node in source where error occurred
-	 * @param styleNode  node in stylesheet where error occurred
-	 * @exception XSLProcessorException
-	 */
 	virtual void
 	error(
 			const XalanDOMString&	msg,
-			const XalanNode*		styleNode = 0,
-			const XalanNode*		sourceNode = 0) const;
+			const XalanNode*		sourceNode = 0,
+			const XalanNode*		styleNode = 0) const;
+
+	virtual void
+	error(
+			const XalanDOMString&		msg,
+			const XalanNode*			sourceNode,
+			const ElemTemplateElement*	styleNode) const;
 
 	/**
-	 * Tell the user of an error, and probably throw an exception.
+	 * Report an error, and throw an exception.
 	 * 
 	 * @param msg		 text of message to output
 	 * @param sourceNode node in source where error occurred
 	 * @param styleNode  node in stylesheet where error occurred
-	 * @exception XSLProcessorException
 	 */
 	virtual void
 	error(
 			const char*			msg,
-			const XalanNode*	styleNode = 0,
-			const XalanNode*	sourceNode = 0) const;
+			const XalanNode*	sourceNode = 0,
+			const XalanNode*	styleNode = 0) const;
 
 	/**
 	 * Mark the time, so that displayDuration can later display the elapsed
@@ -820,7 +827,7 @@ public:
 	 * @param theKey pointer to element to push
 	 */
 	void
-	pushTime(const void*	key) const;
+	pushTime(const void*	key);
 
 	/**
 	 * Returns the duration since pushTime was called for element
@@ -829,7 +836,7 @@ public:
 	 * @param key pointer to element involved
 	 */
 	clock_t
-	popDuration(const void* 	key) const;
+	popDuration(const void* 	key);
 
 	/**
 	 * Display the duration since pushTime was called for element in
@@ -841,7 +848,7 @@ public:
 	void
 	displayDuration(
 			const XalanDOMString&	info,
-			const void* 			key) const;
+			const void* 			key);
 
 
 	/**
@@ -850,7 +857,9 @@ public:
 	 * @return true for diagnostics output 
 	 */
 	bool doDiagnosticsOutput()
-	{	return 0 != m_diagnosticsPrintWriter; }
+	{
+		return 0 != m_diagnosticsPrintWriter ? true : false;
+	}
 
 	/**
 	 * Print a diagnostics string to the output device
@@ -1568,7 +1577,7 @@ private:
 	PrintWriter*	m_diagnosticsPrintWriter;
 
 	/* For diagnostics */
-	mutable DurationsTableMapType	m_durationsTable;
+	DurationsTableMapType	m_durationsTable;
 
 	/**
 	 * List of listeners who are interested in tracing what's 
@@ -1581,9 +1590,15 @@ private:
 	problem(
 			const XalanDOMString&				msg, 
 			ProblemListener::eClassification	classification,
-			const XalanNode*					styleNode = 0,
-			const XalanNode*					sourceNode = 0) const;
+			const XalanNode*					sourceNode,
+			const XalanNode*					styleNode) const;
 
+	void
+	problem(
+			const XalanDOMString&				msg, 
+			ProblemListener::eClassification	classification,
+			const XalanNode*					sourceNode,
+			const ElemTemplateElement*			styleNode) const;
 
   //==========================================================
   // SECTION: Function to do with attribute handling
@@ -1593,7 +1608,7 @@ private:
 	 * This is used whenever a unique namespace is needed.
 	 */
 	unsigned long	m_uniqueNSValue;
-  
+
 	ParamVectorType 	m_topLevelParams;
 
 public:

@@ -261,128 +261,114 @@ XSLTEngineImpl::process(
 			StylesheetConstructionContext&	constructionContext,
 			StylesheetExecutionContext&		executionContext)
 {
-	try
+	XalanDOMString	xslIdentifier;
+
+	if (0 == stylesheetSource.getSystemId())
 	{
-		XalanDOMString	xslIdentifier;
+		xslIdentifier = XalanDOMString(XALAN_STATIC_UCODE_STRING("Input XSL"));
+	}
+	else
+	{
+		xslIdentifier = stylesheetSource.getSystemId();
+	}
 
-		if (0 == stylesheetSource.getSystemId())
-		{
-			xslIdentifier = XalanDOMString(XALAN_STATIC_UCODE_STRING("Input XSL"));
-		}
-		else
-		{
-			xslIdentifier = stylesheetSource.getSystemId();
-		}
+	bool totalTimeID = true;
 
-		bool totalTimeID = true;
+	pushTime(&totalTimeID);
 
-		pushTime(&totalTimeID);
+	XalanNode*	sourceTree = getSourceTreeFromInput(inputSource);
 
-		XalanNode*	sourceTree = getSourceTreeFromInput(inputSource);
+	m_stylesheetRoot = processStylesheet(stylesheetSource, constructionContext);
 
-		try
-		{
-			m_stylesheetRoot = processStylesheet(stylesheetSource, constructionContext);
-		}
-		catch(const XSLException&)
-		{
-		}
-		catch(const SAXException&)
-		{
-		}
-		catch(const XMLException&)
-		{
-		}
+	if(0 != sourceTree && m_stylesheetRoot == 0)
+	{
+		// Didn't get a stylesheet from the input source, so look for a
+		// stylesheet processing instruction...
+		XalanDOMString			stylesheetURI;
 
-		if(0 != sourceTree && m_stylesheetRoot == 0)
-		{
-			// Didn't get a stylesheet from the input source, so look for a
-			// stylesheet processing instruction...
-			XalanDOMString			stylesheetURI;
-
-			// The PI must be a child of the document...
-			XalanNode*				child = sourceTree->getFirstChild();
+		// The PI must be a child of the document...
+		XalanNode*				child = sourceTree->getFirstChild();
 
 #if !defined(XALAN_NO_NAMESPACES)
-			using std::vector;
+		using std::vector;
 #endif
 
-			vector<XalanDOMString>	hrefs;
+		vector<XalanDOMString>	hrefs;
 
-			// $$$ ToDo: is this first one style valid?
-			const XalanDOMString	stylesheetNodeName1(XALAN_STATIC_UCODE_STRING("xml-stylesheet"));
-			const XalanDOMString	stylesheetNodeName2(XALAN_STATIC_UCODE_STRING("xml:stylesheet"));
+		// $$$ ToDo: is this first one style valid?
+		const XalanDOMString	stylesheetNodeName1(XALAN_STATIC_UCODE_STRING("xml-stylesheet"));
+		const XalanDOMString	stylesheetNodeName2(XALAN_STATIC_UCODE_STRING("xml:stylesheet"));
 
-			// $$$ ToDo: This code is much like that in getStyleSheetURIFromDoc().
-			// Why is it repeated???
-			// $$$ ToDo: Move these embedded strings from inside these loops
-			// out here...
-			// $$$ ToDo: These loops are a mess of repeated use of the
-			// same data values.
-			while(child != 0)
+		// $$$ ToDo: This code is much like that in getStyleSheetURIFromDoc().
+		// Why is it repeated???
+		// $$$ ToDo: Move these embedded strings from inside these loops
+		// out here...
+		// $$$ ToDo: These loops are a mess of repeated use of the
+		// same data values.
+		while(child != 0)
+		{
+			if(XalanNode::PROCESSING_INSTRUCTION_NODE == child->getNodeType())
 			{
-				if(XalanNode::PROCESSING_INSTRUCTION_NODE == child->getNodeType())
+				const XalanDOMString	nodeName(child->getNodeName());
+
+				if(equals(nodeName, stylesheetNodeName1) ||
+				   equals(nodeName, stylesheetNodeName2))
 				{
-					const XalanDOMString	nodeName(child->getNodeName());
+					bool isOK = true;
 
-					if(equals(nodeName, stylesheetNodeName1) ||
-					   equals(nodeName, stylesheetNodeName2))
+					StringTokenizer 	tokenizer(child->getNodeValue(), XALAN_STATIC_UCODE_STRING(" \t="));
+
+					while(tokenizer.hasMoreTokens())
 					{
-						bool isOK = true;
+						if(equals(tokenizer.nextToken(), XALAN_STATIC_UCODE_STRING("type")))
+						{
+							XalanDOMString	typeVal = tokenizer.nextToken();
 
+							typeVal = substring(typeVal, 1, length(typeVal) - 1);
+
+							if(!equals(typeVal, XALAN_STATIC_UCODE_STRING("text/xsl")))
+							{
+								isOK = false;
+							}
+						}
+					}	
+						
+					if(isOK)
+					{
 						StringTokenizer 	tokenizer(child->getNodeValue(), XALAN_STATIC_UCODE_STRING(" \t="));
 
 						while(tokenizer.hasMoreTokens())
 						{
-							if(equals(tokenizer.nextToken(), XALAN_STATIC_UCODE_STRING("type")))
+							const XalanDOMString	theCurrentToken = tokenizer.nextToken();
+
+							if(equals(theCurrentToken, XALAN_STATIC_UCODE_STRING("href")))
 							{
-								XalanDOMString	typeVal = tokenizer.nextToken();
-
-								typeVal = substring(typeVal, 1, length(typeVal) - 1);
-
-								if(!equals(typeVal, XALAN_STATIC_UCODE_STRING("text/xsl")))
-								{
-									isOK = false;
-								}
-							}
-						}	
-						
-						if(isOK)
-						{
-							StringTokenizer 	tokenizer(child->getNodeValue(), XALAN_STATIC_UCODE_STRING(" \t="));
-
-							while(tokenizer.hasMoreTokens())
-							{
-								const XalanDOMString	theCurrentToken = tokenizer.nextToken();
-
-								if(equals(theCurrentToken, XALAN_STATIC_UCODE_STRING("href")))
-								{
-									stylesheetURI = tokenizer.nextToken();
-									stylesheetURI = substring(stylesheetURI, 1, length(stylesheetURI) - 1);
-									hrefs.push_back(stylesheetURI);
-								}
+								stylesheetURI = tokenizer.nextToken();
+								stylesheetURI = substring(stylesheetURI, 1, length(stylesheetURI) - 1);
+								hrefs.push_back(stylesheetURI);
 							}
 						}
 					}
 				}
-
-				child = child->getNextSibling();
 			}
 
-			bool isRoot = true;
-			Stylesheet* prevStylesheet = 0;
+			child = child->getNextSibling();
+		}
+
+		bool isRoot = true;
+		Stylesheet* prevStylesheet = 0;
 			
-			if (hrefs.empty() == false)
+		if (hrefs.empty() == false)
+		{
+			const XalanDOMChar* const	pxch = inputSource.getSystemId();
+
+			const XalanDOMString		sysid(pxch == 0 ? &s_dummyString : pxch); 
+
+			do
 			{
-				const XalanDOMChar* const	pxch = inputSource.getSystemId();
+				const XalanDOMString&	ref =  hrefs.back();
 
-				const XalanDOMString		sysid(pxch == 0 ? &s_dummyString : pxch); 
-
-				do
-				{
-					const XalanDOMString&	ref =  hrefs.back();
-
-					Stylesheet* stylesheet =
+				Stylesheet* stylesheet =
 							getStylesheetFromPIURL(
 								ref,
 								*sourceTree,
@@ -390,53 +376,40 @@ XSLTEngineImpl::process(
 								isRoot,
 								constructionContext);
 
-					if(false == isRoot)
-					{
-						prevStylesheet->addImport(stylesheet, false);
-					}
+				if(false == isRoot)
+				{
+					prevStylesheet->addImport(stylesheet, false);
+				}
 
-					prevStylesheet = stylesheet;
-					isRoot = false;
-					hrefs.pop_back();
-				} while(!hrefs.empty());
-			}
+				prevStylesheet = stylesheet;
+				isRoot = false;
+				hrefs.pop_back();
+			} while(!hrefs.empty());
 		}
+	}
 
-		if(0 == m_stylesheetRoot)
-		{
-			error("Failed to process stylesheet!");
-		}
-		else if(0 != sourceTree)
-		{
-			executionContext.setStylesheetRoot(m_stylesheetRoot);
+	if(0 == m_stylesheetRoot)
+	{
+		error("Failed to process stylesheet!");
+	}
+	else if(0 != sourceTree)
+	{
+		executionContext.setStylesheetRoot(m_stylesheetRoot);
 
-			FormatterListener* const	theFormatter =
+		FormatterListener* const	theFormatter =
 				outputTarget.getDocumentHandler();
 
-			if (theFormatter != 0)
-			{
-				theFormatter->setPrefixResolver(this);
-			}
-
-			m_stylesheetRoot->process(sourceTree, outputTarget, executionContext);
-
-			if(0 != m_diagnosticsPrintWriter)
-			{
-				displayDuration(StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("Total time")), &totalTimeID);
-			}
+		if (theFormatter != 0)
+		{
+			theFormatter->setPrefixResolver(this);
 		}
-	}
-	catch(SAXException& se)
-	{
-		message("SAX Exception");
 
-		throw se;
-	}
-	catch (...)
-	{
-		message("Unknown Exception");
+		m_stylesheetRoot->process(sourceTree, outputTarget, executionContext);
 
-		throw;
+		if(0 != m_diagnosticsPrintWriter)
+		{
+			displayDuration(StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("Total time")), &totalTimeID);
+		}
 	}
 }
 
@@ -488,18 +461,9 @@ XSLTEngineImpl::processStylesheet(
 			const XalanDOMString&			xsldocURLString,
 			StylesheetConstructionContext&	constructionContext)
 {
-	try
-	{
-		XSLTInputSource		input(c_wstr(xsldocURLString));
+	const XSLTInputSource	input(c_wstr(xsldocURLString));
 
-		return processStylesheet(input, constructionContext);
-	}
-	catch(SAXException& se)
-	{
-		message("processStylesheet not successfull!");
-
-		throw se;
-	}
+	return processStylesheet(input, constructionContext);
 
 	return 0;
 }
@@ -520,55 +484,37 @@ XSLTEngineImpl::processStylesheet(
 	{
 		XalanDOMString	xslIdentifier;
 
-		try
+		theStylesheet = constructionContext.create(stylesheetSource);
+
+		StylesheetHandler	stylesheetProcessor(*theStylesheet, constructionContext);
+
+		if(stylesheetNode != 0)
 		{
-			theStylesheet = constructionContext.create(stylesheetSource);
+			xslIdentifier = XALAN_STATIC_UCODE_STRING("Input XSL");
 
-			StylesheetHandler	stylesheetProcessor(*theStylesheet, constructionContext);
+			FormatterTreeWalker tw(stylesheetProcessor);
 
-			if(stylesheetNode != 0)
+			tw.traverse(stylesheetSource.getNode());
+		}
+		else
+		{
+			if (systemID != 0)
 			{
-				xslIdentifier = XALAN_STATIC_UCODE_STRING("Input XSL");
-
-				FormatterTreeWalker tw(stylesheetProcessor);
-
-				tw.traverse(stylesheetSource.getNode());
-			}
-			else
-			{
-				if (systemID != 0)
-				{
-					xslIdentifier = systemID;
-				}
-
-				diag(XALAN_STATIC_UCODE_STRING("========= Parsing ") + xslIdentifier + XALAN_STATIC_UCODE_STRING(" =========="));
-				pushTime(&xslIdentifier);
-				m_parserLiaison.parseXMLStream(stylesheetSource,
-											   stylesheetProcessor);
-				if(0 != m_diagnosticsPrintWriter)
-					displayDuration(XALAN_STATIC_UCODE_STRING("Parse of ") + xslIdentifier, &xslIdentifier);
+				xslIdentifier = systemID;
 			}
 
-			theStylesheet->postConstruction(constructionContext);
-		}
-		catch(const XSLException&)
-		{
-			message("Error parsing " + xslIdentifier);
+			diag(XALAN_STATIC_UCODE_STRING("========= Parsing ") + xslIdentifier + XALAN_STATIC_UCODE_STRING(" =========="));
 
-			throw;
-		}
-		catch(const SAXException&)
-		{
-			message("Error parsing " + xslIdentifier);
+			pushTime(&xslIdentifier);
 
-			throw;
-		}
-		catch(const XMLException&)
-		{
-			message("Error parsing " + xslIdentifier);
+			m_parserLiaison.parseXMLStream(stylesheetSource,
+										   stylesheetProcessor);
 
-			throw;
+			if(0 != m_diagnosticsPrintWriter)
+				displayDuration(XALAN_STATIC_UCODE_STRING("Parse of ") + xslIdentifier, &xslIdentifier);
 		}
+
+		theStylesheet->postConstruction(constructionContext);
 	}
 
 	return theStylesheet;
@@ -593,40 +539,34 @@ XSLTEngineImpl::getSourceTreeFromInput(const XSLTInputSource&	inputSource)
 
 		// In case we have a fragment identifier, go ahead and 
 		// try to parse the XML here.
-		try
-		{
-			diag(XALAN_STATIC_UCODE_STRING("========= Parsing ") +
+		diag(XALAN_STATIC_UCODE_STRING("========= Parsing ") +
 					xmlIdentifier +
 					XALAN_STATIC_UCODE_STRING(" =========="));
 
-			pushTime(&xmlIdentifier);
+		pushTime(&xmlIdentifier);
 
 #if defined(XALAN_VQ_SPECIAL_TRACE)
-			QuantifyStartRecordingData();
+		QuantifyStartRecordingData();
 #endif
-			XalanDocument* const	theDocument =
+
+		XalanDocument* const	theDocument =
 						m_parserLiaison.parseXMLStream(inputSource,
 													   xmlIdentifier);
-			assert(theDocument != 0);
+		assert(theDocument != 0);
 
 #if defined(XALAN_VQ_SPECIAL_TRACE)
-			QuantifyStopRecordingData();
+		QuantifyStopRecordingData();
 #endif
-			if(0 != m_diagnosticsPrintWriter)
-				displayDuration(XALAN_STATIC_UCODE_STRING("Parse of ") +
-									xmlIdentifier,
-								&xmlIdentifier);
-
-			m_xpathEnvSupport.setSourceDocument(xmlIdentifier, theDocument);
-
-			sourceTree = theDocument;
-		}
-		// catch(Exception e)
-		// $$$ ToDo: Fix this!!!
-		catch(...)
+		if(0 != m_diagnosticsPrintWriter)
 		{
-			error("Could not parse " + xmlIdentifier + " document!");
+			displayDuration(
+				XALAN_STATIC_UCODE_STRING("Parse of ") + xmlIdentifier,
+				&xmlIdentifier);
 		}
+
+		m_xpathEnvSupport.setSourceDocument(xmlIdentifier, theDocument);
+
+		sourceTree = theDocument;
 	}
 
 	return sourceTree;
@@ -1229,22 +1169,21 @@ XSLTEngineImpl::setTraceSelects(bool	b)
 void
 XSLTEngineImpl::message(
 			const XalanDOMString&	msg,
-			const XalanNode*		styleNode,
-			const XalanNode*		sourceNode) const
+			const XalanNode*		sourceNode,
+			const XalanNode*		styleNode) const
 {
-	if (m_problemListener != 0)
-	{
-		const bool	shouldThrow =
-			m_problemListener->problem(ProblemListener::eXSLPROCESSOR, 
-									   ProblemListener::eMESSAGE,
-									   styleNode, sourceNode,
-									   msg, 0, 0, 0);
+	problem(msg, ProblemListener::eMESSAGE, sourceNode, styleNode);
+}
 
-		if(shouldThrow == true)
-		{
-			throw XSLTProcessorException(msg);
-		}
-	}
+
+
+void
+XSLTEngineImpl::message(
+			const XalanDOMString&		msg,
+			const XalanNode*			sourceNode,
+			const ElemTemplateElement*	styleNode) const
+{
+	problem(msg, ProblemListener::eMESSAGE, sourceNode, styleNode);
 }
 
 
@@ -1264,31 +1203,114 @@ void
 XSLTEngineImpl::problem(
 			const XalanDOMString&				msg, 
 			ProblemListener::eClassification	classification,
-			const XalanNode*					styleNode,
-			const XalanNode*					sourceNode) const
+			const XalanNode*					sourceNode,
+			const XalanNode*					styleNode) const
 {
-	if (m_problemListener == 0) return;
-
 	const Locator* const	locator = getLocatorFromStack();
 
-	const XalanDOMChar* id = (0 == locator) ?
-						0 : (0 == locator->getPublicId()) ?
-					 locator->getPublicId() : locator->getSystemId();
+	const XalanDOMChar*		id = 0;
 
-	const bool	shouldThrow =
-		m_problemListener->problem(
-				ProblemListener::eXSLPROCESSOR, 
-				classification,
-				styleNode,
-				sourceNode,
-				msg, 
-				id, 
-				(0 == locator) ? 0: locator->getLineNumber(), 
-				(0 == locator) ? 0: locator->getColumnNumber());
+	XalanDOMString			uri;
 
-	if(shouldThrow == true)
+	int						lineNumber = -1;
+	int 					columnNumber = -1;
+
+	if (locator != 0)
 	{
-		throw XSLTProcessorException(msg);
+		id = locator->getPublicId();
+
+		if (id == 0)
+		{
+			id = locator->getSystemId();
+		}
+
+		if (id != 0)
+		{
+			uri = id;
+		}
+
+		lineNumber = locator->getLineNumber();
+		columnNumber = locator->getColumnNumber();
+	}
+
+	if (m_problemListener != 0)
+	{
+		m_problemListener->problem(
+					ProblemListener::eXSLPROCESSOR,
+					classification,
+					styleNode,
+					sourceNode,
+					msg,
+					id,
+					lineNumber,
+					columnNumber);
+	}
+
+	if (classification == ProblemListener::eERROR)
+	{
+		throw XSLTProcessorException(msg, uri, lineNumber, columnNumber);
+	}
+}
+
+
+
+void
+XSLTEngineImpl::problem(
+			const XalanDOMString&				msg, 
+			ProblemListener::eClassification	classification,
+			const XalanNode*					sourceNode,
+			const ElemTemplateElement*			styleNode) const
+{
+	const Locator* const	locator = getLocatorFromStack();
+
+	const XalanDOMChar*		id = 0;
+
+	XalanDOMString			uri;
+
+	int						lineNumber = -1;
+	int 					columnNumber = -1;
+
+	if (locator != 0)
+	{
+		id = locator->getPublicId();
+
+		if (id == 0)
+		{
+			id = locator->getSystemId();
+		}
+
+		if (id != 0)
+		{
+			uri = id;
+		}
+
+		lineNumber = locator->getLineNumber();
+		columnNumber = locator->getColumnNumber();
+	}
+	else if (styleNode != 0)
+	{
+		lineNumber = styleNode->getLineNumber();
+		columnNumber = styleNode->getColumnNumber();
+
+		uri = styleNode->getURI();
+	}
+
+	if (m_problemListener != 0)
+	{
+		m_problemListener->problem(
+					ProblemListener::eXSLPROCESSOR,
+					classification,
+					styleNode,
+					sourceNode,
+					msg,
+					id,
+					lineNumber,
+					columnNumber);
+	}
+
+	if (classification == ProblemListener::eERROR)
+	{
+		throw XSLTProcessorException(msg, uri, lineNumber, columnNumber);
 	}
 }
 
@@ -1297,10 +1319,21 @@ XSLTEngineImpl::problem(
 void
 XSLTEngineImpl::warn(
 			const XalanDOMString&	msg,
-			const XalanNode*		styleNode,
-			const XalanNode*		sourceNode) const
+			const XalanNode*		sourceNode,
+			const XalanNode*		styleNode) const
 {
-	problem(msg, ProblemListener::eWARNING, styleNode, sourceNode);
+	problem(msg, ProblemListener::eWARNING, sourceNode, styleNode);
+}
+
+
+
+void
+XSLTEngineImpl::warn(
+			const XalanDOMString&		msg,
+			const XalanNode*			sourceNode,
+			const ElemTemplateElement*	styleNode) const
+{
+	problem(msg, ProblemListener::eWARNING, sourceNode, styleNode);
 }
 
 
@@ -1319,10 +1352,21 @@ XSLTEngineImpl::warn(
 void
 XSLTEngineImpl::error(
 			const XalanDOMString&	msg,
-			const XalanNode*		styleNode,
-			const XalanNode*		sourceNode) const
+			const XalanNode*		sourceNode,
+			const XalanNode*		styleNode) const
 {
-	problem(msg, ProblemListener::eERROR, styleNode, sourceNode);
+	problem(msg, ProblemListener::eERROR, sourceNode, styleNode);
+}
+
+
+
+void
+XSLTEngineImpl::error(
+			const XalanDOMString&		msg,
+			const XalanNode*			sourceNode,
+			const ElemTemplateElement*	styleNode) const
+{
+	problem(msg, ProblemListener::eERROR, sourceNode, styleNode);
 }
 
 
@@ -1339,43 +1383,31 @@ XSLTEngineImpl::error(
 
 
 void
-XSLTEngineImpl::pushTime(const void*	key) const
+XSLTEngineImpl::pushTime(const void*	key)
 {
 	if(0 != key)
 	{
-#if defined(XALAN_NO_MUTABLE)
-		((XSLTEngineImpl*)this)->m_durationsTable.insert(DurationsTableMapType::value_type(key, clock()));
-#else
-		m_durationsTable.insert(DurationsTableMapType::value_type(key, clock()));
-#endif
+		m_durationsTable[key] = clock();
 	}
 }
 
 
 
 clock_t
-XSLTEngineImpl::popDuration(const void*		key) const
+XSLTEngineImpl::popDuration(const void*		key)
 {
 	clock_t 	clockTicksDuration = 0;
 
 	if(0 != key)
 	{
 		const DurationsTableMapType::iterator	i =
-#if defined(XALAN_NO_MUTABLE)
-				((XSLTEngineImpl*)this)->m_durationsTable.find(key);
-#else
 				m_durationsTable.find(key);
-#endif
 
 		if (i != m_durationsTable.end())
 		{
 			clockTicksDuration = clock() - (*i).second;
 
-#if defined(XALAN_NO_MUTABLE)
-			((XSLTEngineImpl*)this)->m_durationsTable.erase(i);
-#else
 			m_durationsTable.erase(i);
-#endif
 		}
 	}
 
@@ -1387,7 +1419,7 @@ XSLTEngineImpl::popDuration(const void*		key) const
 void
 XSLTEngineImpl::displayDuration(
 			const XalanDOMString&	info,
-			const void*				key) const
+			const void*				key)
 {
 	if(0 != key)
 	{
@@ -2664,7 +2696,8 @@ XSLTEngineImpl::evalXPathStr(
 
     m_xpathProcessor->initXPath(*theXPath,
 								str,
-								*executionContext.getPrefixResolver());
+								*executionContext.getPrefixResolver(),
+								getLocatorFromStack());
 
     return theXPath->execute(executionContext.getCurrentNode(),
 							 *executionContext.getPrefixResolver(),
@@ -2687,7 +2720,8 @@ XSLTEngineImpl::evalXPathStr(
 
     m_xpathProcessor->initXPath(*theXPath,
 								str,
-								prefixResolver);
+								prefixResolver,
+								getLocatorFromStack());
 
     return theXPath->execute(contextNode, prefixResolver, executionContext);
 }
@@ -2721,7 +2755,7 @@ XSLTEngineImpl::createMatchPattern(
 {
 	XPath* const	xpath = m_xpathFactory.create();
 
-	m_xpathProcessor->initMatchPattern(*xpath, str, resolver);
+	m_xpathProcessor->initMatchPattern(*xpath, str, resolver, getLocatorFromStack());
 
 	return xpath;
 }

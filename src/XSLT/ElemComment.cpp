@@ -92,7 +92,10 @@ ElemComment::ElemComment(
 
 		if(isAttrOK(aname, atts, i, constructionContext) == false || processSpaceAttr(aname, atts, i))
 		{
-			constructionContext.error(Constants::ELEMNAME_COMMENT_WITH_PREFIX_STRING + " has an illegal attribute: " + aname);
+			constructionContext.error(
+				"xsl:comment has an illegal attribute",
+				0,
+				this);
 		}
 	}	
 }
@@ -145,13 +148,6 @@ ElemComment::childTypeAllowed(int	xslToken) const
 	case Constants::ELEMNAME_COPY:
 	case Constants::ELEMNAME_VARIABLE:
 	case Constants::ELEMNAME_MESSAGE:
-		
-// instructions 
-// case Constants.ELEMNAME_PI:
-// case Constants.ELEMNAME_COMMENT:
-// case Constants.ELEMNAME_ELEMENT:
-// case Constants.ELEMNAME_ATTRIBUTE:
-		
 		fResult = true;
 		break;
 		

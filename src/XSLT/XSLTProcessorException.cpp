@@ -65,6 +65,18 @@
 
 XSLTProcessorException::XSLTProcessorException(
 		const XalanDOMString&	theMessage,
+		const XalanDOMString&	theURI,
+		int						theLineNumber,
+		int						theColumnNumber,
+		const XalanDOMString&	theType) :
+	XSLException(theMessage, theURI, theLineNumber, theColumnNumber, theType)
+{
+}
+
+
+
+XSLTProcessorException::XSLTProcessorException(
+		const XalanDOMString&	theMessage,
 		const XalanDOMString&	theType) :
 	XSLException(theMessage, theType)
 {

@@ -96,7 +96,7 @@ ElemWhen::ElemWhen(
 		switch(tok)
 		{
 		case Constants::TATTRNAME_TEST:
-			m_pTest = constructionContext.createXPath(atts.getValue(i), *this);
+			m_pTest = constructionContext.createXPath(this, atts.getValue(i), *this);
 			break;
 
 		case Constants::TATTRNAME_XMLSPACE:

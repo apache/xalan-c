@@ -97,7 +97,10 @@ ElemCopy::ElemCopy(
 				processSpaceAttr(aname, atts, i) ||
 				isAttrOK(aname, atts, i, constructionContext)))
 		{
-			constructionContext.error(Constants::ELEMNAME_COPY_WITH_PREFIX_STRING + " has an illegal attribute: " + aname);
+			constructionContext.error(
+				"xsl:copy has an illegal attribute",
+				0,
+				this);
 		}
 	}
 }

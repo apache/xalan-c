@@ -108,7 +108,7 @@ ElemVariable::ElemVariable(
 		switch(tok)
 		{
 		case Constants::TATTRNAME_SELECT:
-			m_selectPattern = constructionContext.createXPath(atts.getValue(i),
+			m_selectPattern = constructionContext.createXPath(this, atts.getValue(i),
 				*this);
 			break;
 
@@ -123,14 +123,17 @@ ElemVariable::ElemVariable(
 		default:
 			if(!isAttrOK(aname, atts, i, constructionContext))
 			{
-				constructionContext.error(Constants::ELEMNAME_VARIABLE_WITH_PREFIX_STRING + " has an illegal attribute: " + aname);
+				constructionContext.error("xsl:variable has an illegal attribute", 0, this);
 			}
 		}
 	}
 
 	if(m_qname.isEmpty())
 	{
-		constructionContext.error(Constants::ELEMNAME_VARIABLE_WITH_PREFIX_STRING + " must have a 'name' attribute.");
+		constructionContext.error(
+			"xsl:variable must have a 'name' attribute.",
+			0,
+			this);
 	}
 }
 

@@ -69,6 +69,10 @@
 
 
 
+#include <sax/Locator.hpp>
+
+
+
 #include <XalanDOM/XalanDOMString.hpp>
 #include <XalanDOM/XalanElement.hpp>
 #include <XalanDOM/XalanEmptyNamedNodeMap.hpp>
@@ -98,7 +102,7 @@ class XPath;
 
 
 
-class ElemTemplateElement : public XalanElement, public PrefixResolver
+class XALAN_XSLT_EXPORT ElemTemplateElement : public XalanElement, public PrefixResolver, public Locator
 {
 public:
 
@@ -308,28 +312,6 @@ public:
 	 */
 	virtual	void
 	error(const char*	msg) const;
-
-	/** 
-	 * Get the line number where the element occurs in the xsl file.
-	 * 
-	 * @return line number
-	 */
-	int
-	getLineNumber() const
-	{
-		return m_lineNumber;
-	}
-
-	/** 
-	 * Get the column offset where the element occurs in the xsl file.
-	 * 
-	 * @return column number
-	 */
-	int
-	getColumnNumber() const
-	{
-		return m_columnNumber;
-	}
 
 	virtual const XalanDOMString&
 	getElementName() const = 0;
@@ -662,6 +644,23 @@ public:
 	virtual const XalanDOMString&
 	getURI() const;
 
+
+	// These interfaces are inherited from Locator...
+
+	virtual const XMLCh*
+	getPublicId() const;
+
+	virtual const XMLCh*
+	getSystemId() const;
+
+	virtual int
+	getLineNumber() const;
+
+	virtual int
+	getColumnNumber() const;
+
+
+	// These optimization interfaces are new to ElemTemplateElement...
 	bool
 	hasParams() const
 	{

@@ -144,39 +144,39 @@ public:
 
 	virtual void
 	error(
-			const XalanDOMString&	msg,
-			const XalanNode* 		sourceNode = 0,
-			const XalanNode*		styleNode = 0) const;
+			const XalanDOMString&		msg,
+			const XalanNode* 			sourceNode = 0,
+			const ElemTemplateElement*	styleNode = 0) const;
 
 	virtual void
 	error(
-			const char*			msg,
-			const XalanNode* 	sourceNode = 0,
-			const XalanNode* 	styleNode = 0) const;
+			const char*					msg,
+			const XalanNode* 			sourceNode = 0,
+			const ElemTemplateElement* 	styleNode = 0) const;
 
 	virtual void
 	warn(
-			const XalanDOMString&	msg,
-			const XalanNode* 		sourceNode = 0,
-			const XalanNode* 		styleNode = 0) const;
+			const XalanDOMString&		msg,
+			const XalanNode* 			sourceNode = 0,
+			const ElemTemplateElement* 	styleNode = 0) const;
 
 	virtual void
 	warn(
-			const char*			msg,
-			const XalanNode* 	sourceNode = 0,
-			const XalanNode* 	styleNode = 0) const;
+			const char*					msg,
+			const XalanNode* 			sourceNode = 0,
+			const ElemTemplateElement* 	styleNode = 0) const;
 
 	virtual void
 	message(
-			const XalanDOMString&	msg,
-			const XalanNode* 		sourceNode = 0,
-			const XalanNode* 		styleNode = 0) const;
+			const XalanDOMString&		msg,
+			const XalanNode* 			sourceNode = 0,
+			const ElemTemplateElement* 	styleNode = 0) const;
 
 	virtual void
 	message(
-			const char*			msg,
-			const XalanNode* 	sourceNode = 0,
-			const XalanNode* 	styleNode = 0) const;
+			const char*					msg,
+			const XalanNode* 			sourceNode = 0,
+			const ElemTemplateElement* 	styleNode = 0) const;
 
 	// These interfaces are inherited from StylesheetConstructionContext...
 
@@ -224,21 +224,25 @@ public:
 
 	virtual XPath*
 	createMatchPattern(
+			const Locator*			locator,
 			const XalanDOMString&	str,
 			const PrefixResolver&	resolver);
 
 	virtual XPath*
 	createMatchPattern(
+			const Locator*			locator,
 			const XalanDOMChar*		str,
 			const PrefixResolver&	resolver);
 
 	virtual XPath*
 	createXPath(
+			const Locator*			locator,
 			const XalanDOMString&	str,
 			const PrefixResolver&	resolver);
 
 	virtual XPath*
 	createXPath(
+			const Locator*			locator,
 			const XalanDOMChar*		str,
 			const PrefixResolver&	resolver);
 

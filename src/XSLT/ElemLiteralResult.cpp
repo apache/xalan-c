@@ -157,7 +157,7 @@ ElemLiteralResult::ElemLiteralResult(
 			if(! processUseAttributeSets(constructionContext, aname, atts, i) &&
 					isAttrOK(aname, atts, i, constructionContext))
 			{
-				m_avts.push_back(new AVT(aname, atts.getType(i), atts.getValue(i), 	
+				m_avts.push_back(new AVT(this, aname, atts.getType(i), atts.getValue(i), 	
 							*this, constructionContext));
 			}
 		}

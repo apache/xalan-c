@@ -98,7 +98,10 @@ ElemChoose::ElemChoose(
 
 		if(isAttrOK(aname, atts, i, constructionContext) == false  || processSpaceAttr(aname, atts, i))
 		{
-			constructionContext.error(Constants::ELEMNAME_CHOOSE_WITH_PREFIX_STRING + " has an illegal attribute: " + aname);
+			constructionContext.error(
+				"xsl:choose has an illegal attribute",
+				0,
+				this);
 		}
 	}	
 }

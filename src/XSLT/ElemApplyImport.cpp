@@ -100,7 +100,10 @@ ElemApplyImport::ElemApplyImport(
 
 		if(isAttrOK(aname, atts, i, constructionContext) == false)
 		{
-			constructionContext.error(Constants::ELEMNAME_APPLY_IMPORTS_WITH_PREFIX_STRING + " has an illegal attribute: " + aname);
+			constructionContext.error(
+				"xsl:apply-imports has an illegal attribute",
+				0,
+				this);
 		}
     }
 }
@@ -123,10 +126,11 @@ ElemApplyImport::execute(StylesheetExecutionContext&		executionContext) const
 	XalanNode* const	sourceNode = executionContext.getCurrentNode();
 	assert(sourceNode != 0);
 
-	transformChild(executionContext,
-				   *this,
-				   0,
-				   sourceNode);   
+	transformChild(
+			executionContext,
+			*this,
+			0,
+			sourceNode);   
 }
 
 

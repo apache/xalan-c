@@ -115,6 +115,7 @@ static const XalanDOMChar	theRightCurlyBracketString[] =
  * on to the string if the AVT is simple.
  */
 AVT::AVT(
+			const Locator*					locator,
 			const XalanDOMChar*				name,
 			const XalanDOMChar*				type,
 			const XalanDOMChar*				stringedValue,
@@ -245,7 +246,11 @@ AVT::AVT(
 							// expression.
 							clear(buffer);
 
-							const XPath* const	xpath = constructionContext.createXPath(exprBuffer, resolver);
+							const XPath* const	xpath =
+								constructionContext.createXPath(
+											locator,
+											exprBuffer,
+											resolver);
 							assert(xpath != 0);
 
 							m_parts.push_back(new AVTPartXPath(xpath));

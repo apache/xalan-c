@@ -100,18 +100,21 @@ ElemAttribute::ElemAttribute(
 
 		if(equals(aname, Constants::ATTRNAME_NAME))
 		{
-			m_pNameAVT = new AVT(aname, atts.getType(i), atts.getValue(i),
+			m_pNameAVT = new AVT(this, aname, atts.getType(i), atts.getValue(i),
 				*this, constructionContext);
 		}
 		else if(equals(aname,Constants::ATTRNAME_NAMESPACE))
 		{
-			m_pNamespaceAVT = new AVT(aname, atts.getType(i), atts.getValue(i),
+			m_pNamespaceAVT = new AVT(this, aname, atts.getType(i), atts.getValue(i),
 				*this, constructionContext);
 		}
 		else if(!(isAttrOK(aname, atts, i, constructionContext) || 
 			processSpaceAttr(aname, atts, i)))
 		{
-			constructionContext.error(Constants::ELEMNAME_ATTRIBUTE_WITH_PREFIX_STRING + " has an illegal attribute: " + aname);
+			constructionContext.error(
+				"xsl:attribute has an illegal attribute",
+				0,
+				this);
 		}
 	}
 
@@ -123,7 +126,10 @@ ElemAttribute::ElemAttribute(
 		delete m_pNamespaceAVT;
 #endif
 
-		constructionContext.error(Constants::ELEMNAME_ATTRIBUTE_WITH_PREFIX_STRING + " must have a name attribute.");
+		constructionContext.error(
+			"xsl:attribute must have a \"name\" attribute",
+			0,
+			this);
 	} 
 	
 }

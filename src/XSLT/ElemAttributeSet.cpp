@@ -98,13 +98,19 @@ ElemAttributeSet::ElemAttributeSet(
 		else if(!(processUseAttributeSets(constructionContext, aname, atts, i) ||
 					isAttrOK(aname, atts, i, constructionContext)))
 		{
-			constructionContext.error(Constants::ELEMNAME_ATTRIBUTESET_WITH_PREFIX_STRING + " has an illegal attribute: " + aname);
+			constructionContext.error(
+				"xsl:attribute-set has an illegal attribute",
+				0,
+				this);
 		}
 	}
 
 	if(isEmpty(m_QName.getLocalPart()))
 	{
-		constructionContext.error(Constants::ELEMNAME_ATTRIBUTESET_WITH_PREFIX_STRING + " must have a name attribute.");
+		constructionContext.error(
+			"xsl:attribute-set must have a \"name\" attribute",
+			0,
+			this);
 	}
 }
 

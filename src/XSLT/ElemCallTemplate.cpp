@@ -102,13 +102,19 @@ ElemCallTemplate::ElemCallTemplate(
 		}
 		else if(!isAttrOK(aname, atts, i, constructionContext))
 		{
-			constructionContext.error(Constants::ELEMNAME_CALLTEMPLATE_WITH_PREFIX_STRING + " has an illegal attribute: " + aname);
+			constructionContext.error(
+				"xsl:call-template has an illegal attribute",
+				0,
+				this);
 		}
 	}
 
 	if (m_templateName.isEmpty() == true)
 	{
-		constructionContext.error(Constants::ELEMNAME_CALLTEMPLATE_WITH_PREFIX_STRING + " requires a name attribute!");
+		constructionContext.error(
+			"xsl:call-template must have a \"name\" attribute",
+			0,
+			this);
 	}
 }
 
