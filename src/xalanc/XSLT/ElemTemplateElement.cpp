@@ -219,7 +219,7 @@ ElemTemplateElement::startElement(StylesheetExecutionContext&	executionContext) 
 			TracerEvent(executionContext, *this));
 	} 
 	return 0;
-};
+}
 
 
 
