@@ -298,6 +298,10 @@ SOURCE=..\..\..\..\src\XSLT\KeyTable.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\XSLT\NamespacesHandler.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\XSLT\NodeSorter.cpp
 # End Source File
 # Begin Source File
@@ -616,6 +620,10 @@ SOURCE=..\..\..\..\src\XSLT\KeyDeclaration.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\XSLT\KeyTable.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XSLT\NamespacesHandler.hpp
 # End Source File
 # Begin Source File
 
