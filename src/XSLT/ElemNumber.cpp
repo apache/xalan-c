@@ -167,12 +167,9 @@ ElemNumber::ElemNumber(
 		}
 		else if(equals(aname, Constants::ATTRNAME_LETTERVALUE))
 		{
-			if (equals("traditional", atts.getValue(i)))
-				constructionContext.warn(Constants::ATTRNAME_LETTERVALUE +
-						" value 'traditional' not supported yet!");
 			m_lettervalue_avt = new AVT(aname, atts.getType(i),
 						atts.getValue(i), *this, constructionContext);
-		} 
+		}
 		else if(equals(aname,Constants::ATTRNAME_GROUPINGSEPARATOR))
 		{
 			m_groupingSeparator_avt = new AVT(aname, atts.getType(i),
@@ -226,6 +223,7 @@ ElemNumber::execute(
 		executionContext.characters(toCharArray(countString), 0, length(countString));
 	}
 }
+
 
 
 XalanNode*
@@ -776,15 +774,16 @@ ElemNumber::evaluateLetterValueAVT(
 	}
 	else
 	{
-		XalanDOMString letterVal;
+		// A string to hold the result.
+		StylesheetExecutionContext::GetAndReleaseCachedString	letterVal(executionContext);
 
 		m_lettervalue_avt->evaluate(
-				letterVal,
+				letterVal.get(),
 				contextNode,
 				*this,
 				executionContext);
 
-		return equals(compareValue, letterVal);
+		return equals(compareValue, letterVal.get());
 	}
 }
 
@@ -825,11 +824,13 @@ ElemNumber::traditionalAlphaCount(
 
 	const IntVectorType::size_type	groupsSize = groups.size();
 
-	// array of tables of hundreds, tens, digits. Indexes into the vector
-	// returned by 
+	// array of tables of hundreds, tens, digits. Indexes into the vectors
+	// in the digits table.
 	const IntVectorType&	tables = theResourceBundle.getDigitsTableTable();
 
 	const DigitsTableVectorType&	digitsTable = theResourceBundle.getDigitsTable();
+
+	assert(tables.size() == digitsTable.size());
 
 	// some languages have additive alphabetical notation,
 	// some multiplicative-additive, etc... Handle them differently.
@@ -1038,6 +1039,10 @@ ElemNumber::traditionalAlphaCount(
 
 
 
+const XalanDOMChar	elalphaNumberType = 0x03B1;
+
+
+
 XalanDOMString
 ElemNumber::getFormattedNumber(
 			StylesheetExecutionContext&		executionContext,
@@ -1079,8 +1084,24 @@ ElemNumber::getFormattedNumber(
 			break;
 
 		// Handle the special case of Greek letters for now
-		case 0x03B1:
-			return int2alphaCount(listElement, s_elalphaCountTable);
+		case elalphaNumberType:
+			if (evaluateLetterValueAVT(executionContext, contextNode, Constants::ATTRVAL_TRADITIONAL) == true)
+			{
+				NumberingResourceBundleMapType::const_iterator	i = s_resourceBundles.find(0x03B1);
+
+				if (i != s_resourceBundles.end())
+				{
+					return traditionalAlphaCount(listElement, (*i).second);
+				}
+				else
+				{
+					return XalanDOMString();
+				}
+			}
+			else
+			{
+				return int2alphaCount(listElement, s_elalphaCountTable);
+			}
 			break;
 
 		default: // "1"
@@ -1431,6 +1452,41 @@ static const XalanDOMChar	elalphaCountTable[] =
 	0
 };
 
+
+
+static const XalanDOMChar	elalphaTraditionalCountTable[] =
+{
+	0x03c9,
+	0x03b1,
+	0x03b2,
+	0x03b3,
+	0x03db,
+	0x03b4,
+	0x03b5,
+	0x03b6,
+	0x03b7,
+	0x03b8,
+	0x03b9,
+	0x03ba,
+	0x03bb,
+	0x03bc,
+	0x03bd,
+	0x03be,
+	0x03bf,
+	0x03c0,
+	0x03c1,
+	0x03c2,
+	0x03c3,
+	0x03c4,
+	0x03c5,
+	0x03c6,
+	0x03c7,
+	0x03c8,
+	0
+};
+
+
+
 static XalanDOMString								s_atString;
 
 static XalanDOMString								s_textString;
@@ -1447,13 +1503,17 @@ static XalanDOMString								s_dotString;
 
 static XalanDOMString								s_oneString;
 
+static XalanDOMString								s_alphaCountTable;
+
 static XalanDOMString								s_elalphaCountTable;
 
-static XalanDOMString								s_alphaCountTable;
+static XalanDOMString								s_elalphaTraditionalCountTable;
+
 
 static ElemNumber::DecimalToRomanVectorType			s_romanConvertTable;
 
 static ElemNumber::NumberingResourceBundleMapType	s_resourceBundles;
+
 
 const XalanDOMString&	ElemNumber::s_atString = ::s_atString;
 
@@ -1471,15 +1531,120 @@ const XalanDOMString&	ElemNumber::s_dotString = ::s_dotString;
 
 const XalanDOMString&	ElemNumber::s_oneString = ::s_oneString;
 
+const XalanDOMString&	ElemNumber::s_alphaCountTable = ::s_alphaCountTable;
+
 const XalanDOMString&	ElemNumber::s_elalphaCountTable = ::s_elalphaCountTable;
 
-const XalanDOMString&	ElemNumber::s_alphaCountTable = ::s_alphaCountTable;
+const XalanDOMString&	ElemNumber::s_elalphaTraditionalCountTable = ::s_elalphaTraditionalCountTable;
 
 const ElemNumber::DecimalToRomanVectorType&		ElemNumber::s_romanConvertTable =
 				::s_romanConvertTable;
 
 const ElemNumber::NumberingResourceBundleMapType&	ElemNumber::s_resourceBundles =
 				::s_resourceBundles;
+
+
+
+static void
+addTraditionalElalphaBundle(ElemNumber::NumberingResourceBundleMapType&		theBundleMap)
+{
+
+	// The following are a bunch of static data the comprise the contents of the bundle.
+	static const XalanDOMChar	elalphaAlphabet[] =
+	{
+		0x03b1, 0x03b2, 0x03b3, 0x03b4, 0x03b5, 0x03b6, 0x03b7,  0x03b8,
+		0x03b9, 0x03ba, 0x03bb, 0x03bc, 0x03bd, 0x03be, 0x03bf, 0x03c0,
+		0x03c1, 0x03c2, 0x03c3, 0x03c4, 0x03c5, 0x03c6, 0x03c7, 0x03c8,
+		0x03c9, 0
+	};
+
+	static const XalanDOMChar	elalphaTraditionalAlphabet[] =
+	{
+		XalanUnicode::charLetter_A, XalanUnicode::charLetter_B, XalanUnicode::charLetter_C,
+		XalanUnicode::charLetter_D, XalanUnicode::charLetter_E, XalanUnicode::charLetter_F,
+		XalanUnicode::charLetter_G, XalanUnicode::charLetter_H, XalanUnicode::charLetter_I,
+		XalanUnicode::charLetter_J, XalanUnicode::charLetter_K, XalanUnicode::charLetter_L,
+		XalanUnicode::charLetter_M, XalanUnicode::charLetter_N, XalanUnicode::charLetter_O,
+		XalanUnicode::charLetter_P, XalanUnicode::charLetter_Q, XalanUnicode::charLetter_R,
+		XalanUnicode::charLetter_S, XalanUnicode::charLetter_T, XalanUnicode::charLetter_U,
+		XalanUnicode::charLetter_V, XalanUnicode::charLetter_W, XalanUnicode::charLetter_X,
+		XalanUnicode::charLetter_Y, XalanUnicode::charLetter_Z, 0
+	};
+
+	static const int	elalphaNumberGroups[] =
+	{
+		100, 10, 1
+	};
+
+	const size_t	elalphaNumberGroupsCount = sizeof(elalphaNumberGroups) / sizeof(int);
+
+	static const int	elalphaMultipliers[] = { 1000 };
+
+	const size_t	elalphaMultipliersCount = sizeof(elalphaMultipliers) / sizeof(int);
+
+	static const XalanDOMChar	elalphaMultiplierChars[] = { 0x03d9, 0 };
+
+	static const XalanDOMChar	elalphaDigits[] =
+	{
+		0x03b1, 0x03b2, 0x03b3, 0x03b4, 0x03b5, 0x03db, 0x03b6, 0x03b7, 0x03b8, 0
+	};
+
+	static const XalanDOMChar	elalphaTens[] =
+	{
+		0x03b9, 0x03ba, 0x03bb, 0x03bc, 0x03bd, 0x03be, 0x03bf, 0x03c0, 0x03df, 0
+	};
+
+	static const XalanDOMChar	elalphaHundreds[] =
+	{
+		0x03c1, 0x03c2, 0x03c4, 0x03c5, 0x03c6, 0x03c7, 0x03c8, 0x03c9, 0x03e1, 0
+	};
+
+	typedef XalanNumberingResourceBundle::DigitsTableVectorType		DigitsTableVectorType;
+	typedef XalanNumberingResourceBundle::IntVectorType				IntVectorType;
+
+	// Create the table of characters for the various digit positions...
+	DigitsTableVectorType			theElalphaDigitsTable;
+
+	// Since we know the size, create the empty vectors in the table...
+	theElalphaDigitsTable.resize(3);
+
+	// Swap the empty tables with temporary ones...
+	XalanDOMCharVectorType(elalphaDigits, elalphaDigits + length(elalphaDigits)).swap(theElalphaDigitsTable[0]);
+	XalanDOMCharVectorType(elalphaTens, elalphaTens + length(elalphaTens)).swap(theElalphaDigitsTable[1]);
+	XalanDOMCharVectorType(elalphaHundreds, elalphaHundreds + length(elalphaHundreds)).swap(theElalphaDigitsTable[2]);
+
+	// This table will indicate which positions the vectors of digits are in
+	// the table...
+	IntVectorType	theDigitsTableTable;
+
+	theDigitsTableTable.reserve(3);
+
+	// Push the positions on in reverse order, since that's how things work...
+	theDigitsTableTable.push_back(2);
+	theDigitsTableTable.push_back(1);
+	theDigitsTableTable.push_back(0);
+
+	XalanNumberingResourceBundle	theElaphaBundle(
+		XalanDOMString(XALAN_STATIC_UCODE_STRING("el")),
+		XalanDOMString(XALAN_STATIC_UCODE_STRING("el")),
+		XalanDOMString(XALAN_STATIC_UCODE_STRING("el")),
+		XalanDOMCharVectorType(elalphaAlphabet, elalphaAlphabet + length(elalphaAlphabet)),
+		XalanDOMCharVectorType(elalphaTraditionalAlphabet, elalphaTraditionalAlphabet + length(elalphaTraditionalAlphabet)),
+		XalanNumberingResourceBundle::eLeftToRight,
+		XalanNumberingResourceBundle::eMultiplicativeAdditive,
+		XalanNumberingResourceBundle::ePrecedes,
+		~0,
+		IntVectorType(elalphaNumberGroups, elalphaNumberGroups + elalphaNumberGroupsCount),
+		IntVectorType(elalphaMultipliers, elalphaMultipliers + elalphaMultipliersCount),
+		XalanDOMCharVectorType(),
+		XalanDOMCharVectorType(elalphaMultiplierChars, elalphaMultiplierChars + length(elalphaMultiplierChars)),
+		theElalphaDigitsTable,
+		theDigitsTableTable);
+
+	theBundleMap[elalphaNumberType] = theElaphaBundle;
+}
+
+
 
 void
 ElemNumber::initialize()
@@ -1503,6 +1668,8 @@ ElemNumber::initialize()
 	::s_alphaCountTable = alphaCountTable;
 
 	::s_elalphaCountTable = elalphaCountTable;
+
+	::s_elalphaTraditionalCountTable = elalphaTraditionalCountTable;
 
 	::s_romanConvertTable.reserve(7);
 
@@ -1554,6 +1721,8 @@ ElemNumber::initialize()
 			StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("I")),
 			1L,
 			StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("I"))));
+
+	addTraditionalElalphaBundle(::s_resourceBundles);
 }
 
 
@@ -1572,6 +1741,7 @@ ElemNumber::terminate()
 
 	clear(::s_alphaCountTable);
 	clear(::s_elalphaCountTable);
+	clear(::s_elalphaTraditionalCountTable);
 
 	DecimalToRomanVectorType().swap(::s_romanConvertTable);
 

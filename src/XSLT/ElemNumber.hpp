@@ -321,7 +321,6 @@ protected:
 			long	val,
 			bool	prefixesAreOK);
 
-
 private:
 
 	bool
