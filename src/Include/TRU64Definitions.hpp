@@ -54,24 +54,30 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-#if !defined(PLATFORMDEFINITIONS_HEADER_GUARD_1357924680)
-#define PLATFORMDEFINITIONS_HEADER_GUARD_1357924680
+/* Patch from Trevor Smigiel                                   */
+#if !defined(TRU64DEFINITIONS_HEADER_GUARD_1357924680)
+#define TRU64DEFINITIONS_HEADER_GUARD_1357924680
 
-#if defined(_MSC_VER)
-#include "VCPPDefinitions.hpp"
-#elif defined(__GNUC__)
-#include "GCCDefinitions.hpp"
-#elif defined(_AIX)
-#include "AIXDefinitions.hpp"
-#elif defined(__hpux)
-#include "HPUXDefinitions.hpp"
-#elif defined(SOLARIS)
-#include "SolarisDefinitions.hpp"
-#elif defined(OS390)
-#include "OS390Definitions.hpp"
-#elif defined(TRU64)
-#include "TRU64Definitions.hpp"
-#else
-#endif
 
-#endif	// PLATFORMDEFINITIONS_HEADER_GUARD_1357924680
+// ---------------------------------------------------------------------------
+//  A define in the build for each project is also used to control whether
+//  the export keyword is from the project's viewpoint or the client's. 
+//  These defines provide the platform specific keywords that they need
+//  to do this.
+// ---------------------------------------------------------------------------
+
+#define XALAN_PLATFORM_EXPORT
+#define XALAN_PLATFORM_IMPORT
+#define XALAN_PLATFORM_EXPORT_FUNCTION(T) T XALAN_PLATFORM_EXPORT
+#define XALAN_PLATFORM_IMPORT_FUNCTION(T) T XALAN_PLATFORM_IMPORT
+
+// This next line enables standard IO streams.
+#define __USE_STD_IOSTREAM
+#define XALAN_RTTI_AVAILABLE
+#define XALAN_XALANDOMCHAR_USHORT_MISMATCH
+//#define XALAN_NO_STD_ALLOCATORS
+#define XALAN_POSIX2_AVAILABLE
+
+#define XALAN_BIG_ENDIAN
+
+#endif  // TRU64DEFINITIONS_HEADER_GUARD_1357924680
