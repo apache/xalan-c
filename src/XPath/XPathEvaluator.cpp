@@ -93,6 +93,7 @@ XPathEvaluator::terminate()
 
 XPathEvaluator::XPathEvaluator() :
 	m_xobjectFactory(new XObjectFactoryDefault),
+	m_xpathFactory(new XPathFactoryDefault),
 	m_executionContext(new XPathExecutionContextDefault)
 
 {
@@ -155,6 +156,48 @@ XPathEvaluator::selectSingleNode(
 
 
 
+XalanNode*
+XPathEvaluator::selectSingleNode(
+			DOMSupport&				domSupport,
+			XalanNode*				contextNode,
+			const XPath&			xpath,
+			const XalanElement*		namespaceNode)
+{
+	const XObjectPtr	theResult(
+		evaluate(
+			domSupport,
+			contextNode,
+			xpath,
+			namespaceNode));
+
+	const NodeRefListBase&	theNodeList = theResult->nodeset();
+
+	return theNodeList.getLength() == 0 ? 0 : theNodeList.item(0);
+}
+
+
+
+XalanNode*
+XPathEvaluator::selectSingleNode(
+			DOMSupport&				domSupport,
+			XalanNode*				contextNode,
+			const XPath&			xpath,
+			const PrefixResolver&	prefixResolver)
+{
+	const XObjectPtr	theResult(
+		evaluate(
+			domSupport,
+			contextNode,
+			xpath,
+			prefixResolver));
+
+	const NodeRefListBase&	theNodeList = theResult->nodeset();
+
+	return theNodeList.getLength() == 0 ? 0 : theNodeList.item(0);
+}
+
+
+
 NodeRefList
 XPathEvaluator::selectNodeList(
 			DOMSupport&				domSupport,
@@ -193,6 +236,44 @@ XPathEvaluator::selectNodeList(
 
 
 
+NodeRefList
+XPathEvaluator::selectNodeList(
+			DOMSupport&				domSupport,
+			XalanNode*				contextNode,
+			const XPath&			xpath,
+			const XalanElement*		namespaceNode)
+{
+	const XObjectPtr	theResult(
+		evaluate(
+			domSupport,
+			contextNode,
+			xpath,
+			namespaceNode));
+
+	return NodeRefList(theResult->nodeset());
+}
+
+
+
+NodeRefList
+XPathEvaluator::selectNodeList(
+			DOMSupport&				domSupport,
+			XalanNode*				contextNode,
+			const XPath&			xpath,
+			const PrefixResolver&	prefixResolver)
+{
+	const XObjectPtr	theResult(
+		evaluate(
+			domSupport,
+			contextNode,
+			xpath,
+			prefixResolver));
+
+	return NodeRefList(theResult->nodeset());
+}
+
+
+
 XObjectPtr
 XPathEvaluator::evaluate(
 			DOMSupport&				domSupport,
@@ -208,6 +289,25 @@ XPathEvaluator::evaluate(
 			xpathString,
 			ElementPrefixResolverProxy(namespaceNode, theEnvSupportDefault, domSupport),
 			theEnvSupportDefault);
+}
+
+
+
+XObjectPtr
+XPathEvaluator::evaluate(
+			DOMSupport&				domSupport,
+			XalanNode*				contextNode,
+			const XPath&			xpath,
+			const XalanElement*		namespaceNode)
+{
+	XPathEnvSupportDefault	theEnvSupportDefault;
+
+	return evaluate(
+				domSupport,
+				contextNode,
+				xpath,
+				ElementPrefixResolverProxy(namespaceNode, theEnvSupportDefault, domSupport),
+				theEnvSupportDefault);
 }
 
 
@@ -235,16 +335,61 @@ XObjectPtr
 XPathEvaluator::evaluate(
 			DOMSupport&				domSupport,
 			XalanNode*				contextNode,
+			const XPath&			xpath,
+			const PrefixResolver&	prefixResolver)
+{
+	XPathEnvSupportDefault	theEnvSupportDefault;
+
+	return evaluate(
+				domSupport,
+				contextNode,
+				xpath,
+				prefixResolver,
+				theEnvSupportDefault);
+}
+
+
+
+XPath*
+XPathEvaluator::createXPath(
+			const XalanDOMChar*		xpathString,
+			const PrefixResolver&	prefixResolver)
+{
+	XPath* const	theXPath = m_xpathFactory->create();
+	assert(theXPath != 0);
+
+	XPathProcessorImpl		theProcessor;
+
+    theProcessor.initXPath(
+			*theXPath,
+			XalanDOMString(xpathString),
+			prefixResolver);
+
+	return theXPath;
+}
+
+
+
+bool
+XPathEvaluator::destroyXPath(XPath*		theXPath)
+{
+	assert(theXPath != 0);
+
+	return m_xpathFactory->returnObject(theXPath);
+}
+
+
+
+XObjectPtr
+XPathEvaluator::evaluate(
+			DOMSupport&				domSupport,
+			XalanNode*				contextNode,
 			const XalanDOMChar*		xpathString,
 			const PrefixResolver&	prefixResolver,
 			XPathEnvSupport&		envSupport)
 {
 	assert(contextNode != 0);
 	assert(xpathString != 0);
-
-	// Reset these, in case we've been here before...
-	m_executionContext->reset();
-	m_xobjectFactory->reset();
 
 	// Create an XPath, and an XPathProcessorImpl to process
 	// the XPath.
@@ -257,6 +402,23 @@ XPathEvaluator::evaluate(
 			XalanDOMString(xpathString),
 			prefixResolver);
 
+	return evaluate(domSupport, contextNode, theXPath, prefixResolver, envSupport);
+}
+
+
+
+XObjectPtr
+XPathEvaluator::evaluate(
+			DOMSupport&				domSupport,
+			XalanNode*				contextNode,
+			const XPath&			xpath,
+			const PrefixResolver&	prefixResolver,
+			XPathEnvSupport&		envSupport)
+{
+	// Reset these, in case we've been here before...
+	m_executionContext->reset();
+	m_xobjectFactory->reset();
+
 	// Set up the connections between the execution context and
 	// the provided support objects...
 	m_executionContext->setXPathEnvSupport(&envSupport);
@@ -267,7 +429,7 @@ XPathEvaluator::evaluate(
 
 	// OK, evaluate the expression...
 	const XObjectPtr	theResult(
-		theXPath.execute(
+		xpath.execute(
 			contextNode,
 			prefixResolver,
 			*m_executionContext.get()));

@@ -65,6 +65,7 @@
 
 #if defined(XALAN_AUTO_PTR_REQUIRES_DEFINITION)
 #include <XPath/XObjectFactory.hpp>
+#include <XPath/XPathFactory.hpp>
 #include <XPath/XPathExecutionContextDefault.hpp>
 #endif
 
@@ -80,6 +81,7 @@
 
 #if !defined(XALAN_AUTO_PTR_REQUIRES_DEFINITION)
 class XObjectFactory;
+class XPathFactory;
 class XPathExecutionContextDefault;
 #endif
 
@@ -91,6 +93,7 @@ class PrefixResolver;
 class XalanNode;
 class XalanElement;
 class XObjectPtr;
+class XPath;
 class XPathEnvSupport;
 
 
@@ -151,6 +154,42 @@ public:
 			const PrefixResolver&	prefixResolver);
 
 	/**
+	 * Evaluate the supplied XPath, within the given context.  If
+	 * the expression doesn't select a node, 0 is returned.  If it selects
+	 * more than one node, only the first is returned.
+	 *
+	 * @param domSupport An instance of the corresponding DOMSupport-derived for the DOM implementation being used.
+	 * @param contextNode The source tree context node
+	 * @param xpath A reference to a compiled XPath expression.
+	 * @param namespaceNode A node to use for namespace prefix resolution.
+	 * @return A pointer to the node selected by the expression, if any.
+	 */
+	XalanNode*
+	selectSingleNode(
+			DOMSupport&				domSupport,
+			XalanNode*				contextNode,
+			const XPath&			xpath,
+			const XalanElement*		namespaceNode = 0);
+
+	/**
+	 * Evaluate the supplied XPath, within the given context.  If
+	 * the expression doesn't select a node, 0 is returned.  If it selects
+	 * more than one node, only the first is returned.
+	 *
+	 * @param domSupport An instance of the corresponding DOMSupport-derived for the DOM implementation being used.
+	 * @param contextNode The source tree context node
+	 * @param xpath A reference to a compiled XPath expression.
+	 * @param prefixResolver A prefix resolver instance to use for namespace prefix resolution.
+	 * @return A pointer to the node selected by the expression, if any.
+	 */
+	XalanNode*
+	selectSingleNode(
+			DOMSupport&				domSupport,
+			XalanNode*				contextNode,
+			const XPath&			xpath,
+			const PrefixResolver&	prefixResolver);
+
+	/**
 	 * Evaluate the supplied XPath expression, within the given context.  If
 	 * the expression doesn't select a node, an empty list is returned.
 	 *
@@ -185,13 +224,48 @@ public:
 			const PrefixResolver&	prefixResolver);
 
 	/**
+	 * Evaluate the supplied XPath, within the given context.  If
+	 * the expression doesn't select a node, an empty list is returned.
+	 *
+	 * @param domSupport An instance of the corresponding DOMSupport-derived for the DOM implementation being used.
+	 * @param contextNode The source tree context node
+	 * @param xpath A reference to a compiled XPath expression.
+	 * @param namespaceNode A node to use for namespace prefix resolution.
+	 * @return A list of selected nodes.
+	 */
+	NodeRefList
+	selectNodeList(
+			DOMSupport&				domSupport,
+			XalanNode*				contextNode,
+			const XPath&			xpath,
+			const XalanElement*		namespaceNode = 0);
+
+	/**
+	 * Evaluate the supplied XPath, within the given context.  If
+	 * the expression doesn't select a node, an empty list is returned.
+	 *
+	 * @param domSupport An instance of the corresponding DOMSupport-derived for the DOM implementation being used.
+	 * @param contextNode The source tree context node
+	 * @param xpath A reference to a compiled XPath expression.
+	 * @param prefixResolver A prefix resolver instance to use for namespace prefix resolution.
+	 * @return A list of selected nodes.
+	 */
+	NodeRefList
+	selectNodeList(
+			DOMSupport&				domSupport,
+			XalanNode*				contextNode,
+			const XPath&			xpath,
+			const PrefixResolver&	prefixResolver);
+
+	/**
 	 * Evaluate the supplied XPath expression, within the given context.  The
 	 * result is returned as a generalized object.  The object will be
 	 * destroyed when the returned when the user's copy of the returned
-	 * XObjectPtr goes out of scope, or when the XPathEvaluator instance
-	 * is reset or goes out of scope.  The user's XObjectPtr copy _must_ no
-	 * longer be in scope when the XPathEvaluator instance is reset or
-	 * out of scope.
+	 * XObjectPtr goes out of scope, or when the XPathEvaluator goes out of scope
+	 * or another expression is evaluated.
+	 *
+	 * The user's XObjectPtr copy _must_ no longer be in scope when the XPathEvaluator
+	 * instance goes out of scope, or another expression is evaluated.
 	 *
 	 * @param domSupport An instance of the corresponding DOMSupport-derived for the DOM implementation being used.
 	 * @param contextNode The source tree context node
@@ -210,10 +284,11 @@ public:
 	 * Evaluate the supplied XPath expression, within the given context.  The
 	 * result is returned as a generalized object.  The object will be
 	 * destroyed when the returned when the user's copy of the returned
-	 * XObjectPtr goes out of scope, or when the XalanXPathEvaluator instance
-	 * is reset or goes out of scope.  The user's XObjectPtr copy _must_ no
-	 * longer be in scope when the XPathEvaluator instance is reset or
-	 * out of scope.
+	 * XObjectPtr goes out of scope, or when the XPathEvaluator goes out of scope
+	 * or another expression is evaluated.
+	 *
+	 * The user's XObjectPtr copy _must_ no longer be in scope when the XPathEvaluator
+	 * instance goes out of scope, or another expression is evaluated.
 	 *
 	 * @param domSupport An instance of the corresponding DOMSupport-derived for the DOM implementation being used.
 	 * @param contextNode The source tree context node
@@ -227,6 +302,90 @@ public:
 			XalanNode*				contextNode,
 			const XalanDOMChar*		xpathString,
 			const PrefixResolver&	prefixResolver);
+
+	/**
+	 * Evaluate the supplied XPath, within the given context.  The
+	 * result is returned as a generalized object.  The object will be
+	 * destroyed when the returned when the user's copy of the returned
+	 * XObjectPtr goes out of scope, or when the XPathEvaluator goes out of scope
+	 * or another expression is evaluated.
+	 *
+	 * The user's XObjectPtr copy _must_ no longer be in scope when the XPathEvaluator
+	 * instance goes out of scope, or another expression is evaluated.
+	 *
+	 * @param domSupport An instance of the corresponding DOMSupport-derived for the DOM implementation being used.
+	 * @param contextNode The source tree context node
+	 * @param xpath A reference to a compiled XPath expression.
+	 * @param namespaceNode A node to use for namespace prefix resolution.
+	 * @return The result of evaluting the XPath expression.
+	 */
+	XObjectPtr
+	evaluate(
+			DOMSupport&				domSupport,
+			XalanNode*				contextNode,
+			const XPath&			xpath,
+			const XalanElement*		namespaceNode = 0);
+
+	/**
+	 * Evaluate the supplied XPath, within the given context.  The
+	 * result is returned as a generalized object.  The object will be
+	 * destroyed when the returned when the user's copy of the returned
+	 * XObjectPtr goes out of scope, or when the XPathEvaluator goes out of scope
+	 * or another expression is evaluated.
+	 *
+	 * The user's XObjectPtr copy _must_ no longer be in scope when the XPathEvaluator
+	 * instance goes out of scope, or another expression is evaluated.
+	 *
+	 * @param domSupport An instance of the corresponding DOMSupport-derived for the DOM implementation being used.
+	 * @param contextNode The source tree context node
+	 * @param xpath A reference to a compiled XPath expression.
+	 * @param prefixResolver A prefix resolver instance to use for namespace prefix resolution.
+	 * @return The result of evaluting the XPath expression.
+	 */
+	XObjectPtr
+	evaluate(
+			DOMSupport&				domSupport,
+			XalanNode*				contextNode,
+			const XPath&			xpath,
+			const PrefixResolver&	prefixResolver);
+
+	/**
+	 * Compile an XPath expression into an object which can be used multiple times.
+	 * Call destroyXPath() when finished with the instance.  Otherwise, the object
+	 * will be destroyed when the XPathEvaluator instance goes out of scope.
+	 *
+	 * @param xpathString The XPath expression to evaluate
+	 * @param namespaceNode A node to use for namespace prefix resolution.
+	 * @return A pointer to an XPath instance.
+	 */
+	XPath*
+	createXPath(
+			const XalanDOMChar*		xpathString,
+			const XalanElement*		namespaceNode = 0);
+
+	/**
+	 * Compile an XPath expression into an object which can be used multiple times.
+	 * Call destroyXPath() when finished with the instance.  Otherwise, the object
+	 * will be destroyed when the XPathEvaluator instance goes out of scope.
+	 *
+	 * @param xpathString The XPath expression to evaluate
+	 * @param prefixResolver A prefix resolver instance to use for namespace prefix resolution.
+	 * @return A pointer to an XPath instance.
+	 */
+	XPath*
+	createXPath(
+			const XalanDOMChar*		xpathString,
+			const PrefixResolver&	prefixResolver);
+
+	/**
+	 * Destory a compiled XPath instance.  The instance must have
+	 * been created using createXPath().
+	 *
+	 * @param theXPath The XPath instance to destroy
+	 * @return true if the instance was successfully destroyed
+	 */
+	bool
+	destroyXPath(XPath*		theXPath);
 
 private:
 
@@ -238,7 +397,7 @@ private:
 	 * @param contextNode The source tree context node
 	 * @param xpathString The XPath expression to evaluate
 	 * @param prefixResolver A prefix resolver instance to use for namespace prefix resolution.
-	 * @param doEvaluate The XPathEnvSupport instance to use.
+	 * @param envSupport The XPathEnvSupport instance to use.
 	 * @return The result of evaluting the XPath expression.
 	 */
 	XObjectPtr
@@ -247,10 +406,31 @@ private:
 			XalanNode*				contextNode,
 			const XalanDOMChar*		xpathString,
 			const PrefixResolver&	prefixResolver,
-			XPathEnvSupport&		doEvaluate);
+			XPathEnvSupport&		envSupport);
+
+	/**
+	 * A helper function to evaluate the supplied XPath expression, within
+	 * the given context.
+	 *
+	 * @param domSupport An instance of the corresponding DOMSupport-derived for the DOM implementation being used.
+	 * @param contextNode The source tree context node
+	 * @param xpath The XPath to evaluate
+	 * @param prefixResolver A prefix resolver instance to use for namespace prefix resolution.
+	 * @param envSupport The XPathEnvSupport instance to use.
+	 * @return The result of evaluting the XPath expression.
+	 */
+	XObjectPtr
+	evaluate(
+			DOMSupport&				domSupport,
+			XalanNode*				contextNode,
+			const XPath&			xpath,
+			const PrefixResolver&	prefixResolver,
+			XPathEnvSupport&		envSupport);
 
 	// Data members...
 	const XalanAutoPtr<XObjectFactory>					m_xobjectFactory;
+
+	const XalanAutoPtr<XPathFactory>					m_xpathFactory;
 
 	const XalanAutoPtr<XPathExecutionContextDefault>	m_executionContext;
 };
