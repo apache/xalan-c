@@ -99,7 +99,7 @@ XalanUTF16Transcoder::transcode(
 			const XalanXMLByte	theHighByte = XalanXMLByte((theSourceData[theSourceEaten] & 0xFF00) >> 8);
 			const XalanXMLByte	theLowByte = XalanXMLByte(theSourceData[theSourceEaten] & 0x00FF);
 
-#if defined(XALAN_LITLE_ENDIAN)
+#if defined(XALAN_LITTLE_ENDIAN)
 			theTarget[theTargetPosition++] = theLowByte;
 			theTarget[theTargetPosition++] = theHighByte;
 #elif defined(XALAN_BIG_ENDIAN)
@@ -144,7 +144,7 @@ XalanUTF16Transcoder::transcode(
 		}
 		else
 		{
-#if defined(XALAN_LITLE_ENDIAN)
+#if defined(XALAN_LITTLE_ENDIAN)
 			const XalanXMLByte	theLowByte = theSourceData[theSourceCount++];
 			const XalanXMLByte	theHighByte = theSourceData[theSourceCount++];
 #elif defined(XALAN_BIG_ENDIAN)

@@ -163,7 +163,7 @@ const XalanTranscodingServices::XalanXMLByte	XalanTranscodingServices::s_UTF8Byt
 
 const XalanTranscodingServices::XalanXMLByte	XalanTranscodingServices::s_UTF16ByteOrderMark[] =
 {
-#if defined(XALAN_LITLE_ENDIAN)
+#if defined(XALAN_LITTLE_ENDIAN)
 	XalanTranscodingServices::XalanXMLByte(0xFF),
 	XalanTranscodingServices::XalanXMLByte(0xFE),
 #elif defined(XALAN_BIG_ENDIAN)
