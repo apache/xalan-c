@@ -193,7 +193,10 @@ public:
 	getDrive();
 
 	bool
-	getParams(int argc, const char*	argv[], char* outDir);
+	getParams(	int			argc, 
+				const char*	argv[], 
+				char*		outDir,
+				bool		fsetGold = true);
 
 
 	FileNameVectorType

@@ -139,11 +139,11 @@ FileUtility::getDrive()
 bool
 FileUtility::getParams(int argc, 
 		  const char*	argv[],
-		  char*	outDir)
+		  char*			outDir,
+		  bool			fsetGold)
 {
 	bool fSuccess = true;	// Used to continue argument loop
 	bool fsetOut = true;	// Set default output directory, set to false if data is provided
-	bool fsetGold = true;	// Set default gold directory, set to false if data is provided
 
 	args.skip = true;		// Default values for performance testing parameters.
 	args.iters = 3;			
@@ -195,8 +195,14 @@ FileUtility::getParams(int argc,
 			if(i < argc && argv[i][0] != '-')
 			{
 				assign(args.gold, XalanDOMString(argv[i]));
+
+				if ( !checkDir(args.gold) )
+				{	
+					cout << "Given Gold dir - " << c_str(TranscodeToLocalCodePage(args.gold)) << " - does not exist" << endl;
+					fSuccess = false;
+				}
+
 				append(args.gold, pathSep);
-				checkAndCreateDir(args.gold);
 				fsetGold = false;
 			}
 			else
@@ -294,7 +300,11 @@ FileUtility::getParams(int argc,
 	{
 		args.gold = args.base;
 		append(args.gold,XalanDOMString("-gold"));
-		checkAndCreateDir(args.gold);
+		if ( !checkDir(args.gold) )
+		{	
+			cout << "Assumed Gold dir - " << c_str(TranscodeToLocalCodePage(args.gold)) << " - does not exist" << endl;
+			fSuccess = false;
+		}
 		append(args.gold,pathSep);
 	}
 	
