@@ -39,7 +39,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
-				AdditionalDependencies="xerces-c_2.lib xslt4c_1.lib"
+				AdditionalDependencies="xerces-c_2.lib Xalan-C_1.lib"
 				OutputFile="..\..\..\..\..\bin\XPathWrapper.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
@@ -94,7 +94,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
-				AdditionalDependencies="xerces-c_2D.lib xslt4c_1D.lib"
+				AdditionalDependencies="xerces-c_2D.lib Xalan-C_1D.lib"
 				OutputFile="..\..\..\..\..\bin\XPathWrapper_D.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="TRUE"
