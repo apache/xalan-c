@@ -1237,7 +1237,7 @@ ElemNumber::getFormattedNumber(
 		case XalanUnicode::charLetter_a:
 			int2alphaCount(listElement, s_alphaCountTable, theResult);
 
-			theResult = toLowerCase(theResult);
+			theResult = toLowerCaseASCII(theResult);
 			break;
 
 		case XalanUnicode::charLetter_I:
@@ -1247,7 +1247,7 @@ ElemNumber::getFormattedNumber(
 		case XalanUnicode::charLetter_i:
 			long2roman(listElement, true, theResult);
 
-			theResult = toLowerCase(theResult);
+			theResult = toLowerCaseASCII(theResult);
 			break;
 
 		case 0x3042:
