@@ -369,7 +369,6 @@ XPathExpression::XPathExpression() :
 	m_lastOpCodeIndex(0),
 	m_tokenQueue(),
 	m_currentPosition(0),
-	m_patternMap(100, 0),
 	m_currentPattern()
 {
 	m_opMap.reserve(eDefaultOpMapSize);
@@ -393,8 +392,6 @@ XPathExpression::reset()
 
 	m_opMap.clear();
 	m_tokenQueue.clear();
-
-	fill(m_patternMap.begin(), m_patternMap.end(), 0);
 }
 
 
@@ -405,11 +402,6 @@ XPathExpression::shrink()
 	if (m_opMap.capacity() > m_opMap.size())
 	{
 		OpCodeMapType(m_opMap).swap(m_opMap);
-	}
-
-	if (m_patternMap.capacity() > m_patternMap.size())
-	{
-		PatternMapType(m_patternMap).swap(m_patternMap);
 	}
 }
 

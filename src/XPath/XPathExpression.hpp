@@ -740,7 +740,6 @@ public:
 
 	typedef vector<int>						OpCodeMapType;
 	typedef vector<XToken>					TokenQueueType;
-	typedef vector<int>						PatternMapType;
 
 	typedef OpCodeMapType::value_type		OpCodeMapValueType;
 	typedef OpCodeMapType::size_type		OpCodeMapSizeType;
@@ -752,7 +751,6 @@ public:
 
 	typedef std::vector<int>				OpCodeMapType;
 	typedef std::vector<XToken>				TokenQueueType;
-	typedef std::vector<int>				PatternMapType;
 
 	typedef OpCodeMapType::value_type		OpCodeMapValueType;
 	typedef OpCodeMapType::size_type		OpCodeMapSizeType;
@@ -764,8 +762,6 @@ public:
 
 	typedef TokenQueueType::value_type		TokenQueueValueType;
 	typedef TokenQueueType::size_type		TokenQueueSizeType;
-	typedef PatternMapType::value_type		PatternMapValueType;
-	typedef PatternMapType::size_type		PatternMapSizeType;
 
 	/**
 	 * The length is always the opcode position + 1. Length is always expressed
@@ -849,17 +845,6 @@ public:
 	tokenQueueSize() const
 	{
 		return m_tokenQueue.size();
-	}
-
-	/**
-	 * Retrieve number of elements in the pattern map.
-	 * 
-	 * @return size of pattern map
-	 */
-	PatternMapSizeType
-	patternMapSize() const
-	{
-		return m_patternMap.size();
 	}
 
 	/**
@@ -1213,7 +1198,6 @@ public:
 		m_tokenQueue.insert(m_tokenQueue.begin() + (m_currentPosition - 1), XToken(theToken));
 	}
 
-#if 1
 	/**
 	 * Replace a token in the token queue.
 	 * 
@@ -1235,54 +1219,7 @@ public:
 
 		m_tokenQueue[thePosition] = theToken;
 	}
-#else
-	/**
-	 * Replace a token in the token queue.
-	 * 
-	 * @param theOffset the offset at which to replace the token.
-	 * @param theToken string value for the new token
-	 */
-	void
-	replaceRelativeToken(
-			int						theOffset,
-			const XalanDOMString&	theToken)
-	{
-		assert(c_wstr(theToken) != 0);
 
-		const int	thePosition = int(m_currentPosition) + theOffset;
-
-		if (thePosition < 0 ||
-			thePosition >= int(tokenQueueSize()))
-		{
-			throw InvalidRelativeTokenPosition(theOffset);
-		}
-
-		m_tokenQueue[thePosition] = theToken;
-	}
-
-	/**
-	 * Replace a token in the token queue.
-	 * 
-	 * @param theOffset the offset at which to replace the token.
-	 * @param theToken double value for the new token
-	 */
-	void
-	replaceRelativeToken(
-			int		theOffset,
-			double	theToken)
-	{
-		assert(theToken != 0);
-
-		const int	thePosition = int(m_currentPosition) + theOffset;
-
-		if (thePosition < 0 || thePosition >= int(tokenQueueSize()))
-		{
-			throw InvalidRelativeTokenPosition(theOffset);
-		}
-
-		m_tokenQueue[thePosition] = theToken;
-	}
-#endif
 	/**
 	 * Diagnostic function to output the operation code map.
 	 * 
@@ -1416,61 +1353,6 @@ public:
 	pushCurrentTokenOnOpCodeMap();
 
 	/**
-	 * Retrieve a pattern in the pattern map at the specified position.
-	 * position in the token queue.
-	 * 
-	 * @param thePatternPosition position in pattern map
-	 * @return match pattern
-	 */
-	PatternMapValueType
-	getPattern(int	thePatternPosition) const
-	{
-		assert(int(patternMapSize()) > thePatternPosition);
-
-		return m_patternMap[thePatternPosition];
-	}
-
-	/**
-	 * Retrieve a pattern in the pattern map at the specified position.
-	 * position in the token queue.
-	 * 
-	 * @param thePatternPosition position in pattern map
-	 * @return match pattern
-	 */
-	PatternMapValueType
-	getPattern(PatternMapSizeType	thePatternPosition) const
-	{
-		assert(patternMapSize() > thePatternPosition);
-
-		return m_patternMap[thePatternPosition];
-	}
-
-	/**
-	 * Push a pattern onto the pattern map.
-	 *
-	 * @param thePattern match pattern to push
-	 */
-	void
-	pushPattern(PatternMapValueType	thePattern)
-	{
-		m_patternMap.push_back(thePattern);
-	}
-
-	/**
-	 * Adjust the value of a pattern at a specified index in the pattern map.
-	 *
-	 * @param theIndex      index in map
-	 * @param theAdjustment value of adjustment to add
-	 */
-	void
-	adjustPattern(
-			OpCodeMapSizeType	theIndex,
-			PatternMapValueType	theAdjustment)
-	{
-		m_patternMap[theIndex] += theAdjustment;
-	}
-
-	/**
 	 * Change the current pattern in the pattern map.
 	 *
 	 * @param thePattern match pattern to make current
@@ -1519,16 +1401,6 @@ public:
 	TokenQueueSizeType		m_currentPosition;
 
 	/**
-	 * This holds a map to the m_tokenQueue that tells where the top-level
-	 * elements are. It is used for pattern matching so the m_tokenQueue can be
-	 * walked backwards. Each element that is a 'target', (right-most top level
-	 * element name) has TARGETEXTRA added to it.
-	 * 
-	 */
-	 // Ignore this, it is going away.
-	PatternMapType			m_patternMap;
-
-	/**
 	 * The current pattern string, for diagnostics purposes.
 	 */
 	XalanDOMString			m_currentPattern;
@@ -1540,7 +1412,6 @@ private:
 	{
 		eDefaultOpMapSize = 100,
 		eDefaultTokenQueueSize = 50,
-		eDefaultPatternMapSize = 100
 	};
 
 	NumberLiteralValueVectorType	m_numberLiteralValues;

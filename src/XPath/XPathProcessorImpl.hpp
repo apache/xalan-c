@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2003 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -101,7 +101,7 @@ public:
 
 #if defined(XALAN_NO_STD_NAMESPACE)
 	typedef map<XalanDOMString,
-				XalanDOMString,
+				const XalanDOMString*,
 				less<XalanDOMString> >	StringToStringMapType;
 
 #if defined(XALAN_USE_DEQUE_FOR_VECTOR_BOOL)
@@ -111,7 +111,7 @@ public:
 #endif
 #else
 	typedef std::map<XalanDOMString,
-					 XalanDOMString>	StringToStringMapType;
+					 const XalanDOMString*>		StringToStringMapType;
 
 #if defined(XALAN_USE_DEQUE_FOR_VECTOR_BOOL)
 	typedef std::deque<bool>			BoolVectorType;
@@ -155,17 +155,6 @@ private:
 	void
 	tokenize(const XalanDOMString&	pat);
   
-	/**
-	 * Record the current position on the token queue as long as this is a
-	 * top-level element.  Must be called before the next token is added to the
-	 * m_tokenQueue.
-	 */
-	bool
-	mapPatternElemPos(
-			int		nesting,
-			bool	isStart,
-			bool	isAttrName) const;
-
 	void
 	addToTokenQueue(const XalanDOMString&	s) const;
 
@@ -182,52 +171,6 @@ private:
 			int						startSubstring,
 			int						posOfNSSep,
 			int						posOfScan);
-
-	/**
-	 * Given a map pos, return the corresponding token queue pos.
-	 */
-	int
-	getTokenQueuePosFromMap(int		i) const;
-
-	/**
-	 * This will return the index above the passed index that is the target
-	 * element, i.e. it holds a value >= TARGETEXTRA. If there is no next
-	 * target, it will return -1. Pass -1 in to start testing from zero.
-	 */
-	int
-	getNextTargetIndexInMap(int		i) const;
-  
-	/**
-	 * This will return the normalized index into the pattern 
-	 * map above the passed index, or -1 if it is the last pattern.
-	 */
-	int
-	getNextIndexInMap(int	i) const;
-  
-	/**
-	 * This will return the index above the passed index that 
-	 * is the start if the next subpattern, or -1 if there is none.
-	 * If there is no next target, it will return -1.
-	 * Pass -1 in to start testing from zero.
-	 */
-	int
-	getNextSubpatternStartIndexInMap(int	i) const;
-
-	/**
-	 * This will return the next index from the passed index,
-	 * or -1 if it the passed index is the last index of the 
-	 * subpattern.
-	 */
-	int
-	getNextPatternPos(int	i) const;
-
-	/**
-	 * This will return the previous index from the passed index,
-	 * or -1 if it the passed index is the first index of the 
-	 * subpattern.
-	 */
-	int
-	getPrevMapIndex(int		i) const;
 
 	/**
 	 * Check if m_token==s. If m_token is null, this won't throw
@@ -856,11 +799,8 @@ private:
 
 	StringToStringMapType			m_namespaces;
 
-	enum eDummy
-	{
-		TARGETEXTRA = 10000
-	};
 
+	// Static stuff here...
 	static const XalanDOMString		s_emptyString;
 
 	static const XalanDOMChar		s_functionIDString[];

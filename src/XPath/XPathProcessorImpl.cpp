@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2003 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -224,13 +224,6 @@ XPathProcessorImpl::tokenize(const XalanDOMString&	pat)
 	int 		startSubstring = -1;
 	int 		posOfNSSep = -1;
 
-	bool		isStartOfPat = true;
-	bool		isAttrName = false;
-
-	// Nesting of '[' so we can know if the given element should be 
-	// counted inside the m_patternMap.
-	int nesting = 0;
-
 	const XPathConstructionContext::GetAndReleaseCachedString	theGuard(*m_constructionContext);
 
 	XalanDOMString&		theToken = theGuard.get();
@@ -245,10 +238,6 @@ XPathProcessorImpl::tokenize(const XalanDOMString&	pat)
 			{
 				if(startSubstring != -1)
 				{
-					isStartOfPat = mapPatternElemPos(nesting, isStartOfPat, isAttrName);
-
-					isAttrName = false;
-
 					if(-1 != posOfNSSep)
 					{	   
 						posOfNSSep = mapNSTokens(pat, startSubstring, posOfNSSep, i);
@@ -284,9 +273,6 @@ XPathProcessorImpl::tokenize(const XalanDOMString&	pat)
 			{
 				if(startSubstring != -1)
 				{
-					isStartOfPat = mapPatternElemPos(nesting, isStartOfPat, isAttrName);
-					isAttrName = false;
-
 					if(-1 != posOfNSSep)
 					{	 
 						posOfNSSep = mapNSTokens(pat, startSubstring, posOfNSSep, i);
@@ -325,9 +311,6 @@ XPathProcessorImpl::tokenize(const XalanDOMString&	pat)
 			{
 				if(startSubstring != -1)
 				{
-					isStartOfPat = mapPatternElemPos(nesting, isStartOfPat, isAttrName);
-					isAttrName = false;
-
 					if(-1 != posOfNSSep)
 					{	 
 						posOfNSSep = mapNSTokens(pat, startSubstring, posOfNSSep, i);
@@ -344,22 +327,16 @@ XPathProcessorImpl::tokenize(const XalanDOMString&	pat)
 			}
 			break;
 		
-		case XalanUnicode::charCommercialAt:
-			isAttrName = true;
-			// fall-through on purpose
-
 		case XalanUnicode::charHyphenMinus:
 			{
-				if(XalanUnicode::charHyphenMinus == c)
+				if(!(startSubstring == -1))
 				{
-					if(!(startSubstring == -1))
-					{
-						break;
-					}
+					break;
 				}
 			}
 			// fall-through on purpose
 
+		case XalanUnicode::charCommercialAt:
 		case XalanUnicode::charLeftParenthesis:
 		case XalanUnicode::charLeftSquareBracket:
 		case XalanUnicode::charRightParenthesis:
@@ -379,9 +356,6 @@ XPathProcessorImpl::tokenize(const XalanDOMString&	pat)
 			{
 				if(startSubstring != -1)
 				{
-					isStartOfPat = mapPatternElemPos(nesting, isStartOfPat, isAttrName);
-					isAttrName = false;
-
 					if(-1 != posOfNSSep)
 					{	 
 						posOfNSSep = mapNSTokens(pat, startSubstring, posOfNSSep, i);
@@ -394,32 +368,6 @@ XPathProcessorImpl::tokenize(const XalanDOMString&	pat)
 					}
 
 					startSubstring = -1;
-				}
-				else if(XalanUnicode::charSolidus == c && isStartOfPat == true)
-				{
-					isStartOfPat = mapPatternElemPos(nesting, isStartOfPat, isAttrName);
-				}
-				else if(XalanUnicode::charAsterisk == c)
-				{
-					isStartOfPat = mapPatternElemPos(nesting, isStartOfPat, isAttrName);
-					isAttrName = false;
-				}
-
-				if(0 == nesting)
-				{
-					if(XalanUnicode::charVerticalLine == c)
-					{
-						isStartOfPat = true;
-					}
-				}
-
-				if(XalanUnicode::charRightParenthesis == c || XalanUnicode::charRightSquareBracket == c)
-				{
-					nesting--;
-				}
-				else if(XalanUnicode::charLeftParenthesis == c || XalanUnicode::charLeftSquareBracket == c)
-				{
-					nesting++;
 				}
 
 				substring(pat, theToken, i, i + 1);
@@ -442,7 +390,6 @@ XPathProcessorImpl::tokenize(const XalanDOMString&	pat)
 						}
 					}
 
-					isAttrName = false;
 					startSubstring = -1;
 					posOfNSSep = -1;
 
@@ -509,8 +456,6 @@ XPathProcessorImpl::tokenize(const XalanDOMString&	pat)
 
 	if(startSubstring != -1)
 	{
-		isStartOfPat = mapPatternElemPos(nesting, isStartOfPat, isAttrName);
-
 		if(-1 != posOfNSSep)
 		{	 
 			posOfNSSep = mapNSTokens(pat, startSubstring, posOfNSSep, nChars);
@@ -529,34 +474,6 @@ XPathProcessorImpl::tokenize(const XalanDOMString&	pat)
 	}
 
 	m_expression->setTokenPosition(0);
-}
-
-
-
-bool
-XPathProcessorImpl::mapPatternElemPos(
-			int 	nesting,
-			bool	isStart,
-			bool	isAttrName) const
-{
-	if(0 == nesting)
-	{
-		if(!isStart)
-		{
-			m_expression->adjustPattern(
-				m_expression->patternMapSize() - 1,
-				-TARGETEXTRA);
-		}
-
-		const int	theValue =
-			m_expression->tokenQueueSize() - (isAttrName ? 1 : 0) + TARGETEXTRA;
-
-		m_expression->pushPattern(theValue);
-
-		isStart = false;
-	}
-
-	return isStart;
 }
 
 
@@ -582,12 +499,12 @@ XPathProcessorImpl::replaceTokenWithNamespaceToken() const
 	StringToStringMapType::const_iterator	i = m_namespaces.find(m_token);
 	assert(i != m_namespaces.end());
 
-	const XalanDOMString&	theNamespaceURI = (*i).second;
-	assert(theNamespaceURI.size() != 0);
+	const XalanDOMString* const		theNamespaceURI = (*i).second;
+	assert(theNamespaceURI != 0 && theNamespaceURI->size() != 0);
 
 	m_expression->replaceRelativeToken(
 			-1,
-			theNamespaceURI);
+			*theNamespaceURI);
 }
 
 
@@ -632,7 +549,7 @@ XPathProcessorImpl::mapNSTokens(
 	}
 	else
 	{
-		m_namespaces[scratchString] = *uName;
+		m_namespaces[scratchString] = uName;
 
 		addToTokenQueue(scratchString);
 
@@ -661,18 +578,6 @@ XPathProcessorImpl::mapNSTokens(
 	}
 
 	return -1;
-}
-
-
-
-int
-XPathProcessorImpl::getTokenQueuePosFromMap(int 	i) const
-{
-	assert(m_expression != 0);
-
-	const int	pos = m_expression->getPattern(i);
-
-	return pos >= TARGETEXTRA ? pos - TARGETEXTRA : pos;
 }
 
 
