@@ -320,27 +320,28 @@ MutableNodeRefList::addNodesInDocOrder(
 
 
 
-MutableNodeRefList::NodeListIteratorType
+bool
 findInsertionPointBinarySearch(
 			XalanNode*									node,
 			MutableNodeRefList::NodeListIteratorType	begin,
-			MutableNodeRefList::NodeListIteratorType	end)
+			MutableNodeRefList::NodeListIteratorType	end,
+			MutableNodeRefList::NodeListIteratorType&	insertionPoint)
 {
 	assert(node != 0);
 	assert(node->getNodeType() == XalanNode::DOCUMENT_NODE ||
 		   (node->getOwnerDocument() != 0 && node->getOwnerDocument()->isIndexed() == true));
 
-	typedef MutableNodeRefList::NodeListIteratorType	NodeListIteratorType;
-
-	NodeListIteratorType	insertionPoint = 0;
+	bool	fInsert = true;
 
 	// At this point, we are guaranteed that the range is only for this
 	// document, and that the range is indexed...
 	const unsigned long		theIndex = node->getIndex();
 
+	typedef MutableNodeRefList::NodeListIteratorType	NodeListIteratorType;
+
 	// End points to one past the last valid point,
 	// so subtract 1.
-	NodeListIteratorType	last = end - 1;
+	NodeListIteratorType	last(end - 1);
 	assert(*last != 0);
 
 	// Do a quick check to see if we just need to append...
@@ -351,8 +352,8 @@ findInsertionPointBinarySearch(
 	else
 	{
 		// Do a binary search for the insertion point...
-		NodeListIteratorType	first = begin;
-		NodeListIteratorType	current = 0;
+		NodeListIteratorType	first(begin);
+		NodeListIteratorType	current(end);
 
 		unsigned long			theCurrentIndex = 0;
 
@@ -374,13 +375,15 @@ findInsertionPointBinarySearch(
 			else if (theIndex == theCurrentIndex)
 			{
 				// Duplicate, don't insert...
+				fInsert = false;
+
 				break;
 			}
 		}
 
 		if (theIndex != theCurrentIndex)
 		{
-			if (current == 0 || first == end)
+			if (current == end || first == end)
 			{
 				// We either didn't search, or we're
 				// at the end...
@@ -406,24 +409,27 @@ findInsertionPointBinarySearch(
 		}
 	}
 
-	return insertionPoint;
+	return fInsert;
 }
 
 
 
 template<class PredicateType>
-MutableNodeRefList::NodeListIteratorType
+bool
 findInsertionPointLinearSearch(
 			XalanNode*									node,
 			MutableNodeRefList::NodeListIteratorType	begin,
 			MutableNodeRefList::NodeListIteratorType	end,
-			const PredicateType&						isNodeAfterPredicate)
+			MutableNodeRefList::NodeListIteratorType&	insertionPoint,
+			const PredicateType							isNodeAfterPredicate)
 {
 	assert(node != 0);
 
+	bool	fInsert = true;
+
 	typedef MutableNodeRefList::NodeListIteratorType	NodeListIteratorType;
 
-	NodeListIteratorType	current = begin;
+	NodeListIteratorType	current(begin);
 
 	// Loop, looking for the node, or for a
 	// node that's before the one we're adding...
@@ -435,7 +441,7 @@ findInsertionPointLinearSearch(
 		if(child == node)
 		{
 			// Duplicate, don't insert...
-			current = 0;
+			fInsert = false;
 
 			break;
 		}
@@ -450,7 +456,9 @@ findInsertionPointLinearSearch(
 		}
 	}
 
-	return current;
+	insertionPoint = current;
+
+	return fInsert;
 }
 
 
@@ -551,7 +559,9 @@ MutableNodeRefList::addNodeInDocOrder(
 			// Is it a duplicate?
 			if (theLastNode != node)
 			{
-				NodeListIteratorType	insertionPoint = 0;
+				bool					fInsert = false;
+
+				NodeListIteratorType	insertionPoint;
 
 				const XalanNode* const	theFirstNode = m_nodeList.front();
 				assert(theFirstNode != 0);
@@ -579,33 +589,36 @@ MutableNodeRefList::addNodeInDocOrder(
 					// much we can do except a linear search...
 					if (theFirstNodeOwner == theLastNodeOwner)
 					{
-						insertionPoint =
+						fInsert =
 							findInsertionPointBinarySearch(
 									node,
 									m_nodeList.begin(),
-									m_nodeList.end());
+									m_nodeList.end(),
+									insertionPoint);
 					}
 					else
 					{
-						insertionPoint =
+						fInsert =
 							findInsertionPointLinearSearch(
 									node,
 									m_nodeList.begin(),
 									m_nodeList.end(),
+									insertionPoint,
 									IndexPredicate());
 					}
 				}
 				else
 				{
-					insertionPoint =
+					fInsert =
 							findInsertionPointLinearSearch(
 									node,
 									m_nodeList.begin(),
 									m_nodeList.end(),
+									insertionPoint,
 									ExecutionContextPredicate(executionContext));
 				}
 
-				if (insertionPoint != 0)
+				if (fInsert == true)
 				{
 					m_nodeList.insert(insertionPoint, node);
 				}
