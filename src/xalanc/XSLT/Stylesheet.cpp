@@ -1375,7 +1375,7 @@ Stylesheet::findTemplate(
 
                     StylesheetExecutionContext::GetAndReleaseCachedString theGuard1(executionContext);
 
-					conflictsString += XalanMessageLoader::getMessage(XalanMessages::LastFoundStylesheetWillBeUsed, theGuard1.get());
+					conflictsString += XalanMessageLoader::getMessage(XalanMessages::ConflictsFound, theGuard1.get());
 
 					executionContext.warn(conflictsString, targetNode, bestMatchedRule->getLocator());
 				}
