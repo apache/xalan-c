@@ -71,6 +71,10 @@
 #endif
 
 #include <util/XercesDefs.hpp>
+#include <XSLT/XSLTInputSource.hpp>
+#include <XalanSourceTree/XalanSourceTreeDOMSupport.hpp>
+#include <XalanSourceTree/XalanSourceTreeParserLiaison.hpp>
+#include <XalanSourceTree/XalanSourceTreeDocument.hpp>
 
 using namespace std;
 
@@ -112,7 +116,7 @@ public:
 	FileUtility()
 	{
 
-			cout << "Using Xerces Version " << gXercesFullVersionStr << endl;
+			cout << endl << "Using Xerces Version " << gXercesFullVersionStr << endl;
 	}
 	
 	/** 
@@ -148,22 +152,48 @@ public:
 	* Utility method used to get OUT file based on XML file.
 	* @returns a XalanDOMString.
 	*/
-
 	XalanDOMString FileUtility::GenerateFileName(const XalanDOMString&  theXMLFileName, char* suffix);
 
 	/** 
 	* Utility method used to generate UniqRunid.
 	* @returns a XalanDOMString.
 	*/
-
 	XalanDOMString FileUtility::GenerateUniqRunid();
 
 	/** 
 	* Utility methods used to get Xerces Version number.
 	* @returns a XalanDOMString.
 	*/
-
 	XalanDOMString FileUtility::getXercesVersion();
+
+	/** 
+	* Utility methods used to perform a DOM Compare
+	* @returns boolean
+	*/
+	bool 
+	FileUtility::domCompare(const XalanNode& gold, const XalanNode& doc,  const XalanDOMString& fileName);
+
+	/** 
+	* Utility methods used to diff two Element nodes.
+	* @returns boolean.
+	*/
+	bool 
+	FileUtility::diffElement(const XalanNode& gold, const XalanNode& doc, const XalanDOMString& fileName);
+
+	/** 
+	* Utility methods used to diff two attribute nodes.
+	* @returns boolean.
+	*/
+	bool 
+	FileUtility::diffATTR(const XalanNode* gAttr, const XalanNode* dAttr, const XalanDOMString& fileName);
+
+	/** 
+	* Utility methods used to report DOM compare errors.
+	* @returns void.
+	*/
+	void 
+	FileUtility::reportDOMError( XalanDOMString file, XalanDOMString node, char* msg);
+
 
 };        // end of class FileUtility
 #endif
