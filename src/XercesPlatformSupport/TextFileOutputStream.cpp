@@ -64,13 +64,9 @@
 
 
 
-#include <util/Janitor.hpp>
-#include <util/XMLString.hpp>
-
-
-
 #include <PlatformSupport/DOMStringHelper.hpp>
 #include <PlatformSupport/STLHelper.hpp>
+
 
 
 
@@ -79,9 +75,9 @@ TextFileOutputStream::TextFileOutputStream(const DOMString&		theFileName) :
 	m_fileName(theFileName),
 	m_handle(0)
 {
-	char* const	tmpName = XMLString::transcode(toCharArray(theFileName));
+	char* const	tmpName = theFileName.transcode();
 
-	ArrayJanitor<char>	janTmp(tmpName);
+	array_auto_ptr<char>	janTmp(tmpName);
 
 	m_handle = fopen(tmpName, "wt");
 

@@ -63,6 +63,7 @@
 #include <XercesPlatformSupport/XercesPlatformSupportDefinitions.hpp>
 
 
+
 #include <cstdio>
 #include <vector>
 
@@ -143,7 +144,6 @@ public:
 
 	virtual
 	~TextFileOutputStreamOpenException();
-
 };
 
 
@@ -165,7 +165,6 @@ public:
 
 	virtual
 	~TextFileOutputStreamWriteException();
-
 };
 
 
