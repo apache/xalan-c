@@ -92,29 +92,6 @@ class XALAN_XSLT_EXPORT NamespacesHandler
 {
 public:
 
-	/**
-	 * Perform static initialization.  See class XSLTInit.
-	 */
-	static void
-	initialize();
-
-	/**
-	 * Perform static shut down.  See class XSLTInit.
-	 */
-	static void
-	terminate();
-
-
-	/* Some static strings for various namespace URIs...
-	 *
-	 */
-	static const XalanDOMString&	s_ApacheXSLTNamespaceURI;
-
-	static const XalanDOMString&	s_LotusXSLTNamespaceURI;
-
-	static const XalanDOMString&	s_LotusXSLTNamespaceURIWithSeparator;
-
-
 	class NameSpaceExtended : public NameSpace
 	{
 	public:

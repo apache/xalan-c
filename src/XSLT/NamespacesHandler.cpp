@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 2000 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -368,9 +368,6 @@ NamespacesHandler::shouldExcludeResultNamespaceNode(
 	// These are commone namespaces that are always excluded...
 	if(equals(theURI, theXSLTNamespaceURI)
 			|| m_extensionNamespaceURIs.find(theURI) != m_extensionNamespaceURIs.end()
-			|| equals(theURI, s_ApacheXSLTNamespaceURI)
-			|| equals(theURI, s_LotusXSLTNamespaceURIWithSeparator)
-			|| equals(theURI, s_LotusXSLTNamespaceURI)
 			|| equals(theURI, DOMServices::s_XMLNamespaceURI))
 	{
 		return true;
@@ -738,42 +735,4 @@ NamespacesHandler::copyExcludeResultPrefixes(const ExcludedResultPrefixesMapType
 			}
 		}
 	}
-}
-
-
-
-static XalanDOMString	s_ApacheXSLTNamespaceURI;
-
-static XalanDOMString	s_LotusXSLTNamespaceURI;
-
-static XalanDOMString	s_LotusXSLTNamespaceURIWithSeparator;
-
-
-const XalanDOMString&	NamespacesHandler::s_ApacheXSLTNamespaceURI =
-							::s_ApacheXSLTNamespaceURI;
-
-const XalanDOMString&	NamespacesHandler::s_LotusXSLTNamespaceURI =
-							::s_LotusXSLTNamespaceURI;
-
-const XalanDOMString&	NamespacesHandler::s_LotusXSLTNamespaceURIWithSeparator =
-							::s_LotusXSLTNamespaceURIWithSeparator;
-
-
-
-void
-NamespacesHandler::initialize()
-{
-	::s_ApacheXSLTNamespaceURI = XALAN_STATIC_UCODE_STRING("http://xml.apache.org/xslt");
-	::s_LotusXSLTNamespaceURI = XALAN_STATIC_UCODE_STRING("http://xsl.lotus.com");
-	::s_LotusXSLTNamespaceURIWithSeparator = XALAN_STATIC_UCODE_STRING("http://xsl.lotus.com/");
-}
-
-
-
-void
-NamespacesHandler::terminate()
-{
-	::releaseMemory(::s_ApacheXSLTNamespaceURI);
-	::releaseMemory(::s_LotusXSLTNamespaceURI);
-	::releaseMemory(::s_LotusXSLTNamespaceURIWithSeparator);
 }
