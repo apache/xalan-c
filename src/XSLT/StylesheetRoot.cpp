@@ -196,8 +196,6 @@ StylesheetRoot::process(
 
 	setupFormatterListener(outputTarget, executionContext);
 
-	executionContext.resetCurrentState(sourceTree);
-
 	executionContext.setRootDocument(sourceTree);
 
 	if(executionContext.doDiagnosticsOutput())
@@ -486,16 +484,25 @@ StylesheetRoot::processOutputSpec(
 		}
 		else if(equals(aname,Constants::ATTRNAME_OUTPUT_CDATA_SECTION_ELEMENTS))
 		{
-			StringTokenizer tokenizer(atts.getValue(i));
+			StringTokenizer	theTokenizer(atts.getValue(i));
 
-			while(tokenizer.hasMoreTokens())
+			unsigned int	theTokenCount =
+				theTokenizer.countTokens();
+
+			m_cdataSectionElems.reserve(theTokenCount);
+
+			XalanDOMString	theToken;
+
+			while(theTokenCount > 0)
 			{
-				const XalanDOMString	token = tokenizer.nextToken();
+				theTokenizer.nextToken(theToken);
 
-				const QNameByValue		qname(token, getNamespaces());
+				--theTokenCount;
 
-				m_cdataSectionElems.push_back(qname);
+				m_cdataSectionElems.push_back(QNameByValue(theToken, getNamespaces()));
 			}
+
+			assert(theTokenizer.hasMoreTokens() == false);
 		}
 		else if (isAttrOK(aname, atts, i, constructionContext) == false)
 		{
