@@ -170,7 +170,7 @@ ExtensionFunctionHandler::callFunction(
 		startupComponent();
 	}
 
-	return 0;
+	return XObjectPtr();
 }
 
 
