@@ -144,7 +144,7 @@ endif
 ifeq ($(PLATFORM), LINUX)
 
   SUPPORTED = TRUE
-  ALLLIBS = ${LIBS} -L/usr/lib
+  ALLLIBS = ${LIBS}
   SHLIBSUFFIX=.so
   PIC_OPTION=
 
