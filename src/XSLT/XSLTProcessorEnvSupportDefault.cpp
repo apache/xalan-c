@@ -194,8 +194,6 @@ XSLTProcessorEnvSupportDefault::parseXML(
 			XMLParserLiaison&	parserLiaison =
 				m_processor->getXMLParserLiaison();
 
-			XSLTInputSource		inputSource(c_wstr(urlText));
-
 			EntityResolverType* const	theResolver = 
 				parserLiaison.getEntityResolver();
 
