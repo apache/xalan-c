@@ -1657,7 +1657,14 @@ StylesheetHandler::processingInstruction(
 	if (m_exceptionPending == true)
 		return;
 
-	clear(m_accumulateText);
+	if (isXMLWhitespace(m_accumulateText) == false)
+	{
+		processAccumulatedText();
+	}
+	else
+	{
+		clear(m_accumulateText);
+	}
 }
 
 
@@ -1668,7 +1675,7 @@ StylesheetHandler::comment(const XMLCh* const /*data*/)
 	// if we have apending exception, we don't want to even try to process this
 	if (m_exceptionPending == false)
 	{
-		clear(m_accumulateText);
+		processAccumulatedText();
 	}
 }
 
@@ -1680,7 +1687,7 @@ StylesheetHandler::entityReference(const XMLCh* const /*name*/)
 	// if we have apending exception, we don't want to even try to process this
 	if (m_exceptionPending == false)
 	{
-		clear(m_accumulateText);
+		processAccumulatedText();
 	}
 }
 
