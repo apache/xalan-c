@@ -318,10 +318,6 @@ SOURCE=..\..\..\..\src\XSLT\NodeSortKey.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\NumeratorFormatter.cpp
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\..\..\src\XSLT\ProblemListener.cpp
 # End Source File
 # Begin Source File
@@ -363,6 +359,14 @@ SOURCE=..\..\..\..\src\XSLT\StylesheetHandler.cpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\XSLT\StylesheetRoot.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XSLT\TraceListener.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XSLT\TraceListenerDefault.cpp
 # End Source File
 # Begin Source File
 
@@ -676,6 +680,14 @@ SOURCE=..\..\..\..\src\XSLT\StylesheetHandler.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\XSLT\StylesheetRoot.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XSLT\TraceListener.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XSLT\TraceListenerDefault.hpp
 # End Source File
 # Begin Source File
 
