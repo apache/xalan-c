@@ -250,7 +250,7 @@ const XalanDOMChar	XalanTranscodingServices::s_UTF16ByteOrderMark[] =
 
 
 
-XALAN_USING(xercesc, XMLTransService)
+XALAN_USING_XERCES(XMLTransService)
 
 
 static XalanTranscodingServices::eCode
