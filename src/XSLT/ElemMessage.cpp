@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -140,23 +140,44 @@ ElemMessage::execute(StylesheetExecutionContext&	executionContext) const
 			executionContext,
 			theResult.get());
 
-		
+	const Locator* const	theLocator = getLocator();
+
 	executionContext.message(
 			theString,
 			executionContext.getCurrentNode(),
-			getLocator());
+			theLocator);
 
 	if (m_terminate == true)
 	{
-		throw ElemMessageTerminateException(theString);
+		if (theLocator != 0)
+		{
+			throw ElemMessageTerminateException(*theLocator, theString);
+		}
+		else
+		{
+			throw ElemMessageTerminateException(theString);
+		}
 	}
 }
 
 
 
 ElemMessage::ElemMessageTerminateException::ElemMessageTerminateException(const XalanDOMString&		theMessage) :
-	XSLTProcessorException(theMessage,
-						   TranscodeFromLocalCodePage("ElemMessageTerminateException"))
+	XSLTProcessorException(
+			theMessage,
+			TranscodeFromLocalCodePage("ElemMessageTerminateException"))
+{
+}
+
+
+
+ElemMessage::ElemMessageTerminateException::ElemMessageTerminateException(
+			const Locator&			theLocator,
+			const XalanDOMString&	theMessage) :
+	XSLTProcessorException(
+			theLocator,
+			theMessage,
+			TranscodeFromLocalCodePage("ElemMessageTerminateException"))
 {
 }
 
