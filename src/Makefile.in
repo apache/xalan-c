@@ -529,6 +529,21 @@ ${ALL_OBJECTS_DIR}/%.o:$(SAMPLES_DIR)/ExternalFunction/%.cpp
 	$(CC1) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $<
 endif
 
+ParsedSourceWrapper: lib $(BINTARGETDIR)/ParsedSourceWrapper
+
+$(BINTARGETDIR)/ParsedSourceWrapper: ${ALL_OBJECTS_DIR}/ParsedSourceWrapper.o
+ifeq ($(PLATFORM), OS390)
+	${LINK} $(XSL_BUILD_OPTIONS) ${PLATFORM_LIB_LINK_OPTIONS} ${LIBRARY_SEARCH_PATHS} \
+	${EXTRA_LINK_OPTIONS} $(LIB_DIR)/lib$(PROJECT_NAME)$(VER).x $(ALLLIBS) $(CXXFLAGS) $^ -o $@	
+${ALL_OBJECTS_DIR}/%.o:$(SAMPLES_DIR)/ParsedSourceWrapper/%.cpp
+	$(CC3) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $<
+else
+	${LINK} $(XSL_BUILD_OPTIONS) ${PLATFORM_LIB_LINK_OPTIONS} ${LIBRARY_SEARCH_PATHS} \
+	${EXTRA_LINK_OPTIONS} -L$(LIB_DIR) -l$(PROJECT_NAME)$(VER) $(ALLLIBS) $(CXXFLAGS) $^ -o $@	
+${ALL_OBJECTS_DIR}/%.o:$(SAMPLES_DIR)/ParsedSourceWrapper/%.cpp
+	$(CC1) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $<
+endif
+
 SerializeNodeSet: lib $(BINTARGETDIR)/SerializeNodeSet
 
 $(BINTARGETDIR)/SerializeNodeSet: ${ALL_OBJECTS_DIR}/SerializeNodeSet.o
