@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -86,7 +86,24 @@
 
 
 
-//#define XALAN_VQ_SPECIAL_TRACE
+#if defined(_MSC_VER)
+#define XALAN_USE_WINDOWS_TIMING
+#endif
+
+#if defined(XALAN_USE_WINDOWS_TIMING)
+#include "windows.h"
+#include "largeint.h"
+#else
+#include <ctime>
+#if defined(XALAN_STRICT_ANSI_HEADERS)
+using std::clock;
+using std::clock_t;
+#endif
+#endif
+
+
+
+#define XALAN_VQ_SPECIAL_TRACE
 #if defined(XALAN_VQ_SPECIAL_TRACE)
 #include "C:/Program Files/Rational/Quantify/pure.h"
 #endif
@@ -97,6 +114,7 @@ XALAN_USING_STD(cerr)
 XALAN_USING_STD(cin)
 XALAN_USING_STD(cout)
 XALAN_USING_STD(endl)
+XALAN_USING_STD(ostream)
 
 #if defined(XALAN_STRICT_ANSI_HEADERS)
 using std::atoi;
@@ -132,6 +150,8 @@ Usage()
 		 << endl
 		 << "  -p name expression    Sets a stylesheet parameter."
 		 << endl
+		 << "  -t                    Diplay timing information."
+		 << endl
 		 << "  -u                    Disable escaping of URLs in HTML output."
 		 << endl
 		 << "  -v                    Validates source documents."
@@ -150,6 +170,7 @@ Usage()
 
 XALAN_USING_XALAN(XalanTransformer)
 XALAN_USING_XALAN(XSLTInputSource)
+XALAN_USING_XALAN(XSLTResultTarget)
 
 
 
@@ -162,6 +183,7 @@ public:
 		m_useStylesheetPI(false),
 		m_omitMETATag(false),
 		m_noURLEscaping(false),
+		m_showTiming(false),
 		m_indentAmount(-1),
 		m_inFileName(0),
 		m_xslFileName(0),
@@ -232,6 +254,7 @@ public:
 	bool			m_useStylesheetPI;
 	bool			m_omitMETATag;
 	bool			m_noURLEscaping;
+	bool			m_showTiming;
 
 	int				m_indentAmount;
 
@@ -368,6 +391,10 @@ getArgs(
 					}
 				}
 			}
+			else if (argv[i][1] == 't') 
+			{
+				params.m_showTiming = true;
+			}
 			else if (argv[i][1] == 'u') 
 			{
 				params.m_noURLEscaping = true;
@@ -424,6 +451,231 @@ getArgs(
 
 
 
+#if defined(XALAN_USE_WINDOWS_TIMING)
+typedef LARGE_INTEGER	ClockType;
+#else
+#if defined(XALAN_STRICT_ANSI_HEADERS)
+typedef std::clock_t	ClockType;
+#else
+typedef clock_t			ClockType;
+#endif
+#endif
+
+typedef ostream			OstreamType;
+
+
+inline ClockType
+getClock()
+{
+#if defined(XALAN_USE_WINDOWS_TIMING)
+	ClockType	theResult;
+
+	QueryPerformanceCounter(&theResult);
+
+	return theResult;
+#else
+#if defined(XALAN_STRICT_ANSI_HEADERS)
+	return std::clock();
+#else
+	return clock();
+#endif
+#endif
+}
+
+
+
+#if defined(XALAN_USE_WINDOWS_TIMING)
+inline ClockType
+getPerformanceFrequencyInMilliseconds()
+{
+	ClockType	theInterval;
+
+	ULONG		theDummy;
+
+	QueryPerformanceFrequency(&theInterval);
+
+	return ExtendedLargeIntegerDivide(theInterval, 1000UL, &theDummy);
+}
+#endif
+
+
+
+void
+writeElapsedMilliseconds(
+			ClockType		theStartClock,
+			ClockType		theEndClock,
+			OstreamType&	theStream)
+{
+#if defined(XALAN_USE_WINDOWS_TIMING)
+	static const ClockType	theInterval = getPerformanceFrequencyInMilliseconds();
+
+	char		theBuffer[1000];
+
+	const ClockType		theDiff = LargeIntegerSubtract(theEndClock, theStartClock);
+
+	ClockType	theRemainder;
+
+	const ClockType		theResult = LargeIntegerDivide(theDiff, theInterval, &theRemainder);
+
+	sprintf(theBuffer, "%I64d.%I64d", theResult, theRemainder);
+
+	theStream << theBuffer;
+#else
+	theStream << (double(theEndClock - theStartClock) / CLOCKS_PER_SEC) * 1000.0;
+#endif
+}
+
+
+
+inline void
+reportElapsedMilliseconds(
+			const char*		theString,
+			ClockType		theStartClock,
+			ClockType		theEndClock,
+			OstreamType&	theStream)
+{
+	theStream << theString;
+
+	writeElapsedMilliseconds(theStartClock, theEndClock, theStream);
+
+	theStream << " milliseconds.\n";
+}
+
+
+
+inline int
+transform(
+			XalanTransformer&			theTransformer,
+			const Params&				theParams,
+			const XSLTInputSource&		theSource,
+			const XSLTResultTarget&		theTarget)
+{
+	if (theParams.m_showTiming == false)
+	{
+		return theTransformer.transform(
+					theSource,
+					theTarget);
+	}
+	else
+	{
+		XALAN_USING_XALAN(XalanParsedSource)
+
+		ClockType	theStartClock = getClock();
+
+		const XalanParsedSource*	theParsedSource = 0;
+
+		int	theResult = theTransformer.parseSource(theSource, theParsedSource);
+
+		if (theResult == 0)
+		{
+			ClockType		theEndClock = getClock();
+
+			reportElapsedMilliseconds(
+				"Source tree parsing time: ",
+				theStartClock,
+				theEndClock,
+				cerr);
+
+			const XalanTransformer::EnsureDestroyParsedSource	theGuard(theTransformer, theParsedSource);
+
+			theStartClock = getClock();
+
+			theResult = theTransformer.transform(*theParsedSource, theTarget);
+
+			theEndClock = getClock();
+
+			reportElapsedMilliseconds(
+				"Transformation time, including stylesheet compilation: ",
+				theStartClock,
+				theEndClock,
+				cerr);
+		}
+
+		return theResult;
+	}
+}
+
+
+
+inline int
+transform(
+			XalanTransformer&			theTransformer,
+			const Params&				theParams,
+			const XSLTInputSource&		theSource,
+			const XSLTInputSource&		theStylesheetSource,
+			const XSLTResultTarget&		theTarget)
+{
+	if (theParams.m_showTiming == false)
+	{
+		return theTransformer.transform(
+				theSource,
+				theStylesheetSource,
+				theTarget);
+	}
+	else
+	{
+		XALAN_USING_XALAN(XalanParsedSource)
+
+		ClockType	theStartClock = getClock();
+
+		const XalanParsedSource*	theParsedSource = 0;
+
+		int		theResult = theTransformer.parseSource(theSource, theParsedSource);
+
+		if (theResult == 0)
+		{
+			ClockType	theEndClock = getClock();
+
+			reportElapsedMilliseconds(
+				"Source tree parsing time: ",
+				theStartClock,
+				theEndClock,
+				cerr);
+
+			const XalanTransformer::EnsureDestroyParsedSource	theSourceGuard(theTransformer, theParsedSource);
+
+			XALAN_USING_XALAN(XalanCompiledStylesheet)
+
+			const XalanCompiledStylesheet*	theCompiledStylesheet = 0;
+
+			theStartClock = getClock();
+
+			theResult = theTransformer.compileStylesheet(theStylesheetSource, theCompiledStylesheet);
+
+			if (theResult == 0)
+			{
+				theEndClock = getClock();
+
+				reportElapsedMilliseconds(
+					"Stylesheet compilation time: ",
+					theStartClock,
+					theEndClock,
+					cerr);
+
+				assert(theCompiledStylesheet != 0);
+
+				const XalanTransformer::EnsureDestroyCompiledStylesheet		theStylesheetGuard(theTransformer, theCompiledStylesheet);
+
+				theStartClock = getClock();
+
+				theResult = theTransformer.transform(*theParsedSource, theCompiledStylesheet, theTarget);
+
+				theEndClock = getClock();
+
+				reportElapsedMilliseconds(
+					"Transformation time: ",
+					theStartClock,
+					theEndClock,
+					cerr);
+			}
+		}
+
+		return theResult;
+	}
+}
+
+
+
 inline int
 transform(
 			XalanTransformer&		theTransformer,
@@ -452,16 +704,11 @@ transform(
 
 	if (theParams.m_useStylesheetPI == true)
 	{
-		return theTransformer.transform(
-					theSource,
-					theTarget);
+		return transform(theTransformer, theParams, theSource, theTarget);
 	}
 	else
 	{
-		return theTransformer.transform(
-				theSource,
-				theStylesheetSource,
-				theTarget);
+		return transform(theTransformer, theParams, theSource, theStylesheetSource, theTarget);
 	}
 }
 
@@ -491,7 +738,7 @@ transform(
 				theTransformer,
 				theParams,
 				theSource,
-				theParams.m_xslFileName);
+				XSLTInputSource(theParams.m_xslFileName));
 	}
 }
 
