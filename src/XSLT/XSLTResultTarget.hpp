@@ -83,9 +83,6 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 class FormatterListener;
-class XalanDocument;
-class XalanDocumentFragment;
-class XalanElement;
 class Writer;
 
 
@@ -145,27 +142,6 @@ public:
 	 *                        will be written
 	 */ 
 	XSLTResultTarget(Writer*	characterStream);
-
-	/**
-	 * Create a new output target with a DOM document.
-	 *
-	 * @param n root of DOM node tree that holds results
-	 */
-	XSLTResultTarget(XalanDocument*		document);
-
-	/**
-	 * Create a new output target with a DOM document fragment.
-	 *
-	 * @param n root of DOM node tree that holds results
-	 */
-	XSLTResultTarget(XalanDocumentFragment*		documentFragment);
-
-	/**
-	 * Create a new output target with a DOM element.
-	 *
-	 * @param n root of DOM node tree that holds results
-	 */
-	XSLTResultTarget(XalanElement*	element);
 
 	/**
 	 * Create a new output target with a FormatterListener.
@@ -284,109 +260,6 @@ public:
 		return m_characterStream;
 	}
 
-	bool
-	hasDOMTarget() const
-	{
-		return m_document != 0 || m_documentFragment != 0 || m_element != 0;
-	}
-
-	/**
-	 * Set the document node that will contain the result nodes.
-	 *
-	 * @param node DOM node to contain results
-	 */
-	void
-	setDocument(XalanDocument*		document)
-	{
-		m_document = document;
-
-		m_documentFragment = 0;
-		m_element = 0;
-	}
-
-	/**
-	 * Get the document node that will contain the result nodes.
-	 *
-	 * @return a pointer to the document node
-	 */
-	XalanDocument*
-	getDocument() const
-	{
-		return m_document;
-	}
-
-	/**
-	 * Set the document fragment node that will contain the result nodes.
-	 *
-	 * @param node DOM node to contain results
-	 */
-	void
-	setDocumentFragment(XalanDocumentFragment*	documentFragment)
-	{
-		m_documentFragment = documentFragment;
-
-		m_document = 0;
-		m_element = 0;
-	}
-
-	/**
-	 * Get the document node that will contain the result nodes.
-	 *
-	 * @return a pointer to the document node
-	 */
-	XalanDocumentFragment*
-	getDocumentFragment() const
-	{
-		return m_documentFragment;
-	}
-
-	/**
-	 * Set the element node that will contain the result nodes.
-	 *
-	 * @param node DOM node to contain results
-	 */
-	void
-	setElement(XalanElement*	element)
-	{
-		m_element = element;
-
-		m_documentFragment = 0;
-		m_document = 0;
-	}
-
-	/**
-	 * Get the document node that will contain the result nodes.
-	 *
-	 * @return a pointer to the document node
-	 */
-	XalanElement*
-	getElement() const
-	{
-		return m_element;
-	}
-
-	/**
-	 * Set a SAX DocumentHandler to process the result tree events.
-	 *
-	 * @param handler pointer to new handler
-	 */
-	void
-	setDocumentHandler(FormatterListener*	handler)
-	{
-		m_formatterListener = handler;
-	}
-
-	/**
-	 * Get the SAX DocumentHandler that will process the result tree events.
-	 *
-	 * @return pointer to current handler
-	 */
-	FormatterListener*
-	getDocumentHandler() const
-	{
-		return m_formatterListener;
-	}
-
 	/**
 	 * Set a FormatterListener to process the result tree events.
 	 *
@@ -418,12 +291,6 @@ private:
 	XalanDOMString			m_encoding;
 
 	Writer*					m_characterStream;
-
-	XalanDocument*			m_document;
-
-	XalanDocumentFragment*	m_documentFragment;
-
-	XalanElement*			m_element;
 
 	FormatterListener*		m_formatterListener;
 };

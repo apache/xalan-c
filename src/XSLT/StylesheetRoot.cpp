@@ -300,11 +300,6 @@ StylesheetRoot::setupFormatterListener(
 {
 	FormatterListener*	flistener = outputTarget.getFormatterListener();
 
-	if(flistener == 0)
-	{
-		flistener = outputTarget.getDocumentHandler();
-	}
-
 	if (flistener != 0)
 	{
 		// Do encoding stuff here...
@@ -438,49 +433,12 @@ StylesheetRoot::setupFormatterListener(
 
 		executionContext.setFormatterListener(flistener);
 	}
-	else if(outputTarget.hasDOMTarget() == true)
-	{
-		/*
-		 * Output target has a node
-		 */
-		if (outputTarget.getDocument() != 0)
-		{
-			flistener = executionContext.createFormatterToDOM(outputTarget.getDocument(), 0);
-		}
-		else if (outputTarget.getDocumentFragment() != 0)
-		{
-			XalanDocumentFragment* const	theFragment =
-					outputTarget.getDocumentFragment();
-
-			flistener = executionContext.createFormatterToDOM(
-								theFragment->getOwnerDocument(),
-								theFragment,
-								0);
-		}
-		else if (outputTarget.getElement() != 0)
-		{
-			XalanElement* const		theElement =
-					outputTarget.getElement();
-
-				flistener = executionContext.createFormatterToDOM(
-								theElement->getOwnerDocument(),
-								theElement);
-		}
-		else
-		{
-			assert(0);
-		}
-	}
 	else
 	{
-		/*
-		 * Create an empty document and set the output target node to this
-		 */
-		XalanDocument* const	theDocument = executionContext.createDocument();
-
-		outputTarget.setDocument(theDocument);
-
-		flistener = executionContext.createFormatterToDOM(theDocument, 0);
+		executionContext.error(
+					"There is no valid result target",
+					executionContext.getCurrentNode(),
+					0);
 	}
 
 	executionContext.setFormatterListener(flistener);

@@ -378,7 +378,7 @@ XSLTEngineImpl::process(
 		executionContext.setStylesheetRoot(m_stylesheetRoot);
 
 		FormatterListener* const	theFormatter =
-				outputTarget.getDocumentHandler();
+				outputTarget.getFormatterListener();
 
 		if (theFormatter != 0 && theFormatter->getPrefixResolver() == 0)
 		{
@@ -423,7 +423,7 @@ XSLTEngineImpl::process(
 		}
 
 		FormatterListener* const	theFormatter =
-				outputTarget.getDocumentHandler();
+				outputTarget.getFormatterListener();
 
 		if (theFormatter != 0 && theFormatter->getPrefixResolver() == 0)
 		{
