@@ -166,14 +166,24 @@ XalanDOMStringPool::get(
 	{
 		const unsigned int	theActualLength = theLength == unsigned(-1) ? length(theString) : theLength;
 
-		// Find the string...
-		const IndexMapType::const_iterator	i =
-			m_index.find(IndexMapType::key_type(theString, theActualLength));
+#if defined(XALAN_NO_NAMESPACES)
+		typedef pair<IndexMapType::iterator, bool>			InsertPairType;
+#else
+		typedef std::pair<IndexMapType::iterator, bool>		InsertPairType;
+#endif
 
-		if (i != m_index.end())
+		// Insert an entry into the index map.
+		InsertPairType	i =
+			m_index.insert(
+				IndexMapType::value_type(
+					IndexMapType::key_type(theString, theActualLength),
+					0));
+
+		// Was it added?
+		if (i.second == false)
 		{
 			// Already there, so return it...
-			return *(*i).second;
+			return *(*(i.first)).second;
 		}
 		else
 		{
@@ -187,11 +197,9 @@ XalanDOMStringPool::get(
 
 			assert(theActualLength == length(theNewString));
 
-			// Add an index entry...
-			m_index.insert(
-				IndexMapType::value_type(
-					IndexMapType::key_type(toCharArray(theNewString), theActualLength),
-					&theNewString));
+			// Update the index entry that we just inserted...
+			(*(i.first)).second = &theNewString;
+			(*(i.first)).first.changePointer(toCharArray(theNewString));
 
 			assert(m_strings.size() == m_index.size());
 

@@ -99,11 +99,38 @@ public:
 		bool
 		operator<(const StringKey&	theRHS) const;
 
+		/*
+		 * OK, this is a really big hack.  The problem is that we index
+		 * the strings in the pool by const XalanDOMChar* which are not
+		 * necessarily null-terminated.  An added problem is that is too
+		 * inefficient to search the map for the string, then add it if it
+		 * wasn't found.  Instead, we want to insert a new entry in the
+		 * map, then figure out from the result of the insert whether or
+		 * not the entry was found.  This call allows us to change the
+		 * pointer for the key to the persistent pointer from the new
+		 * string that we created, instead of the pointer that was passed
+		 * into the call, which is not persistent.  This won't screw up
+		 * the map since the map is ordered on the _value_ of the string
+		 * and not the pointer itself.
+		 *
+		 * @param theNewPointer The new pointer value to use for the key.
+		 */
+		void
+		changePointer(const XalanDOMChar*	theNewPointer) const
+		{
+			assert(theNewPointer != 0 && equals(theNewPointer, m_string, m_length));
+#if defined(XALAN_NO_MUTABLE)
+			((StringKey*)this)->m_string = theNewPointer;
+#else
+			m_string = theNewPointer;
+#endif
+		}
+
 	private:
 
-		const XalanDOMChar*		m_string;
+		mutable const XalanDOMChar*		m_string;
 
-		unsigned int			m_length;
+		unsigned int					m_length;
 	};
 
 #if defined(XALAN_NO_NAMESPACES)
