@@ -65,10 +65,8 @@
 
 #if defined(XALAN_OLD_STREAM_HEADERS)
 #include <iostream.h>
-#include <strstream.h>
 #else
 #include <iostream>
-#include <strstream>
 #endif
 
 
@@ -150,21 +148,13 @@ FormatMessageLocal(
 			const char*		theMessage,
 			int				theErrorCode)
 {
-#if !defined(XALAN_NO_NAMESPACES)
-using std::ostrstream;
-#endif
+	XalanDOMString	theResult(theMessage);
 
-	XalanDOMString	theResult(TranscodeFromLocalCodePage(theMessage));
+	append(theResult, ".  The error code was ");
 
-	ostrstream   theFormatter;
+	LongToDOMString(theErrorCode, theResult);
 
-	theFormatter << ".  The error code was "
-				 << theErrorCode
-				 << "." << '\0';
-
-	append(theResult, theFormatter.str());
-
-	delete theFormatter.str();
+	append(theResult, ".");
 
 	return theResult;
 }
