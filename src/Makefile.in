@@ -55,6 +55,9 @@
 # 
 #
 # $Log$
+# Revision 1.3  2000/02/10 13:08:55  jdonohue
+# Added make for dependencies
+#
 # Revision 1.2  2000/02/03 20:13:12  jdonohue
 # Linux changes
 # PR:
@@ -139,14 +142,10 @@ XSL_INCL = -I . -I $(XERCESCROOT)/src/
 #                                                                 #
 ###################################################################
 
-###################################################################
-# @@ NOTE:                                                        #
-# Need to add dependencies for header files and for XERCES headers#
-###################################################################
+DEPFILE=depends
 
 #MACROS defining commands
 MKDIR=mkdir
-
 
 ifndef XALANCROOT 
 noxalanroot:
@@ -210,6 +209,13 @@ prepare:
 	-${MKDIR} -p ${ALL_OBJECTS_DIR}
 	-${MKDIR} -p ${LIB_DIR}
 	-${MKDIR} -p $(BINTARGETDIR)
+
+# Create header dependendies file -- this must be run before any objects are
+# built
+depend:
+	$(MAKE) -f makedepends DEPFILE=$(DEPFILE)
+
+-include $(DEPFILE)	
 
 compile:	 $(ALL_OBJECTS)
 
