@@ -23,11 +23,8 @@
 
 
 
-#include <deque>
-
-
-
 #include <xalanc/Include/XalanVector.hpp>
+#include <xalanc/Include/XalanDeque.hpp>
 
 
 
@@ -86,11 +83,7 @@ public:
 
 		typedef XalanNamespace	value_type;
 
-#if defined(XALAN_NO_STD_NAMESPACE)
-		typedef	deque<value_type>		NamespaceCollectionType;
-#else
-		typedef	std::deque<value_type>	NamespaceCollectionType;
-#endif
+        typedef	XalanDeque<value_type>	NamespaceCollectionType;
 
 		typedef const XalanDOMString& (value_type::*MemberFunctionType)() const;
 
@@ -220,21 +213,8 @@ public:
 
 	typedef XalanNamespacesStackEntry	value_type;
 
-#if defined(XALAN_NO_STD_NAMESPACE)
-	typedef	deque<value_type>		NamespacesStackType;
-#if defined(XALAN_USE_DEQUE_FOR_VECTOR_BOOL)
-	typedef deque<bool>				BoolVectorType;
-#else
+    typedef	XalanDeque<value_type>		NamespacesStackType;
 	typedef XalanVector<bool>			BoolVectorType;
-#endif
-#else
-	typedef	std::deque<value_type>	NamespacesStackType;
-#if defined(XALAN_USE_DEQUE_FOR_VECTOR_BOOL)
-	typedef std::deque<bool>		BoolVectorType;
-#else
-	typedef XalanVector<bool>		BoolVectorType;
-#endif
-#endif
 
 	typedef NamespacesStackType::iterator					iterator;
 	typedef NamespacesStackType::reverse_iterator			reverse_iterator;

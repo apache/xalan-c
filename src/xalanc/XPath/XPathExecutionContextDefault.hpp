@@ -23,11 +23,8 @@
 
 
 
-#include <deque>
-
-
-
 #include <xalanc/Include/XalanObjectCache.hpp>
+#include <xalanc/Include/XalanVector.hpp>
 
 
 
@@ -69,13 +66,8 @@ class XALAN_XPATH_EXPORT XPathExecutionContextDefault : public XPathExecutionCon
 {
 public:
 
-#if defined(XALAN_NO_STD_NAMESPACE)
-	typedef deque<XalanNode*>				CurrentNodeStackType;
-	typedef deque<const NodeRefListBase*>	ContextNodeListStackType;
-#else
-	typedef std::deque<XalanNode*>				CurrentNodeStackType;
-	typedef std::deque<const NodeRefListBase*>	ContextNodeListStackType;
-#endif
+	typedef XalanVector<XalanNode*>				CurrentNodeStackType;
+	typedef XalanVector<const NodeRefListBase*>	ContextNodeListStackType;
 
 	/**
 	 * Construct an XPathExecutionContextDefault object

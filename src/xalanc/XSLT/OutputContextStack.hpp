@@ -23,7 +23,7 @@
 
 
 
-#include <deque>
+#include <xalanc/Include/XalanDeque.hpp>
 
 
 
@@ -88,11 +88,7 @@ public:
 		bool				m_mustFlushPendingStartDocument;
 	};
 
-#if defined(XALAN_NO_STD_NAMESPACE)
-	typedef deque<OutputContext>			OutputContextStackType;
-#else
-	typedef std::deque<OutputContext>		OutputContextStackType;
-#endif
+	typedef XalanDeque<OutputContext>			OutputContextStackType;
 
 	typedef OutputContextStackType::size_type	size_type;
 

@@ -22,11 +22,8 @@
 
 
 
-#include <deque>
-
-
-
 #include <xalanc/Include/XalanVector.hpp>
+#include <xalanc/Include/XalanDeque.hpp>
 
 
 
@@ -331,15 +328,10 @@ public:
 	void
 	buildBridgeNodes();
 
-#if defined(XALAN_NO_STD_NAMESPACE)
-	typedef deque<XercesBridgeNavigator>	NavigatorBridgeVectorType;
 
-	typedef deque<XalanNode*>				NodeVectorType;
-#else
-	typedef std::deque<XercesBridgeNavigator>	NavigatorBridgeVectorType;
+	typedef XalanDeque<XercesBridgeNavigator>	NavigatorBridgeVectorType;
+	typedef XalanDeque<XalanNode*>				NodeVectorType;
 
-	typedef std::deque<XalanNode*>				NodeVectorType;
-#endif
 
 	// Helper class to walk the tree and build everything...
 	class BuildBridgeTreeWalker : public XercesTreeWalker

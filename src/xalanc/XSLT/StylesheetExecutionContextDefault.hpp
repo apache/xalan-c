@@ -24,7 +24,6 @@
 
 
 #include <ctime>
-#include <deque>
 #include <memory>
 
 
@@ -96,11 +95,11 @@ public:
 	typedef XalanVector<PrintWriter*>					PrintWriterVectorType;
 	typedef XalanVector<XalanOutputStream*>				OutputStreamVectorType;
 
-	typedef XALAN_STD_QUALIFIER deque<const ElemTemplateElement*>	ElementTemplateElementStackType;
+	typedef XalanVector<const ElemTemplateElement*>	ElementTemplateElementStackType;
 	typedef XalanSet<const KeyDeclaration*> KeyDeclarationSetType;
 	typedef XALAN_STD_QUALIFIER pair<const XPath*, ClockType>		XPathCacheEntry;
 	typedef XalanMap <XalanDOMString, XPathCacheEntry>				XPathCacheMapType;
-	typedef XALAN_STD_QUALIFIER deque<const ElemTemplate*>			CurrentTemplateStackType;
+	typedef XalanVector<const ElemTemplate*>			CurrentTemplateStackType;
 
 	typedef Stylesheet::KeyTablesTableType				KeyTablesTableType;
 	typedef VariablesStack::ParamsVectorType			ParamsVectorType;

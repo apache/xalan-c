@@ -23,11 +23,8 @@
 
 
 
-#include <deque>
-
-
-
 #include <xalanc/Include/XalanMap.hpp>
+#include <xalanc/Include/XalanDeque.hpp>
 #include <xalanc/Include/STLHelper.hpp>
 
 
@@ -71,13 +68,8 @@ class XALAN_XPATH_EXPORT XalanQName
 {
 public:
 
-#if defined(XALAN_NO_STD_NAMESPACE)
-	typedef	deque<NameSpace>					NamespaceVectorType;
-	typedef	deque<NamespaceVectorType>			NamespacesStackType;
-#else
-	typedef	std::deque<NameSpace>				NamespaceVectorType;
-	typedef	std::deque<NamespaceVectorType>		NamespacesStackType;
-#endif
+    typedef	XalanDeque<NameSpace>					NamespaceVectorType;
+	typedef XalanDeque<NamespaceVectorType>			NamespacesStackType;
 
 	/**
 	 * Construct an empty XalanQName.

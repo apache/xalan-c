@@ -199,6 +199,10 @@ SOURCE=..\..\..\..\src\xalanc\Include\XalanAutoPtr.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\xalanc\Include\XalanDeque.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\xalanc\Include\XalanList.hpp
 # End Source File
 # Begin Source File
