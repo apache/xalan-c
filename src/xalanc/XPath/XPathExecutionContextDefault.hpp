@@ -113,9 +113,11 @@ class XALAN_XPATH_EXPORT XPathExecutionContextDefault : public XPathExecutionCon
 public:
 
 #if defined(XALAN_NO_STD_NAMESPACE)
-	typedef deque<XalanNode*>			CurrentNodeStackType;
+	typedef deque<XalanNode*>				CurrentNodeStackType;
+	typedef deque<const NodeRefListBase*>	ContextNodeListStackType;
 #else
-	typedef std::deque<XalanNode*>		CurrentNodeStackType;
+	typedef std::deque<XalanNode*>				CurrentNodeStackType;
+	typedef std::deque<const NodeRefListBase*>	ContextNodeListStackType;
 #endif
 
 	/**
@@ -233,11 +235,14 @@ public:
 			const XalanNode&	node1,
 			const XalanNode&	node2) const;
 
-	virtual const NodeRefListBase&
-	getContextNodeList() const;
+	virtual void
+	pushContextNodeList(const NodeRefListBase&	theList);
 
 	virtual void	
-	setContextNodeList(const NodeRefListBase&	theList);
+	popContextNodeList();
+
+	virtual const NodeRefListBase&
+	getContextNodeList() const;
 
 	virtual size_type
 	getContextNodeListLength() const;
@@ -329,12 +334,6 @@ public:
 	virtual bool
 	shouldStripSourceNode(const XalanNode&	node);
 
-	virtual bool
-	getThrowFoundIndex() const;
-
-	virtual void
-	setThrowFoundIndex(bool 	fThrow);
-
 	virtual XalanDocument*
 	getSourceDocument(const XalanDOMString&		theURI) const;
 
@@ -419,11 +418,9 @@ protected:
 
 	CurrentNodeStackType					m_currentNodeStack;
 
-	const NodeRefListBase*					m_contextNodeList;
+	ContextNodeListStackType				m_contextNodeListStack;
 
 	const PrefixResolver*					m_prefixResolver;
-
-	bool									m_throwFoundIndex;
 
 	XalanDOMString							m_currentPattern;
 

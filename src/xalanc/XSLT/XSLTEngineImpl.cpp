@@ -757,13 +757,9 @@ XSLTEngineImpl::getStylesheetFromPIURL(
 
 		if(nl.getLength() == 0)
 		{
-			NodeRefList		theEmptyList;
-
 			ds = XALAN_STATIC_UCODE_STRING("//*[@id='");
 			ds += fragID;
 			ds += XALAN_STATIC_UCODE_STRING("']");
-
-			theExecutionContext.setContextNodeList(theEmptyList);
 
 			const XObjectPtr	xobj(evalXPathStr(ds, theExecutionContext));
 			assert(xobj.null() == false);
@@ -776,8 +772,6 @@ XSLTEngineImpl::getStylesheetFromPIURL(
 				ds += fragID;
 				ds += XALAN_STATIC_UCODE_STRING("']");
 
-				theExecutionContext.setContextNodeList(theEmptyList);
-
 				const XObjectPtr	xobj(evalXPathStr(ds, theExecutionContext));
 				assert(xobj.null() == false);
 
@@ -786,8 +780,6 @@ XSLTEngineImpl::getStylesheetFromPIURL(
 				if(nl.getLength() == 0)
 				{
 					// Well, hell, maybe it's an XPath...
-					theExecutionContext.setContextNodeList(theEmptyList);
-
 					const XObjectPtr	xobj(evalXPathStr(fragID, theExecutionContext));
 					assert(xobj.null() == false);
 

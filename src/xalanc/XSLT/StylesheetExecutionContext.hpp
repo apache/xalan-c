@@ -1802,11 +1802,14 @@ public:
 			const XalanNode&	node1,
 			const XalanNode&	node2) const = 0;
 
-	virtual const NodeRefListBase&
-	getContextNodeList() const = 0;
+	virtual void
+	pushContextNodeList(const NodeRefListBase&	theList) = 0;
 
 	virtual void	
-	setContextNodeList(const NodeRefListBase&	theList) = 0;
+	popContextNodeList() = 0;
+
+	virtual const NodeRefListBase&
+	getContextNodeList() const = 0;
 
 	virtual size_type
 	getContextNodeListLength() const = 0;
@@ -1928,12 +1931,6 @@ public:
 
 	virtual bool
 	shouldStripSourceNode(const XalanNode&	node) = 0;
-
-	virtual bool
-	getThrowFoundIndex() const = 0;
-
-	virtual void
-	setThrowFoundIndex(bool 	fThrow) = 0;
 
 	virtual XalanDocument*
 	getSourceDocument(const XalanDOMString&		theURI) const = 0;

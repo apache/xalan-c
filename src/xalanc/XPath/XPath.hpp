@@ -330,8 +330,8 @@ public:
 			const NodeRefListBase&	contextNodeList,
 			XPathExecutionContext&	executionContext) const
 	{
-		// Set and restore the context node list...
-		XPathExecutionContext::ContextNodeListSetAndRestore		theSetAndRestore(
+		// Push and pop the context node list...
+		XPathExecutionContext::ContextNodeListPushAndPop	thePushAndPop(
 										executionContext,
 										contextNodeList);
 
@@ -355,8 +355,8 @@ public:
 			XPathExecutionContext&	executionContext,
 			bool&					result) const
 	{
-		// Set and restore the context node list...
-		XPathExecutionContext::ContextNodeListSetAndRestore		theSetAndRestore(
+		// Push and pop the context node list...
+		XPathExecutionContext::ContextNodeListPushAndPop	thePushAndPop(
 										executionContext,
 										contextNodeList);
 
@@ -380,8 +380,8 @@ public:
 			XPathExecutionContext&	executionContext,
 			double&					result) const
 	{
-		// Set and restore the context node list...
-		XPathExecutionContext::ContextNodeListSetAndRestore		theSetAndRestore(
+		// Push and pop the context node list...
+		XPathExecutionContext::ContextNodeListPushAndPop	thePushAndPop(
 										executionContext,
 										contextNodeList);
 
@@ -406,8 +406,8 @@ public:
 			XPathExecutionContext&	executionContext,
 			XalanDOMString&			result) const
 	{
-		// Set and restore the context node list...
-		XPathExecutionContext::ContextNodeListSetAndRestore		theSetAndRestore(
+		// Push and pop the context node list...
+		XPathExecutionContext::ContextNodeListPushAndPop	thePushAndPop(
 										executionContext,
 										contextNodeList);
 
@@ -433,8 +433,8 @@ public:
 			FormatterListener&		formatterListener,
 			MemberFunctionPtr		function) const
 	{
-		// Set and restore the context node list...
-		XPathExecutionContext::ContextNodeListSetAndRestore		theSetAndRestore(
+		// Push and pop the context node list...
+		XPathExecutionContext::ContextNodeListPushAndPop	thePushAndPop(
 										executionContext,
 										contextNodeList);
 
@@ -469,8 +469,8 @@ public:
 			XPathExecutionContext&	executionContext,
 			MutableNodeRefList&		result) const
 	{
-		// Set and restore the context node list...
-		XPathExecutionContext::ContextNodeListSetAndRestore		theSetAndRestore(
+		// Push and pop the context node list...
+		XPathExecutionContext::ContextNodeListPushAndPop	thePushAndPop(
 										executionContext,
 										contextNodeList);
 

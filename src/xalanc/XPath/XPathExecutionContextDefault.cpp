@@ -79,7 +79,6 @@
 
 
 
-#include "FoundIndex.hpp"
 #include "XObjectFactory.hpp"
 #include "XalanQName.hpp"
 #include "XPathEnvSupport.hpp"
@@ -105,15 +104,16 @@ XPathExecutionContextDefault::XPathExecutionContextDefault(
 	m_xpathEnvSupport(&theXPathEnvSupport),
 	m_domSupport(&theDOMSupport),
 	m_currentNodeStack(),
-	m_contextNodeList(theContextNodeList == 0 ? &s_dummyList : theContextNodeList),
+	m_contextNodeListStack(),
 	m_prefixResolver(thePrefixResolver),
-	m_throwFoundIndex(false),
 	m_nodeListCache(eNodeListCacheListSize),
 	m_stringCache(),
 	m_cachedPosition(),
 	m_scratchQName()
 {
 	m_currentNodeStack.push_back(theCurrentNode);
+
+	m_contextNodeListStack.push_back(theContextNodeList == 0 ? &s_dummyList : theContextNodeList);
 }
 
 
@@ -126,15 +126,16 @@ XPathExecutionContextDefault::XPathExecutionContextDefault(
 	m_xpathEnvSupport(0),
 	m_domSupport(0),
 	m_currentNodeStack(),
-	m_contextNodeList(theContextNodeList == 0 ? &s_dummyList : theContextNodeList),
+	m_contextNodeListStack(),
 	m_prefixResolver(thePrefixResolver),
-	m_throwFoundIndex(false),
 	m_nodeListCache(eNodeListCacheListSize),
 	m_stringCache(),
 	m_cachedPosition(),
 	m_scratchQName()
 {
 	m_currentNodeStack.push_back(theCurrentNode);
+
+	m_contextNodeListStack.push_back(theContextNodeList == 0 ? &s_dummyList : theContextNodeList);
 }
 
 
@@ -166,10 +167,9 @@ XPathExecutionContextDefault::reset()
 	}
 
 	m_currentNodeStack.clear();
+	m_contextNodeListStack.clear();
 
-	m_contextNodeList = &s_dummyList;
 	m_prefixResolver = 0;
-	m_throwFoundIndex = false;
 
 	m_nodeListCache.reset(),
 
@@ -214,23 +214,32 @@ XPathExecutionContextDefault::isNodeAfter(
 
 
 
-const NodeRefListBase&
-XPathExecutionContextDefault::getContextNodeList() const
+void	
+XPathExecutionContextDefault::pushContextNodeList(const NodeRefListBase&	theList)
 {
-	return *m_contextNodeList;
+	m_cachedPosition.clear();
+
+	m_contextNodeListStack.push_back(&theList);
 }
 
 
 
 void	
-XPathExecutionContextDefault::setContextNodeList(const NodeRefListBase&		theList)
+XPathExecutionContextDefault::popContextNodeList()
 {
-	if (&theList != m_contextNodeList)
-	{
-		m_contextNodeList = &theList;
+	m_cachedPosition.clear();
 
-		m_cachedPosition.clear();
-	}
+	m_contextNodeListStack.pop_back();
+}
+
+
+
+const NodeRefListBase&
+XPathExecutionContextDefault::getContextNodeList() const
+{
+	assert(m_contextNodeListStack.empty() == false);
+
+	return *m_contextNodeListStack.back();
 }
 
 
@@ -238,16 +247,9 @@ XPathExecutionContextDefault::setContextNodeList(const NodeRefListBase&		theList
 XPathExecutionContextDefault::size_type
 XPathExecutionContextDefault::getContextNodeListLength() const
 {
-#if 1
-	assert(m_throwFoundIndex == false);
-#else
-	if (m_throwFoundIndex == true)
-	{
-		throw FoundIndex();
-	}
-#endif
+	assert(m_contextNodeListStack.empty() == false);
 
-	return m_contextNodeList->getLength();
+	return m_contextNodeListStack.back()->getLength();
 }
 
 
@@ -255,24 +257,17 @@ XPathExecutionContextDefault::getContextNodeListLength() const
 XPathExecutionContextDefault::size_type
 XPathExecutionContextDefault::getContextNodeListPosition(const XalanNode&	contextNode) const
 {
-#if 1
-	assert(m_throwFoundIndex == false);
-#else
-	if (m_throwFoundIndex == true)
-	{
-		throw FoundIndex();
-	}
-#endif
+	assert(m_contextNodeListStack.empty() == false);
 
 	if (m_cachedPosition.m_node == &contextNode)
 	{
-		assert((m_cachedPosition.m_index == 0 && m_contextNodeList->indexOf(&contextNode) == NodeRefListBase::npos) ||
-			   (m_contextNodeList->indexOf(&contextNode) + 1 == m_cachedPosition.m_index));
+		assert((m_cachedPosition.m_index == 0 && m_contextNodeListStack.back()->indexOf(&contextNode) == NodeRefListBase::npos) ||
+			   (m_contextNodeListStack.back()->indexOf(&contextNode) + 1 == m_cachedPosition.m_index));
 	}
 	else
 	{
 		// Get the index of the node...
-		const size_type		theIndex = m_contextNodeList->indexOf(&contextNode);
+		const size_type		theIndex = m_contextNodeListStack.back()->indexOf(&contextNode);
 
 		// If not found, it's 0.  Otherwise, it's the index + 1
 #if defined(XALAN_NO_MUTABLE)
@@ -682,22 +677,6 @@ XPathExecutionContextDefault::message(
 			const LocatorType* 	locator) const
 {
 	message(TranscodeFromLocalCodePage(msg), sourceNode, locator);
-}
-
-			
-			
-bool
-XPathExecutionContextDefault::getThrowFoundIndex() const
-{
-	return m_throwFoundIndex;
-}
-
-
-
-void
-XPathExecutionContextDefault::setThrowFoundIndex(bool 	fThrow)
-{
-	m_throwFoundIndex = fThrow;
 }
 
 

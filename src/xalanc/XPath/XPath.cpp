@@ -85,7 +85,6 @@
 
 
 #include "FormatterStringLengthCounter.hpp"
-#include "FoundIndex.hpp"
 #include "MutableNodeRefList.hpp"
 #include "XalanQNameByReference.hpp"
 #include "XObject.hpp"
@@ -2893,14 +2892,14 @@ XPath::step(
 		break;
 	}
 
-	// Push and pop the context node list...
-	XPathExecutionContext::ContextNodeListSetAndRestore		theSetAndRestore(
-									executionContext,
-									*subQueryResults);
-
 	opPos += argLen;
 
 	int		nextStepType = currentExpression.getOpCodeMapValue(opPos);
+
+	// Push and pop the context node list...
+		XPathExecutionContext::ContextNodeListPushAndPop	thePushAndPop(
+										executionContext,
+										*subQueryResults);
 
 	if(XPathExpression::eOP_PREDICATE == nextStepType ||
 	   XPathExpression::eOP_PREDICATE_WITH_POSITION == nextStepType)
@@ -2917,35 +2916,38 @@ XPath::step(
 	{
 		const NodeRefListBase::size_type	nContexts = subQueryResults->getLength();
 
-		for(NodeRefListBase::size_type i = 0; i < nContexts; i++)
+		if (nContexts > 0)
 		{
-			XalanNode* const	node = subQueryResults->item(i);
-			assert(node != 0);
-
-			BorrowReturnMutableNodeRefList	mnl(executionContext);
-
-			step(executionContext, node, opPos, *mnl);
-
-			if (mnl->empty() == false)
+			for(NodeRefListBase::size_type i = 0; i < nContexts; i++)
 			{
-				if(queryResults.empty() == false)
-				{
-					queryResults.addNodesInDocOrder(*mnl, executionContext);
+				XalanNode* const	node = subQueryResults->item(i);
+				assert(node != 0);
 
-					queryResults.setDocumentOrder();
-				}
-				else
-				{
-					assert(mnl->getDocumentOrder() == true);
+				BorrowReturnMutableNodeRefList	mnl(executionContext);
 
-					queryResults.swap(*mnl);
+				step(executionContext, node, opPos, *mnl);
+
+				if (mnl->empty() == false)
+				{
+					if(queryResults.empty() == false)
+					{
+						queryResults.addNodesInDocOrder(*mnl, executionContext);
+
+						queryResults.setDocumentOrder();
+					}
+					else
+					{
+						assert(mnl->getDocumentOrder() == true);
+
+						queryResults.swap(*mnl);
+					}
 				}
 			}
-		}
 
-		if (queryResults.empty() == true)
-		{
-			queryResults.setDocumentOrder();
+			if (queryResults.empty() == true)
+			{
+				queryResults.setDocumentOrder();
+			}
 		}
 	}
 	else
@@ -3247,68 +3249,48 @@ XPath::stepPattern(
 	{
 		score = eMatchScoreOther;
 
-		// Execute the xpath.predicates, but if we have an index, then we have 
-		// to start over and do a search from the parent.  It would be nice 
-		// if I could sense this condition earlier...
-#if 0
-		try
+		while(XPathExpression::eOP_PREDICATE == nextStepType ||
+			  XPathExpression::eOP_PREDICATE_WITH_POSITION == nextStepType)
 		{
-			executionContext.setThrowFoundIndex(true);
-#endif
-
-			while(XPathExpression::eOP_PREDICATE == nextStepType ||
-				  XPathExpression::eOP_PREDICATE_WITH_POSITION == nextStepType)
+			// This is a quick hack to look ahead and see if we have
+			// number literal as the predicate, i.e. match="foo[1]".
+			if (XPathExpression::eOP_PREDICATE_WITH_POSITION == nextStepType)
 			{
-				// This is a quick hack to look ahead and see if we have
-				// number literal as the predicate, i.e. match="foo[1]".
-				if (XPathExpression::eOP_PREDICATE_WITH_POSITION == nextStepType)
+				if (m_expression.getOpCodeMapValue(opPos + 2) == XPathExpression::eOP_NUMBERLIT)
 				{
-					if (m_expression.getOpCodeMapValue(opPos + 2) == XPathExpression::eOP_NUMBERLIT)
-					{
-						score = handleFoundIndexPositional(
+					score = handleFoundIndexPositional(
 							executionContext,
 							context,
 							startOpPos);
-					}
-					else
-					{
-						score = handleFoundIndex(
-							executionContext,
-							context,
-							startOpPos);
-					}
 				}
 				else
 				{
-					const XObjectPtr	pred(predicate(context, opPos, executionContext));
-					assert(pred.get() != 0);
-
-					if(XObject::eTypeNumber == pred->getType())
-					{
-						score = handleFoundIndex(executionContext, context, startOpPos);
-					}
-					else if(pred->boolean() == false)
-					{
-						score = eMatchScoreNone;
-
-						break;
-					}
+					score = handleFoundIndex(
+							executionContext,
+							context,
+							startOpPos);
 				}
+			}
+			else
+			{
+				const XObjectPtr	pred(predicate(context, opPos, executionContext));
+				assert(pred.get() != 0);
 
-				opPos = currentExpression.getNextOpCodePosition(opPos);
-				nextStepType = currentExpression.getOpCodeMapValue(opPos);
+				if(XObject::eTypeNumber == pred->getType())
+				{
+					score = handleFoundIndex(executionContext, context, startOpPos);
+				}
+				else if(pred->boolean() == false)
+				{
+					score = eMatchScoreNone;
+
+					break;
+				}
 			}
 
-#if 0
-			executionContext.setThrowFoundIndex(false);
+			opPos = currentExpression.getNextOpCodePosition(opPos);
+			nextStepType = currentExpression.getOpCodeMapValue(opPos);
 		}
-		catch(const FoundIndex&)
-		{
-			executionContext.setThrowFoundIndex(false);
-
-			score = handleFoundIndex(executionContext, context, startOpPos);
-		}
-#endif
 	}
 
 	if (scoreHolder == eMatchScoreNone || 
@@ -4690,6 +4672,8 @@ XPath::predicates(
 			int 					opPos,
 			MutableNodeRefList& 	subQueryResults) const
 {
+	assert(&executionContext.getContextNodeList() == &subQueryResults);
+
 	const XPathExpression&	currentExpression = getExpression();
 
 	assert(currentExpression.getOpCodeMapValue(opPos) == XPathExpression::eOP_PREDICATE ||
@@ -4789,11 +4773,6 @@ XPath::predicates(
 		else
 		{
 			theLength = subQueryResults.getLength();
-
-			if(theLength != 0)
-			{
-				executionContext.setContextNodeList(subQueryResults);
-			}
 		}
 	}
 

@@ -201,44 +201,48 @@ public:
 			const XalanNode&	node2) const = 0;
 
 	/**
-	 * Retrieve node list for current context.
-	 * 
-	 * @return node list
-	 */
-	virtual const NodeRefListBase&
-	getContextNodeList() const = 0;
-
-	/**
-	 * Set node list for current context.
+	 * Push the node list for current context.
 	 * 
 	 * @param theList new node list
 	 */
-	virtual void	
-	setContextNodeList(const NodeRefListBase&	theList) = 0;
+	virtual void
+	pushContextNodeList(const NodeRefListBase&	theList) = 0;
 
-	class ContextNodeListSetAndRestore
+	/**
+	 * Pop the node list for current context.
+	 */
+	virtual void	
+	popContextNodeList() = 0;
+
+	class ContextNodeListPushAndPop
 	{
 	public:
 
-		ContextNodeListSetAndRestore(
+		ContextNodeListPushAndPop(
 				XPathExecutionContext&		theExecutionContext,
 				const NodeRefListBase&		theNodeList) :
-			m_executionContext(theExecutionContext),
-			m_savedNodeList(theExecutionContext.getContextNodeList())
+			m_executionContext(theExecutionContext)
 		{
-			m_executionContext.setContextNodeList(theNodeList);
+			m_executionContext.pushContextNodeList(theNodeList);
 		}
 
-		~ContextNodeListSetAndRestore()
+		~ContextNodeListPushAndPop()
 		{
-			m_executionContext.setContextNodeList(m_savedNodeList);
+			m_executionContext.popContextNodeList();
 		}
 
 	private:
 
 		XPathExecutionContext&	m_executionContext;
-		const NodeRefListBase&	m_savedNodeList;
 	};
+
+	/**
+	 * Get the node list for current context.
+	 * 
+	 * @return node list
+	 */
+	virtual const NodeRefListBase&
+	getContextNodeList() const = 0;
 
 	/*
 	 * Get the count of nodes in the current context node list.
@@ -671,25 +675,11 @@ public:
 	shouldStripSourceNode(const XalanNode&	node) = 0;
 
 	/**
-	 * Tells if FoundIndex should be thrown if index is found. This is an
-	 * optimization for match patterns, and is used internally by the XPath
-	 * engine.
+	 * Get the document associated with the given URI.
 	 *
-	 * @return true to throw FoundIndex
+	 * @param theURI      document URI
+	 * @return a pointer to the document instance, if any.
 	 */
-	virtual bool
-	getThrowFoundIndex() const = 0;
-
-	/**
-	 * Changes whether FoundIndex should be thrown if index is found. This is an
-	 * optimization for match patterns, and is used internally by the XPath
-	 * engine.
-	 *
-	 * @param fThrow true to throw FoundIndex
-	 */
-	virtual void
-	setThrowFoundIndex(bool 	fThrow) = 0;
-
 	virtual XalanDocument*
 	getSourceDocument(const XalanDOMString&		theURI) const = 0;
 

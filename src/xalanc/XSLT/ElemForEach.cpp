@@ -468,7 +468,7 @@ ElemForEach::selectAndSortChildren(
 		else
 		{
 			typedef StylesheetExecutionContext::SetAndRestoreCurrentStackFrameIndex		SetAndRestoreCurrentStackFrameIndex;
-			typedef StylesheetExecutionContext::ContextNodeListSetAndRestore			ContextNodeListSetAndRestore;
+			typedef StylesheetExecutionContext::ContextNodeListPushAndPop				ContextNodeListPushAndPop;
 			typedef StylesheetExecutionContext::BorrowReturnMutableNodeRefList			BorrowReturnMutableNodeRefList;
 
 			BorrowReturnMutableNodeRefList	sortedSourceNodes(executionContext);
@@ -480,7 +480,7 @@ ElemForEach::selectAndSortChildren(
 						executionContext,
 						selectStackFrameIndex);
 
-				ContextNodeListSetAndRestore			theContextNodeListSetAndRestore(
+				ContextNodeListPushAndPop	theContextNodeListPushAndPop(
 						executionContext,
 						*sourceNodes);
 
@@ -514,7 +514,7 @@ ElemForEach::transformSelectedChildren(
 	}
 
 	// Create an object to set and restore the context node list...
-	const StylesheetExecutionContext::ContextNodeListSetAndRestore	theContextNodeListSetAndRestore(
+	const StylesheetExecutionContext::ContextNodeListPushAndPop		theContextNodeLisPushAndPop(
 				executionContext,
 				sourceNodes);
 

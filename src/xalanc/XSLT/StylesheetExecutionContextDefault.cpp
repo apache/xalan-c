@@ -1726,18 +1726,26 @@ StylesheetExecutionContextDefault::isNodeAfter(
 
 
 
-const NodeRefListBase&
-StylesheetExecutionContextDefault::getContextNodeList() const
+void
+StylesheetExecutionContextDefault::pushContextNodeList(const NodeRefListBase&	theContextNodeList)
 {
-	return m_xpathExecutionContextDefault.getContextNodeList();
+	m_xpathExecutionContextDefault.pushContextNodeList(theContextNodeList);
 }
 
 
 
 void
-StylesheetExecutionContextDefault::setContextNodeList(const NodeRefListBase&	theContextNodeList)
+StylesheetExecutionContextDefault::popContextNodeList()
 {
-	m_xpathExecutionContextDefault.setContextNodeList(theContextNodeList);
+	m_xpathExecutionContextDefault.popContextNodeList();
+}
+
+
+
+const NodeRefListBase&
+StylesheetExecutionContextDefault::getContextNodeList() const
+{
+	return m_xpathExecutionContextDefault.getContextNodeList();
 }
 
 
@@ -2012,22 +2020,6 @@ StylesheetExecutionContextDefault::shouldStripSourceNode(const XalanNode&	node)
 	{
 		return m_xsltProcessor->shouldStripSourceNode(*this, node);
 	}
-}
-
-
-
-bool
-StylesheetExecutionContextDefault::getThrowFoundIndex() const
-{
-	return m_xpathExecutionContextDefault.getThrowFoundIndex();
-}
-
-
-
-void
-StylesheetExecutionContextDefault::setThrowFoundIndex(bool 	fThrow)
-{
-	m_xpathExecutionContextDefault.setThrowFoundIndex(fThrow);
 }
 
 
