@@ -403,6 +403,10 @@ getArgs(
 			{
 				params.m_validate = true;
 			}
+			else
+			{
+				fSuccess = false;
+			}
 		}
 		else if (params.m_inFileName == 0 &&
 				 strlen(argv[i]) != 0)
