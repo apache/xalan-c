@@ -205,7 +205,7 @@ XalanDOMString::erase(
 	invariants();
 
 	const size_type		theActualCount =
-			theCount == size_type(npos) ? length() : theCount;
+			theCount == size_type(npos) ? length() - theStartPosition : theCount;
 
 	if (theStartPosition == 0 && theCount >= size())
 	{
