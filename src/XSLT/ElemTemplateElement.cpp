@@ -153,8 +153,8 @@ ElemTemplateElement::ElemTemplateElement(
 			int								xslToken) :
 	XalanElement(),
 	PrefixResolver(),
-	m_namespacesHandler(),
 	m_stylesheet(stylesheetTree),
+	m_namespacesHandler(),
 	m_lineNumber(lineNumber),
 	m_columnNumber(columnNumber),
 	m_xslToken(xslToken),
@@ -163,8 +163,8 @@ ElemTemplateElement::ElemTemplateElement(
 	m_previousSibling(0),
 	m_firstChild(0),
 	m_baseIndentifier(s_emptyString),
-	m_flags(eCanGenerateAttributes),
-	m_locatorProxy(*this)
+	m_locatorProxy(*this),
+	m_flags(eCanGenerateAttributes)
 {
 }
 
