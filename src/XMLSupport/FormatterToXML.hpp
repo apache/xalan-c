@@ -586,9 +586,9 @@ protected:
 	const XalanDOMString	m_doctypePublic;
 
 	/**
-	 * The character encoding.  Not currently used.
+	 * The character encoding.
 	 */
-	const XalanDOMString	m_encoding;
+	XalanDOMString	m_encoding;
 
 	/**
 	 * Flag to keep track of the indent amount.
@@ -792,7 +792,7 @@ private:
 	/**
 	 * The string "UTF-8".
 	 */
-	static const XalanDOMCharVectorType&	s_utf8EncodingString;
+	static const XalanDOMString&	s_utf8EncodingString;
 
 
 	DOMCharBufferType				m_charBuf;

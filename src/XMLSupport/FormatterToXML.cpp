@@ -151,7 +151,17 @@ FormatterToXML::FormatterToXML(
 
 		if (theStream != 0)
 		{
-			theStream->setOutputEncoding(m_encoding);
+			try
+			{
+				theStream->setOutputEncoding(m_encoding);
+			}
+			catch(const XalanOutputStream::UnsupportedEncodingException&)
+			{
+				// Default to UTF-8 if the requested encoding is not supported...
+				theStream->setOutputEncoding(s_utf8EncodingString);
+
+				m_encoding = s_utf8EncodingString;
+			}
 		}
 	}
 
@@ -1566,7 +1576,7 @@ static XalanDOMCharVectorType	s_usASCIIEncodingString;
 
 static XalanDOMCharVectorType	s_asciiEncodingString;
 
-static XalanDOMCharVectorType	s_utf8EncodingString ;
+static XalanDOMString			s_utf8EncodingString;
 
 
 
@@ -1598,7 +1608,7 @@ const XalanDOMCharVectorType&	FormatterToXML::s_usASCIIEncodingString = ::s_usAS
 
 const XalanDOMCharVectorType&	FormatterToXML::s_asciiEncodingString = ::s_asciiEncodingString;
 
-const XalanDOMCharVectorType&	FormatterToXML::s_utf8EncodingString = ::s_utf8EncodingString;
+const XalanDOMString&			FormatterToXML::s_utf8EncodingString = ::s_utf8EncodingString;
 
 bool							FormatterToXML::s_javaEncodingIsISO = false; 
 
@@ -1651,8 +1661,7 @@ FormatterToXML::initialize()
 	::s_asciiEncodingString =
 		MakeXalanDOMCharVector(c_wstr(XALAN_STATIC_UCODE_STRING("ASCII")));
 
-	::s_utf8EncodingString =
-		MakeXalanDOMCharVector(c_wstr(XALAN_STATIC_UCODE_STRING("UTF-8")));
+	::s_utf8EncodingString = XALAN_STATIC_UCODE_STRING("UTF-8");
 }
 
 
@@ -1688,5 +1697,5 @@ FormatterToXML::terminate()
 
 	XalanDOMCharVectorType().swap(::s_asciiEncodingString);
 
-	XalanDOMCharVectorType().swap(::s_utf8EncodingString);
+	clear(::s_utf8EncodingString);
 }
