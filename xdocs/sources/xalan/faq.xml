@@ -14,6 +14,21 @@
     <p>For a brief listing of tutorials, discussion forums, and other materials, see <link idref="overview"
      anchor="uptospeed">Getting up to speed with XSLT</link>.</p></a>
   </faq>
+  
+<faq title="Questions"><q>Where can I ask question?</q>
+
+<a><p>For generic questions about XSL stylesheets and transformations, use the XSL-list hosted by Mulberry Technologies. There is an archive that can be searched as well. Specific questions about &xslt4c; can be asked on the Xalan-dev list. Please review this document and the archives before posting new questions.</p>
+
+<p>For specific questions on &xslt4c;:  <jump href="http://xml-archive.webweaving.org/xml-archive-xalan">http://xml-archive.webweaving.org/xml-archive-xalan</jump>.</p>
+<p>For general questions on XSLT: <jump href="http://www.biglist.com/lists/xsl-list/">http://www.biglist.com/lists/xsl-list/</jump>.</p></a>
+</faq>
+
+<faq title="What is &xml4c;?">
+<q>What is &xml4c; and why do I need it?</q>
+
+<a><p>&xml4c; is a validating XML parser written in a portable subset of C++. &xml4c; makes it easy to give your application the ability to read and write XML data. Like &xslt4c;, &xml4c; is available from the Apache XML site:  http://xml.apache.org/xerces-c/index.html</p></a>
+</faq>
+  
 
   <faq title="Which version of Xerces should I be using?">  
     <q>Which version of Xerces should I be using?</q>
@@ -21,6 +36,79 @@
     <a><p>The &xslt4c; release notes includes information about the &xml4c; release with which the &xslt4c; release has been coordinated and tested. See <link idref="readme" anchor="status">Status</link></p></a>
   </faq>
   
+<faq title="Problems with samples in Windows">
+<q>I have encountered problem executing the &xslt4c; sample applications after rebuilding them under Win32 Environment (Windows NT 4.0, SP3). When I tried to execute the sample program, I receive the error message "Debug Assertion Failed! ...  Expression: _BLOCK_TYPE_IS_VALID(pHead->nBlockUse)"</q>
+
+<a><p>You may be mixing debug and release versions of executables and libraries. In other words, if you are compiling the sample for debug, then you should link with the debug version of the &xslt4c; and &xml4c; libraries and run with the debug version of the dynamic link libraries.</p></a>
+</faq>
+
+<faq title="Building on Windows">
+<q>What do I need to rebuild &xslt4c; on Windows?</q>
+
+<a><p>To build &xslt4c; on Windows, you need &xml4c; and MS Visual C++ 6.0 installed with Service Pack 3 for Visual C++ and Visual Studio. You should also apply the bug fixes for the C++ standard library that shipped with Visual C++ 6.0. These fixes are  available from the Dinkumware site:<jump href="http://www.dinkumware.com/vc_fixes.html">http://www.dinkumware.com/vc_fixes.html</jump>.</p>
+<p>For more details, see <link idref="readme" anchor="win32">Steps for doing a Windows build</link>.</p></a>
+</faq>
+
+<faq title="Building on UNIX">
+<q>What do I need to rebuild &xslt4c; on UNIX?</q>
+
+<a><p>To build &xslt4c; on supported UNIX platforms, you need &xml4c; and a supported C++ compilers (see the table below). If your compiler does not support the STL or its implementation is old, you must install the STLPort.</p>
+<p>For more details see: http://xml.apache.org/xalan-c/readme.html#unix</p>
+     <table>
+       <tr>
+         <th>Platform - Operating System</th>
+         <th>Compilers</th>
+         <th>STLPort Required</th>
+       </tr>
+       <tr>
+         <td>AIX 4.3</td>
+         <td>IBM C and C++ for AIX 3.6.6</td>
+         <td>Yes</td>
+      </tr>
+       <tr>
+         <td>Solaris 2.6</td>
+         <td>Workshop 4.2</td>
+         <td>Yes</td>
+      </tr>
+       <tr>
+         <td>HP/UX 11.0</td>
+         <td>aCC A.03.27</td>
+         <td>No</td>
+      </tr>
+       <tr>
+         <td>Red Hat Linux 6.1</td>
+         <td>glib-2.1.2-11</td>
+         <td>No</td>
+      </tr>
+    </table>
+ <p>For more details see: <link idref="readme" anchor="unix">Steps for doing a UNIX build</link>.</p>
+</a></faq>
+
+<faq title="STLPort">
+<q>What is STLPort and why do I need it?</q>
+
+<a><p>The Standard Template Library, or STL, is a C++ library of container classes, algorithms, and iterators; it provides many of the basic computer science algorithms and data structures. &xslt4c; implementation uses the SLT. STLport ports SGI STL to any platform possible and provides all necessary wrap-upsinstalled. If your compiler does not support the STL or its implementation is out of date, you will need to install the STLPort.</p> 
+
+<p>The STLPort is available for download from the site: <jump href="http://www.stlport.org/">http://www.stlport.org/</jump>.</p>
+
+<p>For more details on the STL, see: <jump href="http://www.sgi.com/Technology/STL/stl_introduction.html">http://www.sgi.com/Technology/STL/stl_introduction.html</jump>.</p></a>
+</faq>
+
+<faq title="ICU">
+<q>What is ICU and why do I need it?</q>
+
+<a><p>The International Components for Unicode(ICU) is a C and C++ library that provides robust and full-featured Unicode support on a wide variety of platforms. &xslt4c; uses the ICU to extend support for encoding, number formatting, and sorting.</p> 
+<p>The ICU is available for download from <jump href="http://oss.software.ibm.com/developerworks/opensource/icu/project/index.html">http://oss.software.ibm.com/developerworks/opensource/icu/project/index.html</jump>.</p>
+<p>For more details see: <link idref="usagepatterns" anchor="icu">Using the International Components for Unicode (ICU)</link>.</p></a>
+</faq>
+
+<faq title="&xslt4c; in Apache">
+<q>Is it possible to run &xslt4c; from an Apache server?</q>
+
+<a><p>A simple Apache module called <link idref="samples" anchor="apachemodulexslt">ApacheModuleXSLT</link> is provides as a sample. It demonstrates how to integrate &xslt4c; with Apache.</p></a>
+</faq>
+
+    
   <faq title="Are the XSLTEngineImpl (XSLT processor) and StylesheetRoot (compiled stylesheet) objects thread-safe?">
   
     <q>Are the XSLTEngineImpl (XSLT processor) and StylesheetRoot (compiled stylesheet) objects thread-safe?</q>
@@ -71,4 +159,10 @@
       <p>You can use the xsl:stylesheet doctype defined in xsl-html40s.dtd for stylesheets that generate HTML.</p>
 		</a>
 	</faq>
+    
+<faq title="Patches">
+<q>Who do I submit patches to?</q>
+<a><p>Your contributions are much appreciated! Please e-mail your patches to <human-resource-ref idref="xalandev"/>.</p></a>
+</faq>
+    
 </faqs>

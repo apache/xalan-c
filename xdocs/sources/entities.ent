@@ -3,10 +3,11 @@
 <!ENTITY xslt4c "Xalan-C++">
 <!ENTITY xslt4c-dist "Xalan-C_1_2">
 <!ENTITY xslt4c-current "Xalan-C++ version 1.2">
-<!ENTITY xslt4c-windlls "DOMSupport.dll, PlatformSupport.dll, XalanDOM.dll, XercesParserLiaison.dll, XMLSupport.dll, XPath.dll, XSLT.dll">
+<!ENTITY xslt4c-windlls "DOMSupport.dll, PlatformSupport.dll, XalanDOM.dll, XercesParserLiaison.dll, XMLSupport.dll, XPath.dll, XSLT.dll, XalanTransformer.dll">
 <!ENTITY xslt4c-linuxlib "libxalan-c1_2.so">
 <!ENTITY xslt4c-aixlib "libxalan-c1_2.a">
 <!ENTITY xslt4c-hplib "libxalan-c1_2.sl">
+<!ENTITY xslt4c-solarislib "libxalan-c1_2.xxxx">
 <!ENTITY xml4c "Xerces-C++">
 <!ENTITY xml4c-used "Xerces-C++ version 1.4.0">
 <!ENTITY xml4c-windll "xerces-c_1_4.dll">
@@ -14,6 +15,7 @@
 <!ENTITY xml4c-linuxlib "libxerces-c1_4.so">
 <!ENTITY xml4c-aixlib "libxerces-c1_4.a">
 <!ENTITY xml4c-hplib "libxerces-c1_4.sl">
+<!ENTITY xml4c-solarislib "libxerces-c1_4.xxxx">
 <!ENTITY xslt4j "Xalan-Java">
 <!ENTITY icu-used "International Components for Unicode(ICU) 1.6 source files">
 <!ENTITY icu-windlls "icui18n.dll, icuuc.dll">

@@ -59,6 +59,7 @@
 <s1 title="&xslt4c; Basic usage patterns">
 <ul>
 <li><link anchor="intro">Introduction</link></li>
+<li><link anchor="xalantransformer">Using the XalanTransformer class</link></li>
 <li><link anchor="basic">Basic procedure for performing XSL transformations</link></li>
 <li><link anchor="dom">Working with DOM input and output</link></li>
 <li><link anchor="params">Setting stylesheet parameters</link></li>
@@ -75,6 +76,30 @@
 <p>&xslt4c; uses &xml4c; to parse text input, performs the transformation, and sends the output to an instance of <jump href="apidocs/class_xsltresulttarget.html">XSLTResultTarget</jump>, which may be configured to write to a file, a stream, or a DOM tree.</p>
 <p>For detailed API documentation, see <jump href="apidocs/index.html">&xslt4c; API</jump>. For an overview of the
 command-line utility, see <link idref="commandline">Command-Line Utility</link>.</p>
+</s2><anchor name="xalantransformer"/>
+<s2 title="Using the XalanTransformer class">
+<p>&xslt4c; 1.2 introduces a new class designed to take care of configuration and setup under the covers and provide a simpler API for performing standard transformations. Using XalanTransformer, you can perform one or more transformations as follows:</p>
+<ol>
+  <li>Include the XalanTransformer header file.<br/>
+  <code>#include &lt;XalanTransformer/XalanTransformer.hpp</code><br/><br/></li>
+  <li>Initialize Xalan and Xerces.<br/>
+  <code>XalanTransformer::initialize();</code><br/><br/></li>
+  <li>Create a XalanTransformer.<br/>
+  <code>XalanTransformer theXalanTransformer;</code><br/><br/></li>
+  <li>Use one of the XalanTransformer transform() methods to perform each transformation. For example:<br/>
+  <code>const char* xmlIn = "foo.xml";</code><br/>
+  <code>const char* xslSheet = "foo.xsl";</code><br/>
+  <code>const char* xmlOut = "foo.out";</code><br/>
+  <code>int theResult = 0;</code><br/>
+  <code>theResult = theXalanTransformer(xmlIn,xslSheet,xmlOut);</code><br/><br/></li>
+  <li>Shut down Xalan and Xerces.<br/>
+  <code>XalanTransformer::terminate();</code></li>
+</ol>
+<p>The XalanTransformer transform() methods also allow you to process and output streams, and to send the output to a callback 
+function. Each transform() method returns an integer code, 0 for success. For the details, see XalanTransormer/XalanTransformer.hpp in the source tree. For an example, see the <link idref="samples" anchor="xalantransform">XalanTransform</link> sample.</p>
+<p>We also include a simple C interface for using the XalanTransformer class. See XalanTransformer/XalanCAPI.h in the source tree. 
+The <link idref="samples" anchor="apachemodulexslt">ApacheModuleXSLT</link> sample illustrates the use of this C API.</p>
+<note>As we expand the functionality of the XalanTransformer, we will revise the sections below to indicate how to take advantage of the API it provides.</note>
 </s2><anchor name="basic"/>
 <s2 title="Basic procedure for performing an XSL transformation">
 <p>When you are setting up your application to use XSL stylesheets to transform XML documents, you must do the following:</p>
