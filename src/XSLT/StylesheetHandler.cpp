@@ -821,12 +821,19 @@ StylesheetHandler::startElement (const XMLCh* const name, AttributeList& atts)
 				break;
 
 			default:
-			  // If this stylesheet is declared to be of a higher version than the one
-				  // supported, don't flag an error.
-				if(XSLTEngineImpl::getXSLTVerSupported() < m_stylesheet.getXSLTVerDeclared())
 				{
 					XalanDOMString msg("Unknown XSL element: " + localName);
-					throw SAXException(toCharArray(msg));
+
+					// If this stylesheet is declared to be of a higher version than the one
+					// supported, don't flag an error.
+					if(XSLTEngineImpl::getXSLTVerSupported() < m_stylesheet.getXSLTVerDeclared())
+					{
+						m_constructionContext.warn(msg);
+					}
+					else
+					{
+						throw SAXException(toCharArray(msg));
+					}
 				}
 			}
 		  }
