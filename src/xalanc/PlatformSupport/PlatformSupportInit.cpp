@@ -18,6 +18,7 @@
 
 
 
+#include "DoubleSupport.hpp"
 #include "XalanMessageLoader.hpp"
 #include "XalanTranscodingServices.hpp"
 
@@ -59,6 +60,8 @@ PlatformSupportInit::~PlatformSupportInit()
 void
 PlatformSupportInit::initialize()
 {
+    DoubleSupport::initialize();
+
 	XalanMessageLoader::createLoader();
 
 	XalanTranscodingServices::initialize();
@@ -72,6 +75,8 @@ PlatformSupportInit::terminate()
 	XalanTranscodingServices::terminate();
 
 	XalanMessageLoader::destroyLoader();
+
+    DoubleSupport::terminate();
 }
 
 
