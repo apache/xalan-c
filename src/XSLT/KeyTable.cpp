@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -203,6 +203,36 @@ KeyTable::KeyTable(
 
 		pos = nextNode;
     } // while(0 != pos)
+
+	if (m_keys.empty() == false)
+	{
+		const KeysMapType::iterator		theEnd = m_keys.end();
+		KeysMapType::iterator			theCurrent = m_keys.begin();
+		assert(theCurrent != theEnd);
+
+		do
+		{
+			NodeListMapType&	theCurrentNodeListMap = (*theCurrent).second;
+
+			if (theCurrentNodeListMap.empty() == false)
+			{
+				const NodeListMapType::iterator		theEnd = theCurrentNodeListMap.end();
+				NodeListMapType::iterator			theCurrent = theCurrentNodeListMap.begin();
+				assert(theCurrent != theEnd);
+
+				do
+				{
+					(*theCurrent).second.setDocumentOrder();
+
+					++theCurrent;
+				}
+				while(theCurrent != theEnd);
+			}
+
+			++theCurrent;
+		}
+		while(theCurrent != theEnd);
+	}	
 } // end constructor
 
 
@@ -213,7 +243,7 @@ KeyTable::~KeyTable()
 
 
 
-const NodeRefListBase&
+const MutableNodeRefList&
 KeyTable::getNodeSetByKey(
 					  const XalanQName&			qname, 
 					  const XalanDOMString&		ref) const
@@ -241,14 +271,12 @@ KeyTable::getNodeSetByKey(
 
 
 inline void
-KeyTable::addIfNotFound(
-			MutableNodeRefList&		theNodeList,
-			XalanNode*				theNode)
+addIfNotFound(
+			StylesheetExecutionContext&		executionContext,
+			MutableNodeRefList&				theNodeList,
+			XalanNode*						theNode)
 {
-	if (theNodeList.indexOf(theNode) == MutableNodeRefList::npos)
-	{
-		theNodeList.addNode(theNode);
-	}
+	theNodeList.addNodeInDocOrder(theNode, executionContext);
 }
 
 
@@ -270,6 +298,7 @@ KeyTable::processKeyDeclaration(
 	if(xuse->getType() != XObject::eTypeNodeSet)
 	{
 		addIfNotFound(
+			executionContext,
 			theKeys[kd.getQName()][xuse->str()],
 			testNode);
 	}
@@ -296,6 +325,7 @@ KeyTable::processKeyDeclaration(
 			DOMServices::getNodeData(*nl.item(i), nodeData);
 
 			addIfNotFound(
+				executionContext,
 				theKeys[kd.getQName()][nodeData],
 				testNode);
 
