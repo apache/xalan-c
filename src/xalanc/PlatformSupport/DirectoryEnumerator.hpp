@@ -331,6 +331,10 @@ EnumerateDirectory(
 		XalanDOMString		theSuffix;
 		if ( !target_Dir )
 		{
+#if defined(XALAN_STRICT_ANSI_HEADERS)
+            using std::strlen;
+#endif
+
 			int lenSpec = strlen(theSpec); 
 			theName = theFullSearchSpec.substr(lenSpec, indexName); 
 			theSuffix = theFullSearchSpec.substr(lenSpec+indexName+1, indexSuffix);
