@@ -170,12 +170,41 @@ public:
 	 * Set the value of the flag that controls whether result tree
 	 * fragments are created using a DOM factory, or a XalanSourceTreeDocument.
 	 *
-	 * @param The boolean value
+	 * @param theValue The boolean value
 	 */
 	void
 	setUseDOMResultTreeFactory(bool		theValue)
 	{
 		m_useDOMResultTreeFactory = theValue;
+	}
+
+	/**
+	 * Set the value of the flag that controls whether HTML output will
+	 * check for namespace declarations on HTML elements.
+	 *
+	 * Set this to true if you want the HTML output formatter to skip
+	 * checking for namespaces on elements.  This makes HTML output more
+	 * efficient, but can result in non-conforming behavior, since the XSLT
+	 * recommendation requires XML output for elements with namespaces.
+	 *
+	 * @param theValue The boolean value
+	 */
+	bool
+	setIgnoreHTMLElementNamespaces() const
+	{
+		return m_ignoreHTMLElementNamespaces;
+	}
+
+	/**
+	 * Set the value of the flag that controls whether HTML output will
+	 * check for namespace declarations on HTML elements.
+	 *
+	 * @return The value
+	 */
+	void
+	setIgnoreHTMLElementNamespaces(bool		theValue)
+	{
+		m_ignoreHTMLElementNamespaces = theValue;
 	}
 
 
@@ -904,6 +933,11 @@ private:
 	CountersTable						m_countersTable;
 
 	bool								m_useDOMResultTreeFactory;
+
+	// If true, we will not check HTML output for elements with
+	// namespaces.  This is an optimization which can lead to
+	// non-conforming behavior.
+	bool								m_ignoreHTMLElementNamespaces;
 
 	/**
 	 * The factory that will be used to create result tree fragments based on our

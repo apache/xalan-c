@@ -146,6 +146,7 @@ StylesheetExecutionContextDefault::StylesheetExecutionContextDefault(
 	m_keyDeclarationSet(),
 	m_countersTable(),
 	m_useDOMResultTreeFactory(false),
+	m_ignoreHTMLElementNamespaces(false),
 	m_sourceTreeResultTreeFactory()
 {
 }
@@ -1063,6 +1064,14 @@ StylesheetExecutionContextDefault::createFormatterToHTML(
 			version,
 			standalone,
 			xmlDecl);
+
+	// Check to see if the user has asked us to ignore
+	// namespaces in HTML output.
+	if (m_ignoreHTMLElementNamespaces == false)
+	{
+		// Nope, so give the formatter a prefix resolver...
+		theFormatter->setPrefixResolver(&m_xsltProcessor);
+	}
 
 	m_formatterListeners.insert(theFormatter);
 

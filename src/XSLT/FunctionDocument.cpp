@@ -68,11 +68,11 @@
 
 
 #include <DOMSupport/DOMServices.hpp>
+#include <DOMSupport/PrefixResolver.hpp>
 
 
 
 #include <XPath/XObjectFactory.hpp>
-#include <XPath/PrefixResolver.hpp>
 
 
 

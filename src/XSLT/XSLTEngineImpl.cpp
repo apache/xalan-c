@@ -152,6 +152,10 @@
 
 
 
+const XalanDOMString	XSLTEngineImpl::s_emptyString;
+
+
+
 //==========================================================
 // SECTION: Constructors
 //==========================================================
@@ -164,6 +168,7 @@ XSLTEngineImpl::XSLTEngineImpl(
 			XPathFactory&		xpathFactory) :
 	XSLTProcessor(),
 	DocumentHandler(),
+	PrefixResolver(),
 	m_outputCarriageReturns(false),
 	m_outputLinefeeds(false),
 	m_useDOMResultTreeFactory(false),
@@ -585,6 +590,22 @@ XSLTEngineImpl::getSourceTreeFromInput(const XSLTInputSource&	inputSource)
 	}
 
 	return sourceTree;
+}
+
+
+
+const XalanDOMString&
+XSLTEngineImpl::getNamespaceForPrefix(const XalanDOMString&		prefix) const
+{
+	return m_resultNamespacesStack.getNamespaceForPrefix(prefix);
+}
+
+
+
+const XalanDOMString&
+XSLTEngineImpl::getURI() const
+{
+	return s_emptyString;
 }
 
 

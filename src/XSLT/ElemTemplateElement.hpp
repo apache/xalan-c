@@ -80,7 +80,7 @@
 
 
 
-#include <XPath/PrefixResolver.hpp>
+#include <DOMSupport/PrefixResolver.hpp>
 
 
 

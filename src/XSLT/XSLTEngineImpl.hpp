@@ -101,6 +101,10 @@
 
 
 
+#include <DOMSupport/PrefixResolver.hpp>
+
+
+
 #include <XPath/Function.hpp>
 #include <XPath/NameSpace.hpp>
 
@@ -149,7 +153,7 @@ class XSLTResultTarget;
  *
  */
 
-class XALAN_XSLT_EXPORT XSLTEngineImpl : public XSLTProcessor, private DocumentHandler
+class XALAN_XSLT_EXPORT XSLTEngineImpl : public XSLTProcessor, private DocumentHandler, public PrefixResolver
 {
 public:
 
@@ -201,7 +205,8 @@ public:
 			XObjectFactory& 	xobjectFactory,
 			XPathFactory&		xpathFactory);
 
-	virtual ~XSLTEngineImpl();
+	virtual
+	~XSLTEngineImpl();
 
 	/**
 	 * Perform initialization of statics -- must be called before any
@@ -332,6 +337,27 @@ public:
 	virtual void
 	setDiagnosticsOutput(PrintWriter*	pw);
 
+
+	// Inherited from PrefixResolver...
+
+	/**
+	 * Retrieve a namespace corresponding to a prefix.  This assumes that 
+	 * the PrevixResolver hold's its own namespace context, or is a namespace
+	 * context itself.
+	 *
+	 * @param prefix Prefix to resolve
+	 * @return namespace that prefix resolves to, or null if prefix is not found
+	 */
+	virtual const XalanDOMString&
+	getNamespaceForPrefix(const XalanDOMString&		prefix) const;
+
+	/**
+	 * Retrieve the base URI for the resolver.
+	 * 
+	 * @return URI string
+	 */
+	virtual const XalanDOMString&
+	getURI() const;
 
 	/**
 	 * Read in the XML file, either producing a Document or calling SAX events,
@@ -1679,6 +1705,8 @@ private:
 
 	static void
 	initializeXSLT4JElementKeys(ElementKeysMapType&		theElementKeys);
+
+	static const XalanDOMString		s_emptyString;
 };
 
 

@@ -79,7 +79,10 @@
 #include <XalanDOM/XalanNodeListSurrogate.hpp>
 
 
-#include <XPath/PrefixResolver.hpp>
+#include <DOMSupport/PrefixResolver.hpp>
+
+
+
 #include <XPath/NameSpace.hpp>
 #include <XPath/QNameByReference.hpp>
 
