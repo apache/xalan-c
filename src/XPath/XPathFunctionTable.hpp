@@ -315,6 +315,7 @@ public:
 				theVector.push_back(theString);
 			}
 		}
+	}
 #else
 
 	/**
