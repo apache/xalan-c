@@ -57,38 +57,52 @@
 #include <cstdio>
 #include <cstring>
 #include <iostream>
-#include <util/StdOut.hpp>
+
+
 
 #include <dom/DOM_Node.hpp>
 #include <dom/DOM_Element.hpp>
 #include <dom/DOM_NodeList.hpp>
-
-#include <PlatformSupport/DOMStringHelper.hpp>
-#include <PlatformSupport/NullPrintWriter.hpp>
-#include <DOMSupport/DOMSupportDefault.hpp>
-#include <XPath/XObjectFactoryDefault.hpp>
-#include <XPath/XPathEnvSupportDefault.hpp>
-#include <XPath/XPathSupportDefault.hpp>
-#include <XPath/XPath.hpp>
-#include <XPath/XPathProcessorImpl.hpp>
-#include <XPath/XPathFactoryDefault.hpp>
-
-#include <Xslt/XSLTEngineImpl.hpp>
-#include <Xslt/StylesheetRoot.hpp>
-
-#include <XercesPlatformSupport/XercesDOMPrintWriter.hpp>
-#include <XercesPlatformSupport/TextFileOutputStream.hpp>
-#include <XercesPlatformSupport/NullTextOutputStream.hpp>
-#include <XercesParserLiaison/XercesParserLiaison.hpp>
-
-#include <DOMSupport/DOMSupport.hpp>
-#include <XMLSupport/Formatter.hpp>
-
 #include <sax/SAXException.hpp>
 
 
 
-#include <Xslt/XSLTProcessorEnvSupportDefault.hpp>
+#include <PlatformSupport/DOMStringHelper.hpp>
+#include <PlatformSupport/DOMStringPrintWriter.hpp>
+#include <PlatformSupport/NullPrintWriter.hpp>
+
+#include <DOMSupport/DOMSupportDefault.hpp>
+
+#include <XPath/XObjectFactoryDefault.hpp>
+#include <XPath/XPathEnvSupportDefault.hpp>
+#include <XPath/XPathSupportDefault.hpp>
+#include <XPath/XPath.hpp>
+#include <XPath/XPathExecutionContextDefault.hpp>
+#include <XPath/XPathFactoryDefault.hpp>
+#include <XPath/XPathProcessorImpl.hpp>
+
+#include <XercesPlatformSupport/XercesDOMPrintWriter.hpp>
+#include <XercesPlatformSupport/TextFileOutputStream.hpp>
+#include <XercesPlatformSupport/XercesStdTextOutputStream.hpp>
+#include <XercesPlatformSupport/NullTextOutputStream.hpp>
+
+#include <XercesParserLiaison/XercesParserLiaison.hpp>
+
+#include <XMLSupport/Formatter.hpp>
+#include <XMLSupport/FormatterToHTML.hpp>
+#include <XMLSupport/FormatterToText.hpp>
+#include <XMLSupport/FormatterToXML.hpp>
+
+
+#include <XSLT/XSLTEngineImpl.hpp>
+#include <XSLT/XSLTInputSource.hpp>
+#include <XSLT/XSLTResultTarget.hpp>
+#include <XSLT/StylesheetRoot.hpp>
+#include <XSLT/StylesheetConstructionContextDefault.hpp>
+#include <XSLT/StylesheetExecutionContextDefault.hpp>
+#include <XSLT/XSLTProcessorEnvSupportDefault.hpp>
+
+
 
 /**
  * Print argument options.
@@ -169,11 +183,11 @@ void xsltMain(int argc, const char* argv[] ) throw(XMLException)
 	/**
 	* The default diagnostic writer...
 	*/
-	XMLStdOut				theStdOut;
-	XMLStdErr				theStdErr;
-	NullTextOutputStream	theNullStream;
-	XercesDOMPrintWriter		diagnosticsWriter(theStdErr);
-	XercesDOMPrintWriter		dumpWriter(theStdErr);
+	XercesStdTextOutputStream				theStdOut(std::cout);
+	XercesStdTextOutputStream				theStdErr(std::cerr);
+	NullTextOutputStream					theNullStream;
+	XercesDOMPrintWriter					diagnosticsWriter(theStdErr);
+	XercesDOMPrintWriter					dumpWriter(theStdErr);
 
 	
 	if(argc < 2)
@@ -190,18 +204,36 @@ void xsltMain(int argc, const char* argv[] ) throw(XMLException)
 		XPathSupportDefault theXPathSupport(theDOMSupport);
 		XSLTProcessorEnvSupportDefault	theXSLProcessorSupport;
 		XObjectFactoryDefault theXObjectFactory(theXSLProcessorSupport, theXPathSupport);
-		XPathFactoryDefault theXPathFactory( theXObjectFactory, theXSLProcessorSupport,
-			theXPathSupport);
+		XPathFactoryDefault theXPathFactory;
 
 		XSLTEngineImpl processor(
 				xmlParserLiaison, theXPathSupport,
 				theXSLProcessorSupport,
-				&theXObjectFactory,
-				&theXPathFactory);
+				theXObjectFactory,
+				theXPathFactory);
 
 		theXSLProcessorSupport.setProcessor(&processor);
 
 		processor.setFormatter(&xmlParserLiaison);
+
+
+		// Use separate factory instances for the stylesheet.  This is really only necessary
+		// if you want to use the stylesheet with another processor, or you want to use
+		// it multiple times.
+		XObjectFactoryDefault	theStylesheetXObjectFactory(theXSLProcessorSupport, theXPathSupport);
+		XPathFactoryDefault		theStylesheetXPathFactory;
+
+		StylesheetConstructionContextDefault	theConstructionContext(processor,
+																	   theXSLProcessorSupport,
+																	   theStylesheetXObjectFactory,
+																	   theStylesheetXPathFactory);
+
+		XPathExecutionContextDefault			theXPathExecutionContext(theXSLProcessorSupport,
+																		 theXPathSupport,
+																		 theXObjectFactory);
+
+		StylesheetExecutionContextDefault		theExecutionContext(theXPathExecutionContext,
+																	processor);
 
 		bool formatOutput = false;
 		
@@ -340,7 +372,7 @@ void xsltMain(int argc, const char* argv[] ) throw(XMLException)
 			
 			if(0 != xslFileName.length())
 			{
-				stylesheet = processor.processStylesheet(xslFileName);
+				stylesheet = processor.processStylesheet(xslFileName, theConstructionContext);
 			}
 
 			if (length(outFileName) != 0)
@@ -425,9 +457,8 @@ void xsltMain(int argc, const char* argv[] ) throw(XMLException)
 				rTreeTarget->setFormatterListener(formatter);
 				xmlParserLiaison.setFormatterListener(formatter);
 			}
-			
 
-			stylesheet->process(sourceTree, rTreeTarget);
+			stylesheet->process(sourceTree, *rTreeTarget, theExecutionContext);
 
 			delete formatter;
 			delete rTreeTarget;
