@@ -2917,12 +2917,17 @@ XPath::step(
 	{
 		const NodeRefListBase::size_type	nContexts = subQueryResults->getLength();
 
-		for(NodeRefListBase::size_type i = 0; i < nContexts; i++)
+		if (nContexts == 0 && queryResults.empty() == true)
 		{
-			XalanNode* const	node = subQueryResults->item(i);
-
-			if(0 != node)
+			queryResults.setDocumentOrder();
+		}
+		else
+		{
+			for(NodeRefListBase::size_type i = 0; i < nContexts; i++)
 			{
+				XalanNode* const	node = subQueryResults->item(i);
+				assert(node != 0);
+
 				BorrowReturnMutableNodeRefList	mnl(executionContext);
 
 				step(executionContext, node, opPos, *mnl);
