@@ -81,7 +81,7 @@ typedef std::basic_string<XalanDOMChar>		XalanDOMString;
 #else
 
 #define XALAN_USE_CUSTOM_STRING
-
+//#define XALAN_DOMSTRING_CACHE_SIZE
 
 
 #include <cassert>
@@ -147,7 +147,13 @@ public:
 		if (&theRHS != this)
 		{
 			m_data = theRHS.m_data;
+
+#if defined(XALAN_DOMSTRING_CACHE_SIZE)
+			m_size = theRHS.m_size;
+#endif
 		}
+
+		invariants();
 
 		return *this;
 	}
@@ -163,48 +169,72 @@ public:
 		m_data[0] = theRHS;
 		m_data[1] = XalanDOMChar(0);
 
+#if defined(XALAN_DOMSTRING_CACHE_SIZE)
+		m_size = 1;
+#endif
+
+		invariants();
+
 		return *this;
 	}
 
 	iterator
 	begin()
 	{
+		invariants();
+
 		return m_data.begin();
 	}
 
 	const_iterator
 	begin() const
 	{
+		invariants();
+
 		return m_data.begin();
 	}
 
 	reverse_iterator
 	rbegin()
 	{
+		invariants();
+
 		return m_data.rbegin();
 	}
 
 	const_reverse_iterator
 	rbegin() const
 	{
+		invariants();
+
 		return m_data.rbegin();
 	}
 
 	size_type
 	size() const
 	{
+		invariants();
+
+#if defined(XALAN_DOMSTRING_CACHE_SIZE)
+		return m_size;
+#else
 		return m_data.empty() == true ? 0 : m_data.size() - 1;
+#endif
 	}
 
 	size_type
 	length() const
 	{
+		invariants();
+
 		return size();
 	}
 
 	size_type
 	max_size() const
 	{
+		invariants();
+
 		return size_type(~0);
 	}
 
@@ -213,39 +243,82 @@ public:
 			size_type		theCount,
 			XalanDOMChar	theChar)
 	{
-		m_data.resize(theCount + 1, theChar);
+		invariants();
 
+		const size_type		theOldSize = size();
+
+		if (theOldSize == 0)
+		{
+			// If the string is of 0 length, resize but add an
+			// extra byte for the terminating byte.
+			m_data.resize(theCount + 1, theChar);
+		}
+		else
+		{
+			// If the string is not of 0 length, resize but
+			// put a copy of theChar where the terminating
+			// byte used to be.
+			m_data.resize(theCount, theChar);
+
+			m_data[theOldSize] = theChar;
+		}
+
+#if defined(XALAN_DOMSTRING_CACHE_SIZE)
+		m_size += theCount;
+#endif
+
+		// Terminate...
 		m_data.back() = 0;
+
+		invariants();
 	}
 
 	void
 	resize(size_type	theCount)
 	{
+		invariants();
+
 		resize(theCount, XalanDOMChar(0));
 	}
 
 	size_type
 	capacity() const
 	{
+		invariants();
+
 		return m_data.capacity() - 1;
 	}
 
 	void
 	reserve(size_type	theCount = 0)
 	{
+		invariants();
+
 		m_data.reserve(theCount + 1);
 	}
 
 	void
 	clear()
 	{
+		invariants();
+
 		XalanDOMCharVectorType().swap(m_data);
+
+#if defined(XALAN_DOMSTRING_CACHE_SIZE)
+		m_size = 0;
+#endif
+
+		invariants();
 	}
 
 	void
 	erase()
 	{
-		m_data.clear();
+		invariants();
+
+		clear();
+
+		invariants();
 	}
 
 	void
@@ -253,26 +326,50 @@ public:
 			size_type	theStartPosition,
 			size_type	theCount = size_type(npos))
 	{
-		const iterator	i = getIteratorForPosition(theStartPosition);
+		invariants();
 
-		m_data.erase(i, i + (theCount == size_type(npos) ? length() : theCount));
+		const size_type		theActualCount =
+			theCount == size_type(npos) ? length() : theCount;
+
+		if (theStartPosition == 0 && theCount == size())
+		{
+			erase();
+		}
+		else
+		{
+			const iterator		i = getIteratorForPosition(theStartPosition);
+
+			m_data.erase(i, i + (theActualCount));
+
+#if defined(XALAN_DOMSTRING_CACHE_SIZE)
+			m_size -= theActualCount;
+#endif
+		}
+
+		invariants();
 	}
 
 	bool
 	empty() const
 	{
+		invariants();
+
 		return m_data.size() < 2 ? true : false;
 	}
 
 	const_reference
 	operator[](size_type	theIndex) const
 	{
+		invariants();
+
 		return m_data[theIndex];
 	}
 
 	reference
 	operator[](size_type	theIndex)
 	{
+		invariants();
+
 		return m_data[theIndex];
 	}
 
@@ -282,12 +379,16 @@ public:
 	const_reference
 	at(size_type	theIndex) const
 	{
+		invariants();
+
 		return m_data.at(theIndex);
 	}
 
 	reference
 	at(size_type	theIndex)
 	{
+		invariants();
+
 		return m_data.at(theIndex);
 	}
 #endif
@@ -295,6 +396,8 @@ public:
 	const XalanDOMChar*
 	c_str() const
 	{
+		invariants();
+
 		// $$$ ToDo: Do we really want to do this?
 		// for convenience, we will return a pointer to
 		// a default empty string so that c_str() never
@@ -305,30 +408,48 @@ public:
 	const XalanDOMChar*
 	data() const
 	{
+		invariants();
+
 		return c_str();
 	}
 
 	void
 	swap(XalanDOMString&	theOther)
 	{
+		invariants();
+
 		m_data.swap(theOther.m_data);
+
+#if defined(XALAN_DOMSTRING_CACHE_SIZE)
+#if !defined(XALAN_NO_NAMESPACES)
+		using std::swap;
+#endif
+
+		swap(m_size, theOther.m_size);
+#endif
 	}
 
 	XalanDOMString&
 	operator+=(const XalanDOMString&	theSource)
 	{
+		invariants();
+
 		return append(theSource);
 	}
 
 	XalanDOMString&
 	operator+=(const XalanDOMChar*	theString)
 	{
+		invariants();
+
 		return append(theString);
 	}
 
 	XalanDOMString&
 	operator+=(XalanDOMChar theChar)
 	{
+		invariants();
+
 		append(1, theChar);
 
 		return *this;
@@ -337,9 +458,15 @@ public:
 	XalanDOMString&
 	assign(const XalanDOMChar*	theSource)
 	{
+		invariants();
+
 		erase();
 
+		invariants();
+
 		return append(theSource);
+
+		invariants();
 	}
 
 	XalanDOMString&
@@ -347,7 +474,11 @@ public:
 			const XalanDOMChar*		theSource,
 			size_type				theCount)
 	{
+		invariants();
+
 		erase();
+
+		invariants();
 
 		return append(theSource, theCount);
 	}
@@ -358,7 +489,11 @@ public:
 			size_type				thePosition,
 			size_type				theCount)
 	{
+		invariants();
+
 		erase();
+
+		invariants();
 
 		return append(theSource, thePosition, theCount);
 	}
@@ -366,7 +501,11 @@ public:
 	XalanDOMString&
 	assign(const XalanDOMString&	theSource)
 	{
+		invariants();
+
 		m_data = theSource.m_data;
+
+		invariants();
 
 		return *this;
 	}
@@ -376,7 +515,11 @@ public:
 			size_type		theCount,
 			XalanDOMChar	theChar)
 	{
+		invariants();
+
 		erase();
+
+		invariants();
 
 		return append(theCount, theChar);
 	}
@@ -386,9 +529,15 @@ public:
 		const_iterator	theFirstPosition,
 		const_iterator	theLastPosition)
 	{
+		invariants();
+
 		erase();
 
+		invariants();
+
 		insert(begin(), theFirstPosition, theLastPosition);
+
+		invariants();
 
 		return *this;
 	}
@@ -396,6 +545,8 @@ public:
 	XalanDOMString&
 	append(const XalanDOMString&	theSource)
 	{
+		invariants();
+
 		return append(theSource.c_str(), theSource.length());
 	}
 
@@ -405,6 +556,8 @@ public:
 			size_type				thePosition,
 			size_type				theCount)
 	{
+		invariants();
+
 		return append(theSource.c_str() + thePosition, theCount);
 	}
 
@@ -418,6 +571,8 @@ public:
 	{
 		assert(theString != 0);
 
+		invariants();
+
 		return append(theString, length(theString));
 	}
 
@@ -429,7 +584,11 @@ public:
 	void
 	push_back(XalanDOMChar	theChar)
 	{
+		invariants();
+
 		append(1, theChar);
+
+		invariants();
 	}
 
 	XalanDOMString&
@@ -437,6 +596,8 @@ public:
 			size_type				thePosition,
 			const XalanDOMString&	theString)
 	{
+		invariants();
+
 		return insert(thePosition, theString.c_str(), theString.length());
 	}
 
@@ -447,6 +608,8 @@ public:
 			size_type				thePosition2,
 			size_type				theCount)
 	{
+		invariants();
+
 		return insert(thePosition1, theString.c_str() + thePosition2, theCount);
 	}
 
@@ -461,6 +624,8 @@ public:
 			size_type				thePosition,
 			const XalanDOMChar*		theString)
 	{
+		invariants();
+
 		return insert(thePosition, theString, length(theString));
 	}
 
@@ -495,12 +660,16 @@ public:
 		assert(theCount == size_type(npos) && thePosition < length() ||
 			   thePosition + theCount <= length());
 
+		invariants();
+
 		return XalanDOMString(*this, thePosition, theCount);
 	}
 
 	int
 	compare(const XalanDOMString&	theString) const
 	{
+		invariants();
+
 		return compare(theString.c_str());
 	}
 
@@ -510,6 +679,8 @@ public:
 			size_type				theCount1,
 			const XalanDOMString&	theString) const
 	{
+		invariants();
+
 		return compare(thePosition1, theCount1, theString.c_str(), theString.length());
 	}
 
@@ -521,6 +692,8 @@ public:
 			size_type				thePosition2,
 			size_type				theCount2) const
 	{
+		invariants();
+
 		return compare(thePosition1, theCount1, theString.c_str() + thePosition2, theCount2);
 	}
 
@@ -537,6 +710,8 @@ public:
 	int
 	compare(const char*		theString) const
 	{
+		invariants();
+
 		return compare(XalanDOMString(theString));
 	}
 
@@ -547,6 +722,8 @@ public:
 			const char*		theString,
 			size_type		theCount2 = size_type(npos)) const
 	{
+		invariants();
+
 		return compare(thePosition1, theCount1, XalanDOMString(theString, theCount2));
 	}
 
@@ -615,6 +792,24 @@ public:
 protected:
 
 	/*
+	 * Function to assert invariant conditions for the class.
+	 *
+	 * @return the iterator
+	 */
+	void
+	invariants() const
+	{
+#if !defined(NDEBUG
+
+#if defined(XALAN_DOMSTRING_CACHE_SIZE)
+		assert(m_data.size() == 0 || m_size == m_data.size() - 1);
+#endif
+
+		assert(m_data.size() == 0 || m_data.back() == 0);
+#endif
+	}
+
+	/*
 	 * Get an iterator to the position of the terminating null.
 	 *
 	 * @return the iterator
@@ -622,30 +817,42 @@ protected:
 	iterator
 	getBackInsertIterator()
 	{
+		invariants();
+
 		return m_data.size() == 0 ? m_data.end() : m_data.end() - 1;
 	}
 
 	const_iterator
 	getBackInsertIterator() const
 	{
+		invariants();
+
 		return m_data.size() == 0 ? m_data.end() : m_data.end() - 1;
 	}
 
 	iterator
 	getIteratorForPosition(size_type	thePosition)
 	{
+		invariants();
+
 		return m_data.begin() + thePosition;
 	}
 
 	const_iterator
 	getIteratorForPosition(size_type	thePosition) const
 	{
+		invariants();
+
 		return m_data.begin() + thePosition;
 	}
 
 private:
 
 	XalanDOMCharVectorType		m_data;
+
+#if defined(XALAN_DOMSTRING_CACHE_SIZE
+	unsigned long				m_size;
+#endif
 
 	static const XalanDOMChar	s_empty;
 };

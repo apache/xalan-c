@@ -81,6 +81,9 @@ const XalanDOMChar	XalanDOMString::s_empty = 0;
 
 XalanDOMString::XalanDOMString() :
 	m_data()
+#if defined(XALAN_DOMSTRING_CACHE_SIZE)
+	, m_size(0)
+#endif
 {
 }
 
@@ -91,6 +94,9 @@ XalanDOMString::XalanDOMString(
 			size_type				theStartPosition,
 			size_type				theCount) :
 	m_data()
+#if defined(XALAN_DOMSTRING_CACHE_SIZE)
+	, m_size(0)
+#endif
 {
 	if (theSource.length() != 0)
 	{
@@ -104,6 +110,9 @@ XalanDOMString::XalanDOMString(
 			const XalanDOMChar*		theString,
 			size_type				theCount) :
 	m_data()
+#if defined(XALAN_DOMSTRING_CACHE_SIZE)
+	, m_size(0)
+#endif
 {
 	assert(theString != 0);
 
@@ -119,6 +128,9 @@ XalanDOMString::XalanDOMString(
 			const char*		theString,
 			size_type		theCount) :
 	m_data()
+#if defined(XALAN_DOMSTRING_CACHE_SIZE)
+	, m_size(0)
+#endif
 {
 	assert(theString != 0);
 
@@ -126,8 +138,12 @@ XalanDOMString::XalanDOMString(
 	{
 		TranscodeFromLocalCodePage(theString, theCount, m_data, true);
 
-		assert(m_data.back() == 0);
+#if defined(XALAN_DOMSTRING_CACHE_SIZE)
+		m_size = m_data.size() - 1;
+#endif
 	}
+
+	invariants();
 }
 
 
@@ -136,6 +152,9 @@ XalanDOMString::XalanDOMString(
 			size_type		theCount,
 			XalanDOMChar	theChar) :
 	m_data()
+#if defined(XALAN_DOMSTRING_CACHE_SIZE)
+	, m_size(0)
+#endif
 {
 	if (theCount != 0)
 	{
@@ -143,7 +162,13 @@ XalanDOMString::XalanDOMString(
 
 		// Null-terminate it...
 		m_data.back() = 0;
+
+#if defined(XALAN_DOMSTRING_CACHE_SIZE)
+		m_size = theCount;
+#endif
 	}
+
+	invariants();
 }
 
 
@@ -154,6 +179,8 @@ XalanDOMString::operator=(const XalanDOMChar*	theRHS)
 	erase();
 
 	append(theRHS, length(theRHS));
+
+	invariants();
 
 	return *this;
 }
@@ -178,14 +205,23 @@ XalanDOMString::append(
 
 			m_data.push_back(0);
 
+#if defined(XALAN_DOMSTRING_CACHE_SIZE)
+			m_size = theLength;
+#endif
+
 			assert(length() == theLength);
-			assert(m_data.back() == 0);
 		}
 		else
 		{
 			m_data.insert(getBackInsertIterator(), theString, theString + theLength);
+
+#if defined(XALAN_DOMSTRING_CACHE_SIZE)
+			m_size += theCount;
+#endif
 		}
 	}
+
+	invariants();
 
 	return *this;
 }
@@ -203,14 +239,22 @@ XalanDOMString::append(
 
 		m_data.back() = 0;
 
+#if defined(XALAN_DOMSTRING_CACHE_SIZE)
+		m_size = theCount;
+#endif
+
 		assert(length() == theCount);
 	}
 	else
 	{
 		m_data.insert(getBackInsertIterator(), theCount, theChar);
+
+#if defined(XALAN_DOMSTRING_CACHE_SIZE)
+		m_size += theCount;
+#endif
 	}
 
-	assert(m_data.back() == 0);
+	invariants();
 
 	return *this;
 }
@@ -225,6 +269,12 @@ XalanDOMString::insert(
 {
 	m_data.insert(getIteratorForPosition(thePosition), theString, theString + theCount);
 
+#if defined(XALAN_DOMSTRING_CACHE_SIZE)
+	m_size += theCount;
+#endif
+
+	invariants();
+
 	return *this;
 }
 
@@ -238,6 +288,12 @@ XalanDOMString::insert(
 {
 	m_data.insert(getIteratorForPosition(thePosition), theCount, theChar);
 
+#if defined(XALAN_DOMSTRING_CACHE_SIZE)
+	m_size += theCount;
+#endif
+
+	invariants();
+
 	return *this;
 }
 
@@ -249,6 +305,12 @@ XalanDOMString::insert(
 			XalanDOMChar	theChar)
 {
 	m_data.insert(thePosition, theChar);
+
+#if defined(XALAN_DOMSTRING_CACHE_SIZE)
+	++m_size;
+#endif
+
+	invariants();
 
 	return thePosition;
 }
@@ -262,6 +324,12 @@ XalanDOMString::insert(
 			XalanDOMChar	theChar)
 {
 	m_data.insert(thePosition, theCount, theChar);
+
+#if defined(XALAN_DOMSTRING_CACHE_SIZE)
+	m_size += theCount;
+#endif
+
+	invariants();
 }
 
 
@@ -273,6 +341,12 @@ XalanDOMString::insert(
 		const_iterator	theLastPosition)
 {
 	m_data.insert(theInsertPosition, theFirstPosition, theLastPosition);
+
+#if defined(XALAN_DOMSTRING_CACHE_SIZE)
+	m_size = m_data.size() - 1;
+#endif
+
+	invariants();
 }
 
 
@@ -340,6 +414,8 @@ doCompare(
 int
 XalanDOMString::compare(const XalanDOMChar*		theString) const
 {
+	invariants();
+
 	return doCompare(c_str(), length(), theString, length(theString));
 }
 
@@ -352,6 +428,8 @@ XalanDOMString::compare(
 			const XalanDOMChar*		theString,
 			size_type				theCount2) const
 {
+	invariants();
+
 	return doCompare(c_str() + thePosition1, theCount1, theString, theCount2);
 }
 
@@ -360,6 +438,8 @@ XalanDOMString::compare(
 XalanDOMString::CharVectorType
 XalanDOMString::transcode() const
 {
+	invariants();
+
 	CharVectorType	theResult;
 
 	TranscodeToLocalCodePage(c_str(), length(), theResult, true);
