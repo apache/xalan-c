@@ -318,12 +318,10 @@ XMLFileReporter::logElement(const XalanDOMString& element, const XalanDOMString&
        )
     {
 
-        printToFile("<" + escapestring(element) + ">");
+	const XalanDOMString escElement(escapestring(element));
+	const XalanDOMString theElement("<" + escElement + ">" + msg + "</" + escElement + ">");
+	printToFile(theElement);
 
-        if (msg.empty() == 0)
-            //printToFile(escapestring(msg));
-			printToFile(msg);
-        printToFile("</" + escapestring(element) + ">");
     }
 }
 
@@ -409,18 +407,6 @@ XMLFileReporter::logCheckPass(const XalanDOMString& comment)
 }
 
 
-
-void 
-XMLFileReporter::logCheckAmbiguous(const XalanDOMString& comment)
-{
-    if (isReady())
-    {
-        printToFile(CHECKAMBG_HDR + escapestring(comment) + "\"/>");
-    }
-}
-
-
-
 void 
 XMLFileReporter::logCheckFail(const XalanDOMString& comment)
 {
@@ -431,16 +417,6 @@ XMLFileReporter::logCheckFail(const XalanDOMString& comment)
     }
 }
 
-
-void 
-XMLFileReporter::logErrorResult(const XalanDOMString& test, const XalanDOMString& reason)
-{
-    if (isReady())
-    {
-        printToFile(CHECKFAIL_HDR + escapestring(test) + "\" " + XalanDOMString("reason=\"") + escapestring(reason)  + "\"/>");
-
-    }
-}
 
 void 
 XMLFileReporter::logCheckFail(const XalanDOMString& test, Hashtable actexp)
@@ -486,6 +462,27 @@ XMLFileReporter::logCheckFail(const XalanDOMString& test, Hashtable attrs, Hasht
 		printToFile(CHECKFAIL_FTR);
     }
 }
+
+void 
+XMLFileReporter::logCheckAmbiguous(const XalanDOMString& comment)
+{
+    if (isReady())
+    {
+        printToFile(CHECKAMBG_HDR + escapestring(comment) + "\"/>");
+    }
+}
+
+
+void 
+XMLFileReporter::logErrorResult(const XalanDOMString& test, const XalanDOMString& reason)
+{
+    if (isReady())
+    {
+        printToFile(CHECKFAIL_HDR + escapestring(test) + "\" " + XalanDOMString("reason=\"") + escapestring(reason)  + "\"/>");
+
+    }
+}
+
 
 void 
 XMLFileReporter::logCheckErr(const XalanDOMString& comment)
