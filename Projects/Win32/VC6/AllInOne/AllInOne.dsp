@@ -870,14 +870,6 @@ SOURCE=..\..\..\..\src\xalanc\XPath\FormatterStringLengthCounter.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\xalanc\XPath\FoundIndex.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\src\xalanc\XPath\FoundIndex.hpp
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\..\..\src\xalanc\XPath\Function.cpp
 # End Source File
 # Begin Source File
