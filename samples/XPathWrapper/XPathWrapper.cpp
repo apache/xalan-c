@@ -135,8 +135,7 @@ public:
 
 				theXPathProcessor.initXPath(*contextXPath,										
 											TranscodeFromLocalCodePage(context),
-											ElementPrefixResolverProxy(rootElem, theEnvSupport, theDOMSupport),
-											theEnvSupport);
+											ElementPrefixResolverProxy(rootElem, theEnvSupport, theDOMSupport));
 
 	   			XObjectPtr	xObj =
 					contextXPath->execute(rootElem,
@@ -175,8 +174,7 @@ public:
 					XPath* const	xpath = theXPathFactory.create();
 					theXPathProcessor.initXPath(*xpath,
 												TranscodeFromLocalCodePage(expr),
-												ElementPrefixResolverProxy(rootElem, theEnvSupport, theDOMSupport),
-												theEnvSupport);
+												ElementPrefixResolverProxy(rootElem, theEnvSupport, theDOMSupport));
 
 					xObj = xpath->execute(contextNodeList.item(0),
 										  ElementPrefixResolverProxy(rootElem, theEnvSupport, theDOMSupport),
