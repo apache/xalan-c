@@ -73,8 +73,8 @@ const XalanDOMString	ResultTreeFrag::s_emptyString;
 
 ResultTreeFrag::ResultTreeFrag(XalanSourceTreeDocumentFragment*		theDocumentFragment) :
 	ResultTreeFragBase(),
-	m_documentFragment(theDocumentFragment),
-	XalanNodeList()
+	XalanNodeList(),
+	m_documentFragment(theDocumentFragment)
 {
 }
 
