@@ -133,7 +133,10 @@ FunctionSystemProperty::execute(
 				}
 				else
 				{
-					executionContext.warn("XSL Property not supported: " + fullName);
+					executionContext.error(
+						"XSL Property not supported: " + fullName,
+						context,
+						locator);
 				}
 			}
 			else
