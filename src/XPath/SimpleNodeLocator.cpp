@@ -1917,21 +1917,21 @@ SimpleNodeLocator::NodeTester::NodeTester(
 	switch(theExpression.getOpCodeMapValue(opPos))
 	{
 	case XPathExpression::eNODETYPE_COMMENT:
-		m_testFunction = NodeTester::testComment;
+		m_testFunction = &NodeTester::testComment;
 		break;
 
 	case XPathExpression::eNODETYPE_TEXT:
-		m_testFunction = NodeTester::testText;
+		m_testFunction = &NodeTester::testText;
 		break;
 
 	case XPathExpression::eNODETYPE_PI:
 		if (argLen == 1)
 		{
-			m_testFunction = NodeTester::testPI;
+			m_testFunction = &NodeTester::testPI;
 		}
 		else if(argLen == 2)
 		{
-			m_testFunction = NodeTester::testPIName;
+			m_testFunction = &NodeTester::testPIName;
 
 			m_targetLocalName = getStringFromTokenQueue(
 				theExpression,
@@ -1944,11 +1944,11 @@ SimpleNodeLocator::NodeTester::NodeTester(
 		break;
 
 	case XPathExpression::eNODETYPE_NODE:
-		m_testFunction = NodeTester::testNode;
+		m_testFunction = &NodeTester::testNode;
 		break;
 
 	case XPathExpression::eNODETYPE_ROOT:
-		m_testFunction = NodeTester::testRoot;
+		m_testFunction = &NodeTester::testRoot;
 		break;
 
 	case XPathExpression::eNODENAME:
@@ -1975,67 +1975,67 @@ SimpleNodeLocator::NodeTester::NodeTester(
 			{
 				if (isTotallyWild == true)
 				{
-					m_testFunction = NodeTester::testAttributeTotallyWild;
+					m_testFunction = &NodeTester::testAttributeTotallyWild;
 				}
 				else if (m_targetNamespace == 0)
 				{
 					assert(m_targetLocalName != 0);
 
-					m_testFunction = NodeTester::testAttributeNCName;
+					m_testFunction = &NodeTester::testAttributeNCName;
 				}
 				else if (m_targetLocalName == 0)
 				{
 					assert(m_targetNamespace != 0);
 
-					m_testFunction = NodeTester::testAttributeNamespaceOnly;
+					m_testFunction = &NodeTester::testAttributeNamespaceOnly;
 				}
 				else
 				{
 					assert(m_targetNamespace != 0 && m_targetLocalName != 0);
 
 
-					m_testFunction = NodeTester::testAttributeQName;
+					m_testFunction = &NodeTester::testAttributeQName;
 				}
 			}
 			else if (stepType == XPathExpression::eFROM_NAMESPACE)
 			{
 				if (isTotallyWild == true)
 				{
-					m_testFunction = NodeTester::testNamespaceTotallyWild;
+					m_testFunction = &NodeTester::testNamespaceTotallyWild;
 				}
 				else
 				{
-					m_testFunction = NodeTester::testNamespaceNCName;
+					m_testFunction = &NodeTester::testNamespaceNCName;
 				}
 			}
 			else
 			{
 				if (isTotallyWild == true)
 				{
-					m_testFunction = NodeTester::testElementTotallyWild;
+					m_testFunction = &NodeTester::testElementTotallyWild;
 				}
 				else if (m_targetNamespace == 0)
 				{
-					m_testFunction = NodeTester::testElementNCName;
+					m_testFunction = &NodeTester::testElementNCName;
 				}
 				else if (m_targetLocalName == 0)
 				{
 					assert(m_targetNamespace != 0);
 
-					m_testFunction = NodeTester::testElementNamespaceOnly;
+					m_testFunction = &NodeTester::testElementNamespaceOnly;
 				}
 				else
 				{
 					assert(m_targetNamespace != 0 && m_targetLocalName != 0);
 
-					m_testFunction = NodeTester::testElementQName;
+					m_testFunction = &NodeTester::testElementQName;
 				}
 			}
 		}
 		break;
 
 	default:
-		m_testFunction = NodeTester::testDefault;
+		m_testFunction = &NodeTester::testDefault;
 		break;
 	}
 
