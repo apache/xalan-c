@@ -68,12 +68,9 @@
  </ul>
   <s2 title="Status">
    <ul>
-    <li><link anchor="done">Bug fixes</link></li>    
-    <li><link anchor="bugs">Outstanding bugs</link></li>
+    <li><link anchor="bugs">Bug reporting</link></li>
     <li><link anchor="status">Version of Xerces-C to use</link></li>    
    </ul>
-     <anchor name="done"/>
-     &done-c;     
      <anchor name="bugs"/>
      &bugs-c;
      <anchor name="status"/>
@@ -88,36 +85,14 @@
 </ul>
 <anchor name="jar"/> 
    <s3 title="Rebuilding &xslt4c;">
-   <p>the Xalan-C dynamic link libraries and command-line executable.</p>
-     <p>The &xslt4c; build is in xalan.jar. The &xslt4c; source code tree is in the src directory.
-     If you want to rebuild xalan.jar, you can do the following:</p>
-     <ol>
-       <li>Set up GNU or the equivalent build environment on your workstation.<br/><br/>
-       If you are running Windows 95/98/2000/NT, you can use the Cygwin port of GNU. Be sure to put the
-       appropriate Cygwin bin directory at the beginning of your system path. For information about
-       Cygwin, see <jump href="http://www.sourceware.cygnus.com/cygwin/">Cygwin</jump>.<br/><br/></li>
-       <li>Place <resource-ref idref="xerces-used"/> xerces.jar in the Java class path.<br/><br/></li>
-       <li>If you are working in Windows, set MAKE_MODE as follows:<br/><br/>
-       <code>set MAKE_MODE=UNIX</code><br/><br/></li>
-       <li>Run the make file in the &xslt4c; root directory:<br/><br/>
-       <code>make build</code><br/><br/></li>
-     </ol>
-     <p>If you want to do the build without the GNU build environment, keep the following in mind:</p>
-     <ul>
-     <li>Set the class path to include the src directory, xerces.jar, bsf.jar, and bsfengines.jar.</li>
-     <li>Use a Java compiler (such as the IBM Just-In-Time compiler or the Sun javac) to compile all the .java files in the src
-     tree. </li>
-     <li>Use the Sun jar utility to store the resulting .class files in xalan.jar</li>
-     </ul>
+   <p>To rebuild the Windows32 release, use the Microsoft Visual C++ 6.0 project files. To rebuild the Linux release, use the make file in the root of the source directory.</p>
+   <p><em>Important</em> We have set up the Visual C++ projects and the Linux make file to look for Xerces in a the directory structure that results from downloading xml-xerces/c from the Apache XML repository and building with the Visual C++ project files or the Linux make file. This structure parallels the Xalan-C source tree and build structure.<br/><br/>
+If you are using a Xerces-C binary distribution, you must either modify the Xalan-C project files or Makefile, or rearrange the build directory structure, and you must also get the header files from the Xerces-C source distribution, since Xalan-C uses a header file that is not included in the Xerces-C binary distribution.</p>
    </s3><anchor name="samples"/>
    <s3 title="Rebuilding a sample application">
-   <p>If you modify a sample and want to recompile it, you can run the Java compiler in the directory containing the
-   example. Be sure xalan.jar and xerces.jar are on the class path. To recompile (and run!) the class files in the
-   Servlet subdirectory, the javax.servlet and javax.servlet.http packages must also be on the class path. Sun
-   distributes these packages in the JSWDK 1.0.1 servlet.jar file.</p> 
-   <p>After recompiling a sample, you can use the Sun jar utility to place your new .class files in
-    xalansamples.jar.</p>
-   </s3><anchor name="doc"/>
+   <p>The Windows32 distribution includes Visual C++ project files for each of the sample applications. The project files are in the samples subdirectories along with the source files. If you modify a sample and want to recompile it, you can recompile the .cpp file(s) and rebuild the executable.</p>
+<p>The Linux distribution does not yet include make files for the sample applications, so you must construct your own Linux make files and build the sample executables.</p>
+   </s3>
  </s2><anchor name="contact"/>
  <s2 title="Getting in Touch">
   <p>Your feedback is more than welcome. Offers of help are even more so! Perhaps you would like to contribute to the ongoing development, testing, or documentation of &xslt4c;?</p> 
