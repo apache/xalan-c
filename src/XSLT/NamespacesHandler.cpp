@@ -593,6 +593,10 @@ NamespacesHandler::processExcludeResultPrefixes(const XalanDOMString&	theElement
 			{
 				// It's excluded, so remove it...
 				theDeadEntries.push_back(i);
+
+				// Add it to the excluded prefixes, in case we need it later...
+				m_excludedResultPrefixes.insert(
+						ExcludedResultPrefixesMapType::value_type(thePrefix, theURI));
 			}
 
 			++i;
