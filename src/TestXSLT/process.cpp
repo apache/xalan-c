@@ -137,43 +137,61 @@ using std::vector;
 void
 printArgOptions()
 {
-	cerr << "TestXSLT options: "
+	cerr << endl
+		 << "TestXSLT options: "
 		 << endl
-		 << "		-IN inputXMLURL"
 		 << endl
-		 << "	 [-XSL XSLTransformationURL]"
+		 << "Options are not case-sensitive."
 		 << endl
-		 << "	 [-OUT outputFileName]"
 		 << endl
-		 << "	 [-V (Version info)]"
+		 << "	-IN inputXMLURL"
 		 << endl
-		 << "	 [-QC (Quiet Pattern Conflicts Warnings)]"
 		 << endl
-		 << "	 [-Q (Quiet Mode)]"
+		 << " [-XSL XSLTransformationURL]"
 		 << endl
-		 << "	 [-ESCAPE (Which characters to escape {default is <>&\"\'\\r\\n}]"
+		 << " [-OUT outputFileName]"
 		 << endl
-		 << "	 [-INDENT n(Control how many spaces to indent {default is 0})]"
+		 << " [-V (Version info)]"
 		 << endl
-		 << "	 [-TT (Trace the templates as they are being called.)]"
+		 << " [-QC (Quiet Pattern Conflicts Warnings)]"
 		 << endl
-		 << "	 [-TG (Trace each generation event.)]"
+		 << " [-Q (Quiet Mode)]"
 		 << endl
-		 << "	 [-TS (Trace each selection event.)]"
+		 << " [-ESCAPE (Which characters to escape {default is <>&\"\'\\r\\n}]"
 		 << endl
-		 << "	 [-TTC (Trace the template children as they are being processed.)]"
+		 << " [-INDENT n (Control how many spaces to indent {default is 0})]"
 		 << endl
-		 << "	 [-VALIDATE (Set whether validation occurs. Validation is off by default.)]"
+		 << " [-TT (Trace the templates as they are being called.)]"
 		 << endl
-		 << "	 [-XML (Use XML formatter and add XML header.)]"
+		 << " [-TG (Trace each generation event.)]"
 		 << endl
-		 << "	 [-NH (Don't write XML header. Works only with previous option.)]"
+		 << " [-TS (Trace each selection event.)]"
 		 << endl
-		 << "	 [-TEXT (Use simple Text formatter.)]"
+		 << " [-TTC (Trace the template children as they are being processed.)]"
 		 << endl
-		 << "	 [-HTML (Use HTML formatter.)]"
+//		 << " [-VALIDATE (Set whether validation occurs. Validation is off by default.)]"
+//		 << endl
+		 << " [-XML (Use XML formatter and add XML header.)]"
 		 << endl
-		 << "	 [-PARAM name expression (Set a stylesheet parameter)]"
+		 << " [-TEXT (Use simple Text formatter.)]"
+		 << endl
+		 << " [-HTML (Use HTML formatter.)]"
+		 << endl
+		 << " [-PARAM name expression (Set a stylesheet parameter)]"
+		 << endl
+		 << endl
+		 << "The following options are valid only with -HTML or -XML."
+		 << endl
+		 << endl
+		 << " [-STRIPCDATA (Strip CDATA sections of their brackets, but don't escape.)"
+		 << endl
+		 << " [-ESCAPECDATA (Strip CDATA sections of their brackets, but escape.)"
+		 << endl
+		 << endl
+		 << "The following option is valid only with -XML."
+		 << endl
+		 << endl
+		 << " [-NH (Don't write XML header.)]"
 		 << endl;
 }
 
@@ -188,7 +206,6 @@ struct CmdLineParams
 	String2StringMapType paramsMap;
 	bool doStackDumpOnError;
 	bool escapeCData;
-	bool formatOutput;
 	bool setQuietConflictWarnings;
 	bool setQuietMode;
 	bool shouldExpandEntityRefs;
@@ -201,10 +218,8 @@ struct CmdLineParams
 	bool shouldWriteXMLHeader;
 	int indentAmount;
 	int outputType;
-	string dumpFileName;
-	string  outFileName;
+	string outFileName;
 	string specialCharacters;
-	string treedumpFileName;
 	string xslFileName;
 	string inFileName;
 
@@ -212,7 +227,6 @@ struct CmdLineParams
 		paramsMap(),
 		doStackDumpOnError(false),
 		escapeCData(false),
-		formatOutput(false),
 		setQuietConflictWarnings(false),
 		setQuietMode(false),
 		shouldExpandEntityRefs(false),
@@ -225,9 +239,7 @@ struct CmdLineParams
 		shouldWriteXMLHeader(true),
 		indentAmount(0),
 		outputType(-1),
-		dumpFileName(),
 		specialCharacters(),
-		treedumpFileName(),
 		outFileName(),
 		xslFileName(),
 		inFileName()
@@ -238,40 +250,132 @@ struct CmdLineParams
 
 
 void
-getArgs(int argc, const char* argv[], CmdLineParams& p)
+warnPreviousOutputMethod(int	outputMethod)
 {
-	for (int i = 1;	i < argc;	i ++) 
+	cerr << endl << "Warning: Ignoring previous output method switch ";
+
+	switch(outputMethod)
 	{
-		if (!stricmp("-ESCAPE", argv[i])) 
+	case FormatterListener::OUTPUT_METHOD_XML:
+		cerr << "-XML.";
+		break;
+		
+	case FormatterListener::OUTPUT_METHOD_TEXT:
+		cerr << "-TEXT.";
+		break;
+
+	case FormatterListener::OUTPUT_METHOD_HTML:
+		cerr << "-HTML.";
+		break;
+	}
+
+	cerr << endl << endl;
+}
+
+
+
+bool
+getArgs(
+			int				argc,
+			const char*		argv[],
+			CmdLineParams&	p)
+{
+	bool fSuccess = true;
+
+	for (int i = 1; i < argc && fSuccess == true; ++i)
+	{
+		if (!stricmp("-IN", argv[i]))
 		{
-			p.specialCharacters = argv[++i];
+			++i;
+
+			if(i < argc && argv[i][0] != '-')
+			{
+				p.inFileName = argv[i];
+			}
+			else
+			{
+				fSuccess = false;
+			}
 		}
-		else if (!stricmp("-INDENT", argv[i])) 
+		else if (!stricmp("-XSL", argv[i]))
 		{
-			if(((i+1) < argc) && (argv[i+1][0] != '-'))
-				p.indentAmount = atoi( argv[++i] );
+			++i;
+
+			if(i < argc && argv[i][0] != '-')
+			{
+				p.xslFileName = argv[i];
+			}
+			else
+			{
+				fSuccess = false;
+			}
+		}
+		else if (!stricmp("-OUT", argv[i]))
+		{
+			++i;
+
+			if(i < argc && argv[i][0] != '-')
+			{
+				p.outFileName = argv[i];
+			}
+			else
+			{
+				fSuccess = false;
+			}
+		}
+		else if (!stricmp("-ESCAPE", argv[i]))
+		{
+			++i;
+
+			if(i < argc && argv[i][0] != '-')
+			{
+				p.specialCharacters = argv[i];
+			}
+			else
+			{
+				fSuccess = false;
+			}
+		}
+		else if (!stricmp("-INDENT", argv[i]))
+		{
+			++i;
+
+			if(i < argc && argv[i][0] != '-')
+			{
+				p.indentAmount = atoi(argv[i]);
+			}
+			else
+			{
+				fSuccess = false;
+			}
 		} 
-		else if (!stricmp("-IN", argv[i])) 
-		{
-			p.inFileName = argv[++i];
-		}
-		else if (!stricmp("-OUT", argv[i])) 
-		{
-			p.outFileName = argv[++i];
-		}
-		else if (!stricmp("-XSL", argv[i])) 
-		{
-			p.xslFileName = argv[++i];
-		}
 		else if (!stricmp("-PARAM", argv[i])) 
 		{
-			string name = argv[++i];
-			string expression = argv[++i];
-			p.paramsMap[name] = expression;
-		}
-		else if(!stricmp("-F", argv[i]))
-		{
-			p.formatOutput = true;
+			++i;
+
+			if(i < argc && argv[i][0] != '-')
+			{
+				const string	name = argv[i];
+
+				++i;
+
+				// Don't check for '-' here, since that might
+				// be a valid character in a parameter value.
+				if(i < argc)
+				{
+					const string	expression = argv[i];
+
+					p.paramsMap[name] = expression;
+				}
+				else
+				{
+					fSuccess = false;
+				}
+			}
+			else
+			{
+				fSuccess = false;
+			}
 		}
 		else if(!stricmp("-V", argv[i]))
 		{
@@ -287,14 +391,29 @@ getArgs(int argc, const char* argv[], CmdLineParams& p)
 		}
 		else if(!stricmp("-XML", argv[i]))
 		{
+			if (p.outputType != -1)
+			{
+				warnPreviousOutputMethod(p.outputType);
+			}
+
 			p.outputType = FormatterListener::OUTPUT_METHOD_XML;
 		}
 		else if(!stricmp("-TEXT", argv[i]))
 		{
+			if (p.outputType != -1)
+			{
+				warnPreviousOutputMethod(p.outputType);
+			}
+
 			p.outputType = FormatterListener::OUTPUT_METHOD_TEXT;
 		}
 		else if(!stricmp("-HTML", argv[i]))
 		{
+			if (p.outputType != -1)
+			{
+				warnPreviousOutputMethod(p.outputType);
+			}
+
 			p.outputType = FormatterListener::OUTPUT_METHOD_HTML;
 		}
 		else if(!stricmp("-STRIPCDATA", argv[i]))
@@ -327,9 +446,11 @@ getArgs(int argc, const char* argv[], CmdLineParams& p)
 		}
 		else
 		{
-			cout << endl << "Warning: Ignoring unknown option \"" << argv[i] << "\"" << endl << endl;
+			cerr << endl << "Warning: Ignoring unknown option \"" << argv[i] << "\"." << endl << endl;
 		}
 	}
+
+	return fSuccess;
 }
 
 
@@ -618,7 +739,7 @@ xsltMain(const CmdLineParams&	params)
 
 	if (stylesheet == 0)
 	{
-		// No stylesheet, so the only hope is that the xml file has
+		// No stylesheet, so our only hope is that the xml file has
 		// PI with the stylesheet...
 
 		// Dummy input source...
@@ -674,12 +795,14 @@ int main(int argc, const char* argv[]) throw()
 	}
 	else
 	{
-		getArgs(argc, argv, theParams);
-
-		if (theParams.versionOnly == true)
+		if (getArgs(argc, argv, theParams) == false)
+		{
+			printArgOptions();
+		}
+		else if (theParams.versionOnly == true)
 		{
 			cout << endl
-				 << "TestXSLT version 0.31.0 (Xalan C++ version 0.31.0)"
+				 << "TestXSLT version 0.40.0 (Xalan C++ version 0.40.0)"
 				 << endl;
 		}
 		else if (theParams.inFileName.size() == 0)
