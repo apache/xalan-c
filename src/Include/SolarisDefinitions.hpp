@@ -76,6 +76,10 @@
 #define XALAN_SIZE_T_IN_NAMESPACE_STD
 #define XALAN_SIGNAL_IN_STD
 
+// Standard allocators don't seem to work correctly with this compiler.
+// I don't know if this is their bug, or ours...
+#define XALAN_NO_STD_ALLOCATORS
+
 #else
 
 // Sun Workshop 4.2 _does_ support new cast syntax, but it's
@@ -96,7 +100,6 @@
 #define XALAN_BOOL_AS_INT
 #define XALAN_NO_DEFAULT_TEMPLATE_ARGUMENTS
 #define XALAN_NO_COVARIANT_RETURN_TYPE
-#define XALAN_NO_STD_NUMERIC_LIMITS
 
 // STL Port Definitions
 #define __STL_NO_SGI_IOSTREAMS
@@ -105,6 +108,7 @@
 
 #endif
 
+#define XALAN_NO_STD_NUMERIC_LIMITS
 #define XALAN_XALANDOMCHAR_USHORT_MISMATCH
 #define XALAN_POSIX2_AVAILABLE
 
