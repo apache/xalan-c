@@ -148,7 +148,12 @@ getParams(int argc,
 		if (f.checkDir(XalanDOMString(argv[1])))
 		{
 			assign(baseDir, XalanDOMString(argv[1]));
-//			insert(baseDir, 0, pathSep);
+			if ( !endsWith(baseDir, XalanDOMString("conf")) )
+			{
+				cout << endl << "Given base directory \"" << argv[1] << "\" not valid conformance directory" << endl;
+				printArgOptions();
+				return false;
+			}
 		}
 		else
 		{
