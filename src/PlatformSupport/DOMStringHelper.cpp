@@ -224,6 +224,18 @@ indexOf(
 }
 
 
+// $$$ ToDo:  This should be inlined by the 1.6 release...
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString::size_type)
+indexOf(
+			const XalanDOMChar*		theString,
+			const XalanDOMChar*		theSubstring)
+{
+	assert(theString != 0 && theSubstring != 0);
+
+	return indexOf(theString, length(theString), theSubstring, length(theSubstring));
+}
+
+
 
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString::size_type)
 indexOf(

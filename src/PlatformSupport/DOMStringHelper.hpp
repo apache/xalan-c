@@ -503,15 +503,10 @@ indexOf(
  * or length(theString) if the string is not
  * found.
  */
-inline XalanDOMString::size_type
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString::size_type)
 indexOf(
 			const XalanDOMChar*		theString,
-			const XalanDOMChar*		theSubstring)
-{
-	assert(theString != 0 && theSubstring != 0);
-
-	return indexOf(theString, length(theString), theSubstring, length(theSubstring));
-}
+			const XalanDOMChar*		theSubstring);
 
 
 
