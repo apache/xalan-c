@@ -97,8 +97,8 @@ ALL_BINARIES =    CompileStylesheet \
                   XalanTransformerCallback \
                   XPathWrapper
 
-include $(wildcard version.incl ../version.incl)
-include $(wildcard Makefile.incl ../src/xalanc/Makefile.incl)
+include $(wildcard version.incl $(XALANCROOT)/version.incl)
+include $(wildcard Makefile.incl $(XALANCROOT)/src/xalanc/Makefile.incl)
 
 all: Samples
 

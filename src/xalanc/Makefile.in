@@ -161,7 +161,7 @@ COMMON_BUILD = version.incl \
 	       src/xalanc/config.guess \
 	       src/xalanc/install-sh
 
-include ../../version.incl
+include $(XALANCROOT)/version.incl
 include Makefile.incl
 
 # Using ICUBridge

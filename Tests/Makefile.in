@@ -82,8 +82,8 @@ noxercesroot:
 	@echo XERCESCROOT must be defined
 endif
 
-include $(wildcard version.incl ../version.incl)
-include $(wildcard Makefile.incl ../src/xalanc/Makefile.incl)
+include $(wildcard version.incl $(XALANCROOT)/version.incl)
+include $(wildcard Makefile.incl $(XALANCROOT)/src/xalanc/Makefile.incl)
 
 all: Tests
 
