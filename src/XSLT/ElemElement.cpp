@@ -171,7 +171,7 @@ ElemElement::execute(
 
 	m_nameAVT->evaluate(elemName, sourceNode, *this, executionContext);
 
-	bool				isIllegalAttribute = false;
+	bool				isIllegalElement = false;
 
 	unsigned int		len = length(elemName);
 
@@ -186,18 +186,17 @@ ElemElement::execute(
 		if (indexOfNSSep + 1 == len ||
 			isValidNCName(substring(elemName, indexOfNSSep + 1)) == false)
 		{
-			isIllegalAttribute = true;
+			isIllegalElement = true;
 		}
 	}
 	else if(len == 0 || isValidNCName(elemName) == false)
 	{
-		isIllegalAttribute = true;
+		isIllegalElement = true;
 	}
 
-	if (isIllegalAttribute == true)
+	if (isIllegalElement == true)
 	{
-		XalanDOMString	msg("Illegal attribute name: ");
-		msg += elemName;
+		XalanDOMString	msg("Illegal element name!");
 
 		executionContext.warn(msg, sourceNode, this);
 
