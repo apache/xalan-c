@@ -124,8 +124,6 @@ StaticStringToDOMString(const XalanDOMChar*		theString)
 	return XalanDOMString(theString);
 }
 
-
-
 #else
 
 #define XALAN_STATIC_UCODE_STRING(str) TranscodeFromLocalCodePage(str)
@@ -143,8 +141,6 @@ StaticStringToDOMString(const XalanDOMString&	theString)
 {
 	return theString;
 }
-
-
 
 #endif
 
@@ -335,24 +331,6 @@ indexOf(
 			const XalanDOMChar*		theString,
 			XalanDOMChar			theChar)
 {
-	// For the time being, we're using our own custom routine,
-	// since performance is better.
-#if 0 // defined(XALAN_USE_WCHAR_SUPPORT)
-
-	const XalanDOMChar* const	thePointer =
-			wcschr(theString, theChar);
-
-	if (thePointer == 0)
-	{
-		return length(theString);
-	}
-	else
-	{
-		return thePointer - theString;
-	}
-
-#else
-
 	const XalanDOMChar*		thePointer = theString;
 
 	while(*thePointer != theChar && *thePointer != 0)
@@ -361,8 +339,6 @@ indexOf(
 	}
 
 	return thePointer - theString;
-
-#endif
 }
 
 
@@ -434,36 +410,12 @@ indexOf(
  * found.
  */
 
-// For the time being, we're using our own custom routine,
-// since performance is better.
-#if 0 // defined(XALAN_USE_WCHAR_SUPPORT)
-
-inline unsigned int
-lastIndexOf(
-			const XalanDOMChar*		theString,
-			XalanDOMChar			theChar)
-{
-	const XalanDOMChar* const	thePointer =
-			wcsrchr(theString, theChar);
-
-	if (thePointer == 0)
-	{
-		return length(theString);
-	}
-	else
-	{
-		return thePointer - theString;
-	}
-}
-
-#else
-
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(unsigned int)
 lastIndexOf(
 			const XalanDOMChar*		theString,
 			XalanDOMChar			theChar);
 
-#endif
+
 
 /**
  * Simulates the java String method lastIndexOf().
@@ -562,6 +514,7 @@ startsWith(
 }
 
 
+
 /**
  * Simulates the java String method endsWith().
  * 
@@ -596,52 +549,137 @@ endsWith(
 /**
  * Converts a double value into a XalanDOMString
  * 
- * @param theDouble number to be converted
- * @return decimal string representation of the number
+ * @param theValue number to be converted
+ * @param theResult the string to append with the result
  */
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString)
-DoubleToDOMString(double	theDouble);
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(void)
+DoubleToDOMString(
+			double				theValue,
+			XalanDOMString&		theResult);
 
 
 
 /**
- * Converts a long value into a XalanDOMString
- * 
- * @param theInt number to be converted
- * @return hexadecimal string representation of the number
- */
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString)
-LongToHexDOMString(long		theLong);
-
-
-
-/**
- * Converts an unsigned long value into a XalanDOMString
- * 
- * @param theUnsignedLong number to be converted
- * @return hexadecimal string representation of the number
- */
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString)
-UnsignedLongToHexDOMString(unsigned long	theValue);
-
-
-
-/**
- * Converts a long value into a XalanDOMString
- * 
- * @param theInt number to be converted
- * @return decimal string representation of the number
- */
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString)
-LongToDOMString(long	theValue);
-
-
-
-/**
- * Converts an unsigned long value into a XalanDOMString
+ * Converts a double value into a XalanDOMString
  * 
  * @param theValue number to be converted
- * @param theString The string for the result.
+ * @return decimal string representation of the number
+ */
+inline const XalanDOMString
+DoubleToDOMString(double	theValue)
+{
+	XalanDOMString	theResult;
+
+	DoubleToDOMString(theValue, theResult);
+
+	return theResult;
+}
+
+
+
+/**
+ * Converts a long value into a XalanDOMString.  Negative
+ * values are ignored.
+ * 
+ * @param theValue number to be converted
+ * @param theResult the string to append with the result
+ */
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(void)
+LongToHexDOMString(
+			long				theValue,
+			XalanDOMString&		theResult);
+
+
+
+/**
+ * Converts a long value into a XalanDOMString.  Returns
+ * an empty string for negative values.
+ * 
+ * @param theValue number to be converted
+ * @return hexadecimal string representation of the number
+ */
+inline const XalanDOMString
+LongToHexDOMString(long		theValue)
+{
+	XalanDOMString	theResult;
+
+	LongToHexDOMString(theValue, theResult);
+
+	return theResult;
+}
+
+
+
+/**
+ * Converts an unsigned long value  and appends the
+ * result to a XalanDOMString.
+ * 
+ * @param theValue number to be converted
+ * @param theResult the string to append with the result
+ */
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(void)
+UnsignedLongToHexDOMString(
+			unsigned long		theValue,
+			XalanDOMString&		theResult);
+
+
+
+/**
+ * Converts an unsigned long value and appends the
+ * result to a XalanDOMString.
+ *
+ * @param theValue number to be converted
+ * @return hexadecimal string representation of the number
+ */
+inline const XalanDOMString
+UnsignedLongToHexDOMString(unsigned long	theValue)
+{
+	XalanDOMString	theResult;
+
+	UnsignedLongToHexDOMString(theValue, theResult);
+
+	return theResult;
+}
+
+
+
+/**
+ * Converts a long value into a XalanDOMString
+ * 
+ * @param theValue number to be converted
+ * @param theResult the string to append with the result
+ */
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(void)
+LongToDOMString(
+			long				theValue,
+			XalanDOMString&		theResult);
+
+
+
+/**
+ * Converts a long value into a XalanDOMString
+ * 
+ * @param theValue number to be converted
+ * @return decimal string representation of the number
+ */
+inline const XalanDOMString
+LongToDOMString(long	theValue)
+{
+	XalanDOMString	theResult;
+
+	LongToDOMString(theValue, theResult);
+
+	return theResult;
+}
+
+
+
+/**
+ * Converts an unsigned long value and appends the
+ * result to a XalanDOMString.
+ * 
+ * @param theValue number to be converted
+ * @param theResult the string to append with the result
  */
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(void)
 UnsignedLongToDOMString(
@@ -653,7 +691,7 @@ UnsignedLongToDOMString(
 /**
  * Converts an unsigned long value into a XalanDOMString
  * 
- * @param theInt number to be converted
+ * @param theValue number to be converted
  * @return decimal string representation of the number
  */
 inline const XalanDOMString
@@ -1057,7 +1095,7 @@ charAt(
 inline bool
 isXMLWhitespace(XalanDOMChar	theChar)
 {
-	return XalanXMLChar::isWhitespace(theChar) ? true : false;
+	return XalanXMLChar::isWhitespace(theChar);
 }
 
 
@@ -1069,9 +1107,9 @@ isXMLWhitespace(XalanDOMChar	theChar)
  * @return true if character represents a digit
  */
 inline bool
-isXMLDigit(XalanDOMChar	theChar)
+isXMLDigit(XalanDOMChar		theChar)
 {	
-	return XalanXMLChar::isDigit(theChar) ? true : false;
+	return XalanXMLChar::isDigit(theChar);
 }
 
 
@@ -1083,10 +1121,10 @@ isXMLDigit(XalanDOMChar	theChar)
  * @return true if character represents a letter or digit
  */
 inline bool
-isXMLLetterOrDigit(XalanDOMChar	theChar)
+isXMLLetterOrDigit(XalanDOMChar		theChar)
 {
 	return	XalanXMLChar::isDigit(theChar) || 
-			XalanXMLChar::isLetter(theChar) ? true : false;
+			XalanXMLChar::isLetter(theChar);
 }
 
 
@@ -1106,7 +1144,7 @@ XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString)
 substring(
 			const XalanDOMChar*		theString,
 			unsigned int			theStartIndex,
-			unsigned int			theEndIndex = UINT_MAX);
+			unsigned int			theEndIndex = unsigned(-1));
 
 
 
@@ -1125,7 +1163,7 @@ XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString)
 substring(
 			const XalanDOMString&	theString,
 			unsigned int			theStartIndex,
-			unsigned int			theEndIndex = UINT_MAX);
+			unsigned int			theEndIndex = unsigned(-1));
 
 
 
@@ -1313,11 +1351,6 @@ compare(
 
 
 
-// For the time being, we're using our own custom routine,
-// since performance is better.
-
-#if 0 // defined(XALAN_USE_WCHAR_SUPPORT)
-
 /**
  * Compare the contents of two strings.
  * 
@@ -1326,22 +1359,10 @@ compare(
  * @return Returns 0 for equal strings, less than 0 if theLHS is less
  * than theRHS, or greater than 0 if theRHS is greater than theLHS.
  */
-inline int
-compare(
-			const XalanDOMChar*		theLHS,
-			const XalanDOMChar*		theRHS)
-{
-	return wcscmp(theLHS, theRHS);
-}
-
-#else
-
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(int)
 compare(
 			const XalanDOMChar*		theLHS,
 			const XalanDOMChar*		theRHS);
-
-#endif
 
 
 
@@ -1443,8 +1464,6 @@ compareIgnoreCaseASCII(
 			const XalanDOMString&	theRHS);
 
 
-
-#if 0 // defined(XALAN_USE_WCHAR_SUPPORT)
 
 /**
  * Compare the contents of two strings using the
@@ -1457,16 +1476,6 @@ compareIgnoreCaseASCII(
  * @see operator<()
  * @see compare()
  */
-inline int
-collationCompare(
-			const XalanDOMChar*		theLHS,
-			const XalanDOMChar*		theRHS)
-{
-	return wcscoll(theLHS, theRHS);
-}
-
-#else
-
 // Can't really do it, so just call compare...
 inline int
 collationCompare(
@@ -1475,8 +1484,6 @@ collationCompare(
 {
 	return compare(theLHS, theRHS);
 }
-
-#endif
 
 
 
@@ -2029,7 +2036,7 @@ append(
 
 		theTemp.push_back(char(0));
 
-		append(theString, XalanDOMString(&theTemp[0]));
+		append(theString, XalanDOMString(&theTemp[0], theTemp.size() - 1));
 	}
 #endif
 

@@ -122,6 +122,9 @@ using std::vector;
 // number strings when we don't have to,
 const size_t	MAX_PRINTF_DIGITS = 100;
 
+// The maximum number of characters for a floating point number.
+const size_t	MAX_FLOAT_CHARACTERS = 100;
+
 
 
 #if !defined(XALAN_LSTRSUPPORT)
@@ -153,6 +156,10 @@ static XalanDOMString	theNegativeInfinityString;
 
 static XalanDOMString	thePositiveInfinityString;
 
+static XalanDOMString	theNegativeZeroString;
+
+static XalanDOMString	thePositiveZeroString;
+
 
 
 /**
@@ -165,6 +172,8 @@ DOMStringHelperInitialize()
 	theNaNString = XALAN_STATIC_UCODE_STRING("NaN");
 	theNegativeInfinityString = XALAN_STATIC_UCODE_STRING("-Infinity");
 	thePositiveInfinityString = XALAN_STATIC_UCODE_STRING("Infinity");
+	theNegativeZeroString = XALAN_STATIC_UCODE_STRING("-0");
+	thePositiveZeroString = XALAN_STATIC_UCODE_STRING("0");
 }
 
 
@@ -179,6 +188,8 @@ DOMStringHelperTerminate()
 	clear(theNaNString);
 	clear(theNegativeInfinityString);
 	clear(thePositiveInfinityString);
+	clear(theNegativeZeroString);
+	clear(thePositiveZeroString);
 }
 
 
@@ -403,8 +414,7 @@ endsWith(
 
 	const unsigned int	theSubStringLength = length(theSubstring);
 
-	// If either string is of length 0, or if the substring
-	// is longer, there's no point in continuing.
+	// If the substring is longer, there's no point in continuing.
 	if (theStringLength >= theSubStringLength)
 	{
 		int		i = theStringLength - 1;
@@ -451,7 +461,7 @@ OutputString(
 #else
 			std::ostream&			theStream,
 #endif
-			 const CharVectorType&	theString)
+			const CharVectorType&	theString)
 {
 	if (theString.size() > 0)
 	{
@@ -520,48 +530,54 @@ substring(
 
 #if defined(XALAN_NO_ALGORITHMS_WITH_BUILTINS)
 
-template<class OutputIteratorType>
-inline void
+template<class InputIteratorType, class OutputIteratorType>
+inline OutputIteratorType
 XalanCopy(
-			const char*			begin,
-			const char*			end,
+			InputIteratorType	begin,
+			InputIteratorType	end,
 			OutputIteratorType	iterator)
 {
 	for(; begin != end; ++iterator, ++begin)
 	{
 		*iterator = *begin;
 	}
+
+	return iterator;
 }
 
 
 
-template<class OutputIteratorType>
-inline void
+template<class InputIteratorType, class OutputIteratorType>
+inline OutputIteratorType
 XalanCopy(
-			const XalanDOMChar*		begin,
-			const XalanDOMChar*		end,
+			InputIteratorType		begin,
+			InputIteratorType		end,
 			OutputIteratorType		iterator)
 {
 	for(; begin != end; ++iterator, ++begin)
 	{
 		*iterator = *begin;
 	}
+
+	return iterator;
 }
 
 
 
-template<class OutputIteratorType, class UnaryFunction>
-inline void
+template<class InputIteratorType, class OutputIteratorType, class UnaryFunction>
+inline OutputIteratorType
 XalanTransform(
-			const XalanDOMChar*		begin,
-			const XalanDOMChar*		end,
-			OutputIteratorType		iterator,
-			UnaryFunction			function)
+			InputIteratorType	begin,
+			InputIteratorType	end,
+			OutputIteratorType	iterator,
+			UnaryFunction		function)
 {
 	for(; begin != end; ++iterator, ++begin)
 	{
 		*iterator = function(*begin);
 	}
+
+	return iterator;
 }
 
 #endif
@@ -598,6 +614,9 @@ substring(
 		{
 			assert(theStartIndex + theLength <= theStringLength);
 
+#if defined(XALAN_USE_CUSTOM_STRING) || defined(XALAN_USE_STD_STRING)
+			return theString.substr(theStartIndex, theLength);
+#else
 			// @@ JMD:
 			// If this is the case, the DOMString class doesn't create a new string,
 			// and in any case, does not null terminate the string, just points to
@@ -605,14 +624,14 @@ substring(
 			// and create a new buffer
 			if (0 == theStartIndex)
 			{
+				const XalanDOMChar* const	ptr = toCharArray(theString);
+
 				vector<XalanDOMChar>	theBuffer;
 
 				// Reserve the buffer now.  We don't have to null-terminate,
 				// because the XalanDOMString constructor will take a size
 				// parameter.
 				theBuffer.reserve(theLength);
-
-				const XalanDOMChar* const	ptr = toCharArray(theString);
 
 #if defined(XALAN_NO_ALGORITHMS_WITH_BUILTINS)
 				XalanCopy(
@@ -626,18 +645,40 @@ substring(
 					back_inserter(theBuffer));
 #endif
 
-				return XalanDOMString(theBuffer.begin(), theBuffer.size());
+				return XalanDOMString(&*theBuffer.begin(), theBuffer.size());
 			}
 			else
 			{
-#if defined(XALAN_USE_CUSTOM_STRING) || defined(XALAN_USE_STD_STRING)
-				return theString.substr(theStartIndex, theLength);
-#else
 				return theString.substringData(theStartIndex, theLength);
-#endif
 			}
+#endif	// defined(XALAN_USE_CUSTOM_STRING) || defined(XALAN_USE_STD_STRING)
 		}
 	}
+}
+
+
+
+template <class InputIteratorType, class OutputIteratorType, class FunctionType>
+OutputIteratorType
+TransformString(
+			InputIteratorType	theInputBegin,
+			InputIteratorType	theInputEnd,
+			OutputIteratorType	theOutputIterator,
+			FunctionType		theFunction)
+{
+#if defined(XALAN_NO_ALGORITHMS_WITH_BUILTINS)
+	return XalanTransform(
+			theInputBegin,
+			theInputEnd,
+			theOutputIterator,
+			theFunction);
+#else
+	return transform(
+			theInputBegin,
+			theInputEnd,
+			theOutputIterator,
+			theFunction);
+#endif
 }
 
 
@@ -651,23 +692,27 @@ TransformString(
 {
 	assert(theInputString != 0);
 
+#if defined(XALAN_USE_XERCES_DOMSTRING)
 	vector<XalanDOMChar>	theConvertedString;
 
-#if defined(XALAN_NO_ALGORITHMS_WITH_BUILTINS)
-		XalanTransform(
+	TransformString(
 			theInputString,
 			theInputString + theInputStringLength,
 			back_inserter(theConvertedString),
 			theFunction);
-#else
-		transform(
-			theInputString,
-			theInputString + theInputStringLength,
-			back_inserter(theConvertedString),
-			theFunction);
-#endif
 
-	return XalanDOMString(theConvertedString.begin(), theConvertedString.size());
+	return XalanDOMString(&*theConvertedString.begin(), theConvertedString.size());
+#else
+	XalanDOMString	theConvertedString;
+
+	TransformString(
+			theInputString,
+			theInputString + theInputStringLength,
+			back_inserter(theConvertedString),
+			theFunction);
+
+	return theConvertedString;
+#endif
 }
 
 
@@ -692,7 +737,6 @@ TransformXalanDOMString(
 		return TransformString(theBuffer, unsigned(theStringLength), theFunction);
 	}
 }
-
 
 
 
@@ -1443,7 +1487,7 @@ template <class Type>
 Type
 WideStringToIntegral(
 			const XalanDOMChar*		theString,
-			Type					theDummy)
+			Type					/* theDummy */)
 {
 	if (theString == 0)
 	{
@@ -1523,7 +1567,7 @@ trim(const XalanDOMString&	theString)
 	const int	strLen = length(theString);
 	
 	// index of first non-whitespace character
-	int leadingSpace = 0;
+	int			leadingSpace = 0;
 
 	for (; leadingSpace < strLen; ++leadingSpace)
 		if (!isXMLWhitespace(charAt(theString, leadingSpace)))
@@ -1541,193 +1585,423 @@ trim(const XalanDOMString&	theString)
 
 
 
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString)
-DoubleToDOMString(double	theDouble)
+template <class InputCharType, class OutputCharType>
+class IdentityTransform
+{
+public:
+
+	OutputCharType
+	operator()(InputCharType	theChar) const
+	{
+		return OutputCharType(theChar);
+	}
+};
+
+
+
+template<class InputCharType, class OutputCharType>
+IdentityTransform<InputCharType, OutputCharType>
+makeIdentityTransform(
+			const InputCharType*,
+			const OutputCharType*)
+{
+	return IdentityTransform<InputCharType, OutputCharType>();
+}
+
+
+
+// A very cheap decimal number transcoder...
+template <class InputCharType, class OutputCharType>
+class DecimalNumberTranscodeTransform
+{
+public:
+
+	OutputCharType
+	operator()(InputCharType	theChar) const
+	{
+		switch(theChar)
+		{
+		case '-':
+			return OutputCharType(XalanUnicode::charHyphenMinus);
+			break;
+
+		case '.':
+			return OutputCharType(XalanUnicode::charFullStop);
+			break;
+
+		case '0':
+			return OutputCharType(XalanUnicode::charDigit_0);
+			break;
+
+		case '1':
+			return OutputCharType(XalanUnicode::charDigit_1);
+			break;
+
+		case '2':
+			return OutputCharType(XalanUnicode::charDigit_2);
+			break;
+
+		case '3':
+			return OutputCharType(XalanUnicode::charDigit_3);
+			break;
+
+		case '4':
+			return OutputCharType(XalanUnicode::charDigit_4);
+			break;
+
+		case '5':
+			return OutputCharType(XalanUnicode::charDigit_5);
+			break;
+
+		case '6':
+			return OutputCharType(XalanUnicode::charDigit_6);
+			break;
+
+		case '7':
+			return OutputCharType(XalanUnicode::charDigit_7);
+			break;
+
+		case '8':
+			return OutputCharType(XalanUnicode::charDigit_8);
+			break;
+
+		case '9':
+			return OutputCharType(XalanUnicode::charDigit_9);
+			break;
+
+		default:
+			return OutputCharType(0);
+			break;
+		}
+	}
+};
+
+
+
+template<class InputCharType, class OutputCharType>
+DecimalNumberTranscodeTransform<InputCharType, OutputCharType>
+makeDecimalNumberTranscodeTransform(
+			const InputCharType*,
+			const OutputCharType*)
+{
+	return DecimalNumberTranscodeTransform<InputCharType, OutputCharType>();
+}
+
+
+
+// A very cheap hex number transcoder...
+template <class InputCharType, class OutputCharType>
+class HexadecimalDecimalNumberTranscodeTransform : public DecimalNumberTranscodeTransform<InputCharType, OutputCharType>
+{
+public:
+
+	typedef DecimalNumberTranscodeTransform<InputCharType, OutputCharType>	BaseClassType;
+
+	OutputCharType
+	operator()(InputCharType	theChar) const
+	{
+		switch(theChar)
+		{
+		case 'A':
+			return OutputCharType(XalanUnicode::char_A);
+			break;
+
+		case 'a':
+			return OutputCharType(XalanUnicode::char_a);
+			break;
+
+		case 'B':
+			return OutputCharType(XalanUnicode::char_B);
+			break;
+
+		case 'b':
+			return OutputCharType(XalanUnicode::char_b);
+			break;
+
+		case 'C':
+			return OutputCharType(XalanUnicode::char_C);
+			break;
+
+		case 'c':
+			return OutputCharType(XalanUnicode::char_c);
+			break;
+
+		case 'D':
+			return OutputCharType(XalanUnicode::char_D);
+			break;
+
+		case 'd':
+			return OutputCharType(XalanUnicode::char_d);
+			break;
+
+		case 'E':
+			return OutputCharType(XalanUnicode::char_E);
+			break;
+
+		case 'e':
+			return OutputCharType(XalanUnicode::char_e);
+			break;
+
+		case 'F':
+			return OutputCharType(XalanUnicode::char_F);
+			break;
+
+		case 'f':
+			return OutputCharType(XalanUnicode::char_f);
+			break;
+
+		default:
+			return BaseClassType::operator()(theChar);
+			break;
+		}
+	}
+};
+
+
+
+template <class InputIteratorType, class OutputIteratorType>
+OutputIteratorType
+TranscodeNumber(
+			InputIteratorType	theInputBegin,
+			InputIteratorType	theInputEnd,
+			OutputIteratorType	theOutputIterator)
+{
+	return TransformString(
+				theInputBegin,
+				theInputEnd,
+				theOutputIterator,
+#if defined(XALAN_NON_ASCII_PLATFORM)
+				DecimalNumberTranscodeTransform<char, XalanDOMChar>());
+#else
+				IdentityTransform<char, XalanDOMChar>());
+#endif
+}
+
+
+
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(void)
+DoubleToDOMString(
+			double				theDouble,
+			XalanDOMString&		theString)
 {
 	if (DoubleSupport::isNaN(theDouble) == true)
 	{
-		return theNaNString;
+		theString = theNaNString;
 	}
 	else if (DoubleSupport::isPositiveInfinity(theDouble) == true)
 	{
-		return thePositiveInfinityString;
+		theString = thePositiveInfinityString;
 	}
 	else if (DoubleSupport::isNegativeInfinity(theDouble) == true)
 	{
-		return theNegativeInfinityString;
+		theString = theNegativeInfinityString;
+	}
+	else if (DoubleSupport::isNegativeZero(theDouble) == true)
+	{
+		theString = theNegativeZeroString;
+	}
+	else if (DoubleSupport::isPositiveZero(theDouble) == true)
+	{
+		theString = thePositiveZeroString;
 	}
 	else
 	{
-		// $$$ ToDo: this is all temporary, until we get the NumberFormat and DecimalFormat
-		// classes working.
-		// According to the XPath standard, any values without
-		// a fractional part are printed as integers.
-		double	intPart = 0;
+		char			theBuffer[MAX_PRINTF_DIGITS + 1];
 
-		double	fracPart = fabs(modf(theDouble, &intPart));
+		unsigned int	theCharsWritten = sprintf(theBuffer, "%f", theDouble);
+		assert(theCharsWritten != 0);
 
-		char		theBuffer[MAX_PRINTF_DIGITS + 1];
+		// First, cleanup the output to conform to the XPath standard,
+		// which says no trailing '0's for the decimal portion.
+		// So start with the last digit, and search until we find
+		// the last correct character for the output.
+		// Also, according to the XPath standard, any values without
+		// a fractional part are printed as integers.  There's always
+		// a decimal point, so we have to strip stuff away...
 
-#if 1
-		sprintf(theBuffer, "%f", theDouble);
-#else
-		ostrstream	theFormatter(theBuffer, sizeof(theBuffer));
-
-		// Ensure that we get fixed point results, and that there's enough precision.
-		theFormatter.flags((theFormatter.flags() & ~ios::scientific) | ios::fixed);
-
-		theFormatter.precision(20);
-
-		theFormatter << theDouble << '\0';
-#endif
-		// OK, now we have to clean up the output for
-		// the XPath standard, which says no trailing
-		// '0's for the decimal portion.  So start with
-		// the last digit, and replace any '0's with the
-		// null character.  We know at this point that
-		// we have at least 1 digit before the decimal
-		// point, and and least 1 non-zero digit after
-		// the decimal point, since any values with no
-		// fractional part were printed as integers
-		XalanDOMCharVectorType		theResult =
-#if defined(XALAN_NON_ASCII_PLATFORM)
-				MakeXalanDOMCharVector(theBuffer, true);
-#else
-				MakeXalanDOMCharVector(theBuffer, false);
-#endif
-
-		XalanDOMCharVectorType::iterator	thePosition = theResult.end();
-
-		// Move to the terminating null byte...
-		--thePosition;
-
-		// Now, move back while there are zeros.
-		while(*--thePosition == XalanUnicode::charDigit_0)
+		// Now, move back while there are zeros...
+		while(theBuffer[--theCharsWritten] == '0')
 		{
 		}
 
-		// If there's no fractional part, make sure we get rid
-		// of the decimal point...
-		if (fracPart != 0 ||
-			*thePosition != XalanUnicode::charFullStop)
+		// If a decimal point stopped the loop, then
+		// we don't want to preserve it.  Otherwise,
+		// another digit stopped the loop, so we must
+		// preserve it.
+		if(theBuffer[theCharsWritten] != '.')
 		{
-			// Move up one, since we need to keep at least one...
-			++thePosition;
+			++theCharsWritten;
 		}
 
-		// Terminate it...
-		*thePosition = 0;
-			
-		return XalanDOMString(theResult.begin());
+#if defined(XALAN_USE_XERCES_DOMSTRING)
+		XalanDOMChar	theResult[sizeof(theBuffer)];
+
+		TranscodeNumber(
+				theBuffer,
+				theBuffer + theCharsWritten,
+				theResult);
+
+		theString = XalanDOMString(theResult, theCharsWritten);
+#else
+		reserve(theString, theCharsWritten);
+
+		TranscodeNumber(
+				theBuffer,
+				theBuffer + theCharsWritten,
+				back_inserter(theString));
+#endif
 	}
 }
 
 
 
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString)
-LongToHexDOMString(long		theLong)
+template <class ScalarType>
+XalanDOMChar*
+ScalarToDecimalString(
+			ScalarType		theValue,
+			XalanDOMChar*	theOutput)
 {
-// I'm 99% sure that we don't need to use swprintf
-// to format, since strings of numbers don't to be
-// generated as wide strings.
-#if 0 // defined(XALAN_USE_WCHAR_SUPPORT)
+	// Null terminate it...
+	*theOutput = 0;
 
-	wchar_t		theBuffer[MAX_PRINTF_DIGITS + 1];
+	if (theValue < 0)
+	{
+		do
+		{
+			*--theOutput = XalanDOMChar(-(theValue % 10) + XalanUnicode::charDigit_0);
 
-	swprintf(theBuffer,
-			 L"%lx",
-			 theLong);
+			// OK, we're done with it...
+			theValue /= 10;
+		}
+		while(theValue != 0);
 
-	return XalanDOMString(theBuffer, length(theBuffer));
+		*--theOutput = XalanUnicode::charHyphenMinus;
+	}
+	else
+	{
+		do
+		{
+			*--theOutput = XalanDOMChar(theValue % 10 + XalanUnicode::charDigit_0);
 
-#else
+			// OK, we're done with it...
+			theValue /= 10;
+		}
+		while(theValue != 0);
+	}
 
-	char		theBuffer[MAX_PRINTF_DIGITS + 1];
-
-	ostrstream	theFormatter(theBuffer, sizeof(theBuffer));
-
-	theFormatter << hex << theLong << '\0';
-
-	// We don't need to transcode, so just make it a
-	// wide character string...
-	XalanDOMChar	theResult[MAX_PRINTF_DIGITS + 1];
-
-	const unsigned int	theLength = strlen(theBuffer);
-
-#if defined(XALAN_NO_ALGORITHMS_WITH_BUILTINS)
-	XalanCopy(theBuffer, theBuffer + theLength, theResult);
-#else
-	copy(theBuffer, theBuffer + theLength, theResult);
-#endif
-
-	return XalanDOMString(theResult, theLength);
-
-#endif
+	return theOutput;
 }
 
 
 
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString)
-UnsignedLongToHexDOMString(unsigned long	theUnsignedLong)
+template <class ScalarType>
+void
+ScalarToDecimalString(
+			ScalarType			theValue,
+			XalanDOMString&		theResult)
 {
-	char		theBuffer[MAX_PRINTF_DIGITS + 1];
-
-	ostrstream	theFormatter(theBuffer, sizeof(theBuffer));
-
-	theFormatter << hex << theUnsignedLong << '\0';
-
 	// We don't need to transcode, so just make it a
 	// wide character string...
-	XalanDOMChar	theResult[MAX_PRINTF_DIGITS + 1];
+	XalanDOMChar			theBuffer[MAX_PRINTF_DIGITS + 1];
 
-	const unsigned int	theLength = strlen(theBuffer);
+	XalanDOMChar* const		theEnd = &theBuffer[MAX_PRINTF_DIGITS];
 
-#if defined(XALAN_NO_ALGORITHMS_WITH_BUILTINS)
-	XalanCopy(theBuffer, theBuffer + theLength, theResult);
-#else
-	copy(theBuffer, theBuffer + theLength, theResult);
-#endif
+	XalanDOMChar* const		theBegin = ScalarToDecimalString(theValue, theEnd);
 
-	return XalanDOMString(theResult, theLength);
+	append(theResult, theBegin, theEnd - theBegin);
 }
 
 
 
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString)
-LongToDOMString(long	theLong)
+template <class ScalarType>
+XalanDOMChar*
+UnsignedScalarToHexadecimalString(
+			ScalarType		theValue,
+			XalanDOMChar*	theOutput)
 {
-#if 0 // defined(XALAN_USE_WCHAR_SUPPORT)
+	if (theValue >= 0)
+	{
+		// Null terminate it...
+		*theOutput = 0;
 
-	wchar_t		theBuffer[MAX_PRINTF_DIGITS + 1];
+		do
+		{
+			// Next spot...
+			--theOutput;
 
-	swprintf(theBuffer,
-			 L"%ld",
-			 theLong);
+			const ScalarType	theTemp = theValue % 16;
 
-	return XalanDOMString(theBuffer, length(theBuffer));
+			// Isolate the left most character.
+			if (theTemp >= 0 && theTemp <= 9)
+			{
+				*theOutput = XalanDOMChar(theTemp + XalanUnicode::charDigit_0);
+			}
+			else
+			{
+				assert(theTemp >= 10 && theTemp <= 15);
 
-#else
+				*theOutput = XalanDOMChar(theTemp - 10 + XalanUnicode::charLetter_A);
+			}
 
-	char		theBuffer[MAX_PRINTF_DIGITS + 1];
+			// OK, we're done with it...
+			theValue /= 16;
+		}
+		while(theValue != 0);
+	}
 
-	ostrstream	theFormatter(theBuffer, sizeof(theBuffer));
+	return theOutput;
+}
 
-	theFormatter << theLong << '\0';
 
-	// We don't need to transcode, so just make it a
-	// wide character string...
-	XalanDOMChar	theResult[MAX_PRINTF_DIGITS + 1];
 
-	const unsigned int	theLength = strlen(theBuffer);
+template <class ScalarType>
+void
+UnsignedScalarToHexadecimalString(
+			ScalarType			theValue,
+			XalanDOMString&		theResult)
+{
+	if (theValue >= 0)
+	{
+		// We don't need to transcode, so just make it a
+		// wide character string...
+		XalanDOMChar			theBuffer[MAX_PRINTF_DIGITS + 1];
 
-#if defined(XALAN_NO_ALGORITHMS_WITH_BUILTINS)
-	XalanCopy(theBuffer, theBuffer + theLength, theResult);
-#else
-	copy(theBuffer, theBuffer + theLength, theResult);
-#endif
+		XalanDOMChar* const		theEnd = &theBuffer[MAX_PRINTF_DIGITS];
 
-	return XalanDOMString(theResult, theLength);
-#endif
+		XalanDOMChar* const		theBegin = UnsignedScalarToHexadecimalString(theValue, theEnd);
+
+		append(theResult, theBegin, theEnd - theBegin);
+	}
+}
+
+
+
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(void)
+LongToHexDOMString(
+			long				theValue,
+			XalanDOMString&		theResult)
+{
+	UnsignedScalarToHexadecimalString(theValue, theResult);
+}
+
+
+
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(void)
+UnsignedLongToHexDOMString(
+			unsigned long		theValue,
+			XalanDOMString&		theResult)
+{
+	UnsignedScalarToHexadecimalString(theValue, theResult);
+}
+
+
+
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(void)
+LongToDOMString(
+			long				theValue,
+			XalanDOMString&		theResult)
+{
+	ScalarToDecimalString(theValue, theResult);
 }
 
 
@@ -1737,61 +2011,7 @@ UnsignedLongToDOMString(
 			unsigned long		theValue,
 			XalanDOMString&		theResult)
 {
-#if 1
-
-	XalanDOMChar				theBuffer[MAX_PRINTF_DIGITS + 1];
-
-	XalanDOMChar*				thePointer = &theBuffer[MAX_PRINTF_DIGITS];
-	const XalanDOMChar* const	theEnd = thePointer;
-
-	// Null terminate it...
-	*thePointer = 0;
-
-	do
-	{
-		// Next spot...
-		--thePointer;
-
-		// Isolate the left most character.
-		*thePointer = XalanDOMChar(theValue % 10 + XalanUnicode::charDigit_0);
-
-		// OK, we're done with it...
-		theValue /= 10;
-	}
-	while(theValue != 0);
-
-	assign(theResult, thePointer, theEnd - thePointer);
-
-#elif defined(XALAN_USE_WCHAR_SUPPORT)
-
-	wchar_t		theBuffer[MAX_PRINTF_DIGITS + 1];
-
-	swprintf(theBuffer,
-			 L"%lu",
-			 theValue);
-
-	assign(theResult, theBuffer, length(theBuffer));
-
-#else
-
-	char		theBuffer[MAX_PRINTF_DIGITS + 1];
-
-	ostrstream	theFormatter(theBuffer, sizeof(theBuffer));
-
-	theFormatter << theValue << '\0';
-
-	XalanDOMChar	theWideBuffer[MAX_PRINTF_DIGITS + 1];
-
-	const unsigned int	theLength = length(theBuffer);
-
-#if defined(XALAN_NO_ALGORITHMS_WITH_BUILTINS)
-	XalanCopy(theBuffer, theBuffer + theLength, theWideBuffer);
-#else
-	copy(theBuffer, theBuffer + theLength, theWideBuffer);
-#endif
-
-	assign(theResult, theWideBuffer, theLength);
-#endif
+	ScalarToDecimalString(theValue, theResult);
 }
 
 
