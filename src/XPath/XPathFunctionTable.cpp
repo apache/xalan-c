@@ -190,6 +190,8 @@ XPathFunctionTable::CreateTable()
 {
 	try
 	{
+		m_FunctionCollection.reserve(eDefaultTableSize);
+
 		InstallFunction(StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("last")),
 						FunctionLast());
 
@@ -270,7 +272,6 @@ XPathFunctionTable::CreateTable()
 
 		InstallFunction(StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("round")),
 						FunctionRound());
-
 	}
 	catch(...)
 	{

@@ -127,6 +127,8 @@ public:
 	typedef std::map<XalanDOMString, int>	FunctionNameIndexMapType;
 #endif
 
+	enum { eDefaultTableSize = 36 };
+
 	typedef DeleteFunctor<Function>		DeleteFunctorType;
 
 	/**
