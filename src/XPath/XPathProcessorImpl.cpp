@@ -603,11 +603,26 @@ XPathProcessorImpl::mapNSTokens(
 
 	const XalanDOMString 			prefix =
 				substring(pat, startSubstring, posOfNSSep);
+	assert(length(prefix) != 0);
 
 	const XalanDOMString* const		uName =
 				m_prefixResolver->getNamespaceForPrefix(prefix);
 
-	if(uName != 0 && length(*uName) > 0)
+	if(uName == 0)
+	{
+		error(
+			TranscodeFromLocalCodePage("Unable to resolve prefix '") +
+			prefix +
+			TranscodeFromLocalCodePage("'."));
+	}
+	else if (length(*uName) == 0)
+	{
+		error(
+			TranscodeFromLocalCodePage("The prefix '") +
+			prefix +
+			TranscodeFromLocalCodePage("' is bound to a zero-length URI."));
+	}
+	else
 	{
 		addToTokenQueue(*uName);
 
@@ -616,19 +631,6 @@ XPathProcessorImpl::mapNSTokens(
 		const XalanDOMString 	s = substring(pat, posOfNSSep + 1, posOfScan);
 	  
 		if(length(s) > 0)
-		{
-			addToTokenQueue(s);
-		}
-	}
-	else
-	{
-		addToTokenQueue(prefix);
-
-		addToTokenQueue(DOMServices::s_XMLNamespaceSeparatorString);
-
-		const XalanDOMString 	s = substring(pat, posOfNSSep + 1, posOfScan);
-
-		if(s.length() > 0)
 		{
 			addToTokenQueue(s);
 		}
