@@ -201,14 +201,6 @@ public:
 
 	typedef XALAN_STD_QUALIFIER map<const XalanDOMString*,
 				const XalanDOMString*,
-				DOMStringPointerLessThanFunction>		ExcludedResultPrefixesMapType;
-
-	typedef XALAN_STD_QUALIFIER map<const XalanDOMString*,
-				NamespaceExtended,
-				DOMStringPointerLessThanFunction>		NamespacesMapType;
-
-	typedef XALAN_STD_QUALIFIER map<const XalanDOMString*,
-				const XalanDOMString*,
 				DOMStringPointerLessThanFunction>		NamespaceAliasesMapType;
 
 	/**
@@ -367,7 +359,7 @@ public:
 	void
 	swap(NamespacesHandler&		theOther);
 
-	NamespacesMapType::size_type
+	NamespaceExtendedVectorType::size_type
 	getNamespaceDeclarationsCount() const
 	{
 		return m_namespaceDeclarations.size();
