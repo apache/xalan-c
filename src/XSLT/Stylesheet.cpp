@@ -1533,14 +1533,13 @@ Stylesheet::appendChild(XalanNode*		/* oldChild */)
 bool
 Stylesheet::hasChildNodes() const
 {
-	// $$$ ToDo: Is this always true?
 	return true;
 }
 
 
 
 void
-Stylesheet::setNodeValue(const XalanDOMString&		/* nodeValue */)
+Stylesheet::setNodeValue(const XalanDOMString&	/* nodeValue */)
 {
 	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
 }
@@ -1567,7 +1566,6 @@ Stylesheet::supports(
 const XalanDOMString&
 Stylesheet::getNamespaceURI() const
 {
-	// $$ ToDo: Is this the same value as PrefixResolver::getURI()?
 	return s_emptyString;
 }
 
@@ -1608,8 +1606,7 @@ Stylesheet::getIndex() const
 XalanElement*
 Stylesheet::createElement(const XalanDOMString& 	/* tagName */)
 {
-	//should not be called
-	assert(false);	
+	throw XalanDOMException(XalanDOMException::NOT_SUPPORTED_ERR);
 
 	return 0;
 }
@@ -1619,8 +1616,7 @@ Stylesheet::createElement(const XalanDOMString& 	/* tagName */)
 XalanDocumentFragment*
 Stylesheet::createDocumentFragment()
 {
-	//should not be called
-	assert(false);	
+	throw XalanDOMException(XalanDOMException::NOT_SUPPORTED_ERR);
 
 	return 0;
 }
@@ -1630,8 +1626,7 @@ Stylesheet::createDocumentFragment()
 XalanText*
 Stylesheet::createTextNode(const XalanDOMString&	/* data */)
 {
-	//should not be called
-	assert(false);	
+	throw XalanDOMException(XalanDOMException::NOT_SUPPORTED_ERR);
 
 	return 0;
 }
@@ -1641,8 +1636,7 @@ Stylesheet::createTextNode(const XalanDOMString&	/* data */)
 XalanComment*
 Stylesheet::createComment(const XalanDOMString& 	/* data */)
 {
-	//should not be called
-	assert(false);	
+	throw XalanDOMException(XalanDOMException::NOT_SUPPORTED_ERR);
 
 	return 0;
 }
@@ -1652,8 +1646,7 @@ Stylesheet::createComment(const XalanDOMString& 	/* data */)
 XalanCDATASection*
 Stylesheet::createCDATASection(const XalanDOMString&	/* data */)
 {
-	//should not be called
-	assert(false);	
+	throw XalanDOMException(XalanDOMException::NOT_SUPPORTED_ERR);
 
 	return 0;
 }
@@ -1665,8 +1658,7 @@ Stylesheet::createProcessingInstruction(
 			const XalanDOMString&	/* target */,
 			const XalanDOMString&	/* data */)
 {
-	//should not be called
-	assert(false);	
+	throw XalanDOMException(XalanDOMException::NOT_SUPPORTED_ERR);
 
 	return 0;
 }
@@ -1676,8 +1668,7 @@ Stylesheet::createProcessingInstruction(
 XalanAttr*
 Stylesheet::createAttribute(const XalanDOMString&	/* name */)
 {
-	//should not be called
-	assert(false);	
+	throw XalanDOMException(XalanDOMException::NOT_SUPPORTED_ERR);
 
 	return 0;
 }
@@ -1687,8 +1678,7 @@ Stylesheet::createAttribute(const XalanDOMString&	/* name */)
 XalanEntityReference*
 Stylesheet::createEntityReference(const XalanDOMString& 	/* name */)
 {
-	//should not be called
-	assert(false);	
+	throw XalanDOMException(XalanDOMException::NOT_SUPPORTED_ERR);
 
 	return 0;
 }
@@ -1698,8 +1688,7 @@ Stylesheet::createEntityReference(const XalanDOMString& 	/* name */)
 XalanDocumentType*
 Stylesheet::getDoctype() const
 {
-	//should not be called
-	assert(false);	
+	throw XalanDOMException(XalanDOMException::NOT_SUPPORTED_ERR);
 
 	return 0;
 }
@@ -1709,8 +1698,7 @@ Stylesheet::getDoctype() const
 XalanDOMImplementation*
 Stylesheet::getImplementation() const
 {
-	//should not be called
-	assert(false);	
+	throw XalanDOMException(XalanDOMException::NOT_SUPPORTED_ERR);
 
 	return 0;
 }
@@ -1720,8 +1708,6 @@ Stylesheet::getImplementation() const
 XalanElement*
 Stylesheet::getDocumentElement() const
 {
-	// $$$ ToDo: Is this correct?
-
 	return m_wrapperlessTemplate != 0 ? m_wrapperlessTemplate : m_firstTemplate;
 }
 
@@ -1730,6 +1716,8 @@ Stylesheet::getDocumentElement() const
 XalanNodeList*
 Stylesheet::getElementsByTagName(const XalanDOMString&		/* name */) const
 {
+	throw XalanDOMException(XalanDOMException::NOT_SUPPORTED_ERR);
+
 	return 0;
 }
 
@@ -1740,6 +1728,8 @@ Stylesheet::getElementsByTagNameNS(
 			const XalanDOMString&	/* namespaceURI */,
 			const XalanDOMString&	/* localName */) const
 {
+	throw XalanDOMException(XalanDOMException::NOT_SUPPORTED_ERR);
+
 	return 0;
 }
 
@@ -1750,8 +1740,7 @@ Stylesheet::importNode(
 			XalanNode*	/* importedNode */,
 			bool		/* deep */)
 {
-	//should not be called
-	assert(false);	
+	throw XalanDOMException(XalanDOMException::NOT_SUPPORTED_ERR);
 
 	return 0;
 }
@@ -1763,8 +1752,7 @@ Stylesheet::createElementNS(
 			const XalanDOMString&	/* namespaceURI */,
 			const XalanDOMString&	/* qualifiedName */)
 {
-	//should not be called
-	assert(false);	
+	throw XalanDOMException(XalanDOMException::NOT_SUPPORTED_ERR);
 
 	return 0;
 }
@@ -1776,8 +1764,7 @@ Stylesheet::createAttributeNS(
 			const XalanDOMString&	/* namespaceURI */,
 			const XalanDOMString&	/* qualifiedName */)
 {
-	//should not be called
-	assert(false);	
+	throw XalanDOMException(XalanDOMException::NOT_SUPPORTED_ERR);
 
 	return 0;
 }
@@ -1787,8 +1774,7 @@ Stylesheet::createAttributeNS(
 XalanElement*
 Stylesheet::getElementById(const XalanDOMString&	/* elementId */) const
 {
-	//should not be called
-	assert(false);	
+	throw XalanDOMException(XalanDOMException::NOT_SUPPORTED_ERR);
 
 	return 0;
 }
@@ -1798,9 +1784,6 @@ Stylesheet::getElementById(const XalanDOMString&	/* elementId */) const
 bool
 Stylesheet::isIndexed() const
 {
-	// This member functionshould not be called
-	assert(false);	
-
 	return false;
 }
 

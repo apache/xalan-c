@@ -360,7 +360,7 @@ XalanSourceTreeDocument::getIndex() const
 XalanElement*
 XalanSourceTreeDocument::createElement(const XalanDOMString&	/* tagName */)
 {
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
+	throw XalanDOMException(XalanDOMException::NOT_SUPPORTED_ERR);
 
 	// Dummy return value...
 	return 0;
@@ -371,7 +371,7 @@ XalanSourceTreeDocument::createElement(const XalanDOMString&	/* tagName */)
 XalanDocumentFragment*
 XalanSourceTreeDocument::createDocumentFragment()
 {
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
+	throw XalanDOMException(XalanDOMException::NOT_SUPPORTED_ERR);
 
 	// Dummy return value...
 	return 0;
@@ -382,7 +382,7 @@ XalanSourceTreeDocument::createDocumentFragment()
 XalanText*
 XalanSourceTreeDocument::createTextNode(const XalanDOMString&	/* data */)
 {
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
+	throw XalanDOMException(XalanDOMException::NOT_SUPPORTED_ERR);
 
 	// Dummy return value...
 	return 0;
@@ -393,7 +393,7 @@ XalanSourceTreeDocument::createTextNode(const XalanDOMString&	/* data */)
 XalanComment*
 XalanSourceTreeDocument::createComment(const XalanDOMString&	/* data */)
 {
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
+	throw XalanDOMException(XalanDOMException::NOT_SUPPORTED_ERR);
 
 	// Dummy return value...
 	return 0;
@@ -404,7 +404,7 @@ XalanSourceTreeDocument::createComment(const XalanDOMString&	/* data */)
 XalanCDATASection*
 XalanSourceTreeDocument::createCDATASection(const XalanDOMString&	/* data */)
 {
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
+	throw XalanDOMException(XalanDOMException::NOT_SUPPORTED_ERR);
 
 	// Dummy return value...
 	return 0;
@@ -417,7 +417,7 @@ XalanSourceTreeDocument::createProcessingInstruction(
 			const XalanDOMString&	/* target */,
 			const XalanDOMString&	/* data */)
 {
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
+	throw XalanDOMException(XalanDOMException::NOT_SUPPORTED_ERR);
 
 	// Dummy return value...
 	return 0;
@@ -428,7 +428,7 @@ XalanSourceTreeDocument::createProcessingInstruction(
 XalanAttr*
 XalanSourceTreeDocument::createAttribute(const XalanDOMString&	/* name */)
 {
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
+	throw XalanDOMException(XalanDOMException::NOT_SUPPORTED_ERR);
 
 	// Dummy return value...
 	return 0;
@@ -439,7 +439,7 @@ XalanSourceTreeDocument::createAttribute(const XalanDOMString&	/* name */)
 XalanEntityReference*
 XalanSourceTreeDocument::createEntityReference(const XalanDOMString&	/* name */)
 {
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
+	throw XalanDOMException(XalanDOMException::NOT_SUPPORTED_ERR);
 
 	// Dummy return value...
 	return 0;
@@ -498,7 +498,7 @@ XalanSourceTreeDocument::createElementNS(
 			const XalanDOMString&	/* namespaceURI */,
 			const XalanDOMString&	/* qualifiedName */)
 {
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
+	throw XalanDOMException(XalanDOMException::NOT_SUPPORTED_ERR);
 
 	return 0;
 }
@@ -510,7 +510,7 @@ XalanSourceTreeDocument::createAttributeNS(
 			const XalanDOMString&	/* namespaceURI */,
 			const XalanDOMString&	/* qualifiedName */)
 {
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
+	throw XalanDOMException(XalanDOMException::NOT_SUPPORTED_ERR);
 
 	return 0;
 }
