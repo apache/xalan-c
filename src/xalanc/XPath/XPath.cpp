@@ -4952,15 +4952,60 @@ XPath::NodeTester::NodeTester(
 	m_testFunction(&NodeTester::testDefault),
     m_testFunction2(&NodeTester::testDefault2)
 {
+	const eMatchScore	theScore =
+		initialize(
+			theConstructionContext,
+			theNameTest,
+			thePrefixResolver,
+			theLocator);
+
+	if (theMatchScore != 0)
+	{
+		*theMatchScore = theScore;
+	}
+}
+    
+
+
+XPath::NodeTester::NodeTester(
+            const XalanDOMString&   theNamespaceURI,
+            const XalanDOMString&   theLocalName,
+            eMatchScore*            theMatchScore) :
+	m_executionContext(0),
+	m_targetNamespace(0),
+	m_targetLocalName(0),
+	m_testFunction(&NodeTester::testDefault),
+    m_testFunction2(0)
+{
+	const eMatchScore	theScore =
+		initialize(theNamespaceURI, theLocalName);
+
+	if (theMatchScore != 0)
+	{
+		*theMatchScore = theScore;
+	}
+}
+
+
+
+XPath::eMatchScore
+XPath::NodeTester::initialize(
+            XPathConstructionContext&	theConstructionContext,
+            const XalanDOMString&       theNameTest,
+            const PrefixResolver&       thePrefixResolver,
+            const LocatorType*          theLocator)
+{
 	const XalanDOMString::size_type     theLength =
                 length(theNameTest);
 
     if (theLength == 1 && theNameTest[0] == XPath::PSEUDONAME_ANY[0])
     {
-		initialize(s_emptyString, s_emptyString, theMatchScore);
+		return initialize(s_emptyString, s_emptyString);
     }
     else
     {
+		eMatchScore		theResult = eMatchScoreNone;
+
         const XalanDOMString::size_type     theIndex =
                 indexOf(theNameTest, XalanUnicode::charColon);
 
@@ -4978,10 +5023,9 @@ XPath::NodeTester::NodeTester(
             }
             else
             {
-                initialize(
+                theResult = initialize(
 					s_emptyString,
-					theConstructionContext.getPooledString(theNameTest),
-                    theMatchScore);
+					theConstructionContext.getPooledString(theNameTest));
             }
         }
         else
@@ -5021,10 +5065,9 @@ XPath::NodeTester::NodeTester(
                          theNameTest[theIndex + 1] == XPath::PSEUDONAME_ANY[0])
                 {
                     // It's of the form "NCName:*"
-					initialize(
+					theResult = initialize(
                         theConstructionContext.getPooledString(*theNamespaceURI),
-                        s_emptyString,
-                        theMatchScore);
+                        s_emptyString);
                 }
                 else
                 {
@@ -5042,39 +5085,24 @@ XPath::NodeTester::NodeTester(
                     else
                     {
                         // It's of the form "NCName:NCName"
-						initialize(
+						theResult = initialize(
                             theConstructionContext.getPooledString(*theNamespaceURI),
-                            theConstructionContext.getPooledString(theScratchString),
-                            theMatchScore);
+                            theConstructionContext.getPooledString(theScratchString));
                     }
                 }
             }
         }
+
+		return theResult;
     }
 }
-    
-
-
-XPath::NodeTester::NodeTester(
-            const XalanDOMString&   theNamespaceURI,
-            const XalanDOMString&   theLocalName,
-            eMatchScore*            theMatchScore) :
-	m_executionContext(0),
-	m_targetNamespace(0),
-	m_targetLocalName(0),
-	m_testFunction(&NodeTester::testDefault),
-    m_testFunction2(0)
-{
-	initialize(theNamespaceURI, theLocalName, theMatchScore);
-}
 
 
 
-void
+XPath::eMatchScore
 XPath::NodeTester::initialize(
             const XalanDOMString&   theNamespaceURI,
-            const XalanDOMString&   theLocalName,
-            eMatchScore*            theMatchScore)
+            const XalanDOMString&   theLocalName)
 {
     if (theNamespaceURI.empty() == false)
     {
@@ -5084,10 +5112,7 @@ XPath::NodeTester::initialize(
         {
             m_testFunction2 = &NodeTester::testElementNamespaceOnly2;
 
-			if (theMatchScore != 0)
-			{
-				*theMatchScore = eMatchScoreNSWild;
-			}
+			return eMatchScoreNSWild;
         }
         else
         {
@@ -5095,10 +5120,7 @@ XPath::NodeTester::initialize(
 
 			m_targetLocalName = &theLocalName;
 
-			if (theMatchScore != 0)
-			{
-				*theMatchScore = eMatchScoreQName;
-			}
+			return eMatchScoreQName;
         }
     }
     else if (theLocalName.empty() == false)
@@ -5107,19 +5129,13 @@ XPath::NodeTester::initialize(
 
         m_targetLocalName = &theLocalName;
 
-		if (theMatchScore != 0)
-		{
-			*theMatchScore = eMatchScoreQName;
-		}
+		return eMatchScoreQName;
     }
     else
     {
         m_testFunction2 = &NodeTester::testElementTotallyWild2;
 
-		if (theMatchScore != 0)
-		{
-			*theMatchScore = eMatchScoreNodeTest;
-		}
+		return eMatchScoreNodeTest;
     }
 }
 

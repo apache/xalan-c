@@ -1083,13 +1083,21 @@ public:
 			return *this;
 		}
 
-	private:
+	protected:
 
-		void
+		eMatchScore
+		initialize(
+            XPathConstructionContext&	theConstructionContext,
+            const XalanDOMString&       theNameTest,
+            const PrefixResolver&       thePrefixResolver,
+            const LocatorType*          theLocator);
+
+		eMatchScore
 		initialize(
             const XalanDOMString&   theNamespaceURI,
-            const XalanDOMString&   theLocalName,
-            eMatchScore*            theMatchScore = 0);
+            const XalanDOMString&   theLocalName);
+
+	private:
 
 
 		typedef eMatchScore (NodeTester::*TestFunctionPtr)(const XalanNode&, XalanNode::NodeType) const;
