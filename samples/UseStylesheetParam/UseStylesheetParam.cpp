@@ -37,33 +37,24 @@ main(
 		// Initialize Xalan.
 		XalanTransformer::initialize();
 
-		// Create a XalanTransformer.
-		XalanTransformer theXalanTransformer;
-
-		// Our input files...The assumption is that the executable will be run
-		// from same directory as the input files.
-		const char*		theXMLFileName = "foo.xml";
-		const char*		theXSLFileName = "foo.xsl";
-
-		// Our output target...
-		const char*	theOutputFileName = "foo.out";
-
-		// Get the stylesheet parameter key (name) and
-		// expression (a string expression).
-		const char*	paramKey = argv[1];
-		const char*	paramExpression = argv[2];
-
-		// Set the stylesheet parameter.
-		theXalanTransformer.setStylesheetParam(paramKey, paramExpression);
-
-		// Do the transform.
-		theResult = theXalanTransformer.transform(theXMLFileName, theXSLFileName, theOutputFileName);
-    
-		if(theResult != 0)
 		{
-			cerr << "UseStylesheetParam Error: \n" << theXalanTransformer.getLastError()
-				 << endl
-				 << endl;
+			// Create a XalanTransformer.
+			XalanTransformer	theXalanTransformer;
+
+			// Set the stylesheet parameter name and
+			// expression (a string expression).
+			theXalanTransformer.setStylesheetParam(argv[1], argv[2]);
+
+			// Our input files...The assumption is that the executable will be run
+			// from same directory as the input files.
+			theResult = theXalanTransformer.transform("foo.xml", "foo.xsl", "foo.out");
+    
+			if(theResult != 0)
+			{
+				cerr << "UseStylesheetParam Error: \n" << theXalanTransformer.getLastError()
+					 << endl
+					 << endl;
+			}
 		}
 
 		// Terminate Xalan.

@@ -39,25 +39,20 @@ main(
 		// Initialize Xalan.
 		XalanTransformer::initialize();
 
-		// Create a XalanTransformer.
-		XalanTransformer theXalanTransformer;
-
-		// Our input files...The assumption is that the executable will be run
-		// from same directory as the input files.
-		const char*		theXMLFileName = "foo.xml";
-		const char*		theXSLFileName = "foo.xsl";
-
-		// Our output target...
-		const char*	theOutputFileName = "foo.out";
-
-		// Do the transform.
-		theResult = theXalanTransformer.transform(theXMLFileName, theXSLFileName, theOutputFileName);
-    
-		if(theResult != 0)
 		{
-			cerr << "SimpleTransform Error: \n" << theXalanTransformer.getLastError()
-				 << endl
-				 << endl;
+			// Create a XalanTransformer.
+			XalanTransformer theXalanTransformer;
+
+			// The assumption is that the executable will be run
+			// from same directory as the input files.
+			theResult = theXalanTransformer.transform("foo.xml", "foo.xsl", "foo.out");
+
+			if(theResult != 0)
+			{
+				cerr << "SimpleTransform Error: \n" << theXalanTransformer.getLastError()
+					 << endl
+					 << endl;
+			}
 		}
 
 		// Terminate Xalan.
