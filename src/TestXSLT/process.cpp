@@ -58,7 +58,10 @@
 #include <cstring>
 #include <iostream>
 
+#include <sys/types.h>
+#include <sys/stat.h>
 
+#include <string>
 
 #include <dom/DOM_Node.hpp>
 #include <dom/DOM_Element.hpp>
@@ -132,37 +135,137 @@ void printArgOptions(XercesDOMPrintWriter&		writer)
 	writer.println("	 [-PARAM name expression (Set a stylesheet parameter)]");
 }
 
-/*
-void printChildren(const DOM_Node& theNode, int level=0) 
+typedef std::map<std::string, std::string> String2StringMapType;
+
+struct CmdLineParams
 {
-	XMLCh *nodeTypeNames[] =
-	{
-		"", "ELEMENT_NODE", "ATTRIBUTE_NODE", "TEXT_NODE", "CDATA_SECTION_NODE",
-		"ENTITY_REFERENCE_NODE", "ENTITY_NODE", "PROCESSING_INSTRUCTION_NODE",
-		"COMMENT_NODE", "DOCUMENT_NODE", "DOCUMENT_TYPE_NODE",
-		"DOCUMENT_FRAGMENT_NODE", "NOTATION_NODE",
-	};
+	std::string dumpFileName;
+	DOMString specialCharacters;
+	DOMString treedumpFileName;
+	DOMString xslFileName;
+	String2StringMapType paramsMap;
+	bool doStackDumpOnError;
+	bool escapeCData;
+	bool formatOutput;
+	bool setQuietConflictWarnings;
+	bool setQuietMode;
+	bool shouldExpandEntityRefs;
+	bool stripCData;
+	int indentAmount;
+	int outputType;
+	std::vector <std::string> inFileNames;
+	std::string outFileName;
+};
 
-	DOM_NodeList nl = theNode.getChildNodes();
+typedef CmdLineParams CmdLineParamsType;
 
-	level++;
-	for (int i=0; i< nl.getLength(); i++)
+
+void getArgs(int argc, const char* argv[], CmdLineParamsType& p) throw()
+{
+	p.outputType = -1;
+	for (int i = 1;	i < argc;	i ++) 
 	{
-		for (int j=1; j< level; j++) printf("\t");
-		printf("%d.%d: ", level, i);
-		const DOM_Node n = nl.item(i);
-		std::basic_string<XMLCh> s(c_wstr(n.getNodeName()));
-		s.append("(");
-		int t = n.getNodeType();
-		s.append(nodeTypeNames[t]);
-		s.append(")");
-		printf("%-20ws ", s.c_str());
-		printf( t==3 ? "= %ws\n": "\n", c_wstr(n.getNodeValue()));
-		printChildren(n, level);
+		if (!stricmp("-ESCAPE", argv[i])) 
+		{
+			p.specialCharacters = argv[++i];
+		}
+		else if (!stricmp("-INDENT", argv[i])) 
+		{
+			if(((i+1) < argc) && (argv[i+1][0] != '-'))
+				p.indentAmount = atoi( argv[++i] );
+			else
+				p.indentAmount = 0;
+		} 
+		else if (!stricmp("-IN", argv[i])) 
+		{
+			p.inFileNames.push_back(argv[++i]);
+			while (! (*argv[i+1] == '-'))	// Multiple entries
+				p.inFileNames.push_back(argv[++i]);
+		}
+		else if (!stricmp("-OUT", argv[i])) 
+		{
+			p.outFileName = argv[++i];
+		}
+		else if (!stricmp("-XSL", argv[i])) 
+		{
+			p.xslFileName = argv[++i];
+		}
+		else if (!stricmp("-PARAM", argv[i])) 
+		{
+			std::string name = argv[++i];
+			std::string expression = argv[++i];
+			p.paramsMap[name] = expression;
+		}
+		else if (!stricmp("-treedump", argv[i])) 
+		{
+			p.treedumpFileName = argv[++i];
+		}
+		else if(!stricmp("-F", argv[i]))
+		{
+			p.formatOutput = true;
+		}
+		else if(!stricmp("-E", argv[i]))
+		{
+			p.shouldExpandEntityRefs = false;	//??
+		}
+		else if(!stricmp("-V", argv[i])) { }
+		else if(!stricmp("-QC", argv[i]))
+		{
+			p.setQuietConflictWarnings = true;
+		}
+		else if(!stricmp("-Q", argv[i]))
+		{
+			p.setQuietMode = true;
+		}
+		// Not used
+		else if(!stricmp("-VALIDATE", argv[i]))
+		{
+			DOMString shouldValidate;
+			if(((i+1) < argc) && (argv[i+1][0] != '-'))
+				shouldValidate = argv[++i];
+			else
+				shouldValidate = "yes";
+
+		}
+		else if(!stricmp("-PARSER", argv[i]))
+		{
+			i++; // Handled above
+		}
+		else if(!stricmp("-XML", argv[i]))
+		{
+			p.outputType = Formatter::OUTPUT_METH_XML;
+		}
+		else if(!stricmp("-TEXT", argv[i]))
+		{
+			p.outputType = Formatter::OUTPUT_METH_TEXT;
+		}
+		else if(!stricmp("-HTML", argv[i]))
+		{
+			p.outputType = Formatter::OUTPUT_METH_HTML;
+		}
+		else if(!stricmp("-STRIPCDATA", argv[i]))
+		{
+			p.stripCData = true;
+		}
+		else if(!stricmp("-ESCAPECDATA", argv[i]))
+		{
+			p.escapeCData = true;
+		}
+		else if(!stricmp("-EDUMP", argv[i]))
+		{
+			p.doStackDumpOnError = true;
+			if(((i+1) < argc) && (argv[i+1][0] != '-'))
+				p.dumpFileName = argv[++i];
+		}
 	}
 }
-*/
 
+static inline bool exists(std::string &filename)
+{
+
+	struct stat statBuffer;
+	return (0 == stat(filename.c_str(), &statBuffer));
+}
 
 void xsltMain(int argc, const char* argv[] ) throw(XMLException)
 {
@@ -178,9 +281,6 @@ void xsltMain(int argc, const char* argv[] ) throw(XMLException)
 	XMLPlatformUtils::Initialize();
 	XSLTEngineImpl::Initialize();
 
-
-	bool doStackDumpOnError = false;
-	bool setQuietMode = false;
 	
 	// @@ This should become a command line switch
 	bool shouldWriteXMLHeader = false;
@@ -203,10 +303,20 @@ void xsltMain(int argc, const char* argv[] ) throw(XMLException)
 	}
 	else
 	{
-		DOMSupportDefault theDOMSupport;
-		XercesParserLiaison xmlParserLiaison(theDOMSupport);
+		CmdLineParamsType params;
+		/*
+		 *		Get command line arguments
+		 */
+		getArgs(argc, argv, params);
+
+		std::auto_ptr<TextFileOutputStream>	outputFileStream;
+		TextOutputStream*					outputStream = &theStdOut;
+
 
 		DOMStringPrintWriter pw;
+
+		DOMSupportDefault theDOMSupport;
+		XercesParserLiaison xmlParserLiaison(theDOMSupport);
 
 		XPathSupportDefault theXPathSupport(theDOMSupport);
 		XSLTProcessorEnvSupportDefault	theXSLProcessorSupport;
@@ -220,6 +330,27 @@ void xsltMain(int argc, const char* argv[] ) throw(XMLException)
 				theXPathFactory);
 
 		theXSLProcessorSupport.setProcessor(&processor);
+		/*
+		 * Set specified processor flags
+		 */
+		if (params.setQuietConflictWarnings)
+			processor.setQuietConflictWarnings(true);
+
+		if (! params.paramsMap.empty())	
+		{
+			String2StringMapType::iterator it = params.paramsMap.begin();
+			for ( ; it != params.paramsMap.end(); it++)
+				processor.setStylesheetParam((*it).first.c_str(),
+						(*it).second.c_str());
+		}
+
+		/*
+		 * Set specified parser flags
+		 */
+		xmlParserLiaison.setIndent(params.indentAmount);
+		xmlParserLiaison.setSpecialCharacters(params.specialCharacters);
+		xmlParserLiaison.SetShouldExpandEntityRefs(params.shouldExpandEntityRefs);
+
 
 		processor.setFormatter(&xmlParserLiaison);
 
@@ -231,214 +362,116 @@ void xsltMain(int argc, const char* argv[] ) throw(XMLException)
 		XPathFactoryDefault		theStylesheetXPathFactory;
 
 		StylesheetConstructionContextDefault	theConstructionContext(processor,
-																	   theXSLProcessorSupport,
-																	   theStylesheetXObjectFactory,
-																	   theStylesheetXPathFactory);
+				theXSLProcessorSupport,
+				theStylesheetXObjectFactory,
+				theStylesheetXPathFactory);
 
 		XPathExecutionContextDefault			theXPathExecutionContext(theXSLProcessorSupport,
-																		 theXPathSupport,
-																		 theXObjectFactory);
+				theXPathSupport,
+				theXObjectFactory);
 
 		StylesheetExecutionContextDefault		theExecutionContext(theXPathExecutionContext,
-																	processor);
+				processor);
 
-		bool formatOutput = false;
-		
-		QName mode;
-		DOMString inFileName;
-		DOMString outFileName;
-		DOMString dumpFileName;
-		DOMString xslFileName;
-		DOMString compiledStylesheetFileNameOut;
-		DOMString compiledStylesheetFileNameIn;
-		DOMString treedumpFileName;
-		bool didSetCR = false;
-		bool didSetLF = false;
-		bool stripCData = false;
-		bool escapeCData = false;
-		std::auto_ptr<TextFileOutputStream>	outputFileStream;
-		TextOutputStream*					outputStream = &theStdOut;
-
-	
-		int outputType = -1;
-
-		for (int i = 1;	i < argc;	i ++) 
-		{
-			if (!stricmp("-ESCAPE", argv[i])) 
-			{
-				xmlParserLiaison.setSpecialCharacters(argv[++i]);
-			}
-			else if (!stricmp("-INDENT", argv[i])) 
-			{
-				int indentAmount;
-				if(((i+1) < argc) && (argv[i+1][0] != '-'))
-				{
-					indentAmount = atoi( argv[++i] );
-				}
-				else
-				{
-					indentAmount = 0;
-				}
-				xmlParserLiaison.setIndent(indentAmount);
-			} 
-			else if (!stricmp("-IN", argv[i])) 
-			{
-				inFileName = argv[++i];
-			}
-			else if (!stricmp("-OUT", argv[i])) 
-			{
-				outFileName = argv[++i];
-			}
-			else if (!stricmp("-XSL", argv[i])) 
-			{
-				xslFileName = argv[++i];
-			}
-			else if (!stricmp("-PARAM", argv[i])) 
-			{
-				DOMString name = argv[++i];
-				DOMString expression = argv[++i];
-				processor.setStylesheetParam(name, expression);
-			}
-			else if (!stricmp("-treedump", argv[i])) 
-			{
-				treedumpFileName = argv[++i];
-			}
-			else if(!stricmp("-F", argv[i]))
-			{
-				formatOutput = true;
-			}
-			else if(!stricmp("-E", argv[i]))
-			{
-				xmlParserLiaison.SetShouldExpandEntityRefs(false);
-			}
-			else if(!stricmp("-V", argv[i]))
-			{
-			}
-			else if(!stricmp("-QC", argv[i]))
-			{
-				processor.setQuietConflictWarnings(true);
-			}
-			else if(!stricmp("-Q", argv[i]))
-			{
-				setQuietMode = true;
-			}
-			else if(!stricmp("-VALIDATE", argv[i]))
-			{
-				DOMString shouldValidate;
-				if(((i+1) < argc) && (argv[i+1][0] != '-'))
-				{
-					shouldValidate = argv[++i];
-				}
-				else
-				{
-					shouldValidate = "yes";
-				}
-			 
-			}
-			else if(!stricmp("-PARSER", argv[i]))
-			{
-				i++;
-				// Handled above
-			}
-			else if(!stricmp("-XML", argv[i]))
-			{
-				outputType = Formatter::OUTPUT_METH_XML;
-			}
-			else if(!stricmp("-TEXT", argv[i]))
-			{
-				outputType = Formatter::OUTPUT_METH_TEXT;
-			}
-			else if(!stricmp("-HTML", argv[i]))
-			{
-				outputType = Formatter::OUTPUT_METH_HTML;
-			}
-			else if(!stricmp("-STRIPCDATA", argv[i]))
-			{
-				stripCData = true;
-			}
-			else if(!stricmp("-ESCAPECDATA", argv[i]))
-			{
-				escapeCData = true;
-			}
-			else if(!stricmp("-EDUMP", argv[i]))
-			{
-				doStackDumpOnError = true;
-				if(((i+1) < argc) && (argv[i+1][0] != '-'))
-				{
-					dumpFileName = argv[++i];
-				}
-			}
-		}
-		
 		// The main XSL transformation occurs here!
-			if (! setQuietMode)
-				processor.setDiagnosticsOutput( &diagnosticsWriter );
-			
-							
-			StylesheetRoot* stylesheet = 0;
-			
-			if(0 != xslFileName.length())
-			{
-				stylesheet = processor.processStylesheet(xslFileName, theConstructionContext);
-			}
+		if (! params.setQuietMode)
+			processor.setDiagnosticsOutput( &diagnosticsWriter );
 
-			if (length(outFileName) != 0)
-			{
-				outputFileStream =
-					std::auto_ptr<TextFileOutputStream>(new TextFileOutputStream(outFileName));
 
-				outputStream = outputFileStream.get();
-			}
+		StylesheetRoot* stylesheet = 0;
 
-			XercesDOMPrintWriter	resultWriter(*outputStream);
-			DOMString mimeEncoding("UTF-8");
-			DOMString encoding("UTF-8");
-			
-			FormatterListener* formatter = 0;
+		if(0 != params.xslFileName.length())
+		{
+			stylesheet = processor.processStylesheet(params.xslFileName, theConstructionContext);
+		}
 
-			assert(inFileName.length());
-			XSLTInputSource theInputSource(c_wstr(inFileName));
+		/*
+		 * If no output file specified, and multiple input files, generate an
+		 * output file based on the root of each input file; otherwise construct
+		 * as many unique filenames as required using the original output file
+		 * name as a base
+		 */
+		bool noOutputFileSpecified =  params.outFileName.empty();
+
+		DOMString mimeEncoding("UTF-8");
+		DOMString encoding("UTF-8");
+
+		FormatterListener* formatter = 0;
+
+		assert(! params.inFileNames.empty());
+
+
+		/*
+		 * Main loop to process multiple documents with a single stylesheet
+		 */
+		int nInputFiles = params.inFileNames.size();
+		for (int i=0; i< nInputFiles; i++)
+		{
+
+			std::string theInputFileName = params.inFileNames[i];
+			std::string outputFileName;
+			XSLTInputSource theInputSource(theInputFileName.c_str());
 			DOM_Node sourceTree = processor.getSourceTreeFromInput(&theInputSource);
 
-			/*
-			 * Output the source tree
-			 */
-/*
-			if (0)
-			if (! setQuietMode)
-				printChildren(sourceTree);
- */
-			
-			if(0 != stylesheet)
+			if (noOutputFileSpecified)
 			{
-				if(Formatter::OUTPUT_METH_XML == outputType)
+				if (nInputFiles > 1)
 				{
-					FormatterToXML* fToXML = new FormatterToXML(resultWriter,
-							stylesheet->m_version,
-							stylesheet->getOutputIndent(),
-							xmlParserLiaison.getIndent(),
-							mimeEncoding,
-							stylesheet->m_mediatype,
-							stylesheet->getOutputDoctypeSystem(),
-							stylesheet->getOutputDoctypePublic(),
-							true,	// xmlDecl
-							stylesheet->m_standalone,
-							&(stylesheet->getCdataSectionElems()));
-					fToXML->m_shouldWriteXMLHeader = shouldWriteXMLHeader;
-					fToXML->m_attrSpecialChars = xmlParserLiaison.getSpecialCharacters();
-					fToXML->m_stripCData = stripCData;
-					fToXML->m_escapeCData = escapeCData;
-					formatter = fToXML;
+					outputFileName =
+						theInputFileName.substr(0, theInputFileName.find_last_of('.'));
+					outputFileName += ".out";
+					//	Strip off protocol, if its a file protocol for local machine,
+					//	otherwise we're out of luck
+					std::string LOCALFILE = "file:///";
+					if (0 == outputFileName.find(LOCALFILE))
+						outputFileName = outputFileName.substr(LOCALFILE.size());
 				}
-				else if(Formatter::OUTPUT_METH_TEXT == outputType)
-				{
-					FormatterToText* fToText = new FormatterToText(resultWriter);
-					formatter = fToText;
-				}
-				else if(Formatter::OUTPUT_METH_HTML == outputType)
-				{
-					FormatterToHTML* fToHTML
-						= new FormatterToHTML(resultWriter, 
+			}
+			else
+			{
+				outputFileName = params.outFileName;
+				if (exists(outputFileName))		// Make sure it's unique
+					outputFileName += '0'+i;
+
+			}
+			if (! outputFileName.empty())	
+			{
+				outputFileStream = 
+					std::auto_ptr<TextFileOutputStream>(new TextFileOutputStream(
+								outputFileName.c_str()));
+				outputStream = outputFileStream.get();
+			}
+			XercesDOMPrintWriter	resultWriter(*outputStream);
+
+			assert(0 != stylesheet);
+			if(Formatter::OUTPUT_METH_XML == params.outputType)
+			{
+				FormatterToXML* fToXML = new FormatterToXML(resultWriter,
+						stylesheet->m_version,
+						stylesheet->getOutputIndent(),
+						xmlParserLiaison.getIndent(),
+						mimeEncoding,
+						stylesheet->m_mediatype,
+						stylesheet->getOutputDoctypeSystem(),
+						stylesheet->getOutputDoctypePublic(),
+						true,	// xmlDecl
+						stylesheet->m_standalone,
+						&(stylesheet->getCdataSectionElems()));
+				fToXML->m_shouldWriteXMLHeader = shouldWriteXMLHeader;
+				fToXML->m_attrSpecialChars = xmlParserLiaison.getSpecialCharacters();
+				fToXML->m_stripCData = params.stripCData;
+				fToXML->m_escapeCData = params.escapeCData;
+				formatter = fToXML;
+			}
+			else if(Formatter::OUTPUT_METH_TEXT == params.outputType)
+			{
+				FormatterToText* fToText = new FormatterToText(resultWriter);
+				formatter = fToText;
+			}
+			else if(Formatter::OUTPUT_METH_HTML == params.outputType)
+			{
+				FormatterToHTML* fToHTML
+					= new FormatterToHTML(resultWriter, 
 							stylesheet->m_version,
 							stylesheet->getOutputIndent(),
 							xmlParserLiaison.getIndent(), mimeEncoding,
@@ -449,10 +482,9 @@ void xsltMain(int argc, const char* argv[] ) throw(XMLException)
 							stylesheet->m_standalone,
 							&(stylesheet->getCdataSectionElems()));
 
-					fToHTML->m_attrSpecialChars = xmlParserLiaison.getSpecialCharacters();
-					fToHTML->m_stripCData = stripCData;
-					formatter = fToHTML;
-				}
+				fToHTML->m_attrSpecialChars = xmlParserLiaison.getSpecialCharacters();
+				fToHTML->m_stripCData = params.stripCData;
+				formatter = fToHTML;
 			}
 			XSLTResultTarget* rTreeTarget = 0;
 			if(0 == formatter)
@@ -467,10 +499,10 @@ void xsltMain(int argc, const char* argv[] ) throw(XMLException)
 			}
 
 			stylesheet->process(sourceTree, *rTreeTarget, theExecutionContext);
-
-			delete formatter;
 			delete rTreeTarget;
+		}
 
+		delete formatter;
 	}
 }	
 
