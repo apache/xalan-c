@@ -48,11 +48,6 @@
 #include <PlatformSupport/XalanStdOutputStream.hpp>
 #include "FileUtility.hpp"
 
-#if defined(XALAN_NO_NAMESPACES)
-	typedef vector<XalanDOMString>		FileNameVectorType;
-#else
-	typedef std::vector<XalanDOMString>	FileNameVectorType;
-#endif
 
 /*	This routine retrieves test file names from specified directories.
 //	Inputs: baseDir:	typically "conf" or "perf"
