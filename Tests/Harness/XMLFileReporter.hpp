@@ -291,6 +291,8 @@ public:
 
 	void logCheckFail(const XalanDOMString& test, Hashtable faildata, Hashtable actexp);
 
+	void logCheckFail(const XalanDOMString& test, Hashtable actexp);
+
 	void logErrorResult(const XalanDOMString& test, const XalanDOMString& reason);
 
 	/**

@@ -443,6 +443,25 @@ XMLFileReporter::logErrorResult(const XalanDOMString& test, const XalanDOMString
 }
 
 void 
+XMLFileReporter::logCheckFail(const XalanDOMString& test, Hashtable actexp)
+{
+    if (isReady())
+    {
+        printToFile(CHECKFAIL_HDR + escapestring(test) + "\"");
+
+		printToFile(XalanDOMString(">"));
+		
+		Hashtable::iterator aeEnd = actexp.end();
+       	for(Hashtable::iterator ii = actexp.begin(); ii != aeEnd; ++ii)
+        {            
+			logElement((*ii).first, (*ii).second);
+        }
+
+		printToFile(CHECKFAIL_FTR);
+    }
+}
+
+void 
 XMLFileReporter::logCheckFail(const XalanDOMString& test, Hashtable attrs, Hashtable actexp)
 {
     if (isReady())
