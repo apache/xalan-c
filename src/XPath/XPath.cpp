@@ -507,12 +507,12 @@ XPath::getTargetData(TargetDataVectorType&	targetData) const
 
 								if(targetLocalName != 0)
 								{
-									if(XALAN_CPP_NAMESPACE_QUALIFIER equals(targetLocalName, PSEUDONAME_ANY) == true)
+									if(targetLocalName == PSEUDONAME_ANY)
 									{
 										targetLocalName = PSEUDONAME_ANY;
 
 										if (targetNamespace == 0 ||
-											XALAN_CPP_NAMESPACE_QUALIFIER equals(*targetNamespace, PSEUDONAME_ANY) == true)
+											*targetNamespace == PSEUDONAME_ANY)
 										{
 											score = eMatchScoreNodeTest;
 										}
@@ -531,7 +531,7 @@ XPath::getTargetData(TargetDataVectorType&	targetData) const
 									targetLocalName = PSEUDONAME_ANY;
 
 									if (targetNamespace == 0 ||
-										XALAN_CPP_NAMESPACE_QUALIFIER equals(*targetNamespace, PSEUDONAME_ANY) == true)
+										*targetNamespace == PSEUDONAME_ANY)
 									{
 										score = eMatchScoreNodeTest;
 									}
@@ -2690,7 +2690,7 @@ XPath::findNamespace(
 					// This is an optimization to keep non-namespace attributes out of
 					// the call to nodeTest().
 					if (startsWith(theNodeName, DOMServices::s_XMLNamespaceWithSeparator) == true ||
-						XALAN_CPP_NAMESPACE_QUALIFIER equals(theNodeName, DOMServices::s_XMLNamespace) == true)
+						theNodeName == DOMServices::s_XMLNamespace)
 					{
 						const eMatchScore	score =
 							theTester(*attr, XalanNode::ATTRIBUTE_NODE);
@@ -2790,7 +2790,7 @@ XPath::nodeTest(
 					currentExpression.getToken(tokenPosition);
 				assert(name != 0);
 
-				if (XALAN_CPP_NAMESPACE_QUALIFIER equals(context->getNodeName(), name->str()) == true)
+				if (context->getNodeName() == name->str())
 				{
 					score = eMatchScoreQName;
 				}
@@ -2866,7 +2866,7 @@ XPath::nodeTest(
 
 					if(0 != length(targetNS) && 0 != length(contextNS))
 					{
-						test = XALAN_CPP_NAMESPACE_QUALIFIER equals(contextNS, targetNS);
+						test = contextNS == targetNS;
 
 						didMatchNS = true;
 					}
@@ -2898,7 +2898,7 @@ XPath::nodeTest(
 
 							const bool				isNamespace =
 									startsWith(attrName, DOMServices::s_XMLNamespaceWithSeparator) ||
-									XALAN_CPP_NAMESPACE_QUALIFIER equals(attrName, DOMServices::s_XMLNamespace);
+									attrName == DOMServices::s_XMLNamespace;
 
 							if(XPathExpression::eELEMWILDCARD == queueIndex)
 							{
@@ -2938,7 +2938,7 @@ XPath::nodeTest(
 										const XalanDOMString&	localAttrName =
 												DOMServices::getLocalNameOfNode(*context);
 
-										if (XALAN_CPP_NAMESPACE_QUALIFIER equals(localAttrName, targetLocalName) == true)
+										if (localAttrName == targetLocalName)
 										{
 											score = eMatchScoreQName;
 										}
@@ -2964,7 +2964,7 @@ XPath::nodeTest(
 										const XalanDOMString&	targetLocalName =
 															currentExpression.getToken(queueIndex)->str();
 
-										if (XALAN_CPP_NAMESPACE_QUALIFIER equals(theNamespace, targetLocalName) == true)
+										if (theNamespace == targetLocalName)
 										{
 											score = eMatchScoreQName;
 										}
@@ -2989,8 +2989,7 @@ XPath::nodeTest(
 								const XalanDOMString&	targetLocalName =
 															currentExpression.getToken(queueIndex)->str();
 
-								if (XALAN_CPP_NAMESPACE_QUALIFIER equals(DOMServices::getLocalNameOfNode(*context),
-										   targetLocalName) == true)
+								if (DOMServices::getLocalNameOfNode(*context) == targetLocalName)
 								{
 									score = eMatchScoreQName;
 								}
@@ -3344,7 +3343,7 @@ XPath::NodeTester::testPIName(
 	assert(m_targetLocalName != 0);
 
 	if (XalanNode::PROCESSING_INSTRUCTION_NODE == nodeType &&
-		XALAN_CPP_NAMESPACE_QUALIFIER equals(context.getNodeName(), *m_targetLocalName) == true)
+		context.getNodeName() == *m_targetLocalName)
 	{
 		return eMatchScoreQName;
 	}
@@ -3623,7 +3622,7 @@ XPath::NodeTester::matchLocalName(const XalanNode&	context) const
 	assert(m_targetLocalName != 0);
 
 	return length(context.getNamespaceURI()) == 0 &&
-		XALAN_CPP_NAMESPACE_QUALIFIER equals(DOMServices::getLocalNameOfNode(context), *m_targetLocalName);
+		DOMServices::getLocalNameOfNode(context) == *m_targetLocalName;
 }
 
 
@@ -3633,7 +3632,7 @@ XPath::NodeTester::matchNamespaceURI(const XalanNode&	context) const
 {
 	assert(m_targetNamespace != 0);
 
-	return XALAN_CPP_NAMESPACE_QUALIFIER equals(context.getNamespaceURI(), *m_targetNamespace);
+	return context.getNamespaceURI() == *m_targetNamespace;
 }
 
 
@@ -3643,8 +3642,8 @@ XPath::NodeTester::matchLocalNameAndNamespaceURI(const XalanNode&	context) const
 {
 	assert(m_targetNamespace != 0 && m_targetLocalName != 0);
 
-	return XALAN_CPP_NAMESPACE_QUALIFIER equals(DOMServices::getLocalNameOfNode(context), *m_targetLocalName) == true &&
-		XALAN_CPP_NAMESPACE_QUALIFIER equals(context.getNamespaceURI(), *m_targetNamespace) == true;
+	return DOMServices::getLocalNameOfNode(context) == *m_targetLocalName &&
+		   context.getNamespaceURI() == *m_targetNamespace;
 }
 
 
@@ -3654,7 +3653,7 @@ XPath::NodeTester::matchNamespace(const XalanNode&	context) const
 {
 	assert(m_targetLocalName != 0);
 
-	return XALAN_CPP_NAMESPACE_QUALIFIER equals(context.getLocalName(), *m_targetLocalName);
+	return context.getLocalName() == *m_targetLocalName;
 }
 
 
