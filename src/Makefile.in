@@ -158,7 +158,7 @@ ifeq ($(PLATFORM), LINUX)
   ifeq (${CXX}, icpc)
 
     PIC_OPTION=-KPIC
-    PLATFORM_COMPILE_OPTIONS = -w1 -Xa -mp -prec_div
+    PLATFORM_COMPILE_OPTIONS = -ansi 
 
   else
 

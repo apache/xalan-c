@@ -58,6 +58,9 @@
 # 
 #
 # $Log$
+# Revision 1.18  2003/03/20 16:38:32  dbertoni
+# Updates for Intel compiler on Linux.
+#
 # Revision 1.17  2003/02/08 01:39:33  dbertoni
 # Don't add bitstobuildLink on AIX.
 #
@@ -258,7 +261,11 @@ esac
 if test $debug = "off"; then
     echo "Debug is OFF"
     if test $platform = "linux"; then
-        debugflag="-O2 -DNDEBUG";
+		if test $cppcompiler = "icpc"; then
+			debugflag="-O3 -DNDEBUG";
+		else
+			debugflag="-O2 -DNDEBUG";
+		fi
     else
         debugflag="-O -DNDEBUG";
     fi
