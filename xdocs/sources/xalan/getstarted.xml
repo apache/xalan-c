@@ -79,7 +79,6 @@
 </p>
 <p>New to the &xslt4c-current; binary distribution list, we are also providing the following: 
 <ul>
-<li>SuSE Linux 7.2 for S/390 32-bit gcc 2.95 build  </li>
 <li>SuSE Linux 8.1 for IA-32 gcc 3.2.2 build  </li>
 </ul>
 </p>
@@ -133,11 +132,6 @@ will be provided in a separate distribution.</p>
   <td>&xslt4c-solaris27_64-dist; </td>
   <td>&xml4c-solaris27_64-dist;</td>
   <td>Solaris 2.7 (64-bit)</td>
-  </tr>
-  <tr>
-  <td>&xslt4c-suse72_zOS-dist;</td>
-  <td>&xml4c-suse72_zOS-dist;</td>
-  <td>SuSE Linux 7.2 for S/390 (32-bit)</td>
   </tr>
   <tr>
   <td>&xslt4c-suse81_IA-dist;</td>

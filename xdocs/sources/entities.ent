@@ -57,7 +57,7 @@
  -->
 
 <!ENTITY xslt4c "Xalan-C++">
-<!ENTITY xslt4c-dist "Xalan-C_1_7">
+<!ENTITY xslt4c-dist "Xalan-C_1_7_0">
 <!ENTITY xslt4c-current "Xalan-C++ version 1.7">
 <!ENTITY xslt4c-windll "Xalan-C_1_7_0.dll">
 <!ENTITY xslt4c-linuxlib "libxalan-c1_7.so">
