@@ -71,6 +71,7 @@
 // Xerces DOM header files
 #include <util/XercesDefs.hpp>
 #include <sax/ErrorHandler.hpp>
+#include <dom/DOM_Document.hpp>
 
 
 
@@ -150,7 +151,19 @@ public:
 	 * @return A pointer to the XercesDocumentBridge instance.
 	 */
 	XercesDocumentBridge*
-	mapXalanDocument(const XalanDocument*	theDocument) const;
+	mapDocument(const XalanDocument*	theDocument) const;
+
+	/** 
+	 * Map a pointer to a XalanDocument instance to its corresponding
+	 * class pointer.  Normally, you should have no reason for doing
+	 * this.  The liaison will return a null pointer if it did not
+	 * create the instance passed.
+	 *
+	 * @param theDocument A pointer to a XalanDocument instance.
+	 * @return A pointer to the XercesDocumentBridge instance.
+	 */
+	DOM_Document
+	mapXercesDocument(const XalanDocument*	theDocument) const;
 
 	// Implementations for SAX ErrorHandler
 

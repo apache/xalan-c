@@ -226,7 +226,7 @@ XercesParserLiaison::createDocument(const DOM_Document&		theXercesDocument)
 
 
 XercesDocumentBridge*
-XercesParserLiaison::mapXalanDocument(const XalanDocument*	theDocument) const
+XercesParserLiaison::mapDocument(const XalanDocument*	theDocument) const
 {
 	const DocumentMapType::const_iterator	i =
 		m_documentMap.find(theDocument);
@@ -236,7 +236,19 @@ XercesParserLiaison::mapXalanDocument(const XalanDocument*	theDocument) const
 
 
 
-void XercesParserLiaison::fatalError(const SAXParseException& e)
+DOM_Document
+XercesParserLiaison::mapXercesDocument(const XalanDocument*		theDocument) const
+{
+	const DocumentMapType::const_iterator	i =
+		m_documentMap.find(theDocument);
+
+	return i != m_documentMap.end() ? i->second->getXercesDocument() : DOM_Document();
+}
+
+
+
+void
+XercesParserLiaison::fatalError(const SAXParseException& e)
 {
 #if !defined(XALAN_NO_NAMESPACES)
 	using std::cerr;
