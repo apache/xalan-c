@@ -4952,6 +4952,8 @@ XPath::NodeTester::NodeTester(
         {
             m_testFunction2 = &NodeTester::testElementQName2;
 
+			m_targetLocalName = &theLocalName;
+
             theMatchScore = eMatchScoreQName;
         }
     }
