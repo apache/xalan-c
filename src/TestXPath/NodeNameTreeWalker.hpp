@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -71,6 +71,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 class NodeNameTreeWalker : public TreeWalker
 {
 public:
@@ -133,6 +137,10 @@ private:
 	XalanDOMString	m_nodeName;
 	NodeVectorType	m_matchingNodes;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 
