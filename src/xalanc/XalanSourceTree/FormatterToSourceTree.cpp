@@ -196,6 +196,8 @@ doAppendChildNode(
 	else
 	{
 		XalanSourceTreeHelper::appendSibling(theLastChild, theNewChild);
+
+		theNewChild->setParent(theParent);
 	}
 
 	theLastChild = theNewChild;
