@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?> 
 <!DOCTYPE resources [
+  <!ENTITY % externalEntity SYSTEM "sbk:/sources/entities.ent">
+  %externalEntity;
   <!ENTITY apiResources SYSTEM "apiResources.xml">
   <!ELEMENT resources (resource|human-resource)+>
   <!ELEMENT resource EMPTY>
@@ -13,7 +15,7 @@
    ]>     
 <resources>
  	
-  <resource id="xslt4c-current" title="&xslt4c-current" location="http://xml.apache.org/xalan"/>
+  <resource id="xslt4c-current" title="&xslt4c-current;" location="http://xml.apache.org/xalan"/>
   <resource id="xml4c-used" title="&xml4c-used;" location="http://xml.apache.org/xerces-c/index.html"/>   
 
   <resource id="xslt4c-distdir" title="&xslt4c; distribution directory" location="http://xml.apache.org/dist/xalan-c"/>
