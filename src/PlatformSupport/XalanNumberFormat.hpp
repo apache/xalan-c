@@ -91,10 +91,32 @@ public:
 	 * Format a number into a string.
 	 *
 	 * @param theValue number to format
+	 * @param theResult the string result
+	 */
+	virtual void
+	format(
+			double				theValue,
+			XalanDOMString&		theResult);
+
+	/**
+	 * Format a number into a string.
+	 *
+	 * @param theValue number to format
 	 * @return string representation of number
 	 */
 	virtual XalanDOMString
 	format(int	theValue);
+
+	/**
+	 * Format a number into a string.
+	 *
+	 * @param theValue number to format
+	 * @param theResult the string result
+	 */
+	virtual void
+	format(
+			int					theValue,
+			XalanDOMString&		theResult);
 
 	/**
 	 * Format a number into a string.
@@ -109,6 +131,17 @@ public:
 	 * Format a number into a string.
 	 *
 	 * @param theValue number to format
+	 * @param theResult the string result
+	 */
+	virtual void
+	format(
+			unsigned int		theValue,
+			XalanDOMString&		theResult);
+
+	/**
+	 * Format a number into a string.
+	 *
+	 * @param theValue number to format
 	 * @return string representation of number
 	 */
 	virtual XalanDOMString
@@ -118,10 +151,32 @@ public:
 	 * Format a number into a string.
 	 *
 	 * @param theValue number to format
+	 * @param theResult the string result
+	 */
+	virtual void
+	format(
+			long				theValue,
+			XalanDOMString&		theResult);
+
+	/**
+	 * Format a number into a string.
+	 *
+	 * @param theValue number to format
 	 * @return string representation of number
 	 */
 	virtual XalanDOMString
 	format(unsigned long	theValue);
+
+	/**
+	 * Format a number into a string.
+	 *
+	 * @param theValue number to format
+	 * @param theResult the string result
+	 */
+	virtual void
+	format(
+			unsigned long		theValue,
+			XalanDOMString&		theResult);
 
 	/**
 	 * Whether groupings are used for numbers, for example, "234,678"
@@ -156,11 +211,14 @@ public:
 	virtual void
 	setGroupingSeparator(const XalanDOMString&	s);
 
+protected:
+
+	void
+	applyGrouping(
+			const XalanDOMString&		value,
+			XalanDOMString&				result);
+
 private:
-
-	XalanDOMString
-	applyGrouping(const XalanDOMString&		value);
-
 
 	// Not implemented...
 	XalanNumberFormat(const XalanNumberFormat&);

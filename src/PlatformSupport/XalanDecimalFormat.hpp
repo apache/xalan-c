@@ -85,10 +85,9 @@ public:
 	 * @param theSymbols       class defining the symbols used for output, for
 	 *                         example, symbol for currency
 	 */
-	explicit
 	XalanDecimalFormat(
-			const XalanDOMString&				thePatternString = XalanDOMString(),
-			const XalanDecimalFormatSymbols&	theSymbols = XalanDecimalFormatSymbols());
+			const XalanDOMString&				thePatternString,
+			const XalanDecimalFormatSymbols&	theSymbols);
 
 	virtual
 	~XalanDecimalFormat();
@@ -97,18 +96,42 @@ public:
 	virtual XalanDOMString
 	format(double	theValue);
 
+	virtual void
+	format(
+			double				theValue,
+			XalanDOMString&		theResult);
+
 	virtual XalanDOMString
 	format(int	theValue);
+
+	virtual void
+	format(
+			int					theValue,
+			XalanDOMString&		theResult);
 
 	virtual XalanDOMString
 	format(unsigned int		theValue);
 
+	virtual void
+	format(
+			unsigned int		theValue,
+			XalanDOMString&		theResult);
+
 	virtual XalanDOMString
 	format(long		theValue);
+
+	virtual void
+	format(
+			long				theValue,
+			XalanDOMString&		theResult);
 
 	virtual XalanDOMString
 	format(unsigned long	theValue);
 
+	virtual void
+	format(
+			unsigned long		theValue,
+			XalanDOMString&		theResult);
 
 	// New for XalanDecimalFormat...
 
@@ -121,7 +144,7 @@ public:
 	const XalanDecimalFormatSymbols&
 	getDecimalFormatSymbols() const
 	{
-		return m_decimalFormatSymbols;
+		return *m_decimalFormatSymbols;
 	}
 
 	/**
@@ -133,7 +156,7 @@ public:
 	void
 	setDecimalFormatSymbols(const XalanDecimalFormatSymbols&	theDecimalFormatSymbols)
 	{
-		m_decimalFormatSymbols = theDecimalFormatSymbols;
+		m_decimalFormatSymbols = &theDecimalFormatSymbols;
 	}
 
 	void
@@ -160,11 +183,11 @@ private:
 
 
 	// Data members...
-	XalanDOMString					m_patternString;
+	XalanDOMString						m_patternString;
 
-	XalanDecimalFormatSymbols		m_decimalFormatSymbols;
+	const XalanDecimalFormatSymbols*	m_decimalFormatSymbols;
 
-	static const XalanDOMString		s_defaultPatternString;
+	static const XalanDOMString			s_defaultPatternString;
 };
 
 

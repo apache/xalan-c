@@ -58,6 +58,7 @@
 #include "DOMStringHelper.hpp"
 
 
+
 const XalanDOMString	XalanDecimalFormat::s_defaultPatternString;
 
 
@@ -66,8 +67,8 @@ XalanDecimalFormat::XalanDecimalFormat(
 			const XalanDOMString&				thePatternString,
 			const XalanDecimalFormatSymbols&	theSymbols) :
 	XalanNumberFormat(),
-	m_patternString(length(thePatternString) == 0 ? s_defaultPatternString : thePatternString),
-	m_decimalFormatSymbols(theSymbols)
+	m_patternString(thePatternString),
+	m_decimalFormatSymbols(&theSymbols)
 {
 }
 
@@ -88,11 +89,33 @@ XalanDecimalFormat::format(double	theValue)
 
 
 
+void
+XalanDecimalFormat::format(
+			double				theValue,
+			XalanDOMString&		theResult)
+{
+	// $$$ ToDo: Fix this!
+	XalanNumberFormat::format(theValue, theResult);
+}
+
+
+
 XalanDOMString
 XalanDecimalFormat::format(int	theValue)
 {
 	// $$$ ToDo: Fix this!!!
 	return XalanNumberFormat::format(theValue);
+}
+
+
+
+void
+XalanDecimalFormat::format(
+			int					theValue,
+			XalanDOMString&		theResult)
+{
+	// $$$ ToDo: Fix this!
+	XalanNumberFormat::format(theValue, theResult);
 }
 
 
@@ -106,6 +129,17 @@ XalanDecimalFormat::format(unsigned int	theValue)
 
 
 
+void
+XalanDecimalFormat::format(
+			unsigned int		theValue,
+			XalanDOMString&		theResult)
+{
+	// $$$ ToDo: Fix this!
+	XalanNumberFormat::format(theValue, theResult);
+}
+
+
+
 XalanDOMString
 XalanDecimalFormat::format(long	theValue)
 {
@@ -115,11 +149,33 @@ XalanDecimalFormat::format(long	theValue)
 
 
 
+void
+XalanDecimalFormat::format(
+			long				theValue,
+			XalanDOMString&		theResult)
+{
+	// $$$ ToDo: Fix this!
+	XalanNumberFormat::format(theValue, theResult);
+}
+
+
+
 XalanDOMString
 XalanDecimalFormat::format(unsigned long	theValue)
 {
 	// $$$ ToDo: Fix this!!!
 	return XalanNumberFormat::format(theValue);
+}
+
+
+
+void
+XalanDecimalFormat::format(
+			unsigned long		theValue,
+			XalanDOMString&		theResult)
+{
+	// $$$ ToDo: Fix this!
+	XalanNumberFormat::format(theValue, theResult);
 }
 
 
@@ -149,7 +205,7 @@ XalanDecimalFormat::getNormalizedPattern(const XalanDOMString&	thePattern)
 	// numbers, then assume that the pattern for negative
 	// numbers is the same as that for positive numbers.
 	const XalanDOMChar	thePatternSeparatorChar =
-		m_decimalFormatSymbols.getPatternSeparator();
+		m_decimalFormatSymbols->getPatternSeparator();
 
 	// Is the a separator?
 	const unsigned int	theSeparatorIndex =
@@ -166,7 +222,7 @@ XalanDecimalFormat::getNormalizedPattern(const XalanDOMString&	thePattern)
 		XalanDOMString	theNewPattern(thePattern);
 
 		theNewPattern += thePatternSeparatorChar;
-		theNewPattern += m_decimalFormatSymbols.getMinusSign();
+		theNewPattern += m_decimalFormatSymbols->getMinusSign();
 		theNewPattern += thePattern;
 
 		return theNewPattern;

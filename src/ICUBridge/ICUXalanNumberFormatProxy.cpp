@@ -97,11 +97,25 @@ ICUXalanNumberFormatProxy::~ICUXalanNumberFormatProxy()
 XalanDOMString
 ICUXalanNumberFormatProxy::format(double	theValue)
 {
-	UnicodeString	theResult;
+	UnicodeString	theUnicodeResult;
 
-	m_decimalFormat->format(theValue, theResult);
+	m_decimalFormat->format(theValue, theUnicodeResult);
 
-	return ICUBridge::UnicodeStringToXalanDOMString(theResult);
+	return ICUBridge::UnicodeStringToXalanDOMString(theUnicodeResult);
+}
+
+
+
+void
+ICUXalanNumberFormatProxy::format(
+			double				theValue,
+			XalanDOMString&		theResult)
+{
+	UnicodeString	theUnicodeResult;
+
+	m_decimalFormat->format(theValue, theUnicodeResult);
+
+	ICUBridge::UnicodeStringToXalanDOMString(theUnicodeResult, theResult);
 }
 
 
@@ -109,11 +123,25 @@ ICUXalanNumberFormatProxy::format(double	theValue)
 XalanDOMString
 ICUXalanNumberFormatProxy::format(int	theValue)
 {
-	UnicodeString	theResult;
+	UnicodeString	theUnicodeResult;
 
-	m_decimalFormat->format(int32_t(theValue), theResult);
+	m_decimalFormat->format(int32_t(theValue), theUnicodeResult);
 
-	return ICUBridge::UnicodeStringToXalanDOMString(theResult);
+	return ICUBridge::UnicodeStringToXalanDOMString(theUnicodeResult);
+}
+
+
+
+void
+ICUXalanNumberFormatProxy::format(
+			int					theValue,
+			XalanDOMString&		theResult)
+{
+	UnicodeString	theUnicodeResult;
+
+	m_decimalFormat->format(int32_t(theValue), theUnicodeResult);
+
+	ICUBridge::UnicodeStringToXalanDOMString(theUnicodeResult, theResult);
 }
 
 
@@ -121,11 +149,25 @@ ICUXalanNumberFormatProxy::format(int	theValue)
 XalanDOMString
 ICUXalanNumberFormatProxy::format(unsigned int	theValue)
 {
-	UnicodeString	theResult;
+	UnicodeString	theUnicodeResult;
 
-	m_decimalFormat->format(int32_t(theValue), theResult);
+	m_decimalFormat->format(int32_t(theValue), theUnicodeResult);
 
-	return ICUBridge::UnicodeStringToXalanDOMString(theResult);
+	return ICUBridge::UnicodeStringToXalanDOMString(theUnicodeResult);
+}
+
+
+
+void
+ICUXalanNumberFormatProxy::format(
+			unsigned int		theValue,
+			XalanDOMString&		theResult)
+{
+	UnicodeString	theUnicodeResult;
+
+	m_decimalFormat->format(int32_t(theValue), theUnicodeResult);
+
+	ICUBridge::UnicodeStringToXalanDOMString(theUnicodeResult, theResult);
 }
 
 
@@ -133,11 +175,25 @@ ICUXalanNumberFormatProxy::format(unsigned int	theValue)
 XalanDOMString
 ICUXalanNumberFormatProxy::format(long	theValue)
 {
-	UnicodeString	theResult;
+	UnicodeString	theUnicodeResult;
 
-	m_decimalFormat->format(int32_t(theValue), theResult);
+	m_decimalFormat->format(int32_t(theValue), theUnicodeResult);
 
-	return ICUBridge::UnicodeStringToXalanDOMString(theResult);
+	return ICUBridge::UnicodeStringToXalanDOMString(theUnicodeResult);
+}
+
+
+
+void
+ICUXalanNumberFormatProxy::format(
+			long				theValue,
+			XalanDOMString&		theResult)
+{
+	UnicodeString	theUnicodeResult;
+
+	m_decimalFormat->format(theValue, theUnicodeResult);
+
+	ICUBridge::UnicodeStringToXalanDOMString(theUnicodeResult, theResult);
 }
 
 
@@ -145,11 +201,25 @@ ICUXalanNumberFormatProxy::format(long	theValue)
 XalanDOMString
 ICUXalanNumberFormatProxy::format(unsigned long	theValue)
 {
-	UnicodeString	theResult;
+	UnicodeString	theUnicodeResult;
 
-	m_decimalFormat->format(int32_t(theValue), theResult);
+	m_decimalFormat->format(int32_t(theValue), theUnicodeResult);
 
-	return ICUBridge::UnicodeStringToXalanDOMString(theResult);
+	return ICUBridge::UnicodeStringToXalanDOMString(theUnicodeResult);
+}
+
+
+
+void
+ICUXalanNumberFormatProxy::format(
+			unsigned long		theValue,
+			XalanDOMString&		theResult)
+{
+	UnicodeString	theUnicodeResult;
+
+	m_decimalFormat->format(int32_t(theValue), theUnicodeResult);
+
+	ICUBridge::UnicodeStringToXalanDOMString(theUnicodeResult, theResult);
 }
 
 

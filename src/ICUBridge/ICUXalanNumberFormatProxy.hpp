@@ -87,17 +87,42 @@ public:
 	virtual XalanDOMString
 	format(double	theValue);
 
+	virtual void
+	format(
+			double				theValue,
+			XalanDOMString&		theResult);
+
 	virtual XalanDOMString
 	format(int	theValue);
+
+	virtual void
+	format(
+			int					theValue,
+			XalanDOMString&		theResult);
 
 	virtual XalanDOMString
 	format(unsigned int		theValue);
 
+	virtual void
+	format(
+			unsigned int		theValue,
+			XalanDOMString&		theResult);
+
 	virtual XalanDOMString
 	format(long		theValue);
 
+	virtual void
+	format(
+			long				theValue,
+			XalanDOMString&		theResult);
+
 	virtual XalanDOMString
 	format(unsigned long	theValue);
+
+	virtual void
+	format(
+			unsigned long		theValue,
+			XalanDOMString&		theResult);
 
 	virtual bool
 	isGroupingUsed() const;
