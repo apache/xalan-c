@@ -193,18 +193,26 @@ ElemAttribute::execute(
 			{
 				indexOfNSSep = indexOf(origAttrName, XalanUnicode::charColon);
 
-				if(indexOfNSSep < origAttrNameLength)
-				{
-					assign(attrName, substring(attrName, indexOfNSSep + 1));
-				}
-
+				// See if the namespace already exists.  If it does, we'll get the
+				// prefix that was used when it was declared.
 				const XalanDOMString&	prefix = executionContext.getResultPrefixForNamespace(attrNameSpace);
 
 				if(isEmpty(prefix) == false)
 				{
-					reserve(
-						attrName,
-						length(attrName) + DOMServices::s_XMLNamespaceSeparatorStringLength + length(prefix) + 1);
+					if(indexOfNSSep < origAttrNameLength)
+					{
+						reserve(
+							attrName,
+							length(attrName) - (indexOfNSSep + 1) + DOMServices::s_XMLNamespaceSeparatorStringLength + length(prefix) + 1);
+
+						assign(attrName, substring(attrName, indexOfNSSep + 1));
+					}
+					else
+					{
+						reserve(
+							attrName,
+							length(attrName) + DOMServices::s_XMLNamespaceSeparatorStringLength + length(prefix) + 1);
+					}
 
 					insert(attrName, 0, DOMServices::s_XMLNamespaceSeparatorString);
 					insert(attrName, 0, prefix);
@@ -215,8 +223,39 @@ ElemAttribute::execute(
 
 					XalanDOMString&		newPrefix = newPrefixGuard.get();
 
-					executionContext.getUniqueNamespaceValue(newPrefix);
+					// If the prefix on the QName is xmlns, we cannot use it.
+					const bool			fPrefixIsXMLNS =
+						startsWith(origAttrName, DOMServices::s_XMLNamespaceWithSeparator);
 
+					// If there's a prefix, and it's not xmlns, then use
+					// the prefix that's provided.
+					if(indexOfNSSep < origAttrNameLength &&
+					    fPrefixIsXMLNS == false)
+					{
+						newPrefix = substring(origAttrName, 0, indexOfNSSep);
+					}
+					else
+					{
+						// If there's a prefix, and it's xmlns, then strip it
+						// off...
+						if (fPrefixIsXMLNS == true)
+						{
+							assign(attrName, substring(attrName, indexOfNSSep + 1));
+						}
+
+						// Get a new, unique namespace prefix...
+						executionContext.getUniqueNamespaceValue(newPrefix);
+
+						// Reserve some space in the string.
+						reserve(
+							attrName,
+							length(attrName) + DOMServices::s_XMLNamespaceSeparatorStringLength + length(newPrefix) + 1);
+
+						insert(attrName, 0, DOMServices::s_XMLNamespaceSeparatorString);
+						insert(attrName, 0, newPrefix);
+					}
+
+					// OK, now we have to generate a namespace declaration...
 					StylesheetExecutionContext::GetAndReleaseCachedString	nsDeclGuard(executionContext);
 
 					XalanDOMString&		nsDecl = nsDeclGuard.get();
@@ -224,17 +263,11 @@ ElemAttribute::execute(
 					reserve(nsDecl, DOMServices::s_XMLNamespaceWithSeparatorLength + length(newPrefix) + 1);
 
 					assign(nsDecl, DOMServices::s_XMLNamespaceWithSeparator);
-					
+
 					append(nsDecl, newPrefix);
 
+					// Add the namespace declaration...
 					executionContext.addResultAttribute(nsDecl, attrNameSpace);
-
-					reserve(
-						attrName,
-						length(attrName) + DOMServices::s_XMLNamespaceSeparatorStringLength + length(newPrefix) + 1);
-
-					insert(attrName, 0, DOMServices::s_XMLNamespaceSeparatorString);
-					insert(attrName, 0, newPrefix);
 				}
 			}
 		}
