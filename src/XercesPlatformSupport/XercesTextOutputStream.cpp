@@ -68,7 +68,7 @@
 
 
 
-const XercesTextOutputStream::BufferType::size_type	XercesTextOutputStream::s_bufferSize = 8192;
+const XercesTextOutputStream::BufferType::size_type	XercesTextOutputStream::s_bufferSize = 512;
 
 
 
