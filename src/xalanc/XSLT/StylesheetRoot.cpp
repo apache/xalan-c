@@ -208,6 +208,7 @@ StylesheetRoot::process(
 		executionContext.pushTime(&sourceTree);
 	}
 
+#if defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 	typedef StylesheetExecutionContext::PushAndPopContextMarker	PushAndPopContextMarker;
 	typedef StylesheetExecutionContext::PushAndPopElementFrame	PushAndPopElementFrame;
 	typedef StylesheetExecutionContext::ResolveAndClearTopLevelParams	ResolveAndClearTopLevelParams;
@@ -219,6 +220,11 @@ StylesheetRoot::process(
 				0);
 
 	ResolveAndClearTopLevelParams	theResolveAndClearTopLevelParams(executionContext);
+#else
+	executionContext.pushContextMarker();
+	executionContext.pushElementFrame(0);
+	executionContext.resolveTopLevelParams();
+#endif
 
 #if defined(XALAN_VQ_SPECIAL_TRACE)
 	QuantifyStartRecordingData();
@@ -250,6 +256,12 @@ StylesheetRoot::process(
 		executionContext.displayDuration(XalanMessageLoader::getMessage(XalanMessages::Transform), &sourceTree);
 		executionContext.diag(StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("")));
 	}
+
+#if !defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
+	executionContext.clearTopLevelParams();
+	executionContext.popElementFrame();
+	executionContext.popContextMarker();
+#endif
 }
 
 
