@@ -94,10 +94,6 @@ LINK32=link.exe
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\Arg.cpp
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\..\..\src\XSLT\AVT.cpp
 # End Source File
 # Begin Source File
@@ -115,14 +111,6 @@ SOURCE=..\..\..\..\src\XSLT\AVTPartXPath.cpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\XSLT\Constants.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\src\XSLT\ContextMarker.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\src\XSLT\ContextState.cpp
 # End Source File
 # Begin Source File
 
@@ -175,14 +163,6 @@ SOURCE=..\..\..\..\src\XSLT\ElemElement.cpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\XSLT\ElemEmpty.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\src\XSLT\ElementFrameMarker.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\src\XSLT\ElementMarker.cpp
 # End Source File
 # Begin Source File
 
@@ -338,10 +318,6 @@ SOURCE=..\..\..\..\src\XSLT\SelectionEvent.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\StackEntry.cpp
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\..\..\src\XSLT\Stylesheet.cpp
 # End Source File
 # Begin Source File
@@ -370,6 +346,10 @@ SOURCE=..\..\..\..\src\XSLT\StylesheetRoot.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\XSLT\TopLevelArg.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\XSLT\TraceListener.cpp
 # End Source File
 # Begin Source File
@@ -379,6 +359,10 @@ SOURCE=..\..\..\..\src\XSLT\TraceListenerDefault.cpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\XSLT\TracerEvent.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XSLT\VariablesStack.cpp
 # End Source File
 # Begin Source File
 
@@ -423,10 +407,6 @@ SOURCE=..\..\..\..\src\XSLT\XSLTResultTarget.cpp
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\Arg.hpp
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\..\..\src\XSLT\AVT.hpp
 # End Source File
 # Begin Source File
@@ -444,14 +424,6 @@ SOURCE=..\..\..\..\src\XSLT\AVTPartXPath.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\XSLT\Constants.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\src\XSLT\ContextMarker.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\src\XSLT\ContextState.hpp
 # End Source File
 # Begin Source File
 
@@ -667,10 +639,6 @@ SOURCE=..\..\..\..\src\XSLT\SelectionEvent.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\StackEntry.hpp
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\..\..\src\XSLT\Stylesheet.hpp
 # End Source File
 # Begin Source File
@@ -699,6 +667,10 @@ SOURCE=..\..\..\..\src\XSLT\StylesheetRoot.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\XSLT\TopLevelArg.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\XSLT\TraceListener.hpp
 # End Source File
 # Begin Source File
@@ -708,6 +680,10 @@ SOURCE=..\..\..\..\src\XSLT\TraceListenerDefault.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\XSLT\TracerEvent.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XSLT\VariablesStack.hpp
 # End Source File
 # Begin Source File
 
