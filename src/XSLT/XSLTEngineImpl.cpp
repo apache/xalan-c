@@ -4118,17 +4118,16 @@ XSLTEngineImpl::VariableStack::pushParams(
 
 	try
 	{
-		try
+		// If we do a pop, the current stack index may point to the last
+		// element, in which case it will be changed when the push happens, so
+		// we need to preserve the current index
+		const ElemTemplateElement*	child =
+			xslCallTemplateElement.getFirstChildElem();
+		if (0 != child)
 		{
-			// If we do a pop, the current stack index may point to the last
-			// element, in which case it will be changed when the push happens, so
-			// we need to preserve the current index
-			const ElemTemplateElement*	child =
-				xslCallTemplateElement.getFirstChildElem();
-			if (0 != child)
+			try
 			{
 				pop();
-
 				while(0 != child)
 				{
 					if(Constants::ELEMNAME_WITHPARAM == child->getXSLToken())
@@ -4175,15 +4174,13 @@ XSLTEngineImpl::VariableStack::pushParams(
 					child = child->getNextSiblingElem();
 				}
 			}
-		}
-		catch(...)
-		{
+			catch(...)
+			{
+				push(cm);
+				throw;
+			}
 			push(cm);
-
-			throw;
 		}
-
-		push(cm);
 
 		try
 		{
