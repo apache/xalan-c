@@ -154,10 +154,17 @@ XalanOutputStreamPrintWriter::write(
 			size_t			theLength)
 {
 	assert(s != 0);
+    assert(XalanDOMString::size_type(theLength) == theLength);
 
 	flushWideChars();
 
-	if (theLength == npos)
+	if (theLength != npos)
+	{
+		m_outputStream.write(
+            s + theOffset,
+            XalanDOMString::size_type(theLength));
+	}
+	else
 	{
 		if (theOffset == 0)
 		{
@@ -167,10 +174,6 @@ XalanOutputStreamPrintWriter::write(
 		{
 			m_outputStream.write(s + theOffset);
 		}
-	}
-	else
-	{
-		m_outputStream.write(s + theOffset, theLength);
 	}
 }
 

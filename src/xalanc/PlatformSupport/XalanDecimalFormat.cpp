@@ -178,24 +178,21 @@ XalanDecimalFormat::format(
 			unsigned long		theValue,
 			XalanDOMString&		theResult)
 {
-	// $$$ ToDo: Fix this!
 	XalanNumberFormat::format(theValue, theResult);
 }
 
 
 
 void
-XalanDecimalFormat::applyPattern(const XalanDOMString&	thePattern)
+XalanDecimalFormat::applyPattern(const XalanDOMString&	/* thePattern */)
 {
-	// $$$ ToDo: Fix this!!!
 }
 
 
 
 void
-XalanDecimalFormat::applyLocalizedPattern(const XalanDOMString&	thePattern)
+XalanDecimalFormat::applyLocalizedPattern(const XalanDOMString&     /* thePattern */)
 {
-	// $$$ ToDo: Fix this!!!
 }
 
 

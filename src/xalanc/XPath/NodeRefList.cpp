@@ -162,7 +162,9 @@ NodeRefList::item(size_type		index) const
 NodeRefList::size_type
 NodeRefList::getLength() const
 {
-	return m_nodeList.size();
+    assert(size_type(m_nodeList.size()) == m_nodeList.size());
+
+	return size_type(m_nodeList.size());
 }
 
 

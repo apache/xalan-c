@@ -72,10 +72,6 @@
 
 
 
-#include <xalanc/XalanDOM/XalanDOMString.hpp>
-
-
-
 XALAN_CPP_NAMESPACE_BEGIN
 
 

@@ -1111,11 +1111,11 @@ private:
 
 	DOMCharBufferType							m_charBuf;
 
-	DOMCharBufferType::size_type				m_pos;
+	XalanDOMString::size_type				    m_pos;
 
 	ByteBufferType								m_byteBuf;
 
-	static const DOMCharBufferType::size_type	s_maxBufferSize;
+	static const XalanDOMString::size_type	    s_maxBufferSize;
 
 	/**
 	 * A stack of Boolean objects that tell if the given element 

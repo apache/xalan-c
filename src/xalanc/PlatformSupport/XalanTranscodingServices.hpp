@@ -98,20 +98,22 @@ public:
 	terminate();
 
 	typedef unsigned char	XalanXMLByte;
+    typedef unsigned int    size_type;
+    typedef unsigned int    UnicodeCharType;
 
-	static size_t
+	static size_type
 	length(const XalanXMLByte*	theBytes)
 	{
 		assert(theBytes != 0);
 
-		const XalanXMLByte*		theCurrentByte = theBytes;
+        size_type   i = 0;
 
-		while(*theCurrentByte != 0)
+		while(theBytes[i] != 0)
 		{
-			++theCurrentByte;
+			++i;
 		}
 
-		return theCurrentByte - theBytes;
+		return i;
 	}
 
     enum eCode
@@ -136,7 +138,7 @@ public:
 	makeNewTranscoder(
 			const XalanDOMString&	theEncodingName,
 			eCode&					theResult,
-			size_t					theBlockSize);
+			size_type				theBlockSize);
 
 	/**
 	 * Destroy a transcoder instance.
@@ -244,7 +246,7 @@ public:
 	getBytesEqualChars(const XalanDOMString&	theEncoding);
 
 	static bool
-	canTranscodeToLocalCodePage(unsigned int	theChar)
+	canTranscodeToLocalCodePage(UnicodeCharType     theChar)
 	{
 		// Yuck!! See getMaximumCharacterValue() for more details.
 		return theChar <= 0x7fu ? true : false;
@@ -276,13 +278,13 @@ public:
 	public:
 
 		UnrepresentableCharacterException(
-			unsigned int			theCharacter,
+			UnicodeCharType			theCharacter,
 			const XalanDOMString&	theEncoding);
 
 		virtual
 		~UnrepresentableCharacterException();
 
-		unsigned int
+		UnicodeCharType
 		getCharacter() const
 		{
 			return m_badCharacter;
@@ -296,7 +298,7 @@ public:
 
 	private:
 
-		const unsigned int		m_badCharacter;
+		const UnicodeCharType	m_badCharacter;
 
 		const XalanDOMString	m_encoding;
 	};
@@ -314,8 +316,10 @@ class XALAN_PLATFORMSUPPORT_EXPORT XalanOutputTranscoder
 {
 public:
 
-	typedef XalanTranscodingServices::XalanXMLByte	XalanXMLByte;
-	typedef XalanTranscodingServices::eCode			eCode;
+	typedef XalanTranscodingServices::XalanXMLByte	    XalanXMLByte;
+	typedef XalanTranscodingServices::eCode			    eCode;
+    typedef XalanTranscodingServices::size_type         size_type;
+    typedef XalanTranscodingServices::UnicodeCharType   UnicodeCharType;
 
 	explicit
 	XalanOutputTranscoder();
@@ -339,11 +343,11 @@ public:
 	virtual eCode
 	transcode(
 			const XalanDOMChar*		theSourceData,
-			size_t					theSourceCount,
+			size_type				theSourceCount,
 			XalanXMLByte*			theTarget,
-			size_t					theTargetSize,
-			size_t&					theSourceCharsTranscoded,
-			size_t&					theTargetBytesUsed) = 0;
+			size_type			    theTargetSize,
+			size_type&				theSourceCharsTranscoded,
+			size_type&				theTargetBytesUsed) = 0;
 
 	/**
 	 * Transcode data from the transcoder's encoding to UTF-16.  If successfull,
@@ -362,15 +366,15 @@ public:
 	virtual eCode
 	transcode(
 			const XalanXMLByte*		theSourceData,
-			size_t					theSourceCount,
+			size_type				theSourceCount,
 			XalanDOMChar*			theTarget,
-			size_t					theTargetSize,
-			size_t&					theSourceCharsTranscoded,
-			size_t&					theTargetBytesUsed,
+			size_type				theTargetSize,
+			size_type&				theSourceCharsTranscoded,
+			size_type&				theTargetBytesUsed,
 			unsigned char*			theCharSizes) = 0;
 
 	virtual bool
-	canTranscodeTo(unsigned int		theChar) const = 0;
+	canTranscodeTo(UnicodeCharType	theChar) const = 0;
 
 private:
 

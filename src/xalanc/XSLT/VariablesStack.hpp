@@ -97,6 +97,8 @@ class XALAN_XSLT_EXPORT VariablesStack
 {
 public:
 
+    typedef unsigned long   size_type;
+
 	/**
 	 * Constructor for a variable stack.
 	 */
@@ -105,7 +107,6 @@ public:
 
 	~VariablesStack();
 
-	
 	/**
 	 * Reset the stack.
 	 */
@@ -298,12 +299,18 @@ public:
 	 * @param currentStackFrameIndex new value of index
 	 */
 	void
-	setCurrentStackFrameIndex(int	currentStackFrameIndex = -1)
+	setCurrentStackFrameIndex(size_type     currentStackFrameIndex = ~0u)
 	{
-		if (currentStackFrameIndex == -1)
-			m_currentStackFrameIndex = m_stack.size();
+		if (currentStackFrameIndex == ~0u)
+        {
+            assert(size_type(m_stack.size()) == m_stack.size());
+
+			m_currentStackFrameIndex = size_type(m_stack.size());
+        }
 		else
+        {
 			m_currentStackFrameIndex = currentStackFrameIndex;
+        }
 	}
 
 	/**
@@ -312,7 +319,7 @@ public:
 	 *
 	 * @return current value of index
 	 */
-	int
+	size_type
 	getCurrentStackFrameIndex() const
 	{
 		return m_currentStackFrameIndex;
@@ -323,7 +330,7 @@ public:
 	 *
 	 * @return current value of index
 	 */
-	int
+	size_type
 	getGlobalStackFrameIndex() const
 	{
 		return m_globalStackFrameIndex;
@@ -510,12 +517,10 @@ public:
 	typedef std::vector<StackEntry>		VariableStackStackType;
 #endif
 
-	typedef VariableStackStackType::size_type	size_type;
-
 	size_type
 	getStackSize() const
 	{
-		return m_stack.size();
+		return size_type(m_stack.size());
 	}
 
 	enum { eDefaultStackSize = 100 };
@@ -595,7 +600,7 @@ private:
 			bool							fSearchGlobalSpace,
 			bool&							fNameFound);
 
-	VariableStackStackType::size_type
+	size_type
 	findEntry(
 			const XalanQName&	name,
 			bool				fIsParam,
@@ -604,7 +609,7 @@ private:
 
 	VariableStackStackType		m_stack;
 
-	int							m_globalStackFrameIndex;
+	size_type				    m_globalStackFrameIndex;
 
 	bool						m_globalStackFrameMarked;
 
@@ -613,7 +618,7 @@ private:
 	 * for a variable or param should take place.  It may not 
 	 * be the real stack top.
 	 */
-	unsigned int				m_currentStackFrameIndex;	
+	size_type				    m_currentStackFrameIndex;	
 
 	/**
 	 * This will be a stack for any variable definitions

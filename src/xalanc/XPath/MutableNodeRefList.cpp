@@ -600,9 +600,7 @@ MutableNodeRefList::addNodeInDocOrder(
 {
 	if (node != 0)
 	{
-		const size_type		size = m_nodeList.size();
-
-		if (size == 0)
+		if (m_nodeList.size() == 0)
 		{
 			addNode(node);
 		}
@@ -746,7 +744,10 @@ MutableNodeRefList::reverseAssign(MutableNodeRefList&	nodelist) const
 		nodelist.m_nodeList.assign(m_nodeList.rbegin(), m_nodeList.rend());
 #else
         nodelist.clear();
-		nodelist.reserve(m_nodeList.size());
+
+        assert(size_type(m_nodeList.size()) == m_nodeList.size());
+
+		nodelist.reserve(size_type(m_nodeList.size()));
 
 		typedef NodeListVectorType::const_reverse_iterator	const_reverse_iterator;
 

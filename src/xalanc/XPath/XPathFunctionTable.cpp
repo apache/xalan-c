@@ -534,7 +534,9 @@ XPathFunctionTable::getFunctionIndex(
 		}
 		else
 		{
-			return theCurrent - s_functionNames;
+            assert(int(theCurrent - s_functionNames) == theCurrent - s_functionNames);
+
+			return int(theCurrent - s_functionNames);
 		}
 	}
 

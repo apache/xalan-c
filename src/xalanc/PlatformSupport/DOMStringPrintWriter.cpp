@@ -112,7 +112,13 @@ DOMStringPrintWriter::write(
 			size_t			theOffset,
 			size_t			theLength)
 {
-	write(TranscodeFromLocalCodePage(s), theOffset, theLength);
+    assert(XalanDOMString::size_type(theOffset) == theOffset);
+    assert(XalanDOMString::size_type(theLength) == theLength);
+
+	write(
+        TranscodeFromLocalCodePage(s),
+        XalanDOMString::size_type(theOffset),
+        XalanDOMString::size_type(theLength));
 }
 
 

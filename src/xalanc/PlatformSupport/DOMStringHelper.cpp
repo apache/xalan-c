@@ -1686,7 +1686,10 @@ ScalarToDecimalString(
 
 	XalanDOMChar* const		theBegin = ScalarToDecimalString(theValue, theEnd);
 
-	append(theResult, theBegin, theEnd - theBegin);
+	append(
+        theResult,
+        theBegin,
+        XalanDOMString::size_type(theEnd - theBegin));
 }
 
 
@@ -1748,7 +1751,10 @@ UnsignedScalarToHexadecimalString(
 
 		XalanDOMChar* const		theBegin = UnsignedScalarToHexadecimalString(theValue, theEnd);
 
-		append(theResult, theBegin, theEnd - theBegin);
+		append(
+            theResult,
+            theBegin,
+            XalanDOMString::size_type(theEnd - theBegin));
 	}
 }
 

@@ -307,6 +307,7 @@ XalanDestroyXPathEvaluator(XalanXPathEvaluatorHandle	theXalanHandle)
 }
 
 
+typedef XalanTranscodingServices::size_type     size_type;
 
 inline int
 transcodeString(
@@ -314,7 +315,7 @@ transcodeString(
 			const char*				theString,
 			XalanDOMChar*			theChars,
 			unsigned char*			theCharsCount,
-			size_t					theLength,
+			size_type				theLength,
 			XalanDOMString&			theResultString)
 {
 	assert(theTranscoder != 0);
@@ -322,8 +323,8 @@ transcodeString(
 	assert(theChars != 0);
 	assert(theCharsCount != 0);
 
-	size_t	theSourceCharsTranscoded = 0;
-	size_t	theTargetBytesUsed = 0;
+	size_type	theSourceCharsTranscoded = 0;
+	size_type	theTargetBytesUsed = 0;
 
 	const XalanTranscodingServices::eCode	theCode = theTranscoder->transcode(
 #if defined(XALAN_OLD_STYLE_CASTS)
@@ -344,7 +345,9 @@ transcodeString(
 	}
 	else
 	{
-		theResultString.assign(theChars, theTargetBytesUsed);
+        assert(XalanDOMString::size_type(theTargetBytesUsed) == theTargetBytesUsed);
+
+        theResultString.assign(theChars, XalanDOMString::size_type(theTargetBytesUsed));
 
 		return XALAN_XPATH_API_SUCCESS;
 	}

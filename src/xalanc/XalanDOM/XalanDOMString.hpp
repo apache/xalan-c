@@ -76,15 +76,6 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-#if defined(XALAN_USE_NATIVE_WCHAR_T)
-typedef wchar_t			XalanDOMChar;
-#else
-// UTF-16 character...
-typedef unsigned short	XalanDOMChar;
-#endif
-
-
-
 class XALAN_DOM_EXPORT XalanDOMString
 {
 public:
@@ -103,7 +94,7 @@ public:
 	typedef XalanDOMChar&				reference;
 	typedef const XalanDOMChar&			const_reference;
 
-	typedef XalanDOMCharVectorType::size_type				size_type;
+    typedef unsigned int    size_type;
 
 	typedef XalanDOMCharVectorType::iterator				iterator;
 	typedef XalanDOMCharVectorType::const_iterator			const_iterator;
@@ -286,7 +277,7 @@ public:
 	{
 		invariants();
 
-		return m_data.capacity() - 1;
+		return size_type(m_data.capacity()) - 1;
 	}
 
 	void

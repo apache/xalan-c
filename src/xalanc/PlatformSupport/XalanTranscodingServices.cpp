@@ -283,7 +283,7 @@ XalanOutputTranscoder*
 XalanTranscodingServices::makeNewTranscoder(
 			const XalanDOMString&	theEncodingName,
 			eCode&					theResult,
-			size_t					theBlockSize)
+			size_type				theBlockSize)
 {
 	XALAN_USING_XERCES(XMLPlatformUtils)
 
@@ -465,7 +465,7 @@ XalanTranscodingServices::getBytesEqualChars(const XalanDOMString&	theEncoding)
 
 
 XalanTranscodingServices::UnrepresentableCharacterException::UnrepresentableCharacterException(
-			unsigned int			theCharacter,
+			UnicodeCharType			theCharacter,
 			const XalanDOMString&	theEncoding) :
 	XSLException(
 		XalanMessageLoader::getMessage(

@@ -72,6 +72,7 @@
 
 
 
+#include <xalanc/PlatformSupport/XalanTranscodingServices.hpp>
 #include <xalanc/PlatformSupport/XSLException.hpp>
 
 
@@ -101,7 +102,8 @@ public :
 	typedef std::vector<char>			TranscodeVectorType;
 #endif
 
-	typedef BufferType::size_type	size_type;
+	typedef XalanTranscodingServices::size_type	        size_type;
+    typedef XalanTranscodingServices::UnicodeCharType   UnicodeCharType;
 
 	/**
 	 * Constructor.
@@ -112,9 +114,9 @@ public :
 	 */
 	explicit
 	XalanOutputStream(
-			BufferType::size_type			theBufferSize = eDefaultBufferSize,
-			TranscodeVectorType::size_type	theTranscoderBlockSize = eDefaultTranscoderBlockSize,
-			bool							fThrowTranscodeException = true);
+			size_type	theBufferSize = eDefaultBufferSize,
+			size_type	theTranscoderBlockSize = eDefaultTranscoderBlockSize,
+			bool		fThrowTranscodeException = true);
 
 	virtual
 	~XalanOutputStream();
@@ -277,7 +279,7 @@ public :
 	 * @return true if the value can be represented, and false if not.
 	 */
 	bool
-	canTranscodeTo(unsigned int 	theChar) const;
+	canTranscodeTo(UnicodeCharType 	theChar) const;
 
 	const XalanOutputTranscoder*
 	getTranscoder() const
@@ -310,7 +312,7 @@ public :
 	 * @param the new value of the flag.
 	 */
 	void
-	setThrowTranscodeException(bool flag)
+	setThrowTranscodeException(bool     flag)
 	{
 		m_throwTranscodeException = flag;
 	}
@@ -321,7 +323,7 @@ public :
 	 * @param theBufferSize The buffer size.
 	 */
 	void
-	setBufferSize(BufferType::size_type 	theBufferSize);
+	setBufferSize(size_type     theBufferSize);
 
 
 	class XALAN_PLATFORMSUPPORT_EXPORT XalanOutputStreamException : public XSLException
@@ -450,24 +452,24 @@ private:
 	void
 	doWrite(
 			const XalanDOMChar* 	theBuffer,
-			size_t					theBufferLength);
+			size_type				theBufferLength);
 
 
-	const TranscodeVectorType::size_type	m_transcoderBlockSize;
+	const size_type	        m_transcoderBlockSize;
 
-	XalanOutputTranscoder*					m_transcoder;
+	XalanOutputTranscoder*	m_transcoder;
 
-	BufferType::size_type					m_bufferSize;
+	size_type	            m_bufferSize;
 
-	BufferType								m_buffer;
+	BufferType				m_buffer;
 
-	XalanDOMString							m_encoding;
+	XalanDOMString			m_encoding;
 
-	bool									m_writeAsUTF16;
+	bool					m_writeAsUTF16;
 
-	bool									m_throwTranscodeException;
+	bool					m_throwTranscodeException;
 
-	TranscodeVectorType 					m_transcodingBuffer;
+	TranscodeVectorType 	m_transcodingBuffer;
 };
 
 

@@ -1050,7 +1050,7 @@ ElemNumber::traditionalAlphaCount(
 	//String orientation = thisBundle.getString(Constants.LANG_ORIENTATION);
 
 	// next character to set in the buffer
-	size_t	charPos = 0;
+    XalanDOMString::size_type	charPos = 0;
 
 	// array of number groups: ie.1000, 100, 10, 1
 	const NumberTypeVectorType&	groups = theResourceBundle.getNumberGroups();
@@ -1441,7 +1441,7 @@ ElemNumber::int2alphaCount(
 #endif
 
 	// next character to set in the buffer
-	size_t	charPos = buflen - 1 ;    // work backward through buf[]
+    XalanDOMString::size_type	charPos = buflen - 1 ;    // work backward through buf[]
 
 	// index in table of the last character that we stored
 	size_t	lookupIndex = 1;  // start off with anything other than zero to make correction work

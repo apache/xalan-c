@@ -79,6 +79,8 @@
 #error Unknown compiler!
 #endif
 
+
+
 #include "XalanVersion.hpp"
 
 #if defined(__cplusplus)
@@ -147,6 +149,21 @@
 	#define XALAN_DECLARE_XERCES_CLASS(NAME) class NAME;
 	#define XALAN_DECLARE_XERCES_STRUCT(NAME) struct NAME;
 #endif
+
+
+
+#include <cstddef>
+
+
+
+XALAN_CPP_NAMESPACE_BEGIN
+#if defined(XALAN_USE_NATIVE_WCHAR_T)
+typedef wchar_t			XalanDOMChar;
+#else
+// UTF-16 character...
+typedef unsigned short	XalanDOMChar;
+#endif
+XALAN_CPP_NAMESPACE_END
 
 
 

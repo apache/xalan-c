@@ -219,7 +219,8 @@ XalanDOMString::erase(
 
 		m_data.erase(i, i + (theActualCount));
 
-		const size_type		theNewSize = m_data.size();
+		const size_type		theNewSize = size_type(m_data.size());
+        assert(size_type(m_data.size()) == theNewSize);
 
 		if (theNewSize < 2)
 		{
@@ -316,7 +317,9 @@ XalanDOMString::assign(
 
 	m_data.push_back(XalanDOMChar(0));
 
-	m_size = m_data.size() - 1;
+	m_size = size_type(m_data.size()) - 1;
+    assert(m_data.size() - 1 == m_size);
+
 #endif
 
 	invariants();
@@ -415,7 +418,8 @@ XalanDOMString::append(
 			append(&*theTempVector.begin(), size_type(theTempVector.size()));
 		}
 
-		m_size = m_data.size() - 1;
+		m_size = size_type(m_data.size()) - 1;
+        assert(m_data.size() - 1 == m_size);
 	}
 
 	invariants();
@@ -588,7 +592,7 @@ XalanDOMString::insert(
 	{
 		m_data.insert(theInsertPosition, theFirstPosition, theLastPosition);
 
-		m_size = m_data.size() - 1;
+		m_size = size_type(m_data.size()) - 1;
 
 		assert(m_size == m_data.size() - 1);
 	}

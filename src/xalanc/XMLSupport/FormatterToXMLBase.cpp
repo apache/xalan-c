@@ -165,7 +165,8 @@ FormatterToXMLBase::FormatterToXMLBase(
 	m_newlineString(0),
 	m_newlineStringLength(0),
 	m_needToOutputDoctypeDecl(false),
-	m_shouldWriteXMLHeader(xmlDecl),
+    // We must write the XML declaration if standalone is specified
+    m_shouldWriteXMLHeader(xmlDecl == true ? true : standalone.length() == 0),
 	m_elemStack()
 {
 	if(isEmpty(m_doctypePublic) == false)

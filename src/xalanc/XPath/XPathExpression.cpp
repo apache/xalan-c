@@ -459,10 +459,10 @@ XPathExpression::setOpCodeArgs(
 	}
 	else
 	{
-		const OpCodeMapSizeType		theArgCount =
+		const OpCodeMapValueType    theArgCount =
 				theOpCodeLength - 1 - s_opCodeMapLengthIndex;
 
-		if (theArgCount != theArgs.size())
+        if (OpCodeMapValueVectorType::size_type(theArgCount) != theArgs.size())
 		{
 			throw InvalidArgumentCountException(theOpCode,
 												theOpCodeLength,
@@ -472,7 +472,7 @@ XPathExpression::setOpCodeArgs(
 		{
 			assert(opCodeMapSize() > theIndex + theArgCount);
 
-			for (OpCodeMapSizeType	i = 0; i < theArgCount; ++i)
+			for (OpCodeMapValueType	i = 0; i < theArgCount; ++i)
 			{
 				if (theArgs[i] < 0)
 				{
@@ -540,7 +540,7 @@ XPathExpression::replaceOpCode(
 			eOpCodes			theOldOpCode,
 			eOpCodes			theNewOpCode)
 {
-	if (theIndex >= m_opMap.size() ||
+	if (theIndex >= opCodeMapSize() ||
 		m_opMap[theIndex] != theOldOpCode ||
 		getOpCodeLength(theOldOpCode) != getOpCodeLength(theNewOpCode))
 	{
@@ -592,8 +592,12 @@ XPathExpression::insertOpCode(
 void
 XPathExpression::updateShiftedOpCodeLength(
 			OpCodeMapValueType	theOpCode,
-			OpCodeMapSizeType	theOriginalIndex,
-			OpCodeMapSizeType	theNewIndex)
+#if defined(NDEBUG)
+			OpCodeMapValueType	/* theOriginalIndex */,
+#else
+			OpCodeMapValueType	theOriginalIndex,
+#endif
+			OpCodeMapValueType	theNewIndex)
 {
 	// There must be some other expressions in
 	// the buffer...
@@ -601,7 +605,7 @@ XPathExpression::updateShiftedOpCodeLength(
 
 	assert(theNewIndex > theOriginalIndex);
 
-	const int	theOpCodeLength = getOpCodeLength(theOpCode);
+	const OpCodeMapValueType    theOpCodeLength = getOpCodeLength(theOpCode);
 
 	// Make sure it's a valid op code and that it
 	// matches the op code at supplied index.
@@ -643,7 +647,7 @@ XPathExpression::updateShiftedOpCodeLength(
 void
 XPathExpression::updateOpCodeLength(
 			OpCodeMapValueType	theOpCode,
-			OpCodeMapSizeType	theIndex)
+			OpCodeMapValueType	theIndex)
 {
 	// There must be some other expressions in
 	// the buffer...
@@ -689,7 +693,7 @@ XPathExpression::isNodeTestOpCode(OpCodeMapValueType	theOpCode)
 
 
 void
-XPathExpression::updateOpCodeLengthAfterNodeTest(OpCodeMapSizeType	theIndex)
+XPathExpression::updateOpCodeLengthAfterNodeTest(OpCodeMapValueType	    theIndex)
 {
 	// There must be some other expressions in
 	// the buffer...
@@ -821,7 +825,7 @@ XPathExpression::pushArgumentOnOpCodeMap(const XToken&	theXToken)
 {
 	assert(m_currentPosition != 0);
 
-	const TokenQueueSizeType	thePosition = m_currentPosition - 1;
+	const int	thePosition = m_currentPosition - 1;
 
 	assert(thePosition < tokenQueueSize());
 

@@ -140,10 +140,11 @@ CountersTable::countNode(
 					Counter&	counter = counters[i];
 
 					const Counter::NodeVectorType::size_type	cacheLen = counter.m_countNodes.size();
+                    assert(cacheLen == CountType(cacheLen));
 
 					if(cacheLen > 0 && counter.m_countNodes[cacheLen - 1] == target)
 					{
-						count += cacheLen + counter.m_countNodesStartCount;
+						count += CountType(cacheLen) + counter.m_countNodesStartCount;
 
 						if(cacheLen > 0)
 						{
@@ -186,6 +187,7 @@ Counter::getPreviouslyCounted(
 		const XalanNode*				node) const
 {
 	const NodeVectorType::size_type		n = m_countNodes.size();
+    assert(CountType(n) == n);
 
 	CountType	result = 0;
 
@@ -197,7 +199,7 @@ Counter::getPreviouslyCounted(
 		{
 			// Since the list is in backwards order, the count is 
 			// how many are in the rest of the list.
-			result = i + m_countNodesStartCount;
+			result = CountType(i) + m_countNodesStartCount;
 
 			break;
 		}

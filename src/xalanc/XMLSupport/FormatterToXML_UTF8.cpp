@@ -352,7 +352,9 @@ FormatterToXML_UTF8::writeName1_1(const XalanDOMChar*	theChars)
 		}
 		else
 		{
-			write(firstChar, currentChar - firstChar);
+			write(
+                firstChar,
+                XalanDOMString::size_type(currentChar - firstChar));
 
 			const XalanDOMChar	high = *currentChar;
 			const XalanDOMChar	low = *(++currentChar);
@@ -365,7 +367,9 @@ FormatterToXML_UTF8::writeName1_1(const XalanDOMChar*	theChars)
 		}
 	}
 
-	write(firstChar, currentChar - firstChar);
+	write(
+        firstChar,
+        XalanDOMString::size_type(currentChar - firstChar));
 }
 
 

@@ -69,6 +69,7 @@
 
 
 
+#include <xalanc/XPath/NodeRefListBase.hpp>
 #include <xalanc/XPath/XNodeSetResultTreeFragProxy.hpp>
 
 
@@ -84,7 +85,7 @@ class XALAN_XPATH_EXPORT XNodeSetBase : public XObject
 {
 public:
 
-	typedef size_t	size_type;
+    typedef NodeRefListBase::size_type	size_type;
 
 	virtual
 	~XNodeSetBase();

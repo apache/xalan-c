@@ -81,7 +81,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 VariablesStack::VariablesStack() :
 	m_stack(),
-	m_globalStackFrameIndex(-1),
+	m_globalStackFrameIndex(~0u),
 	m_globalStackFrameMarked(false),
 	m_currentStackFrameIndex(0),
 	m_guardStack(),
@@ -111,7 +111,7 @@ VariablesStack::reset()
 	m_elementFrameStack.clear();
 
 	m_globalStackFrameMarked = false;
-	m_globalStackFrameIndex = -1;
+	m_globalStackFrameIndex = ~0u;
 }
 
 
@@ -174,7 +174,7 @@ VariablesStack::popContextMarker()
 		}
 	}
 
-	m_currentStackFrameIndex = m_stack.size();
+	m_currentStackFrameIndex = size_type(m_stack.size());
 }
 
 
@@ -318,12 +318,13 @@ VariablesStack::start()
 void
 VariablesStack::resetParams()
 {
-	const unsigned int	nElems = getCurrentStackFrameIndex();
+	const size_type     nElems = getCurrentStackFrameIndex();
+    assert(nElems > 0);
 
 	// There is guaranteed to be a context marker at
 	// the bottom of the stack, so i should stop at
 	// 1.
-	for(unsigned int i = nElems - 1; i > 0; --i)
+	for(size_type i = nElems - 1; i > 0; --i)
 	{
 		StackEntry&		theEntry = m_stack[i];
 
@@ -343,7 +344,7 @@ VariablesStack::resetParams()
 void
 VariablesStack::markGlobalStackFrame()
 {
-	m_globalStackFrameIndex = m_stack.size();
+	m_globalStackFrameIndex = size_type(m_stack.size());
 
 	m_globalStackFrameMarked = true;
 
@@ -357,7 +358,7 @@ VariablesStack::unmarkGlobalStackFrame()
 {
 	popContextMarker();
 
-	m_globalStackFrameIndex = -1;
+	m_globalStackFrameIndex = ~0u;
 
 	m_globalStackFrameMarked = false;
 }
@@ -449,22 +450,20 @@ VariablesStack::findXObject(
 
 
 
-VariablesStack::VariableStackStackType::size_type
+VariablesStack::size_type
 VariablesStack::findEntry(
 			const XalanQName&	qname,
 			bool				fIsParam,
 			bool				fSearchGlobalSpace)
 {
-	typedef VariableStackStackType::size_type	size_type;
+	size_type	theEntryIndex = size_type(m_stack.size());
 
-	size_type	theEntryIndex = m_stack.size();
-
-	const unsigned int	nElems = getCurrentStackFrameIndex();
+	const size_type     nElems = getCurrentStackFrameIndex();
 
 	// There is guaranteed to be a context marker at
 	// the bottom of the stack, so i should stop at
 	// 1.
-	for(unsigned int i = nElems - 1; i > 0; --i)
+	for(size_type i = nElems - 1; i > 0; --i)
 	{
 		StackEntry&					theEntry = m_stack[i];
 
@@ -477,7 +476,7 @@ VariablesStack::findEntry(
 
 			if(theEntry.getName()->equals(qname))
 			{
-				theEntryIndex = size_type(i);
+				theEntryIndex = i;
 
 				break;
 			}
@@ -490,7 +489,7 @@ VariablesStack::findEntry(
 				{
 					theEntry.activate();
 
-					theEntryIndex = size_type(i);
+					theEntryIndex = i;
 
 					break;
 				}
@@ -505,7 +504,7 @@ VariablesStack::findEntry(
 	if(theEntryIndex == m_stack.size() && fIsParam == false && true == fSearchGlobalSpace && m_globalStackFrameIndex > 1)
 	{
 		// Look in the global space
-		for(unsigned int i = m_globalStackFrameIndex - 1; i > 0; i--)
+		for(size_type i = m_globalStackFrameIndex - 1; i > 0; i--)
 		{
 			StackEntry&		theEntry = m_stack[i];
 
@@ -517,7 +516,7 @@ VariablesStack::findEntry(
 
 				if(theEntry.getName()->equals(qname))
 				{
-					theEntryIndex = size_type(i);
+					theEntryIndex = i;
 
 					break;
 				}
@@ -679,13 +678,6 @@ VariablesStack::StackEntry::StackEntry(const StackEntry&	theSource) :
 
 VariablesStack::StackEntry::~StackEntry()
 {
-#if !defined(NDEBUG)
-	m_qname = (const XalanQName*) 0xDEADBEEF;
-
-	m_variable = (const ElemVariable*) 0xDEADBEEF;
-
-	m_element = (const ElemTemplateElement*) 0xDEADBEEF;
-#endif
 }
 
 

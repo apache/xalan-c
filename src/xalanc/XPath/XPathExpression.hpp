@@ -737,23 +737,21 @@ public:
 
 
 #if defined(XALAN_NO_STD_NAMESPACE)
-
 	typedef vector<int>						OpCodeMapType;
 	typedef vector<XToken>					TokenQueueType;
 
 	typedef OpCodeMapType::value_type		OpCodeMapValueType;
-	typedef OpCodeMapType::size_type		OpCodeMapSizeType;
+	typedef OpCodeMapValueType		        OpCodeMapSizeType;
 
 	typedef vector<OpCodeMapValueType>		OpCodeMapValueVectorType;
 
 	typedef vector<double>					NumberLiteralValueVectorType;
 #else
-
 	typedef std::vector<int>				OpCodeMapType;
 	typedef std::vector<XToken>				TokenQueueType;
 
 	typedef OpCodeMapType::value_type		OpCodeMapValueType;
-	typedef OpCodeMapType::size_type		OpCodeMapSizeType;
+	typedef OpCodeMapValueType		        OpCodeMapSizeType;
 
 	typedef std::vector<OpCodeMapValueType> OpCodeMapValueVectorType;
 
@@ -761,7 +759,7 @@ public:
 #endif
 
 	typedef TokenQueueType::value_type		TokenQueueValueType;
-	typedef TokenQueueType::size_type		TokenQueueSizeType;
+	typedef int		                        TokenQueueSizeType;
 
 	/**
 	 * The length is always the opcode position + 1. Length is always expressed
@@ -803,7 +801,7 @@ public:
 	OpCodeMapSizeType
 	opCodeMapSize() const
 	{
-		return m_opMap.size();
+		return OpCodeMapSizeType(m_opMap.size());
 	}
 
 	/**
@@ -844,7 +842,7 @@ public:
 	TokenQueueSizeType
 	tokenQueueSize() const
 	{
-		return m_tokenQueue.size();
+		return TokenQueueSizeType(m_tokenQueue.size());
 	}
 
 	/**
@@ -970,7 +968,7 @@ public:
 	 * @param theIndex  index in list
 	 */
 	void
-	updateOpCodeLength(OpCodeMapSizeType	theIndex)
+	updateOpCodeLength(OpCodeMapValueType	theIndex)
 	{
 		assert(theIndex < opCodeMapSize());
 
@@ -988,8 +986,8 @@ public:
 	void
 	updateShiftedOpCodeLength(
 			OpCodeMapValueType	theOpCode,
-			OpCodeMapSizeType	theOriginalIndex,
-			OpCodeMapSizeType	theNewIndex);
+			OpCodeMapValueType	theOriginalIndex,
+			OpCodeMapValueType	theNewIndex);
 
 	/**
 	 * Update the length of an operation code at a specified index in the list.
@@ -1004,7 +1002,7 @@ public:
 	void
 	updateOpCodeLength(
 			OpCodeMapValueType	theOpCode,
-			OpCodeMapSizeType	theIndex);
+			OpCodeMapValueType	theIndex);
 
 	/**
 	 * Whether the operation code is one of the node test types, for example,
@@ -1022,7 +1020,7 @@ public:
 	 * @param theIndex  index in list
 	 */
 	void
-	updateOpCodeLengthAfterNodeTest(OpCodeMapSizeType	theIndex);
+	updateOpCodeLengthAfterNodeTest(OpCodeMapValueType	theIndex);
 
 	/**
 	 * Whether there are any more tokens in the token queue.
@@ -1068,6 +1066,7 @@ public:
 		m_currentPosition = thePosition > theSize ? theSize : thePosition;
 	}
 
+#if 0
 	/**
 	 * Set the current position in the token queue to a specified value.
 	 *
@@ -1078,7 +1077,7 @@ public:
 	{
 		setTokenPosition(thePosition > 0 ? TokenQueueSizeType(thePosition) : 0);
 	}
-
+#endif
 	/**
 	 * Retrieve a token at the specified position in the token queue.
 	 * 

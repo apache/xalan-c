@@ -223,7 +223,7 @@ ExtensionNSHandler::loadComponentDescription()
 
 
 XalanDOMString
-ExtensionNSHandler::getScriptString(const XalanElement&		elem)
+ExtensionNSHandler::getScriptString(const XalanElement&		/* elem */)
 {
 	return XalanDOMString();
 }

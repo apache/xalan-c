@@ -195,10 +195,11 @@ FormatterToXML::FormatterToXML(
 	m_maxCharacter = XalanTranscodingServices::getMaximumCharacterValue(m_encoding);
 
     // We cannot omit the XML declaration if the encoding is not UTF-8 or
-    // UTF-16
+    // UTF-16, or if there is a standalone declaration
     const bool  canOmitXMLDeclaration =
-        XalanTranscodingServices::encodingIsUTF8(m_encoding) ||
-		XalanTranscodingServices::encodingIsUTF16(m_encoding);
+        (XalanTranscodingServices::encodingIsUTF8(m_encoding) ||
+		 XalanTranscodingServices::encodingIsUTF16(m_encoding)) &&
+         m_standalone.length() == 0;
 
     if (canOmitXMLDeclaration == false && m_shouldWriteXMLHeader == false)
     {
@@ -1979,7 +1980,7 @@ const FormatterToXML::size_type		FormatterToXML::s_xhtmlDocTypeStringLength =
 		FXML_SIZE(s_xhtmlDocTypeString);
 
 
-const FormatterToXML::DOMCharBufferType::size_type	FormatterToXML::s_maxBufferSize = 512;
+const XalanDOMString::size_type     FormatterToXML::s_maxBufferSize = 512;
 
 
 
