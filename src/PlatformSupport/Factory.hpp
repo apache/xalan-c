@@ -98,17 +98,17 @@ public:
 
 	// These interfaces are new...
 
-	/*
-	 *
-	 */
 	/**
 	 * Return an object to the factory.
 	 * 
 	 * @param theFactoryObject object to be returned
 	 */
 
-	virtual bool
-	returnObject(const FactoryObject*	theFactoryObject) = 0;
+	bool
+	returnObject(const FactoryObject*	theFactoryObject)
+	{
+		return doReturnObject(theFactoryObject);
+	}
 
 protected:
 
@@ -117,6 +117,55 @@ protected:
 	 */
 	virtual bool
 	deleteObject(const FactoryObject*	theFactoryObject) const;
+
+	/**
+	 * Return an object to the factory.
+	 * 
+	 * @param theFactoryObject object to be returned
+	 * @param fInReset true when called during reset().
+	 */
+
+	virtual bool
+	doReturnObject(
+			const FactoryObject*	theFactoryObject,
+			bool					fInReset = false) = 0;
+
+	/**
+	 *
+	 * A functor for use with stl algorithms.
+	 *
+	 */
+	#if defined(XALAN_NO_NAMESPACES)
+	struct DeleteFactoryObjectFunctor : public unary_function<const FactoryObject*, void>
+	#else
+	struct DeleteFactoryObjectFunctor : public std::unary_function<const FactoryObject*, void>
+	#endif
+	{
+	public:
+
+		DeleteFactoryObjectFunctor(
+			Factory&		theFactoryInstance,
+			bool			fInReset = false) :
+			m_factoryInstance(theFactoryInstance),
+			m_fInReset(fInReset)
+		{
+		}
+
+		result_type
+		operator()(argument_type	theFactoryObject) const
+		{
+			m_factoryInstance.doReturnObject(theFactoryObject,
+											 m_fInReset);
+		}
+
+	private:
+
+		Factory&	m_factoryInstance;
+
+		const bool	m_fInReset;
+	};
+
+	friend struct DeleteFactoryObjectFunctor;
 
 private:
 
@@ -128,32 +177,6 @@ private:
 
 	bool
 	operator==(const Factory&) const;
-};
-
-
-
-#if defined(XALAN_NO_NAMESPACES)
-struct DeleteFactoryObjectFunctor : public unary_function<const FactoryObject*, void>
-#else
-struct DeleteFactoryObjectFunctor : public std::unary_function<const FactoryObject*, void>
-#endif
-{
-public:
-
-	DeleteFactoryObjectFunctor(Factory&		theFactoryInstance) :
-		m_factoryInstance(theFactoryInstance)
-	{
-	}
-
-	result_type
-	operator()(argument_type	theFactoryObject) const
-	{
-		m_factoryInstance.returnObject(theFactoryObject);
-	}
-
-private:
-
-	Factory&	m_factoryInstance;
 };
 
 

@@ -128,7 +128,7 @@ XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(int)
 indexOf(const DOMString&	theString,
 		XMLCh				theChar)
 {
-	const int	theLength = length(theString);
+	const unsigned int	theLength = length(theString);
 
 	if (theLength == 0)
 	{
@@ -136,12 +136,12 @@ indexOf(const DOMString&	theString,
 	}
 	else
 	{
-		int			theIndex = 0;
+		unsigned int	theIndex = 0;
 
 		while(theIndex < theLength &&
 			  charAt(theString, theIndex) != theChar)
 		{
-			theIndex++;
+			++theIndex;
 		}
 
 		return theIndex == theLength ? -1 : theIndex;
@@ -154,8 +154,8 @@ XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(int)
 indexOf(const DOMString&	theFirstString,
 		const DOMString&	theSecondString)
 {
-	const int	theFirstStringLength = length(theFirstString);
-	const int	theSecondStringLength = length(theSecondString);
+	const unsigned int	theFirstStringLength = length(theFirstString);
+	const unsigned int	theSecondStringLength = length(theSecondString);
 
 	// If the substring is longer than the string, then
 	// it's not a substring.
@@ -167,7 +167,7 @@ indexOf(const DOMString&	theFirstString,
 	{
 		bool			fMatch = false;
 
-		int				theFirstStringIndex = 0;
+		unsigned int	theFirstStringIndex = 0;
 
 		// While we haven't matched, and we haven't finished with the
 		// first string, and the number of characters left in the first
@@ -178,13 +178,13 @@ indexOf(const DOMString&	theFirstString,
 			  theFirstStringLength - theFirstStringIndex >= theSecondStringLength)
 		{
 			// We always start over from the beginning of the second string.
-			int		theSecondStringIndex = 0;
+			unsigned int	theSecondStringIndex = 0;
 
 			// This variable will be incremented to index into the first
 			// string.  That way, we preserve the first string index for
 			// when we have to restart the following loop with the next
 			// position in the first string.
-			int		theOffset = 0;
+			unsigned int	theOffset = 0;
 
 			// Compare the characters in the two strings, at the
 			// current indices, until the characters don't match.
@@ -219,7 +219,7 @@ indexOf(const DOMString&	theFirstString,
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(int)
 lastIndexOf(const DOMString& theString, XMLCh theChar)
 {
-	const int theLength = length(theString);
+	const unsigned int	theLength = length(theString);
 
 	if (theLength == 0)
 	{
@@ -227,7 +227,7 @@ lastIndexOf(const DOMString& theString, XMLCh theChar)
 	}
 	else
 	{
-		int theIndex = theLength-1;
+		int	theIndex = theLength - 1;
 
 		while(theIndex >=0 &&  charAt(theString, theIndex) != theChar)
 		{
@@ -240,28 +240,26 @@ lastIndexOf(const DOMString& theString, XMLCh theChar)
 
 
 
-
-
-
-
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(bool)
 startsWith(const DOMString&		theDOMString,
 		   const DOMString&		theSubString)
 {
 	bool		fResult = false;
 
-	const int	theStringLength = length(theDOMString);
+	const unsigned int	theStringLength = length(theDOMString);
 	assert(theStringLength >= 0);
 
-	const int	theSubStringLength = length(theSubString);
+	const unsigned int	theSubStringLength = length(theSubString);
 	assert(theSubStringLength >= 0);
 
 	// If either string is of length 0, or if the substring
 	// is longer, there's no point in continuing.
 	if (theStringLength >= theSubStringLength)
 	{
+		unsigned int	i = 0;
+
 		// Compare each character...
-		for (int i = 0;
+		for (;
 				i < theSubStringLength &&
 						charAt(theDOMString, i) == charAt(theSubString, i);
 					i++)
@@ -289,20 +287,19 @@ endsWith(
 {
 	bool		fResult = false;
 
-	const int	theStringLength = length(theDOMString);
-	assert(theStringLength >= 0);
+	const unsigned int	theStringLength = length(theDOMString);
 
-	const int	theSubStringLength = length(theSubString);
-	assert(theSubStringLength >= 0);
+	const unsigned int	theSubStringLength = length(theSubString);
 
 	// If either string is of length 0, or if the substring
 	// is longer, there's no point in continuing.
 	if (theStringLength >= theSubStringLength)
 	{
 		int		i = theStringLength - 1;
+		int		j = theSubStringLength - 1;
 
 		// Compare each character...
-		for (int j = theSubStringLength - 1;
+		for (;
 				j >= 0 &&
 						charAt(theDOMString, i) == charAt(theSubString, j);
 					--j, --i)
@@ -354,8 +351,7 @@ OutputString(
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(DOMString)
 toLowerCase(const DOMString&	theString)
 {
-	const int	theStringLength = length(theString);
-	assert(theStringLength >= 0);
+	const unsigned int	theStringLength = length(theString);
 
 	if (theStringLength == 0)
 	{
@@ -368,7 +364,7 @@ toLowerCase(const DOMString&	theString)
 		XMLCh* const	theBuffer = theLowerCaseString.rawBuffer();
 		assert(theBuffer != 0);
 
-		for(int i = 0; i < theStringLength; i++)
+		for(unsigned int i = 0; i < theStringLength; i++)
 		{
 			theBuffer[i] = towlower(theBuffer[i]);
 		}
@@ -382,8 +378,7 @@ toLowerCase(const DOMString&	theString)
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(DOMString)
 toUpperCase(const DOMString&	theString)
 {
-	const int	theStringLength = length(theString);
-	assert(theStringLength >= 0);
+	const unsigned int	theStringLength = length(theString);
 
 	if (theStringLength == 0)
 	{
@@ -396,7 +391,7 @@ toUpperCase(const DOMString&	theString)
 		XMLCh* const	theBuffer = theLowerCaseString.rawBuffer();
 		assert(theBuffer != 0);
 
-		for(int i = 0; i < theStringLength; i++)
+		for(unsigned int i = 0; i < theStringLength; i++)
 		{
 			theBuffer[i] = towupper(theBuffer[i]);
 		}
@@ -437,7 +432,9 @@ equalsIgnoreCase(const DOMString&	theLHS,
 	{
 		// Check each character, converting to uppercase
 		// for the test.
-		for(unsigned int i = 0; i < theLength; i++)
+		unsigned int	i = 0;
+
+		for(; i < theLength; i++)
 		{
 			if (towupper(charAt(theLHS, i)) !=
 						towupper(charAt(theRHS, i)))
@@ -463,51 +460,54 @@ compare(
 			const DOMString&	theLHS,
 			const DOMString&	theRHS)
 {
-	const int	theLHSLength = theLHS.length();
-	const int	theRHSLength = theRHS.length();
+	unsigned const int	theLHSLength = length(theLHS);
+	unsigned const int	theRHSLength = length(theRHS);
 
-	int			theResult = 0;
+	int					theResult = 0;
 
-	XMLCh		theLHSChar = 0;
-	XMLCh		theRHSChar = 0;
-
-	if (theLHSLength == 0 && theRHSLength == 0) return 0;
-
-	for(int i = 0; i < theLHSLength && i < theRHSLength; i++)
+	if (theLHSLength != 0 || theRHSLength != 0)
 	{
-		theLHSChar = charAt(theLHS, i);
-		theRHSChar = charAt(theRHS, i);
+		XMLCh		theLHSChar = 0;
+		XMLCh		theRHSChar = 0;
 
-		if (theLHSChar != theRHSChar)
+		unsigned int	i = 0;
+
+		for(; i < theLHSLength && i < theRHSLength; i++)
 		{
-			break;
-		}
-	}
+			theLHSChar = charAt(theLHS, i);
+			theRHSChar = charAt(theRHS, i);
 
-	if (i == theLHSLength)
-	{
-		// We reached the end of theLHS...
-		if (i != theRHSLength)
-		{
-			// but not the end of theRHS.
-			theResult = -1;
+			if (theLHSChar != theRHSChar)
+			{
+				break;
+			}
 		}
-	}
-	else if (i == theRHSLength)
-	{
-		// We reached the end of theRHS string...
-		if (i != theLHSLength)
+
+		if (i == theLHSLength)
 		{
-			// but not the end of theLHS string.
-			theResult = 1;
+			// We reached the end of theLHS...
+			if (i != theRHSLength)
+			{
+				// but not the end of theRHS.
+				theResult = -1;
+			}
 		}
-	}
-	else
-	{
-		// We didn't reach the end of _either_ string, so
-		// return the difference between the two characters
-		// that caused the problem.
-		theResult = theLHSChar - theRHSChar;
+		else if (i == theRHSLength)
+		{
+			// We reached the end of theRHS string...
+			if (i != theLHSLength)
+			{
+				// but not the end of theLHS string.
+				theResult = 1;
+			}
+		}
+		else
+		{
+			// We didn't reach the end of _either_ string, so
+			// return the difference between the two characters
+			// that caused the problem.
+			theResult = theLHSChar - theRHSChar;
+		}
 	}
 
 	return theResult;
@@ -644,21 +644,23 @@ trim(const DOMString&	theString)
 	if (isEmpty(theString))
 		return theString;
 
-	const int strLen = theString.length();
+	const int	strLen = theString.length();
 	
 	// index of first non-whitespace character
 	int leadingSpace = 0;
-	for (leadingSpace=0; leadingSpace<strLen; leadingSpace++)
-		if (!isSpace(theString.charAt(leadingSpace)))
+
+	for (; leadingSpace < strLen; ++leadingSpace)
+		if (!isSpace(charAt(theString, leadingSpace)))
 			break;
 
 	// index of last non-whitespace character
-	int trailingSpace = 0;
-	for (trailingSpace=strLen-1; trailingSpace>=0; trailingSpace--)
-		if (!isSpace(theString.charAt(trailingSpace)))
+	int trailingSpace = strLen - 1;
+
+	for (; trailingSpace>=0; --trailingSpace)
+		if (!isSpace(charAt(theString, trailingSpace)))
 			break;
 
-	return substring(theString,leadingSpace,trailingSpace+1);
+	return substring(theString, leadingSpace, trailingSpace + 1);
 }
 
 
@@ -886,8 +888,11 @@ DOMStringToStdString(const DOMString& domString)
 	else
     {
         for (unsigned int index = 0; index < realLen; index++)
+		{
             tmpSource[index] = (wchar_t)toTranscode[index];
+		}
     }
+
     tmpSource[realLen] = 0;
 
     // See now many chars we need to transcode this guy
