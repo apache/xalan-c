@@ -111,7 +111,7 @@ NamedNodeMapAttributeList::getName(const unsigned int index) const
 namespace
 {
 
-const DOMString	theType("CDATA");
+const DOMString	theType(XALAN_STATIC_UCODE_STRING("CDATA"));
 
 }
 

@@ -56,10 +56,7 @@
  */
 #include <cstdio>
 #include <vector>
-
-
-
-#include <util/StdOut.hpp>
+#include <iostream>
 
 
 
@@ -68,23 +65,30 @@
 #include <dom/DOM_Element.hpp>
 #include <dom/DOM_NodeList.hpp>
 #include <framework/URLInputSource.hpp>
+#include <util/PlatformUtils.hpp>
 
 
 
 #include <PlatformSupport/DirectoryEnumerator.hpp>
 #include <PlatformSupport/DOMStringHelper.hpp>
 #include <DOMSupport/DOMSupportDefault.hpp>
+#include <XPath/ElementPrefixResolverProxy.hpp>
 #include <XPath/XObjectFactoryDefault.hpp>
 #include <XPath/XPathEnvSupportDefault.hpp>
+#include <XPath/XPathExecutionContextDefault.hpp>
 #include <XPath/XPathSupportDefault.hpp>
 #include <XPath/XPath.hpp>
 #include <XPath/XPathProcessorImpl.hpp>
 #include <XPath/XPathFactoryDefault.hpp>
-#include <XPath/ElementPrefixResolverProxy.hpp>
 #include <XMLSupport/FormatterTreeWalker.hpp>
 #include <XMLSupport/FormatterToXML.hpp>
 #include <XercesPlatformSupport/XercesDOMPrintWriter.hpp>
+#include <XercesPlatformSupport/XercesStdTextOutputStream.hpp>
 #include <XercesParserLiaison/XercesParserLiaison.hpp>
+
+
+
+#include "NodeNameTreeWalker.hpp"
 
 
 
@@ -92,50 +96,83 @@ namespace
 {
 
 
+const XObject*
+ExecuteXPath(
+			XPathProcessor&			theXPathProcessor,
+			XPath&					theXPath,
+			const DOMString&		theXPathString,
+			XPathEnvSupport&		theXPathEnvSupport,
+			XPathSupport&			theXPathSupport,
+			XObjectFactory&			theXObjectFactory,
+			const DOM_Node& 		theContextNode,
+			const PrefixResolver&	thePrefixResolver,
+			const NodeRefListBase& 	theContextNodeList)
+{
+	theXPathProcessor.initXPath(theXPath,
+								theXPathString,
+								thePrefixResolver,
+								theXObjectFactory,
+								theXPathEnvSupport);
+
+	XPathExecutionContextDefault	theExecutionContext(theXPathEnvSupport,
+														theXPathSupport,
+														theXObjectFactory,
+														theContextNode,
+														theContextNodeList,
+														&thePrefixResolver);
+
+	const XObject* const	theResult =
+		theXPath.execute(theExecutionContext);
+
+	return theResult;
+}
+
+
+
 bool
 TestNumericResult(
-			XPathSupport&			theXPathSupport,
-			XPathProcessorImpl&		theXPathProcessor,
+			XPathProcessor&			theXPathProcessor,
 			XPath&					theXPath,
 			const DOMString&		theXPathString,
 			PrintWriter&			thePrintWriter,
 			double					theExpectedResult,
+			XPathEnvSupport&		theXPathEnvSupport,
+			XPathSupport&			theXPathSupport,
+			XObjectFactory&			theXObjectFactory,
 			const DOM_Node& 		theContextNode,
-			const DOM_Element&		theNamespaceContext,
-			const DOM_NodeList& 	theContextNodeList)
+			const PrefixResolver&	thePrefixResolver,
+			const NodeRefListBase& 	theContextNodeList)
 {
 	bool	fError = false;
 
-	theXPathProcessor.initXPath(theXPath,
-								theXPathString,
-								ElementPrefixResolverProxy(theNamespaceContext,theXPathSupport));
-
-	MutableNodeRefList	theList;
-
-	theList = theContextNodeList;
-
 	const XObject* const	theResult =
-		theXPath.execute(theContextNode,
-						 ElementPrefixResolverProxy(theNamespaceContext,theXPathSupport),
-						 theList);
+		ExecuteXPath(theXPathProcessor,
+					 theXPath,
+					 theXPathString,
+					 theXPathEnvSupport,
+					 theXPathSupport,
+					 theXObjectFactory,
+					 theContextNode,
+					 thePrefixResolver,
+					 theContextNodeList);
 
-	thePrintWriter.print("Execution of XPath ");
+	thePrintWriter.print(XMLStrL("Execution of XPath "));
 	thePrintWriter.print(theXPathString);
 
 	if (theResult->num() == theExpectedResult)
 	{
-		thePrintWriter.println(" succeeded.");
-		thePrintWriter.print("The result was ");
+		thePrintWriter.println(XMLStrL(" succeeded."));
+		thePrintWriter.print(XMLStrL("The result was "));
 		thePrintWriter.println(theResult->num());
 	}
 	else
 	{
 		fError = true;
 
-		thePrintWriter.println(" failed!");
-		thePrintWriter.print("The expected result was ");
+		thePrintWriter.println(XMLStrL(" failed!"));
+		thePrintWriter.print(XMLStrL("The expected result was "));
 		thePrintWriter.println(theExpectedResult);
-		thePrintWriter.print("The actual result was ");
+		thePrintWriter.print(XMLStrL("The actual result was "));
 		thePrintWriter.println(theResult->num());
 	}
 
@@ -146,52 +183,120 @@ TestNumericResult(
 
 bool
 TestStringResult(
-			XPathSupport&			theXPathSupport,
-			XPathProcessorImpl&		theXPathProcessor,
+			XPathProcessor&			theXPathProcessor,
 			XPath&					theXPath,
 			const DOMString&		theXPathString,
 			PrintWriter&			thePrintWriter,
 			const DOMString&		theExpectedResult,
+			XPathEnvSupport&		theXPathEnvSupport,
+			XPathSupport&			theXPathSupport,
+			XObjectFactory&			theXObjectFactory,
 			const DOM_Node& 		theContextNode,
-			const DOM_Element&		theNamespaceContext,
-			const DOM_NodeList& 	theContextNodeList)
+			const PrefixResolver&	thePrefixResolver,
+			const NodeRefListBase& 	theContextNodeList)
 {
 	bool	fError = false;
 
-	theXPathProcessor.initXPath(theXPath,
-								theXPathString,
-								ElementPrefixResolverProxy(theNamespaceContext,theXPathSupport));
-
-	MutableNodeRefList	theList;
-
-	theList = theContextNodeList;
-
 	const XObject* const	theResult =
-		theXPath.execute(theContextNode,
-						 ElementPrefixResolverProxy(theNamespaceContext,theXPathSupport),
-						 theList);
+		ExecuteXPath(theXPathProcessor,
+					 theXPath,
+					 theXPathString,
+					 theXPathEnvSupport,
+					 theXPathSupport,
+					 theXObjectFactory,
+					 theContextNode,
+					 thePrefixResolver,
+					 theContextNodeList);
 
-	thePrintWriter.print("Execution of XPath ");
+	thePrintWriter.print(XMLStrL("Execution of XPath "));
 	thePrintWriter.print(theXPathString);
 
 	if (equals(theResult->str(), theExpectedResult) == true)
 	{
-		thePrintWriter.println(" succeeded.");
-		thePrintWriter.print("The result was \"");
+		thePrintWriter.println(XMLStrL(" succeeded."));
+		thePrintWriter.print(XMLStrL("The result was \""));
 		thePrintWriter.print(theResult->str());
-		thePrintWriter.println("\".");
+		thePrintWriter.println(XMLStrL("\"."));
 	}
 	else
 	{
 		fError = true;
 
-		thePrintWriter.println(" failed!");
-		thePrintWriter.print("The expected result was \"");
+		thePrintWriter.println(XMLStrL(" failed!"));
+		thePrintWriter.print(XMLStrL("The expected result was \""));
 		thePrintWriter.print(theExpectedResult);
-		thePrintWriter.println("\".");
-		thePrintWriter.print("The actual result was \"");
+		thePrintWriter.println(XMLStrL("\"."));
+		thePrintWriter.print(XMLStrL("The actual result was \""));
 		thePrintWriter.print(theResult->str());
-		thePrintWriter.println("\".");
+		thePrintWriter.println(XMLStrL("\"."));
+	}
+
+	return fError;
+}
+
+
+
+bool
+TestBooleanResult(
+			XPathProcessor&			theXPathProcessor,
+			XPath&					theXPath,
+			const DOMString&		theXPathString,
+			PrintWriter&			thePrintWriter,
+			bool					theExpectedResult,
+			XPathEnvSupport&		theXPathEnvSupport,
+			XPathSupport&			theXPathSupport,
+			XObjectFactory&			theXObjectFactory,
+			const DOM_Node& 		theContextNode,
+			const PrefixResolver&	thePrefixResolver,
+			const NodeRefListBase& 	theContextNodeList)
+{
+	bool	fError = false;
+
+	const XObject* const	theResult =
+		ExecuteXPath(theXPathProcessor,
+					 theXPath,
+					 theXPathString,
+					 theXPathEnvSupport,
+					 theXPathSupport,
+					 theXObjectFactory,
+					 theContextNode,
+					 thePrefixResolver,
+					 theContextNodeList);
+
+	bool	fDump = false;
+
+	if (fDump == true)
+	{
+		thePrintWriter.println();
+		thePrintWriter.println();
+		theXPath.getExpression().dumpOpCodeMap(thePrintWriter);
+		thePrintWriter.println();
+		theXPath.getExpression().dumpTokenQueue(thePrintWriter);
+		thePrintWriter.println();
+		thePrintWriter.println();
+	}
+
+	thePrintWriter.print(XMLStrL("Execution of XPath "));
+	thePrintWriter.print(theXPathString);
+
+	if (theResult->boolean() == theExpectedResult)
+	{
+		thePrintWriter.println(XMLStrL(" succeeded."));
+		thePrintWriter.print(("The result was "));
+		thePrintWriter.print(theResult->boolean());
+		thePrintWriter.println(XMLStrL("."));
+	}
+	else
+	{
+		fError = true;
+
+		thePrintWriter.println(XMLStrL(" failed!"));
+		thePrintWriter.print(XMLStrL("The expected result was \""));
+		thePrintWriter.print(theExpectedResult);
+		thePrintWriter.println(XMLStrL("\"."));
+		thePrintWriter.print(XMLStrL("The actual result was \""));
+		thePrintWriter.print(theResult->boolean());
+		thePrintWriter.println(XMLStrL("\"."));
 	}
 
 	return fError;
@@ -211,281 +316,93 @@ ParseXML(
 
 
 
+DOMString
+GetAttributeFromNode(
+			const DOM_Node&		theNode,
+			const DOMString&	theAttributeName)
+{
+	DOMString	theResult;
+
+	if (theNode.getNodeType() == DOM_Node::ELEMENT_NODE)
+	{
+		const DOM_Element&	theElement =
+					static_cast<const DOM_Element&>(theNode);
+
+		theResult = theElement.getAttribute(theAttributeName);
+	}
+
+	return theResult;
+}
+
+
+
+DOMString
+FindNodeAndGetAttributeValue(
+			const DOM_Node&		theStartNode,
+			const DOMString&	theNodeName,
+			const DOMString&	theAttributeName)
+{
+	DOMString			theResult;
+
+	NodeNameTreeWalker	theTreeWalker;
+
+	theTreeWalker.findMatchingNodes(theNodeName,
+									theStartNode);
+
+	const std::vector<DOM_Node>&	theMatchingNodes =
+			theTreeWalker.getMatchingNodes();
+
+	if (theMatchingNodes.size() == 1)
+	{
+		const DOM_Node&		theMatchingNode = theMatchingNodes[0];
+
+		if (theMatchingNode != 0)
+		{
+			theResult = GetAttributeFromNode(theMatchingNode,
+											 theAttributeName);
+		}
+	}
+
+	return theResult;
+}
+
+
+
 bool
 GetXSLInput(
+			XMLParserLiaison&	theLiaison,
 			const DOMString&	theXSLFileURL,
 			DOMString&			theContextNodeMatchPattern,
 			DOMString&			theXPathString)
 {
 	bool	fResult = false;
 
-	if (endsWith(theXSLFileURL, "axes01.xsl") == true)
-	{
-		theContextNodeMatchPattern = "//center";
-//		theXPathString = "ancestor::*";
-		theXPathString = "node()|@*";
+	const DOM_Document	theDocument = ParseXML(theLiaison,
+											   theXSLFileURL);
 
-		fResult = true;
-	}
-	else if (endsWith(theXSLFileURL, "axes02.xsl") == true)
+	if (theDocument != 0)
 	{
-		theContextNodeMatchPattern = "//center";
-		theXPathString = "ancestor-or-self::*";
+		static const DOMString	theContextNodeName(XMLStrL("xsl:for-each"));
+		static const DOMString	theAttributeName(XMLStrL("select"));
 
-		fResult = true;
-	}
-	else if (endsWith(theXSLFileURL, "axes03.xsl") == true)
-	{
-		theContextNodeMatchPattern = "//center";
-		theXPathString = "attribute::*";
+		theContextNodeMatchPattern =
+			 FindNodeAndGetAttributeValue(theDocument,
+										  theContextNodeName,
+										  theAttributeName);
 
-		fResult = true;
-	}
-	else if (endsWith(theXSLFileURL, "axes04.xsl") == true)
-	{
-		theContextNodeMatchPattern = "//center";
-		theXPathString = "child::*";
+		if (length(theContextNodeMatchPattern) != 0)
+		{
+			static const DOMString	theSelectNodeName(XMLStrL("xsl:apply-templates"));
 
-		fResult = true;
-	}
-	else
-	if (endsWith(theXSLFileURL, "axes05.xsl") == true)
-	{
-		theContextNodeMatchPattern = "//center";
-		theXPathString = "descendant::*";
-
-		fResult = true;
-	}
-	else if (endsWith(theXSLFileURL, "axes06.xsl") == true)
-	{
-		theContextNodeMatchPattern = "//center";
-		theXPathString = "descendant-or-self::*";
-
-		fResult = true;
-	}
-	else if (endsWith(theXSLFileURL, "axes07.xsl") == true)
-	{
-		theContextNodeMatchPattern = "//center";
-		theXPathString = "following::*";
-
-		fResult = true;
-	}
-	else if (endsWith(theXSLFileURL, "axes08.xsl") == true)
-	{
-		theContextNodeMatchPattern = "//center";
-		theXPathString = "preceding::*";
-
-		fResult = true;
-	}
-	else if (endsWith(theXSLFileURL, "axes09.xsl") == true)
-	{
-		theContextNodeMatchPattern = "//center";
-		theXPathString = "following-sibling::*";
-
-		fResult = true;
-	}
-	else if (endsWith(theXSLFileURL, "axes10.xsl") == true)
-	{
-		theContextNodeMatchPattern = "//center";
-		theXPathString = "preceding-sibling::*";
-
-		fResult = true;
-	}
-	else if (endsWith(theXSLFileURL, "axes11.xsl") == true)
-	{
-		theContextNodeMatchPattern = "//center";
-		theXPathString = "parent::*";
-
-		fResult = true;
-	}
-	else if (endsWith(theXSLFileURL, "axes12.xsl") == true)
-	{
-		theContextNodeMatchPattern = "//center";
-		theXPathString = "self::*";
-
-		fResult = true;
-	}
-	else if (endsWith(theXSLFileURL, "axes16.xsl") == true)
-	{
-		theContextNodeMatchPattern = "//center";
-		theXPathString = "ancestor::*[3]";
-
-		fResult = true;
-	}
-	else if (endsWith(theXSLFileURL, "axes17.xsl") == true)
-	{
-		theContextNodeMatchPattern = "//center";
-		theXPathString = "ancestor-or-self::*[1]";
-
-		fResult = true;
-	}
-	else if (endsWith(theXSLFileURL, "axes18.xsl") == true)
-	{
-		theContextNodeMatchPattern = "//center";
-		theXPathString = "attribute::*[2]";
-
-		fResult = true;
-	}
-	else if (endsWith(theXSLFileURL, "axes19.xsl") == true)
-	{
-		theContextNodeMatchPattern = "//center";
-		theXPathString = "@*";
-
-		fResult = true;
-	}
-	else if (endsWith(theXSLFileURL, "axes20.xsl") == true)
-	{
-		theContextNodeMatchPattern = "//center";
-		theXPathString = "@*[2]";
-
-		fResult = true;
-	}
-	else if (endsWith(theXSLFileURL, "axes21.xsl") == true)
-	{
-		theContextNodeMatchPattern = "//center";
-		theXPathString = "child::*[2]";
-
-		fResult = true;
-	}
-	else if (endsWith(theXSLFileURL, "axes22.xsl") == true)
-	{
-		theContextNodeMatchPattern = "//center";
-		theXPathString = "child::near-south-west";
-
-		fResult = true;
-	}
-	else if (endsWith(theXSLFileURL, "axes23.xsl") == true)
-	{
-		theContextNodeMatchPattern = "//center";
-		theXPathString = "descendant::*[3]";
-
-		fResult = true;
-	}
-	else if (endsWith(theXSLFileURL, "axes24.xsl") == true)
-	{
-		theContextNodeMatchPattern = "//center";
-		theXPathString = "descendant::far-south";
-
-		fResult = true;
-	}
-	else if (endsWith(theXSLFileURL, "axes25.xsl") == true)
-	{
-		theContextNodeMatchPattern = "//center";
-		theXPathString = "descendant-or-self::*[3]";
-
-		fResult = true;
-	}
-	else if (endsWith(theXSLFileURL, "axes26.xsl") == true)
-	{
-		theContextNodeMatchPattern = "//center";
-		theXPathString = "descendant-or-self::far-south";
-
-		fResult = true;
-	}
-	else if (endsWith(theXSLFileURL, "axes27.xsl") == true)
-	{
-		theContextNodeMatchPattern = "//center";
-		theXPathString = "descendant-or-self::center";
-
-		fResult = true;
-	}
-	else if (endsWith(theXSLFileURL, "axes28.xsl") == true)
-	{
-		theContextNodeMatchPattern = "//center";
-		theXPathString = "following::*[4]";
-
-		fResult = true;
-	}
-	else if (endsWith(theXSLFileURL, "axes29.xsl") == true)
-	{
-		theContextNodeMatchPattern = "//center";
-		theXPathString = "following::out-yonder-east";
-
-		fResult = true;
-	}
-	else if (endsWith(theXSLFileURL, "axes30.xsl") == true)
-	{
-		theContextNodeMatchPattern = "//center";
-		theXPathString = "preceding::*[4]";
-
-		fResult = true;
-	}
-	else if (endsWith(theXSLFileURL, "axes31.xsl") == true)
-	{
-		theContextNodeMatchPattern = "//center";
-		theXPathString = "preceding::out-yonder-west";
-
-		fResult = true;
-	}
-	else if (endsWith(theXSLFileURL, "axes32.xsl") == true)
-	{
-		theContextNodeMatchPattern = "//center";
-		theXPathString = "following-sibling::*[2]";
-
-		fResult = true;
-	}
-	else if (endsWith(theXSLFileURL, "axes33.xsl") == true)
-	{
-		theContextNodeMatchPattern = "//center";
-		theXPathString = "following-sibling::east";
-
-		fResult = true;
-	}
-	else if (endsWith(theXSLFileURL, "axes34.xsl") == true)
-	{
-		theContextNodeMatchPattern = "//center";
-		theXPathString = "preceding-sibling::*[2]";
-
-		fResult = true;
-	}
-	else if (endsWith(theXSLFileURL, "axes35.xsl") == true)
-	{
-		theContextNodeMatchPattern = "//center";
-		theXPathString = "preceding-sibling::west";
-
-		fResult = true;
-	}
-	else if (endsWith(theXSLFileURL, "axes35.xsl") == true)
-	{
-		theContextNodeMatchPattern = "//center";
-		theXPathString = "preceding-sibling::west";
-
-		fResult = true;
-	}
-	else if (endsWith(theXSLFileURL, "axes36.xsl") == true)
-	{
-		theContextNodeMatchPattern = "//center";
-		theXPathString = "parent::near-north";
-
-		fResult = true;
-	}
-	else if (endsWith(theXSLFileURL, "axes37.xsl") == true)
-	{
-		theContextNodeMatchPattern = "//center";
-		theXPathString = "parent::*[1]";
-
-		fResult = true;
-	}
-	else if (endsWith(theXSLFileURL, "axes38.xsl") == true)
-	{
-		theContextNodeMatchPattern = "//center";
-		theXPathString = "parent::foo";
-
-		fResult = true;
-	}
-	else if (endsWith(theXSLFileURL, "axes39.xsl") == true)
-	{
-		theContextNodeMatchPattern = "//center";
-		theXPathString = "..";
-
-		fResult = true;
-	}
-	else if (endsWith(theXSLFileURL, "axes40.xsl") == true)
-	{
-		theContextNodeMatchPattern = "//center";
-		theXPathString = "self::center";
-
-		fResult = true;
+			theXPathString =
+				 FindNodeAndGetAttributeValue(theDocument,
+											  theSelectNodeName,
+											  theAttributeName);
+			if (length(theXPathString) != 0)
+			{
+				fResult = true;
+			}
+		}
 	}
 
 	return fResult;
@@ -495,8 +412,10 @@ GetXSLInput(
 
 DOM_Node
 FindContextNode(
+			XPathProcessor&			theXPathProcessor,
+			XPathEnvSupport&		theXPathEnvSupport,
 			XPathSupport&			theXPathSupport,
-			XPathProcessorImpl&		theXPathProcessor,
+			XObjectFactory&			theXObjectFactory,
 			XPathFactory&			theXPathFactory,
 			const DOM_Document&		theDocument,
 			const DOMString&		theContextNodeMatchPattern,
@@ -507,21 +426,20 @@ FindContextNode(
 	FactoryObjectAutoPointer<XPath>		theXPath(&theXPathFactory,
 												 theXPathFactory.create());
 
-	DOM_Element							theNamespaceContext;
-
-	theXPathProcessor.initXPath(*theXPath.get(),
-								theContextNodeMatchPattern,
-								ElementPrefixResolverProxy(theNamespaceContext,theXPathSupport));
-
-	DOM_NodeList		theContextNodeList;
-	MutableNodeRefList	theList;
-
-	theList = theContextNodeList;
+	DOM_Element					theNamespaceContext;
+	ElementPrefixResolverProxy	thePrefixResolver(theNamespaceContext, theXPathSupport);
+	NodeRefList					theContextNodeList;
 
 	const XObject* const	theXObject =
-					theXPath->execute(theDocument,
-									  ElementPrefixResolverProxy(theNamespaceContext,theXPathSupport),
-									  theList);
+		ExecuteXPath(theXPathProcessor,
+					 *theXPath.get(),
+					 theContextNodeMatchPattern,
+					 theXPathEnvSupport,
+					 theXPathSupport,
+					 theXObjectFactory,
+					 theDocument,
+					 thePrefixResolver,
+					 theContextNodeList);
 
 	try
 	{
@@ -530,15 +448,30 @@ FindContextNode(
 		const MutableNodeRefList&	theResultList =
 						theXObject->mutableNodeset();
 
-		assert(theResultList.getLength() == 1);
-
-		theResult = theResultList.item(0);
+		if (theResultList.getLength() == 0)
+		{
+			thePrintWriter.print(XMLStrL("FindContextNode: Unable to find context node using select \""));
+			thePrintWriter.print(theContextNodeMatchPattern);
+			thePrintWriter.println(XMLStrL("\"."));
+			thePrintWriter.println(XMLStrL("FindContextNode: No nodes matched the pattern."));
+		}
+		else if (theResultList.getLength() != 1)
+		{
+			thePrintWriter.print(XMLStrL("FindContextNode: Unable to find context node using select \""));
+			thePrintWriter.print(theContextNodeMatchPattern);
+			thePrintWriter.println(XMLStrL("\"."));
+			thePrintWriter.println(XMLStrL("FindContextNode: More than one node matched the pattern."));
+		}
+		else
+		{
+			theResult = theResultList.item(0);
+		}
 	}
 	catch(...)
 	{
-		thePrintWriter.print("FindContextNode: Error executing match pattern \"");
+		thePrintWriter.print(XMLStrL("FindContextNode: Error executing match pattern \""));
 		thePrintWriter.print(theContextNodeMatchPattern);
-		thePrintWriter.println("\".");
+		thePrintWriter.println(XMLStrL("\"."));
 	}
 
 	return theResult;
@@ -548,8 +481,10 @@ FindContextNode(
 
 bool
 TestAxisResult(
+			XPathProcessor&			theXPathProcessor,
+			XPathEnvSupport&		theXPathEnvSupport,
 			XPathSupport&			theXPathSupport,
-			XPathProcessorImpl&		theXPathProcessor,
+			XObjectFactory&			theXObjectFactory,
 			XMLParserLiaison&		theLiaison,
 			XPathFactory&			theXPathFactory,
 			const DOMString&		theXMLFileURL,
@@ -566,12 +501,15 @@ TestAxisResult(
 		DOMString		theContextNodeMatchPattern;
 		DOMString		theXPathString;
 
-		if (GetXSLInput(theXSLFileURL,
+		if (GetXSLInput(theLiaison,
+						theXSLFileURL,
 						theContextNodeMatchPattern,
 						theXPathString) == true)
 		{
-			DOM_Node		theContextNode = FindContextNode(theXPathSupport,
-															 theXPathProcessor,
+			DOM_Node		theContextNode = FindContextNode(theXPathProcessor,
+															 theXPathEnvSupport,
+															 theXPathSupport,
+															 theXObjectFactory,
 															 theXPathFactory,
 															 theXMLDocument,
 															 theContextNodeMatchPattern,
@@ -579,15 +517,18 @@ TestAxisResult(
 
 			if (theContextNode != 0)
 			{
-				DOM_Element		theNamespaceContext;
-				DOM_NodeList	theContextNodeList;
+				DOM_Element						theNamespaceContext;
+				ElementPrefixResolverProxy		thePrefixResolver(theNamespaceContext, theXPathSupport);
+				NodeRefList						theContextNodeList;
 
 				FactoryObjectAutoPointer<XPath>		theXPath(&theXPathFactory,
 															 theXPathFactory.create());
 
 				theXPathProcessor.initXPath(*theXPath.get(),
 											theXPathString,
-											ElementPrefixResolverProxy(theNamespaceContext,theXPathSupport));
+											thePrefixResolver,
+											theXObjectFactory,
+											theXPathEnvSupport);
 
 				bool	fDump = false;
 
@@ -602,14 +543,15 @@ TestAxisResult(
 					thePrintWriter.println();
 				}
 
-				MutableNodeRefList	theList;
-				
-				theList = theContextNodeList;
+				XPathExecutionContextDefault	theExecutionContext(theXPathEnvSupport,
+																	theXPathSupport,
+																	theXObjectFactory,
+																	theContextNode,
+																	theContextNodeList,
+																	&thePrefixResolver);
 
 				const XObject* const	theResult =
-					theXPath->execute(theContextNode,
-									  ElementPrefixResolverProxy(theNamespaceContext,theXPathSupport),
-									  theList);
+					theXPath->execute(theExecutionContext);
 
 				try
 				{
@@ -622,22 +564,202 @@ TestAxisResult(
 
 					if (theLength > 0)
 					{
-						thePrintWriter.print("<out>");
+						thePrintWriter.print(XMLStrL("<out>"));
 
 						for (int i = 0; i < theLength; i++)
 						{
 							thePrintWriter.print(theResultList.item(i).getNodeName());
-							thePrintWriter.print(" ");
+							thePrintWriter.print(L" ");
 						}
 					}
 
-					thePrintWriter.println("</out>");
+					thePrintWriter.println(XMLStrL("</out>"));
 				}
 				catch(...)
 				{
-					thePrintWriter.print("Execution of XPath ");
+					thePrintWriter.print(XMLStrL("Execution of XPath "));
 					thePrintWriter.print(theXPathString);
-					thePrintWriter.println(" failed!");
+					thePrintWriter.println(XMLStrL(" failed!"));
+				}
+			}
+		}
+	}
+
+	return fError;
+}
+
+
+
+bool
+TestPredicateResult(
+			XPathProcessor&			theXPathProcessor,
+			XPathEnvSupport&		theXPathEnvSupport,
+			XPathSupport&			theXPathSupport,
+			XObjectFactory&			theXObjectFactory,
+			XMLParserLiaison&		theLiaison,
+			XPathFactory&			theXPathFactory,
+			const DOMString&		theXMLFileURL,
+			const DOMString&		theXSLFileURL,
+			PrintWriter&			thePrintWriter)
+{
+	bool	fError = false;
+
+	const DOM_Document	theXMLDocument = ParseXML(theLiaison,
+												  theXMLFileURL);
+
+	if (theXMLDocument != 0)
+	{
+		DOMString		theContextNodeMatchPattern;
+		DOMString		theXPathString;
+
+		if (GetXSLInput(theLiaison,
+						theXSLFileURL,
+						theContextNodeMatchPattern,
+						theXPathString) == true)
+		{
+			DOM_Node		theContextNode = FindContextNode(theXPathProcessor,
+															 theXPathEnvSupport,
+															 theXPathSupport,
+															 theXObjectFactory,
+															 theXPathFactory,
+															 theXMLDocument,
+															 theContextNodeMatchPattern,
+															 thePrintWriter);
+
+			if (theContextNode != 0)
+			{
+				DOM_Element						theNamespaceContext;
+				ElementPrefixResolverProxy		thePrefixResolver(theNamespaceContext, theXPathSupport);
+				NodeRefList						theContextNodeList;
+
+				FactoryObjectAutoPointer<XPath>		theXPath1(&theXPathFactory,
+															  theXPathFactory.create());
+
+				theXPathProcessor.initXPath(*theXPath1.get(),
+											"following-sibling::*",
+											thePrefixResolver,
+											theXObjectFactory,
+											theXPathEnvSupport);
+
+				FactoryObjectAutoPointer<XPath>		theXPath2(&theXPathFactory,
+															  theXPathFactory.create());
+
+				theXPathProcessor.initXPath(*theXPath2.get(),
+											"descendant::*",
+											thePrefixResolver,
+											theXObjectFactory,
+											theXPathEnvSupport);
+
+				bool	fDump = false;
+
+				if (fDump == true)
+				{
+					thePrintWriter.println();
+					thePrintWriter.println();
+					theXPath1->getExpression().dumpOpCodeMap(thePrintWriter);
+					thePrintWriter.println();
+					theXPath1->getExpression().dumpTokenQueue(thePrintWriter);
+					thePrintWriter.println();
+					thePrintWriter.println();
+					theXPath2->getExpression().dumpOpCodeMap(thePrintWriter);
+					thePrintWriter.println();
+					theXPath2->getExpression().dumpTokenQueue(thePrintWriter);
+					thePrintWriter.println();
+					thePrintWriter.println();
+				}
+
+				DOM_Node		theContextNode = theXMLDocument.getFirstChild().getFirstChild();
+
+				for( ; theContextNode != 0; theContextNode = theContextNode.getNextSibling())
+				{
+					if (theContextNode.getNodeType() != DOM_Node::ELEMENT_NODE)
+					{
+						continue;
+					}
+
+					XPathExecutionContextDefault	theExecutionContext(theXPathEnvSupport,
+																		theXPathSupport,
+																		theXObjectFactory,
+																		theContextNode,
+																		theContextNodeList,
+																		&thePrefixResolver);
+
+					const XObject* const	theResult1 =
+							theXPath1->execute(theExecutionContext);
+
+					try
+					{
+						assert(theResult1 != 0);
+
+						const MutableNodeRefList&	theResultList =
+								theResult1->mutableNodeset();
+
+						const int	theLength = theResultList.getLength();
+
+						thePrintWriter.print(XMLStrL("theResult1->str() == \""));
+						thePrintWriter.print(theResult1->str());
+						thePrintWriter.print(XMLStrL("\""));
+						thePrintWriter.println();
+
+						if (theLength > 0)
+						{
+							for (int i = 0; i < theLength; i++)
+							{
+								thePrintWriter.print(theResultList.item(i).getNodeName());
+								thePrintWriter.println();
+							}
+						}
+					}
+					catch(...)
+					{
+						thePrintWriter.print(XMLStrL("Execution of XPath "));
+						thePrintWriter.print(theXPathString);
+						thePrintWriter.println(XMLStrL(" failed!"));
+					}
+
+					const XObject* const	theResult2 =
+							theXPath2->execute(theExecutionContext);
+
+					try
+					{
+						assert(theResult2 != 0);
+
+						const MutableNodeRefList&	theResultList =
+								theResult2->mutableNodeset();
+
+						const int	theLength = theResultList.getLength();
+
+						thePrintWriter.print(XMLStrL("theResult2->str() == \""));
+						thePrintWriter.print(theResult2->str());
+						thePrintWriter.print(XMLStrL("\""));
+						thePrintWriter.println();
+
+						if (theLength > 0)
+						{
+							for (int i = 0; i < theLength; i++)
+							{
+								thePrintWriter.print(theResultList.item(i).getNodeName());
+								thePrintWriter.println();
+							}
+						}
+					}
+					catch(...)
+					{
+						thePrintWriter.print(XMLStrL("Execution of XPath "));
+						thePrintWriter.print(theXPathString);
+						thePrintWriter.println(XMLStrL(" failed!"));
+					}
+
+					if (theResult1->equals(*theResult2) == true)
+					{
+						thePrintWriter.print(XMLStrL("theResult1 is equal to theResult2"));
+						thePrintWriter.println();
+						thePrintWriter.print(XMLStrL("theContextNode.getNodeName() == \""));
+						thePrintWriter.print(theContextNode.getNodeName());
+						thePrintWriter.print(XMLStrL("\"  theContextNode.getNodeValue() == \""));
+						thePrintWriter.print(theContextNode.getNodeValue());
+						thePrintWriter.println(XMLStrL("\""));
+					}
 				}
 			}
 		}
@@ -659,6 +781,7 @@ const char* const	theNumericTestInput[] =
 };
 
 
+
 const double	theNumericTestExpectedOutput[] =
 {
 	-136.0,
@@ -673,11 +796,12 @@ const double	theNumericTestExpectedOutput[] =
 
 void
 TestNumericResults(
-			XPathSupport&			theXPathSupport,
-			XPathFactory&			theXPathFactory,
-			XObjectFactory&			/* theXObjectFactory */,
-			XPathProcessorImpl&		theXPathProcessor,
-			PrintWriter&			thePrintWriter)
+			XPathFactory&		theXPathFactory,
+			XObjectFactory&		theXObjectFactory,
+			XPathProcessor&		theXPathProcessor,
+			XPathEnvSupport&	theXPathEnvSupport,
+			XPathSupport&		theXPathSupport,
+			PrintWriter&		thePrintWriter)
 {
 	assert(sizeof(theNumericTestInput) / sizeof(theNumericTestInput[0]) ==
 			sizeof(theNumericTestExpectedOutput) / sizeof(theNumericTestExpectedOutput[0]));
@@ -687,17 +811,20 @@ TestNumericResults(
 		FactoryObjectAutoPointer<XPath>		theXPath(&theXPathFactory,
 													 theXPathFactory.create());
 
-		TestNumericResult(theXPathSupport,
-						  theXPathProcessor,
+		TestNumericResult(theXPathProcessor,
 						  *theXPath.get(),
 						  theNumericTestInput[i],
 						  thePrintWriter,
 						  theNumericTestExpectedOutput[i],
+						  theXPathEnvSupport,
+						  theXPathSupport,
+						  theXObjectFactory,
 						  DOM_Node(),
-						  DOM_Element(),
-						  DOM_NodeList());
+						  ElementPrefixResolverProxy(DOM_Element(), theXPathSupport),
+						  NodeRefList());
 	}
 }
+
 
 
 const char* const	theStringTestInput[] =
@@ -716,10 +843,10 @@ const char* const	theStringTestInput[] =
 	"concat(\"foo\", \"bar\", \"sky\")",
 
 	"contains(\"foobar\", \"oba\")",
-	"contains(\"Xalan is great\", \"boag\")",
+	"contains(\"LotusXSL4C is great\", \"boag\")",
 
 	"starts-with(\"foobar\", \"foo\")",
-	"starts-with(\"Xalan is great\", \"boag\")",
+	"starts-with(\"LotusXSL4C is great\", \"boag\")",
 
 	"substring-after(\"1999/04/01\", \"/\")",
 	"substring-after(\"1999/04/01\", \"19\")",
@@ -734,7 +861,7 @@ const char* const	theStringTestInput[] =
 	"substring(\"12345\", -2, -1)",
 	"substring(\"12345\", -2)",
 
-	"normalize(\"   aa   a  \")",
+	"normalize-space(\"   aa   a  \")",
 
 	"translate(\"---aaa--\", \"abc-\", \"ABC\")",
 
@@ -791,11 +918,12 @@ const char* const	theStringTestExpectedOutput[] =
 
 void
 TestStringResults(
-			XPathSupport&			theXPathSupport,
-			XPathFactory&			theXPathFactory,
-			XObjectFactory&			/* theXObjectFactory */,
-			XPathProcessorImpl&		theXPathProcessor,
-			PrintWriter&			thePrintWriter)
+			XPathFactory&		theXPathFactory,
+			XObjectFactory&		theXObjectFactory,
+			XPathProcessor&		theXPathProcessor,
+			XPathEnvSupport&	theXPathEnvSupport,
+			XPathSupport&		theXPathSupport,
+			PrintWriter&		thePrintWriter)
 {
 	assert(sizeof(theStringTestInput) == sizeof(theStringTestExpectedOutput));
 
@@ -804,15 +932,134 @@ TestStringResults(
 		FactoryObjectAutoPointer<XPath>		theXPath(&theXPathFactory,
 													 theXPathFactory.create());
 
-		TestStringResult(theXPathSupport,
-						theXPathProcessor,
+		TestStringResult(theXPathProcessor,
 						 *theXPath.get(),
 						 theStringTestInput[i],
 						 thePrintWriter,
 						 theStringTestExpectedOutput[i],
+						 theXPathEnvSupport,
+						 theXPathSupport,
+						 theXObjectFactory,
 						 DOM_Node(),
-						 DOM_Element(),
-						 DOM_NodeList());
+						 ElementPrefixResolverProxy(DOM_Element(), theXPathSupport),
+						 NodeRefList());
+	}
+}
+
+
+
+const char* const	theBooleanTestInput[] =
+{
+	"0 < 2 < 3",
+	"0 < 2 > 3",
+	"1 < 2 < 3",
+
+	"0 div 0 != 0 div 0",
+	"0 div 0 = 0 div 0",
+	"1 < 0 div 0",
+	"1 <= 0 div 0",
+	"2 > 0 div 0",
+	"2 >= 0 div 0",
+
+	"1 < 2",
+	"1500 < 657",
+	"1465787676 < 5 div 0",
+	"4657 div 0 < 4563745658",
+
+	"1000 <= 256000",
+	"1000 <= 1000",
+	"200564 <= 1999",
+	"5768594 <= 56 div 0",
+	"564783 div 0 <= 6758494857",
+
+	"2015 > 100",
+	"56478 > 240000",
+	"4657 div 0 > 57683946",
+	"573068574 > 5 div 0",
+
+	"46000 >= 1500",
+	"56983 >= 56983",
+	"460983 >= 1500000",
+	"67594876 div 0 >= 576849",
+	"1465787676 >= 5 div 0",
+	"1 = 2 = 0",
+	"1 = 2 != 0",
+
+	0
+};
+
+
+
+const bool	theBooleanTestExpectedOutput[] =
+{
+	true,
+	false,
+	true,
+
+	true,
+	false,
+	false,
+	false,
+	false,
+	false,
+
+	true,
+	false,
+	true,
+	false,
+
+	true,
+	true,
+	false,
+	true,
+	false,
+
+	true,
+	false,
+	true,
+	false,
+
+	true,
+	true,
+	false,
+	true,
+	false,
+	true,
+	false,
+
+	0
+};
+
+
+
+void
+TestBooleanResults(
+			XPathFactory&		theXPathFactory,
+			XObjectFactory&		theXObjectFactory,
+			XPathProcessor&		theXPathProcessor,
+			XPathEnvSupport&	theXPathEnvSupport,
+			XPathSupport&		theXPathSupport,
+			PrintWriter&		thePrintWriter)
+{
+	assert(sizeof(theBooleanTestInput) / sizeof(theBooleanTestInput[0]) ==
+				sizeof(theBooleanTestExpectedOutput) / sizeof(theBooleanTestExpectedOutput[0]));
+
+	for(int i = 0; theBooleanTestInput[i] != 0; i++)
+	{
+		FactoryObjectAutoPointer<XPath>		theXPath(&theXPathFactory,
+													 theXPathFactory.create());
+
+		TestBooleanResult(theXPathProcessor,
+						  *theXPath.get(),
+						  theBooleanTestInput[i],
+						  thePrintWriter,
+						  theBooleanTestExpectedOutput[i],
+						  theXPathEnvSupport,
+						  theXPathSupport,
+						  theXObjectFactory,
+						  DOM_Node(),
+						  ElementPrefixResolverProxy(DOM_Element(), theXPathSupport),
+						  NodeRefList());
 	}
 }
 
@@ -843,7 +1090,7 @@ GetXSLFileName(const DOMString&		theXMLFileName)
 							  0,
 							  thePeriodIndex + 1);
 
-		theResult += "xsl";
+		theResult += XMLStrL("xsl");
 	}
 
 	return theResult;
@@ -853,16 +1100,19 @@ GetXSLFileName(const DOMString&		theXMLFileName)
 
 void
 TestAxes(
-			XPathSupport&			theXPathSupport,
-			XPathFactory&			theXPathFactory,
-			XObjectFactory&			/* theXObjectFactory */,
-			XPathProcessorImpl&		theXPathProcessor,
-			XMLParserLiaison&		theLiaison,
-			PrintWriter&			thePrintWriter)
+			XPathFactory&		theXPathFactory,
+			XObjectFactory&		theXObjectFactory,
+			XPathProcessor&		theXPathProcessor,
+			XPathEnvSupport&	theXPathEnvSupport,
+			XPathSupport&		theXPathSupport,
+			XMLParserLiaison&	theLiaison,
+			const DOMString&	theDirectory,
+			PrintWriter&		thePrintWriter)
 {
-	const char* const	theBaseURL = "file:///testsuite/conf/Axes/";
-	const char* const	theSearchSpecification = "/testsuite/conf/Axes";
-	const char* const	theXMLSuffix = ".xml";
+	const DOMString		theProtocol(XMLStrL("file://"));
+	const DOMString		theBaseURL = theProtocol + theDirectory;
+	const DOMString		theSearchSpecification(theDirectory);
+	const DOMString		theXMLSuffix(XMLStrL(".xml"));
 
 	typedef std::vector<DOMString>	FileNameVectorType;
 
@@ -888,8 +1138,10 @@ TestAxes(
 			FactoryObjectAutoPointer<XPath>		theXPath(&theXPathFactory,
 														 theXPathFactory.create());
 
-			TestAxisResult(theXPathSupport,
-							theXPathProcessor,
+			TestAxisResult(theXPathProcessor,
+						   theXPathEnvSupport,
+						   theXPathSupport,
+						   theXObjectFactory,
 						   theLiaison,
 						   theXPathFactory,
 						   theXMLFileName,
@@ -903,30 +1155,42 @@ TestAxes(
 
 void
 RunTests(
-			XPathSupport&			theXPathSupport,
-			XPathFactory&			theXPathFactory,
-			XObjectFactory&			theXObjectFactory,
-			XPathProcessorImpl&		theXPathProcessor,
-			XMLParserLiaison&		theLiaison,
-			PrintWriter&			thePrintWriter)
+			XPathFactory&		theXPathFactory,
+			XObjectFactory&		theXObjectFactory,
+			XPathProcessor&		theXPathProcessor,
+			XPathEnvSupport&	theXPathEnvSupport,
+			XPathSupport&		theXPathSupport,
+			XMLParserLiaison&	theLiaison,
+			PrintWriter&		thePrintWriter)
 {
-	TestNumericResults(theXPathSupport,
-					   theXPathFactory,
+	TestNumericResults(theXPathFactory,
 					   theXObjectFactory,
 					   theXPathProcessor,
+					   theXPathEnvSupport,
+					   theXPathSupport,
 					   thePrintWriter);
 
-	TestStringResults(theXPathSupport,
-					  theXPathFactory,
+	TestStringResults(theXPathFactory,
 					  theXObjectFactory,
 					  theXPathProcessor,
+					  theXPathEnvSupport,
+					  theXPathSupport,
 					  thePrintWriter);
 
-	TestAxes(theXPathSupport,
-		     theXPathFactory,
+	TestBooleanResults(theXPathFactory,
+					   theXObjectFactory,
+					   theXPathProcessor,
+					   theXPathEnvSupport,
+					   theXPathSupport,
+					   thePrintWriter);
+
+	TestAxes(theXPathFactory,
 			 theXObjectFactory,
 			 theXPathProcessor,
+		     theXPathEnvSupport,
+			 theXPathSupport,
 			 theLiaison,
+			 XMLStrL("/testsuite/conf/Axes/"),
 			 thePrintWriter);
 }
 
@@ -938,22 +1202,26 @@ int
 main(int			/* argc */,
 	 const char*	/* argv[] */)
 {
-	XPathEnvSupportDefault	theEnvSupport;
-	DOMSupportDefault		theDOMSupport;
-	XPathSupportDefault		theSupport(theDOMSupport);
-	XObjectFactoryDefault	theXObjectFactory(theEnvSupport, theSupport);
-	XPathFactoryDefault		theXPathFactory(theXObjectFactory, theEnvSupport, theSupport);
-	XPathProcessorImpl		theXPathProcessor(theEnvSupport, theSupport);
-	XMLStdOut				theStdOut;
-	XercesDOMPrintWriter		thePrintWriter(theStdOut);
-	XercesParserLiaison		theLiaison(theDOMSupport);
+	XMLPlatformUtils::Initialize();
 
-	RunTests(theSupport,
-			theXPathFactory,
-			theXObjectFactory,
-			theXPathProcessor,
-			theLiaison,
-			thePrintWriter);
+	XPathEnvSupportDefault		theXPathEnvSupport;
+	DOMSupportDefault			theDOMSupport;
+	XPathSupportDefault			theXPathSupport(theDOMSupport);
+	XObjectFactoryDefault		theXObjectFactory(theXPathEnvSupport, theXPathSupport);
+	XPathFactoryDefault			theXPathFactory;
+	XPathProcessorImpl			theXPathProcessor;
+
+	XercesStdTextOutputStream	theStdOut(std::cout);
+	XercesDOMPrintWriter		thePrintWriter(theStdOut);
+	XercesParserLiaison			theLiaison(theDOMSupport);
+
+	RunTests(theXPathFactory,
+			 theXObjectFactory,
+			 theXPathProcessor,
+			 theXPathEnvSupport,
+		     theXPathSupport,
+			 theLiaison,
+			 thePrintWriter);
 
 	return 0;
 }

@@ -68,6 +68,7 @@
 #include <cctype>
 #include <cstdio>
 #include <functional>
+#include <iosfwd>
 #include <vector>
 
 
@@ -78,6 +79,29 @@
 
 class TextOutputStream;
 
+
+
+
+// This macro has been defined to deal with certain C++ compilers which
+// do not create Unicode strings when the "L" string constant prefix is
+// used.  It is meant _only_ for use with static strings.
+// It is _not_ designed to be thread-safe, because there will always be
+// at least one global static transcoded string that will trigger the
+// code at startup.
+#if defined(XML_LSTRSUPPORT)
+
+#define XALAN_STATIC_UCODE_STRING(str) L##str
+
+#else
+
+// Makes sure the Xerces platform is initialized, then
+// transcodes the string.
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(const DOMString)
+initializeAndTranscode(const char*	theString);
+
+#define XALAN_STATIC_UCODE_STRING(str) initializeAndTranscode(str)
+
+#endif
 
 
 // Simulates the java String method indexOf().  Returns the index of theChar
@@ -173,6 +197,13 @@ OutputString(
 
 
 
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(void)
+OutputString(
+			 std::ostream&		theStream,
+			 const DOMString&	theString);
+
+
+
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(DOMString)
 DoubleToDOMString(double	theDouble);
 
@@ -196,6 +227,19 @@ UnsignedLongToDOMString(unsigned long	theInt);
 inline TextOutputStream&
 operator<<(
 			TextOutputStream&	theStream,
+			const DOMString&	theString)
+{
+	OutputString(theStream,
+				 theString);
+
+	return theStream;
+}
+
+
+
+inline std::ostream&
+operator<<(
+			std::ostream&		theStream,
 			const DOMString&	theString)
 {
 	OutputString(theStream,
@@ -504,6 +548,14 @@ setCharAt(
 typedef std::vector<XMLCh>	XMLCharVectorType;
 
 
+
+// Utility function to make a 0-terminated vector of XMLChs, from
+// a 0-terminated array chars, via transcoding.
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XMLCharVectorType)
+MakeXMLChVector(const char*		data);
+
+
+
 // Utility function to make a 0-terminated vector of XMLChs, from
 // a 0-terminated array of them.
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XMLCharVectorType)
@@ -568,20 +620,32 @@ struct DOMStringEqualsFunction : public std::binary_function<const DOMString&, c
 	}
 };
 
+
+
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(std::string)
 DOMStringToStdString(const DOMString& domString);
 
-inline std::wstring DOMStringToStdWString(const DOMString& domString)
+
+
+inline std::wstring
+DOMStringToStdWString(const DOMString& domString)
 {
 	return (c_wstr(domString));
 }
 
+
+
 //Is the string just whitespace?
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(bool)
-isWhiteSpace(const DOMString& string);
+isWhiteSpace(const DOMString&	string);
+
+
 
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(bool)
-isWhiteSpace(const XMLCh* const ch, int start, int length);
+isWhiteSpace(
+			const XMLCh*	ch,
+			int				start,
+			int				length);
 
 
 

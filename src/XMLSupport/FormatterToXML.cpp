@@ -77,7 +77,7 @@ namespace
 const char* const	theDefaultAttrSpecialChars = "<>&\"\'\r\n";
 }
 
-const DOMString FormatterToXML::DEFAULT_MIME_ENCODING = "UTF-8";
+const DOMString FormatterToXML::DEFAULT_MIME_ENCODING = XALAN_STATIC_UCODE_STRING("UTF-8");
 
 XMLCh				FormatterToXML::m_charBuf[MAXCHARBUF];
 // This should be OK on all platforms ??
@@ -1069,178 +1069,178 @@ void FormatterToXML::initEncodings()
 	// need to resort to escaping in the XML.
 	// TODO: To tell the truth, I'm guessing a bit here. 
 	// s_revsize.insert(std::make_pair("CP1252",          0xFF)); // Windows Latin-1 
-	s_revsize.insert(std::make_pair(DOMString("WINDOWS-1250"),    0xFF)); // Windows 1250 Peter Smolik
-	s_revsize.insert(std::make_pair(DOMString("UTF-8"),           0xFFFF)); // Universal Transformation Format 8
-	s_revsize.insert(std::make_pair(DOMString("US-ASCII"),        0x7F));
-	s_revsize.insert(std::make_pair(DOMString("ISO-8859-1"),      0xFF));
-	s_revsize.insert(std::make_pair(DOMString("ISO-8859-2"),      0xFF));
-	s_revsize.insert(std::make_pair(DOMString("ISO-8859-3"),      0xFF));
-	s_revsize.insert(std::make_pair(DOMString("ISO-8859-4"),      0xFF));
-	s_revsize.insert(std::make_pair(DOMString("ISO-8859-5"),      0xFF));
-	s_revsize.insert(std::make_pair(DOMString("ISO-8859-6"),      0xFF));
-	s_revsize.insert(std::make_pair(DOMString("ISO-8859-7"),      0xFF));
-	s_revsize.insert(std::make_pair(DOMString("ISO-8859-8"),      0xFF));
-	s_revsize.insert(std::make_pair(DOMString("ISO-8859-9"),      0xFF));
-	s_revsize.insert(std::make_pair(DOMString("ISO-2022-JP"),     0xFFFF));
-	s_revsize.insert(std::make_pair(DOMString("SHIFT_JIS"),       0xFFFF));
-	s_revsize.insert(std::make_pair(DOMString("EUC-JP"),          0xFFFF));
-	s_revsize.insert(std::make_pair(DOMString("GB2312"),          0xFFFF));
-	s_revsize.insert(std::make_pair(DOMString("BIG5"),            0xFFFF));
-	s_revsize.insert(std::make_pair(DOMString("EUC-KR"),          0xFFFF));
-	s_revsize.insert(std::make_pair(DOMString("ISO-2022-KR"),     0xFFFF));
-	s_revsize.insert(std::make_pair(DOMString("KOI8-R"),          0xFFFF));
-	s_revsize.insert(std::make_pair(DOMString("EBCDIC-CP-US"),    0xFF));
-	s_revsize.insert(std::make_pair(DOMString("EBCDIC-CP-CA"),    0xFF));
-	s_revsize.insert(std::make_pair(DOMString("EBCDIC-CP-NL"),    0xFF));
-	s_revsize.insert(std::make_pair(DOMString("EBCDIC-CP-DK"),    0xFF));
-	s_revsize.insert(std::make_pair(DOMString("EBCDIC-CP-NO"),    0xFF));
-	s_revsize.insert(std::make_pair(DOMString("EBCDIC-CP-FI"),    0xFF));
-	s_revsize.insert(std::make_pair(DOMString("EBCDIC-CP-SE"),    0xFF));
-	s_revsize.insert(std::make_pair(DOMString("EBCDIC-CP-IT"),    0xFF));
-	s_revsize.insert(std::make_pair(DOMString("EBCDIC-CP-ES"),    0xFF));
-	s_revsize.insert(std::make_pair(DOMString("EBCDIC-CP-GB"),    0xFF));
-	s_revsize.insert(std::make_pair(DOMString("EBCDIC-CP-FR"),    0xFF));
-	s_revsize.insert(std::make_pair(DOMString("EBCDIC-CP-AR1"),   0xFF));
-	s_revsize.insert(std::make_pair(DOMString("EBCDIC-CP-HE"),    0xFF));
-	s_revsize.insert(std::make_pair(DOMString("EBCDIC-CP-CH"),    0xFF));
-	s_revsize.insert(std::make_pair(DOMString("EBCDIC-CP-ROECE"), 0xFF));
-	s_revsize.insert(std::make_pair(DOMString("EBCDIC-CP-YU"),    0xFF));
-	s_revsize.insert(std::make_pair(DOMString("EBCDIC-CP-IS"),    0xFF));
-	s_revsize.insert(std::make_pair(DOMString("EBCDIC-CP-AR2"),   0xFF));
+	s_revsize.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("WINDOWS-1250")),    0xFF)); // Windows 1250 Peter Smolik
+	s_revsize.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("UTF-8")),           0xFFFF)); // Universal Transformation Format 8
+	s_revsize.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("US-ASCII")),        0x7F));
+	s_revsize.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("ISO-8859-1")),      0xFF));
+	s_revsize.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("ISO-8859-2")),      0xFF));
+	s_revsize.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("ISO-8859-3")),      0xFF));
+	s_revsize.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("ISO-8859-4")),      0xFF));
+	s_revsize.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("ISO-8859-5")),      0xFF));
+	s_revsize.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("ISO-8859-6")),      0xFF));
+	s_revsize.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("ISO-8859-7")),      0xFF));
+	s_revsize.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("ISO-8859-8")),      0xFF));
+	s_revsize.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("ISO-8859-9")),      0xFF));
+	s_revsize.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("ISO-2022-JP")),     0xFFFF));
+	s_revsize.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("SHIFT_JIS")),       0xFFFF));
+	s_revsize.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("EUC-JP")),          0xFFFF));
+	s_revsize.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("GB2312")),          0xFFFF));
+	s_revsize.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("BIG5")),            0xFFFF));
+	s_revsize.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("EUC-KR")),          0xFFFF));
+	s_revsize.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("ISO-2022-KR")),     0xFFFF));
+	s_revsize.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("KOI8-R")),          0xFFFF));
+	s_revsize.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-US")),    0xFF));
+	s_revsize.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-CA")),    0xFF));
+	s_revsize.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-NL")),    0xFF));
+	s_revsize.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-DK")),    0xFF));
+	s_revsize.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-NO")),    0xFF));
+	s_revsize.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-FI")),    0xFF));
+	s_revsize.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-SE")),    0xFF));
+	s_revsize.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-IT")),    0xFF));
+	s_revsize.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-ES")),    0xFF));
+	s_revsize.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-GB")),    0xFF));
+	s_revsize.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-FR")),    0xFF));
+	s_revsize.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-AR1")),   0xFF));
+	s_revsize.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-HE")),    0xFF));
+	s_revsize.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-CH")),    0xFF));
+	s_revsize.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-ROECE")), 0xFF));
+	s_revsize.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-YU")),    0xFF));
+	s_revsize.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-IS")),    0xFF));
+	s_revsize.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-AR2")),   0xFF));
 
 	//    <preferred MIME name>, <Java encoding name>
 	// s_enchash.insert(std::make_pair("ISO 8859-1", "CP1252")); // Close enough, I guess
-	s_enchash.insert(std::make_pair(DOMString("WINDOWS-1250"), DOMString("CP1250"))); // Peter Smolik
-	s_enchash.insert(std::make_pair(DOMString("UTF-8"), DOMString("UTF8")));
+	s_enchash.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("WINDOWS-1250")), DOMString(XALAN_STATIC_UCODE_STRING("CP1250")))); // Peter Smolik
+	s_enchash.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("UTF-8")), DOMString(XALAN_STATIC_UCODE_STRING("UTF8"))));
 	if(useISOPrefix)
 	{
-		s_enchash.insert(std::make_pair(DOMString("US-ASCII"),
-		DOMString("ISO8859_1")));    // ?
-		s_enchash.insert(std::make_pair(DOMString("ISO-8859-1"),
-		DOMString("ISO8859_1")));
-		s_enchash.insert(std::make_pair(DOMString("ISO-8859-2"),
-		DOMString("ISO8859_2")));
-		s_enchash.insert(std::make_pair(DOMString("ISO-8859-3"),
-		DOMString("ISO8859_3")));
-		s_enchash.insert(std::make_pair(DOMString("ISO-8859-4"),
-		DOMString("ISO8859_4")));
-		s_enchash.insert(std::make_pair(DOMString("ISO-8859-5"),
-		DOMString("ISO8859_5")));
-		s_enchash.insert(std::make_pair(DOMString("ISO-8859-6"),
-		DOMString("ISO8859_6")));
-		s_enchash.insert(std::make_pair(DOMString("ISO-8859-7"),
-		DOMString("ISO8859_7")));
-		s_enchash.insert(std::make_pair(DOMString("ISO-8859-8"),
-		DOMString("ISO8859_8")));
-		s_enchash.insert(std::make_pair(DOMString("ISO-8859-9"),
-		DOMString("ISO8859_9")));
+		s_enchash.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("US-ASCII")),
+		DOMString(XALAN_STATIC_UCODE_STRING("ISO8859_1"))));    // ?
+		s_enchash.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("ISO-8859-1")),
+		DOMString(XALAN_STATIC_UCODE_STRING("ISO8859_1"))));
+		s_enchash.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("ISO-8859-2")),
+		DOMString(XALAN_STATIC_UCODE_STRING("ISO8859_2"))));
+		s_enchash.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("ISO-8859-3")),
+		DOMString(XALAN_STATIC_UCODE_STRING("ISO8859_3"))));
+		s_enchash.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("ISO-8859-4")),
+		DOMString(XALAN_STATIC_UCODE_STRING("ISO8859_4"))));
+		s_enchash.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("ISO-8859-5")),
+		DOMString(XALAN_STATIC_UCODE_STRING("ISO8859_5"))));
+		s_enchash.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("ISO-8859-6")),
+		DOMString(XALAN_STATIC_UCODE_STRING("ISO8859_6"))));
+		s_enchash.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("ISO-8859-7")),
+		DOMString(XALAN_STATIC_UCODE_STRING("ISO8859_7"))));
+		s_enchash.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("ISO-8859-8")),
+		DOMString(XALAN_STATIC_UCODE_STRING("ISO8859_8"))));
+		s_enchash.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("ISO-8859-9")),
+		DOMString(XALAN_STATIC_UCODE_STRING("ISO8859_9"))));
 	}
 	else
 	{
-		s_enchash.insert(std::make_pair(DOMString("US-ASCII"),
-		DOMString("8859_1")));    // ?
-		s_enchash.insert(std::make_pair(DOMString("ISO-8859-1"),
-		DOMString("8859_1")));
-		s_enchash.insert(std::make_pair(DOMString("ISO-8859-2"),
-		DOMString("8859_2")));
-		s_enchash.insert(std::make_pair(DOMString("ISO-8859-3"),
-		DOMString("8859_3")));
-		s_enchash.insert(std::make_pair(DOMString("ISO-8859-4"),
-		DOMString("8859_4")));
-		s_enchash.insert(std::make_pair(DOMString("ISO-8859-5"),
-		DOMString("8859_5")));
-		s_enchash.insert(std::make_pair(DOMString("ISO-8859-6"),
-		DOMString("8859_6")));
-		s_enchash.insert(std::make_pair(DOMString("ISO-8859-7"),
-		DOMString("8859_7")));
-		s_enchash.insert(std::make_pair(DOMString("ISO-8859-8"),
-		DOMString("8859_8")));
-		s_enchash.insert(std::make_pair(DOMString("ISO-8859-9"),
-		DOMString("8859_9")));
+		s_enchash.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("US-ASCII")),
+		DOMString(XALAN_STATIC_UCODE_STRING("8859_1"))));    // ?
+		s_enchash.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("ISO-8859-1")),
+		DOMString(XALAN_STATIC_UCODE_STRING("8859_1"))));
+		s_enchash.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("ISO-8859-2")),
+		DOMString(XALAN_STATIC_UCODE_STRING("8859_2"))));
+		s_enchash.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("ISO-8859-3")),
+		DOMString(XALAN_STATIC_UCODE_STRING("8859_3"))));
+		s_enchash.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("ISO-8859-4")),
+		DOMString(XALAN_STATIC_UCODE_STRING("8859_4"))));
+		s_enchash.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("ISO-8859-5")),
+		DOMString(XALAN_STATIC_UCODE_STRING("8859_5"))));
+		s_enchash.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("ISO-8859-6")),
+		DOMString(XALAN_STATIC_UCODE_STRING("8859_6"))));
+		s_enchash.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("ISO-8859-7")),
+		DOMString(XALAN_STATIC_UCODE_STRING("8859_7"))));
+		s_enchash.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("ISO-8859-8")),
+		DOMString(XALAN_STATIC_UCODE_STRING("8859_8"))));
+		s_enchash.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("ISO-8859-9")),
+		DOMString(XALAN_STATIC_UCODE_STRING("8859_9"))));
 	}
-	s_enchash.insert(std::make_pair(DOMString("ISO-2022-JP"),     DOMString("JIS")));
-	s_enchash.insert(std::make_pair(DOMString("SHIFT_JIS"),       DOMString("SJIS")));
-	s_enchash.insert(std::make_pair(DOMString("EUC-JP"),          DOMString("EUCJIS")));
-	s_enchash.insert(std::make_pair(DOMString("GB2312"),          DOMString("GB2312")));
-	s_enchash.insert(std::make_pair(DOMString("BIG5"),            DOMString("Big5")));
-	s_enchash.insert(std::make_pair(DOMString("EUC-KR"),          DOMString("KSC5601")));
-	s_enchash.insert(std::make_pair(DOMString("ISO-2022-KR"),     DOMString("ISO2022KR")));
-	s_enchash.insert(std::make_pair(DOMString("KOI8-R"),          DOMString("KOI8_R")));
-	s_enchash.insert(std::make_pair(DOMString("EBCDIC-CP-US"),    DOMString("CP037")));
-	s_enchash.insert(std::make_pair(DOMString("EBCDIC-CP-CA"),    DOMString("CP037")));
-	s_enchash.insert(std::make_pair(DOMString("EBCDIC-CP-NL"),    DOMString("CP037")));
-	s_enchash.insert(std::make_pair(DOMString("EBCDIC-CP-DK"),    DOMString("CP277")));
-	s_enchash.insert(std::make_pair(DOMString("EBCDIC-CP-NO"),    DOMString("CP277")));
-	s_enchash.insert(std::make_pair(DOMString("EBCDIC-CP-FI"),    DOMString("CP278")));
-	s_enchash.insert(std::make_pair(DOMString("EBCDIC-CP-SE"),    DOMString("CP278")));
-	s_enchash.insert(std::make_pair(DOMString("EBCDIC-CP-IT"),    DOMString("CP280")));
-	s_enchash.insert(std::make_pair(DOMString("EBCDIC-CP-ES"),    DOMString("CP284")));
-	s_enchash.insert(std::make_pair(DOMString("EBCDIC-CP-GB"),    DOMString("CP285")));
-	s_enchash.insert(std::make_pair(DOMString("EBCDIC-CP-FR"),    DOMString("CP297")));
-	s_enchash.insert(std::make_pair(DOMString("EBCDIC-CP-AR1"),   DOMString("CP420")));
-	s_enchash.insert(std::make_pair(DOMString("EBCDIC-CP-HE"),    DOMString("CP424")));
-	s_enchash.insert(std::make_pair(DOMString("EBCDIC-CP-CH"),    DOMString("CP500")));
-	s_enchash.insert(std::make_pair(DOMString("EBCDIC-CP-ROECE"), DOMString("CP870")));
-	s_enchash.insert(std::make_pair(DOMString("EBCDIC-CP-YU"),    DOMString("CP870")));
-	s_enchash.insert(std::make_pair(DOMString("EBCDIC-CP-IS"),    DOMString("CP871")));
-	s_enchash.insert(std::make_pair(DOMString("EBCDIC-CP-AR2"),   DOMString("CP918")));
+	s_enchash.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("ISO-2022-JP")),     DOMString(XALAN_STATIC_UCODE_STRING("JIS"))));
+	s_enchash.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("SHIFT_JIS")),       DOMString(XALAN_STATIC_UCODE_STRING("SJIS"))));
+	s_enchash.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("EUC-JP")),          DOMString(XALAN_STATIC_UCODE_STRING("EUCJIS"))));
+	s_enchash.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("GB2312")),          DOMString(XALAN_STATIC_UCODE_STRING("GB2312"))));
+	s_enchash.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("BIG5")),            DOMString(XALAN_STATIC_UCODE_STRING("Big5"))));
+	s_enchash.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("EUC-KR")),          DOMString(XALAN_STATIC_UCODE_STRING("KSC5601"))));
+	s_enchash.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("ISO-2022-KR")),     DOMString(XALAN_STATIC_UCODE_STRING("ISO2022KR"))));
+	s_enchash.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("KOI8-R")),          DOMString(XALAN_STATIC_UCODE_STRING("KOI8_R"))));
+	s_enchash.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-US")),    DOMString(XALAN_STATIC_UCODE_STRING("CP037"))));
+	s_enchash.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-CA")),    DOMString(XALAN_STATIC_UCODE_STRING("CP037"))));
+	s_enchash.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-NL")),    DOMString(XALAN_STATIC_UCODE_STRING("CP037"))));
+	s_enchash.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-DK")),    DOMString(XALAN_STATIC_UCODE_STRING("CP277"))));
+	s_enchash.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-NO")),    DOMString(XALAN_STATIC_UCODE_STRING("CP277"))));
+	s_enchash.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-FI")),    DOMString(XALAN_STATIC_UCODE_STRING("CP278"))));
+	s_enchash.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-SE")),    DOMString(XALAN_STATIC_UCODE_STRING("CP278"))));
+	s_enchash.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-IT")),    DOMString(XALAN_STATIC_UCODE_STRING("CP280"))));
+	s_enchash.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-ES")),    DOMString(XALAN_STATIC_UCODE_STRING("CP284"))));
+	s_enchash.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-GB")),    DOMString(XALAN_STATIC_UCODE_STRING("CP285"))));
+	s_enchash.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-FR")),    DOMString(XALAN_STATIC_UCODE_STRING("CP297"))));
+	s_enchash.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-AR1")),   DOMString(XALAN_STATIC_UCODE_STRING("CP420"))));
+	s_enchash.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-HE")),    DOMString(XALAN_STATIC_UCODE_STRING("CP424"))));
+	s_enchash.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-CH")),    DOMString(XALAN_STATIC_UCODE_STRING("CP500"))));
+	s_enchash.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-ROECE")), DOMString(XALAN_STATIC_UCODE_STRING("CP870"))));
+	s_enchash.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-YU")),    DOMString(XALAN_STATIC_UCODE_STRING("CP870"))));
+	s_enchash.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-IS")),    DOMString(XALAN_STATIC_UCODE_STRING("CP871"))));
+	s_enchash.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-AR2")),   DOMString(XALAN_STATIC_UCODE_STRING("CP918"))));
 
 	// j:CNS11643 -> EUC-TW?
 	// ISO-2022-CN? ISO-2022-CN-EXT?
 
 	//    <Java encoding name>, <preferred MIME name>
-	s_revhash.insert(std::make_pair(DOMString("CP1252"), DOMString("ISO-8859-1"))); // Close enough, I guess
-	s_revhash.insert(std::make_pair(DOMString("CP1250"), DOMString("windows-1250"))); // Peter Smolik
-	s_revhash.insert(std::make_pair(DOMString("UTF8"), DOMString("UTF-8")));
-	//s_revhash.insert(std::make_pair(DOMString("ISO8859_1"), DOMString("US-ASCII")));    // ?
+	s_revhash.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("CP1252")), DOMString(XALAN_STATIC_UCODE_STRING("ISO-8859-1")))); // Close enough, I guess
+	s_revhash.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("CP1250")), DOMString(XALAN_STATIC_UCODE_STRING("windows-1250")))); // Peter Smolik
+	s_revhash.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("UTF8")), DOMString(XALAN_STATIC_UCODE_STRING("UTF-8"))));
+	//s_revhash.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("ISO8859_1")), DOMString(XALAN_STATIC_UCODE_STRING("US-ASCII"))));    // ?
 	if(useISOPrefix)
 	{
-		s_revhash.insert(std::make_pair(DOMString("ISO8859_1"), DOMString("ISO-8859-1")));
-		s_revhash.insert(std::make_pair(DOMString("ISO8859_2"), DOMString("ISO-8859-2")));
-		s_revhash.insert(std::make_pair(DOMString("ISO8859_3"), DOMString("ISO-8859-3")));
-		s_revhash.insert(std::make_pair(DOMString("ISO8859_4"), DOMString("ISO-8859-4")));
-		s_revhash.insert(std::make_pair(DOMString("ISO8859_5"), DOMString("ISO-8859-5")));
-		s_revhash.insert(std::make_pair(DOMString("ISO8859_6"), DOMString("ISO-8859-6")));
-		s_revhash.insert(std::make_pair(DOMString("ISO8859_7"), DOMString("ISO-8859-7")));
-		s_revhash.insert(std::make_pair(DOMString("ISO8859_8"), DOMString("ISO-8859-8")));
-		s_revhash.insert(std::make_pair(DOMString("ISO8859_9"), DOMString("ISO-8859-9")));
+		s_revhash.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("ISO8859_1")), DOMString(XALAN_STATIC_UCODE_STRING("ISO-8859-1"))));
+		s_revhash.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("ISO8859_2")), DOMString(XALAN_STATIC_UCODE_STRING("ISO-8859-2"))));
+		s_revhash.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("ISO8859_3")), DOMString(XALAN_STATIC_UCODE_STRING("ISO-8859-3"))));
+		s_revhash.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("ISO8859_4")), DOMString(XALAN_STATIC_UCODE_STRING("ISO-8859-4"))));
+		s_revhash.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("ISO8859_5")), DOMString(XALAN_STATIC_UCODE_STRING("ISO-8859-5"))));
+		s_revhash.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("ISO8859_6")), DOMString(XALAN_STATIC_UCODE_STRING("ISO-8859-6"))));
+		s_revhash.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("ISO8859_7")), DOMString(XALAN_STATIC_UCODE_STRING("ISO-8859-7"))));
+		s_revhash.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("ISO8859_8")), DOMString(XALAN_STATIC_UCODE_STRING("ISO-8859-8"))));
+		s_revhash.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("ISO8859_9")), DOMString(XALAN_STATIC_UCODE_STRING("ISO-8859-9"))));
 	}
 	else
 	{
-		s_revhash.insert(std::make_pair(DOMString("8859_1"), DOMString("ISO-8859-1")));
-		s_revhash.insert(std::make_pair(DOMString("8859_2"), DOMString("ISO-8859-2")));
-		s_revhash.insert(std::make_pair(DOMString("8859_3"), DOMString("ISO-8859-3")));
-		s_revhash.insert(std::make_pair(DOMString("8859_4"), DOMString("ISO-8859-4")));
-		s_revhash.insert(std::make_pair(DOMString("8859_5"), DOMString("ISO-8859-5")));
-		s_revhash.insert(std::make_pair(DOMString("8859_6"), DOMString("ISO-8859-6")));
-		s_revhash.insert(std::make_pair(DOMString("8859_7"), DOMString("ISO-8859-7")));
-		s_revhash.insert(std::make_pair(DOMString("8859_8"), DOMString("ISO-8859-8")));
-		s_revhash.insert(std::make_pair(DOMString("8859_9"), DOMString("ISO-8859-9")));
+		s_revhash.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("8859_1")), DOMString(XALAN_STATIC_UCODE_STRING("ISO-8859-1"))));
+		s_revhash.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("8859_2")), DOMString(XALAN_STATIC_UCODE_STRING("ISO-8859-2"))));
+		s_revhash.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("8859_3")), DOMString(XALAN_STATIC_UCODE_STRING("ISO-8859-3"))));
+		s_revhash.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("8859_4")), DOMString(XALAN_STATIC_UCODE_STRING("ISO-8859-4"))));
+		s_revhash.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("8859_5")), DOMString(XALAN_STATIC_UCODE_STRING("ISO-8859-5"))));
+		s_revhash.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("8859_6")), DOMString(XALAN_STATIC_UCODE_STRING("ISO-8859-6"))));
+		s_revhash.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("8859_7")), DOMString(XALAN_STATIC_UCODE_STRING("ISO-8859-7"))));
+		s_revhash.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("8859_8")), DOMString(XALAN_STATIC_UCODE_STRING("ISO-8859-8"))));
+		s_revhash.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("8859_9")), DOMString(XALAN_STATIC_UCODE_STRING("ISO-8859-9"))));
 	}
-	s_revhash.insert(std::make_pair(DOMString("JIS"), DOMString("ISO-2022-JP")));
-	s_revhash.insert(std::make_pair(DOMString("SJIS"), DOMString("Shift_JIS")));
-	s_revhash.insert(std::make_pair(DOMString("EUCJIS"), DOMString("EUC-JP")));
-	s_revhash.insert(std::make_pair(DOMString("GB2312"), DOMString("GB2312")));
-	s_revhash.insert(std::make_pair(DOMString("BIG5"), DOMString("Big5")));
-	s_revhash.insert(std::make_pair(DOMString("KSC5601"), DOMString("EUC-KR")));
-	s_revhash.insert(std::make_pair(DOMString("ISO2022KR"), DOMString("ISO-2022-KR")));
-	s_revhash.insert(std::make_pair(DOMString("KOI8_R"), DOMString("KOI8-R")));
-	s_revhash.insert(std::make_pair(DOMString("CP037"), DOMString("EBCDIC-CP-US")));
-	s_revhash.insert(std::make_pair(DOMString("CP037"), DOMString("EBCDIC-CP-CA")));
-	s_revhash.insert(std::make_pair(DOMString("CP037"), DOMString("EBCDIC-CP-NL")));
-	s_revhash.insert(std::make_pair(DOMString("CP277"), DOMString("EBCDIC-CP-DK")));
-	s_revhash.insert(std::make_pair(DOMString("CP277"), DOMString("EBCDIC-CP-NO")));
-	s_revhash.insert(std::make_pair(DOMString("CP278"), DOMString("EBCDIC-CP-FI")));
-	s_revhash.insert(std::make_pair(DOMString("CP278"), DOMString("EBCDIC-CP-SE")));
-	s_revhash.insert(std::make_pair(DOMString("CP280"), DOMString("EBCDIC-CP-IT")));
-	s_revhash.insert(std::make_pair(DOMString("CP284"), DOMString("EBCDIC-CP-ES")));
-	s_revhash.insert(std::make_pair(DOMString("CP285"), DOMString("EBCDIC-CP-GB")));
-	s_revhash.insert(std::make_pair(DOMString("CP297"), DOMString("EBCDIC-CP-FR")));
-	s_revhash.insert(std::make_pair(DOMString("CP420"), DOMString("EBCDIC-CP-AR1")));
-	s_revhash.insert(std::make_pair(DOMString("CP424"), DOMString("EBCDIC-CP-HE")));
-	s_revhash.insert(std::make_pair(DOMString("CP500"), DOMString("EBCDIC-CP-CH")));
-	s_revhash.insert(std::make_pair(DOMString("CP870"), DOMString("EBCDIC-CP-ROECE")));
-	s_revhash.insert(std::make_pair(DOMString("CP870"), DOMString("EBCDIC-CP-YU")));
-	s_revhash.insert(std::make_pair(DOMString("CP871"), DOMString("EBCDIC-CP-IS")));
-	s_revhash.insert(std::make_pair(DOMString("CP918"), DOMString("EBCDIC-CP-AR2")));
+	s_revhash.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("JIS")), DOMString(XALAN_STATIC_UCODE_STRING("ISO-2022-JP"))));
+	s_revhash.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("SJIS")), DOMString(XALAN_STATIC_UCODE_STRING("Shift_JIS"))));
+	s_revhash.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("EUCJIS")), DOMString(XALAN_STATIC_UCODE_STRING("EUC-JP"))));
+	s_revhash.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("GB2312")), DOMString(XALAN_STATIC_UCODE_STRING("GB2312"))));
+	s_revhash.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("BIG5")), DOMString(XALAN_STATIC_UCODE_STRING("Big5"))));
+	s_revhash.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("KSC5601")), DOMString(XALAN_STATIC_UCODE_STRING("EUC-KR"))));
+	s_revhash.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("ISO2022KR")), DOMString(XALAN_STATIC_UCODE_STRING("ISO-2022-KR"))));
+	s_revhash.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("KOI8_R")), DOMString(XALAN_STATIC_UCODE_STRING("KOI8-R"))));
+	s_revhash.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("CP037")), DOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-US"))));
+	s_revhash.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("CP037")), DOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-CA"))));
+	s_revhash.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("CP037")), DOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-NL"))));
+	s_revhash.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("CP277")), DOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-DK"))));
+	s_revhash.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("CP277")), DOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-NO"))));
+	s_revhash.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("CP278")), DOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-FI"))));
+	s_revhash.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("CP278")), DOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-SE"))));
+	s_revhash.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("CP280")), DOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-IT"))));
+	s_revhash.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("CP284")), DOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-ES"))));
+	s_revhash.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("CP285")), DOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-GB"))));
+	s_revhash.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("CP297")), DOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-FR"))));
+	s_revhash.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("CP420")), DOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-AR1"))));
+	s_revhash.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("CP424")), DOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-HE"))));
+	s_revhash.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("CP500")), DOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-CH"))));
+	s_revhash.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("CP870")), DOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-ROECE"))));
+	s_revhash.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("CP870")), DOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-YU"))));
+	s_revhash.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("CP871")), DOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-IS"))));
+	s_revhash.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("CP918")), DOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-AR2"))));
 }

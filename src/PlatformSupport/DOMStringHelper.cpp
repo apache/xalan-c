@@ -72,11 +72,43 @@
 
 
 // Xerces header files
+#include <util/Janitor.hpp>
 #include <util/TextOutputStream.hpp>
+#include <util/XMLString.hpp>
 
+#if !defined(XML_LSTRSUPPORT)
+#include <util/PlatformUtils.hpp>
+#endif
 
 
 #include "DoubleSupport.hpp"
+
+
+
+#if !defined(XML_LSTRSUPPORT)
+
+// This string is defined just to make sure that
+// _something_ trips the initialization code
+// before main() is entered.
+const DOMString		theDummy(XALAN_STATIC_UCODE_STRING("dummy"));
+
+
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(const DOMString)
+initializeAndTranscode(const char*	theString)
+{
+	static bool		fInitialized = false;
+
+	if (fInitialized == false)
+	{
+		XMLPlatformUtils::Initialize();
+
+		fInitialized = true;
+	}
+
+	return DOMString(theString);
+}
+
+#endif
 
 
 
@@ -281,6 +313,7 @@ endsWith(
 
 
 
+
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(void)
 OutputString(TextOutputStream&	theStream,
 			 const DOMString&	theString)
@@ -289,6 +322,21 @@ OutputString(TextOutputStream&	theStream,
 	{
 		theStream << c_wstr(theString);
 	}
+}
+
+
+
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(void)
+OutputString(
+			 std::ostream&		theStream,
+			 const DOMString&	theString)
+{
+	char* const		theTranscodedString =
+		theString.transcode();
+
+	ArrayJanitor<char>	theJanitor(theTranscodedString);
+
+	theStream << theTranscodedString;
 }
 
 
@@ -708,7 +756,6 @@ LongToDOMString(long	theLong)
 
 
 
-
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(DOMString)
 UnsignedLongToDOMString(unsigned long	theUnsignedLong)
 {
@@ -719,6 +766,21 @@ UnsignedLongToDOMString(unsigned long	theUnsignedLong)
 	theFormatter << theUnsignedLong;
 
 	return theFormatter.str().c_str();
+}
+
+
+
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XMLCharVectorType)
+MakeXMLChVector(const char*		data)
+{
+	assert(data != 0);
+
+	XMLCh*	theTranscodedData = XMLString::transcode(data);
+
+	ArrayJanitor<XMLCh>		theJanitor(theTranscodedData);
+
+	// Create a vector which includes the terminating 0.
+	return MakeXMLChVector(theTranscodedData);
 }
 
 
@@ -740,29 +802,41 @@ MakeXMLChVector(const XMLCh*		data)
 	return XMLCharVectorType(data, theEnd + 1);
 }
 
+
+
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(bool)
 isWhiteSpace(const DOMString& string)
 {
-	for(int s = 0;  s < string.length();  s++) 
+	const int	theLength = length(string);
+
+	for(int s = 0; s < theLength;  s++) 
 	{
 		if (!isSpace(charAt(string, s)))
 			return false;
 	}
+
 	return true;
 }
 
 
+
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(bool)
-isWhiteSpace(const XMLCh* const ch, int start, int length)
+isWhiteSpace(
+			const XMLCh* const	ch,
+			int					start,
+			int					length)
 {
-	int end = start+length;
+	const int	end = start + length;
+
 	for(int s = start; s < end; s++) 
 	{
 		if (!isSpace(ch[s]))	
 			return false;
 	}
+
 	return true;
 }
+
 
 
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(std::string)

@@ -620,21 +620,21 @@ FormatterToHTML::createEmpties()
 {
 	EmptiesSetType	theEmpties;
 
-	theEmpties.insert("AREA");
-	theEmpties.insert("BASE");
-	theEmpties.insert("BR");
-	theEmpties.insert("COL");
-	theEmpties.insert("HR");
-	theEmpties.insert("IMG");
-	theEmpties.insert("INPUT");
-	theEmpties.insert("LINK");
-	theEmpties.insert("META");
-	theEmpties.insert("PARAM");
+	theEmpties.insert(XALAN_STATIC_UCODE_STRING("AREA"));
+	theEmpties.insert(XALAN_STATIC_UCODE_STRING("BASE"));
+	theEmpties.insert(XALAN_STATIC_UCODE_STRING("BR"));
+	theEmpties.insert(XALAN_STATIC_UCODE_STRING("COL"));
+	theEmpties.insert(XALAN_STATIC_UCODE_STRING("HR"));
+	theEmpties.insert(XALAN_STATIC_UCODE_STRING("IMG"));
+	theEmpties.insert(XALAN_STATIC_UCODE_STRING("INPUT"));
+	theEmpties.insert(XALAN_STATIC_UCODE_STRING("LINK"));
+	theEmpties.insert(XALAN_STATIC_UCODE_STRING("META"));
+	theEmpties.insert(XALAN_STATIC_UCODE_STRING("PARAM"));
 
 	// HTML 4.0 loose DTD
-	theEmpties.insert("BASEFONT");
-	theEmpties.insert("FRAME");
-	theEmpties.insert("ISINDEX");
+	theEmpties.insert(XALAN_STATIC_UCODE_STRING("BASEFONT"));
+	theEmpties.insert(XALAN_STATIC_UCODE_STRING("FRAME"));
+	theEmpties.insert(XALAN_STATIC_UCODE_STRING("ISINDEX"));
 
 	return theEmpties;
 }
@@ -643,12 +643,12 @@ FormatterToHTML::EmptiesSetType
 FormatterToHTML::createAttrEmpties()
 {
 	EmptiesSetType	theEmpties;
-	theEmpties.insert("checked");
-	theEmpties.insert("disabled");
-	theEmpties.insert("readonly");
-	theEmpties.insert("multiple");
-	theEmpties.insert("disabled");
-	theEmpties.insert("selected");
+	theEmpties.insert(XALAN_STATIC_UCODE_STRING("checked"));
+	theEmpties.insert(XALAN_STATIC_UCODE_STRING("disabled"));
+	theEmpties.insert(XALAN_STATIC_UCODE_STRING("readonly"));
+	theEmpties.insert(XALAN_STATIC_UCODE_STRING("multiple"));
+	theEmpties.insert(XALAN_STATIC_UCODE_STRING("disabled"));
+	theEmpties.insert(XALAN_STATIC_UCODE_STRING("selected"));
 	return theEmpties;
 }
 
@@ -656,12 +656,12 @@ FormatterToHTML::StringSetType
 FormatterToHTML::createNonBlockElems()
 {
 	StringSetType	theElems;
-	theElems.insert("FONT");
-	// s_nonblockelems.insert("A");
-	theElems.insert("TD");
-	theElems.insert("IMG");
-	theElems.insert("B");
-	theElems.insert("I");
+	theElems.insert(XALAN_STATIC_UCODE_STRING("FONT"));
+	// s_nonblockelems.insert(XALAN_STATIC_UCODE_STRING("A"));
+	theElems.insert(XALAN_STATIC_UCODE_STRING("TD"));
+	theElems.insert(XALAN_STATIC_UCODE_STRING("IMG"));
+	theElems.insert(XALAN_STATIC_UCODE_STRING("B"));
+	theElems.insert(XALAN_STATIC_UCODE_STRING("I"));
 	return theElems;
 }
 
@@ -669,20 +669,20 @@ FormatterToHTML::StringSetType
 FormatterToHTML::createEscapeElems()
 {
 	StringSetType	theElems;
-	theElems.insert("%");
-	theElems.insert("<");
-	theElems.insert(">");
-//	theElems.insert(" ");
-//	theElems.insert("#");
-	theElems.insert("{");
-	theElems.insert("}");
-	theElems.insert("[");
-	theElems.insert("]");
-//	theElems.insert("\\");
-	theElems.insert("|");
-	theElems.insert("^");
-	theElems.insert("\"");
-//	theElems.insert("'"); 	  
+	theElems.insert(XALAN_STATIC_UCODE_STRING("%"));
+	theElems.insert(XALAN_STATIC_UCODE_STRING("<"));
+	theElems.insert(XALAN_STATIC_UCODE_STRING(">"));
+//	theElems.insert(XALAN_STATIC_UCODE_STRING(" "));
+//	theElems.insert(XALAN_STATIC_UCODE_STRING("#"));
+	theElems.insert(XALAN_STATIC_UCODE_STRING("{"));
+	theElems.insert(XALAN_STATIC_UCODE_STRING("}"));
+	theElems.insert(XALAN_STATIC_UCODE_STRING("["));
+	theElems.insert(XALAN_STATIC_UCODE_STRING("]"));
+//	theElems.insert(XALAN_STATIC_UCODE_STRING("\\"));
+	theElems.insert(XALAN_STATIC_UCODE_STRING("|"));
+	theElems.insert(XALAN_STATIC_UCODE_STRING("^"));
+	theElems.insert(XALAN_STATIC_UCODE_STRING("\""));
+//	theElems.insert(XALAN_STATIC_UCODE_STRING("'")); 	  
 	return theElems;
 }
 
@@ -691,91 +691,122 @@ FormatterToHTML::createAttributesMap()
 {
 	AttributesMapType	theAtts;
 	StringSetType URLAttrsHREFSingle;
-	URLAttrsHREFSingle.insert(DOMString("href"));
+	URLAttrsHREFSingle.insert(XALAN_STATIC_UCODE_STRING("href"));
 	StringSetType URLAttrsCITESingle;
-	URLAttrsCITESingle.insert(DOMString("cite"));
+	URLAttrsCITESingle.insert(XALAN_STATIC_UCODE_STRING("cite"));
 
-	theAtts.insert(std::make_pair(DOMString("base"), URLAttrsHREFSingle));
-	theAtts.insert(std::make_pair(DOMString("link"), URLAttrsHREFSingle));
-	theAtts.insert(std::make_pair(DOMString("area"), URLAttrsHREFSingle));
+	theAtts.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("base")), URLAttrsHREFSingle));
+	theAtts.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("link")), URLAttrsHREFSingle));
+	theAtts.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("area")), URLAttrsHREFSingle));
 	// From the HTML 4.0 spec: Note. The same conversion based on UTF-8 
 	// should be applied to values of the name attribute for the A element. 
 
 	StringSetType URLAttrs_A;
-	URLAttrs_A.insert(DOMString("href"));
-	URLAttrs_A.insert(DOMString("name"));
-	theAtts.insert(std::make_pair(DOMString("a"), URLAttrs_A));
+	URLAttrs_A.insert(XALAN_STATIC_UCODE_STRING("href"));
+	URLAttrs_A.insert(XALAN_STATIC_UCODE_STRING("name"));
+	theAtts.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("a")), URLAttrs_A));
 
 	StringSetType URLAttrs_INPUT;
-	URLAttrs_A.insert(DOMString("src"));
-	URLAttrs_A.insert(DOMString("usemap"));
-	theAtts.insert(std::make_pair(DOMString("input"), URLAttrs_INPUT));
+	URLAttrs_A.insert(XALAN_STATIC_UCODE_STRING("src"));
+	URLAttrs_A.insert(XALAN_STATIC_UCODE_STRING("usemap"));
+	theAtts.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("input")), URLAttrs_INPUT));
 
 	StringSetType URLAttrs_SCRIPT;
-	URLAttrs_A.insert(DOMString("src"));
-	URLAttrs_A.insert(DOMString("for"));
-	theAtts.insert(std::make_pair(DOMString("script"), URLAttrs_SCRIPT));
+	URLAttrs_A.insert(XALAN_STATIC_UCODE_STRING("src"));
+	URLAttrs_A.insert(XALAN_STATIC_UCODE_STRING("for"));
+	theAtts.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("script")), URLAttrs_SCRIPT));
 
 	StringSetType URLAttrs_IMG;
-	URLAttrs_A.insert(DOMString("src"));
-	URLAttrs_A.insert(DOMString("longdesc"));
-	URLAttrs_A.insert(DOMString("usemap"));
-	theAtts.insert(std::make_pair(DOMString("img"), URLAttrs_IMG));
+	URLAttrs_A.insert(XALAN_STATIC_UCODE_STRING("src"));
+	URLAttrs_A.insert(XALAN_STATIC_UCODE_STRING("longdesc"));
+	URLAttrs_A.insert(XALAN_STATIC_UCODE_STRING("usemap"));
+	theAtts.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("img")), URLAttrs_IMG));
 
 	StringSetType URLAttrs_OBJECT;
-	URLAttrs_A.insert(DOMString("classid"));
-	URLAttrs_A.insert(DOMString("codebase"));
-	URLAttrs_A.insert(DOMString("data"));
-	URLAttrs_A.insert(DOMString("archive"));
-	URLAttrs_A.insert(DOMString("usemap"));
-	theAtts.insert(std::make_pair(DOMString("object"), URLAttrs_OBJECT));
+	URLAttrs_A.insert(XALAN_STATIC_UCODE_STRING("classid"));
+	URLAttrs_A.insert(XALAN_STATIC_UCODE_STRING("codebase"));
+	URLAttrs_A.insert(XALAN_STATIC_UCODE_STRING("data"));
+	URLAttrs_A.insert(XALAN_STATIC_UCODE_STRING("archive"));
+	URLAttrs_A.insert(XALAN_STATIC_UCODE_STRING("usemap"));
+	theAtts.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("object")), URLAttrs_OBJECT));
 
-	theAtts.insert(std::make_pair(DOMString("q"), URLAttrsCITESingle));
-	theAtts.insert(std::make_pair(DOMString("blockquote"), URLAttrsCITESingle));
-	theAtts.insert(std::make_pair(DOMString("ins"), URLAttrsCITESingle));
-	theAtts.insert(std::make_pair(DOMString("del"), URLAttrsCITESingle));
+	theAtts.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("q")), URLAttrsCITESingle));
+	theAtts.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("blockquote")), URLAttrsCITESingle));
+	theAtts.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("ins")), URLAttrsCITESingle));
+	theAtts.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("del")), URLAttrsCITESingle));
 
 	StringSetType URLAttrs_FORM;
-	URLAttrs_A.insert(DOMString("action"));
-	theAtts.insert(std::make_pair(DOMString("form"), URLAttrs_FORM));
+	URLAttrs_A.insert(XALAN_STATIC_UCODE_STRING("action"));
+	theAtts.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("form")), URLAttrs_FORM));
 
 	StringSetType URLAttrs_HEAD;
-	URLAttrs_A.insert(DOMString("profile"));
-	theAtts.insert(std::make_pair(DOMString("head"), URLAttrs_HEAD));
+	URLAttrs_A.insert(XALAN_STATIC_UCODE_STRING("profile"));
+	theAtts.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("head")), URLAttrs_HEAD));
 	return theAtts;
 }
 
 FormatterToHTML::HTMLAttributesVectorType
 FormatterToHTML::createAttributes()
 {
+#if defined(XALAN_WIDE_STRING_UCODE_PROBLEM)
 	static const char* const	theHTMLAttributes[] = 
 	{
-		"nbsp",    "iexcl",    "cent",    "pound",    
-		"curren",    "yen",    "brvbar",    "sect",    
-		"uml",    "copy",    "ordf",    "laquo",    
-		"not",    "shy",    "reg",    "macr",    "deg",    
-		"plusmn",    "sup2",    "sup3",    "acute",    
-		"micro",    "para",    "middot",    "cedil",    
-		"sup1",    "ordm",    "raquo",    "frac14",    
-		"frac12",    "frac34",    "iquest",    
-		"Agrave",    "Aacute",    "Acirc",    
-		"Atilde",    "Auml",    "Aring",    "AElig",    
+		"nbsp",    "iexcl",    "cent",    "pound",
+		"curren",    "yen",    "brvbar",    "sect",
+		"uml",    "copy",    "ordf",    "laquo", 
+		"not",    "shy",    "reg",    "macr",    "deg",
+		"plusmn",    "sup2",    "sup3",    "acute",
+		"micro",    "para",    "middot",    "cedil",
+		"sup1",    "ordm",    "raquo",    "frac14",
+		"frac12",    "frac34",    "iquest",
+		"Agrave",    "Aacute",    "Acirc",
+		"Atilde",    "Auml",    "Aring",    "AElig",
 		"Ccedil",    "Egrave",    "Eacute",    "Ecirc",    
-		"Euml",    "Igrave",    "Iacute",    "Icirc",    
-		"Iuml",    "ETH",    "Ntilde",    "Ograve",    
-		"Oacute",    "Ocirc",    "Otilde",    "Ouml",    
-		"times",    "Oslash",    "Ugrave",    "Uacute",    
-		"Ucirc",    "Uuml",    "Yacute",    "THORN",    
-		"szlig",    "agrave",    "aacute",    "acirc",    
-		"atilde",    "auml",    "aring",    "aelig",    
-		"ccedil",    "egrave",    "eacute",    "ecirc",    
-		"euml",    "igrave",    "iacute",    "icirc",    
-		"iuml",    "eth",    "ntilde",    "ograve",    
-		"oacute",    "ocirc",    "otilde",    "ouml",    
-		"divide",    "oslash",    "ugrave",    "uacute",    
-		"ucirc",    "uuml",    "yacute",    "thorn",    
+		"Euml",    "Igrave",    "Iacute",    "Icirc",
+		"Iuml",    "ETH",    "Ntilde",    "Ograve",
+		"Oacute",    "Ocirc",    "Otilde",    "Ouml",
+		"times",    "Oslash",    "Ugrave",    "Uacute",
+		"Ucirc",    "Uuml",    "Yacute",    "THORN",
+		"szlig",    "agrave",    "aacute",    "acirc",
+		"atilde",    "auml",    "aring",    "aelig",
+		"ccedil",    "egrave",    "eacute",    "ecirc",
+		"euml",    "igrave",    "iacute",    "icirc",
+		"iuml",    "eth",    "ntilde",    "ograve",
+		"oacute",    "ocirc",    "otilde",    "ouml",
+		"divide",    "oslash",    "ugrave",    "uacute",
+		"ucirc",    "uuml",    "yacute",    "thorn",
 		"yuml"
 	};
+#else
+	static const XMLCh* const	theHTMLAttributes[] = 
+	{
+		L"nbsp",    L"iexcl",    L"cent",    L"pound",
+		L"curren",    L"yen",    L"brvbar",    L"sect",
+		L"uml",    L"copy",    L"ordf",    L"laquo", 
+		L"not",    L"shy",    L"reg",    L"macr",    L"deg",
+		L"plusmn",    L"sup2",    L"sup3",    L"acute",
+		L"micro",    L"para",    L"middot",    L"cedil",
+		L"sup1",    L"ordm",    L"raquo",    L"frac14",
+		L"frac12",    L"frac34",    L"iquest",
+		L"Agrave",    L"Aacute",    L"Acirc",
+		L"Atilde",    L"Auml",    L"Aring",    L"AElig",
+		L"Ccedil",    L"Egrave",    L"Eacute",    L"Ecirc",    
+		L"Euml",    L"Igrave",    L"Iacute",    L"Icirc",
+		L"Iuml",    L"ETH",    L"Ntilde",    L"Ograve",
+		L"Oacute",    L"Ocirc",    L"Otilde",    L"Ouml",
+		L"times",    L"Oslash",    L"Ugrave",    L"Uacute",
+		L"Ucirc",    L"Uuml",    L"Yacute",    L"THORN",
+		L"szlig",    L"agrave",    L"aacute",    L"acirc",
+		L"atilde",    L"auml",    L"aring",    L"aelig",
+		L"ccedil",    L"egrave",    L"eacute",    L"ecirc",
+		L"euml",    L"igrave",    L"iacute",    L"icirc",
+		L"iuml",    L"eth",    L"ntilde",    L"ograve",
+		L"oacute",    L"ocirc",    L"otilde",    L"ouml",
+		L"divide",    L"oslash",    L"ugrave",    L"uacute",
+		L"ucirc",    L"uuml",    L"yacute",    L"thorn",
+		L"yuml"
+	};
+#endif
 
 	static const size_t		theArraySize =
 			sizeof(theHTMLAttributes) / sizeof(theHTMLAttributes[0]);
@@ -786,7 +817,11 @@ FormatterToHTML::createAttributes()
 
 	for(size_t	i = 0; i < theArraySize; i++)
 	{
+#if defined(XALAN_WIDE_STRING_UCODE_PROBLEM)
+		theAttributes.push_back(initializeAndTranscode(theHTMLAttributes[i]));
+#else
 		theAttributes.push_back(theHTMLAttributes[i]);
+#endif
 	}
 
 	return theAttributes;
@@ -797,30 +832,59 @@ FormatterToHTML::createAttributes()
 FormatterToHTML::HTMLSymbolsVectorType
 FormatterToHTML::createSymbols()
 {
+#if defined(XALAN_WIDE_STRING_UCODE_PROBLEM)
 	static const char* const	theHTMLSymbols[] = 
 	{
-		"Alpha",    "Beta",    
-		"Gamma",    "Delta",    "Epsilon",    "Zeta",    
-		"Eta",    "Theta",    "Iota",    "Kappa",    
-		"Lambda",    "Mu",    "Nu",    "Xi",    
-		"Omicron",    "Pi",    "Rho",    "Sigma",    
-		"Tau",    "Upsilon",    "Phi",    "Chi",    
-		"Psi",    "Omega",    "alpha",    "beta",    
-		"gamma",    "delta",    "epsilon",    "zeta",    
-		"eta",    "theta",    "iota",    "kappa",    
-		"lambda",    "mu",    "nu",    "xi",    
-		"omicron",    "pi",    "rho",    "sigmaf",    
-		"sigma",    "tau",    "upsilon",    "phi",    
-		"chi",    "psi",    "omega",    "thetasym",    
+		"Alpha",    "Beta",
+		"Gamma",    "Delta",    "Epsilon",    "Zeta",
+		"Eta",    "Theta",    "Iota",    "Kappa",
+		"Lambda",    "Mu",    "Nu",    "Xi",
+		"Omicron",    "Pi",    "Rho",    "Sigma",
+		"Tau",    "Upsilon",    "Phi",    "Chi",
+		"Psi",    "Omega",    "alpha",    "beta",
+		"gamma",    "delta",    "epsilon",    "zeta",
+		"eta",    "theta",    "iota",    "kappa",
+		"lambda",    "mu",    "nu",    "xi",
+		"omicron",    "pi",    "rho",    "sigmaf",
+		"sigma",    "tau",    "upsilon",    "phi",
+		"chi",    "psi",    "omega",    "thetasym",
 		"upsih",    "piv"
 	};
+#else
+	static const XMLCh* const	theHTMLSymbols[] = 
+	{
+		L"Alpha",    L"Beta",
+		L"Gamma",    L"Delta",    L"Epsilon",    L"Zeta",
+		L"Eta",    L"Theta",    L"Iota",    L"Kappa",
+		L"Lambda",    L"Mu",    L"Nu",    L"Xi",
+		L"Omicron",    L"Pi",    L"Rho",    L"Sigma",
+		L"Tau",    L"Upsilon",    L"Phi",    L"Chi",
+		L"Psi",    L"Omega",    L"alpha",    L"beta",
+		L"gamma",    L"delta",    L"epsilon",    L"zeta",
+		L"eta",    L"theta",    L"iota",    L"kappa",
+		L"lambda",    L"mu",    L"nu",    L"xi",
+		L"omicron",    L"pi",    L"rho",    L"sigmaf",
+		L"sigma",    L"tau",    L"upsilon",    L"phi",
+		L"chi",    L"psi",    L"omega",    L"thetasym",
+		L"upsih",    L"piv"
+	};
+#endif
+
 	static const size_t		theArraySize =
 		sizeof(theHTMLSymbols) / sizeof(theHTMLSymbols[0]);
+
 	HTMLSymbolsVectorType	theSymbols;
+
 	theSymbols.reserve(theArraySize);
+
 	for(size_t	i = 0; i < theArraySize; i++)
 	{
+#if defined(XALAN_WIDE_STRING_UCODE_PROBLEM)
+		theSymbols.push_back(initializeAndTranscode(theHTMLSymbols[i]));
+#else
 		theSymbols.push_back(theHTMLSymbols[i]);
+#endif
 	}
+
 	return theSymbols;
 }
