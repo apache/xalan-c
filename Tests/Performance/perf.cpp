@@ -123,6 +123,7 @@ const char* const 	excludeStylesheets[] =
 {
 	//"basic-all_well.xsl",
 	"large-evans_large.xsl",
+	"thruput-flat.xsl",
 	//"sort-cem-big.xsl",
 	//"large-cem10k.xsl",
 	0
@@ -264,6 +265,25 @@ addMetricToAttrs(char* desc, double theMetric, Hashtable& attrs)
 	return;
 }
 
+void
+printArgOptions()
+{
+	cerr << endl
+		 << "Perf options (options are not case-sensitive)"
+		 << endl
+		 << endl
+		 << "-base dirname      (base directory for testcases)"
+		 << endl
+		 << endl
+		 << "[-out dirname      (base directory for output) ]"
+		 << endl
+		 << "[-category dirname (run files only from a specific directory) ]"
+		 << endl
+		 << "[-i                (include all testcases) ]"
+		 << endl
+		 << "[-iter n           (specifies number of iterations; must be > 0)  ]"
+		 << endl;
+}
 
 bool
 getParams(int argc, 
@@ -271,11 +291,12 @@ getParams(int argc,
 		  long& iterCount, 
 		  bool& skip,
 		  bool& cat,
-		  XalanDOMString& category)
+		  XalanDOMString& category,
+		  XalanDOMString& basedir)
 {
-	if (argc >= 6 )
+	if (argc = 1 )
 	{
-		cout << "Usage perf {count, -s(kip) -category 'dirname'} " << endl;
+		printArgOptions(); 
 		return false;
 	}
 
@@ -284,12 +305,12 @@ getParams(int argc,
 		iterCount = atol(argv[1]);
 		if (iterCount <= 0)
 		{
-			cerr << "Usage: perf <count, -s(kip)>" << endl  << endl;
+			cerr << "Usage: perf <count, -i(nclude)>" << endl  << endl;
 			return false;
 		}
-		else if (argc >= 3 && !stricmp(argv[2], "-s"))
+		else if (argc >= 3 && !stricmp(argv[2], "-i"))
 		{
-			skip = true;
+			skip = false;
 		}
 	}
 
@@ -300,8 +321,90 @@ getParams(int argc,
 			assign(category, XalanDOMString(argv[4]));
 		}
 
+	if (argc >= 5 && !stricmp(argv[5], "-basedir"))
+		{
+			cout << argv[6] << endl;
+			assign(basedir, XalanDOMString(argv[6]));
+		}
+
 	return true;
 }
+
+bool
+getParamsNEW(int argc, 
+		  const char*	argv[], 
+		  long& iterCount, 
+		  bool& skip,
+		  XalanDOMString& category,
+		  XalanDOMString& basedir,
+		  XalanDOMString& outdir)
+{
+	bool fSuccess = true;
+
+	if (argc == 1 )
+	{
+		printArgOptions(); 
+		return false;
+	}
+	for (int i = 1; i < argc && fSuccess == true; ++i)
+	{
+
+	if(!stricmp("-base", argv[i]))
+	{
+		++i;
+		if(i < argc && argv[i][0] != '-')
+		{
+			assign(basedir, XalanDOMString(argv[i]));
+		}
+		else
+		{
+			fSuccess = false;
+		}
+	}
+	else if(!stricmp("-out", argv[i]))
+	{
+		++i;
+		if(i < argc && argv[i][0] != '-')
+		{
+			assign(outdir, XalanDOMString(argv[i]));
+		}
+		else
+		{
+			fSuccess = false;
+		}
+	}
+	else if(!stricmp("-category", argv[i]))
+	{
+		++i;
+		if(i < argc && argv[i][0] != '-')
+		{
+			assign(category, XalanDOMString(argv[i]));
+		}
+		else
+		{
+			fSuccess = false;
+		}
+	}
+	else if(!stricmp("-i", argv[i]))
+	{
+		skip = false;
+	}
+	else if(!stricmp("-iter", argv[i]))
+	{
+		++i;
+		iterCount = atol(argv[i]);
+		if (iterCount <= 0)
+		{
+			printArgOptions();
+			fSuccess = false;
+		}
+	}
+
+	} // End of for-loop
+	return fSuccess;
+}
+
+
 
 
 
@@ -320,12 +423,16 @@ main(
 
 	Hashtable runAttrs;
 	long iterCount = 5;	// Default number of iterations
-	bool skip = false;	// Default will not skip long tests
+	bool skip = true;	// Default will skip long tests
 	bool cat = false;   // run tests from single directory
-	XalanDOMString category(XalanDOMString("NA")); // Default perf/dir to test
+
+	XalanDOMString  category(XalanDOMString("")); // Default perf/dir to test
+	XalanDOMString  baseDir(XALAN_STATIC_UCODE_STRING("d:\\xslt\\xsl-test\\perf\\"));
+	XalanDOMString  outputRoot(XALAN_STATIC_UCODE_STRING("d:\\xslt\\cperf-results\\"));
+	XalanDOMString  resultsRoot(XALAN_STATIC_UCODE_STRING("d:\\xslt\\xsl-test\\perf-dataxml\\"));
 
 
-	if (getParams(argc, argv, iterCount, skip, cat, category) == true)
+	if (getParamsNEW(argc, argv, iterCount, skip, category, baseDir, outputRoot) == true)
 	{
 
 		FileUtility f;
@@ -336,9 +443,6 @@ main(
 		const XalanDOMString processorType(XALAN_STATIC_UCODE_STRING("XalanC"));
 
 		// Defined basic constants for file manipulation 
-		const XalanDOMString  baseDir(XALAN_STATIC_UCODE_STRING("d:\\xslt\\xsl-test\\perf\\"));
-		const XalanDOMString  outputRoot(XALAN_STATIC_UCODE_STRING("d:\\xslt\\cperf-results\\"));
-		const XalanDOMString  resultsRoot(XALAN_STATIC_UCODE_STRING("d:\\xslt\\xsl-test\\perf-dataxml\\"));
 
 		const XalanDOMString  XSLSuffix(XALAN_STATIC_UCODE_STRING(".xsl"));
 		const XalanDOMString  XMLSuffix(XALAN_STATIC_UCODE_STRING(".xml"));
@@ -368,7 +472,7 @@ main(
 
 				for(FileNameVectorType::size_type	j = 0; j < dirs.size(); j++)
 				{
-					if (cat && !equals(dirs[j], category))
+					if (length(category) > 0 && !equals(dirs[j], category))
 					{
 						continue;
 					}
