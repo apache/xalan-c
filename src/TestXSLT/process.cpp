@@ -170,8 +170,6 @@ using std::cin;
 using std::cout;
 using std::endl;
 using std::hex;
-using std::less;
-using std::map;
 using std::pair;
 using std::vector;
 #endif
@@ -214,7 +212,7 @@ printArgOptions()
 		 << endl
 		 << " [-INDENT n (Controls how many spaces to indent. {default is 0})]"
 		 << endl
-		 << " [-NOVALIDATE (Controls whether validation occurs. Validation is on by default.)]"
+		 << " [-VALIDATE (Controls whether validation occurs. Validation is off by default.)]"
 		 << endl
 		 << " [-TT (Trace the templates as they are being called.)]"
 		 << endl
@@ -252,6 +250,7 @@ printArgOptions()
 		 << endl
 		 << " [-NOINDENT (Turns off HTML indenting..]"
 		 << endl
+		 << endl
 		 << "The following option is valid only with -XML."
 		 << endl
 		 << endl
@@ -262,7 +261,7 @@ printArgOptions()
 
 
 #if defined(XALAN_NEEDS_EXPLICIT_TEMPLATE_INSTANTIATION)
-#include<stl/_tree.c>
+#include<stl/_vector.c>
 #endif
 
 typedef vector<pair<const char*, const char*> >	StringPairVectorType;
@@ -462,9 +461,9 @@ getArgs(
 				fSuccess = false;
 			}
 		}
-		else if(!compareNoCase("-NOVALIDATE", argv[i]))
+		else if(!compareNoCase("-VALIDATE", argv[i]))
 		{
-			p.doValidation = false;
+			p.doValidation = true;
 		}
 		else if (!compareNoCase("-PARAM", argv[i])) 
 		{
@@ -820,15 +819,8 @@ xsltMain(const CmdLineParams&	params)
 	XSLTInit	theInit;
 
 #if defined(XALAN_USE_ICU)
-	// Create an installer to install the substitue format-number() function.
+	// Create an installer to install the substitute format-number() function.
 	FunctionICUFormatNumber::FunctionICUFormatNumberInstaller	theInstaller;
-
-	// Create a factory for creating XalanNumberFormat instances using
-	// the ICU as implementation...
-	ICUXalanNumberFormatFactory		theXalanNumberFormatFactory;
-
-	// Install the ICU-based factory...
-//	StylesheetExecutionContextDefault::installXalanNumberFormatFactory(&theXalanNumberFormatFactory);
 #endif
 
 	const XalanDOMString	mimeEncoding(XALAN_STATIC_UCODE_STRING("UTF-8"));
@@ -996,6 +988,8 @@ xsltMain(const CmdLineParams&	params)
 	else
 	{
 		theInputSource.setStream(&cin);
+
+		cerr << "Reading input document from stdin..." << endl;
 	}
 
 	StylesheetExecutionContextDefault	theExecutionContext(processor,
