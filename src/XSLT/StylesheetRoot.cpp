@@ -178,7 +178,8 @@ StylesheetRoot::postConstruction(StylesheetConstructionContext&		constructionCon
 	}
 
 	// cdata-section-elements only applies to the XML output method...
-	if (m_outputMethod != FormatterListener::OUTPUT_METHOD_XML)
+	if (m_outputMethod != FormatterListener::OUTPUT_METHOD_XML &&
+		m_outputMethod != FormatterListener::OUTPUT_METHOD_NONE)
 	{
 		m_cdataSectionElems.clear();
 	}
