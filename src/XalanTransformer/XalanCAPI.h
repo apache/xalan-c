@@ -130,7 +130,7 @@ extern "C"
 	 * @param theXalanHandle The XalanTransformer to destroy.
 	 */
 	XALAN_TRANSFORMER_EXPORT_FUNCTION(void)
-	DeleteXalanTransformer(XalanHandle*	theXalanHandle);
+	DeleteXalanTransformer(XalanHandle	theXalanHandle);
 
 	/**
 	 * Transform the XML source tree to the given result file.
@@ -177,7 +177,7 @@ extern "C"
 	 * @param theStream The address of character data.
 	 */
 	XALAN_TRANSFORMER_EXPORT_FUNCTION(void)
-	XalanFreeData(char**				theStream);
+	XalanFreeData(char*		theStream);
 
 	/**
 	 * Transform the XML source tree to the address of a callback.

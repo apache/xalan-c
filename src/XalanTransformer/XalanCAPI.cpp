@@ -85,22 +85,16 @@ XalanTerminate()
 
 XALAN_TRANSFORMER_EXPORT_FUNCTION(XalanHandle)
 CreateXalanTransformer()
-{
-	XalanTransformer* theXalanTransformer = new XalanTransformer();
-	return theXalanTransformer;
+{	
+	return new XalanTransformer();
 }
 
 
 
 XALAN_TRANSFORMER_EXPORT_FUNCTION(void)
-DeleteXalanTransformer(XalanHandle* theXalanHandle)
+DeleteXalanTransformer(XalanHandle theXalanHandle)
 {
-	if(*theXalanHandle != NULL)
-	{
-		XalanTransformer* theXalanTransformer = (XalanTransformer*) *theXalanHandle;
-		delete	theXalanTransformer;
-		*theXalanHandle = NULL;
-	}
+	delete	theXalanHandle;
 }
 
 
@@ -112,17 +106,11 @@ XalanTransformToFile(
 			const char*		theOutFileName,
 			XalanHandle		theXalanHandle)
 {
-	int status = true;
-
-	if(theXalanHandle != NULL)
-	{
-		XalanTransformer* theXalanTransformer = (XalanTransformer*) theXalanHandle;
-
-		// Do the transformation...
-		status = theXalanTransformer->transform(theXMLFileName, theXSLFileName, theOutFileName);
-	}
-
-	return status;
+#if defined(XALAN_OLD_STYLE_CASTS)
+	return ((XalanTransformer*)theXalanHandle)->transform(theXMLFileName, theXSLFileName, theOutFileName);
+#else
+	return 	static_cast<XalanTransformer*>(theXalanHandle)->transform(theXMLFileName, theXSLFileName, theOutFileName);
+#endif	
 }
 
 
@@ -138,36 +126,30 @@ XalanTransformToData(
 	using std::ostrstream;
 #endif
 
-	int status = true;
+	int status = true;		
 
-	if(theXalanHandle != NULL)
-	{
-		XalanTransformer* theXalanTransformer = (XalanTransformer*) theXalanHandle;
+	ostrstream	theOutputStream;	
 
-		ostrstream	theOutputStream;	
+	// Do the transformation...
+#if defined(XALAN_OLD_STYLE_CASTS)
+	status = ((XalanTransformer*)theXalanHandle)->transform(theXMLFileName, theXSLFileName, &theOutputStream);
+#else
+	status = static_cast<XalanTransformer*>(theXalanHandle)->transform(theXMLFileName, theXSLFileName, &theOutputStream);
+#endif
+	// Null-terminate the data.
+	theOutputStream << '\0';
 
-		// Do the transformation...
-		status = theXalanTransformer->transform(theXMLFileName, theXSLFileName, &theOutputStream);
-
-		// Null-terminate the data.
-		theOutputStream << '\0';
-
-		*theOutput = theOutputStream.str();
-	}
-
+	*theOutput = theOutputStream.str();
+	
 	return status;
 }
 
 
 
 XALAN_TRANSFORMER_EXPORT_FUNCTION(void)
-XalanFreeData(char**	theStream)
+XalanFreeData(char*	theStream)
 {
-	if(*theStream != NULL)
-	{
-		delete[] *theStream;
-		*theStream = NULL;
-	}
+	delete[] theStream;
 }
 
 
@@ -180,15 +162,9 @@ XalanTransformToHandler(
 			const void*				theOutputHandle, 
 			XalanOutputHandlerType	theOutputHandler)
 {
-	int status = true;
-
-	if(theXalanHandle != NULL)
-	{
-		XalanTransformer* theXalanTransformer = (XalanTransformer*) theXalanHandle;
-
-		// Do the transformation...
-		status = theXalanTransformer->transform(theXMLFileName, theXSLFileName, theOutputHandle, theOutputHandler);
-	}
-
-	return status;
+#if defined(XALAN_OLD_STYLE_CASTS)
+	return ((XalanTransformer*)theXalanHandle)->transform(theXMLFileName, theXSLFileName, theOutputHandle, theOutputHandler);
+#else
+	return 	static_cast<XalanTransformer*>(theXalanHandle)->transform(theXMLFileName, theXSLFileName, theOutputHandle, theOutputHandler);
+#endif	
 }
