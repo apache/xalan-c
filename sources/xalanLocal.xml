@@ -21,24 +21,34 @@
  
   <resources source="sbk:/sources/xalan/resources.xml"/>
    
+  <document id="index" 
+            label="Xalan-C++ 1.9" 
+            source="xalan/index.xml"/>   
+
   <document id="overview" 
             label="Overview" 
             source="xalan/overview.xml"/>   
                         
-  <separator/>
-  
-  <document id="getstarted"
-            label="Getting Started"
-            source="xalan/getstarted.xml"/>
+  <document id="whatsnew" 
+            label="What's New" 
+            source="xalan/whatsnew.xml"/> 
             
   <separator/>
   
-  <faqs     id="faq"        
-            label="FAQs"
-            source="xalan/faq.xml" />
+  <document id="download"
+            label="Downloads"
+            source="xalan/download.xml"/>
+            
+  <document id="build_instruct"
+            label="Build Instructions"
+            source="xalan/build_instruct.xml"/>
 
-  <separator/>  
-            
+  <document id="install"
+            label="Installation"
+            source="xalan/install.xml"/>
+
+  <separator/>
+              
   <document id="samples"
             label="Sample Apps"
             source="xalan/samples.xml"/>            
@@ -52,28 +62,31 @@
             source="xalan/usagepatterns.xml"/>
 
   <separator/>
-   
-  <external href="apidocs/index.html"  label="C++ API"/>
-   
-  <separator/>                  
-            
+
+  <document id="programming"
+            label="Programming"
+            source="xalan/programming.xml"/>
+
   <document id="extensions" 
             label="Extensions" 
             source="xalan/extensions.xml"/>
-  <document id="extensionslib" label="Extensions Library" source="xalan/extensionslib.xml"/>            
- <separator/>
+
+  <document id="extensionslib" 
+            label="Extensions Library" 
+            source="xalan/extensionslib.xml"/>            
+
+  <external href="apiDocs/index.html"  label="API Reference"/>
+   
+  <separator/>                  
+
+  <faqs     id="faq"        
+            label="FAQs"
+            source="xalan/faq.xml" />
+
+  <separator/>
           
- <document id="readme" 
-            label="Release Notes" 
-            source="xalan/readme.xml"/> 
- <external href="getstarted.html#download"  label="Downloads"/>
-
-            
- <separator/>
- <external href="http://cvs.apache.org/viewcvs.cgi/xml-xalan/c"     label="CVS Repository"/>
-
- <external href="readme.html#bugs" label="Bugs"/>
+  <external href="whatsnew.html#bugs" label="Bugs"/>
  
- <external href="http://xml.apache.org/xalan-j/test/run.html#how-to-run-c"  label="Testing"/>
+  <external href="http://xml.apache.org/xalan-j/test/run.html#how-to-run-c"  label="Testing"/>
 
 </book>
