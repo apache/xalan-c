@@ -698,7 +698,7 @@ theResult = XalanTransformToFile(xmlfilename,
                                  xalan);
 	  </source>
 	  <note>
-		If the XML input file contains a stylesheet processing instruction that you want to use, include an empty string ("") for the xslfilename argument.
+		If the XML input file contains a stylesheet processing instruction that you want to use, use an empty XSLTInputSource for the stylesheet argument.
 	  </note>
 	</s3>                                 
 	<s3 title="5. Shut down Xalan">
@@ -711,7 +711,7 @@ theResult = XalanTransformToFile(xmlfilename,
 	  The <jump href="apidocs/XalanCAPI.h.html">Xalan C API</jump> supports approximately the same set of options as the C++ API. In particular, you can
 	</p>
 	<ul>
-	  <li>Use stylesheet processing instructions (PI) to supply the stylesheet. Simply supply an empty string ("") for the XSL file name.<br/><br/></li>
+	  <li>Use stylesheet processing instructions (PI) to indicate the URI of the stylesheet. Supply NULL for the stylesheet argument.<br/><br/></li>
 	  <li>Set stylesheet parameters. Use the SetStylesheetParam() function.<br/><br/></li>
 	  <li>Compile stylesheets. Use the CompileStylesheet() method to compile a stylesheet, and the TransformToFileCSS() or TransformToDataCSS() function to use the compiled stylesheet in a transformation.<br/><br/></li>
 	  <li>Parse XML sources. Use the XalanParseSource() or XalanParseSouceUseXalan() method.<br/><br/></li>
