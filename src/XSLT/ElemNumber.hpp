@@ -109,7 +109,7 @@ public:
 				less<const ElemNumber*> >			ElemToCounterVectorMapType;
 	typedef map<XalanDOMChar,
 				XalanNumberingResourceBundle,
-				less<XalanDOMChar>					NumberingResourceBundleMapType;
+				less<XalanDOMChar> >				NumberingResourceBundleMapType;
 #else
 	typedef std::vector<DecimalToRoman>				DecimalToRomanVectorType;
 	typedef std::vector<int>						IntArrayType;
