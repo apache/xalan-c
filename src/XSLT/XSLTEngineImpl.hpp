@@ -187,16 +187,34 @@ public:
 	typedef vector<const Locator*>			LocatorStack;
 	typedef vector<TraceListener*>			TraceListenerVectorType;
 	typedef vector<bool>					BoolVectorType;
-	typedef set<const XalanDOMString*,
-				LessXalanDOMStringPointers>	XalanDOMStringPointerSetType;
+	typedef vector<const XalanDOMString*>	XalanDOMStringPointerVectorType;
 #else
 	typedef std::map<const void*, ClockType>	DurationsTableMapType;
 	typedef std::vector<const Locator*>			LocatorStack;
 	typedef std::vector<TraceListener*>			TraceListenerVectorType;
 	typedef std::vector<bool>					BoolVectorType;
-	typedef std::set<const XalanDOMString*,
-					 LessXalanDOMStringPointers>	XalanDOMStringPointerSetType;
+	typedef std::vector<const XalanDOMString*>	XalanDOMStringPointerVectorType;
 #endif
+
+	struct FindStringPointerFunctor
+	{
+		FindStringPointerFunctor(const XalanDOMString&	theString) :
+			m_string(theString)
+		{
+		}
+
+		bool
+		operator()(const XalanDOMString*	theString) const
+		{
+			assert(theString != 0);
+
+			return *theString == m_string;
+		}
+
+	private:
+
+		const XalanDOMString&	m_string;
+	};
 
 	typedef XalanAutoPtr<XPathProcessor>				XPathProcessorPtrType;
 	typedef Function::XObjectArgVectorType				XObjectArgVectorType;
@@ -1708,17 +1726,15 @@ private:
 	/*
 	 * Dummy AttributeListImpl
 	 */
-	AttributeListImpl				m_dummyAttributesList;
+	AttributeListImpl					m_dummyAttributesList;
 
-	XalanDOMString					m_scratchString;
+	XalanDOMString						m_scratchString;
 
-	XalanDOMStringPointerSetType	m_attributeNamesVisited;
+	XalanDOMStringPointerVectorType		m_attributeNamesVisited;
 
-	const XalanDOMStringPointerSetType::iterator	m_attributeNamesVisitedEnd;
+	bool								m_hasStripOrPreserveSpace;
 
-	bool							m_hasStripOrPreserveSpace;
-
-	bool							m_hasCDATASectionElements;
+	bool								m_hasCDATASectionElements;
 
 	static void
 	installFunctions();

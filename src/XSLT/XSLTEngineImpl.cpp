@@ -195,7 +195,6 @@ XSLTEngineImpl::XSLTEngineImpl(
 	m_dummyAttributesList(),
 	m_scratchString(),
 	m_attributeNamesVisited(),
-	m_attributeNamesVisitedEnd(m_attributeNamesVisited.end()),
 	m_hasStripOrPreserveSpace(false),
 	m_hasCDATASectionElements(false)
 {
@@ -2941,11 +2940,18 @@ XSLTEngineImpl::copyNamespaceAttributes(const XalanNode&	src)
 
 			const XalanDOMString&	nodeName = attr->getNodeName();
 
-			if (m_attributeNamesVisited.find(&nodeName) == m_attributeNamesVisitedEnd)
+#if !defined(XALAN_NO_NAMESPACES)
+			using std::find_if;
+#endif
+
+			if (find_if(
+					m_attributeNamesVisited.begin(),
+					m_attributeNamesVisited.end(),
+					FindStringPointerFunctor(nodeName)) == m_attributeNamesVisited.end())
 			{
 				addResultNamespace(*attr, thePendingAttributes, true);
 
-				m_attributeNamesVisited.insert(&nodeName);
+				m_attributeNamesVisited.push_back(&nodeName);
 			}
 		}
 
