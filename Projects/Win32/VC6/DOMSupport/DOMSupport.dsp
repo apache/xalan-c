@@ -149,6 +149,10 @@ SOURCE=..\..\..\..\src\DOMSupport\DOMSupportInit.cpp
 
 SOURCE=..\..\..\..\src\DOMSupport\TreeWalker.cpp
 # End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\DOMSupport\XalanNamespacesStack.cpp
+# End Source File
 # End Group
 # Begin Group "Header Files"
 
@@ -180,6 +184,10 @@ SOURCE=..\..\..\..\src\DOMSupport\DOMSupportInit.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\DOMSupport\TreeWalker.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\DOMSupport\XalanNamespacesStack.hpp
 # End Source File
 # End Group
 # Begin Group "Resource Files"
