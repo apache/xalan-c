@@ -283,8 +283,9 @@ FileUtility::checkResults(const XalanDOMString& outputFile,
 						  const XalanDOMString& goldFile, 
 						  XMLFileReporter& logfile)
 {
-	int ambgFlag = data.nogold;
+	int ambgFlag = data.nogold;	// get the current number of tests w/o gold files.
 
+	// Compare the results, report success if compareSerializedResults returns true.
 	if(compareSerializedResults(outputFile, goldFile))
 	{
 		cout << "Passed: " << data.testOrFile << endl;
@@ -292,10 +293,11 @@ FileUtility::checkResults(const XalanDOMString& outputFile,
 		data.pass += 1;
 	}
 	else
-	{
+	{	// if the compairson fails gather up the failure data and determine if it failed 
+		// due to bad output or missing Gold file. Lastly, log the failure.
 		Hashtable attrs;
 		Hashtable actexp;
-		reportDOMError();
+		reportError();
 
 		attrs.insert(Hashtable::value_type(XalanDOMString("reason"), XalanDOMString(data.msg)));
 		attrs.insert(Hashtable::value_type(XalanDOMString("atNode"), data.currentNode));
@@ -313,6 +315,39 @@ FileUtility::checkResults(const XalanDOMString& outputFile,
 	}
 
 }
+
+void
+FileUtility::checkAPIResults(const XalanDOMString& actual, 
+						  const XalanDOMString& expected, 
+						  char* msg,
+						  XMLFileReporter& logfile)
+{
+	if(actual == expected)
+	{
+		data.pass += 1;
+		cout << "Passed: " << data.testOrFile << endl;
+		logfile.logCheckPass(data.testOrFile);
+	}
+	else
+	{	data.actual = actual;
+		data.expected = expected;
+		data.currentNode = "API Test";
+		data.msg = msg;
+		data.fail += 1;
+
+		reportError();
+		Hashtable actexp;
+
+		actexp.insert(Hashtable::value_type(XalanDOMString("exp"), expected));
+		actexp.insert(Hashtable::value_type(XalanDOMString("act"), actual));
+
+		logfile.logCheckFail(data.testOrFile, actexp);
+
+	}
+
+}
+
+
 
 /*	This routine compares the results of a transform with the gold file.
 //	It in turn call the domCompare routine to do the actual comparision. 
@@ -424,16 +459,27 @@ FileUtility::fileCompare(const char* goldFile,
 	data.actual = XalanDOMString(" ");
 	data.currentNode = XalanDOMString("Line: 0");
 
+	// Attempt to open the files. 
 	result = fopen(outputFile, "r");
 	gold   = fopen(goldFile, "r");
 
-	if (!gold || !result)
+	// If the result file fails to open report this as a failure.
+	if (!result)
 	{
-		data.msg = "Failed to open either Gold or Result file";
+		data.msg = "No Result file (Transform failed)";
+		data.fail += 1;
+		return false;
+	}
+	
+	// If the gold file fails to open report this as ambiguous.
+	if (!gold )
+	{
+		data.msg = "No Gold file";
 		data.nogold += 1;
 		return false;
 	}
 
+	// Start file comparison,  line by line..
 	while( !feof(result) && !feof(gold))
 	{
 		fgets(gline, sizeof(gline), gold );
@@ -447,6 +493,7 @@ FileUtility::fileCompare(const char* goldFile,
 			return false;
 		}
 
+		// Compare the lines character by charcter ....
 		int i = 0;
 		while(i < sizeof(gline)) 
 		{
@@ -456,7 +503,8 @@ FileUtility::fileCompare(const char* goldFile,
 				continue;
 			}
 			else 
-			{
+			{	// If there is a mismatch collect up the fail data and return false.  To ensure that 
+				// the results can be seen in the browser enclose the actual/expected in CDATA Sections.
 				data.msg = "Error: Text based comparison failure";
 				data.expected = XalanDOMString("<![CDATA[") + XalanDOMString(gline) + XalanDOMString("]]>");
 				data.actual = XalanDOMString("<![CDATA[") + XalanDOMString(rline) + XalanDOMString("]]>");
@@ -855,14 +903,14 @@ bool FileUtility::diffAttr(const XalanNode* gAttr, const XalanNode* dAttr)
 //				
 */
 void
-FileUtility::reportDOMError()
+FileUtility::reportError()
 {
 
 	cout << endl << "* Failed "<< data.testOrFile 
 		 << "  " << data.msg << endl
 		 << "	" << "Processing Node: " << data.currentNode << endl
 		 << "	Expected:	" << data.expected << endl
-		 << "	Actual:		" << data.actual << endl;
+		 << "	Actual:		" << data.actual << "\n\n";
 
 }
 
