@@ -147,5 +147,5 @@ Function::execute(
 const XalanDOMString
 Function::getError() const
 {
-	return XALAN_STATIC_UCODE_STRING("Unknown function called.");
+	return XALAN_STATIC_UCODE_STRING("Invalid number of arguments for function!");
 }
