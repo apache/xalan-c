@@ -174,6 +174,13 @@ XalanSourceTreeParserLiaison::parseXMLStream(
 
 	theReader->setLexicalHandler(&theContentHandler);
 
+	EntityResolver* const	theResolver = getEntityResolver();
+
+	if (theResolver != 0)
+	{
+		theReader->setEntityResolver(theResolver);
+	}
+
 	theReader->parse(inputSource);
 
 	XalanSourceTreeDocument* const	theDocument = theContentHandler.detachDocument();
@@ -301,6 +308,13 @@ XalanSourceTreeParserLiaison::parseXMLStream(
 	theReader->setErrorHandler(&m_xercesParserLiaison);
 
 	theReader->setLexicalHandler(theLexicalHandler);
+
+	EntityResolver* const	theResolver = getEntityResolver();
+
+	if (theResolver != 0)
+	{
+		theReader->setEntityResolver(theResolver);
+	}
 
 	theReader->parse(theInputSource);
 }
