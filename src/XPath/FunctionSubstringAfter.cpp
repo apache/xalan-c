@@ -141,7 +141,14 @@ FunctionSubstringAfter::execute(
 			const unsigned int		theSubstringLength =
 				theFirstStringLength  - theIndex - theSecondStringLength;
 
-			return executionContext.getXObjectFactory().createString(theFirstCharacter, theSubstringLength);
+			XPathExecutionContext::GetAndReleaseCachedString	theResult(executionContext);
+
+			assign(
+					theResult,
+					theFirstCharacter,
+					theSubstringLength);
+
+			return executionContext.getXObjectFactory().createString(theResult);
 		}
 	}
 }

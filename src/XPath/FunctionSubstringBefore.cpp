@@ -129,10 +129,15 @@ FunctionSubstringBefore::execute(
 		}
 		else
 		{
-			// Create a string of the appropriate length...
-			return executionContext.getXObjectFactory().createString(
+			XPathExecutionContext::GetAndReleaseCachedString	theResult(executionContext);
+
+			assign(
+					theResult,
 					toCharArray(theFirstString),
 					theIndex);
+
+			// Create a string of the appropriate length...
+			return executionContext.getXObjectFactory().createString(theResult);
 		}
 	}
 }

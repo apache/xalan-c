@@ -170,7 +170,7 @@ FunctionLocalName::getLocalName(
 		theType == XalanNode::ELEMENT_NODE ||
 		theType == XalanNode::PROCESSING_INSTRUCTION_NODE)
 	{
-		return executionContext.getXObjectFactory().createString(executionContext.getLocalNameOfNode(node));
+		return executionContext.getXObjectFactory().createStringReference(executionContext.getLocalNameOfNode(node));
 	}
 	else
 	{

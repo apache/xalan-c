@@ -137,14 +137,13 @@ FunctionTranslate::execute(
 	typedef std::vector<XalanDOMChar>	VectorType;
 #endif
 
-	// A vector to contain the new characters.  We'll use it to construct
-	// the result string.
-	VectorType	theBuffer;
+	// A string to hold the result.
+	XPathExecutionContext::GetAndReleaseCachedString	theResult(executionContext);
 
 	// The result string can only be as large as the first string, so
 	// just reserve the space now.  Also reserve space for the
 	// terminating 0.
-	theBuffer.reserve(theFirstStringLength + 1);
+	reserve(theResult, theFirstStringLength + 1);
 
 	for (unsigned int i = 0; i < theFirstStringLength; i++)
 	{
@@ -156,13 +155,13 @@ FunctionTranslate::execute(
 		{
 			// Didn't find the character in the second string, so it
 			// is not translated.
-			theBuffer.push_back(theCurrentChar);
+			append(theResult, theCurrentChar);
 		}
 		else if (theIndex < theThirdStringLength)
 		{
 			// OK, there's a corresponding character in the
 			// third string, so do the translation...
-			theBuffer.push_back(charAt(theThirdString, theIndex));
+			append(theResult, charAt(theThirdString, theIndex));
 		}
 		else
 		{
@@ -174,16 +173,7 @@ FunctionTranslate::execute(
 		}
 	}
 
-	const VectorType::size_type		theSize = theBuffer.size();	
-	
-	if (theSize == 0)
-	{
-		return executionContext.getXObjectFactory().createString(XalanDOMString());
-	}
-	else
-	{
-		return executionContext.getXObjectFactory().createString(&*theBuffer.begin(), theSize);
-	}
+	return executionContext.getXObjectFactory().createString(theResult);
 }
 
 

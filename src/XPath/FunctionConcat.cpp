@@ -108,15 +108,15 @@ FunctionConcat::execute(
 {
 	assert(arg1.null() == false && arg2.null() == false);	
 
-	XalanDOMString	theResult;
+	XPathExecutionContext::GetAndReleaseCachedString	theResult(executionContext);
 
 	const XalanDOMString&	theArg1 = arg1->str();
 	const XalanDOMString&	theArg2 = arg2->str();
 
 	reserve(theResult, length(theArg1) + length(theArg2) + 1);
 
-	theResult += theArg1;
-	theResult += theArg2;
+	append(theResult, theArg1);
+	append(theResult, theArg2);
 
 	return executionContext.getXObjectFactory().createString(theResult);
 }
@@ -133,7 +133,7 @@ FunctionConcat::execute(
 {
 	assert(arg1.null() == false && arg2.null() == false && arg3.null() == false);	
 
-	XalanDOMString	theResult;
+	XPathExecutionContext::GetAndReleaseCachedString	theResult(executionContext);
 
 	const XalanDOMString&	theArg1 = arg1->str();
 	const XalanDOMString&	theArg2 = arg2->str();
@@ -141,9 +141,9 @@ FunctionConcat::execute(
 
 	reserve(theResult, length(theArg1) + length(theArg2) + length(theArg3) + 1);
 
-	theResult += theArg1;
-	theResult += theArg2;
-	theResult += theArg3;
+	append(theResult, theArg1);
+	append(theResult, theArg2);
+	append(theResult, theArg3);
 
 	return executionContext.getXObjectFactory().createString(theResult);
 }
@@ -172,7 +172,7 @@ FunctionConcat::execute(
 		}
 	}
 
-	XalanDOMString	theResult;
+	XPathExecutionContext::GetAndReleaseCachedString	theResult(executionContext);
 
 	reserve(theResult, theCombinedLength + 1);
 
@@ -181,7 +181,7 @@ FunctionConcat::execute(
 
 		for(; i != theEnd; ++i)
 		{
-			theResult += (*i)->str();
+			append(theResult, (*i)->str());
 		}
 	}
 

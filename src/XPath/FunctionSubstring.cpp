@@ -252,9 +252,14 @@ FunctionSubstring::execute(
 						theStartIndex,
 						theTotal);
 
-				return executionContext.getXObjectFactory().createString(
-								toCharArray(theSourceString) + theStartIndex,
-								theSubstringLength);
+				XPathExecutionContext::GetAndReleaseCachedString	theResult(executionContext);
+
+				assign(
+						theResult,
+						toCharArray(theSourceString) + theStartIndex,
+						theSubstringLength );
+
+				return executionContext.getXObjectFactory().createString(theResult);
 			}
 		}
 	}

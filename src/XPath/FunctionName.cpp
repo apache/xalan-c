@@ -76,44 +76,46 @@ FunctionName::~FunctionName()
 
 XObjectPtr
 FunctionName::execute(
-		XPathExecutionContext&			executionContext,
-		XalanNode*						context)
+		XPathExecutionContext&	executionContext,
+		XalanNode*				context)
 {
-	XalanDOMString	theData;
-
 	if (context == 0)
 	{
 		executionContext.error("The name() function requires a non-null context node!");
+
+        // Dummy return value...
+        return 0;
 	}
 	else
-	{	
-		theData = executionContext.getNameOfNode(*context);		
+	{
+	    return executionContext.getXObjectFactory().createStringReference(executionContext.getNameOfNode(*context));
 	}
-
-	return executionContext.getXObjectFactory().createString(theData);	
 }
 
 
 
 XObjectPtr
 FunctionName::execute(
-		XPathExecutionContext&			executionContext,
-		XalanNode*						/* context */,			
-		const XObjectPtr					arg1)
+		XPathExecutionContext&	executionContext,
+		XalanNode*				/* context */,
+		const XObjectPtr		arg1)
 {
 	assert(arg1.null() == false);	
-	
-	XalanDOMString	theData;	
 
 	const NodeRefListBase&	theNodeList = arg1->nodeset();
 
-	if (theNodeList.getLength() > 0)
+	if (theNodeList.getLength() == 0)
+    {
+	    return executionContext.getXObjectFactory().createString(XalanDOMString());
+    }
+    else
 	{
 		assert(theNodeList.item(0) != 0);
-		theData = executionContext.getNameOfNode(*theNodeList.item(0));		
-	}
 
-	return executionContext.getXObjectFactory().createString(theData);	
+        const XalanDOMString&   theData = executionContext.getNameOfNode(*theNodeList.item(0));
+
+	    return executionContext.getXObjectFactory().createStringReference(theData);
+	}
 }
 
 
@@ -121,7 +123,7 @@ FunctionName::execute(
 XObjectPtr
 FunctionName::execute(
 			XPathExecutionContext&	executionContext,
-			XalanNode*				context,			
+			XalanNode*				context,	
 			const XObjectPtr		/* arg1 */,
 			const XObjectPtr		/* arg2 */)
 {
@@ -135,7 +137,7 @@ FunctionName::execute(
 XObjectPtr
 FunctionName::execute(
 			XPathExecutionContext&	executionContext,
-			XalanNode*				context,			
+			XalanNode*				context,
 			const XObjectPtr		/* arg1 */,
 			const XObjectPtr		/* arg2 */,
 			const XObjectPtr		/* arg3 */)

@@ -117,7 +117,7 @@ FunctionString::execute(
 {
 	assert(arg1.null() == false);	
 	
-	return executionContext.getXObjectFactory().createString(arg1->str());
+	return executionContext.getXObjectFactory().createStringAdapter(arg1);
 }
 
 
@@ -182,4 +182,3 @@ FunctionString::getError() const
 {
 	return XALAN_STATIC_UCODE_STRING("The string() function takes zero or one argument!");
 }
-
