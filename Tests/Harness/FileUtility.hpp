@@ -209,6 +209,24 @@ public:
 							  const XalanDOMString& goldFile, 
 							  XMLFileReporter& logfile);
 
+	void
+	FileUtility::checkAPIResults(const XalanDOMString& actual, 
+								 const XalanDOMString& expected,
+								 char* msg,
+								 XMLFileReporter& logfile);
+
+	void
+	FileUtility::checkAPIErrorResults(const char* actual, 
+									  const char* expected,
+									  char* msg,
+									  XMLFileReporter& logfile)
+	{
+		FileUtility::checkAPIResults(XalanDOMString(actual), 
+									 XalanDOMString(expected),
+									 msg,
+									 logfile);
+	}
+
 	/**
 	* Utility method used to compare the results. It inturn
 	* call domCompare.  
@@ -219,13 +237,6 @@ public:
 								const XalanCompiledStylesheet* compiledSS, 
 								XalanSourceTreeDocument* dom,
 								const XSLTInputSource& goldInputSource);
-	/** 
-	* Simplified version of above.
-	*/
-//	void
-//	FileUtility::compareSerializedResults(const XSLTInputSource& transformResult,
-//								const XSLTInputSource& goldInputSource,
-//								XalanDOMString fileName, const char* testCase);
 
 	bool
 	FileUtility::compareSerializedResults(const XalanDOMString& transformResult,
@@ -295,7 +306,7 @@ private:
 	* @returns void.
 	*/
 	void
-	FileUtility::reportDOMError();
+	FileUtility::reportError();
 
 };        // end of class FileUtility
 #endif
