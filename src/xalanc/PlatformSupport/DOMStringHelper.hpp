@@ -565,8 +565,10 @@ lastIndexOf(
 /**
  * Simulates the java String method startsWith().
  * 
- * @param theDOMString target string to search
+ * @param theString target string to search
+ * @param theStringLength the length of theString
  * @param theSubstring substring searched for
+ * @param theSubstringLength the length of theSubstring
  * @return true if the target string begins with the substring
  */
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(bool)
@@ -631,6 +633,27 @@ startsWith(
 	assert(theSubstring != 0);
 
 	return startsWith(c_wstr(theString), length(theString), theSubstring, length(theSubstring));
+}
+
+
+
+/**
+ * Simulates the java String method startsWith().
+ * 
+ * @param theDOMString target string to search
+ * @param theSubstring substring searched for
+ * @param theSubstringLength the length of theSubstring
+ * @return true if the target string begins with the substring
+ */
+inline bool
+startsWith(
+			const XalanDOMString&		theString,
+			const XalanDOMChar*			theSubstring,
+			XalanDOMString::size_type	theSubstringLength)
+{
+	assert(theSubstring != 0);
+
+	return startsWith(c_wstr(theString), length(theString), theSubstring, theSubstringLength);
 }
 
 
