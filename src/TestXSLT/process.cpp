@@ -122,6 +122,7 @@
 #include <XSLT/StylesheetRoot.hpp>
 #include <XSLT/StylesheetConstructionContextDefault.hpp>
 #include <XSLT/StylesheetExecutionContextDefault.hpp>
+#include <XSLT/TraceListenerDefault.hpp>
 #include <XSLT/XSLTProcessorEnvSupportDefault.hpp>
 
 
@@ -161,8 +162,6 @@ printArgOptions()
 		 << endl
 		 << "	 [-OUT outputFileName]"
 		 << endl
-		 << "	 [-E (Do not expand entity refs)]"
-		 << endl
 		 << "	 [-V (Version info)]"
 		 << endl
 		 << "	 [-QC (Quiet Pattern Conflicts Warnings)]"
@@ -181,8 +180,6 @@ printArgOptions()
 		 << endl
 		 << "	 [-TTC (Trace the template children as they are being processed.)]"
 		 << endl
-		 << "	 [-TCLASS (TraceListener class for trace extensions.)]"
-		 << endl
 		 << "	 [-VALIDATE (Set whether validation occurs.	Validation is off by default.)]"
 		 << endl
 		 << "	 [-XML (Use XML formatter and add XML header.)]"
@@ -192,8 +189,6 @@ printArgOptions()
 		 << "	 [-HTML (Use HTML formatter.)]"
 		 << endl
 		 << "	 [-PARAM name expression (Set a stylesheet parameter)]"
-		 << endl
-		 << "	 [-MT n(Set number of threads to 'n' {default is 1})]"
 		 << endl;
 }
 
@@ -210,6 +205,11 @@ struct CmdLineParams
 	bool setQuietMode;
 	bool shouldExpandEntityRefs;
 	bool stripCData;
+	bool versionOnly;
+	bool traceTemplates;
+	bool traceGenerationEvent;
+	bool traceSelectionEvent;
+	bool traceTemplateChildren;
 	int indentAmount;
 	int nThreads;
 	int outputType;
@@ -219,13 +219,30 @@ struct CmdLineParams
 	string treedumpFileName;
 	string xslFileName;
 	vector <string> inFileNames;
+
 	CmdLineParams() :
-		paramsMap(), doStackDumpOnError(false), escapeCData(false),
-		formatOutput(false), setQuietConflictWarnings(false), setQuietMode(false),
-		shouldExpandEntityRefs(false), stripCData(false), indentAmount(0),
-		nThreads(1), outputType(-1), dumpFileName(),
-		specialCharacters(), treedumpFileName(),
-		outFileName(), xslFileName(), inFileNames() { }
+		paramsMap(),
+		doStackDumpOnError(false),
+		escapeCData(false),
+		formatOutput(false),
+		setQuietConflictWarnings(false),
+		setQuietMode(false),
+		shouldExpandEntityRefs(false),
+		stripCData(false),
+		versionOnly(false),
+		traceTemplates(false),
+		traceGenerationEvent(false),
+		traceSelectionEvent(false),
+		traceTemplateChildren(false),
+		indentAmount(0),
+		nThreads(1),
+		outputType(-1),
+		dumpFileName(),
+		specialCharacters(),
+		treedumpFileName(),
+		outFileName(),
+		xslFileName(),
+		inFileNames() { }
 private:	
 	CmdLineParams(const CmdLineParams& other);
 };
@@ -272,19 +289,14 @@ void getArgs(int argc, const char* argv[], CmdLineParams& p) throw()
 			string expression = argv[++i];
 			p.paramsMap[name] = expression;
 		}
-		else if (!stricmp("-treedump", argv[i])) 
-		{
-			p.treedumpFileName = argv[++i];
-		}
 		else if(!stricmp("-F", argv[i]))
 		{
 			p.formatOutput = true;
 		}
-		else if(!stricmp("-E", argv[i]))
+		else if(!stricmp("-V", argv[i]))
 		{
-			p.shouldExpandEntityRefs = false;	//??
+			p.versionOnly = true;
 		}
-		else if(!stricmp("-V", argv[i])) { }
 		else if(!stricmp("-QC", argv[i]))
 		{
 			p.setQuietConflictWarnings = true;
@@ -292,20 +304,6 @@ void getArgs(int argc, const char* argv[], CmdLineParams& p) throw()
 		else if(!stricmp("-Q", argv[i]))
 		{
 			p.setQuietMode = true;
-		}
-		// Not used
-		else if(!stricmp("-VALIDATE", argv[i]))
-		{
-			XalanDOMString shouldValidate;
-			if(((i+1) < argc) && (argv[i+1][0] != '-'))
-				shouldValidate = argv[++i];
-			else
-				shouldValidate = "yes";
-
-		}
-		else if(!stricmp("-PARSER", argv[i]))
-		{
-			i++; // Handled above
 		}
 		else if(!stricmp("-XML", argv[i]))
 		{
@@ -327,11 +325,21 @@ void getArgs(int argc, const char* argv[], CmdLineParams& p) throw()
 		{
 			p.escapeCData = true;
 		}
-		else if(!stricmp("-EDUMP", argv[i]))
+		else if(!stricmp("-TT", argv[i]))
 		{
-			p.doStackDumpOnError = true;
-			if(((i+1) < argc) && (argv[i+1][0] != '-'))
-				p.dumpFileName = argv[++i];
+			p.traceTemplates = true;
+		}
+		else if(!stricmp("-TG", argv[i]))
+		{
+			p.traceGenerationEvent = true;
+		}
+		else if(!stricmp("-TS", argv[i]))
+		{
+			p.traceSelectionEvent = true;
+		}
+		else if(!stricmp("-TTC", argv[i]))
+		{
+			p.traceTemplateChildren = true;
 		}
 	}
 }
@@ -492,9 +500,27 @@ THREADFUNCTIONRETURN xsltMain(void *vptr) throw(XMLException)
 			theXPathFactory);
 
 	theXSLProcessorSupport.setProcessor(&processor);
-	
+
 	processor.setFormatter(&xmlParserLiaison);
 
+
+	auto_ptr<TraceListener>		theTraceListener;
+
+	if (params.traceTemplates == true ||
+		params.traceTemplateChildren == true ||
+		params.traceGenerationEvent == true ||
+		params.traceSelectionEvent)
+	{
+		theTraceListener = auto_ptr<TraceListener>(new TraceListenerDefault(
+				diagnosticsWriter,
+				params.traceTemplates,
+				params.traceTemplateChildren,
+				params.traceGenerationEvent,
+				params.traceSelectionEvent));
+
+		processor.setTraceSelects(params.traceSelectionEvent);
+		processor.addTraceListener(theTraceListener.get());
+	}
 
 	// Use separate factory instances for the stylesheet.  This is really only necessary
 	// if you want to use the stylesheet with another processor, or you want to use
@@ -550,6 +576,7 @@ THREADFUNCTIONRETURN xsltMain(void *vptr) throw(XMLException)
 	StylesheetRoot* stylesheet = 0;
 
 	XalanDOMString xslFileName;
+
 	if(0 != params.xslFileName.size())
 	{
 		xslFileName = params.xslFileName.c_str();
@@ -729,111 +756,123 @@ int main(int argc, const char* argv[]) throw()
 	{
 		getArgs(argc, argv, theParams);
 
-		try
+		if (theParams.versionOnly == true)
 		{
-			if (theParams.nThreads > 1)
-				xsltMultiThreadedMain(theParams);
-			else		
-				xsltMain(&theParams);
-		}
-		catch (XSLException& e)
-		{
-			cout << "\nXSLException ";
-
-			const string	type = DOMStringToStdString(e.getType());
-
-			if (!type.empty())
-				cout << "Type is : " << type << endl;
-
-			const string	msg = DOMStringToStdString(e.getMessage());
-
-			if (!msg.empty())
-				cout << "Message is : " << msg << endl;
-
-			theResult = -1;
-		}
-		catch (SAXException& e)
-		{
-			cout << "\nSAXException ";
-
-			const string	msg = DOMStringToStdString(e.getMessage());
-
-			if (!msg.empty())
-				cout << "Message is : " << msg << endl;
-
-			theResult = -1;
-		}
-		catch (XMLException& e)
-		{
-			cout << "\nXMLException ";
-
-			const string	type = DOMStringToStdString(e.getType());
-
-			if (!type.empty())
-				cout << "Type is : " << type << endl;
-
-			const string	msg = DOMStringToStdString(e.getMessage());
-
-			if (!msg.empty())
-				cout << "Message is : " << msg << endl;
-
-			theResult = -1;
-		}
-		catch (...)
-		{
-			cout << "\nUnhandled Exception\n";
-		}
-
-#if !defined(NDEBUG)
-		const unsigned long		theInstanceCount =
-			XalanNode::getInstanceCount();
-
-		if (theInstanceCount > 0)
-		{
-			cout << "There are "
-				 << XalanNode::getInstanceCount()
-				 << " XalanNode instances still alive!"
-				 << endl
-				 << endl
-				 << "A dump of these instances follows..."
-				 << endl
+			cout << "TestXSLT version 0.40.0 (Xalan C++ version 0.40.0)"
 				 << endl;
-
-			vector<XalanNode*>	theNodes(theInstanceCount);
-
-			XalanNode::getLiveInstances(theNodes.begin());
-
-			for(unsigned int i = 0; i < theInstanceCount; ++i)
+		}
+		else if (theParams.inFileNames.size() == 0)
+		{
+			printArgOptions();
+		}
+		else
+		{
+			try
 			{
-				const XalanNode* const	theInstance = theNodes[i];
+				if (theParams.nThreads > 1)
+					xsltMultiThreadedMain(theParams);
+				else		
+					xsltMain(&theParams);
+			}
+			catch (XSLException& e)
+			{
+				cout << "\nXSLException ";
 
-				if(theInstance == 0)
+				const string	type = DOMStringToStdString(e.getType());
+
+				if (!type.empty())
+					cout << "Type is : " << type << endl;
+
+				const string	msg = DOMStringToStdString(e.getMessage());
+
+				if (!msg.empty())
+					cout << "Message is : " << msg << endl;
+
+				theResult = -1;
+			}
+			catch (SAXException& e)
+			{
+				cout << "\nSAXException ";
+
+				const string	msg = DOMStringToStdString(e.getMessage());
+
+				if (!msg.empty())
+					cout << "Message is : " << msg << endl;
+
+				theResult = -1;
+			}
+			catch (XMLException& e)
+			{
+				cout << "\nXMLException ";
+
+				const string	type = DOMStringToStdString(e.getType());
+
+				if (!type.empty())
+					cout << "Type is : " << type << endl;
+
+				const string	msg = DOMStringToStdString(e.getMessage());
+
+				if (!msg.empty())
+					cout << "Message is : " << msg << endl;
+
+				theResult = -1;
+			}
+			catch (...)
+			{
+				cout << "\nUnhandled Exception\n";
+			}
+
+	#if !defined(NDEBUG)
+			const unsigned long		theInstanceCount =
+				XalanNode::getInstanceCount();
+
+			if (theInstanceCount > 0)
+			{
+				cout << "There are "
+					 << XalanNode::getInstanceCount()
+					 << " XalanNode instances still alive!"
+					 << endl
+					 << endl
+					 << "A dump of these instances follows..."
+					 << endl
+					 << endl;
+
+				vector<XalanNode*>	theNodes(theInstanceCount);
+
+				XalanNode::getLiveInstances(theNodes.begin());
+
+				for(unsigned int i = 0; i < theInstanceCount; ++i)
 				{
-					cout << "No instance information is available..."
-						 << endl;
-				}
-				else
-				{
-					cout << "("
-						 << hex
-						 << theInstance
-						 << ")  Node name: \""
-						 << theInstance->getNodeName()
-						 << "\"  Node value: \""
-						 << theInstance->getNodeValue()
-						 << "\""
-#if defined(XALAN_RTTI_AVAILABLE) && !defined(XALAN_NO_TYPEINFO)
-						 << "  Type: \""
-						 << typeid(*theInstance).name()
-						 << "\""
-#endif
-						 << endl
-						 << endl;
+					const XalanNode* const	theInstance = theNodes[i];
+
+					if(theInstance == 0)
+					{
+						cout << "No instance information is available..."
+							 << endl;
+					}
+					else
+					{
+						cout << "("
+							 << hex
+							 << theInstance
+							 << ")  Node name: \""
+							 << theInstance->getNodeName()
+							 << "\"  Node value: \""
+							 << theInstance->getNodeValue()
+							 << "\""
+	#if defined(XALAN_RTTI_AVAILABLE) && !defined(XALAN_NO_TYPEINFO)
+							 << "  Type: \""
+							 << typeid(*theInstance).name()
+							 << "\""
+	#endif
+							 << endl
+							 << endl;
+					}
 				}
 			}
-		}
-#endif
+	#endif
 
+		}
 	}
 
 	return theResult;
