@@ -147,7 +147,7 @@ ElemChoose::execute(StylesheetExecutionContext&		executionContext) const
 					SelectionEvent(executionContext,
 					sourceNode,
 					*when,
-					StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("test")),
+					Constants::ATTRNAME_TEST,
 					*theXPath,
 					test));
 			}
