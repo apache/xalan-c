@@ -119,3 +119,50 @@ XalanUTF16Transcoder::transcode(
 
 	return XalanTranscodingServices::OK;
 }
+
+
+
+XalanUTF16Transcoder::eCode
+XalanUTF16Transcoder::transcode(
+			const XalanXMLByte*		theSourceData,
+			unsigned int			theSourceCount,
+			XalanDOMChar*			theTarget,
+			unsigned int			theTargetSize,
+			unsigned int&			theSourceCharsTranscoded,
+			unsigned int&			theTargetBytesUsed,
+			unsigned char*			theCharSizes)
+{
+	unsigned int	theSourceEaten = 0;
+	unsigned int	theTargetPosition = 0;
+
+	while(theSourceEaten < theSourceCount)
+	{
+		// Swap bytes to big endian...
+		if (theTargetPosition + 1 >= theTargetSize)
+		{
+			break;
+		}
+		else
+		{
+#if defined(XALAN_LITLE_ENDIAN)
+			const XalanXMLByte	theLowByte = theSourceData[theSourceCount++];
+			const XalanXMLByte	theHighByte = theSourceData[theSourceCount++];
+#elif defined(XALAN_BIG_ENDIAN)
+			const XalanXMLByte	theHighByte = theSourceData[theSourceCount++];
+			const XalanXMLByte	theLowByte = theSourceData[theSourceCount++];
+#else
+#error The platform must define the byte order!
+#endif
+
+			theTarget[theTargetPosition++] = XalanDOMChar((theHighByte << 8) | theLowByte);
+
+			*theCharSizes++ = 2;
+		}
+	}
+
+	theSourceCharsTranscoded = theSourceEaten;
+
+	theTargetBytesUsed = theTargetPosition;
+
+	return XalanTranscodingServices::OK;
+}

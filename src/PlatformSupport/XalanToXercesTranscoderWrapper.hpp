@@ -92,6 +92,16 @@ public:
 			unsigned int&			theSourceCharsTranscoded,
 			unsigned int&			theTargetBytesUsed);
 
+	virtual eCode
+	transcode(
+			const XalanXMLByte*		theSourceData,
+			unsigned int			theSourceCount,
+			XalanDOMChar*			theTarget,
+			unsigned int			theTargetSize,
+			unsigned int&			theSourceCharsTranscoded,
+			unsigned int&			theTargetBytesUsed,
+			unsigned char*			theCharSizes);
+
 private:
 
 	// Not implemented...

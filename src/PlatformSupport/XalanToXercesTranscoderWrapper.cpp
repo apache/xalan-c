@@ -116,3 +116,37 @@ XalanToXercesTranscoderWrapper::transcode(
 
 	return theCode;
 }
+
+
+
+XalanToXercesTranscoderWrapper::eCode
+XalanToXercesTranscoderWrapper::transcode(
+			const XalanXMLByte*		theSourceData,
+			unsigned int			theSourceCount,
+			XalanDOMChar*			theTarget,
+			unsigned int			theTargetSize,
+			unsigned int&			theSourceCharsTranscoded,
+			unsigned int&			theTargetBytesUsed,
+			unsigned char*			theCharSizes)
+{
+	eCode	theCode = XalanTranscodingServices::OK;
+
+	try
+	{
+		theTargetBytesUsed = m_transcoder->transcodeFrom(
+			theSourceData,
+			theSourceCount,
+			theTarget,
+			theTargetSize,
+			theSourceCharsTranscoded,
+			theCharSizes);
+	}
+	catch(const XMLException&)
+	{
+		theSourceCharsTranscoded = 0;
+		theTargetBytesUsed = 0;
+		theCode = XalanTranscodingServices::InternalFailure;
+	}
+
+	return theCode;
+}

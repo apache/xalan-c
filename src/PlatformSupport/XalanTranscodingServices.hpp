@@ -319,6 +319,30 @@ public:
 			unsigned int&			theSourceCharsTranscoded,
 			unsigned int&			theTargetBytesUsed) = 0;
 
+	/**
+	 * Transcode data from the transcoder's encoding to UTF-16.  If successfull,
+	 * theResult will be set to OK.  If not, it will be set to one of the other
+	 * codes.
+	 *
+	 * @param theSourceData The source data to transcode
+	 * @param theSourceCount The length of the source data.
+	 * @param theTarget The target array for storing the transcoded data.
+	 * @param theTargetSize The number of characters that can be stored in the target.
+	 * @param theSourceCharsTranscoded The count of the source characters that were transcoded.
+	 * @param theTargetBytesUsed The number of characters stored in the target array
+	 * @param theCharSizes For each character in theTarget, the number of characters consumed from theSourceData.
+	 * @return The result code.
+	 */
+	virtual eCode
+	transcode(
+			const XalanXMLByte*		theSourceData,
+			unsigned int			theSourceCount,
+			XalanDOMChar*			theTarget,
+			unsigned int			theTargetSize,
+			unsigned int&			theSourceCharsTranscoded,
+			unsigned int&			theTargetBytesUsed,
+			unsigned char*			theCharSizes) = 0;
+
 private:
 
 	// Not implemented...

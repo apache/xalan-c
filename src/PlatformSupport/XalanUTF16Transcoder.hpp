@@ -80,8 +80,7 @@ public:
 	~XalanUTF16Transcoder();
 
 	/**
-	 * Transcode data from UTF-16 to UTF-16.  Used for the time being, because, on some
-	 * platforms, we store UTF-16 in 4-byte wchar_t.
+	 * Transcode data from UTF-16 to UTF-16.
 	 *
 	 * @param theSourceData The source data to transcode
 	 * @param theSourceCount The length of the source data.
@@ -100,6 +99,28 @@ public:
 			unsigned int			theTargetSize,
 			unsigned int&			theSourceCharsTranscoded,
 			unsigned int&			theTargetBytesUsed);
+
+	/**
+	 * Transcode data from UTF-16 to UTF-16.
+	 *
+	 * @param theSourceData The source data to transcode
+	 * @param theSourceCount The length of the source data.
+	 * @param theResult The error code, if any.
+	 * @param theTarget The target array for storing the transcoded data.
+	 * @param theTargetSize The number of characters that can be stored in the target.
+	 * @param theSourceCharsTranscoded The count of the source characters that were transcoded.
+	 * @param theTargetBytesUsed The number of characters stored in the target array
+	 * @return The result code.
+	 */
+	virtual eCode
+	transcode(
+			const XalanXMLByte*		theSourceData,
+			unsigned int			theSourceCount,
+			XalanDOMChar*			theTarget,
+			unsigned int			theTargetSize,
+			unsigned int&			theSourceCharsTranscoded,
+			unsigned int&			theTargetBytesUsed,
+			unsigned char*			theCharSizes);
 
 private:
 
