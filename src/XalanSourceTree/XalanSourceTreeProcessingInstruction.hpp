@@ -72,7 +72,6 @@
 
 
 class XalanSourceTreeComment;
-class XalanSourceTreeCDATASection;
 class XalanSourceTreeDocument;
 class XalanSourceTreeElement;
 class XalanSourceTreeText;
@@ -511,9 +510,6 @@ public:
 	setPreviousSibling(XalanSourceTreeComment*	thePreviousSibling);
 
 	void
-	setPreviousSibling(XalanSourceTreeCDATASection*		thePreviousSibling);
-
-	void
 	setPreviousSibling(XalanSourceTreeElement*	thePreviousSibling);
 
 	void
@@ -524,9 +520,6 @@ public:
 
 	void
 	appendSiblingNode(XalanSourceTreeComment*	theSibling);
-
-	void
-	appendSiblingNode(XalanSourceTreeCDATASection*	theSibling);
 
 	void
 	appendSiblingNode(XalanSourceTreeElement*	theSibling);

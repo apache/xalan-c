@@ -58,9 +58,14 @@
 
 
 
+#include <cassert>
+
+
+
 XalanSourceTreeAttributesVector::XalanSourceTreeAttributesVector(size_type	theBlockSize) :
 	m_list(),
-	m_blockSize(theBlockSize)
+	m_blockSize(theBlockSize),
+	m_lastEntryFound(0)
 {
 }
 
@@ -78,18 +83,18 @@ XalanSourceTreeAttributesVector::allocate(size_type		theCount)
 	// Handle the case of theCount being greater than the block size first...
 	if (theCount >= m_blockSize)
 	{
-		return createEntry(theCount);
+		return createEntry(theCount, theCount);
 	}
 	else
 	{
-		ListEntryType* const	theEntry =
+		ListEntryType*	theEntry =
 			findEntry(theCount);
 
 		// Did we find a slot?
 		if (theEntry == 0)
 		{
 			// Nope, create a new one...
-			return createEntry(theCount);
+            return createEntry(m_blockSize, theCount);;
 		}
 		else
 		{
@@ -109,8 +114,12 @@ XalanSourceTreeAttributesVector::allocate(size_type		theCount)
 
 
 XalanSourceTreeAttr**
-XalanSourceTreeAttributesVector::createEntry(size_type	theCount)
+XalanSourceTreeAttributesVector::createEntry(
+			size_type	theBlockSize,
+			size_type	theCount)
 {
+	assert(theBlockSize >= theCount);
+
 	// Push on a new entry.  The entry has no open space,
 	// since it's greater than our block size...
 	m_list.push_back(ListEntryType(0, VectorType()));
@@ -119,7 +128,15 @@ XalanSourceTreeAttributesVector::createEntry(size_type	theCount)
 	ListEntryType&	theNewEntry = m_list.back();
 
 	// Resize the vector to the appropriate size...
-	theNewEntry.second.resize(theCount);
+	theNewEntry.second.resize(theBlockSize, 0);
+
+	// Set the number of free spaces accordingly...
+	theNewEntry.first = theBlockSize - theCount;
+
+    if (theNewEntry.first != 0)
+    {
+        m_lastEntryFound = &theNewEntry;
+    }
 
 	// Return a pointer to the beginning of the allocated memory...
 	return &*theNewEntry.second.begin();
@@ -132,47 +149,57 @@ XalanSourceTreeAttributesVector::ListEntryType*
 XalanSourceTreeAttributesVector::findEntry(size_type	theCount)
 {
 	// Search for an entry that has some free space.
-	const ListType::iterator	theEnd = m_list.end();
-	ListType::iterator	theCurrent = m_list.begin();
 
-	ListEntryType*	theEntry = 0;
-
-	while(theCurrent != theEnd)
+	if (m_lastEntryFound != 0 && m_lastEntryFound->first >= theCount)
 	{
-		// We're looking for the best fit, so
-		// if the free space and the count we're
-		// looking for are equal, that's pretty
-		// much the best we can do...
-		if ((*theCurrent).first == theCount)
-		{
-			theEntry = &*theCurrent;
-
-			break;
-		}
-		else if ((*theCurrent).first >= theCount)
-		{
-			// If we haven't found anything yet, the first
-			// entry we find that's large enough becomes
-			// our best fit.
-			//
-			// Otherwise, we'll assume that a smaller
-			// slot is a better fit, though I may be
-			// wrong about this...
-			if (theEntry == 0 ||
-				(*theCurrent).first < theEntry->first)
-			{
-				// Nope, so this becomes our best-fit so far.
-				theEntry = &*theCurrent;
-			}
-
-			++theCurrent;
-		}
-		else
-		{
-			// Won't fit, so just continue...
-			++theCurrent;
-		}
+		return m_lastEntryFound;
 	}
+	else
+	{
+		const ListType::iterator	theEnd = m_list.end();
+		ListType::iterator	theCurrent = m_list.begin();
 
-	return theEntry;
+		ListEntryType*	theEntry = 0;
+
+		while(theCurrent != theEnd)
+		{
+			// We're looking for the best fit, so
+			// if the free space and the count we're
+			// looking for are equal, that's pretty
+			// much the best we can do...
+			if ((*theCurrent).first == theCount)
+			{
+				theEntry = &*theCurrent;
+
+				break;
+			}
+			else if ((*theCurrent).first >= theCount)
+			{
+				// If we haven't found anything yet, the first
+				// entry we find that's large enough becomes
+				// our best fit.
+				//
+				// Otherwise, we'll assume that a smaller
+				// slot is a better fit, though I may be
+				// wrong about this...
+				if (theEntry == 0 ||
+					(*theCurrent).first < theEntry->first)
+				{
+					// Nope, so this becomes our best-fit so far.
+					theEntry = &*theCurrent;
+				}
+
+				++theCurrent;
+			}
+			else
+			{
+				// Won't fit, so just continue...
+				++theCurrent;
+			}
+		}
+
+		m_lastEntryFound = theEntry;
+
+		return theEntry;
+	}
 }

@@ -68,7 +68,6 @@
 
 
 #include "XalanSourceTreeComment.hpp"
-#include "XalanSourceTreeCDATASection.hpp"
 #include "XalanSourceTreeDocument.hpp"
 #include "XalanSourceTreeElement.hpp"
 #include "XalanSourceTreeProcessingInstruction.hpp"
@@ -102,10 +101,6 @@ doAppendSibling(
 
 	switch(theLastSibling->getNodeType())
 	{
-	case XalanNode::CDATA_SECTION_NODE:
-		castTo<XalanSourceTreeCDATASection>(theLastSibling)->appendSiblingNode(theNewSibling);
-		break;
-
 	case XalanNode::COMMENT_NODE:
 		castTo<XalanSourceTreeComment>(theLastSibling)->appendSiblingNode(theNewSibling);
 		break;
@@ -184,10 +179,6 @@ doAppendSibling(
 
 	switch(theNewSibling->getNodeType())
 	{
-	case XalanNode::CDATA_SECTION_NODE:
-		append(thePreviousSibling, theNextSiblingSlot, castTo<XalanSourceTreeCDATASection>(theNewSibling));
-		break;
-
 	case XalanNode::COMMENT_NODE:
 		append(thePreviousSibling, theNextSiblingSlot, castTo<XalanSourceTreeComment>(theNewSibling));
 		break;
@@ -226,6 +217,10 @@ XalanSourceTreeHelper::appendSibling(
 	{
 		switch(theNewSibling->getNodeType())
 		{
+		case XalanNode::COMMENT_NODE:
+			append(theNextSiblingSlot, castTo<XalanSourceTreeComment>(theNewSibling));
+			break;
+
 		case XalanNode::ELEMENT_NODE:
 			append(theNextSiblingSlot, castTo<XalanSourceTreeElement>(theNewSibling));
 			break;
@@ -239,17 +234,6 @@ XalanSourceTreeHelper::appendSibling(
 			break;
 		}
 	}
-}
-
-
-
-void
-XalanSourceTreeHelper::appendSibling(
-			XalanSourceTreeCDATASection*	theNode,
-			XalanNode*&						theNextSiblingSlot,
-			XalanNode*						theNewSibling)
-{
-	doAppendSibling(theNode, theNextSiblingSlot, theNewSibling);
 }
 
 
@@ -314,17 +298,6 @@ doAppendSiblingToChild(
 	}
 
 	append(theFirstChildSlot, theNewSibling);
-}
-
-
-
-void
-XalanSourceTreeHelper::appendSiblingToChild(
-			XalanSourceTreeElement*			theOwnerElement,
-			XalanNode*&						theFirstChildSlot,
-			XalanSourceTreeCDATASection*	theNewSibling)
-{
-	doAppendSiblingToChild(theOwnerElement, theFirstChildSlot, theNewSibling);
 }
 
 

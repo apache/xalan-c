@@ -67,7 +67,6 @@
 
 
 #include "XalanSourceTreeComment.hpp"
-#include "XalanSourceTreeCDATASection.hpp"
 #include "XalanSourceTreeDocument.hpp"
 #include "XalanSourceTreeElement.hpp"
 #include "XalanSourceTreeText.hpp"
@@ -148,9 +147,14 @@ XalanSourceTreeProcessingInstruction::getNodeType() const
 XalanNode*
 XalanSourceTreeProcessingInstruction::getParentNode() const
 {
-	assert(m_ownerDocument != 0);
-
-	return m_ownerDocument;
+	if (m_parentElement != 0)
+	{
+		return m_parentElement;
+	}
+	else
+	{
+		return m_ownerDocument;
+	}
 }
 
 
@@ -388,14 +392,6 @@ XalanSourceTreeProcessingInstruction::setPreviousSibling(XalanSourceTreeComment*
 
 
 void
-XalanSourceTreeProcessingInstruction::setPreviousSibling(XalanSourceTreeCDATASection*	thePreviousSibling)
-{
-	m_previousSibling = thePreviousSibling;
-}
-
-
-
-void
 XalanSourceTreeProcessingInstruction::setPreviousSibling(XalanSourceTreeElement*	thePreviousSibling)
 {
 	m_previousSibling = thePreviousSibling;
@@ -421,14 +417,6 @@ XalanSourceTreeProcessingInstruction::setPreviousSibling(XalanSourceTreeText*	th
 
 void
 XalanSourceTreeProcessingInstruction::appendSiblingNode(XalanSourceTreeComment*		theSibling)
-{
-	XalanSourceTreeHelper::appendSibling(this, m_nextSibling, theSibling);
-}
-
-
-
-void
-XalanSourceTreeProcessingInstruction::appendSiblingNode(XalanSourceTreeCDATASection*	theSibling)
 {
 	XalanSourceTreeHelper::appendSibling(this, m_nextSibling, theSibling);
 }

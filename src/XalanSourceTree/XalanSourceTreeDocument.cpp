@@ -84,16 +84,14 @@ XalanSourceTreeDocument::XalanSourceTreeDocument(bool	fDynamic) :
 	m_firstChild(0),
 	m_documentElement(0),
 	m_children(*this),
-	m_attributeAllocator(50),
+	m_attributeAllocator(100),
 	m_attributeNSAllocator(50),
 	m_commentAllocator(20),
-	m_cdataSectionAllocator(20),
-	m_cdataSectionIWSAllocator(20),
-	m_elementAllocator(50),
-	m_elementNSAllocator(50),
+	m_elementAllocator(100),
+	m_elementNSAllocator(100),
 	m_piAllocator(25),
-	m_textAllocator(50),
-	m_textIWSAllocator(50),
+	m_textAllocator(100),
+	m_textIWSAllocator(100),
 	m_stringPool(),
 	m_attributesVector(),
 	m_nextIndexValue(2),
@@ -529,243 +527,6 @@ XalanSourceTreeDocument::getElementById(const XalanDOMString&	elementId) const
 
 
 
-#if 0
-void
-XalanSourceTreeDocument::buildBridgeNodes()
-{
-	const DOM_Node	theStartChild = m_xercesDocument.getFirstChild();
-
-	if (theStartChild.isNull() == false)
-	{
-		assert(m_navigators.back().getIndex() == 1);
-		assert(m_navigators.size() == 1);
-
-		BuildBridgeTreeWalker	theTreeWalker(
-				this,
-				&m_navigators.back(),
-				m_navigators,
-				2);
-
-		theTreeWalker.traverse(theStartChild, m_xercesDocument);
-	}
-
-	// OK, now set m_documentElement...
-	XalanNode*	theChild = m_navigator.getFirstChild();
-
-	while(theChild != 0 && theChild->getNodeType() != XalanNode::ELEMENT_NODE)
-	{
-		theChild = theChild->getNextSibling();
-	}
-
-#if defined(XALAN_OLD_STYLE_CASTS)
-	m_documentElement = (XalanElement*)theChild;
-#else
-	m_documentElement = static_cast<XalanElement*>(theChild);
-#endif
-
-	m_indexValid = true;
-
-	m_mappingMode = false;
-}
-
-
-
-XalanSourceTreeDocument::BuildBridgeTreeWalker::BuildBridgeTreeWalker(
-			XalanSourceTreeDocument*		theDocument,
-			XercesBridgeNavigator*		theDocumentNavigator,
-			NavigatorBridgeVectorType&	theNavigators,
-			unsigned long				theStartIndex) :
-	m_document(theDocument),
-	m_navigators(theNavigators),
-	m_currentIndex(theStartIndex),
-	m_parentNavigatorStack(),
-	m_siblingNavigatorStack()
-{
-	assert(theDocument != 0 && theDocumentNavigator != 0);
-
-	// Reserve some space...
-	m_parentNavigatorStack.reserve(100);
-	m_parentNavigatorStack.reserve(100);
-
-	// The document navigator is the last navigator on the stack...
-	m_parentNavigatorStack.push_back(NavigatorStackEntryType(theDocumentNavigator, theDocument));
-
-	// There is no previous sibling...
-	m_siblingNavigatorStack.push_back(NavigatorStackEntryType(0, 0));
-}
-
-
-
-XalanSourceTreeDocument::BuildBridgeTreeWalker::~BuildBridgeTreeWalker()
-{
-}
-
-
-
-void
-XalanSourceTreeDocument::BuildBridgeTreeWalker::startNode(const DOM_Node&	node)
-{
-	XalanNode* const	theBridgeNode = m_document->createBridgeNode(node, m_currentIndex, false);
-
-	XercesBridgeNavigator&	theCurrentNodeNavigator = m_navigators.back();
-
-	assert(m_parentNavigatorStack.empty() == false);
-	assert(m_siblingNavigatorStack.empty() == false);
-
-	// Get the two navigators...
-	NavigatorStackEntryType&	theParentEntry = m_parentNavigatorStack.back();
-	NavigatorStackEntryType&	theSiblingEntry = m_siblingNavigatorStack.back();
-
-	theCurrentNodeNavigator.setParentNode(theParentEntry.m_node);
-
-	// If the first child has not been set, then set it
-	// now...
-	if (theParentEntry.m_navigator->getFirstChild() == 0)
-	{
-		assert(theSiblingEntry.m_node == 0);
-
-		theParentEntry.m_navigator->setFirstChild(theBridgeNode);
-	}
-
-	// Always set the last child...
-	theParentEntry.m_navigator->setLastChild(theBridgeNode);
-
-	theCurrentNodeNavigator.setPreviousSibling(theSiblingEntry.m_node);
-
-	if (theSiblingEntry.m_navigator != 0)
-	{
-		theSiblingEntry.m_navigator->setNextSibling(theBridgeNode);
-	}
-
-	// Build an entry for the stacks...
-	const NavigatorStackEntryType	theCurrentEntry(&theCurrentNodeNavigator, theBridgeNode);
-
-	// My child nodes will now be visited, so push the current
-	// context on the parent stack...
-	m_parentNavigatorStack.push_back(theCurrentEntry);
-
-	// My siblings will also need to know about me as well...
-	m_siblingNavigatorStack.push_back(theCurrentEntry);
-
-	// This will serve to mark the sibling context for my first child,
-	// since it has no previous sibling.  This will be popped off
-	// when endNode() is called.
-	m_siblingNavigatorStack.push_back(NavigatorStackEntryType(0, 0));
-
-	// Finally, increment the index counter...
-	++m_currentIndex;
-
-	const short		theType = node.getNodeType();
-
-	if (theType == DOM_Node::DOCUMENT_TYPE_NODE)
-	{
-		// Special case for doctype -- we have to build its entities...
-		const DOM_DocumentType&		theDoctype =
-#if defined(XALAN_OLD_STYLE_CASTS)
-			(const DOM_DocumentType&)node;
-#else
-			static_cast<const DOM_DocumentType&>(node);
-#endif
-
-		const DOM_NamedNodeMap	theEntities =
-			theDoctype.getEntities();
-
-		const unsigned int	theLength =
-			theEntities.getLength();
-
-		for (unsigned int i = 0; i < theLength; ++i)
-		{
-			// Build it, but don't index it...
-			m_document->createBridgeNode(theEntities.item(i), m_currentIndex++, true);
-		}
-	}
-	else if (theType == DOM_Node::ELEMENT_NODE)
-	{
-	// Special case for element nodes -- we have to build the attributes...
-		const DOM_Element&	theElement =
-#if defined(XALAN_OLD_STYLE_CASTS)
-			(const DOM_Element&)node;
-#else
-			static_cast<const DOM_Element&>(node);
-#endif
-
-		const DOM_NamedNodeMap	theAttributes =
-			theElement.getAttributes();
-
-		const unsigned int	theLength =
-			theAttributes.getLength();
-
-		XercesBridgeNavigator*	thePreviousAttrNavigator = 0;
-		XalanNode*				thePreviousAttr = 0;
-
-		for (unsigned int i = 0; i < theLength; ++i)
-		{
-			// Get the attribute from the node map...
-			const DOM_Node	theAttr = theAttributes.item(i);
-			assert(theAttr.isNull() == false);
-
-			// Create a bridge node.
-			XalanNode* const	theCurrentAttr =
-				m_document->createBridgeNode(theAttr, m_currentIndex, false);
-			assert(theCurrentAttr != 0);
-
-			// Get the attribute node's navigator...
-			XercesBridgeNavigator&	theCurrentAttrNavigator =
-				m_navigators.back();
-
-			// Set the parent node...
-			theCurrentAttrNavigator.setParentNode(theBridgeNode);
-
-			if (thePreviousAttr != 0)
-			{
-				assert(thePreviousAttrNavigator != 0);
-
-				// Link in the previous attribute...
-				theCurrentAttrNavigator.setPreviousSibling(thePreviousAttr);
-
-				thePreviousAttrNavigator->setNextSibling(theCurrentAttr);
-			}
-
-			// Update the pointers so they point to this attribute...
-			thePreviousAttr = theCurrentAttr;
-			thePreviousAttrNavigator = &theCurrentAttrNavigator;
-
-			// Finally, increment the index...
-			++m_currentIndex;
-		}
-	}
-}
-
-
-
-void
-XalanSourceTreeDocument::BuildBridgeTreeWalker::endNode(const DOM_Node&	/* node */)
-{
-	assert(m_parentNavigatorStack.empty() == false);
-	assert(m_siblingNavigatorStack.empty() == false);
-
-	// I have to pop my entry, since my children are finished...
-	m_parentNavigatorStack.pop_back();
-
-	// Pop any sibling navigators my child pushed...
-	while(m_siblingNavigatorStack.back().m_navigator != 0)
-	{
-		assert(m_siblingNavigatorStack.back().m_node != 0);
-
-		m_siblingNavigatorStack.pop_back();
-	}
-
-	// There must be a context marker...
-	assert(m_siblingNavigatorStack.back().m_navigator == 0 &&
-		   m_siblingNavigatorStack.back().m_node == 0);
-
-	// Pop the context marker...
-	m_siblingNavigatorStack.pop_back();
-}
-#endif
-
-
-
 XalanSourceTreeElement*
 XalanSourceTreeDocument::createElementNode(
 			const XalanDOMChar*			name,
@@ -893,47 +654,17 @@ XalanSourceTreeDocument::createElementNode(
 
 
 
-XalanSourceTreeCDATASection*
-XalanSourceTreeDocument::createCDATASectionNode(
-			const XalanDOMChar*			chars,
+XalanSourceTreeComment*
+XalanSourceTreeDocument::createCommentNode(
+			const XalanDOMChar*			data,
 			unsigned int				length,
 			XalanSourceTreeElement*		theParentElement,
 			XalanNode*					thePreviousSibling,
 			XalanNode*					theNextSibling)
 {
-	const XalanDOMString&	theString = m_stringPool.get(chars, length);
-
-	if (isXMLWhitespace(theString) == true)
-	{
-		return m_cdataSectionIWSAllocator.create(
-				theString,
-				theParentElement,
-				thePreviousSibling,
-				theNextSibling,
-				m_nextIndexValue++);
-	}
-	else
-	{
-		return m_cdataSectionAllocator.create(
-				theString,
-				theParentElement,
-				thePreviousSibling,
-				theNextSibling,
-				m_nextIndexValue++);
-	}
-}
-
-
-
-XalanSourceTreeComment*
-XalanSourceTreeDocument::createCommentNode(
-			const XalanDOMChar*			data,
-			XalanSourceTreeElement*		theParentElement,
-			XalanNode*					thePreviousSibling,
-			XalanNode*					theNextSibling)
-{
 	return m_commentAllocator.create(
-				m_stringPool.get(data),
+				m_stringPool.get(data, length),
+				this,
 				theParentElement,
 				thePreviousSibling,
 				theNextSibling,
@@ -1020,7 +751,7 @@ XalanSourceTreeDocument::createTextIWSNode(
 
 
 void
-XalanSourceTreeDocument::unparsedEntityDecl(
+XalanSourceTreeDocument::unparsedEntityDeclaration(
 			const XMLCh*	name,
 			const XMLCh*	publicId,
 			const XMLCh*	systemId,
@@ -1234,7 +965,12 @@ XalanSourceTreeDocument::createAttributes(
 			*++theType == XalanUnicode::charLetter_D &&
 			*++theType == 0)
 		{
-			m_elementsByID[c_wstr(theAttributeVector[i]->getValue())] = theOwnerElement;
+			// The XPath says that if there are duplicate IDs, the first node is
+			// always returned, so use insert(), rather than []
+			m_elementsByID.insert(
+				ElementByIDMapType::value_type(
+					c_wstr(theAttributeVector[i]->getValue()),
+					theOwnerElement));
 		}
 	}
 }
@@ -1242,18 +978,9 @@ XalanSourceTreeDocument::createAttributes(
 
 
 void
-XalanSourceTreeDocument::setDocumentElement(XalanSourceTreeElement*		theElement)
+XalanSourceTreeDocument::appendChildNode(XalanSourceTreeComment*	theChild)
 {
-	if (m_documentElement != 0)
-	{
-		throw XalanDOMException(XalanDOMException::HIERARCHY_REQUEST_ERR);
-	}
-	else
-	{
-		m_documentElement = theElement;
-
-		XalanSourceTreeHelper::appendSibling(this, m_firstChild, theElement);
-	}
+	XalanSourceTreeHelper::appendSibling(this, m_firstChild, theChild);
 }
 
 

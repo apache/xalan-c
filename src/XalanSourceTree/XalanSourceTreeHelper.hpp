@@ -68,7 +68,6 @@
 
 
 class XalanNode;
-class XalanSourceTreeCDATASection;
 class XalanSourceTreeComment;
 class XalanSourceTreeDocument;
 class XalanSourceTreeElement;
@@ -81,7 +80,6 @@ class XALAN_XALANSOURCETREE_EXPORT XalanSourceTreeHelper
 {
 public:
 
-	friend class XalanSourceTreeCDATASection;
 	friend class XalanSourceTreeComment;
 	friend class XalanSourceTreeDocument;
 	friend class XalanSourceTreeElement;
@@ -98,12 +96,6 @@ private:
 			XalanSourceTreeDocument*	theDocument,
 			XalanNode*&					theNextSiblingSlot,
 			XalanNode*					theNewSibling);
-
-	static void
-	appendSibling(
-			XalanSourceTreeCDATASection*	theNode,
-			XalanNode*&						theNextSiblingSlot,
-			XalanNode*						theNewSibling);
 
 	static void
 	appendSibling(
@@ -128,12 +120,6 @@ private:
 			XalanSourceTreeText*	theNode,
 			XalanNode*&				theNextSiblingSlot,
 			XalanNode*				theNewSibling);
-
-	static void
-	appendSiblingToChild(
-			XalanSourceTreeElement*			theOwnerElement,
-			XalanNode*&						theChildSlot,
-			XalanSourceTreeCDATASection*	theNewSibling);
 
 	static void
 	appendSiblingToChild(

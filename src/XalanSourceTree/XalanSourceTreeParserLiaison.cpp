@@ -159,6 +159,8 @@ XalanSourceTreeParserLiaison::parseXMLStream(
 
 	theReader->setErrorHandler(&m_xercesParserLiaison);
 
+	theReader->setLexicalHandler(&theContentHandler);
+
 	theReader->parse(inputSource);
 
 	XalanSourceTreeDocument* const	theDocument = theContentHandler.detachDocument();

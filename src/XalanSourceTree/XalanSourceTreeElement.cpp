@@ -68,7 +68,6 @@
 
 #include "XalanSourceTreeAttr.hpp"
 #include "XalanSourceTreeComment.hpp"
-#include "XalanSourceTreeCDATASection.hpp"
 #include "XalanSourceTreeDocument.hpp"
 #include "XalanSourceTreeProcessingInstruction.hpp"
 #include "XalanSourceTreeText.hpp"
@@ -537,14 +536,6 @@ XalanSourceTreeElement::setPreviousSibling(XalanSourceTreeComment*	thePreviousSi
 
 
 void
-XalanSourceTreeElement::setPreviousSibling(XalanSourceTreeCDATASection*		thePreviousSibling)
-{
-	m_previousSibling = thePreviousSibling;
-}
-
-
-
-void
 XalanSourceTreeElement::setPreviousSibling(XalanSourceTreeElement*	thePreviousSibling)
 {
 	m_previousSibling = thePreviousSibling;
@@ -577,14 +568,6 @@ XalanSourceTreeElement::appendSiblingNode(XalanSourceTreeComment*	theSibling)
 
 
 void
-XalanSourceTreeElement::appendSiblingNode(XalanSourceTreeCDATASection*	theSibling)
-{
-	XalanSourceTreeHelper::appendSibling(this, m_nextSibling, theSibling);
-}
-
-
-
-void
 XalanSourceTreeElement::appendSiblingNode(XalanSourceTreeElement*	theSibling)
 {
 	XalanSourceTreeHelper::appendSibling(this, m_nextSibling, theSibling);
@@ -610,14 +593,6 @@ XalanSourceTreeElement::appendSiblingNode(XalanSourceTreeText*	theSibling)
 
 void
 XalanSourceTreeElement::appendChildNode(XalanSourceTreeComment*		theChild)
-{
-	XalanSourceTreeHelper::appendSiblingToChild(this, m_firstChild, theChild);
-}
-
-
-
-void
-XalanSourceTreeElement::appendChildNode(XalanSourceTreeCDATASection*	theChild)
 {
 	XalanSourceTreeHelper::appendSiblingToChild(this, m_firstChild, theChild);
 }

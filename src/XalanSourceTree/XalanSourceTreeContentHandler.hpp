@@ -71,6 +71,19 @@
 #include <sax/DTDHandler.hpp>
 #include <sax2/ContentHandler.hpp>
 
+#if defined(XALAN_XERCES_HAS_LEXICAL_HANDLER)
+#include <sax2/LexicalHandler.hpp>
+#else
+
+class XALAN_XALANSOURCETREE_EXPORT LexicalHandler
+{
+public:
+
+    LexicalHandler() {}
+};
+
+#endif
+
 
 
 #include <XalanDOM/XalanDOMString.hpp>
@@ -82,20 +95,19 @@ class XalanSourceTreeElement;
 
 
 
-class XALAN_XALANSOURCETREE_EXPORT XalanSourceTreeContentHandler : public ContentHandler, public DTDHandler
+class XALAN_XALANSOURCETREE_EXPORT XalanSourceTreeContentHandler : public ContentHandler, public DTDHandler, public LexicalHandler
 {
 public:
 	/** @name Constructors and Destructor */
 
 #if defined(XALAN_NO_NAMESPACES)
-	typedef vector<XalanSourceTreeElement*>			ElementStackType;
+	typedef vector<XalanSourceTreeElement*> 		ElementStackType;
 #else
 	typedef std::vector<XalanSourceTreeElement*>	ElementStackType;
 #endif
 
 	enum { eDefaultStackSize = 50, eDefaultTextBufferSize = 100 };
 
-	//@{
 
 	// Constructor
 	explicit
@@ -133,7 +145,7 @@ public:
 		const XMLCh* const	data);
 
 	virtual void
-	setDocumentLocator(const Locator* const		locator);
+	setDocumentLocator(const Locator* const 	locator);
 
 	virtual void
 	startDocument();
@@ -143,7 +155,7 @@ public:
 			const XMLCh* const	uri,
 			const XMLCh* const	localname,
 			const XMLCh* const	qname,
-			const Attributes& 	attrs);
+			const Attributes&	attrs);
 
 	virtual void
 	startPrefixMapping(
@@ -151,7 +163,7 @@ public:
 		const XMLCh* const	uri);
 
 	virtual void
-	endPrefixMapping(const XMLCh* const		prefix);
+	endPrefixMapping(const XMLCh* const 	prefix);
 
 
 	virtual void
@@ -162,21 +174,50 @@ public:
 
 	virtual void
 	notationDecl(
-			const XMLCh* const    name,
-			const XMLCh* const    publicId,
-			const XMLCh* const    systemId);
+			const XMLCh* const	  name,
+			const XMLCh* const	  publicId,
+			const XMLCh* const	  systemId);
 
 	virtual void
 	unparsedEntityDecl(
-			const XMLCh* const    name,
-			const XMLCh* const    publicId,
-			const XMLCh* const    systemId,
-			const XMLCh* const    notationName);
+			const XMLCh* const	  name,
+			const XMLCh* const	  publicId,
+			const XMLCh* const	  systemId,
+			const XMLCh* const	  notationName);
 
-    virtual void
+	virtual void
 	resetDocType();
 
 
+	// Inherited from LexicalHandler...
+
+	virtual void
+	comment(
+			const XMLCh* const	chars,
+			const unsigned int	length);
+
+	virtual void
+	endCDATA();
+
+	virtual void
+	endDTD();
+
+	virtual void
+	endEntity(const XMLCh* const	name);
+
+	virtual void
+	startCDATA();
+
+	virtual void
+	startDTD(
+			const XMLCh* const	name,
+			const XMLCh* const	publicId,
+			const XMLCh* const	systemId);
+
+	virtual void
+	startEntity(const XMLCh* const	name);
+
+	
 	// New to XalanSourceTreeContentHandler...
 
 	XalanSourceTreeDocument*
@@ -208,8 +249,8 @@ private:
 			const XMLCh* const			uri,
 			const XMLCh* const			localname,
 			const XMLCh* const			qname,
-			const Attributes& 			attrs,
-			XalanSourceTreeElement*		theOwnerElement);
+			const Attributes&			attrs,
+			XalanSourceTreeElement* 	theOwnerElement);
 
 	void
 	processAccumulatedText();
@@ -223,7 +264,7 @@ private:
 	// Data members...
 	XalanSourceTreeDocument*	m_document;
 
-	XalanSourceTreeElement*		m_currentElement;
+	XalanSourceTreeElement* 	m_currentElement;
 
 	ElementStackType			m_elementStack;
 

@@ -71,7 +71,7 @@
 
 
 
-class XalanSourceTreeCDATASection;
+class XalanSourceTreeDocument;
 class XalanSourceTreeElement;
 class XalanSourceTreeProcessingInstruction;
 class XalanSourceTreeText;
@@ -93,7 +93,8 @@ public:
 	/**
 	 * Constructor.
 	 *
-	 * @param theData The text data of the node
+	 * @param theData The text data of the node.
+	 * @param theOwnerDocument The owner document of the comment node.
 	 * @param theParentElement The parent element, if any.
 	 * @param thePreviousSibling The previous sibling, if any.
 	 * @param theNextSibling The next sibling, if any.
@@ -101,6 +102,7 @@ public:
 	 */
 	XalanSourceTreeComment(
 			const XalanDOMString&		theData,
+			XalanSourceTreeDocument*	theOwnerDocument,
 			XalanSourceTreeElement*		theParentElement = 0,
 			XalanNode*					thePreviousSibling = 0,
 			XalanNode*					theNextSibling = 0,
@@ -601,9 +603,6 @@ public:
 	setPreviousSibling(XalanSourceTreeComment*	thePreviousSibling);
 
 	void
-	setPreviousSibling(XalanSourceTreeCDATASection*		thePreviousSibling);
-
-	void
 	setPreviousSibling(XalanSourceTreeElement*	thePreviousSibling);
 
 	void
@@ -614,9 +613,6 @@ public:
 
 	void
 	appendSiblingNode(XalanSourceTreeComment*	theSibling);
-
-	void
-	appendSiblingNode(XalanSourceTreeCDATASection*	theSibling);
 
 	void
 	appendSiblingNode(XalanSourceTreeElement*	theSibling);
@@ -651,6 +647,8 @@ private:
 
 	// Data members...
 	const XalanDOMString&		m_data;
+
+	XalanSourceTreeDocument*	m_ownerDocument;
 
 	XalanSourceTreeElement*		m_parentElement;
 

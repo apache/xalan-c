@@ -81,8 +81,6 @@
 #include <XalanSourceTree/XalanSourceTreeAttributeNSAllocator.hpp>
 #include <XalanSourceTree/XalanSourceTreeAttributesVector.hpp>
 #include <XalanSourceTree/XalanSourceTreeCommentAllocator.hpp>
-#include <XalanSourceTree/XalanSourceTreeCDATASectionAllocator.hpp>
-#include <XalanSourceTree/XalanSourceTreeCDATASectionIWSAllocator.hpp>
 #include <XalanSourceTree/XalanSourceTreeElementAllocator.hpp>
 #include <XalanSourceTree/XalanSourceTreeElementNSAllocator.hpp>
 #include <XalanSourceTree/XalanSourceTreeProcessingInstructionAllocator.hpp>
@@ -326,17 +324,10 @@ public:
 			XalanNode*					thePreviousSibling = 0,
 			XalanNode*					theNextSibling = 0);
 
-	XalanSourceTreeCDATASection*
-	createCDATASectionNode(
-			const XalanDOMChar*			chars,
-			unsigned int				length,
-			XalanSourceTreeElement*		theParentElement = 0,
-			XalanNode*					thePreviousSibling = 0,
-			XalanNode*					theNextSibling = 0);
-
 	XalanSourceTreeComment*
 	createCommentNode(
 			const XalanDOMChar*			data,
+			unsigned int				length,
 			XalanSourceTreeElement*		theParentElement = 0,
 			XalanNode*					thePreviousSibling = 0,
 			XalanNode*					theNextSibling = 0);
@@ -366,7 +357,7 @@ public:
 			XalanNode*					theNextSibling = 0);
 
 	void
-	unparsedEntityDecl(
+	unparsedEntityDeclaration(
 			const XMLCh*	name,
 			const XMLCh*	publicId,
 			const XMLCh*	systemId,
@@ -377,7 +368,7 @@ public:
 
 	// Child node setters...
 	void
-	setDocumentElement(XalanSourceTreeElement*	theElement);
+	appendChildNode(XalanSourceTreeComment*		theChild);
 
 	void
 	appendChildNode(XalanSourceTreeElement*		theChild);
@@ -432,10 +423,6 @@ private:
 	XalanSourceTreeAttributeNSAllocator				m_attributeNSAllocator;
 
 	XalanSourceTreeCommentAllocator					m_commentAllocator;
-
-	XalanSourceTreeCDATASectionAllocator			m_cdataSectionAllocator;
-
-	XalanSourceTreeCDATASectionIWSAllocator			m_cdataSectionIWSAllocator;
 
 	XalanSourceTreeElementAllocator					m_elementAllocator;
 

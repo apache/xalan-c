@@ -66,7 +66,7 @@
 
 
 
-#include "XalanSourceTreeCDATASection.hpp"
+#include "XalanSourceTreeDocument.hpp"
 #include "XalanSourceTreeElement.hpp"
 #include "XalanSourceTreeProcessingInstruction.hpp"
 #include "XalanSourceTreeText.hpp"
@@ -80,12 +80,14 @@ static const XalanDOMString		s_emptyString;
 
 XalanSourceTreeComment::XalanSourceTreeComment(
 			const XalanDOMString&		theData,
+			XalanSourceTreeDocument*	theOwnerDocument,
 			XalanSourceTreeElement*		theParentElement,
 			XalanNode*					thePreviousSibling,
 			XalanNode*					theNextSibling,
 			unsigned int				theIndex) :
 	XalanComment(),
 	m_data(theData),
+	m_ownerDocument(theOwnerDocument),
 	m_parentElement(theParentElement),
 	m_previousSibling(thePreviousSibling),
 	m_nextSibling(theNextSibling),
@@ -142,7 +144,16 @@ XalanSourceTreeComment::getNodeType() const
 XalanNode*
 XalanSourceTreeComment::getParentNode() const
 {
-	return m_parentElement;
+	assert(m_ownerDocument != 0);
+
+	if (m_parentElement != 0)
+	{
+		return m_parentElement;
+	}
+	else
+	{
+		return m_ownerDocument;
+	}
 }
 
 
@@ -198,9 +209,9 @@ XalanSourceTreeComment::getAttributes() const
 XalanDocument*
 XalanSourceTreeComment::getOwnerDocument() const
 {
-	assert(m_parentElement != 0);
+	assert(m_ownerDocument != 0);
 
-	return m_parentElement->getOwnerDocument();
+	return m_ownerDocument;
 }
 
 
@@ -421,14 +432,6 @@ XalanSourceTreeComment::setPreviousSibling(XalanSourceTreeComment*	thePreviousSi
 
 
 void
-XalanSourceTreeComment::setPreviousSibling(XalanSourceTreeCDATASection*		thePreviousSibling)
-{
-	m_previousSibling = thePreviousSibling;
-}
-
-
-
-void
 XalanSourceTreeComment::setPreviousSibling(XalanSourceTreeElement*	thePreviousSibling)
 {
 	m_previousSibling = thePreviousSibling;
@@ -454,14 +457,6 @@ XalanSourceTreeComment::setPreviousSibling(XalanSourceTreeText*		thePreviousSibl
 
 void
 XalanSourceTreeComment::appendSiblingNode(XalanSourceTreeComment*	theSibling)
-{
-	XalanSourceTreeHelper::appendSibling(this, m_nextSibling, theSibling);
-}
-
-
-
-void
-XalanSourceTreeComment::appendSiblingNode(XalanSourceTreeCDATASection*	theSibling)
 {
 	XalanSourceTreeHelper::appendSibling(this, m_nextSibling, theSibling);
 }

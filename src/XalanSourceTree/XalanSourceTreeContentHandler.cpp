@@ -76,6 +76,7 @@ XalanSourceTreeContentHandler::XalanSourceTreeContentHandler(
 			bool						fAccumulateText) :
 	ContentHandler(),
 	DTDHandler(),
+	LexicalHandler(),
 	m_document(theDocument),
 	m_currentElement(0),
 	m_elementStack(),
@@ -163,11 +164,8 @@ XalanSourceTreeContentHandler::ignorableWhitespace(
 			const XMLCh* const	chars,
 			const unsigned int	length)
 {
-	if (m_currentElement == 0)
-	{
-		throw XalanDOMException(XalanDOMException::HIERARCHY_REQUEST_ERR);
-	}
-	else
+	// Ignore any whitespace reported before the document element has been parsed.
+	if (m_elementStack.empty() == false)
 	{
 		processAccumulatedText();
 
@@ -247,14 +245,7 @@ XalanSourceTreeContentHandler::startElement(
 
 	if (m_currentElement == 0)
 	{
-		if (m_document->getDocumentElement() != 0)
-		{
-			throw XalanDOMException(XalanDOMException::HIERARCHY_REQUEST_ERR);
-		}
-		else
-		{
-			m_document->setDocumentElement(theNewElement);
-		}
+		m_document->appendChildNode(theNewElement);
 	}
 	else
 	{
@@ -310,7 +301,7 @@ XalanSourceTreeContentHandler::unparsedEntityDecl(
 {
 	assert(m_document != 0);
 
-	m_document->unparsedEntityDecl(name, publicId, systemId, notationName);
+	m_document->unparsedEntityDeclaration(name, publicId, systemId, notationName);
 }
 
 
@@ -318,6 +309,79 @@ XalanSourceTreeContentHandler::unparsedEntityDecl(
 void
 XalanSourceTreeContentHandler::resetDocType()
 {
+}
+
+
+
+void
+XalanSourceTreeContentHandler::comment(
+			const XMLCh* const	chars,
+			const unsigned int	length)
+{
+	assert(m_document != 0);
+
+	processAccumulatedText();
+
+	XalanSourceTreeComment* const	theNewComment =
+		m_document->createCommentNode(chars, length, m_currentElement);
+
+	if (m_currentElement != 0)
+	{
+		m_currentElement->appendChildNode(theNewComment);
+	}
+	else
+	{
+		m_document->appendChildNode(theNewComment);
+	}
+}
+
+
+
+void
+XalanSourceTreeContentHandler::endCDATA()
+{
+}
+
+
+
+void
+XalanSourceTreeContentHandler::endDTD()
+{
+	assert(m_document != 0);
+
+}
+
+
+
+void
+XalanSourceTreeContentHandler::endEntity(const XMLCh* const		name)
+{
+	assert(m_document != 0);
+}
+
+
+void
+XalanSourceTreeContentHandler::startCDATA()
+{
+}
+
+
+
+void
+XalanSourceTreeContentHandler::startDTD(
+			const XMLCh* const	name,
+			const XMLCh* const	publicId,
+			const XMLCh* const	systemId)
+{
+	assert(m_document != 0);
+}
+
+
+
+void
+XalanSourceTreeContentHandler::startEntity(const XMLCh* const	name)
+{
+	assert(m_document != 0);
 }
 
 

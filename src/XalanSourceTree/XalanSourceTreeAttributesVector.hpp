@@ -89,8 +89,8 @@ public:
 	typedef std::list<ListEntryType>			ListType;
 #endif
 
-
-	enum { eDefaultBlockSize = 50 };
+    // Default size for vector allocation.
+	enum { eDefaultBlockSize = 500 };
 
 	/**
 	 * Constructor.
@@ -115,7 +115,9 @@ private:
 
 	// Utility functions...
 	XalanSourceTreeAttr**
-	createEntry(size_type	theCount);
+	createEntry(
+			size_type	theBlockSize,
+			size_type	theCount);
 
 	ListEntryType*
 	findEntry(size_type		theCount);
@@ -134,6 +136,8 @@ private:
 	ListType			m_list;
 
 	const size_type		m_blockSize;
+
+	ListEntryType*		m_lastEntryFound;
 };
 
 
