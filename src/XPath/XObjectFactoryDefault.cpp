@@ -565,4 +565,6 @@ XObjectFactoryDefault::reset()
 	m_xnumberCache.clear();
 
 	m_xnodesetCache.clear();
+
+	m_xresultTreeFragCache.clear();
 }
