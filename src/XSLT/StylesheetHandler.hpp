@@ -413,6 +413,14 @@ private:
 			const XMLCh* const	chars,
 			const unsigned int	length);
 
+	void
+	accumulateText(
+			const XMLCh* const	chars,
+			const unsigned int	length);
+
+	void
+	processAccumulatedText();
+
 	// Data members...
 	XalanDOMString	m_pendingException;
 
@@ -480,6 +488,12 @@ private:
 	 * to being the first elements.
 	 */
 	bool m_foundNotImport;
+
+	/**
+	 * Accumulate character buffer to create contiguous character data
+	 * where possible.
+	 */
+	XalanDOMString	m_accumulateText;
 	
 	// BEGIN SANJIVA CODE
 	bool m_inLXSLTScript;
@@ -518,9 +532,9 @@ private:
 
 		ElemTemplate* const					m_pTemplate;
 
-		ElemTemplateElement* const			m_lastPopped;
+		ElemTemplateElement* const			m_lastPopped;		
 
-		const bool							m_inTemplate;
+		const bool							m_inTemplate;		
 
 		const bool							m_foundStylesheet;
 

@@ -137,10 +137,11 @@ StylesheetHandler::StylesheetHandler(
 	m_strayElements(),
 	m_whiteSpaceElems(),
 	m_pTemplate(0),
-	m_lastPopped(0),
+	m_lastPopped(0),	
 	m_inTemplate(false),
 	m_foundStylesheet(false),
 	m_foundNotImport(false),
+	m_accumulateText(),
 	m_inLXSLTScript(false),
 	m_LXSLTScriptBody(),
 	m_LXSLTScriptLang(),
@@ -278,6 +279,7 @@ StylesheetHandler::startElement(
 #if !defined(XALAN_NO_NAMESPACES)
 		using std::for_each;
 #endif
+		processAccumulatedText();
 
 		// Clean up the whitespace elements.
 		for_each(m_whiteSpaceElems.begin(),
@@ -1284,6 +1286,8 @@ StylesheetHandler::endElement(const XMLCh* const name)
 	using std::for_each;
 #endif
 
+	processAccumulatedText();
+
 	// Clean up the whitespace elements.
 	for_each(m_whiteSpaceElems.begin(),
 			 m_whiteSpaceElems.end(),
@@ -1372,7 +1376,7 @@ StylesheetHandler::characters(
 	if (m_exceptionPending == true)
 		return;
 
-	processText(chars, length);
+	accumulateText(chars, length);
 }
 
 
@@ -1385,6 +1389,8 @@ StylesheetHandler::cdata(
 	// if we have apending exception, we don't want to even try to process this
 	if (m_exceptionPending == true)
 		return;
+
+	accumulateText(chars, length);
 
 	processText(chars, length);
 
@@ -1417,7 +1423,7 @@ StylesheetHandler::processingInstruction(
 	if (m_exceptionPending == true)
 		return;
 
-	// No action for the moment.
+	processAccumulatedText();
 }
 
 
@@ -1429,7 +1435,7 @@ StylesheetHandler::comment(const XMLCh* const /*data*/)
 	if (m_exceptionPending == true)
 		return;
 
-	// No action for the moment.
+	processAccumulatedText();
 }
 
 
@@ -1558,6 +1564,32 @@ StylesheetHandler::processText(
 
 
 
+void
+StylesheetHandler::accumulateText(
+			const XMLCh* const	chars,
+			const unsigned int	length)
+{	
+	if(m_inTemplate)
+	{
+		append(m_accumulateText, chars, length);
+	}
+}
+
+
+
+void
+StylesheetHandler::processAccumulatedText()
+{
+	if (isEmpty(m_accumulateText) == false)
+	{
+		processText(m_accumulateText.c_str(), length(m_accumulateText));
+
+		clear(m_accumulateText);
+	}	
+}
+
+
+
 StylesheetHandler::PushPopIncludeState::PushPopIncludeState(StylesheetHandler&	theHandler) :
 	m_handler(theHandler),
 	m_elemStack(theHandler.m_elemStack),
@@ -1572,6 +1604,7 @@ StylesheetHandler::PushPopIncludeState::PushPopIncludeState(StylesheetHandler&	t
 	m_namespaces(),
 	m_namespacesHandler()
 {
+	m_handler.m_accumulateText.clear();
 	m_handler.m_elemStack.clear();
 	m_handler.m_pTemplate = 0;
 	m_handler.m_lastPopped = 0;
@@ -1600,6 +1633,7 @@ StylesheetHandler::PushPopIncludeState::~PushPopIncludeState()
 			 m_handler.m_elemStack.end(),
 			 DeleteFunctor<ElemTemplateElement>());
 
+	m_handler.m_accumulateText.clear();
 	m_handler.m_elemStack = m_elemStack;
 	m_handler.m_elemStackParentedElements = m_elemStackParentedElements;
 	m_handler.m_pTemplate = m_pTemplate;
