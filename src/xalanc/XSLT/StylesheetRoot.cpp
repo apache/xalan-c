@@ -790,16 +790,18 @@ StylesheetRoot::getNodeSetByKey(
 		}
 		else
 		{
-			KeyTable* const kt =
+			XalanAutoPtr<KeyTable>	kt(
 				new KeyTable(
 							 theKeyNode,
 							 resolver,
 							 m_keyDeclarations,
-							 executionContext);
+							 executionContext));
 
-			theKeysTable[theKeyNode] = kt;
+			theKeysTable[theKeyNode] = kt.get();
 
-			const MutableNodeRefList&	nl = kt->getNodeSetByKey(qname, ref);
+			const KeyTable* const	theNewTable = kt.release();
+
+			const MutableNodeRefList&	nl = theNewTable->getNodeSetByKey(qname, ref);
 
 			if (nodelist.empty() == true)
 			{
