@@ -155,7 +155,6 @@
 #if defined(XALAN_USE_ICU)
 #include <ICUBridge/ICUBridge.hpp>
 #include <ICUBridge/FunctionICUFormatNumber.hpp>
-#include <ICUBridge/ICUXalanNumberFormatFactory.hpp>
 #include <ICUBridge/ICUBridgeCollationCompareFunctor.hpp>
 #endif
 
