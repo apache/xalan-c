@@ -151,6 +151,10 @@ SOURCE=..\..\..\..\src\PlatformSupport\ExecutionContext.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\PlatformSupport\FormatterListener.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\PlatformSupport\NamedNodeMapAttributeList.cpp
 # End Source File
 # Begin Source File
@@ -300,6 +304,10 @@ SOURCE=..\..\..\..\src\PlatformSupport\DoubleSupport.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\PlatformSupport\ExecutionContext.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\PlatformSupport\FormatterListener.hpp
 # End Source File
 # Begin Source File
 
