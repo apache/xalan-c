@@ -238,12 +238,37 @@ typedef XALAN_STD vector<ElemDecimalFormat*>			ElemDecimalFormatVectorType;
 	}
 
 	/**
+	 * Retrieve the stack of namespace lists
+	 * 
+	 * @return vector of namespace vectors
+	 */
+	NamespacesStackType&
+	getNamespaces()
+	{ 
+		return m_namespaces;
+	}
+
+	/**
 	 * Retrieve the list of namespace declarations currently in effect
 	 * 
 	 * @return vector of namespace vectors
 	 */
 	const NamespaceVectorType&
-	getNamespaceDecls() const;
+	getNamespaceDecls() const
+	{
+		return m_namespaceDecls;
+	}
+
+	/**
+	 * Retrieve the list of namespace declarations currently in effect
+	 * 
+	 * @return vector of namespace vectors
+	 */
+	NamespaceVectorType&
+	getNamespaceDecls()
+	{
+		return m_namespaceDecls;
+	}
 
 	/**
 	 * Set the list of namespace declarations currently in effect
@@ -251,7 +276,10 @@ typedef XALAN_STD vector<ElemDecimalFormat*>			ElemDecimalFormatVectorType;
 	 * @param ns vector of namespace vectors
 	 */
 	void
-	setNamespaceDecls(const NamespaceVectorType& ns);
+	setNamespaceDecls(const NamespaceVectorType& ns)
+	{
+		m_namespaceDecls = ns;
+	}
 
 	/*
 	 * Get the top entry on the namespace stack, or 0, if

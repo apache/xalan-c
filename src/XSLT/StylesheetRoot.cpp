@@ -553,7 +553,7 @@ StylesheetRoot::processOutputSpec(
 				m_cdataSectionElems.push_back(qname);
 			}
 		}
-		else
+		else if (isAttrOK(aname, atts, i, constructionContext) == false)
 		{
 			constructionContext.error(name + XalanDOMString(" has an illegal attribute: ")+aname);
 		}

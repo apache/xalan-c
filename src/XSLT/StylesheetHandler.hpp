@@ -78,11 +78,14 @@
 
 
 
+#include <XSLT/Stylesheet.hpp>
+
+
+
 class ElemTemplate;
 class ElemTemplateElement;
 class ElemTextLiteral;
 class ExtensionNSHandler;
-class Stylesheet;
 class StylesheetConstructionContext;
 
 
@@ -482,21 +485,25 @@ private:
 
 	private:
 
-		StylesheetHandler&			m_handler;
+		StylesheetHandler&					m_handler;
 
-		ElemTemplateStackType		m_elemStack;
+		ElemTemplateStackType				m_elemStack;
 
-		ElemTemplate* const			m_pTemplate;
+		ElemTemplate* const					m_pTemplate;
 
-		ElemTemplateElement* const	m_lastPopped;
+		ElemTemplateElement* const			m_lastPopped;
 
-		const bool					m_inTemplate;
+		const bool							m_inTemplate;
 
-		const bool					m_foundStylesheet;
+		const bool							m_foundStylesheet;
 
-		const XalanDOMString		m_XSLNameSpaceURL;
+		const XalanDOMString				m_XSLNameSpaceURL;
 
-		const bool					m_foundNotImport;
+		const bool							m_foundNotImport;
+
+		Stylesheet::NamespaceVectorType		m_namespaceDecls;
+
+		Stylesheet::NamespacesStackType		m_namespaces;
 	};
 
 	friend class PushPopIncludeState;

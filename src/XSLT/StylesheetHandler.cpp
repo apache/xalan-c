@@ -1590,7 +1590,9 @@ StylesheetHandler::PushPopIncludeState::PushPopIncludeState(StylesheetHandler&	t
 	m_inTemplate(theHandler.m_inTemplate),
 	m_foundStylesheet(theHandler.m_foundStylesheet),
 	m_XSLNameSpaceURL(theHandler.m_stylesheet.getXSLTNamespaceURI()),
-	m_foundNotImport(theHandler.m_foundNotImport)
+	m_foundNotImport(theHandler.m_foundNotImport),
+	m_namespaceDecls(),
+	m_namespaces()
 {
 	m_handler.m_elemStack.clear();
 	m_handler.m_pTemplate = 0;
@@ -1598,6 +1600,11 @@ StylesheetHandler::PushPopIncludeState::PushPopIncludeState(StylesheetHandler&	t
 	m_handler.m_inTemplate = false;
 	m_handler.m_foundStylesheet = false;
 	m_handler.m_foundNotImport = false;
+
+	// This is much more efficient, since we're just swapping
+	// underlying data.  This clears out the stack as well...
+	m_namespaceDecls.swap(theHandler.m_stylesheet.getNamespaceDecls());
+	m_namespaces.swap(theHandler.m_stylesheet.getNamespaces());
 }
 
 
@@ -1621,4 +1628,9 @@ StylesheetHandler::PushPopIncludeState::~PushPopIncludeState()
 	m_handler.m_foundStylesheet = m_foundStylesheet;
 	m_handler.m_stylesheet.setXSLTNamespaceURI(m_XSLNameSpaceURL);
 	m_handler.m_foundNotImport = m_foundNotImport;
+
+	// This is much more efficient, since we're just swapping
+	// underlying data.
+	m_handler.m_stylesheet.getNamespaceDecls().swap(m_namespaceDecls);
+	m_handler.m_stylesheet.getNamespaces().swap(m_namespaces);
 }

@@ -262,13 +262,15 @@ Stylesheet::processKeyElement(
 			*nsContext);
 		}
 		else if(equals(aname, Constants::ATTRNAME_USE))
+		{
 			useAttr = constructionContext.createXPath(atts.getValue(i),
 				*nsContext);
-		else
+		}
+		else if (isAttrOK(aname, atts, i, constructionContext) == false)
 		{
 			constructionContext.error(
 				XalanDOMString("xsl:key, unrecognized keyword '") +
-					Constants::ATTRNAME_NAME + 
+					aname + 
 					XalanDOMString("'!"));
 		}
 	}
@@ -1475,22 +1477,6 @@ void Stylesheet::applyAttrSets(
 		}
 	}
 }	
-
-
-
-const
-Stylesheet::NamespaceVectorType& Stylesheet::getNamespaceDecls() const
-{ 
-	return m_namespaceDecls;
-}
-
-
-
-void
-Stylesheet::setNamespaceDecls(const NamespaceVectorType& ns)
-{
-	m_namespaceDecls = ns;
-}
 
 
 
