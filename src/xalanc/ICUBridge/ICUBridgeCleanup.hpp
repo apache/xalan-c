@@ -21,7 +21,7 @@
 
 #include <xalanc/ICUBridge/ICUBridgeDefinitions.hpp>
 
-
+#include <xalanc/Include/XalanMemoryManagement.hpp>
 
 XALAN_CPP_NAMESPACE_BEGIN
 
@@ -33,6 +33,9 @@ public:
 
 	static void
 	cleanup();
+
+	static void
+	startup(MemoryManagerType&  theManager);
 };
 
 

@@ -34,7 +34,11 @@ ICUBridgeCleanup::cleanup()
 	u_cleanup();
 }
 
-
+void
+ICUBridgeCleanup::startup(MemoryManagerType&  /*theManager*/)
+{
+    //TBD
+}
 
 XALAN_CPP_NAMESPACE_END
 
