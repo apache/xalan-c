@@ -94,6 +94,7 @@
 
 
 #include <XSLT/CountersTable.hpp>
+#include <XSLT/NodeSorter.hpp>
 #include <XSLT/Stylesheet.hpp>
 #include <XSLT/VariablesStack.hpp>
 
@@ -551,6 +552,12 @@ public:
 
 	virtual bool
 	returnFormatterToText(FormatterToText*	theFormatter);
+
+	virtual NodeSorter*
+	borrowNodeSorter();
+
+	virtual bool
+	returnNodeSorter(NodeSorter*	theSorter);
 
 	virtual XalanNumberFormatAutoPtr
 	createXalanNumberFormat();
@@ -1016,18 +1023,24 @@ private:
 	// non-conforming behavior.
 	bool								m_ignoreHTMLElementNamespaces;
 
-	// Holds the current mode.
-	const QName*	                    m_mode;
-
-	XalanObjectCacheDefault<FormatterToText>		m_formatterToTextCache;
-
-	XalanObjectCacheDefault<FormatterToSourceTree>	m_formatterToSourceTreeCache;
-
 	/**
 	 * The factory that will be used to create result tree fragments based on our
 	 * proprietary source tree.
 	 */
 	mutable XalanAutoPtr<XalanSourceTreeDocument>	m_sourceTreeResultTreeFactory;
+
+	// Holds the current mode.
+	const QName*	                    m_mode;
+
+	typedef XalanObjectCacheDefault<FormatterToText>		FormatterToTextCacheType;
+	typedef XalanObjectCacheDefault<FormatterToSourceTree>	FormatterToSourceTreeCacheType;
+	typedef XalanObjectCacheDefault<NodeSorter>				NodeSorterCacheType;
+
+	FormatterToTextCacheType			m_formatterToTextCache;
+
+	FormatterToSourceTreeCacheType		m_formatterToSourceTreeCache;
+
+	NodeSorterCacheType					m_nodeSorterCache;
 
 	static XalanNumberFormatFactory		s_defaultXalanNumberFormatFactory;
 

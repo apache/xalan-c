@@ -151,7 +151,8 @@ StylesheetExecutionContextDefault::StylesheetExecutionContextDefault(
 	m_sourceTreeResultTreeFactory(),
 	m_mode(0),
 	m_formatterToTextCache(),
-	m_formatterToSourceTreeCache()
+	m_formatterToSourceTreeCache(),
+	m_nodeSorterCache()
 {
 }
 
@@ -183,7 +184,8 @@ StylesheetExecutionContextDefault::StylesheetExecutionContextDefault(
 	m_sourceTreeResultTreeFactory(),
 	m_mode(0),
 	m_formatterToTextCache(),
-	m_formatterToSourceTreeCache()
+	m_formatterToSourceTreeCache(),
+	m_nodeSorterCache()
 {
 }
 
@@ -922,8 +924,7 @@ StylesheetExecutionContextDefault::createXResultTreeFrag(
 
 	BorrowReturnResultTreeFrag	theResultTreeFrag(*this);
 
-#if 1
-	GetReleaseCachedObject<FormatterToSourceTree>	theGuard(m_formatterToSourceTreeCache);
+	GetReleaseCachedObject<FormatterToSourceTreeCacheType>	theGuard(m_formatterToSourceTreeCache);
 
 	FormatterToSourceTree* const	theFormatter = theGuard.get();
 	assert(theFormatter != 0);
@@ -942,23 +943,6 @@ StylesheetExecutionContextDefault::createXResultTreeFrag(
 				theFormatter);
 
 	templateChild.executeChildren(*this, sourceNode);
-#else
-	XalanSourceTreeDocument* const	theDocument = getSourceTreeFactory();
-
-	FormatterToSourceTree	tempFormatter(
-					theDocument,
-					theResultTreeFrag.get());
-
-	tempFormatter.setPrefixResolver(m_xsltProcessor);
-
-	theResultTreeFrag->setOwnerDocument(theDocument);
-
-	StylesheetExecutionContext::OutputContextPushPop	theOutputContextPushPop(
-				*this,
-				&tempFormatter);
-
-	templateChild.executeChildren(*this, sourceNode);
-#endif
 
 	return getXObjectFactory().createResultTreeFrag(theResultTreeFrag);
 }
@@ -1217,6 +1201,22 @@ bool
 StylesheetExecutionContextDefault::returnFormatterToText(FormatterToText*	theFormatter)
 {
 	return m_formatterToTextCache.release(theFormatter);
+}
+
+
+
+NodeSorter*
+StylesheetExecutionContextDefault::borrowNodeSorter()
+{
+	return m_nodeSorterCache.get();
+}
+
+
+
+bool
+StylesheetExecutionContextDefault::returnNodeSorter(NodeSorter*		theSorter)
+{
+	return m_nodeSorterCache.release(theSorter);
 }
 
 
@@ -1665,14 +1665,20 @@ StylesheetExecutionContextDefault::getVariable(const QName&		name)
 
 	const XObjectPtr	theValue(m_variablesStack.getVariable(name, *this, fFound));
 
-	if(fFound == false)
+	if(fFound == true)
+	{
+		assert(theValue.null() == false);
+
+		return theValue;
+	}
+	else
 	{
 		warn(
 			TranscodeFromLocalCodePage("Variable reference given for variable out of context or without definition!  Name = ") +
 			name.getLocalPart());
-	}
 
-	return theValue;
+		return getXObjectFactory().createUnknown(name.getLocalPart());
+	}
 }
 
 

@@ -110,11 +110,8 @@
 
 
 
+#include <XSLT/KeyTable.hpp>
 #include <XSLT/TopLevelArg.hpp>
-
-
-
-#include "KeyTable.hpp"
 
 
 
@@ -130,6 +127,7 @@ class GenerateEvent;
 class KeyTable;
 class PrefixResolver;
 class NodeRefListBase;
+class NodeSorter;
 class PrintWriter;
 class QName;
 class SelectionEvent;
@@ -631,6 +629,30 @@ public:
 	 */
 	virtual void
 	popContextMarker() = 0;
+
+	/*
+	 * A class to manage pushing and popping an element's stack
+	 * frame context.
+	 */
+	class PushAndPopContextMarker
+	{
+	public:
+
+		PushAndPopContextMarker(StylesheetExecutionContext&		executionContext) :
+			m_executionContext(executionContext)
+		{
+			executionContext.pushContextMarker();
+		}
+
+		~PushAndPopContextMarker()
+		{
+			m_executionContext.popContextMarker();
+		}
+
+	private:
+
+		StylesheetExecutionContext&		m_executionContext;
+	};
 
 	/**
 	 * Resolve the params that were pushed by the caller.
@@ -1174,7 +1196,7 @@ public:
 	 * Return a previously borrowed FormatterToText instance.
 	 *
 	 * @param theFormatter A pointer the to previously borrowed instance.
-	 * @return true if the formatter was borrowed (at therefore, destroyed), false if not.
+	 * @return true if the instance was previously borrowed, false if not.
 	 */
 	virtual bool
 	returnFormatterToText(FormatterToText*	theFormatter) = 0;
@@ -1223,6 +1245,71 @@ public:
 		StylesheetExecutionContext&		m_executionContext;
 
 		FormatterToText*				m_formatter;
+	};
+
+
+	/**
+	 * Borrow a cached NodeSorter instance.
+	 *
+	 * @return A pointer to the instance.
+	 */
+	virtual NodeSorter*
+	borrowNodeSorter() = 0;
+
+	/**
+	 * Return a previously borrowed NodeSorter instance.
+	 *
+	 * @param theSorter A pointer the to previously borrowed instance.
+	 * @return true if the instance was previously borrowed, false if not.
+	 */
+	virtual bool
+	returnNodeSorter(NodeSorter*	theSorter) = 0;
+
+	class BorrowReturnNodeSorter
+	{
+	public:
+
+		BorrowReturnNodeSorter(StylesheetExecutionContext&	executionContext) :
+			m_executionContext(executionContext),
+			m_sorter(executionContext.borrowNodeSorter())
+		{
+			assert(m_sorter != 0);
+		}
+
+		~BorrowReturnNodeSorter()
+		{
+			assert(m_sorter != 0);
+
+			m_executionContext.returnNodeSorter(m_sorter);
+		}
+
+		NodeSorter&
+		operator*() const
+		{
+			assert(m_sorter != 0);
+
+			return *m_sorter;
+		}
+
+		NodeSorter*
+		get() const
+		{
+			assert(m_sorter != 0);
+
+			return m_sorter;
+		}
+
+		NodeSorter*
+		operator->() const
+		{
+			return get();
+		}
+
+	private:
+
+		StylesheetExecutionContext&		m_executionContext;
+
+		NodeSorter*						m_sorter;
 	};
 
 
