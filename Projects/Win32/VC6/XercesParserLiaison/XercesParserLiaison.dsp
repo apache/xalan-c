@@ -94,10 +94,6 @@ LINK32=link.exe
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\NullTreeWalker.cpp
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\..\..\src\XercesParserLiaison\XercesAttrBridge.cpp
 # End Source File
 # Begin Source File
@@ -212,10 +208,6 @@ SOURCE=..\..\..\..\src\XercesParserLiaison\XercesTreeWalker.cpp
 # Begin Group "Header Files"
 
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
-# Begin Source File
-
-SOURCE=..\..\..\..\src\XercesParserLiaison\NullTreeWalker.hpp
-# End Source File
 # Begin Source File
 
 SOURCE=..\..\..\..\src\XercesParserLiaison\XercesAttrBridge.hpp
