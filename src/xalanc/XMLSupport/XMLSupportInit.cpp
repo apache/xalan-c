@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -59,6 +59,11 @@
 
 
 
+#include "FormatterToXML_UTF8.hpp"
+#include "FormatterToXML_UTF16.hpp"
+
+
+
 XALAN_CPP_NAMESPACE_BEGIN
 
 
@@ -96,6 +101,8 @@ XMLSupportInit::~XMLSupportInit()
 void
 XMLSupportInit::initialize()
 {
+	FormatterToXML_UTF8::initialize();
+	FormatterToXML_UTF16::initialize();
 }
 
 
@@ -103,6 +110,8 @@ XMLSupportInit::initialize()
 void
 XMLSupportInit::terminate()
 {
+	FormatterToXML_UTF16::terminate();
+	FormatterToXML_UTF8::terminate();
 }
 
 
