@@ -179,6 +179,10 @@ printArgOptions()
 		 << endl
 		 << " [-PARAM name expression (Set a stylesheet parameter)]"
 		 << endl
+#if !defined(NDEBUG)
+		 << " [-S (Display some interesting statistics.)]"
+		 << endl
+#endif
 		 << endl
 		 << "The following options are valid only with -HTML or -XML."
 		 << endl
@@ -216,6 +220,9 @@ struct CmdLineParams
 	bool traceSelectionEvent;
 	bool traceTemplateChildren;
 	bool shouldWriteXMLHeader;
+#if !defined(NDEBUG)
+	bool showStats;
+#endif
 	int indentAmount;
 	int outputType;
 	string outFileName;
@@ -237,6 +244,9 @@ struct CmdLineParams
 		traceSelectionEvent(false),
 		traceTemplateChildren(false),
 		shouldWriteXMLHeader(true),
+#if !defined(NDEBUG)
+		showStats(false),
+#endif
 		indentAmount(0),
 		outputType(-1),
 		specialCharacters(),
@@ -377,6 +387,12 @@ getArgs(
 				fSuccess = false;
 			}
 		}
+#if !defined(NDEBUG)
+		else if(!stricmp("-S", argv[i]))
+		{
+			p.showStats = true;
+		}
+#endif
 		else if(!stricmp("-V", argv[i]))
 		{
 			p.versionOnly = true;
@@ -615,8 +631,6 @@ xsltMain(const CmdLineParams&	params)
 	DOMSupportDefault theDOMSupport;
 	XercesParserLiaison xmlParserLiaison(theDOMSupport);
 
-	DOMStringPrintWriter pw;
-
 	XPathSupportDefault theXPathSupport(theDOMSupport);
 	XSLTProcessorEnvSupportDefault	theXSLProcessorSupport;
 	XObjectFactoryDefault theXObjectFactory(theXSLProcessorSupport, theXPathSupport);
@@ -697,11 +711,6 @@ xsltMain(const CmdLineParams&	params)
 
 	const StylesheetRoot*	stylesheet = 0;
 
-	StylesheetExecutionContextDefault		theExecutionContext(processor,
-			theXSLProcessorSupport,
-			theXPathSupport,
-			theXObjectFactory);
-
 	if (!isEmpty(xslFileName))
 	{
 		stylesheet = processor.processStylesheet(xslFileName, theConstructionContext);
@@ -737,6 +746,11 @@ xsltMain(const CmdLineParams&	params)
 	// Do the transformation...
 	XSLTInputSource		theInputSource(params.inFileName.c_str());
 
+	StylesheetExecutionContextDefault		theExecutionContext(processor,
+			theXSLProcessorSupport,
+			theXPathSupport,
+			theXObjectFactory);
+
 	if (stylesheet == 0)
 	{
 		// No stylesheet, so our only hope is that the xml file has
@@ -762,12 +776,103 @@ xsltMain(const CmdLineParams&	params)
 				theExecutionContext);
 	}
 
+#if !defined(NDEBUG)
+	if (params.showStats == true)
+	{
+		cerr << endl
+			 << "Execution XObject details:"
+			 << endl
+			 << endl
+			 << "Total number of XBoolean instances created: "
+			 << theXObjectFactory.getTotalBooleanInstanceCount()
+			 << endl
+			 << "Total number of XNodeSet instances created: "
+			 << theXObjectFactory.getTotalNodeSetInstanceCount()
+			 << endl
+			 << "Total number of XNull instances created: "
+			 << theXObjectFactory.getTotalNullInstanceCount()
+			 << endl
+			 << "Total number of XNumber instances created: "
+			 << theXObjectFactory.getTotalNumberInstanceCount()
+			 << endl
+			 << "Total number of XResultTreeFrag instances created: "
+			 << theXObjectFactory.getTotalResultTreeFragInstanceCount()
+			 << endl
+			 << "Total number of XString instances created: "
+			 << theXObjectFactory.getTotalStringInstanceCount()
+			 << endl
+			 << "Total number of XUnknown instances created: "
+			 << theXObjectFactory.getTotalUnknownInstanceCount()
+			 << endl
+			 << endl
+			 << "Execution XPath details:"
+			 << endl
+			 << endl
+			 << "Total number of XPath instances created: "
+			 << theXPathFactory.getTotalInstanceCount()
+			 << endl
+			 << endl;
+
+		cerr << endl
+			 << "Stylesheet XObject details:"
+			 << endl
+			 << endl
+			 << "Total number of XBoolean instances created: "
+			 << theStylesheetXObjectFactory.getTotalBooleanInstanceCount()
+			 << endl
+			 << "Total number of XNodeSet instances created: "
+			 << theStylesheetXObjectFactory.getTotalNodeSetInstanceCount()
+			 << endl
+			 << "Total number of XNull instances created: "
+			 << theStylesheetXObjectFactory.getTotalNullInstanceCount()
+			 << endl
+			 << "Total number of XNumber instances created: "
+			 << theStylesheetXObjectFactory.getTotalNumberInstanceCount()
+			 << endl
+			 << "Total number of XResultTreeFrag instances created: "
+			 << theStylesheetXObjectFactory.getTotalResultTreeFragInstanceCount()
+			 << endl
+			 << "Total number of XString instances created: "
+			 << theStylesheetXObjectFactory.getTotalStringInstanceCount()
+			 << endl
+			 << "Total number of XUnknown instances created: "
+			 << theStylesheetXObjectFactory.getTotalUnknownInstanceCount()
+			 << endl
+			 << endl
+			 << "Stylesheet XPath details:"
+			 << endl
+			 << endl
+			 << "Total number of XPath instances created: "
+			 << theStylesheetXPathFactory.getTotalInstanceCount()
+			 << endl
+			 << endl;
+	}
+#endif
+
+	theExecutionContext.reset();
+
+	theConstructionContext.reset();
+	theStylesheetXPathFactory.reset();
+	theStylesheetXObjectFactory.reset();
+
+	processor.reset();
+
+	theXPathFactory.reset();
+	theXObjectFactory.reset();
+	theXSLProcessorSupport.reset();
+	theXPathSupport.reset();
+
+	xmlParserLiaison.reset();
+
 	return 0;
 }
 
 
 
-int main(int argc, const char* argv[]) throw()
+int
+main(
+			int				argc,
+			const char*		argv[])
 {
 	/**
 	 * Command line interface to transform the XML according to 
@@ -840,7 +945,7 @@ int main(int argc, const char* argv[]) throw()
 				if (!msg.empty())
 					cout << "Message is : " << msg << endl;
 
-				theResult = -1;
+				theResult = -2;
 			}
 			catch (XMLException& e)
 			{
@@ -856,7 +961,7 @@ int main(int argc, const char* argv[]) throw()
 				if (!msg.empty())
 					cout << "Message is : " << msg << endl;
 
-				theResult = -1;
+				theResult = -3;
 			}
 			catch(const XalanDOMException&	e)
 			{
@@ -866,11 +971,13 @@ int main(int argc, const char* argv[]) throw()
 					 << "."
 					 << endl;
 
-				theResult = -1;
+				theResult = -4;
 			}
 			catch (...)
 			{
 				cout << "\nUnhandled Exception\n";
+
+				theResult = -5;
 			}
 
 #if !defined(NDEBUG)
