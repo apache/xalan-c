@@ -139,8 +139,7 @@ XPathSupportDefault::getLocalNameOfNode(const XalanNode&	n) const
 XalanDOMString
 XPathSupportDefault::getNodeData(const XalanNode&	node) const
 {
-	return DOMServices::getNodeData(node,
-									m_whitespaceSupport);
+	return DOMServices::getNodeData(node);
 }
 
 
