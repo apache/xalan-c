@@ -189,6 +189,8 @@ public:
 	/**
 	 * Get the amount to indent when indent-result="yes".
 	 *
+	 * @deprecated
+	 *
 	 * @return number of characters to indent
 	 */
 	virtual int
@@ -196,6 +198,8 @@ public:
 
 	/**
 	 * Set the amount to indent when indent-result="yes".
+	 *
+	 * @deprecated
 	 *
 	 * @param i number of characters to indent
 	 */
