@@ -1196,12 +1196,13 @@ StylesheetExecutionContextDefault::getTraceSelects() const
 
 void
 StylesheetExecutionContextDefault::traceSelect(
-			const XalanElement&		theTemplate,
-			const NodeRefListBase&	nl) const
+			const ElemTemplateElement&	theTemplate,
+			const NodeRefListBase&		nl,
+			const XPath*				xpath)
 {
 	assert(m_xsltProcessor != 0);
 
-	m_xsltProcessor->traceSelect(theTemplate, nl);
+	m_xsltProcessor->traceSelect(*this, theTemplate, nl, xpath);
 }
 
 

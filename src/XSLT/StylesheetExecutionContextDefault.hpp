@@ -667,8 +667,9 @@ public:
 
 	virtual void
 	traceSelect(
-			const XalanElement&		theTemplate,
-			const NodeRefListBase&	nl) const;
+			const ElemTemplateElement&	theStylesheetElement,
+			const NodeRefListBase&		nl,
+			const XPath*				xpath);
 
 	virtual int
 	collationCompare(

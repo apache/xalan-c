@@ -96,6 +96,7 @@ class XalanNode;
 class XMLParserLiaison;
 class XObject;
 class XObjectPtr;
+class XPath;
 class XPathExecutionContext;
 class XSLTInputSource;
 class XSLTResultTarget;
@@ -384,13 +385,17 @@ public:
 	/**
 	 * Compose a diagnostic trace of the current selection
 	 *
-	 * @param theTemplate current context node
-	 * @param nl          list of selected nodes
+	 * @param executionContext The current execution context
+	 * @param theStylesheetElement The executing stylesheet element
+	 * @param nl The list of selected nodes
+	 * @param xpath A pointer to the XPath which generated the list of nodes, if any.
 	 */
 	virtual void
 	traceSelect(
-			const XalanElement&		theTemplate,
-			const NodeRefListBase&	nl) const = 0;
+			StylesheetExecutionContext& 	executionContext,
+			const ElemTemplateElement&		theStylesheetElement,
+			const NodeRefListBase&			nl,
+			const XPath*					xpath) const = 0;
 
 	/**
 	 * If the quietConflictWarnings property is set to 

@@ -1507,13 +1507,15 @@ public:
 	/**
 	 * Compose a diagnostic trace of the current selection
 	 *
-	 * @param theTemplate current context node
-	 * @param nl          list of selected nodes
+	 * @param theStylesheetElement The executing stylesheet element
+	 * @param nl The list of selected nodes
+	 * @param xpath A pointer to the XPath which generated the list of nodes, if any.
 	 */
 	virtual void
 	traceSelect(
-			const XalanElement&		theTemplate,
-			const NodeRefListBase&	nl) const = 0;
+			const ElemTemplateElement&	theStylesheetElement,
+			const NodeRefListBase&		nl,
+			const XPath*				xpath) = 0;
 
 	enum eCaseOrder { eDefault, eLowerFirst, eUpperFirst };
 

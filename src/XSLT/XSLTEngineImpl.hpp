@@ -310,10 +310,12 @@ public:
 	virtual void
 	setTraceSelects(bool	b);
 
-	virtual void
+	void
 	traceSelect(
-			const XalanElement&		theTemplate,
-			const NodeRefListBase&	nl) const;
+			StylesheetExecutionContext& 	executionContext,
+			const ElemTemplateElement&		theTemplate,
+			const NodeRefListBase&			nl,
+			const XPath*					xpath) const;
 
 	virtual void
 	setQuietConflictWarnings(bool	b);

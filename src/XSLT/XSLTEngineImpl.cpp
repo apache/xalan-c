@@ -86,6 +86,7 @@
 
 #include <PlatformSupport/PrintWriter.hpp>
 #include <PlatformSupport/StringTokenizer.hpp>
+#include <PlatformSupport/XalanLocator.hpp>
 #include <PlatformSupport/XalanUnicode.hpp>
 
 
@@ -1153,8 +1154,8 @@ XSLTEngineImpl::problem(
 
 	XalanDOMString			uri;
 
-	int						lineNumber = -1;
-	int 					columnNumber = -1;
+	XalanLocator::size_type		lineNumber = -1;
+	XalanLocator::size_type		columnNumber = -1;
 
 	if (locator != 0)
 	{
@@ -1271,15 +1272,15 @@ XSLTEngineImpl::problem(
 			const Locator&						locator,
 			const XalanNode*					sourceNode) const
 {
-	const XalanDOMChar*			id = locator.getSystemId();
+	const XalanDOMChar*		id = locator.getSystemId();
 
 	if (id == 0)
 	{
 		id = &theDummy;
 	}
 
-	const int					lineNumber = locator.getLineNumber();
-	const int 					columnNumber = locator.getColumnNumber();
+	const XalanLocator::size_type	lineNumber = locator.getLineNumber();
+	const XalanLocator::size_type 	columnNumber = locator.getColumnNumber();
 
 	if (m_problemListener != 0)
 	{
@@ -1503,18 +1504,18 @@ XSLTEngineImpl::setDocumentLocator(const Locator*	/* locator */)
 
 void
 XSLTEngineImpl::traceSelect(
-			const XalanElement& 	theTemplate,
-			const NodeRefListBase&	nl) const
+			StylesheetExecutionContext& 	executionContext,
+			const ElemTemplateElement&		theTemplate,
+			const NodeRefListBase&			nl,
+			const XPath*					xpath) const
 {
 	if (0 != m_diagnosticsPrintWriter)
 	{
 		XalanDOMString	msg = theTemplate.getNodeName() + XalanDOMString(XALAN_STATIC_UCODE_STRING(": "));
 
-		XalanAttr*		attr = theTemplate.getAttributeNode(Constants::ATTRNAME_SELECT);
-
-		if(0 != attr)
+		if(xpath != 0)
 		{
-			msg += attr->getValue();
+			msg += xpath->getExpression().getCurrentPattern();
 			msg += XALAN_STATIC_UCODE_STRING(", ");
 			msg += UnsignedLongToDOMString(nl.getLength());
 			msg += XALAN_STATIC_UCODE_STRING(" selected");
@@ -1526,11 +1527,14 @@ XSLTEngineImpl::traceSelect(
 			msg += XALAN_STATIC_UCODE_STRING(" selected");
 		}
 
-		attr = theTemplate.getAttributeNode(Constants::ATTRNAME_MODE);
+		const XalanQName* const		mode = executionContext.getCurrentMode();
 
-		if(0 != attr)
+		if(mode != 0 && mode->isEmpty() == false)
 		{
-			msg += XalanDOMString(XALAN_STATIC_UCODE_STRING(", mode = ")) + attr->getValue();
+			msg += XALAN_STATIC_UCODE_STRING(", mode = {");
+			msg += mode->getNamespace();
+			msg += XALAN_STATIC_UCODE_STRING("}");
+			msg += mode->getLocalPart();
 		}
 
 		m_diagnosticsPrintWriter->println(msg);
