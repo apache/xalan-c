@@ -119,9 +119,9 @@ XalanNumberFormat::applyGrouping(const XalanDOMString& value)
 {
 	if (!m_isGroupingUsed) return value;
 	if (m_groupingSize == 0) return value;
-	int len = value.length();
+	const unsigned int len = length(value);
 	if (len == 0) return value;
-	
+
 	const unsigned int	bufsize = len + len/m_groupingSize + 1;
 
 	XalanDOMChar* const		buffer = new XalanDOMChar[bufsize];
