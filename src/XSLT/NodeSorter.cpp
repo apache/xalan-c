@@ -274,10 +274,6 @@ NodeSorter::NodeSortKeyCompare::isNodeBefore(
 
 
 
-static const NodeRefList	dummy;
-
-
-
 double
 NodeSorter::NodeSortKeyCompare::getNumberResult(
 				const NodeSortKey&	theKey,
@@ -301,7 +297,7 @@ NodeSorter::NodeSortKeyCompare::getNumberResult(
 		}
 	}
 
-	const XObjectPtr	result(xpath->execute(node, *theKey.getPrefixResolver(), dummy, m_executionContext));
+	const XObjectPtr	result(xpath->execute(node, *theKey.getPrefixResolver(), m_executionContext));
 	assert(result.null() == false);
 
 	const double	theResult = result->num();
@@ -342,8 +338,7 @@ NodeSorter::NodeSortKeyCompare::getStringResult(
 		}
 	}
 
-	const XObjectPtr	result(
-		xpath->execute(node, *theKey.getPrefixResolver(), dummy, m_executionContext));
+	const XObjectPtr	result(xpath->execute(node, *theKey.getPrefixResolver(), m_executionContext));
 	assert(result.null() == false);
 
 	const XalanDOMString&	theResult = result->str();
