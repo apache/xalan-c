@@ -153,7 +153,7 @@ XalanDOMStringHashTable::find(
 
 
 inline unsigned int
-hash(
+hashString(
 			const XalanDOMChar*		theString,
 			unsigned int			theLength)
 {
@@ -186,7 +186,7 @@ XalanDOMStringHashTable::find(
 	const unsigned int	theActualLength =
 		theLength == unsigned(-1) ? length(theString) : theLength;
 
-	const unsigned int	theHash = hash(theString, theActualLength);
+	const unsigned int	theHash = hashString(theString, theActualLength);
 
 	const unsigned int	theLocalBucketIndex = theHash % m_bucketCount;
 
@@ -224,7 +224,7 @@ XalanDOMStringHashTable::find(
 void
 XalanDOMStringHashTable::insert(const XalanDOMString&	theString)
 {
-	const unsigned int	theHash = hash(c_wstr(theString), length(theString));
+	const unsigned int	theHash = hashString(c_wstr(theString), length(theString));
 
 	const unsigned int	theBucketIndex = theHash % m_bucketCount;
 
@@ -253,7 +253,7 @@ XalanDOMStringHashTable::insert(
 			const XalanDOMString&	theString,
 			unsigned int			theBucketIndex)
 {
-	assert(theBucketIndex == hash(c_wstr(theString), length(theString)) % m_bucketCount);
+	assert(theBucketIndex == hashString(c_wstr(theString), length(theString)) % m_bucketCount);
 	assert(theBucketIndex < m_bucketCount);
 
 	BucketType&	theBucket = m_buckets[theBucketIndex];
