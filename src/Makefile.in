@@ -277,7 +277,6 @@ endif
 
 ifeq (${BITSTOBUILD}, 64)
 	MAKE_SHARED += -X64
-	LINK += -X64
 	CC2 += -q64
 	CC4 += -q64
 endif
