@@ -371,7 +371,7 @@ OutputString(
 {
     CharVectorType  theVector(XalanMemMgrs::getDefaultXercesMemMgr());
 
-    TranscodeToLocalCodePage(theString, theVector, true);
+    TranscodeToLocalCodePage(theString, theVector);
 
 	OutputString(theStream, theVector);
 }
