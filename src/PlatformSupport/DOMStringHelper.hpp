@@ -118,7 +118,7 @@ StaticStringToDOMString(const XalanDOMChar*		theString)
 
 #else
 
-#define XALAN_STATIC_UCODE_STRING(str) TranscodeFromLocalCodePage(str)
+#define XALAN_STATIC_UCODE_STRING(str) XALAN_CPP_NAMESPACE_QUALIFIER TranscodeFromLocalCodePage(str)
 
 /**
  * Determines if a range in an array contains only whitespace
