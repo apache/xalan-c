@@ -68,6 +68,7 @@
 
 
 #include <XalanDOM/XalanElement.hpp>
+#include <XalanDOM/XalanNodeList.hpp>
 
 
 
@@ -76,7 +77,6 @@
 
 
 #include <XercesParserLiaison/XercesNamedNodeMapWrapper.hpp>
-#include <XercesParserLiaison/XercesNodeListWrapper.hpp>
 #include <XercesParserLiaison/XercesWrapperTypes.hpp>
 
 
@@ -89,7 +89,7 @@ class XercesWrapperNavigator;
 
 
 
-class XALAN_XERCESPARSERLIAISON_EXPORT XercesElementWrapper : public XalanElement
+class XALAN_XERCESPARSERLIAISON_EXPORT XercesElementWrapper : public XalanElement, private XalanNodeList
 {
 public:
 
@@ -735,6 +735,14 @@ public:
 
 private:
 
+	// Implementation of XalanNodeList for children.
+	virtual XalanNode*
+	item(unsigned int	index) const;
+
+	virtual unsigned int
+	getLength() const;
+
+
 	// Not implemented...
 	XercesElementWrapper(const XercesElementWrapper&	theSource);
 
@@ -748,8 +756,6 @@ private:
 	const DOMElementType* const		m_xercesNode;
 
 	const XercesWrapperNavigator&	m_navigator;
-
-	XercesNodeListWrapper			m_children;
 
 	XercesNamedNodeMapWrapper		m_attributes;
 };

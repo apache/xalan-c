@@ -59,6 +59,7 @@
 
 
 #include <xercesc/dom/DOMElement.hpp>
+#include <xercesc/dom/DOMNodeList.hpp>
 
 
 
@@ -87,8 +88,6 @@ XercesElementWrapper::XercesElementWrapper(
 	XalanElement(),
 	m_xercesNode(theXercesElement),
 	m_navigator(theNavigator),
-	m_children(theXercesElement->getChildNodes(),
-			   theNavigator),
 	m_attributes(theXercesElement->getAttributes(),
 				 theNavigator)
 {
@@ -138,7 +137,7 @@ XercesElementWrapper::getParentNode() const
 const XalanNodeList*
 XercesElementWrapper::getChildNodes() const
 {
-	return &m_children;
+	return this;
 }
 
 
@@ -476,6 +475,42 @@ XercesElementWrapper::getElementsByTagNameNS(
 	throw XercesDOMWrapperException(XercesDOMWrapperException::NOT_SUPPORTED_ERR);
 
 	return 0;
+}
+
+
+
+XalanNode*
+XercesElementWrapper::item(unsigned int		index) const
+{
+	assert(index < getLength());
+
+	if (m_navigator.getOwnerDocument()->getMappingMode() == true)
+	{
+		assert(m_xercesNode->getChildNodes()->item(index));
+
+		return m_navigator.mapNode(m_xercesNode->getChildNodes()->item(index));
+	}
+	else
+	{
+		XalanNode*	child = getFirstChild();
+		assert(child != 0);
+
+		for(unsigned int i = 0; i < index; ++i)
+		{
+			child = child->getNextSibling();
+			assert(child != 0);
+		}
+
+		return child;
+	}
+}
+
+
+
+unsigned int
+XercesElementWrapper::getLength() const
+{
+	return m_xercesNode->getChildNodes()->getLength();
 }
 
 

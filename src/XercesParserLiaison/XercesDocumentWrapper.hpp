@@ -494,6 +494,12 @@ public:
 			const XalanDOMChar*			theString,
 			XalanDOMString::size_type	theLength /* = XalanDOMString::npos */) const;
 
+	bool
+	getMappingMode() const
+	{
+		return m_mappingMode;
+	}
+
 private:
 
 	// Destruction API...
