@@ -220,6 +220,24 @@ public:
 		::clear(m_localpart);
 	}
 
+	XalanQNameByValue&
+	operator=(const XalanQNameByValue&	theRHS)
+	{
+		m_namespace = theRHS.m_namespace;
+		m_localpart = theRHS.m_localpart;
+
+		return *this;
+	}
+
+	XalanQNameByValue&
+	operator=(const XalanQName&		theRHS)
+	{
+		m_namespace = theRHS.getNamespace();
+		m_localpart = theRHS.getLocalPart();
+
+		return *this;
+	}
+
 private:
 
 	void
