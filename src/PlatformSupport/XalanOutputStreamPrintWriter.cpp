@@ -149,12 +149,7 @@ XalanOutputStreamPrintWriter::write(
 	}
 	else
 	{
-		const long	theStopIndex = theOffset + theLength;
-
-		for (long i = theOffset; i < theStopIndex; i++)
-		{
-			m_OutputStream.write(s[i]);
-		}
+		m_OutputStream.write(s + theOffset, theLength);
 	}
 }
 
@@ -181,12 +176,7 @@ XalanOutputStreamPrintWriter::write(
 	}
 	else
 	{
-		const long	theStopIndex = theOffset + theLength;
-
-		for (long i = theOffset; i < theStopIndex; i++)
-		{
-			m_OutputStream.write(s[i]);
-		}
+		m_OutputStream.write(s + theOffset, theLength);
 	}
 }
 
