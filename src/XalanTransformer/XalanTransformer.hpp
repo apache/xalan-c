@@ -81,6 +81,7 @@ class EntityResolver;
 class ErrorHandler;
 class Function;
 class StylesheetExecutionContextDefault;
+class TraceListener;
 class XSLTInit;
 class XalanDocumentBuilder;
 class XalanCompiledStylesheet;
@@ -140,7 +141,7 @@ public:
 	 * and write the transformation output to the target. 
 	 *
 	 * @param theParsedXML			the parsed input source
-	 * @param theCompiledStylesheet pointer to a compiled stylesheet
+	 * @param theCompiledStylesheet pointer to a compiled stylesheet.  Must not be null.
 	 * @param theResultTarget		output source 
 	 * @return	0 for success
 	 */
@@ -215,7 +216,7 @@ public:
 	 * node. 
 	 *
 	 * @param theInputSource		input source
-	 * @param theCompiledStylesheet pointer to a compiled stylesheet
+	 * @param theCompiledStylesheet pointer to a compiled stylesheet.  Must not be null.
 	 * @param theResultTarget		output source 
 	 * @return	0 for success
 	 */
@@ -237,7 +238,7 @@ public:
 	 * for more details.
 	 * 
 	 * @param theParsedSource		Parsed source instance
-	 * @param theCompiledStylesheet pointer to a compiled stylesheet
+	 * @param theCompiledStylesheet pointer to a compiled stylesheet.  Must not be null.
 	 * @param theOutputHandle		void pointer passed through to callback.
 	 * @param theOutputHandler		a user defined callback function.
 	 * @param theFlushHandler		An optional user-defined callback function.
@@ -276,7 +277,7 @@ public:
 			XalanFlushHandlerType		theFlushHandler = 0);
 
 	/**
-	 * Creates a compeled stylesheet.  The input source can be 
+	 * Creates a compiled stylesheet.  The input source can be 
 	 * a file name, a stream or a root node.   The XalanTransformer
 	 * instance owns the XalanCompiledStylesheet instance and will
 	 * delete it when the XalanTransformer instance goes out of scope,
@@ -312,7 +313,7 @@ public:
 	 *
 	 * @param theInputSource input source
 	 * @param theParsedSource a reference to a pointer to a XalanParsedSource.
-	 * @param useXercesDOM input use default or xerces dom source tree
+	 * @param useXercesDOM input use default or xerces DOM source tree
 	 * @return 0 for success 
 	 */
 	int
@@ -414,7 +415,7 @@ public:
 
 	/**
 	 * Set a top-level stylesheet parameter.  This value can be evaluated via
-	 * xsl:param-variable.
+	 * xsl:param-variable.  These values are cleared after a call to transform().
 	 *
 	 * @param key name of the param
 	 * @param expression expression that will be evaluated
@@ -423,6 +424,37 @@ public:
 	setStylesheetParam(
 			const char*		key,
 			const char*		expression);
+
+	/**
+	 * Add a TraceListener instance.  TraceListeners instances are preserved
+	 * between calls to transform(), so they will be called until they are
+	 * removed.
+	 *
+	 * @param theTraceListener The instance to add.
+	 */
+	void
+	addTraceListener(TraceListener*		theTraceListener)
+	{
+		m_traceListeners.push_back(theTraceListener);
+	}
+
+	/**
+	 * Remove a TraceListener instance
+	 *
+	 * @param theTraceListener The instance to remove.
+	 * @return true if the instance was removed, false if not.
+	 */
+	bool
+	removeTraceListener(TraceListener*	theTraceListener);
+
+	/**
+	 * Remove all TraceListener instances.
+	 */
+	void
+	removeTraceListeners()
+	{
+		m_traceListeners.clear();
+	}
 
 	/**
 	 * Set a flag to indicate whether or not the source file(s) for the
@@ -528,6 +560,7 @@ public:
 	typedef vector<ParamPairType>						ParamPairVectorType;
 	typedef pair<XalanQNameByValue, Function*>			FunctionPairType;
 	typedef vector<FunctionPairType>					FunctionParamPairVectorType;
+	typedef vector<TraceListener*>						TraceListenerVectorType;
 #else
 	typedef std::vector<const XalanCompiledStylesheet*> CompiledStylesheetPtrVectorType;
 	typedef std::vector<const XalanParsedSource*>		ParsedSourcePtrVectorType;
@@ -535,6 +568,7 @@ public:
 	typedef std::vector<ParamPairType>					ParamPairVectorType;
 	typedef std::pair<XalanQNameByValue, Function*>		FunctionPairType;
 	typedef std::vector<FunctionPairType>				FunctionParamPairVectorType;
+	typedef std::vector<TraceListener*>					TraceListenerVectorType;
 #endif
 
 	class EnsureDestroyParsedSource
@@ -637,6 +671,8 @@ private:
 	ParamPairVectorType 					m_paramPairs;
 
 	FunctionParamPairVectorType 			m_functionPairs;
+
+	TraceListenerVectorType					m_traceListeners;
 
 	CharVectorType							m_errorMessage;
 

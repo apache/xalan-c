@@ -129,6 +129,7 @@ XalanTransformer::XalanTransformer():
 	m_parsedSources(),
 	m_paramPairs(),
 	m_functionPairs(),
+	m_traceListeners(),
 	m_errorMessage(1, '\0'),
 	m_useValidation(false),
 	m_entityResolver(0),
@@ -162,8 +163,6 @@ XalanTransformer::~XalanTransformer()
 	{			
 		delete m_functionPairs[i].second;
 	}
-
-	m_functionPairs.clear();
 
 	delete m_stylesheetExecutionContext;
 }
@@ -245,16 +244,34 @@ XalanTransformer::terminate()
 
 
 
+static void
+addTraceListeners(
+				  const XalanTransformer::TraceListenerVectorType&	theTraceListeners,
+				  XSLTEngineImpl&									theEngine)
+{
+	if (theTraceListeners.size() != 0)
+	{
+		typedef XalanTransformer::TraceListenerVectorType	TraceListenerVectorType;
+
+		TraceListenerVectorType::const_iterator 	theEnd = theTraceListeners.end();
+
+		for(TraceListenerVectorType::const_iterator i = theTraceListeners.begin(); i != theEnd; ++i)
+		{
+			theEngine.addTraceListener(*i);
+		}
+
+		theEngine.setTraceSelects(true);
+	}
+}
+
+
+
 int
 XalanTransformer::transform(
 	const XalanParsedSource&	theParsedXML, 
 	const XSLTInputSource&		theStylesheetSource,
 	const XSLTResultTarget& 	theResultTarget)
 {
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::for_each;
-#endif
-
 	int 	theResult = 0;
 
 	// Clear the error message.
@@ -272,9 +289,9 @@ XalanTransformer::transform(
 		XalanAutoPtr<XalanParsedSourceHelper>	theHelper(theParsedXML.createHelper());
 		assert(theHelper.get() != 0);
 
-		DOMSupport& 					theDOMSupport = theHelper->getDOMSupport();
+		DOMSupport& 		theDOMSupport = theHelper->getDOMSupport();
 
-		XMLParserLiaison&				theParserLiaison = theHelper->getParserLiaison();
+		XMLParserLiaison&	theParserLiaison = theHelper->getParserLiaison();
 
 		theParserLiaison.setUseValidation(m_useValidation);
 
@@ -292,6 +309,8 @@ XalanTransformer::transform(
 				theDOMSupport,
 				theXObjectFactory,
 				theXPathFactory);
+
+		addTraceListeners(m_traceListeners, theProcessor);
 
 		theXSLTProcessorEnvSupport.setProcessor(&theProcessor);
 
@@ -433,9 +452,7 @@ XalanTransformer::transform(
 			const XalanCompiledStylesheet*	theCompiledStylesheet,
 			const XSLTResultTarget& 		theResultTarget)
 {
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::for_each;
-#endif
+	assert(theCompiledStylesheet != 0);
 
 	int 	theResult = 0;
 
@@ -454,9 +471,9 @@ XalanTransformer::transform(
 		XalanAutoPtr<XalanParsedSourceHelper>	theHelper(theParsedXML.createHelper());
 		assert(theHelper.get() != 0);
 
-		DOMSupport& 					theDOMSupport = theHelper->getDOMSupport();
+		DOMSupport& 		theDOMSupport = theHelper->getDOMSupport();
 
-		XMLParserLiaison&				theParserLiaison = theHelper->getParserLiaison();
+		XMLParserLiaison&	theParserLiaison = theHelper->getParserLiaison();
 
 		theParserLiaison.setUseValidation(m_useValidation);
 
@@ -474,6 +491,8 @@ XalanTransformer::transform(
 				theDOMSupport,
 				theXObjectFactory,
 				theXPathFactory);
+
+		addTraceListeners(m_traceListeners, theProcessor);
 
 		theXSLTProcessorEnvSupport.setProcessor(&theProcessor);
 
@@ -1052,6 +1071,33 @@ XalanTransformer::setStylesheetParam(
 			const char*		expression)
 {
 	setStylesheetParam(XalanDOMString(key), XalanDOMString(expression));
+}
+
+
+
+bool
+XalanTransformer::removeTraceListener(TraceListener*	theTraceListener)
+{
+#if !defined(XALAN_NO_NAMESPACES)
+	using std::find;
+#endif
+
+	const TraceListenerVectorType::iterator 	i =
+		find(
+			m_traceListeners.begin(),
+			m_traceListeners.end(),
+			theTraceListener);
+
+	if (i == m_traceListeners.end())
+	{
+		return false;
+	}
+	else
+	{
+		m_traceListeners.erase(i);
+
+		return true;
+	}
 }
 
 
