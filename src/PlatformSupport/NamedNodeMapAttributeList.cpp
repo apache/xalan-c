@@ -110,19 +110,10 @@ NamedNodeMapAttributeList::getLength() const
 const XMLCh*
 NamedNodeMapAttributeList::getName(const unsigned int index) const
 {
-	// We have to return a pointer to a something, but the Xerces
-	// DOM classes return strings by value, so we have to get
-	// the value from the node and store the data somewhere
-	// safe, so we have a vector to hold everything.
-	const XalanAttr* const	theAttribute =
-#if defined(XALAN_OLD_STYLE_CASTS)
-		(const XalanAttr*)m_nodeMap.item(m_lastIndex - index);
-#else
-		static_cast<const XalanAttr*>(m_nodeMap.item(m_lastIndex - index));
-#endif
+	const XalanNode* const	theAttribute = m_nodeMap.item(m_lastIndex - index);
 	assert(theAttribute != 0);
 
-	return c_wstr(theAttribute->getName());
+	return c_wstr(theAttribute->getNodeName());
 }
 
 
@@ -140,15 +131,10 @@ NamedNodeMapAttributeList::getType(const unsigned int /* index */) const
 const XMLCh*
 NamedNodeMapAttributeList::getValue(const unsigned int index) const
 {
-	const XalanAttr* const	theAttribute =
-#if defined(XALAN_OLD_STYLE_CASTS)
-		(const XalanAttr*)m_nodeMap.item(m_lastIndex - index);
-#else
-		static_cast<const XalanAttr*>(m_nodeMap.item(m_lastIndex - index));
-#endif
+	const XalanNode* const	theAttribute = m_nodeMap.item(m_lastIndex - index);
 	assert(theAttribute != 0);
 
-	return c_wstr(theAttribute->getValue());
+	return c_wstr(theAttribute->getNodeValue());
 }
 
 
@@ -166,10 +152,6 @@ NamedNodeMapAttributeList::getType(const XMLCh* const /* name */) const
 const XMLCh*
 NamedNodeMapAttributeList::getValue(const XMLCh* const name) const
 {
-	// We have to return a pointer to a something, but the Xerces
-	// DOM classes return strings by value, so we have to get
-	// the value from the node and store the XalanDOMString somewhere
-	// safe, so we have a vector of XalanDOMStrings to hold everything.
 	const XalanNode*	theNode = m_nodeMap.getNamedItem(XalanDOMString(name));
 
 	if (theNode == 0)
@@ -178,14 +160,7 @@ NamedNodeMapAttributeList::getValue(const XMLCh* const name) const
 	}
 	else
 	{
-		const XalanAttr* const	theAttribute =
-#if defined(XALAN_OLD_STYLE_CASTS)
-			(const XalanAttr*)theNode;
-#else
-			static_cast<const XalanAttr*>(theNode);
-#endif
-
-		return c_wstr(theAttribute->getValue());
+		return c_wstr(theNode->getNodeValue());
 	}
 }
 
