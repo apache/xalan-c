@@ -855,13 +855,13 @@ CopyWideStringToVector(
 			const XalanDOMChar*		theString,
 			vector<char>&			theVector)
 {
-	const int	theLength = length(theString);
+	const unsigned int	theLength = length(theString);
 
 	if (theLength != 0)
 	{
 		theVector.reserve(theLength + 1);
 
-		for(int	i = 0; i < theLength; i++)
+		for(unsigned int	i = 0; i < theLength; i++)
 		{
 #if defined(XALAN_OLD_STYLE_CASTS)
 			// Assert that the truncation will not affect the resulting character.
