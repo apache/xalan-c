@@ -95,8 +95,9 @@
 
   <!-- pack apidocs for transfer to website -->
  <target name="pack.apidocs">
-    <tar tarfile="c/build/docs/apidocs/xalan-c-apidocs.tar" basedir="c/build/docs/apidocs" includes="*"/>
-    <gzip src="c/build/docs/apidocs/xalan-c-apidocs.tar" zipfile="c/build/docs/apidocs/xalan-c-apidocs.tar.gz"/>
+    <!--tar tarfile="./build/xalan-c-apidocs.tar" basedir="./build/docs/apidocs" includes="*"/>
+    <gzip src="./build/xalan-c-apidocs.tar" zipfile="./build/xalan-c-apidocs.tar.gz"/-->
+    <zip zipfile="./build/xalan-c-apidocs.zip" basedir="./build/docs/apidocs" includes="*"/>
   </target>
   
 </project>
