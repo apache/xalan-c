@@ -69,9 +69,11 @@
 
 // XERCES HEADERS...
 //	Are included by HarnessInit.hpp
+#include <parsers/DOMParser.hpp>
 
 // XALAN HEADERS...
 //	Are included by FileUtility.hpp
+#include <XalanTransformer/XercesDOMWrapperParsedSource.hpp>
 
 // HARNESS HEADERS...
 #include <XMLFileReporter.hpp>
@@ -321,7 +323,8 @@ void testCase3(XalanTransformer &xalan, XMLFileReporter &logFile,
 	firstChild = theNode->getFirstChild();
 	value = firstChild->getNodeValue();
 
-	futil.checkAPIResults(value, XalanDOMString(" This is THE Smoke Test "), "XSLTInputSource.getNode()", logFile);
+	futil.checkAPIResults(value, XalanDOMString(" This is THE Smoke Test "), "XSLTInputSource.getNode()", logFile,
+							theOutputFile, theGoldFile);
 
 	// Create the XML Input Source
 	const XSLTInputSource	xmlStringSource("\\xml-xalan\\test\\tests\\capi\\smoke\\smoke01.xml");
@@ -369,6 +372,40 @@ void testCase4(XalanTransformer &xalan, XMLFileReporter& logFile)
 	futil.checkResults(theOutputFile, theGoldFile, logFile);
 }
 
+// TestCase5 will use the following API.  Default constructor of XSLTInputSource will take a string.
+//		- XSLTInputSource(const char*)
+//		- XSLTInputSource(const char*)
+void testCase5(XalanTransformer &xalan, XMLFileReporter& logFile)
+{
+
+	const XalanDOMString theOutputFile("\\xml-xalan\\test\\tests\\ISOURCE-results\\smoke\\TestCase5.out");
+	const XalanDOMString theGoldFile("\\xml-xalan\\test\\tests\\capi-gold\\smoke\\smoke01.out");
+
+	futil.data.testOrFile = "TestCase5";
+
+	//const char* const theURI = "Data/trans_input1.xml";
+	const char* const theURI = "/xml-xalan/test/tests/capi/smoke/smoke01.xml";
+		 
+	DOMParser  theParser;
+	theParser.setToCreateXMLDeclTypeNode(false);
+	theParser.parse(theURI);
+	const DOM_Document theDOM = theParser.getDocument();
+
+	XercesDOMSupport theDOMSupport;
+	XercesParserLiaison theParserLiaison(theDOMSupport);
+	//	 theDOMSupport.setParserLiaison(&theParserLiaison);
+
+	// This is the new class...
+	const XercesDOMWrapperParsedSource loXMLDocWrapper(theDOM,theParserLiaison, theDOMSupport, XalanDOMString(theURI));
+	const XSLTInputSource loInStyle("/xml-xalan/test/tests/capi/smoke/smoke01.xsl");
+	const XSLTResultTarget loOut(theOutputFile);
+
+	XalanTransformer loXalanTransformer;
+	loXalanTransformer.transform(loXMLDocWrapper,	loInStyle, loOut);
+
+	futil.checkResults(theOutputFile, theGoldFile, logFile);
+}
+
 int
 main(int			argc,
 		const char*	argv [])
@@ -391,6 +428,7 @@ main(int			argc,
 
 		// Defined basic constants for file manipulation
 		const XalanDOMString drive(futil.getDrive());
+		futil.data.testBase = baseDir;
 		
 		const XalanDOMString  resultFilePrefix("isource");
 		const XalanDOMString  resultsFile(drive + outputRoot + resultFilePrefix + UniqRunid + XMLSuffix);
@@ -440,6 +478,7 @@ main(int			argc,
 					testCase2(xalan, logFile, theOutputDir, theGoldFile);
 					testCase3(xalan, logFile, theOutputDir, theGoldFile);
 					testCase4(xalan, logFile);
+					testCase5(xalan, logFile);
 				}
 
 				logFile.logTestCaseClose("Done", "Pass");	
@@ -449,7 +488,7 @@ main(int			argc,
 			logFile.logTestFileClose("ISource Testing: ", "Done");
 			logFile.close();
 
-			futil.analyzeResults(xalan, baseDir, resultsFile);
+			futil.analyzeResults(xalan, resultsFile);
 			XalanTransformer::terminate();
 		}
 		catch(...)
