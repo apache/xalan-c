@@ -211,7 +211,7 @@ public:
     typedef XalanList<Entry>                                EntryListType;
 
     typedef XalanVector<typename EntryListType::iterator>	BucketType;
-    typedef XalanVector<BucketType>                         BucketTableType;
+    typedef XalanVector<BucketType, ConstructWithMemoryManagerTraits<BucketType> >      BucketTableType;
 
     typedef XalanMapIterator<
                 XalanMapIteratorTraits<value_type>, 
