@@ -30,14 +30,18 @@
 
 
 #if defined(WIN32)
-//This is here for the threads.
-#include <process.h>
 
+#include <csignal>
+#include <process.h>
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
+
 #elif defined(XALAN_POSIX2_AVAILABLE)
+
+#include <csignal>
 #include <pthread.h>
 #include <unistd.h>
+
 #else
 #error Unsupported platform!
 #endif
@@ -58,7 +62,7 @@
 #endif
 
 
-	
+
 class SynchronizedCounter
 {
 public:
@@ -73,14 +77,14 @@ public:
 	void
 	decrement();
 
-	unsigned long
+	long
 	getCounter() const;
 
 private:
 
 	mutable XMLMutex	m_mutex;
 
-	unsigned long		m_counter;
+	long				m_counter;
 };
 
 
@@ -125,7 +129,7 @@ SynchronizedCounter::decrement()
 
 
 
-unsigned long
+long
 SynchronizedCounter::getCounter() const
 {
 	return m_counter;
@@ -140,13 +144,16 @@ ThreadInfo
 			unsigned int			theThreadNumber = 0,
 			SynchronizedCounter*	theCounter = 0) :
 		m_threadNumber(theThreadNumber),
-		m_counter(theCounter)
+		m_counter(theCounter),
+		m_done(false)
 	{
 	}
 
 	unsigned int			m_threadNumber;
 
 	SynchronizedCounter*	m_counter;
+
+	bool					m_done;
 };
 
 
@@ -154,6 +161,34 @@ ThreadInfo
 // Used to hold compiled stylesheet and pre-parsed source...
 const XalanCompiledStylesheet*	glbCompiledStylesheet = 0;
 const XalanParsedSource*		glbParsedSource = 0;
+bool							fContinue = true;
+
+
+#if defined(WIN32)
+static BOOL __stdcall
+signalHandler(DWORD		theSignalType)
+{
+	if (theSignalType == CTRL_C_EVENT ||
+		theSignalType == CTRL_BREAK_EVENT)
+	{
+		fContinue = false;
+
+		return TRUE;
+	}
+	else
+	{
+		return FALSE;
+	}
+}
+#elif defined(XALAN_POSIX2_AVAILABLE)
+static void
+signalHandler(int)
+{
+	fContinue = false;
+}
+#else
+#error Unsupported platform!
+#endif
 
 
 
@@ -177,9 +212,9 @@ theThreadRoutine(void*		param)
 // process() method.
 
 #if defined(XALAN_OLD_STYLE_CASTS)
-	const ThreadInfo* const		theInfo = (const ThreadInfo*)param;
+	ThreadInfo* const		theInfo = (ThreadInfo*)param;
 #else
-	const ThreadInfo* const		theInfo = reinterpret_cast<const ThreadInfo*>(param);
+	ThreadInfo* const		theInfo = reinterpret_cast<ThreadInfo*>(param);
 #endif
 
 	assert(theInfo != 0);
@@ -211,6 +246,8 @@ theThreadRoutine(void*		param)
 	// Decrement the counter because we're done...
 	theInfo->m_counter->decrement();
 
+	theInfo->m_done = true;
+
 #if defined(XALAN_POSIX2_AVAILABLE)
 	return 0;
 #endif
@@ -232,9 +269,141 @@ doSleep(unsigned int	theMilliseconds)
 
 
 
-void
-doThreads(long	theThreadCount)
+bool
+createThread(ThreadInfo&	theThreadInfo)
 {
+	theThreadInfo.m_done = false;
+
+#if defined(WIN32)
+
+	const unsigned long		theThreadID =
+			_beginthread(theThreadRoutine, 4096, reinterpret_cast<LPVOID>(&theThreadInfo));
+
+	if (theThreadID == unsigned(-1))
+	{
+		theThreadInfo.m_done = true;
+
+		return false;
+	}
+	else
+	{
+		return true;
+	}
+
+#elif defined(XALAN_POSIX2_AVAILABLE)
+
+	pthread_t	theThread;
+
+	const int	theResult = pthread_create(&theThread, 0, theThreadRoutine, (void*)&theThreadInfo);
+
+	if (theResult != 0)
+	{
+		theThreadInfo.m_done = true;
+
+		return false;
+	}
+	else
+	{
+#if defined(OS390)
+		pthread_detach(&theThread);
+#else
+		pthread_detach(theThread);
+#endif
+
+		return true;
+	}
+#else
+#error Unsupported platform!
+#endif
+}
+
+
+
+void
+doCountedThreads(
+			const SynchronizedCounter&	theCounter,
+			clock_t&					theClock)
+{
+	cout << "Waiting for active threads to finish..." << endl;
+
+	unsigned int	theCheckCount = 0;
+
+	do
+	{
+		doSleep(2000);
+
+		// Check a couple of times, just in case, since
+		// getCounter() is not synchronized...
+		if (theCounter.getCounter() == 0)
+		{
+			if (theCheckCount == 0)
+			{
+				theClock = clock();
+			}
+
+			++theCheckCount;
+		}
+	}
+	while(theCheckCount < 2);
+}
+
+
+
+void
+doContinuousThreads(
+			const SynchronizedCounter&	theCounter,
+			ThreadInfo					theThreadInfo[],
+			long						theThreadCount,
+			clock_t&					theClock)
+{
+	while(fContinue == true)
+	{
+//		doSleep(100);
+
+		if (theCounter.getCounter() < theThreadCount)
+		{
+			for (long i = 0; i < theThreadCount && fContinue == true; ++i)
+			{
+				if (theThreadInfo[i].m_done == true)
+				{
+					if (createThread(theThreadInfo[i]) == false)
+					{
+						cerr << endl << "Unable to create thread!" << endl;
+					}
+					else
+					{
+						cout << "Started thread number " << i << "." << endl;
+					}
+				}
+			}
+		}
+	}
+
+	doCountedThreads(theCounter, theClock);
+}
+
+
+
+void
+doThreads(
+			long	theThreadCount,
+			bool	fContinuous)
+{
+	if (fContinuous == true)
+	{
+#if defined(WIN32)
+		SetConsoleCtrlHandler(
+				signalHandler,
+				TRUE);
+#elif defined(XALAN_POSIX2_AVAILABLE)
+		signal(SIGINT, signalHandler);
+#else
+#error Unsupported platform!
+#endif
+
+		cout << endl << "Running in continuous mode." << endl;
+	}
+
 	cout << endl << "Starting " << theThreadCount << " threads." << endl;
 
 	XalanArrayAutoPtr<ThreadInfo>	theThreadInfo(new ThreadInfo[theThreadCount]);
@@ -247,42 +416,19 @@ doThreads(long	theThreadCount)
 
 		long	i = 0;
 
-		while (i < theThreadCount)
+		while (i < theThreadCount && fContinue == true)
 		{
 			theThreadInfo[i].m_threadNumber = i;
 			theThreadInfo[i].m_counter = &theCounter;
 
-#if defined(WIN32)
-
-			const unsigned long		theThreadID =
-					_beginthread(theThreadRoutine, 4096, reinterpret_cast<LPVOID>(&theThreadInfo[i]));
-
-			if (theThreadID == unsigned(-1))
+			if (createThread(theThreadInfo[i]) == false)
 			{
-				cerr << endl << "Unable to create thread number " << i + 1 << "." << endl;
-			}
-
-#elif defined(XALAN_POSIX2_AVAILABLE)
-
-			pthread_t	theThread;
-
-			const int	theResult = pthread_create(&theThread, 0, theThreadRoutine, (void*)&theThreadInfo[i]);
-
-			if (theResult != 0)
-			{
-				cerr << endl << "Unable to create thread number " << i + 1 << "." << endl;
+				cerr << endl << "Unable to create thread!" << endl;
 			}
 			else
 			{
-#if defined(OS390)
-				pthread_detach(&theThread);
-#else
-				pthread_detach(theThread);
-#endif
+				cout << "Started thread number " << i << "." << endl;
 			}
-#else
-#error Unsupported platform!
-#endif
 
 			++i;
 		}
@@ -295,25 +441,18 @@ doThreads(long	theThreadCount)
 		}
 		else
 		{
-			unsigned int	theCheckCount = 0;
-
-			do
+			if (fContinuous == true)
 			{
-				doSleep(2000);
-
-				// Check a couple of times, just in case, since
-				// getCounter() is not synchronized...
-				if (theCounter.getCounter() == 0)
-				{
-					if (theCheckCount == 0)
-					{
-						theClock = clock();
-					}
-
-					++theCheckCount;
-				}
+				doContinuousThreads(
+					theCounter,
+					theThreadInfo.get(),
+					theThreadCount,
+					theClock);
 			}
-			while(theCheckCount < 2);
+			else
+			{
+				doCountedThreads(theCounter, theClock);
+			}
 		}
 
 		cout << endl << "Clock after threads: " << theClock << endl;
@@ -325,6 +464,17 @@ doThreads(long	theThreadCount)
 			<< endl;
 	}
 }
+
+
+
+void
+Usage()
+{
+	cerr << "Usage: ThreadTest [-c] [count]"
+		 << endl
+		 << endl;
+}
+
 
 
 int
@@ -339,63 +489,96 @@ main(
 	_CrtSetReportFile(_CRT_WARN, _CRTDBG_FILE_STDERR);
 #endif
 
-	if (argc > 2)
+	if (argc > 3)
 	{
-		cerr << "Usage: ThreadTest"
-			 << endl
-			 << endl;
+		Usage();
 	}
 	else
 	{
-		int		threadCount = 60;
+		bool	fContinuous = false;
+		int		threadCount = 0;
 
-		if (argc == 2)
+		if (argc == 1)
 		{
-			threadCount = atoi(argv[1]);
+			threadCount = 60;
 		}
-
-		try
+		else
 		{
-			// Initialize Xerces...
-			XMLPlatformUtils::Initialize();
-
-			// Initialize Xalan...
-			XalanTransformer::initialize();
-
+			if (strcmp(argv[1], "-c") == 0)
 			{
-				// Create a XalanTransformer.  We won't actually use this to transform --
-				// it's just acting likely a factory for the compiled stylesheet and
-				// pre-parsed source.
-				XalanTransformer	theXalanTransformer;
-
-				const char* const	theXSLFileName = "birds.xsl";
-
-				theXalanTransformer.compileStylesheet(theXSLFileName, glbCompiledStylesheet);
-				assert(glbCompiledStylesheet != 0);
-
-				// Compile the XML source document as well. All threads will use
-				// this binary representation of the source tree.
-				const char* const	theXMLFileName = "birds.xml";
-
-				theXalanTransformer.parseSource(theXMLFileName, glbParsedSource);
-				assert(glbParsedSource != 0);
-
-				doThreads(threadCount);
+				fContinuous = true;
 			}
 
-			// Terminate Xalan...
-			XalanTransformer::terminate();
-
-			// Terminate Xerces...
-			XMLPlatformUtils::Terminate();
+			if (argc == 2)
+			{
+				if (fContinuous == true)
+				{
+					threadCount = 60;
+				}
+				else
+				{
+					threadCount = atoi(argv[1]);
+				}
+			}
+			else if (argc == 3)
+			{
+				if (fContinuous == true)
+				{
+					threadCount = atoi(argv[2]);
+				}
+				else
+				{
+					Usage();
+				}
+			}
 		}
-		catch(...)
+
+		if (threadCount > 0)
 		{
-			cerr << "Exception caught!!!"
-				 << endl
-				 << endl;
-		}
+			try
+			{
+				// Initialize Xerces...
+				XMLPlatformUtils::Initialize();
 
+				// Initialize Xalan...
+				XalanTransformer::initialize();
+
+				{
+					// Create a XalanTransformer.  We won't actually use this to transform --
+					// it's just acting as a factory for the compiled stylesheet and
+					// pre-parsed source document.  Note that we can't let the individual
+					// threads use this as a factory without serializing access to it, but
+					// we can share the stylesheet and source document.
+					XalanTransformer	theXalanTransformer;
+
+					const char* const	theXSLFileName = "birds.xsl";
+
+					theXalanTransformer.compileStylesheet(theXSLFileName, glbCompiledStylesheet);
+					assert(glbCompiledStylesheet != 0);
+
+					// Compile the XML source document as well. All threads will use
+					// this binary representation of the source tree.
+					const char* const	theXMLFileName = "birds.xml";
+
+					theXalanTransformer.parseSource(theXMLFileName, glbParsedSource);
+					assert(glbParsedSource != 0);
+
+					doThreads(threadCount, fContinuous);
+				}
+
+				// Terminate Xalan...
+				XalanTransformer::terminate();
+
+				// Terminate Xerces...
+				XMLPlatformUtils::Terminate();
+			}
+			catch(...)
+			{
+				cerr << "Exception caught!!!"
+					 << endl
+					 << endl;
+			}
+		}
 	} 
 
 	return 0;
