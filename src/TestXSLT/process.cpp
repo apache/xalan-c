@@ -347,6 +347,22 @@ warnPreviousOutputMethod(int	outputMethod)
 
 
 
+#if defined(OS390)
+#undef stricmp                                                   
+#include <strings.h>                                             
+                                                                  
+int
+stricmp(
+			const char*		str1,
+			const char*		str2)     
+{
+	return strcasecmp(str1, str2);
+}
+
+#endif
+
+
+
 bool
 getArgs(
 			int				argc,
@@ -1126,8 +1142,6 @@ main(
 	QuantifyStopRecordingData();
 #endif
 
-	XMLPlatformUtils::Initialize();
-
 	int				theResult = 0;
 
 	CmdLineParams	theParams;
@@ -1157,6 +1171,8 @@ main(
 		}
 		else
 		{
+			XMLPlatformUtils::Initialize();
+
 			try
 			{
 				theResult = xsltMain(theParams);
@@ -1291,10 +1307,10 @@ main(
 				}
 			}
 #endif
+			
+			XMLPlatformUtils::Terminate();
 		}
 	}
-
-	XMLPlatformUtils::Terminate();
 
 	return theResult;
 }
