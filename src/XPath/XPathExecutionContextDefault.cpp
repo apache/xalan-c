@@ -80,7 +80,6 @@
 
 #include "FoundIndex.hpp"
 #include "XObjectFactory.hpp"
-#include "ResultTreeFrag.hpp"
 #include "XalanQName.hpp"
 #include "XPathEnvSupport.hpp"
 
@@ -336,16 +335,14 @@ XPathExecutionContextDefault::returnMutableNodeRefList(MutableNodeRefList*	theLi
 ResultTreeFragBase*
 XPathExecutionContextDefault::borrowResultTreeFrag()
 {
-	return new ResultTreeFrag;
+	return 0;
 }
 
 
 
 bool
-XPathExecutionContextDefault::returnResultTreeFrag(ResultTreeFragBase*	theResultTreeFragBase)
+XPathExecutionContextDefault::returnResultTreeFrag(ResultTreeFragBase*	/* theResultTreeFragBase */)
 {
-	delete theResultTreeFragBase;
-
 	return true;
 }
 
