@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2003 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -115,8 +115,6 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 const XalanDOMString			ElemTemplateElement::s_emptyString;
 
-const XalanEmptyNamedNodeMap	ElemTemplateElement::s_fakeAttributes;
-
 const XalanQNameByReference			ElemTemplateElement::s_emptyQName(s_emptyString, s_emptyString);
 
 
@@ -127,7 +125,6 @@ ElemTemplateElement::ElemTemplateElement(
 			int								lineNumber,
 			int								columnNumber,
 			int								xslToken) :
-	XalanElement(),
 	PrefixResolver(),
 	m_stylesheet(stylesheetTree),
 	m_namespacesHandler(
@@ -155,7 +152,6 @@ ElemTemplateElement::ElemTemplateElement(
 			int								lineNumber,
 			int								columnNumber,
 			int								xslToken) :
-	XalanElement(),
 	PrefixResolver(),
 	m_stylesheet(stylesheetTree),
 	m_namespacesHandler(),
@@ -735,267 +731,6 @@ ElemTemplateElement::transformChild(
 
 
 
-const XalanDOMString&
-ElemTemplateElement::getNodeName() const
-{
-	return getElementName();
-}
-
-
-
-const XalanDOMString&
-ElemTemplateElement::getNodeValue() const
-{
-	return s_emptyString;
-}
-
-
-
-ElemTemplateElement::NodeType
-ElemTemplateElement::getNodeType() const
-{
-    return XalanNode::ELEMENT_NODE;
-}
-
-
-
-XalanNode*
-ElemTemplateElement::getParentNode() const
-{
-	return m_parentNode;
-}
-
-
-
-const XalanNodeList*
-ElemTemplateElement::getChildNodes() const
-{
-	throw XalanDOMException(XalanDOMException::NOT_SUPPORTED_ERR);
-
-	return 0;
-}
-
-
-
-XalanNode*
-ElemTemplateElement::getFirstChild() const
-{
-	return m_firstChild;
-}
-
-
-
-XalanNode*
-ElemTemplateElement::getLastChild() const
-{
-	return getLastChildElem();
-}
-
-
-
-XalanNode*
-ElemTemplateElement::getPreviousSibling() const 
-{
-	return m_previousSibling;
-}
-
-
-
-XalanNode*
-ElemTemplateElement::getNextSibling() const 
-{
-	return m_nextSibling;
-}
-
-
-
-const XalanNamedNodeMap*
-ElemTemplateElement::getAttributes() const
-{
-	return &s_fakeAttributes;
-}
-
-
-
-XalanDocument*
-ElemTemplateElement::getOwnerDocument() const
-{
-	return &m_stylesheet;
-}
-
-
-
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-XalanNode*
-#else
-ElemTemplateElement*
-#endif
-ElemTemplateElement::cloneNode(bool		/* deep */) const
-{
-	throw XalanDOMException(XalanDOMException::NOT_SUPPORTED_ERR);
-
-	return 0;
-}
-
-
-
-XalanNode*
-ElemTemplateElement::insertBefore(
-			XalanNode*	/* newChild */,
-			XalanNode*	/* refChild */)
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
-
-	// Dummy return value...
-	return 0;
-}
-
-
-
-XalanNode*
-ElemTemplateElement::replaceChild(
-			XalanNode*	/* newChild */,
-			XalanNode*	/* oldChild */)
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
-
-	// Dummy return value...
-	return 0;
-}
-
-
-
-XalanNode*
-ElemTemplateElement::removeChild(XalanNode*		/* oldChild */)
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
-
-	// Dummy return value...
-	return 0;
-}
-
-
-/** 
- * Throw a template element error.
- * 
- * @param msg Description of the error that occured.
- */
-
-XalanNode*
-ElemTemplateElement::appendChild(XalanNode*		/* oldChild */)
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
-
-	// Dummy return value...
-	return 0;
-}
-
-
-
-bool
-ElemTemplateElement::hasChildNodes() const
-{
-    return 0 != m_firstChild ? true : false;
-}
-
-
-void
-ElemTemplateElement::setNodeValue(const XalanDOMString&		/* nodeValue */)
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
-}
-
-
-
-void
-ElemTemplateElement::normalize()
-{
-}
-
-
-
-bool
-ElemTemplateElement::isSupported(
-			const XalanDOMString&	/* feature */,
-			const XalanDOMString&	/* version */) const
-{
-	return false;
-}
-
-
-
-const XalanDOMString&
-ElemTemplateElement::getNamespaceURI() const
-{
-	return s_emptyString;
-}
-
-
-
-const XalanDOMString&
-ElemTemplateElement::getPrefix() const
-{
-	return s_emptyString;
-}
-
-
-
-const XalanDOMString&
-ElemTemplateElement::getLocalName() const
-{
-	return s_emptyString;
-}
-
-
-
-void
-ElemTemplateElement::setPrefix(const XalanDOMString&	/* prefix */)
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
-}
-
-
-
-bool
-ElemTemplateElement::isIndexed() const
-{
-	return false;
-}
-
-
-
-ElemTemplateElement::IndexType
-ElemTemplateElement::getIndex() const
-{
-	return 0;
-}
-
-
-
-const XalanDOMString&
-ElemTemplateElement::getTagName() const
-{
-	return getElementName();
-}
-
-
-
-const XalanDOMString&
-ElemTemplateElement::getAttribute(const XalanDOMString&		/* name */) const
-{
-	return s_emptyString;
-}
-
-
-
-XalanAttr*
-ElemTemplateElement::getAttributeNode(const XalanDOMString&		/* name */) const
-{
-	return 0;
-}
-
-
-
 void
 ElemTemplateElement::postConstruction(
 			StylesheetConstructionContext&	constructionContext,
@@ -1035,12 +770,12 @@ ElemTemplateElement::postConstruction(
 		// There are opportunities for optimization if there's only one
 		// xsl:text child node.  See childrenToString()...
 		if (theToken == StylesheetConstructionContext::ELEMNAME_TEXT_LITERAL_RESULT &&
-			m_firstChild->getNextSibling() == 0)
+			m_firstChild->getNextSiblingElem() == 0)
 		{
 			m_flags |= eHasSingleTextChild;
 		}
 		else if (theToken == StylesheetConstructionContext::ELEMNAME_CALL_TEMPLATE &&
-				 m_firstChild->getNextSibling() == 0)
+				 m_firstChild->getNextSiblingElem() == 0)
 		{
 			// Just a single xsl:call-template child, so we don't need to
 			// execute it if it has no params -- we can just execute the
@@ -1080,113 +815,6 @@ ElemTemplateElement::namespacesPostConstruction(
 			true,
 			getElementName(),
 			&theParentHandler);
-}
-
-
-
-XalanNodeList*
-ElemTemplateElement::getElementsByTagName(const XalanDOMString&		/* name */) const
-{
-	return 0;
-}
-
-
-
-void
-ElemTemplateElement::setAttribute(
-			const XalanDOMString&	/* name */, 
-			const XalanDOMString&	/* value */)
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
-}
-
-
-
-XalanAttr*
-ElemTemplateElement::setAttributeNode(XalanAttr*	/* newAttr */)
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
-
-	return 0;
-}
-
-
-
-XalanAttr*
-ElemTemplateElement::removeAttributeNode(XalanAttr*	/* oldAttr */)
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
-
-	return 0;
-}
-
-
-
-void
-ElemTemplateElement::removeAttribute(const XalanDOMString&	/* name */)
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
-}
-
-
-
-const XalanDOMString&
-ElemTemplateElement::getAttributeNS(
-			const XalanDOMString&	/* namespaceURI */,
-			const XalanDOMString&	/* localName */) const
-{
-	return s_emptyString;
-}
-
-
-
-void
-ElemTemplateElement::setAttributeNS(
-			const XalanDOMString&	/* namespaceURI */,
-			const XalanDOMString&	/* qualifiedName */,
-			const XalanDOMString&	/* value */)
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
-}
-
-
-
-void
-ElemTemplateElement::removeAttributeNS(
-			const XalanDOMString&	/* namespaceURI */,
-			const XalanDOMString&	/* localName */)
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
-}
-
-
-
-XalanAttr*
-ElemTemplateElement::getAttributeNodeNS(
-			const XalanDOMString&	/* namespaceURI */,
-			const XalanDOMString&	/* localName */) const
-{
-	return 0;
-}
-
-
-
-XalanAttr*
-ElemTemplateElement::setAttributeNodeNS(XalanAttr*	/* newAttr */)
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
-
-	return 0;
-}
-
-
-
-XalanNodeList*
-ElemTemplateElement::getElementsByTagNameNS(
-			const XalanDOMString&	/* namespaceURI */,
-			const XalanDOMString&	/* localName */) const
-{
-	return 0;
 }
 
 

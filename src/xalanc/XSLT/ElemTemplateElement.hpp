@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2003 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -65,8 +65,7 @@
 
 
 #include <xalanc/XalanDOM/XalanDOMString.hpp>
-#include <xalanc/XalanDOM/XalanElement.hpp>
-#include <xalanc/XalanDOM/XalanEmptyNamedNodeMap.hpp>
+#include <xalanc/XalanDOM/XalanNode.hpp>
 
 
 
@@ -107,11 +106,9 @@ class StylesheetExecutionContext;
 
 
 
-class XALAN_XSLT_EXPORT ElemTemplateElement : public XalanElement, public PrefixResolver
+class XALAN_XSLT_EXPORT ElemTemplateElement : public PrefixResolver
 {
 public:
-
-	typedef XalanElement::NodeType	NodeType;
 
 	/**
 	 * Construct a template element instance.
@@ -524,158 +521,6 @@ public:
 	appendChildElem(ElemTemplateElement*	newChild);
 
 
-	// These interfaces are inherited from XalanElement ...
-
-	virtual const XalanDOMString&
-	getNodeName() const;
-
-	virtual const XalanDOMString&
-	getNodeValue() const;
-
-	virtual NodeType
-	getNodeType() const;
-
-	virtual XalanNode*
-	getParentNode() const;
-
-	virtual const XalanNodeList*
-	getChildNodes() const;
-
-	virtual XalanNode*
-	getFirstChild() const;
-
-	virtual XalanNode*
-	getLastChild() const;
-
-	virtual XalanNode*
-	getPreviousSibling() const;
-
-	virtual XalanNode*
-	getNextSibling() const;
-
-	virtual const XalanNamedNodeMap*
-	getAttributes() const;
-
-	virtual XalanDocument*
-	getOwnerDocument() const;
-
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-	virtual XalanNode*
-#else
-	virtual ElemTemplateElement*
-#endif
-	cloneNode(bool	deep) const;
-
-	virtual XalanNode*
-	insertBefore(
-			XalanNode*	newChild,
-			XalanNode*	refChild);
-
-	virtual XalanNode*
-	replaceChild(
-			XalanNode*	newChild,
-			XalanNode*	oldChild);
-
-	virtual XalanNode*
-	removeChild(XalanNode*	oldChild);
-
-	/** 
-	 * Add a child to the child list.
-	 * 
-	 * @exception DOMException 
-	 * @param newChild child node to add
-	 */
-	virtual XalanNode*
-	appendChild(XalanNode*	newChild);
-
-	virtual bool
-	hasChildNodes() const;
-
-	virtual void
-	setNodeValue(const XalanDOMString&	nodeValue);
-
-	virtual void
-	normalize();
-
-	virtual bool
-	isSupported(
-			const XalanDOMString&	feature,
-			const XalanDOMString&	version) const;
-
-	virtual const XalanDOMString&
-	getNamespaceURI() const;
-
-	virtual const XalanDOMString&
-	getPrefix() const;
-
-	virtual const XalanDOMString&
-	getLocalName() const;
-
-	virtual void
-	setPrefix(const XalanDOMString& prefix);
-
-	virtual bool
-	isIndexed() const;
-
-	virtual IndexType
-	getIndex() const;
-
-	virtual const XalanDOMString&
-	getTagName() const;
-
-	virtual const XalanDOMString&
-	getAttribute(const XalanDOMString&	name) const;
-
-	virtual XalanAttr*
-	getAttributeNode(const XalanDOMString&	name) const;
-
-	virtual XalanNodeList*
-	getElementsByTagName(const XalanDOMString&	name) const;
-
-	virtual void
-	setAttribute(
-			const XalanDOMString&	name, 
-			const XalanDOMString&	value);
-
-	virtual XalanAttr*
-	setAttributeNode(XalanAttr* 	newAttr);
-
-	virtual XalanAttr*
-	removeAttributeNode(XalanAttr*	oldAttr);
-
-	virtual void
-	removeAttribute(const XalanDOMString&	name);
-
-	virtual const XalanDOMString&
-	getAttributeNS(
-			const XalanDOMString&	namespaceURI,
-			const XalanDOMString&	localName) const;
-
-	virtual void
-	setAttributeNS(
-			const XalanDOMString&	namespaceURI,
-			const XalanDOMString&	qualifiedName,
-			const XalanDOMString&	value);
-
-	virtual void
-	removeAttributeNS(
-			const XalanDOMString&	namespaceURI,
-			const XalanDOMString&	localName);
-
-	virtual XalanAttr*
-	getAttributeNodeNS(
-			const XalanDOMString&	namespaceURI,
-			const XalanDOMString&	localName) const;
-
-	virtual XalanAttr*
-	setAttributeNodeNS(XalanAttr*	newAttr);
-
-	virtual XalanNodeList*
-	getElementsByTagNameNS(
-			const XalanDOMString&	namespaceURI,
-			const XalanDOMString&	localName) const;
-
-
 	// These interfaces are inherited from PrefixResolver...
 
 	virtual const XalanDOMString*
@@ -979,8 +824,6 @@ private:
 	LocatorProxy			m_locatorProxy;
 
 	unsigned short			m_flags;
-
-	static const XalanEmptyNamedNodeMap 	s_fakeAttributes;
 
 	static const XalanQNameByReference		s_emptyQName;
 
