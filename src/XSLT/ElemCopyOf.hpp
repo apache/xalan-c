@@ -76,6 +76,7 @@
 
 
 
+class NodeRefListBase;
 class XPath;
 
 
@@ -110,7 +111,19 @@ public:
 
 private:
 
-	const XPath*	m_pSelectPattern;
+	void
+	cloneNodeSet(
+			StylesheetExecutionContext&		executionContext,
+			const NodeRefListBase&			theNodeList) const;
+
+	void
+	cloneNode(
+			StylesheetExecutionContext&		executionContext,
+			XalanNode&						theNode) const;
+
+	const XPath*	m_selectPattern;
+
+	bool			m_isDot;
 };
 
 

@@ -89,22 +89,36 @@ ElemCopyOf::ElemCopyOf(
 						lineNumber,
 						columnNumber,
 						Constants::ELEMNAME_COPY_OF),
-	m_pSelectPattern(0)
+	m_selectPattern(0),
+	m_isDot(false)
 {
 	const unsigned int	nAttrs = atts.getLength();
 	
-	for(unsigned int i = 0; i < nAttrs; i++)
+	for(unsigned int i = 0; i < nAttrs; ++i)
 	{
 		const XalanDOMChar*	const	aname = atts.getName(i);
 
 		if(equals(aname, Constants::ATTRNAME_SELECT))
 		{
-			m_pSelectPattern = constructionContext.createXPath(atts.getValue(i), *this);
+			const XalanDOMChar* const	avalue = atts.getValue(i);
+			assert(avalue != 0);
+
+			if (avalue[0] == XalanUnicode::charFullStop && avalue[1] == 0)
+			{
+				m_isDot = true;
+			}
+
+			m_selectPattern = constructionContext.createXPath(avalue, *this);
 		}
 		else if(!isAttrOK(aname, atts, i, constructionContext))
 		{
-			constructionContext.error(Constants::ELEMNAME_COPY_OF_WITH_PREFIX_STRING + " has an illegal attribute: " + aname);
+			constructionContext.error(XalanDOMString("xsl:copy-of has an illegal attribute: ") + aname);
 		}
+	}
+
+	if (m_selectPattern == 0)
+	{
+		constructionContext.error("xsl:copy-of must have a \"select\" attribute.");
 	}
 }
 
@@ -118,107 +132,143 @@ ElemCopyOf::getElementName() const
 
 
 
-void
-ElemCopyOf::execute(StylesheetExecutionContext&		executionContext) const
+inline void
+ElemCopyOf::cloneNodeSet(
+			StylesheetExecutionContext&		executionContext,
+			const NodeRefListBase&			theNodeList) const
 {
-	ElemTemplateElement::execute(executionContext);
+	unsigned int	nChildren = theNodeList.getLength();
 
-	assert(m_pSelectPattern != 0);
-
-	XalanNode* sourceNode = executionContext.getCurrentNode();
-
-	const XObjectPtr	value(m_pSelectPattern->execute(sourceNode, *this, executionContext));
-	assert(value.null() == false);
-
-	if(0 != executionContext.getTraceListeners())
+	for(unsigned int i = 0; i < nChildren; i++)
 	{
-		executionContext.fireSelectEvent(
-			SelectionEvent(
-				executionContext,
-				sourceNode,
-				*this,
-				StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("select")),
-				*m_pSelectPattern,
-				value));
+		assert(theNodeList.item(i) != 0);
+		cloneNode(executionContext, *theNodeList.item(i));
 	}
+}
 
-	const XObject::eObjectType	type = value->getType();
 
-	switch(type)
+
+inline void
+ElemCopyOf::cloneNode(
+			StylesheetExecutionContext&		executionContext,
+			XalanNode&						theNode) const
+{
+	XalanNode*			pos = &theNode;
+
+	while(pos != 0)
 	{
-	case XObject::eTypeBoolean:
-	case XObject::eTypeNumber:
-	case XObject::eTypeString:
-		executionContext.characters(value);
-		break;
-
-	case XObject::eTypeNodeSet:
-	{
-		const NodeRefListBase&	nl = value->nodeset();
-
-		unsigned int			nChildren = nl.getLength();
-
-		for(unsigned int i = 0; i < nChildren; i++)
+		if(pos->getNodeType() != XalanNode::ATTRIBUTE_NODE)
 		{
-			XalanNode*			pos = nl.item(i);
-			XalanNode* const	top = pos;
+			executionContext.flushPending();
+		}
 
-			while(pos != 0)
-			{
-				if(pos->getNodeType() != XalanNode::ATTRIBUTE_NODE)
-				{
-                    executionContext.flushPending();
-                }
-
-				executionContext.cloneToResultTree(
+		executionContext.cloneToResultTree(
 						*pos,
 						false,
 						false,
 						true);
 
-				XalanNode*	nextNode = pos->getFirstChild();
+		XalanNode*	nextNode = pos->getFirstChild();
 
-				while(nextNode == 0)
+		while(nextNode == 0)
+		{
+			if(XalanNode::ELEMENT_NODE == pos->getNodeType())
+			{
+				executionContext.endElement(c_wstr(pos->getNodeName()));
+			}
+
+			if(&theNode == pos)
+				break;
+
+			nextNode = pos->getNextSibling();
+
+			if(nextNode == 0)
+			{
+				pos = pos->getParentNode();
+
+				if(&theNode == pos)
 				{
 					if(XalanNode::ELEMENT_NODE == pos->getNodeType())
 					{
 						executionContext.endElement(c_wstr(pos->getNodeName()));
 					}
 
-					if(top == pos)
-						break;
-
-					nextNode = pos->getNextSibling();
-
-					if(nextNode == 0)
-					{
-						pos = pos->getParentNode();
-
-						if(top == pos)
-						{
-							if(XalanNode::ELEMENT_NODE == pos->getNodeType())
-							{
-								executionContext.endElement(c_wstr(pos->getNodeName()));
-							}
-
-							nextNode = 0;
-							break;
-						}
-					}
+					nextNode = 0;
+					break;
 				}
-
-				pos = nextNode;
 			}
 		}
-		break;
+
+		pos = nextNode;
 	}
+}
 
-	case XObject::eTypeResultTreeFrag:
-		executionContext.outputResultTreeFragment(*value.get());
-		break;
 
-	default:
-		executionContext.characters(value);
-		break;
+
+void
+ElemCopyOf::execute(StylesheetExecutionContext&		executionContext) const
+{
+	ElemTemplateElement::execute(executionContext);
+
+	assert(m_selectPattern != 0);
+
+	XalanNode* const	sourceNode = executionContext.getCurrentNode();
+	assert(sourceNode != 0);
+
+	if (m_isDot == true)
+	{
+		if(0 != executionContext.getTraceListeners())
+		{
+			executionContext.fireSelectEvent(
+				SelectionEvent(
+					executionContext,
+					sourceNode,
+					*this,
+					StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("select")),
+					*m_selectPattern,
+					XObjectPtr()));
+		}
+
+		cloneNode(executionContext, *sourceNode);
+	}
+	else
+	{
+		const XObjectPtr	value(m_selectPattern->execute(sourceNode, *this, executionContext));
+		assert(value.null() == false);
+
+		if(0 != executionContext.getTraceListeners())
+		{
+			executionContext.fireSelectEvent(
+				SelectionEvent(
+					executionContext,
+					sourceNode,
+					*this,
+					StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("select")),
+					*m_selectPattern,
+					value));
+		}
+
+		const XObject::eObjectType	type = value->getType();
+
+		switch(type)
+		{
+		case XObject::eTypeBoolean:
+		case XObject::eTypeNumber:
+		case XObject::eTypeString:
+			executionContext.characters(value);
+			break;
+
+		case XObject::eTypeNodeSet:
+			cloneNodeSet(executionContext, value->nodeset());
+			break;
+
+		case XObject::eTypeResultTreeFrag:
+			executionContext.outputResultTreeFragment(*value.get());
+			break;
+
+		default:
+			executionContext.characters(value);
+			break;
+		}
 	}
 }
