@@ -84,6 +84,7 @@ XalanTransformer::XalanTransformer():
 	m_compiledStylesheets(),
 	m_parsedSources(),
     m_paramPairs(),
+	m_functionPairs(),
 	m_errorMessage()
 {
 	m_errorMessage.push_back(0);
@@ -106,6 +107,13 @@ XalanTransformer::~XalanTransformer()
 	for_each(m_parsedSources.begin(),
 			 m_parsedSources.end(),
 			 DeleteFunctor<XalanParsedSource>());
+
+	for (FunctionParamPairVectorType::size_type i = 0; i < m_functionPairs.size(); ++i)
+	{			
+		delete m_functionPairs[i].second;
+		m_functionPairs.erase(m_functionPairs.begin() + i);			
+	}	
+
 }
 
 
@@ -198,11 +206,21 @@ XalanTransformer::transform(
 
 		m_stylesheetExecutionContext.setXSLTProcessor(&theProcessor);
 
+		// Set the parameters if any.
 		for (ParamPairVectorType::size_type i = 0; i < m_paramPairs.size(); ++i)
 		{
 			theProcessor.setStylesheetParam(
 					m_paramPairs[i].first,
 					m_paramPairs[i].second);
+		}
+
+		// Set the functions if any.
+		for (FunctionParamPairVectorType::size_type f = 0; f < m_functionPairs.size(); ++f)
+		{
+			theXSLTProcessorEnvSupport.installExternalFunctionLocal(
+					m_functionPairs[f].first.getNamespace(),
+					m_functionPairs[f].first.getLocalPart(),
+					*(m_functionPairs[f].second));
 		}
 
 		// Do the transformation...
@@ -350,11 +368,21 @@ XalanTransformer::transform(
 		// Set the compiled stylesheet.
 		theCompiledStylesheet->setStylesheetRoot(m_stylesheetExecutionContext);
 
+		// Set the parameters if any.
 		for (ParamPairVectorType::size_type i = 0; i < m_paramPairs.size(); ++i)
 		{
 			theProcessor.setStylesheetParam(
 					m_paramPairs[i].first,
 					m_paramPairs[i].second);
+		}
+
+		// Set the functions if any.
+		for (FunctionParamPairVectorType::size_type f = 0; f < m_functionPairs.size(); ++f)
+		{
+			theXSLTProcessorEnvSupport.installExternalFunctionLocal(
+					m_functionPairs[f].first.getNamespace(),
+					m_functionPairs[f].first.getLocalPart(),
+					*(m_functionPairs[f].second));
 		}
 
 		// Do the transformation...
@@ -772,6 +800,55 @@ XalanTransformer::setStylesheetParam(
 	setStylesheetParam(
 					XalanDOMString(key),  
 					XalanDOMString(expression));
+}
+
+
+
+void
+XalanTransformer::installExternalFunction(
+			const XalanDOMString&	theNamespace,
+			const XalanDOMString&	functionName,
+			const Function&			function)
+{
+	m_functionPairs.push_back(FunctionPairType(QNameByValue(theNamespace, functionName), function.clone()));
+}
+
+
+
+void
+XalanTransformer::installExternalFunction(
+			const char*				theNamespace,
+			const char*				functionName,
+			const Function&			function)
+{
+	installExternalFunction(theNamespace, functionName, function);
+}
+
+
+
+void
+XalanTransformer::uninstallExternalFunction(
+			const XalanDOMString&	theNamespace,
+			const XalanDOMString&	functionName)
+{
+	for (FunctionParamPairVectorType::size_type i = 0; i < m_functionPairs.size(); ++i)
+	{
+		if(QNameByReference(theNamespace, functionName).equals(m_functionPairs[i].first))
+		{	
+			delete m_functionPairs[i].second;
+			m_functionPairs.erase(m_functionPairs.begin() + i);		
+		}
+	}	
+}
+
+
+
+void
+XalanTransformer::uninstallExternalFunction(
+			const char*				theNamespace,
+			const char*				functionName)
+{
+	uninstallExternalFunction(theNamespace, functionName);
 }
 
 

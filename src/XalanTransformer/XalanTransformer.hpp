@@ -72,6 +72,7 @@
 
 
 
+#include <XPath/QNameByValue.hpp>
 #include <XPath/XObjectFactoryDefault.hpp>
 #include <XPath/XPathFactoryBlock.hpp>
 #include <XPath/XPathFactoryDefault.hpp>
@@ -314,6 +315,54 @@ public:
 	compileStylesheet(const XSLTInputSource&		theStylesheetSource);
 
 	/**
+	 * Parse source document.  The input source can be 
+	 * a file name, a stream or a root node.
+	 *
+	 * @param theInputSource	input source
+	 * @param useXercesDOM		input use default or xerces dom source tree
+	 * @return	a pointer to a XalanParsedSource or 0 for failure.
+	 */
+	XalanParsedSource*
+	parseSource(
+			const XSLTInputSource&	theInputSource, 
+			bool  useXercesDOM = 0);
+
+	/**
+	 * Install an external function in the local space.
+	 *
+	 * @param theNamespace The namespace for the functionl
+	 * @param functionName The name of the function.
+	 * @param function The function to install.
+	 */
+	void
+	installExternalFunction(
+			const XalanDOMString&	theNamespace,
+			const XalanDOMString&	functionName,
+			const Function&			function);
+
+	void
+	installExternalFunction(
+			const char*				theNamespace,
+			const char*				functionName,
+			const Function&			function);
+
+	/**
+	 * Uninstall an external function from the local space.
+	 *
+	 * @param theNamespace The namespace for the function
+	 * @param functionName The name of the function.
+	 */
+	void
+	uninstallExternalFunction(
+			const XalanDOMString&	theNamespace,
+			const XalanDOMString&	functionName);
+
+	void
+	uninstallExternalFunction(
+			const char*				theNamespace,
+			const char*				functionName);
+
+	/**
 	 * Set a top-level stylesheet parameter.  This value can be evaluated via
 	 * xsl:param-variable.
 	 *
@@ -330,19 +379,6 @@ public:
 			const char*				expression);
 
 	/**
-	 * Parse source document.  The input source can be 
-	 * a file name, a stream or a root node.
-	 *
-	 * @param theInputSource	input source
-	 * @param useXercesDOM		input use default or xerces dom source tree
-	 * @return	a pointer to a XalanParsedSource or 0 for failure.
-	 */
-	XalanParsedSource*
-	parseSource(
-			const XSLTInputSource&	theInputSource, 
-			bool  useXercesDOM = 0);
-
-	/**
 	 * Returns the last error that occurred as a 
 	 * result of calling transform.	
 	 *
@@ -357,11 +393,15 @@ public:
 	typedef vector<XalanParsedSource*>					ParsedSourcePtrVectorType;
 	typedef pair<XalanDOMString, XalanDOMString>    	ParamPairType;
 	typedef vector<ParamPairType>		                ParamPairVectorType;
+	typedef pair<QNameByValue, Function*>    			FunctionPairType;
+	typedef vector<FunctionPairType>		            FunctionParamPairVectorType;
 #else
 	typedef std::vector<const XalanCompiledStylesheet*>	CompiledStylesheetPtrVectorType;
 	typedef std::vector<const XalanParsedSource*>		ParsedSourcePtrVectorType;
 	typedef std::pair<XalanDOMString, XalanDOMString>	ParamPairType;
 	typedef std::vector<ParamPairType>	                ParamPairVectorType;
+	typedef std::pair<QNameByValue, Function*>    		FunctionPairType;
+	typedef std::vector<FunctionPairType>		        FunctionParamPairVectorType;
 #endif
 
 protected:
@@ -378,6 +418,8 @@ private:
 	ParsedSourcePtrVectorType				m_parsedSources;
 
     ParamPairVectorType                     m_paramPairs;
+
+	FunctionParamPairVectorType				m_functionPairs;
 
 	CharVectorType							m_errorMessage;
 
