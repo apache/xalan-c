@@ -64,6 +64,10 @@
 
 #include <cassert>
 
+#if !defined(XALAN_CLASSIC_IOSTREAMS)
+#include <istream>
+#endif
+
 
 
 #include <PlatformSupport/DOMStringHelper.hpp>
@@ -87,7 +91,7 @@ XSLTInputSource::XSLTInputSource() :
 
 // $$$ ToDo:  Xerces' InputSource class does not yet have a copy
 // constructor or assignment operator.  See bug #7944.
-XSLTInputSource::XSLTInputSource(const XSLTInputSource&	theSource) :
+XSLTInputSource::XSLTInputSource(const XSLTInputSource&		theSource) :
 #if 1
 	InputSource(),
 #else
