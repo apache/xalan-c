@@ -3,13 +3,23 @@
 
 
 
+#if defined(XALAN_OLD_STREAM_HEADERS)
+#include <iostream.h>
+#include <strstream.h>
+#include <fstream.h>
+#else
 #include <iostream>
 #include <strstream>
 #include <fstream>
+#endif
 
 
 
 #include <util/PlatformUtils.hpp>
+
+
+
+#include <Include/XalanAutoPtr.hpp>
 
 
 
@@ -161,12 +171,11 @@ main(
 				theOutputStream << '\0';
 
 #if !defined(SIMPLE_STREAM_USE_STATIC_BUFFER)
-				// Get a pointer to the string...
-				const char* const	theData = theOutputStream.str();
+				// Get a pointer to the string, and store it in a XalanArrayAutoPtr,
+				// since it will need to be deleted.
+				const XalanArrayAutoPtr<char>	theGuard(theOutputStream.str());
 
-				// Unfreeze the stream, so the memory is automatically
-				// delete when the stream goes out of scope...
-				theOutputStream.freeze(false);
+				const char* const	theData = theGuard.get();
 #endif
 
 				cout << theData;
