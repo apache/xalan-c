@@ -2217,6 +2217,24 @@ XPathProcessorImpl::AbbreviatedNodeTestStep()
 
 		nextToken();
 	}
+	else if(lookahead(XALAN_STATIC_UCODE_STRING("::"), 1) == true)
+	{
+		if(tokenIs(XALAN_STATIC_UCODE_STRING("attribute")) == true)
+		{
+			m_expression->appendOpCode(XPathExpression::eMATCH_ATTRIBUTE);
+		}
+		else if(tokenIs(XALAN_STATIC_UCODE_STRING("child")) == true)
+		{
+			m_expression->appendOpCode(XPathExpression::eMATCH_IMMEDIATE_ANCESTOR);
+		}
+		else
+		{
+			error("Only child:: and attribute:: axes are allowed in match patterns!");
+		}
+
+		nextToken();
+		nextToken();
+	}
 	else if(tokenIs('/') == true)
 	{
 		m_expression->appendOpCode(XPathExpression::eMATCH_ANY_ANCESTOR);
