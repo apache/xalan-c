@@ -98,26 +98,26 @@ public:
 
 	// Output functions...
 
-	// If the length is -1, then the array is assumed to be null-terminated.
+	// If the length is UINT_MAX, then the array is assumed to be null-terminated.
 	virtual void
 	write(const char*	s,
-		  long			theOffset = 0,
-		  long			theLength = -1);
+		  unsigned int	theOffset = 0,
+		  unsigned int	theLength = UINT_MAX);
 
-	// If the length is -1, then the entire string is printed.
+	// If the length is UINT_MAX, then the entire string is printed.
 	virtual void
 	write(const XMLCh*	s,
-		  long			theOffset = 0,
-		  long			theLength = -1);
+		  unsigned int	theOffset = 0,
+		  unsigned int	theLength = UINT_MAX);
 
 	virtual void
 	write(XMLCh		c);
 
-	// If the length is -1, then the entire string is printed.
+	// If the length is UINT_MAX, then the entire string is printed.
 	virtual void
 	write(const DOMString&	s,
-		  long				theOffset = 0,
-		  long				theLength = -1);
+		  unsigned int		theOffset = 0,
+		  unsigned int		theLength = UINT_MAX);
 
 	virtual void
 	print(bool	b);
@@ -127,11 +127,11 @@ public:
 
 	virtual void
 	print(const char*	s,
-		  long			theLength = -1);
+		  unsigned int	theLength = UINT_MAX);
 
 	virtual void
 	print(const XMLCh*	s,
-		  long			theLength = -1);
+		  unsigned int	theLength = UINT_MAX);
 
 	virtual void
 	print(double	d);
@@ -156,11 +156,11 @@ public:
 
 	virtual void
 	println(const char*		s,
-		    long			theLength = -1);
+		    unsigned int	theLength = UINT_MAX);
 
 	virtual void
 	println(const XMLCh*	s,
-			long			theLength = -1);
+			unsigned int	theLength = UINT_MAX);
 
 	virtual void
 	println(double	d);

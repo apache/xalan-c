@@ -99,17 +99,31 @@ public:
 	// These interfaces are new to NamespaceResolver...
 
 	virtual DOMString
-	getNamespaceOfNode(const DOM_Node&	theNode);
+	getNamespaceOfNode(const DOM_Node&	theNode) const;
 
 protected:
 
 #if defined(XALAN_HASH_CONTAINERS_AVAILABLE)
+#if defined(XALAN_NO_NAMESPACES)
+	typedef hash_map<DOM_Node, NSInfo, DOM_NodeHashFunction>		NSInfoMapType;
+#else
 	typedef std::hash_map<DOM_Node, NSInfo, DOM_NodeHashFunction>	NSInfoMapType;
+#endif
+#else
+#if defined(XALAN_NO_NAMESPACES)
+	typedef map<DOM_Node, NSInfo>									NSInfoMapType;
 #else
 	typedef std::map<DOM_Node, NSInfo>								NSInfoMapType;
 #endif
+#endif
 
-	NSInfoMapType	m_NSInfos;
+	void
+	updateNamespace(
+			const DOM_Node&		theNode,
+			const NSInfo&		theNamespace) const;
+
+	// Cached namespace information...
+	mutable NSInfoMapType	m_NSInfos;
 };
 
 

@@ -91,16 +91,16 @@ public:
 	 *   index.
 	 */
 	virtual DOM_Node
-	item(unsigned long	index) const = 0;
+	item(unsigned int	index) const = 0;
 
 	/**
 	 * The number of nodes in the list. The range of valid child node indices is 
 	 * 0 to <code>length-1</code> inclusive. 
 	 */
-	virtual int
+	virtual unsigned int
 	getLength() const = 0;
 
-	virtual int
+	virtual unsigned int
 	indexOf(const DOM_Node&		theNode) const = 0;
 
 protected:

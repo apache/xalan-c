@@ -154,6 +154,7 @@ UnimplementedDocument::	getChildNodes()
 }
 
 
+
 NodeImpl*
 UnimplementedDocument::getFirstChild()
 {
@@ -161,6 +162,7 @@ UnimplementedDocument::getFirstChild()
 
 	return 0;
 }
+
 
 
 NodeImpl*
@@ -172,6 +174,7 @@ UnimplementedDocument::	getLastChild()
 }
 
 
+
 unsigned int
 UnimplementedDocument::getLength()
 {
@@ -179,6 +182,7 @@ UnimplementedDocument::getLength()
 
 	return 0;
 }
+
 
 
 NodeImpl*
@@ -280,7 +284,7 @@ UnimplementedDocument::insertBefore(
 
 
 NodeImpl*
-UnimplementedDocument::item(unsigned long	/* index */)
+UnimplementedDocument::item(unsigned int	/* index */)
 {
 	assert(false);
 

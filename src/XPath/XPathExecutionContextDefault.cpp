@@ -262,7 +262,7 @@ XPathExecutionContextDefault::parseXML(
 			const DOMString&	urlString,
 			const DOMString&	base) const
 {
-	return m_xpathSupport.parseXML(urlString, base);
+	return m_xpathEnvSupport.parseXML(urlString, base);
 }
 
 
@@ -293,7 +293,7 @@ XPathExecutionContextDefault::getNodeSetByKey(
 	return getNodeSetByKey(doc,
 						   name,
 						   ref,
-						   ElementPrefixResolverProxy(nscontext, m_xpathSupport));
+						   ElementPrefixResolverProxy(nscontext, m_xpathEnvSupport, m_xpathSupport));
 }
 
 
@@ -397,9 +397,7 @@ XPathExecutionContextDefault::error(
 			const DOM_Node&		sourceNode,
 			const DOM_Node&		/* styleNode */) const
 {
-	assert(m_prefixResolver != 0);
-
-	DOMString	emsg;
+	DOMString			emsg;
 
 	const DOMString		theCurrentPattern(getCurrentPattern());
 
@@ -414,7 +412,7 @@ XPathExecutionContextDefault::error(
 
 	if (m_xpathEnvSupport.problem(XPathEnvSupport::eXPATHProcessor, 
 								  XPathEnvSupport::eError,
-								  *m_prefixResolver, 
+								  m_prefixResolver, 
 								  sourceNode,
 								  emsg,
 								  0,
@@ -433,8 +431,6 @@ XPathExecutionContextDefault::warn(
 			const DOM_Node&		sourceNode,
 			const DOM_Node&		/* styleNode */) const
 {
-	assert(m_prefixResolver != 0);
-
 	DOMString	emsg;
 
 	const DOMString		theCurrentPattern(getCurrentPattern());
@@ -450,7 +446,7 @@ XPathExecutionContextDefault::warn(
 
 	if (m_xpathEnvSupport.problem(XPathEnvSupport::eXPATHProcessor, 
 								  XPathEnvSupport::eWarning,
-								  *m_prefixResolver, 
+								  m_prefixResolver, 
 								  sourceNode,
 								  emsg,
 								  0,
@@ -469,8 +465,6 @@ XPathExecutionContextDefault::message(
 			const DOM_Node&		sourceNode,
 			const DOM_Node&		/* styleNode */) const
 {
-	assert(m_prefixResolver != 0);
-
 	DOMString	emsg;
 
 	const DOMString		theCurrentPattern(getCurrentPattern());
@@ -486,7 +480,7 @@ XPathExecutionContextDefault::message(
 
 	if (m_xpathEnvSupport.problem(XPathEnvSupport::eXPATHProcessor, 
 								  XPathEnvSupport::eMessage,
-								  *m_prefixResolver, 
+								  m_prefixResolver, 
 								  sourceNode,
 								  emsg,
 								  0,
@@ -525,4 +519,22 @@ DOMString
 XPathExecutionContextDefault::getCurrentPattern() const
 {
 	return m_currentPattern;
+}
+
+
+
+DOM_Document
+XPathExecutionContextDefault::getSourceDocument(const DOMString&	theURI) const
+{
+	return m_xpathEnvSupport.getSourceDocument(theURI);
+}
+
+
+
+void
+XPathExecutionContextDefault::setSourceDocument(
+			const DOMString&		theURI,
+			const DOM_Document&		theDocument)
+{
+	m_xpathEnvSupport.setSourceDocument(theURI, theDocument);
 }

@@ -173,6 +173,7 @@
 #include "ElemWithParam.hpp"
 #include "ElementMarker.hpp"
 #include "FunctionCurrent.hpp"
+#include "FunctionDocument.hpp"
 #include "FunctionFormatNumber.hpp"
 #include "FunctionKey.hpp"
 #include "FunctionUnparsedEntityURI.hpp"
@@ -210,14 +211,13 @@ const DOMString	XSLTEngineImpl::s_XSLT4JNameSpaceURL(XALAN_STATIC_UCODE_STRING("
  * at the moment.  I don't think this is worth fixing 
  * until NodeList variables are implemented.
  */
-const bool										XSLTEngineImpl::m_resolveContentsEarly = true;
+const bool								XSLTEngineImpl::m_resolveContentsEarly = true;
 
-XSLTEngineImpl::AttributeKeysMapType XSLTEngineImpl::s_attributeKeys;
+XSLTEngineImpl::AttributeKeysMapType	XSLTEngineImpl::s_attributeKeys;
 
 XSLTEngineImpl::ElementKeysMapType		XSLTEngineImpl::s_elementKeys;
 
-XSLTEngineImpl::ElementKeysMapType XSLTEngineImpl::s_XSLT4JElementKeys;
-
+XSLTEngineImpl::ElementKeysMapType		XSLTEngineImpl::s_XSLT4JElementKeys;
 
 
 
@@ -236,7 +236,6 @@ XSLTEngineImpl::XSLTEngineImpl(
 	m_stylesheetRoot(0),
 	m_stylesheetExecutionContext(0),
 	m_stylesheets(),
-	m_sourceDocs(),
 	m_rootDoc(),
 	m_XSLNameSpaceURL(s_DefaultXSLNameSpaceURL),
 	m_XSLDirectiveLookup(),
@@ -286,13 +285,18 @@ XSLTEngineImpl::XSLTEngineImpl(
 {
 }
 
-void XSLTEngineImpl::Initialize()
+
+
+void
+XSLTEngineImpl::Initialize()
 {
 	InstallFunctions();
+
 	InitializeAttributeKeysTable();
 	InitializeElementKeysTable();
 	InitializeXSLT4JElementKeys();
 }
+
 
 
 /**
@@ -671,38 +675,40 @@ const DOM_Node XSLTEngineImpl::getSourceTreeFromInput(XSLTInputSource *inputSour
 			error("Could not parse "+xmlIdentifier+" document!");
 		}
 	}
+
 	return sourceTree;
 }
 
 
-DOM_Document XSLTEngineImpl::parseXML(const XMLURL& url, 
-	                         DocumentHandler* docHandler, 
-	                         const DOM_Document& docToRegister)
+
+DOM_Document
+XSLTEngineImpl::parseXML(
+			const XMLURL&			url,
+			DocumentHandler*		docHandler,
+			const DOM_Document&		docToRegister)
 {
 	// java: url.toExternalForm();
 	const DOMString&	urlString = url.getURLText();
-	DOM_Document	doc;
-	const SourceDocumentsTableType::iterator	it = m_sourceDocs.find(urlString);
-	if(it != m_sourceDocs.end())
-	{
-		doc = (*it).second;
-		return doc;
-	}
-	 // java: url.toString()
-	XSLTInputSource	inputSource(url.getURLText());
-	if(0 != docHandler)
-		m_parserLiaison.parseXMLStream(inputSource, *docHandler);
-	else
-		m_parserLiaison.parseXMLStream(inputSource);
 
-	if(0 == docHandler)
+	DOM_Document		doc = m_xpathEnvSupport.getSourceDocument(urlString);
+
+	if(doc == 0)
 	{
-		// java:  doc = m_parserLiaison.getDocument();
-		assert(0);	// @@ JMD: We don't handle this case right now
-	}
-	else
-	{
-		doc = docToRegister;
+		 // java: url.toString()
+		XSLTInputSource		inputSource(url.getURLText());
+
+		if(0 != docHandler)
+		{
+			m_parserLiaison.parseXMLStream(inputSource, *docHandler);
+
+			doc = docToRegister;
+		}
+		else
+		{
+			doc = m_parserLiaison.parseXMLStream(inputSource);
+		}
+
+		m_xpathEnvSupport.setSourceDocument(urlString, doc);
 	}
 
 	return doc;
@@ -762,7 +768,7 @@ XSLTEngineImpl::getStylesheetFromPIURL(
 		ds += fragID;
 		ds += ")";
 
-		ElementPrefixResolverProxy		theProxy(nsNode, m_xpathSupport);
+		ElementPrefixResolverProxy		theProxy(nsNode, m_xpathEnvSupport, m_xpathSupport);
 
 		XPathExecutionContextDefault	theExecutionContext(m_xpathEnvSupport,
 															m_xpathSupport,
@@ -2334,7 +2340,7 @@ XSLTEngineImpl::getPrefixForNamespace(
 		if (type == DOM_Node::ELEMENT_NODE) 
 		{
 			DOM_NamedNodeMap	nnm = parent.getAttributes();
-			for (int i = 0;  i < nnm.getLength();  i ++) 
+			for (unsigned long i = 0;  i < nnm.getLength();  i ++) 
 			{
 				const DOM_Node		attr = nnm.item(i);
 				const DOMString 	aname = attr.getNodeName();
@@ -2449,6 +2455,7 @@ XSLTEngineImpl::evalXPathStr(
 			XPathExecutionContext&	executionContext)
 {
 	ElementPrefixResolverProxy	theProxy(prefixResolver,
+										 m_xpathEnvSupport,
 										 m_xpathSupport);
 
 	return evalXPathStr(str, contextNode, theProxy, executionContext);
@@ -2597,7 +2604,7 @@ XSLTEngineImpl::evaluateAttrVal(
 		DOMString	lookahead; // next token
 		DOMString	error; // if not empty, break from loop
 
-		ElementPrefixResolverProxy	theProxy(namespaceContext, m_xpathSupport);
+		ElementPrefixResolverProxy	theProxy(namespaceContext, m_xpathEnvSupport, m_xpathSupport);
 
 		while(tokenizer.hasMoreTokens())
 		{
@@ -3086,7 +3093,7 @@ XSLTEngineImpl::shouldStripSourceNode(const DOM_Node&	textNode) const
 				double highPreserveScore = XPath::s_MatchScoreNone;
 				double highStripScore = XPath::s_MatchScoreNone;
 
-				ElementPrefixResolverProxy		theProxy(parentElem, m_xpathSupport);
+				ElementPrefixResolverProxy		theProxy(parentElem, m_xpathEnvSupport, m_xpathSupport);
 
 				{
 					const int	nTests = m_stylesheetRoot->m_whitespacePreservingElements.size();
@@ -3557,7 +3564,7 @@ XSLTEngineImpl::setStylesheetParam(
 			const DOMString&	expression)
 {
 	// java:     QName qname = new QName(key, null, m_parserLiaison);
-	QName qname(theName, DOM_Element(), m_xpathSupport);
+	QName qname(theName, DOM_Element(), m_xpathEnvSupport, m_xpathSupport);
 	Arg arg(qname, expression, true);
 	m_topLevelParams.push_back(arg);
 }
@@ -3569,7 +3576,7 @@ XSLTEngineImpl::setStylesheetParam(
 			XObject*			theValue)
 {
 	// java:     QName qname = new QName(key, null, m_parserLiaison);
-	const QName		qname(theName, DOM_Element(), m_xpathSupport);
+	const QName		qname(theName, DOM_Element(), m_xpathEnvSupport, m_xpathSupport);
 	const Arg		arg(qname, theValue);
 
 	m_topLevelParams.push_back(arg);
@@ -3827,22 +3834,6 @@ void
 XSLTEngineImpl::setFormatterListener(FormatterListener*		flistener)
 {
 	m_flistener = flistener;
-}
-
-
-
-DOMString
-XSLTEngineImpl::findURIFromDoc(const DOM_Document&	doc)
-{ 
-	return m_xpathEnvSupport.findURIFromDoc(doc);
-}
-
-
-
-XSLTEngineImpl::SourceDocumentsTableType&
-XSLTEngineImpl::getSourceDocsTable() const
-{
-	return m_xpathEnvSupport.getSourceDocsTable();
 }
 
 
@@ -4322,6 +4313,7 @@ void
 XSLTEngineImpl::InstallFunctions()
 {
 	XPath::installFunction(XALAN_STATIC_UCODE_STRING("current"), FunctionCurrent());
+	XPath::installFunction(XALAN_STATIC_UCODE_STRING("current"), FunctionDocument());
 	XPath::installFunction(XALAN_STATIC_UCODE_STRING("format-number"), FunctionFormatNumber());
 	XPath::installFunction(XALAN_STATIC_UCODE_STRING("key"), FunctionKey());
 	XPath::installFunction(XALAN_STATIC_UCODE_STRING("unparsed-entity-uri"), FunctionUnparsedEntityURI());
@@ -4459,11 +4451,9 @@ XSLTEngineImpl::InitializeElementKeysTable()
 	s_elementKeys[Constants::ELEMNAME_APPLY_IMPORTS_STRING] = Constants::ELEMNAME_APPLY_IMPORTS;
 	
 	s_elementKeys[Constants::ELEMNAME_EXTENSION_STRING] = Constants::ELEMNAME_EXTENSION;
-
 	s_elementKeys[Constants::ELEMNAME_MESSAGE_STRING] = Constants::ELEMNAME_MESSAGE;
 	s_elementKeys[Constants::ELEMNAME_LOCALE_STRING] = Constants::ELEMNAME_LOCALE;
 	s_elementKeys[Constants::ELEMNAME_FALLBACK_STRING] = Constants::ELEMNAME_FALLBACK;
-
 	s_elementKeys[Constants::ELEMNAME_OUTPUT_STRING] = Constants::ELEMNAME_OUTPUT;
 }
 

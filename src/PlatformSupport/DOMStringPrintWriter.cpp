@@ -110,8 +110,8 @@ DOMStringPrintWriter::flush()
 void
 DOMStringPrintWriter::write(
 			const char*		s,
-			long			theOffset,
-			long			theLength)
+			unsigned int	theOffset,
+			unsigned int	theLength)
 {
 	write(DOMString(s), theOffset, theLength);
 }
@@ -121,11 +121,13 @@ DOMStringPrintWriter::write(
 void
 DOMStringPrintWriter::write(
 			const XMLCh*	s,
-			long			theOffset,
-			long			theLength)
+			unsigned int	theOffset,
+			unsigned int	theLength)
 {
+#if !defined(XALAN_NO_NAMESPACES)
 	using std::vector;
 	using std::copy;
+#endif
 
 	assert(s != 0);
 	assert(theOffset >= 0);
@@ -165,8 +167,8 @@ DOMStringPrintWriter::write(XMLCh		c)
 void
 DOMStringPrintWriter::write(
 			const DOMString&	s,
-			long				theOffset,
-			long				theLength)
+			unsigned int		theOffset,
+			unsigned int		theLength)
 {
 	assert(s != 0);
 	assert(theOffset >= 0);
@@ -211,7 +213,7 @@ DOMStringPrintWriter::print(char	c)
 void
 DOMStringPrintWriter::print(
 			const char*		s,
-			long			theLength)
+			unsigned int	theLength)
 {
 	write(s,
 		  0,
@@ -223,7 +225,7 @@ DOMStringPrintWriter::print(
 void
 DOMStringPrintWriter::print(
 			const XMLCh*	s,
-			long			theLength)
+			unsigned int	theLength)
 {
 	write(s,
 		  0,
@@ -295,7 +297,7 @@ DOMStringPrintWriter::println(char	c)
 void
 DOMStringPrintWriter::println(
 			const char*		s,
-			long			theLength)
+			unsigned int	theLength)
 {
 	print(s, theLength);
 
@@ -307,7 +309,7 @@ DOMStringPrintWriter::println(
 void
 DOMStringPrintWriter::println(
 			const XMLCh*	s,
-			long			theLength)
+			unsigned int	theLength)
 {
 	print(s, theLength);
 

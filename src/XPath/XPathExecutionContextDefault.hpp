@@ -169,6 +169,10 @@ public:
 			const DOMString&		id,
 			const DOM_Document&		doc) const;
 
+	/*
+	 * Get the current context node list.
+	 *
+	 */
 	virtual const NodeRefListBase&
 	getContextNodeList() const;
 
@@ -319,6 +323,14 @@ public:
 
 	virtual DOMString
 	getCurrentPattern() const;
+
+	virtual DOM_Document
+	getSourceDocument(const DOMString&	theURI) const;
+
+	virtual void
+	setSourceDocument(
+			const DOMString&		theURI,
+			const DOM_Document&		theDocument);
 
 private:
 

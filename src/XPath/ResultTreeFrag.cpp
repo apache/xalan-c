@@ -106,7 +106,7 @@ ResultTreeFrag::~ResultTreeFrag()
 
 
 NodeImpl*
-ResultTreeFrag::item(unsigned long	index)
+ResultTreeFrag::item(unsigned int	index)
 {
 	return XALAN_DOM_NodeHack(m_children.item(index)).getImplementationObject();
 };
@@ -370,7 +370,7 @@ ResultTreeFrag::getLength() const
 
 
 DOM_Node
-ResultTreeFrag::item(unsigned long	index) const
+ResultTreeFrag::item(unsigned int	index) const
 {
 	return m_children.item(index);
 };

@@ -121,19 +121,19 @@ DOMString NumberFormat::applyGrouping(const DOMString& value)
 	
 	int bufsize = len + len/m_groupingSize + 1;
 	XMLCh* buffer = new XMLCh[bufsize];
-	XMLCh c;
+
 	XMLCh* p = buffer + bufsize -1;
 	*p-- = 0;	// null terminate
 	for (int i= 0, ix = len-1; i < len; i++, ix--)
 	{
-		XMLCh c = charAt(value, ix);
+		const XMLCh		c = charAt(value, ix);
 		if (i && !(i% m_groupingSize))
 		{
 			// Could be a multiple character separator??
 			for (int j= m_groupingSeparator.length()-1; j>=0; j--)
 				*p-- = charAt(m_groupingSeparator, j);
 		}
-		*p-- = charAt(value, ix);
+		*p-- = c;
 	}
 	DOMString s(++p);
 	delete [] buffer;

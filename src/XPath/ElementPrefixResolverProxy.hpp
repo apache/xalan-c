@@ -74,6 +74,7 @@
 
 
 
+class XPathEnvSupport;
 class XPathSupport;
 
 
@@ -84,6 +85,7 @@ public:
 
 	ElementPrefixResolverProxy(
 			const DOM_Element&		namespaceContext,
+			const XPathEnvSupport&	envSupport,
 			const XPathSupport& 	support);
 
 	virtual
@@ -92,9 +94,13 @@ public:
 	virtual DOMString
 	getNamespaceForPrefix(const DOMString&	prefix) const;
 
+	virtual DOMString
+	getURI() const;
+
 private:
 
 	const DOM_Element		m_namespaceContext;
+	const XPathEnvSupport&	m_envSupport;
 	const XPathSupport&		m_support;
 };
 

@@ -507,7 +507,7 @@ protected:
  * The maximum character value before we have to resort 
  * to escaping.
  */
-	XMLCh m_maxCharacter;
+	unsigned int	m_maxCharacter;
   
 	/**
 	 * The character encoding.  Not currently used.

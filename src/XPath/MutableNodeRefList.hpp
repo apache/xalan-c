@@ -116,7 +116,7 @@ public:
 	virtual void
 	insertNode(
 			const DOM_Node&		n,
-			int					pos);
+			unsigned int		pos);
 
 	/**
 	 * Remove a node.
@@ -125,7 +125,7 @@ public:
 	removeNode(const DOM_Node&	n);
 
 	virtual void
-	removeNode(int	pos);
+	removeNode(unsigned int		pos);
 
 	/**
 	 * Remove all nodes.
@@ -137,7 +137,7 @@ public:
 	 * Set a item.
 	 */
 	virtual void
-	setNode(int					pos,
+	setNode(unsigned int		pos,
 			const DOM_Node&		n = DOM_Node());
 
 	/**

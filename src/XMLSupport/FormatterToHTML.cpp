@@ -208,8 +208,7 @@ FormatterToHTML::startElement(
 	}
 	m_needToOutputDocTypeDecl = false;
 	bool savedDoIndent = m_doIndent;
-	// @@ JMD: What's this ??
-	bool noLineBreak;
+
 	// If the previous element is a non-block element or the next 
 	// element is a non-block element, then do not indent.
 	m_doIndent =
@@ -347,7 +346,7 @@ FormatterToHTML::characters(
 		int end = length;
 		for (int i = 0;  i < end;  i ++) 
 		{
-			int ch = chars[i];
+			const XMLCh ch = chars[i];
 			int chNum = ch;
 			if ('\n' == ch) 
 			{
@@ -572,17 +571,19 @@ FormatterToHTML::processAttribute(
  */
 const DOMString& FormatterToHTML::prepAttrURI(
 			const DOMString& string,
-			const DOMString& specials,
-			const DOMString& encoding)
+			const DOMString& /* specials */,
+			const DOMString& /* encoding */)
 	// java: throws SAXException
 {
 	static DOMString sb;
 	sb = "";
-	for (int i = 0;  i < string.length();  i ++)
+	const unsigned int	theLength = length(string);
+
+	for (unsigned int i = 0;  i < theLength;  i ++)
 	{
-		XMLCh ch = charAt(string, i);
+		const XMLCh ch = charAt(string, i);
 		DOMString sch(&ch, 1);
-		int ich = ch;
+		const int ich = ch;
 		if(((ch > 0x1F) &&   // X'00 - 1F' not valid
 					(ch < 0x7F)) &&   // X'7F' not valid
 				(s_escapetb.find(sch)== s_escapetb.end())  ) // characters in the table
@@ -592,11 +593,12 @@ const DOMString& FormatterToHTML::prepAttrURI(
 		else
 		{
 			// need to escape the character
-			int mask1  = 0xFF00;
-			int mask2  = 0x00FF;
+			const int mask1  = 0xFF00;
+			const int mask2  = 0x00FF;
 			assert (ich < 0xFFFF);
-			int b1 = (int)(((ich) & mask1) >> 8);
-			int b2 = (int)((ich) & mask2);
+			const int b1 = (int)(((ich) & mask1) >> 8);
+			const int b2 = (int)((ich) & mask2);
+
 			// if first 8 bytes are 0, no need to append them.
 			if (b1 != 0)
 			{	 
@@ -607,6 +609,7 @@ const DOMString& FormatterToHTML::prepAttrURI(
 			sb += LongToHexDOMString(b2);
 		}
 	}
+
 	return sb;
 }
   

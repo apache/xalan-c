@@ -66,13 +66,13 @@
 
 #if defined(_MSC_VER)
 #include <io.h>
-#else
-#	if defined(__GNUC__)
+#elif defined(__GNUC__)
 #include <dirent.h>
-#	else
-#		error Unsupport platform!!!
-#	endif
+#else
+#error Unsupported platform!!!
 #endif
+
+
 
 #include <functional>
 #include <iterator>
@@ -89,7 +89,6 @@
 
 
 #if defined(_MSC_VER)
-
 class FindFileStruct : public _wfinddata_t
 {
 public:
@@ -103,6 +102,29 @@ public:
 		eReadOnly = _A_RDONLY,
 		eSystem = _A_SYSTEM
 	};
+
+#elif defined(__GNUC__)
+
+class FindFileStruct
+{
+public:
+
+	XMLCh m_name[MAXNAMLEN];
+	int m_attrib;
+
+	enum eAttributes
+	{
+		eAttributeArchive = 1,
+		eAttributeDirectory = 2,
+		eAttributeHidden = 4,
+		eAttributeNormal = 8,
+		eReadOnly = 16,
+		eSystem = 32
+	};
+
+#else
+#error Unsupported platform!!!
+#endif
 
 	const XMLCh*
 	getName() const
@@ -147,76 +169,13 @@ public:
 	}
 };
 
+
+
+#if defined(XALAN_NO_NAMESPACES)
+struct ArchiveFileFilterPredicate : public unary_function<FindFileStruct, bool>
 #else
-#	if defined(__GNUC__)
-
-class FindFileStruct
-{
-	XMLCh m_name[MAXNAMLEN];
-	int m_attrib;
-public:
-
-	enum eAttributes
-	{
-		eAttributeArchive = 1,
-		eAttributeDirectory = 2,
-		eAttributeHidden = 4,
-		eAttributeNormal = 8,
-		eReadOnly = 16,
-		eSystem = 32
-	};
-
-	const XMLCh*
-	getName() const
-	{
-		return m_name;
-	}
-
-	bool
-	isArchive() const
-	{
-		return m_attrib & eAttributeArchive ? true : false;
-	}
-
-	bool
-	isDirectory() const
-	{
-		return m_attrib & eAttributeDirectory ? true : false;
-	}
-
-	bool
-	isHidden() const
-	{
-		return m_attrib & eAttributeHidden ? true : false;
-	}
-
-	bool
-	isNormal() const
-	{
-		return m_attrib == eAttributeNormal ? true : false;
-	}
-
-	bool
-	isReadOnly() const
-	{
-		return m_attrib & eReadOnly ? true : false;
-	}
-
-	bool
-	isSystem() const
-	{
-		return m_attrib & eSystem ? true : false;
-	}
-};
-
-
-#	else
-#		error Unsupported platform!
-#	endif
-#endif
-
-
 struct ArchiveFileFilterPredicate : public std::unary_function<FindFileStruct, bool>
+#endif
 {
 	result_type
 	operator()(const argument_type&		theFindData) const
@@ -227,7 +186,11 @@ struct ArchiveFileFilterPredicate : public std::unary_function<FindFileStruct, b
 
 
 
+#if defined(XALAN_NO_NAMESPACES)
+struct DirectoryFilterPredicate : public unary_function<FindFileStruct, bool>
+#else
 struct DirectoryFilterPredicate : public std::unary_function<FindFileStruct, bool>
+#endif
 {
 	result_type
 	operator()(const argument_type&		theFindData) const
@@ -238,7 +201,11 @@ struct DirectoryFilterPredicate : public std::unary_function<FindFileStruct, boo
 
 
 
+#if defined(XALAN_NO_NAMESPACES)
+struct HiddenFileFilterPredicate : public unary_function<FindFileStruct, bool>
+#else
 struct HiddenFileFilterPredicate : public std::unary_function<FindFileStruct, bool>
+#endif
 {
 	result_type
 	operator()(const argument_type&		theFindData) const
@@ -249,7 +216,11 @@ struct HiddenFileFilterPredicate : public std::unary_function<FindFileStruct, bo
 
 
 
+#if defined(XALAN_NO_NAMESPACES)
+struct NormalFileFilterPredicate : public unary_function<FindFileStruct, bool>
+#else
 struct NormalFileFilterPredicate : public std::unary_function<FindFileStruct, bool>
+#endif
 {
 	result_type
 	operator()(const argument_type&		theFindData) const
@@ -260,7 +231,11 @@ struct NormalFileFilterPredicate : public std::unary_function<FindFileStruct, bo
 
 
 
+#if defined(XALAN_NO_NAMESPACES)
+struct ReadOnlyFileFilterPredicate : public unary_function<FindFileStruct, bool>
+#else
 struct ReadOnlyFileFilterPredicate : public std::unary_function<FindFileStruct, bool>
+#endif
 {
 	result_type
 	operator()(const argument_type&		theFindData) const
@@ -271,7 +246,11 @@ struct ReadOnlyFileFilterPredicate : public std::unary_function<FindFileStruct, 
 
 
 
+#if defined(XALAN_NO_NAMESPACES)
+struct SystemFileFilterPredicate : public unary_function<FindFileStruct, bool>
+#else
 struct SystemFileFilterPredicate : public std::unary_function<FindFileStruct, bool>
+#endif
 {
 	result_type
 	operator()(const argument_type&		theFindData) const
@@ -282,26 +261,26 @@ struct SystemFileFilterPredicate : public std::unary_function<FindFileStruct, bo
 
 
 
+#if defined(XALAN_NO_NAMESPACES)
+struct FilesOnlyFilterPredicate : public unary_function<FindFileStruct, bool>
+#else
 struct FilesOnlyFilterPredicate : public std::unary_function<FindFileStruct, bool>
+#endif
 {
 	result_type
 	operator()(const argument_type&		theFindData) const
 	{
-		DirectoryFilterPredicate		directoryfilterpredicate;
-		ArchiveFileFilterPredicate    archivefilefilterpredicate;
-		NormalFileFilterPredicate     normalfilefilterpredicate;
-		ReadOnlyFileFilterPredicate   readonlyfilefilterpredicate;
-		return !directoryfilterpredicate(theFindData) &&
-			   (archivefilefilterpredicate(theFindData) ||
-			    normalfilefilterpredicate(theFindData) ||
-				readonlyfilefilterpredicate(theFindData));
+		DirectoryFilterPredicate		theDirectoryPredicate;
+		ArchiveFileFilterPredicate		theArchivePredicate;
+		NormalFileFilterPredicate		theNormalPredicate;
+		ReadOnlyFileFilterPredicate		theReadOnlyPredicate;
+
+		return !theDirectoryPredicate(theFindData) &&
+			   (theArchivePredicate(theFindData) ||
+			    theNormalPredicate(theFindData) ||
+				theReadOnlyPredicate(theFindData));
 			   
 	}
-
-//	DirectoryFilterPredicate		m_directoryPredicate;
-//	ArchiveFileFilterPredicate		m_archivePredicate;
-//	NormalFileFilterPredicate		m_normalPredicate;
-//	ReadOnlyFileFilterPredicate		m_readOnlyPredicate;
 };
 
 
@@ -350,15 +329,10 @@ EnumerateDirectory(
 
 		_findclose(theSearchHandle);
 	}
+#elif defined(__GNUC__)
+	assert(false);
 #else
-
-#	if defined(__GNUC__)
-	// @@ Need to implement this !!
-	assert(0);
-#	else
-#		error Unsupport platform!!!
-#	endif
-
+#error Unsupported platform!!!
 #endif
 }
 
@@ -368,7 +342,11 @@ template<class CollectionType,
 		 class FilterPredicateType = FilesOnlyFilterPredicate,
 		 class StringType = DOMString,
 		 class StringConversionFunction = c_wstr_functor>
+#if defined(XALAN_NO_NAMESPACES)
+struct DirectoryEnumeratorFunctor : public unary_function<StringType, CollectionType>
+#else
 struct DirectoryEnumeratorFunctor : public std::unary_function<StringType, CollectionType>
+#endif
 {
 	result_type
 	operator()(const argument_type&		theDirectory) const

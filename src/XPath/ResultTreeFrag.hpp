@@ -108,7 +108,7 @@ public:
 	// These interfaces are inherited from NodeListImpl...
 
 	virtual NodeImpl*
-	item(unsigned long	index);
+	item(unsigned int	index);
 
 	virtual unsigned int
 	getLength();
@@ -183,7 +183,7 @@ public:
 	getChildNodesAsNodeRefList() const;
 
 	virtual DOM_Node
-	item(unsigned long	index) const;
+	item(unsigned int	index) const;
 
 	virtual unsigned int
 	getLength() const;

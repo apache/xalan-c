@@ -97,12 +97,38 @@ static NSInfo	theNSInfoNullNoAncestorXMLNS(true, false, NSInfo::ANCESTORNOXMLNS)
 
 
 
-DOMString
-NamespaceResolver::getNamespaceOfNode(const DOM_Node&	theNode)
+static DOMString	theXMLString(XALAN_STATIC_UCODE_STRING("xml"));
+static DOMString	theXMLNSString(XALAN_STATIC_UCODE_STRING("xmlns"));
+static DOMString	theXMLNSStringWithColon(XALAN_STATIC_UCODE_STRING("xmlns:"));
+
+
+
+void
+NamespaceResolver::updateNamespace(
+			const DOM_Node&		theNode,
+			const NSInfo&		theNamespace) const
 {
+#if defined(XALAN_NO_MUTABLE)
+#if defined(XALAN_OLD_STYLE_CASTS)
+	((NamespaceResolver*)this)->m_NSInfos[theNode] = theNamespace;
+#else
+	const_cast<NamespaceResolver*>(this)->m_NSInfos[theNode] = theNamespace;
+#endif
+#else
+	m_NSInfos[theNode] = theNamespace;
+#endif
+}
+
+
+
+DOMString
+NamespaceResolver::getNamespaceOfNode(const DOM_Node&	theNode) const
+{
+#if !defined(XALAN_NO_NAMESPACES)
 	using std::make_pair;
 	using std::pair;
 	using std::vector;
+#endif
 
 	DOM_Node						theLocalNode(theNode);
 
@@ -178,7 +204,7 @@ NamespaceResolver::getNamespaceOfNode(const DOM_Node&	theNode)
 		bool	ancestorsHaveXMLNS = false;
 		bool	nHasXMLNS = false;
 
-		if(equals(prefix, "xml") == true)
+		if(equals(prefix, theXMLString) == true)
 		{
 			namespaceOfPrefix = DOMServices::s_XMLNamespaceURI;
 		}
@@ -209,10 +235,11 @@ NamespaceResolver::getNamespaceOfNode(const DOM_Node&	theNode)
 					
 					if (parentType == DOM_Node::ELEMENT_NODE) 
 					{
-						// $$$ TODO: DOM_NamedNodeMap::getLength() should be const.
+						// $$$ TODO: DOM_NamedNodeMap::item() should be const.  When it does,
+						// this can become const as well.
 						DOM_NamedNodeMap	nnm = parent.getAttributes();
 
-						for (int i = 0;  i < nnm.getLength();  i ++) 
+						for (unsigned int i = 0;  i < nnm.getLength();  i ++) 
 						{
 							DOM_Node			attr = nnm.item(i);
 
@@ -220,11 +247,9 @@ NamespaceResolver::getNamespaceOfNode(const DOM_Node&	theNode)
 
 							if(charAt(aname, 0) == 'x')
 							{
-								const char* const	theXMLNS = "xmlns:";
-
-								bool isPrefix = startsWith(aname, theXMLNS);
+								bool isPrefix = startsWith(aname, theXMLNSStringWithColon);
 							  
-								if (equals(aname, "xmlns") == true || isPrefix == true) 
+								if (equals(aname, theXMLNSString) == true || isPrefix == true) 
 								{
 									if(theLocalNode == parent)
 									{
@@ -235,7 +260,7 @@ NamespaceResolver::getNamespaceOfNode(const DOM_Node&	theNode)
 									ancestorsHaveXMLNS = true;
 
 									const DOMString	p = isPrefix == true ?
-										substring(aname, strlen(theXMLNS)) : DOMString();
+										substring(aname, length(theXMLNSStringWithColon)) : DOMString();
 
 									if (equals(p, prefix) == true) 
 									{
@@ -254,7 +279,7 @@ NamespaceResolver::getNamespaceOfNode(const DOM_Node&	theNode)
 						nsInfo = elementHasXMLNS ? theNSInfoUnProcWithXMLNS :
 										theNSInfoUnProcWithoutXMLNS;
 
-						m_NSInfos[parent] = nsInfo;
+						updateNamespace(parent, nsInfo);
 					}
 				}
 
@@ -293,7 +318,7 @@ NamespaceResolver::getNamespaceOfNode(const DOM_Node&	theNode)
 						if(candidateInfo == theNSInfoUnProcWithoutXMLNS ||
 						   candidateInfo == theNSInfoNullWithoutXMLNS)
 						{
-							m_NSInfos[parent] = candidateInfo;
+							updateNamespace(parent, candidateInfo);
 						}
 					}
 				}
@@ -310,23 +335,23 @@ NamespaceResolver::getNamespaceOfNode(const DOM_Node&	theNode)
 				{
 					if(nHasXMLNS == true)
 					{
-						m_NSInfos[theLocalNode] = theNSInfoNullWithXMLNS;
+						updateNamespace(theLocalNode, theNSInfoNullWithXMLNS);
 					}
 				
 					else
 					{
-						m_NSInfos[theLocalNode] = theNSInfoNullWithoutXMLNS;
+						updateNamespace(theLocalNode, theNSInfoNullWithoutXMLNS);
 					}
 				}
 			  
 				else
 				{
-					m_NSInfos[theLocalNode] = theNSInfoNullNoAncestorXMLNS;
+					updateNamespace(theLocalNode, theNSInfoNullNoAncestorXMLNS);
 				}
 			}
 			else
 			{
-				m_NSInfos[theLocalNode] = NSInfo(namespaceOfPrefix, nHasXMLNS);
+				updateNamespace(theLocalNode, NSInfo(namespaceOfPrefix, nHasXMLNS));
 			}
 		}
 	}

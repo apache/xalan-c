@@ -105,6 +105,8 @@ DOMServices::getNodeData(
  			const DOM_Node&				node,
 			const WhitespaceSupport&	theResolver)
 {
+	assert(node != 0);
+
 	DOMString	data;
 
 	switch(node.getNodeType())
@@ -113,11 +115,11 @@ DOMServices::getNodeData(
 	case DOM_Node::DOCUMENT_NODE:
 	case DOM_Node::ELEMENT_NODE:
 		{
-			DOM_NodeList	children = node.getChildNodes();
+			const DOM_NodeList	children = node.getChildNodes();
 
-			const int 	nNodes = children.getLength();
+			const unsigned int 	nNodes = children.getLength();
 
-			for(int i = 0; i < nNodes; i++)
+			for(unsigned int i = 0; i < nNodes; i++)
 			{
 				const DOMString 	nodeData =
 					getNodeData(children.item(i),
@@ -135,7 +137,11 @@ DOMServices::getNodeData(
 	case DOM_Node::CDATA_SECTION_NODE:
 		{
 			const DOM_Text&		theTextNode =
+#if defined(XALAN_OLD_STYLE_CASTS)
+				(const DOM_Text&)node;
+#else
 				static_cast<const DOM_Text&>(node);
+#endif
 
 			if(theResolver.isIgnorableWhitespace(theTextNode) == false)
 			{
@@ -182,13 +188,15 @@ locateAttrParent(
 
     DOM_Node			parent;
 
+	// $$$ TODO: DOM_NamedNodeMap::item() should be const.  When it does,
+	// this can become const as well.
 	DOM_NamedNodeMap	attrs = elem.getAttributes();
 
     if(attrs != 0)
 	{
-		const int		nAttrs = attrs.getLength();
+		const unsigned int	nAttrs = attrs.getLength();
 		
-		for(int i = 0; i < nAttrs; i++)
+		for(unsigned int i = 0; i < nAttrs; i++)
 		{
 			if(attrs.item(i) == attr)
 			{
@@ -201,17 +209,21 @@ locateAttrParent(
 
 	if(parent == 0)
     {
-		DOM_NodeList	children = elem.getChildNodes();
+		DOM_NodeList		children = elem.getChildNodes();
 
-		const int		nChildren = children.getLength();
+		const unsigned int	nChildren = children.getLength();
 
-		for(int i = 0; i < nChildren; i++)
+		for(unsigned int i = 0; i < nChildren; i++)
 		{
 			DOM_Node node = children.item(i);
 
 			if(node.getNodeType() == DOM_Node::ELEMENT_NODE)
 			{
+#if defined(XALAN_OLD_STYLE_CASTS)
+				parent = locateAttrParent((const DOM_Element&)node, attr);
+#else
 				parent = locateAttrParent(static_cast<DOM_Element&>(node), attr);
+#endif
 
 				if(parent != 0)
 					break;
@@ -284,9 +296,13 @@ DOMServices::getNamespaceForPrefix(
 		{
 			if (type == DOM_Node::ELEMENT_NODE) 
 			{
-				DOM_NamedNodeMap nnm = parent.getAttributes();
-				
-				for (int i = 0;  i < nnm.getLength();  i ++) 
+				// $$$ TODO: DOM_NamedNodeMap::item() should be const.  When it does,
+				// this can become const as well.
+				DOM_NamedNodeMap	nnm = parent.getAttributes();
+
+				const unsigned int	theLength = nnm.getLength();
+
+				for (unsigned int i = 0;  i < theLength;  i ++) 
 				{
 					DOM_Node	attr = nnm.item(i);
 					DOMString	aname = attr.getNodeName();

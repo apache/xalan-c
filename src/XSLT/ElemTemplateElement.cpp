@@ -190,7 +190,8 @@ ElemTemplateElement::getNodeName()
 
 
 
-DOMString ElemTemplateElement::getNamespaceForPrefix(const DOMString& prefix) const
+DOMString
+ElemTemplateElement::getNamespaceForPrefix(const DOMString& prefix) const
 {
     DOMString nameSpace;
     if(m_finishedConstruction == true)
@@ -218,6 +219,14 @@ DOMString ElemTemplateElement::getNamespaceForPrefix(const DOMString& prefix) co
     if(isEmpty(nameSpace))
       error("Can not resolve namespace prefix: "+prefix);
     return nameSpace;
+}
+
+
+
+DOMString
+ElemTemplateElement::getURI() const
+{
+	return getStylesheet().getBaseIdentifier();
 }
 
 
@@ -586,7 +595,7 @@ ElemTemplateElement::transformSelectedChildren(
 		sourceNodes = sourceNodeContext.getChildNodes();
 	}
 
-	int nNodes = sourceNodes.getLength();
+	const int	nNodes = sourceNodes.getLength();
 
 	if(nNodes > 0)
 	{
@@ -980,14 +989,14 @@ unsigned int ElemTemplateElement::getLength()
  * @param index 
  * @return org.w3c.dom.Node
  */
-NodeImpl* ElemTemplateElement::item(unsigned long	index) 
+NodeImpl* ElemTemplateElement::item(unsigned int	index) 
 {
     // It is assumed that the getChildNodes call synchronized
     // the children. Therefore, we can access the first child
     // reference directly.
     ElemTemplateElement*	node = m_firstChild;
 
-    for (int i = 0; i < index && node != 0; i++) 
+    for (unsigned int i = 0; i < index && node != 0; i++) 
     {
 		node = node->m_nextSibling;
     }

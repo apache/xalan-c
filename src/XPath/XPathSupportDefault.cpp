@@ -163,43 +163,12 @@ XPathSupportDefault::isIgnorableWhitespace(const DOM_Text&	node) const
 
 
 
-DOM_Document
-XPathSupportDefault::parseXML(
-			const DOMString&	/* urlString */,
-			const DOMString&	/* base */) const
-{
-	return DOM_Document();
-}
-
-
-
-DOM_Document
-XPathSupportDefault::parseXML(
-			const XMLURL&				/* url */,
-			DocumentHandler&		/* docHandler */,
-			const DOM_Document&		/* styleDoc */) const
-{
-	return DOM_Document();
-}
-
-
-
 DOM_Element
 XPathSupportDefault::getElementByID(
 			const DOMString&	/* id */,
 			const DOM_Document&	/* doc */) const
 {
 	return DOM_Element();
-}
-
-
-
-XMLURL*
-XPathSupportDefault::getURLFromString(
-			const DOMString&		/* urlString */,
-			const DOMString&		/* base */) const
-{
-	return 0;
 }
 
 

@@ -119,9 +119,9 @@ public:
 
 		double					sum = 0.0;
 
-		const int				count = nl.getLength();
+		const unsigned int		count = nl.getLength();
 
-		for (int i = 0; i < count; i++)
+		for (unsigned int i = 0; i < count; i++)
 		{
 			sum += DOMStringToDouble(executionContext.getNodeData(nl.item(i)));
 		}

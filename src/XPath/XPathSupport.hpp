@@ -146,42 +146,12 @@ public:
 	getParentOfNode(const DOM_Node&		n) const = 0;
 
 	/**
-	 * Provides support for XML parsing service.
-	 */
-	virtual DOM_Document
-	parseXML(
-			const DOMString&	urlString,
-			const DOMString&	base) const = 0;
-
-	/**
-	 * Take a user string and try and parse XML, and also return 
-	 * the url.
-	 * the error condition is severe enough to halt processing.
-	 */
-	virtual DOM_Document
-	parseXML(
-			const XMLURL&				url,
-			DocumentHandler&		docHandler,
-			const DOM_Document&		styleDoc) const = 0;
-
-	/**
 	 * Get an element from an ID.
 	 */
 	virtual DOM_Element
 	getElementByID(
 			const DOMString&		id,
 			const DOM_Document&		doc) const = 0;
-
-	/**
-	 * Take a user string and try and parse XML, and also return 
-	 * the url.
-	 * @exception XSLProcessorException thrown if the active ProblemListener and XMLParserLiaison decide 
-	 * the error condition is severe enough to halt processing.
-	 */
-	virtual XMLURL*
-	getURLFromString(
-			const DOMString&		urlString,
-			const DOMString&		base) const = 0;
 
 	/**
 	 * Set whether or not the liaison attempts to expand namespaces.	Used 

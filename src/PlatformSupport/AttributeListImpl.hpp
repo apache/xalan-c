@@ -156,6 +156,16 @@ protected:
 		const XMLCharVectorType		m_Type;
 	};
 
+#if defined(XALAN_NO_NAMESPACES)
+	// This vector will hold the entries.
+	typedef vector<const AttributeVectorEntry*>				AttributeVectorType;
+
+	// This map will associate a name with a pointer to the entry that corresponds
+	// to that name.
+	typedef map<const XMLCh*,
+					 const AttributeVectorEntry*,
+					 less_null_terminated_arrays<XMLCh> >	AttributeKeyMapType;
+#else
 	// This vector will hold the entries.
 	typedef std::vector<const AttributeVectorEntry*>		AttributeVectorType;
 
@@ -164,6 +174,7 @@ protected:
 	typedef std::map<const XMLCh*,
 					 const AttributeVectorEntry*,
 					 less_null_terminated_arrays<XMLCh> >	AttributeKeyMapType;
+#endif
 
 	AttributeKeyMapType		m_AttributeKeyMap;
 	AttributeVectorType		m_AttributeVector;

@@ -146,14 +146,14 @@ StylesheetExecutionContextDefault::getXPathExecutionContext()
 const NodeRefListBase&
 StylesheetExecutionContextDefault::getContextNodeList() const
 {
-	return m_contextNodeList;
+	return m_xpathExecutionContext.getContextNodeList();
 }
 
 
 void
 StylesheetExecutionContextDefault::setContextNodeList(const NodeRefListBase&	theContextNodeList)
 {
-	m_contextNodeList = theContextNodeList;
+	m_xpathExecutionContext.setContextNodeList(theContextNodeList);
 }
 
 

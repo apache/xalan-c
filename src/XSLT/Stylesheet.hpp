@@ -405,13 +405,22 @@ public:
 // JMD added Thu Sep 30 08:20:29 EDT 1999
 
    // Get the base identifier with which this stylesheet is associated.
-	const DOMString getBaseIdentifier() { return m_baseIdent; }
-	void setBaseIdentifier(const DOMString& str) { m_baseIdent = str; }
+	const DOMString
+	getBaseIdentifier() const
+	{
+		return m_baseIdent;
+	}
+
+	void
+	setBaseIdentifier(const DOMString& str)
+	{
+		m_baseIdent = str;
+	}
 
 	/**
 	 * Add an attribute set to the list.
 	 *
-	*/
+	 */
 	void addAttributeSet(
 		const QName&		qname, 
 		ElemAttributeSet*	attrSet);
@@ -497,7 +506,7 @@ public:
 //		  throws XSLProcessorException
 private:
 
-#if OUT
+#if defined(OUT)
 	/**
 	 * Process imports, includes, macros, templates, etc.
 	 * into tables of various types.
@@ -510,7 +519,7 @@ private:
 			const DOM_Element&	stylesheet,
 			const DOMString&	base);
 
-	@@ OUT ?
+	//@@ OUT ?
 	/**
 	 * Get a list of the included documents into a vector.
 	 */

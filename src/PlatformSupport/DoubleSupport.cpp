@@ -57,37 +57,43 @@
 #include "DoubleSupport.hpp"
 
 
+#if defined(NO_STD_LIMITS)
 #if defined(__GNUC__)
 #include <math.h>
 // @@ JMD: Shouldn't need this as well ??
 #include <bits/nan.h>
+else
+#error Unsupported platform!!!
+#endif
 #else
 #include <limits>
 #endif
 
 
 
-
-
-#if defined(_MSC_VER)
-const double			DoubleSupport::s_NaN = std::numeric_limits<double>::quiet_NaN();
-const double			DoubleSupport::s_positiveInfinity = std::numeric_limits<double>::infinity();
-const double			DoubleSupport::s_negativeInfinity = std::numeric_limits<double>::signaling_NaN();
-#else
+#if defined(NO_STD_LIMITS)
 #if defined(__GNUC__)
 const double	DoubleSupport::s_NaN = NAN;
 const double	DoubleSupport::s_positiveInfinity = HUGE_VAL;
 const double	DoubleSupport::s_negativeInfinity = -HUGE_VAL;
 #else
-#	error Unsupported platform!
+#error Unsupported platform!!!
 #endif
+#else
+const double	DoubleSupport::s_NaN = std::numeric_limits<double>::quiet_NaN();
+const double	DoubleSupport::s_positiveInfinity = std::numeric_limits<double>::infinity();
+const double	DoubleSupport::s_negativeInfinity = std::numeric_limits<double>::signaling_NaN();
 #endif
 
 
 
 #if defined(XALAN_NEED_SPECIAL_NAN_SUPPORT)
 const unsigned long*	DoubleSupport::s_NaNFirstDWORD =
+#if defined(XALAN_OLD_STYLE_CASTS)
+					(const unsigned long*)&s_NaN;
+#else
 					reinterpret_cast<const unsigned long*>(&s_NaN);
+#endif
 
 const unsigned long*	DoubleSupport::s_NaNSecondDWORD =
 					s_NaNFirstDWORD + 1;

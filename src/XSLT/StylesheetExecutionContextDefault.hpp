@@ -69,10 +69,6 @@
 
 
 
-#include <XPath/MutableNodeRefList.hpp>
-
-
-
 class XPathProcessor;
 class XPathSupport;
 class XObjectFactory;
@@ -406,8 +402,6 @@ private:
 	const PrefixResolver*			m_prefixResolver;
 
 	StylesheetRoot*					m_stylesheetRoot;
-
-	MutableNodeRefList				m_contextNodeList;
 };
 
 

@@ -127,7 +127,11 @@ private:
 
 
 
+#if defined(XALAN_NO_NAMESPACES)
+struct DeleteFactoryObjectFunctor : public unary_function<const FactoryObject*, void>
+#else
 struct DeleteFactoryObjectFunctor : public std::unary_function<const FactoryObject*, void>
+#endif
 {
 public:
 

@@ -115,8 +115,6 @@ MutableNodeRefList::operator=(const MutableNodeRefList&		theRHS)
 	{
 		// Chain up...
 		NodeRefList::operator=(theRHS);
-
-		m_support = theRHS.m_support;
 	}
 
 	return *this;
@@ -131,8 +129,6 @@ MutableNodeRefList::operator=(const NodeRefList&		theRHS)
 	{
 		// Chain up...
 		NodeRefList::operator=(theRHS);
-
-		m_support = 0;
 	}
 
 	return *this;
@@ -147,8 +143,6 @@ MutableNodeRefList::operator=(const NodeRefListBase&	theRHS)
 	{
 		// Chain up...
 		NodeRefList::operator=(theRHS);
-
-		m_support = 0;
 	}
 
 	return *this;
@@ -182,7 +176,7 @@ MutableNodeRefList::addNode(const DOM_Node&		n)
 void
 MutableNodeRefList::insertNode(
 			const DOM_Node&		n,
-			int					pos)
+			unsigned int		pos)
 {
  	assert(getLength() >= pos);
 
@@ -214,7 +208,7 @@ MutableNodeRefList::removeNode(const DOM_Node&	n)
 
 
 void
-MutableNodeRefList::removeNode(int	pos)
+MutableNodeRefList::removeNode(unsigned int		pos)
 {
 	assert(pos < getLength());
 
@@ -233,7 +227,7 @@ MutableNodeRefList::clear()
 
 void
 MutableNodeRefList::setNode(
-			int					pos,
+			unsigned int		pos,
 			const DOM_Node&		theNode)
 {
 	assert(pos < getLength());
@@ -251,9 +245,9 @@ MutableNodeRefList::addNodes(const DOM_NodeList&	nodelist)
 {
 	if (nodelist != 0)
 	{
-		const int	theLength = nodelist.getLength();
+		const unsigned int	theLength = nodelist.getLength();
 
-		for (int i = 0; i < theLength; i++)
+		for (unsigned int i = 0; i < theLength; i++)
 		{
 			addNode(nodelist.item(i));
 		}
@@ -265,9 +259,9 @@ MutableNodeRefList::addNodes(const DOM_NodeList&	nodelist)
 void
 MutableNodeRefList::addNodes(const NodeRefListBase&		nodelist)
 {
-	const int	theLength = nodelist.getLength();
+	const unsigned int	theLength = nodelist.getLength();
 
-	for (int i = 0; i < theLength; i++)
+	for (unsigned int i = 0; i < theLength; i++)
 	{
 		addNode(nodelist.item(i));
 	}
@@ -278,9 +272,9 @@ MutableNodeRefList::addNodes(const NodeRefListBase&		nodelist)
 void
 MutableNodeRefList::addNodesInDocOrder(const DOM_NodeList&	nodelist)
 {
-	const int	nChildren = nodelist.getLength();
+	const unsigned int	nChildren = nodelist.getLength();
 
-	for(int i = 0; i < nChildren; i++)
+	for(unsigned int i = 0; i < nChildren; i++)
 	{
 		addNodeInDocOrder(nodelist.item(i));
 	}
@@ -291,9 +285,9 @@ MutableNodeRefList::addNodesInDocOrder(const DOM_NodeList&	nodelist)
 void
 MutableNodeRefList::addNodesInDocOrder(const NodeRefListBase&	nodelist)
 {
-	const int	nChildren = nodelist.getLength();
+	const unsigned int	nChildren = nodelist.getLength();
 
-	for(int i = 0; i < nChildren; i++)
+	for(unsigned int i = 0; i < nChildren; i++)
 	{
 		addNodeInDocOrder(nodelist.item(i),
 						  true);
@@ -315,18 +309,19 @@ MutableNodeRefList::addNodeInDocOrder(
 		}
 		else
 		{
-			const int	size = getLength();
+			const unsigned int	size = getLength();
 
-			int			i = size - 1;
+			unsigned int		i = size - 1;
 
-			for(; i >= 0; i--)
+			// When wrap-around happens, i will be > than size...
+			for(; i < size; i--)
 			{
 				const DOM_Node&		child = m_nodeList[i];
 
 				if(child == node)
 				{
 					// Duplicate, don't insert...
-					i = -2;
+					i = size;
 
 					break;
 				}
@@ -336,7 +331,7 @@ MutableNodeRefList::addNodeInDocOrder(
 				}
 			}
 
-			if (i != -2)
+			if (i < size)
 			{
 				insertNode(node, i + 1);
 			}
@@ -489,7 +484,7 @@ MutableNodeRefList::isNodeAfterSibling(
 	{
 		DOM_NamedNodeMap	children = parent.getAttributes();
 	  
-		const int			nNodes = children.getLength();
+		const unsigned int	nNodes = children.getLength();
 
 		bool				found1 = false;
 		bool				found2 = false;

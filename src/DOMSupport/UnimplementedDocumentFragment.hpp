@@ -102,7 +102,7 @@ public:
 	// Deriving classes _must_ override these.
 
 	virtual NodeImpl*
-	item(unsigned long	index);
+	item(unsigned int	index);
 
 	virtual unsigned int
 	getLength();

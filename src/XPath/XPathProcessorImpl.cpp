@@ -846,12 +846,11 @@ XPathProcessorImpl::warn(
 			const DOM_Node& 	sourceNode) const
 {
 	assert(m_envSupport != 0);
-	assert(m_prefixResolver != 0);
 
 	const bool	shouldThrow =
 		m_envSupport->problem(XPathEnvSupport::eXPATHParser, 
 							  XPathEnvSupport::eWarning,
-							  *m_prefixResolver, 
+							  m_prefixResolver, 
 							  sourceNode,
 							  msg,
 							  0,
@@ -897,13 +896,11 @@ XPathProcessorImpl::error(
 	}
 
 	assert(m_envSupport != 0);
-	assert(m_prefixResolver != 0);
-
 
 	const bool	shouldThrow =
 		m_envSupport->problem(XPathEnvSupport::eXPATHParser, 
 							  XPathEnvSupport::eError,
-							  *m_prefixResolver, 
+							  m_prefixResolver, 
 							  sourceNode,
 							  emsg,
 							  0,
@@ -915,161 +912,6 @@ XPathProcessorImpl::error(
 	}
 }
   
-
-
-#if 0
-  private static Hashtable m_keywords = new Hashtable();
-  private static Hashtable m_axisnames = new Hashtable();
-  static Hashtable m_functions = new Hashtable();
-  private static Hashtable m_nodetypes = new Hashtable();
-
-  private static final String FROM_ANCESTORS_STRING = "ancestor";
-  private static final String FROM_ANCESTORS_OR_SELF_STRING = "ancestor-or-self";
-  private static final String FROM_ATTRIBUTES_STRING = "attribute";
-  private static final String FROM_CHILDREN_STRING = "child";
-  private static final String FROM_DESCENDANTS_STRING = "descendant";
-  private static final String FROM_DESCENDANTS_OR_SELF_STRING = "descendant-or-self";
-  private static final String FROM_FOLLOWING_STRING = "following";
-  private static final String FROM_FOLLOWING_SIBLINGS_STRING = "following-sibling";
-  private static final String FROM_PARENT_STRING = "parent";
-  private static final String FROM_PRECEDING_STRING = "preceding";
-  private static final String FROM_PRECEDING_SIBLINGS_STRING = "preceding-sibling";
-  private static final String FROM_SELF_STRING = "self";
-  private static final String FROM_NAMESPACE_STRING = "namespace";
-  
-  private static final String FROM_SELF_ABBREVIATED_STRING = ".";
-  private static final String NODETYPE_COMMENT_STRING = "comment";
-  private static final String NODETYPE_TEXT_STRING = "text";
-  private static final String NODETYPE_PI_STRING = "processing-instruction";
-  private static final String NODETYPE_NODE_STRING = "node";
-  private static final String FROM_ATTRIBUTE_STRING = "@";
-  private static final String FROM_DOC_STRING = "document";
-  private static final String FROM_DOCREF_STRING = "document";
-  private static final String FROM_ID_STRING = "id";
-  private static final String FROM_IDREF_STRING = "idref";
-  private static final String NODETYPE_ANYELEMENT_STRING = "*";
-  private static final String FUNC_CURRENT_STRING = "current";
-  private static final String FUNC_LAST_STRING = "last";
-  private static final String FUNC_POSITION_STRING = "position";
-  private static final String FUNC_COUNT_STRING = "count";
-  private static final String FUNC_ID_STRING = "id";
-  private static final String FUNC_IDREF_STRING = "idref";
-  private static final String FUNC_KEY_STRING = "key";
-  private static final String FUNC_KEYREF_STRING = "keyref";
-  private static final String FUNC_DOC_STRING = "doc";
-  private static final String FUNC_DOCUMENT_STRING = "document";
-  private static final String FUNC_DOCREF_STRING = "docref";
-  private static final String FUNC_LOCAL_PART_STRING = "local-name";
-  private static final String FUNC_NAMESPACE_STRING = "namespace-uri";
-  private static final String FUNC_NAME_STRING = "name";
-  private static final String FUNC_GENERATE_ID_STRING = "generate-id";
-  private static final String FUNC_NOT_STRING = "not";
-  private static final String FUNC_TRUE_STRING = "true";
-  private static final String FUNC_FALSE_STRING = "false";
-  private static final String FUNC_BOOLEAN_STRING = "boolean";
-  private static final String FUNC_LANG_STRING = "lang";
-  private static final String FUNC_NUMBER_STRING = "number";
-  private static final String FUNC_FLOOR_STRING = "floor";
-  private static final String FUNC_CEILING_STRING = "ceiling";
-  private static final String FUNC_ROUND_STRING = "round";
-  private static final String FUNC_SUM_STRING = "sum";
-  private static final String FUNC_STRING_STRING = "string";
-  private static final String FUNC_STARTS_WITH_STRING = "starts-with";
-  private static final String FUNC_CONTAINS_STRING = "contains";
-  private static final String FUNC_SUBSTRING_BEFORE_STRING = "substring-before";
-  private static final String FUNC_SUBSTRING_AFTER_STRING = "substring-after";
-  private static final String FUNC_NORMALIZE_STRING = "normalize";
-  private static final String FUNC_TRANSLATE_STRING = "translate";
-  private static final String FUNC_CONCAT_STRING = "concat";
-  private static final String FUNC_FORMAT_NUMBER_STRING = "format-number";
-  private static final String FUNC_SYSTEM_PROPERTY_STRING = "system-property";
-  private static final String FUNC_EXT_FUNCTION_AVAILABLE_STRING = "extension-function-available";
-  private static final String FUNC_EXT_ELEM_AVAILABLE_STRING = "extension-element-available";
-  private static final String FUNC_SUBSTRING_STRING = "substring";
-  private static final String FUNC_STRING_LENGTH_STRING = "string-length";
-
-  // Proprietary, built in functions
-  private static final String FUNC_DOCLOCATION_STRING = "document-location";
-
-  static 
-  {
-	m_axisnames.put((FROM_ANCESTORS_STRING).intern(), new Integer(XPath.FROM_ANCESTORS));
-	m_axisnames.put((FROM_ANCESTORS_OR_SELF_STRING).intern(), new Integer(XPath.FROM_ANCESTORS_OR_SELF));
-	m_axisnames.put((FROM_ATTRIBUTES_STRING).intern(), new Integer(XPath.FROM_ATTRIBUTES));
-	m_axisnames.put((FROM_CHILDREN_STRING).intern(), new Integer(XPath.FROM_CHILDREN));
-	m_axisnames.put((FROM_DESCENDANTS_STRING).intern(), new Integer(XPath.FROM_DESCENDANTS));
-	m_axisnames.put((FROM_DESCENDANTS_OR_SELF_STRING).intern(), new Integer(XPath.FROM_DESCENDANTS_OR_SELF));
-	m_axisnames.put((FROM_FOLLOWING_STRING).intern(), new Integer(XPath.FROM_FOLLOWING));
-	m_axisnames.put((FROM_FOLLOWING_SIBLINGS_STRING).intern(), new Integer(XPath.FROM_FOLLOWING_SIBLINGS));
-	m_axisnames.put((FROM_PARENT_STRING).intern(), new Integer(XPath.FROM_PARENT));
-	m_axisnames.put((FROM_PRECEDING_STRING).intern(), new Integer(XPath.FROM_PRECEDING));
-	m_axisnames.put((FROM_PRECEDING_SIBLINGS_STRING).intern(), new Integer(XPath.FROM_PRECEDING_SIBLINGS));
-	m_axisnames.put((FROM_SELF_STRING).intern(), new Integer(XPath.FROM_SELF));
-	m_axisnames.put((FROM_NAMESPACE_STRING).intern(), new Integer(XPath.FROM_NAMESPACE));
-
-	m_nodetypes.put((NODETYPE_COMMENT_STRING).intern(), new Integer(XPath.NODETYPE_COMMENT));
-	m_nodetypes.put((NODETYPE_TEXT_STRING).intern(), new Integer(XPath.NODETYPE_TEXT));
-	m_nodetypes.put((NODETYPE_PI_STRING).intern(), new Integer(XPath.NODETYPE_PI));
-	m_nodetypes.put((NODETYPE_NODE_STRING).intern(), new Integer(XPath.NODETYPE_NODE));
-	m_nodetypes.put((NODETYPE_ANYELEMENT_STRING).intern(), new Integer(XPath.NODETYPE_ANYELEMENT));
-	
-	m_keywords.put((FROM_SELF_ABBREVIATED_STRING).intern(), new Integer(XPath.FROM_SELF));
-	// m_keywords.put((FROM_ATTRIBUTE_STRING).intern(), new Integer(XPath.FROM_ATTRIBUTE));
-	// m_keywords.put((FROM_DOC_STRING).intern(), new Integer(XPath.FROM_DOC));
-	// m_keywords.put((FROM_DOCREF_STRING).intern(), new Integer(XPath.FROM_DOCREF));
-	// m_keywords.put((FROM_ID_STRING).intern(), new Integer(XPath.FROM_ID));
-	// m_keywords.put((FROM_IDREF_STRING).intern(), new Integer(XPath.FROM_IDREF));
-
-	m_keywords.put((FUNC_ID_STRING).intern(), new Integer(XPath.FUNC_ID));
-	m_keywords.put((FUNC_KEY_STRING).intern(), new Integer(XPath.FUNC_KEY));
-	m_keywords.put((FUNC_DOCUMENT_STRING).intern(), new Integer(XPath.FUNC_DOC));
-
-	m_functions.put((FUNC_CURRENT_STRING).intern(), new Integer(XPath.FUNC_CURRENT));
-	m_functions.put((FUNC_LAST_STRING).intern(), new Integer(XPath.FUNC_LAST));
-	m_functions.put((FUNC_POSITION_STRING).intern(), new Integer(XPath.FUNC_POSITION));
-	m_functions.put((FUNC_COUNT_STRING).intern(), new Integer(XPath.FUNC_COUNT));
-	m_functions.put((FUNC_ID_STRING).intern(), new Integer(XPath.FUNC_ID));
-	m_functions.put((FUNC_KEY_STRING).intern(), new Integer(XPath.FUNC_KEY));
-	m_functions.put((FUNC_DOCUMENT_STRING).intern(), new Integer(XPath.FUNC_DOC));
-	m_functions.put((FUNC_LOCAL_PART_STRING).intern(), new Integer(XPath.FUNC_LOCAL_PART));
-	m_functions.put((FUNC_NAMESPACE_STRING).intern(), new Integer(XPath.FUNC_NAMESPACE));
-	m_functions.put((FUNC_NAME_STRING).intern(), new Integer(XPath.FUNC_QNAME));
-	m_functions.put((FUNC_GENERATE_ID_STRING).intern(), new Integer(XPath.FUNC_GENERATE_ID));
-	m_functions.put((FUNC_NOT_STRING).intern(), new Integer(XPath.FUNC_NOT));
-	m_functions.put((FUNC_TRUE_STRING).intern(), new Integer(XPath.FUNC_TRUE));
-	m_functions.put((FUNC_FALSE_STRING).intern(), new Integer(XPath.FUNC_FALSE));
-	m_functions.put((FUNC_BOOLEAN_STRING).intern(), new Integer(XPath.FUNC_BOOLEAN));
-	m_functions.put((FUNC_LANG_STRING).intern(), new Integer(XPath.FUNC_LANG));
-	m_functions.put((FUNC_NUMBER_STRING).intern(), new Integer(XPath.FUNC_NUMBER));
-	m_functions.put((FUNC_FLOOR_STRING).intern(), new Integer(XPath.FUNC_FLOOR));
-	m_functions.put((FUNC_CEILING_STRING).intern(), new Integer(XPath.FUNC_CEILING));
-	m_functions.put((FUNC_ROUND_STRING).intern(), new Integer(XPath.FUNC_ROUND));
-	m_functions.put((FUNC_SUM_STRING).intern(), new Integer(XPath.FUNC_SUM));
-	m_functions.put((FUNC_STRING_STRING).intern(), new Integer(XPath.FUNC_STRING));
-	m_functions.put((FUNC_STARTS_WITH_STRING).intern(), new Integer(XPath.FUNC_STARTS_WITH));
-	m_functions.put((FUNC_CONTAINS_STRING).intern(), new Integer(XPath.FUNC_CONTAINS));
-	m_functions.put((FUNC_SUBSTRING_BEFORE_STRING).intern(), new Integer(XPath.FUNC_SUBSTRING_BEFORE));
-	m_functions.put((FUNC_SUBSTRING_AFTER_STRING).intern(), new Integer(XPath.FUNC_SUBSTRING_AFTER));
-	m_functions.put((FUNC_NORMALIZE_STRING).intern(), new Integer(XPath.FUNC_NORMALIZE));
-	m_functions.put((FUNC_TRANSLATE_STRING).intern(), new Integer(XPath.FUNC_TRANSLATE));
-	m_functions.put((FUNC_CONCAT_STRING).intern(), new Integer(XPath.FUNC_CONCAT));
-	m_functions.put((FUNC_FORMAT_NUMBER_STRING).intern(), new Integer(XPath.FUNC_FORMAT_NUMBER));
-	m_functions.put((FUNC_SYSTEM_PROPERTY_STRING).intern(), new Integer(XPath.FUNC_SYSTEM_PROPERTY));
-	m_functions.put((FUNC_EXT_FUNCTION_AVAILABLE_STRING).intern(), new Integer(XPath.FUNC_EXT_FUNCTION_AVAILABLE));
-	m_functions.put((FUNC_EXT_ELEM_AVAILABLE_STRING).intern(), new Integer(XPath.FUNC_EXT_ELEM_AVAILABLE));
-	m_functions.put((FUNC_SUBSTRING_STRING).intern(), new Integer(XPath.FUNC_SUBSTRING));
-	m_functions.put((FUNC_STRING_LENGTH_STRING).intern(), new Integer(XPath.FUNC_STRING_LENGTH));
-
-	// These aren't really functions.
-	m_functions.put((NODETYPE_COMMENT_STRING).intern(), new Integer(XPath.NODETYPE_COMMENT));
-	m_functions.put((NODETYPE_TEXT_STRING).intern(), new Integer(XPath.NODETYPE_TEXT));
-	m_functions.put((NODETYPE_PI_STRING).intern(), new Integer(XPath.NODETYPE_PI));
-	m_functions.put((NODETYPE_NODE_STRING).intern(), new Integer(XPath.NODETYPE_NODE));
-		
-	m_functions.put((FUNC_DOCLOCATION_STRING).intern(), new Integer(XPath.FUNC_DOCLOCATION));
-  }
-#endif
-
 
   
 int

@@ -84,6 +84,7 @@
 class PrefixResolver;
 class QName;
 class XLocator;
+class XMLURL;
 class XObject;
 class XObjectFactory;
 
@@ -179,6 +180,10 @@ public:
 			const DOMString&		id,
 			const DOM_Document&		doc) const = 0;
 
+	/*
+	 * Get the current context node list.
+	 *
+	 */
 	virtual const NodeRefListBase&
 	getContextNodeList() const = 0;
 
@@ -329,6 +334,14 @@ public:
 
 	virtual DOMString
 	getCurrentPattern() const = 0;
+
+	virtual DOM_Document
+	getSourceDocument(const DOMString&	theURI) const = 0;
+
+	virtual void
+	setSourceDocument(
+			const DOMString&		theURI,
+			const DOM_Document&		theDocument) = 0;
 };
 
 

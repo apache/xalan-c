@@ -69,7 +69,11 @@
 
 
 template <class T>
+#if defined(XALAN_NO_NAMESPACES)
+struct DeleteFunctor : public unary_function<const T*, void>
+#else
 struct DeleteFunctor : public std::unary_function<const T*, void>
+#endif
 {
 	result_type
 	operator()(argument_type	thePointer) const
@@ -82,7 +86,11 @@ struct DeleteFunctor : public std::unary_function<const T*, void>
 #if ! defined(__GNUC__)
 
 template <class PairType>
+#if defined(XALAN_NO_NAMESPACES)
+struct select1st : public unary_function<PairType, PairType::first_type>
+#else
 struct select1st : public std::unary_function<PairType, PairType::first_type>
+#endif
 {
 	typedef PairType	value_type;
 
@@ -96,7 +104,11 @@ struct select1st : public std::unary_function<PairType, PairType::first_type>
 
 
 template <class PairType>
+#if defined(XALAN_NO_NAMESPACES)
+struct select2nd : public unary_function<PairType, PairType::second_type>
+#else
 struct select2nd : public std::unary_function<PairType, PairType::second_type>
+#endif
 {
 	typedef PairType	value_type;
 
@@ -113,8 +125,14 @@ struct select2nd : public std::unary_function<PairType, PairType::second_type>
 template <class OutputIteratorType, class PairMemberSelectType>
 struct PairIsolatorOutputIterator
 {
+#if defined(XALAN_NO_NAMESPACES)
+	typedef output_iterator_tag					iterator_category;
+#else
 	typedef std::output_iterator_tag			iterator_category;
+#endif
+
 	typedef typename PairMemberSelectType::value_type        value_type;
+
 	typedef void								difference_type;
 	typedef void								pointer;
 	typedef void								reference;
@@ -165,7 +183,11 @@ private:
 
 
 template <class T>
+#if defined(XALAN_NO_NAMESPACES)
+struct MapValueDeleteFunctor : public unary_function<const T::value_type&, void>
+#else
 struct MapValueDeleteFunctor : public std::unary_function<const typename T::value_type&, void>
+#endif
 {
 	result_type
 	operator()(argument_type	thePair)
@@ -177,7 +199,11 @@ struct MapValueDeleteFunctor : public std::unary_function<const typename T::valu
 
 
 template<class T, class Functor>
+#if defined(XALAN_NO_NAMESPACES)
+struct nested_for_each_functor : public unary_function<const T::value_type&, Functor>
+#else
 struct nested_for_each_functor : public std::unary_function<const typename T::value_type&, Functor>
+#endif
 {
 	nested_for_each_functor(Functor		theFunctor) :
 		m_functor(theFunctor)
@@ -221,7 +247,11 @@ nested_for_each(
 // points.  Using this algorithm instead of the default will allow the map to
 // work as expected.
 template<class T>
+#if defined(XALAN_NO_NAMESPACES)
+struct less_null_terminated_arrays : public binary_function<const T*, const T*, bool>
+#else
 struct less_null_terminated_arrays : public std::binary_function<const T*, const T*, bool>
+#endif
 {
 	result_type
 	operator()(first_argument_type		theLHS,

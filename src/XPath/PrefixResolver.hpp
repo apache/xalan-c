@@ -80,6 +80,9 @@ public:
 
 	virtual DOMString
 	getNamespaceForPrefix(const DOMString&	prefix) const = 0;
+
+	virtual DOMString
+	getURI() const = 0;
 };
 
 

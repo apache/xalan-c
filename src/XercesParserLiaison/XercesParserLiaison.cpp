@@ -216,3 +216,10 @@ void XercesParserLiaison::warning(const SAXParseException& e)
 		 << ", char " << e.getColumnNumber()
          << "): " << DOMStringToStdString(e.getMessage()) << std::endl;
 }
+
+
+
+void
+XercesParserLiaison::resetErrors()
+{
+}

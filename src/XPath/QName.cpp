@@ -119,11 +119,12 @@ QName::QName(
 QName::QName(
 			const DOMString&		qname,
 			const DOM_Element&		namespaceContext,
+			const XPathEnvSupport&	envSupport,
 			const XPathSupport& 	support) :
 	m_namespace(),
 	m_localpart()
 {
-	ElementPrefixResolverProxy	theProxy(namespaceContext, support);
+	ElementPrefixResolverProxy	theProxy(namespaceContext, envSupport, support);
 
 	resolvePrefix(qname, theProxy);
 }
@@ -206,7 +207,7 @@ DOMString QName::getNamespaceForPrefix(const NamespaceVectorType& namespaces,
 		{
 			for(int j = namespaces.size()-1; j >= 0; j--)
 			{
-				const NameSpace ns = namespaces[j];
+				const NameSpace& ns = namespaces[j];
 				const DOMString& thisPrefix = ns.getPrefix();
 				if((0 != thisPrefix.length()) && prefix.equals(thisPrefix))
 					return ns.getURI();
@@ -214,9 +215,9 @@ DOMString QName::getNamespaceForPrefix(const NamespaceVectorType& namespaces,
 		}
 		else
 		{
-			for(int j = 0; j < namespaces.size(); j++)
+			for(unsigned int j = 0; j < namespaces.size(); j++)
 			{
-				const NameSpace ns = namespaces[j];
+				const NameSpace& ns = namespaces[j];
 				const DOMString& thisPrefix = ns.getPrefix();
 				if((0 != thisPrefix.length()) && prefix.equals(thisPrefix))
 					return ns.getURI();
@@ -230,7 +231,7 @@ DOMString QName::getNamespaceForPrefix(const NamespacesStackType& nsStack,
 		const DOMString& prefix, bool reverse /* true */)
 {
 	DOMString nsURI;
-	int depth = nsStack.size();
+	const int depth = nsStack.size();
 	for(int i = depth-1; i >= 0; i--)
 	{
 		const NamespaceVectorType& namespaces = nsStack[i];
@@ -258,7 +259,7 @@ DOMString QName::getPrefixForNamespace(const NamespacesStackType& nsStack,
 		const DOMString& uri, bool reverse /* true */)
 {
 	DOMString prefix;
-	int depth = nsStack.size();
+	const int depth = nsStack.size();
 	if (reverse)
 	{
 		for(int i = depth-1; i >= 0; i--)

@@ -381,15 +381,11 @@ public:
 	 * the error condition is severe enough to halt processing.
 	 */
 	DOM_Document
-	parseXML(const XMLURL& url, 
-//@@ TODO: Fix this
-#if 1
-	                         DocumentHandler* docHandler, 
-#else
-	FormatterListener*	docHandler,
-#endif
-	                         const DOM_Document& docToRegister);
-	  
+	parseXML(
+			const XMLURL&		url,
+			DocumentHandler*	docHandler, 
+			const DOM_Document& docToRegister);
+
 	/**
 	 * Reset the state of the XSL processor by reading in a new 
 	 * XSL stylesheet.
@@ -466,54 +462,10 @@ public:
   // SECTION: Source Tree Tables
   //==========================================================
 
-	/**
-	 * Table of input documents.
-	 * Document objects are keyed by URL string.
-	 */
-#if defined(XALAN_HASH_CONTAINERS_AVAILABLE)
-	typedef hash_map<DOMString,
-					 DOM_Document,
-					 DOMStringHashFunction,
-					 DOMStringEqualsFunction>	SourceDocumentsTableType;
-#else
-	typedef std::map<DOMString, DOM_Document, DOMStringEqualsFunction>	SourceDocumentsTableType;
-#endif
-	SourceDocumentsTableType	m_sourceDocs;
-
 /**
  * The root document.
  */
 	DOM_Document			m_rootDoc;
-
-public:
-
-	/**
-	 * Given a DOM Document, tell what URI was used to parse it.
-	 */
-	DOMString
-	findURIFromDoc(const DOM_Document& doc);
-
-
-  /**
-   * Get table of source tree documents.
-   * Document objects are keyed by URL string.
-   */
-	SourceDocumentsTableType&
-	getSourceDocsTable() const;
-
-  /**
-   * Set a source document. Every time a source document is requested 
-   * through either xsl:uri or in a process call,
-   * the processor will first consult table of supplied 
-   * documents before trying to load and parse the corresponding 
-   * document from the Net.
-
-   */
-	void setSourceDocument(const DOMString&	uri,
-					  DOM_Document&	doc)
-	{
-		m_sourceDocs.insert(std::make_pair<const DOMString, DOM_Document>(uri, doc));
-	}
 
 protected:
 
@@ -618,7 +570,7 @@ private:
   /**
    *  Hash table that can look up xslt element IDs via name.
    */
-	static AttributeKeysMapType	s_elementKeys;
+	static ElementKeysMapType	s_elementKeys;
 
 
 public:

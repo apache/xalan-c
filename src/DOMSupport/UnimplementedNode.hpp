@@ -98,7 +98,7 @@ public:
 	// These interfaces are inherited from NodeListImpl...
 
 	virtual NodeImpl*
-	item(unsigned long	index);
+	item(unsigned int	index);
 
 	virtual unsigned int
 	getLength();

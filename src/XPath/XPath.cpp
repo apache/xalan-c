@@ -439,8 +439,12 @@ XPath::execute(
 */
 
 	default:
-		executionContext.error(DOMString("ERROR! Unknown op code: ") + static_cast<int>(m_expression.m_opMap[opPos]),
-							   context);
+		{
+			const DOMString		theOpCode = LongToDOMString(m_expression.m_opMap[opPos]);
+
+			executionContext.error(DOMString("ERROR! Unknown op code: ") + theOpCode,
+								   context);
+		}
 		break;
 	}
 

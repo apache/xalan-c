@@ -65,21 +65,19 @@
 
 
 #include <cassert>
-#include <cctype>
-#include <cstdio>
 #include <functional>
 #include <iosfwd>
+#include <limits>
 #include <vector>
 #include <string>
 
 
 
 #include <dom/DOMString.hpp>
-#include <util/XMLString.hpp>
+
 
 
 class TextOutputStream;
-
 
 
 
@@ -145,7 +143,7 @@ endsWith(
 
 
 
-inline int
+inline unsigned int
 length(const DOMString&		theString)
 {
 	return theString.length();
@@ -153,7 +151,7 @@ length(const DOMString&		theString)
 
 
 
-inline int
+inline unsigned int
 length(const XMLCh*		theBuffer)
 {
 	assert(theBuffer != 0);
@@ -173,16 +171,7 @@ length(const XMLCh*		theBuffer)
 inline bool 
 isEmpty(const DOMString& str)
 {
-#if defined(__GNUC__)
-	// @@ JMD: linux had problems with this 
- 	DOM_NullPtr *nil = 0;
- 	assert( (length(str)>0 && str.operator!=(nil)) ||
- 			(length(str)==0 && str.operator==(nil)) );
-#else			
-	assert( (length(str)>0 && str!=0) || (length(str)==0 && str==0) );
-#endif	
-
-	return length(str) == 0; 
+	return length(str) == 0 ? true : false; 
 }
 
 
@@ -207,7 +196,11 @@ OutputString(
 
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(void)
 OutputString(
+#if defined(XALAN_NO_NAMESPACES)
+			 ostream&			theStream,
+#else
 			 std::ostream&		theStream,
+#endif
 			 const DOMString&	theString);
 
 
@@ -245,7 +238,11 @@ operator<<(
 
 
 
+#if defined(XALAN_NO_NAMESPACES)
+inline ostream&
+#else
 inline std::ostream&
+#endif
 operator<<(
 			std::ostream&		theStream,
 			const DOMString&	theString)
@@ -265,41 +262,6 @@ clone(const DOMString&	theString)
 }
 
 
-#if 0
-@@ JMD: no longer needed, exist in base class
-inline DOMString
-operator+(
-			const DOMString&	theLHS,
-			const DOMString&	theRHS)
-{
-	return DOMString(theLHS) + theRHS;
-}
-
-
-inline DOMString&
-operator+=(
-			DOMString&			theLHS,
-			const DOMString&	theRHS)
-{
-	theLHS.appendData(theRHS);
-
-	return theLHS;
-}
-
-
-
-inline DOMString&
-operator+=(
-			DOMString&	theLHS,
-			XMLCh		theRHS)
-{
-	theLHS += DOMString(&theRHS, 1);
-
-	return theLHS;
-}
-#endif // 0
-
-
 
 inline bool
 isSpace(XMLCh	theChar)
@@ -312,7 +274,7 @@ isSpace(XMLCh	theChar)
 inline XMLCh
 charAt(
 			const DOMString&	theString,
-			int					theIndex)
+			unsigned int		theIndex)
 {
 	return theString.charAt(theIndex);
 }
@@ -338,10 +300,10 @@ isLetterOrDigit(XMLCh	theChar)
 inline DOMString
 substring(
 			const DOMString&	theString,
-			int					theStartIndex,
-			int					theEndIndex = -1)
+			unsigned int		theStartIndex,
+			unsigned int		theEndIndex = UINT_MAX)
 {
-	const int	theStringLength = length(theString);
+	const unsigned int	theStringLength = length(theString);
 
 	// $$$ ToDo: In Java-land, any failing of these
 	// assertions would result in an exception being thrown.
@@ -354,7 +316,7 @@ substring(
 	}
 	else
 	{
-		const int	theLength = theEndIndex == -1 ? theStringLength - theStartIndex :
+		const unsigned int	theLength = theEndIndex == UINT_MAX ? theStringLength - theStartIndex :
 													theEndIndex - theStartIndex;
 		assert(theStartIndex + theLength <= theStringLength);
 
@@ -524,27 +486,18 @@ trim(const DOMString&	theString);
 
 
 inline void
-clear(
-			DOMString&	theString,
-			int			theOffset = 0,
-			int			theLength = -1)
+clear(DOMString&	theString)
 {
-	assert(theOffset >= 0);
-	assert(theLength == -1 ||
-			theLength <= length(theString) - theOffset);
-
-	theString.deleteData(theOffset, theLength >= 0 ? 
-										theLength :
-										length(theString) - theOffset);
+	theString.deleteData(0, length(theString));
 }
 
 
 
 inline void
 setCharAt(
-			DOMString&	theString,
-			int			theIndex,
-			XMLCh		theChar)
+			DOMString&		theString,
+			unsigned int	theIndex,
+			XMLCh			theChar)
 {
 	assert(theIndex < length(theString));
 
@@ -556,7 +509,11 @@ setCharAt(
 
 
 // A standard vector of XMLChs
+#if defined(XALAN_NO_NAMESPACES)
+typedef vector<XMLCh>		XMLCharVectorType;
+#else
 typedef std::vector<XMLCh>	XMLCharVectorType;
+#endif
 
 
 
@@ -583,7 +540,11 @@ MakeXMLChVector(const DOMString&		data)
 
 
 
+#if defined(XALAN_NO_NAMESPACES)
+struct c_wstr_functor : public unary_function<DOMString, const XMLCh*>
+#else
 struct c_wstr_functor : public std::unary_function<DOMString, const XMLCh*>
+#endif
 {
 	result_type
 	operator() (const argument_type&	theString) const
@@ -595,7 +556,11 @@ struct c_wstr_functor : public std::unary_function<DOMString, const XMLCh*>
 
 
 // Hash functor for DOMStrings
+#if defined(XALAN_NO_NAMESPACES)
+struct DOMStringHashFunction : public unary_function<const DOMString&, size_t>
+#else
 struct DOMStringHashFunction : public std::unary_function<const DOMString&, size_t>
+#endif
 {
 	result_type
 	operator() (argument_type	theKey) const
@@ -621,7 +586,12 @@ struct DOMStringHashFunction : public std::unary_function<const DOMString&, size
 
 
 // Equals functor for DOMStrings
+// Hash functor for DOMStrings
+#if defined(XALAN_NO_NAMESPACES)
+struct DOMStringEqualsFunction : public binary_function<const DOMString&, const DOMString&, bool>
+#else
 struct DOMStringEqualsFunction : public std::binary_function<const DOMString&, const DOMString&, bool>
+#endif
 {
 	result_type
 	operator() (first_argument_type		theLHS,
@@ -633,22 +603,12 @@ struct DOMStringEqualsFunction : public std::binary_function<const DOMString&, c
 
 
 
+#if defined(XALAN_NO_NAMESPACES)
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(string)
+#else
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(std::string)
+#endif
 DOMStringToStdString(const DOMString& domString);
-
-
-#if defined(__GNUC__)
-
-// Linux GNU C++ doesn't support wstring
-#else			
-
-inline std::wstring
-DOMStringToStdWString(const DOMString& domString)
-{
-	return (c_wstr(domString));
-}
-
-#endif	
 
 
 
@@ -661,8 +621,8 @@ isWhiteSpace(const DOMString&	string);
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(bool)
 isWhiteSpace(
 			const XMLCh*	ch,
-			int				start,
-			int				length);
+			unsigned int	start,
+			unsigned int	length);
 
 
 

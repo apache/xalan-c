@@ -65,6 +65,7 @@
 
 
 #include <util/Janitor.hpp>
+#include <util/XMLString.hpp>
 
 
 
@@ -116,6 +117,10 @@ AttributeListImpl::AttributeListImpl(const AttributeList&	theSource) :
 AttributeListImpl&
 AttributeListImpl::operator=(const AttributeListImpl&	theRHS)
 {
+#if !defined(XALAN_NO_NAMESPACES)
+	using std::make_pair;
+#endif
+
 	if (this != &theRHS)
 	{
 		// Note that we can't chain up to our base class operator=()
@@ -141,8 +146,8 @@ AttributeListImpl::operator=(const AttributeListImpl&	theRHS)
 			m_AttributeVector.push_back(theEntry);
 
 			// Create an entry in the index map...
-			m_AttributeKeyMap.insert(std::make_pair(theEntry->m_Name.begin(),
-													theEntry));
+			m_AttributeKeyMap.insert(make_pair(theEntry->m_Name.begin(),
+											   theEntry));
 		}
 
 		assert(getLength() == theLength);
@@ -292,6 +297,9 @@ AttributeListImpl::getValue(const XMLCh* const name) const
 void
 AttributeListImpl::clear()
 {
+#if !defined(XALAN_NO_NAMESPACES)
+	using std::for_each;
+#endif
 	// Delete all of the objects in the vector.
 	std::for_each(m_AttributeVector.begin(),
 				  m_AttributeVector.end(),
@@ -310,6 +318,10 @@ AttributeListImpl::addAttribute(
 			const XMLCh* const type,
 			const XMLCh* const value)
 {
+#if !defined(XALAN_NO_NAMESPACES)
+	using std::make_pair;
+#endif
+
 	assert(name != 0);
 	assert(type != 0);
 	assert(value != 0);
@@ -329,7 +341,7 @@ AttributeListImpl::addAttribute(
 		m_AttributeVector.push_back(theEntry);
 
 		// Create an entry in the index map.
-		m_AttributeKeyMap.insert(std::make_pair(theEntry->m_Name.begin(), theEntry));
+		m_AttributeKeyMap.insert(make_pair(theEntry->m_Name.begin(), theEntry));
 
 		fResult = true;
 	}
@@ -348,9 +360,11 @@ AttributeListImpl::removeAttribute(const XMLCh* const name)
 	assert(name != 0);
 	assert(m_AttributeKeyMap.size() == m_AttributeVector.size());
 
+#if !defined(XALAN_NO_NAMESPACES)
 	using std::find_if;
 	using std::equal_to;
 	using std::bind1st;
+#endif
 
 	bool	fResult = false;
 

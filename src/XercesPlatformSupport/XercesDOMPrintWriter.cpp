@@ -113,8 +113,8 @@ XercesDOMPrintWriter::flush()
 void
 XercesDOMPrintWriter::write(
 			const char*		s,
-			long			theOffset,
-			long			theLength)
+			unsigned int	theOffset,
+			unsigned int	theLength)
 {
 	write(DOMString(s), theOffset, theLength);
 }
@@ -124,8 +124,8 @@ XercesDOMPrintWriter::write(
 void
 XercesDOMPrintWriter::write(
 			const XMLCh*	s,
-			long			theOffset,
-			long			theLength)
+			unsigned int	theOffset,
+			unsigned int	theLength)
 {
 	assert(s != 0);
 	assert(theOffset >= 0 && theOffset < length(s));
@@ -166,8 +166,8 @@ XercesDOMPrintWriter::write(XMLCh	c)
 void
 XercesDOMPrintWriter::write(
 			const DOMString&	s,
-			long				theOffset,
-			long				theLength)
+			unsigned int		theOffset,
+			unsigned int		theLength)
 {
 	assert(theOffset >= 0);
 	assert(theLength >= 0 || theLength == -1);
@@ -217,7 +217,7 @@ XercesDOMPrintWriter::print(char	c)
 void
 XercesDOMPrintWriter::print(
 			const char*		s,
-			long			theLength)
+			unsigned int	theLength)
 {
 	write(s,
 		  0,
@@ -229,7 +229,7 @@ XercesDOMPrintWriter::print(
 void
 XercesDOMPrintWriter::print(
 			const XMLCh*	s,
-			long			theLength)
+			unsigned int	theLength)
 {
 	assert(s != 0);
 	assert(theLength >= 0 || theLength == -1);
@@ -304,7 +304,7 @@ XercesDOMPrintWriter::println(char	c)
 void
 XercesDOMPrintWriter::println(
 			const char*		s,
-			long			theLength)
+			unsigned int	theLength)
 {
 	print(s, theLength);
 
@@ -316,7 +316,7 @@ XercesDOMPrintWriter::println(
 void
 XercesDOMPrintWriter::println(
 			const XMLCh*	s,
-			long			theLength)
+			unsigned int	theLength)
 {
 	print(s, theLength);
 

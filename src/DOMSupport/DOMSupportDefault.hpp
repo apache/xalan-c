@@ -100,7 +100,7 @@ public:
 
 private:
 
-	mutable NamespaceResolver	m_resolver;
+	NamespaceResolver	m_resolver;
 };
 
 

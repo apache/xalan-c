@@ -54,12 +54,14 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-#include "NamedNodeMapAttributeList.hpp"
 
+#include "NamedNodeMapAttributeList.hpp"
 
 
 #include <dom/DOM_Attr.hpp>
 #include <util/Janitor.hpp>
+#include <util/XMLString.hpp>
+
 
 
 #include "DOMStringHelper.hpp"
@@ -96,12 +98,11 @@ NamedNodeMapAttributeList::getName(const unsigned int index) const
 	// DOM classes return strings by value, so we have to get
 	// the value from the node and store the DOMString somewhere
 	// safe, so we have a vector of DOMStrings to hold everything.
-	const DOM_Node		theNode = m_nodeMap.item(m_lastIndex - index);
-
-	const DOM_Attr&		theAttr = 
-		static_cast<const DOM_Attr&>(theNode);
-
-	m_cachedData.push_back(theAttr.getName());
+#if defined(XALAN_OLD_STYLE_CASTS)
+	m_cachedData.push_back(((const DOM_Attr&)((DOM_NamedNodeMap&)m_nodeMap).item(m_lastIndex - index)).getName());
+#else
+	m_cachedData.push_back(static_cast<const DOM_Attr&>(const_cast<DOM_NamedNodeMap&>(m_nodeMap).item(m_lastIndex - index)).getName());
+#endif
 
 	return c_wstr(m_cachedData.back());
 }
@@ -128,12 +129,11 @@ NamedNodeMapAttributeList::getValue(const unsigned int index) const
 	// DOM classes return strings by value, so we have to get
 	// the value from the node and store the DOMString somewhere
 	// safe, so we have a vector of DOMStrings to hold everything.
-	const DOM_Node		theNode = m_nodeMap.item(m_lastIndex - index);
-
-	const DOM_Attr&		theAttr = 
-		static_cast<const DOM_Attr&>(theNode);
-
-	m_cachedData.push_back(theAttr.getValue());
+#if defined(XALAN_OLD_STYLE_CASTS)
+	m_cachedData.push_back(((const DOM_Attr&)((DOM_NamedNodeMap&)m_nodeMap).item(m_lastIndex - index)).getValue());
+#else
+	m_cachedData.push_back(static_cast<const DOM_Attr&>(const_cast<DOM_NamedNodeMap&>(m_nodeMap).item(m_lastIndex - index)).getValue());
+#endif
 
 	return c_wstr(m_cachedData.back());
 }
@@ -155,14 +155,26 @@ NamedNodeMapAttributeList::getValue(const XMLCh* const name) const
 	// DOM classes return strings by value, so we have to get
 	// the value from the node and store the DOMString somewhere
 	// safe, so we have a vector of DOMStrings to hold everything.
-	const DOM_Node		theNode = m_nodeMap.getNamedItem(name);
+#if defined(XALAN_OLD_STYLE_CASTS)
+	const DOM_Node		theNode = ((DOM_NamedNodeMap&)m_nodeMap).getNamedItem(name);
+#else
+	const DOM_Node		theNode = const_cast<DOM_NamedNodeMap&>(m_nodeMap).getNamedItem(name);
+#endif
 
-	const DOM_Attr&		theAttr = 
-		static_cast<const DOM_Attr&>(theNode);
+	if (theNode == 0)
+	{
+		return 0;
+	}
+	else
+	{
+#if defined(XALAN_OLD_STYLE_CASTS)
+		m_cachedData.push_back(((const DOM_Attr&)theNode).getValue());
+#else
+		m_cachedData.push_back(static_cast<const DOM_Attr&>(theNode).getValue());
+#endif
 
-	m_cachedData.push_back(theAttr.getValue());
-
-	return c_wstr(m_cachedData.back());
+		return c_wstr(m_cachedData.back());
+	}
 }
 
 

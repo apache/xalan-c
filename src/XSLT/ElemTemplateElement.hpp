@@ -123,10 +123,19 @@ public:
 	~ElemTemplateElement();
 
 
+	// These interfaces are inherited from PrefixResolver...
+
 	/** 
-	* Given a namespace, get the corresponding prefix.
-	*/
-	DOMString getNamespaceForPrefix(const DOMString& prefix) const;
+	 * Given a namespace, get the corresponding prefix.
+	 */
+	virtual DOMString
+	getNamespaceForPrefix(const DOMString& prefix) const;
+
+
+	virtual DOMString
+	getURI() const;
+
+	// These interfaces are new to ElemTemplateElement...
 
 	/** 
 	* See if this is a xmlns attribute, and, if so, process it.
@@ -420,7 +429,7 @@ public:
 #else
 	virtual ElemTemplateElement*
 #endif
-	item(unsigned long	i);
+	item(unsigned int	i);
 
 	const Stylesheet&
 	getStylesheet() const

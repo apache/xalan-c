@@ -169,16 +169,53 @@ XPathEnvSupportDefault::getVariable(
 
 
 
-XPathEnvSupportDefault::SourceDocsTableType&
-XPathEnvSupportDefault::getSourceDocsTable()
+DOM_Document
+XPathEnvSupportDefault::parseXML(
+			const DOMString&	/* urlString */,
+			const DOMString&	/* base */) const
+{
+	return DOM_Document();
+}
+
+
+
+DOM_Document
+XPathEnvSupportDefault::getSourceDocument(const DOMString&	theURI) const
 {
 	if (m_extendedSupport != 0)
 	{
-		return m_extendedSupport->getSourceDocsTable();
+		return m_extendedSupport->getSourceDocument(theURI);
 	}
 	else
 	{
-		return m_sourceDocs;
+		const SourceDocsTableType::const_iterator	i =
+			m_sourceDocs.find(theURI);
+
+		if (i == m_sourceDocs.end())
+		{
+			return DOM_Document();
+		}
+		else
+		{
+			return i->second;
+		}
+	}
+}
+
+
+
+void
+XPathEnvSupportDefault::setSourceDocument(
+			const DOMString&		theURI,
+			const DOM_Document&		theDocument)
+{
+	if (m_extendedSupport != 0)
+	{
+		m_extendedSupport->setSourceDocument(theURI, theDocument);
+	}
+	else
+	{
+		m_sourceDocs[theURI] = theDocument;
 	}
 }
 
@@ -193,7 +230,24 @@ XPathEnvSupportDefault::findURIFromDoc(const DOM_Document&	owner) const
 	}
 	else
 	{
-		return "Unknown";
+		SourceDocsTableType::const_iterator		i =
+			m_sourceDocs.begin();
+
+		bool	fFound = false;
+
+		while(i != m_sourceDocs.end() && fFound == false)
+		{
+			if (i->second == owner)
+			{
+				fFound = true;
+			}
+			else
+			{
+				++i;
+			}
+		}
+
+		return fFound == false ? "Unknown" : i->first;
 	}
 }
 
@@ -337,7 +391,7 @@ bool
 XPathEnvSupportDefault::problem(
 			eSource					where,
 			eClassification			classification,
-			const PrefixResolver&	resolver,
+			const PrefixResolver*	resolver,
 			const DOM_Node&			sourceNode,
 			const DOMString&		msg,
 			int						lineNo,

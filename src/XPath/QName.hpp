@@ -79,6 +79,7 @@
 class DOM_Element;
 class NameSpace;
 class PrefixResolver;
+class XPathEnvSupport;
 class XPathSupport;
 
 
@@ -126,6 +127,7 @@ public:
 	QName(
 			const DOMString&		qname,
 			const DOM_Element&		namespaceContext,
+			const XPathEnvSupport&	envSupport,
 			const XPathSupport&		support);
 
 	/**

@@ -245,9 +245,9 @@ public:
 	{
 		assert(m_executionContext != 0);
 
-		const int	theNodeCount = theValue.getLength();
+		const unsigned int	theNodeCount = theValue.getLength();
 
-		for (int i = 0 ; i < theNodeCount; i++)
+		for (unsigned int i = 0 ; i < theNodeCount; i++)
 		{
 			m_resultString += m_executionContext->getNodeData(theValue.item(i));
 

@@ -59,14 +59,17 @@
 
 
 
+#include "XPathEnvSupport.hpp"
 #include "XPathSupport.hpp"
 
 
 
 ElementPrefixResolverProxy::ElementPrefixResolverProxy(
 			const DOM_Element&		namespaceContext,
+			const XPathEnvSupport&	envSupport,
 			const XPathSupport& 	support) :
 	m_namespaceContext(namespaceContext),
+	m_envSupport(envSupport),
 	m_support(support)
 {
 }
@@ -83,4 +86,12 @@ DOMString
 ElementPrefixResolverProxy::getNamespaceForPrefix(const DOMString&	prefix) const
 {
 	return m_support.getNamespaceForPrefix(prefix, m_namespaceContext);
+}
+
+
+
+DOMString
+ElementPrefixResolverProxy::getURI() const
+{
+	return m_envSupport.findURIFromDoc(m_namespaceContext.getOwnerDocument());
 }

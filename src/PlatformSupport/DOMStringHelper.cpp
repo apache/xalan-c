@@ -67,7 +67,20 @@
 
 
 #include <strstream>
+#include <ostream>
 #include <vector>
+
+
+
+#if !defined(XALAN_NO_NAMESPACES)
+using std::hex;
+using std::ostream;
+using std::ostrstream;
+using std::string;
+//using std::stringstream;
+using std::vector;
+using std::wstring;
+#endif
 
 
 
@@ -328,7 +341,7 @@ OutputString(TextOutputStream&	theStream,
 
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(void)
 OutputString(
-			 std::ostream&		theStream,
+			 ostream&			theStream,
 			 const DOMString&	theString)
 {
 	char* const		theTranscodedString =
@@ -418,16 +431,16 @@ XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(bool)
 equalsIgnoreCase(const DOMString&	theLHS,
 				 const DOMString&	theRHS)
 {
-	bool		fResult = false;
+	bool				fResult = false;
 
-	const int	theLength = length(theLHS);
+	const unsigned int	theLength = length(theLHS);
 
 	// If they are equal, then compare
 	if (theLength == length(theRHS))
 	{
 		// Check each character, converting to uppercase
 		// for the test.
-		for(int i = 0; i < theLength; i++)
+		for(unsigned int i = 0; i < theLength; i++)
 		{
 			if (towupper(charAt(theLHS, i)) !=
 						towupper(charAt(theRHS, i)))
@@ -507,10 +520,8 @@ compare(
 
 static void
 CopyDOMStringToVector(const DOMString&		theString,
-					  std::vector<char>&	theVector)
+					  vector<char>&			theVector)
 {
-	using std::vector;
-
 	const int	theLength = length(theString);
 
 	if (theLength != 0)
@@ -519,14 +530,18 @@ CopyDOMStringToVector(const DOMString&		theString,
 
 		for(int	i = 0; i < theLength; i++)
 		{
+#if defined(XALAN_OLD_STYLE_CASTS)
+			// Assert that the truncation will not affect the resulting character.
+			assert(charAt(theString, i) == (char)charAt(theString, i));
+
+			theVector.push_back((char)charAt(theString, i));
+#else
 			// Assert that the truncation will not affect the resulting character.
 			assert(charAt(theString, i) == static_cast<char>(charAt(theString, i)));
 
 			theVector.push_back(static_cast<char>(charAt(theString, i)));
+#endif
 		}
-
-		assert(theVector.size() ==
-			static_cast<std::vector<char>::size_type >(theLength));
 
 		// Put a terminating 0 byte.
 		theVector.push_back(0);
@@ -539,8 +554,6 @@ CopyDOMStringToVector(const DOMString&		theString,
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(int)
 DOMStringToInt(const DOMString&	theString)
 {
-	using std::vector;
-
 	int				theResult = 0;
 
 	vector<char>	theVector;
@@ -561,8 +574,6 @@ DOMStringToInt(const DOMString&	theString)
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(long)
 DOMStringToLong(const DOMString&	theString)
 {
-	using std::vector;
-
 	long			theResult = 0;
 
 	vector<char>	theVector;
@@ -583,13 +594,13 @@ DOMStringToLong(const DOMString&	theString)
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(double)
 DOMStringToDouble(const DOMString&	theString)
 {
-	using std::vector;
-
 	double			theResult = DoubleSupport::getNaN();
 
 	if (length(theString) > 0)
 	{
-		vector<char>	theVector;
+		typedef vector<char>	VectorType;
+
+		VectorType				theVector;
 
 		CopyDOMStringToVector(theString,
 							  theVector);
@@ -600,8 +611,8 @@ DOMStringToDouble(const DOMString&	theString)
 			// localization as well.
 			bool	fError = false;
 
-			std::vector<char>::const_iterator	i = theVector.begin();
-			std::vector<char>::const_iterator	j = theVector.end();
+			VectorType::const_iterator	i = theVector.begin();
+			VectorType::const_iterator	j = theVector.end();
 
 			j--;
 
@@ -672,11 +683,7 @@ DoubleToDOMString(double	theDouble)
 	}
 	else
 	{
-#if !defined(XALAN_NO_NAMESPACES)
-		using namespace std;
-#endif
-
-		std::ostrstream	theFormatter;
+		ostrstream	theFormatter;
 
 		// $$$ ToDo: this is all temporary, until we get the NumberFormat and DecimalFormat
 		// classes working.
@@ -690,8 +697,13 @@ DoubleToDOMString(double	theDouble)
 
 		if (fracPart == 0)
 		{
+#if defined(XALAN_OLD_STYLE_CASTS)
+			theFormatter << (long)theDouble << '\0';
+
+#else
 			theFormatter << static_cast<long>(theDouble) << '\0';
 
+#endif
 			theResult = theFormatter.str();
 		}
 		else
@@ -727,11 +739,7 @@ DoubleToDOMString(double	theDouble)
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(DOMString)
 LongToHexDOMString(long		theLong)
 {
-#if !defined(XALAN_NO_NAMESPACES)
-	using namespace std;
-#endif
-
-	std::ostrstream	theFormatter;
+	ostrstream	theFormatter;
 
 	theFormatter << hex << theLong << '\0';
 
@@ -743,11 +751,7 @@ LongToHexDOMString(long		theLong)
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(DOMString)
 LongToDOMString(long	theLong)
 {
-#if !defined(XALAN_NO_NAMESPACES)
-	using namespace std;
-#endif
-
-	std::ostrstream	theFormatter;
+	ostrstream	theFormatter;
 
 	theFormatter << theLong << '\0';
 
@@ -759,11 +763,7 @@ LongToDOMString(long	theLong)
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(DOMString)
 UnsignedLongToDOMString(unsigned long	theUnsignedLong)
 {
-#if !defined(XALAN_NO_NAMESPACES)
-	using namespace std;
-#endif
-
-	std::ostrstream	theFormatter;
+	ostrstream	theFormatter;
 
 	theFormatter << theUnsignedLong << '\0';
 
@@ -809,9 +809,9 @@ MakeXMLChVector(const XMLCh*		data)
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(bool)
 isWhiteSpace(const DOMString& string)
 {
-	const int	theLength = length(string);
+	const unsigned int	theLength = length(string);
 
-	for(int s = 0; s < theLength;  s++) 
+	for(unsigned int s = 0; s < theLength;  s++) 
 	{
 		if (!isSpace(charAt(string, s)))
 			return false;
@@ -825,12 +825,12 @@ isWhiteSpace(const DOMString& string)
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(bool)
 isWhiteSpace(
 			const XMLCh* const	ch,
-			int					start,
-			int					length)
+			unsigned int		start,
+			unsigned int		length)
 {
-	const int	end = start + length;
+	const unsigned int	end = start + length;
 
-	for(int s = start; s < end; s++) 
+	for(unsigned int s = start; s < end; s++) 
 	{
 		if (!isSpace(ch[s]))	
 			return false;
@@ -841,7 +841,7 @@ isWhiteSpace(
 
 
 
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(std::string)
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(string)
 DOMStringToStdString(const DOMString& domString)
 {
 	XMLCh* toTranscode = domString.rawBuffer();
@@ -851,7 +851,7 @@ DOMStringToStdString(const DOMString& domString)
     // Short circuit if its a null pointer
     if (!toTranscode || (!toTranscode[0]))
     {
-        return std::string();
+        return string();
 	}
 
     // See if our XMLCh and wchar_t as the same on this platform
@@ -878,7 +878,10 @@ DOMStringToStdString(const DOMString& domString)
     //  same, we have to use a temp buffer. Since this is common in these
     //  samples, we just do it anyway.
     //
-    wchar_t* tmpSource = new wchar_t[realLen + 1];
+    wchar_t* const	tmpSource = new wchar_t[realLen + 1];
+
+	ArrayJanitor<wchar_t>	tmpSourceJanitor(tmpSource);
+
     if (isSameSize)
     {
         memcpy(tmpSource, toTranscode, realLen * sizeof(wchar_t));
@@ -894,7 +897,9 @@ DOMStringToStdString(const DOMString& domString)
     const unsigned int targetLen = ::wcstombs(0, tmpSource, 0);
 
     // Allocate out storage member
-    char *localForm = new char[targetLen + 1];
+    char* const		localForm = new char[targetLen + 1];
+
+	ArrayJanitor<char>	localFormJanitor(localForm);
 
     //
     //  And transcode our temp source buffer to the local buffer. Cap it
@@ -904,11 +909,5 @@ DOMStringToStdString(const DOMString& domString)
     ::wcstombs(localForm, tmpSource, targetLen);
     localForm[targetLen] = 0;
 
-	std::string ret(localForm);
-
-    // Don't forget to delete our temp buffers
-    delete [] tmpSource;
-	delete [] localForm;
-
-	return ret;
+	return localForm;
 }

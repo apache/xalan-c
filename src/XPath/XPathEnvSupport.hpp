@@ -141,16 +141,27 @@ public:
 			XObjectFactory&		factory,
 			const QName&		name) const = 0;
 
-	// Table for storing source tree documents, which are keyed by
-	// URL.
-	typedef std::map<DOMString, DOM_Document, DOMStringEqualsFunction>	SourceDocsTableType;
+	/**
+	 * Provides support for XML parsing service.
+	 */
+	virtual DOM_Document
+	parseXML(
+			const DOMString&	urlString,
+			const DOMString&	base) const = 0;
 
 	/**
-	 * Get table of source tree documents.
-	 * Document objects are keyed by URL string.
+	 * Get the source document for the given URI.
 	 */
-	virtual SourceDocsTableType&
-	getSourceDocsTable() = 0;
+	virtual DOM_Document
+	getSourceDocument(const DOMString&	theURI) const = 0;
+
+	/**
+	 * Associate a document with a given URI
+	 */
+	virtual void
+	setSourceDocument(
+			const DOMString&		theURI,
+			const DOM_Document&		theDocument) = 0;
 
 	/**
 	 * Given a DOM Document, tell what URI was used to parse it.
@@ -250,7 +261,7 @@ public:
 	problem(
 			eSource					where,
 			eClassification			classification,
-			const PrefixResolver&	resolver,
+			const PrefixResolver*	resolver,
 			const DOM_Node&			sourceNode,
 			const DOMString&		msg,
 			int						lineNo,

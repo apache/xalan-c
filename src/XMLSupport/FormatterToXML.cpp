@@ -143,8 +143,9 @@ FormatterToXML::FormatterToXML(
 		m_encoding = DEFAULT_MIME_ENCODING;
 	}
 
-	DOMString2IntMapType::const_iterator it;
-	it = s_revsize.find(toUpperCase(m_encoding));
+	DOMString2IntMapType::const_iterator it =
+		s_revsize.find(toUpperCase(m_encoding));
+
 	if (it != s_revsize.end())
 		m_maxCharacter = (*it).second;
 	m_isUTF8 = equals(m_encoding, "UTF-8");
@@ -354,8 +355,8 @@ FormatterToXML::characters(
 		int end = length;
 		for (int i = 0;  i < end;  i ++) 
 		{
-			char ch = chars[i];
-			int chNum = ch;
+			const XMLCh ch = chars[i];
+			const int chNum = ch;
 			if ('\n' == ch) 
 			{
 			/*
@@ -795,7 +796,7 @@ FormatterToXML::prepAttrString(
 			const DOMString& 	specials,
 			const DOMString& 	/* encoding */)
 {
-	const int	theLength = string.length();
+	const unsigned int	theLength = string.length();
 
 	// we'll do the work into a buffer pre-allocated to
 	// twice the size of the original string, giving some
@@ -807,7 +808,7 @@ FormatterToXML::prepAttrString(
 	std::vector<XMLCh> vec;
 	vec.reserve(theLength*2);
 
-	for (int i = 0;  i < theLength;  i ++) 
+	for (unsigned int i = 0;  i < theLength;  i ++) 
 	{
 		const XMLCh		ch = charAt(string, i);
 
@@ -855,10 +856,10 @@ FormatterToXML::prepAttrString(
 			vec.push_back('#');
 			vec.push_back('x');
 
-			DOMString num = LongToHexDOMString(next);
+			const DOMString num = LongToHexDOMString(next);
 
-			for (int k=0; k<num.length(); k++)
-				vec.push_back(num.charAt(k));
+			for (unsigned int k=0; k < length(num); k++)
+				vec.push_back(charAt(num, k));
 
 			vec.push_back(';');
 		}

@@ -84,7 +84,7 @@ class XMLParserLiaison;
 /**
  * The holder of result tree fragments.
  */
-class XALAN_XPATH_EXPORT ResultTreeFragBase : public Cloneable, public UnimplementedDocumentFragment
+class XALAN_XPATH_EXPORT ResultTreeFragBase : public UnimplementedDocumentFragment, public Cloneable
 {
 public:
 
@@ -95,20 +95,12 @@ public:
 	virtual
 	~ResultTreeFragBase();
 
-	// these interfaces are inherited from Cloneable...
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-	virtual Cloneable*
-#else
-	virtual ResultTreeFragBase*
-#endif
-	clone(bool	deep) const = 0;
-
 	// These interfaces are inherited from UnimplementedDocumentFragment...
 
 	// These interfaces are inherited from NodeListImpl...
 
 	virtual NodeImpl*
-	item(unsigned long	index) = 0;
+	item(unsigned int	index) = 0;
 
 	virtual unsigned int
 	getLength() = 0;
@@ -227,7 +219,7 @@ public:
 	getChildNodesAsNodeRefList() const = 0;
 
 	virtual DOM_Node
-	item(unsigned long	index) const = 0;
+	item(unsigned int	index) const = 0;
 
 	virtual unsigned int
 	getLength() const = 0;
@@ -361,6 +353,14 @@ public:
 	 */
 	virtual DOM_Node
 	cloneNode(bool	deep) const = 0;
+
+	// these interfaces are inherited from Cloneable...
+#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
+	virtual Cloneable*
+#else
+	virtual ResultTreeFragBase*
+#endif
+	clone(bool	deep) const = 0;
 
 protected:
 

@@ -64,13 +64,6 @@
 
 
 
-#if defined(__GNUC__)
-// This doesn't exist in g++ yet
-#else
-#include <locale>
-#endif
-
-
 #include <dom/DOMString.hpp>
 
 
@@ -79,12 +72,11 @@ class XALAN_PLATFORMSUPPORT_EXPORT DecimalFormatSymbols
 {
 public:
 
-#if defined(__GNUC__)
-	DecimalFormatSymbols();
-#else
+	// Eventually, this constructor should take a locale to determine
+	// all of the stuff it needs to know.  But locales are implemented
+	// on all of our platforms yet.
 	explicit
-	DecimalFormatSymbols(const std::locale&	theLocale = std::locale());
-#endif
+	DecimalFormatSymbols();
 
 	DecimalFormatSymbols(const DecimalFormatSymbols&	theSource);
 

@@ -69,6 +69,7 @@
 
 
 
+#include <Include/DOMHelper.hpp>
 #include <PlatformSupport/DirectoryEnumerator.hpp>
 #include <PlatformSupport/DOMStringHelper.hpp>
 #include <DOMSupport/DOMSupportDefault.hpp>
@@ -311,6 +312,16 @@ ParseXML(
 }
 
 
+template<class Source, class Target>
+const Target&
+XalanStaticCast(
+	const Source&	theSource,
+	const Target&	/* theTarget */)
+{
+	return static_cast<const Target&>(theSource);
+}
+
+
 
 DOMString
 GetAttributeFromNode(
@@ -322,9 +333,15 @@ GetAttributeFromNode(
 	if (theNode.getNodeType() == DOM_Node::ELEMENT_NODE)
 	{
 		const DOM_Element&	theElement =
-					static_cast<const DOM_Element&>(theNode);
+//					static_cast<const DOM_Element&>(theNode);
+//					XalanDOMDowncast<DOM_Element>()(theNode);
+					XalanStaticCast(theNode, theElement);
 
 		theResult = theElement.getAttribute(theAttributeName);
+
+		if (0 == theElement)
+		{
+		}
 	}
 
 	return theResult;
@@ -423,7 +440,7 @@ FindContextNode(
 												 theXPathFactory.create());
 
 	DOM_Element					theNamespaceContext;
-	ElementPrefixResolverProxy	thePrefixResolver(theNamespaceContext, theXPathSupport);
+	ElementPrefixResolverProxy	thePrefixResolver(theNamespaceContext, theXPathEnvSupport, theXPathSupport);
 	NodeRefList					theContextNodeList;
 
 	const XObject* const	theXObject =
@@ -514,7 +531,7 @@ TestAxisResult(
 			if (theContextNode != 0)
 			{
 				DOM_Element						theNamespaceContext;
-				ElementPrefixResolverProxy		thePrefixResolver(theNamespaceContext, theXPathSupport);
+				ElementPrefixResolverProxy		thePrefixResolver(theNamespaceContext, theXPathEnvSupport, theXPathSupport);
 				NodeRefList						theContextNodeList;
 
 				FactoryObjectAutoPointer<XPath>		theXPath(&theXPathFactory,
@@ -556,13 +573,13 @@ TestAxisResult(
 					const MutableNodeRefList&	theResultList =
 						theResult->mutableNodeset();
 
-					const int	theLength = theResultList.getLength();
+					const unsigned int	theLength = theResultList.getLength();
 
 					if (theLength > 0)
 					{
 						thePrintWriter.print(XMLStrL("<out>"));
 
-						for (int i = 0; i < theLength; i++)
+						for (unsigned int i = 0; i < theLength; i++)
 						{
 							thePrintWriter.print(theResultList.item(i).getNodeName());
 							thePrintWriter.print(L" ");
@@ -625,7 +642,7 @@ TestPredicateResult(
 			if (theContextNode != 0)
 			{
 				DOM_Element						theNamespaceContext;
-				ElementPrefixResolverProxy		thePrefixResolver(theNamespaceContext, theXPathSupport);
+				ElementPrefixResolverProxy		thePrefixResolver(theNamespaceContext, theXPathEnvSupport, theXPathSupport);
 				NodeRefList						theContextNodeList;
 
 				FactoryObjectAutoPointer<XPath>		theXPath1(&theXPathFactory,
@@ -690,7 +707,7 @@ TestPredicateResult(
 						const MutableNodeRefList&	theResultList =
 								theResult1->mutableNodeset();
 
-						const int	theLength = theResultList.getLength();
+						const unsigned int	theLength = theResultList.getLength();
 
 						thePrintWriter.print(XMLStrL("theResult1->str() == \""));
 						thePrintWriter.print(theResult1->str());
@@ -699,7 +716,7 @@ TestPredicateResult(
 
 						if (theLength > 0)
 						{
-							for (int i = 0; i < theLength; i++)
+							for (unsigned int i = 0; i < theLength; i++)
 							{
 								thePrintWriter.print(theResultList.item(i).getNodeName());
 								thePrintWriter.println();
@@ -816,7 +833,7 @@ TestNumericResults(
 						  theXPathSupport,
 						  theXObjectFactory,
 						  DOM_Node(),
-						  ElementPrefixResolverProxy(DOM_Element(), theXPathSupport),
+						  ElementPrefixResolverProxy(DOM_Element(), theXPathEnvSupport, theXPathSupport),
 						  NodeRefList());
 	}
 }
@@ -937,7 +954,7 @@ TestStringResults(
 						 theXPathSupport,
 						 theXObjectFactory,
 						 DOM_Node(),
-						 ElementPrefixResolverProxy(DOM_Element(), theXPathSupport),
+						 ElementPrefixResolverProxy(DOM_Element(), theXPathEnvSupport, theXPathSupport),
 						 NodeRefList());
 	}
 }
@@ -1054,7 +1071,7 @@ TestBooleanResults(
 						  theXPathSupport,
 						  theXObjectFactory,
 						  DOM_Node(),
-						  ElementPrefixResolverProxy(DOM_Element(), theXPathSupport),
+						  ElementPrefixResolverProxy(DOM_Element(), theXPathEnvSupport, theXPathSupport),
 						  NodeRefList());
 	}
 }

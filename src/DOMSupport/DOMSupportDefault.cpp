@@ -66,7 +66,6 @@
 #include <dom/DOM_Attr.hpp>
 #include <dom/DOM_Document.hpp>
 #include <dom/DOM_Element.hpp>
-#include <dom/DOM_NamedNodeMap.hpp>
 
 
 

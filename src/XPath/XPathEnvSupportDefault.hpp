@@ -127,11 +127,26 @@ public:
 			const QName&		name) const;
 
 	/**
-	 * Get table of source tree documents.
-	 * Document objects are keyed by URL string.
+	 * Provides support for XML parsing service.
 	 */
-	virtual SourceDocsTableType&
-	getSourceDocsTable();
+	virtual DOM_Document
+	parseXML(
+			const DOMString&	urlString,
+			const DOMString&	base) const;
+
+	/**
+	 * Get the source document for the given URI.
+	 */
+	virtual DOM_Document
+	getSourceDocument(const DOMString&	theURI) const;
+
+	/**
+	 * Associate a document with a given URI
+	 */
+	virtual void
+	setSourceDocument(
+			const DOMString&		theURI,
+			const DOM_Document&		theDocument);
 
 	/**
 	 * Given a DOM Document, tell what URI was used to parse it.
@@ -222,7 +237,7 @@ public:
 	problem(
 			eSource					where,
 			eClassification			classification,
-			const PrefixResolver&	resolver,
+			const PrefixResolver*	resolver,
 			const DOM_Node&			sourceNode,
 			const DOMString&		msg,
 			int						lineNo,
@@ -262,6 +277,10 @@ private:
 	// Data members...
 
 	XPathEnvSupport*		m_extendedSupport;
+
+	// Table for storing source tree documents, which are keyed by
+	// URL.
+	typedef std::map<DOMString, DOM_Document, DOMStringEqualsFunction>	SourceDocsTableType;
 
 	SourceDocsTableType		m_sourceDocs;
 };

@@ -109,11 +109,25 @@ public:
 
 private:
 
-	mutable DOM_NamedNodeMap		m_nodeMap;
+	// Not implemented...
+	NamedNodeMapAttributeList&
+	operator=(const NamedNodeMapAttributeList&);
+
+	bool
+	operator==(const NamedNodeMapAttributeList&);
+
+	// Data members...
+	const DOM_NamedNodeMap			m_nodeMap;
 
 	const int						m_lastIndex;
 
-	mutable std::vector<DOMString>	m_cachedData;
+#if defined(XALAN_NO_NAMESPACES)
+	typedef vector<DOMString>		CacheType;
+#else
+	typedef std::vector<DOMString>	CacheType;
+#endif
+
+	mutable CacheType				m_cachedData;
 };
 
 

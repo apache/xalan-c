@@ -142,7 +142,7 @@ NodeRefList::operator=(const NodeRefList&	theRHS)
 
 
 DOM_Node
-NodeRefList::item(unsigned long		index) const
+NodeRefList::item(unsigned int	index) const
 {
 	assert(index < m_nodeList.size());
 
@@ -151,7 +151,7 @@ NodeRefList::item(unsigned long		index) const
 
 
 
-int
+unsigned int
 NodeRefList::getLength() const
 {
 	return m_nodeList.size();
@@ -159,7 +159,7 @@ NodeRefList::getLength() const
 
 
 
-int
+unsigned int
 NodeRefList::indexOf(const DOM_Node&	theNode) const
 {
 	using std::vector;
