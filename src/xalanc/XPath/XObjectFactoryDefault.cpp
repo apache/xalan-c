@@ -58,9 +58,9 @@ XObjectFactoryDefault::XObjectFactoryDefault(
 	m_xnumberCache(),
 	m_xnodesetCache(),
 	m_xstringCache(),
-	m_XNull(new XNull),
-	m_xbooleanFalse(new XBoolean(false)),
-	m_xbooleanTrue(new XBoolean(true))
+	m_xnull(),
+	m_xbooleanFalse(false),
+	m_xbooleanTrue(true)
 {
 }
 
@@ -266,16 +266,15 @@ XObjectFactoryDefault::doReturnObject(
 
 
 const XObjectPtr
-XObjectFactoryDefault::createBoolean(
-			bool	theValue)
+XObjectFactoryDefault::createBoolean(bool   theValue)
 {
 	if (theValue == true)
 	{
-		return XObjectPtr(m_xbooleanTrue.get());
+		return XObjectPtr(&m_xbooleanTrue);
 	}
 	else
 	{
-		return XObjectPtr(m_xbooleanFalse.get());
+		return XObjectPtr(&m_xbooleanFalse);
 	}
 }
 
@@ -284,7 +283,7 @@ XObjectFactoryDefault::createBoolean(
 const XObjectPtr
 XObjectFactoryDefault::createNull()
 {	
-	return XObjectPtr(m_XNull.get());
+	return XObjectPtr(&m_xnull);
 }
 
 

@@ -36,8 +36,10 @@
 
 
 
+#include <xalanc/XPath/XBoolean.hpp>
 #include <xalanc/XPath/XNodeSetAllocator.hpp>
 #include <xalanc/XPath/XNodeSetNodeProxyAllocator.hpp>
+#include <xalanc/XPath/XNull.hpp>
 #include <xalanc/XPath/XNumberAllocator.hpp>
 #include <xalanc/XPath/XStringAllocator.hpp>
 #include <xalanc/XPath/XStringAdapterAllocator.hpp>
@@ -48,24 +50,11 @@
 
 
 
-#if defined(XALAN_AUTO_PTR_REQUIRES_DEFINITION)
-#include <xalanc/XPath/XNull.hpp>
-#include <xalanc/XPath/XBoolean.hpp>
-#endif
-
-
-
 #include <xalanc/Include/XalanAutoPtr.hpp>
 
 
 
 XALAN_CPP_NAMESPACE_BEGIN
-
-
-
-class XBoolean;
-class XNull;
-class XNumber;
 
 
 
@@ -89,7 +78,7 @@ public:
 		eXResultTreeFragCacheMax = 40
 	};
 
-	typedef unsigned long	size_type;
+    typedef XNodeSetAllocator::size_type	size_type;
 
 	/**
 	 * Construct a factory for creating XObjects.
@@ -212,11 +201,11 @@ private:
 
 	XStringCacheType				m_xstringCache;
 
-	const XalanAutoPtr<XNull>		m_XNull;
+	XNull		                    m_xnull;
 
-	const XalanAutoPtr<XBoolean>	m_xbooleanFalse;
+	XBoolean	                    m_xbooleanFalse;
 
-	const XalanAutoPtr<XBoolean>	m_xbooleanTrue;
+	XBoolean	                    m_xbooleanTrue;
 };
 
 
