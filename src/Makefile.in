@@ -55,6 +55,9 @@
 # 
 #
 # $Log$
+# Revision 1.19  2000/10/10 16:34:56  auriemma
+# Update version number.
+#
 # Revision 1.18  2000/10/03 14:58:14  auriemma
 # Added Xerces include to the include path.
 #
@@ -285,7 +288,7 @@ SAMPLES_DIR = ${XALANCROOT}/samples
 PROJECT_NAME = xalan-c
 LIBNAME = lib${PROJECT_NAME}
 THISLIB = ${LIB_DIR}/${LIBNAME}
-VER = 0_40
+VER = 1_0
 
 PRODUCTNAME=xalan
 PRODUCTVERSION=${VER}

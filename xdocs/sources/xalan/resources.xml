@@ -39,18 +39,7 @@
   <resource id="XPath" title="XML Path Language (XPath) Version 1.0" location="http://www.w3.org/TR/xpath"/>
 
   <resource id="DOM" title="DOM" location="http://www.w3.org/DOM"/>
-
-    
  
   <human-resource id="xalandev" name="Xalan Development Mailing List" mailto="xalan-dev@xml.apache.org"/>
-  <human-resource id="sboag" name="Scott Boag" mailto="scott_boag@lotus.com"/>
-  <human-resource id="dnbertoni" name="David N. Bertoni" mailto="david_n_bertoni@lotus.com"/>
-  <human-resource id="mmidy" name="Myriam Midy" mailto="myriam_midy@lotus.com"/>
-  <human-resource id="scurcuru" name="Shane Curcuru" mailto="shane_curcuru@lotus.com"/>
-  <human-resource id="dleslie" name="Don Leslie" mailto="donald_leslie@lotus.com"/>       
-  <human-resource id="pdick" name="Paul Dick" mailto="paul_dick@lotus.com"/> 
-
-  <human-resource id="nmendelsohn" name="Noah Mendelsohn" mailto="noah_mendelsohn@lotus.com"/> 
-	<human-resource id="sanjiva" name="Sanjiva Weerawarana" mailto="sanjiva@watson.ibm.com"/> 
 
 </resources>
