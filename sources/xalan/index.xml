@@ -63,7 +63,7 @@
   <s2 title="What is it?">
     <p>Xalan is an XSLT processor for transforming XML documents into HTML, text, or other XML
      document types.</p>
-    <p>&xslt4c-current; is a robust C++ reference implementation of the W3C Recommendations 
+    <p>&xslt4c-current; is a robust implementation of the W3C Recommendations 
     for XSL Transformations (XSLT) and the XML Path Language (XPath). It uses the &xml4c-used;
     XML parser.</p>
 	</s2>

@@ -158,7 +158,7 @@
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<code>chmod +x conf*</code><br/><br/></li>
       <li>Run the runConfigure utility with at least the platform flag (Linux) or the platform, C compilier, and C++ compiler flags (AIX) as indicated below.<br/><br/>
       <ref>Linux:</ref>&nbsp;&nbsp;<code>runConfigure -p linux</code><br/>
-      <ref>AIX:</ref>&nbsp;&nbsp;&nbsp;<code>runConfigure -p aix -c xlc_r -x xlC-r</code><br/><br/>
+      <ref>AIX:</ref>&nbsp;&nbsp;&nbsp;<code>runConfigure -p aix -c xlc_r -x xlC-R</code><br/><br/>
       To see the other runConfigure flags you may include, use the help flag:<br/><br/>
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<code>runConfigure -h</code><br/><br/></li>
       <li>Run the make file:<br/><br/>
