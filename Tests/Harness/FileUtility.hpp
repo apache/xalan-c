@@ -64,7 +64,13 @@
 #include<stdio.h>
 #include <time.h>
 
+#if defined(XALAN_OLD_STREAM_HEADERS)
+#include <iostream.h>
+#else
+#include <iostream>
+#endif
 
+#include <util/XercesDefs.hpp>
 
 using namespace std;
 
@@ -105,6 +111,8 @@ public:
 	/** Simple constructor, does not perform initialization.  */
 	FileUtility()
 	{
+
+			cout << "Using Xerces Version " << gXercesFullVersionStr << endl;
 	}
 	
 	/** 
@@ -149,6 +157,13 @@ public:
 	*/
 
 	XalanDOMString FileUtility::GenerateUniqRunid();
+
+	/** 
+	* Utility methods used to get Xerces Version number.
+	* @returns a XalanDOMString.
+	*/
+
+	XalanDOMString FileUtility::getXercesVersion();
 
 };        // end of class FileUtility
 #endif

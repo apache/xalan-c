@@ -34,6 +34,7 @@
 
 #include <framework/URLInputSource.hpp>
 #include <util/PlatformUtils.hpp>
+#include <util/XercesDefs.hpp>
 
 #include <XalanDOM/XalanNode.hpp>
 #include <XalanDOM/XalanDocument.hpp>
@@ -58,7 +59,6 @@
 //																			*/	
 FileNameVectorType FileUtility::getTestFileNames(XalanDOMString baseDir, XalanDOMString relDir, bool useDirPrefix)
 {
-	const XalanDOMString	pathSep(XALAN_STATIC_UCODE_STRING("\\"));
 	const XalanDOMString	searchSuffix(XALAN_STATIC_UCODE_STRING("*.xsl"));
 	XalanDOMString	searchSpecification;
 
@@ -190,5 +190,16 @@ XalanDOMString FileUtility::GenerateUniqRunid()
 		strftime( tmpbuf, 10,"%m%d%H%M",newtime );
 
 		return(XalanDOMString(tmpbuf));
+
+}
+
+/*	This routine get Xerces Version number. 
+//	Inputs: None
+//				
+*/
+XalanDOMString FileUtility::getXercesVersion()
+{
+
+	return(XalanDOMString(gXercesFullVersionStr));
 
 }
