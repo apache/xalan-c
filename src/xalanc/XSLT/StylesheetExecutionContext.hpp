@@ -67,6 +67,7 @@
 
 
 #include <cstddef>
+#include <cstdio>
 #include <memory>
 
 
@@ -604,22 +605,6 @@ public:
 	 */
 	virtual void
 	setIndent(int	indentAmount) = 0;
-
-	// $$$ ToDo: Remove this one!!!!
-	/**
-	 * Execute an XPath and return the resulting XObject. The lifetime of this
-	 * XObject is not necessarily that of the Stylesheet.
-	 *
-	 * @param str         string expression for XPath evaluation
-	 * @param contextNode current node in the source tree
-	 * @param resolver    resolver for namespace resolution
-	 * @return pointer to resulting XObject
-	 */
-//	virtual const XObjectPtr
-//	executeXPath(
-//			const XalanDOMString&	str,
-//			XalanNode*				contextNode,
-//			const XalanElement&		resolver) = 0;
 
 	/**
 	 * Create and initialize an xpath and return it. This is to be used to
@@ -1737,6 +1722,15 @@ public:
 	 */
 	virtual PrintWriter*
 	createPrintWriter(StreamType&	theStream) = 0;
+
+	/**
+	 * Create a PrintWriter using the provided FILE instance.
+	 * 
+	 * @param theStream The output stream for the PrintWriter.
+	 * @return The new instance.
+	 */
+	virtual PrintWriter*
+	createPrintWriter(FILE*		theStream) = 0;
 
 	/**
 	 * Get the counters table, which is a table of cached

@@ -82,7 +82,8 @@ XSLTResultTarget::XSLTResultTarget() :
 	m_byteStream(0),
 	m_encoding(),
 	m_characterStream(0),
-	m_formatterListener(0)
+	m_formatterListener(0),
+	m_stream(0)
 {
 }
 
@@ -93,7 +94,8 @@ XSLTResultTarget::XSLTResultTarget(const XalanDOMString&	fileName) :
 	m_byteStream(0),
 	m_encoding(),
 	m_characterStream(0),
-	m_formatterListener(0)
+	m_formatterListener(0),
+	m_stream(0)
 {
 }
 
@@ -104,7 +106,8 @@ XSLTResultTarget::XSLTResultTarget(const XalanDOMChar*	fileName) :
 	m_byteStream(0),
 	m_encoding(),
 	m_characterStream(0),
-	m_formatterListener(0)
+	m_formatterListener(0),
+	m_stream(0)
 {
 }
 
@@ -115,7 +118,8 @@ XSLTResultTarget::XSLTResultTarget(const char*	fileName) :
 	m_byteStream(0),
 	m_encoding(),
 	m_characterStream(0),
-	m_formatterListener(0)
+	m_formatterListener(0),
+	m_stream(0)
 {
 }
 
@@ -126,7 +130,8 @@ XSLTResultTarget::XSLTResultTarget(StreamType*	theStream) :
 	m_byteStream(theStream),
 	m_encoding(),
 	m_characterStream(0),
-	m_formatterListener(0)
+	m_formatterListener(0),
+	m_stream(0)
 {
 	assert(theStream != 0);
 }
@@ -138,7 +143,8 @@ XSLTResultTarget::XSLTResultTarget(StreamType&	theStream) :
 	m_byteStream(&theStream),
 	m_encoding(),
 	m_characterStream(0),
-	m_formatterListener(0)
+	m_formatterListener(0),
+	m_stream(0)
 {
 }
 
@@ -149,7 +155,8 @@ XSLTResultTarget::XSLTResultTarget(Writer*	characterStream) :
 	m_byteStream(0),
 	m_encoding(),
 	m_characterStream(characterStream),
-	m_formatterListener(0)
+	m_formatterListener(0),
+	m_stream(0)
 {
 	assert(characterStream != 0);
 }
@@ -161,7 +168,8 @@ XSLTResultTarget::XSLTResultTarget(FormatterListener&		flistener) :
 	m_byteStream(0),
 	m_encoding(),
 	m_characterStream(0),
-	m_formatterListener(&flistener)
+	m_formatterListener(&flistener),
+	m_stream(0)
 {
 }
 

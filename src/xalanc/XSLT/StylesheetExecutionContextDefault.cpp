@@ -76,6 +76,7 @@
 #include <xalanc/PlatformSupport/XalanOutputStreamPrintWriter.hpp>
 #include <xalanc/PlatformSupport/XalanStdOutputStream.hpp>
 #include <xalanc/PlatformSupport/XalanFileOutputStream.hpp>
+#include <xalanc/PlatformSupport/XalanFStreamOutputStream.hpp>
 #include <xalanc/PlatformSupport/XalanTranscodingServices.hpp>
 
 
@@ -553,22 +554,6 @@ void
 StylesheetExecutionContextDefault::setIndent(int	indentAmount)
 {
 	m_indentAmount = indentAmount;
-}
-
-
-
-const XObjectPtr
-StylesheetExecutionContextDefault::executeXPath(
-			const XalanDOMString&	str,
-			XalanNode*				contextNode,
-			const XalanElement&		resolver)
-{
-	assert(m_xsltProcessor != 0);
-
-	return m_xsltProcessor->evalXPathStr(str,
-										contextNode,
-										resolver,
-										*this);
 }
 
 
@@ -2138,6 +2123,19 @@ StylesheetExecutionContextDefault::createPrintWriter(StreamType&	theStream)
 {
 	XalanOutputStream* const		theOutputStream =
 		new XalanStdOutputStream(theStream);
+
+	m_outputStreams.push_back(theOutputStream);
+
+	return createPrintWriter(theOutputStream);
+}
+
+
+
+PrintWriter*
+StylesheetExecutionContextDefault::createPrintWriter(FILE*	theStream)
+{
+	XalanOutputStream* const		theOutputStream =
+		new XalanFStreamOutputStream(theStream);
 
 	m_outputStreams.push_back(theOutputStream);
 

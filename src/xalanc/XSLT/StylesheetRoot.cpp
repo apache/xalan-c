@@ -307,6 +307,7 @@ StylesheetRoot::setupFormatterListener(
 	}
 	else if(0 != outputTarget.getCharacterStream() ||
 			0 != outputTarget.getByteStream() ||
+			0 != outputTarget.getStream() ||
 			0 != length(outputTarget.getFileName()))
 	{
 		/*
@@ -323,6 +324,10 @@ StylesheetRoot::setupFormatterListener(
 			if(0 != outputTarget.getByteStream())
 			{
 				pw = executionContext.createPrintWriter(*outputTarget.getByteStream());
+			}
+			else if (0 != outputTarget.getStream())
+			{
+				pw = executionContext.createPrintWriter(outputTarget.getStream());
 			}
 			else if(!isEmpty(outputTarget.getFileName()))
 			{

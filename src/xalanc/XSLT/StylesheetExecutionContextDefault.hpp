@@ -422,13 +422,6 @@ public:
 	virtual void
 	setIndent(int	indentAmount);
 
-	// $$$ ToDo: Get rid of this!!!!
-	virtual const XObjectPtr
-	executeXPath(
-			const XalanDOMString&	str,
-			XalanNode*				contextNode,
-			const XalanElement&		resolver);
-
 	virtual const XPath*
 	createMatchPattern(
 			const XalanDOMString&	str,
@@ -823,6 +816,9 @@ public:
 
 	virtual PrintWriter*
 	createPrintWriter(StreamType&	theStream);
+
+	virtual PrintWriter*
+	createPrintWriter(FILE*		theStream);
 
 	virtual CountersTable&
 	getCountersTable();

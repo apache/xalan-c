@@ -66,6 +66,7 @@
 
 
 
+#include <cstdio>
 #if defined(XALAN_CLASSIC_IOSTREAMS)
 class ostream;
 #else
@@ -142,6 +143,14 @@ public:
 	 *                        will be written
 	 */ 
 	XSLTResultTarget(Writer*	characterStream);
+
+	/**
+	 * Create a new output target with a stream.
+	 *
+	 * @param characterStream pointer to character stream where the results
+	 *                        will be written
+	 */ 
+	XSLTResultTarget(FILE*	characterStream);
 
 	/**
 	 * Create a new output target with a FormatterListener.
@@ -279,6 +288,17 @@ public:
 	}
 
 	/**
+	 * Get the stream for this output target.
+	 *
+	 * @return pointer to stream, or null if none was supplied.
+	 */
+	FILE*
+	getStream() const
+	{
+		return m_stream;
+	}
+
+	/**
 	 * Set a FormatterListener to process the result tree events.
 	 *
 	 * @param handler pointer to new listener
@@ -311,6 +331,8 @@ private:
 	Writer*					m_characterStream;
 
 	FormatterListener*		m_formatterListener;
+
+	FILE*					m_stream;
 };
 
 
