@@ -81,7 +81,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 XercesDOMWrapperParsedSource::XercesDOMWrapperParsedSource(
-			const DOM_DocumentType&		theDocument,
+			const DOM_Document_Type&	theDocument,
 			XercesParserLiaison&		theParserLiaison,
 			XercesDOMSupport&			theDOMSupport,
 			const XalanDOMString&		theURI) :
@@ -97,10 +97,10 @@ XercesDOMWrapperParsedSource::XercesDOMWrapperParsedSource(
 
 
 XercesDOMWrapperParsedSource::XercesDOMWrapperParsedSource(
-			const DOMDocumentType*	theDocument,
-			XercesParserLiaison&	theParserLiaison,
-			XercesDOMSupport&		theDOMSupport,
-			const XalanDOMString&	theURI) :
+			const DOMDocument_Type*		theDocument,
+			XercesParserLiaison&		theParserLiaison,
+			XercesDOMSupport&			theDOMSupport,
+			const XalanDOMString&		theURI) :
 	XalanParsedSource(),
 	m_parserLiaison(theParserLiaison),
 	m_domSupport(theDOMSupport),

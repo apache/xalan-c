@@ -81,8 +81,8 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-typedef XERCES_CPP_NAMESPACE_QUALIFIER DOM_Document	DOM_DocumentType;
-typedef XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument	DOMDocumentType;
+typedef XERCES_CPP_NAMESPACE_QUALIFIER DOM_Document	DOM_Document_Type;
+typedef XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument	DOMDocument_Type;
 
 
 
@@ -110,7 +110,7 @@ public:
 	 * @deprecated This constructor is deprecated.
 	 */
 	XercesDOMWrapperParsedSource(
-			const DOM_DocumentType&		theDocument,
+			const DOM_Document_Type&	theDocument,
 			XercesParserLiaison&		theParserLiaison,
 			XercesDOMSupport&			theDOMSupport,
 			const XalanDOMString&		theURI = XalanDOMString());
@@ -124,10 +124,10 @@ public:
 	 * @param theURI The URI of the document, if any.
 	 */
 	XercesDOMWrapperParsedSource(
-			const DOMDocumentType*	theDocument,
-			XercesParserLiaison&	theParserLiaison,
-			XercesDOMSupport&		theDOMSupport,
-			const XalanDOMString&	theURI = XalanDOMString());
+			const DOMDocument_Type*		theDocument,
+			XercesParserLiaison&		theParserLiaison,
+			XercesDOMSupport&			theDOMSupport,
+			const XalanDOMString&		theURI = XalanDOMString());
 
 	virtual
 	~XercesDOMWrapperParsedSource();
