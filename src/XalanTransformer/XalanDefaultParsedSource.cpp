@@ -66,6 +66,10 @@
 
 
 
+#include <DOMSupport/DOMServices.hpp>
+
+
+
 #include <XalanSourceTree/XalanSourceTreeDocument.hpp>
 #include <XalanSourceTree/XalanSourceTreeDOMSupport.hpp>
 
@@ -97,7 +101,7 @@ XalanDefaultParsedSourceDOMSupport::getNamespaceForPrefix(
 			const XalanDOMString&	prefix, 
 			const XalanElement&		namespaceContext) const
 {
-	return m_domSupport.getNamespaceForPrefix(
+	return DOMServices::getNamespaceForPrefix(
 					prefix, 
 					namespaceContext);
 }
