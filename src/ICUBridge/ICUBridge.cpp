@@ -86,6 +86,33 @@
 
 
 
+#if defined(XALAN_XALANDOMCHAR_USHORT_MISMATCH)
+inline void
+doCopyData(
+			const XalanDOMChar*		theString,
+			unsigned int			theStringLength,
+			XalanDOMChar*			theBuffer)
+{
+	// Copy the data, truncating each character...
+	for (unsigned int i = 0; i < theStringLength; ++i)
+	{
+		// There should be no truncation, since XalanDOMChars
+		// hold UTF-16 code points, but assert, just in case...
+		assert(theString[i] == UChar(theString[i]));
+
+		theBuffer[i] = theString[i];
+	}
+
+}
+#endif
+
+
+
+// Use a stack-based buffer up to this size.
+const unsigned int	theStackBufferSize = 200u;
+
+
+
 const UnicodeString
 ICUBridge::XalanDOMCharStringToUnicodeString(const XalanDOMChar*	theString)
 {
@@ -97,29 +124,32 @@ ICUBridge::XalanDOMCharStringToUnicodeString(const XalanDOMChar*	theString)
 	{
 #if defined(XALAN_XALANDOMCHAR_USHORT_MISMATCH)
 
-		// Create a buffer to copy out the UnicodeString data...
-		UCharVectorType		theBuffer;
-
 		const unsigned int	theLength = length(theString);
 
-		// Resize the buffer appropriately...
-		theBuffer.reserve(theLength);
-
-		// Copy the data, truncating each character...
-		for (unsigned int i = 0; i < theLength; ++i)
+		if (theStackBufferSize > theLength)
 		{
-			// There should be no truncation, since XalanDOMChars
-			// hold UTF-16 code points, but assert, just in case...
-			assert(theString[i] == UChar(theString[i]));
-			theBuffer.push_back(theString[i]);
+			XalanDOMChar	theBuffer[theStackBufferSize];
+
+			doCopyData(theString, theLength, theBuffer);
+
+			return UnicodeString(&theBuffer[0], theLength);
 		}
+		else
+		{
+			// Create a buffer to copy out the UnicodeString data...
+			UCharVectorType		theBuffer;
 
-		return UnicodeString(&theBuffer[0], theBuffer.size());
+			// Resize the buffer appropriately...
+			theBuffer.resize(theLength);
 
+			doCopyData(theString, theLength, &theBuffer[0]);
+
+			assert(theLength == theBuffer.size());
+
+			return UnicodeString(&theBuffer[0], theLength);
+		}
 #else
-
 		return UnicodeString(theString, length(theString));
-
 #endif
 	}
 }
@@ -136,13 +166,13 @@ ICUBridge::XalanDOMStringToUnicodeString(const XalanDOMString&	theString)
 
 
 const XalanDOMString
-ICUBridge::UnicodeStringToXalanDOMString(const UnicodeString&		theString)
+ICUBridge::UnicodeStringToXalanDOMString(const UnicodeString&	theString)
 {
+	const int32_t	theLength = theString.length();
+
 #if defined(XALAN_XALANDOMCHAR_USHORT_MISMATCH)
 
 	// If XalanDOMChar is larger than the ICU's UChar, we have to more work...
-	const int32_t	theLength = theString.length();
-
 	// Create a buffer...
 	XalanDOMCharVectorType	theBuffer;
 
@@ -159,19 +189,30 @@ ICUBridge::UnicodeStringToXalanDOMString(const UnicodeString&		theString)
 
 #else
 
-	// Create a buffer to copy out the UnicodeString data...
-	UCharVectorType		theResult;
+	if (theStackBufferSize > theLength)
+	{
+		UChar	theBuffer[theStackBufferSize];
 
-	const int32_t	theLength = theString.length();
+		// Extract the data...
+		theString.extract(0, theLength, theBuffer);
 
-	// Resize the buffer appropriately...
-	theResult.resize(theLength);
+		return XalanDOMString(theBuffer, theLength);
+	}
+	else
+	{
+		// Create a buffer to copy out the UnicodeString data...
+		UCharVectorType		theBuffer;
 
-	// Extract the data...
-	theString.extract(0, theLength, &theResult[0]);
+		// Resize the buffer appropriately...
+		theBuffer.resize(theLength);
 
-	return XalanDOMString(&theResult[0], theResult.size());
+		// Extract the data...
+		theString.extract(0, theLength, &theBuffer[0]);
 
+		assert(theLength == int32_t(theBuffer.size()));
+
+		return XalanDOMString(&theBuffer[0], theLength);
+	}
 #endif
 }
 
@@ -192,25 +233,36 @@ ICUBridge::UnicodeStringToXalanDOMString(
 
 #else
 
-#if defined(XALAN_NO_NAMESPACES)
-	typedef vector<UChar>					UCharVectorType;
-#else
-	typedef std::vector<UChar>				UCharVectorType;
-#endif
-
-	// Create a buffer to copy out the UnicodeString data...
-	UCharVectorType		theBuffer;
-
 	const int32_t	theLength = theString.length();
 
-	// Resize the buffer appropriately...
-	theBuffer.resize(theLength);
+	if (theStackBufferSize > theLength)
+	{
+		UChar	theBuffer[theStackBufferSize];
 
-	// Extract the data...
-	theString.extract(0, theLength, &theBuffer[0]);
+		// Extract the data...
+		theString.extract(0, theLength, theBuffer);
 
-	theResult = XalanDOMString(&theBuffer[0], theBuffer.size());
+		theResult = XalanDOMString(theBuffer, theLength);
+	}
+	else
+	{
+#if defined(XALAN_NO_NAMESPACES)
+		typedef vector<UChar>		UCharVectorType;
+#else
+		typedef std::vector<UChar>	UCharVectorType;
+#endif
 
+		// Create a buffer to copy out the UnicodeString data...
+		UCharVectorType		theBuffer;
+
+		// Resize the buffer appropriately...
+		theBuffer.resize(theLength);
+
+		// Extract the data...
+		theString.extract(0, theLength, &theBuffer[0]);
+
+		theResult = XalanDOMString(&theBuffer[0], theBuffer.size());
+	}
 #endif
 }
 
