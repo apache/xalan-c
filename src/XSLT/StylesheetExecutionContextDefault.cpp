@@ -167,7 +167,7 @@ StylesheetExecutionContextDefault::StylesheetExecutionContextDefault(
 	m_resultTreeFragAllocator(eResultTreeFragAllocatorBlockSize),
 	m_documentFragmentAllocator(eDocumentFragmentAllocatorBlockSize),
 	m_documentAllocator(eDocumentAllocatorBlockSize),
-	m_usePerInstanceDocumentFactory(true),
+	m_usePerInstanceDocumentFactory(false),
 	m_cloneTextNodesOnly(false),
 	m_escapeURLs(eEscapeURLsDefault),
 	m_omitMETATag(eOmitMETATagDefault),
@@ -211,7 +211,7 @@ StylesheetExecutionContextDefault::StylesheetExecutionContextDefault(
 	m_resultTreeFragAllocator(eResultTreeFragAllocatorBlockSize),
 	m_documentFragmentAllocator(eDocumentFragmentAllocatorBlockSize),
 	m_documentAllocator(eDocumentAllocatorBlockSize),
-	m_usePerInstanceDocumentFactory(true),
+	m_usePerInstanceDocumentFactory(false),
 	m_cloneTextNodesOnly(false),
 	m_escapeURLs(eEscapeURLsDefault),
 	m_scratchQName()
