@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -145,6 +145,14 @@ XUnknown::str(
 	assert(length(m_value) == FormatterListener::size_type(length(m_value)));
 
 	(formatterListener.*function)(c_wstr(m_value), FormatterListener::size_type(length(m_value)));
+}
+
+
+
+double
+XUnknown::stringLength() const
+{
+	return length(m_value);
 }
 
 

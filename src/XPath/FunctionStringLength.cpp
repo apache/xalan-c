@@ -124,7 +124,7 @@ FunctionStringLength::execute(
 {
 	assert(arg.null() == false);	
 
-	return executionContext.getXObjectFactory().createNumber(length(arg->str()));
+	return executionContext.getXObjectFactory().createNumber(arg->stringLength());
 }
 
 

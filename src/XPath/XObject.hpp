@@ -182,6 +182,14 @@ public:
 			MemberFunctionPtr	function) const = 0;
 
 	/**
+	 * Get the length of the string value of the instance..
+	 *
+	 * @return The length of the string value
+	 */
+	virtual double
+	stringLength() const = 0;
+
+	/**
 	 * Append the string value directly a string
 	 *
 	 * @param theBuffer The buffer for the data

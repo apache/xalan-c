@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -73,6 +73,7 @@
 
 
 
+#include <XPath/FormatterStringLengthCounter.hpp>
 #include <XPath/NodeRefListBase.hpp>
 #include <XPath/ResultTreeFragBase.hpp>
 #include <XPath/XObjectTypeCallback.hpp>
@@ -206,6 +207,25 @@ XResultTreeFrag::str(XalanDOMString&	theBuffer) const
 	else
 	{
 		DOMServices::getNodeData(*m_value, theBuffer);
+	}
+}
+
+
+
+double
+XResultTreeFrag::stringLength() const
+{
+	if (isEmpty(m_cachedStringValue) == false)
+	{
+		return length(m_cachedStringValue);
+	}
+	else
+	{
+		FormatterStringLengthCounter	theCounter;
+
+		DOMServices::getNodeData(*m_value, theCounter, FormatterListener::characters);
+
+		return theCounter.getCount();
 	}
 }
 

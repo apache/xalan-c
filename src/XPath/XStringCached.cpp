@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -122,4 +122,12 @@ XStringCached::eObjectType
 XStringCached::getRealType() const
 {
 	return eTypeStringCached;
+}
+
+
+
+double
+XStringCached::stringLength() const
+{
+	return length(m_value.get());
 }

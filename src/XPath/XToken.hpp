@@ -109,6 +109,9 @@ public:
 	virtual void
 	str(XalanDOMString&	theBuffer) const;
 
+	virtual double
+	stringLength() const;
+
 	virtual void
 	ProcessXObjectTypeCallback(XObjectTypeCallback&		theCallbackObject);
 

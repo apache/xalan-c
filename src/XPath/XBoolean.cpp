@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -156,6 +156,14 @@ XBoolean::str(
 
 
 
+double
+XBoolean::stringLength() const
+{
+	return m_value == true ? s_trueString.length() : s_falseString.length();
+}
+
+
+	
 void
 XBoolean::ProcessXObjectTypeCallback(XObjectTypeCallback&	theCallbackObject)
 {

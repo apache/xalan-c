@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -159,4 +159,12 @@ XNumber::set(double		theValue)
 	m_value = theValue;
 
 	clear(m_cachedStringValue);
+}
+
+
+
+double
+XNumber::stringLength() const
+{
+	return length(str());
 }

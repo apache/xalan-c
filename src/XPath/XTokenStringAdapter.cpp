@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -127,6 +127,14 @@ void
 XTokenStringAdapter::str(XalanDOMString&	theBuffer) const
 {
 	m_value.str(theBuffer);
+}
+
+
+
+double
+XTokenStringAdapter::stringLength() const
+{
+	return m_value.stringLength();
 }
 
 

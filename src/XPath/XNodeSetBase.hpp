@@ -126,6 +126,9 @@ public:
 	virtual void
 	str(XalanDOMString&	theBuffer) const;
 
+	virtual double
+	stringLength() const;
+
 	virtual const ResultTreeFragBase&
 	rtree() const;
 

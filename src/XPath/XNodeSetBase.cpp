@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -72,6 +72,7 @@
 
 
 
+#include "FormatterStringLengthCounter.hpp"
 #include "XObjectTypeCallback.hpp"
 #include "XPathExecutionContext.hpp"
 
@@ -196,6 +197,32 @@ XNodeSetBase::str(XalanDOMString&	theBuffer) const
 		assert(theNode != 0);
 
 		DOMServices::getNodeData(*theNode, theBuffer);
+	}
+}
+
+
+
+double
+XNodeSetBase::stringLength() const
+{
+	if (isEmpty(m_cachedStringValue) == false)
+	{
+		return length(m_cachedStringValue);
+	}
+	else if (getLength() == 0)
+	{
+		return 0;
+	}
+	else
+	{
+		const XalanNode* const	theNode = item(0);
+		assert(theNode != 0);
+
+		FormatterStringLengthCounter	theCounter;
+
+		DOMServices::getNodeData(*theNode, theCounter, FormatterListener::characters);
+
+		return theCounter.getCount();
 	}
 }
 
