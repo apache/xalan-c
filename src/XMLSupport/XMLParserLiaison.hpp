@@ -73,6 +73,7 @@
 
 
 class DocumentHandler;
+class ExecutionContext;
 class FormatterListener;
 class InputSource;
 class URLInputSource;
@@ -97,6 +98,12 @@ public:
 	reset() = 0;
 
 	// These interfaces are new to XMLParserLiaison
+
+	virtual ExecutionContext*
+	getExecutionContext() const = 0;
+
+	virtual void
+	setExecutionContext(ExecutionContext&	theContext) = 0;
 
 	/**
 	 * Determine if the liaison supports the SAX DocumentHandler interface.

@@ -93,6 +93,21 @@ XMLParserLiaisonDefault::reset()
 
 
 
+ExecutionContext*
+XMLParserLiaisonDefault::getExecutionContext() const
+{
+	return 0;
+}
+
+
+
+void
+XMLParserLiaisonDefault::setExecutionContext(ExecutionContext&	/* theContext */)
+{
+}
+
+
+
 bool
 XMLParserLiaisonDefault::supportsSAX() const
 {

@@ -98,6 +98,12 @@ public:
 
 	// These interfaces are inherited from XMLParserLiaison...
 
+	virtual ExecutionContext*
+	getExecutionContext() const;
+
+	virtual void
+	setExecutionContext(ExecutionContext&	theContext);
+
 	virtual bool
 	supportsSAX() const;
 
