@@ -126,7 +126,6 @@
 #include <XSLT/XSLTProcessorEnvSupportDefault.hpp>
 
 
-
 //#define XALAN_USE_ICU
 #if defined(XALAN_USE_ICU)
 #include <ICUBridge/ICUBridge.hpp>
@@ -680,8 +679,6 @@ THREADFUNCTIONRETURN xsltMain(void *vptr) throw(XMLException)
 		XercesDOMPrintWriter	resultWriter(*outputStream);
 
 
-		assert(0 != stylesheet);
-
 		if(FormatterListener::OUTPUT_METHOD_XML == outputType)
 		{
 			FormatterToXML* fToXML = new FormatterToXML(resultWriter,
@@ -734,7 +731,18 @@ THREADFUNCTIONRETURN xsltMain(void *vptr) throw(XMLException)
 			xmlParserLiaison.setFormatterListener(formatter);
 		}
 
-		stylesheet->process(sourceTree, *rTreeTarget, theExecutionContext);
+		if (stylesheet != 0)
+		{
+			theExecutionContext.setStylesheetRoot(stylesheet);
+		}
+
+		XSLTInputSource		theSourceTree(sourceTree);
+
+		processor.process(
+			theSourceTree,
+			*rTreeTarget,
+			theExecutionContext);
+
 		delete formatter;
 		delete rTreeTarget;
 	}
@@ -771,7 +779,7 @@ int main(int argc, const char* argv[]) throw()
 
 		if (theParams.versionOnly == true)
 		{
-			cout << "TestXSLT version 0.40.0 (Xalan C++ version 0.40.0)"
+			cout << "TestXSLT version 0.31.0 (Xalan C++ version 0.31.0)"
 				 << endl;
 		}
 		else if (theParams.inFileNames.size() == 0)
