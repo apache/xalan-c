@@ -51,13 +51,15 @@ XALAN_CPP_NAMESPACE_BEGIN
 class XalanAttr;
 class XalanDocument;
 
+typedef XalanVector<const XalanNode*> 				AttributeVectorTypeDecl;
+XALAN_USES_MEMORY_MANAGER(AttributeVectorTypeDecl)
 
 
 class XALAN_DOMSUPPORT_EXPORT XalanDocumentPrefixResolver : public PrefixResolver
 {
 public:
 
-	typedef XalanVector<const XalanNode*> 				AttributeVectorType;
+	typedef AttributeVectorTypeDecl				        AttributeVectorType;
 	typedef XalanMap<const XalanDOMString*,
 					AttributeVectorType>				NamespacesMapType;
 
