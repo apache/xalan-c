@@ -23,6 +23,10 @@
 <!ENTITY xslt4c-aixlib "libxalan-c19.so">
 <!ENTITY xslt4c-hplib "libxalan-c.sl.19.0">
 <!ENTITY xslt4c-solarislib "libxalan-c1_9.so">
+<!ENTITY xslt4c-msgdll "XalanMessages_1_9.dll">
+<!ENTITY xslt4c-msglib "XalanMessages_1_9.lib">
+<!ENTITY xslt4c-msgsho "libxalanMsg19.so">
+<!ENTITY xslt4c-msgcat "xalanMsg1_9.cat">
 <!ENTITY xslt4c-win_root "xml-xalan\c">
 <!ENTITY xslt4c-unix_root "xml-xalan/c">
 

@@ -21,7 +21,7 @@
    build the &xslt4c; libraries themselves.</p>
 <ul>
   <li><link anchor="rebuild">Rebuilding &xslt4c;</link></li>
-  <li><link idref="samples" anchor="samples">Rebuilding sample applications</link></li>
+  <li><link idref="samples" anchor="rebuilding">Rebuilding sample applications</link></li>
 </ul>
 
 <anchor name="rebuild"/> 

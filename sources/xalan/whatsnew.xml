@@ -47,9 +47,28 @@
       inhibit executing stylesheets that are heavily dependent on recursive functions.  This feature will prevent these types 
       of failure. </li>
   <li>Upgrade from Xerces-C 2.5 to Xerces-C 2.6. </li>
-  <li><resource-ref idref="bugsfixedforthisrelease"/>.</li>
+  <li><link anchor="bugfixes">Bugs fixed in this release</link>.</li>
  </ul>  
 </s3>  
+
+<anchor name="bugfixes"/>
+<s2 title="Bugs Fixed in this Release">
+<p>The bugs fixed in this release include:</p>
+  <table>
+      <tr>
+         <th>JIRA #</th>
+         <th>Abstract</th>
+      </tr>
+      <tr>
+         <td>XALANC-414</td>
+         <td>DOCS: Apache 2.0 license update</td>
+      </tr>
+      <tr>
+         <td>XALANC-428</td>
+         <td>Usage patterns doc spelling fixes</td>
+      </tr>
+   </table>
+</s2>
 
 <anchor name="bugs"/>
 <s3 title="Bug reporting">
