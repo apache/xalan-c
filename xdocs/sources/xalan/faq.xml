@@ -37,7 +37,8 @@
   </faq>
   
 <faq title="Problems with samples in Windows">
-<q>I have encountered problem executing the &xslt4c; sample applications after rebuilding them under Win32 Environment (Windows NT 4.0, SP3). When I tried to execute the sample program, I receive the error message "Debug Assertion Failed! ...  Expression: _BLOCK_TYPE_IS_VALID(pHead->nBlockUse)"</q>
+<q>I have encountered problem executing the &xslt4c; sample applications after rebuilding them under Win32 Environment (Windows NT 4.0, SP3).
+ When I tried to execute the sample, I receive the error message "Debug Assertion Failed! ...  Expression: _BLOCK_TYPE_IS_VALID(pHead->nBlockUse)".</q>
 
 <a><p>You may be mixing debug and release versions of executables and libraries. In other words, if you are compiling the sample for debug, then you should link with the debug version of the &xslt4c; and &xml4c; libraries and run with the debug version of the dynamic link libraries.</p></a>
 </faq>

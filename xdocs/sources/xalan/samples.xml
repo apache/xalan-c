@@ -93,7 +93,7 @@
      executable is on the path, and run it from the samples subdirectory that contains the input files.</note>
   </s2><anchor name="xalantransform"/>
   <s2 title="XalanTransform">
-    <p>What it does: XalanTransform uses the XalanTransformer class to apply an XSL stylesheet file to an XML document file and write
+    <p>What it does: XalanTransform uses the XalanTransformer class and the associated C++ API to apply an XSL stylesheet file to an XML document file and write
     the transformation output to either an output file or to a stream. XalanTransform takes command-line 
     arguments for the XML document to be transformed, the XSL stylesheet to apply, and an optional output file argument. If you omit 
     the third argument, XalanTransform writes the transformation output to a stream that is sent to standard out (the screen).</p>
