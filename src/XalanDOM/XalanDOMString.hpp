@@ -746,7 +746,7 @@ public:
 	public:
 
 		TranscodingError() :
-			XalanDOMException(ExceptionCode::TRANSCODING_ERR)
+			XalanDOMException(TRANSCODING_ERR)
 		{
 		}
 
