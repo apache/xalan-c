@@ -740,12 +740,6 @@ private:
 	operator==(const FormatterToXML&) const;
 
 	/**
-	 * Initialize the static codings table.
-	 */
-	static void
-	initEncodings();
-
-	/**
 	 * Append a wide character to the buffer.
 	 * Characters that are not representable
 	 * in the encoding are not written as
