@@ -802,7 +802,7 @@ int main(int argc, const char* argv[]) throw()
 						 << "\"  Node value: \""
 						 << theInstance->getNodeValue()
 						 << "\""
-	#if defined(XALAN_RTTI_AVAILABLE)
+	#if defined(XALAN_RTTI_AVAILABLE) && !defined(XALAN_NO_TYPEINFO)
 						 << "  Type: \""
 						 << typeid(*theInstance).name()
 						 << "\""
