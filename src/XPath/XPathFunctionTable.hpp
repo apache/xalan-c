@@ -82,6 +82,10 @@
 
 
 
+class Locator;
+
+
+
 /**
  * Exception class thrown when an unknown function is encountered
  */
@@ -89,13 +93,17 @@ class XALAN_XPATH_EXPORT XPathExceptionFunctionNotAvailable : public XalanXPathE
 {
 public:
 
+	XPathExceptionFunctionNotAvailable(int	theFunctionNumber);
+
+	XPathExceptionFunctionNotAvailable(const XalanDOMString&	theFunctionName);
+
 	XPathExceptionFunctionNotAvailable(
-		int					theFunctionName,
-		const XalanNode*	styleNode = 0);
+		int					theFunctionNumber,
+		const Locator&		theLocator);
 
 	XPathExceptionFunctionNotAvailable(
 		const XalanDOMString&	theFunctionName,
-		const XalanNode*		styleNode = 0);
+		const Locator&			theLocator);
 
 	~XPathExceptionFunctionNotAvailable();
 };

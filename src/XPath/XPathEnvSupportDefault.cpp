@@ -452,7 +452,14 @@ XPathEnvSupportDefault::extFunction(
 
 		theFunctionName += functionName;
 
-		throw XPathExceptionFunctionNotAvailable(theFunctionName);
+		if (locator != 0)
+		{
+			throw XPathExceptionFunctionNotAvailable(theFunctionName, *locator);
+		}
+		else
+		{
+			throw XPathExceptionFunctionNotAvailable(theFunctionName);
+		}
 
 		// dummy return value...
 		return XObjectPtr();

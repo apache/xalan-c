@@ -306,11 +306,26 @@ XPathFunctionTable::DestroyTable()
 
 
 
+XPathExceptionFunctionNotAvailable::XPathExceptionFunctionNotAvailable(int	theFunctionNumber) :
+	XalanXPathException(TranscodeFromLocalCodePage("The specified function number is not available: ") + LongToDOMString(theFunctionNumber))
+{
+}
+
+
+
+XPathExceptionFunctionNotAvailable::XPathExceptionFunctionNotAvailable(const XalanDOMString&	theFunctionName) :
+	XalanXPathException(TranscodeFromLocalCodePage("The specified function is not available: ") + theFunctionName)
+{
+}
+
+
+
 XPathExceptionFunctionNotAvailable::XPathExceptionFunctionNotAvailable(
-		int					theFunctionNumber,
-		const XalanNode*	styleNode) :
-	XalanXPathException(TranscodeFromLocalCodePage("The specified function ID is not available: ") + LongToDOMString(theFunctionNumber),
-				   styleNode)
+			int				theFunctionNumber,
+			const Locator&	theLocator) :
+	XalanXPathException(
+					theLocator,
+					TranscodeFromLocalCodePage("The specified function number is not available: ") + LongToDOMString(theFunctionNumber))
 {
 }
 
@@ -318,9 +333,10 @@ XPathExceptionFunctionNotAvailable::XPathExceptionFunctionNotAvailable(
 
 XPathExceptionFunctionNotAvailable::XPathExceptionFunctionNotAvailable(
 			const XalanDOMString&	theFunctionName,
-			const XalanNode*		styleNode) :
-	XalanXPathException(TranscodeFromLocalCodePage("The specified function is not available: ") + theFunctionName,
-				   styleNode)
+			const Locator&			theLocator) :
+	XalanXPathException(
+					theLocator,
+					TranscodeFromLocalCodePage("The specified function is not available: ") + theFunctionName)
 {
 }
 
