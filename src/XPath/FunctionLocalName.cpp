@@ -101,13 +101,13 @@ FunctionLocalName::execute(
 	if (context == 0)
 	{
 		executionContext.error("The local-name() function requires a non-null context node!");
+
+		return XObjectPtr();
 	}
 	else
 	{
 		return getLocalName(executionContext, *context);
 	}
-
-	return 0;
 }
 
 
