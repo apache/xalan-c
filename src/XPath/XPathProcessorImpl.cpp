@@ -635,8 +635,8 @@ XPathProcessorImpl::tokenIs(char	c) const
 
 bool
 XPathProcessorImpl::lookahead(
-			char	c,
-			int 	n) const
+			XalanDOMChar	c,
+			int 			n) const
 {
 	const XalanDOMString 	tok =
 		getTokenRelative(n - 1);
@@ -1493,10 +1493,10 @@ XPathProcessorImpl::PrimaryExpr()
 
 		m_expression->appendOpCode(XPathExpression::eOP_VARIABLE);
 
-		NCName();
+		QName();
 
 		m_expression->updateOpCodeLength(XPathExpression::eOP_VARIABLE,
-										 opPos);
+											 opPos);
 	}
 	else if(m_tokenChar == XalanUnicode::charLeftParenthesis)
 	{
@@ -1906,7 +1906,7 @@ XPathProcessorImpl::NodeTest(int	axisType)
 			nextToken();
 
 			m_expression->appendOpCode((*i).second);
-		
+
 			consumeExpected(XalanUnicode::charLeftParenthesis);
 
 			if(XPathExpression::eNODETYPE_PI == (*i).second)
@@ -2008,7 +2008,7 @@ XPathProcessorImpl::PredicateExpr()
 	m_expression->updateOpCodeLength(XPathExpression::eOP_PREDICATE,
 									 opPos);
 }
-  
+
 
 
 void
@@ -2017,11 +2017,23 @@ XPathProcessorImpl::QName()
 	assert(m_xpath != 0);
 	assert(m_expression != 0);
 
-	m_expression->pushCurrentTokenOnOpCodeMap();
+	// If there is no prefix, we have to fake things out...
+	if (lookahead(':', 1) == false)
+	{
+		m_expression->insertToken(XalanDOMString());
 
-	nextToken();
+		m_expression->pushCurrentTokenOnOpCodeMap();
 
-	consumeExpected(XalanUnicode::charColon);
+		nextToken();
+	}
+	else
+	{
+		m_expression->pushCurrentTokenOnOpCodeMap();
+
+		nextToken();
+
+		consumeExpected(XalanUnicode::charColon);
+	}
 
 	m_expression->pushCurrentTokenOnOpCodeMap();
 

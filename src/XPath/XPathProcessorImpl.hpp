@@ -281,8 +281,8 @@ private:
 	 */
 	bool
 	lookahead(
-			char	c,
-			int		n) const;
+			XalanDOMChar	c,
+			int				n) const;
 
 	/**
 	 * Lookahead of the current token in order to 

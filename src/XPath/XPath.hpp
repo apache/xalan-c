@@ -713,7 +713,7 @@ protected:
 			XPathExecutionContext&	executionContext) const;
   
 	/**
-	 * Get a literal value.
+	 * Get the value of a variable.
 	 * @param context The current source tree context node.
 	 * @param opPos The current position in the m_opMap array.
 	 * @return an XObject object.

@@ -586,10 +586,8 @@ public:
 		eMATCH_ANY_ANCESTOR = 95,
 		eMATCH_IMMEDIATE_ANCESTOR = 96,
 		eMATCH_ANY_ANCESTOR_WITH_PREDICATE = 97,
-		// Always add _before_ this one.
 
-		// $$$ ToDo: Determine if these specific numbers mean
-		// anything vis-a-vis the parser and xpath code.
+		// Always add _before_ this one.
 		eOpCodeNextAvailable
 	};	// enum eOpCodes
 
@@ -1214,6 +1212,30 @@ public:
 	pushToken(double	theToken)
 	{
 		m_tokenQueue.push_back(XToken(theToken));
+	}
+
+	/**
+	 * Insert a token onto the token queue at the
+	 * current position.
+	 *
+	 * @param theToken the string value to push
+	 */
+	void
+	insertToken(const XalanDOMString&	theToken)
+	{
+		m_tokenQueue.insert(m_tokenQueue.begin() + (m_currentPosition - 1), XToken(theToken));
+	}
+
+	/**
+	 * Insert a token onto the token queue at the
+	 * current position.
+	 *
+	 * @param theToken the string value to push
+	 */
+	void
+	insertToken(double	theToken)
+	{
+		m_tokenQueue.insert(m_tokenQueue.begin() + (m_currentPosition - 1), XToken(theToken));
 	}
 
 	/**

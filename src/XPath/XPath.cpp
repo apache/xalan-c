@@ -1153,11 +1153,13 @@ XPath::variable(
 {
 	assert(executionContext.getPrefixResolver() != 0);
 
-	const XObject&	varName = m_expression.m_tokenQueue[m_expression.m_opMap[opPos + 2]];
+	const XObject&	ns = m_expression.m_tokenQueue[m_expression.m_opMap[opPos + 2]];
+
+	const XObject&	varName = m_expression.m_tokenQueue[m_expression.m_opMap[opPos + 3]];
 
 	// $$$ ToDo: I don't this will be parsed right in the first place...
-	const QName		qname(varName.str(),
-						  *executionContext.getPrefixResolver());
+	const QName		qname(ns.str(),
+						  varName.str());
 
 	const XObject*	result = 0;
 
