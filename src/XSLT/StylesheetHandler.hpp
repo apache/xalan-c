@@ -424,6 +424,11 @@ private:
 	ElemTemplateStackType	m_elemStack;
 
 	/**
+	 * The stack of stray elements, to be delete when finished.
+	 */
+	ElemTemplateStackType	m_strayElements;
+
+	/**
 	 * Need to keep a stack of found whitespace elements so that 
 	 * whitespace elements next to non-whitespace elements can 
 	 * be merged.  For instance: &lt;out> &lt;![CDATA[test]]> &lt;/out>

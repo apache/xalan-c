@@ -118,12 +118,15 @@ StylesheetHandler::StylesheetHandler(
 			Stylesheet&						stylesheetTree,
 			StylesheetConstructionContext&	constructionContext) :
 	FormatterListener(),
+	m_includeBase(stylesheetTree.getBaseIdentifier()),
 	m_pendingException(),
 	m_exceptionPending(false),
 	m_processor(processor),
 	m_stylesheet(stylesheetTree),
 	m_constructionContext(constructionContext),
-	m_includeBase(stylesheetTree.getBaseIdentifier()),
+	m_elemStack(),
+	m_strayElements(),
+	m_whiteSpaceElems(),
 	m_pTemplate(0),
 	m_lastPopped(0),
 	m_inTemplate(false),
@@ -133,8 +136,7 @@ StylesheetHandler::StylesheetHandler(
 	m_LXSLTScriptBody(),
 	m_LXSLTScriptLang(),
 	m_LXSLTScriptSrcURL(),
-	m_pLXSLTExtensionNSH(0),
-	m_elemStack()
+	m_pLXSLTExtensionNSH(0)
 {
 }
 
@@ -154,6 +156,11 @@ StylesheetHandler::~StylesheetHandler()
 	// Clean up the whitespace elements.
 	for_each(m_whiteSpaceElems.begin(),
 			 m_whiteSpaceElems.end(),
+			 DeleteFunctor<ElemTemplateElement>());
+
+	// Clean up the stray elements.
+	for_each(m_strayElements.begin(),
+			 m_strayElements.end(),
 			 DeleteFunctor<ElemTemplateElement>());
 }
 
@@ -1170,7 +1177,6 @@ StylesheetHandler::processInclude(
 			
 			PushPopIncludeState		theStateHandler(*this);
 
-			m_lastPopped = 0;
 			const XalanDOMString	href = atts.getValue(i);
 
 			assert(m_stylesheet.getIncludeStack().back() != 0);
@@ -1186,9 +1192,8 @@ StylesheetHandler::processInclude(
 			m_stylesheet.getIncludeStack().push_back(hrefUrl);
 
 			m_processor.parseXML(*hrefUrl, this, &m_stylesheet);
-			
-			m_stylesheet.getIncludeStack().pop_back();
 
+			m_stylesheet.getIncludeStack().pop_back();
 		}
 		else if(!isAttrOK(aname, atts, i))
 		{
@@ -1242,8 +1247,9 @@ void StylesheetHandler::endElement(const XMLCh* const name)
 	else if (tok == Constants::ELEMNAME_UNDEFINED ||
 		tok == Constants::ELEMNAME_TEXT)
 	{
-		// These are stray elements, so delete them...
-		delete m_lastPopped;
+		// These are stray elements, so stuff them away
+		// to be deleted when we're finished...
+		m_strayElements.push_back(m_lastPopped);
 	}
 
 	// BEGIN SANJIVA CODE
@@ -1304,7 +1310,7 @@ void StylesheetHandler::characters (const XMLCh* const chars, const unsigned int
 			m_stylesheet,
 			lineNumber, columnNumber,
 			chars, 0, length, 
-			true, preserveSpace, 
+			false, preserveSpace, 
 			disableOutputEscaping);
 
 		const bool isWhite = isWhiteSpace(chars, 0, length);
@@ -1330,10 +1336,9 @@ void StylesheetHandler::characters (const XMLCh* const chars, const unsigned int
 
 			if(0 != last)
 			{
-				ElemTemplateElement* lastElem = dynamic_cast<ElemTemplateElement*>(last);
 				// If it was surrounded by xsl:text, it will count as an element.
 				bool isPrevCharData =
-					Constants::ELEMNAME_TEXTLITERALRESULT == lastElem->getXSLToken();
+					Constants::ELEMNAME_TEXTLITERALRESULT == last->getXSLToken();
 				bool isLastPoppedXSLText = (m_lastPopped != 0) &&
 					(Constants::ELEMNAME_TEXT == m_lastPopped->getXSLToken());
 
@@ -1357,7 +1362,10 @@ void StylesheetHandler::characters (const XMLCh* const chars, const unsigned int
 	}
 	// END SANJIVA CODE
 	// TODO: Flag error if text inside of stylesheet
+
+//	m_lastPopped = 0;
 }
+
 
 
 void StylesheetHandler::cdata(const XMLCh* const chars, const unsigned int length)
@@ -1413,10 +1421,16 @@ void StylesheetHandler::cdata(const XMLCh* const chars, const unsigned int lengt
 
 			if(0 != last)
 			{
-				if(Constants::ELEMNAME_TEXTLITERALRESULT == last->getXSLToken() &&
-					static_cast<ElemTextLiteral*>(last)->isPreserveSpace() == false)
+				// If it was surrounded by xsl:text, it will count as an element.
+				bool isPrevCharData =
+					Constants::ELEMNAME_TEXTLITERALRESULT == last->getXSLToken();
+				bool isLastPoppedXSLText = (m_lastPopped != 0) &&
+						(Constants::ELEMNAME_TEXT == m_lastPopped->getXSLToken());
+
+				if(isPrevCharData && ! isLastPoppedXSLText)
 				{
 					parent->appendChildElem(elem);
+
 					shouldPush = false;
 				}
 			}
@@ -1432,6 +1446,8 @@ void StylesheetHandler::cdata(const XMLCh* const chars, const unsigned int lengt
 	}
 	// END SANJIVA CODE
 	// TODO: Flag error if text inside of stylesheet
+
+	m_lastPopped = 0;
 }
 
 
@@ -1442,6 +1458,8 @@ void StylesheetHandler::ignorableWhitespace (const XMLCh* const /*chars*/, const
 		return;
 
   // Ignore!
+
+	m_lastPopped = 0;
 }
 
 
@@ -1451,7 +1469,7 @@ void StylesheetHandler::processingInstruction (const XMLCh* const /*target*/, co
 	if (m_exceptionPending == true)
 		return;
 
-  // No action for the moment.
+	m_lastPopped = 0;
 }
 
 
