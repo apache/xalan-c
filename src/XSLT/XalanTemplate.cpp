@@ -285,18 +285,6 @@ foo(XPathExecutionContext&	theExecutionContext)
 		for_each(theTable.begin(),
 			 theTable.end(),
 			 NamespaceFunctionTableDeleteFunctor());
-
-		for_each(theValue.second.begin(),
-			 theValue.second.end(),
-			 MapValueDeleteFunctor<FunctionTableType>());
-	}
-	
-	{
-		XPathEnvSupportDefault::FunctionTableType	theTable;
-
-		for_each(theTable.begin(),
-			 theTable.end(),
-			 makeMapValueDeleteFunctor(theTable));
 	}
 	
 	{
