@@ -1117,7 +1117,7 @@ main(
 
 				vector<XalanNode*>	theNodes(theInstanceCount, 0);
 
-				XalanNode::getLiveInstances(theNodes.begin());
+				XalanNode::getLiveInstances(&*theNodes.begin());
 
 				for(unsigned int i = 0; i < theInstanceCount; ++i)
 				{

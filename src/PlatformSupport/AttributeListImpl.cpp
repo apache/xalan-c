@@ -236,7 +236,7 @@ AttributeListImpl::getName(const unsigned int index) const
 {
 	assert(index < getLength());
 
-	return m_AttributeVector[index]->m_Name.begin();
+	return &*m_AttributeVector[index]->m_Name.begin();
 }
 
 
@@ -246,7 +246,7 @@ AttributeListImpl::getType(const unsigned int index) const
 {
 	assert(index < getLength());
 
-	return m_AttributeVector[index]->m_Type.begin();
+	return &*m_AttributeVector[index]->m_Type.begin();
 }
 
 
@@ -256,7 +256,7 @@ AttributeListImpl::getValue(const unsigned int index) const
 {
 	assert(index < getLength());
 
-	return m_AttributeVector[index]->m_Value.begin();
+	return &*m_AttributeVector[index]->m_Value.begin();
 }
 
 
@@ -271,7 +271,7 @@ struct NameCompareFunctor
 	bool
 	operator()(const AttributeListImpl::AttributeVectorEntry*	theEntry) const
 	{
-		return equals(theEntry->m_Name.begin(), m_name);
+		return equals(&*theEntry->m_Name.begin(), m_name);
 	}
 
 private:
@@ -299,7 +299,7 @@ AttributeListImpl::getType(const XMLCh* const name) const
 	if (i != m_AttributeVector.end())
 	{
 		// Found it, so return a pointer to the type.
-		return (*i)->m_Type.begin();
+		return &*(*i)->m_Type.begin();
 	}
 	else
 	{
@@ -312,7 +312,7 @@ AttributeListImpl::getType(const XMLCh* const name) const
 const XMLCh*
 AttributeListImpl::getValue(const char* const name) const
 {
-	return getValue(MakeXalanDOMCharVector(name).begin());
+	return getValue(&*MakeXalanDOMCharVector(name).begin());
 }
 
 
@@ -335,7 +335,7 @@ AttributeListImpl::getValue(const XMLCh* const name) const
 	if (i != m_AttributeVector.end())
 	{
 		// Found it, so return a pointer to the value.
-		return (*i)->m_Value.begin();
+		return &*(*i)->m_Value.begin();
 	}
 	else
 	{
@@ -400,7 +400,7 @@ AttributeListImpl::addAttribute(
 	if (i != m_AttributeVector.end())
 	{
 		// This is a special optimization for type, since it's (almost) always "CDATA".
-		if (equals(type, (*i)->m_Type.begin()) == false)
+		if (equals(type, &*(*i)->m_Type.begin()) == false)
 		{
 			// If necessary, create the a new vector and swap them.  Otherwise,
 			// just copy the new data in.

@@ -215,16 +215,17 @@ static const XMLCh* const	theHTMLLatin1Symbols[] =
 #endif
 
 
+
 FormatterToHTML::FormatterToHTML(
-			Writer&				writer,
-			const XalanDOMString& encoding, 
-			const XalanDOMString& mediaType,
-			const XalanDOMString& doctypeSystem,
-			const XalanDOMString& doctypePublic,
-			bool doIndent,
-			int indent,
-			const XalanDOMString& version,
-			const XalanDOMString& standalone,
+			Writer&					writer,
+			const XalanDOMString&	encoding, 
+			const XalanDOMString&	mediaType,
+			const XalanDOMString&	doctypeSystem,
+			const XalanDOMString&	doctypePublic,
+			bool					doIndent,
+			int						indent,
+			const XalanDOMString&	version,
+			const XalanDOMString&	standalone,
 			bool xmlDecl) :
 	FormatterToXML(
 			writer,
@@ -910,12 +911,9 @@ FormatterToHTML::copyEntityIntoBuffer(const XalanDOMString&		s)
 void
 FormatterToHTML::copyEntityIntoBuffer(const XalanDOMCharVectorType&		s)
 {
-
-	;
-
     accum(XalanUnicode::charAmpersand);
 
-    for(XalanDOMCharVectorType::const_iterator i = s.begin(); (*i) != 0; ++i)
+    for(XalanDOMCharVectorType::const_iterator i = s.begin(); *i != 0; ++i)
     {
 		accum(*i);
     }
@@ -1607,6 +1605,7 @@ pushStringsOnVector(
 	}
 }
 #endif
+
 
 
 void

@@ -1164,7 +1164,7 @@ StylesheetHandler::processImport(
 			{
 				throw SAXException("Imports can only occur as the first elements in the stylesheet!");
 			}
-			
+
 			const XalanDOMString	saved_XSLNameSpaceURL = m_stylesheet.getXSLTNamespaceURI();
 
 			const XalanDOMString	href(atts.getValue(i));

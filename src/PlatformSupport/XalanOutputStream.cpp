@@ -387,7 +387,7 @@ XalanOutputStream::flushBuffer()
 	{
 		m_buffer.push_back(0);
 
-		doWrite(m_buffer.begin());
+		doWrite(&*m_buffer.begin());
 
 		m_buffer.clear();
 	}

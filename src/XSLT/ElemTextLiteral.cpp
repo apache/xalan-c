@@ -115,10 +115,10 @@ ElemTextLiteral::execute(
 
     if(!m_disableOutputEscaping)
     {
-		executionContext.characters(m_ch.begin(), 0, unsigned(m_ch.size()));
+		executionContext.characters(&*m_ch.begin(), 0, unsigned(m_ch.size()));
     }
     else
     {
-		executionContext.charactersRaw(m_ch.begin(), 0, unsigned(m_ch.size()));
+		executionContext.charactersRaw(&*m_ch.begin(), 0, unsigned(m_ch.size()));
     }
 }
