@@ -94,8 +94,6 @@ const StylesheetExecutionContextDefault::DefaultCollationCompareFunctor		Stylesh
 
 
 
-
-
 StylesheetExecutionContextDefault::StylesheetExecutionContextDefault(
 			XSLTEngineImpl&			xsltProcessor,
 			XPathEnvSupport&		theXPathEnvSupport,
@@ -3000,26 +2998,12 @@ StylesheetExecutionContextDefault::popExecuteIf()
 void
 StylesheetExecutionContextDefault::beginFormatToText(XalanDOMString&  theResult)
 {
-	FormatterToText* theFormatter = m_formatterToTextStack.get();
+    FormatterToTextDOMString* const     theFormatter =
+        m_formatterToTextStack.get();
+    assert(theFormatter != 0);
 
-	if (theFormatter->getWriter() == 0)
-	{
-		theFormatter->setWriter(new DOMStringPrintWriter(theResult));
-		theFormatter->setNormalizeLinefeed(false);
-		theFormatter->setHandleIgnorableWhitespace(true);
-		theFormatter->clearEncoding();
-	}
-	else
-	{
-		 DOMStringPrintWriter*	thePrinterWriter  =
-#if defined(XALAN_OLD_STYLE_CASTS)
-				(DOMStringPrintWriter*)(theFormatter->getWriter());
-#else
-				static_cast<DOMStringPrintWriter*>(theFormatter->getWriter());
-#endif
-		thePrinterWriter->setString(theResult);
-	}
-	
+    theFormatter->setDOMString(theResult);
+
 	pushOutputContext(theFormatter);
 	
 	theFormatter->startDocument();
@@ -3030,8 +3014,13 @@ StylesheetExecutionContextDefault::beginFormatToText(XalanDOMString&  theResult)
 void
 StylesheetExecutionContextDefault::endFormatToText()
 {
-	FormatterToText* theFormatter = m_formatterToTextStack.top();
-	
+	FormatterToText* const  theFormatter = m_formatterToTextStack.top();
+	assert(
+        theFormatter != 0 &&
+        theFormatter->getEncoding().empty() == true &&
+        theFormatter->getNormalizeLinefeed() == false &&
+        theFormatter->getHandleIgnorableWhitespace() == true);
+
 	theFormatter->endDocument();
 
 	popOutputContext();
@@ -3108,8 +3097,28 @@ StylesheetExecutionContextDefault::popNodesToTransformList()
 
 	m_nodesToTransformStack.pop_back();
 }
-#endif
 
+
+
+XalanDOMString  StylesheetExecutionContextDefault::FormatterToTextDOMString::s_dummyString;
+
+
+
+StylesheetExecutionContextDefault::FormatterToTextDOMString::FormatterToTextDOMString() :
+    FormatterToText(),
+    m_printWriter(s_dummyString)
+{
+    setNormalizeLinefeed(false);
+
+    setWriter(&m_printWriter);
+}
+
+
+StylesheetExecutionContextDefault::FormatterToTextDOMString::~FormatterToTextDOMString()
+{
+    assert(s_dummyString.capacity() == 0);
+}
+#endif
 
 
 XALAN_CPP_NAMESPACE_END

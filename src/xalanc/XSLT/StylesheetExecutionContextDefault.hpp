@@ -37,6 +37,12 @@
 
 
 
+#if !defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
+#include <xalanc/PlatformSupport/DOMStringPrintWriter.hpp>
+#endif
+
+
+
 #include <xalanc/XPath/XPathExecutionContextDefault.hpp>
 
 
@@ -1181,12 +1187,34 @@ private:
 #endif
 
 #if !defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
+    class FormatterToTextDOMString : public FormatterToText
+    {
+    public:
+
+        FormatterToTextDOMString();
+
+        virtual
+        ~FormatterToTextDOMString();
+
+        void
+        setDOMString(XalanDOMString&    theString)
+        {
+            m_printWriter.setString(theString);
+        }
+
+    private:
+
+        DOMStringPrintWriter    m_printWriter;
+
+        static XalanDOMString   s_dummyString;
+    };
+
 	typedef XalanVector<XObjectPtr>			XObjectPtrStackType;
 	typedef XalanVector<ParamsVectorType>		ParamsVectorStackType;
 	typedef XalanVector<UseAttributeSetIndexes>  	UseAttributeSetIndexesStackType;
 	typedef XalanObjectStackCache<MutableNodeRefList>		MutableNodeRefListStackType;
 	typedef XalanObjectStackCache<XalanDOMString>			StringStackType;
-	typedef XalanObjectStackCache<FormatterToText>			FormatterToTextStackType;
+	typedef XalanObjectStackCache<FormatterToTextDOMString>			FormatterToTextStackType;
 	typedef XalanObjectStackCache<FormatterToSourceTree>		FormatterToSourceTreeStackType;
 
 	/*
