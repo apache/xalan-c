@@ -73,6 +73,10 @@
 
 
 
+#include <DOMSupport/DOMServices.hpp>
+
+
+
 static const XalanDOMChar 	theDefaultAttrSpecialChars[] =
 {
 	XalanUnicode::charLessThanSign,
@@ -1619,12 +1623,20 @@ FormatterToXML::processAttribute(
 			const XalanDOMChar* 	name,
 			const XalanDOMChar* 	value)
 {
-	accumContent(XalanUnicode::charSpace);
-	accumName(name);
-	accumContent(XalanUnicode::charEqualsSign);
-	accumContent(XalanUnicode::charQuoteMark);
-	writeAttrString(value);
-	accumContent(XalanUnicode::charQuoteMark);
+	// We add a fake attribute to the source tree to
+	// declare the xml prefix, so we filter it back out
+	// here...
+	// $$$ ToDo: It would be better if we didn't have to do
+	// this here.
+	if (equals(name, DOMServices::s_XMLNamespacePrefix) == false)
+	{
+		accumContent(XalanUnicode::charSpace);
+		accumName(name);
+		accumContent(XalanUnicode::charEqualsSign);
+		accumContent(XalanUnicode::charQuoteMark);
+		writeAttrString(value);
+		accumContent(XalanUnicode::charQuoteMark);
+	}
 }
 
 

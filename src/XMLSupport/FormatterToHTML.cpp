@@ -850,30 +850,38 @@ FormatterToHTML::processAttribute(
 			const XalanDOMChar*										value,
 			const XalanHTMLElementsProperties::ElementProperties&	elemProperties)
 {
-    accumContent(XalanUnicode::charSpace);
+	// We add a fake attribute to the source tree to
+	// declare the xml prefix, so we filter it back out
+	// here...
+	// $$$ ToDo: It would be better if we didn't have to do
+	// this here.
+	if (equals(name, DOMServices::s_XMLNamespacePrefix) == false)
+	{
+		accumContent(XalanUnicode::charSpace);
 
-    if((length(value) == 0 || equalsIgnoreCaseASCII(name, value)) &&
-	   elemProperties.isAttribute(name, XalanHTMLElementsProperties::ATTREMPTY) == true)
-    {
-		accumName(name);
-    }
-    else
-    {
-		accumName(name);
-		accumContent(XalanUnicode::charEqualsSign);
-		accumContent(XalanUnicode::charQuoteMark);
-
-		if(elemProperties.isAttribute(name, XalanHTMLElementsProperties::ATTRURL) == true)
+		if((length(value) == 0 || equalsIgnoreCaseASCII(name, value)) &&
+		   elemProperties.isAttribute(name, XalanHTMLElementsProperties::ATTREMPTY) == true)
 		{
-			writeAttrURI(value);
+			accumName(name);
 		}
 		else
 		{
-			writeAttrString(value);
-		}
+			accumName(name);
+			accumContent(XalanUnicode::charEqualsSign);
+			accumContent(XalanUnicode::charQuoteMark);
 
-		accumContent(XalanUnicode::charQuoteMark);
-    }
+			if(elemProperties.isAttribute(name, XalanHTMLElementsProperties::ATTRURL) == true)
+			{
+				writeAttrURI(value);
+			}
+			else
+			{
+				writeAttrString(value);
+			}
+
+			accumContent(XalanUnicode::charQuoteMark);
+		}
+	}
 }
 
 
