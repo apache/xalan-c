@@ -129,6 +129,7 @@ XPath::uninstallFunction(const XalanDOMString&	funcName)
 }
 
 
+
 XLocator*
 XPath::createXLocatorHandler() const
 {
@@ -140,6 +141,7 @@ XPath::createXLocatorHandler() const
 const XObjectPtr
 XPath::execute(XPathExecutionContext&	executionContext) const
 {
+	assert(executionContext.getCurrentNode() != 0);
 	assert(executionContext.getPrefixResolver() != 0);
 
 	return executeMore(executionContext.getCurrentNode(), 0, executionContext);
@@ -153,6 +155,8 @@ XPath::execute(
 			const PrefixResolver&	prefixResolver,
 			XPathExecutionContext&	executionContext) const
 {
+	assert(context != 0);
+
 	// Push and pop the PrefixResolver...
 	XPathExecutionContext::PrefixResolverSetAndRestore	theResolverSetAndRestore(
 									executionContext,
@@ -175,6 +179,8 @@ XPath::execute(
 			const NodeRefListBase&	contextNodeList,
 			XPathExecutionContext&	executionContext) const
 {
+	assert(context != 0);
+
 	// Push and pop the PrefixResolver...
 	XPathExecutionContext::ContextNodeListSetAndRestore		theSetAndRestore(
 									executionContext,
@@ -191,6 +197,8 @@ XPath::executeMore(
 			int 					opPos,
 			XPathExecutionContext&	executionContext) const
 {
+	assert(context != 0);
+
 	XObjectPtr	result;
 
 	switch(m_expression.m_opMap[opPos])
@@ -416,6 +424,35 @@ XPath::executeMore(
 
 
 
+inline void
+XPath::doGetMatchScore(
+			XalanNode*				context,
+			XPathExecutionContext&	executionContext,
+			double&					score) const
+{
+	int		opPos = 2;
+
+	XLocator* const		locator = m_defaultXLocator;
+
+	while(m_expression.m_opMap[opPos] == XPathExpression::eOP_LOCATIONPATHPATTERN)
+	{
+		const int	nextOpPos = m_expression.getNextOpCodePosition(opPos);
+
+		score = locator->locationPathPattern(*this, executionContext, *context, opPos);
+
+		if(score == s_MatchScoreNone)
+		{
+			opPos = nextOpPos;
+		}
+		else
+		{
+			break;
+		}
+	}
+}
+
+
+
 double
 XPath::getMatchScore(XalanNode*					context,
 					 const PrefixResolver&		resolver,
@@ -423,43 +460,26 @@ XPath::getMatchScore(XalanNode*					context,
 {
 	double	score = s_MatchScoreNone;
 
-	int		opPos = 0;
-
-	if(m_expression.m_opMap[opPos] == XPathExpression::eOP_MATCHPATTERN)
+	if(m_expression.m_opMap[0] == XPathExpression::eOP_MATCHPATTERN)
 	{
 		assert(context != 0);
 
-		// Push and pop the PrefixResolver...
-		XPathExecutionContext::PrefixResolverSetAndRestore	theSetAndRestore(
-									executionContext,
-									&resolver);
+		const PrefixResolver* const		theCurrentResolver =
+			executionContext.getPrefixResolver();
 
-		opPos += 2;
-
-#if 1
-		XLocator* const		locator = m_defaultXLocator;
-#else
-		XLocator*	locator = executionContext.getXLocatorFromNode(context);
-
-		if(0 == locator)
+		if (theCurrentResolver == &resolver)
 		{
-			locator = m_defaultXLocator;
+			doGetMatchScore(context, executionContext, score);
 		}
-		assert(locator != 0);
-#endif
-
-		while(m_expression.m_opMap[opPos] == XPathExpression::eOP_LOCATIONPATHPATTERN &&
-			  score == s_MatchScoreNone)
+		else
 		{
-			const int	nextOpPos = m_expression.getNextOpCodePosition(opPos);
+			// Push and pop the PrefixResolver...
+			XPathExecutionContext::PrefixResolverSetAndRestore	theSetAndRestore(
+										executionContext,
+										theCurrentResolver,
+										&resolver);
 
-			// opPos+=2;		
-			score = locator->locationPathPattern(*this, executionContext, *context, opPos);
-
-			if(score == s_MatchScoreNone)
-			{
-				opPos = nextOpPos;
-			}
+			doGetMatchScore(context, executionContext, score);
 		}
 	}
 	else
@@ -1194,16 +1214,7 @@ XPath::locationPath(
 {    
 	assert(context != 0);
 
-#if 1
 	XLocator* const		locator = m_defaultXLocator;
-#else
-	XLocator*	xlocator = executionContext.getXLocatorFromNode(context);
-
-	if(0 == xlocator)
-	{
-		locator = m_defaultXLocator;
-	}
-#endif
 
 	return locator->locationPath(*this, executionContext, *context, opPos);
 }
@@ -1229,16 +1240,7 @@ XPath::locationPathPattern(
 {
 	assert(context != 0);
 
-#if 1
 	XLocator* const		locator = m_defaultXLocator;
-#else
-	XLocator*	locator = executionContext.getXLocatorFromNode(context);
-
-	if(0 == locator)
-	{
-		locator = m_defaultXLocator;
-	}
-#endif
 
 	const double	result = locator->locationPathPattern(*this, executionContext, *context, opPos);
 

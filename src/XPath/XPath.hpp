@@ -485,6 +485,18 @@ protected:
 protected:
 
 	/**
+	 * Helper function to get match score.
+	 * @param context The current source tree context node.
+	 * @param executionContext The current execution context
+	 * @param score The match score
+	 */
+	void
+	doGetMatchScore(
+			XalanNode*				context,
+			XPathExecutionContext&	executionContext,
+			double&					score) const;
+
+	/**
 	 * OR two expressions and return the boolean result.
 	 * @param context The current source tree context node.
 	 * @param opPos The current position in the m_opMap array.
