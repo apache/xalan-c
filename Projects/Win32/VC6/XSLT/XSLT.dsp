@@ -274,7 +274,15 @@ SOURCE=..\..\..\..\src\XSLT\FunctionDocument.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\XSLT\FunctionElementAvailable.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\XSLT\FunctionFormatNumber.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XSLT\FunctionFunctionAvailable.cpp
 # End Source File
 # Begin Source File
 
@@ -579,7 +587,15 @@ SOURCE=..\..\..\..\src\XSLT\FunctionDocument.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\XSLT\FunctionElementAvailable.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\XSLT\FunctionFormatNumber.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XSLT\FunctionFunctionAvailable.hpp
 # End Source File
 # Begin Source File
 
