@@ -73,8 +73,6 @@
 
 #if __SUNPRO_CC >= 0x520
 
-#define XALAN_SIZE_T_IN_NAMESPACE_STD
-#define XALAN_SIGNAL_IN_STD
 #define XALAN_STRICT_ANSI_HEADERS
 
 #else

@@ -125,7 +125,7 @@ class XALAN_XSLT_EXPORT Stylesheet : public XalanDocument, protected PrefixResol
 
 public:
 
-#if defined(XALAN_SIZE_T_IN_NAMESPACE_STD)
+#if defined(XALAN_STRICT_ANSI_HEADERS)
 	typedef std::size_t		size_type;
 #else
 	typedef size_t			size_type;

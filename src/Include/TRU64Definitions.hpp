@@ -82,7 +82,6 @@
 
 #if defined(__STD_STRICT_ANSI) || defined(__STD_STRICT_ANSI_ERRORS)
 #define XALAN_STRICT_ANSI_HEADERS
-#define XALAN_SIZE_T_IN_NAMESPACE_STD
 #endif
 
 #define XALAN_UNALIGNED __unaligned

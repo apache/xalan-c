@@ -214,7 +214,7 @@ public:
 	}
 
 	Type&
-#if defined(XALAN_SIZE_T_IN_NAMESPACE_STD)
+#if defined(XALAN_STRICT_ANSI_HEADERS)
 	operator[](std::size_t	index) const
 #else
 	operator[](size_t	index) const
