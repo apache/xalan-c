@@ -89,6 +89,7 @@ public:
 					const XalanDOMString&	theTokens = XalanDOMString(XALAN_STATIC_UCODE_STRING("\t\n\r\f")),
 					bool					fReturnTokens = false);
 
+#if defined(XALAN_LSTRSUPPORT)
 	/**
 	 * Constructs a tokenizer for the target string.  This version constructs
 	 * from null-terminated wide strings, like those we get from SAX-like APIs.
@@ -102,6 +103,7 @@ public:
 	StringTokenizer(const XalanDOMChar*		theString,
 					const XalanDOMChar*		theTokens = XALAN_STATIC_UCODE_STRING("\t\n\r\f"),
 					bool					fReturnTokens = false);
+#endif
 
 	virtual
 	~StringTokenizer();

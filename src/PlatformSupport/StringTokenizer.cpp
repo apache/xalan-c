@@ -82,6 +82,8 @@ StringTokenizer::StringTokenizer(
 
 
 
+#if defined(XALAN_LSTRSUPPORT)
+
 StringTokenizer::StringTokenizer(
 			const XalanDOMChar*		theString,
 			const XalanDOMChar*		theTokens,
@@ -95,6 +97,7 @@ StringTokenizer::StringTokenizer(
 {
 }
 
+#endif
 
 
 StringTokenizer::~StringTokenizer()

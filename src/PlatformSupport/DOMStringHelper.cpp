@@ -1067,7 +1067,7 @@ LongToDOMString(long	theLong)
 
 	theFormatter << theLong << '\0';
 
-	XalanDOMString	theString = MakeDOMStheFormatter.str();
+	XalanDOMString	theString = theFormatter.str();
 
 	theFormatter.freeze(false);
 
