@@ -84,7 +84,8 @@ XalanSourceTreeContentHandler::XalanSourceTreeContentHandler(
 	m_lastChild(0),
 	m_lastChildStack(),
 	m_accumulateText(fAccumulateText),
-	m_textBuffer()
+	m_textBuffer(),
+	m_inDTD(false)
 {
 }
 
@@ -101,6 +102,8 @@ XalanSourceTreeContentHandler::characters(
 			const	XMLCh* const	chars,
 			const unsigned int		length)
 {
+	assert(m_inDTD == false);
+
 	if (m_currentElement == 0)
 	{
 		if (isXMLWhitespace(chars) == false)
@@ -123,6 +126,8 @@ XalanSourceTreeContentHandler::characters(
 void
 XalanSourceTreeContentHandler::endDocument()
 {
+	assert(m_inDTD == false);
+
 	// Pop off the dummy value that we pushed in 
 	// startDocument()...
 	m_elementStack.pop_back();
@@ -143,6 +148,8 @@ XalanSourceTreeContentHandler::endElement(
 			const XMLCh* const	/* localname */, 
 			const XMLCh* const	/* qname */)
 {
+	assert(m_inDTD == false);
+
 	// Process any text that we may have accumulated...
 	processAccumulatedText();
 
@@ -224,6 +231,8 @@ XalanSourceTreeContentHandler::ignorableWhitespace(
 			const XMLCh* const	chars,
 			const unsigned int	length)
 {
+	assert(m_inDTD == false);
+
 	// Ignore any whitespace reported before the document element has been parsed.
 	if (m_elementStack.empty() == false)
 	{
@@ -245,6 +254,8 @@ XalanSourceTreeContentHandler::processingInstruction(
 		const XMLCh* const	target,
 		const XMLCh* const	data)
 {
+	assert(m_inDTD == false);
+
 	processAccumulatedText();
 
 	XalanSourceTreeProcessingInstruction* const		theNewPI =
@@ -269,6 +280,8 @@ XalanSourceTreeContentHandler::setDocumentLocator(const Locator* const	/* locato
 void
 XalanSourceTreeContentHandler::startDocument()
 {
+	assert(m_inDTD == false);
+
 	m_currentElement = 0;
 
 	m_elementStack.clear();
@@ -302,6 +315,15 @@ XalanSourceTreeContentHandler::startElement(
 			const XMLCh* const	qname,
 			const Attributes& 	attrs)
 {
+	// $$$ ToDo: This is a workaround for a bug in Xerces 1.5.1.
+#if 1
+	if (m_currentElement == 0 && m_inDTD == true)
+	{
+		m_inDTD = false;
+	}
+#endif
+	assert(m_inDTD == false);
+
 	processAccumulatedText();
 
 	XalanSourceTreeElement* const	theNewElement =
@@ -329,6 +351,7 @@ XalanSourceTreeContentHandler::startPrefixMapping(
 		const XMLCh* const	/* prefix */,
 		const XMLCh* const	/* uri */)
 {
+	assert(m_inDTD == false);
 }
 
 
@@ -336,6 +359,7 @@ XalanSourceTreeContentHandler::startPrefixMapping(
 void
 XalanSourceTreeContentHandler::endPrefixMapping(const XMLCh* const	/* prefix */)
 {
+	assert(m_inDTD == false);
 }
 
 
@@ -385,16 +409,19 @@ XalanSourceTreeContentHandler::comment(
 {
 	assert(m_document != 0);
 
-	processAccumulatedText();
+	if (m_inDTD == false)
+	{
+		processAccumulatedText();
 
-	XalanSourceTreeComment* const	theNewComment =
-		m_document->createCommentNode(chars, length, m_currentElement);
+		XalanSourceTreeComment* const	theNewComment =
+			m_document->createCommentNode(chars, length, m_currentElement);
 
-	doAppendChildNode(
-			m_document,
-			m_currentElement,
-			m_lastChild,
-			theNewComment);
+		doAppendChildNode(
+				m_document,
+				m_currentElement,
+				m_lastChild,
+				theNewComment);
+	}
 }
 
 
@@ -402,6 +429,7 @@ XalanSourceTreeContentHandler::comment(
 void
 XalanSourceTreeContentHandler::endCDATA()
 {
+	assert(m_inDTD == false);
 }
 
 
@@ -409,8 +437,9 @@ XalanSourceTreeContentHandler::endCDATA()
 void
 XalanSourceTreeContentHandler::endDTD()
 {
-	assert(m_document != 0);
+	m_inDTD = false;
 
+	assert(m_document != 0);
 }
 
 
@@ -425,6 +454,7 @@ XalanSourceTreeContentHandler::endEntity(const XMLCh* const		name)
 void
 XalanSourceTreeContentHandler::startCDATA()
 {
+	assert(m_inDTD == false);
 }
 
 
@@ -435,7 +465,10 @@ XalanSourceTreeContentHandler::startDTD(
 			const XMLCh* const	publicId,
 			const XMLCh* const	systemId)
 {
+	assert(m_inDTD == false);
 	assert(m_document != 0);
+
+	m_inDTD = true;
 }
 
 
@@ -464,6 +497,8 @@ XalanSourceTreeContentHandler::createElement(
 			const Attributes& 			attrs,
 			XalanSourceTreeElement*		theOwnerElement)
 {
+	assert(m_inDTD == false);
+
 	if (length(uri) != 0)
 	{
 		return m_document->createElementNode(uri, localname, qname, attrs, theOwnerElement);
@@ -479,6 +514,8 @@ XalanSourceTreeContentHandler::createElement(
 void
 XalanSourceTreeContentHandler::processAccumulatedText()
 {
+	assert(m_inDTD == false);
+
 	if (isEmpty(m_textBuffer) == false)
 	{
 		doCharacters(c_wstr(m_textBuffer), length(m_textBuffer));
@@ -494,6 +531,8 @@ XalanSourceTreeContentHandler::doCharacters(
 			const XMLCh*	chars,
 			unsigned int	length)
 {
+	assert(m_inDTD == false);
+
 	assert(m_currentElement != 0);
 
 	XalanSourceTreeText*	theNewTextNode = 

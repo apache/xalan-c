@@ -277,6 +277,9 @@ private:
 
 	// A buffer to hold accumulated text.
 	XalanDOMString				m_textBuffer;
+
+	// A flag to determine if the DTD is being processed.
+	bool						m_inDTD;
 };
 
 
