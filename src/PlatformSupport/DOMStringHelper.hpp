@@ -322,7 +322,7 @@ length(const XalanDOMChar*	theString)
 		theBufferPointer++;
 	}
 
-	return theBufferPointer - theString;
+	return unsigned(theBufferPointer - theString);
 }
 
 
@@ -338,7 +338,7 @@ length(const char*	theString)
 {
 	assert(theString != 0);
 
-	return strlen(theString);
+	return unsigned(strlen(theString));
 }
 
 
@@ -380,7 +380,7 @@ indexOf(
 		++thePointer;
 	}
 
-	return thePointer - theString;
+	return unsigned(thePointer - theString);
 }
 
 
@@ -411,7 +411,7 @@ indexOf(
 		++thePointer;
 	}
 
-	return thePointer - theString;
+	return unsigned(thePointer - theString);
 }
 
 
@@ -2577,7 +2577,7 @@ struct DOMStringHashFunction : public std::unary_function<const XalanDOMString&,
 	{
 		const XalanDOMChar*		theRawBuffer = c_wstr(theKey);
 
-		unsigned long		theHashValue = 0L; 
+		result_type		theHashValue = 0; 
 
 		if (theRawBuffer != 0)
 		{
@@ -2589,7 +2589,7 @@ struct DOMStringHashFunction : public std::unary_function<const XalanDOMString&,
 			}
 		}
 
-		return result_type(theHashValue++);
+		return theHashValue++;
 	}
 };
 
