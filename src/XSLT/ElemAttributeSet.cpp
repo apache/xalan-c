@@ -131,31 +131,6 @@ ElemAttributeSet::getElementName() const
 
 
 void
-ElemAttributeSet::adopt(ElemAttributeSet&	theSource)
-{
-	ElemTemplateElement* node = theSource.getFirstChildElem();
-
-	while(node != 0) 
-	{
-		assert(node->getXSLToken() == Constants::ELEMNAME_ATTRIBUTE);
-
-		theSource.removeChild(node);
-
-		XalanAutoPtr<ElemTemplateElement>	theGuard(node);
-
-		appendChild(node);
-
-		theGuard.release();
-
-		node = theSource.getFirstChildElem();
-	}
-
-	copyQNames(theSource);
-}
-
-
-
-void
 ElemAttributeSet::execute(StylesheetExecutionContext&		executionContext) const
 {
 	typedef StylesheetExecutionContext::SetAndRestoreCurrentStackFrameIndex		SetAndRestoreCurrentStackFrameIndex;

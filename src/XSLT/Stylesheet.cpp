@@ -398,46 +398,8 @@ Stylesheet::postConstruction(StylesheetConstructionContext&		constructionContext
 		}
 	}
 
-	{
-#if !defined(XALAN_NO_NAMESPACES)
-		using std::find_if;
-#endif
-		for (AttributeSetVectorType::size_type i = 0; i < m_attributeSets.size(); ++i)
-		{
-			ElemAttributeSet* const		theCurrent = m_attributeSets[i];
-
-			assert(theCurrent != 0);
-
-			for(;;)
-			{
-				// Look for duplicate sets...
-				const AttributeSetVectorType::iterator 	theResult =
-					find_if(
-							m_attributeSets.begin() + (i + 1),
-							m_attributeSets.end(),
-							attrSetCompare(*theCurrent));
-
-				// Did we find it?
-				if(theResult == m_attributeSets.end())
-				{
-					break;
-				}
-				else
-				{
-					theCurrent->adopt(**theResult);
-
-					delete *theResult;
-
-					m_attributeSets.erase(theResult);
-				}
-			}
-
-			theCurrent->postConstruction(constructionContext, m_namespacesHandler);
-		}
-
-		// Now that we're done with removing duplicates, cache the size...
-		m_attributeSetsSize = m_attributeSets.size();
-	}
+	// Cache the size...
+	m_attributeSetsSize = m_attributeSets.size();
 
 	// OK, now we need to add everything template that matches "node()"
 	// to the end of the text, comment, and PI template lists.

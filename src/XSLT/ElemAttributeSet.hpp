@@ -107,15 +107,6 @@ public:
 		return m_QName;
 	}
 
-	/**
-	 * Adopt the information of the supplied instance.
-	 * The children are removed from the supplied instance,
-	 * and any QNames for use-attribute-sets are copied.
-	 *
-	 * @param theSource The source ElemAttributeSet instance.
-	 */
-	void
-	adopt(ElemAttributeSet&		theSource);
 
 	// These methods are inherited from ElemUse ...
 
