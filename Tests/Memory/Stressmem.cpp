@@ -91,7 +91,7 @@ static const char* const	excludeStylesheets[] =
 //	"impincl16.xml",
 	0
 };
-const XalanDOMString	pathSep(XALAN_STATIC_UCODE_STRING("\\"));
+
 
 inline bool
 checkForExclusion(XalanDOMString currentFile)
