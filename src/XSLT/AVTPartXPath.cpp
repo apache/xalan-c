@@ -77,10 +77,7 @@ AVTPartXPath::AVTPartXPath(const XPath* xpath) :
 
 
 
-namespace
-{
-
-const XPath*
+static const XPath*
 createAndInitXPath(
 			const DOMString&		val,
 			const PrefixResolver&	resolver,
@@ -95,8 +92,6 @@ createAndInitXPath(
 
 	return theXPath;
 }
-
-};
 
 
 

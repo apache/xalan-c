@@ -74,19 +74,19 @@
 
 
 
-const DOMString			ElemNumber::s_alphaCountTable = "ZABCDEFGHIJKLMNOPQRSTUVWXY"; 
+const DOMString			ElemNumber::s_alphaCountTable(XALAN_STATIC_UCODE_STRING("ZABCDEFGHIJKLMNOPQRSTUVWXY"));
 
 
 
 const DecimalToRoman	ElemNumber::s_romanConvertTable[] = 
 {
-	DecimalToRoman(1000, "M", 900, "CM"),        
-	DecimalToRoman(500, "D", 400, "CD"),
-	DecimalToRoman(100L, "C", 90L, "XC"),        
-	DecimalToRoman(50L, "L", 40L, "XL"),
-	DecimalToRoman(10L, "X", 9L, "IX"),        
-	DecimalToRoman(5L, "V", 4L, "IV"),
-	DecimalToRoman(1L, "I", 1L, "I")    
+	DecimalToRoman(1000, XALAN_STATIC_UCODE_STRING("M"), 900, XALAN_STATIC_UCODE_STRING("CM")),
+	DecimalToRoman(500, XALAN_STATIC_UCODE_STRING("D"), 400, XALAN_STATIC_UCODE_STRING("CD")),
+	DecimalToRoman(100L, XALAN_STATIC_UCODE_STRING("C"), 90L, XALAN_STATIC_UCODE_STRING("XC")),
+	DecimalToRoman(50L, XALAN_STATIC_UCODE_STRING("L"), 40L, XALAN_STATIC_UCODE_STRING("XL")),
+	DecimalToRoman(10L, XALAN_STATIC_UCODE_STRING("X"), 9L, XALAN_STATIC_UCODE_STRING("IX")),
+	DecimalToRoman(5L, XALAN_STATIC_UCODE_STRING("V"), 4L, XALAN_STATIC_UCODE_STRING("IV")),
+	DecimalToRoman(1L, XALAN_STATIC_UCODE_STRING("I"), 1L, XALAN_STATIC_UCODE_STRING("I"))
 };
 
 

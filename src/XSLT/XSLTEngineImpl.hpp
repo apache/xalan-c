@@ -1342,12 +1342,12 @@ public:
 	 * Tell if a given element name should output it's text 
 	 * as cdata.
 	 */
-	bool isCDataResultElem(DOMString& elementName);
+	bool isCDataResultElem(const DOMString& elementName);
 	
 	/**
 	 * Tell if a qualified name equals the current result tree name.
 	 */
-	bool qnameEqualsResultElemName(QName& qname, DOMString& elementName);
+	bool qnameEqualsResultElemName(const QName& qname, const DOMString& elementName);
 	
 	  
 	/**

@@ -73,13 +73,13 @@ InitializeDecimalToRomanTable()
 {
 	std::vector<DecimalToRoman>	theVector(7);
 
-	theVector[0] = DecimalToRoman(1000L, "M", 900L, "CM");
-	theVector[1] = DecimalToRoman(500L, "D", 400L, "CD");
-	theVector[2] = DecimalToRoman(100L, "C", 90L, "XC");
-	theVector[3] = DecimalToRoman(50L, "L", 40L, "XL");
-	theVector[4] = DecimalToRoman(10L, "X", 9L, "IX");
-	theVector[5] = DecimalToRoman(5L, "V", 4L, "IV");
-	theVector[6] = DecimalToRoman(1L, "I", 1L, "I");
+	theVector[0] = DecimalToRoman(1000L, XALAN_STATIC_UCODE_STRING("M"), 900L, XALAN_STATIC_UCODE_STRING("CM"));
+	theVector[1] = DecimalToRoman(500L, XALAN_STATIC_UCODE_STRING("D"), 400L, XALAN_STATIC_UCODE_STRING("CD"));
+	theVector[2] = DecimalToRoman(100L, XALAN_STATIC_UCODE_STRING("C"), 90L, XALAN_STATIC_UCODE_STRING("XC"));
+	theVector[3] = DecimalToRoman(50L, XALAN_STATIC_UCODE_STRING("L"), 40L, XALAN_STATIC_UCODE_STRING("XL"));
+	theVector[4] = DecimalToRoman(10L, XALAN_STATIC_UCODE_STRING("X"), 9L, XALAN_STATIC_UCODE_STRING("IX"));
+	theVector[5] = DecimalToRoman(5L, XALAN_STATIC_UCODE_STRING("V"), 4L, XALAN_STATIC_UCODE_STRING("IV"));
+	theVector[6] = DecimalToRoman(1L, XALAN_STATIC_UCODE_STRING("I"), 1L, XALAN_STATIC_UCODE_STRING("I"));
 
 	return theVector;
 }

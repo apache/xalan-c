@@ -142,6 +142,7 @@
 #include <PlatformSupport/STLHelper.hpp>
 #include <PlatformSupport/StringTokenizer.hpp>
 
+#include <DOMSupport/DOMServices.hpp>
 #include <DOMSupport/UnimplementedNode.hpp>
 #include <DOMSupport/UnimplementedElement.hpp>
 #include <DOMSupport/UnimplementedDocumentFragment.hpp>
@@ -192,9 +193,9 @@
 
 
 const double XSLTEngineImpl::s_XSLTVerSupported(1.0);
-const DOMString	XSLTEngineImpl::s_DefaultXSLNameSpaceURL("http://www.w3.org/1999/XSL/Transform/1.0");
-const DOMString XSLTEngineImpl::s_XSLNameSpaceURLPre("http://www.w3.org/1999/XSL/Transform");
-const DOMString	XSLTEngineImpl::s_XSLT4JNameSpaceURL("http://xml.apache.org/xslt");
+const DOMString	XSLTEngineImpl::s_DefaultXSLNameSpaceURL(XALAN_STATIC_UCODE_STRING("http://www.w3.org/1999/XSL/Transform/1.0"));
+const DOMString XSLTEngineImpl::s_XSLNameSpaceURLPre(XALAN_STATIC_UCODE_STRING("http://www.w3.org/1999/XSL/Transform"));
+const DOMString	XSLTEngineImpl::s_XSLT4JNameSpaceURL(XALAN_STATIC_UCODE_STRING("http://xml.apache.org/xslt"));
 
 /**
  * Control if the xsl:variable is resolved early or 
@@ -2233,10 +2234,10 @@ XSLTEngineImpl::outputResultTreeFragment(const XObject&		theTree)
 /**
  * Tell if a given element name should output it's text as cdata.
  */
-bool XSLTEngineImpl::isCDataResultElem(DOMString& elementName)
+bool XSLTEngineImpl::isCDataResultElem(const DOMString& elementName)
 {
 	bool is = false;
-	Stylesheet::QNameVectorType cdataElems = m_stylesheetRoot->getCdataSectionElems();
+	const Stylesheet::QNameVectorType& cdataElems = m_stylesheetRoot->getCdataSectionElems();
 	if(0 != cdataElems.size())
 	{
 		DOMString elemNS;
@@ -2247,7 +2248,7 @@ bool XSLTEngineImpl::isCDataResultElem(DOMString& elementName)
 			DOMString prefix = substring(elementName, 0, indexOfNSSep);
 			if(equals(prefix, "xml"))
 			{
-				elemNS = QName::s_XMLNAMESPACEURI;
+				elemNS = DOMServices::s_XMLNamespaceURI;
 			}
 			else
 			{
@@ -2263,7 +2264,7 @@ bool XSLTEngineImpl::isCDataResultElem(DOMString& elementName)
 		const int n = cdataElems.size();
 		for(int i = 0; i < n; i++)
 		{
-			QName qname = cdataElems.at(i);
+			const QName& qname = cdataElems[i];
 			is = qname.equals(QName(elemNS, elemLocalName));
 			if(is)
 				break;
@@ -2275,7 +2276,7 @@ bool XSLTEngineImpl::isCDataResultElem(DOMString& elementName)
 	/**
 	 * Tell if a qualified name equals the current result tree name.
 	 */
-bool XSLTEngineImpl::qnameEqualsResultElemName(QName& qname, DOMString& elementName)
+bool XSLTEngineImpl::qnameEqualsResultElemName(const QName& qname, const DOMString& elementName)
 {
 	DOMString elemNS;
 	DOMString elemLocalName;
@@ -2285,12 +2286,12 @@ bool XSLTEngineImpl::qnameEqualsResultElemName(QName& qname, DOMString& elementN
 		DOMString prefix = substring(elementName, 0, indexOfNSSep);
 		if(equals(prefix, "xml"))
 		{
-			elemNS = QName::s_XMLNAMESPACEURI;
+			elemNS = DOMServices::s_XMLNamespaceURI;
 		}
 		else
 		{
 			elemNS = getResultNamespaceForPrefix(prefix);
-		}	
+		}
 		if(0 == elemNS.length())
 		{
 			error(DOMString("Prefix must resolve to a namespace: ") + prefix);
@@ -2361,7 +2362,7 @@ XSLTEngineImpl::getPrefixForNamespace(
 
 void
 XSLTEngineImpl::copyNamespaceAttributes(
-			const DOM_Node&			src,
+			const DOM_Node&		src,
 			bool				srcIsStylesheetTree) 
 {
 	int type;
@@ -2554,9 +2555,9 @@ XPath* XSLTEngineImpl::getExpression(
 
 DOMString
 XSLTEngineImpl::getAttrVal(
-			const DOM_Element& 		el,
+			const DOM_Element& 	el,
 			const DOMString&	key,
-			const DOM_Node&	/* contextNode */		)
+			const DOM_Node&		/* contextNode */		)
 {
 	// @@ JMD: context not used
 	return getAttrVal( el, key);
@@ -4321,12 +4322,12 @@ XSLTEngineImpl::VariableStack::findArg(
 void
 XSLTEngineImpl::InstallFunctions()
 {
-	XPath::installFunction("current", FunctionCurrent());
-	XPath::installFunction("format-number", FunctionFormatNumber());
-	XPath::installFunction("key", FunctionKey());
-	XPath::installFunction("unparsed-entity-uri", FunctionUnparsedEntityURI());
-	XPath::installFunction("system-property", FunctionSystemProperty());
-	XPath::installFunction("generate-id", FunctionGenerateID());
+	XPath::installFunction(XALAN_STATIC_UCODE_STRING("current"), FunctionCurrent());
+	XPath::installFunction(XALAN_STATIC_UCODE_STRING("format-number"), FunctionFormatNumber());
+	XPath::installFunction(XALAN_STATIC_UCODE_STRING("key"), FunctionKey());
+	XPath::installFunction(XALAN_STATIC_UCODE_STRING("unparsed-entity-uri"), FunctionUnparsedEntityURI());
+	XPath::installFunction(XALAN_STATIC_UCODE_STRING("system-property"), FunctionSystemProperty());
+	XPath::installFunction(XALAN_STATIC_UCODE_STRING("generate-id"), FunctionGenerateID());
 }
 
 
