@@ -117,6 +117,7 @@ public:
 		eDefaultXNodeSetBlockSize = 10,
 		eXNumberCacheMax = 40,
 		eXNodeSetCacheMax = 40,
+		eXStringCacheMax = 40,
 		eXResultTreeFragCacheMax = 40
 	};
 	
@@ -184,13 +185,15 @@ public:
 			const XalanDOMString&	theValue);
 
 #if defined(XALAN_NO_NAMESPACES)
-	typedef vector<XObject*>			XObjectCollectionType;
-	typedef vector<XNumber*>			XNumberCacheType;
-	typedef vector<XNodeSet*>			XNodeSetCacheType;
+	typedef vector<XObject*>		XObjectCollectionType;
+	typedef vector<XNumber*>		XNumberCacheType;
+	typedef vector<XNodeSet*>		XNodeSetCacheType;
+	typedef vector<XString*>		XStringCacheType;
 #else
-	typedef std::vector<XObject*>			XObjectCollectionType;
-	typedef std::vector<XNumber*>			XNumberCacheType;
-	typedef std::vector<XNodeSet*>			XNodeSetCacheType;
+	typedef std::vector<XObject*>	XObjectCollectionType;
+	typedef std::vector<XNumber*>	XNumberCacheType;
+	typedef std::vector<XNodeSet*>	XNodeSetCacheType;
+	typedef std::vector<XString*>	XStringCacheType;
 #endif
 
 protected:
@@ -237,6 +240,8 @@ private:
 	XNumberCacheType				m_xnumberCache;
 
 	XNodeSetCacheType				m_xnodesetCache;
+
+	XStringCacheType				m_xstringCache;
 
 	const XalanAutoPtr<XNull>		m_XNull;
 

@@ -91,6 +91,11 @@ public:
 	virtual
 	~XString();
 
+	void
+	set(const XalanDOMString&	theString)
+	{
+		m_value = theString;
+	}
 
 	// These methods are inherited from XObject ...
 
@@ -111,7 +116,7 @@ public:
 
 private:
 
-	const XalanDOMString	m_value;
+	XalanDOMString	m_value;
 };
 
 

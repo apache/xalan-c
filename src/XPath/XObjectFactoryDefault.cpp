@@ -92,6 +92,7 @@ XObjectFactoryDefault::XObjectFactoryDefault(
 	m_xobjects(),
 	m_xnumberCache(),
 	m_xnodesetCache(),
+	m_xstringCache(),
 	m_XNull(new XNull),
 	m_xbooleanFalse(new XBoolean(false)),
 	m_xbooleanTrue(new XBoolean(true))
@@ -174,7 +175,16 @@ XObjectFactoryDefault::doReturnObject(
 				static_cast<XString*>(theXObject);
 #endif
 
-			bStatus = m_xstringAllocator.destroy(theXString);
+			if (m_xstringCache.size() < eXStringCacheMax)
+			{
+				m_xstringCache.push_back(theXString);
+
+				bStatus = true;
+			}
+			else
+			{
+				bStatus = m_xstringAllocator.destroy(theXString);
+			}
 		}
 		break;
 
@@ -386,11 +396,26 @@ XObjectFactoryDefault::createNodeSet(BorrowReturnMutableNodeRefList&	theValue)
 const XObjectPtr
 XObjectFactoryDefault::createString(const XalanDOMString&	theValue)
 {
-	XString* const	theXString = m_xstringAllocator.createString(theValue);
+	if (m_xstringCache.empty() == false)
+	{
+		XString* const	theXString = m_xstringCache.back();
 
-	theXString->setFactory(this);
+		m_xstringCache.pop_back();
 
-	return XObjectPtr(theXString);
+		theXString->set(theValue);
+
+		return XObjectPtr(theXString);
+	}
+	else
+	{
+		m_xstringCache.reserve(eXStringCacheMax);
+
+		XString* const	theXString = m_xstringAllocator.createString(theValue);
+
+		theXString->setFactory(this);
+
+		return XObjectPtr(theXString);
+	}
 }
 
 
