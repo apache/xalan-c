@@ -110,14 +110,14 @@ XalanTransformerProblemListener::setPrintWriter(PrintWriter*	thePrintWriter)
 
 void
 XalanTransformerProblemListener::problem(
-			eProblemSource			where,
-			eClassification			classification, 
-			const XalanNode*		sourceNode,
-			const XalanNode*		styleNode,
-			const XalanDOMString&	msg,
-			const XalanDOMChar*		uri,
-			int						lineNo,
-			int						charOffset)
+			eProblemSource				where,
+			eClassification				classification, 
+			const XalanNode*			sourceNode,
+			const ElemTemplateElement*	styleNode,
+			const XalanDOMString&		msg,
+			const XalanDOMChar*			uri,
+			int							lineNo,
+			int							charOffset)
 {
 	if (classification == eERROR)
 	{
