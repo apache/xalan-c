@@ -238,7 +238,7 @@ main(
 
 			{
 				XalanTransformer		transformEngine;
-					
+				bool embedFlag =  false;
 				
 				// Get the files found in the "params" directory
 				const XalanDOMString  testDir("params");
@@ -293,6 +293,23 @@ main(
 								XalanDOMString("'DATA'"));
 							break;
 
+						case 7:
+							{
+								const XSLTInputSource	embed07InputSource(c_wstr(theXSLFile));
+								transformEngine.transform(embed07InputSource, theResultTarget);
+								append(futil.data.testOrFile, " (Embed01)" );
+								embedFlag = true;
+								break;
+							}
+
+						case 8:
+							{
+								const XSLTInputSource	embed08InputSource(c_wstr(theXSLFile));
+								transformEngine.transform(embed08InputSource, theResultTarget);
+								append(futil.data.testOrFile, " (Embed02)" );
+								embedFlag = true;
+								break;
+							}
 						default:
 							transformEngine.setStylesheetParam(
 								XalanDOMString("input"),
@@ -300,8 +317,13 @@ main(
 							break;
 					}
 
+
+
 					// Do a total end to end transform with no pre parsing of either xsl or xml files.
-					transformEngine.transform(xmlInputSource, xslInputSource, theResultTarget);
+					if (!embedFlag)
+					{
+						transformEngine.transform(xmlInputSource, xslInputSource, theResultTarget);
+					}
 
 					// Check and report the results.
 					futil.checkResults(theOutputFile, theGoldFile, logFile);
