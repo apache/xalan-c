@@ -1247,14 +1247,14 @@ trim(const XalanDOMString&	theString)
 	int leadingSpace = 0;
 
 	for (; leadingSpace < strLen; ++leadingSpace)
-		if (!isSpace(charAt(theString, leadingSpace)))
+		if (!isXMLWhitespace(charAt(theString, leadingSpace)))
 			break;
 
 	// index of last non-whitespace character
 	int trailingSpace = strLen - 1;
 
 	for (; trailingSpace>=0; --trailingSpace)
-		if (!isSpace(charAt(theString, trailingSpace)))
+		if (!isXMLWhitespace(charAt(theString, trailingSpace)))
 			break;
 
 	return substring(theString, leadingSpace, trailingSpace + 1);
@@ -1516,13 +1516,13 @@ UnsignedLongToDOMString(unsigned long	theUnsignedLong)
 
 
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(bool)
-isWhiteSpace(const XalanDOMString&	string)
+isWhitespace(const XalanDOMString&	string)
 {
 	const unsigned int	theLength = length(string);
 
 	for(unsigned int s = 0; s < theLength;  s++) 
 	{
-		if (!isSpace(charAt(string, s)))
+		if (!isXMLWhitespace(charAt(string, s)))
 			return false;
 	}
 
@@ -1532,7 +1532,7 @@ isWhiteSpace(const XalanDOMString&	string)
 
 
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(bool)
-isWhiteSpace(
+isWhitespace(
 			const XalanDOMChar*		ch,
 			unsigned int			start,
 			unsigned int			length)
@@ -1541,7 +1541,7 @@ isWhiteSpace(
 
 	for(unsigned int s = start; s < end; s++) 
 	{
-		if (!isSpace(ch[s]))	
+		if (!isXMLWhitespace(ch[s]))	
 			return false;
 	}
 

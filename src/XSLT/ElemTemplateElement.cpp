@@ -254,7 +254,7 @@ ElemTemplateElement::isValidNCName(const XalanDOMString&	s)
 
     XalanDOMChar		c = charAt(s, 0);
 
-    if(!(isLetterOrDigit(c) || (c == XalanUnicode::charLowLine)))
+    if(!(isXMLLetterOrDigit(c) || (c == XalanUnicode::charLowLine)))
       return false;
 
     if(len > 0)
@@ -263,7 +263,7 @@ ElemTemplateElement::isValidNCName(const XalanDOMString&	s)
 		{
 			c = charAt(s, i); 
 
-			if(!(isLetterOrDigit(c) ||
+			if(!(isXMLLetterOrDigit(c) ||
 				 c == XalanUnicode::charLowLine ||
 				 c == XalanUnicode::charHyphenMinus ||
 				 c == XalanUnicode::charFullStop))

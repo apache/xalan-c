@@ -159,7 +159,7 @@ DOMServices::WhitespaceSupportDefault::isIgnorableWhitespace(const XalanText&	no
 	{
 		const XalanDOMChar	theChar = charAt(theData, i);
 
-		if (!isSpace(theChar))
+		if (!isXMLWhitespace(theChar))
 		{
 			break;
 		}

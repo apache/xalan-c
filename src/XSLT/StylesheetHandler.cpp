@@ -1385,7 +1385,7 @@ StylesheetHandler::characters(
 			false, preserveSpace, 
 			disableOutputEscaping);
 
-		const bool isWhite = isWhiteSpace(chars, 0, length);
+		const bool isWhite = isWhitespace(chars, 0, length);
 
 		if(preserveSpace || (!preserveSpace && !isWhite))
 		{
@@ -1477,7 +1477,7 @@ StylesheetHandler::cdata(
 			true, preserveSpace, 
 			disableOutputEscaping);
 
-		bool isWhite = isWhiteSpace(chars, 0, length);
+		bool isWhite = isWhitespace(chars, 0, length);
 
 		if(preserveSpace || (!preserveSpace && !isWhite))
 		{

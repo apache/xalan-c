@@ -462,5 +462,5 @@ XercesCDATASectionBridge::splitText(unsigned int	offset)
 bool
 XercesCDATASectionBridge::isIgnorableWhitespace() const
 {
-	return isWhiteSpace(m_xercesNode.getData());
+	return isWhitespace(m_xercesNode.getData());
 }

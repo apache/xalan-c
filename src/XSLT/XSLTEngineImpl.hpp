@@ -1011,7 +1011,7 @@ public:
    * @param   doublePunctuationSpaces true to use double spaces for punctuation
    * @return trimmed string
    */
-	XalanDOMString fixWhiteSpace(
+	XalanDOMString fixWhitespace(
 			const XalanDOMString&	string, 
 			bool				trimHead, 
 			bool				trimTail, 

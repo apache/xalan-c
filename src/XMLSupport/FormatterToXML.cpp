@@ -760,7 +760,7 @@ FormatterToXML::processingInstruction(
 
 			const unsigned int	len = length(data);
 
-			if ( len > 0 && !isSpace(data[0]))
+			if ( len > 0 && !isXMLWhitespace(data[0]))
 			{
 				accum(XalanUnicode::charSpace);
 			}

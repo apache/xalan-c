@@ -2864,7 +2864,7 @@ XSLTEngineImpl::shouldStripSourceNode(
 				{
 					return true;
 				}
-				else if(!isWhiteSpace(data))
+				else if(!isWhitespace(data))
 				{
 					return false;
 				}
@@ -2963,7 +2963,7 @@ XSLTEngineImpl::shouldStripSourceNode(
 
 
 XalanDOMString
-XSLTEngineImpl::fixWhiteSpace(
+XSLTEngineImpl::fixWhitespace(
 			const XalanDOMString&	string, 
 			bool					trimHead, 
 			bool					trimTail, 
@@ -2984,7 +2984,7 @@ XSLTEngineImpl::fixWhiteSpace(
 
 	for(s = 0;	s < len;  ++s) 
 	{
-		if(isSpace(buf[s]) == true) 
+		if(isXMLWhitespace(buf[s]) == true) 
 		{
 			break;
 		}
@@ -2999,7 +2999,7 @@ XSLTEngineImpl::fixWhiteSpace(
 	{
 		const XalanDOMChar 	c = buf[s];
 
-		if (isSpace(c) == true) 
+		if (isXMLWhitespace(c) == true) 
 		{
 			if (!pres) 
 			{

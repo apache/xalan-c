@@ -405,11 +405,11 @@ XPathProcessorImpl::tokenize(
 				{
 					startSubstring = i;
 
-					isNum = isDigit(c);
+					isNum = isXMLDigit(c);
 				}
 				else if(isNum == true)
 				{
-					isNum = isDigit(c);
+					isNum = isXMLDigit(c);
 				}
 			}
 		}
@@ -1513,8 +1513,8 @@ XPathProcessorImpl::PrimaryExpr()
 	}
 	else if((XalanUnicode::charFullStop == m_tokenChar &&
 				m_token.length() > 1 &&
-				isDigit(charAt(m_token, 1)) == true)
-			 || isDigit(m_tokenChar) == true)
+				isXMLDigit(charAt(m_token, 1)) == true)
+			 || isXMLDigit(m_tokenChar) == true)
 	{
 		m_expression->appendOpCode(XPathExpression::eOP_NUMBERLIT);
 

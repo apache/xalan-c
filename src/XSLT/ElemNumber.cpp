@@ -699,7 +699,7 @@ ElemNumber::formatNumberList(
 	{
 		it = tokenVector.begin();
 
-		if(!isLetterOrDigit(charAt(*it, 0)))
+		if(!isXMLLetterOrDigit(charAt(*it, 0)))
 		{
 			leaderStr = *it;
 			tokenVector.erase(it);
@@ -709,7 +709,7 @@ ElemNumber::formatNumberList(
 		{
 			it = tokenVector.end() - 1;
 
-			if(!isLetterOrDigit(charAt(*it, 0)))
+			if(!isXMLLetterOrDigit(charAt(*it, 0)))
 			{
 				trailerStr = *it;
 				tokenVector.erase(it);
@@ -728,7 +728,7 @@ ElemNumber::formatNumberList(
 		{
 			// $$$ ToDo: This assert is commented out until we get
 			// out character classification problems fixed.
-			// assert(isLetterOrDigit(charAt((*it), 0)));
+			// assert(isXMLLetterOrDigit(charAt((*it), 0)));
 			formatToken = *it++;
 			numberWidth = length(formatToken);
 			numberType = charAt(formatToken, numberWidth - 1);
@@ -737,7 +737,7 @@ ElemNumber::formatNumberList(
 		{
 			// $$$ ToDo: This assert is commented out until we get
 			// out character classification problems fixed.
-			//assert(!isLetterOrDigit(charAt((*it), 0)));
+			//assert(!isXMLLetterOrDigit(charAt((*it), 0)));
 			sepString = *it++;
 		}
 		formattedNumber += getFormattedNumber(executionContext, contextNode,
@@ -1303,16 +1303,16 @@ ElemNumber::NumberFormatStringTokenizer::nextToken()
 
 	const int	start = m_currentPosition;
 
-	if (isLetterOrDigit(charAt(m_str, m_currentPosition)))
+	if (isXMLLetterOrDigit(charAt(m_str, m_currentPosition)))
 	{
 		while ((m_currentPosition < m_maxPosition) &&
-				isLetterOrDigit(charAt(m_str, m_currentPosition))) 
+				isXMLLetterOrDigit(charAt(m_str, m_currentPosition))) 
 			m_currentPosition++;
 	}
 	else
 	{
 		while ((m_currentPosition < m_maxPosition) &&
-				!isLetterOrDigit(charAt(m_str, m_currentPosition))) 
+				!isXMLLetterOrDigit(charAt(m_str, m_currentPosition))) 
 			m_currentPosition++;
 	}
 
@@ -1333,16 +1333,16 @@ ElemNumber::NumberFormatStringTokenizer::countTokens() const
 	// non-alphabetic characters
 	while (currpos < m_maxPosition) 
 	{
-		if (isLetterOrDigit(charAt(m_str, currpos)))
+		if (isXMLLetterOrDigit(charAt(m_str, currpos)))
 		{
 			while ((currpos < m_maxPosition) &&
-					isLetterOrDigit(charAt(m_str, currpos))) 
+					isXMLLetterOrDigit(charAt(m_str, currpos))) 
 				currpos++;
 		}
 		else
 		{
 			while ((currpos < m_maxPosition) &&
-					!isLetterOrDigit(charAt(m_str, currpos))) 
+					!isXMLLetterOrDigit(charAt(m_str, currpos))) 
 				currpos++;
 		}
 		count++;

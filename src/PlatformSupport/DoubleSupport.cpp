@@ -339,7 +339,7 @@ void
 consumeWhitespace(const XalanDOMChar*&	theString)
 {
 	while(*theString != 0 &&
-		  isSpace(*theString))
+		  isXMLWhitespace(*theString))
 	{
 		++theString;
 	}

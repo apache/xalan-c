@@ -89,6 +89,7 @@
 
 
 #include <PlatformSupport/XalanUnicode.hpp>
+#include <PlatformSupport/XalanXMLChar.hpp>
 
 
 
@@ -957,13 +958,9 @@ clone(const XalanDOMString&	theString)
  * @return true if character represents white space
  */
 inline bool
-isSpace(XalanDOMChar	theChar)
+isXMLWhitespace(XalanDOMChar	theChar)
 {
-	return theChar > XalanUnicode::charSpace ? false :
-		   (theChar == XalanUnicode::charSpace ||
-		    theChar == XalanUnicode::charCR ||
-		    theChar == XalanUnicode::charLF ||
-		    theChar == XalanUnicode::charHTab) ? true : false;
+	return XalanXMLChar::isWhitespace(theChar) ? true : false;
 }
 
 
@@ -992,9 +989,9 @@ charAt(
  * @return true if character represents a digit
  */
 inline bool
-isDigit(XalanDOMChar	theChar)
-{
-	return iswdigit(theChar) ? true : false;
+isXMLDigit(XalanDOMChar	theChar)
+{	
+	return XalanXMLChar::isDigit(theChar) ? true : false;
 }
 
 
@@ -1006,9 +1003,10 @@ isDigit(XalanDOMChar	theChar)
  * @return true if character represents a letter or digit
  */
 inline bool
-isLetterOrDigit(XalanDOMChar	theChar)
+isXMLLetterOrDigit(XalanDOMChar	theChar)
 {
-	return iswalnum(theChar) ? true : false;
+	return	XalanXMLChar::isDigit(theChar) || 
+			XalanXMLChar::isLetter(theChar) ? true : false;
 }
 
 
@@ -2067,7 +2065,7 @@ TranscodeToLocalCodePage(const XalanDOMString&	sourceString)
  * @return true if string contains only whitespace
  */
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(bool)
-isWhiteSpace(const XalanDOMString&	string);
+isWhitespace(const XalanDOMString&	string);
 
 
 
@@ -2080,7 +2078,7 @@ isWhiteSpace(const XalanDOMString&	string);
  * @return true if specified range contains only whitespace
  */
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(bool)
-isWhiteSpace(
+isWhitespace(
 			const XalanDOMChar*		ch,
 			unsigned int			start,
 			unsigned int			length);

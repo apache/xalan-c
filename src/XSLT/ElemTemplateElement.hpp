@@ -270,7 +270,7 @@ public:
 	 * @return true if the string is pure whitespace
 	 */
 	static bool
-	isWhiteSpace(const XalanDOMString& theString);
+	isWhitespace(const XalanDOMString& theString);
 
 	/** 
 	 * Throw a template element runtime error.  

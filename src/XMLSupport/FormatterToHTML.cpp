@@ -731,7 +731,7 @@ FormatterToHTML::processingInstruction(
 
 		if (length(data) > 0)
 		{
-			if(isSpace(data[0]) == false)
+			if(isXMLWhitespace(data[0]) == false)
 			{
 				accum(XalanUnicode::charSpace);
 			}

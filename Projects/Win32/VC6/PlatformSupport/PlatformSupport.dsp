@@ -198,6 +198,10 @@ SOURCE=..\..\..\..\src\PlatformSupport\XalanUTF16Transcoder.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\PlatformSupport\XalanXMLChar.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\PlatformSupport\XSLException.cpp
 # End Source File
 # End Group
@@ -343,6 +347,10 @@ SOURCE=..\..\..\..\src\PlatformSupport\XalanUnicode.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\PlatformSupport\XalanUTF16Transcoder.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\PlatformSupport\XalanXMLChar.hpp
 # End Source File
 # Begin Source File
 

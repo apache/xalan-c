@@ -143,12 +143,12 @@ public:
 		{
 			const XalanDOMChar	theCurrentChar = charAt(theSourceString, i);
 
-			if (isSpace(theCurrentChar) == true)
+			if (isXMLWhitespace(theCurrentChar) == true)
 			{
 				// If the previous character wasn't a space, and we've
 				// encountered some non-space characters, then push the
 				// space.
-				if (isSpace(thePreviousChar) == false && theVector.size() > 0)
+				if (isXMLWhitespace(thePreviousChar) == false && theVector.size() > 0)
 				{
 					theVector.push_back(XalanDOMChar(XalanUnicode::charSpace));
 				}
@@ -161,7 +161,7 @@ public:
 			thePreviousChar = theCurrentChar;
 		}
 
-		if (theVector.empty() == false && isSpace(theVector.back()) == true)
+		if (theVector.empty() == false && isXMLWhitespace(theVector.back()) == true)
 		{
 			// The last character is a space, so remove it
 			theVector.pop_back();
