@@ -188,6 +188,11 @@ private:
 	 * A vector to keep track of the attribute elements.
 	 */
 	AVTVectorType			m_avts;
+
+	/**
+	 * If true, the literal result element has a namespace prefix...
+	 */
+	const bool				m_hasPrefix;
 };
 
 

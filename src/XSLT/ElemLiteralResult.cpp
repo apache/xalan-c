@@ -101,7 +101,8 @@ ElemLiteralResult::ElemLiteralResult(
 			columnNumber,
 			xslToken),
 	m_elementName(name),
-	m_avts()
+	m_avts(),
+	m_hasPrefix(indexOf(name, XalanUnicode::charColon) < length(name) ? true : false)
 {
 	const unsigned int	nAttrs = atts.getLength();
 
@@ -296,24 +297,27 @@ ElemLiteralResult::execute(StylesheetExecutionContext&	executionContext) const
 
 	m_namespacesHandler.outputResultNamespaces(executionContext);
 
-	// OK, let's check to make sure we don't have to change the default namespace...
-	const XalanDOMString* const		theCurrentDefaultNamespace =
-				executionContext.getResultNamespaceForPrefix(s_emptyString);
-
-	if (theCurrentDefaultNamespace != 0)
+	if (m_hasPrefix == false)
 	{
-		const XalanDOMString* const		theElementDefaultNamespace =
-						m_namespacesHandler.getNamespace(s_emptyString);
+		// OK, let's check to make sure we don't have to change the default namespace...
+		const XalanDOMString* const		theCurrentDefaultNamespace =
+					executionContext.getResultNamespaceForPrefix(s_emptyString);
 
-		if (theElementDefaultNamespace == 0)
+		if (theCurrentDefaultNamespace != 0)
 		{
-			// There was no default namespace, so we have to turn the
-			// current one off.
-			executionContext.addResultAttribute(DOMServices::s_XMLNamespace, s_emptyString);
-		}
-		else if (equals(*theCurrentDefaultNamespace, *theElementDefaultNamespace) == false)
-		{
-			executionContext.addResultAttribute(DOMServices::s_XMLNamespace, *theElementDefaultNamespace);
+			const XalanDOMString* const		theElementDefaultNamespace =
+							m_namespacesHandler.getNamespace(s_emptyString);
+
+			if (theElementDefaultNamespace == 0)
+			{
+				// There was no default namespace, so we have to turn the
+				// current one off.
+				executionContext.addResultAttribute(DOMServices::s_XMLNamespace, s_emptyString);
+			}
+			else if (equals(*theCurrentDefaultNamespace, *theElementDefaultNamespace) == false)
+			{
+				executionContext.addResultAttribute(DOMServices::s_XMLNamespace, *theElementDefaultNamespace);
+			}
 		}
 	}
 

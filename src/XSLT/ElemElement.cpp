@@ -277,9 +277,18 @@ ElemElement::execute(StylesheetExecutionContext&		executionContext) const
 					{
 						if (namespaceLen > 0)
 						{
-							outputResultNamespaces(executionContext, hasUnresolvedPrefix);
+							outputResultNamespaces(executionContext, hasUnresolvedPrefix, true);
 
-							executionContext.addResultAttribute(DOMServices::s_XMLNamespace, elemNameSpace);
+							const XalanDOMString* const		theDefaultNamespace =
+								executionContext.getResultNamespaceForPrefix(s_emptyString);
+
+							if (theDefaultNamespace == 0 ||
+								equals(*theDefaultNamespace, elemNameSpace) == false)
+							{
+								executionContext.addResultAttribute(
+									DOMServices::s_XMLNamespace,
+									elemNameSpace);
+							}
 						}
 						else
 						{
