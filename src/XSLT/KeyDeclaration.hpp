@@ -140,7 +140,7 @@ public:
 	beginConstruction() const
 	{
 #if defined(XALAN_NO_MUTABLE)
-		((KeyDeclaration*)this->m_inConstruction = true;
+		((KeyDeclaration*)this)->m_inConstruction = true;
 #else
 		m_inConstruction = true;
 #endif
@@ -150,7 +150,7 @@ public:
 	endConstruction() const
 	{
 #if defined(XALAN_NO_MUTABLE)
-		((KeyDeclaration*)this->m_inConstruction = false;
+		((KeyDeclaration*)this)->m_inConstruction = false;
 #else
 		m_inConstruction = false;
 #endif
