@@ -54,17 +54,36 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-#if !defined(PLATFORMDEFINITIONS_HEADER_GUARD_1357924680)
-#define PLATFORMDEFINITIONS_HEADER_GUARD_1357924680
+/* Patch from Trevor Smigiel                                   */
+#if !defined(HPUXDEFINITIONS_HEADER_GUARD_1357924680)
+#define HPUXDEFINITIONS_HEADER_GUARD_1357924680
 
-#if defined(_MSC_VER)
-#include "VCPPDefinitions.hpp"
-#elif defined(__GNUC__)
-#include "GCCDefinitions.hpp"
-#elif defined(_AIX)
-#include "AIXDefinitions.hpp"
-#elif defined(__hpux)
-#include "HPUXDefinitions.hpp"
-#endif
 
-#endif	// PLATFORMDEFINITIONS_HEADER_GUARD_1357924680
+// ---------------------------------------------------------------------------
+//  A define in the build for each project is also used to control whether
+//  the export keyword is from the project's viewpoint or the client's. 
+//  These defines provide the platform specific keywords that they need
+//  to do this.
+// ---------------------------------------------------------------------------
+
+#define XALAN_PLATFORM_EXPORT
+#define XALAN_PLATFORM_IMPORT
+#define XALAN_PLATFORM_EXPORT_FUNCTION(T) T XALAN_PLATFORM_EXPORT
+#define XALAN_PLATFORM_IMPORT_FUNCTION(T) T XALAN_PLATFORM_IMPORT
+
+
+#define XALAN_OLD_STREAM_HEADERS
+#define XALAN_NO_IOSFWD
+#define XALAN_NO_MEMBER_TEMPLATES
+#define XALAN_NO_COVARIANT_RETURN_TYPE
+#define XALAN_RTTI_AVAILABLE
+#define XALAN_NO_TYPEINFO
+#define XALAN_SGI_BASED_STL
+#define XALAN_OLD_STYLE_CASTS
+#define XALAN_NO_NAMESPACES
+#define XALAN_XALANDOMCHAR_USHORT_MISMATCH
+
+#define XALAN_BIG_ENDIAN
+
+#endif  // HPUXDEFINITIONS_HEADER_GUARD_1357924680
+
