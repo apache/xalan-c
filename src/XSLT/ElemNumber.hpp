@@ -468,13 +468,6 @@ private:
 			 */
 			CounterVectorType& getCounters(const ElemNumber*	numberElem);
 
-
-			/**
-			 * Put a counter into the table and create an empty 
-			 * vector as it's value.
-			 */
-			CounterVectorType& putElemNumber(const ElemNumber*	numberElem);
-
 			/**
 			 * Add a list of counted nodes that were built in backwards document 
 			 * order, or a list of counted nodes that are in forwards document 

@@ -1024,40 +1024,28 @@ ElemNumber::NumberFormatStringTokenizer::countTokens() const
 	return count;
 }
 
-/*
- *					CountersTable Class Implementation
- */
+
 
 ElemNumber::CounterVectorType& ElemNumber::CountersTable::getCounters(const ElemNumber* numberElem)
 {
-	const ElemToCounterVectorMapType::const_iterator	it =
-		m_counterMap.find(numberElem);
-
-	return (m_counterMap.end() == it) ? putElemNumber(numberElem) : (*it).second;
+	return m_counterMap[numberElem];
 }
 
-ElemNumber::CounterVectorType& ElemNumber::CountersTable::putElemNumber(const ElemNumber*	numberElem)
-{
-	m_counterMap.insert(ElemToCounterVectorMapType::value_type(numberElem, CounterVectorType()));
 
-	return m_counterMap.find(numberElem)->second;
-}
 
-void ElemNumber::CountersTable::appendBtoFList(MutableNodeRefList& flist, MutableNodeRefList& blist)
+void
+ElemNumber::CountersTable::appendBtoFList(MutableNodeRefList& flist, MutableNodeRefList& blist)
 {
-	int n = blist.getLength();
+	const int n = blist.getLength();
+
 	for(int i = (n-1); i >= 0; i--)
 	{
 		flist.addNode(blist.item(i));
 	}
 }
 
-/**
- * Count forward until the given node is found, or until 
- * we have looked to the given amount.
- * @node The node to count.
- * @return The node count, or 0 if not found.
- */
+
+
 int
 ElemNumber::CountersTable::countNode(
 			StylesheetExecutionContext&		support,
@@ -1070,7 +1058,7 @@ ElemNumber::CountersTable::countNode(
 
 	const CounterVectorType::size_type	nCounters = counters.size();
 
-	XalanNode*	target = numberElem->getTargetNode(support, node);
+	XalanNode* 	target = numberElem->getTargetNode(support, node);
 
 	if(0 != target)
 	{
@@ -1130,15 +1118,14 @@ ElemNumber::CountersTable::countNode(
 	return count;
 }
 
-/*
- *					Counters Class Implementation
- */
-    
-int ElemNumber::Counter::getPreviouslyCounted(
+
+
+int
+ElemNumber::Counter::getPreviouslyCounted(
 		StylesheetExecutionContext&		support,
 		const XalanNode*				node) const
 {
-	int n = m_countNodes.getLength();
+	const int n = m_countNodes.getLength();
 	int result = 0;
 
 	for(int i = n-1;i >= 0; i--)
@@ -1163,6 +1150,6 @@ int ElemNumber::Counter::getPreviouslyCounted(
 
 XalanNode* ElemNumber::Counter::getLast()
 {
-	int size = m_countNodes.getLength();
+	const int size = m_countNodes.getLength();
 	return (size > 0) ? m_countNodes.item(size-1) : 0;
 }
