@@ -1423,7 +1423,7 @@ StylesheetHandler::processingInstruction(
 	if (m_exceptionPending == true)
 		return;
 
-	processAccumulatedText();
+	clear(m_accumulateText);
 }
 
 
@@ -1435,7 +1435,7 @@ StylesheetHandler::comment(const XMLCh* const /*data*/)
 	if (m_exceptionPending == true)
 		return;
 
-	processAccumulatedText();
+	clear(m_accumulateText);
 }
 
 
@@ -1447,7 +1447,7 @@ StylesheetHandler::entityReference(const XMLCh* const /*name*/)
 	if (m_exceptionPending == true)
 		return;
 
-  // No action for the moment.
+	clear(m_accumulateText);
 }
 
 
@@ -1459,7 +1459,7 @@ StylesheetHandler::resetDocument()
 	if (m_exceptionPending == true)
 		return;
 
-  // No action for the moment.
+	clear(m_accumulateText);
 }
 
 
