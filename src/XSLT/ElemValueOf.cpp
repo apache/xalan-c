@@ -241,12 +241,12 @@ ElemValueOf::outputValue(
 
 
 void
-ElemValueOf::	fireSelectionEvent(
+ElemValueOf::fireSelectionEvent(
 			StylesheetExecutionContext&		executionContext,
 			XalanNode*						sourceNode,
 			const XalanDOMString&			theValue) const
 {
-	const XObjectPtr value(executionContext.getXObjectFactory().createString(theValue));
+	const XObjectPtr value(executionContext.getXObjectFactory().createStringReference(theValue));
 
 	fireSelectionEvent(executionContext, sourceNode, value);
 }
