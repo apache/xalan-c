@@ -95,6 +95,19 @@ class XALAN_XSLT_EXPORT StylesheetConstructionContextDefault : public Stylesheet
 {
 public:
 
+	/*
+	 * Construct an instance.  If the stylesheet(s) constructed is/are meant to be reused (a.k.a. "compiled"),
+	 * the XObjectFactory and XPathFactory instance must exist for the lifetime of the construction context
+	 * and, therefore, for the lifetime of the stylesheet(s).  Otherwise, XObject and XPath instance will be
+	 * destroyed when the corresponding factories are destryed, leaving pointers to destroyed objects in the.
+	 * stylesheet(s).
+	 *
+	 * @param processor a reference to an XSLTEngineImpl instance.  Used for error reporting.
+	 * @param xpathEnvSupport a reference to an XPathEnvSupport instance.
+	 * @param xobjectFactory a reference to an XObjectFactory instance.  See comments above for important details.
+	 * @param xpathFactory a reference to an XPathFactory instance.  See comments above for important details.
+	 *
+	 */
 	StylesheetConstructionContextDefault(
 			XSLTEngineImpl&		processor,
 			XPathEnvSupport&	xpathEnvSupport,
