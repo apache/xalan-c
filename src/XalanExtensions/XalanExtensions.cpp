@@ -94,9 +94,10 @@ static const XalanDOMChar	s_extensionsNamespace[] =
 	XalanUnicode::charLetter_g,
 	XalanUnicode::charSolidus,
 	XalanUnicode::charLetter_x,
-	XalanUnicode::charLetter_s,
+	XalanUnicode::charLetter_a,
 	XalanUnicode::charLetter_l,
-	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_n,
 	0
 };
 
