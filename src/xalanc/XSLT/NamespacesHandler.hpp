@@ -24,10 +24,6 @@
 
 
 
-#include <set>
-
-
-
 #include <xalanc/Include/XalanVector.hpp>
 #include <xalanc/Include/XalanMap.hpp>
 

@@ -23,7 +23,7 @@
 
 
 
-#include <set>
+#include <xalanc/Include/XalanSet.hpp>
 
 
 
@@ -57,12 +57,7 @@ public:
 	virtual XPath*
 	create();
 
-
-#if defined(XALAN_NO_STD_NAMESPACE)
-	typedef set<const XPath*, less<const XPath*> >	CollectionType;
-#else
-	typedef std::set<const XPath*>	CollectionType;
-#endif
+    typedef XalanSet<const XPath*>	CollectionType;
 
 	CollectionType::size_type
 	getInstanceCount() const

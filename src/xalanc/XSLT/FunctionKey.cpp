@@ -17,10 +17,6 @@
 
 
 
-#include <set>
-
-
-
 #include <xalanc/XalanDOM/XalanNode.hpp>
 #include <xalanc/XalanDOM/XalanDocument.hpp>
 #include <xalanc/XalanDOM/XalanDOMString.hpp>

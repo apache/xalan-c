@@ -22,7 +22,7 @@
 #include <algorithm>
 
 #if !defined(NDEBUG)
-#include <set>
+#include <xalanc/Include/XalanSet.hpp>
 #endif
 
 
@@ -151,11 +151,7 @@ NodeRefList::indexOf(const XalanNode*	theNode) const
 bool
 NodeRefList::checkForDuplicates() const
 {
-#if defined(XALAN_NO_STD_NAMESPACE)
-	typedef set<const XalanNode*, less<const XalanNode*> >	NodeSetType;
-#else
-	typedef std::set<const XalanNode*>	NodeSetType;
-#endif
+	typedef XalanSet<const XalanNode*>	NodeSetType;
 
 	bool	fResult = false;
 

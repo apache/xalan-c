@@ -23,10 +23,7 @@
 
 
 #include <xalanc/Include/XalanVector.hpp>
-
-
-
-#include <set>
+#include <xalanc/Include/XalanSet.hpp>
 
 
 
@@ -76,11 +73,10 @@ public:
 	typedef XalanVector<ElemTemplateElement*>		ElemTextLiteralStackType;
 
 	typedef XalanVector<bool>						BoolStackType;
-	typedef XALAN_STD_QUALIFIER set<XalanQNameByReference,
-				XALAN_STD_QUALIFIER less<XalanQName> >		QNameSetType;
+	typedef XalanSet<XalanQNameByReference> 		QNameSetType;
 	typedef XalanVector<QNameSetType>				QNameSetVectorType;
-
-	/**
+    
+    /**
 	 * Perform static initialization.  See class XMLSupportInit.
 	 */
 	static void

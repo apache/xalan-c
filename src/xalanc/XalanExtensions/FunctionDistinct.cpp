@@ -17,7 +17,7 @@
 
 
 
-#include <set>
+#include <xalanc/Include/XalanSet.hpp>
 
 
 
@@ -26,6 +26,7 @@
 
 
 #include <xalanc/PlatformSupport/XalanMessageLoader.hpp>
+#include <xalanc/PlatformSupport/DOMStringHelper.hpp>
 
 
 
@@ -88,11 +89,8 @@ FunctionDistinct::execute(
 
 		XalanDOMString&				theCachedString = theGuard.get();
 
-#if defined(XALAN_NO_STD_NAMESPACE)
-		typedef set<XalanDOMString, less<XalanDOMString> >	SetType;
-#else
-		typedef std::set<XalanDOMString>					SetType;
-#endif
+
+		typedef XalanSet<XalanDOMString>					SetType;
 
 		SetType		theStrings;
 

@@ -23,10 +23,6 @@
 
 
 
-#include <set>
-
-
-
 #include <xalanc/Include/XalanVector.hpp>
 
 

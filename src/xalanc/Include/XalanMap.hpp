@@ -280,11 +280,19 @@ public:
 		}
 	}
 
-	void erase(const key_type& key)
+	size_type erase(const key_type& key)
 	{
 		iterator pos = find(key);
 
-		erase(pos);
+        if (pos != end())
+        {
+		    erase(pos);
+            return 1;
+        }
+        else
+        {
+            return 0;
+        }
 	}
 
 	void clear() 

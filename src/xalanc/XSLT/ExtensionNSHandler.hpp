@@ -27,11 +27,15 @@
 
 
 
-#include <set>
+#include <xalanc/Include/XalanSet.hpp>
 
 
 
 #include <xalanc/XalanDOM/XalanDOMString.hpp>
+
+
+
+#include <xalanc/PlatformSupport/DOMStringHelper.hpp>
 
 
 
@@ -165,12 +169,7 @@ protected:
 
 private:
 
-#if defined(XALAN_NO_STD_NAMESPACE)
-	typedef set<XalanDOMString,
-				less<XalanDOMString> >	ExtensionSetType;
-#else
-	typedef std::set<XalanDOMString>	ExtensionSetType;
-#endif
+	typedef XalanSet<XalanDOMString>	ExtensionSetType;
 
 	// Extension elements of this namespace
 	ExtensionSetType	m_elements;

@@ -23,10 +23,6 @@
 
 
 
-#include <set>
-
-
-
 #include <xalanc/XalanDOM/XalanElement.hpp>
 #include <xalanc/XalanDOM/XalanNode.hpp>
 #include <xalanc/XalanDOM/XalanDocument.hpp>
