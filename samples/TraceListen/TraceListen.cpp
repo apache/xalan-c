@@ -34,7 +34,7 @@ main(
 			const char*		argv[])
 {
 #if !defined(XALAN_NO_NAMESPACES)
-  using std::auto_ptr;
+	using std::auto_ptr;
 	using std::cerr;
 	using std::endl;
 #endif
@@ -50,37 +50,38 @@ main(
 		cerr << "Usage: TraceListen [+ 1 or more of following] -TT -TG -TS -TTC" << endl;
 		return -1;
 	}
-  // Set the TraceListener flags...
-  for (int i = 1;	i < argc;	i ++)
-  {
-    if(!stricmp("-TT", argv[i]))
-    {
-      traceTemplates = true;
-    }
-    else if(!stricmp("-TG", argv[i]))
+
+	// Set the TraceListener flags...
+	for (int i = 1;	i < argc;	i ++)
+	{
+		if(!stricmp("-TT", argv[i]))
 		{
-		  traceGenerationEvent = true;
+			traceTemplates = true;
+		}
+		else if(!stricmp("-TG", argv[i]))
+		{
+			traceGenerationEvent = true;
 		}
 		else if(!stricmp("-TS", argv[i]))
 		{
-		  traceSelectionEvent = true;
-    }
-    else if(!stricmp("-TTC", argv[i]))
-		{
-		  traceTemplateChildren = true;
+			traceSelectionEvent = true;
 		}
-    else
-    {
-  		cerr << "Usage: TraceListen [+ 1 or more of following] -TT -TG -TS -TTC" << endl;
-	  	return -1;
-    }
-  } 
+		else if(!stricmp("-TTC", argv[i]))
+		{
+			traceTemplateChildren = true;
+		}
+		else
+		{
+  			cerr << "Usage: TraceListen [+ 1 or more of following] -TT -TG -TS -TTC" << endl;
+	  		return -1;
+		}
+	} 
  
 	try
 	{
-    // Call the static initializers...
-    XMLPlatformUtils::Initialize();
-	  XSLTEngineImpl::Initialize();	  
+		// Call the static initializers...
+		XMLPlatformUtils::Initialize();
+		XSLTEngineImpl::Initialize();	  
 
 		// Create the support objects that are necessary for running the processor...
 		DOMSupportDefault				theDOMSupport;
@@ -129,33 +130,36 @@ main(
 		XercesDOMPrintWriter	theResultWriter(theOutputStream);
 		XSLTResultTarget		theResultTarget(&theResultWriter);
 
-	  // Set up a diagnostic writer to be used by the TraceListener...
-	  XercesStdTextOutputStream				theStdErr(cerr);
-	  XercesDOMPrintWriter					diagnosticsWriter(theStdErr);
+		// Set up a diagnostic writer to be used by the TraceListener...
+		XercesStdTextOutputStream				theStdErr(cerr);
+		XercesDOMPrintWriter					diagnosticsWriter(theStdErr);
 
 	  // Set up the TraceListener... 
-    auto_ptr<TraceListener>		theTraceListener;
-	  theTraceListener = auto_ptr<TraceListener>(new TraceListenerDefault(
+		auto_ptr<TraceListener>		theTraceListener(
+			new TraceListenerDefault(
 				diagnosticsWriter,
 				traceTemplates,
 				traceTemplateChildren,
 				traceGenerationEvent,
 				traceSelectionEvent));
 
-    // Add the TraceListener to the XSLT processor...
-    theProcessor.setTraceSelects(traceSelectionEvent);
-	  theProcessor.addTraceListener(theTraceListener.get());
+		// Add the TraceListener to the XSLT processor...
+		theProcessor.setTraceSelects(traceSelectionEvent);
+		theProcessor.addTraceListener(theTraceListener.get());
 
-    // Perform the transformation...
+		// Perform the transformation...
 		theProcessor.process(
 						theInputSource,
 						theStylesheetSource,
 						theResultTarget,
 						theConstructionContext,
 						theExecutionContext);
-  }
 
-  catch(...)
+		// Call the static terminators...
+		XMLPlatformUtils::Terminate();
+		XSLTEngineImpl::Terminate();
+	}
+	catch(...)
 	{
 		cerr << "Exception caught!  Exiting..." << endl;
 	}
