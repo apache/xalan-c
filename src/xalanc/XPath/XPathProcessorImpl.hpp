@@ -211,7 +211,7 @@ private:
 	 * Retrieve the next token from the command and
 	 * store it in m_token string.
 	 */
-	void
+	bool
 	nextToken();
 
 	/**

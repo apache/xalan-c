@@ -79,6 +79,8 @@ XPathProcessorImpl::initXPath(
 			const PrefixResolver&		resolver,
 			const LocatorType*			locator)
 {
+	m_isMatchPattern = false;
+
 	m_requireLiterals = false;
 
 	m_xpath = &pathObj;
@@ -647,7 +649,7 @@ XPathProcessorImpl::lookbehindHasToken(int	n) const
 
 
 
-void
+bool
 XPathProcessorImpl::nextToken()
 {
 	assert(m_expression != 0);
@@ -667,10 +669,14 @@ XPathProcessorImpl::nextToken()
 	if(length(m_token) > 0)
 	{
 		m_tokenChar = charAt(m_token, 0);
+
+        return true;
 	}
 	else
 	{
 		m_tokenChar = 0;
+
+        return false;
 	}
 }
 
@@ -777,7 +783,6 @@ XPathProcessorImpl::error(const XalanDOMString&		msg) const
 			{
 				thePrintWriter.print(XalanMessageLoader::getMessage(XalanMessages::ExpressionIs_1Param,theCurrentPattern));
 			}
-
 		}
 
 		// Back up one token, since we've consumed one...
@@ -830,15 +835,22 @@ XPathProcessorImpl::OrExpr()
 
 	if(tokenIs(s_orString) == true)
 	{
-		nextToken();
+		if (nextToken() == false)
+        {
+		    error(XalanMessageLoader::getMessage(XalanMessages::ExpectedToken));
+        }
+        else
+        {
+		    m_expression->insertOpCode(
+                XPathExpression::eOP_OR,
+				opPos);
 
-		m_expression->insertOpCode(XPathExpression::eOP_OR,
-								   opPos);
+		    OrExpr();
 
-		OrExpr();
-
-		m_expression->updateOpCodeLength(XPathExpression::eOP_OR,
-										 opPos);
+		    m_expression->updateOpCodeLength(
+                XPathExpression::eOP_OR,
+				opPos);
+        }
 	}
 }
 
@@ -853,15 +865,22 @@ XPathProcessorImpl::AndExpr()
 
 	if(tokenIs(s_andString) == true)
 	{
-		nextToken();
+		if (nextToken() == false)
+        {
+		    error(XalanMessageLoader::getMessage(XalanMessages::ExpectedToken));
+        }
+        else
+        {
+		    m_expression->insertOpCode(
+                XPathExpression::eOP_AND,
+				opPos);
 
-		m_expression->insertOpCode(XPathExpression::eOP_AND,
-								   opPos);
+            AndExpr();
 
-		AndExpr();
-
-		m_expression->updateOpCodeLength(XPathExpression::eOP_AND,
-										 opPos);
+		    m_expression->updateOpCodeLength(
+                XPathExpression::eOP_AND,
+				opPos);
+        }
 	}
 }
 
@@ -879,52 +898,64 @@ XPathProcessorImpl::EqualityExpr(int	opCodePos)
 	XPathExpression::eOpCodes	theOpCode =
 			XPathExpression::eENDOP;
 
+    bool    foundToken = false;
+
 	if(tokenIs(XalanUnicode::charExclamationMark) && lookahead(XalanUnicode::charEqualsSign, 1))
 	{
 		nextToken();
-		nextToken();
+
+        foundToken = nextToken();
 
 		theOpCode = XPathExpression::eOP_NOTEQUALS;
 	}
 	else if(tokenIs(XalanUnicode::charEqualsSign))
 	{
-		nextToken();
+		foundToken = nextToken();
 
 		theOpCode = XPathExpression::eOP_EQUALS;
 	}
 
 	if (theOpCode != XPathExpression::eENDOP)
 	{
-		// Save the number of bytes we inserted
-		// into the map.
-		const int	theLocalDisplacement =
-				m_expression->insertOpCode(theOpCode,
-										   opPos);
+        if (foundToken == false)
+        {
+            error(XalanMessageLoader::getMessage(XalanMessages::ExpectedToken));
+        }
+        else
+        {
+		    // Save the number of bytes we inserted
+		    // into the map.
+		    const int	theLocalDisplacement =
+				    m_expression->insertOpCode(theOpCode,
+										       opPos);
 
-		// Update the length
-		m_expression->updateOpCodeLength(theOpCode,
-										 opPos);
+		    // Update the length
+		    m_expression->updateOpCodeLength(theOpCode,
+										     opPos);
 
-		// Do the right term of the expression.
-		theOpDisplacement += EqualityExpr(opPos);
+		    // Do the right term of the expression.
+		    theOpDisplacement += EqualityExpr(opPos);
 
-		// If there's any displacement from the right
-		// term, update the length for a shift. Otherwise,
-		// just update the length.
-		if (theOpDisplacement > 0)
-		{
-			m_expression->updateShiftedOpCodeLength(theOpCode,
-													opPos,
-													opPos + theOpDisplacement);
-		}
-		else
-		{
-			m_expression->updateOpCodeLength(theOpCode,
-											 opPos);
-		}
+		    // If there's any displacement from the right
+		    // term, update the length for a shift. Otherwise,
+		    // just update the length.
+		    if (theOpDisplacement > 0)
+		    {
+			    m_expression->updateShiftedOpCodeLength(
+                    theOpCode,
+					opPos,
+					opPos + theOpDisplacement);
+		    }
+		    else
+		    {
+			    m_expression->updateOpCodeLength(
+                    theOpCode,
+					opPos);
+		    }
 
-		// Accumulate the displacement.
-		theOpDisplacement += theLocalDisplacement;
+		    // Accumulate the displacement.
+		    theOpDisplacement += theLocalDisplacement;
+        }
 	}
 
 	return theOpDisplacement;
@@ -943,16 +974,18 @@ XPathProcessorImpl::RelationalExpr(int	opCodePos)
 
 	if(0 != length(m_token))
 	{
+        bool    foundToken = false;
+
 		XPathExpression::eOpCodes	theOpCode =
 			XPathExpression::eENDOP;
 
 		if(tokenIs(XalanUnicode::charLessThanSign) == true)
 		{
-			nextToken();
+			foundToken = nextToken();
 
 			if(tokenIs(XalanUnicode::charEqualsSign) == true)
 			{
-				nextToken();
+				foundToken = nextToken();
 
 				theOpCode = XPathExpression::eOP_LTE;
 			}
@@ -963,11 +996,11 @@ XPathProcessorImpl::RelationalExpr(int	opCodePos)
 		}
 		else if(tokenIs(XalanUnicode::charGreaterThanSign) == true)
 		{
-			nextToken();
+			foundToken = nextToken();
 
 			if(tokenIs(XalanUnicode::charEqualsSign) == true)
 			{
-				nextToken();
+				foundToken = nextToken();
 
 				theOpCode = XPathExpression::eOP_GTE;
 			}
@@ -979,36 +1012,45 @@ XPathProcessorImpl::RelationalExpr(int	opCodePos)
 
 		if (theOpCode != XPathExpression::eENDOP)
 		{
-			// Save the number of bytes we inserted
-			// into the map.
-			const int	theLocalDisplacement =
-				m_expression->insertOpCode(theOpCode,
-										   opPos);
+            if (foundToken == false)
+            {
+                error(XalanMessageLoader::getMessage(XalanMessages::ExpectedToken));
+            }
+            else
+            {
+                // Save the number of bytes we inserted
+			    // into the map.
+			    const int	theLocalDisplacement =
+				    m_expression->insertOpCode(theOpCode,
+										       opPos);
 
-			// Update the length
-			m_expression->updateOpCodeLength(theOpCode,
-											 opPos);
+			    // Update the length
+			    m_expression->updateOpCodeLength(theOpCode,
+											     opPos);
 
-			// Do the right term of the expression.
-			theOpDisplacement += RelationalExpr(opPos);
+			    // Do the right term of the expression.
+			    theOpDisplacement += RelationalExpr(opPos);
 
-			// If there's any displacement from the right
-			// term, update the length for a shift. Otherwise,
-			// just update the length.
-			if (theOpDisplacement > 0)
-			{
-				m_expression->updateShiftedOpCodeLength(theOpCode,
-														opPos,
-														opPos + theOpDisplacement);
-			}
-			else
-			{
-				m_expression->updateOpCodeLength(theOpCode,
-												 opPos);
-			}
+			    // If there's any displacement from the right
+			    // term, update the length for a shift. Otherwise,
+			    // just update the length.
+			    if (theOpDisplacement > 0)
+			    {
+				    m_expression->updateShiftedOpCodeLength(
+                        theOpCode,
+						opPos,
+						opPos + theOpDisplacement);
+			    }
+			    else
+			    {
+				    m_expression->updateOpCodeLength(
+                        theOpCode,
+						opPos);
+			    }
 
-			// Accumulate the displacement.
-			theOpDisplacement += theLocalDisplacement;
+			    // Accumulate the displacement.
+			    theOpDisplacement += theLocalDisplacement;
+            }
 		}
 	}
 
@@ -1042,38 +1084,45 @@ XPathProcessorImpl::AdditiveExpr(int	opCodePos)
 
 		if (theOpCode != XPathExpression::eENDOP)
 		{
-			nextToken();
+		    if (nextToken() == false)
+            {
+		        error(XalanMessageLoader::getMessage(XalanMessages::ExpectedToken));
+            }
+            else
+            {
+			    // Save the number of bytes we inserted
+			    // into the map.
+			    const int	theLocalDisplacement =
+				    m_expression->insertOpCode(theOpCode,
+										       opPos);
 
-			// Save the number of bytes we inserted
-			// into the map.
-			const int	theLocalDisplacement =
-				m_expression->insertOpCode(theOpCode,
-										   opPos);
+			    // Update the length
+			    m_expression->updateOpCodeLength(theOpCode,
+											     opPos);
 
-			// Update the length
-			m_expression->updateOpCodeLength(theOpCode,
-											 opPos);
+			    // Do the right term of the expression.
+			    theOpDisplacement += AdditiveExpr(opPos);
 
-			// Do the right term of the expression.
-			theOpDisplacement += AdditiveExpr(opPos);
+			    // If there's any displacement from the right
+			    // term, update the length for a shift. Otherwise,
+			    // just update the length.
+			    if (theOpDisplacement > 0)
+			    {
+				    m_expression->updateShiftedOpCodeLength(
+                        theOpCode,
+						opPos,
+						opPos + theOpDisplacement);
+			    }
+			    else
+			    {
+				    m_expression->updateOpCodeLength(
+                        theOpCode,
+						opPos);
+			    }
 
-			// If there's any displacement from the right
-			// term, update the length for a shift. Otherwise,
-			// just update the length.
-			if (theOpDisplacement > 0)
-			{
-				m_expression->updateShiftedOpCodeLength(theOpCode,
-														opPos,
-														opPos + theOpDisplacement);
-			}
-			else
-			{
-				m_expression->updateOpCodeLength(theOpCode,
-												 opPos);
-			}
-
-			// Accumulate the displacement.
-			theOpDisplacement += theLocalDisplacement;
+			    // Accumulate the displacement.
+			    theOpDisplacement += theLocalDisplacement;
+            }
 		}
 	}
 
@@ -1111,38 +1160,45 @@ XPathProcessorImpl::MultiplicativeExpr(int	opCodePos)
 
 		if (theOpCode != XPathExpression::eENDOP)
 		{
-			nextToken();
+            if (nextToken() == false)
+            {
+                error(XalanMessageLoader::getMessage(XalanMessages::ExpectedToken));
+            }
+            else
+            {
+			    // Save the number of bytes we inserted
+			    // into the map.
+			    const int	theLocalDisplacement =
+				    m_expression->insertOpCode(theOpCode,
+										       opPos);
 
-			// Save the number of bytes we inserted
-			// into the map.
-			const int	theLocalDisplacement =
-				m_expression->insertOpCode(theOpCode,
-										   opPos);
+			    // Update the length
+			    m_expression->updateOpCodeLength(theOpCode,
+											     opPos);
 
-			// Update the length
-			m_expression->updateOpCodeLength(theOpCode,
-											 opPos);
+			    // Do the right term of the expression.
+			    theOpDisplacement += MultiplicativeExpr(opPos);
 
-			// Do the right term of the expression.
-			theOpDisplacement += MultiplicativeExpr(opPos);
+			    // If there's any displacement from the right
+			    // term, update the length for a shift. Otherwise,
+			    // just update the length.
+			    if (theOpDisplacement > 0)
+			    {
+				    m_expression->updateShiftedOpCodeLength(
+                        theOpCode,
+						opPos,
+						opPos + theOpDisplacement);
+			    }
+			    else
+			    {
+				    m_expression->updateOpCodeLength(
+                        theOpCode,
+						opPos);
+			    }
 
-			// If there's any displacement from the right
-			// term, update the length for a shift. Otherwise,
-			// just update the length.
-			if (theOpDisplacement > 0)
-			{
-				m_expression->updateShiftedOpCodeLength(theOpCode,
-														opPos,
-														opPos + theOpDisplacement);
-			}
-			else
-			{
-				m_expression->updateOpCodeLength(theOpCode,
-												 opPos);
-			}
-
-			// Accumulate the displacement.
-			theOpDisplacement += theLocalDisplacement;
+			    // Accumulate the displacement.
+			    theOpDisplacement += theLocalDisplacement;
+            }
 		}
 	}
 
@@ -1234,15 +1290,17 @@ XPathProcessorImpl::PathExpr()
 	{
 		nextToken();
 
-		m_expression->insertOpCode(XPathExpression::eOP_LOCATIONPATH,
-								   opPos);
+		m_expression->insertOpCode(
+            XPathExpression::eOP_LOCATIONPATH,
+			opPos);
 
 		RelativeLocationPath();
 
 		m_expression->appendOpCode(XPathExpression::eENDOP);
 
-		m_expression->updateOpCodeLength(XPathExpression::eOP_LOCATIONPATH,
-										 opPos);
+		m_expression->updateOpCodeLength(
+            XPathExpression::eOP_LOCATIONPATH,
+			opPos);
 	}
 }
 
@@ -1300,8 +1358,9 @@ XPathProcessorImpl::PrimaryExpr()
 
 		Literal();
 
-		m_expression->updateOpCodeLength(XPathExpression::eOP_LITERAL,
-										 opPos);
+		m_expression->updateOpCodeLength(
+            XPathExpression::eOP_LITERAL,
+			opPos);
 	}
 	else if(tokenIs(XalanUnicode::charDollarSign) == true)
 	{
@@ -1311,8 +1370,9 @@ XPathProcessorImpl::PrimaryExpr()
 
 		QName();
 
-		m_expression->updateOpCodeLength(XPathExpression::eOP_VARIABLE,
-											 opPos);
+		m_expression->updateOpCodeLength(
+            XPathExpression::eOP_VARIABLE,
+			opPos);
 	}
 	else if(tokenIs(XalanUnicode::charLeftParenthesis) == true)
 	{
@@ -1324,8 +1384,9 @@ XPathProcessorImpl::PrimaryExpr()
 
 		consumeExpected(XalanUnicode::charRightParenthesis);
 
-		m_expression->updateOpCodeLength(XPathExpression::eOP_GROUP,
-										 opPos);
+		m_expression->updateOpCodeLength(
+            XPathExpression::eOP_GROUP,
+			opPos);
 	}
 	else if((tokenIs(XalanUnicode::charFullStop) == true &&
 				length(m_token) > 1 &&
@@ -1336,8 +1397,9 @@ XPathProcessorImpl::PrimaryExpr()
 
 		Number();
 
-		m_expression->updateOpCodeLength(XPathExpression::eOP_NUMBERLIT,
-										 opPos);
+		m_expression->updateOpCodeLength(
+            XPathExpression::eOP_NUMBERLIT,
+			opPos);
 	}
 	else if(lookahead(XalanUnicode::charLeftParenthesis, 1) == true ||
 			(lookahead(XalanUnicode::charColon, 1) == true && lookahead(XalanUnicode::charLeftParenthesis, 3) == true))
