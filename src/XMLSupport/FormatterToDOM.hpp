@@ -252,7 +252,7 @@ private:
 
 	XalanElement*					m_currentElem;
 
-#if defined(XALAN_NO_NAMESPACES)
+#if defined(XALAN_NO_STD_NAMESPACE)
 	typedef vector<XalanElement*>		ElementStackType;
 #else
 	typedef std::vector<XalanElement*>	ElementStackType;

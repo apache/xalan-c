@@ -305,7 +305,7 @@ public:
 		m_indent = value;
 	}
 
-#if defined(XALAN_NO_NAMESPACES)
+#if defined(XALAN_NO_STD_NAMESPACE)
 	typedef vector<bool>				BoolStackType;
 	typedef vector<XalanDOMChar>		DOMCharBufferType;
 	typedef vector<char>				ByteBufferType;
