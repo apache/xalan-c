@@ -95,7 +95,9 @@
       make it an expression.</p>
   </s2>
   <s2 title="API">
-    <p></p>
+    <p>The API documentation, generated using Doc++ from comments in the header files, is still in very preliminary form. For example,
+    it lists public classes, class members, and functions, but does not yet identify which of these are exported. 
+    With this in mind, see <link idref="c-apidocs/aindex.html">Xalan C++ API: Table of Contents</link>.</p>
   </s2>
   <s2 title="&xslt4c; Features">
 	    <ul> 
