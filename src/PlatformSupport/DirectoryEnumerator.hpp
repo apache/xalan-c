@@ -66,10 +66,8 @@
 
 #if defined(_MSC_VER)
 #include <io.h>
-#elif defined(__GNUC__)
-#include <dirent.h>
 #else
-#error Unsupported platform!!!
+#include <dirent.h>
 #endif
 
 
@@ -89,6 +87,7 @@
 
 
 #if defined(_MSC_VER)
+
 class FindFileStruct : public _wfinddata_t
 {
 
@@ -128,8 +127,7 @@ public:
 
 };
 
-
-#elif defined(__GNUC__)
+#else
 
 class FindFileStruct : public dirent
 {
@@ -152,14 +150,12 @@ public:
 	 */
 	bool isDirectory() const
 	{
-		return d_type ==  DT_DIR;
+		return d_type == DT_DIR;
 	}
 };
 
-
-#else
-#error Unsupported platform!!!
 #endif
+
 
 
 #if defined(XALAN_NO_NAMESPACES)
@@ -169,12 +165,11 @@ struct DirectoryFilterPredicate : public std::unary_function<FindFileStruct, boo
 #endif
 {
 	result_type
-	operator()(const argument_type&		theFindData) const
+	operator()(const argument_type&	theFindData) const
 	{
 		return theFindData.isDirectory();
 	}
 };
-
 
 
 
@@ -185,7 +180,7 @@ struct FilesOnlyFilterPredicate : public std::unary_function<FindFileStruct, boo
 #endif
 {
 	result_type
-	operator()(const argument_type&		theFindData) const
+	operator()(const argument_type&	theFindData) const
 	{
 		DirectoryFilterPredicate		theDirectoryPredicate;
 
@@ -193,6 +188,7 @@ struct FilesOnlyFilterPredicate : public std::unary_function<FindFileStruct, boo
 			   
 	}
 };
+
 
 
 template<class OutputIteratorType,
