@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -81,9 +81,9 @@
 #include <XalanTransformer/XercesDOMWrapperParsedSource.hpp>
 
 // HARNESS HEADERS...
-#include <XMLFileReporter.hpp>
-#include <FileUtility.hpp>
-#include <HarnessInit.hpp>
+#include <Harness/XMLFileReporter.hpp>
+#include <Harness/FileUtility.hpp>
+#include <Harness/HarnessInit.hpp>
 
 #if defined(XALAN_NO_NAMESPACES)
 	typedef map<XalanDOMString, XalanDOMString, less<XalanDOMString> >	Hashtable;
