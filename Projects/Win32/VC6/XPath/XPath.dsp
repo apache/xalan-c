@@ -146,11 +146,19 @@ SOURCE=..\..\..\..\src\XPath\XNodeSet.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\XPath\XNodeSetAllocator.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\XPath\XNull.cpp
 # End Source File
 # Begin Source File
 
 SOURCE=..\..\..\..\src\XPath\XNumber.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XPath\XNumberAllocator.cpp
 # End Source File
 # Begin Source File
 
@@ -242,11 +250,19 @@ SOURCE=..\..\..\..\src\XPath\XResultTreeFrag.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\XPath\XResultTreeFragAllocator.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\XPath\XSpan.cpp
 # End Source File
 # Begin Source File
 
 SOURCE=..\..\..\..\src\XPath\XString.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XPath\XStringAllocator.cpp
 # End Source File
 # Begin Source File
 
@@ -434,11 +450,19 @@ SOURCE=..\..\..\..\src\XPath\XNodeSet.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\XPath\XNodeSetAllocator.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\XPath\XNull.hpp
 # End Source File
 # Begin Source File
 
 SOURCE=..\..\..\..\src\XPath\XNumber.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XPath\XNumberAllocator.hpp
 # End Source File
 # Begin Source File
 
@@ -534,11 +558,19 @@ SOURCE=..\..\..\..\src\XPath\XResultTreeFrag.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\XPath\XResultTreeFragAllocator.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\XPath\XSpan.hpp
 # End Source File
 # Begin Source File
 
 SOURCE=..\..\..\..\src\XPath\XString.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XPath\XStringAllocator.hpp
 # End Source File
 # Begin Source File
 
