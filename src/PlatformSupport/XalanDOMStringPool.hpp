@@ -71,6 +71,7 @@
 
 #include <PlatformSupport/ArenaAllocator.hpp>
 #include <PlatformSupport/DOMStringHelper.hpp>
+#include <PlatformSupport/XalanDOMStringAllocator.hpp>
 #include <PlatformSupport/XalanDOMStringHashTable.hpp>
 
 
@@ -79,20 +80,13 @@ class XALAN_PLATFORMSUPPORT_EXPORT XalanDOMStringPool
 {
 public:
 
-	enum { eDefaultBlockSize = 1024,
+	enum { eDefaultBlockSize = 32,
 		   eDefaultBucketCount = XalanDOMStringHashTable::eDefaultBucketCount,
 		   eDefaultBucketSize = XalanDOMStringHashTable::eDefaultBucketSize };
 
-#if defined(XALAN_NO_DEFAULT_TEMPLATE_ARGUMENTS)
-	typedef ArenaBlock<XalanDOMString>		ArenaBlockType;
+	typedef XalanDOMStringAllocator			AllocatorType;
 
-	typedef ArenaAllocator<XalanDOMString,
-						   ArenaBlockType>	ArenaAllocatorType;
-#else
-	typedef ArenaAllocator<XalanDOMString>	ArenaAllocatorType;
-#endif
-
-	typedef ArenaAllocatorType::size_type				block_size_type;
+	typedef AllocatorType::size_type					block_size_type;
 	typedef size_t										bucket_count_type;
 	typedef XalanDOMStringHashTable::bucket_size_type	bucket_size_type;
 
@@ -172,7 +166,7 @@ private:
 	operator==(const XalanDOMStringPool&) const;
 
 	// Data members...
-	ArenaAllocatorType				m_stringAllocator;
+	AllocatorType					m_stringAllocator;
 
 	size_t							m_stringCount;
 

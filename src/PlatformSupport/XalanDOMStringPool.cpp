@@ -139,12 +139,8 @@ XalanDOMStringPool::get(
 		{
 			// Not found, so insert the string...
 			XalanDOMString* const	theNewString =
-				m_stringAllocator.allocateBlock();
+				m_stringAllocator.create(theString, theActualLength);
 			assert(theNewString != 0);
-
-			new(theNewString) XalanDOMString(theString, theActualLength);
-
-			m_stringAllocator.commitAllocation(theNewString);
 
 			assert(theActualLength == length(*theNewString));
 
