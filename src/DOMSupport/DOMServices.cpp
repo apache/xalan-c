@@ -766,6 +766,7 @@ DOMServices::getNamespaceForPrefix(
 	}
 	else
 	{
+		const bool				isDefaultNamespace = isEmpty(prefix);
 		XalanNode::NodeType		type;
 		const XalanNode*		parent = &namespaceContext;
 
@@ -792,11 +793,14 @@ DOMServices::getNamespaceForPrefix(
 
 					const XalanDOMString&	aname = attr->getNodeName();
 
-					if (equals(aname, s_XMLNamespace) == true)
+					if (isDefaultNamespace == true)
 					{
-						theNamespace = &attr->getNodeValue();
+						if (equals(aname, s_XMLNamespace) == true)
+						{
+							theNamespace = &attr->getNodeValue();
 
-						break;
+							break;
+						}
 					}
 					else if (startsWith(aname, s_XMLNamespaceWithSeparator) == true) 
 					{
