@@ -78,9 +78,6 @@
 
 
 
-const double	theBogusNumberValue = 123456789;
-
-
 
 XNodeSet::XNodeSet(BorrowReturnMutableNodeRefList&	value) :
 	XNodeSetBase(),
