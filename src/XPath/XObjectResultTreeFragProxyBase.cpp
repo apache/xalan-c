@@ -257,7 +257,7 @@ XObjectResultTreeFragProxyBase::normalize()
 
 
 bool
-XObjectResultTreeFragProxyBase::supports(
+XObjectResultTreeFragProxyBase::isSupported(
 			const XalanDOMString&	/* feature */,
 			const XalanDOMString&	/* version */) const
 {
