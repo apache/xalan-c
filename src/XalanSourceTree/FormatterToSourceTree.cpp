@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -91,6 +91,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 FormatterToSourceTree::FormatterToSourceTree(XalanSourceTreeDocument*	theDocument) :
 	FormatterListener(OUTPUT_METHOD_DOM),
 	m_document(theDocument),
@@ -130,7 +134,7 @@ FormatterToSourceTree::~FormatterToSourceTree()
 
 
 void
-FormatterToSourceTree::setDocumentLocator(const Locator* const		/* locator */)
+FormatterToSourceTree::setDocumentLocator(const LocatorType* const	/* locator */)
 {
 }
 
@@ -236,8 +240,8 @@ doAppendChildNode(
 
 void
 FormatterToSourceTree::startElement(
-			const	XMLCh* const	name,
-			AttributeList&			attrs)
+			const XMLCh* const	name,
+			AttributeListType&	attrs)
 {
 	processAccumulatedText();
 
@@ -462,7 +466,7 @@ FormatterToSourceTree::doCharacters(
 XalanSourceTreeElement*
 FormatterToSourceTree::createElementNode(
 			const XalanDOMChar*			name,
-			AttributeList&				attrs,
+			AttributeListType&			attrs,
 			XalanSourceTreeElement*		theParentElement)
 {
 	if (m_prefixResolver != 0)
@@ -489,3 +493,7 @@ FormatterToSourceTree::doProcessingInstruction(
 			m_lastChild,
 			m_document->createProcessingInstructionNode(target, data));
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

@@ -71,6 +71,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 class XalanSourceTreeComment;
 class XalanSourceTreeDocument;
 class XalanSourceTreeDocumentFragment;
@@ -562,6 +566,10 @@ private:
 
 	unsigned long				m_index;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

@@ -78,6 +78,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 static const XalanDOMString		s_emptyString;
 
 
@@ -141,3 +145,7 @@ XalanSourceTreeDOMSupport::isNodeAfter(
 
 	return node1.getIndex() > node2.getIndex() ? true : false;
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

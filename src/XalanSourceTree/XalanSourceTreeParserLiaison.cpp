@@ -82,6 +82,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 // http://xml.org/sax/features/validation
 const XalanDOMChar	XalanSourceTreeParserLiaison::s_validationString[] = {
 	XalanUnicode::charLetter_h,
@@ -556,8 +560,8 @@ XalanSourceTreeParserLiaison::setExecutionContext(ExecutionContext&		theContext)
 
 void
 XalanSourceTreeParserLiaison::parseXMLStream(
-			const InputSource&		inputSource,
-			DocumentHandler&		handler,
+			const InputSourceType&	inputSource,
+			DocumentHandlerType&	handler,
 			const XalanDOMString&	identifier)
 {
 	m_xercesParserLiaison.parseXMLStream(inputSource, handler, identifier);
@@ -567,12 +571,12 @@ XalanSourceTreeParserLiaison::parseXMLStream(
 
 XalanDocument*
 XalanSourceTreeParserLiaison::parseXMLStream(
-			const InputSource&		inputSource,
+			const InputSourceType&	inputSource,
 			const XalanDOMString&	/* identifier */)
 {
 	XalanSourceTreeContentHandler	theContentHandler(createXalanSourceTreeDocument());
 
-	XalanAutoPtr<SAX2XMLReader>		theReader(createReader());
+	XalanAutoPtr<SAX2XMLReaderType>	theReader(createReader());
 
 	theReader->setContentHandler(&theContentHandler);
 
@@ -662,13 +666,13 @@ XalanSourceTreeParserLiaison::getParserDescription() const
 
 void
 XalanSourceTreeParserLiaison::parseXMLStream(
-			const InputSource&		theInputSource,
-			ContentHandler&			theContentHandler,
-			DTDHandler*				theDTDHandler,
-			LexicalHandler*			theLexicalHandler,
+			const InputSourceType&	theInputSource,
+			ContentHandlerType&		theContentHandler,
+			DTDHandlerType*			theDTDHandler,
+			LexicalHandlerType*		theLexicalHandler,
 			const XalanDOMString&	/* theIdentifier */)
 {
-	XalanAutoPtr<SAX2XMLReader>		theReader(createReader());
+	XalanAutoPtr<SAX2XMLReaderType>		theReader(createReader());
 
 	theReader->setContentHandler(&theContentHandler);
 
@@ -697,7 +701,7 @@ XalanSourceTreeParserLiaison::setIncludeIgnorableWhitespace(bool	include)
 
 
 
-ErrorHandler*
+ErrorHandlerType*
 XalanSourceTreeParserLiaison::getErrorHandler() const
 {
 	return m_xercesParserLiaison.getErrorHandler();
@@ -706,7 +710,7 @@ XalanSourceTreeParserLiaison::getErrorHandler() const
 
 
 void
-XalanSourceTreeParserLiaison::setErrorHandler(ErrorHandler*	handler)
+XalanSourceTreeParserLiaison::setErrorHandler(ErrorHandlerType*		handler)
 {
 	m_xercesParserLiaison.setErrorHandler(handler);
 }
@@ -745,7 +749,7 @@ XalanSourceTreeParserLiaison::setExitOnFirstFatalError(bool		newState)
 
 
 
-EntityResolver*
+EntityResolverType*
 XalanSourceTreeParserLiaison::getEntityResolver() const
 {
 	return m_xercesParserLiaison.getEntityResolver();
@@ -754,7 +758,7 @@ XalanSourceTreeParserLiaison::getEntityResolver() const
 
 
 void
-XalanSourceTreeParserLiaison::setEntityResolver(EntityResolver*	resolver)
+XalanSourceTreeParserLiaison::setEntityResolver(EntityResolverType*		resolver)
 {
 	m_xercesParserLiaison.setEntityResolver(resolver);
 }
@@ -817,10 +821,10 @@ XalanSourceTreeParserLiaison::createXalanSourceTreeDocument()
 
 
 
-SAX2XMLReader*
+SAX2XMLReaderType*
 XalanSourceTreeParserLiaison::createReader()
 {
-	XalanAutoPtr<SAX2XMLReader>		theReader(XMLReaderFactory::createXMLReader());
+	XalanAutoPtr<SAX2XMLReaderType>		theReader(XERCES_CPP_NAMESPACE_QUALIFIER XMLReaderFactory::createXMLReader());
 
 	const bool	fValidate = m_xercesParserLiaison.getUseValidation();
 
@@ -853,7 +857,7 @@ XalanSourceTreeParserLiaison::createReader()
 		s_namespacePrefixesString,
 		true);
 
-	ErrorHandler* const		theHandler = getErrorHandler();
+	ErrorHandlerType* const		theHandler = getErrorHandler();
 
 	if (theHandler == 0)
 	{
@@ -900,3 +904,7 @@ XalanSourceTreeParserLiaison::createReader()
 
 	return theReader.release();
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

@@ -74,6 +74,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 static const XalanDOMString		s_emptyString;
 
 
@@ -514,11 +518,11 @@ XalanSourceTreeText::appendSiblingNode(XalanSourceTreeText*		theSibling)
 
 
 
-static XalanDOMString	s_nameString;
+static XalanDOMString	s_staticNameString;
 
 
 
-const XalanDOMString&	XalanSourceTreeText::s_nameString = ::s_nameString;
+const XalanDOMString&	XalanSourceTreeText::s_nameString = s_staticNameString;
 
 
 
@@ -537,7 +541,7 @@ const XalanDOMChar	s_text[] =
 void
 XalanSourceTreeText::initialize()
 {
-	::s_nameString = s_text;
+	s_staticNameString = s_text;
 }
 
 
@@ -545,5 +549,9 @@ XalanSourceTreeText::initialize()
 void
 XalanSourceTreeText::terminate()
 {
-	releaseMemory(::s_nameString);
+	releaseMemory(s_staticNameString);
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -74,6 +74,10 @@
 
 
 #include <XalanDOM/XalanDOMString.hpp>
+
+
+
+XALAN_CPP_NAMESPACE_BEGIN
 
 
 
@@ -195,7 +199,7 @@ public:
 	entityReference(const XMLCh* const	name);
 
 	virtual void
-	setDocumentLocator(const Locator* const		locator);
+	setDocumentLocator(const LocatorType* const		locator);
 
 	virtual void
 	startDocument();
@@ -205,8 +209,8 @@ public:
 
 	virtual void
 	startElement(
-				const	XMLCh* const	name,
-				AttributeList&			attrs);
+				const XMLCh* const	name,
+				AttributeListType&	attrs);
 
 	virtual void
 	endElement(const XMLCh* const	name);
@@ -238,7 +242,7 @@ private:
 	XalanSourceTreeElement*
 	createElementNode(
 			const XalanDOMChar*			name,
-			AttributeList&				attrs,
+			AttributeListType&			attrs,
 			XalanSourceTreeElement*		theParentElement);
 
 	void
@@ -273,6 +277,10 @@ private:
 
 	XalanDOMString						m_textBuffer;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

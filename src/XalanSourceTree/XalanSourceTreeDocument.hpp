@@ -92,8 +92,20 @@
 
 
 
-class AttributeList;
-class Attributes;
+XALAN_DECLARE_XERCES_CLASS(Attributes)
+XALAN_DECLARE_XERCES_CLASS(AttributeList)
+
+
+
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
+typedef XERCES_CPP_NAMESPACE_QUALIFIER Attributes		AttributesType;
+typedef XERCES_CPP_NAMESPACE_QUALIFIER AttributeList	AttributeListType;
+
+
+
 class PrefixResolver;
 class XalanSourceTreeAttr;
 
@@ -371,19 +383,19 @@ public:
 
 	XalanSourceTreeElement*
 	createElementNode(
-			const XalanDOMChar*		name,
-			const AttributeList&	attrs,
-			XalanNode*				theParentNode = 0,
-			XalanNode*				thePreviousSibling = 0,
-			XalanNode*				theNextSibling = 0,
-			bool					fAddXMLNamespaceAttribute = false);
+			const XalanDOMChar*			name,
+			const AttributeListType&	attrs,
+			XalanNode*					theParentNode = 0,
+			XalanNode*					thePreviousSibling = 0,
+			XalanNode*					theNextSibling = 0,
+			bool						fAddXMLNamespaceAttribute = false);
 
 	XalanSourceTreeElement*
 	createElementNode(
 			const XalanDOMChar*			uri,
 			const XalanDOMChar*			localname,
 			const XalanDOMChar*			qname,
-			const Attributes&			attrs,
+			const AttributesType&		attrs,
 			XalanNode*					theParentNode = 0,
 			XalanNode*					thePreviousSibling = 0,
 			XalanNode*					theNextSibling = 0,
@@ -392,7 +404,7 @@ public:
 	XalanSourceTreeElement*
 	createElementNode(
 			const XalanDOMChar*			tagName,
-			const AttributeList&		attrs,
+			const AttributeListType&	attrs,
 			const PrefixResolver&		thePrefixResolver,
 			XalanNode*					theParentNode = 0,
 			XalanNode*					thePreviousSibling = 0,
@@ -402,7 +414,7 @@ public:
 	XalanSourceTreeElement*
 	createElementNode(
 			const XalanDOMChar*			name,
-			const Attributes&			attrs,
+			const AttributesType&		attrs,
 			XalanNode*					theParentNode = 0,
 			XalanNode*					thePreviousSibling = 0,
 			XalanNode*					theNextSibling = 0,
@@ -488,7 +500,7 @@ private:
 
 	void
 	createAttributes(
-			const Attributes&			theAttributes,
+			const AttributesType&		theAttributes,
 			XalanSourceTreeAttr**		theAttributeVector,
 			XalanSourceTreeElement*		theOwnerElement,
 			bool						fAddXMLNamespaceAttribute);
@@ -556,6 +568,10 @@ private:
 
 	static const XalanDOMString&					s_nameString;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -70,6 +70,10 @@
 #if !defined(XALAN_NO_COVARIANT_RETURN_TYPE)
 #include <XalanSourceTree/XalanSourceTreeDocument.hpp>
 #endif
+
+
+
+XALAN_CPP_NAMESPACE_BEGIN
 
 
 
@@ -225,6 +229,10 @@ private:
 
 	XalanNode*						m_firstChild;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

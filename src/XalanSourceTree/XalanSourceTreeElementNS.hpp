@@ -67,6 +67,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 class XALAN_XALANSOURCETREE_EXPORT XalanSourceTreeElementNS : public XalanSourceTreeElement
 {
 public:
@@ -145,6 +149,10 @@ private:
 
 	const XalanDOMString&	m_namespaceURI;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

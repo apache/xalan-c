@@ -60,6 +60,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 XalanSourceTreeProcessingInstructionAllocator::XalanSourceTreeProcessingInstructionAllocator(size_type	theBlockCount) :
 	m_allocator(theBlockCount)
 {
@@ -107,3 +111,7 @@ XalanSourceTreeProcessingInstructionAllocator::reset()
 {
 	m_allocator.reset();
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

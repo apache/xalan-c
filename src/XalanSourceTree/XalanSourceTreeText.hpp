@@ -71,6 +71,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 class XalanSourceTreeComment;
 class XalanSourceTreeDocumentFragment;
 class XalanSourceTreeElement;
@@ -685,6 +689,10 @@ private:
 
 	static const XalanDOMString&	s_nameString;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

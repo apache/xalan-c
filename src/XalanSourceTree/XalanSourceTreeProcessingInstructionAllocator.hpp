@@ -72,6 +72,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 class XALAN_XALANSOURCETREE_EXPORT XalanSourceTreeProcessingInstructionAllocator
 {
 public:
@@ -161,6 +165,10 @@ private:
 	// Data members...
 	ArenaAllocatorType	m_allocator;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

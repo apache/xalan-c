@@ -68,6 +68,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 class XalanSourceTreeParserLiaison;
 
 
@@ -114,6 +118,10 @@ private:
 
 	const XalanSourceTreeParserLiaison*		m_parserLiaison;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

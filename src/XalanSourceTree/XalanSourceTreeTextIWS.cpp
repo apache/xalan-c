@@ -58,6 +58,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 XalanSourceTreeTextIWS::XalanSourceTreeTextIWS(
 			const XalanDOMString&	theData,
 			XalanNode*				theParentNode,
@@ -90,3 +94,7 @@ XalanSourceTreeTextIWS::isIgnorableWhitespace() const
 {
 	return true;
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

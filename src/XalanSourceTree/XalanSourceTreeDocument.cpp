@@ -80,6 +80,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 static const XalanDOMString		s_emptyString;
 
 
@@ -581,7 +585,7 @@ XalanSourceTreeDocument::getElementById(const XalanDOMString&	elementId) const
 
 
 static bool
-hasXMLNamespaceAttribute(const AttributeList&	attrs)
+hasXMLNamespaceAttribute(const AttributeListType&	attrs)
 {
 	const unsigned int	theLength = attrs.getLength();
 
@@ -603,7 +607,7 @@ hasXMLNamespaceAttribute(const AttributeList&	attrs)
 
 
 static bool
-hasXMLNamespaceAttribute(const Attributes&	attrs)
+hasXMLNamespaceAttribute(const AttributesType&	attrs)
 {
 	const unsigned int	theLength = attrs.getLength();
 
@@ -626,12 +630,12 @@ hasXMLNamespaceAttribute(const Attributes&	attrs)
 
 XalanSourceTreeElement*
 XalanSourceTreeDocument::createElementNode(
-			const XalanDOMChar*		name,
-			const AttributeList&	attrs,
-			XalanNode*				theParentNode,
-			XalanNode*				thePreviousSibling,
-			XalanNode*				theNextSibling,
-			bool					fAddXMLNamespaceAttribute)
+			const XalanDOMChar*			name,
+			const AttributeListType&	attrs,
+			XalanNode*					theParentNode,
+			XalanNode*					thePreviousSibling,
+			XalanNode*					theNextSibling,
+			bool						fAddXMLNamespaceAttribute)
 {
 	// We might have typedef'ed this to something smaller than unsigned int.
 	AttributesCountType		theAttributeCount = AttributesCountType(attrs.getLength());
@@ -725,13 +729,13 @@ XalanSourceTreeDocument::createElementNode(
 
 XalanSourceTreeElement*
 XalanSourceTreeDocument::createElementNode(
-			const XalanDOMChar*		tagName,
-			const AttributeList&	attrs,
-			const PrefixResolver&	thePrefixResolver,
-			XalanNode*				theParentNode,
-			XalanNode*				thePreviousSibling,
-			XalanNode*				theNextSibling,
-			bool					fAddXMLNamespaceAttribute)
+			const XalanDOMChar*			tagName,
+			const AttributeListType&	attrs,
+			const PrefixResolver&		thePrefixResolver,
+			XalanNode*					theParentNode,
+			XalanNode*					thePreviousSibling,
+			XalanNode*					theNextSibling,
+			bool						fAddXMLNamespaceAttribute)
 {
 	// We might have typedef'ed this to something smaller than unsigned int.
 	AttributesCountType		theAttributeCount = AttributesCountType(attrs.getLength());
@@ -849,7 +853,7 @@ XalanSourceTreeDocument::createElementNode(
 			const XalanDOMChar*		uri,
 			const XalanDOMChar*		localname,
 			const XalanDOMChar*		qname,
-			const Attributes&		attrs,
+			const AttributesType&	attrs,
 			XalanNode*				theParentNode,
 			XalanNode*				thePreviousSibling,
 			XalanNode*				theNextSibling,
@@ -908,7 +912,7 @@ XalanSourceTreeDocument::createElementNode(
 XalanSourceTreeElement*
 XalanSourceTreeDocument::createElementNode(
 			const XalanDOMChar*		name,
-			const Attributes&		attrs,
+			const AttributesType&	attrs,
 			XalanNode*				theParentNode,
 			XalanNode*				thePreviousSibling,
 			XalanNode*				theNextSibling,
@@ -1018,7 +1022,7 @@ XalanSourceTreeDocument::getTextNodeString(
 
 		assign(theString, chars, length);
 
-		assert(length == ::length(theString));
+		assert(length == theString.length());
 
 		return theString;
 	}
@@ -1277,7 +1281,7 @@ XalanSourceTreeDocument::createElementNode(
 
 void
 XalanSourceTreeDocument::createAttributes(
-			const Attributes&			theAttributes,
+			const AttributesType&		theAttributes,
 			XalanSourceTreeAttr**		theAttributeVector,
 			XalanSourceTreeElement*		theOwnerElement,
 			bool						fAddXMLNamespaceAttribute)
@@ -1423,11 +1427,11 @@ XalanSourceTreeDocument::appendChildNode(XalanSourceTreeProcessingInstruction*	t
 
 
 
-static XalanDOMString	s_nameString;
+static XalanDOMString	s_staticNameString;
 
 
 
-const XalanDOMString&	XalanSourceTreeDocument::s_nameString = ::s_nameString;
+const XalanDOMString&	XalanSourceTreeDocument::s_nameString = s_staticNameString;
 
 
 
@@ -1450,7 +1454,7 @@ static const XalanDOMChar	s_document[] =
 void
 XalanSourceTreeDocument::initialize()
 {
-	::s_nameString = s_document;
+	s_staticNameString = s_document;
 }
 
 
@@ -1458,5 +1462,9 @@ XalanSourceTreeDocument::initialize()
 void
 XalanSourceTreeDocument::terminate()
 {
-	releaseMemory(::s_nameString);
+	releaseMemory(s_staticNameString);
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

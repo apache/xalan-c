@@ -75,6 +75,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 static const XalanDOMString		s_emptyString;
 
 
@@ -464,3 +468,7 @@ XalanSourceTreeProcessingInstruction::appendSiblingNode(XalanSourceTreeText*	the
 {
 	XalanSourceTreeHelper::appendSibling(this, m_nextSibling, theSibling);
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

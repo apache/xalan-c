@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  * 
- * Copyright (c) 1999-2000 The Apache Software Foundation.	All rights
+ * Copyright (c) 1999-2002 The Apache Software Foundation.	All rights
  * reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -78,13 +78,38 @@
 
 
 
+XALAN_DECLARE_XERCES_CLASS(Attributes)
+XALAN_DECLARE_XERCES_CLASS(AttributeList)
+XALAN_DECLARE_XERCES_CLASS(ContentHandler);
+XALAN_DECLARE_XERCES_CLASS(DTDHandler);
+XALAN_DECLARE_XERCES_CLASS(LexicalHandler);
+XALAN_DECLARE_XERCES_CLASS(Locator);
+
+
+
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
+typedef XERCES_CPP_NAMESPACE_QUALIFIER Attributes		AttributesType;
+typedef XERCES_CPP_NAMESPACE_QUALIFIER AttributeList	AttributeListType;
+typedef XERCES_CPP_NAMESPACE_QUALIFIER ContentHandler	ContentHandlerType;
+typedef XERCES_CPP_NAMESPACE_QUALIFIER DTDHandler		DTDHandlerType;
+typedef XERCES_CPP_NAMESPACE_QUALIFIER LexicalHandler	LexicalHandlerType;
+typedef XERCES_CPP_NAMESPACE_QUALIFIER Locator			LocatorType;
+
+
+
 class XalanNode;
 class XalanSourceTreeDocument;
 class XalanSourceTreeElement;
 
 
 
-class XALAN_XALANSOURCETREE_EXPORT XalanSourceTreeContentHandler : public ContentHandler, public DTDHandler, public LexicalHandler
+class XALAN_XALANSOURCETREE_EXPORT XalanSourceTreeContentHandler :
+	public ContentHandlerType,
+	public DTDHandlerType,
+	public LexicalHandlerType
 {
 public:
 
@@ -135,17 +160,17 @@ public:
 		const XMLCh* const	data);
 
 	virtual void
-	setDocumentLocator(const Locator* const 	locator);
+	setDocumentLocator(const LocatorType* const 	locator);
 
 	virtual void
 	startDocument();
 
 	virtual void
 	startElement(
-			const XMLCh* const	uri,
-			const XMLCh* const	localname,
-			const XMLCh* const	qname,
-			const Attributes&	attrs);
+			const XMLCh* const		uri,
+			const XMLCh* const		localname,
+			const XMLCh* const		qname,
+			const AttributesType&	attrs);
 
 	virtual void
 	startPrefixMapping(
@@ -236,7 +261,7 @@ private:
 			const XMLCh* const			uri,
 			const XMLCh* const			localname,
 			const XMLCh* const			qname,
-			const Attributes&			attrs,
+			const AttributesType&		attrs,
 			XalanSourceTreeElement* 	theOwnerElement);
 
 	void
@@ -279,6 +304,10 @@ private:
 	// A flag to determine if the DTD is being processed.
 	bool						m_inDTD;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

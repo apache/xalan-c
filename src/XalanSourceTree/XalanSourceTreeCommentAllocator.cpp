@@ -60,6 +60,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 XalanSourceTreeCommentAllocator::XalanSourceTreeCommentAllocator(size_type	theBlockCount) :
 	m_allocator(theBlockCount)
 {
@@ -105,3 +109,7 @@ XalanSourceTreeCommentAllocator::reset()
 {
 	m_allocator.reset();
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

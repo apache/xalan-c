@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -72,6 +72,10 @@
 #include "XalanSourceTreeProcessingInstruction.hpp"
 #include "XalanSourceTreeText.hpp"
 #include "XalanSourceTreeHelper.hpp"
+
+
+
+XALAN_CPP_NAMESPACE_BEGIN
 
 
 
@@ -509,11 +513,11 @@ XalanSourceTreeComment::appendSiblingNode(XalanSourceTreeText*	theSibling)
 
 
 
-static XalanDOMString	s_nameString;
+static XalanDOMString	s_staticNameString;
 
 
 
-const XalanDOMString&	XalanSourceTreeComment::s_nameString = ::s_nameString;
+const XalanDOMString&	XalanSourceTreeComment::s_nameString = s_staticNameString;
 
 
 
@@ -535,7 +539,7 @@ static const XalanDOMChar	s_comment[] =
 void
 XalanSourceTreeComment::initialize()
 {
-	::s_nameString = s_comment;
+	s_staticNameString = s_comment;
 }
 
 
@@ -543,5 +547,9 @@ XalanSourceTreeComment::initialize()
 void
 XalanSourceTreeComment::terminate()
 {
-	releaseMemory(::s_nameString);
+	releaseMemory(s_staticNameString);
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

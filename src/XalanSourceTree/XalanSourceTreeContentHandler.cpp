@@ -72,6 +72,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 XalanSourceTreeContentHandler::XalanSourceTreeContentHandler(
 			XalanSourceTreeDocument*	theDocument,
 			bool						fAccumulateText) :
@@ -271,7 +275,7 @@ XalanSourceTreeContentHandler::processingInstruction(
 
 
 void
-XalanSourceTreeContentHandler::setDocumentLocator(const Locator* const	/* locator */)
+XalanSourceTreeContentHandler::setDocumentLocator(const LocatorType* const	/* locator */)
 {
 }
 
@@ -310,10 +314,10 @@ XalanSourceTreeContentHandler::startDocument()
 
 void
 XalanSourceTreeContentHandler::startElement(
-			const XMLCh* const	uri,
-			const XMLCh* const	localname,
-			const XMLCh* const	qname,
-			const Attributes& 	attrs)
+			const XMLCh* const		uri,
+			const XMLCh* const		localname,
+			const XMLCh* const		qname,
+			const AttributesType& 	attrs)
 {
 #if 0
 	assert(m_inDTD == false);
@@ -495,7 +499,7 @@ XalanSourceTreeContentHandler::createElement(
 			const XMLCh* const			uri,
 			const XMLCh* const			localname,
 			const XMLCh* const			qname,
-			const Attributes& 			attrs,
+			const AttributesType& 		attrs,
 			XalanSourceTreeElement*		theOwnerElement)
 {
 	assert(m_inDTD == false);
@@ -546,3 +550,7 @@ XalanSourceTreeContentHandler::doCharacters(
 
 	doAppendChildNode(m_currentElement, m_lastChild, theNewTextNode);
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

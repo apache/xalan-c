@@ -73,6 +73,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 static const XalanDOMString		s_emptyString;
 
 
@@ -376,3 +380,7 @@ XalanSourceTreeDocumentFragment::clearChildren()
 {
 	m_firstChild = 0;
 }
+
+
+
+XALAN_CPP_NAMESPACE_END
