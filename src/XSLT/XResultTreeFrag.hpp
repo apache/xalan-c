@@ -194,6 +194,8 @@ private:
 	// Data members...
 	ResultTreeFragBase*				m_value;	
 
+	const bool						m_hasSingleTextChild;
+
 	StylesheetExecutionContext*		m_executionContext;
 
 	mutable XalanDOMString			m_cachedStringValue;

@@ -84,9 +84,29 @@
 
 
 
+inline bool
+hasSingleTextChild(const ResultTreeFragBase&	theRTreeFrag)
+{
+	const XalanNode* const	theFirstChild = theRTreeFrag.getFirstChild();
+
+	if (theFirstChild != 0 &&
+		theFirstChild->getNodeType() == XalanNode::TEXT_NODE &&
+		theFirstChild->getNextSibling() == 0)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+
+
 XResultTreeFrag::XResultTreeFrag(ResultTreeFragBase&	value) :
 	XObject(eTypeResultTreeFrag),
 	m_value(&value),
+	m_hasSingleTextChild(hasSingleTextChild(value)),
 	m_executionContext(0),
 	m_cachedStringValue(),
 	m_cachedNumberValue(0.0)
@@ -100,6 +120,7 @@ XResultTreeFrag::XResultTreeFrag(
 			bool					/* deepClone */) :
 	XObject(source),
 	m_value(source.m_value),
+	m_hasSingleTextChild(source.m_hasSingleTextChild),
 	m_executionContext(0),
 	m_cachedStringValue(source.m_cachedStringValue),
 	m_cachedNumberValue(source.m_cachedNumberValue)
@@ -164,7 +185,14 @@ XResultTreeFrag::boolean() const
 const XalanDOMString&
 XResultTreeFrag::str() const
 {
-	if (isEmpty(m_cachedStringValue) == true)
+	if (m_hasSingleTextChild == true)
+	{
+		assert(m_value->getFirstChild() != 0 &&
+				m_value->getFirstChild()->getNodeType() == XalanNode::TEXT_NODE);
+
+		return m_value->getFirstChild()->getNodeValue();
+	}
+	else if (isEmpty(m_cachedStringValue) == true)
 	{
 #if defined(XALAN_NO_MUTABLE)
 		DOMServices::getNodeData(*m_value, ((XResultTreeFrag*)this)->m_cachedStringValue);
