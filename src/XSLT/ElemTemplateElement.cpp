@@ -613,7 +613,7 @@ ElemTemplateElement::appendChildElem(ElemTemplateElement*	newChild)
 
 
 
-bool
+void
 ElemTemplateElement::transformChild(
 			StylesheetExecutionContext&		executionContext,
 			const ElemTemplateElement&		xslInstruction,
@@ -622,7 +622,26 @@ ElemTemplateElement::transformChild(
 {
 	assert(child != 0);
 
-	const XalanNode::NodeType	nodeType = child->getNodeType();
+	transformChild(
+		executionContext,
+		xslInstruction,
+		theTemplate,
+		child,
+		child->getNodeType());
+}
+
+
+
+
+void
+ElemTemplateElement::transformChild(
+			StylesheetExecutionContext&		executionContext,
+			const ElemTemplateElement&		xslInstruction,
+			const ElemTemplateElement*		theTemplate,
+			XalanNode*						child,
+			XalanNode::NodeType				nodeType) const
+{
+	assert(child != 0);
 
 	if(0 == theTemplate)
 	{
@@ -638,6 +657,7 @@ ElemTemplateElement::transformChild(
 		theTemplate = stylesheetTree->findTemplate(
 						executionContext,
 						child,
+						nodeType,
 						*executionContext.getCurrentMode(),
 						isApplyImports);
 	}
@@ -665,7 +685,7 @@ ElemTemplateElement::transformChild(
 			break;
 		}     
 	}
-			
+				
 	if(0 != theTemplate)
 	{
 		if(theTemplate == getStylesheet().getStylesheetRoot().getDefaultTextRule())
@@ -681,10 +701,15 @@ ElemTemplateElement::transformChild(
 				{
 					const XalanDOMString&	val = child->getNodeValue();
 
-					executionContext.characters(
-						toCharArray(val), 
-						0,
-						length(val));
+					const XalanDOMString::size_type		len = length(val);
+
+					if (len > 0)
+					{
+						executionContext.characters(
+							toCharArray(val), 
+							0,
+							len);
+					}
 				}
 				break;
 
@@ -706,8 +731,6 @@ ElemTemplateElement::transformChild(
 			theTemplate->executeChildren(executionContext, child);
 		}
 	}
-
-	return true;
 }
 
 

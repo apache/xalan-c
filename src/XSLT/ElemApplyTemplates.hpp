@@ -114,6 +114,17 @@ protected:
 	childTypeAllowed(int	xslToken) const;
 
 	virtual void
+	transformChild(
+			StylesheetExecutionContext& 	executionContext,
+			const ElemTemplateElement&		xslInstruction,
+			const ElemTemplateElement*		theTemplate,
+			XalanNode*						child) const;
+
+#if !defined(XALAN_NO_USING_DECLARATION)
+	using ParentType::transformChild;
+#endif
+
+	virtual void
 	selectAndSortChildren(
 			StylesheetExecutionContext&		executionContext,
 			const ElemTemplateElement*		theTemplate,

@@ -837,18 +837,34 @@ protected:
 	 * template and process the contents.
 	 * 
 	 * @param executionContext The current execution context
-	 * @param xslInstruction The calling element (deprecated -- I dont think we 
-	 *		need this).
+	 * @param xslInstruction The calling element
 	 * @param template The template to use if xsl:for-each, or null.
 	 * @param child The source context node.
-	 * @return true if applied a template, false if not.
 	 */
-	bool
+	virtual void
 	transformChild(
 			StylesheetExecutionContext& 	executionContext,
 			const ElemTemplateElement&		xslInstruction,
 			const ElemTemplateElement*		theTemplate,
 			XalanNode*						child) const;
+
+	/**
+	 * Given an element, find the corresponding
+	 * template and process the contents.
+	 * 
+	 * @param executionContext The current execution context
+	 * @param xslInstruction The calling element
+	 * @param template The template to use if xsl:for-each, or null.
+	 * @param child The source context node.
+	 * @param nodeType The type of child.
+	 */
+	virtual void
+	transformChild(
+			StylesheetExecutionContext& 	executionContext,
+			const ElemTemplateElement&		xslInstruction,
+			const ElemTemplateElement*		theTemplate,
+			XalanNode*						child,
+			XalanNode::NodeType				nodeType) const;
 
 	/**
 	 * Given an xsl token type, determine whether or not a child

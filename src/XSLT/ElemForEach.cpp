@@ -520,7 +520,7 @@ ElemForEach::transformSelectedChildren(
 				executionContext,
 				sourceNodes);
 
-	for(unsigned int i = 0; i < sourceNodesCount; i++) 
+	for(NodeRefListBase::size_type i = 0; i < sourceNodesCount; i++) 
 	{
 		XalanNode* const		childNode = sourceNodes.item(i);
 		assert(childNode != 0);

@@ -170,46 +170,39 @@ ElemApplyTemplates::execute(StylesheetExecutionContext&		executionContext) const
 		  executionContext, *this));
 	}
 
-#if 1
 	ParentType::transformSelectedChildren(
 			executionContext,
 			0);
+}
+
+
+
+void
+ElemApplyTemplates::transformChild(
+			StylesheetExecutionContext&		executionContext,
+			const ElemTemplateElement&		xslInstruction,
+			const ElemTemplateElement*		theTemplate,
+			XalanNode*						child) const
+{
+	assert(child != 0);
+
+	const XalanNode::NodeType	nodeType = child->getNodeType();
+
+	// Filter out any attributes nodes that are namespace declarations
+	if (nodeType != XalanNode::ATTRIBUTE_NODE ||
+#if defined(XALAN_OLD_STYLE_CASTS)
+		DOMServices::isNamespaceDeclaration((const XalanAttr&)*child) == false)
 #else
-	XalanNode* const	sourceNode = executionContext.getCurrentNode();
-	assert(sourceNode != 0);
-
-	// Push the params & stack frame, but then execute the select
-	// expression inside transformSelectedChildren, which must be
-	// executed in the stack frame before the new stack frame.
-	StylesheetExecutionContext::ParamsPushPop	thePushPop(
-			executionContext,
-			*this,
-			sourceNode,
-			this);
-
-	const XalanQName* const		currentMode = executionContext.getCurrentMode();
-	assert(currentMode != 0);
-
-	if (isDefaultTemplate() == false &&
-		!m_mode->equals(*currentMode))
-	{
-		executionContext.setCurrentMode(m_mode);
-
-		transformSelectedChildren(
-				executionContext,
-				0,
-				thePushPop.getStackFrameIndex());
-
-		executionContext.setCurrentMode(currentMode);
-	}
-	else
-	{
-		transformSelectedChildren(
-				executionContext,
-				0,
-				thePushPop.getStackFrameIndex());
-	}
+		DOMServices::isNamespaceDeclaration(static_cast<const XalanAttr&>(*child)) == false)
 #endif
+	{
+		ParentType::transformChild(
+			executionContext,
+			xslInstruction,
+			theTemplate,
+			child,
+			nodeType);
+	}
 }
 
 
