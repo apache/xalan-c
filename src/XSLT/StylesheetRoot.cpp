@@ -216,9 +216,8 @@ void StylesheetRoot::process(
 		if(0 != outputTarget.getDocumentHandler())
 		{
 			// Stuff a DocumentHandler into a FormatterListener
-			FormatterListener* pFL = dynamic_cast<FormatterListener *>(outputTarget.getDocumentHandler());
-			executionContext.setFormatterListener(pFL);
-			flistener = executionContext.getFormatterListener();
+			flistener = 
+				dynamic_cast<FormatterListener *>(outputTarget.getDocumentHandler());
 		}
 		/*
 		 * Output target has a character or byte stream or file
@@ -285,11 +284,13 @@ void StylesheetRoot::process(
 					newPW = true;
 				}
 			}
-			/*
-			*/
 			
 			int indentAmount = executionContext.getIndent();
 			bool doIndent = (indentAmount > -1) ? true : m_indentResult;
+			// Make sure we don't have a negative indent amount if we're
+			// indenting
+			if (m_indentResult && (indentAmount < 0))
+				indentAmount = 0;
 			
 			switch(m_outputmethod)
 			{
@@ -313,9 +314,7 @@ void StylesheetRoot::process(
 				newListener = true;
 				break;
 			}
-			executionContext.setFormatterListener(flistener);
 		}
-
 		/*
 		 * Output target has a node
 		 */

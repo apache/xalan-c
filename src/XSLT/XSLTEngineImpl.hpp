@@ -1337,12 +1337,6 @@ typedef XALAN_STD runtime_error               RuntimeError;
 		m_stripWhiteSpace = fStrip;
 	}
 
-  /*
-   * indent-result is by default no, which means an XSL processor must not
-   * change the whitespace on output.
-   */
-	//bool	m_indentResult;
-  
   /**
 	* Conditionally trim all leading and trailing whitespace in the specified
 	* String.  All strings of white space are replaced by a single space
