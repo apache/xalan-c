@@ -16,7 +16,7 @@ rem = See the License for the specific language governing permissions and
 rem = limitations under the License. 
 rem ========================================================================== 
 rem
-rem     build.bat: Build Xalan-J 2.x using Ant 
+rem     build.bat: Xalan-C Documentation Build 
 rem     Usage: build [ant-options] [targets]
 rem     Setup:
 rem         - you should set JAVA_HOME
@@ -24,8 +24,8 @@ rem         - you can set ANT_HOME if you use your own Ant install
 rem         - JAVA_OPTS is added to the java command line
 rem         - PARSER_JAR may be set to use alternate parser (default:bin\xercesImpl.jar)
 echo.
-echo Xalan-J 2.x Build
-echo -------------
+echo Xalan-C Documentation Build
+echo ---------------------------
 
 if not "%JAVA_HOME%" == "" goto setant
 :noJavaHome
