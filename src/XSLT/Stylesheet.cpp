@@ -1122,7 +1122,8 @@ void Stylesheet::pushTopLevelVariables(
 					}
 				}
 			}
-			else
+
+			if (isParam == false)
 			{
 				XalanDocument* const	doc = executionContext.getRootDocument();
 
