@@ -15,7 +15,7 @@
 Please contact us at <human-resource-ref idref="xalandev"/> if you would like to help provide builds for other platforms.</p>
 <anchor name="xalandists"/>
 <s3 title="&xslt4c; Windows Distribution">
-<p><img src="xalan-c-windist.gif" alt="xalan-cdist.gif"/></p>
+<p><img src="xalan-c-windist.gif" alt="xalan-c-windist.gif"/></p>
 </s3>
 <p>For the Windows32 build, download <resource-ref idref="xslt4c-win32-download"/>. This Windows32 distribution was built with MSVC 6.0 SP3 and <jump href="http://www.dinkumware.com/vc_fixes.html">Dinkumware C++ library fixes</jump>.</p>
 <s3 title="&xslt4c; UNIX Distributions">

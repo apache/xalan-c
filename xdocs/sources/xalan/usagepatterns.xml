@@ -59,238 +59,138 @@
 <s1 title="&xslt4c; Basic usage patterns">
 <ul>
 <li><link anchor="intro">Introduction</link></li>
-<li><link anchor="xalantransformer">Using the XalanTransformer class</link></li>
-<li><link anchor="basic">Basic procedure for performing XSL transformations</link></li>
-<li><link anchor="dom">Working with DOM input and output</link></li>
+<li><link anchor="cpp">Basic usage pattern with the XalanTransformer C++ API</link></li>
+<li><link anchor="stylepi">Using a stylesheet processing instruction</link></li>
 <li><link anchor="params">Setting stylesheet parameters</link></li>
-<li><link anchor="compiled">Compiling stylesheets</link></li>
+<li><link anchor="incremental">Processing output incrementally</link></li>
+<li><link anchor="compiled">Performing a series of transformations</link></li>
+<li><link anchor="dom">Working with DOM input and output</link></li>
 <li><link anchor="xpath">Working with XPath expressions</link></li>
 <li><link anchor="tracelistener">Using the TraceListener</link></li>
 <li><link anchor="icu">Using the International Components for Unicode (ICU)</link></li>
+<li><link anchor="capi">Basic usage pattern with the XalanTransformer C API</link></li>
+<li><link anchor="cvar">Variations with the XalanTransformer C API</link></li>
 <li>See also: <link idref="extensions">Creating and using extension functions</link></li>
 </ul><anchor name="intro"/>
 
-  <s2 title="Introduction">  
-<p>&xslt4c; takes as primary input an XML source document and an XSL stylesheet, both represented by instances of <jump href="apidocs/class_XSLTInputSource.html">XSLTInputSource</jump>. These input objects may each take the form of a file or URL, a stream, or a DOM tree. The stylesheet may also take the form of a compiled stylesheet (an instance of <jump href="apidocs/class_stylesheetroot.html">StylesheetRoot</jump>).</p>
-<note>If the XML source document contains a stylesheet Processing Instruction (PI), &xslt4c; uses the stylesheet this PI points to and a separate stylesheet object is not required. </note>
-<p>&xslt4c; uses &xml4c; to parse text input, performs the transformation, and sends the output to an instance of <jump href="apidocs/class_xsltresulttarget.html">XSLTResultTarget</jump>, which may be configured to write to a file, a stream, or a DOM tree.</p>
+<s2 title="Introduction">  
+<p>To perform a transformation, use one of the <jump href="apdidocs/class_xalantransformer.html">XalanTransformer</jump> transform() methods. The transformation requires an XML source document and an XSL stylesheet. Both of these objects may be represented by instances of <jump href="apidocs/class_xsltinputsource.html">XSLTInputSource</jump>. You can construct an XSLTInputSource with a string (the system ID for a file or URI), an input stream, or a DOM.</p>
+<p>If you are using an XSL stylesheet to perform a series of transformations, you can improve performance by calling transfomr() with a compiled stylesheet, an instance of <jump href="apidocs/class_xalancompiledstylesheet.html">XalanCompiledStylesheet</jump>. If you are transforming an XML source more than once, you should call transform() with a parsed XML source, an instance of <jump href="apidocs/class_xalanparsedsource">XalanParsedSource</jump>. See <link anchor="compiled">Performing a series of transformations</link>.</p>
+<p>If you XML source document contains a stylesheet Processing Instruction (PI), you do not need to include a stylesheet object when you call transform().</p>
+<p>The transformation output is represented by an <jump href="apdidocs/class_xsltresulttarget.html">XSLTResultTarget</jump>, which you can set up to refer to an output stream, the system ID for a file or URI, or a DOM.</p>
 <p>For detailed API documentation, see <jump href="apidocs/index.html">&xslt4c; API</jump>. For an overview of the
 command-line utility, see <link idref="commandline">Command-Line Utility</link>.</p>
-</s2><anchor name="xalantransformer"/>
-<s2 title="Using the XalanTransformer class">
-<p>&xslt4c; 1.1 introduces XalanTransformer, a new class designed to package the basic Xalan infrastructure and provide a simpler C++ 
-and C API for performing standard transformations.</p>
-<note>As we expand the functionality of the XalanTransformer, we will revise the remainder of this chapter and the samples to indicate 
-how to take advantage of the API it provides.</note>
+</s2><anchor name="cpp"/>
+<s2 title="Basic usage patten with the XalanTransformer C++ API">
+<p>Using <jump href="apdidocs/class_xalantransformer.html">XalanTransformer</jump> and the C++ API, you can perform one or more transformations as described in the following steps.</p>
+<note>For a working sample that illustrates these steps, see the <link idref="samples" anchor="xalantransform">XalanTransform</link> sample.</note>
+<s3 title="1. Include the required header files.">
+<p>Always start with Include/PlatformDefinitions.hpp, the &xslt4c; base header file. Also include util/PlatformUtils.hpp, XalanTransformer/XalanTransformer.hpp, and any other header files your particular application requires.</p>
+<source>#include &lt;Include/PlatformDefinitions.hpp&gt;
+#include &lt;util/PlatformUtils.hpp&gt;
+#include &lt;XalanTransformer/XalanTransformer.hpp&gt;
+...</source>
+</s3>
+  <s3 title="2. Initialize Xerces and Xalan">
+<p>Use the static initializers to initialize the &xslt4c; and &xml4c; platforms. You must initialize &xml4c; once per process. You may initialize and terminate &xslt4c; multiple times, but this is not recommended: it is inefficient and is not thread safe.</p>  
+<source>XMLPlatformUtils::Initialize();
+XalanTransformer::initialize();</source>
+</s3>
+  <s3 title="3.Create a XalanTransformer">
+  <source>XalanTransformer theXalanTransformer;</source>
+  </s3>
+  <s3 title="4. Perform each transformation">
+    <p>You can explicitly instantiate <jump href="apidocs/class_xsltinputsource.html">XSLTInputSource</jump> objects for the XML source document and XSL stylesheet, and an <jump href="apidocs/class_xsltresulttarget.html">XSLTResultTarget</jump> object for the output, and then call <jump href="apdidocs/class_xalantransformer.html">XalanTransformer</jump> transform() with those objects as parameters. For example:</p>
+<source>XSLTInputSource xmlIn("foo.xml");
+XSLTInputSource xslIn("foo.xsl");
+XSLTResultTarget xmlOut("foo-out.xml");
+int theResult =
+    theXalanTransformer.transform(xmlIn,xslIn,xmlOut)</source>
+   <p>Alternatively, you can call transform() with the strings (system identifiers), streams, and/or DOMs that the compiler needs to implicitly construct the <jump href="apidocs/class_xsltinputsource.html">XSLTInputSource</jump> and <jump href="apidocs/class_xsltresulttarget.html">XSLTResultTarget</jump> objects. For example:</p>
+<source>const char* xmlIn = "foo.xml";
+const char* xslIn = "foo.xsl";
+const char* xmlOut = "foo-out.xml";
+int theResult =
+    theXalanTransformer.transform(xmlIn,xslIn,xmlOut)</source>
+ <p>Keep in mind that <jump href="apidocs/class_xsltinputsource.html">XSLTInputSource</jump> and <jump href="apidocs/class_xsltresulttarget.html">XSLTResultTarget</jump> provide a variety of single-argument constructors that you can use in this manner:</p>
 <ul>
-  <li><link anchor="cpp">Basic usage pattern with the XalanTransformer C++ API</link></li>
-  <li><link anchor="cppvar">Variations with the XalanTransformer C++ API</link></li>  
-  <li><link anchor="capi">Basic usage pattern with the XalanTransformer C API</link></li>
-  <li><link anchor="cvar">Variations with the XalanTransformer C API</link></li>  
-</ul><anchor name="cpp"/>
-<s3 title="Basic usage patten with XalanTransformer C++ API">
-<p>Using XalanTransformer and the C++ API, you can perform one or more transformations as follows:</p>
-<ol>
-  <li>Include the PlatformUtils and XalanTransformer header files.<br/>
-  <code>#include &lt;util/PlatformUtils.hpp&gt;</code><br/>
-  <code>#include &lt;XalanTransformer/XalanTransformer.hpp&gt;</code><br/><br/></li>
-  <li>Initialize Xerces and Xalan.<br/>
-  <code>XMLPlatformUtils::Initialize();</code><br/>
-  <code>XalanTransformer::initialize();</code><br/><br/></li>
-  <li>Create a XalanTransformer.<br/>
-  <code>XalanTransformer theXalanTransformer;</code><br/><br/></li>
-  <li>Use one of the XalanTransformer transform() methods to perform each transformation. For example:<br/>
-  <code>const char* xmlIn = "foo.xml";</code><br/>
-  <code>const char* xslSheet = "foo.xsl";</code><br/>
-  <code>const char* xmlOut = "foo.out";</code><br/>
-  <code>int theResult = 0;</code><br/>
-  <code>theResult =</code><br/>
-  <code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;theXalanTransformer.transform(xmlIn,xslSheet,xmlOut);</code><br/><br/></li>
-  <li>Shut down Xalan and (optionally) Xerces.<br/>
-  <code>XalanTransformer::terminate();</code><br/>
-  <code>XMLPlatformUtils::Terminate();</code></li>
-</ol>
-</s3><anchor name="cppvar"/>
-<s3 title="Variations with the XalanTransformer C++ API">
-<p>The XalanTransformer transform() methods also allow you to process and produce streams, and to send the output in blocks to a callback 
-function, which means you can begin processing the output while the transformation is still in progress. Each transform() method returns 
-an integer code, 0 for success. If an error occurs, you can use the getLastError() method to return a pointer to the error message. 
-For the details, see XalanTransormer/XalanTransformer.hpp in the source tree. For an example, see the 
-<link idref="samples" anchor="xalantransform">XalanTransform</link> sample.</p>
-<p>Transform an XML file with a stylesheet processing instruction to an output file.</p>
+  <li><code>XSLTInputSource(const char* systemID);</code></li>
+  <li><code>XSLTInputSource(const XMLCh* systemID);//Unicode chars</code></li>
+  <li><code>XSLTInputSource(istream* stream);</code></li>
+  <li><code>XSLTInputSource(XalanNode* node);</code><br/><br/></li>
+  <li><code>XSLTResultTarget(char* fileName);</code></li>
+  <li><code>XSLTResultTarget(XalanDOMString&amp; fileName);</code></li>
+  <li><code>XSLTResultTarget(ostream* stream);</code></li>
+  <li><code>XSLTResultTarget(ostream&amp; stream);</code></li>  
+  <li><code>XSLTResultTarget(Writer* characterStream);</code></li>
+  <li><code>XSLTResultTarget(XalanDocument* document);</code></li>
+  <li><code>XSLTResultTarget(XalanDocumentFragment* documentFragment);</code></li>
+  <li><code>XSLTResultTarget(XalanElement* element);</code></li>
+</ul>
+<note>Each transform() method returns an integer code, 0 for success. If an error occurs, you can use the getLastError() method to return a pointer to the error message.</note>
+</s3>
+<s3 title="5. Shut down Xalan and (optionally) Xerces">
+<p>Use the static terminators.</p>
+<source>XalanTransformer::terminate();
+XMLPlatformUtils::Terminate();</source>
+  <note>Once you have shut down Xerces, you can no longer make Xalan or Xerces calls in the current process.</note>
+</s3></s2><anchor name="stylepi"/>
+<s2 title="Using a stylesheet processing instruction">
+<p>If you want to use the stylesheet referred to by a stylesheet processing instruction in the XMl document, simply call transform() without the second XSLTInputSource argument. For example:</p>
+<source>// foo.xml contains a stylesheet PI
+const char* xmlIn = "foo.xml";
+const char* xmlOut = "foo-out.xml";
+int theResult =
+    theXalanTransformer.transform(xmlIn,xmlOut)</source>
+</s2><anchor name="params"/>
+<s2 title="Setting stylesheet parameters">
+<p>An XSL stylesheet can include parameters that are set at run time before a transformation takes place. When we generate the HTML documents that make up the Xalan doc set, for example, we send the stylesheet an id parameter along with each XML source document. The id identifies that document and enables the stylesheet to integrate it into the overall doc set.</p>
+<p>To set a stylesheet parameter, use the <jump href="apdidocs/class_xalantransformer.html">XalanTransformer</jump> setStylesheetParam() method. The setStytlesheetParam() method takes two arguments: the parameter name and the expression. For example:</p>
+<source>const char* key="param1";
+const char* expression="'Hello World'";
+theXalanTransformer.setStylesheetParam(key, expression);
+// foo.xsl defines a stylesheet parameter named param1.
+theXalanTransformer.transform("foo.xml","foo.xsl","foo-out.xml")</source>
+<note>If the expression is a string, enclose it in single quotes to make it a string expression.</note>
+<p>You can include the -param flag with two arguments when you call the <link idref="commandline">command line utility</link>. The first argument is the parameter name or key, and the second argument is the string expression (in single quotes). For example:</p>
+<p><code>TestXSLT -in foo.xml -xsl foo.xsl -param param1 'boo'</code></p>
+<p>If the string expression includes spaces or other characters that the shell intercepts, first enclose the string in single quotes so &xslt4c; interprets it as a string expression, and then enclose the resulting string in double quotes so the shell interprets it as a single argument. For example:</p>
+<p><code>TestXSLT -in foo.xml -xsl foo.xsl -param param1 "'hello there'"</code></p>
+<p>The <link idref="samples" anchor="usestylesheetparam">UseStylesheetParam</link> sample application also uses a command-line parameter.</p>
+</s2><anchor name="incremental"/>
+<s2 title="Processing output incrementally">
+<p><jump href="apdidocs/class_xalantransformer.html">XalanTransformer</jump> provides a transform() method that sends the output in blocks to a callback function, which enables you to begin processing the output while the transformation is still in process:</p>
 <source>int
-transform(const  char*  xmlInFile, 
-          const  char*  xmlOutFile);</source>
-<p>Transform from files to an output stream:</p>
-<source>int
-transform(const char* xmlInFile,
-          const char* xslFile,
-          ostream&amp;    resultOutStream);</source>
-<p>Transform from input streams to an output stream:</p>
-<source>int
-transform(istream&amp; xmlInStream,
-          istream&amp; xslInStram,
-          ostream&amp; resultOutStream);</source>
-<p>Transform an input stream that contains the XML input with a stylesheet processing instruction to an output stream.</p>
-<source>int
-transform(istream&amp; xmlInStream,
-          ostream&amp; resultOutStream);</source>
-
-<p>Transform from files to an output handler that receives the output in blocks. </p>          
-<source>int
-transform(const char* xmlInFile,
-          const char* xslFile,
+transform(const XSLTInputSource&amp; xmlIn,
+          const XSLTInputSource&amp; xslIn,
           const void* theOutputHandle,
           XalanOutputHandlerType theOutputHandler
           XalanFlushHanderType theFlushHandler = 0);</source>
-<p>The transform() method that the other transform() methods all call:</p>
-<source>int
-transform( const XSLTInputSource&amp; xmlInput,
-           const XSLTInputSource&amp; xslStylesheet,
-           const XSLTResultTarget&amp; transformResult);</source>
-                                            
-</s3><anchor name="capi"/>
-<s3 title="Basic XalanTransformer usage pattern with the C API">
-<p>We also include a simple C interface for using the XalanTransformer class. See XalanTransformer/XalanCAPI.h in the source tree. 
-The <link idref="samples" anchor="apachemodulexslt">ApacheModuleXSLT</link> sample illustrates the use of this C API.</p>
-<p>Basic strategy:</p>
-<ol>
-  <li>Include the XalanTransformer C API header.<br/>
-  <code>#include &lt;XalanTransformer/XalanCAPI.h&gt;</code><br/><br/></li>
-  <li>Initialize Xalan and Xerces.<br/>
-  <code>XalanInitialize();</code><br/><br/></li>  
-  <li>Create a Xalan transformer.<br/>
-  <code>XalanHandle xalan = NULL;</code><br/>
-  <code>xalan = CreateXalanTransformer();</code><br/><br/></li>
-  <li>Perform each transformation. For example:<br/>
-  <code>char * xmlfilename = "foo.xml";</code><br/>
-  <code>char xslfilename = "foo.xsl";</code><br/>
-  <code>char outfilename = "foo.out";</code><br/>  
-  <code>int theResult = 0;</code><br/>
-  <code>theResult = XalanTransformToFile(xmlfilename,</code><br/>
-  <code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;xslfilename,</code><br/>
-  <code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;outfilename,</code><br/>
-  <code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;xalan);</code><br/><br/></li>
-  <li>Shut down Xalan.<br/>
-  <code>XalanTerminate();</code></li>
-</ol>
-<p>If the XML input file contains a stylesheet processing instruction that you want to use, include an empty string ("") for the xslfilename argument.</p>
-</s3><anchor name="cvar"/>
-<s3 title="Variations with the XalanTransformer C API">
-<p>The C API supports basically the same options as the C++ API.</p>
-<p>Transform from files to a character array:</p>
-<source>int
-XalanTransformToData(const char*  xmlInFile,
-                     const char*  xslFile,
-                     const char** transformOutput,
-                     XalanHandle  xalan);</source>
-<p>If the XML input contains a stylesheet processing instruction that you want to use, include an empty string ("") for the xslFile argument.</p>                     
-<p>After calling XalanTransformToData(), call XalanFreeData() with the address of the pointer to the character array:</p>
-<p><code>XalanFreeData(transformOutput);</code></p>
-<p>Transform to a callback function that receives the output in blocks (see the <link idref="samples" 
-anchor="apachemodulexslt">ApacheModuleXSLT</link> sample).</p>
-<source>int
-XalanTransformToHandler(const char*  xmlInFile,
-                        const char*  xslFile,
-                        XalanHandle xalan,
-                        const void* outputHandle,
-                        XalanOutputHandlerType outputHandler,
-                        XalanFlushHandlerType flushHandler);</source>
-</s3>
-</s2><anchor name="basic"/>
-<s2 title="Basic procedure for performing an XSL transformation">
-<p>When you are setting up your application to use XSL stylesheets to transform XML documents, you must do the following:</p>
-<s3 title="1. Include the required header files">
-<p>Always start with Include/PlatformDefinitions.hpp, the &xslt4c; base header file. Along with any additional &xslt4c; and other header files that are required for the particular application, be sure to include utils/PlatformUtils.hpp from the &xml4c; distribution.</p>
-</s3>
-<s3 title="2. Initialize Xalan and Xerces">
-<p>Use the static initializers to initialize the &xslt4c; and &xml4c; platforms. You must initialize &xml4c; once per process. You may
-initialize and terminate &xslt4c; multiple times, but this is not recommended: it is inefficient and is not thread safe.</p>
-<source>XMLPlatformUtils::Initialize();
-XSLTInit  theInit;</source>
-</s3><anchor name="step3"/>
-<s3 title="3. Set up an XSLT processor with its support objects">
-<p>The XSLT processor interacts with several support objects that you must set up before you can perform transformations.</p>
-<source>// Create the support objects.
-XalanSourceTreeDOMSupport      theDOMSupport;
-XalanSourceTreeParserLiaison   theParserLiaison(theDOMSupport);
-// Hook the two together...
-theDOMSupport.setParserLiaison(&amp;theParserLiaison);
-// More support objects...
-XSLTProcessorEnvSupportDefault theXSLTProcessorEnvSupport;
-XObjectFactoryDefault          theXObjectFactory;
-XPathFactoryDefault            theXPathFactory;
 
-// Create the processor.
-XSLTEngineImpl  theProcessor(
-          theParserLiaison,
-          theXSLTProcessorEnvSupport,
-          theDOMSupport,
-          theXObjectFactory,
-          theXPathFactory);
-
-// Connect the processor to the environment support object.
-theXSLTProcessorEnvSupport.setProcessor(&amp;theProcessor);</source>
-</s3>
-<s3 title="4. Create context objects for the stylesheet">
-<p>Use the processor and support objects to set up stylesheet construction context and execution context objects.</p>
-<source>
-StylesheetConstructionContextDefault  theConstructionContext(
-            theProcessor,
-            theXSLTProcessorEnvSupport,
-            theXPathFactory);
-StylesheetExecutionContextDefault      theExecutionContext(
-            theProcessor,
-            theXSLTProcessorEnvSupport,
-            theDOMSupport,
-            theXObjectFactory);
-            
-// Optional: arrange to send parsing errors to the ProblemListener set 
-// for XSLTEngineImpl.
-theParserLiaison.setExecutionContext(theExecutionContext);</source>
-</s3>
-<s3 title="5. Set up input and output objects for a transformation">
-<p>You must set up XSLTInputSource objects for the XML document and XSL stylesheet, and an XSLTResultTarget object to contain the transformation output.</p>
-<p>Each of these objects may take the form of a file or URL, a stream, or a DOM tree. In the following fragment, the input and output are files:</p>
-<source>// Use XalanDOMString to create a Unicode file name.
-// The files are in the same directory as the application executable.
-const XalanDOMString    theXMLFileName("foo.xml");
-const XalanDOMString    theXSLFileName("foo.xsl");
-
-// Create XSLTInputSource objects.
-XSLTInputSource    theInputSource(c_wstr(theXMLFileName));
-XSLTInputSource    theStylesheetSource(c_wstr(theXSLFileName));
-
-// For the output, create an XSLTResultTarget object.
-const XalanDOMString    theOutputFile("foo.out");
-XSLTResultTarget		theResultTarget(theOutputFile);
-</source>
-<p>For the other constructors you can use to set up input and output objects (with input and output streams, for example), see <jump href="apidocs/class_xsltinputsource.html">XSLTInputSource</jump> and <jump href="apidocs/class_xsltresulttarget.html">XSLTResultTarget</jump>. See also <link anchor="dom">Working with
-DOM input and output</link>.</p>
-</s3><anchor name="process"/>
-<s3 title="6. Perform the transformation">
-<p>Use the XSLTEngineImpl process() method to perform the transformation.</p>
-<source>
-theProcessor.process(
-               theInputSource,
-               theStylesheetSource,
-               theResultTarget,
-               theConstructionContext,
-               theExecutionContext);</source>
-<p>The XSLTResultTarget object receives the transformation output.</p>
-<p>The support objects store running state information, so they are not thread safe. To perform multiple transformations, create a new instance for each transformation, or call the StylesheetExecutionContext reset() method between each transformation.</p> 
-<p>If you are using the same stylesheet to perform multiple transformations, for efficiency you should compile the stylesheet and use the appropriate XSLTEngineImpl process() method. Compiled stylesheet (StylesheetRoot) objects are also thread-safe. A single StylesheetRoot object may be called concurrently from multiple threads. For more information, see <link anchor="compiled">Compiling stylesheets</link>.</p>
-</s3>
-<s3 title="7. Shut down Xerces.">
-<p>When you are done performing transformations, shut down Xerces. Once you have shut down Xerces, you can no longer make Xalan or Xerces call in that process.</p>
-<source>// Call the static terminator for Xerces.
-XMLPlatformUtils::Terminate();
-</source>
-<p>For a sample application that performs a transformation, see <link idref="samples" anchor="simpletransform">SimpleTransform</link>.</p> 
-</s3>
+</s2><anchor name="compiled"/>
+<s2 title="Performing a series of transformations">
+<p>Before Xalan performs a standard transformation, it must parse the XML document and compile the XSL stylesheet into binary representations. If you plan to use the same XML document or stylesheet in a series of transformations, you can improve performance by parsing the XML document or compiling the styleheet once and using the binary representation when you call transform().</p>
+<p><jump href="apdidocs/class_xalantransformer.html">XalanTransformer</jump> includes methods for creating compiled stylesheets and parsed XML documents: the compileStylesheet() method returns a pointer to a <jump href="apdidocs/class_xalancompiledstylesheet.html">XalanCompiledStylesheet</jump>; the parseSource() method returns a pointer to a <jump href="apdidocs/class_xalanparsedsource.html">XalanParsedSource</jump>.</p>
+<note>In the case of failure, both methods return 0.</note>
+<p>Example using a XalanCompiledStylesheet to perform multiple transformations:</p>
+<source>XalanCompiledStylesheet* compiledStylesheet = 0;
+compiledStylesheet = theXalanTransformer.compileStylesheet("foo.xsl");
+assert(compiledStylesheet!=0);
+theXalanTransformer.transform("foo1.xml", *compiledStylesheet, "foo1.out.");
+theXalanTransformer.transform("foo2.xml", *compiledStylesheet, "foo2.out");
+...</source>
+<p>For a working sample, see the <link idref="samples" anchor="compilestylesheet">CompileStylesheet</link> sample.</p>
+<p>Example using a XalanParsedSource for multiple transformations:</p>
+<source>XalanParsedSource* parsedXML = 0;
+parsedXML = theXalanTransformer.parseSource("foo.xml");
+assert(parsedXML!=0);
+theXalanTransformer.transform(*parsedXML, "foo1.xsl", "foo-xsl1.out");
+theXalanTransformer.transform(*parsedXML, "foo2.xsl", "foo-xsl2.out");
+...</source>
+<p>For a sample that uses both a parsed XML source and a compiled stylesheet, see <link idref="samples" anchor="threadsafe">ThreadSafe</link>.</p>
 </s2><anchor name="dom"/>
 <s2 title="Working with DOM input and output">
-<p>You can set up an XSLTResultTarget to produce a DOM when you perform a transformation. You can also use a DOM as input for a transformation.</p>
+<p>You can set up an <jump href="apidocs/class_xsltresulttarget.html">XSLTResultTarget</jump> to produce a DOM when you perform a transformation. You can also use a DOM as input for a transformation.</p>
 <p>The following code fragments illustrate the procedures for working with DOM input and output:</p>
 <source>
 
@@ -321,94 +221,6 @@ XSLTResultTarget theDOMResultTarget(docOut);
 // the output.
 // You can also convert the XalanDocument to a Xerces DOM_Document.
 DOM_Document domOut = theParserLiaison.mapXercesDocument(docOut)</source>
-</s2><anchor name="params"/>
-<s2 title="Setting stylesheet parameters">
-<p>An XSL stylesheet can include parameters that are set at run time before a transformation takes place. When we generate the HTML documents that make up the Xalan doc set, for example, we send the stylesheet an id parameter along with each XML source document. The id identifies that document and enables the stylesheet to integrate it into the overall doc set.</p>
-<p>To set a stylesheet parameter, use one of the <jump href="apidocs/class_xsltengineimpl.html">XSLTEngineImpl</jump> setStylesheetParam() methods. Both methods take two arguments: the parameter name (a XalanDOMstring) and the expression (a XalanDOMString or an XObject). The XObject option is useful when you are working with the XPath API. For example, you could use the XObject returned by an Xpath function to set a stylesheet parameter.</p>
-<note>If the expression is a string and you are using XalanDOMString for the input parameter, enclose it in single quotes to make it a string expression.</note>
-<p>You can include the -param flag with two arguments when you call the <link idref="commandline">command line utility</link>. The first argument is the parameter name or key, and the second argument is the string expression (in single quotes). For example:</p>
-<p><code>TestXSLT -in foo.xml -xsl foo.xsl -param param1 'boo'</code></p>
-<p>If the string expression includes spaces or other characters that the shell intercepts, first enclose the string in single quotes so &xslt4c; interprets it as a string expression, and then enclose the resulting string in double quotes so the shell interprets it as a single argument. For example:</p>
-<p><code>TestXSLT -in foo.xml -xsl foo.xsl -param param1 "'hello there'"</code></p>
-<p>The <link idref="samples" anchor="usestylesheetparam">UseStylesheetParam</link> sample application also uses a command-line parameter.</p>
-</s2><anchor name="compiled"/>
-<s2 title="Compiling stylesheets">
-<p>When &xslt4c; performs a transformation with the <link anchor="process">XSLTEngineImpl process() method used above</link>, it starts by compiling the stylesheet into a binary representation. If you intend to use the same stylesheet to perform multiple transformations, you can enhance efficiency by explicitly compiling the stylesheet and using another XSLTEngimeImpl process() method for each transformation. A compiled stylesheet (a <jump href="apidocs/class_stylesheetroot.html">StylesheetRoot</jump> object) is thread safe, so it even supports concurrent access by multiple clients. If, for example, you are setting up a server application to perform transformations, you can improve performance by compiling any stylesheets the application repeatedly uses.</p>
-<p>A compiled stylesheet requires its own XPath factory support object, independent of the XPath support object for an XSLT processor. So after you have set up the XSLT processor with its support objects, set up another XPath
-factory support object and use it to create a construction context for the stylesheet:</p>
-<source>// Set up the XSLT processor with its support objects
-XercesDOMSupport           theDOMSupport;
-XercesParserLiaison        theParserLiaison(theDOMSupport);
-XPathSupportDefault        theXPathSupport(theDOMSupport);
-XSLTProcessorEnvSupportDefault  theXSLTProcessorEnvSupport;
-XObjectFactoryDefault      theXObjectFactory;
-XPathFactoryDefault        theXPathFactory;
-
-// Create the processor and connect to the
-// environment support object.
-XSLTEngineImpl  theProcessor(
-          theParserLiaison,
-          theXPathSupport,
-          theXSLTProcessorEnvSupport,
-          theDOMSupport;
-          theXObjectFactory,
-          theXPathFactory);
-theXSLTProcessorEnvSupport.setProcessor(&amp;theProcessor);
-...
-// Create an XPath factory support object for the stylesheet,
-// so it will have its own factory-created XPath instances
-// (separate from the XSLT processor XPath objects).
-XPathFactoryDefault        theStylesheetXPathFactory;
-
-// Use this XPath factory support object to create a stylesheet 
-// construction context.
-StylesheetConstructionContextDefault  theConstructionContext(
-            theProcessor,
-            theXSLTProcessorEnvSupport,
-            theStylesheetXPathFactory);
-
- // The execution context uses the same factory support objects as
- // the processor.
- StylesheetExecutionContextDefault    theExecutionContext(
-            theProcessor,
-            theXSLTProcessorEnvSupport,
-            theXPathSupport,
-            theXObjectFactory);</source>
-<p>Compile the stylesheet, add the StylesheetRoot object to the execution context, and start performing transformations. Use the XSLTEngineImpl process() method (see below) that takes advantage of the compiled stylesheet. Be sure to reset the processor and execution context between each transformation. For example:</p>
-<source>
-// Compile the stylesheet.
-StylesheetRoot* const	theStylesheetRoot =
-          theProcessor.processStylesheet(
-                theStylesheetSource,
-                theConstructionContext);
-          assert(theStylesheetRoot != 0);
-
-// Set the execution context object to use the compiled stylesheet.
-theExecutionContext.setStylesheetRoot(theStylesheetRoot)
-
-// Set up an XSLTInputSource object (theInputSource)
-// and an XSLTResultTarget object (theResultTarget).
-...
-// Do the transformation. This version of the process() method uses
-// the StylesheetRoot object associated with the execution context.
-theProcessor.process(
-         theInputSource,
-         theResultTarget,
-         theExecutionContext);
-
-// Reset the processor and the execution context
-// so we can perform the next transformation.
-// Reset the parser liaison to clear out the
-// source document we just transformed.
-
-theProcessor.reset();
-theExecutionContext.reset();
-theParserLiaison.reset();
-theExecutionContext.setStylesheetRoot(theStylesheetRoot);
-
-// Perform the next transformation.
-....</source>
-<p>For an example, see the <link idref="samples" anchor="compilestylesheet">CompileStylesheet</link> sample.</p>
 </s2><anchor name="xpath"/>
 <s2 title="Working with XPath expressions">
 <p>XSL stylesheets use XPath expressions to select nodes, specify conditions, and generate text for the result tree. XPath provides an API that you can call directly. For example, you may want to select nodes programmatically and do your own processing without a stylesheet.</p>
@@ -498,6 +310,47 @@ FunctionICUFormatNumber::FunctionICUFormatNumberInstaller theInstaller;</source>
 // and install the ICUCollationCompareFunctor.
 ICUBridgeCollationCompareFunctor	theICUFunctor;
 theExecutionContext.installCollationCompareFunctor(&amp;theICUFunctor);</source>
+ </s3></s2><anchor name="capi"/>
+ <s2 title="Basic XalanTransformer usage pattern with the C API">
+<p>We also include a simple C interface for using the XalanTransformer class. See XalanTransformer/XalanCAPI.h in the source tree. 
+The <link idref="samples" anchor="apachemodulexslt">ApacheModuleXSLT</link> sample illustrates the use of this C API.</p>
+<p>Basic strategy:</p>
+
+  <s3 title="1. Include the XalanTransformer C API header">
+  <source>#include &lt;XalanTransformer/XalanCAPI.h&gt;</source>
   </s3>
- </s2>
+  <s3 title="2. Initialize Xalan and Xerces">
+  <source>XalanInitialize();</source> 
+  </s3>
+  <s3 title="3. Create a Xalan transformer">
+  <source>XalanHandle xalan = NULL;
+xalan = CreateXalanTransformer();</source>
+</s3>
+  <s3 title="4. Perform each transformation">
+<p>  For example:</p>
+<source>const char * xmlfilename = "foo.xml";
+const char* xslfilename = "foo.xsl";
+const char* outfilename = "foo.out";
+int theResult = 0;
+theResult = XalanTransformToFile(xmlfilename,
+                                 xslfilename,
+                                 outfilename,
+                                 xalan);</source>
+<note>If the XML input file contains a stylesheet processing instruction that you want to use, include an empty string ("") for the xslfilename argument.</note>
+</s3>                                 
+  <s3 title="5. Shut down Xalan">
+  <source>XalanTerminate();</source>
+</s3></s2><anchor name="cvar"/>
+<s2 title="Variations with the XalanTransformer C API">
+<p>The <jump href="apidocs/XalanCAPI.h.html">Xalan C API</jump> supports approximately the same set of options as the C++ API. In particular, you can</p>
+<ul>
+<li>Use stylesheet processing instructions (PI) to supply the stylesheet. Simply supply an empty string ("") for the XSL file name.<br/><br/></li>
+<li>Set stylesheet parameters. Use the SetStylesheetParam() method.<br/><br/></li>
+<li>Compile stylesheets. Use the CompileStylesheet() method to compile a stylesheet, and the TransformToFileCSS() or TransformToDataCSS() method to use the compiled stylesheet in a transformation.<br/><br/></li>
+<li>Parse XML sources. Use the XalanParseSource() or XalanParseSouceUseXalan() method.<br/><br/></li>
+<li>Place the transformation output in a character array. Use the TransformToData() or TransformToDataCSS() method. After you perform the transformation, use the XalanFreeData() method to free memory allocated for the output data.<br/><br/></li>
+<li>Send the output to a callback function to process blocks of output data as they arrive.</li>
+</ul> 
+<p>For a sample that sends output in blocks to a callback function, see <link idref="samples" anchor="apachemodulexslt">ApacheModuleXSLT</link>.</p>
+</s2>
 </s1>
