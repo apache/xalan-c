@@ -20,6 +20,7 @@
 
 #include <xalanc/PlatformSupport/DOMStringHelper.hpp>
 #include <xalanc/PlatformSupport/XalanMessageLoader.hpp>
+#include <xalanc/PlatformSupport/XalanUnicode.hpp>
 
 
 
@@ -32,6 +33,22 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 XalanDOMString	XUnknown::s_unknownString;
+
+
+static const XalanDOMChar   s_unknown[] =
+{
+    XalanUnicode::charLessThanSign,
+    XalanUnicode::charLetter_u,
+    XalanUnicode::charLetter_n,
+    XalanUnicode::charLetter_k,
+    XalanUnicode::charLetter_n,
+    XalanUnicode::charLetter_o,
+    XalanUnicode::charLetter_w,
+    XalanUnicode::charLetter_n,
+    XalanUnicode::charGreaterThanSign,
+    0
+};
+
 
 
 XUnknown::XUnknown(const XalanDOMString&	name) :
@@ -75,7 +92,7 @@ XUnknown::clone(void*	theAddress) const
 
 
 
-XalanDOMString
+const XalanDOMString&
 XUnknown::getTypeString() const
 {
 	return s_unknownString;
@@ -148,7 +165,7 @@ XUnknown::ProcessXObjectTypeCallback(XObjectTypeCallback&	theCallbackObject) con
 void
 XUnknown::initialize()
 {
-	s_unknownString = XALAN_STATIC_UCODE_STRING("#UNKNOWN");
+	s_unknownString = s_unknown;
 }
 
 

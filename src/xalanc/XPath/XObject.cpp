@@ -24,6 +24,7 @@
 
 #include <xalanc/PlatformSupport/DoubleSupport.hpp>
 #include <xalanc/PlatformSupport/XalanMessageLoader.hpp>
+#include <xalanc/PlatformSupport/XalanUnicode.hpp>
 
 
 
@@ -40,20 +41,140 @@
 XALAN_CPP_NAMESPACE_BEGIN
 
 
+XalanDOMString  s_localBooleanString;
+XalanDOMString  s_localFalseString;
+XalanDOMString  s_localNodesetString;
+XalanDOMString  s_localNumberString;
+XalanDOMString  s_localResultTreeFragmentString;
+XalanDOMString  s_localStringString;
+XalanDOMString  s_localTrueString;
 
-XalanDOMString	XObject::s_falseString;
+const XalanDOMString&   XObject::s_booleanString =
+        s_localBooleanString;
 
-XalanDOMString	XObject::s_trueString;
+const XalanDOMString&   XObject::s_falseString =
+        s_localFalseString;
 
-const XalanDOMString	XObject::s_nullString;
+const XalanDOMString&   XObject::s_nodesetString =
+        s_localNodesetString;
 
+const XalanDOMString&   XObject::s_numberString =
+        s_localNumberString;
+
+const XalanDOMString&   XObject::s_resultTreeFragmentString =
+        s_localResultTreeFragmentString;
+
+const XalanDOMString&   XObject::s_stringString =
+        s_localStringString;
+
+const XalanDOMString&   XObject::s_trueString =
+        s_localTrueString;
+
+const XalanDOMString    XObject::s_emptyString;
+
+
+static const XalanDOMChar   s_boolean[] =
+{
+    XalanUnicode::charLetter_b,
+    XalanUnicode::charLetter_o,
+    XalanUnicode::charLetter_o,
+    XalanUnicode::charLetter_l,
+    XalanUnicode::charLetter_e,
+    XalanUnicode::charLetter_a,
+    XalanUnicode::charLetter_n,
+    0
+};
+
+static const XalanDOMChar   s_false[] =
+{
+    XalanUnicode::charLetter_f,
+    XalanUnicode::charLetter_a,
+    XalanUnicode::charLetter_l,
+    XalanUnicode::charLetter_s,
+    XalanUnicode::charLetter_e,
+    0
+};
+
+static const XalanDOMChar   s_number[] =
+{
+    XalanUnicode::charLetter_n,
+    XalanUnicode::charLetter_u,
+    XalanUnicode::charLetter_m,
+    XalanUnicode::charLetter_b,
+    XalanUnicode::charLetter_e,
+    XalanUnicode::charLetter_r,
+    0
+};
+
+static const XalanDOMChar   s_nodeset[] =
+{
+    XalanUnicode::charLetter_n,
+    XalanUnicode::charLetter_o,
+    XalanUnicode::charLetter_d,
+    XalanUnicode::charLetter_e,
+    XalanUnicode::charHyphenMinus,
+    XalanUnicode::charLetter_s,
+    XalanUnicode::charLetter_e,
+    XalanUnicode::charLetter_t,
+    0
+};
+
+static const XalanDOMChar   s_resultTreeFragment[] =
+{
+    XalanUnicode::charLetter_r,
+    XalanUnicode::charLetter_e,
+    XalanUnicode::charLetter_s,
+    XalanUnicode::charLetter_u,
+    XalanUnicode::charLetter_l,
+    XalanUnicode::charLetter_t,
+    XalanUnicode::charSpace,
+    XalanUnicode::charLetter_t,
+    XalanUnicode::charLetter_r,
+    XalanUnicode::charLetter_e,
+    XalanUnicode::charLetter_e,
+    XalanUnicode::charSpace,
+    XalanUnicode::charLetter_f,
+    XalanUnicode::charLetter_r,
+    XalanUnicode::charLetter_a,
+    XalanUnicode::charLetter_g,
+    XalanUnicode::charLetter_m,
+    XalanUnicode::charLetter_e,
+    XalanUnicode::charLetter_n,
+    XalanUnicode::charLetter_t,
+    0
+};
+
+static const XalanDOMChar   s_string[] =
+{
+    XalanUnicode::charLetter_s,
+    XalanUnicode::charLetter_t,
+    XalanUnicode::charLetter_r,
+    XalanUnicode::charLetter_i,
+    XalanUnicode::charLetter_n,
+    XalanUnicode::charLetter_g,
+    0
+};
+
+static const XalanDOMChar   s_true[] =
+{
+    XalanUnicode::charLetter_t,
+    XalanUnicode::charLetter_r,
+    XalanUnicode::charLetter_u,
+    XalanUnicode::charLetter_e,
+    0
+};
 
 
 void
 XObject::initialize()
 {
-	s_falseString = XALAN_STATIC_UCODE_STRING("false");
-	s_trueString = XALAN_STATIC_UCODE_STRING("true");
+    s_localBooleanString = s_boolean;
+    s_localFalseString = s_false;
+    s_localNodesetString = s_nodeset;
+    s_localNumberString = s_number;
+    s_localResultTreeFragmentString = s_resultTreeFragment;
+    s_localStringString = s_string;
+    s_localTrueString = s_true;
 }
 
 
@@ -61,23 +182,28 @@ XObject::initialize()
 void
 XObject::terminate()
 {
-	releaseMemory(s_falseString);
-	releaseMemory(s_trueString);
+    releaseMemory(s_localBooleanString);
+    releaseMemory(s_localFalseString);
+    releaseMemory(s_localNodesetString);
+    releaseMemory(s_localNumberString);
+    releaseMemory(s_localResultTreeFragmentString);
+    releaseMemory(s_localStringString);
+    releaseMemory(s_localTrueString);
 }
 
 
 
-XObject::XObject(eObjectType	theObjectType) :
-	m_objectType(theObjectType),
-	m_factory(0)
+XObject::XObject(eObjectType    theObjectType) :
+    m_objectType(theObjectType),
+    m_factory(0)
 {
 }
 
 
 
-XObject::XObject(const XObject&		source) :
-	m_objectType(source.m_objectType),
-	m_factory(0)
+XObject::XObject(const XObject&     source) :
+    m_objectType(source.m_objectType),
+    m_factory(0)
 {
 }
 
@@ -92,7 +218,7 @@ XObject::~XObject()
 XObject::eObjectType
 XObject::getRealType() const
 {
-	return m_objectType;
+    return m_objectType;
 }
 
 
@@ -106,35 +232,35 @@ XObject::referenced()
 
 double
 XObject::number(
-			XPathExecutionContext&	executionContext,
-			const XalanNode&		theNode)
+            XPathExecutionContext&  executionContext,
+            const XalanNode&        theNode)
 {
-	XPathExecutionContext::GetAndReleaseCachedString	theGuard(executionContext);
+    XPathExecutionContext::GetAndReleaseCachedString    theGuard(executionContext);
 
-	XalanDOMString&		theString = theGuard.get();
+    XalanDOMString&     theString = theGuard.get();
 
-	XObject::string(theNode, theString);
+    XObject::string(theNode, theString);
 
-	return XObject::number(theString);
+    return XObject::number(theString);
 }
 
 
 
 double
 XObject::number(
-			XPathExecutionContext&	executionContext,
-			const NodeRefListBase&	theNodeList)
+            XPathExecutionContext&  executionContext,
+            const NodeRefListBase&  theNodeList)
 {
-	if (theNodeList.getLength() == 0)
-	{
-		return number(s_nullString);
-	}
-	else
-	{
-		assert(theNodeList.item(0) != 0);
+    if (theNodeList.getLength() == 0)
+    {
+        return number(s_emptyString);
+    }
+    else
+    {
+        assert(theNodeList.item(0) != 0);
 
-		return number(executionContext, *theNodeList.item(0));
-	}
+        return number(executionContext, *theNodeList.item(0));
+    }
 }
 
 
@@ -142,10 +268,10 @@ XObject::number(
 void 
 XObject::dereferenced()
 {
-	if (m_factory != 0)
-	{
-		m_factory->returnObject(this);
-	}
+    if (m_factory != 0)
+    {
+        m_factory->returnObject(this);
+    }
 }
 
 
@@ -153,10 +279,10 @@ XObject::dereferenced()
 double
 XObject::num() const
 {
-	throw XObjectInvalidConversionException(getTypeString(), TranscodeFromLocalCodePage("number"));
+    throw XObjectInvalidConversionException(getTypeString(), s_numberString);
 
-	// This is just a dummy value to satisfy the compiler.
-	return 0.0;
+    // This is just a dummy value to satisfy the compiler.
+    return 0.0;
 }
 
 
@@ -164,10 +290,10 @@ XObject::num() const
 bool
 XObject::boolean() const
 {
-	throw XObjectInvalidConversionException(getTypeString(), TranscodeFromLocalCodePage("boolean"));
+    throw XObjectInvalidConversionException(getTypeString(), s_booleanString);
 
-	// This is just a dummy value to satisfy the compiler.
-	return false;
+    // This is just a dummy value to satisfy the compiler.
+    return false;
 }
 
 
@@ -175,28 +301,28 @@ XObject::boolean() const
 const XalanDOMString&
 XObject::str() const
 {
-	throw XObjectInvalidConversionException(getTypeString(), TranscodeFromLocalCodePage("string"));
+    throw XObjectInvalidConversionException(getTypeString(), s_stringString);
 
-	// This is just a dummy value to satisfy the compiler.
-	return s_nullString;
+    // This is just a dummy value to satisfy the compiler.
+    return s_emptyString;
 }
 
 
 
 void
 XObject::str(
-			FormatterListener&	/* formatterListener */,
-			MemberFunctionPtr	/* function */) const
+            FormatterListener&  /* formatterListener */,
+            MemberFunctionPtr   /* function */) const
 {
-	throw XObjectInvalidConversionException(getTypeString(), TranscodeFromLocalCodePage("string"));
+    throw XObjectInvalidConversionException(getTypeString(), s_stringString);
 }
 
 
 
 void
-XObject::str(XalanDOMString&	theBuffer) const
+XObject::str(XalanDOMString&    theBuffer) const
 {
-	append(theBuffer, str());
+    append(theBuffer, str());
 }
 
 
@@ -206,40 +332,40 @@ static int foo = 0;
 const XalanDocumentFragment&
 XObject::rtree() const
 {
-	throw XObjectInvalidConversionException(getTypeString(), TranscodeFromLocalCodePage("result tree fragment"));
+    throw XObjectInvalidConversionException(getTypeString(), s_resultTreeFragmentString);
 
-	// This is just a dummy value to satisfy the compiler.
+    // This is just a dummy value to satisfy the compiler.
 #if defined(XALAN_OLD_STYLE_CASTS)
-	return (const XalanDocumentFragment&)foo;
+    return (const XalanDocumentFragment&)foo;
 #else
-	return reinterpret_cast<const XalanDocumentFragment&>(foo);
+    return reinterpret_cast<const XalanDocumentFragment&>(foo);
 #endif
 }
 
 
 
-static const NodeRefList	s_dummyList;
+static const NodeRefList    s_dummyList;
 
 
 
 const NodeRefListBase&
 XObject::nodeset() const
 {
-	throw XObjectInvalidConversionException(getTypeString(), TranscodeFromLocalCodePage("node set"));
+    throw XObjectInvalidConversionException(getTypeString(), TranscodeFromLocalCodePage("node-set"));
 
-	// error will throw, so this is just a dummy
-	// value to satisfy the compiler.
-	return s_dummyList;
+    // error will throw, so this is just a dummy
+    // value to satisfy the compiler.
+    return s_dummyList;
 }
 
 
 
 void
 getStringFromNode(
-			const XalanNode&	theNode,
-			XalanDOMString&		theString)
+            const XalanNode&    theNode,
+            XalanDOMString&     theString)
 {
-	DOMServices::getNodeData(theNode, theString);
+    DOMServices::getNodeData(theNode, theString);
 }
 
 
@@ -247,34 +373,34 @@ getStringFromNode(
 struct
 getStringFromNodeFunction
 {
-	getStringFromNodeFunction(XPathExecutionContext&	executionContext) :
-		m_executionContext(executionContext)
-	{
-	}
+    getStringFromNodeFunction(XPathExecutionContext&    executionContext) :
+        m_executionContext(executionContext)
+    {
+    }
 
-	const XalanDOMString
-	operator()(const XalanNode&		theNode) const
-	{
-		XPathExecutionContext::GetAndReleaseCachedString	theGuard(m_executionContext);
+    const XalanDOMString
+    operator()(const XalanNode&     theNode) const
+    {
+        XPathExecutionContext::GetAndReleaseCachedString    theGuard(m_executionContext);
 
-		XalanDOMString&		theString = theGuard.get();
+        XalanDOMString&     theString = theGuard.get();
 
-		getStringFromNode(theNode, theString);
+        getStringFromNode(theNode, theString);
 
-		return theString;
-	}
+        return theString;
+    }
 
-	void
-	operator()(
-			const XalanNode&	theNode,
-			XalanDOMString&		theString) const
-	{
-		getStringFromNode(theNode, theString);
-	}
+    void
+    operator()(
+            const XalanNode&    theNode,
+            XalanDOMString&     theString) const
+    {
+        getStringFromNode(theNode, theString);
+    }
 
 private:
 
-	XPathExecutionContext&	m_executionContext;
+    XPathExecutionContext&  m_executionContext;
 };
 
 
@@ -282,46 +408,46 @@ private:
 struct
 getNumberFromNodeFunction
 {
-	getNumberFromNodeFunction(XPathExecutionContext&	executionContext) :
-		m_executionContext(executionContext)
-	{
-	}
+    getNumberFromNodeFunction(XPathExecutionContext&    executionContext) :
+        m_executionContext(executionContext)
+    {
+    }
 
-	double
-	operator()(const XalanNode&		theNode) const
-	{
-		return getNumberFromNode(theNode);
-	}
+    double
+    operator()(const XalanNode&     theNode) const
+    {
+        return getNumberFromNode(theNode);
+    }
 
-	void
-	operator()(
-			const XalanNode&	theNode,
-			double&				theNumber) const
-	{
-		getNumberFromNode(theNode, theNumber);
-	}
+    void
+    operator()(
+            const XalanNode&    theNode,
+            double&             theNumber) const
+    {
+        getNumberFromNode(theNode, theNumber);
+    }
 
 private:
 
-	double
-	getNumberFromNode(const XalanNode&	theNode) const
-	{
-		XPathExecutionContext::GetAndReleaseCachedString	theString(m_executionContext);
+    double
+    getNumberFromNode(const XalanNode&  theNode) const
+    {
+        XPathExecutionContext::GetAndReleaseCachedString    theString(m_executionContext);
 
-		getStringFromNode(theNode, theString.get());
+        getStringFromNode(theNode, theString.get());
 
-		return DoubleSupport::toDouble(theString.get());
-	}
+        return DoubleSupport::toDouble(theString.get());
+    }
 
-	void
-	getNumberFromNode(
-			const XalanNode&	theNode,
-			double&				theNumber) const
-	{
-		theNumber = getNumberFromNode(theNode);
-	}
+    void
+    getNumberFromNode(
+            const XalanNode&    theNode,
+            double&             theNumber) const
+    {
+        theNumber = getNumberFromNode(theNode);
+    }
 
-	XPathExecutionContext&	m_executionContext;
+    XPathExecutionContext&  m_executionContext;
 };
 
 
@@ -329,29 +455,29 @@ private:
 struct
 equalsDOMString
 {
-	bool
-	operator()(
-			const XalanDOMString&	theLHS,
-			const XalanDOMString&	theRHS) const
-	{
-		return DOMStringEqualsFunction()(theLHS, theRHS);
-	}
+    bool
+    operator()(
+            const XalanDOMString&   theLHS,
+            const XalanDOMString&   theRHS) const
+    {
+        return DOMStringEqualsFunction()(theLHS, theRHS);
+    }
 
-	bool
-	operator()(
-			const XObject&			theLHS,
-			const XalanDOMString&	theRHS) const
-	{
-		return DOMStringEqualsFunction()(theLHS.str(), theRHS);
-	}
+    bool
+    operator()(
+            const XObject&          theLHS,
+            const XalanDOMString&   theRHS) const
+    {
+        return DOMStringEqualsFunction()(theLHS.str(), theRHS);
+    }
 
-	bool
-	operator()(
-			const XalanDOMString&	theLHS,
-			const XObject&			theRHS) const
-	{
-		return DOMStringEqualsFunction()(theLHS, theRHS.str());
-	}
+    bool
+    operator()(
+            const XalanDOMString&   theLHS,
+            const XObject&          theRHS) const
+    {
+        return DOMStringEqualsFunction()(theLHS, theRHS.str());
+    }
 };
 
 
@@ -359,29 +485,29 @@ equalsDOMString
 struct
 notEqualsDOMString
 {
-	bool
-	operator()(
-			const XalanDOMString&	theLHS,
-			const XalanDOMString&	theRHS) const
-	{
-		return DOMStringNotEqualsFunction()(theLHS, theRHS);
-	}
+    bool
+    operator()(
+            const XalanDOMString&   theLHS,
+            const XalanDOMString&   theRHS) const
+    {
+        return DOMStringNotEqualsFunction()(theLHS, theRHS);
+    }
 
-	bool
-	operator()(
-			const XObject&			theLHS,
-			const XalanDOMString&	theRHS) const
-	{
-		return DOMStringNotEqualsFunction()(theLHS.str(), theRHS);
-	}
+    bool
+    operator()(
+            const XObject&          theLHS,
+            const XalanDOMString&   theRHS) const
+    {
+        return DOMStringNotEqualsFunction()(theLHS.str(), theRHS);
+    }
 
-	bool
-	operator()(
-			const XalanDOMString&	theLHS,
-			const XObject&			theRHS) const
-	{
-		return DOMStringNotEqualsFunction()(theLHS, theRHS.str());
-	}
+    bool
+    operator()(
+            const XalanDOMString&   theLHS,
+            const XObject&          theRHS) const
+    {
+        return DOMStringNotEqualsFunction()(theLHS, theRHS.str());
+    }
 };
 
 
@@ -389,35 +515,35 @@ notEqualsDOMString
 struct
 lessThanDOMString
 {
-	bool
-	operator()(
-			const XalanDOMString&	theLHS,
-			const XalanDOMString&	theRHS) const
-	{
-		return DoubleSupport::lessThan(
-				DOMStringToDouble(theLHS),
-				DOMStringToDouble(theRHS));
-	}
+    bool
+    operator()(
+            const XalanDOMString&   theLHS,
+            const XalanDOMString&   theRHS) const
+    {
+        return DoubleSupport::lessThan(
+                DOMStringToDouble(theLHS),
+                DOMStringToDouble(theRHS));
+    }
 
-	bool
-	operator()(
-			const XObject&			theLHS,
-			const XalanDOMString&	theRHS) const
-	{
-		return DoubleSupport::lessThan(
-				theLHS.num(),
-				DOMStringToDouble(theRHS));
-	}
+    bool
+    operator()(
+            const XObject&          theLHS,
+            const XalanDOMString&   theRHS) const
+    {
+        return DoubleSupport::lessThan(
+                theLHS.num(),
+                DOMStringToDouble(theRHS));
+    }
 
-	bool
-	operator()(
-			const XalanDOMString&	theLHS,
-			const XObject&			theRHS) const
-	{
-		return DoubleSupport::lessThan(
-				DOMStringToDouble(theLHS),
-				theRHS.num());
-	}
+    bool
+    operator()(
+            const XalanDOMString&   theLHS,
+            const XObject&          theRHS) const
+    {
+        return DoubleSupport::lessThan(
+                DOMStringToDouble(theLHS),
+                theRHS.num());
+    }
 };
 
 
@@ -425,35 +551,35 @@ lessThanDOMString
 struct
 lessThanOrEqualDOMString
 {
-	bool
-	operator()(
-			const XalanDOMString&	theLHS,
-			const XalanDOMString&	theRHS) const
-	{
-		return DoubleSupport::lessThanOrEqual(
-				DOMStringToDouble(theLHS),
-				DOMStringToDouble(theRHS));
-	}
+    bool
+    operator()(
+            const XalanDOMString&   theLHS,
+            const XalanDOMString&   theRHS) const
+    {
+        return DoubleSupport::lessThanOrEqual(
+                DOMStringToDouble(theLHS),
+                DOMStringToDouble(theRHS));
+    }
 
-	bool
-	operator()(
-			const XObject&			theLHS,
-			const XalanDOMString&	theRHS) const
-	{
-		return DoubleSupport::lessThanOrEqual(
-				theLHS.num(),
-				DOMStringToDouble(theRHS));
-	}
+    bool
+    operator()(
+            const XObject&          theLHS,
+            const XalanDOMString&   theRHS) const
+    {
+        return DoubleSupport::lessThanOrEqual(
+                theLHS.num(),
+                DOMStringToDouble(theRHS));
+    }
 
-	bool
-	operator()(
-			const XalanDOMString&	theLHS,
-			const XObject&			theRHS) const
-	{
-		return DoubleSupport::lessThanOrEqual(
-				DOMStringToDouble(theLHS),
-				theRHS.num());
-	}
+    bool
+    operator()(
+            const XalanDOMString&   theLHS,
+            const XObject&          theRHS) const
+    {
+        return DoubleSupport::lessThanOrEqual(
+                DOMStringToDouble(theLHS),
+                theRHS.num());
+    }
 };
 
 
@@ -461,35 +587,35 @@ lessThanOrEqualDOMString
 struct
 greaterThanDOMString
 {
-	bool
-	operator()(
-			const XalanDOMString&	theLHS,
-			const XalanDOMString&	theRHS) const
-	{
-		return DoubleSupport::greaterThan(
-				DOMStringToDouble(theLHS),
-				DOMStringToDouble(theRHS));
-	}
+    bool
+    operator()(
+            const XalanDOMString&   theLHS,
+            const XalanDOMString&   theRHS) const
+    {
+        return DoubleSupport::greaterThan(
+                DOMStringToDouble(theLHS),
+                DOMStringToDouble(theRHS));
+    }
 
-	bool
-	operator()(
-			const XObject&			theLHS,
-			const XalanDOMString&	theRHS) const
-	{
-		return DoubleSupport::greaterThan(
-				theLHS.num(),
-				DOMStringToDouble(theRHS));
-	}
+    bool
+    operator()(
+            const XObject&          theLHS,
+            const XalanDOMString&   theRHS) const
+    {
+        return DoubleSupport::greaterThan(
+                theLHS.num(),
+                DOMStringToDouble(theRHS));
+    }
 
-	bool
-	operator()(
-			const XalanDOMString&	theLHS,
-			const XObject&			theRHS) const
-	{
-		return DoubleSupport::greaterThan(
-				DOMStringToDouble(theLHS),
-				theRHS.num());
-	}
+    bool
+    operator()(
+            const XalanDOMString&   theLHS,
+            const XObject&          theRHS) const
+    {
+        return DoubleSupport::greaterThan(
+                DOMStringToDouble(theLHS),
+                theRHS.num());
+    }
 };
 
 
@@ -497,35 +623,35 @@ greaterThanDOMString
 struct
 greaterThanOrEqualDOMString
 {
-	bool
-	operator()(
-			const XalanDOMString&	theLHS,
-			const XalanDOMString&	theRHS) const
-	{
-		return DoubleSupport::greaterThanOrEqual(
-				DOMStringToDouble(theLHS),
-				DOMStringToDouble(theRHS));
-	}
+    bool
+    operator()(
+            const XalanDOMString&   theLHS,
+            const XalanDOMString&   theRHS) const
+    {
+        return DoubleSupport::greaterThanOrEqual(
+                DOMStringToDouble(theLHS),
+                DOMStringToDouble(theRHS));
+    }
 
-	bool
-	operator()(
-			const XObject&			theLHS,
-			const XalanDOMString&	theRHS) const
-	{
-		return DoubleSupport::greaterThanOrEqual(
-				theLHS.num(),
-				DOMStringToDouble(theRHS));
-	}
+    bool
+    operator()(
+            const XObject&          theLHS,
+            const XalanDOMString&   theRHS) const
+    {
+        return DoubleSupport::greaterThanOrEqual(
+                theLHS.num(),
+                DOMStringToDouble(theRHS));
+    }
 
-	bool
-	operator()(
-			const XalanDOMString&	theLHS,
-			const XObject&			theRHS) const
-	{
-		return DoubleSupport::greaterThanOrEqual(
-				DOMStringToDouble(theLHS),
-				theRHS.num());
-	}
+    bool
+    operator()(
+            const XalanDOMString&   theLHS,
+            const XObject&          theRHS) const
+    {
+        return DoubleSupport::greaterThanOrEqual(
+                DOMStringToDouble(theLHS),
+                theRHS.num());
+    }
 };
 
 
@@ -533,66 +659,66 @@ greaterThanOrEqualDOMString
 template<class CompareFunction, class TypeFunction>
 bool
 doCompareNodeSets(
-			const NodeRefListBase&	theLHSNodeSet,
-			const NodeRefListBase&	theRHSNodeSet,
-			const TypeFunction&		theTypeFunction,
-			const CompareFunction&	theCompareFunction,
-			XPathExecutionContext&	executionContext)
+            const NodeRefListBase&  theLHSNodeSet,
+            const NodeRefListBase&  theRHSNodeSet,
+            const TypeFunction&     theTypeFunction,
+            const CompareFunction&  theCompareFunction,
+            XPathExecutionContext&  executionContext)
 {
-	// From http://www.w3.org/TR/xpath: 
-	// If both objects to be compared are node-sets, then the comparison 
-	// will be true if and only if there is a node in the first node-set 
-	// and a node in the second node-set such that the result of performing 
-	// the comparison on the string-values of the two nodes is true.
+    // From http://www.w3.org/TR/xpath: 
+    // If both objects to be compared are node-sets, then the comparison 
+    // will be true if and only if there is a node in the first node-set 
+    // and a node in the second node-set such that the result of performing 
+    // the comparison on the string-values of the two nodes is true.
 
-	// Note this little gem from the draft:
-	// NOTE: If $x is bound to a node-set, then $x="foo" 
-	// does not mean the same as not($x!="foo"): the former 
-	// is true if and only if some node in $x has the string-value 
-	// foo; the latter is true if and only if all nodes in $x have 
-	// the string-value foo.
-	bool	theResult = false;
+    // Note this little gem from the draft:
+    // NOTE: If $x is bound to a node-set, then $x="foo" 
+    // does not mean the same as not($x!="foo"): the former 
+    // is true if and only if some node in $x has the string-value 
+    // foo; the latter is true if and only if all nodes in $x have 
+    // the string-value foo.
+    bool    theResult = false;
 
-	const NodeRefListBase::size_type	len1 = theLHSNodeSet.getLength();
+    const NodeRefListBase::size_type    len1 = theLHSNodeSet.getLength();
 
-	if (len1 > 0)
-	{
-		const NodeRefListBase::size_type	len2 = theRHSNodeSet.getLength();
+    if (len1 > 0)
+    {
+        const NodeRefListBase::size_type    len2 = theRHSNodeSet.getLength();
 
-		if (len2 > 0)
-		{
-			XPathExecutionContext::GetAndReleaseCachedString	s1(executionContext);
+        if (len2 > 0)
+        {
+            XPathExecutionContext::GetAndReleaseCachedString    s1(executionContext);
 
-			XPathExecutionContext::GetAndReleaseCachedString	s2(executionContext);
+            XPathExecutionContext::GetAndReleaseCachedString    s2(executionContext);
 
-			for(NodeRefListBase::size_type i = 0; i < len1 && theResult == false; i++)
-			{
-				const XalanNode* const	theLHSNode = theLHSNodeSet.item(i);
-				assert(theLHSNode != 0);
+            for(NodeRefListBase::size_type i = 0; i < len1 && theResult == false; i++)
+            {
+                const XalanNode* const  theLHSNode = theLHSNodeSet.item(i);
+                assert(theLHSNode != 0);
 
-				theTypeFunction(*theLHSNode, s1.get());
+                theTypeFunction(*theLHSNode, s1.get());
 
-				for(NodeRefListBase::size_type k = 0; k < len2 && theResult == false; k++)
-				{
-					const XalanNode* const	theRHSNode = theRHSNodeSet.item(k);
-					assert(theRHSNode != 0);
+                for(NodeRefListBase::size_type k = 0; k < len2 && theResult == false; k++)
+                {
+                    const XalanNode* const  theRHSNode = theRHSNodeSet.item(k);
+                    assert(theRHSNode != 0);
 
-					theTypeFunction(*theRHSNode, s2.get());
+                    theTypeFunction(*theRHSNode, s2.get());
 
-					if(theCompareFunction(s1.get(), s2.get()) == true)
-					{
-						theResult = true;
-					}
+                    if(theCompareFunction(s1.get(), s2.get()) == true)
+                    {
+                        theResult = true;
+                    }
 
-					clear(s2.get());
-				}
+                    clear(s2.get());
+                }
 
-				clear(s1.get());
-			}
-		}
-	}
+                clear(s1.get());
+            }
+        }
+    }
 
-	return theResult;
+    return theResult;
 }
 
 
@@ -600,36 +726,36 @@ doCompareNodeSets(
 template<class CompareFunction, class StringFunction>
 bool
 doCompareString(
-			const NodeRefListBase&	theLHSNodeSet,
-			const StringFunction&	theStringFunction,
-			const XObject&			theRHS,
-			const CompareFunction&	theCompareFunction,
-			XPathExecutionContext&	executionContext)
+            const NodeRefListBase&  theLHSNodeSet,
+            const StringFunction&   theStringFunction,
+            const XObject&          theRHS,
+            const CompareFunction&  theCompareFunction,
+            XPathExecutionContext&  executionContext)
 {
-	bool				theResult = false;
+    bool                theResult = false;
 
-	const NodeRefListBase::size_type	len1 = theLHSNodeSet.getLength();
+    const NodeRefListBase::size_type    len1 = theLHSNodeSet.getLength();
 
-	XPathExecutionContext::GetAndReleaseCachedString	theGuard(executionContext);
+    XPathExecutionContext::GetAndReleaseCachedString    theGuard(executionContext);
 
-	XalanDOMString&		theLHS = theGuard.get();
+    XalanDOMString&     theLHS = theGuard.get();
 
-	for(NodeRefListBase::size_type i = 0; i < len1 && theResult == false; i++)
-	{
-		const XalanNode* const	theLHSNode = theLHSNodeSet.item(i);
-		assert(theLHSNode != 0);
+    for(NodeRefListBase::size_type i = 0; i < len1 && theResult == false; i++)
+    {
+        const XalanNode* const  theLHSNode = theLHSNodeSet.item(i);
+        assert(theLHSNode != 0);
 
-		theStringFunction(*theLHSNode, theLHS);
+        theStringFunction(*theLHSNode, theLHS);
 
-		if (theCompareFunction(theLHS, theRHS) == true)
-		{
-			theResult = true;
-		}
+        if (theCompareFunction(theLHS, theRHS) == true)
+        {
+            theResult = true;
+        }
 
-		clear(theLHS);
-	}
+        clear(theLHS);
+    }
 
-	return theResult;
+    return theResult;
 }
 
 
@@ -637,29 +763,29 @@ doCompareString(
 template<class CompareFunction, class NumberFunction>
 bool
 doCompareNumber(
-			const NodeRefListBase&	theLHSNodeSet,
-			const NumberFunction&	theNumberFunction,
-			const double			theRHS,
-			const CompareFunction&	theCompareFunction)
+            const NodeRefListBase&  theLHSNodeSet,
+            const NumberFunction&   theNumberFunction,
+            const double            theRHS,
+            const CompareFunction&  theCompareFunction)
 {
-	bool	theResult = false;
+    bool    theResult = false;
 
-	const NodeRefListBase::size_type	len1 = theLHSNodeSet.getLength();
+    const NodeRefListBase::size_type    len1 = theLHSNodeSet.getLength();
 
-	for(NodeRefListBase::size_type i = 0; i < len1 && theResult == false; i++)
-	{
-		const XalanNode* const	theLHSNode = theLHSNodeSet.item(i);
-		assert(theLHSNode != 0);
+    for(NodeRefListBase::size_type i = 0; i < len1 && theResult == false; i++)
+    {
+        const XalanNode* const  theLHSNode = theLHSNodeSet.item(i);
+        assert(theLHSNode != 0);
 
-		const double	theLHS = theNumberFunction(*theLHSNode);
+        const double    theLHS = theNumberFunction(*theLHSNode);
 
-		if (theCompareFunction(theLHS, theRHS) == true)
-		{
-			theResult = true;
-		}
-	}
+        if (theCompareFunction(theLHS, theRHS) == true)
+        {
+            theResult = true;
+        }
+    }
 
-	return theResult;
+    return theResult;
 }
 
 
@@ -667,480 +793,480 @@ doCompareNumber(
 template<class StringCompareFunction, class NumberCompareFunction>
 bool
 compareNodeSets(
-			const XObject&					theLHS,
-			const XObject&					theRHS,
-			XObject::eObjectType			theRHSType,
-			const StringCompareFunction&	theStringCompareFunction,
-			const NumberCompareFunction&	theNumberCompareFunction,
-			XPathExecutionContext&			executionContext)
+            const XObject&                  theLHS,
+            const XObject&                  theRHS,
+            XObject::eObjectType            theRHSType,
+            const StringCompareFunction&    theStringCompareFunction,
+            const NumberCompareFunction&    theNumberCompareFunction,
+            XPathExecutionContext&          executionContext)
 {
-	bool	theResult = false;
+    bool    theResult = false;
 
-	if(theRHSType == XObject::eTypeNodeSet)
-	{
-		// Compare as node sets...
-		theResult = doCompareNodeSets(
-				theLHS.nodeset(),
-				theRHS.nodeset(),
-				getStringFromNodeFunction(executionContext),
-				theStringCompareFunction,
-				executionContext);
+    if(theRHSType == XObject::eTypeNodeSet)
+    {
+        // Compare as node sets...
+        theResult = doCompareNodeSets(
+                theLHS.nodeset(),
+                theRHS.nodeset(),
+                getStringFromNodeFunction(executionContext),
+                theStringCompareFunction,
+                executionContext);
 
-	}
-	else if(theRHSType == XObject::eTypeBoolean)
-	{
-	  // From http://www.w3.org/TR/xpath: 
-	  // If one object to be compared is a node-set and the other is a boolean, 
-	  // then the comparison will be true if and only if the result of 
-	  // performing the comparison on the boolean and on the result of 
-	  // converting the node-set to a boolean using the boolean function 
-	  // is true.
-		const double	num1 = theLHS.boolean() == true ? 1.0 : 0.0;
+    }
+    else if(theRHSType == XObject::eTypeBoolean)
+    {
+      // From http://www.w3.org/TR/xpath: 
+      // If one object to be compared is a node-set and the other is a boolean, 
+      // then the comparison will be true if and only if the result of 
+      // performing the comparison on the boolean and on the result of 
+      // converting the node-set to a boolean using the boolean function 
+      // is true.
+        const double    num1 = theLHS.boolean() == true ? 1.0 : 0.0;
 
-		theResult = theNumberCompareFunction(num1, theRHS.num());
-	}
-	else if(theRHSType == XObject::eTypeNumber)
-	{
-		// From http://www.w3.org/TR/xpath: 
-		// If one object to be compared is a node-set and the other is a number, 
-		// then the comparison will be true if and only if there is a 
-		// node in the node-set such that the result of performing the 
-		// comparison on the number to be compared and on the result of 
-		// converting the string-value of that node to a number using 
-		// the number function is true. 
+        theResult = theNumberCompareFunction(num1, theRHS.num());
+    }
+    else if(theRHSType == XObject::eTypeNumber)
+    {
+        // From http://www.w3.org/TR/xpath: 
+        // If one object to be compared is a node-set and the other is a number, 
+        // then the comparison will be true if and only if there is a 
+        // node in the node-set such that the result of performing the 
+        // comparison on the number to be compared and on the result of 
+        // converting the string-value of that node to a number using 
+        // the number function is true. 
 
-		theResult = doCompareNumber(
-				theLHS.nodeset(),
-				getNumberFromNodeFunction(executionContext),
-				theRHS.num(),
-				theNumberCompareFunction);
-	}
-	else if(theRHSType == XObject::eTypeResultTreeFrag)
-	{
-		// hmmm... 
-		const double	theRHSNumber = theRHS.num();
+        theResult = doCompareNumber(
+                theLHS.nodeset(),
+                getNumberFromNodeFunction(executionContext),
+                theRHS.num(),
+                theNumberCompareFunction);
+    }
+    else if(theRHSType == XObject::eTypeResultTreeFrag)
+    {
+        // hmmm... 
+        const double    theRHSNumber = theRHS.num();
 
-		if(DoubleSupport::isNaN(theRHSNumber) == false)
-		{
-			// Compare as number...
-			theResult = doCompareNumber(
-					theLHS.nodeset(),
-					getNumberFromNodeFunction(executionContext),
-					theRHS.num(),
-					theNumberCompareFunction);
-		}
-		else
-		{
-			// Compare as string...
-			theResult = doCompareString(
-					theLHS.nodeset(),
-					getStringFromNodeFunction(executionContext),
-					theRHS,
-					theStringCompareFunction,
-					executionContext);
-		}
-	}
-	else if(theRHSType == XObject::eTypeString)
-	{
-		// From http://www.w3.org/TR/xpath: 
-		// If one object to be compared is a node-set and the other is a 
-		// string, then the comparison will be true if and only if there 
-		// is a node in the node-set such that the result of performing 
-		// the comparison on the string-value of the node and the other 
-		// string is true. 
-		theResult = doCompareString(
-				theLHS.nodeset(),
-				getStringFromNodeFunction(executionContext),
-				theRHS,
-				theStringCompareFunction,
-				executionContext);
-	}
-	else if (theRHSType != XObject::eTypeUnknown)
-	{
-		assert(false);
-	}
+        if(DoubleSupport::isNaN(theRHSNumber) == false)
+        {
+            // Compare as number...
+            theResult = doCompareNumber(
+                    theLHS.nodeset(),
+                    getNumberFromNodeFunction(executionContext),
+                    theRHS.num(),
+                    theNumberCompareFunction);
+        }
+        else
+        {
+            // Compare as string...
+            theResult = doCompareString(
+                    theLHS.nodeset(),
+                    getStringFromNodeFunction(executionContext),
+                    theRHS,
+                    theStringCompareFunction,
+                    executionContext);
+        }
+    }
+    else if(theRHSType == XObject::eTypeString)
+    {
+        // From http://www.w3.org/TR/xpath: 
+        // If one object to be compared is a node-set and the other is a 
+        // string, then the comparison will be true if and only if there 
+        // is a node in the node-set such that the result of performing 
+        // the comparison on the string-value of the node and the other 
+        // string is true. 
+        theResult = doCompareString(
+                theLHS.nodeset(),
+                getStringFromNodeFunction(executionContext),
+                theRHS,
+                theStringCompareFunction,
+                executionContext);
+    }
+    else if (theRHSType != XObject::eTypeUnknown)
+    {
+        assert(false);
+    }
 
-	return theResult;
+    return theResult;
 }
 
 
 
 inline bool
 equalNodeSet(
-			const XObject&			theLHS,
-			const XObject&			theRHS,
-			XObject::eObjectType	theRHSType,
-			XPathExecutionContext&	executionContext)
+            const XObject&          theLHS,
+            const XObject&          theRHS,
+            XObject::eObjectType    theRHSType,
+            XPathExecutionContext&  executionContext)
 {
-	return compareNodeSets(
-				theLHS,
-				theRHS,
-				theRHSType,
-				equalsDOMString(),
-				DoubleSupport::equalFunction(),
-				executionContext);
+    return compareNodeSets(
+                theLHS,
+                theRHS,
+                theRHSType,
+                equalsDOMString(),
+                DoubleSupport::equalFunction(),
+                executionContext);
 }
 
 
 
 inline bool
 notEqualNodeSet(
-			const XObject&			theLHS,
-			const XObject&			theRHS,
-			XObject::eObjectType	theRHSType,
-			XPathExecutionContext&	executionContext)
+            const XObject&          theLHS,
+            const XObject&          theRHS,
+            XObject::eObjectType    theRHSType,
+            XPathExecutionContext&  executionContext)
 {
-	return compareNodeSets(
-				theLHS,
-				theRHS,
-				theRHSType,
-				notEqualsDOMString(),
-				DoubleSupport::notEqualFunction(),
-				executionContext);
+    return compareNodeSets(
+                theLHS,
+                theRHS,
+                theRHSType,
+                notEqualsDOMString(),
+                DoubleSupport::notEqualFunction(),
+                executionContext);
 }
 
 
 
 inline bool
 lessThanNodeSet(
-			const XObject&			theLHS,
-			const XObject&			theRHS,
-			XObject::eObjectType	theRHSType,
-			XPathExecutionContext&	executionContext)
+            const XObject&          theLHS,
+            const XObject&          theRHS,
+            XObject::eObjectType    theRHSType,
+            XPathExecutionContext&  executionContext)
 {
-	return compareNodeSets(
-				theLHS,
-				theRHS,
-				theRHSType,
-				lessThanDOMString(),
-				DoubleSupport::lessThanFunction(),
-				executionContext);
+    return compareNodeSets(
+                theLHS,
+                theRHS,
+                theRHSType,
+                lessThanDOMString(),
+                DoubleSupport::lessThanFunction(),
+                executionContext);
 }
 
 
 
 inline bool
 lessThanOrEqualNodeSet(
-			const XObject&			theLHS,
-			const XObject&			theRHS,
-			XObject::eObjectType	theRHSType,
-			XPathExecutionContext&	executionContext)
+            const XObject&          theLHS,
+            const XObject&          theRHS,
+            XObject::eObjectType    theRHSType,
+            XPathExecutionContext&  executionContext)
 {
-	return compareNodeSets(
-				theLHS,
-				theRHS,
-				theRHSType,
-				lessThanOrEqualDOMString(),
-				DoubleSupport::lessThanOrEqualFunction(),
-				executionContext);
+    return compareNodeSets(
+                theLHS,
+                theRHS,
+                theRHSType,
+                lessThanOrEqualDOMString(),
+                DoubleSupport::lessThanOrEqualFunction(),
+                executionContext);
 }
 
 
 
 inline bool
 greaterThanNodeSet(
-			const XObject&			theLHS,
-			const XObject&			theRHS,
-			XObject::eObjectType	theRHSType,
-			XPathExecutionContext&	executionContext)
+            const XObject&          theLHS,
+            const XObject&          theRHS,
+            XObject::eObjectType    theRHSType,
+            XPathExecutionContext&  executionContext)
 {
-	return compareNodeSets(
-				theLHS,
-				theRHS,
-				theRHSType,
-				greaterThanDOMString(),
-				DoubleSupport::greaterThanFunction(),
-				executionContext);
+    return compareNodeSets(
+                theLHS,
+                theRHS,
+                theRHSType,
+                greaterThanDOMString(),
+                DoubleSupport::greaterThanFunction(),
+                executionContext);
 }
 
 
 
 inline bool
 greaterThanOrEqualNodeSet(
-			const XObject&			theLHS,
-			const XObject&			theRHS,
-			XObject::eObjectType	theRHSType,
-			XPathExecutionContext&	executionContext)
+            const XObject&          theLHS,
+            const XObject&          theRHS,
+            XObject::eObjectType    theRHSType,
+            XPathExecutionContext&  executionContext)
 {
-	return compareNodeSets(
-				theLHS,
-				theRHS,
-				theRHSType,
-				greaterThanOrEqualDOMString(),
-				DoubleSupport::greaterThanOrEqualFunction(),
-				executionContext);
+    return compareNodeSets(
+                theLHS,
+                theRHS,
+                theRHSType,
+                greaterThanOrEqualDOMString(),
+                DoubleSupport::greaterThanOrEqualFunction(),
+                executionContext);
 }
 
 
 
 bool
 XObject::equals(
-			const XObject&			theRHS,
-			XPathExecutionContext&	executionContext) const
+            const XObject&          theRHS,
+            XPathExecutionContext&  executionContext) const
 {
-	if (this == &theRHS)
-	{
-		return true;
-	}
-	else
-	{
-		const eObjectType	theLHSType = getType();
+    if (this == &theRHS)
+    {
+        return true;
+    }
+    else
+    {
+        const eObjectType   theLHSType = getType();
 
-		if (theLHSType == eTypeUnknown)
-		{
-			return this == &theRHS ? true : false;
-		}
-		else if (theLHSType == eTypeNull)
-		{
-			return theRHS.getType() == eTypeNull ? true : false;
-		}
-		else if (theLHSType == eTypeNodeSet)
-		{
-			return equalNodeSet(*this, theRHS, theRHS.getType(), executionContext);
-		}
-		else
-		{
-			const eObjectType	theRHSType = theRHS.getType();
+        if (theLHSType == eTypeUnknown)
+        {
+            return this == &theRHS ? true : false;
+        }
+        else if (theLHSType == eTypeNull)
+        {
+            return theRHS.getType() == eTypeNull ? true : false;
+        }
+        else if (theLHSType == eTypeNodeSet)
+        {
+            return equalNodeSet(*this, theRHS, theRHS.getType(), executionContext);
+        }
+        else
+        {
+            const eObjectType   theRHSType = theRHS.getType();
 
-			if (theRHSType == eTypeNodeSet)
-			{
-				return equalNodeSet(theRHS, *this, theLHSType, executionContext);
-			}
-			else
-			{
-				if (theLHSType == eTypeBoolean || theRHSType == eTypeBoolean)
-				{
-					return boolean() == theRHS.boolean();
-				}
-				else if (theLHSType == eTypeNumber || theRHSType == eTypeNumber)
-				{
-					return DoubleSupport::equal(num(), theRHS.num());
-				}
-				else
-				{
-					return str() == theRHS.str();
-				}
-			}
-		}
-	}
+            if (theRHSType == eTypeNodeSet)
+            {
+                return equalNodeSet(theRHS, *this, theLHSType, executionContext);
+            }
+            else
+            {
+                if (theLHSType == eTypeBoolean || theRHSType == eTypeBoolean)
+                {
+                    return boolean() == theRHS.boolean();
+                }
+                else if (theLHSType == eTypeNumber || theRHSType == eTypeNumber)
+                {
+                    return DoubleSupport::equal(num(), theRHS.num());
+                }
+                else
+                {
+                    return str() == theRHS.str();
+                }
+            }
+        }
+    }
 }
 
 
 
 bool
 XObject::notEquals(
-			const XObject&			theRHS,
-			XPathExecutionContext&	executionContext) const
+            const XObject&          theRHS,
+            XPathExecutionContext&  executionContext) const
 {
-	if (this == &theRHS)
-	{
-		return false;
-	}
-	else
-	{
-		const eObjectType	theLHSType = getType();
+    if (this == &theRHS)
+    {
+        return false;
+    }
+    else
+    {
+        const eObjectType   theLHSType = getType();
 
-		if (theLHSType == eTypeUnknown)
-		{
-			return this == &theRHS ? false : true;
-		}
-		else if (theLHSType == eTypeNull)
-		{
-			return theRHS.getType() == eTypeNull ? false : true;
-		}
-		else if (theLHSType == eTypeNodeSet)
-		{
-			return notEqualNodeSet(*this, theRHS, theRHS.getType(), executionContext);
-		}
-		else
-		{
-			const eObjectType	theRHSType = theRHS.getType();
+        if (theLHSType == eTypeUnknown)
+        {
+            return this == &theRHS ? false : true;
+        }
+        else if (theLHSType == eTypeNull)
+        {
+            return theRHS.getType() == eTypeNull ? false : true;
+        }
+        else if (theLHSType == eTypeNodeSet)
+        {
+            return notEqualNodeSet(*this, theRHS, theRHS.getType(), executionContext);
+        }
+        else
+        {
+            const eObjectType   theRHSType = theRHS.getType();
 
-			if (theRHSType == eTypeNodeSet)
-			{
-				return notEqualNodeSet(theRHS, *this, theLHSType, executionContext);
-			}
-			else
-			{
-				if (theLHSType == eTypeBoolean || theRHSType == eTypeBoolean)
-				{
-					return boolean() != theRHS.boolean();
-				}
-				else if (theLHSType == eTypeNumber || theRHSType == eTypeNumber)
-				{
-					return DoubleSupport::notEqual(num(), theRHS.num());
-				}
-				else
-				{
-					return str() != theRHS.str();
-				}
-			}
-		}
-	}
+            if (theRHSType == eTypeNodeSet)
+            {
+                return notEqualNodeSet(theRHS, *this, theLHSType, executionContext);
+            }
+            else
+            {
+                if (theLHSType == eTypeBoolean || theRHSType == eTypeBoolean)
+                {
+                    return boolean() != theRHS.boolean();
+                }
+                else if (theLHSType == eTypeNumber || theRHSType == eTypeNumber)
+                {
+                    return DoubleSupport::notEqual(num(), theRHS.num());
+                }
+                else
+                {
+                    return str() != theRHS.str();
+                }
+            }
+        }
+    }
 }
 
 
 
 bool
 XObject::lessThan(
-			const XObject&			theRHS,
-			XPathExecutionContext&	executionContext) const
+            const XObject&          theRHS,
+            XPathExecutionContext&  executionContext) const
 {
-	if (this == &theRHS)
-	{
-		return false;
-	}
-	else
-	{
-		const eObjectType	theLHSType = getType();
+    if (this == &theRHS)
+    {
+        return false;
+    }
+    else
+    {
+        const eObjectType   theLHSType = getType();
 
-		if (theLHSType == eTypeNull || theLHSType == eTypeUnknown)
-		{
-			return false;
-		}
-		else if (theLHSType == eTypeNodeSet)
-		{
-			return lessThanNodeSet(*this, theRHS, theRHS.getType(), executionContext);
-		}
-		else if (theRHS.getType() == eTypeNodeSet)
-		{
-			return greaterThanNodeSet(theRHS, *this, theLHSType, executionContext);
-		}
-		else
-		{
-			return DoubleSupport::lessThan(num(), theRHS.num());
-		}
-	}
+        if (theLHSType == eTypeNull || theLHSType == eTypeUnknown)
+        {
+            return false;
+        }
+        else if (theLHSType == eTypeNodeSet)
+        {
+            return lessThanNodeSet(*this, theRHS, theRHS.getType(), executionContext);
+        }
+        else if (theRHS.getType() == eTypeNodeSet)
+        {
+            return greaterThanNodeSet(theRHS, *this, theLHSType, executionContext);
+        }
+        else
+        {
+            return DoubleSupport::lessThan(num(), theRHS.num());
+        }
+    }
 }
 
 
 
 bool
 XObject::lessThanOrEquals(
-			const XObject&			theRHS,
-			XPathExecutionContext&	executionContext) const
+            const XObject&          theRHS,
+            XPathExecutionContext&  executionContext) const
 {
-	if (this == &theRHS)
-	{
-		return false;
-	}
-	else
-	{
-		const eObjectType	theLHSType = getType();
+    if (this == &theRHS)
+    {
+        return false;
+    }
+    else
+    {
+        const eObjectType   theLHSType = getType();
 
-		if (theLHSType == eTypeNull || theLHSType == eTypeUnknown)
-		{
-			return false;
-		}
-		else if (theLHSType == eTypeNodeSet)
-		{
-			return lessThanOrEqualNodeSet(*this, theRHS, theRHS.getType(), executionContext);
-		}
-		else if (theRHS.getType() == eTypeNodeSet)
-		{
-			return greaterThanOrEqualNodeSet(theRHS, *this, theLHSType, executionContext);
-		}
-		else
-		{
-			return DoubleSupport::lessThanOrEqual(num(), theRHS.num());
-		}
-	}
+        if (theLHSType == eTypeNull || theLHSType == eTypeUnknown)
+        {
+            return false;
+        }
+        else if (theLHSType == eTypeNodeSet)
+        {
+            return lessThanOrEqualNodeSet(*this, theRHS, theRHS.getType(), executionContext);
+        }
+        else if (theRHS.getType() == eTypeNodeSet)
+        {
+            return greaterThanOrEqualNodeSet(theRHS, *this, theLHSType, executionContext);
+        }
+        else
+        {
+            return DoubleSupport::lessThanOrEqual(num(), theRHS.num());
+        }
+    }
 }
 
 
 
 bool
 XObject::greaterThan(
-			const XObject&			theRHS,
-			XPathExecutionContext&	executionContext) const
+            const XObject&          theRHS,
+            XPathExecutionContext&  executionContext) const
 {
-	if (this == &theRHS)
-	{
-		return false;
-	}
-	else
-	{
-		const eObjectType	theLHSType = getType();
+    if (this == &theRHS)
+    {
+        return false;
+    }
+    else
+    {
+        const eObjectType   theLHSType = getType();
 
-		if (theLHSType == eTypeNull || theLHSType == eTypeUnknown)
-		{
-			return false;
-		}
-		else if (theLHSType == eTypeNodeSet)
-		{
-			return greaterThanNodeSet(*this, theRHS, theRHS.getType(), executionContext);
-		}
-		else if (theRHS.getType() == eTypeNodeSet)
-		{
-			return lessThanNodeSet(theRHS, *this, theLHSType, executionContext);
-		}
-		else
-		{
-			return DoubleSupport::greaterThan(num(), theRHS.num());
-		}
-	}
+        if (theLHSType == eTypeNull || theLHSType == eTypeUnknown)
+        {
+            return false;
+        }
+        else if (theLHSType == eTypeNodeSet)
+        {
+            return greaterThanNodeSet(*this, theRHS, theRHS.getType(), executionContext);
+        }
+        else if (theRHS.getType() == eTypeNodeSet)
+        {
+            return lessThanNodeSet(theRHS, *this, theLHSType, executionContext);
+        }
+        else
+        {
+            return DoubleSupport::greaterThan(num(), theRHS.num());
+        }
+    }
 }
 
 
 
 bool
 XObject::greaterThanOrEquals(
-			const XObject&			theRHS,
-			XPathExecutionContext&	executionContext) const
+            const XObject&          theRHS,
+            XPathExecutionContext&  executionContext) const
 {
-	if (this == &theRHS)
-	{
-		return false;
-	}
-	else
-	{
-		const eObjectType	theLHSType = getType();
+    if (this == &theRHS)
+    {
+        return false;
+    }
+    else
+    {
+        const eObjectType   theLHSType = getType();
 
-		if (theLHSType == eTypeNull || theLHSType == eTypeUnknown)
-		{
-			return false;
-		}
-		else if (theLHSType == eTypeNodeSet)
-		{
-			return greaterThanOrEqualNodeSet(*this, theRHS, theRHS.getType(), executionContext);
-		}
-		else if (theRHS.getType() == eTypeNodeSet)
-		{
-			return lessThanOrEqualNodeSet(theRHS, *this, theLHSType, executionContext);
-		}
-		else
-		{
-			return DoubleSupport::greaterThanOrEqual(num(), theRHS.num());
-		}
-	}
+        if (theLHSType == eTypeNull || theLHSType == eTypeUnknown)
+        {
+            return false;
+        }
+        else if (theLHSType == eTypeNodeSet)
+        {
+            return greaterThanOrEqualNodeSet(*this, theRHS, theRHS.getType(), executionContext);
+        }
+        else if (theRHS.getType() == eTypeNodeSet)
+        {
+            return lessThanOrEqualNodeSet(theRHS, *this, theLHSType, executionContext);
+        }
+        else
+        {
+            return DoubleSupport::greaterThanOrEqual(num(), theRHS.num());
+        }
+    }
 }
 
 
-const XalanDOMChar	XObject::XObjectException::m_type[] = 
-{	
-	XalanUnicode::charLetter_X,
-	XalanUnicode::charLetter_O,
-	XalanUnicode::charLetter_b,
-	XalanUnicode::charLetter_j,
-	XalanUnicode::charLetter_e,
-	XalanUnicode::charLetter_c,
-	XalanUnicode::charLetter_t,
-	XalanUnicode::charLetter_E,
-	XalanUnicode::charLetter_x,
-	XalanUnicode::charLetter_c,
-	XalanUnicode::charLetter_e,
-	XalanUnicode::charLetter_p,
-	XalanUnicode::charLetter_t,
-	XalanUnicode::charLetter_i,
-	XalanUnicode::charLetter_o,
-	XalanUnicode::charLetter_n,
-	0
+const XalanDOMChar  XObject::XObjectException::m_type[] = 
+{   
+    XalanUnicode::charLetter_X,
+    XalanUnicode::charLetter_O,
+    XalanUnicode::charLetter_b,
+    XalanUnicode::charLetter_j,
+    XalanUnicode::charLetter_e,
+    XalanUnicode::charLetter_c,
+    XalanUnicode::charLetter_t,
+    XalanUnicode::charLetter_E,
+    XalanUnicode::charLetter_x,
+    XalanUnicode::charLetter_c,
+    XalanUnicode::charLetter_e,
+    XalanUnicode::charLetter_p,
+    XalanUnicode::charLetter_t,
+    XalanUnicode::charLetter_i,
+    XalanUnicode::charLetter_o,
+    XalanUnicode::charLetter_n,
+    0
 };
 
 
 XObject::XObjectException::XObjectException(
-				const XalanDOMString&	message) :
-	XalanXPathException(message)
+                const XalanDOMString&   message) :
+    XalanXPathException(message)
 {
 }
 
@@ -1150,53 +1276,53 @@ XObject::XObjectException::~XObjectException()
 {
 }
 
-const XalanDOMChar	XObject::XObjectInvalidConversionException::m_type[] = 
-{	
-	XalanUnicode::charLetter_X,
-	XalanUnicode::charLetter_O,
-	XalanUnicode::charLetter_b,
-	XalanUnicode::charLetter_j,
-	XalanUnicode::charLetter_e,
-	XalanUnicode::charLetter_c,
-	XalanUnicode::charLetter_t,
-	XalanUnicode::charLetter_I,
-	XalanUnicode::charLetter_n,
-	XalanUnicode::charLetter_v,
-	XalanUnicode::charLetter_a,
-	XalanUnicode::charLetter_l,
-	XalanUnicode::charLetter_i,
-	XalanUnicode::charLetter_d,
-	XalanUnicode::charLetter_C,
-	XalanUnicode::charLetter_o,
-	XalanUnicode::charLetter_n,
-	XalanUnicode::charLetter_v,
-	XalanUnicode::charLetter_e,
-	XalanUnicode::charLetter_r,
-	XalanUnicode::charLetter_s,
-	XalanUnicode::charLetter_a,
-	XalanUnicode::charLetter_t,
-	XalanUnicode::charLetter_i,
-	XalanUnicode::charLetter_o,
-	XalanUnicode::charLetter_n,
-	XalanUnicode::charLetter_E,
-	XalanUnicode::charLetter_x,
-	XalanUnicode::charLetter_c,
-	XalanUnicode::charLetter_e,
-	XalanUnicode::charLetter_p,
-	XalanUnicode::charLetter_t,
-	XalanUnicode::charLetter_i,
-	XalanUnicode::charLetter_o,
-	XalanUnicode::charLetter_n,
-	0
+const XalanDOMChar  XObject::XObjectInvalidConversionException::m_type[] = 
+{   
+    XalanUnicode::charLetter_X,
+    XalanUnicode::charLetter_O,
+    XalanUnicode::charLetter_b,
+    XalanUnicode::charLetter_j,
+    XalanUnicode::charLetter_e,
+    XalanUnicode::charLetter_c,
+    XalanUnicode::charLetter_t,
+    XalanUnicode::charLetter_I,
+    XalanUnicode::charLetter_n,
+    XalanUnicode::charLetter_v,
+    XalanUnicode::charLetter_a,
+    XalanUnicode::charLetter_l,
+    XalanUnicode::charLetter_i,
+    XalanUnicode::charLetter_d,
+    XalanUnicode::charLetter_C,
+    XalanUnicode::charLetter_o,
+    XalanUnicode::charLetter_n,
+    XalanUnicode::charLetter_v,
+    XalanUnicode::charLetter_e,
+    XalanUnicode::charLetter_r,
+    XalanUnicode::charLetter_s,
+    XalanUnicode::charLetter_a,
+    XalanUnicode::charLetter_t,
+    XalanUnicode::charLetter_i,
+    XalanUnicode::charLetter_o,
+    XalanUnicode::charLetter_n,
+    XalanUnicode::charLetter_E,
+    XalanUnicode::charLetter_x,
+    XalanUnicode::charLetter_c,
+    XalanUnicode::charLetter_e,
+    XalanUnicode::charLetter_p,
+    XalanUnicode::charLetter_t,
+    XalanUnicode::charLetter_i,
+    XalanUnicode::charLetter_o,
+    XalanUnicode::charLetter_n,
+    0
 };
 
 XObject::XObjectInvalidConversionException::XObjectInvalidConversionException(
-				const XalanDOMString&	fromType,
-				const XalanDOMString&	toType) :
-	XObjectException(
-			formatErrorString(fromType, toType)),
-	m_fromType(fromType),
-	m_toType(toType)
+                const XalanDOMString&   fromType,
+                const XalanDOMString&   toType) :
+    XObjectException(
+            formatErrorString(fromType, toType)),
+    m_fromType(fromType),
+    m_toType(toType)
 {
 }
 
@@ -1210,11 +1336,11 @@ XObject::XObjectInvalidConversionException::~XObjectInvalidConversionException()
 
 const XalanDOMString
 XObject::XObjectInvalidConversionException::formatErrorString(
-				const XalanDOMString&	fromType,
-				const XalanDOMString&	toType)
+                const XalanDOMString&   fromType,
+                const XalanDOMString&   toType)
 {
 
-	return XalanMessageLoader::getMessage(XalanMessages::CannotConvertTypetoType_2Param, fromType, toType);
+    return XalanMessageLoader::getMessage(XalanMessages::CannotConvertTypetoType_2Param, fromType, toType);
 
 }
 

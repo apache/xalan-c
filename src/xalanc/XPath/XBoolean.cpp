@@ -71,10 +71,10 @@ XBoolean::clone(void*	theAddress) const
 
 
 
-XalanDOMString
+const XalanDOMString&
 XBoolean::getTypeString() const
 {
-	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("#BOOLEAN"));
+	return s_booleanString;
 }
 
 

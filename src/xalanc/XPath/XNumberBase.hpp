@@ -49,7 +49,7 @@ public:
 
 	// These methods are inherited from XObject ...
 
-	virtual XalanDOMString
+	virtual const XalanDOMString&
 	getTypeString() const;
 
 	virtual double

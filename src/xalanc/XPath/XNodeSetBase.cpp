@@ -71,10 +71,10 @@ XNodeSetBase::~XNodeSetBase()
 
 
 
-XalanDOMString
+const XalanDOMString&
 XNodeSetBase::getTypeString() const
 {
-	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("#NODESET"));
+	return s_nodesetString;
 }
 
 

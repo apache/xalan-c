@@ -26,6 +26,22 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
+XalanDOMString   XNull::s_nullString;
+
+
+static const XalanDOMChar   s_null[] =
+{
+    XalanUnicode::charLessThanSign,
+    XalanUnicode::charLetter_n,
+    XalanUnicode::charLetter_u,
+    XalanUnicode::charLetter_l,
+    XalanUnicode::charLetter_l,
+    XalanUnicode::charGreaterThanSign,
+    0
+};
+
+
+
 XNull::XNull() :
 	XObject(eTypeNull)
 {
@@ -65,10 +81,10 @@ XNull::clone(void*	theAddress) const
 
 
 
-XalanDOMString
+const XalanDOMString&
 XNull::getTypeString() const
 {
-	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("#NULL"));
+	return s_nullString;
 }
 
 
@@ -92,7 +108,7 @@ XNull::boolean() const
 const XalanDOMString&
 XNull::str() const
 {
-	return s_nullString;
+	return s_emptyString;
 }
 
 
@@ -126,6 +142,22 @@ void
 XNull::ProcessXObjectTypeCallback(XObjectTypeCallback&	theCallbackObject) const
 {
 	theCallbackObject.Null(*this);
+}
+
+
+
+void
+XNull::initialize()
+{
+	s_nullString = s_null;
+}
+
+
+
+void
+XNull::terminate()
+{
+	releaseMemory(s_nullString);
 }
 
 

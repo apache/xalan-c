@@ -118,10 +118,10 @@ XResultTreeFrag::clone(void*	theAddress) const
 
 
 
-XalanDOMString
+const XalanDOMString&
 XResultTreeFrag::getTypeString() const
 {
-	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("#RESULT_TREE_FRAG"));
+	return s_resultTreeFragmentString;
 }
 
 

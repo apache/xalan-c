@@ -64,7 +64,7 @@ public:
 #endif
 	clone(void*		theAddress = 0) const = 0;
 
-	virtual XalanDOMString
+	virtual const XalanDOMString&
 	getTypeString() const;
   
 	virtual double

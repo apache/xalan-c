@@ -39,6 +39,18 @@ public:
 	typedef XObject		ParentType;
 
 	/**
+	 * Perform static initialization.  See class XPathInit.
+	 */
+	static void
+	initialize();
+
+	/**
+	 * Perform static shut down.  See class XPathInit.
+	 */
+	static void
+	terminate();
+
+	/**
 	 * Create an XNull.
 	 *
 	 */
@@ -65,7 +77,7 @@ public:
 #endif
 	clone(void*		theAddress = 0) const;
 
-	virtual XalanDOMString
+	virtual const XalanDOMString&
 	getTypeString() const;
 
 	virtual double
@@ -97,8 +109,11 @@ public:
 
 private:
 
+    static XalanDOMString   s_nullString;
+
 	// not implemented
-	XNull& operator=(const XNull &);
+	XNull&
+    operator=(const XNull &);
 };
 
 

@@ -18,6 +18,7 @@
 
 
 
+#include "XNull.hpp"
 #include "XObject.hpp"
 #include "XUnknown.hpp"
 #include "XPath.hpp"
@@ -63,6 +64,8 @@ XPathInit::~XPathInit()
 void
 XPathInit::initialize()
 {
+    XNull::initialize();
+
 	XObject::initialize();
 
 	XUnknown::initialize();
@@ -84,6 +87,8 @@ XPathInit::terminate()
 	XUnknown::terminate();
 
 	XObject::terminate();
+
+    XNull::terminate();
 }
 
 

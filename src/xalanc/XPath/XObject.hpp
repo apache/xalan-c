@@ -62,520 +62,528 @@ class XALAN_XPATH_EXPORT XObject : protected XalanReferenceCountedObject
 {
 public:
 
-	friend class XObjectPtr;
+    friend class XObjectPtr;
 
-	/**
-	 * Enumeration of possible object types
-	 */
-	enum	eObjectType { eTypeNull = 0,
-						  eTypeUnknown = 1,
-						  eTypeBoolean = 2,
-						  eTypeNumber = 3,
-						  eTypeString = 4,
-						  eTypeNodeSet = 5,
-						  eTypeResultTreeFrag = 6,
-						  eTypeUserDefined = 7,
-						  // These next types are implementation-specific, and
-						  // are never returned by getType().
-						  eTypeStringReference = 8,
-						  eTypeStringAdapter = 9,
-						  eTypeStringCached = 10,
-						  eTypeXTokenNumberAdapter = 11,
-						  eTypeXTokenStringAdapter = 12,
-						  eTypeNodeSetNodeProxy = 13,
-						  eUnknown
-						};
+    /**
+     * Enumeration of possible object types
+     */
+    enum    eObjectType { eTypeNull = 0,
+                          eTypeUnknown = 1,
+                          eTypeBoolean = 2,
+                          eTypeNumber = 3,
+                          eTypeString = 4,
+                          eTypeNodeSet = 5,
+                          eTypeResultTreeFrag = 6,
+                          eTypeUserDefined = 7,
+                          // These next types are implementation-specific, and
+                          // are never returned by getType().
+                          eTypeStringReference = 8,
+                          eTypeStringAdapter = 9,
+                          eTypeStringCached = 10,
+                          eTypeXTokenNumberAdapter = 11,
+                          eTypeXTokenStringAdapter = 12,
+                          eTypeNodeSetNodeProxy = 13,
+                          eUnknown
+                        };
 
-	/**
-	 * Perform static initialization.  See class XPathInit.
-	 */
-	static void
-	initialize();
+    /**
+     * Perform static initialization.  See class XPathInit.
+     */
+    static void
+    initialize();
 
-	/**
-	 * Perform static shut down.  See class XPathInit.
-	 */
-	static void
-	terminate();
+    /**
+     * Perform static shut down.  See class XPathInit.
+     */
+    static void
+    terminate();
 
-	/**
-	 * Create an XObject.
-	 *
-	 * @param theObjectType The enum for the type of the object.
-	 */
-	XObject(eObjectType		theObjectType);
+    /**
+     * Create an XObject.
+     *
+     * @param theObjectType The enum for the type of the object.
+     */
+    XObject(eObjectType     theObjectType);
 
-	XObject(const XObject&	source);
+    XObject(const XObject&  source);
 
-	/**
-	 * Clone the instance
-	 *
-	 * @param If theAddress is not null, the XObject will clone itself into that address.
-	 * @return a clone of the instance.
-	 */
-	virtual XObject*
-	clone(void*		theAddress = 0) const = 0;
+    /**
+     * Clone the instance
+     *
+     * @param If theAddress is not null, the XObject will clone itself into that address.
+     * @return a clone of the instance.
+     */
+    virtual XObject*
+    clone(void*     theAddress = 0) const = 0;
 
-	/**
-	 * Given a request type, return the equivalent string. 
-	 * For diagnostic purposes.
-	 *
-	 * @return string for type
-	 */
-	virtual XalanDOMString
-	getTypeString() const = 0;
+    /**
+     * Given a request type, return the equivalent string. 
+     * For diagnostic purposes.
+     *
+     * @return string for type
+     */
+    virtual const XalanDOMString&
+    getTypeString() const = 0;
 
-	/**
-	 * Cast result object to a number.
-	 *
-	 * @return numeric value
-	 */
-	virtual double
-	num() const;
+    /**
+     * Cast result object to a number.
+     *
+     * @return numeric value
+     */
+    virtual double
+    num() const;
 
-	/**
-	 * Cast result object to a boolean.
-	 *
-	 * @return boolean value
-	 */
-	virtual bool
-	boolean() const;
+    /**
+     * Cast result object to a boolean.
+     *
+     * @return boolean value
+     */
+    virtual bool
+    boolean() const;
 
-	/**
-	 * Cast result object to a string.
-	 *
-	 * @return string value
-	 */
-	virtual const XalanDOMString&
-	str() const;
+    /**
+     * Cast result object to a string.
+     *
+     * @return string value
+     */
+    virtual const XalanDOMString&
+    str() const;
 
-	typedef void (FormatterListener::*MemberFunctionPtr)(const XMLCh* const, const unsigned int);
+    typedef void (FormatterListener::*MemberFunctionPtr)(const XMLCh* const, const unsigned int);
 
-	/**
-	 * Send the string value to a FormatterListener instance.
-	 *
-	 * @param formatterListener The FormatterListener instance
-	 * @param function A pointer to the member function of FormatterListener to call
-	 * 
-	 */
-	virtual void
-	str(
-			FormatterListener&	formatterListener,
-			MemberFunctionPtr	function) const = 0;
+    /**
+     * Send the string value to a FormatterListener instance.
+     *
+     * @param formatterListener The FormatterListener instance
+     * @param function A pointer to the member function of FormatterListener to call
+     * 
+     */
+    virtual void
+    str(
+            FormatterListener&  formatterListener,
+            MemberFunctionPtr   function) const = 0;
 
-	/**
-	 * Get the length of the string value of the instance..
-	 *
-	 * @return The length of the string value
-	 */
-	virtual double
-	stringLength() const = 0;
+    /**
+     * Get the length of the string value of the instance..
+     *
+     * @return The length of the string value
+     */
+    virtual double
+    stringLength() const = 0;
 
-	/**
-	 * Append the string value directly a string
-	 *
-	 * @param theBuffer The buffer for the data
-	 */
-	virtual void
-	str(XalanDOMString&	theBuffer) const;
+    /**
+     * Append the string value directly a string
+     *
+     * @param theBuffer The buffer for the data
+     */
+    virtual void
+    str(XalanDOMString& theBuffer) const;
 
-	/**
-	 * Cast result object to a result tree fragment.
-	 *
-	 * @return result tree fragment
-	 */
-	virtual const XalanDocumentFragment&
-	rtree() const;
+    /**
+     * Cast result object to a result tree fragment.
+     *
+     * @return result tree fragment
+     */
+    virtual const XalanDocumentFragment&
+    rtree() const;
 
-	/**
-	 * Cast result object to a nodelist.
-	 *
-	 * @return node list
-	 */
-	virtual const NodeRefListBase&
-	nodeset() const;
+    /**
+     * Cast result object to a nodelist.
+     *
+     * @return node list
+     */
+    virtual const NodeRefListBase&
+    nodeset() const;
 
-	/**
-	 * Process a callback request for preferred type information.
-	 *
-	 * @param theCallbackObject object to call back
-	 */
-	virtual void
-	ProcessXObjectTypeCallback(XObjectTypeCallback&		theCallbackObject) = 0;
+    /**
+     * Process a callback request for preferred type information.
+     *
+     * @param theCallbackObject object to call back
+     */
+    virtual void
+    ProcessXObjectTypeCallback(XObjectTypeCallback&     theCallbackObject) = 0;
 
-	/**
-	 * Process a callback request for preferred type information.
-	 *
-	 * @param theCallbackObject object to call back
-	 */
-	virtual void
-	ProcessXObjectTypeCallback(XObjectTypeCallback&		theCallbackObject) const = 0;
+    /**
+     * Process a callback request for preferred type information.
+     *
+     * @param theCallbackObject object to call back
+     */
+    virtual void
+    ProcessXObjectTypeCallback(XObjectTypeCallback&     theCallbackObject) const = 0;
 
-	/**
-	 * Tell if two objects are functionally equal.
-	 *
-	 * @param theRHS object to compare
-	 * @param executionContext the current execution context
-	 * @return true if they are equal
-	 */
-	bool
-	equals(
-			const XObject&			theRHS,
-			XPathExecutionContext&	executionContext) const;
+    /**
+     * Tell if two objects are functionally equal.
+     *
+     * @param theRHS object to compare
+     * @param executionContext the current execution context
+     * @return true if they are equal
+     */
+    bool
+    equals(
+            const XObject&          theRHS,
+            XPathExecutionContext&  executionContext) const;
 
-	/**
-	 * Tell if two objects are functionally not equal.
-	 *
-	 * @param theRHS object to compare
-	 * @param executionContext the current execution context
-	 * @return true if they are equal
-	 */
-	bool
-	notEquals(
-			const XObject&			theRHS,
-			XPathExecutionContext&	executionContext) const;
+    /**
+     * Tell if two objects are functionally not equal.
+     *
+     * @param theRHS object to compare
+     * @param executionContext the current execution context
+     * @return true if they are equal
+     */
+    bool
+    notEquals(
+            const XObject&          theRHS,
+            XPathExecutionContext&  executionContext) const;
 
-	/**
-	 * Tell if one object is less than the other.
-	 *
-	 * @param theRHS object to compare
-	 * @return true if they are equal
-	 */
-	bool
-	lessThan(
-			const XObject&			theRHS,
-			XPathExecutionContext&	executionContext) const;
+    /**
+     * Tell if one object is less than the other.
+     *
+     * @param theRHS object to compare
+     * @return true if they are equal
+     */
+    bool
+    lessThan(
+            const XObject&          theRHS,
+            XPathExecutionContext&  executionContext) const;
 
-	/**
-	 * Tell if one object is less than or equal
-	 * the other.
-	 *
-	 * @param theRHS object to compare
-	 * @return true if they are equal
-	 */
-	bool
-	lessThanOrEquals(
-			const XObject&			theRHS,
-			XPathExecutionContext&	executionContext) const;
+    /**
+     * Tell if one object is less than or equal
+     * the other.
+     *
+     * @param theRHS object to compare
+     * @return true if they are equal
+     */
+    bool
+    lessThanOrEquals(
+            const XObject&          theRHS,
+            XPathExecutionContext&  executionContext) const;
 
-	/**
-	 * Tell if one object is greater than the other.
-	 *
-	 * @param theRHS object to compare
-	 * @return true if they are equal
-	 */
-	bool
-	greaterThan(
-			const XObject&			theRHS,
-			XPathExecutionContext&	executionContext) const;
+    /**
+     * Tell if one object is greater than the other.
+     *
+     * @param theRHS object to compare
+     * @return true if they are equal
+     */
+    bool
+    greaterThan(
+            const XObject&          theRHS,
+            XPathExecutionContext&  executionContext) const;
 
-	/**
-	 * Tell if one object is greater than or equal
-	 * the other.
-	 *
-	 * @param theRHS object to compare
-	 * @return true if they are equal
-	 */
-	bool
-	greaterThanOrEquals(
-			const XObject&			theRHS,
-			XPathExecutionContext&	executionContext) const;
+    /**
+     * Tell if one object is greater than or equal
+     * the other.
+     *
+     * @param theRHS object to compare
+     * @return true if they are equal
+     */
+    bool
+    greaterThanOrEquals(
+            const XObject&          theRHS,
+            XPathExecutionContext&  executionContext) const;
 
-	/**
-	 * Tell what kind of class this is.
-	 *
-	 * @return numeric type value
-	 */
-	eObjectType
-	getType() const
-	{
-		return m_objectType;
-	}
+    /**
+     * Tell what kind of class this is.
+     *
+     * @return numeric type value
+     */
+    eObjectType
+    getType() const
+    {
+        return m_objectType;
+    }
 
-	/**
-	 * Static conversion function.
-	 *
-	 * @return bool value
-	 */
-	static bool
-	boolean(double	theNumber)
-	{
-		return !DoubleSupport::isNaN(theNumber) && !DoubleSupport::equal(theNumber, 0.0);
-	}
+    /**
+     * Static conversion function.
+     *
+     * @return bool value
+     */
+    static bool
+    boolean(double  theNumber)
+    {
+        return !DoubleSupport::isNaN(theNumber) && !DoubleSupport::equal(theNumber, 0.0);
+    }
 
-	/**
-	 * Static conversion function.
-	 *
-	 * @return bool value
-	 */
-	static bool
-	boolean(const XalanDOMString&	theString)
-	{
-		return theString.length() == 0 ? false : true;
-	}
+    /**
+     * Static conversion function.
+     *
+     * @return bool value
+     */
+    static bool
+    boolean(const XalanDOMString&   theString)
+    {
+        return theString.length() == 0 ? false : true;
+    }
 
-	/**
-	 * Static conversion function.
-	 *
-	 * @return bool value
-	 */
-	static bool
-	boolean(const NodeRefListBase&	theNodeList)
-	{
-		return theNodeList.getLength() == 0 ? false : true;
-	}
+    /**
+     * Static conversion function.
+     *
+     * @return bool value
+     */
+    static bool
+    boolean(const NodeRefListBase&  theNodeList)
+    {
+        return theNodeList.getLength() == 0 ? false : true;
+    }
 
-	/**
-	 * Static conversion function.
-	 *
-	 * @return The string value of the number
-	 */
-	static const XalanDOMString&
-	string(bool		theBool)
-	{
-		return theBool == true ? s_trueString : s_falseString;
-	}
+    /**
+     * Static conversion function.
+     *
+     * @return The string value of the number
+     */
+    static const XalanDOMString&
+    string(bool     theBool)
+    {
+        return theBool == true ? s_trueString : s_falseString;
+    }
 
-	static void
-	string(
-			bool				theBool,
-			FormatterListener&	formatterListener,
-			MemberFunctionPtr	function)
-	{
-		if(theBool == true)
-		{
-			(formatterListener.*function)(s_trueString.c_str(), s_trueString.length());
-		}
-		else
-		{
-			(formatterListener.*function)(s_falseString.c_str(), s_falseString.length());
-		}
-	}
+    static void
+    string(
+            bool                theBool,
+            FormatterListener&  formatterListener,
+            MemberFunctionPtr   function)
+    {
+        if(theBool == true)
+        {
+            (formatterListener.*function)(s_trueString.c_str(), s_trueString.length());
+        }
+        else
+        {
+            (formatterListener.*function)(s_falseString.c_str(), s_falseString.length());
+        }
+    }
 
-	/**
-	 * Static conversion function.
-	 *
-	 * @return The string value of the number
-	 */
-	static void
-	string(
-			double				theNumber,
-			XalanDOMString&		theString)
-	{
-		DoubleToDOMString(theNumber, theString);
-	}
+    /**
+     * Static conversion function.
+     *
+     * @return The string value of the number
+     */
+    static void
+    string(
+            double              theNumber,
+            XalanDOMString&     theString)
+    {
+        DoubleToDOMString(theNumber, theString);
+    }
 
-	static void
-	string(
-			double				theNumber,
-			FormatterListener&	formatterListener,
-			MemberFunctionPtr	function)
-	{
-		DOMStringHelper::DoubleToCharacters(theNumber, formatterListener, function);
-	}
+    static void
+    string(
+            double              theNumber,
+            FormatterListener&  formatterListener,
+            MemberFunctionPtr   function)
+    {
+        DOMStringHelper::DoubleToCharacters(theNumber, formatterListener, function);
+    }
 
-	/**
-	 * Static conversion function.
-	 *
-	 * @return The string value of the node
-	 */
-	static void
-	string(
-			const XalanNode&	theNode,
-			XalanDOMString&		theString)
-	{
-		DOMServices::getNodeData(theNode, theString);
-	}
+    /**
+     * Static conversion function.
+     *
+     * @return The string value of the node
+     */
+    static void
+    string(
+            const XalanNode&    theNode,
+            XalanDOMString&     theString)
+    {
+        DOMServices::getNodeData(theNode, theString);
+    }
 
-	static void
-	string(
-			const XalanNode&	theNode,
-			FormatterListener&	formatterListener,
-			MemberFunctionPtr	function)
-	{
-		DOMServices::getNodeData(theNode, formatterListener, function);
-	}
+    static void
+    string(
+            const XalanNode&    theNode,
+            FormatterListener&  formatterListener,
+            MemberFunctionPtr   function)
+    {
+        DOMServices::getNodeData(theNode, formatterListener, function);
+    }
 
-	/**
-	 * Static conversion function.
-	 *
-	 * @return The string value of the node list
-	 */
-	static void
-	string(
-			const NodeRefListBase&	theNodeList,
-			XalanDOMString&			theString)
-	{
-		if (theNodeList.getLength() > 0)
-		{
-			assert(theNodeList.item(0) != 0);
+    /**
+     * Static conversion function.
+     *
+     * @return The string value of the node list
+     */
+    static void
+    string(
+            const NodeRefListBase&  theNodeList,
+            XalanDOMString&         theString)
+    {
+        if (theNodeList.getLength() > 0)
+        {
+            assert(theNodeList.item(0) != 0);
 
-			string(*theNodeList.item(0), theString);
-		}
-	}
+            string(*theNodeList.item(0), theString);
+        }
+    }
 
-	static void
-	string(
-			const NodeRefListBase&	theNodeList,
-			FormatterListener&		formatterListener,
-			MemberFunctionPtr		function)
-	{
-		if (theNodeList.getLength() > 0)
-		{
-			assert(theNodeList.item(0) != 0);
+    static void
+    string(
+            const NodeRefListBase&  theNodeList,
+            FormatterListener&      formatterListener,
+            MemberFunctionPtr       function)
+    {
+        if (theNodeList.getLength() > 0)
+        {
+            assert(theNodeList.item(0) != 0);
 
-			DOMServices::getNodeData(*theNodeList.item(0), formatterListener, function);
-		}
-	}
+            DOMServices::getNodeData(*theNodeList.item(0), formatterListener, function);
+        }
+    }
 
-	/**
-	 * Static conversion function.
-	 *
-	 * @return bool value
-	 */
-	static double
-	number(bool		theBoolean)
-	{
-		return theBoolean == true ? 1.0 : 0.0;
-	}
+    /**
+     * Static conversion function.
+     *
+     * @return bool value
+     */
+    static double
+    number(bool     theBoolean)
+    {
+        return theBoolean == true ? 1.0 : 0.0;
+    }
 
-	static double
-	number(const XalanDOMString&	theString)
-	{
-		return DoubleSupport::toDouble(theString);
-	}
+    static double
+    number(const XalanDOMString&    theString)
+    {
+        return DoubleSupport::toDouble(theString);
+    }
 
-	/**
-	 * Static conversion function.
-	 *
-	 * @return The number value of the node list
-	 */
-	static double
-	number(
-			XPathExecutionContext&	executionContext,
-			const NodeRefListBase&	theNodeList);
+    /**
+     * Static conversion function.
+     *
+     * @return The number value of the node list
+     */
+    static double
+    number(
+            XPathExecutionContext&  executionContext,
+            const NodeRefListBase&  theNodeList);
 
-	/**
-	 * Static conversion function.
-	 *
-	 * @return The number value of the node
-	 */
-	static double
-	number(
-			XPathExecutionContext&	executionContext,
-			const XalanNode&		theNode);
-
-
-	// All XObject instances are controlled by an instance of an XObjectFactory.
-	friend class XObjectFactory;
-
-	void
-	setFactory(XObjectFactory*	theFactory)
-	{
-		m_factory = theFactory;
-	}
-
-	// Base class for all XObject exceptions...
-	class XObjectException : public XalanXPathException
-	{
-	public:
-
-		explicit
-		XObjectException(
-				const XalanDOMString&	message);
-
-		virtual
-		~XObjectException();
-
-		virtual const XalanDOMChar*
-		getType() const
-		{
-			return m_type;
-		}
-	private:
-
-		static const XalanDOMChar	m_type[];
-	};
-
-	class XObjectInvalidConversionException : public XObjectException
-	{
-	public:
-
-		XObjectInvalidConversionException(
-				const XalanDOMString&	fromType,
-				const XalanDOMString&	toType);
-
-		virtual
-		~XObjectInvalidConversionException();
-
-		const XalanDOMString&
-		getFromType() const
-		{
-			return m_fromType;
-		}
-
-		const XalanDOMString&
-		getToType() const
-		{
-			return m_toType;
-		}
+    /**
+     * Static conversion function.
+     *
+     * @return The number value of the node
+     */
+    static double
+    number(
+            XPathExecutionContext&  executionContext,
+            const XalanNode&        theNode);
 
 
-		virtual const XalanDOMChar*
-		getType() const
-		{
-			return m_type;
-		}
-	private:
+    // All XObject instances are controlled by an instance of an XObjectFactory.
+    friend class XObjectFactory;
 
-		static const XalanDOMChar	m_type[];
+    void
+    setFactory(XObjectFactory*  theFactory)
+    {
+        m_factory = theFactory;
+    }
 
-		static const XalanDOMString
-		formatErrorString(
-				const XalanDOMString&	fromType,
-				const XalanDOMString&	toType);
+    // Base class for all XObject exceptions...
+    class XObjectException : public XalanXPathException
+    {
+    public:
 
-		const XalanDOMString	m_fromType;
+        explicit
+        XObjectException(
+                const XalanDOMString&   message);
 
-		const XalanDOMString	m_toType;
-	};
+        virtual
+        ~XObjectException();
+
+        virtual const XalanDOMChar*
+        getType() const
+        {
+            return m_type;
+        }
+    private:
+
+        static const XalanDOMChar   m_type[];
+    };
+
+    class XObjectInvalidConversionException : public XObjectException
+    {
+    public:
+
+        XObjectInvalidConversionException(
+                const XalanDOMString&   fromType,
+                const XalanDOMString&   toType);
+
+        virtual
+        ~XObjectInvalidConversionException();
+
+        const XalanDOMString&
+        getFromType() const
+        {
+            return m_fromType;
+        }
+
+        const XalanDOMString&
+        getToType() const
+        {
+            return m_toType;
+        }
+
+
+        virtual const XalanDOMChar*
+        getType() const
+        {
+            return m_type;
+        }
+    private:
+
+        static const XalanDOMChar   m_type[];
+
+        static const XalanDOMString
+        formatErrorString(
+                const XalanDOMString&   fromType,
+                const XalanDOMString&   toType);
+
+        const XalanDOMString    m_fromType;
+
+        const XalanDOMString    m_toType;
+    };
 
 protected:
 
-	/**
-	 * Tell what kind of class this is.
-	 *
-	 * @return numeric type value
-	 */
-	virtual eObjectType
-	getRealType() const;
+    /**
+     * Tell what kind of class this is.
+     *
+     * @return numeric type value
+     */
+    virtual eObjectType
+    getRealType() const;
 
-	virtual void 
-	referenced();
+    virtual void 
+    referenced();
 
-	virtual void 
-	dereferenced();
+    virtual void 
+    dereferenced();
 
-	virtual
-	~XObject();
+    virtual
+    ~XObject();
 
-	static const XalanDOMString		s_nullString;
+    static const XalanDOMString     s_emptyString;
 
-protected:
+    static const XalanDOMString&    s_booleanString;
 
-	static XalanDOMString	s_falseString;
+    static const XalanDOMString&    s_falseString;
 
-	static XalanDOMString	s_trueString;
+    static const XalanDOMString&    s_nodesetString;
+
+    static const XalanDOMString&    s_numberString;
+
+    static const XalanDOMString&    s_resultTreeFragmentString;
+
+    static const XalanDOMString&    s_stringString;
+
+    static const XalanDOMString&    s_trueString;
 
 private:
 
-	// Not implemented...
-	XObject&
-	operator=(const XObject&);
+    // Not implemented...
+    XObject&
+    operator=(const XObject&);
 
-	const eObjectType	m_objectType;
+    const eObjectType   m_objectType;
 
-	XObjectFactory*		m_factory;
+    XObjectFactory*     m_factory;
 };
 
 
@@ -587,130 +595,130 @@ class XALAN_XPATH_EXPORT XObjectPtr
 {
 public:
 
-	friend bool operator==(const XObjectPtr&, const XObjectPtr&);
-	friend bool operator<(const XObjectPtr&, const XObjectPtr&);
+    friend bool operator==(const XObjectPtr&, const XObjectPtr&);
+    friend bool operator<(const XObjectPtr&, const XObjectPtr&);
 
-	/**
-	 * Create an XObjectPtr.
-	 */
-	explicit
-	XObjectPtr(XObject*		theXObject = 0) :
-		m_xobjectPtr(theXObject)
-	{
-		XalanReferenceCountedObject::addReference(theXObject);
-	}
-	
-	XObjectPtr(const XObjectPtr&	theSource) :
-		m_xobjectPtr(theSource.m_xobjectPtr)
-	{ 
-		XalanReferenceCountedObject::addReference(m_xobjectPtr);
-	};
+    /**
+     * Create an XObjectPtr.
+     */
+    explicit
+    XObjectPtr(XObject*     theXObject = 0) :
+        m_xobjectPtr(theXObject)
+    {
+        XalanReferenceCountedObject::addReference(theXObject);
+    }
+    
+    XObjectPtr(const XObjectPtr&    theSource) :
+        m_xobjectPtr(theSource.m_xobjectPtr)
+    { 
+        XalanReferenceCountedObject::addReference(m_xobjectPtr);
+    };
 
-	XObjectPtr&
-	operator=(const XObjectPtr&		theRHS)
-	{ 
-		if (m_xobjectPtr != theRHS.m_xobjectPtr)
-		{
-			XalanReferenceCountedObject::removeReference(m_xobjectPtr);
+    XObjectPtr&
+    operator=(const XObjectPtr&     theRHS)
+    { 
+        if (m_xobjectPtr != theRHS.m_xobjectPtr)
+        {
+            XalanReferenceCountedObject::removeReference(m_xobjectPtr);
 
-			m_xobjectPtr = theRHS.m_xobjectPtr;
+            m_xobjectPtr = theRHS.m_xobjectPtr;
 
-			XalanReferenceCountedObject::addReference(m_xobjectPtr);
-		}
+            XalanReferenceCountedObject::addReference(m_xobjectPtr);
+        }
 
-		return *this;
-	}
+        return *this;
+    }
 
-	~XObjectPtr()
-	{
-		XalanReferenceCountedObject::removeReference(m_xobjectPtr);
-	};	
+    ~XObjectPtr()
+    {
+        XalanReferenceCountedObject::removeReference(m_xobjectPtr);
+    };  
 
-	void
-	release()
-	{
-		XObject* const	xobjectPtr = m_xobjectPtr;
+    void
+    release()
+    {
+        XObject* const  xobjectPtr = m_xobjectPtr;
 
-		m_xobjectPtr = 0;
+        m_xobjectPtr = 0;
 
-		XalanReferenceCountedObject::removeReference(xobjectPtr);
-	}
+        XalanReferenceCountedObject::removeReference(xobjectPtr);
+    }
 
-	bool
-	null() const
-	{
-		return m_xobjectPtr == 0 ? true : false;
-	}
+    bool
+    null() const
+    {
+        return m_xobjectPtr == 0 ? true : false;
+    }
 
-	const XObject&
-	operator*() const
-	{
-		return *m_xobjectPtr;
-	};
+    const XObject&
+    operator*() const
+    {
+        return *m_xobjectPtr;
+    };
 
-	XObject&
-	operator*() 
-	{
-		return *m_xobjectPtr;
-	};
+    XObject&
+    operator*() 
+    {
+        return *m_xobjectPtr;
+    };
 
-	const XObject*
-	operator->() const
-	{
-		return m_xobjectPtr;
-	};
+    const XObject*
+    operator->() const
+    {
+        return m_xobjectPtr;
+    };
 
-	XObject*
-	operator->()
-	{
-		return m_xobjectPtr;
-	};
+    XObject*
+    operator->()
+    {
+        return m_xobjectPtr;
+    };
 
-	const XObject*
-	get() const
-	{
-		return m_xobjectPtr;
-	};
+    const XObject*
+    get() const
+    {
+        return m_xobjectPtr;
+    };
 
-	XObject*
-	get()
-	{
-		return m_xobjectPtr;
-	};
+    XObject*
+    get()
+    {
+        return m_xobjectPtr;
+    };
 
 private:
 
-	XObject*	m_xobjectPtr;
+    XObject*    m_xobjectPtr;
 };
 
 
 
 inline bool
 operator==(
-			const XObjectPtr&	theLHS,
-			const XObjectPtr&	theRHS)
+            const XObjectPtr&   theLHS,
+            const XObjectPtr&   theRHS)
 {
-	return theLHS.m_xobjectPtr == theRHS.m_xobjectPtr;
+    return theLHS.m_xobjectPtr == theRHS.m_xobjectPtr;
 }
 
 
 
 inline bool
 operator!=(
-			const XObjectPtr&	theLHS,
-			const XObjectPtr&	theRHS)
+            const XObjectPtr&   theLHS,
+            const XObjectPtr&   theRHS)
 {
-	return !(theLHS == theRHS);
+    return !(theLHS == theRHS);
 }
 
 
 
 inline bool
 operator<(
-			const XObjectPtr&	theLHS,
-			const XObjectPtr&	theRHS)
+            const XObjectPtr&   theLHS,
+            const XObjectPtr&   theRHS)
 {
-	return theLHS.m_xobjectPtr < theRHS.m_xobjectPtr;
+    return theLHS.m_xobjectPtr < theRHS.m_xobjectPtr;
 }
 
 
@@ -719,4 +727,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// XOBJECT_HEADER_GUARD_1357924680
+#endif  // XOBJECT_HEADER_GUARD_1357924680

@@ -61,10 +61,10 @@ XStringBase::~XStringBase()
 
 
 
-XalanDOMString
+const XalanDOMString&
 XStringBase::getTypeString() const
 {
-	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("#STRING"));
+	return s_stringString;
 }
 
 

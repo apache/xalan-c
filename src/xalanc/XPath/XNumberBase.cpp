@@ -50,10 +50,10 @@ XNumberBase::~XNumberBase()
 
 
 
-XalanDOMString
+const XalanDOMString&
 XNumberBase::getTypeString() const
 {
-	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("#NUMBER"));
+	return s_numberString;
 }
 
 
