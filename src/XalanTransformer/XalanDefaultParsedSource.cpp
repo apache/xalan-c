@@ -140,9 +140,11 @@ XalanDefaultParsedSourceDOMSupport::isNodeAfter(
 
 
 
-XalanDefaultParsedSourceHelper::XalanDefaultParsedSourceHelper(const XalanSourceTreeDOMSupport&	theSourceDOMSupport) :
+XalanDefaultParsedSourceHelper::XalanDefaultParsedSourceHelper(
+			const XalanSourceTreeDOMSupport&		theSourceDOMSupport,
+			const XalanSourceTreeParserLiaison&		theSourceParserLiaison) :
 	m_domSupport(theSourceDOMSupport),
-	m_parserLiaison()
+	m_parserLiaison(theSourceParserLiaison.getDocumentNumber())
 {
 	m_domSupport.setParserLiaison(&m_parserLiaison);
 }
@@ -222,7 +224,7 @@ XalanDefaultParsedSource::getDocument() const
 XalanParsedSourceHelper*
 XalanDefaultParsedSource::createHelper() const
 {
-	return new XalanDefaultParsedSourceHelper(m_domSupport);
+	return new XalanDefaultParsedSourceHelper(m_domSupport, m_parserLiaison);
 }
 
 

@@ -95,8 +95,9 @@ XalanDefaultDocumentBuilder::getDocument() const
 XalanParsedSourceHelper*
 XalanDefaultDocumentBuilder::createHelper() const
 {
-	return new XalanDefaultParsedSourceHelper(m_domSupport);
+	return new XalanDefaultParsedSourceHelper(m_domSupport, m_parserLiaison.getDocumentNumber());
 }
+
 
 
 ContentHandler*

@@ -70,6 +70,12 @@ class XALAN_TRANSFORMER_EXPORT XercesDOMParsedSourceHelper : public XalanParsedS
 {
 public:
 
+	XercesDOMParsedSourceHelper(const XercesParserLiaison&	theXercesParserLiaison) :
+		m_domSupport(),
+		m_parserLiaison(theXercesParserLiaison.getDocumentNumber())
+	{
+	}
+
 	virtual DOMSupport&
 	getDOMSupport()
 	{
@@ -145,7 +151,7 @@ XercesDOMParsedSource::getDocument() const
 XalanParsedSourceHelper*
 XercesDOMParsedSource::createHelper() const
 {
-	return new XercesDOMParsedSourceHelper;
+	return new XercesDOMParsedSourceHelper(m_parserLiaison);
 }
 
 

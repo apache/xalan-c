@@ -123,7 +123,9 @@ class XALAN_TRANSFORMER_EXPORT XalanDefaultParsedSourceHelper : public XalanPars
 {
 public:
 
-	XalanDefaultParsedSourceHelper(const XalanSourceTreeDOMSupport&	theSourceDOMSupport);
+	XalanDefaultParsedSourceHelper(
+			const XalanSourceTreeDOMSupport&		theSourceDOMSupport,
+			const XalanSourceTreeParserLiaison&		theSourceParserLiaison);
 
 	virtual DOMSupport&
 	getDOMSupport();
