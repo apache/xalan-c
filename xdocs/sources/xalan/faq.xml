@@ -66,7 +66,7 @@
          <td>Yes</td>
       </tr>
        <tr>
-         <td>Solaris 2.6</td>
+         <td>Solaris 2.6 &solarisbuild;</td>
          <td>Workshop 4.2</td>
          <td>Yes</td>
       </tr>
@@ -102,8 +102,8 @@
 <p>For more details see: <link idref="usagepatterns" anchor="icu">Using the International Components for Unicode (ICU)</link>.</p><!--icuNote--><anchor name="gnutar"/><p/></a>
 </faq>
 
-   <faq title="A tar checksum error on Solaris.">
-      <q>I am getting a tar checksum error on Solaris. What's the problem?</q>
+   <faq title="A tar checksum error on Solaris">
+      <q>I am getting a tar checksum error on Solaris &solarisbuild;. What's the problem?</q>
       <a>
          <p>The Solaris tar utility you are using does not properly handle files with long pathnames.
          You must use GNU tar (gtar), which handles arbitrarily long pathnames

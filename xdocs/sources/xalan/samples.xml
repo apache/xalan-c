@@ -70,7 +70,9 @@
      <li><link anchor="documentbuilder">DocumentBuilder</link></li>
     <li><link anchor="threadsafe">ThreadSafe</link></li>  
     <li><link anchor="xpathwrapper">XPathWrapper</link></li>
-    <li><link anchor="simplexpathapi">SimpleXPathAPI</link></li>    
+    <li><link anchor="simplexpathapi">SimpleXPathAPI</link></li>
+    <li><link anchor="simplexapthcapi">SimpleXPathCAPI</link></li>
+    <li><link anchor="serializenodeset">SerializeNodeSet</link></li>    
     <li><link anchor="externalfunctions">ExternalFunctions</link></li>
     <li><link anchor="apachemodulexslt">ApacheModuleXSLT</link></li>
   </ul>
@@ -227,14 +229,15 @@ theProcessor.addTraceListener(&amp;theTraceListener);
   <p>Run this sample from the SimpleXPathAPI subdirectory with</p>
   <p><code>SimpleXPathAPI <ref>XMLFile</ref> <ref>ContextNode</ref> <ref>XPathExpression</ref></code></p>
   <p>where <ref>XMLFile</ref> is an XML source file, <ref>ContextNode</ref> is the location path to the context
-     node, and <ref>XPathExpression</ref> is an XPath expression to apply to that context node. The XPathWrapper
-     subdirectory contains an XML file named xml.foo (part of it appears below).</p>
+     node, and <ref>XPathExpression</ref> is an XPath expression to apply to that context node.</p> 
+<note>Keep in mind that the string value returned by an XPath expression is the string value of the first node in the nodeset returned by the expresssion.</note>
+<p>The XPathWrapper subdirectory contains an XML file named xml.foo (part of it appears below).</p>
      <source>&lt;?xml version="1.0"?&gt;
 &lt;doc&gt;
-  &lt;name first="David" last="Marston"/&gt;
-  &lt;name first="David" last="Bertoni"/&gt;
+  &lt;name first="David" last="Marston"&gt;Mr. Marson&lt;/name&gt;
+  &lt;name first="David" last="Bertoni"&gt;Mr. Bertoni&lt;/name&gt;
   ...
-  &lt;name first="Paul" last="Dick"/&gt;
+  &lt;name first="Paul" last="Dick"&gt;Mr. Dick&lt;/name&gt;
 &lt;/doc&gt;</source>
     <p>You can try command lines like</p>
     <p><code>SimpleXPathAPI foo.xml /doc name/@last</code></p>
@@ -242,7 +245,23 @@ theProcessor.addTraceListener(&amp;theTraceListener);
     <p><code>SimpleXPathAPI foo.xml / '//name[position()="4"]/@first'</code></p>
      <note>If a SimpleXPathAPI argument includes characters (such as *) that the shell interprets incorrectly, enclose the argument 
      in double quotes.</note>
-    <p>See also: <link idref="usagepatterns" anchor="xpath">Working with XPath expressions</link>.</p>      
+    <p>See also: <link idref="usagepatterns" anchor="xpath">Working with XPath expressions</link>.</p>
+  </s2><anchor name="simplexpathcapi"/>
+  <s2 title="SimpleXPathCAPI">
+  <p>What it does: Use the XPathEvaluator C interface to evaluate an XPath epxeression and display the string value returned by the epxression.</p>
+<note>Keep in mind that the string value returned by an XPath expression is the string value of the first node in the nodeset returned by the epxresssion.</note>
+<p>Run this sample from the SimpleXPathCAPI subdirectory with</p>
+<p><code>SimpleXPathCAPI <ref>XMLFile</ref> <ref>XPathExpression</ref></code></p>
+<p>where <ref>XMLFile</ref> is an XML source file, and <ref>XPathExpression</ref> is an XPath expression to apply to the XML source file. The SimpleXPathCAPI subdirectory contains an XML file named xml.foo identical to foo.xml in the preceding example.</p>
+    <p>You can try command lines like</p>
+    <p><code>SimpleXPathCAPI foo.xml /doc/name[3]</code></p>
+  </s2><anchor name="serializenodeset"/>
+  <s2 title="SerializeNodeSet">
+  <p>What it does: Serialize the node set returned by the application of an XPath expression to an XML document.</p>
+<p>Run this sample from the SerializeNodeSet subdirectory with</p>
+<p><code>SerializeNodeSet <ref>XMLFile</ref> <ref>ContextNode</ref> <ref>XPathExpression</ref></code></p>
+  <p>where <ref>XMLFile</ref> is an XML source file, <ref>ContextNode</ref> is the location path to the context
+     node, and <ref>XPathExpression</ref> is an XPath expression to apply to that context node. The SerializeNodeSet directory contains the same foo.xml sample source file as the preceding examples.</p>
   </s2><anchor name="externalfunctions"/>
   <s2 title="ExternalFunctions">
     <p>What it does: implement, install, and illustrate the usage of three extension functions. The functions return a
