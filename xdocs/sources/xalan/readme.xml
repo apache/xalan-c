@@ -130,6 +130,7 @@
    </s3><anchor name="win32"/>
   <s3 title="Steps for doing a Windows build">
   <p>To build &xslt4c; on Windows, you need &xml4c; and MS Visual C++ 6.0 installed with Service Pack 3 for Visual C++ and Visual Studio. You should also apply the bug fixes for the C++ standard library that shipped with Visual C++ 6.0. These fixes are available from the Dinkumware site: <jump href="http://www.dinkumware.com/vc_fixes.html">http://www.dinkumware.com/vc_fixes.html</jump>.</p> 
+  <p>If you do not want to apply the Dinkumware patches, or you are using a different Service Pack, you must rebuild all of the Xerces and Xalan binaries.</p>
 <p>Before you do the following, be sure you have <link idref="getstarted" anchor="windowspath">provided Visual C++ the paths to the Xerces headers and libraries</link>.</p>
   <ol>    
      <li>(Optional) If you are rebuilding the ICUBridge, install the ICU so the icu root directory
@@ -152,17 +153,14 @@
        distribution.<br/><br/></li>
       <li>(Optional) If you are including the ICUBridge, install the ICU, use the shell to define XALAN_USE_ICU and to set the ICUROOT environment variable to the path to the ICU root. For more information, see (see <link idref="usagepatterns" anchor="icu">Using the ICU</link>)<br/><br/></li>
       <li>Change directory to xml-xalan/c/src in the &xslt4c; distribution.<br/><br/></li>      
-      <li>Use the chmod +x command to set the executable flags for conf* and runConfigure.<br/><br/>
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<code>chmod +x runConfigure</code><br/>
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<code>chmod +x conf*</code><br/><br/></li>
       <li>Run the runConfigure utility with at least the platform flag (Linux) or the platform, C compilier, and C++ compiler flags (AIX) as indicated below.<br/><br/>
-      <ref>Linux:</ref>&nbsp;&nbsp;<code>runConfigure -p linux</code><br/>
-      <ref>AIX:</ref>&nbsp;&nbsp;&nbsp;&nbsp;<code>runConfigure -p aix -c xlc -x xlC</code><br/><br/>
-      <ref>HP-UX 11 (32 bit):</ref>&nbsp;&nbsp;<code>runConfigure -p hp-11 -c cc -x aCC</code><br/><br/>
-      <ref>HP-UX 11 (64 bit):</ref>&nbsp;&nbsp;<code>runConfigure -p hp-11 -c cc -x aCC -b 64</code><br/><br/>
-      <ref>Solaris:</ref>&nbsp;&nbsp;<code>runConfigure -p Solaris -c cc -x CC</code><br/><br/>            
+      <ref>Linux:</ref>&nbsp;&nbsp;<code>./runConfigure -p linux</code><br/>
+      <ref>AIX:</ref>&nbsp;&nbsp;&nbsp;&nbsp;<code>./runConfigure -p aix -c xlc -x xlC</code><br/><br/>
+      <ref>HP-UX 11 (32 bit):</ref>&nbsp;&nbsp;<code>./runConfigure -p hp-11 -c cc -x aCC</code><br/><br/>
+      <ref>HP-UX 11 (64 bit):</ref>&nbsp;&nbsp;<code>./runConfigure -p hp-11 -c cc -x aCC -b 64</code><br/><br/>
+      <ref>Solaris:</ref>&nbsp;&nbsp;<code>./runConfigure -p Solaris -c cc -x CC</code><br/><br/>            
       To see the other runConfigure flags you may include, use the help flag:<br/><br/>
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<code>runConfigure -h</code><br/><br/></li>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<code>./runConfigure -h</code><br/><br/></li>
       <li>Purge the previous build:<br/><br/>
          <code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;make clean</code><br/><br/></li>
       <li>Run the new build:<br/><br/>
