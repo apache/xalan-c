@@ -150,10 +150,10 @@ XalanTranscodingServices::makeNewTranscoder(
 					theBlockSize);
 
 		theResult = translateCode(theCode);
-		assert(theResult == XMLTransService::Ok ||
+		assert(theResult == XalanTranscodingServices::OK ||
 			   theXercesTranscoder == 0);
 
-		if (theResult == XMLTransService::Ok)
+		if (theResult == XalanTranscodingServices::OK)
 		{
 			theTranscoder = new XalanToXercesTranscoderWrapper(theXercesTranscoder);
 		}
