@@ -514,5 +514,5 @@ XalanSourceTreeText::initialize()
 void
 XalanSourceTreeText::terminate()
 {
-	clear(::s_nameString);
+	releaseMemory(::s_nameString);
 }

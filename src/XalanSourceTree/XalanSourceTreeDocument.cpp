@@ -1092,5 +1092,5 @@ XalanSourceTreeDocument::initialize()
 void
 XalanSourceTreeDocument::terminate()
 {
-	clear(::s_nameString);
+	releaseMemory(::s_nameString);
 }
