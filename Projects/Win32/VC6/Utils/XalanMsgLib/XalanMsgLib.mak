@@ -36,7 +36,8 @@ RSC=rc.exe
 
 XERCESINCLUDE=/I "$(XERCESCROOT)\src" /I "$(XERCESCROOT)\include"
 XERCESLIB=/libpath:"$(XERCESCROOT)\lib"
-
+XERCESLIBDEBUG=$(XERCESLIB) /libpath:"$(XERCESCROOT)\Build\Win32\VC6\Debug"
+XERCESLIBRELEASE=$(XERCESLIB) /libpath:"$(XERCESCROOT)\Build\Win32\VC6\Release"
 
 !IFNDEF DLLNAME
 !	ERROR Name of dll should be provided in the command line.
@@ -44,7 +45,7 @@ XERCESLIB=/libpath:"$(XERCESCROOT)\lib"
 
 !IF  "$(CFG)" == "XalanMsgLib - Win32 Release.symbols"
 
-BUILDRESDIR=.\..\..\..\..\..\Build\Win32\VC7\Release.symbols
+BUILDRESDIR=.\..\..\..\..\..\Build\Win32\VC6\Release.symbols
 OUTDIR=$(BUILDRESDIR)\Util\XalanMsgLib
 INTDIR=$(BUILDRESDIR)\Util\XalanMsgLib
 
@@ -52,14 +53,14 @@ ALL : "$(BUILDRESDIR)\$(DLLNAME).dll"
 
 
 CLEAN :
-	-@erase "$(INTDIR)\VC70.idb"
+	-@erase "$(INTDIR)\VC60.idb"
 	-@erase "$(INTDIR)\XalanMsgLib.obj"
 	-@erase "$(BUILDRESDIR)\$(DLLNAME).dll"
 	-@erase "$(BUILDRESDIR)\$(DLLNAME).exp"
 	-@erase "$(BUILDRESDIR)\$(DLLNAME).lib"
 	-@erase "$(BUILDRESDIR)\$(DLLNAME).pdb"	
-	-@erase "$(INTDIR)\VC70.pdb"
-	-@erase "$(INTDIR)\VC70.idb"	
+	-@erase "$(INTDIR)\VC60.pdb"
+	-@erase "$(INTDIR)\VC60.idb"	
 "$(OUTDIR)" :
     if not exist "$(OUTDIR)/$(NULL)" mkdir "$(OUTDIR)"
 
@@ -70,7 +71,7 @@ BSC32_FLAGS=/nologo /o"$(OUTDIR)\$(DLLNAME).bsc"
 BSC32_SBRS= \
 	
 LINK32=link.exe
-LINK32_FLAGS= /nologo /dll /incremental:no /pdb:"$(OUTDIR)\XalanMsgLib.pdb" /debug /machine:I386 /out:"$(BUILDRESDIR)\$(DLLNAME).dll" /implib:"$(BUILDRESDIR)\$(DLLNAME).lib" $(XERCESLIB) 
+LINK32_FLAGS= /nologo /dll /incremental:no /pdb:"$(OUTDIR)\XalanMsgLib.pdb" /debug /machine:I386 /out:"$(BUILDRESDIR)\$(DLLNAME).dll" /implib:"$(BUILDRESDIR)\$(DLLNAME).lib" $(XERCESLIBRELEASE) 
 LINK32_OBJS= \
 	"$(INTDIR)\XalanMsgLib.obj"
 
@@ -80,7 +81,7 @@ LINK32_OBJS= \
 <<
 !ELSEIF  "$(CFG)" == "XalanMsgLib - Win32 Release"
 
-BUILDRESDIR=.\..\..\..\..\..\Build\Win32\VC7\Release
+BUILDRESDIR=.\..\..\..\..\..\Build\Win32\VC6\Release
 OUTDIR=.\$(BUILDRESDIR)\Util\XalanMsgLib
 INTDIR=.\$(BUILDRESDIR)\Util\XalanMsgLib
 
@@ -88,7 +89,7 @@ ALL : "$(BUILDRESDIR)\$(DLLNAME).dll"
 
 
 CLEAN :
-	-@erase "$(INTDIR)\VC70.idb"
+	-@erase "$(INTDIR)\VC60.idb"
 	-@erase "$(INTDIR)\XalanMsgLib.obj"
 	-@erase "$(BUILDRESDIR)\$(DLLNAME).dll"
 	-@erase "$(BUILDRESDIR)\$(DLLNAME).exp"
@@ -104,7 +105,7 @@ BSC32_FLAGS=/nologo /o"$(OUTDIR)\$(DLLNAME).bsc"
 BSC32_SBRS= \
 	
 LINK32=link.exe
-LINK32_FLAGS=/nologo /dll /incremental:no /pdb:none /machine:I386 /out:"$(BUILDRESDIR)\$(DLLNAME).dll" /implib:"$(BUILDRESDIR)\$(DLLNAME).lib" $(XERCESLIB)
+LINK32_FLAGS=/nologo /dll /incremental:no /pdb:none /machine:I386 /out:"$(BUILDRESDIR)\$(DLLNAME).dll" /implib:"$(BUILDRESDIR)\$(DLLNAME).lib" $(XERCESLIBRELEASE)
 LINK32_OBJS= \
 	"$(INTDIR)\XalanMsgLib.obj"
 
@@ -115,7 +116,7 @@ LINK32_OBJS= \
 
 !ELSEIF  "$(CFG)" == "XalanMsgLib - Win32 Debug"
 
-BUILDRESDIR=.\..\..\..\..\..\Build\Win32\VC7\Debug
+BUILDRESDIR=.\..\..\..\..\..\Build\Win32\VC6\Debug
 OUTDIR=.\$(BUILDRESDIR)\Util\XalanMsgLib
 INTDIR=.\$(BUILDRESDIR)\Util\XalanMsgLib
 # Begin Custom Macros
@@ -126,8 +127,8 @@ ALL : "$(BUILDRESDIR)\$(DLLNAME).dll"
 
 
 CLEAN :
-	-@erase "$(INTDIR)\VC70.idb"
-	-@erase "$(INTDIR)\VC70.pdb"
+	-@erase "$(INTDIR)\VC60.idb"
+	-@erase "$(INTDIR)\VC60.pdb"
 	-@erase "$(INTDIR)\XalanMsgLib.obj"
 	-@erase "$(INTDIR)\XalanMsgLib.sbr"
 	-@erase "$(OUTDIR)\XalanMsgLib.bsc"
@@ -142,7 +143,7 @@ CPP_PROJ=/nologo /MDd /W4 /Gm /GX /ZI /Od $(XERCESINCLUDE) /I "..\..\..\..\..\sr
 MTL_PROJ=/D "_DEBUG" /win32 
 
 LINK32=link.exe
-LINK32_FLAGS= /nologo /dll /pdb:none /debug /machine:I386 /out:"$(BUILDRESDIR)\$(DLLNAME).dll" /implib:"$(BUILDRESDIR)\$(DLLNAME).lib" $(XERCESLIB)
+LINK32_FLAGS= /nologo /dll /pdb:none /debug /machine:I386 /out:"$(BUILDRESDIR)\$(DLLNAME).dll" /implib:"$(BUILDRESDIR)\$(DLLNAME).lib" $(XERCESLIBDEBUG)
 LINK32_OBJS= \
 	"$(INTDIR)\XalanMsgLib.obj"
 
@@ -152,7 +153,7 @@ LINK32_OBJS= \
 <<
 !ELSEIF  "$(CFG)" == "XalanMsgLib - Win64 Release"
 
-BUILDRESDIR=.\..\..\..\..\..\Build\Win64\VC7\Release
+BUILDRESDIR=.\..\..\..\..\..\Build\Win64\VC6\Release
 OUTDIR=.\$(BUILDRESDIR)\Util\XalanMsgLib
 INTDIR=.\$(BUILDRESDIR)\Util\XalanMsgLib
 
@@ -160,7 +161,7 @@ ALL : "$(BUILDRESDIR)\$(DLLNAME).dll"
 
 
 CLEAN :
-	-@erase "$(INTDIR)\VC70.idb"
+	-@erase "$(INTDIR)\VC60.idb"
 	-@erase "$(INTDIR)\XalanMsgLib.obj"
 	-@erase "$(BUILDRESDIR)\$(DLLNAME).dll"
 	-@erase "$(BUILDRESDIR)\$(DLLNAME).exp"
@@ -173,7 +174,7 @@ CPP_PROJ=/nologo /MD /W4 /GX /O2 $(XERCESINCLUDE) /I "..\..\..\..\..\src" /I ".\
 MTL_PROJ=/nologo /D "NDEBUG" /mktyplib203 /win32 
 	
 LINK32=link.exe
-LINK32_FLAGS=/nologo /dll /incremental:no /pdb:none /machine:IX86 /out:"$(BUILDRESDIR)\$(DLLNAME).dll" /implib:"$(BUILDRESDIR)\$(DLLNAME).lib" /machine:IA64 $(XERCESLIB)
+LINK32_FLAGS=/nologo /dll /incremental:no /pdb:none /machine:IX86 /out:"$(BUILDRESDIR)\$(DLLNAME).dll" /implib:"$(BUILDRESDIR)\$(DLLNAME).lib" /machine:IA64 $(XERCESLIBRELEASE)
 LINK32_OBJS= \
 	"$(INTDIR)\XalanMsgLib.obj"
 
@@ -184,7 +185,7 @@ LINK32_OBJS= \
 
 !ELSEIF  "$(CFG)" == "XalanMsgLib - Win64 Debug"
 
-BUILDRESDIR=.\..\..\..\..\..\Build\Win32\VC7\Debug
+BUILDRESDIR=.\..\..\..\..\..\Build\Win32\VC6\Debug
 OUTDIR=.\$(BUILDRESDIR)\Util\XalanMsgLib
 INTDIR=.\$(BUILDRESDIR)\Util\XalanMsgLib
 # Begin Custom Macros
@@ -195,8 +196,8 @@ ALL : "$(BUILDRESDIR)\$(DLLNAME).dll"
 
 
 CLEAN :
-	-@erase "$(INTDIR)\VC70.idb"
-	-@erase "$(INTDIR)\VC70.pdb"
+	-@erase "$(INTDIR)\VC60.idb"
+	-@erase "$(INTDIR)\VC60.pdb"
 	-@erase "$(INTDIR)\XalanMsgLib.obj"
 	-@erase "$(OUTDIR)\XalanMsgLib.exp"
 	-@erase "$(OUTDIR)\$(DLLNAME).lib"
@@ -209,7 +210,7 @@ CPP_PROJ=/nologo /MDd /W4 /Gm /GX /ZI /Od $(XERCESINCLUDE) /I "..\..\..\..\..\sr
 MTL_PROJ=/D "_DEBUG" /win32 
 
 LINK32=link.exe
-LINK32_FLAGS= /nologo /dll /pdb:none /debug /machine:IX86 /out:"$(BUILDRESDIR)\$(DLLNAME).dll" /implib:"$(BUILDRESDIR)\$(DLLNAME).lib" /machine:IA64 $(XERCESLIB)
+LINK32_FLAGS= /nologo /dll /pdb:none /debug /machine:IX86 /out:"$(BUILDRESDIR)\$(DLLNAME).dll" /implib:"$(BUILDRESDIR)\$(DLLNAME).lib" /machine:IA64 $(XERCESLIBDEBUG)
 LINK32_OBJS= \
 	"$(INTDIR)\XalanMsgLib.obj"
 
