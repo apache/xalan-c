@@ -113,7 +113,6 @@ StylesheetExecutionContextDefault::StylesheetExecutionContextDefault(
 	m_xsltProcessor(&xsltProcessor),
 	m_rootDocument(0),
 	m_elementRecursionStack(),
-	m_prefixResolver(0),
 	m_stylesheetRoot(0),
 	m_formatterListeners(),
 	m_printWriters(),
@@ -125,7 +124,6 @@ StylesheetExecutionContextDefault::StylesheetExecutionContextDefault(
 	m_keyTables(),
 	m_keyDeclarationSet(),
 	m_countersTable(),
-	m_ignoreHTMLElementNamespaces(false),
 	m_sourceTreeResultTreeFactory(),
 	m_mode(0),
 	m_currentTemplateStack(),
@@ -156,7 +154,6 @@ StylesheetExecutionContextDefault::StylesheetExecutionContextDefault(
 	m_xsltProcessor(0),
 	m_rootDocument(0),
 	m_elementRecursionStack(),
-	m_prefixResolver(0),
 	m_stylesheetRoot(0),
 	m_formatterListeners(),
 	m_printWriters(),
@@ -168,7 +165,6 @@ StylesheetExecutionContextDefault::StylesheetExecutionContextDefault(
 	m_keyTables(),
 	m_keyDeclarationSet(),
 	m_countersTable(),
-	m_ignoreHTMLElementNamespaces(false),
 	m_sourceTreeResultTreeFactory(),
 	m_mode(0),
 	m_currentTemplateStack(),
@@ -1310,15 +1306,9 @@ StylesheetExecutionContextDefault::createFormatterToHTML(
 			escapeURLs,
 			omitMetaTag);
 
-	// Check to see if the user has asked us to ignore
-	// namespaces in HTML output.
-	if (m_ignoreHTMLElementNamespaces == false)
-	{
-		// Nope, so give the formatter a prefix resolver...
-		theFormatter->setPrefixResolver(m_xsltProcessor);
-	}
-
 	m_formatterListeners.push_back(theFormatter);
+
+    theFormatter->setPrefixResolver(m_xsltProcessor);
 
 	return theFormatter;
 }
@@ -1736,6 +1726,8 @@ StylesheetExecutionContextDefault::reset()
 		m_xsltProcessor->reset();
 	}
 
+    m_rootDocument = 0;
+    m_stylesheetRoot = 0;
 	m_mode = 0;
 
 	m_currentTemplateStack.clear();
@@ -1743,9 +1735,10 @@ StylesheetExecutionContextDefault::reset()
 	m_formatterToTextCache.reset();
 	m_formatterToSourceTreeCache.reset();
 	m_nodeSorterCache.reset();
-	m_documentAllocator.reset();
-	m_documentFragmentAllocator.reset();
+
 	m_xresultTreeFragAllocator.reset();
+    m_documentFragmentAllocator.reset();
+	m_documentAllocator.reset();
 
 	// Just in case endDocument() was not called,
 	// clean things up...
