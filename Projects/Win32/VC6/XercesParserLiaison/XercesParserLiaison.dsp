@@ -135,6 +135,14 @@ SOURCE=..\..\..\..\src\XercesParserLiaison\XercesAttributeBridgeAllocator.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesAttrWrapper.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesAttrWrapperAllocator.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\XercesParserLiaison\XercesBridgeHelper.cpp
 # End Source File
 # Begin Source File
@@ -147,7 +155,15 @@ SOURCE=..\..\..\..\src\XercesParserLiaison\XercesCDATASectionBridge.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesCDATASectionWrapper.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\XercesParserLiaison\XercesCommentBridge.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesCommentWrapper.cpp
 # End Source File
 # Begin Source File
 
@@ -167,6 +183,14 @@ SOURCE=..\..\..\..\src\XercesParserLiaison\XercesDocumentTypeBridge.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesDocumentTypeWrapper.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesDocumentWrapper.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\XercesParserLiaison\XercesDOM_NodeHack.cpp
 # End Source File
 # Begin Source File
@@ -179,7 +203,19 @@ SOURCE=..\..\..\..\src\XercesParserLiaison\XercesDOMImplementationBridge.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesDOMImplementationWrapper.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\XercesParserLiaison\XercesDOMSupport.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesDOMWalker.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesDOMWrapperException.cpp
 # End Source File
 # Begin Source File
 
@@ -195,11 +231,27 @@ SOURCE=..\..\..\..\src\XercesParserLiaison\XercesElementNamedNodeListCache.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesElementWrapper.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesElementWrapperAllocator.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\XercesParserLiaison\XercesEntityBridge.cpp
 # End Source File
 # Begin Source File
 
 SOURCE=..\..\..\..\src\XercesParserLiaison\XercesEntityReferenceBridge.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesEntityReferenceWrapper.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesEntityWrapper.cpp
 # End Source File
 # Begin Source File
 
@@ -215,11 +267,23 @@ SOURCE=..\..\..\..\src\XercesParserLiaison\XercesNamedNodeMapBridge.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesNamedNodeMapWrapper.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\XercesParserLiaison\XercesNodeListBridge.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesNodeListWrapper.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\XercesParserLiaison\XercesNotationBridge.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesNotationWrapper.cpp
 # End Source File
 # Begin Source File
 
@@ -231,6 +295,10 @@ SOURCE=..\..\..\..\src\XercesParserLiaison\XercesProcessingInstructionBridge.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesProcessingInstructionWrapper.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\XercesParserLiaison\XercesTextBridge.cpp
 # End Source File
 # Begin Source File
@@ -239,11 +307,31 @@ SOURCE=..\..\..\..\src\XercesParserLiaison\XercesTextBridgeAllocator.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesTextWrapper.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesTextWrapperAllocator.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\XercesParserLiaison\XercesToXalanNodeMap.cpp
 # End Source File
 # Begin Source File
 
 SOURCE=..\..\..\..\src\XercesParserLiaison\XercesTreeWalker.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesWrapperHelper.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesWrapperNavigator.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesWrapperToXalanNodeMap.cpp
 # End Source File
 # End Group
 # Begin Group "Header Files"
@@ -256,6 +344,14 @@ SOURCE=..\..\..\..\src\XercesParserLiaison\XercesAttrBridge.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\XercesParserLiaison\XercesAttributeBridgeAllocator.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesAttrWrapper.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesAttrWrapperAllocator.hpp
 # End Source File
 # Begin Source File
 
@@ -275,7 +371,15 @@ SOURCE=..\..\..\..\src\XercesParserLiaison\XercesCDATASectionBridge.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesCDATASectionWrapper.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\XercesParserLiaison\XercesCommentBridge.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesCommentWrapper.hpp
 # End Source File
 # Begin Source File
 
@@ -295,6 +399,14 @@ SOURCE=..\..\..\..\src\XercesParserLiaison\XercesDocumentTypeBridge.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesDocumentTypeWrapper.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesDocumentWrapper.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\XercesParserLiaison\XercesDOM_NodeHack.hpp
 # End Source File
 # Begin Source File
@@ -307,7 +419,19 @@ SOURCE=..\..\..\..\src\XercesParserLiaison\XercesDOMImplementationBridge.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesDOMImplementationWrapper.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\XercesParserLiaison\XercesDOMSupport.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesDOMWalker.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesDOMWrapperException.hpp
 # End Source File
 # Begin Source File
 
@@ -323,11 +447,27 @@ SOURCE=..\..\..\..\src\XercesParserLiaison\XercesElementNamedNodeListCache.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesElementWrapper.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesElementWrapperAllocator.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\XercesParserLiaison\XercesEntityBridge.hpp
 # End Source File
 # Begin Source File
 
 SOURCE=..\..\..\..\src\XercesParserLiaison\XercesEntityReferenceBridge.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesEntityReferenceWrapper.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesEntityWrapper.hpp
 # End Source File
 # Begin Source File
 
@@ -343,11 +483,23 @@ SOURCE=..\..\..\..\src\XercesParserLiaison\XercesNamedNodeMapBridge.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesNamedNodeMapWrapper.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\XercesParserLiaison\XercesNodeListBridge.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesNodeListWrapper.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\XercesParserLiaison\XercesNotationBridge.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesNotationWrapper.hpp
 # End Source File
 # Begin Source File
 
@@ -363,6 +515,10 @@ SOURCE=..\..\..\..\src\XercesParserLiaison\XercesProcessingInstructionBridge.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesProcessingInstructionWrapper.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\XercesParserLiaison\XercesTextBridge.hpp
 # End Source File
 # Begin Source File
@@ -371,11 +527,31 @@ SOURCE=..\..\..\..\src\XercesParserLiaison\XercesTextBridgeAllocator.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesTextWrapper.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesTextWrapperAllocator.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\XercesParserLiaison\XercesToXalanNodeMap.hpp
 # End Source File
 # Begin Source File
 
 SOURCE=..\..\..\..\src\XercesParserLiaison\XercesTreeWalker.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesWrapperHelper.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesWrapperNavigator.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesWrapperToXalanNodeMap.hpp
 # End Source File
 # End Group
 # Begin Group "Resource Files"
