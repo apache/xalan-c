@@ -560,7 +560,7 @@ foo()
 	}
 	
 	{
-		NodeVectorType						theVector;
+		NodeSorter::NodeVectorType			theVector;
 		NodeSorter::NodeSortKeyCompare*		theComparer;
 		
 		stable_sort(	
