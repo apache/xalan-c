@@ -122,6 +122,8 @@ main(
 							theConstructionContext);
 			assert(theStylesheetRoot != 0);
 
+      theProcessor.setStylesheet(theStylesheetRoot);
+
 			for (unsigned int i = 0; i < 10; i++)
 			{
         // Generate the input and output file names.
@@ -144,6 +146,12 @@ main(
              theResultTarget,
              theConstructionContext,
              theExecutionContext);
+
+        // Reset the processor and the execution context
+        // so we can perform the next transformation.
+        theProcessor.reset();
+        theProcessor.setStylesheet(theStylesheetRoot);
+        theExecutionContext.reset();
 			}
 		}
 		catch(...)
