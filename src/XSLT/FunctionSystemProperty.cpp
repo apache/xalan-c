@@ -69,11 +69,16 @@
 
 #include <XPath/MutableNodeRefList.hpp>
 #include <XPath/NodeRefListBase.hpp>
+#include <XPath/XalanQName.hpp>
 #include <XPath/XObjectFactory.hpp>
 
 
 
 XALAN_CPP_NAMESPACE_BEGIN
+
+
+
+static const XalanDOMString		s_emptyString;
 
 
 
@@ -96,10 +101,28 @@ FunctionSystemProperty::~FunctionSystemProperty()
 
 
 
+inline void
+validateNCName(
+			XPathExecutionContext&	executionContext,
+			XalanNode*				context,
+			const LocatorType*		locator,
+			const XalanDOMString&	ncname)
+{
+	if (XalanQName::isValidNCName(ncname) == false)
+	{
+		executionContext.error(
+			"system-property(): The property is not a valid QName",
+			context,
+			locator);
+	}
+}
+
+
+
 XObjectPtr
 FunctionSystemProperty::execute(
 			XPathExecutionContext&	executionContext,
-			XalanNode*				context,			
+			XalanNode*				context,
 			const XObjectPtr		arg1,
 			const LocatorType*		locator) const
 {
@@ -117,6 +140,8 @@ FunctionSystemProperty::execute(
 
 		substring(fullName, theBuffer, 0, indexOfNSSep);
 
+		validateNCName(executionContext, context, locator, theBuffer);
+
 		const XalanDOMString* const		nspace = executionContext.getNamespaceForPrefix(theBuffer);
 
 		if (nspace == 0)
@@ -128,10 +153,12 @@ FunctionSystemProperty::execute(
 		}
 		else
 		{
-			substring(fullName, theBuffer, indexOfNSSep + 1);
-
-			if(startsWith(*nspace, m_xsltNamespaceURI))
+			if(*nspace == m_xsltNamespaceURI)
 			{
+				substring(fullName, theBuffer, indexOfNSSep + 1);
+
+				validateNCName(executionContext, context, locator, theBuffer);
+
 				if(equals(theBuffer, m_versionPropertyString))
 				{
 					return executionContext.getXObjectFactory().createNumber(1.0);
@@ -146,23 +173,15 @@ FunctionSystemProperty::execute(
 				}
 				else
 				{
-					executionContext.error(
-						"Unknown property in system-property()",
-						context,
-						locator);
+					return executionContext.getXObjectFactory().createStringReference(s_emptyString);
 				}
-			}
-			else
-			{
-				executionContext.warn(
-					"Only the XSLT namespace is supported in the function system-property()",
-					context,
-					locator);
 			}
 		}
 	}
 	else
 	{
+		validateNCName(executionContext, context, locator, fullName);
+
 		const char* const	theEnvString =
 #if defined(XALAN_STRICT_ANSI_HEADERS)
 			std::getenv(c_str(TranscodeToLocalCodePage(fullName)));
@@ -170,14 +189,7 @@ FunctionSystemProperty::execute(
 			getenv(c_str(TranscodeToLocalCodePage(fullName)));
 #endif
 
-		if (theEnvString == 0)
-		{
-				executionContext.warn(
-					"Unknown environment proprerty requested",
-					context,
-					locator);
-		}
-		else
+		if (theEnvString != 0)
 		{
 			XPathExecutionContext::GetAndReleaseCachedString	guard(executionContext);
 
@@ -189,10 +201,7 @@ FunctionSystemProperty::execute(
 		}
 	}
 
-	// We should never get here...
-	assert(false);
-
-	return XObjectPtr();
+	return executionContext.getXObjectFactory().createStringReference(s_emptyString);
 }
 
 
