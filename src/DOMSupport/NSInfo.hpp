@@ -141,9 +141,9 @@ public:
 	operator==(const NSInfo&	theRHS) const
 	{
 		return equals(m_namespace, theRHS.m_namespace) &&
-			   equals(m_hasXMLNSAttrs, theRHS.m_hasXMLNSAttrs) &&
-			   equals(m_hasProcessedNS, theRHS.m_hasProcessedNS) &&
-			   equals(m_ancestorHasXMLNSAttrs, theRHS.m_ancestorHasXMLNSAttrs);
+			   m_hasXMLNSAttrs == theRHS.m_hasXMLNSAttrs &&
+			   m_hasProcessedNS == theRHS.m_hasProcessedNS &&
+			   m_ancestorHasXMLNSAttrs == theRHS.m_ancestorHasXMLNSAttrs;
 	}
 
 	XalanDOMString	m_namespace;
