@@ -58,7 +58,10 @@
 
 
 
-#include <DOMSupport/PrefixResolver.hpp>
+#include <PlatformSupport/PrefixResolver.hpp>
+
+
+
 #include <XPath/XObjectFactory.hpp>
 #include <XPath/XPath.hpp>
 #include <XPath/XPathProcessorImpl.hpp>
