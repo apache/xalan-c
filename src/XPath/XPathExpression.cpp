@@ -73,8 +73,8 @@ const XPathExpression::NodeTestSetType		XPathExpression::s_NodeTestOpCodes =
 				XPathExpression::InitializeNodeTestSet();
 
 
-XPathExpression::XPathExpressionException::XPathExpressionException(const std::string&	theMessage) :
-	XPathException(theMessage.c_str())
+XPathExpression::XPathExpressionException::XPathExpressionException(const XalanDOMString&	theMessage) :
+	XPathException(theMessage)
 {
 }
 
@@ -99,7 +99,7 @@ XPathExpression::InvalidOpCodeException::~InvalidOpCodeException()
 
 
 
-std::string
+XalanDOMString
 XPathExpression::InvalidOpCodeException::FormatErrorMessage(int		theOpCode)
 {
 #if !defined(XALAN_NO_NAMESPACES)
@@ -113,9 +113,9 @@ XPathExpression::InvalidOpCodeException::FormatErrorMessage(int		theOpCode)
 				 << " was detected."
 				 << '\0';
 
-	std::string theString = theFormatter.str();
-	delete theFormatter.str();
-	return theString;
+	theFormatter.freeze(false);
+
+	return theFormatter.str();
 }
 
 
@@ -136,7 +136,7 @@ XPathExpression::InvalidArgumentCountException::~InvalidArgumentCountException()
 
 
 
-std::string
+XalanDOMString
 XPathExpression::InvalidArgumentCountException::FormatErrorMessage(
 			int		theOpCode,
 			int		theExpectedCount,
@@ -158,9 +158,9 @@ XPathExpression::InvalidArgumentCountException::FormatErrorMessage(
 				 << " arguments(s) were supplied."
 				 << '\0';
 
-	std::string theString = theFormatter.str();
-	delete theFormatter.str();
-	return theString;
+	theFormatter.freeze(false);
+
+	return theFormatter.str();
 }
 
 
@@ -180,7 +180,7 @@ XPathExpression::InvalidArgumentException::~InvalidArgumentException()
 
 
 
-std::string
+XalanDOMString
 XPathExpression::InvalidArgumentException::FormatErrorMessage(
 				int		theOpCode,
 				int		theValue)
@@ -198,9 +198,9 @@ XPathExpression::InvalidArgumentException::FormatErrorMessage(
 				 << "."
 				 << '\0';
 
-	std::string theString = theFormatter.str();
-	delete theFormatter.str();
-	return theString;
+	theFormatter.freeze(false);
+
+	return theFormatter.str();
 }
 
 
@@ -238,9 +238,9 @@ XPathExpression::reset()
 void
 XPathExpression::shrink()
 {
-	m_opMap = OpCodeMapType(m_opMap);
+	OpCodeMapType(m_opMap).swap(m_opMap);
 	TokenQueueType(m_tokenQueue).swap(m_tokenQueue);
-	m_patternMap = PatternMapType(m_patternMap);
+	PatternMapType(m_patternMap).swap(m_patternMap);
 }
 
 
@@ -282,9 +282,9 @@ XPathExpression::getOpCodeLength(OpCodeMapSizeType	opPos) const
 
 void
 XPathExpression::setOpCodeArgs(
-			eOpCodes								theOpCode,
-			OpCodeMapSizeType						theIndex,
-			const std::vector<OpCodeMapValueType>&	theArgs)
+			eOpCodes							theOpCode,
+			OpCodeMapSizeType					theIndex,
+			const OpCodeMapValueVectorType&		theArgs)
 {
 	// There must be at least enough space to hold the OpCode
 	// and the length indicator.

@@ -169,7 +169,7 @@ public:
 	extFunction(
 			const XalanDOMString&			theNamespace,
 			const XalanDOMString&			extensionName, 
-			const std::vector<XObject*>&	argVec);
+			const XObjectArgVectorType&		argVec);
 
 	virtual XLocator*
 	getXLocatorFromNode(const XalanNode*	node) const;

@@ -236,9 +236,13 @@ XPathFunctionTable::DestroyTable()
 {
 	try
 	{
-		std::for_each(m_FunctionCollection.begin(),
-					  m_FunctionCollection.end(),
-					  DeleteFunctorType());
+#if !defined(XALAN_NO_NAMESPACES)
+		using std::for_each;
+#endif
+
+		for_each(m_FunctionCollection.begin(),
+				 m_FunctionCollection.end(),
+				 DeleteFunctorType());
 	}
 	catch(...)
 	{

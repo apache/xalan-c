@@ -92,13 +92,6 @@ class XALAN_XPATH_EXPORT XPathExpression
 {
 public:
 
-#if defined(XALAN_NO_NAMESPACES)
-#	define XALAN_STD
-#else
-#	define XALAN_STD std::
-#endif
-
-
 	/**
 	 * List of operations codes.
 	 *
@@ -630,7 +623,7 @@ public:
 		 * 
 		 * @param theMessage string error message
 		 */
-		XPathExpressionException(const XALAN_STD string&		theMessage);
+		XPathExpressionException(const XalanDOMString&	theMessage);
 
 		virtual~
 		XPathExpressionException();
@@ -655,7 +648,7 @@ public:
 
 	private:
 
-		static XALAN_STD string
+		static XalanDOMString
 		FormatErrorMessage(int	theOpCode);
 	};
 
@@ -684,7 +677,7 @@ public:
 
 	private:
 
-		static XALAN_STD string
+		static XalanDOMString
 		FormatErrorMessage(
 			int		theOpCode,
 			int		theExpectedCount,
@@ -713,12 +706,18 @@ public:
 
 	private:
 
-		static XALAN_STD string
+		static XalanDOMString
 		FormatErrorMessage(
 				int		theOpCode,
 				int		theValue);
 	};
 
+
+#if defined(XALAN_NO_NAMESPACES)
+#	define XALAN_STD
+#else
+#	define XALAN_STD std::
+#endif
 
 	typedef XALAN_STD vector<int>				OpCodeMapType;
 	typedef XALAN_STD vector<XObject*>			TokenQueueType;

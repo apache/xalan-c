@@ -238,9 +238,9 @@ XPathExecutionContextDefault::functionAvailable(
 
 XObject*
 XPathExecutionContextDefault::extFunction(
-			const XalanDOMString&			theNamespace,
-			const XalanDOMString&			extensionName, 
-			const std::vector<XObject*>&	argVec)
+			const XalanDOMString&					theNamespace,
+			const XalanDOMString&					extensionName, 
+			const Function::XObjectArgVectorType&	argVec)
 {
 	return m_xpathEnvSupport.extFunction(*this, theNamespace, extensionName, argVec);
 }

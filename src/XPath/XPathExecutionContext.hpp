@@ -77,6 +77,7 @@
 
 
 
+#include <XPath/Function.hpp>
 #include <XPath/MutableNodeRefList.hpp>
 
 
@@ -102,6 +103,8 @@ class XalanElement;
 class XALAN_XPATH_EXPORT XPathExecutionContext : public ExecutionContext
 {
 public:
+
+	typedef Function::XObjectArgVectorType	XObjectArgVectorType;
 
 	explicit
 	XPathExecutionContext();
@@ -250,7 +253,7 @@ public:
 	extFunction(
 			const XalanDOMString&			theNamespace,
 			const XalanDOMString&			extensionName, 
-			const std::vector<XObject*>&	argVec) = 0;
+			const XObjectArgVectorType&		argVec) = 0;
 
 	/**
 	 * Get an XLocator provider keyed by node.  This gets the association
