@@ -139,14 +139,13 @@ XalanMessageLoader::getMessage(
 
 	XalanDOMChar	sBuffer[MAX_MESSAGE_LEN];
 
-	s_msgLoader->load
-		(
-		msgToLoad
-		, sBuffer
-		, MAX_MESSAGE_LEN
-		, repText1.c_str()
-		, repText2.c_str())
-		, repText3.c_str();
+	s_msgLoader->load(
+		msgToLoad,
+		sBuffer,
+		MAX_MESSAGE_LEN,
+		repText1.c_str(),
+		repText2.c_str(),
+		repText3.c_str());
 
 
 	return XalanDOMString(sBuffer);
