@@ -138,19 +138,6 @@ public:
 			const XalanNode* 			sourceNode = 0) const = 0;
 
 	/**
-	 * Report an error and throw an exception.
-	 * 
-	 * @param msg The text of the message.
-	 * @param styleNode The stylesheet node were the error occurred.
-	 * @param sourceNode The source node where the error occurred.  May be 0.
-	 */
-	virtual void
-	error(
-			const char*					msg,
-			const ElemTemplateElement&	styleNode,
-			const XalanNode* 			sourceNode = 0) const = 0;
-
-	/**
 	 * Report a  warning.
 	 * 
 	 * @param msg The text of the message.
@@ -160,19 +147,6 @@ public:
 	virtual void
 	warn(
 			const XalanDOMString&		msg,
-			const ElemTemplateElement&	styleNode,
-			const XalanNode* 			sourceNode = 0) const = 0;
-
-	/**
-	 * Report a  warning.
-	 * 
-	 * @param msg The text of the message.
-	 * @param styleNode The stylesheet node were the warning occurred.
-	 * @param sourceNode The source node where the warning occurred.  May be 0.
-	 */
-	virtual void
-	warn(
-			const char*					msg,
 			const ElemTemplateElement&	styleNode,
 			const XalanNode* 			sourceNode = 0) const = 0;
 
@@ -189,19 +163,6 @@ public:
 			const ElemTemplateElement&	styleNode,
 			const XalanNode* 			sourceNode = 0) const = 0;
 
-
-	/**
-	 * Report a  message.
-	 * 
-	 * @param msg The text of the message.
-	 * @param styleNode The stylesheet node were the message occurred.
-	 * @param sourceNode The source node where the message occurred.  May be 0.
-	 */
-	virtual void
-	message(
-			const char*					msg,
-			const ElemTemplateElement&	styleNode,
-			const XalanNode* 			sourceNode = 0) const = 0;
 
 	/**
 	 * Determine whether conflicts should be reported.
@@ -2147,34 +2108,16 @@ public:
 			const LocatorType* 		locator) const = 0;
 
 	virtual void
-	error(
-			const char*			msg,
-			const XalanNode* 	sourceNode,
-			const LocatorType* 	locator) const = 0;
-
-	virtual void
 	warn(
 			const XalanDOMString&	msg,
 			const XalanNode* 		sourceNode = 0,
 			const LocatorType* 		locator = 0) const = 0;
 
 	virtual void
-	warn(
-			const char*			msg,
-			const XalanNode* 	sourceNode = 0,
-			const LocatorType* 	locator = 0) const = 0;
-
-	virtual void
 	message(
 			const XalanDOMString&	msg,
 			const XalanNode* 		sourceNode = 0,
 			const LocatorType* 		locator = 0) const = 0;
-
-	virtual void
-	message(
-			const char*			msg,
-			const XalanNode* 	sourceNode = 0,
-			const LocatorType* 	locator = 0) const = 0;
 
 #if defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 protected:

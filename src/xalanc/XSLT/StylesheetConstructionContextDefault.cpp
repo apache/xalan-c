@@ -152,27 +152,6 @@ StylesheetConstructionContextDefault::error(
 
 
 
-void
-StylesheetConstructionContextDefault::error(
-			const char*					msg,
-			const XalanNode* 			sourceNode,
-			const ElemTemplateElement*	styleNode) const
-{
-	error(TranscodeFromLocalCodePage(msg), sourceNode, styleNode);
-}
-
-
-
-void
-StylesheetConstructionContextDefault::error(
-			const char*			msg,
-			const XalanNode* 	sourceNode,
-			const LocatorType* 	locator) const
-{
-	error(TranscodeFromLocalCodePage(msg), sourceNode, locator);
-}
-
-
 
 void
 StylesheetConstructionContextDefault::warn(
@@ -202,29 +181,6 @@ StylesheetConstructionContextDefault::warn(
 }
 
 
-
-void
-StylesheetConstructionContextDefault::warn(
-			const char*					msg,
-			const XalanNode* 			sourceNode,
-			const ElemTemplateElement*	styleNode) const
-{
-	warn(TranscodeFromLocalCodePage(msg), sourceNode, styleNode);
-}
-
-
-
-void
-StylesheetConstructionContextDefault::warn(
-			const char*			msg,
-			const XalanNode* 	sourceNode,
-			const LocatorType* 	locator) const
-{
-	warn(TranscodeFromLocalCodePage(msg), sourceNode, locator);
-}
-
-
-
 void
 StylesheetConstructionContextDefault::message(
 			const XalanDOMString&		msg,
@@ -251,29 +207,6 @@ StylesheetConstructionContextDefault::message(
 		m_processor.message(msg, sourceNode);
 	}
 }
-
-
-
-void
-StylesheetConstructionContextDefault::message(
-			const char*					msg,
-			const XalanNode* 			sourceNode,
-			const ElemTemplateElement*	styleNode) const
-{
-	message(TranscodeFromLocalCodePage(msg), sourceNode, styleNode);
-}
-
-
-
-void
-StylesheetConstructionContextDefault::message(
-			const char*			msg,
-			const XalanNode* 	sourceNode,
-			const LocatorType* 	locator) const
-{
-	message(TranscodeFromLocalCodePage(msg), sourceNode, locator);
-}
-
 
 
 void

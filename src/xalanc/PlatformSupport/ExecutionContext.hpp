@@ -66,19 +66,6 @@ public:
 			const LocatorType* 		locator = 0) const = 0;
 
 	/**
-	 * Report an error and throw an exception.
-	 * 
-	 * @param msg The text of the message.
-	 * @param sourceNode The source node where the error occurred.  May be 0.
-	 * @param locator A Locator to determine where the error occurred.  May be 0.
-	 */
-	virtual void
-	error(
-			const char*			msg,
-			const XalanNode* 	sourceNode = 0,
-			const LocatorType* 	locator = 0) const = 0;
-
-	/**
 	 * Report a warning
 	 * 
 	 * @param msg The text of the message.
@@ -90,19 +77,6 @@ public:
 			const XalanDOMString&	msg,
 			const XalanNode* 		sourceNode = 0,
 			const LocatorType* 		locator = 0) const = 0;
-
-	/**
-	 * Report a warning
-	 * 
-	 * @param msg The text of the message.
-	 * @param sourceNode The source node where the warning occurred.  May be 0.
-	 * @param locator A Locator to determine where the warning occurred.  May be 0.
-	 */
-	virtual void
-	warn(
-			const char*			msg,
-			const XalanNode* 	sourceNode = 0,
-			const LocatorType* 	locator = 0) const = 0;
 
 	/**
 	 * Output a message.
@@ -117,18 +91,6 @@ public:
 			const XalanNode* 		sourceNode = 0,
 			const LocatorType* 		locator = 0) const = 0;
 
-	/**
-	 * Output a message.
-	 * 
-	 * @param msg The text of the message.
-	 * @param sourceNode The source node where the message occurred.  May be 0.
-	 * @param locator A Locator to determine where the message occurred.  May be 0.
-	 */
-	virtual void
-	message(
-			const char*			msg,
-			const XalanNode* 	sourceNode = 0,
-			const LocatorType* 	locator = 0) const = 0;
 };
 
 

@@ -1175,18 +1175,6 @@ XSLTEngineImpl::warn(
 }
 
 
-
-void
-XSLTEngineImpl::warn(
-			const char*					msg,
-			const XalanNode*			sourceNode,
-			const ElemTemplateElement*	styleNode) const
-{
-	warn(TranscodeFromLocalCodePage(msg), sourceNode, styleNode);
-}
-
-
-
 void
 XSLTEngineImpl::error(
 			const XalanDOMString&		msg,
@@ -3073,51 +3061,6 @@ XSLTEngineImpl::fireCharacterGenerateEvent(
 
 	fireGenerateEvent(ge);
 }
-
-
-
-void
-XSLTEngineImpl::error(
-			const char*			theMessage,
-			const LocatorType*	theLocator,
-			const XalanNode*	theSourceNode)
-{
-	assert(theMessage != 0);
-
-	m_scratchString = theMessage;
-
-	if (theLocator != 0)
-	{
-		error(m_scratchString, *theLocator, theSourceNode);
-	}
-	else
-	{
-		error(m_scratchString, theSourceNode);
-	}
-}
-
-
-
-void
-XSLTEngineImpl::warn(
-			const char*			theMessage,
-			const LocatorType*	theLocator,
-			const XalanNode*	theSourceNode)
-{
-	assert(theMessage != 0);
-
-	m_scratchString = theMessage;
-
-	if (theLocator != 0)
-	{
-		warn(m_scratchString, *theLocator, theSourceNode);
-	}
-	else
-	{
-		warn(m_scratchString, theSourceNode);
-	}
-}
-
 
 
 void

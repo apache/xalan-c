@@ -1571,16 +1571,6 @@ StylesheetHandler::inExtensionElement() const
 
 void
 StylesheetHandler::error(
-			const char*			theMessage,
-			const LocatorType*	theLocator) const
-{
-	m_constructionContext.error(theMessage, 0, theLocator);
-}
-
-
-
-void
-StylesheetHandler::error(
 			const XalanDOMString&	theMessage,
 			const LocatorType*		theLocator) const
 {

@@ -2489,29 +2489,6 @@ StylesheetExecutionContextDefault::error(
 }
 
 
-
-void
-StylesheetExecutionContextDefault::error(
-			const char*					msg,
-			const ElemTemplateElement&	styleNode,
-			const XalanNode*			sourceNode) const
-{
-	error(TranscodeFromLocalCodePage(msg), styleNode, sourceNode);
-}
-
-
-
-void
-StylesheetExecutionContextDefault::error(
-			const char*			msg,
-			const XalanNode*	sourceNode,
-			const LocatorType*	locator) const
-{
-	error(TranscodeFromLocalCodePage(msg), sourceNode, locator);
-}
-
-
-
 void
 StylesheetExecutionContextDefault::warn(
 			const XalanDOMString&		msg,
@@ -2556,28 +2533,6 @@ StylesheetExecutionContextDefault::warn(
 
 
 void
-StylesheetExecutionContextDefault::warn(
-			const char*					msg,
-			const ElemTemplateElement&	styleNode,
-			const XalanNode*			sourceNode) const
-{
-	warn(TranscodeFromLocalCodePage(msg), styleNode, sourceNode);
-}
-
-
-
-void
-StylesheetExecutionContextDefault::warn(
-			const char*			msg,
-			const XalanNode*	sourceNode,
-			const LocatorType*	locator) const
-{
-	warn(TranscodeFromLocalCodePage(msg), sourceNode, locator);
-}
-
-
-
-void
 StylesheetExecutionContextDefault::message(
 			const XalanDOMString&		msg,
 			const ElemTemplateElement&	styleNode,
@@ -2617,29 +2572,6 @@ StylesheetExecutionContextDefault::message(
 		m_xsltProcessor->message(msg, sourceNode);
 	}
 }
-
-
-
-void
-StylesheetExecutionContextDefault::message(
-			const char*					msg,
-			const ElemTemplateElement&	styleNode,
-			const XalanNode*			sourceNode) const
-{
-	message(TranscodeFromLocalCodePage(msg), styleNode, sourceNode);
-}
-
-
-
-void
-StylesheetExecutionContextDefault::message(
-			const char*			msg,
-			const XalanNode*	sourceNode,
-			const LocatorType*	locator) const
-{
-	message(TranscodeFromLocalCodePage(msg), sourceNode, locator);
-}
-
 
 
 class PopAndPushContextMarker

@@ -263,12 +263,6 @@ private:
 	error(const XalanDOMString&		msg) const;
 
 	/**
-	 * Throw an exception using the provided message text.
-	 */
-	void
-	error(const char*	msg) const;
-
-	/**
 	 * Given a string, return the corresponding token.
 	 */
 	static XPathExpression::eOpCodes

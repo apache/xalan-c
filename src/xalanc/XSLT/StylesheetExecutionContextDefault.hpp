@@ -209,32 +209,14 @@ public:
 			const XalanNode* 			sourceNode = 0) const;
 
 	virtual void
-	error(
-			const char*					msg,
-			const ElemTemplateElement&	styleNode,
-			const XalanNode* 			sourceNode = 0) const;
-
-	virtual void
 	warn(
 			const XalanDOMString&		msg,
 			const ElemTemplateElement&	styleNode,
 			const XalanNode* 			sourceNode = 0) const;
 
 	virtual void
-	warn(
-			const char*					msg,
-			const ElemTemplateElement&	styleNode,
-			const XalanNode* 			sourceNode = 0) const;
-
-	virtual void
 	message(
 			const XalanDOMString&		msg,
-			const ElemTemplateElement&	styleNode,
-			const XalanNode* 			sourceNode = 0) const;
-
-	virtual void
-	message(
-			const char*					msg,
 			const ElemTemplateElement&	styleNode,
 			const XalanNode* 			sourceNode = 0) const;
 
@@ -1013,32 +995,14 @@ public:
 			const LocatorType* 		locator) const;
 
 	virtual void
-	error(
-			const char*			msg,
-			const XalanNode* 	sourceNode,
-			const LocatorType* 	locator) const;
-
-	virtual void
 	warn(
 			const XalanDOMString&	msg,
 			const XalanNode* 		sourceNode,
 			const LocatorType* 		locator) const;
 
 	virtual void
-	warn(
-			const char*			msg,
-			const XalanNode* 	sourceNode,
-			const LocatorType* 	locator) const;
-
-	virtual void
 	message(
 			const XalanDOMString&	msg,
-			const XalanNode* 	sourceNode,
-			const LocatorType* 	locator) const;
-
-	virtual void
-	message(
-			const char*			msg,
 			const XalanNode* 	sourceNode,
 			const LocatorType* 	locator) const;
 

@@ -814,14 +814,6 @@ XPathProcessorImpl::error(const XalanDOMString&		msg) const
 
 
 void
-XPathProcessorImpl::error(const char*	msg) const
-{
-	error(TranscodeFromLocalCodePage(msg));
-}
-
-
-
-void
 XPathProcessorImpl::Expr()
 {
 	OrExpr();

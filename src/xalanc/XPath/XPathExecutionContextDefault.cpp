@@ -513,17 +513,6 @@ XPathExecutionContextDefault::error(
 
 
 void
-XPathExecutionContextDefault::error(
-			const char*			msg,
-			const XalanNode* 	sourceNode,
-			const LocatorType* 	locator) const
-{
-	error(TranscodeFromLocalCodePage(msg), sourceNode, locator);
-}
-
-
-
-void
 XPathExecutionContextDefault::warn(
 			const XalanDOMString&	msg,
 			const XalanNode*		sourceNode,
@@ -571,17 +560,6 @@ XPathExecutionContextDefault::warn(
 	{
 		throw XalanXPathException(msg, uri, lineNumber, columnNumber);
 	}
-}
-
-
-
-void
-XPathExecutionContextDefault::warn(
-			const char*			msg,
-			const XalanNode*	sourceNode,
-			const LocatorType* 	locator) const
-{
-	warn(TranscodeFromLocalCodePage(msg), sourceNode, locator);
 }
 
 
@@ -635,18 +613,6 @@ XPathExecutionContextDefault::message(
 		throw XalanXPathException(msg, uri, lineNumber, columnNumber);
 	}
 }
-
-
-
-void
-XPathExecutionContextDefault::message(
-			const char*			msg,
-			const XalanNode*	sourceNode,
-			const LocatorType* 	locator) const
-{
-	message(TranscodeFromLocalCodePage(msg), sourceNode, locator);
-}
-
 
 
 XalanDocument*

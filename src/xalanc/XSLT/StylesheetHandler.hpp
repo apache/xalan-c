@@ -408,11 +408,6 @@ private:
 
 	// Utility functions...
 	void
-	error(
-			const char*			theMessage,
-			const LocatorType*	theLocator) const;
-
-	void
 	illegalAttributeError(
 			const XalanDOMChar*		theElementName,
 			const XalanDOMChar*		theAttributeName,

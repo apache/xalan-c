@@ -800,18 +800,6 @@ public:
 			const XalanNode*			sourceNode = 0,
 			const ElemTemplateElement*	styleNode = 0) const;
 
-	/**
-	 * Report a message
-	 * 
-	 * @param msg		 text of message to output
-	 * @param sourceNode node in source where error occurred
-	 * @param styleNode  node in stylesheet where error occurred
-	 */
-	virtual void
-	warn(
-			const char*					msg,
-			const XalanNode*			sourceNode = 0,
-			const ElemTemplateElement*	styleNode = 0) const;
 
 	virtual void
 	warn(
@@ -1630,17 +1618,6 @@ private:
 			const XalanDOMString&	theElementName,
 			const XalanDOMString&	theElementNamespaceURI);
 
-	void
-	error(
-			const char*			theMessage,
-			const LocatorType*	theLocator,
-			const XalanNode*	theSourceNode);
-
-	void
-	warn(
-			const char*			theMessage,
-			const LocatorType*	theLocator,
-			const XalanNode*	theSourceNode);
 
 
 	// Data members...
