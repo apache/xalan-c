@@ -71,8 +71,12 @@
 
 
 
+#if defined(XALAN_USE_NATIVE_WCHAR_T)
+typedef wchar_t			XalanDOMChar;
+#else
 // UTF-16 character...
 typedef unsigned short	XalanDOMChar;
+#endif
 
 
 
