@@ -72,9 +72,9 @@
 
 
 #if defined(XALAN_OLD_STREAM_HEADERS)
-#include <strstream.h>
+#include <iostream.h>
 #else
-#include <strstream>
+#include <iostream>
 #endif
 
 
@@ -84,9 +84,7 @@ using std::back_inserter;
 using std::copy;
 using std::hex;
 using std::ios;
-using std::istrstream;
 using std::ostream;
-using std::ostrstream;
 using std::transform;
 using std::vector;
 #endif

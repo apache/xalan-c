@@ -63,14 +63,6 @@
 
 
 
-#if defined(XALAN_OLD_STREAM_HEADERS)
-#include <strstream.h>
-#else
-#include <strstream>
-#endif
-
-
-
 #include <Include/XalanAutoPtr.hpp>
 
 
@@ -246,22 +238,15 @@ FormatMessageLocal(
 			const XalanDOMString&	theFileName,
 			int						theErrorCode)
 {
-	XalanDOMString	theResult(TranscodeFromLocalCodePage(theMessage));
+	XalanDOMString	theResult(theMessage);
 
 	theResult += theFileName;
 
-#if !defined(XALAN_NO_NAMESPACES)
-using std::ostrstream;
-#endif
+	append(theResult, ".  The C++ run-time error code (errno) is ");
 
-	ostrstream	theFormatter;
+	LongToDOMString(theErrorCode, theResult);
 
-	theFormatter << ".  The C++ run-time error code (errno) is "
-				 << theErrorCode << "." << '\0';
-
-	append(theResult, theFormatter.str());
-
-	delete theFormatter.str();
+	append(theResult, ".");
 
 	return theResult;
 }
