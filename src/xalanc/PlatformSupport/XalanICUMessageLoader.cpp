@@ -133,14 +133,14 @@ XalanICUMessageLoader::XalanICUMessageLoader():
 	}
 
 	fLocaleBundle = ures_open(sPackageName, szLocal , &err);
-	if (!U_SUCCESS(err) || fLocaleBundle == NULL)
+	if (!U_SUCCESS(err) || fLocaleBundle == 0)
 	{
 		assert( 0 );
 	}
 
 	err = U_ZERO_ERROR;
-    fDomainBundle = ures_getByKey(fLocaleBundle, domainName, NULL, &err);
-    if (!U_SUCCESS(err) || fDomainBundle == NULL)
+    fDomainBundle = ures_getByKey(fLocaleBundle, domainName, 0, &err);
+    if (!U_SUCCESS(err) || fDomainBundle == 0)
     {
         assert( 0 );
     }
