@@ -157,6 +157,13 @@
 
 
 
+//#define XALAN_VQ_SPECIAL_TRACE
+#if defined(XALAN_VQ_SPECIAL_TRACE)
+#include "C:/Program Files/Rational/Quantify/pure.h"
+#endif
+
+
+
 #if !defined (XALAN_NO_NAMESPACES)
 using std::cerr;
 using std::cout;
@@ -221,8 +228,6 @@ printArgOptions()
 		 << endl
 		 << " [-XST (Use source tree formatter.  Formats to Xalan source tree, then formats XML for output.)]"
 		 << endl
-		 << " [-DRTF (Use the Xerces DOM for generating Result Tree Fragments, instead of the Xalan source tree.]"
-		 << endl
 		 << " [-PARAM name expression (Sets a stylesheet parameter.)]"
 		 << endl
 		 << " [-XD Use Xerces DOM instead of Xalan source tree.]"
@@ -278,7 +283,6 @@ struct CmdLineParams
 	bool formatToNull;
 	bool formatToSourceTree;
 	bool useDOM;
-	bool useDOMForRTFs;
 	int indentAmount;
 	int outputType;
 	CharVectorType outFileName;
@@ -305,7 +309,6 @@ struct CmdLineParams
 		formatToNull(false),
 		formatToSourceTree(false),
 		useDOM(false),
-		useDOMForRTFs(false),
 		indentAmount(-1),
 		outputType(-1),
 		outFileName(),
@@ -549,10 +552,6 @@ getArgs(
 			p.outputType = FormatterListener::OUTPUT_METHOD_DOM;
 
 			p.formatToSourceTree = true;
-		}
-		else if(!compareNoCase("-DRTF", argv[i]))
-		{
-			p.useDOMForRTFs = true;
 		}
 		else if(!compareNoCase("-NULL", argv[i]))
 		{
@@ -1011,8 +1010,6 @@ xsltMain(const CmdLineParams&	params)
 		theXercesParserLiaison.setExecutionContext(theExecutionContext);
 	}
 
-	theExecutionContext.setUseDOMResultTreeFactory(params.useDOMForRTFs);
-
 	if (stylesheet == 0)
 	{
 		// No stylesheet, so our only hope is that the xml file has
@@ -1125,13 +1122,6 @@ xsltMain(const CmdLineParams&	params)
 
 	return 0;
 }
-
-
-
-//#define XALAN_VQ_SPECIAL_TRACE
-#if defined(XALAN_VQ_SPECIAL_TRACE)
-#include "d:/Rational/Quantify/pure.h"
-#endif
 
 
 
