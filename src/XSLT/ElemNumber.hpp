@@ -33,7 +33,7 @@
  *    nor may "Apache" appear in their name, without prior written
  *    permission of the Apache Software Foundation.
  *
- * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
+  THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
  * DISCLAIMED.  IN NO EVENT SHALL THE APACHE SOFTWARE FOUNDATION OR
@@ -72,6 +72,9 @@
 
 // Base class header file.
 #include "ElemTemplateElement.hpp"
+#include "AVT.hpp"
+
+#include "XPath/MutableNodeRefList.hpp"
 
 
 
@@ -95,6 +98,10 @@ class XPathExecutionContext;
 
 class ElemNumber: public ElemTemplateElement
 {
+private:
+
+struct Counter;
+
 public:
 
 #if defined(XALAN_NO_NAMESPACES)
@@ -103,8 +110,10 @@ public:
 #     define XALAN_STD std::
 #endif
 	typedef XALAN_STD vector<int> IntArrayType;
+	typedef XALAN_STD vector<Counter> CounterVectorType;
+	typedef XALAN_STD map<ElemNumber*, CounterVectorType>Ptr2CounterVectorMapType;
 #	if ! defined(__GNUC__)
-		typedef XALAN_STD locale LocaleType;
+	typedef XALAN_STD locale LocaleType;
 #	endif
 #undef XALAN_STD	
 
@@ -125,6 +134,9 @@ public:
 			const AttributeList&			atts,
 			int								lineNumber,
 			int								columnNumber);
+
+	virtual
+	~ElemNumber();
 
 	// These methods are inherited from ElemTemplateElement ...
 	
@@ -148,10 +160,10 @@ protected:
 	 */
 	XalanNode*
 	findAncestor(
-			StylesheetExecutionContext&		executionContext,
-			const XPath*					fromMatchPattern,
-			const XPath*					countMatchPattern,
-			XalanNode*						context,
+			StylesheetExecutionContext&	executionContext,
+			const XPath*						fromMatchPattern,
+			const XPath*						countMatchPattern,
+			const XalanNode* const			context,
 			const XalanElement*				namespaceContext) const;
 
 	  /**
@@ -165,10 +177,10 @@ protected:
 	   */
 	XalanNode*
 	findPrecedingOrAncestorOrSelf(
-			StylesheetExecutionContext&		executionContext,
-			const XPath*					fromMatchPattern,
-			const XPath*					countMatchPattern,
-			XalanNode*						context,
+			StylesheetExecutionContext&	executionContext,
+			const XPath*						fromMatchPattern,
+			const XPath*						countMatchPattern,
+			const XalanNode* const 			context,
 			const XalanElement*				namespaceContext) const;
 
 	/**
@@ -177,7 +189,7 @@ protected:
 	const XPath*
 	getCountMatchPattern(
 			StylesheetExecutionContext&		executionContext,
-			XalanNode*						contextNode) const;
+			const XalanNode* const				contextNode) const;
 
 	/**
 	 * Given an XML source node, get the count according to the 
@@ -186,93 +198,35 @@ protected:
 	XalanDOMString
 	getCountString(
 			StylesheetExecutionContext&		executionContext,
-			XalanNode*						sourceTree, 
-			XalanNode*						sourceNode) const;
+			XalanNode* const					sourceTree, 
+			XalanNode* const					sourceNode) const;
 
 	/**
-	 * from any position in the tree, return the 
-	 * next node in the tree, assuming preorder 
-	 * traversal preceded, or null if at the end.
+	 * Get the previous node to be counted.
 	 */
-	static XalanNode*
-	getNextInTree(
-			XalanNode*	pos,
-			XalanNode*	from);
-
-	/**
-	 * Get a number that represents a node based on the
-	 * position of that node among within the document tree,  
-	 * and taking into account the count and from patterns as 
-	 * specified in the XSL specification.
-	 * @param fromMatchPattern if non-null, where to 
-	 * start counting from.
-	 * @param countMatchPattern if non-null, count only nodes 
-	 * that match this pattern.
-	 * @param target count this node and preceding nodes.
-	 * @return A number that counts target and preceding 
-	 * nodes that qualify.
-	 */
-	unsigned int
-	getNumberInTree(
-			XPathExecutionContext&	executionContext,
-			const XPath*			countMatchPattern,
-			XalanNode*				pos,
-			XalanNode*				from,
-			XalanNode*				target,
-			int						countFrom) const;
-
-	/**
-	 * Get a number that represents a node based on the
-	 * position of that node among it's siblings, and 
-	 * taking into account the count and from patterns.
-	 * @param fromMatchPattern if non-null, where to 
-	 * start counting from.
-	 * @param countMatchPattern if non-null, count only nodes 
-	 * that match this pattern.
-	 * @param target count this node and preceding siblings.
-	 * @return A number that counts target and preceding 
-	 * siblings that qualify.
-	 */
-	unsigned int
-	getSiblingNumber(
+	XalanNode* getPreviousNode(
 			StylesheetExecutionContext&		executionContext,
-			const XPath*					countMatchPattern, 
-			XalanNode*						target) const;
+			XalanNode* pos);
 
 	/**
-	 * Count the ancestors, up to the root, that match the 
+	 * Get the target node that will be counted..
+	 */
+	XalanNode* getTargetNode(
+			StylesheetExecutionContext& executionContext,
+			const XalanNode* const sourceNode);
+
+	/**
+	 * Get the ancestors, up to the root, that match the
 	 * pattern.
-	 * @param patterns if non-null, count only nodes 
-	 * that match this pattern, if null count all ancestors.
+	 * @param patterns if non-0, count only nodes
+	 * that match this pattern, if 0 count all ancestors.
 	 * @param node Count this node and it's ancestors.
 	 * @return The number of ancestors that match the pattern.
 	 */
-	unsigned int
-	countMatchingAncestors(	
+	MutableNodeRefList getMatchingAncestors(
 			StylesheetExecutionContext&		executionContext,
-			const XPath*					patterns,
-			XalanNode*						node) const;
-
-	/**
-	 * Climb up the ancestor tree, collecting sibling position 
-	 * numbers (as modified by the fromMatchPattern and 
-	 * countMatchPattern patterns).
-	 * @param fromMatchPattern if non-null, where to 
-	 * start counting from in each sibling list.
-	 * @param countMatchPattern if non-null, count only ancestors 
-	 * and siblings that match this pattern.
-	 * @param node count this node and ancestors that match the countMatchPattern.
-	 * @return An array of ints of length that matches exactly the number 
-	 * of ancestors that match countMatchPattern.
-	 * @exception XSLProcessorException thrown if the active ProblemListener and XMLParserLiaison decide 
-	 * the error condition is severe enough to halt processing.
-	 */
-	IntArrayType
-	getAncestorNumbers(
-			StylesheetExecutionContext&		executionContext,
-			const XPath*					fromMatchPattern,
-			const XPath*					countMatchPattern, 
-			XalanNode*						node) const;
+			XalanNode* node, 
+			bool stopAtFirstFound) const;
 
 #if ! defined(__GNUC__)
 	/**
@@ -305,6 +259,20 @@ protected:
 			XalanNode*						contextNode) const;
 
 	/**
+	 * Convert a long integer into alphabetic counting, in other words
+	 * count using the sequence A B C ... Z.
+	 * @param val Value to convert -- must be greater than zero.
+	 * @param table a table containing one character for each digit in the radix
+	 * @return String representing alpha count of number.
+	 * @see XSLTEngineImpl#DecimalToRoman
+	 *
+	 * Note that the radix of the conversion is inferred from the size
+	 * of the table.
+	 */
+	XalanDOMString int2singlealphaCount(int val, 
+			const XalanDOMString&	table);
+		
+	/**
 	 * Convert a long integer into alphabetic counting, in other words 
 	 * count using the sequence A B C ... Z AA AB AC.... etc.
 	 * @param val Value to convert -- must be greater than zero.
@@ -319,6 +287,20 @@ protected:
 	int2alphaCount(
 			int						val,
 			const XalanDOMString&	table);
+
+	/**
+	 * Convert a long integer into traditional alphabetic counting, in other words
+	 * count using the traditional numbering.
+	 * @param val Value to convert -- must be greater than zero.
+	 * @param table a table containing one character for each digit in the radix
+	 * @return String representing alpha count of number.
+	 * @see XSLProcessor#DecimalToRoman
+	 *
+	 * Note that the radix of the conversion is inferred from the size
+	 * of the table.
+	 */
+	static XalanDOMString
+	tradAlphaCount(int val);
 
 	/**
 	 * Convert a long integer into roman numerals.
@@ -354,11 +336,11 @@ private:
 
 	int				m_level; // = Constants.NUMBERLEVEL_SINGLE;
 	
-	XalanDOMString	m_format_avt;
-	XalanDOMString	m_lang_avt;
-	XalanDOMString	m_lettervalue_avt;
-	XalanDOMString	m_groupingSeparator_avt;
-	XalanDOMString	m_groupingSize_avt;
+	AVT*	m_format_avt;
+	AVT*	m_lang_avt;
+	AVT*	m_lettervalue_avt;
+	AVT*	m_groupingSeparator_avt;
+	AVT*	m_groupingSize_avt;
 
 	/**
 	* Chars for converting integers into alpha counts.
@@ -372,8 +354,232 @@ private:
 	 * @see XSLTEngineImpl#long2roman
 	 */
 	static const DecimalToRoman		s_romanConvertTable[];
-};
 
 
+
+// Inner classes
+
+
+	/**
+	 * This class returns tokens using non-alphanumberic characters as
+	 * delimiters. 
+	 */
+	class NumberFormatStringTokenizer
+	{
+		public:
+
+			/**
+			 * Construct a NumberFormatStringTokenizer.
+			 *
+			 * @param theStr string to tokenize
+			 */
+			explicit
+				NumberFormatStringTokenizer(const DOMString&	theStr = DOMString());
+
+			/**
+			 * Sets the string to tokenize.
+			 *
+			 * @param theString  new string to tokenize
+			 */
+			void
+				setString(const DOMString&	theString);
+
+			/**
+			 * Reset tokenizer so that nextToken() starts from the beginning.
+			 */
+			void
+				reset()
+				{
+					m_currentPosition = 0;
+				}
+
+			/**
+			 * Retrieve the next token to be parsed; behavior is undefined if there
+			 * are no more tokens
+			 * 
+			 * @return next token string
+			 */
+			DOMString
+				nextToken();
+
+			/**
+			 * Determine if there are tokens remaining
+			 * 
+			 * @return true if there are more tokens
+			 */
+			bool
+				hasMoreTokens() const
+				{
+					return (m_currentPosition >= m_maxPosition) ? false : true;
+				}
+
+			/**
+			 * Count the number of tokens yet to be parsed
+			 * 
+			 * @return number of remaining tokens
+			 */
+			int
+				countTokens() const;
+
+		private:
+
+			int			m_currentPosition;
+			int			m_maxPosition;
+			DOMString	m_str;
+	}; // end NumberFormatStringTokenizer
+
+	/**
+	 * <meta name="usage" content="internal"/>
+	 * This is a table of counters, keyed by ElemNumber objects, each 
+	 * of which has a list of Counter objects.  This really isn't a true 
+	 * table, it is more like a list of lists (there must be a technical 
+	 * term for that...).
+	 */
+	class CountersTable
+	{
+		public:
+
+			/**
+			 * Construct a CountersTable.
+			 */
+			CountersTable() : 
+				m_countersMade(0)
+				{
+				};
+
+
+			/**
+			 * Count forward until the given node is found, or until 
+			 * we have looked to the given amount.
+			 * @node The node to count.
+			 * @return The node count, or 0 if not found.
+			 */
+			int CountersTable::countNode(
+					StylesheetExecutionContext& support,
+					ElemNumber* const numberElem,
+					const XalanNode* const node);
+
+		private:
+
+			/**
+			 * Get the list of counters that corresponds to 
+			 * the given ElemNumber object.
+			 */
+			CounterVectorType& getCounters(ElemNumber* const numberElem);
+
+
+			/**
+			 * Put a counter into the table and create an empty 
+			 * vector as it's value.
+			 */
+			CounterVectorType& putElemNumber(ElemNumber* const numberElem);
+
+			/**
+			 * Add a list of counted nodes that were built in backwards document 
+			 * order, or a list of counted nodes that are in forwards document 
+			 * order.
+			 */
+			void appendBtoFList(MutableNodeRefList& flist, MutableNodeRefList& blist);
+
+			/**
+			 * Place to collect new counters.
+			 */
+			MutableNodeRefList m_newFound;
+
+			// For diagnostics
+			int m_countersMade;
+
+			// Since we're not really a hash table like in java, we need this
+			Ptr2CounterVectorMapType m_hashTable;
+
+	}; // end CountersTable
+
+	friend class CountersTable;
+
+	/**
+	 * <meta name="usage" content="internal"/>
+	 * A class that does incremental counting for support of xsl:number.
+	 * This class stores a cache of counted nodes (m_countNodes). 
+	 * It tries to cache the counted nodes in document order... 
+	 * the node count is based on its position in the cache list 
+	 */
+	struct Counter
+	{
+		/**
+		 * The start count from where m_countNodes counts 
+		 * from.  In other words, the count of a given node 
+		 * in the m_countNodes vector is node position + 
+		 * m_countNodesStartCount.
+		 */
+		int m_countNodesStartCount;
+
+		/**
+		 * A vector of all nodes counted so far.
+		 */
+		MutableNodeRefList m_countNodes;
+
+		/**
+		 * The node from where the counting starts.  This is needed to 
+		 * find a counter if the node being counted is not immediatly
+		 * found in the m_countNodes vector.
+		 */
+		XalanNode* m_fromNode;
+
+		/**
+		 * The owning xsl:number element.
+		 */
+		ElemNumber* m_numberElem;
+
+		/**
+		 * Value to store result of last getCount call, for benifit
+		 * of returning val from CountersTable.getCounterByCounted, 
+		 * who calls getCount.
+		 */
+		int m_countResult;
+
+		/**
+		 * Construct a counter object.
+		 */
+		Counter(ElemNumber* numberElem, MutableNodeRefList& countNodes) :
+			m_countNodesStartCount(0),
+		m_countNodes(countNodes),
+		m_fromNode(0),
+		m_numberElem(numberElem),
+		m_countResult(0)
+		{
+		}
+
+		/**
+		 * Construct a counter object.
+		 */
+		Counter(ElemNumber* numberElem) :
+			m_countNodesStartCount(0),
+		m_countNodes(),
+		m_fromNode(0),
+		m_numberElem(numberElem),
+		m_countResult(0)
+		{
+		}
+
+		/**
+		 * Try to find a node that was previously counted. If found, return a
+		 * positive integer that corresponds to the count.
+		 * @param node The node to be counted.
+		 * @returns The count of the node, or -1 if not found.
+		 */
+		int getPreviouslyCounted(
+				StylesheetExecutionContext& support,
+				const XalanNode* const node);
+
+		/**
+		 * Get the last node in the list.
+		 */
+		XalanNode* getLast();
+
+	}; // end Counter
+
+	friend struct Counter;
+
+}; // end ElemNumber
 
 #endif	// XALAN_ELEMNUMBER_HEADER_GUARD
