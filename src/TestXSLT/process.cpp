@@ -910,6 +910,22 @@ xsltMain(const CmdLineParams&	params)
 
 	const StylesheetRoot*	stylesheet = 0;
 
+	StylesheetExecutionContextDefault	theExecutionContext(processor,
+			theXSLProcessorSupport,
+			theDOMSupport,
+			theXObjectFactory);
+
+	if (params.useDOM == false)
+	{
+		theXalanSourceTreeParserLiaison.setExecutionContext(theExecutionContext);
+	}
+	else
+	{
+		theXercesParserLiaison.setExecutionContext(theExecutionContext);
+	}
+
+	theExecutionContext.setUseDOMResultTreeFactory(params.useDOMForRTFs);
+
 	if (!isEmpty(xslFileName))
 	{
 		stylesheet = processor.processStylesheet(xslFileName, theConstructionContext);
@@ -949,13 +965,6 @@ xsltMain(const CmdLineParams&	params)
 
 	// Do the transformation...
 	XSLTInputSource		theInputSource(c_str(params.inFileName));
-
-	StylesheetExecutionContextDefault	theExecutionContext(processor,
-			theXSLProcessorSupport,
-			theDOMSupport,
-			theXObjectFactory);
-
-	theExecutionContext.setUseDOMResultTreeFactory(params.useDOMForRTFs);
 
 #if defined(XALAN_USE_ICU)
 	ICUBridgeCollationCompareFunctor	theICUFunctor;
