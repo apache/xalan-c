@@ -208,14 +208,6 @@ public:
 	reverse();
 
 	/**
-	 * Assign the nodes in reverse order into the supplied instance.
-	 *
-	 * @param nodelist The target node list.
-	 */
-	void
-	reverseAssign(MutableNodeRefList&	nodelist) const;
-
-	/**
 	 * Reserve space for the supplied number of nodes.
 	 * This is taken as an optimization, and may be
 	 * ignored.  You might want to call this when you
