@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2003 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -85,47 +85,87 @@ public:
 	~TreeWalker();
 
 	/**
-	 * Perform a pre-order traversal non-recursive style.
-	 * 
-	 * @param pos starting node $$$
+	 * Perform a document-order traversal.
+	 *
+	 * Derived classes and stop the traversal by returning
+	 * true from startNode() or endNode().  If that happens,
+	 * the function will return the next node in document
+	 * order.  If desired, the caller can start traversing
+	 * the tree again from that point.  Note that terminal
+	 * nodes will always have startNode() and endNode()
+	 * called before the traversal terminates.
+	 *
+	 * @param pos The node in the tree with which to start the walk
+	 *
+	 * @return 0 if the traversal completes, or the next node if the traversal doesn't complete.
 	 */
-
-	virtual void
+	const XalanNode*
 	traverse(const XalanNode*	pos);
 
 	/**
-	 * Perform a pre-order traversal non-recursive style.
-	 * 
-	 * @param pos starting node $$$
+	 * Perform a document-order traversal.
+	 *
+	 * Derived classes and stop the traversal by returning
+	 * true from startNode() or endNode().  If that happens,
+	 * the function will return the next node in document
+	 * order.  If desired, the caller can start traversing
+	 * the tree again from that point.  Note that terminal
+	 * nodes will always have startNode() and endNode()
+	 * called before the traversal terminates.
+	 *
+	 * @param pos The node in the tree with which to start the walk
+	 *
+	 * @return 0 if the traversal completes, or the next node if the traversal doesn't complete.
 	 */
-
-	virtual void
+	XalanNode*
 	traverse(XalanNode*		pos);
 
 	/**
-	 * Perform a pre-order traversal non-recursive style.
-	 * 
-	 * @param pos starting node  $$$
-	 * @param parent parent node $$$
+	 * Perform a document-order traversal stopping at the
+	 * provided parent node.
+	 *
+	 * Derived classes and stop the traversal by returning
+	 * true from startNode() or endNode().  If that happens,
+	 * the function will return the next node in document
+	 * order.  If desired, the caller can start traversing
+	 * the tree again from that point.  Note that terminal
+	 * nodes will always have startNode() and endNode()
+	 * called before the traversal terminates.
+	 *
+	 * @param pos The node in the tree with which to start the walk
+	 * @param parent The parent of pos.  Note that for multiple calls that continue the traversal, this node must remain the same.
+	 *
+	 * @return parent if the traversal completes, or the next node if the traversal doesn't complete.
 	 */
-	virtual void
+	const XalanNode*
 	traverse(
 			const XalanNode*	pos,
 			const XalanNode*	parent);
 
 	/**
-	 * Perform a pre-order traversal non-recursive style.
-	 * 
-	 * @param pos starting node  $$$
-	 * @param parent parent node $$$
+	 * Perform a document-order traversal stopping at the
+	 * provided parent node.
+	 *
+	 * Derived classes and stop the traversal by returning
+	 * true from startNode() or endNode().  If that happens,
+	 * the function will return the next node in document
+	 * order.  If desired, the caller can start traversing
+	 * the tree again from that point.  Note that terminal
+	 * nodes will always have startNode() and endNode()
+	 * called before the traversal terminates.
+	 *
+	 * @param pos The node in the tree with which to start the walk
+	 * @param parent The parent of pos.  Note that for multiple calls that continue the traversal, this node must remain the same.
+	 *
+	 * @return parent if the traversal completes, or the next node if the traversal doesn't complete.
 	 */
-	virtual void
+	XalanNode*
 	traverse(
 			XalanNode*	pos,
 			XalanNode*	parent);
 
 	/**
-	 * Perform a pre-order traversal non-recursive style.
+	 * Perform a pre-order traversal.
 	 * 
 	 * @param pos starting node
 	 */
@@ -133,7 +173,7 @@ public:
 	traverseSubtree(const XalanNode*	pos);
 
 	/**
-	 * Perform a pre-order traversal non-recursive style.
+	 * Perform a pre-order traversal.
 	 * 
 	 * @param pos starting node
 	 */
@@ -142,16 +182,44 @@ public:
 
 protected:
 
-	virtual void
+	/**
+	 * Called when first walking a node
+	 * 
+	 * @param node The node
+	 *
+	 * @return return false if the walk should continue, or true if it should not.
+	 */
+	virtual bool
 	startNode(const XalanNode*	node) = 0;
 
-	virtual void
+	/**
+	 * Called when first walking a node
+	 * 
+	 * @param node The node
+	 *
+	 * @return return false if the walk should continue, or true if it should not.
+	 */
+	virtual bool
 	startNode(XalanNode*	node) = 0;
 
-	virtual void
+	/**
+	 * Called when leaving a node
+	 * 
+	 * @param node The node
+	 *
+	 * @return return false if the walk should continue, or true if it should not.
+	 */
+	virtual bool
 	endNode(const XalanNode*	node) = 0;
 
-	virtual void
+	/**
+	 * Called when leaving a node
+	 * 
+	 * @param node The node
+	 *
+	 * @return return false if the walk should continue, or true if it should not.
+	 */
+	virtual bool
 	endNode(XalanNode*	node) = 0;
 
 private:

@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2003 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -120,7 +120,7 @@ NodeNameTreeWalker::findMatchingNodes(
 
 
 
-void
+bool
 NodeNameTreeWalker::startNode(XalanNode*	node)
 {
 	const XalanDOMString&	theNodeName = node->getNodeName();
@@ -129,27 +129,39 @@ NodeNameTreeWalker::startNode(XalanNode*	node)
 	{
 		m_matchingNodes.push_back(node);
 	}
+
+	return false;
 }
 
 
 
-void
+bool
 NodeNameTreeWalker::endNode(XalanNode*	/* node */)
 {
+	return false;
 }
 
 
 
-void
-NodeNameTreeWalker::startNode(const XalanNode*	/* node */)
+bool
+NodeNameTreeWalker::startNode(const XalanNode*	node)
 {
+	const XalanDOMString&	theNodeName = node->getNodeName();
+
+	if (equals(theNodeName, m_nodeName) == true)
+	{
+		m_matchingNodes.push_back(node);
+	}
+
+	return false;
 }
 
 
 
-void
+bool
 NodeNameTreeWalker::endNode(const XalanNode*	/* node */)
 {
+	return false;
 }
 
 

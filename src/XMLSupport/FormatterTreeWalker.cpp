@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2003 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -90,7 +90,7 @@ FormatterTreeWalker::~FormatterTreeWalker()
 
 
 
-void
+bool
 FormatterTreeWalker::startNode(const XalanNode*		node)
 {
 	assert(node != 0);
@@ -166,25 +166,27 @@ FormatterTreeWalker::startNode(const XalanNode*		node)
 		// Do nothing...
 		break;
 	}
+
+	return false;
 }
 
 
 
-void
+bool
 FormatterTreeWalker::startNode(XalanNode*	node)
 {
 	assert(node != 0);
 
 #if defined(XALAN_OLD_STYLE_CASTS)
-	startNode((const XalanNode*)node);
+	return startNode((const XalanNode*)node);
 #else
-	startNode(const_cast<const XalanNode*>(node));
+	return startNode(const_cast<const XalanNode*>(node));
 #endif
 }
 
 
 
-void
+bool
 FormatterTreeWalker::endNode(const XalanNode*	node)
 {
 	assert(node != 0);
@@ -203,17 +205,19 @@ FormatterTreeWalker::endNode(const XalanNode*	node)
 		// Do nothing
 		break;
 	}
+
+	return false;
 }
 
 
 
-void
+bool
 FormatterTreeWalker::endNode(XalanNode*		node)
 {
 #if defined(XALAN_OLD_STYLE_CASTS)
-	endNode((const XalanNode*)node);
+	return endNode((const XalanNode*)node);
 #else
-	endNode(const_cast<const XalanNode*>(node));
+	return endNode(const_cast<const XalanNode*>(node));
 #endif
 }
 

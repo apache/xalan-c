@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2003 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -80,9 +80,9 @@ class NodeNameTreeWalker : public TreeWalker
 public:
 
 #if defined(XALAN_NO_STD_NAMESPACE)
-	typedef vector<XalanNode*>			NodeVectorType;
+	typedef vector<const XalanNode*>		NodeVectorType;
 #else
-	typedef std::vector<XalanNode*>		NodeVectorType;
+	typedef std::vector<const XalanNode*>	NodeVectorType;
 #endif
 
 	NodeNameTreeWalker();
@@ -120,21 +120,22 @@ public:
 
 protected:
 
-	virtual void
+	virtual bool
 	startNode(XalanNode*	node);
 
-	virtual void
+	virtual bool
 	endNode(XalanNode*	node);
 
-	virtual void
+	virtual bool
 	startNode(const XalanNode*	node);
 
-	virtual void
+	virtual bool
 	endNode(const XalanNode*	node);
 
 private:
 
 	XalanDOMString	m_nodeName;
+
 	NodeVectorType	m_matchingNodes;
 };
 

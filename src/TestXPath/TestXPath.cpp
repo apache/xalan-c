@@ -343,7 +343,7 @@ ParseXML(
 
 XalanDOMString
 GetAttributeFromNode(
-			XalanNode*				theNode,
+			const XalanNode*		theNode,
 			const XalanDOMString&	theAttributeName)
 {
 	XalanDOMString	theResult;
@@ -383,7 +383,7 @@ FindNodeAndGetAttributeValue(
 
 	if (theMatchingNodes.size() == 1)
 	{
-		XalanNode* const	theMatchingNode = theMatchingNodes[0];
+		const XalanNode* const	theMatchingNode = theMatchingNodes[0];
 
 		if (theMatchingNode != 0)
 		{

@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2003 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -83,22 +83,31 @@ TreeWalker::~TreeWalker()
 
 
 
-void
+const XalanNode*
 TreeWalker::traverse(const XalanNode*	pos)
 {
 	assert(pos != 0);
 
 	const XalanNode*	thePos = pos;
 
-	while(0 != thePos)
+	bool	fStop = false;
+
+	while(0 != thePos && fStop == false)
 	{
-		startNode(thePos);
+		fStop = startNode(thePos);
 
 		const XalanNode*	nextNode = thePos->getFirstChild();
 
 		while(0 == nextNode)
 		{
-			endNode(thePos);
+			if (fStop == false)
+			{
+				fStop = endNode(thePos);
+			}
+			else
+			{
+				endNode(thePos);
+			}
 
 			nextNode = thePos->getNextSibling();
 
@@ -117,26 +126,37 @@ TreeWalker::traverse(const XalanNode*	pos)
 
 		thePos = nextNode;
 	}
+
+	return thePos;
 }
 
 
 
-void
+XalanNode*
 TreeWalker::traverse(XalanNode*		pos)
 {
 	assert(pos != 0);
 
 	XalanNode*	thePos = pos;
 
-	while(0 != thePos)
+	bool	fStop = false;
+
+	while(0 != thePos && fStop == false)
 	{
-		startNode(thePos);
+		fStop = startNode(thePos);
 
 		XalanNode*	nextNode = thePos->getFirstChild();
 
 		while(0 == nextNode)
 		{
-			endNode(thePos);
+			if (fStop == false)
+			{
+				fStop = endNode(thePos);
+			}
+			else
+			{
+				endNode(thePos);
+			}
 
 			nextNode = thePos->getNextSibling();
 
@@ -155,11 +175,13 @@ TreeWalker::traverse(XalanNode*		pos)
 
 		thePos = nextNode;
 	}
+
+	return thePos;
 }
 
 
 
-void
+const XalanNode*
 TreeWalker::traverse(
 			const XalanNode*	pos,
 			const XalanNode*	parent)
@@ -169,15 +191,24 @@ TreeWalker::traverse(
 
 	const XalanNode*	thePos = pos;
 
-	while(parent != thePos)
+	bool	fStop = false;
+
+	while(parent != thePos && fStop == false)
 	{	  
-		startNode(thePos);
+		fStop = startNode(thePos);
 	  
 		const XalanNode*	nextNode = thePos->getFirstChild();
 
 		while(0 == nextNode)
 		{
-			endNode(thePos);
+			if (fStop == false)
+			{
+				fStop = endNode(thePos);
+			}
+			else
+			{
+				endNode(thePos);
+			}
 
 			nextNode = thePos->getNextSibling();
 
@@ -196,11 +227,13 @@ TreeWalker::traverse(
 
 		thePos = nextNode;
 	}
+
+	return thePos;
 }
 
 
 
-void
+XalanNode*
 TreeWalker::traverse(
 			XalanNode*	pos,
 			XalanNode*	parent)
@@ -210,15 +243,24 @@ TreeWalker::traverse(
 
 	XalanNode*	thePos = pos;
 
-	while(parent != thePos)
+	bool	fStop = false;
+
+	while(parent != thePos && fStop == false)
 	{	  
-		startNode(thePos);
+		fStop = startNode(thePos);
 	  
 		XalanNode*	nextNode = thePos->getFirstChild();
 
 		while(0 == nextNode)
 		{
-			endNode(thePos);
+			if (fStop == false)
+			{
+				fStop = endNode(thePos);
+			}
+			else
+			{
+				endNode(thePos);
+			}
 
 			nextNode = thePos->getNextSibling();
 
@@ -237,6 +279,8 @@ TreeWalker::traverse(
 
 		thePos = nextNode;
 	}
+
+	return thePos;
 }
 
 
