@@ -1,3 +1,8 @@
+// Base header file.  Must be first.
+#include <Include/PlatformDefinitions.hpp>
+
+
+
 #include <cassert>
 
 
@@ -27,14 +32,6 @@
 #include <XalanSourceTree/XalanSourceTreeDOMSupport.hpp>
 #include <XalanSourceTree/XalanSourceTreeInit.hpp>
 #include <XalanSourceTree/XalanSourceTreeParserLiaison.hpp>
-
-
-
-#if !defined(XALAN_NO_NAMESPACES)
-using std::cerr;
-using std::endl;
-using std::vector;
-#endif
 
 
 
