@@ -78,7 +78,7 @@
 
 
 XSLTInputSource::XSLTInputSource() :
-	InputSource(""),
+	InputSource(),
 	m_stream(0),
 	m_node(0)
 {
