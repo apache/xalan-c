@@ -73,7 +73,7 @@
 
 #include <xercesc/framework/URLInputSource.hpp>
 #if XERCES_VERSION_MAJOR >= 2
-#include <xercesc/dom/deprecated/DOMParser.hpp>
+#include <xercesc/parsers/XercesDOMParser.hpp>
 #else
 #include <xercesc/parsers/DOMParser.hpp>
 #endif
@@ -132,6 +132,7 @@ XercesParserLiaison::XercesParserLiaison() :
 	m_externalSchemaLocation(),
 	m_externalNoNamespaceSchemaLocation(),
 	m_documentMap(),
+	m_buildWrapper(true),
 	m_buildBridge(true),
 	m_threadSafe(false),
 	m_executionContext(0)
@@ -159,6 +160,11 @@ XercesParserLiaison::reset()
 		i != m_documentMap.end();
 		++i)
 	{
+		if ((*i).second.m_isDeprecated == false)
+		{
+			delete (*i).second.m_wrapper->getXercesDocument();
+		}
+
 		delete (*i).first;
 	}
 
@@ -214,7 +220,11 @@ XercesParserLiaison::parseXMLStream(
 			const InputSource&		reader,
 			const XalanDOMString&	/* identifier */)
 {
+#if XERCES_VERSION_MAJOR >= 2
+	XalanAutoPtr<XercesDOMParser>	theParser(CreateDOMParser());
+#else
 	XalanAutoPtr<DOMParser>		theParser(CreateDOMParser());
+#endif
 
 	if (m_errorHandler == 0)
 	{
@@ -227,16 +237,33 @@ XercesParserLiaison::parseXMLStream(
 
 	theParser->parse(reader);
 
+#if XERCES_VERSION_MAJOR >= 2
+	DOMDocument* const	theXercesDocument =
+		theParser->getDocument();
+
+	theXercesDocument->normalize();
+#else
 	DOM_Document	theXercesDocument =
 		theParser->getDocument();
 
 	theXercesDocument.normalize();
+#endif
 
+#if XERCES_VERSION_MAJOR >= 2
+	XercesDocumentWrapper*	theNewDocument = 0;
+
+	if (theXercesDocument != 0)
+	{
+		theNewDocument = doCreateDocument(theXercesDocument, m_threadSafe, m_buildWrapper);
+
+		theParser->adoptDocument();
+#else
 	XercesDocumentBridge*	theNewDocument = 0;
 
 	if (theXercesDocument.isNull() == false)
 	{
 		theNewDocument = doCreateDocument(theXercesDocument, m_threadSafe, m_buildBridge);
+#endif
 
 		m_documentMap[theNewDocument] = theNewDocument;
 	}
@@ -618,12 +645,14 @@ XercesParserLiaison::resetErrors()
 
 
 
-DOMParser*
+XercesParserLiaison::DOMParserType*
 XercesParserLiaison::CreateDOMParser()
 {
-	DOMParser* const	theParser = new DOMParser;
+	DOMParserType* const	theParser = new DOMParserType;
 
-	theParser->setValidationScheme(m_useValidation == true ? DOMParser::Val_Auto : DOMParser::Val_Never);
+	theParser->setExpandEntityReferences(true);
+
+	theParser->setValidationScheme(m_useValidation == true ? DOMParserType::Val_Auto : DOMParserType::Val_Never);
 
 	theParser->setIncludeIgnorableWhitespace(m_includeIgnorableWhitespace);
 
@@ -648,9 +677,11 @@ XercesParserLiaison::CreateDOMParser()
 		theParser->setExternalNoNamespaceSchemaLocation(c_wstr(m_externalNoNamespaceSchemaLocation));
 	}
 
+#if XERCES_VERSION_MAJOR < 2
 	// Xerces has a non-standard node type to represent the XML decl.
 	// Why did they ever do this?
 	theParser->setToCreateXMLDeclTypeNode(false);
+#endif
 
 	return theParser;
 }

@@ -80,7 +80,11 @@
 
 class DOM_Document;
 class DOMDocument;
+#if XERCES_VERSION_MAJOR >= 2
+class XercesDOMParser;
+#else
 class DOMParser;
+#endif
 class DOMSupport;
 class EntityResolver;
 class InputSource;
@@ -331,6 +335,24 @@ public:
 	 *
 	 * @deprecated This API is deprecated.
 	 * @param theXercesDocument The Xerces document.
+	 * @return a pointer to a new XalanDocument-derived instance.
+	 */
+	XalanDocument*
+	createDocument(const DOM_Document&	theXercesDocument)
+	{
+		return createDocument(theXercesDocument, m_threadSafe, m_buildBridge);
+	}
+
+	/**
+	 * This API is deprecated.
+	 *
+	 * Create a XalanDocument proxy for an existing Xerces document.
+	 * The parser liaison owns the instance, and you must not delete
+	 * it.	The liaison will delete it when reset() is called, or the
+	 * liaison is destroyed.
+	 *
+	 * @deprecated This API is deprecated.
+	 * @param theXercesDocument The Xerces document.
 	 * @param threadSafe If true, read access to the tree will be thread-safe (implies buildBridge == true).
 	 * @param buildBridge If true, the entire bridge structure is built.
 	 * @return a pointer to a new XalanDocument-derived instance.
@@ -340,6 +362,21 @@ public:
 			const DOM_Document&		theXercesDocument,
 			bool					threadSafe = false,
 			bool					buildBridge = false);
+
+	/**
+	 * Create a XalanDocument proxy for an existing Xerces document.
+	 * The parser liaison owns the instance, and you must not delete
+	 * it.	The liaison will delete it when reset() is called, or the
+	 * liaison is destroyed.
+	 *
+	 * @param theXercesDocument The Xerces document.
+	 * @return a pointer to a new XalanDocument-derived instance.
+	 */
+	XalanDocument*
+	createDocument(const DOMDocument*	theXercesDocument)
+	{
+		return createDocument(theXercesDocument, m_threadSafe, m_buildWrapper);
+	}
 
 	/**
 	 * Create a XalanDocument proxy for an existing Xerces document.
@@ -469,6 +506,7 @@ public:
 	/**
 	 * This functions returns the state of the liaison's build-bridge-nodes flag.
 	 *
+	 * @deprecated This API is deprecated.
 	 * @return true, if the bridge nodes are automatically built, false otherwise.
 	 */
 	bool
@@ -479,7 +517,44 @@ public:
 	}
 
 	/**
+	 * This API is deprecated.
+	 *
 	 * This functions sets the state of the liaison's build-bridge-nodes flag.
+	 * This flag must be set for the document to be thread safe.  It can also be
+	 * set to true to increase performance.  If this flag is set to false, then
+	 * the thread-safe flag will also be set to false.
+	 *
+	 * @deprecated This API is deprecated.
+	 * @param newState The new state for the flag.
+	 *
+	 */
+	void
+	setBuildBridgeNodes(bool	newState)
+	{
+		m_buildBridge = newState;
+
+		if (newState == false)
+		{
+			m_threadSafe = false;
+		}
+	}
+
+	/**
+	 * This API is deprecated.
+	 *
+	 * This functions returns the state of the liaison's build-wrapper-nodes flag.
+	 *
+	 * @return true, if the wrapper nodes are automatically built, false otherwise.
+	 */
+	bool
+	getBuildWrapperNodes() const
+	
+	{
+		return m_buildWrapper;
+	}
+
+	/**
+	 * This functions sets the state of the liaison's build-wrapper-nodes flag.
 	 * This flag must be set for the document to be thread safe.  It can also be
 	 * set to true to increase performance.  If this flag is set to false, then
 	 * the thread-safe flag will also be set to false.
@@ -488,9 +563,9 @@ public:
 	 *
 	 */
 	void
-	setBuildBridgeNodes(bool	newState)
+	setBuildWrapperNodes(bool	newState)
 	{
-		m_buildBridge = newState;
+		m_buildWrapper = newState;
 
 		if (newState == false)
 		{
@@ -530,9 +605,16 @@ public:
 
 		if (m_threadSafe == true)
 		{
+			m_buildWrapper = true;
 			m_buildBridge = true;
 		}
 	}
+
+#if XERCES_VERSION_MAJOR >= 2
+	typedef XercesDOMParser		DOMParserType;
+#else
+	typedef DOMParser	DOMParserType;
+#endif
 
 protected:
 
@@ -541,7 +623,7 @@ protected:
 			const SAXParseException&	e,
 			XalanDOMString&				theMessage);
 
-	virtual DOMParser*
+	DOMParserType*
 	CreateDOMParser();
 
 	virtual SAXParser*
@@ -597,6 +679,8 @@ private:
 	XalanDOMString		m_externalNoNamespaceSchemaLocation;
 
 	DocumentMapType 	m_documentMap;
+
+	bool				m_buildWrapper;
 
 	bool				m_buildBridge;
 
