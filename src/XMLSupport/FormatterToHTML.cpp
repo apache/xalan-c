@@ -417,7 +417,7 @@ FormatterToHTML::startElement(
 
 	accum(XalanUnicode::charLessThanSign);
 
-	accum(name);
+	writeCharacters(name);
 
 	const unsigned int	nAttrs = attrs.getLength();
 
@@ -476,23 +476,18 @@ FormatterToHTML::endElement(const XMLCh* const	name)
 
 		accum(XalanUnicode::charLessThanSign);
 		accum(XalanUnicode::charSolidus);
-		accum(name);
+		writeCharacters(name);
 		accum(XalanUnicode::charGreaterThanSign);
-    }
+	}
     else
     {
 		if(elemDesc.is(ElemDesc::EMPTY) == false)
 		{
 			accum(XalanUnicode::charGreaterThanSign);
 
-			if (shouldIndent == true)
-			{
-				indent(m_currentIndent);
-			}
-
 			accum(XalanUnicode::charLessThanSign);
 			accum(XalanUnicode::charSolidus);
-			accum(name, 0, length(name));
+			writeCharacters(name);
 			accum(XalanUnicode::charGreaterThanSign);
 		}
 		else
@@ -558,114 +553,7 @@ FormatterToHTML::characters(
 
 			m_ispreserve = true;
 
-			for (unsigned int i = 0; i < length; ++i) 
-			{
-				const XalanDOMChar	ch = chars[i];
-
-				if(ch < SPECIALSSIZE && m_charsMap[ch] != 'S')
-				{
-					accum(ch);
-
-					continue;
-				}
-				else if (0x0A == ch && i + 1 < length && 0x0D == chars[i + 1]) 
-				{
-					outputLineSep();
-
-					++i;
-				}
-
-				if (0x0D == ch && i + 1 < length && 0x0A == chars[i + 1]) 
-				{
-					outputLineSep();
-
-					++i;
-				}
-				else if (0x0D == ch) 
-				{
-					outputLineSep();
-
-					++i;
-				}
-				else if (XalanUnicode::charLF == ch) 
-				{
-					outputLineSep();
-				}
-				else if (XalanUnicode::charLessThanSign == ch) 
-				{
-					copyEntityIntoBuffer(s_ltString);
-				}
-				else if (XalanUnicode::charGreaterThanSign == ch) 
-				{
-					copyEntityIntoBuffer(s_gtString);
-				}
-				else if (XalanUnicode::charAmpersand == ch) 
-				{
-					copyEntityIntoBuffer(s_ampString);
-				}
-				else if(ch >= 9 && ch <= 126)
-				{
-					accum(ch);
-				}
-				else if(ch >= 160 && ch <= 255)
-				{
-					copyEntityIntoBuffer(theHTMLLatin1Symbols[ch - 160]);
-				}
-				else if(ch >= 913 && ch <= 937 && ch != 930)
-				{
-					copyEntityIntoBuffer(theHTMLSymbols1[ch - 913]);
-				}
-				else if(ch >= 945 && ch <= 969)
-				{
-					copyEntityIntoBuffer(theHTMLSymbols2[ch - 945]);
-				}
-				else if(ch >= 977 && ch <= 978)
-				{
-					// subtract the unused characters 
-					copyEntityIntoBuffer(theHTMLSymbols2[ch - 945 - 7]);
-				}
-				else if(ch == 982)
-				{
-					// subtract the unused characters
-					copyEntityIntoBuffer(theHTMLSymbols2[ch - 945 - 10]);
-				}
-				else if (402 == ch) 
-				{
-					copyEntityIntoBuffer(s_fnofString);
-				}
-				else if (m_isUTF8 == true && 0xd800 <= ch && ch < 0xdc00)
-				{
-					// UTF-16 surrogate
-					unsigned int	next = 0;
-
-					if (i + 1 >= length) 
-					{
-						throwInvalidUTF16SurrogateException(ch);
-					}
-					else
-					{
-						next = chars[++i];
-
-						if (!(0xdc00 <= next && next < 0xe000))
-						{
-							throwInvalidUTF16SurrogateException(ch, next);
-						}
-
-						next = ((ch - 0xd800) << 10) + next - 0xdc00 + 0x00010000;
-					}
-
-					writeNumberedEntityReference(next);
-				}
-				else if(ch >= 0x007Fu && ch <= m_maxCharacter)
-				{
-					// Hope this is right...
-					accum(ch);
-				}
-				else
-				{
-					writeNumberedEntityReference(ch);
-				}
-			}
+			writeCharacters(chars, length);
 		}
 	}
 
@@ -750,7 +638,7 @@ FormatterToHTML::processingInstruction(
 
 		accum(XalanUnicode::charLessThanSign);
 		accum(XalanUnicode::charQuestionMark);
-		accum(target);
+		writeCharacters(target);
 
 		if (length(data) > 0)
 		{
@@ -759,12 +647,123 @@ FormatterToHTML::processingInstruction(
 				accum(XalanUnicode::charSpace);
 			}
 
-			accum(data);
+			writeCharacters(data);
 		}
 
 		accum(XalanUnicode::charGreaterThanSign); // different from XML
 
 		m_startNewLine = true;
+	}
+}
+
+
+
+void
+FormatterToHTML::writeCharacters(const XalanDOMString&	theString)
+{
+	writeCharacters(toCharArray(theString), length(theString));
+}
+
+
+
+void
+FormatterToHTML::writeCharacters(
+			const XalanDOMChar*		theString,
+			unsigned int			theLength)
+{
+	assert(theString != 0);
+
+	if (theLength == unsigned(-1))
+	{
+		theLength = length(theString);
+	}
+
+	for (unsigned int i = 0; i < theLength; ++i) 
+	{
+		const XalanDOMChar	ch = theString[i];
+
+		if(ch < SPECIALSSIZE && m_charsMap[ch] != 'S')
+		{
+			accum(ch);
+		}
+		else if (XalanUnicode::charLF == ch) 
+		{
+			outputLineSep();
+		}
+		else if (XalanUnicode::charLessThanSign == ch) 
+		{
+			copyEntityIntoBuffer(s_ltString);
+		}
+		else if (XalanUnicode::charGreaterThanSign == ch) 
+		{
+			copyEntityIntoBuffer(s_gtString);
+		}
+		else if (XalanUnicode::charAmpersand == ch) 
+		{
+			copyEntityIntoBuffer(s_ampString);
+		}
+		else if(ch >= 160 && ch <= 255)
+		{
+			copyEntityIntoBuffer(theHTMLLatin1Symbols[ch - 160]);
+		}
+		else if(ch >= 913 && ch <= 937 && ch != 930)
+		{
+			copyEntityIntoBuffer(theHTMLSymbols1[ch - 913]);
+		}
+		else if(ch >= 945 && ch <= 969)
+		{
+			copyEntityIntoBuffer(theHTMLSymbols2[ch - 945]);
+		}
+		else if(ch >= 977 && ch <= 978)
+		{
+			// subtract the unused characters 
+			copyEntityIntoBuffer(theHTMLSymbols2[ch - 945 - 7]);
+		}
+		else if(ch == 982)
+		{
+			// subtract the unused characters
+			copyEntityIntoBuffer(theHTMLSymbols2[ch - 945 - 10]);
+		}
+		else if (338 == ch)
+		{
+			copyEntityIntoBuffer(s_oeligString);
+		}
+		else if (402 == ch) 
+		{
+			copyEntityIntoBuffer(s_fnofString);
+		}
+		else if (m_isUTF8 == true && 0xd800 <= ch && ch < 0xdc00)
+		{
+			// UTF-16 surrogate
+			unsigned int	next = 0;
+
+			if (i + 1 >= theLength) 
+			{
+				throwInvalidUTF16SurrogateException(ch);
+			}
+			else
+			{
+				next = theString[++i];
+
+				if (!(0xdc00 <= next && next < 0xe000))
+				{
+					throwInvalidUTF16SurrogateException(ch, next);
+				}
+
+				next = ((ch - 0xd800) << 10) + next - 0xdc00 + 0x00010000;
+			}
+
+			writeNumberedEntityReference(next);
+		}
+		else if(ch >= 0x007Fu && ch <= m_maxCharacter)
+		{
+			// Hope this is right...
+			accum(ch);
+		}
+		else
+		{
+			writeNumberedEntityReference(ch);
+		}
 	}
 }
 
@@ -852,24 +851,28 @@ FormatterToHTML::writeAttrString(
 				accum(theHTMLSymbols2[ch - 945 - 10]);
 				accum(XalanUnicode::charSemicolon);
 			}
+			else if (338 == ch)
+			{
+				copyEntityIntoBuffer(s_oeligString);
+			}
 			else if (402 == ch) 
 			{
-				accum(XalanUnicode::charAmpersand);
-				accum(XalanUnicode::charLetter_f);
-				accum(XalanUnicode::charLetter_n);
-				accum(XalanUnicode::charLetter_o);
-				accum(XalanUnicode::charLetter_f);
-				accum(XalanUnicode::charSemicolon);
+				copyEntityIntoBuffer(s_fnofString);
 			}
 			else
 			{
-				accum(XalanUnicode::charAmpersand);
-				accum(XalanUnicode::charNumberSign);
-				accum(UnsignedLongToDOMString(ch));
-				accum(XalanUnicode::charSemicolon);
+				writeNumberedEntityReference(ch);
 			}
 		}
     }
+}
+
+
+
+void
+FormatterToHTML::commentData(const XalanDOMChar*		data)
+{
+	writeCharacters(data);
 }
 
 
@@ -934,11 +937,11 @@ FormatterToHTML::processAttribute(
     if(elemDesc.isAttrFlagSet(name, ElemDesc::ATTREMPTY) == true &&
        (length(value) == 0) || equalsIgnoreCaseASCII(value, name) == true)
     {
-		accum(name);
+		writeCharacters(name);
     }
     else
     {
-		accum(name);
+		writeCharacters(name);
 		accum(XalanUnicode::charEqualsSign);
 		accum(XalanUnicode::charQuoteMark);
 
@@ -1559,6 +1562,7 @@ static XalanDOMCharVectorType	s_ampString;
 
 static XalanDOMCharVectorType	s_fnofString;
 
+static XalanDOMCharVectorType	s_oeligString;
 
 
 const XalanDOMCharVectorType&	FormatterToHTML::s_doctypeHeaderStartString =
@@ -1587,6 +1591,9 @@ const XalanDOMCharVectorType&	FormatterToHTML::s_ampString =
 
 const XalanDOMCharVectorType&	FormatterToHTML::s_fnofString =
 			::s_fnofString;
+
+const XalanDOMCharVectorType&	FormatterToHTML::s_oeligString =
+			::s_oeligString;
 
 
 
@@ -1631,6 +1638,8 @@ FormatterToHTML::initialize()
 
 	::s_fnofString = MakeXalanDOMCharVector(c_wstr(XALAN_STATIC_UCODE_STRING("fnof")));
 
+	::s_oeligString = MakeXalanDOMCharVector(c_wstr(XALAN_STATIC_UCODE_STRING("OElig")));
+
 #if !defined(XALAN_LSTRSUPPORT)
 	pushStringsOnVector(
 			theHTMLSymbols1Narrow,
@@ -1673,6 +1682,8 @@ FormatterToHTML::terminate()
 	XalanDOMCharVectorType().swap(::s_ampString);
 
 	XalanDOMCharVectorType().swap(::s_fnofString);
+
+	XalanDOMCharVectorType().swap(::s_oeligString);
 
 #if !defined(XALAN_LSTRSUPPORT)
 	XalanDOMStringVectorType().swap(theHTMLSymbols1);

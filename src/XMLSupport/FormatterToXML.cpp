@@ -859,6 +859,14 @@ FormatterToXML::writeAttrString(
 
 
 void
+FormatterToXML::commentData(const XalanDOMChar*		data)
+{
+	accum(data);
+}
+
+
+
+void
 FormatterToXML::writeNormalizedChars(
 			const XalanDOMChar	ch[],
 			unsigned int		start,
@@ -1072,7 +1080,7 @@ FormatterToXML::comment(const XMLCh* const	data)
 		accum(XalanUnicode::charHyphenMinus);
 		accum(XalanUnicode::charHyphenMinus);
 
-		accum(data);
+		commentData(data);
 
 		accum(XalanUnicode::charHyphenMinus);
 		accum(XalanUnicode::charHyphenMinus);

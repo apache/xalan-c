@@ -165,7 +165,6 @@ public:
 	virtual void
 	entityReference(const XMLCh* const	name);
 
-
 	virtual void
 	cdata(
 			const XMLCh* const	ch,
@@ -287,6 +286,17 @@ protected:
 			const XalanDOMChar*		string,
 			const XalanDOMString&	encoding);
 
+	virtual void
+	commentData(const XalanDOMChar*		data);
+
+	void
+	writeCharacters(const XalanDOMString&	theString);
+
+	void
+	writeCharacters(
+			const XalanDOMChar*		theString,
+			unsigned int			theLength = unsigned(-1));
+
 private:
 
 	static const ElementFlagsMapType&	s_elementFlags;
@@ -340,6 +350,11 @@ private:
 	 * The string "fnof".
 	 */
 	static const XalanDOMCharVectorType&	s_fnofString;
+
+	/**
+	 * The string "OElig".
+	 */
+	static const XalanDOMCharVectorType&	s_oeligString;
 
 	/**
 	 * Set the attribute characters what will require special mapping.

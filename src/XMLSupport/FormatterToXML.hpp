@@ -505,6 +505,13 @@ protected:
 			const XalanDOMString&	encoding);
 
 	/**
+	 * Write the data of a comment.
+	 * @param data The string to write.
+	 */
+	virtual void
+	commentData(const XalanDOMChar*		data);
+
+	/**
 	 * Throw an exception when an invalid
 	 * surrogate is encountered.
 	 * @param ch The first character in the surrogate
