@@ -24,16 +24,13 @@
 
 
 
-
+#include <xalanc/XalanDOM/XalanNode.hpp>
+#include <xalanc/XalanDOM/XalanDOMString.hpp>
 
 
 
 #include <xalanc/Include/XalanVector.hpp>
 #include <xalanc/Include/XalanMap.hpp>
-
-
-
-#include <xalanc/XalanDOM/XalanNode.hpp>
 
 
 

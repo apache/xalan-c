@@ -24,6 +24,10 @@
 
 
 
+#include <xalanc/XalanDOM/XalanDOMString.hpp>
+
+
+
 #include <xalanc/Include/XalanVector.hpp>
 #include <xalanc/Include/XalanSet.hpp>
 

@@ -22,11 +22,8 @@
 
 
 
-#include <xalanc/Include/XalanMap.hpp>
-
-
-
 #include <xalanc/XalanDOM/XalanDocument.hpp>
+#include <xalanc/XalanDOM/XalanDOMString.hpp> 
 
 
 

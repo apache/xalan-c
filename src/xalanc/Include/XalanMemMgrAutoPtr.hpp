@@ -104,7 +104,7 @@ public:
 		invariants()const
 		{
 			assert( isInitilized() ||
-					( (first == 0) && (second ==0) ) );
+					( (this->first == 0) && (this->second ==0) ) );
 		}
 		
 	};

@@ -26,15 +26,16 @@
 
 
 
-#include "xalanc/Include/XalanMap.hpp"
+#include "xalanc/XalanDOM/XalanDOMString.hpp"
+
+
 
 #include "xalanc/Include/XalanMemMgrHelper.hpp"
+#include "xalanc/Include/XalanMap.hpp"
+
+
 
 #include "xalanc/PlatformSupport/DOMStringHelper.hpp"
-
-
-
-#include "xalanc/XalanDOM/XalanDOMString.hpp"
 
 
 
