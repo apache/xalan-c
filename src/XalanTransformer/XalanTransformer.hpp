@@ -123,7 +123,7 @@ public:
 	virtual ~XalanTransformer();
 
 	/**
-	 * Initialize Xerces and Xalan.
+	 * Initialize Xalan.
 	 * Should be called only once per process before creating any
 	 * instances of XalanTransformer. See class XSLTInit.
 	 */
@@ -131,7 +131,7 @@ public:
 	initialize();
 
 	/**
-	 * Terminate Xalan and Xerces.
+	 * Terminate Xalan.
 	 * Should be called only once per process after deleting all
 	 * instances of XalanTransformer. See class XSLTInit.
 	 */

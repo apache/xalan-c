@@ -54,10 +54,6 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-#include <util/PlatformUtils.hpp>
-
-
-
 #include <sax/SAXException.hpp>
 
 
@@ -117,9 +113,6 @@ XalanTransformer::~XalanTransformer()
 void
 XalanTransformer::initialize()
 {
-	// Call the static initializer for Xerces.
-	XMLPlatformUtils::Initialize();
-
 	// Initialize Xalan. 
 	m_xsltInit = new XSLTInit;
 }
@@ -131,11 +124,6 @@ XalanTransformer::terminate()
 {
 	// Terminate Xalan and release memory.
 	delete m_xsltInit;
-
-	// Call the static terminator for Xerces.
-	// We do not call terminate to Xerces because we have no way 
-	// of knowing if it is being used elsewhere in the process.
-	//XMLPlatformUtils::Terminate();
 }
 
 

@@ -1,3 +1,4 @@
+#include <util/PlatformUtils.hpp>
 
 
 
@@ -30,6 +31,9 @@ main(
 		cerr << "Usage: XalanTransform XMLFileName XSLFileName [OutFileName]" << endl;
 		return -1;
 	}
+
+	// Call the static initializer for Xerces.
+	XMLPlatformUtils::Initialize();
 
     // Initialize Xalan.
     XalanTransformer::initialize();
@@ -75,6 +79,9 @@ main(
 
     // Terminate Xalan.
 	XalanTransformer::terminate();
+
+	// Call the static terminator for Xerces.
+	XMLPlatformUtils::Terminate();
 
 	return theResult;
 }

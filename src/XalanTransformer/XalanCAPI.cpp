@@ -54,6 +54,10 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
+#include <util/PlatformUtils.hpp>
+
+
+
 #include <XalanTransformer/XalanCAPI.h>
 #include <XalanTransformer/XalanTransformer.hpp>
 
@@ -70,6 +74,10 @@
 XALAN_TRANSFORMER_EXPORT_FUNCTION(void)
 XalanInitialize()
 {
+	// Call the static initializer for Xerces.
+	XMLPlatformUtils::Initialize();
+
+	// Initialize Xalan.
 	XalanTransformer::initialize();
 }
 
@@ -78,7 +86,11 @@ XalanInitialize()
 XALAN_TRANSFORMER_EXPORT_FUNCTION(void)
 XalanTerminate()
 {
+	// Terminate Xalan.
 	XalanTransformer::terminate();
+
+	// Call the static terminator for Xerces.
+	XMLPlatformUtils::Terminate();
 }
 
 
@@ -86,6 +98,7 @@ XalanTerminate()
 XALAN_TRANSFORMER_EXPORT_FUNCTION(XalanHandle)
 CreateXalanTransformer()
 {	
+	// Create a XalanTransformer object.
 	return new XalanTransformer();
 }
 
@@ -94,6 +107,7 @@ CreateXalanTransformer()
 XALAN_TRANSFORMER_EXPORT_FUNCTION(void)
 DeleteXalanTransformer(XalanHandle theXalanHandle)
 {
+	// Delete a XalanTransformer object.
 #if defined(XALAN_OLD_STYLE_CASTS)
 	delete	(XalanTransformer*)theXalanHandle;
 #else
@@ -110,6 +124,7 @@ XalanTransformToFile(
 			const char*		theOutFileName,
 			XalanHandle		theXalanHandle)
 {
+	// Do the transformation...
 #if defined(XALAN_OLD_STYLE_CASTS)
 	return ((XalanTransformer*)theXalanHandle)->transform(theXMLFileName, theXSLFileName, theOutFileName);
 #else
@@ -153,6 +168,7 @@ XalanTransformToData(
 XALAN_TRANSFORMER_EXPORT_FUNCTION(void)
 XalanFreeData(char*	theStream)
 {
+	// Delete the data.
 	delete[] theStream;
 }
 
@@ -167,6 +183,7 @@ XalanTransformToHandler(
 			XalanOutputHandlerType	theOutputHandler,
 			XalanFlushHandlerType	theFlushHandler)
 {
+	// Do the transformation...
 #if defined(XALAN_OLD_STYLE_CASTS)
 	return ((XalanTransformer*)theXalanHandle)->transform(theXMLFileName, theXSLFileName, theOutputHandle, theOutputHandler, theFlushHandler);
 #else
@@ -179,6 +196,7 @@ XalanTransformToHandler(
 XALAN_TRANSFORMER_EXPORT_FUNCTION(XalanCCharPtr)
 XalanGetLastError(XalanHandle theXalanHandle)
 {
+	// Get the last error.
 #if defined(XALAN_OLD_STYLE_CASTS)
 	return ((XalanTransformer*)theXalanHandle)->getLastError();
 #else
