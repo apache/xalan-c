@@ -18,6 +18,27 @@ Package=<4>
 
 ###############################################################################
 
+Project: "ICUBridge"=".\ICUBridge\ICUBridge.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name XSLT
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name XPath
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name PlatformSupport
+    End Project Dependency
+}}}
+
+###############################################################################
+
 Project: "PlatformSupport"=".\PlatformSupport\PlatformSupport.dsp" - Package Owner=<4>
 
 Package=<5>
