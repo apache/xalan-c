@@ -195,7 +195,10 @@ public:
 	 * Shrink internal tables.
 	 */
 	void
-	shrink();
+	shrink()
+	{
+		m_expression.shrink();
+	}
 
 	/**
 	 * Execute the XPath from the provided context.
@@ -391,7 +394,26 @@ public:
 	static void
 	installFunction(
 			const XalanDOMString&	funcName,
-			const Function& 		func);
+			const Function& 		func)
+	{
+		s_functions.InstallFunction(funcName,
+									func);
+	}
+
+	/**
+	 * Install a built-in function.
+	 *
+	 * @param funcName  unqualified name of the function
+	 * @param func      instance of an XPath function object
+	 */
+	static void
+	installFunction(
+			const XalanDOMChar*		funcName,
+			const Function& 		func)
+	{
+		s_functions.InstallFunction(funcName,
+									func);
+	}
 
 	/**
 	 * Remove a named function from the function table.
@@ -400,7 +422,22 @@ public:
 	 * @return true if the function was found and removed.
 	 */
 	static bool
-	uninstallFunction(const XalanDOMString&		funcName);
+	uninstallFunction(const XalanDOMString&		funcName)
+	{
+		return 	s_functions.UninstallFunction(funcName);
+	}
+
+	/**
+	 * Remove a named function from the function table.
+	 * 
+	 * @param funcName name of function
+	 * @return true if the function was found and removed.
+	 */
+	static bool
+	uninstallFunction(const XalanDOMChar*	funcName)
+	{
+		return 	s_functions.UninstallFunction(funcName);
+	}
 
 	/**
 	 * Whether the named function is installed in the function table.

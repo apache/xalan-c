@@ -113,33 +113,6 @@ XPath::~XPath()
 
 
 
-void
-XPath::shrink()
-{
-	m_expression.shrink();
-}
-
-
-
-void
-XPath::installFunction(
-			const XalanDOMString&	funcName,
-			const Function& 		func)
-{
-	s_functions.InstallFunction(funcName,
-							    func);
-}
-
-
-
-bool
-XPath::uninstallFunction(const XalanDOMString&	funcName)
-{
-	return 	s_functions.UninstallFunction(funcName);
-}
-
-
-
 const XObjectPtr
 XPath::execute(
 			XalanNode*				context,
