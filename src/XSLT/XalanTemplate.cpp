@@ -91,7 +91,7 @@
 #include <string>
 #include <stl/_string.c>
 #include <stl/_string_fwd.c>
-
+#endif
 
 
 #include <XalanDOM/XalanNode.hpp>
@@ -200,7 +200,6 @@ static XPathExpression::TokenQueueType theTokenQueueType;
 static set<const XalanNode*,less<const XalanNode*> > theXalanNodeSet;
 static XPathExpression::OpCodeLengthMapType theOpCodeLengthMapType;
 static XPathExpression::OpCodeMapValueType theOpCodeMapValueType;
-static XPathExpression::NodeTestSetType theNodeTestSetType;
 static XPathExecutionContext::XObjectArgVectorType theVector;
 static XPathProcessorImpl::NodeTypesMapType theNodeTypesMapType;
 static Stylesheet::PatternTableListType	thePatternTableList;
@@ -328,11 +327,12 @@ foo()
 	}
 
 	{
-		Stylesheet::AttributeSetMapType	theMap;
+		Stylesheet::AttributeSetVectorType	theVector;
 		
-		for_each(theMap.begin(),
-			 theMap.end(),
-			 DeleteFunctor<ElemAttributeSet>());
+		for_each(
+			theVector.begin(),
+			theVector.end(),
+			DeleteFunctor<ElemAttributeSet>());
 	}
 
 	{
@@ -594,5 +594,7 @@ foo()
 
 __node_alloc<0,0> alloc1;
 __node_alloc<1,0> alloc2;
+
+
 
 #endif
