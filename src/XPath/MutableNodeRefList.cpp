@@ -330,7 +330,7 @@ MutableNodeRefList::addNodeInDocOrder(
 				}
 			}
 
-			if (i < size)
+			if (i != size)
 			{
 				insertNode(node, i + 1);
 			}
