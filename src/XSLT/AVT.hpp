@@ -130,7 +130,7 @@ public:
 	 * 
 	 * @return type of AVT
 	 */
-	const XalanDOMChar*
+	const XalanDOMString&
 	getType() const
 	{
 		return m_pcType;
@@ -152,19 +152,18 @@ private:
 	AVT& operator=(const AVT &);
 
 #if defined(XALAN_NO_NAMESPACES)
-	typedef vector<AVTPart*>		AVTPartPtrVectorType;
+	typedef vector<const AVTPart*>		AVTPartPtrVectorType;
 #else
-	typedef std::vector<AVTPart*>	AVTPartPtrVectorType;
+	typedef std::vector<const AVTPart*>	AVTPartPtrVectorType;
 #endif
 
 	XalanDOMString			m_simpleString;
 
 	AVTPartPtrVectorType	m_parts;
 
-	XalanDOMString			m_name;
+	const XalanDOMString	m_name;
 
-	// $$$ ToDO: Is this OK just to hold a pointer?
-	const XalanDOMChar*		m_pcType;
+	const XalanDOMString	m_pcType;
 };
 
 

@@ -102,6 +102,8 @@ ElemLiteralResult::ElemLiteralResult(
 {
 	const unsigned int	nAttrs = atts.getLength();
 
+	m_avts.reserve(nAttrs);
+
 	for(unsigned int i = 0; i < nAttrs; i++)
 	{
 		const XalanDOMChar*	const	aname = atts.getName(i);
@@ -157,7 +159,16 @@ ElemLiteralResult::ElemLiteralResult(
 							*this, constructionContext));
 			}
 		}
+
 		removeExcludedPrefixes(m_excludeResultPrefixes);
+	}
+
+	// Shrink the vector of AVTS, if necessary...
+	if (m_avts.capacity() > m_avts.size())
+	{
+		// Make a copy that's the exact size, and
+		// swap the two...
+		AVTVectorType(m_avts).swap(m_avts);
 	}
 }
 
@@ -201,8 +212,10 @@ void ElemLiteralResult::execute(
 
 			if(!isEmpty(stringedValue))
 			{
-				executionContext.replacePendingAttribute(toCharArray(avt->getName()), 
-					avt->getType(), toCharArray(stringedValue));
+				executionContext.replacePendingAttribute(
+					c_wstr(avt->getName()), 
+					c_wstr(avt->getType()),
+					c_wstr(stringedValue));
 			}
 		}
 	}

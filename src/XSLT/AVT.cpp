@@ -58,8 +58,13 @@
 
 
 
+#include <algorithm>
+
+
+
 #include <PlatformSupport/DOMStringHelper.hpp>
 #include <PlatformSupport/StringTokenizer.hpp>
+#include <PlatformSupport/STLHelper.hpp>
 
 
 
@@ -85,11 +90,9 @@ AVT::AVT(
 		m_simpleString(),
 		m_pcType(type)
 {
-	StringTokenizer tokenizer(stringedValue, XALAN_STATIC_UCODE_STRING("{}\"\'"), true);
+	StringTokenizer		tokenizer(stringedValue, XALAN_STATIC_UCODE_STRING("{}\"\'"), true);
 
-	const int	nTokens = tokenizer.countTokens();
-
-	assert(length(m_simpleString) == 0);
+	const unsigned int	nTokens = tokenizer.countTokens();
 
 	if(nTokens < 2)
 	{
@@ -110,13 +113,17 @@ AVT::AVT(
 			if(length(lookahead))
 			{
 				t = lookahead;
-				lookahead = XalanDOMString();
+
+				clear(lookahead);
 			}
-			else t = tokenizer.nextToken();
-					
+			else
+			{
+				t = tokenizer.nextToken();
+			}
+
 			if(length(t) == 1)
 			{
-				const XalanDOMChar	theChar = t.charAt(0);
+				const XalanDOMChar	theChar = charAt(t, 0);
 
 				switch(theChar)
 				{
@@ -127,8 +134,10 @@ AVT::AVT(
 						if(equals(lookahead, XALAN_STATIC_UCODE_STRING("{")))
 						{
 							// Double curlys mean escape to show curly
-							append(buffer,lookahead);
-							lookahead = XalanDOMString();
+							append(buffer, lookahead);
+
+							clear(lookahead);
+
 							break; // from switch
 						}
 						else
@@ -136,42 +145,51 @@ AVT::AVT(
 							if(length(buffer) > 0)
 							{
 								m_parts.push_back(new AVTPartSimple(buffer));
-								buffer = XalanDOMString();
+
+								clear(buffer);
 							}
 									
-							exprBuffer = XalanDOMString();
+							clear(exprBuffer);
+
 							while(length(lookahead) > 0 && !equals(lookahead, XALAN_STATIC_UCODE_STRING("}")))
 							{
 								if(length(lookahead) == 1)
 								{
-									switch(lookahead.charAt(0))
+									switch(charAt(lookahead, 0))
 									{
 										case '\'':
 										case '\"':
 										{
 											// String start
-											append(exprBuffer,lookahead);
+											append(exprBuffer, lookahead);
+
 											const XalanDOMString quote = lookahead;
+
 											// Consume stuff 'till next quote
 											lookahead = tokenizer.nextToken();
+
 											while(!equals(lookahead, quote))
 											{
-												append(exprBuffer,lookahead);
+												append(exprBuffer, lookahead);
+
 												lookahead = tokenizer.nextToken();
 											}
+
 											append(exprBuffer,lookahead);
+
 											break;
 										}
 										case '{':
 										{
 											// What's another curly doing here?
 											error = "Error: Can not have \"{\" within expression.";
+
 											break;
 										}
 										default:
 										{
 											// part of the template stuff, just add it.
-											append(exprBuffer,lookahead);
+											append(exprBuffer, lookahead);
 										}
 									} // end inner switch
 								} // end if lookahead length == 1
@@ -180,16 +198,21 @@ AVT::AVT(
 									// part of the template stuff, just add it.
 									append(exprBuffer,lookahead);
 								}
+
 								lookahead = tokenizer.nextToken();
 							} // end while(!equals(lookahead, "}"))
 							assert(equals(lookahead, XALAN_STATIC_UCODE_STRING("}")));
 							
 							// Proper close of attribute template. Evaluate the
 							// expression.
-							buffer = XalanDOMString();
-							XPath *xpath = constructionContext.createXPath(exprBuffer, resolver);
+							clear(buffer);
+
+							const XPath* const	xpath = constructionContext.createXPath(exprBuffer, resolver);
+
 							m_parts.push_back(new AVTPartXPath(xpath));
-							lookahead = XalanDOMString(); // breaks out of inner while loop
+
+							clear(lookahead); // breaks out of inner while loop
+
 							if(length(error) > 0)
 							{
 								break; // from inner while loop
@@ -200,16 +223,19 @@ AVT::AVT(
 					case('}'):
 					{
 						lookahead = tokenizer.nextToken();
+
 						if(equals(lookahead, XALAN_STATIC_UCODE_STRING("}")))
 						{
 							// Double curlys mean escape to show curly
-							append(buffer,lookahead);
-							lookahead = XalanDOMString(); // swallow
+							append(buffer, lookahead);
+
+							clear(lookahead); // swallow
 						}
 						else
 						{
 							// Illegal, I think...
 							constructionContext.warn("Found \"}\" but no attribute template open!");
+
 							append(buffer, XALAN_STATIC_UCODE_STRING("}"));
 							// leave the lookahead to be processed by the next round.
 						}
@@ -220,7 +246,8 @@ AVT::AVT(
 						// @@ Just to make sure we're not getting the whole string
 						// There seemed to be a problem with single character
 						// strings
-						DOMString s(&theChar, 1);
+						const DOMString		s(&theChar, 1);
+
 						// Anything else just add to string.
 						append(buffer, s);
 					}
@@ -235,6 +262,7 @@ AVT::AVT(
 			if(length(error) > 0)
 			{
 				constructionContext.warn("Attr Template, " + error);
+
 				break;
 			}
 		} // end while(tokenizer.hasMoreTokens())
@@ -253,18 +281,25 @@ AVT::AVT(
 		// Error?
 		clear(m_simpleString);
 	}
+	else if (m_parts.size() < m_parts.capacity())
+	{
+		AVTPartPtrVectorType(m_parts).swap(m_parts);
+	}
+
 }
 
 
 
 AVT::~AVT()
 {
-	for (unsigned i = 0; i < m_parts.size(); ++i)
-	{
-		delete (m_parts[i]);
-	}
+#if !defined(XALAN_NO_NAMESPACES)
+	using std::for_each;
+#endif
 
-	m_pcType = 0;
+	// Clean up all entries in the vector.
+	for_each(m_parts.begin(),
+			 m_parts.end(),
+			 DeleteFunctor<AVTPart>());
 }
 
 
@@ -282,7 +317,7 @@ AVT::evaluate(
 	}
 	else if(!m_parts.empty())
 	{
-		buf = XalanDOMString();
+		clear(buf);
 
 		const AVTPartPtrVectorType::size_type	n = m_parts.size();
 
@@ -295,6 +330,6 @@ AVT::evaluate(
 	}
 	else
 	{
-		buf = XalanDOMString();
+		clear(buf);
 	}
 }
