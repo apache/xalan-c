@@ -712,6 +712,29 @@ public:
 				int		theValue);
 	};
 
+	/**
+	 * Exception class thrown when an invalid token position is encountered
+	 */
+	class XALAN_XPATH_EXPORT InvalidRelativeTokenPosition : public XPathExpressionException
+	{
+	public:
+
+		/**
+		 * Construct an InvalidRelativeTokenPosition object.
+		 * 
+		 * @param theOffset the offset that caused the problem.
+		 */
+		InvalidRelativeTokenPosition(int	theOffset);
+
+		virtual~
+		InvalidRelativeTokenPosition();
+
+	private:
+
+		static XalanDOMString
+		FormatErrorMessage(int	theOffset);
+	};
+
 
 #if defined(XALAN_NO_NAMESPACES)
 #	define XALAN_STD
@@ -962,7 +985,6 @@ public:
 
 	/**
 	 * Update the length of an operation code after a node test code.
-	 * $$$: ??
 	 * 
 	 * @param theIndex  index in list
 	 */
@@ -1109,6 +1131,36 @@ public:
 		assert(theToken != 0);
 
 		m_tokenQueue.push_back(theToken);
+	}
+
+	/**
+	 * Replace a token in the token queue.
+	 * 
+	 * @param theOffset the offset at which to replace the token.
+	 * @param theToken pointer to new XObject token
+	 * @return a pointer to the old token
+	 */
+	XObject*
+	replaceRelativeToken(
+			int			theOffset,
+			XObject*	theToken)
+	{
+		assert(theToken != 0);
+
+		const int	thePosition =
+			static_cast<int>(m_currentPosition) + theOffset;
+
+		if (thePosition < 0 ||
+			thePosition >= static_cast<int>(tokenQueueSize()))
+		{
+			throw InvalidRelativeTokenPosition(theOffset);
+		}
+
+		XObject* const	theOldToken = m_tokenQueue[thePosition];
+
+		m_tokenQueue[thePosition] = theToken;
+
+		return theOldToken;
 	}
 
 	/**

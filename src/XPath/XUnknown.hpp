@@ -85,6 +85,7 @@ public:
 	 */
 	XUnknown(
 			XPathEnvSupport&		envSupport,
+			XPathSupport&			support,
 			const XalanDOMString&	name);
 
 	XUnknown(const XUnknown&	source);

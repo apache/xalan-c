@@ -69,8 +69,9 @@
 
 XUnknown::XUnknown(
 			XPathEnvSupport&		envSupport,
+			XPathSupport&			support,
 			const XalanDOMString&	name) :
-	XObject(&envSupport),
+	XObject(&envSupport, &support),
 	m_name(name)
 {
 }

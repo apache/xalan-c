@@ -76,6 +76,7 @@ class MutableNodeRefList;
 class NodeRefListBase;
 class ResultTreeFragBase;
 class XObjectTypeCallback;
+class XPathSupport;
 class XPathEnvSupport;
 
 
@@ -93,7 +94,9 @@ public:
 	 * @param envSupport XPath environment support class instance
 	 */
 	explicit
-	XObject(XPathEnvSupport*	envSupport = 0);
+	XObject(
+			XPathEnvSupport*	envSupport,
+			XPathSupport*		support);
 
 	XObject(const XObject&	source);
 
@@ -192,8 +195,55 @@ public:
 	 * @param theRHS object to compare
 	 * @return true if they are equal
 	 */
-	virtual bool
-	equals(const XObject&	theRHS) const = 0;
+	bool
+	equals(const XObject&	theRHS) const;
+
+	/**
+	 * Tell if two objects are functionally not equal.
+	 *
+	 * @param theRHS object to compare
+	 * @return true if they are equal
+	 */
+	bool
+	notEquals(const XObject&	theRHS) const;
+
+	/**
+	 * Tell if one object is less than the other.
+	 *
+	 * @param theRHS object to compare
+	 * @return true if they are equal
+	 */
+	bool
+	lessThan(const XObject&		theRHS) const;
+
+	/**
+	 * Tell if one object is less than or equal
+	 * the other.
+	 *
+	 * @param theRHS object to compare
+	 * @return true if they are equal
+	 */
+	bool
+	lessThanOrEqual(const XObject&	theRHS) const;
+
+	/**
+	 * Tell if one object is greater than the other.
+	 *
+	 * @param theRHS object to compare
+	 * @return true if they are equal
+	 */
+	bool
+	greaterThan(const XObject&	theRHS) const;
+
+	/**
+	 * Tell if one object is greater than or equal
+	 * the other.
+	 *
+	 * @param theRHS object to compare
+	 * @return true if they are equal
+	 */
+	bool
+	greaterThanOrEqual(const XObject&	theRHS) const;
 
 	/**
 	 * Enumeration of possible object types
@@ -215,6 +265,18 @@ public:
 	virtual	eObjectType
 	getType() const = 0;
 
+	XPathEnvSupport*
+	getEnvSupport() const
+	{
+		return m_envSupport;
+	}
+
+	XPathSupport*
+	getSupport() const
+	{
+		return m_support;
+	}
+
 protected:
 
 	virtual
@@ -227,8 +289,10 @@ protected:
 	virtual void
 	error(const XalanDOMString&		msg) const;
 
-	// Data member...
+	// Data members...
 	XPathEnvSupport* const	m_envSupport;
+
+	XPathSupport* const		m_support;
 
 private:
 
@@ -236,6 +300,66 @@ private:
 	XObject&
 	operator=(const XObject&);
 };
+
+
+
+inline bool
+operator==(
+			const XObject&	theLHS,
+			const XObject&	theRHS)
+{
+	return theLHS.equals(theRHS);
+}
+
+
+
+inline bool
+operator!=(
+			const XObject&	theLHS,
+			const XObject&	theRHS)
+{
+	return theLHS.notEquals(theRHS);
+}
+
+
+
+inline bool
+operator<(
+			const XObject&	theLHS,
+			const XObject&	theRHS)
+{
+	return theLHS.lessThan(theRHS);
+}
+
+
+
+inline bool
+operator<=(
+			const XObject&	theLHS,
+			const XObject&	theRHS)
+{
+	return theLHS.lessThanOrEqual(theRHS);
+}
+
+
+
+inline bool
+operator>(
+			const XObject&	theLHS,
+			const XObject&	theRHS)
+{
+	return theLHS.greaterThan(theRHS);
+}
+
+
+
+inline bool
+operator>=(
+			const XObject&	theLHS,
+			const XObject&	theRHS)
+{
+	return theLHS.greaterThanOrEqual(theRHS);
+}
 
 
 

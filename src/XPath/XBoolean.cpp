@@ -68,9 +68,10 @@
 
 
 XBoolean::XBoolean(
-			XPathEnvSupport&	support,
+			XPathEnvSupport&	envSupport,
+			XPathSupport&		support,
 			bool				val) :
-	XObject(&support),
+	XObject(&envSupport, &support),
 	m_value(val)
 {
 }
@@ -78,9 +79,10 @@ XBoolean::XBoolean(
 
 
 XBoolean::XBoolean(
-			XPathEnvSupport*	support,
+			XPathEnvSupport*	envSupport,
+			XPathSupport*		support,
 			bool				val) :
-	XObject(support),
+	XObject(envSupport, support),
 	m_value(val)
 {
 }
@@ -221,12 +223,4 @@ XBoolean::ProcessXObjectTypeCallback(XObjectTypeCallback&	theCallbackObject) con
 {
 	theCallbackObject.Boolean(*this,
 							  boolean());
-}
-
-
-
-bool
-XBoolean::equals(const XObject&	theRHS) const
-{
-	return m_value == theRHS.boolean();
 }

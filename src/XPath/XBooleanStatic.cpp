@@ -65,6 +65,7 @@
 
 XBooleanStatic::XBooleanStatic(bool		val) :
 	XBoolean(0,
+			 0,
 			 val)
 {
 }

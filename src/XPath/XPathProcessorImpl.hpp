@@ -615,7 +615,7 @@ private:
 	 Basis	::=    AxisName '::' NodeTest	
 	 | AbbreviatedBasis  
 	 */
-	void
+	int
 	AxisName();
   
 	/**
@@ -625,7 +625,7 @@ private:
 	 | 'processing-instruction' '(' Literal ')' 
 	 */
 	void
-	NodeTest();
+	NodeTest(int	axisType);
 
 	/**
 	 * --------------------------------------------------------------------------------

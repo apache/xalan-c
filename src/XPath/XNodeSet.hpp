@@ -180,9 +180,6 @@ public:
 	virtual void
 	ProcessXObjectTypeCallback(XObjectTypeCallback&		theCallbackObject) const;
 
-	virtual bool
-	equals(const XObject&	theRHS) const;
-
 private:
 
 	// Not implemented...
@@ -190,8 +187,6 @@ private:
 	operator=(const XNodeSet&);
 
 	// Data members...
-	XPathSupport&								m_support;
-
 	MutableNodeRefList							m_value;
 
 #if defined(XALAN_NO_NAMESPACES)

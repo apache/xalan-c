@@ -150,9 +150,6 @@ public:
 	virtual void
 	ProcessXObjectTypeCallback(XObjectTypeCallback&		theCallbackObject) const;
 
-	virtual bool
-	equals(const XObject&	theRHS) const;
-
 private:
 
 	const std::auto_ptr<ResultTreeFragBase>		m_resultTreeFrag;

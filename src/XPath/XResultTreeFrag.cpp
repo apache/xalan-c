@@ -80,9 +80,8 @@ XResultTreeFrag::XResultTreeFrag(
 			XPathSupport&				support,
 			const ResultTreeFragBase&	val,
 			bool						deepClone) :
-	XObject(&envSupport),
+	XObject(&envSupport, &support),
 	NodeRefListBase(),
-	m_support(support),
 	m_value(val.clone(deepClone))
 {
 }
@@ -94,7 +93,6 @@ XResultTreeFrag::XResultTreeFrag(
 			bool					deepClone) :
 	XObject(source),
 	NodeRefListBase(source),
-	m_support(source.m_support),
 	m_value(source.m_value->clone(deepClone))
 {
 }
@@ -126,7 +124,7 @@ XResultTreeFrag::getTypeString() const
 double
 XResultTreeFrag::num() const
 {
-	const XalanDOMString	theValue = m_support.getNodeData(*m_value.get());
+	const XalanDOMString	theValue = m_support->getNodeData(*m_value.get());
 
 	return DOMStringToDouble(theValue);
 }
@@ -147,7 +145,7 @@ XResultTreeFrag::boolean() const
 			const XalanText* const	theTextNode =
 				static_cast<const XalanText*>(theCurrentNode);
 
-			if (m_support.isIgnorableWhitespace(*theTextNode) ||
+			if (m_support->isIgnorableWhitespace(*theTextNode) ||
 			    length(trim(theTextNode->getData())) == 0)
 			{
 				continue;
@@ -168,7 +166,7 @@ XResultTreeFrag::boolean() const
 XalanDOMString
 XResultTreeFrag::str() const
 {
-	return m_support.getNodeData(*m_value.get());
+	return m_support->getNodeData(*m_value.get());
 }
 
 
@@ -313,5 +311,5 @@ XResultTreeFrag::indexOf(const XalanNode*	theNode) const
 XPathSupport*
 XResultTreeFrag::getSupport() const
 {
-	return &m_support;
+	return m_support;
 }

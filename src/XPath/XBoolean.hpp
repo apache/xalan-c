@@ -76,11 +76,14 @@ public:
 	/**
 	 * Construct an XBoolean object from a boolean value
 	 * 
-	 * @param support XPath environment support class instance
-	 * @param val     boolean value to initialize object
+	 * @param support XPath support class instance
+	 * @param envSupport XPath environment support class instance
+	 * @param val		boolean value to initialize object
 	 */
-	XBoolean(XPathEnvSupport&	support,
-			 bool				val);
+	XBoolean(
+			XPathEnvSupport&	envSupport,
+			XPathSupport&		support,
+			bool				val);
 
 	XBoolean(const XBoolean&	source);
 
@@ -122,16 +125,15 @@ public:
 	virtual void
 	ProcessXObjectTypeCallback(XObjectTypeCallback&		theCallbackObject) const;
 
-	virtual bool
-	equals(const XObject&	theRHS) const;
-
 protected:
 
 	virtual
 	~XBoolean();
 
-	XBoolean(XPathEnvSupport*	support,
-			 bool				val);
+	XBoolean(
+			XPathEnvSupport*	envSupport,
+			XPathSupport*		support,
+			bool				val);
 
 private:
 

@@ -159,7 +159,7 @@ XObjectFactoryDefault::createBoolean(
 	}
 	else
 	{
-		XBoolean* const		theBoolean = new XBoolean(m_envSupport, theValue);
+		XBoolean* const		theBoolean = new XBoolean(m_envSupport, m_support, theValue);
 
 		m_xobjects.insert(theBoolean);
 
@@ -254,7 +254,7 @@ XObjectFactoryDefault::createNumber(
 			double	theValue,
 			bool	/* fOptimize */)
 {
-	XNumber*	theXNumber = new XNumber(m_envSupport, theValue);
+	XNumber*	theXNumber = new XNumber(m_envSupport, m_support, theValue);
 
 	m_xobjects.insert(theXNumber);
 
@@ -290,7 +290,7 @@ XObjectFactoryDefault::createUnknown(
 			const XalanDOMString&	theValue,
 			bool					/* fOptimize */)
 {
-	XUnknown* const	theXUnknown = new XUnknown(m_envSupport, theValue);
+	XUnknown* const	theXUnknown = new XUnknown(m_envSupport, m_support, theValue);
 
 	m_xobjects.insert(theXUnknown);
 

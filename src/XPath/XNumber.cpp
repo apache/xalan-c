@@ -70,8 +70,9 @@
 
 XNumber::XNumber(
 			XPathEnvSupport&	envSupport,
+			XPathSupport&		support,
 			double				val) :
-	XObject(&envSupport),
+	XObject(&envSupport, &support),
 	m_value(val)
 {
 }
@@ -206,25 +207,4 @@ XNumber::ProcessXObjectTypeCallback(XObjectTypeCallback&	theCallbackObject) cons
 {
 	theCallbackObject.Number(*this,
 							 num());
-}
-
-
-
-bool
-XNumber::equals(const XObject&	theRHS) const
-{
-	bool			fResult = false;
-
-	if (DoubleSupport::isNaN(m_value) == false)
-	{
-		const double	theRHSNumber = theRHS.num();
-
-		if (DoubleSupport::isNaN(theRHSNumber) == false &&
-			m_value == theRHSNumber)
-		{
-			fResult = true;
-		}
-	}
-
-	return fResult;
 }

@@ -750,7 +750,7 @@ XPath::notequals(
 	XObject* const	expr2 = executeMore(context, expr2Pos, executionContext);
 	assert(expr2 != 0);
 
-	return executionContext.getXObjectFactory().createBoolean(!expr1->equals(*expr2));
+	return executionContext.getXObjectFactory().createBoolean(*expr1 != *expr2);
 }
 
 
@@ -771,7 +771,7 @@ XPath::equals(
 	XObject* const	expr2 = executeMore(context, expr2Pos, executionContext);
 	assert(expr2 != 0);
 
-	return executionContext.getXObjectFactory().createBoolean(expr1->equals(*expr2));
+	return executionContext.getXObjectFactory().createBoolean(*expr1 == *expr2);
 }
 
 
@@ -782,34 +782,17 @@ XPath::lte(
 			int						opPos,
 			XPathExecutionContext&	executionContext) const
 {
-	bool	fResult = false;
-
 	opPos += 2;
 
 	XObject* const	expr1 = executeMore(context, opPos, executionContext);
 	assert(expr1 != 0);
 
-	const double	expr1Value = expr1->num();
+	const int		expr2Pos = m_expression.getNextOpCodePosition(opPos);
 
-	if (DoubleSupport::isNaN(expr1Value) == false)
-	{
-		const int		expr2Pos = m_expression.getNextOpCodePosition(opPos);
+	XObject* const	expr2 = executeMore(context, expr2Pos, executionContext);
+	assert(expr2 != 0);
 
-		XObject* const	expr2 = executeMore(context, expr2Pos, executionContext);
-		assert(expr2 != 0);
-
-		const double	expr2Value = expr2->num();
-
-		if (DoubleSupport::isNaN(expr2Value) == false)
-		{
-			if (expr1Value <= expr2Value)
-			{
-				fResult = true;
-			}
-		}
-	}
-
-	return executionContext.getXObjectFactory().createBoolean(fResult);
+	return executionContext.getXObjectFactory().createBoolean(*expr1 <= *expr2);
 }
 
 
@@ -820,34 +803,17 @@ XPath::lt(
 			int						opPos,
 			XPathExecutionContext&	executionContext) const
 {
-	bool	fResult = false;
-
 	opPos += 2;
 
 	XObject* const	expr1 = executeMore(context, opPos, executionContext);
 	assert(expr1 != 0);
 
-	const double	expr1Value = expr1->num();
+	const int		expr2Pos = m_expression.getNextOpCodePosition(opPos);
 
-	if (DoubleSupport::isNaN(expr1Value) == false)
-	{
-		const int		expr2Pos = m_expression.getNextOpCodePosition(opPos);
+	XObject* const	expr2 = executeMore(context, expr2Pos, executionContext);
+	assert(expr2 != 0);
 
-		XObject* const	expr2 = executeMore(context, expr2Pos, executionContext);
-		assert(expr2 != 0);
-
-		const double	expr2Value = expr2->num();
-
-		if (DoubleSupport::isNaN(expr2Value) == false)
-		{
-			if (expr1Value < expr2Value)
-			{
-				fResult = true;
-			}
-		}
-	}
-
-	return executionContext.getXObjectFactory().createBoolean(fResult);
+	return executionContext.getXObjectFactory().createBoolean(*expr1 < *expr2);
 }
 
 
@@ -858,34 +824,17 @@ XPath::gte(
 			int						opPos,
 			XPathExecutionContext&	executionContext) const
 {
-	bool	fResult = false;
-
 	opPos += 2;
 
 	XObject* const	expr1 = executeMore(context, opPos, executionContext);
 	assert(expr1 != 0);
 
-	const double	expr1Value = expr1->num();
+	const int		expr2Pos = m_expression.getNextOpCodePosition(opPos);
 
-	if (DoubleSupport::isNaN(expr1Value) == false)
-	{
-		const int		expr2Pos = m_expression.getNextOpCodePosition(opPos);
+	XObject* const	expr2 = executeMore(context, expr2Pos, executionContext);
+	assert(expr2 != 0);
 
-		XObject* const	expr2 = executeMore(context, expr2Pos, executionContext);
-		assert(expr2 != 0);
-
-		const double	expr2Value = expr2->num();
-
-		if (DoubleSupport::isNaN(expr2Value) == false)
-		{
-			if (expr1Value >= expr2Value)
-			{
-				fResult = true;
-			}
-		}
-	}
-
-	return executionContext.getXObjectFactory().createBoolean(fResult);
+	return executionContext.getXObjectFactory().createBoolean(*expr1 >= *expr2);
 }
 
 
@@ -896,34 +845,17 @@ XPath::gt(
 			int						opPos,
 			XPathExecutionContext&	executionContext) const
 {
-	bool	fResult = false;
-
 	opPos += 2;
 
 	XObject* const	expr1 = executeMore(context, opPos, executionContext);
 	assert(expr1 != 0);
 
-	const double	expr1Value = expr1->num();
+	const int		expr2Pos = m_expression.getNextOpCodePosition(opPos);
 
-	if (DoubleSupport::isNaN(expr1Value) == false)
-	{
-		const int		expr2Pos = m_expression.getNextOpCodePosition(opPos);
+	XObject* const	expr2 = executeMore(context, expr2Pos, executionContext);
+	assert(expr2 != 0);
 
-		XObject* const	expr2 = executeMore(context, expr2Pos, executionContext);
-		assert(expr2 != 0);
-
-		const double	expr2Value = expr2->num();
-
-		if (DoubleSupport::isNaN(expr2Value) == false)
-		{
-			if (expr1Value > expr2Value)
-			{
-				fResult = true;
-			}
-		}
-	}
-
-	return executionContext.getXObjectFactory().createBoolean(fResult);
+	return executionContext.getXObjectFactory().createBoolean(*expr1 > *expr2);
 }
 
 

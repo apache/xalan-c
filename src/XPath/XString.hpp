@@ -143,12 +143,7 @@ public:
 	virtual void
 	ProcessXObjectTypeCallback(XObjectTypeCallback&		theCallbackObject) const;
 
-	virtual bool
-	equals(const XObject&	theRHS) const;
-
 private:
-
-	XPathSupport&								m_support;
 
 	const XalanDOMString						m_value;
 

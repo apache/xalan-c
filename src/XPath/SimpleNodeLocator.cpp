@@ -59,6 +59,7 @@
 
 
 
+#include <XalanDOM/XalanAttr.hpp>
 #include <XalanDOM/XalanElement.hpp>
 #include <XalanDOM/XalanNamedNodeMap.hpp>
 #include <XalanDOM/XalanNode.hpp>
@@ -1394,7 +1395,7 @@ SimpleNodeLocator::nodeTest(
 	const XPathExpression&	currentExpression =
 		xpath.getExpression();
 
-	double score = 0.0L;
+	double score = xpath.s_MatchScoreNone;
 
 	const int	testType = currentExpression.getOpCodeMapValue(opPos);
 
@@ -1405,23 +1406,23 @@ SimpleNodeLocator::nodeTest(
 	switch(testType)
 	{
 	case XPathExpression::eNODETYPE_COMMENT:
-		score = XalanNode::COMMENT_NODE == nodeType
-			  ? xpath.s_MatchScoreNodeTest : xpath.s_MatchScoreNone;
+		if (XalanNode::COMMENT_NODE == nodeType)
+		{
+			score = xpath.s_MatchScoreNodeTest;
+		}
 		break;
 
 	case XPathExpression::eNODETYPE_TEXT:
-	  score = (XalanNode::CDATA_SECTION_NODE == nodeType ||
-					XalanNode::TEXT_NODE == nodeType) &&
-			  executionContext.shouldStripSourceNode(*context) == false
-			  ? xpath.s_MatchScoreNodeTest : xpath.s_MatchScoreNone;
+		if ((XalanNode::CDATA_SECTION_NODE == nodeType ||
+			 XalanNode::TEXT_NODE == nodeType) &&
+			executionContext.shouldStripSourceNode(*context) == false)
+		{
+			  score = xpath.s_MatchScoreNodeTest;
+		}
 	  break;
 
 	case XPathExpression::eNODETYPE_PI:
-		if(XalanNode::PROCESSING_INSTRUCTION_NODE != nodeType)
-		{
-			score = xpath.s_MatchScoreNone;
-		}
-		else
+		if(XalanNode::PROCESSING_INSTRUCTION_NODE == nodeType)
 		{
 			if(argLen == 1)
 			{
@@ -1436,13 +1437,13 @@ SimpleNodeLocator::nodeTest(
 					currentExpression.getToken(tokenPosition);
 				assert(name != 0);
 
-				score = equals(context->getNodeName(), name->str())
-						? xpath.s_MatchScoreQName : xpath.s_MatchScoreNone;
+				if (equals(context->getNodeName(), name->str()) == true)
+				{
+					score = xpath.s_MatchScoreQName;
+				}
 			}
 			else
 			{
-				score = xpath.s_MatchScoreNone;
-
 				executionContext.error("Arg length of processing-instruction() node test is incorrect!");
 			}
 		}
@@ -1457,10 +1458,6 @@ SimpleNodeLocator::nodeTest(
 			{
 				score = xpath.s_MatchScoreNodeTest;
 			}
-			else
-			{
-				score = xpath.s_MatchScoreNone;
-			}
 		}
 		else
 		{
@@ -1469,145 +1466,172 @@ SimpleNodeLocator::nodeTest(
 		break;
 
 	case XPathExpression::eNODETYPE_ROOT:
-		score = XalanNode::DOCUMENT_FRAGMENT_NODE == nodeType ||
-				XalanNode::DOCUMENT_NODE == nodeType ?
-					xpath.s_MatchScoreOther :
-						xpath.s_MatchScoreNone;
+		if (XalanNode::DOCUMENT_FRAGMENT_NODE == nodeType ||
+			XalanNode::DOCUMENT_NODE == nodeType)
+		{
+			score =  xpath.s_MatchScoreOther;
+		}
 		break;
 
 	case XPathExpression::eNODENAME:
 		{
-			bool					test = false;
-
-			int 					queueIndex = currentExpression.getOpCodeMapValue(opPos);
-
-			const XalanDOMString	targetNS = queueIndex >= 0 ?
-									currentExpression.getToken(queueIndex)->str() :
-										XalanDOMString();
-
-			opPos++;
-
-			// From the draft: "Two expanded names are equal if they 
-			// have the same local part, and either both have no URI or 
-			// both have the same URI."
-			// "A node test * is true for any node of the principal node type. 
-			// For example, child::* will select all element children of the 
-			// context node, and attribute::* will select all attributes of 
-			// the context node."
-			// "A node test can have the form NCName:*. In this case, the prefix 
-			// is expanded in the same way as with a QName using the context 
-			// namespace declarations. The node test will be true for any node 
-			// of the principal type whose expanded name has the URI to which 
-			// the prefix expands, regardless of the local part of the name."
-			const bool	isTotallyWild =
-						0 == length(targetNS) &&
-						currentExpression.getOpCodeMapValue(opPos) == XPathExpression::eELEMWILDCARD;
-
-			const bool	processNamespaces = executionContext.getProcessNamespaces();
-
-			bool		didMatchNS = false;
-
-			if(isTotallyWild == false && processNamespaces == true)
+			if (nodeType == XalanNode::ATTRIBUTE_NODE || nodeType == XalanNode::ELEMENT_NODE)
 			{
-				const XalanDOMString	contextNS = executionContext.getNamespaceOfNode(*context);
+				bool					test = false;
 
-				if(0 != length(targetNS) && 0 != length(contextNS))
+				int 					queueIndex = currentExpression.getOpCodeMapValue(opPos);
+
+				const XalanDOMString	targetNS = queueIndex >= 0 ?
+										currentExpression.getToken(queueIndex)->str() :
+											XalanDOMString();
+
+				opPos++;
+
+				// From the draft: "Two expanded names are equal if they 
+				// have the same local part, and either both have no URI or 
+				// both have the same URI."
+				// "A node test * is true for any node of the principal node type. 
+				// For example, child::* will select all element children of the 
+				// context node, and attribute::* will select all attributes of 
+				// the context node."
+				// "A node test can have the form NCName:*. In this case, the prefix 
+				// is expanded in the same way as with a QName using the context 
+				// namespace declarations. The node test will be true for any node 
+				// of the principal type whose expanded name has the URI to which 
+				// the prefix expands, regardless of the local part of the name."
+				const bool	isTotallyWild =
+							0 == length(targetNS) &&
+							currentExpression.getOpCodeMapValue(opPos) == XPathExpression::eELEMWILDCARD;
+
+				const bool	processNamespaces = executionContext.getProcessNamespaces();
+
+				bool		didMatchNS = false;
+
+				if(isTotallyWild == false && processNamespaces == true)
 				{
-					test = equals(contextNS, targetNS);
+					const XalanDOMString	contextNS = executionContext.getNamespaceOfNode(*context);
 
-					didMatchNS = true;
+					if(0 != length(targetNS) && 0 != length(contextNS))
+					{
+						test = equals(contextNS, targetNS);
+
+						didMatchNS = true;
+					}
+					else
+					{
+						test = XPathExpression::eELEMWILDCARD == queueIndex || 
+						   0 == length(contextNS) || 0 == length(contextNS);
+					}
 				}
 				else
 				{
-					test = XPathExpression::eELEMWILDCARD == queueIndex || 
-					   0 == length(contextNS) || 0 == length(contextNS);
+					test = true;
 				}
-			}
-			else
-			{
-				test = true;
-			}
 
-			queueIndex = currentExpression.getOpCodeMapValue(opPos);
+				queueIndex = currentExpression.getOpCodeMapValue(opPos);
 
-			const XalanDOMString	targetLocalName =
-						queueIndex >= 0 ? currentExpression.getToken(queueIndex)->str() : XalanDOMString();
+				const XalanDOMString	targetLocalName =
+							queueIndex >= 0 ? currentExpression.getToken(queueIndex)->str() : XalanDOMString();
 
-			if(test == false)
-			{
-				score = XPath::s_MatchScoreNone;
-			}
-			else
-			{
-				switch(nodeType)
+				if(test == true)
 				{
-				case XalanNode::ATTRIBUTE_NODE:
-					if(stepType == XPathExpression::eFROM_ATTRIBUTES)
+					switch(nodeType)
 					{
-						assert(context->getNodeType() == XalanNode::ATTRIBUTE_NODE);
-
-						if(XPathExpression::eELEMWILDCARD == queueIndex)
+					case XalanNode::ATTRIBUTE_NODE:
+						if(stepType == XPathExpression::eFROM_ATTRIBUTES ||
+							stepType == XPathExpression::eFROM_NAMESPACE)
 						{
-							if(processNamespaces == true)
-							{
-								const XalanDOMString	attrName =
-									context->getNodeName();
+							assert(context->getNodeType() == XalanNode::ATTRIBUTE_NODE);
 
-								score = !(startsWith(attrName, DOMServices::s_XMLNamespaceWithSeparator) ||
-										  equals(attrName, DOMServices::s_XMLNamespace))
-										? xpath.s_MatchScoreNodeTest : xpath.s_MatchScoreNone;
+							const XalanDOMString	attrName =
+										context->getNodeName();
+
+							const bool				isNamespace =
+									startsWith(attrName, DOMServices::s_XMLNamespaceWithSeparator) ||
+									equals(attrName, DOMServices::s_XMLNamespace);
+
+							if(XPathExpression::eELEMWILDCARD == queueIndex)
+							{
+								if(stepType == XPathExpression::eFROM_ATTRIBUTES)
+								{
+									if (isNamespace == false)
+									{
+										score = xpath.s_MatchScoreNodeTest;
+									}
+								}
+								else
+								{
+									if (isNamespace == true)
+									{
+										score = xpath.s_MatchScoreNodeTest;
+									}
+								}
 							}
 							else
 							{
-								score = xpath.s_MatchScoreNodeTest;
+								if(stepType == XPathExpression::eFROM_ATTRIBUTES)
+								{
+									if (isNamespace == false)
+									{
+										const XalanDOMString	localAttrName =
+											executionContext.getLocalNameOfNode(*context);
+
+										if (equals(localAttrName, targetLocalName) == true)
+										{
+											score = xpath.s_MatchScoreQName;
+										}
+									}
+								}
+								else
+								{
+									if (isNamespace == true)
+									{
+										const XalanAttr* const	theAttrNode =
+											static_cast<const XalanAttr*>(context);
+										assert(theAttrNode != 0);
+
+										const XalanDOMString	theNamespace =
+													theAttrNode->getValue();
+
+										if (equals(theNamespace, targetLocalName) == true)
+										{
+											score = xpath.s_MatchScoreQName;
+										}
+									}
+								}
 							}
 						}
-						else
-						{
-							const XalanDOMString	localAttrName =
-								executionContext.getLocalNameOfNode(*context);
+						break;
 
-							score = equals(localAttrName, targetLocalName) ?
-									xpath.s_MatchScoreQName : xpath.s_MatchScoreNone;
-						}
-					}
-					else
-					{
-						score  = xpath.s_MatchScoreNone;
-					}
-					break;
-
-				case XalanNode::ELEMENT_NODE:
-					if(stepType != XPathExpression::eFROM_ATTRIBUTES)
-					{
-						if(XPathExpression::eELEMWILDCARD == queueIndex)
+					case XalanNode::ELEMENT_NODE:
+						if(stepType != XPathExpression::eFROM_ATTRIBUTES)
 						{
-							score = didMatchNS == true ?
-								XPath::s_MatchScoreNSWild : XPath::s_MatchScoreNodeTest;
+							if(XPathExpression::eELEMWILDCARD == queueIndex)
+							{
+								score = didMatchNS == true ?
+									XPath::s_MatchScoreNSWild : XPath::s_MatchScoreNodeTest;
+							}
+							else
+							{
+								if (equals(executionContext.getLocalNameOfNode(*context),
+										   targetLocalName) == true)
+								{
+									score = xpath.s_MatchScoreQName;
+								}
+							}
 						}
-						else
-						{
-							score = equals(executionContext.getLocalNameOfNode(*context), targetLocalName) ?
-								xpath.s_MatchScoreQName : xpath.s_MatchScoreNone;
-						}
-					}
-					else
-					{
-						score  = xpath.s_MatchScoreNone;
-					}
-					break;
+						break;
 
-				default:
-					// Trying to match on anything else causes nasty bugs.
-					score  = xpath.s_MatchScoreNone;
-					break;
-				} // end switch(nodeType)
-			} // end if(test)
+					default:
+						// Trying to match on anything else causes nasty bugs.
+						break;
+					} // end switch(nodeType)
+				} // end if(test)
+			} // end if (nodeType == XalanNode::ATTRIBUTE_NODE || nodeType == XalanNode::ELEMENT_NODE)
 		} // end case XPathExpression::eNODENAME
 		break;
 
 	default:
-		score  = xpath.s_MatchScoreNone;
 		break;
 	} // end switch(testType)
 

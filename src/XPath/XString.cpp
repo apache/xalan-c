@@ -78,8 +78,7 @@ XString::XString(
 			XPathEnvSupport&		envSupport,
 			XPathSupport&			support,
 			const XalanDOMString&	val) :
-	XObject(&envSupport),
-	m_support(support),
+	XObject(&envSupport, &support),
 	m_value(val),
 	m_resultTreeFrag(0)
 {
@@ -89,7 +88,6 @@ XString::XString(
 
 XString::XString(const XString&	source) :
 	XObject(source),
-	m_support(source.m_support),
 	m_value(source.m_value),
 	m_resultTreeFrag(source.m_resultTreeFrag.get() == 0 ?
 						0 :
@@ -148,6 +146,7 @@ XString::str() const
 const ResultTreeFragBase&
 XString::rtree() const
 {
+	assert(m_support != 0);
 	assert(m_envSupport != 0);
 
 	if (m_resultTreeFrag.get() == 0)
@@ -158,7 +157,7 @@ XString::rtree() const
 
 		ResultTreeFrag* const	theFrag =
 			new ResultTreeFrag(*theFactory,
-							   m_support);
+							   *m_support);
 
 		XalanNode* const	textNode =
 			theFactory->createTextNode(str());
@@ -197,6 +196,9 @@ XString::rtree() const
 ResultTreeFragBase&
 XString::rtree()
 {
+	assert(m_support != 0);
+	assert(m_envSupport != 0);
+
 	if (m_resultTreeFrag.get() == 0)
 	{
 		XalanDocument* const	theFactory =
@@ -205,7 +207,7 @@ XString::rtree()
 
 		ResultTreeFrag* const	theFrag =
 			new ResultTreeFrag(*theFactory,
-							   m_support);
+							   *m_support);
 
 		XalanNode* const	textNode =
 			theFactory->createTextNode(str());
@@ -291,12 +293,4 @@ XString::ProcessXObjectTypeCallback(XObjectTypeCallback&	theCallbackObject) cons
 {
 	theCallbackObject.String(*this,
 							 str());
-}
-
-
-
-bool
-XString::equals(const XObject&	theRHS) const
-{
-	return ::equals(m_value, theRHS.str());
 }

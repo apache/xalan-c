@@ -170,8 +170,6 @@ private:
 	virtual XPathSupport*
 	getSupport() const;
 
-	XPathSupport&						m_support;
-
 #if defined(XALAN_NO_NAMESPACES)
 	auto_ptr<ResultTreeFragBase>		m_value;
 #else

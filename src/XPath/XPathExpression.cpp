@@ -205,6 +205,41 @@ XPathExpression::InvalidArgumentException::FormatErrorMessage(
 
 
 
+XPathExpression::InvalidRelativeTokenPosition::InvalidRelativeTokenPosition(int		theOffset) :
+	XPathExpressionException(FormatErrorMessage(theOffset))
+{
+}
+
+
+
+XPathExpression::InvalidRelativeTokenPosition::~InvalidRelativeTokenPosition()
+{
+}
+
+
+
+XalanDOMString
+XPathExpression::InvalidRelativeTokenPosition::FormatErrorMessage(int	theOffset)
+{
+#if !defined(XALAN_NO_NAMESPACES)
+	using std::ostrstream;
+#endif
+
+	ostrstream	theFormatter;
+
+	theFormatter << "An invalid offset of "
+				 << theOffset
+				 << " was supplied as a relative token position."
+				 << "."
+				 << '\0';
+
+	theFormatter.freeze(false);
+
+	return theFormatter.str();
+}
+
+
+
 XPathExpression::XPathExpression() :
 	m_opMap(),
 	m_lastOpCodeIndex(0),

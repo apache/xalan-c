@@ -68,7 +68,7 @@
 XNull::XNull(
 			XPathEnvSupport&	envSupport,
 			XPathSupport&		support) :
-	XObject(&envSupport),
+	XObject(&envSupport, &support),
 	m_resultTreeFrag(new ResultTreeFrag(*envSupport.getDOMFactory(),
 										support))
 {
@@ -200,12 +200,4 @@ void
 XNull::ProcessXObjectTypeCallback(XObjectTypeCallback&	theCallbackObject) const
 {
 	theCallbackObject.Null(*this);
-}
-
-
-
-bool
-XNull::equals(const XObject&	theRHS) const
-{
-	return theRHS.getType() == eTypeNull;
 }

@@ -1813,23 +1813,29 @@ XPathProcessorImpl::Basis()
 	assert(m_expression != 0);
 
 	const int	opPos = m_expression->opCodeMapLength();
-	
+
+	int			axisType = 0;
+
 	// The next blocks guarantee that a FROM_XXX will be added.
 	if(lookahead(XALAN_STATIC_UCODE_STRING("::"), 1) == true)
 	{
-		AxisName();
+		axisType = AxisName();
 
 		nextToken();
 		nextToken();
 	}
 	else if(tokenIs('@') == true)
 	{
+		axisType = XPathExpression::eFROM_ATTRIBUTES;
+
 		m_expression->appendOpCode(XPathExpression::eFROM_ATTRIBUTES);
 
 		nextToken();
 	}
 	else if(tokenIs('/') == true)
 	{
+		axisType = XPathExpression::eFROM_DESCENDANTS_OR_SELF;
+
 		// Have to fix up for patterns such as '//@foo' or '//attribute::foo',
 		// which translate to 'descendant-or-self::node()/attribute::foo'.
 		// notice I leave the '/' on the queue, so the next will be processed 
@@ -1858,10 +1864,12 @@ XPathProcessorImpl::Basis()
 	}
 	else
 	{
+		axisType = XPathExpression::eFROM_CHILDREN;
+
 		m_expression->appendOpCode(XPathExpression::eFROM_CHILDREN);
 	}
 
-	NodeTest();
+	NodeTest(axisType);
 
 	// Tell how long the step is without the predicate
 	m_expression->updateOpCodeLengthAfterNodeTest(opPos);
@@ -1869,7 +1877,7 @@ XPathProcessorImpl::Basis()
 
 
 
-void
+int
 XPathProcessorImpl::AxisName()
 {
 	assert(m_xpath != 0);
@@ -1885,14 +1893,16 @@ XPathProcessorImpl::AxisName()
 	}
 	else
 	{
-		m_expression->appendOpCode((*i).second);
+		m_expression->appendOpCode(i->second);
 	}
+
+	return i->second;
 }
 
 
 
 void
-XPathProcessorImpl::NodeTest()
+XPathProcessorImpl::NodeTest(int	axisType)
 {
 	assert(m_xpath != 0);
 	assert(m_expression != 0);
@@ -1939,6 +1949,21 @@ XPathProcessorImpl::NodeTest()
 			}
 			else
 			{
+				if (axisType == XPathExpression::eFROM_NAMESPACE)
+				{
+					const XObject* const	theToken =
+						m_expression->getRelativeToken(-1);
+
+					const XalanDOMString	theString = theToken->str();
+
+					const XalanDOMString	theNamespace =
+						m_prefixResolver->getNamespaceForPrefix(theString);
+
+					m_expression->replaceRelativeToken(
+									-1,
+									m_xobjectFactory->createString(theNamespace));
+				}
+
 				m_expression->pushCurrentTokenOnOpCodeMap();
 			}
 
@@ -2211,23 +2236,33 @@ XPathProcessorImpl::AbbreviatedNodeTestStep()
 
 	const int	opPos = m_expression->opCodeMapLength();
 
+	int			axisType = 0;
+
 	int			matchTypePos = -1;
 
 	// The next blocks guarantee that a MATCH_XXX will be added.
 	if(tokenIs('@') == true)
 	{
+		axisType = XPathExpression::eMATCH_ATTRIBUTE;
+
 		m_expression->appendOpCode(XPathExpression::eMATCH_ATTRIBUTE);
 
 		nextToken();
 	}
 	else if(lookahead(XALAN_STATIC_UCODE_STRING("::"), 1) == true)
 	{
+		// $$$ To Do: Perhaps these strings should be in the
+		// axis table?
 		if(tokenIs(XALAN_STATIC_UCODE_STRING("attribute")) == true)
 		{
+			axisType = XPathExpression::eMATCH_ATTRIBUTE;
+
 			m_expression->appendOpCode(XPathExpression::eMATCH_ATTRIBUTE);
 		}
 		else if(tokenIs(XALAN_STATIC_UCODE_STRING("child")) == true)
 		{
+			axisType = XPathExpression::eMATCH_IMMEDIATE_ANCESTOR;
+
 			m_expression->appendOpCode(XPathExpression::eMATCH_IMMEDIATE_ANCESTOR);
 		}
 		else
@@ -2240,6 +2275,8 @@ XPathProcessorImpl::AbbreviatedNodeTestStep()
 	}
 	else if(tokenIs('/') == true)
 	{
+		axisType = XPathExpression::eMATCH_ANY_ANCESTOR;
+
 		m_expression->appendOpCode(XPathExpression::eMATCH_ANY_ANCESTOR);
 
 		nextToken();
@@ -2253,6 +2290,8 @@ XPathProcessorImpl::AbbreviatedNodeTestStep()
 
 		matchTypePos = m_expression->opCodeMapLength();
 
+		axisType = XPathExpression::eMATCH_IMMEDIATE_ANCESTOR;
+
 		m_expression->appendOpCode(XPathExpression::eMATCH_IMMEDIATE_ANCESTOR);
 	}
 
@@ -2260,7 +2299,7 @@ XPathProcessorImpl::AbbreviatedNodeTestStep()
 	// This will be replaced by the right value.
 	m_expression->appendOpCode(XPathExpression::eENDOP);
 
-	NodeTest();
+	NodeTest(axisType);
 
 	m_expression->updateOpCodeLengthAfterNodeTest(opPos);
 

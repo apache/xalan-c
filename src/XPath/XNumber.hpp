@@ -85,6 +85,7 @@ public:
 	 */
 	XNumber(
 			XPathEnvSupport&	envSupport,
+			XPathSupport&		support,
 			double				val);
 
 	XNumber(const XNumber&	source);
@@ -129,9 +130,6 @@ public:
 
 	virtual void
 	ProcessXObjectTypeCallback(XObjectTypeCallback&		theCallbackObject) const;
-
-	virtual bool
-	equals(const XObject&	theRHS) const;
 
 private:
 
