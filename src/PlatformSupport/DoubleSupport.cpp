@@ -58,6 +58,10 @@
 
 
 
+#if !defined(XALAN_NO_STD_NUMERIC_LIMITS)
+#include <limits>
+#endif
+
 #include <cmath>
 
 
@@ -66,6 +70,7 @@
 #include "XalanUnicode.hpp"
 
 
+#if defined(XALAN_NO_STD_NUMERIC_LIMITS)
 // To circumvent an OS/390 problem
 #if !defined(OS390)
 #define XALAN_POSITIVE_INFINITY HUGE_VAL
@@ -83,6 +88,14 @@ static const union
 
 const double	DoubleSupport::s_NaN = sqrt(-2.01);
 const double	DoubleSupport::s_positiveInfinity = XALAN_POSITIVE_INFINITY;
+
+#else
+
+const double	DoubleSupport::s_NaN = std::numeric_limits<double>::signaling_NaN();
+const double	DoubleSupport::s_positiveInfinity = std::numeric_limits<double>::infinity();
+
+#endif
+
 const double	DoubleSupport::s_negativeInfinity = -DoubleSupport::s_positiveInfinity;
 const double	DoubleSupport::s_positiveZero = 0.0;
 
