@@ -69,17 +69,19 @@
 
 
 /**
- * Structure to help in converting integers to roman numerals
+ * Structure to help in converting integrals to roman numerals
  */
 struct XALAN_XSLT_EXPORT DecimalToRoman 
 {
 	enum { eMaxLetter = 2 };
 
-	long			m_postValue;
+	typedef unsigned long	ValueType;
+
+	ValueType		m_postValue;
 
 	XalanDOMChar	m_postLetter[eMaxLetter + 1];
 
-	long			m_preValue;
+	ValueType		m_preValue;
 
 	XalanDOMChar	m_preLetter[eMaxLetter + 1];
 };
