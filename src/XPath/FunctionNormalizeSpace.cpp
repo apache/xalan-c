@@ -174,20 +174,15 @@ FunctionNormalizeSpace::normalize(
 {
 	const unsigned int	theStringLength = length(theString);
 
-	// A vector to contain the new characters.  We'll use it to construct
-	// the result string.
-#if defined(XALAN_NO_NAMESPACES)
-	typedef vector<XalanDOMChar>		VectorType;
-#else
-	typedef std::vector<XalanDOMChar>	VectorType;
-#endif
+	// A string contain the result...
+	XPathExecutionContext::GetAndReleaseCachedString	theResult(executionContext);
 
-	// A vector to contain the result.
-	VectorType	theVector;
+	XalanDOMString&		theNewString = theResult.get();
+	assert(length(theNewString) == 0);
 
 	// The result string can only be as large as the source string, so
 	// just reserve the space now.
-	theVector.reserve(theStringLength);
+	reserve(theNewString, theStringLength);
 
 	bool	fPreviousIsSpace = false;
 
@@ -204,10 +199,10 @@ FunctionNormalizeSpace::normalize(
 			// space character (not the original character).
 			if (fPreviousIsSpace == false)
 			{
-				if (theVector.size() > 0 &&
+				if (length(theNewString) > 0 &&
 					i < theStringLength - 1)
 				{
-					theVector.push_back(XalanDOMChar(XalanUnicode::charSpace));
+					append(theNewString, XalanDOMChar(XalanUnicode::charSpace));
 				}
 
 				fPreviousIsSpace = true;
@@ -215,28 +210,29 @@ FunctionNormalizeSpace::normalize(
 		}
 		else
 		{
-			theVector.push_back(theCurrentChar);
+			append(theNewString, theCurrentChar);
 
 			fPreviousIsSpace = false;
 		}
 	}
 
-	const VectorType::size_type		theSize = theVector.size();
+	const unsigned int	theNewStringLength = length(theNewString);
 
-	if (theSize == 0)
+	if (theNewStringLength == 0)
 	{
 		return executionContext.getXObjectFactory().createString(XalanDOMString());
 	}
 	else
 	{
-		if (isXMLWhitespace(theVector.back()) == true)
+		// We may have a space character at end, since we don't look ahead,
+		// so removed it now...
+		if (charAt(theNewString, theNewStringLength - 1) ==
+				XalanDOMChar(XalanUnicode::charSpace))
 		{
-			return executionContext.getXObjectFactory().createString(&*theVector.begin(), theSize - 1);
+			theNewString.erase(theNewStringLength - 1, 1);
 		}
-		else
-		{
-			return executionContext.getXObjectFactory().createString(&*theVector.begin(), theSize);
-		}
+
+		return executionContext.getXObjectFactory().createString(theResult);
 	}
 }
 
