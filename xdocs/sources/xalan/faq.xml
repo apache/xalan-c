@@ -65,12 +65,12 @@ implementation.</p>
 Xalan, using the internal DOM implementation is the best approach.</p>
 
 	  <p>In cases where you want to modify the DOM document on the fly,
-wyou should use the Xerces DOM as the base document.  You can wrap the 
-Xerces DOM in a wrapper (see  <link anchor="xercesdomwrapperparsedsource">
+you should use the Xerces DOM as the base document.  You can wrap the 
+Xerces DOM in a wrapper (see  <link idref="usagepatterns" anchor="xercesdomwrapperparsedsource">
 passing in a Xerces DOM</link>) to then use as an input to a Xalan
 transformation.  Alternatively you can output the result of
 a transformation to a Xerces DOM document (see 
-<link anchor="dom">working with DOM input and output</link>).  
+<link idref="usagepatterns" anchor="dom">working with DOM input and output</link>).  
 In either case, the Xerces 
 document can be freely modified.  However, after you modify the document,
 you need to re-build the wrapper so that any changes are replicated in the
@@ -133,7 +133,7 @@ Xalan wrappers.</p></a>
             <jump href="http://www.gnu.org/software/tar/tar.html">
             http://www.gnu.org/software/tar/tar.html</jump>.  For additional
             background information on this problem, see the online manual
-            <jump href="http://www.gnu.org/manual/tar/html_node/tar_117.html#SEC112">
+            <jump href="http://www.gnu.org/manual/tar/html_chapter/tar_8.html#SEC112">
             GNU tar and POSIX tar </jump> for the utility.
          </p>
       </a>
