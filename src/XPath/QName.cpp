@@ -88,6 +88,10 @@ QName::getNamespaceForPrefix(
 	{
 		nsURI = &DOMServices::s_XMLNamespaceURI;
 	}
+	else if (::equals(prefix, DOMServices::s_XMLNamespace))
+	{
+		nsURI = &DOMServices::s_XMLNamespacePrefixURI;
+	}
 	else
 	{
 		if (reverse)

@@ -94,6 +94,7 @@ public:
 	static const XalanDOMString&	s_XMLNamespace;
 	static const XalanDOMString&	s_XMLNamespaceWithSeparator;
 	static const XalanDOMString&	s_XMLNamespaceSeparatorString;
+	static const XalanDOMString&	s_XMLNamespacePrefixURI;
 
 	static const unsigned int&		s_XMLStringLength;
 	static const unsigned int&		s_XMLStringWithSeparatorLength;
@@ -101,6 +102,8 @@ public:
 	static const unsigned int&		s_XMLNamespaceLength;
 	static const unsigned int&		s_XMLNamespaceWithSeparatorLength;
 	static const unsigned int&		s_XMLNamespaceSeparatorStringLength;
+	static const unsigned int&		s_XMLNamespacePrefixURILength;
+
 
 	// A dummy string to return when we need an emtpy string...
 	static const XalanDOMString		s_emptyString;

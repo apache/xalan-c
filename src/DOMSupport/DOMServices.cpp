@@ -94,6 +94,7 @@ static XalanDOMString	s_XMLNamespaceURI;
 static XalanDOMString	s_XMLNamespace;
 static XalanDOMString	s_XMLNamespaceWithSeparator;
 static XalanDOMString	s_XMLNamespaceSeparatorString;
+static XalanDOMString	s_XMLNamespacePrefixURI;
 
 
 
@@ -103,6 +104,7 @@ const XalanDOMString&	DOMServices::s_XMLNamespaceURI = ::s_XMLNamespaceURI;
 const XalanDOMString&	DOMServices::s_XMLNamespace = ::s_XMLNamespace;
 const XalanDOMString&	DOMServices::s_XMLNamespaceWithSeparator = ::s_XMLNamespaceWithSeparator;
 const XalanDOMString&	DOMServices::s_XMLNamespaceSeparatorString  = ::s_XMLNamespaceSeparatorString;
+const XalanDOMString&	DOMServices::s_XMLNamespacePrefixURI = ::s_XMLNamespacePrefixURI;
 const XalanDOMString	DOMServices::s_emptyString;
 
 
@@ -116,6 +118,7 @@ static unsigned int		s_XMLNamespaceURILength = 0;
 static unsigned int		s_XMLNamespaceLength = 0;
 static unsigned int		s_XMLNamespaceWithSeparatorLength = 0;
 static unsigned int		s_XMLNamespaceSeparatorStringLength = 0;
+static unsigned int		s_XMLNamespacePrefixURILength = 0;
 
 
 
@@ -185,6 +188,7 @@ DOMServices::initialize()
 	::s_XMLNamespace = XALAN_STATIC_UCODE_STRING("xmlns");
 	::s_XMLNamespaceWithSeparator = XALAN_STATIC_UCODE_STRING("xmlns:");
 	::s_XMLNamespaceSeparatorString = XALAN_STATIC_UCODE_STRING(":");
+	::s_XMLNamespacePrefixURI = XALAN_STATIC_UCODE_STRING("http://www.w3.org/2000/xmlns/");
 
 	::s_XMLStringLength = length(DOMServices::s_XMLString);
 	::s_XMLStringWithSeparatorLength = length(DOMServices::s_XMLStringWithSeparator);
@@ -192,6 +196,7 @@ DOMServices::initialize()
 	::s_XMLNamespaceLength = length(DOMServices::s_XMLNamespace);
 	::s_XMLNamespaceWithSeparatorLength = length(DOMServices::s_XMLNamespaceWithSeparator);
 	::s_XMLNamespaceSeparatorStringLength = length(DOMServices::s_XMLNamespaceSeparatorString);
+	::s_XMLNamespacePrefixURILength = length(DOMServices::s_XMLNamespacePrefixURI);
 }
 
 
