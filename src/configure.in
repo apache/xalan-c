@@ -12,8 +12,6 @@ AC_CHECK_LIB(m, floor)
 
 # Check for gcc problems
 
-if test "$CXX" = "g++"; then
-
 AC_MSG_CHECKING([whether -fno-elide-constructors works correctly])
 
 old_cxxflags=$CXXFLAGS
@@ -26,8 +24,6 @@ AC_TRY_COMPILE([#include <vector>],
   [AC_MSG_RESULT([yes])], 
   CXXFLAGS=$old_cxxflags
   [AC_MSG_RESULT([no])]);
-
-fi
 
 
 dnl

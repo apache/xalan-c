@@ -1051,10 +1051,8 @@ fi
 
 # Check for gcc problems
 
-if test "$CXX" = "g++"; then
-
 echo $ac_n "checking whether -fno-elide-constructors works correctly""... $ac_c" 1>&6
-echo "configure:1058: checking whether -fno-elide-constructors works correctly" >&5
+echo "configure:1056: checking whether -fno-elide-constructors works correctly" >&5
 
 old_cxxflags=$CXXFLAGS
 CXXFLAGS="$CXXFLAGS -fno-elide-constructors"
@@ -1068,14 +1066,14 @@ cross_compiling=$ac_cv_prog_cxx_cross
 
 
 cat > conftest.$ac_ext <<EOF
-#line 1072 "configure"
+#line 1070 "configure"
 #include "confdefs.h"
 #include <vector>
 int main() {
 
 ; return 0; }
 EOF
-if { (eval echo configure:1079: \"$ac_compile\") 1>&5; (eval $ac_compile) 2>&5; }; then
+if { (eval echo configure:1077: \"$ac_compile\") 1>&5; (eval $ac_compile) 2>&5; }; then
   rm -rf conftest*
   echo "$ac_t""yes" 1>&6
 else
@@ -1087,8 +1085,6 @@ else
 fi
 rm -f conftest*;
 
-fi
-
 
 
 
@@ -1098,7 +1094,7 @@ else { echo "configure: error: can not run $ac_config_sub" 1>&2; exit 1; }
 fi
 
 echo $ac_n "checking host system type""... $ac_c" 1>&6
-echo "configure:1102: checking host system type" >&5
+echo "configure:1098: checking host system type" >&5
 
 host_alias=$host
 case "$host_alias" in
