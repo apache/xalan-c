@@ -168,8 +168,8 @@ main(
 	if (getParams(argc, argv) == true)
 	{
 		// Defined root for performance directory. Based on PD's machine. 
-		const XalanDOMString	confDir(XALAN_STATIC_UCODE_STRING("\\xsl-test\\conf\\"));
-		const XalanDOMString	outDir(XALAN_STATIC_UCODE_STRING("\\xsl-test\\cplus-mem\\"));
+		const XalanDOMString	confDir(XALAN_STATIC_UCODE_STRING("d:\\xslt\\xsl-test\\conf\\"));
+		const XalanDOMString	outDir(XALAN_STATIC_UCODE_STRING("d:\\xslt\\xsl-test\\cplus-mem\\"));
 
 		FileUtility			f;
 
@@ -205,10 +205,15 @@ main(
 							//logFile.logTestCaseInit(files[i]);
 							cout << files[i] << endl;
 
-							const XalanDOMString	theXMLFile= confDir + dirs[j] + pathSep + files[i];
-							const XalanDOMString	outFile = outDir + dirs[j] + pathSep + files[i];
-							const XalanDOMString	theXSLFile = f.GenerateFileName(theXMLFile,"xsl");
-							const XalanDOMString	theOutputFile = f.GenerateFileName(outFile, "out");
+					//		const XalanDOMString	theXMLFile= confDir + dirs[j] + pathSep + files[i];
+					//		const XalanDOMString	outFile = outDir + dirs[j] + pathSep + files[i];
+					//		const XalanDOMString	theXSLFile = f.GenerateFileName(theXMLFile,"xsl");
+					//		const XalanDOMString	theOutputFile = f.GenerateFileName(outFile, "out");
+
+							const XalanDOMString  theXSLFile= confDir + dirs[j] + pathSep + files[i];
+							const XalanDOMString  theXMLFile = f.GenerateFileName(theXSLFile,"xml");
+							const XalanDOMString  theOutput =  outDir + dirs[j] + pathSep + files[i]; 
+							const XalanDOMString  theOutputFile = f.GenerateFileName(theOutput, "out");
 
 							// Do a total end to end transform with no pre parsing of either xsl or xml files.
 							XSLTResultTarget		theResultTarget(theOutputFile);
@@ -216,7 +221,7 @@ main(
 							const XSLTInputSource	xslInputSource(c_wstr(theXSLFile));
 							const XSLTInputSource	xmlInputSource(c_wstr(theXMLFile));
 
-							int		theResult =
+							int	theResult =
 								transformEngine.transform(xmlInputSource, xslInputSource, theResultTarget);
 
 							if(theResult != 0)
