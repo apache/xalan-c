@@ -1906,7 +1906,7 @@ StylesheetExecutionContextDefault::getNodeSetByKey(
 				getPrefixResolver();
 	assert(resolver != 0);
 
-	XalanQNameByValue	theQName = m_xpathExecutionContextDefault.getScratchQName();
+	XalanQNameByValue&	theQName = m_xpathExecutionContextDefault.getScratchQName();
 
 	theQName.set(name, resolver, locator);
 
