@@ -127,7 +127,11 @@ XPathFunctionTable::InstallFunction(
 		assert(CollectionType::size_type((*i).second) < m_FunctionCollection.size());
 
 		// It is, so delete the old one, and add the new one...
+#if defined(XALAN_CANNOT_DELETE_CONST)
+		delete (Function*)m_FunctionCollection[(*i).second];
+#else
 		delete m_FunctionCollection[(*i).second];
+#endif
 
 		m_FunctionCollection[(*i).second] = theFunction.clone();
 	}
@@ -165,7 +169,11 @@ XPathFunctionTable::UninstallFunction(const XalanDOMString&		theFunctionName)
 #endif
 
 		// Delete the function...
+#if defined(XALAN_CANNOT_DELETE_CONST)
+		delete (Function*)m_FunctionCollection[(*i).second];
+#else
 		delete m_FunctionCollection[(*i).second];
+#endif
 
 		// Set the entry in the table to 0...
 		m_FunctionCollection[(*i).second] = 0;
