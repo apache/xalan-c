@@ -383,6 +383,12 @@ public:
 		m_processAliases = fValue;
 	}
 
+	NamespacesMapType::size_type
+	getNamespaceDeclarationsCount() const
+	{
+		return m_namespaceDeclarations.size();
+	}
+
 private:
 
 	/**
