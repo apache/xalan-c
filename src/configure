@@ -1332,19 +1332,19 @@ cppflags=${CPPFLAGS}
 cflags=${CFLAGS}
 
 
-ldflags=${LDCFLAGS}
+ldflags=${LDFLAGS}
 
 
 libs=${LIBS}
 
 
-uselibwww=${USELIBWWW}
-
-
-messageloader=${MESSAGELOADER}
-
-
 transcoder=${TRANSCODER}
+
+
+threads=${THREADS}
+
+
+bitstobuild=${BITSTOBUILD}
 
 
 trap '' 1 2 15
@@ -1516,6 +1516,8 @@ s%@libs@%$libs%g
 s%@uselibwww@%$uselibwww%g
 s%@messageloader@%$messageloader%g
 s%@transcoder@%$transcoder%g
+s%@bitstobuild@%$bitstobuild%g
+s%@threads@%$threads%g
 
 CEOF
 EOF

@@ -58,6 +58,9 @@
 # 
 #
 # $Log$
+# Revision 1.10  2002/08/05 20:33:54  dbertoni
+# Changes to implement 32 and 64-bit builds.
+#
 # Revision 1.9  2002/08/01 18:36:38  dbertoni
 # Added support for Intel compiler.
 #
@@ -112,6 +115,7 @@ usage()
     echo "       -x <C++ compiler name> (e.g. g++, CC, xlC)"
     echo "       -d (specifies that you want to build debug version)"
     echo "       -r <thread option> can be 'pthread' or 'dce' (only used on HP-11)"
+    echo "       -b <bitsToBuild> (accepts '64', '32')"
     echo "       -l <extra linker options>"
     echo "       -z <extra compiler options>"
     echo "       -C <any one extra configure options>"
@@ -141,7 +145,7 @@ if test $1 = "-h"; then
 fi
 
 # Get the command line parameters
-set -- `getopt p:c:x:dm:n:t:r:l:z:h $*`
+set -- `getopt p:c:x:dm:n:t:r:l:z:h:b $*`
 if [ $? != 0 ]
    then
    usage
@@ -150,41 +154,49 @@ fi
 
 # Set up the default values for each parameter
 debug=off                # by default debug is off
-msgloader=inmem          # by default use native transcoder
+bitsToBuild=32           # by default 32 bit build assumed
 
 for i in $*
    do
    case $i in
    -p) 
         platform=$2; shift 2;;
-   
+
    -c) 
         ccompiler=$2; shift 2;;
-   
+
    -x) 
         cppcompiler=$2; shift 2;;
-   
+
    -d) 
         debug=on; shift;;
-   
+
    -r) 
         thread=$2; shift 2;;
-   
-   -l) 
-        linkeroption=$2; shift 2;;
-   
+
+   -b)
+        bitsToBuild=$2; shift 2;;
+
+   -l)
+        linkeroptions="$linkeroptions $2"; shift 2;;
+
    -z) 
         compileroptions="$compileroptions $2"; shift 2;;
-   
+
    -C)
         configureoptions="$configureoptions $2"; shift 2;;
 
    -h) 
         usage
         exit ${ERROR_EXIT_CODE};; 
-   
+
    --) 
         shift; break;; 
+
+   *)
+       echo "unknown option $1"
+       usage
+       exit ${ERROR_EXIT_CODE};;
    esac
 done
 
@@ -193,8 +205,9 @@ echo "Platform: $platform"
 echo "C Compiler: $ccompiler"
 echo "C++ Compiler: $cppcompiler"
 echo "Extra compile options: $compileroptions"
-echo "Extra link options: $linkeroption"
+echo "Extra link options: $linkeroptions"
 echo "Thread option: $thread"
+echo "bitsToBuild option: $bitsToBuild"
 echo "Extra configure options: $configureoptions"
 
 
@@ -225,6 +238,62 @@ else
 fi
 
 
+
+#
+# Check for the bitsToBuild option
+#
+
+#
+#  aix | linux | hp-11 | solaris |
+#  hp-10 | freebsd | irix | openserver | unixware | os400 | ptx | tru64 | macosx
+#
+if test $bitsToBuild = 64; then
+    bitstobuildDefines=" -DXML_BITSTOBUILD_64 "
+    bitstobuildLink=" "
+    if test $platform; then
+        case $platform in
+           solaris)
+              bitstobuildDefines=" $bitstobuildDefines -xarch=v9 "
+              bitstobuildLink=" -xarch=v9 " ;;
+           aix)
+              bitstobuildDefines=" $bitstobuildDefines -q64 -qwarn64 " ;;
+              bitstobuildLink=" -X64 " ;;
+           hp-11)
+              bitstobuildDefines=" $bitstobuildDefines +DA2.0W "
+              bitstobuildLink=" +DA2.0W " ;;
+           linux)
+              bitstobuildDefines=" $bitstobuildDefines " ;;
+           *)
+            ;;
+        esac
+    fi
+elif test $bitsToBuild = 32; then
+    bitstobuildDefines=" "
+    bitstobuildLink=" "
+    if test $platform; then
+        case $platform in
+           solaris)
+		      ;;
+           aix)
+		      ;;
+           hp-11)
+              bitstobuildDefines=" $bitstobuildDefines +DAportable "
+           linux)
+              ;;
+           *)
+            ;;
+        esac
+    fi
+else
+    echo "I do not recognize the bitsToBuild '$bitsToBuild'. Please type '${0} -h' for help."
+    exit ${ERROR_EXIT_CODE};
+fi
+
+#
+# to export in case it is needed in Makefile.in/Makefine.incl
+#
+BITSTOBUILD=$bitsToBuild
+export BITSTOBUILD
 
 #
 # Check for the threading option only for hp-11
@@ -280,11 +349,14 @@ export CXX
 # Set the extra C and C++ compiler flags
 #
 
-CXXFLAGS="$compileroptions $debugflag $transcodingDefines $threadingDefines"
+CXXFLAGS="$compileroptions $debugflag $transcodingDefines $threadingDefines $bitstobuildDefines "
 export CXXFLAGS
 
-CFLAGS="$compileroptions $debugflag $transcodingDefines $threadingDefines"
+CFLAGS="$compileroptions $debugflag $transcodingDefines $threadingDefines $bitstobuildDefines "
 export CFLAGS
+
+LDFLAGS="$LDFLAGS $linkeroptions $bitstobuildLink"
+export LDFLAGS
 
 LIBS="$transcodingLibs $threadingLibs "
 export LIBS

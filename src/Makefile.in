@@ -136,27 +136,42 @@ CC  = @cc@
 CXX = @cxx@
 CXXFLAGS = @cxxflags@
 PREFIX = @prefix@
+LDFLAGS = @ldflags@
 
 #=============== LINUX SPECIFIC OPTIONS =========================
 
 ifeq ($(PLATFORM), LINUX)
 
   SUPPORTED = TRUE
-  PLATFORM_COMPILE_OPTIONS = -fpic -Wall -D${PLATFORM} -D_REENTRANT
   ALLLIBS = ${LIBS} -L/usr/lib
   SHLIBSUFFIX=.so
+  PIC_OPTION=
+
+  ifeq (${CXX}, icpc)
+
+    PIC_OPTION=-KPIC
+    PLATFORM_COMPILE_OPTIONS = -w1 -Xa -mp -prec_div
+
+  else
+
+    PIC_OPTION=-fPIC
+    PLATFORM_COMPILE_OPTIONS = -Wall
+
+  endif
+
+  PLATFORM_COMPILE_OPTIONS += ${PIC_OPTION} -D${PLATFORM} -D_REENTRANT
 
   # We need the ICU library if we are using the ICUBridge
   ifdef XALAN_USE_ICU
-  LD_RPATH_PRE=	-Wl,-rpath,
-  PLATFORM_LIB_LINK_OPTIONS=$(LD_RPATH_PRE)${ICUROOT}/lib 
+    LD_RPATH_PRE= -Wl,-rpath,
+    PLATFORM_LIB_LINK_OPTIONS=$(LD_RPATH_PRE)${ICUROOT}/lib 
   endif
 
-  EXTRA_LINK_OPTIONS=-lc
+  EXTRA_LINK_OPTIONS=
   CC1 = $(CXX) $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS)
   CC4 = $(CC) $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS)
-  MAKE_SHARED = ${CXX} $(CXXFLAGS) -D${PLATFORM} -shared -fpic
-  LINK =  g++ -D${PLATFORM} -fpic
+  MAKE_SHARED = ${CXX} $(CXXFLAGS) -D${PLATFORM} -shared ${PIC_OPTION}
+  LINK = $(CXX) -D${PLATFORM} ${PIC_OPTION}
 
 endif
 
@@ -165,14 +180,14 @@ endif
 ifeq ($(PLATFORM), HPUX)
 
   SUPPORTED = TRUE
-  PLATFORM_COMPILE_OPTIONS = +Z -D${PLATFORM} -D_THREAD_SAFE +DAportable
+  PLATFORM_COMPILE_OPTIONS = +Z -D${PLATFORM} -D_THREAD_SAFE
   PLATFORM_CXX_COMPILE_OPTIONS = +p -mt -Aa
   ALLLIBS = ${LIBS}
   SHLIBSUFFIX=.sl
   CC1 = $(CXX) $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS) $(PLATFORM_CXX_COMPILE_OPTIONS)
   CC4 = $(CC) $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS)
-  MAKE_SHARED = $(CXX) -b +Z -Wl,+s
-  LINK = $(CXX) $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS) $(PLATFORM_CXX_COMPILE_OPTIONS) -Wl,+s
+  MAKE_SHARED = $(CXX) -b +Z ${LDFLAGS} -Wl,+s
+  LINK = $(CXX) $(CXXFLAGS) ${LDFLAGS} $(PLATFORM_COMPILE_OPTIONS) $(PLATFORM_CXX_COMPILE_OPTIONS) -Wl,+s
 
 endif
 
@@ -253,8 +268,10 @@ else
 	CC2 = $(CXX) $(PLATFORM_COMPILE_OPTIONS) -I${STLPORTROOT}/stlport
 endif
     CC4 = $(CC) $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS)
-	MAKE_SHARED = makeC++SharedLib_r -p 5000 -brtl
-	LINK = $(CXX) -qnotempinc $(CXXFLAGS)  -brtl $(PLATFORM_COMPILE_OPTIONS)
+
+	MAKE_SHARED = makeC++SharedLib_r -p 5000 -brtl ${bitstobuildLink}
+
+	LINK = $(CXX) -qnotempinc $(CXXFLAGS)  -brtl $(PLATFORM_COMPILE_OPTIONS) ${bitstobuildLink}
 
   endif
 
@@ -325,7 +342,7 @@ endif
 ifeq ($(PLATFORM), OS390)
   ALLLIBS += $(XERCESCROOT)/lib/libxerces-c1_7_0.x
 else
-  ALLLIBS += -L$(XERCESCROOT)/lib -lxerces-c1_7_0
+  ALLLIBS += -L$(XERCESCROOT)/lib -lxerces-c
 endif
 
 # We need the ICU library if we are using the ICUBridge

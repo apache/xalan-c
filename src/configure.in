@@ -60,11 +60,20 @@ AC_SUBST(cppflags)
 cflags=${CFLAGS}
 AC_SUBST(cflags)
 
-ldflags=${LDCFLAGS}
+ldflags=${LDFLAGS}
 AC_SUBST(ldflags)
 
 libs=${LIBS}
 AC_SUBST(libs)
+
+transcoder=${TRANSCODER}
+AC_SUBST(transcoder)
+
+threads=${THREADS}
+AC_SUBST(threads)
+
+bitstobuild=${BITSTOBUILD}
+AC_SUBST(bitstobuild)
 
 dnl output the Makefiles
 +AC_OUTPUT([Makefile])
