@@ -270,7 +270,7 @@ XMLFileReporter::logTestFileInit(const XalanDOMString& msg)
 
 
 void 
-XMLFileReporter::logTestFileClose(const XalanDOMString& msg, const XalanDOMString& result)
+XMLFileReporter::logTestFileClose(const XalanDOMString& /* msg */, const XalanDOMString& /* result */)
 {
     if (isReady())
     {
@@ -295,7 +295,7 @@ XMLFileReporter::logTestCaseInit(const XalanDOMString& msg)
 
 
 void 
-XMLFileReporter::logTestCaseClose(const XalanDOMString& msg, const XalanDOMString& result)
+XMLFileReporter::logTestCaseClose(const XalanDOMString& /* msg */, const XalanDOMString& /* result */)
 {
     if (isReady())
     {
@@ -335,20 +335,17 @@ void XMLFileReporter::addMetricToAttrs(char* desc, double theMetric, Hashtable& 
 }
 
 void 
-XMLFileReporter::logElementWAttrs(int level, const XalanDOMString& element, Hashtable attrs, const XalanDOMString& msg)
+XMLFileReporter::logElementWAttrs(int /* level */, const XalanDOMString& element, Hashtable attrs, const XalanDOMString& msg)
 {
-	if (isReady()
-        && (element.empty() == 0)
-        && (attrs.empty() == 0)
-       )
+	if (isReady() && !element.empty()&& !attrs.empty())
     {
-		char tmp[20];
-		sprintf(tmp, "%d", level);
+//		char tmp[20];
+//		sprintf(tmp, "%d", level);
 //
 //		Took out this level attribute cuz we don't use it.
-//      printToFile("<" + escapestring(element) + " " + ATTR_LEVEL + "=\""
+//      printToFile("<" + element + " " + ATTR_LEVEL + "=\""
 //                      + tmp + "\"");
-        printToFile("<" + escapestring(element) + " ");
+        printToFile("<" + element + " ");
 	
 		Hashtable::iterator theEnd = attrs.end();	
     
@@ -362,34 +359,28 @@ XMLFileReporter::logElementWAttrs(int level, const XalanDOMString& element, Hash
         printToFile(XalanDOMString(">"));
         if (msg.empty() != 0)
             printToFile(escapestring(msg));
-        printToFile("</" + escapestring(element) + ">");
+        printToFile("</" + element + ">");
     }
 }
 
 void 
 XMLFileReporter::logElement(const XalanDOMString& element, const XalanDOMString& msg)
 {
-	if (isReady()
-        && (element.empty() == 0)
-        && (msg.empty() == 0)
-       )
+	if (isReady() && !element.empty() && !msg.empty())
     {
-
-	const XalanDOMString escElement(escapestring(element));
-	const XalanDOMString theElement("<" + escElement + ">" + msg + "</" + escElement + ">");
-	printToFile(theElement);
-
+		printToFile("<" + element + ">");
+		printToFile(escapestring(msg));
+		printToFile("</" + element + ">");
     }
 }
 
 void 
 XMLFileReporter::logStatistic (int level, long lVal, double dVal, const XalanDOMString& msg)
 {
- 	char tmp[20];
-
-
 	if (isReady())
     {
+		char tmp[40];
+
 		sprintf(tmp, "%d", level);
         printToFile(STATISTIC_HDR + tmp + "\" " + ATTR_DESC + "=\"" + escapestring(msg) + "\">");
 		
@@ -551,6 +542,32 @@ XMLFileReporter::logCheckErr(const XalanDOMString& comment)
 }
 
 
+
+static const XalanDOMChar	theAmpersandString[] =
+{
+	XalanUnicode::charAmpersand,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_m,
+	XalanUnicode::charLetter_p,
+	XalanUnicode::charSemicolon,
+	0
+};
+
+
+
+static const XalanDOMChar	theApostropheString[] =
+{
+	XalanUnicode::charAmpersand,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_p,
+	XalanUnicode::charLetter_o,
+	XalanUnicode::charLetter_s,
+	XalanUnicode::charSemicolon,
+	0
+};
+
+
+
 static const XalanDOMChar	theLessThanString[] =
 {
 	XalanUnicode::charAmpersand,
@@ -559,6 +576,7 @@ static const XalanDOMChar	theLessThanString[] =
 	XalanUnicode::charSemicolon,
 	0
 };
+
 
 
 static const XalanDOMChar	theGreaterThanString[] =
@@ -572,14 +590,29 @@ static const XalanDOMChar	theGreaterThanString[] =
 
 
 
+static const XalanDOMChar	theQuoteString[] =
+{
+	XalanUnicode::charAmpersand,
+	XalanUnicode::charLetter_q,
+	XalanUnicode::charLetter_u,
+	XalanUnicode::charLetter_o,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charSemicolon,
+	0
+};
+
+
+
 XalanDOMString
 XMLFileReporter::escapestring(const XalanDOMString&  s)
 {
     XalanDOMString		sb;
 
-    const unsigned int	length = s.length();
+    const XalanDOMString::size_type		length = s.length();
 
-    for (unsigned int i = 0; i < length; i++)
+	sb.reserve(length);
+
+    for (XalanDOMString::size_type i = 0; i < length; i++)
     {
         const XalanDOMChar	ch = charAt(s, i);
 
@@ -591,8 +624,18 @@ XMLFileReporter::escapestring(const XalanDOMString&  s)
         {
 			append(sb, theGreaterThanString);
         }
-        // Note: Skipping escaping of UTF-16 surrogates and & ampersands, since 
-        //  I don't think we'll be outputting them or they won't affect our output
+		else if (XalanUnicode::charAmpersand == ch) 
+		{
+			append(sb, theAmpersandString);
+		}
+		else if (XalanUnicode::charQuoteMark == ch) 
+		{
+			append(sb, theQuoteString);
+		}
+		else if (XalanUnicode::charApostrophe == ch) 
+		{
+			append(sb, theApostropheString);
+		}
         else
         {
             append(sb, ch);
