@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2003 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -81,6 +81,10 @@
 
 #include <xalanc/PlatformSupport/DOMStringHelper.hpp>
 #include <xalanc/PlatformSupport/PrefixResolver.hpp>
+
+
+
+#include <xalanc/DOMSupport/DOMServices.hpp>
 
 
 
@@ -323,7 +327,7 @@ FormatterToDOM::createElement(
 	{
 		// Check for the namespace...
 		const XalanDOMString* const		theNamespace =
-					getNamespaceForPrefix(theElementName, *m_prefixResolver, m_buffer2);
+					DOMServices::getNamespaceForPrefix(theElementName, *m_prefixResolver, false, m_buffer2);
 
 		if (theNamespace == 0 || length(*theNamespace) == 0)
 		{
@@ -368,7 +372,7 @@ FormatterToDOM::addAttributes(
 
 			// Check for the namespace...
 			const XalanDOMString* const		theNamespace =
-					getNamespaceForPrefix(theName, *m_prefixResolver, m_buffer2);
+				DOMServices::getNamespaceForPrefix(theName, *m_prefixResolver, true, m_buffer2);
 
 			assign(m_buffer1, theName);
 			assign(m_buffer2, attrs.getValue(i));
@@ -382,33 +386,6 @@ FormatterToDOM::addAttributes(
 				theElement->setAttributeNS(*theNamespace, m_buffer1, m_buffer2);
 			}
 		}
-	}
-}
-
-
-
-const XalanDOMString*
-FormatterToDOM::getNamespaceForPrefix(
-			const XalanDOMChar*		theName,
-			const PrefixResolver&	thePrefixResolver,
-			XalanDOMString&			thePrefix)
-{
-	const XalanDOMString::size_type		theLength = length(theName);
-	const XalanDOMString::size_type		theColonIndex = indexOf(theName, XalanUnicode::charColon);
-
-	if (theColonIndex == theLength)
-	{
-		clear(thePrefix);
-
-		return thePrefixResolver.getNamespaceForPrefix(s_emptyString);
-	}
-	else
-	{
-		// Get the prefix from theName...
-		assign(thePrefix, theName, theColonIndex);
-		assert(length(thePrefix) != 0);
-
-		return thePrefixResolver.getNamespaceForPrefix(thePrefix);
 	}
 }
 

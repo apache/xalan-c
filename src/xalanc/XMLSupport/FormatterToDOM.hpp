@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2003 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -243,12 +243,6 @@ private:
 	addAttributes(
 			XalanElement*		theElement,
 			AttributeListType&	attrs);
-
-	const XalanDOMString*
-	getNamespaceForPrefix(
-			const XalanDOMChar*		theName,
-			const PrefixResolver&	thePrefixResolver,
-			XalanDOMString&			thePrefix);
 
 
 	// Data members...
