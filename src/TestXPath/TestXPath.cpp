@@ -1278,7 +1278,7 @@ RunTests(
 
 int
 main(int			/* argc */,
-	 const char*	/* argv[] */)
+	 const char*	/* argv */ [])
 {
 #if !defined (XALAN_NO_NAMESPACES)
 	using std::cout;
