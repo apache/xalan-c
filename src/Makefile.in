@@ -55,6 +55,9 @@
 # 
 #
 # $Log$
+# Revision 1.17  2000/10/02 13:38:39  auriemma
+# Added Solaris GCC support to makefile. This update was provided by Sean MacRoibeaird.
+#
 # Revision 1.16  2000/09/27 16:44:55  dbertoni
 # Output transcoding support.
 #
@@ -167,6 +170,28 @@ LINK =  g++ -D${PLATFORM} -fpic
 
 endif
 
+#=============== SOLARIS SPECIFIC OPTIONS =========================
+ifeq ($(PLATFORM), SOLARIS)
+
+SUPPORTED = TRUE
+PLATFORM_COMPILE_OPTIONS = -fPIC -instances=static -D${PLATFORM} -D_REENTRANT
+PLATFORM_COMPILE_OPTIONS += -DXALAN_CANNOT_MUTATE_ANONYMOUS_OBJECT
+ALLLIBS = ${LIBS} -L/usr/lib -L/usr/local/lib -lc
+SHLIBSUFFIX=.so
+
+# We need the ICU library if we are using the ICUBridge
+ifdef XALAN_USE_ICU
+LD_RPATH_PRE=  -Wl,-rpath,
+PLATFORM_LIB_LINK_OPTIONS=$(LD_RPATH_PRE)/usr/lib $(LD_RPATH_PRE)/usr/local/lib
+endif
+
+EXTRA_LINK_OPTIONS=-lc
+CC1 = $(CXX) $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS)
+MAKE_SHARED = ${CXX} $(CXXFLAGS) -D${PLATFORM} -shared -fPIC
+LINK =  g++ -D${PLATFORM} -fPIC
+
+endif
+
 #=============== AIX SPECIFIC OPTIONS =========================
 ifeq ($(PLATFORM), AIX)
 
@@ -189,7 +214,7 @@ endif
 
 ifndef SUPPORTED
 nogood:
-	@echo Linux and AIX are the only unix platforms supported.
+	@echo Linux Solaris and AIX are the only unix platforms supported.
 endif
 
 # We need the Xerces library
