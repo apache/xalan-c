@@ -97,7 +97,11 @@ public:
 
 	/**
 	 * Execute an XPath function object.  The function must return a valid
-	 * object.
+	 * object.  Extension functions should override this version of execute(),
+	 * rather than one of the other calls designed for a specific number of
+	 * arguments, since the extension function mechanism will call this
+	 * version first.  Extension functions that accept more than three
+	 * arguments _must_ override this version.
 	 *
 	 * @param executionContext executing context
 	 * @param context          current context node
@@ -195,9 +199,11 @@ public:
 protected:
 
 	/**
-	 * Create a copy of the function object.
+	 * Get the error message to report when
+	 * the function is called with the wrong
+	 * number of arguments.
 	 *
-	 * @return string function name
+	 * @return function error message
 	 */
 	virtual const XalanDOMString
 	getError() const = 0;
