@@ -547,23 +547,6 @@ XalanCopy(
 
 
 
-template<class InputIteratorType, class OutputIteratorType>
-inline OutputIteratorType
-XalanCopy(
-			InputIteratorType		begin,
-			InputIteratorType		end,
-			OutputIteratorType		iterator)
-{
-	for(; begin != end; ++iterator, ++begin)
-	{
-		*iterator = *begin;
-	}
-
-	return iterator;
-}
-
-
-
 template<class InputIteratorType, class OutputIteratorType, class UnaryFunction>
 inline OutputIteratorType
 XalanTransform(
