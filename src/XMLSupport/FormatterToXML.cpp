@@ -125,7 +125,7 @@ XalanDOMChar				FormatterToXML::s_lineSep = '\n';
 bool						FormatterToXML::s_javaEncodingIsISO = false; 
 
 
-const FormatterToXML::DOMCharBufferType::size_type	FormatterToXML::s_maxBufferSize = 8 * 1024;
+const FormatterToXML::DOMCharBufferType::size_type	FormatterToXML::s_maxBufferSize = 1024;
 
 
 FormatterToXML::FormatterToXML(
@@ -171,8 +171,8 @@ FormatterToXML::FormatterToXML(
 	m_standalone(standalone),
 	m_mediaType(mediaType),
 	m_attrSpecialChars(theDefaultAttrSpecialChars),
-	m_charBuf(s_maxBufferSize),
-	m_byteBuf(s_maxBufferSize),
+	m_charBuf(),
+	m_byteBuf(),
 	m_pos(0),
 	m_level(0),
 	m_elemStack()
@@ -196,6 +196,12 @@ FormatterToXML::FormatterToXML(
 		equals(m_encoding, s_asciiEncodingString) == true)
 	{
 		m_bytesEqualChars = true;
+
+		m_byteBuf.resize(s_maxBufferSize + 1);
+	}
+	else
+	{
+		m_charBuf.resize(s_maxBufferSize + 1);
 	}
 
 #if 0
@@ -561,7 +567,11 @@ FormatterToXML::accumDefaultEntity(
 void
 FormatterToXML::flushBytes()
 {
-	m_writer.write(&m_byteBuf[0], 0, m_pos);
+	assert(m_byteBuf.size() > 0 && m_byteBuf.size() > m_pos);
+
+	m_byteBuf[m_pos] = '\0';
+
+	m_writer.write(&m_byteBuf[0]);
 
 	m_pos = 0;
 }
@@ -571,7 +581,11 @@ FormatterToXML::flushBytes()
 void
 FormatterToXML::flushChars()
 {
-	m_writer.write(&m_charBuf[0], 0, m_pos);
+	assert(m_charBuf.size() > 0 && m_charBuf.size() > m_pos);
+
+	m_charBuf[m_pos] = 0;
+
+	m_writer.write(&m_charBuf[0]);
 
 	m_pos = 0;
 }
