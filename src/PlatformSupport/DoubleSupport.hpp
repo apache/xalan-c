@@ -511,15 +511,12 @@ public:
 
 private:
 
-
 	static const double				s_NaN;
 	static const double				s_positiveInfinity;
 	static const double				s_negativeInfinity;
 
-#if defined(XALAN_NEED_SPECIAL_NAN_SUPPORT)
 	static const unsigned long*		s_NaNFirstDWORD;
 	static const unsigned long*		s_NaNSecondDWORD;
-#endif
 };
 
 
