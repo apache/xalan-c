@@ -109,11 +109,6 @@
 
 
 
-#include <DOMSupport/NamespaceResolver.hpp>
-#include <DOMSupport/NSInfo.hpp>
-
-
-
 #include <XMLSupport/FormatterToHTML.hpp>
 #include <XMLSupport/FormatterToXML.hpp>
 #include <XMLSupport/FormatterToDOM.hpp>
@@ -198,7 +193,6 @@ foo(XPathExecutionContext&	theExecutionContext)
 		AttributeListImpl::AttributeVectorType theAttributeVectorEntryVector;
 		AttributesImpl::AttributesVectorType theAttributesVectorEntryVector;
 		allocator<DOMString> theAllocator;
-		vector<pair<const XalanNode*,NSInfo> > theXalanNodeVector;
 		FormatterToHTML::ElemDesc theElemDesc;
 		FormatterToHTML::ElementFlagsMapType theElementFlagsMapType;
 		XPathExpression::TokenQueueType theTokenQueueType;
