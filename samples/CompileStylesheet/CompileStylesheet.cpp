@@ -1,19 +1,29 @@
 // Base header file.  Must be first.
 #include <Include/PlatformDefinitions.hpp>
 
+
+
 #include <cassert>
 #include <fstream>
 #include <iostream>
 #include <strstream>
 
+
+
 #include <util/PlatformUtils.hpp>
+
+
 
 #include <PlatformSupport/DOMStringHelper.hpp>
 #include <DOMSupport/DOMSupportDefault.hpp>
 
+
+
 #include <XPath/XObjectFactoryDefault.hpp>
 #include <XPath/XPathSupportDefault.hpp>
 #include <XPath/XPathFactoryDefault.hpp>
+
+
 
 #include <XSLT/StylesheetConstructionContextDefault.hpp>
 #include <XSLT/StylesheetExecutionContextDefault.hpp>
@@ -23,7 +33,11 @@
 #include <XSLT/XSLTProcessorEnvSupportDefault.hpp>
 #include <XSLT/XSLTResultTarget.hpp>
 
+
+
 #include <XercesParserLiaison/XercesParserLiaison.hpp>
+
+
 
 #include <XercesPlatformSupport/TextFileOutputStream.hpp>
 #include <XercesPlatformSupport/XercesDOMPrintWriter.hpp>
@@ -76,9 +90,9 @@ main(
 			// Connect the processor to the support object...
 			theXSLTProcessorEnvSupport.setProcessor(&theProcessor);
 
-			// Create a separate XPath factory support object so the
-			// stylesheet's factory-created XPath instances are independent
-			// from the processor's.
+			// Create separate factory support objects so the stylesheet's
+			// factory-created XPath instances are independent from the
+			// processor's.
 			XPathFactoryDefault				theStylesheetXPathFactory;
 
 			// Create a stylesheet construction context, using the
@@ -101,6 +115,10 @@ main(
 			// from same directory as the input files.
 			const XalanDOMString		theXMLFileName("foo.xml");
 			const XalanDOMString		theXSLFileName("foo.xsl");
+			
+			// Buffers passed in to ostrstream.
+			char inBuffer[10];
+			char outBuffer[10];
 
 			// Our stylesheet input source...
 			XSLTInputSource			theStylesheetSource(c_wstr(theXSLFileName));
@@ -120,17 +138,15 @@ main(
 				theExecutionContext.setStylesheetRoot(theStylesheetRoot);
 
 				// Generate the input and output file names.
-				ostrstream theFormatterIn, theFormatterOut;
+				ostrstream theFormatterIn(inBuffer, sizeof(inBuffer));
+				ostrstream theFormatterOut(outBuffer, sizeof(outBuffer));
+				
 				theFormatterIn << "foo" << i + 1 << ".xml" << '\0';
 				theFormatterOut << "foo" << i + 1 << ".out" << '\0';
 
 				//Generate the XML input and output objects.
 				XSLTInputSource		theInputSource(theFormatterIn.str());
 				XSLTResultTarget	theResultTarget(theFormatterOut.str());
-
-				// Unfreeze the ostrstreams, so the memory is returned...
-				theFormatterIn.freeze(false);
-				theFormatterOut.freeze(false);
 
 				// Do the tranformation...
 				theProcessor.process(
