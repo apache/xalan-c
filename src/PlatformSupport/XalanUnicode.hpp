@@ -181,7 +181,10 @@ namespace XalanUnicode
 		charLetter_e			= 0x65,
 		charLetter_f			= 0x66,
 		charLetter_g			= 0x67,
+		charLetter_h			= 0x68,
 		charLetter_i			= 0x69,
+		charLetter_j			= 0x6A,
+		charLetter_k			= 0x6B,
 		charLetter_l			= 0x6C,
 		charLetter_m			= 0x6D,
 		charLetter_n			= 0x6E,
@@ -192,6 +195,7 @@ namespace XalanUnicode
 		charLetter_s			= 0x73,
 		charLetter_t			= 0x74,
 		charLetter_u			= 0x75,
+		charLetter_v			= 0x76,
 		charLetter_w			= 0x77,
 		charLetter_x			= 0x78,
 		charLetter_y			= 0x79,
@@ -309,7 +313,10 @@ namespace XalanUnicode
 	static const XalanDOMChar	charLetter_e			= 0x65;
 	static const XalanDOMChar	charLetter_f			= 0x66;
 	static const XalanDOMChar	charLetter_g			= 0x67;
+	static const XalanDOMChar	charLetter_h			= 0x68;
 	static const XalanDOMChar	charLetter_i			= 0x69;
+	static const XalanDOMChar	charLetter_j			= 0x6A;
+	static const XalanDOMChar	charLetter_k			= 0x6B;
 	static const XalanDOMChar	charLetter_l			= 0x6C;
 	static const XalanDOMChar	charLetter_m			= 0x6D;
 	static const XalanDOMChar	charLetter_n			= 0x6E;
@@ -320,6 +327,7 @@ namespace XalanUnicode
 	static const XalanDOMChar	charLetter_s			= 0x73;
 	static const XalanDOMChar	charLetter_t			= 0x74;
 	static const XalanDOMChar	charLetter_u			= 0x75;
+	static const XalanDOMChar	charLetter_v			= 0x76;
 	static const XalanDOMChar	charLetter_w			= 0x77;
 	static const XalanDOMChar	charLetter_x			= 0x78;
 	static const XalanDOMChar	charLetter_y			= 0x79;
