@@ -70,6 +70,7 @@
 #include <PlatformSupport/STLHelper.hpp>
 
 
+#include <sax/SAXException.hpp>
 
 #include "AVT.hpp"
 #include "Constants.hpp"
@@ -77,6 +78,9 @@
 #include "StylesheetConstructionContext.hpp"
 #include "StylesheetExecutionContext.hpp"
 
+#if !defined(XALAN_NO_NAMESPACES)
+	using std::make_pair;
+#endif
 
 
 ElemLiteralResult::ElemLiteralResult(
@@ -116,27 +120,15 @@ ElemLiteralResult::ElemLiteralResult(
 
 				if(startsWith(ns, constructionContext.getXSLNameSpaceURLPre()))
 				{
-					const XalanDOMString localName = substring(aname, indexOfNSSep + 1);
-
-					if(equals(localName, Constants::ATTRNAME_EXTENSIONELEMENTPREFIXES))
-					{
+					const XalanDOMString localName = substring(aname,indexOfNSSep + 1);
+            	processPrefixControl(localName, atts.getValue(i));
+					if(0 != m_excludeResultPrefixes.size())
 						needToProcess = false;
-
-						const XalanDOMString qnames = atts.getValue(i);
-
-						StringTokenizer tokenizer(qnames,
-												  XALAN_STATIC_UCODE_STRING(" \t\n\r"),
-												  false);
-
-						m_extensionElementPrefixes.reserve(tokenizer.countTokens());
-
-						while(tokenizer.hasMoreTokens())
-						{
-							m_extensionElementPrefixes.push_back(tokenizer.nextToken());
-						}
-					}
 				}
 			}
+			else
+				// don't process namespace decls
+				needToProcess = false;
 		}
 
 		if(needToProcess == true)
@@ -152,6 +144,7 @@ ElemLiteralResult::ElemLiteralResult(
 							*this, constructionContext));
 			}
 		}
+		removeExcludedPrefixes(m_excludeResultPrefixes);
 	}
 }
 
@@ -202,6 +195,10 @@ void ElemLiteralResult::execute(
 		}
 	}
 
+	// @@@ JMD:
+	// This logic has been eliminated in the java version and replaced by a
+	// method 'processResultNS' in the base class ElemTemplateElement
+	// This also requires implementation of namespace alias logic
 	const ElemTemplateElement*	elem = this;
 
 	const NamespaceVectorType*	nsVector = &elem->getNameSpace();
@@ -230,21 +227,9 @@ void ElemLiteralResult::execute(
 					|| 0 != getStylesheet().lookupExtensionNSHandler(srcURI)
 					|| equalsIgnoreCase(srcURI,executionContext.getXalanXSLNameSpaceURL());
 
-				if(!isXSLNS)
+				if(!isXSLNS && !equalsIgnoreCase(srcURI,desturi)) // TODO: Check for extension namespaces
 				{
-					if(startsWith(srcURI, XALAN_STATIC_UCODE_STRING("quote:")))
-					{
-						srcURI = substring(srcURI, 6);
-					}
-
-					if(!equalsIgnoreCase(srcURI,desturi)) // TODO: Check for extension namespaces
-					{
-						executionContext.addResultAttribute(attrName, srcURI);
-					}
-				}
-				else
-				{
-					ns.setResultCandidate(false);
+					executionContext.addResultAttribute(attrName, srcURI);
 				}
 			}
 		}
@@ -273,8 +258,53 @@ void ElemLiteralResult::execute(
 		else
 			more = false;
 	}
+/*
+	java:
+    // Handle namespaces(including those on the ancestor chain 
+    // and stylesheet root declarations).
+    processResultNS(processor);           
+*/
 
 	executeChildren(executionContext, sourceTree, sourceNode, mode);
 
 	executionContext.endElement(toCharArray(m_QName));
 }
+
+/**
+ * Process the exclude-result-prefixes or the extension-element-prefixes
+ * attributes, for the purpose of prefix exclusion.
+ */
+void ElemLiteralResult::processPrefixControl(const DOMString& localName, 
+		const DOMString& attrValue) 
+{                                                                                                                   
+/*
+	OLD:
+	if(equals(localName, Constants::ATTRNAME_EXTENSIONELEMENTPREFIXES))
+	{
+		needToProcess = false;
+		const DOMString qnames = attrValue;
+		StringTokenizer tokenizer(qnames, " \t\n\r", false);
+		m_extensionElementPrefixes.reserve(tokenizer.countTokens());
+		while(tokenizer.hasMoreTokens())
+		{
+			m_extensionElementPrefixes.push_back(tokenizer.nextToken());
+		}
+	}
+*/
+	if(equals(localName, Constants::ATTRNAME_EXTENSIONELEMENTPREFIXES) ||
+			equals(localName, Constants::ATTRNAME_EXCLUDE_RESULT_PREFIXES))
+	{
+		const DOMString qnames = attrValue;
+		StringTokenizer tokenizer(qnames, " \t\n\r", false);
+		while(tokenizer.hasMoreTokens())
+		{
+			DOMString prefix = tokenizer.nextToken();
+			if(equalsIgnoreCase(prefix, "#default")) prefix="";
+			DOMString ns = getStylesheet().getNamespaceForPrefixFromStack(prefix);
+			if(isEmpty(ns))
+				throw SAXException("Invalid prefix in exclude-result-prefixes");
+			m_excludeResultPrefixes.insert(make_pair(prefix, ns));
+		}
+	}
+}
+

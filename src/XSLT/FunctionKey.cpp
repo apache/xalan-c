@@ -79,6 +79,9 @@
 #include <XPath/XPathExecutionContext.hpp>
 
 
+#if !defined(XALAN_NO_NAMESPACES)
+	using std::set;
+#endif 
 
 
 

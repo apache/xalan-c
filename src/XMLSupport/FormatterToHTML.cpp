@@ -105,27 +105,21 @@ const FormatterToHTML::AttributesMapType FormatterToHTML::s_attruris =
 
 
 FormatterToHTML::FormatterToHTML(
-			Writer&					writer,
-			const XalanDOMString&	version,
-			bool					doIndent,
-			int						indent,
-			const XalanDOMString&	encoding,
-			const XalanDOMString&	mediaType,
-			const XalanDOMString&	doctypeSystem,
-			const XalanDOMString&	doctypePublic,
-			bool					xmlDecl,
-			const XalanDOMString&	standalone) :
-	FormatterToXML(writer,
-				   version,
-				   doIndent,
-				   indent,
-				   encoding,
-				   mediaType,
-				   doctypeSystem,
-				   doctypePublic,
-				   xmlDecl,
-				   standalone),
-	m_currentElementName()
+	  Writer&				writer,
+	  const XalanDOMString& version,
+	  bool doIndent, 
+	  int indent,
+	  const XalanDOMString& encoding, 
+	  const XalanDOMString& mediaType,
+	  const XalanDOMString& doctypeSystem,
+	  const XalanDOMString& doctypePublic,
+	  bool xmlDecl,
+	  const XalanDOMString& standalone) :
+	FormatterToXML( writer, version, doIndent, indent,
+	  encoding, mediaType, doctypeSystem, doctypePublic,
+	  xmlDecl, standalone),
+	m_currentElementName(),
+	m_inBlockElem(false)
 {
 }
 
@@ -176,7 +170,7 @@ FormatterToHTML::endDocument()
 {
 	try
 	{
-		m_writer.write("\n");
+		m_writer.write(m_lineSep);
 	}
 	catch(...)
 	{
@@ -193,6 +187,7 @@ FormatterToHTML::startElement(
 			const	XMLCh* const	name,
 			AttributeList&			attrs)
 {
+	// @@ JMD: this block is not in the java version any more ...
 	XalanDOMString theName(name);
 	if(true == m_needToOutputDocTypeDecl)
 	{
@@ -228,28 +223,39 @@ FormatterToHTML::startElement(
 		}
 	}
 	m_needToOutputDocTypeDecl = false;
+
 	bool savedDoIndent = m_doIndent;
+
+	XalanDOMString nameUpper = toUpperCase(theName);
 
 	// If the previous element is a non-block element or the next 
 	// element is a non-block element, then do not indent.
-	m_doIndent =
-	((s_nonblockelems.end() != s_nonblockelems.find(toUpperCase(theName))) ||
+	bool isBlockElement = 
+	((s_nonblockelems.end() != s_nonblockelems.find(nameUpper)) ||
 	((! isEmpty(m_currentElementName) &&
 		(s_nonblockelems.end() !=
-		 s_nonblockelems.find(toUpperCase(m_currentElementName))))))
+		 s_nonblockelems.find(m_currentElementName)))))
 			? false : true;
 
-	m_currentElementName = name;
 	try
 	{      
 		writeParentTagEnd();
-		m_ispreserve = false;
 
-		if (shouldIndent() && !m_elemStack.empty()) 
+		if (m_ispreserve)
+			m_ispreserve = false;
+		else if(m_doIndent
+					&& (!isEmpty(m_currentElementName))
+					&& (!m_inBlockElem || isBlockElement))
 		{
 			m_startNewLine = true;
 			indent(m_writer, m_currentIndent);
 		}
+		m_inBlockElem = !isBlockElement;
+		
+		// @@@ JMD: need to provide equivalent functionality here ...
+		// m_isRawStack.push(elemDesc.is(ElemDesc.RAW));
+			 
+		m_currentElementName = nameUpper;
 
 		m_writer.write('<');
 		m_writer.write(name);
@@ -265,7 +271,6 @@ FormatterToHTML::startElement(
 		m_currentIndent += m_indent;
 		m_isprevtext = false;
 	}
-	// java: catch(IOException ioe)
 	catch(...)
 	{
 		throw SAXException("IO error");
@@ -285,9 +290,29 @@ FormatterToHTML::endElement(
 		// name = name.toUpperCase();
 		const bool	hasChildNodes = childNodesWereAdded();
 
+// @@ JMD: need to provide this ...		
+//		m_isRawStack.pop();
+
+	// @@ JMD: check that this doesn't change name ...
+		XalanDOMString nameUpper = toUpperCase(name);
+		bool isBlockElement = s_nonblockelems.end() == s_nonblockelems.find(nameUpper);
+
+		bool shouldIndent = false;
+		if(m_ispreserve)
+		{
+			m_ispreserve = false;
+		}
+		else if(m_doIndent && (!m_inBlockElem || isBlockElement))
+		{
+			m_startNewLine = true;
+			shouldIndent = true;
+		}
+
+		m_inBlockElem = !isBlockElement;
+
 		if (hasChildNodes == true) 
 		{
-			if (shouldIndent() == true)
+			if (shouldIndent == true)
 				indent(m_writer, m_currentIndent);
 			m_writer.write("</");
 			m_writer.write(name);
@@ -297,7 +322,10 @@ FormatterToHTML::endElement(
 		{
 			if(s_empties.find(toUpperCase(name)) == s_empties.end())
 			{
-				m_writer.write("></");
+				m_writer.write(">");
+				if (shouldIndent)
+					indent(m_writer, m_currentIndent);
+				m_writer.write("</");
 				m_writer.write(name);
 				m_writer.write(">");
 			}
@@ -306,6 +334,12 @@ FormatterToHTML::endElement(
 				m_writer.write(">");
 			}
 		}
+/*
+		@@@ JMD: need to provide equivalent functionality here ...
+		if (elemDesc.is(ElemDesc.WHITESPACESENSITIVE))
+			m_ispreserve = true;
+*/
+
 		if (hasChildNodes == true) 
 		{
 			m_ispreserve = m_preserves.top();
@@ -515,6 +549,14 @@ FormatterToHTML::cdata(
 	}
 }
 
+void FormatterToHTML::processingInstruction(
+		const XMLCh* const	target,
+		const XMLCh* const	data)
+
+{
+	FormatterToXML::processingInstruction( target, data, true);
+}
+
 
 void
 FormatterToHTML::processAttribute(
@@ -681,6 +723,7 @@ FormatterToHTML::createNonBlockElems()
 	theElems.insert(XALAN_STATIC_UCODE_STRING("IMG"));
 	theElems.insert(XALAN_STATIC_UCODE_STRING("B"));
 	theElems.insert(XALAN_STATIC_UCODE_STRING("I"));
+	theElems.insert(XALAN_STATIC_UCODE_STRING("Q"));
 	return theElems;
 }
 

@@ -480,6 +480,27 @@ public:
 	getParamVariable(const QName&	theName) const = 0;
 
 	/**
+	 * Get the top of the stack frame from where a search 
+	 * for a variable or param should take place.
+	 *
+	 * @return current value of index
+	 */
+	virtual int getCurrentStackFrameIndex() const = 0;
+
+	/**
+	 * Set the top of the stack frame from where a search 
+	 * for a variable or param should take place.
+	 *
+	 * @param currentStackFrameIndex new value of index
+	 */
+	virtual void setCurrentStackFrameIndex(int currentStackFrameIndex = -1) = 0;
+
+	/**
+	 * Mark the top of the global stack where global searches should start.
+	 */
+	virtual void markGlobalStackFrame() = 0;
+
+	/**
 	 * Receive notification of the beginning of a document.
 	 *
 	 * <p>The SAX parser will invoke this method only once, before any

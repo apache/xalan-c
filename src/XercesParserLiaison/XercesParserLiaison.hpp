@@ -69,6 +69,7 @@
 
 
 // Xerces DOM header files
+#include <util/XercesDefs.hpp>
 #include <sax/ErrorHandler.hpp>
 
 

@@ -484,9 +484,14 @@ NumeratorFormatter::long2roman(
 {
 	XalanDOMString	roman;
 
-	if(val <= 0)
+	if(val < 0)
 	{
 		roman = XalanDOMString(XALAN_STATIC_UCODE_STRING("#E(")) + XalanDOMString(val) + XalanDOMString(XALAN_STATIC_UCODE_STRING(")"));
+	}
+	// Make this match the conformance test
+	else if(val == 0)
+	{
+		roman = DOMString(XALAN_STATIC_UCODE_STRING("0"));
 	}
 	else
 	{

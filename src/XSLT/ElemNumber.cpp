@@ -208,6 +208,7 @@ ElemNumber::execute(
 
 
 
+
 XalanNode*
 ElemNumber::findAncestor(
 			StylesheetExecutionContext&		executionContext,
@@ -265,8 +266,8 @@ ElemNumber::findPrecedingOrAncestorOrSelf(
 		if(0 != fromMatchPattern)
 		{
 			if(fromMatchPattern->getMatchScore(contextCopy,
-											   *this,
-											   executionContext.getXPathExecutionContext()) != XPath::s_MatchScoreNone)
+						*this,
+						executionContext.getXPathExecutionContext()) != XPath::s_MatchScoreNone)
 			{
 				contextCopy = 0;
 				break;
@@ -383,6 +384,7 @@ ElemNumber::getCountString(
 		if((Constants::NUMBERLEVEL_ANY == m_level) || 
 			(Constants::NUMBERLEVEL_SINGLE == m_level))
 		{
+			int numberFound;
 			if(Constants::NUMBERLEVEL_SINGLE == m_level)
 			{
 				XalanNode*	target =
@@ -397,7 +399,9 @@ ElemNumber::getCountString(
 
 				if(target != 0)
 				{
-					numberList.push_back(getSiblingNumber(executionContext, countMatchPattern, target));
+					numberFound = getSiblingNumber(executionContext, countMatchPattern, target);
+					if (numberFound > 0)
+						numberList.push_back(numberFound);
 				}
 				else
 				{
@@ -413,10 +417,6 @@ ElemNumber::getCountString(
 
 				if(0 != m_fromMatchPattern)
 				{
-// @@ JMD: was as below, which looked wrong to me based on java code and the
-// meaning of the arguments. The sad fact is that the number of tests we
-// passed went DOWN after this change
-// 					from = findPrecedingOrAncestorOrSelf(executionContext, 0, m_fromMatchPattern, 
 					from = findPrecedingOrAncestorOrSelf(executionContext, m_fromMatchPattern, countMatchPattern,
 						sourceNode, this);
 
@@ -432,7 +432,10 @@ ElemNumber::getCountString(
 
 				XalanNode* const	fromPos = (from != sourceNode) ? getNextInTree(from, from) : from;
 
-				numberList.push_back(getNumberInTree(executionContext.getXPathExecutionContext(), countMatchPattern, fromPos, from, sourceNode, 0));
+				numberFound = getNumberInTree(executionContext.getXPathExecutionContext(),
+						countMatchPattern, fromPos, from, sourceNode, 0);
+				if (numberFound > 0)
+					numberList.push_back(numberFound);
 			}
 		}
 		else // if NUMBERLEVEL_MULTI
@@ -716,6 +719,10 @@ ElemNumber::formatNumberList(
 	XalanDOMString	sepString(XALAN_STATIC_UCODE_STRING("."));
 	XalanDOMString	lastSepString;
 
+	// Pathological cases
+	if (nNumbers == 0) return formattedNumber;
+	if (contextNode == 0) return formattedNumber;
+
 	XalanDOMString	formatValue = !isEmpty(m_format_avt)
 		? executionContext.evaluateAttrVal(contextNode,
 										   *this,
@@ -751,7 +758,7 @@ ElemNumber::formatNumberList(
 		leaderStr = *it;
 		tokenVector.erase(it);
 	}
-	it += tokenVector.size()-1;
+	it = tokenVector.end()-1;
 	if(! isLetterOrDigit(charAt((*it), 0)))
 	{
 		trailerStr = *it;
@@ -939,12 +946,18 @@ ElemNumber::long2roman(
 			long	val,
 			bool	prefixesAreOK)
 {
-	if(val <= 0)
+	if(val < 0)
 	{
 		return XalanDOMString(XALAN_STATIC_UCODE_STRING("#E(") +
 								LongToDOMString(val) +
 								XALAN_STATIC_UCODE_STRING(")"));
 	}
+	// Make this match the conformance test
+	else if(val == 0)
+	{
+		return XalanDOMString("0");
+	}
+
 
 	XalanDOMString	roman;
 

@@ -374,6 +374,10 @@ protected:
   
 	bool			m_ispreserve;
 	BoolStackType	m_preserves;
+	/**
+	 * State flag that tells if the previous node processed 
+	 * was text, so we can tell if we should preserve whitespace.
+	 */
 	bool			m_isprevtext;
 	bool			m_doIndent;
 	int				m_currentIndent;
@@ -381,6 +385,7 @@ protected:
 	XalanDOMString	m_doctypeSystem;
 	XalanDOMString	m_doctypePublic;
 	bool			m_startNewLine;
+
   /**
    * Assume java encoding names are the same as the ISO encoding names if this is true.
    */
@@ -412,6 +417,12 @@ protected:
 			int&					pos,			// Index in m_charBuf
 			int						length		// Length of 'chars' string
 		);
+
+	void FormatterToXML::processingInstruction(
+			const XMLCh* const	target,
+			const XMLCh* const	data,
+			bool isHTML);
+
 	
 private:
 

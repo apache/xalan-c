@@ -108,7 +108,7 @@ ElemApplyTemplates::ElemApplyTemplates(
 			break;
 
 		default:
-			if(!isAttrOK(tok, aname, atts, i))
+			if(!isAttrOK(aname, atts, i, constructionContext))
 			{
 				constructionContext.error(XalanDOMString(name) + " has an illegal attribute: " + aname);
 			}
@@ -142,9 +142,24 @@ ElemApplyTemplates::execute(
 	  getStylesheet().getStylesheetRoot().fireTraceEvent(TracerEvent(
 		  executionContext, sourceTree, sourceNode, mode, *this));
 	}
-
 	if (0 != sourceNode)
 	{
+		ElemTemplateElement* const	theTemplate = 
+			const_cast<ElemTemplateElement* const>
+				(static_cast<const ElemTemplateElement* const>(this));
+
+		// Dragons here.  Push the params & stack frame, but then execute the
+		// select statement inside transformSelectedChildren, which must be
+		// executed in the stack frame before the new stack frame.  Because of
+		// depth-first searching, this gets worse.
+		int selectStackFrameIndex = executionContext.getCurrentStackFrameIndex();
+		executionContext.pushContextMarker(theTemplate,
+				sourceNode);
+		executionContext.setCurrentStackFrameIndex(selectStackFrameIndex);
+		executionContext.pushParams(*this, sourceTree, sourceNode, mode,
+				theTemplate);
+
+		executionContext.setCurrentStackFrameIndex();
 		transformSelectedChildren(
 			executionContext,
 			getStylesheet(),
@@ -154,7 +169,12 @@ ElemApplyTemplates::execute(
 			sourceNode, 
 			m_isDefaultTemplate == false ? m_mode : mode,
 			m_pSelectPattern, 
-			Constants::ELEMNAME_APPLY_TEMPLATES);
+			Constants::ELEMNAME_APPLY_TEMPLATES,
+			selectStackFrameIndex);
+
+		executionContext.popCurrentContext();
+		executionContext.setCurrentStackFrameIndex(selectStackFrameIndex);
+
 	}
     else
 	{
@@ -173,7 +193,7 @@ ElemApplyTemplates::childTypeAllowed(int	xslToken) const
 	{
 	// char-instructions 
 	case Constants::ELEMNAME_SORT:
-	case Constants::ELEMNAME_PARAM:
+	case Constants::ELEMNAME_WITHPARAM:
 		fResult = true;
 		break;
 		

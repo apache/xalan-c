@@ -103,11 +103,13 @@ public:
 			int								/* opPos */,
 			const XObjectArgVectorType&		args)
 	{
-		if(args.size() != 1)
+		if(args.size() > 1)
 		{
-			executionContext.error("The string() function takes one argument!",
+			executionContext.error("The string() function takes zero or one argument!",
 								   context);
 		}
+		if(args.size() == 0)
+			return executionContext.getXObjectFactory().createNodeSet(*context);
 
 		return executionContext.getXObjectFactory().createString(args[0]->str());
 	}

@@ -146,11 +146,10 @@ ElemForEach::execute(
 		assert(m_pSelectPattern != 0);
 
 		transformSelectedChildren(executionContext, getStylesheet(), 
-								  *this,
-								  this,
-								  sourceTree,sourceNode,mode,
-								  m_pSelectPattern,
-								  Constants::ELEMNAME_FOREACH);
+			*this,this,sourceTree,sourceNode,mode,
+			m_pSelectPattern, Constants::ELEMNAME_FOREACH,
+			executionContext.getCurrentStackFrameIndex()
+			);
 	}
     else
     {

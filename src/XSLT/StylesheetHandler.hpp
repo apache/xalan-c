@@ -439,7 +439,7 @@ private:
 	 * The last element popped from the stack.  I'm not totally clear 
 	 * anymore as to why this is needed.
 	 */
-	ElemTemplateElement* m_pLastPopped;
+	ElemTemplateElement* m_lastPopped;
 	
 	/**
 	 * True if the process is in a template context.
@@ -491,7 +491,7 @@ private:
 
 		ElemTemplate* const			m_pTemplate;
 
-		ElemTemplateElement* const	m_pLastPopped;
+		ElemTemplateElement* const	m_lastPopped;
 
 		const bool					m_inTemplate;
 

@@ -65,6 +65,7 @@
 
 
 #include <vector>
+#include <map>
 
 
 
@@ -144,7 +145,7 @@ public:
 	* @param atts     attribute list where the element comes from (not used at 
 	*                 this time)
 	* @param which    index into the attribute list (not used at this time)
-	* @return         true if this attribute should not be flagged as an error
+	* @return         true if this is a namespace name
 	*/
 	bool
 	isAttrOK(
@@ -306,8 +307,11 @@ public:
 
 #if defined(XALAN_NO_NAMESPACES)
 	typedef	vector<NameSpace>		NamespaceVectorType;
+	typedef map<XalanDOMString, XalanDOMString>	String2StringMapType;
 #else
-	typedef	std::vector<NameSpace>	NamespaceVectorType;
+	typedef	std::vector<NameSpace>		NamespaceVectorType;
+	typedef std::map<XalanDOMString, XalanDOMString>	String2StringMapType;
+
 #endif
 
 	/** 
@@ -342,6 +346,13 @@ public:
 	{
 		m_finishedConstruction = bFinished;
 	}
+
+  /**
+   * Remove any excluded prefixes from the current namespaces.
+	* 
+	* @param map of prefixes and associated namespaces to be excluded
+   */
+  void removeExcludedPrefixes(const String2StringMapType& excludeResultPrefixes);
 
 
 	// Type-safe getters/setters...
@@ -436,6 +447,8 @@ public:
 	virtual ElemTemplateElement*
 	appendChildElem(ElemTemplateElement*	newChild);
 
+	// Type-safe getters...
+
 	/**
 	 * Append a child.
 	 *
@@ -517,6 +530,12 @@ public:
 	virtual XalanNode*
 	removeChild(XalanNode*	oldChild);
 
+	/** 
+	 * Add a child to the child list.
+	 * 
+	 * @exception DOMException 
+	 * @param newChild child node to add
+	 */
 	virtual XalanNode*
 	appendChild(XalanNode*	newChild);
 
@@ -627,6 +646,8 @@ protected:
 	 * @param selectPattern The XPath with which to perform the selection.
 	 * @param xslToken The current XSLT instruction (deprecated -- I do not     
 	 *     think we want this).
+	 * @param selectStackFrameIndex stack frame context for executing the
+	 *                              select statement
 	 */
 	void
 	transformSelectedChildren(
@@ -638,7 +659,32 @@ protected:
 			XalanNode*						sourceNodeContext,
 			const QName&					mode,
 			const XPath*					selectPattern,
-			int								xslToken) const;
+			int	xslToken,
+			int selectStackFrameIndex) const;
+
+  /**
+   * Tell if the result namespace decl should be excluded.  Should be called before 
+   * namespace aliasing (I think).
+   * TODO: I believe this contains a bug, in that included elements will check with with 
+   * their including stylesheet, since in this implementation right now the included 
+   * templates are merged with the including stylesheet.  The XSLT Recommendation says: "The 
+   * designation of a namespace as an excluded namespace is effective within 
+   * the subtree of the stylesheet rooted at the element bearing the 
+   * <code>exclude-result-prefixes</code> or <code>xsl:exclude-result-prefixes</code> 
+   * attribute; a subtree rooted at an <code>xsl:stylesheet</code> element
+   * does not include any stylesheets imported or included by children
+   * of that <code>xsl:stylesheet</code> element."
+   */
+  bool shouldExcludeResultNamespaceNode(
+		  const XalanDOMString& prefix, const XalanDOMString& uri);
+
+  /** 
+   * The table of namespaces that are excluded from being 
+   * used in the result tree but which need to be used 
+   * in to resolve prefixes.
+   * @serial
+   */
+  String2StringMapType m_excludedNamespaces;
 
 	/**
 	 * Given an element and mode, find the corresponding

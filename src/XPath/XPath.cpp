@@ -1475,7 +1475,8 @@ XPath::function(
 {
 	assert(m_expression.getToken(funcID) != 0);
 
-	const XalanDOMString	theFunctionName(m_expression.getToken(funcID)->str());
+	const XalanDOMString		theFunctionName(m_expression.getToken(funcID)->str());
+	assert(theFunctionName != 0);
 	assert(!isEmpty(theFunctionName));
 
 	return s_functions[theFunctionName].execute(executionContext, context, opPos, argVec);

@@ -200,9 +200,7 @@ StylesheetRoot::process(
 
 		FormatterListener* flistener = 0;
 		bool newListener = false;
-
-		// $$$ ToDo: Why is this Xerces-specific?
-		XercesDOMPrintWriter* pw = 0;
+		Writer* pw = 0;
 		bool newPW = false;
 
 		/*
@@ -224,10 +222,7 @@ StylesheetRoot::process(
 
 			if(0 != outputTarget.getCharacterStream())
 			{
-				// @@ JMD: is this right ??
-				// java: pw = new PrintWriter(outputTarget.getCharacterStream());
-				pw = static_cast<XercesDOMPrintWriter*>
-					(outputTarget.getCharacterStream());
+				pw = outputTarget.getCharacterStream();
 			}
 			else
 			{

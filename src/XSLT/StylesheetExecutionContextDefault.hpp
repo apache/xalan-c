@@ -241,6 +241,12 @@ public:
 	virtual XObject*
 	getParamVariable(const QName&	theName) const;
 
+	virtual int getCurrentStackFrameIndex() const;
+
+	virtual void setCurrentStackFrameIndex(int currentStackFrameIndex = -1);
+
+	virtual void markGlobalStackFrame();
+	
 	virtual void
 	startDocument();
 

@@ -599,13 +599,10 @@ typedef XALAN_STD vector<ElemDecimalFormat*>			ElemDecimalFormatVectorType;
 	 * XSL document, according to the rules specified in the xsl draft. 
 	 *
 	 * @param executionContext current execution context
-	 * @param sourceTree		where the targetElem is to be found
-	 * @param targetElem		element that needs a rule
-	 * @param mode				string indicating the display mode
-	 * @param useImports		means that this is an xsl:apply-imports commend
-	 * @param foundStylesheet	if non-null, the Stylesheet that the found
-	 *							template belongs to will be returned in the
-	 *							foundStylesheet[0]
+	 * @param sourceTree        where the targetElem is to be found
+	 * @param targetElem        element that needs a rule
+	 * @param mode              string indicating the display mode
+	 * @param useImports        means that this is an xsl:apply-imports commend
 	 * @return pointer to rule that best matches targetElem
 	 */
 	virtual

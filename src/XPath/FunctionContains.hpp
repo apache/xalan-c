@@ -112,9 +112,14 @@ public:
 		const XalanDOMString	arg1 = args[0]->str();
 		const XalanDOMString	arg2 = args[1]->str();
 
-		const unsigned int		theIndex = indexOf(arg1, arg2);
+		// This is rather a moot point but conformance test str62 indicates the
+		// answer should be true
+		if (isEmpty(arg1) && isEmpty(arg2))
+			return executionContext.getXObjectFactory().createBoolean(true);
 
-		return executionContext.getXObjectFactory().createBoolean(theIndex < length(arg1) ? true : false);
+		const int			theIndex = indexOf(arg1, arg2);
+
+		return executionContext.getXObjectFactory().createBoolean(theIndex >= 0 ? true : false);
 	}
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)

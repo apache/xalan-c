@@ -290,7 +290,7 @@ StylesheetExecutionContextDefault::replacePendingAttribute(
 	AttributeListImpl	thePendingAttributes(m_xsltProcessor.getPendingAttributes());
 
 	// Remove the old attribute, then add the new one...
-	thePendingAttributes.removeAttribute(theName);
+	// thePendingAttributes.removeAttribute(theName);
 	thePendingAttributes.addAttribute(theName, theNewType, theNewValue);
 
 	// Set the new pending attributes...
@@ -497,6 +497,22 @@ StylesheetExecutionContextDefault::getParamVariable(const QName&	theName) const
 	return m_xsltProcessor.getParamVariable(theName);
 }
 
+int StylesheetExecutionContextDefault::getCurrentStackFrameIndex() const
+{
+	return m_xsltProcessor.getVariableStacks().getCurrentStackFrameIndex();
+}
+
+void StylesheetExecutionContextDefault::setCurrentStackFrameIndex(int
+		currentStackFrameIndex)
+{
+	m_xsltProcessor.getVariableStacks().setCurrentStackFrameIndex(currentStackFrameIndex);
+}
+
+void StylesheetExecutionContextDefault::markGlobalStackFrame()
+{
+	m_xsltProcessor.getVariableStacks().markGlobalStackFrame();
+}
+	
 
 
 void

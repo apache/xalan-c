@@ -69,6 +69,7 @@
 
 
 
+
 // Standard library headers
 #include <cassert>
 #include <ctime>
@@ -1619,15 +1620,6 @@ public:
 		}
 
 		/**
-		 * Tell if there is a param variable on the stack.
-		 *
-		 * @param qname name of variable
-		 * @return true if variable is on stack
-		 */
-		bool
-		hasParamVariable(const QName&	qname) const;
-
-		/**
 		 * Given a name, find the corresponding XObject.
 		 *
 		 * @param qname name of variable
@@ -1654,6 +1646,76 @@ public:
 				XObject*			val,
 				const XalanNode*	e);
 
+		/**
+		 * Mark the top of the global stack frame.
+		 */
+		void markGlobalStackFrame()
+		{
+			m_globalStackFrameIndex = m_stack.size();
+		}
+
+		/**
+		 * Set the top of the stack frame from where a search for a variable or
+		 * param should take place.  Calling with no parameter will cause the
+		 * index to be set to the size of the stack.
+		 *
+		 * @param currentStackFrameIndex new value of index
+		 */
+		void setCurrentStackFrameIndex(int currentStackFrameIndex = -1)
+		{
+			if (currentStackFrameIndex == -1)
+				m_currentStackFrameIndex = m_stack.size();
+			else
+				m_currentStackFrameIndex = currentStackFrameIndex;
+		}
+
+		/**
+		 * Get the top of the stack frame from where a search 
+		 * for a variable or param should take place.
+		 *
+		 * @return current value of index
+		 */
+		int getCurrentStackFrameIndex() const
+		{
+			return m_currentStackFrameIndex;
+		}
+
+		/**
+		 * Override the push in order to track the 
+		 * m_currentStackFrameIndex correctly.
+		 *
+		 * @param stack entry to push
+		 * @param isNew true if object was created on the heap
+		 */
+		void push(StackEntry* theEntry, bool isNew = false)
+		{
+			int type = theEntry->getType();
+			assert(type <4 && type >= 0);
+			if(m_currentStackFrameIndex == m_stack.size())
+				m_currentStackFrameIndex+=1;
+			m_stack.push_back(theEntry);
+			m_isNew.push_back(isNew);
+		}
+
+		/**
+		 * Override the pop in order to track the 
+		 * m_currentStackFrameIndex correctly.
+		 *
+		 * @return stack entry popped
+		 */
+		void pop()
+		{
+			assert (! m_stack.empty());
+			if(m_currentStackFrameIndex == m_stack.size())
+				m_currentStackFrameIndex-=1;
+			StackEntry* theEntry = m_stack.back();
+			m_stack.pop_back();
+			if (m_isNew.back() == true)
+				delete theEntry;
+			m_isNew.pop_back();
+		}
+
+
 	private:
 
 		XObject*
@@ -1675,8 +1737,19 @@ public:
 
 
 		VariableStackStackType			m_stack;
+		BoolVectorType	m_isNew;
 
-		XSLTEngineImpl& 				m_processor;
+		XSLTEngineImpl&					m_processor;
+
+		int m_globalStackFrameIndex;
+
+		/**
+		 * This is the top of the stack frame from where a search 
+		 * for a variable or param should take place.  It may not 
+		 * be the real stack top.
+		 */
+		unsigned int m_currentStackFrameIndex;
+	
 	}; // end VariableStack
 
 	// Give VariableStack access to stuff.

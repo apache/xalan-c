@@ -267,11 +267,11 @@ FormatterToXML::startElement(
 		m_needToOutputDocTypeDecl = false;
 		writeParentTagEnd();
 		m_ispreserve = false;
-		if (shouldIndent() && !m_elemStack.empty()) 
+		if (shouldIndent() && m_startNewLine) 
 		{
-			m_startNewLine = true;
 			indent(m_writer, m_currentIndent);
 		}
+		m_startNewLine = true;
 
 		m_writer.write('<');
 		m_writer.write(name);
@@ -602,12 +602,19 @@ FormatterToXML::ignorableWhitespace(
 	characters(chars, length);
 }
 
-
-
 void
 FormatterToXML::processingInstruction(
 			const XMLCh* const	target,
 			const XMLCh* const	data)
+{
+	processingInstruction( target, data, false);
+}			
+
+void
+FormatterToXML::processingInstruction(
+			const XMLCh* const	target,
+			const XMLCh* const	data,
+			bool isHTML)
 {
 // @@ Need to add this --
 //    if(m_inEntityRef)
@@ -640,7 +647,10 @@ FormatterToXML::processingInstruction(
 			}
 
 			m_writer.write(data);
-			m_writer.write(XALAN_STATIC_UCODE_STRING("?>"));
+			if (isHTML)
+				m_writer.write(XALAN_STATIC_UCODE_STRING(">"));
+			else
+				m_writer.write(XALAN_STATIC_UCODE_STRING("?>"));
 
 			m_startNewLine = true;
 		}
@@ -749,6 +759,7 @@ FormatterToXML::writeParentTagEnd()
 			if(false == m_elemStack.top())
 			{
 				m_writer.write(XALAN_STATIC_UCODE_STRING(">"));
+				m_isprevtext = false;
 
 				m_elemStack.pop();
 				m_elemStack.push(true);
@@ -841,7 +852,10 @@ FormatterToXML::prepAttrString(
 		{
 			vec.push_back('&');
 			vec.push_back('#');
-			vec.push_back(ch);
+			DOMString ds = LongToDOMString(ch);
+			const XMLCh* pb = c_wstr(ds);
+			for(int k = 0; k < ds.length(); k++)
+				vec.push_back(*pb++);
 			vec.push_back(';');
 		}
 		else if (0xd800 <= chNum && chNum < 0xdc00) 

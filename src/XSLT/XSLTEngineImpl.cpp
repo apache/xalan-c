@@ -144,6 +144,31 @@
 #include "XSLTInputSource.hpp"
 #include "XSLTProcessorException.hpp"
 
+ // @@@@
+#include <iostream>
+void dumpStack(XSLTEngineImpl::VariableStackStackType& m_stack)
+{
+	int  size = m_stack.size();
+	assert (size < 100);
+	for(int i = 0; i < size; i++)
+	{
+		const StackEntry* const		theEntry = m_stack[i];
+		if(theEntry->getType() == StackEntry::eArgument)
+		{
+			const Arg* const	theArg =
+				dynamic_cast<const Arg*>(theEntry);
+			std::cout << i << ": " << theArg->getName().getLocalPart() << "\n";
+		}
+		else if(theEntry->getType() == StackEntry::eContextMarker)
+			std::cout << i << " Context marker" << "\n";
+		else if(theEntry->getType() == StackEntry::eElementMarker)
+			std::cout << i <<  " Element marker" << "\n";
+		else
+			std::cout << "??" << "\n";
+	}
+//	std::cout << m_globalStackFrameIndex <<  ": global stack frame index" << "\n";
+//	std::cout << m_currentStackFrameIndex <<  ": current stack frame index" << "\n";
+}
 
 
 const double			XSLTEngineImpl::s_XSLTVerSupported(1.0);
@@ -2310,7 +2335,7 @@ XSLTEngineImpl::getPrefixForNamespace(
 void
 XSLTEngineImpl::copyNamespaceAttributes(
 			const XalanNode&	src,
-			bool				srcIsStylesheetTree) 
+			bool				/* srcIsStylesheetTree */) 
 {
 	int type;
 
@@ -2341,7 +2366,8 @@ XSLTEngineImpl::copyNamespaceAttributes(
 					const XalanDOMString 	prefix = isPrefix ? substring(aname, 6) : XalanDOMString();
 					const XalanDOMString 	desturi = getResultNamespaceForPrefix(prefix);
 					XalanDOMString			srcURI = attr->getNodeValue();
-
+					/*
+					@@ JMD: Not used anymore in java ...
 					const bool			isXSLNS =
 						srcIsStylesheetTree && equalsIgnoreCase(srcURI, m_XSLNameSpaceURL)
 						|| 0 != m_stylesheetRoot->lookupExtensionNSHandler(srcURI)
@@ -2353,6 +2379,8 @@ XSLTEngineImpl::copyNamespaceAttributes(
 					}
 
 					if(!equalsIgnoreCase(srcURI, desturi) && !isXSLNS)
+					*/
+					if(!equalsIgnoreCase(srcURI, desturi))
 					{
 						addResultAttribute(m_pendingAttributes, aname, srcURI);
 					}
@@ -3559,6 +3587,8 @@ void
 XSLTEngineImpl::resolveTopLevelParams(StylesheetExecutionContext&	executionContext)
 {
 	m_stylesheetRoot->pushTopLevelVariables(executionContext, m_topLevelParams);
+	getVariableStacks().markGlobalStackFrame();
+	getVariableStacks().pushContextMarker(0, 0);
 }
 
 
@@ -3585,7 +3615,7 @@ XSLTEngineImpl::registerExtensionHandlerByName(
 			const XalanDOMString&	/* codetype */)
 {
 #if 1
-	error("XSL4C does not support extensions at this time!");
+	error("Xalan does not support extensions at this time!");
 #else
 	try
 	{
@@ -3631,7 +3661,7 @@ XSLTEngineImpl::registerExtensionHandler(
 			DispatcherFactory*	/* factory */)
 {
 #if 1
-	error("XSL4C does not support extensions at this time!");
+	error("Xalan does not support extensions at this time!");
 #else
 	if(0 != m_diagnosticsPrintWriter)
 	{
@@ -3958,7 +3988,9 @@ XSLTEngineImpl::StackGuard::pop()
 XSLTEngineImpl::VariableStack::VariableStack(XSLTEngineImpl&	theProcessor) :
 	m_caller(),
 	m_stack(),
-	m_processor(theProcessor)
+	m_processor(theProcessor),
+	m_globalStackFrameIndex(-1),
+	m_currentStackFrameIndex(0)
 {
 	pushContextMarker(0, 0);	
 }
@@ -3990,7 +4022,7 @@ XSLTEngineImpl::VariableStack::reset()
 void
 XSLTEngineImpl::VariableStack::pushElementMarker(const XalanNode*	elem)
 {
-	m_stack.push_back(new ElementMarker(elem));
+	push(new ElementMarker(elem), true);
 }
 
 
@@ -4012,15 +4044,14 @@ XSLTEngineImpl::VariableStack::popElementMarker(const XalanNode*	elem)
 
 			if(theEntry->getType() == StackEntry::eElementMarker)
 			{
-				m_stack.pop_back();
+				pop();
 				fFound = true;
 			}
 			else
 			{
-				m_stack.pop_back();
+				pop();
 			}
 
-			delete theEntry;
 		}
 	}
 }
@@ -4059,7 +4090,7 @@ XSLTEngineImpl::VariableStack::pushContextMarker(
 			const XalanNode*	caller,
 			const XalanNode*	sourceNode)
 {
-	m_stack.push_back(new ContextMarker(caller, sourceNode));
+	push(new ContextMarker(caller, sourceNode), true);
 }
 
 
@@ -4075,10 +4106,11 @@ XSLTEngineImpl::VariableStack::popCurrentContext()
 		const StackEntry* const		theEntry = m_stack[i];
 		assert(theEntry != 0);
 		int type = theEntry->getType();
+		if (type >3 || type < 0)
+			dumpStack(m_stack);
 		assert(type <4 && type >= 0);
 		fFound  = (type == StackEntry::eContextMarker);
-		m_stack.pop_back();
-		delete theEntry;
+		pop();
 	}
 }
 
@@ -4115,65 +4147,70 @@ XSLTEngineImpl::VariableStack::pushParams(
 	{
 		try
 		{
-			m_stack.pop_back();
-
+			// If we do a pop, the current stack index may point to the last
+			// element, in which case it will be changed when the push happens, so
+			// we need to preserve the current index
 			const ElemTemplateElement*	child =
 				xslCallTemplateElement.getFirstChildElem();
-
-			while(0 != child)
+			if (0 != child)
 			{
-				if(Constants::ELEMNAME_WITHPARAM == child->getXSLToken())
+				pop();
+
+				while(0 != child)
 				{
-					const ElemWithParam* const	xslParamElement =
+					if(Constants::ELEMNAME_WITHPARAM == child->getXSLToken())
+					{
+						const ElemWithParam* const	xslParamElement =
 #if defined(XALAN_OLD_STYLE_CASTS)
-						(ElemWithParam*)child;
+							(ElemWithParam*)child;
 #else
 						static_cast<const ElemWithParam*>(child);
 #endif
 
-					Arg*	theArg = 0;
+						Arg*	theArg = 0;
 
-					const XPath* const	pxpath = xslParamElement->getSelectPattern();
+						const XPath* const	pxpath = xslParamElement->getSelectPattern();
 
-					if(0 != pxpath)
-					{
-						XObject* const	theXObject =
+						if(0 != pxpath)
+						{
+							XObject* const	theXObject =
 								pxpath->execute(sourceNode,
-												*xslParamElement,
-												executionContext.getXPathExecutionContext());
+										*xslParamElement,
+										executionContext.getXPathExecutionContext());
 
-						theArg = new Arg(xslParamElement->getQName(), theXObject, true);
+							theArg = new Arg(xslParamElement->getQName(), theXObject, true);
+						}
+						else
+						{
+							ResultTreeFragBase* const	theDocFragment =
+								m_processor.createResultTreeFrag(executionContext,
+										*xslParamElement,
+										sourceTree,
+										sourceNode,
+										mode);
+							assert(theDocFragment != 0);
+
+							XObject* var = m_processor.createXResultTreeFrag(*theDocFragment);
+
+							theArg = new Arg(xslParamElement->getQName(), var, true);
+						}
+						assert(theArg != 0);
+
+						tempStack.push_back(theArg);
 					}
-					else
-					{
-						ResultTreeFragBase* const	theDocFragment =
-							m_processor.createResultTreeFrag(executionContext,
-									*xslParamElement,
-									sourceTree,
-									sourceNode,
-									mode);
-						assert(theDocFragment != 0);
 
-						XObject* var = m_processor.createXResultTreeFrag(*theDocFragment);
-
-						theArg = new Arg(xslParamElement->getQName(), var, true);
-					}
-					assert(theArg != 0);
-
-					tempStack.push_back(theArg);
+					child = child->getNextSiblingElem();
 				}
-
-				child = child->getNextSiblingElem();
 			}
 		}
 		catch(...)
 		{
-			m_stack.push_back(cm);
+			push(cm);
 
 			throw;
 		}
 
-		m_stack.push_back(cm);
+		push(cm);
 
 		try
 		{
@@ -4181,7 +4218,7 @@ XSLTEngineImpl::VariableStack::pushParams(
 			const int	nParams = tempStack.size();
 			for(int i = 0; i < nParams; i++)
 			{
-				m_stack.push_back(tempStack.back());
+				push(tempStack.back());
 				tempStack.pop_back();
 			}
 		}
@@ -4205,39 +4242,6 @@ XSLTEngineImpl::VariableStack::pushParams(
 }
 
 
-
-bool
-XSLTEngineImpl::VariableStack::hasParamVariable(const QName&	qname) const
-{
-	bool hasit = false;
-
-	const int	nElems = m_stack.size();
-
-	// Sub 1 extra for the context marker.
-	for(int i = (nElems - 1); i >= 0; i--)
-	{
-		const StackEntry* const		theEntry = m_stack[i];
-		assert(theEntry != 0);
-		if(theEntry->getType() == StackEntry::eArgument)
-		{
-			const Arg* const	theArg = static_cast<const Arg*>(theEntry);
-
-			if(theArg->getName().equals(qname))
-			{
-				hasit = true;
-				break;
-			}
-		}
-		else if(theEntry->getType() == StackEntry::eContextMarker)
-		{
-			break;
-		}
-	}
-
-	return hasit;
-}
-
-
 void
 XSLTEngineImpl::VariableStack::pushVariable(
 			const QName&		name,
@@ -4249,7 +4253,7 @@ XSLTEngineImpl::VariableStack::pushVariable(
 		pushElementMarker(e);
 	}
 
-	m_stack.push_back(new Arg(name, val, false));
+	push(new Arg(name, val, false), true);
 }
 
 
@@ -4286,7 +4290,7 @@ XSLTEngineImpl::VariableStack::findArg(
 {
 	const Arg*	theResult = 0;
 
-	const int	nElems = m_stack.size();
+	const int	nElems = getCurrentStackFrameIndex();
 
 	// Sub 1 extra for the context marker.
 	for(int i = (nElems - 1); i >= 0; i--)
@@ -4315,7 +4319,7 @@ XSLTEngineImpl::VariableStack::findArg(
 	if(0 == theResult && true == fSearchGlobalSpace)
 	{
 		// Look in the global space
-		for(int i = 2; i < (nElems - 1); i++)
+		for(int i = (m_globalStackFrameIndex-1); i >= 2; i--)
 		{
 			const StackEntry* const		theEntry = m_stack[i];
 			assert(theEntry != 0);
@@ -4346,7 +4350,6 @@ void
 XSLTEngineImpl::InstallFunctions()
 {
 	XPath::installFunction(XALAN_STATIC_UCODE_STRING("current"), FunctionCurrent());
-	XPath::installFunction(XALAN_STATIC_UCODE_STRING("current"), FunctionDocument());
 	XPath::installFunction(XALAN_STATIC_UCODE_STRING("format-number"), FunctionFormatNumber());
 	XPath::installFunction(XALAN_STATIC_UCODE_STRING("key"), FunctionKey());
 	XPath::installFunction(XALAN_STATIC_UCODE_STRING("unparsed-entity-uri"), FunctionUnparsedEntityURI());

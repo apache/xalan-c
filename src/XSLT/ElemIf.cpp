@@ -114,7 +114,7 @@ ElemIf::ElemIf(
 			break;
 
 		default:
-			if(!isAttrOK(tok, aname, atts, i))
+			if(!isAttrOK(aname, atts, i, constructionContext))
 			{
 				constructionContext.error(name + " has an illegal attribute: " + aname);
 			}

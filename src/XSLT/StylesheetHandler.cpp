@@ -125,7 +125,7 @@ StylesheetHandler::StylesheetHandler(
 	m_constructionContext(constructionContext),
 	m_includeBase(stylesheetTree.getBaseIdentifier()),
 	m_pTemplate(0),
-	m_pLastPopped(0),
+	m_lastPopped(0),
 	m_inTemplate(false),
 	m_foundStylesheet(false),
 	m_foundNotImport(false),
@@ -517,6 +517,21 @@ StylesheetHandler::startElement (const XMLCh* const name, AttributeList& atts)
 						else if(equals(aname, Constants::ATTRNAME_DEFAULTSPACE))
 						{
 							throw SAXException("default-space no longer supported!  Use xsl:strip-space or xsl:preserve-space instead.");
+						}
+						else if(equals(aname, Constants::ATTRNAME_EXCLUDE_RESULT_PREFIXES))
+						{
+							m_constructionContext.warn(Constants::ATTRNAME_EXCLUDE_RESULT_PREFIXES
+									+ " not supported yet!");
+
+						/*
+							@@ TODO: implement this ---
+							StringToStringTable excluded =
+								m_stylesheet.getExcludeResultPrefixes();
+							excluded =
+								m_stylesheet.processExcludeResultPrefixes(atts.getValue(i),
+										excluded);
+							m_stylesheet.setExcludeResultPrefixes(excluded);
+						*/
 						}
 						else if(equals(aname, Constants::ATTRNAME_EXTENSIONELEMENTPREFIXES))
 						{
@@ -1153,8 +1168,10 @@ StylesheetHandler::processInclude(
 		{
 			foundIt = true;
 			
-			PushPopIncludeState		theStateHandler(*this);
+// ??			PushPopIncludeState		theStateHandler(*this);
 
+			ElemTemplateElement* saved_pLastPopped = m_lastPopped;
+			m_lastPopped = 0;
 			const XalanDOMString	href = atts.getValue(i);
 
 			assert(m_stylesheet.getIncludeStack().back() != 0);
@@ -1173,6 +1190,7 @@ StylesheetHandler::processInclude(
 			
 			m_stylesheet.getIncludeStack().pop_back();
 
+			m_lastPopped = saved_pLastPopped;
 		}
 		else if(!isAttrOK(aname, atts, i))
 		{
@@ -1198,11 +1216,11 @@ void StylesheetHandler::endElement(const XMLCh* const name)
 
 	m_stylesheet.popNamespaces();
 
-	m_pLastPopped = m_elemStack.back();
+	m_lastPopped = m_elemStack.back();
 	m_elemStack.pop_back();
-	m_pLastPopped->setFinishedConstruction(true);
+	m_lastPopped->setFinishedConstruction(true);
 
-	const int	tok = m_pLastPopped->getXSLToken();
+	const int tok = m_lastPopped->getXSLToken();
 
 	if(Constants::ELEMNAME_TEMPLATE == tok)
 	{
@@ -1211,7 +1229,7 @@ void StylesheetHandler::endElement(const XMLCh* const name)
 	else if((Constants::ELEMNAME_PARAMVARIABLE == tok) ||
 		Constants::ELEMNAME_VARIABLE == tok)
 	{
-		ElemVariable* const		var = static_cast<ElemVariable*>(m_pLastPopped);
+		ElemVariable* const		var = static_cast<ElemVariable*>(m_lastPopped);
 
 		if(var->isTopLevel())
 		{
@@ -1227,7 +1245,7 @@ void StylesheetHandler::endElement(const XMLCh* const name)
 		tok == Constants::ELEMNAME_TEXT)
 	{
 		// These are stray elements, so delete them...
-		delete m_pLastPopped;
+		delete m_lastPopped;
 	}
 
 	// BEGIN SANJIVA CODE
@@ -1314,8 +1332,14 @@ void StylesheetHandler::characters (const XMLCh* const chars, const unsigned int
 
 			if(0 != last)
 			{
-				if(Constants::ELEMNAME_TEXTLITERALRESULT == last->getXSLToken() &&
-					static_cast<ElemTextLiteral*>(last)->isPreserveSpace() == false)
+				ElemTemplateElement* lastElem = dynamic_cast<ElemTemplateElement*>(last);
+				// If it was surrounded by xsl:text, it will count as an element.
+				bool isPrevCharData =
+					Constants::ELEMNAME_TEXTLITERALRESULT == lastElem->getXSLToken();
+				bool isLastPoppedXSLText = (m_lastPopped != 0) &&
+					(Constants::ELEMNAME_TEXT == m_lastPopped->getXSLToken());
+
+				if(isPrevCharData && ! isLastPoppedXSLText)
 				{
 					parent->appendChildElem(elem);
 
@@ -1324,11 +1348,7 @@ void StylesheetHandler::characters (const XMLCh* const chars, const unsigned int
 			}
 
 			if(shouldPush)
-			{
 				m_whiteSpaceElems.push_back(elem);
-
-				elem = 0;
-			}
 		}
 	}
 	// BEGIN SANJIVA CODE
@@ -1483,7 +1503,7 @@ StylesheetHandler::PushPopIncludeState::PushPopIncludeState(StylesheetHandler&	t
 	m_handler(theHandler),
 	m_elemStack(theHandler.m_elemStack),
 	m_pTemplate(theHandler.m_pTemplate),
-	m_pLastPopped(theHandler.m_pLastPopped),
+	m_lastPopped(theHandler.m_lastPopped),
 	m_inTemplate(theHandler.m_inTemplate),
 	m_foundStylesheet(theHandler.m_foundStylesheet),
 	m_XSLNameSpaceURL(theHandler.m_processor.getXSLNameSpaceURL()),
@@ -1491,7 +1511,7 @@ StylesheetHandler::PushPopIncludeState::PushPopIncludeState(StylesheetHandler&	t
 {
 	m_handler.m_elemStack.clear();
 	m_handler.m_pTemplate = 0;
-	m_handler.m_pLastPopped = 0;
+	m_handler.m_lastPopped = 0;
 	m_handler.m_inTemplate = false;
 	m_handler.m_foundStylesheet = false;
 	m_handler.m_foundNotImport = false;
@@ -1513,7 +1533,7 @@ StylesheetHandler::PushPopIncludeState::~PushPopIncludeState()
 
 	m_handler.m_elemStack = m_elemStack;
 	m_handler.m_pTemplate = m_pTemplate;
-	m_handler.m_pLastPopped = m_pLastPopped;
+	m_handler.m_lastPopped = m_lastPopped;
 	m_handler.m_inTemplate = m_inTemplate;
 	m_handler.m_foundStylesheet = m_foundStylesheet;
 	m_handler.m_processor.setXSLNameSpaceURL(m_XSLNameSpaceURL);

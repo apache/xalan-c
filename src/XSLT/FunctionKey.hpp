@@ -84,6 +84,12 @@ class XALAN_XSLT_EXPORT FunctionKey : public Function
 {
 public:
 
+#if defined(XALAN_NO_NAMESPACES)
+	typedef vector<XObject*> XObjectPtrVectorType;
+#else
+	typedef std::vector<XObject*> XObjectPtrVectorType;
+#endif 
+
 	FunctionKey();
 
 	virtual

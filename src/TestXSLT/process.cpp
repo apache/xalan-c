@@ -541,7 +541,8 @@ THREADFUNCTIONRETURN xsltMain(void *vptr) throw(XMLException)
 		xslFileName = params.xslFileName.c_str();
 	}
 
-	stylesheet = processor.processStylesheet(xslFileName, theConstructionContext);
+	if (! isEmpty(xslFileName))
+		stylesheet = processor.processStylesheet(xslFileName, theConstructionContext);
 
 	const XalanDOMString	mimeEncoding(XALAN_STATIC_UCODE_STRING("UTF-8"));
 	const XalanDOMString	encoding(XALAN_STATIC_UCODE_STRING("UTF-8"));
@@ -764,6 +765,10 @@ int main(int argc, const char* argv[]) throw()
 
 			theResult = -1;
 		}
+		catch (...)
+		{
+			cout << "\nUnhandled Exception\n";
+		}
 
 #if !defined(NDEBUG)
 		const unsigned long		theInstanceCount =
@@ -806,11 +811,13 @@ int main(int argc, const char* argv[]) throw()
 					 << endl;
 			}
 
+#if defined(INTERACTIVE)
 			cout << "Hit <Enter> to continue..."
 				 << endl
 				 << endl;
 
 			cin.get();
+#endif
 		}
 #endif
 

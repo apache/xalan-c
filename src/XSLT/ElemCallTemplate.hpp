@@ -128,7 +128,7 @@ private:
 	operator=(const ElemCallTemplate &);
 
 	// Data members...
-	const AVT*	m_pNameAVT;
+	const QName* m_templateName;
 };
 
 

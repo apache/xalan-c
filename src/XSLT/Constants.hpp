@@ -249,24 +249,25 @@ public:
 	/*---------------------------------------------
 	 * Literals for XSL attribute names.
 	 */
-	static const XalanDOMString	ATTRNAME_CLASS;
-	static const XalanDOMString	ATTRNAME_ATTRIBUTE;
-	static const XalanDOMString	ATTRNAME_ATTRIBUTE_SET;
 	static const XalanDOMString	ATTRNAME_AMOUNT;
 	static const XalanDOMString	ATTRNAME_ANCESTOR;
+	static const XalanDOMString	ATTRNAME_ATTRIBUTE;
+	static const XalanDOMString	ATTRNAME_ATTRIBUTE_SET;
 	static const XalanDOMString	ATTRNAME_CASEORDER;
+	static const XalanDOMString	ATTRNAME_CLASS;
 	static const XalanDOMString	ATTRNAME_CONDITION;
 	static const XalanDOMString	ATTRNAME_COPYTYPE;
 	static const XalanDOMString	ATTRNAME_COUNT;
 	static const XalanDOMString	ATTRNAME_DATATYPE;
 	static const XalanDOMString	ATTRNAME_DECIMALSEPARATOR;
-	static const XalanDOMString	ATTRNAME_DEFAULTSPACE;
 	static const XalanDOMString	ATTRNAME_DEFAULT;
+	static const XalanDOMString	ATTRNAME_DEFAULTSPACE;
 	static const XalanDOMString	ATTRNAME_DEPTH;
 	static const XalanDOMString	ATTRNAME_DIGIT;
 	static const XalanDOMString	ATTRNAME_DIGITGROUPSEP;
 	static const XalanDOMString	ATTRNAME_ELEMENT;
 	static const XalanDOMString	ATTRNAME_ELEMENTS;
+	static const XalanDOMString	ATTRNAME_EXCLUDE_RESULT_PREFIXES;
 	static const XalanDOMString	ATTRNAME_EXPR;
 	static const XalanDOMString	ATTRNAME_EXTENSIONELEMENTPREFIXES;
 	static const XalanDOMString	ATTRNAME_FORMAT;
@@ -278,16 +279,15 @@ public:
 	static const XalanDOMString	ATTRNAME_IMPORTANCE;
 	static const XalanDOMString	ATTRNAME_INDENTRESULT;
 	static const XalanDOMString	ATTRNAME_INFINITY;
+	static const XalanDOMString	ATTRNAME_LANG;
 	static const XalanDOMString	ATTRNAME_LETTERVALUE;
 	static const XalanDOMString	ATTRNAME_LEVEL;
-	static const XalanDOMString	ATTRNAME_LANG;
-	// static const XalanDOMString	ATTRNAME_MACRO;
 	static const XalanDOMString	ATTRNAME_MATCH;
 	static const XalanDOMString	ATTRNAME_MINUSSIGN;
 	static const XalanDOMString	ATTRNAME_MODE;
 	static const XalanDOMString	ATTRNAME_NAME;
-	static const XalanDOMString	ATTRNAME_NAN;
 	static const XalanDOMString	ATTRNAME_NAMESPACE;
+	static const XalanDOMString	ATTRNAME_NAN;
 	static const XalanDOMString	ATTRNAME_NDIGITSPERGROUP;
 	static const XalanDOMString	ATTRNAME_ONLY;
 	static const XalanDOMString	ATTRNAME_ORDER;
@@ -301,17 +301,17 @@ public:
 	static const XalanDOMString	ATTRNAME_SELECT;
 	static const XalanDOMString	ATTRNAME_SEQUENCESRC;
 	static const XalanDOMString	ATTRNAME_STYLE;
-    static const XalanDOMString	ATTRNAME_STYLESHEET_PREFIX;
 	static const XalanDOMString	ATTRNAME_TEST;
 	static const XalanDOMString	ATTRNAME_TOSTRING;
 	static const XalanDOMString	ATTRNAME_TYPE;
 	static const XalanDOMString	ATTRNAME_USE;
 	static const XalanDOMString	ATTRNAME_USEATTRIBUTESETS;
 	static const XalanDOMString	ATTRNAME_VALUE;
-	static const XalanDOMString	ATTRNAME_XMLNSDEF;
 	static const XalanDOMString	ATTRNAME_XMLNS;
+	static const XalanDOMString	ATTRNAME_XMLNSDEF;
 	static const XalanDOMString	ATTRNAME_XMLSPACE;
 	static const XalanDOMString	ATTRNAME_ZERODIGIT;
+   static const XalanDOMString	ATTRNAME_STYLESHEET_PREFIX;
  
 	  // Atributes on the functions element
 	static const XalanDOMString	ATTRNAME_NS;
@@ -463,7 +463,8 @@ public:
 		TATTRNAME_VALUE = 65,
 		TATTRNAME_XMLNSDEF = 66,
 		TATTRNAME_XMLNS = 67,
-		TATTRNAME_XMLSPACE = 68
+		TATTRNAME_XMLSPACE = 68,
+		TATTRNAME_EXCLUDE_RESULT_PREFIXES = 69
 	};
 
 	// These are used mainly for keys in the pattern lookup table,

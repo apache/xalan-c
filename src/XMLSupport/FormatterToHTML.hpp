@@ -81,6 +81,7 @@
 // Base class header file.
 #include <XMLSupport/FormatterToXML.hpp>
 
+#include <XPath/QName.hpp>
 
 
 /**
@@ -159,6 +160,11 @@ public:
 	cdata(
 			const XMLCh* const	ch,
 			const unsigned int 	length);
+
+	virtual void
+	processingInstruction(
+			const XMLCh* const	target,
+			const XMLCh* const	data);
 
 
 	// These methods are new ...
@@ -265,7 +271,8 @@ private:
 	static const AttributesMapType			s_attruris;
 	static const StringSetType				s_escapetb;
 
-	XalanDOMString							m_currentElementName;
+	XalanDOMString								m_currentElementName;
+	bool m_inBlockElem;
 
 };
 

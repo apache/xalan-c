@@ -99,6 +99,10 @@
 #include "SelectionEvent.hpp"
 #include "TracerEvent.hpp"
 
+#if !defined(XALAN_NO_NAMESPACES)
+	using std::make_pair;
+#endif
+
 
 /** 
  * @param processor The XSLT Processor.
@@ -123,7 +127,7 @@ ElemTemplateElement::ElemTemplateElement(
 	m_columnNumber(columnNumber),
 	m_defaultSpace(true),
 	m_finishedConstruction(false),
-	m_namespaces(m_stylesheet.getCurrentNamespace()),
+	m_namespaces(),
 	m_elemName(name),
 	m_xslToken(xslToken),
 	m_parentNode(0),
@@ -132,6 +136,30 @@ ElemTemplateElement::ElemTemplateElement(
 	m_firstChild(0),
 	m_surrogateChildren(*this)
 {
+	/*
+	 * Copy the stylesheet namespaces to the element namespace vector
+	 */
+	const Stylesheet::NamespacesStackType& stylesheetNamespaces =
+		m_stylesheet.getNamespaces();
+	int n = stylesheetNamespaces.size();
+	for(int i = (n-1); i >= 0; i--)
+	{
+		const Stylesheet::NamespaceVectorType& nsVector = stylesheetNamespaces[i];
+		for(int j = 0; j < nsVector.size(); j++)
+		{
+			NameSpace ns = nsVector[j];
+			if(isEmpty(ns.getURI()))
+				continue;
+			if(!shouldExcludeResultNamespaceNode(ns.getPrefix(), ns.getURI()))
+			{
+				m_namespaces.push_back(ns);
+			}
+			else
+			{
+				m_excludedNamespaces.insert(make_pair(ns.getPrefix(), ns.getURI()));
+			}
+		}
+	}
 }
 
 
@@ -577,13 +605,15 @@ ElemTemplateElement::transformSelectedChildren(
 			XalanNode*						sourceNodeContext,
 			const QName&					mode,
 			const XPath*					selectPattern,
-			int								xslToken) const
+			int								xslToken,
+			int selectStackFrameIndex) const
 {
 	// Sort the nodes according to the xsl:sort method
 	const int	tok = xslInstruction.getXSLToken();
 
 	NodeSorter::NodeSortKeyVectorType	keys;
 
+	// @@ JMD: Now in method processSortKeys in java ...
 	if((Constants::ELEMNAME_APPLY_TEMPLATES == tok) ||
 		(Constants::ELEMNAME_FOREACH == tok))
 	{
@@ -622,11 +652,37 @@ ElemTemplateElement::transformSelectedChildren(
 			keys.push_back(key);
 		}
 	}
+	// @@ JMD: Now in method processSortKeys in java ...
 
 	MutableNodeRefList sourceNodes;
 
+/*
+	@@@ JMD: This is newer java code that is not implemented in C++; so, the
+	manipulation of the current stack frame index really does nothing now, it's
+	just a placeholder for future implementation
+
+    // We can only do callbacks if the node list isn't sorted.
+    NodeCallback callback = (null == keys) ? this : null;
+*/
+
+	int savedCurrentStackFrameIndex = executionContext.getCurrentStackFrameIndex();
 	if (0 != selectPattern)
 	{
+		executionContext.setCurrentStackFrameIndex(selectStackFrameIndex);
+/*
+	@@@ JMD: This is newer java code that is not implemented in C++; the
+	callback mechanism may affect the correct positioning of the stack frame and
+	may be why the parameters aren't working right
+
+      // Optimization note: is there a way we can keep from creating 
+      // a new callback context every time?
+      TemplateElementContext callbackContext 
+        = (null != callback) 
+			 ? new TemplateElementContext(stylesheetTree, xslInstruction,
+					 template, sourceNodeContext, mode, xslToken, tcontext,
+					 savedCurrentStackFrameIndex) : null;
+*/
+
 		XObject* const	result = selectPattern->execute(
 			sourceNodeContext,
 			xslInstruction,
@@ -644,6 +700,7 @@ ElemTemplateElement::transformSelectedChildren(
 					*selectPattern,
 					result));
 		}
+		executionContext.setCurrentStackFrameIndex(savedCurrentStackFrameIndex);
 	}
 	else if (keys.size() > 0)
 	{
@@ -658,7 +715,9 @@ ElemTemplateElement::transformSelectedChildren(
 		{
 			NodeSorter sorter(executionContext.getXPathExecutionContext());
 
+			executionContext.setCurrentStackFrameIndex(selectStackFrameIndex);
 			sorter.sort(sourceNodes, keys);
+			executionContext.setCurrentStackFrameIndex(savedCurrentStackFrameIndex);
 		}
 
 		const MutableNodeRefList	savedContextNodeList(executionContext.getContextNodeList());
@@ -1068,6 +1127,11 @@ ElemTemplateElement::removeChild(XalanNode*		oldChild)
 }
 
 
+/** 
+ * Throw a template element error.
+ * 
+ * @param msg Description of the error that occured.
+ */
 
 XalanNode*
 ElemTemplateElement::appendChild(XalanNode*		oldChild)
@@ -1086,7 +1150,6 @@ ElemTemplateElement::hasChildNodes() const
 {
     return 0 != m_firstChild ? true : false;
 }
-
 
 
 void
@@ -1169,6 +1232,57 @@ ElemTemplateElement::getAttributeNode(const XalanDOMString&		/* name */) const
 	return 0;
 }
 
+
+void ElemTemplateElement::removeExcludedPrefixes(
+		const String2StringMapType& excludeResultPrefixes)
+{
+	if(0 !=excludeResultPrefixes.size() && 0 != m_namespaces.size())
+	{
+		for( NamespaceVectorType::iterator it = m_namespaces.begin();
+				it != m_namespaces.end(); )
+		{
+			NameSpace ns = *it;
+			DOMString p = ns.getPrefix();
+			String2StringMapType::const_iterator it2 = excludeResultPrefixes.find(p);
+			if(it2 != excludeResultPrefixes.end())
+			{
+				m_excludedNamespaces.insert(make_pair(p, ns.getURI()));
+				it = m_namespaces.erase(it);
+			}
+			else 
+				it++;
+		}
+	}
+}
+  
+bool ElemTemplateElement::shouldExcludeResultNamespaceNode(
+		const DOMString& prefix, const DOMString& uri)
+{
+/*
+	@@ JMD: Need to implement this ---
+
+	if(uri.equals(m_stylesheet.m_XSLNameSpaceURL)
+			|| (null != m_stylesheet.lookupExtensionNSHandler(uri))
+			|| uri.equals("http://xml.apache.org/xslt")
+			|| uri.equals("http://xsl.lotus.com/")
+			|| uri.equals("http://xsl.lotus.com"))
+		return true; 
+	ElemTemplateElement elem = this;
+	while(0 != elem)
+	{
+		elem = elem.m_parentNode;
+		if(0 == elem)
+		{
+			if(0 != m_stylesheet.m_excludeResultPrefixes)
+			{
+				if(m_stylesheet.m_excludeResultPrefixes.contains(prefix))
+					return true;
+			}
+		}
+	}
+*/
+	return false;
+}
 
 
 XalanNodeList*

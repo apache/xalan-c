@@ -88,7 +88,7 @@ ElemCallTemplate::ElemCallTemplate(
 						lineNumber,
 						columnNumber,
 						Constants::ELEMNAME_CALLTEMPLATE),
-	m_pNameAVT(0)
+	m_templateName(0)
 {
 	const unsigned int	nAttrs = atts.getLength();
 
@@ -98,8 +98,12 @@ ElemCallTemplate::ElemCallTemplate(
 
 		if(equals(aname, Constants::ATTRNAME_NAME))
 		{
+        m_templateName = new QName(atts.getValue(i), getStylesheet().getNamespaces());        
+
+/*
 			m_pNameAVT = new AVT(aname,	atts.getType(i), atts.getValue(i),
 				*this, constructionContext);
+*/
 		}
 		else if(!isAttrOK(aname, atts, i, constructionContext))
 		{
@@ -112,7 +116,7 @@ ElemCallTemplate::ElemCallTemplate(
 	
 ElemCallTemplate::~ElemCallTemplate()
 {
-	delete m_pNameAVT;
+	delete m_templateName;
 }
 
 
@@ -126,36 +130,37 @@ ElemCallTemplate::execute(
 {
 	ElemTemplateElement::execute(executionContext,	sourceTree, sourceNode, mode);
 
-	assert(m_pNameAVT != 0);
-
-	XalanDOMString templateName; 
-
-	m_pNameAVT->evaluate(templateName, sourceNode, *this, executionContext.getXPathExecutionContext());
-
-	if(!isEmpty(templateName))
+	if(!isEmpty(m_templateName->getLocalPart()))
 	{
 		ElemTemplateElement* const	theTemplate =
-			getStylesheet().getStylesheetRoot().findNamedTemplate(templateName, executionContext);
+			getStylesheet().getStylesheetRoot().findNamedTemplate(*m_templateName,
+					executionContext);
 
 		if(0 != theTemplate)
 		{
-			executionContext.pushContextMarker(theTemplate, sourceNode);
-			
-			executionContext.pushParams(*this, 
-				sourceTree, sourceNode, mode, theTemplate);
+			int selectStackFrameIndex = executionContext.getCurrentStackFrameIndex();
+			executionContext.pushContextMarker(theTemplate,
+					sourceNode);
+			executionContext.setCurrentStackFrameIndex(selectStackFrameIndex);
+			executionContext.pushParams(*this, sourceTree, sourceNode, mode,
+					theTemplate);
+			executionContext.markGlobalStackFrame();
 
+			executionContext.setCurrentStackFrameIndex();
 			theTemplate->execute(executionContext, sourceTree, sourceNode, mode);
 
 			executionContext.popCurrentContext();
+			executionContext.setCurrentStackFrameIndex(selectStackFrameIndex);
 		}
 		else
 		{
-			executionContext.error("Could not find template named: '" + templateName + "'");
+			executionContext.error("Could not find template named: '" +
+					m_templateName->getLocalPart() + "'");
 		}
 	}
 	else
 	{
-		executionContext.error("Could not resolve name AVT in xsl:call-template.");
+		executionContext.error("Could not resolve name in xsl:call-template.");
 	}
 }
 

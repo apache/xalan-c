@@ -118,12 +118,13 @@ private:
 
 #if defined(XALAN_NO_NAMESPACES)
 	typedef vector<const AVT*>				AVTVectorType;
-	typedef vector<XalanDOMString>			ExtensionElementPrefixesVectoryType;
+	typedef vector<XalanDOMString>			ExtensionElementPrefixesVectorType;
+	typedef map<DOMString, DOMString>	String2StringMapType;
 #else
 	typedef std::vector<const AVT*>			AVTVectorType;
-	typedef std::vector<XalanDOMString>		ExtensionElementPrefixesVectoryType;
+	typedef std::vector<XalanDOMString>		ExtensionElementPrefixesVectorType;
+	typedef std::map<DOMString, DOMString>	String2StringMapType;
 #endif
-
 
 	/**
 	 * A stack to keep track of the attribute elements.
@@ -132,7 +133,23 @@ private:
 
 	XalanDOMString							m_QName;
 
-	ExtensionElementPrefixesVectoryType		m_extensionElementPrefixes;
+
+	ExtensionElementPrefixesVectorType		m_extensionElementPrefixes;
+	
+	/**
+	 * This is in support of the exclude-result-prefixes attribute.  It is
+	 * really needed only at construction time, and so should probably go
+	 * somewhere else.
+	 */
+	String2StringMapType m_excludeResultPrefixes;
+
+/**
+ * Process the exclude-result-prefixes or the extension-element-prefixes
+ * attributes, for the purpose of prefix exclusion.
+ */
+void ElemLiteralResult::processPrefixControl(const DOMString& localName, 
+		const DOMString& attrValue);
+		
 };
 
 

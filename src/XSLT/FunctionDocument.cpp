@@ -234,7 +234,7 @@ FunctionDocument::execute(
 													executionContext.getNodeData(*arg->nodeset().item(i)) :
 													arg->str();
 
-			if(length(ref) > 0)
+			if(! isEmpty(ref))
 			{
 				if(docContext == 0)
 				{
