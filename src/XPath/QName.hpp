@@ -198,8 +198,6 @@ public:
 	static DOMString getPrefixForNamespace(const NamespacesStackType& nsStack,
 			const DOMString& uri, bool reverse=true);
 
-	static const DOMString	s_XMLNAMESPACEURI;
-
 private:
 
 	void

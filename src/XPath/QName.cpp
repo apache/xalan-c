@@ -69,14 +69,14 @@
 
 
 
+#include <DOMSupport/DOMServices.hpp>
+
+
+
 #include "NameSpace.hpp"
 #include "ElementPrefixResolverProxy.hpp"
 #include "PrefixResolver.hpp"
 #include "XPathSupport.hpp"
-
-
-const DOMString 	QName::s_XMLNAMESPACEURI(XALAN_STATIC_UCODE_STRING("http://www.w3.org/XML/1998/namespace")
-											 );
 
 
 
@@ -169,7 +169,7 @@ QName::resolvePrefix(
 
 		if(::equals(prefix, "xml"))
 		{
-			m_namespace = s_XMLNAMESPACEURI;
+			m_namespace = DOMServices::s_XMLNamespaceURI;
 		}
 		// The default namespace is not resolved.
       else if(prefix.equals("xmlns"))
@@ -198,16 +198,16 @@ DOMString QName::getNamespaceForPrefix(const NamespaceVectorType& namespaces,
 		const DOMString& prefix, bool reverse /* true */)
 {
 	DOMString nsURI;
-	if(prefix.equals("xml"))
-		nsURI = s_XMLNAMESPACEURI;
+	if(::equals(prefix, "xml"))
+		nsURI = DOMServices::s_XMLNamespaceURI;
 	else
 	{
 		if (reverse)
 		{
 			for(int j = namespaces.size()-1; j >= 0; j--)
 			{
-				NameSpace ns = namespaces.at(j);
-				const DOMString& thisPrefix = ns.getPrefix();
+				const NameSpace&	ns = namespaces.at(j);
+				const DOMString&	thisPrefix = ns.getPrefix();
 				if((0 != thisPrefix.length()) && prefix.equals(thisPrefix))
 					return ns.getURI();
 			}
@@ -216,8 +216,8 @@ DOMString QName::getNamespaceForPrefix(const NamespaceVectorType& namespaces,
 		{
 			for(int j = 0; j < namespaces.size(); j++)
 			{
-				NameSpace ns = namespaces.at(j);
-				const DOMString& thisPrefix = ns.getPrefix();
+				const NameSpace&	ns = namespaces.at(j);
+				const DOMString&	thisPrefix = ns.getPrefix();
 				if((0 != thisPrefix.length()) && prefix.equals(thisPrefix))
 					return ns.getURI();
 			}
@@ -233,7 +233,7 @@ DOMString QName::getNamespaceForPrefix(const NamespacesStackType& nsStack,
 	int depth = nsStack.size();
 	for(int i = depth-1; i >= 0; i--)
 	{
-		NamespaceVectorType namespaces = nsStack.at(i);
+		const NamespaceVectorType& namespaces = nsStack.at(i);
 		nsURI = QName::getNamespaceForPrefix(namespaces, prefix, reverse);
 		if (! ::isEmpty(nsURI))
 			return nsURI;
@@ -246,7 +246,7 @@ DOMString QName::getPrefixForNamespace(const NamespaceVectorType& namespaces,
 {
 	for(int j = namespaces.size()-1; j >= 0; j--)
 	{
-		NameSpace ns = namespaces.at(j);
+		const NameSpace& ns = namespaces.at(j);
 		const DOMString& thisPrefix = ns.getURI();
 		if((0 != thisPrefix.length()) && uri.equals(thisPrefix))
 			return ns.getPrefix();
@@ -263,7 +263,7 @@ DOMString QName::getPrefixForNamespace(const NamespacesStackType& nsStack,
 	{
 		for(int i = depth-1; i >= 0; i--)
 		{
-			NamespaceVectorType namespaces = nsStack.at(i);
+			const NamespaceVectorType& namespaces = nsStack.at(i);
 			prefix = QName::getPrefixForNamespace(namespaces, uri, reverse);
 			if (! ::isEmpty(prefix))
 				return prefix;
@@ -273,7 +273,7 @@ DOMString QName::getPrefixForNamespace(const NamespacesStackType& nsStack,
 	{
 		for(int i = 0; i < depth; i++)
 		{
-			NamespaceVectorType namespaces = nsStack.at(i);
+			const NamespaceVectorType& namespaces = nsStack.at(i);
 			prefix = QName::getPrefixForNamespace(namespaces, uri, reverse);
 			if (! ::isEmpty(prefix))
 				return prefix;
@@ -281,4 +281,3 @@ DOMString QName::getPrefixForNamespace(const NamespacesStackType& nsStack,
 	}
 	return prefix;
 }
-
