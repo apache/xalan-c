@@ -404,4 +404,105 @@ private:
 
 
 
+template<class T>
+#if defined(XALAN_NO_NAMESPACES)
+struct pointer_equals : public binary_function<const T*, const T*, bool>
+#else
+struct pointer_equals : public std::binary_function<const T*, const T*, bool>
+#endif
+{
+#if defined(XALAN_NO_NAMESPACES)
+	typedef binary_function<const T*, const T*, bool>			BaseClassType;
+#else
+	typedef std::binary_function<const T*, const T*, bool>		BaseClassType;
+#endif
+
+	typedef typename BaseClassType::result_type				result_type;
+	typedef typename BaseClassType::first_argument_type		first_argument_type;
+	typedef typename BaseClassType::second_argument_type	second_argument_type;
+
+	result_type
+	operator()(
+		first_argument_type		theLHS,
+		second_argument_type	theRHS) const
+	{
+		assert(theLHS != 0 && theRHS != 0);
+
+		return *theLHS == *theRHS;
+	}
+};
+
+
+
+template<class T>
+#if defined(XALAN_NO_NAMESPACES)
+struct pointer_equals_predicate : public unary_function<const T*, bool>
+#else
+struct pointer_equals_predicate : public std::unary_function<const T*, bool>
+#endif
+{
+#if defined(XALAN_NO_NAMESPACES)
+	typedef unary_function<const T*, bool>			BaseClassType;
+#else
+	typedef std::unary_function<const T*, bool>		BaseClassType;
+#endif
+
+	typedef typename BaseClassType::result_type		result_type;
+	typedef typename BaseClassType::argument_type	argument_type;
+
+	pointer_equals_predicate(argument_type	theArg) :
+		m_arg(theArg)
+	{
+	}
+
+	result_type
+	operator()(
+		argument_type	theOther) const
+	{
+		assert(theOther != 0);
+
+		return *theOther == *m_arg;
+	}
+
+private:
+
+	const argument_type		m_arg;
+};
+
+
+
+template<class T>
+#if defined(XALAN_NO_NAMESPACES)
+struct pointer_less : public binary_function<const T*, const T*, bool>
+#else
+struct pointer_less : public std::binary_function<const T*, const T*, bool>
+#endif
+{
+#if defined(XALAN_NO_NAMESPACES)
+	typedef binary_function<const T*, const T*, bool>			BaseClassType;
+#else
+	typedef std::binary_function<const T*, const T*, bool>		BaseClassType;
+#endif
+
+	typedef typename BaseClassType::result_type				result_type;
+	typedef typename BaseClassType::first_argument_type		first_argument_type;
+	typedef typename BaseClassType::second_argument_type	second_argument_type;
+
+	result_type
+	operator()(
+		first_argument_type		theLHS,
+		second_argument_type	theRHS) const
+	{
+		assert(theLHS != 0 && theRHS != 0);
+
+#if !defined(XALAN_NO_NAMESPACES)
+		using std::less;
+#endif
+
+		return less<T>()(*theLHS, *theRHS);
+	}
+};
+
+
+
 #endif	// STLHELPERS_HEADER_GUARD_1357924680
