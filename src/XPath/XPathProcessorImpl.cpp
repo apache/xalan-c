@@ -2007,7 +2007,7 @@ XPathProcessorImpl::NodeTest(XPathExpression::eOpCodes	axisType)
 
 	int		nodeTestPos = -1;
 
-	if(lookahead(XalanUnicode::charLeftParenthesis, 1) == true)
+	if (lookahead(XalanUnicode::charLeftParenthesis, 1) == true)
 	{
 		const XPathExpression::eOpCodes		theOpCode = getNodeTypeToken(m_token);
 
@@ -2063,7 +2063,7 @@ XPathProcessorImpl::NodeTest(XPathExpression::eOpCodes	axisType)
 			m_expression->appendOpCode(XPathExpression::eEMPTY);
 		}
 
-		if(tokenIs(XalanUnicode::charAsterisk) == true)
+		if (tokenIs(XalanUnicode::charAsterisk) == true)
 		{
 			m_expression->appendOpCode(XPathExpression::eELEMWILDCARD);
 		}
@@ -2544,6 +2544,11 @@ XPathProcessorImpl::isAxis(const XalanDOMString&	theToken)
 	}
 	else if (theLength == 1 &&
 			 charAt(theToken, 0) == XalanUnicode::charCommercialAt)
+	{
+		return true;
+	}
+	else if (equals(theToken, s_dotString) == true ||
+			 equals(theToken, s_dotDotString) == true)
 	{
 		return true;
 	}
