@@ -694,10 +694,11 @@ public:
 	uninstallCollationCompareFunctor();
 
 
-	class  FormatNumberFunctor
+	class XALAN_XSLT_EXPORT FormatNumberFunctor
 	{
 	public:
-		FormatNumberFunctor() {};
+
+        FormatNumberFunctor() {};
 
 		virtual
 		~FormatNumberFunctor() {};
@@ -731,10 +732,10 @@ public:
 			const LocatorType*		locator = 0);
 
 
-	const FormatNumberFunctor * 
-	installFormatNumberFunctor(FormatNumberFunctor * formatNumberFunctor);
+	const FormatNumberFunctor* 
+	installFormatNumberFunctor(FormatNumberFunctor*     formatNumberFunctor);
 	
-	FormatNumberFunctor *
+	FormatNumberFunctor*
 	uninstallFormatNumberFunctor();
 
 	virtual	bool
