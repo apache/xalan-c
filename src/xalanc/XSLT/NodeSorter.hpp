@@ -90,7 +90,7 @@ class StylesheetExecutionContext;
 class XalanNode;
 class XPath;
 
-#define XALAN_NODESORTER_CACHE_XOBJECTS
+
 
 /**
  * This class can sort vectors of nodes according to a select pattern.
