@@ -64,17 +64,7 @@
 
 
 
-#include <map>
-#include <memory>
-#include <vector>
-
-
-
 #include <XalanDOM/XalanDOMString.hpp>
-
-
-
-#include <PlatformSupport/STLHelper.hpp>
 
 
 
@@ -83,8 +73,6 @@
 
 
 
-#include <XPath/XPathException.hpp>
-#include <XPath/MutableNodeRefList.hpp>
 #include <XPath/XPathExpression.hpp>
 #include <XPath/Function.hpp>
 #include <XPath/XPathFunctionTable.hpp>
@@ -94,8 +82,6 @@
 class PrefixResolver;
 class XLocator;
 class XObject;
-class XPathEnvSupport;
-class XPathSupport;
 class XalanNode;
 
 
