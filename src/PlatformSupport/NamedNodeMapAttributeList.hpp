@@ -129,9 +129,6 @@ public:
 
 private:
 
-	void
-	cacheData(const XalanDOMString&		theData) const;
-
 	// Not implemented...
 	NamedNodeMapAttributeList&
 	operator=(const NamedNodeMapAttributeList&);
@@ -142,17 +139,7 @@ private:
 	// Data members...
 	const XalanNamedNodeMap&		m_nodeMap;
 
-	const int						m_lastIndex;
-
-#if defined(XALAN_NO_NAMESPACES)
-	typedef XalanDOMString					CacheEntryType;
-	typedef vector<CacheEntryType>			CacheType;
-#else
-	typedef XalanDOMString					CacheEntryType;
-	typedef std::vector<CacheEntryType>		CacheType;
-#endif
-
-	mutable CacheType				m_cachedData;
+	const unsigned int				m_lastIndex;
 
 	static const XalanDOMString&	s_typeString;
 };

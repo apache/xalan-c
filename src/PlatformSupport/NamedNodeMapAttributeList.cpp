@@ -69,8 +69,7 @@
 
 NamedNodeMapAttributeList::NamedNodeMapAttributeList(const XalanNamedNodeMap&	theMap) :
 	m_nodeMap(theMap),
-	m_lastIndex(theMap.getLength() - 1),
-	m_cachedData()
+	m_lastIndex(theMap.getLength() - 1)
 {
 }
 
@@ -105,9 +104,7 @@ NamedNodeMapAttributeList::getName(const unsigned int index) const
 #endif
 	assert(theAttribute != 0);
 
-	cacheData(theAttribute->getName());
-
-	return c_wstr(m_cachedData.back());
+	return c_wstr(theAttribute->getName());
 }
 
 
@@ -133,9 +130,7 @@ NamedNodeMapAttributeList::getValue(const unsigned int index) const
 #endif
 	assert(theAttribute != 0);
 
-	cacheData(theAttribute->getValue());
-
-	return c_wstr(m_cachedData.back());
+	return c_wstr(theAttribute->getValue());
 }
 
 
@@ -172,9 +167,7 @@ NamedNodeMapAttributeList::getValue(const XMLCh* const name) const
 			static_cast<const XalanAttr*>(theNode);
 #endif
 
-		cacheData(theAttribute->getValue());
-
-		return c_wstr(m_cachedData.back());
+		return c_wstr(theAttribute->getValue());
 	}
 }
 
@@ -184,18 +177,6 @@ const XMLCh*
 NamedNodeMapAttributeList::getValue(const char* const name) const
 {
 	return getValue(c_wstr(TranscodeFromLocalCodePage(name)));
-}
-
-
-
-void
-NamedNodeMapAttributeList::cacheData(const XalanDOMString&	theData) const
-{
-#if defined(XALAN_NO_MUTABLE)
-	((NamedNodeMapAttributeList*)this)->m_cachedData.push_back(theData);
-#else
-	m_cachedData.push_back(theData);
-#endif
 }
 
 
