@@ -83,13 +83,8 @@ XalanMessageLoader::initialize(MemoryManagerType&      theManager)
 void
 XalanMessageLoader::terminate()
 {
-#if defined (XALAN_INMEM_MSG_LOADER)
-        typedef XalanMessageLoader::XalanMessageLoaderDestructFunct <XalanInMemoryMessageLoader> LoaderDestructType;
-#elif defined (XALAN_ICU_MSG_LOADER)
-        typedef XalanMessageLoader::XalanMessageLoaderDestructFunct <XalanICUMessageLoader> LoaderDestructType;
-#elif defined (XALAN_NLS_MSG_LOADER)
-        typedef XalanMessageLoader::XalanMessageLoaderDestructFunct <XalanNLSMessageLoader> LoaderDestructType;
-#endif
+
+    typedef XalanMessageLoader::XalanMessageLoaderDestructFunct LoaderDestructType;
 
     assert(s_initManager != 0);
     

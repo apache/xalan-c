@@ -58,7 +58,6 @@ public:
 
     };
 	
-    template <class Type>
     class XalanMessageLoaderDestructFunct
     {
     public:
@@ -67,13 +66,9 @@ public:
         {        
             assert ( p != 0);
 
-            Type* theObj = dynamic_cast<Type*> (p);
-
-             assert( theObj != 0 );
-
-            theObj->~Type();
+             p->~XalanMessageLoader();
         
-            theManager.deallocate(theObj);
+            theManager.deallocate(p);
         }
 
     };
@@ -128,6 +123,8 @@ public:
         const XalanDOMString& 				repText1,  
         const XalanDOMString& 				repText2,  
         const XalanDOMString& 				repText3);
+
+    
 
 protected:
 	virtual bool loadMsg
