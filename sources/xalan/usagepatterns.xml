@@ -74,15 +74,15 @@
 </ul><anchor name="intro"/>
 
 <s2 title="Introduction">  
-<p>To perform a transformation, use one of the <jump href="apdidocs/class_xalantransformer.html">XalanTransformer</jump> transform() methods. The transformation requires an XML source document and an XSL stylesheet. Both of these objects may be represented by instances of <jump href="apidocs/class_xsltinputsource.html">XSLTInputSource</jump>. You can construct an XSLTInputSource with a string (the system ID for a file or URI), an input stream, or a DOM.</p>
+<p>To perform a transformation, use one of the <jump href="apidocs/class_xalantransformer.html">XalanTransformer</jump> transform() methods. The transformation requires an XML source document and an XSL stylesheet. Both of these objects may be represented by instances of <jump href="apidocs/class_xsltinputsource.html">XSLTInputSource</jump>. You can construct an XSLTInputSource with a string (the system ID for a file or URI), an input stream, or a DOM.</p>
 <p>If you are using an XSL stylesheet to perform a series of transformations, you can improve performance by calling transform() with a compiled stylesheet, an instance of <jump href="apidocs/class_xalancompiledstylesheet.html">XalanCompiledStylesheet</jump>. If you are transforming an XML source more than once, you should call transform() with a parsed XML source, an instance of <jump href="apidocs/class_xalanparsedsource">XalanParsedSource</jump>. See <link anchor="compiled">Performing a series of transformations</link>.</p>
 <p>If you XML source document contains a stylesheet Processing Instruction (PI), you do not need to include a stylesheet object when you call transform().</p>
-<p>The transformation output is represented by an <jump href="apdidocs/class_xsltresulttarget.html">XSLTResultTarget</jump>, which you can set up to refer to an output stream, the system ID for a file or URI, or a DOM.</p>
+<p>The transformation output is represented by an <jump href="apidocs/class_xsltresulttarget.html">XSLTResultTarget</jump>, which you can set up to refer to an output stream, the system ID for a file or URI, or a DOM.</p>
 <p>For detailed API documentation, see <jump href="apidocs/index.html">&xslt4c; API</jump>. For an overview of the
 command-line utility, see <link idref="commandline">Command-Line Utility</link>.</p>
 </s2><anchor name="cpp"/>
 <s2 title="Basic usage patten with the XalanTransformer C++ API">
-<p>Using <jump href="apdidocs/class_xalantransformer.html">XalanTransformer</jump> and the C++ API, you can perform one or more transformations as described in the following steps.</p>
+<p>Using <jump href="apidocs/class_xalantransformer.html">XalanTransformer</jump> and the C++ API, you can perform one or more transformations as described in the following steps.</p>
 <note>For a working sample that illustrates these steps, see the <link idref="samples" anchor="xalantransform">XalanTransform</link> sample.</note>
 <s3 title="1. Include the required header files.">
 <p>Always start with Include/PlatformDefinitions.hpp, the &xslt4c; base header file. Also include util/PlatformUtils.hpp, XalanTransformer/XalanTransformer.hpp, and any other header files your particular application requires.</p>
@@ -100,7 +100,7 @@ XalanTransformer::initialize();</source>
   <source>XalanTransformer theXalanTransformer;</source>
   </s3>
   <s3 title="4. Perform each transformation">
-    <p>You can explicitly instantiate <jump href="apidocs/class_xsltinputsource.html">XSLTInputSource</jump> objects for the XML source document and XSL stylesheet, and an <jump href="apidocs/class_xsltresulttarget.html">XSLTResultTarget</jump> object for the output, and then call <jump href="apdidocs/class_xalantransformer.html">XalanTransformer</jump> transform() with those objects as parameters. For example:</p>
+    <p>You can explicitly instantiate <jump href="apidocs/class_xsltinputsource.html">XSLTInputSource</jump> objects for the XML source document and XSL stylesheet, and an <jump href="apidocs/class_xsltresulttarget.html">XSLTResultTarget</jump> object for the output, and then call <jump href="apidocs/class_xalantransformer.html">XalanTransformer</jump> transform() with those objects as parameters. For example:</p>
 <source>XSLTInputSource xmlIn("foo.xml");
 XSLTInputSource xslIn("foo.xsl");
 XSLTResultTarget xmlOut("foo-out.xml");
@@ -145,7 +145,7 @@ int theResult =
 </s2><anchor name="params"/>
 <s2 title="Setting stylesheet parameters">
 <p>An XSL stylesheet can include parameters that are set at run time before a transformation takes place. When we generate the HTML documents that make up the Xalan doc set, for example, we send the stylesheet an id parameter along with each XML source document. The id identifies that document and enables the stylesheet to integrate it into the overall doc set.</p>
-<p>To set a stylesheet parameter, use the <jump href="apdidocs/class_xalantransformer.html">XalanTransformer</jump> setStylesheetParam() method. The setStytlesheetParam() method takes two arguments: the parameter name and the expression. For example:</p>
+<p>To set a stylesheet parameter, use the <jump href="apidocs/class_xalantransformer.html">XalanTransformer</jump> setStylesheetParam() method. The setStytlesheetParam() method takes two arguments: the parameter name and the expression. For example:</p>
 <source>const XalanDOMString&amp; key="param1";
 const XalanDOMString&amp; expression="'Hello World'";
 theXalanTransformer.setStylesheetParam(key, expression);
@@ -159,7 +159,7 @@ theXalanTransformer.transform("foo.xml","foo.xsl","foo-out.xml")</source>
 <p>The <link idref="samples" anchor="usestylesheetparam">UseStylesheetParam</link> sample application also uses a command-line parameter.</p>
 </s2><anchor name="incremental"/>
 <s2 title="Processing output incrementally">
-<p><jump href="apdidocs/class_xalantransformer.html">XalanTransformer</jump> provides a transform() method that sends the output in blocks to a callback function, which enables you to begin processing the output while the transformation is still in process:</p>
+<p><jump href="apidocs/class_xalantransformer.html">XalanTransformer</jump> provides a transform() method that sends the output in blocks to a callback function, which enables you to begin processing the output while the transformation is still in process:</p>
 <source>int
 transform(const XSLTInputSource&amp; xmlIn,
           const XSLTInputSource&amp; xslIn,
@@ -169,8 +169,8 @@ transform(const XSLTInputSource&amp; xmlIn,
 <p>For an example, see <link idref="samples" anchor="xalantransformercallback">XalanTransformerCallback</link>.</p>
 </s2><anchor name="compiled"/>
 <s2 title="Performing a series of transformations">
-<p>Before Xalan performs a standard transformation, it must parse the XML document and compile the XSL stylesheet into binary representations. If you plan to use the same XML document or stylesheet in a series of transformations, you can improve performance by parsing the XML document or compiling the styleheet once and using the binary representation when you call transform().</p>
-<p><jump href="apdidocs/class_xalantransformer.html">XalanTransformer</jump> includes methods for creating compiled stylesheets and parsed XML documents: the compileStylesheet() method returns a pointer to a <jump href="apdidocs/class_xalancompiledstylesheet.html">XalanCompiledStylesheet</jump>; the parseSource() method returns a pointer to a <jump href="apdidocs/class_xalanparsedsource.html">XalanParsedSource</jump>.</p>
+<p>Before Xalan performs a standard transformation, it must parse the XML document and compile the XSL stylesheet into binary representations. If you plan to use the same XML document or stylesheet in a series of transformations, you can improve performance by parsing the XML document or compiling the stylesheet once and using the binary representation when you call transform().</p>
+<p><jump href="apidocs/class_xalantransformer.html">XalanTransformer</jump> includes methods for creating compiled stylesheets and parsed XML documents: the compileStylesheet() method returns a pointer to a <jump href="apidocs/class_xalancompiledstylesheet.html">XalanCompiledStylesheet</jump>; the parseSource() method returns a pointer to a <jump href="apidocs/class_xalanparsedsource.html">XalanParsedSource</jump>.</p>
 <note>In the case of failure, both methods return 0.</note>
 <p>Example using a XalanCompiledStylesheet to perform multiple transformations:</p>
 <source>XalanCompiledStylesheet* compiledStylesheet = 0;
@@ -199,12 +199,15 @@ theXalanTransformer.transform(*parsedXML, "foo2.xsl", "foo-xsl2.out");
 #include &lt;dom/DOM_Node.hpp&gt;
 
 DOMParser  theParser;
+// You MUST instruct the Xerces DOMParser NOT to create a DOM_XMLDecNode
+// in the DOM to represent the XML declaration. See "Limitations" below.
+DOMParser::setToCreateXMLDeclTypeNode(false);
 theParser.parse("foo.xml");
 const DOM_Document theDOM = theParser.getDocument();
 
 // Set up a XercesParserLiaison and use it to wrap the DOM_Document
 // in a XalanDocument.
-DOMSupportDefault   theDOMSupport;
+XercesDOMSupport   theDOMSupport;
 XercesParserLiaison	theParserLiaison(theDOMSupport);
 XalanDocument* theDoc = theParserLiaison.createDocument(theDOM);
 
@@ -221,6 +224,12 @@ XSLTResultTarget theDOMResultTarget(docOut);
 // the output.
 // You can also convert the XalanDocument to a Xerces DOM_Document.
 DOM_Document domOut = theParserLiaison.mapXercesDocument(docOut)</source>
+<s3 title="Limitations">
+<p>Performance is much better when &xslt4c; uses native source tree handling rather than interacting with the Xerces DOMParser.</p>
+<p>By default, the Xerces DOMParser creates a DOM_XMLDecNode in the DOM tree to represent the XML declaration. The
+Xalan bridge for the Xerces DOM does not support this non-standard node type. Accordingly, you must call DOMParser::setToCreateXMLDeclTypeNode(false) <em>before</em> you parse the XML file. If not, the behavior is undefined, and 
+your application may crash.</p>
+</s3>
 </s2><anchor name="xpath"/>
 <s2 title="Working with XPath expressions">
 <p>XSL stylesheets use XPath expressions to select nodes, specify conditions, and generate text for the result tree. 
@@ -239,7 +248,7 @@ executing XPath expressions.</p>
   <li>Result tree generation events</li>
  </ul>
 <p>To construct a TraceListener with TraceListenerDefault, you need a PrintWriter and a boolean for each of these four tracing options. You can then use the XSLTEngimeImpl setTraceSelects and addTraceListener methods to add the TraceListener to an XSLTProcessor. See the <link idref="samples" anchor="tracelisten">TraceListen</link> sample application.</p>
-<p>The <link idref="commandline">command-line utility (TextXSLT)</link> and TraceListen both use TraceListenerDefault to write events to the screen.</p>
+<p>The <link idref="commandline">command-line utility (testXSLT)</link> and TraceListen both use TraceListenerDefault to write events to the screen.</p>
 </s2><anchor name="icu"/>
 <s2 title="Using the ICU">
     <p>You can use the <resource-ref idref="icu"/> to extend support for encoding, number
@@ -349,10 +358,10 @@ theResult = XalanTransformToFile(xmlfilename,
 <p>The <jump href="apidocs/XalanCAPI.h.html">Xalan C API</jump> supports approximately the same set of options as the C++ API. In particular, you can</p>
 <ul>
 <li>Use stylesheet processing instructions (PI) to supply the stylesheet. Simply supply an empty string ("") for the XSL file name.<br/><br/></li>
-<li>Set stylesheet parameters. Use the SetStylesheetParam() method.<br/><br/></li>
-<li>Compile stylesheets. Use the CompileStylesheet() method to compile a stylesheet, and the TransformToFileCSS() or TransformToDataCSS() method to use the compiled stylesheet in a transformation.<br/><br/></li>
+<li>Set stylesheet parameters. Use the SetStylesheetParam() function.<br/><br/></li>
+<li>Compile stylesheets. Use the CompileStylesheet() method to compile a stylesheet, and the TransformToFileCSS() or TransformToDataCSS() function to use the compiled stylesheet in a transformation.<br/><br/></li>
 <li>Parse XML sources. Use the XalanParseSource() or XalanParseSouceUseXalan() method.<br/><br/></li>
-<li>Place the transformation output in a character array. Use the TransformToData() or TransformToDataCSS() method. After you perform the transformation, use the XalanFreeData() method to free memory allocated for the output data.<br/><br/></li>
+<li>Place the transformation output in a character array. Use the TransformToData() or TransformToDataCSS() function. After you perform the transformation, use the XalanFreeData() function to free memory allocated for the output data.<br/><br/></li>
 <li>Send the output to a callback function to process blocks of output data as they arrive.</li>
 </ul> 
 <p>For a sample that sends output in blocks to a callback function, see <link idref="samples" anchor="apachemodulexslt">ApacheModuleXSLT</link>.</p>
