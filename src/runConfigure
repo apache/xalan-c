@@ -58,6 +58,9 @@
 # 
 #
 # $Log$
+# Revision 1.12  2002/08/05 21:21:02  dbertoni
+# Fixed statement termination problem.
+#
 # Revision 1.11  2002/08/05 20:41:24  dbertoni
 # Merge in HP changes.
 #
@@ -264,7 +267,7 @@ if test $bitsToBuild = 64; then
               bitstobuildDefines=" $bitstobuildDefines -xarch=v9 "
               bitstobuildLink=" -xarch=v9 " ;;
            aix)
-              bitstobuildDefines=" $bitstobuildDefines -q64 -qwarn64 " ;;
+              bitstobuildDefines=" $bitstobuildDefines -q64 -qwarn64 "
               bitstobuildLink=" -X64 " ;;
            hp-11)
               bitstobuildDefines=" $bitstobuildDefines +DA2.0W "
@@ -286,6 +289,7 @@ elif test $bitsToBuild = 32; then
 		      ;;
            hp-11)
               bitstobuildDefines=" $bitstobuildDefines +DAportable "
+			  ;;
            linux)
               ;;
            *)
