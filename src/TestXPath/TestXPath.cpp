@@ -106,6 +106,7 @@
 #include <XPath/XPathEnvSupportDefault.hpp>
 #include <XPath/XPathExecutionContextDefault.hpp>
 #include <XPath/XPath.hpp>
+#include <XPath/XPathConstructionContextDefault.hpp>
 #include <XPath/XPathProcessorImpl.hpp>
 #include <XPath/XPathFactoryDefault.hpp>
 
@@ -128,17 +129,20 @@
 
 const XObjectPtr
 ExecuteXPath(
-			XPathProcessor&			theXPathProcessor,
-			XPath&					theXPath,
-			const XalanDOMString&	theXPathString,
-			XalanNode* 				theContextNode,
-			const PrefixResolver&	thePrefixResolver,
-			const NodeRefListBase& 	theContextNodeList,
-			XPathExecutionContext&	theExecutionContext)
+			XPathProcessor&				theXPathProcessor,
+			XPathConstructionContext&	theXPathConstructionContext,
+			XPath&						theXPath,
+			const XalanDOMString&		theXPathString,
+			XalanNode* 					theContextNode,
+			const PrefixResolver&		thePrefixResolver,
+			const NodeRefListBase& 		theContextNodeList,
+			XPathExecutionContext&		theExecutionContext)
 {
-	theXPathProcessor.initXPath(theXPath,
-								theXPathString,
-								thePrefixResolver);
+	theXPathProcessor.initXPath(
+				theXPath,
+				theXPathConstructionContext,
+				theXPathString,
+				thePrefixResolver);
 
 	const XObjectPtr theResult =
 		theXPath.execute(theContextNode, thePrefixResolver, theContextNodeList, theExecutionContext);
@@ -150,26 +154,29 @@ ExecuteXPath(
 
 bool
 TestNumericResult(
-			XPathProcessor&			theXPathProcessor,
-			XPath&					theXPath,
-			const XalanDOMString&	theXPathString,
-			PrintWriter&			thePrintWriter,
-			double					theExpectedResult,
-			XalanNode* 				theContextNode,
-			const PrefixResolver&	thePrefixResolver,
-			const NodeRefListBase& 	theContextNodeList,
-			XPathExecutionContext&	theExecutionContext)
+			XPathProcessor&				theXPathProcessor,
+			XPath&						theXPath,
+			XPathConstructionContext&	theXPathConstructionContext,
+			const XalanDOMString&		theXPathString,
+			PrintWriter&				thePrintWriter,
+			double						theExpectedResult,
+			XalanNode* 					theContextNode,
+			const PrefixResolver&		thePrefixResolver,
+			const NodeRefListBase& 		theContextNodeList,
+			XPathExecutionContext&		theExecutionContext)
 {
 	bool	fError = false;
 
 	const XObjectPtr theResult =
-		ExecuteXPath(theXPathProcessor,
-					 theXPath,
-					 theXPathString,
-					 theContextNode,
-					 thePrefixResolver,
-					 theContextNodeList,
-					 theExecutionContext);
+		ExecuteXPath(
+			theXPathProcessor,
+			theXPathConstructionContext,
+			theXPath,
+			theXPathString,
+			theContextNode,
+			thePrefixResolver,
+			theContextNodeList,
+			theExecutionContext);
 
 	thePrintWriter.print(XALAN_STATIC_UCODE_STRING("Execution of XPath "));
 	thePrintWriter.print(theXPathString);
@@ -198,26 +205,29 @@ TestNumericResult(
 
 bool
 TestStringResult(
-			XPathProcessor&			theXPathProcessor,
-			XPath&					theXPath,
-			const XalanDOMString&	theXPathString,
-			PrintWriter&			thePrintWriter,
-			const XalanDOMString&	theExpectedResult,
-			XalanNode* 				theContextNode,
-			const PrefixResolver&	thePrefixResolver,
-			const NodeRefListBase& 	theContextNodeList,
-			XPathExecutionContext&	theExecutionContext)
+			XPathProcessor&				theXPathProcessor,
+			XPath&						theXPath,
+			XPathConstructionContext&	theXPathConstructionContext,
+			const XalanDOMString&		theXPathString,
+			PrintWriter&				thePrintWriter,
+			const XalanDOMString&		theExpectedResult,
+			XalanNode* 					theContextNode,
+			const PrefixResolver&		thePrefixResolver,
+			const NodeRefListBase& 		theContextNodeList,
+			XPathExecutionContext&		theExecutionContext)
 {
 	bool	fError = false;
 
 	const XObjectPtr theResult =
-		ExecuteXPath(theXPathProcessor,
-					 theXPath,
-					 theXPathString,
-					 theContextNode,
-					 thePrefixResolver,
-					 theContextNodeList,
-					 theExecutionContext);
+		ExecuteXPath(
+			theXPathProcessor,
+			theXPathConstructionContext,
+			theXPath,
+			theXPathString,
+			theContextNode,
+			thePrefixResolver,
+			theContextNodeList,
+			theExecutionContext);
 
 	thePrintWriter.print(XALAN_STATIC_UCODE_STRING("Execution of XPath "));
 	thePrintWriter.print(theXPathString);
@@ -249,26 +259,29 @@ TestStringResult(
 
 bool
 TestBooleanResult(
-			XPathProcessor&			theXPathProcessor,
-			XPath&					theXPath,
+			XPathProcessor&				theXPathProcessor,
+			XPath&						theXPath,
+			XPathConstructionContext&	theXPathConstructionContext,
 			const XalanDOMString&		theXPathString,
-			PrintWriter&			thePrintWriter,
-			bool					theExpectedResult,
-			XalanNode* 		theContextNode,
-			const PrefixResolver&	thePrefixResolver,
-			const NodeRefListBase& 	theContextNodeList,
-			XPathExecutionContext&	theExecutionContext)
+			PrintWriter&				thePrintWriter,
+			bool						theExpectedResult,
+			XalanNode* 					theContextNode,
+			const PrefixResolver&		thePrefixResolver,
+			const NodeRefListBase& 		theContextNodeList,
+			XPathExecutionContext&		theExecutionContext)
 {
 	bool	fError = false;
 
 	const XObjectPtr theResult =
-		ExecuteXPath(theXPathProcessor,
-					 theXPath,
-					 theXPathString,
-					 theContextNode,
-					 thePrefixResolver,
-					 theContextNodeList,
-					 theExecutionContext);
+		ExecuteXPath(
+			theXPathProcessor,
+			theXPathConstructionContext,
+			theXPath,
+			theXPathString,
+			theContextNode,
+			thePrefixResolver,
+			theContextNodeList,
+			theExecutionContext);
 
 	bool	fDump = false;
 
@@ -437,6 +450,8 @@ FindContextNode(
 
 	XPath* const	theXPath = theXPathFactory.create();
 
+	XPathConstructionContextDefault		theXPathConstructionContext;
+
 	XPathGuard		theGuard(
 						theXPathFactory,
 						theXPath);
@@ -446,13 +461,15 @@ FindContextNode(
 	NodeRefList					theContextNodeList;
 
 	const XObjectPtr	theXObject =
-		ExecuteXPath(theXPathProcessor,
-					 *theXPath,
-					 theContextNodeMatchPattern,
-					 theDocument,
-					 thePrefixResolver,
-					 theContextNodeList,
-					 theExecutionContext);
+		ExecuteXPath(
+			theXPathProcessor,
+			theXPathConstructionContext,
+			*theXPath,
+			theContextNodeMatchPattern,
+			theDocument,
+			thePrefixResolver,
+			theContextNodeList,
+			theExecutionContext);
 
 	try
 	{
@@ -537,10 +554,13 @@ TestAxisResult(
 
 				XPath* const	theXPath = theXPathFactory.create();
 
+				XPathConstructionContextDefault		theXPathConstructionContext;
+
 				XPathGuard		theGuard(theXPathFactory,
 										 theXPath);
 
 				theXPathProcessor.initXPath(*theXPath,
+											theXPathConstructionContext,
 											theXPathString,
 											thePrefixResolver);
 
@@ -649,10 +669,13 @@ TestPredicateResult(
 
 				XPath* const	theXPath1 = theXPathFactory.create();
 
+				XPathConstructionContextDefault		theXPathConstructionContext;
+
 				XPathGuard	theGuard1(theXPathFactory,
 									  theXPath1);
 
 				theXPathProcessor.initXPath(*theXPath1,
+											theXPathConstructionContext,
 											TranscodeFromLocalCodePage("following-sibling::*"),
 											thePrefixResolver);
 
@@ -662,6 +685,7 @@ TestPredicateResult(
 									  theXPath2);
 
 				theXPathProcessor.initXPath(*theXPath2,
+											theXPathConstructionContext,
 											TranscodeFromLocalCodePage("descendant::*"),
 											thePrefixResolver);
 
@@ -826,11 +850,14 @@ TestNumericResults(
 		{
 			XPath* const	theXPath = theXPathFactory.create();
 
+			XPathConstructionContextDefault		theXPathConstructionContext;
+
 			XPathGuard		theGuard(theXPathFactory,
 									 theXPath);
 
 			TestNumericResult(theXPathProcessor,
 							  *theXPath,
+							  theXPathConstructionContext,
 							  TranscodeFromLocalCodePage(theNumericTestInput[i]),
 							  thePrintWriter,
 							  theNumericTestExpectedOutput[i],
@@ -956,11 +983,14 @@ TestStringResults(
 		{
 			XPath* const	theXPath = theXPathFactory.create();
 
+			XPathConstructionContextDefault		theXPathConstructionContext;
+
 			XPathGuard	theGuard(theXPathFactory,
 								 theXPath);
 
 			TestStringResult(theXPathProcessor,
 							 *theXPath,
+							 theXPathConstructionContext,
 							 TranscodeFromLocalCodePage(theStringTestInput[i]),
 							 thePrintWriter,
 							 TranscodeFromLocalCodePage(theStringTestExpectedOutput[i]),
@@ -1090,11 +1120,14 @@ TestBooleanResults(
 		{
 			XPath* const	theXPath = theXPathFactory.create();
 
+			XPathConstructionContextDefault		theXPathConstructionContext;
+
 			XPathGuard	theGuard(theXPathFactory,
 								 theXPath);
 
 			TestBooleanResult(theXPathProcessor,
 							  *theXPath,
+							  theXPathConstructionContext,
 							  TranscodeFromLocalCodePage(theBooleanTestInput[i]),
 							  thePrintWriter,
 							  theBooleanTestExpectedOutput[i],

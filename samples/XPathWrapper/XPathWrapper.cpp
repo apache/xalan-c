@@ -39,6 +39,7 @@
 
 #include <XPath/XObjectFactoryDefault.hpp>
 #include <XPath/XPath.hpp>
+#include <XPath/XPathConstructionContextDefault.hpp>
 #include <XPath/XPathEnvSupportDefault.hpp>
 #include <XPath/XPathExecutionContextDefault.hpp>
 #include <XPath/XPathInit.hpp>
@@ -131,6 +132,7 @@ public:
 			XPathEnvSupportDefault			theEnvSupport;
 			XObjectFactoryDefault			theXObjectFactory;
 			XPathExecutionContextDefault	theExecutionContext(theEnvSupport, theDOMSupport, theXObjectFactory);
+			XPathConstructionContextDefault	theXPathConstructionContext;
 			XPathFactoryDefault				theXPathFactory;
 			XPathProcessorImpl				theXPathProcessor;
 
@@ -140,6 +142,7 @@ public:
 				XPath* const	contextXPath = theXPathFactory.create();
 
 				theXPathProcessor.initXPath(*contextXPath,
+											theXPathConstructionContext,
 											XalanDOMString(context),
 											ElementPrefixResolverProxy(rootElem, theEnvSupport, theDOMSupport));
 
@@ -179,6 +182,7 @@ public:
 					// and now get the result of the primary xpath expression
 					XPath* const	xpath = theXPathFactory.create();
 					theXPathProcessor.initXPath(*xpath,
+												theXPathConstructionContext,
 												TranscodeFromLocalCodePage(expr),
 												ElementPrefixResolverProxy(rootElem, theEnvSupport, theDOMSupport));
 
