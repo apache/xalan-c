@@ -83,7 +83,6 @@
 
 #include <XPath/XObjectFactoryDefault.hpp>
 #include <XPath/XPathFactoryBlock.hpp>
-#include <XPath/XPathFactoryDefault.hpp>
 
 
 
@@ -508,9 +507,9 @@ XalanTransformer::compileStylesheet(
 		// Create some more support objects...
 		XSLTProcessorEnvSupportDefault	theXSLTProcessorEnvSupport;
 
-		XObjectFactoryDefault			theXObjectFactory;
+		XObjectFactoryDefault	theXObjectFactory;
 
-		XPathFactoryDefault 			theXPathFactory;
+		XPathFactoryBlock 		theXPathFactory;
 
 		// Create a processor...
 		XSLTEngineImpl	theProcessor(
@@ -1139,7 +1138,7 @@ XalanTransformer::doTransform(
 
 		XObjectFactoryDefault	theXObjectFactory;
 
-		XPathFactoryDefault 	theXPathFactory;
+		XPathFactoryBlock 		theXPathFactory;
 
 		// Create a processor...
 		XSLTEngineImpl	theProcessor(
