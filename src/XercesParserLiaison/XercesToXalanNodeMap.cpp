@@ -87,15 +87,12 @@ XercesToXalanNodeMap::~XercesToXalanNodeMap()
 
 
 
+void
 XercesToXalanNodeMap::addAssociation(
 			const DOM_Node&		theXercesNode,
 			XalanNode*			theXalanNode,
 			bool				fAssignIndex)
 {
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::make_pair;
-#endif
-
 	// Space the indices, just in case nodes are
 	// added.  With any luck, we may not need to
 	// reindex the nodes.
@@ -103,7 +100,7 @@ XercesToXalanNodeMap::addAssociation(
 
 	NodeImpl* const		theImpl = XercesDOM_NodeHack::getImpl(theXercesNode);
 
-	m_xercesMap.insert(make_pair(theImpl, theXalanNode));
+	m_xercesMap.insert(XercesNodeMapType::value_type(theImpl, theXalanNode));
 
 	try
 	{
@@ -126,7 +123,7 @@ XercesToXalanNodeMap::addAssociation(
 			}
 		}
 
-		m_xalanMap.insert(make_pair(theXalanNode, XalanNodeMapEntryType(theImpl, theIndex)));
+		m_xalanMap.insert(XalanNodeMapType::value_type(theXalanNode, XalanNodeMapEntryType(theImpl, theIndex)));
 	}
 	catch(...)
 	{
@@ -138,6 +135,7 @@ XercesToXalanNodeMap::addAssociation(
 
 
 
+void
 XercesToXalanNodeMap::clear()
 {
 	m_xalanMap.clear();

@@ -88,11 +88,13 @@ public:
 
 	~XercesToXalanNodeMap();
 
+	void
 	addAssociation(
 			const DOM_Node&		theXercesNode,
 			XalanNode*			theXalanNode,
 			bool				fAssignIndex);
 
+	void
 	clear();
 
 	XalanNode*
