@@ -378,53 +378,65 @@ main(
 	else
 	{
 		XALAN_USING_XERCES(XMLPlatformUtils)
+		XALAN_USING_XERCES(XMLException)
 
 		XALAN_USING_XALAN(XalanTransformer)
 
 		// Call the static initializer for Xerces.
-		XMLPlatformUtils::Initialize();
-
-		// Initialize Xalan.
-		XalanTransformer::initialize();
-
+		try
 		{
-			// Create a XalanTransformer.
-			XalanTransformer	theXalanTransformer;
-
-			// The namespace for our functions...
-			const XalanDOMString	theNamespace("http://ExternalFunction.xalan-c++.xml.apache.org");
-
-			// Install the functions in the local space.  They will only
-			// be installed in this instance, so no other instances
-			// will know about them...
-			theXalanTransformer.installExternalFunction(
-				theNamespace,
-				XalanDOMString("asctime"),
-				FunctionAsctime());
-
-			theXalanTransformer.installExternalFunction(
-				theNamespace,
-				XalanDOMString("square-root"),
-				FunctionSquareRoot());
-
-			theXalanTransformer.installExternalFunction(
-				theNamespace,
-				XalanDOMString("cube"),
-				FunctionCube());
-
-			// Do the transform.
-			theResult = theXalanTransformer.transform("foo.xml", "foo.xsl", "foo.out");
-    
-			if(theResult != 0)
-			{
-				cerr << "ExternalFunction Error: \n" << theXalanTransformer.getLastError()
-					 << endl
-					 << endl;
-			}
+			 XMLPlatformUtils::Initialize();
+		}
+		catch (const XMLException& toCatch)
+		{
+			 cerr << "Error during Xerces initialization! "<< endl;
+			 theResult = -1;
 		}
 
-		// Terminate Xalan...
-		XalanTransformer::terminate();
+		if (theResult == 0)
+		{
+			// Initialize Xalan.
+			XalanTransformer::initialize();
+
+			{
+				// Create a XalanTransformer.
+				XalanTransformer	theXalanTransformer;
+
+				// The namespace for our functions...
+				const XalanDOMString	theNamespace("http://ExternalFunction.xalan-c++.xml.apache.org");
+
+				// Install the functions in the local space.  They will only
+				// be installed in this instance, so no other instances
+				// will know about them...
+				theXalanTransformer.installExternalFunction(
+					theNamespace,
+					XalanDOMString("asctime"),
+					FunctionAsctime());
+
+				theXalanTransformer.installExternalFunction(
+					theNamespace,
+					XalanDOMString("square-root"),
+					FunctionSquareRoot());
+
+				theXalanTransformer.installExternalFunction(
+					theNamespace,
+					XalanDOMString("cube"),
+					FunctionCube());
+
+				// Do the transform.
+				theResult = theXalanTransformer.transform("foo.xml", "foo.xsl", "foo.out");
+    
+				if(theResult != 0)
+				{
+					cerr << "ExternalFunction Error: \n" << theXalanTransformer.getLastError()
+						 << endl
+						 << endl;
+				}
+			}
+
+			// Terminate Xalan...
+			XalanTransformer::terminate();
+		}
 
 		// Terminate Xerces...
 		XMLPlatformUtils::Terminate();

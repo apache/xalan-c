@@ -194,38 +194,50 @@ main(
 	else
 	{
 		XALAN_USING_XERCES(XMLPlatformUtils)
+		XALAN_USING_XERCES(XMLException)
 
 		// Call the static initializer for Xerces.
-		XMLPlatformUtils::Initialize();
-
-		// Initialize Xalan.
-		XalanTransformer::initialize();
-
+		try
 		{
-			// Create a XalanTransformer.
-			XalanTransformer	theXalanTransformer;
-
-			// Get a document builder from the transformer...
-			XalanDocumentBuilder* const		theBuilder = theXalanTransformer.createDocumentBuilder();
-
-			BuildDocument(theBuilder);
-
-			// The assumption is that the executable will be run
-			// from same directory as the stylesheet file.
-
-			// Do the transform.
-			theResult = theXalanTransformer.transform(*theBuilder, "foo.xsl", "foo.out");
-    
-			if(theResult != 0)
-			{
-				cerr << "DocumentBuilder error: \n" << theXalanTransformer.getLastError()
-					 << endl
-					 << endl;
-			}
+			 XMLPlatformUtils::Initialize();
+		}
+		catch (const XMLException& toCatch)
+		{
+			 cerr << "Error during Xerces initialization! "<< endl;
+			 theResult = -1;
 		}
 
-		// Terminate Xalan.
-		XalanTransformer::terminate();
+		if (theResult == 0)
+		{
+			// Initialize Xalan.
+			XalanTransformer::initialize();
+
+			{
+				// Create a XalanTransformer.
+				XalanTransformer	theXalanTransformer;
+
+				// Get a document builder from the transformer...
+				XalanDocumentBuilder* const		theBuilder = theXalanTransformer.createDocumentBuilder();
+
+				BuildDocument(theBuilder);
+
+				// The assumption is that the executable will be run
+				// from same directory as the stylesheet file.
+
+				// Do the transform.
+				theResult = theXalanTransformer.transform(*theBuilder, "foo.xsl", "foo.out");
+    
+				if(theResult != 0)
+				{
+					cerr << "DocumentBuilder error: \n" << theXalanTransformer.getLastError()
+						 << endl
+						 << endl;
+				}
+			}
+
+			// Terminate Xalan.
+			XalanTransformer::terminate();
+		}
 
 		// Call the static terminator for Xerces.
 		XMLPlatformUtils::Terminate();

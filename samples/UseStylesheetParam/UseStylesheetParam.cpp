@@ -94,41 +94,55 @@ main(
 	else
 	{
 		XALAN_USING_XERCES(XMLPlatformUtils)
+		XALAN_USING_XERCES(XMLException)
+
 
 		XALAN_USING_XALAN(XalanTransformer)
 
 		// Call the static initializer for Xerces.
-		XMLPlatformUtils::Initialize();
-
-		// Initialize Xalan.
-		XalanTransformer::initialize();
-
+		try
 		{
-			XALAN_USING_XALAN(XalanDOMString)
-
-			// Create a XalanTransformer.
-			XalanTransformer	theXalanTransformer;
-
-			// Set the stylesheet parameter name and
-			// expression (a string expression).
-			theXalanTransformer.setStylesheetParam(
-					XalanDOMString(argv[1]),
-					XalanDOMString(argv[2]));
-
-			// Our input files...The assumption is that the executable will be run
-			// from same directory as the input files.
-			theResult = theXalanTransformer.transform("foo.xml", "foo.xsl", "foo.out");
-
-			if(theResult != 0)
-			{
-				cerr << "UseStylesheetParam Error: \n" << theXalanTransformer.getLastError()
-					 << endl
-					 << endl;
-			}
+			 XMLPlatformUtils::Initialize();
+		}
+		catch (const XMLException& toCatch)
+		{
+			 cerr << "Error during Xerces initialization! "<< endl;
+			 theResult = -1;
 		}
 
-		// Terminate Xalan...
-		XalanTransformer::terminate();
+		if ( theResult == 0)
+		{
+
+			// Initialize Xalan.
+			XalanTransformer::initialize();
+
+			{
+				XALAN_USING_XALAN(XalanDOMString)
+
+				// Create a XalanTransformer.
+				XalanTransformer	theXalanTransformer;
+
+				// Set the stylesheet parameter name and
+				// expression (a string expression).
+				theXalanTransformer.setStylesheetParam(
+						XalanDOMString(argv[1]),
+						XalanDOMString(argv[2]));
+
+				// Our input files...The assumption is that the executable will be run
+				// from same directory as the input files.
+				theResult = theXalanTransformer.transform("foo.xml", "foo.xsl", "foo.out");
+
+				if(theResult != 0)
+				{
+					cerr << "UseStylesheetParam Error: \n" << theXalanTransformer.getLastError()
+						 << endl
+						 << endl;
+				}
+			}
+
+			// Terminate Xalan...
+			XalanTransformer::terminate();
+		}
 
 		// Terminate Xerces...
 		XMLPlatformUtils::Terminate();
