@@ -60,13 +60,7 @@
 
 
 #if !defined(XALAN_INLINE_INITIALIZATION)
-#include <climits>
-#endif
-
-
-
-#if !defined(XALAN_INLINE_INITIALIZATION)
-const unsigned int	NodeRefListBase::npos = UINT_MAX;
+const unsigned int	NodeRefListBase::npos = ~0u;
 #endif
 
 

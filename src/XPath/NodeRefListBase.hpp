@@ -64,12 +64,6 @@
 
 
 
-#if defined(XALAN_INLINE_INITIALIZATION)
-#include <climits>
-#endif
-
-
-
 class XalanNode;
 
 
@@ -119,7 +113,7 @@ public:
 	indexOf(const XalanNode*	theNode) const = 0;
 
 #if defined(XALAN_INLINE_INITIALIZATION)
-	static const unsigned int	npos = UINT_MAX;
+	static const unsigned int	npos = ~0u;
 #else
 	static const unsigned int	npos;
 #endif
