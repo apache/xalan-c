@@ -92,6 +92,27 @@
    <li>Fixed AIX packaging bug. ICU on AIX now produces archives instead of shared objects.</li>
    <li>Fixed bug in CompileStylesheet.dsp that prevented building the sample on Win32.</li>
    <li>Fixed spelling errors in usagepatterns.xml. (JIRA XALANC-428)</li>
+   <li>Fixed bug involving exporting the Harness symbols in Win64 with ICU dll. (AllInOneWithICU.dsp)</li>
+   <li>Fixed bug to enable build on HP-UX/aCC - workaround symbol length limit.(Makefile.incl.in)</li>
+   <li>Enabled build of PerfT/Performance tests as well as direct conf's intermediate build files to the correct location. (conf.vcproj, PerfT.vcproj, perf.vcproj)</li>
+   <li>Added status value error checking and included an example of the ICU memory management feature by altering SimpleTransform sample.</li>
+   <li>Updated Makefiles for zOS build (Makefile.in)</li>
+   <li>Corrected initialization of XalanMap with XalanVector as a data value</li>
+   <li>Modified XalanFileUtility.cpp by commenting out system call to bring up results html file in a browser.</li>
+   <li>Improved XalanMap implementation (XalanMap.hpp)</li>
+   <li>Right configuation for XalanVector , preventing memory allocation from the global heap (XalanMap.hpp)</li>
+   <li>Avoid trying to resolve against a base URI which is relative. (XalanParsedURI.cpp)</li>
+   <li>Simplified boolean expressions. (XalanParsedURI.hpp)</li>
+   <li>Use std::vector instead of XalanVector, since we cannot use the former until Xerces-C is initialized. (process.cpp) </li>
+   <li>Added code to ensured that ICU cleanup code is called. (process.cpp)</li>
+   <li>Fixed bug for providing backward API compatibility for Formatter* classes. (various files)</li>
+   <li>Fixed build bug for Solaris platform. (XPath.cpp)</li>
+   <li>Fixed bug in iterative stylesheet processing.  Execution was corrupted if &lt;xsl:for-each&gt; contained a single &lt;xsl:call-template&gt; and the invoked template was not the last template in the stylesheet. (ElemForEach.cpp)</li>
+   <li>Fixed bug where incorrect template was chosen when checking for conflicts. (Stylesheet.cpp)</li>
+   <li>Fixed bug to set proper document source URI (fixes testXSLT when inputs are specified with a relative path).  (XSLTEngineImpl.cpp)</li>
+   <li>Fixed bug where XML identifier was getting clobbered. (XSLTEngineImpl.cpp)</li>
+   <li>Provided an option to pool all text node strings. (various files) </li>
+   <li>Updated docs in anticipation of 1.9 release (various files)</li>
 </ul>
 </s2>
 
