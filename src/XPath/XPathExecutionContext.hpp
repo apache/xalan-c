@@ -154,11 +154,23 @@ public:
 
 		CurrentNodeSetAndRestore(
 				XPathExecutionContext&	theExecutionContext,
-				XalanNode*				theNode) :
+				XalanNode*				theNewNode) :
 			m_executionContext(theExecutionContext),
 			m_savedNode(theExecutionContext.getCurrentNode())
 		{
-			m_executionContext.setCurrentNode(theNode);
+			theExecutionContext.setCurrentNode(theNewNode);
+		}
+
+		CurrentNodeSetAndRestore(
+				XPathExecutionContext&	theExecutionContext,
+				XalanNode*				theOldNode,
+				XalanNode*				theNewNode) :
+			m_executionContext(theExecutionContext),
+			m_savedNode(theOldNode)
+		{
+			assert(theExecutionContext.getCurrentNode() == theOldNode);
+
+			theExecutionContext.setCurrentNode(theNewNode);
 		}
 
 		~CurrentNodeSetAndRestore()

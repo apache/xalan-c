@@ -502,7 +502,7 @@ public:
 	 * be set execution context, and must not be 0.
 	 *
 	 * @param executionContext current execution context
-	 * @param result           the boolean result
+	 * @param result the boolean result
 	 */
 	void
 	execute(
@@ -543,7 +543,7 @@ public:
 	 * be set execution context, and must not be 0.
 	 *
 	 * @param executionContext current execution context
-	 * @param result           the string result
+	 * @param result the string result
 	 */
 	void
 	execute(
@@ -595,6 +595,7 @@ public:
 	 * be set execution context, and must not be 0.
 	 *
 	 * @param executionContext current execution context
+	 * @param result A node list for the result.  This may or may not contain the actual result.
 	 * @return the node-set result, if the result was not returned in the parameter
 	 */
 	const XObjectPtr
@@ -604,6 +605,172 @@ public:
 	{
 		assert(executionContext.getCurrentNode() != 0);
 		assert(executionContext.getPrefixResolver() != 0);
+
+		return executeMore(executionContext.getCurrentNode(), 0, executionContext, result);
+	}
+
+	/**
+	 * Execute the XPath from the provided context.
+	 *
+	 * The current node must already be set execution context,
+	 * and must not be 0.
+	 *
+	 * @param executionContext current execution context
+	 * @param prefixResolver   prefix resolver to use
+	 * @return smart-pointer to result XObject
+	 */
+	const XObjectPtr
+	execute(
+			const PrefixResolver&	prefixResolver,
+			XPathExecutionContext&	executionContext) const
+	{
+		assert(executionContext.getCurrentNode() != 0);
+
+		// Push and pop the PrefixResolver...
+		XPathExecutionContext::PrefixResolverSetAndRestore	theResolverSetAndRestore(
+										executionContext,
+										&prefixResolver);
+
+		return executeMore(executionContext.getCurrentNode(), 0, executionContext);
+	}
+
+	/**
+	 * Execute the XPath from the provided context.
+	 *
+	 * The current node must already be set execution context,
+	 * and must not be 0.
+	 *
+	 * @param executionContext current execution context
+	 * @param prefixResolver prefix resolver to use
+	 * @param result the boolean result
+	 */
+	void
+	execute(
+			const PrefixResolver&	prefixResolver,
+			XPathExecutionContext&	executionContext,
+			bool&					result) const
+	{
+		assert(executionContext.getCurrentNode() != 0);
+
+		// Push and pop the PrefixResolver...
+		XPathExecutionContext::PrefixResolverSetAndRestore	theResolverSetAndRestore(
+										executionContext,
+										&prefixResolver);
+
+		executeMore(executionContext.getCurrentNode(), 0, executionContext, result);
+	}
+
+	/**
+	 * Execute the XPath from the provided context.
+	 *
+	 * The current node must already be set execution context,
+	 * and must not be 0.
+	 *
+	 * @param executionContext current execution context
+	 * @param prefixResolver prefix resolver to use
+	 * @param result the numeric result
+	 */
+	void
+	execute(
+			const PrefixResolver&	prefixResolver,
+			XPathExecutionContext&	executionContext,
+			double&					result) const
+	{
+		assert(executionContext.getCurrentNode() != 0);
+
+		// Push and pop the PrefixResolver...
+		XPathExecutionContext::PrefixResolverSetAndRestore	theResolverSetAndRestore(
+										executionContext,
+										&prefixResolver);
+
+		executeMore(executionContext.getCurrentNode(), 0, executionContext, result);
+	}
+
+	/**
+	 * Execute the XPath from the provided context. The
+	 * result is appended to the supplied string.
+	 *
+	 * The current node must already be set execution context,
+	 * and must not be 0.
+	 *
+	 * @param executionContext current execution context
+	 * @param prefixResolver prefix resolver to use
+	 * @param result the string result
+	 */
+	void
+	execute(
+			const PrefixResolver&	prefixResolver,
+			XPathExecutionContext&	executionContext,
+			XalanDOMString&			result) const
+	{
+		assert(executionContext.getCurrentNode() != 0);
+
+		// Push and pop the PrefixResolver...
+		XPathExecutionContext::PrefixResolverSetAndRestore	theResolverSetAndRestore(
+										executionContext,
+										&prefixResolver);
+
+		executeMore(executionContext.getCurrentNode(), 0, executionContext, result);
+	}
+
+	/**
+	 * Execute the XPath from the provided context.
+	 *
+	 * @param prefixResolver   prefix resolver to use
+	 * @param executionContext current execution context
+	 * @param formatterListener the FormatterListener instance to receive the result
+	 * @param function A pointer to the member function of FormatterListener to call
+	 */
+	void
+	execute(
+			const PrefixResolver&	prefixResolver,
+			XPathExecutionContext&	executionContext,
+			FormatterListener&		formatterListener,
+			MemberFunctionPtr		function) const
+	{
+		assert(executionContext.getCurrentNode() != 0);
+
+		// Push and pop the PrefixResolver...
+		XPathExecutionContext::PrefixResolverSetAndRestore	theResolverSetAndRestore(
+										executionContext,
+										&prefixResolver);
+
+		executeMore(executionContext.getCurrentNode(), 0, executionContext, formatterListener, function);
+	}
+
+	/**
+	 * Execute the XPath from the provided context.  Normally,
+	 * the expression will be evaluated and the result placed
+	 * in the parameter result.  However, some cases (such as
+	 * the evalution of a variable) could result in the copying
+	 * of a node-set, which is extremely expensive.  In that
+	 * case, the return value will contain the result of the
+	 * evaluation.  If the call to XObject::null() on the return
+	 * value is true, that indicates the value was executed
+	 * directly into the parameter.  Otherwise, the parameter
+	 * will be empty, and the result will be in the XObject
+	 * instance returned.
+	 *
+	 * The current node must already be set execution context,
+	 * and must not be 0.
+	 *
+	 * @param executionContext current execution context
+	 * @param prefixResolver prefix resolver to use
+	 * @param result A node list for the result.  This may or may not contain the actual result.
+	 * @return the node-set result, if the result was not returned in the parameter
+	 */
+	XObjectPtr
+	execute(
+			const PrefixResolver&	prefixResolver,
+			XPathExecutionContext&	executionContext,
+			MutableNodeRefList&		result) const
+	{
+		assert(executionContext.getCurrentNode() != 0);
+
+		// Push and pop the PrefixResolver...
+		XPathExecutionContext::PrefixResolverSetAndRestore	theResolverSetAndRestore(
+										executionContext,
+										&prefixResolver);
 
 		return executeMore(executionContext.getCurrentNode(), 0, executionContext, result);
 	}
