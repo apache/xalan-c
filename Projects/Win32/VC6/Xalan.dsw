@@ -72,24 +72,6 @@ Package=<4>
 
 ###############################################################################
 
-Project: "DOMSupport"=".\DOMSupport\DOMSupport.dsp" - Package Owner=<4>
-
-Package=<5>
-{{{
-}}}
-
-Package=<4>
-{{{
-    Begin Project Dependency
-    Project_Dep_Name PlatformSupport
-    End Project Dependency
-    Begin Project Dependency
-    Project_Dep_Name XalanDOM
-    End Project Dependency
-}}}
-
-###############################################################################
-
 Project: "DocumentBuilder"="..\..\..\samples\DocumentBuilder\DocumentBuilder.dsp" - Package Owner=<4>
 
 Package=<5>
@@ -148,30 +130,6 @@ Package=<4>
 {{{
     Begin Project Dependency
     Project_Dep_Name AllInOne
-    End Project Dependency
-}}}
-
-###############################################################################
-
-Project: "ICUBridge"=".\ICUBridge\ICUBridge.dsp" - Package Owner=<4>
-
-Package=<5>
-{{{
-}}}
-
-Package=<4>
-{{{
-    Begin Project Dependency
-    Project_Dep_Name XSLT
-    End Project Dependency
-    Begin Project Dependency
-    Project_Dep_Name XPath
-    End Project Dependency
-    Begin Project Dependency
-    Project_Dep_Name PlatformSupport
-    End Project Dependency
-    Begin Project Dependency
-    Project_Dep_Name XalanDOM
     End Project Dependency
 }}}
 
@@ -241,21 +199,6 @@ Package=<4>
     End Project Dependency
     Begin Project Dependency
     Project_Dep_Name AllInOne
-    End Project Dependency
-}}}
-
-###############################################################################
-
-Project: "PlatformSupport"=".\PlatformSupport\PlatformSupport.dsp" - Package Owner=<4>
-
-Package=<5>
-{{{
-}}}
-
-Package=<4>
-{{{
-    Begin Project Dependency
-    Project_Dep_Name XalanDOM
     End Project Dependency
 }}}
 
@@ -471,141 +414,6 @@ Package=<4>
 
 ###############################################################################
 
-Project: "XMLSupport"=".\XMLSupport\XMLSupport.dsp" - Package Owner=<4>
-
-Package=<5>
-{{{
-}}}
-
-Package=<4>
-{{{
-    Begin Project Dependency
-    Project_Dep_Name PlatformSupport
-    End Project Dependency
-    Begin Project Dependency
-    Project_Dep_Name DOMSupport
-    End Project Dependency
-    Begin Project Dependency
-    Project_Dep_Name XalanDOM
-    End Project Dependency
-}}}
-
-###############################################################################
-
-Project: "XPath"=".\XPath\XPath.dsp" - Package Owner=<4>
-
-Package=<5>
-{{{
-}}}
-
-Package=<4>
-{{{
-    Begin Project Dependency
-    Project_Dep_Name PlatformSupport
-    End Project Dependency
-    Begin Project Dependency
-    Project_Dep_Name DOMSupport
-    End Project Dependency
-    Begin Project Dependency
-    Project_Dep_Name XalanDOM
-    End Project Dependency
-}}}
-
-###############################################################################
-
-Project: "XPathCAPI"=".\XPathCAPI\XPathCAPI.dsp" - Package Owner=<4>
-
-Package=<5>
-{{{
-}}}
-
-Package=<4>
-{{{
-    Begin Project Dependency
-    Project_Dep_Name XalanSourceTree
-    End Project Dependency
-    Begin Project Dependency
-    Project_Dep_Name XPath
-    End Project Dependency
-    Begin Project Dependency
-    Project_Dep_Name PlatformSupport
-    End Project Dependency
-    Begin Project Dependency
-    Project_Dep_Name XalanDOM
-    End Project Dependency
-}}}
-
-###############################################################################
-
-Project: "XSLT"=".\XSLT\XSLT.dsp" - Package Owner=<4>
-
-Package=<5>
-{{{
-}}}
-
-Package=<4>
-{{{
-    Begin Project Dependency
-    Project_Dep_Name DOMSupport
-    End Project Dependency
-    Begin Project Dependency
-    Project_Dep_Name PlatformSupport
-    End Project Dependency
-    Begin Project Dependency
-    Project_Dep_Name XMLSupport
-    End Project Dependency
-    Begin Project Dependency
-    Project_Dep_Name XalanDOM
-    End Project Dependency
-    Begin Project Dependency
-    Project_Dep_Name XalanSourceTree
-    End Project Dependency
-    Begin Project Dependency
-    Project_Dep_Name XPath
-    End Project Dependency
-}}}
-
-###############################################################################
-
-Project: "XalanDOM"=".\XalanDOM\XalanDOM.dsp" - Package Owner=<4>
-
-Package=<5>
-{{{
-}}}
-
-Package=<4>
-{{{
-}}}
-
-###############################################################################
-
-Project: "XalanEXSLT"=".\XalanEXSLT\XalanEXSLT.dsp" - Package Owner=<4>
-
-Package=<5>
-{{{
-}}}
-
-Package=<4>
-{{{
-    Begin Project Dependency
-    Project_Dep_Name DOMSupport
-    End Project Dependency
-    Begin Project Dependency
-    Project_Dep_Name PlatformSupport
-    End Project Dependency
-    Begin Project Dependency
-    Project_Dep_Name XalanDOM
-    End Project Dependency
-    Begin Project Dependency
-    Project_Dep_Name XPath
-    End Project Dependency
-    Begin Project Dependency
-    Project_Dep_Name XalanExtensions
-    End Project Dependency
-}}}
-
-###############################################################################
-
 Project: "XalanExe"=".\XalanExe\XalanExe.dsp" - Package Owner=<4>
 
 Package=<5>
@@ -616,60 +424,6 @@ Package=<4>
 {{{
     Begin Project Dependency
     Project_Dep_Name AllInOne
-    End Project Dependency
-}}}
-
-###############################################################################
-
-Project: "XalanExtensions"=".\XalanExtensions\XalanExtensions.dsp" - Package Owner=<4>
-
-Package=<5>
-{{{
-}}}
-
-Package=<4>
-{{{
-    Begin Project Dependency
-    Project_Dep_Name PlatformSupport
-    End Project Dependency
-    Begin Project Dependency
-    Project_Dep_Name XalanDOM
-    End Project Dependency
-    Begin Project Dependency
-    Project_Dep_Name XPath
-    End Project Dependency
-    Begin Project Dependency
-    Project_Dep_Name DOMSupport
-    End Project Dependency
-    Begin Project Dependency
-    Project_Dep_Name XSLT
-    End Project Dependency
-}}}
-
-###############################################################################
-
-Project: "XalanSourceTree"=".\XalanSourceTree\XalanSourceTree.dsp" - Package Owner=<4>
-
-Package=<5>
-{{{
-}}}
-
-Package=<4>
-{{{
-    Begin Project Dependency
-    Project_Dep_Name XalanDOM
-    End Project Dependency
-    Begin Project Dependency
-    Project_Dep_Name PlatformSupport
-    End Project Dependency
-    Begin Project Dependency
-    Project_Dep_Name XercesParserLiaison
-    End Project Dependency
-    Begin Project Dependency
-    Project_Dep_Name XMLSupport
-    End Project Dependency
-    Begin Project Dependency
-    Project_Dep_Name DOMSupport
     End Project Dependency
 }}}
 
@@ -690,48 +444,6 @@ Package=<4>
 
 ###############################################################################
 
-Project: "XalanTransformer"=".\XalanTransformer\XalanTransformer.dsp" - Package Owner=<4>
-
-Package=<5>
-{{{
-}}}
-
-Package=<4>
-{{{
-    Begin Project Dependency
-    Project_Dep_Name DOMSupport
-    End Project Dependency
-    Begin Project Dependency
-    Project_Dep_Name PlatformSupport
-    End Project Dependency
-    Begin Project Dependency
-    Project_Dep_Name XalanDOM
-    End Project Dependency
-    Begin Project Dependency
-    Project_Dep_Name XalanSourceTree
-    End Project Dependency
-    Begin Project Dependency
-    Project_Dep_Name XercesParserLiaison
-    End Project Dependency
-    Begin Project Dependency
-    Project_Dep_Name XMLSupport
-    End Project Dependency
-    Begin Project Dependency
-    Project_Dep_Name XPath
-    End Project Dependency
-    Begin Project Dependency
-    Project_Dep_Name XSLT
-    End Project Dependency
-    Begin Project Dependency
-    Project_Dep_Name XalanExtensions
-    End Project Dependency
-    Begin Project Dependency
-    Project_Dep_Name XalanEXSLT
-    End Project Dependency
-}}}
-
-###############################################################################
-
 Project: "XalanTransformerCallback"="..\..\..\samples\XalanTransformerCallback\XalanTransformerCallback.dsp" - Package Owner=<4>
 
 Package=<5>
@@ -742,30 +454,6 @@ Package=<4>
 {{{
     Begin Project Dependency
     Project_Dep_Name AllInOne
-    End Project Dependency
-}}}
-
-###############################################################################
-
-Project: "XercesParserLiaison"=".\XercesParserLiaison\XercesParserLiaison.dsp" - Package Owner=<4>
-
-Package=<5>
-{{{
-}}}
-
-Package=<4>
-{{{
-    Begin Project Dependency
-    Project_Dep_Name XMLSupport
-    End Project Dependency
-    Begin Project Dependency
-    Project_Dep_Name PlatformSupport
-    End Project Dependency
-    Begin Project Dependency
-    Project_Dep_Name XalanDOM
-    End Project Dependency
-    Begin Project Dependency
-    Project_Dep_Name DOMSupport
     End Project Dependency
 }}}
 
