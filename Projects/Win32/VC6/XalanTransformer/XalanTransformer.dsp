@@ -156,6 +156,10 @@ SOURCE=..\..\..\..\src\XalanTransformer\XalanTransformerOutputStream.cpp
 
 SOURCE=..\..\..\..\src\XalanTransformer\XercesDOMParsedSource.cpp
 # End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XalanTransformer\XercesDOMWrapperParsedSource.cpp
+# End Source File
 # End Group
 # Begin Group "Header Files"
 
@@ -203,6 +207,10 @@ SOURCE=..\..\..\..\src\XalanTransformer\XalanTransformerOutputStream.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\XalanTransformer\XercesDOMParsedSource.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XalanTransformer\XercesDOMWrapperParsedSource.hpp
 # End Source File
 # End Group
 # Begin Group "Resource Files"
