@@ -327,18 +327,17 @@ SimpleNodeLocator::stepPattern(
 	const int	endStep = currentExpression.getNextOpCodePosition(opPos);
 	int 		nextStepType = currentExpression.getOpCodeMapValue(endStep);
 
-	XalanNode*	localContext = context;
-
 	if(XPathExpression::eENDOP != nextStepType)
 	{
 		// Continue step via recursion...
-		localContext = stepPattern(xpath,
-								   executionContext,
-								   localContext,
-								   endStep,
-								   scoreHolder);
+		context = stepPattern(
+						xpath,
+						executionContext,
+						context,
+						endStep,
+						scoreHolder);
 
-		if(0 == localContext)
+		if(0 == context)
 		{
 			scoreHolder = xpath.s_MatchScoreNone;
 
@@ -354,17 +353,17 @@ SimpleNodeLocator::stepPattern(
 
 		if (nextStepType != XPathExpression::eMATCH_ANY_ANCESTOR_WITH_FUNCTION_CALL)
 		{
-			localContext = DOMServices::getParentOfNode(*localContext);
+			context = DOMServices::getParentOfNode(*context);
 		}
 
-		if(0 == localContext)
+		if(0 == context)
 		{
 			// !!!!!!!!!!!!! Big ugly return here !!!!!!!!!!!!!!!!!!!
 			return 0;
 		}
 	}
 
-	assert(localContext != 0);
+	assert(context != 0);
 
 	int			argLen = 0;
 
@@ -380,7 +379,7 @@ SimpleNodeLocator::stepPattern(
 		{
 			argLen = currentExpression.getOpCodeLength(opPos);
 
-			const XObjectPtr		obj(xpath.executeMore(localContext, opPos, executionContext));
+			const XObjectPtr		obj(xpath.executeMore(context, opPos, executionContext));
 			assert(obj.get() != 0);
 
 			const NodeRefListBase&	nl = obj->nodeset();
@@ -393,17 +392,17 @@ SimpleNodeLocator::stepPattern(
 			{
 				bool	fFound = false;
 
-				while(localContext != 0 && fFound == false)
+				while(context != 0 && fFound == false)
 				{
 					for(unsigned int i = 0; i < len; i++)
 					{
 						XalanNode* const	n = nl.item(i);
 
-						if(n == localContext)
+						if(n == context)
 						{
 							score = xpath.s_MatchScoreOther;
 
-							localContext = n;
+							context = n;
 
 							fFound = true;
 
@@ -411,7 +410,7 @@ SimpleNodeLocator::stepPattern(
 						}
 					}
 
-					localContext = DOMServices::getParentOfNode(*localContext);
+					context = DOMServices::getParentOfNode(*context);
 				}
 			}
 			else
@@ -420,11 +419,11 @@ SimpleNodeLocator::stepPattern(
 				{
 					XalanNode* const	n = nl.item(i);
 
-					if(n == localContext)
+					if(n == context)
 					{
 						score = xpath.s_MatchScoreOther;
 
-						localContext = n;
+						context = n;
 
 						break;
 					}
@@ -442,7 +441,7 @@ SimpleNodeLocator::stepPattern(
 
 			opPos += 3;
 
-			const XalanNode::NodeType	nodeType = localContext->getNodeType();
+			const XalanNode::NodeType	nodeType = context->getNodeType();
 
 			if (nodeType == XalanNode::DOCUMENT_NODE ||
 				nodeType == XalanNode::DOCUMENT_FRAGMENT_NODE)
@@ -463,7 +462,7 @@ SimpleNodeLocator::stepPattern(
 
 			score = nodeTest(xpath,
 							 executionContext,
-							 localContext,
+							 context,
 							 opPos,
 							 argLen,
 							 XPathExpression::eFROM_ATTRIBUTES);
@@ -476,22 +475,20 @@ SimpleNodeLocator::stepPattern(
 			// $$ ToDO: Can we reduce this to some call on the
 			// XPathExpression interface?
 			argLen =
-				currentExpression.getOpCodeMapValue(opPos + XPathExpression::s__opCodeMapLengthIndex + 1) - 3;
+					currentExpression.getOpCodeMapValue(opPos + XPathExpression::s__opCodeMapLengthIndex + 1) - 3;
 
-			score = xpath.s_MatchScoreNone;
-
-			if(localContext->getNodeType() != XalanNode::ATTRIBUTE_NODE)
+			if(context->getNodeType() != XalanNode::ATTRIBUTE_NODE)
 			{
 				opPos += 3;
 
-				while(0 != localContext)
+				while(0 != context)
 				{
-					score = nodeTest(xpath, executionContext, localContext, opPos, argLen, stepType);
+					score = nodeTest(xpath, executionContext, context, opPos, argLen, stepType);
 
 					if(xpath.s_MatchScoreNone != score)
 						break;
 
-					localContext = DOMServices::getParentOfNode(*localContext);
+					context = DOMServices::getParentOfNode(*context);
 				}
 			}
 		}
@@ -503,30 +500,16 @@ SimpleNodeLocator::stepPattern(
 		argLen =
 				currentExpression.getOpCodeMapValue(opPos + XPathExpression::s__opCodeMapLengthIndex + 1) - 3;
 
-		if(localContext->getNodeType() == XalanNode::ATTRIBUTE_NODE)
-		{
-			score = xpath.s_MatchScoreNone;
-		}
-		else
+		if(context->getNodeType() != XalanNode::ATTRIBUTE_NODE)
 		{
 			opPos += 3;
 
-			score = nodeTest(xpath, executionContext, localContext, opPos, argLen, stepType);
+			score = nodeTest(xpath, executionContext, context, opPos, argLen, stepType);
 		}
 		break;
 
 	default:
-		// $$ ToDO: Can we reduce this to some call on the
-		// XPathExpression interface?
-		argLen =
-				currentExpression.getOpCodeMapValue(opPos + XPathExpression::s__opCodeMapLengthIndex + 1) - 3;
-
-		opPos += 3;
-
-		score = xpath.s_MatchScoreNone;
-	  
-		executionContext.error(TranscodeFromLocalCodePage("unknown match operation!"), localContext);
-
+		executionContext.error(TranscodeFromLocalCodePage("unknown match operation!"), context);
 		break;
 	}
 
@@ -547,12 +530,12 @@ SimpleNodeLocator::stepPattern(
 
 			while(XPathExpression::eOP_PREDICATE == nextStepType)
 			{
-				const XObjectPtr		pred(xpath.predicate(localContext, opPos, executionContext));
+				const XObjectPtr		pred(xpath.predicate(context, opPos, executionContext));
 				assert(pred.get() != 0);
 
 				if(XObject::eTypeNumber == pred->getType())
 				{
-					score = handleFoundIndex(xpath, executionContext, localContext, startOpPos);
+					score = handleFoundIndex(xpath, executionContext, context, startOpPos);
 				}
 				else if(pred->boolean() == false)
 				{
@@ -569,7 +552,7 @@ SimpleNodeLocator::stepPattern(
 		}
 		catch(const FoundIndex&)
 		{
-			score = handleFoundIndex(xpath, executionContext, localContext, startOpPos);
+			score = handleFoundIndex(xpath, executionContext, context, startOpPos);
 		}
 	}
 
@@ -579,7 +562,7 @@ SimpleNodeLocator::stepPattern(
 		scoreHolder = score;
 	}
 
-	return score == xpath.s_MatchScoreNone ? 0 : localContext;
+	return score == xpath.s_MatchScoreNone ? 0 : context;
 }
 
 

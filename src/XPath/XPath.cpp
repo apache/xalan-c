@@ -436,6 +436,9 @@ XPath::getMatchScore(XalanNode*					context,
 
 		opPos += 2;
 
+#if 1
+		XLocator* const		locator = m_defaultXLocator;
+#else
 		XLocator*	locator = executionContext.getXLocatorFromNode(context);
 
 		if(0 == locator)
@@ -443,6 +446,7 @@ XPath::getMatchScore(XalanNode*					context,
 			locator = m_defaultXLocator;
 		}
 		assert(locator != 0);
+#endif
 
 		while(m_expression.m_opMap[opPos] == XPathExpression::eOP_LOCATIONPATHPATTERN &&
 			  score == s_MatchScoreNone)
@@ -1190,14 +1194,18 @@ XPath::locationPath(
 {    
 	assert(context != 0);
 
+#if 1
+	XLocator* const		locator = m_defaultXLocator;
+#else
 	XLocator*	xlocator = executionContext.getXLocatorFromNode(context);
 
 	if(0 == xlocator)
 	{
-		xlocator = m_defaultXLocator;
+		locator = m_defaultXLocator;
 	}
+#endif
 
-	return xlocator->locationPath(*this, executionContext, *context, opPos);
+	return locator->locationPath(*this, executionContext, *context, opPos);
 }
 
 
@@ -1221,12 +1229,16 @@ XPath::locationPathPattern(
 {
 	assert(context != 0);
 
+#if 1
+	XLocator* const		locator = m_defaultXLocator;
+#else
 	XLocator*	locator = executionContext.getXLocatorFromNode(context);
 
 	if(0 == locator)
 	{
 		locator = m_defaultXLocator;
 	}
+#endif
 
 	const double	result = locator->locationPathPattern(*this, executionContext, *context, opPos);
 
