@@ -275,6 +275,10 @@ SOURCE=..\..\..\..\src\PlatformSupport\AttributesImpl.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\PlatformSupport\AttributeVectorEntry.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\PlatformSupport\AttributeVectorEntryExtended.hpp
 # End Source File
 # Begin Source File
