@@ -1071,10 +1071,20 @@ StylesheetHandler::appendChildElementToParent(
 	{
 		if (e.getExceptionCode() == XalanDOMException::HIERARCHY_REQUEST_ERR)
 		{
-			error(
-				elem->getElementName(),
-				XALAN_STATIC_UCODE_STRING(" is not allowed at this position in the stylesheet"),
-				locator);
+			if (elem->getXSLToken() == StylesheetConstructionContext::ELEMNAME_TEXT_LITERAL_RESULT)
+			{
+				error(
+					elem->getElementName(),
+					XALAN_STATIC_UCODE_STRING(" or literal text is not allowed at this position in the stylesheet"),
+					locator);
+			}
+			else
+			{
+				error(
+					elem->getElementName(),
+					XALAN_STATIC_UCODE_STRING(" is not allowed at this position in the stylesheet"),
+					locator);
+			}
 		}
 	}
 }
