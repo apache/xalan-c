@@ -582,25 +582,32 @@ foo(XPathExecutionContext&	theExecutionContext)
 
 		typedef MutableNodeRefList::addNodeInDocOrderFunctor	addNodeInDocOrderFunctor;
 
-		MutableNodeRefList				theList;
-		NodeRefList::NodeListVectorType theVector;
+		{
+			NodeRefList::NodeListVectorType theVector;
 
-		copy(
-			nodelist.m_nodeList.rbegin(),
-			nodelist.m_nodeList.rend(),
-			back_inserter(m_nodeList));
+			copy(
+				theVector.rbegin(),
+				theVector.rend(),
+				back_inserter(theVector));
+		}
 
-		addNodeInDocOrderFunctor	theFunctor(theList, executionContext)
+		{
+			MutableNodeRefList	theList;
 
-		for_each(
-			theVector.begin(),
-			theVector.end(),
-			theFunctor);
+			MutableNodeRefList::addNodeInDocOrderFunctor	theFunctor(theList, theExecutionContext);
 
-		for_each(
-			nodelist.m_nodeList.rbegin(),
-			nodelist.m_nodeList.rend(),
-			theFunctor);
+			const NodeRefList::NodeListVectorType	theConstVector;
+
+			for_each(
+				theConstVector.begin(),
+				theConstVector.end(),
+				theFunctor);
+
+			for_each(
+				theConstVector.rbegin(),
+				theConstVector.rend(),
+				theFunctor);
+		}
 	}
 
 	{
