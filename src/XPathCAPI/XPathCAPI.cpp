@@ -98,8 +98,8 @@ static bool	fInitialized = false;
 static bool	fTerminated = false;
 
 
-//XALAN_USING_XALAN(length)
-//XALAN_USING_XALAN(XalanArrayAutoPtr)
+
+
 XALAN_USING_XALAN(XalanDOMChar)
 XALAN_USING_XALAN(XalanDOMString)
 XALAN_USING_XALAN(XalanOutputTranscoder)
