@@ -349,20 +349,20 @@ XalanDOMString::append(
 	{
 		if (size() == 0)
 		{
-			doTranscode(theString, theCount, m_data);
+			doTranscode(theString, theLength, m_data);
 		}
 		else
 		{
 			XalanDOMCharVectorType	theTempVector;
 
-			doTranscode(theString, theCount, theTempVector);
+			doTranscode(theString, theLength, theTempVector);
 
 			append(&*theTempVector.begin(), theTempVector.size());
 		}
 
-	#if defined(XALAN_DOMSTRING_CACHE_SIZE)
+#if defined(XALAN_DOMSTRING_CACHE_SIZE)
 		m_size = m_data.size() - 1;
-	#endif
+#endif
 	}
 
 	invariants();
