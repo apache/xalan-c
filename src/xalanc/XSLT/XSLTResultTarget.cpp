@@ -163,7 +163,20 @@ XSLTResultTarget::XSLTResultTarget(Writer*	characterStream) :
 
 
 
-XSLTResultTarget::XSLTResultTarget(FormatterListener&		flistener) :
+XSLTResultTarget::XSLTResultTarget(FILE*	stream) :
+	m_fileName(),
+	m_byteStream(0),
+	m_encoding(),
+	m_characterStream(0),
+	m_formatterListener(0),
+	m_stream(stream)
+{
+	assert(stream != 0);
+}
+
+
+
+XSLTResultTarget::XSLTResultTarget(FormatterListener&	flistener) :
 	m_fileName(),
 	m_byteStream(0),
 	m_encoding(),
