@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -117,8 +117,8 @@
 
 
 
-#include <XercesParserLiaison/XercesDOMSupport.hpp>
-#include <XercesParserLiaison/XercesParserLiaison.hpp>
+#include <XalanSourceTree/XalanSourceTreeDOMSupport.hpp>
+#include <XalanSourceTree/XalanSourceTreeParserLiaison.hpp>
 
 
 
@@ -1283,7 +1283,7 @@ main(int			/* argc */,
 		XPathInit						theXPathInit;
 
 		XPathEnvSupportDefault			theXPathEnvSupport;
-		XercesDOMSupport				theDOMSupport;
+		XalanSourceTreeDOMSupport		theDOMSupport;
 		XObjectFactoryDefault			theXObjectFactory;
 		XPathFactoryDefault				theXPathFactory;
 		XPathProcessorImpl				theXPathProcessor;
@@ -1294,7 +1294,7 @@ main(int			/* argc */,
 
 		XalanStdOutputStream			theStdOut(cout);
 		XalanOutputStreamPrintWriter	thePrintWriter(theStdOut);
-		XercesParserLiaison				theLiaison(theDOMSupport);
+		XalanSourceTreeParserLiaison	theLiaison(theDOMSupport);
 
 		RunTests(theXPathFactory,
 				 theXPathProcessor,
