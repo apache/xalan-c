@@ -111,6 +111,39 @@ public:
 	virtual XPath*
 	create(bool		fOptimize = true) = 0;
 
+	/**
+	 *
+	 * A functor for use with stl algorithms.
+	 *
+	 */
+#if defined(XALAN_NO_NAMESPACES)
+	struct DeleteXPathFunctor : public unary_function<const XPath*, void>
+#else
+	struct DeleteXPathFunctor : public std::unary_function<const XPath*, void>
+#endif
+	{
+	public:
+
+		DeleteXPathFunctor(
+			XPathFactory&		theFactoryInstance) :
+			m_factoryInstance(theFactoryInstance)
+		{
+		}
+
+		result_type
+		operator()(argument_type	theXPath) const
+		{
+			m_factoryInstance.doReturnObject(theXPath,
+											 false);
+		}
+
+	private:
+
+		XPathFactory&		m_factoryInstance;
+	};
+
+	friend struct DeleteXPathFunctor;
+
 protected:
 
 	virtual bool
@@ -154,7 +187,6 @@ protected:
 	};
 
 	friend struct ProtectedDeleteXPathFunctor;
-
 };
 
 
