@@ -219,7 +219,7 @@ public:
 #endif
 	clone() const
 	{
-		return new XalanEXSLTFunctionPadding(*this);
+		return new XalanEXSLTFunctionPadding;
 	}
 
 protected:
@@ -233,6 +233,8 @@ protected:
 private:
 
 	// Not implemented...
+	XalanEXSLTFunctionPadding(const XalanEXSLTFunctionPadding&);
+
 	XalanEXSLTFunctionPadding&
 	operator=(const XalanEXSLTFunctionPadding&);
 
