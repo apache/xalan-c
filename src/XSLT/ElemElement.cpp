@@ -175,13 +175,17 @@ ElemElement::execute(
 
 	m_nameAVT->evaluate(elemName, sourceNode, *this, executionContext);
 
-	bool					isIllegalElement = false;
+	bool				isIllegalElement = false;
 
-	unsigned int			len = length(elemName);
+	unsigned int		len = length(elemName);
 
-	const unsigned int		indexOfNSSep = indexOf(elemName, XalanUnicode::charColon);
+	const unsigned int	indexOfNSSep = indexOf(elemName, XalanUnicode::charColon);
 
-	const bool				haveNamespace = indexOfNSSep == len ? false : true;
+	StylesheetExecutionContext::GetAndReleaseCachedString	prefixGuard(executionContext);
+
+	XalanDOMString&		prefix = prefixGuard.get();
+
+	const bool			haveNamespace = indexOfNSSep == len ? false : true;
 
 	if(haveNamespace == true)
 	{
@@ -204,10 +208,6 @@ ElemElement::execute(
 	}
 	else if (haveNamespace == true)
 	{
-		StylesheetExecutionContext::GetAndReleaseCachedString	prefixGuard(executionContext);
-
-		XalanDOMString&		prefix = prefixGuard.get();
-
 		prefix = substring(elemName, 0, indexOfNSSep);
 
 		const XalanDOMString&	theNamespace = executionContext.getResultNamespaceForPrefix(prefix);
@@ -251,6 +251,12 @@ ElemElement::execute(
 				if(indexOfNSSep == len)
 				{
 					executionContext.addResultAttribute(DOMServices::s_XMLNamespace, elemNameSpace);
+				}
+				else
+				{
+					insert(prefix, 0, DOMServices::s_XMLNamespaceWithSeparator);
+
+					executionContext.addResultAttribute(prefix, elemNameSpace);
 				}
 			}
 		}

@@ -1493,19 +1493,56 @@ XSLTEngineImpl::addResultAttribute(
 			const XalanDOMString&	aname,
 			const XalanDOMString&	value)
 {
-	const bool	isPrefix = startsWith(aname, DOMServices::s_XMLNamespaceWithSeparator);
+	bool	fExcludeAttribute = false;
 
-	if (equals(aname, DOMServices::s_XMLNamespace) || isPrefix == true) 
+	if (equals(aname, DOMServices::s_XMLNamespace)) 
 	{
-		const XalanDOMString	p = isPrefix == true ? substring(aname, 6) : XalanDOMString();
+		// OK, we're adding a default namespace declaration.  So see if the length
+		// of the namespace is 0.  If it's not, go ahead and add the declaration.
+		// If it's not, it means we're "turning off" the previous default
+		// declaration.
+		if (length(value) != 0)
+		{
+			addResultNamespaceDecl(s_emptyString, value);
+		}
+		else
+		{
+			// OK, we're turning of the previous default namespace declaration.
+			// Check to see if there is one, and if there isn't, don't add
+			// the namespace declaration _and_ don't add the attribute.
+			const XalanDOMString&	currentDefaultNamespace =
+					getNamespaceForPrefix(DOMServices::s_XMLNamespace);
 
-		addResultNamespaceDecl(p, value);
+			if (length(currentDefaultNamespace) != 0)
+			{
+				addResultNamespaceDecl(s_emptyString, value);
+			}
+			else
+			{
+				fExcludeAttribute = true;
+			}
+		}
+	}
+	else if (startsWith(aname, DOMServices::s_XMLNamespaceWithSeparator) == true)
+	{
+		assert(m_executionContext != 0);
+
+		StylesheetExecutionContext::GetAndReleaseCachedString	prefixGuard(*m_executionContext);
+
+		XalanDOMString&		prefix = prefixGuard.get();
+
+		prefix = substring(aname, DOMServices::s_XMLNamespaceWithSeparatorLength);
+
+		addResultNamespaceDecl(prefix, value);
 	}
 
-	attList.addAttribute(
-		c_wstr(aname),
-		c_wstr(Constants::ATTRTYPE_CDATA),
-		c_wstr(value));
+	if (fExcludeAttribute == false)
+	{
+		attList.addAttribute(
+			c_wstr(aname),
+			c_wstr(Constants::ATTRTYPE_CDATA),
+			c_wstr(value));
+	}
 }
 
 
