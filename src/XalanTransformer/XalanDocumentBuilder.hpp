@@ -81,10 +81,10 @@ class XALAN_TRANSFORMER_EXPORT XalanDocumentBuilder
 {
 public:
 
-	XalanDocumentBuilder();
-
 	virtual
-	~XalanDocumentBuilder();
+	~XalanDocumentBuilder()
+	{
+	}
 
 	virtual XalanDocument*
 	getDocument() const = 0;	
