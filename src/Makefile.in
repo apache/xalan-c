@@ -55,6 +55,9 @@
 # 
 #
 # $Log$
+# Revision 1.5  2000/06/01 17:44:23  dbertoni
+# New source directory.
+#
 # Revision 1.4  2000/04/10 20:25:06  dbertoni
 # Changes to remove absolute path to shared library when linking executable.
 #
@@ -160,6 +163,7 @@ noxercesroot:
 	@echo XERCESCROOT must be defined
 endif
 
+XALANDOM_DIR = XalanDOM
 DOMSUPPORT_DIR = DOMSupport
 INCLUDE_DIR = Include
 PLATFORMSUPPORT_DIR = PlatformSupport
@@ -184,7 +188,7 @@ PRODUCTVERSION=${VER}
 BINTARGETDIR=${XALANCROOT}/bin
 
 vpath %.cpp \
-$(DOMSUPPORT_DIR):$(PLATFORMSUPPORT_DIR):$(TESTXPATH_DIR):$(TESTXSLT_DIR):\
+$(XALANDOM_DIR):$(DOMSUPPORT_DIR):$(PLATFORMSUPPORT_DIR):$(TESTXPATH_DIR):$(TESTXSLT_DIR):\
 $(XMLSUPPORT_DIR):$(XPATH_DIR):$(XSLT_DIR):$(XERCESINIT_DIR):\
 $(XERCESPARSERLIAISON_DIR):$(XERCESPLATFORMSUPPORT_DIR)
 
@@ -195,6 +199,7 @@ ${ALL_OBJECTS_DIR}/%.o:%.hpp
 	$(CC1) -c $(XSL_BUILD_OPTIONS) $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $(patsubst .hpp,.cpp,$<)
 
 ALLSOURCE = \
+	$(wildcard $(XALANDOM_DIR)/*.cpp) \
 	$(wildcard $(DOMSUPPORT_DIR)/*.cpp) \
 	$(wildcard $(PLATFORMSUPPORT_DIR)/*.cpp) \
 	$(wildcard $(XMLSUPPORT_DIR)/*.cpp) \
