@@ -425,8 +425,8 @@ public:
 
 
 #if defined(XALAN_NO_NAMESPACES)
-	typedef vector<XalanCompiledStylesheet*>			CompiledStylesheetPtrVectorType;
-	typedef vector<XalanParsedSource*>					ParsedSourcePtrVectorType;
+	typedef vector<const XalanCompiledStylesheet*>		CompiledStylesheetPtrVectorType;
+	typedef vector<const XalanParsedSource*>			ParsedSourcePtrVectorType;
 	typedef pair<XalanDOMString, XalanDOMString>		ParamPairType;
 	typedef vector<ParamPairType>						ParamPairVectorType;
 	typedef pair<QNameByValue, Function*>				FunctionPairType;
