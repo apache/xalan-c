@@ -70,7 +70,7 @@
 
 
 
-#include "Stylesheet.hpp"
+#include "StylesheetRoot.hpp"
 #include "StylesheetConstructionContext.hpp"
 
 
@@ -115,7 +115,7 @@ ElemUse::execute(
 	ElemTemplateElement::execute(executionContext, sourceTree, sourceNode, mode);
 
 	if(0 != m_attributeSetsNames.size())
-		getStylesheet().applyAttrSets(m_attributeSetsNames, 
+		getStylesheet().getStylesheetRoot().applyAttrSets(m_attributeSetsNames, 
 				executionContext, sourceTree, sourceNode, mode);
 }
 
