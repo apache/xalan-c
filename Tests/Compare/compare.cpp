@@ -227,7 +227,7 @@ getParams(int argc,
 	{
 		unsigned int ii = lastIndexOf(baseDir,charAt(pathSep,0));
 		outDir = substring(baseDir, 0, ii+1);
-		append(outDir,XalanDOMString("COMPARE-results"));
+		append(outDir,XalanDOMString("DOMCOM-results"));
 		f.checkAndCreateDir(outDir);
 		append(outDir,pathSep);
 	}
@@ -355,7 +355,7 @@ main(
 			logFile.logElement(10, "perfdata", runAttrs, "xxx");
 				
 			// Specify the "test" directory for both input and output.
-			const XalanDOMString  xDir("simpletests");
+			const XalanDOMString  xDir("domcomtests");
 			const XalanDOMString  theOutputDir = outputRoot + xDir;
 			futil.checkAndCreateDir(theOutputDir);
 
