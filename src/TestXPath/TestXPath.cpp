@@ -329,7 +329,11 @@ GetAttributeFromNode(
 	if (theNode->getNodeType() == XalanNode::ELEMENT_NODE)
 	{
 		const XalanElement*		theElement =
+#if defined(XALAN_OLD_STYLE_CASTS)
+					(const XalanElement*)theNode;
+#else
 					static_cast<const XalanElement*>(theNode);
+#endif
 
 		theResult = theElement->getAttribute(theAttributeName);
 	}
@@ -1163,7 +1167,7 @@ TestAxes(
 	typedef std::vector<XalanDOMString>	FileNameVectorType;
 #endif
 
-	DirectoryEnumeratorFunctor<FileNameVectorType>	theEnumerator;
+	DirectoryEnumeratorFunctor<FileNameVectorType, XalanDOMString>	theEnumerator;
 
 	FileNameVectorType	theFiles;
 

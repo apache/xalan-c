@@ -150,7 +150,11 @@ public:
 	 */
 	bool isDirectory() const
 	{
-		return d_type == DT_DIR;
+#if defined(AIX)	
+		return false;
+#else		
+		return d_type == DT_DIR;		
+#endif		
 	}
 };
 
@@ -235,19 +239,39 @@ EnumerateDirectory(
 
 		_findclose(theSearchHandle);
 	}
-#elif defined(__GNUC__)
-	// Do nothing for now...
+
+	
 #else
-#error Unsupported platform!!!
+	// Do nothing for now...
+	// Unsupported platform!!!
 #endif
 }
 
 
 
-template<class CollectionType,
-		 class FilterPredicateType = FilesOnlyFilterPredicate,
-		 class StringType = XalanDOMString,
-		 class StringConversionFunction = c_wstr_functor>
+#if defined(XALAN_NO_DEFAULT_TEMPLATE_ARGUMENTS)
+template<class CollectionType, class StringType>
+struct DirectoryEnumeratorFunctor
+{
+	CollectionType
+	operator()(const StringType&	theDirectory) const
+	{
+		CollectionType		theCollection;
+
+		operator()(theDirectory,
+			   theCollection);
+
+		return theCollection;
+	}
+
+	void
+	operator()(
+		const StringType&,
+		const CollectionType&) const
+	{
+	}
+};
+#else
 #if defined(XALAN_NO_NAMESPACES)
 struct DirectoryEnumeratorFunctor : public unary_function<StringType, CollectionType>
 #else
@@ -284,7 +308,7 @@ private:
 	FilterPredicateType			m_filterPredicate;
 	StringConversionFunction	m_conversionFunction;
 };
-
+#endif
 
 
 #endif	// DIRECTORY_ENUMERATOR_HEADER_GUARD_1357924680
