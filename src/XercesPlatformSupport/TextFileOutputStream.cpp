@@ -80,24 +80,15 @@
 
 
 
-
-
-const TextFileOutputStream::BufferType::size_type	TextFileOutputStream::s_bufferSize = 8192;
-
-
-
 TextFileOutputStream::TextFileOutputStream(const DOMString&		theFileName) :
-	TextOutputStream(),
+	XercesTextOutputStream(),
 	m_fileName(theFileName),
 #if defined(_MSC_VER)
-	m_handle(INVALID_HANDLE_VALUE),
+	m_handle(INVALID_HANDLE_VALUE)
 #else
-	m_handle(0),
+	m_handle(0)
 #endif
-	m_buffer()
 {
-	m_buffer.reserve(s_bufferSize + 1);
-
 #if defined(_MSC_VER)
 
 	// check the version.  Only NT allows  
@@ -163,10 +154,8 @@ TextFileOutputStream::~TextFileOutputStream()
 
 
 void
-TextFileOutputStream::flush()
+TextFileOutputStream::doFlush()
 {
-	flushBuffer();
-
 #if defined(_MSC_VER)
 	FlushFileBuffers(m_handle);
 #else
@@ -177,84 +166,7 @@ TextFileOutputStream::flush()
 
 
 void
-TextFileOutputStream::write(const XMLCh* const	theBuffer)
-{
-	const BufferType::size_type		theLength =
-		static_cast<BufferType::size_type>(length(theBuffer));
-
-	if (theLength + m_buffer.size() > s_bufferSize)
-	{
-		flushBuffer();
-	}
-
-	if (theLength > s_bufferSize)
-	{
-		doWrite(theBuffer);
-	}
-	else
-	{
-		m_buffer.insert(m_buffer.end(),
-						theBuffer,
-						theBuffer + theLength);
-	}
-}
-
-
-
-void
-TextFileOutputStream::write(const char* const	theBuffer)
-{
-	flushBuffer();
-
-	doWrite(theBuffer,
-		    strlen(theBuffer));
-}
-
-
-
-void
-TextFileOutputStream::write(
-			const char*		theBuffer,
-			unsigned long	theBufferLength)
-{
-	flushBuffer();
-
-	doWrite(theBuffer,
-			theBufferLength);
-}
-
-
-
-void
-TextFileOutputStream::flushBuffer()
-{
-	if (m_buffer.size() > 0)
-	{
-		m_buffer.push_back(0);
-
-		doWrite(m_buffer.begin());
-
-		m_buffer.clear();
-	}
-}
-
-
-
-void
-TextFileOutputStream::doWrite(const XMLCh*	theBuffer)
-{
-    char* const	tmpVal = XMLString::transcode(theBuffer);
-
-    ArrayJanitor<char> janTmp(tmpVal);
-
-	doWrite(tmpVal,
-			strlen(tmpVal));
-}
-
-
-
-void
-TextFileOutputStream::doWrite(
+TextFileOutputStream::writeData(
 			const char*		theBuffer,
 			unsigned long	theBufferLength)
 {
@@ -284,27 +196,11 @@ TextFileOutputStream::doWrite(
 
 
 
-TextFileOutputStreamException::TextFileOutputStreamException(
-		const DOMString&	theMessage,
-		const DOMString&	theType) :
-	XercesPlatformSupportException(theMessage,
-								theType)
-{
-}
-
-
-
-TextFileOutputStreamException::~TextFileOutputStreamException()
-{
-}
-
-
-
 namespace
 {
 
-const DOMString		theOpenExceptionType("TextFileOutputStreamOpenException");
-const DOMString		theWriteExceptionType("TextFileOutputStreamWriteException");
+const DOMString		theOpenExceptionType(XALAN_STATIC_UCODE_STRING("TextFileOutputStreamOpenException"));
+const DOMString		theWriteExceptionType(XALAN_STATIC_UCODE_STRING("TextFileOutputStreamWriteException"));
 
 
 
@@ -338,10 +234,10 @@ FormatMessageLocal(
 TextFileOutputStreamOpenException::TextFileOutputStreamOpenException(
 		const DOMString&	theFileName,
 		int					theErrorCode) :
-	TextFileOutputStreamException(FormatMessageLocal("Error opening file: ",
+	XercesTextOutputStreamException(FormatMessageLocal("Error opening file: ",
 													 theFileName,
 													 theErrorCode),
-								  theOpenExceptionType)
+								   theOpenExceptionType)
 {
 }
 
@@ -358,10 +254,10 @@ TextFileOutputStreamOpenException::~TextFileOutputStreamOpenException()
 TextFileOutputStreamWriteException::TextFileOutputStreamWriteException(
 		const DOMString&	theFileName,
 		int					theErrorCode) :
-	TextFileOutputStreamException(FormatMessageLocal("Error writing file: ",
+	XercesTextOutputStreamException(FormatMessageLocal("Error writing file: ",
 													 theFileName,
 													 theErrorCode),
-								  theWriteExceptionType)
+								    theWriteExceptionType)
 {
 }
 
@@ -370,6 +266,3 @@ TextFileOutputStreamWriteException::TextFileOutputStreamWriteException(
 TextFileOutputStreamWriteException::~TextFileOutputStreamWriteException()
 {
 }
-
-
-

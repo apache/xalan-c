@@ -71,12 +71,11 @@
 
 
 // Base class header file.
-#include <util/TextOutputStream.hpp>
-#include <XercesPlatformSupport/XercesPlatformSupportException.hpp>
+#include <XercesPlatformSupport/XercesTextOutputStream.hpp>
 
 
 
-class XALAN_XERCESPLATFORMSUPPORT_EXPORT TextFileOutputStream : public TextOutputStream
+class XALAN_XERCESPLATFORMSUPPORT_EXPORT TextFileOutputStream : public XercesTextOutputStream
 {
 public :
 
@@ -85,21 +84,14 @@ public :
     virtual
 	~TextFileOutputStream();
 
-    // These are inherited from TextOutputStream...
-    virtual void
-	flush();
+protected:
 
-    virtual void
-	write(const XMLCh* const	theBuffer);
+	virtual void
+	writeData(const char*		theBuffer,
+			  unsigned long		theBufferLength);
 
-    virtual void
-	write(const char* const		theBuffer);
-
-    // This is new...
-    virtual void
-	write(
-			const char*		theBuffer,
-			unsigned long	theBufferLength);
+	virtual void
+	doFlush();
 
 private:
 
@@ -131,33 +123,11 @@ private:
 #else
 	FILE*				m_handle;
 #endif
-
-	typedef std::vector<XMLCh>	BufferType;
-
-	BufferType							m_buffer;
-
-	static const BufferType::size_type	s_bufferSize;
 };
 
 
 
-class XALAN_XERCESPLATFORMSUPPORT_EXPORT TextFileOutputStreamException : public XercesPlatformSupportException
-{
-public:
-
-	virtual
-	~TextFileOutputStreamException();
-
-protected:
-
-	TextFileOutputStreamException(
-		const DOMString&	theMessage,
-		const DOMString&	theType);
-};
-
-
-
-class XALAN_XERCESPLATFORMSUPPORT_EXPORT TextFileOutputStreamOpenException : public TextFileOutputStreamException
+class XALAN_XERCESPLATFORMSUPPORT_EXPORT TextFileOutputStreamOpenException : public XercesTextOutputStreamException
 {
 public:
 
@@ -172,7 +142,7 @@ public:
 
 
 
-class XALAN_XERCESPLATFORMSUPPORT_EXPORT TextFileOutputStreamWriteException : public TextFileOutputStreamException
+class XALAN_XERCESPLATFORMSUPPORT_EXPORT TextFileOutputStreamWriteException : public XercesTextOutputStreamException
 {
 public:
 
