@@ -74,22 +74,27 @@ main(
 		{
 			fprintf(stderr, "Unable to create transformer...\n");
 		}
-		else if (argc == 2)
-		{
-			error = XalanTransformToHandler(argv[1], NULL, xalan, stdout, OutputHandler, FlushHandler);
-		}
 		else
 		{
-			error = XalanTransformToHandler(argv[1], argv[2], xalan, stdout, OutputHandler, FlushHandler);
-		}
+			if (argc == 2)
+			{
+				error = XalanTransformToHandler(argv[1], NULL, xalan, stdout, OutputHandler, FlushHandler);
+			}
+			else
+			{
+				error = XalanTransformToHandler(argv[1], argv[2], xalan, stdout, OutputHandler, FlushHandler);
+			}
 
-		if (error != 0)
-		{
-			fprintf(
-				stderr,
-				"Error transforming.  The error code is %d.  The message is %s.\n",
-				error,
-				XalanGetLastError(xalan));
+			if (error != 0)
+			{
+				fprintf(
+					stderr,
+					"Error transforming.  The error code is %d.  The message is %s.\n",
+					error,
+					XalanGetLastError(xalan));
+			}
+
+			DeleteXalanTransformer(xalan);
 		}
 
 		XalanTerminate(1);
