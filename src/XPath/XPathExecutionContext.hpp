@@ -92,7 +92,6 @@ XALAN_CPP_NAMESPACE_BEGIN
 class XalanDecimalFormatSymbols;
 class PrefixResolver;
 class XalanQName;
-class XMLURL;
 class XObject;
 class XObjectPtr;
 class XObjectFactory;
