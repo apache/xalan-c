@@ -363,21 +363,24 @@ private:
 
 
 template<class XalanObjectCacheType>
-class GetReleaseCachedObject
+class GuardCachedObject
 {
 public:
 
 	typedef typename XalanObjectCacheType::CacheObjectType	CacheObjectType;
 
-	GetReleaseCachedObject(XalanObjectCacheType&	theCache) :
+	GuardCachedObject(XalanObjectCacheType&	theCache) :
 		m_cache(theCache),
 		m_cachedObject(theCache.get())
 	{
 	}
 
-	~GetReleaseCachedObject()
+	~GuardCachedObject()
 	{
-		m_cache.release(m_cachedObject);
+		if (m_cachedObject != 0)
+		{
+			m_cache.release(m_cachedObject);
+		}
 	}
 
 	CacheObjectType*
@@ -386,16 +389,26 @@ public:
 		return m_cachedObject;
 	}
 
+	CacheObjectType*
+	release()
+	{
+		CacheObjectType* const	temp = m_cachedObject;
+
+		m_cachedObject = 0;
+
+		return temp;
+	}
+
 private:
 
 	// Not implemented...
-	GetReleaseCachedObject(const GetReleaseCachedObject<XalanObjectCacheType>&);
+	GuardCachedObject(const GuardCachedObject<XalanObjectCacheType>&);
 
 
 	// Data members...
 	XalanObjectCacheType&	m_cache;
 
-	CacheObjectType* const	m_cachedObject;
+	CacheObjectType*		m_cachedObject;
 };
 
 
