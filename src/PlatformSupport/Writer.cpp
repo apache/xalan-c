@@ -60,7 +60,7 @@
 
 
 #if !defined(XALAN_INLINE_INITIALIZATION)
-const Writer::size_t	npos = ~0u;
+const size_t	Writer::npos = ~0u;
 #endif
 
 
