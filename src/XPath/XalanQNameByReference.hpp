@@ -111,12 +111,44 @@ public:
 	getLocalPart() const;
 
 	/**
+	 * Set the local part of qualified name.
+	 * 
+	 * @param theLocalPart local part string
+	 */
+	void
+	setLocalPart(const XalanDOMString&	theLocalPart)
+	{
+		m_localpart = &theLocalPart;
+	}
+
+	/**
 	 * Retrieve the namespace of qualified name.
 	 * 
 	 * @return namespace string
 	 */
 	virtual const XalanDOMString&
 	getNamespace() const;
+
+	/**
+	 * Set the Namespace URI of qualified name.
+	 * 
+	 * @param theLocalPart local part string
+	 */
+	void
+	setNamespace(const XalanDOMString&	theNamespace)
+	{
+		m_namespace = &theNamespace;
+	}
+
+	/**
+	 * Clear the instance.
+	 */
+	void
+	clear()
+	{
+		m_namespace = &s_emptyString;
+		m_localpart = &s_emptyString;
+	}
 
 private:
 
