@@ -83,12 +83,30 @@ class XALAN_TRANSFORMER_EXPORT XercesDOMWrapperParsedSource : public XalanParsed
 {
 public:
 
+	/**
+	 * Constructor
+	 *
+	 * @param theDocument The Xerces document to wrap
+	 * @param theParserLiaison The XercesParserLiaison instance that will own the document.
+	 * @param theDOMSupport The XercesDOMSupport instance
+	 * @param theURI The URI of the document, if any.
+	 *
+	 * @deprecated This constructor is deprecated.
+	 */
 	XercesDOMWrapperParsedSource(
 			const DOM_Document&		theDocument,
 			XercesParserLiaison&	theParserLiaison,
 			XercesDOMSupport&		theDOMSupport,
 			const XalanDOMString&	theURI = XalanDOMString());
 
+	/**
+	 * Constructor
+	 *
+	 * @param theDocument The Xerces document to wrap
+	 * @param theParserLiaison The XercesParserLiaison instance that will own the document.
+	 * @param theDOMSupport The XercesDOMSupport instance
+	 * @param theURI The URI of the document, if any.
+	 */
 	XercesDOMWrapperParsedSource(
 			const DOMDocument*		theDocument,
 			XercesParserLiaison&	theParserLiaison,
