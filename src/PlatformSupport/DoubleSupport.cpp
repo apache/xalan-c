@@ -70,6 +70,8 @@
 const double	DoubleSupport::s_NaN = sqrt(-2.01);
 const double	DoubleSupport::s_positiveInfinity = HUGE_VAL;
 const double	DoubleSupport::s_negativeInfinity = -DoubleSupport::s_positiveInfinity;
+const double	DoubleSupport::s_positiveZero = 0.0;
+const double	DoubleSupport::s_negativeZero = -DoubleSupport::s_positiveZero;
 
 
 
@@ -82,6 +84,26 @@ const unsigned long*	DoubleSupport::s_NaNFirstDWORD =
 
 const unsigned long*	DoubleSupport::s_NaNSecondDWORD =
 					s_NaNFirstDWORD + 1;
+
+
+const unsigned long*	DoubleSupport::s_positiveZeroFirstDWORD =
+#if defined(XALAN_OLD_STYLE_CASTS)
+					(const unsigned long*)&s_positiveZero;
+#else
+					reinterpret_cast<const unsigned long*>(&s_positiveZero);
+#endif
+
+const unsigned long*	DoubleSupport::s_positiveZeroSecondDWORD = s_positiveZeroFirstDWORD + 1;
+
+
+const unsigned long*	DoubleSupport::s_negativeZeroFirstDWORD =
+#if defined(XALAN_OLD_STYLE_CASTS)
+					(const unsigned long*)&s_negativeZero;
+#else
+					reinterpret_cast<const unsigned long*>(&s_negativeZero);
+#endif
+
+const unsigned long*	DoubleSupport::s_negativeZeroSecondDWORD = s_negativeZeroFirstDWORD + 1;
 
 
 
@@ -107,14 +129,7 @@ DoubleSupport::notEqual(
 			double	theLHS,
 			double	theRHS)
 {
-	if (isNaN(theLHS) == true || isNaN(theRHS) == true)
-	{
-		return true;
-	}
-	else
-	{
-		return theLHS != theRHS;
-	}
+	return !equal(theLHS, theRHS);
 }
 
 
@@ -276,14 +291,15 @@ DoubleSupport::divide(
 			// This is NaN...
 			return DoubleSupport::getNaN();
 		}
-		else if (theLHS > 0.0L)
+		else if (theLHS > 0.0L &&
+				 isPositiveZero(theRHS) == true)
 		{
 			// This is positive infinity...
 			return DoubleSupport::getPositiveInfinity();
 		}
 		else
 		{
-			// This is positive infinity...
+			// This is negative infinity...
 			return DoubleSupport::getNegativeInfinity();
 		}
 	}

@@ -130,6 +130,54 @@ public:
 		return !isNaN(theNumber) && theNumber == s_negativeInfinity;
 	}
 
+	/**
+	 * Determine if target is positive 0.
+	 * 
+	 * @param theNumber target number
+	 * @return true if target represents the value for positive 0.
+	 */
+	static bool
+	isPositiveZero(double	theNumber)
+	{
+		// Compare the two DWORDs of the double as unsigned longs.
+		const unsigned long* const	theFirstDWORD =
+#if defined(XALAN_OLD_STYLE_CASTS)
+			(const unsigned long*)&theNumber;
+#else
+			reinterpret_cast<const unsigned long*>(&theNumber);
+#endif
+
+		const unsigned long* const	theSecondDWORD =
+							theFirstDWORD + 1;
+
+		return *theFirstDWORD == *s_positiveZeroFirstDWORD &&
+			   *theSecondDWORD == *s_positiveZeroSecondDWORD;
+	}
+
+	/**
+	 * Determine if target is negative 0
+	 * 
+	 * @param theNumber target number
+	 * @return true if target represents the value for negative 0
+	 */
+	static bool
+	isNegativeZero(double	theNumber)
+	{
+		// Compare the two DWORDs of the double as unsigned longs.
+		const unsigned long* const	theFirstDWORD =
+#if defined(XALAN_OLD_STYLE_CASTS)
+			(const unsigned long*)&theNumber;
+#else
+			reinterpret_cast<const unsigned long*>(&theNumber);
+#endif
+
+		const unsigned long* const	theSecondDWORD =
+							theFirstDWORD + 1;
+
+		return *theFirstDWORD == *s_negativeZeroFirstDWORD &&
+			   *theSecondDWORD == *s_negativeZeroSecondDWORD;
+	}
+
 	// These can be used to initialize values, but should not
 	// be used to do equality comparisons, as == may fail on
 	// some platforms.
@@ -514,9 +562,17 @@ private:
 	static const double				s_NaN;
 	static const double				s_positiveInfinity;
 	static const double				s_negativeInfinity;
+	static const double				s_positiveZero;
+	static const double				s_negativeZero;
 
 	static const unsigned long*		s_NaNFirstDWORD;
 	static const unsigned long*		s_NaNSecondDWORD;
+
+	static const unsigned long*		s_positiveZeroFirstDWORD;
+	static const unsigned long*		s_positiveZeroSecondDWORD;
+
+	static const unsigned long*		s_negativeZeroFirstDWORD;
+	static const unsigned long*		s_negativeZeroSecondDWORD;
 };
 
 
