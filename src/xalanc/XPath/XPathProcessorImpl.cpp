@@ -265,7 +265,7 @@ XPathProcessorImpl::tokenize(const XalanDOMString&	pat)
 				}
 				else
 				{
-					error(XalanMessageLoader::getMessage(XalanMessages::ExpectedDoubleQuote_1Param,"double"));
+					error(XalanMessageLoader::getMessage(XalanMessages::ExpectedDoubleQuote));
 				}
 			}
 			break;
@@ -300,7 +300,7 @@ XPathProcessorImpl::tokenize(const XalanDOMString&	pat)
 				}
 				else
 				{
-					error(XalanMessageLoader::getMessage(XalanMessages::ExpectedDoubleQuote_1Param,XalanDOMString("single")));
+					error(XalanMessageLoader::getMessage(XalanMessages::ExpectedSingleQuote));
 
 				}
 			}

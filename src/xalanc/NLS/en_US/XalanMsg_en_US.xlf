@@ -144,9 +144,14 @@
 		<target>Extra illegal tokens</target>
 </trans-unit>
 
-<trans-unit id="ExpectedDoubleQuote_1Param">
-		<source>The literal expression is not terminated. An {0} is missing</source>
-		<target>The literal expression is not terminated. An {0} is missing</target>
+<trans-unit id="ExpectedDoubleQuote">
+		<source>The literal expression is not terminated. An double quote is missing</source>
+		<target>The literal expression is not terminated. An double quote is missing</target>
+</trans-unit>
+
+<trans-unit id="ExpectedSingleQuote">
+		<source>The literal expression is not terminated. An single quote is missing</source>
+		<target>The literal expression is not terminated. An single quote is missing</target>
 </trans-unit>
 
 <trans-unit id="EmptyExpression">
