@@ -90,8 +90,10 @@
 
 
 
+#if defined(_MSC_VER)
 #if (_MSC_VER < 1300) && !defined(_WIN64)
 #define XALAN_USE_WINDOWS_TIMING
+#endif
 #endif
 
 #if defined(XALAN_USE_WINDOWS_TIMING)
