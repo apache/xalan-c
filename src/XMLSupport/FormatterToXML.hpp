@@ -102,7 +102,7 @@ public:
 #endif
 	typedef XALAN_STD map<XalanDOMString, XalanDOMString>	DOMStringMapType;
 	typedef XALAN_STD map<XalanDOMString, int>				DOMString2IntMapType;
-	typedef std::stack<bool>								BoolStackType;
+	typedef XALAN_STD stack<bool>							BoolStackType;
 #undef XALAN_STD
 
 	/**

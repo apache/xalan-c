@@ -68,14 +68,24 @@
 #include <string>
 
 typedef unsigned short						XalanDOMChar;
+
+#if defined(XALAN_NO_NAMESPACES)
+typedef basic_string<XalanDOMChar>			XalanDOMString;
+#else
 typedef std::basic_string<XalanDOMChar>		XalanDOMString;
+#endif
 
 #elif defined(XALAN_USE_VECTOR_FOR_STRING)
 
 #include <vector>
 
 typedef unsigned short						XalanDOMChar;
+
+#if defined(XALAN_NO_NAMESPACES)
+typedef vector<XalanDOMChar>				XalanDOMString;
+#else
 typedef std::vector<XalanDOMChar>			XalanDOMString;
+#endif
 
 #else
 

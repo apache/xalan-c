@@ -359,7 +359,7 @@ FindNodeAndGetAttributeValue(
 	theTreeWalker.findMatchingNodes(theNodeName,
 									theStartNode);
 
-	const std::vector<XalanNode*>&	theMatchingNodes =
+	const NodeNameTreeWalker::NodeVectorType&	theMatchingNodes =
 			theTreeWalker.getMatchingNodes();
 
 	if (theMatchingNodes.size() == 1)
@@ -1142,7 +1142,11 @@ TestAxes(
 	const XalanDOMString		theSearchSpecification(theDirectory);
 	const XalanDOMString		theXMLSuffix(XALAN_STATIC_UCODE_STRING(".xml"));
 
+#if defined(XALAN_NO_NAMESPACES)
+	typedef vector<XalanDOMString>		FileNameVectorType;
+#else
 	typedef std::vector<XalanDOMString>	FileNameVectorType;
+#endif
 
 	DirectoryEnumeratorFunctor<FileNameVectorType>	theEnumerator;
 
@@ -1228,6 +1232,10 @@ int
 main(int			/* argc */,
 	 const char*	/* argv[] */)
 {
+#if !defined (XALAN_NO_NAMESPACES)
+	using std::cout;
+#endif
+
 	XMLPlatformUtils::Initialize();
 
 	XPathEnvSupportDefault		theXPathEnvSupport;
@@ -1237,7 +1245,7 @@ main(int			/* argc */,
 	XPathFactoryDefault			theXPathFactory;
 	XPathProcessorImpl			theXPathProcessor;
 
-	XercesStdTextOutputStream	theStdOut(std::cout);
+	XercesStdTextOutputStream	theStdOut(cout);
 	XercesDOMPrintWriter		thePrintWriter(theStdOut);
 	XercesParserLiaison			theLiaison(theDOMSupport);
 

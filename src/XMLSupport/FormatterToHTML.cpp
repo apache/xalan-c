@@ -755,38 +755,42 @@ FormatterToHTML::createEscapeElems()
 FormatterToHTML::AttributesMapType
 FormatterToHTML::createAttributesMap()
 {
+#if !defined(XALAN_NO_NAMESPACES)
+	using std::make_pair;
+#endif
+
 	AttributesMapType	theAtts;
 	StringSetType URLAttrsHREFSingle;
 	URLAttrsHREFSingle.insert(XALAN_STATIC_UCODE_STRING("href"));
 	StringSetType URLAttrsCITESingle;
 	URLAttrsCITESingle.insert(XALAN_STATIC_UCODE_STRING("cite"));
 
-	theAtts.insert(std::make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("base")), URLAttrsHREFSingle));
-	theAtts.insert(std::make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("link")), URLAttrsHREFSingle));
-	theAtts.insert(std::make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("area")), URLAttrsHREFSingle));
+	theAtts.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("base")), URLAttrsHREFSingle));
+	theAtts.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("link")), URLAttrsHREFSingle));
+	theAtts.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("area")), URLAttrsHREFSingle));
 	// From the HTML 4.0 spec: Note. The same conversion based on UTF-8 
 	// should be applied to values of the name attribute for the A element. 
 
 	StringSetType URLAttrs_A;
 	URLAttrs_A.insert(XALAN_STATIC_UCODE_STRING("href"));
 	URLAttrs_A.insert(XALAN_STATIC_UCODE_STRING("name"));
-	theAtts.insert(std::make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("a")), URLAttrs_A));
+	theAtts.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("a")), URLAttrs_A));
 
 	StringSetType URLAttrs_INPUT;
 	URLAttrs_A.insert(XALAN_STATIC_UCODE_STRING("src"));
 	URLAttrs_A.insert(XALAN_STATIC_UCODE_STRING("usemap"));
-	theAtts.insert(std::make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("input")), URLAttrs_INPUT));
+	theAtts.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("input")), URLAttrs_INPUT));
 
 	StringSetType URLAttrs_SCRIPT;
 	URLAttrs_A.insert(XALAN_STATIC_UCODE_STRING("src"));
 	URLAttrs_A.insert(XALAN_STATIC_UCODE_STRING("for"));
-	theAtts.insert(std::make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("script")), URLAttrs_SCRIPT));
+	theAtts.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("script")), URLAttrs_SCRIPT));
 
 	StringSetType URLAttrs_IMG;
 	URLAttrs_A.insert(XALAN_STATIC_UCODE_STRING("src"));
 	URLAttrs_A.insert(XALAN_STATIC_UCODE_STRING("longdesc"));
 	URLAttrs_A.insert(XALAN_STATIC_UCODE_STRING("usemap"));
-	theAtts.insert(std::make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("img")), URLAttrs_IMG));
+	theAtts.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("img")), URLAttrs_IMG));
 
 	StringSetType URLAttrs_OBJECT;
 	URLAttrs_A.insert(XALAN_STATIC_UCODE_STRING("classid"));
@@ -794,20 +798,20 @@ FormatterToHTML::createAttributesMap()
 	URLAttrs_A.insert(XALAN_STATIC_UCODE_STRING("data"));
 	URLAttrs_A.insert(XALAN_STATIC_UCODE_STRING("archive"));
 	URLAttrs_A.insert(XALAN_STATIC_UCODE_STRING("usemap"));
-	theAtts.insert(std::make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("object")), URLAttrs_OBJECT));
+	theAtts.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("object")), URLAttrs_OBJECT));
 
-	theAtts.insert(std::make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("q")), URLAttrsCITESingle));
-	theAtts.insert(std::make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("blockquote")), URLAttrsCITESingle));
-	theAtts.insert(std::make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("ins")), URLAttrsCITESingle));
-	theAtts.insert(std::make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("del")), URLAttrsCITESingle));
+	theAtts.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("q")), URLAttrsCITESingle));
+	theAtts.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("blockquote")), URLAttrsCITESingle));
+	theAtts.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("ins")), URLAttrsCITESingle));
+	theAtts.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("del")), URLAttrsCITESingle));
 
 	StringSetType URLAttrs_FORM;
 	URLAttrs_A.insert(XALAN_STATIC_UCODE_STRING("action"));
-	theAtts.insert(std::make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("form")), URLAttrs_FORM));
+	theAtts.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("form")), URLAttrs_FORM));
 
 	StringSetType URLAttrs_HEAD;
 	URLAttrs_A.insert(XALAN_STATIC_UCODE_STRING("profile"));
-	theAtts.insert(std::make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("head")), URLAttrs_HEAD));
+	theAtts.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("head")), URLAttrs_HEAD));
 	return theAtts;
 }
 

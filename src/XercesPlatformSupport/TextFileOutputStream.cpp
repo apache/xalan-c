@@ -143,7 +143,11 @@ FormatMessageLocal(
 
 	theResult += theFileName;
 
-	std::ostrstream	theFormatter;
+#if !defined(XALAN_NO_NAMESPACES)
+using std::ostrstream;
+#endif
+
+	ostrstream	theFormatter;
 
 	theFormatter << ".  The error code was "
 				 << theErrorCode << "." << '\0';
