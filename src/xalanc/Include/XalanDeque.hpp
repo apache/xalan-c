@@ -172,8 +172,9 @@ public:
 
     typedef XalanVector<BlockType*> BlockIndexType;
 
-    typedef XalanDequeIterator<XalanDequeIteratorTraits<value_type>, XalanDeque> iterator;
-    typedef XalanDequeIterator<XalanDequeConstIteratorTraits<value_type>, XalanDeque> const_iterator;
+    typedef XalanDeque<Type, ConstructionTraits>							ThisType;		
+    typedef XalanDequeIterator<XalanDequeIteratorTraits<value_type>, ThisType> 		iterator;
+    typedef XalanDequeIterator<XalanDequeConstIteratorTraits<value_type>, ThisType> 	const_iterator;
 
 #if defined(XALAN_HAS_STD_ITERATORS)
     typedef XALAN_STD_QUALIFIER reverse_iterator<iterator>          reverse_iterator_;
