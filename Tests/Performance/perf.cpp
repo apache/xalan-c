@@ -280,12 +280,13 @@ main(int			argc,
 	const XalanDOMString	processorType(XALAN_STATIC_UCODE_STRING("XalanC"));
 	long iterCount;			// Default number of iterations
 	bool skip = true;		// Default will skip long tests
+	bool setGold = false;
 
 	// Set the program help string,  then get the command line parameters.
 	//
 	setHelp();
 
-	if (h.getParams(argc, argv, "PERF-RESULTS") == true)
+	if (h.getParams(argc, argv, "PERF-RESULTS", setGold) == true)
 	{
 
 		// Generate Unique Run id and processor info
@@ -303,7 +304,7 @@ main(int			argc,
 			// exceptions then terminate() is sure to run because it will automatically get
 			// cleaned up when this instance goes out of scope.
 			HarnessInit xmlPlatformUtils;
-
+			bool foundDir = false;	// Flag indicates directory found. Used in conjunction with -sub cmd-line arg.
 			{
 				XSLTInit	theInit;  
 		
@@ -318,14 +319,16 @@ main(int			argc,
 						continue;
 					}
 
-					cout << "Processing files in Directory: " << dirs[j] << endl;
-
 					// Check that output directory is there.
 					const XalanDOMString  theOutputDir = h.args.output + dirs[j];
 					h.checkAndCreateDir(theOutputDir);
 
-					logFile.logTestCaseInit(XalanDOMString("Performance Directory: ") + dirs[j] ); 
+					logFile.logTestCaseInit(XalanDOMString("Performance Directory: ") + dirs[j] );
+					
+					// Indicate that directory was processed and get test files from the directory
+					foundDir = true;
 					const FileNameVectorType files = h.getTestFileNames(h.args.base, dirs[j], false);
+
 					for(FileNameVectorType::size_type i = 0; i < files.size(); i++)
 					{
 						// Define  variables used for timing and reporting ...
@@ -534,6 +537,12 @@ main(int			argc,
 				}
 
 			}
+
+		// Check to see if -sub cmd-line directory was processed correctly.
+		if (!foundDir)
+		{
+			cout << "Specified test directory: \"" << c_str(TranscodeToLocalCodePage(h.args.sub)) << "\" not found" << endl;
+		}
 
 		h.reportPassFail(logFile, UniqRunid);
 		logFile.logTestFileClose("Performance", "Done");

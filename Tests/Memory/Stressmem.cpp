@@ -136,7 +136,10 @@ main(int			argc,
 	// Set the program help string,  then get the command line parameters.
 	//
 	setHelp();
-	if (h.getParams(argc, argv, "MEM-RESULTS") == true)
+	bool setGold = false;
+	bool foundDir = false;
+
+	if (h.getParams(argc, argv, "MEM-RESULTS", setGold) == true)
 	{
 		// Get the list of Directories that are below perf
 		const FileNameVectorType	dirs = h.getDirectoryNames(h.args.base);
@@ -174,6 +177,7 @@ main(int			argc,
 					h.checkAndCreateDir(theOutputDir);
 
 					const FileNameVectorType	files = h.getTestFileNames(h.args.base, dirs[j],true);
+					foundDir = true;
 
 					for(FileNameVectorType::size_type i = 0; i < files.size(); ++i)
 					{
@@ -212,8 +216,12 @@ main(int			argc,
 				}
 			}
 
+			// Check to see if -sub cmd-line directory was processed correctly.
+			if (!foundDir)
+			{
+				cout << "Specified test directory: \"" << c_str(TranscodeToLocalCodePage(h.args.sub)) << "\" not found" << endl;
+			}
 			XalanTransformer::terminate();
-
 			logFile.logTestFileClose("Memory Testing: ", "Done");
 			logFile.close();
 
