@@ -633,13 +633,13 @@ FileUtility::getXMLFormatter(
 
 	if (stylesheet != 0)
 	{
-		version = stylesheet->m_version;
+		version = stylesheet->getOutputVersion();
 
-		mediatype = stylesheet->m_mediatype;
+		mediatype = stylesheet->getOutputMediaType();
 		doctypeSystem = stylesheet->getOutputDoctypeSystem();
 		doctypePublic = stylesheet->getOutputDoctypePublic();
-		standalone = stylesheet->m_standalone;
-		outputIndent = stylesheet->m_indentResult;
+		standalone = stylesheet->getOutputStandalone();
+		outputIndent = stylesheet->getOutputIndent();
 	}
 
 	return new FormatterToXML(
