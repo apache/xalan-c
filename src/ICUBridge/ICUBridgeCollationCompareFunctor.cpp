@@ -112,23 +112,10 @@ ICUBridgeCollationCompareFunctor::operator()(
 	{
 		assert(m_collator != 0);
 
-#if defined(XALAN_USE_XERCES_DOMSTRING)
-		// $$$ ToDo: This code is necessary because DOMStrings can
-		// have a null representation.
-		const XalanDOMChar* const	lhs = theLHS == 0 ? &dummy : theLHS;
-		const XalanDOMChar* const	rhs = theRHS == 0 ? &dummy : theRHS;
-
-		return m_collator->compare(
-					lhs,
-					length(lhs),
-					rhs,
-					length(rhs));
-#else
 		return m_collator->compare(
 					theLHS,
 					length(theLHS),
 					theRHS,
 					length(theRHS));
-#endif
 	}
 }
