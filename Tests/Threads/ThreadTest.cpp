@@ -20,6 +20,10 @@
 
 
 
+#include <Include/XalanAutoPtr.hpp>
+
+
+
 #include <XalanTransformer/XalanTransformer.hpp>
 
 
@@ -43,7 +47,6 @@
 	using std::cerr;
 	using std::cout;
 	using std::endl;
-	using std::vector;
 #endif
 
 
@@ -140,12 +143,6 @@ ThreadInfo
 	{
 	}
 
-	ThreadInfo(const ThreadInfo&	theSource) :
-		m_threadNumber(theSource.m_threadNumber),
-		m_counter(theSource.m_counter)
-	{
-	}
-
 	unsigned int			m_threadNumber;
 
 	SynchronizedCounter*	m_counter;
@@ -239,11 +236,7 @@ doThreads(long	theThreadCount)
 {
 	cout << endl << "Starting " << theThreadCount << " threads." << endl;
 
-	typedef vector<ThreadInfo>		ThreadInfoVectorType;
-
-	ThreadInfoVectorType	theThreadInfo;
-
-	theThreadInfo.reserve(theThreadCount);
+	XalanArrayAutoPtr<ThreadInfo>	theThreadInfo(new ThreadInfo[theThreadCount]);
 
 	try
 	{
@@ -251,14 +244,17 @@ doThreads(long	theThreadCount)
 
 		SynchronizedCounter		theCounter;
 
-		for (long i = 0; i < theThreadCount; i++)
+		long	i = 0;
+
+		while (i < theThreadCount)
 		{
-			theThreadInfo.push_back(ThreadInfoVectorType::value_type(i, &theCounter));
+			theThreadInfo[i].m_threadNumber = i;
+			theThreadInfo[i].m_counter = &theCounter;
 
 #if defined(WIN32)
 
 			const unsigned long		theThreadID =
-					_beginthread(theThreadRoutine, 4096, reinterpret_cast<LPVOID>(&theThreadInfo.back()));
+					_beginthread(theThreadRoutine, 4096, reinterpret_cast<LPVOID>(&theThreadInfo[i]));
 
 			if (theThreadID == unsigned(-1))
 			{
@@ -269,7 +265,7 @@ doThreads(long	theThreadCount)
 
 			pthread_t	theThread;
 
-			const int	theResult = pthread_create(&theThread, 0, theThreadRoutine, (void*)&theThreadInfo.back());
+			const int	theResult = pthread_create(&theThread, 0, theThreadRoutine, (void*)&theThreadInfo[i]);
 
 			if (theResult != 0)
 			{
@@ -286,11 +282,13 @@ doThreads(long	theThreadCount)
 #else
 #error Unsupported platform!
 #endif
+
+			++i;
 		}
 
 		clock_t		theClock = 0;
 
-		if (theThreadInfo.size() == 0)
+		if (i == 0)
 		{
 			cerr << endl << "No threads were created!" << endl;
 		}
