@@ -434,14 +434,14 @@ ICUBridgeCollationCompareFunctorImpl::getCachedCollator(const XalanDOMChar*		the
 	using std::find_if;
 #endif
 
-	CollatorCacheDequeType&		theNonConstCache =
+	CollatorCacheListType&		theNonConstCache =
 #if defined(XALAN_NO_MUTABLE)
-		(CollatorCacheDequeType*)m_collatorCache;
+		(CollatorCacheListType*)m_collatorCache;
 #else
 		m_collatorCache;
 #endif
 
-	CollatorCacheDequeType::iterator	i =
+	CollatorCacheListType::iterator	i =
 		find_if(
 			theNonConstCache.begin(),
 			theNonConstCache.end(),
@@ -456,7 +456,7 @@ ICUBridgeCollationCompareFunctorImpl::getCachedCollator(const XalanDOMChar*		the
 		// Let's do a quick check to see if we found the first entry.
 		// If so, we don't have to update the cache, so just return the
 		// appropriate value...
-		const CollatorCacheDequeType::iterator	theBegin =
+		const CollatorCacheListType::iterator	theBegin =
 			theNonConstCache.begin();
 
 		if (i == theBegin)
@@ -465,35 +465,14 @@ ICUBridgeCollationCompareFunctorImpl::getCachedCollator(const XalanDOMChar*		the
 		}
 		else
 		{
-			// Make a new instance for the cache, then swap it with
-			// the one we found.
-			CollatorCacheDequeType::value_type	theEntry;
+			// Save the collator, because splice() may invalidate
+			// i.
+			CollatorType* const		theCollator = (*i).m_collator;
 
-			theEntry.swap(*i);
+			// Move the entry to the beginning the cache
+			theNonConstCache.splice(theBegin, theNonConstCache, i);
 
-			// Protect the collator instance, since what we're doing
-			// might throw an exception...
-			XalanAutoPtr<CollatorType>	theCollator(theEntry.m_collator);
-
-			// OK, now swap everything from i down to begin()...
-			
-			CollatorCacheDequeType::iterator	theOther(i);
-
-			do
-			{
-				--theOther;
-
-				(*i).swap(*theOther);
-
-				--i;
-			}
-			while(i != theBegin);
-
-			// Now, swap the latest one into the front...
-			theEntry.swap(*theBegin);
-			
-			// Everything's OK, so release to return the value...
-			return theCollator.release();
+			return theCollator;
 		}
 	}
 }
@@ -508,23 +487,25 @@ ICUBridgeCollationCompareFunctorImpl::cacheCollator(
 	assert(theCollator != 0);
 	assert(theLocale != 0);
 
-	CollatorCacheDequeType&		theNonConstCache =
+	CollatorCacheListType&		theNonConstCache =
 #if defined(XALAN_NO_MUTABLE)
-		(CollatorCacheDequeType*)m_collatorCache;
+		(CollatorCacheListType*)m_collatorCache;
 #else
 		m_collatorCache;
 #endif
 
+	// Is the cache full?
 	if (theNonConstCache.size() == eCacheMax)
 	{
-		delete theNonConstCache.back().m_collator;
+		// Yes, so guard the collator instance, in case pop_back() throws...
+		XalanAutoPtr<CollatorType>	theCollatorGuard(theNonConstCache.back().m_collator);
 
 		theNonConstCache.pop_back();
 	}
 
-	theNonConstCache.push_front(CollatorCacheDequeType::value_type());
+	theNonConstCache.push_front(CollatorCacheListType::value_type());
 
-	CollatorCacheDequeType::value_type&		theEntry = 
+	CollatorCacheListType::value_type&		theEntry = 
 		theNonConstCache.front();
 
 	// Set the locale first, since that might throw an exception...

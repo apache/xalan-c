@@ -64,7 +64,7 @@
 
 
 
-#include <deque>
+#include <list>
 
 
 
@@ -177,9 +177,9 @@ public:
 	};
 
 #if defined(XALAN_NO_NAMESPACES)
-	typedef deque<CollationCacheStruct>			CollatorCacheDequeType;
+	typedef list<CollationCacheStruct>			CollatorCacheListType;
 #else
-	typedef std::deque<CollationCacheStruct>	CollatorCacheDequeType;
+	typedef std::list<CollationCacheStruct>		CollatorCacheListType;
 #endif
 
 	enum { eCacheMax = 10 };
@@ -236,7 +236,7 @@ private:
 
 	bool							m_cacheCollators;
 
-	mutable CollatorCacheDequeType	m_collatorCache;
+	mutable CollatorCacheListType	m_collatorCache;
 
 	const static StylesheetExecutionContextDefault::DefaultCollationCompareFunctor	s_defaultFunctor;
 };
