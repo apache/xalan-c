@@ -16,11 +16,7 @@
 
 
 
-#include <XPath/XPathFactoryDefault.hpp>
-
-
-
-#include <XSLT/XSLTProcessorEnvSupportDefault.hpp>
+#include <XPath/XObjectFactory.hpp>
 
 
 
