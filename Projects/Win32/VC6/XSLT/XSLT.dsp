@@ -70,7 +70,7 @@ LINK32=link.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MTd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "XSLT_EXPORTS" /YX /FD /GZ /c
-# ADD CPP /nologo /MDd /W4 /Gm /GR /GX /Zi /Od /I "..\..\..\..\..\..\xml-xerces\c\src" /I "..\..\..\..\src\\" /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "XALAN_XSLT_BUILD_DLL" /D "XALAN_XERCES" /YX /FD /GZ /c
+# ADD CPP /nologo /MDd /W4 /Gm /GR /GX /Zi /Od /I "..\..\..\..\..\..\xml-xerces\c\src" /I "..\..\..\..\src\\" /D "_WINDOWS" /D "_USRDLL" /D "XALAN_XSLT_BUILD_DLL" /D "XALAN_XERCES" /D "WIN32" /D "_DEBUG" /D "_MBCS" /D "XML_DEBUG" /YX /FD /GZ /c
 # ADD BASE MTL /nologo /D "_DEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "_DEBUG" /mktyplib203 /win32
 # ADD BASE RSC /l 0x409 /d "_DEBUG"
@@ -263,6 +263,10 @@ SOURCE=..\..\..\..\src\XSLT\ExtensionNSHandler.cpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\XSLT\FunctionCurrent.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XSLT\FunctionDocument.cpp
 # End Source File
 # Begin Source File
 
@@ -556,6 +560,10 @@ SOURCE=..\..\..\..\src\XSLT\ExtensionFunctionHandler.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\XSLT\FunctionCurrent.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XSLT\FunctionDocument.hpp
 # End Source File
 # Begin Source File
 
