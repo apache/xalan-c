@@ -34,10 +34,6 @@ CPP=cl.exe
 MTL=midl.exe
 RSC=rc.exe
 
-!IFNDEF DLLNAME
-!	ERROR Name of dll should be provided in the command line.
-!ENDIF
-
 !IF  "$(CFG)" == "XalanMsgLib - Win32 Release.symbols"
 
 OUTDIR=.\..\..\..\..\..\Build\Win32\VC7\Release.symbols\Util\XalanMsgLib
@@ -47,14 +43,14 @@ ALL : "..\..\..\..\..\Build\Win32\VC7\Release.symbols\$(DLLNAME).dll"
 
 
 CLEAN :
-	-@erase "$(INTDIR)\vc60.idb"
+	-@erase "$(INTDIR)\vc70.idb"
 	-@erase "$(INTDIR)\XalanMsgLib.obj"
 	-@erase "..\..\..\..\..\Build\Win32\VC7\Release.symbols\$(DLLNAME).dll"
 	-@erase "..\..\..\..\..\Build\Win32\VC7\Release.symbols\$(DLLNAME).exp"
 	-@erase "..\..\..\..\..\Build\Win32\VC7\Release.symbols\$(DLLNAME).lib"
 	-@erase "..\..\..\..\..\Build\Win32\VC7\Release.symbols\$(DLLNAME).pdb"	
-	-@erase "$(INTDIR)\vc60.pdb"
-	-@erase "$(INTDIR)\vc60.idb"	
+	-@erase "$(INTDIR)\vc70.pdb"
+	-@erase "$(INTDIR)\vc70.idb"	
 "$(OUTDIR)" :
     if not exist "$(OUTDIR)/$(NULL)" mkdir "$(OUTDIR)"
 
@@ -82,7 +78,7 @@ ALL : "..\..\..\..\..\Build\Win32\VC7\Release\$(DLLNAME).dll"
 
 
 CLEAN :
-	-@erase "$(INTDIR)\vc60.idb"
+	-@erase "$(INTDIR)\vc70.idb"
 	-@erase "$(INTDIR)\XalanMsgLib.obj"
 	-@erase "..\..\..\..\..\Build\Win32\VC7\Release\$(DLLNAME).dll"
 	-@erase "..\..\..\..\..\Build\Win32\VC7\Release\$(DLLNAME).exp"
@@ -119,8 +115,8 @@ ALL : "..\..\..\..\..\Build\Win32\VC7\Debug\$(DLLNAME).dll"
 
 
 CLEAN :
-	-@erase "$(INTDIR)\vc60.idb"
-	-@erase "$(INTDIR)\vc60.pdb"
+	-@erase "$(INTDIR)\vc70.idb"
+	-@erase "$(INTDIR)\vc70.pdb"
 	-@erase "$(INTDIR)\XalanMsgLib.obj"
 	-@erase "$(INTDIR)\XalanMsgLib.sbr"
 	-@erase "$(OUTDIR)\XalanMsgLib.bsc"
@@ -152,7 +148,7 @@ ALL : "..\..\..\..\..\Build\Win64\VC7\Release\$(DLLNAME).dll"
 
 
 CLEAN :
-	-@erase "$(INTDIR)\vc60.idb"
+	-@erase "$(INTDIR)\vc70.idb"
 	-@erase "$(INTDIR)\XalanMsgLib.obj"
 	-@erase "..\..\..\..\..\Build\Win64\VC7\Release\$(DLLNAME).dll"
 	-@erase "..\..\..\..\..\Build\Win64\VC7\Release\$(DLLNAME).exp"
@@ -186,8 +182,8 @@ ALL : "..\..\..\..\..\Build\Win64\VC7\Debug\$(DLLNAME).dll"
 
 
 CLEAN :
-	-@erase "$(INTDIR)\vc60.idb"
-	-@erase "$(INTDIR)\vc60.pdb"
+	-@erase "$(INTDIR)\vc70.idb"
+	-@erase "$(INTDIR)\vc70.pdb"
 	-@erase "$(INTDIR)\XalanMsgLib.obj"
 	-@erase "$(OUTDIR)\XalanMsgLib.exp"
 	-@erase "$(OUTDIR)\$(DLLNAME).lib"

@@ -53,7 +53,7 @@ CLEAN :
 	-@erase "$(INTDIR)\MsgFileOutputStream.obj"
 	-@erase "$(INTDIR)\NLSHandler.obj"
 	-@erase "$(INTDIR)\SAX2Handler.obj"
-	-@erase "$(INTDIR)\vc60.idb"
+	-@erase "$(INTDIR)\vc70.idb"
 	-@erase "..\..\..\..\..\Build\Win32\VC7\$(RELEASE)\MsgCreator.exe"
 
 "$(OUTDIR)" :
@@ -103,8 +103,8 @@ CLEAN :
 	-@erase "$(INTDIR)\NLSHandler.sbr"
 	-@erase "$(INTDIR)\SAX2Handler.obj"
 	-@erase "$(INTDIR)\SAX2Handler.sbr"
-	-@erase "$(INTDIR)\vc60.idb"
-	-@erase "$(INTDIR)\vc60.pdb"
+	-@erase "$(INTDIR)\vc70.idb"
+	-@erase "$(INTDIR)\vc70.pdb"
 	-@erase "$(OUTDIR)\MsgCreator.bsc"
 	-@erase "$(OUTDIR)\MsgCreator.pdb"
 	-@erase "..\..\..\..\..\Build\Win32\VC7\Debug\MsgCreator.exe"
@@ -168,8 +168,8 @@ CLEAN :
 	-@erase "$(INTDIR)\NLSHandler.sbr"
 	-@erase "$(INTDIR)\SAX2Handler.obj"
 	-@erase "$(INTDIR)\SAX2Handler.sbr"
-	-@erase "$(INTDIR)\vc60.idb"
-	-@erase "$(INTDIR)\vc60.pdb"
+	-@erase "$(INTDIR)\vc70.idb"
+	-@erase "$(INTDIR)\vc70.pdb"
 	-@erase "$(OUTDIR)\MsgCreator.bsc"
 	-@erase "$(OUTDIR)\MsgCreator.pdb"
 	-@erase "..\..\..\..\..\Build\Win64\VC7\Debug\MsgCreator.exe"
@@ -222,7 +222,7 @@ CLEAN :
 	-@erase "$(INTDIR)\MsgFileOutputStream.obj"
 	-@erase "$(INTDIR)\NLSHandler.obj"
 	-@erase "$(INTDIR)\SAX2Handler.obj"
-	-@erase "$(INTDIR)\vc60.idb"
+	-@erase "$(INTDIR)\vc70.idb"
 	-@erase "..\..\..\..\..\Build\Win64\VC7\Release\MsgCreator.exe"
 
 "$(OUTDIR)" :
