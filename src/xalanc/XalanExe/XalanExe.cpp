@@ -90,13 +90,12 @@
 
 
 
-#if defined(_MSC_VER) && !defined(_WIN64)
+#if (_MSC_VER < 1300) && !defined(_WIN64)
 #define XALAN_USE_WINDOWS_TIMING
 #endif
 
 #if defined(XALAN_USE_WINDOWS_TIMING)
 #include "windows.h"
-#include "largeint.h"
 #else
 #include <ctime>
 #if defined(XALAN_STRICT_ANSI_HEADERS)
