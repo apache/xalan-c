@@ -91,7 +91,12 @@ const double	DoubleSupport::s_positiveInfinity = XALAN_POSITIVE_INFINITY;
 
 #else
 
+#if defined(__SGI_STL_PORT)
+const double	DoubleSupport::s_NaN = sqrt(-2.01);
+#else
 const double	DoubleSupport::s_NaN = std::numeric_limits<double>::quiet_NaN();
+#endif
+
 const double	DoubleSupport::s_positiveInfinity = std::numeric_limits<double>::infinity();
 
 #endif
