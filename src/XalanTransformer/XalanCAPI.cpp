@@ -322,6 +322,8 @@ XalanParseSourceUseXerceDOM(
 #endif
 }
 
+
+
 XALAN_TRANSFORMER_EXPORT_FUNCTION(void)
 XalanSetStylesheetParam(
 			const char*				key,
