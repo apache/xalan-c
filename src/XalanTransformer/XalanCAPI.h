@@ -381,7 +381,7 @@ extern "C"
 	 * Returns the last error that occurred as a 
 	 * result of calling transform.
 	 *
-	 * The signiture for following function is really:
+	 * The signature for following function is really:
 	 * const char*
 	 * XalanGetLastError(XalanHandle theXalanHandle) const;
 	 *
