@@ -2073,25 +2073,6 @@ XPathProcessorImpl::NodeTest(XPathExpression::eOpCodes	axisType)
 		}
 		else
 		{
-			if (axisType == XPathExpression::eFROM_NAMESPACE)
-			{
-				const XObject* const	theToken =
-						m_expression->getRelativeToken(-1);
-				assert(theToken != 0);
-
-				const XalanDOMString&			theString = theToken->str();
-
-				const XalanDOMString* const		theNamespace =
-						m_prefixResolver->getNamespaceForPrefix(theString);
-
-				if (theNamespace != 0)
-				{
-					m_expression->replaceRelativeToken(
-										-1,
-										*theNamespace);
-				}
-			}
-
 			m_expression->pushCurrentTokenOnOpCodeMap();
 		}
 
