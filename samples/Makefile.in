@@ -100,7 +100,8 @@ ALL_BINARIES =    CompileStylesheet \
                   UseStylesheetParam \
                   XalanTransform \
                   XalanTransformerCallback \
-                  XPathWrapper
+                  XPathWrapper\
+			ThreadSafe
 
 include $(wildcard $(XALANCROOT)/samples/version.incl \
                    $(XALANCROOT)/version.incl)
@@ -119,7 +120,8 @@ samples: Samples
 Samples: CompileStylesheet DocumentBuilder ExternalFunction \
          ParsedSourceWrappers SimpleTransform SerializeNodeSet SimpleXPathAPI \
          SimpleXPathCAPI StreamTransform TraceListen TransformToXercesDOM \
-         UseStylesheetParam XalanTransform XalanTransformerCallback XPathWrapper
+         UseStylesheetParam XalanTransform XalanTransformerCallback XPathWrapper\
+         ThreadSafe	
 
 ApacheModuleXSLT: prepare $(XSL_LIB_DIR)/mod_xslt$(SHLIBSUFFIX) 
 
@@ -247,6 +249,14 @@ $(XSL_BIN_DIR)/XPathWrapper: $(XSL_OBJ_DIR)/XPathWrapper.o $(XSL_OBJ_DIR)/TestDr
 	$(LINK) $(XSL_BUILD_OPTIONS) $(PLATFORM_LIB_LINK_OPTIONS)  \
 	$(EXTRA_LINK_OPTIONS) $(XALAN_LIB) $(ALLLIBS) $(CXXFLAGS) $^ -o $@	
 $(XSL_OBJ_DIR)/%.o:$(SAMPLES_DIR)/XPathWrapper/%.cpp
+	$(CC1) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $<
+
+ThreadSafe: prepare $(XSL_BIN_DIR)/ThreadSafe
+
+$(XSL_BIN_DIR)/ThreadSafe: $(XSL_OBJ_DIR)/ThreadSafe.o
+	$(LINK) $(XSL_BUILD_OPTIONS) $(PLATFORM_LIB_LINK_OPTIONS)  \
+	$(EXTRA_LINK_OPTIONS) $(XALAN_LIB) $(ALLLIBS) $(CXXFLAGS) $^ -o $@	
+$(XSL_OBJ_DIR)/%.o:$(SAMPLES_DIR)/ThreadSafe/%.cpp
 	$(CC1) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $<
 
 prepare:

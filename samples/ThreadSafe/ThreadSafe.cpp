@@ -61,9 +61,16 @@
 
 #include <cassert>
 #include <ctime>
+
+#if defined(XALAN_CLASSIC_IOSTREAMS)
+#include <fstream.h>
+#include <iostream.h>
+#include <strstream.h>
+#else
 #include <fstream>
 #include <iostream>
 #include <strstream>
+#endif
 
 
 
@@ -76,10 +83,27 @@
 
 
 //This is here for the Windows threads.
+#if defined(_MSC_VER)
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include <winbase.h>
 #define THREADFUNCTIONRETURN DWORD WINAPI
+    typedef   DWORD      theThreadIDType;
+    typedef   HANDLE     theThreadType;
+
+//This is here for Unix threads
+#elif defined(XALAN_POSIX2_AVAILABLE)
+#include <pthread.h>
+#include <unistd.h>
+    typedef   unsigned long     theThreadIDType;
+    typedef   pthread_t         theThreadType;
+
+#else
+//error Unsupported Platform!
+#endif
+
+#define NUM_THREADS 10
+
 
 
 
@@ -110,7 +134,7 @@ int								glbError = 0;
 // beginning and end of the entire operation.
 void
 outputMessage(
-			DWORD		id,
+              theThreadIDType  id,
 			const char	msg[])
 {
 	ostrstream threadMsg;
@@ -119,23 +143,36 @@ outputMessage(
 
 	cout << threadMsg.str();
 
+    #if defined(HPUX)
+	threadMsg.rdbuf() -> freeze(false);
+    #else
 	threadMsg.freeze(false);
+    #endif
 }
 
 
-
+#if defined(_MSC_VER)
 THREADFUNCTIONRETURN
 theThread(LPVOID	param)
+#elif defined(XALAN_POSIX2_AVAILABLE)
+  void  *theThread(void   *param)
+#endif
 {
 // This routine uses a compiled stylesheet (glbCompiledStylesheet), 
 // and a binary source tree (glbParsedSource) to perform the 
 // transformation.
 
 	int	theResult = 0;
-
+  
+   #if defined(_MSC_VER)
 	const int	number = reinterpret_cast<int>(param);
+        const theThreadIDType         theThreadID = GetCurrentThreadId();
 
-	const DWORD		theThreadID = GetCurrentThreadId();
+   #elif defined(XALAN_POSIX2_AVAILABLE)
+        const int       number = *(int *)(param);
+        const theThreadIDType         theThreadID = pthread_self();
+
+   #endif
 
 	outputMessage(theThreadID, "Starting ");
 
@@ -150,7 +187,11 @@ theThread(LPVOID	param)
 	const XSLTResultTarget	theResultTarget(XalanDOMString(theFormatterOut.str()));
 
 	// Unfreeze the ostrstream, so memory is returned...
+     #if defined(HPUX)
+        theFormatterOut.rdbuf() -> freeze(false);
+     #else
 	theFormatterOut.freeze(false);
+     #endif
 
 	outputMessage(theThreadID, "Transforming");
 
@@ -167,8 +208,12 @@ theThread(LPVOID	param)
 	}
 
 	outputMessage(theThreadID, "Finishing");
-
+  
+  #if defined(_MSC_VER)
 	return (theResult);
+  #elif defined(XALAN_POSIX2_AVAILABLE)
+        return 0;
+  #endif
 }
 
 
@@ -179,21 +224,23 @@ theThread(LPVOID	param)
 void
 doThreads(int	nThreads)
 {
+      int   i=0;
+      cout << endl << "Clock before starting threads: " << clock() << endl;
+      
+
 	XALAN_USING_STD(vector)
 
-	vector<HANDLE>	hThreads;
+        vector<theThreadType>   hThreads;
 
 	hThreads.reserve(nThreads);
 
-	cout << endl << "Clock before starting threads: " << clock() << endl;
-
-	int		i = 0;	
+#if defined(_MSC_VER)
 
 	for (; i < nThreads; ++i)
 	{
-		DWORD  threadID;
+                theThreadIDType  threadID;
 
-		const HANDLE	hThread = CreateThread(
+                const theThreadType  hThread = CreateThread(
 				0, 
 				4096,							// Stack size for thread.
 				theThread,						// pointer to thread function
@@ -208,12 +255,51 @@ doThreads(int	nThreads)
 
 	WaitForMultipleObjects(hThreads.size(), &hThreads[0], TRUE, INFINITE);
 
-	cout << endl << "Clock after threads: " << clock() << endl;
-
 	for (i = 0; i < nThreads; ++i)
 	{
 		CloseHandle(hThreads[i]);
 	}
+
+#elif defined(XALAN_POSIX2_AVAILABLE)
+
+  int result;
+  void *thread_result;
+  
+  for(; i < nThreads; ++i)
+  { 
+   result = pthread_create(
+                          &hThreads[i],    //thread pointer
+                          NULL,            //thread's attribute default
+                          theThread,       //thread function
+                          (void *) &i      //thread function argument
+                         );
+  if (result != 0)
+    {
+      perror ("Thread creation failed");
+      exit(EXIT_FAILURE);
+    }
+  }
+
+  cout << endl << "Waiting for threads to finish..." << endl << endl;
+  for( i = nThreads - 1; i>=0; i-- )
+  {
+    result = pthread_join(
+                           hThreads[i],
+                           &thread_result
+                         );
+    if (result != 0)
+     {
+       perror ("Thread join failed");
+       exit (EXIT_FAILURE);
+     }
+   //for UNIX debugging
+   // cout << "Thread joined, return value: " << (char *)thread_result << endl;
+  } 
+ 
+#endif
+
+cout << endl << endl << "Clock after threads: " << clock() << endl;
+
 }
 
 
@@ -276,7 +362,8 @@ main(
 						// Create and run the threads...
 						// Each thread uses the same document and 
 						// stylesheet to perform a transformation.
-						doThreads(10);
+                                    doThreads(NUM_THREADS);
+
 					}
 				}
 			}
