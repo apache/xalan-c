@@ -2362,13 +2362,15 @@ XSLTEngineImpl::cloneToResultTree(
 
 			if (theLocator != 0)
 			{
-				warn(XalanDOMString(theErrorMessage),
+				warn(
+					XalanDOMString(theErrorMessage),
 					*theLocator,
 					&node);
 			}
 			else
 			{
-				warn(theErrorMessage,
+				warn(
+					XalanDOMString(theErrorMessage),
 					&node,
 					styleNode);
 			}
