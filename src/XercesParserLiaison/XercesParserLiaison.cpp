@@ -93,7 +93,7 @@ XercesParserLiaison::XercesParserLiaison(DOMSupport&	theSupport) :
 	m_DOMSupport(theSupport),
 	m_specialCharacters(theDefaultSpecialCharacters),
 	m_indent(-1),
-	m_shouldExpandEntityRefs(true),
+	m_shouldExpandEntityRefs(false),
 	m_useValidation(false),
 	m_includeIgnorableWhitespace(true),
 	m_doNamespaces(false),
