@@ -176,7 +176,8 @@ FormatterToXML::FormatterToXML(
 	m_maxCharacter = XalanTranscodingServices::getMaximumCharacterValue(m_encoding);
 
 	m_encodingIsUTF = XalanTranscodingServices::encodingIsUTF8(m_encoding) ||
-					  XalanTranscodingServices::encodingIsUTF16(m_encoding);
+					  XalanTranscodingServices::encodingIsUTF16(m_encoding) ||
+					  XalanTranscodingServices::encodingIsUTF32(m_encoding);
 
 #if 1
 	if (m_encodingIsUTF == true)

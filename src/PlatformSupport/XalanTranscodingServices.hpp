@@ -157,7 +157,7 @@ public:
 	/**
 	 * Determine if the encoding name supplied is equivalent to UTF-8.
 	 * 
-	 * @param theEncodingName The name of the desired output encoding.
+	 * @param theEncodingName The name of the output encoding.
 	 * @return true or false
 	 */
 	static bool
@@ -166,7 +166,7 @@ public:
 	/**
 	 * Determine if the encoding name supplied is equivalent to UTF-8.
 	 * 
-	 * @param theEncodingName The name of the desired output encoding.
+	 * @param theEncodingName The name of the output encoding.
 	 * @return true or false
 	 */
 	static bool
@@ -175,7 +175,7 @@ public:
 	/**
 	 * Determine if the encoding name supplied is equivalent to UTF-16.
 	 * 
-	 * @param theEncodingName The name of the desired output encoding.
+	 * @param theEncodingName The name of the output encoding.
 	 * @return true or false
 	 */
 	static bool
@@ -184,12 +184,29 @@ public:
 	/**
 	 * Determine if the encoding name supplied is equivalent to UTF-16.
 	 * 
-	 * @param theEncodingName The name of the desired output encoding.
+	 * @param theEncodingName The name of the output encoding.
 	 * @return true or false
 	 */
 	static bool
 	encodingIsUTF16(const XalanDOMString&	theEncodingName);
 
+	/**
+	 * Determine if the encoding name supplied is equivalent to UTF-32.
+	 * 
+	 * @param theEncodingName The name of the output encoding.
+	 * @return true or false
+	 */
+	static bool
+	encodingIsUTF32(const XalanDOMChar*		theEncodingName);
+
+	/**
+	 * Determine if the encoding name supplied is equivalent to UTF-32.
+	 * 
+	 * @param theEncodingName The name of the output encoding.
+	 * @return true or false
+	 */
+	static bool
+	encodingIsUTF32(const XalanDOMString&	theEncodingName);
 	/**
 	 * Get an array that contains any leading bytes that should be
 	 * written to an XML stream for the specified encoding.  For example,
@@ -244,6 +261,8 @@ public:
 	static const XalanDOMChar 	s_utf8String[];
 
 	static const XalanDOMChar 	s_utf16String[];
+
+	static const XalanDOMChar 	s_utf32String[];
 
 	static const XalanDOMChar 	s_asciiString[];
 

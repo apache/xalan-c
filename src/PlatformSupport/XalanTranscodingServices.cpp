@@ -98,6 +98,19 @@ const XalanDOMChar 	XalanTranscodingServices::s_utf16String[] =
 
 
 
+const XalanDOMChar 	XalanTranscodingServices::s_utf32String[] =
+{
+	XalanUnicode::charLetter_U,
+	XalanUnicode::charLetter_T,
+	XalanUnicode::charLetter_F, 
+	XalanUnicode::charHyphenMinus,
+	XalanUnicode::charDigit_3,
+	XalanUnicode::charDigit_2,
+	0
+};
+
+
+
 const XalanDOMChar 	XalanTranscodingServices::s_asciiString[] =
 {
 	XalanUnicode::charLetter_A,
@@ -251,7 +264,7 @@ XalanTranscodingServices::encodingIsUTF8(const XalanDOMChar*	theEncodingName)
 
 
 bool
-XalanTranscodingServices::encodingIsUTF8(const XalanDOMString&		theEncodingName)
+XalanTranscodingServices::encodingIsUTF8(const XalanDOMString&	theEncodingName)
 {
 	return encodingIsUTF8(c_wstr(theEncodingName));
 }
@@ -269,6 +282,21 @@ bool
 XalanTranscodingServices::encodingIsUTF16(const XalanDOMString&		theEncodingName)
 {
 	return encodingIsUTF16(c_wstr(theEncodingName));
+}
+
+
+
+bool
+XalanTranscodingServices::encodingIsUTF32(const XalanDOMChar*	theEncodingName)
+{
+	return compareIgnoreCaseASCII(c_wstr(theEncodingName), s_utf32String) == 0 ? true : false;
+}
+
+
+bool
+XalanTranscodingServices::encodingIsUTF32(const XalanDOMString&		theEncodingName)
+{
+	return encodingIsUTF32(c_wstr(theEncodingName));
 }
 
 
