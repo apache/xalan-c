@@ -64,52 +64,13 @@ const XalanDOMString	XalanDOMStringPool::s_emptyString;
 
 
 
-bool
-XalanDOMStringPool::StringKey::operator<(const StringKey&	theRHS) const
-{
-	// Note that we don't really need lexicographical ordering, so this
-	// is much cheaper.
-	if (m_length < theRHS.m_length)
-	{
-		return true;
-	}
-	else if (m_length > theRHS.m_length)
-	{
-		return false;
-	}
-	else
-	{
-		unsigned int	i = 0;
-
-		while(i < m_length)
-		{
-			const XalanDOMChar	theLHSChar = m_string[i];
-			const XalanDOMChar	theRHSChar = theRHS.m_string[i];
-
-			if (theLHSChar < theRHSChar)
-			{
-				return true;
-			}
-			else if (theLHSChar > theRHSChar)
-			{
-				return false;
-			}
-			else
-			{
-				++i;
-			}
-		}
-
-		// They're equal, so return false...
-		return false;
-	}
-}
-
-
-
-XalanDOMStringPool::XalanDOMStringPool() :
-	m_strings(),
-	m_index()
+XalanDOMStringPool::XalanDOMStringPool(
+			unsigned int	theBlockSize,
+			unsigned int	theBucketCount,
+			unsigned int	theBucketSize) :
+	m_stringAllocator(theBlockSize),
+	m_stringCount(0),
+	m_hashTable(theBucketCount, theBucketSize)
 {
 }
 
@@ -124,21 +85,21 @@ XalanDOMStringPool::~XalanDOMStringPool()
 void
 XalanDOMStringPool::clear()
 {
-	// Clear by swapping things, which is
-	// guaranteed to free up all allocated memory.
-	XalanDOMStringCollectionType().swap(m_strings);
+	m_stringAllocator.reset();
 
-	IndexMapType().swap(m_index);
+	m_hashTable.clear();
+
+	m_stringCount = 0;
 }
 
 
 
-XalanDOMStringPool::size_type
+unsigned int
 XalanDOMStringPool::size() const
 {
-	assert(m_strings.size() == m_index.size());
+	assert(m_stringCount == m_hashTable.size());
 
-	return m_strings.size();
+	return m_stringCount;
 }
 
 
@@ -156,7 +117,7 @@ XalanDOMStringPool::get(
 			const XalanDOMChar*		theString,
 			unsigned int			theLength)
 {
-	assert(m_strings.size() == m_index.size());
+	assert(m_stringCount == m_hashTable.size());
 
 	if (theString == 0 || *theString == 0)
 	{
@@ -166,44 +127,35 @@ XalanDOMStringPool::get(
 	{
 		const unsigned int	theActualLength = theLength == unsigned(-1) ? length(theString) : theLength;
 
-#if defined(XALAN_NO_NAMESPACES)
-		typedef pair<IndexMapType::iterator, bool>			InsertPairType;
-#else
-		typedef std::pair<IndexMapType::iterator, bool>		InsertPairType;
-#endif
+		unsigned int	theBucketIndex;
 
-		// Insert an entry into the index map.
-		InsertPairType	i =
-			m_index.insert(
-				IndexMapType::value_type(
-					IndexMapType::key_type(theString, theActualLength),
-					(const XalanDOMString*)0));
+		const XalanDOMString*	theTableString = m_hashTable.find(theString, theActualLength, &theBucketIndex);
 
-		// Was it added?
-		if (i.second == false)
+		if (theTableString != 0)
 		{
-			// Already there, so return it...
-			return *(*(i.first)).second;
+			return *theTableString;
 		}
 		else
 		{
 			// Not found, so insert the string...
-			const XalanDOMStringCollectionType::iterator	theIterator =
-				m_strings.insert(m_strings.end(), XalanDOMString());
+			XalanDOMString* const	theNewString =
+				m_stringAllocator.allocateBlock();
+			assert(theNewString != 0);
 
-			XalanDOMString&		theNewString = *theIterator;
+			new(theNewString) XalanDOMString(theString, theActualLength);
 
-			assign(theNewString, theString, theActualLength);
+			m_stringAllocator.commitAllocation(theNewString);
 
-			assert(theActualLength == length(theNewString));
+			assert(theActualLength == length(*theNewString));
 
-			// Update the index entry that we just inserted...
-			(*(i.first)).second = &theNewString;
-			(*(i.first)).first.changePointer(toCharArray(theNewString));
+			++m_stringCount;
 
-			assert(m_strings.size() == m_index.size());
+			// Insert the string into the hash table...
+			m_hashTable.insert(*theNewString, theBucketIndex);
 
-			return theNewString;
+			assert(m_stringCount == m_hashTable.size());
+
+			return *theNewString;
 		}
 	}
 }

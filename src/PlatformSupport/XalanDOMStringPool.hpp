@@ -69,7 +69,9 @@
 
 
 
+#include <PlatformSupport/ArenaAllocator.hpp>
 #include <PlatformSupport/DOMStringHelper.hpp>
+#include <PlatformSupport/XalanDOMStringHashTable.hpp>
 
 
 
@@ -77,81 +79,22 @@ class XALAN_PLATFORMSUPPORT_EXPORT XalanDOMStringPool
 {
 public:
 
-	class XALAN_PLATFORMSUPPORT_EXPORT StringKey
-	{
-	public:
+	enum { eDefaultBlockSize = 1024,
+		   eDefaultBucketCount = XalanDOMStringHashTable::eDefaultBucketCount,
+		   eDefaultBucketSize = XalanDOMStringHashTable::eDefaultBucketSize };
 
-		explicit
-		StringKey();
-
-		StringKey(
-				const XalanDOMChar*		theString,
-				unsigned int			theLength) :
-			m_string(theString),
-			m_length(theLength)
-		{
-		}
-
-		~StringKey()
-		{
-		}
-
-		bool
-		operator<(const StringKey&	theRHS) const;
-
-		/*
-		 * OK, this is a really big hack.  The problem is that we index
-		 * the strings in the pool by const XalanDOMChar* which are not
-		 * necessarily null-terminated.  An added problem is that is too
-		 * inefficient to search the map for the string, then add it if it
-		 * wasn't found.  Instead, we want to insert a new entry in the
-		 * map, then figure out from the result of the insert whether or
-		 * not the entry was found.  This call allows us to change the
-		 * pointer for the key to the persistent pointer from the new
-		 * string that we created, instead of the pointer that was passed
-		 * into the call, which is not persistent.  This won't screw up
-		 * the map since the map is ordered on the _value_ of the string
-		 * and not the pointer itself.
-		 *
-		 * @param theNewPointer The new pointer value to use for the key.
-		 */
-		void
-		changePointer(const XalanDOMChar*	theNewPointer) const
-		{
-			assert(theNewPointer != 0 && equals(theNewPointer, m_string, m_length));
-#if defined(XALAN_NO_MUTABLE)
-			((StringKey*)this)->m_string = theNewPointer;
-#else
-			m_string = theNewPointer;
-#endif
-		}
-
-	private:
-
-		mutable const XalanDOMChar*		m_string;
-
-		unsigned int					m_length;
-	};
-
-#if defined(XALAN_NO_NAMESPACES)
-	typedef deque<XalanDOMString>		XalanDOMStringCollectionType;
-
-	typedef map<
-				StringKey,
-				const XalanDOMString*,
-				less<StringKey> >		IndexMapType;
-#else
-	typedef std::deque<XalanDOMString>	XalanDOMStringCollectionType;
-
-	typedef std::map<
-				StringKey,
-				const XalanDOMString*>	IndexMapType;
-#endif
-
-	typedef XalanDOMStringCollectionType::size_type		size_type;
-
+	/**
+	 * Create a string pool.
+	 *
+	 * @param theBlockSize The block size for the allocator.
+	 * @param theBucketCount The number of buckets to use for the hash table.  This should be a prime number for best results.
+	 * @param theBucketSize The initial size of each bucket in the hash table.
+	 */
 	explicit
-	XalanDOMStringPool();
+	XalanDOMStringPool(
+			unsigned int	theBlockSize = eDefaultBlockSize,
+			unsigned int	theBucketCount = eDefaultBucketCount,
+			unsigned int	theBucketSize = eDefaultBucketSize);
 
 	virtual
 	~XalanDOMStringPool();
@@ -159,7 +102,6 @@ public:
 	/**
 	 * Clear the pool.
 	 *
-	 * @param thePair key-value pair
 	 */
 	virtual void
 	clear();
@@ -167,9 +109,9 @@ public:
 	/**
 	 * Get the number of strings in the pool
 	 *
-	 * @param thePair key-value pair
+	 * @return the size of the pool.
 	 */
-	virtual size_type
+	virtual unsigned int
 	size() const;
 
 	/**
@@ -193,6 +135,18 @@ public:
 			const XalanDOMChar*		theString,
 			unsigned int			theLength = unsigned(-1));
 
+	/**
+	 * Get a reference to the pool's hash table.  Useful for diagnostic
+	 * purposes.
+	 *
+	 * @return a const reference to the hash table.
+	 */
+	const XalanDOMStringHashTable&
+	getHashTable() const
+	{
+		return m_hashTable;
+	}
+
 private:
 
 	// Not implemented, for now...
@@ -204,10 +158,21 @@ private:
 	bool
 	operator==(const XalanDOMStringPool&) const;
 
-	// Data members...
-	XalanDOMStringCollectionType	m_strings;
+#if defined(XALAN_NO_DEFAULT_TEMPLATE_ARGUMENTS)
+	typedef ArenaBlock<XalanDOMString>		ArenaBlockType;
 
-	IndexMapType					m_index;
+	typedef ArenaAllocator<XalanDOMString,
+						   ArenaBlockType>	ArenaAllocatorType;
+#else
+	typedef ArenaAllocator<XalanDOMString>	ArenaAllocatorType;
+#endif
+
+	// Data members...
+	ArenaAllocatorType				m_stringAllocator;
+
+	unsigned int					m_stringCount;
+
+	XalanDOMStringHashTable			m_hashTable;
 
 	static const XalanDOMString		s_emptyString;
 };
