@@ -434,6 +434,13 @@ private:
 
 	static const XalanDOMString::size_type	s_linefeedNCRStringLength;
 
+	/**
+ 	 * The string "&#9;".
+ 	 */
+ 	static const XalanDOMChar				s_htabNCRString[];
+
+	static const XalanDOMString::size_type	s_htabNCRStringLength;
+
 	enum
 	{
 		kBufferSize = 512		// The size of the buffer

@@ -464,6 +464,14 @@ private:
 
 	static const XalanDOMString::size_type	s_linefeedNCRStringLength;
 
+	/**
+ 	 * The string "&#9;".
+ 	 */
+ 	static const char						s_htabNCRString[];
+
+	static const XalanDOMString::size_type	s_htabNCRStringLength;
+
+
 	typedef void (FormatterToXML_UTF8::*NameFunctionType)(const XalanDOMChar*);
 
 	NameFunctionType	m_nameFunction;

@@ -356,8 +356,9 @@ FormatterToXML::initAttrCharsMap()
 		}
 	}
 
-	m_attrCharsMap[0x0A] = 'S';
-	m_attrCharsMap[0x0D] = 'S';
+	m_attrCharsMap[XalanUnicode::charHTab] = 'S';
+	m_attrCharsMap[XalanUnicode::charLF] = 'S';
+	m_attrCharsMap[XalanUnicode::charCR] = 'S';
 }
 
 

@@ -86,8 +86,8 @@ const XalanDOMChar	FormatterToXMLBase::s_specialChars[kSpecialsSize] =
 	kNotSpecial,
 	kNotSpecial,
 	kNotSpecial,
-	kNotSpecial,
-	kBothSpecial,		// 0xA -- linefeed  Special because we normalize as requested.
+	kAttributeSpecial,	// 0x9 -- horizontal tab.  Write as a numeric character reference in attribute values.
+	kBothSpecial,		// 0xA -- linefeed  Normalize as requested, and write as a numeric character reference in attribute values.
 	kNotSpecial,
 	kNotSpecial,
 	kNotSpecial,
