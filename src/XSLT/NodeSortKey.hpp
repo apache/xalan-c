@@ -53,8 +53,10 @@
  * Business Machines, Inc., http://www.ibm.com.  For more
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
+ *
+ * $ Id: $
+ *
  */
-// $ Id: $
 
 #if !defined(XALAN_NODESORTKEY_HEADER_GUARD)
 #define XALAN_NODESORTKEY_HEADER_GUARD

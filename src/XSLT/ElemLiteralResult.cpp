@@ -216,7 +216,7 @@ void ElemLiteralResult::execute(
 
 				bool isXSLNS = equals(srcURI, executionContext.getXSLNameSpaceURL())
 					|| 0 != getStylesheet().lookupExtensionNSHandler(srcURI)
-					|| equalsIgnoreCase(srcURI,executionContext.getXSLT4JNameSpaceURL());
+					|| equalsIgnoreCase(srcURI,executionContext.getXalanXSLNameSpaceURL());
 
 				if(!isXSLNS)
 				{

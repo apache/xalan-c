@@ -93,6 +93,16 @@ class AVT: public AVTPart
 {
 public:
 
+#if defined(XALAN_NO_NAMESPACES)
+#	define XALAN_STD
+#else
+#	define XALAN_STD std::
+#endif
+
+typedef XALAN_STD vector<AVTPart*>	AVTPartPtrVectorType;
+
+#undef XALAN_STD
+
 	/**
 	 * Construct an Attribute Value Template(AVT) by parsing the string, and
 	 * either constructing a vector of AVTParts, or simply hold on to the
@@ -159,7 +169,7 @@ private:
 /**
  * If the AVT is complex, hold a Vector of AVTParts.
  */
-	std::vector<AVTPart*>	m_parts;
+	AVTPartPtrVectorType	m_parts;
 
 /**
  * The name of the attribute.

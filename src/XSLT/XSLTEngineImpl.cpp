@@ -1241,10 +1241,7 @@ void XSLTEngineImpl::addTraceListenersToStylesheet()
 	}
 } 
 
-/**
- * Remove a trace listener.
- * @param tl Trace listener to be removed.
- */
+
 void XSLTEngineImpl::removeTraceListener(TraceListener* tl)
 {
 	int nListeners = m_traceListeners.size();
@@ -1257,9 +1254,7 @@ void XSLTEngineImpl::removeTraceListener(TraceListener* tl)
 		m_stylesheetRoot->removeTraceListener(tl);
 }
 
-/**
- * Fire a generate event.
- */
+
 void XSLTEngineImpl::fireGenerateEvent(const GenerateEvent& te)
 {
 	const int	nListeners = m_traceListeners.size();
@@ -1273,18 +1268,12 @@ void XSLTEngineImpl::fireGenerateEvent(const GenerateEvent& te)
 }
 
 
-
-/**
-* Warn the user of an problem.
-* This is public for access by extensions.
-* @exception XSLTProcessorException thrown if the active ProblemListener and XMLParserLiaison decide 
-* the error condition is severe enough to halt processing.
-*/
 void XSLTEngineImpl::message(const DOMString& msg)
 {
 	DOM_Node node;
 	message(node, node, msg);
 }
+
 
 void XSLTEngineImpl::message(	const DOM_Node& styleNode,
 					const DOM_Node& sourceNode,
@@ -2277,9 +2266,7 @@ bool XSLTEngineImpl::isCDataResultElem(const DOMString& elementName)
 	return is;
 }
 	
-	/**
-	 * Tell if a qualified name equals the current result tree name.
-	 */
+
 bool XSLTEngineImpl::qnameEqualsResultElemName(const QName& qname, const DOMString& elementName)
 {
 	DOMString elemNS;

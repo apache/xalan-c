@@ -53,25 +53,17 @@
  * Business Machines, Inc., http://www.ibm.com.  For more
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
+ *
+ * $ Id: $
+ *
  */
-// $ Id: $
 
 #if !defined(XALAN_XSLTPROCESSOR_HEADER_GUARD)
 #define XALAN_XSLTPROCESSOR_HEADER_GUARD
 
-// @@ JMD: Set values as pointers for now, until classes are defined, etc may
-// want to revisit this
-
 // Base include file.  Must be first.
 #include "XSLTDefinitions.hpp"
 
-
-
-
-
-//@@ JMD: This makes it all work, I don't know why?? Need to fix this
-// These were all declared in the original class XSLProcessor.hpp, but
-// shouldn't be needed for an abstract class I would think
 class Arg;
 class DispatcherFactory;
 class DOM_Element;
@@ -116,9 +108,6 @@ class XSLTResultTarget;
  * specified by a stylesheet tree.  The methods process(...) are
  * the primary public entry points.
  * 
- * Look at the Process class
- * for an advanced example of usage by the main() function.
- * 
  * If you reuse the processor instance, you should call reset() between calls.
  */
 class XALAN_XSLT_EXPORT XSLTProcessor
@@ -130,70 +119,64 @@ public:
 	virtual
 	~XSLTProcessor();
 
-  /**
-   * Transform the source tree to the output in the given 
-   * result tree target.
-   * @param inputSource  The input source.  May be null.
-   * @param stylesheetSource  The stylesheet source.  May be null if source has a xml-stylesheet PI.
-   * @param outputTarget The output source tree.
-	* @exception XSLProcessorException thrown if the active ProblemListener and
-	* XMLParserLiaison decide the error condition is severe enough to halt
-	* processing.
-   */
+	/**
+	 * Transform the source tree to the output in the given result tree target.
+	 *
+	 * @param inputSource         input source,  may be null
+	 * @param stylesheetSource    stylesheet source,  may be null if source
+	 *                            has a xml-stylesheet PI
+	 * @param outputTarget        output source tree
+	 * @param constructionContext context for construction of objects
+	 * @param executionContext    current execution context
+	 * @exception XSLProcessorException 
+	 */
 	virtual void
 	process(
-			XSLTInputSource*				inputSource, 
-	        XSLTInputSource*				stylesheetSource,
-	        XSLTResultTarget&				outputTarget,
-			StylesheetConstructionContext&	constructionContext,
-			StylesheetExecutionContext&		executionContext) = 0;
+		XSLTInputSource*				inputSource, 
+		XSLTInputSource*				stylesheetSource,
+		XSLTResultTarget&				outputTarget,
+		StylesheetConstructionContext&	constructionContext,
+		StylesheetExecutionContext&		executionContext) = 0;
 
-  /**
-   * Given a URI to an XSL stylesheet, 
-   * Compile the stylesheet into an internal representation.
-   * This will delete any existing stylesheet root.  If you want to use this stylesheet multiple
-   * times, or with multiple processor instances, you must use different XObjectFactory and
-   * XPathFactory instances from the ones being used by the process itself.
-   * @param stylesheetSource  The input source for the input XML.
-   * @param xobjectFactory  The XObjectFactory to use for constructing the stylesheet.
-   * @param xpathFactory  The XPathFactory to use for constructing the stylesheet.
-   * @return The compiled stylesheet object.
-   * @exception XSLProcessorException thrown if the active ProblemListener and XMLParserLiaison decide 
-   * the error condition is severe enough to halt processing.
-   */
+	/**
+	 * Given a stylesheet input source, compile the stylesheet into an internal
+	 * representation. This will delete any existing stylesheet root.
+	 *
+	 * @param stylesheetSource    input source for the stylesheet
+	 * @param constructionContext context for construction of objects
+	 * @return pointer to the compiled stylesheet object
+	 * @exception XSLProcessorException 
+	 */
 	virtual StylesheetRoot*
 	processStylesheet(
 			XSLTInputSource&				stylesheetSource,
 			StylesheetConstructionContext&	constructionContext) = 0;
-    // throws XSLProcessorException
   
-  /**
-   * Given a URI to an XSL stylesheet, 
-   * Compile the stylesheet into an internal representation.
-   * This calls reset() before processing if the stylesheet root has been set 
-   * to non-null.
-   * @param xmldocURLString  The URL to the input XML document.
-   * @return The compiled stylesheet object.
-	* @exception XSLProcessorException thrown if the active ProblemListener and
-	* XMLParserLiaison decide the error condition is severe enough to halt
-	* processing.
-   */
+	/**
+	 * Given a URI to an XSL stylesheet, compile the stylesheet into an internal
+	 * representation. This will delete any existing stylesheet root.
+	 *
+	 * @param xmldocURLString URI to the input XML document
+	 * @param constructionContext context for construction of objects
+	 * @return pointer to compiled stylesheet object
+	 * @exception XSLProcessorException 
+	 */
 	virtual StylesheetRoot*
 	processStylesheet(
 			const DOMString&				xsldocURLString,
 			StylesheetConstructionContext&	constructionContext) = 0;
-    // throws XSLProcessorException
   
-  /**
-   * Reset the state.  This needs to be called after a process() call 
-   * is invoked, if the processor is to be used again.
-   */
+	/**
+	 * Reset the state.  This needs to be called after a process() call 
+	 * is invoked, if the processor is to be used again.
+	 */
    virtual void reset() = 0;
   
 	/**
 	 * Given an input source, get the source tree.
 	 *
 	 * @param inputSource pointer to input source
+	 * @return source tree
 	 */
    virtual const DOM_Node getSourceTreeFromInput(XSLTInputSource* inputSource) = 0;
 
@@ -201,43 +184,62 @@ public:
     * Output an object to the result tree by doing the right conversions.
     * This is public for access by extensions.
     *
-    * @param obj the XObject to output.
+    * @param obj the XObject to output
     */
 	virtual void
 	outputToResultTree(
 			const XObject&		xobj) = 0;
 
+	/**
+	 * Retrieve a top level variable corresponding to name.
+	 * 
+	 * @param theName name of variable
+	 * @return pointer to XObject for variable
+	 */
 	virtual XObject*
 	getTopLevelVariable(const DOMString&	theName) const = 0;
 
-  /**
-   * Reset the current element state
-   */
+	/**
+	 * Reset the state of execution to node 'xmlNode' in source tree
+	 * 'sourceTree.'
+	 * 
+	 * @param sourceTree source tree for execution
+	 * @param xmlNode    node to execute
+	 */
 	virtual void
 	resetCurrentState(
 			const DOM_Node&		sourceTree,
 			const DOM_Node&		xmlNode) = 0;
 
+	/**
+	 * Retrieve root document for stylesheet.
+	 * 
+	 * @return root document
+	 */
 	virtual DOM_Document
 	getRootDoc() const = 0;
 
+	/**
+	 * Set root document for stylesheet.
+	 * 
+	 * @param doc root document
+	 */
 	virtual void
 	setRootDoc(const DOM_Document& doc) = 0;
 
-  /**
-   * Evaluates attribute values for attribute templates
-   * (Stuff in curly {} braces that hold expressions).
-   *
-   * @param contextNode the current node in the source tree
-   * @param namespaceContext the current namespace context.
-   * the pattern-by-example structures when parsing expressions.
-   * @param stringedValue the attribute value to be processed.
-   * @param executionContext the current execution context.
-   * @return Processed stringedValue with attribute templates
-   * resolved.
-   * @exception XSLProcessorException thrown if the active ProblemListener and XMLParserLiaison decide 
-   * the error condition is severe enough to halt processing.
-   */
+	/**
+	 * Evaluates attribute values for attribute templates (Stuff in curly {}
+	 * braces that hold expressions).
+	 *
+	 * @param contextNode      current node in the source tree
+	 * @param namespaceContext current namespace context for the
+	 *                         pattern-by-example structures when parsing
+	 *                         expressions
+	 * @param stringedValue    attribute value to be processed
+	 * @param executionContext current execution context
+	 * @return processed stringedValue with attribute templates resolved
+	 * @exception XSLProcessorException 
+	 */
 	virtual DOMString
 	evaluateAttrVal(
 			const DOM_Node&			contextNode,
@@ -245,18 +247,17 @@ public:
 			const DOMString&		stringedValue,
 			XPathExecutionContext&	executionContext) = 0;
 
-  /**
-   * Given a stylesheet element, create a result tree fragment from its 
-   * contents.  Caller owns the memory.
-   * @exception XSLProcessorException thrown if the active ProblemListener and
-   * XMLParserLiaison decide the error condition is severe enough to halt
-   * processing.
-   * @param templateChild The template element that holds the fragment.
-   * @param sourceTree The source tree document context.
-   * @param sourceNode The current source context node.
-   * @param mode The mode under which the template is operating.
-   * @return An object that represents the result tree fragment.
-   */
+	/**
+	 * Given a stylesheet element, create a result tree fragment from its 
+	 * contents.  Caller owns the memory.
+	 *
+	 * @param templateChild template element that holds the fragment
+	 * @param sourceTree    source tree document context
+	 * @param sourceNode    current source context node
+	 * @param mode          mode under which the template is operating
+	 * @return pointer to an object that represents the result tree fragment
+	 * @exception XSLProcessorException 
+	 */
 	virtual ResultTreeFragBase*
 	createResultTreeFrag(
 			StylesheetExecutionContext&		executionContext,
@@ -267,6 +268,8 @@ public:
 
 	/**
 	 * Create an empty result tree fragment. Caller owns the memory.
+	 *
+	 * @return pointer to an object that represents the result tree fragment
 	 */
 	virtual ResultTreeFragBase*
 	createResultTreeFrag() const = 0;
@@ -279,39 +282,56 @@ public:
 
   /**
    * Get the XML Parser Liaison that this processor uses.
+	 *
+	 * @return XML parser liaison object
    */
    virtual XMLParserLiaison&
    getXMLParserLiaison() const = 0;
 
+	/**
+	 * Generate a random namespace prefix guaranteed to be unique.
+	 * 
+	 * @return unique namespace prefix
+	 */
    virtual const DOMString
    getUniqueNSValue() const = 0;
 
-  /**
-   * Convenience function to create an XObject that represents a Result tree fragment.
-   * @param r The result tree fragment to use.
-   * @return An XObject instance.
-   */
+	/**
+	 * Convenience function to create an XObject that represents a Result tree
+	 * fragment.
+	 *
+	 * @param r result tree fragment to use
+	 * @return XObject instance
+	 */
    virtual XObject*
    createXResultTreeFrag(const ResultTreeFragBase&  r) const = 0;
 
-   /**
-   * Given a name, locate a variable in the current context, and return 
-   * the object.
-   * @return An XObject if the variable was found, 0 if it was not.
-   */
+	/**
+	 * Given a name, locate a variable in the current context, and return 
+	 * the object.
+	 *
+	 * @param theName name of variable
+	 * @return An XObject if the variable was found, 0 if it was not.
+	 */
    virtual XObject*
    getVariable(const QName& qname) const = 0;
 
 	/**
-	 * Given a name, locate a param variable in the current context, and return 
-	 * the Object.
+	 * Given a name, return a string representing the value, but don't look in
+	 * the global space.
+	 *
+	 * @param theName name of variable
+	 * @return pointer to XObject for variable
 	 */
 	virtual XObject*
 	getParamVariable(const QName&	theName) const = 0;
 
 	/**
-	 * Given a name, a variable, and an element, push the variable on the variables
-	 * stack.
+	 * Push a named variable onto the processor variable stack
+	 *
+	 * @param name    name of variable
+	 * @param var     pointer to XObject value
+	 * @param element element marker for variable
 	 */
 	virtual void
 	pushVariable(
@@ -320,10 +340,11 @@ public:
 			const DOM_Node&		element) = 0;
 
   /**
-   * Push a top-level stylesheet parameter.  This value can 
-   * be evaluated via xsl:param-variable.
-   * @param key The name of the param.
-   * @param value An XObject that will be used.
+	* Push a top-level stylesheet parameter.  This value can be evaluated via
+	* xsl:param-variable.
+	*
+   * @param key   name of the parameter
+   * @param value XObject value for parameter
    */
    virtual void
    setStylesheetParam(
@@ -331,17 +352,30 @@ public:
 			XObject*			value) = 0;
   
   /**
-   * Push a top-level stylesheet parameter.  This value can 
-   * be evaluated via xsl:param-variable.
-   * @param key The name of the param.
-   * @param expression An expression that will be evaluated.
+	* Push a top-level stylesheet parameter.  This value can be evaluated via
+	* xsl:param-variable.
+	*
+   * @param key name of the param
+   * @param expression expression that will be evaluated
    */
-   virtual void setStylesheetParam(const DOMString& key, const DOMString& expression) = 0;
+   virtual void setStylesheetParam(
+			const DOMString& key,
+			const DOMString& expression) = 0;
 
-
-   /**
-	* Given a valid element key, return the corresponding node list.
-	*/
+	/**
+	 * Given a valid element key, return the corresponding node list.
+	 *
+	 * @param doc              source document
+	 * @param name             name of the key, which must match the 'name'
+	 *                         attribute on xsl:key
+	 * @param ref              value that must match the value found by the
+	 *                         'match' attribute on xsl:key
+	 * @param resolver         resolver for namespace resolution
+	 * @param executionContext current execution context
+	 * @return if the name was not declared with xsl:key, this will return
+	 * null, if the identifier is not found, it will return an empty node set,
+	 * otherwise it will return a nodeset of nodes.
+	 */
    virtual const NodeRefListBase*
    getNodeSetByKey(
 					const DOM_Node&			doc, 
@@ -351,74 +385,83 @@ public:
 					XPathExecutionContext&	executionContext) const = 0;
 
 	/**
-	 * Tells, through the combination of the default-space attribute
-	 * on xsl:stylesheet, xsl:strip-space, xsl:preserve-space, and the
-	 * xml:space attribute, whether or not extra whitespace should be stripped
-	 * from the node.  Literal elements from template elements should
-	 * <em>not</em> be tested with this function.
-	 * @param textNode A text node from the source tree.
-	 * @return true if the text node should be stripped of extra whitespace.
+	 * Tells, through the combination of the default-space attribute on
+	 * xsl:stylesheet, xsl:strip-space, xsl:preserve-space, and the xml:space
+	 * attribute, whether or not extra whitespace should be stripped from the
+	 * node.  Literal elements from template elements should <em>not</em> be
+	 * tested with this function.
+	 *
+	 * @param textNode text node from the source tree
+	 * @return true if the text node should be stripped of extra whitespace
 	 */
 	virtual bool
 	shouldStripSourceNode(const DOM_Node&	textNode) const = 0;
 
-  /**
-   * Get the current formatter listener.
-   */
+	/**
+	 * Get the current formatter listener.
+	 * 
+	 * @return pointer to formatter listener
+	 */
    virtual FormatterListener* getFormatterListener() const = 0;
   
-  /**
-   * Set the current formatter listener.
-   */
-   virtual void setFormatterListener(FormatterListener* flistener) = 0;  
+	/**
+	 * Set the current formatter listener.
+	 *
+	 * @param flistener pointer to new formatter listener
+	 */
+	virtual void setFormatterListener(FormatterListener* flistener) = 0;  
   
 	/**
 	 * Add a trace listener for the purposes of debugging and diagnosis.
-	 *
-	 * @param tl trace listener to be added
+	 * 
+	 * @param tl pointer to listener to add
 	 */
    virtual void addTraceListener(TraceListener* tl) = 0;
-    // throws TooManyListenersException
   
-  /**
-   * If this is set to true, simple traces of 
-   * template calls are made.
-   */
-   virtual void setTraceTemplates(bool b) = 0;
+	/**
+	 * If this is set to true, simple traces of template calls are made.
+	 *
+	 * @param b true to make traces of template calls
+	 */
+	virtual void setTraceTemplates(bool b) = 0;
+
+	/**
+	 * If this is set to true, simple traces of select calls are made.
+	 *
+	 * @param b true to make traces of select calls
+	 */
+	virtual void setTraceSelect(bool b) = 0;
   
-  /**
-   * If this is set to true, simple traces of 
-   * template calls are made.
-   */
-   virtual void setTraceSelect(bool b) = 0;
-  
-  /**
-   * If this is set to true, debug diagnostics about 
-   * template children as they are being constructed 
-   * will be written to the m_diagnosticsPrintWriter 
-   * stream.  diagnoseTemplateChildren is false by
-   * default.
-   */
-   virtual void setTraceTemplateChildren(bool b) = 0;
-  
-  /**
-   * If the quietConflictWarnings property is set to 
-   * true, warnings about pattern conflicts won't be 
-   * printed to the diagnostics stream.
-   * True by default.
-   * @param b true if conflict warnings should be suppressed.
-   */
-   virtual void setQuietConflictWarnings(bool b) = 0;
-  
+	/**
+	 * If this is set to true, debug diagnostics about 
+	 * template children as they are being constructed 
+	 * will be written to the m_diagnosticsPrintWriter 
+	 * stream.  diagnoseTemplateChildren is false by
+	 * default.
+	 *
+	 * @param b true to make traces of template children construction
+	 */
+	virtual void setTraceTemplateChildren(bool b) = 0;
+
+	/**
+	 * If the quietConflictWarnings property is set to 
+	 * true, warnings about pattern conflicts won't be 
+	 * printed to the diagnostics stream.
+	 * True by default.
+	 *
+	 * @param b true if conflict warnings should be suppressed.
+	 */
+	virtual void setQuietConflictWarnings(bool b) = 0;
+
 	/**
 	 * Remove a trace listener.
 	 *
 	 * @param tl Trace listener to be removed.
 	 */
-   virtual void removeTraceListener(TraceListener* tl) = 0;
+	virtual void removeTraceListener(TraceListener* tl) = 0;
   
 // @@TODO: what to do about output stream ??
-  /**
+  /*
    * If this is set, diagnostics will be 
    * written to the m_diagnosticsPrintWriter stream. If 
    * the value is null, then diagnostics will be turned 
@@ -426,13 +469,15 @@ public:
    */
 //   virtual void setDiagnosticsOutput(java.io.OutputStream out) = 0;
   
-  /**
-   * If this is set, diagnostics will be 
-   * written to the m_diagnosticsPrintWriter stream. If 
-   * the value is null, then diagnostics will be turned 
-   * off.
-   */
-   virtual void setDiagnosticsOutput(PrintWriter* pw) = 0;
+	/**
+	 * If this is set, diagnostics will be 
+	 * written to the m_diagnosticsPrintWriter stream. If 
+	 * the value is null, then diagnostics will be turned 
+	 * off.
+	 *
+	 * @param pw pointer to print writer
+	 */
+	virtual void setDiagnosticsOutput(PrintWriter* pw) = 0;
 
 };
 

@@ -365,7 +365,7 @@ public:
 	getTraceListeners() const;
 
 	/**
-	 * Add a trace listener.
+	 * Add a trace listener for the purposes of debugging and diagnosis.
 	 * 
 	 * @param tl pointer to listener to add
 	 */

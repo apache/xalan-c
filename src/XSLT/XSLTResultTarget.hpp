@@ -53,8 +53,10 @@
  * Business Machines, Inc., http://www.ibm.com.  For more
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
+ *
+ * $ Id: $
+ 
  */
-// $ Id: $
 
 #if !defined(XALAN_XSLTRESULTTARGET_HEADER_GUARD)
 #define XALAN_XSLTRESULTTARGET_HEADER_GUARD
@@ -74,108 +76,105 @@ class Writer;
 class XALAN_XSLT_EXPORT XSLTResultTarget
 {
 public:
-	/**
-	 * Zero-argument default constructor.
-	 */
+
 	XSLTResultTarget();
 
 	/**
 	 * Create a new output target with a file name.
 	 *
-	 * @param fileName Must be a valid system file name.
+	 * @param fileName valid system file name
 	 */
-	XSLTResultTarget (DOMString& fileName); // File?
+	XSLTResultTarget (DOMString& fileName);
 
 	/**
 	 * Create a new output target with a byte stream.
 	 *
-	 * @param byteStream The raw byte stream that will contain the document.
+	 * @param byteStream pointer to raw byte stream that will contain the
+	 *                   document
 	 */
 	XSLTResultTarget (OutputStream* byteStream);
 
 	/**
 	 * Create a new output target with a character stream.
 	 *
-	 * @param characterStream The character stream where the results will be written.
+	 * @param characterStream pointer to character stream where the results
+	 *                        will be written
 	 */ 
 	XSLTResultTarget (Writer* characterStream);
 
 	/**
-	 * Create a new output target with a character stream.
+	 * Create a new output target with a DOM node.
 	 *
-	 * @param characterStream The character stream where the results will be written.
+	 * @param n root of DOM node tree that holds results
 	 */
 	XSLTResultTarget (DOM_Node& n);
 
 	/**
 	 * Set the file name where the results will be written.
 	 *
-	 * @param fileName The system identifier as a string.
+	 * @param fileName system identifier as a string
 	 */
-	void setFileName (DOMString& fileName) // File?
+	void setFileName (DOMString& fileName)
 	{
 		m_fileName = fileName;
 	}
 
-
 	/**
 	 * Get the file name where the results will be written to.
 	 * 
-	 * @return The file name.
+	 * @return file name string
 	 */
 	DOMString& getFileName ()
 	{
 		return m_fileName;
 	}
 
-
 	/**
 	 * Set the byte stream for this output target.
 	 *
-	 * @param byteStream A byte stream that will contain the result document.
+	 * @param byteStream pointer to byte stream that will contain the result
+	 *                   document
 	 */
 	void setByteStream (OutputStream* byteStream)
 	{
 		m_byteStream = byteStream;
 	}
 
-
 	/**
 	 * Get the byte stream for this output target.
 	 *
-	 * @return The byte stream, or null if none was supplied.
+	 * @return pointer to byte stream, or null if none was supplied.
 	 */
 	OutputStream* getByteStream ()
 	{
 		return m_byteStream;
 	}
 
-
 	/** 
 	 * Set the character encoding, if known.
+	 *
+	 * @param encoding new encoding string
 	 */
 	void setEncoding (DOMString& encoding)
 	{
 		m_encoding = encoding;
 	}
 
-
 	/**
-	 * Get the character encoding that was used.
+	 * Get the character encoding in use.
 	 *
-	 * @return The encoding, or null if none was supplied.
+	 * @return encoding string, or empty string if none was supplied.
 	 */
 	DOMString& getEncoding ()
 	{
 		return m_encoding;
 	}
 
-
 	/**
 	 * Set the character stream for this output target.
 	 *
-	 * @param characterStream The character stream that will contain 
-	 *										 the result document.
+	 * @param characterStream pointer to character stream that will contain 
+	 *                        the result document
 	 */
 	void setCharacterStream (Writer* characterStream)
 	{
@@ -186,7 +185,7 @@ public:
 	/**
 	 * Get the character stream for this output target.
 	 *
-	 * @return The character stream, or null if none was supplied.
+	 * @return pointer to character stream, or null if none was supplied.
 	 */
 	Writer* getCharacterStream ()
 	{
@@ -195,6 +194,8 @@ public:
 
 	/**
 	 * Set the node that will contain the result nodes.
+	 *
+	 * @param node DOM node to contain results
 	 */
 	void setNode (const DOM_Node& node)
 	{
@@ -203,6 +204,8 @@ public:
 
 	/**
 	 * Get the node that will contain the result nodes.
+	 *
+	 * @return DOM node containing results
 	 */
 	DOM_Node& getNode ()
 	{
@@ -211,6 +214,8 @@ public:
 	
 	/**
 	 * Set a SAX DocumentHandler to process the result tree events.
+	 *
+	 * @param handler pointer to new handler
 	 */
 	void setDocumentHandler (DocumentHandler* handler)
 	{
@@ -219,6 +224,8 @@ public:
 
 	/**
 	 * Get the SAX DocumentHandler that will process the result tree events.
+	 *
+	 * @return pointer to current handler
 	 */
 	DocumentHandler* getDocumentHandler ()
 	{
@@ -227,6 +234,8 @@ public:
 
 	/**
 	 * Set a FormatterListener to process the result tree events.
+	 *
+	 * @param handler pointer to new listener
 	 */
 	void setFormatterListener (FormatterListener* handler)
 	{
@@ -235,6 +244,8 @@ public:
 
 	/**
 	 * Get the FormatterListener that will process the result tree events.
+	 *
+	 * @return pointer to new listener
 	 */
 	FormatterListener* getFormatterListener ()
 	{

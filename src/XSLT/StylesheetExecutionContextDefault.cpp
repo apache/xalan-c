@@ -639,9 +639,9 @@ StylesheetExecutionContextDefault::getXSLNameSpaceURL() const
 
 
 const DOMString&
-StylesheetExecutionContextDefault::getXSLT4JNameSpaceURL() const
+StylesheetExecutionContextDefault::getXalanXSLNameSpaceURL() const
 {
-	return m_xsltProcessor.getXSLT4JNameSpaceURL();
+	return m_xsltProcessor.getXalanXSLNameSpaceURL();
 }
 
 

@@ -189,7 +189,7 @@ public:
 	setStylesheetRoot(StylesheetRoot*	theStylesheet) = 0;
 
 	/**
-	 * Reset the state of execution to node 'xmlNode' in source tree 'sourceTree'
+	 * Reset the state of execution to node 'xmlNode' in source tree 'sourceTree.'
 	 * 
 	 * @param sourceTree source tree for execution
 	 * @param xmlNode    node to execute
@@ -274,9 +274,9 @@ public:
 			const XMLCh*	theNewValue) = 0;
 
 	/**
-	 * Replace the name of the pending element.
+	 * Changes the currently pending element name.
 	 * 
-	 * @param elementName name of element
+	 * @param elementName new name of element
 	 */
 	virtual void
 	setPendingElementName(const DOMString&	elementName) = 0;
@@ -462,7 +462,7 @@ public:
 	 * @param sourceTree             source tree
 	 * @param sourceNode             source node
 	 * @param mode                   mode under which the template is operating
-	 * @param targetTemplate         $$$
+	 * @param targetTemplate         target template
 	 */
 	virtual	void
 	pushParams(
@@ -695,7 +695,7 @@ public:
 	 * @return Xalan namespace for extensions
 	 */
 	virtual const DOMString&
-	getXSLT4JNameSpaceURL() const = 0;
+	getXalanXSLNameSpaceURL() const = 0;
 
 	/**
 	 * If this is set to true, simple traces of template calls are made.

@@ -53,8 +53,10 @@
  * Business Machines, Inc., http://www.ibm.com.  For more
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
+ *
+ * $ Id: $
+ *
  */
-// $ Id: $
 
 #if !defined(XALAN_XSLTINPUTSOURCE_HEADER_GUARD)
 #define XALAN_XSLTINPUTSOURCE_HEADER_GUARD
@@ -73,89 +75,66 @@ class Reader;
 
 class XALAN_XSLT_EXPORT XSLTInputSource : public InputSource
 {
-	/**
-	  * Zero-argument default constructor.
-	  *
-	  * @see #setPublicId
-	  * @see #setSystemId
-	  * @see #setByteStream
-	  * @see #setCharacterStream
-	  * @see #setEncoding
-	  */
+
 public:
 
-	/**
-	  * Zero-argument default constructor.
-	  *
-	  * @see #setPublicId
-	  * @see #setSystemId
-	  * @see #setByteStream
-	  * @see #setCharacterStream
-	  * @see #setEncoding
-	  */
-	XSLTInputSource() : InputSource("") { }	// @@ ??
+	XSLTInputSource() : InputSource("")
+	{ }
 
 	/**
 	 * Create a new input source with a system identifier.
 	 *
-	 * <p>Applications may use setPublicId to include a 
-	 * public identifier as well, or setEncoding to specify
-	 * the character encoding, if known.</p>
+	 * <p>Applications may use setPublicId to include a public identifier as
+	 * well, or setEncoding to specify the character encoding, if known.</p>
 	 *
 	 * <p>If the system identifier is a URL, it must be full resolved.</p>
 	 *
-	 * @param systemId The system identifier (URI).
-	 * @see #setPublicId
-	 * @see #setSystemId
-	 * @see #setByteStream
-	 * @see #setEncoding
-	 * @see #setCharacterStream
+	 * @param systemId  system identifier (URI)
 	 */
 	XSLTInputSource(const XMLCh* const systemId);
 
-	XSLTInputSource(const XMLCh* const systemId, const XMLCh* const publicId);
-
 	/**
 	 * Create a new input source with a system identifier.
 	 *
-	 * <p>Applications may use setPublicId to include a 
-	 * public identifier as well</p>
+	 * <p>Applications may use setPublicId to include a public identifier as
+	 * well, or setEncoding to specify the character encoding, if known.</p>
 	 *
 	 * <p>If the system identifier is a URL, it must be full resolved.</p>
 	 *
-	 * @param systemId The system identifier (URI).
-	 * @see #setPublicId
-	 * @see #setSystemId
-	 * @see #setByteStream
-	 * @see #setCharacterStream
+	 * @param systemId  system identifier (URI)
 	 */
 	XSLTInputSource(const char* const systemId);
 
 	/**
-	 * Create a new input source with a system identifier and a public identifier.
+	 * Create a new input source with a system identifier and a public
+	 * identifier.
 	 *
 	 * <p>If the system identifier is a URL, it must be full resolved.</p>
 	 *
-	 * @param systemId The system identifier (URI).
-	 * @see #setPublicId
-	 * @see #setSystemId
-	 * @see #setByteStream
-	 * @see #setCharacterStream
+	 * @param systemId system identifier (URI)
+	 * @param publicId public identifier
 	 */
-	
 	XSLTInputSource(const char* const systemId, const char* const publicId);
 
-
+	/**
+	 * Create a new input source with a system identifier and a public
+	 * identifier.
+	 *
+	 * <p>If the system identifier is a URL, it must be full resolved.</p>
+	 *
+	 * @param systemId system identifier (URI)
+	 * @param publicId public identifier
+	 */
+	XSLTInputSource(const XMLCh* const systemId, const XMLCh* const publicId);
 
 	/**
 	 * Create a new input source with a byte stream.
 	 *
-	 * <p>Application writers may use setSystemId to provide a base 
-	 * for resolving relative URIs, setPublicId to include a 
-	 * public identifier, and/or setEncoding to specify the object's
-	 * character encoding.</p>
+	 * <p>Application writers may use setSystemId to provide a base for
+	 * resolving relative URIs, setPublicId to include a public identifier,
+	 * and/or setEncoding to specify the object's character encoding.</p>
 	 *
-	 * @param byteStream The raw byte stream containing the document.
+	 * @param byteStream pointer to raw byte stream containing the document
 	 */
 	XSLTInputSource (InputStream* byteStream);
 
@@ -165,20 +144,21 @@ public:
 	 * <p>Application writers may use setSystemId() to provide a base 
 	 * for resolving relative URIs, and setPublicId to include a 
 	 * public identifier.</p>
+	 *
+	 * @param characterStream pointer to character stream containing the document
 	 */
 	XSLTInputSource (Reader* characterStream);
 	
 	/**
 	 * Create a new input source with a DOM node.
 	 *
-	 * <p>Application writers may use setSystemId() to provide a base 
-	 * for resolving relative URIs, and setPublicId to include a 
-	 * public identifier.</p>
+	 * <p>Application writers may use setSystemId() to provide a base for
+	 * resolving relative URIs, and setPublicId to include a public
+	 * identifier.</p>
 	 *
-	 * <p>The character stream shall not include a byte order mark.</p>
+	 * @param node DOM node that is root of the document
 	 */
 	XSLTInputSource (const DOM_Node& node);
-	
 	
 	/**
 	 * Makes the byte stream for this input source.
@@ -187,30 +167,22 @@ public:
 	 * stream specified, but it will use a byte stream in preference
 	 * to opening a URI connection itself.</p>
 	 *
-	 * @see #getByteStream
-	 * @see InputStream
+	 *
+	 * @return pointer to byte stream created
 	 */
 	virtual BinInputStream* makeStream() const;
 	
 	/**
-	 * Set the character stream for this input source.
+	 * Set the DOM node for this input source.
 	 *
-	 * <p>If there is a character stream specified, the SAX parser
-	 * will ignore any byte stream and will not attempt to open
-	 * a URI connection to the system identifier.</p>
-	 *
-	 * @param characterStream The character stream containing the
-	 *        XML document or other entity.
-	 * @see #getCharacterStream
-	 * @see java.io.Reader
+	 * @param node DOM node that is root of the document
 	 */
 	void setNode (const DOM_Node& node);
 
 	/**
-	 * Get the character stream for this input source.
+	 * Retrieve the DOM node for this input source.
 	 *
-	 * @return The character stream, or null if none was supplied.
-	 * @see #setCharacterStream
+	 * @return DOM node that is root of the document
 	 */
 	const DOM_Node& getNode ();
 

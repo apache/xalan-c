@@ -175,7 +175,6 @@ public:
 	 * @param length number of characters to read from the array
 	 * @exception SAXException
 	 * @see #ignorableWhitespace 
-	 * @see org.xml.sax.Locator
 	 */
 	virtual void cdata(const XMLCh* const ch, const unsigned int length);
 
@@ -237,12 +236,6 @@ public:
 	 * @exception SAXException
 	 */
 	virtual void entityReference(const XMLCh* const data);
-
-    /**
-		* This method allows the user installed Document Handler to 'reset'
-		* itself, freeing all the memory resources. The scanner calls this
-		* method before starting a new parse event.
-      */
 
 	// These methods are inherited DocumentHandler ...
 	
@@ -339,7 +332,12 @@ public:
 	 */
 	virtual void endElement(const XMLCh* const name);
 	
-    virtual void resetDocument();
+	/**
+	 * This method allows the user installed Document Handler to 'reset'
+	 * itself, freeing all the memory resources. The scanner calls this
+	 * method before starting a new parse event.
+	 */
+	virtual void resetDocument();
 
 protected:
 

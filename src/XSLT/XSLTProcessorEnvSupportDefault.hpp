@@ -84,11 +84,19 @@ public:
 	virtual
 	~XSLTProcessorEnvSupportDefault();
 
+	/**
+	 * Reset the XLST processor instance
+	 * 
+	 * @param theProcessor pointer to new processor instance
+	 */
+	void
+	setProcessor(XSLTProcessor*		theProcessor)
+	{
+		m_processor = theProcessor;
+	}
+
 	// These interfaces are inherited from XPathEnvSupportDefault...
 
-	/**
-	 * Given a valid element key, return the corresponding node list.
-	 */
 	virtual const NodeRefListBase*
 	getNodeSetByKey(
 			const DOM_Node&			doc,
@@ -97,10 +105,6 @@ public:
 			const PrefixResolver&	resolver,
 			XPathExecutionContext&	executionContext) const;
 
-	/**
-	 * Given a name, locate a variable in the current context, and return 
-	 * the Object.
-	 */
 	XObject*
 	getVariable(
 			XObjectFactory&		factory,
@@ -126,23 +130,8 @@ public:
 			int						lineNo,
 			int						charOffset) const;
 
-	/**
-	 * Tells, through the combination of the default-space attribute
-	 * on xsl:stylesheet, xsl:strip-space, xsl:preserve-space, and the
-	 * xml:space attribute, whether or not extra whitespace should be stripped
-	 * from the node.  Literal elements from template elements should
-	 * <em>not</em> be tested with this function.
-	 * @param textNode A text node from the source tree.
-	 * @return true if the text node should be stripped of extra whitespace.
-	 */
 	virtual bool
 	shouldStripSourceNode(const DOM_Node&	node) const;
-
-	void
-	setProcessor(XSLTProcessor*		theProcessor)
-	{
-		m_processor = theProcessor;
-	}
 
 private:
 

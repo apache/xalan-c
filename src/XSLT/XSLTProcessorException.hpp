@@ -73,6 +73,13 @@ class XALAN_XSLT_EXPORT XSLTProcessorException : public XSLException
 {
 public:
 
+	/**
+	 * Construct an XSLT Processor exception object
+	 * 
+	 * @param theMessage message to print when exception thrown
+	 * @param theType    type of exception string, default
+	 *                   "XSLTProcessorException"
+	 */
 	XSLTProcessorException(
 		const DOMString&	theMessage,
 		const DOMString&	theType = DOMString("XSLTProcessorException"));

@@ -109,19 +109,27 @@ public:
 
 protected:
 
+#if defined(XALAN_NO_NAMESPACES)
+#	define XALAN_STD
+#else
+#	define XALAN_STD std::
+#endif
+
 #if defined(XALAN_HASH_CONTAINERS_AVAILABLE)
 #if defined(XALAN_NO_NAMESPACES)
 	typedef hash_map<DOM_Node, NSInfo, DOM_NodeHashFunction>		NSInfoMapType;
 #else
-	typedef std::hash_map<DOM_Node, NSInfo, DOM_NodeHashFunction>	NSInfoMapType;
+	typedef XALAN_STD hash_map<DOM_Node, NSInfo, DOM_NodeHashFunction>	NSInfoMapType;
 #endif
 #else
 #if defined(XALAN_NO_NAMESPACES)
 	typedef map<DOM_Node, NSInfo>									NSInfoMapType;
 #else
-	typedef std::map<DOM_Node, NSInfo>								NSInfoMapType;
+	typedef XALAN_STD map<DOM_Node, NSInfo>								NSInfoMapType;
 #endif
 #endif
+
+#undef XALAN_STD
 
 	void
 	updateNamespace(

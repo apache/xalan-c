@@ -223,9 +223,6 @@ public:
 			const DOM_Node&		caller,
 			const DOM_Node&		sourceNode);
 
-	/**
-	 * Pop the current context from the current context stack.
-	 */
 	virtual void
 	popCurrentContext();
 
@@ -315,7 +312,7 @@ public:
 	getXSLNameSpaceURL() const;
 
 	virtual const DOMString&
-	getXSLT4JNameSpaceURL() const;
+	getXalanXSLNameSpaceURL() const;
 
 	virtual bool
 	isTraceSelect() const;
