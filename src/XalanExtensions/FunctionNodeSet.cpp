@@ -153,25 +153,30 @@ FunctionNodeSet::~FunctionNodeSet()
 
 XObjectPtr
 FunctionNodeSet::execute(
-			XPathExecutionContext&	executionContext,
-			XalanNode*				context,			
-			const XObjectPtr		arg,
-			const Locator*			locator) const
+			XPathExecutionContext&			executionContext,
+			XalanNode*						context,
+			const XObjectArgVectorType&		args,
+			const Locator*					locator) const
 {
-	assert(arg.null() == false);	
+	if (args.size() != 1)
+	{
+		executionContext.error(getError(), context, locator);
+	}
 
-	if (arg->getType() != XObject::eTypeResultTreeFrag)
+	assert(args[0].null() == false);
+
+	if (args[0]->getType() != XObject::eTypeResultTreeFrag)
 	{
 		executionContext.warn(
 			"Invalid argument type in function nodeset()!",
 			context,
 			locator);
 
-		return arg;
+		return args[0];
 	}
 	else
 	{
-		return XObjectPtr(new XResultTreeFragNodeSetProxy(arg));
+		return XObjectPtr(new XResultTreeFragNodeSetProxy(args[0]));
 	}
 }
 

@@ -85,11 +85,11 @@ public:
 
 	virtual XObjectPtr
 	execute(
-			XPathExecutionContext&	executionContext,
-			XalanNode*				context,
-			const XObjectPtr		arg1,
-			const XObjectPtr		arg2,
-			const Locator*			locator) const;
+			XPathExecutionContext&			executionContext,
+			XalanNode*						context,
+			const XObjectArgVectorType&		args,
+			const Locator*					locator) const;
+
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
 	virtual Function*
 #else

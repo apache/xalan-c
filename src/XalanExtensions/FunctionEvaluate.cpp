@@ -62,6 +62,11 @@
 
 
 
+#include <XalanDOM/XalanElement.hpp>
+
+
+
+#include <XPath/ElementPrefixResolverProxy.hpp>
 #include <XPath/XObjectFactory.hpp>
 #include <XPath/XPath.hpp>
 #include <XPath/XPathProcessorImpl.hpp>
@@ -82,24 +87,56 @@ FunctionEvaluate::~FunctionEvaluate()
 
 XObjectPtr
 FunctionEvaluate::execute(
-			XPathExecutionContext&	executionContext,
-			XalanNode*				context,			
-			const XObjectPtr		arg,
-			const Locator*			locator) const
+			XPathExecutionContext&			executionContext,
+			XalanNode*						context,
+			const XObjectArgVectorType&		args,
+			const Locator*					locator) const
 {
-	assert(arg.null() == false);	
+	if (args.size() != 1)
+	{
+		executionContext.error(getError(), context, locator);
+	}
+
+	assert(args[0].null() == false);
 
 	const PrefixResolver* const	theResolver =
 		executionContext.getPrefixResolver();
 
 	if (theResolver == 0)
 	{
-		executionContext.warn(
-			"No prefix resolver available in evaluate()!",
-			context,
-			locator);
+		if (context->getNodeType() != XalanNode::ELEMENT_NODE)
+		{
+			executionContext.warn(
+				"No prefix resolver is available in evaluate().  The expression cannot be evaluated.",
+				context,
+				locator);
 
-		return arg;
+			return args[0];
+		}
+		else
+		{
+			executionContext.warn(
+				"No prefix resolver is available in evaluate().  evalute() will use the context node for prefix resolution.",
+				context,
+				locator);
+
+#if defined(XALAN_OLD_STYLE_CASTS)
+			ElementPrefixResolverProxy	theProxy((const XalanElement*)context);
+#else
+			ElementPrefixResolverProxy	theProxy(static_cast<const XalanElement*>(context));
+#endif
+
+			XPathProcessorImpl	theProcessor;
+
+			XPath				theXPath;
+
+			theProcessor.initXPath(
+					theXPath,
+					args[0]->str(),
+					theProxy);
+
+			return theXPath.execute(context, *theResolver, executionContext);
+		}
 	}
 	else
 	{
@@ -109,7 +146,7 @@ FunctionEvaluate::execute(
 
 		theProcessor.initXPath(
 				theXPath,
-				arg->str(),
+				args[0]->str(),
 				*theResolver);
 
 		return theXPath.execute(context, *theResolver, executionContext);

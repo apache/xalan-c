@@ -89,14 +89,19 @@ FunctionDistinct::~FunctionDistinct()
 
 XObjectPtr
 FunctionDistinct::execute(
-			XPathExecutionContext&	executionContext,
-			XalanNode*				/* context */,			
-			const XObjectPtr		arg,
-			const Locator*			/* locator */) const
+			XPathExecutionContext&			executionContext,
+			XalanNode*						context,
+			const XObjectArgVectorType&		args,
+			const Locator*					locator) const
 {
-	assert(arg.null() == false);
+	if (args.size() != 1)
+	{
+		executionContext.error(getError(), context, locator);
+	}
 
-	const NodeRefListBase&	nodeset = arg->nodeset();
+	assert(args[0].null() == false);
+
+	const NodeRefListBase&	nodeset = args[0]->nodeset();
 
 	typedef XPathExecutionContext::BorrowReturnMutableNodeRefList	BorrowReturnMutableNodeRefList;
 

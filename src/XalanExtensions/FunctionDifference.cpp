@@ -77,16 +77,20 @@ FunctionDifference::~FunctionDifference()
 
 XObjectPtr
 FunctionDifference::execute(
-			XPathExecutionContext&	executionContext,
-			XalanNode*				/* context */,
-			const XObjectPtr		arg1,
-			const XObjectPtr		arg2,
-			const Locator*			/* locator */) const
+			XPathExecutionContext&			executionContext,
+			XalanNode*						context,
+			const XObjectArgVectorType&		args,
+			const Locator*					locator) const
 {
-	assert(arg1.null() == false && arg2.null() == false);
+	if (args.size() != 2)
+	{
+		executionContext.error(getError(), context, locator);
+	}
 
-	const NodeRefListBase&	nodeset1 = arg1->nodeset();
-	const NodeRefListBase&	nodeset2 = arg2->nodeset();
+	assert(args[0].null() == false && args[1].null() == false);
+
+	const NodeRefListBase&	nodeset1 = args[0]->nodeset();
+	const NodeRefListBase&	nodeset2 = args[1]->nodeset();
 
 	typedef XPathExecutionContext::BorrowReturnMutableNodeRefList	BorrowReturnMutableNodeRefList;
 
