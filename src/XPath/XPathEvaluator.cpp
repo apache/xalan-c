@@ -169,7 +169,7 @@ XPathEvaluator::selectNodeList(
 			xpathString,
 			namespaceNode));
 
-	return theResult->nodeset();
+	return NodeRefList(theResult->nodeset());
 }
 
 
@@ -188,7 +188,7 @@ XPathEvaluator::selectNodeList(
 			xpathString,
 			prefixResolver));
 
-	return theResult->nodeset();
+	return NodeRefList(theResult->nodeset());
 }
 
 
