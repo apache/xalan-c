@@ -504,40 +504,6 @@ public:
 			const AttributeList&			atts,
 			StylesheetConstructionContext&	constructionContext);
 //		  throws XSLProcessorException
-private:
-
-#if defined(OUT)
-	/**
-	 * Process imports, includes, macros, templates, etc.
-	 * into tables of various types.
-	 * @param stylesheet Probably a stylesheet element, 
-	 * though this may later be an xsl:module element.
-	 */
-	virtual
-	void
-	buildStylesheetTables(
-			const DOM_Element&	stylesheet,
-			const DOMString&	base);
-
-	//@@ OUT ?
-	/**
-	 * Get a list of the included documents into a vector.
-	 */
-	virtual
-	void
-	initIncludes(
-			const DOM_Element&	includedStyles,
-			const DOMString&	base);
-
-    
-	/**
-	 * Get a list of the imported documents into a vector.
-	 */
-	virtual
-	void
-	initImports(const DOM_Element&	includedStyles);
-#endif // OUT
-
   
 public:
 			
