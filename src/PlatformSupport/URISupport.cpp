@@ -105,46 +105,29 @@ const XalanDOMChar	URISupport::s_fileProtocolString2[] =
 
 
 URISupport::URLAutoPtrType
-URISupport::getURLFromString(const XalanDOMString&	urlString)
-{
-	return getURLFromString(c_wstr(urlString));
-}
-
-
-
-URISupport::URLAutoPtrType
 URISupport::getURLFromString(const XalanDOMChar*	urlString)
 {
 	URLAutoPtrType	url(new XMLURL);
 
-	url->setURL(c_wstr(getURLStringFromString(urlString)));
+	url->setURL(getURLStringFromString(urlString).c_str());
 
 	return url;
 }
 
 
 
-XalanDOMString
-URISupport::getURLStringFromString(const XalanDOMString&	urlString)
-{
-	return getURLStringFromString(c_wstr(urlString));
-}
-
-
-
-XalanDOMString
-URISupport::getURLStringFromString(const XalanDOMChar*	urlString)
+void
+URISupport::getURLStringFromString(
+			const XalanDOMChar*			urlString,
+			XalanDOMString::size_type	len,
+			XalanDOMString&				theNormalizedURI)
 {
 	assert(urlString != 0);
 
-	XalanDOMString	theNormalizedURI(urlString);
-
 	// Let's see what sort of URI we have...
-	const XalanDOMString::size_type		len = length(theNormalizedURI);
-
 	if (len != 0)
 	{
-		const XalanDOMString::size_type		index = indexOf(theNormalizedURI, XalanUnicode::charColon);
+		const XalanDOMString::size_type		index = indexOf(urlString, XalanUnicode::charColon);
 
 		bool	protocolPresent = false;
 
@@ -152,7 +135,7 @@ URISupport::getURLStringFromString(const XalanDOMChar*	urlString)
 		{
 			// $$$ ToDo: XMLURL::lookupByName() is supposed to be static, but is not.
 			const XMLURL::Protocols		theProtocol =
-				XMLURL().lookupByName(c_wstr(substring(theNormalizedURI, 0 , index)));
+					XMLURL().lookupByName(c_wstr(substring(urlString, 0 , index)));
 
 			if (theProtocol != XMLURL::Unknown)
 			{
@@ -162,97 +145,81 @@ URISupport::getURLStringFromString(const XalanDOMChar*	urlString)
 
 		if (protocolPresent == true)
 		{
+			theNormalizedURI = urlString;
+
 			NormalizeURIText(theNormalizedURI);
 		}
 		else
 		{
 			// Assume it's a file specification...
-			const XalanArrayAutoPtr<XalanDOMChar>	theFullPath(XMLPlatformUtils::getFullPath(c_wstr(urlString)));
-			assert(theFullPath.get() != 0);
+			const XalanArrayAutoPtr<XalanDOMChar>	theFullPathGuard(XMLPlatformUtils::getFullPath(c_wstr(urlString)));
 
-			theNormalizedURI = theFullPath.get();
-			assert(length(theNormalizedURI) > 0);
+			const XalanDOMChar* const	theFullPath = theFullPathGuard.get();
+			assert(theFullPath != 0);
 
-			NormalizeURIText(theNormalizedURI);
+			const XalanDOMString::size_type		theFullPathLength =
+				XalanDOMString::length(theFullPath);
 
-			if (indexOf(theNormalizedURI, XalanUnicode::charSolidus) == 0)
+			assert(theFullPathLength > 0);
+
+			if (theFullPath[0] == XalanDOMChar(XalanUnicode::charSolidus))
 			{
-				insert(theNormalizedURI, 0, &s_fileProtocolString1[0]);
+				const size_t	theSize = sizeof(s_fileProtocolString1) / sizeof(s_fileProtocolString1[0]) - 1;
+
+				theNormalizedURI.reserve(theFullPathLength + theSize);
+
+				theNormalizedURI.assign(s_fileProtocolString1, theSize);
 			}
 			else
 			{
-				insert(theNormalizedURI, 0, &s_fileProtocolString2[0]);
+				const size_t	theSize = sizeof(s_fileProtocolString2) / sizeof(s_fileProtocolString2[0]) - 1;
+
+				theNormalizedURI.reserve(theFullPathLength + theSize);
+
+				theNormalizedURI.assign(s_fileProtocolString2, theSize);
 			}
+
+			theNormalizedURI.append(theFullPath, theFullPathLength);
+
+			NormalizeURIText(theNormalizedURI);
 		}
 	}
-
-	return theNormalizedURI;
 }
 
 
 
-URISupport::URLAutoPtrType
-URISupport::getURLFromString(
-			const XalanDOMString&	urlString,
-			const XalanDOMString&	base)
-{	
-	return getURLFromString(getURLStringFromString(urlString, base));
-}
-
-
-
-XalanDOMString
+void
 URISupport::getURLStringFromString(
-			const XalanDOMString&	urlString,
-			const XalanDOMString&	base)
+			const XalanDOMChar*			urlString,
+			XalanDOMString::size_type	urlStringLen,
+			const XalanDOMChar*			base,
+			XalanDOMString::size_type	baseLen,
+			XalanDOMString&				theNormalizedURI)
 {
-	return getURLStringFromString(c_wstr(urlString), c_wstr(base));
-}
-
-
-
-XalanDOMString
-URISupport::getURLStringFromString(
-			const XalanDOMChar*		urlString,
-			const XalanDOMChar*		base)
-{
-	XalanDOMString	context(base);
+	XalanDOMString	context(base, baseLen);
 
 	NormalizeURIText(context);
 
-	const XalanDOMString::size_type		theContextLength = length(context);
-
-	const XalanDOMString::size_type		indexOfSlash = theContextLength == 0 ?
+	const XalanDOMString::size_type		indexOfSlash = baseLen == 0 ?
 							0 :
 							lastIndexOf(context, XalanUnicode::charSolidus);
 
-	bool				hasPath = true;
+	const bool	hasPath = indexOfSlash < baseLen ? true : false;
 
-	if (indexOfSlash < theContextLength)
+	if (hasPath == true)
 	{
-		context = substring(context, 0, indexOfSlash + 1);
-	}
-	else
-	{
-		hasPath = false;
+		// Strip off file name from context...
+		substring(context, context, 0, indexOfSlash + 1);
 	}
 
 	// OK, now let's look at the urlString...
 
 	// Is there a colon, indicating some sort of drive spec, or protocol?
-	const XalanDOMString::size_type		theURLStringLength = length(urlString);
 	const XalanDOMString::size_type		theColonIndex = indexOf(urlString, XalanUnicode::charColon);
 
-	if (theColonIndex == theURLStringLength)
+	if (theColonIndex == urlStringLen)
 	{
 		// No colon, so just use the urlString as is...
-
-		// Strip off file name from context...
-		if (indexOfSlash < theContextLength)
-		{
-			context = substring(context, 0, indexOfSlash + 1);
-		}
-
 		if (hasPath == true)
 		{
 			context += urlString;
@@ -291,7 +258,7 @@ URISupport::getURLStringFromString(
 				// Check if this is an absolute URI (starts with a leading '//')
 				const XalanDOMString::size_type		protoLength = length(theProtocolString);
 
-				if (protoLength + 3 <= theURLStringLength &&
+				if (protoLength + 3 <= urlStringLen &&
 					urlString[protoLength + 1] == XalanUnicode::charSolidus &&
 					urlString[protoLength + 2] == XalanUnicode::charSolidus)
 				{
@@ -301,20 +268,20 @@ URISupport::getURLStringFromString(
 				else
 				{
 					// Strip off file name from context...
-					if (indexOfSlash < theContextLength)
+					if (indexOfSlash < baseLen)
 					{
 						context = substring(context, 0, indexOfSlash + 1);
 					}
 
 					// OK, everything looks good, so strip off the protocol 
 					// and colon...
-					context += substring(urlString, theColonIndex + 1, theURLStringLength);
+					context += substring(urlString, theColonIndex + 1, urlStringLen);
 				}
 			}
 		}
 	}
 
-	return getURLStringFromString(context);
+	getURLStringFromString(context, theNormalizedURI);
 }
 
 
@@ -332,6 +299,15 @@ URISupport::NormalizeURIText(XalanDOMString&	uriString)
 
 	if (index != len)
 	{
+#if 1
+		// Start replacing at the index point, since that's the
+		// first one...
+		replace(
+				uriString.begin(),
+				uriString.end(),
+				XalanDOMChar(XalanUnicode::charReverseSolidus),
+				XalanDOMChar(XalanUnicode::charSolidus));
+#else
 		XalanDOMCharVectorType	theVector =
 			MakeXalanDOMCharVector(uriString);
 
@@ -344,6 +320,7 @@ URISupport::NormalizeURIText(XalanDOMString&	uriString)
 				XalanDOMCharVectorType::value_type(XalanUnicode::charSolidus));
 
 		uriString = XalanDOMString(&theVector[0]);
+#endif
 	}
 
 	return uriString;

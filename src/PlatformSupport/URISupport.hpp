@@ -93,7 +93,24 @@ public:
 	 * @return auto pointer to fully qualified URI
 	 */
 	static URLAutoPtrType
-	getURLFromString(const XalanDOMString&	urlString);
+	getURLFromString(const XalanDOMString&	urlString)
+	{
+		return getURLFromString(urlString.c_str());
+	}
+
+	/**
+	 * Determine the fully qualified URI for a string.
+	 *
+	 * @param urlString string to qualify
+	 * @param url to update with the qualified string.
+	 */
+	static void
+	getURLFromString(
+			const XalanDOMString&	urlString,
+			XMLURL&					url)
+	{
+		getURLFromString(urlString.c_str(), url);
+	}
 
 	/**
 	 * Determine the fully qualified URI for a string.
@@ -108,19 +125,15 @@ public:
 	 * Determine the fully qualified URI for a string.
 	 *
 	 * @param urlString string to qualify
-	 * @return string to fully qualified URI
+	 * @param url to update with the qualified string.
 	 */
-	static XalanDOMString
-	getURLStringFromString(const XalanDOMString&	urlString);
-
-	/**
-	 * Determine the fully qualified URI for a string.
-	 *
-	 * @param urlString string to qualify
-	 * @return string to fully qualified URI
-	 */
-	static XalanDOMString
-	getURLStringFromString(const XalanDOMChar*	urlString);
+	static void
+	getURLFromString(
+			const XalanDOMChar*		urlString,
+			XMLURL&					url)
+	{
+		url.setURL(getURLStringFromString(urlString).c_str());
+	}
 
 	/**
 	 * Determine the fully qualified URI for a string.
@@ -132,7 +145,10 @@ public:
 	static URLAutoPtrType
 	getURLFromString(
 			const XalanDOMString&	urlString,
-			const XalanDOMString&	base);
+			const XalanDOMString&	base)
+	{
+		return getURLFromString(getURLStringFromString(urlString, base));
+	}
 
 	/**
 	 * Determine the fully qualified URI for a string.
@@ -150,13 +166,119 @@ public:
 	 * Determine the fully qualified URI for a string.
 	 *
 	 * @param urlString string to qualify
+	 * @return string to fully qualified URI
+	 */
+	static XalanDOMString
+	getURLStringFromString(const XalanDOMString&	urlString)
+	{
+		XalanDOMString	result;
+
+		getURLStringFromString(urlString.c_str(), urlString.length(), result);
+
+		return result;
+	}
+
+	/**
+	 * Determine the fully qualified URI for a string.
+	 *
+	 * @param urlString string to qualify
+	 * @return string to fully qualified URI
+	 */
+	static void
+	getURLStringFromString(
+			const XalanDOMString&	urlString,
+			XalanDOMString&			theNormalizedURI)
+	{
+		getURLStringFromString(urlString.c_str(), urlString.length(), theNormalizedURI);
+	}
+
+	/**
+	 * Determine the fully qualified URI for a string.
+	 *
+	 * @param urlString string to qualify
+	 * @return string to fully qualified URI
+	 */
+	static XalanDOMString
+	getURLStringFromString(const XalanDOMChar*	urlString)
+	{
+		XalanDOMString	theNormalizedURI;
+
+		getURLStringFromString(urlString, theNormalizedURI);
+
+		return theNormalizedURI;
+	}
+
+	/**
+	 * Determine the fully qualified URI for a string.
+	 *
+	 * @param urlString string to qualify
+	 * @param theNormalizedURI fully qualified URI
+	 */
+	static void
+	getURLStringFromString(
+			const XalanDOMChar*			urlString,
+			XalanDOMString&				theNormalizedURI)
+	{
+		assert(urlString != 0);
+
+		getURLStringFromString(
+			urlString,
+			XalanDOMString::length(urlString),
+			theNormalizedURI);
+	}
+
+	/**
+	 * Determine the fully qualified URI for a string.
+	 *
+	 * @param urlString string to qualify
+	 * @param len the length of urlString
+	 * @param theNormalizedURI fully qualified URI
+	 */
+	static void
+	getURLStringFromString(
+			const XalanDOMChar*			urlString,
+			XalanDOMString::size_type	len,
+			XalanDOMString&				theNormalizedURI);
+
+	/**
+	 * Determine the fully qualified URI for a string.
+	 *
+	 * @param urlString string to qualify
 	 * @param base base location for URI
 	 * @return string to fully qualified URI
 	 */
 	static XalanDOMString
 	getURLStringFromString(
 			const XalanDOMString&	urlString,
-			const XalanDOMString&	base);
+			const XalanDOMString&	base)
+	{
+		XalanDOMString	theNormalizedURI;
+
+		getURLStringFromString(
+			urlString.c_str(),
+			urlString.length(),
+			base.c_str(),
+			base.length(),
+			theNormalizedURI);
+
+		return theNormalizedURI;
+	}
+
+	/**
+	 * Determine the fully qualified URI for a string.
+	 *
+	 * @param urlString string to qualify
+	 * @param base base location for URI
+	 * @param theNormalizedURI fully qualified URI
+	 */
+	static void
+	getURLStringFromString(
+			const XalanDOMString&	urlString,
+			const XalanDOMString&	base,
+			XalanDOMString&			theNormalizedURI)
+	{
+		getURLStringFromString(urlString.c_str(), base.c_str(), theNormalizedURI);
+	}
 
 	/**
 	 * Determine the fully qualified URI for a string.
@@ -168,7 +290,52 @@ public:
 	static XalanDOMString
 	getURLStringFromString(
 			const XalanDOMChar*		urlString,
-			const XalanDOMChar*		base);
+			const XalanDOMChar*		base)
+	{
+		XalanDOMString	theNormalizedURI;
+
+		getURLStringFromString(urlString, base, theNormalizedURI);
+
+		return theNormalizedURI;
+	}
+
+	/**
+	 * Determine the fully qualified URI for a string.
+	 *
+	 * @param urlString string to qualify
+	 * @param base base location for URI
+	 * @param theNormalizedURI fully qualified URI
+	 */
+	static void
+	getURLStringFromString(
+			const XalanDOMChar*		urlString,
+			const XalanDOMChar*		base,
+			XalanDOMString&			theNormalizedURI)
+	{
+		assert(urlString != 0 && base != 0);
+
+		getURLStringFromString(
+			urlString,
+			XalanDOMString::length(urlString),
+			base,
+			XalanDOMString::length(base),
+			theNormalizedURI);
+	}
+
+	/**
+	 * Determine the fully qualified URI for a string.
+	 *
+	 * @param urlString string to qualify
+	 * @param base base location for URI
+	 * @param theNormalizedURI fully qualified URI
+	 */
+	static void
+	getURLStringFromString(
+			const XalanDOMChar*			urlString,
+			XalanDOMString::size_type	urlStringLen,
+			const XalanDOMChar*			base,
+			XalanDOMString::size_type	baseLen,
+			XalanDOMString&				theNormalizedURI);
 
 	/**
 	 * Normalizes the string passed in, replacing
