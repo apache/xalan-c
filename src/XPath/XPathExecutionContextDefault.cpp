@@ -382,7 +382,7 @@ XPathExecutionContextDefault::returnMutableNodeRefList(MutableNodeRefList*	theLi
 #endif
 
 	// Search from the back to the front, since we push the latest borrowed on the back.
-	const NodeRefListCacheType::reverse_iterator	i =
+	NodeRefListCacheType::reverse_iterator	i =
 		find(m_busyCachedNodeLists.rbegin(), m_busyCachedNodeLists.rend(), theList);
 
 	if (i == m_busyCachedNodeLists.rend())

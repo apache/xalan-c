@@ -61,7 +61,14 @@
 
 #include <algorithm>
 #include <cstdio>
+
+
+
+#if defined(XALAN_OLD_STREAM_HEADERS)
+#include <strstream.h>
+#else
 #include <strstream>
+#endif
 
 
 

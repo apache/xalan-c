@@ -110,8 +110,7 @@ public:
 	 * @param theCurrentNode     current node in the source tree
 	 * @param theContextNodeList node list for current context
 	 * @param thePrefixResolver  pointer to prefix resolver to use
-	 */
-	explicit
+	 */	
 	XPathExecutionContextDefault(
 			XPathEnvSupport&		theXPathEnvSupport,
 			XPathSupport&			theXPathSupport,
