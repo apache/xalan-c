@@ -111,37 +111,46 @@ FunctionSubstringAfter::execute(
 	{
 		const XalanDOMString&	theSecondString = arg2->str();
 
-		const XalanDOMString::size_type		theIndex = indexOf(theFirstString,
-												   theSecondString);
+		const XalanDOMString::size_type		theSecondStringLength = length(theSecondString);
 
-		if (theIndex == theFirstStringLength)
+		if (theSecondStringLength == 0)
 		{
-			return createEmptyString(executionContext);
+			return arg1;
 		}
 		else
 		{
-			const XalanDOMString::size_type		theSecondStringLength = length(theSecondString);
+			const XalanDOMString::size_type		theIndex = indexOf(theFirstString,
+													   theSecondString);
 
-			// Find the first character, which will be the offset of the index of the
-			// beginning of the second string, plus the length of the second string.
-			const XalanDOMChar* const	theFirstCharacter =
-				toCharArray(theFirstString) + theIndex + theSecondStringLength;
+			if (theIndex == theFirstStringLength)
+			{
+				return createEmptyString(executionContext);
+			}
+			else
+			{
+				const XalanDOMString::size_type		theSecondStringLength = length(theSecondString);
 
-			// The remaining length is just the opposite -- the length of the string,
-			// minus the index, minus the length of the second string.
-			const XalanDOMString::size_type		theSubstringLength =
-				theFirstStringLength  - theIndex - theSecondStringLength;
+				// Find the first character, which will be the offset of the index of the
+				// beginning of the second string, plus the length of the second string.
+				const XalanDOMChar* const	theFirstCharacter =
+					toCharArray(theFirstString) + theIndex + theSecondStringLength;
 
-			XPathExecutionContext::GetAndReleaseCachedString	theResult(executionContext);
+				// The remaining length is just the opposite -- the length of the string,
+				// minus the index, minus the length of the second string.
+				const XalanDOMString::size_type		theSubstringLength =
+					theFirstStringLength  - theIndex - theSecondStringLength;
 
-			XalanDOMString&		theString = theResult.get();
+				XPathExecutionContext::GetAndReleaseCachedString	theResult(executionContext);
 
-			assign(
-					theString,
-					theFirstCharacter,
-					theSubstringLength);
+				XalanDOMString&		theString = theResult.get();
 
-			return executionContext.getXObjectFactory().createString(theResult);
+				assign(
+						theString,
+						theFirstCharacter,
+						theSubstringLength);
+
+				return executionContext.getXObjectFactory().createString(theResult);
+			}
 		}
 	}
 }

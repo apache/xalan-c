@@ -111,25 +111,34 @@ FunctionSubstringBefore::execute(
 	{
 		const XalanDOMString&				theSecondString = arg2->str();
 
-		const XalanDOMString::size_type		theIndex = indexOf(theFirstString,
-												   theSecondString);
+		const XalanDOMString::size_type		theSecondStringLength = length(theSecondString);
 
-		if (theIndex == theFirstStringLength)
+		if (theSecondStringLength == 0)
 		{
 			return createEmptyString(executionContext);
 		}
 		else
 		{
-			XPathExecutionContext::GetAndReleaseCachedString	theResult(executionContext);
+			const XalanDOMString::size_type		theIndex = indexOf(theFirstString,
+													   theSecondString);
 
-			XalanDOMString&		theString = theResult.get();
+			if (theIndex == theFirstStringLength)
+			{
+				return createEmptyString(executionContext);
+			}
+			else
+			{
+				XPathExecutionContext::GetAndReleaseCachedString	theResult(executionContext);
 
-			theString.assign(
-					toCharArray(theFirstString),
-					theIndex);
+				XalanDOMString&		theString = theResult.get();
 
-			// Create a string of the appropriate length...
-			return executionContext.getXObjectFactory().createString(theResult);
+				theString.assign(
+						toCharArray(theFirstString),
+						theIndex);
+
+				// Create a string of the appropriate length...
+				return executionContext.getXObjectFactory().createString(theResult);
+			}
 		}
 	}
 }
