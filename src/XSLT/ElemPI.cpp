@@ -143,11 +143,11 @@ ElemPI::execute(StylesheetExecutionContext&		executionContext) const
 
 	if(equalsIgnoreCaseASCII(piName, Constants::ATTRVAL_OUTPUT_METHOD_XML))
 	{
-		executionContext.error("processing-instruction name can not be 'xml'", 0, this);
+		executionContext.error("processing-instruction name can not be 'xml'", 0, getLocator());
 	}
 	else if(!isValidNCName(piName))
 	{
-		executionContext.error("processing-instruction name must be a valid NCName", 0, this);
+		executionContext.error("processing-instruction name must be a valid NCName", 0, getLocator());
 	}
 
 	StylesheetExecutionContext::SetAndRestoreCopyTextNodesOnly	theSetAndRestore(executionContext, true);

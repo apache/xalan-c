@@ -179,35 +179,37 @@ protected:
 	 * Given a 'from' pattern (ala xsl:number), a match pattern 
 	 * and a context, find the first ancestor that matches the 
 	 * pattern (including the context handed in).
+	 *
+	 * @param executionContext The current execution context
 	 * @param matchPatternString The match pattern.
-	 * @param node The node that "." expresses.
-	 * @param namespaceContext The context in which namespaces in the 
-	 * queries are supposed to be expanded.
+	 * @param matchPatternString The count match pattern.
+	 * @param node The context node
+	 * @return A pointer to the matched node.
 	 */
 	XalanNode*
 	findAncestor(
 			StylesheetExecutionContext&		executionContext,
 			const XPath*					fromMatchPattern,
 			const XPath*					countMatchPattern,
-			XalanNode*						context,
-			const XalanElement*				namespaceContext) const;
+			XalanNode*						context) const;
 
 	/**
-	* Given a 'from' pattern (ala xsl:number), a match pattern 
-	* and a context, find the first ancestor that matches the 
-	* pattern (including the context handed in).
-	* @param matchPatternString The match pattern.
-	* @param node The node that "." expresses.
-	* @param namespaceContext The context in which namespaces in the 
-	* queries are supposed to be expanded.
-	*/
+	 * Given a 'from' pattern (ala xsl:number), a match pattern 
+	 * and a context, find the first ancestor that matches the 
+	 * pattern (including the context handed in).
+	 *
+	 * @param executionContext The current execution context
+	 * @param matchPatternString The match pattern.
+	 * @param matchPatternString The count match pattern.
+	 * @param node The context node
+	 * @return A pointer to the matched node.
+	 */
 	XalanNode*
 	findPrecedingOrAncestorOrSelf(
 			StylesheetExecutionContext&		executionContext,
 			const XPath*					fromMatchPattern,
 			const XPath*					countMatchPattern,
-			XalanNode*						context,
-			const XalanElement*				namespaceContext) const;
+			XalanNode*						context) const;
 
 	/**
 	 * Get the count match pattern, or a default value.

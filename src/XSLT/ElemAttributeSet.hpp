@@ -69,10 +69,6 @@
 
 
 
-#include <XPath/XalanQNameByValue.hpp>
-
-
-
 class ElemAttributeSet : public ElemUse
 {
 public:
@@ -104,7 +100,9 @@ public:
 	const XalanQName&
 	getQName() const
 	{
-		return m_QName;
+		assert(m_qname != 0);
+
+		return *m_qname;
 	}
 
 
@@ -123,7 +121,7 @@ protected:
 
 private:
 
-	XalanQNameByValue	m_QName;
+	const XalanQName*	m_qname;
 };
 
 

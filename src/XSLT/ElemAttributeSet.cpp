@@ -80,7 +80,7 @@ ElemAttributeSet::ElemAttributeSet(
 			lineNumber,
 			columnNumber,
 			StylesheetConstructionContext::ELEMNAME_ATTRIBUTE_SET),
-	m_QName()
+	m_qname(0)
 {
 	const unsigned int	nAttrs = atts.getLength();
 
@@ -90,7 +90,10 @@ ElemAttributeSet::ElemAttributeSet(
 
 		if(equals(aname, Constants::ATTRNAME_NAME))
 		{
-			m_QName.set(atts.getValue(i), stylesheetTree.getNamespaces());
+			m_qname = constructionContext.createXalanQName(
+				atts.getValue(i),
+				stylesheetTree.getNamespaces(),
+				getLocator());
 
 			stylesheetTree.addAttributeSet(this);
 		}
@@ -104,14 +107,14 @@ ElemAttributeSet::ElemAttributeSet(
 		}
 	}
 
-	if(m_QName.isEmpty() == true)
+	if(m_qname == 0)
 	{
 		constructionContext.error(
 			"xsl:attribute-set must have a 'name' attribute",
 			0,
 			this);
 	}
-	else if (isValidNCName(m_QName.getLocalPart()) == false)
+	else if (m_qname->isValid() == false)
 	{
 		constructionContext.error(
 			"xsl:attribute-set has an invalid 'name' attribute",

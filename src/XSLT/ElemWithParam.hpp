@@ -69,10 +69,6 @@
 
 
 
-#include <XPath/XalanQNameByValue.hpp>
-
-
-
 class XPath;
 
 
@@ -108,7 +104,9 @@ public:
 	const XalanQName&
 	getQName() const
 	{
-		return m_qname;
+		assert(m_qname != 0);
+
+		return *m_qname;
 	}
 
 	/**
@@ -136,7 +134,7 @@ private:
 	// Data members...
 	const XPath*		m_selectPattern;
 
-	XalanQNameByValue	m_qname;
+	const XalanQName*	m_qname;
 };
 
 

@@ -66,9 +66,17 @@
 
 
 
+#include <XPath/XalanQNameByValue.hpp>
+
+
+
 #include "Constants.hpp"
 #include "Stylesheet.hpp"
 #include "StylesheetConstructionContext.hpp"
+
+
+
+static const XalanQNameByValue	s_empty;
 
 
 
@@ -86,7 +94,7 @@ ElemDecimalFormat::ElemDecimalFormat(
 	m_countMatchPattern(0),
 	m_fromMatchPattern(0),
 	m_valueExpr(0),
-	m_qname(),
+	m_qname(&s_empty),
 	m_decimalFormatSymbols()
 {
 	m_decimalFormatSymbols.setInfinity(XalanDOMString());
@@ -102,7 +110,10 @@ ElemDecimalFormat::ElemDecimalFormat(
 		{
 			assert(atts.getValue(i) != 0);
 
-			m_qname.set(atts.getValue(i), getStylesheet().getNamespaces());
+			m_qname = constructionContext.createXalanQName(
+						atts.getValue(i),
+						getStylesheet().getNamespaces(),
+						getLocator());
 		}
 		else if(equals(aname, Constants::ATTRNAME_DECIMALSEPARATOR))
 		{
@@ -273,7 +284,7 @@ ElemDecimalFormat::ElemDecimalFormat(
 
 	// Look for duplicate decimal-format names
 	const XalanDecimalFormatSymbols* const	theOther =
-			stylesheetTree.getDecimalFormatSymbols(m_qname);
+			stylesheetTree.getDecimalFormatSymbols(*m_qname);
 
 	if (theOther != 0 && *theOther != m_decimalFormatSymbols)
 	{

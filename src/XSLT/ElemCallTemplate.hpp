@@ -64,10 +64,6 @@
 
 
 
-#include <XPath/XalanQNameByValue.hpp>
-
-
-
 // Base class header file.
 #include "ElemTemplateElement.hpp"
 
@@ -133,7 +129,7 @@ private:
 	operator=(const ElemCallTemplate&);
 
 	// Data members...
-	XalanQNameByValue		m_templateName;
+	const XalanQName*		m_templateName;
 
 	const ElemTemplate*		m_template;
 };

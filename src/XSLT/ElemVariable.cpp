@@ -84,12 +84,13 @@ ElemVariable::ElemVariable(
 			const AttributeList&			atts,
 			int								lineNumber,
 			int								columnNumber) :
-	ElemTemplateElement(constructionContext,
-						stylesheetTree,
-						lineNumber,
-						columnNumber,
-						StylesheetConstructionContext::ELEMNAME_VARIABLE),
-	m_qname(),
+	ParentType(
+		constructionContext,
+		stylesheetTree,
+		lineNumber,
+		columnNumber,
+		StylesheetConstructionContext::ELEMNAME_VARIABLE),
+	m_qname(0),
 	m_selectPattern(0),
 	m_isTopLevel(false),
 	m_value(0),
@@ -107,12 +108,13 @@ ElemVariable::ElemVariable(
 			int								lineNumber,
 			int								columnNumber,
 			int								xslToken) :
-	ElemTemplateElement(constructionContext,
-						stylesheetTree,
-						lineNumber,
-						columnNumber,
-						xslToken),
-	m_qname(),
+	ParentType(
+		constructionContext,
+		stylesheetTree,
+		lineNumber,
+		columnNumber,
+		xslToken),
+	m_qname(0),
 	m_selectPattern(0),
 	m_isTopLevel(false),
 	m_value(0),
@@ -147,7 +149,10 @@ ElemVariable::init(
 		}
 		else if (equals(aname, Constants::ATTRNAME_NAME))
 		{
-			m_qname = XalanQNameByValue(atts.getValue(i), stylesheetTree.getNamespaces());
+			m_qname = constructionContext.createXalanQName(
+						atts.getValue(i),
+						stylesheetTree.getNamespaces(),
+						getLocator());
 		}
 		else if(!(isAttrOK(aname, atts, i, constructionContext) || 
 				 processSpaceAttr(aname, atts, i, constructionContext)))
@@ -159,12 +164,59 @@ ElemVariable::init(
 		}
 	}
 
-	if(m_qname.isEmpty())
+	if(m_qname == 0)
 	{
 		constructionContext.error(
 			"xsl:variable must have a 'name' attribute",
 			0,
 			this);
+	}
+	else if (m_qname->isValid() == false)
+	{
+		constructionContext.error(
+			"xsl:variable has an invalid 'name' attribute",
+			0,
+			this);
+	}
+}
+
+
+
+const XalanQName&
+ElemVariable::getNameAttribute() const
+{
+	assert(m_qname != 0);
+
+	return *m_qname;
+}
+
+
+
+void
+ElemVariable::addToStylesheet(
+			StylesheetConstructionContext&	constructionContext,
+			Stylesheet&						theStylesheet)
+{
+	// Processing a top-level element only...
+	if (&theStylesheet != &getStylesheet())
+	{
+		constructionContext.error(
+			"The ElemVariable instance was added to wrong stylesheet.",
+			0,
+			this);
+	}
+	else if (getParentNode() != 0)
+	{
+		constructionContext.error(
+			"The ElemVariable instance is already parented and cannot be a top-level element.",
+			0,
+			this);
+	}
+	else
+	{
+		theStylesheet.setTopLevelVariable(this);
+
+		m_isTopLevel = true;
 	}
 }
 
@@ -179,23 +231,40 @@ ElemVariable::getElementName() const
 
 
 void
-ElemVariable::execute(StylesheetExecutionContext&		executionContext) const
+ElemVariable::setParentNodeElem(ElemTemplateElement*	theParent)
 {
-	ElemTemplateElement::execute(executionContext);
+	if (m_isTopLevel == true)
+	{
+		throw XalanDOMException(XalanDOMException::HIERARCHY_REQUEST_ERR);
+	}
+	else
+	{
+		ParentType::setParentNodeElem(theParent);
+	}
+}
+
+
+
+void
+ElemVariable::execute(StylesheetExecutionContext&	executionContext) const
+{
+	assert(m_qname != 0);
+
+	ParentType::execute(executionContext);
 
 	const XObjectPtr	theValue(getValue(executionContext, executionContext.getCurrentNode()));
 
 	if (theValue.null() == false)
 	{
 		executionContext.pushVariable(
-				m_qname,
+				*m_qname,
 				theValue,
 				getParentNodeElem());
 	}
 	else
 	{
 		executionContext.pushVariable(
-				m_qname,
+				*m_qname,
 				this,
 				getParentNodeElem());
 	}
@@ -212,7 +281,7 @@ ElemVariable::getValue(
 	{
 		if (getFirstChild() == 0)
 		{
-			return executionContext.getXObjectFactory().createString(XalanDOMString());
+			return executionContext.getXObjectFactory().createStringReference(s_emptyString);
 		}
 		else
 		{

@@ -69,10 +69,6 @@
 
 
 
-#include <XPath/XalanQNameByValue.hpp>
-
-
-
 #include "Constants.hpp"
 
 

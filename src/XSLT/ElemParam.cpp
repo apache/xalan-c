@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -99,7 +99,9 @@ ElemParam::getElementName() const
 void
 ElemParam::execute(StylesheetExecutionContext&		executionContext) const
 {
-	const XObjectPtr	obj = executionContext.getParamVariable(m_qname);
+	assert(m_qname != 0);
+
+	const XObjectPtr	obj = executionContext.getParamVariable(*m_qname);
 
 	if (obj.null() == true)
 	{

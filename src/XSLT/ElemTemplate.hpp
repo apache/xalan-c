@@ -71,10 +71,6 @@
 
 
 
-#include <XPath/XalanQNameByValue.hpp>
-
-
-
 class XPath;
 
 
@@ -103,17 +99,6 @@ public:
 	~ElemTemplate();
 
 	/**
-	 * Retrieve the qualified name of element
-	 * 
-	 * @return QName for element
-	 */
-	const XalanQName&
-	getName() const
-	{
-		return m_name;
-	}
-
-	/**
 	 * Retrieve the mode of element
 	 * 
 	 * @return QName for mode
@@ -121,7 +106,9 @@ public:
 	const XalanQName&
 	getMode() const
 	{
-		return m_mode;
+		assert(m_mode != 0);
+
+		return *m_mode;
 	}
 
 	/**
@@ -145,6 +132,14 @@ public:
 	{
 		return m_priority;
 	}
+
+	virtual const XalanQName&
+	getNameAttribute() const;
+
+	virtual void
+	addToStylesheet(
+			StylesheetConstructionContext&	constructionContext,
+			Stylesheet&						theStylesheet);
 
 	virtual const XalanDOMString&
 	getElementName() const;
@@ -172,8 +167,8 @@ private:
 	// Data members...
 	const XPath*		m_matchPattern;
 
-	XalanQNameByValue	m_name;
-	XalanQNameByValue	m_mode;
+	const XalanQName*	m_name;
+	const XalanQName*	m_mode;
 
 	double				m_priority;
 };

@@ -209,7 +209,7 @@ ElemForEach::execute(StylesheetExecutionContext&	executionContext) const
 			executionContext.error(
 				"There is no current node in ElemForEach::execute()",
 				sourceNode, 
-				this);
+				getLocator());
 		}
 	}
 }
@@ -418,6 +418,14 @@ ElemForEach::transformSelectedChildren(
 
 	if (theXObject.null() == false)
 	{
+		if (theXObject->getType() != XObject::eTypeNodeSet)
+		{
+			executionContext.error(
+				"xsl:for-each 'select' must evaluate to a node-set",
+				sourceNodeContext,
+				getLocator());
+		}
+
 		const NodeRefListBase&	sourceNodes = theXObject->nodeset();
 
 		if(0 != executionContext.getTraceListeners())

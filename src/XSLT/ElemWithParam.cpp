@@ -84,7 +84,7 @@ ElemWithParam::ElemWithParam(
 						columnNumber,
 						StylesheetConstructionContext::ELEMNAME_WITH_PARAM),
 	m_selectPattern(0),
-	m_qname()
+	m_qname(0)
 {
 	const unsigned int	nAttrs = atts.getLength();
 
@@ -98,7 +98,10 @@ ElemWithParam::ElemWithParam(
 		}
 		else if(equals(aname, Constants::ATTRNAME_NAME))
 		{
-			m_qname = XalanQNameByValue(atts.getValue(i), stylesheetTree.getNamespaces());
+			m_qname = constructionContext.createXalanQName(
+						atts.getValue(i),
+						stylesheetTree.getNamespaces(),
+						getLocator());
 		}
 		else if(!isAttrOK(aname, atts, i, constructionContext))
 		{
@@ -109,10 +112,17 @@ ElemWithParam::ElemWithParam(
 		}
 	}
 
-	if(m_qname.isEmpty() == true)
+	if(m_qname == 0)
 	{
 		constructionContext.error(
 			"xsl:with-param must have a 'name' attribute",
+			0,
+			this);
+	}
+	else if (m_qname->isValid() == false)
+	{
+		constructionContext.error(
+			"xsl:with-param has an invalid 'name' attribute",
 			0,
 			this);
 	}

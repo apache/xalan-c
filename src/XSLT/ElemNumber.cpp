@@ -243,8 +243,7 @@ ElemNumber::findAncestor(
 			StylesheetExecutionContext&		executionContext,
 			const XPath*					fromMatchPattern,
 			const XPath*					countMatchPattern,
-			XalanNode*						context,
-			const XalanElement*				/* namespaceContext */) const
+			XalanNode*						context) const
 {
 	XalanNode*	contextCopy = context;
 
@@ -283,8 +282,7 @@ ElemNumber::findPrecedingOrAncestorOrSelf(
 			StylesheetExecutionContext&		executionContext,
 			const XPath*					fromMatchPattern,
 			const XPath*					countMatchPattern,
-			XalanNode*						context,
-			const XalanElement*				/* namespaceContext */) const
+			XalanNode*						context) const
 {  
 	XalanNode*	contextCopy = context;
 
@@ -730,8 +728,7 @@ ElemNumber::getTargetNode(
 				executionContext,
 				m_fromMatchPattern,
 				countMatchPattern,
-				sourceNode,
-				this);
+				sourceNode);
 	}
 	else
 	{
@@ -739,8 +736,7 @@ ElemNumber::getTargetNode(
 				executionContext,
 				m_fromMatchPattern,
 				countMatchPattern,
-				sourceNode,
-				this);
+				sourceNode);
 	}
 
 	return target;

@@ -2166,13 +2166,13 @@ StylesheetExecutionContextDefault::fireSelectEvent(const SelectionEvent&	se)
 
 void
 StylesheetExecutionContextDefault::error(
-			const XalanDOMString&	msg,
-			const XalanNode* 		sourceNode,
-			const XalanNode*		styleNode) const
+			const XalanDOMString&		msg,
+			const ElemTemplateElement&	styleNode,
+			const XalanNode*			sourceNode) const
 {
 	assert(m_xsltProcessor != 0);
 
-	m_xsltProcessor->error(msg, sourceNode, styleNode);
+	m_xsltProcessor->error(msg, sourceNode != 0 ? sourceNode : getCurrentNode(), &styleNode);
 }
 
 
@@ -2184,6 +2184,11 @@ StylesheetExecutionContextDefault::error(
 			const Locator*			locator) const
 {
 	assert(m_xsltProcessor != 0);
+
+	if (sourceNode == 0)
+	{
+		sourceNode = getCurrentNode();
+	}
 
 	if (locator != 0)
 	{
@@ -2199,11 +2204,11 @@ StylesheetExecutionContextDefault::error(
 
 void
 StylesheetExecutionContextDefault::error(
-			const char*			msg,
-			const XalanNode*	sourceNode,
-			const XalanNode*	styleNode) const
+			const char*					msg,
+			const ElemTemplateElement&	styleNode,
+			const XalanNode*			sourceNode) const
 {
-	error(TranscodeFromLocalCodePage(msg), sourceNode, styleNode);
+	error(TranscodeFromLocalCodePage(msg), styleNode, sourceNode);
 }
 
 
@@ -2221,13 +2226,18 @@ StylesheetExecutionContextDefault::error(
 
 void
 StylesheetExecutionContextDefault::warn(
-			const XalanDOMString&	msg,
-			const XalanNode* 		sourceNode,
-			const XalanNode*		styleNode) const
+			const XalanDOMString&		msg,
+			const ElemTemplateElement&	styleNode,
+			const XalanNode* 			sourceNode) const
 {
 	assert(m_xsltProcessor != 0);
 
-	m_xsltProcessor->warn(msg, sourceNode, styleNode);
+	if (sourceNode == 0)
+	{
+		sourceNode = getCurrentNode();
+	}
+
+	m_xsltProcessor->warn(msg, sourceNode, &styleNode);
 }
 
 
@@ -2239,6 +2249,11 @@ StylesheetExecutionContextDefault::warn(
 			const Locator*			locator) const
 {
 	assert(m_xsltProcessor != 0);
+
+	if (sourceNode == 0)
+	{
+		sourceNode = getCurrentNode();
+	}
 
 	if (locator != 0)
 	{
@@ -2254,11 +2269,11 @@ StylesheetExecutionContextDefault::warn(
 
 void
 StylesheetExecutionContextDefault::warn(
-			const char*			msg,
-			const XalanNode*	sourceNode,
-			const XalanNode*	styleNode) const
+			const char*					msg,
+			const ElemTemplateElement&	styleNode,
+			const XalanNode*			sourceNode) const
 {
-	warn(TranscodeFromLocalCodePage(msg), sourceNode, styleNode);
+	warn(TranscodeFromLocalCodePage(msg), styleNode, sourceNode);
 }
 
 
@@ -2276,13 +2291,18 @@ StylesheetExecutionContextDefault::warn(
 
 void
 StylesheetExecutionContextDefault::message(
-			const XalanDOMString&	msg,
-			const XalanNode* 		sourceNode,
-			const XalanNode*		styleNode) const
+			const XalanDOMString&		msg,
+			const ElemTemplateElement&	styleNode,
+			const XalanNode* 			sourceNode) const
 {
 	assert(m_xsltProcessor != 0);
 
-	m_xsltProcessor->message(msg, sourceNode, styleNode);
+	if (sourceNode == 0)
+	{
+		sourceNode = getCurrentNode();
+	}
+
+	m_xsltProcessor->message(msg, sourceNode, &styleNode);
 }
 
 
@@ -2294,6 +2314,11 @@ StylesheetExecutionContextDefault::message(
 			const Locator*			locator) const
 {
 	assert(m_xsltProcessor != 0);
+
+	if (sourceNode == 0)
+	{
+		sourceNode = getCurrentNode();
+	}
 
 	if (locator != 0)
 	{
@@ -2309,11 +2334,11 @@ StylesheetExecutionContextDefault::message(
 
 void
 StylesheetExecutionContextDefault::message(
-			const char*			msg,
-			const XalanNode*	sourceNode,
-			const XalanNode*	styleNode) const
+			const char*					msg,
+			const ElemTemplateElement&	styleNode,
+			const XalanNode*			sourceNode) const
 {
-	message(TranscodeFromLocalCodePage(msg), sourceNode, styleNode);
+	message(TranscodeFromLocalCodePage(msg), styleNode, sourceNode);
 }
 
 

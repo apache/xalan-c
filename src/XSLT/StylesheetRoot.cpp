@@ -552,7 +552,7 @@ StylesheetRoot::processOutputSpec(
 				--theTokenCount;
 
 				m_cdataSectionElems.push_back(
-					constructionContext.createXalanQNameByValue(theToken, getNamespaces(), theLocator, true));
+					constructionContext.createXalanQName(theToken, getNamespaces(), theLocator, true));
 			}
 
 			assert(theTokenizer.hasMoreTokens() == false);

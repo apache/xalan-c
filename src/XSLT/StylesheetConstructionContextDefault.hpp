@@ -333,13 +333,19 @@ public:
 	isXMLSpaceAttribute(
 			const XalanDOMChar*		theAttributeName,
 			const Stylesheet&		theStylesheet,
-			const Locator*			theLocator);
+			const Locator*			theLocator = 0);
 
 	virtual bool
 	isXSLUseAttributeSetsAttribute(
 			const XalanDOMChar*		theAttributeName,
 			const Stylesheet&		theStylesheet,
-			const Locator*			theLocator);
+			const Locator*			theLocator = 0);
+
+	virtual bool
+	isValidQName(
+			const XalanDOMChar*		theName,
+			const Stylesheet&		theStylesheet,
+			const Locator*			theLocator = 0);
 
 	virtual int
 	getElementToken(const XalanDOMString&	name) const;
@@ -396,8 +402,15 @@ public:
 	allocateAVTPartPointerVector(size_type	theLength);
 
 	virtual const XalanQName*
-	createXalanQNameByValue(
+	createXalanQName(
 			const XalanDOMString&		qname,
+			const NamespacesStackType&	namespaces,
+			const Locator*				locator = 0,
+			bool						fUseDefault = false);
+
+	virtual const XalanQName*
+	createXalanQName(
+			const XalanDOMChar*			qname,
 			const NamespacesStackType&	namespaces,
 			const Locator*				locator = 0,
 			bool						fUseDefault = false);

@@ -254,13 +254,6 @@ AVT::AVT(
 							// expression.
 							clear(buffer);
 
-							const XPath* const	xpath =
-								constructionContext.createXPath(
-											locator,
-											exprBuffer,
-											resolver);
-							assert(xpath != 0);
-
 							assert(m_partsSize + 1 < nTokens);
 
 							m_parts[m_partsSize++] =

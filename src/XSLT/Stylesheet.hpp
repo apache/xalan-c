@@ -562,17 +562,6 @@ public:
 	}
 
 	/**
-	 * Set the manufactured template to use if there is no wrapper.
-	 * 
-	 * @param templ template to use
-	 */
-	void
-	setWrapperlessTemplate(ElemTemplate*	templ)
-	{
-		m_wrapperlessTemplate = templ;
-	}
-
-	/**
 	 * whether there is a wrapper template
 	 * 
 	 * @return true is there is a wrapper
@@ -608,27 +597,16 @@ public:
 	/**
 	 * Process the xsl:key element.
 	 * 
-	 * @param nsContext 		  element providing context for namespaces
-	 * @param atts				  attribute list for element
-	 * @param constructionContext context for evaluation
-	 */
-	/*
-	 * (Notes to myself)
-	 * What we need to do is:
-	 * 1) As this function is called, build a table of KeyDeclarations.
-	 * 2) During either XML processing, or upon request, walk the XML 
-	 * document tree, and build a hash table:
-	 * a) keyed by name,
-	 * b) each with a value of a hashtable, keyed by the value returned by 
-	 *	  the use attribute,
-	 * c) each with a value that is a nodelist.
-	 * Thus, for a given key or keyref, look up hashtable by name, 
-	 * look up the nodelist by the given reference.
+	 * @param nsContext The PrefixResolver instance for namespace prefixes.
+	 * @param atts The attribute list for element.
+	 * #param locator The Locator instance for error reporting, if any.  May be 0.    
+	 * @param constructionContext The current construction context.
 	 */
 	void
 	processKeyElement(
-			ElemTemplateElement*			nsContext,
+			const PrefixResolver&			nsContext,
 			const AttributeList&			atts,
+			const Locator*					locator,
 			StylesheetConstructionContext&	constructionContext);
 
 	/**
@@ -903,8 +881,7 @@ public:
 	}
 
 	/**
-	 * Set a top level variable, to be serialized with the rest of the
-	 * stylesheet.
+	 * Set a top level variable.
 	 *
 	 * @param var top-level variable declared with "xsl:variable" or
 	 *			  xsl:param-variable.

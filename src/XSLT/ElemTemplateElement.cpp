@@ -113,6 +113,8 @@ const XalanDOMString			ElemTemplateElement::s_emptyString;
 
 const XalanEmptyNamedNodeMap	ElemTemplateElement::s_fakeAttributes;
 
+const XalanQNameByReference			ElemTemplateElement::s_emptyQName(s_emptyString, s_emptyString);
+
 
 
 ElemTemplateElement::ElemTemplateElement(
@@ -319,6 +321,27 @@ ElemTemplateElement::executeChildren(
 
 		executeChildren(executionContext);
 	}
+}
+
+
+
+const XalanQName&
+ElemTemplateElement::getNameAttribute() const
+{
+	return s_emptyQName;
+}
+
+
+
+void
+ElemTemplateElement::addToStylesheet(
+			StylesheetConstructionContext&	constructionContext,
+			Stylesheet&						/* theStylesheet */)
+{
+	constructionContext.error(
+		"An illegal call to addToStylesheet() was made during compilation of the stylesheet.",
+		0,
+		this);
 }
 
 
@@ -532,6 +555,8 @@ ElemTemplateElement*
 ElemTemplateElement::appendChildElem(ElemTemplateElement*	newChild)
 {
 	assert(newChild != 0);
+	assert(newChild->getXSLToken() != StylesheetConstructionContext::ELEMNAME_TEXT);
+	assert(newChild->getXSLToken() != StylesheetConstructionContext::ELEMNAME_UNDEFINED);
 
 	if (newChild->isWhitespace() == false &&
 		childTypeAllowed(newChild->getXSLToken()) == false)
@@ -865,8 +890,7 @@ ElemTemplateElement*
 #endif
 ElemTemplateElement::cloneNode(bool		/* deep */) const
 {
-	//should not be called
-	assert(false);	
+	throw XalanDOMException(XalanDOMException::NOT_SUPPORTED_ERR);
 
 	return 0;
 }
@@ -875,84 +899,37 @@ ElemTemplateElement::cloneNode(bool		/* deep */) const
 
 XalanNode*
 ElemTemplateElement::insertBefore(
-			XalanNode*	newChild,
-			XalanNode*	refChild)
+			XalanNode*	/* newChild */,
+			XalanNode*	/* refChild */)
 {
-#if defined(XALAN_OLD_STYLE_CASTS) || !defined(XALAN_RTTI_AVAILABLE)
-	return insertBeforeElem((ElemTemplateElement*)newChild,
-							(ElemTemplateElement*)refChild);
-#else
-	return insertBeforeElem(dynamic_cast<ElemTemplateElement*>(newChild),
-							dynamic_cast<ElemTemplateElement*>(refChild));
-#endif
+	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
+
+	// Dummy return value...
+	return 0;
 }
 
 
 
 XalanNode*
 ElemTemplateElement::replaceChild(
-			XalanNode*	newChild,
-			XalanNode*	oldChild)
+			XalanNode*	/* newChild */,
+			XalanNode*	/* oldChild */)
 {
-#if defined(XALAN_OLD_STYLE_CASTS) || !defined(XALAN_RTTI_AVAILABLE)
-	return replaceChildElem((ElemTemplateElement*)newChild,
-							(ElemTemplateElement*)oldChild);
-#else
-	return replaceChildElem(dynamic_cast<ElemTemplateElement*>(newChild),
-							dynamic_cast<ElemTemplateElement*>(oldChild));
-#endif
+	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
+
+	// Dummy return value...
+	return 0;
 }
 
 
 
 XalanNode*
-ElemTemplateElement::removeChild(XalanNode*		oldChild)
+ElemTemplateElement::removeChild(XalanNode*		/* oldChild */)
 {
-	assert(oldChild != 0);
+	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
 
-	XalanNode*				ret = 0;
-
-	// first try the common, easy cases
-	if (oldChild == 0 || oldChild->getParentNode() != this)
-	{
-		throw XalanDOMException(XalanDOMException::NOT_FOUND_ERR);
-	}
-	else
-	{
-		ElemTemplateElement*	pTest = m_firstChild;
-		assert(pTest != 0);
-
-		if (pTest == oldChild)
-		{
-			ElemTemplateElement* const	nextChild =
-				pTest->getNextSiblingElem();
-
-			if (nextChild != 0)
-			{
-				nextChild->setPreviousSiblingElem(0);
-			}
-
-			pTest->setNextSiblingElem(0);
-			m_firstChild = nextChild;
-
-			ret = pTest;
-		}
-		else
-		{
-			// now we walk this singly-linked list, peeling one ahead, since we need be
-			// able to patch up the list
-
-			while (pTest->getNextSibling() != 0 && pTest->getNextSibling() != oldChild)
-				pTest = pTest->getNextSiblingElem();
-
-			ret = pTest->getNextSibling();
-
-			if (pTest->getNextSibling() != 0)
-				pTest->setNextSiblingElem(pTest->getNextSiblingElem()->getNextSiblingElem());
-		}
-	}
-
-	return ret;
+	// Dummy return value...
+	return 0;
 }
 
 
@@ -963,13 +940,12 @@ ElemTemplateElement::removeChild(XalanNode*		oldChild)
  */
 
 XalanNode*
-ElemTemplateElement::appendChild(XalanNode*		oldChild)
+ElemTemplateElement::appendChild(XalanNode*		/* oldChild */)
 {
-#if defined(XALAN_OLD_STYLE_CASTS) || !defined(XALAN_RTTI_AVAILABLE)
-	return appendChildElem((ElemTemplateElement*)oldChild);
-#else
-	return appendChildElem(dynamic_cast<ElemTemplateElement*>(oldChild));
-#endif
+	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
+
+	// Dummy return value...
+	return 0;
 }
 
 

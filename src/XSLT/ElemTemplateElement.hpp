@@ -82,6 +82,10 @@
 
 
 
+#include <XPath/XalanQNameByReference.hpp>
+
+
+
 #include <XSLT/NamespacesHandler.hpp>
 
 
@@ -99,6 +103,8 @@ class StylesheetExecutionContext;
 class XALAN_XSLT_EXPORT ElemTemplateElement : public XalanElement, public PrefixResolver
 {
 public:
+
+	typedef XalanElement::NodeType	NodeType;
 
 	/**
 	 * Construct a template element instance.
@@ -121,7 +127,7 @@ public:
 	 * Special constructor used by dummy elements which do not exist in the
 	 * final stylesheet.
 	 * 
-	 * @param constructionContext  context when object constructed
+	 * @param constructionContext  The current construction context
 	 * @param stylesheetTree	   owning stylesheet
 	 * @param xslToken			   an integer representing the type of instance.
 	 */
@@ -310,8 +316,36 @@ public:
 	virtual bool
 	isWhitespace() const;
 
+	/** 
+	 * Get a string for the name of the element.  Useful for debugging purposes,
+	 * and error reporting.
+	 * 
+	 * @return A string containing the name of the element.
+	 */
 	virtual const XalanDOMString&
 	getElementName() const = 0;
+
+	/** 
+	 * Get the QName associated with any name attribute of this element.
+	 * If the element has no name attribute, this will be an empty QName.
+	 * 
+	 * @return A string containing the name of the element.
+	 */
+	virtual const XalanQName&
+	getNameAttribute() const;
+
+	/** 
+	 * Called during compilation when an instance is not parented by
+	 * another element, and thus, is a child of the stylesheet..
+	 * 
+	 * @param constructionContext  The current construction context
+	 * @param theStylesheet The owning stylesheet
+	 * @return nothing
+	 */
+	virtual void
+	addToStylesheet(
+			StylesheetConstructionContext&	constructionContext,
+			Stylesheet&						theStylesheet);
 
 #if defined(XALAN_NO_NAMESPACES)
 	typedef map<XalanDOMString,
@@ -821,7 +855,7 @@ private:
 		const ElemTextLiteral*	m_textLiteralChild;
 	};
 
-	XalanNodeListSurrogate	m_surrogateChildren;
+	const XalanNodeListSurrogate	m_surrogateChildren;
 
 	const XalanDOMString&	m_baseIndentifier;
 
@@ -836,6 +870,8 @@ private:
 	LocatorProxy			m_locatorProxy;
 
 	static const XalanEmptyNamedNodeMap 	s_fakeAttributes;
+
+	static const XalanQNameByReference		s_emptyQName;
 
 	// Not implemented...
 	ElemTemplateElement(const ElemTemplateElement&);

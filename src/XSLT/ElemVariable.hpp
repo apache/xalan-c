@@ -74,7 +74,6 @@
 
 
 
-#include <XPath/XalanQNameByValue.hpp>
 #include <XPath/XObject.hpp>
 
 
@@ -90,6 +89,8 @@ class XPath;
 class ElemVariable : public ElemTemplateElement
 {
 public:
+
+	typedef ElemTemplateElement		ParentType;
 
 	/**
 	 * Construct an object corresponding to an "xsl:variable" element
@@ -121,30 +122,16 @@ public:
 		return m_isTopLevel;
 	}
 
-	/**
-	 * Sets whether this is a top level variable.
-	 * 
-	 * @param bTopLevel value of flag to set
-	 */
-	void
-	setTopLevel(bool bTopLevel)
-	{
-		m_isTopLevel = bTopLevel;
-	}
-
-	/**
-	 * Retrieve the object name.
-	 * 
-	 * @return qualified name of object
-	 */
-	const XalanQName&
-	getName() const
-	{ 
-		return m_qname;
-	}
-
 	// These methods are inherited from ElemTemplateElement ...
 	
+	virtual const XalanQName&
+	getNameAttribute() const;
+
+	virtual void
+	addToStylesheet(
+			StylesheetConstructionContext&	constructionContext,
+			Stylesheet&						theStylesheet);
+
 	virtual const XalanDOMString&
 	getElementName() const;
 
@@ -155,6 +142,9 @@ public:
 	getValue(
 			StylesheetExecutionContext&		executionContext,
 			XalanNode*						sourceNode) const;
+
+	virtual void
+	setParentNodeElem(ElemTemplateElement*		theParent);
 
 protected:
 
@@ -189,7 +179,7 @@ protected:
 			const AttributeList&			atts);
 
 
-	XalanQNameByValue	m_qname;
+	const XalanQName*	m_qname;
 
 private:
 

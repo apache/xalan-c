@@ -71,9 +71,17 @@
 
 
 
+#include <XPath/XalanQNameByValue.hpp>
+
+
+
 #include "Constants.hpp"
 #include "Stylesheet.hpp"
 #include "StylesheetConstructionContext.hpp"
+
+
+
+static const XalanQNameByValue	s_empty;
 
 
 
@@ -89,8 +97,8 @@ ElemTemplate::ElemTemplate(
 						columnNumber,
 						StylesheetConstructionContext::ELEMNAME_TEMPLATE),
 	m_matchPattern(0),
-	m_name(),
-	m_mode(),
+	m_name(&s_empty),
+	m_mode(&s_empty),
 	m_priority(XPath::getMatchScoreValue(XPath::eMatchScoreNone))
 {
 	const unsigned int	nAttrs = atts.getLength();
@@ -105,7 +113,10 @@ ElemTemplate::ElemTemplate(
 		}
 		else if (equals(aname, Constants::ATTRNAME_NAME))
 		{
-			m_name = XalanQNameByValue(atts.getValue(i), getStylesheet().getNamespaces());
+			m_name = constructionContext.createXalanQName(
+						atts.getValue(i),
+						getStylesheet().getNamespaces(),
+						getLocator());
 		}
 		else if (equals(aname, Constants::ATTRNAME_PRIORITY))
 		{
@@ -115,7 +126,10 @@ ElemTemplate::ElemTemplate(
 		}
 		else if (equals(aname, Constants::ATTRNAME_MODE))
 		{
-			m_mode = XalanQNameByValue(atts.getValue(i), getStylesheet().getNamespaces());
+			m_mode = constructionContext.createXalanQName(
+						atts.getValue(i),
+						getStylesheet().getNamespaces(),
+						getLocator());
 		}
 		else if(!(isAttrOK(aname, atts, i, constructionContext) || 
 				 processSpaceAttr(aname, atts, i, constructionContext)))
@@ -127,7 +141,7 @@ ElemTemplate::ElemTemplate(
 		}
 	}
 
-	const bool	isEmptyName = m_name.isEmpty();
+	const bool	isEmptyName = m_name->isEmpty();
 
 	if(0 == m_matchPattern && isEmptyName == true)
 	{
@@ -136,10 +150,17 @@ ElemTemplate::ElemTemplate(
 				0,
 				this);
 	}
-	else if (isEmptyName == false && isValidNCName(m_name.getLocalPart()) == false)
+	else if (isEmptyName == false && m_name->isValid() == false)
 	{
 		constructionContext.error(
 			"xsl:template has an invalid 'name' attribute",
+			0,
+			this);
+	}
+	else if (m_mode->isEmpty() == false && m_mode->isValid() == false)
+	{
+		constructionContext.error(
+			"xsl:template has an invalid 'mode' attribute",
 			0,
 			this);
 	}
@@ -149,6 +170,24 @@ ElemTemplate::ElemTemplate(
 
 ElemTemplate::~ElemTemplate()
 {
+}
+
+
+
+void
+ElemTemplate::addToStylesheet(
+			StylesheetConstructionContext&	constructionContext,
+			Stylesheet&						theStylesheet)
+{
+	theStylesheet.addTemplate(this, constructionContext); 
+}
+
+
+
+const XalanQName&
+ElemTemplate::getNameAttribute() const
+{ 
+	return *m_name;
 }
 
 

@@ -99,7 +99,10 @@ ElemExtensionCall::getElementName() const
 void
 ElemExtensionCall::execute(StylesheetExecutionContext&		executionContext) const
 {
-	executionContext.warn("Xalan C++ does not yet handle extensions!");
+	executionContext.warn(
+		"Xalan C++ does not yet handle extensions!",
+		0,
+		getLocator());
 
 	for (const ElemTemplateElement*	child = getFirstChildElem(); child != 0; child = child->getNextSiblingElem())
 	{

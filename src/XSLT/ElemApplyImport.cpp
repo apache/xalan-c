@@ -126,7 +126,7 @@ ElemApplyImport::execute(StylesheetExecutionContext&	executionContext) const
 
 	if (executionContext.getCurrentTemplate() == 0)
 	{
-		executionContext.error("There is no current template", sourceNode, this);
+		executionContext.error("There is no current template", sourceNode, getLocator());
 	}
 
 	ElemTemplateElement::execute(executionContext);

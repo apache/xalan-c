@@ -457,6 +457,48 @@ private:
 			const Locator*	theLocator) const;
 
 	void
+	illegalAttributeError(
+			const XalanDOMChar*		theElementName,
+			const XalanDOMChar*		theAttributeName,
+			const Locator*			theLocator) const;
+
+	void
+	error(
+			const XalanDOMChar*		theMessage1,
+			const XalanDOMChar*		theMessage2,
+			const Locator*			theLocator) const;
+
+	void
+	error(
+			const XalanDOMChar*		theMessage1,
+			const XalanDOMString&	theMessage2,
+			const Locator*			theLocator) const;
+
+	void
+	error(
+			const XalanDOMString&	theMessage1,
+			const XalanDOMChar*		theMessage2,
+			const Locator*			theLocator) const;
+
+	void
+	error(
+			const XalanDOMString&	theMessage1,
+			const XalanDOMString&	theMessage2,
+			const Locator*			theLocator) const;
+
+	void
+	warn(
+			const XalanDOMChar*		theMessage1,
+			const XalanDOMChar*		theMessage2,
+			const Locator*			theLocator) const;
+
+	void
+	warn(
+			const XalanDOMChar*		theMessage1,
+			const XalanDOMString&	theMessage2,
+			const Locator*			theLocator) const;
+
+	void
 	error(
 			const XalanDOMString&	theMessage,
 			const Locator*			theLocator) const;
@@ -477,8 +519,6 @@ private:
 	void
 	processTopLevelElement(
 			const XalanDOMChar*		name,
-			const XalanDOMString&	localName,
-			const XalanDOMString&	ns,
 			const AttributeList&	atts,
 			int						xslToken,
 			const Locator*			locator,
@@ -556,27 +596,107 @@ private:
 	ElemTemplateSetType		m_elemStackParentedElements;
 
 	/**
-	 * The stack of stray elements, to be delete when finished.
-	 */
-	ElemTemplateStackType	m_strayElements;
-
-	/**
 	 * Need to keep a stack of found whitespace elements so that 
 	 * whitespace elements next to non-whitespace elements can 
 	 * be merged.  For instance: &lt;out> &lt;![CDATA[test]]> &lt;/out>
 	 */
-	ElemTextLiteralStackType m_whiteSpaceElems;
+	ElemTextLiteralStackType	m_whiteSpaceElems;
 
 	/**
 	 * The current template.
 	 */
 	ElemTemplate* m_pTemplate;
-	
+
+	class LastPoppedHolder
+	{
+	public:
+
+		LastPoppedHolder() :
+			m_lastPopped(0)
+		{
+		}
+
+		~LastPoppedHolder()
+		{
+			cleanup();
+		}
+
+		ElemTemplateElement*
+		operator->() const
+		{
+			return m_lastPopped;
+		}
+
+		bool
+		operator==(ElemTemplateElement*		theRHS)
+		{
+			return m_lastPopped == theRHS;
+		}
+
+		bool
+		operator!=(ElemTemplateElement*		theRHS)
+		{
+			return m_lastPopped != theRHS;
+		}
+
+		void
+		operator=(ElemTemplateElement*	theRHS)
+		{
+			if (theRHS != m_lastPopped)
+			{
+				cleanup();
+
+				m_lastPopped = theRHS;
+			}
+		}
+
+		void
+		swap(LastPoppedHolder&	theOther)
+		{
+			ElemTemplateElement* const	theTemp = m_lastPopped;
+
+			m_lastPopped = theOther.m_lastPopped;
+
+			theOther.m_lastPopped = theTemp;
+		}
+
+		ElemTemplateElement*
+		get() const
+		{
+			return m_lastPopped;
+		}
+
+	private:
+
+		void
+		set(ElemTemplateElement*	theNewElement)
+		{
+			if (theNewElement != m_lastPopped)
+			{
+				cleanup();
+
+				m_lastPopped = theNewElement;
+			}
+		}
+
+		// Not implemented...
+		LastPoppedHolder&
+		operator=(const LastPoppedHolder&);
+
+		LastPoppedHolder(const LastPoppedHolder&);
+
+		// Helper functions...
+		void
+		cleanup();
+
+		// Data members...
+		ElemTemplateElement*	m_lastPopped;
+	};
+
 	/**
-	 * The last element popped from the stack.  I'm not totally clear 
-	 * anymore as to why this is needed.
+	 * Manages the last element popped from the stack.
 	 */
-	ElemTemplateElement* m_lastPopped;
+	LastPoppedHolder	m_lastPopped;
 	
 	/**
 	 * True if the process is in a template context.
@@ -609,13 +729,6 @@ private:
 	BoolStackType	m_inExtensionElementStack;
 
 	BoolStackType	m_preserveSpaceStack;
-
-	bool					m_inLXSLTScript;
-
-	XalanDOMString			m_LXSLTScriptBody;
-	XalanDOMString			m_LXSLTScriptLang;
-	XalanDOMString			m_LXSLTScriptSrcURL;
-	ExtensionNSHandler*		m_pLXSLTExtensionNSH;
 
 	// Note that these variables must not be saved by
 	// PushPopIncludeState...
@@ -661,7 +774,7 @@ private:
 
 		ElemTemplate* const					m_pTemplate;
 
-		ElemTemplateElement* const			m_lastPopped;		
+		LastPoppedHolder					m_lastPopped;		
 
 		const bool							m_inTemplate;		
 

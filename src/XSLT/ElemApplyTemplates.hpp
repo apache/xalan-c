@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -75,7 +75,7 @@
 
 
 
-#include <XPath/XalanQNameByValue.hpp>
+class XalanQName;
 
 
 
@@ -141,7 +141,7 @@ private:
 
 	bool				m_isDefaultTemplate;
 
-	XalanQNameByValue	m_mode;
+	const XalanQName*	m_mode;
 };
 
 

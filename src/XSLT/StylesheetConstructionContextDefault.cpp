@@ -606,6 +606,21 @@ StylesheetConstructionContextDefault::isXSLUseAttributeSetsAttribute(
 
 
 
+bool
+StylesheetConstructionContextDefault::isValidQName(
+			const XalanDOMChar*		theName,
+			const Stylesheet&		theStylesheet,
+			const Locator*			theLocator)
+{
+	assert(theName != 0);
+
+	m_scratchQName.set(theName, theStylesheet.getNamespaces(), theLocator, false);
+
+	return m_scratchQName.isValid();
+}
+
+
+
 int
 StylesheetConstructionContextDefault::getElementToken(const XalanDOMString&		name) const
 {
@@ -784,8 +799,21 @@ StylesheetConstructionContextDefault::allocateAVTPartPointerVector(size_type	the
 
 
 const XalanQName*
-StylesheetConstructionContextDefault::createXalanQNameByValue(
+StylesheetConstructionContextDefault::createXalanQName(
 			const XalanDOMString&		qname,
+			const NamespacesStackType&	namespaces,
+			const Locator*				locator,
+			bool						fUseDefault)
+{
+	return 	m_xalanQNameByValueAllocator.create(qname, namespaces, locator, fUseDefault);
+
+}
+
+
+
+const XalanQName*
+StylesheetConstructionContextDefault::createXalanQName(
+			const XalanDOMChar*			qname,
 			const NamespacesStackType&	namespaces,
 			const Locator*				locator,
 			bool						fUseDefault)

@@ -87,7 +87,7 @@ ElemCallTemplate::ElemCallTemplate(
 						lineNumber,
 						columnNumber,
 						StylesheetConstructionContext::ELEMNAME_CALL_TEMPLATE),
-	m_templateName(),
+	m_templateName(0),
 	m_template(0)
 {
 	const unsigned int	nAttrs = atts.getLength();
@@ -98,7 +98,10 @@ ElemCallTemplate::ElemCallTemplate(
 
 		if(equals(aname, Constants::ATTRNAME_NAME))
 		{
-			m_templateName.set(atts.getValue(i), getStylesheet().getNamespaces());        
+			m_templateName = constructionContext.createXalanQName(
+					atts.getValue(i),
+					getStylesheet().getNamespaces(),
+					getLocator());
 		}
 		else if(!isAttrOK(aname, atts, i, constructionContext))
 		{
@@ -109,14 +112,14 @@ ElemCallTemplate::ElemCallTemplate(
 		}
 	}
 
-	if (m_templateName.isEmpty() == true)
+	if (m_templateName == 0)
 	{
 		constructionContext.error(
 			"xsl:call-template must have a 'name' attribute",
 			0,
 			this);
 	}
-	else if (isValidNCName(m_templateName.getLocalPart()) == false)
+	else if (m_templateName->isValid() == false)
 	{
 		constructionContext.error(
 			"xsl:call-template has an invalid 'name' attribute",
@@ -126,7 +129,7 @@ ElemCallTemplate::ElemCallTemplate(
 }
 
 
-	
+
 ElemCallTemplate::~ElemCallTemplate()
 {
 }
@@ -167,10 +170,9 @@ ElemCallTemplate::postConstruction(
 			StylesheetConstructionContext&	constructionContext,
 			const NamespacesHandler&		theParentHandler)
 {
-	assert(m_templateName.isEmpty() == false);
+	assert(m_templateName != 0);
 
-	m_template =
-		getStylesheet().getStylesheetRoot().findNamedTemplate(m_templateName);
+	m_template = getStylesheet().getStylesheetRoot().findNamedTemplate(*m_templateName);
 
 	if(m_template == 0)
 	{
@@ -189,18 +191,12 @@ ElemCallTemplate::postConstruction(
 bool
 ElemCallTemplate::childTypeAllowed(int	xslToken) const
 {
-	bool	fResult = false;
-	
-	switch(xslToken)
+	if (xslToken == StylesheetConstructionContext::ELEMNAME_WITH_PARAM)
 	{
-	// char-instructions 
-	case StylesheetConstructionContext::ELEMNAME_WITH_PARAM:
-		fResult = true;
-		break;
-		
-	default:
-		break;
+		return true;
 	}
-	
-	return fResult;
+	else
+	{
+		return false;
+	}
 }

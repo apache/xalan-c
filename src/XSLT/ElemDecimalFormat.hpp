@@ -73,10 +73,6 @@
 
 
 
-#include <XPath/XalanQNameByValue.hpp>
-
-
-
 class XPath;
 
 
@@ -120,7 +116,9 @@ public:
 	const XalanQName&
 	getQName() const
 	{
-		return m_qname;
+		assert(m_qname != 0);
+
+		return *m_qname;
 	}
 
 private:
@@ -129,7 +127,7 @@ private:
 	const XPath*				m_fromMatchPattern;
 	const XPath*				m_valueExpr;
 
-	XalanQNameByValue			m_qname;
+	const XalanQName*			m_qname;
 
 	XalanDecimalFormatSymbols	m_decimalFormatSymbols;
 };

@@ -417,26 +417,47 @@ public:
 	/**
 	 * Given an name, determine if it is the xml:space attribute
 	 *
-	 * @param name a name
+	 * @param theAttributeName The name to check
+	 * @param theStylesheet The current Stylesheet instance
+	 * @param theLocator The Locator for error reporting.  May be 0.
+	 *
 	 * @return true if the string is the xml:space attribute name
 	 */
 	virtual bool
 	isXMLSpaceAttribute(
 			const XalanDOMChar*		theAttributeName,
 			const Stylesheet&		theStylesheet,
-			const Locator*			theLocator) = 0;
+			const Locator*			theLocator = 0) = 0;
 
 	/**
 	 * Given an name, determine if it is the xsl:use-attribute-sets attribute
 	 *
-	 * @param name a name
+	 * @param theAttributeName The name to check
+	 * @param theStylesheet The current Stylesheet instance
+	 * @param theLocator The Locator for error reporting.  May be 0.
+	 *
 	 * @return true if the string is the xsl:use-attribute-sets attribute name
 	 */
 	virtual bool
 	isXSLUseAttributeSetsAttribute(
 			const XalanDOMChar*		theAttributeName,
 			const Stylesheet&		theStylesheet,
-			const Locator*			theLocator) = 0;
+			const Locator*			theLocator = 0) = 0;
+
+	/**
+	 * Given an name, determine if it is a valid QName
+	 *
+	 * @param theName The name to check
+	 * @param theStylesheet The current Stylesheet instance
+	 * @param theLocator The Locator for error reporting.  May be 0.
+	 *
+	 * @return true if the string is a valid QName.
+	 */
+	virtual bool
+	isValidQName(
+			const XalanDOMChar*		theName,
+			const Stylesheet&		theStylesheet,
+			const Locator*			theLocator = 0) = 0;
 
 	/**
 	 * Given an XSL tag name, return an integer token that corresponds to
@@ -570,8 +591,24 @@ public:
 	 * @return A pointer to the new instance
 	 */
 	virtual const XalanQName*
-	createXalanQNameByValue(
+	createXalanQName(
 			const XalanDOMString&		qname,
+			const NamespacesStackType&	namespaces,
+			const Locator*				locator = 0,
+			bool						fUseDefault = false) = 0;
+
+	/**
+	 * Create a XalanQName-derived instance.
+	 *
+	 * @param qname The qname string
+	 * @param namespaces The stack of namespaces
+	 * @param Locator The current Locator, if any
+	 * @param fUseDefault If true, a qname without a prefix will use the default namespace
+	 * @return A pointer to the new instance
+	 */
+	virtual const XalanQName*
+	createXalanQName(
+			const XalanDOMChar*			qname,
 			const NamespacesStackType&	namespaces,
 			const Locator*				locator = 0,
 			bool						fUseDefault = false) = 0;

@@ -230,8 +230,9 @@ Stylesheet::~Stylesheet()
 
 void
 Stylesheet::processKeyElement(
-			ElemTemplateElement*			nsContext,
+			const PrefixResolver&			nsContext,
 			const AttributeList&			atts,
+			const Locator*					locator,
 			StylesheetConstructionContext&	constructionContext)
 {
 	const XalanDOMChar* 	nameAttr = 0;
@@ -254,7 +255,7 @@ Stylesheet::processKeyElement(
 					constructionContext.createMatchPattern(
 						0,
 						XalanDOMString(atts.getValue(i)),
-						*nsContext);
+						nsContext);
 		}
 		else if(equals(aname, Constants::ATTRNAME_USE))
 		{
@@ -262,37 +263,54 @@ Stylesheet::processKeyElement(
 					constructionContext.createXPath(
 						0,
 						atts.getValue(i),
-						*nsContext);
+						nsContext);
 		}
 		else if (isAttrOK(aname, atts, i, constructionContext) == false)
 		{
-			constructionContext.error("xsl:key has an illegal attribute");
+			constructionContext.error(
+				"xsl:key has an illegal attribute",
+				0,
+				locator);
 		}
 	}
 
 	if(0 == nameAttr)
 	{
-		constructionContext.error("xsl:key requires a 'name' attribute");
+		constructionContext.error(
+			"xsl:key requires a 'name' attribute",
+			0,
+			locator);
 	}
 
 	if(0 == matchAttr)
 	{
-		constructionContext.error("xsl:key requires a 'match' attribute");
+		constructionContext.error(
+			"xsl:key requires a 'match' attribute",
+			0,
+			locator);
 	}
 
 	if(0 == useAttr)
 	{
-		constructionContext.error("xsl:key requires a 'use' attribute");
+		constructionContext.error(
+			"xsl:key requires a 'use' attribute",
+			0,
+			locator);
 	}
 
-	const XalanQNameByValue		theQName(nameAttr, m_namespaces, constructionContext.getLocatorFromStack());
+	const XalanQName* const		theQName =
+		constructionContext.createXalanQName(nameAttr, m_namespaces, locator);
+	assert(theQName != 0);
 
-	if (theQName.isValid() == false)
+	if (theQName->isValid() == false)
 	{
-		constructionContext.error("xsl:key has an invalid 'name' attribute");
+		constructionContext.error(
+			"xsl:key has an invalid 'name' attribute",
+			0,
+			locator);
 	}
 
-	m_keyDeclarations.push_back(KeyDeclaration(theQName, *matchAttr, *useAttr));
+	m_keyDeclarations.push_back(KeyDeclaration(*theQName, *matchAttr, *useAttr));
 }
 
 
@@ -599,7 +617,21 @@ Stylesheet::addTemplate(
 {
 	assert(theTemplate != 0);
 
-	if(0 == m_firstTemplate)
+	if (m_isWrapperless == true)
+	{
+		if (m_wrapperlessTemplate != 0)
+		{
+			constructionContext.error(
+				"The stylesheet already has a wrapperless template",
+				0,
+				theTemplate);
+		}
+		else
+		{
+			m_wrapperlessTemplate = theTemplate;
+		}
+	}
+	else if(0 == m_firstTemplate)
 	{
 		m_firstTemplate = theTemplate;
 	}
@@ -624,7 +656,7 @@ Stylesheet::addTemplate(
 
 	// If it's a named template, then we need to
 	// and it to the map of named templates.
-	const XalanQName&	theName = theTemplate->getName();
+	const XalanQName&	theName = theTemplate->getNameAttribute();
 
 	if(theName.isEmpty() == false)
 	{
@@ -1260,7 +1292,7 @@ Stylesheet::pushTopLevelVariables(
 			{
 				const ParamVectorType::value_type&	arg = topLevelParams[k];
 
-				if(arg.getName().equals(var->getName()))
+				if(arg.getName().equals(var->getNameAttribute()))
 				{
 					isParam = true;
 
@@ -1288,7 +1320,7 @@ Stylesheet::pushTopLevelVariables(
 
 		if (isParam == false)
 		{
-			executionContext.pushVariable(var->getName(),
+			executionContext.pushVariable(var->getNameAttribute(),
 										  var,
 										  var->getParentNodeElem());
 		}
