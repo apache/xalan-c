@@ -124,11 +124,11 @@ ElemTemplateElement::ElemTemplateElement(
 			int								xslToken) :
 	XalanElement(),
 	PrefixResolver(),
+	m_finishedConstruction(false),
 	m_stylesheet(stylesheetTree),
 	m_lineNumber(lineNumber),
 	m_columnNumber(columnNumber),
-	m_defaultSpace(true),
-	m_finishedConstruction(false),
+	m_defaultSpace(true),	
 	m_elemName(name),
 	m_xslToken(xslToken),
 	m_parentNode(0),

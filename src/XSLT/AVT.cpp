@@ -114,8 +114,8 @@ AVT::AVT(
 			const PrefixResolver&			resolver,
 			StylesheetConstructionContext&	constructionContext) :
 		AVTPart(),
-		m_name(name),
 		m_simpleString(),
+		m_name(name),		
 		m_pcType(type)
 {
 	StringTokenizer		tokenizer(stringedValue, theTokenDelimiterCharacters, true);

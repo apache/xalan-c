@@ -155,13 +155,13 @@ private:
 
 	// not implemented
 	AVT(const AVT &);
-	AVT& operator=(const AVT &);
-
-	XalanDOMString			m_simpleString;
+	AVT& operator=(const AVT &);	
 
 	AVTPartPtrVectorType	m_parts;
 
-	const XalanDOMString	m_name;
+	XalanDOMString			m_simpleString;
+
+	const XalanDOMString	m_name;	
 
 	const XalanDOMString	m_pcType;
 };

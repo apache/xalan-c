@@ -167,6 +167,7 @@ public:
 		assert(theBlockSize > 0);
 	}
 
+	virtual 
 	~ArenaBlock()
 	{
 		destroyAll();

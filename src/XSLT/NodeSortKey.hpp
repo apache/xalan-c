@@ -167,10 +167,10 @@ private:
 
 	ExecutionContext*		m_executionContext; // needed for error reporting.
 
-	bool					m_treatAsNumbers;
-	bool					m_descending;
-
 	const XPath*			m_selectPat;
+
+	bool					m_treatAsNumbers;
+	bool					m_descending;	
 
 	const PrefixResolver*	m_prefixResolver;
 

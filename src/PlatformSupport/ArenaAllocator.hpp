@@ -197,9 +197,9 @@ protected:
 	typedef std::vector<ArenaBlockType*>	ArenaBlockListType;
 #endif
 
-	ArenaBlockListType	m_blocks;
-
 	const size_type		m_blockSize;
+
+	ArenaBlockListType	m_blocks;
 
 private:
 

@@ -122,10 +122,7 @@ StylesheetRoot::StylesheetRoot(
 		StylesheetConstructionContext&	constructionContext) :
 	Stylesheet(*this,
 			   baseIdentifier,
-			   constructionContext),
-	m_importStack(),
-	m_resultNameSpaceURL(),
-	m_outputMethod(FormatterListener::OUTPUT_METHOD_NONE),
+			   constructionContext),	
 	m_version(),
 	m_indentResult(false),
 	m_encoding(),
@@ -134,10 +131,14 @@ StylesheetRoot::StylesheetRoot(
 	m_doctypePublic(),
 	m_omitxmlDecl(false),
 	m_standalone(),
+	m_resultNameSpaceURL(),
+	m_outputMethod(FormatterListener::OUTPUT_METHOD_NONE),
 	m_cdataSectionElems(),
+	m_importStack(),
 	m_defaultTextRule(0),
 	m_defaultRule(0),
 	m_defaultRootRule(0)
+
 {
 	const XalanDOMString urlString = constructionContext.getURLStringFromString(m_baseIdent);
 

@@ -89,9 +89,9 @@ ElemTextLiteral::ElemTextLiteral(
 						columnNumber,
 						Constants::ELEMNAME_TEXTLITERALRESULT),
 	m_isCData(isCData),
-	m_preserveSpace(preserveSpace),
-	m_ch(ch + start, ch + start + length),
-	m_disableOutputEscaping(disableOutputEscaping)
+	m_preserveSpace(preserveSpace),	
+	m_disableOutputEscaping(disableOutputEscaping),
+	m_ch(ch + start, ch + start + length)
 {
 	assert(XMLChVectorType::size_type(int(m_ch.size())) == m_ch.size());
 }
