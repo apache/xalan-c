@@ -81,7 +81,7 @@ public:
 
 #if defined(XALAN_NO_NAMESPACES)
 	typedef vector<NumberType>						NumberTypeVectorType;
-	typedef vector<NumberType>						DigitsTableVectorType;
+	typedef vector<XalanDOMCharVectorType>			DigitsTableVectorType;
 #else
 	typedef std::vector<unsigned long>				NumberTypeVectorType;
 	typedef std::vector<XalanDOMCharVectorType>		DigitsTableVectorType;
