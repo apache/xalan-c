@@ -92,18 +92,22 @@ class StylesheetExecutionContext;
  */
 struct Counter
 {
+	typedef unsigned long	CountType;
+
 #if defined(XALAN_NO_NAMESPACES)
 	typedef vector<XalanNode*>			NodeVectorType;
 #else
 	typedef std::vector<XalanNode*>		NodeVectorType;
 #endif
+
+
 	/**
 	 * The start count from where m_countNodes counts 
 	 * from.  In other words, the count of a given node 
 	 * in the m_countNodes vector is node position + 
 	 * m_countNodesStartCount.
 	 */
-	int					m_countNodesStartCount;
+	CountType			m_countNodesStartCount;
 
 	/**
 	 * A vector of all nodes counted so far.
@@ -150,9 +154,9 @@ struct Counter
 	 * Try to find a node that was previously counted. If found, return a
 	 * positive integer that corresponds to the count.
 	 * @param node The node to be counted.
-	 * @returns The count of the node, or -1 if not found.
+	 * @returns The count of the node, or 0 if not found.
 	 */
-	int
+	CountType
 	getPreviouslyCounted(
 			StylesheetExecutionContext&		support,
 			const XalanNode*				node) const;
@@ -179,6 +183,8 @@ struct Counter
 class CountersTable
 {
 public:
+
+	typedef Counter::CountType	CountType;
 
 #if defined(XALAN_NO_NAMESPACES)
 	typedef vector<Counter>					CounterVectorType;
@@ -223,7 +229,7 @@ public:
 	 * @node The node to count.
 	 * @return The node count, or 0 if not found.
 	 */
-	int
+	CountType
 	countNode(
 			StylesheetExecutionContext&		executionContext,
 			const ElemNumber&				numberElem,

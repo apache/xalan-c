@@ -87,7 +87,7 @@ appendBtoFList(
 
 
 
-int
+CountersTable::CountType
 CountersTable::countNode(
 			StylesheetExecutionContext&		support,
 			const ElemNumber&				numberElem,
@@ -95,7 +95,7 @@ CountersTable::countNode(
 {
 	assert(numberElem.getID() < m_countersVector.size());
 
-	int		count = 0;
+	CountType	count = 0;
 
 	CounterVectorType&	counters = m_countersVector[numberElem.getID()];
 
@@ -112,7 +112,9 @@ CountersTable::countNode(
 			count = counter.getPreviouslyCounted(support, target);
 
 			if(count > 0)
+			{
 				return count;
+			}
 		}
 
 		// In the loop below, we collect the nodes in backwards doc order, so 
@@ -123,6 +125,7 @@ CountersTable::countNode(
 		// the backwards list (m_newFound) to the forwards list
 		// (counter.m_countNodes).
 		count = 0;
+
 		for(; 0 != target; target = numberElem.getPreviousNode(support, target))
 		{   
 			// First time in, we should not have to check for previous counts, 
@@ -173,14 +176,14 @@ CountersTable::countNode(
 
 
 
-int
+Counter::CountType
 Counter::getPreviouslyCounted(
 		StylesheetExecutionContext&		executionContext,
 		const XalanNode*				node) const
 {
 	const NodeVectorType::size_type		n = m_countNodes.size();
 
-	int			result = 0;
+	CountType	result = 0;
 
 	for(NodeVectorType::size_type i = n; i > 0; --i)
 	{
@@ -191,13 +194,16 @@ Counter::getPreviouslyCounted(
 			// Since the list is in backwards order, the count is 
 			// how many are in the rest of the list.
 			result = i + m_countNodesStartCount;
+
 			break;
 		}
 
 		// Try to see if the given node falls after the counted node...
 		// if it does, don't keep searching backwards.
 		if(executionContext.isNodeAfter(*countedNode, *node))
+		{
 			break;
+		}
 	}
 
 	return result;
