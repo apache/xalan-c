@@ -82,8 +82,8 @@ public:
 	 * 
 	 * @param theMessage message to print when exception thrown
 	 * @param theURI the URI of the related document, if known
-	 * @param theLineNumber the line number of the related document, or -1 if not known
-	 * @param theColumnNumber the column number of the related document, or -1 if not known
+	 * @param theLineNumber the line number of the related document.
+	 * @param theColumnNumber the column number of the related document.
 	 * @param theType    type of exception string, default is "XSLTProcessorException"
 	 */
 	XSLTProcessorException(
