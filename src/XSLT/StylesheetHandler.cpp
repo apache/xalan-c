@@ -467,9 +467,27 @@ StylesheetHandler::startElement(
 					break;
 
 				case Constants::ELEMNAME_APPLY_IMPORTS:
-					elem = new ElemApplyImport(m_constructionContext,
-											 m_stylesheet,
-											 atts, lineNumber, columnNumber);
+					{
+						if (m_elemStack.empty() == true)
+						{
+							error("xsl:apply-imports is not allowed at this position in the stylesheet", locator);
+						}
+
+						ElemTemplateElement* const	theElement =
+								m_elemStack.back();
+						assert(theElement != 0);
+
+						const int	xslToken = theElement->getXSLToken();
+
+						if (xslToken == Constants::ELEMNAME_FOREACH)
+						{
+							error("xsl:apply-imports is not allowed at this position in the stylesheet", locator);
+						}
+
+						elem = new ElemApplyImport(m_constructionContext,
+												 m_stylesheet,
+												 atts, lineNumber, columnNumber);
+					}
 					break;
           
 				case Constants::ELEMNAME_VALUEOF:
