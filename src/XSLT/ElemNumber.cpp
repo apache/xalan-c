@@ -386,7 +386,7 @@ ElemNumber::getCountMatchPattern(
 				StylesheetExecutionContext::GetAndReleaseCachedString	theMatchPatternString(executionContext);
 
 				assign(theMatchPatternString.get(), thePrefix.get());
-				append(theMatchPatternString.get(), XalanUnicode::charColon);
+				append(theMatchPatternString.get(), XalanDOMChar(XalanUnicode::charColon));
 				append(theMatchPatternString.get(), theNodeName);
 
 				// Use this class to resolve the synthesized prefix to the
