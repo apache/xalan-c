@@ -58,6 +58,9 @@
 # 
 #
 # $Log$
+# Revision 1.6  2001/11/27 01:19:25  dbertoni
+# Added support for extra configuration options and removed support for unused ones.  Fixes bug 4631.
+#
 # Revision 1.5  2001/08/14 16:10:18  dbertoni
 # Changes from James Berry <jberry@criticalpath.com> for Mac OS X support.
 #
@@ -102,9 +105,9 @@ usage()
     echo "       -c <C compiler name> (e.g. gcc, cc, xlc)"
     echo "       -x <C++ compiler name> (e.g. g++, CC, xlC)"
     echo "       -d (specifies that you want to build debug version)"
-    echo "       -r <thread option> can be 'pthread' or 'dce' (only used on HP-11)"
     echo "       -l <extra linker options>"
     echo "       -z <extra compiler options>"
+    echo "       -C <any one extra configure options>"
     echo "       -h (to get help on the above commands)"
 }
 
@@ -131,7 +134,7 @@ if test $1 = "-h"; then
 fi
 
 # Get the command line parameters
-set -- `getopt p:c:x:dm:n:t:r:l:z:h $*`
+set -- `getopt p:c:x:dm:n:t:l:z:h $*`
 if [ $? != 0 ]
    then
    usage
@@ -157,15 +160,15 @@ for i in $*
    -d) 
         debug=on; shift;;
    
-   -r) 
-        thread=$2; shift 2;;
-   
    -l) 
         linkeroption=$2; shift 2;;
    
    -z) 
         compileroption=$2; shift 2;;
    
+   -C)
+        configureoptions="$configureoptions $2"; shift 2;;
+
    -h) 
         usage
         exit ${ERROR_EXIT_CODE};; 
@@ -182,6 +185,7 @@ echo "C++ Compiler: $cppcompiler"
 echo "Extra compile options: $compileroption"
 echo "Extra link options: $linkeroption"
 echo "Thread option: $thread"
+echo "Extra configure options: $configureoptions"
 
 
 #
@@ -266,13 +270,13 @@ export CXX
 # Set the extra C and C++ compiler flags
 #
 
-CXXFLAGS="$compileroption $debugflag $transcodingDefines $threadingDefines"
+CXXFLAGS="$compileroption $debugflag $threadingDefines"
 export CXXFLAGS
 
-CFLAGS="$compileroption $debugflag $transcodingDefines $threadingDefines"
+CFLAGS="$compileroption $debugflag $threadingDefines"
 export CFLAGS
 
-LIBS="$transcodingLibs $threadingLibs "
+LIBS="$$threadingLibs "
 export LIBS
 
 
@@ -280,7 +284,7 @@ echo
 rm -f config.cache
 rm -f config.log
 rm -f config.status
-./configure
+sh ./configure $configureoptions
 
 echo
 echo If the result of the above commands look OK to you, go to the directory
