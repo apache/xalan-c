@@ -124,6 +124,25 @@ public:
 			XalanNode*						sourceNode,
 			const QName&					mode) const;
 
+protected:
+
+	/** 
+	 * Process the children of a template.
+	 * 
+	 * @param executionContext The current execution context
+	 * @param sourceTree input source tree
+	 * @param sourceNode current context node
+	 * @param mode current mode
+	 * @param skipAttributeChildren If true, attribute children will not be executed.
+	 */
+	virtual void
+	doExecuteChildren(
+			StylesheetExecutionContext&		executionContext,
+			XalanNode*						sourceTree,
+			XalanNode*						sourceNode,
+			const QName&					mode,
+			bool							skipAttributeChildren) const;
+
 private:
 
 	// not implemented

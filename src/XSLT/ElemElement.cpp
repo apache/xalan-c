@@ -93,6 +93,10 @@ ElemElement::ElemElement(
 						stylesheetTree.getNamespaces(),
 						stylesheetTree.getXSLTNamespaceURI())	
 {
+	// Namespace aliases are not used for xsl:element, so
+	// turn them off...
+	m_namespacesHandler.setProcessNamespaceAliaises(false);
+
 	const unsigned int	nAttrs = atts.getLength();
 
 	for(unsigned int i = 0; i < nAttrs; i++)
@@ -194,11 +198,9 @@ ElemElement::execute(
 
 	if (isIllegalElement == true)
 	{
-		executionContext.warn("Illegal element name!", sourceNode, this);
+		executionContext.warn("Illegal element name: \"" + elemName + "\"", this, sourceNode);
 
 		clear(elemName);
-
-		len = 0;
 	}
 	else if (haveNamespace == true)
 	{
@@ -212,15 +214,17 @@ ElemElement::execute(
 
 		if (length(theNamespace) == 0 && length(m_namespacesHandler.getNamespace(prefix)) == 0)
 		{
-			executionContext.warn("Could not resolve prefix: " + prefix, this);
+			executionContext.warn("Could not resolve prefix: " + prefix, this, sourceNode);
+
+			isIllegalElement = true;
 		}
 	}
 
-	if (len != 0)
+	if (isIllegalElement == false)
 	{
 		if(0 == m_namespaceAVT)
 		{
-			executionContext.startElement(toCharArray(elemName));   
+			executionContext.startElement(c_wstr(elemName));   
 
 			m_namespacesHandler.outputResultNamespaces(executionContext);
 		}
@@ -234,13 +238,13 @@ ElemElement::execute(
 
 			if(isEmpty(elemNameSpace) == true)
 			{
-				executionContext.startElement(toCharArray(elemName));   
+				executionContext.startElement(c_wstr(elemName));   
 
 				m_namespacesHandler.outputResultNamespaces(executionContext);
 			}
 			else
 			{
-				executionContext.startElement(toCharArray(elemName));
+				executionContext.startElement(c_wstr(elemName));
 
 				m_namespacesHandler.outputResultNamespaces(executionContext);
 
@@ -254,10 +258,40 @@ ElemElement::execute(
 
 	ElemUse::execute(executionContext, sourceTree, sourceNode, mode);
 
-	executeChildren(executionContext, sourceTree, sourceNode, mode);
+	doExecuteChildren(executionContext, sourceTree, sourceNode, mode, isIllegalElement);
 
-	if (len != 0)
+	if (isIllegalElement == false)
 	{
-		executionContext.endElement(toCharArray(elemName));
+		executionContext.endElement(c_wstr(elemName));
+	}
+}
+
+
+
+void
+ElemElement::doExecuteChildren(
+			StylesheetExecutionContext&		executionContext,
+			XalanNode*						sourceTree,
+			XalanNode*						sourceNode,
+			const QName&					mode,
+			bool							skipAttributeChildren) const
+{
+	if (skipAttributeChildren == false)
+	{
+		// If we should execute all children, then just call
+		// executeChildren()...
+		executeChildren(executionContext, sourceTree, sourceNode, mode);
+	}
+	else
+	{
+		StylesheetExecutionContext::PushAndPopElementFrame	thePushAndPop(executionContext, this);
+
+		for (ElemTemplateElement* node = getFirstChildElem(); node != 0; node = node->getNextSiblingElem()) 
+		{
+			if (node->getXSLToken() != Constants::ELEMNAME_ATTRIBUTE)
+			{
+				node->execute(executionContext, sourceTree, sourceNode, mode);
+			}
+		}
 	}
 }
