@@ -2679,6 +2679,7 @@ case "${host}" in
         *-*-netbsd*)    platform=NETBSD ;;
         *-*-irix*)      platform=IRIX ;;
         *-*-aix*)       platform=AIX ;;
+        ia64-hp*)       platform=HPUX ; osver=HPUX11 ; osvariant=IA64;;
         *-*-hp*)        platform=HPUX ;
                         case "${host}" in
                             *-*-hpux11*)  osver=HPUX11;;
@@ -4026,6 +4027,7 @@ s,@platform@,$platform,;t t
 s,@cxx@,$cxx,;t t
 s,@cc@,$cc,;t t
 s,@osver@,$osver,;t t
+s,@osvariant@,$osvariant,;t t
 s,@cxxflags@,$cxxflags,;t t
 s,@cppflags@,$cppflags,;t t
 s,@cflags@,$cflags,;t t

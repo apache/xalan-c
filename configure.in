@@ -48,6 +48,7 @@ case "${host}" in
         *-*-netbsd*)    platform=NETBSD ;;
         *-*-irix*)      platform=IRIX ;;
         *-*-aix*)       platform=AIX ;;
+        ia64-hp*)       platform=HPUX ; osver=HPUX11 ; osvariant=IA64;;
         *-*-hp*)        platform=HPUX ;
                         case "${host}" in
                             *-*-hpux11*)  osver=HPUX11;;
@@ -107,6 +108,8 @@ AC_SUBST(cc)
 AC_SUBST(prefix)
 dnl  Not used:
 AC_SUBST(osver)
+
+AC_SUBST(osvariant)
 
 cxxflags=${CXXFLAGS}
 AC_SUBST(cxxflags)

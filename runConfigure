@@ -58,6 +58,9 @@
 # 
 #
 # $Log$
+# Revision 1.6  2004/02/06 08:39:35  dbertoni
+# Initial changes for HP-UX IA64 port.
+#
 # Revision 1.5  2004/01/06 02:41:25  dbertoni
 # Changes for Bugzilla 25914.
 #
@@ -165,7 +168,7 @@ usage()
     echo "Usage: runConfigure \"options\""
     echo "       where options may be any of the following:"
     echo "       -p <platform> (accepts 'aix', 'linux', 'freebsd', 'netbsd', 'solaris',
-            'hp-10', 'hp-11', 'irix', 'tru64', 'macosx', 'os400')"
+            'hp-11', 'hp-11-ia64', 'irix', 'tru64', 'macosx', 'os400')"
     echo "       -c <C compiler name> (e.g. gcc, cc, xlc)"
     echo "       -x <C++ compiler name> (e.g. g++, CC, xlC)"
     echo "       -d (specifies that you want to build debug version)"
@@ -301,7 +304,7 @@ echo "Extra configure options: $configureoptions"
 #
 
 case $platform in
-   aix | linux | freebsd | netbsd | solaris | hp-10 | hp-11 | irix | tru64 | macosx | os400)
+   aix | linux | freebsd | netbsd | solaris | hp-11 | hp-11-ia64 | irix | tru64 | macosx | os400)
        # platform has been recognized
        ;;
    *)
@@ -339,8 +342,8 @@ fi
 #
 
 #
-#  aix | linux | hp-11 | solaris |
-#  hp-10 | freebsd | netbsd | irix | openserver | unixware | os400 | ptx | tru64 | macosx
+#  aix | linux | hp-11 | hp-11-ia64 | solaris |
+#  freebsd | netbsd | irix | openserver | unixware | os400 | ptx | tru64 | macosx
 #
 if test $bitsToBuild = 64; then
     bitstobuildDefines=" -DXML_BITSTOBUILD_64 "
@@ -355,6 +358,9 @@ if test $bitsToBuild = 64; then
            hp-11)
               bitstobuildDefines=" $bitstobuildDefines +DA2.0W "
               bitstobuildLink=" +DA2.0W " ;;
+           hp-11-ia64)
+	          bitstobuildDefines=" $bitstobuildDefines +DD64 "
+              bitstobuildLink=" +DD64 " ;;
            linux)
               bitstobuildDefines=" $bitstobuildDefines " ;;
            *)
@@ -362,8 +368,8 @@ if test $bitsToBuild = 64; then
         esac
     fi
 elif test $bitsToBuild = 32; then
-    bitstobuildDefines=" "
-    bitstobuildLink=" "
+    bitstobuildDefines=""
+    bitstobuildLink=""
     if test $platform; then
         case $platform in
            solaris)
@@ -371,7 +377,10 @@ elif test $bitsToBuild = 32; then
            aix)
 		      ;;
            hp-11)
-              bitstobuildDefines=" $bitstobuildDefines +DAportable "
+              bitstobuildDefines="+DAportable "
+			  ;;
+           hp-11-ia64)
+              bitstobuildDefines="+DD32 "
 			  ;;
            linux)
               ;;
@@ -473,9 +482,6 @@ elif test $platform = "freebsd"; then
     threadingLibs="-pthread -lc_r"
 elif test $platform = "netbsd"; then
     threadingLibs="-pthread -lpthread"
-elif test $platform = "hp-10"; then
-    threadingLibs="-lcma"
-    threadingDefines="-DXML_USE_DCE"
 elif test $platform = "os400"; then
     threadingLibs=""
 fi
