@@ -142,31 +142,11 @@ SOURCE=..\..\..\..\src\XPath\Function.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\FunctionBoolean.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\src\XPath\FunctionCeiling.cpp
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\..\..\src\XPath\FunctionConcat.cpp
 # End Source File
 # Begin Source File
 
 SOURCE=..\..\..\..\src\XPath\FunctionContains.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\src\XPath\FunctionCount.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\src\XPath\FunctionFalse.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\src\XPath\FunctionFloor.cpp
 # End Source File
 # Begin Source File
 
@@ -178,18 +158,6 @@ SOURCE=..\..\..\..\src\XPath\FunctionLang.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\FunctionLast.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\src\XPath\FunctionLocalName.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\src\XPath\FunctionName.cpp
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\..\..\src\XPath\FunctionNamespaceURI.cpp
 # End Source File
 # Begin Source File
@@ -198,31 +166,11 @@ SOURCE=..\..\..\..\src\XPath\FunctionNormalizeSpace.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\FunctionNot.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\src\XPath\FunctionNumber.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\src\XPath\FunctionPosition.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\src\XPath\FunctionRound.cpp
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\..\..\src\XPath\FunctionStartsWith.cpp
 # End Source File
 # Begin Source File
 
 SOURCE=..\..\..\..\src\XPath\FunctionString.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\src\XPath\FunctionStringLength.cpp
 # End Source File
 # Begin Source File
 
@@ -238,15 +186,7 @@ SOURCE=..\..\..\..\src\XPath\FunctionSubstringBefore.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\FunctionSum.cpp
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\..\..\src\XPath\FunctionTranslate.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\src\XPath\FunctionTrue.cpp
 # End Source File
 # Begin Source File
 
@@ -299,6 +239,14 @@ SOURCE=..\..\..\..\src\XPath\XNodeSetAllocator.cpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\XPath\XNodeSetBase.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XPath\XNodeSetNodeProxy.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XPath\XNodeSetNodeProxyAllocator.cpp
 # End Source File
 # Begin Source File
 
@@ -506,31 +454,11 @@ SOURCE=..\..\..\..\src\XPath\Function.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\FunctionBoolean.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\src\XPath\FunctionCeiling.hpp
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\..\..\src\XPath\FunctionConcat.hpp
 # End Source File
 # Begin Source File
 
 SOURCE=..\..\..\..\src\XPath\FunctionContains.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\src\XPath\FunctionCount.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\src\XPath\FunctionFalse.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\src\XPath\FunctionFloor.hpp
 # End Source File
 # Begin Source File
 
@@ -542,18 +470,6 @@ SOURCE=..\..\..\..\src\XPath\FunctionLang.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\FunctionLast.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\src\XPath\FunctionLocalName.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\src\XPath\FunctionName.hpp
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\..\..\src\XPath\FunctionNamespaceURI.hpp
 # End Source File
 # Begin Source File
@@ -562,31 +478,11 @@ SOURCE=..\..\..\..\src\XPath\FunctionNormalizeSpace.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\FunctionNot.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\src\XPath\FunctionNumber.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\src\XPath\FunctionPosition.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\src\XPath\FunctionRound.hpp
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\..\..\src\XPath\FunctionStartsWith.hpp
 # End Source File
 # Begin Source File
 
 SOURCE=..\..\..\..\src\XPath\FunctionString.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\src\XPath\FunctionStringLength.hpp
 # End Source File
 # Begin Source File
 
@@ -602,15 +498,7 @@ SOURCE=..\..\..\..\src\XPath\FunctionSubstringBefore.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\FunctionSum.hpp
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\..\..\src\XPath\FunctionTranslate.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\src\XPath\FunctionTrue.hpp
 # End Source File
 # Begin Source File
 
@@ -667,6 +555,14 @@ SOURCE=..\..\..\..\src\XPath\XNodeSetAllocator.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\XPath\XNodeSetBase.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XPath\XNodeSetNodeProxy.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XPath\XNodeSetNodeProxyAllocator.hpp
 # End Source File
 # Begin Source File
 
