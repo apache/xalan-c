@@ -200,11 +200,11 @@ FunctionDocument::execute(
 
 		MutableNodeRefList		mnl(executionContext.createMutableNodeRefList());
 
-		const int				nRefs = XObject::eTypeNodeSet == arg->getType() ?
+		const unsigned int		nRefs = XObject::eTypeNodeSet == arg->getType() ?
 													arg->nodeset().getLength()
 													: 1;
 
-		for(int i = 0; i < nRefs; i++)
+		for(unsigned int i = 0; i < nRefs; i++)
 		{
 			assert(XObject::eTypeNodeSet != arg->getType() ||
 								arg->nodeset().item(i) != 0);
