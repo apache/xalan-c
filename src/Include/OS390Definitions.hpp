@@ -99,7 +99,7 @@
 #define XALAN_POSIX2_AVAILABLE
 #define XALAN_ICU_DEFAULT_LOCALE_PROBLEM
 
-
+#define XALAN_UNALIGNED
 
 // STL Port Definitions
 #define __STL_NO_SGI_IOSTREAMS

@@ -91,5 +91,6 @@
 #error XALAN_BIG_ENDIAN or XALAN_LITTLE_ENDIAN must be defined for this platform!
 #endif
 
+#define XALAN_UNALIGNED
 
 #endif	// GCCDEFINITIONS_HEADER_GUARD_1357924680

@@ -97,6 +97,7 @@
 #define XALAN_USE_WCHAR_CAST_HACK
 #define XALAN_POSIX2_AVAILABLE
 
+#define XALAN_UNALIGNED
 
 
 // STL Port Definitions
