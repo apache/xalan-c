@@ -74,7 +74,6 @@
 
 // This next line enables standard IO streams.
 #define __USE_STD_IOSTREAM
-#define XALAN_RTTI_AVAILABLE
 #define XALAN_XALANDOMCHAR_USHORT_MISMATCH
 #define XALAN_POSIX2_AVAILABLE
 #define XALAN_INLINE_INITIALIZATION

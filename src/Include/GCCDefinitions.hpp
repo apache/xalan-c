@@ -81,7 +81,6 @@
 // As of 3.1, std::numeric_limits<double> is broken, so
 // we don't use it.
 #define XALAN_NO_STD_NUMERIC_LIMITS
-#define XALAN_RTTI_AVAILABLE
 #define XALAN_SGI_BASED_STL
 #define XALAN_XALANDOMCHAR_USHORT_MISMATCH
 #define XALAN_POSIX2_AVAILABLE
