@@ -1,22 +1,22 @@
 <?xml encoding="US-ASCII"?>
 
 <!ENTITY xslt4c "Xalan-C++">
-<!ENTITY xslt4c-dist "Xalan-C_1_4">
-<!ENTITY xslt4c-current "Xalan-C++ version 1.4">
+<!ENTITY xslt4c-dist "Xalan-C_1_5">
+<!ENTITY xslt4c-current "Xalan-C++ version 1.5">
 <!ENTITY xslt4c-windlls "DOMSupport.dll, PlatformSupport.dll, XalanDOM.dll, XalanSourceTree,dll, XercesParserLiaison.dll, XMLSupport.dll, XPath.dll, XSLT.dll, XalanTransformer.dll, XalanExtensions.dll">
-<!ENTITY xslt4c-linuxlib "libxalan-c1_4.so">
-<!ENTITY xslt4c-aixlib "libxalan-c1_4.a">
-<!ENTITY xslt4c-hplib "libxalan-c1_4.sl">
-<!ENTITY xslt4c-solarislib "libxalan-c1_4.so">
+<!ENTITY xslt4c-linuxlib "libxalan-c1_5.so">
+<!ENTITY xslt4c-aixlib "libxalan-c1_5.a">
+<!ENTITY xslt4c-hplib "libxalan-c1_5.sl">
+<!ENTITY xslt4c-solarislib "libxalan-c1_5.so">
 <!ENTITY xml4c "Xerces-C++">
-<!ENTITY xml4c-used "Xerces-C++ version 2.1.0">
-<!ENTITY xml4c-dist "xerces-c2_1_0">
-<!ENTITY xml4c-windll "xerces-c_2_1_0.dll">
+<!ENTITY xml4c-used "Xerces-C++ version 2.2.0">
+<!ENTITY xml4c-dist "xerces-c2_2_0">
+<!ENTITY xml4c-windll "xerces-c_2_2_0.dll">
 <!ENTITY xml4c-winlib "xerces-c_2.lib">
-<!ENTITY xml4c-linuxlib "libxerces-c2_1_0.so">
-<!ENTITY xml4c-aixlib "libxerces-c2_1_0.a">
-<!ENTITY xml4c-hplib "libxerces-c2_1_0.sl">
-<!ENTITY xml4c-solarislib "libxerces-c2_1_0.so">
+<!ENTITY xml4c-linuxlib "libxerces-c2_2_0.so">
+<!ENTITY xml4c-aixlib "libxerces-c2_2_0.a">
+<!ENTITY xml4c-hplib "libxerces-c2_2_0.sl">
+<!ENTITY xml4c-solarislib "libxerces-c2_2_0.so">
 <!ENTITY xml4c-linuxdist "&xml4c-dist;-linux7.2gcc3.1.tar.gz">
 <!ENTITY xml4c-aixdist "&xml4c-dist;-AIX51_5.02.tar.gz">
 <!ENTITY xml4c-hpdist "&xml4c-dist;-HP11ACC.tar.gz">
