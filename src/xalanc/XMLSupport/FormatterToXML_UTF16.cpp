@@ -100,7 +100,7 @@ FormatterToXML_UTF16::write(
 			const XalanDOMChar*			theChars,
 			XalanDOMString::size_type	theLength)
 {
-	if (theLength > XalanDOMString::size_type(kBufferSize))
+	if (theLength >= XalanDOMString::size_type(kBufferSize))
 	{
 		flushBuffer();
 
