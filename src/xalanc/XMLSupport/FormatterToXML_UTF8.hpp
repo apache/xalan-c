@@ -659,7 +659,7 @@ private:
 			kAttributeSpecial = 2,	// A flag to indicate a value in s_specialChars applies to attributes
 			kBothSpecial = 3,		// A flag t0 indicate a value in s_specialChars applies to both content and attributes
 			kSpecialsSize = 0x80,	// The size of s_specialChars
-			kBufferSize = 512,		// The size of the buffer
+			kBufferSize = 512		// The size of the buffer
 	};
 
 	static bool
