@@ -92,37 +92,6 @@ extern "C"
 	typedef const void*		XalanPSHandle;
 
 	/**
-	 * Callback function passed to XalanTransformToHandler. 
-	 * Used to process transformation output in blocks of data.
-	 * Caller is responsible for streaming or copying data to a user  
-	 * allocated buffer. Caller should not attempt to write to or  
-	 * free this data. Upon termination, Xalan reuses the same buffer 
-	 * and frees it.
-	 *
-	 * The callback should return the number of bytes written, and
-	 * this number should match the length received. Otherwise the
-	 * XalanTransformToHandler function terminates and returns an error status.	
-	 *
-	 * static unsigned long xalanOutputHandler(const void* data, unsigned long length, const void *handle);
-	 *
-	 * @param data		a block of data
-	 * @param length	length of block
-	 * @param handle	handle of XalanTransformer instance.
-	 * @return number of bytes written
-	 */
-	typedef unsigned long (*XalanOutputHandlerType) (const void*, unsigned long, const void*);
-	
-	/**
-	 * Callback function passed to XalanTransformToHandler. 
-	 * Used to flush the buffer once transform is completed.
-	 *
-	 * static void xalanFlushHandler(const void *handle);
-	 *
-	 * @param handle	handle of XalanTransformer instance.
-	 */
-	typedef void (*XalanFlushHandlerType) (const void*);
-
-	/**
 	 * This is a typedef to work around limitations with
 	 * the XALAN_TRANSFORMER_EXPORT_FUNCTION macro.
 	 */
@@ -271,7 +240,7 @@ extern "C"
 				const char*				theXMLFileName, 
 				const char*				theXSLFileName,
 				XalanHandle				theXalanHandle,
-				const void*				theOutputHandle, 
+				void*					theOutputHandle, 
 				XalanOutputHandlerType	theOutputHandler,
 				XalanFlushHandlerType	theFlushHandler);
 
@@ -301,7 +270,7 @@ extern "C"
 				const char*				theXMLFileName, 
 				XalanCSSHandle			theCSSHandle,
 				XalanHandle				theXalanHandle,
-				const void*				theOutputHandle, 
+				void*					theOutputHandle, 
 				XalanOutputHandlerType	theOutputHandler,
 				XalanFlushHandlerType	theFlushHandler);
 

@@ -223,7 +223,7 @@ public:
 	transform(
 			const XSLTInputSource&		theInputSource, 
 			const XSLTInputSource&		theStylesheetSource,
-			const void*					theOutputHandle, 
+			void*						theOutputHandle, 
 			XalanOutputHandlerType		theOutputHandler,
 			XalanFlushHandlerType		theFlushHandler = 0);
 	
@@ -247,9 +247,9 @@ public:
 	 */
 	int
 	transform(
-			const XSLTInputSource&			theInputSource, 
+			const XSLTInputSource&			theInputSource,
 			const XalanCompiledStylesheet*	theCompiledStylesheet,
-			const void*						theOutputHandle, 
+			void*							theOutputHandle,
 			XalanOutputHandlerType			theOutputHandler,
 			XalanFlushHandlerType			theFlushHandler = 0);
 
@@ -272,8 +272,8 @@ public:
 	 */
 	int
 	transform(
-			const XSLTInputSource&		theInputSource, 		
-			const void*					theOutputHandle, 
+			const XSLTInputSource&		theInputSource,
+			void*						theOutputHandle,
 			XalanOutputHandlerType		theOutputHandler,
 			XalanFlushHandlerType		theFlushHandler = 0);
 
@@ -364,21 +364,20 @@ public:
 			const Function&			function);
 
 	/**
-	 * Install an external function.  The function is only
-	 * available in this instance.
+	 * Install an external function in the global space.
 	 *
 	 * @param theNamespace The namespace for the functionl
 	 * @param functionName The name of the function.
 	 * @param function The function to install.
 	 */
-	void
-	installExternalFunction(
-			const char*				theNamespace,
-			const char*				functionName,
+	static void
+	installExternalFunctionGlobal(
+			const XalanDOMString&	theNamespace,
+			const XalanDOMString&	functionName,
 			const Function&			function);
 
 	/**
-	 * Uninstall an external function.
+	 * Uninstall an external local function.
 	 *
 	 * @param theNamespace The namespace for the function
 	 * @param functionName The name of the function.
@@ -389,15 +388,15 @@ public:
 			const XalanDOMString&	functionName);
 
 	/**
-	 * Uninstall an external function.
+	 * Uninstall an external global function.
 	 *
 	 * @param theNamespace The namespace for the function
 	 * @param functionName The name of the function.
 	 */
-	void
-	uninstallExternalFunction(
-			const char*		theNamespace,
-			const char*		functionName);
+	static void
+	uninstallExternalFunctionGlobal(
+			const XalanDOMString&	theNamespace,
+			const XalanDOMString&	functionName);
 
 	/**
 	 * Set a top-level stylesheet parameter.  This value can be evaluated via
@@ -410,18 +409,6 @@ public:
 	setStylesheetParam(
 			const XalanDOMString&	key,
 			const XalanDOMString&	expression);
-
-	/**
-	 * Set a top-level stylesheet parameter.  This value can be evaluated via
-	 * xsl:param-variable.
-	 *
-	 * @param key name of the param
-	 * @param expression expression that will be evaluated
-	 */
-	void
-	setStylesheetParam(
-			const char*		key,
-			const char*		expression);
 
 	/**
 	 * Returns the last error that occurred as a 

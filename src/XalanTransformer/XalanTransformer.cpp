@@ -115,9 +115,8 @@ XalanTransformer::XalanTransformer():
 	m_parsedSources(),
     m_paramPairs(),
 	m_functionPairs(),
-	m_errorMessage()
+	m_errorMessage(1, '\0')
 {
-	m_errorMessage.push_back(0);
 }
 
 
@@ -181,9 +180,7 @@ XalanTransformer::transform(
 	int		theResult = 0;
 
 	// Clear the error message.
-	m_errorMessage.clear();
-
-	m_errorMessage.push_back(0);
+	m_errorMessage.resize(1, '\0');
 
 	// Store error messages from problem listener.
 	XalanDOMString	theErrorMessage;
@@ -346,9 +343,7 @@ XalanTransformer::transform(
 	int		theResult = 0;
 
 	// Clear the error message.
-	m_errorMessage.clear();
-
-	m_errorMessage.push_back(0);
+	m_errorMessage.resize(1, '\0');
 
 	// Store error messages from problem listener.
 	XalanDOMString	theErrorMessage;
@@ -556,7 +551,7 @@ int
 XalanTransformer::transform(
 			const XSLTInputSource&	theInputSource, 
 			const XSLTInputSource&	theStylesheetSource,
-			const void*				theOutputHandle, 
+			void*					theOutputHandle, 
 			XalanOutputHandlerType	theOutputHandler,
 			XalanFlushHandlerType	theFlushHandler)
 {
@@ -580,7 +575,7 @@ int
 XalanTransformer::transform(
 			const XSLTInputSource&			theInputSource, 
 			const XalanCompiledStylesheet*	theCompiledStylesheet,
-			const void*						theOutputHandle, 
+			void*							theOutputHandle, 
 			XalanOutputHandlerType			theOutputHandler,
 			XalanFlushHandlerType			theFlushHandler)
 {
@@ -603,7 +598,7 @@ XalanTransformer::transform(
 int
 XalanTransformer::transform(
 			const XSLTInputSource&		theInputSource, 		
-			const void*					theOutputHandle, 
+			void*						theOutputHandle, 
 			XalanOutputHandlerType		theOutputHandler,
 			XalanFlushHandlerType		theFlushHandler)
 {
@@ -627,9 +622,7 @@ const XalanCompiledStylesheet*
 XalanTransformer::compileStylesheet(const XSLTInputSource&		theStylesheetSource)
 {
 	// Clear the error message.
-	m_errorMessage.clear();
-
-	m_errorMessage.push_back(0);
+	m_errorMessage.resize(1, '\0');
 
 	// Store error messages from problem listener.
 	XalanDOMString	theErrorMessage;
@@ -759,7 +752,7 @@ XalanTransformer::destroyStylesheet(const XalanCompiledStylesheet*	theStylesheet
 
 const XalanParsedSource*
 XalanTransformer::parseSource(
-			const XSLTInputSource&	theInputSource, 
+			const XSLTInputSource&	theInputSource,
 			bool					useXercesDOM)
 {
 	// Clear the error message.
@@ -767,7 +760,7 @@ XalanTransformer::parseSource(
 	m_errorMessage.push_back(0);
 
 	try
-	{	
+	{
 		XalanParsedSource* theParsedDocument = 0;
 
 		if(useXercesDOM == true)
@@ -780,10 +773,10 @@ XalanTransformer::parseSource(
 		}
 
 		// Store it in a vector.
-		m_parsedSources.push_back(theParsedDocument);		
+		m_parsedSources.push_back(theParsedDocument);
 
 		return theParsedDocument;
-	}	
+	}
 	catch (XSLException& e)
 	{
 		TranscodeToLocalCodePage(e.getMessage(), m_errorMessage, true);
@@ -846,19 +839,6 @@ XalanTransformer::setStylesheetParam(
 
 
 
-void
-XalanTransformer::setStylesheetParam(
-			const char*				key,
-			const char*				expression)
-{
-	// Set the stylesheet parameter.
-	setStylesheetParam(
-					XalanDOMString(key),  
-					XalanDOMString(expression));
-}
-
-
-
 XalanDocumentBuilder*
 XalanTransformer::createDocumentBuilder()
 {
@@ -893,12 +873,15 @@ XalanTransformer::installExternalFunction(
 
 
 void
-XalanTransformer::installExternalFunction(
-			const char*				theNamespace,
-			const char*				functionName,
+XalanTransformer::installExternalFunctionGlobal(
+			const XalanDOMString&	theNamespace,
+			const XalanDOMString&	functionName,
 			const Function&			function)
 {
-	installExternalFunction(theNamespace, functionName, function);
+	XSLTProcessorEnvSupportDefault::installExternalFunctionGlobal(
+			theNamespace,
+			functionName,
+			function);
 }
 
 
@@ -911,8 +894,9 @@ XalanTransformer::uninstallExternalFunction(
 	for (FunctionParamPairVectorType::size_type i = 0; i < m_functionPairs.size(); ++i)
 	{
 		if(QNameByReference(theNamespace, functionName).equals(m_functionPairs[i].first))
-		{	
+		{
 			delete m_functionPairs[i].second;
+
 			m_functionPairs.erase(m_functionPairs.begin() + i);		
 		}
 	}	
@@ -921,12 +905,15 @@ XalanTransformer::uninstallExternalFunction(
 
 
 void
-XalanTransformer::uninstallExternalFunction(
-			const char*				theNamespace,
-			const char*				functionName)
+XalanTransformer::uninstallExternalFunctionGlobal(
+			const XalanDOMString&	theNamespace,
+			const XalanDOMString&	functionName)
 {
-	uninstallExternalFunction(theNamespace, functionName);
+	XSLTProcessorEnvSupportDefault::uninstallExternalFunctionGlobal(
+			theNamespace,
+			functionName);
 }
+
 
 
 

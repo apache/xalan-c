@@ -69,15 +69,6 @@
 
 
 
-extern "C"
-{
-	typedef unsigned long (*XalanOutputHandlerType) (const void*, unsigned long, const void*);
-
-	typedef void (*XalanFlushHandlerType) (const void*);
-}
-
-
-
 // A class for output to a user defined (callback) function.
 class XALAN_TRANSFORMER_EXPORT XalanTransformerOutputStream : public XalanOutputStream
 {
@@ -92,7 +83,7 @@ public:
 	 * @param theFlushHandler	a user defined (callback) function.
 	 */
     XalanTransformerOutputStream(
-		const void*					theOutputHandle, 
+		void*						theOutputHandle, 
 		XalanOutputHandlerType		theOutputHandler,
 		XalanFlushHandlerType		theFlushHandler = 0);
 
@@ -117,7 +108,7 @@ private:
     XalanTransformerOutputStream&
 	operator=(const XalanTransformerOutputStream&);
 
-	const void*				m_outputHandle;
+	void* const				m_outputHandle;
 
 	XalanOutputHandlerType	m_outputHandler;
 

@@ -289,7 +289,7 @@ XalanTransformToHandler(
 			const char*				theXMLFileName, 
 			const char*				theXSLFileName,
 			XalanHandle				theXalanHandle,
-			const void*				theOutputHandle, 
+			void*					theOutputHandle, 
 			XalanOutputHandlerType	theOutputHandler,
 			XalanFlushHandlerType	theFlushHandler)
 {
@@ -309,7 +309,7 @@ XalanTransformToHandlerCSS(
 			const char*				theXMLFileName, 
 			XalanCSSHandle			theCSSHandle,
 			XalanHandle				theXalanHandle,
-			const void*				theOutputHandle, 
+			void*					theOutputHandle, 
 			XalanOutputHandlerType	theOutputHandler,
 			XalanFlushHandlerType	theFlushHandler)
 {
@@ -360,7 +360,9 @@ XalanSetStylesheetParam(
 			const char*		expression,
 			XalanHandle		theXalanHandle)
 {
-	getTransformer(theXalanHandle)->setStylesheetParam(key, expression);
+	getTransformer(theXalanHandle)->setStylesheetParam(
+		XalanDOMString(key),
+		XalanDOMString(expression));
 }
 
 

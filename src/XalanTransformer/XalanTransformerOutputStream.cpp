@@ -54,12 +54,12 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-#include <XalanTransformer/XalanTransformerOutputStream.hpp>
+#include "XalanTransformerOutputStream.hpp"
 
 
 
 XalanTransformerOutputStream::XalanTransformerOutputStream(
-	const void*					theOutputHandle, 
+	void*						theOutputHandle, 
 	XalanOutputHandlerType		theOutputHandler,
 	XalanFlushHandlerType		theFlushHandler):
 	m_outputHandle(theOutputHandle),
