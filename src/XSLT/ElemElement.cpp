@@ -266,7 +266,7 @@ ElemElement::execute(StylesheetExecutionContext&		executionContext) const
 						// we end up with another xmlns="" on the element we're
 						// generating.  Although this isn't really an error, it's
 						// a bit unsightly, so let's suppress it...
-						const XalanDOMString& const	theParentDefaultNamespace =
+						const XalanDOMString&	theParentDefaultNamespace =
 							getParentDefaultNamespace();
 
 						if (length(theParentDefaultNamespace) == 0)
