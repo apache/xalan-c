@@ -81,7 +81,17 @@
      <p>Major updates since version 1.5 include:</p>
      <ul>
 		<li><resource-ref idref="bugsfixedforthisrelease"/>.</li>
-		<li>Directory "sane include" reorganization.  A new sub-directory called &apos;xalanc&apos; has been added to the src directory (for source distribution packages) and include directory (for binary distribution packages).  New source files which include Xalan headers will need to be modified to include the 'xalanc' prefix in the header path.  <p>For example&colon; </p><p><code>#include &lt;XPath/XObject.hpp&gt;</code></p><p>will need to be changed to</p> <code>#include &lt;xalanc/XPath/XObject.hpp&gt;</code><p>For Windows users, all project files have been modified to reflect this change.  For UNIX users, please see <link anchor="unix">Steps for doing a UNIX build</link> for migration considerations.</p></li>
+		<li>Directory "sane include" reorganization.  A new sub-directory called &apos;xalanc&apos; has been added to the src directory (for source distribution packages) and include directory (for binary distribution packages).  New source files which include Xalan headers will need to be modified to include the 'xalanc' prefix in the header path.  
+
+For example: <br/><br/>
+
+<code>#include &lt;XPath/XObject.hpp&gt;</code><br/><br/>
+
+will need to be changed to <br/><br/>
+
+<code>#include &lt;xalanc/XPath/XObject.hpp&gt;</code><br/><br/>
+
+For Windows users, all project files have been modified to reflect this change.  For UNIX users, please see <link anchor="unix">Steps for doing a UNIX build</link> for migration considerations.</li>
      </ul>  
    </s3>  
      <anchor name="bugs"/>
@@ -165,8 +175,8 @@
       <code>testXSLT</code> (the testXSLT executable). ICUBridge is included in the build of Xalan and TestXSLT if XALAN_USE_ICU is
       defined.  You can build the sample applications using the target <code>samples</code>.<br/><br/></li>
     </ol>
-    <note>To recompile existing applications without changing your source code, be sure to modify the command line in your Makefile to pick up the Xalan headers from it's new location. e.g:  if your xalan source location is in /home/xml-xalan,</note>
-    <br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<code>CC ... -I/home/xml-xalan/c/src -I/home/xml-xalan/c/src/xalanc mysrc.cpp</code><anchor name="64"/>
+    <note>To recompile existing applications without changing your source code, be sure to modify the command line in your Makefile to pick up the Xalan headers from it's new location. e.g:  if your xalan source location is in /home/xml-xalan,</note><p>
+    <br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<code>CC ... -I/home/xml-xalan/c/src -I/home/xml-xalan/c/src/xalanc mysrc.cpp</code><anchor name="64"/></p>
    </s3><anchor name="samples"/>
    <s3 title="Rebuilding a Sample application">
    <p>In the Windows32 distribution, all of the sample applications can be built from the Xalan.dsw Visual C++ workspace. If you modify a sample and want to recompile it, you can recompile the .cpp file(s) and rebuild the executable.</p>
