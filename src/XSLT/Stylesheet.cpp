@@ -1560,7 +1560,7 @@ Stylesheet::normalize()
 
 
 bool
-Stylesheet::supports(
+Stylesheet::isSupported(
 			const XalanDOMString&	/* feature */,
 			const XalanDOMString&	/* version */) const
 {

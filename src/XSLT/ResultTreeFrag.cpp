@@ -335,7 +335,7 @@ ResultTreeFrag::normalize()
 
 
 bool
-ResultTreeFrag::supports(
+ResultTreeFrag::isSupported(
 			const XalanDOMString&	/* feature */,
 			const XalanDOMString&	/* version */) const
 {

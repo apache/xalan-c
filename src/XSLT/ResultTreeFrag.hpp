@@ -183,7 +183,7 @@ public:
 	normalize();
 
 	virtual bool
-	supports(
+	isSupported(
 			const XalanDOMString&	feature,
 			const XalanDOMString&	version) const;
 

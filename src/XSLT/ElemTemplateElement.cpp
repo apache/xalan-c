@@ -1126,7 +1126,7 @@ ElemTemplateElement::normalize()
 
 
 bool
-ElemTemplateElement::supports(
+ElemTemplateElement::isSupported(
 			const XalanDOMString&	/* feature */,
 			const XalanDOMString&	/* version */) const
 {
