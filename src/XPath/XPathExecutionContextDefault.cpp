@@ -67,12 +67,12 @@
 
 
 #include <DOMSupport/DOMSupport.hpp>
+#include <DOMSupport/PrefixResolver.hpp>
 
 
 
 #include "FoundIndex.hpp"
 #include "XObjectFactory.hpp"
-#include "PrefixResolver.hpp"
 #include "ResultTreeFrag.hpp"
 #include "QName.hpp"
 #include "XPathEnvSupport.hpp"

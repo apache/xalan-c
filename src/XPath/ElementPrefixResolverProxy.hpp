@@ -65,7 +65,7 @@
 
 
 // Base class header file...
-#include <XPath/PrefixResolver.hpp>
+#include <DOMSupport/PrefixResolver.hpp>
 
 
 

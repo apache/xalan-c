@@ -72,10 +72,13 @@
 
 
 
+#include <DOMSupport/PrefixResolver.hpp>
+
+
+
 #include "FoundIndex.hpp"
 #include "MutableNodeRefList.hpp"
 #include "QNameByReference.hpp"
-#include "PrefixResolver.hpp"
 #include "SimpleNodeLocator.hpp"
 #include "XLocator.hpp"
 #include "XPathException.hpp"

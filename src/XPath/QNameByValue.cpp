@@ -65,11 +65,11 @@
 
 #include <DOMSupport/DOMServices.hpp>
 #include <DOMSupport/DOMSupport.hpp>
+#include <DOMSupport/PrefixResolver.hpp>
 
 
 
 #include "ElementPrefixResolverProxy.hpp"
-#include "PrefixResolver.hpp"
 
 
 

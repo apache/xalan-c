@@ -70,10 +70,10 @@
 
 
 #include <DOMSupport/DOMServices.hpp>
+#include <DOMSupport/PrefixResolver.hpp>
 
 
 
-#include "PrefixResolver.hpp"
 #include "XPathEnvSupport.hpp"
 #include "XPathExecutionContext.hpp"
 #include "XPathParserException.hpp"
