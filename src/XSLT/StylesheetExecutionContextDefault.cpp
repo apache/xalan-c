@@ -651,7 +651,16 @@ StylesheetExecutionContextDefault::createVariable(
 			XalanNode*					contextNode,
 			const PrefixResolver&		resolver)
 {
-	return xpath.execute(contextNode, resolver, *this);
+	XalanNode* const	theCurrentNode = getCurrentNode();
+			
+	if (theCurrentNode == contextNode)
+	{
+		return xpath.execute(resolver, *this);
+	}
+	else
+	{
+		return xpath.execute(contextNode, resolver, *this);
+	}
 }
 
 
