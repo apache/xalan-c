@@ -66,8 +66,11 @@
 
 
 
+#include <PlatformSupport/PrefixResolver.hpp>
+
+
+
 #include <DOMSupport/DOMSupport.hpp>
-#include <DOMSupport/PrefixResolver.hpp>
 
 
 

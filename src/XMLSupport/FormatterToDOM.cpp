@@ -80,10 +80,7 @@
 
 
 #include <PlatformSupport/DOMStringHelper.hpp>
-
-
-
-#include <DOMSupport/PrefixResolver.hpp>
+#include <PlatformSupport/PrefixResolver.hpp>
 
 
 
@@ -101,8 +98,7 @@ FormatterToDOM::FormatterToDOM(
 	m_currentElem(currentElement),
 	m_elemStack(),
 	m_buffer1(),
-	m_buffer2(),
-	m_prefixResolver(0)
+	m_buffer2()
 {
 	assert(m_doc != 0 && m_docFrag != 0);
 }
@@ -118,8 +114,7 @@ FormatterToDOM::FormatterToDOM(
 	m_currentElem(elem),
 	m_elemStack(),
 	m_buffer1(),
-	m_buffer2(),
-	m_prefixResolver(0)
+	m_buffer2()
 {
 	assert(m_doc != 0);
 }

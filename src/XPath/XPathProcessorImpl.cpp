@@ -65,12 +65,12 @@
 #include <PlatformSupport/DOMStringHelper.hpp>
 #include <PlatformSupport/DOMStringPrintWriter.hpp>
 #include <PlatformSupport/DoubleSupport.hpp>
+#include <PlatformSupport/PrefixResolver.hpp>
 #include <PlatformSupport/XalanXMLChar.hpp>
 
 
 
 #include <DOMSupport/DOMServices.hpp>
-#include <DOMSupport/PrefixResolver.hpp>
 
 
 
@@ -893,7 +893,7 @@ XPathProcessorImpl::consumeExpected(char	expected)
 void
 XPathProcessorImpl::error(
 			const XalanDOMString&	msg,
-			XalanNode*				sourceNode) const
+			XalanNode*				/* sourceNode */) const
 {
 	XalanDOMString	emsg;
 

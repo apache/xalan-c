@@ -67,11 +67,8 @@
 
 
 
+#include <PlatformSupport/PrefixResolver.hpp>
 #include <PlatformSupport/XalanUnicode.hpp>
-
-
-
-#include <DOMSupport/PrefixResolver.hpp>
 
 
 

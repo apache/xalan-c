@@ -73,10 +73,7 @@
 
 
 #include <PlatformSupport/DOMStringHelper.hpp>
-
-
-
-#include <DOMSupport/PrefixResolver.hpp>
+#include <PlatformSupport/PrefixResolver.hpp>
 
 
 
@@ -98,8 +95,7 @@ FormatterToSourceTree::FormatterToSourceTree(XalanSourceTreeDocument*	theDocumen
 	m_documentFragment(0),
 	m_currentElement(0),
 	m_elementStack(),
-	m_textBuffer(),
-	m_prefixResolver(0)
+	m_textBuffer()
 {
 }
 
@@ -113,8 +109,7 @@ FormatterToSourceTree::FormatterToSourceTree(
 	m_documentFragment(theDocumentFragment),
 	m_currentElement(0),
 	m_elementStack(),
-	m_textBuffer(),
-	m_prefixResolver(0)
+	m_textBuffer()
 {
 	assert(m_document != 0);
 	assert(m_documentFragment != 0);

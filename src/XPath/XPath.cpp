@@ -72,10 +72,7 @@
 
 
 #include <PlatformSupport/DoubleSupport.hpp>
-
-
-
-#include <DOMSupport/PrefixResolver.hpp>
+#include <PlatformSupport/PrefixResolver.hpp>
 
 
 

@@ -64,11 +64,11 @@
 
 
 #include <PlatformSupport/DOMStringHelper.hpp>
+#include <PlatformSupport/PrefixResolver.hpp>
 
 
 
 #include <DOMSupport/DOMServices.hpp>
-#include <DOMSupport/PrefixResolver.hpp>
 
 
 

@@ -77,7 +77,6 @@
 
 
 
-class PrefixResolver;
 class XalanDocument;
 class XalanDocumentFragment;
 class XalanElement;
@@ -120,18 +119,6 @@ public:
 	virtual
 	~FormatterToDOM();
 
-
-	const PrefixResolver*
-	getPrefixResolver() const
-	{
-		return m_prefixResolver;
-	}
-
-	void
-	setPrefixResolver(const PrefixResolver*		thePrefixResolver)
-	{
-		m_prefixResolver = thePrefixResolver;
-	}
 
 	// These methods are inherited from DocumentHandler ...
 
@@ -272,8 +259,6 @@ private:
 	XalanDOMString					m_buffer1;
 
 	XalanDOMString					m_buffer2;
-
-	const PrefixResolver*			m_prefixResolver;
 
 	static const XalanDOMString		s_emptyString;
 };

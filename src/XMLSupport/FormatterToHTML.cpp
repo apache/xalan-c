@@ -77,6 +77,7 @@
 
 
 #include <PlatformSupport/DOMStringHelper.hpp>
+#include <PlatformSupport/PrefixResolver.hpp>
 #include <PlatformSupport/Writer.hpp>
 #include <PlatformSupport/XalanUnicode.hpp>
 #include <PlatformSupport/XalanXMLChar.hpp>
@@ -84,7 +85,6 @@
 
 
 #include <DOMSupport/DOMServices.hpp>
-#include <DOMSupport/PrefixResolver.hpp>
 
 
 
@@ -122,7 +122,6 @@ FormatterToHTML::FormatterToHTML(
 	m_escapeURLs(true),
 	m_isFirstElement(false),
 	m_elementLevel(0),
-	m_prefixResolver(0),
 	m_hasNamespaceStack()
 {
 	initCharsMap();

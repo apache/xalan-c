@@ -91,10 +91,6 @@
 
 
 
-class PrefixResolver;
-
-
-
 /**
  * FormatterToHTML formats SAX-style events into HTML.
  */
@@ -197,18 +193,6 @@ public:
 			const XMLCh* const	target,
 			const XMLCh* const	data);
 
-
-	const PrefixResolver*
-	getPrefixResolver() const
-	{
-		return m_prefixResolver;
-	}
-
-	void
-	setPrefixResolver(const PrefixResolver*		thePrefixResolver)
-	{
-		m_prefixResolver = thePrefixResolver;
-	}
 
 	class ElemDesc
 	{
@@ -477,11 +461,6 @@ private:
 	 * A counter so we can tell if we're inside the document element.
 	 */
 	int						m_elementLevel;
-
-	/**
-	 * A prefix resolver for elements that have prefixes.
-	 */
-	const PrefixResolver*	m_prefixResolver;
 
 	/**
 	 * A stack to determine if the current element has

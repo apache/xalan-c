@@ -59,13 +59,13 @@
 
 
 
+#include <PlatformSupport/PrefixResolver.hpp>
 #include <PlatformSupport/XSLException.hpp>
 
 
 
 #include <DOMSupport/DOMServices.hpp>
 #include <DOMSupport/DOMSupport.hpp>
-#include <DOMSupport/PrefixResolver.hpp>
 
 
 

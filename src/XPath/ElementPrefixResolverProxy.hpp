@@ -64,12 +64,12 @@
 
 
 
-// Base class header file...
-#include <DOMSupport/PrefixResolver.hpp>
-
-
-
 #include <XalanDOM/XalanDOMString.hpp>
+
+
+
+// Base class header file...
+#include <PlatformSupport/PrefixResolver.hpp>
 
 
 

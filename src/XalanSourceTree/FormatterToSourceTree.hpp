@@ -168,18 +168,6 @@ public:
 		m_currentElement = theElement;
 	}
 
-	const PrefixResolver*
-	getPrefixResolver() const
-	{
-		return m_prefixResolver;
-	}
-
-	void
-	setPrefixResolver(const PrefixResolver*		thePrefixResolver)
-	{
-		m_prefixResolver = thePrefixResolver;
-	}
-
 	// These methods are inherited from DocumentHandler ...
 
 	virtual void
@@ -272,8 +260,6 @@ private:
 	ElementStackType								m_elementStack;
 
 	XalanDOMString									m_textBuffer;
-
-	const PrefixResolver*							m_prefixResolver;
 };
 
 
