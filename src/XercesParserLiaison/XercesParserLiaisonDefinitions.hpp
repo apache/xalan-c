@@ -63,6 +63,10 @@
 
 
 
+#include <xercesc/util/XercesDefs.hpp>
+
+
+
 #if defined(XALAN_XERCESPARSERLIAISON_BUILD_DLL)
 
 #define XALAN_XERCESPARSERLIAISON_EXPORT XALAN_PLATFORM_EXPORT
