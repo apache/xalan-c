@@ -331,11 +331,10 @@ XalanEXSLTFunctionEncodeURI::s_reservedChars[] =
 	XalanUnicode::charQuestionMark,
 	XalanUnicode::charCommercialAt,
 	XalanUnicode::charLeftSquareBracket,
-	XalanUnicode::charRightSquareBracket,
-	0
+	XalanUnicode::charRightSquareBracket
 };
 const XalanDOMString::size_type 
-XalanEXSLTFunctionEncodeURI::s_reservedCharsSize = 12;
+XalanEXSLTFunctionEncodeURI::s_reservedCharsSize = sizeof(s_reservedChars) / sizeof(s_reservedChars[0]);;
 
 // Excluded URI characters
 const XalanDOMChar
@@ -377,11 +376,12 @@ XalanEXSLTFunctionEncodeURI::execute(
 
 	const XalanDOMString& theString = args[0]->str();
 	const bool            escapeReserved = args[1]->boolean();
-	const XalanDOMString& theEncoding = 
-		theSize == 3 ? args[2]->str() : XalanDOMString(XalanTranscodingServices::s_utf8String);
+
+	// We only support UTF-8, which is the default when there are only two arguments.
+	const bool	fSupportedEncoding = theSize == 2 || XalanTranscodingServices::encodingIsUTF8(args[2]->str());
 
 	if (theString.length() == 0 ||
-		!XalanTranscodingServices::encodingIsUTF8(theEncoding))
+		!fSupportedEncoding)
 	{
 		return executionContext.getXObjectFactory().createStringReference(s_emptyString);
 	} 	
@@ -491,11 +491,11 @@ XalanEXSLTFunctionDecodeURI::execute(
 		   (theSize == 2 || args[1].null() == false));
 
     const XalanDOMString& theString = args[0]->str();
-	const XalanDOMString& theEncoding = 
-		theSize == 2 ? args[1]->str() : XalanDOMString(XalanTranscodingServices::s_utf8String);
 
-	if (theString.length() == 0 ||
-		!XalanTranscodingServices::encodingIsUTF8(theEncoding))
+	// We only support UTF-8, which is the default when there's only one argument.
+	const bool	fSupportedEncoding = theSize == 1 || XalanTranscodingServices::encodingIsUTF8(args[1]->str());
+
+	if (theString.length() == 0 || !fSupportedEncoding)
 	{
 		return executionContext.getXObjectFactory().createStringReference(s_emptyString);
 	} 
@@ -512,9 +512,9 @@ XalanEXSLTFunctionDecodeURI::execute(
 			theResult+= ch;
 			continue;
 		}
-		
+
 		// escaped character
-		
+
 		// count number of escaped octets
 		XalanDOMString::size_type numOctets = 0;
 		XalanDOMString::size_type j = i;
@@ -526,7 +526,7 @@ XalanEXSLTFunctionDecodeURI::execute(
 			++numOctets;
 			j+= s_octetSize;
 		}
-		
+
 		// no complete sequences found
 		if (numOctets < 1) {
 			break;
@@ -546,7 +546,7 @@ XalanEXSLTFunctionDecodeURI::execute(
 			XalanDOMChar byte2 = hexCharsToByte(executionContext, context, locator,
 											    theString[i+1],theString[i+2]);
 			i+=2;
-	
+
 			if (byte2 & 0x80 == 0) 
 			{
 				// invalid byte, bypass rest of this sequence
