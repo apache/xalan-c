@@ -176,6 +176,8 @@ void xsltMain(int argc, const char* argv[] ) throw(XMLException)
  *		-F (Format output pretty-printed)
  */
 	XMLPlatformUtils::Initialize();
+	XSLTEngineImpl::Initialize();
+
 
 	bool doStackDumpOnError = false;
 	bool setQuietMode = false;
