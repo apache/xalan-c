@@ -187,7 +187,7 @@ XalanTransformer::~XalanTransformer()
 			 DeleteFunctor<XalanParsedSource>());
 
 	for (FunctionParamPairVectorType::size_type i = 0; i < m_functionPairs.size(); ++i)
-	{			
+	{
 		delete m_functionPairs[i].second;
 	}
 

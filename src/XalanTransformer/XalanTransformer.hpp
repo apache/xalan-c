@@ -745,6 +745,7 @@ public:
 
 	/**
 	 * Enums to determine whether or not run-time omission of the META tag has been set.
+	 * Relevant only for HTML output
 	 */
 	enum eOmitMETATag
 	{
@@ -754,7 +755,7 @@ public:
 	};
 
 	/**
-	 * Get the value for run-time omission of URLs.  This can
+	 * Get the value for run-time omission of the META tag.  This can
 	 * override the property specified by the stylesheet.  The
 	 * default behavior is to honor the property in the stylesheet.
 	 *
@@ -764,7 +765,7 @@ public:
 	getOmitMETATag() const;
 
 	/**
-	 * Get the value for run-time omission of URLs.  This can
+	 * Get the value for run-time omission of the META tag.  This can
 	 * override the property specified by the stylesheet.  The
 	 * default behavior is to honor the property in the stylesheet.
 	 *
