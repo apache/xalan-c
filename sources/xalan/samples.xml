@@ -255,6 +255,10 @@ theProcessor.addTraceListener(&amp;theTraceListener);
     <p>See also: <link idref="extensions">Extension Functions</link>.</p>
   </s2><anchor name="apachemodulexslt"/>
   <s2 title="ApacheModuleXSLT">
+  <note>This sample must be built with the Apache Web server, and the &xslt4c; distribution files do not include a binary
+    for ApacheModuleXSLT. Assuming you have installed the Apache server on your platform, you can use Visual C++ on Windows to
+    build ApacheModuleXSLT.dll, or the makefile on UNIX to build xslt_module (with the appropriate library suffix).</note>
+    
   <p>What it does: runs as an Apache module on an Apache Web server; performs transformations and returns the output to a Web
   browser. You configure Apache to respond to a given URL request for an output file (html or txt file in the configuration below)
   by applying an xsl stylesheet file to an xml document file (both with the specified name in a given location) and returning
@@ -262,12 +266,9 @@ theProcessor.addTraceListener(&amp;theTraceListener);
   <p>This sample also illustrates use of the XalanTransformer class and the C API defined in src/XalanTransformer/XalanCAPI.h. It returns 
   transformation output in blocks to a callback function, which enables the browser to start displaying the result before the transformation
   has been completed.</p>
-  <p>In the Windows distribution, this ApacheModuleXSLT is named ApacheModuleXSLT.dll. In the Linux distribution, it is named mod_xslt.so. 
-  For the other UNIX distributions, assuming you have installed the Apache server on that platform, you can use the makefile to build the
-  Apache module (mod_xslt with the appropriate library suffix).</p>
   <note>You may need to adjust the Visual C++ or makefile settings to locate the required Apache header files. As shipped, the Visual C++ 
   project file looks in \Apache Group\Apache\src\include, and the UNIX makefile looks in usr/lib.</note>
-  <p>To build (or rebuild) the Apache module, follow the instructions in <link idref="readme" anchor="win32">Steps for doing a Windows 
+  <p>To build the Apache module, follow the instructions in <link idref="readme" anchor="win32">Steps for doing a Windows 
   build</link> or <link idref="readme" anchor="unix">Steps for doing a UNIX build</link>. For UNIX platforms, you do the build with<br/> 
   <code>make ApacheModuleXSLT</code>.</p>
   <s3 title="Setting up and using ApacheModuleXSLT">
