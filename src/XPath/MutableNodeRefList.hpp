@@ -265,6 +265,24 @@ public:
 	}
 
 	/**
+	 * See if the order of the nodes is an unknown order.
+	 */
+	bool
+	getUnknownOrder() const
+	{
+		return m_order == eUnknownOrder ? true : false;
+	}
+
+	/**
+	 * See if the order of the nodes is document order.
+	 */
+	bool
+	getDocumentOrder() const
+	{
+		return m_order == eDocumentOrder ? true : false;
+	}
+
+	/**
 	 * Set the known order of the nodes.  This should
 	 * only be done when the order is known. Otherwise,
 	 * disaster will ensue.
@@ -273,6 +291,15 @@ public:
 	setDocumentOrder()
 	{
 		m_order = eDocumentOrder;
+	}
+
+	/**
+	 * See if the order of the nodes is reverse document order.
+	 */
+	bool
+	getReverseDocumentOrder() const
+	{
+		return m_order == eReverseDocumentOrder ? true : false;
 	}
 
 	/**
