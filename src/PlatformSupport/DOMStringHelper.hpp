@@ -371,9 +371,42 @@ indexOf(
 			const XalanDOMChar*		theString,
 			XalanDOMChar			theChar)
 {
+	assert(theString != 0);
+
 	const XalanDOMChar*		thePointer = theString;
 
 	while(*thePointer != theChar && *thePointer != 0)
+	{
+		++thePointer;
+	}
+
+	return thePointer - theString;
+}
+
+
+
+/**
+ * Simulates the java String method indexOf().
+ * 
+ * @param theString string to search
+ * @param theStringLength the length of theString
+ * @param theChar   character searched for
+ * @return the index of theChar in theString,
+ * or length(theString) if the character is not
+ * found.    
+ */
+inline unsigned int
+indexOf(
+			const XalanDOMChar*		theString,
+			unsigned int			theStringLength,
+			XalanDOMChar			theChar)
+{
+	assert(theString != 0);
+
+	const XalanDOMChar*			thePointer = theString;
+	const XalanDOMChar*	const	theEndPointer = theString + theStringLength;
+
+	while(*thePointer != theChar && thePointer != theEndPointer)
 	{
 		++thePointer;
 	}
