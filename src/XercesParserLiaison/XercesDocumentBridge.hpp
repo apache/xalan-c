@@ -147,7 +147,7 @@ public:
 	 *
 	 */
 	XercesDocumentBridge(
-			const DOM_DocumentType&		theXercesDocument,
+			const DOM_Document_Type&	theXercesDocument,
 			bool						threadSafe = true,
 			bool						buildBridge = true);
 
@@ -352,7 +352,7 @@ public:
 	 * @return the Xerces DOM_Document instance.
 	 *
 	 */
-	DOM_DocumentType
+	DOM_Document_Type
 	getXercesDocument() const
 	{
 		return m_xercesDocument;
@@ -496,9 +496,9 @@ private:
 
 	XercesDocumentTypeBridge*
 	createBridgeNode(
-			const DOM_DocTypeType&	theDoctype,
-			unsigned long			theIndex,
-			bool					mapNode) const;
+			const DOM_DocumentType_Type&	theDoctype,
+			unsigned long					theIndex,
+			bool							mapNode) const;
 
 	XercesElementBridge*
 	createBridgeNode(
@@ -568,7 +568,7 @@ private:
 
 	// $$$ ToDo: This is because DOM_Document::getElementById() is not
 	// const...
-	mutable DOM_DocumentType				m_xercesDocument;
+	mutable DOM_Document_Type				m_xercesDocument;
 
 	XalanElement*							m_documentElement;
 

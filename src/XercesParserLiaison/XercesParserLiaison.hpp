@@ -351,7 +351,7 @@ public:
 	 * @return a pointer to a new XalanDocument-derived instance.
 	 */
 	XalanDocument*
-	createDocument(const DOM_DocumentType&	theXercesDocument)
+	createDocument(const DOM_Document_Type&		theXercesDocument)
 	{
 		return createDocument(theXercesDocument, m_threadSafe, m_buildBridge);
 	}
@@ -372,7 +372,7 @@ public:
 	 */
 	XalanDocument*
 	createDocument(
-			const DOM_DocumentType& 	theXercesDocument,
+			const DOM_Document_Type& 	theXercesDocument,
 			bool						threadSafe,
 			bool						buildBridge);
 
@@ -386,7 +386,7 @@ public:
 	 * @return a pointer to a new XalanDocument-derived instance.
 	 */
 	XalanDocument*
-	createDocument(const DOMDocumentType*	theXercesDocument)
+	createDocument(const DOMDocument_Type*	theXercesDocument)
 	{
 		return createDocument(theXercesDocument, m_threadSafe, m_buildWrapper);
 	}
@@ -404,9 +404,9 @@ public:
 	 */
 	XalanDocument*
 	createDocument(
-			const DOMDocumentType*	theXercesDocument,
-			bool					threadSafe,
-			bool					buildWrapper);
+			const DOMDocument_Type*		theXercesDocument,
+			bool						threadSafe,
+			bool						buildWrapper);
 
 	/**
 	 * This API is deprecated.
@@ -447,7 +447,7 @@ public:
 	 * @param theDocument A pointer to a XalanDocument instance.
 	 * @return A pointer to the XercesDocumentBridge instance.
 	 */
-	DOM_DocumentType
+	DOM_Document_Type
 	mapXercesDocument(const XalanDocument*	theDocument) const;
 
 	/** 
@@ -459,7 +459,7 @@ public:
 	 * @param theDocument A pointer to a XalanDocument instance.
 	 * @return A pointer to the XercesDocumentBridge instance.
 	 */
-	const DOMDocumentType*
+	const DOMDocument_Type*
 	mapToXercesDocument(const XalanDocument*	theDocument) const;
 
 	// Implementations for SAX ErrorHandler
@@ -657,7 +657,7 @@ protected:
 	 */
 	XercesDocumentBridge*
 	doCreateDocument(
-			const DOM_DocumentType& 	theXercesDocument,
+			const DOM_Document_Type& 	theXercesDocument,
 			bool						threadSafe,
 			bool						buildBridge);
 
@@ -671,10 +671,10 @@ protected:
 	 */
 	XercesDocumentWrapper*
 	doCreateDocument(
-			const DOMDocumentType*	theXercesDocument,
-			bool					threadSafe,
-			bool					buildWrapper,
-			bool					isOwned);
+			const DOMDocument_Type*		theXercesDocument,
+			bool						threadSafe,
+			bool						buildWrapper,
+			bool						isOwned);
 
 private:
 

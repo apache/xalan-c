@@ -238,12 +238,12 @@ XercesParserLiaison::parseXMLStream(
 	theParser->parse(reader);
 
 #if XERCES_VERSION_MAJOR >= 2
-	DOMDocumentType* const	theXercesDocument =
+	DOMDocument_Type* const	theXercesDocument =
 		theParser->getDocument();
 
 	theXercesDocument->normalize();
 #else
-	DOM_DocumentType	theXercesDocument =
+	DOM_Document_Type	theXercesDocument =
 		theParser->getDocument();
 
 	theXercesDocument.normalize();
@@ -274,8 +274,8 @@ XercesParserLiaison::parseXMLStream(
 XalanDocument*
 XercesParserLiaison::createDocument()
 {
-	const DOM_DocumentType	theXercesDocument =
-		DOM_DocumentType::createDocument();
+	const DOM_Document_Type	theXercesDocument =
+		DOM_Document_Type::createDocument();
 
 	return createDocument(theXercesDocument, false, false);
 }
@@ -471,7 +471,7 @@ XercesParserLiaison::setExternalNoNamespaceSchemaLocation(const XalanDOMChar*	lo
 
 XalanDocument*
 XercesParserLiaison::createDocument(
-			const DOM_DocumentType& 	theXercesDocument,
+			const DOM_Document_Type& 	theXercesDocument,
 			bool						threadSafe,
 			bool						buildBridge)
 {
@@ -482,9 +482,9 @@ XercesParserLiaison::createDocument(
 
 XalanDocument*
 XercesParserLiaison::createDocument(
-			const DOMDocumentType*	theXercesDocument,
-			bool					threadSafe,
-			bool					buildWrapper)
+			const DOMDocument_Type*		theXercesDocument,
+			bool						threadSafe,
+			bool						buildWrapper)
 {
 	// As we did not create the underlying DOMDocument - ensure we don't
 	// delete it later.
@@ -515,18 +515,18 @@ XercesParserLiaison::mapDocumentToWrapper(const XalanDocument*	theDocument) cons
 
 
 
-DOM_DocumentType
+DOM_Document_Type
 XercesParserLiaison::mapXercesDocument(const XalanDocument* 	theDocument) const
 {
 	const DocumentMapType::const_iterator	i =
 		m_documentMap.find(theDocument);
 
-	return i != m_documentMap.end() ? (*i).second.m_isDeprecated == true ? (*i).second.m_bridge->getXercesDocument() : DOM_DocumentType() : DOM_DocumentType();
+	return i != m_documentMap.end() ? (*i).second.m_isDeprecated == true ? (*i).second.m_bridge->getXercesDocument() : DOM_Document_Type() : DOM_Document_Type();
 }
 
 
 
-const DOMDocumentType*
+const DOMDocument_Type*
 XercesParserLiaison::mapToXercesDocument(const XalanDocument*	theDocument) const
 {
 	const DocumentMapType::const_iterator	i =
@@ -717,7 +717,7 @@ XercesParserLiaison::CreateSAXParser()
 
 XercesDocumentBridge*
 XercesParserLiaison::doCreateDocument(
-			const DOM_DocumentType& 	theXercesDocument,
+			const DOM_Document_Type& 	theXercesDocument,
 			bool						threadSafe,
 			bool						buildBridge)
 {
@@ -733,10 +733,10 @@ XercesParserLiaison::doCreateDocument(
 
 XercesDocumentWrapper*
 XercesParserLiaison::doCreateDocument(
-			const DOMDocumentType*	theXercesDocument,
-			bool					threadSafe,
-			bool					buildWrapper,
-			bool					isOwned)
+			const DOMDocument_Type*		theXercesDocument,
+			bool						threadSafe,
+			bool						buildWrapper,
+			bool						isOwned)
 {
 	XercesDocumentWrapper* const		theNewDocument =
 		new XercesDocumentWrapper(theXercesDocument, threadSafe, buildWrapper);

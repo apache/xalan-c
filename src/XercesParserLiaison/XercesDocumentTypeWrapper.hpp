@@ -86,7 +86,7 @@ class XALAN_XERCESPARSERLIAISON_EXPORT XercesDocumentTypeWrapper : public XalanD
 public:
 
 	XercesDocumentTypeWrapper(
-			const DOMDocTypeType*			theXercesDOMDocumentType,
+			const DOMDocumentType_Type*		theXercesDOMDocumentType,
 			const XercesWrapperNavigator&	theNavigator);
 
 	virtual
@@ -491,7 +491,7 @@ public:
 	 *
 	 * @return The Xerces node
 	 */
-	const DOMDocTypeType*
+	const DOMDocumentType_Type*
 	getXercesNode() const
 	{
 		return m_xercesNode;
@@ -511,13 +511,13 @@ private:
 	operator==(const XercesDocumentTypeWrapper&		theRHS) const;
 
 	// Data members...
-	const DOMDocTypeType* const		m_xercesNode;
+	const DOMDocumentType_Type* const	m_xercesNode;
 
-	XercesNamedNodeMapWrapper		m_entities;
+	XercesNamedNodeMapWrapper			m_entities;
 	
-	XercesNamedNodeMapWrapper		m_notations;
+	XercesNamedNodeMapWrapper			m_notations;
 
-	const XercesWrapperNavigator&	m_navigator;
+	const XercesWrapperNavigator&		m_navigator;
 };
 
 

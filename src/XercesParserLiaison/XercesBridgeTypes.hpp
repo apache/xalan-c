@@ -99,8 +99,9 @@ typedef XERCES_CPP_NAMESPACE_QUALIFIER DOM_Attr				DOM_AttrType;
 typedef XERCES_CPP_NAMESPACE_QUALIFIER DOM_CharacterData	DOM_CharacterDataType;
 typedef XERCES_CPP_NAMESPACE_QUALIFIER DOM_Comment			DOM_CommentType;
 typedef XERCES_CPP_NAMESPACE_QUALIFIER DOM_CDATASection		DOM_CDATASectionType;
-typedef XERCES_CPP_NAMESPACE_QUALIFIER DOM_DocumentType		DOM_DocTypeType;
-typedef XERCES_CPP_NAMESPACE_QUALIFIER DOM_Document			DOM_DocumentType;
+// These next two have an extra '_' because they collide without it...
+typedef XERCES_CPP_NAMESPACE_QUALIFIER DOM_DocumentType		DOM_DocumentType_Type;
+typedef XERCES_CPP_NAMESPACE_QUALIFIER DOM_Document			DOM_Document_Type;
 typedef XERCES_CPP_NAMESPACE_QUALIFIER DOM_DocumentFragment	DOM_DocumentFragmentType;
 typedef XERCES_CPP_NAMESPACE_QUALIFIER DOM_DOMImplementation	DOM_DOMImplementationType;
 typedef XERCES_CPP_NAMESPACE_QUALIFIER DOM_Element			DOM_ElementType;

@@ -94,7 +94,7 @@ class XALAN_XERCESPARSERLIAISON_EXPORT XercesDocumentTypeBridge : public XalanDo
 public:
 
 	XercesDocumentTypeBridge(
-			const DOM_DocTypeType&			theXercesDOMDocumentType,
+			const DOM_DocumentType_Type&	theXercesDOMDocumentType,
 			const XercesBridgeNavigator&	theNavigator);
 
 	virtual
@@ -499,7 +499,7 @@ public:
 	 *
 	 * @return The Xerces node
 	 */
-	DOM_DocTypeType
+	DOM_DocumentType_Type
 	getXercesNode() const
 	{
 		return m_xercesNode;
@@ -519,7 +519,7 @@ private:
 	operator==(const XercesDocumentTypeBridge&	theRHS) const;
 
 	// Data members...
-	DOM_DocTypeType					m_xercesNode;
+	DOM_DocumentType_Type			m_xercesNode;
 
 	XercesNamedNodeMapBridge		m_entities;
 	

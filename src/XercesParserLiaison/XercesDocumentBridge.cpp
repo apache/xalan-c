@@ -101,7 +101,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 XercesDocumentBridge::XercesDocumentBridge(
-			const DOM_DocumentType&		theXercesDocument,
+			const DOM_Document_Type&	theXercesDocument,
 			bool						threadSafe,
 			bool						buildBridge) :
 	XalanDocument(),
@@ -332,9 +332,9 @@ XercesDocumentBridge::pushNavigator(bool	mappingMode) const
 
 XercesDocumentTypeBridge*
 XercesDocumentBridge::createBridgeNode(
-			const DOM_DocTypeType&	theDoctype,
-			unsigned long			theIndex,
-			bool					mapNode) const
+			const DOM_DocumentType_Type&	theDoctype,
+			unsigned long					theIndex,
+			bool							mapNode) const
 {
 	// This is a special case, since there is only one
 	// doctype node allowed...
@@ -873,11 +873,11 @@ XercesDocumentBridge::createBridgeNode(
 
 	case DOM_NodeType::DOCUMENT_TYPE_NODE:
 		{
-			const DOM_DocTypeType&		theDoctypeNode =
+			const DOM_DocumentType_Type&	theDoctypeNode =
 #if defined(XALAN_OLD_STYLE_CASTS)
-						(const DOM_DocTypeType&)theXercesNode;
+						(const DOM_DocumentType_Type&)theXercesNode;
 #else
-						static_cast<const DOM_DocTypeType&>(theXercesNode);
+						static_cast<const DOM_DocumentType_Type&>(theXercesNode);
 #endif
 
 			theNewNode = createBridgeNode(theDoctypeNode, theIndex, mapNode);
@@ -1062,9 +1062,9 @@ XercesDocumentBridge::cloneNode(bool	deep) const
 
 		theBridge =
 #if defined(XALAN_OLD_STYLE_CASTS)
-			new XercesDocumentBridge((const DOM_DocumentType&)theNewDocument);
+			new XercesDocumentBridge((const DOM_Document_Type&)theNewDocument);
 #else
-			new XercesDocumentBridge(static_cast<const DOM_DocumentType&>(theNewDocument));
+			new XercesDocumentBridge(static_cast<const DOM_Document_Type&>(theNewDocument));
 #endif
 	}
 	catch(const DOM_DOMExceptionType&	theException)
@@ -1678,11 +1678,11 @@ XercesDocumentBridge::BuildBridgeTreeWalker::startNode(const DOM_NodeType&	node)
 	if (theType == DOM_NodeType::DOCUMENT_TYPE_NODE)
 	{
 		// Special case for doctype -- we have to build its entities...
-		const DOM_DocTypeType&		theDoctype =
+		const DOM_DocumentType_Type&	theDoctype =
 #if defined(XALAN_OLD_STYLE_CASTS)
-			(const DOM_DocTypeType&)node;
+			(const DOM_DocumentType_Type&)node;
 #else
-			static_cast<const DOM_DocTypeType&>(node);
+			static_cast<const DOM_DocumentType_Type&>(node);
 #endif
 
 		const DOM_NamedNodeMapType	theEntities =

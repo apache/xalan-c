@@ -138,9 +138,9 @@ public:
 	 *
 	 */
 	XercesDocumentWrapper(
-			const DOMDocumentType*	theXercesDocument,
-			bool					threadSafe = true,
-			bool					buildWrapper = true);
+			const DOMDocument_Type*		theXercesDocument,
+			bool						threadSafe = true,
+			bool						buildWrapper = true);
 
 	virtual
 	~XercesDocumentWrapper();
@@ -340,7 +340,7 @@ public:
 	 * @return the Xerces DOMDocument instance.
 	 *
 	 */
-	const DOMDocumentType*
+	const DOMDocument_Type*
 	getXercesDocument() const
 	{
 		return m_xercesDocument;
@@ -476,9 +476,9 @@ private:
 
 	XercesDocumentTypeWrapper*
 	createWrapperNode(
-			const DOMDocTypeType*	theDoctype,
-			unsigned long			theIndex,
-			bool					mapNode) const;
+			const DOMDocumentType_Type*		theDoctype,
+			unsigned long					theIndex,
+			bool							mapNode) const;
 
 	XercesElementWrapper*
 	createWrapperNode(
@@ -540,7 +540,7 @@ private:
 	// This is a private helper class for building the tree...
 	friend class BuildWrapperTreeWalker;
 
-	const DOMDocumentType* const			m_xercesDocument;
+	const DOMDocument_Type* const			m_xercesDocument;
 
 	XalanElement*							m_documentElement;
 
