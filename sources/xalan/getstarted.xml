@@ -39,25 +39,25 @@ If you want to take advantage of the support for number formatting, sorting, and
 
 <p><em>Linux</em></p>
 <ul>
-  <li>The executable: TestXSLT</li>
+  <li>The executable: testXSLT</li>
   <li>The Xalan-C++ shared library: &xslt4c-linuxlib;</li>
   <li>The Xerces-C++ shared library: &xml4c-linuxlib;</li>
 </ul>
 <p><em>AIX</em></p>
 <ul>
-  <li>The executable: TestXSLT</li>
+  <li>The executable: testXSLT</li>
   <li>The Xalan-C++ load library: &xslt4c-aixlib;</li>
   <li>The Xerces-C++ load library: &xml4c-aixlib;</li>
 </ul>
 <p><em>HP-UX 11</em></p>
 <ul>
-  <li>The executable: TestXSLT</li>
+  <li>The executable: testXSLT</li>
   <li>The Xalan-C++ shared library: &xslt4c-hplib;</li>
   <li>The Xerces-C++ shared library: &xml4c-hplib;</li>
 </ul>
 <p><em>Solaris</em></p>
 <ul>
-  <li>The executable: TestXSLT</li>
+  <li>The executable: testXSLT</li>
   <li>The Xalan-C++ shared library: &xslt4c-solarislib;</li>
   <li>The Xerces-C++ shared library: &xml4c-solarislib;</li>
 </ul>
@@ -106,7 +106,7 @@ xml-xalan\c\Build\Win32\VC6\Release. In the UNIX distributions, the executables 
 <s2 title="Performing your own transformations from the command line">
 <p>TestXSLT provides a basic utility for performing transformations from the command line. The command line for 
 most standard transformations is as follows:</p>
-<p><code>TestXSLT -in <ref>xmlSource</ref> -xsl <ref>stylesheet</ref> -out <ref>outputfile</ref></code></p>
+<p><code>testXSLT -in <ref>xmlSource</ref> -xsl <ref>stylesheet</ref> -out <ref>outputfile</ref></code></p>
 <p>where <ref>xmlSource</ref> is the XML source file name, <ref>stylesheet</ref> is the XSL stylesheet file name, and <ref>outputfile</ref> is the output file name.</p>
 <p>If you want the output to be displayed on the screen, simply omit the -out flag and outputfile.</p>
 <p>You can use this utility to try out XSL stylesheets you have written, to make sure they do what you expect with the XML source files they are designed to transform. The utility provides useful messages if the source file or stylesheet is not well formed. If you include a DOCTYPE statement in your XML source files and include the -validate flag on the command line, the utility will also let you know whether the XML document is valid (conforms to that DOCTYPE). For more information, see <link idref="commandline">Command-Line Utility</link>.</p>

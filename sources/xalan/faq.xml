@@ -89,7 +89,7 @@
 
 <a><p>The Standard Template Library, or STL, is a C++ library of container classes, algorithms, and iterators; it provides many of the basic computer science algorithms and data structures. &xslt4c; implementation uses the SLT. STLport ports SGI STL to any platform possible and provides all necessary wrap-ups installed. If your compiler does not support the STL or its implementation is out of date, you will need to install the STLPort.</p> 
 
-<p>The STLPort is available for download from the site: <jump href="http://www.stlport.org/">http://www.stlport.org/</jump>.</p>
+<p>The STLPort version 4.0  for download from the site: <jump href="http://www.stlport.org/">http://www.stlport.org/</jump>.</p>
 
 <p>For more details on the STL, see: <jump href="http://www.sgi.com/tech/stl/stl_introduction.html">http://www.sgi.com/tech/stl/stl_introduction.html</jump>.</p></a>
 </faq>
@@ -188,7 +188,7 @@
           an invalid structure.  For example, text nodes are not allowed as children
           of the document node.</p>
 
-          <p>This is also a very common error when attempting to transform to DOM.
+          <p>This is a common error when attempting to transform to DOM.
           Source documents and stylesheets that might produce valid serialized XML
           might not produce value DOM.  The usual suspect is text nodes being
           generated before the document element is generated.</p>
