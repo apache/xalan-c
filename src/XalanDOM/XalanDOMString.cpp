@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -175,9 +175,7 @@ XalanDOMString::resize(
 			// If the string is not of 0 length, resize but
 			// put a copy of theChar where the terminating
 			// byte used to be.
-			m_data.resize(theCount, theChar);
-
-			m_data[theOldSize] = theChar;
+			m_data.resize(theCount + 1, theChar);
 		}
 
 		m_size = theCount;
@@ -232,16 +230,61 @@ XalanDOMString::erase(
 
 XalanDOMString&
 XalanDOMString::assign(
+			const XalanDOMString&	theSource,
+			size_type				thePosition,
+			size_type				theCount)
+{
+	invariants();
+
+	assert(thePosition < theSource.size() && thePosition + theCount <= theSource.size());
+
+	if (&theSource != this)
+	{
+		erase();
+
+		append(theSource, thePosition, theCount);
+	}
+	else
+	{
+		if (thePosition == 0)
+		{
+			// See if we're being asked to
+			// assign everything to ourself,
+			// which is a noop...
+			if (theCount != m_size)
+			{
+				// We're being asked to truncate...
+				resize(theCount);
+			}
+		}
+		else
+		{
+			// Yuck.  We have to move data...
+			memmove(&*begin(), &*begin() + thePosition, theCount * sizeof(XalanDOMChar));
+
+			resize(theCount);
+		}
+	}
+
+	invariants();
+
+	return *this;
+}
+
+
+
+XalanDOMString&
+XalanDOMString::assign(
 		const_iterator	theFirstPosition,
 		const_iterator	theLastPosition)
 {
 	invariants();
 
-	erase();
+	m_data.assign(theFirstPosition, theLastPosition);
 
-	invariants();
+	m_data.push_back(XalanDOMChar(0));
 
-	insert(begin(), theFirstPosition, theLastPosition);
+	m_size = m_data.size() - 1;
 
 	invariants();
 

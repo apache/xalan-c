@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -177,6 +177,22 @@ public:
 		return m_data.begin();
 	}
 
+	iterator
+	end()
+	{
+		invariants();
+
+		return m_data.end();
+	}
+
+	const_iterator
+	end() const
+	{
+		invariants();
+
+		return m_data.end();
+	}
+
 	reverse_iterator
 	rbegin()
 	{
@@ -191,6 +207,22 @@ public:
 		invariants();
 
 		return m_data.rbegin();
+	}
+
+	reverse_iterator
+	rend()
+	{
+		invariants();
+
+		return m_data.rend();
+	}
+
+	const_reverse_iterator
+	rend() const
+	{
+		invariants();
+
+		return m_data.rend();
 	}
 
 	size_type
@@ -417,21 +449,7 @@ public:
 	assign(
 			const XalanDOMString&	theSource,
 			size_type				thePosition,
-			size_type				theCount)
-	{
-		invariants();
-
-		if (&theSource != this)
-		{
-			erase();
-
-			append(theSource, thePosition, theCount);
-		}
-
-		invariants();
-
-		return *this;
-	}
+			size_type				theCount);
 
 	XalanDOMString&
 	assign(const XalanDOMString&	theSource)
