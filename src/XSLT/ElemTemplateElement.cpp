@@ -688,17 +688,21 @@ ElemTemplateElement::transformSelectedChildren(
 			xslInstruction,
 			executionContext);
 
-		sourceNodes = result->mutableNodeset();
-	
-		if(0 != getStylesheet().getStylesheetRoot().getTraceListeners())
+		// @@ JMD: Should this be an assert ??
+		if (0 != result)
 		{
-			getStylesheet().getStylesheetRoot().fireSelectedEvent(
-				SelectionEvent(executionContext, 
-					sourceNodeContext,
-					*this,
-					XALAN_STATIC_UCODE_STRING("select"),
-					*selectPattern,
-					result));
+			sourceNodes = result->mutableNodeset();
+
+			if(0 != getStylesheet().getStylesheetRoot().getTraceListeners())
+			{
+				getStylesheet().getStylesheetRoot().fireSelectedEvent(
+						SelectionEvent(executionContext, 
+							sourceNodeContext,
+							*this,
+							XALAN_STATIC_UCODE_STRING("select"),
+							*selectPattern,
+							result));
+			}
 		}
 		executionContext.setCurrentStackFrameIndex(savedCurrentStackFrameIndex);
 	}
