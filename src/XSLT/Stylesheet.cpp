@@ -157,11 +157,22 @@ Stylesheet::Stylesheet(
 	}
 	else
 	{
-		const XalanDOMString urlString = constructionContext.getURLStringFromString(m_baseIdent);
-
-		if (length(urlString) != 0)
+		try
 		{
-			m_includeStack.push_back(urlString);
+			const XalanDOMString urlString = constructionContext.getURLStringFromString(m_baseIdent);
+
+			if (length(urlString) != 0)
+			{
+				m_includeStack.push_back(urlString);
+			}
+		}
+		catch(const XMLException&	e)
+		{
+			// Assume that any exception here relates to get the urlString from
+			// m_baseIdent.  We'll assume that it's just a fake base identifier
+			// since the parser will throw the real error if the base identifier
+			// can't be resolved.
+			m_includeStack.push_back(baseIdentifier);
 		}
 	}
 }
