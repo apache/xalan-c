@@ -4,12 +4,12 @@
 <!ENTITY xslt4c-dist "Xalan-C_0_40_0">
 <!ENTITY xslt4c-current "Xalan-C++ version 0.40.0">
 <!ENTITY xslt4c-windlls "DOMSupport.dll, PlatformSupport.dll, XalanDOM.dll, XercesParserLiaison.dll, XercesPlatformSupport.dll, XMLSupport.dll, XPath.dll, XSLT.dll">
-<!ENTITY xslt4c-linuxlib "libxalan-c_0_40_0.so">
+<!ENTITY xslt4c-linuxlib "libxalan-c0_40.so">
 <!ENTITY xml4c "Xerces-C++">
 <!ENTITY xml4c-used "Xerces-C++ version 1.2.0a">
 <!ENTITY xml4c-windll "xerces-c_1_2.dll">
 <!ENTITY xml4c-winlib "xerces-c_1.lib">
-<!ENTITY xml4c-linuxlib "libxerces-c_1_2.so">
+<!ENTITY xml4c-linuxlib "libxerces-c1_2.so">
 <!ENTITY xslt4j "Xalan-Java">
 <!ENTITY icu-used "International Components for Unicode(ICU) 1.4.1.2 source files">
 <!ENTITY icu-windlls "icui18n.dll, icuuc.dll">

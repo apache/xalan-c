@@ -88,8 +88,8 @@
   </s2>
   
   <s2 title="Where do I get Xerces?">
-    <p>Both distributions include the Xerces runtime environment for Xalan -- xerces-c_1_2.dll for Windows,
-     and libxerces-c_1_2.so for Linux. To build applications with Xalan and Xerces, you also need the &xml4c;
+    <p>Both distributions include the Xerces runtime environment for Xalan -- &xml4c-windll; for Windows,
+     and &xml4c-linuxlib; for Linux. To build applications with Xalan and Xerces, you also need the &xml4c;
      binary distribution for your platform, which you can download from the  
      <resource-ref idref="xml4c-distdir"/>.</p>
      <note>Be sure you are using a compatible Xerces-C++ build. For information about the build with which this release
