@@ -122,13 +122,15 @@ NodeSorter::sort(
 	const unsigned int	theLength = theList.getLength();
 
 	// Copy the nodes to a vector...
-	NodeVectorType	theNodes(theLength);
+	NodeVectorType	theNodes;
+
+	theNodes.reserve(theLength);
 
 	unsigned int		i = 0;
 
 	for (; i < theLength; ++i)
 	{
-		theNodes[i] = theList.item(i);
+		theNodes.push_back(theList.item(i));
 	}
 
 	sort(theNodes,
@@ -185,7 +187,7 @@ NodeSorter::NodeSortKeyCompare::operator()(
 		{
 			const double	diff = n1Num - n2Num;
 
-			theResult =  diff < 0.0 ? true : false;
+			theResult =  diff <= 0.0 ? true : false;
 
 			if (theKey.getDescending() == true)
 			{
@@ -207,7 +209,7 @@ NodeSorter::NodeSortKeyCompare::operator()(
 		}
 		else
 		{
-			theResult = theCompareResult < 0 ? true : false;
+			theResult = theCompareResult <= 0 ? true : false;
 
 			if (theKey.getDescending() == true)
 			{
