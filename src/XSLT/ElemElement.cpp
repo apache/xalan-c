@@ -179,10 +179,6 @@ ElemElement::execute(
 
 	const bool				haveNamespace = indexOfNSSep == len ? false : true;
 
-	bool					outputNSDecl = false;
-
-	const XalanDOMString*	ns = 0;
-
 	if(haveNamespace == true)
 	{
 		if (indexOfNSSep + 1 == len ||
@@ -206,16 +202,27 @@ ElemElement::execute(
 	}
 	else if (haveNamespace == true)
 	{
-		ns = &getNamespaceForPrefixInternal(substring(elemName, 0, indexOfNSSep), false);
+		StylesheetExecutionContext::GetAndReleaseCachedString	prefixGuard(executionContext);
+
+		XalanDOMString&		prefix = prefixGuard.get();
+
+		prefix = substring(elemName, 0, indexOfNSSep);
+
+		const XalanDOMString&	theNamespace = executionContext.getResultNamespaceForPrefix(prefix);
+
+		if (length(theNamespace) == 0 && length(m_namespacesHandler.getNamespace(prefix)) == 0)
+		{
+			executionContext.warn("Could not resolve prefix: " + prefix, this);
+		}
 	}
 
-	const unsigned int	nsLength = ns == 0 ? 0 : length(*ns);
-
-	if (len != 0 && (haveNamespace == false || nsLength != 0))
+	if (len != 0)
 	{
 		if(0 == m_namespaceAVT)
 		{
 			executionContext.startElement(toCharArray(elemName));   
+
+			m_namespacesHandler.outputResultNamespaces(executionContext);
 		}
 		else
 		{
@@ -228,55 +235,18 @@ ElemElement::execute(
 			if(isEmpty(elemNameSpace) == true)
 			{
 				executionContext.startElement(toCharArray(elemName));   
+
+				m_namespacesHandler.outputResultNamespaces(executionContext);
 			}
 			else
 			{
-				if(indexOfNSSep < len)
+				executionContext.startElement(toCharArray(elemName));
+
+				m_namespacesHandler.outputResultNamespaces(executionContext);
+
+				if(indexOfNSSep == len)
 				{
-					assign(elemName, substring(elemName, indexOfNSSep + 1));
-				}
-
-				const XalanDOMString&	prefix = executionContext.getResultPrefixForNamespace(elemNameSpace);
-
-				if(isEmpty(prefix) == false)
-				{
-					reserve(
-						elemName,
-						length(elemName) + DOMServices::s_XMLNamespaceSeparatorStringLength + length(prefix) + 1);
-
-					insert(elemName, 0, DOMServices::s_XMLNamespaceSeparatorString);
-					insert(elemName, 0, prefix);
-			
-					executionContext.startElement(toCharArray(elemName));   
-				}
-				else
-				{
-					StylesheetExecutionContext::GetAndReleaseCachedString	newPrefixGuard(executionContext);
-
-					XalanDOMString&		newPrefix = newPrefixGuard.get();
-
-					executionContext.getUniqueNamespaceValue(newPrefix);
-
-					StylesheetExecutionContext::GetAndReleaseCachedString	nsDeclGuard(executionContext);
-
-					XalanDOMString&		nsDecl = nsDeclGuard.get();
-
-					reserve(nsDecl, DOMServices::s_XMLNamespaceWithSeparatorLength + length(newPrefix) + 1);
-
-					assign(nsDecl, DOMServices::s_XMLNamespaceWithSeparator);
-
-					append(nsDecl, newPrefix);
-
-					reserve(
-						elemName,
-						length(elemName) + DOMServices::s_XMLNamespaceSeparatorStringLength + length(newPrefix) + 1);
-
-					insert(elemName, 0, DOMServices::s_XMLNamespaceSeparatorString);
-					insert(elemName, 0, newPrefix);
-
-					executionContext.startElement(toCharArray(elemName));   
-
-					executionContext.addResultAttribute(nsDecl, elemNameSpace);
+					executionContext.addResultAttribute(DOMServices::s_XMLNamespace, elemNameSpace);
 				}
 			}
 		}
@@ -284,11 +254,9 @@ ElemElement::execute(
 
 	ElemUse::execute(executionContext, sourceTree, sourceNode, mode);
 
-	m_namespacesHandler.outputResultNamespaces(executionContext);
-
 	executeChildren(executionContext, sourceTree, sourceNode, mode);
 
-	if (len != 0 && (haveNamespace == false || nsLength != 0))
+	if (len != 0)
 	{
 		executionContext.endElement(toCharArray(elemName));
 	}
