@@ -344,7 +344,7 @@ public:
 	 * on this node, <code>false</code> otherwise.
 	 */
 	virtual bool
-	supports(
+	isSupported(
 			const XalanDOMString&	feature,
 			const XalanDOMString&	version) const = 0;
 
