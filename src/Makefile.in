@@ -803,7 +803,6 @@ endif
 clean:
 	(cd $(ALL_OBJECTS_DIR); rm -rf *)
 ifeq ($(PLATFORM), TRU64)
-	rm -rf $(ALL_OBJECTS_DIR)/.cxx_repository
 	rm -rf $(OUTDIR)/so_locations
 endif
 	rm -f $(THISLIB)$(VER)$(SHLIBSUFFIX)
