@@ -92,11 +92,11 @@ class XPath;
 /**
  * This class can sort vectors of nodes according to a select pattern.
  */
-class NodeSorter
+class XALAN_XSLT_EXPORT NodeSorter
 {
 public:
 
-	struct VectorEntry
+	struct XALAN_XSLT_EXPORT VectorEntry
 	{
 	public:
 
@@ -147,9 +147,9 @@ public:
 	 * Return the results of a compare of two nodes.
 	 */
 #if defined(XALAN_NO_NAMESPACES)
-	struct NodeSortKeyCompare : public binary_function<const NodeVectorType::value_type&, const NodeVectorType::value_type&, bool>
+	struct XALAN_XSLT_EXPORT NodeSortKeyCompare : public binary_function<const NodeVectorType::value_type&, const NodeVectorType::value_type&, bool>
 #else
-	struct NodeSortKeyCompare : public std::binary_function<const NodeVectorType::value_type&, const NodeVectorType::value_type&, bool>
+	struct XALAN_XSLT_EXPORT NodeSortKeyCompare : public std::binary_function<const NodeVectorType::value_type&, const NodeVectorType::value_type&, bool>
 #endif
 	{
 	public:
