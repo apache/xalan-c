@@ -749,6 +749,29 @@ XalanDOMString::length(const char*	theString)
 
 
 
+XalanDOMString::size_type
+XalanDOMString::hash(
+			const XalanDOMChar*			theString,
+			XalanDOMString::size_type	theLength)
+{
+	assert(theString != 0);
+
+    size_type	theResult = 0;
+
+	const XalanDOMChar* const	theEnd = theString + theLength;
+
+	while (theString != theEnd)
+    {
+        theResult += (theResult * 37) + (theResult >> 24) + size_type(*theString);
+
+        ++theString;
+    }
+
+	return theResult;
+}
+
+
+
 #if defined(XALAN_USE_XERCES_LOCAL_CODEPAGE_TRANSCODERS)
 
 

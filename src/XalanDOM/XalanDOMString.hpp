@@ -694,6 +694,12 @@ public:
 	CharVectorType
 	transcode() const;
 
+	size_type
+	hash() const
+	{
+		return hash(c_str(), size());
+	}
+
 	static bool
 	equals(
 			const XalanDOMChar*		theLHS,
@@ -749,6 +755,11 @@ public:
 	 */
 	static size_type
 	length(const char*	theString);
+
+	static size_type
+	hash(
+			const XalanDOMChar*		theString,
+			size_type				theLength);
 
 	class TranscodingError : public XalanDOMException
 	{

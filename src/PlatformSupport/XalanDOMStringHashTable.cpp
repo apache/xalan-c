@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -173,29 +173,6 @@ XalanDOMStringHashTable::find(
 
 
 
-inline size_t
-hashString(
-			const XalanDOMChar*			theString,
-			XalanDOMString::size_type	theLength)
-{
-	assert(theString != 0);
-
-    size_t				theResult = 0;
-
-	const XalanDOMChar* const	theEnd = theString + theLength;
-
-	while (theString != theEnd)
-    {
-        theResult += (theResult * 37) + (theResult >> 24) + size_t(*theString);
-
-        ++theString;
-    }
-
-	return theResult;
-}
-
-
-
 const XalanDOMString*
 XalanDOMStringHashTable::find(
 			const XalanDOMChar*			theString,
@@ -207,7 +184,7 @@ XalanDOMStringHashTable::find(
 	const XalanDOMString::size_type		theActualLength =
 		theLength == XalanDOMString::npos ? length(theString) : theLength;
 
-	const size_t	theHash = hashString(theString, theActualLength);
+	const XalanDOMString::size_type		theHash = XalanDOMString::hash(theString, theActualLength);
 
 	const size_t	theLocalBucketIndex = theHash % m_bucketCount;
 
@@ -243,7 +220,7 @@ XalanDOMStringHashTable::find(
 void
 XalanDOMStringHashTable::insert(const XalanDOMString&	theString)
 {
-	const size_t	theHash = hashString(c_wstr(theString), length(theString));
+	const XalanDOMString::size_type		theHash = theString.hash();
 
 	const size_t	theBucketIndex = theHash % m_bucketCount;
 
@@ -272,7 +249,7 @@ XalanDOMStringHashTable::insert(
 			const XalanDOMString&	theString,
 			size_t					theBucketIndex)
 {
-	assert(theBucketIndex == hashString(c_wstr(theString), length(theString)) % m_bucketCount);
+	assert(theBucketIndex == theString.hash() % m_bucketCount);
 	assert(theBucketIndex < m_bucketCount);
 
 	BucketType&		theBucket = m_buckets[theBucketIndex];
