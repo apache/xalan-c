@@ -1317,6 +1317,8 @@ static const XalanDOMChar	s_powFunctionName[] =
 	XalanUnicode::charLetter_p,
 	XalanUnicode::charLetter_o,
 	XalanUnicode::charLetter_w,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_r,
 	0
 };
 
