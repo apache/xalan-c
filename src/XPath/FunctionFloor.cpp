@@ -58,6 +58,10 @@
 
 
 
+#include <PlatformSupport/DoubleSupport.hpp>
+
+
+
 #include "XObjectFactory.hpp"
 
 
@@ -87,11 +91,7 @@ FunctionFloor::execute(
 {	
 	assert(arg1.null() == false);	
 
-#if defined(XALAN_STRICT_ANSI_HEADERS)
-	return executionContext.getXObjectFactory().createNumber(std::floor(arg1->num()));
-#else
-	return executionContext.getXObjectFactory().createNumber(floor(arg1->num()));
-#endif
+	return executionContext.getXObjectFactory().createNumber(DoubleSupport::floor(arg1->num()));
 }
 
 
