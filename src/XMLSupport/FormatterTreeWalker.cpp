@@ -73,11 +73,8 @@
 
 #include <PlatformSupport/AttributeListImpl.hpp>
 #include <PlatformSupport/DOMStringHelper.hpp>
+#include <PlatformSupport/FormatterListener.hpp>
 #include <PlatformSupport/NamedNodeMapAttributeList.hpp>
-
-
-
-#include "FormatterListener.hpp"
 
 
 
