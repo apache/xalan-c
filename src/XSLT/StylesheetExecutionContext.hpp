@@ -1299,7 +1299,7 @@ public:
 	 * @param version           version of the output method
 	 * @param doIndent          true if output is to be indented
 	 * @param indent            number of spaces to indent at each nesting level
-	 * @param encoding          character encoding in use by <VAR>writer</VAR>
+	 * @param encoding			character encoding for the writer
 	 * @param mediaType         media type (MIME content type) of the data
 	 * @param doctypeSystem     system identifier to be used in the document
 	 *                          type declaration
@@ -1334,7 +1334,7 @@ public:
 	 * owns the instance and will delete it when reset.
 	 *
 	 * @param writer            character output stream to use
-	 * @param encoding          character encoding in use by <VAR>writer</VAR>
+	 * @param encoding			character encoding for the writer
 	 * @param mediaType         media type (MIME content type) of the data
 	 * @param doctypeSystem     system identifier to be used in the document
 	 *                          type declaration
@@ -1392,10 +1392,13 @@ public:
 	/**
 	 * FormatterToText instance constructor.
 	 *
-	 * @param pw print writer for output
+	 * @param writer writer for output
+	 * @param encoding character encoding for the writer
 	 */
 	virtual FormatterToText*
-	createFormatterToText(Writer&	writer) = 0;
+	createFormatterToText(
+			Writer&					writer,
+			const XalanDOMString&	encoding) = 0;
 
 
 	typedef XalanAutoPtr<XalanNumberFormat>		XalanNumberFormatAutoPtr;

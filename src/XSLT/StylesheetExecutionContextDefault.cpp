@@ -1137,10 +1137,12 @@ StylesheetExecutionContextDefault::createFormatterToDOM(
 
 
 FormatterToText*
-StylesheetExecutionContextDefault::createFormatterToText(Writer&	writer)
+StylesheetExecutionContextDefault::createFormatterToText(
+			Writer&					writer,
+			const XalanDOMString&	encoding)
 {
 	FormatterToText* const	theFormatter =
-		new FormatterToText(writer);
+		new FormatterToText(writer, encoding);
 
 	m_formatterListeners.insert(theFormatter);
 

@@ -312,7 +312,7 @@ StylesheetRoot::setupFormatterListener(
 			break;
 
 		case FormatterListener::OUTPUT_METHOD_TEXT:
-			flistener = executionContext.createFormatterToText(*pw);
+			flistener = executionContext.createFormatterToText(*pw, m_encoding);
 			break;
 
 		case FormatterListener::OUTPUT_METHOD_NONE:

@@ -455,8 +455,9 @@ public:
 			XalanElement*	elem);
 
 	virtual FormatterToText*
-	createFormatterToText(Writer&	writer);
-
+	createFormatterToText(
+			Writer&					writer,
+			const XalanDOMString&	encoding);
 
 	virtual XalanNumberFormatAutoPtr
 	createXalanNumberFormat();
