@@ -63,6 +63,7 @@
 
 
 
+#include <cassert>
 #include <vector>
 
 
@@ -81,10 +82,6 @@ typedef wchar_t			XalanDOMChar;
 // UTF-16 character...
 typedef unsigned short	XalanDOMChar;
 #endif
-
-
-
-#include <cassert>
 
 
 
