@@ -294,8 +294,6 @@ FunctionNormalizeSpace::needsNormalization(const XalanDOMString&	theString) cons
 
 		if (isXMLWhitespace(theCurrentChar) == false)
 		{
-			++i;
-
 			fPreviousIsSpace = false;
 		}
 		else
@@ -310,8 +308,6 @@ FunctionNormalizeSpace::needsNormalization(const XalanDOMString&	theString) cons
 			else
 			{
 				fPreviousIsSpace = true;
-
-				++i;
 			}
 		}
 	}
