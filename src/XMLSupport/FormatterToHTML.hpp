@@ -313,7 +313,7 @@ private:
 	 * @param theChar The character to accumulate
 	 */
 	void
-	accumHexNumber(const XalanDOMChar	theChar);
+	accumHexNumber(XalanDOMChar		theChar);
 
 	bool
 	popHasNamespace();

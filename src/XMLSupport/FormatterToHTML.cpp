@@ -1054,7 +1054,7 @@ FormatterToHTML::writeAttrURI(
 
 
 void
-FormatterToHTML::accumHexNumber(const XalanDOMChar	theChar)
+FormatterToHTML::accumHexNumber(XalanDOMChar	theChar)
 {
 	accumContent(XalanUnicode::charPercentSign);
 
