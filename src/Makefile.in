@@ -214,8 +214,6 @@ ifeq ($(PLATFORM), SOLARIS)
 
 	ALLLIBS = ${LIBS} -L/usr/lib -L/usr/local/lib -lc
 
-    PLATFORM_LIB_LINK_OPTIONS=$(LD_RPATH_PRE)${ICUROOT}/lib $(LD_RPATH_PRE)${ICUI18NROOT}/lib
-
   else
 
 	PLATFORM_COMPILE_OPTIONS = -KPIC -mt -xs -ptr$(ALL_OBJECTS_DIR) -features=rtti -D${PLATFORM} -D_REENTRANT
@@ -243,11 +241,6 @@ ifeq ($(PLATFORM), AIX)
 
 	PLATFORM_COMPILE_OPTIONS = -fPIC -instances=static -D${PLATFORM} -D_REENTRANT
 	ALLLIBS = ${LIBS} -L/usr/lib -L/usr/local/lib -lc
-
-	ifdef XALAN_USE_ICU
-	LD_RPATH_PRE=  -Wl,-rpath,
-	PLATFORM_LIB_LINK_OPTIONS=$(LD_RPATH_PRE)${ICUROOT}/lib $(LD_RPATH_PRE)${ICUI18NROOT}/lib
-	endif
 
 	EXTRA_LINK_OPTIONS=-lc
 	CC1 = $(CXX) $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS)
