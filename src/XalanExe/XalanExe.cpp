@@ -105,7 +105,7 @@ void
 Usage()
 {
 	cerr << endl
-		 << "Xalan version 1.2"
+		 << "Xalan version 1.3"
 		 << endl
 		 << "Usage: Xalan [options] source stylesheet"
 		 << endl
