@@ -105,9 +105,9 @@ public:
 #else
 	virtual FunctionSquareRoot*
 #endif
-	clone(MemoryManagerType&  theManager) const
+	clone(MemoryManagerType&    theManager) const
 	{
-		return cloneFunction_1<FunctionSquareRoot>()( *this, theManager);
+	    return XalanCopyConstruct(theManager, *this);
 	}
 
 protected:
@@ -120,9 +120,9 @@ protected:
 	 * @return function error message
 	 */
 	const XalanDOMString&
-	getError(XalanDOMString& theResult) const
+	getError(XalanDOMString&    theResult) const
 	{
-        theResult.assign(XALAN_STATIC_UCODE_STRING("The square-root() function accepts one argument!"));
+        theResult.assign("The square-root() function accepts one argument!");
 
 		return theResult;
 	}
@@ -194,9 +194,9 @@ public:
 #else
 	virtual FunctionCube*
 #endif
-	clone(MemoryManagerType& theManager) const
+	clone(MemoryManagerType&    theManager) const
 	{
-		return cloneFunction_1<FunctionCube>()(*this, theManager);
+	    return XalanCopyConstruct(theManager, *this);
 	}
 
 protected:
@@ -209,9 +209,9 @@ protected:
 	 * @return function error message
 	 */
 	const XalanDOMString&
-	getError(XalanDOMString& theResult) const
+	getError(XalanDOMString&    theResult) const
 	{
-        theResult.assign(XALAN_STATIC_UCODE_STRING("The cube() function accepts one argument!"));
+        theResult.assign("The cube() function accepts one argument!");
 
 		return theResult;
 	}
@@ -296,9 +296,9 @@ public:
 #else
 	virtual FunctionAsctime*
 #endif
-	clone(MemoryManagerType& theManager) const
+	clone(MemoryManagerType&    theManager) const
 	{
-		return cloneFunction_1<FunctionAsctime>()(*this, theManager);
+	    return XalanCopyConstruct(theManager, *this);
 	}
 
 protected:
@@ -313,7 +313,7 @@ protected:
 	const XalanDOMString&
 	getError(XalanDOMString& theResult) const
 	{
-        theResult.assign(XALAN_STATIC_UCODE_STRING("The asctime() function accepts one argument!"));
+        theResult.assign("The asctime() function accepts one argument!");
 
 		return theResult;
 	}
