@@ -99,6 +99,7 @@ VariablesStack::reset()
 	m_stack.clear();
 
 	m_globalStackFrameMarked = false;
+	m_globalStackFrameIndex = -1;
 }
 
 
@@ -353,6 +354,18 @@ VariablesStack::markGlobalStackFrame()
 	m_globalStackFrameMarked = true;
 
 	pushContextMarker();
+}
+
+
+
+void
+VariablesStack::unmarkGlobalStackFrame()
+{
+	popContextMarker();
+
+	m_globalStackFrameIndex = -1;
+
+	m_globalStackFrameMarked = false;
 }
 
 

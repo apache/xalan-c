@@ -280,6 +280,12 @@ public:
 	markGlobalStackFrame();
 
 	/**
+	 * Clear the marking of the global stack frame.
+	 */
+	void
+	unmarkGlobalStackFrame();
+
+	/**
 	 * Set the top of the stack frame from where a search for a variable or
 	 * param should take place.  Calling with no parameter will cause the
 	 * index to be set to the size of the stack.

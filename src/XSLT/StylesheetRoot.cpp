@@ -228,6 +228,15 @@ StylesheetRoot::process(
 		executionContext.pushTime(&sourceTree);
 	}
 
+	typedef StylesheetExecutionContext::PushAndPopContextMarker	PushAndPopContextMarker;
+	typedef StylesheetExecutionContext::PushAndPopElementFrame	PushAndPopElementFrame;
+
+	PushAndPopContextMarker		thePushAndPopContextMarker(executionContext);
+
+	PushAndPopElementFrame		thePushAndPopElementFrame(
+				executionContext,
+				0);
+
 	executionContext.resolveTopLevelParams();
 
 #if defined(XALAN_VQ_SPECIAL_TRACE)

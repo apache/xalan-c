@@ -663,8 +663,6 @@ StylesheetExecutionContextDefault::popContextMarker()
 void
 StylesheetExecutionContextDefault::resolveTopLevelParams()
 {
-	pushContextMarker();
-
 	assert(m_xsltProcessor != 0);
 
 	m_xsltProcessor->resolveTopLevelParams(*this);
@@ -680,29 +678,9 @@ StylesheetExecutionContextDefault::clearTopLevelParams()
 	assert(m_xsltProcessor != 0);
 
 	m_xsltProcessor->clearTopLevelParams();
+
+	m_variablesStack.unmarkGlobalStackFrame();
 }
-
-
-
-class PopPushContextMarker
-{
-public:
-
-	PopPushContextMarker(StylesheetExecutionContext&	theExecutionContext) :
-		m_executionContext(theExecutionContext)
-	{
-		m_executionContext.popContextMarker();
-	}
-
-	~PopPushContextMarker()
-	{
-		m_executionContext.pushContextMarker();
-	}
-
-private:
-
-	StylesheetExecutionContext&		m_executionContext;
-};
 
 
 
@@ -816,10 +794,6 @@ StylesheetExecutionContextDefault::endDocument()
 	assert(m_xsltProcessor != 0);
 
 	m_xsltProcessor->endDocument();
-
-	// This matches the pushContextMarker in
-	// resolveTopLevelParams().
-	popContextMarker();
 
 	cleanUpTransients();
 
@@ -2004,6 +1978,28 @@ StylesheetExecutionContextDefault::message(
 
 
 
+class PopAndPushContextMarker
+{
+public:
+
+	PopAndPushContextMarker(StylesheetExecutionContext&	theExecutionContext) :
+		m_executionContext(theExecutionContext)
+	{
+		m_executionContext.popContextMarker();
+	}
+
+	~PopAndPushContextMarker()
+	{
+		m_executionContext.pushContextMarker();
+	}
+
+private:
+
+	StylesheetExecutionContext&		m_executionContext;
+};
+
+
+
 void
 StylesheetExecutionContextDefault::getParams(
 			const ElemTemplateElement&	xslCallTemplateElement,
@@ -2020,7 +2016,7 @@ StylesheetExecutionContextDefault::getParams(
 		// This object will take care of popping, then
 		// pushing the context marker at the top of the
 		// stack, even if an exception is thrown.
-		PopPushContextMarker	thePopPush(*this);
+		PopAndPushContextMarker		thePopPush(*this);
 
 		while(0 != child)
 		{
