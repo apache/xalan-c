@@ -680,19 +680,40 @@ ${ALL_OBJECTS_DIR}/%.o:$(TESTS_DIR)/Threads/%.cpp
 	$(CC1) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $<
 endif
 
-Conf: lib $(BINTARGETDIR)/Conf
+Harness : lib ${ALL_OBJECTS_DIR}/XMLFileReporter.o ${ALL_OBJECTS_DIR}/FileUtility.o
 
-$(BINTARGETDIR)/Conf: ${ALL_OBJECTS_DIR}/conf.o ${ALL_OBJECTS_DIR}/FileUtility.o ${ALL_OBJECTS_DIR}/XMLFileReport.o 
+${ALL_OBJECTS_DIR}/FileUtility.o:
+ifeq ($(PLATFORM), OS390)
+${ALL_OBJECTS_DIR}/%.o:$(TESTS_DIR)/Harness/%.cpp
+	$(CC3) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) -I$(TESTS_DIR) $(EXTRA_COMPILE_OPTIONS) -o $@ $<
+else
+${ALL_OBJECTS_DIR}/%.o:$(TESTS_DIR)/Harness/%.cpp
+	$(CC1) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) -I$(TESTS_DIR) $(EXTRA_COMPILE_OPTIONS) -o $@ $<
+endif
+
+${ALL_OBJECTS_DIR}/XMLFileReporter.o:
+ifeq ($(PLATFORM), OS390)
+${ALL_OBJECTS_DIR}/%.o:$(TESTS_DIR)/Harness/%.cpp
+	$(CC3) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) -I$(TESTS_DIR) $(EXTRA_COMPILE_OPTIONS) -o $@ $<
+else
+${ALL_OBJECTS_DIR}/%.o:$(TESTS_DIR)/Harness/%.cpp
+	$(CC1) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) -I$(TESTS_DIR) $(EXTRA_COMPILE_OPTIONS) -o $@ $<
+endif
+
+
+Conf: Harness $(BINTARGETDIR)/Conf
+
+$(BINTARGETDIR)/Conf: ${ALL_OBJECTS_DIR}/conf.o ${ALL_OBJECTS_DIR}/FileUtility.o ${ALL_OBJECTS_DIR}/XMLFileReporter.o 
 ifeq ($(PLATFORM), OS390)                                                       
 	${LINK} $(XSL_BUILD_OPTIONS) ${PLATFORM_LIB_LINK_OPTIONS} ${LIBRARY_SEARCH_PATHS} \
 	${EXTRA_LINK_OPTIONS} $(LIB_DIR)/lib$(PROJECT_NAME)$(VER).x $(ALLLIBS) $(CXXFLAGS) $^ -o $@	
-${ALL_OBJECTS_DIR}/%.o:$(TESTS_DIR)/Threads/%.cpp
-	$(CC3) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $<
+${ALL_OBJECTS_DIR}/%.o:$(TESTS_DIR)/Conf/%.cpp
+	$(CC3) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) -I$(TESTS_DIR) $(EXTRA_COMPILE_OPTIONS) -o $@ $<
 else
 	${LINK} $(XSL_BUILD_OPTIONS) ${PLATFORM_LIB_LINK_OPTIONS} ${LIBRARY_SEARCH_PATHS} \
 	${EXTRA_LINK_OPTIONS} -L$(LIB_DIR) -l$(PROJECT_NAME)$(VER) $(ALLLIBS) $(CXXFLAGS) $^ -o $@	
-${ALL_OBJECTS_DIR}/%.o:$(TESTS_DIR)/Threads/%.cpp
-	$(CC1) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $<
+${ALL_OBJECTS_DIR}/%.o:$(TESTS_DIR)/Conf/%.cpp
+	$(CC1) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) -I$(TESTS_DIR) $(EXTRA_COMPILE_OPTIONS) -o $@ $<
 endif
 
 lib:	prepare compile $(THISLIB)$(VER)$(SHLIBSUFFIX)
