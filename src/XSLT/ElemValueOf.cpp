@@ -175,30 +175,15 @@ ElemValueOf::execute(
 
 	if (m_isDot == true)
 	{
-//		const XalanNode::NodeType	type = sourceNode->getNodeType();
-//
-//		if(type == XalanNode::COMMENT_NODE ||
-//         type == XalanNode::PROCESSING_INSTRUCTION_NODE)
-//		{
-//			outputValue(executionContext, sourceNode->getNodeValue());
-//
-//			if(0 != executionContext.getTraceListeners())
-//			{
-//				fireSelectionEvent(executionContext, sourceNode, theValue);
-//			}
-//		}
-//		else
+		StylesheetExecutionContext::GetAndReleaseCachedString	theResult(executionContext);
+
+		DOMServices::getNodeData(*sourceNode, theResult.get());
+
+		outputValue(executionContext, theResult.get());
+
+		if(0 != executionContext.getTraceListeners())
 		{
-			StylesheetExecutionContext::GetAndReleaseCachedString	theResult(executionContext);
-
-			DOMServices::getNodeData(*sourceNode, theResult.get());
-
-			outputValue(executionContext, theResult.get());
-
-			if(0 != executionContext.getTraceListeners())
-			{
-				fireSelectionEvent(executionContext, sourceNode, theResult.get());
-			}
+			fireSelectionEvent(executionContext, sourceNode, theResult.get());
 		}
 	}
 	else
