@@ -124,8 +124,8 @@ class XALAN_XSLT_EXPORT Stylesheet : public XalanDocument, protected PrefixResol
 public:
 
 	typedef StylesheetExecutionContext::ParamVectorType		ParamVectorType;
-	typedef NamespacesHandler::NamespaceVectorType			NamespaceVectorType;
-	typedef NamespacesHandler::NamespacesStackType			NamespacesStackType;
+	typedef XalanQName::NamespaceVectorType					NamespaceVectorType;
+	typedef XalanQName::NamespacesStackType					NamespacesStackType;
 
 #if defined(XALAN_NO_NAMESPACES)
 	typedef map<XalanDOMString,
