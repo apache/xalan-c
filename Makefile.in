@@ -58,10 +58,9 @@ include Makefile.incl
 all: 
 	$(MAKE) -C src/xalanc $@
 
-Samples: samples
-	$(MAKE) -C samples $@
+samples: Samples
 
-samples: 
+Samples: 
 	$(MAKE) -C samples $@
 
 tests: 
