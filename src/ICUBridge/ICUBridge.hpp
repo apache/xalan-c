@@ -68,50 +68,49 @@
 
 
 
+#include <XalanDOM/XalanDOMString.hpp>
+
+
+
+class UnicodeString;
+class XalanDecimalFormatSymbols;
+
+
+
 class XALAN_ICUBRIDGE_EXPORT ICUBridge
 {
 public:
 
-	typedef wchar_t							UnicodeCharType;
+	static const UnicodeString
+	XalanDOMCharStringToUnicodeString(const XalanDOMChar*	theString);
 
-#if defined(XALAN_NO_NAMESPACES
-	typedef vector<unsigned short>			UTF16VectorType;
-#else
-	typedef std::vector<unsigned short>		UTF16VectorType;
-#endif
+	static const UnicodeString
+	XalanDOMStringToUnicodeString(const XalanDOMString&		theString);
+
+	static const XalanDOMString
+	UnicodeStringToXalanDOMString(const UnicodeString&	theString);
+
+	static void
+	UnicodeStringToXalanDOMString(
+			const UnicodeString&	theString,
+			XalanDOMString&			theResult);
 
 	static unsigned long
 	FormatNumber(
-			const UTF16VectorType&		thePattern,
-			double						theNumber,
-			UTF16VectorType&			theResult);
-
-	static unsigned long
-	FormatNumber(
-			const UTF16VectorType&		thePattern,
-			double						theNumber,
-			const UTF16VectorType&		theCurrencySymbolString,
-			unsigned short				theDecimalSeparatorChar,
-			unsigned short				theDigitChar,
-			unsigned short				theGroupingSeparatorChar,
-			const UTF16VectorType&		theInfinityString,
-			const UTF16VectorType&		theInternationalCurrencySymbolString,
-			unsigned short				theMinusSignChar,
-			unsigned short				theMonetaryDecimalSeparatorChar,
-			const UTF16VectorType&		theNaNString,
-			unsigned short				thePatternSeparatorChar,
-			unsigned short				thePercentChar,
-			unsigned short				thePerMillChar,
-			unsigned short				theZeroDigitChar,
-			UTF16VectorType&			theResult);
+			const XalanDOMString&				thePattern,
+			double								theNumber,
+			const XalanDecimalFormatSymbols*	theXalanDFS,
+			XalanDOMString&						theResult);
 
 	static int
 	collationCompare(
-			const UnicodeCharType*		theLHS,
-			const UnicodeCharType*		theRHS);
+			const XalanDOMString&	theLHS,
+			const XalanDOMString&	theRHS);
 
 	static int
-	strLength(const UnicodeCharType*	theString);
+	collationCompare(
+			const XalanDOMChar*		theLHS,
+			const XalanDOMChar*		theRHS);
 };
 
 

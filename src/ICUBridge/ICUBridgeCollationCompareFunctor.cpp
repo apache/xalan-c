@@ -60,6 +60,10 @@
 
 
 
+#include <PlatformSupport/DOMStringHelper.hpp>
+
+
+
 #include <unicode/coll.h>
 
 
@@ -104,11 +108,8 @@ ICUBridgeCollationCompareFunctor::operator()(
 	{
 		assert(m_collator != 0);
 
-		const UnicodeString		theUnicodeLHS(theLHS, ICUBridge::strLength(theLHS));
-		const UnicodeString		theUnicodeRHS(theRHS, ICUBridge::strLength(theRHS));
-
 		return m_collator->compare(
-					theUnicodeLHS,
-					theUnicodeRHS);
+					ICUBridge::XalanDOMCharStringToUnicodeString(theLHS),
+					ICUBridge::XalanDOMCharStringToUnicodeString(theRHS));
 	}
 }

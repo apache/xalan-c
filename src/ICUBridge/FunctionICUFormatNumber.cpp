@@ -112,16 +112,6 @@ FunctionICUFormatNumber::clone() const
 
 
 
-ICUBridge::UTF16VectorType
-makeUTF16VectorType(const XalanDOMString&	theString)
-{
-	return ICUBridge::UTF16VectorType(
-		c_wstr(theString),
-		c_wstr(theString) + length(theString));
-}
-
-
-
 XalanDOMString
 FunctionICUFormatNumber::doFormat(
 			XPathExecutionContext&				executionContext,
@@ -130,39 +120,15 @@ FunctionICUFormatNumber::doFormat(
 			const XalanDOMString&				thePattern,
 			const XalanDecimalFormatSymbols*	theDFS)
 {
-	ICUBridge::UTF16VectorType			theResultString;
+	XalanDOMString	theResultString;
 
-	unsigned long		theResult = 0;
+	unsigned long	theResult = 0;
 
-	if (theDFS == 0)
-	{
-		// Nothing special, so use the default call...
-		theResult = ICUBridge::FormatNumber(
-					makeUTF16VectorType(thePattern),
+	theResult = ICUBridge::FormatNumber(
+					thePattern,
 					theNumber,
+					theDFS,
 					theResultString);
-	}
-	else
-	{
-		// DecimalFormatSymbols specified, so use those values...
-		theResult = ICUBridge::FormatNumber(
-					makeUTF16VectorType(thePattern),
-					theNumber,
-					makeUTF16VectorType(theDFS->getCurrencySymbol()),
-					theDFS->getDecimalSeparator(),
-					theDFS->getDigit(),
-					theDFS->getGroupingSeparator(),
-					makeUTF16VectorType(theDFS->getInfinity()),
-					makeUTF16VectorType(theDFS->getInternationalCurrencySymbol()),
-					theDFS->getMinusSign(),
-					theDFS->getMonetaryDecimalSeparator(),
-					makeUTF16VectorType(theDFS->getNaN()),
-					theDFS->getPatternSeparator(),
-					theDFS->getPercent(),
-					theDFS->getPerMill(),
-					theDFS->getZeroDigit(),
-					theResultString);
-	}
 
 	if (theResult != 0)
 	{
@@ -181,6 +147,6 @@ FunctionICUFormatNumber::doFormat(
 	}
 	else
 	{
-		return XalanDOMString(theResultString.begin(), theResultString.size());
+		return theResultString;
 	}
 }

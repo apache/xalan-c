@@ -59,6 +59,11 @@
 
 
 
+#include <PlatformSupport/DOMStringHelper.hpp>
+#include <PlatformSupport/XalanDecimalFormatSymbols.hpp>
+
+
+
 #include <memory>
 
 
@@ -69,89 +74,190 @@
 
 
 
-unsigned long
-ICUBridge::FormatNumber(
-			const UTF16VectorType&		thePattern,
-			double						theNumber,
-			UTF16VectorType&			theResult)
+#if defined(XALAN_NO_NAMESPACES)
+	typedef vector<UChar>					UCharVectorType;
+#else
+	typedef std::vector<UChar>				UCharVectorType;
+#endif
+
+
+
+const UnicodeString
+ICUBridge::XalanDOMCharStringToUnicodeString(const XalanDOMChar*	theString)
 {
-	const UnicodeString		theUnicodePattern(&thePattern[0], thePattern.size());
-
-	UErrorCode				theStatus = U_ZERO_ERROR;
-
-	UnicodeString			theUnicodeResult;
-
-	DecimalFormat			theFormatter(theUnicodePattern, theStatus);
-
-	if (theStatus == U_ZERO_ERROR ||
-		theStatus == U_USING_DEFAULT_ERROR)
+	if (theString == 0)
 	{
-		// Do the format...
-		theFormatter.format(theNumber, theUnicodeResult);
+		return UnicodeString();
+	}
+	else
+	{
+#if defined(XALAN_ICU_BRIDGE_UCHAR_MISMATCH)
 
-		const int32_t	theLength = theUnicodeResult.length();
+		// Create a buffer to copy out the UnicodeString data...
+		UCharVectorType		theBuffer;
 
-		// Resize the vector to the appropriate length...
-		theResult.clear();
-		theResult.resize(theLength);
+		const unsigned int	theLength = length(theString);
 
-		theUnicodeResult.extract(0, theLength, &theResult[0]);
+		// Resize the buffer appropriately...
+		theBuffer.reserve(theLength);
 
-		theStatus = U_ZERO_ERROR;
+		// Copy the data, truncating each character...
+		for (unsigned int i = 0; i < theLength; ++i)
+		{
+			// There should be no truncation, since XalanDOMChars
+			// hold UTF-16 code points, but assert, just in case...
+			assert(theString[i] == UChar(theString[i]));
+			theBuffer.push_back(theString[i]);
+		}
+
+		return UnicodeString(&theBuffer[0], theBuffer.size());
+
+#else
+
+		return UnicodeString(theString, length(theString));
+
+#endif
+	}
+}
+
+
+
+const UnicodeString
+ICUBridge::XalanDOMStringToUnicodeString(const XalanDOMString&	theString)
+{
+	// Just call up to the XalanDOMChar* version...
+	return XalanDOMCharStringToUnicodeString(c_wstr(theString));
+}
+
+
+
+const XalanDOMString
+ICUBridge::UnicodeStringToXalanDOMString(const UnicodeString&		theString)
+{
+#if defined(XALAN_ICU_BRIDGE_UCHAR_MISMATCH)
+
+	// If XalanDOMChar is larger than the ICU's UChar, we have to more work...
+	const int32_t	theLength = theString.length();
+
+	// Create a buffer...
+	XalanDOMCharVectorType	theBuffer;
+
+	// Reserve the appropriate amount of space...
+	theBuffer.reserve(theLength);
+
+	// Copy the data...
+	for (int32_t i = 0; i < theLength; ++i)
+	{
+		theBuffer.push_back(theString[i]);
 	}
 
-	return theStatus;
+	return XalanDOMString(&theBuffer[0], theBuffer.size());
+
+#else
+
+	// Create a buffer to copy out the UnicodeString data...
+	UCharVectorType		theResult;
+
+	const int32_t	theLength = theString.length();
+
+	// Resize the buffer appropriately...
+	theResult.resize(theLength);
+
+	// Extract the data...
+	theString.extract(0, theLength, &theResult[0]);
+
+	return XalanDOMString(&theResult[0], theResult.size());
+
+#endif
+}
+
+
+
+void
+ICUBridge::UnicodeStringToXalanDOMString(
+			const UnicodeString&	theString,
+			XalanDOMString&			theResult)
+{
+#if defined(XALAN_ICU_BRIDGE_UCHAR_MISMATCH)
+	
+	// If XalanDOMChar is larger than the ICU's UChar, we have to more work.
+	// Don't bother to provide the optimized version, just call to the
+	// previous function.
+
+	theResult = UnicodeStringToXalanDOMString(theString);
+
+#else
+
+#if defined(XALAN_NO_NAMESPACES)
+	typedef vector<UChar>					UCharVectorType;
+#else
+	typedef std::vector<UChar>				UCharVectorType;
+#endif
+
+	// Create a buffer to copy out the UnicodeString data...
+	UCharVectorType		theBuffer;
+
+	const int32_t	theLength = theString.length();
+
+	// Resize the buffer appropriately...
+	theBuffer.resize(theLength);
+
+	// Extract the data...
+	theString.extract(0, theLength, &theBuffer[0]);
+
+	theResult = XalanDOMString(&theBuffer[0], theBuffer.size());
+
+#endif
 }
 
 
 
 unsigned long
 ICUBridge::FormatNumber(
-			const UTF16VectorType&	thePattern,
-			double					theNumber,
-			const UTF16VectorType&	theCurrencySymbolString,
-			unsigned short			theDecimalSeparatorChar,
-			unsigned short			theDigitChar,
-			unsigned short			theGroupingSeparatorChar,
-			const UTF16VectorType&	theInfinityString,
-			const UTF16VectorType&	theInternationalCurrencySymbolString,
-			unsigned short			theMinusSignChar,
-			unsigned short			theMonetaryDecimalSeparatorChar,
-			const UTF16VectorType&	theNaNString,
-			unsigned short			thePatternSeparatorChar,
-			unsigned short			thePercentChar,
-			unsigned short			thePerMillChar,
-			unsigned short			theZeroDigitChar,
-			UTF16VectorType&		theResult)
+			const XalanDOMString&				thePattern,
+			double								theNumber,
+			const XalanDecimalFormatSymbols*	theXalanDFS,
+			XalanDOMString&						theResult)
 {
-	const UnicodeString		theUnicodePattern(&thePattern[0], thePattern.size());
+#if !defined(XALAN_NO_NAMESPACES)
+	using std::auto_ptr;
+#endif
 
 	UErrorCode				theStatus = U_ZERO_ERROR;
 
-	UnicodeString			theUnicodeResult;
-
-	DecimalFormatSymbols	theDFS(theStatus);
-
-	theDFS.setZeroDigit(theZeroDigitChar);
-	theDFS.setGroupingSeparator(theGroupingSeparatorChar);
-	theDFS.setDecimalSeparator(theDecimalSeparatorChar);
-	theDFS.setPerMill(thePerMillChar);
-	theDFS.setPercent(thePercentChar);
-	theDFS.setDigit(theDigitChar);
-	theDFS.setPatternSeparator(thePatternSeparatorChar);
-	theDFS.setInfinity(UnicodeString(&theInfinityString[0], theInfinityString.size()));
-	theDFS.setNaN(UnicodeString(&theNaNString[0], theNaNString.size()));
-//	theDFS.setPlusSign(theZeroDigitChar);
-	theDFS.setMinusSign(theMinusSignChar);
-//	theDFS.setExponentialSymbol(theZeroDigitChar);
-	theDFS.setCurrencySymbol(UnicodeString(&theCurrencySymbolString[0], theCurrencySymbolString.size()));
-	theDFS.setInternationalCurrencySymbol(UnicodeString(&theInternationalCurrencySymbolString[0], theInternationalCurrencySymbolString.size()));
-	theDFS.setMonetaryDecimalSeparator(theMonetaryDecimalSeparatorChar);
+	// Use an auto_ptr, to keep this safe until we construct the DecimalFormat instance.
+	const auto_ptr<DecimalFormatSymbols>	theDFS(new DecimalFormatSymbols(theStatus));
 
 	if (theStatus == U_ZERO_ERROR ||
 		theStatus == U_USING_DEFAULT_ERROR)
 	{
-		DecimalFormat			theFormatter(theUnicodePattern, theDFS, theStatus);
+		if (theXalanDFS != 0)
+		{
+			// We got a XalanDecimalFormatSymbols, so set the
+			// corresponding data in the ICU DecimalFormatSymbols.
+			theDFS->setZeroDigit(theXalanDFS->getZeroDigit());
+			theDFS->setGroupingSeparator(theXalanDFS->getGroupingSeparator());
+			theDFS->setDecimalSeparator(theXalanDFS->getDecimalSeparator());
+			theDFS->setPerMill(theXalanDFS->getPerMill());
+			theDFS->setPercent(theXalanDFS->getPercent());
+			theDFS->setDigit(theXalanDFS->getDigit());
+			theDFS->setPatternSeparator(theXalanDFS->getPatternSeparator());
+
+			theDFS->setInfinity(XalanDOMStringToUnicodeString(theXalanDFS->getInfinity()));
+			theDFS->setNaN(XalanDOMStringToUnicodeString(theXalanDFS->getNaN()));
+		//	theDFS->setPlusSign(theZeroDigitChar);
+			theDFS->setMinusSign(theXalanDFS->getMinusSign());
+		//	theDFS->setExponentialSymbol(theZeroDigitChar);
+			theDFS->setCurrencySymbol(XalanDOMStringToUnicodeString(theXalanDFS->getCurrencySymbol()));
+			theDFS->setInternationalCurrencySymbol(XalanDOMStringToUnicodeString(theXalanDFS->getInternationalCurrencySymbol()));
+			theDFS->setMonetaryDecimalSeparator(theXalanDFS->getMonetaryDecimalSeparator());
+		}
+
+		UnicodeString	theUnicodeResult;
+
+		// Construct a DecimalFormat.  Note that we release the auto_ptr, since the
+		// DecimalFormat will adopt the DecimalFormatSymbols instance.
+		DecimalFormat	theFormatter(XalanDOMStringToUnicodeString(thePattern), theDFS.release(), theStatus);
 
 		if (theStatus == U_ZERO_ERROR ||
 			theStatus == U_USING_DEFAULT_ERROR)
@@ -159,13 +265,7 @@ ICUBridge::FormatNumber(
 			// Do the format...
 			theFormatter.format(theNumber, theUnicodeResult);
 
-			const int32_t	theLength = theUnicodeResult.length();
-
-			// Resize the vector to the appropriate length...
-			theResult.clear();
-			theResult.resize(theLength);
-
-			theUnicodeResult.extract(0, theLength, &theResult[0]);
+			UnicodeStringToXalanDOMString(theUnicodeResult, theResult);
 
 			theStatus = U_ZERO_ERROR;
 		}
@@ -177,51 +277,40 @@ ICUBridge::FormatNumber(
 
 
 int
-ICUBridge::strLength(const UnicodeCharType*		theString)
+ICUBridge::collationCompare(
+			const XalanDOMString&	theLHS,
+			const XalanDOMString&	theRHS)
 {
-	if (theString == 0)
-	{
-		return 0;
-	}
-	else
-	{
-		const UnicodeCharType*	current = theString;
-
-		while(*current)
-		{
-			++current;
-		}
-
-		return current - theString;
-	}
+	// Just call to the XalanDOMChar* version...
+	return collationCompare(c_wstr(theLHS), c_wstr(theRHS));
 }
 
 
 
 int
 ICUBridge::collationCompare(
-			const UnicodeCharType*		theLHS,
-			const UnicodeCharType*		theRHS)
+			const XalanDOMChar*		theLHS,
+			const XalanDOMChar*		theRHS)
 {
 #if !defined(XALAN_NO_NAMESPACES)
 	using std::auto_ptr;
 #endif
 
-	const UnicodeString		theUnicodeLHS(theLHS, strLength(theLHS));
-	const UnicodeString		theUnicodeRHS(theRHS, strLength(theRHS));
-
 	UErrorCode				theStatus = U_ZERO_ERROR;
 
-	auto_ptr<Collator>	theCollator(Collator::createInstance(theStatus));
+	// Create a collcator, and keep it in an auto_ptr
+	const auto_ptr<Collator>	theCollator(Collator::createInstance(theStatus));
 
 	if (theStatus == U_ZERO_ERROR || theStatus == U_USING_DEFAULT_ERROR)
 	{
+		// OK, do the compare...
 		return theCollator->compare(
-					theUnicodeLHS,
-					theUnicodeRHS);
+					XalanDOMCharStringToUnicodeString(theLHS),
+					XalanDOMCharStringToUnicodeString(theRHS));
 	}
 	else
 	{
-		return theUnicodeLHS.compare(theUnicodeRHS);
+		// If creating the ICU Collator failed, fall back to the default...
+		return collationCompare(theLHS, theRHS);
 	}
 }
