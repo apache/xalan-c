@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2003 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -67,33 +67,18 @@
 
 
 
-#include "FunctionBoolean.hpp"
-#include "FunctionCeiling.hpp"
 #include "FunctionConcat.hpp"
 #include "FunctionContains.hpp"
-#include "FunctionCount.hpp"
-#include "FunctionFalse.hpp"
-#include "FunctionFloor.hpp"
 #include "FunctionID.hpp"
 #include "FunctionLang.hpp"
-#include "FunctionLast.hpp"
-#include "FunctionLocalName.hpp"
-#include "FunctionName.hpp"
+#include "FunctionString.hpp"
 #include "FunctionNamespaceURI.hpp"
 #include "FunctionNormalizeSpace.hpp"
-#include "FunctionNot.hpp"
-#include "FunctionNumber.hpp"
-#include "FunctionPosition.hpp"
-#include "FunctionRound.hpp"
 #include "FunctionStartsWith.hpp"
-#include "FunctionString.hpp"
-#include "FunctionStringLength.hpp"
 #include "FunctionSubstring.hpp"
 #include "FunctionSubstringAfter.hpp"
 #include "FunctionSubstringBefore.hpp"
-#include "FunctionSum.hpp"
 #include "FunctionTranslate.hpp"
-#include "FunctionTrue.hpp"
 
 
 
@@ -343,11 +328,11 @@ XPathFunctionTable::CreateTable()
 
 		InstallFunction(
 				s_not,
-				FunctionNot());
+				FunctionNotImplemented(s_not));
 
 		InstallFunction(
 				s_sum,
-				FunctionSum());
+				FunctionNotImplemented(s_sum));
 
 		InstallFunction(
 				s_lang,
@@ -355,31 +340,31 @@ XPathFunctionTable::CreateTable()
 
 		InstallFunction(
 				s_last,
-				FunctionLast());
+				FunctionNotImplemented(s_last));
 
 		InstallFunction(
 				s_name,
-				FunctionName());
+				FunctionNotImplemented(s_name));
 
 		InstallFunction(
 				s_true,
-				FunctionTrue());
+				FunctionNotImplemented(s_true));
 
 		InstallFunction(
 				s_count,
-				FunctionCount());
+				FunctionNotImplemented(s_count));
 
 		InstallFunction(
 				s_false,
-				FunctionFalse());
+				FunctionNotImplemented(s_false));
 
 		InstallFunction(
 				s_floor,
-				FunctionFloor());
+				FunctionNotImplemented(s_floor));
 
 		InstallFunction(
 				s_round,
-				FunctionRound());
+				FunctionNotImplemented(s_round));
 
 		InstallFunction(
 				s_concat,
@@ -387,7 +372,7 @@ XPathFunctionTable::CreateTable()
 
 		InstallFunction(
 				s_number,
-				FunctionNumber());
+				FunctionNotImplemented(s_number));
 
 		InstallFunction(
 				s_string,
@@ -395,11 +380,11 @@ XPathFunctionTable::CreateTable()
 
 		InstallFunction(
 				s_boolean,
-				FunctionBoolean());
+				FunctionNotImplemented(s_boolean));
 
 		InstallFunction(
 				s_ceiling,
-				FunctionCeiling());
+				FunctionNotImplemented(s_ceiling));
 
 		InstallFunction(
 				s_current,
@@ -415,7 +400,7 @@ XPathFunctionTable::CreateTable()
 
 		InstallFunction(
 				s_position,
-				FunctionPosition());
+				FunctionNotImplemented(s_position));
 
 		InstallFunction(
 				s_substring,
@@ -427,7 +412,7 @@ XPathFunctionTable::CreateTable()
 
 		InstallFunction(
 				s_localName,
-				FunctionLocalName());
+				FunctionNotImplemented(s_localName));
 
 		InstallFunction(
 				s_generateId,
@@ -447,7 +432,7 @@ XPathFunctionTable::CreateTable()
 
 		InstallFunction(
 				s_stringLength,
-				FunctionStringLength());
+				FunctionNotImplemented(s_stringLength));
 
 		InstallFunction(
 				s_normalizeSpace,
