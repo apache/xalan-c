@@ -578,6 +578,10 @@ XercesParserLiaison::CreateDOMParser()
 
 	theParser->setErrorHandler(m_errorHandler);
 
+	// Xerces has a non-standard node type to represent the XML decl.
+	// Why did they ever do this?
+	theParser->setToCreateXMLDeclTypeNode(false);
+
 	return theParser;
 }
 
