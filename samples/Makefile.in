@@ -234,6 +234,7 @@ install: Samples
 
 install-extras:
 	cp -r $(SAMPLES_DIR)  $(DESTDIR)/$(prefix)
+	rm -rf $(DESTDIR)/$(prefix)/samples/Projects
 	for common_build_file in $(COMMON_BUILD); do \
           $(INSTALL_PROGRAM) $(XALANCROOT)/$$common_build_file \
                              $(DESTDIR)/$(prefix)/samples; \
