@@ -231,7 +231,9 @@ URISupport::getURLStringFromString(
 	}
 	else
 	{
-		const XalanDOMString	theProtocolString(substring(urlString, 0, theColonIndex));
+		XalanDOMString	theProtocolString;
+		
+		substring(urlString, theProtocolString, 0, theColonIndex);
 
 		// $$$ ToDo: XMLURL::lookupByName() is supposed to be static, but is not.
 		const XMLURL::Protocols		theProtocol =
@@ -270,7 +272,7 @@ URISupport::getURLStringFromString(
 					// Strip off file name from context...
 					if (indexOfSlash < baseLen)
 					{
-						context = substring(context, 0, indexOfSlash + 1);
+						substring(context, context, 0, indexOfSlash + 1);
 					}
 
 					// OK, everything looks good, so strip off the protocol 
@@ -299,28 +301,13 @@ URISupport::NormalizeURIText(XalanDOMString&	uriString)
 
 	if (index != len)
 	{
-#if 1
 		// Start replacing at the index point, since that's the
 		// first one...
 		replace(
-				uriString.begin(),
+				uriString.begin() + index,
 				uriString.end(),
 				XalanDOMChar(XalanUnicode::charReverseSolidus),
 				XalanDOMChar(XalanUnicode::charSolidus));
-#else
-		XalanDOMCharVectorType	theVector =
-			MakeXalanDOMCharVector(uriString);
-
-		// Start replacing at the index point, since that's the
-		// first one...
-		replace(
-				theVector.begin(),
-				theVector.end(),
-				XalanDOMCharVectorType::value_type(XalanUnicode::charReverseSolidus),
-				XalanDOMCharVectorType::value_type(XalanUnicode::charSolidus));
-
-		uriString = XalanDOMString(&theVector[0]);
-#endif
 	}
 
 	return uriString;
