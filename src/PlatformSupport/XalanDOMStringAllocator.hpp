@@ -80,7 +80,15 @@ public:
 	typedef XalanDOMString					data_type;
 	typedef data_type::size_type			data_type_size_type;
 
+#if defined(XALAN_NO_DEFAULT_TEMPLATE_ARGUMENTS)
+	typedef ArenaBlock<data_type>			ArenaBlockType;
+
+	typedef ArenaAllocator<data_type,
+						   ArenaBlockType>	ArenaAllocatorType;
+#else
 	typedef ArenaAllocator<data_type>		ArenaAllocatorType;
+#endif
+
 	typedef ArenaAllocatorType::size_type	size_type;
 
 	enum { eDefaultBlockSize = 32 };
