@@ -114,8 +114,16 @@ XercesDOMParsedSource::XercesDOMParsedSource(
 	m_parserLiaison.setUseValidation(fValidate);
 	m_parserLiaison.setEntityResolver(theEntityResolver);
 	m_parserLiaison.setErrorHandler(theErrorHandler);
-	m_parserLiaison.setExternalSchemaLocation(theExternalSchemaLocation);
-	m_parserLiaison.setExternalNoNamespaceSchemaLocation(theExternalNoNamespaceSchemaLocation);
+
+	if (theExternalSchemaLocation != 0)
+	{
+		m_parserLiaison.setExternalSchemaLocation(theExternalSchemaLocation);
+	}
+
+	if (theExternalNoNamespaceSchemaLocation != 0)
+	{
+		m_parserLiaison.setExternalNoNamespaceSchemaLocation(theExternalNoNamespaceSchemaLocation);
+	}
 
 	m_parsedSource = m_parserLiaison.parseXMLStream(theInputSource);
 	assert(m_parsedSource != 0);
