@@ -120,6 +120,7 @@
 #include <XPath/NodeRefList.hpp>
 #include <XPath/XObjectFactory.hpp>
 #include <XPath/XObjectFactoryDefault.hpp>
+#include <XPath/XPath.hpp>
 #include <XPath/XPathEnvSupportDefault.hpp>
 #include <XPath/XPathExecutionContextDefault.hpp>
 #include <XPath/XPathExpression.hpp>
@@ -833,6 +834,10 @@ foo(XPathExecutionContext&	theExecutionContext)
 			theCollection.begin(),
 			theCollection.end(),
 			theXObject);
+	}
+
+	{
+		XPath::TargetDataVectorType		theVector;
 	}
 #endif
 }
