@@ -67,23 +67,11 @@
 
 
 
-#if defined(XALAN_USE_XERCES_DOMSTRING)
-
-static const char foo;
-
-#elif defined(XALAN_USE_STD_STRING)
-
-
-
-#elif defined(XALAN_USE_CUSTOM_STRING)
+#if defined(XALAN_USE_CUSTOM_STRING)
 
 
 
 #include <cstdlib>
-
-
-
-#include <dom/DOMString.hpp>
 
 
 
@@ -406,6 +394,45 @@ length(const XalanDOMChar*	theString)
 
 
 
+bool
+XalanDOMString::equals(
+			const XalanDOMChar*		theLHS,
+			unsigned int			theLHSLength,
+			const XalanDOMChar*		theRHS,
+			unsigned int			theRHSLength)
+{
+	if (theLHSLength != theRHSLength)
+	{
+		return false;
+	}
+	else if (theLHSLength == 0)
+	{
+		return true;
+	}
+	else
+	{
+		const XalanDOMChar* const	theEnd = theLHS + theLHSLength;
+
+		while(*theLHS == *theRHS)
+		{
+			++theLHS;
+
+			if (theLHS == theEnd)
+			{
+				return true;
+			}
+			else
+			{
+				++theRHS;
+			}
+		}
+
+		return false;
+	}
+}
+
+
+
 XalanDOMString::size_type
 XalanDOMString::length(const XalanDOMChar*	theString)
 {
@@ -636,7 +663,7 @@ TranscodeFromLocalCodePage(
 
 
 
-#if defined(XALAN_USE_XERCES_DOMSTRING) || defined(XALAN_USE_STD_STRING)
+#if defined(XALAN_USE_STD_STRING)
 XALAN_DOM_EXPORT_FUNCTION(const XalanDOMString)
 TranscodeFromLocalCodePage(
 			const char*		theSourceString,

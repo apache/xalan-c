@@ -67,39 +67,24 @@
 
 
 
-#if defined(XALAN_USE_XERCES_DOMSTRING)
+// UTF-16 character...
+typedef unsigned short	XalanDOMChar;
 
-#include <dom/DOMString.hpp>
 
-typedef XMLCh		XalanDOMChar;
-typedef DOMString	XalanDOMString;
 
-#elif defined(XALAN_USE_STD_STRING)
+#if defined(XALAN_USE_STD_STRING)
 
 #include <string>
 
-#include <util/XercesDefs.hpp>
-
-typedef XMLCh								XalanDOMChar;
 typedef std::basic_string<XalanDOMChar>		XalanDOMString;
 
 #else
-
-
 
 #define XALAN_USE_CUSTOM_STRING
 
 
 
 #include <cassert>
-
-
-
-#include <util/XercesDefs.hpp>
-
-
-
-typedef XMLCh	XalanDOMChar;
 
 
 
@@ -568,7 +553,54 @@ public:
 	CharVectorType
 	transcode() const;
 
-protected:
+	static bool
+	equals(
+			const XalanDOMChar*		theLHS,
+			unsigned int			theLHSLength,
+			const XalanDOMChar*		theRHS,
+			unsigned int			theRHSLength);
+
+	static bool
+	equals(
+			const XalanDOMChar*		theLHS,
+			const XalanDOMChar*		theRHS)
+	{
+		return equals(theLHS, length(theLHS), theRHS, length(theRHS));
+	}
+
+	static bool
+	equals(
+			const XalanDOMString&	theLHS,
+			const XalanDOMString&	theRHS)
+	{
+		const unsigned int	theLHSLength = theLHS.size();
+		const unsigned int	theRHSLength = theRHS.size();
+
+		if (theLHSLength != theRHSLength)
+		{
+			return false;
+		}
+		else
+		{
+			return equals(theLHS.c_str(), theLHSLength, theRHS.c_str(), theRHSLength);
+		}
+	}
+
+	static bool
+	equals(
+			const XalanDOMString&	theLHS,
+			const XalanDOMChar*		theRHS)
+	{
+		return equals(theLHS.c_str(), theRHS);
+	}
+
+	static bool
+	equals(
+			const XalanDOMChar*		theLHS,
+			const XalanDOMString&	theRHS)
+	{
+		return equals(theLHS, theRHS.c_str());
+	}
 
 	/*
 	 * Helper function to determine the length of a null-
@@ -579,6 +611,8 @@ protected:
 	 */
 	static size_type
 	length(const XalanDOMChar*	theString);
+
+protected:
 
 	/*
 	 * Get an iterator to the position of the terminating null.
@@ -623,7 +657,7 @@ operator==(
 			const XalanDOMString&	theLHS,
 			const XalanDOMString&	theRHS)
 {
-	return theLHS.compare(theRHS) == 0 ? true : false;
+	return XalanDOMString::equals(theLHS, theRHS);
 }
 
 
@@ -633,7 +667,7 @@ operator==(
 			const XalanDOMString&	theLHS,
 			const XalanDOMChar*		theRHS)
 {
-	return theLHS.compare(theRHS) == 0 ? true : false;
+	return XalanDOMString::equals(theLHS, theRHS);
 }
 
 
@@ -644,7 +678,7 @@ operator==(
 			const XalanDOMString&	theRHS)
 {
 	// Note reversing of operands...
-	return theRHS.compare(theLHS) == 0 ? true : false;
+	return XalanDOMString::equals(theLHS, theRHS);
 }
 
 
@@ -824,11 +858,7 @@ TranscodeToLocalCodePage(
 			CharVectorType&			targetVector,
 			bool					terminate = false)
 {
-#if defined(XALAN_USE_CUSTOM_STRING) || defined(XALAN_USE_STD_STRING)
 	return TranscodeToLocalCodePage(theSourceString.c_str(), targetVector, terminate);
-#else
-	return TranscodeToLocalCodePage(theSourceString.rawBuffer(), theSourceString.length(), targetVector, terminate);
-#endif
 }
 
 
@@ -861,7 +891,7 @@ TranscodeToLocalCodePage(const XalanDOMString&	theSourceString)
  * @param theSourceStringLength The source string length.
  * @return The new string.
  */
-#if defined(XALAN_USE_XERCES_DOMSTRING) || defined(XALAN_USE_STD_STRING)
+#if defined(XALAN_USE_STD_STRING)
 XALAN_DOM_EXPORT_FUNCTION(const XalanDOMString)
 TranscodeFromLocalCodePage(
 			const char*		theSourceString,
