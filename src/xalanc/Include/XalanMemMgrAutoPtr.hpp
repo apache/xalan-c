@@ -34,7 +34,6 @@
 
 
 
-
 XALAN_CPP_NAMESPACE_BEGIN
 
 
@@ -47,43 +46,94 @@ class XalanMemMgrAutoPtr
 {
 public:
 
-    typedef XERCES_CPP_NAMESPACE_QUALIFIER MemoryManager    MemoryManagerType;
+    typedef XERCES_CPP_NAMESPACE_QUALIFIER MemoryManager		MemoryManagerType;
+	typedef XALAN_STD_QUALIFIER pair<MemoryManagerType*, Type*> AutoPtrPairType;
 
+	class MemMgrAutoPtrData : public AutoPtrPairType
+	{
+	public:
+		MemMgrAutoPtrData():
+			AutoPtrPairType(0,0)
+		{
+		}
+
+		MemMgrAutoPtrData(	
+			MemoryManagerType* memoryManager,
+			Type* dataPointer): 
+			AutoPtrPairType(memoryManager, dataPointer)
+		{
+			invariants();
+		}
+		
+	
+		bool
+		isInitilized()const
+		{
+			return ( (first != 0) && (second != 0) )? true : false;
+		}
+	
+		void
+		deallocate()
+		{
+			invariants();
+
+			if ( isInitilized() )
+			{			
+				second->~Type();
+
+				first->deallocate(second);
+			}
+		}
+		
+		void 
+		reset(	MemoryManagerType* _m_memoryManager ,
+				Type*	_m_dataPointer )
+		{	
+			invariants();
+
+			first = _m_memoryManager;
+			
+			second = _m_dataPointer;
+
+			invariants();
+		}	
+	private:
+		void
+		invariants()const
+		{
+			assert( isInitilized() ||
+					( (first == 0) && (second ==0) ) );
+		}
+		
+	};
+	
+	
 	XalanMemMgrAutoPtr(
-			Type*	thePointer = 0, 
-			MemoryManagerType*  theManager = 0) :
-		m_memoryManager(theManager),
-		m_pointer(thePointer)
+			MemoryManagerType*  theManager, 
+			Type* ptr  ) : 
+		m_pointerInfo(theManager, ptr)
 	{
-		invariants();
+	}	
+
+	XalanMemMgrAutoPtr() :
+		m_pointerInfo()
+	{
+	}
+	
+	XalanMemMgrAutoPtr(const XalanMemMgrAutoPtr<Type>&	theSource) :
+		m_pointerInfo(((XalanMemMgrAutoPtr<Type>&)theSource).release())
+	{
 	}
 
-	XalanMemMgrAutoPtr(const XalanMemMgrAutoPtr<Type>&	theSource) :
-		m_memoryManager(theSource.m_memoryManager),
-		m_pointer(((XalanMemMgrAutoPtr<Type>&)theSource).release())
-	{
-		invariants();
-	}
 
 	XalanMemMgrAutoPtr<Type>&
 	operator=(XalanMemMgrAutoPtr<Type>&	theRHS)
-	{
-		invariants();
-		
-		theRHS.invariants();
-		
+	{		
 		if (this != &theRHS)
 		{
+			m_pointerInfo.deallocate();
 
-			if ( m_memoryManager != 0 && m_pointer != 0)
-			{
-				m_pointer->~Type();
-
-				m_memoryManager->deallocate(m_pointer);
-			}
-
-
-			m_pointer = theRHS.release(m_memoryManager);
+			m_pointerInfo = theRHS.release();
 		}
 
 		return *this;
@@ -91,113 +141,51 @@ public:
 
 	~XalanMemMgrAutoPtr()
 	{
-		// See note in operator=() about this...
-		if ( m_memoryManager != 0 && m_pointer!= 0 )
-		{
-			m_pointer->~Type();
-			
-			m_memoryManager->deallocate(m_pointer);
-		}
+		m_pointerInfo.deallocate();
 	}
 
 	Type&
 	operator*() const
 	{
-		return *m_pointer;
+		return *m_pointerInfo.second;
 	}
 
 	Type*
 	operator->() const
 	{
-		return m_pointer;
+		return m_pointerInfo.second;
 	}
 
 	Type*
 	get() const
 	{
-		return m_pointer;
+		return m_pointerInfo.second;
 	}
 
-/**
- * Release , similar to the auto_ptr release , but returns a memory manager the pointer comes from
- * 
- * @param theManager   parameter to receive the memory manager
- */
-	Type*
-	release( /* OUT */ MemoryManagerType** theManager)
-	{
-		invariants();
-		
-		Type* const	temp = m_pointer;
-		
-		*theManager = m_memoryManager;
-		
-		m_pointer = 0;
-		
-		m_memoryManager = 0;
-		
-		return temp;
-	}
-	
-/**
- * Release , similar to the auto_ptr release. Note , that the Type* pointer can't be "deleted"
- */
-	Type*
+	MemMgrAutoPtrData
 	release()
-	{
-		invariants();
+	{		
+		MemMgrAutoPtrData tmp = m_pointerInfo;
+	
+		m_pointerInfo.reset( 0 , 0 ); 
 		
-		Type* const	temp = m_pointer;
-		
-		m_pointer = 0;
-		
-		m_memoryManager = 0;
-		
-		return temp;
+		return MemMgrAutoPtrData(tmp);
 	}
 	
 	void
-	reset(	 Type*		thePointer = 0,
-			 MemoryManagerType*  theManager = 0 )
-	{
-		// check the correctness before ...
-		invariants();
-		
-		// See note in operator=() about this...
-		if ( m_memoryManager != 0 && m_pointer!=0 )
-		{
-			m_pointer->~Type();
-			
-			m_memoryManager->deallocate(m_pointer);
-		}
+	reset(	MemoryManagerType*  theManager = 0,
+			Type*		thePointer = 0 )
+	{		
+		m_pointerInfo.deallocate();
 
-		m_memoryManager = theManager;
-
-		m_pointer = thePointer;
-		
-		// check the correctness after ...
-		invariants();
+		m_pointerInfo.reset ( theManager , thePointer );
 	}
 
 private:
-#if defined(NDEBUG)
-    void
-    invariants() const
-    {
-    }
-#else
-    void
-    invariants() const
-    {
-        assert ( (m_pointer != 0 && m_memoryManager != 0 ) || 
-					(m_pointer == 0 && m_memoryManager == 0 ) );
-    }
-#endif
 
-// data members
-	MemoryManagerType* m_memoryManager;
 
-	Type*	m_pointer;
+// data member
+	MemMgrAutoPtrData m_pointerInfo;
 };
 
 
