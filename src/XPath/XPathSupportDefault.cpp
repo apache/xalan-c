@@ -130,6 +130,14 @@ XPathSupportDefault::getNamespaceOfNode(const XalanNode&	n) const
 
 
 XalanDOMString
+XPathSupportDefault::getNameOfNode(const XalanNode&		n) const
+{
+	return DOMServices::getNameOfNode(n);
+}
+
+
+
+XalanDOMString
 XPathSupportDefault::getLocalNameOfNode(const XalanNode&	n) const
 {
 	return DOMServices::getLocalNameOfNode(n);

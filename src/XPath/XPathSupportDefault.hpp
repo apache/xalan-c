@@ -97,6 +97,9 @@ public:
 	getNamespaceOfNode(const XalanNode&		n) const;
 
 	virtual XalanDOMString
+	getNameOfNode(const XalanNode&	n) const;
+
+	virtual XalanDOMString
 	getLocalNameOfNode(const XalanNode&		n) const;
 
 	virtual XalanDOMString

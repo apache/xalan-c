@@ -68,14 +68,14 @@
 
 
 
+// Base class header file...
+#include <XPath/Function.hpp>
+
+
+
 #include <XalanDOM/XalanNode.hpp>
 #include <XalanDOM/XalanAttr.hpp>
 #include <XalanDOM/XalanDOMString.hpp>
-
-
-
-// Base class header file...
-#include <XPath/Function.hpp>
 
 
 
@@ -119,7 +119,7 @@ public:
 			}
 			else
 			{
-				theResult = getNameFromNode(*context);
+				theResult = executionContext.getNameOfNode(*context);
 			}
 		}
 		else if (theSize == 1)
@@ -132,7 +132,7 @@ public:
 			{
 				assert(theNodeList.item(0) != 0);
 
-				theResult = getNameFromNode(*theNodeList.item(0));
+				theResult = executionContext.getNameOfNode(*theNodeList.item(0));
 			}
 		}
 		else
@@ -152,38 +152,6 @@ public:
 	clone() const
 	{
 		return new FunctionName(*this);
-	}
-
-protected:
-
-	/**
-	 * Retrieve the name of the first element in the nodelist
-	 * 
-	 * @param theNodeList node list
-	 * @return name string of node, or an empty string if node list is empty
-	 */
-	virtual XalanDOMString
-	getNameFromNode(const XalanNode&	theNode) const
-	{
-		XalanDOMString	theResult;
-
-		const XalanNode::NodeType	theNodeType =
-				theNode.getNodeType();
-
-		if (theNodeType == XalanNode::ATTRIBUTE_NODE)
-		{
-			const XalanAttr&	theAttributeNode =
-					reinterpret_cast<const XalanAttr&>(theNode);
-
-			theResult = theAttributeNode.getName();
-		}
-		else if (theNodeType == XalanNode::ELEMENT_NODE ||
-				 theNodeType == XalanNode::PROCESSING_INSTRUCTION_NODE)
-		{
-			theResult = theNode.getNodeName();
-		}
-
-		return theResult;
 	}
 
 private:

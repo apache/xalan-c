@@ -122,6 +122,17 @@ public:
 	getNamespaceOfNode(const XalanNode&		n) const = 0;
 
 	/**
+	 * Retrieve the name of the node, taking into
+	 * account the differences between the DOM and
+	 * XSLT data models.
+	 * 
+	 * @param node	DOM node whose name is returned
+	 * @return name of the node
+	 */
+	virtual XalanDOMString
+	getNameOfNode(const XalanNode&	n) const = 0;
+
+	/**
 	 * Retrieve local name of node
 	 * 
 	 * @param node	DOM node whose name is returned
