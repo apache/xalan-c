@@ -97,6 +97,49 @@ static const XalanDOMChar	s_dateTimeNamespace[] =
 };
 
 
+#if defined(WIN32)
+static struct tm *
+localtime_r(const time_t *clock, struct tm *res)
+{
+	assert( res != 0 );
+
+	struct tm * tmpTime = localtime(clock);
+
+	if (tmpTime == 0 )
+	{
+		return 0;
+	}
+	else
+	{
+		*res = *tmpTime;
+
+		return res;
+	}
+	
+}
+
+static struct tm *
+gmtime_r(const time_t *clock, struct tm *res)
+{
+	assert( res != 0 );
+
+	struct tm * tmpTime = gmtime(clock);
+
+	if (tmpTime == 0 )
+	{
+		return 0;
+	}
+	else
+	{
+		*res = *tmpTime;
+
+		return res;
+	}
+	
+}
+
+#endif // WIN32
+
 XObjectPtr
 XalanEXSLTFunctionDateTime::execute(
 			XPathExecutionContext&			executionContext,
@@ -116,42 +159,43 @@ XalanEXSLTFunctionDateTime::execute(
 	theResult.clear();
 
 #if defined(XALAN_STRICT_ANSI_HEADERS)
-	using std::localtime;
+	using std::localtime_r;
 	using std::tm;
 	using std::time_t;
 	using std::time;
 	using std::size_t;
 	using std::strftime;
-	using std::gmtime;
+	using std::gmtime_r;
 #endif
 
 	time_t long_time;
 
 	time( &long_time );
 
-	const struct tm*	strctTime = localtime(&long_time);
+	struct tm localTime;
 
-	if (strctTime != 0 )
+	const struct tm*	ptrStrctTime = localtime_r(&long_time, &localTime);
+
+	if (ptrStrctTime != 0 )
 	{
-		// save local time value
-		struct tm localTime = *strctTime;
+		struct tm gmtTime;
 
-		strctTime = gmtime(&long_time);
+		ptrStrctTime = gmtime_r(&long_time, &gmtTime);
 
-		if(strctTime != 0 )
+		if(ptrStrctTime != 0 )
 		{
 
 			const size_t	MAX_DATE_TIME_LEN = 1000;
 			char stringTime[MAX_DATE_TIME_LEN + 1];
 
-			const size_t	result = strftime(stringTime, MAX_DATE_TIME_LEN, "%Y-%m-%dT%H:%M:%S", strctTime);
+			const size_t	result = strftime(stringTime, MAX_DATE_TIME_LEN, "%Y-%m-%dT%H:%M:%S", ptrStrctTime);
 
 			if (result != 0)
 			{
 				theResult.assign(stringTime);
 				
 				long localData = localTime.tm_year * 10000 + localTime.tm_mon * 100 + localTime.tm_mday;
-				long gmtData = strctTime->tm_year * 10000 + strctTime->tm_mon * 100 + strctTime->tm_mday;
+				long gmtData = gmtTime.tm_year * 10000 + gmtTime.tm_mon * 100 + gmtTime.tm_mday;
 
 				char timeZone[MAX_DATE_TIME_LEN+1];
 				
@@ -159,22 +203,22 @@ XalanEXSLTFunctionDateTime::execute(
 
 				if( localData == gmtData )
 				{
-					if(localTime.tm_hour == strctTime->tm_hour)
+					if(localTime.tm_hour == gmtTime.tm_hour)
 					{
 						offset = 100; //  much bigger then any legal offset
 					}
 					else
 					{
-						offset = localTime.tm_hour - strctTime->tm_hour;
+						offset = localTime.tm_hour - gmtTime.tm_hour;
 					}
 				}
 				else if(localData < gmtData)
 				{
-					offset = localTime.tm_hour - strctTime->tm_hour - 24;
+					offset = localTime.tm_hour - gmtTime.tm_hour - 24;
 				}
 				else
 				{
-					offset = localTime.tm_hour - strctTime->tm_hour + 24;
+					offset = localTime.tm_hour - gmtTime.tm_hour + 24;
 				}
 
 				if(offset == 100)
