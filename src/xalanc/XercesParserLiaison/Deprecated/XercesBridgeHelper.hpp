@@ -54,92 +54,122 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-#include "XercesDOMWrapperParsedSource.hpp"
+#if !defined(XERCESBRIDGEHELPER_HEADER_GUARD_1357924680)
+#define XERCESBRIDGEHELPER_HEADER_GUARD_1357924680
 
 
 
-#include <xalanc/XalanDOM/XalanDocument.hpp>
+#include <xalanc/XercesParserLiaison/XercesParserLiaisonDefinitions.hpp>
 
 
 
-#include <xalanc/PlatformSupport/URISupport.hpp>
+#include <cassert>
 
 
 
-#include <xalanc/XercesParserLiaison/XercesParserLiaison.hpp>
-#include <xalanc/XercesParserLiaison/XercesDOMSupport.hpp>
+#if XERCES_VERSION_MAJOR >= 2
+#include <xercesc/dom/deprecated/DOM_Node.hpp>
+#else
+#include <xercesc/dom/DOM_Node.hpp>
+#endif
 
 
 
-#include "XercesDOMParsedSource.hpp"
+#include <xalanc/XalanDOM/XalanDOMString.hpp>
+
+
+
+#include <xalanc/XercesParserLiaison/Deprecated/XercesBridgeNavigator.hpp>
+#include <xalanc/XercesParserLiaison/Deprecated/XercesBridgeTypes.hpp>
+
+
+
+XALAN_DECLARE_XERCES_CLASS(DOM_CharacterData)
 
 
 
 XALAN_CPP_NAMESPACE_BEGIN
 
 
-
-XercesDOMWrapperParsedSource::XercesDOMWrapperParsedSource(
-			const DOM_Document_Type&	theDocument,
-			XercesParserLiaison&		theParserLiaison,
-			XercesDOMSupport&			theDOMSupport,
-			const XalanDOMString&		theURI) :
-	XalanParsedSource(),
-	m_parserLiaison(theParserLiaison),
-	m_domSupport(theDOMSupport),
-	m_parsedSource(theParserLiaison.createDocument(theDocument, true, true)),
-	m_uri(URISupport::NormalizeURIText(theURI))
+/**
+ * This class is deprecated.
+ *
+ * @deprecated This class is part of the deprecated Xerces DOM bridge.
+ */
+class XALAN_XERCESPARSERLIAISON_EXPORT XercesBridgeHelper
 {
-	assert(m_parsedSource != 0);
-}
+public:
 
+	typedef unsigned int	XercesStringLengthType;
 
+	static const DOMStringType
+	XalanDOMStringToXercesDOMString(const XalanDOMString&	theString)
+	{
+		assert(XercesStringLengthType(theString.length()) == theString.length());
 
-XercesDOMWrapperParsedSource::XercesDOMWrapperParsedSource(
-			const DOMDocument_Type*		theDocument,
-			XercesParserLiaison&		theParserLiaison,
-			XercesDOMSupport&			theDOMSupport,
-			const XalanDOMString&		theURI) :
-	XalanParsedSource(),
-	m_parserLiaison(theParserLiaison),
-	m_domSupport(theDOMSupport),
-	m_parsedSource(theParserLiaison.createDocument(theDocument, true, true)),
-	m_uri(URISupport::NormalizeURIText(theURI))
-{
-	assert(m_parsedSource != 0);
-}
+		return DOMStringType(&theString[0], XercesStringLengthType(theString.length()));
+	}
 
+	static void
+	setNodeValue(
+			DOM_NodeType&			theXercesNode,
+			const XalanDOMString&	nodeValue);
 
+	static void
+	normalize(DOM_NodeType&		theXercesNode);
 
-XercesDOMWrapperParsedSource::~XercesDOMWrapperParsedSource()
-{
-	m_parserLiaison.destroyDocument(m_parsedSource);
-}
+	static bool
+	isSupported(
+			const DOM_NodeType&		theXercesNode,
+			const XalanDOMString&	feature,
+			const XalanDOMString&	version);
 
+	static void
+	setPrefix(
+			DOM_NodeType&			theXercesNode,
+			const XalanDOMString&	prefix);
 
+	static const XalanDOMString
+	substringData(
+			const DOM_CharacterDataType&	theXercesNode,
+			unsigned int					offset, 
+			unsigned int					count);
 
-XalanDocument*
-XercesDOMWrapperParsedSource::getDocument() const
-{
-	return m_parsedSource;
-}
+	static void
+	appendData(
+			DOM_CharacterDataType&	theXercesNode,
+			const XalanDOMString&	arg);
 
+	static void
+	insertData(
+			DOM_CharacterDataType&	theXercesNode,
+			unsigned int			offset,
+			const  XalanDOMString& 	arg);
 
+	static void
+	deleteData(
+			DOM_CharacterDataType&	theXercesNode,
+			unsigned int			offset, 
+			unsigned int			count);
 
-XalanParsedSourceHelper*
-XercesDOMWrapperParsedSource::createHelper() const
-{
-	return new XercesDOMParsedSourceHelper;
-}
+	static void
+	replaceData(
+			DOM_CharacterDataType&	theXercesNode,
+			unsigned int			offset, 
+			unsigned int			count, 
+			const XalanDOMString&	arg);
+private:
 
+	// Not implemented...
+	XercesBridgeHelper();
 
-
-const XalanDOMString&
-XercesDOMWrapperParsedSource::getURI() const
-{
-	return m_uri;
-}
+	XercesBridgeHelper(const XercesBridgeHelper&);
+};
 
 
 
 XALAN_CPP_NAMESPACE_END
+
+
+
+#endif	// !defined(XERCESBRIDGEHELPER_HEADER_GUARD_1357924680)

@@ -75,7 +75,6 @@
 
 
 
-#include <xalanc/XercesParserLiaison/XercesBridgeNavigator.hpp>
 #include <xalanc/XercesParserLiaison/XercesWrapperTypes.hpp>
 
 

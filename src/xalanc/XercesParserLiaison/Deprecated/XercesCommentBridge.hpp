@@ -54,8 +54,8 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-#if !defined(XERCESCDATASECTIONWRAPPER_HEADER_GUARD_1357924680)
-#define XERCESCDATASECTIONWRAPPER_HEADER_GUARD_1357924680
+#if !defined(XERCESCOMMENTBRIDGE_HEADER_GUARD_1357924680)
+#define XERCESCOMMENTBRIDGE_HEADER_GUARD_1357924680
 
 
 
@@ -63,11 +63,19 @@
 
 
 
-#include <xalanc/XalanDOM/XalanCDATASection.hpp>
+#if XERCES_VERSION_MAJOR >= 2
+#include <xercesc/dom/deprecated/DOM_Comment.hpp>
+#else
+#include <xercesc/dom/DOM_Comment.hpp>
+#endif
 
 
 
-#include <xalanc/XercesParserLiaison/XercesWrapperTypes.hpp>
+#include <xalanc/XalanDOM/XalanComment.hpp>
+
+
+
+#include <xalanc/XercesParserLiaison/Deprecated/XercesBridgeTypes.hpp>
 
 
 
@@ -75,20 +83,24 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-class XercesWrapperNavigator;
+class XercesBridgeNavigator;
 
 
-
-class XALAN_XERCESPARSERLIAISON_EXPORT XercesCDATASectionWrapper : public XalanCDATASection
+/**
+ * This class is deprecated.
+ *
+ * @deprecated This class is part of the deprecated Xerces DOM bridge.
+ */
+class XALAN_XERCESPARSERLIAISON_EXPORT XercesCommentBridge : public XalanComment
 {
 public:
 
-	XercesCDATASectionWrapper(
-			const DOMCDATASectionType*		theXercesCDATASection,
-			const XercesWrapperNavigator&	theNavigator);
+	XercesCommentBridge(
+			const DOM_CommentType&			theXercesComment,
+			const XercesBridgeNavigator&	theNavigator);
 
 	virtual
-	~XercesCDATASectionWrapper();
+	~XercesCommentBridge();
 
 
 	/**
@@ -115,7 +127,7 @@ public:
 	 * All nodes, except <code>Document</code>,
 	 * <code>DocumentFragment</code>, and <code>Attr</code> may have a parent.
 	 * However, if a node has just been created and not yet added to the tree,
-	 * or if it has been removed from the tree, a <code>null</code> DOMNode
+	 * or if it has been removed from the tree, a <code>null</code> DOM_Node
 	 * is returned.
 	 */
 	virtual XalanNode*
@@ -177,12 +189,12 @@ public:
 	getAttributes() const;
 
 	/**
-	 * Gets the <code>DOMDocument</code> object associated with this node.
+	 * Gets the <code>DOM_Document</code> object associated with this node.
 	 *
 	 * This is also
-	 * the <code>DOMDocument</code> object used to create new nodes. When this
-	 * node is a <code>DOMDocument</code> or a <code>DOMDocumentType</code>
-	 * which is not used with any <code>DOMDocument</code> yet, this is
+	 * the <code>DOM_Document</code> object used to create new nodes. When this
+	 * node is a <code>DOM_Document</code> or a <code>DOM_DocumentType</code>
+	 * which is not used with any <code>DOM_Document</code> yet, this is
 	 * <code>null</code>.
 	 */
 	virtual XalanDocument*
@@ -213,7 +225,7 @@ public:
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
 	virtual XalanNode*
 #else
-	virtual XercesCDATASectionWrapper*
+	virtual XercesCommentBridge*
 #endif
 	cloneNode(bool deep) const;
 
@@ -230,7 +242,7 @@ public:
 	 * <br>If <code>newChild</code> is a <code>DocumentFragment</code> object,
 	 * all of its children are inserted, in the same order, before
 	 * <code>refChild</code>. If the <code>newChild</code> is already in the
-	 * tree, it is first removed.  Note that a <code>DOMNode</code> that
+	 * tree, it is first removed.  Note that a <code>DOM_Node</code> that
 	 * has never been assigned to refer to an actual node is == null.
 	 * @param newChild The node to insert.
 	 * @param refChild The reference node, i.e., the node before which the new
@@ -246,8 +258,8 @@ public:
 	 * Replaces the child node <code>oldChild</code> with <code>newChild</code>
 	 * in the list of children, and returns the <code>oldChild</code> node.
 	 *
-	 * If <CODE>newChild</CODE> is a <CODE>DOMDocumentFragment</CODE> object,
-	 * <CODE>oldChild</CODE> is replaced by all of the <CODE>DOMDocumentFragment</CODE>
+	 * If <CODE>newChild</CODE> is a <CODE>DOM_DocumentFragment</CODE> object,
+	 * <CODE>oldChild</CODE> is replaced by all of the <CODE>DOM_DocumentFragment</CODE>
 	 * children, which are inserted in the same order.
 	 *
 	 * If the <code>newChild</code> is already in the tree, it is first removed.
@@ -303,7 +315,6 @@ public:
 	/** @name Set functions. */
 	//@{
 
-
 	/**
 	* Sets the value of the node.
 	*
@@ -325,20 +336,20 @@ public:
 	//@{
 
 	/**
-	 * Puts all <CODE>DOMText</CODE>
-	 * nodes in the full depth of the sub-tree underneath this <CODE>DOMNode</CODE>, 
+	 * Puts all <CODE>DOM_Text</CODE>
+	 * nodes in the full depth of the sub-tree underneath this <CODE>DOM_Node</CODE>, 
 	 * including attribute nodes, into a "normal" form where only markup (e.g., 
 	 * tags, comments, processing instructions, CDATA sections, and entity 
-	 * references) separates <CODE>DOMText</CODE>
-	 * nodes, i.e., there are no adjacent <CODE>DOMText</CODE>
+	 * references) separates <CODE>DOM_Text</CODE>
+	 * nodes, i.e., there are no adjacent <CODE>DOM_Text</CODE>
 	 * nodes. This can be used to ensure that the DOM view of a document is the 
 	 * same as if it were saved and re-loaded, and is useful when operations 
 	 * (such as XPointer lookups) that depend on a particular document tree 
 	 * structure are to be used.
-	 * <P><B>Note:</B> In cases where the document contains <CODE>DOMCDATASections</CODE>, 
+	 * <P><B>Note:</B> In cases where the document contains <CODE>DOM_CDATASections</CODE>, 
 	 * the normalize operation alone may not be sufficient, since XPointers do 
-	 * not differentiate between <CODE>DOMText</CODE>
-	 * nodes and <CODE>DOMCDATASection</CODE> nodes.</P>
+	 * not differentiate between <CODE>DOM_Text</CODE>
+	 * nodes and <CODE>DOM_CDATASection</CODE> nodes.</P>
 	 */
 	virtual void
 	normalize();
@@ -388,7 +399,7 @@ public:
 	 * Returns the local part of the <em>qualified name</em> of this node.
 	 * <p>
 	 * For nodes created with a DOM Level 1 method, such as
-	 * <code>createElement</code> from the <code>DOMDocument</code> interface,
+	 * <code>createElement</code> from the <code>DOM_Document</code> interface,
 	 * it is null.
 	 */
 	virtual const XalanDOMString&
@@ -400,7 +411,7 @@ public:
 	 * Note that setting this attribute, when permitted, changes 
 	 * the <CODE>nodeName</CODE> attribute, which holds the <EM>qualified 
 	 * name</EM>, as well as the <CODE>tagName</CODE> and <CODE>name</CODE> 
-	 * attributes of the <CODE>DOMElement</CODE> and <CODE>DOMAttr</CODE>
+	 * attributes of the <CODE>DOM_Element</CODE> and <CODE>DOM_Attr</CODE>
 	 * interfaces, when applicable.
 	 * <p>
 	 * Note also that changing the prefix of an 
@@ -424,7 +435,7 @@ public:
 	 *		 <CODE>localName</CODE> is <CODE>null</CODE>.
 	 */
 	virtual void
-	setPrefix(const XalanDOMString&		prefix);
+	setPrefix(const XalanDOMString&	prefix);
 
 	virtual bool
 	isIndexed() const;
@@ -562,63 +573,34 @@ public:
 			unsigned int			count, 
 			const XalanDOMString&	arg);
 
-  //@}
-
-    //@}
-    /** @name Functions to modify the Text node. */
-    //@{
-
-    /**
-     * Breaks this node into two nodes at the specified 
-     * offset, keeping both in the tree as siblings. 
-     *
-     * This node then only 
-     * contains all the content up to the <code>offset</code> point. And a new 
-     * node of the same nodeType, which is inserted as the next sibling of this 
-     * node, contains all the content at and after the <code>offset</code> 
-     * point. When the <code>offset</code> is equal to the lenght of this node,
-     * the new node has no data.
-     * @param offset The offset at which to split, starting from 0.
-     * @return The new <code>Text</code> node.
-     * @exception DOMException
-     *   INDEX_SIZE_ERR: Raised if the specified offset is negative or greater 
-     *   than the number of characters in <code>data</code>.
-     *   <br>NO_MODIFICATION_ALLOWED_ERR: Raised if this node is readonly.
-     */
-    virtual XalanText*
-	splitText(unsigned int	offset);
-
-    //@}
-
-	virtual bool
-	isIgnorableWhitespace() const;
-
 	/**
 	 * Get the Xerces node this instance represent.
 	 *
 	 * @return The Xerces node
 	 */
-	const DOMCDATASectionType*
+	DOM_CommentType
 	getXercesNode() const
 	{
 		return m_xercesNode;
 	}
 
+  //@}
+
 private:
 
 	// Not implemented...
-	XercesCDATASectionWrapper(const XercesCDATASectionWrapper&	theSource);
+	XercesCommentBridge(const XercesCommentBridge&	theSource);
 
-	XercesCDATASectionWrapper&
-	operator=(const XercesCDATASectionWrapper&	theSource);
+	XercesCommentBridge&
+	operator=(const XercesCommentBridge&	theSource);
 
 	bool
-	operator==(const XercesCDATASectionWrapper&	theRHS) const;
+	operator==(const XercesCommentBridge&	theRHS) const;
 
 	// Data members...
-	const DOMCDATASectionType*		m_xercesNode;
+	DOM_CommentType					m_xercesNode;
 
-	const XercesWrapperNavigator&	m_navigator;
+	const XercesBridgeNavigator&	m_navigator;
 };
 
 
@@ -627,4 +609,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// !defined(XERCESCDATASECTIONWRAPPER_HEADER_GUARD_1357924680)
+#endif	// !defined(XERCESCOMMENTBRIDGE_HEADER_GUARD_1357924680)

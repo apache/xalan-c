@@ -54,92 +54,118 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-#include "XercesDOMWrapperParsedSource.hpp"
+
+#if !defined(XERCESELEMENTBRIDGEALLOCATOR_INCLUDE_GUARD_12455133)
+#define XERCESELEMENTBRIDGEALLOCATOR_INCLUDE_GUARD_12455133
 
 
 
-#include <xalanc/XalanDOM/XalanDocument.hpp>
+#include <xalanc/XercesParserLiaison/XercesParserLiaisonDefinitions.hpp>
 
 
 
-#include <xalanc/PlatformSupport/URISupport.hpp>
+#include <xalanc/PlatformSupport/ArenaAllocator.hpp>
 
 
 
-#include <xalanc/XercesParserLiaison/XercesParserLiaison.hpp>
-#include <xalanc/XercesParserLiaison/XercesDOMSupport.hpp>
-
-
-
-#include "XercesDOMParsedSource.hpp"
+#include <xalanc/XercesParserLiaison/Deprecated/XercesElementBridge.hpp>
 
 
 
 XALAN_CPP_NAMESPACE_BEGIN
 
 
-
-XercesDOMWrapperParsedSource::XercesDOMWrapperParsedSource(
-			const DOM_Document_Type&	theDocument,
-			XercesParserLiaison&		theParserLiaison,
-			XercesDOMSupport&			theDOMSupport,
-			const XalanDOMString&		theURI) :
-	XalanParsedSource(),
-	m_parserLiaison(theParserLiaison),
-	m_domSupport(theDOMSupport),
-	m_parsedSource(theParserLiaison.createDocument(theDocument, true, true)),
-	m_uri(URISupport::NormalizeURIText(theURI))
+/**
+ * This class is deprecated.
+ *
+ * @deprecated This class is part of the deprecated Xerces DOM bridge.
+ */
+class XALAN_XERCESPARSERLIAISON_EXPORT XercesElementBridgeAllocator
 {
-	assert(m_parsedSource != 0);
-}
+public:
+
+	typedef XercesElementBridge				ObjectType;
 
 
+#if defined(XALAN_NO_DEFAULT_TEMPLATE_ARGUMENTS)
+	typedef ArenaBlock<ObjectType>					ArenaBlockType;
 
-XercesDOMWrapperParsedSource::XercesDOMWrapperParsedSource(
-			const DOMDocument_Type*		theDocument,
-			XercesParserLiaison&		theParserLiaison,
-			XercesDOMSupport&			theDOMSupport,
-			const XalanDOMString&		theURI) :
-	XalanParsedSource(),
-	m_parserLiaison(theParserLiaison),
-	m_domSupport(theDOMSupport),
-	m_parsedSource(theParserLiaison.createDocument(theDocument, true, true)),
-	m_uri(URISupport::NormalizeURIText(theURI))
-{
-	assert(m_parsedSource != 0);
-}
+	typedef ArenaAllocator<ObjectType,
+						   ArenaBlockType>			ArenaAllocatorType;
+#else
+	typedef ArenaAllocator<ObjectType>				ArenaAllocatorType;
+#endif
+
+	typedef ArenaAllocatorType::size_type	size_type;
+
+	/**
+	 * Construct an instance that will allocate blocks of the specified size.
+	 *
+	 * @param theBlockSize The block size.
+	 */
+	XercesElementBridgeAllocator(size_type	theBlockCount);
+
+	~XercesElementBridgeAllocator();
+	
+	/**
+	 * Create a XercesElementBridge instance.
+	 * 
+	 * @param theXercesElement The Xerces element node
+	 * @param theNavigator The navigator for this instance.
+	 *
+	 * @return pointer to the instance
+	 */
+	ObjectType*
+	create(
+			const DOM_ElementType&			theXercesElement,
+			const XercesBridgeNavigator&	theNavigator);
+
+	/**
+	 * Delete all objects from allocator.	 
+	 */	
+	void
+	reset();
+
+	/**
+	 * Get size of an ArenaBlock, that is, the number
+	 * of objects in each block.
+	 *
+	 * @return The size of the block
+	 */
+	size_type
+	getBlockCount() const
+	{
+		return m_allocator.getBlockCount();
+	}
+
+	/**
+	 * Get the number of ArenaBlocks currently allocated.
+	 *
+	 * @return The number of blocks.
+	 */
+	size_type
+	getBlockSize() const
+	{
+		return m_allocator.getBlockSize();
+	}
 
 
+private:
 
-XercesDOMWrapperParsedSource::~XercesDOMWrapperParsedSource()
-{
-	m_parserLiaison.destroyDocument(m_parsedSource);
-}
+	// Not implemented...
+	XercesElementBridgeAllocator(const XercesElementBridgeAllocator&);
 
+	XercesElementBridgeAllocator&
+	operator=(const XercesElementBridgeAllocator&);
 
-
-XalanDocument*
-XercesDOMWrapperParsedSource::getDocument() const
-{
-	return m_parsedSource;
-}
-
-
-
-XalanParsedSourceHelper*
-XercesDOMWrapperParsedSource::createHelper() const
-{
-	return new XercesDOMParsedSourceHelper;
-}
-
-
-
-const XalanDOMString&
-XercesDOMWrapperParsedSource::getURI() const
-{
-	return m_uri;
-}
+	// Data members...
+	ArenaAllocatorType	m_allocator;
+};
 
 
 
 XALAN_CPP_NAMESPACE_END
+
+
+
+#endif	// XERCESELEMENTBRIDGEALLOCATOR_INCLUDE_GUARD_12455133

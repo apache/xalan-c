@@ -186,7 +186,7 @@ XercesDocumentWrapper::mapNode(const DOMNodeType*	theXercesNode) const
 			}
 			else if (m_mappingMode == true)
 			{
-				// OK, we haven't yet created a bridge not, so go ahead and
+				// OK, we haven't yet created a wrapper, so go ahead and
 				// create one.
 				theXalanNode = createWrapperNode(theXercesNode, 0, true);
 				assert(theXalanNode != 0);
@@ -1114,7 +1114,7 @@ XercesDocumentWrapper::hasChildNodes() const
 
 
 void
-XercesDocumentWrapper::setNodeValue(const XalanDOMString&	nodeValue)
+XercesDocumentWrapper::setNodeValue(const XalanDOMString&	/* nodeValue */)
 {
 	throw XercesDOMWrapperException(XercesDOMWrapperException::NO_MODIFICATION_ALLOWED_ERR);
 }
@@ -1196,7 +1196,7 @@ XercesDocumentWrapper::getIndex() const
 
 
 XalanElement*
-XercesDocumentWrapper::createElement(const XalanDOMString&	tagName)
+XercesDocumentWrapper::createElement(const XalanDOMString&	/* tagName */)
 {
 	throw XercesDOMWrapperException(XercesDOMWrapperException::NOT_SUPPORTED_ERR);
 
@@ -1216,7 +1216,7 @@ XercesDocumentWrapper::createDocumentFragment()
 
 
 XalanText*
-XercesDocumentWrapper::createTextNode(const XalanDOMString&	data)
+XercesDocumentWrapper::createTextNode(const XalanDOMString&	/* data */)
 {
 	throw XercesDOMWrapperException(XercesDOMWrapperException::NOT_SUPPORTED_ERR);
 
@@ -1226,7 +1226,7 @@ XercesDocumentWrapper::createTextNode(const XalanDOMString&	data)
 
 
 XalanComment*
-XercesDocumentWrapper::createComment(const XalanDOMString&	data)
+XercesDocumentWrapper::createComment(const XalanDOMString&	/* data */)
 {
 	throw XercesDOMWrapperException(XercesDOMWrapperException::NOT_SUPPORTED_ERR);
 
@@ -1236,7 +1236,7 @@ XercesDocumentWrapper::createComment(const XalanDOMString&	data)
 
 
 XalanCDATASection*
-XercesDocumentWrapper::createCDATASection(const XalanDOMString&	data)
+XercesDocumentWrapper::createCDATASection(const XalanDOMString&		/* data */)
 {
 	throw XercesDOMWrapperException(XercesDOMWrapperException::NOT_SUPPORTED_ERR);
 
@@ -1247,8 +1247,8 @@ XercesDocumentWrapper::createCDATASection(const XalanDOMString&	data)
 
 XalanProcessingInstruction*
 XercesDocumentWrapper::createProcessingInstruction(
-			const XalanDOMString&	target,
-			const XalanDOMString&	data)
+			const XalanDOMString&	/* target */,
+			const XalanDOMString&	/* data */)
 {
 	throw XercesDOMWrapperException(XercesDOMWrapperException::NOT_SUPPORTED_ERR);
 
@@ -1258,7 +1258,7 @@ XercesDocumentWrapper::createProcessingInstruction(
 
 
 XalanAttr*
-XercesDocumentWrapper::createAttribute(const XalanDOMString&		name)
+XercesDocumentWrapper::createAttribute(const XalanDOMString&	/* name */)
 {
 	throw XercesDOMWrapperException(XercesDOMWrapperException::NOT_SUPPORTED_ERR);
 
@@ -1268,7 +1268,7 @@ XercesDocumentWrapper::createAttribute(const XalanDOMString&		name)
 
 
 XalanEntityReference*
-XercesDocumentWrapper::createEntityReference(const XalanDOMString&	name)
+XercesDocumentWrapper::createEntityReference(const XalanDOMString&	/* name */)
 {
 	throw XercesDOMWrapperException(XercesDOMWrapperException::NOT_SUPPORTED_ERR);
 
@@ -1318,8 +1318,8 @@ XercesDocumentWrapper::getElementsByTagName(const XalanDOMString&	/* tagname */)
 
 XalanNode*
 XercesDocumentWrapper::importNode(
-			XalanNode*	importedNode,
-			bool		deep)
+			XalanNode*	/* importedNode */,
+			bool		/* deep */)
 {
 	throw XercesDOMWrapperException(XercesDOMWrapperException::NO_MODIFICATION_ALLOWED_ERR);
 
@@ -1331,8 +1331,8 @@ XercesDocumentWrapper::importNode(
 
 XalanElement*
 XercesDocumentWrapper::createElementNS(
-			const XalanDOMString&	namespaceURI,
-			const XalanDOMString&	qualifiedName)
+			const XalanDOMString&	/* namespaceURI */,
+			const XalanDOMString&	/* qualifiedName */)
 {
 	// Not supported...
 	throw XercesDOMWrapperException(XercesDOMWrapperException::NOT_SUPPORTED_ERR);
@@ -1345,8 +1345,8 @@ XercesDocumentWrapper::createElementNS(
 
 XalanAttr*
 XercesDocumentWrapper::createAttributeNS(
-			const XalanDOMString&	namespaceURI,
-			const XalanDOMString&	qualifiedName)
+			const XalanDOMString&	/* namespaceURI */,
+			const XalanDOMString&	/* qualifiedName */)
 {
 	// Not supported...
 	throw XercesDOMWrapperException(XercesDOMWrapperException::NOT_SUPPORTED_ERR);
@@ -1573,7 +1573,7 @@ XercesDocumentWrapper::BuildWrapperTreeWalker::startNode(const DOMNodeType*		nod
 			const DOMNodeType* const	theAttr = theAttributes->item(i);
 			assert(theAttr != 0);
 
-			// Create a bridge node.
+			// Create a wrapper node.
 			XalanNode* const	theCurrentAttr =
 				m_document->createWrapperNode(theAttr, m_currentIndex, m_buildMaps);
 			assert(theCurrentAttr != 0);

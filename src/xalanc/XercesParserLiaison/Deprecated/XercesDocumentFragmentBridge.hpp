@@ -54,8 +54,8 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-#if !defined(XERCESCDATASECTIONWRAPPER_HEADER_GUARD_1357924680)
-#define XERCESCDATASECTIONWRAPPER_HEADER_GUARD_1357924680
+#if !defined(XERCESDOCUMENTFRAGMENTBRIDGE_HEADER_GUARD_1357924680)
+#define XERCESDOCUMENTFRAGMENTBRIDGE_HEADER_GUARD_1357924680
 
 
 
@@ -63,11 +63,19 @@
 
 
 
-#include <xalanc/XalanDOM/XalanCDATASection.hpp>
+#if XERCES_VERSION_MAJOR >= 2
+#include <xercesc/dom/deprecated/DOM_DocumentFragment.hpp>
+#else
+#include <xercesc/dom/DOM_DocumentFragment.hpp>
+#endif
 
 
 
-#include <xalanc/XercesParserLiaison/XercesWrapperTypes.hpp>
+#include <xalanc/XalanDOM/XalanDocumentFragment.hpp>
+
+
+
+#include <xalanc/XercesParserLiaison/Deprecated/XercesNodeListBridge.hpp>
 
 
 
@@ -75,25 +83,30 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-class XercesWrapperNavigator;
+class XercesBridgeNavigator;
 
 
-
-class XALAN_XERCESPARSERLIAISON_EXPORT XercesCDATASectionWrapper : public XalanCDATASection
+/**
+ * This class is deprecated.
+ *
+ * @deprecated This class is part of the deprecated Xerces DOM bridge.
+ */
+class XALAN_XERCESPARSERLIAISON_EXPORT XercesDocumentFragmentBridge : public XalanDocumentFragment
 {
 public:
 
-	XercesCDATASectionWrapper(
-			const DOMCDATASectionType*		theXercesCDATASection,
-			const XercesWrapperNavigator&	theNavigator);
+	typedef XERCES_CPP_NAMESPACE_QUALIFIER DOM_DocumentFragment		DOM_DocumentFragmentType;
+
+	XercesDocumentFragmentBridge(
+			const DOM_DocumentFragmentType&		theXercesDOMDocumentFragment,
+			const XercesBridgeNavigator&		theNavigator);
 
 	virtual
-	~XercesCDATASectionWrapper();
+	~XercesDocumentFragmentBridge();
 
 
-	/**
-	 * Gets the name of this node.
-	 */
+	// These interfaces are inherited from XalanNode...
+
 	virtual const XalanDOMString&
 	getNodeName() const;
 
@@ -115,7 +128,7 @@ public:
 	 * All nodes, except <code>Document</code>,
 	 * <code>DocumentFragment</code>, and <code>Attr</code> may have a parent.
 	 * However, if a node has just been created and not yet added to the tree,
-	 * or if it has been removed from the tree, a <code>null</code> DOMNode
+	 * or if it has been removed from the tree, a <code>null</code> DOM_Node
 	 * is returned.
 	 */
 	virtual XalanNode*
@@ -177,12 +190,12 @@ public:
 	getAttributes() const;
 
 	/**
-	 * Gets the <code>DOMDocument</code> object associated with this node.
+	 * Gets the <code>DOM_Document</code> object associated with this node.
 	 *
 	 * This is also
-	 * the <code>DOMDocument</code> object used to create new nodes. When this
-	 * node is a <code>DOMDocument</code> or a <code>DOMDocumentType</code>
-	 * which is not used with any <code>DOMDocument</code> yet, this is
+	 * the <code>DOM_Document</code> object used to create new nodes. When this
+	 * node is a <code>DOM_Document</code> or a <code>DOM_DocumentType</code>
+	 * which is not used with any <code>DOM_Document</code> yet, this is
 	 * <code>null</code>.
 	 */
 	virtual XalanDocument*
@@ -213,7 +226,7 @@ public:
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
 	virtual XalanNode*
 #else
-	virtual XercesCDATASectionWrapper*
+	virtual XercesDocumentFragmentBridge*
 #endif
 	cloneNode(bool deep) const;
 
@@ -230,7 +243,7 @@ public:
 	 * <br>If <code>newChild</code> is a <code>DocumentFragment</code> object,
 	 * all of its children are inserted, in the same order, before
 	 * <code>refChild</code>. If the <code>newChild</code> is already in the
-	 * tree, it is first removed.  Note that a <code>DOMNode</code> that
+	 * tree, it is first removed.  Note that a <code>DOM_Node</code> that
 	 * has never been assigned to refer to an actual node is == null.
 	 * @param newChild The node to insert.
 	 * @param refChild The reference node, i.e., the node before which the new
@@ -246,8 +259,8 @@ public:
 	 * Replaces the child node <code>oldChild</code> with <code>newChild</code>
 	 * in the list of children, and returns the <code>oldChild</code> node.
 	 *
-	 * If <CODE>newChild</CODE> is a <CODE>DOMDocumentFragment</CODE> object,
-	 * <CODE>oldChild</CODE> is replaced by all of the <CODE>DOMDocumentFragment</CODE>
+	 * If <CODE>newChild</CODE> is a <CODE>DOM_DocumentFragment</CODE> object,
+	 * <CODE>oldChild</CODE> is replaced by all of the <CODE>DOM_DocumentFragment</CODE>
 	 * children, which are inserted in the same order.
 	 *
 	 * If the <code>newChild</code> is already in the tree, it is first removed.
@@ -325,20 +338,20 @@ public:
 	//@{
 
 	/**
-	 * Puts all <CODE>DOMText</CODE>
-	 * nodes in the full depth of the sub-tree underneath this <CODE>DOMNode</CODE>, 
+	 * Puts all <CODE>DOM_Text</CODE>
+	 * nodes in the full depth of the sub-tree underneath this <CODE>DOM_Node</CODE>, 
 	 * including attribute nodes, into a "normal" form where only markup (e.g., 
 	 * tags, comments, processing instructions, CDATA sections, and entity 
-	 * references) separates <CODE>DOMText</CODE>
-	 * nodes, i.e., there are no adjacent <CODE>DOMText</CODE>
+	 * references) separates <CODE>DOM_Text</CODE>
+	 * nodes, i.e., there are no adjacent <CODE>DOM_Text</CODE>
 	 * nodes. This can be used to ensure that the DOM view of a document is the 
 	 * same as if it were saved and re-loaded, and is useful when operations 
 	 * (such as XPointer lookups) that depend on a particular document tree 
 	 * structure are to be used.
-	 * <P><B>Note:</B> In cases where the document contains <CODE>DOMCDATASections</CODE>, 
+	 * <P><B>Note:</B> In cases where the document contains <CODE>DOM_CDATASections</CODE>, 
 	 * the normalize operation alone may not be sufficient, since XPointers do 
-	 * not differentiate between <CODE>DOMText</CODE>
-	 * nodes and <CODE>DOMCDATASection</CODE> nodes.</P>
+	 * not differentiate between <CODE>DOM_Text</CODE>
+	 * nodes and <CODE>DOM_CDATASection</CODE> nodes.</P>
 	 */
 	virtual void
 	normalize();
@@ -388,7 +401,7 @@ public:
 	 * Returns the local part of the <em>qualified name</em> of this node.
 	 * <p>
 	 * For nodes created with a DOM Level 1 method, such as
-	 * <code>createElement</code> from the <code>DOMDocument</code> interface,
+	 * <code>createElement</code> from the <code>DOM_Document</code> interface,
 	 * it is null.
 	 */
 	virtual const XalanDOMString&
@@ -400,7 +413,7 @@ public:
 	 * Note that setting this attribute, when permitted, changes 
 	 * the <CODE>nodeName</CODE> attribute, which holds the <EM>qualified 
 	 * name</EM>, as well as the <CODE>tagName</CODE> and <CODE>name</CODE> 
-	 * attributes of the <CODE>DOMElement</CODE> and <CODE>DOMAttr</CODE>
+	 * attributes of the <CODE>DOM_Element</CODE> and <CODE>DOM_Attr</CODE>
 	 * interfaces, when applicable.
 	 * <p>
 	 * Note also that changing the prefix of an 
@@ -432,193 +445,36 @@ public:
 	virtual IndexType
 	getIndex() const;
 
-	//@}
-
-	// These interfaces are inherited from XalanCDATASection...
-
-	/** @name Getter functions. */
-	//@{
-	/**
-	 * Returns the character data of the node that implements this interface. 
-	 *
-	 * The DOM implementation may not put arbitrary limits on the amount of data that 
-	 * may be stored in a  <code>CharacterData</code> node. However, 
-	 * implementation limits may  mean that the entirety of a node's data may 
-	 * not fit into a single <code>DOMString</code>. In such cases, the user 
-	 * may call <code>substringData</code> to retrieve the data in 
-	 * appropriately sized pieces.
-	 * @exception DOMException
-	 *	 NO_MODIFICATION_ALLOWED_ERR: Raised when the node is readonly.
-	 * @exception DOMException
-	 *	 DOMSTRING_SIZE_ERR: Raised when it would return more characters than 
-	 *	 fit in a <code>DOMString</code> variable on the implementation 
-	 *	 platform.
-	 */
-	virtual const XalanDOMString&
-	getData() const;
-
-	/**
-	 * Returns the number of characters that are available through <code>data</code> and 
-	 * the <code>substringData</code> method below. 
-	 *
-	 * This may have the value 
-	 * zero, i.e., <code>CharacterData</code> nodes may be empty.
-	 */
-	virtual unsigned int
-	getLength() const;
-
-	/**
-	 * Extracts a range of data from the node.
-	 *
-	 * @param offset Start offset of substring to extract.
-	 * @param count The number of characters to extract.
-	 * @return The specified substring. If the sum of <code>offset</code> and 
-	 *	 <code>count</code> exceeds the <code>length</code>, then all 
-	 *	 characters to the end of the data are returned.
-	 * @exception DOMException
-	 *	 INDEX_SIZE_ERR: Raised if the specified offset is negative or greater 
-	 *	 than the number of characters in <code>data</code>, or if the 
-	 *	 specified <code>count</code> is negative.
-	 *	 <br>DOMSTRING_SIZE_ERR: Raised if the specified range of text does not 
-	 *	 fit into a <code>DOMString</code>.
-	 */
-	virtual XalanDOMString
-	substringData(
-			unsigned int	offset, 
-			unsigned int	count) const;
-
-	//@}
-	/** @name Functions that set or change data. */
-	//@{
-	/**
-	 * Append the string to the end of the character data of the node.
-	 *
-	 * Upon success, <code>data</code> provides access to the concatenation of 
-	 * <code>data</code> and the <code>DOMString</code> specified.
-	 * @param arg The <code>DOMString</code> to append.
-	 * @exception DOMException
-	 *	 NO_MODIFICATION_ALLOWED_ERR: Raised if this node is readonly.
-	 */
-	virtual void
-	appendData(const XalanDOMString&	arg);
-
-	/**
-	 * Insert a string at the specified character offset.
-	 *
-	 * @param offset The character offset at which to insert.
-	 * @param arg The <code>DOMString</code> to insert.
-	 * @exception DOMException
-	 *	 INDEX_SIZE_ERR: Raised if the specified offset is negative or greater 
-	 *	 than the number of characters in <code>data</code>.
-	 *	 <br>NO_MODIFICATION_ALLOWED_ERR: Raised if this node is readonly.
-	 */
-	virtual void
-	insertData(
-			unsigned int			offset,
-			const  XalanDOMString& 	arg);
-
-	/**
-	 * Remove a range of characters from the node. 
-	 *
-	 * Upon success, 
-	 * <code>data</code> and <code>length</code> reflect the change.
-	 * @param offset The offset from which to remove characters.
-	 * @param count The number of characters to delete. If the sum of 
-	 *	 <code>offset</code> and <code>count</code> exceeds <code>length</code> 
-	 *	 then all characters from <code>offset</code> to the end of the data 
-	 *	 are deleted.
-	 * @exception DOMException
-	 *	 INDEX_SIZE_ERR: Raised if the specified offset is negative or greater 
-	 *	 than the number of characters in <code>data</code>, or if the 
-	 *	 specified <code>count</code> is negative.
-	 *	 <br>NO_MODIFICATION_ALLOWED_ERR: Raised if this node is readonly.
-	 */
-	virtual void
-	deleteData(
-			unsigned int	offset, 
-			unsigned int	count);
-
-	/**
-	 * Replace the characters starting at the specified character offset with 
-	 * the specified string.
-	 *
-	 * @param offset The offset from which to start replacing.
-	 * @param count The number of characters to replace. If the sum of 
-	 *	 <code>offset</code> and <code>count</code> exceeds <code>length</code>
-	 *	 , then all characters to the end of the data are replaced (i.e., the 
-	 *	 effect is the same as a <code>remove</code> method call with the same 
-	 *	 range, followed by an <code>append</code> method invocation).
-	 * @param arg The <code>DOMString</code> with which the range must be 
-	 *	 replaced.
-	 * @exception DOMException
-	 *	 INDEX_SIZE_ERR: Raised if the specified offset is negative or greater 
-	 *	 than the number of characters in <code>data</code>, or if the 
-	 *	 specified <code>count</code> is negative.
-	 *	 <br>NO_MODIFICATION_ALLOWED_ERR: Raised if this node is readonly.
-	 */
-	virtual void
-	replaceData(
-			unsigned int			offset, 
-			unsigned int			count, 
-			const XalanDOMString&	arg);
-
-  //@}
-
-    //@}
-    /** @name Functions to modify the Text node. */
-    //@{
-
-    /**
-     * Breaks this node into two nodes at the specified 
-     * offset, keeping both in the tree as siblings. 
-     *
-     * This node then only 
-     * contains all the content up to the <code>offset</code> point. And a new 
-     * node of the same nodeType, which is inserted as the next sibling of this 
-     * node, contains all the content at and after the <code>offset</code> 
-     * point. When the <code>offset</code> is equal to the lenght of this node,
-     * the new node has no data.
-     * @param offset The offset at which to split, starting from 0.
-     * @return The new <code>Text</code> node.
-     * @exception DOMException
-     *   INDEX_SIZE_ERR: Raised if the specified offset is negative or greater 
-     *   than the number of characters in <code>data</code>.
-     *   <br>NO_MODIFICATION_ALLOWED_ERR: Raised if this node is readonly.
-     */
-    virtual XalanText*
-	splitText(unsigned int	offset);
-
-    //@}
-
-	virtual bool
-	isIgnorableWhitespace() const;
-
 	/**
 	 * Get the Xerces node this instance represent.
 	 *
 	 * @return The Xerces node
 	 */
-	const DOMCDATASectionType*
+	DOM_DocumentFragmentType
 	getXercesNode() const
 	{
 		return m_xercesNode;
 	}
 
+	//@}
+
 private:
 
 	// Not implemented...
-	XercesCDATASectionWrapper(const XercesCDATASectionWrapper&	theSource);
+	XercesDocumentFragmentBridge(const XercesDocumentFragmentBridge&	theSource);
 
-	XercesCDATASectionWrapper&
-	operator=(const XercesCDATASectionWrapper&	theSource);
+	XercesDocumentFragmentBridge&
+	operator=(const XercesDocumentFragmentBridge&	theSource);
 
 	bool
-	operator==(const XercesCDATASectionWrapper&	theRHS) const;
+	operator==(const XercesDocumentFragmentBridge&		theRHS) const;
 
 	// Data members...
-	const DOMCDATASectionType*		m_xercesNode;
+	DOM_DocumentFragmentType		m_xercesNode;
 
-	const XercesWrapperNavigator&	m_navigator;
+	XercesNodeListBridge			m_children;
+
+	const XercesBridgeNavigator&	m_navigator;
 };
 
 
@@ -627,4 +483,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// !defined(XERCESCDATASECTIONWRAPPER_HEADER_GUARD_1357924680)
+#endif	// !defined(XERCESDOCUMENTFRAGMENTBRIDGE_HEADER_GUARD_1357924680)

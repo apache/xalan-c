@@ -54,24 +54,28 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-#include "XercesDOMWrapperParsedSource.hpp"
+#if !defined(XERCESNODELISTBRIDGE_HEADER_GUARD_1357924680)
+#define XERCESNODELISTBRIDGE_HEADER_GUARD_1357924680
 
 
 
-#include <xalanc/XalanDOM/XalanDocument.hpp>
+#include <xalanc/XercesParserLiaison/XercesParserLiaisonDefinitions.hpp>
 
 
 
-#include <xalanc/PlatformSupport/URISupport.hpp>
+#if XERCES_VERSION_MAJOR >= 2
+#include <xercesc/dom/deprecated/DOM_NodeList.hpp>
+#else
+#include <xercesc/dom/DOM_NodeList.hpp>
+#endif
 
 
 
-#include <xalanc/XercesParserLiaison/XercesParserLiaison.hpp>
-#include <xalanc/XercesParserLiaison/XercesDOMSupport.hpp>
+#include <xalanc/XalanDOM/XalanNodeList.hpp>
 
 
 
-#include "XercesDOMParsedSource.hpp"
+#include <xalanc/XercesParserLiaison/Deprecated/XercesBridgeTypes.hpp>
 
 
 
@@ -79,67 +83,74 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XercesDOMWrapperParsedSource::XercesDOMWrapperParsedSource(
-			const DOM_Document_Type&	theDocument,
-			XercesParserLiaison&		theParserLiaison,
-			XercesDOMSupport&			theDOMSupport,
-			const XalanDOMString&		theURI) :
-	XalanParsedSource(),
-	m_parserLiaison(theParserLiaison),
-	m_domSupport(theDOMSupport),
-	m_parsedSource(theParserLiaison.createDocument(theDocument, true, true)),
-	m_uri(URISupport::NormalizeURIText(theURI))
+class XercesBridgeNavigator;
+
+
+/**
+ * This class is deprecated.
+ *
+ * @deprecated This class is part of the deprecated Xerces DOM bridge.
+ */
+class XALAN_XERCESPARSERLIAISON_EXPORT XercesNodeListBridge : public XalanNodeList
 {
-	assert(m_parsedSource != 0);
-}
+public:
+
+	XercesNodeListBridge(
+			const DOM_NodeListType&			theXercesNodeList,
+			const XercesBridgeNavigator&	theNavigator);
+
+	XercesNodeListBridge(const XercesNodeListBridge&	theSource);
+
+	virtual
+	~XercesNodeListBridge();
+
+	bool
+	operator==(const XercesNodeListBridge& 	theRHS) const
+	{
+		return m_xercesNodeList == theRHS.m_xercesNodeList ? true : false;
+	}
+
+	/** @name Get functions. */
+	//@{
+	/**
+	 * Returns the <code>index</code>th item in the collection. 
+	 *
+	 * If <code>index</code> is greater than or equal to the number of nodes in 
+	 * the list, this returns <code>null</code>.
+	 *
+	 * @param index Index into the collection.
+	 * @return The node at the <code>index</code>th position in the 
+	 *	 <code>NodeList</code>, or <code>null</code> if that is not a valid 
+	 *	 index.
+	 */
+	virtual XalanNode*
+	item(unsigned int	index) const;
+
+	/**
+	 * Returns the number of nodes in the list. 
+	 *
+	 * The range of valid child node indices is 0 to <code>length-1</code> inclusive. 
+	 */
+	virtual unsigned int
+	getLength() const;
+
+private:
+
+	// Not implemented...
+	XercesNodeListBridge&
+	operator=(const XercesNodeListBridge&	theRHS);
 
 
+	// Data members...
+	DOM_NodeListType				m_xercesNodeList;
 
-XercesDOMWrapperParsedSource::XercesDOMWrapperParsedSource(
-			const DOMDocument_Type*		theDocument,
-			XercesParserLiaison&		theParserLiaison,
-			XercesDOMSupport&			theDOMSupport,
-			const XalanDOMString&		theURI) :
-	XalanParsedSource(),
-	m_parserLiaison(theParserLiaison),
-	m_domSupport(theDOMSupport),
-	m_parsedSource(theParserLiaison.createDocument(theDocument, true, true)),
-	m_uri(URISupport::NormalizeURIText(theURI))
-{
-	assert(m_parsedSource != 0);
-}
-
-
-
-XercesDOMWrapperParsedSource::~XercesDOMWrapperParsedSource()
-{
-	m_parserLiaison.destroyDocument(m_parsedSource);
-}
-
-
-
-XalanDocument*
-XercesDOMWrapperParsedSource::getDocument() const
-{
-	return m_parsedSource;
-}
-
-
-
-XalanParsedSourceHelper*
-XercesDOMWrapperParsedSource::createHelper() const
-{
-	return new XercesDOMParsedSourceHelper;
-}
-
-
-
-const XalanDOMString&
-XercesDOMWrapperParsedSource::getURI() const
-{
-	return m_uri;
-}
+	const XercesBridgeNavigator&	m_navigator;
+};
 
 
 
 XALAN_CPP_NAMESPACE_END
+
+
+
+#endif	// !defined(XERCESNODELISTBRIDGE_HEADER_GUARD_1357924680)

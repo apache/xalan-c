@@ -54,24 +54,32 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-#include "XercesDOMWrapperParsedSource.hpp"
+#if !defined(XERCESTOXALANNODEMAP_HEADER_GUARD_1357924680)
+#define XERCESTOXALANNODEMAP_HEADER_GUARD_1357924680
 
 
 
-#include <xalanc/XalanDOM/XalanDocument.hpp>
+#include <xalanc/XercesParserLiaison/XercesParserLiaisonDefinitions.hpp>
 
 
 
-#include <xalanc/PlatformSupport/URISupport.hpp>
+#include <map>
 
 
 
-#include <xalanc/XercesParserLiaison/XercesParserLiaison.hpp>
-#include <xalanc/XercesParserLiaison/XercesDOMSupport.hpp>
+#if XERCES_VERSION_MAJOR >= 2
+#include <xercesc/dom/deprecated/DOM_Node.hpp>
+#else
+#include <xercesc/dom/DOM_Node.hpp>
+#endif
 
 
 
-#include "XercesDOMParsedSource.hpp"
+#include <xalanc/XercesParserLiaison/Deprecated/XercesDOM_NodeHack.hpp>
+
+
+
+XALAN_DECLARE_XERCES_CLASS(NodeImpl)
 
 
 
@@ -79,67 +87,111 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XercesDOMWrapperParsedSource::XercesDOMWrapperParsedSource(
-			const DOM_Document_Type&	theDocument,
-			XercesParserLiaison&		theParserLiaison,
-			XercesDOMSupport&			theDOMSupport,
-			const XalanDOMString&		theURI) :
-	XalanParsedSource(),
-	m_parserLiaison(theParserLiaison),
-	m_domSupport(theDOMSupport),
-	m_parsedSource(theParserLiaison.createDocument(theDocument, true, true)),
-	m_uri(URISupport::NormalizeURIText(theURI))
+class XalanNode;
+
+
+/**
+ * This class is deprecated.
+ *
+ * @deprecated This class works with the deprecated Xerces DOM bridge.
+ */
+class XALAN_XERCESPARSERLIAISON_EXPORT XercesToXalanNodeMap
 {
-	assert(m_parsedSource != 0);
-}
+public:
 
+	typedef XERCES_CPP_NAMESPACE_QUALIFIER DOM_Node		DOM_NodeType;
+	typedef XERCES_CPP_NAMESPACE_QUALIFIER NodeImpl		NodeImplType;
 
+#if defined(XALAN_NO_STD_NAMESPACE)
+	typedef map<XalanNode*, NodeImplType*, less<XalanNode*> >	XalanNodeMapType;
 
-XercesDOMWrapperParsedSource::XercesDOMWrapperParsedSource(
-			const DOMDocument_Type*		theDocument,
-			XercesParserLiaison&		theParserLiaison,
-			XercesDOMSupport&			theDOMSupport,
-			const XalanDOMString&		theURI) :
-	XalanParsedSource(),
-	m_parserLiaison(theParserLiaison),
-	m_domSupport(theDOMSupport),
-	m_parsedSource(theParserLiaison.createDocument(theDocument, true, true)),
-	m_uri(URISupport::NormalizeURIText(theURI))
-{
-	assert(m_parsedSource != 0);
-}
+	typedef map<NodeImplType*, XalanNode*, less<NodeImplType*> >	XercesNodeMapType;
+#else
+	typedef std::map<XalanNode*, NodeImplType*>		XalanNodeMapType;
 
+	typedef std::map<NodeImplType*, XalanNode*>		XercesNodeMapType;
+#endif
 
+	XercesToXalanNodeMap();
 
-XercesDOMWrapperParsedSource::~XercesDOMWrapperParsedSource()
-{
-	m_parserLiaison.destroyDocument(m_parsedSource);
-}
+	~XercesToXalanNodeMap();
 
+	void
+	addAssociation(
+			const DOM_NodeType&		theXercesNode,
+			XalanNode*				theXalanNode);
 
+	void
+	clear();
 
-XalanDocument*
-XercesDOMWrapperParsedSource::getDocument() const
-{
-	return m_parsedSource;
-}
+	XalanNode*
+	getNode(const DOM_NodeType&		theXercesNode) const
+	{
+		return getNode(XercesDOM_NodeHack::getImpl(theXercesNode));
+	}
 
+	XalanNode*
+	getNode(NodeImplType*	theXercesNodeImpl) const
+	{
+		const XercesNodeMapType::const_iterator		i =
+				m_xercesMap.find(theXercesNodeImpl);
 
+		if (i == m_xercesMap.end())
+		{
+			return 0;
+		}
+		else
+		{
+			return (*i).second;
+		}
+	}
 
-XalanParsedSourceHelper*
-XercesDOMWrapperParsedSource::createHelper() const
-{
-	return new XercesDOMParsedSourceHelper;
-}
+	DOM_NodeType
+	getNode(const XalanNode*	theXalanNode) const
+	{
+		return XercesDOM_NodeHack(getNodeImpl(theXalanNode));
+	}
 
+	NodeImplType*
+	getNodeImpl(const XalanNode*	theXalanNode) const;
 
+	class NameMapEqualsFunctor
+	{
+	public:
 
-const XalanDOMString&
-XercesDOMWrapperParsedSource::getURI() const
-{
-	return m_uri;
-}
+		NameMapEqualsFunctor(const XalanNode*	theXalanNode) :
+			m_value(theXalanNode)
+		{
+		}
+
+		bool
+		operator()(const XercesNodeMapType::value_type&		thePair) const
+		{
+			return m_value == thePair.second;
+		}
+
+	private:
+
+		const XalanNode*	m_value;
+	};
+
+	NodeImplType*
+	getNodeImpl(const DOM_NodeType&		theXercesNode) const
+	{
+		return XercesDOM_NodeHack::getImpl(theXercesNode);
+	}
+
+private:
+
+	XalanNodeMapType	m_xalanMap;
+
+	XercesNodeMapType	m_xercesMap;
+};
 
 
 
 XALAN_CPP_NAMESPACE_END
+
+
+
+#endif	// !defined(XERCESTOXALANNODEMAP_HEADER_GUARD_1357924680)

@@ -54,24 +54,23 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-#include "XercesDOMWrapperParsedSource.hpp"
+#include "XercesDOMImplementationBridge.hpp"
 
 
 
-#include <xalanc/XalanDOM/XalanDocument.hpp>
+#if XERCES_VERSION_MAJOR >= 2
+#include <xercesc/dom/deprecated/DOM_DOMImplementation.hpp>
+#else
+#include <xercesc/dom/DOM_DOMImplementation.hpp>
+#endif
 
 
 
-#include <xalanc/PlatformSupport/URISupport.hpp>
+#include <xalanc/PlatformSupport/DOMStringHelper.hpp>
 
 
 
-#include <xalanc/XercesParserLiaison/XercesParserLiaison.hpp>
-#include <xalanc/XercesParserLiaison/XercesDOMSupport.hpp>
-
-
-
-#include "XercesDOMParsedSource.hpp"
+#include <xalanc/XercesParserLiaison/XercesDOMException.hpp>
 
 
 
@@ -79,65 +78,62 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XercesDOMWrapperParsedSource::XercesDOMWrapperParsedSource(
-			const DOM_Document_Type&	theDocument,
-			XercesParserLiaison&		theParserLiaison,
-			XercesDOMSupport&			theDOMSupport,
-			const XalanDOMString&		theURI) :
-	XalanParsedSource(),
-	m_parserLiaison(theParserLiaison),
-	m_domSupport(theDOMSupport),
-	m_parsedSource(theParserLiaison.createDocument(theDocument, true, true)),
-	m_uri(URISupport::NormalizeURIText(theURI))
+XercesDOMImplementationBridge::XercesDOMImplementationBridge(DOM_DOMImplementationType&	theXercesDOMImplementation) :
+	XalanDOMImplementation(),
+	m_xercesNode(theXercesDOMImplementation)
 {
-	assert(m_parsedSource != 0);
 }
 
 
 
-XercesDOMWrapperParsedSource::XercesDOMWrapperParsedSource(
-			const DOMDocument_Type*		theDocument,
-			XercesParserLiaison&		theParserLiaison,
-			XercesDOMSupport&			theDOMSupport,
-			const XalanDOMString&		theURI) :
-	XalanParsedSource(),
-	m_parserLiaison(theParserLiaison),
-	m_domSupport(theDOMSupport),
-	m_parsedSource(theParserLiaison.createDocument(theDocument, true, true)),
-	m_uri(URISupport::NormalizeURIText(theURI))
+XercesDOMImplementationBridge::~XercesDOMImplementationBridge()
 {
-	assert(m_parsedSource != 0);
 }
 
 
 
-XercesDOMWrapperParsedSource::~XercesDOMWrapperParsedSource()
+XercesDOMImplementationBridge::XercesDOMImplementationBridge(const XercesDOMImplementationBridge&	theSource) :
+	XalanDOMImplementation(theSource),
+	m_xercesNode(theSource.m_xercesNode)
 {
-	m_parserLiaison.destroyDocument(m_parsedSource);
+}
+
+
+
+bool
+XercesDOMImplementationBridge::hasFeature(
+			const XalanDOMString&	feature,
+			const XalanDOMString&	version)
+{
+	return m_xercesNode.hasFeature(c_wstr(feature), c_wstr(version));
+}
+
+
+
+XalanDocumentType*
+XercesDOMImplementationBridge::createDocumentType(
+			const XalanDOMString&	qualifiedName,
+			const XalanDOMString&	publicId,
+			const XalanDOMString&	systemId)
+{
+	// $$$ ToDo: Fix this!!!
+	throw XercesDOMException(XercesDOMException::NO_MODIFICATION_ALLOWED_ERR);
+
+	return 0;
 }
 
 
 
 XalanDocument*
-XercesDOMWrapperParsedSource::getDocument() const
+XercesDOMImplementationBridge::createDocument(
+			const XalanDOMString&		namespaceURI,
+			const XalanDOMString&		qualifiedName,
+			const XalanDocumentType&	doctype)
 {
-	return m_parsedSource;
-}
+	// $$$ ToDo: Fix this!!!
+	throw XercesDOMException(XercesDOMException::NO_MODIFICATION_ALLOWED_ERR);
 
-
-
-XalanParsedSourceHelper*
-XercesDOMWrapperParsedSource::createHelper() const
-{
-	return new XercesDOMParsedSourceHelper;
-}
-
-
-
-const XalanDOMString&
-XercesDOMWrapperParsedSource::getURI() const
-{
-	return m_uri;
+	return 0;
 }
 
 

@@ -78,7 +78,7 @@
 
 
 
-#include <xalanc/XercesParserLiaison/XercesBridgeTypes.hpp>
+#include <xalanc/XercesParserLiaison/Deprecated/XercesBridgeTypes.hpp>
 #include <xalanc/XercesParserLiaison/XercesWrapperTypes.hpp>
 
 
@@ -207,7 +207,7 @@ public:
 	  * on non-validating parsers which always include non-markup text.
 	  * <p>When set to true (also the default), ignorable whitespaces will be
 	  * added to the DOM tree as text nodes.  The method
-	  * DOM_Text::isIgnorableWhitespace() will return true for those text
+	  * <code>DOMText::isIgnorableWhitespace</code> will return true for those text
 	  * nodes only.
 	  * <p>When set to false, all ignorable whitespace will be discarded and
 	  * no text node is added to the DOM tree.	Note: applications intended
@@ -346,7 +346,7 @@ public:
 	 * it.	The liaison will delete it when reset() is called, or the
 	 * liaison is destroyed.
 	 *
-	 * @deprecated This API is deprecated.
+	 * @deprecated The Xerces DOM bridge is deprecated.
 	 * @param theXercesDocument The Xerces document.
 	 * @return a pointer to a new XalanDocument-derived instance.
 	 */
@@ -364,7 +364,7 @@ public:
 	 * it.	The liaison will delete it when reset() is called, or the
 	 * liaison is destroyed.
 	 *
-	 * @deprecated This API is deprecated.
+	 * @deprecated The Xerces DOM bridge is deprecated.
 	 * @param theXercesDocument The Xerces document.
 	 * @param threadSafe If true, read access to the tree will be thread-safe (implies buildBridge == true).
 	 * @param buildBridge If true, the entire bridge structure is built.
@@ -418,7 +418,7 @@ public:
 	 * this.  The liaison will return a null pointer if it did not
 	 * create the instance passed.
 	 *
-	 * @deprecated This API is deprecated.
+	 * @deprecated The Xerces DOM bridge has been deprecated.
 	 * @param theDocument A pointer to a XalanDocument instance.
 	 * @return A pointer to the XercesDocumentBridge instance.
 	 */
@@ -445,7 +445,7 @@ public:
 	 * this.  The liaison will return a null pointer if it did not
 	 * create the instance passed.
 	 *
-	 * @deprecated This API is deprecated.
+	 * @deprecated The Xerces DOM bridge has been deprecated.
 	 * @param theDocument A pointer to a XalanDocument instance.
 	 * @return A pointer to the XercesDocumentBridge instance.
 	 */
@@ -524,9 +524,11 @@ public:
 #endif
 
 	/**
+	 * This API is deprecated.
+	 * 
 	 * This functions returns the state of the liaison's build-bridge-nodes flag.
 	 *
-	 * @deprecated This API is deprecated.
+	 * @deprecated The Xerces DOM bridge is deprecated.
 	 * @return true, if the bridge nodes are automatically built, false otherwise.
 	 */
 	bool
@@ -544,7 +546,7 @@ public:
 	 * set to true to increase performance.  If this flag is set to false, then
 	 * the thread-safe flag will also be set to false.
 	 *
-	 * @deprecated This API is deprecated.
+	 * @deprecated The Xerces DOM bridge is deprecated.
 	 * @param newState The new state for the flag.
 	 *
 	 */
@@ -560,8 +562,6 @@ public:
 	}
 
 	/**
-	 * This API is deprecated.
-	 *
 	 * This functions returns the state of the liaison's build-wrapper-nodes flag.
 	 *
 	 * @return true, if the wrapper nodes are automatically built, false otherwise.

@@ -54,8 +54,8 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-#if !defined(XERCESNAMEDNODEMAPWRAPPER_HEADER_GUARD_1357924680)
-#define XERCESNAMEDNODEMAPWRAPPER_HEADER_GUARD_1357924680
+#if !defined(XERCESNAMEDNODEMAPBRIDGE_HEADER_GUARD_1357924680)
+#define XERCESNAMEDNODEMAPBRIDGE_HEADER_GUARD_1357924680
 
 
 
@@ -63,11 +63,15 @@
 
 
 
+#if XERCES_VERSION_MAJOR >= 2
+#include <xercesc/dom/deprecated/DOM_NamedNodeMap.hpp>
+#else
+#include <xercesc/dom/DOM_NamedNodeMap.hpp>
+#endif
+
+
+
 #include <xalanc/XalanDOM/XalanNamedNodeMap.hpp>
-
-
-
-#include <xalanc/XercesParserLiaison/XercesWrapperTypes.hpp>
 
 
 
@@ -75,20 +79,27 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-class XercesWrapperNavigator;
+class XercesBridgeNavigator;
+class XercesNodeBridge;
 
 
-
-class XALAN_XERCESPARSERLIAISON_EXPORT XercesNamedNodeMapWrapper : public XalanNamedNodeMap
+/**
+ * This class is deprecated.
+ *
+ * @deprecated This class is part of the deprecated Xerces DOM bridge.
+ */
+class XALAN_XERCESPARSERLIAISON_EXPORT XercesNamedNodeMapBridge : public XalanNamedNodeMap
 {
 public:
 
-	XercesNamedNodeMapWrapper(
-			const DOMNamedNodeMapType*		theXercesNamedNodeMap,
-			const XercesWrapperNavigator&	theNavigator);
+	typedef XERCES_CPP_NAMESPACE_QUALIFIER DOM_NamedNodeMap		DOM_NamedNodeMapType;
+
+	XercesNamedNodeMapBridge(
+			const DOM_NamedNodeMapType&		theXercesNamedNodeMap,
+			const XercesBridgeNavigator&	theNavigator);
 
 	virtual
-	~XercesNamedNodeMapWrapper();
+	~XercesNamedNodeMapBridge();
 
 	/** @name Set functions. */
 	//@{
@@ -143,7 +154,7 @@ public:
 	 * Retrieves a node specified by name.
 	 *
 	 * @param name The <code>nodeName</code> of a node to retrieve.
-	 * @return A <code>DOMNode</code> (of any type) with the specified <code>nodeName</code>, or 
+	 * @return A <code>DOM_Node</code> (of any type) with the specified <code>nodeName</code>, or 
 	 *	 <code>null</code> if it does not identify any node in 
 	 *	 the map. 
 	 */
@@ -191,7 +202,7 @@ public:
 	 * @param namespaceURI The <em>namespace URI</em> of
 	 *	  the node to retrieve.
 	 * @param localName The <em>local name</em> of the node to retrieve.
-	 * @return A <code>DOMNode</code> (of any type) with the specified
+	 * @return A <code>DOM_Node</code> (of any type) with the specified
 	 *	  local name and namespace URI, or <code>null</code> if they do not
 	 *	  identify any node in the map.
 	 */
@@ -230,9 +241,9 @@ public:
 	 * @param namespaceURI The <em>namespace URI</em> of
 	 *	  the node to remove.
 	 * @param localName The <em>local name</em> of the
-	 *	  node to remove. When this <code>DOMNamedNodeMap</code> contains the
+	 *	  node to remove. When this <code>DOM_NamedNodeMap</code> contains the
 	 *	  attributes attached to an element, as returned by the attributes
-	 *	  attribute of the <code>DOMNode</code> interface, if the removed
+	 *	  attribute of the <code>DOM_Node</code> interface, if the removed
 	 *	  attribute is known to have a default value, an attribute
 	 *	  immediately appears containing the default value
 	 *	  as well as the corresponding namespace URI, local name, and prefix.
@@ -255,18 +266,19 @@ public:
 private:
 
 	// Not implemented...
-	XercesNamedNodeMapWrapper(const XercesNamedNodeMapWrapper&	theSource);
+	XercesNamedNodeMapBridge(const XercesNamedNodeMapBridge&	theSource);
 
-	XercesNamedNodeMapWrapper&
-	operator=(const XercesNamedNodeMapWrapper&	theRHS);
+	XercesNamedNodeMapBridge&
+	operator=(const XercesNamedNodeMapBridge&	theRHS);
 
 	bool
-	operator==(const XercesNamedNodeMapWrapper&	theRHS) const;
+	operator==(const XercesNamedNodeMapBridge&	theRHS) const;
 
 
-	const DOMNamedNodeMapType* const	m_xercesNamedNodeMap;
+	// $$$ ToDo:  Eventually, this will not need to be mutable.
+	mutable DOM_NamedNodeMapType	m_xercesNamedNodeMap;
 
-	const XercesWrapperNavigator&		m_navigator;
+	const XercesBridgeNavigator&	m_navigator;
 };
 
 
@@ -275,4 +287,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// !defined(XERCESNAMEDNODEMAPWRAPPER_HEADER_GUARD_1357924680)
+#endif	// !defined(XERCESNAMEDNODEMAPBRIDGE_HEADER_GUARD_1357924680)

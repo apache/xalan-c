@@ -54,92 +54,65 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-#include "XercesDOMWrapperParsedSource.hpp"
+#if !defined(XERCESTREEWALKER_HEADER_GUARD_1357924680)
+#define XERCESTREEWALKER_HEADER_GUARD_1357924680
 
 
 
-#include <xalanc/XalanDOM/XalanDocument.hpp>
+#include <xalanc/XercesParserLiaison/XercesParserLiaisonDefinitions.hpp>
 
 
 
-#include <xalanc/PlatformSupport/URISupport.hpp>
-
-
-
-#include <xalanc/XercesParserLiaison/XercesParserLiaison.hpp>
-#include <xalanc/XercesParserLiaison/XercesDOMSupport.hpp>
-
-
-
-#include "XercesDOMParsedSource.hpp"
+#include <xalanc/XercesParserLiaison/Deprecated/XercesBridgeTypes.hpp>
 
 
 
 XALAN_CPP_NAMESPACE_BEGIN
 
-
-
-XercesDOMWrapperParsedSource::XercesDOMWrapperParsedSource(
-			const DOM_Document_Type&	theDocument,
-			XercesParserLiaison&		theParserLiaison,
-			XercesDOMSupport&			theDOMSupport,
-			const XalanDOMString&		theURI) :
-	XalanParsedSource(),
-	m_parserLiaison(theParserLiaison),
-	m_domSupport(theDOMSupport),
-	m_parsedSource(theParserLiaison.createDocument(theDocument, true, true)),
-	m_uri(URISupport::NormalizeURIText(theURI))
+/**
+ * This class is deprecated.
+ *
+ * @deprecated This class works with the deprecated Xerces DOM bridge.
+ */
+class XALAN_XERCESPARSERLIAISON_EXPORT XercesTreeWalker
 {
-	assert(m_parsedSource != 0);
-}
+public:
 
+	/**
+	 * Constructor.
+	 */
+	XercesTreeWalker();
 
+	virtual
+	~XercesTreeWalker();
 
-XercesDOMWrapperParsedSource::XercesDOMWrapperParsedSource(
-			const DOMDocument_Type*		theDocument,
-			XercesParserLiaison&		theParserLiaison,
-			XercesDOMSupport&			theDOMSupport,
-			const XalanDOMString&		theURI) :
-	XalanParsedSource(),
-	m_parserLiaison(theParserLiaison),
-	m_domSupport(theDOMSupport),
-	m_parsedSource(theParserLiaison.createDocument(theDocument, true, true)),
-	m_uri(URISupport::NormalizeURIText(theURI))
-{
-	assert(m_parsedSource != 0);
-}
+	/**
+	 * Perform a pre-order traversal non-recursive style.
+	 */
+	virtual void
+	traverse(const DOM_NodeType&	pos);
 
+	/**
+	 * Perform a pre-order traversal non-recursive style.
+	 */
+	virtual void
+	traverse(
+			const DOM_NodeType&		pos,
+			const DOM_NodeType&		parent);
 
+protected:
 
-XercesDOMWrapperParsedSource::~XercesDOMWrapperParsedSource()
-{
-	m_parserLiaison.destroyDocument(m_parsedSource);
-}
+	virtual void
+	startNode(const DOM_NodeType&	node) = 0;
 
-
-
-XalanDocument*
-XercesDOMWrapperParsedSource::getDocument() const
-{
-	return m_parsedSource;
-}
-
-
-
-XalanParsedSourceHelper*
-XercesDOMWrapperParsedSource::createHelper() const
-{
-	return new XercesDOMParsedSourceHelper;
-}
-
-
-
-const XalanDOMString&
-XercesDOMWrapperParsedSource::getURI() const
-{
-	return m_uri;
-}
+	virtual void
+	endNode(const DOM_NodeType&		node) = 0;
+};
 
 
 
 XALAN_CPP_NAMESPACE_END
+
+
+
+#endif	// XERCESTREEWALKER_HEADER_GUARD_1357924680

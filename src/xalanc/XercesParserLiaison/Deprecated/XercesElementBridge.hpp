@@ -54,8 +54,8 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-#if !defined(XERCESELEMENTWRAPPER_HEADER_GUARD_1357924680)
-#define XERCESELEMENTWRAPPER_HEADER_GUARD_1357924680
+#if !defined(XERCESELEMENTBRIDGE_HEADER_GUARD_1357924680)
+#define XERCESELEMENTBRIDGE_HEADER_GUARD_1357924680
 
 
 
@@ -67,8 +67,15 @@
 
 
 
+#if XERCES_VERSION_MAJOR >= 2
+#include <xercesc/dom/deprecated/DOM_Element.hpp>
+#else
+#include <xercesc/dom/DOM_Element.hpp>
+#endif
+
+
+
 #include <xalanc/XalanDOM/XalanElement.hpp>
-#include <xalanc/XalanDOM/XalanNodeList.hpp>
 
 
 
@@ -76,8 +83,9 @@
 
 
 
-#include <xalanc/XercesParserLiaison/XercesNamedNodeMapWrapper.hpp>
-#include <xalanc/XercesParserLiaison/XercesWrapperTypes.hpp>
+#include <xalanc/XercesParserLiaison/Deprecated/XercesDOM_NodeHack.hpp>
+#include <xalanc/XercesParserLiaison/Deprecated/XercesNamedNodeMapBridge.hpp>
+#include <xalanc/XercesParserLiaison/Deprecated/XercesNodeListBridge.hpp>
 
 
 
@@ -85,20 +93,26 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-class XercesWrapperNavigator;
+class XercesBridgeNavigator;
 
 
-
-class XALAN_XERCESPARSERLIAISON_EXPORT XercesElementWrapper : public XalanElement, private XalanNodeList
+/**
+ * This class is deprecated.
+ *
+ * @deprecated This class is part of the deprecated Xerces DOM bridge.
+ */
+class XALAN_XERCESPARSERLIAISON_EXPORT XercesElementBridge : public XalanElement
 {
 public:
 
-	XercesElementWrapper(
-			const DOMElementType*			theXercesElement,
-			const XercesWrapperNavigator&	theNavigator);
+	typedef XERCES_CPP_NAMESPACE_QUALIFIER DOM_Element	DOM_ElementType;
+
+	XercesElementBridge(
+			const DOM_ElementType&			theXercesElement,
+			const XercesBridgeNavigator&	theNavigator);
 
 	virtual
-	~XercesElementWrapper();
+	~XercesElementBridge();
 
 
 	/**
@@ -125,7 +139,7 @@ public:
 	 * All nodes, except <code>Document</code>,
 	 * <code>DocumentFragment</code>, and <code>Attr</code> may have a parent.
 	 * However, if a node has just been created and not yet added to the tree,
-	 * or if it has been removed from the tree, a <code>null</code> DOMNode
+	 * or if it has been removed from the tree, a <code>null</code> DOM_Node
 	 * is returned.
 	 */
 	virtual XalanNode*
@@ -187,12 +201,12 @@ public:
 	getAttributes() const;
 
 	/**
-	 * Gets the <code>DOMDocument</code> object associated with this node.
+	 * Gets the <code>DOM_Document</code> object associated with this node.
 	 *
 	 * This is also
-	 * the <code>DOMDocument</code> object used to create new nodes. When this
-	 * node is a <code>DOMDocument</code> or a <code>DOMDocumentType</code>
-	 * which is not used with any <code>DOMDocument</code> yet, this is
+	 * the <code>DOM_Document</code> object used to create new nodes. When this
+	 * node is a <code>DOM_Document</code> or a <code>DOM_DocumentType</code>
+	 * which is not used with any <code>DOM_Document</code> yet, this is
 	 * <code>null</code>.
 	 */
 	virtual XalanDocument*
@@ -223,7 +237,7 @@ public:
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
 	virtual XalanNode*
 #else
-	virtual XercesElementWrapper*
+	virtual XercesElementBridge*
 #endif
 	cloneNode(bool deep) const;
 
@@ -240,7 +254,7 @@ public:
 	 * <br>If <code>newChild</code> is a <code>DocumentFragment</code> object,
 	 * all of its children are inserted, in the same order, before
 	 * <code>refChild</code>. If the <code>newChild</code> is already in the
-	 * tree, it is first removed.  Note that a <code>DOMNode</code> that
+	 * tree, it is first removed.  Note that a <code>DOM_Node</code> that
 	 * has never been assigned to refer to an actual node is == null.
 	 * @param newChild The node to insert.
 	 * @param refChild The reference node, i.e., the node before which the new
@@ -256,8 +270,8 @@ public:
 	 * Replaces the child node <code>oldChild</code> with <code>newChild</code>
 	 * in the list of children, and returns the <code>oldChild</code> node.
 	 *
-	 * If <CODE>newChild</CODE> is a <CODE>DOMDocumentFragment</CODE> object,
-	 * <CODE>oldChild</CODE> is replaced by all of the <CODE>DOMDocumentFragment</CODE>
+	 * If <CODE>newChild</CODE> is a <CODE>DOM_DocumentFragment</CODE> object,
+	 * <CODE>oldChild</CODE> is replaced by all of the <CODE>DOM_DocumentFragment</CODE>
 	 * children, which are inserted in the same order.
 	 *
 	 * If the <code>newChild</code> is already in the tree, it is first removed.
@@ -335,20 +349,20 @@ public:
 	//@{
 
 	/**
-	 * Puts all <CODE>DOMText</CODE>
-	 * nodes in the full depth of the sub-tree underneath this <CODE>DOMNode</CODE>, 
+	 * Puts all <CODE>DOM_Text</CODE>
+	 * nodes in the full depth of the sub-tree underneath this <CODE>DOM_Node</CODE>, 
 	 * including attribute nodes, into a "normal" form where only markup (e.g., 
 	 * tags, comments, processing instructions, CDATA sections, and entity 
-	 * references) separates <CODE>DOMText</CODE>
-	 * nodes, i.e., there are no adjacent <CODE>DOMText</CODE>
+	 * references) separates <CODE>DOM_Text</CODE>
+	 * nodes, i.e., there are no adjacent <CODE>DOM_Text</CODE>
 	 * nodes. This can be used to ensure that the DOM view of a document is the 
 	 * same as if it were saved and re-loaded, and is useful when operations 
 	 * (such as XPointer lookups) that depend on a particular document tree 
 	 * structure are to be used.
-	 * <P><B>Note:</B> In cases where the document contains <CODE>DOMCDATASections</CODE>, 
+	 * <P><B>Note:</B> In cases where the document contains <CODE>DOM_CDATASections</CODE>, 
 	 * the normalize operation alone may not be sufficient, since XPointers do 
-	 * not differentiate between <CODE>DOMText</CODE>
-	 * nodes and <CODE>DOMCDATASection</CODE> nodes.</P>
+	 * not differentiate between <CODE>DOM_Text</CODE>
+	 * nodes and <CODE>DOM_CDATASection</CODE> nodes.</P>
 	 */
 	virtual void
 	normalize();
@@ -398,7 +412,7 @@ public:
 	 * Returns the local part of the <em>qualified name</em> of this node.
 	 * <p>
 	 * For nodes created with a DOM Level 1 method, such as
-	 * <code>createElement</code> from the <code>DOMDocument</code> interface,
+	 * <code>createElement</code> from the <code>DOM_Document</code> interface,
 	 * it is null.
 	 */
 	virtual const XalanDOMString&
@@ -410,7 +424,7 @@ public:
 	 * Note that setting this attribute, when permitted, changes 
 	 * the <CODE>nodeName</CODE> attribute, which holds the <EM>qualified 
 	 * name</EM>, as well as the <CODE>tagName</CODE> and <CODE>name</CODE> 
-	 * attributes of the <CODE>DOMElement</CODE> and <CODE>DOMAttr</CODE>
+	 * attributes of the <CODE>DOM_Element</CODE> and <CODE>DOM_Attr</CODE>
 	 * interfaces, when applicable.
 	 * <p>
 	 * Note also that changing the prefix of an 
@@ -461,17 +475,17 @@ public:
 	 * Retrieves an attribute value by name.
 	 *
 	 * @param name The name of the attribute to retrieve.
-	 * @return The <code>DOMAttr</code> value as a string, or the empty  string if 
+	 * @return The <code>DOM_Attr</code> value as a string, or the empty  string if 
 	 *   that attribute does not have a specified or default value.
 	 */
 	virtual const XalanDOMString&
 	getAttribute(const XalanDOMString&		name) const;
 
 	/**
-	 * Retrieves an <code>DOMAttr</code> node by name.
+	 * Retrieves an <code>DOM_Attr</code> node by name.
 	 *
 	 * @param name The name (<CODE>nodeName</CODE>) of the attribute to retrieve.
-	 * @return The <code>DOMAttr</code> node with the specified name (<CODE>nodeName</CODE>) or 
+	 * @return The <code>DOM_Attr</code> node with the specified name (<CODE>nodeName</CODE>) or 
 	 *   <code>null</code> if there is no such attribute.
 	 */
 	virtual XalanAttr*
@@ -480,12 +494,12 @@ public:
 	/**
 	 * Returns a <code>NodeList</code> of all descendant elements with a given 
 	 * tag name, in the order in which they would be encountered in a preorder 
-	 * traversal of the <code>DOMElement</code> tree.  Caller is
+	 * traversal of the <code>DOM_Element</code> tree.  Caller is
 	 * responsible for deleting the XalanNodeList instance.
 	 *
 	 * @param name The name of the tag to match on. The special value "*" 
 	 *   matches all tags.
-	 * @return A list of matching <code>DOMElement</code> nodes.
+	 * @return A list of matching <code>DOM_Element</code> nodes.
 	 */
 	virtual XalanNodeList*
 	getElementsByTagName(const XalanDOMString&		name) const;
@@ -504,7 +518,7 @@ public:
 	 * treated as literal text, and needs to be appropriately escaped by the 
 	 * implementation when it is written out. In order to assign an attribute 
 	 * value that contains entity references, the user must create an 
-	 * <code>DOMAttr</code> node plus any <code>Text</code> and 
+	 * <code>DOM_Attr</code> node plus any <code>Text</code> and 
 	 * <code>EntityReference</code> nodes, build the appropriate subtree, and 
 	 * use <code>setAttributeNode</code> to assign it as the value of an 
 	 * attribute.
@@ -525,18 +539,18 @@ public:
 	 * 
 	 * If an attribute with that name (<CODE>nodeName</CODE>) is already present 
 	 * in the element, it is replaced by the new one.
-	 * @param newAttr The <code>DOMAttr</code> node to add to the attribute list.
+	 * @param newAttr The <code>DOM_Attr</code> node to add to the attribute list.
 	 * @return If the <code>newAttr</code> attribute replaces an existing 
      *   attribute, the replaced
-     *   <code>DOMAttr</code> node is returned, otherwise <code>null</code> is 
+     *   <code>DOM_Attr</code> node is returned, otherwise <code>null</code> is 
      *   returned.
      * @exception DOMException
      *   WRONG_DOCUMENT_ERR: Raised if <code>newAttr</code> was created from a 
      *   different document than the one that created the element.
      *   <br>NO_MODIFICATION_ALLOWED_ERR: Raised if this node is readonly.
      *   <br>INUSE_ATTRIBUTE_ERR: Raised if <code>newAttr</code> is already an 
-     *   attribute of another <code>DOMElement</code> object. The DOM user must 
-     *   explicitly clone <code>DOMAttr</code> nodes to re-use them in other 
+     *   attribute of another <code>DOM_Element</code> object. The DOM user must 
+     *   explicitly clone <code>DOM_Attr</code> nodes to re-use them in other 
      *   elements.
      */
 	virtual XalanAttr*
@@ -548,14 +562,14 @@ public:
     
 	/**
 	 * Removes the specified attribute node.
-	 * If the removed <CODE>DOMAttr</CODE>
+	 * If the removed <CODE>DOM_Attr</CODE>
 	 *   has a default value it is immediately replaced. The replacing attribute 
 	 *   has the same namespace URI and local name, as well as the original prefix, 
 	 *   when applicable.
 	 *
-	 * @param oldAttr The <code>DOMAttr</code> node to remove from the attribute 
+	 * @param oldAttr The <code>DOM_Attr</code> node to remove from the attribute 
 	 *   list.
-	 * @return The <code>DOMAttr</code> node that was removed.
+	 * @return The <code>DOM_Attr</code> node that was removed.
 	 * @exception DOMException
 	 *   NO_MODIFICATION_ALLOWED_ERR: Raised if this node is readonly.
 	 *   <br>NOT_FOUND_ERR: Raised if <code>oldAttr</code> is not an attribute 
@@ -590,7 +604,7 @@ public:
 	 *    the attribute to retrieve.
 	 * @param localName The <em>local name</em> of the
 	 *    attribute to retrieve.
-	 * @return The <code>DOMAttr</code> value as a string, or an empty string if
+	 * @return The <code>DOM_Attr</code> value as a string, or an empty string if
 	*    that attribute does not have a specified or default value.
 	 */
 	virtual const XalanDOMString&
@@ -613,8 +627,8 @@ public:
 	 * recognized as an entity reference) is treated as literal text, and
 	 * needs to be appropriately escaped by the implementation when it is
 	 * written out. In order to assign an attribute value that contains entity
-	 * references, the user must create a <code>DOMAttr</code> node plus any
-	 * <code>DOMText</code> and <code>DOMEntityReference</code> nodes, build the
+	 * references, the user must create a <code>DOM_Attr</code> node plus any
+	 * <code>DOM_Text</code> and <code>DOM_EntityReference</code> nodes, build the
 	 * appropriate subtree, and use <code>setAttributeNodeNS</code> or
 	 * <code>setAttributeNode</code> to assign it as the value of an
 	 * attribute.
@@ -664,13 +678,13 @@ public:
 			const XalanDOMString&	localName);
 
 	/**
-	 * Retrieves an <code>DOMAttr</code> node by local name and namespace URI.
+	 * Retrieves an <code>DOM_Attr</code> node by local name and namespace URI.
 	 *
 	 * @param namespaceURI The <em>namespace URI</em> of
 	 *    the attribute to retrieve.
 	 * @param localName The <em>local name</em> of the
 	 *    attribute to retrieve.
-	 * @return The <code>DOMAttr</code> node with the specified attribute local
+	 * @return The <code>DOM_Attr</code> node with the specified attribute local
 	 *    name and namespace URI or <code>null</code> if there is no such attribute.
 	 */
 	virtual XalanAttr*
@@ -683,28 +697,28 @@ public:
 	  * 
 	  * If an attribute with that local name and namespace URI is already present 
 	  * in the element, it is replaced by the new one.
-	  * @param newAttr The <code>DOMAttr</code> node to add to the attribute list.
+	  * @param newAttr The <code>DOM_Attr</code> node to add to the attribute list.
 	  * @return If the <code>newAttr</code> attribute replaces an existing
 	  *    attribute with the same <em>local name</em> and <em>namespace URI</em>,
-	  *    the replaced <code>DOMAttr</code> node is
+	  *    the replaced <code>DOM_Attr</code> node is
 	  *    returned, otherwise <code>null</code> is returned.
 	  * @exception DOMException
 	  *   WRONG_DOCUMENT_ERR: Raised if <code>newAttr</code> was created from a 
 	  *   different document than the one that created the element.
 	  *   <br>NO_MODIFICATION_ALLOWED_ERR: Raised if this node is readonly.
 	  *   <br>INUSE_ATTRIBUTE_ERR: Raised if <code>newAttr</code> is already an 
-	  *   attribute of another <code>DOMElement</code> object. The DOM user must 
-	  *   explicitly clone <code>DOMAttr</code> nodes to re-use them in other 
+	  *   attribute of another <code>DOM_Element</code> object. The DOM user must 
+	  *   explicitly clone <code>DOM_Attr</code> nodes to re-use them in other 
 	  *   elements.
 	  */
 	virtual XalanAttr*
 	setAttributeNodeNS(XalanAttr*	newAttr);
 
 	/**
-	 * Returns a <code>DOMNodeList</code> of all the <code>DOMElement</code>s
+	 * Returns a <code>DOM_NodeList</code> of all the <code>DOM_Element</code>s
 	 * with a given local name and namespace URI in the order in which they
 	 * would be encountered in a preorder traversal of the
-	 * <code>DOMDocument</code> tree, starting from this node.  Caller is
+	 * <code>DOM_Document</code> tree, starting from this node.  Caller is
 	 * responsible for deleting the XalanNodeList instance.
 	 *
 	 * @param namespaceURI The <em>namespace URI</em> of
@@ -712,7 +726,7 @@ public:
 	 *    namespaces.
 	 * @param localName The <em>local name</em> of the
 	 *    elements to match on. The special value "*" matches all local names.
-	 * @return A new <code>DOMNodeList</code> object containing all the matched
+	 * @return A new <code>DOM_NodeList</code> object containing all the matched
 	 *    <code>Element</code>s.
 	 */
 	virtual XalanNodeList*
@@ -725,7 +739,7 @@ public:
 	 *
 	 * @return The Xerces node
 	 */
-	const DOMElementType*
+	DOM_ElementType
 	getXercesNode() const
 	{
 		return m_xercesNode;
@@ -735,29 +749,23 @@ public:
 
 private:
 
-	// Implementation of XalanNodeList for children.
-	virtual XalanNode*
-	item(unsigned int	index) const;
-
-	virtual unsigned int
-	getLength() const;
-
-
 	// Not implemented...
-	XercesElementWrapper(const XercesElementWrapper&	theSource);
+	XercesElementBridge(const XercesElementBridge&	theSource);
 
 	XalanNode&
 	operator=(const XalanNode&	theSource);
 
 	bool
-	operator==(const XercesElementWrapper&	theRHS) const;
+	operator==(const XercesElementBridge&	theRHS) const;
 
 	// Data members...
-	const DOMElementType* const		m_xercesNode;
+	XercesDOM_ElementHack				m_xercesNode;
 
-	const XercesWrapperNavigator&	m_navigator;
+	const XercesBridgeNavigator&		m_navigator;
 
-	XercesNamedNodeMapWrapper		m_attributes;
+	XercesNodeListBridge				m_children;
+
+	XercesNamedNodeMapBridge			m_attributes;
 };
 
 
@@ -766,4 +774,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// !defined(XERCESELEMENTWRAPPER_HEADER_GUARD_1357924680)
+#endif	// !defined(XERCESELEMENTBRIDGE_HEADER_GUARD_1357924680)

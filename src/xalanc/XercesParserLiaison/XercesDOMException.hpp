@@ -76,7 +76,7 @@
 
 
 
-#include <xalanc/XercesParserLiaison/XercesBridgeTypes.hpp>
+#include <xalanc/XercesParserLiaison/Deprecated/XercesBridgeTypes.hpp>
 #include <xalanc/XercesParserLiaison/XercesWrapperTypes.hpp>
 
 
@@ -101,9 +101,12 @@ public:
 	XercesDOMException(ExceptionCode 	code = UNKNOWN_ERR);
 
 	/**
+	  * This API is deprecated.
+	  * 
 	  * Constructor which takes a Xerces exception and
 	  * translates it into a XercesDOMException.
-	  *
+	  * 
+	  * @deprecated The Xerces DOM bridge is deprecated.
 	  * @param code The Xerces DOM_DOMException instance.
 	  */
 	XercesDOMException(const DOM_DOMExceptionType&	theException);
@@ -113,7 +116,7 @@ public:
 	  * Constructor which takes a Xerces exception and
 	  * translates it into a XercesDOMException.
 	  *
-	  * @param code The Xerces DOM_DOMException instance.
+	  * @param code The Xerces DOMException instance.
 	  */
 	XercesDOMException(const DOMExceptionType&	theException);
 

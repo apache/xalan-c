@@ -54,8 +54,8 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-#if !defined(XERCESDOMIMPLEMENTATIONWRAPPER_HEADER_GUARD_1357924680)
-#define XERCESDOMIMPLEMENTATIONWRAPPER_HEADER_GUARD_1357924680
+#if !defined(XERCESDOMIMPLEMENTATIONBRIDGE_HEADER_GUARD_1357924680)
+#define XERCESDOMIMPLEMENTATIONBRIDGE_HEADER_GUARD_1357924680
 
 
 
@@ -67,7 +67,7 @@
 
 
 
-#include <xalanc/XercesParserLiaison/XercesWrapperTypes.hpp>
+#include <xalanc/XercesParserLiaison/Deprecated/XercesBridgeTypes.hpp>
 
 
 
@@ -75,18 +75,21 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-class XercesWrapperNavigator;
+class XercesBridgeNavigator;
 
-
-
-class XALAN_XERCESPARSERLIAISON_EXPORT XercesDOMImplementationWrapper : public XalanDOMImplementation
+/**
+ * This class is deprecated.
+ *
+ * @deprecated This class is part of the deprecated Xerces DOM bridge.
+ */
+class XALAN_XERCESPARSERLIAISON_EXPORT XercesDOMImplementationBridge : public XalanDOMImplementation
 {
 public:
 
-	XercesDOMImplementationWrapper(DOMImplementationType*	theXercesDOMImplementation);
+	XercesDOMImplementationBridge(DOM_DOMImplementationType&	theXercesDOMImplementation);
 
 	virtual
-	~XercesDOMImplementationWrapper();
+	~XercesDOMImplementationBridge();
 
 	/** @name Getter functions */
 	//@{
@@ -115,11 +118,11 @@ public:
     //@{
 
 	/**
-     * Creates an empty <code>DOMDocumentType</code> node.
+     * Creates an empty <code>DOM_DocumentType</code> node.
      * Entity declarations and notations are not made available.
      * Entity reference expansions and default attribute additions
      * do not occur. It is expected that a future version of the DOM
-     * will provide a way for populating a <code>DOMDocumentType</code>.
+     * will provide a way for populating a <code>DOM_DocumentType</code>.
      * @param qualifiedName The <em>qualified name</em>
      * of the document type to be created.
      * @param publicId The external subset public identifier.
@@ -134,7 +137,7 @@ public:
 			const XalanDOMString&	systemId);
 
     /**
-     * Creates an XML <code>DOMDocument</code> object of the specified type
+     * Creates an XML <code>DOM_Document</code> object of the specified type
      * with its document element.
      * @param namespaceURI The <em>namespace URI</em> of
      * the document element to create, or <code>null</code>.
@@ -160,7 +163,7 @@ public:
 	 *
 	 * @return The Xerces node
 	 */
-	DOMImplementationType*
+	DOM_DOMImplementationType&
 	getXercesNode() const
 	{
 		return m_xercesNode;
@@ -172,17 +175,17 @@ private:
 
 	// These are not defined...
 
-	XercesDOMImplementationWrapper(const XercesDOMImplementationWrapper&	theSource);
+	XercesDOMImplementationBridge(const XercesDOMImplementationBridge&	theSource);
 
-	XercesDOMImplementationWrapper&
-	operator=(const XercesDOMImplementationWrapper&		theSource);
+	XercesDOMImplementationBridge&
+	operator=(const XercesDOMImplementationBridge&		theSource);
 
 	bool
-	operator==(const XercesDOMImplementationWrapper&	theRHS) const;
+	operator==(const XercesDOMImplementationBridge&	theRHS) const;
 
 	// Data members...
 
-	DOMImplementationType* const	m_xercesNode;
+	DOM_DOMImplementationType&	m_xercesNode;
 };
 
 
@@ -191,4 +194,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// !defined (XERCESDOMIMPLEMENTATIONWRAPPER_HEADER_GUARD_1357924680)
+#endif	// !defined (XERCESDOMIMPLEMENTATIONBRIDGE_HEADER_GUARD_1357924680)

@@ -91,9 +91,9 @@
 
 
 
-#include "XercesDocumentBridge.hpp"
-#include "XercesDocumentWrapper.hpp"
-#include "XercesDOMSupport.hpp"
+#include <xalanc/XercesParserLiaison/Deprecated/XercesDocumentBridge.hpp>
+#include <xalanc/XercesParserLiaison/XercesDocumentWrapper.hpp>
+#include <xalanc/XercesParserLiaison/XercesDOMSupport.hpp>
 
 
 
