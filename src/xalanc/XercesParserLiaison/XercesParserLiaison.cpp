@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2003 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -295,11 +295,14 @@ XercesParserLiaison::createDOMFactory()
 void
 XercesParserLiaison::destroyDocument(XalanDocument* 	theDocument)
 {
-	if (mapDocument(theDocument) != 0)
-	{
-		m_documentMap.erase(theDocument);
+	const DocumentMapType::iterator		i =
+		m_documentMap.find(theDocument);
 
-		delete theDocument;
+	if (i != m_documentMap.end())
+	{
+		const XalanAutoPtr<XalanDocument>	theGuard(theDocument);
+
+		m_documentMap.erase(i);
 	}
 }
 
