@@ -58,7 +58,7 @@ XalanSpaceNodeTester::XalanSpaceNodeTester(
             const PrefixResolver&           thePrefixResolver,
             const LocatorType*              theLocator) :
     NodeTester(),
-    m_matchScore(),
+    m_matchScore(XPath::eMatchScoreNone),
 	m_type(theType)
 {
 	m_matchScore = initialize(
