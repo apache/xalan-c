@@ -1761,7 +1761,16 @@ XSLTEngineImpl::addResultAttribute(
 
 		prefix = substring(aname, DOMServices::s_XMLNamespaceWithSeparatorLength);
 
-		addResultNamespaceDecl(prefix, value);
+		const XalanDOMString* const	theNamespace = getResultNamespaceForPrefix(prefix);
+
+		if (theNamespace == 0 || equals(*theNamespace, value) == false)
+		{
+			addResultNamespaceDecl(prefix, value);
+		}
+		else
+		{
+			fExcludeAttribute = true;
+		}
 	}
 
 	if (fExcludeAttribute == false)
