@@ -775,7 +775,7 @@ XalanTransformer::destroyStylesheet(const XalanCompiledStylesheet*	theStylesheet
 		const unsigned int	theLength =
 			length(theStylesheetErrorMessage);
 
-		m_errorMessage.resize(theLength + 1, CharVectorType::value_type(0));
+		m_errorMessage.resize(theLength + 1, '\0');
 
 		strncpy(&*m_errorMessage.begin(), theStylesheetErrorMessage, theLength);
 
@@ -876,7 +876,7 @@ XalanTransformer::destroyParsedSource(const XalanParsedSource*	theParsedSource)
 		const unsigned int	theLength =
 			length(theParsedSourceErrorMessage);
 
-		m_errorMessage.resize(theLength + 1, CharVectorType::value_type(0));
+		m_errorMessage.resize(theLength + 1, '\0');
 
 		strncpy(&*m_errorMessage.begin(), theParsedSourceErrorMessage, theLength);
 
