@@ -386,6 +386,8 @@ private:
 	DocumentMapType 			m_persistentDocumentMap;
 
 	bool						m_poolAllText;
+
+	static const XalanDOMChar	validationString[];
 };
 
 
