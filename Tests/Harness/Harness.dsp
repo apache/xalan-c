@@ -189,9 +189,5 @@ SOURCE=.\Harness.rc
 SOURCE=.\resource.h
 # End Source File
 # End Group
-# Begin Source File
-
-SOURCE=..\Transperf\Transperf.dsp
-# End Source File
 # End Target
 # End Project
