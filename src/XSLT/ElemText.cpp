@@ -120,7 +120,6 @@ ElemText::ElemText(
 
 ElemText::~ElemText()
 {
-	assert(getNextSiblingElem() == 0 && getFirstChildElem() == 0);
 }
 
 
