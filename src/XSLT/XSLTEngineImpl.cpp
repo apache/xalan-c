@@ -2124,7 +2124,8 @@ XSLTEngineImpl::createResultTreeFrag(
 	auto_ptr<ResultTreeFragBase> pfrag(createDocFrag());
 
 	FormatterToDOM	tempFormatter(m_resultTreeFactory, 
-								  pfrag.get());
+								  pfrag.get(),
+								  0);
 
 	m_mustFlushStartDocument = true;
 
