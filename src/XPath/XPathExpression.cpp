@@ -60,6 +60,7 @@
 
 
 #include <cstdio>
+#include <strstream>
 
 
 
@@ -101,20 +102,18 @@ XPathExpression::InvalidOpCodeException::~InvalidOpCodeException()
 std::string
 XPathExpression::InvalidOpCodeException::FormatErrorMessage(int		theOpCode)
 {
-	// $$$ ToDo: This can be changed to C++-style
-	// formatting with a stringstream if we can
-	// get the Microsoft library and the SGI STL to
-	// coexist.
-	char	theBuffer[256];
+#if !defined(XALAN_NO_NAMESPACES)
+	using std::ostrstream;
+#endif
 
-	const char*		theMessage =
-				"Invalid op code %d was detected.";
+	ostrstream	theFormatter;
 
-	sprintf(theBuffer,
-			theMessage,
-			theOpCode);
+	theFormatter << "Invalid op code "
+				 << theOpCode
+				 << " was detected."
+				 << '\0';
 
-	return theBuffer;
+	return theFormatter.str();
 }
 
 
@@ -141,24 +140,23 @@ XPathExpression::InvalidArgumentCountException::FormatErrorMessage(
 			int		theExpectedCount,
 			int		theSuppliedCount)
 {
-	// $$$ ToDo: This can be changed to C++-style
-	// formatting with a stringstream if we can
-	// get the Microsoft library and the SGI STL to
-	// coexist.
-	char	theBuffer[256];
+#if !defined(XALAN_NO_NAMESPACES)
+	using std::ostrstream;
+#endif
 
-	const char*		theMessage =
-				"An invalid number of arguments for op code %d was detected. "
-				"The required number of argument(s) is %d, but %d arguments(s) were "
-				"supplied.";
+	ostrstream	theFormatter;
 
-	sprintf(theBuffer,
-			theMessage,
-			theOpCode,
-			theExpectedCount,
-			theSuppliedCount);
+	theFormatter << "An invalid number of arguments for op code "
+				 << theOpCode
+				 << " was detected.  "
+				 << "The required number of arguments is "
+				 << theExpectedCount
+				 << ", but "
+				 << theSuppliedCount
+				 << " arguments(s) were supplied."
+				 << '\0';
 
-	return theBuffer;
+	return theFormatter.str();
 }
 
 
@@ -183,21 +181,20 @@ XPathExpression::InvalidArgumentException::FormatErrorMessage(
 				int		theOpCode,
 				int		theValue)
 {
-	// $$$ ToDo: This can be changed to C++-style
-	// formatting with a stringstream if we can
-	// get the Microsoft library and the SGI STL to
-	// coexist.
-	char	theBuffer[256];
+#if !defined(XALAN_NO_NAMESPACES)
+	using std::ostrstream;
+#endif
 
-	const char*		theMessage =
-				"An invalid argument of %d was supplied for op code %d.";
+	ostrstream	theFormatter;
 
-	sprintf(theBuffer,
-			theMessage,
-			theValue,
-			theOpCode);
+	theFormatter << "An invalid argument of "
+				 << theValue
+				 << " was supplied for op code "
+				 << theOpCode
+				 << "."
+				 << '\0';
 
-	return theBuffer;
+	return theFormatter.str();
 }
 
 
