@@ -150,7 +150,7 @@ getCollator(
 			const XalanDOMChar*		theLocale,
 			UErrorCode&				theStatus)
 {
-	const unsigned int	theLength = length(theLocale);
+	const XalanDOMString::size_type		theLength = length(theLocale);
 
 	if (theLength >= ULOC_FULLNAME_CAPACITY)
 	{
