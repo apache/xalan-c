@@ -166,13 +166,13 @@ main(int			argc,
 	// Set the program help string,  then get the command line parameters.
 	//
 	setHelp();
-
+	bool setGold = false;
 	{
 		const XalanDOMString	processorType(XALAN_STATIC_UCODE_STRING("XalanC"));
 		long iterCount;			// Default number of iterations
 		bool skip = true;		// Default will skip long tests
 
-		if (h.getParams(argc, argv, "PERFT-RESULTS") == true)
+		if (h.getParams(argc, argv, "PERFT-RESULTS", setGold) == true)
 		{
 			//
 			// Call the static initializers for xerces and xalan, and create a transformer

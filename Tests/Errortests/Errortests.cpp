@@ -145,11 +145,12 @@ main(int			argc,
 
 	{
 		int theResult;	
+		bool setGold = false;
 
 		// Set the program help string,  then get the command line parameters.
 		//
 		setHelp();
-		if (h.getParams(argc, argv, "ERR-RESULTS") == true)
+		if (h.getParams(argc, argv, "ERR-RESULTS", setGold) == true)
 		{
 			//
 			// Call the static initializers for xerces and xalan, and create a transformer
