@@ -1013,7 +1013,7 @@ ElemTemplateElement::error(const XalanDOMString&	msg) const
 {
 	XalanDOMString errMsg("ElemTemplateElement error: " + msg);
 
-	throw SAXException(toCharArray(errMsg));
+	throw SAXException(c_wstr(errMsg));
 }
 
 

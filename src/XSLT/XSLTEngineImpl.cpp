@@ -2085,7 +2085,7 @@ XSLTEngineImpl::cloneToResultTree(
 
 			const XalanDOMString& 	theData = theComment.getData();
 
-			comment(toCharArray(theData));
+			comment(c_wstr(theData));
 		}
 		break;
 
@@ -2098,7 +2098,8 @@ XSLTEngineImpl::cloneToResultTree(
 	case XalanNode::ENTITY_REFERENCE_NODE:
 		{
 			const XalanDOMString &	theName = node.getNodeName();
-			entityReference(toCharArray(theName));
+
+			entityReference(c_wstr(theName));
 		}
 		break;
 
@@ -2114,8 +2115,8 @@ XSLTEngineImpl::cloneToResultTree(
 			const XalanDOMString& 	theTarget = pi.getTarget();
 			const XalanDOMString& 	theData = pi.getData();
 
-			processingInstruction(toCharArray(theTarget),
-								  toCharArray(theData));
+			processingInstruction(c_wstr(theTarget),
+								  c_wstr(theData));
 		}
 		break;
 

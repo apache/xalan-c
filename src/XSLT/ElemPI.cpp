@@ -141,7 +141,7 @@ ElemPI::execute(
 	
 	m_nameAVT->evaluate(piName, sourceNode, *this, executionContext);
 
-	if(equalsIgnoreCase(piName, XALAN_STATIC_UCODE_STRING("xml")))
+	if(equalsIgnoreCase(piName, Constants::ATTRVAL_OUTPUT_METHOD_XML))
 	{
 		error("processing-instruction name can not be 'xml'");
 	}
@@ -158,7 +158,7 @@ ElemPI::execute(
 			mode,
 			theResult.get());
 
-	executionContext.processingInstruction(toCharArray(piName), toCharArray(theResult.get()));
+	executionContext.processingInstruction(c_wstr(piName), c_wstr(theResult.get()));
 }
 
 
