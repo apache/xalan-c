@@ -107,7 +107,7 @@ private:
 
 	bool		m_isValid;
 
-	Collator*	m_collator;
+	Collator*	m_defaultCollator;
 
 	const static StylesheetExecutionContextDefault::DefaultCollationCompareFunctor		s_defaultFunctor;
 };

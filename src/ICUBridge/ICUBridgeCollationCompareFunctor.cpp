@@ -78,11 +78,11 @@ const StylesheetExecutionContextDefault::DefaultCollationCompareFunctor		ICUBrid
 
 ICUBridgeCollationCompareFunctor::ICUBridgeCollationCompareFunctor() :
 	m_isValid(false),
-	m_collator(0)
+	m_defaultCollator(0)
 {
 	UErrorCode	theStatus = U_ZERO_ERROR;
 
-	m_collator = Collator::createInstance(theStatus);
+	m_defaultCollator = Collator::createInstance(theStatus);
 
 	if (theStatus == U_ZERO_ERROR ||
 	    (theStatus >= U_ERROR_INFO_START && theStatus < U_ERROR_INFO_LIMIT))
@@ -95,7 +95,7 @@ ICUBridgeCollationCompareFunctor::ICUBridgeCollationCompareFunctor() :
 
 ICUBridgeCollationCompareFunctor::~ICUBridgeCollationCompareFunctor()
 {
-	delete m_collator;
+	delete m_defaultCollator;
 }
 
 
@@ -114,11 +114,11 @@ ICUBridgeCollationCompareFunctor::operator()(
 	{
 		assert(theCollator.get() != 0);
 
-#if U_SIZEOF_WCHAR_T==2
+#if defined(XALAN_USE_WCHAR_CAST_HACK)
 		return theCollator->compare(
-					(wchar_t*)theLHS,
+					(const wchar_t*)theLHS,
 					length(theLHS),
-					(wchar_t*)theRHS,
+					(const wchar_t*)theRHS,
 					length(theRHS));
 #else
 		return theCollator->compare(
@@ -136,6 +136,38 @@ ICUBridgeCollationCompareFunctor::operator()(
 
 
 
+inline Collator*
+getCollator(
+			const XalanDOMChar*		theLocale,
+			UErrorCode&				theStatus)
+{
+	char	theBuffer[ULOC_FULLNAME_CAPACITY];
+
+	const unsigned int	theLength = length(theLocale);
+
+	if (theLength >= ULOC_FULLNAME_CAPACITY)
+	{
+		theStatus = U_ILLEGAL_ARGUMENT_ERROR;
+
+		return 0;
+	}
+	else
+	{
+		// Since language names must be ASCII, this
+		// is the cheapest way to "transcode"...
+		for (unsigned int i = 0; i <= theLength; ++i)
+		{
+			theBuffer[i] = char(theLocale[i]);
+		}
+
+		return Collator::createInstance(
+					Locale::createFromName(theBuffer),
+					theStatus);
+	}
+}
+
+
+
 int
 ICUBridgeCollationCompareFunctor::operator()(
 			const XalanDOMChar*		theLHS,
@@ -144,18 +176,14 @@ ICUBridgeCollationCompareFunctor::operator()(
 {
 	UErrorCode	theStatus = U_ZERO_ERROR;
 
-#if U_SIZEOF_WCHAR_T==2
-	XalanAutoPtr<Collator>	theCollator(Collator::createInstance(Locale(UnicodeString((const wchar_t*)theLocale)), theStatus));
-#else
-	XalanAutoPtr<Collator>	theCollator(Collator::createInstance(Locale(UnicodeString(theLocale)), theStatus));
-#endif
+	XalanAutoPtr<Collator>	theCollator(getCollator(theLocale, theStatus));
 
 	if (theStatus == U_ZERO_ERROR ||
 	    (theStatus >= U_ERROR_INFO_START && theStatus < U_ERROR_INFO_LIMIT))
 	{
 		assert(theCollator.get() != 0);
 
-#if U_SIZEOF_WCHAR_T==2
+#if defined(XALAN_USE_WCHAR_CAST_HACK)
 		return theCollator->compare(
 					(const wchar_t*)theLHS,
 					length(theLHS),
@@ -188,15 +216,16 @@ ICUBridgeCollationCompareFunctor::operator()(
 	}
 	else
 	{
-		assert(m_collator != 0);
-#if U_SIZEOF_WCHAR_T==2
-		return m_collator->compare(
+		assert(m_defaultCollator != 0);
+
+#if defined(XALAN_USE_WCHAR_CAST_HACK)
+		return m_defaultCollator->compare(
 					(const wchar_t*)theLHS,
 					length(theLHS),
 					(const wchar_t*)theRHS,
 					length(theRHS));
 #else
-		return m_collator->compare(
+		return m_defaultCollator->compare(
 					theLHS,
 					length(theLHS),
 					theRHS,
