@@ -130,6 +130,10 @@ SOURCE=..\..\..\..\src\XPath\ElementPrefixResolverProxy.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\XPath\FormatterStringLengthCounter.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\XPath\FoundIndex.cpp
 # End Source File
 # Begin Source File
@@ -479,6 +483,10 @@ SOURCE=..\..\..\..\src\XPath\XUnknown.cpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\XPath\ElementPrefixResolverProxy.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XPath\FormatterStringLengthCounter.hpp
 # End Source File
 # Begin Source File
 
