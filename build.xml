@@ -93,6 +93,10 @@
     </java>
   </target>
 
+  <!-- pack apidocs for transfer to website -->
+ <target name="pack.apidocs">
+    <tar tarfile="c/build/docs/apidocs/xalan-c-apidocs.tar" basedir="c/build/docs/apidocs" includes="*"/>
+    <gzip src="c/build/docs/apidocs/xalan-c-apidocs.tar" zipfile="c/build/docs/apidocs/xalan-c-apidocs.tar.gz"/>
+  </target>
   
-    
 </project>
