@@ -70,9 +70,6 @@
 
 #include <stl/_range_errors.h>
 
-#include <limits>
-#include <stl/_limits.c>
-
 #include <algorithm>
 #include <stl/_algo.c>
 #include <stl/_algobase.c>
