@@ -3061,5 +3061,13 @@ SOURCE=..\..\Res\AllInOne\resource.h
 
 SOURCE=..\..\..\..\src\XSLT\ResultTreeFragBaseNodeRefListBaseProxy.cpp
 # End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XMLSupport\XalanHTMLElementsProperties.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XMLSupport\XalanHTMLElementsProperties.hpp
+# End Source File
 # End Target
 # End Project
