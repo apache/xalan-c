@@ -451,7 +451,11 @@ getArgs(
 
 			if(i < argc && argv[i][0] != '-')
 			{
+#if defined(XALAN_STRICT_ANSI_HEADERS)
+				p.indentAmount = std::atoi(argv[i]);
+#else
 				p.indentAmount = atoi(argv[i]);
+#endif
 			}
 			else
 			{
@@ -597,7 +601,7 @@ getArgs(
 			{
 				p.extentionsNamespace = argv[i];
 
-				if (strlen(p.extentionsNamespace) == 0)
+				if (XalanDOMString::length(p.extentionsNamespace) == 0)
 				{
 					fSuccess = false;
 				}
