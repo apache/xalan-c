@@ -109,6 +109,7 @@ typedef XERCES_CPP_NAMESPACE_QUALIFIER DOMNotation			DOMNotationType;
 typedef XERCES_CPP_NAMESPACE_QUALIFIER DOMProcessingInstruction	DOMProcessingInstructionType;
 typedef XERCES_CPP_NAMESPACE_QUALIFIER DOMText				DOMTextType;
 typedef XERCES_CPP_NAMESPACE_QUALIFIER DOMException			DOMExceptionType;
+typedef XMLSize_t											XMLSizeType;
 
 
 
