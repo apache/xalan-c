@@ -89,10 +89,6 @@ public:
 
 	// These methods are inherited from Function ...
 
-#if !defined(XALAN_NO_USING_DECLARATION)
-	using ParentType::execute;
-#endif
-
 	XObjectPtr
 	execute(
 			XPathExecutionContext&		executionContext,
@@ -100,6 +96,10 @@ public:
 			const XObjectPtr			arg1,
 			const XObjectPtr			arg2,
 			const LocatorType*			locator) const;
+
+#if !defined(XALAN_NO_USING_DECLARATION)
+	using ParentType::execute;
+#endif
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
 	virtual Function*
