@@ -143,13 +143,13 @@ public:
 	getParserDescription() const;
 
 	virtual EntityResolver*
-	getEntityResolver() { return m_entityResolver; }
+	getEntityResolver() const { return m_entityResolver; }
 
 	virtual void
 	setEntityResolver(EntityResolver*	resolver) { m_entityResolver = resolver; }
 
 	virtual ErrorHandler*
-	getErrorHandler() { return m_errorHandler; }
+	getErrorHandler() { return m_errorHandler; } const
 
 	virtual void
 	setErrorHandler(ErrorHandler*	handler) { m_errorHandler = handler; }
