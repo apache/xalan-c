@@ -63,15 +63,34 @@ public:
     typedef value_type&         reference;
     typedef const value_type&   const_reference;
     typedef size_t              size_type;
-    typedef value_type*         iterator;
-    typedef const value_type*   const_iterator;
     typedef ptrdiff_t           difference_type;
-    
+
+#if defined(XALAN_VCPP_USE_PTRIT)
+    typedef std::_Ptrit<
+                Type,
+                ptrdiff_t,
+                pointer,
+                reference,
+                pointer,
+                reference>          iterator;
+
+    typedef std::_Ptrit<
+                Type,
+                ptrdiff_t,
+                const_pointer,
+                const_reference,
+                pointer,
+                reference>          const_iterator;
+#else
+    typedef value_type*             iterator;
+    typedef const value_type*       const_iterator;
+#endif
+
 #if defined(XALAN_HAS_STD_ITERATORS)
     typedef XALAN_STD_QUALIFIER reverse_iterator<iterator>          reverse_iterator_;
     typedef XALAN_STD_QUALIFIER reverse_iterator<const_iterator>    const_reverse_iterator_;
 #else
-    typedef XALAN_STD_QUALIFIER reverse_iterator<iterator,value_type>                           reverse_iterator_;
+    typedef XALAN_STD_QUALIFIER reverse_iterator<iterator, value_type>                          reverse_iterator_;
     typedef XALAN_STD_QUALIFIER reverse_iterator<const_iterator, value_type, const_reference>   const_reverse_iterator_;
 #endif
 
@@ -221,13 +240,17 @@ public:
     void
     insert(
             iterator        thePosition,
-            const_iterator  theStart,
-            const_iterator  theEnd)
+            const_iterator  theFirst,
+            const_iterator  theLast)
     {
+        // Since we're using bare pointers for now, we can
+        // assert this...
+        assert(theFirst <= theLast);
+
         invariants();
 
         const size_type     theInsertSize =
-            local_distance(theStart, theEnd);
+            local_distance(theFirst, theLast);
 
         if (theInsertSize == 0)
         {
@@ -240,13 +263,13 @@ public:
         {
             pointer     thePointer = ensureCapacity(theTotalSize);
 
-            while (theStart != theEnd)
+            while (theFirst != theLast)
             {
-                construct(thePointer, *theStart);
+                construct(thePointer, *theFirst);
 
                 ++thePointer;
                 ++m_size;
-                ++theStart;
+                ++theFirst;
             }
         }
         else
@@ -259,7 +282,7 @@ public:
                 theTemp.insert(theTemp.end(), begin(), thePosition);
 
                 // insert the new stuff...
-                theTemp.insert(theTemp.end(), theStart, theEnd);
+                theTemp.insert(theTemp.end(), theFirst, theLast);
 
                 // insert everything from the position to the end...
                 theTemp.insert(theTemp.end(), thePosition, end());
@@ -280,10 +303,10 @@ public:
                     
                     // append from inserted range, all values that will extend 
                     // beyond the current vector
-                    const const_iterator    toInsertSplit = theStart + theRightSplitSize;
+                    const const_iterator    toInsertSplit = theFirst + theRightSplitSize;
                     const_iterator          toInsertIter = toInsertSplit;
 
-                    while (toInsertIter != theEnd)
+                    while (toInsertIter != theLast)
                     {
                         doPushBack(*toInsertIter);
 
@@ -301,7 +324,7 @@ public:
 
                     // copy the remaining part of inserted range into 
                     // the original vector spaces
-                    XALAN_STD_QUALIFIER copy(theStart, toInsertSplit, thePosition);
+                    XALAN_STD_QUALIFIER copy(theFirst, toInsertSplit, thePosition);
                 }
                 else
                 {
@@ -321,7 +344,7 @@ public:
                     XALAN_STD_QUALIFIER copy_backward(thePosition, theOriginalEnd - theInsertSize, theOriginalEnd);
 
                     // insert into current vector
-                    XALAN_STD_QUALIFIER copy(theStart, theEnd, thePosition);
+                    XALAN_STD_QUALIFIER copy(theFirst, theLast, thePosition);
                 }
             }
         }
@@ -332,10 +355,13 @@ public:
     void
     insert(
             iterator  thePosition,
-            iterator  theStart,
-            iterator  theEnd)
+            iterator  theFirst,
+            iterator  theLast)
     {
-        insert(thePosition, const_iterator(theStart), const_iterator(theEnd));
+        insert(
+            thePosition,
+            const_iterator(theFirst),
+            const_iterator(theLast));
     }
 
     void
@@ -353,14 +379,12 @@ public:
         {
             pointer     thePointer = ensureCapacity(theTotalSize);
 
-            size_type index = 0; 
-            while (index < theCount)
+            for (size_type index = 0; index < theCount; ++index)
             {
                 construct(thePointer, theData);
 
                 ++thePointer;
                 ++m_size;
-                ++index;
             }
         }
         else
@@ -468,7 +492,10 @@ public:
     {
         clear();
 
-        insert(begin(), theFirst, theLast);
+        insert(
+            begin(),
+            theFirst,
+            theLast);
     }
 
     void
@@ -476,7 +503,9 @@ public:
             iterator    theFirst,
             iterator    theLast)
     {
-        assign(const_iterator(theFirst), const_iterator(theLast));
+        assign(
+            const_iterator(theFirst),
+            const_iterator(theLast));
     }
 
     void
@@ -507,8 +536,8 @@ public:
 
     void
     resize(
-            size_type   theSize,
-            value_type  theValue = value_type())
+            size_type           theSize,
+            const value_type&   theValue = value_type())
     {
         invariants();
 
@@ -718,7 +747,7 @@ public:
         {
             if (m_allocation < theRHS.m_size)
             {
-                XalanVector<Type>   theTemp(theRHS);
+                ThisType    theTemp(theRHS);
 
                 swap(theTemp);
             }
@@ -825,15 +854,19 @@ private:
 
     size_type
     local_distance(
-            const_iterator  theStart,
-            const_iterator  theEnd)
+            const_iterator  theFirst,
+            const_iterator  theLast)
     {
+        // Since we're using bare pointers for now, we can
+        // assert this...
+        assert(theFirst <= theLast);
+
 #if defined(XALAN_HAS_STD_DISTANCE)
-        return XALAN_STD_QUALIFIER distance(theStart, theEnd);
+        return XALAN_STD_QUALIFIER distance(theFirst, theLast);
 #else
         size_type   theDistance;
 
-        XALAN_STD_QUALIFIER distance(theStart, theEnd, theDistance);
+        XALAN_STD_QUALIFIER distance(theFirst, theLast, theDistance);
 
         return theDistance;
 #endif
@@ -842,7 +875,7 @@ private:
     value_type*
     allocate(size_type  size)
     {
-        const size_type     theBytesNeeded = size * sizeof(Type);
+        const size_type     theBytesNeeded = size * sizeof(value_type);
 
         void*   pointer = m_memoryManager == 0 ?
             ::operator new (theBytesNeeded) :
@@ -871,16 +904,16 @@ private:
             value_type*         theAddress,
             const value_type&   theValue)
     {
-        new (theAddress) Type(theValue);
+        new (theAddress) value_type(theValue);
     }
 
     static void
     construct(
-            value_type*         start,
-            value_type*         end,
+            value_type*         theFirst,
+            value_type*         theLast,
             const value_type*   values)
     {
-        for(; start != end; ++start, ++values)
+        for(; theFirst != theLast; ++theFirst, ++values)
         {
             construct(*values);
         }
@@ -894,12 +927,12 @@ private:
 
     static void
     destroy(
-            iterator    start,
-            iterator    end)
+            iterator    theFirst,
+            iterator    theLast)
     {
-        for(; start != end; ++start)
+        for(; theFirst != theLast; ++theFirst)
         {
-            destroy(*start);
+            destroy(*theFirst);
         }
     }
 
@@ -1005,6 +1038,7 @@ private:
     {
         return theLHS > theRHS ? theLHS : theRHS;
     }
+
 
     // Data members...
     MemoryManagerType*  m_memoryManager;
