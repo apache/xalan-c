@@ -112,14 +112,27 @@ public:
 		const XalanDOMString	arg1 = args[0]->str();
 		const XalanDOMString	arg2 = args[1]->str();
 
-		// This is rather a moot point but conformance test str62 indicates the
-		// answer should be true
-		if (isEmpty(arg1) && isEmpty(arg2))
-			return executionContext.getXObjectFactory().createBoolean(true);
+		bool					fResult = true;
 
-		const int			theIndex = indexOf(arg1, arg2);
+		// If arg2 is empty, then don't bother to check anything.
+		if (isEmpty(arg2) == false)
+		{
+			// Is arg1 empty?
+			if (isEmpty(arg1) == true)
+			{
+				fResult = false;
+			}
+			else
+			{
+				// OK, both strings have some data, so look for
+				// the index...
+				const unsigned int		theIndex = indexOf(arg1, arg2);
 
-		return executionContext.getXObjectFactory().createBoolean(theIndex >= 0 ? true : false);
+				fResult = theIndex < length(arg1) ? true : false;
+			}
+		}
+
+		return executionContext.getXObjectFactory().createBoolean(fResult);
 	}
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)

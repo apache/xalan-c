@@ -69,7 +69,6 @@
 
 
 
-#include <XPath/FunctionString.hpp>
 #include <XPath/XObject.hpp>
 #include <XPath/XObjectFactory.hpp>
 #include <XPath/XPathExecutionContext.hpp>
@@ -116,40 +115,20 @@ protected:
 	virtual XalanDOMString
 	getDefaultStringArgument(
 			XPathExecutionContext&		executionContext,
-			XalanNode&					context,
-			int							opPos)
+			XalanNode&					context)
 	{
 		// This is complicated.  The XPath standard says that if there
 		// are no arguments, the default is to turn the contextNode
-		// into a string-value, which really means using FunctionString.
-		// 
-		// So we have to create a context for calling FunctionString
-		// with the context node.  We shroud the temporary XObjects in
-		// XString in FactoryObjectAutoPointers because they can be returned
-		// once we've converted the context node to an XObject.
-
-		// A vector for the args.  The size will always be one.
-		XObjectArgVectorType	theNewArgs(1);
+		// into a string-value, which really means using FunctionString,
+		// but we don't need to do that, since our XObject classes
+		// do the real work in turning themselves into strings.
 
 		// A node set that contains the context node.
 		FactoryObjectAutoPointer<XObject>		theArg(&executionContext.getXObjectFactory(),
 													   executionContext.getXObjectFactory().createNodeSet(context));
 
-		// Put the argument into the vector...
-		theNewArgs[0] = theArg.get();
-
-		// This is our string functor.
-		FunctionString		theStringFunctor;
-
-		// Get the result...
-		FactoryObjectAutoPointer<XObject>		theXString(&executionContext.getXObjectFactory(),
-														   theStringFunctor.execute(executionContext,
-																					&context,
-																					opPos,
-																					theNewArgs));
-
 		// Now, get the string from the XObject.
-			return theXString->str();
+		return theArg->str();
 	}
 
 private:

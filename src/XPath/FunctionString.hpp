@@ -73,7 +73,7 @@
 
 
 // Base class header file...
-#include <XPath/Function.hpp>
+#include <XPath/FunctionDefaultStringArgument.hpp>
 
 
 
@@ -90,7 +90,7 @@
 // These are all inline, even though
 // there are virtual functions, because we expect that they will only be
 // needed by the XPath class.
-class XALAN_XPATH_EXPORT FunctionString : public Function
+class XALAN_XPATH_EXPORT FunctionString : public FunctionDefaultStringArgument
 {
 public:
 
@@ -103,15 +103,36 @@ public:
 			int								/* opPos */,
 			const XObjectArgVectorType&		args)
 	{
-		if(args.size() > 1)
+		XalanDOMString	theResult;
+
+		const XObjectArgVectorType::size_type	theSize = args.size();
+
+		if(theSize > 1)
 		{
 			executionContext.error("The string() function takes zero or one argument!",
 								   context);
 		}
-		if(args.size() == 0)
-			return executionContext.getXObjectFactory().createNodeSet(*context);
+		else if(theSize == 0)
+		{
+			if (context == 0)
+			{
+				executionContext.error("The string() function requires a non-null context node!",
+									   context);
+			}
+			else
+			{
+				theResult = getDefaultStringArgument(executionContext,
+													 *context);
+			}
+		}
+		else
+		{
+			assert(args[0] != 0);
 
-		return executionContext.getXObjectFactory().createString(args[0]->str());
+			theResult = args[0]->str();
+		}
+
+		return executionContext.getXObjectFactory().createString(theResult);
 	}
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)

@@ -95,7 +95,7 @@ public:
 	execute(
 			XPathExecutionContext&			executionContext,
 			XalanNode*						context,
-			int								opPos,
+			int								/* opPos */,
 			const XObjectArgVectorType&		args)
 	{
 		XalanDOMString	theSourceString;
@@ -116,9 +116,8 @@ public:
 		}
 		else
 		{
-			theSourceString = 	getDefaultStringArgument(executionContext,
-														 *context,
-														 opPos);
+			theSourceString = getDefaultStringArgument(executionContext,
+													   *context);
 		}
 
 		const unsigned int		theSourceStringLength = length(theSourceString);

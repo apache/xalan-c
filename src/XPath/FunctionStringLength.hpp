@@ -97,7 +97,7 @@ public:
 	execute(
 			XPathExecutionContext&			executionContext,
 			XalanNode*						context,
-			int								opPos,
+			int								/* opPos */,
 			const XObjectArgVectorType&		args)
 	{
 		const XObjectArgVectorType::size_type	theSize = args.size();
@@ -114,8 +114,7 @@ public:
 			else
 			{
 				theResult = getDefaultStringArgument(executionContext,
-													 *context,
-													 opPos);
+													 *context);
 			}
 		}
 		else if (theSize == 1)
