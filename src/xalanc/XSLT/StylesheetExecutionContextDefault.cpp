@@ -76,6 +76,7 @@
 #include <xalanc/PlatformSupport/XalanOutputStreamPrintWriter.hpp>
 #include <xalanc/PlatformSupport/XalanStdOutputStream.hpp>
 #include <xalanc/PlatformSupport/XalanFileOutputStream.hpp>
+#include <xalanc/PlatformSupport/XalanTranscodingServices.hpp>
 
 
 
@@ -90,6 +91,8 @@
 
 #include <xalanc/XMLSupport/FormatterToDOM.hpp>
 #include <xalanc/XMLSupport/FormatterToXML.hpp>
+#include <xalanc/XMLSupport/FormatterToXML_UTF8.hpp>
+#include <xalanc/XMLSupport/FormatterToXML_UTF16.hpp>
 #include <xalanc/XMLSupport/FormatterToHTML.hpp>
 #include <xalanc/XMLSupport/XMLParserLiaison.hpp>
 
@@ -287,7 +290,6 @@ void
 StylesheetExecutionContextDefault::setStylesheetRoot(const StylesheetRoot*	theStylesheet)
 {
 	assert(m_xsltProcessor != 0);
-	assert(theStylesheet == 0 || theStylesheet->isRoot() == true);
 
 	m_stylesheetRoot = theStylesheet;
 
@@ -1164,7 +1166,7 @@ StylesheetExecutionContextDefault::pushOnElementRecursionStack(const ElemTemplat
 	{
 		XalanDOMString	theMessage(XALAN_STATIC_UCODE_STRING("Infinite recursion detected for element: "));
 
-		theMessage += theElement->getNodeName();
+		theMessage += theElement->getElementName();
 
 		throw XSLTProcessorException(theMessage);
 	}
@@ -1284,22 +1286,58 @@ StylesheetExecutionContextDefault::createFormatterToXML(
 			bool					xmlDecl,
 			const XalanDOMString&	standalone)
 {
-	FormatterToXML* const	theFormatter =
-		new FormatterToXML(
-			writer,
-			version,
-			doIndent,
-			indent,
-			encoding,
-			mediaType,
-			doctypeSystem,
-			doctypePublic,
-			xmlDecl,
-			standalone);
+	if (doIndent == false &&
+		(encoding.empty() == true || XalanTranscodingServices::encodingIsUTF8(encoding)))
+	{
+		FormatterToXML_UTF8* const	theFormatter =
+			new FormatterToXML_UTF8(
+				writer,
+				version,
+				mediaType,
+				doctypeSystem,
+				doctypePublic,
+				xmlDecl,
+				standalone);
 
-	m_formatterListeners.push_back(theFormatter);
+		m_formatterListeners.push_back(theFormatter);
 
-	return theFormatter;
+		return theFormatter;
+	}
+	else if (doIndent == false && XalanTranscodingServices::encodingIsUTF16(encoding))
+	{
+		FormatterToXML_UTF16* const	theFormatter =
+			new FormatterToXML_UTF16(
+				writer,
+				version,
+				mediaType,
+				doctypeSystem,
+				doctypePublic,
+				xmlDecl,
+				standalone);
+
+		m_formatterListeners.push_back(theFormatter);
+
+		return theFormatter;
+	}
+	else
+	{
+		FormatterToXML* const	theFormatter =
+			new FormatterToXML(
+				writer,
+				version,
+				doIndent,
+				indent,
+				encoding,
+				mediaType,
+				doctypeSystem,
+				doctypePublic,
+				xmlDecl,
+				standalone);
+
+		m_formatterListeners.push_back(theFormatter);
+
+		return theFormatter;
+	}
 }
 
 
