@@ -79,6 +79,15 @@ noxercesroot:
 	@echo XERCESCROOT must be defined
 endif
 
+ifdef XALAN_USE_ICU
+ifndef ICUROOT
+ICUROOT=/usr/local
+endif
+ifndef ICUI18NROOT
+ICUI18NROOT=/usr/local
+endif
+endif
+
 XALANDOM_DIR = XalanDOM
 DOMSUPPORT_DIR = DOMSupport
 INCLUDE_DIR = Include
@@ -113,7 +122,7 @@ $(XMLSUPPORT_DIR):$(XPATH_DIR):$(XSLT_DIR):$(XALANEXTENSIONS_DIR):$(XALANTRANSFO
 
 # Using ICUBridge
 ifdef XALAN_USE_ICU
-ALL_VPATH_CPP+=:$(ICUBRIDGE_DIR) 
+ALL_VPATH_CPP+=:$(ICUBRIDGE_DIR)
 endif
 
 #all these setting come from the arguments passed in to runConfigure.
@@ -124,45 +133,44 @@ CXXFLAGS = @cxxflags@
 PREFIX = @prefix@
 
 #=============== LINUX SPECIFIC OPTIONS =========================
+
 ifeq ($(PLATFORM), LINUX)
 
-SUPPORTED = TRUE
-PLATFORM_COMPILE_OPTIONS = -fpic -Wall -instances=static -D${PLATFORM} -D_REENTRANT
-#ALLLIBS = ${LIBS} -L/usr/lib -L/usr/local/lib -L/usr/ccs/lib -lc
-ALLLIBS = ${LIBS} -L/usr/lib -L/usr/local/lib 
-SHLIBSUFFIX=.so
+  SUPPORTED = TRUE
+  PLATFORM_COMPILE_OPTIONS = -fpic -Wall -instances=static -D${PLATFORM} -D_REENTRANT
+  ALLLIBS = ${LIBS} -L/usr/lib
+  SHLIBSUFFIX=.so
 
-# We need the ICU library if we are using the ICUBridge
-ifdef XALAN_USE_ICU
-LD_RPATH_PRE=	-Wl,-rpath,
-PLATFORM_LIB_LINK_OPTIONS=$(LD_RPATH_PRE)/usr/lib $(LD_RPATH_PRE)/usr/local/lib 
-endif
+  # We need the ICU library if we are using the ICUBridge
+  ifdef XALAN_USE_ICU
+  LD_RPATH_PRE=	-Wl,-rpath,
+  PLATFORM_LIB_LINK_OPTIONS=$(LD_RPATH_PRE)${ICUROOT}/lib 
+  endif
 
-EXTRA_LINK_OPTIONS=-lc
-CC1 = $(CXX) $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS)
-MAKE_SHARED = ${CXX} $(CXXFLAGS) -D${PLATFORM} -shared -fpic
-LINK =  g++ -D${PLATFORM} -fpic
+  EXTRA_LINK_OPTIONS=-lc
+  CC1 = $(CXX) $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS)
+  MAKE_SHARED = ${CXX} $(CXXFLAGS) -D${PLATFORM} -shared -fpic
+  LINK =  g++ -D${PLATFORM} -fpic
 
 endif
 
 #=============== HPUX SPECIFIC OPTIONS =========================
+
 ifeq ($(PLATFORM), HPUX)
 
-SUPPORTED = TRUE
-PLATFORM_COMPILE_OPTIONS = +Z -D${PLATFORM} -D_THREAD_SAFE
-ALLLIBS = ${LIBS}
-SHLIBSUFFIX=.sl
-CC1 = $(CXX) $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS)
-CC2 = $(CXX) $(PLATFORM_COMPILE_OPTIONS)
-MAKE_SHARED = $(CXX) -b +Z
-LINK = $(CXX) $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS) -Wl,+s
-
-
+  SUPPORTED = TRUE
+  PLATFORM_COMPILE_OPTIONS = +Z -D${PLATFORM} -D_THREAD_SAFE
+  ALLLIBS = ${LIBS}
+  SHLIBSUFFIX=.sl
+  CC1 = $(CXX) $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS)
+  CC2 = $(CXX) $(PLATFORM_COMPILE_OPTIONS)
+  MAKE_SHARED = $(CXX) -b +Z
+  LINK = $(CXX) $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS) -Wl,+s
 
 endif
 
-
 #=============== SOLARIS SPECIFIC OPTIONS =========================
+
 ifeq ($(PLATFORM), SOLARIS)
 
   SUPPORTED = TRUE
@@ -174,7 +182,6 @@ ifeq ($(PLATFORM), SOLARIS)
 
 	ifdef XALAN_USE_ICU
 	LD_RPATH_PRE=  -Wl,-rpath,
-	PLATFORM_LIB_LINK_OPTIONS=$(LD_RPATH_PRE)/usr/lib $(LD_RPATH_PRE)/usr/local/lib
 	endif
 
 	EXTRA_LINK_OPTIONS=-lc
@@ -195,14 +202,14 @@ ifeq ($(PLATFORM), SOLARIS)
 
 	ifdef XALAN_USE_ICU
 	LD_RPATH_PRE=  -Wl,-rpath,
-	PLATFORM_LIB_LINK_OPTIONS=$(LD_RPATH_PRE)/usr/lib $(LD_RPATH_PRE)/usr/local/lib
 	endif
 
     ALLLIBS = -mt ${LIBS} -L/usr/local/SUNWspro/lib -L/usr/ccs/lib \
                   -lc -lgen
   endif
 
-SHLIBSUFFIX=.so
+  PLATFORM_LIB_LINK_OPTIONS=$(LD_RPATH_PRE)${ICUROOT}/lib $(LD_RPATH_PRE)${ICUI18NROOT}/lib
+  SHLIBSUFFIX=.so
 
 endif
 
@@ -218,7 +225,7 @@ ifeq ($(PLATFORM), AIX)
 
 	ifdef XALAN_USE_ICU
 	LD_RPATH_PRE=  -Wl,-rpath,
-	PLATFORM_LIB_LINK_OPTIONS=$(LD_RPATH_PRE)/usr/lib $(LD_RPATH_PRE)/usr/local/lib
+	PLATFORM_LIB_LINK_OPTIONS=$(LD_RPATH_PRE)${ICUROOT}/lib $(LD_RPATH_PRE)${ICUI18NROOT}/lib
 	endif
 
 	EXTRA_LINK_OPTIONS=-lc
@@ -252,87 +259,85 @@ endif
 
 ifeq ($(PLATFORM), OS390)
 
-ifndef STLPORTROOT
-nostlportroot:
-	@echo STLPORTROOT must be defined
-endif
+  ifndef STLPORTROOT
+  nostlportroot:
+	  @echo STLPORTROOT must be defined
+  endif
 
-SUPPORTED = TRUE
-PLATFORM_COMPILE_OPTIONS =-Wc,dll -W0,"langlvl(extended),float(ieee)" -D${PLATFORM} -D_OPEN_THREADS -D_XOPEN_SOURCE_EXTENDED -I ${STLPORTROOT}/stlport
-PLATFORM_COMPILE_OPTIONS2 =-Wc,dll -W0,"langlvl(extended),notempinc,float(ieee)" -D${PLATFORM} -D_OPEN_THREADS -D_XOPEN_SOURCE_EXTENDED -I ${STLPORTROOT}/stlport
-ALLLIBS =
-SHLIBSUFFIX=.dll
-OS390SIDEDECK=.x
+  SUPPORTED = TRUE
+  PLATFORM_COMPILE_OPTIONS =-Wc,dll -W0,"langlvl(extended),float(ieee)" -D${PLATFORM} -D_OPEN_THREADS -D_XOPEN_SOURCE_EXTENDED -I ${STLPORTROOT}/stlport
+  PLATFORM_COMPILE_OPTIONS2 =-Wc,dll -W0,"langlvl(extended),notempinc,float(ieee)" -D${PLATFORM} -D_OPEN_THREADS -D_XOPEN_SOURCE_EXTENDED -I ${STLPORTROOT}/stlport
+  ALLLIBS =
+  SHLIBSUFFIX=.dll
+  OS390SIDEDECK=.x
 
-CC1 = $(CXX) $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS)
-CC2 = $(CXX) $(PLATFORM_COMPILE_OPTIONS2)
-CC3 = $(CXX) $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS2)
-MAKE_SHARED = ${CXX} $(CXXFLAGS) -D${PLATFORM} -Wl,dll
-LINK = $(CXX) $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS)
+  CC1 = $(CXX) $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS)
+  CC2 = $(CXX) $(PLATFORM_COMPILE_OPTIONS2)
+  CC3 = $(CXX) $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS2)
+  MAKE_SHARED = ${CXX} $(CXXFLAGS) -D${PLATFORM} -Wl,dll
+  LINK = $(CXX) $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS)
 
 endif
 
 #============ TRU64 SPECIFIC OPTIONS ============================
+
 ifeq ($(PLATFORM), TRU64)
 
-SUPPORTED = TRUE
-PLATFORM_COMPILE_OPTIONS = -D${PLATFORM} -ptr ${ALL_OBJECTS_DIR}/.cxx_repository -ieee -pthread
-ALLLIBS = ${LIBS} -L/usr/lib -L/usr/local/lib -L/usr/ccs/lib -lc -lrt -lm
-SHLIBSUFFIX = .so
-CC1 = ${CXX} ${CXXFLAGS} $(PLATFORM_COMPILE_OPTIONS)
-MAKE_SHARED = ${CXX} ${CXXFLAGS} -shared -D${PLATFORM} -ptr ${ALL_OBJECTS_DIR}/.cxx_repository -nocxxstd
-LINK = ${CXX} $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS)
+  SUPPORTED = TRUE
+  PLATFORM_COMPILE_OPTIONS = -D${PLATFORM} -ptr ${ALL_OBJECTS_DIR}/.cxx_repository -ieee -pthread
+  ALLLIBS = ${LIBS} -L/usr/lib -lc -lrt -lm
+  SHLIBSUFFIX = .so
+  CC1 = ${CXX} ${CXXFLAGS} $(PLATFORM_COMPILE_OPTIONS)
+  MAKE_SHARED = ${CXX} ${CXXFLAGS} -shared -D${PLATFORM} -ptr ${ALL_OBJECTS_DIR}/.cxx_repository -nocxxstd
+  LINK = ${CXX} $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS)
 
 endif
 
 #============ MacOSX SPECIFIC OPTIONS ============================
+
 ifeq ($(PLATFORM), MACOSX)
 
-SUPPORTED = TRUE
-PLATFORM_COMPILE_OPTIONS = -Wall -D${PLATFORM} -D_REENTRANT -DXALAN_USE_XERCES_LOCAL_CODEPAGE_TRANSCODERS
-ALLLIBS = ${LIBS} -L/usr/lib -L/usr/local/lib
-SHLIBSUFFIX=.dylib
-CC1 = ${CXX} $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS)
-MAKE_SHARED = ${CXX} $(CXXFLAGS) -D${PLATFORM} -dynamiclib
-LINK = ${CXX} $(CXXFLAGS) ${PLATFORM_COMPILE_OPTIONS}
+  SUPPORTED = TRUE
+  PLATFORM_COMPILE_OPTIONS = -Wall -D${PLATFORM} -D_REENTRANT -DXALAN_USE_XERCES_LOCAL_CODEPAGE_TRANSCODERS
+  ALLLIBS = ${LIBS} -L/usr/lib -L/usr/local/lib
+  SHLIBSUFFIX=.dylib
+  CC1 = ${CXX} $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS)
+  MAKE_SHARED = ${CXX} $(CXXFLAGS) -D${PLATFORM} -dynamiclib
+  LINK = ${CXX} $(CXXFLAGS) ${PLATFORM_COMPILE_OPTIONS}
 
 endif
 
 ifndef SUPPORTED
-nogood:
-	@echo Linux, Solaris, AIX, Compaq Tru64, OS/390, MacOSX, and HP-UX are the only platforms supported.
+  nogood:
+	  @echo Linux, Solaris, AIX, Compaq Tru64, OS/390, MacOSX, and HP-UX are the only platforms supported.
 endif
 
 # We need the Xerces library
-ifeq ($(PLATFORM), OS390)                             
-ALLLIBS += $(XERCESCROOT)/lib/libxerces-c1_5_1.x
-else                                                  
-ALLLIBS += -L$(XERCESCROOT)/lib -lxerces-c1_5_1
+ifeq ($(PLATFORM), OS390)
+  ALLLIBS += $(XERCESCROOT)/lib/libxerces-c1_5_1.x
+else
+  ALLLIBS += -L$(XERCESCROOT)/lib -lxerces-c1_5
 endif
 
 # We need the ICU library if we are using the ICUBridge
 ifdef XALAN_USE_ICU
-ifeq ($(PLATFORM), OS390)
-ALLLIBS += ${ICUROOT}/lib/libicuuc.x ${ICUROOT}/lib/libicui18n.x
-else
-ALLLIBS += -L/usr/local/lib -licuuc
-ALLLIBS += -L/usr/local/lib -licui18n
-endif
+  ifeq ($(PLATFORM), OS390)
+    ALLLIBS += ${ICUROOT}/lib/libicuuc.x ${ICUROOT}/lib/libicui18n.x
+  else
+    ALLLIBS += -L${ICUROOT}/lib -licuuc
+    ALLLIBS += -L${ICUI18NROOT}/lib -licui18n
+  endif
 endif
 
 
 # We have to use the includes from the source distribution, since we use
 # headers that others normally wouldn't
-XSL_INCL = -I. -I$(XERCESCROOT)/src/ -I$(XERCESCROOT)/include/ 
-
-# We need the ICU library if we are using the ICUBridge
 ifdef XALAN_USE_ICU
-ifeq ($(PLATFORM), OS390)                 
-XSL_INCL += -I ${ICUROOT}/include/        
-else                                      
-XSL_INCL += -I/usr/local/include/
-endif
-XSL_BUILD_OPTIONS += -DXALAN_USE_ICU
+# We need the ICU library if we are using the ICUBridge
+  XSL_INCL = -I ${ICUROOT}/include/ -I. -I$(XERCESCROOT)/src/ -I$(XERCESCROOT)/include/ 
+  XSL_BUILD_OPTIONS += -DXALAN_USE_ICU
+else
+  XSL_INCL = -I. -I$(XERCESCROOT)/src/ -I$(XERCESCROOT)/include/ 
 endif
 
 
