@@ -133,6 +133,10 @@ SOURCE=..\..\..\..\src\TestXPath\TestXPath.cpp
 
 SOURCE=..\..\..\..\src\TestXPath\NodeNameTreeWalker.hpp
 # End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\TestXPath\XML_Xalan.h
+# End Source File
 # End Group
 # Begin Group "Resource Files"
 
