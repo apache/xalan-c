@@ -234,7 +234,7 @@ ElemTemplateElement::endElement(StylesheetExecutionContext&		/*executionContext*
 void
 ElemTemplateElement::execute(StylesheetExecutionContext&			executionContext) const
 {
-	const ElemTemplateElement const * invoker = getParentNodeElem();
+	const ElemTemplateElement * invoker = getParentNodeElem();
 	const ElemTemplateElement * currentElement = this;
 	const ElemTemplateElement * nextElement = 0;
 

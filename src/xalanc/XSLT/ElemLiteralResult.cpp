@@ -384,7 +384,7 @@ ElemLiteralResult::evaluateAVTs(StylesheetExecutionContext& executionContext) co
 
 
 
-#if !defined(ITERATIVE_EXECUTION
+#if !defined(ITERATIVE_EXECUTION)
 void
 ElemLiteralResult::execute(StylesheetExecutionContext&	executionContext) const
 {
