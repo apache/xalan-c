@@ -293,7 +293,8 @@ ICUFormatNumberFunctor::doICUFormat(
 		theFormatter->format(theNumber, theUnicodeResult);
 		ICUBridge::UnicodeStringToXalanDOMString(theUnicodeResult, theResult);
 	}
-	return U_SUCCESS(theStatus);
+
+    return U_SUCCESS(theStatus) ? true : false;
 }
 
 XalanDOMString
