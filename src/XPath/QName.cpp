@@ -61,7 +61,6 @@
 
 #include <PlatformSupport/DOMStringHelper.hpp>
 #include <PlatformSupport/STLHelper.hpp>
-#include <PlatformSupport/XSLException.hpp>
 #include <PlatformSupport/XalanUnicode.hpp>
 
 
@@ -70,161 +69,18 @@
 
 
 
-#include "ElementPrefixResolverProxy.hpp"
-#include "PrefixResolver.hpp"
-#include "XPathSupport.hpp"
-
-
-
 const XalanDOMString	QName::s_emptyString;
 
 
 
-QName::QName() :
-	m_namespace(),
-	m_localpart()
+QName::QName()
 {
-}
-
-
-
-QName::QName(
-			const XalanDOMString&	theNamespace,
-			const XalanDOMString&	theLocalPart) :
-	m_namespace(theNamespace),
-	m_localpart(theLocalPart)
-{
-}
-
-
-
-QName::QName(
-			const XalanDOMString&		qname,
-			const NamespacesStackType&	namespaces) :
-	m_namespace(),
-	m_localpart()
-{
-	initialize(c_wstr(qname), namespaces);
-}
-
-
-
-QName::QName(
-			const XalanDOMChar*			qname,
-			const NamespacesStackType&	namespaces) :
-	m_namespace(),
-	m_localpart()
-{
-	assert(qname != 0);
-
-	initialize(qname, namespaces);
-}
-
-
-
-QName::QName(
-			const XalanDOMString&	qname,
-			const XalanElement*		namespaceContext,
-			const XPathEnvSupport&	envSupport,
-			const XPathSupport& 	support) :
-	m_namespace(),
-	m_localpart()
-{
-	ElementPrefixResolverProxy	theProxy(namespaceContext, envSupport, support);
-
-	resolvePrefix(qname, theProxy);
-}
-
-
-
-QName::QName(
-			const XalanDOMString&	qname,
-			const PrefixResolver&	theResolver) :
-	m_namespace(),
-	m_localpart()
-{
-	resolvePrefix(qname, theResolver);
 }
 
 
 
 QName::~QName()
 {
-}
-
-
-
-bool
-QName::equals(const QName&	theRHS) const
-{
-	return ::equals(m_localpart, theRHS.m_localpart) &&
-		   ::equals(m_namespace, theRHS.m_namespace);
-}
-
-
-
-void
-QName::initialize(
-			const XalanDOMChar*			qname,
-			const NamespacesStackType&	namespaces)
-{
-	const unsigned int	indexOfNSSep = indexOf(qname, XalanUnicode::charColon);
-
-	if(indexOfNSSep < length(qname))
-	{
-		const XalanDOMString		prefix = substring(qname, 0, indexOfNSSep);
-		if(::equals(prefix, DOMServices::s_XMLNamespace))
-			return;
-		m_namespace = getNamespaceForPrefix(namespaces, prefix);
-		if(0 == length(m_namespace))
-		{
-			throw XSLException(TranscodeFromLocalCodePage("Prefix must resolve to a namespace: ") + prefix);
-		}
-		m_localpart =  substring(qname, indexOfNSSep + 1);
-	}
-	else
-		m_localpart = qname;
-}
-
-
-
-void
-QName::resolvePrefix(
-			const XalanDOMString&	qname,
-			const PrefixResolver&	theResolver)
-{
-	const unsigned int	indexOfNSSep = indexOf(qname, XalanUnicode::charColon);
-	const unsigned int	theLength = length(qname);
-
-	if(indexOfNSSep < theLength)
-	{
-		const XalanDOMString	prefix = substring(qname, 0, indexOfNSSep);
-
-		if(::equals(prefix, DOMServices::s_XMLString))
-		{
-			m_namespace = DOMServices::s_XMLNamespaceURI;
-		}
-		// The default namespace is not resolved.
-		else if(::equals(prefix, DOMServices::s_XMLNamespace))
-		{
-			return;
-		}
-		else
-		{
-			m_namespace = theResolver.getNamespaceForPrefix(prefix);
-		}  
-
-		if(0 == length(m_namespace))
-		{
-			throw XSLException(TranscodeFromLocalCodePage("Prefix must resolve to a namespace: ") + prefix);
-		}
-	}
-	else
-	{
-		// $$$ ToDo: error or warning...
-	}
-
-	m_localpart = indexOfNSSep == theLength ? qname : substring(qname, indexOfNSSep + 1);
 }
 
 

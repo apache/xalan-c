@@ -118,64 +118,7 @@ public:
 	explicit
 	QName();
 
-	/**
-	 * Construct a QName, with the supplied namespace and local part.
-	 *
-	 * @param theNamespace namespace string
-	 * @param theLocalPart local part string
-	 */
-	QName(
-			const XalanDOMString&	theNamespace,
-			const XalanDOMString&	theLocalPart);
-
-	/**
-	 * Construct a QName from a string, resolving the prefix using the given
-	 * namespace vector stack. The default namespace is not resolved.
-	 *
-	 * @param qname      QName string
-	 * @param namespaces namespace vector stack to use
-	 */
-	QName(
-			const XalanDOMString&		qname,
-			const NamespacesStackType&	namespaces);
-
-	/**
-	 * Construct a QName from a string, resolving the prefix using the given
-	 * namespace vector stack. The default namespace is not resolved.
-	 *
-	 * @param qname      QName string
-	 * @param namespaces namespace vector stack to use
-	 */
-	QName(
-			const XalanDOMChar*			qname,
-			const NamespacesStackType&	namespaces);
-
-	/**
-	 * Construct a QName from a string, resolving the prefix using the given
-	 * namespace context. The default namespace is not resolved.
-	 *
-	 * @param qname            QName string
-	 * @param namespaceContext context object for namespace resolution
-	 * @param envSupport       XPath environment support class instance
-	 * @param support          XPath support class instance
-	 */
-	QName(
-			const XalanDOMString&	qname,
-			const XalanElement*		namespaceContext,
-			const XPathEnvSupport&	envSupport,
-			const XPathSupport&		support);
-
-	/**
-	 * Construct a QName from a string, resolving the prefix using the given
-	 * prefix resolver. The default namespace is not resolved.
-	 *
-	 * @param qname            QName string
-	 * @param theResolver prefix resolver to use
-	 */
-	QName(
-			const XalanDOMString&		qname,
-			const PrefixResolver&	theResolver);
-
+	virtual
 	~QName();
 
 	/**
@@ -183,31 +126,26 @@ public:
 	 * 
 	 * @return local part string
 	 */
-	const XalanDOMString&
-	getLocalPart() const
-	{
-		return m_localpart;
-	}
+	virtual const XalanDOMString&
+	getLocalPart() const = 0;
 
 	/**
 	 * Retrieve the namespace of qualified name.
 	 * 
 	 * @return namespace string
 	 */
-	const XalanDOMString&
-	getNamespace() const
-	{
-		return m_namespace;
-	}
+	virtual const XalanDOMString&
+	getNamespace() const = 0;
 
 	/**
 	 * Whether the qualified name is empty.
 	 * 
 	 * @return true if namespace and local part are both empty
 	 */
-	bool isEmpty() const
+	bool
+	isEmpty() const
 	{
-		return (::isEmpty(m_namespace) && ::isEmpty(m_localpart));
+		return ::isEmpty(getNamespace()) && ::isEmpty(getLocalPart());
 	}
 
 	/**
@@ -218,19 +156,12 @@ public:
 	 * @return true if namespace and local part are both empty
 	 */
 	bool
-	equals(const QName&		theRHS) const;
-
-	/**
-	 * Override equals and agree that we're equal if the passed object is a
-	 * string and it matches the name of the arg.
-	 * 
-	 * @param theRHS namespace to compare
-	 * @return true if namespace and local part are both empty
-	 */
-	bool
-	operator==(const QName&		theRHS) const
+	equals(const QName&		theRHS) const
 	{
-		return equals(theRHS);
+		// Note that we do not use our member variables here.  See
+		// class QNameReference for details...
+		return ::equals(getLocalPart(), theRHS.getLocalPart()) &&
+			   ::equals(getNamespace(), theRHS.getNamespace());
 	}
 
 	/**
@@ -287,24 +218,30 @@ public:
 			const XalanDOMString&		uri,
 			bool						reverse = true);
 
-private:
-
-	void
-	initialize(
-			const XalanDOMChar*			qname,
-			const NamespacesStackType&	namespaces);
-
-	void
-	resolvePrefix(
-			const XalanDOMString&	qname,
-			const PrefixResolver&	theResolver);
-
-	XalanDOMString	m_namespace;
-
-	XalanDOMString	m_localpart;
+protected:
 
 	static const XalanDOMString		s_emptyString;
 };
+
+
+
+inline bool
+operator==(
+			const QName&	theLHS,
+			const QName&	theRHS)
+{
+	return theLHS.equals(theRHS);
+}
+
+
+
+inline bool
+operator!=(
+			const QName&	theLHS,
+			const QName&	theRHS)
+{
+	return !(theLHS == theRHS);
+}
 
 
 
@@ -314,13 +251,17 @@ operator<(
 			const QName&	theRHS)
 {
 	if (theLHS.getNamespace() < theRHS.getNamespace())
+	{
 		return true;
-	else if (equals( theLHS.getNamespace(), theRHS.getNamespace()))
+	}
+	else if (equals(theLHS.getNamespace(), theRHS.getNamespace()))
 	{
 		return theLHS.getLocalPart() < theRHS.getLocalPart();
 	}
 	else
+	{
 		return false;
+	}
 }
 
 
