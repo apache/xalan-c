@@ -55,8 +55,11 @@
 # 
 #
 # $Log$
+# Revision 1.18  2000/10/03 14:58:14  auriemma
+# Added Xerces include to the include path.
+#
 # Revision 1.17  2000/10/02 13:38:39  auriemma
-# Added Solaris GCC support to makefile. This update was provided by Sean MacRoibeaird.
+# Added Solaris GCC support to makefile. This update was provided by Andrei Smirnov.
 #
 # Revision 1.16  2000/09/27 16:44:55  dbertoni
 # Output transcoding support.
@@ -229,7 +232,7 @@ endif
 
 # We have to use the includes from the source distribution, since we use
 # headers that others normally wouldn't
-XSL_INCL = -I . -I $(XERCESCROOT)/src/ 
+XSL_INCL = -I . -I $(XERCESCROOT)/src/ -I $(XERCESCROOT)/include/ 
 
 # We need the ICU library if we are using the ICUBridge
 ifdef XALAN_USE_ICU
