@@ -1077,6 +1077,12 @@ public:
 	};
 
 
+	enum eDummy
+	{
+		eDefaultXMLIndentAmount = 0,
+		eDefaultHTMLIndentAmount = 0
+	};
+
 	/**
 	 * Create a new FormatterToXML instance.  The execution context
 	 * owns the instance and will delete it when reset.
@@ -1102,18 +1108,13 @@ public:
 			Writer&					writer,
 			const XalanDOMString&	version = XalanDOMString(),
 			bool					doIndent = false,
-			int						indent = 0,
+			int						indent = eDefaultXMLIndentAmount,
 			const XalanDOMString&	encoding = XalanDOMString(),
 			const XalanDOMString&	mediaType = XalanDOMString(),
 			const XalanDOMString&	doctypeSystem = XalanDOMString(),
 			const XalanDOMString&	doctypePublic = XalanDOMString(),
 			bool					xmlDecl = true,
 			const XalanDOMString&	standalone = XalanDOMString()) = 0;
-
-	enum eDummy
-	{
-		eDefaultHTMLIndentAmount = 4
-	};
 
 	/**
 	 * Create a new FormatterToHTML instance.  The execution context
@@ -1143,7 +1144,7 @@ public:
 			const XalanDOMString&	doctypeSystem = XalanDOMString(),
 			const XalanDOMString&	doctypePublic = XalanDOMString(),
 			bool					doIndent = true,
-			int						indent = 4,
+			int						indent = eDefaultHTMLIndentAmount,
 			const XalanDOMString&	version = XalanDOMString(),
 			const XalanDOMString&	standalone = XalanDOMString(),
 			bool					xmlDecl = false) = 0;
