@@ -186,7 +186,7 @@ public:
 		const XalanDOMString*	m_uri;
 	};
 
-	class XALAN_XSLT_EXPORT NamespaceExtended : public Namespace
+	class NamespaceExtended : public Namespace
 	{
 	public:
 
