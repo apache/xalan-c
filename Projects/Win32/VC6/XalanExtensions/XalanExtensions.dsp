@@ -149,6 +149,10 @@ SOURCE=..\..\..\..\src\XalanExtensions\FunctionIntersection.cpp
 
 SOURCE=..\..\..\..\src\XalanExtensions\FunctionNodeSet.cpp
 # End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XalanExtensions\XalanExtensions.cpp
+# End Source File
 # End Group
 # Begin Group "Header Files"
 
