@@ -17,6 +17,9 @@
 #
 #
 # $Log$
+# Revision 1.9  2004/03/03 15:06:39  mhoyt
+# Patch for Bugzilla 27406 from Bjoern A. Zeeb: FreeBSD threading configuration
+#
 # Revision 1.8  2004/02/26 23:10:06  mhoyt
 # Update to Apache 2.0 License
 #
@@ -447,7 +450,13 @@ if test $platform = "hp-11"; then
 elif test $platform = "aix"; then
     threadingLibs="-lpthreads"
 elif test $platform = "freebsd"; then
-    threadingLibs="-pthread -lc_r"
+    if test -n "${PTHREAD_LIBS}" ; then
+      threadingLibs="${PTHREAD_LIBS}"
+      threadingDefines="${PTHREAD_CFLAGS}"
+    else
+      threadingLibs="-lpthread"
+      threadingDefines=""
+    fi
 elif test $platform = "netbsd"; then
     threadingLibs="-pthread -lpthread"
 elif test $platform = "os400"; then

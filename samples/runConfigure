@@ -292,7 +292,13 @@ if test $platform = "hp-11"; then
 elif test $platform = "aix"; then
     threadingLibs="-lpthreads"
 elif test $platform = "freebsd"; then
-    threadingLibs="-pthread -lc_r"
+    if test -n "${PTHREAD_LIBS}" ; then
+      threadingLibs="${PTHREAD_LIBS}"
+      threadingDefines="${PTHREAD_CFLAGS}"
+    else
+      threadingLibs="-lpthread"
+      threadingDefines=""
+    fi
 elif test $platform = "netbsd"; then
     threadingLibs="-pthread -lpthread"
 elif test $platform = "hp-10"; then

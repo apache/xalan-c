@@ -190,7 +190,7 @@ ifeq ($(PLATFORM), NETBSD)
   ifdef XALAN_USE_ICU
     LD_RPATH_PRE = -Wl,-rpath,
     PLATFORM_LIB_LINK_OPTIONS = $(LD_RPATH_PRE)${ICUROOT}/lib
-    PLATFORM_LIB_LINK_OPTIONS += -licuuc -licudata -lgcc
+    PLATFORM_LIB_LINK_OPTIONS += -licuuc -licudata
     ALLLIBS += -L${ICUROOT}
   endif
 
