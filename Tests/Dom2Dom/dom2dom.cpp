@@ -90,8 +90,8 @@
 #include <FileUtility.hpp>
 #include <HarnessInit.hpp>
 
-#include <parsers/DOMParser.hpp>
-#include <dom/DOM_Node.hpp>
+//#include <parsers/DOMParser.hpp>
+//#include <dom/DOM_Node.hpp>
 
 #include <XercesParserLiaison/XercesDOMSupport.hpp>
 #include <XercesParserLiaison/XercesParserLiaison.hpp>
@@ -317,36 +317,45 @@ main(
 					const XSLTInputSource	xslInputSource(c_wstr(theXSLFile));
 					const XSLTInputSource	xmlInputSource(c_wstr(theXMLFile));
 					
-					const XalanCompiledStylesheet* const compiledSS = transformEngine.compileStylesheet(xslInputSource);
-					assert( compiledSS != 0);
+					const XalanCompiledStylesheet*	compiledSS = 0;
 
-					// Transform using compiled stylesheet.
-					int	theResult =
-						transformEngine.transform(xmlInputSource, compiledSS, domResultTarget);
+					int	theResult = transformEngine.compileStylesheet(
+						xslInputSource,
+						compiledSS);
 
-					if(theResult != 0)
+					if (theResult != 0)
 					{
 						logFile.logTestCaseClose("Done","Fail");
 						cerr << "XalanError: \n" << transformEngine.getLastError();
 					}
 					else
 					{
-						XalanFileOutputStream myOutput(theOutputFile);
-						XalanOutputStreamPrintWriter myResultWriter(myOutput);
-						FormatterListener* theFormatter = getXMLFormatter(true,true,true,false,
-																	myResultWriter,0,
-																	mimeEncoding,
-																	compiledSS->getStylesheetRoot());
+						// Transform using compiled stylesheet.
+						theResult =
+							transformEngine.transform(xmlInputSource, compiledSS, domResultTarget);
 
-						FormatterTreeWalker theTreeWalker(*theFormatter);
-						theTreeWalker.traverse(domOut);
+						if(theResult != 0)
+						{
+							logFile.logTestCaseClose("Done","Fail");
+							cerr << "XalanError: \n" << transformEngine.getLastError();
+						}
+						else
+						{
+							XalanFileOutputStream myOutput(theOutputFile);
+							XalanOutputStreamPrintWriter myResultWriter(myOutput);
+							FormatterListener* theFormatter = getXMLFormatter(true,true,true,false,
+																		myResultWriter,0,
+																		mimeEncoding,
+																		compiledSS->getStylesheetRoot());
 
-						delete theFormatter;
-						logFile.logTestCaseClose("Done","Pass");
-					}	
+							FormatterTreeWalker theTreeWalker(*theFormatter);
+							theTreeWalker.traverse(domOut);
 
+							delete theFormatter;
+							logFile.logTestCaseClose("Done","Pass");
+						}	
+					}
 				}
-				
 			}
 
 			XalanTransformer::terminate();
