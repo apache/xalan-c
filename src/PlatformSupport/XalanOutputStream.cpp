@@ -79,6 +79,7 @@ XalanOutputStream::XalanOutputStream(
 	m_writeAsUTF16(false),
 	m_transcodingBuffer()
 {
+	m_buffer.reserve(theBufferSize + 1);
 }
 
 
@@ -460,7 +461,7 @@ XalanOutputStream::setBufferSize(BufferType::size_type		theBufferSize)
 	if (m_buffer.size() < m_bufferSize)
 	{
 		// Enlarge the buffer...
-		m_buffer.reserve(theBufferSize);
+		m_buffer.reserve(theBufferSize + 1);
 	}
 	else if (m_buffer.size() > m_bufferSize)
 	{
@@ -470,7 +471,7 @@ XalanOutputStream::setBufferSize(BufferType::size_type		theBufferSize)
 		// the correct size.
 		BufferType	temp;
 		
-		temp.reserve(theBufferSize);
+		temp.reserve(theBufferSize + 1);
 		
 		// Swap temp with m_buffer so that
 		// m_buffer is now the correct size.
