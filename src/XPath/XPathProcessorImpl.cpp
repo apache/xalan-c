@@ -1741,10 +1741,8 @@ XPathProcessorImpl::LocationPath()
 	{
 		const int	newOpPos = m_expression->opCodeMapLength();
 
-		XPathExpression::OpCodeMapValueVectorType	theArgs(1, 0);
-
 		// Tell how long the step is without the predicate
-		theArgs[0] = 4;
+		const XPathExpression::OpCodeMapValueVectorType		theArgs(1, 4);
 
 		m_expression->appendOpCode(XPathExpression::eFROM_ROOT,
 								   theArgs);
@@ -1800,10 +1798,7 @@ XPathProcessorImpl::Step()
 			error("'..[predicate]' or '.[predicate]' is illegal syntax.  Use 'self::node()[predicate]' instead.");
 		}
 
-		XPathExpression::OpCodeMapValueVectorType	theArgs(1, 0);
-
-		// Tell how long the step is without the predicate
-		theArgs[0] = 4;
+		const XPathExpression::OpCodeMapValueVectorType		theArgs(1, 4);
 
 		m_expression->appendOpCode(XPathExpression::eFROM_SELF,
 								   theArgs);
@@ -1814,10 +1809,8 @@ XPathProcessorImpl::Step()
 	{
 		nextToken();
 
-		XPathExpression::OpCodeMapValueVectorType	theArgs(1, 0);
-
 		// Tell how long the step is without the predicate
-		theArgs[0] = 4;
+		const XPathExpression::OpCodeMapValueVectorType		theArgs(1, 4);
 
 		m_expression->appendOpCode(XPathExpression::eFROM_PARENT,
 								   theArgs);
@@ -1876,10 +1869,8 @@ XPathProcessorImpl::Basis()
 		// by a regular step pattern.
 		// if(lookahead(XalanUnicode::charCommercialAt, 1) == true || lookahead("::", 2) == true)
 		{
-			XPathExpression::OpCodeMapValueVectorType	theArgs(1, 0);
-
 			// Tell how long the step is without the predicate
-			theArgs[0] = 4;
+			const XPathExpression::OpCodeMapValueVectorType		theArgs(1, 4);
 
 			m_expression->appendOpCode(XPathExpression::eFROM_DESCENDANTS_OR_SELF,
 									   theArgs);
@@ -2189,8 +2180,8 @@ XPathProcessorImpl::LocationPathPattern()
 	// These token s_functionKeyString should not be here, as it is really
 	// part of the XSLT standard, and not the XPATH standard.
 	if(lookahead(XalanUnicode::charLeftParenthesis, 1) == true &&
-					tokenIs(s_functionIDString) == true ||
-				  tokenIs(s_functionKeyString) == true)
+				(tokenIs(s_functionIDString) == true ||
+				 tokenIs(s_functionKeyString) == true))
 	{
 		IdKeyPattern();
 
@@ -2198,10 +2189,8 @@ XPathProcessorImpl::LocationPathPattern()
 		{
 			const int	newOpPos = m_expression->opCodeMapLength();
 
-			XPathExpression::OpCodeMapValueVectorType	theArgs(1, 0);
-
 			// Tell how long the step is without the predicate
-			theArgs[0] = 4;
+			const XPathExpression::OpCodeMapValueVectorType		theArgs(1, 4);
 
 			m_expression->appendOpCode(XPathExpression::eMATCH_ANY_ANCESTOR_WITH_PREDICATE,
 									   theArgs);
@@ -2217,10 +2206,8 @@ XPathProcessorImpl::LocationPathPattern()
 	{
 		const int	newOpPos = m_expression->opCodeMapLength();
 
-		XPathExpression::OpCodeMapValueVectorType	theArgs(1, 0);
-
 		// Tell how long the step is without the predicate
-		theArgs[0] = 4;
+		const XPathExpression::OpCodeMapValueVectorType		theArgs(1, 4);
 
 		if(lookahead(XalanUnicode::charSolidus, 1) == true)
 		{
