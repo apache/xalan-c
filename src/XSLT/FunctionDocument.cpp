@@ -141,6 +141,45 @@ getDoc(
 
 XObjectPtr
 FunctionDocument::execute(
+			XPathExecutionContext&	executionContext,
+			XalanNode*				context)
+{
+	executionContext.error(getError(), context);
+
+	return XObjectPtr(0);
+}
+
+
+
+XObjectPtr
+FunctionDocument::execute(
+		XPathExecutionContext&			executionContext,
+		XalanNode*						context,			
+		const XObjectPtr				arg1)
+{
+	assert(arg1.null() == false);
+
+	if (context == 0)
+	{
+		executionContext.error("The document() function requires a non-null context node!",
+							   context);
+
+		return XObjectPtr();
+	}
+
+	XalanDOMString				base;
+
+	assert(executionContext.getPrefixResolver() != 0);
+
+	base = executionContext.getPrefixResolver()->getURI();
+
+	return execute(executionContext, context, arg1, &base, 1);
+}
+
+
+
+XObjectPtr
+FunctionDocument::execute(
 		XPathExecutionContext&			executionContext,
 		XalanNode*						context,			
 		const XObjectPtr				arg1,
@@ -201,27 +240,29 @@ FunctionDocument::execute(
 
 XObjectPtr
 FunctionDocument::execute(
-		XPathExecutionContext&			executionContext,
-		XalanNode*						context,			
-		const XObjectPtr				arg1)
+			XPathExecutionContext&	executionContext,
+			XalanNode*				context,			
+			const XObjectPtr		/* arg1 */,
+			const XObjectPtr		/* arg2 */,
+			const XObjectPtr		/* arg3 */)
 {
-	assert(arg1.null() == false);
+	executionContext.error(getError(), context);
 
-	if (context == 0)
-	{
-		executionContext.error("The document() function requires a non-null context node!",
-							   context);
+	return XObjectPtr(0);
+}
 
-		return XObjectPtr();
-	}
 
-	XalanDOMString				base;
 
-	assert(executionContext.getPrefixResolver() != 0);
+XObjectPtr
+FunctionDocument::execute(
+			XPathExecutionContext&			executionContext,
+			XalanNode*						context,
+			int								/* opPos */,
+			const XObjectArgVectorType&		/* args */)
+{
+	executionContext.error(getError(), context);
 
-	base = executionContext.getPrefixResolver()->getURI();
-
-	return execute(executionContext, context, arg1, &base, 1);
+	return XObjectPtr(0);
 }
 
 

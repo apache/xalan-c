@@ -87,6 +87,31 @@ FunctionFormatNumber::~FunctionFormatNumber()
 
 XObjectPtr
 FunctionFormatNumber::execute(
+			XPathExecutionContext&	executionContext,
+			XalanNode*				context)
+{
+	executionContext.error(getError(), context);
+
+	return XObjectPtr(0);
+}
+
+
+
+XObjectPtr
+FunctionFormatNumber::execute(
+			XPathExecutionContext&	executionContext,
+			XalanNode*				context,			
+			const XObjectPtr		/* arg1 */)
+{
+	executionContext.error(getError(), context);
+
+	return XObjectPtr(0);
+}
+
+
+
+XObjectPtr
+FunctionFormatNumber::execute(
 		XPathExecutionContext&			executionContext,
 		XalanNode*						context,			
 		const XObjectPtr				arg1,
@@ -152,6 +177,20 @@ FunctionFormatNumber::execute(
 					theDFS);
 
 	return executionContext.getXObjectFactory().createString(theString);
+}
+
+
+
+XObjectPtr
+FunctionFormatNumber::execute(
+			XPathExecutionContext&			executionContext,
+			XalanNode*						context,
+			int								/* opPos */,
+			const XObjectArgVectorType&		/* args */)
+{
+	executionContext.error(getError(), context);
+
+	return XObjectPtr(0);
 }
 
 

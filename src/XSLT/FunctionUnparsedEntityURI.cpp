@@ -78,6 +78,17 @@ FunctionUnparsedEntityURI::~FunctionUnparsedEntityURI()
 }
 
 
+XObjectPtr
+FunctionUnparsedEntityURI::execute(
+			XPathExecutionContext&	executionContext,
+			XalanNode*				context)
+{
+	executionContext.error(getError(), context);
+
+	return XObjectPtr(0);
+}
+
+
 
 XObjectPtr
 FunctionUnparsedEntityURI::execute(
@@ -110,6 +121,49 @@ FunctionUnparsedEntityURI::execute(
 	const XalanDOMString	uri = executionContext.getUnparsedEntityURI(name, *doc);
 
 	return executionContext.getXObjectFactory().createString(uri);
+}
+
+
+
+XObjectPtr
+FunctionUnparsedEntityURI::execute(
+			XPathExecutionContext&	executionContext,
+			XalanNode*				context,			
+			const XObjectPtr		/* arg1 */,
+			const XObjectPtr		/* arg2 */)
+{
+	executionContext.error(getError(), context);
+
+	return XObjectPtr(0);
+}
+
+
+
+XObjectPtr
+FunctionUnparsedEntityURI::execute(
+			XPathExecutionContext&	executionContext,
+			XalanNode*				context,			
+			const XObjectPtr		/* arg1 */,
+			const XObjectPtr		/* arg2 */,
+			const XObjectPtr		/* arg3 */)
+{
+	executionContext.error(getError(), context);
+
+	return XObjectPtr(0);
+}
+
+
+
+XObjectPtr
+FunctionUnparsedEntityURI::execute(
+			XPathExecutionContext&			executionContext,
+			XalanNode*						context,
+			int								/* opPos */,
+			const XObjectArgVectorType&		/* args */)
+{
+	executionContext.error(getError(), context);
+
+	return XObjectPtr(0);
 }
 
 

@@ -80,6 +80,18 @@ FunctionFunctionAvailable::~FunctionFunctionAvailable()
 
 XObjectPtr
 FunctionFunctionAvailable::execute(
+			XPathExecutionContext&	executionContext,
+			XalanNode*				context)
+{
+	executionContext.error(getError(), context);
+
+	return XObjectPtr(0);
+}
+
+
+
+XObjectPtr
+FunctionFunctionAvailable::execute(
 		XPathExecutionContext&			executionContext,
 		XalanNode*						/* context */,			
 		const XObjectPtr				arg1)
@@ -98,6 +110,49 @@ FunctionFunctionAvailable::execute(
 	const XalanDOMString	functionName = indexOfNSSep == nameLength ? fullName : substring(fullName, indexOfNSSep + 1);
 
 	return executionContext.getXObjectFactory().createBoolean(executionContext.functionAvailable(theNamespace, functionName));
+}
+
+
+
+XObjectPtr
+FunctionFunctionAvailable::execute(
+			XPathExecutionContext&	executionContext,
+			XalanNode*				context,			
+			const XObjectPtr		/* arg1 */,
+			const XObjectPtr		/* arg2 */)
+{
+	executionContext.error(getError(), context);
+
+	return XObjectPtr(0);
+}
+
+
+
+XObjectPtr
+FunctionFunctionAvailable::execute(
+			XPathExecutionContext&	executionContext,
+			XalanNode*				context,			
+			const XObjectPtr		/* arg1 */,
+			const XObjectPtr		/* arg2 */,
+			const XObjectPtr		/* arg3 */)
+{
+	executionContext.error(getError(), context);
+
+	return XObjectPtr(0);
+}
+
+
+
+XObjectPtr
+FunctionFunctionAvailable::execute(
+			XPathExecutionContext&			executionContext,
+			XalanNode*						context,
+			int								/* opPos */,
+			const XObjectArgVectorType&		/* args */)
+{
+	executionContext.error(getError(), context);
+
+	return XObjectPtr(0);
 }
 
 

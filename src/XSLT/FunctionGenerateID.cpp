@@ -118,28 +118,6 @@ getSuffix(
 
 XObjectPtr
 FunctionGenerateID::execute(
-			XPathExecutionContext&	executionContext,
-			XalanNode*				context,			
-			const XObjectPtr		arg1)
-{
-	assert(arg1.null() == false);
-
-	const NodeRefListBase&	theNodeList = arg1->nodeset();
-
-	if (theNodeList.getLength() == 0)
-	{
-		return executionContext.getXObjectFactory().createString(s_emptyString);
-	}
-	else
-	{
-		return execute(executionContext, theNodeList.item(0));
-	}
-}
-
-
-
-XObjectPtr
-FunctionGenerateID::execute(
 			XPathExecutionContext&		executionContext,
 			XalanNode*					context)
 {
@@ -168,6 +146,71 @@ FunctionGenerateID::execute(
 		return executionContext.getXObjectFactory().createString(theID);
 #endif
 	}
+}
+
+
+
+XObjectPtr
+FunctionGenerateID::execute(
+			XPathExecutionContext&	executionContext,
+			XalanNode*				context,			
+			const XObjectPtr		arg1)
+{
+	assert(arg1.null() == false);
+
+	const NodeRefListBase&	theNodeList = arg1->nodeset();
+
+	if (theNodeList.getLength() == 0)
+	{
+		return executionContext.getXObjectFactory().createString(s_emptyString);
+	}
+	else
+	{
+		return execute(executionContext, theNodeList.item(0));
+	}
+}
+
+
+
+XObjectPtr
+FunctionGenerateID::execute(
+			XPathExecutionContext&	executionContext,
+			XalanNode*				context,			
+			const XObjectPtr		/* arg1 */,
+			const XObjectPtr		/* arg2 */)
+{
+	executionContext.error(getError(), context);
+
+	return XObjectPtr(0);
+}
+
+
+
+XObjectPtr
+FunctionGenerateID::execute(
+			XPathExecutionContext&	executionContext,
+			XalanNode*				context,			
+			const XObjectPtr		/* arg1 */,
+			const XObjectPtr		/* arg2 */,
+			const XObjectPtr		/* arg3 */)
+{
+	executionContext.error(getError(), context);
+
+	return XObjectPtr(0);
+}
+
+
+
+XObjectPtr
+FunctionGenerateID::execute(
+			XPathExecutionContext&			executionContext,
+			XalanNode*						context,
+			int								/* opPos */,
+			const XObjectArgVectorType&		/* args */)
+{
+	executionContext.error(getError(), context);
+
+	return XObjectPtr(0);
 }
 
 
