@@ -244,8 +244,6 @@ XPathExpression::InvalidRelativeTokenPosition::FormatErrorMessage(int	theOffset)
 				 << "."
 				 << '\0';
 
-	theFormatter.freeze(false);
-
 	return theFormatter.str();
 }
 
