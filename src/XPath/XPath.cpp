@@ -4306,6 +4306,9 @@ XPath::findNamespace(
 						argLen,
 						stepType);
 
+		NodeRefListBase::size_type	nNSFound = 0;
+		bool						defaultNSFound = false;
+
 		do
 		{
 			const XalanNamedNodeMap* const	attributeList =
@@ -4335,7 +4338,37 @@ XPath::findNamespace(
 
 						if(score != eMatchScoreNone)
 						{
-							subQueryResults.addNode(attr);
+							const XalanDOMString&	theNodeValue = attr->getNodeValue();
+
+ 							bool			foundNSMatch = false;
+ 
+ 							// Need to check default NS slightly differently
+ 							if (theNodeName == DOMServices::s_XMLNamespace)
+ 							{
+ 								// If namespace is empty, don't add anything
+ 								// as under XPath an empty default is indicated
+ 								// by no node.
+ 
+ 								foundNSMatch = defaultNSFound ||
+ 									(theNodeValue == DOMServices::s_emptyString);
+ 								defaultNSFound = true;
+ 							}
+ 
+ 							for (NodeRefListBase::size_type lstIndex = 0; 
+ 								 foundNSMatch == false && lstIndex < nNSFound;
+ 								 ++lstIndex)
+ 							{
+ 								if (subQueryResults.item(lstIndex)->getNodeName() == theNodeName)
+ 								{
+ 									foundNSMatch = true;
+ 								}
+ 							}
+
+							if (foundNSMatch == false) 
+ 							{
+ 								subQueryResults.addNode(attr);
+ 								++nNSFound;
+ 							}
 						}
 					}
 				}
