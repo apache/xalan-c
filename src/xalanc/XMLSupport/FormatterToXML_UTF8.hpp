@@ -316,7 +316,7 @@ protected:
 	 * @param start the start offset into the string.
 	 * @param length the length of the string.
 	 */
-	size_type
+	XalanDOMString::size_type
 	writeNormalizedChar(
 			XalanDOMChar				ch,
 			const XalanDOMChar			chars[],
@@ -404,13 +404,13 @@ private:
 
 	void
 	safeWriteContent(
-			const XalanDOMChar*		theChars,
-			size_type				theLength);
+			const XalanDOMChar*			theChars,
+			XalanDOMString::size_type	theLength);
 
 	void
 	write(
-			const XalanDOMChar*		theChars,
-			size_type				theLength);
+			const XalanDOMChar*			theChars,
+			XalanDOMString::size_type	theLength);
 
 	void
 	writeName1_0(const XalanDOMChar*	theChars);
@@ -444,8 +444,8 @@ private:
 
 	void
 	write(
-			const char*		theChars,
-			size_type		theLength);
+			const char*					theChars,
+			XalanDOMString::size_type	theLength);
 
 	void
 	write(const char*	theChars)
@@ -505,8 +505,6 @@ private:
 	 */
 	const XalanDOMString	m_mediaType;
 
-	typedef XalanDOMString::size_type	size_type;
-
 	/**
 	 * The string "UTF-8".
 	 */
@@ -515,114 +513,114 @@ private:
 	/**
 	 * The string "<!DOCTYPE ".
 	 */
-	static const char		s_doctypeHeaderStartString[];
+	static const char						s_doctypeHeaderStartString[];
 
-	static const size_type	s_doctypeHeaderStartStringLength;
+	static const XalanDOMString::size_type	s_doctypeHeaderStartStringLength;
 
 	/**
 	 * The string " PUBLIC \"".
 	 */
-	static const char		s_doctypeHeaderPublicString[];
+	static const char						s_doctypeHeaderPublicString[];
 
-	static const size_type	s_doctypeHeaderPublicStringLength;
+	static const XalanDOMString::size_type	s_doctypeHeaderPublicStringLength;
 
 	/**
 	 * The string " SYSTEM \"".
 	 */
-	static const char		s_doctypeHeaderSystemString[];
+	static const char						s_doctypeHeaderSystemString[];
 
-	static const size_type	s_doctypeHeaderSystemStringLength;
+	static const XalanDOMString::size_type	s_doctypeHeaderSystemStringLength;
 
 	/**
 	 * The string "<?xml version=\"".
 	 */
-	static const char		s_xmlHeaderStartString[];
+	static const char						s_xmlHeaderStartString[];
 
-	static const size_type	s_xmlHeaderStartStringLength;
+	static const XalanDOMString::size_type	s_xmlHeaderStartStringLength;
 
 	/**
 	 * The string "\" encoding=\"".
 	 */
-	static const char		s_xmlHeaderEncodingString[];
+	static const char						s_xmlHeaderEncodingString[];
 
-	static const size_type	s_xmlHeaderEncodingStringLength;
+	static const XalanDOMString::size_type	s_xmlHeaderEncodingStringLength;
 
 	/**
 	 * The string "\" standalone=\"".
 	 */
-	static const char		s_xmlHeaderStandaloneString[];
+	static const char						s_xmlHeaderStandaloneString[];
 
-	static const size_type	s_xmlHeaderStandaloneStringLength;
+	static const XalanDOMString::size_type	s_xmlHeaderStandaloneStringLength;
 
 	/**
 	 * The string "\"?>".
 	 */
-	static const char		s_xmlHeaderEndString[];
+	static const char						s_xmlHeaderEndString[];
 
-	static const size_type	s_xmlHeaderEndStringLength;
+	static const XalanDOMString::size_type	s_xmlHeaderEndStringLength;
 
 	/**
 	 * The string "1.0".
 	 */
-	static const char		s_defaultVersionString[];
+	static const char						s_defaultVersionString[];
 
-	static const size_type	s_defaultVersionStringLength;
+	static const XalanDOMString::size_type	s_defaultVersionStringLength;
 
 	/**
  	 * The string "-//W3C//DTD XHTML".
  	 */
- 	static const char		s_xhtmlDocTypeString[];
+ 	static const char						s_xhtmlDocTypeString[];
 
-	static const size_type	s_xhtmlDocTypeStringLength;
+	static const XalanDOMString::size_type	s_xhtmlDocTypeStringLength;
 
 	/**
  	 * The string "<![CDATA[".
  	 */
- 	static const char		s_cdataOpenString[];
+ 	static const char						s_cdataOpenString[];
 
-	static const size_type	s_cdataOpenStringLength;
+	static const XalanDOMString::size_type	s_cdataOpenStringLength;
 
 	/**
  	 * The string "]]>".
  	 */
- 	static const char		s_cdataCloseString[];
+ 	static const char						s_cdataCloseString[];
 
-	static const size_type	s_cdataCloseStringLength;
+	static const XalanDOMString::size_type	s_cdataCloseStringLength;
 
 	/**
  	 * The string "&lt;".
  	 */
- 	static const char		s_lessThanEntityString[];
+ 	static const char						s_lessThanEntityString[];
 
-	static const size_type	s_lessThanEntityStringLength;
+	static const XalanDOMString::size_type	s_lessThanEntityStringLength;
 
 	/**
  	 * The string "&gt;".
  	 */
- 	static const char		s_greaterThanEntityString[];
+ 	static const char						s_greaterThanEntityString[];
 
-	static const size_type	s_greaterThanEntityStringLength;
+	static const XalanDOMString::size_type	s_greaterThanEntityStringLength;
 
 	/**
  	 * The string "&amp;".
  	 */
- 	static const char		s_ampersandEntityString[];
+ 	static const char						s_ampersandEntityString[];
 
-	static const size_type	s_ampersandEntityStringLength;
+	static const XalanDOMString::size_type	s_ampersandEntityStringLength;
 
 	/**
  	 * The string "&quot;".
  	 */
- 	static const char		s_quoteEntityString[];
+ 	static const char						s_quoteEntityString[];
 
-	static const size_type	s_quoteEntityStringLength;
+	static const XalanDOMString::size_type	s_quoteEntityStringLength;
 
 	/**
  	 * The string "&#10;".
  	 */
- 	static const char		s_linefeedNCRString[];
+ 	static const char						s_linefeedNCRString[];
 
-	static const size_type	s_linefeedNCRStringLength;
+	static const XalanDOMString::size_type	s_linefeedNCRStringLength;
 
 	/**
 	 * A stack of Boolean objects that tell if the given element 
@@ -633,7 +631,7 @@ private:
 	/**
 	 * The string of characters that represents the newline
 	 */
-	const XalanDOMChar*			m_newlineString;
+	const XalanDOMChar*		m_newlineString;
 
 	/**
 	 * The length of the the string of characters that represents the newline
@@ -642,7 +640,7 @@ private:
 
 	typedef void (FormatterToXML_UTF8::*NameFunctionType)(const XalanDOMChar*);
 
-	NameFunctionType			m_nameFunction;
+	NameFunctionType	m_nameFunction;
 
 	void
 	writeName(const XalanDOMChar*	theChars)
@@ -709,7 +707,7 @@ private:
 
 	char*						m_bufferPosition;
 
-	size_type					m_bufferRemaining;
+	XalanDOMString::size_type	m_bufferRemaining;
 
 	static const XalanDOMChar	s_specialChars[];
 };

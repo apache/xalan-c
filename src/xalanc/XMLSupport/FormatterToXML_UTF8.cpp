@@ -408,8 +408,8 @@ FormatterToXML_UTF8::write(unsigned int		theChar)
 
 inline void
 FormatterToXML_UTF8::safeWriteContent(
-			const XalanDOMChar*		theChars,
-			size_type				theLength)
+			const XalanDOMChar*			theChars,
+			XalanDOMString::size_type	theLength)
 {
 	for(size_type i = 0; i < theLength; ++i)
 	{
@@ -423,8 +423,8 @@ FormatterToXML_UTF8::safeWriteContent(
 
 inline void
 FormatterToXML_UTF8::write(
-			const XalanDOMChar*		theChars,
-			size_type				theLength)
+			const XalanDOMChar*			theChars,
+			XalanDOMString::size_type	theLength)
 {
 	for(size_type i = 0; i < theLength; ++i)
 	{
@@ -498,8 +498,8 @@ FormatterToXML_UTF8::writeName1_1(const XalanDOMChar*	theChars)
 
 inline void
 FormatterToXML_UTF8::write(
-			const char*		theChars,
-			size_type		theLength)
+			const char*					theChars,
+			XalanDOMString::size_type	theLength)
 {
 #if defined(NDEBUG)
 	if (theLength > sizeof(m_buffer))
@@ -525,7 +525,7 @@ FormatterToXML_UTF8::write(
 		m_bufferRemaining -= theLength;
 	}
 #else
-	for(size_type i = 0; i < theLength; ++i)
+	for(XalanDOMString::size_type i = 0; i < theLength; ++i)
 	{
 		write(theChars[i]);
 	}
@@ -1006,7 +1006,7 @@ FormatterToXML_UTF8::writeCommentData(const XalanDOMChar*	data)
 
 
 
-FormatterToXML_UTF8::size_type
+XalanDOMString::size_type
 FormatterToXML_UTF8::writeNormalizedChar(
 			XalanDOMChar				ch,
 			const XalanDOMChar			chars[],
@@ -1303,7 +1303,7 @@ const char	FormatterToXML_UTF8::s_doctypeHeaderStartString[] =
 	char(0)
 };
 
-const FormatterToXML_UTF8::size_type	FormatterToXML_UTF8::s_doctypeHeaderStartStringLength =
+const XalanDOMString::size_type	FormatterToXML_UTF8::s_doctypeHeaderStartStringLength =
 		FXML_SIZE(s_doctypeHeaderStartString);
 
 const char	FormatterToXML_UTF8::s_doctypeHeaderPublicString[] =
@@ -1320,7 +1320,7 @@ const char	FormatterToXML_UTF8::s_doctypeHeaderPublicString[] =
 	char(0)
 };
 
-const FormatterToXML_UTF8::size_type	FormatterToXML_UTF8::s_doctypeHeaderPublicStringLength =
+const XalanDOMString::size_type	FormatterToXML_UTF8::s_doctypeHeaderPublicStringLength =
 		FXML_SIZE(s_doctypeHeaderPublicString);
 
 const char	FormatterToXML_UTF8::s_doctypeHeaderSystemString[] =
@@ -1337,7 +1337,7 @@ const char	FormatterToXML_UTF8::s_doctypeHeaderSystemString[] =
 	char(0)
 };
 
-const FormatterToXML_UTF8::size_type		FormatterToXML_UTF8::s_doctypeHeaderSystemStringLength =
+const XalanDOMString::size_type		FormatterToXML_UTF8::s_doctypeHeaderSystemStringLength =
 		FXML_SIZE(s_doctypeHeaderSystemString);
 
 const char	FormatterToXML_UTF8::s_xmlHeaderStartString[] =
@@ -1360,7 +1360,7 @@ const char	FormatterToXML_UTF8::s_xmlHeaderStartString[] =
 	char(0)
 };
 
-const FormatterToXML_UTF8::size_type		FormatterToXML_UTF8::s_xmlHeaderStartStringLength =
+const XalanDOMString::size_type		FormatterToXML_UTF8::s_xmlHeaderStartStringLength =
 		FXML_SIZE(s_xmlHeaderStartString);
 
 const char	FormatterToXML_UTF8::s_xmlHeaderEncodingString[] =
@@ -1380,7 +1380,7 @@ const char	FormatterToXML_UTF8::s_xmlHeaderEncodingString[] =
 	char(0)
 };
 
-const FormatterToXML_UTF8::size_type		FormatterToXML_UTF8::s_xmlHeaderEncodingStringLength =
+const XalanDOMString::size_type		FormatterToXML_UTF8::s_xmlHeaderEncodingStringLength =
 		FXML_SIZE(s_xmlHeaderEncodingString);
 
 const char	FormatterToXML_UTF8::s_xmlHeaderStandaloneString[] =
@@ -1402,7 +1402,7 @@ const char	FormatterToXML_UTF8::s_xmlHeaderStandaloneString[] =
 	char(0)
 };
 
-const FormatterToXML_UTF8::size_type		FormatterToXML_UTF8::s_xmlHeaderStandaloneStringLength =
+const XalanDOMString::size_type		FormatterToXML_UTF8::s_xmlHeaderStandaloneStringLength =
 		FXML_SIZE(s_xmlHeaderStandaloneString);
 
 const char	FormatterToXML_UTF8::s_xmlHeaderEndString[] =
@@ -1413,7 +1413,7 @@ const char	FormatterToXML_UTF8::s_xmlHeaderEndString[] =
 	char(0)
 };
 
-const FormatterToXML_UTF8::size_type		FormatterToXML_UTF8::s_xmlHeaderEndStringLength =
+const XalanDOMString::size_type		FormatterToXML_UTF8::s_xmlHeaderEndStringLength =
 		FXML_SIZE(s_xmlHeaderEndString);
 
 const char	FormatterToXML_UTF8::s_defaultVersionString[] =
@@ -1424,7 +1424,7 @@ const char	FormatterToXML_UTF8::s_defaultVersionString[] =
 	char(0)
 };
 
-const FormatterToXML_UTF8::size_type		FormatterToXML_UTF8::s_defaultVersionStringLength =
+const XalanDOMString::size_type		FormatterToXML_UTF8::s_defaultVersionStringLength =
 		FXML_SIZE(s_defaultVersionString);
 
 const char	FormatterToXML_UTF8::s_cdataOpenString[] =
@@ -1441,7 +1441,7 @@ const char	FormatterToXML_UTF8::s_cdataOpenString[] =
 	char(0)
 };
 
-const FormatterToXML_UTF8::size_type		FormatterToXML_UTF8::s_cdataOpenStringLength =
+const XalanDOMString::size_type		FormatterToXML_UTF8::s_cdataOpenStringLength =
 		FXML_SIZE(s_cdataOpenString);
 
 const char	FormatterToXML_UTF8::s_cdataCloseString[] =
@@ -1452,7 +1452,7 @@ const char	FormatterToXML_UTF8::s_cdataCloseString[] =
 	char(0)
 };
 
-const FormatterToXML_UTF8::size_type		FormatterToXML_UTF8::s_cdataCloseStringLength =
+const XalanDOMString::size_type		FormatterToXML_UTF8::s_cdataCloseStringLength =
 		FXML_SIZE(s_cdataCloseString);
 
 
@@ -1478,7 +1478,7 @@ const char	FormatterToXML_UTF8::s_xhtmlDocTypeString[] =
 	char(0)
 };
 
-const FormatterToXML_UTF8::size_type		FormatterToXML_UTF8::s_xhtmlDocTypeStringLength =
+const XalanDOMString::size_type		FormatterToXML_UTF8::s_xhtmlDocTypeStringLength =
 		FXML_SIZE(s_xhtmlDocTypeString);
 
 const char	FormatterToXML_UTF8::s_lessThanEntityString[] =
@@ -1490,7 +1490,7 @@ const char	FormatterToXML_UTF8::s_lessThanEntityString[] =
 	char(0)
 };
 
-const FormatterToXML_UTF8::size_type		FormatterToXML_UTF8::s_lessThanEntityStringLength =
+const XalanDOMString::size_type		FormatterToXML_UTF8::s_lessThanEntityStringLength =
 		FXML_SIZE(s_lessThanEntityString);
 
 const char	FormatterToXML_UTF8::s_greaterThanEntityString[] =
@@ -1502,7 +1502,7 @@ const char	FormatterToXML_UTF8::s_greaterThanEntityString[] =
 	char(0)
 };
 
-const FormatterToXML_UTF8::size_type		FormatterToXML_UTF8::s_greaterThanEntityStringLength =
+const XalanDOMString::size_type		FormatterToXML_UTF8::s_greaterThanEntityStringLength =
 		FXML_SIZE(s_greaterThanEntityString);
 
 const char	FormatterToXML_UTF8::s_ampersandEntityString[] =
@@ -1515,7 +1515,7 @@ const char	FormatterToXML_UTF8::s_ampersandEntityString[] =
 	char(0)
 };
 
-const FormatterToXML_UTF8::size_type		FormatterToXML_UTF8::s_ampersandEntityStringLength =
+const XalanDOMString::size_type		FormatterToXML_UTF8::s_ampersandEntityStringLength =
 		FXML_SIZE(s_ampersandEntityString);
 
 const char	FormatterToXML_UTF8::s_quoteEntityString[] =
@@ -1529,7 +1529,7 @@ const char	FormatterToXML_UTF8::s_quoteEntityString[] =
 	char(0)
 };
 
-const FormatterToXML_UTF8::size_type		FormatterToXML_UTF8::s_quoteEntityStringLength =
+const XalanDOMString::size_type		FormatterToXML_UTF8::s_quoteEntityStringLength =
 		FXML_SIZE(s_quoteEntityString);
 
 const char	FormatterToXML_UTF8::s_linefeedNCRString[] =
@@ -1542,7 +1542,7 @@ const char	FormatterToXML_UTF8::s_linefeedNCRString[] =
 	char(0)
 };
 
-const FormatterToXML_UTF8::size_type		FormatterToXML_UTF8::s_linefeedNCRStringLength =
+const XalanDOMString::size_type		FormatterToXML_UTF8::s_linefeedNCRStringLength =
 		FXML_SIZE(s_linefeedNCRString);
 
 

@@ -239,8 +239,8 @@ FormatterToXML_UTF16::flushBuffer()
 
 inline void
 FormatterToXML_UTF16::write(
-			const XalanDOMChar*		theChars,
-			size_type				theLength)
+			const XalanDOMChar*			theChars,
+			XalanDOMString::size_type	theLength)
 {
 	if (theLength > sizeof(m_buffer))
 	{
@@ -255,7 +255,7 @@ FormatterToXML_UTF16::write(
 			flushBuffer();
 		}
 
-		for(size_type i = 0; i < theLength; ++i)
+		for(XalanDOMString::size_type i = 0; i < theLength; ++i)
 		{
 			*m_bufferPosition = theChars[i];
 
@@ -983,7 +983,7 @@ const XalanDOMChar	FormatterToXML_UTF16::s_doctypeHeaderStartString[] =
 	XalanDOMChar(0)
 };
 
-const FormatterToXML_UTF16::size_type	FormatterToXML_UTF16::s_doctypeHeaderStartStringLength =
+const XalanDOMString::size_type	FormatterToXML_UTF16::s_doctypeHeaderStartStringLength =
 		FXML_SIZE(s_doctypeHeaderStartString);
 
 const XalanDOMChar	FormatterToXML_UTF16::s_doctypeHeaderPublicString[] =
@@ -1000,7 +1000,7 @@ const XalanDOMChar	FormatterToXML_UTF16::s_doctypeHeaderPublicString[] =
 	XalanDOMChar(0)
 };
 
-const FormatterToXML_UTF16::size_type	FormatterToXML_UTF16::s_doctypeHeaderPublicStringLength =
+const XalanDOMString::size_type	FormatterToXML_UTF16::s_doctypeHeaderPublicStringLength =
 		FXML_SIZE(s_doctypeHeaderPublicString);
 
 const XalanDOMChar	FormatterToXML_UTF16::s_doctypeHeaderSystemString[] =
@@ -1017,7 +1017,7 @@ const XalanDOMChar	FormatterToXML_UTF16::s_doctypeHeaderSystemString[] =
 	XalanDOMChar(0)
 };
 
-const FormatterToXML_UTF16::size_type		FormatterToXML_UTF16::s_doctypeHeaderSystemStringLength =
+const XalanDOMString::size_type		FormatterToXML_UTF16::s_doctypeHeaderSystemStringLength =
 		FXML_SIZE(s_doctypeHeaderSystemString);
 
 const XalanDOMChar	FormatterToXML_UTF16::s_xmlHeaderStartString[] =
@@ -1040,7 +1040,7 @@ const XalanDOMChar	FormatterToXML_UTF16::s_xmlHeaderStartString[] =
 	XalanDOMChar(0)
 };
 
-const FormatterToXML_UTF16::size_type		FormatterToXML_UTF16::s_xmlHeaderStartStringLength =
+const XalanDOMString::size_type		FormatterToXML_UTF16::s_xmlHeaderStartStringLength =
 		FXML_SIZE(s_xmlHeaderStartString);
 
 const XalanDOMChar	FormatterToXML_UTF16::s_xmlHeaderEncodingString[] =
@@ -1060,7 +1060,7 @@ const XalanDOMChar	FormatterToXML_UTF16::s_xmlHeaderEncodingString[] =
 	XalanDOMChar(0)
 };
 
-const FormatterToXML_UTF16::size_type		FormatterToXML_UTF16::s_xmlHeaderEncodingStringLength =
+const XalanDOMString::size_type		FormatterToXML_UTF16::s_xmlHeaderEncodingStringLength =
 		FXML_SIZE(s_xmlHeaderEncodingString);
 
 const XalanDOMChar	FormatterToXML_UTF16::s_xmlHeaderStandaloneString[] =
@@ -1082,7 +1082,7 @@ const XalanDOMChar	FormatterToXML_UTF16::s_xmlHeaderStandaloneString[] =
 	XalanDOMChar(0)
 };
 
-const FormatterToXML_UTF16::size_type		FormatterToXML_UTF16::s_xmlHeaderStandaloneStringLength =
+const XalanDOMString::size_type		FormatterToXML_UTF16::s_xmlHeaderStandaloneStringLength =
 		FXML_SIZE(s_xmlHeaderStandaloneString);
 
 const XalanDOMChar	FormatterToXML_UTF16::s_xmlHeaderEndString[] =
@@ -1093,7 +1093,7 @@ const XalanDOMChar	FormatterToXML_UTF16::s_xmlHeaderEndString[] =
 	XalanDOMChar(0)
 };
 
-const FormatterToXML_UTF16::size_type		FormatterToXML_UTF16::s_xmlHeaderEndStringLength =
+const XalanDOMString::size_type		FormatterToXML_UTF16::s_xmlHeaderEndStringLength =
 		FXML_SIZE(s_xmlHeaderEndString);
 
 const XalanDOMChar	FormatterToXML_UTF16::s_defaultVersionString[] =
@@ -1104,7 +1104,7 @@ const XalanDOMChar	FormatterToXML_UTF16::s_defaultVersionString[] =
 	XalanDOMChar(0)
 };
 
-const FormatterToXML_UTF16::size_type		FormatterToXML_UTF16::s_defaultVersionStringLength =
+const XalanDOMString::size_type		FormatterToXML_UTF16::s_defaultVersionStringLength =
 		FXML_SIZE(s_defaultVersionString);
 
 const XalanDOMChar	FormatterToXML_UTF16::s_cdataOpenString[] =
@@ -1121,7 +1121,7 @@ const XalanDOMChar	FormatterToXML_UTF16::s_cdataOpenString[] =
 	XalanDOMChar(0)
 };
 
-const FormatterToXML_UTF16::size_type		FormatterToXML_UTF16::s_cdataOpenStringLength =
+const XalanDOMString::size_type		FormatterToXML_UTF16::s_cdataOpenStringLength =
 		FXML_SIZE(s_cdataOpenString);
 
 const XalanDOMChar	FormatterToXML_UTF16::s_cdataCloseString[] =
@@ -1132,7 +1132,7 @@ const XalanDOMChar	FormatterToXML_UTF16::s_cdataCloseString[] =
 	XalanDOMChar(0)
 };
 
-const FormatterToXML_UTF16::size_type		FormatterToXML_UTF16::s_cdataCloseStringLength =
+const XalanDOMString::size_type		FormatterToXML_UTF16::s_cdataCloseStringLength =
 		FXML_SIZE(s_cdataCloseString);
 
 
@@ -1158,7 +1158,7 @@ const XalanDOMChar	FormatterToXML_UTF16::s_xhtmlDocTypeString[] =
 	XalanDOMChar(0)
 };
 
-const FormatterToXML_UTF16::size_type		FormatterToXML_UTF16::s_xhtmlDocTypeStringLength =
+const XalanDOMString::size_type		FormatterToXML_UTF16::s_xhtmlDocTypeStringLength =
 		FXML_SIZE(s_xhtmlDocTypeString);
 
 const XalanDOMChar	FormatterToXML_UTF16::s_lessThanEntityString[] =
@@ -1170,7 +1170,7 @@ const XalanDOMChar	FormatterToXML_UTF16::s_lessThanEntityString[] =
 	XalanDOMChar(0)
 };
 
-const FormatterToXML_UTF16::size_type		FormatterToXML_UTF16::s_lessThanEntityStringLength =
+const XalanDOMString::size_type		FormatterToXML_UTF16::s_lessThanEntityStringLength =
 		FXML_SIZE(s_lessThanEntityString);
 
 const XalanDOMChar	FormatterToXML_UTF16::s_greaterThanEntityString[] =
@@ -1182,7 +1182,7 @@ const XalanDOMChar	FormatterToXML_UTF16::s_greaterThanEntityString[] =
 	XalanDOMChar(0)
 };
 
-const FormatterToXML_UTF16::size_type		FormatterToXML_UTF16::s_greaterThanEntityStringLength =
+const XalanDOMString::size_type		FormatterToXML_UTF16::s_greaterThanEntityStringLength =
 		FXML_SIZE(s_greaterThanEntityString);
 
 const XalanDOMChar	FormatterToXML_UTF16::s_ampersandEntityString[] =
@@ -1195,7 +1195,7 @@ const XalanDOMChar	FormatterToXML_UTF16::s_ampersandEntityString[] =
 	XalanDOMChar(0)
 };
 
-const FormatterToXML_UTF16::size_type		FormatterToXML_UTF16::s_ampersandEntityStringLength =
+const XalanDOMString::size_type		FormatterToXML_UTF16::s_ampersandEntityStringLength =
 		FXML_SIZE(s_ampersandEntityString);
 
 const XalanDOMChar	FormatterToXML_UTF16::s_quoteEntityString[] =
@@ -1209,7 +1209,7 @@ const XalanDOMChar	FormatterToXML_UTF16::s_quoteEntityString[] =
 	XalanDOMChar(0)
 };
 
-const FormatterToXML_UTF16::size_type		FormatterToXML_UTF16::s_quoteEntityStringLength =
+const XalanDOMString::size_type		FormatterToXML_UTF16::s_quoteEntityStringLength =
 		FXML_SIZE(s_quoteEntityString);
 
 const XalanDOMChar	FormatterToXML_UTF16::s_linefeedNCRString[] =
@@ -1222,7 +1222,7 @@ const XalanDOMChar	FormatterToXML_UTF16::s_linefeedNCRString[] =
 	XalanDOMChar(0)
 };
 
-const FormatterToXML_UTF16::size_type		FormatterToXML_UTF16::s_linefeedNCRStringLength =
+const XalanDOMString::size_type		FormatterToXML_UTF16::s_linefeedNCRStringLength =
 		FXML_SIZE(s_linefeedNCRString);
 
 
