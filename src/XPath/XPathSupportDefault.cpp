@@ -164,10 +164,10 @@ XPathSupportDefault::isNodeAfter(
 
 XalanElement*
 XPathSupportDefault::getElementByID(
-			const XalanDOMString&	/* id */,
-			const XalanDocument&	/* doc */) const
+			const XalanDOMString&	id,
+			const XalanDocument&	doc) const
 {
-	return 0;
+	return doc.getElementById(id);
 }
 
 
