@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -589,14 +589,16 @@ public:
 	 * @param isLiteral 			true if a literal element
 	 * @param overrideStrip 		false if white space stripping should be done
 	 * @param shouldCloneAttributes true if attributes should be cloned
+	 * @param styleNode				the stylesheet element that generated the clone.
 	 */
 	void
 	cloneToResultTree(
-			XalanNode& 				node,
-			XalanNode::NodeType		nodeType,
-			bool					isLiteral,
-			bool					overrideStrip,
-			bool					shouldCloneAttributes);
+			XalanNode& 					node,
+			XalanNode::NodeType			nodeType,
+			bool						isLiteral,
+			bool						overrideStrip,
+			bool						shouldCloneAttributes,
+			const ElemTemplateElement*	styleNode = 0);
 
 	/**
 	 * Given a result tree fragment, walk the tree and output it to the result

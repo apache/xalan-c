@@ -960,14 +960,16 @@ public:
 	 * @param isLiteral             true if a literal element
 	 * @param overrideStrip         false if white space stripping should be done
 	 * @param shouldCloneAttributes true if attributes should be cloned
+	 * @param styleNode				the stylesheet element that generated the clone.
 	 */
 	virtual void
 	cloneToResultTree(
-			XalanNode&				node,
-			XalanNode::NodeType		nodeType,
-			bool					isLiteral,
-			bool					overrideStrip,
-			bool					shouldCloneAttributes) = 0;
+			XalanNode&					node,
+			XalanNode::NodeType			nodeType,
+			bool						isLiteral,
+			bool						overrideStrip,
+			bool						shouldCloneAttributes,
+			const ElemTemplateElement*	styleNode = 0) = 0;
 
 	/**
 	 * Create an XObject that represents a Result tree fragment.

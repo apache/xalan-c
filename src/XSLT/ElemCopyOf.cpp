@@ -158,7 +158,8 @@ ElemCopyOf::doCloneNode(
 						posNodeType,
 						false,
 						false,
-						true);
+						true,
+						this);
 
 		XalanNode*	nextNode = pos->getFirstChild();
 

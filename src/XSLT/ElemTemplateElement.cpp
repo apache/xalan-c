@@ -887,7 +887,7 @@ ElemTemplateElement::transformChild(
 			{
 			case XalanNode::CDATA_SECTION_NODE:
 			case XalanNode::TEXT_NODE:
-				executionContext.cloneToResultTree(*child, nodeType, false, false, false);
+				executionContext.cloneToResultTree(*child, nodeType, false, false, false, this);
 				break;
 
 			case XalanNode::ATTRIBUTE_NODE:

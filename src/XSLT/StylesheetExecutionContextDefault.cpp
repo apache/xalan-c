@@ -906,11 +906,12 @@ StylesheetExecutionContextDefault::flushPending()
 
 void
 StylesheetExecutionContextDefault::cloneToResultTree(
-			XalanNode&				node,
-			XalanNode::NodeType		nodeType,
-			bool					isLiteral,
-			bool					overrideStrip,
-			bool					shouldCloneAttributes)
+			XalanNode&					node,
+			XalanNode::NodeType			nodeType,
+			bool						isLiteral,
+			bool						overrideStrip,
+			bool						shouldCloneAttributes,
+			const ElemTemplateElement*	styleNode)
 {
 	assert(m_xsltProcessor != 0);
 
@@ -919,7 +920,8 @@ StylesheetExecutionContextDefault::cloneToResultTree(
 			nodeType,
 			isLiteral,
 			overrideStrip,
-			shouldCloneAttributes);
+			shouldCloneAttributes,
+			styleNode);
 }
 
 

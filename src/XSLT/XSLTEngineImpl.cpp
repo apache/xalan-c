@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -2264,11 +2264,12 @@ XSLTEngineImpl::cdata(
 
 void
 XSLTEngineImpl::cloneToResultTree(
-			XalanNode&				node,
-			XalanNode::NodeType		nodeType,
-			bool					isLiteral,
-			bool					overrideStrip,
-			bool					shouldCloneAttributes)
+			XalanNode&					node,
+			XalanNode::NodeType			nodeType,
+			bool						isLiteral,
+			bool						overrideStrip,
+			bool						shouldCloneAttributes,
+			const ElemTemplateElement*	styleNode)
 {
 	assert(nodeType == node.getNodeType());
 	assert(m_executionContext != 0);
@@ -2340,14 +2341,41 @@ XSLTEngineImpl::cloneToResultTree(
 		break;
 
 	case XalanNode::ATTRIBUTE_NODE:
-		addResultAttribute(
-				getPendingAttributesImpl(),
+		if (length(getPendingElementName()) != 0)
+		{
+			addResultAttribute(
+					getPendingAttributesImpl(),
 #if defined(XALAN_OLD_STYLE_CASTS)
-				DOMServices::getNameOfNode((const XalanAttr&)node),
+					DOMServices::getNameOfNode((const XalanAttr&)node),
 #else
-				DOMServices::getNameOfNode(static_cast<const XalanAttr&>(node)),
+					DOMServices::getNameOfNode(static_cast<const XalanAttr&>(node)),
 #endif
-				node.getNodeValue());
+					node.getNodeValue());
+		}
+		else
+		{
+			const Locator*		theLocator = 0;
+			const char* const	theErrorMessage =
+				"Attempting to add an attribute when there is no open element.  The attribute will be ignored";
+
+			if (styleNode != 0)
+			{
+				theLocator = styleNode->getLocator();
+			}
+
+			if (theLocator != 0)
+			{
+				warn(XalanDOMString(theErrorMessage),
+					*theLocator,
+					&node);
+			}
+			else
+			{
+				warn(theErrorMessage,
+					&node,
+					styleNode);
+			}
+		}
 		break;
 
 	case XalanNode::COMMENT_NODE:

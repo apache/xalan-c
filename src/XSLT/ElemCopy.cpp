@@ -131,7 +131,8 @@ ElemCopy::execute(StylesheetExecutionContext&	executionContext) const
 			nodeType,
 			false,
 			false,
-			false);
+			false,
+			this);
 
 		if(XalanNode::ELEMENT_NODE == nodeType)
 		{
