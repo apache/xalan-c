@@ -66,9 +66,23 @@
 #include "XalanUnicode.hpp"
 
 
+// To circumvent an OS/390 problem
+#if !defined(OS390)
+#define XALAN_POSITIVE_INFINITY HUGE_VAL
+#else
+
+static const union
+{
+	unsigned char	c[8];
+	double			d;
+} theHugeVal = { { 0x7f, 0xf0, 0, 0, 0, 0, 0, 0 } };
+
+#define XALAN_POSITIVE_INFINITY (theHugeVal.d)
+
+#endif
 
 const double	DoubleSupport::s_NaN = sqrt(-2.01);
-const double	DoubleSupport::s_positiveInfinity = HUGE_VAL;
+const double	DoubleSupport::s_positiveInfinity = XALAN_POSITIVE_INFINITY;
 const double	DoubleSupport::s_negativeInfinity = -DoubleSupport::s_positiveInfinity;
 const double	DoubleSupport::s_positiveZero = 0.0;
 
@@ -291,26 +305,20 @@ DoubleSupport::divide(
 	{
 		return theLHS / theRHS;
 	}
+	else if (theLHS == 0.0L)
+	{
+		// This is NaN...
+		return DoubleSupport::getNaN();
+	}
+	else if (theLHS > 0.0L && isPositiveZero(theRHS) == true)
+	{
+		// This is positive infinity...
+		return DoubleSupport::getPositiveInfinity();
+	}
 	else
 	{
-		// These are special cases, since we can't actually
-		// do the division...
-		if (theLHS == 0.0L)
-		{
-			// This is NaN...
-			return DoubleSupport::getNaN();
-		}
-		else if (theLHS > 0.0L &&
-				 isPositiveZero(theRHS) == true)
-		{
-			// This is positive infinity...
-			return DoubleSupport::getPositiveInfinity();
-		}
-		else
-		{
-			// This is negative infinity...
-			return DoubleSupport::getNegativeInfinity();
-		}
+		// This is negative infinity...
+		return DoubleSupport::getNegativeInfinity();
 	}
 }
 
@@ -360,7 +368,7 @@ DoubleSupport::toDouble(const XalanDOMString&	theString)
 
 
 
-void
+inline void
 consumeWhitespace(const XalanDOMChar*&	theString)
 {
 	while(*theString != 0 &&
@@ -372,7 +380,22 @@ consumeWhitespace(const XalanDOMChar*&	theString)
 
 
 
-static void
+inline void
+consumeWhitespace(
+			const XalanDOMChar*&	theString,
+			unsigned int&			theLength)
+{
+	while(*theString != 0 &&
+		  isXMLWhitespace(*theString))
+	{
+		++theString;
+		--theLength;
+	}
+}
+
+
+
+inline static void
 consumeNumbers(const XalanDOMChar*&	theString)
 {
 	while(*theString &&
@@ -581,7 +604,7 @@ convertHelper(
 	// is _much_ cheaper...
 	const unsigned int	theLongHackThreshold = 10;
 
-	const unsigned int	theLength = length(theString);
+	unsigned int	theLength = length(theString);
 
 	if (fGotDecimalPoint == false && theLength < theLongHackThreshold)
 	{
@@ -589,6 +612,9 @@ convertHelper(
 	}
 	else
 	{
+		// trim any whitespace
+		consumeWhitespace(theString, theLength);
+
 		// Use a stack-based buffer, when possible...
 		const unsigned int	theBufferSize = 200u;
 
@@ -596,15 +622,15 @@ convertHelper(
 		{
 			char	theBuffer[theBufferSize];
 
-#if !defined(XALAN_NON_ASCII_PLATFORM)
+#if defined(XALAN_NON_ASCII_PLATFORM)
+			translateWideString(theString, theBuffer, theLength);
+#else
 			for(unsigned int i = 0; i < theLength; ++i)
 			{
 				theBuffer[i] = char(theString[i]);
 			}
 
 			theBuffer[theLength] = '\0';
-#else
-			translateWideString(theString, theBuffer, theLength);
 #endif
 			return atof(theBuffer);
 		}
