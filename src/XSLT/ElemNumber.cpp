@@ -651,6 +651,8 @@ ElemNumber::getAncestorNumbers(
 
 
 
+#if ! defined(__GNUC__)
+
 std::locale
 ElemNumber::getLocale(
 			StylesheetExecutionContext&		/* executionContext */,
@@ -660,6 +662,7 @@ ElemNumber::getLocale(
 	return std::locale();
 }
 
+#endif
 
 
 NumberFormat*
@@ -667,7 +670,9 @@ ElemNumber::getNumberFormatter(
 			StylesheetExecutionContext&		executionContext,
 			const DOM_Node&					contextNode) const
 {
+#if ! defined(__GNUC__)
 	std::locale loc = getLocale(executionContext, contextNode);
+#endif
     
     // Helper to format local specific numbers to strings.
 	std::auto_ptr<NumberFormat>		formatter(new NumberFormat);
@@ -725,7 +730,9 @@ ElemNumber::formatNumberList(
 	
 	NumeratorFormatter::NumberFormatStringTokenizer		formatTokenizer(formatValue);
 
+#if ! defined(__GNUC__)
 	std::locale		loc = getLocale(executionContext, contextNode);
+#endif
 
 	for(int i = 0; i < nNumbers; i++)
 	{
@@ -877,7 +884,7 @@ ElemNumber::int2alphaCount(
 	// logs of the radix.  For now, we fake it.  
 	const int	buflen = 100;
 
-	std::vector<XMLCh>	buf(buflen + 1, 0);
+	std::vector<XMLCh>	buf(buflen + 1, (XMLCh)0);
 
 	// next character to set in the buffer
 	int charPos = buflen - 1 ;    // work backward through buf[]

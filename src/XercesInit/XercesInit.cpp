@@ -93,6 +93,9 @@ BOOL APIENTRY DllMain(HANDLE /* hModule */,
 
 #else
 
-#error Unsupported platform!!!
+#	if defined(LINUX)
+#	else
+#		error Unsupported platform!!!
+#	endif
 
 #endif

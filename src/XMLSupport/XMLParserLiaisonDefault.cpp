@@ -62,6 +62,7 @@
 // Standard header files	
 #include <cassert>
 #include <cstring>
+#include <memory>
 
 
 

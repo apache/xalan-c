@@ -111,7 +111,7 @@ RemoveObjectFromCollection(
 #if defined(XALAN_HASH_CONTAINERS_AVAILABLE)
 	return theCollection.erase(theObject) > 0 ? true : false;
 #else
-	CollectionType::iterator	i =
+	typename CollectionType::iterator	i =
 		std::find(theCollection.begin(),
 				  theCollection.end(),
 				  theObject);

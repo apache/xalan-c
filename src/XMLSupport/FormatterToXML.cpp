@@ -960,7 +960,7 @@ int FormatterToXML::copyUTF16IntoBuf(
  * Method consumes two characters from the input buffer 
  */
 {
-	DOMString msg(L"Invalid UTF-16 surrogate detected: ");
+	DOMString msg("Invalid UTF-16 surrogate detected: ");
 	// UTF-16 surrogate
 	int next;
 	int ch = chars[i];

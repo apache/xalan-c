@@ -1183,13 +1183,13 @@ XPath::variable(
 	}
 	catch(...)
 	{
-		executionContext.error(DOMString(L"Could not get variable named ") + varName->str());
+		executionContext.error(DOMString("Could not get variable named ") + varName->str());
 	}
 
 	if(0 == result)
 	{
-		executionContext.warn(DOMString(L"VariableReference given for variable out ") +
-								DOMString(L"of context or without definition!  Name = ") +
+		executionContext.warn(DOMString("VariableReference given for variable out ") +
+								DOMString("of context or without definition!  Name = ") +
 							  varName->str(),
 			 context);
 	}

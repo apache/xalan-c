@@ -201,7 +201,7 @@ void ElemLiteralResult::execute(
 		// so we have to iterate from there down
 		for (int i = nsVector->size()-1; i>=0; i--)
 		{
-			ns = nsVector->at(i);
+			ns = (*nsVector)[i];
 
 			if(!isEmpty(ns.getURI()) && ns.getResultCandidate())
 			{

@@ -55,6 +55,13 @@
 # 
 #
 # $Log$
+# Revision 1.2  2000/02/03 20:13:12  jdonohue
+# Linux changes
+# PR:
+# Obtained from:
+# Submitted by:
+# Reviewed by:
+#
 # Revision 1.1  2000/01/27 20:30:27  jdonohue
 # no message
 #
@@ -112,8 +119,8 @@ nogood:
 endif
 
 # We need the Xerces library
-ALLLIBS += -L$(XERCESCROOT)/lib -lxerces-c1_0
-XERCESLIB = $(XERCESCROOT)/lib/libxerces-c1_0.so
+ALLLIBS += -L$(XERCESCROOT)/lib -lxerces-c1_1
+XERCESLIB = $(XERCESCROOT)/lib/libxerces-c1_1.so
 
 
 XSL_BUILD_OPTIONS =

@@ -131,7 +131,7 @@
 #include <dom/DOM_ProcessingInstruction.hpp>
 #include <sax/DocumentHandler.hpp>
 #include <sax/Locator.hpp>
-#include <sax/SaxException.hpp>
+#include <sax/SAXException.hpp>
 #include <util/PlatformUtils.hpp>
 #include <framework/URLInputSource.hpp>
 
@@ -568,8 +568,9 @@ XSLTEngineImpl::processStylesheet(
 {
 	delete m_stylesheetRoot;
 
+	DOMString ds("Input XSL");
 	const DOMString	xslIdentifier(0 == stylesheetSource.getSystemId() ? 
-									 L"Input XSL" : stylesheetSource.getSystemId());
+									 ds : stylesheetSource.getSystemId());
 
 	// In case we have a fragment identifier, go ahead and 
 	// try to parse the XML here.
@@ -731,7 +732,7 @@ XSLTEngineImpl::getStylesheetFromPIURL(
 
 	if(fragIndex == 0)
 	{
-		diag(L"Locating stylesheet from fragment identifier...");
+		diag("Locating stylesheet from fragment identifier...");
 
 		const DOMString		fragID = substring(localXSLURLString, 1);
 
@@ -754,15 +755,15 @@ XSLTEngineImpl::getStylesheetFromPIURL(
 			if	(node.getNodeType() == DOM_Node::ELEMENT_NODE) 
 				nsNode = (static_cast<const DOM_Element&>(node));
 			else
-				error(L"Could not identify fragment: " + fragID);
+				error("Could not identify fragment: " + fragID);
 		}
 
 		// Try a bunch of really ugly stuff to find the fragment.
 		// What's the right way to do this?
-		DOMString ds(L"id(");
+		DOMString ds("id(");
 
 		ds += fragID;
-		ds += L")";
+		ds += ")";
 
 		ElementPrefixResolverProxy		theProxy(nsNode, m_xpathSupport);
 
@@ -779,9 +780,9 @@ XSLTEngineImpl::getStylesheetFromPIURL(
 
 		if(nl->getLength() == 0)
 		{
-			ds = L"//*[@id='";
+			ds = "//*[@id='";
 			ds += fragID;
-			ds += L"']";
+			ds += "']";
 
 			theExecutionContext.setContextNodeList(NodeRefList());
 
@@ -791,9 +792,9 @@ XSLTEngineImpl::getStylesheetFromPIURL(
 
 			if(nl->getLength() == 0)
 			{
-				ds = L"//*[@name='";
+				ds = "//*[@name='";
 				ds += fragID;
-				ds += L"']";
+				ds += "']";
 
 				theExecutionContext.setContextNodeList(NodeRefList());
 
@@ -815,7 +816,7 @@ XSLTEngineImpl::getStylesheetFromPIURL(
 
 		if(nl->getLength() == 0)
 		{
-			error(L"Could not find fragment: " + fragID);
+			error("Could not find fragment: " + fragID);
 		}
 
 		DOM_Node frag = nl->item(0);
@@ -839,19 +840,19 @@ XSLTEngineImpl::getStylesheetFromPIURL(
 			FormatterTreeWalker tw(flistener);
 			tw.traverse(frag);
 			
-			displayDuration(L"Setup of " + localXSLURLString, &frag);
+			displayDuration("Setup of " + localXSLURLString, &frag);
 		}
 		else
 		{
 			stylesheetDoc = 0;
-			error(L"Node pointed to by fragment identifier was not an element: " + fragID);
+			error("Node pointed to by fragment identifier was not an element: " + fragID);
 		}
 	}
 	else
 	{ 
 		// hmmm.. for now I'll rely on the XML parser to handle 
 		// fragment URLs.
-		diag(L"========= Parsing and preparing " + localXSLURLString + L" ==========");
+		diag("========= Parsing and preparing " + localXSLURLString + " ==========");
 		pushTime(&localXSLURLString);
 
 		if(isRoot)
@@ -2775,8 +2776,8 @@ XSLTEngineImpl::copyAttributeToTarget(
 	// TODO: Find out about empty attribute template expression handling.
 	if(0 != length(stringedValue))
 	{
-		if((equals(attrName, L"xmlns") || startsWith(attrName, L"xmlns:"))
-		   && startsWith(stringedValue, L"quote:"))
+		if((equals(attrName, "xmlns") || startsWith(attrName, "xmlns:"))
+		   && startsWith(stringedValue, "quote:"))
 		{
 			stringedValue = substring(stringedValue, 6);
 		}
@@ -3066,21 +3067,21 @@ XSLTEngineImpl::shouldStripSourceNode(const DOM_Node&	textNode) const
 			{
 				const DOM_Element&	parentElem =
 					static_cast<const DOM_Element&>(parent);
-				const DOM_Attr	attr = parentElem.getAttributeNode(L"xml:space");
+				const DOM_Attr	attr = parentElem.getAttributeNode("xml:space");
 				if(0 != attr)
 				{
 					const DOMString 	xmlSpaceVal = attr.getValue();
-					if(equals(xmlSpaceVal, L"preserve"))
+					if(equals(xmlSpaceVal, "preserve"))
 					{
 						strip = false;
 					}
-					else if(equals(xmlSpaceVal, L"default"))
+					else if(equals(xmlSpaceVal, "default"))
 					{
 						strip = true;
 					}
 					else
 					{
-						error(L"xml:space in the source XML has an illegal value: " + xmlSpaceVal);
+						error("xml:space in the source XML has an illegal value: " + xmlSpaceVal);
 					}
 					break;
 				}

@@ -85,7 +85,7 @@
 #include <XMLSupport/FormatterToDOM.hpp>
 
 #include <PlatformSupport/StringTokenizer.hpp>
-#include <PlatformSupport/AttributeListimpl.hpp>
+#include <PlatformSupport/AttributeListImpl.hpp>
 
 #include <XercesPlatformSupport/XercesDOMPrintWriter.hpp>
 #include <XercesPlatformSupport/XercesStdTextOutputStream.hpp>
@@ -663,7 +663,7 @@ void StylesheetRoot::fireTraceEvent(const TracerEvent& te) const
 	int nListeners = m_traceListeners.size();
 	for(int i = 0; i < nListeners; i++)
 	{
-		TraceListener* tl = m_traceListeners.at(i);
+		TraceListener* tl = m_traceListeners[i];
 		tl->trace(te);
 	}
 }
@@ -676,7 +676,7 @@ void StylesheetRoot::fireSelectedEvent(const SelectionEvent& se) const
 	int nListeners = m_traceListeners.size();
 	for(int i = 0; i < nListeners; i++)
 	{
-		TraceListener* tl = m_traceListeners.at(i);
+		TraceListener* tl = m_traceListeners[i];
 		tl->selected(se);
 	}
 }

@@ -309,9 +309,6 @@ FormatterToHTML::characters(
 {
 		if(0 == length) return;
 
-	std::basic_string<XMLCh> msg(L"Invalid UTF-16 surrogate detected: ");
-	XMLCh buffer[32];	// Should be big enough
-
 	if(m_nextIsRaw)
 	{
 		m_nextIsRaw = false;

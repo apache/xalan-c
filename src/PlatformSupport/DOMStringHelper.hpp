@@ -70,6 +70,7 @@
 #include <functional>
 #include <iosfwd>
 #include <vector>
+#include <string>
 
 
 
@@ -633,12 +634,18 @@ XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(std::string)
 DOMStringToStdString(const DOMString& domString);
 
 
+#if defined(__GNUC__)
+
+// Linux GNU C++ doesn't support wstring
+#else			
 
 inline std::wstring
 DOMStringToStdWString(const DOMString& domString)
 {
 	return (c_wstr(domString));
 }
+
+#endif	
 
 
 

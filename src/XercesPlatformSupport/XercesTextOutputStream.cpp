@@ -59,8 +59,6 @@
 
 
 
-#include <sstream>
-
 
 
 #if defined(_MSC_VER)

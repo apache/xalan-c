@@ -72,8 +72,10 @@
 #include "ElemTemplateElement.hpp"
 
 
-
+// Just locale.h in G++
+#if ! defined(__GNUC__)
 #include <locale>
+#endif
 
 
 
@@ -261,6 +263,7 @@ protected:
 			const XPath*					countMatchPattern, 
 			const DOM_Node&					node) const;
 
+#if ! defined(__GNUC__)
 	/**
 	 * Get the locale we should be using.
 	 */
@@ -268,6 +271,7 @@ protected:
 	getLocale(
 			StylesheetExecutionContext&		executionContext,
 			const DOM_Node&					contextNode) const;
+#endif
 
 	NumberFormat*
 	getNumberFormatter(

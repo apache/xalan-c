@@ -137,6 +137,10 @@
 #include <map>
 #include <set>
 
+#if defined(__GNUC__)
+#include <stdexcept>
+#endif
+
 
 
 // Xerces DOM header file

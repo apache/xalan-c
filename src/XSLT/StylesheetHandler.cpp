@@ -59,7 +59,7 @@
 
 
 #include <sax/Locator.hpp>
-#include <sax/SaxException.hpp>
+#include <sax/SAXException.hpp>
 
 #include <util/XMLURL.hpp>
 

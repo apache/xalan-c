@@ -132,14 +132,15 @@ void printArgOptions(XercesDOMPrintWriter&		writer)
 	writer.println("	 [-PARAM name expression (Set a stylesheet parameter)]");
 }
 
+/*
 void printChildren(const DOM_Node& theNode, int level=0) 
 {
 	XMLCh *nodeTypeNames[] =
 	{
-		L"", L"ELEMENT_NODE", L"ATTRIBUTE_NODE", L"TEXT_NODE", L"CDATA_SECTION_NODE",
-		L"ENTITY_REFERENCE_NODE", L"ENTITY_NODE", L"PROCESSING_INSTRUCTION_NODE",
-		L"COMMENT_NODE", L"DOCUMENT_NODE", L"DOCUMENT_TYPE_NODE",
-		L"DOCUMENT_FRAGMENT_NODE", L"NOTATION_NODE",
+		"", "ELEMENT_NODE", "ATTRIBUTE_NODE", "TEXT_NODE", "CDATA_SECTION_NODE",
+		"ENTITY_REFERENCE_NODE", "ENTITY_NODE", "PROCESSING_INSTRUCTION_NODE",
+		"COMMENT_NODE", "DOCUMENT_NODE", "DOCUMENT_TYPE_NODE",
+		"DOCUMENT_FRAGMENT_NODE", "NOTATION_NODE",
 	};
 
 	DOM_NodeList nl = theNode.getChildNodes();
@@ -151,15 +152,16 @@ void printChildren(const DOM_Node& theNode, int level=0)
 		printf("%d.%d: ", level, i);
 		const DOM_Node n = nl.item(i);
 		std::basic_string<XMLCh> s(c_wstr(n.getNodeName()));
-		s.append(L"(");
+		s.append("(");
 		int t = n.getNodeType();
 		s.append(nodeTypeNames[t]);
-		s.append(L")");
+		s.append(")");
 		printf("%-20ws ", s.c_str());
 		printf( t==3 ? "= %ws\n": "\n", c_wstr(n.getNodeValue()));
 		printChildren(n, level);
 	}
 }
+*/
 
 
 void xsltMain(int argc, const char* argv[] ) throw(XMLException)
@@ -399,10 +401,11 @@ void xsltMain(int argc, const char* argv[] ) throw(XMLException)
 			/*
 			 * Output the source tree
 			 */
+/*
 			if (0)
 			if (! setQuietMode)
 				printChildren(sourceTree);
-
+ */
 			
 			if(0 != stylesheet)
 			{

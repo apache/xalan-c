@@ -67,6 +67,9 @@
 #include "windows.h"
 #else
 #define INVALID_HANDLE_VALUE 0
+
+#include <cerrno>
+
 #endif
 
 

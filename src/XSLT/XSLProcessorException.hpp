@@ -60,7 +60,7 @@
 
 
 // Base header file.  Must be first.
-#include <xSLT/XSLTDefinitions.hpp>
+#include <XSLT/XSLTDefinitions.hpp>
 
 #include <dom/DOMString.hpp>
 #include <dom/DOM_Node.hpp>

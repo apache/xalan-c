@@ -58,9 +58,11 @@
 #include "XercesStdTextOutputStream.hpp"
 
 
+#include <strstream>
 
-#include <ostream>
-#include <sstream>
+#if  defined(__GNUC__)
+#include <cerrno>
+#endif
 
 
 
@@ -116,13 +118,13 @@ FormatMessageLocal(
 {
 	DOMString	theResult(clone(theMessage));
 
-	std::stringstream	theFormatter;
+	std::ostrstream   theFormatter;
 
 	theFormatter << ".  The error code was "
 				 << theErrorCode
-				 << ".";
+				 << "." << '\0';
 
-	theResult += theFormatter.str().c_str();
+	theResult += theFormatter.str();
 
 	return theResult;
 }
