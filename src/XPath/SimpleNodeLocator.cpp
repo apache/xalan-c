@@ -650,18 +650,13 @@ SimpleNodeLocator::stepPattern(
 
 			step(xpath, executionContext, parentContext, startOpPos, mnl);
 
-			const int			nNodes = mnl.getLength();
-
-			score = xpath.s_MatchScoreNone;
-
-			for(int i = 0; i < nNodes; i++)
+			if (mnl.indexOf(localContext) == MutableNodeRefList::npos)
 			{
-				if(mnl.item(i) == localContext)
-				{
-					score = xpath.s_MatchScoreOther;
-
-					break;
-				}
+				score = xpath.s_MatchScoreNone;
+			}
+			else
+			{
+				score = xpath.s_MatchScoreOther;
 			}
 		}
 	}
