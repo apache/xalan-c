@@ -79,27 +79,6 @@ XSLTInit*	XalanTransformer::m_xsltInit = 0;
 
 
 
-struct SetParamFunctor 
-{
-    SetParamFunctor(XSLTEngineImpl&		theProcessor):
-        m_processor(theProcessor)
-    {
-    }
-
-	void
-    operator()(const XalanTransformer::ParamPairType&	theParamPair) 
-	{
-       	// Set the stylesheet parameter.
-	    m_processor.setStylesheetParam(
-					theParamPair.first,  
-					theParamPair.second);        
-	}
-
-   	XSLTEngineImpl&		m_processor;
-};
-
-
-
 XalanTransformer::XalanTransformer():
 	m_stylesheetExecutionContext(),
 	m_compiledStylesheets(),
@@ -219,10 +198,12 @@ XalanTransformer::transform(
 
 		m_stylesheetExecutionContext.setXSLTProcessor(&theProcessor);
 
-        // Set the parameters.
-	    for_each(m_paramPairs.begin(),
-			     m_paramPairs.end(),
-			     SetParamFunctor(theProcessor));
+		for (ParamPairVectorType::size_type i = 0; i < m_paramPairs.size(); ++i)
+		{
+			theProcessor.setStylesheetParam(
+					m_paramPairs[i].first,
+					m_paramPairs[i].second);
+		}
 
 		// Do the transformation...
 		theProcessor.process(
@@ -369,10 +350,12 @@ XalanTransformer::transform(
 		// Set the compiled stylesheet.
 		theCompiledStylesheet->setStylesheetRoot(m_stylesheetExecutionContext);
 
-		// Set the parameters.
-	    for_each(m_paramPairs.begin(),
-			     m_paramPairs.end(),
-			     SetParamFunctor(theProcessor));
+		for (ParamPairVectorType::size_type i = 0; i < m_paramPairs.size(); ++i)
+		{
+			theProcessor.setStylesheetParam(
+					m_paramPairs[i].first,
+					m_paramPairs[i].second);
+		}
 
 		// Do the transformation...
 		theProcessor.process(
