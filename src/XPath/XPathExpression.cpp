@@ -738,7 +738,7 @@ XPathExpression::IntializeOpCodeLengthMap()
 	theMap[eFROM_PRECEDING] = 2 + s__opCodeMapLengthIndex;
 	theMap[eFROM_PRECEDING_SIBLINGS] = 2 + s__opCodeMapLengthIndex;
 	theMap[eFROM_SELF] = 2 + s__opCodeMapLengthIndex;
-	theMap[eFROM_NAMESPACE] = 1 + s__opCodeMapLengthIndex;
+	theMap[eFROM_NAMESPACE] = 2 + s__opCodeMapLengthIndex;
 //	theMap[eFROM_ATTRIBUTE] = -1;
 //	theMap[eFROM_DOC] = -1;
 //	theMap[eFROM_DOCREF] = -1;
