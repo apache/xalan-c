@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<!DOCTYPE resources [
+  <!ENTITY apiResources SYSTEM "apiResources.xml">
+  <!ELEMENT resources (resource|human-resource)+>
+  <!ELEMENT resource EMPTY>
+  <!ATTLIST resource 		id CDATA #IMPLIED
+				title CDATA #IMPLIED
+				location CDATA #IMPLIED>
+  <!ELEMENT human-resource EMPTY>
+  <!ATTLIST human-resource 	id CDATA #IMPLIED
+				name CDATA #IMPLIED
+				mailto CDATA #IMPLIED>
+   ]>     
+<resources>
+ 	
+  <resource id="Xalan-current" title="Xalan-C++ 1.0.0 XSLT Processor" location="http://xml.apache.org/xalan"/>
+  <resource id="Xalan-c-dist" title="Xalan-C distribution directory" location="http://xml.apache.org/dist/xalan-c/"/>
+  <resource id="LotusXSL-current" title="LotusXSL 1.0.0" location="http://www.alphaworks.ibm.com/tech/LotusXSL"/>
+  <resource id="Xerces-c-dist" title="Xerces-C distribution directory" location="http://xml.apache.org/dist/xerces-c/"/>     
+	
+ <resource id="ApacheLicense" title="The Apache Software License, Version 1.1" location="http://xml.apache.org/dist/LICENSE.txt"/>
+	
+  <resource id="Readme" title="Xalan Repository Release Notes" location="http://www.apache.org/websrc/cvsweb.cgi/xml-xalan/README"/>
+  
+  <resource id="XSLT" title="W3C Recommendation 16 November 1999 XSL Transformations (XSLT) Version 1.0" location="http://www.w3.org/TR/xslt"/>
+  
+  <resource id="XPath" title="XML Path Language (XPath) Version 1.0" location="http://www.w3.org/TR/xpath"/>
+
+  <resource id="DOM" title="DOM" location="http://www.w3.org/DOM"/>
+
+    
+  <resource id="xml4c-used" title="Version 3.0.0EA3 of the XML Parser for C++" location="http://www.alphaworks.ibm.com/tech/xml4j"/>    
+  <resource id="xerces-used" title="Version 1.0.3 of Xerces-C++" location="http://xml.apache.org/xerces-c/index.html"/>   
+  
+ 
+  <human-resource id="xalandev" name="Xalan Development Mailing List" mailto="xalan-dev@xml.apache.org"/>
+  <human-resource id="sboag" name="Scott Boag" mailto="scott_boag@lotus.com"/>
+  <human-resource id="dnbertoni" name="David N. Bertoni" mailto="david_n_bertoni@lotus.com"/>
+  <human-resource id="mmidy" name="Myriam Midy" mailto="myriam_midy@lotus.com"/>
+  <human-resource id="scurcuru" name="Shane Curcuru" mailto="shane_curcuru@lotus.com"/>
+  <human-resource id="dleslie" name="Don Leslie" mailto="donald_leslie@lotus.com"/>       
+  <human-resource id="pdick" name="Paul Dick" mailto="paul_dick@lotus.com"/> 
+
+  <human-resource id="nmendelsohn" name="Noah Mendelsohn" mailto="noah_mendelsohn@lotus.com"/> 
+	<human-resource id="sanjiva" name="Sanjiva Weerawarana" mailto="sanjiva@watson.ibm.com"/> 
+
+</resources>

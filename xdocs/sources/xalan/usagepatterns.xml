@@ -1,0 +1,295 @@
+<?xml version="1.0" standalone="no"?> 
+<!DOCTYPE s1 SYSTEM "sbk:/style/dtd/document.dtd">
+<!--
+ * The Apache Software License, Version 1.1
+ *
+ *
+ * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer. 
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in
+ *    the documentation and/or other materials provided with the
+ *    distribution.
+ *
+ * 3. The end-user documentation included with the redistribution,
+ *    if any, must include the following acknowledgment:  
+ *       "This product includes software developed by the
+ *        Apache Software Foundation (http://www.apache.org/)."
+ *    Alternately, this acknowledgment may appear in the software itself,
+ *    if and wherever such third-party acknowledgments normally appear.
+ *
+ * 4. The names "Xalan" and "Apache Software Foundation" must
+ *    not be used to endorse or promote products derived from this
+ *    software without prior written permission. For written 
+ *    permission, please contact apache@apache.org.
+ *
+ * 5. Products derived from this software may not be called "Apache",
+ *    nor may "Apache" appear in their name, without prior written
+ *    permission of the Apache Software Foundation.
+ *
+ * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+ * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED.  IN NO EVENT SHALL THE APACHE SOFTWARE FOUNDATION OR
+ * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
+ * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
+ * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+ * SUCH DAMAGE.
+ * ====================================================================
+ *
+ * This software consists of voluntary contributions made by many
+ * individuals on behalf of the Apache Software Foundation and was
+ * originally based on software copyright (c) 1999, Lotus
+ * Development Corporation., http://www.lotus.com.  For more
+ * information on the Apache Software Foundation, please see
+ * <http://www.apache.org/>.
+ -->
+<s1 title="Basic usage patterns">
+<ul>
+<li><link anchor="intro">Introduction</link></li>
+<li><link anchor="basic">Basic procedure for performing XSL transformations</link></li>
+<li><link anchor="dom">Working with DOM input and output</link></li>
+<li><link anchor="params">Setting stylesheet parameters</link></li>
+<li><link anchor="compiled">Compiling stylesheets</link></li>
+<li><link anchor="xpath">Working with XPath expressions</link></li>
+<li><link anchor="extensions">Creating and using extension functions</link></li>
+<li><link anchor="debugging">Debugger interface</link></li>
+
+</ul><anchor name="intro"/>
+
+  <s2 title="Introduction">  
+<p>&xslt4c; takes as primary input an XML source document and an XSL stylesheet, both represented by instances of <jump href="apidocs/class_XSLTInputSource.html">XSLTInputSource</jump>. The stylesheet may also take the form of a compiled stylesheet (an instance of <jump href="apidocs/class_stylesheetroot.html">StylesheetRoot</jump>. If the XML document contains a stylesheet Processing Instruction (PI), a separate stylesheet is not required.</p>
+<p>&xslt4c; uses an implementation of the <jump href="apidocs/class_xmlparserliaison.html"/> to interact with the Xerces XML parser and sends the output to <jump href="apidocs/class_xsltresulttarget.html">XSLTResultTarget</jump>.
+Your input and output objects can each take the form of a URL or file, a stream, or a DOM tree.</p>
+<p>For detailed API documentation, see <jump href="apidocs/index.html">Xalan C++ API</jump>. For an overview of the
+command-line utility, see <link idref="commandline">Command-Line Utility</link>.</p>
+</s2><anchor name="basic"/>
+<s2 title="Basic Procedure for Performing an XSL transformation">
+<p>When you are setting up your application to use XSL stylesheets to transform XML documents, you must do the following:</p>
+<s3 title="1. Include the required header files">
+<p>Along with any required Xalan-C and other header files, include utils/PlatformUtils.hpp from the Xerces-C distribution.</p>
+</s3>
+<s3 title="2. Initialize Xalan and Xerces">
+<p>Use the static initializers to initialize the Xalan-C and Xerces-C platforms. You only need to do this once per session.</p>
+<source>XMLPlatformUtils::Initialize();
+XSLTEngineImpl::Initialize();</source>
+</s3><anchor name="step3"/>
+<s3 title="3. Set up an XSLT processor with its support objects">
+<p>The XSLT processor interacts with several support objects that you must set up before you can perform transformations.</p>
+<source>// Create the support objects.
+DOMSupportDefault          theDOMSupport;
+XercesParserLiaison        theParserLiaison(theDOMSupport);
+XPathSupportDefault        theXPathSupport(theDOMSupport);
+XSLTProcessorEnvSupportDefault  theXSLTProcessorEnvSupport;
+XObjectFactoryDefault      theXObjectFactory(theXSLTProcessorEnvSupport, 
+                                             theXPathSupport);
+XPathFactoryDefault        theXPathFactory;
+
+// Create the processor.
+XSLTEngineImpl  theProcessor(
+          theParserLiaison,
+          theXPathSupport,
+          theXSLTProcessorEnvSupport,
+          theXObjectFactory,
+          theXPathFactory);
+
+// Connect the processor to the environment support object,
+// and use the parser liaison as the formatter.
+theXSLTProcessorEnvSupport.setProcessor(&amp;theProcessor);
+theProcessor.setFormatter(&amp;theParserLiaison);</source>
+</s3>
+<s3 title="4. Create context objects for the stylesheet">
+<p>Use the processor and support objects to set up a stylesheet construction context object and execution context object.</p>
+<source>
+StylesheetConstructionContextDefault  theConstructionContext(
+            theProcessor,
+            theXSLTProcessorEnvSupport,
+            theXObjectFactory,
+            theXPathFactory);
+StylesheetExecutionContextDefault      theExecutionContext(
+            theProcessor,
+            theXSLTProcessorEnvSupport,
+            theXPathSupport,
+            theXObjectFactory);</source>
+</s3>
+<s3 title="5. Set up input and output objects for a transformation">
+<p>You must set up XSLTInputSource objects for the XML document and XSL stylesheet, and an XSLTResultTarget object to contain the transformation output.</p>
+<p>Each of these objects may take the form of a file or URL, a stream, or a DOM tree. In the following fragment, the input and output are files:</p>
+<source>// Use XalanDOMString to create a Unicode file name.
+// The files are in the same directory as the application executable.
+const XalanDOMString    theXMLFileName("foo.xml");
+const XalanDOMString    theXSLFileName("foo.xsl");
+
+// Create XSLTInputSource objects.
+XSLTInputSource    theInputSource(c_wstr(theXMLFileName));
+XSLTInputSource    theStylesheetSource(c_wstr(theXSLFileName));
+
+// For the output, create an XSLTResultTarget object.
+TextFileOutputStream  theOutputStream("foo.out");
+XercesDOMPrintWriter  theResultWriter(theOutputStream);
+XSLTResultTarget    theResultTarget(&amp;theResultWriter);
+</source>
+<p>For the other constructors you can use to set up input and output objects (with input and output streams, for example), see <jump href="apidocs/class_xsltinputsource.html">XSLTInputSource</jump> and <jump href="apidocs/class_xsltresulttarget.html">XSLTResultTarget</jump>. See also <link anchor="dom">Working with
+DOM input and output</link>.</p>
+</s3>
+<s3 title="6. Perform the transformation">
+<p>Use the XSLTEngineImpl process() method to perform the transformation.</p>
+<source>
+theProcessor.process(
+               theInputSource,
+               &amp;theStylesheetSource,
+               theResultTarget,
+               theConstructionContext,
+               theExecutionContext);</source>
+<p>The XSLTResultTarget object now contains the transformation output.</p>
+<p>XSLTEngineImpl stores running state information, so it is not thread-safe. To perform multiple transformations, create a new instance for each transformation, synchronize the transformations, or call the XSLTProcessor reset() method between each transformation.</p> 
+<p>If you are using the same stylesheet to perform multiple transformations, compile the stylesheet and use the StylesheetRoot process() method. StylesheetRoot objects are thread-safe. A single StylesheetRoot object may be called concurrently from multiple threads. For more information, see xxxx.</p>
+<p>For a sample application that performs a transformation, see <link idref="samples" anchor="simpletransform">SimpleTransform</link>.</p> 
+</s3>
+</s2><anchor name="dom"/>
+<s2 title="Working with DOM input and output">
+<p>You can set up an XSLTResultTarget to produce a DOM when you perform a transformation. You can also use a DOM as input for a transformation, either the DOM output of another transformation, or a DOM produced by the Xerces DOMParser.</p>
+<p>The following code fragments illustrate the procedures for working with DOM input and output:</p>
+<source>
+
+// Use the Xerces DOM parser to create a DOM_Document.
+#include &lt;parsers/DOMParser.hpp&gt;
+#include &lt;dom/DOM_Node.hpp&gt;
+
+DOMParser  theParser;
+theParser.parse("foo.xml");
+const DOM_Document theDOM = theParser.getDocument();
+
+// Set up a XercesParserLiaison and use it to wrap the DOM_Document
+// in a XalanDocument.
+DOMSupportDefault   theDOMSupport;
+XercesParserLiaison	theParserLiaison(theDOMSupport);
+XalanDocument* theDoc = theParserLiaison.createDocument(theDOM);
+
+// Use the XalanDocument to create an XSLTInputSource object, which
+// you can then use in a transformation.
+XSLTInputSource		theInputSource(theDoc);
+...
+// If you want to produce DOM output, create an empty XalanDocument
+// to contain the transformation output.
+XalanDocument* docOut = theParserLiaison.createDocument();
+XSLTResultTarget theDOMResultTarget(docOut);
+...
+// After you perform the transformation, the XalanDocument contains
+// the output.
+// You can also convert the XalanDocument to a Xerces DOM_Document.
+DOM_Document domOut = theParserLiaison.mapXercesDocument(docOut)</source>
+</s2><anchor name="params"/>
+<s2 title="Setting stylesheet parameters">
+<p>An XSL stylesheet can include parameters that get set at run time when a transformation takes place. When we generate the HTML documents that make up the Xalan doc set, for example, we send the stylesheet an id parameter along with each XML source document. The id identifies that document and enables the stylesheet to integrate it into the overall doc set.</p>
+<p>To set a stylesheet parameter, use one of the <jump href="apidocs/class_xsltengineimpl.html">XSLTEngineImpl</jump> setStylesheetParam() methods. Both methods take two arguments: the parameter name (a XalanDOMstring) and the expression (a XalanDOMString or an XObject). The XObject option is useful when you are working with the XPath API. For example, you could use the XObject returned by an Xpath function to set a stylesheet parameter.</p>
+<note>If the expression is a string and you are using XalanDOMString for the input parameter, enclose it in single quotes to make it a string expression.</note>
+<p>You can include the -param flag with two arguments when you call the <link idref="commandline">command line utility</link>. The first argument is the parameter name or key, and the second argument is the string expression (in single quotes). For example:</p>
+<p><code>TestXSLT -in foo.xml -xsl foo.xsl -param 'boo'</code></p>
+<p>If the string expression includes spaces, first enclose the string in single quotes so it is interpreted as a string expression, and then enclose the resulting string in double quotes so it is interpreted as a single argument. For example:</p>
+<p><code>TestXSLT -in foo.xml -xsl foo.xsl -param param1 "'hello there'"</code></p>
+<p>The <link idref="samples" anchor="usestylesheetparam">UseStylesheetParam</link> sample application also uses a command-line parameter.</p>
+</s2><anchor name="compiled"/>
+<s2 title="Compiling stylesheets">
+<p>A <jump href="apidocs/class_stylesheetroot.html">StylesheetRoot</jump> object is a binary representation of a stylesheet that adds efficiency to the performance of repeated transformations and supports thread-safe concurrent access by multiple clients. If, for example, you are setting up a server application to perform transformations, you can improve performance by compiling any stylesheets the application repeatedly uses.</p>
+<p>A compiled stylesheet requires its own XPath and XObject factory support objects, independent of the support objects for an XSLT processor. So after you have set up the XSLT processor with its support objects, set up other
+factory support objects and use them to create a construction context for the stylesheet:</p>
+<source>// Set up the XSLT processor with its support objects
+DOMSupportDefault          theDOMSupport;
+XercesParserLiaison        theParserLiaison(theDOMSupport);
+XPathSupportDefault        theXPathSupport(theDOMSupport);
+XSLTProcessorEnvSupportDefault  theXSLTProcessorEnvSupport;
+XObjectFactoryDefault      theXObjectFactory(theXSLTProcessorEnvSupport, 
+                                             theXPathSupport);
+XPathFactoryDefault        theXPathFactory;
+
+// Create the processor, connect it to the environment support
+// object, and use the parser liaison as the formatter.
+XSLTEngineImpl  theProcessor(
+          theParserLiaison,
+          theXPathSupport,
+          theXSLTProcessorEnvSupport,
+          theXObjectFactory,
+          theXPathFactory);
+theXSLTProcessorEnvSupport.setProcessor(&amp;theProcessor);
+theProcessor.setFormatter(&amp;theParserLiaison);
+...
+// Create factory support objects for the stylesheet, so it will
+// have its own factory-created XObject and XPath instances 
+// (separate from the XSLT processor XObject and XPath objects).
+XObjectFactoryDefault      theStylesheetXObjectFactory(
+            theXSLTProcessorEnvSupport,
+            theXPathSupport);
+ XPathFactoryDefault        theStylesheetXPathFactory;
+
+ // Use these factory support objects to create a stylesheet 
+ // construction context.
+ StylesheetConstructionContextDefault  theConstructionContext(
+            theProcessor,
+            theXSLTProcessorEnvSupport,
+            theStylesheetXObjectFactory,
+            theStylesheetXPathFactory);
+
+ // The execution context uses the same factory support objects as
+ // the processor.
+ StylesheetExecutionContextDefault    theExecutionContext(
+            theProcessor,
+            theXSLTProcessorEnvSupport,
+            theXPathSupport,
+            theXObjectFactory);</source>
+<p>To compile a stylesheet, use the <jump href="apidocs/class_xsltengineimpl.html">XSLTEngineImpl</jump> processStylesheet() method. This operation also sets the XXLTEngineImpl Stylesheet property. In the interest of clarity, you may want to use the setStylesheet() method to explicitly set that property. Then when you call the process method, include a 0 for the "uncompiled" stylesheet parameter so XSLTEngineImpl uses the compiled stylesheet. For example:</p>
+<source>
+// Compile the stylesheet.
+StylesheetRoot* const	theStylesheetRoot =
+          theProcessor.processStylesheet(
+                theStylesheetSource,
+                theConstructionContext);
+                                
+theProcessor.setStylesheet(theStylesheetRoot) // Good form!
+
+// Set up an XSLTInputSource object (theInputSource)
+// and an XSLTResultTarget object (theResultTarget).
+...
+// Do the tranformation...
+theProcessor.process(
+         theInputSource,
+         0,              //Use the StylesheetRoot
+         theResultTarget,
+         theConstructionContext,
+         theExecutionContext);
+
+// Reset the processor and the execution context
+// so we can perform the next transformation.
+theProcessor.reset();
+theProcessor.setStylesheet(theStylesheetRoot);
+theExecutionContext.reset();
+
+// Perform the next transformation.
+....</source>
+<p>For an example, see the <link idref="samples" anchor="compilestylesheet">CompileStylesheet</link> sample.</p>
+<p>Alternative: StylesheetRoot has its own process method, which you can also use to perform transformations.</p>
+</s2><anchor name="xpath"/>
+<s2 title="Working with XPath expressions">
+<p>XSL stylesheets use XPath expressions to select nodes, specify conditions, and generate text for the result tree. XPath provides an API that you can call directly. For example, you may want to select nodes programmatically and do your own processing without a stylesheet.</p>
+<p>The XPathAPI class, in the samples/ApplyXPath subdirectory, contains several convenience methods that you can use to return single DOM Nodes, NodeLists, and XObjects. In the future, we plan to incorporate user feedback and move these methods into the core API.</p>
+<p>If you are interested in the API for executing XPath expressions, we suggest you take a look at the methods in XPathAPI,
+and send us feedback on what best meets your needs.</p>
+<p>For an example that executes XPath expressions against XML source files, see <link idref="samples" anchor="xpath">XPathWrapper</link>.</p>
+</s2>
+<anchor name="debugging"/>
+<s2 title="Debugger Interface">
+<p><em>Placeholder</em>. What do we have to say about TraceListener, the XSLTEngineImplProcessor addTraceListener() method, and TracerEvents? Must also figure out what to include and what to cut out of the command line document.</p>
+</s2>
+</s1>
