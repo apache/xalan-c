@@ -127,31 +127,31 @@ LINK32=link.exe
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanExtensions\FunctionDifference.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanExtensions\FunctionDifference.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanExtensions\FunctionDistinct.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanExtensions\FunctionDistinct.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanExtensions\FunctionEvaluate.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanExtensions\FunctionEvaluate.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanExtensions\FunctionHasSameNodes.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanExtensions\FunctionHasSameNodes.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanExtensions\FunctionIntersection.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanExtensions\FunctionIntersection.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanExtensions\FunctionNodeSet.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanExtensions\FunctionNodeSet.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanExtensions\XalanExtensions.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanExtensions\XalanExtensions.cpp
 # End Source File
 # End Group
 # Begin Group "Header Files"
@@ -159,35 +159,35 @@ SOURCE=..\..\..\..\src\XalanExtensions\XalanExtensions.cpp
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanExtensions\FunctionDifference.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanExtensions\FunctionDifference.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanExtensions\FunctionDistinct.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanExtensions\FunctionDistinct.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanExtensions\FunctionEvaluate.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanExtensions\FunctionEvaluate.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanExtensions\FunctionHasSameNodes.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanExtensions\FunctionHasSameNodes.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanExtensions\FunctionIntersection.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanExtensions\FunctionIntersection.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanExtensions\FunctionNodeSet.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanExtensions\FunctionNodeSet.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanExtensions\XalanExtensions.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanExtensions\XalanExtensions.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanExtensions\XalanExtensionsDefinitions.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanExtensions\XalanExtensionsDefinitions.hpp
 # End Source File
 # End Group
 # Begin Group "Resource Files"

@@ -55,7 +55,7 @@
  * <http://www.apache.org/>.
  */
 // Base header file.  Must be first.
-#include <Include/PlatformDefinitions.hpp>
+#include <xalanc/Include/PlatformDefinitions.hpp>
 
 
 
@@ -81,23 +81,23 @@
 
 
 
-#include <PlatformSupport/DOMStringHelper.hpp>
-#include <PlatformSupport/XalanOutputStreamPrintWriter.hpp>
-#include <PlatformSupport/XalanFileOutputStream.hpp>
-#include <PlatformSupport/XalanStdOutputStream.hpp>
+#include <xalanc/PlatformSupport/DOMStringHelper.hpp>
+#include <xalanc/PlatformSupport/XalanOutputStreamPrintWriter.hpp>
+#include <xalanc/PlatformSupport/XalanFileOutputStream.hpp>
+#include <xalanc/PlatformSupport/XalanStdOutputStream.hpp>
 
 
 
-#include <XMLSupport/FormatterToXML.hpp>
-#include <XMLSupport/FormatterTreeWalker.hpp>
+#include <xalanc/XMLSupport/FormatterToXML.hpp>
+#include <xalanc/XMLSupport/FormatterTreeWalker.hpp>
 
 
 
-#include <XSLT/XSLTInputSource.hpp>
-#include <XSLT/XSLTResultTarget.hpp>
+#include <xalanc/XSLT/XSLTInputSource.hpp>
+#include <xalanc/XSLT/XSLTResultTarget.hpp>
 
-#include <XalanTransformer/XalanTransformer.hpp>
-#include <XalanTransformer/XalanCompiledStylesheetDefault.hpp>
+#include <xalanc/XalanTransformer/XalanTransformer.hpp>
+#include <xalanc/XalanTransformer/XalanCompiledStylesheetDefault.hpp>
 
 
 
@@ -107,10 +107,10 @@
 
 
 
-#include <XercesParserLiaison/FormatterToXercesDOM.hpp>
-#include <XercesParserLiaison/XercesDOMFormatterWalker.hpp>
-#include <XercesParserLiaison/XercesDOMSupport.hpp>
-#include <XercesParserLiaison/XercesParserLiaison.hpp>
+#include <xalanc/XercesParserLiaison/FormatterToXercesDOM.hpp>
+#include <xalanc/XercesParserLiaison/XercesDOMFormatterWalker.hpp>
+#include <xalanc/XercesParserLiaison/XercesDOMSupport.hpp>
+#include <xalanc/XercesParserLiaison/XercesParserLiaison.hpp>
 
 
 

@@ -127,155 +127,155 @@ LINK32=link.exe
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\AttributeListImpl.cpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\AttributeListImpl.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\AttributesImpl.cpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\AttributesImpl.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\DOMStringHelper.cpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\DOMStringHelper.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\DOMStringPrintWriter.cpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\DOMStringPrintWriter.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\DoubleSupport.cpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\DoubleSupport.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\ExecutionContext.cpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\ExecutionContext.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\FormatterListener.cpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\FormatterListener.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\NamedNodeMapAttributeList.cpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\NamedNodeMapAttributeList.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\NullPrintWriter.cpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\NullPrintWriter.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\PlatformSupportInit.cpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\PlatformSupportInit.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\PrefixResolver.cpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\PrefixResolver.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\PrintWriter.cpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\PrintWriter.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\Resettable.cpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\Resettable.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\StdBinInputStream.cpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\StdBinInputStream.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\StringTokenizer.cpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\StringTokenizer.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\URISupport.cpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\URISupport.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\Writer.cpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\Writer.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\XalanBitmap.cpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XalanBitmap.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\XalanDecimalFormat.cpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XalanDecimalFormat.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\XalanDecimalFormatSymbols.cpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XalanDecimalFormatSymbols.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\XalanDOMStringAllocator.cpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XalanDOMStringAllocator.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\XalanDOMStringCache.cpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XalanDOMStringCache.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\XalanDOMStringHashTable.cpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XalanDOMStringHashTable.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\XalanDOMStringPool.cpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XalanDOMStringPool.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\XalanFileOutputStream.cpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XalanFileOutputStream.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\XalanNullOutputStream.cpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XalanNullOutputStream.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\XalanNumberFormat.cpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XalanNumberFormat.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\XalanOutputStream.cpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XalanOutputStream.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\XalanOutputStreamPrintWriter.cpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XalanOutputStreamPrintWriter.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\XalanParsedURI.cpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XalanParsedURI.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\XalanReferenceCountedObject.cpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XalanReferenceCountedObject.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\XalanSimplePrefixResolver.cpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XalanSimplePrefixResolver.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\XalanStdOutputStream.cpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XalanStdOutputStream.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\XalanToXercesTranscoderWrapper.cpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XalanToXercesTranscoderWrapper.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\XalanTranscodingServices.cpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XalanTranscodingServices.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\XalanUTF16Transcoder.cpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XalanUTF16Transcoder.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\XalanXMLChar.cpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XalanXMLChar.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\XSLException.cpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XSLException.cpp
 # End Source File
 # End Group
 # Begin Group "Header Files"
@@ -283,207 +283,207 @@ SOURCE=..\..\..\..\src\PlatformSupport\XSLException.cpp
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\ArenaAllocator.hpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\ArenaAllocator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\ArenaBlock.hpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\ArenaBlock.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\AttributeListImpl.hpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\AttributeListImpl.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\AttributesImpl.hpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\AttributesImpl.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\AttributeVectorEntry.hpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\AttributeVectorEntry.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\AttributeVectorEntryExtended.hpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\AttributeVectorEntryExtended.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\DirectoryEnumerator.hpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\DirectoryEnumerator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\DOMStringHelper.hpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\DOMStringHelper.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\DOMStringPrintWriter.hpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\DOMStringPrintWriter.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\DoubleSupport.hpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\DoubleSupport.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\ExecutionContext.hpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\ExecutionContext.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\FormatterListener.hpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\FormatterListener.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\NamedNodeMapAttributeList.hpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\NamedNodeMapAttributeList.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\NullPrintWriter.hpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\NullPrintWriter.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\PlatformSupportDefinitions.hpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\PlatformSupportDefinitions.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\PlatformSupportInit.hpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\PlatformSupportInit.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\PrefixResolver.hpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\PrefixResolver.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\PrintWriter.hpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\PrintWriter.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\Resettable.hpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\Resettable.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\ReusableArenaAllocator.hpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\ReusableArenaAllocator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\ReusableArenaBlock.hpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\ReusableArenaBlock.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\StdBinInputStream.hpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\StdBinInputStream.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\StringTokenizer.hpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\StringTokenizer.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\URISupport.hpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\URISupport.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\Writer.hpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\Writer.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\XalanAllocator.hpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XalanAllocator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\XalanArrayAllocator.hpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XalanArrayAllocator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\XalanBitmap.hpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XalanBitmap.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\XalanDecimalFormat.hpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XalanDecimalFormat.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\XalanDecimalFormatSymbols.hpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XalanDecimalFormatSymbols.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\XalanDOMStringAllocator.hpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XalanDOMStringAllocator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\XalanDOMStringCache.hpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XalanDOMStringCache.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\XalanDOMStringHashTable.hpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XalanDOMStringHashTable.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\XalanDOMStringPool.hpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XalanDOMStringPool.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\XalanFileOutputStream.hpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XalanFileOutputStream.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\XalanLocator.hpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XalanLocator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\XalanNamespace.hpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XalanNamespace.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\XalanNullOutputStream.hpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XalanNullOutputStream.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\XalanNumberFormat.hpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XalanNumberFormat.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\XalanOutputStream.hpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XalanOutputStream.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\XalanOutputStreamPrintWriter.hpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XalanOutputStreamPrintWriter.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\XalanParsedURI.hpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XalanParsedURI.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\XalanReferenceCountedObject.hpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XalanReferenceCountedObject.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\XalanSimplePrefixResolver.hpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XalanSimplePrefixResolver.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\XalanStdOutputStream.hpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XalanStdOutputStream.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\XalanToXercesTranscoderWrapper.hpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XalanToXercesTranscoderWrapper.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\XalanTranscodingServices.hpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XalanTranscodingServices.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\XalanUnicode.hpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XalanUnicode.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\XalanUTF16Transcoder.hpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XalanUTF16Transcoder.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\XalanXMLChar.hpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XalanXMLChar.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\XSLException.hpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XSLException.hpp
 # End Source File
 # End Group
 # Begin Group "Resource Files"

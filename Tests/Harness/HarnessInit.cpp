@@ -61,7 +61,7 @@
 
 
 
-#include <XalanDOM/XalanDOMInit.hpp>
+#include <xalanc/XalanDOM/XalanDOMInit.hpp>
 
 
 

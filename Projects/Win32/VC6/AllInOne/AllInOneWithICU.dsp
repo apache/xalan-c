@@ -126,27 +126,27 @@ LINK32=link.exe
 # PROP Default_Filter ""
 # Begin Source File
 
-SOURCE=..\..\..\..\src\Include\PlatformDefinitions.hpp
+SOURCE=..\..\..\..\src\xalanc\Include\PlatformDefinitions.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\Include\STLHelper.hpp
+SOURCE=..\..\..\..\src\xalanc\Include\STLHelper.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\Include\VCPPDefinitions.hpp
+SOURCE=..\..\..\..\src\xalanc\Include\VCPPDefinitions.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\Include\XalanAutoPtr.hpp
+SOURCE=..\..\..\..\src\xalanc\Include\XalanAutoPtr.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\Include\XalanObjectCache.hpp
+SOURCE=..\..\..\..\src\xalanc\Include\XalanObjectCache.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\Include\XalanVersion.hpp
+SOURCE=..\..\..\..\src\xalanc\Include\XalanVersion.hpp
 # End Source File
 # End Group
 # Begin Group "XalanDOM"
@@ -154,191 +154,191 @@ SOURCE=..\..\..\..\src\Include\XalanVersion.hpp
 # PROP Default_Filter ""
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanDOM\XalanAttr.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanDOM\XalanAttr.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanDOM\XalanAttr.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanDOM\XalanAttr.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanDOM\XalanCDataSection.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanDOM\XalanCDataSection.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanDOM\XalanCDATASection.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanDOM\XalanCDATASection.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanDOM\XalanCharacterData.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanDOM\XalanCharacterData.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanDOM\XalanCharacterData.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanDOM\XalanCharacterData.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanDOM\XalanComment.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanDOM\XalanComment.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanDOM\XalanComment.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanDOM\XalanComment.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanDOM\XalanDocument.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanDOM\XalanDocument.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanDOM\XalanDocument.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanDOM\XalanDocument.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanDOM\XalanDocumentFragment.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanDOM\XalanDocumentFragment.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanDOM\XalanDocumentFragment.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanDOM\XalanDocumentFragment.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanDOM\XalanDocumentType.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanDOM\XalanDocumentType.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanDOM\XalanDocumentType.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanDOM\XalanDocumentType.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanDOM\XalanDOMDefinitions.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanDOM\XalanDOMDefinitions.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanDOM\XalanDOMException.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanDOM\XalanDOMException.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanDOM\XalanDOMException.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanDOM\XalanDOMException.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanDOM\XalanDOMImplementation.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanDOM\XalanDOMImplementation.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanDOM\XalanDOMImplementation.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanDOM\XalanDOMImplementation.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanDOM\XalanDOMInit.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanDOM\XalanDOMInit.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanDOM\XalanDOMInit.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanDOM\XalanDOMInit.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanDOM\XalanDOMString.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanDOM\XalanDOMString.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanDOM\XalanDOMString.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanDOM\XalanDOMString.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanDOM\XalanElement.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanDOM\XalanElement.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanDOM\XalanElement.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanDOM\XalanElement.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanDOM\XalanEmptyNamedNodeMap.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanDOM\XalanEmptyNamedNodeMap.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanDOM\XalanEmptyNamedNodeMap.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanDOM\XalanEmptyNamedNodeMap.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanDOM\XalanEntity.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanDOM\XalanEntity.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanDOM\XalanEntity.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanDOM\XalanEntity.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanDOM\XalanEntityReference.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanDOM\XalanEntityReference.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanDOM\XalanEntityReference.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanDOM\XalanEntityReference.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanDOM\XalanNamedNodeMap.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanDOM\XalanNamedNodeMap.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanDOM\XalanNamedNodeMap.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanDOM\XalanNamedNodeMap.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanDOM\XalanNode.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanDOM\XalanNode.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanDOM\XalanNode.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanDOM\XalanNode.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanDOM\XalanNodeList.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanDOM\XalanNodeList.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanDOM\XalanNodeList.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanDOM\XalanNodeList.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanDOM\XalanNodeListDummy.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanDOM\XalanNodeListDummy.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanDOM\XalanNodeListDummy.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanDOM\XalanNodeListDummy.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanDOM\XalanNodeListSurrogate.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanDOM\XalanNodeListSurrogate.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanDOM\XalanNodeListSurrogate.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanDOM\XalanNodeListSurrogate.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanDOM\XalanNotation.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanDOM\XalanNotation.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanDOM\XalanNotation.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanDOM\XalanNotation.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanDOM\XalanProcessingInstruction.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanDOM\XalanProcessingInstruction.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanDOM\XalanProcessingInstruction.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanDOM\XalanProcessingInstruction.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanDOM\XalanText.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanDOM\XalanText.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanDOM\XalanText.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanDOM\XalanText.hpp
 # End Source File
 # End Group
 # Begin Group "PlatformSupport"
@@ -346,367 +346,367 @@ SOURCE=..\..\..\..\src\XalanDOM\XalanText.hpp
 # PROP Default_Filter ""
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\ArenaAllocator.hpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\ArenaAllocator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\ArenaBlock.hpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\ArenaBlock.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\AttributeListImpl.cpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\AttributeListImpl.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\AttributeListImpl.hpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\AttributeListImpl.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\AttributesImpl.cpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\AttributesImpl.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\AttributesImpl.hpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\AttributesImpl.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\AttributeVectorEntry.hpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\AttributeVectorEntry.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\AttributeVectorEntryExtended.hpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\AttributeVectorEntryExtended.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\DirectoryEnumerator.hpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\DirectoryEnumerator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\DOMStringHelper.cpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\DOMStringHelper.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\DOMStringHelper.hpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\DOMStringHelper.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\DOMStringPrintWriter.cpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\DOMStringPrintWriter.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\DOMStringPrintWriter.hpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\DOMStringPrintWriter.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\DoubleSupport.cpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\DoubleSupport.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\DoubleSupport.hpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\DoubleSupport.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\ExecutionContext.cpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\ExecutionContext.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\ExecutionContext.hpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\ExecutionContext.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\FormatterListener.cpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\FormatterListener.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\FormatterListener.hpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\FormatterListener.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\NamedNodeMapAttributeList.cpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\NamedNodeMapAttributeList.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\NamedNodeMapAttributeList.hpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\NamedNodeMapAttributeList.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\NullPrintWriter.cpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\NullPrintWriter.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\NullPrintWriter.hpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\NullPrintWriter.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\PlatformSupportDefinitions.hpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\PlatformSupportDefinitions.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\PlatformSupportInit.cpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\PlatformSupportInit.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\PlatformSupportInit.hpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\PlatformSupportInit.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\PrefixResolver.cpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\PrefixResolver.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\PrefixResolver.hpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\PrefixResolver.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\PrintWriter.cpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\PrintWriter.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\PrintWriter.hpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\PrintWriter.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\Resettable.cpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\Resettable.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\Resettable.hpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\Resettable.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\ReusableArenaAllocator.hpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\ReusableArenaAllocator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\ReusableArenaBlock.hpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\ReusableArenaBlock.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\StdBinInputStream.cpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\StdBinInputStream.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\StdBinInputStream.hpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\StdBinInputStream.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\StringTokenizer.cpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\StringTokenizer.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\StringTokenizer.hpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\StringTokenizer.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\URISupport.cpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\URISupport.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\URISupport.hpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\URISupport.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\Writer.cpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\Writer.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\Writer.hpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\Writer.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\XalanAllocator.hpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XalanAllocator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\XalanArrayAllocator.hpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XalanArrayAllocator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\XalanBitmap.cpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XalanBitmap.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\XalanBitmap.hpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XalanBitmap.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\XalanDecimalFormat.cpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XalanDecimalFormat.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\XalanDecimalFormat.hpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XalanDecimalFormat.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\XalanDecimalFormatSymbols.cpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XalanDecimalFormatSymbols.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\XalanDecimalFormatSymbols.hpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XalanDecimalFormatSymbols.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\XalanDOMStringAllocator.cpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XalanDOMStringAllocator.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\XalanDOMStringAllocator.hpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XalanDOMStringAllocator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\XalanDOMStringCache.cpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XalanDOMStringCache.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\XalanDOMStringCache.hpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XalanDOMStringCache.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\XalanDOMStringHashTable.cpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XalanDOMStringHashTable.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\XalanDOMStringHashTable.hpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XalanDOMStringHashTable.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\XalanDOMStringPool.cpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XalanDOMStringPool.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\XalanDOMStringPool.hpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XalanDOMStringPool.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\XalanEncodingPropertyCache.cpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XalanEncodingPropertyCache.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\XalanEncodingPropertyCache.hpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XalanEncodingPropertyCache.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\XalanFileOutputStream.cpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XalanFileOutputStream.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\XalanFileOutputStream.hpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XalanFileOutputStream.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\XalanLocator.hpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XalanLocator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\XalanNamespace.hpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XalanNamespace.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\XalanNullOutputStream.cpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XalanNullOutputStream.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\XalanNullOutputStream.hpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XalanNullOutputStream.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\XalanNumberFormat.cpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XalanNumberFormat.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\XalanNumberFormat.hpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XalanNumberFormat.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\XalanOutputStream.cpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XalanOutputStream.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\XalanOutputStream.hpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XalanOutputStream.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\XalanOutputStreamPrintWriter.cpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XalanOutputStreamPrintWriter.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\XalanOutputStreamPrintWriter.hpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XalanOutputStreamPrintWriter.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\XalanParsedURI.cpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XalanParsedURI.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\XalanParsedURI.hpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XalanParsedURI.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\XalanReferenceCountedObject.cpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XalanReferenceCountedObject.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\XalanReferenceCountedObject.hpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XalanReferenceCountedObject.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\XalanSimplePrefixResolver.cpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XalanSimplePrefixResolver.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\XalanSimplePrefixResolver.hpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XalanSimplePrefixResolver.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\XalanStdOutputStream.cpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XalanStdOutputStream.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\XalanStdOutputStream.hpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XalanStdOutputStream.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\XalanToXercesTranscoderWrapper.cpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XalanToXercesTranscoderWrapper.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\XalanToXercesTranscoderWrapper.hpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XalanToXercesTranscoderWrapper.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\XalanTranscodingServices.cpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XalanTranscodingServices.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\XalanTranscodingServices.hpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XalanTranscodingServices.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\XalanUnicode.hpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XalanUnicode.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\XalanUTF16Transcoder.cpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XalanUTF16Transcoder.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\XalanUTF16Transcoder.hpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XalanUTF16Transcoder.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\XalanXMLChar.cpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XalanXMLChar.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\XalanXMLChar.hpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XalanXMLChar.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\XSLException.cpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XSLException.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\XSLException.hpp
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XSLException.hpp
 # End Source File
 # End Group
 # Begin Group "DOMSupport"
@@ -714,71 +714,71 @@ SOURCE=..\..\..\..\src\PlatformSupport\XSLException.hpp
 # PROP Default_Filter ""
 # Begin Source File
 
-SOURCE=..\..\..\..\src\DOMSupport\DOMServices.cpp
+SOURCE=..\..\..\..\src\xalanc\DOMSupport\DOMServices.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\DOMSupport\DOMServices.hpp
+SOURCE=..\..\..\..\src\xalanc\DOMSupport\DOMServices.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\DOMSupport\DOMSupport.cpp
+SOURCE=..\..\..\..\src\xalanc\DOMSupport\DOMSupport.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\DOMSupport\DOMSupport.hpp
+SOURCE=..\..\..\..\src\xalanc\DOMSupport\DOMSupport.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\DOMSupport\DOMSupportDefault.cpp
+SOURCE=..\..\..\..\src\xalanc\DOMSupport\DOMSupportDefault.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\DOMSupport\DOMSupportDefault.hpp
+SOURCE=..\..\..\..\src\xalanc\DOMSupport\DOMSupportDefault.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\DOMSupport\DOMSupportDefinitions.hpp
+SOURCE=..\..\..\..\src\xalanc\DOMSupport\DOMSupportDefinitions.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\DOMSupport\DOMSupportException.cpp
+SOURCE=..\..\..\..\src\xalanc\DOMSupport\DOMSupportException.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\DOMSupport\DOMSupportException.hpp
+SOURCE=..\..\..\..\src\xalanc\DOMSupport\DOMSupportException.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\DOMSupport\DOMSupportInit.cpp
+SOURCE=..\..\..\..\src\xalanc\DOMSupport\DOMSupportInit.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\DOMSupport\DOMSupportInit.hpp
+SOURCE=..\..\..\..\src\xalanc\DOMSupport\DOMSupportInit.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\DOMSupport\TreeWalker.cpp
+SOURCE=..\..\..\..\src\xalanc\DOMSupport\TreeWalker.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\DOMSupport\TreeWalker.hpp
+SOURCE=..\..\..\..\src\xalanc\DOMSupport\TreeWalker.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\DOMSupport\XalanDocumentPrefixResolver.cpp
+SOURCE=..\..\..\..\src\xalanc\DOMSupport\XalanDocumentPrefixResolver.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\DOMSupport\XalanDocumentPrefixResolver.hpp
+SOURCE=..\..\..\..\src\xalanc\DOMSupport\XalanDocumentPrefixResolver.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\DOMSupport\XalanNamespacesStack.cpp
+SOURCE=..\..\..\..\src\xalanc\DOMSupport\XalanNamespacesStack.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\DOMSupport\XalanNamespacesStack.hpp
+SOURCE=..\..\..\..\src\xalanc\DOMSupport\XalanNamespacesStack.hpp
 # End Source File
 # End Group
 # Begin Group "XPath"
@@ -786,627 +786,627 @@ SOURCE=..\..\..\..\src\DOMSupport\XalanNamespacesStack.hpp
 # PROP Default_Filter ""
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\ElementPrefixResolverProxy.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\ElementPrefixResolverProxy.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\ElementPrefixResolverProxy.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\ElementPrefixResolverProxy.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\FormatterStringLengthCounter.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\FormatterStringLengthCounter.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\FormatterStringLengthCounter.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\FormatterStringLengthCounter.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\FoundIndex.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\FoundIndex.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\FoundIndex.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\FoundIndex.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\Function.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\Function.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\Function.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\Function.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\FunctionConcat.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\FunctionConcat.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\FunctionConcat.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\FunctionConcat.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\FunctionContains.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\FunctionContains.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\FunctionContains.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\FunctionContains.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\FunctionID.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\FunctionID.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\FunctionID.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\FunctionID.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\FunctionLang.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\FunctionLang.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\FunctionLang.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\FunctionLang.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\FunctionNamespaceURI.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\FunctionNamespaceURI.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\FunctionNamespaceURI.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\FunctionNamespaceURI.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\FunctionNormalizeSpace.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\FunctionNormalizeSpace.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\FunctionNormalizeSpace.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\FunctionNormalizeSpace.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\FunctionStartsWith.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\FunctionStartsWith.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\FunctionStartsWith.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\FunctionStartsWith.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\FunctionString.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\FunctionString.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\FunctionString.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\FunctionString.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\FunctionSubstring.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\FunctionSubstring.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\FunctionSubstring.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\FunctionSubstring.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\FunctionSubstringAfter.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\FunctionSubstringAfter.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\FunctionSubstringAfter.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\FunctionSubstringAfter.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\FunctionSubstringBefore.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\FunctionSubstringBefore.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\FunctionSubstringBefore.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\FunctionSubstringBefore.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\FunctionTranslate.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\FunctionTranslate.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\FunctionTranslate.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\FunctionTranslate.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\MutableNodeRefList.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\MutableNodeRefList.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\MutableNodeRefList.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\MutableNodeRefList.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\NameSpace.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\NameSpace.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\NodeRefList.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\NodeRefList.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\NodeRefList.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\NodeRefList.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\NodeRefListBase.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\NodeRefListBase.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\NodeRefListBase.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\NodeRefListBase.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\ResultTreeFragBase.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\ResultTreeFragBase.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\ResultTreeFragBase.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\ResultTreeFragBase.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XalanQName.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XalanQName.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XalanQName.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XalanQName.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XalanQNameByReference.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XalanQNameByReference.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XalanQNameByReference.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XalanQNameByReference.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XalanQNameByValue.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XalanQNameByValue.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XalanQNameByValue.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XalanQNameByValue.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XalanQNameByValueAllocator.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XalanQNameByValueAllocator.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XalanQNameByValueAllocator.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XalanQNameByValueAllocator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XalanXPathException.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XalanXPathException.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XalanXPathException.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XalanXPathException.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XBoolean.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XBoolean.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XBoolean.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XBoolean.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XNodeSet.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XNodeSet.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XNodeSet.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XNodeSet.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XNodeSetAllocator.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XNodeSetAllocator.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XNodeSetAllocator.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XNodeSetAllocator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XNodeSetBase.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XNodeSetBase.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XNodeSetBase.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XNodeSetBase.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XNodeSetNodeProxy.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XNodeSetNodeProxy.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XNodeSetNodeProxy.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XNodeSetNodeProxy.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XNodeSetNodeProxyAllocator.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XNodeSetNodeProxyAllocator.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XNodeSetNodeProxyAllocator.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XNodeSetNodeProxyAllocator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XNodeSetResultTreeFragProxy.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XNodeSetResultTreeFragProxy.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XNodeSetResultTreeFragProxy.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XNodeSetResultTreeFragProxy.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XNull.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XNull.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XNull.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XNull.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XNumber.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XNumber.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XNumber.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XNumber.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XNumberAllocator.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XNumberAllocator.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XNumberAllocator.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XNumberAllocator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XNumberBase.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XNumberBase.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XNumberBase.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XNumberBase.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XObject.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XObject.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XObject.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XObject.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XObjectFactory.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XObjectFactory.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XObjectFactory.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XObjectFactory.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XObjectFactoryDefault.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XObjectFactoryDefault.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XObjectFactoryDefault.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XObjectFactoryDefault.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XObjectResultTreeFragProxy.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XObjectResultTreeFragProxy.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XObjectResultTreeFragProxy.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XObjectResultTreeFragProxy.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XObjectResultTreeFragProxyBase.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XObjectResultTreeFragProxyBase.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XObjectResultTreeFragProxyBase.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XObjectResultTreeFragProxyBase.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XObjectResultTreeFragProxyText.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XObjectResultTreeFragProxyText.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XObjectResultTreeFragProxyText.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XObjectResultTreeFragProxyText.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XObjectTypeCallback.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XObjectTypeCallback.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XObjectTypeCallback.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XObjectTypeCallback.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XPath.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XPath.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XPath.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XPath.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XPathAllocator.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XPathAllocator.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XPathAllocator.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XPathAllocator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XPathConstructionContext.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XPathConstructionContext.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XPathConstructionContext.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XPathConstructionContext.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XPathConstructionContextDefault.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XPathConstructionContextDefault.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XPathConstructionContextDefault.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XPathConstructionContextDefault.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XPathDefinitions.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XPathDefinitions.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XPathEnvSupport.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XPathEnvSupport.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XPathEnvSupport.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XPathEnvSupport.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XPathEnvSupportDefault.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XPathEnvSupportDefault.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XPathEnvSupportDefault.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XPathEnvSupportDefault.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XPathEvaluator.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XPathEvaluator.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XPathEvaluator.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XPathEvaluator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XPathExecutionContext.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XPathExecutionContext.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XPathExecutionContext.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XPathExecutionContext.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XPathExecutionContextDefault.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XPathExecutionContextDefault.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XPathExecutionContextDefault.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XPathExecutionContextDefault.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XPathExpression.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XPathExpression.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XPathExpression.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XPathExpression.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XPathFactory.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XPathFactory.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XPathFactory.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XPathFactory.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XPathFactoryBlock.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XPathFactoryBlock.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XPathFactoryBlock.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XPathFactoryBlock.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XPathFactoryDefault.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XPathFactoryDefault.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XPathFactoryDefault.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XPathFactoryDefault.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XPathFunctionTable.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XPathFunctionTable.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XPathFunctionTable.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XPathFunctionTable.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XPathInit.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XPathInit.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XPathInit.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XPathInit.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XPathParserException.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XPathParserException.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XPathParserException.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XPathParserException.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XPathProcessor.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XPathProcessor.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XPathProcessor.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XPathProcessor.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XPathProcessorImpl.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XPathProcessorImpl.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XPathProcessorImpl.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XPathProcessorImpl.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XSpan.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XSpan.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XSpan.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XSpan.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XString.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XString.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XString.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XString.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XStringAdapter.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XStringAdapter.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XStringAdapter.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XStringAdapter.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XStringAdapterAllocator.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XStringAdapterAllocator.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XStringAdapterAllocator.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XStringAdapterAllocator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XStringAllocator.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XStringAllocator.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XStringAllocator.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XStringAllocator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XStringBase.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XStringBase.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XStringBase.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XStringBase.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XStringCached.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XStringCached.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XStringCached.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XStringCached.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XStringCachedAllocator.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XStringCachedAllocator.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XStringCachedAllocator.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XStringCachedAllocator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XStringReference.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XStringReference.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XStringReference.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XStringReference.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XStringReferenceAllocator.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XStringReferenceAllocator.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XStringReferenceAllocator.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XStringReferenceAllocator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XToken.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XToken.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XToken.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XToken.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XTokenNumberAdapter.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XTokenNumberAdapter.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XTokenNumberAdapter.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XTokenNumberAdapter.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XTokenNumberAdapterAllocator.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XTokenNumberAdapterAllocator.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XTokenNumberAdapterAllocator.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XTokenNumberAdapterAllocator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XTokenStringAdapter.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XTokenStringAdapter.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XTokenStringAdapter.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XTokenStringAdapter.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XTokenStringAdapterAllocator.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XTokenStringAdapterAllocator.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XTokenStringAdapterAllocator.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XTokenStringAdapterAllocator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XUnknown.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XUnknown.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XUnknown.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XUnknown.hpp
 # End Source File
 # End Group
 # Begin Group "XPathCAPI"
@@ -1414,11 +1414,11 @@ SOURCE=..\..\..\..\src\XPath\XUnknown.hpp
 # PROP Default_Filter ""
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPathCAPI\XPathCAPI.cpp
+SOURCE=..\..\..\..\src\xalanc\XPathCAPI\XPathCAPI.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPathCAPI\XPathCAPI.h
+SOURCE=..\..\..\..\src\xalanc\XPathCAPI\XPathCAPI.h
 # End Source File
 # End Group
 # Begin Group "XMLSupport"
@@ -1426,87 +1426,87 @@ SOURCE=..\..\..\..\src\XPathCAPI\XPathCAPI.h
 # PROP Default_Filter ""
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XMLSupport\FormatterToDOM.cpp
+SOURCE=..\..\..\..\src\xalanc\XMLSupport\FormatterToDOM.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XMLSupport\FormatterToDOM.hpp
+SOURCE=..\..\..\..\src\xalanc\XMLSupport\FormatterToDOM.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XMLSupport\FormatterToHTML.cpp
+SOURCE=..\..\..\..\src\xalanc\XMLSupport\FormatterToHTML.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XMLSupport\FormatterToHTML.hpp
+SOURCE=..\..\..\..\src\xalanc\XMLSupport\FormatterToHTML.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XMLSupport\FormatterToNull.cpp
+SOURCE=..\..\..\..\src\xalanc\XMLSupport\FormatterToNull.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XMLSupport\FormatterToNull.hpp
+SOURCE=..\..\..\..\src\xalanc\XMLSupport\FormatterToNull.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XMLSupport\FormatterToText.cpp
+SOURCE=..\..\..\..\src\xalanc\XMLSupport\FormatterToText.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XMLSupport\FormatterToText.hpp
+SOURCE=..\..\..\..\src\xalanc\XMLSupport\FormatterToText.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XMLSupport\FormatterToXML.cpp
+SOURCE=..\..\..\..\src\xalanc\XMLSupport\FormatterToXML.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XMLSupport\FormatterToXML.hpp
+SOURCE=..\..\..\..\src\xalanc\XMLSupport\FormatterToXML.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XMLSupport\FormatterTreeWalker.cpp
+SOURCE=..\..\..\..\src\xalanc\XMLSupport\FormatterTreeWalker.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XMLSupport\FormatterTreeWalker.hpp
+SOURCE=..\..\..\..\src\xalanc\XMLSupport\FormatterTreeWalker.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XMLSupport\XalanHTMLElementsProperties.cpp
+SOURCE=..\..\..\..\src\xalanc\XMLSupport\XalanHTMLElementsProperties.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XMLSupport\XalanHTMLElementsProperties.hpp
+SOURCE=..\..\..\..\src\xalanc\XMLSupport\XalanHTMLElementsProperties.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XMLSupport\XMLParserLiaison.cpp
+SOURCE=..\..\..\..\src\xalanc\XMLSupport\XMLParserLiaison.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XMLSupport\XMLParserLiaison.hpp
+SOURCE=..\..\..\..\src\xalanc\XMLSupport\XMLParserLiaison.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XMLSupport\XMLSupportDefinitions.hpp
+SOURCE=..\..\..\..\src\xalanc\XMLSupport\XMLSupportDefinitions.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XMLSupport\XMLSupportException.cpp
+SOURCE=..\..\..\..\src\xalanc\XMLSupport\XMLSupportException.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XMLSupport\XMLSupportException.hpp
+SOURCE=..\..\..\..\src\xalanc\XMLSupport\XMLSupportException.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XMLSupport\XMLSupportInit.cpp
+SOURCE=..\..\..\..\src\xalanc\XMLSupport\XMLSupportInit.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XMLSupport\XMLSupportInit.hpp
+SOURCE=..\..\..\..\src\xalanc\XMLSupport\XMLSupportInit.hpp
 # End Source File
 # End Group
 # Begin Group "XercesParserLiaison"
@@ -1514,463 +1514,463 @@ SOURCE=..\..\..\..\src\XMLSupport\XMLSupportInit.hpp
 # PROP Default_Filter ""
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\FormatterToDeprecatedXercesDOM.cpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\FormatterToDeprecatedXercesDOM.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\FormatterToDeprecatedXercesDOM.hpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\FormatterToDeprecatedXercesDOM.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\FormatterToXercesDOM.cpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\FormatterToXercesDOM.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\FormatterToXercesDOM.hpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\FormatterToXercesDOM.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesAttrBridge.cpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesAttrBridge.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesAttrBridge.hpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesAttrBridge.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesAttributeBridgeAllocator.cpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesAttributeBridgeAllocator.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesAttributeBridgeAllocator.hpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesAttributeBridgeAllocator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesAttrWrapper.cpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesAttrWrapper.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesAttrWrapper.hpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesAttrWrapper.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesAttrWrapperAllocator.cpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesAttrWrapperAllocator.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesAttrWrapperAllocator.hpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesAttrWrapperAllocator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesBridgeHelper.cpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesBridgeHelper.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesBridgeHelper.hpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesBridgeHelper.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesBridgeNavigator.cpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesBridgeNavigator.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesBridgeNavigator.hpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesBridgeNavigator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesBridgeTypes.hpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesBridgeTypes.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesCDATASectionBridge.cpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesCDATASectionBridge.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesCDATASectionBridge.hpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesCDATASectionBridge.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesCDATASectionWrapper.cpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesCDATASectionWrapper.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesCDATASectionWrapper.hpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesCDATASectionWrapper.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesCommentBridge.cpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesCommentBridge.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesCommentBridge.hpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesCommentBridge.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesCommentWrapper.cpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesCommentWrapper.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesCommentWrapper.hpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesCommentWrapper.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesDocumentBridge.cpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesDocumentBridge.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesDocumentBridge.hpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesDocumentBridge.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesDocumentFragmentBridge.cpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesDocumentFragmentBridge.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesDocumentFragmentBridge.hpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesDocumentFragmentBridge.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesDocumentNamedNodeListCache.cpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesDocumentNamedNodeListCache.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesDocumentNamedNodeListCache.hpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesDocumentNamedNodeListCache.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesDocumentTypeBridge.cpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesDocumentTypeBridge.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesDocumentTypeBridge.hpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesDocumentTypeBridge.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesDocumentTypeWrapper.cpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesDocumentTypeWrapper.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesDocumentTypeWrapper.hpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesDocumentTypeWrapper.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesDocumentWrapper.cpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesDocumentWrapper.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesDocumentWrapper.hpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesDocumentWrapper.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesDOM_NodeHack.cpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesDOM_NodeHack.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesDOM_NodeHack.hpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesDOM_NodeHack.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesDOMException.cpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesDOMException.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesDOMException.hpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesDOMException.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesDOMFormatterWalker.cpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesDOMFormatterWalker.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesDOMFormatterWalker.hpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesDOMFormatterWalker.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesDOMImplementationBridge.cpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesDOMImplementationBridge.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesDOMImplementationBridge.hpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesDOMImplementationBridge.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesDOMImplementationWrapper.cpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesDOMImplementationWrapper.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesDOMImplementationWrapper.hpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesDOMImplementationWrapper.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesDOMSupport.cpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesDOMSupport.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesDOMSupport.hpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesDOMSupport.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesDOMWalker.cpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesDOMWalker.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesDOMWalker.hpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesDOMWalker.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesDOMWrapperException.cpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesDOMWrapperException.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesDOMWrapperException.hpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesDOMWrapperException.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesElementBridge.cpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesElementBridge.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesElementBridge.hpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesElementBridge.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesElementBridgeAllocator.cpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesElementBridgeAllocator.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesElementBridgeAllocator.hpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesElementBridgeAllocator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesElementNamedNodeListCache.cpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesElementNamedNodeListCache.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesElementNamedNodeListCache.hpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesElementNamedNodeListCache.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesElementWrapper.cpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesElementWrapper.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesElementWrapper.hpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesElementWrapper.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesElementWrapperAllocator.cpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesElementWrapperAllocator.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesElementWrapperAllocator.hpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesElementWrapperAllocator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesEntityBridge.cpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesEntityBridge.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesEntityBridge.hpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesEntityBridge.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesEntityReferenceBridge.cpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesEntityReferenceBridge.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesEntityReferenceBridge.hpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesEntityReferenceBridge.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesEntityReferenceWrapper.cpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesEntityReferenceWrapper.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesEntityReferenceWrapper.hpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesEntityReferenceWrapper.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesEntityWrapper.cpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesEntityWrapper.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesEntityWrapper.hpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesEntityWrapper.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesLiaisonXalanDOMStringPool.cpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesLiaisonXalanDOMStringPool.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesLiaisonXalanDOMStringPool.hpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesLiaisonXalanDOMStringPool.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesNamedNodeListCache.cpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesNamedNodeListCache.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesNamedNodeListCache.hpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesNamedNodeListCache.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesNamedNodeMapAttributeList.cpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesNamedNodeMapAttributeList.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesNamedNodeMapAttributeList.hpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesNamedNodeMapAttributeList.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesNamedNodeMapBridge.cpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesNamedNodeMapBridge.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesNamedNodeMapBridge.hpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesNamedNodeMapBridge.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesNamedNodeMapWrapper.cpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesNamedNodeMapWrapper.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesNamedNodeMapWrapper.hpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesNamedNodeMapWrapper.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesNodeListBridge.cpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesNodeListBridge.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesNodeListBridge.hpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesNodeListBridge.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesNodeListWrapper.cpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesNodeListWrapper.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesNodeListWrapper.hpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesNodeListWrapper.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesNotationBridge.cpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesNotationBridge.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesNotationBridge.hpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesNotationBridge.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesNotationWrapper.cpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesNotationWrapper.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesNotationWrapper.hpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesNotationWrapper.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesParserLiaison.cpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesParserLiaison.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesParserLiaison.hpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesParserLiaison.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesParserLiaisonDefinitions.hpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesParserLiaisonDefinitions.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesProcessingInstructionBridge.cpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesProcessingInstructionBridge.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesProcessingInstructionBridge.hpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesProcessingInstructionBridge.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesProcessingInstructionWrapper.cpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesProcessingInstructionWrapper.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesProcessingInstructionWrapper.hpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesProcessingInstructionWrapper.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesTextBridge.cpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesTextBridge.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesTextBridge.hpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesTextBridge.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesTextBridgeAllocator.cpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesTextBridgeAllocator.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesTextBridgeAllocator.hpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesTextBridgeAllocator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesTextWrapper.cpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesTextWrapper.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesTextWrapper.hpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesTextWrapper.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesTextWrapperAllocator.cpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesTextWrapperAllocator.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesTextWrapperAllocator.hpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesTextWrapperAllocator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesToXalanNodeMap.cpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesToXalanNodeMap.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesToXalanNodeMap.hpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesToXalanNodeMap.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesTreeWalker.cpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesTreeWalker.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesTreeWalker.hpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesTreeWalker.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesWrapperHelper.cpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesWrapperHelper.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesWrapperHelper.hpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesWrapperHelper.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesWrapperNavigator.cpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesWrapperNavigator.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesWrapperNavigator.hpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesWrapperNavigator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesWrapperToXalanNodeMap.cpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesWrapperToXalanNodeMap.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesWrapperToXalanNodeMap.hpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesWrapperToXalanNodeMap.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesWrapperTypes.hpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesWrapperTypes.hpp
 # End Source File
 # End Group
 # Begin Group "XalanSourceTree"
@@ -1978,239 +1978,239 @@ SOURCE=..\..\..\..\src\XercesParserLiaison\XercesWrapperTypes.hpp
 # PROP Default_Filter ""
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\FormatterToSourceTree.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanSourceTree\FormatterToSourceTree.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\FormatterToSourceTree.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanSourceTree\FormatterToSourceTree.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeAttr.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeAttr.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeAttr.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeAttr.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeAttributeAllocator.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeAttributeAllocator.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeAttributeAllocator.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeAttributeAllocator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeAttributeNSAllocator.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeAttributeNSAllocator.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeAttributeNSAllocator.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeAttributeNSAllocator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeAttrNS.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeAttrNS.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeAttrNS.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeAttrNS.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeComment.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeComment.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeComment.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeComment.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeCommentAllocator.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeCommentAllocator.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeCommentAllocator.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeCommentAllocator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeContentHandler.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeContentHandler.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeContentHandler.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeContentHandler.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeDefinitions.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeDefinitions.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeDocument.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeDocument.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeDocument.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeDocument.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeDocumentFragment.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeDocumentFragment.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeDocumentFragment.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeDocumentFragment.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeDOMSupport.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeDOMSupport.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeDOMSupport.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeDOMSupport.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeElement.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeElement.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeElement.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeElement.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeElementA.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeElementA.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeElementA.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeElementA.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeElementAAllocator.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeElementAAllocator.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeElementAAllocator.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeElementAAllocator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeElementANS.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeElementANS.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeElementANS.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeElementANS.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeElementANSAllocator.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeElementANSAllocator.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeElementANSAllocator.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeElementANSAllocator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeElementNA.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeElementNA.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeElementNA.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeElementNA.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeElementNAAllocator.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeElementNAAllocator.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeElementNAAllocator.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeElementNAAllocator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeElementNANS.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeElementNANS.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeElementNANS.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeElementNANS.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeElementNANSAllocator.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeElementNANSAllocator.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeElementNANSAllocator.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeElementNANSAllocator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeHelper.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeHelper.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeHelper.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeHelper.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeInit.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeInit.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeInit.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeInit.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeParserLiaison.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeParserLiaison.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeParserLiaison.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeParserLiaison.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeProcessingInstruction.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeProcessingInstruction.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeProcessingInstruction.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeProcessingInstruction.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeProcessingInstructionAllocator.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeProcessingInstructionAllocator.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeProcessingInstructionAllocator.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeProcessingInstructionAllocator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeText.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeText.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeText.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeText.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeTextAllocator.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeTextAllocator.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeTextAllocator.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeTextAllocator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeTextIWS.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeTextIWS.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeTextIWS.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeTextIWS.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeTextIWSAllocator.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeTextIWSAllocator.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeTextIWSAllocator.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeTextIWSAllocator.hpp
 # End Source File
 # End Group
 # Begin Group "XSLT"
@@ -2218,831 +2218,831 @@ SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeTextIWSAllocator.hpp
 # PROP Default_Filter ""
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\AVT.cpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\AVT.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\AVT.hpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\AVT.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\AVTPart.cpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\AVTPart.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\AVTPart.hpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\AVTPart.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\AVTPartSimple.cpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\AVTPartSimple.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\AVTPartSimple.hpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\AVTPartSimple.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\AVTPartXPath.cpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\AVTPartXPath.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\AVTPartXPath.hpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\AVTPartXPath.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\Constants.cpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\Constants.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\Constants.hpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\Constants.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\CountersTable.cpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\CountersTable.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\CountersTable.hpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\CountersTable.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\DecimalToRoman.hpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\DecimalToRoman.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\ElemApplyImport.cpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\ElemApplyImport.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\ElemApplyImport.hpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\ElemApplyImport.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\ElemApplyTemplates.cpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\ElemApplyTemplates.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\ElemApplyTemplates.hpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\ElemApplyTemplates.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\ElemAttribute.cpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\ElemAttribute.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\ElemAttribute.hpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\ElemAttribute.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\ElemAttributeSet.cpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\ElemAttributeSet.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\ElemAttributeSet.hpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\ElemAttributeSet.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\ElemCallTemplate.cpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\ElemCallTemplate.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\ElemCallTemplate.hpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\ElemCallTemplate.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\ElemChoose.cpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\ElemChoose.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\ElemChoose.hpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\ElemChoose.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\ElemComment.cpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\ElemComment.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\ElemComment.hpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\ElemComment.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\ElemCopy.cpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\ElemCopy.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\ElemCopy.hpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\ElemCopy.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\ElemCopyOf.cpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\ElemCopyOf.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\ElemCopyOf.hpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\ElemCopyOf.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\ElemDecimalFormat.cpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\ElemDecimalFormat.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\ElemDecimalFormat.hpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\ElemDecimalFormat.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\ElemElement.cpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\ElemElement.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\ElemElement.hpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\ElemElement.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\ElemEmpty.cpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\ElemEmpty.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\ElemEmpty.hpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\ElemEmpty.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\ElemExtensionCall.cpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\ElemExtensionCall.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\ElemExtensionCall.hpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\ElemExtensionCall.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\ElemFallback.cpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\ElemFallback.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\ElemFallback.hpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\ElemFallback.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\ElemForEach.cpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\ElemForEach.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\ElemForEach.hpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\ElemForEach.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\ElemIf.cpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\ElemIf.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\ElemIf.hpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\ElemIf.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\ElemLiteralResult.cpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\ElemLiteralResult.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\ElemLiteralResult.hpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\ElemLiteralResult.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\ElemMessage.cpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\ElemMessage.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\ElemMessage.hpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\ElemMessage.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\ElemNumber.cpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\ElemNumber.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\ElemNumber.hpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\ElemNumber.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\ElemOtherwise.cpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\ElemOtherwise.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\ElemOtherwise.hpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\ElemOtherwise.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\ElemParam.cpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\ElemParam.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\ElemParam.hpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\ElemParam.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\ElemPI.cpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\ElemPI.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\ElemPI.hpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\ElemPI.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\ElemSort.cpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\ElemSort.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\ElemSort.hpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\ElemSort.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\ElemTemplate.cpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\ElemTemplate.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\ElemTemplate.hpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\ElemTemplate.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\ElemTemplateElement.cpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\ElemTemplateElement.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\ElemTemplateElement.hpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\ElemTemplateElement.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\ElemText.cpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\ElemText.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\ElemText.hpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\ElemText.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\ElemTextLiteral.cpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\ElemTextLiteral.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\ElemTextLiteral.hpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\ElemTextLiteral.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\ElemUse.cpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\ElemUse.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\ElemUse.hpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\ElemUse.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\ElemValueOf.cpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\ElemValueOf.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\ElemValueOf.hpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\ElemValueOf.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\ElemVariable.cpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\ElemVariable.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\ElemVariable.hpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\ElemVariable.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\ElemWhen.cpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\ElemWhen.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\ElemWhen.hpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\ElemWhen.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\ElemWithParam.cpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\ElemWithParam.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\ElemWithParam.hpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\ElemWithParam.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\ExtensionFunctionHandler.cpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\ExtensionFunctionHandler.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\ExtensionFunctionHandler.hpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\ExtensionFunctionHandler.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\ExtensionNSHandler.cpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\ExtensionNSHandler.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\ExtensionNSHandler.hpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\ExtensionNSHandler.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\FunctionCurrent.cpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\FunctionCurrent.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\FunctionCurrent.hpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\FunctionCurrent.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\FunctionDocument.cpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\FunctionDocument.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\FunctionDocument.hpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\FunctionDocument.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\FunctionElementAvailable.cpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\FunctionElementAvailable.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\FunctionElementAvailable.hpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\FunctionElementAvailable.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\FunctionFormatNumber.cpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\FunctionFormatNumber.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\FunctionFormatNumber.hpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\FunctionFormatNumber.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\FunctionFunctionAvailable.cpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\FunctionFunctionAvailable.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\FunctionFunctionAvailable.hpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\FunctionFunctionAvailable.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\FunctionGenerateID.cpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\FunctionGenerateID.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\FunctionGenerateID.hpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\FunctionGenerateID.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\FunctionKey.cpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\FunctionKey.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\FunctionKey.hpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\FunctionKey.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\FunctionSystemProperty.cpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\FunctionSystemProperty.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\FunctionSystemProperty.hpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\FunctionSystemProperty.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\FunctionUnparsedEntityURI.cpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\FunctionUnparsedEntityURI.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\FunctionUnparsedEntityURI.hpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\FunctionUnparsedEntityURI.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\GenerateEvent.cpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\GenerateEvent.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\GenerateEvent.hpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\GenerateEvent.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\KeyDeclaration.hpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\KeyDeclaration.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\KeyTable.cpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\KeyTable.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\KeyTable.hpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\KeyTable.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\NamespacesHandler.cpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\NamespacesHandler.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\NamespacesHandler.hpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\NamespacesHandler.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\NodeSorter.cpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\NodeSorter.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\NodeSorter.hpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\NodeSorter.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\NodeSortKey.cpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\NodeSortKey.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\NodeSortKey.hpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\NodeSortKey.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\OutputContextStack.cpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\OutputContextStack.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\OutputContextStack.hpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\OutputContextStack.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\ProblemListener.cpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\ProblemListener.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\ProblemListener.hpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\ProblemListener.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\ProblemListenerDefault.cpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\ProblemListenerDefault.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\ProblemListenerDefault.hpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\ProblemListenerDefault.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\ResultNamespacesStack.cpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\ResultNamespacesStack.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\ResultNamespacesStack.hpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\ResultNamespacesStack.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\ResultTreeFrag.cpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\ResultTreeFrag.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\ResultTreeFrag.hpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\ResultTreeFrag.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\ResultTreeFragAllocator.cpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\ResultTreeFragAllocator.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\ResultTreeFragAllocator.hpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\ResultTreeFragAllocator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\ResultTreeFragBaseNodeRefListBaseProxy.cpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\ResultTreeFragBaseNodeRefListBaseProxy.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\ResultTreeFragBaseNodeRefListBaseProxy.hpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\ResultTreeFragBaseNodeRefListBaseProxy.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\SelectionEvent.cpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\SelectionEvent.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\SelectionEvent.hpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\SelectionEvent.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\Stylesheet.cpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\Stylesheet.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\Stylesheet.hpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\Stylesheet.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\StylesheetConstructionContext.cpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\StylesheetConstructionContext.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\StylesheetConstructionContext.hpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\StylesheetConstructionContext.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\StylesheetConstructionContextDefault.cpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\StylesheetConstructionContextDefault.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\StylesheetConstructionContextDefault.hpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\StylesheetConstructionContextDefault.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\StylesheetExecutionContext.cpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\StylesheetExecutionContext.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\StylesheetExecutionContext.hpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\StylesheetExecutionContext.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\StylesheetExecutionContextDefault.cpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\StylesheetExecutionContextDefault.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\StylesheetExecutionContextDefault.hpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\StylesheetExecutionContextDefault.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\StylesheetHandler.cpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\StylesheetHandler.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\StylesheetHandler.hpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\StylesheetHandler.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\StylesheetRoot.cpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\StylesheetRoot.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\StylesheetRoot.hpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\StylesheetRoot.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\TopLevelArg.cpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\TopLevelArg.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\TopLevelArg.hpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\TopLevelArg.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\TraceListener.cpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\TraceListener.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\TraceListener.hpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\TraceListener.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\TraceListenerDefault.cpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\TraceListenerDefault.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\TraceListenerDefault.hpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\TraceListenerDefault.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\TracerEvent.cpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\TracerEvent.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\TracerEvent.hpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\TracerEvent.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\VariablesStack.cpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\VariablesStack.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\VariablesStack.hpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\VariablesStack.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\XalanAVTAllocator.cpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\XalanAVTAllocator.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\XalanAVTAllocator.hpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\XalanAVTAllocator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\XalanAVTPartSimpleAllocator.cpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\XalanAVTPartSimpleAllocator.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\XalanAVTPartSimpleAllocator.hpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\XalanAVTPartSimpleAllocator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\XalanAVTPartXPathAllocator.cpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\XalanAVTPartXPathAllocator.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\XalanAVTPartXPathAllocator.hpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\XalanAVTPartXPathAllocator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\XalanElemApplyTemplatesAllocator.cpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\XalanElemApplyTemplatesAllocator.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\XalanElemApplyTemplatesAllocator.hpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\XalanElemApplyTemplatesAllocator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\XalanElemAttributeAllocator.cpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\XalanElemAttributeAllocator.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\XalanElemAttributeAllocator.hpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\XalanElemAttributeAllocator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\XalanElemAttributeSetAllocator.cpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\XalanElemAttributeSetAllocator.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\XalanElemAttributeSetAllocator.hpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\XalanElemAttributeSetAllocator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\XalanElemCallTemplateAllocator.cpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\XalanElemCallTemplateAllocator.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\XalanElemCallTemplateAllocator.hpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\XalanElemCallTemplateAllocator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\XalanElemElementAllocator.cpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\XalanElemElementAllocator.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\XalanElemElementAllocator.hpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\XalanElemElementAllocator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\XalanElemEmptyAllocator.cpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\XalanElemEmptyAllocator.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\XalanElemEmptyAllocator.hpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\XalanElemEmptyAllocator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\XalanElemLiteralResultAllocator.cpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\XalanElemLiteralResultAllocator.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\XalanElemLiteralResultAllocator.hpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\XalanElemLiteralResultAllocator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\XalanElemTemplateAllocator.cpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\XalanElemTemplateAllocator.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\XalanElemTemplateAllocator.hpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\XalanElemTemplateAllocator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\XalanElemTextAllocator.cpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\XalanElemTextAllocator.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\XalanElemTextAllocator.hpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\XalanElemTextAllocator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\XalanElemTextLiteralAllocator.cpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\XalanElemTextLiteralAllocator.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\XalanElemTextLiteralAllocator.hpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\XalanElemTextLiteralAllocator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\XalanElemValueOfAllocator.cpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\XalanElemValueOfAllocator.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\XalanElemValueOfAllocator.hpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\XalanElemValueOfAllocator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\XalanElemVariableAllocator.cpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\XalanElemVariableAllocator.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\XalanElemVariableAllocator.hpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\XalanElemVariableAllocator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\XalanNumberingResourceBundle.cpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\XalanNumberingResourceBundle.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\XalanNumberingResourceBundle.hpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\XalanNumberingResourceBundle.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\XalanSourceTreeDocumentAllocator.cpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\XalanSourceTreeDocumentAllocator.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\XalanSourceTreeDocumentAllocator.hpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\XalanSourceTreeDocumentAllocator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\XalanSourceTreeDocumentFragmentAllocator.cpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\XalanSourceTreeDocumentFragmentAllocator.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\XalanSourceTreeDocumentFragmentAllocator.hpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\XalanSourceTreeDocumentFragmentAllocator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\XResultTreeFrag.cpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\XResultTreeFrag.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\XResultTreeFrag.hpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\XResultTreeFrag.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\XResultTreeFragAllocator.cpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\XResultTreeFragAllocator.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\XResultTreeFragAllocator.hpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\XResultTreeFragAllocator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\XSLTDefinitions.hpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\XSLTDefinitions.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\XSLTEngineImpl.cpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\XSLTEngineImpl.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\XSLTEngineImpl.hpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\XSLTEngineImpl.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\XSLTInit.cpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\XSLTInit.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\XSLTInit.hpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\XSLTInit.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\XSLTInputSource.cpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\XSLTInputSource.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\XSLTInputSource.hpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\XSLTInputSource.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\XSLTProcessor.cpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\XSLTProcessor.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\XSLTProcessor.hpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\XSLTProcessor.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\XSLTProcessorEnvSupport.cpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\XSLTProcessorEnvSupport.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\XSLTProcessorEnvSupport.hpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\XSLTProcessorEnvSupport.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\XSLTProcessorEnvSupportDefault.cpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\XSLTProcessorEnvSupportDefault.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\XSLTProcessorEnvSupportDefault.hpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\XSLTProcessorEnvSupportDefault.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\XSLTProcessorException.cpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\XSLTProcessorException.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\XSLTProcessorException.hpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\XSLTProcessorException.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\XSLTResultTarget.cpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\XSLTResultTarget.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\XSLTResultTarget.hpp
+SOURCE=..\..\..\..\src\xalanc\XSLT\XSLTResultTarget.hpp
 # End Source File
 # End Group
 # Begin Group "ICUBridge"
@@ -3050,63 +3050,63 @@ SOURCE=..\..\..\..\src\XSLT\XSLTResultTarget.hpp
 # PROP Default_Filter ""
 # Begin Source File
 
-SOURCE=..\..\..\..\src\ICUBridge\FunctionICUFormatNumber.cpp
+SOURCE=..\..\..\..\src\xalanc\ICUBridge\FunctionICUFormatNumber.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\ICUBridge\FunctionICUFormatNumber.hpp
+SOURCE=..\..\..\..\src\xalanc\ICUBridge\FunctionICUFormatNumber.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\ICUBridge\ICUBridge.cpp
+SOURCE=..\..\..\..\src\xalanc\ICUBridge\ICUBridge.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\ICUBridge\ICUBridge.hpp
+SOURCE=..\..\..\..\src\xalanc\ICUBridge\ICUBridge.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\ICUBridge\ICUBridgeCleanup.cpp
+SOURCE=..\..\..\..\src\xalanc\ICUBridge\ICUBridgeCleanup.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\ICUBridge\ICUBridgeCleanup.hpp
+SOURCE=..\..\..\..\src\xalanc\ICUBridge\ICUBridgeCleanup.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\ICUBridge\ICUBridgeCollationCompareFunctor.cpp
+SOURCE=..\..\..\..\src\xalanc\ICUBridge\ICUBridgeCollationCompareFunctor.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\ICUBridge\ICUBridgeCollationCompareFunctor.hpp
+SOURCE=..\..\..\..\src\xalanc\ICUBridge\ICUBridgeCollationCompareFunctor.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\ICUBridge\ICUBridgeCollationCompareFunctorImpl.cpp
+SOURCE=..\..\..\..\src\xalanc\ICUBridge\ICUBridgeCollationCompareFunctorImpl.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\ICUBridge\ICUBridgeCollationCompareFunctorImpl.hpp
+SOURCE=..\..\..\..\src\xalanc\ICUBridge\ICUBridgeCollationCompareFunctorImpl.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\ICUBridge\ICUBridgeDefinitions.hpp
+SOURCE=..\..\..\..\src\xalanc\ICUBridge\ICUBridgeDefinitions.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\ICUBridge\ICUXalanNumberFormatFactory.cpp
+SOURCE=..\..\..\..\src\xalanc\ICUBridge\ICUXalanNumberFormatFactory.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\ICUBridge\ICUXalanNumberFormatFactory.hpp
+SOURCE=..\..\..\..\src\xalanc\ICUBridge\ICUXalanNumberFormatFactory.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\ICUBridge\ICUXalanNumberFormatProxy.cpp
+SOURCE=..\..\..\..\src\xalanc\ICUBridge\ICUXalanNumberFormatProxy.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\ICUBridge\ICUXalanNumberFormatProxy.hpp
+SOURCE=..\..\..\..\src\xalanc\ICUBridge\ICUXalanNumberFormatProxy.hpp
 # End Source File
 # End Group
 # Begin Group "XalanExtensions"
@@ -3114,63 +3114,63 @@ SOURCE=..\..\..\..\src\ICUBridge\ICUXalanNumberFormatProxy.hpp
 # PROP Default_Filter ""
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanExtensions\FunctionDifference.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanExtensions\FunctionDifference.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanExtensions\FunctionDifference.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanExtensions\FunctionDifference.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanExtensions\FunctionDistinct.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanExtensions\FunctionDistinct.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanExtensions\FunctionDistinct.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanExtensions\FunctionDistinct.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanExtensions\FunctionEvaluate.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanExtensions\FunctionEvaluate.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanExtensions\FunctionEvaluate.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanExtensions\FunctionEvaluate.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanExtensions\FunctionHasSameNodes.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanExtensions\FunctionHasSameNodes.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanExtensions\FunctionHasSameNodes.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanExtensions\FunctionHasSameNodes.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanExtensions\FunctionIntersection.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanExtensions\FunctionIntersection.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanExtensions\FunctionIntersection.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanExtensions\FunctionIntersection.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanExtensions\FunctionNodeSet.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanExtensions\FunctionNodeSet.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanExtensions\FunctionNodeSet.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanExtensions\FunctionNodeSet.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanExtensions\XalanExtensions.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanExtensions\XalanExtensions.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanExtensions\XalanExtensions.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanExtensions\XalanExtensions.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanExtensions\XalanExtensionsDefinitions.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanExtensions\XalanExtensionsDefinitions.hpp
 # End Source File
 # End Group
 # Begin Group "XalanEXSLT"
@@ -3178,55 +3178,55 @@ SOURCE=..\..\..\..\src\XalanExtensions\XalanExtensionsDefinitions.hpp
 # PROP Default_Filter ""
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanEXSLT\XalanEXSLTCommon.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanEXSLT\XalanEXSLTCommon.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanEXSLT\XalanEXSLTCommon.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanEXSLT\XalanEXSLTCommon.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanEXSLT\XalanEXSLTCommonImpl.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanEXSLT\XalanEXSLTCommonImpl.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanEXSLT\XalanEXSLTDefinitions.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanEXSLT\XalanEXSLTDefinitions.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanEXSLT\XalanEXSLTMath.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanEXSLT\XalanEXSLTMath.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanEXSLT\XalanEXSLTMath.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanEXSLT\XalanEXSLTMath.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanEXSLT\XalanEXSLTMathImpl.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanEXSLT\XalanEXSLTMathImpl.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanEXSLT\XalanEXSLTSet.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanEXSLT\XalanEXSLTSet.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanEXSLT\XalanEXSLTSet.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanEXSLT\XalanEXSLTSet.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanEXSLT\XalanEXSLTSetImpl.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanEXSLT\XalanEXSLTSetImpl.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanEXSLT\XalanEXSLTString.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanEXSLT\XalanEXSLTString.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanEXSLT\XalanEXSLTString.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanEXSLT\XalanEXSLTString.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanEXSLT\XalanEXSLTStringImpl.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanEXSLT\XalanEXSLTStringImpl.hpp
 # End Source File
 # End Group
 # Begin Group "XalanTransformer"
@@ -3234,103 +3234,103 @@ SOURCE=..\..\..\..\src\XalanEXSLT\XalanEXSLTStringImpl.hpp
 # PROP Default_Filter ""
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanTransformer\XalanCAPI.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanTransformer\XalanCAPI.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanTransformer\XalanCAPI.h
+SOURCE=..\..\..\..\src\xalanc\XalanTransformer\XalanCAPI.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanTransformer\XalanCompiledStylesheet.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanTransformer\XalanCompiledStylesheet.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanTransformer\XalanCompiledStylesheetDefault.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanTransformer\XalanCompiledStylesheetDefault.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanTransformer\XalanCompiledStylesheetDefault.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanTransformer\XalanCompiledStylesheetDefault.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanTransformer\XalanDefaultDocumentBuilder.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanTransformer\XalanDefaultDocumentBuilder.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanTransformer\XalanDefaultDocumentBuilder.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanTransformer\XalanDefaultDocumentBuilder.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanTransformer\XalanDefaultParsedSource.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanTransformer\XalanDefaultParsedSource.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanTransformer\XalanDefaultParsedSource.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanTransformer\XalanDefaultParsedSource.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanTransformer\XalanDocumentBuilder.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanTransformer\XalanDocumentBuilder.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanTransformer\XalanParsedSource.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanTransformer\XalanParsedSource.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanTransformer\XalanParsedSource.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanTransformer\XalanParsedSource.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanTransformer\XalanSourceTreeWrapperParsedSource.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanTransformer\XalanSourceTreeWrapperParsedSource.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanTransformer\XalanSourceTreeWrapperParsedSource.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanTransformer\XalanSourceTreeWrapperParsedSource.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanTransformer\XalanTransformer.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanTransformer\XalanTransformer.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanTransformer\XalanTransformer.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanTransformer\XalanTransformer.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanTransformer\XalanTransformerDefinitions.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanTransformer\XalanTransformerDefinitions.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanTransformer\XalanTransformerOutputStream.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanTransformer\XalanTransformerOutputStream.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanTransformer\XalanTransformerOutputStream.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanTransformer\XalanTransformerOutputStream.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanTransformer\XalanTransformerProblemListener.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanTransformer\XalanTransformerProblemListener.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanTransformer\XalanTransformerProblemListener.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanTransformer\XalanTransformerProblemListener.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanTransformer\XercesDOMParsedSource.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanTransformer\XercesDOMParsedSource.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanTransformer\XercesDOMParsedSource.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanTransformer\XercesDOMParsedSource.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanTransformer\XercesDOMWrapperParsedSource.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanTransformer\XercesDOMWrapperParsedSource.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanTransformer\XercesDOMWrapperParsedSource.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanTransformer\XercesDOMWrapperParsedSource.hpp
 # End Source File
 # End Group
 # Begin Group "Resource Files"

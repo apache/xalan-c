@@ -54,7 +54,7 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-#include <Include/PlatformDefinitions.hpp>
+#include <xalanc/Include/PlatformDefinitions.hpp>
 
 
 
@@ -79,7 +79,7 @@
 
 
 
-#include <XalanTransformer/XalanTransformer.hpp>
+#include <xalanc/XalanTransformer/XalanTransformer.hpp>
 
 #include <Harness/XMLFileReporter.hpp>
 #include <Harness/FileUtility.hpp>

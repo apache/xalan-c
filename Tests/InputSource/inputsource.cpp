@@ -55,7 +55,7 @@
  * <http://www.apache.org/>.
  */
 
-#include <Include/PlatformDefinitions.hpp>
+#include <xalanc/Include/PlatformDefinitions.hpp>
 
 
 
@@ -86,22 +86,22 @@
 
 
 // XALAN HEADERS...
-#include <XPath/XPathExecutionContextDefault.hpp>
-#include <XPath/XObjectFactoryDefault.hpp>
-#include <XPath/XPathFactoryDefault.hpp>
+#include <xalanc/XPath/XPathExecutionContextDefault.hpp>
+#include <xalanc/XPath/XObjectFactoryDefault.hpp>
+#include <xalanc/XPath/XPathFactoryDefault.hpp>
 
-#include <XSLT/StylesheetConstructionContextDefault.hpp>
-#include <XSLT/StylesheetExecutionContextDefault.hpp>
-#include <XSLT/XSLTProcessorEnvSupportDefault.hpp>
-#include <XSLT/XSLTEngineImpl.hpp>
-
-
-#include <XalanSourceTree/XalanSourceTreeDOMSupport.hpp>
-#include <XalanSourceTree/XalanSourceTreeParserLiaison.hpp>
+#include <xalanc/XSLT/StylesheetConstructionContextDefault.hpp>
+#include <xalanc/XSLT/StylesheetExecutionContextDefault.hpp>
+#include <xalanc/XSLT/XSLTProcessorEnvSupportDefault.hpp>
+#include <xalanc/XSLT/XSLTEngineImpl.hpp>
 
 
-#include <XalanTransformer/XalanTransformer.hpp>
-#include <XalanTransformer/XercesDOMWrapperParsedSource.hpp>
+#include <xalanc/XalanSourceTree/XalanSourceTreeDOMSupport.hpp>
+#include <xalanc/XalanSourceTree/XalanSourceTreeParserLiaison.hpp>
+
+
+#include <xalanc/XalanTransformer/XalanTransformer.hpp>
+#include <xalanc/XalanTransformer/XercesDOMWrapperParsedSource.hpp>
 
 
 // HARNESS HEADERS...

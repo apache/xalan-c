@@ -126,7 +126,7 @@ LINK32=link.exe
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPathCAPI\XPathCAPI.cpp
+SOURCE=..\..\..\..\src\xalanc\XPathCAPI\XPathCAPI.cpp
 # End Source File
 # End Group
 # Begin Group "Header Files"
@@ -134,7 +134,7 @@ SOURCE=..\..\..\..\src\XPathCAPI\XPathCAPI.cpp
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPathCAPI\XPathCAPI.h
+SOURCE=..\..\..\..\src\xalanc\XPathCAPI\XPathCAPI.h
 # End Source File
 # End Group
 # Begin Group "Resource Files"

@@ -126,47 +126,47 @@ LINK32=link.exe
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanTransformer\XalanCAPI.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanTransformer\XalanCAPI.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanTransformer\XalanCompiledStylesheetDefault.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanTransformer\XalanCompiledStylesheetDefault.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanTransformer\XalanDefaultDocumentBuilder.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanTransformer\XalanDefaultDocumentBuilder.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanTransformer\XalanDefaultParsedSource.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanTransformer\XalanDefaultParsedSource.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanTransformer\XalanParsedSource.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanTransformer\XalanParsedSource.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanTransformer\XalanSourceTreeWrapperParsedSource.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanTransformer\XalanSourceTreeWrapperParsedSource.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanTransformer\XalanTransformer.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanTransformer\XalanTransformer.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanTransformer\XalanTransformerOutputStream.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanTransformer\XalanTransformerOutputStream.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanTransformer\XalanTransformerProblemListener.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanTransformer\XalanTransformerProblemListener.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanTransformer\XercesDOMParsedSource.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanTransformer\XercesDOMParsedSource.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanTransformer\XercesDOMWrapperParsedSource.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanTransformer\XercesDOMWrapperParsedSource.cpp
 # End Source File
 # End Group
 # Begin Group "Header Files"
@@ -174,59 +174,59 @@ SOURCE=..\..\..\..\src\XalanTransformer\XercesDOMWrapperParsedSource.cpp
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanTransformer\XalanCAPI.h
+SOURCE=..\..\..\..\src\xalanc\XalanTransformer\XalanCAPI.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanTransformer\XalanCompiledStylesheet.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanTransformer\XalanCompiledStylesheet.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanTransformer\XalanCompiledStylesheetDefault.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanTransformer\XalanCompiledStylesheetDefault.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanTransformer\XalanDefaultDocumentBuilder.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanTransformer\XalanDefaultDocumentBuilder.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanTransformer\XalanDefaultParsedSource.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanTransformer\XalanDefaultParsedSource.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanTransformer\XalanDocumentBuilder.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanTransformer\XalanDocumentBuilder.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanTransformer\XalanParsedSource.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanTransformer\XalanParsedSource.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanTransformer\XalanSourceTreeWrapperParsedSource.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanTransformer\XalanSourceTreeWrapperParsedSource.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanTransformer\XalanTransformer.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanTransformer\XalanTransformer.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanTransformer\XalanTransformerDefinitions.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanTransformer\XalanTransformerDefinitions.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanTransformer\XalanTransformerOutputStream.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanTransformer\XalanTransformerOutputStream.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanTransformer\XalanTransformerProblemListener.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanTransformer\XalanTransformerProblemListener.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanTransformer\XercesDOMParsedSource.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanTransformer\XercesDOMParsedSource.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanTransformer\XercesDOMWrapperParsedSource.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanTransformer\XercesDOMWrapperParsedSource.hpp
 # End Source File
 # End Group
 # Begin Group "Resource Files"

@@ -121,7 +121,7 @@ LINK32=link.exe
 # End Group
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanExe\XalanExe.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanExe\XalanExe.cpp
 # End Source File
 # End Group
 # Begin Group "Resource Files"

@@ -127,19 +127,19 @@ LINK32=link.exe
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanEXSLT\XalanEXSLTCommon.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanEXSLT\XalanEXSLTCommon.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanEXSLT\XalanEXSLTMath.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanEXSLT\XalanEXSLTMath.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanEXSLT\XalanEXSLTSet.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanEXSLT\XalanEXSLTSet.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanEXSLT\XalanEXSLTString.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanEXSLT\XalanEXSLTString.cpp
 # End Source File
 # End Group
 # Begin Group "Header Files"
@@ -147,39 +147,39 @@ SOURCE=..\..\..\..\src\XalanEXSLT\XalanEXSLTString.cpp
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanEXSLT\XalanEXSLTCommon.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanEXSLT\XalanEXSLTCommon.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanEXSLT\XalanEXSLTCommonImpl.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanEXSLT\XalanEXSLTCommonImpl.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanEXSLT\XalanEXSLTDefinitions.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanEXSLT\XalanEXSLTDefinitions.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanEXSLT\XalanEXSLTMath.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanEXSLT\XalanEXSLTMath.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanEXSLT\XalanEXSLTMathImpl.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanEXSLT\XalanEXSLTMathImpl.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanEXSLT\XalanEXSLTSet.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanEXSLT\XalanEXSLTSet.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanEXSLT\XalanEXSLTSetImpl.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanEXSLT\XalanEXSLTSetImpl.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanEXSLT\XalanEXSLTString.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanEXSLT\XalanEXSLTString.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanEXSLT\XalanEXSLTStringImpl.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanEXSLT\XalanEXSLTStringImpl.hpp
 # End Source File
 # End Group
 # Begin Group "Resource Files"

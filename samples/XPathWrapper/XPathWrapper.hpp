@@ -59,11 +59,11 @@
 
 
 
-#include <Include/PlatformDefinitions.hpp>
+#include <xalanc/Include/PlatformDefinitions.hpp>
 
 
 
-#include <PlatformSupport/DOMStringHelper.hpp>
+#include <xalanc/PlatformSupport/DOMStringHelper.hpp>
 
 
 

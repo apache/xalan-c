@@ -1,5 +1,5 @@
 // Base header file.  Must be first.
-#include <Include/PlatformDefinitions.hpp>
+#include <xalanc/Include/PlatformDefinitions.hpp>
 
 
 
@@ -15,7 +15,7 @@
 
 
 
-#include <XalanTransformer/XalanTransformer.hpp>
+#include <xalanc/XalanTransformer/XalanTransformer.hpp>
 
 
 

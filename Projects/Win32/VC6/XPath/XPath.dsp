@@ -126,311 +126,311 @@ LINK32=link.exe
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\ElementPrefixResolverProxy.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\ElementPrefixResolverProxy.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\FormatterStringLengthCounter.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\FormatterStringLengthCounter.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\FoundIndex.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\FoundIndex.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\Function.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\Function.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\FunctionConcat.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\FunctionConcat.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\FunctionContains.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\FunctionContains.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\FunctionID.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\FunctionID.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\FunctionLang.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\FunctionLang.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\FunctionNamespaceURI.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\FunctionNamespaceURI.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\FunctionNormalizeSpace.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\FunctionNormalizeSpace.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\FunctionStartsWith.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\FunctionStartsWith.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\FunctionString.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\FunctionString.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\FunctionSubstring.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\FunctionSubstring.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\FunctionSubstringAfter.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\FunctionSubstringAfter.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\FunctionSubstringBefore.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\FunctionSubstringBefore.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\FunctionTranslate.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\FunctionTranslate.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\MutableNodeRefList.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\MutableNodeRefList.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\NodeRefList.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\NodeRefList.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\NodeRefListBase.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\NodeRefListBase.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\ResultTreeFragBase.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\ResultTreeFragBase.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XalanQName.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XalanQName.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XalanQNameByReference.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XalanQNameByReference.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XalanQNameByValue.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XalanQNameByValue.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XalanQNameByValueAllocator.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XalanQNameByValueAllocator.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XalanXPathException.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XalanXPathException.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XBoolean.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XBoolean.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XNodeSet.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XNodeSet.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XNodeSetAllocator.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XNodeSetAllocator.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XNodeSetBase.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XNodeSetBase.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XNodeSetNodeProxy.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XNodeSetNodeProxy.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XNodeSetNodeProxyAllocator.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XNodeSetNodeProxyAllocator.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XNodeSetResultTreeFragProxy.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XNodeSetResultTreeFragProxy.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XNull.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XNull.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XNumber.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XNumber.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XNumberAllocator.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XNumberAllocator.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XNumberBase.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XNumberBase.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XObject.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XObject.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XObjectFactory.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XObjectFactory.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XObjectFactoryDefault.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XObjectFactoryDefault.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XObjectResultTreeFragProxy.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XObjectResultTreeFragProxy.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XObjectResultTreeFragProxyBase.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XObjectResultTreeFragProxyBase.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XObjectResultTreeFragProxyText.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XObjectResultTreeFragProxyText.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XObjectTypeCallback.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XObjectTypeCallback.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XPath.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XPath.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XPathAllocator.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XPathAllocator.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XPathConstructionContext.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XPathConstructionContext.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XPathConstructionContextDefault.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XPathConstructionContextDefault.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XPathEnvSupport.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XPathEnvSupport.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XPathEnvSupportDefault.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XPathEnvSupportDefault.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XPathEvaluator.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XPathEvaluator.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XPathExecutionContext.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XPathExecutionContext.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XPathExecutionContextDefault.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XPathExecutionContextDefault.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XPathExpression.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XPathExpression.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XPathFactory.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XPathFactory.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XPathFactoryBlock.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XPathFactoryBlock.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XPathFactoryDefault.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XPathFactoryDefault.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XPathFunctionTable.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XPathFunctionTable.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XPathInit.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XPathInit.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XPathParserException.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XPathParserException.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XPathProcessor.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XPathProcessor.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XPathProcessorImpl.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XPathProcessorImpl.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XSpan.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XSpan.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XString.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XString.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XStringAdapter.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XStringAdapter.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XStringAdapterAllocator.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XStringAdapterAllocator.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XStringAllocator.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XStringAllocator.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XStringBase.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XStringBase.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XStringCached.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XStringCached.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XStringCachedAllocator.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XStringCachedAllocator.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XStringReference.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XStringReference.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XStringReferenceAllocator.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XStringReferenceAllocator.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XToken.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XToken.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XTokenNumberAdapter.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XTokenNumberAdapter.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XTokenNumberAdapterAllocator.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XTokenNumberAdapterAllocator.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XTokenStringAdapter.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XTokenStringAdapter.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XTokenStringAdapterAllocator.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XTokenStringAdapterAllocator.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XUnknown.cpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XUnknown.cpp
 # End Source File
 # End Group
 # Begin Group "Header Files"
@@ -438,319 +438,319 @@ SOURCE=..\..\..\..\src\XPath\XUnknown.cpp
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\ElementPrefixResolverProxy.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\ElementPrefixResolverProxy.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\FormatterStringLengthCounter.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\FormatterStringLengthCounter.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\FoundIndex.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\FoundIndex.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\Function.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\Function.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\FunctionConcat.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\FunctionConcat.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\FunctionContains.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\FunctionContains.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\FunctionID.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\FunctionID.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\FunctionLang.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\FunctionLang.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\FunctionNamespaceURI.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\FunctionNamespaceURI.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\FunctionNormalizeSpace.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\FunctionNormalizeSpace.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\FunctionStartsWith.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\FunctionStartsWith.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\FunctionString.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\FunctionString.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\FunctionSubstring.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\FunctionSubstring.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\FunctionSubstringAfter.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\FunctionSubstringAfter.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\FunctionSubstringBefore.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\FunctionSubstringBefore.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\FunctionTranslate.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\FunctionTranslate.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\MutableNodeRefList.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\MutableNodeRefList.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\NameSpace.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\NameSpace.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\NodeRefList.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\NodeRefList.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\NodeRefListBase.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\NodeRefListBase.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\ResultTreeFragBase.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\ResultTreeFragBase.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XalanQName.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XalanQName.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XalanQNameByReference.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XalanQNameByReference.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XalanQNameByValue.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XalanQNameByValue.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XalanQNameByValueAllocator.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XalanQNameByValueAllocator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XalanXPathException.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XalanXPathException.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XBoolean.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XBoolean.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XNodeSet.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XNodeSet.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XNodeSetAllocator.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XNodeSetAllocator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XNodeSetBase.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XNodeSetBase.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XNodeSetNodeProxy.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XNodeSetNodeProxy.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XNodeSetNodeProxyAllocator.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XNodeSetNodeProxyAllocator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XNodeSetResultTreeFragProxy.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XNodeSetResultTreeFragProxy.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XNull.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XNull.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XNumber.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XNumber.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XNumberAllocator.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XNumberAllocator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XNumberBase.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XNumberBase.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XObject.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XObject.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XObjectFactory.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XObjectFactory.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XObjectFactoryDefault.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XObjectFactoryDefault.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XObjectResultTreeFragProxy.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XObjectResultTreeFragProxy.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XObjectResultTreeFragProxyBase.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XObjectResultTreeFragProxyBase.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XObjectResultTreeFragProxyText.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XObjectResultTreeFragProxyText.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XObjectTypeCallback.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XObjectTypeCallback.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XPath.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XPath.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XPathAllocator.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XPathAllocator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XPathConstructionContext.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XPathConstructionContext.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XPathConstructionContextDefault.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XPathConstructionContextDefault.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XPathDefinitions.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XPathDefinitions.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XPathEnvSupport.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XPathEnvSupport.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XPathEnvSupportDefault.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XPathEnvSupportDefault.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XPathEvaluator.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XPathEvaluator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XPathExecutionContext.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XPathExecutionContext.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XPathExecutionContextDefault.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XPathExecutionContextDefault.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XPathExpression.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XPathExpression.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XPathFactory.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XPathFactory.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XPathFactoryBlock.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XPathFactoryBlock.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XPathFactoryDefault.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XPathFactoryDefault.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XPathFunctionTable.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XPathFunctionTable.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XPathInit.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XPathInit.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XPathParserException.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XPathParserException.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XPathProcessor.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XPathProcessor.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XPathProcessorImpl.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XPathProcessorImpl.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XSpan.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XSpan.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XString.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XString.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XStringAdapter.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XStringAdapter.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XStringAdapterAllocator.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XStringAdapterAllocator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XStringAllocator.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XStringAllocator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XStringBase.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XStringBase.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XStringCached.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XStringCached.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XStringCachedAllocator.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XStringCachedAllocator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XStringReference.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XStringReference.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XStringReferenceAllocator.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XStringReferenceAllocator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XToken.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XToken.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XTokenNumberAdapter.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XTokenNumberAdapter.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XTokenNumberAdapterAllocator.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XTokenNumberAdapterAllocator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XTokenStringAdapter.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XTokenStringAdapter.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XTokenStringAdapterAllocator.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XTokenStringAdapterAllocator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XUnknown.hpp
+SOURCE=..\..\..\..\src\xalanc\XPath\XUnknown.hpp
 # End Source File
 # End Group
 # Begin Group "Resource Files"

@@ -1,5 +1,5 @@
 // Base header file.  Must be first.
-#include <Include/PlatformDefinitions.hpp>
+#include <xalanc/Include/PlatformDefinitions.hpp>
 
 
 
@@ -18,31 +18,31 @@
 
 
 
-#include <XalanDOM/XalanDocument.hpp>
-#include <XalanDOM/XalanElement.hpp>
+#include <xalanc/XalanDOM/XalanDocument.hpp>
+#include <xalanc/XalanDOM/XalanElement.hpp>
 
 
 
-#include <PlatformSupport/XalanOutputStreamPrintWriter.hpp>
-#include <PlatformSupport/XalanStdOutputStream.hpp>
+#include <xalanc/PlatformSupport/XalanOutputStreamPrintWriter.hpp>
+#include <xalanc/PlatformSupport/XalanStdOutputStream.hpp>
 
 
 
-#include <XPath/NodeRefList.hpp>
-#include <XPath/XObject.hpp>
-#include <XPath/XPathEvaluator.hpp>
+#include <xalanc/XPath/NodeRefList.hpp>
+#include <xalanc/XPath/XObject.hpp>
+#include <xalanc/XPath/XPathEvaluator.hpp>
 
 
 
-#include <XMLSupport/FormatterToXML.hpp>
-#include <XMLSupport/FormatterTreeWalker.hpp>
-#include <XMLSupport/XMLSupportInit.hpp>
+#include <xalanc/XMLSupport/FormatterToXML.hpp>
+#include <xalanc/XMLSupport/FormatterTreeWalker.hpp>
+#include <xalanc/XMLSupport/XMLSupportInit.hpp>
 
 
 
-#include <XalanSourceTree/XalanSourceTreeDOMSupport.hpp>
-#include <XalanSourceTree/XalanSourceTreeInit.hpp>
-#include <XalanSourceTree/XalanSourceTreeParserLiaison.hpp>
+#include <xalanc/XalanSourceTree/XalanSourceTreeDOMSupport.hpp>
+#include <xalanc/XalanSourceTree/XalanSourceTreeInit.hpp>
+#include <xalanc/XalanSourceTree/XalanSourceTreeParserLiaison.hpp>
 
 
 

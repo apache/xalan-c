@@ -55,7 +55,7 @@
  * <http://www.apache.org/>.
  */
 
-#include <Include/PlatformDefinitions.hpp>
+#include <xalanc/Include/PlatformDefinitions.hpp>
 
 
 
@@ -71,7 +71,7 @@
 
 
 
-#include <XalanTransformer/XalanTransformer.hpp>
+#include <xalanc/XalanTransformer/XalanTransformer.hpp>
 
 
 

@@ -55,7 +55,7 @@
  * <http://www.apache.org/>.
  */
 
-#include <Include/PlatformDefinitions.hpp>
+#include <xalanc/Include/PlatformDefinitions.hpp>
 
 
 
@@ -74,7 +74,7 @@
 
 #if defined(TEST_XALAN_CPP)
 
-#include <XalanTransformer/XalanTransformer.hpp>
+#include <xalanc/XalanTransformer/XalanTransformer.hpp>
 
 #if defined(XALAN_CLASSIC_IOSTREAMS)
 #include <iostream.h>
@@ -92,7 +92,7 @@ XALAN_USING_STD(ostrstream)
 
 #else
 
-#include <XalanTransformer/XalanCAPI.h>
+#include <xalanc/XalanTransformer/XalanCAPI.h>
 
 #include <cstdio>
 

@@ -125,31 +125,31 @@ LINK32=link.exe
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 # Begin Source File
 
-SOURCE=..\..\..\..\src\ICUBridge\FunctionICUFormatNumber.cpp
+SOURCE=..\..\..\..\src\xalanc\ICUBridge\FunctionICUFormatNumber.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\ICUBridge\ICUBridge.cpp
+SOURCE=..\..\..\..\src\xalanc\ICUBridge\ICUBridge.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\ICUBridge\ICUBridgeCleanup.cpp
+SOURCE=..\..\..\..\src\xalanc\ICUBridge\ICUBridgeCleanup.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\ICUBridge\ICUBridgeCollationCompareFunctor.cpp
+SOURCE=..\..\..\..\src\xalanc\ICUBridge\ICUBridgeCollationCompareFunctor.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\ICUBridge\ICUBridgeCollationCompareFunctorImpl.cpp
+SOURCE=..\..\..\..\src\xalanc\ICUBridge\ICUBridgeCollationCompareFunctorImpl.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\ICUBridge\ICUXalanNumberFormatFactory.cpp
+SOURCE=..\..\..\..\src\xalanc\ICUBridge\ICUXalanNumberFormatFactory.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\ICUBridge\ICUXalanNumberFormatProxy.cpp
+SOURCE=..\..\..\..\src\xalanc\ICUBridge\ICUXalanNumberFormatProxy.cpp
 # End Source File
 # End Group
 # Begin Group "Header Files"
@@ -157,35 +157,35 @@ SOURCE=..\..\..\..\src\ICUBridge\ICUXalanNumberFormatProxy.cpp
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
 # Begin Source File
 
-SOURCE=..\..\..\..\src\ICUBridge\FunctionICUFormatNumber.hpp
+SOURCE=..\..\..\..\src\xalanc\ICUBridge\FunctionICUFormatNumber.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\ICUBridge\ICUBridge.hpp
+SOURCE=..\..\..\..\src\xalanc\ICUBridge\ICUBridge.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\ICUBridge\ICUBridgeCleanup.hpp
+SOURCE=..\..\..\..\src\xalanc\ICUBridge\ICUBridgeCleanup.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\ICUBridge\ICUBridgeCollationCompareFunctor.hpp
+SOURCE=..\..\..\..\src\xalanc\ICUBridge\ICUBridgeCollationCompareFunctor.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\ICUBridge\ICUBridgeCollationCompareFunctorImpl.hpp
+SOURCE=..\..\..\..\src\xalanc\ICUBridge\ICUBridgeCollationCompareFunctorImpl.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\ICUBridge\ICUBridgeDefinitions.hpp
+SOURCE=..\..\..\..\src\xalanc\ICUBridge\ICUBridgeDefinitions.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\ICUBridge\ICUXalanNumberFormatFactory.hpp
+SOURCE=..\..\..\..\src\xalanc\ICUBridge\ICUXalanNumberFormatFactory.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\ICUBridge\ICUXalanNumberFormatProxy.hpp
+SOURCE=..\..\..\..\src\xalanc\ICUBridge\ICUXalanNumberFormatProxy.hpp
 # End Source File
 # End Group
 # Begin Group "Resource Files"

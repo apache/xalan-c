@@ -55,7 +55,7 @@
  * <http://www.apache.org/>.
  */
 // Base header file.  Must be first.
-#include <Include/PlatformDefinitions.hpp>
+#include <xalanc/Include/PlatformDefinitions.hpp>
 
 
 
@@ -72,8 +72,8 @@
 
 #include <xercesc/util/PlatformUtils.hpp>
 
-#include <PlatformSupport/DOMStringHelper.hpp>
-#include <XalanTransformer/XalanTransformer.hpp>
+#include <xalanc/PlatformSupport/DOMStringHelper.hpp>
+#include <xalanc/XalanTransformer/XalanTransformer.hpp>
 
 // HARNESS HEADERS...
 #include <Harness/XMLFileReporter.hpp>

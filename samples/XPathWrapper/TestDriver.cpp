@@ -6,7 +6,7 @@
 
 
 
-#include <PlatformSupport/DOMStringHelper.hpp>
+#include <xalanc/PlatformSupport/DOMStringHelper.hpp>
 
 
 

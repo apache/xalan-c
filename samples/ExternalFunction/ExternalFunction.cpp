@@ -1,5 +1,5 @@
 // Base header file.  Must be first.
-#include <Include/PlatformDefinitions.hpp>
+#include <xalanc/Include/PlatformDefinitions.hpp>
 
 
 
@@ -17,12 +17,12 @@
 
 
 
-#include <XalanTransformer/XalanTransformer.hpp>
+#include <xalanc/XalanTransformer/XalanTransformer.hpp>
 
 
 
-#include <XPath/Function.hpp>
-#include <XPath/XObjectFactory.hpp>
+#include <xalanc/XPath/Function.hpp>
+#include <xalanc/XPath/XObjectFactory.hpp>
 
 
 

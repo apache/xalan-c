@@ -18,38 +18,38 @@
 
 
 
-#include <Include/STLHelper.hpp>
+#include <xalanc/Include/STLHelper.hpp>
 
 
 
-#include <XalanDOM/XalanDocument.hpp>
-#include <XalanDOM/XalanElement.hpp>
+#include <xalanc/XalanDOM/XalanDocument.hpp>
+#include <xalanc/XalanDOM/XalanElement.hpp>
 
 
 
-#include <PlatformSupport/DirectoryEnumerator.hpp>
-#include <PlatformSupport/DOMStringHelper.hpp>
+#include <xalanc/PlatformSupport/DirectoryEnumerator.hpp>
+#include <xalanc/PlatformSupport/DOMStringHelper.hpp>
 
 
 
-#include <DOMSupport/DOMServices.hpp>
+#include <xalanc/DOMSupport/DOMServices.hpp>
 
 
 
-#include <XPath/XObjectFactoryDefault.hpp>
-#include <XPath/XPath.hpp>
-#include <XPath/XPathConstructionContextDefault.hpp>
-#include <XPath/XPathEnvSupportDefault.hpp>
-#include <XPath/XPathExecutionContextDefault.hpp>
-#include <XPath/XPathInit.hpp>
-#include <XPath/XPathProcessorImpl.hpp>
-#include <XPath/XPathFactoryDefault.hpp>
-#include <XPath/ElementPrefixResolverProxy.hpp>
+#include <xalanc/XPath/XObjectFactoryDefault.hpp>
+#include <xalanc/XPath/XPath.hpp>
+#include <xalanc/XPath/XPathConstructionContextDefault.hpp>
+#include <xalanc/XPath/XPathEnvSupportDefault.hpp>
+#include <xalanc/XPath/XPathExecutionContextDefault.hpp>
+#include <xalanc/XPath/XPathInit.hpp>
+#include <xalanc/XPath/XPathProcessorImpl.hpp>
+#include <xalanc/XPath/XPathFactoryDefault.hpp>
+#include <xalanc/XPath/ElementPrefixResolverProxy.hpp>
 
 
 
-#include <XalanSourceTree/XalanSourceTreeDOMSupport.hpp>
-#include <XalanSourceTree/XalanSourceTreeParserLiaison.hpp>
+#include <xalanc/XalanSourceTree/XalanSourceTreeDOMSupport.hpp>
+#include <xalanc/XalanSourceTree/XalanSourceTreeParserLiaison.hpp>
 
 
 

@@ -5,22 +5,22 @@
 
 #include <util/PlatformUtils.hpp>
 
-#include <PlatformSupport/DOMStringHelper.hpp>
-#include <DOMSupport/DOMSupportDefault.hpp>
+#include <xalanc/PlatformSupport/DOMStringHelper.hpp>
+#include <xalanc/DOMSupport/DOMSupportDefault.hpp>
 
-#include <XPath/XObjectFactoryDefault.hpp>
-#include <XPath/XPathSupportDefault.hpp>
-#include <XPath/XPathFactoryDefault.hpp>
+#include <xalanc/XPath/XObjectFactoryDefault.hpp>
+#include <xalanc/XPath/XPathSupportDefault.hpp>
+#include <xalanc/XPath/XPathFactoryDefault.hpp>
 
-#include <XSLT/StylesheetConstructionContextDefault.hpp>
-#include <XSLT/StylesheetExecutionContextDefault.hpp>
-#include <XSLT/StylesheetRoot.hpp>
-#include <XSLT/XSLTEngineImpl.hpp>
-#include <XSLT/XSLTInputSource.hpp>
-#include <XSLT/XSLTProcessorEnvSupportDefault.hpp>
-#include <XSLT/XSLTResultTarget.hpp>
+#include <xalanc/XSLT/StylesheetConstructionContextDefault.hpp>
+#include <xalanc/XSLT/StylesheetExecutionContextDefault.hpp>
+#include <xalanc/XSLT/StylesheetRoot.hpp>
+#include <xalanc/XSLT/XSLTEngineImpl.hpp>
+#include <xalanc/XSLT/XSLTInputSource.hpp>
+#include <xalanc/XSLT/XSLTProcessorEnvSupportDefault.hpp>
+#include <xalanc/XSLT/XSLTResultTarget.hpp>
 
-#include <XercesParserLiaison/XercesParserLiaison.hpp>
+#include <xalanc/XercesParserLiaison/XercesParserLiaison.hpp>
 
 #include <XercesPlatformSupport/TextFileOutputStream.hpp>
 #include <XercesPlatformSupport/XercesDOMPrintWriter.hpp>

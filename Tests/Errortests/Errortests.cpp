@@ -55,7 +55,7 @@
  * <http://www.apache.org/>.
  */
 
-#include <Include/PlatformDefinitions.hpp>
+#include <xalanc/Include/PlatformDefinitions.hpp>
 
 
 
@@ -82,17 +82,17 @@ XALAN_USING_STD(endl)
 
 
 // XALAN HEADERS...
-#include <PlatformSupport/DOMStringHelper.hpp>
+#include <xalanc/PlatformSupport/DOMStringHelper.hpp>
 
 
 
-#include <XalanSourceTree/FormatterToSourceTree.hpp>
-#include <XalanSourceTree/XalanSourceTreeDOMSupport.hpp>
-#include <XalanSourceTree/XalanSourceTreeParserLiaison.hpp>
+#include <xalanc/XalanSourceTree/FormatterToSourceTree.hpp>
+#include <xalanc/XalanSourceTree/XalanSourceTreeDOMSupport.hpp>
+#include <xalanc/XalanSourceTree/XalanSourceTreeParserLiaison.hpp>
 
 
 
-#include <XalanTransformer/XalanTransformer.hpp>
+#include <xalanc/XalanTransformer/XalanTransformer.hpp>
 
 
 

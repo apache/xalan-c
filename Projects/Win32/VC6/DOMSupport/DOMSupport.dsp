@@ -127,31 +127,31 @@ LINK32=link.exe
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 # Begin Source File
 
-SOURCE=..\..\..\..\src\DOMSupport\DOMServices.cpp
+SOURCE=..\..\..\..\src\xalanc\DOMSupport\DOMServices.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\DOMSupport\DOMSupport.cpp
+SOURCE=..\..\..\..\src\xalanc\DOMSupport\DOMSupport.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\DOMSupport\DOMSupportDefault.cpp
+SOURCE=..\..\..\..\src\xalanc\DOMSupport\DOMSupportDefault.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\DOMSupport\DOMSupportException.cpp
+SOURCE=..\..\..\..\src\xalanc\DOMSupport\DOMSupportException.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\DOMSupport\DOMSupportInit.cpp
+SOURCE=..\..\..\..\src\xalanc\DOMSupport\DOMSupportInit.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\DOMSupport\TreeWalker.cpp
+SOURCE=..\..\..\..\src\xalanc\DOMSupport\TreeWalker.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\DOMSupport\XalanNamespacesStack.cpp
+SOURCE=..\..\..\..\src\xalanc\DOMSupport\XalanNamespacesStack.cpp
 # End Source File
 # End Group
 # Begin Group "Header Files"
@@ -159,35 +159,35 @@ SOURCE=..\..\..\..\src\DOMSupport\XalanNamespacesStack.cpp
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
 # Begin Source File
 
-SOURCE=..\..\..\..\src\DOMSupport\DOMServices.hpp
+SOURCE=..\..\..\..\src\xalanc\DOMSupport\DOMServices.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\DOMSupport\DOMSupport.hpp
+SOURCE=..\..\..\..\src\xalanc\DOMSupport\DOMSupport.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\DOMSupport\DOMSupportDefault.hpp
+SOURCE=..\..\..\..\src\xalanc\DOMSupport\DOMSupportDefault.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\DOMSupport\DOMSupportDefinitions.hpp
+SOURCE=..\..\..\..\src\xalanc\DOMSupport\DOMSupportDefinitions.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\DOMSupport\DOMSupportException.hpp
+SOURCE=..\..\..\..\src\xalanc\DOMSupport\DOMSupportException.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\DOMSupport\DOMSupportInit.hpp
+SOURCE=..\..\..\..\src\xalanc\DOMSupport\DOMSupportInit.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\DOMSupport\TreeWalker.hpp
+SOURCE=..\..\..\..\src\xalanc\DOMSupport\TreeWalker.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\DOMSupport\XalanNamespacesStack.hpp
+SOURCE=..\..\..\..\src\xalanc\DOMSupport\XalanNamespacesStack.hpp
 # End Source File
 # End Group
 # Begin Group "Resource Files"

@@ -127,43 +127,43 @@ LINK32=link.exe
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XMLSupport\FormatterToDOM.cpp
+SOURCE=..\..\..\..\src\xalanc\XMLSupport\FormatterToDOM.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XMLSupport\FormatterToHTML.cpp
+SOURCE=..\..\..\..\src\xalanc\XMLSupport\FormatterToHTML.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XMLSupport\FormatterToNull.cpp
+SOURCE=..\..\..\..\src\xalanc\XMLSupport\FormatterToNull.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XMLSupport\FormatterToText.cpp
+SOURCE=..\..\..\..\src\xalanc\XMLSupport\FormatterToText.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XMLSupport\FormatterToXML.cpp
+SOURCE=..\..\..\..\src\xalanc\XMLSupport\FormatterToXML.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XMLSupport\FormatterTreeWalker.cpp
+SOURCE=..\..\..\..\src\xalanc\XMLSupport\FormatterTreeWalker.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XMLSupport\XalanHTMLElementsProperties.cpp
+SOURCE=..\..\..\..\src\xalanc\XMLSupport\XalanHTMLElementsProperties.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XMLSupport\XMLParserLiaison.cpp
+SOURCE=..\..\..\..\src\xalanc\XMLSupport\XMLParserLiaison.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XMLSupport\XMLSupportException.cpp
+SOURCE=..\..\..\..\src\xalanc\XMLSupport\XMLSupportException.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XMLSupport\XMLSupportInit.cpp
+SOURCE=..\..\..\..\src\xalanc\XMLSupport\XMLSupportInit.cpp
 # End Source File
 # End Group
 # Begin Group "Header Files"
@@ -171,47 +171,47 @@ SOURCE=..\..\..\..\src\XMLSupport\XMLSupportInit.cpp
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XMLSupport\FormatterToDOM.hpp
+SOURCE=..\..\..\..\src\xalanc\XMLSupport\FormatterToDOM.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XMLSupport\FormatterToHTML.hpp
+SOURCE=..\..\..\..\src\xalanc\XMLSupport\FormatterToHTML.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XMLSupport\FormatterToNull.hpp
+SOURCE=..\..\..\..\src\xalanc\XMLSupport\FormatterToNull.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XMLSupport\FormatterToText.hpp
+SOURCE=..\..\..\..\src\xalanc\XMLSupport\FormatterToText.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XMLSupport\FormatterToXML.hpp
+SOURCE=..\..\..\..\src\xalanc\XMLSupport\FormatterToXML.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XMLSupport\FormatterTreeWalker.hpp
+SOURCE=..\..\..\..\src\xalanc\XMLSupport\FormatterTreeWalker.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XMLSupport\XalanHTMLElementsProperties.hpp
+SOURCE=..\..\..\..\src\xalanc\XMLSupport\XalanHTMLElementsProperties.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XMLSupport\XMLParserLiaison.hpp
+SOURCE=..\..\..\..\src\xalanc\XMLSupport\XMLParserLiaison.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XMLSupport\XMLSupportDefinitions.hpp
+SOURCE=..\..\..\..\src\xalanc\XMLSupport\XMLSupportDefinitions.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XMLSupport\XMLSupportException.hpp
+SOURCE=..\..\..\..\src\xalanc\XMLSupport\XMLSupportException.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XMLSupport\XMLSupportInit.hpp
+SOURCE=..\..\..\..\src\xalanc\XMLSupport\XMLSupportInit.hpp
 # End Source File
 # End Group
 # Begin Group "Resource Files"

@@ -56,7 +56,7 @@
  */
 
 // Base header file.  Must be first.
-#include <Include/PlatformDefinitions.hpp>
+#include <xalanc/Include/PlatformDefinitions.hpp>
 
 
 
@@ -84,13 +84,13 @@ XALAN_USING_STD(endl)
 
 
 
-#include <XercesParserLiaison/XercesParserLiaison.hpp>
-#include <XercesParserLiaison/XercesDOMSupport.hpp>
+#include <xalanc/XercesParserLiaison/XercesParserLiaison.hpp>
+#include <xalanc/XercesParserLiaison/XercesDOMSupport.hpp>
 
 
 
-#include <XalanTransformer/XalanTransformer.hpp>
-#include <XalanTransformer/XercesDOMWrapperParsedSource.hpp>
+#include <xalanc/XalanTransformer/XalanTransformer.hpp>
+#include <xalanc/XalanTransformer/XercesDOMWrapperParsedSource.hpp>
 
 
 

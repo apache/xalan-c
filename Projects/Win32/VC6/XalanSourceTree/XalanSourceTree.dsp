@@ -127,119 +127,119 @@ LINK32=link.exe
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\FormatterToSourceTree.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanSourceTree\FormatterToSourceTree.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeAttr.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeAttr.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeAttributeAllocator.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeAttributeAllocator.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeAttributeNSAllocator.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeAttributeNSAllocator.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeAttrNS.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeAttrNS.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeComment.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeComment.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeCommentAllocator.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeCommentAllocator.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeContentHandler.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeContentHandler.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeDocument.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeDocument.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeDocumentFragment.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeDocumentFragment.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeDOMSupport.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeDOMSupport.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeElement.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeElement.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeElementA.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeElementA.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeElementAAllocator.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeElementAAllocator.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeElementANS.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeElementANS.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeElementANSAllocator.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeElementANSAllocator.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeElementNA.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeElementNA.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeElementNAAllocator.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeElementNAAllocator.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeElementNANS.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeElementNANS.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeElementNANSAllocator.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeElementNANSAllocator.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeHelper.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeHelper.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeInit.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeInit.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeParserLiaison.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeParserLiaison.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeProcessingInstruction.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeProcessingInstruction.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeProcessingInstructionAllocator.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeProcessingInstructionAllocator.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeText.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeText.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeTextAllocator.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeTextAllocator.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeTextIWS.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeTextIWS.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeTextIWSAllocator.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeTextIWSAllocator.cpp
 # End Source File
 # End Group
 # Begin Group "Header Files"
@@ -247,123 +247,123 @@ SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeTextIWSAllocator.cpp
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\FormatterToSourceTree.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanSourceTree\FormatterToSourceTree.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeAttr.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeAttr.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeAttributeAllocator.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeAttributeAllocator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeAttributeNSAllocator.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeAttributeNSAllocator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeAttrNS.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeAttrNS.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeComment.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeComment.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeCommentAllocator.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeCommentAllocator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeContentHandler.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeContentHandler.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeDefinitions.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeDefinitions.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeDocument.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeDocument.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeDocumentFragment.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeDocumentFragment.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeDOMSupport.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeDOMSupport.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeElement.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeElement.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeElementA.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeElementA.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeElementAAllocator.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeElementAAllocator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeElementANS.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeElementANS.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeElementANSAllocator.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeElementANSAllocator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeElementNA.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeElementNA.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeElementNAAllocator.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeElementNAAllocator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeElementNANS.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeElementNANS.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeElementNANSAllocator.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeElementNANSAllocator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeHelper.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeHelper.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeInit.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeInit.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeParserLiaison.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeParserLiaison.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeProcessingInstruction.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeProcessingInstruction.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeProcessingInstructionAllocator.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeProcessingInstructionAllocator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeText.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeText.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeTextAllocator.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeTextAllocator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeTextIWS.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeTextIWS.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeTextIWSAllocator.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanSourceTree\XalanSourceTreeTextIWSAllocator.hpp
 # End Source File
 # End Group
 # Begin Group "Resource Files"

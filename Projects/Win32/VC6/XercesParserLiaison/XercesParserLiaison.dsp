@@ -127,227 +127,227 @@ LINK32=link.exe
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\FormatterToDeprecatedXercesDOM.cpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\FormatterToDeprecatedXercesDOM.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\FormatterToXercesDOM.cpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\FormatterToXercesDOM.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesAttrBridge.cpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesAttrBridge.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesAttributeBridgeAllocator.cpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesAttributeBridgeAllocator.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesAttrWrapper.cpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesAttrWrapper.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesAttrWrapperAllocator.cpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesAttrWrapperAllocator.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesBridgeHelper.cpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesBridgeHelper.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesBridgeNavigator.cpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesBridgeNavigator.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesCDATASectionBridge.cpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesCDATASectionBridge.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesCDATASectionWrapper.cpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesCDATASectionWrapper.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesCommentBridge.cpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesCommentBridge.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesCommentWrapper.cpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesCommentWrapper.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesDocumentBridge.cpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesDocumentBridge.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesDocumentFragmentBridge.cpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesDocumentFragmentBridge.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesDocumentNamedNodeListCache.cpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesDocumentNamedNodeListCache.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesDocumentTypeBridge.cpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesDocumentTypeBridge.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesDocumentTypeWrapper.cpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesDocumentTypeWrapper.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesDocumentWrapper.cpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesDocumentWrapper.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesDOM_NodeHack.cpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesDOM_NodeHack.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesDOMException.cpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesDOMException.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesDOMFormatterWalker.cpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesDOMFormatterWalker.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesDOMImplementationBridge.cpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesDOMImplementationBridge.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesDOMImplementationWrapper.cpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesDOMImplementationWrapper.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesDOMSupport.cpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesDOMSupport.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesDOMWalker.cpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesDOMWalker.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesDOMWrapperException.cpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesDOMWrapperException.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesElementBridge.cpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesElementBridge.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesElementBridgeAllocator.cpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesElementBridgeAllocator.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesElementNamedNodeListCache.cpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesElementNamedNodeListCache.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesElementWrapper.cpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesElementWrapper.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesElementWrapperAllocator.cpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesElementWrapperAllocator.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesEntityBridge.cpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesEntityBridge.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesEntityReferenceBridge.cpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesEntityReferenceBridge.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesEntityReferenceWrapper.cpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesEntityReferenceWrapper.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesEntityWrapper.cpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesEntityWrapper.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesLiaisonXalanDOMStringPool.cpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesLiaisonXalanDOMStringPool.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesNamedNodeListCache.cpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesNamedNodeListCache.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesNamedNodeMapAttributeList.cpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesNamedNodeMapAttributeList.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesNamedNodeMapBridge.cpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesNamedNodeMapBridge.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesNamedNodeMapWrapper.cpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesNamedNodeMapWrapper.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesNodeListBridge.cpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesNodeListBridge.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesNodeListWrapper.cpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesNodeListWrapper.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesNotationBridge.cpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesNotationBridge.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesNotationWrapper.cpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesNotationWrapper.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesParserLiaison.cpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesParserLiaison.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesProcessingInstructionBridge.cpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesProcessingInstructionBridge.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesProcessingInstructionWrapper.cpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesProcessingInstructionWrapper.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesTextBridge.cpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesTextBridge.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesTextBridgeAllocator.cpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesTextBridgeAllocator.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesTextWrapper.cpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesTextWrapper.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesTextWrapperAllocator.cpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesTextWrapperAllocator.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesToXalanNodeMap.cpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesToXalanNodeMap.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesTreeWalker.cpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesTreeWalker.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesWrapperHelper.cpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesWrapperHelper.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesWrapperNavigator.cpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesWrapperNavigator.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesWrapperToXalanNodeMap.cpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesWrapperToXalanNodeMap.cpp
 # End Source File
 # End Group
 # Begin Group "Header Files"
@@ -355,235 +355,235 @@ SOURCE=..\..\..\..\src\XercesParserLiaison\XercesWrapperToXalanNodeMap.cpp
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\FormatterToDeprecatedXercesDOM.hpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\FormatterToDeprecatedXercesDOM.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\FormatterToXercesDOM.hpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\FormatterToXercesDOM.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesAttrBridge.hpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesAttrBridge.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesAttributeBridgeAllocator.hpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesAttributeBridgeAllocator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesAttrWrapper.hpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesAttrWrapper.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesAttrWrapperAllocator.hpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesAttrWrapperAllocator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesBridgeHelper.hpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesBridgeHelper.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesBridgeNavigator.hpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesBridgeNavigator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesBridgeTypes.hpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesBridgeTypes.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesCDATASectionBridge.hpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesCDATASectionBridge.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesCDATASectionWrapper.hpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesCDATASectionWrapper.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesCommentBridge.hpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesCommentBridge.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesCommentWrapper.hpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesCommentWrapper.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesDocumentBridge.hpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesDocumentBridge.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesDocumentFragmentBridge.hpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesDocumentFragmentBridge.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesDocumentNamedNodeListCache.hpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesDocumentNamedNodeListCache.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesDocumentTypeBridge.hpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesDocumentTypeBridge.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesDocumentTypeWrapper.hpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesDocumentTypeWrapper.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesDocumentWrapper.hpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesDocumentWrapper.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesDOM_NodeHack.hpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesDOM_NodeHack.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesDOMException.hpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesDOMException.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesDOMFormatterWalker.hpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesDOMFormatterWalker.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesDOMImplementationBridge.hpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesDOMImplementationBridge.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesDOMImplementationWrapper.hpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesDOMImplementationWrapper.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesDOMSupport.hpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesDOMSupport.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesDOMWalker.hpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesDOMWalker.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesDOMWrapperException.hpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesDOMWrapperException.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesElementBridge.hpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesElementBridge.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesElementBridgeAllocator.hpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesElementBridgeAllocator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesElementNamedNodeListCache.hpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesElementNamedNodeListCache.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesElementWrapper.hpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesElementWrapper.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesElementWrapperAllocator.hpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesElementWrapperAllocator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesEntityBridge.hpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesEntityBridge.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesEntityReferenceBridge.hpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesEntityReferenceBridge.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesEntityReferenceWrapper.hpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesEntityReferenceWrapper.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesEntityWrapper.hpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesEntityWrapper.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesLiaisonXalanDOMStringPool.hpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesLiaisonXalanDOMStringPool.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesNamedNodeListCache.hpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesNamedNodeListCache.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesNamedNodeMapBridge.hpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesNamedNodeMapBridge.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesNamedNodeMapWrapper.hpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesNamedNodeMapWrapper.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesNodeListBridge.hpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesNodeListBridge.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesNodeListWrapper.hpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesNodeListWrapper.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesNotationBridge.hpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesNotationBridge.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesNotationWrapper.hpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesNotationWrapper.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesParserLiaison.hpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesParserLiaison.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesParserLiaisonDefinitions.hpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesParserLiaisonDefinitions.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesProcessingInstructionBridge.hpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesProcessingInstructionBridge.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesProcessingInstructionWrapper.hpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesProcessingInstructionWrapper.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesTextBridge.hpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesTextBridge.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesTextBridgeAllocator.hpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesTextBridgeAllocator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesTextWrapper.hpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesTextWrapper.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesTextWrapperAllocator.hpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesTextWrapperAllocator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesToXalanNodeMap.hpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesToXalanNodeMap.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesTreeWalker.hpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesTreeWalker.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesWrapperHelper.hpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesWrapperHelper.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesWrapperNavigator.hpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesWrapperNavigator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesWrapperToXalanNodeMap.hpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesWrapperToXalanNodeMap.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesWrapperTypes.hpp
+SOURCE=..\..\..\..\src\xalanc\XercesParserLiaison\XercesWrapperTypes.hpp
 # End Source File
 # End Group
 # Begin Group "Resource Files"

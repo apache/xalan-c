@@ -57,7 +57,7 @@
 #if !defined(HARNESSDEFINITIONS_HEADER_GUARD_1357924680)
 #define HARNESSDEFINITIONS_HEADER_GUARD_1357924680
 
-#include <Include/PlatformDefinitions.hpp>
+#include <xalanc/Include/PlatformDefinitions.hpp>
 
 #if defined(HARNESS_EXPORTS)
 #	define HARNESS_API XALAN_PLATFORM_EXPORT

@@ -1,5 +1,5 @@
 // Base header file.  Must be first.
-#include <Include/PlatformDefinitions.hpp>
+#include <xalanc/Include/PlatformDefinitions.hpp>
 
 
 
@@ -26,30 +26,30 @@
 
 
 
-#include <Include/XalanAutoPtr.hpp>
+#include <xalanc/Include/XalanAutoPtr.hpp>
 
 
 
-#include <XalanDOM/XalanDocument.hpp>
-#include <XalanDOM/XalanElement.hpp>
+#include <xalanc/XalanDOM/XalanDocument.hpp>
+#include <xalanc/XalanDOM/XalanElement.hpp>
 
 
 
-#include <PlatformSupport/XalanOutputStreamPrintWriter.hpp>
-#include <PlatformSupport/XalanStdOutputStream.hpp>
+#include <xalanc/PlatformSupport/XalanOutputStreamPrintWriter.hpp>
+#include <xalanc/PlatformSupport/XalanStdOutputStream.hpp>
 
 
 
-#include <XMLSupport/FormatterToXML.hpp>
+#include <xalanc/XMLSupport/FormatterToXML.hpp>
 
 
 
-#include <XercesParserLiaison/FormatterToXercesDOM.hpp>
-#include <XercesParserLiaison/XercesDOMFormatterWalker.hpp>
+#include <xalanc/XercesParserLiaison/FormatterToXercesDOM.hpp>
+#include <xalanc/XercesParserLiaison/XercesDOMFormatterWalker.hpp>
 
 
 
-#include <XalanTransformer/XalanTransformer.hpp>
+#include <xalanc/XalanTransformer/XalanTransformer.hpp>
 
 
 

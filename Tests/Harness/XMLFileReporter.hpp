@@ -70,7 +70,7 @@
 
 
 
-#include <XalanDOM/XalanDOMString.hpp>
+#include <xalanc/XalanDOM/XalanDOMString.hpp>
 
 
 

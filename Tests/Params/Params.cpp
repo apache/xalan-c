@@ -55,7 +55,7 @@
  * <http://www.apache.org/>.
  */
 // Base header file.  Must be first.
-#include <Include/PlatformDefinitions.hpp>
+#include <xalanc/Include/PlatformDefinitions.hpp>
 
 
 
@@ -78,16 +78,16 @@
 
 
 
-#include <PlatformSupport/XalanUnicode.hpp>
+#include <xalanc/PlatformSupport/XalanUnicode.hpp>
 
 
 
-#include <XSLT/XSLTInputSource.hpp>
-#include <XSLT/XSLTResultTarget.hpp>
+#include <xalanc/XSLT/XSLTInputSource.hpp>
+#include <xalanc/XSLT/XSLTResultTarget.hpp>
 
 
 
-#include <XalanTransformer/XalanTransformer.hpp>
+#include <xalanc/XalanTransformer/XalanTransformer.hpp>
 
 
 

@@ -121,7 +121,7 @@ LINK32=link.exe
 # End Group
 # Begin Source File
 
-SOURCE=..\..\..\..\src\TestXSLT\process.cpp
+SOURCE=..\..\..\..\src\xalanc\TestXSLT\process.cpp
 # End Source File
 # End Group
 # Begin Group "Resource Files"

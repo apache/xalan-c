@@ -125,95 +125,95 @@ LINK32=link.exe
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanDOM\XalanAttr.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanDOM\XalanAttr.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanDOM\XalanCDataSection.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanDOM\XalanCDataSection.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanDOM\XalanCharacterData.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanDOM\XalanCharacterData.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanDOM\XalanComment.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanDOM\XalanComment.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanDOM\XalanDocument.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanDOM\XalanDocument.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanDOM\XalanDocumentFragment.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanDOM\XalanDocumentFragment.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanDOM\XalanDocumentType.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanDOM\XalanDocumentType.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanDOM\XalanDOMException.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanDOM\XalanDOMException.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanDOM\XalanDOMImplementation.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanDOM\XalanDOMImplementation.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanDOM\XalanDOMInit.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanDOM\XalanDOMInit.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanDOM\XalanDOMString.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanDOM\XalanDOMString.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanDOM\XalanElement.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanDOM\XalanElement.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanDOM\XalanEmptyNamedNodeMap.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanDOM\XalanEmptyNamedNodeMap.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanDOM\XalanEntity.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanDOM\XalanEntity.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanDOM\XalanEntityReference.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanDOM\XalanEntityReference.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanDOM\XalanNamedNodeMap.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanDOM\XalanNamedNodeMap.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanDOM\XalanNode.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanDOM\XalanNode.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanDOM\XalanNodeList.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanDOM\XalanNodeList.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanDOM\XalanNodeListDummy.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanDOM\XalanNodeListDummy.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanDOM\XalanNodeListSurrogate.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanDOM\XalanNodeListSurrogate.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanDOM\XalanNotation.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanDOM\XalanNotation.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanDOM\XalanProcessingInstruction.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanDOM\XalanProcessingInstruction.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanDOM\XalanText.cpp
+SOURCE=..\..\..\..\src\xalanc\XalanDOM\XalanText.cpp
 # End Source File
 # End Group
 # Begin Group "Header Files"
@@ -221,99 +221,99 @@ SOURCE=..\..\..\..\src\XalanDOM\XalanText.cpp
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanDOM\XalanAttr.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanDOM\XalanAttr.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanDOM\XalanCDATASection.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanDOM\XalanCDATASection.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanDOM\XalanCharacterData.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanDOM\XalanCharacterData.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanDOM\XalanComment.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanDOM\XalanComment.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanDOM\XalanDocument.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanDOM\XalanDocument.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanDOM\XalanDocumentFragment.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanDOM\XalanDocumentFragment.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanDOM\XalanDocumentType.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanDOM\XalanDocumentType.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanDOM\XalanDOMDefinitions.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanDOM\XalanDOMDefinitions.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanDOM\XalanDOMException.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanDOM\XalanDOMException.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanDOM\XalanDOMImplementation.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanDOM\XalanDOMImplementation.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanDOM\XalanDOMInit.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanDOM\XalanDOMInit.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanDOM\XalanDOMString.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanDOM\XalanDOMString.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanDOM\XalanElement.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanDOM\XalanElement.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanDOM\XalanEmptyNamedNodeMap.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanDOM\XalanEmptyNamedNodeMap.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanDOM\XalanEntity.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanDOM\XalanEntity.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanDOM\XalanEntityReference.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanDOM\XalanEntityReference.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanDOM\XalanNamedNodeMap.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanDOM\XalanNamedNodeMap.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanDOM\XalanNode.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanDOM\XalanNode.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanDOM\XalanNodeList.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanDOM\XalanNodeList.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanDOM\XalanNodeListDummy.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanDOM\XalanNodeListDummy.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanDOM\XalanNodeListSurrogate.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanDOM\XalanNodeListSurrogate.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanDOM\XalanNotation.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanDOM\XalanNotation.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanDOM\XalanProcessingInstruction.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanDOM\XalanProcessingInstruction.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanDOM\XalanText.hpp
+SOURCE=..\..\..\..\src\xalanc\XalanDOM\XalanText.hpp
 # End Source File
 # End Group
 # Begin Group "Resource Files"

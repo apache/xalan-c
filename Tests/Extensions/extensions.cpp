@@ -55,7 +55,7 @@
  * <http://www.apache.org/>.
  */
 // Base header file.  Must be first.
-#include <Include/PlatformDefinitions.hpp>
+#include <xalanc/Include/PlatformDefinitions.hpp>
 
 
 
@@ -83,16 +83,16 @@
 
 
 // EXTENSION HEADERS...
-#include <XalanExtensions/FunctionDifference.hpp>
-#include <XalanExtensions/FunctionDistinct.hpp>
-#include <XalanExtensions/FunctionEvaluate.hpp>
-#include <XalanExtensions/FunctionHasSameNodes.hpp>
-#include <XalanExtensions/FunctionIntersection.hpp>
-#include <XalanExtensions/FunctionNodeSet.hpp>
+#include <xalanc/XalanExtensions/FunctionDifference.hpp>
+#include <xalanc/XalanExtensions/FunctionDistinct.hpp>
+#include <xalanc/XalanExtensions/FunctionEvaluate.hpp>
+#include <xalanc/XalanExtensions/FunctionHasSameNodes.hpp>
+#include <xalanc/XalanExtensions/FunctionIntersection.hpp>
+#include <xalanc/XalanExtensions/FunctionNodeSet.hpp>
 
 
 
-#include <XalanTransformer/XalanTransformer.hpp>
+#include <xalanc/XalanTransformer/XalanTransformer.hpp>
 
 
 

@@ -98,30 +98,30 @@ extern "C" int mkdir(const char*, mode_t mode);
 
 
 
-#include <PlatformSupport/DirectoryEnumerator.hpp>
-#include <PlatformSupport/DOMStringHelper.hpp>
-#include <PlatformSupport/XalanOutputStreamPrintWriter.hpp>
-#include <PlatformSupport/XalanFileOutputStream.hpp>
+#include <xalanc/PlatformSupport/DirectoryEnumerator.hpp>
+#include <xalanc/PlatformSupport/DOMStringHelper.hpp>
+#include <xalanc/PlatformSupport/XalanOutputStreamPrintWriter.hpp>
+#include <xalanc/PlatformSupport/XalanFileOutputStream.hpp>
 
 
 
-#include <XMLSupport/FormatterToXML.hpp>
-#include <XMLSupport/FormatterTreeWalker.hpp>
+#include <xalanc/XMLSupport/FormatterToXML.hpp>
+#include <xalanc/XMLSupport/FormatterTreeWalker.hpp>
 
 
 
-#include <XalanSourceTree/XalanSourceTreeDOMSupport.hpp>
-#include <XalanSourceTree/XalanSourceTreeParserLiaison.hpp>
-#include <XalanSourceTree/XalanSourceTreeDocument.hpp>
+#include <xalanc/XalanSourceTree/XalanSourceTreeDOMSupport.hpp>
+#include <xalanc/XalanSourceTree/XalanSourceTreeParserLiaison.hpp>
+#include <xalanc/XalanSourceTree/XalanSourceTreeDocument.hpp>
 
 
 
-#include <XSLT/StylesheetRoot.hpp>
+#include <xalanc/XSLT/StylesheetRoot.hpp>
 
 
 
-#include <XalanTransformer/XalanCompiledStylesheet.hpp>
-#include <XalanTransformer/XalanTransformer.hpp>
+#include <xalanc/XalanTransformer/XalanCompiledStylesheet.hpp>
+#include <xalanc/XalanTransformer/XalanTransformer.hpp>
 
 
 

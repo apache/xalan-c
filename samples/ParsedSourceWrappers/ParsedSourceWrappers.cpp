@@ -55,7 +55,7 @@
  * <http://www.apache.org/>.
  */
 
-#include <Include/PlatformDefinitions.hpp>
+#include <xalanc/Include/PlatformDefinitions.hpp>
 
 
 
@@ -78,23 +78,23 @@
 
 
 
-#include <PlatformSupport/URISupport.hpp>
+#include <xalanc/PlatformSupport/URISupport.hpp>
 
 
 
-#include <XercesParserLiaison/XercesParserLiaison.hpp>
-#include <XercesParserLiaison/XercesDOMSupport.hpp>
+#include <xalanc/XercesParserLiaison/XercesParserLiaison.hpp>
+#include <xalanc/XercesParserLiaison/XercesDOMSupport.hpp>
 
 
 
-#include <XalanSourceTree/XalanSourceTreeDOMSupport.hpp>
-#include <XalanSourceTree/XalanSourceTreeParserLiaison.hpp>
+#include <xalanc/XalanSourceTree/XalanSourceTreeDOMSupport.hpp>
+#include <xalanc/XalanSourceTree/XalanSourceTreeParserLiaison.hpp>
 
 
 
-#include <XalanTransformer/XalanTransformer.hpp>
-#include <XalanTransformer/XercesDOMWrapperParsedSource.hpp>
-#include <XalanTransformer/XalanSourceTreeWrapperParsedSource.hpp>
+#include <xalanc/XalanTransformer/XalanTransformer.hpp>
+#include <xalanc/XalanTransformer/XercesDOMWrapperParsedSource.hpp>
+#include <xalanc/XalanTransformer/XalanSourceTreeWrapperParsedSource.hpp>
 
 
 
