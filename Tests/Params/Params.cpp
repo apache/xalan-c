@@ -266,18 +266,18 @@ main(
 								transformEngine.setStylesheetParam("input", "'testing 1 2 3'");
 								break;
 							case 2:
-								transformEngine.setStylesheetParam("in1", "A ");
+								transformEngine.setStylesheetParam("in1", "'A '");
 								transformEngine.setStylesheetParam(XalanDOMString("in2"), 
-																   XalanDOMString("B "));
-								transformEngine.setStylesheetParam("in3", "C ");
-								transformEngine.setStylesheetParam("in4", "D ");
-								transformEngine.setStylesheetParam("in5", "E ");
+																   XalanDOMString("'B '"));
+								transformEngine.setStylesheetParam("in3", "'C '");
+								transformEngine.setStylesheetParam("in4", "'D '");
+								transformEngine.setStylesheetParam("in5", "'E '");
 								break;
 							case 3:
-								transformEngine.setStylesheetParam("'xyz:in1'", "DATA");
+								transformEngine.setStylesheetParam("'xyz:in1'", "'DATA'");
 								break;
 							default:
-								transformEngine.setStylesheetParam("input", "testing 1 2 3");
+								transformEngine.setStylesheetParam("input", "'testing 1 2 3'");
 								break;
 						}
 
