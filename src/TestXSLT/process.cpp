@@ -160,6 +160,8 @@ printArgOptions()
 		 << endl
 		 << " [-ESCAPE (Which characters to escape {default is <>&\"\'\\r\\n}]"
 		 << endl
+		 << " [-EER (Expand entity references.  By default, they are not expanded.)]"
+		 << endl
 		 << " [-INDENT n (Control how many spaces to indent {default is 0})]"
 		 << endl
 		 << " [-VALIDATE (Set whether validation occurs. Validation is off by default.)]"
@@ -238,7 +240,7 @@ struct CmdLineParams
 		escapeCData(false),
 		setQuietConflictWarnings(false),
 		setQuietMode(false),
-		shouldExpandEntityRefs(true),
+		shouldExpandEntityRefs(false),
 		stripCData(false),
 		versionOnly(false),
 		traceTemplates(false),
@@ -365,6 +367,10 @@ getArgs(
 		else if(!stricmp("-VALIDATE", argv[i]))
 		{
 			p.doValidation = true;
+		}
+		else if(!stricmp("-EER", argv[i]))
+		{
+			p.shouldExpandEntityRefs = true;
 		}
 		else if (!stricmp("-PARAM", argv[i])) 
 		{
