@@ -651,6 +651,16 @@ public:
 		XalanReferenceCountedObject::removeReference(m_xobjectPtr);
 	};	
 
+	void
+	release()
+	{
+		XObject* const	xobjectPtr = m_xobjectPtr;
+
+		m_xobjectPtr = 0;
+
+		XalanReferenceCountedObject::removeReference(xobjectPtr);
+	}
+
 	bool
 	null() const
 	{
@@ -695,7 +705,7 @@ public:
 
 private:
 
-	XObject*	m_xobjectPtr;	
+	XObject*	m_xobjectPtr;
 };
 
 
