@@ -73,11 +73,13 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
+typedef XERCES_CPP_NAMESPACE_QUALIFIER Locator	LocatorType;
+
+
+
 class XALAN_PLATFORMSUPPORT_EXPORT XSLException
 {
 public:
-
-	typedef XERCES_CPP_NAMESPACE_QUALIFIER Locator	LocatorType;
 
 	typedef XalanLocator::size_type					size_type;
 

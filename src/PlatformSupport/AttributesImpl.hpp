@@ -80,11 +80,13 @@ class AttributeVectorEntryExtended;
 
 
 
-class XALAN_PLATFORMSUPPORT_EXPORT AttributesImpl : public XERCES_CPP_NAMESPACE_QUALIFIER Attributes
+typedef XERCES_CPP_NAMESPACE_QUALIFIER Attributes	AttributesType;
+
+
+
+class XALAN_PLATFORMSUPPORT_EXPORT AttributesImpl : public AttributesType
 {
 public:
-
-	typedef XERCES_CPP_NAMESPACE_QUALIFIER Attributes	ParentType;
 
 	explicit
 	AttributesImpl();
@@ -94,13 +96,13 @@ public:
 
     AttributesImpl(const AttributesImpl&	theSource);
 
-    AttributesImpl(const ParentType&	theSource);
+    AttributesImpl(const AttributesType&	theSource);
 
     AttributesImpl&
 	operator=(const AttributesImpl&		theRHS);
 
 	AttributesImpl&
-	operator=(const ParentType&		theRHS);
+	operator=(const AttributesType&		theRHS);
 
 	// These are inherited from AttributeList
     virtual unsigned int

@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -78,7 +78,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 AttributeListImpl::AttributeListImpl() :
-	ParentType(),
+	AttributeListType(),
 	m_AttributeVector(),
 	m_cacheVector()
 {
@@ -99,7 +99,7 @@ AttributeListImpl::~AttributeListImpl()
 
 
 AttributeListImpl::AttributeListImpl(const AttributeListImpl&	theSource) :
-	AttributeList(),
+	AttributeListType(),
 	m_AttributeVector()
 {
 	// Use the assignment operator to do the dirty work...
@@ -110,8 +110,8 @@ AttributeListImpl::AttributeListImpl(const AttributeListImpl&	theSource) :
 
 
 
-AttributeListImpl::AttributeListImpl(const ParentType&	theSource) :
-	AttributeList(),
+AttributeListImpl::AttributeListImpl(const AttributeListType&	theSource) :
+	AttributeListType(),
 	m_AttributeVector()
 {
 	// Use the assignment operator to do the dirty work...
@@ -190,7 +190,7 @@ AttributeListImpl::operator=(const AttributeListImpl&	theRHS)
 
 
 AttributeListImpl&
-AttributeListImpl::operator=(const ParentType&	theRHS)
+AttributeListImpl::operator=(const AttributeListType&	theRHS)
 {
 	if (this != &theRHS)
 	{

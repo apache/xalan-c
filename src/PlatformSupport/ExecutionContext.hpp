@@ -72,6 +72,10 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
+typedef XERCES_CPP_NAMESPACE_QUALIFIER Locator	LocatorType;
+
+
+
 class XalanNode;
 class XalanDOMString;
 
@@ -82,8 +86,6 @@ class XalanDOMString;
 class XALAN_PLATFORMSUPPORT_EXPORT ExecutionContext
 {
 public:
-
-	typedef XERCES_CPP_NAMESPACE_QUALIFIER Locator	LocatorType;
 
 	explicit
 	ExecutionContext();
