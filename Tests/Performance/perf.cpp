@@ -113,10 +113,7 @@
 
 const char* const 	excludeStylesheets[] =
 {
-	//"basic-all_well.xsl",
 	"large-evans_large.xsl",
-	//"sort-cem-big.xsl",
-	//"large-cem10k.xsl",
 	0
 };
 
