@@ -80,9 +80,6 @@
  */
 namespace Constants
 {
-
-	static const DOMString S_XMLNAMESPACEURI = "http://www.w3.org/XML/1998/namespace";
-
 	/**
 	 * IDs for XSL element types. These are associated 
 	 * with the string literals in the XSLTProcessor class.
