@@ -135,6 +135,13 @@ public:
 
 private:
 
+	// Not implemented...
+	XalanDefaultParsedSourceHelper(const XalanDefaultParsedSourceHelper&);
+
+	XalanDefaultParsedSourceHelper&
+	operator=(const XalanDefaultParsedSourceHelper&);
+
+	// Data members...
 	XalanDefaultParsedSourceDOMSupport	m_domSupport;
 
 	XalanSourceTreeParserLiaison		m_parserLiaison;
@@ -170,6 +177,14 @@ public:
 
 private:
 
+	// Not implemented...
+	XalanDefaultParsedSource(const XalanDefaultParsedSource&);
+
+	XalanDefaultParsedSource&
+	operator=(const XalanDefaultParsedSource&);
+
+
+	// Data members...
 	XalanSourceTreeDOMSupport		m_domSupport;
 
 	XalanSourceTreeParserLiaison	m_parserLiaison;
