@@ -467,7 +467,7 @@ ResultTreeFrag::item(unsigned int	index) const
 		if (m_lastNode != 0)
 		{
 #if defined(XALAN_NO_MUTABLE)
-			((ResultTreeFrag*)this)->m_lastNode = m_lastNode->getNextSibling()
+			((ResultTreeFrag*)this)->m_lastNode = m_lastNode->getNextSibling();
 #else
 			m_lastNode = m_lastNode->getNextSibling();
 #endif
@@ -475,7 +475,7 @@ ResultTreeFrag::item(unsigned int	index) const
 		else
 		{
 #if defined(XALAN_NO_MUTABLE)
-			((ResultTreeFrag*)this)->m_lastNode = 0
+			((ResultTreeFrag*)this)->m_lastNode = 0;
 #else
 			m_lastNode = 0;
 #endif
@@ -496,7 +496,7 @@ ResultTreeFrag::item(unsigned int	index) const
 
 #if defined(XALAN_NO_MUTABLE)
 		((ResultTreeFrag*)this)->m_lastIndex = index;
-		((ResultTreeFrag*)this)->m_lastNode = theCurrentChild
+		((ResultTreeFrag*)this)->m_lastNode = theCurrentChild;
 #else
 		m_lastIndex = index;
 		m_lastNode = theCurrentChild;
@@ -517,7 +517,7 @@ ResultTreeFrag::item(unsigned int	index) const
 
 #if defined(XALAN_NO_MUTABLE)
 		((ResultTreeFrag*)this)->m_lastIndex = index;
-		((ResultTreeFrag*)this)->m_lastNode = theCurrentChild
+		((ResultTreeFrag*)this)->m_lastNode = theCurrentChild;
 #else
 		m_lastIndex = index;
 		m_lastNode = theCurrentChild;
