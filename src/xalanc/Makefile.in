@@ -527,7 +527,7 @@ ALL_HEADERS_DIRS = \
 	XalanTransformer \
 	XPathCAPI
 
-ALL_BINARIES = testXSLT testXPath Xalan
+ALL_BINARIES = testXSLT Xalan
 
 # Using ICUBridge
 ifdef XALAN_USE_ICU
