@@ -15,17 +15,17 @@
 <s3 title="&xslt4c; Distributions">
 <p><img src="xalan-cdist.gif" alt="xalan-cdist.gif"/></p>
 </s3>
-<p>For the Windows32 build, download <resource-ref idref="xalan-c-win32-download"/>.</p>
-<p>For the Linux build, download <resource-ref idref="xalan-c-linux-download"/></p> 
-<p>Each distribution contains all you need to run the Xalan command-line utility for performing transformations. To build your own applications, you also need a compatible Xerces-C distribution and the <resource-ref idref="icu"/>.</p>
+<p>For the Windows32 build, download <resource-ref idref="xslt4c-win32-download"/>.</p>
+<p>For the Linux build, download <resource-ref idref="xslt4c-linux-download"/></p> 
+<p>Each distribution contains all you need to run the Xalan command-line utility for performing transformations. To build your own applications, you also need a compatible Xerces-C++ distribution and the <resource-ref idref="icu"/>.</p>
 <s3 title="What you need to run the Xalan command-line utility">
 <p>To run the Xalan executable for performing transformations, you need the following:</p>
 <p><em>Windows32</em></p>
 <ul>
 <li>The executable: TestXSLT.exe</li>
-<li>The Xalan-C dynamic link libraries: DOMSupport.dll, PlatformSupport.dll, XalanDOM.dll, XercesParserLiaison.dll,
+<li>The Xalan-C++ dynamic link libraries: DOMSupport.dll, PlatformSupport.dll, XalanDOM.dll, XercesParserLiaison.dll,
     XercesPlatformSupport.dll, XMLSupport.dll, XPath.dll, XSLT.dll</li>
-<li>The Xerces-C dynamic link library: xerces-c_1_1.dll</li>
+<li>The Xerces-C++ dynamic link library: xerces-C_1_1.dll</li>
 <li>The International Components for Unicode (ICU) dynamic link libraries: icui18n.dll, icuuc.dll</li>
 <li>The ICU locale data files</li>
 </ul>
@@ -33,8 +33,8 @@
 <p><em>Linux</em></p>
 <ul>
   <li>The utility: TestXSLT</li>
-  <li>The Xalan-C shared library: libxalan-C_0_40_0.so</li>
-  <li>The Xerces-C shared library: libxerces-c1_0.so</li>
+  <li>The Xalan-C++ shared library: libxalan-c_0_40_0.so</li>
+  <li>The Xerces-C++ shared library: libxerces-c1_2.so</li>
   <li>The International Components for Unicode (ICU) shared library: libicu-1_4_1_2.so</li>
   <li>The ICU locale data files</li>
 </ul>
@@ -43,17 +43,17 @@
 </s3>
 <s3 title="What you need to build applications">
 <p>To build your own applications with Xalan and Xerces, you also need need the
-Xalan-C and Xerces-C header (.hpp) files and (for Windows) the Xerces-C libraries (.lib files).</p>
-<p>The Xalan-C header files are in the src directory tree in both distributions.</p> 
+Xalan-C++ and Xerces-C++ header (.hpp) files and (for Windows) the Xerces-C++ libraries (.lib files).</p>
+<p>The Xalan-C++ header files are in the src directory tree in both distributions.</p> 
 <p>In the Windows32 distribution (built with Microsoft&reg; Visual C++&reg; 6.0), the dlls and libraries are in the Build - Win32 -V6 - Release subdirectory.</p> 
 <p>In the Linux distribution (built with a make file and Red Hat Linux 6.1), the shared object library is in the lib subdirectory.</p>
-<p>To get the Xerces-C header and (for Windows) .lib files, download and expand the Xerces-C 1.1.0 Binary distribution for your platform from the <resource-ref idref="xerces-c-dist"/>. For information about which Xerces-C distribution has been tested with this Xalan-C release, see <link idref="readme" anchor="status">Version of Xerces to use</link>.</p>
+<p>To get the Xerces-C++ header and (for Windows) .lib files, download and expand the &xml4c; binary distribution for your platform from the <resource-ref idref="xml4c-distdir"/>. For information about which &xml4c; distribution has been tested with this &xslt4c; release, see <link idref="readme" anchor="status">Version of &xml4c; to use</link>.</p>
 <p>For information about rebuilding &xslt4c;, see the <link idref="readme" anchor="build">Build notes</link>.</p>
 </s3>
 </s2><anchor name="path"/>
 <s2 title="Setting up the path">
-<p>For the Xalan-C Windows32 distribution, place xml-xalan\c\Build\Win32\VC6\Release on the path.</p>
-<p>For the Xalan-C Linux distribution, place xml-xalan/c/bin and xml-xalan/c/lib on the shared library path (LD_LIBRARY_PATH for Red Hat Linux 6.1).</p>
+<p>For the Xalan-C++ Windows32 distribution, place xml-xalan\c\Build\Win32\VC6\Release on the path.</p>
+<p>For the Xalan-C++ Linux distribution, place xml-xalan/c/bin and xml-xalan/c/lib on the shared library path (LD_LIBRARY_PATH for Red Hat Linux 6.1).</p>
 <p>If you do your own Xalan, ICU, and Xerces builds, be sure to include the directories that contain the libraries and the TextXSLT executable on your path.</p>
 </s2><anchor name="samples"/>
 <s2 title="Trying out the samples">

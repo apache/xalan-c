@@ -56,7 +56,7 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  -->
-<s1 title="Xalan-C Basic usage patterns">
+<s1 title="&xslt4c; Basic usage patterns">
 <ul>
 <li><link anchor="intro">Introduction</link></li>
 <li><link anchor="basic">Basic procedure for performing XSL transformations</link></li>
@@ -73,16 +73,16 @@
 <p>&xslt4c; takes as primary input an XML source document and an XSL stylesheet, both represented by instances of <jump href="apidocs/class_XSLTInputSource.html">XSLTInputSource</jump>. These input objects may each take the form of a file or URL, a stream, or a DOM tree. The stylesheet may also take the form of a compiled stylesheet (an instance of <jump href="apidocs/class_stylesheetroot.html">StylesheetRoot</jump>.</p>
 <note>If the XML source document contains a stylesheet Processing Instruction (PI), &xslt4c; uses the stylesheet this PI points to and a separate stylesheet object is not required. </note>
 <p>&xslt4c; uses &xml4c; to parse text input, performs the transformation, and sends the output to an instance of <jump href="apidocs/class_xsltresulttarget.html">XSLTResultTarget</jump>, which may be configured to write to a file, a stream, or a DOM tree.</p>
-<p>For detailed API documentation, see <jump href="apidocs/index.html">Xalan C++ API</jump>. For an overview of the
+<p>For detailed API documentation, see <jump href="apidocs/index.html">&xslt4c; API</jump>. For an overview of the
 command-line utility, see <link idref="commandline">Command-Line Utility</link>.</p>
 </s2><anchor name="basic"/>
 <s2 title="Basic procedure for performing an XSL transformation">
 <p>When you are setting up your application to use XSL stylesheets to transform XML documents, you must do the following:</p>
 <s3 title="1. Include the required header files">
-<p>Along with any required Xalan-C and other header files, include utils/PlatformUtils.hpp from the Xerces-C distribution.</p>
+<p>Along with any required &xslt4c; and other header files, include utils/PlatformUtils.hpp from the &xml4c; distribution.</p>
 </s3>
 <s3 title="2. Initialize Xalan and Xerces">
-<p>Use the static initializers to initialize the Xalan-C and Xerces-C platforms. You only need to do this once per session.</p>
+<p>Use the static initializers to initialize the &xslt4c; and &xml4c; platforms. You only need to do this once per session.</p>
 <source>XMLPlatformUtils::Initialize();
 XSLTEngineImpl::Initialize();</source>
 </s3><anchor name="step3"/>

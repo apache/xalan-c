@@ -65,7 +65,7 @@
 <li><link anchor="use">Using an extension function</link></li>
 </ul><anchor name="intro"/>
   <s2 title="Introduction">
-<p>At times, you may want to call your own custom C++ functions from a stylesheet. For these situations, &xslt4c; supports the creation and use of extension functions.</p>
+<p>At times, you may want to call your own custom C functions from a stylesheet. For these situations, &xslt4c; supports the creation and use of extension functions.</p>
 <p>You can think of extension functions as extending the core library of functions that XPath provides. Like the
 XPath functions, an extension function returns an XObject, which may contain a value of any of the five XSLT
 data types: node-set, result-tree-fragment, string, boolean, or number.</p> 
@@ -163,12 +163,12 @@ methods for installing (and uninstalling) extension functions:</p>
 <note>These XSLTProcessorEnvSupportDefault methods call XPathEnvSupportDefault methods of the same name which provide 
 the actual implementation.</note>
 <p>When you install an extension function, the function inhabits the namespace you designate. For information about XML namespaces, see <jump href="http://www.w3.org/TR/REC-xml-names/">Namespaces in XML</jump>.</p>
-<p>The following code fragment installs the square root function defined above as a global function, and binds it to the extension-function name "square-root" in the namespace "http://ExternalFunction.xalan-c++.xml.apache.org" so it can be accessed from stylesheets. Keep in mind that the function name does not need to be the same as the name of the function class, and that a function name may be used more than once provided that each function with that name is installed in a different namespace.</p>
+<p>The following code fragment installs the square root function defined above as a global function, and binds it to the extension-function name "square-root" in the namespace "http://ExternalFunction.xalan-c.xml.apache.org" so it can be accessed from stylesheets. Keep in mind that the function name does not need to be the same as the name of the function class, and that a function name may be used more than once provided that each function with that name is installed in a different namespace.</p>
 <source>// You have created a header file for FunctionSquareRoot.
 #include &lt;MyFunctions/FunctionSquareRoot.hpp&gt;
 // The namespace...
 const XalanDOMString	
-    theNamespace("http://ExternalFunction.xalan-c++.xml.apache.org");
+    theNamespace("http://ExternalFunction.xalan-c.xml.apache.org");
 // Install the function in the global space so all processor
 // instances can use it.
 XSLTProcessorEnvSupportDefault::installExternalFunctionGlobal(
@@ -204,7 +204,7 @@ the square root of //area/@value:</p>
 <source>&lt;?xml version="1.0"?&gt; 
 &lt;xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" 
   version="1.0"
-	xmlns:external="http://ExternalFunction.xalan-c++.xml.apache.org"
+	xmlns:external="http://ExternalFunction.xalan-c.xml.apache.org"
   exclude-result-prefixes="external"&gt;
   
     &lt;xsl:template match="//area"&gt;

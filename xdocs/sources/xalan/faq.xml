@@ -18,7 +18,7 @@
   <faq title="Which version of Xerces should I be using?">  
     <q>Which version of Xerces should I be using?</q>
     
-    <a><p>The &xslt4c; release notes includes information about the Xerces-C release with which the &xslt4c; release has been coordinated and tested. See <link idref="readme" anchor="status">Status</link></p></a>
+    <a><p>The &xslt4c; release notes includes information about the &xml4c; release with which the &xslt4c; release has been coordinated and tested. See <link idref="readme" anchor="status">Status</link></p></a>
   </faq>
   
   <faq title="Are the XSLTEngineImpl (XSLT processor) and StylesheetRoot (compiled stylesheet) objects thread-safe?">
