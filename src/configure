@@ -1308,6 +1308,7 @@ case "${host}" in
                             *)            osver=HPUX11;;
                         esac;;
         *-*-mvs*)       platform=OS390 ;;
+        *-*-osf*)       platform=TRU64 ;;
         *)              platform=UNKNOWN ;;
 esac
 

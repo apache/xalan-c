@@ -174,7 +174,7 @@ public:
 	 */
 	bool isDirectory() const
 	{
-#if defined(AIX) || defined(HPUX) || defined(SOLARIS) || defined(OS390)
+#if defined(AIX) || defined(HPUX) || defined(SOLARIS) || defined(OS390) || defined(TRU64)
 		return false;
 #else		
 		return d_type == DT_DIR;		

@@ -251,9 +251,22 @@ LINK = $(CXX) $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS)
                                                                                 
 endif                                                                           
 
+#============ TRU64 SPECIFIC OPTIONS ============================
+ifeq ($(PLATFORM), TRU64)
+
+SUPPORTED = TRUE
+PLATFORM_COMPILE_OPTIONS = -D${PLATFORM} -ptr ${ALL_OBJECTS_DIR}/.cxx_repository -error_limit 10
+ALLLIBS = ${LIBS} -L/usr/lib -L/usr/local/lib -L/usr/ccs/lib -lc -lrt -lm
+SHLIBSUFFIX = .so
+CC1 = ${CXX} ${CXXFLAGS} $(PLATFORM_COMPILE_OPTIONS)
+MAKE_SHARED = ${CXX} ${CXXFLAGS} -shared -D${PLATFORM} -ptr ${ALL_OBJECTS_DIR}/.cxx_repository
+LINK = ${CXX} $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS)
+
+endif
+
 ifndef SUPPORTED
 nogood:
-	@echo Linux Solaris, AIX and HPUX are the only unix platforms supported.
+	@echo Linux, Solaris, AIX, Compaq Tru64, OS/390, and HP-UX are the only platforms supported.
 endif
 
 # We need the Xerces library
