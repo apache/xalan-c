@@ -97,7 +97,7 @@ XercesElementBridge::~XercesElementBridge()
 const XalanDOMString&
 XercesElementBridge::getNodeName() const
 {
-	return m_navigator.getPooledString(m_xercesNode.getNodeNameImpl().rawBuffer());
+	return m_navigator.getPooledString(m_xercesNode.getNodeNameImpl());
 }
 
 
@@ -105,7 +105,7 @@ XercesElementBridge::getNodeName() const
 const XalanDOMString&
 XercesElementBridge::getNodeValue() const
 {
-	return m_navigator.getPooledString(m_xercesNode.getNodeValueImpl().rawBuffer());
+	return m_navigator.getPooledString(m_xercesNode.getNodeValueImpl());
 }
 
 
@@ -275,7 +275,7 @@ XercesElementBridge::supports(
 const XalanDOMString&
 XercesElementBridge::getNamespaceURI() const
 {
-	return m_navigator.getPooledString(m_xercesNode.getNamespaceURIImpl().rawBuffer());
+	return m_navigator.getPooledString(m_xercesNode.getNamespaceURIImpl());
 }
 
 
@@ -283,7 +283,7 @@ XercesElementBridge::getNamespaceURI() const
 const XalanDOMString&
 XercesElementBridge::getPrefix() const
 {
-	return m_navigator.getPooledString(m_xercesNode.getPrefixImpl().rawBuffer());
+	return m_navigator.getPooledString(m_xercesNode.getPrefixImpl());
 }
 
 
@@ -291,7 +291,7 @@ XercesElementBridge::getPrefix() const
 const XalanDOMString&
 XercesElementBridge::getLocalName() const
 {
-	return m_navigator.getPooledString(m_xercesNode.getLocalNameImpl().rawBuffer());
+	return m_navigator.getPooledString(m_xercesNode.getLocalNameImpl());
 }
 
 
@@ -323,7 +323,7 @@ XercesElementBridge::getIndex() const
 const XalanDOMString&
 XercesElementBridge::getTagName() const
 {
-	return m_navigator.getPooledString(m_xercesNode.getTagNameImpl().rawBuffer());
+	return m_navigator.getPooledString(m_xercesNode.getTagNameImpl());
 }
 
 
@@ -331,7 +331,7 @@ XercesElementBridge::getTagName() const
 const XalanDOMString&
 XercesElementBridge::getAttribute(const XalanDOMString&		name) const
 {
-	return m_navigator.getPooledString(m_xercesNode.getAttributeImpl(c_wstr(name)).rawBuffer());
+	return m_navigator.getPooledString(m_xercesNode.getAttributeImpl(c_wstr(name)));
 }
 
 
@@ -450,7 +450,7 @@ XercesElementBridge::getAttributeNS(
 			const XalanDOMString&	namespaceURI,
 			const XalanDOMString&	localName) const
 {
-	return m_navigator.getPooledString(m_xercesNode.getAttributeNSImpl(c_wstr(namespaceURI), c_wstr(localName)).rawBuffer());
+	return m_navigator.getPooledString(m_xercesNode.getAttributeNSImpl(c_wstr(namespaceURI), c_wstr(localName)));
 }
 
 

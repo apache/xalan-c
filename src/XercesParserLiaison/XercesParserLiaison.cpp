@@ -213,8 +213,10 @@ XercesParserLiaison::parseXMLStream(
 
 	theParser->parse(reader);
 
-	const DOM_Document	theXercesDocument =
+	DOM_Document	theXercesDocument =
 		theParser->getDocument();
+
+	theXercesDocument.normalize();
 
 	XercesDocumentBridge*	theNewDocument = 0;
 
@@ -537,8 +539,6 @@ DOMParser*
 XercesParserLiaison::CreateDOMParser()
 {
 	DOMParser* const	theParser = new DOMParser;
-
-	theParser->setExpandEntityReferences(true);
 
 	theParser->setDoValidation(m_useValidation);
 

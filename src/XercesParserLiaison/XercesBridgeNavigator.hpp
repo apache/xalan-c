@@ -79,6 +79,7 @@ class XalanElement;
 class XalanNode;
 class XalanText;
 class DOM_Text;
+class DOMString;
 
 
 
@@ -252,17 +253,7 @@ public:
 	 * @return A const reference to the pooled string.
 	 */
 	const XalanDOMString&
-	getPooledString(const XalanDOMString&	theString) const;
-
-	/**
-	 * Get a pooled string.  If the string is not in the pool,
-	 * add it.
-	 *
-	 * @param theString The string to pool.
-	 * @return A const reference to the pooled string.
-	 */
-	const XalanDOMString&
-	getPooledString(const XalanDOMChar*		theString) const;
+	getPooledString(const DOMString&	theString) const;
 
 private:
 

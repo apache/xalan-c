@@ -92,7 +92,7 @@ XercesDocumentTypeBridge::~XercesDocumentTypeBridge()
 const XalanDOMString&
 XercesDocumentTypeBridge::getNodeName() const
 {
-	return m_navigator.getPooledString(m_xercesNode.getNodeName().rawBuffer());
+	return m_navigator.getPooledString(m_xercesNode.getNodeName());
 }
 
 
@@ -100,7 +100,7 @@ XercesDocumentTypeBridge::getNodeName() const
 const XalanDOMString&
 XercesDocumentTypeBridge::getNodeValue() const
 {
-	return m_navigator.getPooledString(m_xercesNode.getNodeValue().rawBuffer());
+	return m_navigator.getPooledString(m_xercesNode.getNodeValue());
 }
 
 
@@ -282,7 +282,7 @@ XercesDocumentTypeBridge::supports(
 const XalanDOMString&
 XercesDocumentTypeBridge::getNamespaceURI() const
 {
-	return m_navigator.getPooledString(m_xercesNode.getNamespaceURI().rawBuffer());
+	return m_navigator.getPooledString(m_xercesNode.getNamespaceURI());
 }
 
 
@@ -290,7 +290,7 @@ XercesDocumentTypeBridge::getNamespaceURI() const
 const XalanDOMString&
 XercesDocumentTypeBridge::getPrefix() const
 {
-	return m_navigator.getPooledString(m_xercesNode.getPrefix().rawBuffer());
+	return m_navigator.getPooledString(m_xercesNode.getPrefix());
 }
 
 
@@ -298,7 +298,7 @@ XercesDocumentTypeBridge::getPrefix() const
 const XalanDOMString&
 XercesDocumentTypeBridge::getLocalName() const
 {
-	return m_navigator.getPooledString(m_xercesNode.getLocalName().rawBuffer());
+	return m_navigator.getPooledString(m_xercesNode.getLocalName());
 }
 
 
@@ -330,7 +330,7 @@ XercesDocumentTypeBridge::getIndex() const
 const XalanDOMString&
 XercesDocumentTypeBridge::getName() const
 {
-	return m_navigator.getPooledString(m_xercesNode.getName().rawBuffer());
+	return m_navigator.getPooledString(m_xercesNode.getName());
 }
 
 
@@ -354,7 +354,7 @@ XercesDocumentTypeBridge::getNotations() const
 const XalanDOMString&
 XercesDocumentTypeBridge::getPublicId() const
 {
-	return m_navigator.getPooledString(m_xercesNode.getPublicId().rawBuffer());
+	return m_navigator.getPooledString(m_xercesNode.getPublicId());
 }
 
 
@@ -362,7 +362,7 @@ XercesDocumentTypeBridge::getPublicId() const
 const XalanDOMString&
 XercesDocumentTypeBridge::getSystemId() const
 {
-	return m_navigator.getPooledString(m_xercesNode.getSystemId().rawBuffer());
+	return m_navigator.getPooledString(m_xercesNode.getSystemId());
 }
 
 
@@ -370,5 +370,5 @@ XercesDocumentTypeBridge::getSystemId() const
 const XalanDOMString&
 XercesDocumentTypeBridge::getInternalSubset() const
 {
-	return m_navigator.getPooledString(m_xercesNode.getInternalSubset().rawBuffer());
+	return m_navigator.getPooledString(m_xercesNode.getInternalSubset());
 }

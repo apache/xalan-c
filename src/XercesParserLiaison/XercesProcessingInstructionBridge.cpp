@@ -88,7 +88,7 @@ XercesProcessingInstructionBridge::~XercesProcessingInstructionBridge()
 const XalanDOMString&
 XercesProcessingInstructionBridge::getNodeName() const
 {
-	return m_navigator.getPooledString(m_xercesNode.getNodeName().rawBuffer());
+	return m_navigator.getPooledString(m_xercesNode.getNodeName());
 }
 
 
@@ -96,7 +96,7 @@ XercesProcessingInstructionBridge::getNodeName() const
 const XalanDOMString&
 XercesProcessingInstructionBridge::getNodeValue() const
 {
-	return m_navigator.getPooledString(m_xercesNode.getNodeValue().rawBuffer());
+	return m_navigator.getPooledString(m_xercesNode.getNodeValue());
 }
 
 
@@ -274,7 +274,7 @@ XercesProcessingInstructionBridge::supports(
 const XalanDOMString&
 XercesProcessingInstructionBridge::getNamespaceURI() const
 {
-	return m_navigator.getPooledString(m_xercesNode.getNamespaceURI().rawBuffer());
+	return m_navigator.getPooledString(m_xercesNode.getNamespaceURI());
 }
 
 
@@ -282,7 +282,7 @@ XercesProcessingInstructionBridge::getNamespaceURI() const
 const XalanDOMString&
 XercesProcessingInstructionBridge::getPrefix() const
 {
-	return m_navigator.getPooledString(m_xercesNode.getPrefix().rawBuffer());
+	return m_navigator.getPooledString(m_xercesNode.getPrefix());
 }
 
 
@@ -290,7 +290,7 @@ XercesProcessingInstructionBridge::getPrefix() const
 const XalanDOMString&
 XercesProcessingInstructionBridge::getLocalName() const
 {
-	return m_navigator.getPooledString(m_xercesNode.getLocalName().rawBuffer());
+	return m_navigator.getPooledString(m_xercesNode.getLocalName());
 }
 
 
@@ -322,7 +322,7 @@ XercesProcessingInstructionBridge::getIndex() const
 const XalanDOMString&
 XercesProcessingInstructionBridge::getTarget() const
 {
-	return m_navigator.getPooledString(m_xercesNode.getTarget().rawBuffer());
+	return m_navigator.getPooledString(m_xercesNode.getTarget());
 }
 
 
@@ -330,7 +330,7 @@ XercesProcessingInstructionBridge::getTarget() const
 const XalanDOMString&
 XercesProcessingInstructionBridge::getData() const
 {
-	return m_navigator.getPooledString(m_xercesNode.getData().rawBuffer());
+	return m_navigator.getPooledString(m_xercesNode.getData());
 }
 
 

@@ -964,7 +964,9 @@ XercesDocumentBridge::internalCloneNode(
 const XalanDOMString&
 XercesDocumentBridge::getNodeName() const
 {
-	return getPooledString(m_xercesDocument.getNodeName().rawBuffer());
+	assert(m_navigator != 0);
+
+	return m_navigator->getPooledString(m_xercesDocument.getNodeName());
 }
 
 
@@ -972,7 +974,9 @@ XercesDocumentBridge::getNodeName() const
 const XalanDOMString&
 XercesDocumentBridge::getNodeValue() const
 {
-	return getPooledString(m_xercesDocument.getNodeValue().rawBuffer());
+	assert(m_navigator != 0);
+
+	return m_navigator->getPooledString(m_xercesDocument.getNodeValue());
 }
 
 
@@ -1165,7 +1169,9 @@ XercesDocumentBridge::supports(
 const XalanDOMString&
 XercesDocumentBridge::getNamespaceURI() const
 {
-	return getPooledString(m_xercesDocument.getNamespaceURI().rawBuffer());
+	assert(m_navigator != 0);
+
+	return m_navigator->getPooledString(m_xercesDocument.getNamespaceURI());
 }
 
 
@@ -1173,7 +1179,9 @@ XercesDocumentBridge::getNamespaceURI() const
 const XalanDOMString&
 XercesDocumentBridge::getPrefix() const
 {
-	return getPooledString(m_xercesDocument.getPrefix().rawBuffer());
+	assert(m_navigator != 0);
+
+	return m_navigator->getPooledString(m_xercesDocument.getPrefix());
 }
 
 
@@ -1181,7 +1189,9 @@ XercesDocumentBridge::getPrefix() const
 const XalanDOMString&
 XercesDocumentBridge::getLocalName() const
 {
-	return getPooledString(m_xercesDocument.getLocalName().rawBuffer());
+	assert(m_navigator != 0);
+
+	return m_navigator->getPooledString(m_xercesDocument.getLocalName());
 }
 
 
@@ -1448,11 +1458,11 @@ XercesDocumentBridge::importNode(
 			XalanNode*	importedNode,
 			bool		deep)
 {
-	// $$$ToDo: Fix this....
+	// $$$ToDo: Fix this...
 	// The problem is that we must get the Xerces node that corresponds to the
 	// importedNode parameter.  We could assume that it is indeed a node from
 	// another XercesDocumentBridge, but I'm not sure that we should do that.
-	throw XercesDOMException(XercesDOMException::NO_MODIFICATION_ALLOWED_ERR);
+	throw XercesDOMException(XercesDOMException::NOT_SUPPORTED_ERR);
 
 	return 0;
 }
@@ -1798,7 +1808,9 @@ XercesDocumentBridge::getPooledString(const XalanDOMString&		theString) const
 
 
 const XalanDOMString&
-XercesDocumentBridge::getPooledString(const XalanDOMChar*		theString) const
+XercesDocumentBridge::getPooledString(
+			const XalanDOMChar*			theString,
+			XalanDOMString::size_type	theLength) const
 {
-	return m_stringPool->get(theString);
+	return m_stringPool->get(theString, theLength);
 }

@@ -88,7 +88,7 @@ XercesCommentBridge::~XercesCommentBridge()
 const XalanDOMString&
 XercesCommentBridge::getNodeName() const
 {
-	return m_navigator.getPooledString(m_xercesNode.getNodeName().rawBuffer());
+	return m_navigator.getPooledString(m_xercesNode.getNodeName());
 }
 
 
@@ -96,7 +96,7 @@ XercesCommentBridge::getNodeName() const
 const XalanDOMString&
 XercesCommentBridge::getNodeValue() const
 {
-	return m_navigator.getPooledString(m_xercesNode.getNodeValue().rawBuffer());
+	return m_navigator.getPooledString(m_xercesNode.getNodeValue());
 }
 
 
@@ -274,7 +274,7 @@ XercesCommentBridge::supports(
 const XalanDOMString&
 XercesCommentBridge::getNamespaceURI() const
 {
-	return m_navigator.getPooledString(m_xercesNode.getNamespaceURI().rawBuffer());
+	return m_navigator.getPooledString(m_xercesNode.getNamespaceURI());
 }
 
 
@@ -282,7 +282,7 @@ XercesCommentBridge::getNamespaceURI() const
 const XalanDOMString&
 XercesCommentBridge::getPrefix() const
 {
-	return m_navigator.getPooledString(m_xercesNode.getPrefix().rawBuffer());
+	return m_navigator.getPooledString(m_xercesNode.getPrefix());
 }
 
 
@@ -290,7 +290,7 @@ XercesCommentBridge::getPrefix() const
 const XalanDOMString&
 XercesCommentBridge::getLocalName() const
 {
-	return m_navigator.getPooledString(m_xercesNode.getLocalName().rawBuffer());
+	return m_navigator.getPooledString(m_xercesNode.getLocalName());
 }
 
 
@@ -322,7 +322,7 @@ XercesCommentBridge::getIndex() const
 const XalanDOMString&
 XercesCommentBridge::getData() const
 {
-	return m_navigator.getPooledString(m_xercesNode.getData().rawBuffer());
+	return m_navigator.getPooledString(m_xercesNode.getData());
 }
 
 

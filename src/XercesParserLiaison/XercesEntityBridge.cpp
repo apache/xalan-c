@@ -90,7 +90,7 @@ XercesEntityBridge::~XercesEntityBridge()
 const XalanDOMString&
 XercesEntityBridge::getNodeName() const
 {
-	return m_navigator.getPooledString(m_xercesNode.getNodeName().rawBuffer());
+	return m_navigator.getPooledString(m_xercesNode.getNodeName());
 }
 
 
@@ -98,7 +98,7 @@ XercesEntityBridge::getNodeName() const
 const XalanDOMString&
 XercesEntityBridge::getNodeValue() const
 {
-	return m_navigator.getPooledString(m_xercesNode.getNodeValue().rawBuffer());
+	return m_navigator.getPooledString(m_xercesNode.getNodeValue());
 }
 
 
@@ -268,7 +268,7 @@ XercesEntityBridge::supports(
 const XalanDOMString&
 XercesEntityBridge::getNamespaceURI() const
 {
-	return m_navigator.getPooledString(m_xercesNode.getNamespaceURI().rawBuffer());
+	return m_navigator.getPooledString(m_xercesNode.getNamespaceURI());
 }
 
 
@@ -276,7 +276,7 @@ XercesEntityBridge::getNamespaceURI() const
 const XalanDOMString&
 XercesEntityBridge::getPrefix() const
 {
-	return m_navigator.getPooledString(m_xercesNode.getPrefix().rawBuffer());
+	return m_navigator.getPooledString(m_xercesNode.getPrefix());
 }
 
 
@@ -284,7 +284,7 @@ XercesEntityBridge::getPrefix() const
 const XalanDOMString&
 XercesEntityBridge::getLocalName() const
 {
-	return m_navigator.getPooledString(m_xercesNode.getLocalName().rawBuffer());
+	return m_navigator.getPooledString(m_xercesNode.getLocalName());
 }
 
 
@@ -316,7 +316,7 @@ XercesEntityBridge::getIndex() const
 const XalanDOMString&
 XercesEntityBridge::getPublicId() const
 {
-	return m_navigator.getPooledString(m_xercesNode.getPublicId().rawBuffer());
+	return m_navigator.getPooledString(m_xercesNode.getPublicId());
 }
 
 
@@ -324,7 +324,7 @@ XercesEntityBridge::getPublicId() const
 const XalanDOMString&
 XercesEntityBridge::getSystemId() const
 {
-	return m_navigator.getPooledString(m_xercesNode.getSystemId().rawBuffer());
+	return m_navigator.getPooledString(m_xercesNode.getSystemId());
 }
 
 
@@ -332,5 +332,5 @@ XercesEntityBridge::getSystemId() const
 const XalanDOMString&
 XercesEntityBridge::getNotationName() const
 {
-	return m_navigator.getPooledString(m_xercesNode.getNotationName().rawBuffer());
+	return m_navigator.getPooledString(m_xercesNode.getNotationName());
 }

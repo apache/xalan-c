@@ -93,7 +93,7 @@ XercesDocumentFragmentBridge::~XercesDocumentFragmentBridge()
 const XalanDOMString&
 XercesDocumentFragmentBridge::getNodeName() const
 {
-	return m_navigator.getPooledString(m_xercesNode.getNodeName().rawBuffer());
+	return m_navigator.getPooledString(m_xercesNode.getNodeName());
 }
 
 
@@ -101,7 +101,7 @@ XercesDocumentFragmentBridge::getNodeName() const
 const XalanDOMString&
 XercesDocumentFragmentBridge::getNodeValue() const
 {
-	return m_navigator.getPooledString(m_xercesNode.getNodeValue().rawBuffer());
+	return m_navigator.getPooledString(m_xercesNode.getNodeValue());
 }
 
 
@@ -271,7 +271,7 @@ XercesDocumentFragmentBridge::supports(
 const XalanDOMString&
 XercesDocumentFragmentBridge::getNamespaceURI() const
 {
-	return m_navigator.getPooledString(m_xercesNode.getNamespaceURI().rawBuffer());
+	return m_navigator.getPooledString(m_xercesNode.getNamespaceURI());
 }
 
 
@@ -279,7 +279,7 @@ XercesDocumentFragmentBridge::getNamespaceURI() const
 const XalanDOMString&
 XercesDocumentFragmentBridge::getPrefix() const
 {
-	return m_navigator.getPooledString(m_xercesNode.getPrefix().rawBuffer());
+	return m_navigator.getPooledString(m_xercesNode.getPrefix());
 }
 
 
@@ -287,7 +287,7 @@ XercesDocumentFragmentBridge::getPrefix() const
 const XalanDOMString&
 XercesDocumentFragmentBridge::getLocalName() const
 {
-	return m_navigator.getPooledString(m_xercesNode.getLocalName().rawBuffer());
+	return m_navigator.getPooledString(m_xercesNode.getLocalName());
 }
 
 

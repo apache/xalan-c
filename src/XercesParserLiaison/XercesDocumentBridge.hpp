@@ -447,10 +447,13 @@ public:
 	 * add it.
 	 *
 	 * @param theString The string to pool.
+	 * @param theLength The length of the string.  If XalanDOMString::npos, the string is assumed to be null-terminated.
 	 * @return A const reference to the pooled string.
 	 */
 	const XalanDOMString&
-	getPooledString(const XalanDOMChar*		theString) const;
+	getPooledString(
+			const XalanDOMChar*			theString,
+			XalanDOMString::size_type	theLength /* = XalanDOMString::npos */) const;
 
 private:
 

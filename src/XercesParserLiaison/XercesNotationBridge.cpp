@@ -87,7 +87,7 @@ XercesNotationBridge::~XercesNotationBridge()
 const XalanDOMString&
 XercesNotationBridge::getNodeName() const
 {
-	return m_navigator.getPooledString(m_xercesNode.getNodeName().rawBuffer());
+	return m_navigator.getPooledString(m_xercesNode.getNodeName());
 }
 
 
@@ -95,7 +95,7 @@ XercesNotationBridge::getNodeName() const
 const XalanDOMString&
 XercesNotationBridge::getNodeValue() const
 {
-	return m_navigator.getPooledString(m_xercesNode.getNodeValue().rawBuffer());
+	return m_navigator.getPooledString(m_xercesNode.getNodeValue());
 }
 
 
@@ -265,7 +265,7 @@ XercesNotationBridge::supports(
 const XalanDOMString&
 XercesNotationBridge::getNamespaceURI() const
 {
-	return m_navigator.getPooledString(m_xercesNode.getNamespaceURI().rawBuffer());
+	return m_navigator.getPooledString(m_xercesNode.getNamespaceURI());
 }
 
 
@@ -273,7 +273,7 @@ XercesNotationBridge::getNamespaceURI() const
 const XalanDOMString&
 XercesNotationBridge::getPrefix() const
 {
-	return m_navigator.getPooledString(m_xercesNode.getPrefix().rawBuffer());
+	return m_navigator.getPooledString(m_xercesNode.getPrefix());
 }
 
 
@@ -281,7 +281,7 @@ XercesNotationBridge::getPrefix() const
 const XalanDOMString&
 XercesNotationBridge::getLocalName() const
 {
-	return m_navigator.getPooledString(m_xercesNode.getLocalName().rawBuffer());
+	return m_navigator.getPooledString(m_xercesNode.getLocalName());
 }
 
 
@@ -313,7 +313,7 @@ XercesNotationBridge::getIndex() const
 const XalanDOMString&
 XercesNotationBridge::getPublicId() const
 {
-	return m_navigator.getPooledString(m_xercesNode.getPublicId().rawBuffer());
+	return m_navigator.getPooledString(m_xercesNode.getPublicId());
 }
 
 
@@ -321,5 +321,5 @@ XercesNotationBridge::getPublicId() const
 const XalanDOMString&
 XercesNotationBridge::getSystemId() const
 {
-	return m_navigator.getPooledString(m_xercesNode.getSystemId().rawBuffer());
+	return m_navigator.getPooledString(m_xercesNode.getSystemId());
 }

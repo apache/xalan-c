@@ -382,15 +382,7 @@ XercesBridgeNavigator::splitText(
 
 
 const XalanDOMString&
-XercesBridgeNavigator::getPooledString(const XalanDOMString&	theString) const
+XercesBridgeNavigator::	getPooledString(const DOMString&	theString) const
 {
-	return m_ownerDocument->getPooledString(theString);
-}
-
-
-
-const XalanDOMString&
-XercesBridgeNavigator::	getPooledString(const XalanDOMChar*		theString) const
-{
-	return m_ownerDocument->getPooledString(theString);
+	return m_ownerDocument->getPooledString(theString.rawBuffer(), theString.length());
 }
