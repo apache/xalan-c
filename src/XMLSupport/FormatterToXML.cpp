@@ -176,17 +176,17 @@ FormatterToXML::FormatterToXML(
 
 		m_byteBuf.resize(s_maxBufferSize);
 
-		m_accumNameFunction = accumNameAsByte;
+		m_accumNameFunction = &FormatterToXML::accumNameAsByte;
 
-		m_accumContentFunction = accumContentAsByte;
+		m_accumContentFunction = &FormatterToXML::accumContentAsByte;
 	}
 	else
 	{
 		m_charBuf.resize(s_maxBufferSize);
 
-		m_accumNameFunction = accumNameAsChar;
+		m_accumNameFunction = &FormatterToXML::accumNameAsChar;
 
-		m_accumContentFunction = accumContentAsChar;
+		m_accumContentFunction = &FormatterToXML::accumContentAsChar;
 	}
 
 	// Do this last so we initialize the map according to the value of
