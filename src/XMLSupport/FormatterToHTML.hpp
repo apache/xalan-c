@@ -195,23 +195,15 @@ public:
 		m_escapeURLs = flag;
 	}
 
-	struct EntityPair
+	struct Entity
 	{
-		XalanDOMChar				m_char;
-
-#if defined(XALAN_LSTRSUPPORT) && !defined(XALAN_XALANDOMCHAR_USHORT_MISMATCH)
-		const XalanDOMChar*			m_string;
-#else
 		enum { eMaxLength = 8 };
 
-		XalanDOMChar				m_string[eMaxLength + 1];
+		XalanDOMChar				m_char;
 
-		EntityPair() :
-			m_char(0),
-			m_string()
-		{
-		}
-#endif
+		XalanDOMString::size_type	m_length;
+
+		XalanDOMChar				m_string[eMaxLength + 1];
 	};
 
 protected:
@@ -275,7 +267,9 @@ private:
 	initCharsMap();
 
 	void
-	copyEntityIntoBuffer(const XalanDOMChar*	s);
+	copyEntityIntoBuffer(
+			const XalanDOMChar*			s,
+			XalanDOMString::size_type	theLength);
 
 	void
 	copyEntityIntoBuffer(const XalanDOMString&	s);
@@ -360,9 +354,9 @@ private:
 
 	static const XalanDOMString		s_emptyString;
 
-	static EntityPair				s_entities[];
+	static const Entity				s_entities[];
 
-	static const unsigned long		s_entitiesSize;
+	static const Entity* const		s_lastEntity;
 };
 
 
