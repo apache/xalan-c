@@ -671,7 +671,7 @@ void XPathExecutionContextDefault::formatNumber(
 		const XalanNode*					context,
 		const LocatorType*					locator) 
 {
-	doFormatNumber(number,pattern,0,theResult,context,locator);
+	doFormatNumber(number, pattern, 0, theResult, context, locator);
 }
 
 
@@ -679,19 +679,19 @@ void XPathExecutionContextDefault::formatNumber(
 void XPathExecutionContextDefault::formatNumber(
 			double								number,
 			const XalanDOMString&				pattern,
-			const XalanDOMString&				dfsName,
+			const XalanDOMString&				/* dfsName */,
 			XalanDOMString&						theResult,
 			const XalanNode*					context,
 			const LocatorType*					locator) 
 {
-	doFormatNumber(number,pattern,0,theResult,context,locator);
+	doFormatNumber(number, pattern, 0, theResult, context, locator);
 }
 
 
 	
 void XPathExecutionContextDefault::doFormatNumber(
 			double								number,
-			const XalanDOMString&				pattern,
+			const XalanDOMString&				/* pattern */,
 			const XalanDecimalFormatSymbols*	theDFS,
 			XalanDOMString&						theResult,
 			const XalanNode*					context,
@@ -737,7 +737,8 @@ void XPathExecutionContextDefault::doFormatNumber(
 			XalanMessageLoader::getMessage(XalanMessages::FunctionIsNotImplemented_1Param,"format-number()"),
 			context, 
 			locator);
-		DoubleToDOMString(number,theResult);
+
+        DoubleToDOMString(number,theResult);
 	}
 }
 
