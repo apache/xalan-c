@@ -58,6 +58,9 @@
 # 
 #
 # $Log$
+# Revision 1.7  2004/02/06 08:49:09  dbertoni
+# Initial changes for HP-UX IA64 port.
+#
 # Revision 1.6  2004/02/06 08:39:35  dbertoni
 # Initial changes for HP-UX IA64 port.
 #
@@ -382,6 +385,9 @@ elif test $bitsToBuild = 32; then
            hp-11-ia64)
               bitstobuildDefines="+DD32 "
 			  ;;
+           hp-11-ia64)
+              bitstobuildDefines=" $bitstobuildDefines +DD32 "
+                        ;;
            linux)
               ;;
            *)
