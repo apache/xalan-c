@@ -442,7 +442,7 @@ void
 XalanSourceTreeContentHandler::endDTD()
 {
 	assert(m_document != 0);
-	assert(m_inDTD == true);
+//	assert(m_inDTD == true);
 
 	m_inDTD = false;
 }
