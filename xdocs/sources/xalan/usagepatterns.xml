@@ -146,8 +146,8 @@ int theResult =
 <s2 title="Setting stylesheet parameters">
 <p>An XSL stylesheet can include parameters that are set at run time before a transformation takes place. When we generate the HTML documents that make up the Xalan doc set, for example, we send the stylesheet an id parameter along with each XML source document. The id identifies that document and enables the stylesheet to integrate it into the overall doc set.</p>
 <p>To set a stylesheet parameter, use the <jump href="apdidocs/class_xalantransformer.html">XalanTransformer</jump> setStylesheetParam() method. The setStytlesheetParam() method takes two arguments: the parameter name and the expression. For example:</p>
-<source>const char* key="param1";
-const char* expression="'Hello World'";
+<source>const XalanDOMString&amp; key="param1";
+const XalanDOMString&amp; expression="'Hello World'";
 theXalanTransformer.setStylesheetParam(key, expression);
 // foo.xsl defines a stylesheet parameter named param1.
 theXalanTransformer.transform("foo.xml","foo.xsl","foo-out.xml")</source>
