@@ -139,6 +139,11 @@ XPathExecutionContextDefault::reset()
 	m_domSupport.reset();
 	m_xobjectFactory.reset();
 
+	m_currentNode = 0;
+	m_contextNodeList = &s_dummyList;
+	m_prefixResolver = 0;
+	m_throwFoundIndex = false;
+
 	while (m_busyCachedNodeLists.size() != 0)
 	{
 		m_availableCachedNodeLists.push_back(m_busyCachedNodeLists.back());
