@@ -1034,10 +1034,12 @@ public:
 
 	private:
 
+		void
 		doPush(
 			const ElemTemplateElement&		xslCallTemplateElement,
 			int								stackFrameIndex);
 
+		void
 		doPush(const ElemTemplateElement&	xslCallTemplateElement);
 	};
 
