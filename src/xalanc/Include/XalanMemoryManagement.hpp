@@ -153,7 +153,7 @@ XalanConstruct(
             Type*&              theInstance)
 {
     XalanAllocationGuard    theGuard(
-                                theManager,
+                                theMemoryManager,
                                 sizeof(Type));
 
     theInstance =
