@@ -185,7 +185,7 @@ ProblemListenerDefault::problem(
 	if (0 != styleNode)
 	{
 		pw.print(styleTreeNodeHeader);
-		pw.print(styleNode->getNodeName());
+		pw.print(styleNode->getElementName());
 	}
 
 	if (0 != sourceNode)

@@ -1384,21 +1384,20 @@ XSLTEngineImpl::traceSelect(
 {
 	if (0 != m_diagnosticsPrintWriter)
 	{
-		XalanDOMString	msg = theTemplate.getNodeName() + XalanDOMString(XALAN_STATIC_UCODE_STRING(": "));
+		XalanDOMString	msg = theTemplate.getElementName() + XalanDOMString(XALAN_STATIC_UCODE_STRING(": "));
 
 		if(xpath != 0)
 		{
 			msg += xpath->getExpression().getCurrentPattern();
 			msg += XALAN_STATIC_UCODE_STRING(", ");
-			msg += UnsignedLongToDOMString(nl.getLength());
-			msg += XALAN_STATIC_UCODE_STRING(" selected");
 		}
 		else
 		{
 			msg += XALAN_STATIC_UCODE_STRING("*|text(), (default select), ");
-			msg += UnsignedLongToDOMString(nl.getLength());
-			msg += XALAN_STATIC_UCODE_STRING(" selected");
 		}
+
+		msg += UnsignedLongToDOMString(nl.getLength());
+		msg += XALAN_STATIC_UCODE_STRING(" selected");
 
 		const XalanQName* const		mode = executionContext.getCurrentMode();
 
