@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 2000 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -96,20 +96,13 @@ XalanUTF16Transcoder::transcode(
 		}
 		else
 		{
-			const XalanXMLByte	theHighByte = XalanXMLByte((theSourceData[theSourceEaten] & 0xFF00) >> 8);
-			const XalanXMLByte	theLowByte = XalanXMLByte(theSourceData[theSourceEaten] & 0x00FF);
-
-#if defined(XALAN_LITTLE_ENDIAN)
-			theTarget[theTargetPosition++] = theLowByte;
-			theTarget[theTargetPosition++] = theHighByte;
-#elif defined(XALAN_BIG_ENDIAN)
-			theTarget[theTargetPosition++] = theHighByte;
-			theTarget[theTargetPosition++] = theLowByte;
+#if defined(XALAN_OLD_STYLE_CASTS)
+			*(XalanDOMChar*)(theTarget + theTargetPosition) = theSourceData[theSourceEaten++];
 #else
-#error The platform must define the byte order!
+			*reinterpret_cast<XalanDOMChar*>(theTarget + theTargetPosition) = theSourceData[theSourceEaten++];
 #endif
 
-			++theSourceEaten;
+			theTargetPosition += 2;
 		}
 	}
 
@@ -135,7 +128,7 @@ XalanUTF16Transcoder::transcode(
 	unsigned int	theSourceEaten = 0;
 	unsigned int	theTargetPosition = 0;
 
-	while(theSourceEaten < theSourceCount)
+	while(theSourceEaten + 1 < theSourceCount)
 	{
 		// Swap bytes to big endian...
 		if (theTargetPosition + 1 >= theTargetSize)
@@ -144,17 +137,11 @@ XalanUTF16Transcoder::transcode(
 		}
 		else
 		{
-#if defined(XALAN_LITTLE_ENDIAN)
-			const XalanXMLByte	theLowByte = theSourceData[theSourceCount++];
-			const XalanXMLByte	theHighByte = theSourceData[theSourceCount++];
-#elif defined(XALAN_BIG_ENDIAN)
-			const XalanXMLByte	theHighByte = theSourceData[theSourceCount++];
-			const XalanXMLByte	theLowByte = theSourceData[theSourceCount++];
+#if defined(XALAN_OLD_STYLE_CASTS)
+			theTarget[theTargetPosition++] = *(const XalanDOMChar*)(theSourceData + theSourceCount++);
 #else
-#error The platform must define the byte order!
+			theTarget[theTargetPosition++] = *reinterpret_cast<const XalanDOMChar*>(theSourceData + theSourceCount++);
 #endif
-
-			theTarget[theTargetPosition++] = XalanDOMChar((theHighByte << 8) | theLowByte);
 
 			*theCharSizes++ = 2;
 		}

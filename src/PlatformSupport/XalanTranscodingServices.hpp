@@ -287,7 +287,7 @@ private:
 
 	static const XalanXMLByte	s_dummyByteOrderMark[];
 	static const XalanXMLByte	s_UTF8ByteOrderMark[];
-	static const XalanXMLByte	s_UTF16ByteOrderMark[];
+	static const XalanDOMChar	s_UTF16ByteOrderMark[];
 
 	static const MaximumCharacterValueMapType&	s_maximumCharacterValues;
 };

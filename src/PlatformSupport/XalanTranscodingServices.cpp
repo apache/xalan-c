@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 2000 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -161,17 +161,9 @@ const XalanTranscodingServices::XalanXMLByte	XalanTranscodingServices::s_UTF8Byt
 
 
 
-const XalanTranscodingServices::XalanXMLByte	XalanTranscodingServices::s_UTF16ByteOrderMark[] =
+const XalanDOMChar	XalanTranscodingServices::s_UTF16ByteOrderMark[] =
 {
-#if defined(XALAN_LITTLE_ENDIAN)
-	XalanTranscodingServices::XalanXMLByte(0xFF),
-	XalanTranscodingServices::XalanXMLByte(0xFE),
-#elif defined(XALAN_BIG_ENDIAN)
-	XalanTranscodingServices::XalanXMLByte(0xFE),
-	XalanTranscodingServices::XalanXMLByte(0xFF),
-#else
-#error The platform must define the byte order!
-#endif
+	XalanDOMChar(0xFEFF),
 	XalanTranscodingServices::XalanXMLByte(0)
 };
 
@@ -286,7 +278,11 @@ XalanTranscodingServices::getStreamProlog(const XalanDOMString&		theEncodingName
 {
 	if (compareIgnoreCaseASCII(c_wstr(theEncodingName), s_utf16String) == 0)
 	{
-		return s_UTF16ByteOrderMark;
+#if defined(XALAN_OLD_STYLE_CASTS)
+		return (const XalanXMLByte*)s_UTF16ByteOrderMark;
+#else
+		return reinterpret_cast<const XalanXMLByte*>(s_UTF16ByteOrderMark);
+#endif
 	}
 #if 0
 	// We won't do this for now...
