@@ -78,6 +78,7 @@ StdBinInputStream::StdBinInputStream(istream&		theStream) :
 #else
 StdBinInputStream::StdBinInputStream(std::istream&	theStream) :
 #endif
+	BinInputStream(),
 	m_stream(theStream)
 {
 }
