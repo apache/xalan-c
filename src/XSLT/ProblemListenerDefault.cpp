@@ -106,7 +106,6 @@ ProblemListenerDefault::ProblemListenerDefault(PrintWriter*		pw) :
 
 ProblemListenerDefault::~ProblemListenerDefault()
 {
-	m_pw = 0;
 }
 
 
