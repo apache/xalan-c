@@ -64,15 +64,19 @@
 
 
 
+#include <Include/STLHelper.hpp>
+
+
+
 template<class ObjectType>
 class XalanObjectCache
 {
 public:
 
 #if defined(XALAN_NO_NAMESPACES)
-	typedef vector<ObjectType*>		VectorType;
+	typedef vector<ObjectType*>			VectorType;
 #else
-	typedef std::vector<KeyType>	VectorType;
+	typedef std::vector<ObjectType*>	VectorType;
 #endif
 
 	explicit
@@ -95,6 +99,52 @@ public:
 			m_availableList.begin(),
 			m_availableList.end(),
 			DeleteFunctor<ObjectType>());
+	}
+
+	ObjectType*
+	get()
+	{
+		// We'll always return the back of the free list, since
+		// that's the cheapest thing.
+		if (m_availableList.size() == 0)
+		{
+			m_busyList.push_back(create());
+		}
+		else
+		{
+			m_busyList.push_back(m_availableList.back());
+
+			m_availableList.pop_back();
+		}
+
+		return m_busyList.back();
+	}
+
+	bool
+	release(ObjectType*		theInstance)
+	{
+#if !defined(XALAN_NO_NAMESPACES)
+		using std::find;
+#endif
+
+		const VectorType::iterator	i =
+			find(
+				m_busyList.begin(),
+				m_busyList.end(),
+				theInstance);
+
+		if (i == m_busyList.end())
+		{
+			return false;
+		}
+		else
+		{
+			m_availableList.push_back(theInstance);
+
+			m_busyList.erase(i);
+
+			return true;
+		}
 	}
 
 	virtual void
@@ -130,14 +180,11 @@ private:
 	XalanObjectCache<ObjectType>&
 	operator=(const XalanObjectCache<ObjectType>&	theRHS);
 
-	bool
-	operator==(const XalanObjectCache<ObjectType>&	theRHS) const;
-
 
 	// Data members
-	VectorType	m_availableVector;
+	VectorType	m_availableList;
 
-	VectorType	m_busyVector;
+	VectorType	m_busyList;
 };
 
 
@@ -146,12 +193,6 @@ template<class ObjectType>
 class XalanObjectCacheDefault : public XalanObjectCache<ObjectType>
 {
 public:
-
-	explicit
-	XalanObjectCacheDefault() :
-		XalanObjectCache()
-	{
-	}
 
 protected:
 
@@ -162,16 +203,6 @@ protected:
 	}
 
 private:
-
-	// There are not defined...
-	XalanObjectCacheDefault(const XalanObjectCacheDefault<ObjectType>&	theRHS);
-
-	XalanObjectCacheDefault<ObjectType>&
-	operator=(const XalanObjectCacheDefault<ObjectType>&	theRHS);
-
-	bool
-	operator==(const XalanObjectCacheDefault<ObjectType>&	theRHS) const;
-
 };
 
 
