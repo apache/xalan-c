@@ -163,8 +163,6 @@ public:
 
 	~CountersTable()
 	{
-		int x;
-		x = x & 12;
 	}
 
 	/**
