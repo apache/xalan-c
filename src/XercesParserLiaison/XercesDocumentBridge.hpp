@@ -496,9 +496,9 @@ private:
 
 	XercesDocumentTypeBridge*
 	createBridgeNode(
-			const DOM_DocumentTypeType&		theDoctype,
-			unsigned long					theIndex,
-			bool							mapNode) const;
+			const DOM_DocTypeType&	theDoctype,
+			unsigned long			theIndex,
+			bool					mapNode) const;
 
 	XercesElementBridge*
 	createBridgeNode(

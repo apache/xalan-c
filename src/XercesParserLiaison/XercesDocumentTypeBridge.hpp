@@ -75,6 +75,7 @@
 
 
 
+#include <XercesParserLiaison/XercesBridgeTypes.hpp>
 #include <XercesParserLiaison/XercesNamedNodeMapBridge.hpp>
 
 
@@ -92,10 +93,8 @@ class XALAN_XERCESPARSERLIAISON_EXPORT XercesDocumentTypeBridge : public XalanDo
 {
 public:
 
-	typedef XERCES_CPP_NAMESPACE_QUALIFIER DOM_DocumentType		DOM_DocumentTypeType;
-
 	XercesDocumentTypeBridge(
-			const DOM_DocumentTypeType&		theXercesDOMDocumentType,
+			const DOM_DocTypeType&			theXercesDOMDocumentType,
 			const XercesBridgeNavigator&	theNavigator);
 
 	virtual
@@ -500,7 +499,7 @@ public:
 	 *
 	 * @return The Xerces node
 	 */
-	DOM_DocumentTypeType
+	DOM_DocTypeType
 	getXercesNode() const
 	{
 		return m_xercesNode;
@@ -520,7 +519,7 @@ private:
 	operator==(const XercesDocumentTypeBridge&	theRHS) const;
 
 	// Data members...
-	DOM_DocumentTypeType			m_xercesNode;
+	DOM_DocTypeType					m_xercesNode;
 
 	XercesNamedNodeMapBridge		m_entities;
 	

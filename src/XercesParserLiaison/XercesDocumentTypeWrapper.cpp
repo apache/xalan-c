@@ -78,7 +78,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 XercesDocumentTypeWrapper::XercesDocumentTypeWrapper(
-			const DOMDocumentTypeType*		theXercesDOMDocumentType,
+			const DOMDocTypeType*			theXercesDOMDocumentType,
 			const XercesWrapperNavigator&	theNavigator) :
 	XalanDocumentType(),
 	m_xercesNode(theXercesDOMDocumentType),

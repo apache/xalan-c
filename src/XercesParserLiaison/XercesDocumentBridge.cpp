@@ -332,9 +332,9 @@ XercesDocumentBridge::pushNavigator(bool	mappingMode) const
 
 XercesDocumentTypeBridge*
 XercesDocumentBridge::createBridgeNode(
-			const DOM_DocumentTypeType&		theDoctype,
-			unsigned long					theIndex,
-			bool							mapNode) const
+			const DOM_DocTypeType&	theDoctype,
+			unsigned long			theIndex,
+			bool					mapNode) const
 {
 	// This is a special case, since there is only one
 	// doctype node allowed...
@@ -873,11 +873,11 @@ XercesDocumentBridge::createBridgeNode(
 
 	case DOM_NodeType::DOCUMENT_TYPE_NODE:
 		{
-			const DOM_DocumentTypeType&		theDoctypeNode =
+			const DOM_DocTypeType&		theDoctypeNode =
 #if defined(XALAN_OLD_STYLE_CASTS)
-						(const DOM_DocumentTypeType&)theXercesNode;
+						(const DOM_DocTypeType&)theXercesNode;
 #else
-						static_cast<const DOM_DocumentTypeType&>(theXercesNode);
+						static_cast<const DOM_DocTypeType&>(theXercesNode);
 #endif
 
 			theNewNode = createBridgeNode(theDoctypeNode, theIndex, mapNode);
@@ -1678,11 +1678,11 @@ XercesDocumentBridge::BuildBridgeTreeWalker::startNode(const DOM_NodeType&	node)
 	if (theType == DOM_NodeType::DOCUMENT_TYPE_NODE)
 	{
 		// Special case for doctype -- we have to build its entities...
-		const DOM_DocumentTypeType&		theDoctype =
+		const DOM_DocTypeType&		theDoctype =
 #if defined(XALAN_OLD_STYLE_CASTS)
-			(const DOM_DocumentTypeType&)node;
+			(const DOM_DocTypeType&)node;
 #else
-			static_cast<const DOM_DocumentTypeType&>(node);
+			static_cast<const DOM_DocTypeType&>(node);
 #endif
 
 		const DOM_NamedNodeMapType	theEntities =

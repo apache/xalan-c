@@ -73,7 +73,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 XercesDocumentTypeBridge::XercesDocumentTypeBridge(
-			const DOM_DocumentTypeType&		theXercesDOMDocumentType,
+			const DOM_DocTypeType&			theXercesDOMDocumentType,
 			const XercesBridgeNavigator&	theNavigator) :
 	XalanDocumentType(),
 	m_xercesNode(theXercesDOMDocumentType),

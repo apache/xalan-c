@@ -93,6 +93,7 @@ typedef XERCES_CPP_NAMESPACE_QUALIFIER DOMAttr				DOMAttrType;
 typedef XERCES_CPP_NAMESPACE_QUALIFIER DOMCharacterData	DOMCharacterDataType;
 typedef XERCES_CPP_NAMESPACE_QUALIFIER DOMComment			DOMCommentType;
 typedef XERCES_CPP_NAMESPACE_QUALIFIER DOMCDATASection		DOMCDATASectionType;
+typedef XERCES_CPP_NAMESPACE_QUALIFIER DOMDocumentType		DOMDocTypeType;
 typedef XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument			DOMDocumentType;
 typedef XERCES_CPP_NAMESPACE_QUALIFIER DOMDocumentFragment	DOMDocumentFragmentType;
 typedef XERCES_CPP_NAMESPACE_QUALIFIER DOMImplementation	DOMImplementationType;
@@ -106,7 +107,6 @@ typedef XERCES_CPP_NAMESPACE_QUALIFIER DOMNodeList			DOMNodeListType;
 typedef XERCES_CPP_NAMESPACE_QUALIFIER DOMNotation			DOMNotationType;
 typedef XERCES_CPP_NAMESPACE_QUALIFIER DOMProcessingInstruction	DOMProcessingInstructionType;
 typedef XERCES_CPP_NAMESPACE_QUALIFIER DOMText				DOMTextType;
-typedef XERCES_CPP_NAMESPACE_QUALIFIER DOMDocumentType		DOMDocumentTypeType;
 typedef XERCES_CPP_NAMESPACE_QUALIFIER DOMException			DOMExceptionType;
 
 

@@ -330,9 +330,9 @@ XercesDocumentWrapper::pushNavigator(bool	mappingMode) const
 
 XercesDocumentTypeWrapper*
 XercesDocumentWrapper::createWrapperNode(
-			const DOMDocumentTypeType*	theDoctype,
-			unsigned long				theIndex,
-			bool						mapNode) const
+			const DOMDocTypeType*	theDoctype,
+			unsigned long			theIndex,
+			bool					mapNode) const
 {
 	// This is a special case, since there is only one
 	// doctype node allowed...
@@ -826,11 +826,11 @@ XercesDocumentWrapper::createWrapperNode(
 
 	case DOMNodeType::DOCUMENT_TYPE_NODE:
 		{
-			const DOMDocumentTypeType*	theDoctypeNode =
+			const DOMDocTypeType*	theDoctypeNode =
 #if defined(XALAN_OLD_STYLE_CASTS)
-						(const DOMDocumentTypeType*)theXercesNode;
+						(const DOMDocTypeType*)theXercesNode;
 #else
-						static_cast<const DOMDocumentTypeType*>(theXercesNode);
+						static_cast<const DOMDocTypeType*>(theXercesNode);
 #endif
 
 			theNewNode = createWrapperNode(theDoctypeNode, theIndex, mapNode);
@@ -1447,11 +1447,11 @@ XercesDocumentWrapper::BuildWrapperTreeWalker::startNode(const DOMNodeType*		nod
 	if (theType == DOMNodeType::DOCUMENT_TYPE_NODE)
 	{
 		// Special case for doctype -- we have to build its entities...
-		const DOMDocumentTypeType* const	theDoctype =
+		const DOMDocTypeType* const	theDoctype =
 #if defined(XALAN_OLD_STYLE_CASTS)
-			(const DOMDocumentTypeType*)node;
+			(const DOMDocTypeType*)node;
 #else
-			static_cast<const DOMDocumentTypeType*>(node);
+			static_cast<const DOMDocTypeType*>(node);
 #endif
 
 		const DOMNamedNodeMapType* const	theEntities =

@@ -476,9 +476,9 @@ private:
 
 	XercesDocumentTypeWrapper*
 	createWrapperNode(
-			const DOMDocumentTypeType*	theDoctype,
-			unsigned long				theIndex,
-			bool						mapNode) const;
+			const DOMDocTypeType*	theDoctype,
+			unsigned long			theIndex,
+			bool					mapNode) const;
 
 	XercesElementWrapper*
 	createWrapperNode(
