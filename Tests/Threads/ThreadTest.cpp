@@ -16,8 +16,8 @@
 
 
 
-#include <xercesc/util/PlatformUtils.hpp>
-#include <xercesc/util/Mutexes.hpp>
+#include <util/PlatformUtils.hpp>
+#include <util/Mutexes.hpp>
 
 
 
