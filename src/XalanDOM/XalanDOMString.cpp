@@ -977,7 +977,7 @@ doTranscodeToLocalCodePage(
 
 		//  And transcode our temp source buffer to the local buffer. Terminate
 		//
-		if (wcstombs(&theTargetVector[0], theTempSource, targetLen) == size_t(-1))
+		if (wcstombs(&theTargetVector[0], theTempSource, targetLen) == ~size_t(0))
 		{
 			theTargetVector.clear();
 
