@@ -73,10 +73,6 @@
 
 
 
-#include <XPath/FunctionRound.hpp>
-
-
-
 #include <PlatformSupport/DoubleSupport.hpp>
 
 
