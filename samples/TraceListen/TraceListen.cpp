@@ -121,17 +121,6 @@ main(
 			// Create a XalanTransformer.
 			XalanTransformer	theXalanTransformer;
 
-			const XalanDOMString	theXMLFileName("birds.xml");
-			const XalanDOMString	theXSLFileName("birds.xsl");
-
-			// Our input sources...
-			const XSLTInputSource	theInputSource(theXMLFileName);
-			const XSLTInputSource	theStylesheetSource(theXSLFileName);
-
-			// Our output target...
-			const XalanDOMString	theOutputFile("birds.out");
-			XSLTResultTarget		theResultTarget(theOutputFile);
-
 			// Set up a diagnostic writer to be used by the TraceListener...
 			XalanStdOutputStream			theStdErr(cerr);
 			XalanOutputStreamPrintWriter	diagnosticsWriter(theStdErr);
