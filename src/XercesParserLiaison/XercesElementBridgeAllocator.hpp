@@ -71,7 +71,7 @@
 #include <XercesParserLiaison/XercesElementBridge.hpp>
 
 
-#define XALAN_NO_DEFAULT_TEMPLATE_ARGUMENTS
+
 class XALAN_XERCESPARSERLIAISON_EXPORT XercesElementBridgeAllocator
 {
 public:
