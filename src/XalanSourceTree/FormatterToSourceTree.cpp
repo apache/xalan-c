@@ -232,7 +232,7 @@ FormatterToSourceTree::charactersRaw(
 
 	processAccumulatedText();
 
-	doProcessingInstruction(c_wstr(s_xsltNextIsRawString), c_wstr(s_formatterToDOMString));
+	doProcessingInstruction(c_wstr(s_xsltNextIsRawString), c_wstr(s_formatterListenerString));
 
 	characters(chars, length);
 }
@@ -391,36 +391,4 @@ FormatterToSourceTree::doProcessingInstruction(
 	{
 		m_document->appendChildNode(theNewPI);
 	}
-}
-
-
-
-static XalanDOMString	s_xsltNextIsRawString;
-
-static XalanDOMString	s_formatterToDOMString;
-
-
-
-const XalanDOMString&	FormatterToSourceTree::s_xsltNextIsRawString = ::s_xsltNextIsRawString;
-
-const XalanDOMString&	FormatterToSourceTree::s_formatterToDOMString = ::s_formatterToDOMString;
-
-
-
-void
-FormatterToSourceTree::initialize()
-{
-	::s_xsltNextIsRawString = XALAN_STATIC_UCODE_STRING("xslt-next-is-raw");
-
-	::s_formatterToDOMString = XALAN_STATIC_UCODE_STRING("formatter-to-dom");
-}
-
-
-
-void
-FormatterToSourceTree::terminate()
-{
-	clear(::s_xsltNextIsRawString);
-
-	clear(::s_formatterToDOMString);
 }

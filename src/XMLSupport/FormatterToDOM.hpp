@@ -93,19 +93,6 @@ class XALAN_XMLSUPPORT_EXPORT FormatterToDOM : public FormatterListener
 public:
 
 	/**
-	 * Perform static initialization.  See class XMLSupportInit.
-	 */
-	static void
-	initialize();
-
-	/**
-	 * Perform static shut down.  See class XMLSupportInit.
-	 */
-	static void
-	terminate();
-
-
-	/**
 	 * Construct a FormatterToDOM instance.  it will add the DOM nodes 
 	 * to the document fragment.
 	 *
@@ -247,10 +234,6 @@ private:
 	ElementStackType				m_elemStack;
 
 	XalanDOMString					m_buffer;
-
-	static const XalanDOMString&	s_xsltNextIsRawString;
-
-	static const XalanDOMString&	s_formatterToDOMString;
 };
 
 

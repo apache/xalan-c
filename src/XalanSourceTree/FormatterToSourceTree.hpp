@@ -252,10 +252,6 @@ private:
 	ElementStackType								m_elementStack;
 
 	XalanDOMString									m_textBuffer;
-
-	static const XalanDOMString&					s_xsltNextIsRawString;
-
-	static const XalanDOMString&					s_formatterToDOMString;
 };
 
 

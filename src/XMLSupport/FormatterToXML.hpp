@@ -652,16 +652,6 @@ protected:
 	int		m_indent;
 
 	/**
-	 * The text "xslt-next-is-raw".
-	 */
-	static const XalanDOMString&	s_xsltNextIsRawString;
-
-	/**
-	 * The string "formatter-to-dom".
-	 */
-	static const XalanDOMString&	s_formatterToDOMString;
-
-	/**
 	 * Stack to keep track of whether or not we need to 
 	 * preserve whitespace.
 	 */

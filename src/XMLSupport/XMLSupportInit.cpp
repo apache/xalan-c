@@ -59,7 +59,7 @@
 
 
 
-#include "FormatterToDOM.hpp"
+#include "FormatterListener.hpp"
 #include "FormatterToHTML.hpp"
 #include "FormatterToXML.hpp"
 
@@ -98,7 +98,7 @@ XMLSupportInit::~XMLSupportInit()
 void
 XMLSupportInit::initialize()
 {
-	FormatterToDOM::initialize();
+	FormatterListener::initialize();
 
 	FormatterToXML::initialize();
 
@@ -114,5 +114,5 @@ XMLSupportInit::terminate()
 
 	FormatterToXML::terminate();
 
-	FormatterToDOM::terminate();
+	FormatterListener::terminate();
 }

@@ -59,7 +59,6 @@
 
 
 
-#include "FormatterToSourceTree.hpp"
 #include "XalanSourceTreeDocument.hpp"
 #include "XalanSourceTreeText.hpp"
 
@@ -99,8 +98,6 @@ XalanSourceTreeInit::~XalanSourceTreeInit()
 void
 XalanSourceTreeInit::initialize()
 {
-	FormatterToSourceTree::initialize();
-
 	XalanSourceTreeDocument::initialize();
 
 	XalanSourceTreeText::initialize();
@@ -114,6 +111,4 @@ XalanSourceTreeInit::terminate()
 	XalanSourceTreeText::terminate();
 
 	XalanSourceTreeDocument::terminate();
-
-	FormatterToSourceTree::terminate();
 }

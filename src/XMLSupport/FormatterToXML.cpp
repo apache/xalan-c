@@ -805,7 +805,7 @@ FormatterToXML::processingInstruction(
 		// Use a fairly nasty hack to tell if the next node is supposed to be 
 		// unescaped text.
 		if(equals(target, c_wstr(s_xsltNextIsRawString)) == true
-			&& equals(data, c_wstr(s_formatterToDOMString)) == true)
+			&& equals(data, c_wstr(s_formatterListenerString)) == true)
 		{
 			m_nextIsRaw = true;
 		}
@@ -1364,10 +1364,6 @@ FormatterToXML::accumNormalizedPIData(
 
 
 
-static XalanDOMString	s_xsltNextIsRawString;
-
-static XalanDOMString	s_formatterToDOMString;
-
 static XalanDOMString	s_defaultMIMEEncoding;
 
 static XalanDOMString	s_doctypeHeaderStartString;
@@ -1392,10 +1388,6 @@ static XalanDOMString	s_iso88591String;
 
 static XalanDOMString	s_dtdCDATACloseString;
 
-
-const XalanDOMString&	FormatterToXML::s_xsltNextIsRawString = ::s_xsltNextIsRawString;
-
-const XalanDOMString&	FormatterToXML::s_formatterToDOMString = ::s_formatterToDOMString;
 
 const XalanDOMString&	FormatterToXML::s_defaultMIMEEncoding = ::s_defaultMIMEEncoding;
 
@@ -1430,10 +1422,6 @@ const FormatterToXML::DOMCharBufferType::size_type	FormatterToXML::s_maxBufferSi
 void
 FormatterToXML::initialize()
 {
-	::s_xsltNextIsRawString = XALAN_STATIC_UCODE_STRING("xslt-next-is-raw");
-
-	::s_formatterToDOMString = XALAN_STATIC_UCODE_STRING("formatter-to-dom");
-
 	::s_defaultMIMEEncoding = XALAN_STATIC_UCODE_STRING("UTF-8");
 
 	::s_doctypeHeaderStartString = XALAN_STATIC_UCODE_STRING("<!DOCTYPE ");
@@ -1464,10 +1452,6 @@ FormatterToXML::initialize()
 void
 FormatterToXML::terminate()
 {
-	clear(::s_xsltNextIsRawString);
-
-	clear(::s_formatterToDOMString);
-
 	clear(::s_defaultMIMEEncoding);
 
 	clear(::s_doctypeHeaderStartString);

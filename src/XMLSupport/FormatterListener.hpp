@@ -76,6 +76,10 @@
 
 
 
+#include <XalanDOM/XalanDOMString.hpp>
+
+
+
 /**
  * A SAX-based formatter interface for the XSL processor.  This interface 
  * will be called as result tree elements are constructed.
@@ -83,6 +87,19 @@
 class XALAN_XMLSUPPORT_EXPORT FormatterListener : public DocumentHandler
 {
 public:
+
+	/**
+	 * Perform static initialization.  See class XMLSupportInit.
+	 */
+	static void
+	initialize();
+
+	/**
+	 * Perform static shut down.  See class XMLSupportInit.
+	 */
+	static void
+	terminate();
+
 
 	enum eFormat
 	{
@@ -201,6 +218,13 @@ public:
 	startElement(
 			const	XMLCh* const	name,
 			AttributeList&			attrs) = 0;
+
+
+	// Used when creating PI to work around limitations of
+	// our interfaces...
+	static const XalanDOMString&	s_xsltNextIsRawString;
+
+	static const XalanDOMString&	s_formatterListenerString;
 
 private:
 
