@@ -72,7 +72,24 @@
 
 
 
+// We're stuck here.  We don't want to include the ICU header files, since we're trying
+// to keep them hidden, but we need their namespace.  So we're just duplicating here.  When
+// it changes, we'll have to track that change.  This is more desirable than forcing users
+// to have the ICU sources.
+//
+// We could fix this by using factories, rather than allowing user access to these
+// implementation classes.  It's certainly worth pursuing...
+#if defined(XALAN_NO_NAMESPACES)
 class UnicodeString;
+#else
+namespace icu_2_0
+{
+	class UnicodeString;
+};
+#endif
+
+
+
 class XalanDecimalFormatSymbols;
 
 
@@ -81,19 +98,25 @@ class XALAN_ICUBRIDGE_EXPORT ICUBridge
 {
 public:
 
-	static const UnicodeString
+#if defined(XALAN_NO_NAMESPACES)
+	typedef UnicodeString			ICUUnicodeString;
+#else
+	typedef icu_2_0::UnicodeString	ICUUnicodeString;
+#endif
+
+	static const ICUUnicodeString
 	XalanDOMCharStringToUnicodeString(const XalanDOMChar*	theString);
 
-	static const UnicodeString
+	static const ICUUnicodeString
 	XalanDOMStringToUnicodeString(const XalanDOMString&		theString);
 
 	static const XalanDOMString
-	UnicodeStringToXalanDOMString(const UnicodeString&	theString);
+	UnicodeStringToXalanDOMString(const ICUUnicodeString&	theString);
 
 	static void
 	UnicodeStringToXalanDOMString(
-			const UnicodeString&	theString,
-			XalanDOMString&			theResult);
+			const ICUUnicodeString&		theString,
+			XalanDOMString&				theResult);
 
 	static unsigned long
 	FormatNumber(

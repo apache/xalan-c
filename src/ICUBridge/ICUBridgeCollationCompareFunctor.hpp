@@ -68,7 +68,21 @@
 
 
 
+// We're stuck here.  We don't want to include the ICU header files, since we're trying
+// to keep them hidden, but we need their namespace.  So we're just duplicating here.  When
+// it changes, we'll have to track that change.  This is more desirable than forcing users
+// to have the ICU sources.
+//
+// We could fix this by using factories, rather than allowing user access to these
+// implementation classes.  It's certainly worth pursuing...
+#if defined(XALAN_NO_NAMESPACES)
 class Collator;
+#else
+namespace icu_2_0
+{
+	class Collator;
+};
+#endif
 
 
 
@@ -107,7 +121,11 @@ private:
 
 	bool		m_isValid;
 
-	Collator*	m_defaultCollator;
+#if defined(XALAN_NO_NAMESPACES)
+	Collator*			m_defaultCollator;
+#else
+	icu_2_0::Collator*	m_defaultCollator;
+#endif
 
 	const static StylesheetExecutionContextDefault::DefaultCollationCompareFunctor		s_defaultFunctor;
 };

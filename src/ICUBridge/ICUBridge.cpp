@@ -113,12 +113,12 @@ const unsigned int	theStackBufferSize = 200u;
 
 
 
-const UnicodeString
+const ICUBridge::ICUUnicodeString
 ICUBridge::XalanDOMCharStringToUnicodeString(const XalanDOMChar*	theString)
 {
 	if (theString == 0)
 	{
-		return UnicodeString();
+		return ICUUnicodeString();
 	}
 	else
 	{
@@ -133,14 +133,14 @@ ICUBridge::XalanDOMCharStringToUnicodeString(const XalanDOMChar*	theString)
 			doCopyData(theString, theLength, theBuffer);
 
 #if U_SIZEOF_WCHAR_T==2
-			return UnicodeString((wchar_t*)&theBuffer[0], theLength);
+			return ICUUnicodeString((wchar_t*)&theBuffer[0], theLength);
 #else
-			return UnicodeString(&theBuffer[0], theLength);
+			return ICUUnicodeString(&theBuffer[0], theLength);
 #endif
 		}
 		else
 		{
-			// Create a buffer to copy out the UnicodeString data...
+			// Create a buffer to copy out the ICUUnicodeString data...
 			UCharVectorType		theBuffer;
 
 			// Resize the buffer appropriately...
@@ -154,17 +154,17 @@ ICUBridge::XalanDOMCharStringToUnicodeString(const XalanDOMChar*	theString)
 
 			assert(theLength == theBuffer.size());
 
-			return UnicodeString(&theBuffer[0], theLength);
+			return ICUUnicodeString(&theBuffer[0], theLength);
 		}
 #else
-		return UnicodeString(theString, length(theString));
+		return ICUUnicodeString(theString, length(theString));
 #endif
 	}
 }
 
 
 
-const UnicodeString
+const ICUBridge::ICUUnicodeString
 ICUBridge::XalanDOMStringToUnicodeString(const XalanDOMString&	theString)
 {
 	// Just call up to the XalanDOMChar* version...
@@ -174,7 +174,7 @@ ICUBridge::XalanDOMStringToUnicodeString(const XalanDOMString&	theString)
 
 
 const XalanDOMString
-ICUBridge::UnicodeStringToXalanDOMString(const UnicodeString&	theString)
+ICUBridge::UnicodeStringToXalanDOMString(const ICUUnicodeString&	theString)
 {
 	const int32_t	theLength = theString.length();
 
@@ -208,7 +208,7 @@ ICUBridge::UnicodeStringToXalanDOMString(const UnicodeString&	theString)
 	}
 	else
 	{
-		// Create a buffer to copy out the UnicodeString data...
+		// Create a buffer to copy out the ICUUnicodeString data...
 		UCharVectorType		theBuffer;
 
 		// Resize the buffer appropriately...
@@ -228,8 +228,8 @@ ICUBridge::UnicodeStringToXalanDOMString(const UnicodeString&	theString)
 
 void
 ICUBridge::UnicodeStringToXalanDOMString(
-			const UnicodeString&	theString,
-			XalanDOMString&			theResult)
+			const ICUUnicodeString&		theString,
+			XalanDOMString&				theResult)
 {
 #if defined(XALAN_XALANDOMCHAR_USHORT_MISMATCH)
 	
@@ -260,7 +260,7 @@ ICUBridge::UnicodeStringToXalanDOMString(
 		typedef std::vector<UChar>	UCharVectorType;
 #endif
 
-		// Create a buffer to copy out the UnicodeString data...
+		// Create a buffer to copy out the ICUUnicodeString data...
 		UCharVectorType		theBuffer;
 
 		// Resize the buffer appropriately...
@@ -292,24 +292,22 @@ doFormatNumber(
 
 		// We got a XalanDecimalFormatSymbols, so set the
 		// corresponding data in the ICU DecimalFormatSymbols.
-		theDFS->setZeroDigit(theXalanDFS.getZeroDigit());
-		theDFS->setGroupingSeparator(theXalanDFS.getGroupingSeparator());
-		theDFS->setDecimalSeparator(theXalanDFS.getDecimalSeparator());
-		theDFS->setPerMill(theXalanDFS.getPerMill());
-		theDFS->setPercent(theXalanDFS.getPercent());
-		theDFS->setDigit(theXalanDFS.getDigit());
-		theDFS->setPatternSeparator(theXalanDFS.getPatternSeparator());
+		theDFS->setSymbol(DecimalFormatSymbols::kZeroDigitSymbol, theXalanDFS.getZeroDigit());
+		theDFS->setSymbol(DecimalFormatSymbols::kGroupingSeparatorSymbol, theXalanDFS.getGroupingSeparator());
+		theDFS->setSymbol(DecimalFormatSymbols::kDecimalSeparatorSymbol, theXalanDFS.getDecimalSeparator());
+		theDFS->setSymbol(DecimalFormatSymbols::kPerMillSymbol, theXalanDFS.getPerMill());
+		theDFS->setSymbol(DecimalFormatSymbols::kPercentSymbol, theXalanDFS.getPercent());
+		theDFS->setSymbol(DecimalFormatSymbols::kDigitSymbol, theXalanDFS.getDigit());
+		theDFS->setSymbol(DecimalFormatSymbols::kPatternSeparatorSymbol, theXalanDFS.getPatternSeparator());
 
-		theDFS->setInfinity(ICUBridge::XalanDOMStringToUnicodeString(theXalanDFS.getInfinity()));
-		theDFS->setNaN(ICUBridge::XalanDOMStringToUnicodeString(theXalanDFS.getNaN()));
-	//	theDFS->setPlusSign(theZeroDigitChar);
-		theDFS->setMinusSign(theXalanDFS.getMinusSign());
-	//	theDFS->setExponentialSymbol(theZeroDigitChar);
-		theDFS->setCurrencySymbol(ICUBridge::XalanDOMStringToUnicodeString(theXalanDFS.getCurrencySymbol()));
-		theDFS->setInternationalCurrencySymbol(ICUBridge::XalanDOMStringToUnicodeString(theXalanDFS.getInternationalCurrencySymbol()));
-		theDFS->setMonetaryDecimalSeparator(theXalanDFS.getMonetaryDecimalSeparator());
+		theDFS->setSymbol(DecimalFormatSymbols::kInfinitySymbol, ICUBridge::XalanDOMStringToUnicodeString(theXalanDFS.getInfinity()));
+		theDFS->setSymbol(DecimalFormatSymbols::kNaNSymbol, ICUBridge::XalanDOMStringToUnicodeString(theXalanDFS.getNaN()));
+		theDFS->setSymbol(DecimalFormatSymbols::kMinusSignSymbol, theXalanDFS.getMinusSign());
+		theDFS->setSymbol(DecimalFormatSymbols::kCurrencySymbol, ICUBridge::XalanDOMStringToUnicodeString(theXalanDFS.getCurrencySymbol()));
+		theDFS->setSymbol(DecimalFormatSymbols::kIntlCurrencySymbol, ICUBridge::XalanDOMStringToUnicodeString(theXalanDFS.getInternationalCurrencySymbol()));
+		theDFS->setSymbol(DecimalFormatSymbols::kMonetarySeparatorSymbol, theXalanDFS.getMonetaryDecimalSeparator());
 
-		UnicodeString	theUnicodeResult;
+		ICUBridge::ICUUnicodeString		theUnicodeResult;
 
 		// Construct a DecimalFormat.  Note that we release the XalanAutoPtr, since the
 		// DecimalFormat will adopt the DecimalFormatSymbols instance.

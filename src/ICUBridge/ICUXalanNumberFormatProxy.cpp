@@ -66,6 +66,9 @@
 #include <unicode/dcfmtsym.h>
 #include <unicode/decimfmt.h>
 
+// this is the ICU's macro for using namespace ...
+U_NAMESPACE_USE
+
 
 
 #include <PlatformSupport/DOMStringHelper.hpp>
@@ -258,7 +261,9 @@ ICUXalanNumberFormatProxy::setGroupingSeparator(const XalanDOMString&	s)
 	DecimalFormatSymbols* const		theNewSymbols =
 		new DecimalFormatSymbols(*theCurrentSymbols);
 
-	theNewSymbols->setGroupingSeparator(charAt(s, 0));
+	theNewSymbols->setSymbol(
+		DecimalFormatSymbols::kGroupingSeparatorSymbol,
+		ICUBridge::XalanDOMStringToUnicodeString(s));
 
 	m_decimalFormat->adoptDecimalFormatSymbols(theNewSymbols);
 }

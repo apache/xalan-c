@@ -70,6 +70,9 @@
 
 #include <unicode/coll.h>
 
+// this is the ICU's macro for using namespace ...
+U_NAMESPACE_USE
+
 
 
 const StylesheetExecutionContextDefault::DefaultCollationCompareFunctor		ICUBridgeCollationCompareFunctor::s_defaultFunctor;
