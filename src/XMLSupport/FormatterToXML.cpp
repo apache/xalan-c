@@ -1124,9 +1124,33 @@ FormatterToXML::ignorableWhitespace(
 			const XMLCh* const	chars,
 			const unsigned int	length)
 {
-	if (length > 0)
+	if(m_inEntityRef == false && length != 0)
 	{
-		characters(chars, length);
+		assert(isXMLWhitespace(chars, 0, length));
+
+		if(m_inCData == true)
+		{
+			cdata(chars, length);
+		}
+		else if(m_nextIsRaw)
+		{
+			m_nextIsRaw = false;
+
+			charactersRaw(chars, length);
+		}
+		else
+		{
+			writeParentTagEnd();
+
+			m_ispreserve = true;
+
+			accumContent(chars, 0, length);
+
+			if (m_isprevtext == false)
+			{
+				m_isprevtext = true;
+			}
+		}
 	}
 }
 
@@ -1245,8 +1269,7 @@ FormatterToXML::writeParentTagEnd()
 
 			m_isprevtext = false;
 
-			m_elemStack.pop_back();
-			m_elemStack.push_back(true);
+			m_elemStack.back() = true;
 
 			m_preserves.push_back(m_ispreserve);
 		}
