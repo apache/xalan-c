@@ -176,8 +176,9 @@ main(
 		// Get the list of Directories that are below perf
 		const FileNameVectorType	dirs = f.getDirectoryNames(confDir);
 
-		//XMLFileReporter	logFile("cpp.xml");
-		//logFile.logTestFileInit("Memory Testing - Memory leaks detected during ConformanceTests. ");
+		
+		XMLFileReporter	logFile("d:\\xslt\\xsl-test\\perf-dataxml\\cpp-mem.xml");
+		logFile.logTestFileInit("Memory Testing - Memory leaks detected during ConformanceTests. ");
 
 		try
 		{
@@ -202,13 +203,9 @@ main(
 						if (checkForExclusion(files[i]) == false)
 						{
 							// Output file name to result log.
-							//logFile.logTestCaseInit(files[i]);
+							logFile.logTestCaseInit(files[i]);
 							cout << files[i] << endl;
 
-					//		const XalanDOMString	theXMLFile= confDir + dirs[j] + pathSep + files[i];
-					//		const XalanDOMString	outFile = outDir + dirs[j] + pathSep + files[i];
-					//		const XalanDOMString	theXSLFile = f.GenerateFileName(theXMLFile,"xsl");
-					//		const XalanDOMString	theOutputFile = f.GenerateFileName(outFile, "out");
 
 							const XalanDOMString  theXSLFile= confDir + dirs[j] + pathSep + files[i];
 							const XalanDOMString  theXMLFile = f.GenerateFileName(theXSLFile,"xml");
@@ -226,7 +223,12 @@ main(
 
 							if(theResult != 0)
 							{
+								logFile.logTestCaseClose("Done","Fail");
 								cerr << "XalanError: \n" << transformEngine.getLastError();
+							}
+							else
+							{
+								logFile.logTestCaseClose("Done","Pass");
 							}
 						}
 					}
@@ -236,6 +238,10 @@ main(
 			XalanTransformer::terminate();
 
 			XMLPlatformUtils::Terminate();
+
+			logFile.logTestFileClose("Memory Testing: ", "Done");
+			logFile.close();
+
 		}
 		catch(...)
 		{
