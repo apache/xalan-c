@@ -551,9 +551,45 @@ public:
 		}
 	};
 
+	/**
+	 * Determine whether or not a string contains
+	 * a valid floating point number.
+	 *
+	 * @param theString The string to check.
+	 * @return true if the string is valid, false if not.
+	 */
+	static bool
+	isValid(const XalanDOMString	theString);
+
+	/**
+	 * Determine whether or not a string contains
+	 * a valid floating point number.
+	 *
+	 * @param theString The string to check.
+	 * @return true if the string is valid, false if not.
+	 */
+	static bool
+	isValid(const XalanDOMChar*		theString);
+
+	/**
+	 * Convert a string to a double value.  Returns
+	 * NaN if the string is not a valid floating
+	 * point number.
+	 *
+	 * @param theString The string to convert.
+	 * @return The result of the conversion
+	 */
 	static double
 	toDouble(const XalanDOMString&	theString);
 
+	/**
+	 * Convert a string to a double value.  Returns
+	 * NaN if the string is not a valid floating
+	 * point number.
+	 *
+	 * @param theString The string to convert.
+	 * @return The result of the conversion
+	 */
 	static double
 	toDouble(const XalanDOMChar*	theString);
 

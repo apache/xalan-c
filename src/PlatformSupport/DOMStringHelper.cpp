@@ -1242,13 +1242,20 @@ WideStringToIntegral(
 			const XalanDOMChar*		theString,
 			Type					/* theDummy */)
 {
-	if (theString == 0)
+	if (theString == 0 || DoubleSupport::isValid(theString) == false)
 	{
 		return Type(0);
 	}
 	else
 	{
+		// OK, now we know we have a valid string, so start converting...
 		Type	theResult = 0;
+
+		// Consume any leading whitespace (which we allow)
+		while(isXMLWhitespace(*theString) == true)
+		{
+			++theString;
+		}
 
 		const bool	isNegative = *theString == XalanUnicode::charHyphenMinus ? true : false;
 
@@ -1267,8 +1274,14 @@ WideStringToIntegral(
 
 				++theString;
 			}
+			else if (isXMLWhitespace(*theString) == true)
+			{
+				// This must be trailing whitespace...
+				break;
+			}
 			else
 			{
+				// An non-numeric character was encountered, so stop...
 				return 0;
 			}
 		}

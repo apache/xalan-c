@@ -363,9 +363,7 @@ consumeWhitespace(const XalanDOMChar*&	theString)
 
 
 
-#if 1
-
-void
+static void
 consumeNumbers(const XalanDOMChar*&	theString)
 {
 	while(*theString &&
@@ -378,12 +376,177 @@ consumeNumbers(const XalanDOMChar*&	theString)
 
 
 
+static bool
+doValidate(
+			const XalanDOMChar*		theString,
+			bool&					fGotDecimalPoint)
+{
+	assert(theString != 0);
+
+	bool	fError = false;
+	bool	fGotDigit = false;
+	bool	fGotMinus = false;
+	bool	fGotWhitespace = false;
+
+	const XalanDOMChar*		theCurrent = theString;
+
+	// trim any whitespace
+	consumeWhitespace(theCurrent);
+
+	while(*theCurrent != 0 && fError == false)
+	{
+		switch(*theCurrent)
+		{
+		case XalanUnicode::charFullStop:
+			if (fGotDecimalPoint == true ||	// can't have more than one...
+				fGotWhitespace == true)	// can't have one after whitespace...
+			{
+				fError = true;
+			}
+			else
+			{
+				fGotDecimalPoint = true;
+
+				++theCurrent;
+			}
+			break;
+
+		case XalanUnicode::charHyphenMinus:
+			if (fGotDecimalPoint == true ||
+				fGotMinus == true ||
+				fGotDigit == true ||
+				fGotWhitespace == true)
+			{
+				// Error -- more than one, or in bad position.
+				fError = true;
+			}
+			else
+			{
+				fGotMinus = true;
+
+				++theCurrent;
+			}
+			break;
+
+		case XalanUnicode::charDigit_0:
+		case XalanUnicode::charDigit_1:
+		case XalanUnicode::charDigit_2:
+		case XalanUnicode::charDigit_3:
+		case XalanUnicode::charDigit_4:
+		case XalanUnicode::charDigit_5:
+		case XalanUnicode::charDigit_6:
+		case XalanUnicode::charDigit_7:
+		case XalanUnicode::charDigit_8:
+		case XalanUnicode::charDigit_9:
+			if (fGotWhitespace == true)
+			{
+				fError = true;
+			}
+			else
+			{
+				fGotDigit = true;
+
+				consumeNumbers(theCurrent);
+			}
+			break;
+
+		case XalanUnicode::charSpace:
+		case XalanUnicode::charCR:
+		case XalanUnicode::charHTab:
+		case XalanUnicode::charLF:
+			if (fGotWhitespace == true)
+			{
+				fError = true;
+			}
+			else
+			{
+				fGotWhitespace = true;
+
+				consumeWhitespace(theCurrent);
+			}
+			break;
+
+		default:
+			fError = true;
+			break;
+		}
+	}
+
+	// If there was no error, check to see that we got
+	// at least one digit.  Otherwise, return false if
+	// there was an error.
+	return fError == false ? fGotDigit : false;
+}
+
+
+
+static bool
+doValidate(const XalanDOMChar*	theString)
+{
+	bool	fDummy = false;
+
+	return doValidate(theString, fDummy);
+}
+
+
+
+inline double
+convertHelper(
+			const XalanDOMChar*		theString,
+			bool					fGotDecimalPoint)
+{
+	// This is a big hack.  If the length of the
+	// string is less than n characters, we'll convert
+	// it as a long and coerce that to a double.  This
+	// is _much_ cheaper...
+	const unsigned int	theLongHackThreshold = 11;
+
+	const unsigned int	theLength = length(theString);
+
+	if (fGotDecimalPoint == false && theLength < theLongHackThreshold)
+	{
+		return double(WideStringToLong(theString));
+	}
+	else
+	{
+		// Use a stack-based buffer, when possible...
+		const unsigned int	theBufferSize = 200u;
+
+		if (theLength < theBufferSize)
+		{
+			char	theBuffer[theBufferSize];
+
+			for(unsigned int i = 0; i < theLength; ++i)
+			{
+				theBuffer[i] = char(theString[i]);
+			}
+
+			theBuffer[theLength] = '\0';
+
+			return atof(theBuffer);
+		}
+		else
+		{
+			CharVectorType	theVector;
+
+			theVector.reserve(theLength + 1);
+
+			CopyWideStringToVector(theString, theVector);
+
+			return atof(&*theVector.begin());
+		}
+	}
+}
+
+
+
 double
 doConvert(const XalanDOMChar*	theString)
 {
 	assert(theString != 0);
 	assert(*theString != 0);
 
+#if 0
 	bool	fError = false;
 	bool	fGotDecimalPoint = false;
 	bool	fGotDigit = false;
@@ -485,16 +648,66 @@ doConvert(const XalanDOMChar*	theString)
 
 		return wcstod(theString, &theDummy);
 #else
-		CharVectorType	theVector;
-
-		CopyWideStringToVector(theString, theVector);
-
-		return atof(&theVector.front());
+		return convertHelper(theString, fGotDecimalPoint);
 #endif
+	}
+#else
+	bool	fGotDecimalPoint = false;
+
+	if (doValidate(theString, fGotDecimalPoint) == false)
+	{
+		return DoubleSupport::getNaN();
+	}
+	else
+	{
+#if defined(XALAN_FULL_WCHAR_SUPPORT) && defined(XALAN_USE_WCHAR_SUPPORT)
+		XalanDOMChar*	theDummy;
+
+		return wcstod(theString, &theDummy);
+#else
+		return convertHelper(theString, fGotDecimalPoint);
+#endif
+	}
+#endif
+}
+
+
+
+double
+DoubleSupport::toDouble(const XalanDOMChar*		theString)
+{
+	if (theString == 0 ||
+		*theString == 0)
+	{
+		return getNaN();
+	}
+	else
+	{
+		return doConvert(theString);
 	}
 }
 
-#else
+
+
+bool
+DoubleSupport::isValid(const XalanDOMString		theString)
+{
+	return isValid(c_wstr(theString));
+}
+
+
+
+bool
+DoubleSupport::isValid(const XalanDOMChar*		theString)
+{
+	bool	fDummy = false;
+
+	return doValidate(theString);
+}
+
+
+
+#if 0
 
 // This version is disabled because it turns out that
 // an unsigned long is not large enough to accumulate
@@ -670,19 +883,3 @@ doConvert(const XalanDOMChar*	theString)
 }
 
 #endif
-
-
-
-double
-DoubleSupport::toDouble(const XalanDOMChar*		theString)
-{
-	if (theString == 0 ||
-		*theString == 0)
-	{
-		return getNaN();
-	}
-	else
-	{
-		return doConvert(theString);
-	}
-}
