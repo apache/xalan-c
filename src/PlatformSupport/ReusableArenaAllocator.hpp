@@ -78,7 +78,7 @@ public:
 
 	typedef ReusableArenaBlock<ObjectType>				ReusableArenaBlockType;
 
-	typedef ReusableArenaBlockType::size_type			size_type;
+	typedef typename ReusableArenaBlockType::size_type	size_type;
 
 	typedef ArenaAllocator<ObjectType,
 						   ReusableArenaBlockType>		BaseClassType;
@@ -126,9 +126,10 @@ public:
 		}
 		else
 		{
-			const ArenaBlockListType::reverse_iterator	theEnd = m_blocks.rend();
+			// Note that this-> is required by template lookup rules.
+			const typename ArenaBlockListType::reverse_iterator	theEnd = this->m_blocks.rend();
 
-			ArenaBlockListType::reverse_iterator	i = m_blocks.rbegin();
+			typename ArenaBlockListType::reverse_iterator	i = this->m_blocks.rbegin();
 
 			while(i != theEnd)
 			{
@@ -167,10 +168,11 @@ public:
 		if (m_lastBlockReferenced == 0 ||
 			m_lastBlockReferenced->blockAvailable() == false)
 		{
-			// Search back for a block with some space available...
-			const ArenaBlockListType::reverse_iterator	theEnd = m_blocks.rend();
-
-			ArenaBlockListType::reverse_iterator	i = m_blocks.rbegin();
+			// Search back for a block with some space available...		
+			const typename ArenaBlockListType::reverse_iterator	theEnd = this->m_blocks.rend();
+			
+			// Note that this-> is required by template lookup rules.
+			typename ArenaBlockListType::reverse_iterator	i = this->m_blocks.rbegin();
 
 			while(i != theEnd)
 			{
@@ -193,9 +195,10 @@ public:
 			{
 				// No blocks have free space available, so create a new block, and
 				// push it on the list.
-				m_lastBlockReferenced = new ReusableArenaBlockType(m_blockSize);
+				// Note that this-> is required by template lookup rules.
+				m_lastBlockReferenced = new ReusableArenaBlockType(this->m_blockSize);
 
-				m_blocks.push_back(m_lastBlockReferenced);
+				this->m_blocks.push_back(m_lastBlockReferenced);
 			}
 		}
 		assert(m_lastBlockReferenced != 0 && m_lastBlockReferenced->blockAvailable() == true);
@@ -212,7 +215,8 @@ public:
 	virtual void
 	commitAllocation(ObjectType*	theObject)
 	{
-		assert(m_blocks.size() != 0 && m_lastBlockReferenced != 0 && m_lastBlockReferenced->ownsBlock(theObject) == true);
+		// Note that this-> is required by template lookup rules.
+		assert(this->m_blocks.size() != 0 && m_lastBlockReferenced != 0 && m_lastBlockReferenced->ownsBlock(theObject) == true);
 
 		m_lastBlockReferenced->commitAllocation(theObject);
 		assert(m_lastBlockReferenced->ownsObject(theObject) == true);
@@ -241,9 +245,10 @@ public:
 			if (fResult == false)
 			{
 				// Search back for a block with some space available...
-				const ArenaBlockListType::const_reverse_iterator	theEnd = m_blocks.rend();
+				// Note that this-> is required by template lookup rules.
+				const typename ArenaBlockListType::const_reverse_iterator	theEnd = this->m_blocks.rend();
 
-				ArenaBlockListType::const_reverse_iterator	i = m_blocks.rbegin();
+				typename ArenaBlockListType::const_reverse_iterator	i = this->m_blocks.rbegin();
 
 				while(i != theEnd)
 				{

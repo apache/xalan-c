@@ -71,7 +71,9 @@ class ReusableArenaBlock : public ArenaBlock<ObjectType>
 {
 public:
 
-	typedef ArenaBlock<ObjectType>	BaseClassType;
+	typedef ArenaBlock<ObjectType>				BaseClassType;
+
+	typedef typename BaseClassType::size_type	size_type;
 
 	/*
 	 * Construct an ArenaBlock of the specified size
@@ -88,7 +90,8 @@ public:
 
 	~ReusableArenaBlock()
 	{
-		destroyAll();
+		// Note that this-> is required by template lookup rules.
+		this->destroyAll();
 	}
 
 	/*
@@ -295,7 +298,8 @@ private:
 			{
 				if (m_freeList.isSet(i) == true)
 				{
-					theResult = getBlockAddress(i);
+					// Note that this-> is required by template lookup rules.
+					theResult = this->getBlockAddress(i);
 
 					break;
 				}
