@@ -21,6 +21,10 @@
 
 
 
+#include <Include/STLHelper.hpp>
+
+
+
 #include <XalanDOM/XalanDocument.hpp>
 #include <XalanDOM/XalanElement.hpp>
 
@@ -28,7 +32,6 @@
 
 #include <PlatformSupport/DirectoryEnumerator.hpp>
 #include <PlatformSupport/DOMStringHelper.hpp>
-#include <PlatformSupport/STLHelper.hpp>
 
 
 
