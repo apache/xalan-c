@@ -50,13 +50,13 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
-				AdditionalDependencies="xerces-c_2.lib XalanMessages_1_8S.lib"
-				OutputFile="..\..\..\..\Build\Win32\VC7\Release.symbols/Xalan-C_1_8S.dll"
+				AdditionalDependencies="xerces-c_2.lib XalanMessages_1_9S.lib"
+				OutputFile="..\..\..\..\Build\Win32\VC7\Release.symbols/Xalan-C_1_9S.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
 				AdditionalLibraryDirectories="$(XERCESCROOT)\Build\Win32\VC7\Release;$(XERCESCROOT)\lib;..\..\..\..\..\..\xml-xerces\c\Build\Win32\VC7\Release,..\..\..\..\Build\Win32\VC7\Release.symbols"
 				GenerateDebugInformation="TRUE"
-				ProgramDatabaseFile=".\..\..\..\..\Build\Win32\VC7\Release.symbols/Xalan-C_1_8S.pdb"
+				ProgramDatabaseFile=".\..\..\..\..\Build\Win32\VC7\Release.symbols/Xalan-C_1_9S.pdb"
 				ImportLibrary="..\..\..\..\Build\Win32\VC7\Release.symbols/Xalan-C_1S.lib"/>
 			<Tool
 				Name="VCMIDLTool"
@@ -119,8 +119,8 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
-				AdditionalDependencies="xerces-c_2.lib XalanMessages_1_8.lib"
-				OutputFile="..\..\..\..\Build\Win32\VC7\Release/Xalan-C_1_8.dll"
+				AdditionalDependencies="xerces-c_2.lib XalanMessages_1_9.lib"
+				OutputFile="..\..\..\..\Build\Win32\VC7\Release/Xalan-C_1_9.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
 				AdditionalLibraryDirectories="$(XERCESCROOT)\Build\Win32\VC7\Release;$(XERCESCROOT)\lib..\..\..\..\..\..\xml-xerces\c\Build\Win32\VC7\Release,..\..\..\..\Build\Win32\VC7\Release"
@@ -184,13 +184,13 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
-				AdditionalDependencies="xerces-c_2D.lib XalanMessages_1_8D.lib"
+				AdditionalDependencies="xerces-c_2D.lib XalanMessages_1_9D.lib"
 				OutputFile="..\..\..\..\Build\Win32\VC7\Debug/Xalan-C_1_8D.dll"
 				LinkIncremental="2"
 				SuppressStartupBanner="TRUE"
 				AdditionalLibraryDirectories="$(XERCESCROOT)\Build\Win32\VC7\Debug;$(XERCESCROOT)\lib;..\..\..\..\..\..\xml-xerces\c\Build\Win32\VC7\Debug,..\..\..\..\Build\Win32\VC7\Debug"
 				GenerateDebugInformation="TRUE"
-				ProgramDatabaseFile=".\..\..\..\..\Build\Win32\VC7\Debug/Xalan-C_1_8D.pdb"
+				ProgramDatabaseFile=".\..\..\..\..\Build\Win32\VC7\Debug/Xalan-C_1_9D.pdb"
 				ImportLibrary="..\..\..\..\Build\Win32\VC7\Debug/Xalan-C_1D.lib"/>
 			<Tool
 				Name="VCMIDLTool"
@@ -232,7 +232,31 @@
 				RelativePath="..\..\..\..\src\xalanc\Include\XalanAutoPtr.hpp">
 			</File>
 			<File
+				RelativePath="..\..\..\..\src\xalanc\Include\XalanDeque.hpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\src\xalanc\Include\XalanList.hpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\src\xalanc\Include\XalanMap.hpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\src\xalanc\Include\XalanMemMgrAutoPtr.hpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\src\xalanc\Include\XalanMemMngArrayAllocate.hpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\src\xalanc\Include\XalanMemoryManagement.hpp">
+			</File>
+			<File
 				RelativePath="..\..\..\..\src\xalanc\Include\XalanObjectCache.hpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\src\xalanc\Include\XalanObjectStackCache.hpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\src\xalanc\Include\XalanSet.hpp">
 			</File>
 			<File
 				RelativePath="..\..\..\..\src\xalanc\Include\XalanVector.hpp">
@@ -562,6 +586,12 @@
 			</File>
 			<File
 				RelativePath="..\..\..\..\src\xalanc\PlatformSupport\XalanDOMStringPool.hpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\src\xalanc\PlatformSupport\XalanDOMStringReusableAllocator.cpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\src\xalanc\PlatformSupport\XalanDOMStringReusableAllocator.hpp">
 			</File>
 			<File
 				RelativePath="..\..\..\..\src\xalanc\PlatformSupport\XalanDecimalFormatSymbols.cpp">
@@ -1470,6 +1500,12 @@
 			</File>
 			<File
 				RelativePath="..\..\..\..\src\xalanc\XercesParserLiaison\XercesWrapperNavigator.hpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\src\xalanc\XercesParserLiaison\XercesWrapperNavigatorAllocator.cpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\src\xalanc\XercesParserLiaison\XercesWrapperNavigatorAllocator.hpp">
 			</File>
 			<File
 				RelativePath="..\..\..\..\src\xalanc\XercesParserLiaison\XercesWrapperToXalanNodeMap.cpp">

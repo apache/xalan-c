@@ -22,12 +22,19 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				AdditionalOptions="/Zm125 "
+				GlobalOptimizations="TRUE"
 				InlineFunctionExpansion="2"
+				EnableIntrinsicFunctions="TRUE"
+				ImproveFloatingPointConsistency="TRUE"
+				FavorSizeOrSpeed="1"
+				OmitFramePointers="TRUE"
 				AdditionalIncludeDirectories="$(ICUROOT)\include;$(XERCESCROOT)\include;$(XERCESCROOT)\src;..\..\..\..\..\..\xml-xerces\c\src,..\..\..\..\src\,..\..\..\..\..\..\icu\include,..\..\..\..\Build\Win32\VC7\Release\Nls\Include"
 				PreprocessorDefinitions="NDEBUG;XALAN_DOMSUPPORT_BUILD_DLL;WIN32;_WINDOWS;_USRDLL;XALAN_XSLT_BUILD_DLL;XALAN_PLATFORMSUPPORT_BUILD_DLL;XALAN_DOM_BUILD_DLL;XALAN_XALANEXTENSIONS_BUILD_DLL;XALAN_XALANSOURCETREE_BUILD_DLL;XALAN_TRANSFORMER_BUILD_DLL;XALAN_XERCESPARSERLIAISON_BUILD_DLL;XALAN_XMLSUPPORT_BUILD_DLL;XALAN_XPATH_BUILD_DLL;XALAN_XPATHCAPI_BUILD_DLL;XALAN_ALLINONE_BUILD_DLL;XALAN_EXSLT_BUILD_DLL;XALAN_ICUBRIDGE_BUILD_DLL;XALAN_HARNESS_BUILD_DLL;XALAN_USE_ICU;XALAN_ICU_MSG_LOADER"
 				StringPooling="TRUE"
 				RuntimeLibrary="2"
+				BufferSecurityCheck="FALSE"
 				EnableFunctionLevelLinking="TRUE"
+				ForceConformanceInForLoopScope="TRUE"
 				RuntimeTypeInfo="TRUE"
 				PrecompiledHeaderFile=".\..\..\..\..\Build\Win32\VC7\Release\AllInOne/AllInOneWithICU.pch"
 				AssemblerListingLocation=".\..\..\..\..\Build\Win32\VC7\Release\AllInOne/"
@@ -35,14 +42,15 @@
 				ProgramDataBaseFileName=".\..\..\..\..\Build\Win32\VC7\Release\AllInOne/"
 				WarningLevel="4"
 				SuppressStartupBanner="TRUE"
+				Detect64BitPortabilityProblems="TRUE"
 				CompileAs="0"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
-				AdditionalDependencies="xerces-c_2.lib XalanMessages_1_8.lib icuuc.lib icuin.lib"
-				OutputFile="..\..\..\..\Build\Win32\VC7\Release/Xalan-C_1_8.dll"
+				AdditionalDependencies="xerces-c_2.lib XalanMessages_1_9.lib icuuc.lib icuin.lib"
+				OutputFile="..\..\..\..\Build\Win32\VC7\Release/Xalan-C_1_9.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
 				AdditionalLibraryDirectories="$(ICUROOT)\lib;$(XERCESCROOT)\Build\Win32\VC7\Release;$(XERCESCROOT)\lib;..\..\..\..\..\..\xml-xerces\c\Build\Win32\VC7\Release,..\..\..\..\..\..\icu\lib,..\..\..\..\Build\Win32\VC7\Release"
@@ -81,10 +89,13 @@
 				Name="VCCLCompilerTool"
 				AdditionalOptions="/Zm125 "
 				Optimization="0"
+				ImproveFloatingPointConsistency="TRUE"
 				AdditionalIncludeDirectories="$(ICUROOT)\include;$(XERCESCROOT)\include;$(XERCESCROOT)\src;..\..\..\..\..\..\xml-xerces\c\src,..\..\..\..\src\,..\..\..\..\..\..\icu\include,..\..\..\..\Build\Win32\VC7\Debug\Nls\Include"
 				PreprocessorDefinitions="_DEBUG;XALAN_DOMSUPPORT_BUILD_DLL;WIN32;_WINDOWS;_USRDLL;XALAN_XSLT_BUILD_DLL;XALAN_PLATFORMSUPPORT_BUILD_DLL;XALAN_DOM_BUILD_DLL;XALAN_XALANEXTENSIONS_BUILD_DLL;XALAN_XALANSOURCETREE_BUILD_DLL;XALAN_TRANSFORMER_BUILD_DLL;XALAN_XERCESPARSERLIAISON_BUILD_DLL;XALAN_XMLSUPPORT_BUILD_DLL;XALAN_XPATH_BUILD_DLL;XALAN_XPATHCAPI_BUILD_DLL;XALAN_ALLINONE_BUILD_DLL;XALAN_EXSLT_BUILD_DLL;XALAN_ICUBRIDGE_BUILD_DLL;XALAN_HARNESS_BUILD_DLL;XALAN_USE_ICU;XALAN_ICU_MSG_LOADER"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
+				BufferSecurityCheck="FALSE"
+				ForceConformanceInForLoopScope="TRUE"
 				RuntimeTypeInfo="TRUE"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderFile=".\..\..\..\..\Build\Win32\VC7\Debug\AllInOne/AllInOneWithICU.pch"
@@ -93,6 +104,7 @@
 				ProgramDataBaseFileName=".\..\..\..\..\Build\Win32\VC7\Debug\AllInOne/"
 				WarningLevel="4"
 				SuppressStartupBanner="TRUE"
+				Detect64BitPortabilityProblems="TRUE"
 				DebugInformationFormat="3"
 				CompileAs="0"/>
 			<Tool
@@ -100,13 +112,13 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
-				AdditionalDependencies="xerces-c_2D.lib XalanMessages_1_8D.lib icuucd.lib icuind.lib"
-				OutputFile="..\..\..\..\Build\Win32\VC7\Debug/Xalan-C_1_8D.dll"
+				AdditionalDependencies="xerces-c_2D.lib XalanMessages_1_9D.lib icuucd.lib icuind.lib"
+				OutputFile="..\..\..\..\Build\Win32\VC7\Debug/Xalan-C_1_9D.dll"
 				LinkIncremental="2"
 				SuppressStartupBanner="TRUE"
 				AdditionalLibraryDirectories="$(ICUROOT)\lib;$(XERCESCROOT)\Build\Win32\VC7\Debug;$(XERCESCROOT)\lib;..\..\..\..\..\..\xml-xerces\c\Build\Win32\VC7\Debug,..\..\..\..\..\..\icu\lib,..\..\..\..\Build\Win32\VC7\Debug"
 				GenerateDebugInformation="TRUE"
-				ProgramDatabaseFile=".\..\..\..\..\Build\Win32\VC7\Debug/Xalan-C_1_8D.pdb"
+				ProgramDatabaseFile=".\..\..\..\..\Build\Win32\VC7\Debug/Xalan-C_1_9D.pdb"
 				ImportLibrary="..\..\..\..\Build\Win32\VC7\Debug/Xalan-C_1D.lib"/>
 			<Tool
 				Name="VCMIDLTool"
@@ -141,12 +153,19 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				AdditionalOptions="/Zm125 "
+				GlobalOptimizations="TRUE"
 				InlineFunctionExpansion="2"
+				EnableIntrinsicFunctions="TRUE"
+				ImproveFloatingPointConsistency="TRUE"
+				FavorSizeOrSpeed="1"
+				OmitFramePointers="TRUE"
 				AdditionalIncludeDirectories="$(ICUROOT)\include;$(XERCESCROOT)\include;$(XERCESCROOT)\src;..\..\..\..\..\..\xml-xerces\c\src,..\..\..\..\src\,..\..\..\..\..\..\icu\include,..\..\..\..\Build\Win32\VC7\Release.symbols\Nls\Include"
 				PreprocessorDefinitions="NDEBUG;NDEBUG_SYMBOLS;XALAN_DOMSUPPORT_BUILD_DLL;WIN32;_WINDOWS;_USRDLL;XALAN_XSLT_BUILD_DLL;XALAN_PLATFORMSUPPORT_BUILD_DLL;XALAN_DOM_BUILD_DLL;XALAN_XALANEXTENSIONS_BUILD_DLL;XALAN_XALANSOURCETREE_BUILD_DLL;XALAN_TRANSFORMER_BUILD_DLL;XALAN_XERCESPARSERLIAISON_BUILD_DLL;XALAN_XMLSUPPORT_BUILD_DLL;XALAN_XPATH_BUILD_DLL;XALAN_XPATHCAPI_BUILD_DLL;XALAN_ALLINONE_BUILD_DLL;XALAN_EXSLT_BUILD_DLL;XALAN_ICUBRIDGE_BUILD_DLL;XALAN_HARNESS_BUILD_DLL;XALAN_USE_ICU;XALAN_ICU_MSG_LOADER"
 				StringPooling="TRUE"
 				RuntimeLibrary="2"
+				BufferSecurityCheck="FALSE"
 				EnableFunctionLevelLinking="TRUE"
+				ForceConformanceInForLoopScope="TRUE"
 				RuntimeTypeInfo="TRUE"
 				PrecompiledHeaderFile=".\..\..\..\..\Build\Win32\VC7\Release.symbols\AllInOne/AllInOneWithICU.pch"
 				AssemblerListingLocation=".\..\..\..\..\Build\Win32\VC7\Release.symbols\AllInOne/"
@@ -154,6 +173,7 @@
 				ProgramDataBaseFileName=".\..\..\..\..\Build\Win32\VC7\Release.symbols\AllInOne/"
 				WarningLevel="4"
 				SuppressStartupBanner="TRUE"
+				Detect64BitPortabilityProblems="TRUE"
 				DebugInformationFormat="3"
 				CompileAs="0"/>
 			<Tool
@@ -161,13 +181,13 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
-				AdditionalDependencies="xerces-c_2.lib XalanMessages_1_8S.lib icuuc.lib icuin.lib"
-				OutputFile="..\..\..\..\Build\Win32\VC7\Release.symbols/Xalan-C_1_8S.dll"
+				AdditionalDependencies="xerces-c_2.lib XalanMessages_1_9S.lib icuuc.lib icuin.lib"
+				OutputFile="..\..\..\..\Build\Win32\VC7\Release.symbols/Xalan-C_1_9S.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
 				AdditionalLibraryDirectories="$(ICUROOT)\lib;$(XERCESCROOT)\Build\Win32\VC7\Release;$(XERCESCROOT)\lib;..\..\..\..\..\..\xml-xerces\c\Build\Win32\VC7\Release,..\..\..\..\..\..\icu\lib,..\..\..\..\Build\Win32\VC7\Release.symbols"
 				GenerateDebugInformation="TRUE"
-				ProgramDatabaseFile=".\..\..\..\..\Build\Win32\VC7\Release.symbols/Xalan-C_1_8S.pdb"
+				ProgramDatabaseFile=".\..\..\..\..\Build\Win32\VC7\Release.symbols/Xalan-C_1_9S.pdb"
 				ImportLibrary="..\..\..\..\Build\Win32\VC7\Release.symbols/Xalan-C_1S.lib"/>
 			<Tool
 				Name="VCMIDLTool"
@@ -209,7 +229,34 @@
 				RelativePath="..\..\..\..\src\xalanc\Include\XalanAutoPtr.hpp">
 			</File>
 			<File
+				RelativePath="..\..\..\..\src\xalanc\Include\XalanDeque.hpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\src\xalanc\Include\XalanList.hpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\src\xalanc\Include\XalanMap.hpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\src\xalanc\Include\XalanMemMgrAutoPtr.hpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\src\xalanc\Include\XalanMemMngArrayAllocate.hpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\src\xalanc\Include\XalanMemoryManagement.hpp">
+			</File>
+			<File
 				RelativePath="..\..\..\..\src\xalanc\Include\XalanObjectCache.hpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\src\xalanc\Include\XalanObjectStackCache.hpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\src\xalanc\Include\XalanSet.hpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\src\xalanc\Include\XalanVector.hpp">
 			</File>
 			<File
 				RelativePath="..\..\..\..\src\xalanc\Include\XalanVersion.hpp">
@@ -536,6 +583,12 @@
 			</File>
 			<File
 				RelativePath="..\..\..\..\src\xalanc\PlatformSupport\XalanDOMStringPool.hpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\src\xalanc\PlatformSupport\XalanDOMStringReusableAllocator.cpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\src\xalanc\PlatformSupport\XalanDOMStringReusableAllocator.hpp">
 			</File>
 			<File
 				RelativePath="..\..\..\..\src\xalanc\PlatformSupport\XalanDecimalFormatSymbols.cpp">
@@ -2528,6 +2581,12 @@
 			</File>
 			<File
 				RelativePath="..\..\..\..\src\xalanc\XercesParserLiaison\XercesWrapperNavigator.hpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\src\xalanc\XercesParserLiaison\XercesWrapperNavigatorAllocator.cpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\src\xalanc\XercesParserLiaison\XercesWrapperNavigatorAllocator.hpp">
 			</File>
 			<File
 				RelativePath="..\..\..\..\src\xalanc\XercesParserLiaison\XercesWrapperToXalanNodeMap.cpp">
