@@ -624,21 +624,14 @@ StylesheetExecutionContextDefault::pushParams(
 			XalanNode*					sourceNode,
 			const ElemTemplateElement*	targetTemplate)
 {
-	const ElemTemplateElement*	child =
-			xslCallTemplateElement.getFirstChildElem();
-
-	// This will ensure that the contents of m_paramsVector are
-	// cleared.
-	CollectionClearGuard<ParamsVectorType>	theGuard(m_paramsVector);
-
-	if (0 != child)
+	// We have a params vector that we reuse, but occasionally, a
+	// param will result in recursive execution, so we'll use a
+	// temporary when we detect such a situation.
+	if(m_paramsVector.size() == 0)
 	{
-		assert(m_paramsVector.size() == 0);
-
-		// This object will take care of popping, then
-		// pushing the context marker at the top of the
-		// stack, even if an exception is thrown.
-		PopPushContextMarker	thePopPush(*this);
+		// This will ensure that the contents of m_paramsVector are
+		// cleared.
+		CollectionClearGuard<ParamsVectorType>	theGuard(m_paramsVector);
 
 		// Make sure we have the default capacity for the params
 		// vector...
@@ -647,49 +640,22 @@ StylesheetExecutionContextDefault::pushParams(
 			 m_paramsVector.reserve(eDefaultParamsVectorSize);
 		}
 
-		while(0 != child)
-		{
-			if(Constants::ELEMNAME_WITHPARAM == child->getXSLToken())
-			{
-				const ElemWithParam* const	xslParamElement =
-#if defined(XALAN_OLD_STYLE_CASTS)
-						(ElemWithParam*)child;
-#else
-						static_cast<const ElemWithParam*>(child);
-#endif
+		getParams(xslCallTemplateElement, sourceNode, m_paramsVector);
 
-				const XPath* const	pxpath = xslParamElement->getSelectPattern();
-
-				XObjectPtr	theXObject;
-
-				if(0 != pxpath)
-				{
-					theXObject =
-						createVariable(
-							&xslCallTemplateElement,
-							*pxpath,
-							sourceNode,
-							*xslParamElement);
-				}
-				else
-				{
-					theXObject =
-						createVariable(
-							&xslCallTemplateElement,
-							*xslParamElement,
-							sourceNode);
-				}
-
-				m_paramsVector.push_back(ParamsVectorType::value_type(&xslParamElement->getQName(), theXObject));
-			}
-
-			child = child->getNextSiblingElem();
-		}
+		m_variablesStack.pushParams(
+					m_paramsVector,
+					targetTemplate);
 	}
+	else
+	{
+		ParamsVectorType	tempParams;
 
-	m_variablesStack.pushParams(
-				m_paramsVector,
-				targetTemplate);
+		getParams(xslCallTemplateElement, sourceNode, tempParams);
+
+		m_variablesStack.pushParams(
+					tempParams,
+					targetTemplate);
+	}
 }
 
 
@@ -1798,6 +1764,67 @@ StylesheetExecutionContextDefault::message(
 			const XalanNode*	styleNode) const
 {
 	message(TranscodeFromLocalCodePage(msg), sourceNode, styleNode);
+}
+
+
+
+void
+StylesheetExecutionContextDefault::getParams(
+			const ElemTemplateElement&	xslCallTemplateElement,
+			XalanNode*					sourceNode,
+			ParamsVectorType&			params)
+{
+	assert(params.size() == 0);
+
+	const ElemTemplateElement*	child =
+			xslCallTemplateElement.getFirstChildElem();
+
+	if (0 != child)
+	{
+		// This object will take care of popping, then
+		// pushing the context marker at the top of the
+		// stack, even if an exception is thrown.
+		PopPushContextMarker	thePopPush(*this);
+
+		while(0 != child)
+		{
+			if(Constants::ELEMNAME_WITHPARAM == child->getXSLToken())
+			{
+				const ElemWithParam* const	xslParamElement =
+#if defined(XALAN_OLD_STYLE_CASTS)
+						(ElemWithParam*)child;
+#else
+						static_cast<const ElemWithParam*>(child);
+#endif
+
+				const XPath* const	pxpath = xslParamElement->getSelectPattern();
+
+				XObjectPtr	theXObject;
+
+				if(0 != pxpath)
+				{
+					theXObject =
+						createVariable(
+							&xslCallTemplateElement,
+							*pxpath,
+							sourceNode,
+							*xslParamElement);
+				}
+				else
+				{
+					theXObject =
+						createVariable(
+							&xslCallTemplateElement,
+							*xslParamElement,
+							sourceNode);
+				}
+
+				params.push_back(ParamsVectorType::value_type(&xslParamElement->getQName(), theXObject));
+			}
+
+			child = child->getNextSiblingElem();
+		}
+	}
 }
 
 

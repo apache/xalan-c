@@ -836,6 +836,20 @@ public:
 private:
 
 	/**
+	 * Given a context, create the params for a template
+	 * call.
+	 *
+	 * @param xslCallTemplateElement "call-template" element
+	 * @param sourceNode             source node
+	 * @param params The params
+	 */
+	void
+	getParams(
+			const ElemTemplateElement&	xslCallTemplateElement,
+			XalanNode*					sourceNode,
+			ParamsVectorType&			params);
+
+	/**
 	 * Get a XalanSourceTreeDocument, primarily for creating result 
 	 * tree fragments.
 	 */
