@@ -515,7 +515,6 @@ ALL_HEADERS_DIRS = \
 	DOMSupport \
 	Include \
 	PlatformSupport \
-	TestXPath \
 	XMLSupport \
 	XPath \
 	XSLT \
