@@ -354,8 +354,8 @@ endif
 
   endif
    
-  XERCES_LIB= -L$(XERCESCROOT)/lib -lxerces-c23
-  ICU_LIB= -L$(ICUROOT)/lib -licuuc24 -L$(ICUI18NROOT)/lib -licui18n24
+  XERCES_LIB= -L$(XERCESCROOT)/lib -lxerces-c24
+  ICU_LIB= -L$(ICUROOT)/lib -licuuc26 -L$(ICUI18NROOT)/lib -licui18n26
 
   LIB = $(LIB_NAME)$(LIB_MAJOR_VER).$(LIB_MINOR_VER)$(SHLIBSUFFIX)
   SO_NAME = $(LIB_NAME)$(LIB_MAJOR_VER)$(SHLIBSUFFIX)
@@ -390,8 +390,8 @@ endif
   MAKE_SHARED = ${CXX} $(CXXFLAGS) -Wl,compat=pm3 -D${PLATFORM} -Wl,dll
   LINK = $(CXX) $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS) -Wl,compat=pm3
 
-  XERCES_LIB=$(XERCESCROOT)/lib/libxerces-c2_2_0.x
-  ICU_LIB=$(XERCESCROOT)/lib/libicuuc24.0.x $(XERCESCROOT)/lib/libicui18n24.0.x
+  XERCES_LIB=$(XERCESCROOT)/lib/libxerces-c2_4_0.x
+  ICU_LIB=$(XERCESCROOT)/lib/libicuuc26.1.x $(XERCESCROOT)/lib/libicui18n26.1.x
   
   LIB=$(LIB_NAME).$(VER)$(OS390SIDEDECK) 
   
@@ -402,7 +402,7 @@ endif
 ifeq (${OS390BATCH},1)
     BATCH_PROJECT_NAME = IXMLC15
     BATCH_TARGET = "//'${LOADMOD}($/{BATCH_PROJECT_NAME})'"
-    ALLLIBS = "//'${LOADEXP}(IXM4C52X)'" "//'${LOADEXP}(IXM24UCX)'" "//'${LOADEXP}(IXMI24IN)'"
+    ALLLIBS = "//'${LOADEXP}(IXM4C54X)'" "//'${LOADEXP}(IXM26UCX)'" "//'${LOADEXP}(IXMI26IN)'"
     LIBRARY_LINK_NAME=  "//'${LOADEXP}(${BATCH_PROJECT_NAME})'" 
 endif  ## OS390BATCH
 
