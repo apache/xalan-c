@@ -87,7 +87,7 @@ XalanDOMStringCache::~XalanDOMStringCache()
 XalanDOMString&
 XalanDOMStringCache::get()
 {
-	if (m_availableList.size() == 0)
+	if (m_availableList.empty() == true)
 	{
 		m_busyList.push_back(new XalanDOMString());
 	}
@@ -168,7 +168,7 @@ XalanDOMStringCache::reset()
 	const StringListType::size_type		theSize =
 		m_availableList.size();
 
-	while(m_busyList.size() > 0)
+	while(m_busyList.empty() == false)
 	{
 		assert(m_busyList.back() != 0);
 

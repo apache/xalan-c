@@ -164,7 +164,7 @@ public:
 	{
 		// We'll always return the back of the free list, since
 		// that's the cheapest thing.
-		if (m_availableList.size() == 0)
+		if (m_availableList.empty() == true)
 		{
 			ObjectType* const	theNewObject = m_createFunctor();
 
@@ -218,7 +218,7 @@ public:
 	void
 	reset()
 	{
-		while (m_busyList.size() != 0)
+		while (m_busyList.empty() == false)
 		{
 			ObjectType* const	theInstance = m_busyList.back();
 
@@ -307,7 +307,7 @@ public:
 	{
 		// We'll always return the back of the free list, since
 		// that's the cheapest thing.
-		if (m_availableList.size() == 0)
+		if (m_availableList.empty() == true)
 		{
 			return m_createFunctor();
 		}

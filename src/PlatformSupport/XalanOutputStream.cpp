@@ -321,7 +321,7 @@ XalanOutputStream::canTranscodeTo(unsigned int		theChar) const
 void
 XalanOutputStream::flushBuffer()
 {
-	if (m_buffer.size() > 0)
+	if (m_buffer.empty() == false)
 	{
 		doWrite(&*m_buffer.begin(), m_buffer.size());
 

@@ -216,7 +216,7 @@ public:
 	commitAllocation(ObjectType*	theObject)
 	{
 		// Note that this-> is required by template lookup rules.
-		assert(this->m_blocks.size() != 0 && m_lastBlockReferenced != 0 && m_lastBlockReferenced->ownsBlock(theObject) == true);
+		assert(this->m_blocks.empty() == false && m_lastBlockReferenced != 0 && m_lastBlockReferenced->ownsBlock(theObject) == true);
 
 		m_lastBlockReferenced->commitAllocation(theObject);
 		assert(m_lastBlockReferenced->ownsObject(theObject) == true);

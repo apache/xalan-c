@@ -352,7 +352,7 @@ public:
 		// for convenience, we will return a pointer to
 		// a default empty string so that c_str() never
 		// returns a null pointer...
-		return m_data.size() == 0 ? &s_empty : &m_data[0];
+		return m_data.empty() == true ? &s_empty : &m_data[0];
 	}
 
 	const XalanDOMChar*
@@ -775,8 +775,8 @@ protected:
 	invariants() const
 	{
 #if !defined(NDEBUG)
-		assert((m_data.size() == 0 && m_size == 0) || m_size == m_data.size() - 1);
-		assert(m_data.size() == 0 || m_data.back() == 0);
+		assert((m_data.empty() == true && m_size == 0) || m_size == m_data.size() - 1);
+		assert(m_data.empty() == true || m_data.back() == 0);
 #endif
 	}
 
@@ -790,7 +790,7 @@ protected:
 	{
 		invariants();
 
-		return m_data.size() == 0 ? m_data.end() : m_data.end() - 1;
+		return m_data.empty() == true ? m_data.end() : m_data.end() - 1;
 	}
 
 	const_iterator
@@ -798,7 +798,7 @@ protected:
 	{
 		invariants();
 
-		return m_data.size() == 0 ? m_data.end() : m_data.end() - 1;
+		return m_data.empty() == true ? m_data.end() : m_data.end() - 1;
 	}
 
 	iterator

@@ -371,7 +371,7 @@ XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(void)
 OutputString(XalanOutputStream&		theStream,
 			 const CharVectorType&	theString)
 {
-	if (theString.size() > 0)
+	if (theString.empty() == false)
 	{
 		theStream.write(c_str(theString));
 	}
@@ -388,7 +388,7 @@ OutputString(
 #endif
 			const CharVectorType&	theString)
 {
-	if (theString.size() > 0)
+	if (theString.empty() == false)
 	{
 		theStream << c_str(theString);
 	}

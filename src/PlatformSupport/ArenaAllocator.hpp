@@ -162,12 +162,12 @@ public:
 	virtual ObjectType*
 	allocateBlock()
 	{
-		if (m_blocks.size() == 0 ||
+		if (m_blocks.empty() == true ||
 			m_blocks.back()->blockAvailable() == false)
 		{
 			m_blocks.push_back(new ArenaBlockType(m_blockSize));
 		}
-		assert(m_blocks.size() > 0 && m_blocks.back() != 0 && m_blocks.back()->blockAvailable() == true);
+		assert(m_blocks.empty() == false && m_blocks.back() != 0 && m_blocks.back()->blockAvailable() == true);
 
 		return m_blocks.back()->allocateBlock();
 	}
@@ -181,7 +181,7 @@ public:
 	virtual void
 	commitAllocation(ObjectType*	theObject)
 	{
-		assert(m_blocks.size() != 0 && m_blocks.back()->ownsBlock(theObject) == true);
+		assert(m_blocks.empty() == false && m_blocks.back()->ownsBlock(theObject) == true);
 
 		m_blocks.back()->commitAllocation(theObject);
 		assert(m_blocks.back()->ownsObject(theObject) == true);

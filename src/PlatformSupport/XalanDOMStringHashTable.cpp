@@ -250,7 +250,7 @@ XalanDOMStringHashTable::insert(const XalanDOMString&	theString)
 	BucketType&	theBucket = m_buckets[theBucketIndex];
 
 #if !defined(NDEBUG)
-	if (theBucket.size() > 0)
+	if (theBucket.empty() == false)
 	{
 		++m_collisions;
 	}
@@ -276,7 +276,7 @@ XalanDOMStringHashTable::insert(
 	BucketType&		theBucket = m_buckets[theBucketIndex];
 
 #if !defined(NDEBUG)
-	if (theBucket.size() > 0)
+	if (theBucket.empty() == false)
 	{
 		++m_collisions;
 	}

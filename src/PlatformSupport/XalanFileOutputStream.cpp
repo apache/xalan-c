@@ -102,7 +102,7 @@ openFile(const XalanDOMString&	theFileName)
 	{
 		const CharVectorType	theResult(TranscodeToLocalCodePage(theFileName));
 
-		if (theResult.size() == 0)
+		if (theResult.empty() == true)
 		{
 			return INVALID_HANDLE_VALUE;
 		}

@@ -330,7 +330,7 @@ XalanDOMString::append(
 
 	if (theLength != 0)
 	{
-		if (m_data.size() == 0)
+		if (m_data.empty() == true)
 		{
 			m_data.reserve(theLength + 1);
 
@@ -425,7 +425,7 @@ XalanDOMString::append(
 {
 	invariants();
 
-	if (m_data.size() == 0)
+	if (m_data.empty() == true)
 	{
 		m_data.insert(m_data.end(), theCount + 1, theChar);
 

@@ -537,7 +537,7 @@ AttributesImpl::getNewEntry(
 	assert(uri != 0);
 	assert(localName != 0);
 
-	if (m_cacheVector.size() == 0)
+	if (m_cacheVector.empty() == true)
 	{
 		return new AttributeVectorEntryExtended(name, value, type, uri, localName);
 	}

@@ -460,7 +460,7 @@ AttributeListImpl::getNewEntry(
 			const XMLCh*	type,
 			const XMLCh*	value)
 {
-	if (m_cacheVector.size() == 0)
+	if (m_cacheVector.empty() == true)
 	{
 		return new AttributeVectorEntry(name, value, type);
 	}

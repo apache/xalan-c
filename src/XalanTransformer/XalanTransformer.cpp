@@ -254,7 +254,7 @@ addTraceListeners(
 				  const XalanTransformer::TraceListenerVectorType&	theTraceListeners,
 				  XSLTEngineImpl&									theEngine)
 {
-	if (theTraceListeners.size() != 0)
+	if (theTraceListeners.empty() == false)
 	{
 		typedef XalanTransformer::TraceListenerVectorType	TraceListenerVectorType;
 

@@ -176,7 +176,7 @@ c_wstr(const XalanDOMString&	theString)
 inline const char*
 c_str(const CharVectorType&		theString)
 {
-	if (theString.size() == 0)
+	if (theString.empty() == true)
 	{
 		return 0;
 	}
@@ -254,7 +254,7 @@ toCharArray(const XalanDOMChar*		theString)
 inline const char*
 toCharArray(const CharVectorType&	theString)
 {
-	return theString.size() == 0 ? 0 : &theString[0];
+	return theString.empty() == true ? 0 : &theString[0];
 }
 
 
