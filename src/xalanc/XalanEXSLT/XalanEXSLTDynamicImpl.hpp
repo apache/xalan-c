@@ -84,9 +84,6 @@ class XALAN_EXSLT_EXPORT XalanEXSLTFunctionEvaluate : public FunctionEvaluate
 public:
 
 	typedef FunctionEvaluate	ParentType;
-#if !defined(XALAN_NO_USING_DECLARATION)
-	using ParentType::execute;
-#endif
 
 	XalanEXSLTFunctionEvaluate() :
 		FunctionEvaluate()
