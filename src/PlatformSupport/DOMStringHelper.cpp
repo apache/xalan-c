@@ -127,29 +127,6 @@ const size_t	MAX_FLOAT_CHARACTERS = 100;
 
 
 
-#if !defined(XALAN_LSTRSUPPORT)
-
-
-
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(const XalanDOMString)
-initializeAndTranscode(const char*	theString)
-{
-	static bool		fInitialized = false;
-
-	if (fInitialized == false)
-	{
-		XMLPlatformUtils::Initialize();
-
-		fInitialized = true;
-	}
-
-	return XalanDOMString(theString);
-}
-
-#endif
-
-
-
 static XalanDOMString	theNaNString;
 
 static XalanDOMString	theNegativeInfinityString;
