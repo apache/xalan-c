@@ -94,7 +94,11 @@ CreateXalanTransformer()
 XALAN_TRANSFORMER_EXPORT_FUNCTION(void)
 DeleteXalanTransformer(XalanHandle theXalanHandle)
 {
-	delete	theXalanHandle;
+#if defined(XALAN_OLD_STYLE_CASTS)
+	delete	(XalanTransformer*)theXalanHandle;
+#else
+	delete 	static_cast<XalanTransformer*>(theXalanHandle);
+#endif	
 }
 
 
