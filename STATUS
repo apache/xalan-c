@@ -1,10 +1,10 @@
 <s3 title="Things still to be done">
   <p>We still need to do the following:</p>
     <ul>
-      <li><p>Work on number formatting</p></li>
-      <li><p>Fix up our implementation of XPath node-set objects</p></li>
-      <li><p>Support for Linux builds</p></li>
-      <li><p>Verify conformance to <resource-ref idref="xsl-draft-used"/></p></li>
-      <li><p>Work on stability and performance</p></li>
+      <li>Work on number formatting<br/><br/></li>
+      <li>Fix up our implementation of XPath node-set objects<br/><br/></li>
+      <li>Support for Linux builds<br/><br/></li>
+      <li>Verify conformance to <resource-ref idref="xsl-draft-used"/><br/><br/></li>
+      <li>Work on stability and performance<br/><br/></li>
     </ul>
 </s3>    

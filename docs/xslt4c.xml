@@ -1,8 +1,8 @@
 <?xml version="1.0" standalone="no"?>
-<!DOCTYPE s1 SYSTEM "../../docs/document.dtd"[
-<!ENTITY done-c SYSTEM "../DONE-C">
-<!ENTITY status-c SYSTEM "../STATUS-C">
-<!ENTITY bugs-c SYSTEM "../BUGS-C">]>
+<!DOCTYPE s1 SYSTEM "sbk:/style/dtd/document.dtd"[
+<!ENTITY done-c SYSTEM "sbk:/sources/xalan/c/DONE">
+<!ENTITY status-c SYSTEM "sbk:/sources/xalan/c/STATUS">
+<!ENTITY bugs-c SYSTEM "sbk:/sources/xalan/c/BUGS">]>
 
 <!--
  * The Apache Software License, Version 1.1
@@ -62,12 +62,14 @@
  -->
  
 <s1 title="Xalan C++ XSL Transformer">
+
   <s2 title="Xalan C++">
      <p>Like Xalan-Java, Xalan-C++ implements <resource-ref idref="xsl-draft-used"/>. Version 0.19.0 is our first release, 
      including a build for Win32. We plan to add a build for Linux in the near future, other builds to follow.</p>
      <p>The build includes 8 DLLs and an executable (TestXSLT.exe, a command-line utility). To use this utility 
      to perform transformations, place these files in a directory with the Xerces dynamic link library, xerces-c_1_0.dll.</p>
-  </s2 title="Command-line utility">  
+  </s2>
+  <s2 title="Command-line utility">  
     <p>&xslt4c; implements a subset of the same interface provided by &xslt4j;. This version accepts the following switches
     and arguments:</p> 
       <source>
@@ -97,7 +99,7 @@
   <s2 title="API">
     <p>The API documentation, generated using Doc++ from comments in the header files, is still in very preliminary form. For example,
     it lists public classes, class members, and functions, but does not yet identify which of these are exported. 
-    With this in mind, see <link idref="c-apidocs/aindex.html">Xalan C++ API: Table of Contents</link>.</p>
+    With this in mind, see <jump href="c-apidocs/aindex.html">Xalan C++ API: Table of Contents</jump>.</p>
   </s2>
   <s2 title="&xslt4c; Features">
 	    <ul> 
@@ -106,14 +108,15 @@
     	  <li>Can output to SAX or DOM</li>
 	    </ul> 
 	  </s2>
-    	 <s2 title="Version Notes">
+    <s2 title="Version Notes">
      &done-c;
      &status-c;
      &bugs-c;
    </s2>
  
 	 <s2 title="Contact Info and Bug Reports"> 
-          <p>Contact information for &xslt4c;: <human-resource-ref idref="sboag"/></p>
+          <p>Contact information for &xslt4c;: <human-resource-ref idref="dnbertoni"/>, 
+          <human-resource-ref idref="pweir"/>.</p>
 	 </s2> 
  
 
