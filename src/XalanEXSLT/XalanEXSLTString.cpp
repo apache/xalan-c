@@ -59,7 +59,7 @@
 
 
 
-//#include <PlatformSupport/DoubleSupport.hpp>
+#include <PlatformSupport/DoubleSupport.hpp>
 #include <PlatformSupport/XalanUnicode.hpp>
 
 
@@ -263,7 +263,7 @@ XalanEXSLTFunctionPadding::execute(
 
 	assert(args[0].null() == false && (theSize == 1 || args[1].null() == false));
 
-	const double						theLength = args[0]->num();
+	const double						theLength = DoubleSupport::round(args[0]->num());
 	const XalanDOMString&				thePaddingString = theSize == 2 ? args[1]->str() : m_space;
 	const XalanDOMString::size_type		thePaddingStringLength = thePaddingString.length();
 
@@ -283,7 +283,7 @@ XalanEXSLTFunctionPadding::execute(
 		}
 		else
 		{
-			double	theRemainingLength = theLength;
+			XalanDOMString::size_type	theRemainingLength = XalanDOMString::size_type(theLength);
 
 			for(;;)
 			{
