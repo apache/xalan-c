@@ -105,6 +105,11 @@ static unsigned long xalan_output_handler(const void *data, unsigned long length
 
 	char* d = (char *)data;
 
+	if (r->status != HTTP_OK)
+	{
+		r->status = HTTP_OK;
+	}
+
 	return ap_rwrite(d, length, r);
 }
 
