@@ -193,10 +193,10 @@ DOMServices::initialize()
 void
 DOMServices::terminate()
 {
-	clear(::s_XMLString);
-	clear(::s_XMLNamespaceURI);
-	clear(::s_XMLNamespace);
-	clear(::s_XMLNamespaceWithSeparator);
+	releaseMemory(::s_XMLString);
+	releaseMemory(::s_XMLNamespaceURI);
+	releaseMemory(::s_XMLNamespace);
+	releaseMemory(::s_XMLNamespaceWithSeparator);
 
 	::s_XMLStringLength = 0;
 	::s_XMLNamespaceURILength = 0;
