@@ -2604,6 +2604,7 @@ XPath::findPreceedingSiblings(
 	const int	argLen =
 		currentExpression.getOpCodeMapValue(opPos + XPathExpression::s_opCodeMapLengthIndex + 1) - 3;
 
+#if 1
 	XalanNode*	pos = context->getPreviousSibling();
 
 	if (pos != 0)
@@ -2631,6 +2632,47 @@ XPath::findPreceedingSiblings(
 			pos = pos->getPreviousSibling();
 		} while(0 != pos);
 	}
+#else
+    // This is some experimental code which avoids using getPreviousSibling(), with the idea that we
+    // could reduce our in-memory representation size by not keeping the previous sibling node.
+	XalanNode*	pos = context->getParentNode();
+
+	if (pos != 0)
+	{
+		pos = pos->getFirstChild();
+
+		if (pos != context)
+		{
+			opPos += 3;
+
+			const NodeTester	theTester(
+							*this,
+							executionContext,
+							opPos,
+							argLen,
+							stepType);
+
+			do
+			{
+				const eMatchScore	score = 
+					theTester(*pos, pos->getNodeType());
+					assert(score == nodeTest(executionContext, pos, pos->getNodeType(), opPos, argLen, stepType));
+
+				if(eMatchScoreNone != score)
+				{
+					subQueryResults.addNode(pos);
+				}
+
+				pos = pos->getNextSibling();
+			} while(pos != context);
+		}
+
+		// Now, reverse the order of the nodes, since
+		// preceeding-sibling is a reverse axis, and we searched
+		// the document from the root to this node.
+		subQueryResults.reverse();
+	}
+#endif
 
 	subQueryResults.setReverseDocumentOrder();
 
