@@ -141,6 +141,7 @@ private:
 	XalanDefaultParsedSourceHelper&
 	operator=(const XalanDefaultParsedSourceHelper&);
 
+
 	// Data members...
 	XalanDefaultParsedSourceDOMSupport	m_domSupport;
 
