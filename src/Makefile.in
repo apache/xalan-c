@@ -467,7 +467,7 @@ samples : Samples
 
 tests : ThreadTest
 
-Samples: lib CompileStylesheet DocumentBuilder ExternalFunction ParsedSourceWrapper SimpleTransform SerializeNodeSet SimpleXPathAPI SimpleXPathCAPI StreamTransform TraceListen UseStylesheetParam XalanTransform XalanTransformerCallback XPathWrapper
+Samples: lib CompileStylesheet DocumentBuilder ExternalFunction ParsedSourceWrappers SimpleTransform SerializeNodeSet SimpleXPathAPI SimpleXPathCAPI StreamTransform TraceListen UseStylesheetParam XalanTransform XalanTransformerCallback XPathWrapper
 
 ApacheModuleXSLT: lib ${LIB_DIR}/mod_xslt$(SHLIBSUFFIX) 
 
@@ -529,18 +529,18 @@ ${ALL_OBJECTS_DIR}/%.o:$(SAMPLES_DIR)/ExternalFunction/%.cpp
 	$(CC1) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $<
 endif
 
-ParsedSourceWrapper: lib $(BINTARGETDIR)/ParsedSourceWrapper
+ParsedSourceWrappers: lib $(BINTARGETDIR)/ParsedSourceWrappers
 
-$(BINTARGETDIR)/ParsedSourceWrapper: ${ALL_OBJECTS_DIR}/ParsedSourceWrapper.o
+$(BINTARGETDIR)/ParsedSourceWrappers: ${ALL_OBJECTS_DIR}/ParsedSourceWrappers.o
 ifeq ($(PLATFORM), OS390)
 	${LINK} $(XSL_BUILD_OPTIONS) ${PLATFORM_LIB_LINK_OPTIONS} ${LIBRARY_SEARCH_PATHS} \
 	${EXTRA_LINK_OPTIONS} $(LIB_DIR)/lib$(PROJECT_NAME)$(VER).x $(ALLLIBS) $(CXXFLAGS) $^ -o $@	
-${ALL_OBJECTS_DIR}/%.o:$(SAMPLES_DIR)/ParsedSourceWrapper/%.cpp
+${ALL_OBJECTS_DIR}/%.o:$(SAMPLES_DIR)/ParsedSourceWrappers/%.cpp
 	$(CC3) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $<
 else
 	${LINK} $(XSL_BUILD_OPTIONS) ${PLATFORM_LIB_LINK_OPTIONS} ${LIBRARY_SEARCH_PATHS} \
 	${EXTRA_LINK_OPTIONS} -L$(LIB_DIR) -l$(PROJECT_NAME)$(VER) $(ALLLIBS) $(CXXFLAGS) $^ -o $@	
-${ALL_OBJECTS_DIR}/%.o:$(SAMPLES_DIR)/ParsedSourceWrapper/%.cpp
+${ALL_OBJECTS_DIR}/%.o:$(SAMPLES_DIR)/ParsedSourceWrappers/%.cpp
 	$(CC1) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $<
 endif
 
