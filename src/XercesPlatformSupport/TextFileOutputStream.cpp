@@ -221,6 +221,7 @@ FormatMessageLocal(
 
 	theResult += theFormatter.str();
 
+	delete theFormatter.str();
 	return theResult;
 }
 

@@ -729,6 +729,7 @@ DoubleToDOMString(double	theDouble)
 			theResult.erase(++thePosition);
 		}
 
+		delete(theFormatter.str());
 		return theResult.c_str();
 	}
 }
@@ -741,8 +742,9 @@ LongToHexDOMString(long		theLong)
 	ostrstream	theFormatter;
 
 	theFormatter << hex << theLong << '\0';
-
-	return theFormatter.str();
+	DOMString theString = theFormatter.str();
+	delete theFormatter.str();
+	return theString;
 }
 
 
@@ -753,8 +755,9 @@ LongToDOMString(long	theLong)
 	ostrstream	theFormatter;
 
 	theFormatter << theLong << '\0';
-
-	return theFormatter.str();
+	DOMString theString = theFormatter.str();
+	delete theFormatter.str();
+	return theString;
 }
 
 
@@ -765,8 +768,9 @@ UnsignedLongToDOMString(unsigned long	theUnsignedLong)
 	ostrstream	theFormatter;
 
 	theFormatter << theUnsignedLong << '\0';
-
-	return theFormatter.str();
+	DOMString theString = theFormatter.str();
+	delete theFormatter.str();
+	return theString;
 }
 
 

@@ -134,6 +134,7 @@ using std::ostrstream;
 
 	theResult += theFormatter.str();
 
+	delete theFormatter.str();
 	return theResult;
 }
 

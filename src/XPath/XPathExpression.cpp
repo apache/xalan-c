@@ -113,7 +113,9 @@ XPathExpression::InvalidOpCodeException::FormatErrorMessage(int		theOpCode)
 				 << " was detected."
 				 << '\0';
 
-	return theFormatter.str();
+	std::string theString = theFormatter.str();
+	delete theFormatter.str();
+	return theString;
 }
 
 
@@ -156,7 +158,9 @@ XPathExpression::InvalidArgumentCountException::FormatErrorMessage(
 				 << " arguments(s) were supplied."
 				 << '\0';
 
-	return theFormatter.str();
+	std::string theString = theFormatter.str();
+	delete theFormatter.str();
+	return theString;
 }
 
 
@@ -194,7 +198,9 @@ XPathExpression::InvalidArgumentException::FormatErrorMessage(
 				 << "."
 				 << '\0';
 
-	return theFormatter.str();
+	std::string theString = theFormatter.str();
+	delete theFormatter.str();
+	return theString;
 }
 
 
