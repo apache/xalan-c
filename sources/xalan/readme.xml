@@ -70,7 +70,7 @@
  <anchor name="status"/>
  <s2 title="Status">
    <ul>
-    <li><link anchor="done">Changes since &xslt4c; version 0.30.0</link></li>    
+    <li><link anchor="done">Changes since &xslt4c; version 0.40.0</link></li>    
     <li><link anchor="bugs">Bug reporting</link></li>    
     <li><link anchor="xml4j">Version of &xml4c; to use</link></li>
     <li><link anchor="to-do">To-do tasks for future &xslt4c; releases</link></li>
@@ -152,7 +152,11 @@
        (This step is not required for Linux because The Linux GNU compiler includes the STL (Standard Template
         Library.)<br/><br/></li>
       <li>(Optional) If you are including the ICUBridge, install the ICU (see <link idref="usagepatterns"
-      anchor="icu">Using the ICU</link>) and define XALAN_USE_ICU.<br/><br/></li>
+      anchor="icu">Using the ICU</link>) and use the shell to define XALAN_USE_ICU.<br/><br/>
+      If you are using Bourne Shell, K Shell, or Bash:
+      <br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<code>export XALAN_USE_ICU "1"</code><br/><br/>
+      If you are using C Shell:
+      <br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<code>setenv XALAN_USE_ICU="1"</code><br/><br/></li>
       <li>Change directory to xml-xalan/c/src in the &xslt4c; distribution.<br/><br/></li>      
       <li>Use the chmod +x command to set the executable flags for conf* and
        runConfigure.<br/><br/>

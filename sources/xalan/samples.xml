@@ -161,14 +161,18 @@ theProcessor.addTraceListener(&amp;theTraceListener);
   <p>See also: <link idref="usagepatterns" anchor="compiled">Compiling stylesheets</link>.</p>  
   </s2><anchor name="xpathwrapper"/>
   <s2 title="XPathWrapper">
-    <p>This sample uses TestDriver, an executable, and two classes: XPathWrapper and XPathWrapperImp. </p>
-    <p>What it does: TestDriver passes XPathWrapper an XML file name, a context node location path, and an XPath
-    expression. XPathWrapper in turn passes these arguments to the XPathWrapperImpl evaluate() method, which executes
-    the XPath expression from specified context node in the XML document and returns the nodes it finds (if any).</p>
+    <p>This sample uses an executable (TestDriver in Windows, XPathWrapper in Linux and AIX), and two classes: XPathWrapper and
+    XPathWrapperImp.</p>
+    <p>What it does: The executable passes XPathWrapper an XML file name, a context node location path, and an XPath
+     expression. XPathWrapper in turn passes these arguments to the XPathWrapperImpl evaluate() method, which executes the
+     XPath expression from specified context node in the XML document and returns the nodes it finds (if any).</p>
      <note>You can use this sample as an aid when you want to find out what a given XPath expression returns from a
      given context node in an XML file.</note>
     <p>Run this sample from the XPathWrapper subdirectory with</p> 
-    <p><code>TestDriver <ref>XMLFile ContextNode XPathExpression</ref></code></p>
+    <p>Windows:<br/>
+    &nbsp;&nbsp;<code>TestDriver <ref>XMLFile ContextNode XPathExpression</ref></code></p>
+    <p>Linux or AIX:<br/>
+    &nbsp;&nbsp;<code>XPathWrapper <ref>XMLFile ContextNode XPathExpression</ref></code></p>
     <p>where <ref>XMLFile</ref> is an XML source file, <ref>ContextNode</ref> is the location path to the context
      node, and <ref>XPathExpression</ref> is an XPath expression to apply to that context node. The XPathWrapper
      subdirectory contains an XML file named xml.foo (part of it appears below).</p>
@@ -180,9 +184,15 @@ theProcessor.addTraceListener(&amp;theTraceListener);
   &lt;name first="Paul" last="Dick"/&gt;
 &lt;/doc&gt;</source>
     <p>You can try command lines like</p>
-    <p><code>TestDriver foo.xml /doc name/@last</code></p>
+    <p>Windows:<br/>
+    &nbsp;&nbsp;<code>TestDriver foo.xml /doc name/@last</code></p>
+    <p>Linux or AIX:
+    &nbsp;&nbsp;<code>XPathWrapper foo.xml /doc name/@last</code></p>
     <p>and</p>
-    <p><code>TestDriver foo.xml //name[position()="4"]./@first</code></p>
+    <p>Windows:<br/>
+    &nbsp;&nbsp;<code>TestDriver foo.xml / '//name[position()="4"]/@first'</code></p>
+    <p>Linux or AIX:<br/>
+    &nbsp;&nbsp;<code>XPathWrapper foo.xml / '//name[position()="4"]/@first'</code></p>
      <note>If an XPathWrapper argument includes characters (such as *) that the shell intercepts, enclose the argument 
      in double quotes.</note>   
     <p>See also: <link idref="usagepatterns" anchor="xpath">Working with XPath expressions</link>.</p> 
