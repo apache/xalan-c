@@ -127,9 +127,6 @@ public:
 #endif
 	clone() const;
 
-	static double
-	getRoundedValue(double	theValue);
-
 private:
 
 	virtual const XalanDOMString

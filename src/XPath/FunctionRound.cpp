@@ -98,8 +98,7 @@ FunctionRound::execute(
 {
 	assert(arg1.null() == false);	
 
-	return executionContext.getXObjectFactory().createNumber(
-		getRoundedValue(arg1->num()));
+	return executionContext.getXObjectFactory().createNumber(DoubleSupport::round(arg1->num()));
 }
 
 
@@ -159,56 +158,8 @@ FunctionRound::clone() const
 
 
 
-double
-FunctionRound::getRoundedValue(double	theValue)
-{
-	if (DoubleSupport::isNaN(theValue))
-	{
-		return DoubleSupport::getNaN();
-	}
-	else if (DoubleSupport::isPositiveInfinity(theValue))
-	{
-		return DoubleSupport::getPositiveInfinity();
-	}
-	if (DoubleSupport::isNegativeInfinity(theValue))
-	{
-		return DoubleSupport::getNegativeInfinity();
-	}
-	else if (theValue == 0)
-	{
-		return 0.0;
-	}
-	else if (theValue > 0)
-	{
-		return long(theValue + 0.5);
-	}
-	else
-	{
-		// Negative numbers are a special case.  Any time we
-		// have -0.5 as the fractional part, we have to
-		// round up (toward 0), rather than down.
-		double			intPart = 0;
-
-		const double	fracPart = modf(theValue, &intPart);
-
-		if (fracPart == -0.5)
-		{
-			// special case -- we have have to round toward 0...
-			return long(theValue + 0.5);
-		}
-		else
-		{
-			return long(theValue - 0.5);
-		}
-	}
-}
-
-
-
 const XalanDOMString
 FunctionRound::getError() const
 {
-	return XALAN_STATIC_UCODE_STRING(
-		"The round() function takes one argument!");
+	return XALAN_STATIC_UCODE_STRING("The round() function takes one argument!");
 }
-

@@ -58,6 +58,10 @@
 
 
 
+#include <PlatformSupport/DoubleSupport.hpp>
+
+
+
 #include "XObjectFactory.hpp"
 
 
@@ -89,7 +93,7 @@ getStartIndex(double	theSecondArgValue)
 	}
 	else
 	{
-		return unsigned(FunctionRound::getRoundedValue(theSecondArgValue)) - 1;
+		return unsigned(DoubleSupport::round(theSecondArgValue)) - 1;
 	}
 }
 
@@ -139,7 +143,7 @@ getTotal(
 	else
 	{
 		const double	theRoundedValue =
-			FunctionRound::getRoundedValue(theSecondArgValue + arg3->num());
+			DoubleSupport::round(theSecondArgValue + arg3->num());
 
 		// If there's overflow, then we should return the length of the string + 1.
 		if (DoubleSupport::isPositiveInfinity(theRoundedValue) == true)
@@ -223,7 +227,7 @@ FunctionSubstring::execute(
 	{
 		// Get the value of the second argument...
 		const double	theSecondArgValue =
-			FunctionRound::getRoundedValue(arg2->num());
+			DoubleSupport::round(arg2->num());
 
 		// XPath indexes from 1, so this is the first XPath index....
 		const unsigned int	theStartIndex = getStartIndex(theSecondArgValue);
