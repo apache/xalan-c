@@ -93,16 +93,16 @@ public:
 			int								lineNumber,
 			int								columnNumber);
 
+	virtual
+	~ElemEmpty();
+
 	// These methods are inherited from ElemTemplateElement ...
 	
-	virtual int
-	getXSLToken() const; 
-
 	virtual void
 	execute(
 			StylesheetExecutionContext&		executionContext,
-			const DOM_Node&					sourceTree, 
-			const DOM_Node&					sourceNode,
+			XalanNode*						sourceTree,
+			XalanNode*						sourceNode,
 			const QName&					mode) const;
 };
 

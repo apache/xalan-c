@@ -72,12 +72,17 @@
 #include <cstdio>
 #include <cstring>
 #include <iostream>
+//#include <map>
+//#include <memory>
 
 #include <sys/types.h>
 #include <sys/stat.h>
 
 #include <string>
 #include <strstream>
+//#include <vector>
+
+
 
 #include <dom/DOM_Node.hpp>
 #include <dom/DOM_Element.hpp>
@@ -124,17 +129,26 @@
 
 
 
+#if !defined (XALAN_NO_NAMESPACES)
+using std::auto_ptr;
+using std::cerr;
+using std::cin;
+using std::cout;
+using std::endl;
+using std::hex;
+using std::map;
+using std::string;
+using std::vector;
+#endif
+
+
+
 /**
  * Print argument options.
  */ 
 void
 printArgOptions()
 {
-#if !defined (XALAN_NO_NAMESPACES)
-	using std::cerr;
-	using std::endl;
-#endif
-
 	cerr << "TestXSLT options: "
 		 << endl
 		 << "		-IN inputXMLURL"
@@ -180,7 +194,7 @@ printArgOptions()
 }
 
 
-typedef std::map<std::string, std::string> String2StringMapType;
+typedef map<string, string> String2StringMapType;
 
 struct CmdLineParams
 {
@@ -195,12 +209,12 @@ struct CmdLineParams
 	int indentAmount;
 	int nThreads;
 	int outputType;
-	std::string dumpFileName;
-	std::string  outFileName;
-	std::string specialCharacters;
-	std::string treedumpFileName;
-	std::string xslFileName;
-	std::vector <std::string> inFileNames;
+	string dumpFileName;
+	string  outFileName;
+	string specialCharacters;
+	string treedumpFileName;
+	string xslFileName;
+	vector <string> inFileNames;
 	CmdLineParams() :
 		paramsMap(), doStackDumpOnError(false), escapeCData(false),
 		formatOutput(false), setQuietConflictWarnings(false), setQuietMode(false),
@@ -250,8 +264,8 @@ void getArgs(int argc, const char* argv[], CmdLineParams& p) throw()
 		}
 		else if (!stricmp("-PARAM", argv[i])) 
 		{
-			std::string name = argv[++i];
-			std::string expression = argv[++i];
+			string name = argv[++i];
+			string expression = argv[++i];
 			p.paramsMap[name] = expression;
 		}
 		else if (!stricmp("-treedump", argv[i])) 
@@ -278,7 +292,7 @@ void getArgs(int argc, const char* argv[], CmdLineParams& p) throw()
 		// Not used
 		else if(!stricmp("-VALIDATE", argv[i]))
 		{
-			DOMString shouldValidate;
+			XalanDOMString shouldValidate;
 			if(((i+1) < argc) && (argv[i+1][0] != '-'))
 				shouldValidate = argv[++i];
 			else
@@ -328,11 +342,6 @@ THREADFUNCTIONRETURN xsltMain(void *vptr) throw(XMLException);
 
 void xsltMultiThreadedMain(CmdLineParams& params) throw(XMLException)
 {
-#if !defined (XALAN_NO_NAMESPACES)
-	using std::cout;
-	using std::endl;
-#endif
-
 	DWORD dwStackSize = 4096;              	// initial thread stack size
 	LPTHREAD_START_ROUTINE lpStartAddress = (LPTHREAD_START_ROUTINE)xsltMain;
 	DWORD dwCreationFlags = 0;             	// creation flags
@@ -387,10 +396,6 @@ void xsltMultiThreadedMain(CmdLineParams& params) throw(XMLException)
 
 void xsltMultiThreadedMain(CmdLineParams& params) throw(XMLException)
 {
-#if !defined (XALAN_NO_NAMESPACES)
-	using std::cout;
-	using std::endl;
-#endif
 
 	const int nThreads = params.nThreads;
 	pthread_t *threads = new pthread_t[nThreads];   // array to receive thread IDs
@@ -416,11 +421,6 @@ void xsltMultiThreadedMain(CmdLineParams& params) throw(XMLException)
 
 void xsltMultiThreadedMain(CmdLineParams& params) throw(XMLException)
 {
-#if !defined (XALAN_NO_NAMESPACES)
-	using std::cerr;
-	using std::endl;
-#endif
-
 	cerr << "xsltMultiThreadedMain: Not valid on this platform" << endl;
 }
 
@@ -428,7 +428,7 @@ void xsltMultiThreadedMain(CmdLineParams& params) throw(XMLException)
 
 
 
-static inline bool exists(std::string &filename)
+static inline bool exists(string &filename)
 {
 	struct stat statBuffer;
 	return (0 == stat(filename.c_str(), &statBuffer));
@@ -438,16 +438,8 @@ static	CmdLineParams theParams;
 	
 THREADFUNCTIONRETURN xsltMain(void *vptr) throw(XMLException)
 {
-#if !defined (XALAN_NO_NAMESPACES)
-	using std::cerr;
-	using std::cout;
-	using std::endl;
-	using std::auto_ptr;
-	using std::string;
-#endif
-
  	const CmdLineParams&	params = *((CmdLineParams *)vptr);
-	const std::string		outputFileNameBase = theParams.outFileName;
+	const string			outputFileNameBase = theParams.outFileName;
 
 	// @@ This should become a command line switch
 	bool shouldWriteXMLHeader = false;
@@ -543,7 +535,7 @@ THREADFUNCTIONRETURN xsltMain(void *vptr) throw(XMLException)
 
 	StylesheetRoot* stylesheet = 0;
 
-	DOMString xslFileName;
+	XalanDOMString xslFileName;
 	if(0 != params.xslFileName.size())
 	{
 		xslFileName = params.xslFileName.c_str();
@@ -551,8 +543,8 @@ THREADFUNCTIONRETURN xsltMain(void *vptr) throw(XMLException)
 
 	stylesheet = processor.processStylesheet(xslFileName, theConstructionContext);
 
-	DOMString mimeEncoding("UTF-8");
-	DOMString encoding("UTF-8");
+	const XalanDOMString	mimeEncoding(XALAN_STATIC_UCODE_STRING("UTF-8"));
+	const XalanDOMString	encoding(XALAN_STATIC_UCODE_STRING("UTF-8"));
 
 	FormatterListener* formatter = 0;
 
@@ -566,7 +558,7 @@ THREADFUNCTIONRETURN xsltMain(void *vptr) throw(XMLException)
 		string theInputFileName = params.inFileNames[i];
 		string outputFileName;
 		XSLTInputSource theInputSource(theInputFileName.c_str());
-		DOM_Node sourceTree = processor.getSourceTreeFromInput(&theInputSource);
+		XalanNode* const	sourceTree = processor.getSourceTreeFromInput(&theInputSource);
 
 	/*
 	 * If no output file specified, and multiple input files, generate an
@@ -646,8 +638,7 @@ THREADFUNCTIONRETURN xsltMain(void *vptr) throw(XMLException)
 					stylesheet->getOutputDoctypeSystem(),
 					stylesheet->getOutputDoctypePublic(),
 					true,	// xmlDecl
-					stylesheet->m_standalone,
-					&(stylesheet->getCdataSectionElems()));
+					stylesheet->m_standalone);
 			fToXML->m_shouldWriteXMLHeader = shouldWriteXMLHeader;
 			fToXML->m_attrSpecialChars = xmlParserLiaison.getSpecialCharacters();
 			fToXML->m_stripCData = stripCData;
@@ -670,8 +661,7 @@ THREADFUNCTIONRETURN xsltMain(void *vptr) throw(XMLException)
 						stylesheet->getOutputDoctypeSystem(),
 						stylesheet->getOutputDoctypePublic(),
 						false,	// xmlDecl
-						stylesheet->m_standalone,
-						&(stylesheet->getCdataSectionElems()));
+						stylesheet->m_standalone);
 
 			fToHTML->m_attrSpecialChars = xmlParserLiaison.getSpecialCharacters();
 			fToHTML->m_stripCData = stripCData;
@@ -722,11 +712,6 @@ int main(int argc, const char* argv[]) throw()
 	}
 	else
 	{
-#if !defined (XALAN_NO_NAMESPACES)
-		using std::cout;
-		using std::endl;
-		using std::string;
-#endif
 		getArgs(argc, argv, theParams);
 
 		try
@@ -779,6 +764,56 @@ int main(int argc, const char* argv[]) throw()
 
 			theResult = -1;
 		}
+
+#if !defined(NDEBUG)
+		const unsigned long		theInstanceCount =
+			XalanNode::getInstanceCount();
+
+		if (theInstanceCount > 0)
+		{
+			cout << "There are "
+				 << XalanNode::getInstanceCount()
+				 << " XalanNode instances still alive!"
+				 << endl
+				 << endl
+				 << "A dump of these instances follows..."
+				 << endl
+				 << endl;
+
+			vector<XalanNode*>	theNodes(theInstanceCount);
+
+			XalanNode::getLiveInstances(theNodes.begin());
+
+			for(unsigned int i = 0; i < theInstanceCount; ++i)
+			{
+				const XalanNode* const	theInstance = theNodes[i];
+				assert(theInstance != 0);
+#define XALAN_RTTI_AVAILABLE
+				cout << "("
+					 << hex
+					 << theInstance
+					 << ")  Node name: \""
+					 << theInstance->getNodeName()
+					 << "\"  Node value: \""
+					 << theInstance->getNodeValue()
+					 << "\""
+#if defined(XALAN_RTTI_AVAILABLE)
+					 << "  Type: \""
+					 << typeid(*theInstance).name()
+					 << "\""
+#endif
+					 << endl
+					 << endl;
+			}
+
+			cout << "Hit <Enter> to continue..."
+				 << endl
+				 << endl;
+
+			cin.get();
+		}
+#endif
+
 	}
 
 	return theResult;

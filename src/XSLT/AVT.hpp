@@ -73,7 +73,7 @@
 
 
 
-#include <dom/DOMString.hpp>
+#include <XalanDOM/XalanDOMString.hpp>
 
 
 
@@ -93,16 +93,6 @@ class AVT: public AVTPart
 {
 public:
 
-#if defined(XALAN_NO_NAMESPACES)
-#	define XALAN_STD
-#else
-#	define XALAN_STD std::
-#endif
-
-typedef XALAN_STD vector<AVTPart*>	AVTPartPtrVectorType;
-
-#undef XALAN_STD
-
 	/**
 	 * Construct an Attribute Value Template(AVT) by parsing the string, and
 	 * either constructing a vector of AVTParts, or simply hold on to the
@@ -115,9 +105,9 @@ typedef XALAN_STD vector<AVTPart*>	AVTPartPtrVectorType;
 	 * @param constructionContext context for construction of AVT
 	 */
 	AVT(
-			const DOMString&				name,
-			const XMLCh*					type,
-			const XMLCh*					stringedValue,
+			const XalanDOMString&			name,
+			const XalanDOMChar*				type,
+			const XalanDOMChar*				stringedValue,
 			const PrefixResolver&			resolver,
 			StylesheetConstructionContext&	constructionContext);
 
@@ -129,7 +119,7 @@ typedef XALAN_STD vector<AVTPart*>	AVTPartPtrVectorType;
 	 * 
 	 * @return name of AVT
 	 */
-    const DOMString&
+    const XalanDOMString&
 	getName() const
 	{
 		return m_name;
@@ -140,7 +130,7 @@ typedef XALAN_STD vector<AVTPart*>	AVTPartPtrVectorType;
 	 * 
 	 * @return type of AVT
 	 */
-	const XMLCh*
+	const XalanDOMChar*
 	getType() const
 	{
 		return m_pcType;
@@ -150,8 +140,8 @@ typedef XALAN_STD vector<AVTPart*>	AVTPartPtrVectorType;
 
 	virtual void
 	evaluate(
-			DOMString&				buf,
-			const DOM_Node&			contextNode,
+			XalanDOMString&			buf,
+			XalanNode*				contextNode,
 			const PrefixResolver&	prefixResolver,
 			XPathExecutionContext&	executionContext) const;
 
@@ -161,26 +151,20 @@ private:
 	AVT(const AVT &);
 	AVT& operator=(const AVT &);
 
-/**
- * If the AVT is not complex, just hold the simple string.
- */
-	DOMString				m_simpleString;
+#if defined(XALAN_NO_NAMESPACES)
+	typedef vector<AVTPart*>		AVTPartPtrVectorType;
+#else
+	typedef std::vector<AVTPart*>	AVTPartPtrVectorType;
+#endif
 
-/**
- * If the AVT is complex, hold a Vector of AVTParts.
- */
+	XalanDOMString			m_simpleString;
+
 	AVTPartPtrVectorType	m_parts;
 
-/**
- * The name of the attribute.
- */
-	DOMString				m_name;
+	XalanDOMString			m_name;
 
-/**
- * The attribute type;
- */
 	// $$$ ToDO: Is this OK just to hold a pointer?
-	const XMLCh*			m_pcType;
+	const XalanDOMChar*		m_pcType;
 };
 
 

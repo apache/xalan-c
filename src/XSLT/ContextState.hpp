@@ -68,12 +68,12 @@
 
 
 
-#include <dom/DOM_Node.hpp>
-
-
-
 // Base class header file.
 #include "StackEntry.hpp"
+
+
+
+class XalanNode;
 
 
 
@@ -93,8 +93,8 @@ public:
 	 * @param sourceNode source node
 	 */
 	ContextState(
-			const DOM_Node&		caller,
-			const DOM_Node&		sourceNode);
+			const XalanNode*	caller,
+			const XalanNode*	sourceNode);
 
 	ContextState(const ContextState&	theSource);
 
@@ -106,7 +106,7 @@ public:
 	 *
 	 * @return caller node
 	 */
-	const DOM_Node&
+	const XalanNode*
 	getCaller() const
 	{
 		return m_caller;
@@ -117,7 +117,7 @@ public:
 	 *
 	 * @return source node
 	 */
-	const DOM_Node&
+	const XalanNode*
 	getSource() const
 	{
 		return m_source;
@@ -136,8 +136,8 @@ public:
 protected:
 
 	ContextState(
-			const DOM_Node&		caller,
-			const DOM_Node&		sourceNode,
+			const XalanNode*	caller,
+			const XalanNode*	sourceNode,
 			eStackEntryType		theType);
 
 	bool
@@ -149,8 +149,8 @@ protected:
 private:
 
 	// Data members...
-	DOM_Node	m_caller;
-	DOM_Node	m_source;
+	const XalanNode*	m_caller;
+	const XalanNode*	m_source;
 };
 
 

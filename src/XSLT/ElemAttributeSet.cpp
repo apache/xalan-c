@@ -71,20 +71,25 @@
 
 
 ElemAttributeSet::ElemAttributeSet(
-	StylesheetConstructionContext&	constructionContext,
-	Stylesheet& stylesheetTree,
-	const DOMString& name, 
-	const AttributeList& atts,
-	int lineNumber, 
-	int columnNumber) :
-		ElemUse(constructionContext, stylesheetTree, name,  lineNumber, columnNumber),
-		m_QName()
+			StylesheetConstructionContext&	constructionContext,
+			Stylesheet&						stylesheetTree,
+			const XalanDOMString&			name, 
+			const AttributeList&			atts,
+			int								lineNumber,
+			int								columnNumber) :
+	ElemUse(constructionContext,
+			stylesheetTree,
+			name,
+			lineNumber,
+			columnNumber,
+			Constants::ELEMNAME_DEFINEATTRIBUTESET),
+	m_QName()
 {
-	const int	nAttrs = atts.getLength();
+	const unsigned int	nAttrs = atts.getLength();
 
-	for(int i = 0; i < nAttrs; i++)
+	for(unsigned int i = 0; i < nAttrs; i++)
 	{
-		const DOMString aname(atts.getName(i));
+		const XalanDOMChar*	const	aname = atts.getName(i);
 
 		if(equals(aname,Constants::ATTRNAME_NAME))
 		{
@@ -112,24 +117,16 @@ ElemAttributeSet::~ElemAttributeSet()
 
 
 
-int
-ElemAttributeSet::getXSLToken() const 
-{
-	return Constants::ELEMNAME_DEFINEATTRIBUTESET;
-}
-
-
-
 void
 ElemAttributeSet::execute(
 			StylesheetExecutionContext&		executionContext,
-			const DOM_Node&					sourceTree, 
-			const DOM_Node&					sourceNode,
+			XalanNode*						sourceTree,
+			XalanNode*						sourceNode,
 			const QName&					mode) const
 {	
 	if(executionContext.findOnElementRecursionStack(this) != false)
 	{
-		DOMString msg("xsl:attribute-set '" 
+		XalanDOMString msg("xsl:attribute-set '" 
 					  + m_QName.getLocalPart() + 
 					  "' used itself, which will cause an infinite loop.");
 
@@ -139,44 +136,34 @@ ElemAttributeSet::execute(
 	// This will push and pop the stack automatically...
 	StylesheetExecutionContext::ElementRecursionStackPusher		thePusher(executionContext, this);
 
-	const ElemTemplateElement* attr = getFirstChild();
+	const ElemTemplateElement*	attr = getFirstChildElem();
 
 	while(0 != attr)
 	{
 		attr->execute(executionContext, sourceTree, sourceNode, mode);
 
-		attr = attr->getNextSibling();
+		attr = attr->getNextSiblingElem();
 	}
 
 	ElemUse::execute(executionContext, sourceTree, sourceNode, mode);
 }
 
 
-/**
-   * Add a child to the child list.
-   * <!ELEMENT xsl:attribute-set (xsl:attribute)*>
-   * <!ATTLIST xsl:attribute-set
-   *   name %qname; #REQUIRED
-   *   use-attribute-sets %qnames; #IMPLIED
-   * >
-   */
-NodeImpl*
-ElemAttributeSet::appendChild(NodeImpl* newChild)
-{
-	assert(dynamic_cast<ElemTemplateElement*>(newChild) != 0);
 
-	int type = dynamic_cast<ElemTemplateElement*>(newChild)->getXSLToken();
-	
-	switch(type)
+bool
+ElemAttributeSet::childTypeAllowed(int	xslToken) const
+{
+	bool	fResult = false;
+
+	switch(xslToken)
 	{
 	case Constants::ELEMNAME_ATTRIBUTE:
+		fResult = true;
 		break;
 		
 	default:
-		error("Can not add " + 
-			  dynamic_cast<ElemTemplateElement*>(newChild)->getTagName() + " to " + 
-			  getTagName());
+		break;
 	}
 
-	return ElemTemplateElement::appendChild(newChild);
+	return fResult;
 }

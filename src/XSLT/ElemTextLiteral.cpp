@@ -62,6 +62,10 @@
 
 
 
+#include <PlatformSupport/DOMStringHelper.hpp>
+
+
+
 #include "Constants.hpp"
 #include "StylesheetExecutionContext.hpp"
 
@@ -80,9 +84,10 @@ ElemTextLiteral::ElemTextLiteral(
             bool							disableOutputEscaping) :
 	ElemTemplateElement(constructionContext,
 						stylesheetTree,
-						DOMString("#text"),
+						XALAN_STATIC_UCODE_STRING("#text"),
 						lineNumber,
-						columnNumber),
+						columnNumber,
+						Constants::ELEMNAME_TEXTLITERALRESULT),
 	m_isCData(isCData),
 	m_preserveSpace(preserveSpace),
 	m_ch(ch + start, ch + start + length),
@@ -100,29 +105,21 @@ ElemTextLiteral::~ElemTextLiteral()
 
 
 
-int
-ElemTextLiteral::getXSLToken() const
-{
-    return Constants::ELEMNAME_TEXTLITERALRESULT;
-}
-
-
-
 void
 ElemTextLiteral::execute(
 			StylesheetExecutionContext&		executionContext,
-			const DOM_Node&					sourceTree, 
-			const DOM_Node&					sourceNode,
+			XalanNode*						sourceTree,
+			XalanNode*						sourceNode,
 			const QName&					mode) const
 {
 	ElemTemplateElement::execute(executionContext, sourceTree, sourceNode, mode);
 
     if(!m_disableOutputEscaping)
     {
-		executionContext.characters(m_ch.begin(), 0, static_cast<int>(m_ch.size()));
+		executionContext.characters(m_ch.begin(), 0, static_cast<unsigned int>(m_ch.size()));
     }
     else
     {
-		executionContext.charactersRaw(m_ch.begin(), 0, static_cast<int>(m_ch.size()));
+		executionContext.charactersRaw(m_ch.begin(), 0, static_cast<unsigned int>(m_ch.size()));
     }
 }

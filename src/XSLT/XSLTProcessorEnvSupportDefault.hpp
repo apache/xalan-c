@@ -64,18 +64,26 @@
 
 
 
+#include <map>
+
+
+
 // Base class header file...
+#include <XSLT/XSLTProcessorEnvSupport.hpp>
+#include <XSLT/Stylesheet.hpp>
+
+
+
 #include <XPath/XPathEnvSupportDefault.hpp>
 
 
 
+class KeyTable;
 class XSLTProcessor;
 
 
 
-// Specializaton of XPathEnvSupportDefault, which implements calls that
-// XPathEnvSupportDefault can't really do.
-class XALAN_XSLT_EXPORT XSLTProcessorEnvSupportDefault : public XPathEnvSupportDefault
+class XALAN_XSLT_EXPORT XSLTProcessorEnvSupportDefault : public XSLTProcessorEnvSupport
 {
 public:
 
@@ -95,48 +103,98 @@ public:
 		m_processor = theProcessor;
 	}
 
-	// These interfaces are inherited from XPathEnvSupportDefault...
+
+	// These interfaces are inherited from XSLTProcessorEnvSupport...
+
+	virtual KeyTable*
+	getKeyTable(const XalanNode*	doc) const;
+
+	virtual void
+	setKeyTable(
+			KeyTable*			keytable,
+			const XalanNode*	doc);
+
+	// These interfaces are inherited from XPathEnvSupport...
 
 	virtual const NodeRefListBase*
 	getNodeSetByKey(
-			const DOM_Node&			doc,
-			const DOMString&		name,
-			const DOMString&		ref,
+			const XalanNode&		doc,
+			const XalanDOMString&	name,
+			const XalanDOMString&	ref,
 			const PrefixResolver&	resolver,
 			XPathExecutionContext&	executionContext) const;
 
-	virtual DOM_Document
-	parseXML(
-			const DOMString&	urlString,
-			const DOMString&	base) const;
-
-	XObject*
+	virtual XObject*
 	getVariable(
 			XObjectFactory&		factory,
 			const QName&		name) const;
 
+	virtual XalanDocument*
+	parseXML(
+			const XalanDOMString&	urlString,
+			const XalanDOMString&	base);
+
+	virtual XalanDocument*
+	getSourceDocument(const XalanDOMString&		theURI) const;
+
+	virtual void
+	setSourceDocument(
+			const XalanDOMString&	theURI,
+			XalanDocument*			theDocument);
+
+	virtual XalanDOMString
+	findURIFromDoc(const XalanDocument*		owner) const;
+
+	virtual XalanDocument*
+	getDOMFactory() const;
+
+	virtual bool
+	functionAvailable(
+			const XalanDOMString&	theNamespace, 
+			const XalanDOMString&	extensionName) const;
+
+	virtual XObject*
+	extFunction(
+			XPathExecutionContext&			executionContext,
+			const XalanDOMString&			theNamespace,
+			const XalanDOMString&			extensionName, 
+			const XObjectArgVectorType&		argVec) const;
+
+	virtual XLocator*
+	getXLocatorFromNode(const XalanNode*	node) const;
+
+	virtual void
+	associateXLocatorToNode(
+			const XalanNode*	node,
+			XLocator*			xlocator);
+
+	virtual bool
+	shouldStripSourceNode(const XalanNode&	node) const;
+
 	virtual bool
 	problem(
-			eSource				where,
-			eClassification		classification,
-			const DOM_Node&		styleNode,
-			const DOM_Node&		sourceNode,
-			const DOMString&	msg,
-			int					lineNo,
-			int					charOffset) const;
+			eSource					where,
+			eClassification			classification,
+			const XalanNode*		styleNode,
+			const XalanNode*		sourceNode,
+			const XalanDOMString&	msg,
+			int						lineNo,
+			int						charOffset) const;
 
 	virtual bool
 	problem(
 			eSource					where,
 			eClassification			classification,
 			const PrefixResolver*	resolver,
-			const DOM_Node&			sourceNode,
-			const DOMString&		msg,
+			const XalanNode*		sourceNode,
+			const XalanDOMString&	msg,
 			int						lineNo,
 			int						charOffset) const;
 
-	virtual bool
-	shouldStripSourceNode(const DOM_Node&	node) const;
+	// These interfaces are inherited from Resettable...
+
+	virtual void
+	reset();
 
 private:
 
@@ -149,9 +207,23 @@ private:
 	bool
 	operator==(const XSLTProcessorEnvSupportDefault&) const;
 
+#if defined(XALAN_NO_NAMESPACES)
+	typedef map<const XalanNode*, XLocator*>		XLocatorTableType;
+#else
+	typedef std::map<const XalanNode*, XLocator*>	XLocatorTableType;
+#endif
+
+	typedef Stylesheet::KeyTablesTableType			KeyTablesTableType;
+
 	// Data members...
 
-	XSLTProcessor*		m_processor;
+	XPathEnvSupportDefault		m_defaultSupport;
+
+	XSLTProcessor*				m_processor;
+
+	mutable KeyTablesTableType	m_keyTables;
+
+	XLocatorTableType			m_xlocatorTable;
 };
 
 

@@ -61,6 +61,7 @@
 #include <sax/AttributeList.hpp>
 
 
+
 #include <PlatformSupport/DOMStringHelper.hpp>
 
 
@@ -74,7 +75,7 @@
 ElemPI::ElemPI(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
-			const DOMString&				name,
+			const XalanDOMString&			name,
 			const AttributeList&			atts,
 			int								lineNumber,
 			int								columnNumber) :
@@ -82,14 +83,15 @@ ElemPI::ElemPI(
 						stylesheetTree,
 						name,
 						lineNumber,
-						columnNumber),	
+						columnNumber,
+						Constants::ELEMNAME_PI),
 	m_name_atv()
 {
-	const int nAttrs = atts.getLength();
+	const unsigned int	nAttrs = atts.getLength();
 
-	for(int i = 0; i < nAttrs; i++)
+	for(unsigned int i = 0; i < nAttrs; i++)
 	{
-		const DOMString		aname(atts.getName(i));
+		const XalanDOMChar* const	aname = atts.getName(i);
 
 		if(equals(aname, Constants::ATTRNAME_NAME))
 		{
@@ -115,29 +117,21 @@ ElemPI::~ElemPI()
 
 
 
-int
-ElemPI::getXSLToken() const 
-{		
-	return Constants::ELEMNAME_PI;		
-}
-
-
-
 void
 ElemPI::execute(
 			StylesheetExecutionContext&		executionContext,
-			const DOM_Node&					sourceTree, 
-			const DOM_Node&					sourceNode,
+			XalanNode*						sourceTree,
+			XalanNode*						sourceNode,
 			const QName&					mode) const
 {
 	ElemTemplateElement::execute(executionContext, sourceTree, sourceNode, mode);
 	
-	const DOMString		piName =
+	const XalanDOMString	piName =
 		executionContext.evaluateAttrVal(sourceNode,
-										 DOM_UnimplementedElement(const_cast<ElemPI*>(this)),
+										 *this,
 										 m_name_atv);
 
-	if(equalsIgnoreCase(piName, DOMString("xml")))
+	if(equalsIgnoreCase(piName, XALAN_STATIC_UCODE_STRING("xml")))
 	{
 		error("processing-instruction name can not be 'xml'");
 	}
@@ -146,21 +140,19 @@ ElemPI::execute(
 		error("processing-instruction name must be a valid NCName: " + piName);
 	}
 	
-	const DOMString		data = childrenToString(executionContext, sourceTree, sourceNode, mode);
+	const XalanDOMString	data = childrenToString(executionContext, sourceTree, sourceNode, mode);
 
 	executionContext.processingInstruction(toCharArray(piName), toCharArray(data));
 }
 
 
 
-NodeImpl*
-ElemPI::appendChild(NodeImpl* newChild)
+bool
+ElemPI::childTypeAllowed(int	xslToken) const
 {
-	assert(dynamic_cast<ElemTemplateElement*>(newChild) != 0);
-
-	const int	type = dynamic_cast<ElemTemplateElement*>(newChild)->getXSLToken();
-
-	switch(type)
+	bool	fResult = false;
+	
+	switch(xslToken)
 	{
 	// char-instructions 
 	case Constants::ELEMNAME_TEXTLITERALRESULT:
@@ -177,20 +169,12 @@ ElemPI::appendChild(NodeImpl* newChild)
 	case Constants::ELEMNAME_COPY:
 	case Constants::ELEMNAME_VARIABLE:
 	case Constants::ELEMNAME_MESSAGE:
-
-// instructions 
-// case Constants.ELEMNAME_PI:
-// case Constants.ELEMNAME_COMMENT:
-// case Constants.ELEMNAME_ELEMENT:
-// case Constants.ELEMNAME_ATTRIBUTE:
-	break;
-
+		fResult = true;
+		break;
+		
 	default:
-		error("Can not add " +
-					dynamic_cast<ElemTemplateElement*>(newChild)->getTagName() +
-					" to " +
-					getTagName());
+		break;
 	}
-
-	return ElemTemplateElement::appendChild(newChild);
+	
+	return fResult;
 }

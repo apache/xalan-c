@@ -57,13 +57,7 @@
 #if !defined(XALAN_ELEMVALUEOF_HEADER_GUARD)
 #define XALAN_ELEMVALUEOF_HEADER_GUARD 
 
-/**
- * $Id$
- * 
- * $State$
- * 
- * @author Myriam Midy (Myriam_Midy @lotus.com 
- */
+
 
 // Base include file.  Must be first.
 #include "XSLTDefinitions.hpp"
@@ -96,7 +90,7 @@ public:
 	ElemValueOf(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
-			const DOMString&				name,
+			const XalanDOMString&			name,
 			const AttributeList&			atts,
 			int								lineNumber,
 			int								columnNumber);
@@ -105,18 +99,12 @@ public:
 	~ElemValueOf();
 
 	// These methods are inherited from ElemTemplateElement ...
-	
-	virtual int
-	getXSLToken() const;
-
-	virtual NodeImpl*
-	appendChild(NodeImpl*	newChild);
 
 	virtual void
 	execute(
 			StylesheetExecutionContext&		executionContext,
-			const DOM_Node&					sourceTree, 
-			const DOM_Node&					sourceNode,
+			XalanNode*						sourceTree,
+			XalanNode*						sourceNode,
 			const QName&					mode) const;
 
 private:
@@ -129,7 +117,7 @@ private:
 	/**
 	 * Tells if this element should disable escaping.
 	 */
-	bool m_disableOutputEscaping;
+	bool			m_disableOutputEscaping;
 };
 
 

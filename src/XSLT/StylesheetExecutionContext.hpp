@@ -64,9 +64,7 @@
 
 
 
-#include <dom/DOM_Node.hpp>
-#include <dom/DOM_Document.hpp>
-#include <dom/DOMString.hpp>
+#include <XalanDOM/XalanDOMString.hpp>
 
 
 
@@ -76,8 +74,6 @@
 
 
 class AttributeList;
-class DOM_Element;
-class DOMString;
 class ElemTemplateElement;
 class FormatterListener;
 class PrefixResolver;
@@ -85,6 +81,9 @@ class NodeRefListBase;
 class QName;
 class Stylesheet;
 class StylesheetRoot;
+class XalanElement;
+class XalanNode;
+class XalanDocument;
 class XPath;
 class XPathExecutionContext;
 class XObject;
@@ -112,8 +111,8 @@ public:
 	 * @param theNode child node
 	 * @return parent node of 'theNode'
 	 */
-	virtual const DOM_Node
-	getParentOfNode(const DOM_Node&	theNode) const = 0;
+	virtual XalanNode*
+	getParentOfNode(const XalanNode&	theNode) const = 0;
 
 	/**
 	 * Retrieve execution context
@@ -146,7 +145,7 @@ public:
 	 * @return pointer to XObject for variable
 	 */
 	virtual XObject*
-	getTopLevelVariable(const DOMString&	theName) const = 0;
+	getTopLevelVariable(const XalanDOMString&	theName) const = 0;
 
 	/**
 	 * Determine whether conflicts should be reported.
@@ -161,7 +160,7 @@ public:
 	 * 
 	 * @return root document
 	 */
-	virtual const DOM_Document
+	virtual XalanDocument*
 	getRootDocument() const = 0;
 
 	/**
@@ -170,14 +169,14 @@ public:
 	 * @param theDocument root document
 	 */
 	virtual void
-	setRootDocument(const DOM_Document&		theDocument) = 0;
+	setRootDocument(XalanDocument*	theDocument) = 0;
 
 	/**
 	 * Create a new empty document.
 	 * 
 	 * @return new document
 	 */
-	virtual const DOM_Document
+	virtual XalanDocument*
 	createDocument() const = 0;
 
 	/**
@@ -196,8 +195,8 @@ public:
 	 */
 	virtual void
 	resetCurrentState(
-			const DOM_Node&		sourceTree,
-			const DOM_Node&		xmlNode) = 0;
+			XalanNode*	sourceTree,
+			XalanNode*	xmlNode) = 0;
 
 	/**
 	 * Whether diagnostic output is to be generated
@@ -213,7 +212,7 @@ public:
 	 * @param theString string to print
 	 */
 	virtual void
-	diag(const DOMString&	theString) = 0;
+	diag(const XalanDOMString&	theString) = 0;
 
 	/**
 	 * Mark the time, so that displayDuration can later display the elapsed
@@ -232,8 +231,8 @@ public:
 	 */
 	virtual void
 	displayDuration(
-			const DOMString&	theMessage,
-			const void*			theKey) = 0;
+			const XalanDOMString&	theMessage,
+			const void*				theKey) = 0;
 
 	/**
 	 * Retrieve list of attributes yet to be processed
@@ -248,7 +247,7 @@ public:
 	 * 
 	 * @return element name
 	 */
-	virtual DOMString
+	virtual XalanDOMString
 	getPendingElementName() const = 0;
 
 	/**
@@ -269,9 +268,9 @@ public:
 	 */
 	virtual void
 	replacePendingAttribute(
-			const XMLCh*	theName,
-			const XMLCh*	theNewType,
-			const XMLCh*	theNewValue) = 0;
+			const XalanDOMChar*		theName,
+			const XalanDOMChar*		theNewType,
+			const XalanDOMChar*		theNewValue) = 0;
 
 	/**
 	 * Changes the currently pending element name.
@@ -279,7 +278,7 @@ public:
 	 * @param elementName new name of element
 	 */
 	virtual void
-	setPendingElementName(const DOMString&	elementName) = 0;
+	setPendingElementName(const XalanDOMString&		elementName) = 0;
 
 	/**
 	 * Add a result attribute to the list of pending attributes.
@@ -289,8 +288,8 @@ public:
 	 */
 	virtual void
 	addResultAttribute(
-			const DOMString&	aname,
-			const DOMString&	value) = 0;
+			const XalanDOMString&	aname,
+			const XalanDOMString&	value) = 0;
 
 	/**
 	 * Add namespace attributes for a node to the list of pending attributes.
@@ -301,7 +300,7 @@ public:
 	 */
 	virtual void
 	copyNamespaceAttributes(
-			const DOM_Node&		src,
+			const XalanNode&	src,
 			bool				srcIsStylesheetTree) = 0;
 
 	/**
@@ -309,25 +308,23 @@ public:
 	 * 
 	 * @param theNamespace namespace for prefix
 	 */
-	virtual DOMString
-	getResultPrefixForNamespace(
-			const DOMString&	theNamespace) const = 0;
+	virtual XalanDOMString
+	getResultPrefixForNamespace(const XalanDOMString&	theNamespace) const = 0;
 
 	/**
 	 * Retrieve the result namespace corresponding to a prefix.
 	 * 
 	 * @param thePrefix prefix for namespace
 	 */
-	virtual DOMString
-	getResultNamespaceForPrefix(
-			const DOMString&	thePrefix) const = 0;
+	virtual XalanDOMString
+	getResultNamespaceForPrefix(const XalanDOMString&	thePrefix) const = 0;
 
 	/**
 	 * Generate a random namespace prefix guaranteed to be unique.
 	 * 
 	 * @return unique namespace prefix
 	 */
-	virtual DOMString
+	virtual XalanDOMString
 	getUniqueNameSpaceValue() const = 0;
 
 	/**
@@ -365,8 +362,8 @@ public:
 	 */
 	virtual XObject*
 	executeXPath(
-			const DOMString&		str,
-			const DOM_Node&			contextNode,
+			const XalanDOMString&	str,
+			XalanNode*				contextNode,
 			const PrefixResolver&	resolver) = 0;
 
 	/**
@@ -380,9 +377,9 @@ public:
 	 */
 	virtual XObject*
 	executeXPath(
-			const DOMString&	str,
-			const DOM_Node&		contextNode,
-			const DOM_Element&	resolver) = 0;
+			const XalanDOMString&	str,
+			XalanNode*				contextNode,
+			const XalanElement&		resolver) = 0;
 
 	/**
 	 * Create and initialize an xpath and return it. This is to be used to
@@ -394,7 +391,7 @@ public:
 	 */
 	virtual XPath*
 	createMatchPattern(
-			const DOMString&		str,
+			const XalanDOMString&	str,
 			const PrefixResolver&	resolver) = 0;
 
 	/**
@@ -405,11 +402,11 @@ public:
 	 * @param namespaceContext context for namespace resolution
 	 * @param stringedValue    value to evaluate
 	 */
-	virtual const DOMString
+	virtual const XalanDOMString
 	evaluateAttrVal(
-			const DOM_Node&		contextNode,
-			const DOM_Element&	namespaceContext,
-			const DOMString&	stringedValue) = 0;
+			XalanNode*				contextNode,
+			const XalanElement&		namespaceContext,
+			const XalanDOMString&	stringedValue) = 0;
 
 	/**
 	 * Push a named variable onto the processor variable stack
@@ -422,7 +419,7 @@ public:
 	pushVariable(
 			const QName&		name,
 			XObject*			var,
-			const DOM_Node&		element) = 0;
+			const XalanNode*	element) = 0;
 
 	/**
 	 * Push a context marker onto the stack to let us know when to stop
@@ -433,8 +430,8 @@ public:
 	 */
 	virtual void
 	pushContextMarker(
-			const DOM_Node&		caller,
-			const DOM_Node&		sourceNode) = 0;
+			const XalanNode*	caller,
+			const XalanNode*	sourceNode) = 0;
 
 	/**
 	 * Pop the current context from the current context stack.
@@ -467,10 +464,10 @@ public:
 	virtual	void
 	pushParams(
 			const ElemTemplateElement&	xslCallTemplateElement,
-			const DOM_Node&				sourceTree, 
-			const DOM_Node&				sourceNode,
+			XalanNode*					sourceTree, 
+			XalanNode*					sourceNode,
 			const QName&				mode,
-			const DOM_Node&				targetTemplate) = 0;
+			const XalanNode*			targetTemplate) = 0;
 
 	/**
 	 * Given a name, return a string representing the value, but don't look in
@@ -525,8 +522,7 @@ public:
 	 * @exception SAXException
 	 */
 	virtual void
-	startElement(
-			const XMLCh*	name) = 0;
+	startElement(const XalanDOMChar*	name) = 0;
 
 	/**
 	 * Receive notification of the end of an element.
@@ -543,8 +539,7 @@ public:
 	 * @exception SAXException
 	 */
 	virtual void
-	endElement(
-			const XMLCh*	name) = 0;
+	endElement(const XalanDOMChar*	name) = 0;
 
 	/**
 	 * Receive notification of character data.
@@ -570,9 +565,9 @@ public:
 	 */
 	virtual void
 	characters(
-			const XMLCh*	ch,
-			unsigned int	start,
-			unsigned int	length) = 0;
+			const XalanDOMChar*		ch,
+			unsigned int			start,
+			unsigned int			length) = 0;
 
 	/**
 	 * Receive notification of character data. If available, when the
@@ -586,9 +581,9 @@ public:
 	 */
 	virtual void
 	charactersRaw(
-			const XMLCh*	ch,
-			unsigned int	start,
-			unsigned int	length) = 0;
+			const XalanDOMChar*		ch,
+			unsigned int			start,
+			unsigned int			length) = 0;
 
 	/**
 	 * Called when a Comment is to be constructed.
@@ -597,8 +592,7 @@ public:
 	 * @exception SAXException
 	 */
 	virtual void
-	comment(
-			const XMLCh*	data) = 0;
+	comment(const XalanDOMChar*		data) = 0;
 
 	/**
 	 * Receive notification of a processing instruction.
@@ -617,8 +611,8 @@ public:
 	 */
 	virtual void
 	processingInstruction(
-			const XMLCh*	target,
-			const XMLCh*	data) = 0;
+			const XalanDOMChar*		target,
+			const XalanDOMChar*		data) = 0;
 
 	/**
 	 * Flush the pending element.
@@ -636,10 +630,10 @@ public:
 	 */
 	virtual void
 	cloneToResultTree(
-			const DOM_Node&			node, 
-			bool					isLiteral,
-			bool					overrideStrip,
-			bool					shouldCloneAttributes) = 0;
+			XalanNode&	node, 
+			bool		isLiteral,
+			bool		overrideStrip,
+			bool		shouldCloneAttributes) = 0;
 
 	/**
 	 * Create an XObject that represents a Result tree fragment.
@@ -651,9 +645,9 @@ public:
 	 */
 	virtual XObject*
 	createXResultTreeFrag(
-			const ElemTemplateElement&		templateChild,
-			const DOM_Node&					sourceTree,
-			const DOM_Node&					sourceNode) = 0;
+			const ElemTemplateElement&	templateChild,
+			XalanNode*					sourceTree,
+			XalanNode*					sourceNode) = 0;
 
 	/**
 	 * Create an XObject that represents a Result tree fragment.
@@ -666,10 +660,10 @@ public:
 	 */
 	virtual XObject*
 	createXResultTreeFrag(
-			const ElemTemplateElement&		templateChild,
-			const DOM_Node&					sourceTree,
-			const DOM_Node&					sourceNode,
-			const QName&					mode) = 0;
+			const ElemTemplateElement&	templateChild,
+			XalanNode*					sourceTree,
+			XalanNode*					sourceNode,
+			const QName&				mode) = 0;
 
 	/**
 	 * Given a result tree fragment, walk the tree and
@@ -685,7 +679,7 @@ public:
 	 *
 	 * @return Xalan namespace URI
 	 */
-	virtual const DOMString&
+	virtual const XalanDOMString&
 	getXSLNameSpaceURL() const = 0;
 
 	/**
@@ -693,7 +687,7 @@ public:
 	 *
 	 * @return Xalan namespace for extensions
 	 */
-	virtual const DOMString&
+	virtual const XalanDOMString&
 	getXalanXSLNameSpaceURL() const = 0;
 
 	/**
@@ -712,7 +706,7 @@ public:
 	 */
 	virtual void
 	traceSelect(
-			const DOM_Element&		theTemplate,
+			const XalanElement&		theTemplate,
 			const NodeRefListBase&	nl) const = 0;
 
 	/**
@@ -721,8 +715,7 @@ public:
 	 * @return true if element on stack
 	 */
 	virtual bool
-	findOnElementRecursionStack(
-			const ElemTemplateElement*	theElement) const = 0;
+	findOnElementRecursionStack(const ElemTemplateElement*	theElement) const = 0;
 
 	/**
 	 * Push an element onto the recursion stack.
@@ -730,8 +723,7 @@ public:
 	 * @param theElement pointer to element to push
 	 */
 	virtual void
-	pushOnElementRecursionStack(
-			const ElemTemplateElement*	theElement) = 0;
+	pushOnElementRecursionStack(const ElemTemplateElement*	theElement) = 0;
 
 	/**
 	 * Pop an element off the recursion stack.
@@ -776,22 +768,21 @@ public:
 
 	virtual void
 	error(
-			const DOMString&	msg,
-			const DOM_Node& 	sourceNode = DOM_Node(),
-			const DOM_Node&		styleNode = DOM_Node()) const = 0;
+			const XalanDOMString&	msg,
+			const XalanNode* 		sourceNode = 0,
+			const XalanNode*		styleNode = 0) const = 0;
 
 	virtual void
 	warn(
-			const DOMString&	msg,
-			const DOM_Node& 	sourceNode = DOM_Node(),
-			const DOM_Node&		styleNode = DOM_Node()) const = 0;
+			const XalanDOMString&	msg,
+			const XalanNode* 		sourceNode = 0,
+			const XalanNode*		styleNode = 0) const = 0;
 
 	virtual void
 	message(
-			const DOMString&	msg,
-			const DOM_Node& 	sourceNode = DOM_Node(),
-			const DOM_Node&		styleNode = DOM_Node()) const = 0;
-
+			const XalanDOMString&	msg,
+			const XalanNode* 		sourceNode = 0,
+			const XalanNode*		styleNode = 0) const = 0;
 };
 
 

@@ -61,9 +61,12 @@
 // Base include file.  Must be first.
 #include "XSLTResultTarget.hpp"
 
-/**
- * Zero-argument default constructor.
- */
+
+
+#include <cassert>
+
+
+
 XSLTResultTarget::XSLTResultTarget() :
 	m_fileName(),
 	m_byteStream(0),
@@ -71,45 +74,56 @@ XSLTResultTarget::XSLTResultTarget() :
 	m_characterStream(0),
 	m_node(),
 	m_formatterListener(0)
-{ }
+{
+}
 
-/**
- * Create a new output target with a file name.
- *
- * @param fileName Must be a valid system file name.
- */
-XSLTResultTarget::XSLTResultTarget (DOMString& fileName) :
+
+
+XSLTResultTarget::XSLTResultTarget(const XalanDOMString&	fileName) :
 	m_fileName(fileName),
 	m_byteStream(0),
 	m_encoding(),
 	m_characterStream(0),
 	m_node(),
 	m_formatterListener(0)
-{ }
+{
+}
 
-XSLTResultTarget::XSLTResultTarget (OutputStream* byteStream) :
+
+
+XSLTResultTarget::XSLTResultTarget(OutputStream*	byteStream) :
 	m_fileName(),
 	m_byteStream(byteStream),
 	m_encoding(),
 	m_characterStream(0),
 	m_node(),
 	m_formatterListener(0)
-{ }
+{
+	assert(byteStream != 0);
+}
 
-XSLTResultTarget::XSLTResultTarget (Writer* characterStream) :
+
+
+XSLTResultTarget::XSLTResultTarget(Writer*	characterStream) :
 	m_fileName(),
 	m_byteStream(0),
 	m_encoding(),
 	m_characterStream(characterStream),
 	m_node(),
 	m_formatterListener(0)
-{ }
+{
+	assert(characterStream != 0);
+}
 
-XSLTResultTarget::XSLTResultTarget (DOM_Node& n) :
+
+
+XSLTResultTarget::XSLTResultTarget(XalanNode*	n) :
 	m_fileName(),
 	m_byteStream(0),
 	m_encoding(),
 	m_characterStream(0),
 	m_node(n),
 	m_formatterListener(0)
-{ }
+{
+	assert(n != 0);
+}

@@ -70,7 +70,7 @@
 
 
 
-#include <dom/DOMString.hpp>
+#include <XalanDOM/XalanDOMString.hpp>
 
 
 
@@ -102,7 +102,7 @@ public:
 	/**
 	 * Stack to keep track of the current include base.
 	 */
-	DOMString m_includeBase;
+	XalanDOMString m_includeBase;
 
 	/**
 	 * Construct a StylesheetHandler ... it will add the DOM nodes 
@@ -350,7 +350,11 @@ protected:
 	 * @param which The index into the attribute list (not used at this time).
 	 * @return True if this is a namespace name.
 	 */
-	bool isAttrOK(const DOMString& attrName, const AttributeList& atts, int which);
+	bool
+	isAttrOK(
+			const XalanDOMChar*		attrName,
+			const AttributeList&	atts,
+			int						which);
 
 	/** 
 	 * Tell whether or not this is a xml:space attribute and, if so, process it.
@@ -360,25 +364,35 @@ protected:
 	 * @param which The index of the attribute into the attribute list.
 	 * @return True if this is a xml:space attribute.
 	 */
-	bool processSpaceAttr(const DOMString& aname, const AttributeList& atts, int which);
+	bool
+	processSpaceAttr(
+			const XalanDOMChar*		aname,
+			const AttributeList&	atts,
+			int						which);
 
 	/**
 	 * Process xsl:import.
 	 */
-	void processImport(const DOMString& name, const AttributeList& atts);
+	void
+	processImport(
+			const XalanDOMChar*		name,
+			const AttributeList&	atts);
 
 	/**
 	 * Process xsl:include.
 	 */
-	void processInclude(const DOMString& name, const AttributeList& atts);
-	
+	void
+	processInclude(const XalanDOMChar*		name,
+				   const AttributeList&		atts);
+
 private:
 
 	// not implemented
 	StylesheetHandler(const StylesheetHandler &);
 	StylesheetHandler& operator=(const StylesheetHandler &);
 
-	DOMString	m_pendingException;
+	XalanDOMString	m_pendingException;
+	bool			m_exceptionPending;
 
 	typedef std::vector<ElemTemplateElement*> ElemTemplateStackType;
 
@@ -447,23 +461,50 @@ private:
 	
 	// BEGIN SANJIVA CODE
 	bool m_inLXSLTScript;
-	DOMString m_LXSLTScriptBody;
-	DOMString m_LXSLTScriptLang;
-	DOMString m_LXSLTScriptSrcURL;
+	XalanDOMString m_LXSLTScriptBody;
+	XalanDOMString m_LXSLTScriptLang;
+	XalanDOMString m_LXSLTScriptSrcURL;
 	ExtensionNSHandler* m_pLXSLTExtensionNSH;
 	// END SANJIVA CODE
 	
 	/**
 	 * Init the wrapperless template
 	 */
-	ElemTemplateElement* initWrapperless (const DOMString& name,
+	ElemTemplateElement* initWrapperless (const XalanDOMString& name,
 							const AttributeList& atts,
 							int lineNumber,
 							int columnNumber);
 
+	class PushPopIncludeState
+	{
+	public:
+
+		PushPopIncludeState(StylesheetHandler&		theHandler);
+
+		~PushPopIncludeState();
+
+	private:
+
+		StylesheetHandler&			m_handler;
+
+		ElemTemplateStackType		m_elemStack;
+
+		ElemTemplate* const			m_pTemplate;
+
+		ElemTemplateElement* const	m_pLastPopped;
+
+		const bool					m_inTemplate;
+
+		const bool					m_foundStylesheet;
+
+		const XalanDOMString		m_XSLNameSpaceURL;
+
+		const bool					m_foundNotImport;
+	};
+
+	friend class PushPopIncludeState;
 };
 
+
+
 #endif	// XALAN_STYLESHEETHANDLER_HEADER_GUARD
-
-//	$ Log: $
-

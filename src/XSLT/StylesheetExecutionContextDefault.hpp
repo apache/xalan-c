@@ -92,8 +92,8 @@ public:
 
 	// These interfaces are inherited from StylesheetExecutionContext...
 
-	virtual const DOM_Node
-	getParentOfNode(const DOM_Node&	theNode) const;
+	virtual XalanNode*
+	getParentOfNode(const XalanNode&	theNode) const;
 
 	virtual XPathExecutionContext&
 	getXPathExecutionContext();
@@ -105,18 +105,18 @@ public:
 	setContextNodeList(const NodeRefListBase&	theContextNodeList);
 
 	virtual XObject*
-	getTopLevelVariable(const DOMString&	theName) const;
+	getTopLevelVariable(const XalanDOMString&	theName) const;
 
 	virtual bool
 	getQuietConflictWarnings() const;
 
-	virtual const DOM_Document
+	virtual XalanDocument*
 	getRootDocument() const;
 
 	virtual void
-	setRootDocument(const DOM_Document&		theDocument);
+	setRootDocument(XalanDocument*	theDocument);
 
-	virtual const DOM_Document
+	virtual XalanDocument*
 	createDocument() const;
 
 	virtual void
@@ -124,27 +124,27 @@ public:
 
 	virtual void
 	resetCurrentState(
-			const DOM_Node&		sourceTree,
-			const DOM_Node&		xmlNode);
+			XalanNode*	sourceTree,
+			XalanNode*	xmlNode);
 
 	virtual bool
 	doDiagnosticsOutput() const;
 
 	virtual void
-	diag(const DOMString&	theString);
+	diag(const XalanDOMString&	theString);
 
 	virtual void
 	pushTime(const void*	theKey);
 
 	virtual void
 	displayDuration(
-			const DOMString&	theMessage,
-			const void*			theKey);
+			const XalanDOMString&	theMessage,
+			const void*				theKey);
 
 	virtual const AttributeList&
 	getPendingAttributes() const;
 
-	virtual DOMString
+	virtual XalanDOMString
 	getPendingElementName() const;
 
 	virtual void
@@ -152,32 +152,30 @@ public:
 
 	virtual void
 	replacePendingAttribute(
-			const XMLCh*	theName,
-			const XMLCh*	theNewType,
-			const XMLCh*	theNewValue);
+			const XalanDOMChar*		theName,
+			const XalanDOMChar*		theNewType,
+			const XalanDOMChar*		theNewValue);
 
 	virtual void
-	setPendingElementName(const DOMString&	elementName);
+	setPendingElementName(const XalanDOMString&		elementName);
 
 	virtual void
 	addResultAttribute(
-			const DOMString&	aname,
-			const DOMString&	value);
+			const XalanDOMString&	aname,
+			const XalanDOMString&	value);
 
 	virtual void
 	copyNamespaceAttributes(
-			const DOM_Node&		src,
+			const XalanNode&	src,
 			bool				srcIsStylesheetTree);
 
-	virtual DOMString
-	getResultPrefixForNamespace(
-			const DOMString&	theNamespace) const;
+	virtual XalanDOMString
+	getResultPrefixForNamespace(const XalanDOMString&	theNamespace) const;
 
-	virtual DOMString
-	getResultNamespaceForPrefix(
-			const DOMString&	thePrefix) const;
+	virtual XalanDOMString
+	getResultNamespaceForPrefix(const XalanDOMString&	thePrefix) const;
 
-	virtual DOMString
+	virtual XalanDOMString
 	getUniqueNameSpaceValue() const;
 
 	virtual FormatterListener*
@@ -191,37 +189,37 @@ public:
 
 	virtual XObject*
 	executeXPath(
-			const DOMString&		str,
-			const DOM_Node&			contextNode,
+			const XalanDOMString&	str,
+			XalanNode*				contextNode,
 			const PrefixResolver&	resolver);
 
 	virtual XObject*
 	executeXPath(
-			const DOMString&	str,
-			const DOM_Node&		contextNode,
-			const DOM_Element&	resolver);
+			const XalanDOMString&	str,
+			XalanNode*				contextNode,
+			const XalanElement&		resolver);
 
 	virtual XPath*
 	createMatchPattern(
-			const DOMString&		str,
+			const XalanDOMString&	str,
 			const PrefixResolver&	resolver);
 
-	virtual const DOMString
+	virtual const XalanDOMString
 	evaluateAttrVal(
-			const DOM_Node&		contextNode,
-			const DOM_Element&	namespaceContext,
-			const DOMString&	stringedValue);
+			XalanNode*				contextNode,
+			const XalanElement&		namespaceContext,
+			const XalanDOMString&	stringedValue);
 
 	virtual void
 	pushVariable(
 			const QName&		name,
 			XObject*			var,
-			const DOM_Node&		element);
+			const XalanNode*	element);
 
 	virtual void
 	pushContextMarker(
-			const DOM_Node&		caller,
-			const DOM_Node&		sourceNode);
+			const XalanNode*	caller,
+			const XalanNode*	sourceNode);
 
 	virtual void
 	popCurrentContext();
@@ -235,10 +233,10 @@ public:
 	virtual	void
 	pushParams(
 			const ElemTemplateElement&	xslCallTemplateElement,
-			const DOM_Node&				sourceTree, 
-			const DOM_Node&				sourceNode,
+			XalanNode*					sourceTree, 
+			XalanNode*					sourceNode,
 			const QName&				mode,
-			const DOM_Node&				targetTemplate);
+			const XalanNode*			targetTemplate);
 
 	virtual XObject*
 	getParamVariable(const QName&	theName) const;
@@ -250,68 +248,61 @@ public:
 	endDocument();
 
 	virtual void
+	startElement(const XalanDOMChar*	name);
+
+	virtual void
+	endElement(const XalanDOMChar*	name);
+
+	virtual void
 	characters(
-			const XMLCh*	ch,
-			unsigned int	start,
-			unsigned int	length);
+			const XalanDOMChar*		ch,
+			unsigned int			start,
+			unsigned int			length);
 
 	virtual void
 	charactersRaw(
-			const XMLCh*	ch,
-			unsigned int	start,
-			unsigned int	length);
+			const XalanDOMChar*		ch,
+			unsigned int			start,
+			unsigned int			length);
 
 	virtual void
-	comment(
-			const XMLCh*	data);
+	comment(const XalanDOMChar*		data);
 
 	virtual void
 	processingInstruction(
-			const XMLCh*	target,
-			const XMLCh*	data);
-
-	virtual void
-	startElement(
-			const XMLCh*	name);
-
-	virtual void
-	endElement(
-			const XMLCh*	name);
+			const XalanDOMChar*		target,
+			const XalanDOMChar*		data);
 
 	virtual void
 	flushPending();
 
 	virtual void
 	cloneToResultTree(
-			const DOM_Node&			node, 
-			bool					isLiteral,
-			bool					overrideStrip,
-			bool					shouldCloneAttributes);
+			XalanNode&	node, 
+			bool		isLiteral,
+			bool		overrideStrip,
+			bool		shouldCloneAttributes);
 
 	virtual XObject*
 	createXResultTreeFrag(
-			const ElemTemplateElement&		templateChild,
-			const DOM_Node&					sourceTree,
-			const DOM_Node&					sourceNode);
+			const ElemTemplateElement&	templateChild,
+			XalanNode*					sourceTree,
+			XalanNode*					sourceNode);
 
 	virtual XObject*
 	createXResultTreeFrag(
-			const ElemTemplateElement&		templateChild,
-			const DOM_Node&					sourceTree,
-			const DOM_Node&					sourceNode,
-			const QName&					mode);
+			const ElemTemplateElement&	templateChild,
+			XalanNode*					sourceTree,
+			XalanNode*					sourceNode,
+			const QName&				mode);
 
-	/**
-	 * Given a result tree fragment, walk the tree and
-	 * output it to the result stream.
-	 */
 	virtual void
 	outputResultTreeFragment(const XObject&		theTree);
 
-	virtual const DOMString&
+	virtual const XalanDOMString&
 	getXSLNameSpaceURL() const;
 
-	virtual const DOMString&
+	virtual const XalanDOMString&
 	getXalanXSLNameSpaceURL() const;
 
 	virtual bool
@@ -319,39 +310,38 @@ public:
 
 	virtual void
 	traceSelect(
-			const DOM_Element&		theTemplate,
+			const XalanElement&		theTemplate,
 			const NodeRefListBase&	nl) const;
 
 	virtual bool
-	findOnElementRecursionStack(
-			const ElemTemplateElement*	theElement) const;
+	findOnElementRecursionStack(const ElemTemplateElement*	theElement) const;
 
 	virtual void
-	pushOnElementRecursionStack(
-			const ElemTemplateElement*	theElement);
+	pushOnElementRecursionStack(const ElemTemplateElement*	theElement);
 
 	virtual const ElemTemplateElement*
 	popElementRecursionStack();
+
 
 	// These interfaces are inherited from ExecutionContext...
 
 	virtual void
 	error(
-			const DOMString&	msg,
-			const DOM_Node& 	sourceNode = DOM_Node(),
-			const DOM_Node&		styleNode = DOM_Node()) const;
+			const XalanDOMString&	msg,
+			const XalanNode* 		sourceNode = 0,
+			const XalanNode*		styleNode = 0) const;
 
 	virtual void
 	warn(
-			const DOMString&	msg,
-			const DOM_Node& 	sourceNode = DOM_Node(),
-			const DOM_Node&		styleNode = DOM_Node()) const;
+			const XalanDOMString&	msg,
+			const XalanNode* 		sourceNode = 0,
+			const XalanNode*		styleNode = 0) const;
 
 	virtual void
 	message(
-			const DOMString&	msg,
-			const DOM_Node& 	sourceNode = DOM_Node(),
-			const DOM_Node&		styleNode = DOM_Node()) const;
+			const XalanDOMString&	msg,
+			const XalanNode* 		sourceNode = 0,
+			const XalanNode*		styleNode = 0) const;
 
 private:
 

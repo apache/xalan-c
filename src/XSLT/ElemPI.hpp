@@ -102,22 +102,18 @@ public:
 	~ElemPI();
 
 	// These methods are inherited from ElemTemplateElement ...
-	
-	virtual int
-	getXSLToken() const; 
 
 	virtual void
 	execute(
 			StylesheetExecutionContext&		executionContext,
-			const DOM_Node&					sourceTree, 
-			const DOM_Node&					sourceNode,
+			XalanNode*						sourceTree,
+			XalanNode*						sourceNode,
 			const QName&					mode) const;
 
-	/**
-	 * Add a child to the child list.
-	 */
-	virtual NodeImpl*
-	appendChild(NodeImpl*	newChild);
+protected:
+
+	virtual bool
+	childTypeAllowed(int	xslToken) const;
 
 private:
 

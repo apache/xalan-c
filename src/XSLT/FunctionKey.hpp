@@ -90,13 +90,13 @@ public:
 	~FunctionKey();
 
 	// These methods are inherited from XPath/Function ...
-	
+
 	virtual XObject*
 	execute(
 			XPathExecutionContext&			executionContext,
-			const DOM_Node&					context,
-			int								/* opPos */,
-			const std::vector<XObject*>&	args);
+			XalanNode*						context,
+			int								opPos,
+			const XObjectArgVectorType&		args);
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
 	virtual Function*

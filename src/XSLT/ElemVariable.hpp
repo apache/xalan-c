@@ -78,6 +78,10 @@
 
 
 
+#include <XSLT/Constants.hpp>
+
+
+
 class XObject;
 
 
@@ -102,7 +106,8 @@ public:
 			const DOMString&				name,
 			const AttributeList&			atts,
 			int								lineNumber,
-			int								columnNumber);
+			int								columnNumber,
+			int								xslToken = Constants::ELEMNAME_VARIABLE);
 
 	virtual
 	~ElemVariable();
@@ -117,8 +122,8 @@ public:
 	XObject*
 	getValue(
 			StylesheetExecutionContext&		executionContext,
-			const DOM_Node&					sourceTree, 
-			const DOM_Node&					sourceNode) const;
+			XalanNode*						sourceTree, 
+			XalanNode*						sourceNode) const;
 
 	/**
 	 * Determines if this is a top level variable.
@@ -155,14 +160,11 @@ public:
 
 	// These methods are inherited from ElemTemplateElement ...
 	
-	virtual int
-	getXSLToken() const;
-
 	virtual void
 	execute(
 			StylesheetExecutionContext&		executionContext,
-			const DOM_Node&					sourceTree, 
-			const DOM_Node&					sourceNode,
+			XalanNode*						sourceTree,
+			XalanNode*						sourceNode,
 			const QName&					mode) const;
 
 protected:
@@ -183,7 +185,7 @@ private:
 
 	const XObject*	m_value;
 
-	DOM_Node		m_varContext;
+	XalanNode*		m_varContext;
 };
 
 

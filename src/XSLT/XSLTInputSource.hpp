@@ -61,25 +61,31 @@
 #if !defined(XALAN_XSLTINPUTSOURCE_HEADER_GUARD)
 #define XALAN_XSLTINPUTSOURCE_HEADER_GUARD
 
+
+
 // Base include file.  Must be first.
 #include "XSLTDefinitions.hpp"
 
-#include <framework/URLInputSource.hpp>
-#include <dom/DOM_Node.hpp>
+
+
 #include <sax/InputSource.hpp>
+
 
 
 class BinInputStream;
 class InputStream;
 class Reader;
+class XalanNode;
+
+
 
 class XALAN_XSLT_EXPORT XSLTInputSource : public InputSource
 {
 
 public:
 
-	XSLTInputSource() : InputSource("")
-	{ }
+	explicit
+	XSLTInputSource();
 
 	/**
 	 * Create a new input source with a system identifier.
@@ -91,7 +97,7 @@ public:
 	 *
 	 * @param systemId  system identifier (URI)
 	 */
-	XSLTInputSource(const XMLCh* const systemId);
+	XSLTInputSource(const XMLCh*	systemId);
 
 	/**
 	 * Create a new input source with a system identifier.
@@ -103,7 +109,7 @@ public:
 	 *
 	 * @param systemId  system identifier (URI)
 	 */
-	XSLTInputSource(const char* const systemId);
+	XSLTInputSource(const char*		systemId);
 
 	/**
 	 * Create a new input source with a system identifier and a public
@@ -114,7 +120,9 @@ public:
 	 * @param systemId system identifier (URI)
 	 * @param publicId public identifier
 	 */
-	XSLTInputSource(const char* const systemId, const char* const publicId);
+	XSLTInputSource(
+			const char*		systemId,
+			const char*		publicId);
 
 	/**
 	 * Create a new input source with a system identifier and a public
@@ -125,7 +133,9 @@ public:
 	 * @param systemId system identifier (URI)
 	 * @param publicId public identifier
 	 */
-	XSLTInputSource(const XMLCh* const systemId, const XMLCh* const publicId);
+	XSLTInputSource(
+			const XMLCh*	systemId,
+			const XMLCh*	publicId);
 
 	/**
 	 * Create a new input source with a byte stream.
@@ -136,7 +146,7 @@ public:
 	 *
 	 * @param byteStream pointer to raw byte stream containing the document
 	 */
-	XSLTInputSource (InputStream* byteStream);
+	XSLTInputSource(InputStream*	byteStream);
 
 	/**
 	 * Create a new input source with a character stream.
@@ -147,8 +157,8 @@ public:
 	 *
 	 * @param characterStream pointer to character stream containing the document
 	 */
-	XSLTInputSource (Reader* characterStream);
-	
+	XSLTInputSource(Reader*		characterStream);
+
 	/**
 	 * Create a new input source with a DOM node.
 	 *
@@ -158,8 +168,8 @@ public:
 	 *
 	 * @param node DOM node that is root of the document
 	 */
-	XSLTInputSource (const DOM_Node& node);
-	
+	XSLTInputSource(XalanNode*	node);
+
 	/**
 	 * Makes the byte stream for this input source.
 	 *
@@ -170,27 +180,30 @@ public:
 	 *
 	 * @return pointer to byte stream created
 	 */
-	virtual BinInputStream* makeStream() const;
-	
+	virtual BinInputStream*
+	makeStream() const;
+
 	/**
 	 * Set the DOM node for this input source.
 	 *
 	 * @param node DOM node that is root of the document
 	 */
-	void setNode (const DOM_Node& node);
+	void
+	setNode(XalanNode*	node);
 
 	/**
 	 * Retrieve the DOM node for this input source.
 	 *
 	 * @return DOM node that is root of the document
 	 */
-	const DOM_Node& getNode ();
+	XalanNode*
+	getNode() const;
 
 private:
-	DOM_Node m_node;
+
+	XalanNode*	m_node;
 };
 
 
-#endif	// XALAN_XSLTINPUTSOURCE_HEADER_GUARD
 
-//	$ Log: $
+#endif	// XALAN_XSLTINPUTSOURCE_HEADER_GUARD

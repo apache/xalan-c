@@ -97,7 +97,7 @@ public:
 	ElemElement(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
-			const DOMString&				name,
+			const XalanDOMString&			name,
 			const AttributeList&			atts,
 			int								lineNumber,
 			int								columnNumber);
@@ -106,15 +106,12 @@ public:
 	~ElemElement();
 
 	// These methods are inherited from ElemUse ...
-	
-	virtual int
-	getXSLToken() const;
 
 	virtual void 
 	execute(
 			StylesheetExecutionContext&		executionContext,
-			const DOM_Node&					sourceTree, 
-			const DOM_Node&					sourceNode,
+			XalanNode*						sourceTree,
+			XalanNode*						sourceNode,
 			const QName&					mode) const;
 
 private:

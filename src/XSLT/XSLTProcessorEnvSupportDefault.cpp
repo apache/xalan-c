@@ -58,21 +58,41 @@
 
 
 
-#include <iostream>
+#include <algorithm>
+
 
 
 #include <util/XMLURL.hpp>
+
+
+
 #include <PlatformSupport/DOMStringHelper.hpp>
+#include <PlatformSupport/STLHelper.hpp>
+
+
+
+#include <XPath/ElementPrefixResolverProxy.hpp>
+#include <XPath/XPathExecutionContext.hpp>
+
+
+
 #include <XMLSupport/XMLParserLiaison.hpp>
 
+
+
+#include "KeyTable.hpp"
 #include "StylesheetRoot.hpp"
 #include "XSLTProcessor.hpp"
 #include "XSLTInputSource.hpp"
 
 
+
 XSLTProcessorEnvSupportDefault::XSLTProcessorEnvSupportDefault(XSLTProcessor*	theProcessor) :
-	XPathEnvSupportDefault(),
-	m_processor(theProcessor)
+	XSLTProcessorEnvSupport(),
+	m_defaultSupport(),
+	m_processor(theProcessor),
+	m_keyTables(),
+	m_xlocatorTable()
 {
 }
 
@@ -80,51 +100,105 @@ XSLTProcessorEnvSupportDefault::XSLTProcessorEnvSupportDefault(XSLTProcessor*	th
 
 XSLTProcessorEnvSupportDefault::~XSLTProcessorEnvSupportDefault()
 {
+	reset();
+}
+
+
+
+void
+XSLTProcessorEnvSupportDefault::reset()
+{
+#if !defined(XALAN_NO_NAMESPACES)
+	using std::for_each;
+#endif
+
+	// Clean up the key table vector
+	for_each(m_keyTables.begin(),
+			 m_keyTables.end(),
+			 makeMapValueDeleteFunctor(m_keyTables));
+
+	m_keyTables.clear();
+
+	m_xlocatorTable.clear();
+}
+
+
+
+KeyTable*
+XSLTProcessorEnvSupportDefault::getKeyTable(const XalanNode*	doc) const
+{
+	const KeyTablesTableType::const_iterator		i =
+					m_keyTables.find(doc);
+
+	if (i == m_keyTables.end())
+	{
+		return 0;
+	}
+	else
+	{
+		return i->second;
+	}
+}
+
+
+
+void
+XSLTProcessorEnvSupportDefault::setKeyTable(
+			KeyTable*			keytable,
+			const XalanNode*	doc)
+{
+	// Get rid of any existing keytable
+	delete m_keyTables[doc];
+
+	m_keyTables[doc] = keytable;
 }
 
 
 
 const NodeRefListBase*
 XSLTProcessorEnvSupportDefault::getNodeSetByKey(
-			const DOM_Node&			doc,
-			const DOMString&		name,
-			const DOMString&		ref,
+			const XalanNode&		doc,
+			const XalanDOMString&	name,
+			const XalanDOMString&	ref,
 			const PrefixResolver&	resolver,
 			XPathExecutionContext&	executionContext) const
 {
 	if (m_processor == 0)
 	{
-		return XPathEnvSupportDefault::getNodeSetByKey(doc,
-													   name,
-													   ref,
-													   resolver,
-													   executionContext);
+		return m_defaultSupport.getNodeSetByKey(doc,
+											    name,
+												ref,
+												resolver,
+												executionContext);
 	}
 	else
 	{
-		return m_processor->getNodeSetByKey(doc,
-											name,
-											ref,
-											resolver,
-											executionContext);
-	}
-}
+		const NodeRefListBase*	nl = 0;
 
-DOM_Document
-XSLTProcessorEnvSupportDefault::parseXML(
-		const DOMString&	urlString,
-		const DOMString&	base) const
-{
-	if (m_processor == 0)
-	{
-		return XPathEnvSupportDefault::parseXML(urlString, base);
-	}
-	else
-	{
-		XMLParserLiaison& parserLiaison = m_processor->getXMLParserLiaison();
-		XMLURL xslURL(c_wstr(base), c_wstr(urlString));
-		XSLTInputSource		inputSource(xslURL.getURLText());
-		return parserLiaison.parseXMLStream(inputSource);
+		const Stylesheet* const		theStylesheet =
+			m_processor->getStylesheetRoot();
+
+		if (theStylesheet != 0)
+		{
+			// $$$ ToDo: Figure out this const stuff!!!
+			nl = theStylesheet->getNodeSetByKey(&const_cast<XalanNode&>(doc),
+												name,
+												ref,
+												resolver,
+												executionContext,
+#if defined(XALAN_NO_MUTABLE)
+												(KeysTableType&)m_keyTables);
+#else
+												m_keyTables);
+#endif
+		}
+
+		if(0 == nl)
+		{
+			m_processor->error(XalanDOMString("There is no xsl:key declaration for '") + name + XalanDOMString("'!"));
+		}
+
+		return nl;
 	}
 }
 
@@ -137,8 +211,8 @@ XSLTProcessorEnvSupportDefault::getVariable(
 {
 	if (m_processor == 0)
 	{
-		return XPathEnvSupportDefault::getVariable(factory,
-												   name);
+		return m_defaultSupport.getVariable(factory,
+											name);
 	}
 	else
 	{
@@ -148,12 +222,137 @@ XSLTProcessorEnvSupportDefault::getVariable(
 
 
 
-bool
-XSLTProcessorEnvSupportDefault::shouldStripSourceNode(const DOM_Node&	node) const
+XalanDocument*
+XSLTProcessorEnvSupportDefault::parseXML(
+		const XalanDOMString&	urlString,
+		const XalanDOMString&	base)
 {
 	if (m_processor == 0)
 	{
-		return XPathEnvSupportDefault::shouldStripSourceNode(node);
+		return m_defaultSupport.parseXML(urlString, base);
+	}
+	else
+	{
+		XMLParserLiaison& parserLiaison = m_processor->getXMLParserLiaison();
+
+		const XMLURL		xslURL(c_wstr(base), c_wstr(urlString));
+
+		const XMLCh* const	urlText = xslURL.getURLText();
+
+		XSLTInputSource		inputSource(urlText);
+
+		XalanDocument*		theDocument = 
+			parserLiaison.parseXMLStream(inputSource);
+
+		setSourceDocument(urlText, theDocument);
+
+		return theDocument;
+	}
+}
+
+
+
+XalanDocument*
+XSLTProcessorEnvSupportDefault::getSourceDocument(const XalanDOMString&		theURI) const
+{
+	return m_defaultSupport.getSourceDocument(theURI);
+}
+
+
+
+void
+XSLTProcessorEnvSupportDefault::setSourceDocument(
+			const XalanDOMString&	theURI,
+			XalanDocument*			theDocument)
+{
+	m_defaultSupport.setSourceDocument(theURI, theDocument);
+}
+
+
+
+XalanDOMString
+XSLTProcessorEnvSupportDefault::findURIFromDoc(const XalanDocument*		owner) const
+{
+	return m_defaultSupport.findURIFromDoc(owner);
+}
+
+
+
+XalanDocument*
+XSLTProcessorEnvSupportDefault::getDOMFactory() const
+{
+	if (m_processor == 0)
+	{
+		return m_defaultSupport.getDOMFactory();
+	}
+	else
+	{
+		return m_processor->getDOMFactory();
+	}
+}
+
+
+
+bool
+XSLTProcessorEnvSupportDefault::functionAvailable(
+			const XalanDOMString&	theNamespace,
+			const XalanDOMString&	extensionName) const
+{
+	return m_defaultSupport.functionAvailable(theNamespace,
+											  extensionName);
+}
+
+
+
+XObject*
+XSLTProcessorEnvSupportDefault::extFunction(
+			XPathExecutionContext&			executionContext,
+			const XalanDOMString&			theNamespace,
+			const XalanDOMString&			extensionName,
+			const XObjectArgVectorType&		argVec) const
+{
+	return m_defaultSupport.extFunction(executionContext,
+										theNamespace,
+										extensionName,
+										argVec);
+}
+
+
+
+XLocator*
+XSLTProcessorEnvSupportDefault::getXLocatorFromNode(const XalanNode*	node) const
+{
+	const XLocatorTableType::const_iterator		i =
+					m_xlocatorTable.find(node);
+
+	if (i == m_xlocatorTable.end())
+	{
+		return 0;
+	}
+	else
+	{
+		return i->second;
+	}
+}
+
+
+
+void
+XSLTProcessorEnvSupportDefault::associateXLocatorToNode(
+			const XalanNode*	node,
+			XLocator*			xlocator)
+{
+	m_xlocatorTable[node] = xlocator;
+}
+
+
+
+bool
+XSLTProcessorEnvSupportDefault::shouldStripSourceNode(const XalanNode&	node) const
+{
+	if (m_processor == 0)
+	{
+		return m_defaultSupport.shouldStripSourceNode(node);
 	}
 	else
 	{
@@ -165,42 +364,40 @@ XSLTProcessorEnvSupportDefault::shouldStripSourceNode(const DOM_Node&	node) cons
 
 bool
 XSLTProcessorEnvSupportDefault::problem(
-			eSource				/* where */,
-			eClassification		classification,
-			const DOM_Node&		/* styleNode */,
-			const DOM_Node&		/* sourceNode */,
-			const DOMString&	msg,
-			int					lineNo,
-			int					charOffset) const
+			eSource					where,
+			eClassification			classification,
+			const XalanNode*		styleNode,
+			const XalanNode*		sourceNode,
+			const XalanDOMString&	msg,
+			int						lineNo,
+			int						charOffset) const
 {
-	std::cerr << msg
-			  << ", at line number "
-			  << static_cast<long>(lineNo)
-			  << " at offset "
-			  << static_cast<long>(charOffset)
-			  << std::endl;
-
-	return classification == XPathEnvSupport::eError ? true : false;
+	return m_defaultSupport.problem(where,
+									classification,
+									styleNode,
+									sourceNode,
+									msg,
+									lineNo,
+									charOffset);
 }
 
 
 
 bool
 XSLTProcessorEnvSupportDefault::problem(
-			eSource					/* where */,
+			eSource					where,
 			eClassification			classification,
-			const PrefixResolver*	/* resolver */,
-			const DOM_Node&			/* sourceNode */,
-			const DOMString&		msg,
+			const PrefixResolver*	resolver,
+			const XalanNode*		sourceNode,
+			const XalanDOMString&	msg,
 			int						lineNo,
 			int						charOffset) const
 {
-	std::cerr << msg
-			  << ", at line number "
-			  << static_cast<long>(lineNo)
-			  << " at offset "
-			  << static_cast<long>(charOffset)
-			  << std::endl;
-
-	return classification == XPathEnvSupport::eError ? true : false;
+	return m_defaultSupport.problem(where,
+									classification,
+									resolver,
+									sourceNode,
+									msg,
+									lineNo,
+									charOffset);
 }

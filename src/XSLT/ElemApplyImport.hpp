@@ -94,30 +94,24 @@ public:
 	ElemApplyImport(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
-			const DOMString&				name,
+			const XalanDOMString&			name,
 			const AttributeList&			atts,
 			int								lineNumber, 
 			int								columnNumber);
 
 
 	// These methods are inherited from ElemTemplateElement ...
-	
-	virtual int
-	getXSLToken() const; 
 
 	virtual void
 	execute(
 			StylesheetExecutionContext&		executionContext,
-			const DOM_Node&					sourceTree, 
-			const DOM_Node&					sourceNode,
+			XalanNode*						sourceTree, 
+			XalanNode*						sourceNode,
 			const QName&					mode) const;
 
-	/**
-	 * Add a child to the child list.
-	 * <!ELEMENT xsl:apply-imports EMPTY>
-	 */
-	virtual NodeImpl*
-	appendChild(NodeImpl*	newChild);
+	virtual ElemTemplateElement*
+	appendChildElem(ElemTemplateElement*	newChild);
+
 
 private:
 };

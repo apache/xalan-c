@@ -60,13 +60,11 @@
 // Base header file.  Must be first.
 #include <XSLT/XSLTDefinitions.hpp>
 
-#include <vector>
+
 
 #include <XPath/Function.hpp>
 
-class DOM_Node;
-class XObject;
-class XPathExecutionContext;
+
 
 // Implementation of the XSLT function generate-id().
 //
@@ -76,16 +74,17 @@ public:
 
 	FunctionGenerateID();
 
-	virtual	~FunctionGenerateID();
+	virtual
+	~FunctionGenerateID();
 
 	// These methods are inherited from XPath/Function ...
 	
 	virtual XObject*
 	execute(
 			XPathExecutionContext&			executionContext,
-			const DOM_Node&					context,
-			int								/* opPos */,
-			const std::vector<XObject*>&	args);
+			XalanNode*						context,
+			int								opPos,
+			const XObjectArgVectorType&		args);
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
 	virtual Function*

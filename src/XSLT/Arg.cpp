@@ -62,18 +62,14 @@
 
 
 
-// Other XSL4C header files.
 #include <PlatformSupport/DOMStringHelper.hpp>
 
 
-/*
- * Construct an arg that represents an expression
- */
 
 Arg::Arg(
-		const QName&		name,
-		const DOMString&	expr,
-		bool				isParamVar) :
+		const QName&			name,
+		const XalanDOMString&	expr,
+		bool					isParamVar) :
 	StackEntry(eArgument),
 	m_qname(name),
 	m_argType(eExpression),
@@ -83,22 +79,21 @@ Arg::Arg(
 {
 }
 
-/*
- * Construct an arg from an XObject 
- * NOTE: this should also be able to handle the case of a result tree
- * fragment as an XRTreeFrag
- */
+
+
 Arg::Arg(
 		const QName&	name,
-		XObject*		val) :
+		XObject*		val,
+		bool			isParamVar) :
 	StackEntry(eArgument),
 	m_qname(name),
 	m_argType(eXObject),
-	m_isParamVar(false),
+	m_isParamVar(isParamVar),
 	m_val(val),
 	m_expression()
 {
 }
+
 
 
 Arg::Arg(const Arg&	theSource) :
@@ -115,7 +110,6 @@ Arg::Arg(const Arg&	theSource) :
 
 Arg::~Arg()
 {
-	m_val = 0;
 }
 
 
@@ -149,8 +143,3 @@ Arg::clone() const
 {
 	return new Arg(*this);
 }
-
-
-/*
- *      $ Log: $
- */

@@ -72,6 +72,7 @@
 #include <memory>
 
 
+
 class XObjectFactory;
 class XPathEnvSupport;
 class XPathFactory;
@@ -103,49 +104,49 @@ public:
 
 	virtual void
 	error(
-			const DOMString&	msg,
-			const DOM_Node& 	sourceNode = DOM_Node(),
-			const DOM_Node&		styleNode = DOM_Node()) const;
+			const XalanDOMString&	msg,
+			const XalanNode* 		sourceNode = 0,
+			const XalanNode*		styleNode = 0) const;
 
 	virtual void
 	warn(
-			const DOMString&	msg,
-			const DOM_Node& 	sourceNode = DOM_Node(),
-			const DOM_Node&		styleNode = DOM_Node()) const;
+			const XalanDOMString&	msg,
+			const XalanNode* 		sourceNode = 0,
+			const XalanNode*		styleNode = 0) const;
 	
 	virtual void
 	message(
-			const DOMString&	msg,
-			const DOM_Node& 	sourceNode = DOM_Node(),
-			const DOM_Node&		styleNode = DOM_Node()) const;
+			const XalanDOMString&	msg,
+			const XalanNode* 		sourceNode = 0,
+			const XalanNode*		styleNode = 0) const;
 
 	// These interfaces are inherited from StylesheetConstructionContext...
 
 	virtual int
-	getAttrTok(const DOMString&	name) const;
+	getAttrTok(const XalanDOMString&	name) const;
 
 	virtual XMLURL*
-	getURLFromString(const DOMString&	urlString);
+	getURLFromString(const XalanDOMString&	urlString);
 
 	virtual XMLURL*
 	getURLFromString(
-			const DOMString&	urlString,
-			const DOMString&	base);
+			const XalanDOMString&	urlString,
+			const XalanDOMString&	base);
 
-	virtual const DOMString&
+	virtual const XalanDOMString&
 	getXSLNameSpaceURLPre() const;
 
-	virtual const DOMString&
+	virtual const XalanDOMString&
 	getXSLNameSpaceURL() const;
 
 	virtual XPath*
 	createMatchPattern(
-			const DOMString&		str,
+			const XalanDOMString&	str,
 			const PrefixResolver&	resolver);
 
 	virtual XPath*
 	createXPath(
-			const DOMString&		str,
+			const XalanDOMString&	str,
 			const PrefixResolver&	resolver);
 
 private:
@@ -155,7 +156,12 @@ private:
 	XObjectFactory&					m_xobjectFactory;
 	XPathFactory&					m_xpathFactory;
 
+#if defined(XALAN_NO_NAMESPACES)
+	auto_ptr<XPathProcessor>		m_xpathProcessor;
+#else
 	std::auto_ptr<XPathProcessor>	m_xpathProcessor;
+#endif
+
 };
 
 

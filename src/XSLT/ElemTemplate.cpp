@@ -76,7 +76,7 @@
 ElemTemplate::ElemTemplate(
 		StylesheetConstructionContext&	constructionContext,
 		Stylesheet&						stylesheetTree,
-		const DOMString&				name,
+		const XalanDOMString&			name,
 		const AttributeList&			atts,
 		int								lineNumber,
 		int								columnNumber) :
@@ -84,19 +84,21 @@ ElemTemplate::ElemTemplate(
 						stylesheetTree,
 						name,
 						lineNumber,
-						columnNumber),
-		m_matchPattern(0),
-		m_name(),
-		m_mode(),
-		m_priority(XPath::s_MatchScoreNone)
+						columnNumber,
+						Constants::ELEMNAME_TEMPLATE),
+	m_matchPattern(0),
+	m_name(),
+	m_mode(),
+	m_priority(XPath::s_MatchScoreNone)
 {
-	const int nAttrs = atts.getLength();
+	const unsigned int	nAttrs = atts.getLength();
 
-	for(int i = 0; i < nAttrs; i++)
+	for(unsigned int i = 0; i < nAttrs; i++)
 	{
-		const DOMString		aname(atts.getName(i));
+		const XalanDOMChar* const	aname = atts.getName(i);
 
-		const int			tok = constructionContext.getAttrTok(aname);
+		const int					tok =
+			constructionContext.getAttrTok(aname);
 
 		switch(tok)
 		{
@@ -110,7 +112,7 @@ ElemTemplate::ElemTemplate(
 
 		case Constants::TATTRNAME_PRIORITY:
 			{
-				const DOMString priorityVal = atts.getValue(i);
+				const XalanDOMString priorityVal = atts.getValue(i);
 				m_priority = DOMStringToDouble(priorityVal);
 			}
 			break;
@@ -145,19 +147,11 @@ ElemTemplate::~ElemTemplate()
 
 
 
-int
-ElemTemplate::getXSLToken() const 
-{
-	return Constants::ELEMNAME_TEMPLATE;
-}
-
-
-
 void
 ElemTemplate::execute(
 			StylesheetExecutionContext&		executionContext,
-			const DOM_Node&					sourceTree, 
-			const DOM_Node&					sourceNode,
+			XalanNode*						sourceTree,
+			XalanNode*						sourceNode,
 			const QName&					mode) const
 {    
 	ElemTemplateElement::execute(executionContext, sourceTree, sourceNode, mode);

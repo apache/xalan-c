@@ -10,33 +10,33 @@
  * are met:
  *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
+ *	  notice, this list of conditions and the following disclaimer. 
  *
  * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in
- *    the documentation and/or other materials provided with the
- *    distribution.
+ *	  notice, this list of conditions and the following disclaimer in
+ *	  the documentation and/or other materials provided with the
+ *	  distribution.
  *
  * 3. The end-user documentation included with the redistribution,
- *    if any, must include the following acknowledgment:  
- *       "This product includes software developed by the
- *        Apache Software Foundation (http://www.apache.org/)."
- *    Alternately, this acknowledgment may appear in the software itself,
- *    if and wherever such third-party acknowledgments normally appear.
+ *	  if any, must include the following acknowledgment:  
+ *		 "This product includes software developed by the
+ *		  Apache Software Foundation (http://www.apache.org/)."
+ *	  Alternately, this acknowledgment may appear in the software itself,
+ *	  if and wherever such third-party acknowledgments normally appear.
  *
  * 4. The names "Xalan" and "Apache Software Foundation" must
- *    not be used to endorse or promote products derived from this
- *    software without prior written permission. For written 
- *    permission, please contact apache@apache.org.
+ *	  not be used to endorse or promote products derived from this
+ *	  software without prior written permission. For written 
+ *	  permission, please contact apache@apache.org.
  *
  * 5. Products derived from this software may not be called "Apache",
- *    nor may "Apache" appear in their name, without prior written
- *    permission of the Apache Software Foundation.
+ *	  nor may "Apache" appear in their name, without prior written
+ *	  permission of the Apache Software Foundation.
  *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED.  IN NO EVENT SHALL THE APACHE SOFTWARE FOUNDATION OR
+ * DISCLAIMED.	IN NO EVENT SHALL THE APACHE SOFTWARE FOUNDATION OR
  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
@@ -61,12 +61,19 @@
 #if !defined(XALAN_XSLTPROCESSOR_HEADER_GUARD)
 #define XALAN_XSLTPROCESSOR_HEADER_GUARD
 
+
+
 // Base include file.  Must be first.
 #include "XSLTDefinitions.hpp"
 
+
+
+#include <XalanDOM/XalanDOMString.hpp>
+
+
+
 class Arg;
 class DispatcherFactory;
-class DOM_Element;
 class ElemTemplateElement;
 class Formatter;
 class FormatterListener;
@@ -85,6 +92,9 @@ class StylesheetConstructionContext;
 class StylesheetExecutionContext;
 class StylesheetRoot;
 class TraceListener;
+class XalanDocument;
+class XalanElement;
+class XalanNode;
 class XMLParserLiaison;
 class XObject;
 class XObjectFactory;
@@ -96,16 +106,12 @@ class XSLTResultTarget;
 
 
 
-#include <dom/DOM_Node.hpp>
-#include <dom/DOMString.hpp>
-
-
 /**
  * This is an interface for an XSLT Processor engine. It's the responsibility
  * of the implementation of the XSLTProcessor interface, collaborating with a
  * XMLParserLiaison, the DOM, and the XPath engine, to transform a source tree
  * of nodes into a result tree according to instructions and templates
- * specified by a stylesheet tree.  The methods process(...) are
+ * specified by a stylesheet tree.	The methods process(...) are
  * the primary public entry points.
  * 
  * If you reuse the processor instance, you should call reset() between calls.
@@ -114,7 +120,7 @@ class XALAN_XSLT_EXPORT XSLTProcessor
 {
 public:
 
-  	XSLTProcessor();
+	XSLTProcessor();
 
 	virtual
 	~XSLTProcessor();
@@ -122,12 +128,12 @@ public:
 	/**
 	 * Transform the source tree to the output in the given result tree target.
 	 *
-	 * @param inputSource         input source,  may be null
-	 * @param stylesheetSource    stylesheet source,  may be null if source
-	 *                            has a xml-stylesheet PI
-	 * @param outputTarget        output source tree
+	 * @param inputSource		  input source,  may be null
+	 * @param stylesheetSource	  stylesheet source,  may be null if source
+	 *							  has a xml-stylesheet PI
+	 * @param outputTarget		  output source tree
 	 * @param constructionContext context for construction of objects
-	 * @param executionContext    current execution context
+	 * @param executionContext	  current execution context
 	 * @exception XSLProcessorException 
 	 */
 	virtual void
@@ -136,13 +142,13 @@ public:
 		XSLTInputSource*				stylesheetSource,
 		XSLTResultTarget&				outputTarget,
 		StylesheetConstructionContext&	constructionContext,
-		StylesheetExecutionContext&		executionContext) = 0;
+		StylesheetExecutionContext& 	executionContext) = 0;
 
 	/**
 	 * Given a stylesheet input source, compile the stylesheet into an internal
 	 * representation. This will delete any existing stylesheet root.
 	 *
-	 * @param stylesheetSource    input source for the stylesheet
+	 * @param stylesheetSource	  input source for the stylesheet
 	 * @param constructionContext context for construction of objects
 	 * @return pointer to the compiled stylesheet object
 	 * @exception XSLProcessorException 
@@ -163,32 +169,41 @@ public:
 	 */
 	virtual StylesheetRoot*
 	processStylesheet(
-			const DOMString&				xsldocURLString,
+			const XalanDOMString&			xsldocURLString,
 			StylesheetConstructionContext&	constructionContext) = 0;
   
 	/**
 	 * Reset the state.  This needs to be called after a process() call 
 	 * is invoked, if the processor is to be used again.
 	 */
-   virtual void reset() = 0;
+	virtual void
+	reset() = 0;
   
+	/**
+	 * Get a factory for creating new target nodes.
+	 *
+	 * @return The factory
+	 */
+	virtual XalanDocument*
+	getDOMFactory() const = 0;
+
 	/**
 	 * Given an input source, get the source tree.
 	 *
 	 * @param inputSource pointer to input source
 	 * @return source tree
 	 */
-   virtual const DOM_Node getSourceTreeFromInput(XSLTInputSource* inputSource) = 0;
+	virtual XalanNode*
+	getSourceTreeFromInput(XSLTInputSource* 	inputSource) = 0;
 
    /**
-    * Output an object to the result tree by doing the right conversions.
-    * This is public for access by extensions.
-    *
-    * @param obj the XObject to output
-    */
+	* Output an object to the result tree by doing the right conversions.
+	* This is public for access by extensions.
+	*
+	* @param obj the XObject to output
+	*/
 	virtual void
-	outputToResultTree(
-			const XObject&		xobj) = 0;
+	outputToResultTree(const XObject&	xobj) = 0;
 
 	/**
 	 * Retrieve a top level variable corresponding to name.
@@ -197,26 +212,26 @@ public:
 	 * @return pointer to XObject for variable
 	 */
 	virtual XObject*
-	getTopLevelVariable(const DOMString&	theName) const = 0;
+	getTopLevelVariable(const XalanDOMString&	theName) const = 0;
 
 	/**
 	 * Reset the state of execution to node 'xmlNode' in source tree
 	 * 'sourceTree.'
 	 * 
 	 * @param sourceTree source tree for execution
-	 * @param xmlNode    node to execute
+	 * @param xmlNode	 node to execute
 	 */
 	virtual void
 	resetCurrentState(
-			const DOM_Node&		sourceTree,
-			const DOM_Node&		xmlNode) = 0;
+			XalanNode*	sourceTree,
+			XalanNode*	xmlNode) = 0;
 
 	/**
 	 * Retrieve root document for stylesheet.
 	 * 
 	 * @return root document
 	 */
-	virtual DOM_Document
+	virtual XalanDocument*
 	getRootDoc() const = 0;
 
 	/**
@@ -225,26 +240,42 @@ public:
 	 * @param doc root document
 	 */
 	virtual void
-	setRootDoc(const DOM_Document& doc) = 0;
+	setRootDoc(XalanDocument*	doc) = 0;
+
+	/**
+	 * Retrieve the root stylesheet.
+	 * 
+	 * @return pointer to root stylesheet
+	 */
+	virtual StylesheetRoot*
+	getStylesheetRoot() const = 0;
+
+	/**
+	 * Set the root stylesheet.
+	 * 
+	 * @param theStylesheet pointer to new root stylesheet
+	 */
+	virtual void
+	setStylesheetRoot(StylesheetRoot*	theStylesheet) = 0;
 
 	/**
 	 * Evaluates attribute values for attribute templates (Stuff in curly {}
 	 * braces that hold expressions).
 	 *
-	 * @param contextNode      current node in the source tree
+	 * @param contextNode	   current node in the source tree
 	 * @param namespaceContext current namespace context for the
-	 *                         pattern-by-example structures when parsing
-	 *                         expressions
+	 *						   pattern-by-example structures when parsing
+	 *						   expressions
 	 * @param stringedValue    attribute value to be processed
 	 * @param executionContext current execution context
 	 * @return processed stringedValue with attribute templates resolved
 	 * @exception XSLProcessorException 
 	 */
-	virtual DOMString
+	virtual XalanDOMString
 	evaluateAttrVal(
-			const DOM_Node&			contextNode,
-			const DOM_Element&		namespaceContext,
-			const DOMString&		stringedValue,
+			XalanNode*				contextNode,
+			const XalanElement& 	namespaceContext,
+			const XalanDOMString&	stringedValue,
 			XPathExecutionContext&	executionContext) = 0;
 
 	/**
@@ -252,18 +283,18 @@ public:
 	 * contents.  Caller owns the memory.
 	 *
 	 * @param templateChild template element that holds the fragment
-	 * @param sourceTree    source tree document context
-	 * @param sourceNode    current source context node
-	 * @param mode          mode under which the template is operating
+	 * @param sourceTree	source tree document context
+	 * @param sourceNode	current source context node
+	 * @param mode			mode under which the template is operating
 	 * @return pointer to an object that represents the result tree fragment
 	 * @exception XSLProcessorException 
 	 */
 	virtual ResultTreeFragBase*
 	createResultTreeFrag(
-			StylesheetExecutionContext&		executionContext,
+			StylesheetExecutionContext& 	executionContext,
 			const ElemTemplateElement&		templateChild,
-			const DOM_Node&					sourceTree,
-			const DOM_Node&					sourceNode,
+			XalanNode*						sourceTree,
+			XalanNode*						sourceNode,
 			const QName&					mode) = 0;
 
 	/**
@@ -293,7 +324,7 @@ public:
 	 * 
 	 * @return unique namespace prefix
 	 */
-   virtual const DOMString
+   virtual const XalanDOMString
    getUniqueNSValue() const = 0;
 
 	/**
@@ -304,7 +335,7 @@ public:
 	 * @return pointer to XObject
 	 */
    virtual XObject*
-   createXResultTreeFrag(const ResultTreeFragBase&  r) const = 0;
+   createXResultTreeFrag(const ResultTreeFragBase&	r) const = 0;
 
 	/**
 	 * Given a name, locate a variable in the current context, and return 
@@ -329,15 +360,15 @@ public:
 	/**
 	 * Push a named variable onto the processor variable stack
 	 *
-	 * @param name    name of variable
-	 * @param var     pointer to XObject value
+	 * @param name	  name of variable
+	 * @param var	  pointer to XObject value
 	 * @param element element marker for variable
 	 */
 	virtual void
 	pushVariable(
 			const QName&		name,
 			XObject*			var,
-			const DOM_Node&		element) = 0;
+			const XalanNode*	element) = 0;
 
   /**
 	* Push a top-level stylesheet parameter.  This value can be evaluated via
@@ -348,8 +379,8 @@ public:
    */
    virtual void
    setStylesheetParam(
-			const DOMString&	key,
-			XObject*			value) = 0;
+			const XalanDOMString&	key,
+			XObject*				value) = 0;
   
   /**
 	* Push a top-level stylesheet parameter.  This value can be evaluated via
@@ -359,30 +390,8 @@ public:
    * @param expression expression that will be evaluated
    */
    virtual void setStylesheetParam(
-			const DOMString& key,
-			const DOMString& expression) = 0;
-
-	/**
-	 * Given a valid element key, return the corresponding node list.
-	 *
-	 * @param doc              source document
-	 * @param name             name of the key, which must match the 'name'
-	 *                         attribute on xsl:key
-	 * @param ref              value that must match the value found by the
-	 *                         'match' attribute on xsl:key
-	 * @param resolver         resolver for namespace resolution
-	 * @param executionContext current execution context
-	 * @return if the name was not declared with xsl:key, this will return
-	 *         null, if the identifier is not found, it will return an empty
-	 *         node set, otherwise it will return a nodeset of nodes.
-	 */
-   virtual const NodeRefListBase*
-   getNodeSetByKey(
-					const DOM_Node&			doc, 
-					const DOMString&		name, 
-					const DOMString&		ref, 
-					const PrefixResolver&	resolver,
-					XPathExecutionContext&	executionContext) const = 0;
+			const XalanDOMString&	key,
+			const XalanDOMString&	expression) = 0;
 
 	/**
 	 * Tells, through the combination of the default-space attribute on
@@ -395,53 +404,59 @@ public:
 	 * @return true if the text node should be stripped of extra whitespace
 	 */
 	virtual bool
-	shouldStripSourceNode(const DOM_Node&	textNode) const = 0;
+	shouldStripSourceNode(const XalanNode&	textNode) const = 0;
 
 	/**
 	 * Get the current formatter listener.
 	 * 
 	 * @return pointer to formatter listener
 	 */
-   virtual FormatterListener* getFormatterListener() const = 0;
+	virtual FormatterListener*
+	getFormatterListener() const = 0;
   
 	/**
 	 * Set the current formatter listener.
 	 *
 	 * @param flistener pointer to new formatter listener
 	 */
-	virtual void setFormatterListener(FormatterListener* flistener) = 0;  
+	virtual void
+	setFormatterListener(FormatterListener* 	flistener) = 0;  
   
 	/**
 	 * Add a trace listener for the purposes of debugging and diagnosis.
 	 * 
 	 * @param tl pointer to listener to add
 	 */
-   virtual void addTraceListener(TraceListener* tl) = 0;
+	virtual void
+	addTraceListener(TraceListener* 	tl) = 0;
   
 	/**
 	 * If this is set to true, simple traces of template calls are made.
 	 *
 	 * @param b true to make traces of template calls
 	 */
-	virtual void setTraceTemplates(bool b) = 0;
+	virtual void
+	setTraceTemplates(bool b) = 0;
 
 	/**
 	 * If this is set to true, simple traces of select calls are made.
 	 *
 	 * @param b true to make traces of select calls
 	 */
-	virtual void setTraceSelect(bool b) = 0;
+	virtual void
+	setTraceSelect(bool b) = 0;
   
 	/**
 	 * If this is set to true, debug diagnostics about 
 	 * template children as they are being constructed 
 	 * will be written to the m_diagnosticsPrintWriter 
-	 * stream.  diagnoseTemplateChildren is false by
+	 * stream.	diagnoseTemplateChildren is false by
 	 * default.
 	 *
 	 * @param b true to make traces of template children construction
 	 */
-	virtual void setTraceTemplateChildren(bool b) = 0;
+	virtual void
+	setTraceTemplateChildren(bool b) = 0;
 
 	/**
 	 * If the quietConflictWarnings property is set to 
@@ -451,15 +466,17 @@ public:
 	 *
 	 * @param b true if conflict warnings should be suppressed.
 	 */
-	virtual void setQuietConflictWarnings(bool b) = 0;
+	virtual void
+	setQuietConflictWarnings(bool b) = 0;
 
 	/**
 	 * Remove a trace listener.
 	 *
 	 * @param tl Trace listener to be removed.
 	 */
-	virtual void removeTraceListener(TraceListener* tl) = 0;
-  
+	virtual void
+	removeTraceListener(TraceListener*	tl) = 0;
+
 // @@TODO: what to do about output stream ??
   /*
    * If this is set, diagnostics will be 
@@ -467,7 +484,7 @@ public:
    * the value is null, then diagnostics will be turned 
    * off.
    */
-//   virtual void setDiagnosticsOutput(java.io.OutputStream out) = 0;
+//	 virtual void setDiagnosticsOutput(java.io.OutputStream out) = 0;
   
 	/**
 	 * If this is set, diagnostics will be 
@@ -477,12 +494,51 @@ public:
 	 *
 	 * @param pw pointer to print writer
 	 */
-	virtual void setDiagnosticsOutput(PrintWriter* pw) = 0;
+	virtual void
+	setDiagnosticsOutput(PrintWriter* pw) = 0;
 
+	/**
+	 * Give the user a message.
+	 * 
+	 * @param msg		 text of message to output
+	 * @param sourceNode node in source where message occurred
+	 * @param styleNode  node in stylesheet where message occurred
+	 */
+	virtual void
+	message(
+			const XalanDOMString&	msg,
+			const XalanNode*		styleNode = 0,
+			const XalanNode*		sourceNode = 0) const = 0;
+
+	/**
+	 * Tell the user of an warning, and probably throw an exception.
+	 * 
+	 * @param msg		 text of message to output
+	 * @param sourceNode node in source where error occurred
+	 * @param styleNode  node in stylesheet where error occurred
+	 * @exception XSLProcessorException
+	 */
+	virtual void
+	warn(
+			const XalanDOMString&	msg,
+			const XalanNode*		styleNode = 0,
+			const XalanNode*		sourceNode = 0) const = 0;
+
+	/**
+	 * Tell the user of an error, and probably throw an exception.
+	 * 
+	 * @param msg		 text of message to output
+	 * @param sourceNode node in source where error occurred
+	 * @param styleNode  node in stylesheet where error occurred
+	 * @exception XSLProcessorException
+	 */
+	virtual void
+	error(
+			const XalanDOMString&	msg,
+			const XalanNode*		styleNode = 0,
+			const XalanNode*		sourceNode = 0) const = 0;
 };
 
-#endif	// XALAN_XSLTPROCESSOR_HEADER_GUARD
 
-/*
- *	$ Log: $
- */
+
+#endif	// XALAN_XSLTPROCESSOR_HEADER_GUARD

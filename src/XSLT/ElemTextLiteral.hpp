@@ -102,7 +102,7 @@ public:
 			Stylesheet&						stylesheetTree,
 			int								lineNumber,
 			int								columnNumber,
-            const XMLCh*					ch,
+            const XalanDOMChar*				ch,
 			int								start,
 			int								length,
             bool							isCData,
@@ -125,14 +125,11 @@ public:
 
 	// These methods are inherited from ElemTemplateElement ...
 	
-	virtual int
-	getXSLToken() const;
-
 	virtual void
 	execute(
 			StylesheetExecutionContext&		executionContext,
-			const DOM_Node&					sourceTree, 
-			const DOM_Node&					sourceNode,
+			XalanNode*						sourceTree,
+			XalanNode*						sourceNode,
 			const QName&					mode) const;
 
 private:
@@ -148,9 +145,9 @@ private:
 	const bool				m_disableOutputEscaping;
 
 #if defined(XALAN_NO_NAMESPACES)
-	typedef vector<XMLCh>	XMLChVectorType;
+	typedef vector<XalanDOMChar>		XMLChVectorType;
 #else
-	typedef std::vector<XMLCh>	XMLChVectorType;
+	typedef std::vector<XalanDOMChar>	XMLChVectorType;
 #endif
 
 	const XMLChVectorType	m_ch;

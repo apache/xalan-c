@@ -80,9 +80,9 @@ FunctionCurrent::~FunctionCurrent()
 XObject*
 FunctionCurrent::execute(
 			XPathExecutionContext&			executionContext,
-			const DOM_Node&					context,
-			int								/* opPos */,
-			const std::vector<XObject*>&	args)
+			XalanNode*						context,
+			int								opPos,
+			const XObjectArgVectorType&		args)
 {
 	if (args.size() != 0)
 	{
@@ -100,7 +100,7 @@ FunctionCurrent::execute(
 	}
 	else
 	{
-		return executionContext.getXObjectFactory().createNodeSet(context);
+		return executionContext.getXObjectFactory().createNodeSet(*context);
 	}
 }
 

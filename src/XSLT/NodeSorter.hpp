@@ -74,15 +74,11 @@
 
 
 
-
-//#include <dom/DOM_Node.hpp>
-
-
-
 #include "NodeSortKey.hpp"
 
 
-class DOM_Node;
+
+class XalanNode;
 class MutableNodeRefList;
 class XPath;
 class XPathExecutionContext;
@@ -98,11 +94,11 @@ class NodeSorter
 public:
 
 #if defined(XALAN_NO_NAMESPACES)
-typedef vector<DOM_Node>		DOMNodeVectorType;
-typedef vector<NodeSortKey>		DOMNodeSortKeyVectorType;
+	typedef vector<XalanNode*>			NodeVectorType;
+	typedef vector<NodeSortKey>			NodeSortKeyVectorType;
 #else
-typedef std::vector<DOM_Node>		DOMNodeVectorType;
-typedef std::vector<NodeSortKey>		DOMNodeSortKeyVectorType;
+	typedef std::vector<XalanNode*>		NodeVectorType;
+	typedef std::vector<NodeSortKey>	NodeSortKeyVectorType;
 #endif
 
 	/**
@@ -124,8 +120,8 @@ typedef std::vector<NodeSortKey>		DOMNodeSortKeyVectorType;
 	 */
 	void
 	sort(
-			DOMNodeVectorType&				v,
-			const DOMNodeSortKeyVectorType&		keys);
+			NodeVectorType&					v,
+			const NodeSortKeyVectorType&	keys);
 
 	/**
 	 * Given a vector of nodes, sort each node according to the criteria in the
@@ -136,8 +132,8 @@ typedef std::vector<NodeSortKey>		DOMNodeSortKeyVectorType;
 	 */
 	void
 	sort(
-			MutableNodeRefList&					theList,
-			const DOMNodeSortKeyVectorType&		keys);
+			MutableNodeRefList&				theList,
+			const NodeSortKeyVectorType&	keys);
 
 	/*
 	 * TODO: Optimize compare -- cache the getStringExpr results,
@@ -147,7 +143,11 @@ typedef std::vector<NodeSortKey>		DOMNodeSortKeyVectorType;
 	/**
 	 * Return the results of a compare of two nodes.
 	 */
-	struct NodeSortKeyCompare : public std::binary_function<const DOM_Node&, const DOM_Node&, bool>
+#if defined(XALAN_NO_NAMESPACES)
+	struct NodeSortKeyCompare : public binary_function<XalanNode*, XalanNode*, bool>
+#else
+	struct NodeSortKeyCompare : public std::binary_function<XalanNode*, XalanNode*, bool>
+#endif
 	{
 	public:
 
@@ -159,8 +159,8 @@ typedef std::vector<NodeSortKey>		DOMNodeSortKeyVectorType;
 	 * @param theNodeSortKeys vector of keys upon which to sort
 	 */
 		NodeSortKeyCompare(XPathExecutionContext&			executionContext,
-						   const DOMNodeVectorType&		theNodes,
-						   const DOMNodeSortKeyVectorType&	theNodeSortKeys) :
+						   const NodeVectorType&			theNodes,
+						   const NodeSortKeyVectorType&		theNodeSortKeys) :
 			m_executionContext(executionContext),
 			m_nodes(theNodes),
 			m_nodeSortKeys(theNodeSortKeys)
@@ -179,16 +179,16 @@ typedef std::vector<NodeSortKey>		DOMNodeSortKeyVectorType;
 				   second_argument_type		theRHS,
 				   unsigned int				theKeyIndex = 0) const;
 
-		XPathExecutionContext&				m_executionContext;
-		const DOMNodeVectorType&		m_nodes;
-		const DOMNodeSortKeyVectorType&		m_nodeSortKeys;
+		XPathExecutionContext&			m_executionContext;
+		const NodeVectorType&			m_nodes;
+		const NodeSortKeyVectorType&	m_nodeSortKeys;
 	};
 
 private:
 
-	XPathExecutionContext&		m_executionContext;
+	XPathExecutionContext&	m_executionContext;
 
-	DOMNodeSortKeyVectorType	m_keys; // vector of NodeSortKeys
+	NodeSortKeyVectorType	m_keys; // vector of NodeSortKeys
   /**
    * @@ TODO: Adjust this for locale.
 	* JMD: java: not used yet, placeholder

@@ -72,7 +72,7 @@
 ElemElement::ElemElement(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
-			const DOMString&				name,
+			const XalanDOMString&			name,
 			const AttributeList&			atts,
 			int								lineNumber,
 			int								columnNumber) :
@@ -80,15 +80,16 @@ ElemElement::ElemElement(
 			stylesheetTree,
 			name,
 			lineNumber,
-			columnNumber),
+			columnNumber,
+			Constants::ELEMNAME_ELEMENT),
 	m_nameAVT(0),
 	m_namespaceAVT(0)	
 {
-	const int nAttrs = atts.getLength();
+	const unsigned int	nAttrs = atts.getLength();
 
-	for(int i = 0; i < nAttrs; i++)
+	for(unsigned int i = 0; i < nAttrs; i++)
 	{
-		const DOMString aname(atts.getName(i));
+		const XalanDOMChar*	const	aname = atts.getName(i);
 
 		if(equals(aname, Constants::ATTRNAME_NAME))
 		{
@@ -125,21 +126,14 @@ ElemElement::~ElemElement()
 
 
 
-int
-ElemElement::getXSLToken() const 
-{
-	return Constants::ELEMNAME_ELEMENT;
-}
-	
-
 void
 ElemElement::execute(
 			StylesheetExecutionContext&		executionContext,
-			const DOM_Node&					sourceTree, 
-			const DOM_Node&					sourceNode,
+			XalanNode*						sourceTree,
+			XalanNode*						sourceNode,
 			const QName&					mode) const
 {	
-	DOMString elemName; 
+	XalanDOMString	elemName; 
 
 	assert(m_nameAVT != 0);
 
@@ -149,25 +143,26 @@ ElemElement::execute(
 	{
 		if(0 != m_namespaceAVT)
 		{
-			DOMString	elemNameSpace;
+			XalanDOMString	elemNameSpace;
 
 			m_namespaceAVT->evaluate(elemNameSpace, sourceNode, 
 				*this, executionContext.getXPathExecutionContext());
 
 			if(!isEmpty(elemNameSpace))
 			{
-				DOMString	prefix = executionContext.getResultPrefixForNamespace(elemNameSpace);
+				XalanDOMString	prefix = executionContext.getResultPrefixForNamespace(elemNameSpace);
 
 				if(isEmpty(prefix))
 				{
 					prefix = executionContext.getUniqueNameSpaceValue();
 
-					const DOMString		nsDecl = DOMString("xmlns:") + prefix;
+					const XalanDOMString	nsDecl =
+						XalanDOMString(XALAN_STATIC_UCODE_STRING("xmlns:")) + prefix;
 
 					executionContext.addResultAttribute(nsDecl, elemNameSpace);
 				}
 
-				elemName = (prefix + ":" + elemName);
+				elemName = prefix + XALAN_STATIC_UCODE_STRING(":") + elemName;
 			}
 		}
 

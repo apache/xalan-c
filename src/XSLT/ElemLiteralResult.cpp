@@ -58,10 +58,16 @@
 
 
 
+#include <algorithm>
+
+
+
 #include <sax/AttributeList.hpp>
 
 
+
 #include <PlatformSupport/StringTokenizer.hpp>
+#include <PlatformSupport/STLHelper.hpp>
 
 
 
@@ -76,47 +82,51 @@
 ElemLiteralResult::ElemLiteralResult(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
-			const DOMString&				name,
+			const XalanDOMString&			name,
 			const AttributeList&			atts,
 			int								lineNumber,
-			int								columnNumber) :
+			int								columnNumber,
+			int								xslToken) :
 	ElemUse(constructionContext,
 			stylesheetTree,
 			name,
 			lineNumber,
-			columnNumber),
+			columnNumber,
+			xslToken),
 	m_QName(name)
 {
-	const int nAttrs = atts.getLength();
+	const unsigned int	nAttrs = atts.getLength();
 
-	for(int i = 0; i < nAttrs; i++)
+	for(unsigned int i = 0; i < nAttrs; i++)
 	{
-		const DOMString aname(atts.getName(i));
+		const XalanDOMChar*	const	aname = atts.getName(i);
 
-		bool		needToProcess = true;
-		const int	indexOfNSSep = indexOf(aname,':');
+		bool						needToProcess = true;
+		const unsigned int			indexOfNSSep = indexOf(aname, ':');
 
-		DOMString prefix;
+		XalanDOMString				prefix;
 
-		if(indexOfNSSep > 0)
+		if(indexOfNSSep < length(aname))
 		{
-			prefix = substring(aname,0,indexOfNSSep);
+			prefix = substring(aname, 0, indexOfNSSep);
 
-			if(!equals(prefix, "xmlns"))
+			if(!equals(prefix, XALAN_STATIC_UCODE_STRING("xmlns")))
 			{
-				DOMString ns = getNamespaceForPrefix(prefix);
+				XalanDOMString	ns = getNamespaceForPrefix(prefix);
 
 				if(startsWith(ns, constructionContext.getXSLNameSpaceURLPre()))
 				{
-					const DOMString localName = substring(aname,indexOfNSSep + 1);
+					const XalanDOMString localName = substring(aname, indexOfNSSep + 1);
 
 					if(equals(localName, Constants::ATTRNAME_EXTENSIONELEMENTPREFIXES))
 					{
 						needToProcess = false;
 
-						const DOMString qnames = atts.getValue(i);
+						const XalanDOMString qnames = atts.getValue(i);
 
-						StringTokenizer tokenizer(qnames, " \t\n\r", false);
+						StringTokenizer tokenizer(qnames,
+												  XALAN_STATIC_UCODE_STRING(" \t\n\r"),
+												  false);
 
 						m_extensionElementPrefixes.reserve(tokenizer.countTokens());
 
@@ -132,10 +142,11 @@ ElemLiteralResult::ElemLiteralResult(
 		if(needToProcess == true)
 		{
 			processSpaceAttr(aname, atts, i);
+
 			// Add xmlns attribute(except xmlns:xsl), xml:space, etc... 
 			// Ignore anything with xsl:xxx 
 			if(! processUseAttributeSets(constructionContext, aname, atts, i) &&
-					isAttrOK(aname, atts, i, constructionContext) )
+					isAttrOK(aname, atts, i, constructionContext))
 			{
 				m_avts.push_back(new AVT(aname, atts.getType(i), atts.getValue(i), 	
 							*this, constructionContext));
@@ -145,22 +156,25 @@ ElemLiteralResult::ElemLiteralResult(
 }
 
 
+
 ElemLiteralResult::~ElemLiteralResult()
 {
+#if !defined(XALAN_NO_NAMESPACES)
+	using std::for_each;
+#endif
+
+	// Clean up all entries in the vector.
+	for_each(m_avts.begin(),
+			 m_avts.end(),
+			 DeleteFunctor<AVT>());
 }
 
 
-
-int ElemLiteralResult::getXSLToken() const 
-{		
-	return Constants::ELEMNAME_LITERALRESULT;		
-}
-	
 
 void ElemLiteralResult::execute(
 			StylesheetExecutionContext&		executionContext,
-			const DOM_Node&					sourceTree, 
-			const DOM_Node&					sourceNode,
+			XalanNode*						sourceTree,
+			XalanNode*						sourceNode,
 			const QName&					mode) const
 {
 	executionContext.startElement(toCharArray(m_QName));
@@ -169,13 +183,13 @@ void ElemLiteralResult::execute(
 
 	if(0 != m_avts.size())
 	{
-		const int	nAttrs = m_avts.size();
+		const AVTVectorType::size_type	nAttrs = m_avts.size();
 
-		for(int i = 0; i < nAttrs; i++)
+		for(AVTVectorType::size_type i = 0; i < nAttrs; i++)
 		{
 			const AVT* const	avt = m_avts[i];
 
-			DOMString stringedValue;
+			XalanDOMString	stringedValue;
 
 			avt->evaluate(stringedValue, sourceNode, *this, 
 				executionContext.getXPathExecutionContext());
@@ -196,22 +210,21 @@ void ElemLiteralResult::execute(
 
 	while(more == true)
 	{
-		NameSpace ns;
-
-		for (int i = 0; i < nsVector->size(); i++)
+		for (NamespaceVectorType::size_type i = 0; i < nsVector->size(); i++)
 		{
-			ns = (*nsVector)[i];
+			NameSpace	ns = (*nsVector)[i];
 
 			if(!isEmpty(ns.getURI()) && ns.getResultCandidate())
 			{
-				bool		hasPrefix = !isEmpty(ns.getPrefix());
+				const bool		hasPrefix = !isEmpty(ns.getPrefix());
 
-				DOMString	prefix = hasPrefix ? ns.getPrefix() : DOMString();
-				DOMString	desturi = executionContext.getResultNamespaceForPrefix(prefix);
-				DOMString	attrName = hasPrefix ? 
-					(DOMString("xmlns:") + prefix) : DOMString("xmlns");
+				XalanDOMString	prefix = hasPrefix ? ns.getPrefix() : XalanDOMString();
+				XalanDOMString	desturi = executionContext.getResultNamespaceForPrefix(prefix);
+				XalanDOMString	attrName = hasPrefix ? 
+					(XalanDOMString(XALAN_STATIC_UCODE_STRING("xmlns:")) + prefix) :
+							XalanDOMString(XALAN_STATIC_UCODE_STRING("xmlns"));
 
-				DOMString srcURI = ns.getURI();
+				XalanDOMString srcURI = ns.getURI();
 
 				bool isXSLNS = equals(srcURI, executionContext.getXSLNameSpaceURL())
 					|| 0 != getStylesheet().lookupExtensionNSHandler(srcURI)
@@ -219,7 +232,7 @@ void ElemLiteralResult::execute(
 
 				if(!isXSLNS)
 				{
-					if(startsWith(srcURI,DOMString("quote:")))
+					if(startsWith(srcURI, XALAN_STATIC_UCODE_STRING("quote:")))
 					{
 						srcURI = substring(srcURI, 6);
 					}
@@ -239,14 +252,14 @@ void ElemLiteralResult::execute(
 		// We didn't find a namespace, start looking at the parents
 		if (0 != elem)
 		{
-			elem = elem->getParentNode();
+			elem = elem->getParentNodeElem();
 
 			while(0 != elem)
 			{
 				nsVector = &elem->getNameSpace();
 
 				if(0 == nsVector->size())
-					elem = elem->getParentNode();
+					elem = elem->getParentNodeElem();
 				else
 					break;
 			}

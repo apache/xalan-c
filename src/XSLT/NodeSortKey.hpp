@@ -74,9 +74,11 @@
 
 
 
+// $$$ ToDo: This is necessary while XalanDOMString is a typedef.
+#include <XalanDOM/XalanDOMString.hpp>
 
 
-class DOMString;
+
 class ExecutionContext;
 class PrefixResolver;
 class XPath;
@@ -86,7 +88,7 @@ class XPath;
 /**
  * Simple data structure class for use by the NodeSorter class.
  */
-class NodeSortKey
+class XALAN_XSLT_EXPORT NodeSortKey
 {
 public:
 
@@ -105,7 +107,7 @@ public:
 			const XPath&			selectPat, 
 			bool					treatAsNumbers, 
 			bool					descending,
-			const DOMString&		langValue, 
+			const XalanDOMString&	langValue, 
 			const PrefixResolver&	resolver);
 
 	~NodeSortKey();
@@ -180,4 +182,3 @@ private:
 /*
  *      $ Log: $
  */
-

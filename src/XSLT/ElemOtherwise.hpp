@@ -93,15 +93,10 @@ public:
 	ElemOtherwise(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
-			const DOMString&				name,
+			const XalanDOMString&			name,
 			const AttributeList&			atts,
 			int								lineNumber,
 			int								columnNumber);
-
-	// These methods are inherited from ElemTemplateElement ...
-	
-	virtual int
-	getXSLToken() const; 
 };
 
 

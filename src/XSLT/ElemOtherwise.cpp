@@ -74,7 +74,7 @@
 ElemOtherwise::ElemOtherwise(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
-			const DOMString&				name,
+			const XalanDOMString&			name,
 			const AttributeList&			atts,
 			int								lineNumber,
 			int								columnNumber) :
@@ -82,25 +82,18 @@ ElemOtherwise::ElemOtherwise(
 						stylesheetTree,
 						name,
 						lineNumber,
-						columnNumber)
+						columnNumber,
+						Constants::ELEMNAME_OTHERWISE)
 {
-	const int	nAttrs = atts.getLength();
+	const unsigned int	nAttrs = atts.getLength();
 
-	for(int i = 0; i < nAttrs; i++)
+	for(unsigned int i = 0; i < nAttrs; i++)
 	{
-		const DOMString		aname(atts.getName(i));
-		
+		const XalanDOMChar* const	aname = atts.getName(i);
+
 		if(isAttrOK(aname, atts, i, constructionContext) == false || processSpaceAttr(aname, atts, i))
 		{
 			constructionContext.error(name + " has an illegal attribute: " + aname);
 		}
 	}
-}
-
-
-
-int
-ElemOtherwise::getXSLToken() const 
-{
-	return Constants::ELEMNAME_OTHERWISE;		
 }

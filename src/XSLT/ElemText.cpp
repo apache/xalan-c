@@ -61,6 +61,7 @@
 #include <sax/AttributeList.hpp>
 
 
+
 #include <PlatformSupport/DOMStringHelper.hpp>
 
 
@@ -78,7 +79,7 @@
 ElemText::ElemText(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
-			const DOMString&				name,
+			const XalanDOMString&			name,
 			const AttributeList&			atts,
 			int								lineNumber,
 			int								columnNumber) :
@@ -86,15 +87,16 @@ ElemText::ElemText(
 						stylesheetTree,
 						name,
 						lineNumber,
-						columnNumber),
+						columnNumber,
+						Constants::ELEMNAME_TEXT),
 	m_disableOutputEscaping(false)
 {
-	const int nAttrs = atts.getLength();
+	const unsigned int	nAttrs = atts.getLength();
 
-	for(int i = 0; i < nAttrs; i++)
+	for(unsigned int i = 0; i < nAttrs; i++)
 	{
-		const DOMString		aname(atts.getName(i));
-		
+		const XalanDOMChar* const	aname = atts.getName(i);
+
 		if(equals(aname, Constants::ATTRNAME_DISABLE_OUTPUT_ESCAPING))
 		{
 			m_disableOutputEscaping =
@@ -117,32 +119,21 @@ ElemText::~ElemText()
 
 
 
-NodeImpl*
-ElemText::appendChild(NodeImpl* newChild)
+bool
+ElemText::childTypeAllowed(int	xslToken) const
 {
-	assert(dynamic_cast<ElemTemplateElement*>(newChild) != 0);
+	bool	fResult = false;
 
-	const int	type = dynamic_cast<ElemTemplateElement*>(newChild)->getXSLToken();
-
-	switch(type)
-	{		
+	switch(xslToken)
+	{
+	// char-instructions 
 	case Constants::ELEMNAME_TEXTLITERALRESULT:
-		break; 
-		
+		fResult = true;
+		break;
+
 	default:
-		error("Can not add " +
-				dynamic_cast<ElemTemplateElement*>(newChild)->getTagName() +
-				" to " +
-				getTagName());
+		break;
 	}
 
-	return ElemTemplateElement::appendChild(newChild);
-}
-
-
-
-int
-ElemText::getXSLToken() const
-{
-    return Constants::ELEMNAME_TEXT;	
+	return fResult;
 }

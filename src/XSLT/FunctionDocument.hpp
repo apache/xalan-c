@@ -64,18 +64,7 @@
 
 
 
-#include <set>
-#include <vector>
-
-
-
 #include <XPath/Function.hpp>
-
-
-
-class DOM_Node;
-class XObject;
-class XPathExecutionContext;
 
 
 
@@ -95,9 +84,9 @@ public:
 	virtual XObject*
 	execute(
 			XPathExecutionContext&			executionContext,
-			const DOM_Node&					context,
-			int								/* opPos */,
-			const std::vector<XObject*>&	args);
+			XalanNode*						context,
+			int								opPos,
+			const XObjectArgVectorType&		args);
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
 	virtual Function*

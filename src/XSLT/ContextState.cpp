@@ -62,8 +62,8 @@
 
 
 ContextState::ContextState(
-			const DOM_Node&		caller,
-			const DOM_Node&		sourceNode) :
+			const XalanNode*	caller,
+			const XalanNode*	sourceNode) :
 	StackEntry(eContextState),
 	m_caller(caller),
 	m_source(sourceNode)
@@ -73,8 +73,8 @@ ContextState::ContextState(
 
 
 ContextState::ContextState(
-			const DOM_Node&		caller,
-			const DOM_Node&		sourceNode,
+			const XalanNode*	caller,
+			const XalanNode*	sourceNode,
 			eStackEntryType		theType) :
 	StackEntry(theType),
 	m_caller(caller),
@@ -115,8 +115,13 @@ bool
 ContextState::equals(const StackEntry& rhs) const
 {
 	if (getType() == rhs.getType() &&
+#if defined(XALAN_OLD_STYLE_CASTS)
+		m_caller == ((const ContextState&)rhs).m_caller &&
+		m_source == ((const ContextState&)rhs).m_source)
+#else
 		m_caller == static_cast<const ContextState&>(rhs).m_caller &&
 		m_source == static_cast<const ContextState&>(rhs).m_source)
+#endif
 	{
 		return true;
 	}
@@ -124,7 +129,6 @@ ContextState::equals(const StackEntry& rhs) const
 	{
 		return false;
 	}
-
 }
 
 

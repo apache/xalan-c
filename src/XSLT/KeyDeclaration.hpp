@@ -64,7 +64,8 @@
 
 
 
-#include <dom/DOMString.hpp>
+#include <XalanDOM/XalanDOMString.hpp>
+
 
 
 class XPath;
@@ -86,12 +87,13 @@ public:
 	 * @paramuse           XPath for "use" attribute
 	 */
 	KeyDeclaration(
-			const DOMString&	name,
-			XPath&				matchPattern,
-			XPath&				use) :
+			const XalanDOMString&	name,
+			XPath&					matchPattern,
+			XPath&					use) :
 		m_name(name),
 		m_match(&matchPattern),
-		m_use(&use)
+		m_use(&use),
+		m_inConstruction(false)
 	{
 	}
 
@@ -100,7 +102,7 @@ public:
 	 * 
 	 * @return name string
 	 */
-	const DOMString&
+	const XalanDOMString&
 	getName() const
 	{
 		return m_name;
@@ -128,14 +130,41 @@ public:
 		return *m_match;
 	}
 
+	bool
+	getInConstruction() const
+	{
+		return m_inConstruction;
+	}
+
+	void
+	beginConstruction() const
+	{
+#if defined(XALAN_NO_MUTABLE)
+		((KeyDeclaration*)this->m_inConstruction = true;
+#else
+		m_inConstruction = true;
+#endif
+	}
+
+	void
+	endConstruction() const
+	{
+#if defined(XALAN_NO_MUTABLE)
+		((KeyDeclaration*)this->m_inConstruction = false;
+#else
+		m_inConstruction = false;
+#endif
+	}
+
 private:
 
-	DOMString		m_name;
+	XalanDOMString	m_name;
 
 	XPath*			m_match;
 
 	XPath*			m_use;
 
+	mutable bool	m_inConstruction;
 };
 
 

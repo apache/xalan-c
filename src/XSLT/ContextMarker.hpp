@@ -68,10 +68,6 @@
 
 
 
-#include <dom/DOM_Node.hpp>
-
-
-
 // Base class header file.
 #include "ContextState.hpp"
 
@@ -93,8 +89,8 @@ public:
 	  * @param sourceNode source node
 	  */
 	ContextMarker(
-			const DOM_Node&		caller,
-			const DOM_Node&		sourceNode);
+			const XalanNode*	caller,
+			const XalanNode*	sourceNode);
 
 
 	ContextMarker(const ContextMarker&	theSource);

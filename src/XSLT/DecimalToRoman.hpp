@@ -64,7 +64,7 @@
 
 
 
-#include <dom/DOMString.hpp>
+#include <XalanDOM/XalanDOMString.hpp>
 
 
 
@@ -84,20 +84,20 @@ public:
 	 * @param preLetter  prefix for quantity, for example, "XC" represents 90
 	 */
 	DecimalToRoman(
-			long				postValue = 0L,
-			const DOMString&	postLetter = DOMString(), 
-			long				preValue = 0L,
-			const DOMString&	preLetter = DOMString());
+			long					postValue = 0L,
+			const XalanDOMString&	postLetter = XalanDOMString(), 
+			long					preValue = 0L,
+			const XalanDOMString&	preLetter = XalanDOMString());
 
 	~DecimalToRoman();
 
-	long		m_postValue;      
+	long			m_postValue;      
 
-	DOMString	m_postLetter;
+	XalanDOMString	m_postLetter;
 
-	long		m_preValue;      
+	long			m_preValue;      
 
-	DOMString	m_preLetter;
+	XalanDOMString	m_preLetter;
 };
 
 

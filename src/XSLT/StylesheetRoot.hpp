@@ -57,24 +57,18 @@
 #if !defined(XALAN_STYLESHEETROOT_HEADER_GUARD)
 #define XALAN_STYLESHEETROOT_HEADER_GUARD 
 
-/**
- * $Id$
- * 
- * $State$
- * 
- * @author Myriam Midy (Myriam_Midy @lotus.com 
- */
-
 
 
 // Base include file.  Must be first.
 #include "XSLTDefinitions.hpp"
 
+
+
 #include "Stylesheet.hpp"
 
 
 
-#include <dom/DOMString.hpp>
+#include <XalanDOM/XalanDOMString.hpp>
 
 
 
@@ -84,6 +78,7 @@ class TraceListener;
 class TracerEvent;
 class XMLURL;
 class XSLTResultTarget;
+
 
 
 /**
@@ -108,7 +103,7 @@ public:
 	 * @param constructionContext context for construction of object
 	 */
 	StylesheetRoot(
-        const DOMString&				baseIdentifier,
+        const XalanDOMString&			baseIdentifier,
 		StylesheetConstructionContext&	constructionContext);    
 
 	virtual 
@@ -123,7 +118,7 @@ public:
 	 */
 	void
 	process(
-			const DOM_Node&					sourceTree, 
+			XalanNode*						sourceTree, 
 			XSLTResultTarget&				outputTarget,
 			StylesheetExecutionContext&		executionContext);
   
@@ -142,7 +137,7 @@ public:
 	 *
 	 * @return version string
 	 */
-	DOMString
+	XalanDOMString
 	getOutputVersion() const;
 
 	/**
@@ -158,7 +153,7 @@ public:
 	 *
 	 * @return encoding string
 	 */
-	DOMString 
+	XalanDOMString 
 	getOutputEncoding() const;
 
 	/**
@@ -166,7 +161,7 @@ public:
 	 *
 	 * @return encoding string
 	 */
-	DOMString 
+	XalanDOMString 
 	getJavaOutputEncoding() const;
 
 	/**
@@ -174,7 +169,7 @@ public:
 	 *
 	 * @return document type string
 	 */
-	DOMString 
+	XalanDOMString 
 	getOutputDoctypeSystem() const;
 
 	/**
@@ -182,7 +177,7 @@ public:
 	 *
 	 * @return media type string
 	 */
-	DOMString 
+	XalanDOMString 
 	getOutputMediaType() const;
 	
 	/**
@@ -190,7 +185,7 @@ public:
 	 *
 	 * @return document type public id string
 	 */
-	DOMString 
+	XalanDOMString 
 	getOutputDoctypePublic() const;
 
 	/**
@@ -198,7 +193,11 @@ public:
 	 *
 	 * @return true to output declarations
 	 */
-	bool getOmitOutputXMLDecl() { return m_omitxmlDecl; }
+	bool
+	getOmitOutputXMLDecl() const
+	{
+		return m_omitxmlDecl;
+	}
 
 	/**
 	 * Get the standalone string that was specified in the stylesheet, either
@@ -206,7 +205,11 @@ public:
 	 *
 	 * @return standalone string
 	 */
-	DOMString getOutputStandalone() const { return m_standalone; }
+	XalanDOMString
+	getOutputStandalone() const
+	{
+		return m_standalone;
+	}
 
 	/**
 	 * Get the template representing the default rule for text.
@@ -251,7 +254,7 @@ public:
 	 */
 	void 
 	processOutputSpec(
-			const DOMString&				name, 
+			const XalanDOMChar*				name, 
 			const AttributeList&			atts,
 			StylesheetConstructionContext&	constructionContext);
 
@@ -267,7 +270,7 @@ public:
 	 * The version tells the version of XML to be used for outputting the result tree,
 	 * as specified in xsl:output.
 	 */
-	DOMString m_version; // = null;
+	XalanDOMString m_version; // = null;
 
 	/**
 	 * indent-result is by default no, which means an XSL processor must not
@@ -279,20 +282,20 @@ public:
 	 * The encoding attribute specifies the preferred encoding to use 
 	 * for outputting the result tree. 
 	 */
-	DOMString m_encoding; // = null;
+	XalanDOMString m_encoding; // = null;
 
 	/**
 	 * The media-type attribute is applicable for the xml output method. 
 	 * The default value for the media-type attribute is text/xml.
 	 */
-	DOMString m_mediatype; // = null;
+	XalanDOMString m_mediatype; // = null;
 
 	/**
 	 * If the doctype-system-id attribute is specified, the xml output method should 
 	 * output a document type declaration immediately before the first element. 
 	 * The name following <!DOCTYPE should be the name of the first element. 
 	 */
-	DOMString m_doctypeSystem; // = null;
+	XalanDOMString m_doctypeSystem; // = null;
 
 	/**
 	 * If doctype-public-id attribute is also specified, then the xml output 
@@ -302,7 +305,7 @@ public:
 	 * doctype-public-id attribute should be ignored unless the doctype-system-id 
 	 * attribute is specified.
 	 */
-	DOMString m_doctypePublic; // = null;
+	XalanDOMString m_doctypePublic; // = null;
 
 	/**
 	 * Tells whether or not to output an XML declaration.
@@ -312,14 +315,15 @@ public:
 	/**
 	 * Tells what the xmldecl should specify for the standalone value.
      */
-	DOMString m_standalone; // = null;
+	XalanDOMString m_standalone; // = null;
 
 	/**
 	 * Retrieve the stack of imported stylesheets.
 	 * 
 	 * @return stack of URIs for stylesheets
 	 */
-	URLStackType& getImportStack()
+	URLStackType&
+	getImportStack()
 	{
 		return m_importStack;
 	}
@@ -329,7 +333,8 @@ public:
 	 * 
 	 * @return const stack of URIs for stylesheets
 	 */
-	const URLStackType& getImportStack() const
+	const URLStackType&
+	getImportStack() const
 	{
 		return m_importStack;
 	}
@@ -340,7 +345,8 @@ public:
 	 * 
 	 * @param bIndent true to indent results
 	 */
-	void setIndentResult(bool bIndent)
+	void
+	setIndentResult(bool bIndent)
 	{
 		m_indentResult = bIndent;
 	}
@@ -351,7 +357,8 @@ public:
 	 * 
 	 * @param meth new method number
 	 */
-	void setOutputMethod(int meth)
+	void
+	setOutputMethod(int meth)
 	{
 		m_outputmethod = meth;
 	}
@@ -369,35 +376,40 @@ public:
 	 * 
 	 * @param tl pointer to listener to add
 	 */
-	void addTraceListener(TraceListener *tl);
+	void
+	addTraceListener(TraceListener *tl);
 
 	/**
 	 * Remove a trace listener.
 	 * 
 	 * @param tl pointer to listener to remove
 	 */
-	void removeTraceListener(TraceListener* tl); 
+	void
+	removeTraceListener(TraceListener* tl); 
 
 	/**
 	 * Fire a trace event.
 	 * 
 	 * @param te trace event to fire
 	 */
-	void fireTraceEvent(const TracerEvent& te) const;
+	void
+	fireTraceEvent(const TracerEvent& te) const;
 	  
 	/**
 	 * Fire a selection event.
 	 * 
 	 * @param se selection event to fire
 	 */
-	void fireSelectedEvent(const SelectionEvent& se) const;
+	void
+	fireSelectedEvent(const SelectionEvent& se) const;
 
 	/**
 	 * Retrieve list of CDATA section elements.
 	 * 
 	 * @return vector of elements
 	 */
-	const QNameVectorType& getCdataSectionElems()
+	const QNameVectorType&
+	getCdataSectionElems()
 	{
 		return m_cdataSectionElems;
 	}
@@ -414,7 +426,7 @@ private:
 	 * The URL that belongs to the result namespace.
 	 * @serial
 	 */
-	DOMString m_resultNameSpaceURL; // = null;
+	XalanDOMString m_resultNameSpaceURL; // = null;
   
 	/**
 	 * List of listeners who are interested in tracing what's going on.

@@ -56,31 +56,22 @@
  */
 #include "TracerEvent.hpp"
 
-#include <dom/DOMString.hpp>
-#include <dom/DOM_Node.hpp>
-#include <dom/DOM_Element.hpp>
-#include <dom/DOM_NodeList.hpp>
+
+
+#include <XalanDOM/XalanNode.hpp>
+#include <XalanDOM/XalanElement.hpp>
+#include <XalanDOM/XalanNodeList.hpp>
+
+
 
 #include <PlatformSupport/DOMStringHelper.hpp>
 
 
-/**
- * This is the parent class of events generated for tracing the
- * progress of the XSL processor.
- */
-  /**
-   * Create an event originating at the given node of the style tree.
-   * @param processor The XSLT Processor.
-   * @param sourceTree The input source tree.
-   * @param sourceNode The current context node.
-   * @param mode The current mode.
-   * @param m_styleNode node in the style tree reference for the event.
-   * Should not be null.  That is not enforced.
-   */
+
 TracerEvent::TracerEvent(
 			const StylesheetExecutionContext&	executionContext,
-			const DOM_Node&						sourceTree,
-			const DOM_Node&						sourceNode,
+			const XalanNode*					sourceTree,
+			const XalanNode*					sourceNode,
 			const QName&						mode,
 			const ElemTemplateElement&			styleNode) :
 	m_executionContext(executionContext),
@@ -99,45 +90,34 @@ TracerEvent::~TracerEvent()
 
 
 
-  /**
-   Returns a string representation of the node.
-   The string returned for elements will contain the element name
-   and any attributes enclosed in angle brackets.
-   The string returned for attributes will be of form, "name=value."
-
-   @param n any DOM node. Must not be null.
-
-   @return a string representation of the given node.
-   */
-DOMString
-TracerEvent::printNode(const DOM_Node& n)
+XalanDOMString
+TracerEvent::printNode(const XalanNode&		n)
 {
-	// in Java was thigs: String r = n.hashCode() + " ";
+	XalanDOMString	r = LongToDOMString(reinterpret_cast<long>(&n)) + XALAN_STATIC_UCODE_STRING(" ");
 
-	DOMString r = LongToDOMString(reinterpret_cast<long>(&n)) + " ";
-	
-	if (n.getNodeType() == DOM_Node::ELEMENT_NODE)
+	if (n.getNodeType() == XalanNode::ELEMENT_NODE)
 	{
-		r += "<" + n.getNodeName();
+		r += XALAN_STATIC_UCODE_STRING("<") + n.getNodeName();
 
-		DOM_Node c = n.getFirstChild();
+		const XalanNode*	c = n.getFirstChild();
 
 		while (c != 0)
 		{
-			if (c.getNodeType() == DOM_Node::ATTRIBUTE_NODE)
+			if (c->getNodeType() == XalanNode::ATTRIBUTE_NODE)
 			{
-				r += printNode(c) + " ";
+				r += printNode(*c) + XALAN_STATIC_UCODE_STRING(" ");
 			}
-			c = c.getNextSibling();
+
+			c = c->getNextSibling();
 		}
 
-		r += ">";
+		r += XALAN_STATIC_UCODE_STRING(">");
 	}
 	else
 	{
-		if (n.getNodeType() == DOM_Node::ATTRIBUTE_NODE)
+		if (n.getNodeType() == XalanNode::ATTRIBUTE_NODE)
 		{
-			r += n.getNodeName() + "=" + n.getNodeValue();
+			r += n.getNodeName() + XALAN_STATIC_UCODE_STRING("=") + n.getNodeValue();
 		}
 		else
 		{
@@ -159,32 +139,31 @@ TracerEvent::printNode(const DOM_Node& n)
 
    @return a string representation of the given node list.
    */
-DOMString
-TracerEvent::printNodeList(const DOM_NodeList&	l)
+XalanDOMString
+TracerEvent::printNodeList(const XalanNodeList&	l)
 {
-	// in Java was this: String r = l.hashCode() + "[";
-	DOMString r = LongToDOMString(reinterpret_cast<long>(&l)) + "[";
+	XalanDOMString	r = LongToDOMString(reinterpret_cast<long>(&l)) +
+								XALAN_STATIC_UCODE_STRING("[");
 
-	int len = l.getLength() - 1;
-	int i = 0;
+	unsigned int	len = l.getLength();
+	unsigned int	i = 0;
 
 	while (i < len)
 	{
-		DOM_Node n = l.item(i);
+		XalanNode* const	n = l.item(i);
+
 		if (n != 0)
 		{
-			r += printNode(n) + ", ";
+			r += printNode(*n);
+
+			if (i != len - 1)
+			{
+				r += XALAN_STATIC_UCODE_STRING(", ");
+			}
 		}
+
 		++i;
 	}
-	if (i == len)
-	{
-		DOM_Node n = l.item(len);
-		if (n != 0)
-		{
-			r += printNode(n);
-		}
-	}
-	return r + "]";
-}
 
+	return r + XALAN_STATIC_UCODE_STRING("]");
+}

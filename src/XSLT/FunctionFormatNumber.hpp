@@ -90,13 +90,13 @@ public:
 	~FunctionFormatNumber();
 
 	// These methods are inherited from XPath/Function ...
-	
+
 	virtual XObject*
 	execute(
 			XPathExecutionContext&			executionContext,
-			const DOM_Node&					context,
+			XalanNode*						context,
 			int								opPos,
-			const std::vector<XObject*>&	args);
+			const XObjectArgVectorType&		args);
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
 	virtual Function*

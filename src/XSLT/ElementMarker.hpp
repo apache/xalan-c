@@ -68,13 +68,13 @@
 
 
 
-#include <dom/DOM_Node.hpp>
-
-
-
 // Base class header file.
 #include "StackEntry.hpp"
-#include "ElemTemplateElement.hpp"
+
+
+
+class XalanNode;
+
 
 
 // This class marks the point in the stack where an Element's context
@@ -83,7 +83,7 @@ class ElementMarker : public StackEntry
 {
 public:
 
-	ElementMarker(const DOM_Node&	elem);
+	ElementMarker(const XalanNode*	elem);
 
 	ElementMarker(const ElementMarker&	theSource);
 
@@ -95,7 +95,7 @@ public:
 	 *
 	 * @return DOM Node corresponding to marker
 	 */
-	const DOM_Node&
+	const XalanNode*
 	getElement() const
 	{
 		return m_elem;
@@ -121,13 +121,9 @@ public:
 
 private:
 
-	const DOM_Node&	m_elem;
+	const XalanNode*	m_elem;
 };
 
 
 
 #endif	// XALAN_ELEMENTMARKER_HEADER_GUARD
-
-/*
- *      $ Log: $
- */

@@ -80,7 +80,7 @@
 ElemCopyOf::ElemCopyOf(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
-			const DOMString&				name,
+			const XalanDOMString&			name,
 			const AttributeList&			atts,
 			int								lineNumber,
 			int								columnNumber) :
@@ -88,14 +88,15 @@ ElemCopyOf::ElemCopyOf(
 						stylesheetTree,
 						name,
 						lineNumber,
-						columnNumber),
+						columnNumber,
+						Constants::ELEMNAME_COPY_OF),
 	m_pSelectPattern(0)
 {
-	const int nAttrs = atts.getLength();
+	const unsigned int	nAttrs = atts.getLength();
 	
-	for(int i = 0; i < nAttrs; i++)
+	for(unsigned int i = 0; i < nAttrs; i++)
 	{
-		const DOMString aname(atts.getName(i));
+		const XalanDOMChar*	const	aname = atts.getName(i);
 
 		if(equals(aname, Constants::ATTRNAME_SELECT))
 		{
@@ -110,19 +111,11 @@ ElemCopyOf::ElemCopyOf(
 
 
 
-int
-ElemCopyOf::getXSLToken() const 
-{
-	return Constants::ELEMNAME_COPY_OF;
-}
-
-
-
 void
 ElemCopyOf::execute(
 			StylesheetExecutionContext&		executionContext,
-			const DOM_Node&					sourceTree, 
-			const DOM_Node&					sourceNode,
+			XalanNode*						sourceTree,
+			XalanNode*						sourceNode,
 			const QName&					mode) const
 {
 	ElemTemplateElement::execute(executionContext, sourceTree, sourceNode, mode);
@@ -137,12 +130,12 @@ ElemCopyOf::execute(
 	{
 		getStylesheet().getStylesheetRoot().fireSelectedEvent(
 			SelectionEvent(executionContext, sourceNode,
-				*this, DOMString("select"), *m_pSelectPattern, pValue));
+				*this, XalanDOMString(XALAN_STATIC_UCODE_STRING("select")), *m_pSelectPattern, pValue));
 	}
 
-	const int type = pValue->getType();
+	const int	type = pValue->getType();
 
-	DOMString s;
+	XalanDOMString s;
 
 	switch(type)
 	{
@@ -155,31 +148,32 @@ ElemCopyOf::execute(
 
 	case XObject::eTypeNodeSet:
 	{
-		NodeRefList nl(pValue->nodeset());
-		int nChildren = nl.getLength();
+		const NodeRefListBase&	nl = pValue->nodeset();
 
-		for(int i = 0; i < nChildren; i++)
+		unsigned int			nChildren = nl.getLength();
+
+		for(unsigned int i = 0; i < nChildren; i++)
 		{
-			DOM_Node pos(nl.item(i));
-			DOM_Node top(pos);
+			XalanNode*			pos = nl.item(i);
+			XalanNode* const	top = pos;
 
 			while(pos != 0)
 			{
 				executionContext.flushPending();
 
-				executionContext.cloneToResultTree( 
-						pos, 
-						false, 
-						false, 
-						true); 
+				executionContext.cloneToResultTree(
+						*pos,
+						false,
+						false,
+						true);
 
-				DOM_Node nextNode(pos.getFirstChild());
+				XalanNode*	nextNode = pos->getFirstChild();
 
 				while(nextNode == 0)
 				{
-					if(DOM_Node::ELEMENT_NODE == pos.getNodeType())
+					if(XalanNode::ELEMENT_NODE == pos->getNodeType())
 					{
-						s = pos.getNodeName();
+						s = pos->getNodeName();
 
 						executionContext.endElement(toCharArray(s));
 					}
@@ -187,18 +181,18 @@ ElemCopyOf::execute(
 					if(top == pos)
 						break;
 
-					nextNode = pos.getNextSibling();
+					nextNode = pos->getNextSibling();
 
 					if(nextNode == 0)
 					{
-						pos = pos.getParentNode();
+						pos = pos->getParentNode();
 
 						if(top == pos)
 						{
-							if(DOM_Node::ELEMENT_NODE == pos.getNodeType())
+							if(XalanNode::ELEMENT_NODE == pos->getNodeType())
 							{
-								s = pos.getNodeName();
-						
+								s = pos->getNodeName();
+
 								executionContext.endElement(toCharArray(s));
 							}
 
@@ -220,25 +214,12 @@ ElemCopyOf::execute(
 
 	default:
 		s = pValue->str();
+
 		if (!isEmpty(s))
 		{
 			executionContext.characters(toCharArray(s), 0, s.length());
 		}
+
 		break;
 	}
-}
-
-
-
-/**
- * Add a child to the child list.
- */
-NodeImpl* ElemCopyOf::appendChild(NodeImpl* newChild)
-{
-    error("Can not add " +
-			dynamic_cast<ElemTemplateElement*>(newChild)->getTagName() +
-			" to " +
-			getTagName());
-
-    return 0;
 }

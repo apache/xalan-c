@@ -57,13 +57,7 @@
 #if !defined(XALAN_ELEMLITERALRESULT_HEADER_GUARD)
 #define XALAN_ELEMLITERALRESULT_HEADER_GUARD 
 
-/**
- * $Id$
- * 
- * $State$
- * 
- * @author Myriam Midy (Myriam_Midy @lotus.com 
- */
+
 
 // Base include file.  Must be first.
 #include "XSLTDefinitions.hpp"
@@ -72,10 +66,6 @@
 
 // Base class header file.
 #include "ElemUse.hpp"
-
-
-
-#include <dom/DOMString.hpp>
 
 
 
@@ -100,24 +90,22 @@ public:
 	ElemLiteralResult(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
-			const DOMString&				name,
+			const XalanDOMString&			name,
 			const AttributeList&			atts,
 			int								lineNumber,
-			int								columnNumber);
+			int								columnNumber,
+			int								xslToken = Constants::ELEMNAME_LITERALRESULT);
 
 	virtual
 	~ElemLiteralResult();
 
 	// These methods are inherited from ElemUse ...
 	
-	virtual int
-	getXSLToken() const; 
-
 	virtual void
 	execute(
 			StylesheetExecutionContext&		executionContext,
-			const DOM_Node&					sourceTree, 
-			const DOM_Node&					sourceNode,
+			XalanNode*						sourceTree,
+			XalanNode*						sourceNode,
 			const QName&					mode) const;
 
 private:
@@ -126,24 +114,23 @@ private:
 	ElemLiteralResult(const ElemLiteralResult &);
 
 	ElemLiteralResult&
-	operator=(const ElemLiteralResult &);
+	operator=(const ElemLiteralResult&);
 
 #if defined(XALAN_NO_NAMESPACES)
-#     define XALAN_STD
+	typedef vector<const AVT*>				AVTVectorType;
+	typedef vector<XalanDOMString>			ExtensionElementPrefixesVectoryType;
 #else
-#     define XALAN_STD std::
+	typedef std::vector<const AVT*>			AVTVectorType;
+	typedef std::vector<XalanDOMString>		ExtensionElementPrefixesVectoryType;
 #endif
-	typedef XALAN_STD vector<const AVT*> AVTsVectorType;
-	typedef XALAN_STD vector<DOMString>	ExtensionElementPrefixesVectoryType;
-#undef XALAN_STD	
+
 
 	/**
 	 * A stack to keep track of the attribute elements.
 	 */
-	AVTsVectorType							m_avts;
+	AVTVectorType							m_avts;
 
-	DOMString								m_QName;
-
+	XalanDOMString							m_QName;
 
 	ExtensionElementPrefixesVectoryType		m_extensionElementPrefixes;
 };

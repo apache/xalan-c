@@ -71,14 +71,25 @@
 
 #include <sax/SAXException.hpp>
 
+
+
 #include <util/XMLURL.hpp>
 
 
 
-#include <Include/DOMHelper.hpp>
+#include <XalanDOM/XalanDocumentFragment.hpp>
+
+
+
+#include <PlatformSupport/StringTokenizer.hpp>
+#include <PlatformSupport/AttributeListImpl.hpp>
+
+
 
 #include <XPath/XPathFactory.hpp>
 #include <XPath/XPathProcessor.hpp>
+
+
 
 #include <XMLSupport/Formatter.hpp>
 #include <XMLSupport/FormatterToHTML.hpp>
@@ -86,18 +97,17 @@
 #include <XMLSupport/FormatterToXML.hpp>
 #include <XMLSupport/FormatterToDOM.hpp>
 
-#include <PlatformSupport/StringTokenizer.hpp>
-#include <PlatformSupport/AttributeListImpl.hpp>
+
 
 #include <XercesPlatformSupport/XercesDOMPrintWriter.hpp>
 #include <XercesPlatformSupport/XercesStdTextOutputStream.hpp>
 
 
+
+#include "Constants.hpp"
 #include "ElemApplyTemplates.hpp" 
 #include "ElemTemplate.hpp" 
 #include "ElemValueOf.hpp"
-
-#include "Constants.hpp"
 #include "StylesheetConstructionContext.hpp"
 #include "StylesheetExecutionContext.hpp"
 #include "TraceListener.hpp"
@@ -112,9 +122,11 @@
  *            halt processing.
  */
 StylesheetRoot::StylesheetRoot(
-        const DOMString&				baseIdentifier,
+        const XalanDOMString&				baseIdentifier,
 		StylesheetConstructionContext&	constructionContext) :
-	Stylesheet(*this, baseIdentifier, constructionContext),
+	Stylesheet(*this,
+			   baseIdentifier,
+			   constructionContext),
 	m_importStack(),
 	m_resultNameSpaceURL(),
 	m_outputmethod(Formatter::OUTPUT_METH_XML),
@@ -158,54 +170,37 @@ StylesheetRoot::~StylesheetRoot()
 {
 	// Clean up all entries in the vector.
 	std::for_each(m_importStack.begin(),
-			 m_importStack.end(),
-			 DeleteFunctor<XMLURL>());
+				  m_importStack.end(),
+				  DeleteFunctor<XMLURL>());
 
-	if (m_defaultRule != 0)
-	{
-		NodeImpl* const		child = m_defaultRule->getFirstChild();
-		m_defaultRule->removeChild(child);
-		delete child;
-		delete m_defaultRule;
-	}
-
-	if (m_defaultTextRule != 0)
-	{
-		NodeImpl* const		child = m_defaultTextRule->getFirstChild();
-		m_defaultTextRule->removeChild(child);
-		delete child;
-		delete m_defaultTextRule;
-	}
-
-	if (m_defaultRootRule != 0)
-	{
-		NodeImpl* const		child = m_defaultRootRule->getFirstChild();
-		m_defaultRootRule->removeChild(child);
-		delete child;
-		delete m_defaultRootRule;
-	}
+	delete m_defaultRule;
+	delete m_defaultTextRule;
+	delete m_defaultRootRule;
 }
 
 
 
-void StylesheetRoot::process(
-			const DOM_Node&					sourceTree, 
+void
+StylesheetRoot::process(
+			XalanNode*						sourceTree, 
 			XSLTResultTarget&				outputTarget,
 			StylesheetExecutionContext&		executionContext)
 {
 		// Find the root pattern in the XSL.
 		ElemTemplate* rootRule =
-			dynamic_cast<ElemTemplate*>(findTemplate(executionContext, sourceTree, sourceTree));
+			findTemplate(executionContext, sourceTree, sourceTree);
 
 		if(0 == rootRule)
 		{
 			rootRule = m_defaultRootRule;
 			assert(rootRule);
 		}
+
 		executionContext.setStylesheetRoot(this);
 
 		FormatterListener* flistener = 0;
 		bool newListener = false;
+
 		// $$$ ToDo: Why is this Xerces-specific?
 		XercesDOMPrintWriter* pw = 0;
 		bool newPW = false;
@@ -238,8 +233,8 @@ void StylesheetRoot::process(
 			{
 /*
 				java:
-				DOMString mimeEncoding;
-				DOMString encoding;
+				XalanDOMString mimeEncoding;
+				XalanDOMString encoding;
 				mimeEncoding = getOutputEncoding();
 				encoding = getJavaOutputEncoding();
 				if(0 == encoding)
@@ -297,8 +292,7 @@ void StylesheetRoot::process(
 			case Formatter::OUTPUT_METH_HTML:
 				flistener = new FormatterToHTML(
 					*pw, m_version, doIndent, indentAmount, m_encoding, m_mediatype,
-					m_doctypeSystem, m_doctypePublic, ! m_omitxmlDecl, m_standalone,
-					&m_cdataSectionElems);
+					m_doctypeSystem, m_doctypePublic, !m_omitxmlDecl, m_standalone);
 				newListener = true;
 				break;
 			case Formatter::OUTPUT_METH_TEXT:
@@ -309,36 +303,40 @@ void StylesheetRoot::process(
 			default:
 				flistener = new FormatterToXML(
 					*pw, m_version, doIndent, indentAmount, m_encoding, m_mediatype,
-					m_doctypeSystem, m_doctypePublic, ! m_omitxmlDecl, m_standalone,
-					&m_cdataSectionElems);
+					m_doctypeSystem, m_doctypePublic, !m_omitxmlDecl, m_standalone);
 				newListener = true;
 				break;
 			}
+
+			executionContext.setFormatterListener(flistener);
 		}
 		/*
 		 * Output target has a node
 		 */
 		else if(0 != outputTarget.getNode())
 		{
-			switch(outputTarget.getNode().getNodeType())
+			switch(outputTarget.getNode()->getNodeType())
 			{
-			case DOM_Node::DOCUMENT_NODE:
+			case XalanNode::DOCUMENT_NODE:
 				flistener = new 
-					FormatterToDOM(static_cast<DOM_Document&>(outputTarget.getNode()));
+					FormatterToDOM(static_cast<XalanDocument*>(outputTarget.getNode()));
 				newListener = true;
 				break;
-			case DOM_Node::DOCUMENT_FRAGMENT_NODE:
-				flistener = new 
-					FormatterToDOM(executionContext.createDocument(),
-						static_cast<DOM_DocumentFragment&>(outputTarget.getNode()));
-				newListener = true;
-				break;
-			case DOM_Node::ELEMENT_NODE:
+
+			case XalanNode::DOCUMENT_FRAGMENT_NODE:
 				flistener = new 
 					FormatterToDOM(executionContext.createDocument(),
-						static_cast<DOM_Element&>(outputTarget.getNode()));
+						static_cast<XalanDocumentFragment*>(outputTarget.getNode()));
 				newListener = true;
 				break;
+
+			case XalanNode::ELEMENT_NODE:
+				flistener = new 
+					FormatterToDOM(executionContext.createDocument(),
+						static_cast<XalanElement*>(outputTarget.getNode()));
+				newListener = true;
+				break;
+
 			default:
 				executionContext.error("Can only output to an Element, DocumentFragment, Document, or PrintWriter.");
 			}
@@ -349,24 +347,24 @@ void StylesheetRoot::process(
 		else
 		{
 			outputTarget.setNode(executionContext.createDocument());
-			flistener = new 
-				FormatterToDOM(static_cast<DOM_Document&>(outputTarget.getNode()));
+			flistener = new
+				FormatterToDOM(static_cast<XalanDocument*>(outputTarget.getNode()));
 			newListener = true;
 		}
 		
 		executionContext.setFormatterListener(flistener);
 		executionContext.resetCurrentState(sourceTree, sourceTree);
 		// @@ JMD: Is this OK ??
-		executionContext.setRootDocument(static_cast<const DOM_Document&>(sourceTree));
+		executionContext.setRootDocument(static_cast<XalanDocument*>(sourceTree));
 		
 		if(executionContext.doDiagnosticsOutput())
 		{
-			executionContext.diag("=============================");
-			executionContext.diag("Transforming...");
+			executionContext.diag(XALAN_STATIC_UCODE_STRING("============================="));
+			executionContext.diag(XALAN_STATIC_UCODE_STRING("Transforming..."));
 			executionContext.pushTime(&sourceTree);
 		}
 		
-		executionContext.pushContextMarker(DOM_Node(), DOM_Node());
+		executionContext.pushContextMarker(0, 0);
 
 		try
 		{
@@ -392,7 +390,7 @@ void StylesheetRoot::process(
 
 		if(executionContext.doDiagnosticsOutput())
 		{
-			executionContext.displayDuration("transform", &sourceTree);
+			executionContext.displayDuration(XALAN_STATIC_UCODE_STRING("transform"), &sourceTree);
 		}
 		if (newListener) delete flistener;		
 		// Can't release this until flistener is gone, since it contains a
@@ -417,7 +415,7 @@ StylesheetRoot::getOutputMethod() const
 
 
 /** Get the version string that was specified in the stylesheet. */
-DOMString 
+XalanDOMString 
 StylesheetRoot::getOutputVersion() const
 { 
 	return m_version; 
@@ -433,7 +431,7 @@ StylesheetRoot::getOutputIndent() const
 
 
 /** Get the encoding string that was specified in the stylesheet. */
-DOMString 
+XalanDOMString 
 StylesheetRoot::getOutputEncoding() const
 { 
     return m_encoding; 
@@ -441,14 +439,20 @@ StylesheetRoot::getOutputEncoding() const
 
 
 /** Get the encoding string that was specified in the stylesheet. */
-DOMString 
+XalanDOMString 
 StylesheetRoot::getJavaOutputEncoding() const 
 { 
-    DOMString encoding;
+    XalanDOMString	encoding;
+
     if(isEmpty(m_encoding))
-      encoding  = DOMString("UTF8");
-    else if( equalsIgnoreCase(m_encoding, DOMString("UTF-16") ) )
-      encoding  = DOMString("Unicode");
+	{
+		encoding  = XALAN_STATIC_UCODE_STRING("UTF8");
+	}
+    else if(equalsIgnoreCase(m_encoding, XALAN_STATIC_UCODE_STRING("UTF-16")))
+	{
+		encoding  = XALAN_STATIC_UCODE_STRING("Unicode");
+	}
+
 // @@ JMD: do we need this ??
 //    else
 // @@ to do       encoding = FormatterToXML.convertMime2JavaEncoding( m_encoding ); 
@@ -457,7 +461,7 @@ StylesheetRoot::getJavaOutputEncoding() const
 
 
 /** Get the media-type string that was specified in the stylesheet. */
-DOMString 
+XalanDOMString 
 StylesheetRoot::getOutputMediaType() const 
 { 
 	return m_mediatype; 
@@ -465,7 +469,7 @@ StylesheetRoot::getOutputMediaType() const
 
 
 /** Get the doctype-system-id string that was specified in the stylesheet. */
-DOMString 
+XalanDOMString 
 StylesheetRoot::getOutputDoctypeSystem() const 
 { 
 	return m_doctypeSystem; 
@@ -473,7 +477,7 @@ StylesheetRoot::getOutputDoctypeSystem() const
 
 
 /** Get the doctype-public-id string that was specified in the stylesheet. */
-DOMString 
+XalanDOMString 
 StylesheetRoot::getOutputDoctypePublic() const
 { 
 	return m_doctypePublic; 
@@ -484,18 +488,22 @@ StylesheetRoot::getOutputDoctypePublic() const
  */
 void 
 StylesheetRoot::processOutputSpec(
-			const DOMString&				name, 
+			const XalanDOMChar*				name, 
 			const AttributeList&			atts,
 			StylesheetConstructionContext&	constructionContext)
 {
-	int nAttrs = atts.getLength();
-	bool didSpecifyIndent = false;
-	for(int i = 0; i < nAttrs; i++)
+	const unsigned int	nAttrs = atts.getLength();
+
+	bool				didSpecifyIndent = false;
+
+	for(unsigned int i = 0; i < nAttrs; i++)
 	{
-		DOMString aname = atts.getName(i);
+		const XalanDOMChar*	const	aname = atts.getName(i);
+
 		if(equals(aname, Constants::ATTRNAME_OUTPUT_METHOD))
 		{
-			DOMString method = atts.getValue(i);
+			const XalanDOMChar*	const	method = atts.getValue(i);
+
 			if(equals(method, Constants::ATTRVAL_OUTPUT_METHOD_HTML))
 				m_outputmethod = Formatter::OUTPUT_METH_HTML;
 			else if(equals(method, Constants::ATTRVAL_OUTPUT_METHOD_XML))
@@ -503,7 +511,7 @@ StylesheetRoot::processOutputSpec(
 			else if(equals(method, Constants::ATTRVAL_OUTPUT_METHOD_TEXT))
 				m_outputmethod = Formatter::OUTPUT_METH_TEXT;
 		}
-		else if(equals(aname,Constants::ATTRNAME_OUTPUT_VERSION))
+		else if(equals(aname, Constants::ATTRNAME_OUTPUT_VERSION))
 		{
 			m_version = atts.getValue(i);
 		}
@@ -539,18 +547,22 @@ StylesheetRoot::processOutputSpec(
 		else if(equals(aname,Constants::ATTRNAME_OUTPUT_CDATA_SECTION_ELEMENTS))
 		{
 			StringTokenizer tokenizer(atts.getValue(i));
+
 			while(tokenizer.hasMoreTokens())
 			{
-				DOMString token = tokenizer.nextToken();
-				QName qname(token, getNamespaces());
+				const XalanDOMString	token = tokenizer.nextToken();
+
+				const QName				qname(token, getNamespaces());
+
 				m_cdataSectionElems.push_back(qname);
 			}
 		}
 		else
 		{
-			constructionContext.error(name+DOMString(" has an illegal attribute: ")+aname);
+			constructionContext.error(name + XalanDOMString(" has an illegal attribute: ")+aname);
 		}
 	}
+
 	if((Formatter::OUTPUT_METH_HTML == m_outputmethod) &&
 		 (false == didSpecifyIndent))
 	{
@@ -559,69 +571,108 @@ StylesheetRoot::processOutputSpec(
 }
 
 
-/**
- * Create the default rule if needed.
- */
+
 void 
 StylesheetRoot::initDefaultRule(StylesheetConstructionContext&	constructionContext)
 {
-	int lineNumber = 0;
-	int columnNumber = 0;
-	// Then manufacture a default
-     
-	AttributeListImpl attrs;
-	//const AttributeListImpl attrs() ;
-    attrs.addAttribute(c_wstr(Constants::ATTRNAME_MATCH),
-	 							c_wstr(DOMString("CDATA")),
-								c_wstr(DOMString("*")));
-    m_defaultRule = new ElemTemplate(constructionContext,	// @@ JMD: should be null 
-									*this,
-									DOMString("xsl:")+Constants::ELEMNAME_TEMPLATE_STRING, 
-                                    attrs, lineNumber, columnNumber);
-    attrs.clear();
-    ElemApplyTemplates* childrenElement 
-      = new ElemApplyTemplates(constructionContext, *this,
-                                DOMString("xsl:")+Constants::ELEMNAME_APPLY_TEMPLATES_STRING,
-                                attrs, lineNumber, columnNumber);
-	childrenElement->setDefaultTemplate(true);
-    m_defaultRule->appendChild(childrenElement);
+	if (m_defaultRule == 0)
+	{
+		assert(m_defaultTextRule == 0);
+		assert(m_defaultRootRule == 0);
+
+		const int				lineNumber = 0;
+		const int				columnNumber = 0;
+
+		AttributeListImpl		attrs;
+
+		const XalanDOMString	xslPrefix(XALAN_STATIC_UCODE_STRING("xsl:"));
+
+		attrs.addAttribute(c_wstr(Constants::ATTRNAME_MATCH),
+	 					   c_wstr(XALAN_STATIC_UCODE_STRING("CDATA")),
+						   c_wstr(XALAN_STATIC_UCODE_STRING("*")));
+
+		m_defaultRule = new ElemTemplate(constructionContext,	// @@ JMD: should be null 
+										 *this,
+										 xslPrefix + Constants::ELEMNAME_TEMPLATE_STRING, 
+										 attrs,
+										 lineNumber,
+										 columnNumber);
+
+		attrs.clear();
+
+		ElemApplyTemplates* childrenElement 
+		  = new ElemApplyTemplates(constructionContext,
+								   *this,
+								   xslPrefix + Constants::ELEMNAME_APPLY_TEMPLATES_STRING,
+								   attrs,
+								   lineNumber,
+								   columnNumber);
+
+		childrenElement->setDefaultTemplate(true);
+		m_defaultRule->appendChildElem(childrenElement);
     
-    // -----------------------------
+		// -----------------------------
     
-    attrs.clear();
-    attrs.addAttribute(c_wstr(Constants::ATTRNAME_MATCH),
-	 							c_wstr(DOMString("CDATA")),
-								c_wstr(DOMString("text() | @*")));
-    m_defaultTextRule = new ElemTemplate(constructionContext, 
-											*this,
-											DOMString("xsl:")+Constants::ELEMNAME_TEMPLATE_STRING,
-											attrs, lineNumber, columnNumber);
-    attrs.clear();
-    attrs.addAttribute(c_wstr(Constants::ATTRNAME_SELECT),
-	 							c_wstr(DOMString("CDATA")),
-								c_wstr(DOMString(".")));
-    ElemValueOf* elemValueOf 
-      = (new ElemValueOf(constructionContext, *this,
-                        DOMString("xsl:")+Constants::ELEMNAME_VALUEOF_STRING,
-                        attrs, lineNumber, columnNumber));
-    m_defaultTextRule->appendChild(elemValueOf);
+		attrs.clear();
+		attrs.addAttribute(c_wstr(Constants::ATTRNAME_MATCH),
+	 					   c_wstr(XALAN_STATIC_UCODE_STRING("CDATA")),
+						   c_wstr(XALAN_STATIC_UCODE_STRING("text() | @*")));
+
+		m_defaultTextRule = new ElemTemplate(constructionContext,
+											 *this,
+											 xslPrefix + Constants::ELEMNAME_TEMPLATE_STRING,
+											 attrs,
+											 lineNumber,
+											 columnNumber);
+
+		attrs.clear();
+		attrs.addAttribute(c_wstr(Constants::ATTRNAME_SELECT),
+	 					   c_wstr(XALAN_STATIC_UCODE_STRING("CDATA")),
+						   c_wstr(XALAN_STATIC_UCODE_STRING(".")));
+
+		ElemValueOf* elemValueOf =
+			new ElemValueOf(constructionContext,
+							*this,
+							xslPrefix + Constants::ELEMNAME_VALUEOF_STRING,
+							attrs,
+							lineNumber,
+							columnNumber);
+
+		m_defaultTextRule->appendChildElem(elemValueOf);
     
-    //--------------------------------
+		//--------------------------------
     
-    attrs.clear();
-    attrs.addAttribute(c_wstr(Constants::ATTRNAME_MATCH),
-	 							c_wstr(DOMString("CDATA")),
-								c_wstr(DOMString("/")));
-    m_defaultRootRule = new ElemTemplate(constructionContext, *this,
-                                        DOMString("xsl:")+Constants::ELEMNAME_TEMPLATE_STRING,
-                                        attrs, lineNumber, columnNumber);
-    attrs.clear();
-    childrenElement 
-      = (new ElemApplyTemplates(constructionContext, *this,
-								DOMString("xsl:")+Constants::ELEMNAME_APPLY_TEMPLATES_STRING,
-								attrs,	lineNumber, columnNumber));
-	childrenElement->setDefaultTemplate(true);
-    m_defaultRootRule->appendChild(childrenElement);
+		attrs.clear();
+		attrs.addAttribute(c_wstr(Constants::ATTRNAME_MATCH),
+	 					   c_wstr(XALAN_STATIC_UCODE_STRING("CDATA")),
+						   c_wstr(XALAN_STATIC_UCODE_STRING("/")));
+
+		m_defaultRootRule =
+			new ElemTemplate(constructionContext,
+							 *this,
+							 xslPrefix + Constants::ELEMNAME_TEMPLATE_STRING,
+							 attrs,
+							 lineNumber,
+							 columnNumber);
+
+		attrs.clear();
+
+		childrenElement =
+			new ElemApplyTemplates(constructionContext,
+								   *this,
+								   xslPrefix + Constants::ELEMNAME_APPLY_TEMPLATES_STRING,
+								   attrs,
+								   lineNumber,
+								   columnNumber);
+
+		childrenElement->setDefaultTemplate(true);
+
+		m_defaultRootRule->appendChildElem(childrenElement);
+	}
+
+	assert(m_defaultRule != 0);
+	assert(m_defaultTextRule != 0);
+	assert(m_defaultRootRule != 0);
 }
 
 
@@ -655,83 +706,38 @@ StylesheetRoot::removeTraceListener(TraceListener* theListener)
 		m_traceListeners.erase(it);
 	}
 }
- 
+
+
+
+
 /**
  * Fire a trace event.
  */
-void StylesheetRoot::fireTraceEvent(const TracerEvent& te) const
+void
+StylesheetRoot::fireTraceEvent(const TracerEvent& te) const
 {
-	int nListeners = m_traceListeners.size();
-	for(int i = 0; i < nListeners; i++)
+	const ListenersVectorType::size_type	nListeners =
+		m_traceListeners.size();
+
+	for(ListenersVectorType::size_type i = 0; i < nListeners; i++)
 	{
-		TraceListener* tl = m_traceListeners[i];
-		tl->trace(te);
+		m_traceListeners[i]->trace(te);
 	}
 }
+
+
   
 /**
  * Fire a selection event.
  */
-void StylesheetRoot::fireSelectedEvent(const SelectionEvent& se) const
+void
+StylesheetRoot::fireSelectedEvent(const SelectionEvent& se) const
 {
-	int nListeners = m_traceListeners.size();
-	for(int i = 0; i < nListeners; i++)
+	const ListenersVectorType::size_type	nListeners =
+		m_traceListeners.size();
+
+	for(ListenersVectorType::size_type i = 0; i < nListeners; i++)
 	{
-		TraceListener* tl = m_traceListeners[i];
-		tl->selected(se);
+		m_traceListeners[i]->selected(se);
 	}
 }
-
-
-
-#if 0
-
-// Transfer these to StylesheetExecutionContext() and StylesheetConstructionContext(), etc...
-XPath*
-StylesheetRoot::createMatchPattern(
-			const DOMString&		str,
-			const PrefixResolver&	resolver)
-{
-	assert(m_processor != 0);
-	assert(m_processor->getXPathProcessor() != 0);
-
-	XPath* const	xpath = m_xpathFactory.create();
-
-	m_processor->getXPathProcessor()->initMatchPattern(*xpath,
-													   str,
-													   resolver,
-													   m_xobjectFactory,
-													   m_processor->getXPathEnvSupport());
-
-	return xpath;
-}
-
-
-
-XPath*
-StylesheetRoot::createXPath(
-			const DOMString&		str,
-			const PrefixResolver&	resolver)
-{
-	assert(m_processor != 0);
-	assert(m_processor->getXPathProcessor() != 0);
-
-	XPath* const	xpath = m_xpathFactory.create();
-
-	// It's OK to use the XPathEnvSupport of the processor,
-	// since we're in construction phase.
-	m_processor->getXPathProcessor()->initXPath(*xpath,
-												str,
-												resolver,
-												m_xobjectFactory,
-												m_processor->getXPathEnvSupport());
-
-	return xpath;
-}
-#endif
-
-
-
-/*
- *	$ Log: $
- */

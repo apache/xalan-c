@@ -56,14 +56,17 @@
  */
 #include "FunctionSystemProperty.hpp"
 
-#include <set>
 
-#include <dom/DOM_Node.hpp>
-#include <dom/DOM_Document.hpp>
-#include <dom/DOMString.hpp>
 
-#include <Include/DOMHelper.hpp>
+#include <XalanDOM/XalanNode.hpp>
+#include <XalanDOM/XalanDocument.hpp>
+
+
+
 #include <PlatformSupport/DOMStringHelper.hpp>
+
+
+
 #include <XPath/MutableNodeRefList.hpp>
 #include <XPath/NodeRefListBase.hpp>
 #include <XPath/XObject.hpp>
@@ -71,61 +74,65 @@
 #include <XPath/XPathExecutionContext.hpp>
 
 
-FunctionSystemProperty::FunctionSystemProperty()
+
+FunctionSystemProperty::FunctionSystemProperty() :
+	Function()
 {
-	// do nothing
 }
 
 
 
 FunctionSystemProperty::~FunctionSystemProperty()
 {
-	// do nothing
 }
 
 
 
-XObject* FunctionSystemProperty::execute(
-	XPathExecutionContext& executionContext,
-	const DOM_Node& context,
-	int /* opPos */,
-	const std::vector<XObject*>& args)
+XObject*
+FunctionSystemProperty::execute(
+			XPathExecutionContext&			executionContext,
+			XalanNode*						context,
+			int								opPos,
+			const XObjectArgVectorType&		args)
 {
 	if (args.size() != 1)
 	{
 		executionContext.error("The system-property() function takes a single argument!", context);
+
 		return 0;
 	}
 
-	const DOMString		fullName = args[0]->str();
-	const int			indexOfNSSep = indexOf(fullName,':');
+	const XalanDOMString	fullName = args[0]->str();
+	const unsigned int		fullNameLength = length(fullName);
+	const unsigned int		indexOfNSSep = indexOf(fullName,':');
 
-	DOMString result;
+	XalanDOMString result;
 
-	if(indexOfNSSep > 0)
+	if(indexOfNSSep < fullNameLength)
 	{
-		const DOMString prefix = (indexOfNSSep >= 0) ? substring(fullName, 0, indexOfNSSep) : DOMString();
+		const XalanDOMString	prefix = substring(fullName, 0, indexOfNSSep);
 
-		//to do:
-//		const DOMString nspace = executionContext.getNamespaceForPrefix(prefix);
-		DOMString nspace = "http://www.w3.org/1999/XSL/Transform";
+		//$$$ ToDo: Fix this!!!
+//		const XalanDOMString nspace = executionContext.getNamespaceForPrefix(prefix);
+		const XalanDOMString	nspace =
+			XALAN_STATIC_UCODE_STRING("http://www.w3.org/1999/XSL/Transform");
 
 		
-		const DOMString propName = (indexOfNSSep < 0) ? fullName 	: substring(fullName,indexOfNSSep+1);
-		
-		if(startsWith(nspace,"http://www.w3.org/1999/XSL/Transform"))
+		const XalanDOMString	propName = substring(fullName, indexOfNSSep + 1);
+
+		if(startsWith(nspace, XALAN_STATIC_UCODE_STRING("http://www.w3.org/1999/XSL/Transform")))
 		{
-			if(equals(propName, "version"))
+			if(equals(propName, XALAN_STATIC_UCODE_STRING("version")))
 			{
-				result = "1.0";
+				result = XALAN_STATIC_UCODE_STRING("1.0");
 			}
-			else if(equals(propName, "vendor"))
+			else if(equals(propName, XALAN_STATIC_UCODE_STRING("vendor")))
 			{
-				result = "xml.apache.org";
+				result = XALAN_STATIC_UCODE_STRING("xml.apache.org");
 			}
-			else if(equals(propName, "vendor-url"))
+			else if(equals(propName, XALAN_STATIC_UCODE_STRING("vendor-url")))
 			{
-				result = "http://xml.apache.org/xslt";
+				result = XALAN_STATIC_UCODE_STRING("http://xml.apache.org/xslt");
 			}
 			else
 			{
@@ -135,6 +142,7 @@ XObject* FunctionSystemProperty::execute(
 		else
 		{
 			executionContext.warn("Don't currently do anything with namespace " + nspace + " in property: " + fullName);
+
 			result = ::getenv(DOMStringToStdString(propName).c_str());
 		}
 	}

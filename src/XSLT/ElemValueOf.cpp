@@ -61,7 +61,11 @@
 #include <sax/AttributeList.hpp>
 
 
+
 #include <PlatformSupport/DOMStringHelper.hpp>
+
+
+
 #include <XPath/XPath.hpp>
 
 
@@ -78,7 +82,7 @@
 ElemValueOf::ElemValueOf(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
-			const DOMString&				name,
+			const XalanDOMString&			name,
 			const AttributeList&			atts,
 			int								lineNumber,
 			int								columnNumber) :
@@ -86,17 +90,19 @@ ElemValueOf::ElemValueOf(
 						stylesheetTree,
 						name,
 						lineNumber,
-						columnNumber),
+						columnNumber,
+						Constants::ELEMNAME_VALUEOF),
 	m_selectPattern(0),
 	m_disableOutputEscaping(false)
 {
-	const int	nAttrs = atts.getLength();
+	const unsigned int	nAttrs = atts.getLength();
 
-	for(int i = 0; i < nAttrs; i++)
+	for(unsigned int i = 0; i < nAttrs; i++)
 	{
-		const DOMString		aname(atts.getName(i));
+		const XalanDOMChar* const	aname = atts.getName(i);
 
-		const int			tok = constructionContext.getAttrTok(aname);
+		const int					tok =
+			constructionContext.getAttrTok(aname);
 
 		switch(tok)
 		{
@@ -136,31 +142,11 @@ ElemValueOf::~ElemValueOf()
 
 
 
-int
-ElemValueOf::getXSLToken() const
-{
-    return Constants::ELEMNAME_VALUEOF;
-}
-
-
-/**
- * Add a child to the child list.
- */
-NodeImpl* ElemValueOf::appendChild(NodeImpl* newChild)
-{
-	error("Can not add " + 
-		dynamic_cast<ElemTemplateElement *>(newChild)->getTagName() 
-		+ " to " + this->getTagName());
-
-    return 0;
-}
-
-
 void
 ElemValueOf::execute(
 			StylesheetExecutionContext&		executionContext,
-			const DOM_Node&					sourceTree, 
-			const DOM_Node&					sourceNode,
+			XalanNode*						sourceTree,
+			XalanNode*						sourceNode,
 			const QName&					mode) const
 {    
 	ElemTemplateElement::execute(executionContext, sourceTree, sourceNode, mode);
@@ -176,7 +162,7 @@ ElemValueOf::execute(
 			SelectionEvent(executionContext,
 						   sourceNode,
 						   *this,
-						   DOMString("select"),
+						   XalanDOMString(XALAN_STATIC_UCODE_STRING("select")),
 						   *m_selectPattern,
 						   value));       
 	}
@@ -187,9 +173,9 @@ ElemValueOf::execute(
 
 		if (XObject::eTypeNull != type)
 		{
-			const DOMString		s = value->str();
+			const XalanDOMString	s = value->str();
 
-			const int			len = length(s);
+			const unsigned int		len = length(s);
 
 			if(len > 0)
 			{

@@ -63,13 +63,15 @@
 
 
 #include <PlatformSupport/DOMStringHelper.hpp>
+
+
+
 #include <XPath/ResultTreeFrag.hpp>
 #include <XPath/XPath.hpp>
 #include <XPath/XResultTreeFrag.hpp>
 
 
 
-#include "Constants.hpp"
 #include "SelectionEvent.hpp"
 #include "Stylesheet.hpp"
 #include "StylesheetConstructionContext.hpp"
@@ -81,28 +83,31 @@
 ElemVariable::ElemVariable(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
-			const DOMString&				name,
+			const XalanDOMString&			name,
 			const AttributeList&			atts,
 			int								lineNumber,
-			int								columnNumber) :
+			int								columnNumber,
+			int								xslToken) :
 	ElemTemplateElement(constructionContext,
 						stylesheetTree,
 						name,
 						lineNumber,
-						columnNumber),
+						columnNumber,
+						xslToken),
 	m_selectPattern(0), 
 	m_qname(),
 	m_isTopLevel(false),
 	m_value(0),
-	m_varContext()
+	m_varContext(0)
 {
-	const int nAttrs = atts.getLength();
+	const unsigned int	nAttrs = atts.getLength();
 	
-	for(int i = 0; i < nAttrs; i++)
+	for(unsigned int i = 0; i < nAttrs; i++)
 	{
-		const DOMString		aname(atts.getName(i));
+		const XalanDOMChar* const	aname = atts.getName(i);
 
-		const int			tok = constructionContext.getAttrTok(aname);
+		const int					tok =
+			constructionContext.getAttrTok(aname);
 
 		switch(tok)
 		{
@@ -141,27 +146,20 @@ ElemVariable::~ElemVariable()
 
 
 
-int
-ElemVariable::getXSLToken() const
-{
-    return Constants::ELEMNAME_VARIABLE;
-}
-
-
 void
 ElemVariable::execute(
 			StylesheetExecutionContext&		executionContext,
-			const DOM_Node&					sourceTree, 
-			const DOM_Node&					sourceNode,
+			XalanNode*						sourceTree,
+			XalanNode*						sourceNode,
 			const QName&					mode) const
-{    
+{
 	ElemTemplateElement::execute(executionContext, sourceTree, sourceNode, mode);
 
     XObject* const	var = getValue(executionContext, sourceTree, sourceNode);
 
 	executionContext.pushVariable(m_qname,
 								  var,
-								  DOM_UnimplementedElement(const_cast<ElemTemplateElement*>(getParentNode())));
+								  getParentNode());
 }
 
 
@@ -169,8 +167,8 @@ ElemVariable::execute(
 XObject*
 ElemVariable::getValue(
 			StylesheetExecutionContext&		executionContext,
-			const DOM_Node&					sourceTree, 
-			const DOM_Node&					sourceNode) const
+			XalanNode*						sourceTree, 
+			XalanNode*						sourceNode) const
 {
 	XObject*	var = 0;
 
@@ -183,7 +181,7 @@ ElemVariable::getValue(
 		{
 			getStylesheet().getStylesheetRoot().fireSelectedEvent(
 				SelectionEvent(executionContext, sourceNode,
-					*this, DOMString("select"), *m_selectPattern, var));
+					*this, XalanDOMString(XALAN_STATIC_UCODE_STRING("select")), *m_selectPattern, var));
 		}
 	}
 	else
@@ -195,4 +193,3 @@ ElemVariable::getValue(
 
 	return var;
 }
-

@@ -98,7 +98,7 @@ public:
 	ElemText(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
-			const DOMString&				name,
+			const XalanDOMString&			name,
 			const AttributeList&			atts,
 			int								lineNumber,
 			int								columnNumber);
@@ -117,13 +117,12 @@ public:
 		return m_disableOutputEscaping;
 	}
 
-	// These methods are inherited from ElemTemplateElement ...
-	
-	virtual NodeImpl*
-	appendChild(NodeImpl*	newChild);
+protected:
 
-	virtual int
-	getXSLToken() const;
+	// These methods are inherited from ElemTemplateElement ...
+
+	virtual bool
+	childTypeAllowed(int	xslToken) const;
 
 private:
 

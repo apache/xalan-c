@@ -59,7 +59,6 @@
 
 
 #include <sax/AttributeList.hpp>
-//#include <sax/SAXException.hpp>
 
 
 
@@ -76,7 +75,7 @@
 ElemComment::ElemComment(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
-			const DOMString&				name,
+			const XalanDOMString&			name,
 			const AttributeList&			atts,
 			int								lineNumber,
 			int								columnNumber) :
@@ -84,13 +83,14 @@ ElemComment::ElemComment(
 						stylesheetTree,
 						name,
 						lineNumber,
-						columnNumber)
+						columnNumber,
+						Constants::ELEMNAME_COMMENT)
 {
-	const int nAttrs = atts.getLength();
+	const unsigned int nAttrs = atts.getLength();
 
-	for(int i = 0; i < nAttrs; i++)
+	for(unsigned int i = 0; i < nAttrs; i++)
 	{
-		const DOMString aname(atts.getName(i));
+		const XalanDOMChar*	const	aname = atts.getName(i);
 
 		if(isAttrOK(aname, atts, i, constructionContext) == false || processSpaceAttr(aname, atts, i))
 		{
@@ -107,19 +107,11 @@ ElemComment::~ElemComment()
 
 
 
-int
-ElemComment::getXSLToken() const 
-{
-	return Constants::ELEMNAME_COMMENT;
-}
-
-
-
 void
 ElemComment::execute(
 			StylesheetExecutionContext&		executionContext,
-			const DOM_Node&					sourceTree, 
-			const DOM_Node&					sourceNode,
+			XalanNode*						sourceTree,
+			XalanNode*						sourceNode,
 			const QName&					mode) const
 {
 	ElemTemplateElement::execute(executionContext, sourceTree, sourceNode, mode);
@@ -132,24 +124,20 @@ ElemComment::execute(
     // | xsl:element
     // | xsl:attribute
     // ">
-    const DOMString		data = childrenToString(executionContext, sourceTree, sourceNode, mode);
+    const XalanDOMString		data = childrenToString(executionContext, sourceTree, sourceNode, mode);
 
     executionContext.comment(toCharArray(data));
 }
 
 
 
-/**
- * Add a child to the child list.
- */
-NodeImpl*
-ElemComment::appendChild(NodeImpl* newChild)
+
+bool
+ElemComment::childTypeAllowed(int	xslToken) const
 {
-	assert(dynamic_cast<ElemTemplateElement*>(newChild) != 0);
-
-	const int	type = dynamic_cast<ElemTemplateElement*>(newChild)->getXSLToken();
-
-	switch(type)
+	bool	fResult = false;
+	
+	switch(xslToken)
 	{
 	// char-instructions 
 	case Constants::ELEMNAME_TEXTLITERALRESULT:
@@ -173,14 +161,12 @@ ElemComment::appendChild(NodeImpl* newChild)
 // case Constants.ELEMNAME_ELEMENT:
 // case Constants.ELEMNAME_ATTRIBUTE:
 		
-	break;
+		fResult = true;
+		break;
 		
 	default:
-		error("Can not add " +
-			  dynamic_cast<ElemTemplateElement*>(newChild)->getTagName() +
-			  " to " +
-			  getTagName());
+		break;
 	}
-
-	return ElemTemplateElement::appendChild(newChild);
+	
+	return fResult;
 }

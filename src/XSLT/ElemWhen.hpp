@@ -57,17 +57,12 @@
 #if !defined(XALAN_ELEMWHEN_HEADER_GUARD)
 #define XALAN_ELEMWHEN_HEADER_GUARD 
 
-/**
- * $Id$
- * 
- * $State$
- * 
- * @author Myriam Midy (Myriam_Midy @lotus.com 
- */
 
 
 // Base include file.  Must be first.
 #include "XSLTDefinitions.hpp"
+
+
 
 // Base class header file.
 #include "ElemTemplateElement.hpp"
@@ -95,7 +90,7 @@ public:
 	ElemWhen (
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
-			const DOMString&				name,
+			const XalanDOMString&			name,
 			const AttributeList&			atts,
 			int								lineNumber,
 			int								columnNumber);
@@ -111,15 +106,9 @@ public:
 		return m_pTest;
 	}
 
-	// These methods are inherited from ElemTemplateElement ...
-	
-	virtual int
-	getXSLToken() const;
-
 private:
 
 	const XPath*	m_pTest;
-
 };
 
 

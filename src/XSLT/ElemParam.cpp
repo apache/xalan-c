@@ -78,16 +78,9 @@ ElemParam::ElemParam(
 				 name,
 				 atts,
 				 lineNumber,
-				 columnNumber)
+				 columnNumber,
+				 Constants::ELEMNAME_PARAMVARIABLE)
 {
-}
-
-
-
-int
-ElemParam::getXSLToken() const 
-{		
-	return Constants::ELEMNAME_PARAMVARIABLE;		
 }
 
 
@@ -95,8 +88,8 @@ ElemParam::getXSLToken() const
 void
 ElemParam::execute(
 			StylesheetExecutionContext&		executionContext,
-			const DOM_Node&					sourceTree, 
-			const DOM_Node&					sourceNode,
+			XalanNode*						sourceTree,
+			XalanNode*						sourceNode,
 			const QName&					mode) const
 {
 	const XObject* const	obj = executionContext.getParamVariable(m_qname);

@@ -75,7 +75,7 @@
 
 
 
-#include <dom/DOMString.hpp>
+#include <XalanDOM/XalanDOMString.hpp>
 
 
 
@@ -100,7 +100,7 @@ public:
 	ElemSort(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
-			const DOMString&				name,
+			const XalanDOMString&			name,
 			const AttributeList&			atts,
 			int								lineNumber,
 			int								columnNumber);
@@ -110,7 +110,7 @@ public:
 	 * 
 	 * @return string corresponding the language AVT
 	 */
-	const DOMString&
+	const XalanDOMString&
 	getLangAVT() const
 	{
 		return m_langAVT;
@@ -121,7 +121,7 @@ public:
 	 * 
 	 * @return string corresponding the order AVT
 	 */
-	const DOMString&
+	const XalanDOMString&
 	getOrderAVT() const
 	{
 		return m_orderAVT;
@@ -132,7 +132,7 @@ public:
 	 * 
 	 * @return string corresponding the data type AVT
 	 */
-	const DOMString&
+	const XalanDOMString&
 	getDataTypeAVT() const
 	{
 		return m_dataTypeAVT;
@@ -149,22 +149,14 @@ public:
 		return m_selectPattern;
 	}
 
-	// These methods are inherited from ElemTemplateElement ...
-	
-	virtual int
-	getXSLToken() const; 
-
-	virtual NodeImpl*
-	appendChild(NodeImpl*	newChild);
-	
 private:
 
 	const XPath*	m_selectPattern;
 
-    DOMString		m_langAVT;
-    DOMString		m_dataTypeAVT;
-	DOMString		m_orderAVT;
-    DOMString		m_caseOrderAVT;
+    XalanDOMString	m_langAVT;
+    XalanDOMString	m_dataTypeAVT;
+	XalanDOMString	m_orderAVT;
+    XalanDOMString	m_caseOrderAVT;
 };
 
 

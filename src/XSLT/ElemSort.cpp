@@ -74,43 +74,48 @@
 ElemSort::ElemSort(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
-			const DOMString&				name,
+			const XalanDOMString&			name,
 			const AttributeList&			atts,
 			int								lineNumber,
 			int								columnNumber) :
-	ElemTemplateElement(constructionContext, stylesheetTree, name, lineNumber, columnNumber),	
+	ElemTemplateElement(constructionContext,
+						stylesheetTree,
+						name,
+						lineNumber,
+						columnNumber,
+						Constants::ELEMNAME_SORT),	
 	m_selectPattern(0),
 	m_langAVT(),
-	m_dataTypeAVT("text"),
-	m_orderAVT("ascending"),
+	m_dataTypeAVT(XALAN_STATIC_UCODE_STRING("text")),
+	m_orderAVT(XALAN_STATIC_UCODE_STRING("ascending")),
 	m_caseOrderAVT()	
 {
 	const int nAttrs = atts.getLength();
 
 	for(int i = 0; i < nAttrs; i++)
 	{
-		const DOMString aname(atts.getName(i));
+		const XalanDOMChar* const	aname = atts.getName(i);
 
-		if(equals(aname,Constants::ATTRNAME_SELECT))
+		if(equals(aname, Constants::ATTRNAME_SELECT))
 		{
 			m_selectPattern 
 				= constructionContext.createXPath(atts.getValue(i), *this);
 		}
-		else if(equals(aname,Constants::ATTRNAME_LANG))
+		else if(equals(aname, Constants::ATTRNAME_LANG))
 		{
 			m_langAVT = atts.getValue(i);
 		}
-		else if(equals(aname,Constants::ATTRNAME_DATATYPE))
+		else if(equals(aname, Constants::ATTRNAME_DATATYPE))
 		{
 			m_dataTypeAVT = atts.getValue(i);
 		}
-		else if(equals(aname,Constants::ATTRNAME_ORDER))
+		else if(equals(aname, Constants::ATTRNAME_ORDER))
 		{
 			m_orderAVT = atts.getValue(i);
 		}
-		else if(equals(aname,Constants::ATTRNAME_CASEORDER))
+		else if(equals(aname, Constants::ATTRNAME_CASEORDER))
 		{
-			constructionContext.warn("XSL4C does not yet handle the " + Constants::ATTRNAME_CASEORDER + " attribute!");
+			constructionContext.warn("Xalan C++ does not yet handle the " + Constants::ATTRNAME_CASEORDER + " attribute!");
 
 			m_caseOrderAVT = atts.getValue(i);
 		}
@@ -122,24 +127,6 @@ ElemSort::ElemSort(
 
 	if(0 == m_selectPattern)
 	{
-		m_selectPattern = constructionContext.createXPath(DOMString("."), *this);
+		m_selectPattern = constructionContext.createXPath(XalanDOMString(XALAN_STATIC_UCODE_STRING(".")), *this);
 	}
-}
-
-
-
-int
-ElemSort::getXSLToken() const 
-{
-	return Constants::ELEMNAME_SORT;
-}
-
-
-
-NodeImpl*
-ElemSort::appendChild(NodeImpl* newChild)
-{
-    error("Can not add " + dynamic_cast<ElemTemplateElement*>(newChild)->getTagName() + " to " + this->getTagName());
-
-    return 0;
 }

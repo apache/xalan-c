@@ -61,8 +61,16 @@
 #include <sax/AttributeList.hpp>
 
 
+
+#include <XalanDOM/XalanDocument.hpp>
+
+
+
 #include <PlatformSupport/DOMStringHelper.hpp>
 #include <PlatformSupport/NumberFormat.hpp>
+
+
+
 #include <XPath/XPath.hpp>
 
 
@@ -76,10 +84,8 @@
 	using std::vector;
 #endif
 
-typedef vector<DOMString> StringVectorType;
-typedef StringVectorType::iterator StringVectorTypeIterator;
 
-const DOMString			ElemNumber::s_alphaCountTable(XALAN_STATIC_UCODE_STRING("ZABCDEFGHIJKLMNOPQRSTUVWXY"));
+const XalanDOMString	ElemNumber::s_alphaCountTable(XALAN_STATIC_UCODE_STRING("ZABCDEFGHIJKLMNOPQRSTUVWXY"));
 
 
 
@@ -99,7 +105,7 @@ const DecimalToRoman	ElemNumber::s_romanConvertTable[] =
 ElemNumber::ElemNumber(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
-			const DOMString&				name,
+			const XalanDOMString&			name,
 			const AttributeList&			atts,
 			int								lineNumber,
 			int								columnNumber) :
@@ -107,7 +113,8 @@ ElemNumber::ElemNumber(
 						stylesheetTree,
 						name,
 						lineNumber,
-						columnNumber),	
+						columnNumber,
+						Constants::ELEMNAME_NUMBER),	
 	m_countMatchPattern(0),
 	m_fromMatchPattern(0),
 	m_valueExpr(0),
@@ -119,27 +126,24 @@ ElemNumber::ElemNumber(
 	m_groupingSize_avt()
 	
 {
-	const int	nAttrs = atts.getLength();
+	const unsigned int	nAttrs = atts.getLength();
 
-	for(int i = 0; i < nAttrs; i++)
+	for(unsigned int i = 0; i < nAttrs; i++)
 	{
-		const DOMString		aname(atts.getName(i));
+		const XalanDOMChar*	const	aname = atts.getName(i);
 
 		if(equals(aname, Constants::ATTRNAME_LEVEL))
 		{
-			const DOMString levelValue = atts.getValue(i);
+			const XalanDOMChar*	const	levelValue = atts.getValue(i);
 
-			if(!isEmpty(levelValue))
-			{
-				if(equals(Constants::ATTRVAL_MULTI, levelValue))
-					m_level = Constants::NUMBERLEVEL_MULTI;
-				else if(equals(levelValue,Constants::ATTRVAL_ANY))
-					m_level = Constants::NUMBERLEVEL_ANY;
-				else if(equals(levelValue,Constants::ATTRVAL_SINGLE))
-					m_level = Constants::NUMBERLEVEL_SINGLE;
-				else
-					error("Bad value on level attribute: " + levelValue);
-			}
+			if(equals(Constants::ATTRVAL_MULTI, levelValue))
+				m_level = Constants::NUMBERLEVEL_MULTI;
+			else if(equals(levelValue,Constants::ATTRVAL_ANY))
+				m_level = Constants::NUMBERLEVEL_ANY;
+			else if(equals(levelValue,Constants::ATTRVAL_SINGLE))
+				m_level = Constants::NUMBERLEVEL_SINGLE;
+			else
+				error(XalanDOMString("Bad value on level attribute: ") + levelValue);
 		}
 		else if(equals(aname, Constants::ATTRNAME_COUNT))
 		{
@@ -182,25 +186,20 @@ ElemNumber::ElemNumber(
 	}
 }
 
-	
-int
-ElemNumber::getXSLToken() const 
-{
-	return Constants::ELEMNAME_NUMBER;
-}
-	
 
 
-void ElemNumber::execute(
+void
+ElemNumber::execute(
 			StylesheetExecutionContext&		executionContext,
-			const DOM_Node&					sourceTree, 
-			const DOM_Node&					sourceNode,
+			XalanNode*						sourceTree,
+			XalanNode*						sourceNode,
 			const QName&					mode) const
 {
 	ElemTemplateElement::execute(executionContext, sourceTree, sourceNode, mode);
 
-	DOMString countString = getCountString(executionContext, sourceTree, sourceNode);
-	
+	const XalanDOMString	countString =
+		getCountString(executionContext, sourceTree, sourceNode);
+
 	if (!isEmpty(countString))
 	{
 		executionContext.characters(toCharArray(countString), 0, length(countString));
@@ -209,43 +208,23 @@ void ElemNumber::execute(
 
 
 
-/**
- * Add a child to the child list.
- */
-NodeImpl* ElemNumber::appendChild(NodeImpl* newChild)
-{
-    error("Can not add " + dynamic_cast<ElemTemplateElement*>(newChild)->getTagName() + " to " + this->getTagName());
-
-    return 0;
-}
-
-
-
-/**
- * Given a 'from' pattern (ala xsl:number), a match pattern 
- * and a context, find the first ancestor that matches the 
- * pattern (including the context handed in).
- * @param matchPatternString The match pattern.
- * @param node The node that "." expresses.
- * @param namespaceContext The context in which namespaces in the 
- * queries are supposed to be expanded.
- */
-DOM_Node
+XalanNode*
 ElemNumber::findAncestor(
 			StylesheetExecutionContext&		executionContext,
 			const XPath*					fromMatchPattern,
 			const XPath*					countMatchPattern,
-			const DOM_Node&					context,
-			const DOM_Element&				/* namespaceContext */) const
+			XalanNode*						context,
+			const XalanElement*				/* namespaceContext */) const
 {
-	DOM_Node contextCopy(context);
+	XalanNode*	contextCopy = context;
 
 	while(contextCopy != 0)
 	{
 		if(0 != fromMatchPattern)
 		{
 			if(fromMatchPattern->getMatchScore(contextCopy,
-						executionContext.getXPathExecutionContext()) !=
+											   *this,
+											   executionContext.getXPathExecutionContext()) !=
 							XPath::s_MatchScoreNone)
 			{
 				break;
@@ -255,14 +234,15 @@ ElemNumber::findAncestor(
 		if(0 != countMatchPattern)
 		{
 			if(countMatchPattern->getMatchScore(context,
-						executionContext.getXPathExecutionContext()) !=
+											    *this,
+												executionContext.getXPathExecutionContext()) !=
 							XPath::s_MatchScoreNone)
 			{
 				break;
 			}
 		}
 		
-		contextCopy = executionContext.getParentOfNode(contextCopy);
+		contextCopy = executionContext.getParentOfNode(*contextCopy);
 	}
 
 	return contextCopy;
@@ -270,21 +250,22 @@ ElemNumber::findAncestor(
 
 
 
-DOM_Node
+XalanNode*
 ElemNumber::findPrecedingOrAncestorOrSelf(
 			StylesheetExecutionContext&		executionContext,
 			const XPath*					fromMatchPattern,
 			const XPath*					countMatchPattern,
-			const DOM_Node&					context,
-			const DOM_Element&				/* namespaceContext */) const
+			XalanNode*						context,
+			const XalanElement*				/* namespaceContext */) const
 {  
-	DOM_Node contextCopy(context);
-    
+	XalanNode*	contextCopy = context;
+
 	while(contextCopy != 0)
 	{
 		if(0 != fromMatchPattern)
 		{
 			if(fromMatchPattern->getMatchScore(contextCopy,
+											   *this,
 											   executionContext.getXPathExecutionContext()) != XPath::s_MatchScoreNone)
 			{
 				contextCopy = 0;
@@ -295,17 +276,18 @@ ElemNumber::findPrecedingOrAncestorOrSelf(
 		if(0 != countMatchPattern)
 		{
 			if(countMatchPattern->getMatchScore(contextCopy,
+											    *this,
 											    executionContext.getXPathExecutionContext()) != XPath::s_MatchScoreNone)
 			{
 				break;
 			}
 		}
 
-		DOM_Node	prevSibling = contextCopy.getPreviousSibling();
+		XalanNode* const	prevSibling = contextCopy->getPreviousSibling();
 
 		if(prevSibling == 0)
 		{
-			contextCopy = executionContext.getParentOfNode(contextCopy);
+			contextCopy = executionContext.getParentOfNode(*contextCopy);
 		}
 		else
 		{
@@ -318,49 +300,47 @@ ElemNumber::findPrecedingOrAncestorOrSelf(
 
 
 
-/**
- * Get the count match pattern, or a default value.
- */
 const XPath*
 ElemNumber::getCountMatchPattern(
 			StylesheetExecutionContext&		executionContext,
-			const DOM_Node&					contextNode) const
+			XalanNode*						contextNode) const
 {
 	const XPath*	countMatchPattern = m_countMatchPattern;
 
 	if(0 == countMatchPattern)
 	{
-		switch(contextNode.getNodeType())
+		switch(contextNode->getNodeType())
 		{
-		case DOM_Node::ELEMENT_NODE:
-			countMatchPattern = executionContext.createMatchPattern(contextNode.getNodeName(),
+		case XalanNode::ELEMENT_NODE:
+			countMatchPattern = executionContext.createMatchPattern(contextNode->getNodeName(),
 				*this);
 			break;
 
-		case DOM_Node::ATTRIBUTE_NODE:
-			countMatchPattern = executionContext.createMatchPattern(DOMString("@") + contextNode.getNodeName(),
+		case XalanNode::ATTRIBUTE_NODE:
+			countMatchPattern = executionContext.createMatchPattern(XalanDOMString(XALAN_STATIC_UCODE_STRING("@")) +
+																	contextNode->getNodeName(),
 				*this);
 			break;
 
-		case DOM_Node::CDATA_SECTION_NODE:
-		case DOM_Node::TEXT_NODE:
-			countMatchPattern = executionContext.createMatchPattern(DOMString("text()"), 
+		case XalanNode::CDATA_SECTION_NODE:
+		case XalanNode::TEXT_NODE:
+			countMatchPattern = executionContext.createMatchPattern(XalanDOMString(XALAN_STATIC_UCODE_STRING("text()")),
 				*this);
 			break;
 
-		case DOM_Node::COMMENT_NODE:
-			countMatchPattern = executionContext.createMatchPattern(DOMString("comment()"), 
+		case XalanNode::COMMENT_NODE:
+			countMatchPattern = executionContext.createMatchPattern(XalanDOMString(XALAN_STATIC_UCODE_STRING("comment()")),
 				*this);
 			break;
 
-		case DOM_Node::DOCUMENT_NODE:
-			countMatchPattern = executionContext.createMatchPattern(DOMString("/"), 
+		case XalanNode::DOCUMENT_NODE:
+			countMatchPattern = executionContext.createMatchPattern(XalanDOMString(XALAN_STATIC_UCODE_STRING("/")),
 				*this);
 			break;
 
-		case DOM_Node::PROCESSING_INSTRUCTION_NODE:
-			countMatchPattern = executionContext.createMatchPattern(DOMString("pi(") + 
-				contextNode.getNodeName() + DOMString(")"),
+		case XalanNode::PROCESSING_INSTRUCTION_NODE:
+			countMatchPattern = executionContext.createMatchPattern(XalanDOMString(XALAN_STATIC_UCODE_STRING("pi(")) + 
+				contextNode->getNodeName() + XalanDOMString(XALAN_STATIC_UCODE_STRING(")")),
 				*this);
 			break;
 
@@ -375,13 +355,16 @@ ElemNumber::getCountMatchPattern(
 
 
 
-DOMString
+XalanDOMString
 ElemNumber::getCountString(
 			StylesheetExecutionContext&		executionContext,
-			const DOM_Node&					/* sourceTree */, 
-			const DOM_Node&					sourceNode) const
+			XalanNode*						/* sourceTree */, 
+			XalanNode*						sourceNode) const
 {
+	assert(sourceNode != 0);
 	IntArrayType	numberList;
+
+	IntArrayType	list;
 
 	if(0 != m_valueExpr)
 	{
@@ -393,7 +376,7 @@ ElemNumber::getCountString(
 		numberList.push_back(static_cast<int>(countObj->num()));
 	}
 	else
-	{      
+	{
 		const XPath* const	countMatchPattern =
 			getCountMatchPattern(executionContext, sourceNode);
 
@@ -402,11 +385,15 @@ ElemNumber::getCountString(
 		{
 			if(Constants::NUMBERLEVEL_SINGLE == m_level)
 			{
-				DOM_Node target = findAncestor(executionContext, m_fromMatchPattern, 
-					countMatchPattern, sourceNode, DOM_UnimplementedElement(const_cast<ElemNumber*>(this)));
+				XalanNode*	target =
+					findAncestor(executionContext,
+								 m_fromMatchPattern, 
+								 countMatchPattern,
+								 sourceNode,
+								 this);
 
 				if(target == 0) 
-					target = executionContext.getParentOfNode(sourceNode);
+					target = executionContext.getParentOfNode(*sourceNode);
 
 				if(target != 0)
 				{
@@ -414,15 +401,15 @@ ElemNumber::getCountString(
 				}
 				else
 				{
-					executionContext.warn(DOMString("Warning: count attribute does not match an ancestor in xsl:number! Target = ") 
-													+ sourceNode.getNodeName(),
+					executionContext.warn(XalanDOMString("Warning: count attribute does not match an ancestor in xsl:number! Target = ") 
+													+ sourceNode->getNodeName(),
 										  sourceNode,
-										  DOM_Node());
+										  0);
 				}
 			}
 			else // if NUMBERLEVEL_ANY
 			{
-				DOM_Node from;
+				XalanNode*	from = 0;
 
 				if(0 != m_fromMatchPattern)
 				{
@@ -431,7 +418,7 @@ ElemNumber::getCountString(
 // passed went DOWN after this change
 // 					from = findPrecedingOrAncestorOrSelf(executionContext, 0, m_fromMatchPattern, 
 					from = findPrecedingOrAncestorOrSelf(executionContext, m_fromMatchPattern, countMatchPattern,
-						sourceNode, DOM_UnimplementedElement(const_cast<ElemNumber*>(this)));
+						sourceNode, this);
 
 					if(from == 0)
 					{
@@ -440,10 +427,10 @@ ElemNumber::getCountString(
 				}
 				else
 				{
-					from = sourceNode.getOwnerDocument();
+					from = sourceNode->getOwnerDocument();
 				}
 
-				DOM_Node fromPos = (from != sourceNode) ? getNextInTree(from, from) : from;
+				XalanNode* const	fromPos = (from != sourceNode) ? getNextInTree(from, from) : from;
 
 				numberList.push_back(getNumberInTree(executionContext.getXPathExecutionContext(), countMatchPattern, fromPos, from, sourceNode, 0));
 			}
@@ -455,27 +442,30 @@ ElemNumber::getCountString(
 		}
 	}
 
-	return numberList.size() > 0 ? formatNumberList(executionContext, numberList, sourceNode) : DOMString();
+	return numberList.size() > 0 ? formatNumberList(executionContext, numberList, sourceNode) : XalanDOMString();
 }
 
 
 
-DOM_Node
+XalanNode*
 ElemNumber::getNextInTree(
-			const DOM_Node&		pos,
-			const DOM_Node&		from)
+			XalanNode*	pos,
+			XalanNode*	from)
 {
-	DOM_Node	posCopy(pos);
+	assert(pos != 0);
+	assert(from != 0);
 
-	DOM_Node	nextNode(posCopy.getFirstChild());
+	XalanNode*	posCopy = pos;
+
+	XalanNode*	nextNode = posCopy->getFirstChild();
 
 	while(nextNode == 0)
 	{
-		nextNode = posCopy.getNextSibling();
+		nextNode = posCopy->getNextSibling();
 
 		if(nextNode == 0)
 		{
-			posCopy = posCopy.getParentNode();
+			posCopy = posCopy->getParentNode();
 
 			if(posCopy == from)
 			{
@@ -489,18 +479,18 @@ ElemNumber::getNextInTree(
 
 
 
-int
+unsigned int
 ElemNumber::getNumberInTree(	
 			XPathExecutionContext&	executionContext,
 			const XPath*			countMatchPattern, 
-			const DOM_Node&			pos, 
-			const DOM_Node&			from, 
-			const DOM_Node&			target,
+			XalanNode*				pos, 
+			XalanNode*				from, 
+			XalanNode*				target,
 			int						countFrom) const
 {
-	DOM_Node posCopy(pos);
+	XalanNode*	posCopy = pos;
 
-	int count = countFrom;
+	int			count = countFrom;
 
 	if(posCopy != 0)
 	{
@@ -508,6 +498,7 @@ ElemNumber::getNumberInTree(
 		{          
 			if( (0 == countMatchPattern) || 
 				(countMatchPattern->getMatchScore(posCopy,
+												  *this,
 												  executionContext) != XPath::s_MatchScoreNone))
 			{
 				count++;
@@ -523,40 +514,38 @@ ElemNumber::getNumberInTree(
 
 
 
-int
+unsigned int
 ElemNumber::getSiblingNumber(
 			StylesheetExecutionContext&		executionContext,
 			const XPath*					countMatchPattern, 
-			const DOM_Node&					target) const
+			XalanNode*						target) const
 {
+	assert(target != 0);
+
 	int number = 0;
 
-	const DOM_Node	theParent = executionContext.getParentOfNode(target);
+	const XalanNode* const	theParent = executionContext.getParentOfNode(*target);
 	assert(theParent != 0);
 
 	// TODO: If target is an Attr, implement special handling. 
-	DOM_NodeList	siblings = theParent.getChildNodes();
+	XalanNode*		child = theParent->getFirstChild();
 
-	if (siblings != 0)
+	while(child != 0)
 	{
-		const int	nNodes = siblings.getLength();
-
-		for(int i = 0; i < nNodes; i++)
+		if(child == target)
 		{
-			const DOM_Node	child = siblings.item(i);
-
-			if(child == target)
-			{
-				number++; // always count the target
-				break;
-			}
-			else if(0 == countMatchPattern || 
-					countMatchPattern->getMatchScore(child,
-													 executionContext.getXPathExecutionContext()) != XPath::s_MatchScoreNone)
-			{
-				number++;
-			}
+			number++; // always count the target
+			break;
 		}
+		else if(0 == countMatchPattern || 
+				countMatchPattern->getMatchScore(child,
+												 *this,
+												 executionContext.getXPathExecutionContext()) != XPath::s_MatchScoreNone)
+		{
+			number++;
+		}
+
+		child = child->getNextSibling();
 	}
 
 	return number;
@@ -564,21 +553,22 @@ ElemNumber::getSiblingNumber(
 
 
 
-int
+unsigned int
 ElemNumber::countMatchingAncestors(
 			StylesheetExecutionContext&		executionContext,
 			const XPath*					patterns,
-			const DOM_Node&					node) const
+			XalanNode*						node) const
 {
 	int			count = 0;
 
-	DOM_Node	nodeCopy(node);
+	XalanNode*	nodeCopy = node;
 
 	while(nodeCopy != 0)
 	{
 		if(0 != patterns)
 		{
 			if(patterns->getMatchScore(nodeCopy,
+									   *this,
 									   executionContext.getXPathExecutionContext()) != XPath::s_MatchScoreNone)
 			{
 				count++;
@@ -589,7 +579,7 @@ ElemNumber::countMatchingAncestors(
 			count++;
 		}
 
-		nodeCopy = executionContext.getParentOfNode(nodeCopy);
+		nodeCopy = executionContext.getParentOfNode(*nodeCopy);
 	}
 
 	return count;
@@ -602,11 +592,11 @@ ElemNumber::getAncestorNumbers(
 			StylesheetExecutionContext&		executionContext,
 			const XPath*					fromMatchPattern,
 			const XPath*					countMatchPattern, 
-			const DOM_Node&					node) const
+			XalanNode*						node) const
 {
-	DOM_Node	nodeCopy(node);
+	XalanNode*			nodeCopy = node;
 
-	const int nMatchingAncestors =
+	const unsigned int	nMatchingAncestors =
 				countMatchingAncestors(executionContext,
 									   countMatchPattern,
 									   nodeCopy);
@@ -624,6 +614,7 @@ ElemNumber::getAncestorNumbers(
 			if(0 != countMatchPattern)
 			{
 				if(countMatchPattern->getMatchScore(nodeCopy,
+													*this,
 													executionContext.getXPathExecutionContext()) != XPath::s_MatchScoreNone)
 				{
 					countIt = true;
@@ -636,21 +627,21 @@ ElemNumber::getAncestorNumbers(
 
 			if(countIt == true)
 			{
-				DOM_Node	target =
+				XalanNode*	target =
 						findAncestor(executionContext,
 									 fromMatchPattern,
 									 countMatchPattern,
 									 nodeCopy,
-									 DOM_UnimplementedElement(const_cast<ElemNumber*>(this)));
+									 this);
 
-				if(target == 0) 
+				if(target == 0)
 					target = nodeCopy;
 
 				counts[countIndex] = getSiblingNumber(executionContext, countMatchPattern, target);
 				countIndex--;
 			}
 
-			nodeCopy = executionContext.getParentOfNode(nodeCopy);
+			nodeCopy = executionContext.getParentOfNode(*nodeCopy);
 		} // end while
 	} // end if nMatchingAncestors > 0
 
@@ -664,7 +655,7 @@ ElemNumber::getAncestorNumbers(
 std::locale
 ElemNumber::getLocale(
 			StylesheetExecutionContext&		/* executionContext */,
-			const DOM_Node&					/* contextNode */) const
+			XalanNode*						/* contextNode */) const
 {
 	//TODO
 	return std::locale();
@@ -676,7 +667,7 @@ ElemNumber::getLocale(
 NumberFormat*
 ElemNumber::getNumberFormatter(
 			StylesheetExecutionContext&		executionContext,
-			const DOM_Node&					contextNode) const
+			XalanNode*						contextNode) const
 {
 #if ! defined(__GNUC__)
 	std::locale loc = getLocale(executionContext, contextNode);
@@ -685,19 +676,17 @@ ElemNumber::getNumberFormatter(
     // Helper to format local specific numbers to strings.
 	std::auto_ptr<NumberFormat>		formatter(new NumberFormat);
 
-	DOM_UnimplementedElement	theNamespaceContext(const_cast<ElemNumber*>(this));
-
-    DOMString digitGroupSepValue = (!isEmpty(m_groupingSeparator_avt))
+	const XalanDOMString	digitGroupSepValue = (!isEmpty(m_groupingSeparator_avt))
                                   ?  executionContext.evaluateAttrVal(contextNode,
-																	  theNamespaceContext,
+																	  *this,
 																	  m_groupingSeparator_avt) :
-										DOMString();
+									 XalanDOMString();
 
-    DOMString nDigitsPerGroupValue = (!isEmpty(m_groupingSize_avt))
+    const XalanDOMString	nDigitsPerGroupValue = (!isEmpty(m_groupingSize_avt))
                                   ?  executionContext.evaluateAttrVal(contextNode,
-																	  theNamespaceContext, 
+																	  *this, 
 																	  m_groupingSize_avt) :
-										DOMString();
+									 XalanDOMString();
 
     // TODO: Handle digit-group attributes
     if(!isEmpty(digitGroupSepValue) || !isEmpty(nDigitsPerGroupValue))
@@ -712,35 +701,39 @@ ElemNumber::getNumberFormatter(
 
 
 
-DOMString
+XalanDOMString
 ElemNumber::formatNumberList(
 			StylesheetExecutionContext&		executionContext,
-			const IntArrayType&				theList, 
-			const DOM_Node&					contextNode) const
+			const IntArrayType&				theList,
+			XalanNode*						contextNode) const
 {
-	const int	nNumbers = theList.size();
-	XMLCh	numberType('1');
+	const IntArrayType::size_type	nNumbers = theList.size();
+	XalanDOMChar	numberType('1');
 	int			numberWidth = 1;
 
-	DOMString	formattedNumber;
-	DOMString	formatToken;
-	DOMString	sepString(".");
-	DOMString	lastSepString;
+	XalanDOMString	formattedNumber;
+	XalanDOMString	formatToken;
+	XalanDOMString	sepString(XALAN_STATIC_UCODE_STRING("."));
+	XalanDOMString	lastSepString;
 
-	DOMString	formatValue = !isEmpty(m_format_avt)
+	XalanDOMString	formatValue = !isEmpty(m_format_avt)
 		? executionContext.evaluateAttrVal(contextNode,
-										   DOM_UnimplementedElement(const_cast<ElemNumber*>(this)),
+										   *this,
 										   m_format_avt)
-		: DOMString();
+		: XalanDOMString();
 
 	if(isEmpty(formatValue)) 
-		formatValue = DOMString("1");
-	
+		formatValue = XALAN_STATIC_UCODE_STRING("1");
+
 	NumeratorFormatter::NumberFormatStringTokenizer		formatTokenizer(formatValue);
 
 #if ! defined(__GNUC__)
 	std::locale		loc = getLocale(executionContext, contextNode);
 #endif
+
+	typedef vector<XalanDOMString>		StringVectorType;
+	typedef StringVectorType::iterator	StringVectorTypeIterator;
+
 	// Construct an array of tokens.  We need to be able to check if the last
 	// token in non-alphabetic, in which case the penultimate non-alphabetic is
 	// the repeating separator
@@ -749,8 +742,8 @@ ElemNumber::formatNumberList(
 		tokenVector.push_back(formatTokenizer.nextToken());
 
 	// Get rid of the leading and trailing non-alphabetics, save for later
-	DOMString leaderStr;
-	DOMString trailerStr;
+	XalanDOMString leaderStr;
+	XalanDOMString trailerStr;
 	StringVectorTypeIterator it;
 	it = tokenVector.begin();
 	if(! isLetterOrDigit(charAt((*it), 0)))
@@ -770,7 +763,7 @@ ElemNumber::formatNumberList(
 	// more matching ones
 	formattedNumber = leaderStr;
 	it = tokenVector.begin();
-	for(int i = 0; i < nNumbers; i++)
+	for(unsigned int i = 0; i < nNumbers; i++)
 	{
 		if (it != tokenVector.end())
 		{
@@ -797,21 +790,21 @@ ElemNumber::formatNumberList(
 
 
 
-DOMString
+XalanDOMString
 ElemNumber::getFormattedNumber(
 			StylesheetExecutionContext&		executionContext,
-			const DOM_Node&					contextNode,
-			XMLCh							numberType,
+			XalanNode*						contextNode,
+			XalanDOMChar					numberType,
 			int								numberWidth,
 			int								listElement) const
 {
 
 	std::auto_ptr<NumberFormat> formatter(getNumberFormatter(executionContext, contextNode));
 
-	DOMString	padString = formatter->format(0);
-	DOMString	lookahead;
+	XalanDOMString	padString = formatter->format(0);
+	XalanDOMString	lookahead;
 
-	DOMString	formattedNumber;
+	XalanDOMString	formattedNumber;
 
 	switch(numberType)
 	{
@@ -830,7 +823,7 @@ ElemNumber::getFormattedNumber(
 
 		default: // "1"
 			{
-				const DOMString		numString =
+				const XalanDOMString		numString =
 					formatter->format(listElement);
 
 				const int	nPadding = numberWidth - length(numString);
@@ -861,10 +854,10 @@ ElemNumber::getFormattedNumber(
  * Note that the radix of the conversion is inferred from the size
  * of the table.
  */
-DOMString
+XalanDOMString
 ElemNumber::int2alphaCount(
-			int					val,
-			const DOMString&	table)
+			int						val,
+			const XalanDOMString&	table)
 {
 	const int	radix = length(table);
 
@@ -873,7 +866,7 @@ ElemNumber::int2alphaCount(
 	// logs of the radix.  For now, we fake it.  
 	const int	buflen = 100;
 
-	std::vector<XMLCh>	buf(buflen + 1, (XMLCh)0);
+	vector<XalanDOMChar>	buf(buflen + 1, 0);
 
 	// next character to set in the buffer
 	int charPos = buflen - 1 ;    // work backward through buf[]
@@ -933,24 +926,26 @@ ElemNumber::int2alphaCount(
 	}
 	while (val > 0);
 
-	DOMString retStr(buf.begin() + charPos + 1, (buflen - charPos - 1));
+	XalanDOMString retStr(buf.begin() + charPos + 1, (buflen - charPos - 1));
 
 	return retStr;
 }
 
 
 
-DOMString
+XalanDOMString
 ElemNumber::long2roman(
 			long	val,
 			bool	prefixesAreOK)
 {
 	if(val <= 0)
 	{
-		return DOMString( "#E(" + LongToDOMString(val) +")" );
+		return XalanDOMString(XALAN_STATIC_UCODE_STRING("#E(") +
+								LongToDOMString(val) +
+								XALAN_STATIC_UCODE_STRING(")"));
 	}
 
-	DOMString	roman;
+	XalanDOMString	roman;
 
 	int			place = 0;
 
@@ -977,7 +972,7 @@ ElemNumber::long2roman(
 	}
 	else
 	{
-		roman = "#error";
+		roman = XALAN_STATIC_UCODE_STRING("#error");
 	}
 
 	return roman;

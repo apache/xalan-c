@@ -66,18 +66,19 @@
 ElemExtensionCall::ElemExtensionCall(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
-			const DOMString&				name,
+			const XalanDOMString&			name,
 			const AttributeList&			atts,
 			int								lineNumber,
 			int								columnNumber,
 			ExtensionNSHandler&				ns,
-			const DOMString&				localpart) :
+			const XalanDOMString&			localpart) :
 	ElemLiteralResult(constructionContext,
 					  stylesheetTree,
 					  name,
 					  atts,
 					  lineNumber,
-					  columnNumber),	
+					  columnNumber,
+					  Constants::ELEMNAME_EXTENSIONCALL),
 	m_nsh(ns),
 	m_localPart(localpart)	
 {
@@ -85,19 +86,11 @@ ElemExtensionCall::ElemExtensionCall(
 
 
 
-int
-ElemExtensionCall::getXSLToken() const 
-{		
-	return Constants::ELEMNAME_EXTENSIONCALL;		
-}
-
-
-
 void
 ElemExtensionCall::execute(
 			StylesheetExecutionContext&		executionContext,
-			const DOM_Node&					/* sourceTree */, 
-			const DOM_Node&					/* sourceNode */,
+			XalanNode*						/* sourceTree */,
+			XalanNode*						/* sourceNode */,
 			const QName&					/* mode */) const
 {
 /*

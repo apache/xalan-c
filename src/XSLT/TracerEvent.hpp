@@ -57,21 +57,31 @@
 #if !defined(XALAN_TracerEvent_HEADER_GUARD)
 #define XALAN_TracerEvent_HEADER_GUARD 
 
-// Base include file.  Must be first.
-#include "XSLTDefinitions.hpp"
 
-class DOMString;
-class DOM_Node;
-class DOM_NodeList;
+
+// Base include file.  Must be first.
+#include <XSLT/XSLTDefinitions.hpp>
+
+
+
+// $$$ ToDo: This is necessary while XalanDOMString is a typedef.
+#include <XalanDOM/XalanDOMString.hpp>
+
+
+
+class XalanNode;
+class XalanNodeList;
 class QName;
 class StylesheetExecutionContext;
 class ElemTemplateElement;
+
+
 
 /**
  * This is the parent class of events generated for tracing the
  * progress of the XSL processor.
  */
-class TracerEvent
+class XALAN_XSLT_EXPORT TracerEvent
 {
 public:
 
@@ -86,8 +96,8 @@ public:
 	 */
 	TracerEvent(
 			const StylesheetExecutionContext&	executionContext,
-			const DOM_Node&						sourceTree,
-			const DOM_Node&						sourceNode,
+			const XalanNode*					sourceTree,
+			const XalanNode*					sourceNode,
 			const QName&						mode,
 			const ElemTemplateElement&			styleNode);
 
@@ -100,46 +110,48 @@ public:
 	 * angle brackets. The string returned for attributes will be of form,
 	 * "name=value."
 	 *
-	 * @param n any DOM node, must not be null
+	 * @param n any DOM node
 	 * @return string representation of the given node
 	 */
-  static DOMString printNode(const DOM_Node& n);
+	static XalanDOMString
+	printNode(const XalanNode&	n);
 
-  /**
-	* Returns a string representation of the node list. The string will contain
-	* the list of nodes inside square braces. Elements will contain the element
-	* name and any attributes enclosed in angle brackets. Attributes will be of
-	* form, "name=value."
-	*
-   * @param l any DOM node list, must not be null
-   * @return string representation of the given node list
-   */
-  static DOMString printNodeList(const DOM_NodeList& l);
+	/**
+	 * Returns a string representation of the node list. The string will contain
+	 * the list of nodes inside square braces. Elements will contain the element
+	 * name and any attributes enclosed in angle brackets. Attributes will be of
+	 * form, "name=value."
+	 *
+	 * @param l any DOM node list
+	 * @return string representation of the given node list
+	 */
+	static XalanDOMString
+	printNodeList(const XalanNodeList&	l);
 
-  /**
-   * The XSLT processor instance.
-   */
-  const StylesheetExecutionContext&		m_executionContext;
+	/**
+	 * The XSLT processor instance.
+	 */
+	const StylesheetExecutionContext&		m_executionContext;
 
-  /**
-   * The input source tree.
-   */
-  const DOM_Node& m_sourceTree;
+	/**
+	 * The input source tree.
+	 */
+	const XalanNode*						m_sourceTree;
   
-  /**
-   * The current context node.
-   */
-  const DOM_Node& m_sourceNode;
+	/**
+	 * The current context node.
+	 */
+	const XalanNode*						m_sourceNode;
   
-  /**
-   * The current mode.
-   */
-  const QName& m_mode;
+	/**
+	 * The current mode.
+	 */
+	const QName&							m_mode;
 
-  /**
-   * The node in the style tree where the event occurs.
-   */
-  const ElemTemplateElement& m_styleNode;
+	/**
+	 * The node in the style tree where the event occurs.
+	 */
+	const ElemTemplateElement&				m_styleNode;
   
 private:
 

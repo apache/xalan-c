@@ -136,7 +136,7 @@ NumeratorFormatter::processAttributes(const DOM_Node&	/* contextNode */)
 	// See http://www.w3.org/TR/WD-xsl#convert for the form 
 	// of the format string, which tells how the numbers should be 
 	// formatted.
-	DOMString	formatValue =
+	XalanDOMString	formatValue =
 		m_xslProcessor->getProcessedAttrVal(m_xslNumberElement, 
 										    Constants::ATTRNAME_FORMAT, 
 										    contextNode);
@@ -152,7 +152,7 @@ NumeratorFormatter::processAttributes(const DOM_Node&	/* contextNode */)
 	// that use letters. A value of "alphabetic" specifies the alphabetic 
 	// sequence; a value of "other" specifies the other sequence.
 	// TODO: Handle letter-value attribute.
-	const DOMString	letterValue =
+	const XalanDOMString	letterValue =
 		m_xslProcessor->getProcessedAttrVal(m_xslNumberElement, 
 										    Constants::ATTRNAME_LETTERVALUE, 
 										    contextNode);
@@ -161,13 +161,13 @@ NumeratorFormatter::processAttributes(const DOM_Node&	/* contextNode */)
 	{
 		m_xslProcessor->warn(DOM_Node(),
 							 contextNode,
-							 DOMString(Constants::ATTRNAME_LETTERVALUE) +
+							 XalanDOMString(Constants::ATTRNAME_LETTERVALUE) +
 								" not supported yet!");
 	}
 
 	// When numbering with an alphabetic sequence, the xml:lang 
 	// attribute specifies which language's alphabet is to be used.
-	const DOMString		langValue =
+	const XalanDOMString		langValue =
 		m_xslProcessor->getAttrVal(m_xslNumberElement, "xml:lang");
 
 #if 0
@@ -197,12 +197,12 @@ NumeratorFormatter::processAttributes(const DOM_Node&	/* contextNode */)
 	// of digits, and the optional n-digits-per-group specifies the 
 	// number of digits per group. For example, digit-group-sep="," 
 	// and n-digits-per-group="3" would produce numbers of the form 1,000,000.
-	const DOMString		digitGroupSepValue =
+	const XalanDOMString		digitGroupSepValue =
 		m_xslProcessor->getProcessedAttrVal(m_xslNumberElement, 
 										    Constants::ATTRNAME_DIGITGROUPSEP, 
 										    contextNode);
 	  
-	const DOMString		nDigitsPerGroupValue = 
+	const XalanDOMString		nDigitsPerGroupValue = 
 		m_xslProcessor->getProcessedAttrVal(m_xslNumberElement, 
 										    Constants::ATTRNAME_NDIGITSPERGROUP, 
 										    contextNode);
@@ -219,7 +219,7 @@ NumeratorFormatter::processAttributes(const DOM_Node&	/* contextNode */)
 	// that contains a whitespace separated list of the members of 
 	// the numbering sequence.
 	// (Used with letter-value="other", I think.)
-	const DOMString		sequenceSrcValue =
+	const XalanDOMString		sequenceSrcValue =
 		m_xslProcessor->getProcessedAttrVal(m_xslNumberElement, 
 										    Constants::ATTRNAME_SEQUENCESRC, 
 										    contextNode);
@@ -228,7 +228,7 @@ NumeratorFormatter::processAttributes(const DOM_Node&	/* contextNode */)
 	{
 		m_xslProcessor->warn(DOM_Node(),
 							 contextNode,
-							 DOMString(Constants::ATTRNAME_SEQUENCESRC) +
+							 XalanDOMString(Constants::ATTRNAME_SEQUENCESRC) +
 								" not supported yet!");
 	}
 */
@@ -236,25 +236,25 @@ NumeratorFormatter::processAttributes(const DOM_Node&	/* contextNode */)
 
 
 
-DOMString
+XalanDOMString
 NumeratorFormatter::formatNumberList(const IntVectorType&		theList)
 {
-	DOMString	formattedNumber;
+	XalanDOMString	formattedNumber;
 
 	const int	nNumbers = theList.size();
 
 	XMLCh		numberType = '1';
 	int			numberWidth = 1;
 
-	DOMString	formatToken;
-	DOMString	sepString;
-	DOMString	lastSepString;
+	XalanDOMString	formatToken;
+	XalanDOMString	sepString;
+	XalanDOMString	lastSepString;
 
 	// $$$ ToDo: Fix this!
-//	DOMString	padString = m_formatter.format(0);
-	DOMString	padString = LongToDOMString(0);
+//	XalanDOMString	padString = m_formatter.format(0);
+	XalanDOMString	padString = LongToDOMString(0);
 
-	DOMString	lookahead; // next token
+	XalanDOMString	lookahead; // next token
 
 	m_formatTokenizer.reset();
 
@@ -265,7 +265,7 @@ NumeratorFormatter::formatNumberList(const IntVectorType&		theList)
 			if(length(lookahead) != 0)
 			{
 				formatToken = lookahead;
-				lookahead = "";
+				clear(lookahead);
 			}
 			else
 			{
@@ -289,7 +289,7 @@ NumeratorFormatter::formatNumberList(const IntVectorType&		theList)
 					if(isLetterOrDigit(charAt(lookahead, 0)) == false)
 					{
 						sepString += lookahead;
-						lookahead = ""; // consume
+						clear(lookahead); // consume
 					}
 					else
 					{
@@ -350,8 +350,8 @@ NumeratorFormatter::formatNumberList(const IntVectorType&		theList)
 		default: // "1"
 			{
 				// $$$ ToDo: Fix this!!!
-				// DOMString	numString = m_formatter.format(theList[i]);
-				DOMString	numString(LongToDOMString(theList[i]));
+				// XalanDOMString	numString = m_formatter.format(theList[i]);
+				XalanDOMString	numString(LongToDOMString(theList[i]));
 
 				const int	nPadding = numberWidth - numString.length();
 
@@ -370,7 +370,7 @@ NumeratorFormatter::formatNumberList(const IntVectorType&		theList)
 	// Check to see if we finished up the format string...
 	if(0 == length(lastSepString))
 	{
-		lastSepString = "";
+		clear(lastSepString);
 
 		while(m_formatTokenizer.hasMoreTokens() == true)
 		{
@@ -383,7 +383,7 @@ NumeratorFormatter::formatNumberList(const IntVectorType&		theList)
 			}
 			else
 			{
-				lastSepString = "";
+				clear(lastSepString);
 			}
 		}
 	}
@@ -398,7 +398,7 @@ NumeratorFormatter::formatNumberList(const IntVectorType&		theList)
 
 
 
-DOMString
+XalanDOMString
 NumeratorFormatter::int2alphaCount(
 			int 			val,
 			const XMLCh		table[],
@@ -472,21 +472,21 @@ NumeratorFormatter::int2alphaCount(
 	}
 	while (val > 0);
 
-	return DOMString(&buf[charPos + 1]);
+	return XalanDOMString(&buf[charPos + 1]);
 }
 
 
 
-DOMString
+XalanDOMString
 NumeratorFormatter::long2roman(
 			long	val,
 			bool	prefixesAreOK)
 {
-	DOMString	roman;
+	XalanDOMString	roman;
 
 	if(val <= 0)
 	{
-		roman = DOMString("#E(") + DOMString(val) + DOMString(")");
+		roman = XalanDOMString(XALAN_STATIC_UCODE_STRING("#E(")) + XalanDOMString(val) + XalanDOMString(XALAN_STATIC_UCODE_STRING(")"));
 	}
 	else
 	{
@@ -527,7 +527,7 @@ NumeratorFormatter::long2roman(
 
 
 NumeratorFormatter::NumberFormatStringTokenizer::NumberFormatStringTokenizer(
-			const DOMString&	theStr) :
+			const XalanDOMString&	theStr) :
 	m_currentPosition(0),
 	m_maxPosition(length(theStr)),
 	m_str(theStr)
@@ -537,7 +537,7 @@ NumeratorFormatter::NumberFormatStringTokenizer::NumberFormatStringTokenizer(
 
 
 void
-NumeratorFormatter::NumberFormatStringTokenizer::setString(const DOMString&	theString)
+NumeratorFormatter::NumberFormatStringTokenizer::setString(const XalanDOMString&	theString)
 {
 	m_str = theString;
 
@@ -547,7 +547,7 @@ NumeratorFormatter::NumberFormatStringTokenizer::setString(const DOMString&	theS
 
 
 
-DOMString
+XalanDOMString
 NumeratorFormatter::NumberFormatStringTokenizer::nextToken() 
 {
 	if (m_currentPosition >= m_maxPosition) 
@@ -573,8 +573,8 @@ NumeratorFormatter::NumberFormatStringTokenizer::nextToken()
 
 	// @@ This didn't seem to be working right when start=current=0
 	// return substring(m_str, start, m_currentPosition);
-	DOMString sub = substring(m_str, start, m_currentPosition);
-	return DOMString(toCharArray(sub), m_currentPosition-start);
+	XalanDOMString sub = substring(m_str, start, m_currentPosition);
+	return XalanDOMString(toCharArray(sub), m_currentPosition-start);
 }
 
 

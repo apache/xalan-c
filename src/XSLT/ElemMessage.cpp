@@ -75,7 +75,7 @@
 ElemMessage::ElemMessage(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
-			const DOMString&				name,
+			const XalanDOMString&			name,
 			const AttributeList&			atts,
 			int								lineNumber,
 			int								columnNumber) :
@@ -83,27 +83,22 @@ ElemMessage::ElemMessage(
 						stylesheetTree,
 						name,
 						lineNumber,
-						columnNumber)
+						columnNumber,
+						Constants::ELEMNAME_MESSAGE)
 {
-	const int nAttrs = atts.getLength();
+	const unsigned int	nAttrs = atts.getLength();
 
-	for(int i = 0; i < nAttrs; i++)
+	for(unsigned int i = 0; i < nAttrs; i++)
 	{
-		const DOMString aname(atts.getName(i));
+		const XalanDOMChar*	const	aname = atts.getName(i);
 
 		if(isAttrOK(aname, atts, i, constructionContext) == false || processSpaceAttr(aname, atts, i))
 		{
-			constructionContext.error(name + " has an illegal attribute: " + aname);
+			constructionContext.error(XalanDOMString(name) +
+										" has an illegal attribute: " +
+										XalanDOMString(aname));
 		}
 	}
-}
-
-
-
-int
-ElemMessage::getXSLToken() const 
-{
-	return Constants::ELEMNAME_MESSAGE;
 }
 
 
@@ -111,13 +106,13 @@ ElemMessage::getXSLToken() const
 void
 ElemMessage::execute(
 			StylesheetExecutionContext&		executionContext,
-			const DOM_Node&					sourceTree, 
-			const DOM_Node&					sourceNode,
+			XalanNode*						sourceTree,
+			XalanNode*						sourceNode,
 			const QName&					mode) const
 {
 	ElemTemplateElement::execute(executionContext, sourceTree, sourceNode, mode);
 
-    const DOMString		data = childrenToString(executionContext, sourceTree, sourceNode, mode);
+    const XalanDOMString	data = childrenToString(executionContext, sourceTree, sourceNode, mode);
 
-    executionContext.message(data, sourceNode, DOM_UnimplementedElement(const_cast<ElemMessage*>(this)));
+    executionContext.message(data, sourceNode, this);
 }

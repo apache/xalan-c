@@ -63,6 +63,9 @@
 
 
 #include <PlatformSupport/DOMStringHelper.hpp>
+
+
+
 #include <XPath/XPath.hpp>
 
 
@@ -79,7 +82,7 @@
 ElemIf::ElemIf(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
-			const DOMString&				name,
+			const XalanDOMString&			name,
 			const AttributeList&			atts,
 			int								lineNumber,
 			int								columnNumber) :
@@ -87,16 +90,18 @@ ElemIf::ElemIf(
 						stylesheetTree,
 						name,
 						lineNumber,
-						columnNumber),
+						columnNumber,
+						Constants::ELEMNAME_IF),
 	m_test(0)
 {
-	const int	nAttrs = atts.getLength();
+	const unsigned int	nAttrs = atts.getLength();
 
-	for(int i = 0; i < nAttrs; i++)
+	for(unsigned int i = 0; i < nAttrs; i++)
 	{
-		const DOMString		aname(atts.getName(i));
+		const XalanDOMChar*	const	aname = atts.getName(i);
 		
-		const int			tok = constructionContext.getAttrTok(aname);
+		const int					tok =
+			constructionContext.getAttrTok(aname);
 
 		switch(tok)
 		{
@@ -124,18 +129,11 @@ ElemIf::ElemIf(
 
 
 
-int
-ElemIf::getXSLToken() const 
-{
-	return Constants::ELEMNAME_IF;
-}
-
-
-
-void ElemIf::execute(
+void
+ElemIf::execute(
 			StylesheetExecutionContext&		executionContext,
-			const DOM_Node&					sourceTree, 
-			const DOM_Node&					sourceNode,
+			XalanNode*						sourceTree,
+			XalanNode*						sourceNode,
 			const QName&					mode) const
 {
 	assert(m_test != 0);
@@ -151,7 +149,7 @@ void ElemIf::execute(
 			SelectionEvent(executionContext,
 			sourceNode,
 			*this, 
-			"test", 
+			XALAN_STATIC_UCODE_STRING("test"), 
 			*m_test, 
 			test));
 	}

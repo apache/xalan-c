@@ -57,37 +57,31 @@
 #if !defined(XALAN_ELEMFOREACH_HEADER_GUARD)
 #define XALAN_ELEMFOREACH_HEADER_GUARD 
 
-/**
- * $Id$
- * 
- * 
- * $State$
- * 
- * @author Myriam Midy (Myriam_Midy @lotus.com 
- */
+
 
 // Base include file.  Must be first.
 #include "XSLTDefinitions.hpp"
 
-// Base class header file.
-#include "ElemTemplateElement.hpp"
-//#include "ElemSort.hpp"
 
-//#include <dom/DOMString.hpp>
-
-//#include <XPath/NameSpace.hpp>
-//#include <XPath/XObject.hpp>
-//#include <XPath/XPath.hpp>
 
 #include <vector>
+
+
+
+// Base class header file.
+#include "ElemTemplateElement.hpp"
+#include "Constants.hpp"
+
 
 
 class ElemSort;
 class XPath;
 
 
+
 class ElemForEach: public ElemTemplateElement
 {
+public:
 
 	/**
 	 * Construct an object corresponding to an "xsl:for-each" element
@@ -96,59 +90,59 @@ class ElemForEach: public ElemTemplateElement
 	 * @param stylesheetTree      stylesheet containing element
 	 * @param name                name of element
 	 * @param atts                list of attributes for element
-	 * @param lineNumber				line number in document
+	 * @param lineNumber			line number in document
 	 * @param columnNumber			column number in document
-	 * @param isOnlyForEach       true if this is not called on a subclass for
-	 *                            ElemForEach; this is necessary because of
-	 *                            differences in construction of subclasses
-	 *                            between C++ and Java
+	 * @param xslToken             an integer representing the type of instance.
 	 */
-public:
-	ElemForEach (
-		StylesheetConstructionContext&	constructionContext,
-		Stylesheet& stylesheetTree,
-		const DOMString& name,
-		const AttributeList& atts,
-		int lineNumber, 
-		int columnNumber,
-		bool isOnlyForEach); // true if this is not called on a subclass for ElemForEach
+	ElemForEach(
+			StylesheetConstructionContext&	constructionContext,
+			Stylesheet&						stylesheetTree,
+			const XalanDOMString&			name,
+			const AttributeList&			atts,
+			int								lineNumber,
+			int								columnNumber,
+			int								xslToken = Constants::ELEMNAME_FOREACH);
 
-
-	virtual ~ElemForEach();
+	virtual
+	~ElemForEach();
 
 #if defined(XALAN_NO_NAMESPACES)
-	typedef vector<ElemSort*> SortElemsVector;
+	typedef vector<ElemSort*>		SortElemsVector;
 #else
-	typedef std::vector<ElemSort*> SortElemsVector;
+	typedef std::vector<ElemSort*>	SortElemsVector;
 #endif
 
 
-	const SortElemsVector& getSortElems() const
+	const SortElemsVector&
+	getSortElems() const
 	{
 		return m_sortElems;
 	}
 
-	SortElemsVector& getSortElems()
+	SortElemsVector&
+	getSortElems()
 	{
 		return m_sortElems;
 	}
 
 	// These methods are inherited from ElemTemplateElement ...
-	
-	virtual int getXSLToken() const; 
 
-	virtual void execute(
-		StylesheetExecutionContext& executionContext, 
-		const DOM_Node& sourceTree, 
-		const DOM_Node& sourceNode,
-		const QName& mode) const;
+	virtual void
+	execute(
+			StylesheetExecutionContext&		executionContext,
+			XalanNode*						sourceTree,
+			XalanNode*						sourceNode,
+			const QName&					mode) const;
 
 protected:
-	const XPath* m_pSelectPattern; // = null;
+
+	const XPath*		m_pSelectPattern;
 
 private:
-	SortElemsVector m_sortElems;
 
+	SortElemsVector		m_sortElems;
 };
+
+
 
 #endif	// XALAN_ELEMFOREACH_HEADER_GUARD

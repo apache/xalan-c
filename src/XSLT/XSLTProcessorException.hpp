@@ -82,7 +82,7 @@ public:
 	 */
 	XSLTProcessorException(
 		const DOMString&	theMessage,
-		const DOMString&	theType = DOMString("XSLTProcessorException"));
+		const DOMString&	theType = XalanDOMString(XALAN_STATIC_UCODE_STRING("XSLTProcessorException")));
 
 	virtual
 	~XSLTProcessorException();

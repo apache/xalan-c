@@ -68,8 +68,8 @@
    */
 
 SelectionEvent::SelectionEvent(
-			StylesheetExecutionContext&		executionContext, 
-			const DOM_Node&					sourceNode,
+			StylesheetExecutionContext&		executionContext,
+			const XalanNode*				sourceNode,
 			const ElemTemplateElement&		styleNode,
 			const DOMString&				attributeName,
 			const XPath&					xpath,
@@ -88,5 +88,3 @@ SelectionEvent::SelectionEvent(
 SelectionEvent::~SelectionEvent()
 {
 }
-
-

@@ -64,19 +64,24 @@
 // Base include file.  Must be first.
 #include "XSLTDefinitions.hpp"
 
-#include <dom/DOMString.hpp>
-#include <dom/DOM_Node.hpp>
-#include <sax/DocumentHandler.hpp>
+
+
+#include <XalanDOM/XalanDOMString.hpp>
 #include <XMLSupport/FormatterListener.hpp>
 
+
+
 class OutputStream;
+class XalanNode;
 class Writer;
+
 
 
 class XALAN_XSLT_EXPORT XSLTResultTarget
 {
 public:
 
+	explicit
 	XSLTResultTarget();
 
 	/**
@@ -84,7 +89,7 @@ public:
 	 *
 	 * @param fileName valid system file name
 	 */
-	XSLTResultTarget (DOMString& fileName);
+	XSLTResultTarget(const XalanDOMString&	fileName);
 
 	/**
 	 * Create a new output target with a byte stream.
@@ -92,7 +97,7 @@ public:
 	 * @param byteStream pointer to raw byte stream that will contain the
 	 *                   document
 	 */
-	XSLTResultTarget (OutputStream* byteStream);
+	XSLTResultTarget(OutputStream*		byteStream);
 
 	/**
 	 * Create a new output target with a character stream.
@@ -100,21 +105,22 @@ public:
 	 * @param characterStream pointer to character stream where the results
 	 *                        will be written
 	 */ 
-	XSLTResultTarget (Writer* characterStream);
+	XSLTResultTarget(Writer*	characterStream);
 
 	/**
 	 * Create a new output target with a DOM node.
 	 *
 	 * @param n root of DOM node tree that holds results
 	 */
-	XSLTResultTarget (DOM_Node& n);
+	XSLTResultTarget(XalanNode*	n);
 
 	/**
 	 * Set the file name where the results will be written.
 	 *
 	 * @param fileName system identifier as a string
 	 */
-	void setFileName (DOMString& fileName)
+	void
+	setFileName(const XalanDOMString&	fileName)
 	{
 		m_fileName = fileName;
 	}
@@ -124,7 +130,8 @@ public:
 	 * 
 	 * @return file name string
 	 */
-	DOMString& getFileName ()
+	const XalanDOMString&
+	getFileName() const
 	{
 		return m_fileName;
 	}
@@ -135,7 +142,8 @@ public:
 	 * @param byteStream pointer to byte stream that will contain the result
 	 *                   document
 	 */
-	void setByteStream (OutputStream* byteStream)
+	void
+	setByteStream(OutputStream*		byteStream)
 	{
 		m_byteStream = byteStream;
 	}
@@ -145,7 +153,8 @@ public:
 	 *
 	 * @return pointer to byte stream, or null if none was supplied.
 	 */
-	OutputStream* getByteStream ()
+	OutputStream*
+	getByteStream() const
 	{
 		return m_byteStream;
 	}
@@ -155,7 +164,8 @@ public:
 	 *
 	 * @param encoding new encoding string
 	 */
-	void setEncoding (DOMString& encoding)
+	void
+	setEncoding(const XalanDOMString&	encoding)
 	{
 		m_encoding = encoding;
 	}
@@ -165,7 +175,8 @@ public:
 	 *
 	 * @return encoding string, or empty string if none was supplied.
 	 */
-	DOMString& getEncoding ()
+	const XalanDOMString&
+	getEncoding() const
 	{
 		return m_encoding;
 	}
@@ -176,18 +187,19 @@ public:
 	 * @param characterStream pointer to character stream that will contain 
 	 *                        the result document
 	 */
-	void setCharacterStream (Writer* characterStream)
+	void
+	setCharacterStream(Writer*	characterStream)
 	{
 		m_characterStream = characterStream;
 	}
-
 
 	/**
 	 * Get the character stream for this output target.
 	 *
 	 * @return pointer to character stream, or null if none was supplied.
 	 */
-	Writer* getCharacterStream ()
+	Writer*
+	getCharacterStream()
 	{
 		return m_characterStream;
 	}
@@ -197,7 +209,8 @@ public:
 	 *
 	 * @param node DOM node to contain results
 	 */
-	void setNode (const DOM_Node& node)
+	void
+	setNode(XalanNode*	node)
 	{
 		m_node = node;
 	}
@@ -207,7 +220,8 @@ public:
 	 *
 	 * @return DOM node containing results
 	 */
-	DOM_Node& getNode ()
+	XalanNode*
+	getNode() const
 	{
 		return m_node;
 	}
@@ -217,7 +231,8 @@ public:
 	 *
 	 * @param handler pointer to new handler
 	 */
-	void setDocumentHandler (DocumentHandler* handler)
+	void
+	setDocumentHandler(FormatterListener*	handler)
 	{
 		m_formatterListener = handler;
 	}
@@ -227,7 +242,8 @@ public:
 	 *
 	 * @return pointer to current handler
 	 */
-	DocumentHandler* getDocumentHandler ()
+	DocumentHandler*
+	getDocumentHandler() const
 	{
 		return m_formatterListener;
 	}
@@ -237,9 +253,10 @@ public:
 	 *
 	 * @param handler pointer to new listener
 	 */
-	void setFormatterListener (FormatterListener* handler)
+	void
+	setFormatterListener(FormatterListener*		handler)
 	{
-		m_formatterListener = static_cast<DocumentHandler*>(handler);
+		m_formatterListener = handler;
 	}
 
 	/**
@@ -247,25 +264,27 @@ public:
 	 *
 	 * @return pointer to new listener
 	 */
-	FormatterListener* getFormatterListener ()
+	FormatterListener*
+	getFormatterListener() const
 	{
-		return static_cast<FormatterListener*>(m_formatterListener);
+		return m_formatterListener;
 	}
-
-	
-	//////////////////////////////////////////////////////////////////////
-	// Internal state.
-	//////////////////////////////////////////////////////////////////////
 
 private:
 
-	DOMString m_fileName;
-	OutputStream* m_byteStream;
-	DOMString m_encoding;
-	Writer* m_characterStream;
-	DOM_Node m_node;
-	DocumentHandler* m_formatterListener;
+	XalanDOMString		m_fileName;
 
+	OutputStream*		m_byteStream;
+
+	XalanDOMString		m_encoding;
+
+	Writer*				m_characterStream;
+
+	XalanNode*			m_node;
+
+	FormatterListener*	m_formatterListener;
 };
+
+
 
 #endif	// XALAN_XSLTRESULTTARGET_HEADER_GUARD

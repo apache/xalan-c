@@ -94,39 +94,39 @@ StylesheetConstructionContextDefault::~StylesheetConstructionContextDefault()
 
 void
 StylesheetConstructionContextDefault::error(
-			const DOMString&	msg,
-			const DOM_Node& 	sourceNode,
-			const DOM_Node&		styleNode) const
+			const XalanDOMString&	msg,
+			const XalanNode* 		sourceNode,
+			const XalanNode*		styleNode) const
 {
-	m_processor.error(styleNode, sourceNode, msg);
+	m_processor.error(msg, styleNode, sourceNode);
 }
 
 
 
 void
 StylesheetConstructionContextDefault::warn(
-			const DOMString&	msg,
-			const DOM_Node& 	sourceNode,
-			const DOM_Node&		styleNode) const
+			const XalanDOMString&	msg,
+			const XalanNode* 		sourceNode,
+			const XalanNode*		styleNode) const
 {
-	m_processor.warn(styleNode, sourceNode, msg);
+	m_processor.warn(msg, styleNode, sourceNode);
 }
 
 
 
 void
 StylesheetConstructionContextDefault::message(
-			const DOMString&	msg,
-			const DOM_Node& 	sourceNode,
-			const DOM_Node&		styleNode) const
+			const XalanDOMString&	msg,
+			const XalanNode* 		sourceNode,
+			const XalanNode*		styleNode) const
 {
-	m_processor.message(styleNode, sourceNode, msg);
+	m_processor.message(msg, styleNode, sourceNode);
 }
 
 
 
 int
-StylesheetConstructionContextDefault::getAttrTok(const DOMString&	name) const
+StylesheetConstructionContextDefault::getAttrTok(const XalanDOMString&	name) const
 {
 	return m_processor.getAttrTok(name);
 }
@@ -134,7 +134,7 @@ StylesheetConstructionContextDefault::getAttrTok(const DOMString&	name) const
 
 
 XMLURL*
-StylesheetConstructionContextDefault::getURLFromString(const DOMString&		urlString)
+StylesheetConstructionContextDefault::getURLFromString(const XalanDOMString&	urlString)
 {
 	return m_processor.getURLFromString(urlString);
 }
@@ -143,15 +143,15 @@ StylesheetConstructionContextDefault::getURLFromString(const DOMString&		urlStri
 
 XMLURL*
 StylesheetConstructionContextDefault::getURLFromString(
-			const DOMString&	urlString,
-			const DOMString&	base)
+			const XalanDOMString&	urlString,
+			const XalanDOMString&	base)
 {
 	return m_processor.getURLFromString(urlString, base);
 }
 
 
 
-const DOMString&
+const XalanDOMString&
 StylesheetConstructionContextDefault::getXSLNameSpaceURLPre() const
 {
 	return m_processor.getXSLNameSpaceURLPre();
@@ -159,7 +159,7 @@ StylesheetConstructionContextDefault::getXSLNameSpaceURLPre() const
 
 
 
-const DOMString&
+const XalanDOMString&
 StylesheetConstructionContextDefault::getXSLNameSpaceURL() const
 {
 	return m_processor.getXSLNameSpaceURL();
@@ -169,7 +169,7 @@ StylesheetConstructionContextDefault::getXSLNameSpaceURL() const
 
 XPath*
 StylesheetConstructionContextDefault::createMatchPattern(
-			const DOMString&		str,
+			const XalanDOMString&	str,
 			const PrefixResolver&	resolver)
 {
 	XPath* const	xpath = m_xpathFactory.create();
@@ -187,7 +187,7 @@ StylesheetConstructionContextDefault::createMatchPattern(
 
 XPath*
 StylesheetConstructionContextDefault::createXPath(
-			const DOMString&		str,
+			const XalanDOMString&		str,
 			const PrefixResolver&	resolver)
 {
 	XPath* const	xpath = m_xpathFactory.create();

@@ -68,18 +68,17 @@
 // Base include file.  Must be first.
 #include "XSLTDefinitions.hpp"
 
+
+
 // Base class header file.
 #include "ElemTemplateElement.hpp"
+
 
 
 // Just locale.h in G++
 #if ! defined(__GNUC__)
 #include <locale>
 #endif
-
-
-
-#include <dom/DOMString.hpp>
 
 
 
@@ -122,25 +121,19 @@ public:
 	ElemNumber(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
-			const DOMString&				name,
+			const XalanDOMString&				name,
 			const AttributeList&			atts,
 			int								lineNumber,
 			int								columnNumber);
 
 	// These methods are inherited from ElemTemplateElement ...
 	
-	virtual int
-	getXSLToken() const; 
-
 	virtual void
 	execute(
 			StylesheetExecutionContext&		executionContext,
-			const DOM_Node&					sourceTree, 
-			const DOM_Node&					sourceNode,
+			XalanNode*						sourceTree,
+			XalanNode*						sourceNode,
 			const QName&					mode) const;
-
-	virtual NodeImpl*
-	appendChild(NodeImpl*	newChild);
 
 protected:
 
@@ -153,13 +146,13 @@ protected:
 	 * @param namespaceContext The context in which namespaces in the 
 	 * queries are supposed to be expanded.
 	 */
-	DOM_Node
+	XalanNode*
 	findAncestor(
 			StylesheetExecutionContext&		executionContext,
 			const XPath*					fromMatchPattern,
 			const XPath*					countMatchPattern,
-			const DOM_Node&					context,
-			const DOM_Element&				namespaceContext) const;
+			XalanNode*						context,
+			const XalanElement*				namespaceContext) const;
 
 	  /**
 	   * Given a 'from' pattern (ala xsl:number), a match pattern 
@@ -170,12 +163,13 @@ protected:
 	   * @param namespaceContext The context in which namespaces in the 
 	   * queries are supposed to be expanded.
 	   */
-	DOM_Node findPrecedingOrAncestorOrSelf(
+	XalanNode*
+	findPrecedingOrAncestorOrSelf(
 			StylesheetExecutionContext&		executionContext,
 			const XPath*					fromMatchPattern,
 			const XPath*					countMatchPattern,
-			const DOM_Node&					context,
-			const DOM_Element&				namespaceContext) const;
+			XalanNode*						context,
+			const XalanElement*				namespaceContext) const;
 
 	/**
 	 * Get the count match pattern, or a default value.
@@ -183,27 +177,27 @@ protected:
 	const XPath*
 	getCountMatchPattern(
 			StylesheetExecutionContext&		executionContext,
-			const DOM_Node&					contextNode) const;
+			XalanNode*						contextNode) const;
 
 	/**
 	 * Given an XML source node, get the count according to the 
 	 * parameters set up by the xsl:number attributes.
 	 */
-	DOMString
+	XalanDOMString
 	getCountString(
 			StylesheetExecutionContext&		executionContext,
-			const DOM_Node&					sourceTree, 
-			const DOM_Node&					sourceNode) const;
+			XalanNode*						sourceTree, 
+			XalanNode*						sourceNode) const;
 
 	/**
 	 * from any position in the tree, return the 
 	 * next node in the tree, assuming preorder 
 	 * traversal preceded, or null if at the end.
 	 */
-	static DOM_Node
+	static XalanNode*
 	getNextInTree(
-			const DOM_Node&		pos,
-			const DOM_Node&		from);
+			XalanNode*	pos,
+			XalanNode*	from);
 
 	/**
 	 * Get a number that represents a node based on the
@@ -218,13 +212,13 @@ protected:
 	 * @return A number that counts target and preceding 
 	 * nodes that qualify.
 	 */
-	int
+	unsigned int
 	getNumberInTree(
 			XPathExecutionContext&	executionContext,
-			const XPath*			countMatchPattern, 
-			const DOM_Node&			pos, 
-			const DOM_Node&			from, 
-			const DOM_Node&			target,
+			const XPath*			countMatchPattern,
+			XalanNode*				pos,
+			XalanNode*				from,
+			XalanNode*				target,
 			int						countFrom) const;
 
 	/**
@@ -239,11 +233,11 @@ protected:
 	 * @return A number that counts target and preceding 
 	 * siblings that qualify.
 	 */
-	int
+	unsigned int
 	getSiblingNumber(
 			StylesheetExecutionContext&		executionContext,
 			const XPath*					countMatchPattern, 
-			const DOM_Node&					target) const;
+			XalanNode*						target) const;
 
 	/**
 	 * Count the ancestors, up to the root, that match the 
@@ -253,11 +247,11 @@ protected:
 	 * @param node Count this node and it's ancestors.
 	 * @return The number of ancestors that match the pattern.
 	 */
-	int
+	unsigned int
 	countMatchingAncestors(	
 			StylesheetExecutionContext&		executionContext,
 			const XPath*					patterns,
-			const DOM_Node&					node) const;
+			XalanNode*						node) const;
 
 	/**
 	 * Climb up the ancestor tree, collecting sibling position 
@@ -278,7 +272,7 @@ protected:
 			StylesheetExecutionContext&		executionContext,
 			const XPath*					fromMatchPattern,
 			const XPath*					countMatchPattern, 
-			const DOM_Node&					node) const;
+			XalanNode*						node) const;
 
 #if ! defined(__GNUC__)
 	/**
@@ -287,13 +281,13 @@ protected:
 	LocaleType
 	getLocale(
 			StylesheetExecutionContext&		executionContext,
-			const DOM_Node&					contextNode) const;
+			XalanNode*						contextNode) const;
 #endif
 
 	NumberFormat*
 	getNumberFormatter(
 			StylesheetExecutionContext&		executionContext,
-			const DOM_Node&					contextNode) const;
+			XalanNode*						contextNode) const;
 
 	/**
 	 * Format a vector of numbers into a formatted string.
@@ -304,11 +298,11 @@ protected:
 	 * TODO: Optimize formatNumberList so that it caches the last count and
 	 * reuses that info for the next count.
 	 */
-	DOMString
+	XalanDOMString
 	formatNumberList(	
 			StylesheetExecutionContext&		executionContext,
-			const IntArrayType&				theList, 
-			const DOM_Node&					contextNode) const;
+			const IntArrayType&				theList,
+			XalanNode*						contextNode) const;
 
 	/**
 	 * Convert a long integer into alphabetic counting, in other words 
@@ -321,10 +315,10 @@ protected:
 	 * Note that the radix of the conversion is inferred from the size
 	 * of the table.
 	 */
-	static DOMString
+	static XalanDOMString
 	int2alphaCount(
-			int					val,
-			const DOMString&	table);
+			int						val,
+			const XalanDOMString&	table);
 
 	/**
 	 * Convert a long integer into roman numerals.
@@ -335,7 +329,7 @@ protected:
 	 * @see DecimalToRoman
 	 * @see m_romanConvertTable
 	 */
-	static DOMString
+	static XalanDOMString
 	long2roman(
 			long	val,
 			bool	prefixesAreOK);
@@ -346,11 +340,11 @@ private:
 	/*
 	 * Get Formatted number
 	 */
-	DOMString 
+	XalanDOMString 
 	getFormattedNumber(
 			StylesheetExecutionContext&		executionContext,
-			const DOM_Node&					contextNode,
-			XMLCh							numberType,
+			XalanNode*						contextNode,
+			XalanDOMChar					numberType,
 			int								numberWidth,
 			int								listElement) const;
 
@@ -360,17 +354,17 @@ private:
 
 	int				m_level; // = Constants.NUMBERLEVEL_SINGLE;
 	
-	DOMString		m_format_avt;
-	DOMString		m_lang_avt;
-	DOMString		m_lettervalue_avt;
-	DOMString		m_groupingSeparator_avt;
-	DOMString		m_groupingSize_avt;
+	XalanDOMString	m_format_avt;
+	XalanDOMString	m_lang_avt;
+	XalanDOMString	m_lettervalue_avt;
+	XalanDOMString	m_groupingSeparator_avt;
+	XalanDOMString	m_groupingSize_avt;
 
 	/**
 	* Chars for converting integers into alpha counts.
 	* @see XSLTEngineImpl#int2alphaCount
 	*/
-	static const DOMString			s_alphaCountTable;
+	static const XalanDOMString		s_alphaCountTable;
 
 	/**
 	 * Table to help in converting decimals to roman numerals.

@@ -57,27 +57,24 @@
 /*
  * $Id$
  */
-
-
 #if !defined(XALAN_PROBLEMLISTENER_HEADER_GUARD)
 #define XALAN_PROBLEMLISTENER_HEADER_GUARD
-
-
-/**
- * @author Scott Boag (scott_boag@lotus.com)
- * @author David N. Bertoni (david_n_bertoni@lotus.com)
- */
 
 
 
 // Base include file.  Must be first.
 #include "XSLTDefinitions.hpp"
 
-#include <dom/DOMString.hpp>
 
-class DOMString;
-class DOM_Node;
+
+// $$$ ToDo: This is necessary while XalanDOMString is still a typedef.
+#include <XalanDOM/XalanDOMString.hpp>
+
+
+
+class XalanNode;
 class PrintWriter;
+
 
 
 /**
@@ -97,8 +94,8 @@ public:
 
 	/// Severity of problem
 	enum eClassification {	eMESSAGE = 0,
-									eWARNING = 1,
-									eERROR   = 2 };
+							eWARNING = 1,
+							eERROR   = 2 };
 
 	ProblemListener();
 
@@ -113,33 +110,33 @@ public:
 	virtual void
 	setPrintWriter(PrintWriter*		pw) = 0;
 
-  /**
-   * Function that is called when a problem event occurs.
-   * 
-   * @param   where          either in XMLPARSER, XSLPROCESSOR, or QUERYENGINE
-   * @param   classification either MESSAGE, ERROR or WARNING
-	* @param   styleNode      style tree node where the problem occurred
-	*                         (may be null)
-	* @param   sourceNode     source tree node where the problem occurred
-	*                         (may be null)
-   * @param   msg            string message explaining the problem.
-   * @param   lineNo         line number where the problem occurred,  
-   *                         if it is known, else zero
-   * @param   charOffset     character offset where the problem,  
-   *                         occurred if it is known, else zero
-	* @return  true if the return is an ERROR, in which case exception will be
-	*          thrown.  Otherwise the processor will continue to process.
-   */
+	/**
+ 	 * Function that is called when a problem event occurs.
+     * 
+     * @param   where          either in XMLPARSER, XSLPROCESSOR, or QUERYENGINE
+     * @param   classification either MESSAGE, ERROR or WARNING
+	 * @param   styleNode      style tree node where the problem occurred
+	 *                         (may be null)
+	 * @param   sourceNode     source tree node where the problem occurred
+	 *                         (may be null)
+	 * @param   msg            string message explaining the problem.
+	 * @param   lineNo         line number where the problem occurred,  
+	 *                         if it is known, else zero
+	 * @param   charOffset     character offset where the problem,  
+	 *                         occurred if it is known, else zero
+	 * @return  true if the return is an ERROR, in which case exception will be
+	 *          thrown.  Otherwise the processor will continue to process.
+	 */
 	virtual bool
 	problem(
-			eProblemSource		where,
-			eClassification		classification, 
-			const DOM_Node&		styleNode,
-			const DOM_Node&		sourceNode,
-			const DOMString&	msg,
-			const XMLCh* id,
-			int					lineNo,
-			int					charOffset) = 0;
+			eProblemSource			where,
+			eClassification			classification, 
+			const XalanNode*		styleNode,
+			const XalanNode*		sourceNode,
+			const XalanDOMString&	msg,
+			const XalanDOMChar*		id,
+			int						lineNo,
+			int						charOffset) = 0;
 
 };
 

@@ -66,16 +66,12 @@
 
 
 
-// Xerces XML4C header files
-#include <dom/DOM_Node.hpp>
-#include <dom/DOMString.hpp>
+#include <XalanDOM/XalanNode.hpp>
 
 
 
-// XSL header files.
 #include <PlatformSupport/DOMStringHelper.hpp>
 #include <PlatformSupport/PrintWriter.hpp>
-#include <Include/DOMHelper.hpp>
 
 
 
@@ -107,6 +103,7 @@ ProblemListenerDefault::~ProblemListenerDefault()
 }
 
 
+
 void
 ProblemListenerDefault::setPrintWriter(PrintWriter*		pw)
 {
@@ -114,16 +111,17 @@ ProblemListenerDefault::setPrintWriter(PrintWriter*		pw)
 }
 
 
+
 bool
 ProblemListenerDefault::problem(
-			eProblemSource		where,
-			eClassification		classification, 
-			const DOM_Node&		styleNode,
-			const DOM_Node&		sourceNode,
-			const DOMString&	msg,
-			const XMLCh*		/* id */,
-			int					lineNo,
-			int					charOffset)
+			eProblemSource			where,
+			eClassification			classification, 
+			const XalanNode*		styleNode,
+			const XalanNode*		sourceNode,
+			const XalanDOMString&	msg,
+			const XalanDOMChar*		/* id */,
+			int						lineNo,
+			int						charOffset)
 {
 	if (m_pw != 0)
 	{
@@ -154,13 +152,13 @@ ProblemListenerDefault::problem(
 		if (0 != styleNode)
 		{
 			m_pw->print(styleTreeNodeHeader);
-			m_pw->print(styleNode.getNodeName());
+			m_pw->print(styleNode->getNodeName());
 		}
 
 		if (0 != sourceNode)
 		{
 			m_pw->print(sourceTreeNodeHeader);
-			m_pw->print(sourceNode.getNodeName());
+			m_pw->print(sourceNode->getNodeName());
 		}
 
 		if (0 != lineNo)

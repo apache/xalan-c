@@ -56,40 +56,40 @@
  */
 #include "FunctionGenerateID.hpp"
 
-#include <dom/DOM_Node.hpp>
-#include <dom/DOM_Document.hpp>
-#include <dom/DOMString.hpp>
 
-#include <Include/DOMHelper.hpp>
+
 #include <PlatformSupport/DOMStringHelper.hpp>
-#include <XPath/MutableNodeRefList.hpp>
+
+
+
 #include <XPath/NodeRefListBase.hpp>
 #include <XPath/XObject.hpp>
 #include <XPath/XObjectFactory.hpp>
 #include <XPath/XPathExecutionContext.hpp>
 
 
-FunctionGenerateID::FunctionGenerateID()
+
+FunctionGenerateID::FunctionGenerateID() :
+	Function()
 {
-	// do nothing
 }
 
 
 
 FunctionGenerateID::~FunctionGenerateID()
 {
-	// do nothing
 }
 
 
 
-XObject* FunctionGenerateID::execute(
-	XPathExecutionContext& executionContext,
-	const DOM_Node& context,
-	int	/* opPos */,
-	const std::vector<XObject*>& args)
+XObject*
+FunctionGenerateID::execute(
+			XPathExecutionContext&			executionContext,
+			XalanNode*						context,
+			int								/* opPos */,
+			const XObjectArgVectorType&		args)
 {
-	DOM_Node theContext = context;
+	XalanNode*	theContext = context;
 
 	if (args.size() > 0)
 	{
@@ -98,20 +98,17 @@ XObject* FunctionGenerateID::execute(
 		if (nl.getLength() > 0)
 			theContext = nl.item(0);
 		else
-			theContext = DOM_Node();
+			theContext = 0;
 	}
 
 	// We're assuming here that each nodes has an implementation with a 
 	// unique address that we can convert into a string
 
-	DOMString id;
+	XalanDOMString id;
 
 	if (0 != theContext)
 	{
-		XALAN_DOM_NodeHack hack(theContext);
-
-		NodeImpl *impl = hack.getImplementationObject();
-		id = "N" + LongToDOMString(reinterpret_cast<long>(impl)); 		
+		id = XALAN_STATIC_UCODE_STRING("N") + LongToDOMString(reinterpret_cast<long>(theContext)); 		
 	}
 
 	return executionContext.getXObjectFactory().createString(id);

@@ -54,65 +54,6 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-/**
- * $Id$
- * 
- * $State$
- * 
- * @author Scott Boag (scott_boag@lotus.com)
- 	@@ Need to check this text based on newer implementation:
- * 
- * It is the responsibility of the XSLTEngineImpl class to traverse the 
- * source DOM tree according to the instructions in the style DOM tree, 
- * and output nodes into the result DOM tree.
- * 
- * Basic flow of control:
- * Starting from process(Document sourceTree, Document out, String mode),
- * 1)  init the Stylesheet instances (which hold the state for each imported 
- *	   XSL stylesheet) in the parseXSLRoot method, then 
- * 2)  locate the rootRule (all rules are found via Stylesheet.findTemplate), 
- *	   then pass the root node of the source tree to 
- * 3)  buildResultFromTemplate, which processes each of the template's 
- *	   child elements by calling 
- * 4)  processTemplateElement, which either processes the element 
- *	   by handling it as an XSL directive (if it is in the xsl: namespace), 
- *	   or by cloning the source node to the result tree.  
- *	   If it is an XSL instruction,
- * 5)  processXSLTemplateInstruction is called, which calls various 
- *	   subfunctions according to the tag name.
- *	   The XSL directives that effect the source traversal are xsl:apply-templates 
- *	   and xsl:for-each, which are handled in the 
- * 6)  handleApplyTemplatesInstruction, which selects the start node and 
- *	   calls the 
- * 7)  transformSelectedChildren method, which performs a query or just 
- *	   traverses the child list, then for each node in the selected list calls 
- * 8)  transformChild, which then calls 
- * 9)  Stylesheet.findTemplate (if it is not an xsl:for-each instruction)
- *	   to locate the corresponding template, and then calls 
- * 10) buildResultFromTemplate, recursing back in to step 3 and starting the 
- *	   traversal cycle all over again.
- * 
- * Glossory (abbreviations used in variable and method 
- * names in square brackets):
- * <DL>
- *	 <DT>XSL Instruction [instruction]</DT>
- *	   <DD>Any tag with an XSL namespace prefix.</DD>
- *	 <DT>XSL Template Instruction [instruction]</DT>
- *	   <DD>Any tag with an XSL namespace prefix
- *		   that occurs inside an xsl:template element.</DD>
- *	 <DT>Template Child [templateChild]</DT>
- *		 <DD>Any node that is a child of an xsl:template element.</DD>
- *	 <DT>Source Tree</DT>
- *	   <DD>The tree input to the XSL process.</DD>
- *	 <DT>Result Tree</DT>
- *	   <DD>The tree that is output by the XSL process.</DD>
- *	 <DT>Stylesheet Tree</DT>
- *	   <DD>The stylesheet tree produced from the XSL file.</DD>
- *	 <DT>Pattern List [patternList]</DT>
- *		 <DD>A parsed query or match pattern.</DD>
- * </DL>
- * 
- */
 
 
 
@@ -124,28 +65,36 @@
 
 
 
-#include <dom/DOM_DOMException.hpp>
-#include <dom/DOM_Node.hpp>
-#include <dom/DOM_NodeList.hpp>
-#include <dom/DOM_NamedNodeMap.hpp>
-#include <dom/DOM_ProcessingInstruction.hpp>
+#include <XalanDOM/XalanDOMException.hpp>
+#include <XalanDOM/XalanNode.hpp>
+#include <XalanDOM/XalanAttr.hpp>
+#include <XalanDOM/XalanComment.hpp>
+#include <XalanDOM/XalanCDATASection.hpp>
+#include <XalanDOM/XalanNodeList.hpp>
+#include <XalanDOM/XalanNamedNodeMap.hpp>
+#include <XalanDOM/XalanProcessingInstruction.hpp>
+#include <XalanDOM/XalanText.hpp>
+
+
+
 #include <sax/DocumentHandler.hpp>
 #include <sax/Locator.hpp>
 #include <sax/SAXException.hpp>
 #include <util/PlatformUtils.hpp>
 #include <framework/URLInputSource.hpp>
 
-#include <Include/DOMHelper.hpp>
+
 
 #include <PlatformSupport/DOMStringPrintWriter.hpp>
 #include <PlatformSupport/PrintWriter.hpp>
 #include <PlatformSupport/STLHelper.hpp>
 #include <PlatformSupport/StringTokenizer.hpp>
 
+
+
 #include <DOMSupport/DOMServices.hpp>
-#include <DOMSupport/UnimplementedNode.hpp>
-#include <DOMSupport/UnimplementedElement.hpp>
-#include <DOMSupport/UnimplementedDocumentFragment.hpp>
+
+
 
 #include <XMLSupport/Formatter.hpp>
 #include <XMLSupport/FormatterToDOM.hpp>
@@ -153,6 +102,8 @@
 #include <XMLSupport/FormatterTreeWalker.hpp>
 #include <XMLSupport/XMLParserLiaison.hpp>
 #include <XMLSupport/FormatterTreeWalker.hpp>
+
+
 
 #include <XPath/ElementPrefixResolverProxy.hpp>
 #include <XPath/ResultTreeFrag.hpp>
@@ -165,6 +116,7 @@
 #include <XPath/XObject.hpp>
 #include <XPath/XObjectFactory.hpp>
 #include <XPath/XResultTreeFrag.hpp>
+
 
 
 #include "Arg.hpp"
@@ -194,10 +146,10 @@
 
 
 
-const double XSLTEngineImpl::s_XSLTVerSupported(1.0);
-const DOMString	XSLTEngineImpl::s_DefaultXSLNameSpaceURL(XALAN_STATIC_UCODE_STRING("http://www.w3.org/1999/XSL/Transform/1.0"));
-const DOMString XSLTEngineImpl::s_XSLNameSpaceURLPre(XALAN_STATIC_UCODE_STRING("http://www.w3.org/1999/XSL/Transform"));
-const DOMString	XSLTEngineImpl::s_XSLT4JNameSpaceURL(XALAN_STATIC_UCODE_STRING("http://xml.apache.org/xslt"));
+const double			XSLTEngineImpl::s_XSLTVerSupported(1.0);
+const XalanDOMString	XSLTEngineImpl::s_DefaultXSLNameSpaceURL(XALAN_STATIC_UCODE_STRING("http://www.w3.org/1999/XSL/Transform/1.0"));
+const XalanDOMString	XSLTEngineImpl::s_XSLNameSpaceURLPre(XALAN_STATIC_UCODE_STRING("http://www.w3.org/1999/XSL/Transform"));
+const XalanDOMString	XSLTEngineImpl::s_XSLT4JNameSpaceURL(XALAN_STATIC_UCODE_STRING("http://xml.apache.org/xslt"));
 
 /**
  * Control if the xsl:variable is resolved early or 
@@ -227,18 +179,18 @@ XSLTEngineImpl::ElementKeysMapType		XSLTEngineImpl::s_XSLT4JElementKeys;
 //==========================================================
 
 XSLTEngineImpl::XSLTEngineImpl(
-							XMLParserLiaison&	parserLiaison,
-							XPathSupport&		xpathSupport,
-							XPathEnvSupport&	xpathEnvSupport,
-							XObjectFactory&		xobjectFactory,
-							XPathFactory&		xpathFactory) :
+			XMLParserLiaison&	parserLiaison,
+			XPathSupport&		xpathSupport,
+			XPathEnvSupport&	xpathEnvSupport,
+			XObjectFactory&		xobjectFactory,
+			XPathFactory&		xpathFactory) :
 	XSLTProcessor(),
 	DocumentHandler(),
 	m_rootDoc(),
 	m_outputCarriageReturns(false),
 	m_outputLinefeeds(false),
 	m_formatter(0),
-	m_resultTreeFactory(),
+	m_resultTreeFactory(0),
 	m_resultNameSpacePrefix(),
 	m_resultNameSpaceURL(),
 	m_stylesheets(),
@@ -311,7 +263,7 @@ XSLTEngineImpl::reset()
 	m_XSLNameSpaceURL = s_DefaultXSLNameSpaceURL;
 	m_durationsTable.clear();
 	m_stylesheetLocatorStack.clear();
-	m_pendingElementName = DOMString();
+	m_pendingElementName = XalanDOMString();
 	m_pendingAttributes.clear();
 	m_cdataStack.clear();
 	m_resultTreeFactory = 0;
@@ -334,6 +286,7 @@ XSLTEngineImpl::reset()
 }
 
 
+
 XSLTEngineImpl::~XSLTEngineImpl()
 {
 	delete m_problemListener;
@@ -342,13 +295,14 @@ XSLTEngineImpl::~XSLTEngineImpl()
 }
 
 
+
 //==========================================================
 // SECTION: Main API Functions
 //==========================================================
 
 
 
-DOM_Document
+XalanDocument*
 XSLTEngineImpl::getRootDoc() const
 {
 	return m_rootDoc;
@@ -357,7 +311,7 @@ XSLTEngineImpl::getRootDoc() const
 
 
 void
-XSLTEngineImpl::setRootDoc(const DOM_Document& doc)
+XSLTEngineImpl::setRootDoc(XalanDocument*	doc)
 {
 	m_rootDoc = doc;
 }
@@ -372,7 +326,7 @@ XSLTEngineImpl::getPendingAttributes()
 
 
 
-DOMString
+const XalanDOMString
 XSLTEngineImpl::getPendingElementName() const
 {
 	return m_pendingElementName;
@@ -389,7 +343,7 @@ XSLTEngineImpl::setPendingAttributes(const AttributeList&	pendingAttributes)
 
 
 void
-XSLTEngineImpl::setPendingElementName(const DOMString&	elementName)
+XSLTEngineImpl::setPendingElementName(const XalanDOMString&	elementName)
 {
 		m_pendingElementName = elementName;
 }
@@ -406,43 +360,64 @@ XSLTEngineImpl::process(
 {
 	try
 	{
-		DOMString xslIdentifier(((0 == stylesheetSource) || 
+		XalanDOMString xslIdentifier(((0 == stylesheetSource) || 
 										(0 == stylesheetSource->getSystemId())) 
-										 ? DOMString("Input XSL") : stylesheetSource->getSystemId());
+										 ? XalanDOMString(XALAN_STATIC_UCODE_STRING("Input XSL")) : stylesheetSource->getSystemId());
 		bool totalTimeID = true;
 		pushTime(&totalTimeID);
-		DOM_Node sourceTree;
+
+		XalanNode*	sourceTree = 0;
+
 		if(0 != inputSource)
 			sourceTree = getSourceTreeFromInput(inputSource);
+
 		if(0 != stylesheetSource)
 		{
 			m_stylesheetRoot = processStylesheet(*stylesheetSource, constructionContext);
 		}
 		else if(0 != sourceTree)
 		{
-			DOMString stylesheetURI = 0;
-			DOM_NodeList children = sourceTree.getChildNodes();
-			int nNodes = children.getLength();
-			std::vector<DOMString>	hrefs;
+			XalanDOMString			stylesheetURI = 0;
+			XalanNode*				child = sourceTree->getFirstChild();
 
-			for(int i = 0; i < nNodes; i++)
+#if !defined(XALAN_NO_NAMESPACES
+			using std::vector;
+#endif
+
+			vector<XalanDOMString>	hrefs;
+
+			// $$$ ToDo: is this first one style valid?
+			const XalanDOMString	stylesheetNodeName1(XALAN_STATIC_UCODE_STRING("xml-stylesheet"));
+			const XalanDOMString	stylesheetNodeName2(XALAN_STATIC_UCODE_STRING("xml:stylesheet"));
+
+			// $$$ ToDo: This code is much like that in getStyleSheetURIFromDoc().
+			// Why is it repeated???
+			// $$$ ToDo: Move these embedded strings from inside these loops
+			// out here...
+			// $$$ ToDo: These loops are a mess of repeated use of the
+			// same data values.
+			while(child != 0)
 			{
-				DOM_Node child = children.item(i);
-				if(DOM_Node::PROCESSING_INSTRUCTION_NODE == child.getNodeType())
+				if(XalanNode::PROCESSING_INSTRUCTION_NODE == child->getNodeType())
 				{
-				 /*DOM_ProcessingInstruction*/const DOM_Node& pi = child;
-					if(pi.getNodeName().equals("xml-stylesheet") 
-						 || pi.getNodeName().equals("xml:stylesheet"))
+					const XalanDOMString	nodeName(child->getNodeName());
+
+					if(equals(nodeName, stylesheetNodeName1) ||
+					   equals(nodeName, stylesheetNodeName2))
 					{
 						bool isOK = true;
-						StringTokenizer 	tokenizer(pi.getNodeValue(), " \t=", true);
+
+						StringTokenizer 	tokenizer(child->getNodeValue(), XALAN_STATIC_UCODE_STRING(" \t="), true);
+
 						while(tokenizer.hasMoreTokens())
 						{
-							if(tokenizer.nextToken().equals("type"))
+							if(equals(tokenizer.nextToken(), XALAN_STATIC_UCODE_STRING("type")))
 							{
-								DOMString typeVal = tokenizer.nextToken();
-								typeVal = substring(typeVal, 1, typeVal.length()-1);
-								if(!typeVal.equals("text/xsl"))
+								XalanDOMString	typeVal = tokenizer.nextToken();
+
+								typeVal = substring(typeVal, 1, length(typeVal) - 1);
+
+								if(!equals(typeVal, XALAN_STATIC_UCODE_STRING("text/xsl")))
 								{
 									isOK = false;
 								}
@@ -451,32 +426,35 @@ XSLTEngineImpl::process(
 						
 						if(isOK)
 						{
-							StringTokenizer 	tokenizer(pi.getNodeValue(), " \t=", true);
+							StringTokenizer 	tokenizer(child->getNodeValue(), XALAN_STATIC_UCODE_STRING(" \t="), true);
 							while(tokenizer.hasMoreTokens())
 							{
-								if(tokenizer.nextToken().equals("href"))
+								if(equals(tokenizer.nextToken(), XALAN_STATIC_UCODE_STRING("href")))
 								{
 									stylesheetURI = tokenizer.nextToken();
 									stylesheetURI = substring(stylesheetURI, 1, stylesheetURI.length()-1);
 									hrefs.push_back(stylesheetURI);
 								}
-							} 
+							}
 							// break;
 						}
 					}
 				}
-			} // end for(int i = 0; i < nNodes; i++)
+
+				child = child->getNextSibling();
+			}
+
 			bool isRoot = true;
 			Stylesheet* prevStylesheet = 0;
 			while(!hrefs.empty())
 			{
 				const XMLCh *pxch = (0 != inputSource) ?
 					inputSource->getSystemId() : 0;
-				const DOMString		sysid(pxch);
-				const DOMString&	ref =  hrefs.back();
+				const XalanDOMString		sysid(pxch);
+				const XalanDOMString&	ref =  hrefs.back();
 
 				Stylesheet* stylesheet =
-					getStylesheetFromPIURL(ref, sourceTree, sysid, isRoot, constructionContext);
+					getStylesheetFromPIURL(ref, *sourceTree, sysid, isRoot, constructionContext);
 
 				if(false == isRoot)
 				{
@@ -504,7 +482,7 @@ XSLTEngineImpl::process(
 
 			if(0 != m_diagnosticsPrintWriter)
 			{
-				displayDuration("Total time", &totalTimeID);
+				displayDuration(XALAN_STATIC_UCODE_STRING("Total time"), &totalTimeID);
 			}
 		}
 	}
@@ -540,7 +518,7 @@ XSLTEngineImpl::process(
 
 StylesheetRoot*
 XSLTEngineImpl::processStylesheet(
-			const DOMString&				xsldocURLString,
+			const XalanDOMString&				xsldocURLString,
 			StylesheetConstructionContext&	constructionContext)
 {
 	try
@@ -570,8 +548,8 @@ XSLTEngineImpl::processStylesheet(
 {
 	delete m_stylesheetRoot;
 
-	DOMString ds("Input XSL");
-	const DOMString	xslIdentifier(0 == stylesheetSource.getSystemId() ? 
+	const XalanDOMString	ds(XALAN_STATIC_UCODE_STRING("Input XSL"));
+	const XalanDOMString	xslIdentifier(0 == stylesheetSource.getSystemId() ? 
 									 ds : stylesheetSource.getSystemId());
 
 	// In case we have a fragment identifier, go ahead and 
@@ -593,12 +571,12 @@ XSLTEngineImpl::processStylesheet(
 		}
 		else
 		{
-			diag("========= Parsing "+xslIdentifier+" ==========");
+			diag(XALAN_STATIC_UCODE_STRING("========= Parsing ") + xslIdentifier + XALAN_STATIC_UCODE_STRING(" =========="));
 			pushTime(&xslIdentifier);
 			m_parserLiaison.parseXMLStream(stylesheetSource,
 										   stylesheetProcessor);
 			if(0 != m_diagnosticsPrintWriter)
-				displayDuration("Parse of "+xslIdentifier, &xslIdentifier);
+				displayDuration(XALAN_STATIC_UCODE_STRING("Parse of ") + xslIdentifier, &xslIdentifier);
 		}
 	}
 	catch(const XSLException&)
@@ -632,13 +610,17 @@ XSLTEngineImpl::processStylesheet(
 // SECTION: XML Parsing Functions
 //==========================================================
 
-const DOM_Node XSLTEngineImpl::getSourceTreeFromInput(XSLTInputSource *inputSource)
+XalanNode*
+XSLTEngineImpl::getSourceTreeFromInput(XSLTInputSource *inputSource)
 {
-	DOM_Node sourceTree;
-	const DOMString ds("Input XML");
-	DOMString xmlIdentifier = ((0 == inputSource) || 
+	XalanNode*				sourceTree = 0;
+
+	const XalanDOMString	ds(XALAN_STATIC_UCODE_STRING("Input XML"));
+
+	XalanDOMString xmlIdentifier = ((0 == inputSource) || 
 										(0 == inputSource->getSystemId())) ?
 										ds : inputSource->getSystemId();
+
 	if(0 != inputSource->getNode())
 	{
 		sourceTree = inputSource->getNode();
@@ -649,14 +631,25 @@ const DOM_Node XSLTEngineImpl::getSourceTreeFromInput(XSLTInputSource *inputSour
 		// try to parse the XML here.
 		try
 		{
-			diag("========= Parsing "+xmlIdentifier+" ==========");
+			diag(XALAN_STATIC_UCODE_STRING("========= Parsing ") +
+					xmlIdentifier +
+					XALAN_STATIC_UCODE_STRING(" =========="));
+
 			pushTime(&xmlIdentifier);
 
-			sourceTree = m_parserLiaison.parseXMLStream(*inputSource,
-														xmlIdentifier);
+			XalanDocument* const	theDocument =
+						m_parserLiaison.parseXMLStream(*inputSource,
+													   xmlIdentifier);
+			assert(theDocument != 0);
 
 			if(0 != m_diagnosticsPrintWriter)
-				displayDuration("Parse of "+xmlIdentifier, &xmlIdentifier);
+				displayDuration(XALAN_STATIC_UCODE_STRING("Parse of ") +
+									xmlIdentifier,
+								&xmlIdentifier);
+
+			m_xpathEnvSupport.setSourceDocument(xmlIdentifier, theDocument);
+
+			sourceTree = theDocument;
 		}
 		// catch(Exception e)
 		// @@ Fix later
@@ -682,16 +675,17 @@ const DOM_Node XSLTEngineImpl::getSourceTreeFromInput(XSLTInputSource *inputSour
 
 
 
-DOM_Document
+XalanDocument*
 XSLTEngineImpl::parseXML(
-			const XMLURL&			url,
-			DocumentHandler*		docHandler,
-			const DOM_Document&		docToRegister)
+			const XMLURL&		url,
+			DocumentHandler*	docHandler,
+			XalanDocument*		docToRegister)
 {
 	// java: url.toExternalForm();
-	const DOMString&	urlString = url.getURLText();
+	const XalanDOMString&	urlString = url.getURLText();
 
-	DOM_Document		doc = m_xpathEnvSupport.getSourceDocument(urlString);
+	XalanDocument*			doc =
+			m_xpathEnvSupport.getSourceDocument(urlString);
 
 	if(doc == 0)
 	{
@@ -719,62 +713,69 @@ XSLTEngineImpl::parseXML(
 
 Stylesheet*
 XSLTEngineImpl::getStylesheetFromPIURL(
-			const DOMString&				xslURLString,
-			const DOM_Node&					fragBase,
-			const DOMString&				xmlBaseIdent,
+			const XalanDOMString&			xslURLString,
+			XalanNode&						fragBase,
+			const XalanDOMString&			xmlBaseIdent,
 			bool							isRoot,
 			StylesheetConstructionContext&	constructionContext)
 {
 	Stylesheet*			stylesheet = 0;
 
-	DOMString			stringHolder;
-	const DOMString		localXSLURLString = clone(trim(xslURLString));
+	XalanDOMString			stringHolder;
+	const XalanDOMString		localXSLURLString = clone(trim(xslURLString));
 
-	const int			fragIndex = indexOf(localXSLURLString, '#');
+	const unsigned int	fragIndex = indexOf(localXSLURLString, '#');
 
-	DOM_Document		stylesheetDoc;
+	XalanDocument*		stylesheetDoc = 0;
 
 	if(fragIndex == 0)
 	{
 		diag("Locating stylesheet from fragment identifier...");
 
-		const DOMString		fragID = substring(localXSLURLString, 1);
+		const XalanDOMString	fragID = substring(localXSLURLString, 1);
 
-		DOM_Element			nsNode;
+		XalanElement*			nsNode = 0;
 
-		if (fragBase.getNodeType() == DOM_Node::DOCUMENT_NODE)
+		if (fragBase.getNodeType() == XalanNode::DOCUMENT_NODE)
 		{
-			const DOM_Document& doc = static_cast<const DOM_Document&>(fragBase);
+			const XalanDocument&	doc =
+				static_cast<const XalanDocument&>(fragBase);
 
 			nsNode = doc.getDocumentElement(); 
 		}
-		else if	(fragBase.getNodeType() == DOM_Node::ELEMENT_NODE)
+		else if	(fragBase.getNodeType() == XalanNode::ELEMENT_NODE)
 		{
-			nsNode = (static_cast<const DOM_Element&>(fragBase));
+			nsNode = static_cast<XalanElement*>(&fragBase);
 		}
-		else		
+		else
 		{
-			const DOM_Node	node = fragBase.getParentNode();
+			XalanNode* const	node = fragBase.getParentNode();
 
-			if	(node.getNodeType() == DOM_Node::ELEMENT_NODE) 
-				nsNode = (static_cast<const DOM_Element&>(node));
+			if	(node->getNodeType() == XalanNode::ELEMENT_NODE) 
+			{
+				nsNode = static_cast<XalanElement*>(node);
+			}
 			else
+			{
 				error("Could not identify fragment: " + fragID);
+			}
 		}
 
 		// Try a bunch of really ugly stuff to find the fragment.
 		// What's the right way to do this?
-		DOMString ds("id(");
+		XalanDOMString	ds(XALAN_STATIC_UCODE_STRING("id("));
 
 		ds += fragID;
-		ds += ")";
+		ds += XALAN_STATIC_UCODE_STRING(")");
+
+		assert(nsNode != 0);
 
 		ElementPrefixResolverProxy		theProxy(nsNode, m_xpathEnvSupport, m_xpathSupport);
 
 		XPathExecutionContextDefault	theExecutionContext(m_xpathEnvSupport,
 															m_xpathSupport,
 															m_xobjectFactory,
-															fragBase,
+															&fragBase,
 															NodeRefList(),
 															&theProxy);
 
@@ -784,11 +785,13 @@ XSLTEngineImpl::getStylesheetFromPIURL(
 
 		if(nl->getLength() == 0)
 		{
-			ds = "//*[@id='";
-			ds += fragID;
-			ds += "']";
+			NodeRefList		theEmptyList;
 
-			theExecutionContext.setContextNodeList(NodeRefList());
+			ds = XALAN_STATIC_UCODE_STRING("//*[@id='");
+			ds += fragID;
+			ds += XALAN_STATIC_UCODE_STRING("']");
+
+			theExecutionContext.setContextNodeList(theEmptyList);
 
 			xobj = evalXPathStr(ds, theExecutionContext);
 
@@ -796,11 +799,11 @@ XSLTEngineImpl::getStylesheetFromPIURL(
 
 			if(nl->getLength() == 0)
 			{
-				ds = "//*[@name='";
+				ds = XALAN_STATIC_UCODE_STRING("//*[@name='");
 				ds += fragID;
-				ds += "']";
+				ds += XALAN_STATIC_UCODE_STRING("']");
 
-				theExecutionContext.setContextNodeList(NodeRefList());
+				theExecutionContext.setContextNodeList(theEmptyList);
 
 				xobj = evalXPathStr(ds, theExecutionContext);
 
@@ -809,11 +812,11 @@ XSLTEngineImpl::getStylesheetFromPIURL(
 				if(nl->getLength() == 0)
 				{
 					// Well, hell, maybe it's an XPath...
-					theExecutionContext.setContextNodeList(NodeRefList());
+					theExecutionContext.setContextNodeList(theEmptyList);
 
 					xobj = evalXPathStr(fragID, theExecutionContext);
 
-					nl = &(xobj->nodeset());
+					nl = &xobj->nodeset();
 				}
 			}
 		}
@@ -823,10 +826,12 @@ XSLTEngineImpl::getStylesheetFromPIURL(
 			error("Could not find fragment: " + fragID);
 		}
 
-		DOM_Node frag = nl->item(0);
-		if(DOM_Node::ELEMENT_NODE == frag.getNodeType())
+		XalanNode* const	frag = nl->item(0);
+
+		if(XalanNode::ELEMENT_NODE == frag->getNodeType())
 		{
-			pushTime(&frag);
+			pushTime(frag);
+
 			if(isRoot)
 			{
 				m_stylesheetRoot = new StylesheetRoot(stringHolder, constructionContext);
@@ -836,15 +841,21 @@ XSLTEngineImpl::getStylesheetFromPIURL(
 			{
 				stylesheet = new Stylesheet(*m_stylesheetRoot, stringHolder, constructionContext);
 			}
+
 			addTraceListenersToStylesheet();
 
 			StylesheetHandler stylesheetProcessor(*this, *stylesheet, constructionContext);
+
 			FormatterListener& flistener =
 				dynamic_cast<FormatterListener&>(stylesheetProcessor);
+
 			FormatterTreeWalker tw(flistener);
+
 			tw.traverse(frag);
-			
-			displayDuration("Setup of " + localXSLURLString, &frag);
+
+			displayDuration(XalanDOMString(XALAN_STATIC_UCODE_STRING("Setup of ")) +
+								localXSLURLString,
+								&frag);
 		}
 		else
 		{
@@ -856,7 +867,9 @@ XSLTEngineImpl::getStylesheetFromPIURL(
 	{ 
 		// hmmm.. for now I'll rely on the XML parser to handle 
 		// fragment URLs.
-		diag("========= Parsing and preparing " + localXSLURLString + " ==========");
+		diag(XalanDOMString(XALAN_STATIC_UCODE_STRING("========= Parsing and preparing ")) +
+				localXSLURLString +
+				XALAN_STATIC_UCODE_STRING(" =========="));
 		pushTime(&localXSLURLString);
 
 		if(isRoot)
@@ -905,18 +918,18 @@ double XSLTEngineImpl::getXSLTVerSupported()
 
 
 int
-XSLTEngineImpl::getXSLToken(const DOM_Node&	node) const
+XSLTEngineImpl::getXSLToken(const XalanNode&	node) const
 {
 	int 	tok = -2;
 
-	if(DOM_Node::ELEMENT_NODE != node.getNodeType()) return tok;
-	const DOMString 	ns =
+	if(XalanNode::ELEMENT_NODE != node.getNodeType()) return tok;
+	const XalanDOMString 	ns =
 			m_xpathSupport.getNamespaceOfNode(node);
 
 	// was: toLowerCase
 	if(equals(ns, m_XSLNameSpaceURL))
 	{
-		const DOMString 	localName =
+		const XalanDOMString 	localName =
 			m_xpathSupport.getLocalNameOfNode(node);
 
 		// $$$ ToDo: Why can't this iterator be a 
@@ -932,7 +945,7 @@ XSLTEngineImpl::getXSLToken(const DOM_Node&	node) const
 	}
 	else if(equals(ns, s_XSLT4JNameSpaceURL))
 	{
-		const DOMString localName = m_xpathSupport.getLocalNameOfNode(node);
+		const XalanDOMString localName = m_xpathSupport.getLocalNameOfNode(node);
 		const ElementKeysMapType::const_iterator		j =
 						s_XSLT4JElementKeys.find(localName);
 		if(j != s_XSLT4JElementKeys.end())
@@ -950,7 +963,7 @@ XSLTEngineImpl::getXSLToken(const DOM_Node&	node) const
 
 
 bool
-XSLTEngineImpl::isXSLTagOfType(const DOM_Node&	node,
+XSLTEngineImpl::isXSLTagOfType(const XalanNode&	node,
 							int 		tagType) const
 {
 	return getXSLToken(node) == tagType ? true : false;
@@ -969,8 +982,10 @@ XSLTEngineImpl::outputToResultTree(
     // XObject classes.
 	 // JMD: Has to be an XObject
 
-	int type = value.getType();
-	DOMString s;
+	const int	type = value.getType();
+
+	XalanDOMString s;
+
 	switch(type)
 	{
 	case XObject::eTypeBoolean:
@@ -978,46 +993,58 @@ XSLTEngineImpl::outputToResultTree(
 	case XObject::eTypeString:
 		s = value.str();
 		characters(toCharArray(s), 0, length(s));
-		break;					
+		break;				
+
 	case XObject::eTypeNodeSet:
 		{
-		const NodeRefListBase* nl = &(value.nodeset());
-		int nChildren = nl->getLength();
-		for(int i = 0; i < nChildren; i++)
-		{
-			DOM_Node		pos = nl->item(i);
-			const DOM_Node&	top = pos;
-			while(0 != pos)
+			const NodeRefListBase&	nl = value.nodeset();
+			const unsigned int		nChildren = nl.getLength();
+
+			for(unsigned int i = 0; i < nChildren; i++)
 			{
-				flushPending();
-				cloneToResultTree(pos, false, false, true);
-				DOM_Node	nextNode = pos.getFirstChild();
-				while(0 == nextNode)
+				XalanNode*			pos = nl.item(i);
+				XalanNode* const	top = pos;
+
+				while(0 != pos)
 				{
-					if(DOM_Node::ELEMENT_NODE == pos.getNodeType())
+					flushPending();
+
+					cloneToResultTree(*pos, false, false, true);
+
+					XalanNode*	nextNode = pos->getFirstChild();
+
+					while(0 == nextNode)
 					{
-						endElement(c_wstr(pos.getNodeName()));
-					}
-					if(top == pos)
-						break;
-					nextNode = pos.getNextSibling();
-					if(0 == nextNode)
-					{
-						pos = pos.getParentNode();
-						if(top == pos)
+						if(XalanNode::ELEMENT_NODE == pos->getNodeType())
 						{
-							if(DOM_Node::ELEMENT_NODE == pos.getNodeType())
-							{
-								endElement(c_wstr(pos.getNodeName()));
-							}
-							nextNode = 0;
+							endElement(c_wstr(pos->getNodeName()));
+						}
+
+						if(top == pos)
 							break;
+
+						nextNode = pos->getNextSibling();
+
+						if(0 == nextNode)
+						{
+							pos = pos->getParentNode();
+
+							if(top == pos)
+							{
+								if(XalanNode::ELEMENT_NODE == pos->getNodeType())
+								{
+									endElement(c_wstr(pos->getNodeName()));
+								}
+
+								nextNode = 0;
+								break;
+							}
 						}
 					}
+
+					pos = nextNode;
 				}
-				pos = nextNode;
 			}
-		}
 		}
 		break;
 		
@@ -1036,8 +1063,8 @@ XSLTEngineImpl::outputToResultTree(
 
 bool
 XSLTEngineImpl::functionAvailable(
-			DOMString&	theNamespace, 
-			DOMString&	extensionName) const
+			XalanDOMString&	theNamespace, 
+			XalanDOMString&	extensionName) const
 {
 	return m_xpathEnvSupport.functionAvailable(theNamespace, extensionName);
 }
@@ -1050,19 +1077,39 @@ XSLTEngineImpl::functionAvailable(
 XObject*
 XSLTEngineImpl::extFunction(
 		XPathExecutionContext&			executionContext,
-		const DOMString&				theNamespace,
-		const DOMString&				extensionName, 
+		const XalanDOMString&			theNamespace,
+		const XalanDOMString&			extensionName, 
 		const std::vector<XObject*>&	argVec) const
 {
 	return m_xpathEnvSupport.extFunction( executionContext,
 		theNamespace, extensionName, argVec);
 }
 
+
+
 void
-XSLTEngineImpl::handleFunctionsInstruction(DOM_Element	extensionElem)
+XSLTEngineImpl::handleFunctionsInstruction(XalanElement&	/* extensionElem */)
 {
 	error("Calling external functions is not supported in the C++ version of Xalan!!!");
 }
+
+
+
+StylesheetRoot*
+XSLTEngineImpl::getStylesheetRoot() const
+{
+	return m_stylesheetRoot;
+}
+
+
+
+void
+XSLTEngineImpl::setStylesheetRoot(StylesheetRoot*	theStylesheet)
+{
+	m_stylesheetRoot = theStylesheet;
+}
+
+
 
 //==========================================================
 // SECTION: Diagnostic functions
@@ -1130,16 +1177,11 @@ void XSLTEngineImpl::fireGenerateEvent(const GenerateEvent& te)
 }
 
 
-void XSLTEngineImpl::message(const DOMString& msg)
-{
-	DOM_Node node;
-	message(node, node, msg);
-}
-
-
-void XSLTEngineImpl::message(	const DOM_Node& styleNode,
-					const DOM_Node& sourceNode,
-					const DOMString& msg)
+void
+XSLTEngineImpl::message(
+			const XalanDOMString&	msg,
+			const XalanNode*		styleNode,
+			const XalanNode*		sourceNode) const
 {
 	if (m_problemListener != 0)
 	{
@@ -1148,6 +1190,7 @@ void XSLTEngineImpl::message(	const DOM_Node& styleNode,
 									   ProblemListener::eMESSAGE,
 									   styleNode, sourceNode,
 									   c_wstr(msg), 0, 0, 0);
+
 		if(shouldThrow == true)
 		{
 			throw XSLTProcessorException(msg);
@@ -1156,10 +1199,12 @@ void XSLTEngineImpl::message(	const DOM_Node& styleNode,
 }
 
 
-void XSLTEngineImpl::problem(const DOM_Node& styleNode,
-				const DOM_Node& sourceNode,
-				const DOMString& msg, 
-				ProblemListener::eClassification		classification) const
+void
+XSLTEngineImpl::problem(
+			const XalanDOMString&				msg, 
+			ProblemListener::eClassification	classification,
+			const XalanNode*					styleNode,
+			const XalanNode*					sourceNode) const
 {
 	if (m_problemListener == 0) return;
 
@@ -1181,39 +1226,25 @@ void XSLTEngineImpl::problem(const DOM_Node& styleNode,
 	}
 }
 
-void
-XSLTEngineImpl::warn(const DOMString& msg) const
-{
-	warn(DOM_Node(), DOM_Node(), msg);
-}
-
 
 
 void
 XSLTEngineImpl::warn(
-			const DOM_Node&	styleNode,
-			const DOM_Node&	sourceNode,
-			const DOMString&	msg) const
+			const XalanDOMString&	msg,
+			const XalanNode*		styleNode,
+			const XalanNode*		sourceNode) const
 {
-	problem(styleNode, sourceNode, msg, ProblemListener::eWARNING);
+	problem(msg, ProblemListener::eWARNING, styleNode, sourceNode);
 }
-
-
-void
-XSLTEngineImpl::error(const DOMString&	msg) const
-{
-	error(DOM_Node(), DOM_Node(), msg);
-}
-
 
 
 void
 XSLTEngineImpl::error(
-			const DOM_Node&	styleNode,
-			const DOM_Node&	sourceNode,
-			const DOMString&	msg) const
+			const XalanDOMString&	msg,
+			const XalanNode*		styleNode,
+			const XalanNode*		sourceNode) const
 {
-	problem(styleNode, sourceNode, msg, ProblemListener::eERROR);
+	problem(msg, ProblemListener::eERROR, styleNode, sourceNode);
 }
 
 
@@ -1253,7 +1284,7 @@ XSLTEngineImpl::popDuration(const void*	key) const
 
 
 void
-XSLTEngineImpl::displayDuration(const DOMString&	info,
+XSLTEngineImpl::displayDuration(const XalanDOMString&	info,
 							  const void*		key) const
 {
 	if(0 != key)
@@ -1263,11 +1294,11 @@ XSLTEngineImpl::displayDuration(const DOMString&	info,
 
 		if(0 != m_diagnosticsPrintWriter)
 		{
-			DOMString	msg(info);
+			XalanDOMString	msg(info);
 
-			msg += " took ";
+			msg += XALAN_STATIC_UCODE_STRING(" took ");
 			msg += DoubleToDOMString(millis);
-			msg += " millis";
+			msg += XALAN_STATIC_UCODE_STRING(" milliseconds");
 
 			m_diagnosticsPrintWriter->println(msg);
 		}
@@ -1283,7 +1314,7 @@ XSLTEngineImpl::setDiagnosticsOutput(PrintWriter*	pw)
 }
 
 void
-XSLTEngineImpl::diag(const DOMString& 	s) const
+XSLTEngineImpl::diag(const XalanDOMString& 	s) const
 {
 	if (0 != m_diagnosticsPrintWriter)
 	{
@@ -1301,15 +1332,15 @@ XSLTEngineImpl::setTraceTemplates(bool	b)
 	m_traceTemplates = b;
 }
 
-/**
- * If this is set to true, simple traces of 
- * template calls are made.
- */
+
+
 void
 XSLTEngineImpl::setTraceSelect(bool	b)
 {
 	m_traceSelects = b;
 }
+
+
 
 bool XSLTEngineImpl::isTraceSelect() const
 {
@@ -1317,89 +1348,100 @@ bool XSLTEngineImpl::isTraceSelect() const
 }
 
 
-/**
- * If this is set to true, debug diagnostics about 
- * template children as they are being constructed 
- * will be written to the m_diagnosticsPrintWriter 
- * stream.  diagnoseTemplateChildren is false by
- * default.
- */
 
-void XSLTEngineImpl::setTraceTemplateChildren(bool	b)
+void
+XSLTEngineImpl::setTraceTemplateChildren(bool	b)
 {
 	m_traceTemplateChildren = b;
 }
 
+
+void
+XSLTEngineImpl::setQuietConflictWarnings(bool	b)
+{
+	m_quietConflictWarnings = b;
+}
+
+
+
 void
 XSLTEngineImpl::traceSelect(
-			const DOM_Element& 		theTemplate,
+			const XalanElement& 	theTemplate,
 			const NodeRefListBase&	nl) const
 {
-	DOMString	msg = theTemplate.getNodeName() + DOMString(": ");
-	DOM_Attr	attr = theTemplate.getAttributeNode(Constants::ATTRNAME_SELECT);
+	XalanDOMString	msg = theTemplate.getNodeName() + XalanDOMString(XALAN_STATIC_UCODE_STRING(": "));
+
+	XalanAttr*		attr = theTemplate.getAttributeNode(Constants::ATTRNAME_SELECT);
+
 	if(0 != attr)
 	{
-		msg += attr.getValue();
-		msg += ", ";
+		msg += attr->getValue();
+		msg += XALAN_STATIC_UCODE_STRING(", ");
 		msg += LongToDOMString(nl.getLength());
-		msg += " selected";
+		msg += XALAN_STATIC_UCODE_STRING(" selected");
 	}
 	else
 	{
-		msg += "*|text(), (default select), ";
+		msg += XALAN_STATIC_UCODE_STRING("*|text(), (default select), ");
 		msg += LongToDOMString(nl.getLength());
-		msg += " selected";
+		msg += XALAN_STATIC_UCODE_STRING(" selected");
 	}
+
 	attr = theTemplate.getAttributeNode(Constants::ATTRNAME_MODE);
+
 	if(0 != attr)
 	{
-		msg += DOMString(", mode = ") + attr.getValue();
+		msg += XalanDOMString(XALAN_STATIC_UCODE_STRING(", mode = ")) + attr->getValue();
 	}
+
+	// $$$ ToDo: We do all of this work, and don't output the message.
 	//System.out.println(msg);
 }
 
-  
-/**
-* Print a trace of a template that is being called, either by 
-* a match, name, or as part of for-each.
-*/
+
+
 void
-XSLTEngineImpl::traceTemplate(const DOM_Element& 	theTemplate) const
+XSLTEngineImpl::traceTemplate(const XalanElement& 	theTemplate) const
 {
-	DOMString	msg;
-	DOM_Attr	attr = theTemplate.getAttributeNode(Constants::ATTRNAME_MATCH);
+	XalanDOMString	msg;
+
+	XalanAttr*	attr = theTemplate.getAttributeNode(Constants::ATTRNAME_MATCH);
+
 	if(0 != attr)
 	{
-		msg = DOMString("Calling template for: ") + attr.getValue();
+		msg = XalanDOMString(XALAN_STATIC_UCODE_STRING("Calling template for: ")) + attr->getValue();
 	}
 	else
 	{
 		attr = theTemplate.getAttributeNode(Constants::ATTRNAME_NAME);
+
 		if(0 != attr) 
 		{
-			msg = DOMString("Calling named template, name = ") + attr.getValue();
+			msg = XalanDOMString(XALAN_STATIC_UCODE_STRING("Calling named template, name = ")) + attr->getValue();
 		}
 		else
 		{
 			const int	xslToken = getXSLToken(theTemplate);
+
 			if(Constants::ELEMNAME_FOREACH == xslToken)
 			{
 				attr = theTemplate.getAttributeNode(Constants::ATTRNAME_SELECT);
+
 				if(0 != attr)
 				{
-					msg = DOMString("Processing for-each, select = ") + attr.getValue();
+					msg = XalanDOMString(XALAN_STATIC_UCODE_STRING("Processing for-each, select = ")) + attr->getValue();
 				}
 				else
 				{
 					error("for-each must have either a match or name attribute");
-					msg = "";
+					clear(msg);
 				}
 			}
 			else
 			{
 				error("templates must have either a match or name attribute");
 
-				msg = "";
+				clear(msg);
 			}
 		}
 	}
@@ -1408,25 +1450,26 @@ XSLTEngineImpl::traceTemplate(const DOM_Element& 	theTemplate) const
 
 	if(0 != attr)
 	{
-		msg += DOMString(", mode = ") + attr.getValue();
+		msg += XalanDOMString(XALAN_STATIC_UCODE_STRING(", mode = ")) + attr->getValue();
 	}
 
+	// $$$ ToDo: We do all of this work, and don't output the message.
 	//System.out.println(msg);
 }
 
 
 void
 XSLTEngineImpl::diagnoseTemplateChildren(
-			const DOM_Node&	templateChild,
-			const DOM_Node&	sourceNode) const
+			const XalanNode&	templateChild,
+			const XalanNode&	sourceNode) const
 {
 	if(m_traceTemplateChildren)
 	{
-		const DOMString 	templateChildTagName = templateChild.getNodeName();
-		const DOMString 	xmlElemName = sourceNode.getNodeName();
-		diag(DOMString("source node: ")
+		const XalanDOMString 	templateChildTagName = templateChild.getNodeName();
+		const XalanDOMString 	xmlElemName = sourceNode.getNodeName();
+		diag(XalanDOMString(XALAN_STATIC_UCODE_STRING("source node: "))
 			 + xmlElemName
-			 + DOMString(", template-node: ") 
+			 + XalanDOMString(XALAN_STATIC_UCODE_STRING(", template-node: ")) 
 			 + templateChildTagName);
 	}
 }
@@ -1469,8 +1512,8 @@ XSLTEngineImpl::endDocument()
 	m_variableStacks.popCurrentContext();
 }
 
-void XSLTEngineImpl::addResultNamespaceDecl(const DOMString& prefix, 
-	                                   const DOMString& namespaceVal)
+void XSLTEngineImpl::addResultNamespaceDecl(const XalanDOMString& prefix, 
+	                                   const XalanDOMString& namespaceVal)
 {
 	NamespaceVectorType nsVector;
 	NameSpace ns(prefix, namespaceVal);
@@ -1496,19 +1539,19 @@ void XSLTEngineImpl::addResultNamespaceDecl(const DOMString& prefix,
 void
 XSLTEngineImpl::addResultAttribute(
 			AttributeListImpl&	attList,
-			const DOMString&	aname,
-			const DOMString&	value)
+			const XalanDOMString&	aname,
+			const XalanDOMString&	value)
 {
 	assert(length(value) > 0);
 
-	const bool	isPrefix = startsWith(aname, "xmlns:");
-	if (equals(aname, "xmlns") || isPrefix == true) 
+	const bool	isPrefix = startsWith(aname, XALAN_STATIC_UCODE_STRING("xmlns:"));
+	if (equals(aname, XALAN_STATIC_UCODE_STRING("xmlns")) || isPrefix == true) 
 	{
-		const DOMString		p = isPrefix == true ? substring(aname, 6) : DOMString();
+		const XalanDOMString		p = isPrefix == true ? substring(aname, 6) : XalanDOMString();
 		addResultNamespaceDecl(p, value);
 	}
 	attList.removeAttribute(c_wstr(aname));
-	attList.addAttribute(c_wstr(aname), c_wstr(DOMString("CDATA")), c_wstr(value));
+	attList.addAttribute(c_wstr(aname), c_wstr(XALAN_STATIC_UCODE_STRING("CDATA")), c_wstr(value));
 }
 
 
@@ -1528,7 +1571,7 @@ XSLTEngineImpl::flushPending()
 			fireGenerateEvent(ge);
 		}
 		m_pendingAttributes.clear();
-		m_pendingElementName = "";
+		clear(m_pendingElementName);
 	}
 }
 
@@ -1820,7 +1863,7 @@ void XSLTEngineImpl::cdata(
 
 void
 XSLTEngineImpl::cloneToResultTree(
-			const DOM_Node&		node, 
+			XalanNode&			node, 
 			bool				isLiteral,
 			bool				overrideStrip,
 			bool				shouldCloneAttributes)
@@ -1829,7 +1872,7 @@ XSLTEngineImpl::cloneToResultTree(
 
 	switch(node.getNodeType())
 	{
-	case DOM_Node::TEXT_NODE:
+	case XalanNode::TEXT_NODE:
 		{
 			// If stripWhiteSpace is false, then take this as an override and 
 			// just preserve the space, otherwise use the XSL whitespace rules.
@@ -1838,9 +1881,11 @@ XSLTEngineImpl::cloneToResultTree(
 				stripWhiteSpace = isLiteral ? true : false;
 			  // was: stripWhiteSpace = isLiteral ? true : shouldStripSourceNode(node);
 			}
-			const DOM_Text& 	tx = static_cast<const DOM_Text&>(node);
-			DOMString	data;
-			// System.out.println("stripWhiteSpace = "+stripWhiteSpace+", "+tx.getData());
+
+			XalanText& 	tx = static_cast<XalanText&>(node);
+
+			XalanDOMString		data;
+
 			if(stripWhiteSpace == true)
 			{
 				if(!m_xpathSupport.isIgnorableWhitespace(tx))
@@ -1848,14 +1893,15 @@ XSLTEngineImpl::cloneToResultTree(
 					data = getNormalizedText(tx);
 					if((0 != length(data)) && (0 == length(trim(data))))
 					{
-						data = "";
+						clear(data);
 					}
 				}
 			}
 			else 
 			{
-				const DOM_Node parent = node.getParentNode();
-				if(parent==0 || DOM_Node::DOCUMENT_NODE != parent.getNodeType())
+				XalanNode*	parent = node.getParentNode();
+
+				if(parent == 0 || XalanNode::DOCUMENT_NODE != parent->getNodeType())
 				{
 					data = getNormalizedText(tx);
 				}
@@ -1887,13 +1933,13 @@ XSLTEngineImpl::cloneToResultTree(
 		}
 		break;
 
-	case DOM_Node::ELEMENT_NODE:
+	case XalanNode::ELEMENT_NODE:
 		{
 			if(shouldCloneAttributes == true)
 			{
-				copyAttributesToAttList(node,
+				copyAttributesToAttList(&node,
 										m_stylesheetRoot,
-										static_cast<const DOM_Element&>(node),
+										static_cast<const XalanElement&>(node),
 										m_pendingAttributes);
 
 				copyNamespaceAttributes(node,
@@ -1904,58 +1950,60 @@ XSLTEngineImpl::cloneToResultTree(
 		}
 		break;
 
-	case DOM_Node::CDATA_SECTION_NODE:
+	case XalanNode::CDATA_SECTION_NODE:
 		{
-			const DOM_CDATASection& 	theCDATA =
-				static_cast<const DOM_CDATASection&>(node);
-			const DOMString 	data = theCDATA.getData();
+			const XalanCDATASection& 	theCDATA =
+				static_cast<const XalanCDATASection&>(node);
+
+			const XalanDOMString 	data = theCDATA.getData();
+
 			cdata(toCharArray(data), 0, length(data));
 		}
 		break;
 	
-	case DOM_Node::ATTRIBUTE_NODE:
+	case XalanNode::ATTRIBUTE_NODE:
 		{
-			const DOM_Attr& 	attr =
-				static_cast<const DOM_Attr&>(node);
+			const XalanAttr& 	attr =
+				static_cast<const XalanAttr&>(node);
+
 			addResultAttribute(m_pendingAttributes,
 							   attr.getName(),
 							   attr.getValue());
 		}
 		break;
 
-	case DOM_Node::COMMENT_NODE:
+	case XalanNode::COMMENT_NODE:
 		{
-			const DOM_Comment&	theComment =
-				static_cast<const DOM_Comment&>(node);
-			const DOMString 	theData = theComment.getData();
+			const XalanComment&		theComment =
+				static_cast<const XalanComment&>(node);
+
+			const XalanDOMString 	theData = theComment.getData();
+
 			comment(toCharArray(theData));
 		}
 		break;
 
-	case DOM_Node::DOCUMENT_FRAGMENT_NODE:
+	case XalanNode::DOCUMENT_FRAGMENT_NODE:
 		{
-			error(DOM_Node(), node, "No clone of a document fragment!");
+			error("No clone of a document fragment!");
 		}
 		break;
 	
-	case DOM_Node::ENTITY_REFERENCE_NODE:
+	case XalanNode::ENTITY_REFERENCE_NODE:
 		{
-#if 0
-			EntityReference er = (EntityReference)node;
-			entityReference(toCharArray(er.getNodeName()));
-#else
-			const DOMString 	theName = node.getNodeName();
+			const XalanDOMString 	theName = node.getNodeName();
 			entityReference(toCharArray(theName));
-#endif
 		}
 		break;
 
-	case DOM_Node::PROCESSING_INSTRUCTION_NODE:
+	case XalanNode::PROCESSING_INSTRUCTION_NODE:
 		{
-			const DOM_ProcessingInstruction&	pi =
-				static_cast<const DOM_ProcessingInstruction&>(node);
-			const DOMString 	theTarget = pi.getTarget();
-			const DOMString 	theData = pi.getData();
+			const XalanProcessingInstruction&	pi =
+				static_cast<const XalanProcessingInstruction&>(node);
+
+			const XalanDOMString 	theTarget = pi.getTarget();
+			const XalanDOMString 	theData = pi.getData();
+
 			processingInstruction(toCharArray(theTarget),
 								  toCharArray(theData));
 		}
@@ -1963,11 +2011,11 @@ XSLTEngineImpl::cloneToResultTree(
 
 	default:
 		{
-			// $$$ ToDo: Fix this when DOMString::operator+() is const.
-			DOMString	msg("Can not create item in result tree: ");
+			// $$$ ToDo: Fix this when XalanDOMString::operator+() is const.
+			XalanDOMString	msg("Can not create item in result tree: ");
 			msg +=node.getNodeName();
 			error(msg);
-//			error(DOMString("Can not create item in result tree: ") +
+//			error(XalanDOMString("Can not create item in result tree: ") +
 //				  node.getNodeName());
 		}
 	}
@@ -1979,8 +2027,8 @@ ResultTreeFragBase*
 XSLTEngineImpl::createResultTreeFrag(
 			StylesheetExecutionContext&		executionContext,
 			const ElemTemplateElement&		templateChild, 
-			const DOM_Node&					sourceTree, 
-			const DOM_Node&					sourceNode,
+			XalanNode*						sourceTree, 
+			XalanNode*						sourceNode,
 			const QName&					mode)
 {
 	DocumentHandler* const	savedFormatterListener = m_flistener;
@@ -1988,10 +2036,10 @@ XSLTEngineImpl::createResultTreeFrag(
 	std::auto_ptr<ResultTreeFragBase> pfrag(createDocFrag());
 
 	FormatterToDOM	tempFormatter(m_resultTreeFactory, 
-								  DOM_UnimplementedDocumentFragment(pfrag.get()));
+								  pfrag.get());
 
-	const DOMString savedPendingName = m_pendingElementName;
-	m_pendingElementName = DOMString();
+	const XalanDOMString savedPendingName = m_pendingElementName;
+	m_pendingElementName = XalanDOMString();
 
 	AttributeListImpl savedPendingAttributes(m_pendingAttributes);
 	m_pendingAttributes.clear();
@@ -2013,20 +2061,20 @@ XSLTEngineImpl::writeChildren(
 			FormatterListener*				flistener,
 			StylesheetExecutionContext&		executionContext,
 	        const ElemTemplateElement&		templateParent,
-	        const DOM_Node&					sourceTree,
-	        const DOM_Node&					sourceNode,
+	        XalanNode&						sourceTree,
+	        XalanNode&						sourceNode,
 			const QName&					mode)
 {
     flushPending();
 
     DocumentHandler* savedFormatterListener = m_flistener;
-    DOMString savedPendingName = m_pendingElementName;
+    XalanDOMString savedPendingName = m_pendingElementName;
     m_pendingElementName = 0;
     AttributeListImpl savedPendingAttributes = m_pendingAttributes;
     m_pendingAttributes.clear();
     m_flistener = flistener;
         
-    templateParent.executeChildren(executionContext, sourceTree, sourceNode, mode);
+    templateParent.executeChildren(executionContext, &sourceTree, &sourceNode, mode);
     
     flushPending();
     m_flistener = savedFormatterListener;
@@ -2039,39 +2087,50 @@ void
 XSLTEngineImpl::outputResultTreeFragment(const XObject&		theTree)
 {
 	const ResultTreeFragBase&	docFrag = theTree.rtree();
-	const NodeRefListBase&		nl = docFrag.getChildNodesAsNodeRefList();
 
-	const int					nChildren = nl.getLength();
+	// $$$ ToDo: We should optimize this so that we don't have
+	// a node list.
+	const XalanNodeList*		nl = docFrag.getChildNodes();
+	assert(nl != 0);
 
-	for(int i = 0; i < nChildren; i++)
+	const unsigned int			nChildren = nl->getLength();
+
+	for(unsigned int i = 0; i < nChildren; i++)
 	{
-		DOM_Node		pos(nl.item(i));
-		const DOM_Node	top(pos);
+		XalanNode*			pos = nl->item(i);
+		XalanNode* const	top = pos;
 
 		while(0 != pos)
 		{
 			flushPending();
-			cloneToResultTree(pos, false, false, true);
-			DOM_Node	nextNode = pos.getFirstChild();
+
+			cloneToResultTree(*pos, false, false, true);
+
+			XalanNode*	nextNode = pos->getFirstChild();
+
 			while(0 == nextNode)
 			{
-				if(DOM_Node::ELEMENT_NODE == pos.getNodeType())
+				if(XalanNode::ELEMENT_NODE == pos->getNodeType())
 				{
-					endElement(c_wstr(pos.getNodeName()));
+					endElement(c_wstr(pos->getNodeName()));
 				}
+
 				if(top == pos)
 					break;
-				nextNode = pos.getNextSibling();
+
+				nextNode = pos->getNextSibling();
+
 				if(0 == nextNode)
 				{
-					pos = pos.getParentNode();
+					pos = pos->getParentNode();
+
 					if(top == pos || 0 == pos)
 					{
 						if (0 != pos)
 						{
-							if(DOM_Node::ELEMENT_NODE == pos.getNodeType())
+							if(XalanNode::ELEMENT_NODE == pos->getNodeType())
 							{
-								endElement(c_wstr(pos.getNodeName()));
+								endElement(c_wstr(pos->getNodeName()));
 							}
 						}
 
@@ -2080,6 +2139,7 @@ XSLTEngineImpl::outputResultTreeFragment(const XObject&		theTree)
 					}
 				}
 			}
+
 			pos = nextNode;
 		}
 	}
@@ -2087,57 +2147,81 @@ XSLTEngineImpl::outputResultTreeFragment(const XObject&		theTree)
 
 
 /**
- * Tell if a given element name should output it's text as cdata.
+ * Tell if a given element name should output its text as cdata.
  */
-bool XSLTEngineImpl::isCDataResultElem(const DOMString& elementName)
+bool
+XSLTEngineImpl::isCDataResultElem(const XalanDOMString& elementName)
 {
+#if defined(XALAN_NO_NAMESPACES)
+	typedef Stylesheet::QNameVectorType		QNameVectorType;
+#else
+	using Stylesheet::QNameVectorType;
+#endif
+
 	bool is = false;
-	const Stylesheet::QNameVectorType& cdataElems = m_stylesheetRoot->getCdataSectionElems();
-	if(0 != cdataElems.size())
+	const QNameVectorType&				cdataElems = m_stylesheetRoot->getCdataSectionElems();
+	const QNameVectorType::size_type	theSize = cdataElems.size();
+
+	if(0 != theSize)
 	{
-		DOMString elemNS;
-		DOMString elemLocalName;
-		const int	indexOfNSSep = indexOf(elementName, ':');
-		if(indexOfNSSep > 0)
+		XalanDOMString		elemNS;
+		XalanDOMString		elemLocalName;
+
+		const unsigned int	indexOfNSSep = indexOf(elementName, ':');
+
+		if(indexOfNSSep == length(elementName))
 		{
-			DOMString prefix = substring(elementName, 0, indexOfNSSep);
-			if(equals(prefix, "xml"))
+			elemLocalName = elementName;
+		}
+		else
+		{
+			const XalanDOMString	prefix = substring(elementName, 0, indexOfNSSep);
+
+			if(equals(prefix, XALAN_STATIC_UCODE_STRING("xml")))
 			{
 				elemNS = DOMServices::s_XMLNamespaceURI;
 			}
 			else
 			{
 				elemNS = getResultNamespaceForPrefix(prefix);
-			}	
-			if(0 == elemNS.length())
+			}
+
+			if(0 == length(elemNS))
 			{
-				error(DOMString("Prefix must resolve to a namespace: ") + prefix);
+				error(XalanDOMString("Prefix must resolve to a namespace: ") + prefix);
 			 // throw new RuntimeException(+prefix);
 			}
+
+			elemLocalName = substring(elementName, indexOfNSSep + 1);
 		}
-		elemLocalName = (indexOfNSSep < 0) ? elementName : substring(elementName, indexOfNSSep+1);
-		const int n = cdataElems.size();
-		for(int i = 0; i < n; i++)
+
+		for(Stylesheet::QNameVectorType::size_type i = 0; i < theSize; i++)
 		{
 			const QName& qname = cdataElems[i];
+
 			is = qname.equals(QName(elemNS, elemLocalName));
+
 			if(is)
 				break;
 		}
 	}
+
 	return is;
 }
 	
 
-bool XSLTEngineImpl::qnameEqualsResultElemName(const QName& qname, const DOMString& elementName)
+bool XSLTEngineImpl::qnameEqualsResultElemName(const QName& qname, const XalanDOMString& elementName)
 {
-	DOMString elemNS;
-	DOMString elemLocalName;
-	const int	indexOfNSSep = indexOf(elementName, ':');
-	if(indexOfNSSep > 0)
+	XalanDOMString		elemNS;
+	XalanDOMString		elemLocalName;
+
+	const unsigned int	indexOfNSSep = indexOf(elementName, ':');
+
+	if(indexOfNSSep < length(elementName))
 	{
-		DOMString prefix = substring(elementName, 0, indexOfNSSep);
-		if(equals(prefix, "xml"))
+		const XalanDOMString	prefix = substring(elementName, 0, indexOfNSSep);
+
+		if(equals(prefix, XALAN_STATIC_UCODE_STRING("xml")))
 		{
 			elemNS = DOMServices::s_XMLNamespaceURI;
 		}
@@ -2147,7 +2231,7 @@ bool XSLTEngineImpl::qnameEqualsResultElemName(const QName& qname, const DOMStri
 		}
 		if(0 == elemNS.length())
 		{
-			error(DOMString("Prefix must resolve to a namespace: ") + prefix);
+			error(XalanDOMString("Prefix must resolve to a namespace: ") + prefix);
 		 // throw new RuntimeException(+prefix);
 		}
 	}
@@ -2155,8 +2239,8 @@ bool XSLTEngineImpl::qnameEqualsResultElemName(const QName& qname, const DOMStri
 	return qname.equals(QName(elemNS, elemLocalName));
 }
 
-DOMString
-XSLTEngineImpl::getResultNamespaceForPrefix(const DOMString&	prefix) const
+XalanDOMString
+XSLTEngineImpl::getResultNamespaceForPrefix(const XalanDOMString&	prefix) const
 {
 	// Search vector from first element back
 	return QName::getNamespaceForPrefix(m_resultNameSpaces, prefix, false);
@@ -2164,8 +2248,8 @@ XSLTEngineImpl::getResultNamespaceForPrefix(const DOMString&	prefix) const
   
 
 
-DOMString
-XSLTEngineImpl::getResultPrefixForNamespace(const DOMString&	theNamespace) const
+XalanDOMString
+XSLTEngineImpl::getResultPrefixForNamespace(const XalanDOMString&	theNamespace) const
 {
 	// Search vector from first element back
 	return QName::getPrefixForNamespace(m_resultNameSpaces, theNamespace, false);
@@ -2173,41 +2257,55 @@ XSLTEngineImpl::getResultPrefixForNamespace(const DOMString&	theNamespace) const
 
 
 
-DOMString
+XalanDOMString
 XSLTEngineImpl::getPrefixForNamespace(
-			const DOMString&	theNamespace,
-			const DOM_Element&	namespaceContext) const
+			const XalanDOMString&	theNamespace,
+			const XalanElement&	namespaceContext) const
 {
-	int 		type;
-	DOM_Node	parent = namespaceContext;
-	DOMString	prefix;
+	int 				type;
+	const XalanNode*	parent = &namespaceContext;
+	XalanDOMString		prefix;
 
-	while ((0 != parent) && (0 == length(prefix))
-		   && (((type = parent.getNodeType()) == DOM_Node::ELEMENT_NODE)
-				|| (type == DOM_Node::ENTITY_REFERENCE_NODE))) 
+	while (0 != parent && 0 == length(prefix)
+		   && ((type = parent->getNodeType()) == XalanNode::ELEMENT_NODE
+				|| type == XalanNode::ENTITY_REFERENCE_NODE))
 	{
-		if (type == DOM_Node::ELEMENT_NODE) 
+		if (type == XalanNode::ELEMENT_NODE) 
 		{
-			DOM_NamedNodeMap	nnm = parent.getAttributes();
-			for (unsigned long i = 0;  i < nnm.getLength();  i ++) 
+			const XalanNamedNodeMap* const	nnm =
+				parent->getAttributes();
+			assert(nnm != 0);
+
+			const unsigned int	theLength = nnm->getLength();
+
+			for (unsigned int i = 0; i < theLength;  i ++) 
 			{
-				const DOM_Node		attr = nnm.item(i);
-				const DOMString 	aname = attr.getNodeName();
-				const bool			isPrefix = startsWith(aname, "xmlns:");
-				if (equals(aname, "xmlns") || isPrefix) 
+				const XalanNode* const	attr = nnm->item(i);
+				assert(attr != 0);
+
+				const XalanDOMString 	aname = attr->getNodeName();
+
+				const bool				isPrefix = startsWith(aname, XALAN_STATIC_UCODE_STRING("xmlns:"));
+
+				if (equals(aname, XALAN_STATIC_UCODE_STRING("xmlns")) || isPrefix) 
 				{
-					const int			index = indexOf(aname, ':');
-					const DOMString 	namespaceOfPrefix = attr.getNodeValue();
+					const unsigned int		index = indexOf(aname, ':');
+					assert(index < length(aname));
+
+					const XalanDOMString 	namespaceOfPrefix = attr->getNodeValue();
+
 					if((0 != length(namespaceOfPrefix)) &&
 						equals(namespaceOfPrefix, theNamespace))
 					{
-						prefix = isPrefix ? substring(aname, index + 1) : DOMString();
+						prefix = isPrefix ? substring(aname, index + 1) : XalanDOMString();
 					}
 				}
 			}
 		}
-		parent = m_xpathSupport.getParentOfNode(parent);
+
+		parent = m_xpathSupport.getParentOfNode(*parent);
 	}
+
 	return prefix;
 }
 
@@ -2215,40 +2313,49 @@ XSLTEngineImpl::getPrefixForNamespace(
 
 void
 XSLTEngineImpl::copyNamespaceAttributes(
-			const DOM_Node&		src,
+			const XalanNode&	src,
 			bool				srcIsStylesheetTree) 
 {
 	int type;
-	DOM_Node	parent = src;
-	while (parent != 0
-		   && ((type = parent.getNodeType()) == DOM_Node::ELEMENT_NODE
-			   || (type == DOM_Node::ENTITY_REFERENCE_NODE))) 
-	{
-		if (type == DOM_Node::ELEMENT_NODE) 
-		{
-			// $$$ ToDo: This can become const when getLength()
-			// is made const.
-			DOM_NamedNodeMap	nnm = parent.getAttributes();
-			const int			nAttrs = nnm.getLength();
-			for (int i = 0;  i < nAttrs; i++) 
-			{
-				const DOM_Node		attr = nnm.item(i);
-				const DOMString 	aname = attr.getNodeName();
-				const bool		isPrefix = startsWith(aname, "xmlns:");
-				if (equals(aname, "xmlns") || isPrefix) 
-				{
-					const DOMString 	prefix = isPrefix ? substring(aname, 6) : DOMString();
-					const DOMString 	desturi = getResultNamespaceForPrefix(prefix);
-					DOMString			srcURI = attr.getNodeValue();
-					const bool			isXSLNS =
-						(srcIsStylesheetTree && equalsIgnoreCase(srcURI, m_XSLNameSpaceURL)
-					|| (0 != m_stylesheetRoot->lookupExtensionNSHandler(srcURI))
-					|| (srcIsStylesheetTree && equalsIgnoreCase(srcURI, s_XSLT4JNameSpaceURL)));
 
-					if(startsWith(srcURI, "quote:"))
+	const XalanNode*	parent = &src;
+
+	while (parent != 0
+		   && ((type = parent->getNodeType()) == XalanNode::ELEMENT_NODE
+			   || type == XalanNode::ENTITY_REFERENCE_NODE)) 
+	{
+		if (type == XalanNode::ELEMENT_NODE) 
+		{
+			const XalanNamedNodeMap* const	nnm =
+				parent->getAttributes();
+			assert(nnm != 0);
+
+			const unsigned int	nAttrs = nnm->getLength();
+
+			for (unsigned int i = 0;  i < nAttrs; i++) 
+			{
+				const XalanNode* const	attr = nnm->item(i);
+
+				const XalanDOMString 	aname = attr->getNodeName();
+
+				const bool				isPrefix = startsWith(aname, XALAN_STATIC_UCODE_STRING("xmlns:"));
+
+				if (equals(aname, XALAN_STATIC_UCODE_STRING("xmlns")) || isPrefix) 
+				{
+					const XalanDOMString 	prefix = isPrefix ? substring(aname, 6) : XalanDOMString();
+					const XalanDOMString 	desturi = getResultNamespaceForPrefix(prefix);
+					XalanDOMString			srcURI = attr->getNodeValue();
+
+					const bool			isXSLNS =
+						srcIsStylesheetTree && equalsIgnoreCase(srcURI, m_XSLNameSpaceURL)
+						|| 0 != m_stylesheetRoot->lookupExtensionNSHandler(srcURI)
+						|| srcIsStylesheetTree && equalsIgnoreCase(srcURI, s_XSLT4JNameSpaceURL);
+
+					if(startsWith(srcURI, XALAN_STATIC_UCODE_STRING("quote:")))
 					{
 						srcURI = substring(srcURI, 6);
 					}
+
 					if(!equalsIgnoreCase(srcURI, desturi) && !isXSLNS)
 					{
 						addResultAttribute(m_pendingAttributes, aname, srcURI);
@@ -2256,7 +2363,8 @@ XSLTEngineImpl::copyNamespaceAttributes(
 				}
 			}
 		}
-		parent = parent.getParentNode();
+
+		parent = parent->getParentNode();
 	}
 }
 
@@ -2264,7 +2372,7 @@ XSLTEngineImpl::copyNamespaceAttributes(
 
 XObject*
 XSLTEngineImpl::evalXPathStr(
-			const DOMString&		str,
+			const XalanDOMString&	str,
 			XPathExecutionContext&	executionContext)
 {
     m_xpathProcessor->initXPath(*m_xpath,
@@ -2273,15 +2381,17 @@ XSLTEngineImpl::evalXPathStr(
 								m_xobjectFactory,
 								m_xpathEnvSupport);
 
-    return m_xpath->execute(executionContext);
+    return m_xpath->execute(executionContext.getCurrentNode(),
+							*executionContext.getPrefixResolver(),
+							executionContext);
 }
 
 
 
 XObject*
 XSLTEngineImpl::evalXPathStr(
-			const DOMString&		str,
-			const DOM_Node&			contextNode,
+			const XalanDOMString&	str,
+			XalanNode*				contextNode,
 			const PrefixResolver&	prefixResolver,
 			XPathExecutionContext&	executionContext)
 {
@@ -2298,12 +2408,12 @@ XSLTEngineImpl::evalXPathStr(
 
 XObject*
 XSLTEngineImpl::evalXPathStr(
-			const DOMString&		str,
-			const DOM_Node&			contextNode,
-			const DOM_Element&		prefixResolver,
+			const XalanDOMString&	str,
+			XalanNode*				contextNode,
+			const XalanElement&		prefixResolver,
 			XPathExecutionContext&	executionContext)
 {
-	ElementPrefixResolverProxy	theProxy(prefixResolver,
+	ElementPrefixResolverProxy	theProxy(&prefixResolver,
 										 m_xpathEnvSupport,
 										 m_xpathSupport);
 
@@ -2315,7 +2425,7 @@ XSLTEngineImpl::evalXPathStr(
 // $$$ ToDo:  This really should not be here...
 XPath*
 XSLTEngineImpl::createProcessingXPath(
-		const DOMString&		str,
+		const XalanDOMString&		str,
 		XPathExecutionContext&	executionContext,
 		const PrefixResolver&	resolver)
 {
@@ -2337,7 +2447,7 @@ XSLTEngineImpl::createProcessingXPath(
  */
 XPath*
 XSLTEngineImpl::createXPath(
-		const DOMString&		str, 
+		const XalanDOMString&		str, 
 		const PrefixResolver&	resolver)
 {
 	XPath* const	xpath = m_xpathFactory.create();
@@ -2356,25 +2466,25 @@ XSLTEngineImpl::createXPath(
  */
 double
 XSLTEngineImpl::evalMatchPatternStr(
-			const DOMString&		str,
-			const DOM_Node&			context,
+			const XalanDOMString&	str,
+			XalanNode*				context,
 			XPathExecutionContext&	executionContext)
-//			const DOM_Node& context,
-//						const PrefixResolver& resolver)
 {
-	assert(executionContext.getPrefixResolver() != 0);
-
 	FactoryObjectAutoPointer<XPath>		theXPath(&m_xpathFactory,
 												 m_xpathFactory.create());
+
+	const PrefixResolver* const		theResolver =
+					executionContext.getPrefixResolver();
+	assert(theResolver != 0);
 
 	// This needs to use a factory method of some sort.
 	m_xpathProcessor->initMatchPattern(*theXPath.get(),
 									   str,
-									   *executionContext.getPrefixResolver(),
+									   *theResolver,
 									   executionContext.getXObjectFactory(),
 									   m_xpathEnvSupport);
 
-	return theXPath->getMatchScore(context, executionContext);
+	return theXPath->getMatchScore(context, *theResolver, executionContext);
 }
 
 
@@ -2384,7 +2494,7 @@ XSLTEngineImpl::evalMatchPatternStr(
  */
 XPath*
 XSLTEngineImpl::createMatchPattern(
-			const DOMString&		str,
+			const XalanDOMString&	str,
 			const PrefixResolver&	resolver)
 {
 	XPath* const	xpath = m_xpathFactory.create();
@@ -2398,49 +2508,52 @@ XSLTEngineImpl::createMatchPattern(
 
 XPath* XSLTEngineImpl::getExpression(
 					AttributeList& attrs,
-					const DOMString& key,
+					const XalanDOMString& key,
 					const PrefixResolver& resolver)
 {
     const XMLCh* val = attrs.getValue(c_wstr(key));
-    return (0 != val) ? createXPath(DOMString(val), resolver) : 0;
+    return (0 != val) ? createXPath(XalanDOMString(val), resolver) : 0;
 }
 
 
 
-DOMString
+XalanDOMString
 XSLTEngineImpl::getAttrVal(
-			const DOM_Element& 	el,
-			const DOMString&	key,
-			const DOM_Node&		/* contextNode */		)
+			const XalanElement& 	el,
+			const XalanDOMString&	key,
+			const XalanNode&		/* contextNode */		)
 {
 	// @@ JMD: context not used
-	return getAttrVal( el, key);
+	return getAttrVal(el, key);
 }
 
 
 
-DOMString
+XalanDOMString
 XSLTEngineImpl::getAttrVal(
-			const DOM_Element&	el,
-			const DOMString&	key)
+			const XalanElement&	el,
+			const XalanDOMString&	key)
 {
-	const DOM_Attr	a = el.getAttributeNode(key);
-	return 0 == a ? DOMString() : a.getValue();
+	const XalanAttr*	a = el.getAttributeNode(key);
+
+	return 0 == a ? XalanDOMString() : a->getValue();
 }
 
 
 
 
-DOMString
+XalanDOMString
 XSLTEngineImpl::evaluateAttrVal(
-			const DOM_Node&			contextNode,
-			const DOM_Element&		namespaceContext,
-			const DOMString&		stringedValue,
+			XalanNode*				contextNode,
+			const XalanElement&		namespaceContext,
+			const XalanDOMString&	stringedValue,
 			XPathExecutionContext&	executionContext)
 {
-	DOMString			expressedValue; // return value
-	StringTokenizer 	tokenizer(stringedValue, "{}\"\'", true);
-	const int			nTokens = tokenizer.countTokens();
+	XalanDOMString		expressedValue;
+
+	StringTokenizer 	tokenizer(stringedValue, XALAN_STATIC_UCODE_STRING("{}\"\'"), true);
+
+	const unsigned int	nTokens = tokenizer.countTokens();
 
 	if(nTokens < 2)
 	{
@@ -2448,19 +2561,19 @@ XSLTEngineImpl::evaluateAttrVal(
 	}
 	else
 	{
-		DOMString	buffer;
-		DOMString	t; // base token
-		DOMString	lookahead; // next token
-		DOMString	error; // if not empty, break from loop
+		XalanDOMString	buffer;
+		XalanDOMString	t; // base token
+		XalanDOMString	lookahead; // next token
+		XalanDOMString	error; // if not empty, break from loop
 
-		ElementPrefixResolverProxy	theProxy(namespaceContext, m_xpathEnvSupport, m_xpathSupport);
+		ElementPrefixResolverProxy	theProxy(&namespaceContext, m_xpathEnvSupport, m_xpathSupport);
 
 		while(tokenizer.hasMoreTokens())
 		{
 			if(length(lookahead) != 0)
 			{
 				t = lookahead;
-				lookahead = "";
+				clear(lookahead);
 			}
 			else t = tokenizer.nextToken();
 
@@ -2479,11 +2592,11 @@ XSLTEngineImpl::evaluateAttrVal(
 					{
 						// Attr template start
 						lookahead = tokenizer.nextToken();
-						if(equals(lookahead, "{"))
+						if(equals(lookahead, XALAN_STATIC_UCODE_STRING("{")))
 						{
 							// Double curlys mean escape to show curly
 							append(buffer, lookahead);
-							lookahead = "";
+							clear(lookahead);
 							break; // from switch
 						}
 						/*
@@ -2496,8 +2609,9 @@ XSLTEngineImpl::evaluateAttrVal(
 						*/
 						else
 						{
-							DOMString expression = lookahead; // Probably should make into StringBuffer
-							while((0 != length(lookahead)) && (!equals(lookahead, "}")))
+							XalanDOMString expression = lookahead; // Probably should make into StringBuffer
+
+							while(0 != length(lookahead) && !equals(lookahead, XALAN_STATIC_UCODE_STRING("}")))
 							{
 								lookahead = tokenizer.nextToken();
 								if(length(lookahead) == 1)
@@ -2509,7 +2623,7 @@ XSLTEngineImpl::evaluateAttrVal(
 										{
 											// String start
 											expression += lookahead;
-											DOMString	quote = lookahead;
+											XalanDOMString	quote = lookahead;
 											// Consume stuff 'till next quote
 											lookahead = tokenizer.nextToken();
 											while(!equals(lookahead, quote))
@@ -2533,11 +2647,11 @@ XSLTEngineImpl::evaluateAttrVal(
 											const XObject* const	xobj =
 												evalXPathStr(expression, contextNode, theProxy, executionContext);
 
-											const DOMString			exprResult(xobj->str());
+											const XalanDOMString			exprResult(xobj->str());
 
 											append(buffer, exprResult);
 
-											lookahead = ""; // breaks out of inner while loop
+											clear(lookahead); // breaks out of inner while loop
 										break;
 										}
 										default:
@@ -2552,7 +2666,7 @@ XSLTEngineImpl::evaluateAttrVal(
 									// part of the template stuff, just add it.
 									expression += lookahead;
 								}
-							} // end while(!lookahead.equals("}"))
+							} // (0 != length(lookahead) && !equals(lookahead, "}"))
 
 							if(length(error) != 0)
 							{
@@ -2564,17 +2678,17 @@ XSLTEngineImpl::evaluateAttrVal(
 					case('}'):
 					{
 						lookahead = tokenizer.nextToken();
-						if(equals(lookahead, "}"))
+						if(equals(lookahead, XALAN_STATIC_UCODE_STRING("}")))
 						{
 							// Double curlys mean escape to show curly
 							append(buffer, lookahead);
-							lookahead = ""; // swallow
+							clear(lookahead); // swallow
 						}
 						else
 						{
 							// Illegal, I think...
 							warn("Found \"}\" but no attribute template open!");
-							append(buffer, "}");
+							append(buffer, XALAN_STATIC_UCODE_STRING("}"));
 							// leave the lookahead to be processed by the next round.
 						}
 						break;
@@ -2594,8 +2708,8 @@ XSLTEngineImpl::evaluateAttrVal(
 
 			if(0 != length(error))
 			{
-				// $$$ ToDo: Fix this when DOMString::operator+() is const.
-				DOMString	message("Attr Template, ");
+				// $$$ ToDo: Fix this when XalanDOMString::operator+() is const.
+				XalanDOMString	message("Attr Template, ");
 
 				warn(message + error);
 				break;
@@ -2611,14 +2725,15 @@ XSLTEngineImpl::evaluateAttrVal(
 
 void
 XSLTEngineImpl::copyAttributeToTarget(
-			const DOM_Attr&			attr,
-			const DOM_Node&			/* contextNode */,
+			const XalanAttr&		attr,
+			XalanNode*				/* contextNode */,
 			const Stylesheet* 		/* stylesheetTree */,
 			AttributeListImpl&		attrList, 
-			const DOM_Element& 		/* namespaceContext */)
+			const XalanElement& 	/* namespaceContext */)
 {
-	const DOMString 	attrName = trim(attr.getName());
-	DOMString			stringedValue = attr.getValue();
+	const XalanDOMString 	attrName = trim(attr.getName());
+
+	XalanDOMString			stringedValue = attr.getValue();
 //	stringedValue = evaluateAttrVal(contextNode,
 //									namespaceContext,
 //									stringedValue);
@@ -2629,43 +2744,49 @@ XSLTEngineImpl::copyAttributeToTarget(
 	// TODO: Find out about empty attribute template expression handling.
 	if(0 != length(stringedValue))
 	{
-		if((equals(attrName, "xmlns") || startsWith(attrName, "xmlns:"))
-		   && startsWith(stringedValue, "quote:"))
+		if((equals(attrName, XALAN_STATIC_UCODE_STRING("xmlns")) || startsWith(attrName, XALAN_STATIC_UCODE_STRING("xmlns:")))
+		   && startsWith(stringedValue, XALAN_STATIC_UCODE_STRING("quote:")))
 		{
 			stringedValue = substring(stringedValue, 6);
 		}
+
 		addResultAttribute(attrList, attrName, stringedValue);
 	}
 }
 
+
+
 void
 XSLTEngineImpl::copyAttributesToAttList(
-			const DOM_Node&			contextNode,
+			XalanNode*				contextNode,
 			const Stylesheet* 		stylesheetTree,
-			const DOM_Element& 		templateChild,
+			const XalanElement& 	templateChild,
 			AttributeListImpl&		attList)
 {
 	assert(m_stylesheetRoot != 0);
 	assert(stylesheetTree != 0);
-	DOM_NamedNodeMap	attributes = templateChild.getAttributes();
-	const int nAttributes = (0 != attributes) ? attributes.getLength() : 0;
-	DOMString	attrSetUseVal;
-	for(int i = 0; i < nAttributes; i++)  
-	{	
-		const DOM_Node		theNode = attributes.item(i);
-		const DOM_Attr& 	attr = static_cast<const DOM_Attr&>(theNode);
-		// $$$ ToDo: Fix this when DOMString::operator+() is const.
-		DOMString			theTemp(m_XSLNameSpaceURL);
-		theTemp += ":use";
+	const XalanNamedNodeMap* const	attributes =
+		templateChild.getAttributes();
 
-		if(equalsIgnoreCase(m_parserLiaison.getExpandedAttributeName(attr), theTemp))
-//		if(equalsIgnoreCase(m_parserLiaison.getExpandedAttributeName(attr), m_XSLNameSpaceURL + ":use"))
+	const unsigned int	nAttributes = (0 != attributes) ? attributes->getLength() : 0;
+
+	XalanDOMString	attrSetUseVal;
+
+	for(unsigned int	i = 0; i < nAttributes; i++)  
+	{	
+		const XalanAttr* const 	attr =
+			static_cast<const XalanAttr*>(attributes->item(i));
+		assert(attr != 0);
+
+		const XalanDOMString	theTemp(m_XSLNameSpaceURL + ":use");
+
+		if(equalsIgnoreCase(m_parserLiaison.getExpandedAttributeName(*attr), theTemp))
 		{
-			attrSetUseVal = attr.getValue();
+			attrSetUseVal = attr->getValue();
 		}
 		else
 		{
-			copyAttributeToTarget(attr,
+			copyAttributeToTarget(*attr,
 								  contextNode,
 								  stylesheetTree, 
 								  attList,
@@ -2681,7 +2802,7 @@ XSLTEngineImpl::translateCSSAttrsToStyleAttr(AttributeListImpl&		attList)
 {
 	if(m_translateCSS == true)
 	{
-		DOMString				styleAttrValueString;
+		XalanDOMString				styleAttrValueString;
 		std::vector<const XMLCh*>	toBeRemoved;
 		int nAttributes = attList.getLength();
 		for(int i = 0; i < nAttributes; i++)
@@ -2692,7 +2813,7 @@ XSLTEngineImpl::translateCSSAttrsToStyleAttr(AttributeListImpl&		attList)
 				toBeRemoved.push_back(attrName);
 				if(0 == length(styleAttrValueString))
 				{
-					// $$$ ToDo: Fix this when DOMString::operator+() is const.
+					// $$$ ToDo: Fix this when XalanDOMString::operator+() is const.
 					styleAttrValueString = attrName;
 					styleAttrValueString += ":";
 					styleAttrValueString += attList.getValue(i);
@@ -2700,7 +2821,7 @@ XSLTEngineImpl::translateCSSAttrsToStyleAttr(AttributeListImpl&		attList)
 				}
 				else
 				{
-					// $$$ ToDo: Fix this when DOMString::operator+() is const.
+					// $$$ ToDo: Fix this when XalanDOMString::operator+() is const.
 					styleAttrValueString += "; ";
 					styleAttrValueString += attrName;
 					styleAttrValueString += ":";
@@ -2724,7 +2845,7 @@ XSLTEngineImpl::translateCSSAttrsToStyleAttr(AttributeListImpl&		attList)
 
 
 bool
-XSLTEngineImpl::isCSSAttribute(const DOMString&	name) const
+XSLTEngineImpl::isCSSAttribute(const XalanDOMString&	name) const
 {
 	if(m_cssKeys.size() == 0)
 	{
@@ -2857,53 +2978,29 @@ XSLTEngineImpl::initCSS2Table()
 
 
 
-const NodeRefListBase*
-XSLTEngineImpl::getNodeSetByKey(
-			const DOM_Node&			doc, 
-			const DOMString&		name, 
-			const DOMString&		ref, 
-			const PrefixResolver&	resolver,
-			XPathExecutionContext&	executionContext) const
-{
-	// Should this call the root or the current stylesheet?
-	const NodeRefListBase*	nl = 0;
-
-	if (m_stylesheetRoot != 0)
-	{
-		nl = m_stylesheetRoot->getNodeSetByKey(doc, name, ref, resolver, executionContext);
-	}
-
-	if(0 == nl)
-	{
-		error(DOMString("There is no xsl:key declaration for '") + name + DOMString("'!"));
-	}
-
-    return nl;
-}
-
-
-
-DOM_Element
+XalanElement*
 XSLTEngineImpl::getElementByID(
-			const DOMString&		id,
-			const DOM_Document&		doc) const
+			const XalanDOMString&	id,
+			const XalanDocument&	doc) const
 {
 	return m_xpathSupport.getElementByID(id, doc);
 }
 
 
+
 bool
-XSLTEngineImpl::shouldStripSourceNode(const DOM_Node&	textNode) const
+XSLTEngineImpl::shouldStripSourceNode(const XalanNode&	textNode) const
 {
 	bool		strip = false; // return value
 	int type = textNode.getNodeType();
-	if((DOM_Node::TEXT_NODE == type) || (DOM_Node::CDATA_SECTION_NODE == type))
+	if((XalanNode::TEXT_NODE == type) || (XalanNode::CDATA_SECTION_NODE == type))
 	{
-		const DOM_Text& 	theTextNode =
-				static_cast<const DOM_Text&>(textNode);
+		const XalanText& 	theTextNode =
+				static_cast<const XalanText&>(textNode);
+
 		if(!m_xpathSupport.isIgnorableWhitespace(theTextNode))
 		{
-			DOMString data = theTextNode.getData();
+			XalanDOMString data = theTextNode.getData();
 			if(0 == length(data))
 			{
 				return true;
@@ -2913,22 +3010,28 @@ XSLTEngineImpl::shouldStripSourceNode(const DOM_Node&	textNode) const
 				return false;
 			}
 		}
-		DOM_Node	parent = m_xpathSupport.getParentOfNode(textNode);
+
+		XalanNode*	parent = m_xpathSupport.getParentOfNode(textNode);
+
 		while(0 != parent)
 		{
-			if(parent.getNodeType() == DOM_Node::ELEMENT_NODE)
+			if(parent->getNodeType() == XalanNode::ELEMENT_NODE)
 			{
-				const DOM_Element&	parentElem =
-					static_cast<const DOM_Element&>(parent);
-				const DOM_Attr	attr = parentElem.getAttributeNode("xml:space");
+				const XalanElement*	const	parentElem =
+					static_cast<const XalanElement*>(parent);
+
+				const XalanAttr* const		attr =
+					parentElem->getAttributeNode(XALAN_STATIC_UCODE_STRING("xml:space"));
+
 				if(0 != attr)
 				{
-					const DOMString 	xmlSpaceVal = attr.getValue();
-					if(equals(xmlSpaceVal, "preserve"))
+					const XalanDOMString 	xmlSpaceVal = attr->getValue();
+
+					if(equals(xmlSpaceVal, XALAN_STATIC_UCODE_STRING("preserve")))
 					{
 						strip = false;
 					}
-					else if(equals(xmlSpaceVal, "default"))
+					else if(equals(xmlSpaceVal, XALAN_STATIC_UCODE_STRING("default")))
 					{
 						strip = true;
 					}
@@ -2945,7 +3048,19 @@ XSLTEngineImpl::shouldStripSourceNode(const DOM_Node&	textNode) const
 				ElementPrefixResolverProxy		theProxy(parentElem, m_xpathEnvSupport, m_xpathSupport);
 
 				{
-					const int	nTests = m_stylesheetRoot->m_whitespacePreservingElements.size();
+					// $$$ ToDo:  All of this should be moved into a member of
+					// Stylesheet, so as not to expose these two data members...
+#if defined(XALAN_NO_NAMESPACES)
+					typedef Stylesheet::XPathVectorType		XPathVectorType;
+#else
+					using Stylesheet::XPathVectorType;
+#endif
+
+					const XPathVectorType&	theElements =
+						m_stylesheetRoot->getWhitespacePreservingElements();
+
+					const XPathVectorType::size_type	nTests =
+						theElements.size();
 
 					XPathExecutionContextDefault	theExecutionContext(m_xpathEnvSupport,
 																		m_xpathSupport,
@@ -2954,12 +3069,12 @@ XSLTEngineImpl::shouldStripSourceNode(const DOM_Node&	textNode) const
 																		NodeRefList(),
 																		&theProxy);
 
-					for(int i = 0; i < nTests; i++)
+					for(XPathVectorType::size_type i = 0; i < nTests; i++)
 					{
-						const XPath* const	matchPat = m_stylesheetRoot->m_whitespacePreservingElements[i];
+						const XPath* const	matchPat = theElements[i];
 						assert(matchPat != 0);
 
-						const double	score = matchPat->getMatchScore(parent, theExecutionContext);
+						const double	score = matchPat->getMatchScore(parent, theProxy, theExecutionContext);
 
 						if(score > highPreserveScore)
 							highPreserveScore = score;
@@ -2967,7 +3082,17 @@ XSLTEngineImpl::shouldStripSourceNode(const DOM_Node&	textNode) const
 				}
 
 				{
-					const int	nTests = m_stylesheetRoot->m_whitespaceStrippingElements.size();
+#if defined(XALAN_NO_NAMESPACES)
+					typedef Stylesheet::XPathVectorType		XPathVectorType;
+#else
+					using Stylesheet::XPathVectorType;
+#endif
+
+					const XPathVectorType&	theElements =
+						m_stylesheetRoot->getWhitespaceStrippingElements();
+
+					const XPathVectorType::size_type	nTests =
+						theElements.size();
 
 					XPathExecutionContextDefault	theExecutionContext(m_xpathEnvSupport,
 																		m_xpathSupport,
@@ -2976,13 +3101,13 @@ XSLTEngineImpl::shouldStripSourceNode(const DOM_Node&	textNode) const
 																		NodeRefList(),
 																		&theProxy);
 
-					for(int i = 0; i < nTests; i++)
+					for(XPathVectorType::size_type i = 0; i < nTests; i++)
 					{
 						const XPath* const	matchPat =
-							m_stylesheetRoot->m_whitespaceStrippingElements[i];
+							theElements[i];
 						assert(matchPat != 0);
 
-						const double	score = matchPat->getMatchScore(parent, theExecutionContext);
+						const double	score = matchPat->getMatchScore(parent, theProxy, theExecutionContext);
 
 						if(score > highStripScore)
 							highStripScore = score;
@@ -3007,20 +3132,22 @@ XSLTEngineImpl::shouldStripSourceNode(const DOM_Node&	textNode) const
 					break;
 				}
 			}
-			parent = parent.getParentNode();
+
+			parent = parent->getParentNode();
 		}
 	}
+
 	return strip;
 }
 
 
 
-DOMString
+XalanDOMString
 XSLTEngineImpl::fixWhiteSpace(
-			const DOMString&	string, 
-			bool				trimHead, 
-			bool				trimTail, 
-			bool				doublePunctuationSpaces) 
+			const XalanDOMString&	string, 
+			bool					trimHead, 
+			bool					trimTail, 
+			bool					doublePunctuationSpaces) 
 {
 	const XMLCh* const	theStringData = c_wstr(string);
 	std::vector<XMLCh>		buf(theStringData,
@@ -3101,27 +3228,32 @@ XSLTEngineImpl::fixWhiteSpace(
 		// taking into account that we may have moved up the
 		// start because we're trimming the from of the string.
 		const int	theLength = d - (start - buf.begin());
-		return DOMString(start, theLength);
+		return XalanDOMString(start, theLength);
 	}
 }
 
 
 
-DOMString
-XSLTEngineImpl::getNormalizedText(const DOM_Text&	tx) const
+const XalanDOMString
+XSLTEngineImpl::getNormalizedText(const XalanText&	tx) const
 {
-	DOMString	theResult;
 	if(m_outputCarriageReturns == false && m_outputLinefeeds == false)
 	{
 		return tx.getData();
 	}
-	const DOMString 	src = tx.getData();
-	const int			nSrcChars = src.length();
+
+	const XalanDOMString 	src = tx.getData();
+
+	const int				nSrcChars = src.length();
+
 	std::vector<XMLCh>		sb;
-	XMLCh				prevChar = 0x00;
+
+	XMLCh					prevChar = 0x00;
+
 	for(int i = 0; i < nSrcChars; i++)
 	{
 		const XMLCh c = charAt(src, i);
+
 		if(0x0A == c)
 		{
 			if(0x0D != prevChar)
@@ -3145,9 +3277,10 @@ XSLTEngineImpl::getNormalizedText(const DOM_Text&	tx) const
 		}
 		prevChar = c;
 	}
+
 	sb.push_back(0);	// Null terminate
-	theResult = DOMString(sb.begin());
-	return theResult;
+
+	return XalanDOMString(sb.begin(), sb.size());
 }
 
 
@@ -3160,18 +3293,18 @@ XSLTEngineImpl::getXMLParserLiaison() const
 
 
 
-const DOMString
+const XalanDOMString
 XSLTEngineImpl::getUniqueNSValue() const
 {
-	return "ns" + LongToDOMString(m_uniqueNSValue++);
+	return XALAN_STATIC_UCODE_STRING("ns") + LongToDOMString(m_uniqueNSValue++);
 }
 
 
 
-DOM_Document
+XalanDocument*
 XSLTEngineImpl::getDOMFactory() const
 {
-	if(m_resultTreeFactory.isNull())
+	if(m_resultTreeFactory == 0)
 	{
 		m_resultTreeFactory = m_parserLiaison.createDocument();
 	}
@@ -3182,7 +3315,7 @@ XSLTEngineImpl::getDOMFactory() const
 
 
 #if 0
-XObject* XSLTEngineImpl::createXString(const DOMString& s)
+XObject* XSLTEngineImpl::createXString(const XalanDOMString& s)
 {
 	return m_xobjectFactory->createString(s);
 }
@@ -3217,7 +3350,7 @@ XObject* XSLTEngineImpl::createXResultTreeFrag(const ResultTreeFragBase& r)
 
 
 
-XObject* XSLTEngineImpl::createXNodeSet(const DOM_Node& n)
+XObject* XSLTEngineImpl::createXNodeSet(const XalanNode& n)
 {
 	return m_xobjectFactory->createNodeSet(n);
 }
@@ -3255,7 +3388,7 @@ void
 XSLTEngineImpl::pushVariable(
 				const QName&		name,
 				XObject*			val,
-				const DOM_Node&		e)
+				const XalanNode*	e)
 {
 	m_variableStacks.pushVariable(name, val, e);
 }
@@ -3267,19 +3400,13 @@ XSLTEngineImpl::pushVariable(
  */
 ResultTreeFragBase* XSLTEngineImpl::createDocFrag() const
 {
-	if(0 == m_resultTreeFactory)
-	{
-		m_resultTreeFactory = m_parserLiaison.createDocument();
-	}
-	assert(m_resultTreeFactory != 0);
-
-	return new ResultTreeFrag(m_resultTreeFactory, m_xpathSupport);
+	return new ResultTreeFrag(*getDOMFactory(), m_xpathSupport);
 }
   
 
 
 XObject*
-XSLTEngineImpl::getXObjectVariable(const DOMString&	name) const
+XSLTEngineImpl::getXObjectVariable(const XalanDOMString&	name) const
 {
 	assert(m_stylesheetRoot != 0);
 	assert(m_stylesheetExecutionContext != 0);
@@ -3297,7 +3424,7 @@ XSLTEngineImpl::getXObjectVariable(const DOMString&	name) const
 
 
 XLocator*
-XSLTEngineImpl::getXLocatorFromNode(const DOM_Node&		node) const
+XSLTEngineImpl::getXLocatorFromNode(const XalanNode*	node) const
 {
 	return m_xpathEnvSupport.getXLocatorFromNode(node);
 }
@@ -3306,7 +3433,7 @@ XSLTEngineImpl::getXLocatorFromNode(const DOM_Node&		node) const
 
 void
 XSLTEngineImpl::associateXLocatorToNode(
-			const DOM_Node&		node,
+			const XalanNode*	node,
 			XLocator*			xlocator)
 {
 	m_xpathEnvSupport.associateXLocatorToNode(node, xlocator);
@@ -3315,7 +3442,7 @@ XSLTEngineImpl::associateXLocatorToNode(
 
 
 XObject*
-XSLTEngineImpl::getTopLevelVariable(const DOMString&	theName) const
+XSLTEngineImpl::getTopLevelVariable(const XalanDOMString&	theName) const
 {
 	TopLevelVariablesMapType::const_iterator	i =
 		m_topLevelVariables.find(theName);
@@ -3336,100 +3463,108 @@ XSLTEngineImpl::getTopLevelVariable(const DOMString&	theName) const
 ResultTreeFragBase*
 XSLTEngineImpl::createResultTreeFrag() const
 {
-	if(0 == m_resultTreeFactory)
-	{
-		m_resultTreeFactory = m_parserLiaison.createDocument();
-	}
-
-	ResultTreeFrag* pfrag = new
-		ResultTreeFrag(m_resultTreeFactory, m_xpathSupport);
-
-	return pfrag;
+	return new ResultTreeFrag(*getDOMFactory(), m_xpathSupport);
 }
 
 
-  /**
-   * Given a document, get the default stylesheet URI from the 
-   * xsl:stylesheet PI.
-   */
 
-DOMString
-XSLTEngineImpl::getStyleSheetURIfromDoc(const DOM_Node&	sourceTree)
-// was:	getStyleSheetURIfromDoc(DOM_Document	sourceTree)
+const XalanDOMString
+XSLTEngineImpl::getStyleSheetURIFromDoc(const XalanNode&	sourceTree)
 {
-	DOMString		stylesheetURI;
-	// $$$ ToDo: Make this const when getLength() is const.
-	DOM_NodeList	children = sourceTree.getChildNodes();
-	const int		nNodes = children.getLength();
-	for(int i = 0; i < nNodes; i++)
+	XalanDOMString		stylesheetURI;
+
+	const XalanNode*	child = sourceTree.getFirstChild();
+
+	// $$$ ToDo: is this first one style valid?
+	const XalanDOMString	stylesheetNodeName1("xml-stylesheet");
+	const XalanDOMString	stylesheetNodeName2("xml:stylesheet");
+
+	// $$$ ToDo: This code is much like that in process().
+	// Why is it repeated???
+	// $$$ ToDo: Move these embedded strings from inside these loops
+	// out here...
+	// $$$ ToDo: These loops are a mess of repeated use of the
+	// same data values.
+	while(child != 0)
 	{
-		const DOM_Node	child = children.item(i);
-		if(DOM_Node::PROCESSING_INSTRUCTION_NODE == child.getNodeType())
+		if(XalanNode::PROCESSING_INSTRUCTION_NODE == child->getNodeType())
 		{
-			 /*DOM_ProcessingInstruction*/ const DOM_Node& pi = child;
-			if(equals(pi.getNodeName(), "xml-stylesheet") ||
-				equals(pi.getNodeName(), "xml:stylesheet"))
+			const XalanDOMString	nodeName(child->getNodeName());
+
+			if(equals(nodeName, stylesheetNodeName1) ||
+				equals(nodeName, stylesheetNodeName2))
 			{
 				bool	isOK = true;
-				StringTokenizer 	tokenizer(pi.getNodeValue(), " \t=");
+
+				const XalanDOMString	nodeValue(child->getNodeValue());
+
+				StringTokenizer 		tokenizer(nodeValue, XALAN_STATIC_UCODE_STRING(" \t="));
+
 				while(tokenizer.hasMoreTokens() == true)
 				{
-					if(equals(tokenizer.nextToken(), "type") == true)
+					const XalanDOMString	nextToken(tokenizer.nextToken());
+
+					if(equals(nextToken, XALAN_STATIC_UCODE_STRING("type")) == true)
 					{
-						DOMString	typeVal = tokenizer.nextToken();
-						typeVal = substring(typeVal, 1, typeVal.length() - 1);
-						if(equals(typeVal, "text/xsl") == false)
+						const XalanDOMString	typeVal =
+							substring(nextToken, 1, length(nextToken) - 1);
+
+						if(equals(typeVal, XALAN_STATIC_UCODE_STRING("text/xsl")) == false)
 						{
 							isOK = false;
 						}
 					}
 				}  
+
 				if(isOK == true)
 				{
-					StringTokenizer 	tokenizer(pi.getNodeValue(), " \t=");
+					StringTokenizer 	tokenizer(nodeValue, XALAN_STATIC_UCODE_STRING(" \t="));
+
 					while(tokenizer.hasMoreTokens() == true)
 					{
-						if(tokenizer.nextToken().equals("href"))
+						const XalanDOMString	nextToken(tokenizer.nextToken());
+
+						if(equals(nextToken, XALAN_STATIC_UCODE_STRING("href")))
 						{
-							stylesheetURI = tokenizer.nextToken();
 							stylesheetURI =
-								substring(stylesheetURI, 1, stylesheetURI.length() - 1);
+								substring(nextToken, 1, nextToken.length() - 1);
 						}
-					} 
+					}
 					break;
 				}
 			}
 		}
+
+		child = child->getNextSibling();
 	}
+
 	return stylesheetURI;
 }
 
 
 
-//bool
 void
 XSLTEngineImpl::setStylesheetParam(
-			const DOMString&	theName,
-			const DOMString&	expression)
+			const XalanDOMString&	theName,
+			const XalanDOMString&	expression)
 {
-	// java:     QName qname = new QName(key, null, m_parserLiaison);
-	QName qname(theName, DOM_Element(), m_xpathEnvSupport, m_xpathSupport);
-	Arg arg(qname, expression, true);
-	m_topLevelParams.push_back(arg);
+	const QName		qname(theName, 0, m_xpathEnvSupport, m_xpathSupport);
+
+	m_topLevelParams.push_back(Arg(qname, expression, true));
 }
 
 
+
 void
 XSLTEngineImpl::setStylesheetParam(
-			const DOMString&	theName,
-			XObject*			theValue)
+			const XalanDOMString&	theName,
+			XObject*				theValue)
 {
-	// java:     QName qname = new QName(key, null, m_parserLiaison);
-	const QName		qname(theName, DOM_Element(), m_xpathEnvSupport, m_xpathSupport);
-	const Arg		arg(qname, theValue);
+	const QName		qname(theName, 0, m_xpathEnvSupport, m_xpathSupport);
 
-	m_topLevelParams.push_back(arg);
+	m_topLevelParams.push_back(Arg(qname, theValue, true));
 }
+
 
 
 void
@@ -3442,8 +3577,8 @@ XSLTEngineImpl::resolveTopLevelParams(StylesheetExecutionContext&	executionConte
 
 void
 XSLTEngineImpl::resetCurrentState(
-			const DOM_Node&		/* sourceTree */,
-			const DOM_Node&		xmlNode)
+			XalanNode*	/* sourceTree */,
+			XalanNode*	xmlNode)
 {
 	if(0 != xmlNode)
 	{
@@ -3458,8 +3593,8 @@ XSLTEngineImpl::resetCurrentState(
 
 void
 XSLTEngineImpl::registerExtensionHandlerByName(
-			const DOMString&	/* classid */,
-			const DOMString&	/* codetype */)
+			const XalanDOMString&	/* classid */,
+			const XalanDOMString&	/* codetype */)
 {
 #if 1
 	error("XSL4C does not support extensions at this time!");
@@ -3504,7 +3639,7 @@ XSLTEngineImpl::registerExtensionHandlerByName(
 
 void
 XSLTEngineImpl::registerExtensionHandler(
-			const DOMString&	/* mimeType */,
+			const XalanDOMString&	/* mimeType */,
 			DispatcherFactory*	/* factory */)
 {
 #if 1
@@ -3512,7 +3647,7 @@ XSLTEngineImpl::registerExtensionHandler(
 #else
 	if(0 != m_diagnosticsPrintWriter)
 	{
-		diag(DOMString("Registering dispatcher factory for: ") + mimeType);
+		diag(XalanDOMString("Registering dispatcher factory for: ") + mimeType);
 	}
 
 	m_dispatcherFactories.put(mimeType, factory);
@@ -3523,61 +3658,67 @@ XSLTEngineImpl::registerExtensionHandler(
 
   
 
-DOM_Element
+// $$$ ToDo: This really belongs in DOMServices or DOMSupport()
+XalanElement*
 XSLTEngineImpl::findElementByAttribute(
-			const DOM_Element& 	elem,
-			const DOMString&	targetElementName, 
-			const DOMString&	targetAttributeName,
-			const DOMString&	targetAttributeValue)
+			XalanElement& 			elem,
+			const XalanDOMString&	targetElementName, 
+			const XalanDOMString&	targetAttributeName,
+			const XalanDOMString&	targetAttributeValue)
 {
-	DOM_Element 		theFoundElement;
-	const DOMString 	tagName = elem.getTagName();
-	if((0 == length(targetElementName)) || tagName.equals(targetElementName))
+	XalanElement* 			theFoundElement = 0;
+
+	const XalanDOMString 	tagName = elem.getTagName();
+
+	if(0 == length(targetElementName) || equals(tagName, targetElementName))
 	{
-		// $$$ Todo: Make this const when getLength is const.
-		DOM_NamedNodeMap	attributes = elem.getAttributes();
+		const XalanNamedNodeMap* const	attributes = elem.getAttributes();
 
 		try
 		{
-			const int	nAttributes = (0 != attributes) ? attributes.getLength() : 0;
-			for(int i = 0; i < nAttributes; i++)  
+			const unsigned int	nAttributes = 0 != attributes ? attributes->getLength() : 0;
+
+			for(unsigned int i = 0; i < nAttributes; i++)  
 			{
-				DOM_Node			theNode = attributes.item(i);
-				const DOM_Attr& 	attr = 
-						  static_cast<DOM_Attr&>(theNode);
-				const DOMString 	attrName = attr.getName();
-				if(attrName.equals(targetAttributeName))
+				const XalanAttr* 		attr = 
+						  static_cast<const XalanAttr*>(attributes->item(i));
+
+				const XalanDOMString 	attrName = attr->getName();
+
+				if(equals(attrName, targetAttributeName))
 				{
-					DOMString	attrVal = attr.getValue();
-					if(attrVal.equals(targetAttributeValue))
+					const XalanDOMString	attrVal = attr->getValue();
+
+					if(equals(attrVal, targetAttributeValue))
 					{
-						theFoundElement = elem;
+						theFoundElement = &elem;
 						break;
 					}
 				}
 			}
 		}
-		catch(const DOM_DOMException&)
+		catch(const XalanDOMException&)
 		{
 		}
 	}
+
 	if(0 == theFoundElement)
 	{
-		// $$$ Todo: Make this const when getLength is const.
-		DOM_NodeList	children = elem.getChildNodes();	
-		const int		nNodes = children.getLength();
-		for(int i = 0; i < nNodes; i++) 
+		XalanNode*	childNode = elem.getFirstChild();
+
+		while(childNode != 0) 
 		{
-			const DOM_Node	childNode = children.item(i);
-			if (childNode.getNodeType() == DOM_Node::ELEMENT_NODE) 
+			if (childNode->getNodeType() == XalanNode::ELEMENT_NODE) 
 			{
-				const DOM_Element&	child = 
-						  static_cast<const DOM_Element&>(childNode);
-				const DOMString 	childName = child.getTagName();
+				XalanElement*	child = 
+						  static_cast<XalanElement*>(childNode);
+
+				const XalanDOMString 	childName = child->getTagName();
+
 				if(0 != length(childName))
 				{
 					theFoundElement = findElementByAttribute(
-													 child,
+													 *child,
 													 targetElementName, 
 													 targetAttributeName,
 													 targetAttributeValue);
@@ -3588,15 +3729,18 @@ XSLTEngineImpl::findElementByAttribute(
 					}
 				}
 			}
+
+			childNode = childNode->getNextSibling();
 		}
 	}
+
 	return theFoundElement;
 }
 
 
 
 XMLURL*
-XSLTEngineImpl::getURLFromString (const DOMString&	urlString) const
+XSLTEngineImpl::getURLFromString (const XalanDOMString&	urlString) const
 {
 	std::auto_ptr<XMLURL>	url(new XMLURL);
 
@@ -3607,7 +3751,7 @@ XSLTEngineImpl::getURLFromString (const DOMString&	urlString) const
 	// 'urlString' not a valid url, try to construct a file url
 	catch (const MalformedURLException&)
 	{
-		DOMString fullpath("file:///");
+		XalanDOMString fullpath("file:///");
 
 		try 
 		{
@@ -3628,7 +3772,7 @@ XSLTEngineImpl::getURLFromString (const DOMString&	urlString) const
 
 
 
-XMLURL* XSLTEngineImpl::getURLFromString(const DOMString&	urlString, const DOMString& base) const
+XMLURL* XSLTEngineImpl::getURLFromString(const XalanDOMString&	urlString, const XalanDOMString& base) const
 {
 	if (isEmpty(base))
 		return getURLFromString(urlString);
@@ -3637,16 +3781,18 @@ XMLURL* XSLTEngineImpl::getURLFromString(const DOMString&	urlString, const DOMSt
 	// base is a complete file URL and urlString is a forward relative path, i.e. 
 	// in the same directory as the urlString or a subdirectory
 
-	DOMString context;
+	XalanDOMString context;
 
 	// just to be robust, we'll accept a forward or back slash
-	int i1 = lastIndexOf(base,'/');
-	int i2 = lastIndexOf(base,'\\');
+	const unsigned int	theLength = length(base);
 
-	int i = i1>i2 ? i1: i2;
+	const unsigned int	i1 = lastIndexOf(base,'/');
+	const unsigned int	i2 = lastIndexOf(base,'\\');
 
-	if (i != -1)
-		context = substring(base,0,i+1);
+	const unsigned int	i = i1 > i2 && i1 < theLength ? i1: i2;
+
+	if (i < theLength)
+		context = substring(base, 0, i + 1);
 
 	context += urlString;
 
@@ -3658,7 +3804,9 @@ void
 XSLTEngineImpl::setFormatter(Formatter*	formatter)
 {
 	flushPending();
+
 	m_formatter = formatter;
+
 	if(0 != formatter)
 	{
 		m_flistener = formatter->getFormatterListener();
@@ -3703,9 +3851,9 @@ XSLTEngineImpl::createXResultTreeFrag(const ResultTreeFragBase&  r) const
 //////////////////////////////////////////////////////////////////////////////
 
 XSLTEngineImpl::StackGuard::StackGuard(
-			XSLTEngineImpl&		processor,
-			const DOM_Element&	xslTemplate,
-			const DOM_Node&		sourceXML) :
+			XSLTEngineImpl&			processor,
+			const XalanElement*		xslTemplate,
+			const XalanNode*		sourceXML) :
 	m_processor(&processor),
 	m_xslRule(xslTemplate),
 	m_sourceXML(sourceXML),
@@ -3726,21 +3874,18 @@ void
 XSLTEngineImpl::StackGuard::print(PrintWriter&	pw) const
 {
 	// for the moment, these diagnostics are really bad...
-	const int	theType = m_sourceXML.getNodeType();
+	const int	theType = m_sourceXML->getNodeType();
 
-	if(theType == DOM_Node::TEXT_NODE)
+	if(theType == XalanNode::TEXT_NODE)
 	{
-		const DOM_Text&		tx =
-			static_cast<const DOM_Text&>(m_sourceXML);
+		const XalanText* const	tx =
+			static_cast<const XalanText*>(m_sourceXML);
 
-		pw.println(tx.getData());
+		pw.println(tx->getData());
 	}
-	else if(theType == DOM_Node::ELEMENT_NODE)
+	else if(theType == XalanNode::ELEMENT_NODE)
 	{
-		const DOM_Element&		elem =
-			static_cast<const DOM_Element&>(m_sourceXML);
-
-		pw.println(elem.getNodeName());
+		pw.println(m_sourceXML->getNodeName());
 	}
 }
 
@@ -3764,26 +3909,26 @@ XSLTEngineImpl::StackGuard::checkForInfiniteLoop(const StackGuard&	guard) const
 		{
 			DOMStringPrintWriter	pw;
 
-			pw.println(DOMString("Infinite loop diagnosed!  Stack trace:"));
+			pw.println(XalanDOMString("Infinite loop diagnosed!  Stack trace:"));
 
 			int		k = 0;
 
 			for(; k < nRules; k++)
 			{
-				pw.println(DOMString("Source Elem #") +
+				pw.println(XalanDOMString("Source Elem #") +
 								LongToDOMString(k) +
-								DOMString(" "));
+								XalanDOMString(" "));
 
 				m_stack[i].print(pw);
 			}
 
-			pw.println(DOMString("Source Elem #") +
+			pw.println(XalanDOMString("Source Elem #") +
 							LongToDOMString(k) +
-							DOMString(" "));
+							XalanDOMString(" "));
 
 			guard.print(pw);
 
-			pw.println(DOMString("End of infinite loop diagnosis."));
+			pw.println(XalanDOMString("End of infinite loop diagnosis."));
 
 			m_processor->diag(pw.getString());
 
@@ -3796,19 +3941,26 @@ XSLTEngineImpl::StackGuard::checkForInfiniteLoop(const StackGuard&	guard) const
 
 void
 XSLTEngineImpl::StackGuard::push(
-				const DOM_Element&	xslTemplate,
-				const DOM_Node&		sourceXML)
+				const XalanElement*		xslTemplate,
+				const XalanNode*		sourceXML)
 {
 	const StackGuard	guard(*m_processor, xslTemplate, sourceXML);
+
 	checkForInfiniteLoop(guard);
+
 	m_stack.push_back(guard);
 }
+
+
 
 void
 XSLTEngineImpl::StackGuard::pop()
 {
 	m_stack.pop_back();
 }
+
+
+
 
 //////////////////////////////////////////////////////////////////////////////
 // CLASS XSLTEngineImpl::VariableStack
@@ -3820,7 +3972,7 @@ XSLTEngineImpl::VariableStack::VariableStack(XSLTEngineImpl&	theProcessor) :
 	m_stack(),
 	m_processor(theProcessor)
 {
-	pushContextMarker(DOM_Node(), DOM_Node());	
+	pushContextMarker(0, 0);	
 }
 
 
@@ -3837,16 +3989,18 @@ XSLTEngineImpl::VariableStack::reset()
 {
 	// Delete all entries left on the stack
 	std::for_each(m_stack.begin(),
-			 m_stack.end(),
-			 DeleteFunctor<StackEntry>());
+				  m_stack.end(),
+				  DeleteFunctor<StackEntry>());
+
 	m_stack.clear();
-	pushContextMarker(DOM_Node(), DOM_Node());	
+
+	pushContextMarker(0, 0);	
 }
 
 
 
 void
-XSLTEngineImpl::VariableStack::pushElementMarker(const DOM_Node&	elem)
+XSLTEngineImpl::VariableStack::pushElementMarker(const XalanNode*	elem)
 {
 	m_stack.push_back(new ElementMarker(elem));
 }
@@ -3854,17 +4008,20 @@ XSLTEngineImpl::VariableStack::pushElementMarker(const DOM_Node&	elem)
 
 
 void
-XSLTEngineImpl::VariableStack::popElementMarker(const DOM_Node&	elem)
+XSLTEngineImpl::VariableStack::popElementMarker(const XalanNode*	elem)
 {
 	if(elementMarkerAlreadyPushed(elem) == true)
 	{
-		int nElems = m_stack.size();
+		const int	nElems = m_stack.size();
+
 		bool		fFound = false;
+
 		// Sub 1 extra for the context marker.
 		for(int i = (nElems - 1); i >= 0 && fFound == false; i--)
 		{
 			const StackEntry* const		theEntry = m_stack[i];
 			assert(theEntry != 0);
+
 			if(theEntry->getType() == StackEntry::eElementMarker)
 			{
 				m_stack.pop_back();
@@ -3874,6 +4031,7 @@ XSLTEngineImpl::VariableStack::popElementMarker(const DOM_Node&	elem)
 			{
 				m_stack.pop_back();
 			}
+
 			delete theEntry;
 		}
 	}
@@ -3882,7 +4040,7 @@ XSLTEngineImpl::VariableStack::popElementMarker(const DOM_Node&	elem)
 
 
 bool
-XSLTEngineImpl::VariableStack::elementMarkerAlreadyPushed(const DOM_Node&	elem) const
+XSLTEngineImpl::VariableStack::elementMarkerAlreadyPushed(const XalanNode*	elem) const
 {
 	const int	nElems = m_stack.size();
 	// Sub 1 extra for the context marker.
@@ -3890,17 +4048,19 @@ XSLTEngineImpl::VariableStack::elementMarkerAlreadyPushed(const DOM_Node&	elem) 
 	{
 		const StackEntry* const		theEntry = m_stack[i];
 		assert(theEntry != 0);
+
 		if(theEntry->getType() == StackEntry::eElementMarker)
 		{
 			const ElementMarker* const	theElementMarkerEntry =
 					static_cast<const ElementMarker*>(theEntry);
 
-			if(&theElementMarkerEntry->getElement() == &elem)
+			if(theElementMarkerEntry->getElement() == elem)
 			{
 				return true;
 			}
 		}
 	}
+
 	return false;
 }
 
@@ -3908,8 +4068,8 @@ XSLTEngineImpl::VariableStack::elementMarkerAlreadyPushed(const DOM_Node&	elem) 
 	
 void
 XSLTEngineImpl::VariableStack::pushContextMarker(
-			const DOM_Node&	caller,
-			const DOM_Node&	sourceNode)
+			const XalanNode*	caller,
+			const XalanNode*	sourceNode)
 {
 	m_stack.push_back(new ContextMarker(caller, sourceNode));
 }
@@ -3935,39 +4095,54 @@ XSLTEngineImpl::VariableStack::popCurrentContext()
 }
 
 
+
 void
 XSLTEngineImpl::VariableStack::pushParams(
 				StylesheetExecutionContext&		executionContext,
 				const ElemTemplateElement&		xslCallTemplateElement,
-				const DOM_Node&					sourceTree, 
-				const DOM_Node&					sourceNode,
+				XalanNode*						sourceTree, 
+				XalanNode*						sourceNode,
 				const QName&					mode,
-				const DOM_Node&					targetTemplate)
+				const XalanNode*				targetTemplate)
 {
 	StackEntry* const		theStackEntry = m_stack.back();
+
 	if (theStackEntry->getType() != StackEntry::eContextMarker)
 	{
 		// @@ $$$ ToDo: Fix this!!!
 		// throw InvalidStackContext();
 		return;
 	}
+
 	VariableStackStackType		tempStack;
+
 	ContextMarker* const	cm =
-			dynamic_cast<ContextMarker*>(theStackEntry);
+#if defined(XALAN_OLD_STYLE_CASTS)
+			(ContextMarker*)theStackEntry;
+#else
+			static_cast<ContextMarker*>(theStackEntry);
+#endif
+
 	try
 	{
 		try
 		{
 			m_stack.pop_back();
-			NodeImpl* child =
-				(const_cast<ElemTemplateElement&>(xslCallTemplateElement)).getFirstChild();
+
+			const ElemTemplateElement*	child =
+				xslCallTemplateElement.getFirstChildElem();
+
 			while(0 != child)
 			{
-				if(Constants::ELEMNAME_WITHPARAM ==
-					(dynamic_cast<ElemTemplateElement*>(child))->getXSLToken())
+				if(Constants::ELEMNAME_WITHPARAM == child->getXSLToken())
 				{
-					ElemWithParam* xslParamElement =
-						dynamic_cast<ElemWithParam*>(child);
+					const ElemWithParam* const	xslParamElement =
+#if defined(XALAN_OLD_STYLE_CASTS)
+						(ElemWithParam*)child;
+#else
+						static_cast<const ElemWithParam*>(child);
+#endif
+
 					Arg*	theArg = 0;
 
 					const XPath* const	pxpath = xslParamElement->getSelectPattern();
@@ -3979,7 +4154,7 @@ XSLTEngineImpl::VariableStack::pushParams(
 												*xslParamElement,
 												executionContext.getXPathExecutionContext());
 
-						theArg = new Arg(xslParamElement->getQName(), theXObject);
+						theArg = new Arg(xslParamElement->getQName(), theXObject, true);
 					}
 					else
 					{
@@ -3990,24 +4165,28 @@ XSLTEngineImpl::VariableStack::pushParams(
 									sourceNode,
 									mode);
 						assert(theDocFragment != 0);
-						// Cast to result tree fragment
-						ResultTreeFrag* const	theResultTreeFrag =
-							static_cast<ResultTreeFrag* const>(theDocFragment);
-						XObject* var = m_processor.createXResultTreeFrag(*theResultTreeFrag);
-						theArg = new Arg(xslParamElement->getQName(), var);
+
+						XObject* var = m_processor.createXResultTreeFrag(*theDocFragment);
+
+						theArg = new Arg(xslParamElement->getQName(), var, true);
 					}
 					assert(theArg != 0);
+
 					tempStack.push_back(theArg);
 				}
-				child = child->getNextSibling();
-			} // while
+
+				child = child->getNextSiblingElem();
+			}
 		}
 		catch(...)
 		{
 			m_stack.push_back(cm);
+
 			throw;
 		}
+
 		m_stack.push_back(cm);
+
 		try
 		{
 			pushElementMarker(targetTemplate);
@@ -4037,10 +4216,15 @@ XSLTEngineImpl::VariableStack::pushParams(
 	}
 }
 
-bool XSLTEngineImpl::VariableStack::hasParamVariable(QName& qname)
+
+
+bool
+XSLTEngineImpl::VariableStack::hasParamVariable(const QName&	qname) const
 {
 	bool hasit = false;
+
 	const int	nElems = m_stack.size();
+
 	// Sub 1 extra for the context marker.
 	for(int i = (nElems - 1); i >= 0; i--)
 	{
@@ -4048,8 +4232,9 @@ bool XSLTEngineImpl::VariableStack::hasParamVariable(QName& qname)
 		assert(theEntry != 0);
 		if(theEntry->getType() == StackEntry::eArgument)
 		{
-			const Arg* const	theArg = dynamic_cast<const Arg*>(theEntry); 
-			if((theArg->getName()).equals(qname))
+			const Arg* const	theArg = static_cast<const Arg*>(theEntry);
+
+			if(theArg->getName().equals(qname))
 			{
 				hasit = true;
 				break;
@@ -4060,6 +4245,7 @@ bool XSLTEngineImpl::VariableStack::hasParamVariable(QName& qname)
 			break;
 		}
 	}
+
 	return hasit;
 }
 
@@ -4068,14 +4254,14 @@ void
 XSLTEngineImpl::VariableStack::pushVariable(
 			const QName&		name,
 			XObject*			val,
-			const DOM_Node&		e)
+			const XalanNode*	e)
 {
 	if(elementMarkerAlreadyPushed(e) == false)
 	{
 		pushElementMarker(e);
 	}
 
-	m_stack.push_back(new Arg(name, val));
+	m_stack.push_back(new Arg(name, val, false));
 }
 
 
@@ -4126,7 +4312,7 @@ XSLTEngineImpl::VariableStack::findArg(
 			const Arg* const	theArg =
 				dynamic_cast<const Arg*>(theEntry);
 
-			if((theArg->getName()).equals(qname))
+			if(theArg->getName().equals(qname))
 			{
 				theResult = theArg;
 				break;
@@ -4148,8 +4334,9 @@ XSLTEngineImpl::VariableStack::findArg(
 			if(theEntry->getType() == StackEntry::eArgument)
 			{
 				const Arg* const	theArg =
-					dynamic_cast<const Arg*>(theEntry);
-				if((theArg->getName()).equals(qname))
+					static_cast<const Arg*>(theEntry);
+
+				if(theArg->getName().equals(qname))
 				{
 					theResult = theArg;
 					break;
@@ -4314,6 +4501,9 @@ XSLTEngineImpl::InitializeElementKeysTable()
 	s_elementKeys[Constants::ELEMNAME_LOCALE_STRING] = Constants::ELEMNAME_LOCALE;
 	s_elementKeys[Constants::ELEMNAME_FALLBACK_STRING] = Constants::ELEMNAME_FALLBACK;
 	s_elementKeys[Constants::ELEMNAME_OUTPUT_STRING] = Constants::ELEMNAME_OUTPUT;
+
+	s_elementKeys[Constants::ELEMNAME_DECIMALFORMAT_STRING] = Constants::ELEMNAME_DECIMALFORMAT;
+	s_elementKeys[Constants::ELEMNAME_NSALIAS_STRING] = Constants::ELEMNAME_NSALIAS;
 }
 
 

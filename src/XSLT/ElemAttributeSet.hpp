@@ -74,7 +74,7 @@
 
 
 
-//#include <dom/DOMString.hpp>
+//#include <dom/XalanDOMString.hpp>
 
 //#include <sax/AttributeList.hpp>
 
@@ -99,38 +99,44 @@ public:
 	 * @param columnNumber			column number in document
 	 */
 	ElemAttributeSet (
-		StylesheetConstructionContext&	constructionContext,
-		Stylesheet& stylesheetTree,
-		const DOMString& name,
-		const AttributeList& atts,
-		int lineNumber, 
-		int columnNumber);
+			StylesheetConstructionContext&	constructionContext,
+			Stylesheet&						stylesheetTree,
+			const XalanDOMString&			name,
+			const AttributeList&			atts,
+			int								lineNumber,
+			int								columnNumber);
 
-	virtual ~ElemAttributeSet();
-	
+	virtual
+	~ElemAttributeSet();
+
 	/**
 	 * Retrieves qualified name of object
 	 *
 	 * @return qualified name
 	 */
-	const QName& getQName() const { return m_QName; }
-	 
+	const QName&
+	getQName() const
+	{
+		return m_QName;
+	}
+
 	// These methods are inherited from ElemUse ...
 	
-	virtual int getXSLToken() const; 
-
 	virtual	void
 	execute(
 			StylesheetExecutionContext&		executionContext,
-			const DOM_Node&					sourceTree, 
-			const DOM_Node&					sourceNode,
+			XalanNode*						sourceTree,
+			XalanNode*						sourceNode,
 			const QName&					mode) const;
 
-	virtual NodeImpl* appendChild(NodeImpl* newChild);
+protected:
+
+	virtual bool
+	childTypeAllowed(int	xslToken) const;
 
 private:
 
-	QName m_QName;
+	QName	m_QName;
 };
 
 

@@ -62,6 +62,10 @@
 
 
 
+#include <XalanDOM/XalanDOMException.hpp>
+
+
+
 #include <PlatformSupport/DOMStringHelper.hpp>
 
 
@@ -75,7 +79,7 @@
 ElemApplyImport::ElemApplyImport(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
-			const DOMString&				name,
+			const XalanDOMString&			name,
 			const AttributeList&			atts,
 			int								lineNumber, 
 			int								columnNumber) :
@@ -83,61 +87,53 @@ ElemApplyImport::ElemApplyImport(
 							stylesheetTree,
 							name,
 							lineNumber,
-							columnNumber)
+							columnNumber,
+							Constants::ELEMNAME_APPLY_IMPORTS)
 {
-	const int nAttrs = atts.getLength();
+	const unsigned int	nAttrs = atts.getLength();
 
-    for(int i = 0; i < nAttrs; i++)
+    for(unsigned int i = 0; i < nAttrs; i++)
     {
-		const DOMString aname(atts.getName(i));
+		const XalanDOMChar*	const	aname = atts.getName(i);
 
 		if(isAttrOK(aname, atts, i, constructionContext) == false)
 		{
-			constructionContext.error(name + " has an illegal attribute: " + aname);
+			constructionContext.error(XalanDOMString(name) + " has an illegal attribute: " + aname);
 		}
     }
 }
 
 
 
-int
-ElemApplyImport::getXSLToken() const 
-{
-	return Constants::ELEMNAME_APPLY_IMPORTS;
-}
-
-
 void
 ElemApplyImport::execute(
 			StylesheetExecutionContext&		executionContext,
-			const DOM_Node&					sourceTree, 
-			const DOM_Node&					sourceNode,
+			XalanNode*						sourceTree, 
+			XalanNode*						sourceNode,
 			const QName&					mode) const
 {
 	ElemTemplateElement::execute(executionContext, sourceTree, sourceNode, mode);
 
 	// This will have to change to current template, (which will have 
 	// to be the top of a current template stack).
+	assert(sourceNode != 0);
 
 	transformChild(executionContext,
 				   getStylesheet(),
 				   0, 
 				   0, 
                    sourceTree, 
-                   executionContext.getParentOfNode(sourceNode), 
+                   executionContext.getParentOfNode(*sourceNode), 
 				   sourceNode, 
-                   mode, 
+                   mode,
 				   getXSLToken());
    
 }
 
 
-NodeImpl*
-ElemApplyImport::appendChild(NodeImpl* newChild)
+
+ElemTemplateElement*
+ElemApplyImport::appendChildElem(ElemTemplateElement*	/* newChild */)
 {
-	assert(newChild != 0);
-
-    error("Can not add " + dynamic_cast<ElemTemplateElement*>(newChild)->getTagName() + " to " + getTagName());
-
-    return 0;
+	throw XalanDOMException(XalanDOMException::HIERARCHY_REQUEST_ERR);
 }

@@ -74,7 +74,7 @@
 ElemWhen::ElemWhen(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
-			const DOMString&				name,
+			const XalanDOMString&				name,
 			const AttributeList&			atts,
 			int								lineNumber,
 			int								columnNumber) :
@@ -82,16 +82,18 @@ ElemWhen::ElemWhen(
 						stylesheetTree,
 						name,
 						lineNumber,
-						columnNumber),
+						columnNumber,
+						Constants::ELEMNAME_WHEN),
 	m_pTest(0)
 {
-	const int nAttrs = atts.getLength();
+	const unsigned int	nAttrs = atts.getLength();
 
-	for(int i = 0; i < nAttrs; i++)
+	for(unsigned int i = 0; i < nAttrs; i++)
 	{
-		const DOMString		aname(atts.getName(i));
+		const XalanDOMChar* const	aname = atts.getName(i);
 
-		const int			tok = constructionContext.getAttrTok(aname);
+		const int					tok =
+			constructionContext.getAttrTok(aname);
 
 		switch(tok)
 		{
@@ -115,12 +117,4 @@ ElemWhen::ElemWhen(
 	{
 		constructionContext.error("xsl:when must have a 'test' attribute.");
 	}
-}
-
-
-
-int
-ElemWhen::getXSLToken() const
-{
-	return Constants::ELEMNAME_WHEN;
 }

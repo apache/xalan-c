@@ -69,11 +69,10 @@
 
 
 
-#include <dom/DOM_Node.hpp>
+#include <XalanDOM/XalanDOMString.hpp>
 
 
 
-class DOMString;
 class PrefixResolver;
 class XPath;
 class XMLURL;
@@ -103,7 +102,7 @@ public:
 	 * -2 if not in known namespace
 	 */
 	virtual int
-	getAttrTok(const DOMString&	name) const = 0;
+	getAttrTok(const XalanDOMString&	name) const = 0;
 
 	/**
 	 * Determine the fully qualified URI for a string.
@@ -112,7 +111,7 @@ public:
 	 * @return pointer to fully qualified URI
 	 */
 	virtual XMLURL*
-	getURLFromString(const DOMString&	urlString) = 0;
+	getURLFromString(const XalanDOMString&	urlString) = 0;
 
 	/**
 	 * Determine the fully qualified URI for a string.
@@ -123,8 +122,8 @@ public:
 	 */
 	virtual XMLURL*
 	getURLFromString(
-			const DOMString&	urlString,
-			const DOMString&	base) = 0;
+			const XalanDOMString&	urlString,
+			const XalanDOMString&	base) = 0;
 
 	/**
 	 * Retrieve the prefix for XSL namespace URI's, for example,
@@ -132,7 +131,7 @@ public:
 	 * 
 	 * @return prefix string
 	 */
-	virtual const DOMString&
+	virtual const XalanDOMString&
 	getXSLNameSpaceURLPre() const = 0;
 
 	/**
@@ -141,7 +140,7 @@ public:
 	 * 
 	 * @return URI string
 	 */
-	virtual const DOMString&
+	virtual const XalanDOMString&
 	getXSLNameSpaceURL() const = 0;
 
 	/**
@@ -155,7 +154,7 @@ public:
 	 */
 	virtual XPath*
 	createMatchPattern(
-			const DOMString&		str,
+			const XalanDOMString&	str,
 			const PrefixResolver&	resolver) = 0;
 
 	/**
@@ -169,28 +168,28 @@ public:
 	 */
 	virtual XPath*
 	createXPath(
-			const DOMString&		str,
+			const XalanDOMString&	str,
 			const PrefixResolver&	resolver) = 0;
 
 	// These interfaces are inherited from ExecutionContext...
 
 	virtual void
 	error(
-			const DOMString&	msg,
-			const DOM_Node& 	sourceNode = DOM_Node(),
-			const DOM_Node&		styleNode = DOM_Node()) const = 0;
+			const XalanDOMString&	msg,
+			const XalanNode* 		sourceNode = 0,
+			const XalanNode*		styleNode = 0) const = 0;
 
 	virtual void
 	warn(
-			const DOMString&	msg,
-			const DOM_Node& 	sourceNode = DOM_Node(),
-			const DOM_Node&		styleNode = DOM_Node()) const = 0;
+			const XalanDOMString&	msg,
+			const XalanNode* 		sourceNode = 0,
+			const XalanNode*		styleNode = 0) const = 0;
 
 	virtual void
 	message(
-			const DOMString&	msg,
-			const DOM_Node& 	sourceNode = DOM_Node(),
-			const DOM_Node&		styleNode = DOM_Node()) const = 0;
+			const XalanDOMString&	msg,
+			const XalanNode* 		sourceNode = 0,
+			const XalanNode*		styleNode = 0) const = 0;
 
 };
 

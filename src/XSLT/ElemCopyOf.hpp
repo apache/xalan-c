@@ -94,7 +94,7 @@ public:
 	 * @param lineNumber				line number in document
 	 * @param columnNumber			column number in document
 	 */
-	ElemCopyOf (
+	ElemCopyOf(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
 			const DOMString&				name,
@@ -104,17 +104,12 @@ public:
 	
 	// These methods are inherited from ElemTemplateElement ...
 	
-	virtual int
-	getXSLToken() const; 
-
-	virtual void execute(
+	virtual void
+	execute(
 			StylesheetExecutionContext&		executionContext,
-			const DOM_Node&					sourceTree, 
-			const DOM_Node&					sourceNode,
+			XalanNode*						sourceTree,
+			XalanNode*						sourceNode,
 			const QName&					mode) const;
-
-	virtual NodeImpl*
-	appendChild(NodeImpl* newChild);
 
 private:
 

@@ -60,110 +60,114 @@
 
 #include "XSLTInputSource.hpp"
 
-// @@ JMD: temporary
+
+
+#include <framework/URLInputSource.hpp>
+
+
+
 #include <cassert>
 
-XSLTInputSource::XSLTInputSource(const XMLCh* const systemId) :
-	InputSource(systemId) { }
-
-XSLTInputSource::XSLTInputSource(const XMLCh* const systemId, const XMLCh* const publicId) :
-	InputSource(systemId, publicId) { }
-
-XSLTInputSource::XSLTInputSource(const char* const systemId) :
-	InputSource(systemId) { }
-
-XSLTInputSource::XSLTInputSource(const char* const systemId, const char* const publicId) :
-	InputSource(systemId, publicId) { }
 
 
-/**
-  * Create a new input source with a byte stream.
-  *
-  * <p>Application writers may use setSystemId to provide a base 
-  * for resolving relative URIs, setPublicId to include a 
-  * public identifier, and/or setEncoding to specify the object's
-  * character encoding.</p>
-  *
-  * @param byteStream The raw byte stream containing the document.
-  */
-XSLTInputSource::XSLTInputSource (InputStream* /* byteStream */) : InputSource("") 
+XSLTInputSource::XSLTInputSource() :
+	InputSource(""),
+	m_node(0)
+{
+}
+
+
+
+
+XSLTInputSource::XSLTInputSource(const XMLCh*	systemId) :
+	InputSource(systemId),
+	m_node(0)
+{
+}
+
+
+
+XSLTInputSource::XSLTInputSource(
+			const XMLCh*	systemId,
+			const XMLCh*	publicId) :
+	InputSource(systemId, publicId),
+	m_node(0)
+{
+}
+
+
+
+XSLTInputSource::XSLTInputSource(const char*	systemId) :
+	InputSource(systemId),
+	m_node(0)
+{
+}
+
+
+
+XSLTInputSource::XSLTInputSource(
+			const char*		systemId,
+			const char*		publicId) :
+	InputSource(systemId,
+				publicId),
+	m_node(0)
+{
+}
+
+
+
+XSLTInputSource::XSLTInputSource(InputStream*	/* byteStream */) :
+	InputSource(""),
+	m_node(0)
 {
 	// @@ JMD: These are not in the C++ InputSource class
 	assert(0);	// @@ ??
 	// java: setByteStream(byteStream);
 }
 
-/**
-  * Create a new input source with a character stream.
-  *
-  * <p>Application writers may use setSystemId() to provide a base 
-  * for resolving relative URIs, and setPublicId to include a 
-  * public identifier.</p>
-  */
-XSLTInputSource::XSLTInputSource (Reader* /* characterStream */) : InputSource("") 
+
+
+XSLTInputSource::XSLTInputSource (Reader* /* characterStream */) :
+	InputSource(""),
+	m_node(0) 
 {
 	// @@ JMD: These are not in the C++ InputSource class
 	assert(0);	// @@ ??
 	// java: setCharacterStream(characterStream);
 }
 
-/**
-  * Create a new input source with a DOM node.
-  *
-  * <p>Application writers may use setSystemId() to provide a base 
-  * for resolving relative URIs, and setPublicId to include a 
-  * public identifier.</p>
-  *
-  * <p>The character stream shall not include a byte order mark.</p>
-  */
-XSLTInputSource::XSLTInputSource (const DOM_Node& node) : InputSource("") 
+
+
+XSLTInputSource::XSLTInputSource (XalanNode*	node) :
+	InputSource(""),
+	m_node(0)
 {
 	setNode(node);
 }
 
-/**
-  * Makes the byte stream for this input source.
-  *
-  * <p>The SAX parser will ignore this if there is also a character
-  * stream specified, but it will use a byte stream in preference
-  * to opening a URI connection itself.</p>
-  *
-  * @see #getByteStream
-  * @see InputStream
-  */
+
+
 BinInputStream*
 XSLTInputSource::makeStream() const
 {
 	URLInputSource inputSource(getSystemId());
+
+
 	return inputSource.makeStream();
 }
 
-/**
-  * Set the character stream for this input source.
-  *
-  * <p>If there is a character stream specified, the SAX parser
-  * will ignore any byte stream and will not attempt to open
-  * a URI connection to the system identifier.</p>
-  *
-  * @param characterStream The character stream containing the
-  *        XML document or other entity.
-  * @see #getCharacterStream
-  * @see java.io.Reader
-  */
+
+
 void
-XSLTInputSource::setNode (const DOM_Node& node)
+XSLTInputSource::setNode(XalanNode*		node)
 {
 	m_node = node;
 }
 
-/**
-  * Get the character stream for this input source.
-  *
-  * @return The character stream, or null if none was supplied.
-  * @see #setCharacterStream
-  */
-const DOM_Node&
-XSLTInputSource::getNode()
+
+
+XalanNode*
+XSLTInputSource::getNode() const
 {
 	return m_node;
 }

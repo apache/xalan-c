@@ -72,26 +72,12 @@
 
 
 
-#if defined(XALAN_HASH_CONTAINERS_AVAILABLE)
-#include <hash_map>
-#else
 #include <map>
-#endif
-
-#include<vector>
+#include <vector>
 
 
 
-// Base class header file.
-//#include "UnImplNode.hpp"
-//#include "PrefixResolver.hpp"
-//#include "Constants.hpp"
-
-
-
-// Xerces XML4C header files.
-#include <dom/DOM_Node.hpp>
-#include <dom/DOMString.hpp>
+#include <XalanDOM/XalanDOMString.hpp>
 
 
 
@@ -99,11 +85,11 @@
 
 
 
-class DOM_Element;
-class DOM_Node;
 class KeyDeclaration;
 class NodeRefListBase;
 class PrefixResolver;
+class XalanElement;
+class XalanNode;
 class XPathExecutionContext;
 
 
@@ -118,6 +104,12 @@ class KeyTable
 {
 public:
 
+#if defined(XALAN_NO_NAMESPACES)
+	typedef vector<KeyDeclaration>			KeyDeclarationVectorType;
+#else
+	typedef std::vector<KeyDeclaration>		KeyDeclarationVectorType;
+#endif
+
 	/**
 	 * Build a keys table.
 	 *
@@ -130,10 +122,11 @@ public:
 	 * @param executionContext current execution context
 	 */
 	KeyTable(
-			const DOM_Node&						doc,
-			const DOM_Node&						startNode,
+			XalanNode*							doc,
+			XalanNode*							startNode,
 			const PrefixResolver&				resolver,
-			const std::vector<KeyDeclaration>&	keyDeclarations,
+			const XalanDOMString&				name,
+			const KeyDeclarationVectorType&		keyDeclarations,
 			XPathExecutionContext&				executionContext);
 
 	virtual
@@ -153,8 +146,8 @@ public:
 	 */
 	const NodeRefListBase*
 	getNodeSetByKey(
-				  const DOMString&	name, 
-				  const DOMString&	ref) const;
+				  const XalanDOMString&		name,
+				  const XalanDOMString&		ref) const;
 
 	/**
 	 * Retrieve the document key.  This table should only be used with contexts
@@ -162,7 +155,7 @@ public:
 	 * 
 	 * @return Node for document
 	 */
-	DOM_Node
+	const XalanNode*
 	getDocKey() const
 	{
 		return m_docKey;
@@ -174,7 +167,7 @@ private:
 	 * The document key.  This table should only be used with contexts
 	 * whose Document roots match this key.
 	 */
-	DOM_Node	m_docKey;
+	const XalanNode*	m_docKey;
 
 	/**
 	/**
@@ -189,25 +182,23 @@ private:
 	 * look up the nodelist by the given reference.
 	 */
 
-#if defined(XALAN_HASH_CONTAINERS_AVAILABLE)
-	typedef hash_map<DOMString,
-					 MutableNodeRefList,
-					 DOMStringHashFunction,
-					 DOMStringEqualsFunction>	NodeListMapType;
+#if defined(XALAN_NO_NAMESPACES)
+	typedef map<XalanDOMString,
+				MutableNodeRefList>			NodeListMapType;
 
-	typedef hash_map<DOMString,
-					 NodeListMapType,
-					 DOMStringHashFunction,
-					 DOMStringEqualsFunction>	KeysMapType;
+	typedef map<XalanDOMString,
+				NodeListMapType>			KeysMapType;
 #else
-	typedef std::map<DOMString,
+	typedef std::map<XalanDOMString,
 					 MutableNodeRefList>	NodeListMapType;
 
-	typedef std::map<DOMString,
-					 NodeListMapType>	KeysMapType;
+	typedef std::map<XalanDOMString,
+					 NodeListMapType>		KeysMapType;
 #endif
 
-	KeysMapType		m_keys;
+	KeysMapType							m_keys;
+
+	static const MutableNodeRefList		s_dummyList;
 };
 
 

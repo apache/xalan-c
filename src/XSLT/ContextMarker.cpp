@@ -63,8 +63,8 @@
 
 
 ContextMarker::ContextMarker(
-		const DOM_Node&		caller,
-		const DOM_Node&		sourceNode) :
+		const XalanNode*	caller,
+		const XalanNode*	sourceNode) :
 	ContextState(caller,
 				 sourceNode,
 				 eContextMarker)

@@ -57,18 +57,26 @@
 #if !defined(XALAN_SelectionEvent_HEADER_GUARD)
 #define XALAN_SelectionEvent_HEADER_GUARD
 
-// Base include file.  Must be first.
-#include "XSLTDefinitions.hpp"
 
-class DOM_Node;
-class DOMString;
+
+// Base include file.  Must be first.
+#include <XSLT/XSLTDefinitions.hpp>
+
+
+
+#include <XalanDOM/XalanDOMString.hpp>
+
+
+
+class XalanNode;
 class ElemTemplateElement;
 class StylesheetExecutionContext;
 class XPath;
 class XObject;
 
 
-class SelectionEvent
+
+class XALAN_XSLT_EXPORT SelectionEvent
 {
 public:
 
@@ -83,10 +91,10 @@ public:
    *                    (should not be null, not enforced)
    */
 	SelectionEvent(
-			StylesheetExecutionContext&		executionContext, 
-			const DOM_Node&					sourceNode,
+			StylesheetExecutionContext&		executionContext,
+			const XalanNode*				sourceNode,
 			const ElemTemplateElement&		styleNode,
-			const DOMString&				attributeName,
+			const XalanDOMString&			attributeName,
 			const XPath&					xpath,
 			const XObject*					selection);
 
@@ -102,33 +110,32 @@ private:
   /**
    * The executionContext instance.
    */
-  const StylesheetExecutionContext&		m_executionContext;
+	const StylesheetExecutionContext&	m_executionContext;
 
   /**
    * The current context node.
    */
-  const DOM_Node&						m_sourceNode;
+	const XalanNode*					m_sourceNode;
   
   /**
    * The node in the style tree where the event occurs.
    */
-  const ElemTemplateElement&			m_styleNode;
+	const ElemTemplateElement&			m_styleNode;
 
   /**
    * The attribute name from which the selection is made.
    */
-  const DOMString&						m_attributeName;
+	const XalanDOMString				m_attributeName;
 
   /**
    * The XPath that executed the selection.
    */
-  const XPath&							m_xpath;
+	const XPath&						m_xpath;
   
   /**
    * The result of the selection.
    */
-  const XObject* const					m_selection;
-
+	const XObject* const				m_selection;
 };
 
 

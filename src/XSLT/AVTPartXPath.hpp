@@ -107,7 +107,7 @@ public:
 	 * @param xpathFactory    factory class instance for XPaths
 	 */
 	AVTPartXPath(
-			const DOMString&		val,
+			const XalanDOMString&	val,
 			const PrefixResolver&	resolver,
 			XObjectFactory&			xobjectFactory,
 			XPathEnvSupport&		xpathEnvSupport,
@@ -119,8 +119,8 @@ public:
 	
 	virtual void
 	evaluate(
-			DOMString&				buf,
-			const DOM_Node&			contextNode,
+			XalanDOMString&			buf,
+			XalanNode*				contextNode,
 			const PrefixResolver&	prefixResolver,
 			XPathExecutionContext&	executionContext) const;
 

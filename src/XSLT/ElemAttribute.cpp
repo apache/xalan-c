@@ -59,7 +59,6 @@
 
 
 #include <sax/AttributeList.hpp>
-//#include <sax/SAXException.hpp>
 
 
 
@@ -77,7 +76,7 @@
 ElemAttribute::ElemAttribute(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
-			const DOMString&				name,
+			const XalanDOMString&			name,
 			const AttributeList&			atts,
 			int								lineNumber,
 			int								columnNumber) :
@@ -85,15 +84,16 @@ ElemAttribute::ElemAttribute(
 						stylesheetTree,
 						name,
 						lineNumber,
-						columnNumber),
+						columnNumber,
+						Constants::ELEMNAME_ATTRIBUTE),
 	m_pNameAVT(0),	
 	m_pNamespaceAVT(0)
 {
-	const int nAttrs = atts.getLength();
+	const unsigned int	nAttrs = atts.getLength();
 
-	for(int i = 0; i < nAttrs; i++)
+	for(unsigned int i = 0; i < nAttrs; i++)
 	{
-		const DOMString aname(atts.getName(i));
+		const XalanDOMChar*	const	aname = atts.getName(i);
 
 		if(equals(aname, Constants::ATTRNAME_NAME))
 		{
@@ -130,35 +130,32 @@ ElemAttribute::~ElemAttribute()
 
 
 
-int
-ElemAttribute::getXSLToken() const 
-{
-	return Constants::ELEMNAME_ATTRIBUTE;
-}
-
-
-
 void
 ElemAttribute::execute(
 			StylesheetExecutionContext&		executionContext,
-			const DOM_Node&					sourceTree, 
-			const DOM_Node&					sourceNode,
+			XalanNode*						sourceTree,
+			XalanNode*						sourceNode,
 			const QName&					mode) const
 {
-	ElemTemplateElement::execute(executionContext, sourceTree, sourceNode, mode);
-
 	assert(m_pNameAVT != 0);
 
-	DOMString attrName;
-	DOMString origAttrName = attrName;      // save original attribute name
-	int indexOfNSSep = 0;
+	ElemTemplateElement::execute(executionContext, sourceTree, sourceNode, mode);
+
+	XalanDOMString attrName;
 
 	m_pNameAVT->evaluate(attrName, sourceNode, *this, 
 		executionContext.getXPathExecutionContext());
 
 	if(!isEmpty(attrName))
 	{
-	   DOMString attrNameSpace;
+		const XalanDOMString	origAttrName = attrName;      // save original attribute name
+
+		const unsigned int		origAttrNameLength = length(origAttrName);
+
+		unsigned int			indexOfNSSep = 0;
+
+		XalanDOMString			attrNameSpace;
+
 		if(0 != m_pNamespaceAVT)
 		{
 			m_pNamespaceAVT->evaluate(attrNameSpace, sourceNode, 
@@ -166,61 +163,76 @@ ElemAttribute::execute(
 
 			if(!isEmpty(attrNameSpace))
 			{
-				DOMString prefix = executionContext.getResultPrefixForNamespace(attrNameSpace);
+				XalanDOMString prefix = executionContext.getResultPrefixForNamespace(attrNameSpace);
 
 				if(isEmpty(prefix))
 				{
 					prefix = executionContext.getUniqueNameSpaceValue();
 
-					DOMString nsDecl = DOMString("xmlns:") + prefix;
+					XalanDOMString nsDecl = XalanDOMString(XALAN_STATIC_UCODE_STRING("xmlns:")) + prefix;
 
 					executionContext.addResultAttribute(nsDecl, attrNameSpace);
 				}
+
 				indexOfNSSep = indexOf(origAttrName, ':');
-				if(indexOfNSSep >= 0)          
-					attrName = substring(attrName, indexOfNSSep+1);
-				attrName = prefix + DOMString(":") + attrName;
+
+				if(indexOfNSSep < origAttrNameLength)
+				{
+					attrName = substring(attrName, indexOfNSSep + 1);
+				}
+
+				attrName = prefix + XalanDOMString(XALAN_STATIC_UCODE_STRING(":")) + attrName;
 			}
 		}
       // Note we are using original attribute name for these tests. 
 		else if(!isEmpty(executionContext.getPendingElementName())
-				&& !equals(origAttrName, "xmlns"))
+				&& !equals(origAttrName, XALAN_STATIC_UCODE_STRING("xmlns")))
 		{
 			// make sure that if a prefix is specified on the attribute name, it is valid
 			indexOfNSSep = indexOf(origAttrName, ':');
-			if(indexOfNSSep >= 0)
+
+			if(indexOfNSSep < origAttrNameLength)
 			{
-				DOMString nsprefix = substring(origAttrName, 0, indexOfNSSep);
+				const XalanDOMString	nsprefix = substring(origAttrName, 0, indexOfNSSep);
+
 				attrNameSpace = getNamespaceForPrefix(nsprefix);
+
 				if (isEmpty(attrNameSpace))
 				{
 					// Could not resolve prefix
-					// @@ TODO: processor.warn(XSLTErrorResources.WG_COULD_NOT_RESOLVE_PREFIX, new Object[]{nsprefix});            
+					executionContext.warn(XalanDOMString("Warning: Could not resolve prefix ") + nsprefix, sourceNode, this);
 				}
 			}
-			if (indexOfNSSep<0 || ! isEmpty(attrNameSpace))
-			{  
-				const DOMString val = childrenToString(executionContext,
-					sourceTree, sourceNode, mode);
-				executionContext.addResultAttribute(attrName, val);
-			}
-			else
-			{
-				//warn(templateChild, sourceNode, "Trying to add attribute after element child has been added, ignoring...");
-			}
+		}
+		else
+		{
+			//warn(templateChild, sourceNode, "Trying to add attribute after element child has been added, ignoring...");
+			executionContext.warn("Warning: Trying to add attribute after element child has been added, ignoring...", sourceNode, this);
+		}
+
+		// If there was no namespace, or the namespace was resolved, process
+		// the result attribute.
+		if (indexOfNSSep == origAttrNameLength || !isEmpty(attrNameSpace))
+		{  
+			const XalanDOMString	val =
+				childrenToString(executionContext,
+								 sourceTree,
+								 sourceNode,
+								 mode);
+
+			executionContext.addResultAttribute(attrName, val);
 		}
 	}
 }
 
 
 
-NodeImpl* ElemAttribute::appendChild(NodeImpl* newChild)
+bool
+ElemAttribute::childTypeAllowed(int		xslToken) const
 {
-	assert(dynamic_cast<ElemTemplateElement*>(newChild) != 0);
+	bool	fResult = false;
 
-	const int	type = dynamic_cast<ElemTemplateElement*>(newChild)->getXSLToken();
-
-	switch(type)
+	switch(xslToken)
 	{
 		// char-instructions 
 	case Constants::ELEMNAME_TEXTLITERALRESULT:
@@ -236,19 +248,18 @@ NodeImpl* ElemAttribute::appendChild(NodeImpl* newChild)
 	case Constants::ELEMNAME_TEXT:
 	case Constants::ELEMNAME_COPY:
 	case Constants::ELEMNAME_VARIABLE:
-	case Constants::ELEMNAME_MESSAGE:
-		
+	case Constants::ELEMNAME_MESSAGE:		
 		// instructions 
 		// case Constants.ELEMNAME_PI:
 		// case Constants.ELEMNAME_COMMENT:
 		// case Constants.ELEMNAME_ELEMENT:
 		// case Constants.ELEMNAME_ATTRIBUTE:
+		fResult = true;
 		break;
-		
+
 	default:
-		error("Can not add " + dynamic_cast<ElemTemplateElement*>(newChild)->getTagName() + " to " + getTagName());
 		break;
 	}
 
-	return ElemTemplateElement::appendChild(newChild);
+	return fResult;
 }

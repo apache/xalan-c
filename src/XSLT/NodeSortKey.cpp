@@ -72,7 +72,7 @@ NodeSortKey::NodeSortKey(
 			const XPath&			selectPat, 
 			bool					treatAsNumbers, 
 			bool					descending,
-			const DOMString&		/* langValue */, 
+			const XalanDOMString&	/* langValue */, 
 			const PrefixResolver&	resolver) :
 	m_executionContext(&executionContext),
 	m_selectPat(&selectPat),

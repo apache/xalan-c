@@ -70,7 +70,6 @@
 
 
 
-#include "Constants.hpp"
 #include "Stylesheet.hpp"
 #include "StylesheetConstructionContext.hpp"
 
@@ -84,14 +83,16 @@
 ElemUse::ElemUse(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
-			const DOMString&				name,
+			const XalanDOMString&			name,
 			int								lineNumber,
-			int								columnNumber) :
+			int								columnNumber,
+			int								xslToken) :
 	ElemTemplateElement(constructionContext,
 						stylesheetTree,
 						name,
 						lineNumber,
-						columnNumber),
+						columnNumber,
+						xslToken),
 	m_attributeSetsNames()
 {
 }
@@ -107,8 +108,8 @@ ElemUse::~ElemUse()
 void
 ElemUse::execute(
 			StylesheetExecutionContext&		executionContext,
-			const DOM_Node&					sourceTree, 
-			const DOM_Node&					sourceNode,
+			XalanNode*						sourceTree,
+			XalanNode*						sourceNode,
 			const QName&					mode) const
 {
 	ElemTemplateElement::execute(executionContext, sourceTree, sourceNode, mode);
@@ -120,24 +121,10 @@ ElemUse::execute(
 
 
 
-int ElemUse::getXSLToken() const 
-{
-	return Constants::ELEMNAME_USE;		
-}
-
-/** 
- * See if this is a use-attribute-sets attribute, and, if so, process it.
- * 
- * @param attrName Qualified name of attribute.
- * @param atts The attribute list where the element comes from (not used at 
- *      this time).
- * @param which The index into the attribute list (not used at this time).
- * @return True if this is a use-attribute-sets attribute.
- */
 bool
 ElemUse::processUseAttributeSets(
 			StylesheetConstructionContext&	constructionContext,
-			const DOMString&				attrName,
+			const XalanDOMString&			attrName,
 			const AttributeList&			atts,
 			int								which)
 {
@@ -145,7 +132,7 @@ ElemUse::processUseAttributeSets(
 
 	if(Constants::ELEMNAME_LITERALRESULT == getXSLToken())
 	{
-		const QName	qname(attrName, getStylesheet().getNamespaces());
+		const QName		qname(attrName, getStylesheet().getNamespaces());
 
 		isUAS = ((equals(qname.getNamespace(),
 			constructionContext.getXSLNameSpaceURL())) &&
@@ -158,16 +145,19 @@ ElemUse::processUseAttributeSets(
 
 	if(isUAS)
 	{
-		const DOMString qnames = atts.getValue(which);
+		const XalanDOMChar* const	qnames = atts.getValue(which);
 
-		StringTokenizer tokenizer(qnames, " \t\n\r", false);
+		StringTokenizer				tokenizer(qnames,
+											  XALAN_STATIC_UCODE_STRING(" \t\n\r"),
+											  false);
 
-		const int	numTokens = tokenizer.countTokens();
+		const unsigned int			numTokens = tokenizer.countTokens();
+
 		m_attributeSetsNames.reserve(numTokens);
 
 		while(tokenizer.hasMoreTokens())
 		{
-			const DOMString		qname = tokenizer.nextToken();
+			const XalanDOMString		qname = tokenizer.nextToken();
 			assert(length(qname) != 0);
 
 			m_attributeSetsNames.push_back(QName(qname, getStylesheet().getNamespaces()));

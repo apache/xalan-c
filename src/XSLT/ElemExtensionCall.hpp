@@ -57,14 +57,7 @@
 #if !defined(XALAN_ELEMEXTENSIONCALL_HEADER_GUARD)
 #define XALAN_ELEMEXTENSIONCALL_HEADER_GUARD 
 
-/**
- * $Id$
- * 
- * 
- * $State$
- * 
- * @author Myriam Midy (Myriam_Midy @lotus.com 
- */
+
 
 // Base include file.  Must be first.
 #include "XSLTDefinitions.hpp"
@@ -73,10 +66,6 @@
 
 // Base class header file.
 #include "ElemLiteralResult.hpp"
-
-
-
-#include <dom/DOMString.hpp>
 
 
 
@@ -103,30 +92,27 @@ public:
 	ElemExtensionCall(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
-			const DOMString&				name,
+			const XalanDOMString&			name,
 			const AttributeList&			atts,
 			int								lineNumber,
 			int								columnNumber,
 			ExtensionNSHandler&				ns,
-			const DOMString&				localpart);
+			const XalanDOMString&			localpart);
 	
 	// These methods are inherited from ElemLiteralResult ...
 	
-	virtual int
-	getXSLToken() const; 
-
 	virtual void
 	execute(
 			StylesheetExecutionContext&		executionContext,
-			const DOM_Node&					sourceTree, 
-			const DOM_Node&					sourceNode,
+			XalanNode*						sourceTree,
+			XalanNode*						sourceNode,
 			const QName&					mode) const;
 	
 private:
 
 	ExtensionNSHandler&		m_nsh;
 
-	DOMString				m_localPart;	
+	XalanDOMString			m_localPart;
 };
 
 

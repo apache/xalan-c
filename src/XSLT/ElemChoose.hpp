@@ -70,12 +70,15 @@
 // Base include file.  Must be first.
 #include "XSLTDefinitions.hpp"
 
+
+
 // Base class header file.
 #include "ElemTemplateElement.hpp"
 
-#include <dom/DOMString.hpp>
+
 
 #include <sax/AttributeList.hpp>
+
 
 
 class ElemChoose: public ElemTemplateElement
@@ -95,25 +98,24 @@ public:
 	ElemChoose(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
-			const DOMString&				name,
+			const XalanDOMString&			name,
 			const AttributeList&			atts,
 			int								lineNumber,
 			int								columnNumber);
 
 	// These methods are inherited from ElemTemplateElement ...
-	
-	virtual int
-	getXSLToken() const; 
 
 	virtual void
 	execute(
 			StylesheetExecutionContext&		executionContext,
-			const DOM_Node&					sourceTree, 
-			const DOM_Node&					sourceNode,
+			XalanNode*						sourceTree,
+			XalanNode*						sourceNode,
 			const QName&					mode) const;
 
-	virtual NodeImpl*
-	appendChild(NodeImpl*	newChild);
+protected:
+
+	virtual bool
+	childTypeAllowed(int	xslToken) const;
 };
 
 

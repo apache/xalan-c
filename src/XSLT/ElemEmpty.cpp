@@ -68,23 +68,22 @@
 ElemEmpty::ElemEmpty(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
-			const DOMString&				name,
+			const XalanDOMString&			name,
 			int								lineNumber,
 			int								columnNumber) :
 	ElemTemplateElement(constructionContext,
 						stylesheetTree,
 						name,
 						lineNumber,
-						columnNumber)
+						columnNumber,
+						Constants::ELEMNAME_UNDEFINED)
 {
 }
 
 
 
-int
-ElemEmpty::getXSLToken() const 
+ElemEmpty::~ElemEmpty()
 {
-	return Constants::ELEMNAME_UNDEFINED;
 }
 
 
@@ -92,8 +91,8 @@ ElemEmpty::getXSLToken() const
 void
 ElemEmpty::execute(
 			StylesheetExecutionContext&		executionContext,
-			const DOM_Node&					sourceTree, 
-			const DOM_Node&					sourceNode,
+			XalanNode*						sourceTree,
+			XalanNode*						sourceNode,
 			const QName&					mode) const
 {
 	assert(false);	// really shouldn't be executing empty nodes

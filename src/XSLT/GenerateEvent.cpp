@@ -58,67 +58,88 @@
 
 
 
-/** 
-* Constructor for startDocument, endDocument events.
-* 
-* @param processor The XSLT Processor instance.
-* @param eventType One of the EVENTTYPE_XXX constants.
-*/
-GenerateEvent::GenerateEvent(XSLTEngineImpl* processor, EventType eventType) :  m_pProcessor(processor), 
-	m_eventType(eventType), m_start(0), m_length(0), m_pAtts(0)
-{
-}
-
-/** 
-* Constructor for startElement, endElement events.
-* 
-* @param processor The XSLT Processor Instance.
-* @param eventType One of the EVENTTYPE_XXX constants.
-* @param name The name of the element.
-* @param atts The SAX attribute list.
-*/
-GenerateEvent::GenerateEvent(XSLTEngineImpl* processor, EventType eventType, DOMString name, AttributeList* atts):	
-	m_name(name), m_pAtts(atts), m_pProcessor(processor), m_eventType(eventType), m_start(0), m_length(0)
-{
-}
-
-/** 
-* Constructor for characters, cdate events.
-* 
-* @param processor The XSLT Processor instance.
-* @param eventType One of the EVENTTYPE_XXX constants.
-* @param ch The char array from the SAX event.
-* @param start The start offset to be used in the char array.
-* @param length The end offset to be used in the chara array.
-*/
-GenerateEvent::GenerateEvent(XSLTEngineImpl* processor, EventType eventType, DOMString ch, int start, int length) :	
-	m_characters(ch), m_start(start), m_length(length), m_pProcessor(processor), m_eventType(eventType), m_pAtts(0)
-{
-}
-
-/** 
-* Constructor for processingInstruction events.
-* 
-* @param processor The instance of the XSLT processor.
-* @param eventType One of the EVENTTYPE_XXX constants.
-* @param name The name of the processing instruction.
-* @param data The processing instruction data.
-*/
-GenerateEvent::GenerateEvent(XSLTEngineImpl* processor, EventType eventType, DOMString name, DOMString data): 
-	m_name(name), m_data(data), m_pProcessor(processor), m_eventType(eventType)
-{
-}
-
-/** 
-* Constructor for comment and entity ref events.
-* 
-* @param processor The XSLT processor instance.
-* @param eventType One of the EVENTTYPE_XXX constants.
-* @param data The comment or entity ref data.
-*/
-GenerateEvent::GenerateEvent(XSLTEngineImpl* processor, EventType eventType, DOMString data):
-	m_data(data), m_pProcessor(processor), m_eventType(eventType)
+GenerateEvent::GenerateEvent(
+			XSLTEngineImpl*		processor,
+			EventType			eventType) :
+	m_eventType(eventType),
+	m_characters(),
+	m_start(0),
+	m_length(0),
+	m_name(),
+	m_data(),
+	m_pAtts(0),
+	m_pProcessor(processor)
 {
 }
 
 
+
+GenerateEvent::GenerateEvent(
+			XSLTEngineImpl*			processor,
+			EventType				eventType,
+			const XalanDOMString&	name,
+			AttributeList*			atts) :
+	m_eventType(eventType),
+	m_characters(),
+	m_start(0),
+	m_length(0),
+	m_name(name),
+	m_data(),
+	m_pAtts(atts),
+	m_pProcessor(processor)
+{
+}
+
+
+
+GenerateEvent::GenerateEvent(
+			XSLTEngineImpl*			processor,
+			EventType				eventType,
+			const XalanDOMString&	ch,
+			unsigned int			start,
+			unsigned int			length) :
+	m_eventType(eventType),
+	m_characters(ch),
+	m_start(start),
+	m_length(length),
+	m_name(),
+	m_data(),
+	m_pAtts(0),
+	m_pProcessor(processor)
+{
+}
+
+
+
+GenerateEvent::GenerateEvent(
+			XSLTEngineImpl*			processor,
+			EventType				eventType,
+			const XalanDOMString&	name,
+			const XalanDOMString&	data) :
+	m_eventType(eventType),
+	m_characters(),
+	m_start(0),
+	m_length(0),
+	m_name(name),
+	m_data(data),
+	m_pAtts(0),
+	m_pProcessor(processor)
+{
+}
+
+
+
+GenerateEvent::GenerateEvent(
+			XSLTEngineImpl*			processor,
+			EventType				eventType,
+			const XalanDOMString&	data) :
+	m_eventType(eventType),
+	m_characters(),
+	m_start(0),
+	m_length(0),
+	m_name(),
+	m_data(data),
+	m_pAtts(0),
+	m_pProcessor(processor)
+{
+}

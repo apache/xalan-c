@@ -67,17 +67,14 @@
 // Base include file.  Must be first.
 #include "XSLTDefinitions.hpp"
 
-//#include <dom/DOMString.hpp>
-
-//#include <dom/DOM_Node.hpp>
-//#include <dom/DOM_Element.hpp>
-
-//#include <xpath/XPathSupport.hpp>
-//#include <xpath/NodeRefListBase.hpp>
 
 
-class DOM_Node;
-class DOMString;
+// $$$ ToDo: This is necessary while XalanDOMString is still a typedef...
+#include <XalanDOM/XalanDOMString.hpp>
+
+
+
+class XalanNode;
 class PrefixResolver;
 class XPathExecutionContext;
 
@@ -106,8 +103,8 @@ public:
 	 */
 	virtual void
 	evaluate(
-			DOMString&				buf,
-			const DOM_Node&			contextNode,
+			XalanDOMString&			buf,
+			XalanNode*				contextNode,
 			const PrefixResolver&	prefixResolver,
 			XPathExecutionContext&	executionContext) const = 0;
 };

@@ -74,22 +74,22 @@
 ElemCopy::ElemCopy(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
-			const DOMString&				name,
+			const XalanDOMString&			name,
 			const AttributeList&			atts,
 			int								lineNumber,
 			int								columnNumber) :
 	ElemUse(constructionContext,
 			stylesheetTree,
 			name,
-			//atts,
 			lineNumber,
-			columnNumber)
+			columnNumber,
+			Constants::ELEMNAME_COPY)
 {
-	const int	nAttrs = atts.getLength();
+	const unsigned int	nAttrs = atts.getLength();
 
-	for(int i = 0; i < nAttrs; i++)
+	for(unsigned int i = 0; i < nAttrs; i++)
 	{
-		const DOMString aname(atts.getName(i));
+		const XalanDOMChar*	const	aname = atts.getName(i);
 
 		if(!(processUseAttributeSets(constructionContext, aname, atts, i) ||
 				processSpaceAttr(aname, atts, i) ||
@@ -102,40 +102,36 @@ ElemCopy::ElemCopy(
 
 
 
-int
-ElemCopy::getXSLToken() const 
-{
-	return Constants::ELEMNAME_COPY;
-}
-
-
-
 void
 ElemCopy::execute(
 			StylesheetExecutionContext&		executionContext,
-			const DOM_Node&					sourceTree, 
-			const DOM_Node&					sourceNode,
+			XalanNode*						sourceTree,
+			XalanNode*						sourceNode,
 			const QName&					mode) const
 {
-	const int	nodeType = sourceNode.getNodeType();
+	assert(sourceNode != 0);
+
+	const int	nodeType = sourceNode->getNodeType();
 	
-	if(DOM_Node::DOCUMENT_NODE != nodeType)
+	if(XalanNode::DOCUMENT_NODE != nodeType)
 	{
 		executionContext.cloneToResultTree(
-			sourceNode, 
+			*sourceNode, 
 			false,
 			false,
 			false);
 
-		if(DOM_Node::ELEMENT_NODE == nodeType)
+		if(XalanNode::ELEMENT_NODE == nodeType)
 		{
+			assert(sourceNode != 0);
+
 			ElemUse::execute(
 				executionContext, 
 				sourceTree, 
 				sourceNode, 
 				mode);
 
-			executionContext.copyNamespaceAttributes(sourceNode, 
+			executionContext.copyNamespaceAttributes(*sourceNode, 
 													 false);
 
 			executeChildren(executionContext, 
@@ -143,7 +139,7 @@ ElemCopy::execute(
 				sourceNode, 
 				mode);
 
-			const DOMString		s = sourceNode.getNodeName();
+			const XalanDOMString		s = sourceNode->getNodeName();
 
 			executionContext.endElement(toCharArray(s)); 
 		}

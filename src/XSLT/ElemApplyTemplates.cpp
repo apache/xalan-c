@@ -62,10 +62,6 @@
 
 
 
-#include <Include/DOMHelper.hpp>
-
-
-
 #include "Constants.hpp"
 #include "Stylesheet.hpp"
 #include "StylesheetRoot.hpp"
@@ -78,7 +74,7 @@
 ElemApplyTemplates::ElemApplyTemplates(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
-			const DOMString&				name, 
+			const XalanDOMString&			name,
 			const AttributeList&			atts,
 			int								lineNumber,
 			int								columnNumber) :
@@ -88,17 +84,18 @@ ElemApplyTemplates::ElemApplyTemplates(
 				atts,
 				lineNumber,
 				columnNumber,
-				false),
+				Constants::ELEMNAME_APPLY_TEMPLATES),
 	m_isDefaultTemplate(false),
 	m_mode()
 {
-	const int nAttrs = atts.getLength();
+	const unsigned	int nAttrs = atts.getLength();
 
-	for(int i = 0; i < nAttrs; i++)
+	for(unsigned int i = 0; i < nAttrs; i++)
 	{
-		const DOMString		aname(atts.getName(i));
+		const XalanDOMChar*	const	aname = atts.getName(i);
 
-		const int			tok = constructionContext.getAttrTok(aname);
+		const int					tok =
+			constructionContext.getAttrTok(aname);
 
 		switch(tok)
 		{
@@ -113,7 +110,7 @@ ElemApplyTemplates::ElemApplyTemplates(
 		default:
 			if(!isAttrOK(tok, aname, atts, i))
 			{
-				constructionContext.error(name + " has an illegal attribute: " + aname);
+				constructionContext.error(XalanDOMString(name) + " has an illegal attribute: " + aname);
 			}
 			break;
 		}
@@ -124,23 +121,20 @@ ElemApplyTemplates::ElemApplyTemplates(
 		if(0 == stylesheetTree.getDefaultATXpath())
 		{
 			stylesheetTree.setDefaultATXpath(
-				constructionContext.createXPath(DOMString("node()"), *this));
+				constructionContext.createXPath(XALAN_STATIC_UCODE_STRING("node()"), *this));
 		}
 
 		m_pSelectPattern = stylesheetTree.getDefaultATXpath();
 	}
 }
 
-int ElemApplyTemplates::getXSLToken() const 
-{
-	return Constants::ELEMNAME_APPLY_TEMPLATES;
-}
 
 
-void ElemApplyTemplates::execute(
+void
+ElemApplyTemplates::execute(
 			StylesheetExecutionContext&		executionContext,
-			const DOM_Node&					sourceTree, 
-			const DOM_Node&					sourceNode,
+			XalanNode*						sourceTree,
+			XalanNode*						sourceNode,
 			const QName&					mode) const
 {
 	if(0 != getStylesheet().getStylesheetRoot().getTraceListeners())
@@ -162,30 +156,30 @@ void ElemApplyTemplates::execute(
 			m_pSelectPattern, 
 			Constants::ELEMNAME_APPLY_TEMPLATES);
 	}
-    else // if(null == sourceNode)
+    else
 	{
 		executionContext.error("sourceNode is null in handleApplyTemplatesInstruction!");
 	}
 }
 
 
-NodeImpl* ElemApplyTemplates::appendChild(NodeImpl* newChild)
+
+bool
+ElemApplyTemplates::childTypeAllowed(int	xslToken) const
 {
-	assert(newChild != 0);
+	bool	fResult = false;
 	
-	const int type = dynamic_cast<ElemTemplateElement*>(newChild)->getXSLToken();
-	
-	switch(type)
+	switch(xslToken)
 	{
 	// char-instructions 
 	case Constants::ELEMNAME_SORT:
 	case Constants::ELEMNAME_PARAM:
+		fResult = true;
 		break;
 		
 	default:
-		error("Can not add " + dynamic_cast<ElemTemplateElement*>(newChild)->getTagName() +	" to " + this->getTagName());
 		break;
 	}
 	
-	return ElemTemplateElement::appendChild(newChild);
+	return fResult;
 }

@@ -57,17 +57,12 @@
 #if !defined(XALAN_ELEMWITHPARAM_HEADER_GUARD)
 #define XALAN_ELEMWITHPARAM_HEADER_GUARD 
 
-/**
- * $Id$
- * 
- * 
- * $State$
- * 
- * @author Myriam Midy (Myriam_Midy @lotus.com 
- */
+
 
 // Base include file.  Must be first.
 #include "XSLTDefinitions.hpp"
+
+
 
 // Base class header file.
 #include "ElemTemplateElement.hpp"
@@ -95,7 +90,7 @@ public:
 	ElemWithParam(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
-			const DOMString&				name,
+			const XalanDOMString&			name,
 			const AttributeList&			atts,
 			int								lineNumber,
 			int								columnNumber);
@@ -109,7 +104,10 @@ public:
 	 * @return qualified name
 	 */
 	const QName&
-	getQName() const { return m_qname; }
+	getQName() const
+	{
+		return m_qname;
+	}
 
 	/**
 	 * Retrieve XPath corresponding to "select" attribute
@@ -117,18 +115,20 @@ public:
 	 * @return pointer to XPath for select pattern
 	 */
 	const XPath*
-	getSelectPattern() const { return m_selectPattern; }
-
-	// These methods are inherited from ElemTemplateElement ...
-	
-	virtual int
-	getXSLToken() const;
+	getSelectPattern() const
+	{
+		return m_selectPattern;
+	}
 
 private:
-	// not implemented
-	ElemWithParam(const ElemWithParam &);
-	ElemWithParam& operator=(const ElemWithParam &);
 
+	// not implemented
+	ElemWithParam(const ElemWithParam&);
+
+	ElemWithParam&
+	operator=(const ElemWithParam&);
+
+	// Data members...
 	const XPath*	m_selectPattern;
 
 	QName			m_qname;

@@ -69,7 +69,7 @@
  * Construct a simple AVT part.
  * @param val A pure string section of an AVT.
  */
-AVTPartXPath::AVTPartXPath(const XPath* xpath) :
+AVTPartXPath::AVTPartXPath(const XPath*		xpath) :
 	AVTPart(),
 	m_pXPath(xpath)
 {
@@ -79,7 +79,7 @@ AVTPartXPath::AVTPartXPath(const XPath* xpath) :
 
 static const XPath*
 createAndInitXPath(
-			const DOMString&		val,
+			const XalanDOMString&	val,
 			const PrefixResolver&	resolver,
 			XObjectFactory&			xobjectFactory,
 			XPathEnvSupport&		xpathEnvSupport,
@@ -96,7 +96,7 @@ createAndInitXPath(
 
 
 AVTPartXPath::AVTPartXPath(
-			const DOMString&		val,
+			const XalanDOMString&	val,
 			const PrefixResolver&	resolver,
 			XObjectFactory&			xobjectFactory,
 			XPathEnvSupport&		xpathEnvSupport,
@@ -116,8 +116,8 @@ AVTPartXPath::AVTPartXPath(
 
 void
 AVTPartXPath::	evaluate(
-			DOMString&				buf,
-			const DOM_Node&			contextNode,
+			XalanDOMString&			buf,
+			XalanNode*				contextNode,
 			const PrefixResolver&	prefixResolver,
 			XPathExecutionContext&	executionContext) const
 {

@@ -75,10 +75,6 @@
 
 
 
-class DOMString;
-
-
-
 /**
  * The implementation of the default error handling for Xalan.
  */
@@ -98,14 +94,14 @@ public:
 
 	virtual bool
 	problem(
-			eProblemSource		where,
-			eClassification		classification, 
-			const DOM_Node&		styleNode,
-			const DOM_Node&		sourceNode,
-			const DOMString&	msg,
-			const XMLCh* id,
-			int					lineNo,
-			int					charOffset);
+			eProblemSource			where,
+			eClassification			classification, 
+			const XalanNode*		styleNode,
+			const XalanNode*		sourceNode,
+			const XalanDOMString&	msg,
+			const XalanDOMChar*		id,
+			int						lineNo,
+			int						charOffset);
 
 private:
 

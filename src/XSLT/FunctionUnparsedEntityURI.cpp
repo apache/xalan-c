@@ -57,13 +57,16 @@
 #include "FunctionUnparsedEntityURI.hpp"
 
 
+
+#include <XalanDOM/XalanNode.hpp>
+#include <XalanDOM/XalanDocument.hpp>
+
+
+
 #include <XPath/XObject.hpp>
 #include <XPath/XObjectFactory.hpp>
 #include <XPath/XPathExecutionContext.hpp>
 
-
-#include <dom/DOM_Document.hpp>
-#include <dom/DOM_Node.hpp>
 
 
 FunctionUnparsedEntityURI::FunctionUnparsedEntityURI()
@@ -91,20 +94,31 @@ FunctionUnparsedEntityURI::~FunctionUnparsedEntityURI()
 XObject*
 FunctionUnparsedEntityURI::execute(
 			XPathExecutionContext&			executionContext,
-			const DOM_Node&					context,
-			int								/* opPos */,
-			const std::vector<XObject*>&	args)
+			XalanNode*						context,
+			int								opPos,
+			const XObjectArgVectorType&		args)
 {    
 	if(args.size() != 1)
 	{
 		executionContext.error("The unparsed-entity-uri function should take one argument!");
 	}
-	DOMString name = (args[0])->str();
-	DOM_Document doc =
-		(DOM_Node::DOCUMENT_NODE == context.getNodeType()) ?
-		static_cast<const DOM_Document&>(context) :
-		context.getOwnerDocument();
-	DOMString uri = executionContext.getUnparsedEntityURI(name, doc);
+	else if (context == 0)
+	{
+		executionContext.error("The unparser-entity-URI() function requires a non-null context node!",
+							   context);
+
+		return 0;
+	}
+
+	const XalanDOMString	name = (args[0])->str();
+
+	XalanDocument* const	doc =
+			XalanNode::DOCUMENT_NODE == context->getNodeType() ?
+				static_cast<XalanDocument*>(context) :
+				context->getOwnerDocument();
+	assert(doc != 0);
+
+	const XalanDOMString	uri = executionContext.getUnparsedEntityURI(name, *doc);
+
 	return executionContext.getXObjectFactory().createString(uri);
 }
-

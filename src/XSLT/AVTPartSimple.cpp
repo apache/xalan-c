@@ -65,7 +65,7 @@
 /**
  * Simple string part of a complex AVT.
  */
-AVTPartSimple::AVTPartSimple(const DOMString& val) :
+AVTPartSimple::AVTPartSimple(const XalanDOMString&	val) :
 	AVTPart(),
 	m_val(val)
 {
@@ -75,8 +75,8 @@ AVTPartSimple::AVTPartSimple(const DOMString& val) :
 
 void
 AVTPartSimple::evaluate(
-			DOMString&				buf,
-			const DOM_Node&			/* contextNode */,
+			XalanDOMString&			buf,
+			XalanNode*				/* contextNode */,
 			const PrefixResolver&	/* prefixResolver */,
 			XPathExecutionContext&	/* executionContext */) const
 

@@ -62,14 +62,16 @@
 
 
 
-#include <dom/DOM_Node.hpp>
-#include <dom/DOM_Document.hpp>
-#include <dom/DOMString.hpp>
+#include <XalanDOM/XalanNode.hpp>
+#include <XalanDOM/XalanDocument.hpp>
+#include <XalanDOM/XalanDOMString.hpp>
 
 
 
-#include <Include/DOMHelper.hpp>
 #include <PlatformSupport/DOMStringHelper.hpp>
+
+
+
 #include <XPath/MutableNodeRefList.hpp>
 #include <XPath/NodeRefListBase.hpp>
 #include <XPath/XObject.hpp>
@@ -96,9 +98,9 @@ FunctionKey::~FunctionKey()
 XObject*
 FunctionKey::execute(
 			XPathExecutionContext&			executionContext,
-			const DOM_Node&					context,
+			XalanNode*						context,
 			int								/* opPos */,
-			const std::vector<XObject*>&	args)
+			const XObjectArgVectorType&		args)
 {
 	if (args.size() != 2)
 	{
@@ -107,12 +109,19 @@ FunctionKey::execute(
 
 		return 0;
 	}
+	else if (context == 0)
+	{
+		executionContext.error("The key() function requires a non-null context node!",
+							   context);
+
+		return 0;
+	}
 	else
 	{
-		DOM_Document docContext = 
-				DOM_Node::DOCUMENT_NODE == context.getNodeType() ?
-						static_cast<const DOM_Document&>(context) :
-							context.getOwnerDocument();
+		XalanDocument* const	docContext = 
+				XalanNode::DOCUMENT_NODE == context->getNodeType() ?
+						static_cast<XalanDocument*>(context) :
+							context->getOwnerDocument();
 
 		if(0 == docContext)
 		{
@@ -120,7 +129,9 @@ FunctionKey::execute(
 								   context);
 		}
 
-		const DOMString			keyname = args[0]->str();
+		assert(executionContext.getPrefixResolver() != 0);
+
+		const XalanDOMString	keyname = args[0]->str();
 
 		const XObject* const	arg = args[1];
 		assert(arg != 0);
@@ -135,16 +146,22 @@ FunctionKey::execute(
 		{
 			const NodeRefListBase&	theNodeSet = arg->nodeset();
 
-			const int				nRefs = theNodeSet.getLength();
+			const unsigned int		nRefs = theNodeSet.getLength();
 
 			if (nRefs > 0)
 			{
-				std::set<DOMString>		usedrefs;
+#if !defined(XALAN_NO_NAMESPACES)
+				using std::set;
+#endif
 
-				for(int i = 0; i < nRefs; i++)
+				set<XalanDOMString>		usedrefs;
+
+				for(unsigned int i = 0; i < nRefs; i++)
 				{
-					const DOMString		ref =
-							executionContext.getNodeData(theNodeSet.item(i));
+					assert(theNodeSet.item(i) != 0);
+
+					const XalanDOMString		ref =
+							executionContext.getNodeData(*theNodeSet.item(i));
 
 					if(0 != length(ref))
 					{
@@ -154,15 +171,13 @@ FunctionKey::execute(
 							usedrefs.insert(ref);
 
 							const NodeRefListBase* const		nl =
-									executionContext.getNodeSetByKey(docContext, 
+									executionContext.getNodeSetByKey(*docContext, 
 											keyname,
 											ref,
 											*executionContext.getPrefixResolver());
+							assert(nl != 0);
 
-							if (nl != 0)
-							{
-								theNodeRefList.addNodesInDocOrder(*nl);
-							}
+							theNodeRefList.addNodesInDocOrder(*nl);
 						}
 					}
 				}
@@ -170,10 +185,10 @@ FunctionKey::execute(
 		}
 		else
 		{
-			const DOMString		ref = arg->str();
+			const XalanDOMString			ref = arg->str();
 
 			const NodeRefListBase* const	nl =
-					executionContext.getNodeSetByKey(docContext,
+					executionContext.getNodeSetByKey(*docContext,
 											keyname,
 											ref,
 											*executionContext.getPrefixResolver());

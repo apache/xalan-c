@@ -66,13 +66,25 @@
 #include <sax/SAXException.hpp>
 
 
+
+#include <XalanDOM/XalanAttr.hpp>
+#include <XalanDOM/XalanDocument.hpp>
+#include <XalanDOM/XalanDOMException.hpp>
+
+
+
 #include <PlatformSupport/AttributeListImpl.hpp>
 #include <PlatformSupport/DOMStringPrintWriter.hpp>
 
+
+
 #include <XMLSupport/FormatterToText.hpp>
+
+
 
 #include <XPath/MutableNodeRefList.hpp>
 #include <XPath/XPath.hpp>
+
 
 
 #include "Constants.hpp"
@@ -98,160 +110,50 @@
  * @exception SAXException Never.
  */
 ElemTemplateElement::ElemTemplateElement(
-	StylesheetConstructionContext&	/* constructionContext */,
-	Stylesheet& stylesheetTree, 
-	const DOMString& name, 
-	int lineNumber, 
-	int columnNumber) :
-		UnimplementedElement(&stylesheetTree),
-		PrefixResolver(),
-		m_stylesheet(stylesheetTree),
-		m_lineNumber(lineNumber),
-		m_columnNumber(columnNumber),
-		m_defaultSpace(true),
-		m_finishedConstruction(false),
-		m_namespaces(m_stylesheet.getCurrentNamespace()),
-		m_elemName(name),
-		m_parentNode(0),
-		m_nextSibling(0),
-		m_firstChild(0)
+			StylesheetConstructionContext&	/* constructionContext */,
+			Stylesheet&						stylesheetTree, 
+			const XalanDOMString&			name,
+			int								lineNumber,
+			int								columnNumber,
+			int								xslToken) :
+	XalanElement(),
+	PrefixResolver(),
+	m_stylesheet(stylesheetTree),
+	m_lineNumber(lineNumber),
+	m_columnNumber(columnNumber),
+	m_defaultSpace(true),
+	m_finishedConstruction(false),
+	m_namespaces(m_stylesheet.getCurrentNamespace()),
+	m_elemName(name),
+	m_xslToken(xslToken),
+	m_parentNode(0),
+	m_nextSibling(0),
+	m_previousSibling(0),
+	m_firstChild(0),
+	m_surrogateChildren(*this)
 {
 }
+
 
 
 ElemTemplateElement::~ElemTemplateElement()
 {
-}
+	delete m_nextSibling;
 
-
-NodeImpl* ElemTemplateElement::getParentNode() 
-{
-	return m_parentNode;
-}
-
-
-void ElemTemplateElement::setParentNode(NodeImpl* elem)
-{
-	assert(!elem || dynamic_cast<ElemTemplateElement *>(elem));
-	m_parentNode = dynamic_cast<ElemTemplateElement *>(elem);
-}
-
-
-NodeImpl* ElemTemplateElement::getNextSibling() 
-{
-	return m_nextSibling;
-}
-
-
-void ElemTemplateElement::setNextSibling(NodeImpl* elem)
-{
-	assert(!elem || dynamic_cast<ElemTemplateElement *>(elem));
-	m_nextSibling = dynamic_cast<ElemTemplateElement *>(elem);
+	delete m_firstChild;
 }
 
 
 
-ElemTemplateElement*
-ElemTemplateElement::getFirstChild() const
-{
-	return m_firstChild;
-}
-
-
-
-ElemTemplateElement*
-ElemTemplateElement::getNextSibling() const
-{
-	return m_nextSibling;
-}
-
-
-
-ElemTemplateElement*
-ElemTemplateElement::getParentNode() const
-{
-	return m_parentNode;
-}
-
-
-
-DOMString
-ElemTemplateElement::getTagName()
-{
-	return m_elemName;
-}
-
-
-
-DOMString
-ElemTemplateElement::getNodeName()
-{
-	return m_elemName;
-}
-
-
-
-DOMString
-ElemTemplateElement::getNamespaceForPrefix(const DOMString& prefix) const
-{
-    DOMString nameSpace;
-    if(m_finishedConstruction == true)
-    {
-		 if(!isEmpty(prefix))
-		 {
-			 ElemTemplateElement*  elem = const_cast<ElemTemplateElement *>(this);
-			 while(isEmpty(nameSpace) && elem != 0)
-			 {
-				 NamespaceVectorType nsVector = elem->getNameSpace();
-				 nameSpace = QName::getNamespaceForPrefix(nsVector, prefix);
-				 if (! isEmpty(nameSpace)) break;
-				 assert(elem);
-				 assert(dynamic_cast<ElemTemplateElement *>(elem->getParentNode()));
-				 elem = dynamic_cast<ElemTemplateElement *>(elem->getParentNode());
-			 }
-		 }
-		 else
-		 {
-			 nameSpace = getStylesheet().getNamespaceForPrefixFromStack(prefix);
-		 }
-    }
-    else
-    {
-		nameSpace = getStylesheet().getNamespaceForPrefixFromStack(prefix);
-    }
-    if(isEmpty(nameSpace))
-      error("Can not resolve namespace prefix: "+prefix);
-    return nameSpace;
-}
-
-
-
-DOMString
-ElemTemplateElement::getURI() const
-{
-	return getStylesheet().getBaseIdentifier();
-}
-
-
-
-/** 
- * See if this is a xmlns attribute, and, if so, process it.
- * 
- * @param attrName Qualified name of attribute.
- * @param atts The attribute list where the element comes from (not used at 
- *      this time).
- * @param which The index into the attribute list (not used at this time).
- * @return True if this is a namespace name.
- */
 bool
 ElemTemplateElement::isAttrOK(
 			int						tok,
-			const DOMString&		attrName,
+			const XalanDOMChar*		attrName,
 			const AttributeList&	/* atts */,
 			int						/* which */) const
 {
     bool isXMLNS = (Constants::TATTRNAME_XMLNSDEF == tok) 
-		|| startsWith(attrName,Constants::ATTRNAME_XMLNS);
+		|| startsWith(attrName, Constants::ATTRNAME_XMLNS);
 
     // TODO: Well, process it...
 
@@ -259,18 +161,10 @@ ElemTemplateElement::isAttrOK(
 }
 
 
-/** 
- * See if this is a xmlns attribute, and, if so, process it.
- * 
- * @param attrName Qualified name of attribute.
- * @param atts The attribute list where the element comes from (not used at 
- *      this time).
- * @param which The index into the attribute list (not used at this time).
- * @return True if this is a namespace name.
- */
+
 bool
 ElemTemplateElement::isAttrOK(
-			const DOMString&				attrName,
+			const XalanDOMChar*				attrName,
 			const AttributeList&			atts,
 			int								which,
 			StylesheetConstructionContext&	constructionContext) const
@@ -278,62 +172,53 @@ ElemTemplateElement::isAttrOK(
     return m_stylesheet.isAttrOK(attrName, atts, which, constructionContext);
 }
 
-/** 
- * Tell whether or not this is a xml:space attribute and, if so, process it.
- * 
- * @param aname The name of the attribute in question.
- * @param atts The attribute list that owns the attribute.
- * @param which The index of the attribute into the attribute list.
- * @return True if this is a xml:space attribute.
- */
-void ElemTemplateElement::processSpaceAttr(const AttributeList&	atts, int which)
-{
-	const DOMString spaceVal = atts.getValue(which);
 
-	if(equals(spaceVal, "default") == true)
+void
+ElemTemplateElement::processSpaceAttr(
+			const AttributeList&	atts,
+			int						which)
+{
+	const XalanDOMChar*	const	spaceVal = atts.getValue(which);
+
+	if(equals(spaceVal, XALAN_STATIC_UCODE_STRING("default")) == true)
 	{
 		m_defaultSpace = true;
 	}
-	else if(equals(spaceVal, "preserve") == true)
+	else if(equals(spaceVal, XALAN_STATIC_UCODE_STRING("preserve")) == true)
 	{
 		m_defaultSpace = false;
 	}
 	else
 	{
-		error("xml:space has an illegal value: " + spaceVal);
+		error(XalanDOMString("xml:space has an illegal value: ") + spaceVal);
 	}
 }
 
 
 
-/** 
- * Tell whether or not this is a xml:space attribute and, if so, process it.
- * 
- * @param aname The name of the attribute in question.
- * @param atts The attribute list that owns the attribute.
- * @param which The index of the attribute into the attribute list.
- * @return True if this is a xml:space attribute.
- */
-bool ElemTemplateElement::processSpaceAttr(const DOMString& aname, 
-	const AttributeList& atts, int which)
+bool
+ElemTemplateElement::processSpaceAttr(
+			const XalanDOMChar*		aname, 
+			const AttributeList&	atts,
+			int						which)
 {
-    const bool	isSpaceAttr = equals(aname, "xml:space");
+    const bool	isSpaceAttr = equals(aname, XALAN_STATIC_UCODE_STRING("xml:space"));
 
     if(isSpaceAttr == true)
     {
-		const DOMString spaceVal = atts.getValue(which);
+		const XalanDOMChar*	const	spaceVal = atts.getValue(which);
 
-		if(equals(spaceVal, "default"))
+		if(equals(spaceVal, XALAN_STATIC_UCODE_STRING("default")))
 		{
 			m_defaultSpace = true;
 		}
-		else if(equals(spaceVal, "preserve") == true)
+		else if(equals(spaceVal, XALAN_STATIC_UCODE_STRING("preserve")) == true)
 		{
 			m_defaultSpace = false;
 		}
 		else
 		{
-			error("xml:space has an illegal value: " + spaceVal);
+			error(XalanDOMString("xml:space has an illegal value: ") + spaceVal);
 		}
     }
 
@@ -342,28 +227,24 @@ bool ElemTemplateElement::processSpaceAttr(const DOMString& aname,
 
 
 
-/** 
- * Validate that the string is an NCName.
- * 
- * @param s The name in question.
- * @return True if the string is a valid NCName according to XML rules.
- * @see http://www.w3.org/TR/REC-xml-names#NT-NCName
- */
-bool ElemTemplateElement::isValidNCName(const DOMString& s)
+bool
+ElemTemplateElement::isValidNCName(const XalanDOMString&	s)
 {
-    int len = length(s);
-    XMLCh c = charAt(s,0);
+    const unsigned int	len = length(s);
+
+    XalanDOMChar		c = charAt(s,0);
 
     if(!(isLetterOrDigit(c) || (c == '_')))
       return false;
 
     if(len > 0)
     {
-      for(int i = 1; i < len; i++)
-      {
-        c = charAt(s,i);   
-        if(!(isLetterOrDigit(c) || (c == '_') || (c == '-') || (c == '.')))
-          return false;
+		for(unsigned int i = 1; i < len; i++)
+		{
+			c = charAt(s,i); 
+
+			if(!(isLetterOrDigit(c) || (c == '_') || (c == '-') || (c == '.')))
+				return false;
       }
     }
 
@@ -371,21 +252,13 @@ bool ElemTemplateElement::isValidNCName(const DOMString& s)
 }
 
 
-/** Execute the element's primary function.  Subclasses of this
- * function may recursivly execute down the element tree.
- * 
- * @exception XSLProcessorException 
- * @exception java.net.MalformedURLException 
- * @exception java.io.FileNotFoundException 
- * @exception java.io.IOException 
- * @exception SAXException 
- * @param processor The XSLT Processor.
- * @param sourceTree The input source tree.
- * @param sourceNode The current context node.
- * @param mode The current mode.
- */
-void ElemTemplateElement::execute(StylesheetExecutionContext& executionContext, const DOM_Node& sourceTree, 
-	const DOM_Node& sourceNode, const QName& mode) const
+
+void
+ElemTemplateElement::execute(
+			StylesheetExecutionContext&		executionContext,
+			XalanNode*						sourceTree,
+			XalanNode*						sourceNode,
+			const QName&					mode) const
 {
 	if(0 != getStylesheet().getStylesheetRoot().getTraceListeners())
     {
@@ -395,26 +268,13 @@ void ElemTemplateElement::execute(StylesheetExecutionContext& executionContext, 
 }
 
 
-/** 
- * Process the children of a template.
- * 
- * @param processor The XSLT processor instance.
- * @param sourceTree The input source tree.
- * @param sourceNode The current context node.
- * @param mode The current mode.
- * @exception XSLProcessorException Thrown from one of the child execute 
- *     methods.
- * @exception java.net.MalformedURLException Might be thrown from the       
- *      document() function, or from xsl:include or xsl:import.
- * @exception java.io.FileNotFoundException Might be thrown from the        
- *      document() function, or from xsl:include or xsl:import.
- * @exception java.io.IOException Might be thrown from the document()       
- *      function, or from xsl:include or xsl:import.
- * @exception SAXException Might be thrown from the  document() function, or
- *      from xsl:include or xsl:import.
- */
-void ElemTemplateElement::executeChildren(StylesheetExecutionContext& executionContext, 
-	const DOM_Node& sourceTree, const DOM_Node& sourceNode, const QName& mode) const
+
+void
+ElemTemplateElement::executeChildren(
+			StylesheetExecutionContext&		executionContext,
+			XalanNode*						sourceTree, 
+			XalanNode*						sourceNode,
+			const QName&					mode) const
 {
     for (ElemTemplateElement* node = m_firstChild; node != 0; node = node->m_nextSibling) 
     {
@@ -423,28 +283,13 @@ void ElemTemplateElement::executeChildren(StylesheetExecutionContext& executionC
 }
 
 
-/** 
- * Take the contents of a template element, process it, and
- * convert it to a string.
- * 
- * @exception XSLProcessorException Thrown from one of the child execute  
- *     methods.
- * @exception java.net.MalformedURLException Might be thrown from the       
- *      document() function, or from xsl:include or xsl:import.
- * @exception java.io.FileNotFoundException Might be thrown from the        
- *      document() function, or from xsl:include or xsl:import.
- * @exception java.io.IOException Might be thrown from the  document()      
- *      function, or from xsl:include or xsl:import.
- * @exception SAXException Might be thrown from the  document() function, or
- *      from xsl:include or xsl:import.
- * @param processor The XSLT processor instance.
- * @param sourceTree The primary source tree.
- * @param sourceNode The current source node context.
- * @param mode The current mode.
- * @return The stringized result of executing the elements children.
- */
-DOMString ElemTemplateElement::childrenToString(StylesheetExecutionContext& executionContext, 
-	const DOM_Node& sourceTree, const DOM_Node& sourceNode, const QName& mode) const
+
+XalanDOMString
+ElemTemplateElement::childrenToString(
+			StylesheetExecutionContext&		executionContext, 
+			XalanNode*						sourceTree,
+			XalanNode*						sourceNode,
+			const QName&					mode) const
 { 
 	FormatterListener* const	savedFListener = executionContext.getFormatterListener();
 
@@ -456,11 +301,11 @@ DOMString ElemTemplateElement::childrenToString(StylesheetExecutionContext& exec
 	{
 		executionContext.setFormatterListener(&theFormatter);
 
-		const DOMString	savedPendingName = executionContext.getPendingElementName();
+		const XalanDOMString	savedPendingName = executionContext.getPendingElementName();
 
 		try
 		{
-			executionContext.setPendingElementName(DOMString());
+			executionContext.setPendingElementName(XalanDOMString());
 
 			const AttributeListImpl		savedPendingAttributes(executionContext.getPendingAttributes());
 
@@ -502,36 +347,242 @@ DOMString ElemTemplateElement::childrenToString(StylesheetExecutionContext& exec
 
 
 
-/** 
- * Perform a query if needed, and call transformChild for each child.
- * 
- * @param stylesheetTree The owning stylesheet tree.
- * @param xslInstruction The stylesheet element context (deprecated -- I do 
- *      not think we need this).
- * @param template The owning template context.
- * @param sourceTree The input source tree.
- * @param sourceNodeContext The current source node context.
- * @param mode The current mode.
- * @param selectPattern The XPath with which to perform the selection.
- * @param xslToken The current XSLT instruction (deprecated -- I do not     
- *     think we want this).
- */
+ElemTemplateElement*
+ElemTemplateElement::getFirstChildElem() const
+{
+    return m_firstChild;
+}
+
+
+
+void
+ElemTemplateElement::setFirstChildElem(ElemTemplateElement*		theElement)
+{
+    m_firstChild = theElement;
+}
+
+
+
+ElemTemplateElement*
+ElemTemplateElement::getLastChildElem() const
+{
+	ElemTemplateElement* lastChild = 0;
+
+	for (ElemTemplateElement* node = m_firstChild; node != 0; node = node->m_nextSibling) 
+	{
+		lastChild = node;
+	}
+
+	return lastChild;
+}
+
+
+
+ElemTemplateElement*
+ElemTemplateElement::getNextSiblingElem() const
+{
+	return m_nextSibling;
+}
+
+
+
+void
+ElemTemplateElement::setNextSiblingElem(ElemTemplateElement*	theSibling)
+{
+	m_nextSibling = theSibling;
+}
+
+
+
+ElemTemplateElement*
+ElemTemplateElement::getPreviousSiblingElem() const
+{
+	return m_previousSibling;
+}
+
+
+
+void
+ElemTemplateElement::setPreviousSiblingElem(ElemTemplateElement*	theSibling)
+{
+	m_previousSibling = theSibling;
+}
+
+
+
+ElemTemplateElement*
+ElemTemplateElement::getParentNodeElem() const
+{
+	return m_parentNode;
+}
+
+
+
+void
+ElemTemplateElement::setParentNodeElem(ElemTemplateElement*		theParent)
+{
+	m_parentNode = theParent;
+}
+
+
+
+ElemTemplateElement*
+ElemTemplateElement::appendChildElem(ElemTemplateElement*	newChild)
+{
+	assert(newChild != 0);
+
+	if (childTypeAllowed(newChild->getXSLToken()) == false)
+	{
+		throw XalanDOMException(XalanDOMException::HIERARCHY_REQUEST_ERR);
+	}
+	else if(0 == m_firstChild)
+	{
+		m_firstChild = newChild;
+
+		newChild->setPreviousSiblingElem(0);
+	}
+	else
+	{
+		ElemTemplateElement* const	last = getLastChildElem();
+		assert(last != 0);
+
+		last->setNextSiblingElem(newChild);
+
+		newChild->setPreviousSiblingElem(last);
+	}
+
+	newChild->setParentNodeElem(this);
+	newChild->setNextSiblingElem(0);
+
+	return newChild;
+}
+
+
+
+ElemTemplateElement*
+ElemTemplateElement::insertBeforeElem(
+			ElemTemplateElement*	newChild,
+			ElemTemplateElement*	refChild)
+{
+	assert(newChild != 0);
+
+	if (refChild != 0 && refChild->getParentNode() != this)
+	{
+		throw XalanDOMException(XalanDOMException::NOT_FOUND_ERR);
+	}
+	else if (newChild->getOwnerDocument() != getOwnerDocument())
+	{
+		throw XalanDOMException(XalanDOMException::WRONG_DOCUMENT_ERR);
+	}
+
+	if (refChild == 0)
+	{
+		appendChildElem(newChild);
+	}
+	else
+	{
+		ElemTemplateElement* const	previousChild =
+			refChild->getPreviousSiblingElem();
+
+		if (previousChild != 0)
+		{
+			previousChild->setNextSiblingElem(newChild);
+		}
+		else
+		{
+			assert(m_firstChild == refChild);
+
+			// The old child was the first child,
+			// so update m_firstChild...
+			m_firstChild = newChild;
+		}
+
+		newChild->setPreviousSiblingElem(previousChild);
+		newChild->setNextSiblingElem(refChild);
+
+		refChild->setPreviousSiblingElem(newChild);
+
+		if (refChild == m_firstChild)
+		{
+			m_firstChild = newChild;
+		}
+	}
+
+	return newChild;
+}
+
+
+
+ElemTemplateElement*
+ElemTemplateElement::replaceChildElem(
+			ElemTemplateElement*	newChild,
+			ElemTemplateElement*	oldChild)
+{
+	assert(newChild != 0);
+	assert(oldChild != 0);
+
+	if (oldChild->getParentNode() != this)
+	{
+		throw XalanDOMException(XalanDOMException::NOT_FOUND_ERR);
+	}
+	else if (newChild->getOwnerDocument() != getOwnerDocument())
+	{
+		throw XalanDOMException(XalanDOMException::WRONG_DOCUMENT_ERR);
+	}
+
+	ElemTemplateElement* const	previousChild =
+			oldChild->getPreviousSiblingElem();
+
+	if (previousChild != 0)
+	{
+		previousChild->setNextSiblingElem(newChild);
+	}
+	else
+	{
+		assert(m_firstChild == oldChild);
+
+		// The old child was the first child,
+		// so update m_firstChild...
+		m_firstChild = newChild;
+	}
+
+	newChild->setPreviousSiblingElem(previousChild);
+
+	ElemTemplateElement* const	nextChild =
+			oldChild->getNextSiblingElem();
+
+	newChild->setNextSiblingElem(nextChild);
+
+	if (nextChild != 0)
+	{
+		nextChild->setPreviousSiblingElem(newChild);
+	}
+
+	oldChild->setParentNodeElem(0);
+	oldChild->setPreviousSiblingElem(0);
+	oldChild->setNextSiblingElem(0);
+
+	return oldChild;
+}
+
+
+
 void
 ElemTemplateElement::transformSelectedChildren(
 			StylesheetExecutionContext&		executionContext,
-			const Stylesheet&				stylesheetTree, 
-			const ElemTemplateElement&		xslInstruction, // xsl:apply-templates or xsl:for-each
-			const ElemTemplateElement*		theTemplate, // The template to copy to the result tree
-			const DOM_Node&					/*sourceTree*/, 
-			const DOM_Node&					sourceNodeContext, 
-			const QName&					mode, 
-			const XPath*					selectPattern, 
+			const Stylesheet&				stylesheetTree,
+			const ElemTemplateElement&		xslInstruction,
+			const ElemTemplateElement*		theTemplate,
+			XalanNode*						/*sourceTree*/,
+			XalanNode*						sourceNodeContext,
+			const QName&					mode,
+			const XPath*					selectPattern,
 			int								xslToken) const
 {
 	// Sort the nodes according to the xsl:sort method
-	int tok = xslInstruction.getXSLToken();
-	
-	std::vector<NodeSortKey> keys;
+	const int	tok = xslInstruction.getXSLToken();
+
+	NodeSorter::NodeSortKeyVectorType	keys;
 
 	if((Constants::ELEMNAME_APPLY_TEMPLATES == tok) ||
 		(Constants::ELEMNAME_FOREACH == tok))
@@ -543,17 +594,18 @@ ElemTemplateElement::transformSelectedChildren(
 		// Probably not the most efficient method.
 		for(int i = 0; i < nChildren; i++)
 		{
-			ElemSort* sort = (foreach->getSortElems())[i];
+			ElemSort* sort = foreach->getSortElems()[i];
+			assert(sort != 0);
 			
-			const DOMString langString = (!isEmpty(sort->getLangAVT())) ? 
-				executionContext.evaluateAttrVal(sourceNodeContext, DOM_UnimplementedElement(sort), sort->getLangAVT()): DOMString();
+			const XalanDOMString langString = (!isEmpty(sort->getLangAVT())) ? 
+				executionContext.evaluateAttrVal(sourceNodeContext, *sort, sort->getLangAVT()): XalanDOMString();
 
-			const DOMString dataTypeString = executionContext.evaluateAttrVal(sourceNodeContext, DOM_UnimplementedElement(sort), sort->getDataTypeAVT());
+			const XalanDOMString dataTypeString = executionContext.evaluateAttrVal(sourceNodeContext, *sort, sort->getDataTypeAVT());
 
 			bool treatAsNumbers = ((!isEmpty(dataTypeString)) && equals(dataTypeString,Constants::ATTRVAL_DATATYPE_NUMBER)) ? 
 				true : false;
 
-			const DOMString	orderString = executionContext.evaluateAttrVal(sourceNodeContext, DOM_UnimplementedElement(sort), sort->getOrderAVT());
+			const XalanDOMString	orderString = executionContext.evaluateAttrVal(sourceNodeContext, *sort, sort->getOrderAVT());
 
 			bool descending = ((!isEmpty(orderString)) &&  equals(orderString,Constants::ATTRVAL_ORDER_DESCENDING))? 
 				true : false;
@@ -588,17 +640,17 @@ ElemTemplateElement::transformSelectedChildren(
 				SelectionEvent(executionContext, 
 					sourceNodeContext,
 					*this,
-					"select",
+					XALAN_STATIC_UCODE_STRING("select"),
 					*selectPattern,
 					result));
 		}
 	}
 	else if (keys.size() > 0)
 	{
-		sourceNodes = sourceNodeContext.getChildNodes();
+		sourceNodes = sourceNodeContext->getChildNodes();
 	}
 
-	const int	nNodes = sourceNodes.getLength();
+	const unsigned int	nNodes = sourceNodes.getLength();
 
 	if(nNodes > 0)
 	{
@@ -617,28 +669,30 @@ ElemTemplateElement::transformSelectedChildren(
 		{
 			if(executionContext.isTraceSelect())
 				executionContext.traceSelect(
-					DOM_UnimplementedElement(const_cast<ElemTemplateElement*>(&xslInstruction)), 
+					xslInstruction, 
 					sourceNodes);
 
-			for(int i = 0; i < nNodes; i++) 
+			for(unsigned int i = 0; i < nNodes; i++) 
 			{
-				const DOM_Node childNode = sourceNodes.item(i);
-				
-				DOM_Document ownerDoc = childNode.getOwnerDocument();
-				if((DOM_Node::DOCUMENT_NODE != childNode.getNodeType()) && (ownerDoc == 0))
+				XalanNode*				childNode = sourceNodes.item(i);
+				assert(childNode != 0);
+
+				XalanDocument* const	ownerDoc = childNode->getOwnerDocument();
+
+				if(XalanNode::DOCUMENT_NODE != childNode->getNodeType() && ownerDoc == 0)
 				{
-					error(DOMString("Child node does not have an owner document!"));
+					error(XalanDOMString("Child node does not have an owner document!"));
 				}
 
 				transformChild(
 					executionContext,
-					stylesheetTree, 
+					stylesheetTree,
 					&xslInstruction,
-					theTemplate, 
-					ownerDoc, 
+					theTemplate,
+					ownerDoc,
 					sourceNodeContext, 
 					childNode,
-					mode, 
+					mode,
 					xslToken);
 			}
 		}
@@ -651,47 +705,29 @@ ElemTemplateElement::transformSelectedChildren(
 
 		executionContext.setContextNodeList(savedContextNodeList);
 	}
-
 }
 
-/** 
- * Given an element and mode, find the corresponding
- * template and process the contents.
- * 
- * @param stylesheetTree The current Stylesheet object.
- * @param xslInstruction The calling element (deprecated -- I dont think we 
- *      need this).
- * @param template The template to use if xsl:for-each, or null.
- * @param sourceTree The source DOM tree.
- * @param selectContext The selection context.
- * @param child The source context node.
- * @param mode The current mode, may be null.
- * @param xslToken ELEMNAME_APPLY_TEMPLATES, ELEMNAME_APPLY_IMPORTS, or     
- *      ELEMNAME_FOREACH.
- * @return true if applied a template, false if not.
- */
+
+
 bool
 ElemTemplateElement::transformChild(
 			StylesheetExecutionContext& executionContext,
 			const Stylesheet&			stylesheet_tree, 
-			const ElemTemplateElement*	xslInstruction, // xsl:apply-templates or xsl:for-each
-			const ElemTemplateElement*	theTemplate, // may be null
-			const DOM_Node&				/*sourceTree*/, 
-			const DOM_Node&				selectContext,
-			const DOM_Node&				child,
+			const ElemTemplateElement*	xslInstruction,
+			const ElemTemplateElement*	theTemplate,
+			XalanNode*					sourceTree, 
+			XalanNode*					selectContext,
+			XalanNode*					child,
 			const QName&				mode,
 			int							xslToken) const
 {
-	bool doApplyTemplate = true; // return value
-	bool shouldStrip = false;
+	bool				doApplyTemplate = true;
+	bool				shouldStrip = false;
 
-	const int nodeType = child.getNodeType();
-	const DOM_Node	sourceTree = (DOM_Node::DOCUMENT_NODE == nodeType) ? child :
-		 child.getOwnerDocument();
+	const int			nodeType = child->getNodeType();
+	const Stylesheet*	stylesheetTree = &stylesheet_tree;
 
-	const Stylesheet* stylesheetTree = &stylesheet_tree;
-
-	bool isApplyImports = xslToken == Constants::ELEMNAME_APPLY_IMPORTS;
+	const bool			isApplyImports = xslToken == Constants::ELEMNAME_APPLY_IMPORTS;
 
 	if(!shouldStrip) // rcw: odd, seems that shouldStripis always false
 	{
@@ -723,28 +759,31 @@ ElemTemplateElement::transformChild(
 			{
 				switch(nodeType)
 				{
-				case DOM_Node::DOCUMENT_FRAGMENT_NODE:
-				case DOM_Node::ELEMENT_NODE:
+				case XalanNode::DOCUMENT_FRAGMENT_NODE:
+				case XalanNode::ELEMENT_NODE:
 					theTemplate = getStylesheet().getStylesheetRoot().getDefaultRule();
 					break;
 
-				case DOM_Node::CDATA_SECTION_NODE:
-				case DOM_Node::TEXT_NODE:
-				case DOM_Node::ATTRIBUTE_NODE:
+				case XalanNode::CDATA_SECTION_NODE:
+				case XalanNode::TEXT_NODE:
+				case XalanNode::ATTRIBUTE_NODE:
 					theTemplate = getStylesheet().getStylesheetRoot().getDefaultTextRule();
 					break;
 
-				case DOM_Node::DOCUMENT_NODE:
+				case XalanNode::DOCUMENT_NODE:
 					theTemplate = getStylesheet().getStylesheetRoot().getDefaultRootRule();
 					break;
-				case DOM_Node::COMMENT_NODE:
-				case DOM_Node::PROCESSING_INSTRUCTION_NODE:
+
+				case XalanNode::COMMENT_NODE:
+				case XalanNode::PROCESSING_INSTRUCTION_NODE:
 					break;
+
 				default:
 					assert(false);
 					break;
 
 				}     
+
 				if(0 != theTemplate)
 				{
 				  // Not sure if this is needed. -sb
@@ -760,20 +799,25 @@ ElemTemplateElement::transformChild(
 				{
 					switch(nodeType)
 					{
-					case DOM_Node::CDATA_SECTION_NODE:
-					case DOM_Node::TEXT_NODE:
+					case XalanNode::CDATA_SECTION_NODE:
+					case XalanNode::TEXT_NODE:
 						executionContext.cloneToResultTree(
-							child, false, false, false);
+							*child, false, false, false);
 						break;
-					case DOM_Node::ATTRIBUTE_NODE:
+
+					case XalanNode::ATTRIBUTE_NODE:
 						{
 							//rcw: DOM_node has no virtual funcs so we can't do a dynamic_cast<>.
-							const DOM_Attr& attr = static_cast<const DOM_Attr&>(child);
-							DOMString val = attr.getValue();
+							const XalanAttr* const	attr = static_cast<const XalanAttr*>(child);
+
+							const XalanDOMString	val = attr->getValue();
+
 							executionContext.characters(toCharArray(val), 
-								0, length(val));
+														0,
+														length(val));
 						}
 						break;
+
 					default:
 						assert(false);
 						break;
@@ -785,25 +829,32 @@ ElemTemplateElement::transformChild(
 
 					if(doPush)
 					{
-						executionContext.pushContextMarker(DOM_UnimplementedElement(const_cast<ElemTemplateElement*>(theTemplate)), child);
+						executionContext.pushContextMarker(theTemplate, child);
 
 						if (xslInstruction != 0)
 						{
 							executionContext.pushParams(*xslInstruction, 
-									sourceTree, selectContext, mode,
-									DOM_UnimplementedElement(const_cast<ElemTemplateElement*>(theTemplate)));
+														sourceTree,
+														selectContext,
+														mode,
+														theTemplate);
 						}
 					}
 
 					if(0 != getStylesheet().getStylesheetRoot().getTraceListeners())
 					{
-						TracerEvent te(executionContext, sourceTree, child, 
-							mode, *theTemplate);
+						TracerEvent te(executionContext,
+									   sourceTree,
+									   child, 
+										mode,
+										*theTemplate);
 
 						getStylesheet().getStylesheetRoot().fireTraceEvent(te);
 					}
 					theTemplate->executeChildren(executionContext, 
-						sourceTree, child, mode);
+												 sourceTree,
+												 child,
+												 mode);
 
 					if(doPush)
 					{
@@ -820,195 +871,466 @@ ElemTemplateElement::transformChild(
 }
 
 
-/** 
- * Throw a template element error.
- * 
- * @param msg Description of the error that occured.
- */
 
-void ElemTemplateElement::error(const DOMString& msg) const
+void
+ElemTemplateElement::error(const XalanDOMString&	msg) const
 {
-	DOMString errMsg("ElemTemplateElement error: " + msg);
+	XalanDOMString errMsg("ElemTemplateElement error: " + msg);
 
 	throw SAXException(toCharArray(errMsg));
 }
 
 
-NodeImpl*
-ElemTemplateElement::cloneNode(bool /*deep*/)
+
+XalanDOMString
+ElemTemplateElement::getNodeName() const
 {
-	//should not be called
-	assert(false);	
+	return m_elemName;
+}
+
+
+
+XalanDOMString
+ElemTemplateElement::getNodeValue() const
+{
+	return XalanDOMString();
+}
+
+
+
+ElemTemplateElement::NodeType
+ElemTemplateElement::getNodeType() const
+{
+    return XalanNode::ELEMENT_NODE;
+}
+
+
+
+XalanNode*
+ElemTemplateElement::getParentNode() const
+{
+	return m_parentNode;
+}
+
+
+
+const XalanNodeList*
+ElemTemplateElement::getChildNodes() const
+{
+	return &m_surrogateChildren;
+}
+
+
+
+XalanNode*
+ElemTemplateElement::getFirstChild() const
+{
+	return m_firstChild;
+}
+
+
+
+XalanNode*
+ElemTemplateElement::getLastChild() const
+{
+	return getLastChildElem();
+}
+
+
+
+XalanNode*
+ElemTemplateElement::getPreviousSibling() const 
+{
+	return m_previousSibling;
+}
+
+
+
+XalanNode*
+ElemTemplateElement::getNextSibling() const 
+{
+	return m_nextSibling;
+}
+
+
+
+const XalanNamedNodeMap*
+ElemTemplateElement::getAttributes() const
+{
 	return 0;
 }
 
 
 
-// Implemented DOM Element methods.
-
-/** 
- * Add a child to the child list.
- * 
- * @exception DOMException 
- * @param newChild 
- */
-NodeImpl* ElemTemplateElement::appendChild(NodeImpl* newChild)
+XalanDocument*
+ElemTemplateElement::getOwnerDocument() const
 {
-	if(0 == newChild)
-	{
-		error("Trying to add a null child!");
-	}
-	
-	NodeImpl* elem = newChild;
-	
-	if(0 == m_firstChild)
-	{
-		assert(dynamic_cast<ElemTemplateElement*>(elem));
-		m_firstChild = dynamic_cast<ElemTemplateElement*>(elem);
-	}
-	else
-	{
-		assert(dynamic_cast<ElemTemplateElement*>(getLastChild()));
-		ElemTemplateElement* last = dynamic_cast<ElemTemplateElement*>(getLastChild());
-		assert(last != 0);
-		last->setNextSibling(elem);
-	}
-	
- 	dynamic_cast<ElemTemplateElement*>(elem)->setParentNode(this);
-	
-	return newChild;
+	return &m_stylesheet;
 }
 
 
 
-/*
- *	Remove a node from the child list
- */
-NodeImpl* ElemTemplateElement::removeChild(NodeImpl *oldChild)
+#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
+XalanNode*
+#else
+ElemTemplateElement*
+#endif
+ElemTemplateElement::cloneNode(bool		/* deep */) const
 {
-	if(0 == oldChild)
-	{
-		error("Trying to remove a null child!");
-	}
+	//should not be called
+	assert(false);	
 
-	NodeImpl *pTest = m_firstChild;
+	return 0;
+}
+
+
+
+XalanNode*
+ElemTemplateElement::insertBefore(
+			XalanNode*	newChild,
+			XalanNode*	refChild)
+{
+#if defined(XALAN_OLD_STYLE_CASTS)
+	return insertBeforeElem((ElemTemplateElement*)newChild,
+							(ElemTemplateElement*)refChild);
+#else
+	return insertBeforeElem(dynamic_cast<ElemTemplateElement*>(newChild),
+							dynamic_cast<ElemTemplateElement*>(refChild));
+#endif
+}
+
+
+
+XalanNode*
+ElemTemplateElement::replaceChild(
+			XalanNode*	newChild,
+			XalanNode*	oldChild)
+{
+#if defined(XALAN_OLD_STYLE_CASTS)
+	return replaceChildElem((ElemTemplateElement*)newChild,
+							(ElemTemplateElement*)oldChild);
+#else
+	return replaceChildElem(dynamic_cast<ElemTemplateElement*>(newChild),
+							dynamic_cast<ElemTemplateElement*>(oldChild));
+#endif
+}
+
+
+
+XalanNode*
+ElemTemplateElement::removeChild(XalanNode*		oldChild)
+{
+	assert(oldChild != 0);
+
+	XalanNode*				ret = 0;
 
 	// first try the common, easy cases
-	if (pTest == 0)
-		return 0;
-
-	if (pTest == oldChild)
+	if (oldChild == 0 || oldChild->getParentNode() != this)
 	{
-		m_firstChild = 0;
-		return pTest;
+		throw XalanDOMException(XalanDOMException::NOT_FOUND_ERR);
 	}
+	else
+	{
+		ElemTemplateElement*	pTest = m_firstChild;
+		assert(pTest != 0);
 
-	// now we walk this singly-linked list, peeling one ahead, since we need be
-	// able to patch up the list
+		if (pTest == oldChild)
+		{
+			ElemTemplateElement* const	nextChild =
+				pTest->getNextSiblingElem();
 
-	while (pTest->getNextSibling() != 0 && pTest->getNextSibling() != oldChild)
-		pTest = pTest->getNextSibling();
+			if (nextChild != 0)
+			{
+				nextChild->setPreviousSiblingElem(0);
+			}
 
-	NodeImpl* ret = pTest->getNextSibling();
+			pTest->setNextSiblingElem(0);
+			m_firstChild = nextChild;
 
-	if (pTest->getNextSibling() != 0)
-		dynamic_cast<ElemTemplateElement*>(pTest)->setNextSibling(pTest->getNextSibling()->getNextSibling());
+			ret = pTest;
+		}
+		else
+		{
+			// now we walk this singly-linked list, peeling one ahead, since we need be
+			// able to patch up the list
+
+			while (pTest->getNextSibling() != 0 && pTest->getNextSibling() != oldChild)
+				pTest = pTest->getNextSiblingElem();
+
+			ret = pTest->getNextSibling();
+
+			if (pTest->getNextSibling() != 0)
+				pTest->setNextSiblingElem(pTest->getNextSiblingElem()->getNextSiblingElem());
+		}
+	}
 
 	return ret;
 }
 
 
-/** 
- * Tell if there are child nodes.
- */
-bool ElemTemplateElement::hasChildNodes()
-{
-    return (0 != m_firstChild);
-}
 
-  
-/** 
- * Get the type of the node.
- */
-short ElemTemplateElement::getNodeType()
+XalanNode*
+ElemTemplateElement::appendChild(XalanNode*		oldChild)
 {
-    return DOM_Node::ELEMENT_NODE;
-}
-
-/** Return the nodelist (same reference).
- */
-NodeListImpl* ElemTemplateElement::getChildNodes()
-{
-	return this;
-}
-  
-
-/** Get the first child
- */
-NodeImpl* ElemTemplateElement::getFirstChild() 
-{
-    return m_firstChild;
+#if defined(XALAN_OLD_STYLE_CASTS)
+	return appendChildElem((ElemTemplateElement*)oldChild);
+#else
+	return appendChildElem(dynamic_cast<ElemTemplateElement*>(oldChild));
+#endif
 }
 
 
-/** Get the last child.
- */
-NodeImpl* ElemTemplateElement::getLastChild()
-{
-	ElemTemplateElement* lastChild = 0;
-	assert(!m_firstChild || dynamic_cast<ElemTemplateElement*>(m_firstChild));
 
-	for (ElemTemplateElement* node = m_firstChild; 
-		node != 0; node = node->m_nextSibling) 
+bool
+ElemTemplateElement::hasChildNodes() const
+{
+    return 0 != m_firstChild ? true : false;
+}
+
+
+
+void
+ElemTemplateElement::setNodeValue(const XalanDOMString&		/* nodeValue */)
+{
+	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
+}
+
+
+
+void
+ElemTemplateElement::normalize()
+{
+}
+
+
+
+bool
+ElemTemplateElement::supports(
+			const XalanDOMString&	/* feature */,
+			const XalanDOMString&	/* version */) const
+{
+	return false;
+}
+
+
+
+XalanDOMString
+ElemTemplateElement::getNamespaceURI() const
+{
+	// $$ ToDo: Is this the same value as PrefixResolver::getURI()?
+	return XalanDOMString();
+}
+
+
+
+XalanDOMString
+ElemTemplateElement::getPrefix() const
+{
+	return XalanDOMString();
+}
+
+
+
+XalanDOMString
+ElemTemplateElement::getLocalName() const
+{
+	return XalanDOMString();
+}
+
+
+
+void
+ElemTemplateElement::setPrefix(const XalanDOMString&	/* prefix */)
+{
+	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
+}
+
+
+
+XalanDOMString
+ElemTemplateElement::getTagName() const
+{
+	return m_elemName;
+}
+
+
+
+XalanDOMString
+ElemTemplateElement::getAttribute(const XalanDOMString&		/* name */) const
+{
+	return XalanDOMString();
+}
+
+
+
+XalanAttr*
+ElemTemplateElement::getAttributeNode(const XalanDOMString&		/* name */) const
+{
+	return 0;
+}
+
+
+
+XalanNodeList*
+ElemTemplateElement::getElementsByTagName(const XalanDOMString&		/* name */) const
+{
+	return 0;
+}
+
+
+
+void
+ElemTemplateElement::setAttribute(
+			const XalanDOMString&	/* name */, 
+			const XalanDOMString&	/* value */)
+{
+	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
+}
+
+
+
+XalanAttr*
+ElemTemplateElement::setAttributeNode(XalanAttr*	/* newAttr */)
+{
+	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
+
+	return 0;
+}
+
+
+
+XalanAttr*
+ElemTemplateElement::removeAttributeNode(XalanAttr*	/* oldAttr */)
+{
+	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
+
+	return 0;
+}
+
+
+
+void
+ElemTemplateElement::removeAttribute(const XalanDOMString&	/* name */)
+{
+	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
+}
+
+
+
+XalanDOMString
+ElemTemplateElement::getAttributeNS(
+			const XalanDOMString&	/* namespaceURI */,
+			const XalanDOMString&	/* localName */) const
+{
+	return XalanDOMString();
+}
+
+
+
+void
+ElemTemplateElement::setAttributeNS(
+			const XalanDOMString&	/* namespaceURI */,
+			const XalanDOMString&	/* qualifiedName */,
+			const XalanDOMString&	/* value */)
+{
+	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
+}
+
+
+
+void
+ElemTemplateElement::removeAttributeNS(
+			const XalanDOMString&	/* namespaceURI */,
+			const XalanDOMString&	/* localName */)
+{
+	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
+}
+
+
+
+XalanAttr*
+ElemTemplateElement::getAttributeNodeNS(
+			const XalanDOMString&	/* namespaceURI */,
+			const XalanDOMString&	/* localName */) const
+{
+	return 0;
+}
+
+
+
+XalanAttr*
+ElemTemplateElement::setAttributeNodeNS(XalanAttr*	/* newAttr */)
+{
+	return 0;
+
+	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
+}
+
+
+
+XalanNodeList*
+ElemTemplateElement::getElementsByTagNameNS(
+			const XalanDOMString&	/* namespaceURI */,
+			const XalanDOMString&	/* localName */) const
+{
+	return 0;
+}
+
+
+
+XalanDOMString
+ElemTemplateElement::getNamespaceForPrefix(const XalanDOMString&	prefix) const
+{
+    XalanDOMString	nameSpace;
+
+    if(m_finishedConstruction == true)
+    {
+		 if(!isEmpty(prefix))
+		 {
+			 ElemTemplateElement*  elem = const_cast<ElemTemplateElement *>(this);
+
+			 while(isEmpty(nameSpace) && elem != 0)
+			 {
+				 const NamespaceVectorType&		nsVector = elem->getNameSpace();
+
+				 nameSpace = QName::getNamespaceForPrefix(nsVector, prefix);
+
+				 if (!isEmpty(nameSpace))
+					 break;
+
+				 elem = elem->getParentNodeElem();
+			 }
+		 }
+		 else
+		 {
+			 nameSpace = getStylesheet().getNamespaceForPrefixFromStack(prefix);
+		 }
+    }
+    else
+    {
+		nameSpace = getStylesheet().getNamespaceForPrefixFromStack(prefix);
+    }
+
+    if(isEmpty(nameSpace))
 	{
-		assert(dynamic_cast<ElemTemplateElement*>(node));
-
-		lastChild = node;
+		error("Can not resolve namespace prefix: " + prefix);
 	}
 
-	return lastChild;
+    return nameSpace;
 }
 
 
-/** 
- * NodeList method: Count the immediate children of this node
- * 
- * @return int
- */
-unsigned int ElemTemplateElement::getLength()
+
+XalanDOMString
+ElemTemplateElement::getURI() const
 {
-    // It is assumed that the getChildNodes call synchronized
-    // the children. Therefore, we can access the first child
-    // reference directly.
-    int count = 0;
-
-    for (ElemTemplateElement* node = m_firstChild; node != 0; node = node->m_nextSibling) 
-    {
-      count++;
-    }
-    return count;
-
-} 
+	return getStylesheet().getBaseIdentifier();
+}
 
 
-/** 
- * NodeList method: Return the Nth immediate child of this node, or
- * null if the index is out of bounds.
- * 
- * @param index 
- * @return org.w3c.dom.Node
- */
-NodeImpl* ElemTemplateElement::item(unsigned int	index) 
+
+bool
+ElemTemplateElement::childTypeAllowed(int	/* xslToken */) const
 {
-    // It is assumed that the getChildNodes call synchronized
-    // the children. Therefore, we can access the first child
-    // reference directly.
-    ElemTemplateElement*	node = m_firstChild;
-
-    for (unsigned int i = 0; i < index && node != 0; i++) 
-    {
-		node = node->m_nextSibling;
-    }
-
-    return node;
+	return true;
 }

@@ -69,7 +69,7 @@
 
 
 
-#include <dom/DOMString.hpp>
+#include <XalanDOM/XalanDOMString.hpp>
 
 
 
@@ -89,15 +89,15 @@ public:
 	 *
 	 * @param val A pure string section of an AVT
 	 */
-	AVTPartSimple(const DOMString&	val);
+	AVTPartSimple(const XalanDOMString&		val);
 
 
 	// These methods are inherited from AVTPart ...
 
 	virtual void
 	evaluate(
-			DOMString&				buf,
-			const DOM_Node&			contextNode,
+			XalanDOMString&			buf,
+			XalanNode*				contextNode,
 			const PrefixResolver&	prefixResolver,
 			XPathExecutionContext&	executionContext) const;
 
@@ -106,7 +106,7 @@ private:
 	/**
 	 * Simple string value;
 	 */
-	const DOMString		m_val;
+	const XalanDOMString		m_val;
 };
 
 

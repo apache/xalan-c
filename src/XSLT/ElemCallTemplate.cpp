@@ -78,7 +78,7 @@
 ElemCallTemplate::ElemCallTemplate(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
-			const DOMString&				name,
+			const XalanDOMString&			name,
 			const AttributeList&			atts,
 			int								lineNumber,
 			int								columnNumber) :
@@ -86,14 +86,15 @@ ElemCallTemplate::ElemCallTemplate(
 						stylesheetTree,
 						name,
 						lineNumber,
-						columnNumber),
+						columnNumber,
+						Constants::ELEMNAME_CALLTEMPLATE),
 	m_pNameAVT(0)
 {
-	const int	nAttrs = atts.getLength();
+	const unsigned int	nAttrs = atts.getLength();
 
-	for(int i = 0; i < nAttrs; i++)
+	for(unsigned int i = 0; i < nAttrs; i++)
 	{
-		const DOMString aname(atts.getName(i));
+		const XalanDOMChar*	const	aname = atts.getName(i);
 
 		if(equals(aname, Constants::ATTRNAME_NAME))
 		{
@@ -116,26 +117,18 @@ ElemCallTemplate::~ElemCallTemplate()
 
 
 
-int
-ElemCallTemplate::getXSLToken() const 
-{
-	return Constants::ELEMNAME_CALLTEMPLATE;
-}
-	
-
-
 void
 ElemCallTemplate::execute(
 			StylesheetExecutionContext&		executionContext,
-			const DOM_Node&					sourceTree, 
-			const DOM_Node&					sourceNode,
+			XalanNode*						sourceTree,
+			XalanNode*						sourceNode,
 			const QName&					mode) const
 {
 	ElemTemplateElement::execute(executionContext,	sourceTree, sourceNode, mode);
 
 	assert(m_pNameAVT != 0);
 
-	DOMString templateName; 
+	XalanDOMString templateName; 
 
 	m_pNameAVT->evaluate(templateName, sourceNode, *this, executionContext.getXPathExecutionContext());
 
@@ -146,10 +139,10 @@ ElemCallTemplate::execute(
 
 		if(0 != theTemplate)
 		{
-			executionContext.pushContextMarker(DOM_UnimplementedElement(theTemplate), sourceNode);
+			executionContext.pushContextMarker(theTemplate, sourceNode);
 			
 			executionContext.pushParams(*this, 
-				sourceTree, sourceNode, mode, DOM_UnimplementedElement(theTemplate));
+				sourceTree, sourceNode, mode, theTemplate);
 
 			theTemplate->execute(executionContext, sourceTree, sourceNode, mode);
 
@@ -167,23 +160,22 @@ ElemCallTemplate::execute(
 }
 
 
-/**
- * Add a child to the child list.
- */
-NodeImpl* ElemCallTemplate::appendChild(NodeImpl* newChild)
+
+bool
+ElemCallTemplate::childTypeAllowed(int	xslToken) const
 {
-	assert(dynamic_cast<ElemTemplateElement*>(newChild) != 0);
-
-	const int type = dynamic_cast<ElemTemplateElement*>(newChild)->getXSLToken();
-
-	switch(type)
+	bool	fResult = false;
+	
+	switch(xslToken)
 	{
+	// char-instructions 
 	case Constants::ELEMNAME_PARAM:
+		fResult = true;
 		break;
 		
 	default:
-		error("Can not add " + dynamic_cast<ElemTemplateElement*>(newChild)->getTagName() +	" to " + getTagName());
+		break;
 	}
-
-	return ElemTemplateElement::appendChild(newChild);
+	
+	return fResult;
 }

@@ -57,16 +57,12 @@
 #if !defined(XALAN_ELEMUSE_HEADER_GUARD)
 #define XALAN_ELEMUSE_HEADER_GUARD 
 
-/**
- * $Id$
- * 
- * $State$
- * 
- * @author Myriam Midy (Myriam_Midy @lotus.com) 
- */
+
 
 // Base include file.  Must be first.
 #include "XSLTDefinitions.hpp"
+
+
 
 // Base class header file.
 #include "ElemTemplateElement.hpp"
@@ -74,6 +70,10 @@
 
 
 #include <XPath/QName.hpp>
+
+
+
+#include "Constants.hpp"
 
 
 
@@ -96,9 +96,10 @@ public:
 	ElemUse(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
-			const DOMString&				name,
+			const XalanDOMString&			name,
 			int								lineNumber,
-			int								columnNumber);
+			int								columnNumber,
+			int								xslToken = Constants::ELEMNAME_USE);
 
 	virtual
 	~ElemUse();
@@ -115,7 +116,7 @@ public:
 	bool
 	processUseAttributeSets(
 			StylesheetConstructionContext&	constructionContext,
-			const DOMString&				attrName,
+			const XalanDOMString&			attrName,
 			const AttributeList&			atts,
 			int								which);
 
@@ -124,20 +125,18 @@ public:
 	virtual void
 	execute(
 			StylesheetExecutionContext&		executionContext,
-			const DOM_Node&					sourceTree, 
-			const DOM_Node&					sourceNode,
+			XalanNode*						sourceTree,
+			XalanNode*						sourceNode,
 			const QName&					mode) const;
-
-	virtual int
-	getXSLToken() const; 
 
 private:
 
 #if defined(XALAN_NO_NAMESPACES)
-	typedef vector<QName> QNameVectorType;
+	typedef vector<QName>		QNameVectorType;
 #else
-	typedef std::vector<QName> QNameVectorType;
+	typedef std::vector<QName>	QNameVectorType;
 #endif
+
 	QNameVectorType m_attributeSetsNames;
 };
 

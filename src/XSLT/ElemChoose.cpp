@@ -80,7 +80,7 @@
 ElemChoose::ElemChoose(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
-			const DOMString&				name,
+			const XalanDOMString&			name,
 			const AttributeList&			atts,
 			int								lineNumber,
 			int								columnNumber) :
@@ -88,13 +88,14 @@ ElemChoose::ElemChoose(
 						stylesheetTree,
 						name,
 						lineNumber,
-						columnNumber)
+						columnNumber,
+						Constants::ELEMNAME_CHOOSE)
 {
-	const int	nAttrs = atts.getLength();
+	const unsigned int	nAttrs = atts.getLength();
 
-	for(int i = 0; i < nAttrs; i++)
+	for(unsigned int i = 0; i < nAttrs; i++)
 	{
-		const DOMString aname(atts.getName(i));
+		const XalanDOMChar*	const	aname = atts.getName(i);
 
 		if(isAttrOK(aname, atts, i, constructionContext) == false  || processSpaceAttr(aname, atts, i))
 		{
@@ -105,26 +106,18 @@ ElemChoose::ElemChoose(
 
 
 
-int
-ElemChoose::getXSLToken() const 
-{
-	return Constants::ELEMNAME_CHOOSE;
-}
-
-
-
 void
 ElemChoose::execute(
 			StylesheetExecutionContext&		executionContext,
-			const DOM_Node&					sourceTree, 
-			const DOM_Node&					sourceNode,
+			XalanNode*						sourceTree,
+			XalanNode*						sourceNode,
 			const QName&					mode) const
 {
 	ElemTemplateElement::execute(executionContext,	sourceTree, sourceNode, mode);
 
-    for (const ElemTemplateElement* node = getFirstChild(); 
+    for (const ElemTemplateElement* node = getFirstChildElem();
 			node != 0;
-				node = node->getNextSibling()) 
+				node = node->getNextSiblingElem()) 
     {
 		const int	type = node->getXSLToken();
 
@@ -137,18 +130,18 @@ ElemChoose::execute(
 
 			const XObject* const	test =
 				theXPath ->execute(sourceNode,
-								   *this, 
+								   *this,
 								   executionContext.getXPathExecutionContext());
 			assert(test != 0);
 
 			if(0 != getStylesheet().getStylesheetRoot().getTraceListeners())
 			{
 				getStylesheet().getStylesheetRoot().fireSelectedEvent(
-					SelectionEvent(executionContext, 
+					SelectionEvent(executionContext,
 					sourceNode,
 					*when,
-					DOMString("test"), 
-					*theXPath, 
+					XalanDOMString(XALAN_STATIC_UCODE_STRING("test")),
+					*theXPath,
 					test));
 			}
 
@@ -169,25 +162,22 @@ ElemChoose::execute(
 
 
 
-/**
- * Add a child to the child list.
- */
-NodeImpl* ElemChoose::appendChild(NodeImpl* newChild)
+bool
+ElemChoose::childTypeAllowed(int	xslToken) const
 {
-	assert(dynamic_cast<ElemTemplateElement*>(newChild) != 0);
-
-	const int	type = dynamic_cast<ElemTemplateElement*>(newChild)->getXSLToken();
-
-    switch(type)
-    {
+	bool	fResult = false;
+	
+	switch(xslToken)
+	{
+	// char-instructions 
     case Constants::ELEMNAME_WHEN:
     case Constants::ELEMNAME_OTHERWISE:
-		// TODO: Positional checking
+		fResult = true;
 		break;
 		
-    default:
-		error("Can not add " + dynamic_cast<ElemTemplateElement*>(newChild)->getTagName() + " to " + getTagName());
-    }
-
-    return ElemTemplateElement::appendChild(newChild);
+	default:
+		break;
+	}
+	
+	return fResult;
 }

@@ -75,7 +75,7 @@
 ElemWithParam::ElemWithParam(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
-			const DOMString&				name,
+			const XalanDOMString&			name,
 			const AttributeList&			atts,
 			int								lineNumber,
 			int								columnNumber) :
@@ -83,15 +83,16 @@ ElemWithParam::ElemWithParam(
 						stylesheetTree,
 						name,
 						lineNumber,
-						columnNumber),
+						columnNumber,
+						Constants::ELEMNAME_PARAM),
 	m_selectPattern(0),
 	m_qname(0)
 {
-	const int	nAttrs = atts.getLength();
+	const unsigned int	nAttrs = atts.getLength();
 
-	for(int i = 0; i < nAttrs; i++)
+	for(unsigned int i = 0; i < nAttrs; i++)
 	{
-		const DOMString		aname(atts.getName(i));
+		const XalanDOMChar* const	aname = atts.getName(i);
 
 		if(equals(aname, Constants::ATTRNAME_SELECT))
 		{
@@ -117,12 +118,4 @@ ElemWithParam::ElemWithParam(
 
 ElemWithParam::~ElemWithParam()
 {
-}
-
-
-
-int
-ElemWithParam::getXSLToken() const
-{
-	return Constants::ELEMNAME_PARAM;	
 }

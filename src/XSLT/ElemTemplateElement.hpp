@@ -57,27 +57,23 @@
 #if !defined(XALAN_ELEMTEMPLATEELEMENT_HEADER_GUARD)
 #define XALAN_ELEMTEMPLATEELEMENT_HEADER_GUARD 
 
-/**
- * $Id$
- * 
- * $State$
- * 
- * @author Myriam Midy (Myriam_Midy @lotus.com)
- */
+
 
 // Base include file.  Must be first.
-#include "XSLTDefinitions.hpp"
+#include <XSLT/XSLTDefinitions.hpp>
+
 
 
 #include <vector>
 
 
-#include <dom/DOMString.hpp>
-#include <dom/DOM_Node.hpp>
+
+#include <XalanDOM/XalanDOMString.hpp>
+#include <XalanDOM/XalanElement.hpp>
+#include <XalanDOM/XalanNodeListSurrogate.hpp>
 
 
 
-#include <DOMSupport/UnimplementedElement.hpp>
 #include <XPath/PrefixResolver.hpp>
 #include <XPath/NameSpace.hpp>
 
@@ -100,7 +96,7 @@ class XPath;
  * @see class Stylesheet
  */
 
-class ElemTemplateElement : public UnimplementedElement, public PrefixResolver
+class ElemTemplateElement : public XalanElement, public PrefixResolver
 {
 public:
 	/**
@@ -112,13 +108,15 @@ public:
 	 * @param lineNumber           line in the XSLT file where the element occurs
 	 * @param columnNumber         column index in the XSLT file where the
 	 *                             element occurs
+	 * @param xslToken             an integer representing the type of instance.
 	 */
-	ElemTemplateElement (
-		StylesheetConstructionContext&	constructionContext,
-        Stylesheet&						stylesheetTree,
-        const DOMString&				name, 
-        int								lineNumber,
-		int								columnNumber);
+	ElemTemplateElement(
+			StylesheetConstructionContext&	constructionContext,
+			Stylesheet&						stylesheetTree,
+			const XalanDOMString&			name,
+			int								lineNumber,
+			int								columnNumber,
+			int								xslToken);
 
 	virtual
 	~ElemTemplateElement();
@@ -132,9 +130,10 @@ public:
 	* @param which    index into the attribute list (not used at this time)
 	* @return         true if this is a namespace name
 	*/
-	bool isAttrOK(
+	bool
+	isAttrOK(
 			int						tok,
-			const DOMString&		attrName,
+			const XalanDOMChar*		attrName,
 			const AttributeList&	atts,
 			int						which) const;
 
@@ -149,7 +148,7 @@ public:
 	*/
 	bool
 	isAttrOK(
-			const DOMString&				attrName,
+			const XalanDOMChar*				attrName,
 			const AttributeList&			atts,
 			int								which,
 			StylesheetConstructionContext&	constructionContext) const;
@@ -162,7 +161,10 @@ public:
 	 * @param which index of the attribute into the attribute list
 	 * @return      true if this is a xml:space attribute
 	 */
-	void processSpaceAttr(const AttributeList& atts, int which);
+	void
+	processSpaceAttr(
+			const AttributeList&	atts,
+			int						which);
 
 	/** 
 	 * Tell whether or not this is a xml:space attribute and, if so, process it.
@@ -172,9 +174,11 @@ public:
 	 * @param which  index of the attribute into the attribute list
 	 * @return       true if this is a xml:space attribute
 	 */
-	bool processSpaceAttr(const DOMString& aname, 
-		const AttributeList& atts, int which);
-
+	bool
+	processSpaceAttr(
+			const XalanDOMChar*		aname, 
+			const AttributeList&	atts,
+			int						which);
 
 	/** 
 	 * Validate that the string is an NCName.
@@ -183,7 +187,8 @@ public:
 	 * @return  true if the string is a valid NCName according to XML rules
 	 * @see http://www.w3.org/TR/REC-xml-names#NT-NCName
 	 */
-	static bool isValidNCName(const DOMString& s);
+	static bool
+	isValidNCName(const XalanDOMString&		s);
 
 	/** 
 	 * Execute the element's primary function.  Subclasses of this function may
@@ -197,8 +202,8 @@ public:
 	virtual	void
 	execute(
 			StylesheetExecutionContext&		executionContext,
-			const DOM_Node&					sourceTree, 
-			const DOM_Node&					sourceNode,
+			XalanNode*						sourceTree,
+			XalanNode*						sourceNode,
 			const QName&					mode) const;
 
 	/** 
@@ -212,8 +217,8 @@ public:
 	void
 	executeChildren(
 			StylesheetExecutionContext&		executionContext,
-			const DOM_Node&					sourceTree, 
-			const DOM_Node&					sourceNode,
+			XalanNode*						sourceTree, 
+			XalanNode*						sourceNode,
 			const QName&					mode) const;
 
 	/** 
@@ -238,9 +243,12 @@ public:
 	 * @param mode       current mode
 	 * @return stringized result of executing the elements children
 	 */
-	DOMString childrenToString(StylesheetExecutionContext& executionContext, 
-		const DOM_Node&	sourceTree, const DOM_Node& sourceNode,
-		const QName& mode) const;
+	XalanDOMString
+	childrenToString(
+			StylesheetExecutionContext&		executionContext, 
+			XalanNode*						sourceTree,
+			XalanNode*						sourceNode,
+			const QName&					mode) const;
 
 
 	/** 
@@ -250,7 +258,11 @@ public:
 	 *         class
 	 * @see class Constants
 	 */
-	virtual int	getXSLToken() const = 0;
+	int
+	getXSLToken() const
+	{
+		return m_xslToken;
+	}
 
 	/** 
 	 * Tell if the string is whitespace.
@@ -258,7 +270,8 @@ public:
 	 * @param string string in question
 	 * @return true if the string is pure whitespace
 	 */
-	static bool isWhiteSpace(const DOMString& theString);
+	static bool
+	isWhiteSpace(const XalanDOMString& theString);
 
 	/** 
 	 * Throw a template element runtime error.  
@@ -266,7 +279,8 @@ public:
 	 * 
 	 * @param msg Description of the error that occurred
 	 */
-	virtual	void error(const DOMString& msg) const;
+	virtual	void
+	error(const XalanDOMString&		msg) const;
 
 	/** 
 	 * Get the line number where the element occurs in the xsl file.
@@ -293,7 +307,7 @@ public:
 #if defined(XALAN_NO_NAMESPACES)
 	typedef	vector<NameSpace>		NamespaceVectorType;
 #else
-	typedef	std::vector<NameSpace>		NamespaceVectorType;
+	typedef	std::vector<NameSpace>	NamespaceVectorType;
 #endif
 
 	/** 
@@ -330,110 +344,7 @@ public:
 	}
 
 
-	// These interfaces are inherited from PrefixResolver...
-
-	virtual DOMString
-	getNamespaceForPrefix(const DOMString& prefix) const;
-
-
-	virtual DOMString
-	getURI() const;
-
-
-	// These interfaces are inherited from UnimplementedElement ...
-
-	/** 
-	 * Add a child to the child list.
-	 * 
-	 * @exception DOMException 
-	 * @param newChild child node to add
-	 */
-	virtual NodeImpl* appendChild(NodeImpl* newChild);
-
-	/**
-	 *	Remove a node from the child list
-	 * 
-	 * @param oldChild child node to remove
-	 */
-	virtual NodeImpl* removeChild(NodeImpl *oldChild);
-
-	/** 
-	 * Tell if there are child nodes.
-	 * 
-	 * @return true if there are child nodes
-	 */
-	virtual	bool hasChildNodes();
-
-	/**
-	 * Get the type of the node.
-	 * 
-	 * @return integer representation of the element type
-	 */
-	virtual	short getNodeType();
-
-	/**
-	 * Get the parent.
-	 * 
-	 * @return parent of this node
-	 */
-	virtual	NodeImpl* getParentNode();
-
-	/**
-	 * Set the parent.
-	 * 
-	 * @param elem parent of this node
-	 */
-	virtual void setParentNode(NodeImpl* elem);
-
-	/**
-	 * Return the nodelist (same reference).
-	 * 
-	 * @return list of child nodes
-	 */
-	virtual NodeListImpl* getChildNodes();
-
-	/**
-	 * Get the first child
-	 * 
-	 * @return pointer to first child node
-	 */
-	virtual NodeImpl* getFirstChild();
-
-	/**
-	 * Get the last child.
-	 * 
-	 * @return pointer to last child node
-	 */
-	virtual	NodeImpl*getLastChild();
-
-
-	/**
-	 * Get the next sibling or return null.
-	 * 
-	 * @return pointer to next sibling node
-	 */
-	virtual NodeImpl* getNextSibling();
-
-	/**
-	 * Set the next sibling.
-	 */
-	virtual	void setNextSibling(NodeImpl* elem);
-
-	/**
-	 * Count the immediate children of this node.
-	 * 
-	 * @return number of immediate children of this node
-	 */
-	virtual	unsigned int getLength();
-
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-	virtual NodeImpl*
-#else
-	virtual ElemTemplateElement*
-#endif
-	cloneNode(bool deep);
-
-	// Type-safe getters...
+	// Type-safe getters/setters...
 
 	/**
 	 * Get the first child.
@@ -441,7 +352,25 @@ public:
 	 * @return first child node of this node
 	 */
 	virtual ElemTemplateElement*
-	getFirstChild() const;
+	getFirstChildElem() const;
+
+	/**
+	 * Set the first child.
+	 *
+	 * theChild - the new value for the first child.
+	 *
+	 * @return nothing
+	 */
+	virtual void
+	setFirstChildElem(ElemTemplateElement*	theChild);
+
+	/**
+	 * Get the last child.
+	 * 
+	 * @return last child node of this node
+	 */
+	virtual ElemTemplateElement*
+	getLastChildElem() const;
 
 	/**
 	 * Get the next sibling.
@@ -449,7 +378,35 @@ public:
 	 * @return next sibling node of this node
 	 */
 	virtual ElemTemplateElement*
-	getNextSibling() const;
+	getNextSiblingElem() const;
+
+	/**
+	 * Set the next sibling.
+	 *
+	 * theSibling - the new value for the next sibling.
+	 *
+	 * @return nothing
+	 */
+	virtual void
+	setNextSiblingElem(ElemTemplateElement*		theSibling);
+
+	/**
+	 * Get the previous sibling.
+	 * 
+	 * @return previous sibling node of this node
+	 */
+	virtual ElemTemplateElement*
+	getPreviousSiblingElem() const;
+
+	/**
+	 * Set the previous sibling.
+	 *
+	 * theSibling - the new value for the previous sibling.
+	 *
+	 * @return nothing
+	 */
+	virtual void
+	setPreviousSiblingElem(ElemTemplateElement*		theSibling);
 
 	/**
 	 * Get the parent node.
@@ -457,39 +414,206 @@ public:
 	 * @return parent node of this node
 	 */
 	virtual	ElemTemplateElement*
-	getParentNode() const;
+	getParentNodeElem() const;
 
 	/**
-	 * Return the Nth immediate child of this node, or null if the index is out
-	 * of bounds.
-	 * 
-	 * @param i index 
-	 * @return child node corresponding to index i
+	 * Set the parent node.
+	 *
+	 * theParent - the new value for the parent.
+	 *
+	 * @return nothing
 	 */
+	virtual void
+	setParentNodeElem(ElemTemplateElement*		theParent);
+
+	/**
+	 * Append a child.
+	 *
+	 * theParent - the new value for the parent.
+	 *
+	 * @return nothing
+	 */
+	virtual ElemTemplateElement*
+	appendChildElem(ElemTemplateElement*	newChild);
+
+	/**
+	 * Append a child.
+	 *
+	 * @param newChild the new child to insert
+	 * @param refChild the node before which to insert the new node
+	 *
+	 * @return newChild
+	 */
+	virtual ElemTemplateElement*
+	insertBeforeElem(
+			ElemTemplateElement*	newChild,
+			ElemTemplateElement*	refChild);
+
+	/**
+	 * Replace a child.
+	 *
+	 * @param newChild the new child to insert
+	 * @param oldChild the child to be replaced
+	 *
+	 * @return oldChild
+	 */
+	virtual ElemTemplateElement*
+	replaceChildElem(
+			ElemTemplateElement*	newChild,
+			ElemTemplateElement*	oldChild);
+
+	// These interfaces are inherited from XalanElement ...
+
+	virtual XalanDOMString
+	getNodeName() const;
+
+	virtual XalanDOMString
+	getNodeValue() const;
+
+	virtual NodeType
+	getNodeType() const;
+
+	virtual XalanNode*
+	getParentNode() const;
+
+	virtual const XalanNodeList*
+	getChildNodes() const;
+
+	virtual XalanNode*
+	getFirstChild() const;
+
+	virtual XalanNode*
+	getLastChild() const;
+
+	virtual XalanNode*
+	getPreviousSibling() const;
+
+	virtual XalanNode*
+	getNextSibling() const;
+
+	virtual const XalanNamedNodeMap*
+	getAttributes() const;
+
+	virtual XalanDocument*
+	getOwnerDocument() const;
+
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-	virtual NodeImpl*
+	virtual XalanNode*
 #else
 	virtual ElemTemplateElement*
 #endif
-	item(unsigned int	i);
+	cloneNode(bool	deep) const;
 
-	/**
-	 * Return the element name.
-	 * 
-	 * @return element name string
-	 */
-	virtual DOMString
-	getTagName();
+	virtual XalanNode*
+	insertBefore(
+			XalanNode*	newChild,
+			XalanNode*	refChild);
 
-	/**
-	 * Return the node name.
-	 * 
-	 * @return node name string
-	 */
-	virtual DOMString
-	getNodeName();
+	virtual XalanNode*
+	replaceChild(
+			XalanNode*	newChild,
+			XalanNode*	oldChild);
+
+	virtual XalanNode*
+	removeChild(XalanNode*	oldChild);
+
+	virtual XalanNode*
+	appendChild(XalanNode*	newChild);
+
+	virtual bool
+	hasChildNodes() const;
+
+	virtual void
+	setNodeValue(const XalanDOMString&	nodeValue);
+
+	virtual void
+	normalize();
+
+	virtual bool
+	supports(
+			const XalanDOMString&	feature,
+			const XalanDOMString&	version) const;
+
+	virtual XalanDOMString
+	getNamespaceURI() const;
+
+	virtual XalanDOMString
+	getPrefix() const;
+
+	virtual XalanDOMString
+	getLocalName() const;
+
+	virtual void
+	setPrefix(const XalanDOMString&	prefix);
+
+	virtual XalanDOMString
+	getTagName() const;
+
+	virtual XalanDOMString
+	getAttribute(const XalanDOMString&	name) const;
+
+	virtual XalanAttr*
+	getAttributeNode(const XalanDOMString&	name) const;
+
+	virtual XalanNodeList*
+	getElementsByTagName(const XalanDOMString&	name) const;
+
+	virtual void
+	setAttribute(
+			const XalanDOMString&	name, 
+			const XalanDOMString&	value);
+
+	virtual XalanAttr*
+	setAttributeNode(XalanAttr*		newAttr);
+
+	virtual XalanAttr*
+	removeAttributeNode(XalanAttr*	oldAttr);
+
+	virtual void
+	removeAttribute(const XalanDOMString&	name);
+
+	virtual XalanDOMString
+	getAttributeNS(
+			const XalanDOMString&	namespaceURI,
+			const XalanDOMString&	localName) const;
+
+	virtual void
+	setAttributeNS(
+			const XalanDOMString&	namespaceURI,
+			const XalanDOMString&	qualifiedName,
+			const XalanDOMString&	value);
+
+	virtual void
+	removeAttributeNS(
+			const XalanDOMString&	namespaceURI,
+			const XalanDOMString&	localName);
+
+	virtual XalanAttr*
+	getAttributeNodeNS(
+			const XalanDOMString&	namespaceURI,
+			const XalanDOMString&	localName) const;
+
+	virtual XalanAttr*
+	setAttributeNodeNS(XalanAttr*	newAttr);
+
+	virtual XalanNodeList*
+	getElementsByTagNameNS(
+			const XalanDOMString&	namespaceURI,
+			const XalanDOMString&	localName) const;
+
+
+	// These interfaces are inherited from PrefixResolver...
+
+	virtual XalanDOMString
+	getNamespaceForPrefix(const XalanDOMString& prefix) const;
+
+
+	virtual XalanDOMString
+	getURI() const;
+
 
 protected:
+
 	/** 
 	 * Perform a query if needed, and call transformChild for each child.
 	 * 
@@ -504,17 +628,17 @@ protected:
 	 * @param xslToken The current XSLT instruction (deprecated -- I do not     
 	 *     think we want this).
 	 */
-	void transformSelectedChildren(
-		StylesheetExecutionContext& executionContext,
-		const Stylesheet& stylesheetTree, 
-		const ElemTemplateElement& xslInstruction, // xsl:apply-templates or xsl:for-each
-		const ElemTemplateElement* theTemplate, // The template to copy to the result tree
-		const DOM_Node&	sourceTree, 
-		const DOM_Node&	sourceNodeContext, 
-		const QName& mode, 
-		const XPath* selectPattern, 
-		int xslToken) const;
-
+	void
+	transformSelectedChildren(
+			StylesheetExecutionContext&		executionContext,
+			const Stylesheet&				stylesheetTree,
+			const ElemTemplateElement&		xslInstruction,
+			const ElemTemplateElement*		theTemplate,
+			XalanNode*						sourceTree,
+			XalanNode*						sourceNodeContext,
+			const QName&					mode,
+			const XPath*					selectPattern,
+			int								xslToken) const;
 
 	/**
 	 * Given an element and mode, find the corresponding
@@ -532,30 +656,55 @@ protected:
 	 *      ELEMNAME_FOREACH.
 	 * @return true if applied a template, false if not.
 	 */
-	bool transformChild(
-		StylesheetExecutionContext& executionContext,
-		const Stylesheet& stylesheetTree,
-		const ElemTemplateElement* xslInstruction, // xsl:apply-templates or xsl:for-each
-		const ElemTemplateElement* theTemplate, // may be null
-		const DOM_Node&	sourceTree, const DOM_Node& selectContext,
-		const DOM_Node&	child, const QName&	mode,
-		int	xslToken) const;
+	bool
+	transformChild(
+			StylesheetExecutionContext&		executionContext,
+			const Stylesheet&				stylesheetTree,
+			const ElemTemplateElement*		xslInstruction,
+			const ElemTemplateElement*		theTemplate,
+			XalanNode*						sourceTree,
+			XalanNode*						selectContext,
+			XalanNode*						child,
+			const QName&					mode,
+			int								xslToken) const;
 
-
-  // Implemented DOM Element methods.
+	/**
+	 * Given an xsl token type, determine whether or not a child
+	 * of that type is allowed.  This is so derived types can
+	 * determine whether a particular type of child is allowed for
+	 * the instance.  It is called from appendChildElem().
+	 *
+	 * The default is to allow no types (no children)
+	 *
+	 * @param xslToken The xsl token value of the child.
+	 *
+	 * @return true if the child is allowed, or false if not.
+	 */
+	virtual bool
+	childTypeAllowed(int	xslToken) const;
 
 private:
 
-	const Stylesheet&		m_stylesheet;
+	Stylesheet&				m_stylesheet;
+
 	const int				m_lineNumber;
 	const int				m_columnNumber;
+
 	NamespaceVectorType 	m_namespaces;
+
 	bool					m_defaultSpace;
 	bool					m_finishedConstruction;
-	const DOMString			m_elemName;
+
+	const XalanDOMString	m_elemName;
+
+	const int				m_xslToken;
+
 	ElemTemplateElement*	m_parentNode;
 	ElemTemplateElement*	m_nextSibling;
+	ElemTemplateElement*	m_previousSibling;
 	ElemTemplateElement*	m_firstChild;
+
+	XalanNodeListSurrogate	m_surrogateChildren;
 };
 
 

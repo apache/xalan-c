@@ -64,16 +64,24 @@
 // Base include file.  Must be first.
 #include "XSLTDefinitions.hpp"
 
-#include <dom/DOMString.hpp>
+
+
+#include <XalanDOM/XalanDOMString.hpp>
+
+
+
 #include <XPath/QName.hpp>
+
+
 
 // Base class header file.
 #include "StackEntry.hpp"
 
-#include <cassert>
+
 
 class XObject;
-class DOMString;
+
+
 
 /**
  * This class holds an instance of an argument on the stack.
@@ -94,21 +102,24 @@ public:
 	 * @param isParamVar true if expression is a parameter variable
 	 */
 	Arg(
-		const QName&		name,
-		const DOMString&	expr,
-		bool				isParamVar);
+		const QName&			name,
+		const XalanDOMString&	expr,
+		bool					isParamVar);
 
 	/**
 	 * Construct an argument object from an XObject
 	 * 
 	 * @param name	name of argument
 	 * @param val XObject argument represents
+	 * @param isParamVar true if expression is a parameter variable
 	 */
 	Arg(
 		const QName&	name,
-		XObject*		val);
+		XObject*		val,
+		bool			isParamVar);
 
-	virtual ~Arg();
+	virtual
+	~Arg();
 
 	/**
 	 * Override equals and agree that we're equal if the passed object is a
@@ -180,7 +191,7 @@ public:
 	 * 
 	 * @return string representation of expression
 	 */
-	const DOMString&
+	const XalanDOMString&
 	getExpression() const
 	{
 		return m_expression;
@@ -192,7 +203,7 @@ public:
 	 * @param pexpr string representation of expression
 	 */
 	void
-	setExpression(const DOMString& pexpr)
+	setExpression(const XalanDOMString&		pexpr)
 	{
 		m_expression = pexpr;
 	};
@@ -210,11 +221,11 @@ public:
 
 private:
 
-	QName			m_qname;
-	eArgumentType	m_argType;
-	bool			m_isParamVar;
-	XObject*		m_val;
-	DOMString		m_expression;
+	QName				m_qname;
+	eArgumentType		m_argType;
+	bool				m_isParamVar;
+	XObject*			m_val;
+	XalanDOMString		m_expression;
 };
 
 

@@ -58,6 +58,7 @@
 
 
 
+#include <algorithm>
 #include <cassert>
 
 
@@ -67,10 +68,10 @@
 
 
 #include <PlatformSupport/DOMStringHelper.hpp>
+#include <PlatformSupport/STLHelper.hpp>
 
 
 
-#include "Constants.hpp"
 #include "ElemSort.hpp"
 #include "StylesheetConstructionContext.hpp"
 #include "StylesheetExecutionContext.hpp"
@@ -78,32 +79,30 @@
 
 
 ElemForEach::ElemForEach(
-	StylesheetConstructionContext&	constructionContext,
-	Stylesheet& stylesheetTree,
-	const DOMString& name, 
-	const AttributeList& atts,
-	int lineNumber, 
-	int	columnNumber,
-	bool isOnlyForEach) :
-		ElemTemplateElement(constructionContext, stylesheetTree, name,  lineNumber, columnNumber),	
-		m_pSelectPattern(0)
+			StylesheetConstructionContext&	constructionContext,
+			Stylesheet&						stylesheetTree,
+			const XalanDOMString&			name,
+			const AttributeList&			atts,
+			int								lineNumber,
+			int								columnNumber,
+			int								xslToken) :
+	ElemTemplateElement(constructionContext,
+						stylesheetTree,
+						name,
+						lineNumber,
+						columnNumber,
+						xslToken),	
+	m_pSelectPattern(0)
 {
-	// since we're calling the virtual function getXSLToken() from a ctor, subclasses 
-	// like ElemApplyTemplates when in a partially constructed state will get
-	// ELEMNAME_FOREACH.  So, as an extra check, we pass in a boolean flag, isOnlyFor each
-	// which is true iff an ElemForEach object is being created not part of a subclass		
-	//
-	if(isOnlyForEach)
+	if(xslToken == Constants::ELEMNAME_FOREACH)
 	{
-		assert(Constants::ELEMNAME_FOREACH == getXSLToken());
-
-		int nAttrs = atts.getLength();
+		const unsigned int	nAttrs = atts.getLength();
 		
-		for(int i = 0; i < nAttrs; i++)
+		for(unsigned int i = 0; i < nAttrs; i++)
 		{
-			const DOMString aname(atts.getName(i));
+			const XalanDOMChar*	const	aname = atts.getName(i);
 
-			if(equals(aname,Constants::ATTRNAME_SELECT))
+			if(equals(aname, Constants::ATTRNAME_SELECT))
 			{
 				m_pSelectPattern = constructionContext.createXPath(atts.getValue(i), *this);
 			}
@@ -120,41 +119,43 @@ ElemForEach::ElemForEach(
 	}
 }
 
+
+	
 ElemForEach::~ElemForEach()
 {
-	size_t len = m_sortElems.size();
+#if !defined(XALAN_NO_NAMESPACES)
+	using std::for_each;
+#endif
 
-	for (size_t i=0; i< len; i++)
-		delete m_sortElems[i];
-}
-
-int ElemForEach::getXSLToken() const 
-{
-	return Constants::ELEMNAME_FOREACH;
+	for_each(m_sortElems.begin(),
+			 m_sortElems.end(),
+			 DeleteFunctor<ElemTemplateElement>());
 }
 
 
 
 void
 ElemForEach::execute(
-	StylesheetExecutionContext& executionContext, 
-	const DOM_Node& sourceTree, 
-	const DOM_Node& sourceNode,
-	const QName& mode) const
+			StylesheetExecutionContext&		executionContext,
+			XalanNode*						sourceTree,
+			XalanNode*						sourceNode,
+			const QName&					mode) const
 {
 	if (sourceNode != 0)
 	{
 		assert(m_pSelectPattern != 0);
 
 		transformSelectedChildren(executionContext, getStylesheet(), 
-			*this,this,sourceTree,sourceNode,mode,
-			m_pSelectPattern, Constants::ELEMNAME_FOREACH);
+								  *this,
+								  this,
+								  sourceTree,sourceNode,mode,
+								  m_pSelectPattern,
+								  Constants::ELEMNAME_FOREACH);
 	}
     else
     {
-	  // error wants DOM_node for first param		
-      executionContext.error("sourceNode is null in handleApplyTemplatesInstruction!",
-							 sourceNode, 
-							 DOM_UnimplementedElement(const_cast<ElemForEach*>(this)));
+		executionContext.error("sourceNode is null in handleApplyTemplatesInstruction!",
+							   sourceNode, 
+							   this);
     }
 }

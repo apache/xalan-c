@@ -61,7 +61,7 @@
 #include "ElementMarker.hpp"
 
 
-ElementMarker::ElementMarker(const DOM_Node& elem) :
+ElementMarker::ElementMarker(const XalanNode*	elem) :
 	StackEntry(eElementMarker),
 	m_elem(elem)
 {
@@ -82,11 +82,16 @@ ElementMarker::~ElementMarker()
 }
 
 
+
 bool
-ElementMarker::equals(const StackEntry& rhs) const
+ElementMarker::equals(const StackEntry&		rhs) const
 {
 	if (getType() == rhs.getType() &&
+#if defined(XALAN_OLD_STYLE_CASTS)
+		m_elem == ((const ElementMarker&)rhs).m_elem)
+#else
 		m_elem == static_cast<const ElementMarker&>(rhs).m_elem)
+#endif
 	{
 		return true;
 	}
@@ -107,7 +112,3 @@ ElementMarker::clone() const
 {
 	return new ElementMarker(*this);
 }
-
-/*
- *      $ Log: $
- */

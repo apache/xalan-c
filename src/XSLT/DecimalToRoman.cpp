@@ -60,10 +60,10 @@
 
 
 DecimalToRoman::DecimalToRoman(
-			long				postValue,
-			const DOMString&	postLetter, 
-			long				preValue,
-			const DOMString&	preLetter) :
+			long					postValue,
+			const XalanDOMString&	postLetter, 
+			long					preValue,
+			const XalanDOMString&	preLetter) :
 	m_postValue(postValue),
 	m_postLetter(postLetter),
 	m_preValue(preValue),

@@ -58,7 +58,8 @@
 
 
 
-#include <util/XMLURL.hpp>
+#include <XalanDOM/XalanNode.hpp>
+#include <XalanDOM/XalanDocument.hpp>
 
 
 
@@ -85,15 +86,15 @@ FunctionDocument::~FunctionDocument()
 
 
 
-static DOM_Document
+static XalanDocument*
 getDoc(
 			XPathExecutionContext&	executionContext,
-			const DOMString&		uri,
-			const DOMString&		base)
+			const XalanDOMString&	uri,
+			const XalanDOMString&	base)
 {
-	DOMString		localURI(uri);
+	XalanDOMString	localURI(uri);
 
-	DOM_Document	newDoc = executionContext.getSourceDocument(localURI);
+    XalanDocument*	newDoc = executionContext.getSourceDocument(localURI);
 
 	if(newDoc == 0)
 	{
@@ -116,16 +117,12 @@ getDoc(
 
 		if(newDoc == 0)
 		{
-			DOMString	theMessage("Cannot load requested doc: ");
+			XalanDOMString	theMessage("Cannot load requested doc: ");
 
 			theMessage += base;
 			theMessage += localURI;
 
 			executionContext.warn(theMessage);
-		}
-		else
-		{
-			executionContext.setSourceDocument(localURI, newDoc);
 		}
     }
 
@@ -137,9 +134,9 @@ getDoc(
 XObject*
 FunctionDocument::execute(
 			XPathExecutionContext&			executionContext,
-			const DOM_Node&					context,
+			XalanNode*						context,
 			int								/* opPos */,
-			const std::vector<XObject*>&	args)
+			const XObjectArgVectorType&		args)
 {
 	if (args.size() == 0)
 	{
@@ -148,16 +145,23 @@ FunctionDocument::execute(
 
 		return 0;
 	}
+	else if (context == 0)
+	{
+		executionContext.error("The document() function requires a non-null context node!",
+							   context);
+
+		return 0;
+	}
 	else
 	{
-		DOM_Document	docContext = DOM_Node::DOCUMENT_NODE == context.getNodeType() ?
-										static_cast<const DOM_Document&>(context) :
-											context.getOwnerDocument();
+		XalanDocument* const	docContext = XalanNode::DOCUMENT_NODE == context->getNodeType() ?
+										static_cast<XalanDocument*>(context) :
+											context->getOwnerDocument();
 
 		const XObject* const	arg = args[0];
 		assert(arg != 0);
 
-		DOMString				base;
+		XalanDOMString				base;
 
 		if(args.size() > 1)
 		{
@@ -166,12 +170,13 @@ FunctionDocument::execute(
 
 			if(XObject::eTypeNodeSet == arg2->getType())
 			{
-				const DOM_Node		baseNode(arg2->nodeset().item(0));
+				XalanNode* const		baseNode =
+							arg2->nodeset().item(0);
 				assert(baseNode != 0);
 
-				const DOM_Document	baseDoc = DOM_Node::DOCUMENT_NODE == baseNode.getNodeType() ?
-												static_cast<const DOM_Document&>(baseNode) :
-													baseNode.getOwnerDocument();
+				XalanDocument* const	baseDoc = XalanNode::DOCUMENT_NODE == baseNode->getNodeType() ?
+												static_cast<XalanDocument*>(baseNode) :
+													baseNode->getOwnerDocument();
 
 				base = executionContext.findURIFromDoc(baseDoc);
 			}
@@ -189,15 +194,29 @@ FunctionDocument::execute(
 
 		// Chop off the file name part of the URI, this includes the
 		// trailing separator
-		DOMString newBase;
+		XalanDOMString newBase;
+
+		if (length(base) > 0)
 		{
-			int indexOfSlash = lastIndexOf(base, '/');
+			const unsigned int	theLength = length(base);
+
+			unsigned int		indexOfSlash = lastIndexOf(base, '/');
 #if defined(WIN32)				
-			const int indexOfBackSlash = lastIndexOf(base, '\\');
-			if(indexOfBackSlash > indexOfSlash)
+			const unsigned int	indexOfBackSlash = lastIndexOf(base, '\\');
+
+			if(indexOfBackSlash > indexOfSlash && indexOfBackSlash < theLength)
+			{
 				indexOfSlash = indexOfBackSlash;
-#endif				
-				newBase = substring(base, 0, indexOfSlash+1);
+			}
+#endif
+			if (indexOfSlash < theLength)
+			{
+				newBase = substring(base, 0, indexOfSlash + 1);
+			}
+			else
+			{
+				newBase = base;
+			}
 		}
 
 		MutableNodeRefList		mnl(executionContext.createMutableNodeRefList());
@@ -208,8 +227,11 @@ FunctionDocument::execute(
 
 		for(int i = 0; i < nRefs; i++)
 		{
-			const DOMString		ref = XObject::eTypeNodeSet == arg->getType() ?
-													executionContext.getNodeData(arg->nodeset().item(i)) :
+			assert(XObject::eTypeNodeSet != arg->getType() ||
+								arg->nodeset().item(i) != 0);
+
+			const XalanDOMString		ref = XObject::eTypeNodeSet == arg->getType() ?
+													executionContext.getNodeData(*arg->nodeset().item(i)) :
 													arg->str();
 
 			if(length(ref) > 0)
@@ -225,21 +247,27 @@ FunctionDocument::execute(
 				// characters. Systems not requiring partial forms should not use any
 				// unencoded slashes in their naming schemes.  If they do, absolute URIs
 				// will still work, but confusion may result.
-				const int indexOfColon = indexOf(ref, ':');
-				int indexOfSlash = indexOf(ref, '/');
+				const unsigned int	theLength = length(ref);
+
+				const unsigned int	indexOfColon = indexOf(ref, ':');
+				unsigned int		indexOfSlash = indexOf(ref, '/');
+
 #if defined(WIN32)				
-				const int indexOfBackSlash = indexOf(ref, '\\');
-				if(indexOfBackSlash > indexOfSlash)
+				const unsigned int	indexOfBackSlash = indexOf(ref, '\\');
+
+				if(indexOfBackSlash > indexOfSlash && indexOfBackSlash < theLength)
+				{
 					indexOfSlash = indexOfBackSlash;
+				}
 #endif				
 
-				if(indexOfColon != -1 && indexOfSlash != -1 && indexOfColon < indexOfSlash)
+				if(indexOfColon < theLength && indexOfSlash < theLength && indexOfColon < indexOfSlash)
 				{
 					// The url (or filename, for that matter) is absolute.
-					newBase = DOMString();
+					newBase = XalanDOMString();
 				}
 
-				const DOM_Document	newDoc = getDoc(executionContext, ref, newBase);
+				XalanDocument* const	newDoc = getDoc(executionContext, ref, newBase);
 
 				if(newDoc != 0)
 				{

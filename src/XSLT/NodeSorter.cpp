@@ -92,8 +92,8 @@ NodeSorter::~NodeSorter()
 
 void
 NodeSorter::sort(
-				DOMNodeVectorType&					v,
-				const DOMNodeSortKeyVectorType&		keys)
+				NodeVectorType&					v,
+				const NodeSortKeyVectorType&	keys)
 {
 #if !defined(XALAN_NO_NAMESPACES)
 	using std::stable_sort;
@@ -116,13 +116,13 @@ NodeSorter::sort(
 
 void
 NodeSorter::sort(
-			MutableNodeRefList&					theList,
-			const DOMNodeSortKeyVectorType&		keys)
+			MutableNodeRefList&				theList,
+			const NodeSortKeyVectorType&	keys)
 {
 	const unsigned int	theLength = theList.getLength();
 
 	// Copy the nodes to a vector...
-	DOMNodeVectorType	theNodes(theLength);
+	NodeVectorType	theNodes(theLength);
 
 	unsigned int		i = 0;
 
@@ -134,7 +134,7 @@ NodeSorter::sort(
 	sort(theNodes,
 		 keys);
 	assert(theNodes.size() ==
-				static_cast<DOMNodeVectorType::size_type>(theLength));
+				static_cast<NodeVectorType::size_type>(theLength));
 
 	theList.clear();
 

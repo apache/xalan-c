@@ -62,12 +62,19 @@
 
 
 
-
+#include <PlatformSupport/DecimalFormat.hpp>
+#include <PlatformSupport/DecimalFormatSymbols.hpp>
 #include <PlatformSupport/DOMStringHelper.hpp>
+
+
+
 #include <XPath/XObject.hpp>
 #include <XPath/XObjectFactory.hpp>
 #include <XPath/XPathExecutionContext.hpp>
 
+
+
+#include "Constants.hpp"
 
 
 
@@ -86,11 +93,11 @@ FunctionFormatNumber::~FunctionFormatNumber()
 XObject*
 FunctionFormatNumber::execute(
 			XPathExecutionContext&			executionContext,
-			const DOM_Node&					context,
+			XalanNode*						context,
 			int								/* opPos */,
-			const std::vector<XObject*>&	args)
+			const XObjectArgVectorType&		args)
 {
-	const std::vector<XObject*>::size_type	theSize =
+	const XObjectArgVectorType::size_type	theSize =
 		args.size();
 
 	if (theSize < 2 || theSize > 3)
@@ -102,19 +109,45 @@ FunctionFormatNumber::execute(
 	}
 	else
 	{
-		executionContext.warn("format-number() is not fully implemented!",
+		executionContext.warn(XALAN_STATIC_UCODE_STRING("format-number() is not fully implemented!"),
 							  context);
 
 		assert(args[0] != 0);
 		assert(args[1] != 0);
 		assert(theSize == 2 || args[2] != 0);
 
-		const double		theNumber = args[0]->num();
-		const DOMString		theFormatString = args[1]->str();
-		const DOMString		theDecimalFormat = theSize == 3 ? args[2]->str() : DOMString();
+		DecimalFormat					theFormatter;
+
+		const double					theNumber = args[0]->num();
+		const XalanDOMString			theFormatString = args[1]->str();
+
+		const DecimalFormatSymbols*		theDFS = 0;
+
+		if (theSize == 3)
+		{
+			const XalanDOMString				theDecimalFormatName = args[2]->str();
+			assert(length(theDecimalFormatName) != 0);
+
+			theDFS = executionContext.getDecimalFormatSymbols(theDecimalFormatName);
+
+			if (theDFS == 0)
+			{
+				executionContext.warn("format-number:  Specified decimal-format element not found!!!",
+									  context);
+			}
+		}
+
+		if (theDFS == 0)
+		{
+			theDFS = executionContext.getDecimalFormatSymbols(Constants::DEFAULT_DECIMAL_FORMAT);
+		}
+
+		theFormatter.setDecimalFormatSymbols(theDFS == 0 ? DecimalFormatSymbols() : *theDFS);
+
+		theFormatter.applyLocalizedPattern(theFormatString);
 
 		// $$$ ToDo: This is not really working according to the spec.
-		return executionContext.getXObjectFactory().createString(DoubleToDOMString(theNumber));
+		return executionContext.getXObjectFactory().createString(theFormatter.format(theNumber));
 	}
 }
 
