@@ -61,6 +61,7 @@
   <ul>
     <li><link anchor="getstarted">Samples to help you get started</link></li>
     <li><link anchor="simpletransform">SimpleTransform</link></li>
+    <li><link anchor="streamtransform">StreamTransform</link></li>    
     <li><link anchor="usestylesheetparam">UseStylesheetParam</link></li>
     <li><link anchor="tracelisten">TraceListen</link></li>        
     <li><link anchor="compilestylesheet">CompileStylesheet</link></li>
@@ -85,7 +86,8 @@
      </ol>
      <note> Each sample application looks for input files in the current directory, the directory from
      which you run the application. The input files are in the samples subdirectory along with the sample source
-     files. The application executable, on the other hand, is in the build subdirectory. To run a sample, be sure the
+     files. For the UNIX builds, the application executable is also in the samples subdirectory. For the Windows32 build, however, the
+     application executable is in the build subdirectory (xml-xalan\c\Build\Win32\VC6\ Debug and Release). To run a sample, be sure the
      executable is on the path, and run it from the samples subdirectory that contains the input files.</note>
   </s2><anchor name="simpletransform"/>
   <s2 title="SimpleTransform">
@@ -95,6 +97,12 @@
     <p><code>SimpleTransform</code></p>
     <p>See also: <link idref="usagepatterns" anchor="basic">Basic procedures for performing XSL
     transformations</link>.</p>
+  </s2><anchor name="streamtransform"/>
+  <s2 title="StreamTransform">
+  <p>What it does: The StreamTransform class processes input streams containing a stylesheet and an XML document, and
+   writes the transformation output to an output stream.</p>
+      <p>You can run it from the SimpleTransform subdirectory with</p>
+    <p><code>StreamTransform</code></p>
   </s2><anchor name="usestylesheetparam"/>    
   <s2 title="UseStylesheetParam">    
     <p>What it does: Set a stylesheet parameter that the stylesheet uses during the transformation.</p>
@@ -171,7 +179,7 @@ theProcessor.addTraceListener(&amp;theTraceListener);
     <p>Run this sample from the XPathWrapper subdirectory with</p> 
     <p>Windows:<br/>
     &nbsp;&nbsp;<code>TestDriver <ref>XMLFile ContextNode XPathExpression</ref></code></p>
-    <p>Linux or AIX:<br/>
+    <p>UNIX:<br/>
     &nbsp;&nbsp;<code>XPathWrapper <ref>XMLFile ContextNode XPathExpression</ref></code></p>
     <p>where <ref>XMLFile</ref> is an XML source file, <ref>ContextNode</ref> is the location path to the context
      node, and <ref>XPathExpression</ref> is an XPath expression to apply to that context node. The XPathWrapper
@@ -186,12 +194,12 @@ theProcessor.addTraceListener(&amp;theTraceListener);
     <p>You can try command lines like</p>
     <p>Windows:<br/>
     &nbsp;&nbsp;<code>TestDriver foo.xml /doc name/@last</code></p>
-    <p>Linux or AIX:
+    <p>UNIX:<br/>
     &nbsp;&nbsp;<code>XPathWrapper foo.xml /doc name/@last</code></p>
     <p>and</p>
     <p>Windows:<br/>
     &nbsp;&nbsp;<code>TestDriver foo.xml / '//name[position()="4"]/@first'</code></p>
-    <p>Linux or AIX:<br/>
+    <p>UNIX:<br/>
     &nbsp;&nbsp;<code>XPathWrapper foo.xml / '//name[position()="4"]/@first'</code></p>
      <note>If an XPathWrapper argument includes characters (such as *) that the shell intercepts, enclose the argument 
      in double quotes.</note>   
