@@ -119,7 +119,7 @@ class StylesheetExecutionContext;
  * This class represents the base stylesheet or an "import" stylesheet.
  * "include" stylesheets are combined with the including stylesheet.
  */
-class XALAN_XSLT_EXPORT Stylesheet : public XalanDocument, private PrefixResolver
+class XALAN_XSLT_EXPORT Stylesheet : public XalanDocument, protected PrefixResolver
 {	
 
 public:
