@@ -195,7 +195,9 @@ XSLTEngineImpl::XSLTEngineImpl(
 	m_resultNamespacesStack(),
 	m_dummyAttributesList(),
 	m_scratchString(),
-	m_hasStripOrPreserveSpace(false)
+	m_hasStripOrPreserveSpace(false),
+	m_attributeNamesVisited(),
+	m_attributeNamesVisitedEnd(m_attributeNamesVisited.end())
 {
 	m_outputContextStack.pushContext();
 }
@@ -230,6 +232,8 @@ XSLTEngineImpl::reset()
 	m_resultNamespacesStack.clear();
 
 	m_hasStripOrPreserveSpace = false;
+
+	m_attributeNamesVisited.clear();
 }
 
 
@@ -1320,7 +1324,16 @@ XSLTEngineImpl::warn(
 			const XalanNode*			sourceNode,
 			const ElemTemplateElement*	styleNode) const
 {
-	problem(msg, ProblemListener::eWARNING, sourceNode, styleNode);
+	const Locator* const	locator = styleNode == 0 ? 0 : styleNode->getLocator();
+
+	if (locator != 0)
+	{
+		problem(msg, ProblemListener::eWARNING, *locator, sourceNode);
+	}
+	else
+	{
+		problem(msg, ProblemListener::eWARNING, sourceNode, styleNode);
+	}
 }
 
 
@@ -1341,6 +1354,17 @@ XSLTEngineImpl::warn(
 			const char*			msg,
 			const XalanNode*	sourceNode,
 			const XalanNode*	styleNode) const
+{
+	warn(TranscodeFromLocalCodePage(msg), sourceNode, styleNode);
+}
+
+
+
+void
+XSLTEngineImpl::warn(
+			const char*					msg,
+			const XalanNode*			sourceNode,
+			const ElemTemplateElement*	styleNode) const
 {
 	warn(TranscodeFromLocalCodePage(msg), sourceNode, styleNode);
 }
@@ -2193,6 +2217,19 @@ XSLTEngineImpl::checkDefaultNamespace(
 
 
 void
+XSLTEngineImpl::warnCopyTextNodesOnly(
+			const XalanNode*			sourceNode,
+			const ElemTemplateElement*	styleNode) const
+{
+	warn(
+			"Only text nodes can be copied in this context.  The node is ignored",
+			sourceNode,
+			styleNode);
+}
+
+
+
+void
 XSLTEngineImpl::cloneToResultTree(
 			const XalanText&	node,
 			bool				isLiteral,
@@ -2244,29 +2281,9 @@ XSLTEngineImpl::cloneToResultTree(
 	if (cloneTextNodesOnly == true &&
 		posNodeType != XalanNode::TEXT_NODE)
 	{
-		const Locator*		theLocator = 0;
-		const char* const	theErrorMessage =
-					"Only text nodes can be copied in this context.  The node is ignored";
-
-		if (styleNode != 0)
-		{
-			theLocator = styleNode->getLocator();
-		}
-
-		if (theLocator != 0)
-		{
-			warn(
-				XalanDOMString(theErrorMessage),
-				*theLocator,
-				&node);
-		}
-		else
-		{
-			warn(
-				XalanDOMString(theErrorMessage),
-				&node,
-				styleNode);
-		}
+		warnCopyTextNodesOnly(
+			&node,
+			styleNode);
 	}
 	else
 	{
@@ -2351,29 +2368,9 @@ XSLTEngineImpl::cloneToResultTree(
 	{
 		if (nodeType != XalanNode::TEXT_NODE)
 		{
-			const Locator*		theLocator = 0;
-			const char* const	theErrorMessage =
-					"Only text nodes can be copied in this context.  The node is ignored";
-
-			if (styleNode != 0)
-			{
-				theLocator = styleNode->getLocator();
-			}
-
-			if (theLocator != 0)
-			{
-				warn(
-					XalanDOMString(theErrorMessage),
-					*theLocator,
-					&node);
-			}
-			else
-			{
-				warn(
-					XalanDOMString(theErrorMessage),
+			warnCopyTextNodesOnly(
 					&node,
 					styleNode);
-			}
 		}
 		else
 		{
@@ -2442,29 +2439,10 @@ XSLTEngineImpl::cloneToResultTree(
 			}
 			else
 			{
-				const Locator*		theLocator = 0;
-				const char* const	theErrorMessage =
-					"Attempting to add an attribute when there is no open element.  The attribute will be ignored";
-
-				if (styleNode != 0)
-				{
-					theLocator = styleNode->getLocator();
-				}
-
-				if (theLocator != 0)
-				{
-					warn(
-						XalanDOMString(theErrorMessage),
-						*theLocator,
-						&node);
-				}
-				else
-				{
-					warn(
-						XalanDOMString(theErrorMessage),
-						&node,
-						styleNode);
-				}
+				warn(
+					"Attempting to add an attribute when there is no open element.  The attribute will be ignored",
+					&node,
+					styleNode);
 			}
 			break;
 
@@ -2537,29 +2515,9 @@ XSLTEngineImpl::outputToResultTree(
 				if (outputTextNodesOnly == true &&
 					posNodeType != XalanNode::TEXT_NODE)
 				{
-					const Locator*		theLocator = 0;
-					const char* const	theErrorMessage =
-							"Only text nodes can be copied in this context.  The node is ignored";
-
-					if (styleNode != 0)
-					{
-						theLocator = styleNode->getLocator();
-					}
-
-					if (theLocator != 0)
-					{
-						warn(
-							XalanDOMString(theErrorMessage),
-							*theLocator,
-							pos);
-					}
-					else
-					{
-						warn(
-							XalanDOMString(theErrorMessage),
+					warnCopyTextNodesOnly(
 							pos,
 							styleNode);
-					}
 				}
 				else
 				{
@@ -2656,29 +2614,9 @@ XSLTEngineImpl::outputResultTreeFragment(
 		if (outputTextNodesOnly == true &&
 			posNodeType != XalanNode::TEXT_NODE)
 		{
-			const Locator*		theLocator = 0;
-			const char* const	theErrorMessage =
-					"Only text nodes can be copied in this context.  The node is ignored";
-
-			if (styleNode != 0)
-			{
-				theLocator = styleNode->getLocator();
-			}
-
-			if (theLocator != 0)
-			{
-				warn(
-					XalanDOMString(theErrorMessage),
-					*theLocator,
-					pos);
-			}
-			else
-			{
-				warn(
-					XalanDOMString(theErrorMessage),
+			warnCopyTextNodesOnly(
 					pos,
 					styleNode);
-			}
 		}
 		else
 		{
@@ -2985,7 +2923,7 @@ XSLTEngineImpl::isPendingResultPrefix(const XalanDOMString&		thePrefix) const
 
 
 
-bool
+void
 XSLTEngineImpl::addResultNamespace(
 			const XalanDOMString&	thePrefix,
 			const XalanDOMString&	theName,
@@ -3003,23 +2941,13 @@ XSLTEngineImpl::addResultNamespace(
 		{
 			addResultAttribute(thePendingAttributes, theName, srcURI);
 			addResultNamespaceDecl(thePrefix, srcURI);
-
-			return true;
 		}
-		else
-		{
-			return false;
-		}
-	}
-	else
-	{
-		return false;
 	}
 }
 
 
 
-bool
+void
 XSLTEngineImpl::addResultNamespace(
 			const XalanNode&	theNode,
 			AttributeListImpl&	thePendingAttributes,
@@ -3033,7 +2961,7 @@ XSLTEngineImpl::addResultNamespace(
 	if (equals(aname, DOMServices::s_XMLNamespace) == true)
 	{
 		// Default namespace declaration...
-		return addResultNamespace(s_emptyString, aname, theNode, thePendingAttributes, fOnlyIfPrefixNotPresent);
+		addResultNamespace(s_emptyString, aname, theNode, thePendingAttributes, fOnlyIfPrefixNotPresent);
 	}
 	else if (startsWith(aname, DOMServices::s_XMLNamespaceWithSeparator))
 	{
@@ -3043,11 +2971,7 @@ XSLTEngineImpl::addResultNamespace(
 
 		substring(aname, thePrefix, DOMServices::s_XMLNamespaceWithSeparatorLength);
 
-		return addResultNamespace(thePrefix, aname, theNode, thePendingAttributes, fOnlyIfPrefixNotPresent);
-	}
-	else
-	{
-		return false;
+		addResultNamespace(thePrefix, aname, theNode, thePendingAttributes, fOnlyIfPrefixNotPresent);
 	}
 }
 
@@ -3056,11 +2980,9 @@ XSLTEngineImpl::addResultNamespace(
 void
 XSLTEngineImpl::copyNamespaceAttributes(const XalanNode&	src) 
 {
+	assert(m_attributeNamesVisited.empty() == true);
+
 	const XalanNode*	parent = &src;
-
-	XalanDOMStringPointerSetType	names;
-
-	XalanDOMStringPointerSetType::iterator	end = names.end();
 
 	while (parent != 0 &&
 		   parent->getNodeType() == XalanNode::ELEMENT_NODE) 
@@ -3083,16 +3005,18 @@ XSLTEngineImpl::copyNamespaceAttributes(const XalanNode&	src)
 
 			const XalanDOMString&	nodeName = attr->getNodeName();
 
-			if (names.find(&nodeName) == end)
+			if (m_attributeNamesVisited.find(&nodeName) == m_attributeNamesVisitedEnd)
 			{
 				addResultNamespace(*attr, thePendingAttributes, true);
 
-				names.insert(&nodeName);
+				m_attributeNamesVisited.insert(&nodeName);
 			}
 		}
 
 		parent = parent->getParentNode();
 	}
+
+	m_attributeNamesVisited.clear();
 }
 
 
@@ -3236,7 +3160,7 @@ XSLTEngineImpl::shouldStripSourceNode(
 	}
 	else
 	{
-		bool	strip = false; // return value
+		bool	strip = false;
 
 		assert(m_stylesheetRoot->getWhitespacePreservingElements().size() > 0 ||
 			   m_stylesheetRoot->getWhitespaceStrippingElements().size() > 0);
@@ -3282,8 +3206,6 @@ XSLTEngineImpl::shouldStripSourceNode(
 					XPath::eMatchScore	highPreserveScore = XPath::eMatchScoreNone;
 					XPath::eMatchScore	highStripScore = XPath::eMatchScoreNone;
 
-					ElementPrefixResolverProxy	theProxy(parentElem, m_xpathEnvSupport, m_domSupport);
-
 					{
 						// $$$ ToDo:  All of this should be moved into a member of
 						// Stylesheet, so as not to expose these two data members...
@@ -3300,7 +3222,7 @@ XSLTEngineImpl::shouldStripSourceNode(
 							const XPath* const	matchPat = theElements[i];
 							assert(matchPat != 0);
 
-							const XPath::eMatchScore	score = matchPat->getMatchScore(parent, theProxy, executionContext);
+							const XPath::eMatchScore	score = matchPat->getMatchScore(parent, executionContext);
 
 							if(score > highPreserveScore)
 								highPreserveScore = score;
@@ -3322,7 +3244,7 @@ XSLTEngineImpl::shouldStripSourceNode(
 									theElements[i];
 							assert(matchPat != 0);
 
-							const XPath::eMatchScore	score = matchPat->getMatchScore(parent, theProxy, executionContext);
+							const XPath::eMatchScore	score = matchPat->getMatchScore(parent, executionContext);
 
 							if(score > highStripScore)
 								highStripScore = score;

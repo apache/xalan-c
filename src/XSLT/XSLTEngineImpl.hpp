@@ -158,7 +158,7 @@ public:
 	typedef clock_t			ClockType;
 #endif
 
-	struct CompareXalanDOMStringPointers
+	struct LessXalanDOMStringPointers
 	{
 		bool
 		operator()(
@@ -194,7 +194,7 @@ public:
 	typedef vector<TraceListener*>			TraceListenerVectorType;
 	typedef vector<bool>					BoolVectorType;
 	typedef set<const XalanDOMString*,
-				CompareXalanDOMStringPointers>	XalanDOMStringPointerSetType;
+				LessXalanDOMStringPointers>	XalanDOMStringPointerSetType;
 #else
 	typedef std::map<XalanDOMString, int>		AttributeKeysMapType;
 	typedef std::map<XalanDOMString, int>		ElementKeysMapType;
@@ -203,7 +203,7 @@ public:
 	typedef std::vector<TraceListener*>			TraceListenerVectorType;
 	typedef std::vector<bool>					BoolVectorType;
 	typedef std::set<const XalanDOMString*,
-					 CompareXalanDOMStringPointers>	XalanDOMStringPointerSetType;
+					 LessXalanDOMStringPointers>	XalanDOMStringPointerSetType;
 #endif
 
 	typedef XalanAutoPtr<XPathProcessor>				XPathProcessorPtrType;
@@ -824,13 +824,12 @@ public:
 			const XalanNode*			sourceNode,
 			const ElemTemplateElement*	styleNode) const;
 
-	/**
-	 * Report a warning.
-	 * 
-	 * @param msg		 text of message to output
-	 * @param sourceNode node in source where error occurred
-	 * @param styleNode  node in stylesheet where error occurred
-	 */
+	virtual void
+	warn(
+			const char*					msg,
+			const XalanNode*			sourceNode,
+			const ElemTemplateElement*	styleNode) const;
+
 	virtual void
 	warn(
 			const char*			msg,
@@ -1497,6 +1496,17 @@ protected:
 private:
 
 	/**
+	 * Issue a warning that only text nodes can be copied.
+	 *
+	 * @param sourceNode node in source where error occurred
+	 * @param styleNode  node in stylesheet where error occurred
+	 */
+	void
+	warnCopyTextNodesOnly(
+			const XalanNode*			sourceNode,
+			const ElemTemplateElement*	styleNode) const;
+
+	/**
 	 * Clone a text node to the result tree
 	 *
 	 * @param node					node to clone
@@ -1516,7 +1526,7 @@ private:
 	bool
 	pendingAttributesHasDefaultNS() const; 
 
-	bool
+	void
 	addResultNamespace(
 			const XalanDOMString&	thePrefix,
 			const XalanDOMString&	theName,
@@ -1524,7 +1534,7 @@ private:
 			AttributeListImpl&		thePendingAttributes,
 			bool					fOnlyIfPrefixNotPresent);
 
-	bool
+	void
 	addResultNamespace(
 			const XalanNode&	theNode,
 			AttributeListImpl&	thePendingAttributes,
@@ -1724,6 +1734,9 @@ private:
 
 	bool							m_hasStripOrPreserveSpace;
 
+	XalanDOMStringPointerSetType	m_attributeNamesVisited;
+
+	const XalanDOMStringPointerSetType::iterator	m_attributeNamesVisitedEnd;
 	static void
 	installFunctions();
 
