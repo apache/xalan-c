@@ -58,6 +58,9 @@
 # 
 #
 # $Log$
+# Revision 1.2  2001/03/15 15:56:36  dbertoni
+# Add -D NDEBUG to release builds to disable assertions.
+#
 # Revision 1.1  2000/01/27 19:57:43  jdonohue
 # Preliminary based on Xerces
 #
@@ -192,7 +195,7 @@ esac
 
 if test $debug = "off"; then
     echo "Debug is OFF"
-    debugflag="-O";
+    debugflag="-O -DNDEBUG";
 else
     echo "Debug is ON"
     debugflag="-g";
