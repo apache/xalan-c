@@ -74,6 +74,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 class DOMSupport;
+class ElemTemplateElement;
 class NodeRefListBase;
 class PrintWriter;
 
@@ -154,6 +155,9 @@ private:
 
 	void
 	processNodeList(const NodeRefListBase&	nl);
+
+	void
+	printNodeInfo(const ElemTemplateElement&	node);
 
 
 	// Data members...

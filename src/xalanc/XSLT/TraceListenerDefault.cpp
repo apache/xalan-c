@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -118,11 +118,8 @@ TraceListenerDefault::trace(const TracerEvent&	ev)
 	case StylesheetConstructionContext::ELEMNAME_TEXT_LITERAL_RESULT:
 		if(m_traceElements == true)
 		{
-			m_printWriter.print(XALAN_STATIC_UCODE_STRING("Line #"));
-			m_printWriter.print(ev.m_styleNode.getLineNumber());
-			m_printWriter.print(XALAN_STATIC_UCODE_STRING(", "));
-			m_printWriter.print(XALAN_STATIC_UCODE_STRING("Column #"));
-			m_printWriter.print(ev.m_styleNode.getColumnNumber());
+			printNodeInfo(ev.m_styleNode);
+
 			m_printWriter.print(XALAN_STATIC_UCODE_STRING(": "));
 			m_printWriter.print(ev.m_styleNode.getElementName());
 			m_printWriter.print(XALAN_STATIC_UCODE_STRING("    "));
@@ -148,11 +145,8 @@ TraceListenerDefault::trace(const TracerEvent&	ev)
 				static_cast<const ElemTemplate&>(ev.m_styleNode);
 #endif
 
-			m_printWriter.print(XALAN_STATIC_UCODE_STRING("Line #"));
-			m_printWriter.print(ev.m_styleNode.getLineNumber());
-			m_printWriter.print(XALAN_STATIC_UCODE_STRING(", "));
-			m_printWriter.print(XALAN_STATIC_UCODE_STRING("Column #"));
-			m_printWriter.print(ev.m_styleNode.getColumnNumber());
+			printNodeInfo(ev.m_styleNode);
+
 			m_printWriter.print(XALAN_STATIC_UCODE_STRING(": "));
 			m_printWriter.print(ev.m_styleNode.getElementName());
 
@@ -192,10 +186,8 @@ TraceListenerDefault::trace(const TracerEvent&	ev)
 	default:
 		if(m_traceElements == true)
 		{
-			m_printWriter.print(XALAN_STATIC_UCODE_STRING("Line #"));
-			m_printWriter.print(ev.m_styleNode.getLineNumber());
-			m_printWriter.print(XALAN_STATIC_UCODE_STRING(", Column #"));
-			m_printWriter.print(ev.m_styleNode.getColumnNumber());
+			printNodeInfo(ev.m_styleNode);
+
 			m_printWriter.print(XALAN_STATIC_UCODE_STRING(": "));
 			m_printWriter.println(ev.m_styleNode.getElementName());
 		}
@@ -259,11 +251,8 @@ TraceListenerDefault::selected(const SelectionEvent&	ev)
 		}
 		else
 		{
-			m_printWriter.print(XALAN_STATIC_UCODE_STRING("Line #"));
-			m_printWriter.print(ev.m_styleNode.getLineNumber());
-			m_printWriter.print(XALAN_STATIC_UCODE_STRING(", "));
-			m_printWriter.print(XALAN_STATIC_UCODE_STRING("Column #"));
-			m_printWriter.print(ev.m_styleNode.getColumnNumber());
+			printNodeInfo(ev.m_styleNode);
+
 			m_printWriter.print(", ");
 		}
 
@@ -357,6 +346,27 @@ TraceListenerDefault::generated(const GenerateEvent&	ev)
 			m_printWriter.println(XALAN_STATIC_UCODE_STRING("IGNORABLEWHITESPACE"));
 			break;
 		}
+	}
+}
+
+
+
+void
+TraceListenerDefault::printNodeInfo(const ElemTemplateElement&	node)
+{
+	const XalanDOMString&	uri = node.getURI();
+
+	m_printWriter.print(XALAN_STATIC_UCODE_STRING("Line #"));
+	m_printWriter.print(node.getLineNumber());
+	m_printWriter.print(XALAN_STATIC_UCODE_STRING(", "));
+	m_printWriter.print(XALAN_STATIC_UCODE_STRING("Column #"));
+	m_printWriter.print(node.getColumnNumber());
+
+	if (uri.length() != 0)
+	{
+		m_printWriter.print(XALAN_STATIC_UCODE_STRING(", ("));
+		m_printWriter.print(uri);
+		m_printWriter.print(XALAN_STATIC_UCODE_STRING(")"));
 	}
 }
 
