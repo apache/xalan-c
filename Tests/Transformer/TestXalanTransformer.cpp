@@ -195,7 +195,8 @@ main(
 			return 0;	
 		}
 */		
-		xalan.setStylesheetParam("param1", "'What is Up'");
+		xalan.setStylesheetParam(XalanDOMString("param1"),
+								 XalanDOMString("'What is Up'"));
 
 		if(xalan.transform(theXMLFileName4, theXSLFileName4, &cout))
 		{
