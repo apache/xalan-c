@@ -103,7 +103,7 @@ ICUI18NROOT=${ICUROOT}
 endif
 endif
 
-ifneq ("$(shell cd $(XALANCROOT) && pwd)/src", "$(shell pwd)")
+ifneq ("$(shell cd $(XALANCROOT) && pwd)/src/xalanc", "$(shell pwd)")
   OUTDIR := $(shell pwd)
 else
   OUTDIR = ${XALANCROOT}
