@@ -229,7 +229,16 @@ XalanSourceTreeParserLiaison::parseXMLStream(
 
 	theReader->setDTDHandler(&theContentHandler);
 
-	theReader->setErrorHandler(&m_xercesParserLiaison);
+	ErrorHandler* const		theHandler = getErrorHandler();
+
+	if (theHandler == 0)
+	{
+		theReader->setErrorHandler(&m_xercesParserLiaison);
+	}
+	else
+	{
+		theReader->setErrorHandler(theHandler);
+	}
 
 	theReader->setLexicalHandler(&theContentHandler);
 
@@ -337,7 +346,16 @@ XalanSourceTreeParserLiaison::parseXMLStream(
 
 	theReader->setDTDHandler(theDTDHandler);
 
-	theReader->setErrorHandler(&m_xercesParserLiaison);
+	ErrorHandler* const		theHandler = getErrorHandler();
+
+	if (theHandler == 0)
+	{
+		theReader->setErrorHandler(&m_xercesParserLiaison);
+	}
+	else
+	{
+		theReader->setErrorHandler(theHandler);
+	}
 
 	theReader->setLexicalHandler(theLexicalHandler);
 
