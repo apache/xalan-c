@@ -62,12 +62,14 @@
 #include <cstdio>
 #include <cstring>
 
-
-
 #if defined(XALAN_OLD_STREAM_HEADERS)
 #include <iostream.h>
 #else
 #include <iostream>
+#endif
+
+#if defined(XALAN_RTTI_AVAILABLE) && !defined(XALAN_NO_TYPEINFO)
+#include <typeinfo>
 #endif
 
 
@@ -1359,7 +1361,7 @@ main(
 						 << "\"  Node value: \""
 						 << theInstance->getNodeValue()
 						 << "\""
-#if defined(XALAN_RTTI_AVAILABLE) && !defined(XALAN_NO_TYPEINFO)
+#if defined(XALAN_RTTI_AVAILABLE)
 						 << "  Type: \""
 						 << typeid(*theInstance).name()
 						 << "\""
