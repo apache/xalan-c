@@ -63,10 +63,18 @@
 #include <XercesPlatformSupport/XercesPlatformSupportDefinitions.hpp>
 
 
+
+#define XALAN_NO_IOSFWD
 #if !defined(_MSC_VER)
 #include <cstdio>
 #endif
+
+#if defined(XALAN_NO_IOSFWD)
+#include <ostream>
+#else
 #include <iosfwd>
+#endif
+
 #include <vector>
 
 
