@@ -132,7 +132,7 @@ XObject::dereferenced()
 double
 XObject::num() const
 {
-	throw XObjectInvalidCastException(getTypeString(), TranscodeFromLocalCodePage("number"));
+	throw XObjectInvalidConversionException(getTypeString(), TranscodeFromLocalCodePage("number"));
 
 	// This is just a dummy value to satisfy the compiler.
 	return 0.0;
@@ -143,7 +143,7 @@ XObject::num() const
 bool
 XObject::boolean() const
 {
-	throw XObjectInvalidCastException(getTypeString(), TranscodeFromLocalCodePage("boolean"));
+	throw XObjectInvalidConversionException(getTypeString(), TranscodeFromLocalCodePage("boolean"));
 
 	// This is just a dummy value to satisfy the compiler.
 	return false;
@@ -154,7 +154,7 @@ XObject::boolean() const
 const XalanDOMString&
 XObject::str() const
 {
-	throw XObjectInvalidCastException(getTypeString(), TranscodeFromLocalCodePage("string"));
+	throw XObjectInvalidConversionException(getTypeString(), TranscodeFromLocalCodePage("string"));
 
 	// This is just a dummy value to satisfy the compiler.
 	return s_nullString;
@@ -165,7 +165,7 @@ XObject::str() const
 const ResultTreeFragBase&
 XObject::rtree(XPathExecutionContext&	/* executionContext */) const
 {
-	throw XObjectInvalidCastException(getTypeString(), TranscodeFromLocalCodePage("result tree fragment"));
+	throw XObjectInvalidConversionException(getTypeString(), TranscodeFromLocalCodePage("result tree fragment"));
 
 	// This is just a dummy value to satisfy the compiler.
 #if defined(XALAN_OLD_STYLE_CASTS)
@@ -184,7 +184,7 @@ static const NodeRefList	s_dummyList;
 const NodeRefListBase&
 XObject::nodeset() const
 {
-	throw XObjectInvalidCastException(getTypeString(), TranscodeFromLocalCodePage("node set"));
+	throw XObjectInvalidConversionException(getTypeString(), TranscodeFromLocalCodePage("node set"));
 
 	// error will throw, so this is just a dummy
 	// value to satisfy the compiler.
@@ -874,8 +874,9 @@ XObject::greaterThanOrEquals(
 
 XObject::XObjectException::XObjectException(
 				const XalanDOMString&	message,
-				const XalanNode*		styleNode) :
-	XPathException(message, styleNode)
+				const XalanNode*		styleNode,
+				const XalanDOMString&	theType) :
+	XPathException(message, styleNode, theType)
 {
 }
 
@@ -887,9 +888,13 @@ XObject::XObjectException::~XObjectException()
 
 
 
-XObject::XObjectInvalidCastException::XObjectInvalidCastException(
+XObject::XObjectInvalidConversionException::XObjectInvalidConversionException(
 				const XalanDOMString&	fromType,
 				const XalanDOMString&	toType) :
+	XObjectException(
+			formatErrorString(fromType, toType),
+			0,
+			StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("XObjectInvalidConversionException"))),
 	m_fromType(fromType),
 	m_toType(toType)
 {
@@ -897,18 +902,18 @@ XObject::XObjectInvalidCastException::XObjectInvalidCastException(
 
 
 
-XObject::XObjectInvalidCastException::~XObjectInvalidCastException()
+XObject::XObjectInvalidConversionException::~XObjectInvalidConversionException()
 {
 }
 
 
 
 const XalanDOMString
-XObject::XObjectInvalidCastException::formatErrorString(
+XObject::XObjectInvalidConversionException::formatErrorString(
 				const XalanDOMString&	fromType,
 				const XalanDOMString&	toType)
 {
-	return XalanDOMString(XALAN_STATIC_UCODE_STRING("Cannot cast an ")) +
+	return XalanDOMString(XALAN_STATIC_UCODE_STRING("Cannot convert a ")) +
 		   fromType +
 		   XalanDOMString(XALAN_STATIC_UCODE_STRING(" to a ")) +
 		   toType +

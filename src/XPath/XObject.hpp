@@ -297,22 +297,23 @@ public:
 		explicit
 		XObjectException(
 				const XalanDOMString&	message = XalanDOMString(),
-				const XalanNode*		styleNode = 0);
+				const XalanNode*		styleNode = 0,
+				const XalanDOMString&	theType = XalanDOMString(XALAN_STATIC_UCODE_STRING("XObjectException")));
 
 		virtual
 		~XObjectException();
 	};
 
-	class XObjectInvalidCastException : public XObjectException
+	class XObjectInvalidConversionException : public XObjectException
 	{
 	public:
 
-		XObjectInvalidCastException(
+		XObjectInvalidConversionException(
 				const XalanDOMString&	fromType,
 				const XalanDOMString&	toType);
 
 		virtual
-		~XObjectInvalidCastException();
+		~XObjectInvalidConversionException();
 
 		const XalanDOMString&
 		getFromType() const
