@@ -229,7 +229,6 @@ ElemAttribute::execute(
 
 					executionContext.addResultAttribute(nsDecl, attrNameSpace);
 
-// $$$ ToDo: Move these blocks (and those in ElemElement.cpp) into a common set of functions...
 					reserve(
 						attrName,
 						length(attrName) + DOMServices::s_XMLNamespaceSeparatorStringLength + length(newPrefix) + 1);
