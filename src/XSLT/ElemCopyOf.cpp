@@ -165,7 +165,7 @@ ElemCopyOf::execute(
 
 			while(pos != 0)
 			{
-				if(XalanNode::ELEMENT_NODE == pos->getNodeType())
+				if(pos->getNodeType() != XalanNode::ATTRIBUTE_NODE)
 				{
                     executionContext.flushPending();
                 }
