@@ -55,6 +55,9 @@
  * <http://www.apache.org/>.
  */
 
+#include <Include/PlatformDefinitions.hpp>
+
+
 
 #include <iostream>
 #include <strstream>
