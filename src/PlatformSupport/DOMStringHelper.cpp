@@ -1157,7 +1157,10 @@ CopyStringToVector(
 			const char*			theString,
 			CharVectorType&		theVector)
 {
-	theVector.assign(theString, theString + strlen(theString) + 1);
+	theVector.insert(
+		theVector.end(),
+		theString,
+		theString + strlen(theString) + 1);
 }
 
 
