@@ -145,7 +145,7 @@ ElemPI::execute(StylesheetExecutionContext&		executionContext) const
 	
 	m_nameAVT->evaluate(piName, sourceNode, *this, executionContext);
 
-	if(equalsIgnoreCase(piName, Constants::ATTRVAL_OUTPUT_METHOD_XML))
+	if(equalsIgnoreCaseASCII(piName, Constants::ATTRVAL_OUTPUT_METHOD_XML))
 	{
 		executionContext.error("processing-instruction name can not be 'xml'", 0, this);
 	}

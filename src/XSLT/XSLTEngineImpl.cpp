@@ -1709,7 +1709,7 @@ XSLTEngineImpl::flushPending()
 
 		if (m_stylesheetRoot->isOutputMethodSet() == false)
 		{
-			if (equalsIgnoreCase(getPendingElementName(),
+			if (equalsIgnoreCaseASCII(getPendingElementName(),
 								 Constants::ELEMNAME_HTML_STRING) == true &&
 				pendingAttributesHasDefaultNS() == false)
 			{

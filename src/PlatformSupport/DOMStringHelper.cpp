@@ -930,23 +930,6 @@ compare(
 
 
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(int)
-compareIgnoreCase(
-			const XalanDOMChar*		theLHS,
-			unsigned int			theLHSLength,
-			const XalanDOMChar*		theRHS,
-			unsigned int			theRHSLength)
-{
-	return doCompare(
-				theLHS,
-				theLHSLength,
-				theRHS,
-				theRHSLength,
-				towupper);
-}
-
-
-
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(int)
 compareIgnoreCaseASCII(
 			const XalanDOMChar*		theLHS,
 			unsigned int			theLHSLength,
@@ -1072,21 +1055,6 @@ equals(
 				theRHS,
 				theLength,
 				makeXalanDOMCharIdentityTransform());
-}
-
-
-
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(bool)
-equalsIgnoreCase(
-			const XalanDOMChar*		theLHS,
-			const XalanDOMChar*		theRHS,
-			unsigned int			theLength)
-{
-	return doEqualsIgnoreCase(
-				theLHS,
-				theRHS,
-				theLength,
-				towupper);
 }
 
 

@@ -254,7 +254,7 @@ XalanTranscodingServices::destroyTranscoder(XalanOutputTranscoder*	theTranscoder
 bool
 XalanTranscodingServices::encodingIsUTF8(const XalanDOMChar*	theEncodingName)
 {
-	return compareIgnoreCase(c_wstr(theEncodingName), s_utf8String) == 0 ? true : false;
+	return compareIgnoreCaseASCII(c_wstr(theEncodingName), s_utf8String) == 0 ? true : false;
 }
 
 
@@ -269,7 +269,7 @@ XalanTranscodingServices::encodingIsUTF8(const XalanDOMString&		theEncodingName)
 bool
 XalanTranscodingServices::encodingIsUTF16(const XalanDOMChar*	theEncodingName)
 {
-	return compareIgnoreCase(c_wstr(theEncodingName), s_utf16String) == 0 ? true : false;
+	return compareIgnoreCaseASCII(c_wstr(theEncodingName), s_utf16String) == 0 ? true : false;
 }
 
 
@@ -284,13 +284,13 @@ XalanTranscodingServices::encodingIsUTF16(const XalanDOMString&		theEncodingName
 const XalanTranscodingServices::XalanXMLByte*
 XalanTranscodingServices::getStreamProlog(const XalanDOMString&		theEncodingName)
 {
-	if (compareIgnoreCase(c_wstr(theEncodingName), s_utf16String) == 0)
+	if (compareIgnoreCaseASCII(c_wstr(theEncodingName), s_utf16String) == 0)
 	{
 		return s_UTF16ByteOrderMark;
 	}
 #if 0
 	// We won't do this for now...
-	else if (compareIgnoreCase(c_wstr(theEncodingName), s_utf8String) == 0)
+	else if (compareIgnoreCaseASCII(c_wstr(theEncodingName), s_utf8String) == 0)
 	{
 		return s_UTF8ByteOrderMark;
 	}

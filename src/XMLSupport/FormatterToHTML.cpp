@@ -801,7 +801,7 @@ FormatterToHTML::processAttribute(
 {
     accumContent(XalanUnicode::charSpace);
 
-    if((length(value) == 0 || equalsIgnoreCase(name, value)) &&
+    if((length(value) == 0 || equalsIgnoreCaseASCII(name, value)) &&
 	   elemDesc.isAttrFlagSet(name, ElemDesc::ATTREMPTY) == true)
     {
 		accumName(name);

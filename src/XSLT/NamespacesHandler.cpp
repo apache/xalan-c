@@ -241,7 +241,7 @@ NamespacesHandler::processExcludeResultPrefixes(
     {
 		XalanDOMString	thePrefix = tokenizer.nextToken();
 
-		if(equalsIgnoreCase(thePrefix, Constants::ATTRVAL_DEFAULT_PREFIX) == true)
+		if(equalsIgnoreCaseASCII(thePrefix, Constants::ATTRVAL_DEFAULT_PREFIX) == true)
 		{
 			::clear(thePrefix);
 		}
@@ -278,7 +278,7 @@ NamespacesHandler::processExtensionElementPrefixes(
     {
 		XalanDOMString	thePrefix = tokenizer.nextToken();
 
-		if(equalsIgnoreCase(thePrefix, Constants::ATTRVAL_DEFAULT_PREFIX) == true)
+		if(equalsIgnoreCaseASCII(thePrefix, Constants::ATTRVAL_DEFAULT_PREFIX) == true)
 		{
 			::clear(thePrefix);
 		}

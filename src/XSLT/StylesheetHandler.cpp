@@ -798,7 +798,7 @@ StylesheetHandler::initWrapperless(
 
 	// This attempts to optimize for a literal result element with
 	// the name HTML, so we don't have to switch on-the-fly.
-	if(equalsIgnoreCase(name, Constants::ELEMNAME_HTML_STRING) == true)
+	if(equalsIgnoreCaseASCII(name, Constants::ELEMNAME_HTML_STRING) == true)
 	{
 		// If there's a default namespace, then we must output XML.
 		// Otherwise, we'll set the output method to HTML.
@@ -881,7 +881,7 @@ StylesheetHandler::processTopLevelElement(
 		break;
 
 	case Constants::ELEMNAME_EXTENSION:
-		if(!equalsIgnoreCase(ns, m_constructionContext.getXalanXSLNameSpaceURL()))
+		if(!equalsIgnoreCaseASCII(ns, m_constructionContext.getXalanXSLNameSpaceURL()))
 		{
 			m_constructionContext.warn("Old syntax: the functions instruction should use a url of " + m_constructionContext.getXalanXSLNameSpaceURL());
 		}

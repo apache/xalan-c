@@ -1476,116 +1476,6 @@ compare(
 
 
 /**
- * Compare the contents of two strings, in a case insensitive
- * manner.
- * 
- * THIS FUNCTION DOES NOT COMPARE STRINGS LIKE strcmp() OR ANY
- * OTHER "COLLATION" ALGORITHM.
- *
- * @param theLHS first string to compare
- * @param theLHSLength the length of the first array
- * @param theRHS second string to compare
- * @param theRHSLength the length of the second array
- * @return Returns 0 for equal strings, less than 0 if theLHS is less
- * than theRHS, or greater than 0 if theRHS is greater than theLHS.
- */
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(int)
-compareIgnoreCase(
-			const XalanDOMChar*		theLHS,
-			unsigned int			theLHSLength,
-			const XalanDOMChar*		theRHS,
-			unsigned int			theRHSLength);
-
-
-
-/**
- * Compare the contents of two strings, in a case insensitive
- * manner.
- * 
- * THIS FUNCTION DOES NOT COMPARE STRINGS LIKE strcmp() OR ANY
- * OTHER "COLLATION" ALGORITHM.
- *
- * @param theLHS first string to compare
- * @param theRHS second string to compare
- * @return Returns 0 for equal strings, less than 0 if theLHS is less
- * than theRHS, or greater than 0 if theRHS is greater than theLHS.
- */
-inline int
-compareIgnoreCase(
-			const XalanDOMChar*		theLHS,
-			const XalanDOMChar*		theRHS)
-{
-	return compareIgnoreCase(theLHS, length(theLHS), theRHS, length(theRHS));
-}
-
-
-
-/**
- * Compare the contents of two strings, in a case insensitive
- * manner
- * 
- * @param theLHS first string to compare
- * @param theRHS second string to compare
- * @return Returns 0 for equal strings, less than 0 if theLHS is less
- * than theRHS, or greater than 0 if theRHS is greater than theLHS.
- * @see operator<
- * @see collationCompare
- */
-inline int
-compareIgnoreCase(
-			const XalanDOMString&	theLHS,
-			const XalanDOMString&	theRHS)
-{
-	return compareIgnoreCase(toCharArray(theLHS), length(theLHS), toCharArray(theRHS), length(theRHS));
-}
-
-
-
-/**
- * Compare the contents of two strings, in a case insensitive
- * manner
- * 
- * THIS FUNCTION DOES NOT COMPARE STRINGS LIKE strcmp() OR ANY
- * OTHER "COLLATION" ALGORITHM.
- *
- * @param theLHS first string to compare
- * @param theRHS second string to compare
- * @return Returns 0 for equal strings, less than 0 if theLHS is less
- * than theRHS, or greater than 0 if theRHS is greater than theLHS.
- */
-inline int
-compareIgnoreCase(
-			const XalanDOMChar*		theLHS,
-			const XalanDOMString&	theRHS)
-{
-	return compareIgnoreCase(theLHS, length(theLHS), toCharArray(theRHS), length(theRHS));
-}
-
-
-
-/**
- * Compare the contents of two strings, in a case insensitive
- * manner
- * 
- * THIS FUNCTION DOES NOT COMPARE STRINGS LIKE strcmp() OR ANY
- * OTHER "COLLATION" ALGORITHM.
- *
- * @param theLHS first string to compare
- * @param theRHS second string to compare
- * @return Returns 0 for equal strings, less than 0 if theLHS is less
- * than theRHS, or greater than 0 if theRHS is greater than theLHS.
- */
-inline int
-compareIgnoreCase(
-			const XalanDOMString&	theLHS,
-			const XalanDOMChar*		theRHS)
-{
-	return compareIgnoreCase(toCharArray(theLHS), length(theLHS), theRHS, length(theRHS));
-}
-
-
-
-/**
  * Compare the contents of two arrays in a case insensitive
  * manner.  Only the characters a-z and A-Z are considered as
  * characters with "case".
@@ -1960,98 +1850,6 @@ equals(const char*			theLHS,
 	   const XalanDOMChar*	theRHS)
 {
 	return equals(theRHS, theLHS);
-}
-
-
-
-/**
- * Compare the contents of two arrays for equality, without regard for case
- *
- * @param theLHS first array to compare
- * @param theRHS second array to compare
- * @param theLength the length of the arrays
- * @return true if the contents of both arrays are identical
- */
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(bool)
-equalsIgnoreCase(
-			const XalanDOMChar*		theLHS,
-			const XalanDOMChar*		theRHS,
-			unsigned int			theLength);
-
-
-
-/**
- * Compare the contents of two strings for equality, without regard for case
- * 
- * @param theLHS first string to compare
- * @param theRHS second string to compare
- * @return true if the case-insensitive contents of both strings are identical
- */
-inline bool 
-equalsIgnoreCase(
-			const XalanDOMChar*		theLHS,
-			const XalanDOMChar*		theRHS)
-{
-	const unsigned int	theLength = length(theLHS);
-
-	return theLength != length(theRHS) ? false : equalsIgnoreCase(theLHS, theRHS, theLength);
-}
-
-
-
-/**
- * Compare the contents of two strings for equality, without regard for case
- * 
- * @param theLHS first string to compare
- * @param theRHS second string to compare
- * @return true if the case-insensitive contents of both strings are identical
- */
-inline bool
-equalsIgnoreCase(
-			const XalanDOMString&	theLHS,
-			const XalanDOMString&	theRHS)
-{
-	const unsigned int	theLHSLength = length(theLHS);
-
-	return theLHSLength != length(theRHS) ? false :
-		equalsIgnoreCase(toCharArray(theLHS), toCharArray(theRHS), theLHSLength);
-}
-
-
-
-/**
- * Compare the contents of two strings for equality, without regard for case
- * 
- * @param theLHS first string to compare
- * @param theRHS second string to compare
- * @return true if the case-insensitive contents of both strings are identical
- */
-inline bool
-equalsIgnoreCase(
-			const XalanDOMChar*		theLHS,
-			const XalanDOMString&	theRHS)
-{
-	const unsigned int	theRHSLength = length(theRHS);
-
-	return theRHSLength != length(theLHS) ? false :
-		equalsIgnoreCase(theLHS, toCharArray(theRHS), theRHSLength);
-}
-
-
-
-/**
- * Compare the contents of two strings for equality, without regard for case
- * 
- * @param theLHS first string to compare
- * @param theRHS second string to compare
- * @return true if the case-insensitive contents of both strings are identical
- */
-inline bool
-equalsIgnoreCase(
-			const XalanDOMString&	theLHS,
-			const XalanDOMChar*		theRHS)
-{
-	return equalsIgnoreCase(theRHS, theLHS);
 }
 
 
@@ -2571,29 +2369,6 @@ struct DOMStringEqualsFunction : public std::binary_function<const XalanDOMStrin
 
 
 /**
- * Case-insensitive equals functor for DOMStrings
- * 
- * @param theLHS first string to compare
- * @param theRHS second string to compare
- * @return true if the contents of both strings are equal, without respect to case
- */
-#if defined(XALAN_NO_NAMESPACES)
-struct DOMStringEqualsIgnoreCaseFunction : public binary_function<const XalanDOMString&, const XalanDOMString&, bool>
-#else
-struct DOMStringEqualsIgnoreCaseFunction : public std::binary_function<const XalanDOMString&, const XalanDOMString&, bool>
-#endif
-{
-	result_type
-	operator() (first_argument_type		theLHS,
-				second_argument_type	theRHS) const
-	{
-		return equalsIgnoreCase(theLHS, theRHS);
-	}
-};
-
-
-
-/**
  * Not equals functor for DOMStrings
  * 
  * @param theLHS first string to compare
@@ -2640,29 +2415,6 @@ struct DOMStringLessThanFunction : public std::binary_function<const XalanDOMStr
 
 
 /**
- * Less than functor for DOMStrings which ignores case
- * 
- * @param theLHS first string to compare
- * @param theRHS second string to compare
- * @return true if the theLHS is less than theRHS, without respect to case.
- */
-#if defined(XALAN_NO_NAMESPACES)
-struct DOMStringLessThanIgnoreCaseFunction : public binary_function<const XalanDOMString&, const XalanDOMString&, bool>
-#else
-struct DOMStringLessThanIgnoreCaseFunction : public std::binary_function<const XalanDOMString&, const XalanDOMString&, bool>
-#endif
-{
-	result_type
-	operator() (first_argument_type		theLHS,
-				second_argument_type	theRHS) const
-	{
-		return compareIgnoreCase(theLHS, theRHS) < 0 ? true : false;
-	}
-};
-
-
-
-/**
  * Less than functor for DOMStrings which ignores case for the characters a-z and A-Z
  * 
  * @param theLHS first string to compare
@@ -2679,7 +2431,7 @@ struct DOMStringLessThanIgnoreCaseASCIIFunction : public std::binary_function<co
 	operator() (first_argument_type		theLHS,
 				second_argument_type	theRHS) const
 	{
-		return compareIgnoreCase(theLHS, theRHS) < 0 ? true : false;
+		return compareIgnoreCaseASCII(theLHS, theRHS) < 0 ? true : false;
 	}
 };
 
