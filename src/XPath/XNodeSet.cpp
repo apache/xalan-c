@@ -164,25 +164,11 @@ XNodeSet::str() const
 		const XalanNode* const	theNode = m_value->item(0);
 		assert(theNode != 0);
 
-		const XalanNode::NodeType	theType = theNode->getNodeType();
-
-		if (theType == XalanNode::COMMENT_NODE ||
-			theType == XalanNode::PROCESSING_INSTRUCTION_NODE)
-		{
 #if defined(XALAN_NO_MUTABLE)
-			((XNodeSet*)this)->m_cachedStringValue = theNode->getNodeValue();
+		DOMServices::getNodeData(*theNode, ((XNodeSet*)this)->m_cachedStringValue);
 #else
-			m_cachedStringValue = theNode->getNodeValue();
+		DOMServices::getNodeData(*theNode, m_cachedStringValue);
 #endif
-		}
-		else
-		{
-#if defined(XALAN_NO_MUTABLE)
-			DOMServices::getNodeData(*theNode, ((XNodeSet*)this)->m_cachedStringValue);
-#else
-			DOMServices::getNodeData(*theNode, m_cachedStringValue);
-#endif
-		}
 	}
 
 	return m_cachedStringValue;

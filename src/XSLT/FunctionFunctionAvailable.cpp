@@ -62,6 +62,10 @@
 
 
 
+#include <XPath/XObjectFactory.hpp>
+
+
+
 FunctionFunctionAvailable::FunctionFunctionAvailable()
 {
 }
@@ -89,7 +93,7 @@ FunctionFunctionAvailable::execute(
 
 	const XalanDOMString	prefix = indexOfNSSep < nameLength ? substring(fullName, 0, indexOfNSSep) : XalanDOMString();
 
-	const XalanDOMString	theNamespace = executionContext.getNamespaceForPrefix(prefix);
+	const XalanDOMString&	theNamespace = executionContext.getNamespaceForPrefix(prefix);
 
 	const XalanDOMString	functionName = indexOfNSSep == nameLength ? fullName : substring(fullName, indexOfNSSep + 1);
 

@@ -54,7 +54,11 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-#include <XPath/FunctionCount.hpp>
+#include "FunctionCount.hpp"
+
+
+
+#include "XObjectFactory.hpp"
 
 
 

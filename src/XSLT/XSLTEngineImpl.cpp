@@ -2095,9 +2095,9 @@ XSLTEngineImpl::createResultTreeFrag(
 								  pfrag.get(),
 								  0);
 
-	setMustFlushPendingStartDocument(true);
+//	setMustFlushPendingStartDocument(true);
 
-	flushPending();
+//	flushPending();
 
 	StylesheetExecutionContext::OutputContextPushPop	theOutputContextPushPop(
 			executionContext,
@@ -2571,9 +2571,7 @@ XSLTEngineImpl::evaluateAttrVal(
 											const XObjectPtr	xobj =
 												evalXPathStr(expression, contextNode, namespaceContext, executionContext);
 
-											const XalanDOMString			exprResult(xobj->str());
-
-											append(buffer, exprResult);
+											append(buffer, xobj->str());
 
 											clear(lookahead); // breaks out of inner while loop
 										break;

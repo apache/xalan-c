@@ -151,6 +151,12 @@ public:
 			XalanNode*						sourceNode,
 			const QName&					mode) const;
 
+	const XObjectPtr
+	getValue(
+			StylesheetExecutionContext&		executionContext,
+			XalanNode*						sourceTree,
+			XalanNode*						sourceNode) const;
+
 protected:
 
 	QNameByValue	m_qname;

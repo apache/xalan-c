@@ -63,6 +63,10 @@
 
 
 
+#include <XPath/XObjectFactory.hpp>
+
+
+
 FunctionUnparsedEntityURI::FunctionUnparsedEntityURI()
 {
 }

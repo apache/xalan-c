@@ -71,6 +71,7 @@
 
 
 
+#include <XPath/XObjectFactory.hpp>
 #include <XPath/PrefixResolver.hpp>
 
 

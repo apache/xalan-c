@@ -60,6 +60,10 @@
 
 
 
+#include "XObjectFactory.hpp"
+
+
+
 Function::Function()
 {
 }

@@ -239,8 +239,7 @@ public:
 			MutableNodeRefList&		nodelist);
 
 	virtual const XObjectPtr
-	getVariable(
-			const QName&	name) const;
+	getVariable(const QName&	name);
 
 	virtual const PrefixResolver*
 	getPrefixResolver() const;

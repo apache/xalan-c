@@ -77,7 +77,7 @@ FormatterToText::FormatterToText(
 			bool		normalizeLinefeed) :
 	FormatterListener(OUTPUT_METHOD_TEXT),
 	m_writer(writer),
-	m_maxCharacter(~0),
+	m_maxCharacter(XalanDOMChar(~0)),
 	m_encoding(),
 	m_haveEncoding(false),
 	m_normalize(normalizeLinefeed)

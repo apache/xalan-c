@@ -65,6 +65,10 @@
 
 
 
+#include <XPath/XObjectFactory.hpp>
+
+
+
 #include "Constants.hpp"
 
 

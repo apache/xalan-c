@@ -54,7 +54,15 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-#include <XPath/FunctionStringLength.hpp>
+#include "FunctionStringLength.hpp"
+
+
+
+#include <DOMSupport/DOMServices.hpp>
+
+
+
+#include "XObjectFactory.hpp"
 
 
 
@@ -72,49 +80,44 @@ FunctionStringLength::~FunctionStringLength()
 
 XObjectPtr
 FunctionStringLength::execute(
-		XPathExecutionContext&			executionContext,
-		XalanNode*						/* context */,			
-		const XObjectPtr				arg1)
+		XPathExecutionContext&	executionContext,
+		XalanNode*				/* context */,			
+		const XObjectPtr		arg1)
 {
 	assert(arg1.null() == false);	
 
-	unsigned int	theLength = length(arg1->str());	
-	
-	return executionContext.getXObjectFactory().createNumber(theLength);
+	return executionContext.getXObjectFactory().createNumber(length(arg1->str()));
 }
 
 
 
 XObjectPtr
 FunctionStringLength::execute(
-		XPathExecutionContext&			executionContext,
-		XalanNode*						context)
+		XPathExecutionContext&	executionContext,
+		XalanNode*				context)
 {
-	unsigned int	theLength = 0;	
-
 	if (context == 0)
 	{
 		executionContext.error("The string-length() function requires a non-null context node!");
+
+		// Dummy return value...
+		return XObjectPtr(0);
 	}
 	else
 	{
-		XalanDOMString	theValue;
-
 		// The XPath standard says that if there are no arguments,
 		// the argument defaults to a node set with the context node
-		// as the only member.
-		// So we have to create an XNodeList with the context node as
-		// the only member and call the str() function on it.  
+		// as the only member.  The string value of a node set is the
+		// string value of the first node in the node set.
+		// DOMServices::getNodeData() will give us the data.
 
-		// An XObject that contains the context node.
-		XObjectPtr	theXObject(executionContext.createNodeSet(*context));
+		// Get a cached string...
+		XPathExecutionContext::GetAndReleaseCachedString	theData(executionContext);
 
-		// Get the value of the theXObject...
-		theValue = theXObject->str();
-		theLength = length(theValue);
+		DOMServices::getNodeData(*context, theData);
+
+		return executionContext.getXObjectFactory().createNumber(length(theData));
 	}
-
-	return executionContext.getXObjectFactory().createNumber(theLength);
 }
 
 
@@ -134,7 +137,5 @@ FunctionStringLength::clone() const
 const XalanDOMString
 FunctionStringLength::getError() const
 {
-	return XALAN_STATIC_UCODE_STRING(
-		"The string-length() function takes zero or one argument!");
+	return XALAN_STATIC_UCODE_STRING("The string-length() function takes zero or one argument!");
 }
-

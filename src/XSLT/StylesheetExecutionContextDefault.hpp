@@ -62,7 +62,6 @@
 
 
 // Base class include file.
-#include "Stylesheet.hpp"
 #include "StylesheetExecutionContext.hpp"
 
 
@@ -79,10 +78,11 @@
 
 
 
+#include <XSLT/Stylesheet.hpp>
 #include <XSLT/VariablesStack.hpp>
 
 
-class Stylesheet;
+
 class XPathProcessor;
 class XPathSupport;
 class XObjectFactory;
@@ -265,7 +265,13 @@ public:
 	virtual void
 	pushVariable(
 			const QName&				name,
-			const XObjectPtr			var,
+			const XObjectPtr			val,
+			const ElemTemplateElement*	element);
+
+	virtual void
+	pushVariable(
+			const QName&				name,
+			const ElemVariable*			var,
 			const ElemTemplateElement*	element);
 
 	virtual void
@@ -305,7 +311,7 @@ public:
 			const ElemTemplateElement*	targetTemplate);
 
 	virtual const XObjectPtr
-	getParamVariable(const QName&	theName) const;
+	getParamVariable(const QName&	theName);
 
 	virtual void
 	pushElementFrame(const ElemTemplateElement*		elem);
@@ -678,7 +684,7 @@ public:
 			MutableNodeRefList&		nodelist);
 
 	virtual const XObjectPtr
-	getVariable(const QName&	name) const;
+	getVariable(const QName&	name);
 
 	virtual const PrefixResolver*
 	getPrefixResolver() const;

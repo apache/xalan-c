@@ -69,6 +69,7 @@
 
 #include <XPath/MutableNodeRefList.hpp>
 #include <XPath/NodeRefListBase.hpp>
+#include <XPath/XObjectFactory.hpp>
 
 
 

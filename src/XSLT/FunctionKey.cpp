@@ -78,6 +78,7 @@
 
 #include <XPath/MutableNodeRefList.hpp>
 #include <XPath/NodeRefListBase.hpp>
+#include <XPath/XObjectFactory.hpp>
 
 
 
@@ -135,7 +136,7 @@ FunctionKey::execute(
 
 		assert(executionContext.getPrefixResolver() != 0);
 
-		const XalanDOMString	keyname = arg1->str();
+		const XalanDOMString&	keyname = arg1->str();
 
 		assert(arg2.null() == false);
 
@@ -163,11 +164,13 @@ FunctionKey::execute(
 
 				StringSetType	usedrefs;
 
+				XalanDOMString	ref;
+
 				for(unsigned int i = 0; i < nRefs; i++)
 				{
 					assert(theNodeSet.item(i) != 0);
 
-					const XalanDOMString		ref = DOMServices::getNodeData(*theNodeSet.item(i));
+					DOMServices::getNodeData(*theNodeSet.item(i), ref);
 
 					if(0 != length(ref))
 					{
@@ -184,12 +187,14 @@ FunctionKey::execute(
 											*theNodeRefList.get());
 						}
 					}
+
+					clear(ref);
 				}
 			}
 		}
 		else
 		{
-			const XalanDOMString			ref = arg2->str();
+			const XalanDOMString&	ref = arg2->str();
 
 					executionContext.getNodeSetByKey(docContext,
 											keyname,

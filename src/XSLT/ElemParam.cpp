@@ -98,7 +98,7 @@ ElemParam::execute(
 {
 	const XObjectPtr	obj = executionContext.getParamVariable(m_qname);
 
-	if(obj.null() == true)
+	if (obj.null() == true)
 	{
 		ElemVariable::execute(executionContext, sourceTree, sourceNode, mode);
 	}

@@ -119,6 +119,7 @@
 
 
 class ElemTemplateElement;
+class ElemVariable;
 class FormatterListener;
 class FormatterToDOM;
 class FormatterToHTML;
@@ -592,16 +593,31 @@ public:
 			XalanNode*					sourceNode) = 0;
 
 	/**
-	 * Push a named variable onto the processor variable stack
+	 * Push a named variable onto the variables stack.
+	 * The variable has already been evaluated.
 	 *
 	 * @param name    name of variable
-	 * @param var     pointer to XObject value
+	 * @param val     pointer to XObject value
 	 * @param element element marker for variable
 	 */
 	virtual void
 	pushVariable(
 			const QName&				name,
-			const XObjectPtr			var,
+			const XObjectPtr			val,
+			const ElemTemplateElement*	element) = 0;
+
+	/**
+	 * Push a named variable onto the processor variable stack
+	 * The variable will be evaluated when first referenced.
+	 *
+	 * @param name    name of variable
+	 * @param var     pointer to ElemVariable instance
+	 * @param element element marker for variable
+	 */
+	virtual void
+	pushVariable(
+			const QName&				name,
+			const ElemVariable*			var,
 			const ElemTemplateElement*	element) = 0;
 
 	/**
@@ -655,7 +671,7 @@ public:
 	 * @return pointer to XObject for variable
 	 */
 	virtual const XObjectPtr
-	getParamVariable(const QName&	theName) const = 0;
+	getParamVariable(const QName&	theName) = 0;
 
 	/**
 	 * Push a frame marker for an element.
@@ -1438,7 +1454,7 @@ public:
 			MutableNodeRefList&		nodelist) = 0;
 
 	virtual const XObjectPtr
-	getVariable(const QName&	name) const = 0;
+	getVariable(const QName&	name) = 0;
 
 	virtual const PrefixResolver*
 	getPrefixResolver() const = 0;

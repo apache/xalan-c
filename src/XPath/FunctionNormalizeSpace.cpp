@@ -59,6 +59,14 @@
 
 
 
+#include <DOMSupport/DOMServices.hpp>
+
+
+
+#include "XObjectFactory.hpp"
+
+
+
 FunctionNormalizeSpace::FunctionNormalizeSpace()
 {
 }
@@ -73,9 +81,9 @@ FunctionNormalizeSpace::~FunctionNormalizeSpace()
 
 XObjectPtr
 FunctionNormalizeSpace::execute(
-		XPathExecutionContext&			executionContext,
-		XalanNode*						/* context */,			
-		const XObjectPtr				arg1)
+		XPathExecutionContext&	executionContext,
+		XalanNode*				/* context */,			
+		const XObjectPtr		arg1)
 {
 	assert(arg1.null() == false);	
 		
@@ -86,24 +94,29 @@ FunctionNormalizeSpace::execute(
 
 XObjectPtr
 FunctionNormalizeSpace::execute(
-		XPathExecutionContext&			executionContext,
-		XalanNode*						context)
+		XPathExecutionContext&	executionContext,
+		XalanNode*				context)
 {
 	if (context == 0)
 	{
 		executionContext.error("The normalize-space() function requires a non-null context node!",
 							   context);
 
-		return XObjectPtr();
+		// Dummy return value...
+		return XObjectPtr(0);
 	}
 	else
 	{
-		// The XPath standard says that if there
-		// are no arguments, the default is to turn the contextNode
-		// into a string-value, which really means using FunctionString,
-		// but we don't need to do that, since our XObject classes
-		// do the real work in turning themselves into strings.
-		return normalize(executionContext, executionContext.createNodeSet(*context)->str());
+		// The XPath standard says that if there are no arguments,
+		// the default is to turn the context node into a string value.
+		// DOMServices::getNodeData() will give us the data.
+
+		// Get a cached string...
+		XPathExecutionContext::GetAndReleaseCachedString	theData(executionContext);
+
+		DOMServices::getNodeData(*context, theData);
+
+		return normalize(executionContext, theData);
 	}
 }
 
@@ -218,8 +231,7 @@ FunctionNormalizeSpace::clone() const
 const XalanDOMString
 FunctionNormalizeSpace::getError() const
 {
-	return XALAN_STATIC_UCODE_STRING(
-		"The normalize-space() function takes zero arguments or one argument!");
+	return XALAN_STATIC_UCODE_STRING("The normalize-space() function takes zero arguments or one argument!");
 }
 
 

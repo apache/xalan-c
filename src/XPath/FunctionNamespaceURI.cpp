@@ -54,7 +54,11 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-#include <XPath/FunctionNamespaceURI.hpp>
+#include "FunctionNamespaceURI.hpp"
+
+
+
+#include "XObjectFactory.hpp"
 
 
 
@@ -72,71 +76,46 @@ FunctionNamespaceURI::~FunctionNamespaceURI()
 
 XObjectPtr
 FunctionNamespaceURI::execute(
-		XPathExecutionContext&			executionContext,
-		XalanNode*						/* context */,			
-		const XObjectPtr					arg1)
+		XPathExecutionContext&	executionContext,
+		XalanNode*				/* context */,			
+		const XObjectPtr		arg1)
 {
 	assert(arg1.null() == false);	
 	
-	const XalanDOMString*	theNamespace = 0;
+	const NodeRefListBase&	theList = arg1->nodeset();
 
-	theNamespace = getNamespaceFromNodeSet(*arg1, executionContext);
+	if (theList.getLength() == 0)
+	{
+		return executionContext.getXObjectFactory().createString(XalanDOMString());
+	}
+	else
+	{
+		assert(theList.item(0) != 0);
 
-	return executionContext.getXObjectFactory().createString(theNamespace == 0 ? XalanDOMString() : *theNamespace);
+		return executionContext.getXObjectFactory().createString(executionContext.getNamespaceOfNode(*theList.item(0)));
+	}
 }
 
 
 
 XObjectPtr
 FunctionNamespaceURI::execute(
-		XPathExecutionContext&			executionContext,
-		XalanNode*						context)
-{	
-	const XalanDOMString*	theNamespace = 0;
-
+		XPathExecutionContext&	executionContext,
+		XalanNode*				context)
+{
 	if (context == 0)
 	{
 		executionContext.error("The namespace-uri() function requires a non-null context node!");
+
+		// Dummy return value...
+		return XObjectPtr(0);
 	}
 	else
 	{
 		// The XPath standard says that if there are no arguments,
 		// the argument defaults to a node set with the context node
 		// as the only member.
-		// So we have to create an XObject with the context node as
-		// the only member.
-		// We shroud the temporary getNamespaceFromNodeSet( in a
-		// FactoryObjectAutoPointer because it can be deleted once
-		// we're done.
-
-		// An XObject that contains the context node.
-		XObjectPtr	theXObject(executionContext.createNodeSet(*context));
-
-
-		theNamespace = getNamespaceFromNodeSet(*theXObject.get(), executionContext);
-	}
-
-	return executionContext.getXObjectFactory().createString(theNamespace == 0 ? XalanDOMString() : *theNamespace);
-}
-
-
-
-const XalanDOMString*
-FunctionNamespaceURI::getNamespaceFromNodeSet(
-						const XObject&			theXObject,
-						XPathExecutionContext&	theContext)
-{
-	const NodeRefListBase&	theList = theXObject.nodeset();
-
-	if (theList.getLength() == 0)
-	{
-		return 0;
-	}
-	else
-	{
-		assert(theList.item(0) != 0);
-
-		return &theContext.getNamespaceOfNode(*theList.item(0));
+		return executionContext.getXObjectFactory().createString(executionContext.getNamespaceOfNode(*context));
 	}
 }
 
@@ -160,4 +139,3 @@ FunctionNamespaceURI::getError() const
 	return XALAN_STATIC_UCODE_STRING(
 		"The namespace-uri() function takes zero arguments or one argument!");
 }
-

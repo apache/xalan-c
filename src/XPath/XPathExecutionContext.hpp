@@ -507,10 +507,26 @@ public:
 		XalanDOMString&
 		get() const
 		{
+			assert(m_string != 0);
+
+			return *m_string;
+		}
+
+		operator XalanDOMString& () const
+		{
+			assert(m_string != 0);
+
 			return *m_string;
 		}
 
 	private:
+
+		// Not implemented...
+		GetAndReleaseCachedString&
+		operator=(const GetAndReleaseCachedString&);
+
+		GetAndReleaseCachedString(const GetAndReleaseCachedString&);
+
 
 		XPathExecutionContext&	m_executionContext;
 
@@ -560,7 +576,7 @@ public:
 	 * @return pointer to an XObject if the variable was found, 0 if it was not
 	 */
 	virtual const XObjectPtr
-	getVariable(const QName&	name) const = 0;
+	getVariable(const QName&	name) = 0;
 
 	/**
 	 * Retrieve the resolver for namespaces.

@@ -58,6 +58,10 @@
 
 
 
+#include "XObjectFactory.hpp"
+
+
+
 FunctionCeiling::FunctionCeiling()
 {
 }

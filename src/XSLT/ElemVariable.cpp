@@ -155,14 +155,39 @@ ElemVariable::execute(
 {
 	ElemTemplateElement::execute(executionContext, sourceTree, sourceNode, mode);
 
-	if(0 != m_selectPattern)
+	const XObjectPtr	theValue(getValue(executionContext, sourceTree, sourceNode));
+
+	if (theValue.null() == false)
 	{
 		executionContext.pushVariable(
 				m_qname,
-			    getParentNodeElem(),
-				*m_selectPattern,
-				sourceNode,
-				*this);
+				theValue,
+				getParentNodeElem());
+	}
+	else
+	{
+		executionContext.pushVariable(
+				m_qname,
+				this,
+				getParentNodeElem());
+	}
+}
+
+
+
+const XObjectPtr
+ElemVariable::getValue(
+			StylesheetExecutionContext&		executionContext,
+			XalanNode*						sourceTree,
+			XalanNode*						sourceNode) const
+{
+	if(m_selectPattern == 0)
+	{
+		return executionContext.createXResultTreeFrag(*this, sourceTree, sourceNode);
+	}
+	else
+	{
+		const XObjectPtr	theValue(m_selectPattern->execute(sourceNode, *this, executionContext));
 
 		if(0 != executionContext.getTraceListeners())
 		{
@@ -173,16 +198,9 @@ ElemVariable::execute(
 					*this,
 					StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("select")),
 					*m_selectPattern,
-					executionContext.getVariable(m_qname)));
+					theValue));
 		}
-	}
-	else
-	{
-		executionContext.pushVariable(
-				m_qname,
-			    getParentNodeElem(),
-				*this,
-				sourceTree,
-				sourceNode);
+
+		return theValue;
 	}
 }

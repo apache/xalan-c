@@ -1063,10 +1063,36 @@ Stylesheet::pushTopLevelVariables(
 			StylesheetExecutionContext& 	executionContext,
 			const ParamVectorType&			topLevelParams) const
 {
-	ParamVectorType::size_type			i = 0;
+#if 1
+	{
+		// First, push any imports...
+		const StylesheetVectorType::const_reverse_iterator	rend = m_imports.rend();
+
+		for(StylesheetVectorType::const_reverse_iterator i = m_imports.rbegin(); i != rend; ++i)
+		{
+			const Stylesheet* const stylesheet = *i;
+			assert(stylesheet != 0);
+
+			stylesheet->pushTopLevelVariables(executionContext, topLevelParams);
+		}
+	}
+#else
+	{
+		// First, push any imports...
+		const StylesheetVectorType::const_reverse_iterator	nImports = m_imports.size();
+
+		for(StylesheetVectorType::size_type i = 0; i < nImports; ++i)
+		{
+			const Stylesheet* const stylesheet = m_imports[i];
+
+			stylesheet->pushTopLevelVariables(executionContext, topLevelParams);
+		}
+	}
+#endif
+
 	const ParamVectorType::size_type	nVars = m_topLevelVariables.size();
 
-	for(; i < nVars; i++)
+	for(ParamVectorType::size_type i = 0; i < nVars; ++i)
 	{
 		ElemVariable* const 	var = m_topLevelVariables[i];
 
@@ -1087,12 +1113,10 @@ Stylesheet::pushTopLevelVariables(
 				{
 					isParam = true;
 
-					const XObjectPtr	theXObject = arg.getXObject();
-
-					if (theXObject.null() == false)
+					if (arg.getXObject().null() == false)
 					{
 						executionContext.pushVariable(arg.getName(),
-													  theXObject,
+													  arg.getXObject(),
 													  0);
 					}
 					else
@@ -1111,25 +1135,12 @@ Stylesheet::pushTopLevelVariables(
 
 		if (isParam == false)
 		{
-			XalanNode* const	doc = executionContext.getRootDocument();
-			assert(doc != 0);
-
-			var->execute(executionContext,
-						 doc,
-						 doc,
-						 QNameByReference());
+			executionContext.pushVariable(var->getName(),
+										  var,
+										  var->getParentNodeElem());
 		}
 	}
 
-	// Now, push any imports...
-	const ParamVectorType::size_type	nImports = m_imports.size();
-
-	for(i = 0; i < nImports; i++)
-	{
-		const Stylesheet* const stylesheet = m_imports[i];
-
-		stylesheet->pushTopLevelVariables(executionContext, topLevelParams);
-	}
 }
 
 

@@ -54,7 +54,15 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-#include <XPath/FunctionString.hpp>
+#include "FunctionString.hpp"
+
+
+
+#include <DOMSupport/DOMServices.hpp>
+
+
+
+#include "XObjectFactory.hpp"
 
 
 
@@ -72,9 +80,9 @@ FunctionString::~FunctionString()
 
 XObjectPtr
 FunctionString::execute(
-		XPathExecutionContext&			executionContext,
-		XalanNode*						/* context */,			
-		const XObjectPtr					arg1)
+		XPathExecutionContext&	executionContext,
+		XalanNode*				/* context */,
+		const XObjectPtr		arg1)
 {
 	assert(arg1.null() == false);	
 	
@@ -85,23 +93,30 @@ FunctionString::execute(
 
 XObjectPtr
 FunctionString::execute(
-		XPathExecutionContext&			executionContext,
-		XalanNode*						context)
+		XPathExecutionContext&	executionContext,
+		XalanNode*				context)
 {
 	if (context == 0)
 	{
 		executionContext.error("The string() function requires a non-null context node!");
 
-		return XObjectPtr();
+		// Dummy return value...
+		return XObjectPtr(0);
 	}
 	else
 	{
 		// The XPath standard says that if there are no arguments,
 		// the argument defaults to a node set with the context node
-		// as the only member.
-		// So we have to create an XNodeList with the context node as
-		// the only member and call the str() function on it.  
-		return executionContext.getXObjectFactory().createString(executionContext.createNodeSet(*context)->str());
+		// as the only member.  The string value of a node set is the
+		// string value of the first node in the node set.
+		// DOMServices::getNodeData() will give us the data.
+
+		// Get a cached string...
+		XPathExecutionContext::GetAndReleaseCachedString	theData(executionContext);
+
+		DOMServices::getNodeData(*context, theData);
+
+		return executionContext.getXObjectFactory().createString(theData);
 	}
 }
 
@@ -122,7 +137,6 @@ FunctionString::clone() const
 const XalanDOMString
 FunctionString::getError() const
 {
-	return XALAN_STATIC_UCODE_STRING(
-		"The string() function takes zero or one argument!");
+	return XALAN_STATIC_UCODE_STRING("The string() function takes zero or one argument!");
 }
 

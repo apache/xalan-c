@@ -66,11 +66,17 @@
 
 
 
+#include "ElemVariable.hpp"
+#include "StylesheetExecutionContext.hpp"
+
+
+
 VariablesStack::VariablesStack() :
 	m_stack(),
 	m_globalStackFrameIndex(-1),
 	m_globalStackFrameMarked(false),
-	m_currentStackFrameIndex(0)
+	m_currentStackFrameIndex(0),
+	m_forceGlobalOnlySearch(false)
 {
 	m_stack.reserve(eDefaultStackSize);
 }
@@ -156,33 +162,6 @@ VariablesStack::popContextMarker()
 
 
 
-class PopPushStackEntry
-{
-public:
-
-	PopPushStackEntry(VariablesStack&	theVariablesStack) :
-		m_variablesStack(theVariablesStack),
-		m_stackEntry(theVariablesStack.back())
-	{
-		assert(m_stackEntry.getType() == VariablesStack::StackEntry::eContextMarker);
-
-		theVariablesStack.pop();
-	}
-
-	~PopPushStackEntry()
-	{
-		m_variablesStack.push(m_stackEntry);
-	}
-
-private:
-
-	VariablesStack&						m_variablesStack;
-
-	const VariablesStack::StackEntry	m_stackEntry;
-};
-
-
-
 class CommitPushElementFrame
 {
 public:
@@ -212,9 +191,9 @@ public:
 
 private:
 
-	VariablesStack*								m_variableStack;
+	VariablesStack*						m_variableStack;
 
-	const ElemTemplateElement* const			m_targetTemplate;
+	const ElemTemplateElement* const	m_targetTemplate;
 };
 
 
@@ -261,9 +240,18 @@ VariablesStack::pop()
 const void
 VariablesStack::PushParamFunctor::operator()(const VariablesStack::ParamsVectorType::value_type&	theEntry)
 {
-	assert(theEntry.first != 0);
+	assert(theEntry.m_qname != 0);
 
-	m_variablesStack.push(VariablesStack::StackEntry(theEntry.first, theEntry.second));
+	if (theEntry.m_value.null() == false)
+	{
+		m_variablesStack.push(VariablesStack::StackEntry(theEntry.m_qname, theEntry.m_value));
+	}
+	else
+	{
+		assert(theEntry.m_variable != 0);
+
+		m_variablesStack.push(VariablesStack::StackEntry(theEntry.m_qname, theEntry.m_variable));
+	}
 }
 
 
@@ -290,6 +278,22 @@ VariablesStack::pushParams(
 	for_each(theParams.begin(), theParams.end(), PushParamFunctor(*this));
 
 	thePusher.commit();
+}
+
+
+
+void
+VariablesStack::pushVariable(
+			const QName&				name,
+			const ElemVariable*			var,
+			const ElemTemplateElement*	e)
+{
+	if(elementFrameAlreadyPushed(e) == false)
+	{
+		pushElementFrame(e);
+	}
+
+	push(StackEntry(&name, var));
 }
 
 
@@ -329,59 +333,112 @@ VariablesStack::markGlobalStackFrame()
 
 
 
+class SetAndRestoreForceGlobalSearch
+{
+public:
+
+	SetAndRestoreForceGlobalSearch(VariablesStack&	variablesStack) :
+			m_variablesStack(variablesStack),
+			m_savedForceSearch(variablesStack.m_forceGlobalOnlySearch)
+		{
+			variablesStack.m_forceGlobalOnlySearch = true;
+		}
+
+	~SetAndRestoreForceGlobalSearch()
+		{
+			m_variablesStack.m_forceGlobalOnlySearch = m_savedForceSearch;
+		}
+
+private:
+
+	VariablesStack&		m_variablesStack;
+
+	const bool			m_savedForceSearch;
+};
+
+
+
 const XObjectPtr
 VariablesStack::findXObject(
-			const QName&	name,
-			bool			fSearchGlobalSpace) const
+			const QName&					name,
+			StylesheetExecutionContext&		executionContext,
+			bool							fSearchGlobalSpace,
+			bool&							fNameFound)
 {
-	const StackEntry* const		theVariable =
-		findVariable(name, fSearchGlobalSpace);
+	StackEntry* const	theEntry =
+		findEntry(name, fSearchGlobalSpace);
 
-	if (theVariable == 0)
+	if (theEntry == 0)
 	{
+		fNameFound = false;
+
 		return XObjectPtr();
 	}
 	else
 	{
-		assert(theVariable->getType() == StackEntry::eVariable);
+		fNameFound = true;
 
-		return theVariable->getVariable();
+		assert(theEntry->getType() == StackEntry::eVariable);
+
+		XObjectPtr	theValue(theEntry->getValue());
+
+		if (theValue.null() == true)
+		{
+			const ElemVariable* const	var = theEntry->getVariable();
+
+			if (var != 0)
+			{
+				XalanNode* const	doc = executionContext.getRootDocument();
+				assert(doc != 0);
+
+				SetAndRestoreForceGlobalSearch	theGuard(*this);
+
+				theValue = var->getValue(executionContext, doc, doc);
+				assert(theValue.null() == false);
+
+				theEntry->setValue(theValue);
+			}
+		}
+
+		return theValue;
 	}
 }
 
 
 
-const VariablesStack::StackEntry*
-VariablesStack::findVariable(
+VariablesStack::StackEntry*
+VariablesStack::findEntry(
 			const QName&	qname,
-			bool			fSearchGlobalSpace) const
+			bool			fSearchGlobalSpace)
 {
-	const StackEntry*	theResult = 0;
+	StackEntry*		theResult = 0;
 
-	const unsigned int	nElems = getCurrentStackFrameIndex();
-
-	// There is guaranteed to be a context marker at
-	// the bottom of the stack, so i should stop at
-	// 1.
-	for(unsigned int i = nElems - 1; i > 0; --i)
+	if (m_forceGlobalOnlySearch == false)
 	{
-		const StackEntry&	theEntry =
-			m_stack[i];
+		const unsigned int	nElems = getCurrentStackFrameIndex();
 
-		if(theEntry.getType() == StackEntry::eVariable)
+		// There is guaranteed to be a context marker at
+		// the bottom of the stack, so i should stop at
+		// 1.
+		for(unsigned int i = nElems - 1; i > 0; --i)
 		{
-			assert(theEntry.getName() != 0);
+			StackEntry&		theEntry = m_stack[i];
 
-			if(theEntry.getName()->equals(qname))
+			if(theEntry.getType() == StackEntry::eVariable)
 			{
-				theResult = &theEntry;
+				assert(theEntry.getName() != 0);
 
+				if(theEntry.getName()->equals(qname))
+				{
+					theResult = &theEntry;
+
+					break;
+				}
+			}
+			else if(theEntry.getType() == StackEntry::eContextMarker)
+			{
 				break;
 			}
-		}
-		else if(theEntry.getType() == StackEntry::eContextMarker)
-		{
-			break;
 		}
 	}
 
@@ -390,7 +447,7 @@ VariablesStack::findVariable(
 		// Look in the global space
 		for(unsigned int i = m_globalStackFrameIndex - 1; i > 0; i--)
 		{
-			const StackEntry&	theEntry = m_stack[i];
+			StackEntry&		theEntry = m_stack[i];
 
 			if(theEntry.getType() == StackEntry::eVariable)
 			{
@@ -494,6 +551,20 @@ VariablesStack::StackEntry::StackEntry(
 	m_type(eVariable),
 	m_qname(name),
 	m_value(val),
+	m_variable(0),
+	m_element(0)
+{
+}
+
+
+
+VariablesStack::StackEntry::StackEntry(
+			const QName*			name,
+			const ElemVariable*		var) :
+	m_type(eVariable),
+	m_qname(name),
+	m_value(),
+	m_variable(var),
 	m_element(0)
 {
 }
@@ -504,6 +575,7 @@ VariablesStack::StackEntry::StackEntry(const ElemTemplateElement*	elem) :
 	m_type(eElementFrameMarker),
 	m_qname(0),
 	m_value(),
+	m_variable(0),
 	m_element(elem)
 {
 }
@@ -514,6 +586,7 @@ VariablesStack::StackEntry::StackEntry(const StackEntry&	theSource) :
 	m_type(theSource.m_type),
 	m_qname(0),
 	m_value(),
+	m_variable(0),
 	m_element(0)
 {
 	// Use operator=() to do the work...
@@ -539,15 +612,19 @@ VariablesStack::StackEntry::operator=(const StackEntry&		theRHS)
 
 		m_value = theRHS.m_value;
 
+		m_variable = theRHS.m_variable;
+
 		m_element = 0;
 	}
 	else if (m_type == eElementFrameMarker)
 	{
-		m_element = theRHS.m_element;
-
 		m_qname = 0;
 
 		m_value = XObjectPtr();
+
+		m_variable = 0;
+
+		m_element = theRHS.m_element;
 	}
 
 	return *this;
@@ -573,8 +650,9 @@ VariablesStack::StackEntry::operator==(const StackEntry&	theRHS) const
 		}
 		else if (m_type == eVariable)
 		{
-			// We only need to compare the variable pointer..
-			if (m_value == theRHS.m_value)
+			// We only need to compare the variable related members...
+			if (m_value == theRHS.m_value ||
+				m_variable == theRHS.m_variable)
 			{
 				fResult = true;
 			}

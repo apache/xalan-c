@@ -138,100 +138,38 @@ KeyTable::KeyTable(
 			{
 				const KeyDeclaration&	kd = keyDeclarations[i];
 
-//				if (equals(kd.getName(), name))
+				if (executionContext.getInConstruction(kd) == true)			
 				{
-					if (executionContext.getInConstruction(kd) == true)			
-					{
-						throw XSLTProcessorException(
+					throw XSLTProcessorException(
 							TranscodeFromLocalCodePage("The use of the key() function in the \"match\" or \"use\" attribute of xsl:key is illegal!"),
 							TranscodeFromLocalCodePage("XSLTKeyIllegalKeyFunctionException"));
-					}
-					else
-					{
-						executionContext.beginConstruction(kd);
+				}
+				else
+				{
+					executionContext.beginConstruction(kd);
 
-						// See if our node matches the given key declaration according to 
-						// the match attribute on xsl:key.
-						assert(kd.getMatchPattern() != 0);
+					// See if our node matches the given key declaration according to 
+					// the match attribute on xsl:key.
+					assert(kd.getMatchPattern() != 0);
 
-						const double	score =
+					const double	score =
 							kd.getMatchPattern()->getMatchScore(testNode,
 																resolver,
 																executionContext);
 
-						if(score == XPath::s_MatchScoreNone)
-						{
-							executionContext.endConstruction(kd);
-						}
-						else
-						{
-							// Query from the node, according the the select pattern in the
-							// use attribute in xsl:key.
-							assert(kd.getUse() != 0);
+					if(score != XPath::s_MatchScoreNone)
+					{
+						processKeyDeclaration(
+							m_keys,
+							kd,
+							testNode,
+							resolver,
+							executionContext);
+					}
 
-							const XObjectPtr	xuse =
-								kd.getUse()->execute(testNode, resolver, NodeRefList(), executionContext);
-
-							const NodeRefListBase*	nl = 0;
-							unsigned int nUseValues;
-							XalanDOMString		exprResult;
-							if(xuse->getType() != xuse->eTypeNodeSet)
-							{
-								nUseValues = 1;
-								exprResult = xuse->str();
-							}
-							else
-							{
-								nl = &xuse->nodeset();
-								// Use each node in the node list as a key value that we'll be 
-								// able to use to look up the given node.
-								nUseValues = nl->getLength();
-							}  
-							// Use each node in the node list as a key value that we'll be 
-							// able to use to look up the given node.
-							for(unsigned int k = 0; k < nUseValues; k++)
-							{
-								// Use getExpr to get the string value of the given node. I hope 
-								// the string assumption is the right thing... I can't see how 
-								// it could work any other way.
-								if(0 != nl)
-								{
-									XalanNode* const	useNode = nl->item(k);
-									assert(useNode != 0);
-
-									exprResult = DOMServices::getNodeData(*useNode);
-								}
-
-								MutableNodeRefList&		keyNodes =
-										m_keys[kd.getName()][exprResult];
-
-								// See if the matched node is already in the 
-								// table set.  If it is there, we're done, otherwise 
-								// add it.
-								bool foundit = false;
-
-								const unsigned int	nKeyNodes = keyNodes.getLength(); //size();
-
-								for(unsigned int j = 0; j < nKeyNodes; j++)
-								{
-									if(testNode == keyNodes.item(j))
-									{
-										foundit = true;
-										break;
-									}
-								} // end for j
-
-								if(foundit == false)
-								{
-									keyNodes.addNode(testNode);
-								}
-							} // end for(int k = 0; k < nUseValues; k++)
-
-							executionContext.endConstruction(kd);
-						} // if(score != kd.getMatchPattern().s_MatchScoreNone)
-					} // if (kd.getInConstruction() == true)
-				} // if (equals(kd.getName(), name)
-			} // end for(int i = 0; i < nDeclarations; i++)
+					executionContext.endConstruction(kd);
+				} // if (kd.getInConstruction() == true)
+			} // end for(int i = 0; i < nDeclarations; ++i)
 
 			nodeIndex++;
 
@@ -270,7 +208,7 @@ KeyTable::KeyTable(
 
 		pos = nextNode;
     } // while(0 != pos)
-} // end buildKeysTable method
+} // end constructor
 
 
 
@@ -289,7 +227,7 @@ KeyTable::getNodeSetByKey(
 
 	if (i != m_keys.end())
 	{
-		const NodeListMapType&					theMap = (*i).second;
+		const NodeListMapType&	theMap = (*i).second;
 
 		const NodeListMapType::const_iterator	j = theMap.find(ref);
 
@@ -303,4 +241,71 @@ KeyTable::getNodeSetByKey(
 	// a list of nodes.  So this is just an empty one
 	// to return when the ref is not found.
 	return s_dummyList;
+}
+
+
+
+void
+KeyTable::addIfNotFound(
+			MutableNodeRefList&		theNodeList,
+			XalanNode*				theNode)
+{
+	if (theNodeList.indexOf(theNode) == MutableNodeRefList::npos)
+	{
+		theNodeList.addNode(theNode);
+	}
+}
+
+
+
+void
+KeyTable::processKeyDeclaration(
+			KeysMapType&					theKeys,
+			const KeyDeclaration&			kd,
+			XalanNode*						testNode,
+			const PrefixResolver&			resolver,
+			StylesheetExecutionContext&		executionContext)
+{
+	// Query from the node, according the the select pattern in the
+	// use attribute in xsl:key.
+	assert(kd.getUse() != 0);
+
+	const XObjectPtr	xuse =
+			kd.getUse()->execute(testNode, resolver, NodeRefList(), executionContext);
+
+	if(xuse->getType() != xuse->eTypeNodeSet)
+	{
+		addIfNotFound(
+			theKeys[kd.getName()][xuse->str()],
+			testNode);
+	}
+	else
+	{
+		const NodeRefListBase&	nl = xuse->nodeset();
+
+		// Use each node in the node list as a key value that we'll be 
+		// able to use to look up the given node.
+		const unsigned int	nUseValues = nl.getLength();
+
+		StylesheetExecutionContext::GetAndReleaseCachedString	theGuard(executionContext);
+
+		XalanDOMString&		nodeData = theGuard.get();
+
+		// Use each node in the node list as a key value that we'll be 
+		// able to use to look up the given node.
+		for(unsigned int i = 0; i < nUseValues; ++i)
+		{
+			// Get the string value of the node to use as the result of the
+			// expression.
+			assert(nl.item(i) != 0);
+
+			DOMServices::getNodeData(*nl.item(i), nodeData);
+
+			addIfNotFound(
+				theKeys[kd.getName()][nodeData],
+				testNode);
+
+			clear(nodeData);
+		}
+	}  
 }

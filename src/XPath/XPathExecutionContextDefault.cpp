@@ -448,7 +448,7 @@ XPathExecutionContextDefault::getNodeSetByKey(
 
 
 const XObjectPtr
-XPathExecutionContextDefault::getVariable(const QName&	name) const
+XPathExecutionContextDefault::getVariable(const QName&	name)
 {
 	return m_xobjectFactory.createUnknown(name.getLocalPart());
 }

@@ -500,7 +500,18 @@ StylesheetExecutionContextDefault::pushVariable(
 void
 StylesheetExecutionContextDefault::pushVariable(
 			const QName&				name,
-			const XObjectPtr			var,
+			const XObjectPtr			val,
+			const ElemTemplateElement*	element)
+{
+	m_variablesStack.pushVariable(name, val, element);
+}
+
+
+
+void
+StylesheetExecutionContextDefault::pushVariable(
+			const QName&				name,
+			const ElemVariable*			var,
 			const ElemTemplateElement*	element)
 {
 	m_variablesStack.pushVariable(name, var, element);
@@ -673,9 +684,13 @@ StylesheetExecutionContextDefault::pushParams(
 
 
 const XObjectPtr
-StylesheetExecutionContextDefault::getParamVariable(const QName&	theName) const
+StylesheetExecutionContextDefault::getParamVariable(const QName&	theName)
 {
-	return m_variablesStack.getParamVariable(theName);
+	bool				fFound;
+
+	const XObjectPtr	theValue(m_variablesStack.getParamVariable(theName, *this, fFound));
+
+	return theValue;
 }
 
 
@@ -1545,9 +1560,20 @@ StylesheetExecutionContextDefault::getNodeSetByKey(
 
 
 const XObjectPtr
-StylesheetExecutionContextDefault::getVariable(const QName&		name) const
+StylesheetExecutionContextDefault::getVariable(const QName&		name)
 {
-	return m_variablesStack.getVariable(name);
+	bool				fFound;
+
+	const XObjectPtr	theValue(m_variablesStack.getVariable(name, *this, fFound));
+
+	if(fFound == false)
+	{
+		warn(
+			TranscodeFromLocalCodePage("Variable reference given for variable out of context or without definition!  Name = ") +
+			name.getLocalPart());
+	}
+
+	return theValue;
 }
 
 

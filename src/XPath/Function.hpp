@@ -64,19 +64,16 @@
 
 
 
-#include <XPath/XObject.hpp>
-#include <XPath/XObjectFactory.hpp>
-#include <XPath/XPathExecutionContext.hpp>
-
-
-
 #include <vector>
 
 
 
+#include <XPath/XObject.hpp>
+#include <XPath/XPathExecutionContext.hpp>
+
+
+
 class XalanNode;
-class XObject;
-class XPathExecutionContext;
 
 
 

@@ -54,11 +54,15 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-#include <XPath/FunctionRound.hpp>
+#include "FunctionRound.hpp"
 
 
 
 #include <PlatformSupport/DoubleSupport.hpp>
+
+
+
+#include "XObjectFactory.hpp"
 
 
 

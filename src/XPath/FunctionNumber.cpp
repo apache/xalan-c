@@ -54,7 +54,15 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-#include <XPath/FunctionNumber.hpp>
+#include "FunctionNumber.hpp"
+
+
+
+#include <DOMSupport/DOMServices.hpp>
+
+
+
+#include "XObjectFactory.hpp"
 
 
 
@@ -72,50 +80,53 @@ FunctionNumber::~FunctionNumber()
 
 XObjectPtr
 FunctionNumber::execute(
-		XPathExecutionContext&			executionContext,
-		XalanNode*						context,			
-		const XObjectPtr				arg1)
+		XPathExecutionContext&	executionContext,
+		XalanNode*				/* context */,			
+		const XObjectPtr		arg1)
 {
 	assert(arg1.null() == false);	
-	
-	double	theValue = 0.0L;
 
-	theValue = arg1->num();
-
-	return executionContext.getXObjectFactory().createNumber(theValue);
+	if (arg1->getType() == XObject::eTypeNumber)
+	{
+		// Since XObjects are reference counted, just return the
+		// argument.
+		return arg1;
+	}
+	else
+	{
+		return executionContext.getXObjectFactory().createNumber(arg1->num());
+	}
 }
 
 
 
 XObjectPtr
 FunctionNumber::execute(
-		XPathExecutionContext&			executionContext,
-		XalanNode*						context)
+		XPathExecutionContext&	executionContext,
+		XalanNode*				context)
 {
-	double	theValue = 0.0L;
-
 	if (context == 0)
 	{
 		executionContext.error("The number() function requires a non-null context node!");
+
+		// Dummy return value...
+		return XObjectPtr(0);
 	}
 	else
 	{
 		// The XPath standard says that if there are no arguments,
 		// the argument defaults to a node set with the context node
-		// as the only member.
-		// So we have to create an XNodeList with the context node as
-		// the only member and call the num() function on it.  We shroud
-		// the temporary XNodeList in an XObjectPtr because it can be
-		// deleted once we've converted the context node to a number.
+		// as the only member.  The number value of a node set is the
+		// string value of the first node in the node set, converted to
+		// a number.  DOMServices::getNodeData() will give us the data.
 
-		// An XObject that contains the context node.
-		XObjectPtr	theXObject(executionContext.createNodeSet(*context));
+		// Get a cached string...
+		XPathExecutionContext::GetAndReleaseCachedString	theData(executionContext);
 
-		// Get the numeric value of the theXObject...
-		theValue = theXObject->num();
+		DOMServices::getNodeData(*context, theData);
+
+		return executionContext.getXObjectFactory().createNumber(DOMStringToDouble(theData));
 	}
-
-	return executionContext.getXObjectFactory().createNumber(theValue);
 }
 
 

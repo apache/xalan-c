@@ -80,6 +80,7 @@
 
 class Arg;
 class ElemTemplateElement;
+class ElemVariable;
 class StylesheetExecutionContext;
 class XalanNode;
 
@@ -139,10 +140,44 @@ public:
 	void
 	popContextMarker();
 
+	struct ParamsVectorEntry
+	{
+		ParamsVectorEntry() :
+			m_qname(0),
+			m_value(),
+			m_variable(0)
+		{
+		}
+
+		ParamsVectorEntry(
+				const QName*		qname,
+				const XObjectPtr	value) :
+			m_qname(qname),
+			m_value(value),
+			m_variable(0)
+		{
+		}
+
+		ParamsVectorEntry(
+				const QName*			qname,
+				const ElemVariable*		variable) :
+			m_qname(qname),
+			m_value(),
+			m_variable(variable)
+		{
+		}
+
+		const QName*			m_qname;
+
+		XObjectPtr				m_value;
+
+		const ElemVariable*		m_variable;
+	};
+
 #if defined(XALAN_NO_NAMESPACES)
-	typedef vector<pair<const QName*,  XObjectPtr> >				ParamsVectorType;
+	typedef vector<ParamsVectorEntry>		ParamsVectorType;
 #else
-	typedef std::vector<std::pair<const QName*,  XObjectPtr> >	ParamsVectorType;
+	typedef std::vector<ParamsVectorEntry>	ParamsVectorType;
 #endif
 
 	/**
@@ -159,33 +194,60 @@ public:
 
 	/**
 	 * Given a name, return a string representing the value, but don't look
-	 * in the global space.
+	 * in the global space.  Since the variable may not yet have been
+	 * evaluated, this may return a null XObjectPtr.
 	 *
 	 * @param theName name of variable
+	 * @param exeuctionContext the current execution context
+	 * @param fNameFound set to true if the name was found, false if not.
 	 * @return pointer to XObject for variable
 	 */
 	const XObjectPtr
-	getParamVariable(const QName& qname) const
+	getParamVariable(
+			const QName&					qname,
+			StylesheetExecutionContext&		executionContext,
+			bool&							fNameFound)
 	{
-		return findXObject(qname, false);
+		return findXObject(qname, executionContext, false, fNameFound);
 	}
 
 	/**
-	 * Given a name, find the corresponding XObject.
+	 * Given a name, find the corresponding XObject.  Since the variable may
+	 * not yet have been evaluated, this may return a null XObjectPtr.
 	 *
 	 * @param qname name of variable
+	 * @param exeuctionContext the current execution context
+	 * @param fNameFound set to true if the name was found, false if not.
 	 * @return pointer to the corresponding XObject
 	 */
 	const XObjectPtr
-	getVariable(const QName& 	name) const
+	getVariable(
+			const QName& 					qname,
+			StylesheetExecutionContext&		executionContext,
+			bool&							fNameFound)
 	{
-		return findXObject(name, true);
+		return findXObject(qname, executionContext, true, fNameFound);
 	}
 
 	/**
 	 * Push a named variable onto the processor variable stack. Don't forget
 	 * to call startContext before pushing a series of arguments for a given
-	 * macro call.
+	 * template.
+	 *
+	 * @param name	  name of variable
+	 * @param val	  pointer to ElemVariable
+	 * @param e 	  element marker for variable
+	 */
+	void
+	pushVariable(
+			const QName&				name,
+			const ElemVariable*			var,
+			const ElemTemplateElement*	e);
+
+	/**
+	 * Push a named variable onto the processor variable stack. Don't forget
+	 * to call startContext before pushing a series of arguments for a given
+	 * template.
 	 *
 	 * @param name	  name of variable
 	 * @param val	  pointer to XObject value
@@ -264,7 +326,7 @@ public:
 
 	private:
 
-		VariablesStack&						m_variablesStack;
+		VariablesStack&		m_variablesStack;
 	};
 
 private:
@@ -310,9 +372,8 @@ private:
 
 	friend class CommitPushElementFrame;
 	friend class EnsurePop;
-	friend class PopPushStackEntry;
-	friend class PushFunctor;
 	friend class PushParamFunctor;
+	friend class SetAndRestoreForceGlobalSearch;
 
 	class StackEntry
 	{
@@ -334,11 +395,18 @@ private:
 		StackEntry();
 
 		/**
-		 * Construct a variable.
+		 * Construct a variable that is already evaluated.
 		 */
 		StackEntry(
 			const QName*		name,
 			const XObjectPtr	val);
+
+		/**
+		 * Construct a variable that has not been evaluated yet.
+		 */
+		StackEntry(
+			const QName*			name,
+			const ElemVariable*		var);
 
 		/**
 		 * Construct an element frame marker.
@@ -384,9 +452,31 @@ private:
 		 * @return pointer to XObject
 		 */
 		const XObjectPtr
-		getVariable() const
+		getValue() const
 		{
 			return m_value;
+		}
+
+		/**
+		 * Retrieve object's XObject pointer.  Valid only for variables
+		 * 
+		 * @return pointer to XObject
+		 */
+		void
+		setValue(const XObjectPtr&	theValue)
+		{
+			m_value = theValue;
+		}
+
+		/**
+		 * Retrieve object's XObject pointer.  Valid only for variables
+		 * 
+		 * @return pointer to XObject
+		 */
+		const ElemVariable*
+		getVariable() const
+		{
+			return m_variable;
 		}
 
 		/**
@@ -415,6 +505,8 @@ private:
 
 		XObjectPtr					m_value;
 
+		const ElemVariable*			m_variable;
+
 		const ElemTemplateElement*	m_element;
 	};
 
@@ -429,27 +521,31 @@ private:
 
 	const XObjectPtr
 	findXObject(
+			const QName&					name,
+			StylesheetExecutionContext&		executionContext,
+			bool							fSearchGlobalSpace,
+			bool&							fNameFound);
+
+	StackEntry*
+	findEntry(
 			const QName&	name,
-			bool			fSearchGlobalSpace) const;
-
-	const StackEntry*
-	findVariable(
-			const QName&	name,
-			bool			fSearchGlobalSpace) const;
+			bool			fSearchGlobalSpace);
 
 
-	VariableStackStackType			m_stack;
+	VariableStackStackType	m_stack;
 
-	int								m_globalStackFrameIndex;
+	int						m_globalStackFrameIndex;
 
-	bool							m_globalStackFrameMarked;
+	bool					m_globalStackFrameMarked;
+
+	bool					m_forceGlobalOnlySearch;
 
 	/**
 	 * This is the top of the stack frame from where a search 
 	 * for a variable or param should take place.  It may not 
 	 * be the real stack top.
 	 */
-	unsigned int					m_currentStackFrameIndex;	
+	unsigned int			m_currentStackFrameIndex;	
 };
 
 

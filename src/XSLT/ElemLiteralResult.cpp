@@ -218,7 +218,7 @@ ElemLiteralResult::execute(
 			XalanNode*						sourceNode,
 			const QName&					mode) const
 {
-	executionContext.startElement(toCharArray(getElementName()));
+	executionContext.startElement(c_wstr(getElementName()));
 
 	ElemUse::execute(executionContext, sourceTree, sourceNode, mode);
 
@@ -226,11 +226,15 @@ ElemLiteralResult::execute(
 	{
 		const AVTVectorType::size_type	nAttrs = m_avts.size();
 
+		StylesheetExecutionContext::GetAndReleaseCachedString	theGuard1(executionContext);
+		StylesheetExecutionContext::GetAndReleaseCachedString	theGuard2(executionContext);
+
+		XalanDOMString&		thePrefix = theGuard1.get();
+		XalanDOMString&		theStringedValue = theGuard2.get();
+
 		for(AVTVectorType::size_type i = 0; i < nAttrs; i++)
 		{
 			const AVT* const	avt = m_avts[i];
-
-			XalanDOMString		thePrefix;
 
 			const XalanDOMString&	theName = avt->getName();
 
@@ -239,7 +243,9 @@ ElemLiteralResult::execute(
 				thePrefix = substring(theName, DOMServices::s_XMLNamespaceWithSeparatorLength);
 			}
 
-			XalanDOMString	theStringedValue;
+			StylesheetExecutionContext::GetAndReleaseCachedString	theGuard2(executionContext);
+
+			XalanDOMString&		theStringedValue = theGuard2.get();
 
 			avt->evaluate(theStringedValue, sourceNode, *this, executionContext);
 
@@ -254,6 +260,9 @@ ElemLiteralResult::execute(
 						c_wstr(avt->getType()),
 						length(theStringedValue) == 0 ? &theDummy : c_wstr(theStringedValue));
 			}
+
+			clear(thePrefix);
+			clear(theStringedValue);
 		}
 	}
 
@@ -261,7 +270,7 @@ ElemLiteralResult::execute(
 
 	executeChildren(executionContext, sourceTree, sourceNode, mode);
 
-	executionContext.endElement(toCharArray(getElementName()));
+	executionContext.endElement(c_wstr(getElementName()));
 }
 
 

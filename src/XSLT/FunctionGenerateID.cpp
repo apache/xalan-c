@@ -67,6 +67,7 @@
 
 
 #include <XPath/NodeRefListBase.hpp>
+#include <XPath/XObjectFactory.hpp>
 
 
 
@@ -89,6 +90,7 @@ FunctionGenerateID::~FunctionGenerateID()
 
 
 
+// Append the suffix to the provided string.
 void
 getSuffix(
 		const XalanNode*	theNode,
@@ -153,13 +155,15 @@ FunctionGenerateID::execute(
 
 		XalanDOMString&		theID = theGuard.get();
 
+#if defined(XALAN_USE_XERCES_DOMSTRING)
 		getSuffix(context, theID);
 		assert(length(theID) != 0);
 
-#if defined(XALAN_USE_XERCES_DOMSTRING)
 		return executionContext.getXObjectFactory().createString(m_prefix + theID);
 #else
-		insert(theID, 0, m_prefix);
+		theID = m_prefix;
+
+		getSuffix(context, theID);
 
 		return executionContext.getXObjectFactory().createString(theID);
 #endif

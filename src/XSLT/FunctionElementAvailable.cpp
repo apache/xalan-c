@@ -62,6 +62,10 @@
 
 
 
+#include <XPath/XObjectFactory.hpp>
+
+
+
 FunctionElementAvailable::FunctionElementAvailable()
 {
 }
@@ -97,9 +101,16 @@ FunctionElementAvailable::execute(
 	}
 	else
 	{
-		const XalanDOMString	elementName = indexOfNSSep == nameLength ? fullName : substring(fullName, indexOfNSSep + 1);
+		if (indexOfNSSep == nameLength)
+		{
+			return executionContext.getXObjectFactory().createBoolean(executionContext.elementAvailable(theNamespace, fullName));
+		}
+		else
+		{
+			const XalanDOMString	elementName =  substring(fullName, indexOfNSSep + 1);
 
-		return executionContext.getXObjectFactory().createBoolean(executionContext.elementAvailable(theNamespace, elementName));
+			return executionContext.getXObjectFactory().createBoolean(executionContext.elementAvailable(theNamespace, elementName));
+		}
 	}
 }
 

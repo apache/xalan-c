@@ -54,7 +54,11 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-#include <XPath/FunctionLocalName.hpp>
+#include "FunctionLocalName.hpp"
+
+
+
+#include "XObjectFactory.hpp"
 
 
 

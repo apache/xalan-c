@@ -179,6 +179,25 @@ public:
 private:
 
 	/**
+	 * Helper function to add a node to the list if not found.
+	 * 
+	 * @param theNodeList the node list.
+	 * @param theNode the node to add.
+	 */
+	static void
+	addIfNotFound(
+			MutableNodeRefList&		theNodeList,
+			XalanNode*				theNode);
+
+	static void
+	processKeyDeclaration(
+			KeysMapType&					theKeys,
+			const KeyDeclaration&			kd,
+			XalanNode*						testNode,
+			const PrefixResolver&			resolver,
+			StylesheetExecutionContext&		executionContext);
+
+	/**
 	 * The document key.  This table should only be used with contexts
 	 * whose Document roots match this key.
 	 */

@@ -1095,7 +1095,7 @@ XPath::literal(
 
 const XObjectPtr
 XPath::variable(
-			XalanNode*				context,
+			XalanNode*				/* context */,
 			int						opPos,
 			XPathExecutionContext&	executionContext) const
 {
@@ -1120,14 +1120,6 @@ XPath::variable(
 		executionContext.error(TranscodeFromLocalCodePage("Could not get variable named ") + varName.str());
 
 		throw;
-	}
-
-	if(result.null() == true)
-	{
-		executionContext.warn(TranscodeFromLocalCodePage("VariableReference given for variable out ") +
-								TranscodeFromLocalCodePage("of context or without definition!  Name = ") +
-							    varName.str(),
-							  context);
 	}
 
 	return result;
