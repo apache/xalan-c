@@ -67,7 +67,7 @@
 
 
 
-#include <dom/DOM_Element.hpp>
+#include <xercesc/dom/DOM_Element.hpp>
 
 
 

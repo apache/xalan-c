@@ -63,7 +63,7 @@
 
 
 
-#include <dom/DOM_CDATASection.hpp>
+#include <xercesc/dom/DOM_CDATASection.hpp>
 
 
 

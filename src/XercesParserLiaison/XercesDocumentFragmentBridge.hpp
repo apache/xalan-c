@@ -63,7 +63,7 @@
 
 
 
-#include <dom/DOM_DocumentFragment.hpp>
+#include <xercesc/dom/DOM_DocumentFragment.hpp>
 
 
 

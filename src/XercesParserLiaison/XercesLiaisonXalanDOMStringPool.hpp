@@ -68,7 +68,7 @@
 
 
 
-#include <util/Mutexes.hpp>
+#include <xercesc/util/Mutexes.hpp>
 
 
 

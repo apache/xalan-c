@@ -64,8 +64,8 @@
 
 
 
-#include <dom/DOM_Element.hpp>
-#include <dom/DOM_NodeList.hpp>
+#include <xercesc/dom/DOM_Element.hpp>
+#include <xercesc/dom/DOM_NodeList.hpp>
 
 
 

@@ -59,7 +59,7 @@
 
 
 
-#include <dom/DOM_CharacterData.hpp>
+#include <xercesc/dom/DOM_CharacterData.hpp>
 
 
 

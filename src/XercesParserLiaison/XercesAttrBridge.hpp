@@ -63,7 +63,7 @@
 
 
 
-#include <dom/DOM_Attr.hpp>
+#include <xercesc/dom/DOM_Attr.hpp>
 
 
 

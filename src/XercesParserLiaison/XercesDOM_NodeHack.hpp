@@ -7,10 +7,10 @@
 
 
 
-#include <dom/DOM_Node.hpp>
-#include <dom/DOM_Attr.hpp>
-#include <dom/DOM_Element.hpp>
-#include <dom/DOM_Text.hpp>
+#include <xercesc/dom/DOM_Node.hpp>
+#include <xercesc/dom/DOM_Attr.hpp>
+#include <xercesc/dom/DOM_Element.hpp>
+#include <xercesc/dom/DOM_Text.hpp>
 
 
 

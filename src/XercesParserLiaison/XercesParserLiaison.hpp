@@ -69,9 +69,9 @@
 
 
 // Xerces DOM header files
-#include <util/XercesDefs.hpp>
-#include <sax/ErrorHandler.hpp>
-#include <dom/DOM_Document.hpp>
+#include <xercesc/util/XercesDefs.hpp>
+#include <xercesc/sax/ErrorHandler.hpp>
+#include <xercesc/dom/DOM_Document.hpp>
 
 
 

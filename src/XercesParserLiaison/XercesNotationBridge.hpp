@@ -63,7 +63,7 @@
 
 
 
-#include <dom/DOM_Notation.hpp>
+#include <xercesc/dom/DOM_Notation.hpp>
 
 
 

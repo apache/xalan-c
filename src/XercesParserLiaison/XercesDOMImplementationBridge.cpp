@@ -58,7 +58,7 @@
 
 
 
-#include <dom/DOM_DOMImplementation.hpp>
+#include <xercesc/dom/DOM_DOMImplementation.hpp>
 
 
 

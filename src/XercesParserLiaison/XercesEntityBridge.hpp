@@ -63,7 +63,7 @@
 
 
 
-#include <dom/DOM_Entity.hpp>
+#include <xercesc/dom/DOM_Entity.hpp>
 
 
 

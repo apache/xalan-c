@@ -71,10 +71,10 @@
 
 
 
-#include <framework/URLInputSource.hpp>
-#include <parsers/DOMParser.hpp>
-#include <parsers/SAXParser.hpp>
-#include <sax/SAXParseException.hpp>
+#include <xercesc/framework/URLInputSource.hpp>
+#include <xercesc/parsers/DOMParser.hpp>
+#include <xercesc/parsers/SAXParser.hpp>
+#include <xercesc/sax/SAXParseException.hpp>
 
 
 

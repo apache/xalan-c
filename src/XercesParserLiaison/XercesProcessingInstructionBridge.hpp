@@ -63,7 +63,7 @@
 
 
 
-#include <dom/DOM_ProcessingInstruction.hpp>
+#include <xercesc/dom/DOM_ProcessingInstruction.hpp>
 
 
 

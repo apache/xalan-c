@@ -63,7 +63,7 @@
 
 
 
-#include <dom/DOM_Text.hpp>
+#include <xercesc/dom/DOM_Text.hpp>
 
 
 
