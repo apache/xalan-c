@@ -97,9 +97,7 @@
       </s2><anchor name="features"/>
    	  <s2 title="&xslt4c; Features">
 	    <ul> 
-		    <li>With a few minor exceptions, &xslt4c; fully implements the <resource-ref idref="XSLT"/>.<br/><br/>
-        For a list of the XSLT features that &xslt4c; does not yet implement, see <link idref="readme" anchor="to-do">&xslt4c;
-        to-do tasks</link>.<br/><br/></li>
+		    <li>&xslt4c; fully implements the <resource-ref idref="XSLT"/>.</li>
         <li>&xslt4c; incorporates the <resource-ref idref="XPath"/>.<br/><br/></li>
     	  <li>&xslt4c; uses <jump href="http://xml.apache.org/xerces-c/index.html">&xml4c;</jump> to parse XML documents and XSL
         stylesheets.<br/><br/>

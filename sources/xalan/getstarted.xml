@@ -11,14 +11,14 @@
 </ul>
 <anchor name="download"/>
 <s2 title="Downloading what you need">
-<p>For &xslt4c-current;, we are distributing a Windows32 Visual C++ build, a Linux GNU build, and an AIX xlC_r build. Please contact us at <human-resource-ref idref="xalandev"/> if you would like to help provide builds for other platforms.</p>
+<p>For &xslt4c-current;, we are distributing a Windows32 Visual C++ build, a Red Hat Linux GNU build, and an AIX xlC_r build. Please contact us at <human-resource-ref idref="xalandev"/> if you would like to help provide builds for other platforms.</p>
 <s3 title="&xslt4c; Distributions">
 <p><img src="xalan-cdist.gif" alt="xalan-cdist.gif"/></p>
 </s3>
 <p>For the Windows32 build, download <resource-ref idref="xslt4c-win32-download"/>.</p>
 <p>For the Linux build, download <resource-ref idref="xslt4c-linux-download"/></p>
 <p>For the AIX build, download <resource-ref idref="xslt4c-aix-download"/></p>
-<p>Each distribution contains all you need to run the Xalan command-line utility for performing transformations. To build your own applications, you also need a compatible Xerces-C++ distribution. If you want to take advantage of the support for number formatting, sorting, and encoding the ICU provides, you should also download and install the <resource-ref idref="icu"/>; see <link idref="usagepatterns" anchor="icu">Using the ICU</link>,</p>
+<p>Each distribution contains all you need to run the Xalan command-line utility for performing transformations. To build your own applications, you also need a compatible &xml4c; binary distribution. If you want to take advantage of the support for number formatting, sorting, and encoding the ICU provides, you should also download and install the <resource-ref idref="icu"/>; see <link idref="usagepatterns" anchor="icu">Using the ICU</link>,</p>
 <s3 title="What you need to run the Xalan command-line utility">
 <p>To run the Xalan executable for performing transformations, you need the following:</p>
 <p><em>Windows32</em></p>
@@ -30,13 +30,13 @@
 
 <p><em>Linux</em></p>
 <ul>
-  <li>The utility: TestXSLT</li>
+  <li>The executable: TestXSLT</li>
   <li>The Xalan-C++ shared library: &xslt4c-linuxlib;</li>
   <li>The Xerces-C++ shared library: &xml4c-linuxlib;</li>
 </ul>
 <p><em>AIX</em></p>
 <ul>
-  <li>The utility: TestXSLT</li>
+  <li>The executable: TestXSLT</li>
   <li>The Xalan-C++ load library: &xslt4c-aixlib;</li>
   <li>The Xerces-C++ load library: &xml4c-aixlib;</li>
 </ul>
@@ -48,7 +48,7 @@
 Xalan-C++ and Xerces-C++ header (.hpp) files and (for Windows) the &xslt4c; and &xml4c; libraries (.lib files).</p>
 <p>The Xalan-C++ header files are in the src directory tree in both distributions.</p> 
 <p>In the Windows32 distribution (built with Microsoft&reg; Visual C++&reg; 6.0), the dlls and libraries are in the Build - Win32 -V6 - Release subdirectory.</p> 
-<p>In the Linux distribution (built with a make file and Red Hat Linux 6.1), the shared object library is in the lib subdirectory.</p>
+<p>In the Linux distribution (built on Red Hat Linux 6.1 with a make file and the CNU C++ compiler), the shared object library is in the lib subdirectory.</p>
 <p>In the AIX distribution (built with the make file and xlC_r), the load library is in the lib subdirectory.</p>
 <p>To get the Xerces-C++ header and (for Windows) .lib files, download and expand the &xml4c; binary distribution for your platform from the <resource-ref idref="xml4c-distdir"/>. For information about which &xml4c; distribution has been tested with this &xslt4c; release, see <link idref="readme" anchor="status">Version of &xml4c; to use</link>.</p>
 <p>For information about rebuilding &xslt4c;, see the <link idref="readme" anchor="build">Build notes</link>.</p>
