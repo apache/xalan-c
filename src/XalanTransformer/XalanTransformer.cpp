@@ -785,7 +785,11 @@ XalanTransformer::destroyStylesheet(const XalanCompiledStylesheet*	theStylesheet
 	{
 		m_compiledStylesheets.erase(i);
 
+#if defined(XALAN_CANNOT_DELETE_CONST)
+		delete (XalanCompiledStylesheet*) theStylesheet;
+#else
 		delete theStylesheet;
+#endif
 
 		return 0;
 	}
@@ -886,7 +890,11 @@ XalanTransformer::destroyParsedSource(const XalanParsedSource*	theParsedSource)
 	{
 		m_parsedSources.erase(i);
 
+#if defined(XALAN_CANNOT_DELETE_CONST)
+		delete (XalanCompiledStylesheet*) theParsedSource;
+#else
 		delete theParsedSource;
+#endif
 
 		return 0;
 	}
