@@ -117,7 +117,8 @@ FormatterToHTML::FormatterToHTML(
 	m_inBlockElem(false),
 	m_isRawStack(),
 	m_isScriptOrStyleElem(false),
-	m_escapeURLs(false),
+	m_escapeURLs(true),
+	m_isFirstElement(false),
 	m_elementLevel(0)
 {
 	initCharsMap();
@@ -207,6 +208,7 @@ FormatterToHTML::startDocument()
 	// Reset this, just in case...
 	m_elementLevel = 0;
 
+	m_isFirstElement = true;
     m_startNewLine = false;
 	m_shouldWriteXMLHeader = false;
 
@@ -271,27 +273,30 @@ FormatterToHTML::startElement(
 	writeParentTagEnd();
 
 	const ElemDesc&		elemDesc =
-		getElemDesc(name);
+			getElemDesc(name);
 
-    const bool	isBlockElement = elemDesc.is(ElemDesc::BLOCK);
+	const bool	isBlockElement = elemDesc.is(ElemDesc::BLOCK);
 	const bool	isHeadElement = elemDesc.is(ElemDesc::HEADELEM);
 
 	m_isScriptOrStyleElem = 
-		equalsIgnoreCaseASCII(name, c_wstr(s_scriptString)) ||
-		equalsIgnoreCaseASCII(name, c_wstr(s_styleString));
+			equalsIgnoreCaseASCII(name, c_wstr(s_scriptString)) ||
+			equalsIgnoreCaseASCII(name, c_wstr(s_styleString));
+
+	// Increment the level...
+	++m_elementLevel;
 
 	if(m_ispreserve == true)
 	{
 		m_ispreserve = false;
 	}
-    else if(m_doIndent &&
-			m_elementLevel > 0 &&
+	else if(m_doIndent &&
+			m_elementLevel > 0 && m_isFirstElement == false &&
 			(m_inBlockElem == false || isBlockElement == true))
-    {
+	{
 		m_startNewLine = true;
 
 		indent(m_currentIndent);
-    }
+	}
 
 	m_inBlockElem = !isBlockElement;
 
@@ -303,33 +308,33 @@ FormatterToHTML::startElement(
 
 	const unsigned int	nAttrs = attrs.getLength();
 
-    for (unsigned int i = 0;  i < nAttrs ;  i++)
-    {
+	for (unsigned int i = 0;  i < nAttrs ;  i++)
+	{
 		processAttribute(attrs.getName(i), attrs.getValue(i), elemDesc);
-    }
+	}
 
-    // Flag the current element as not yet having any children.
-    openElementForChildren();
+	// Flag the current element as not yet having any children.
+	openElementForChildren();
 
-    m_currentIndent += m_indent;
+	m_currentIndent += m_indent;
     
-    m_isprevtext = false;
+	m_isprevtext = false;
 
 	if (isHeadElement)
-    {
-      writeParentTagEnd();
+	{
+		writeParentTagEnd();
 
-      if (m_doIndent)
-        indent(m_currentIndent);
+		if (m_doIndent)
+			indent(m_currentIndent);
 
-      accumContent(s_metaString);
-      accumContent(getEncoding());      
-      accumContent(XalanUnicode::charQuoteMark);
-      accumContent(XalanUnicode::charGreaterThanSign);
-    }
+		accumContent(s_metaString);
+		accumContent(getEncoding());      
+		accumContent(XalanUnicode::charQuoteMark);
+		accumContent(XalanUnicode::charGreaterThanSign);
+	}
 
-	// Increment the level...
-	++m_elementLevel;
+	// We've written the first element, so turn off the flag...
+	m_isFirstElement = false;
 
 	assert(m_elementLevel > 0);
 }
@@ -339,34 +344,34 @@ FormatterToHTML::startElement(
 void
 FormatterToHTML::endElement(const XMLCh* const	name)
 {
-    m_currentIndent -= m_indent;
+	m_currentIndent -= m_indent;
 
-    const bool	hasChildNodes = childNodesWereAdded();
+	const bool	hasChildNodes = childNodesWereAdded();
 
-    m_isRawStack.pop_back();
+	m_isRawStack.pop_back();
     
-    const ElemDesc&		elemDesc =
-		getElemDesc(name);
+	const ElemDesc&		elemDesc =
+			getElemDesc(name);
 
-    const bool	isBlockElement = elemDesc.is(ElemDesc::BLOCK);
+	const bool	isBlockElement = elemDesc.is(ElemDesc::BLOCK);
 
-    bool shouldIndent = false;
+	bool shouldIndent = false;
 
-    if(m_ispreserve == true)
-    {
+	if(m_ispreserve == true)
+	{
 		m_ispreserve = false;
-    }
-    else if(m_doIndent == true && (m_inBlockElem == false || isBlockElement == true))
-    {
+	}
+	else if(m_doIndent == true && (m_inBlockElem == false || isBlockElement == true))
+	{
 		m_startNewLine = true;
 
 		shouldIndent = true;
-    }
+	}
 
-    m_inBlockElem = !isBlockElement;
+	m_inBlockElem = !isBlockElement;
 
-    if (hasChildNodes) 
-    {
+	if (hasChildNodes) 
+	{
 		if (shouldIndent == true)
 		{
 			indent(m_currentIndent);
@@ -377,8 +382,8 @@ FormatterToHTML::endElement(const XMLCh* const	name)
 		accumName(name);
 		accumContent(XalanUnicode::charGreaterThanSign);
 	}
-    else
-    {
+	else
+	{
 		if(elemDesc.is(ElemDesc::EMPTY) == false)
 		{
 			accumContent(XalanUnicode::charGreaterThanSign);
@@ -392,27 +397,25 @@ FormatterToHTML::endElement(const XMLCh* const	name)
 		{
 			accumContent(XalanUnicode::charGreaterThanSign);
 		}
-    }
+	}
 
-    if (elemDesc.is(ElemDesc::WHITESPACESENSITIVE) == true)
+	if (elemDesc.is(ElemDesc::WHITESPACESENSITIVE) == true)
 	{
 		m_ispreserve = true;
 	}
 
-    if (hasChildNodes == true)
-    {
+	if (hasChildNodes == true)
+	{
 		if (m_preserves.empty() == false)
 		{
 			m_preserves.pop_back();
 		}
-    }
+	}
 
-    m_isprevtext = false;
+	m_isprevtext = false;
 
 	// Decrement the level...
 	--m_elementLevel;
-
-	assert(m_elementLevel >= 0);
 }
 
 
@@ -550,8 +553,8 @@ FormatterToHTML::processingInstruction(
 {
 	// Use a fairly nasty hack to tell if the next node is supposed to be 
 	// unescaped text.
-	if(equals(target, c_wstr(s_xsltNextIsRawString)) == true &&
-	   equals(data, c_wstr(s_formatterToDOMString)) == true)
+	if(equals(target, s_xsltNextIsRawString) == true &&
+	   equals(data, s_formatterToDOMString) == true)
 	{
 		m_nextIsRaw = true;
 	}
@@ -809,35 +812,6 @@ FormatterToHTML::writeAttrURI(
 			const XalanDOMChar*		string,
 			const XalanDOMString	encoding)
 {
-#if 1
-	const unsigned int	len = length(string);
-
-    for (unsigned int i = 0; i < len; ++i)
-    {
-		const XalanDOMChar	ch = string[i];
-
-		// if first 8 bytes are 0, no need to append them.
-		if (ch < 9 || ch > 127 || ch == XalanUnicode::charQuoteMark || ch == XalanUnicode::charSpace)
-		{
-			const unsigned int	b1 = (ch & 0xFF00) >> 8;
-			const unsigned int	b2 = ch & 0x00FF;
-
-			if(b1 != 0)
-			{
-				accumContent(XalanUnicode::charPercentSign);
-
-				accumContent(UnsignedLongToHexDOMString(b1));
-			}
-
-			accumContent(XalanUnicode::charPercentSign);
-			accumContent(UnsignedLongToHexDOMString(b2));		
-		}	
-		else
-		{
-			accumContent(ch);
-		}
-	}
-#else
 	// http://www.ietf.org/rfc/rfc2396.txt says:
 	// A URI is always in an "escaped" form, since escaping or unescaping a
 	// completed URI might change its semantics.  Normally, the only time
@@ -1006,7 +980,6 @@ FormatterToHTML::writeAttrURI(
 			accumContent(ch);
 		}
 	}
-#endif
 }
 
 

@@ -445,6 +445,12 @@ private:
 	bool			m_escapeURLs;
 
 	/**
+	 * A flag so we know whether or not we've put out the first
+	 * element.
+	 */
+	bool			m_isFirstElement;
+
+	/**
 	 * A counter so we can tell if we're inside the document element.
 	 */
 	int				m_elementLevel;
