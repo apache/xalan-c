@@ -63,7 +63,7 @@
 
 
 
-#include <xercesc/dom/DOM_DOMException.hpp>
+#include <dom/DOM_DOMException.hpp>
 
 
 

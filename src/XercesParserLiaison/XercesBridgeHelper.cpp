@@ -59,7 +59,7 @@
 
 
 
-#include <xercesc/dom/DOM_CharacterData.hpp>
+#include <dom/DOM_CharacterData.hpp>
 
 
 
@@ -105,7 +105,7 @@ XercesBridgeHelper::isSupported(
 			const XalanDOMString&	feature,
 			const XalanDOMString&	version)
 {
-	return theXercesNode.isSupported(
+	return theXercesNode.supports(
 				XalanDOMStringToXercesDOMString(feature),
 				XalanDOMStringToXercesDOMString(version));
 }
