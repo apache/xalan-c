@@ -1539,6 +1539,7 @@ private:
 	enum
 	{
 		eDefaultOpMapSize = 100,
+		eDefaultTokenQueueSize = 50,
 		eDefaultPatternMapSize = 100
 	};
 

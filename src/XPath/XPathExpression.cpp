@@ -373,6 +373,7 @@ XPathExpression::XPathExpression() :
 	m_currentPattern()
 {
 	m_opMap.reserve(eDefaultOpMapSize);
+	m_tokenQueue.reserve(eDefaultTokenQueueSize);
 }
 
 
