@@ -594,9 +594,9 @@ StylesheetHandler::startElement (const XMLCh* const name, AttributeList& atts)
 
 					if (fVersionFound == false)
 					{
-//						const XalanDOMString		msg("The stylesheet element did not specify a version attribute!");
+						const XalanDOMString		msg("The stylesheet element did not specify a version attribute!");
 
-//						throw SAXException(toCharArray(msg));
+						throw SAXException(toCharArray(msg));
 					}
 				}
 				break;

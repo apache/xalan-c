@@ -59,7 +59,8 @@
 
 
 
-StylesheetExecutionContext::StylesheetExecutionContext()
+StylesheetExecutionContext::StylesheetExecutionContext() :
+	XPathExecutionContext()
 {
 }
 

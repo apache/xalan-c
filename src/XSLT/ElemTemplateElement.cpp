@@ -686,7 +686,7 @@ ElemTemplateElement::transformSelectedChildren(
 		XObject* const	result = selectPattern->execute(
 			sourceNodeContext,
 			xslInstruction,
-			executionContext.getXPathExecutionContext());
+			executionContext);
 
 		sourceNodes = result->mutableNodeset();
 	
@@ -713,7 +713,7 @@ ElemTemplateElement::transformSelectedChildren(
 	{
 		if (keys.size() > 0)
 		{
-			NodeSorter sorter(executionContext.getXPathExecutionContext());
+			NodeSorter sorter(executionContext);
 
 			executionContext.setCurrentStackFrameIndex(selectStackFrameIndex);
 			sorter.sort(sourceNodes, keys);
@@ -866,7 +866,6 @@ ElemTemplateElement::transformChild(
 
 					case XalanNode::ATTRIBUTE_NODE:
 						{
-							//rcw: DOM_node has no virtual funcs so we can't do a dynamic_cast<>.
 							const XalanAttr* const	attr = static_cast<const XalanAttr*>(child);
 
 							const XalanDOMString	val = attr->getValue();
@@ -1049,7 +1048,7 @@ ElemTemplateElement::insertBefore(
 			XalanNode*	newChild,
 			XalanNode*	refChild)
 {
-#if defined(XALAN_OLD_STYLE_CASTS)
+#if defined(XALAN_OLD_STYLE_CASTS) || !defined(XALAN_RTTI_AVAILABLE)
 	return insertBeforeElem((ElemTemplateElement*)newChild,
 							(ElemTemplateElement*)refChild);
 #else
@@ -1065,7 +1064,7 @@ ElemTemplateElement::replaceChild(
 			XalanNode*	newChild,
 			XalanNode*	oldChild)
 {
-#if defined(XALAN_OLD_STYLE_CASTS)
+#if defined(XALAN_OLD_STYLE_CASTS) || !defined(XALAN_RTTI_AVAILABLE)
 	return replaceChildElem((ElemTemplateElement*)newChild,
 							(ElemTemplateElement*)oldChild);
 #else
@@ -1136,7 +1135,7 @@ ElemTemplateElement::removeChild(XalanNode*		oldChild)
 XalanNode*
 ElemTemplateElement::appendChild(XalanNode*		oldChild)
 {
-#if defined(XALAN_OLD_STYLE_CASTS)
+#if defined(XALAN_OLD_STYLE_CASTS) || !defined(XALAN_RTTI_AVAILABLE)
 	return appendChildElem((ElemTemplateElement*)oldChild);
 #else
 	return appendChildElem(dynamic_cast<ElemTemplateElement*>(oldChild));

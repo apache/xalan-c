@@ -394,14 +394,13 @@ private:
 	XalanDOMString	m_pendingException;
 	bool			m_exceptionPending;
 
-	typedef std::vector<ElemTemplateElement*> ElemTemplateStackType;
-
-	/**
-	 * Need to keep a stack of found whitespace elements so that 
-	 * whitespace elements next to non-whitespace elements can 
-	 * be merged.  For instance: &lt;out> &lt;![CDATA[test]]> &lt;/out>
-	 */
-	typedef std::vector<ElemTextLiteral*> ElemTextLiteralStackType;
+#if defined(XALAN_NO_NAMESPACES)
+	typedef vector<ElemTemplateElement*>		ElemTemplateStackType;
+	typedef vector<ElemTextLiteral*>			ElemTextLiteralStackType;
+#else
+	typedef std::vector<ElemTemplateElement*>	ElemTemplateStackType;
+	typedef std::vector<ElemTextLiteral*>		ElemTextLiteralStackType;
+#endif
 
 	/**
 	 * The XSLT Processor for needed services.

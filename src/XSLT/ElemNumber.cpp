@@ -241,7 +241,7 @@ ElemNumber::findAncestor(
 		if(0 != fromMatchPattern)
 		{
 			if(fromMatchPattern->getMatchScore(contextCopy, *this,
-						executionContext.getXPathExecutionContext()) !=
+						executionContext) !=
 							XPath::s_MatchScoreNone)
 			{
 				break;
@@ -251,7 +251,7 @@ ElemNumber::findAncestor(
 		if(0 != countMatchPattern)
 		{
 			if(countMatchPattern->getMatchScore(contextCopy, *this,
-						executionContext.getXPathExecutionContext()) !=
+						executionContext) !=
 							XPath::s_MatchScoreNone)
 			{
 				break;
@@ -279,7 +279,7 @@ ElemNumber::findPrecedingOrAncestorOrSelf(
 		if(0 != fromMatchPattern)
 		{
 			if(fromMatchPattern->getMatchScore(contextCopy, *this,
-						executionContext.getXPathExecutionContext()) !=
+						executionContext) !=
 							XPath::s_MatchScoreNone)
 			{
 				contextCopy = 0;
@@ -290,7 +290,7 @@ ElemNumber::findPrecedingOrAncestorOrSelf(
 		if(0 != countMatchPattern)
 		{
 			if(countMatchPattern->getMatchScore(contextCopy, *this,
-						executionContext.getXPathExecutionContext()) !=
+						executionContext) !=
 							XPath::s_MatchScoreNone)
 			{
 				break;
@@ -382,7 +382,7 @@ ElemNumber::getCountString(
 		const XObject* const	countObj =
 			m_valueExpr->execute(sourceNode,
 								 *this,
-								 executionContext.getXPathExecutionContext());
+								 executionContext);
 
 		numberList.push_back(static_cast<int>(countObj->num()));
 	}
@@ -436,7 +436,7 @@ ElemNumber::getPreviousNode(
 				next = pos->getParentNode();
 				if((0 != next) && ((((0 != fromMatchPattern) &&
 						(fromMatchPattern->getMatchScore(next, *this,
-						executionContext.getXPathExecutionContext()) !=
+						executionContext) !=
 									 XPath::s_MatchScoreNone))) || 
 							(next->getNodeType() == XalanNode::DOCUMENT_NODE)))
 				{
@@ -459,7 +459,7 @@ ElemNumber::getPreviousNode(
 
 			if((0 != pos) && ((0 == countMatchPattern) ||
 						(countMatchPattern->getMatchScore(pos, *this,
-						executionContext.getXPathExecutionContext()) !=
+						executionContext) !=
 						 XPath::s_MatchScoreNone)))
 			{
 				break;
@@ -473,7 +473,7 @@ ElemNumber::getPreviousNode(
 			pos = pos->getPreviousSibling();
 			if((0 != pos) && ((0 == countMatchPattern) ||
 						(countMatchPattern->getMatchScore(pos, *this,
-						executionContext.getXPathExecutionContext()) !=
+						executionContext) !=
 						 XPath::s_MatchScoreNone)))
 			{
 				break;
@@ -525,7 +525,7 @@ ElemNumber::getMatchingAncestors(
 	while( 0 != node )
 	{
 		if((0 != m_fromMatchPattern) &&
-				(m_fromMatchPattern->getMatchScore(node, *this, executionContext.getXPathExecutionContext()) !=
+				(m_fromMatchPattern->getMatchScore(node, *this, executionContext) !=
 				 XPath::s_MatchScoreNone))
 		{ 
 			// The following if statement gives level="single" different 
@@ -541,7 +541,7 @@ ElemNumber::getMatchingAncestors(
 		if(0 == countMatchPattern)
 			error(XalanDOMString("Programmers error! countMatchPattern should never be 0!"));
 
-		if(countMatchPattern->getMatchScore(node, *this, executionContext.getXPathExecutionContext()) !=
+		if(countMatchPattern->getMatchScore(node, *this, executionContext) !=
 				XPath::s_MatchScoreNone)
 		{
 			ancestors.addNode(node);
@@ -583,12 +583,12 @@ ElemNumber::getNumberFormatter(
 	XalanDOMString	digitGroupSepValue;
 	if (0 != m_groupingSeparator_avt)
 		 m_groupingSeparator_avt->evaluate(digitGroupSepValue, contextNode,
-				 *this, executionContext.getXPathExecutionContext());
+				 *this, executionContext);
 									 
 	XalanDOMString	nDigitsPerGroupValue;
 	if (0 != m_groupingSize_avt)
 		m_groupingSize_avt->evaluate(nDigitsPerGroupValue, contextNode, *this,
-				executionContext.getXPathExecutionContext());
+				executionContext);
 
     // TODO: Handle digit-group attributes
 	// 7.7.1 If one is empty, it is ignored	(numb81 conf test)
@@ -626,7 +626,7 @@ ElemNumber::formatNumberList(
 
 	XalanDOMString	formatValue;
 	if (m_format_avt != 0)
-		 m_format_avt->evaluate(formatValue, contextNode, *this, executionContext.getXPathExecutionContext());
+		 m_format_avt->evaluate(formatValue, contextNode, *this, executionContext);
 
 	if(isEmpty(formatValue)) 
 		formatValue = XALAN_STATIC_UCODE_STRING("1");
@@ -712,7 +712,7 @@ ElemNumber::getFormattedNumber(
 	XalanDOMString letterVal;
 	if (m_lettervalue_avt != 0)
 		m_lettervalue_avt->evaluate(letterVal, contextNode, *this,
-				executionContext.getXPathExecutionContext());
+				executionContext);
 
 	XalanDOMString	formattedNumber;
 

@@ -257,7 +257,7 @@ public:
 	
 	virtual void
 	process(
-			XSLTInputSource*				inputSource, 
+			XSLTInputSource&				inputSource, 
 			XSLTInputSource*				stylesheetSource,
 			XSLTResultTarget&				outputTarget,
 			StylesheetConstructionContext&	constructionContext,
@@ -274,7 +274,7 @@ public:
 			StylesheetConstructionContext&	constructionContext);
 
 	virtual XalanNode*
-	getSourceTreeFromInput(XSLTInputSource *inputSource);
+	getSourceTreeFromInput(XSLTInputSource&		inputSource);
 
 	virtual void
 	outputToResultTree(const XObject&	xobj);
@@ -2376,14 +2376,7 @@ private:
 	 * The listener for formatting events.	This should be 
 	 * supplied by the Formatter object.
 	 */
-
-	// For now, we have to use the FormatterListener class,
-	// since we can't use RTTI to determine what we have.
-#if 1
-	DocumentHandler*	m_flistener;
-#else
 	FormatterListener*	m_flistener;
-#endif
 
 	/**
 	 * This holds the current context node list.  This should arguably be 

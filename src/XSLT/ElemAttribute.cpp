@@ -147,8 +147,7 @@ ElemAttribute::execute(
 
 	XalanDOMString attrName;
 
-	m_pNameAVT->evaluate(attrName, sourceNode, *this, 
-		executionContext.getXPathExecutionContext());
+	m_pNameAVT->evaluate(attrName, sourceNode, *this, executionContext);
 
 	if(!isEmpty(attrName))
 	{
@@ -162,8 +161,7 @@ ElemAttribute::execute(
 
 		if(0 != m_pNamespaceAVT)
 		{
-			m_pNamespaceAVT->evaluate(attrNameSpace, sourceNode, 
-				*this, executionContext.getXPathExecutionContext());
+			m_pNamespaceAVT->evaluate(attrNameSpace, sourceNode, *this, executionContext);
 
 			if(!isEmpty(attrNameSpace))
 			{

@@ -123,7 +123,7 @@ ElemCopyOf::execute(
 	assert(m_pSelectPattern != 0);
 
 	const XObject* const	pValue =
-		m_pSelectPattern->execute(sourceNode, *this, executionContext.getXPathExecutionContext());
+		m_pSelectPattern->execute(sourceNode, *this, executionContext);
 	assert(pValue != 0);
 
 	if(0 != getStylesheet().getStylesheetRoot().getTraceListeners())

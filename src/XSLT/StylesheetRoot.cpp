@@ -146,13 +146,17 @@ StylesheetRoot::StylesheetRoot(
     // For some reason, the imports aren't working right if I 
     // don't set the baseIdent to full url.  I think this is OK, 
     // and probably safer and faster in general.
-	std::auto_ptr<XMLURL>	url(constructionContext.getURLFromString(m_baseIdent));
+#if !defined(XALAN_NO_NAMESPACES)
+	using std::auto_ptr;
+#endif
+
+	auto_ptr<XMLURL>	url(constructionContext.getURLFromString(m_baseIdent));
 
 	if (url.get() != 0)
 	{
 		m_baseIdent = url->getURLText();
 
-		std::auto_ptr<XMLURL>	url2(constructionContext.getURLFromString(m_baseIdent));
+		auto_ptr<XMLURL>	url2(constructionContext.getURLFromString(m_baseIdent));
 
 		if (url2.get() != 0)
 		{
@@ -168,10 +172,14 @@ StylesheetRoot::StylesheetRoot(
 
 StylesheetRoot::~StylesheetRoot()
 {
+#if !defined(XALAN_NO_NAMESPACES)
+	using std::for_each;
+#endif
+
 	// Clean up all entries in the vector.
-	std::for_each(m_importStack.begin(),
-				  m_importStack.end(),
-				  DeleteFunctor<XMLURL>());
+	for_each(m_importStack.begin(),
+			 m_importStack.end(),
+			 DeleteFunctor<XMLURL>());
 
 	delete m_defaultRule;
 	delete m_defaultTextRule;
@@ -209,8 +217,12 @@ StylesheetRoot::process(
 		if(0 != outputTarget.getDocumentHandler())
 		{
 			// Stuff a DocumentHandler into a FormatterListener
-			flistener = 
-				dynamic_cast<FormatterListener *>(outputTarget.getDocumentHandler());
+			flistener =
+#if defined(XALAN_OLD_STYLE_CASTS) || !defined(XALAN_RTTI_AVAILABLE)
+				(FormatterListener*)outputTarget.getDocumentHandler();
+#else
+				dynamic_cast<FormatterListener*>(outputTarget.getDocumentHandler());
+#endif
 		}
 		/*
 		 * Output target has a character or byte stream or file
@@ -269,8 +281,12 @@ StylesheetRoot::process(
 				}
 				else
 				{
+#if !defined(XALAN_NO_NAMESPACES)
+					using std::cout;
+#endif
+
 					// $$$ ToDo:  THIS IS A MEMORY LEAK!!!
-					pw = new XercesDOMPrintWriter(*new XercesStdTextOutputStream(std::cout));
+					pw = new XercesDOMPrintWriter(*new XercesStdTextOutputStream(cout));
 					newPW = true;
 				}
 			}
@@ -691,10 +707,14 @@ StylesheetRoot::addTraceListener(TraceListener* tl)
 void 
 StylesheetRoot::removeTraceListener(TraceListener* theListener)
 {
+#if !defined(XALAN_NO_NAMESPACES)
+	using std::find;
+#endif
+
 	const ListenersVectorType::iterator		it =
-		std::find(m_traceListeners.begin(),
-				  m_traceListeners.end(),
-				  theListener);
+			find(m_traceListeners.begin(),
+				 m_traceListeners.end(),
+				 theListener);
 
 	if (it != m_traceListeners.end())
 	{

@@ -141,7 +141,7 @@ ElemIf::execute(
 	ElemTemplateElement::execute(executionContext,	sourceTree, sourceNode, mode);
 
 	const XObject* const	test =
-		m_test->execute(sourceNode, *this, executionContext.getXPathExecutionContext());
+		m_test->execute(sourceNode, *this, executionContext);
 
 	if(0 != getStylesheet().getStylesheetRoot().getTraceListeners())
 	{

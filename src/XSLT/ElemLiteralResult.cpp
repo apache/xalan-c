@@ -188,8 +188,7 @@ void ElemLiteralResult::execute(
 
 			XalanDOMString	stringedValue;
 
-			avt->evaluate(stringedValue, sourceNode, *this, 
-				executionContext.getXPathExecutionContext());
+			avt->evaluate(stringedValue, sourceNode, *this, executionContext);
 
 			if(!isEmpty(stringedValue))
 			{

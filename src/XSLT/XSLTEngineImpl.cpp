@@ -353,7 +353,7 @@ XSLTEngineImpl::setPendingElementName(const XalanDOMString&	elementName)
 
 void
 XSLTEngineImpl::process(
-			XSLTInputSource*				inputSource, 
+			XSLTInputSource&				inputSource, 
 	        XSLTInputSource*				stylesheetSource,
 	        XSLTResultTarget&				outputTarget,
 			StylesheetConstructionContext&	constructionContext,
@@ -369,8 +369,7 @@ XSLTEngineImpl::process(
 
 		XalanNode*	sourceTree = 0;
 
-		if(0 != inputSource)
-			sourceTree = getSourceTreeFromInput(inputSource);
+		sourceTree = getSourceTreeFromInput(inputSource);
 
 		if(0 != stylesheetSource)
 		{
@@ -449,9 +448,8 @@ XSLTEngineImpl::process(
 			Stylesheet* prevStylesheet = 0;
 			while(!hrefs.empty())
 			{
-				const XMLCh *pxch = (0 != inputSource) ?
-					inputSource->getSystemId() : 0;
-				const XalanDOMString		sysid(pxch);
+				const XMLCh* const		pxch = inputSource.getSystemId();
+				const XalanDOMString	sysid(pxch);
 				const XalanDOMString&	ref =  hrefs.back();
 
 				Stylesheet* stylesheet =
@@ -569,9 +567,8 @@ XSLTEngineImpl::processStylesheet(
 
 		if(0 != stylesheetSource.getNode())
 		{
-			FormatterListener& flistener =
-				dynamic_cast<FormatterListener&>(stylesheetProcessor);
-			FormatterTreeWalker tw(flistener);
+			FormatterTreeWalker tw(stylesheetProcessor);
+
 			tw.traverse(stylesheetSource.getNode());
 		}
 		else
@@ -616,19 +613,17 @@ XSLTEngineImpl::processStylesheet(
 //==========================================================
 
 XalanNode*
-XSLTEngineImpl::getSourceTreeFromInput(XSLTInputSource *inputSource)
+XSLTEngineImpl::getSourceTreeFromInput(XSLTInputSource&		inputSource)
 {
-	XalanNode*				sourceTree = 0;
+	XalanNode*		sourceTree = 0;
 
-	const XalanDOMString	ds(XALAN_STATIC_UCODE_STRING("Input XML"));
+	XalanDOMString	xmlIdentifier = 0 != inputSource.getSystemId() ?
+											inputSource.getSystemId() :
+											XALAN_STATIC_UCODE_STRING("Input XML");
 
-	XalanDOMString xmlIdentifier = ((0 == inputSource) || 
-										(0 == inputSource->getSystemId())) ?
-										ds : inputSource->getSystemId();
-
-	if(0 != inputSource->getNode())
+	if(0 != inputSource.getNode())
 	{
-		sourceTree = inputSource->getNode();
+		sourceTree = inputSource.getNode();
 	}
 	else
 	{
@@ -643,7 +638,7 @@ XSLTEngineImpl::getSourceTreeFromInput(XSLTInputSource *inputSource)
 			pushTime(&xmlIdentifier);
 
 			XalanDocument* const	theDocument =
-						m_parserLiaison.parseXMLStream(*inputSource,
+						m_parserLiaison.parseXMLStream(inputSource,
 													   xmlIdentifier);
 			assert(theDocument != 0);
 
@@ -851,10 +846,7 @@ XSLTEngineImpl::getStylesheetFromPIURL(
 
 			StylesheetHandler stylesheetProcessor(*this, *stylesheet, constructionContext);
 
-			FormatterListener& flistener =
-				dynamic_cast<FormatterListener&>(stylesheetProcessor);
-
-			FormatterTreeWalker tw(flistener);
+			FormatterTreeWalker tw(stylesheetProcessor);
 
 			tw.traverse(frag);
 
@@ -2043,7 +2035,7 @@ XSLTEngineImpl::createResultTreeFrag(
 			XalanNode*						sourceNode,
 			const QName&					mode)
 {
-	DocumentHandler* const	savedFormatterListener = m_flistener;
+	FormatterListener* const	savedFormatterListener = m_flistener;
 
 #if !defined(XALAN_NO_NAMESPACES)
 		using std::auto_ptr;
@@ -2083,7 +2075,7 @@ XSLTEngineImpl::writeChildren(
 {
     flushPending();
 
-    DocumentHandler* savedFormatterListener = m_flistener;
+    FormatterListener* const	savedFormatterListener = m_flistener;
     XalanDOMString savedPendingName = m_pendingElementName;
     m_pendingElementName = 0;
     AttributeListImpl savedPendingAttributes = m_pendingAttributes;
@@ -3853,7 +3845,7 @@ XSLTEngineImpl::setFormatter(Formatter*	formatter)
 FormatterListener*
 XSLTEngineImpl::getFormatterListener() const
 {
-	return dynamic_cast<FormatterListener*>(m_flistener);
+	return m_flistener;
 }
 
 
@@ -4192,7 +4184,7 @@ XSLTEngineImpl::VariableStack::pushParams(
 							XObject* const	theXObject =
 								pxpath->execute(sourceNode,
 										*xslParamElement,
-										executionContext.getXPathExecutionContext());
+										executionContext);
 
 							theArg = new Arg(xslParamElement->getQName(), theXObject, true);
 						}
@@ -4327,7 +4319,7 @@ XSLTEngineImpl::VariableStack::findArg(
 		if(theEntry->getType() == StackEntry::eArgument)
 		{
 			const Arg* const	theArg =
-				dynamic_cast<const Arg*>(theEntry);
+				static_cast<const Arg*>(theEntry);
 
 			if(theArg->getName().equals(qname))
 			{

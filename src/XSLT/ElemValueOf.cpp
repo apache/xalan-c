@@ -154,7 +154,7 @@ ElemValueOf::execute(
 	const XObject* const	value =
 		m_selectPattern->execute(sourceNode,
 								 *this,
-								 executionContext.getXPathExecutionContext());
+								 executionContext);
 
 	if(0 != getStylesheet().getStylesheetRoot().getTraceListeners())
 	{

@@ -131,7 +131,7 @@ ElemChoose::execute(
 			const XObject* const	test =
 				theXPath ->execute(sourceNode,
 								   *this,
-								   executionContext.getXPathExecutionContext());
+								   executionContext);
 			assert(test != 0);
 
 			if(0 != getStylesheet().getStylesheetRoot().getTraceListeners())

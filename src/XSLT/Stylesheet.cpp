@@ -431,10 +431,10 @@ Stylesheet::addTemplate(ElemTemplate *tmpl)
 
 	if(tmpl->getName().isEmpty() == false)
 	{
-		m_namedTemplates.insert(std::make_pair(tmpl->getName(), tmpl));
+		m_namedTemplates.insert(ElemTemplateElementMapType::value_type(tmpl->getName(), tmpl));
 	}
 
-	const XPath* xp = tmpl->getMatchPattern();
+	const XPath* const	xp = tmpl->getMatchPattern();
 
 	if(0 != xp)
 	{
@@ -700,7 +700,7 @@ Stylesheet::findTemplate(
 							const XPath* const	xpath = matchPat->getExpression();
 
 							double score =
-								xpath->getMatchScore(targetNode, *this, executionContext.getXPathExecutionContext());
+								xpath->getMatchScore(targetNode, *this, executionContext);
 
 							if(XPath::s_MatchScoreNone != score)
 							{
@@ -1224,7 +1224,7 @@ Stylesheet::getDecimalFormatSymbols(const XalanDOMString&	name) const
 		{
 			assert(m_elemDecimalFormats[i] != 0);
 
-			if (equals(m_elemDecimalFormats[i]->getTagName(), name) == true)
+			if (equals(m_elemDecimalFormats[i]->getName(), name) == true)
 			{
 				dfs = &m_elemDecimalFormats[i]->getDecimalFormatSymbols();
 

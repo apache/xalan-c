@@ -141,7 +141,7 @@ ElemElement::execute(
 
 	assert(m_nameAVT != 0);
 
-	m_nameAVT->evaluate(elemName, sourceNode, *this, executionContext.getXPathExecutionContext());
+	m_nameAVT->evaluate(elemName, sourceNode, *this, executionContext);
 
 	if(!isEmpty(elemName))
 	{
@@ -149,8 +149,7 @@ ElemElement::execute(
 		{
 			XalanDOMString	elemNameSpace;
 
-			m_namespaceAVT->evaluate(elemNameSpace, sourceNode, 
-				*this, executionContext.getXPathExecutionContext());
+			m_namespaceAVT->evaluate(elemNameSpace, sourceNode, *this, executionContext);
 
 			if(!isEmpty(elemNameSpace))
 			{

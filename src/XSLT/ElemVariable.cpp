@@ -174,8 +174,7 @@ ElemVariable::getValue(
 
 	if(0 != m_selectPattern)
 	{
-		var = m_selectPattern->execute(sourceNode, *this, 
-			executionContext.getXPathExecutionContext());
+		var = m_selectPattern->execute(sourceNode, *this, executionContext);
 
 		if(0 != getStylesheet().getStylesheetRoot().getTraceListeners())
 		{

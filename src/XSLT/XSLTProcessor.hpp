@@ -138,7 +138,7 @@ public:
 	 */
 	virtual void
 	process(
-		XSLTInputSource*				inputSource, 
+		XSLTInputSource&				inputSource, 
 		XSLTInputSource*				stylesheetSource,
 		XSLTResultTarget&				outputTarget,
 		StylesheetConstructionContext&	constructionContext,
@@ -194,7 +194,7 @@ public:
 	 * @return source tree
 	 */
 	virtual XalanNode*
-	getSourceTreeFromInput(XSLTInputSource* 	inputSource) = 0;
+	getSourceTreeFromInput(XSLTInputSource& 	inputSource) = 0;
 
    /**
 	* Output an object to the result tree by doing the right conversions.

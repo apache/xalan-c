@@ -81,12 +81,24 @@
 
 
 StylesheetExecutionContextDefault::StylesheetExecutionContextDefault(
-			XPathExecutionContext&	xpathExecutionContext,
-			XSLTEngineImpl&			xsltProcessor) :
+			XSLTEngineImpl&			xsltProcessor,
+			XPathEnvSupport&		theXPathEnvSupport,
+			XPathSupport&			theXPathSupport,
+			XObjectFactory&			theXObjectFactory,
+			XalanNode*				theCurrentNode,
+			const NodeRefListBase&	theContextNodeList,
+			const PrefixResolver*	thePrefixResolver) :
 	StylesheetExecutionContext(),
-	m_xpathExecutionContext(xpathExecutionContext),
+	m_xpathExecutionContextDefault(theXPathEnvSupport,
+								   theXPathSupport,
+								   theXObjectFactory,
+								   theCurrentNode,
+								   theContextNodeList,
+								   thePrefixResolver),
 	m_xsltProcessor(xsltProcessor),
-	m_elementRecursionStack()
+	m_elementRecursionStack(),
+	m_prefixResolver(0),
+	m_stylesheetRoot(0)
 {
 }
 
@@ -94,71 +106,6 @@ StylesheetExecutionContextDefault::StylesheetExecutionContextDefault(
 
 StylesheetExecutionContextDefault::~StylesheetExecutionContextDefault()
 {
-}
-
-
-
-void
-StylesheetExecutionContextDefault::error(
-			const XalanDOMString&	msg,
-			const XalanNode* 		sourceNode,
-			const XalanNode*		styleNode) const
-{
-	m_xpathExecutionContext.error(msg, sourceNode, styleNode);
-}
-
-
-
-void
-StylesheetExecutionContextDefault::warn(
-			const XalanDOMString&	msg,
-			const XalanNode* 		sourceNode,
-			const XalanNode*		styleNode) const
-{
-	m_xpathExecutionContext.warn(msg, sourceNode, styleNode);
-}
-
-
-
-void
-StylesheetExecutionContextDefault::message(
-			const XalanDOMString&	msg,
-			const XalanNode* 		sourceNode,
-			const XalanNode*		styleNode) const
-{
-	m_xpathExecutionContext.message(msg, sourceNode, styleNode);
-}
-
-
-
-XalanNode*
-StylesheetExecutionContextDefault::getParentOfNode(const XalanNode&		theNode) const
-{
-	return m_xpathExecutionContext.getParentOfNode(theNode);
-}
-
-
-
-XPathExecutionContext&
-StylesheetExecutionContextDefault::getXPathExecutionContext()
-{
-	return m_xpathExecutionContext;
-}
-
-
-
-const NodeRefListBase&
-StylesheetExecutionContextDefault::getContextNodeList() const
-{
-	return m_xpathExecutionContext.getContextNodeList();
-}
-
-
-
-void
-StylesheetExecutionContextDefault::setContextNodeList(const NodeRefListBase&	theContextNodeList)
-{
-	m_xpathExecutionContext.setContextNodeList(theContextNodeList);
 }
 
 
@@ -385,7 +332,7 @@ StylesheetExecutionContextDefault::executeXPath(
 	return m_xsltProcessor.evalXPathStr(str,
 										contextNode,
 										resolver,
-										m_xpathExecutionContext);
+										*this);
 }
 
 
@@ -399,7 +346,7 @@ StylesheetExecutionContextDefault::executeXPath(
 	return m_xsltProcessor.evalXPathStr(str,
 										contextNode,
 										resolver,
-										m_xpathExecutionContext);
+										*this);
 }
 
 
@@ -423,7 +370,7 @@ StylesheetExecutionContextDefault::evaluateAttrVal(
 	return m_xsltProcessor.evaluateAttrVal(contextNode,
 										   namespaceContext,
 										   stringedValue,
-										   m_xpathExecutionContext);
+										   *this);
 }
 
 
@@ -497,18 +444,26 @@ StylesheetExecutionContextDefault::getParamVariable(const QName&	theName) const
 	return m_xsltProcessor.getParamVariable(theName);
 }
 
-int StylesheetExecutionContextDefault::getCurrentStackFrameIndex() const
+
+
+int
+StylesheetExecutionContextDefault::getCurrentStackFrameIndex() const
 {
 	return m_xsltProcessor.getVariableStacks().getCurrentStackFrameIndex();
 }
 
-void StylesheetExecutionContextDefault::setCurrentStackFrameIndex(int
-		currentStackFrameIndex)
+
+
+void
+StylesheetExecutionContextDefault::setCurrentStackFrameIndex(int	currentStackFrameIndex)
 {
 	m_xsltProcessor.getVariableStacks().setCurrentStackFrameIndex(currentStackFrameIndex);
 }
 
-void StylesheetExecutionContextDefault::markGlobalStackFrame()
+
+
+void
+StylesheetExecutionContextDefault::markGlobalStackFrame()
 {
 	m_xsltProcessor.getVariableStacks().markGlobalStackFrame();
 }
@@ -631,7 +586,11 @@ StylesheetExecutionContextDefault::createXResultTreeFrag(
 			XalanNode*					sourceNode,
 			const QName&				mode)
 {
-	std::auto_ptr<ResultTreeFragBase>
+#if !defined(XALAN_NO_NAMESPACES)
+	using std::auto_ptr;
+#endif
+
+	auto_ptr<ResultTreeFragBase>
 		theFragment(m_xsltProcessor.createResultTreeFrag(*this,
 														 templateChild,
 														 sourceTree,
@@ -687,10 +646,14 @@ StylesheetExecutionContextDefault::traceSelect(
 bool
 StylesheetExecutionContextDefault::findOnElementRecursionStack(const ElemTemplateElement*	theElement) const
 {
+#if !defined(XALAN_NO_NAMESPACES)
+	using std::find;
+#endif
+
 	const ElementRecursionStackType::const_iterator	i =
-			std::find(m_elementRecursionStack.begin(),
-					  m_elementRecursionStack.end(),
-					  theElement);
+				find(m_elementRecursionStack.begin(),
+					 m_elementRecursionStack.end(),
+					 theElement);
 
 	return i == m_elementRecursionStack.end() ? false : true;
 }
@@ -718,4 +681,368 @@ StylesheetExecutionContextDefault::popElementRecursionStack()
 	m_elementRecursionStack.pop_back();
 
 	return theTemp;
+}
+
+
+
+XalanNode*
+StylesheetExecutionContextDefault::getCurrentNode() const
+{
+	return m_xpathExecutionContextDefault.getCurrentNode();
+}
+
+
+
+void
+StylesheetExecutionContextDefault::setCurrentNode(XalanNode*	theCurrentNode)
+{
+	m_xpathExecutionContextDefault.setCurrentNode(theCurrentNode);
+}
+
+
+
+XObjectFactory&
+StylesheetExecutionContextDefault::getXObjectFactory() const
+{
+	return m_xpathExecutionContextDefault.getXObjectFactory();
+}
+
+
+
+XalanDOMString
+StylesheetExecutionContextDefault::getNamespaceOfNode(const XalanNode&	n) const
+{
+	return m_xpathExecutionContextDefault.getNamespaceOfNode(n);
+}
+
+
+
+XalanDOMString
+StylesheetExecutionContextDefault::getLocalNameOfNode(const XalanNode&	n) const
+{
+	return m_xpathExecutionContextDefault.getLocalNameOfNode(n);
+}
+
+
+
+XalanNode*
+StylesheetExecutionContextDefault::getParentOfNode(const XalanNode&		theNode) const
+{
+	return m_xpathExecutionContextDefault.getParentOfNode(theNode);
+}
+
+
+
+XalanDOMString
+StylesheetExecutionContextDefault::getNodeData(const XalanNode&		n) const
+{
+	return m_xpathExecutionContextDefault.getNodeData(n);
+}
+
+
+
+XalanElement*
+StylesheetExecutionContextDefault::getElementByID(
+			const XalanDOMString&		id,
+			const XalanDocument&		doc) const
+{
+	return m_xpathExecutionContextDefault.getElementByID(id, doc);
+}
+
+
+
+const NodeRefListBase&
+StylesheetExecutionContextDefault::getContextNodeList() const
+{
+	return m_xpathExecutionContextDefault.getContextNodeList();
+}
+
+
+
+void
+StylesheetExecutionContextDefault::setContextNodeList(const NodeRefListBase&	theContextNodeList)
+{
+	m_xpathExecutionContextDefault.setContextNodeList(theContextNodeList);
+}
+
+
+
+int
+StylesheetExecutionContextDefault::getContextNodeListLength() const
+{
+	return m_xpathExecutionContextDefault.getContextNodeListLength();
+}
+
+
+
+int
+StylesheetExecutionContextDefault::getContextNodeListPosition(const XalanNode&	contextNode) const
+{
+	return m_xpathExecutionContextDefault.getContextNodeListPosition(contextNode);
+}
+
+
+
+bool
+StylesheetExecutionContextDefault::elementAvailable(
+			const XalanDOMString&	theNamespace, 
+			const XalanDOMString&	extensionName) const
+{
+	return m_xpathExecutionContextDefault.elementAvailable(theNamespace, extensionName);
+}
+
+
+
+bool
+StylesheetExecutionContextDefault::functionAvailable(
+			const XalanDOMString&	theNamespace, 
+			const XalanDOMString&	extensionName) const
+{
+	return m_xpathExecutionContextDefault.functionAvailable(theNamespace, extensionName);
+}
+
+
+
+XObject*
+StylesheetExecutionContextDefault::extFunction(
+			const XalanDOMString&			theNamespace,
+			const XalanDOMString&			extensionName, 
+			const XObjectArgVectorType&		argVec)
+{
+	return m_xpathExecutionContextDefault.extFunction(theNamespace, extensionName, argVec);
+}
+
+
+
+XLocator*
+StylesheetExecutionContextDefault::getXLocatorFromNode(const XalanNode*		node) const
+{
+	return m_xpathExecutionContextDefault.getXLocatorFromNode(node);
+}
+
+
+
+void
+StylesheetExecutionContextDefault::associateXLocatorToNode(
+			const XalanNode*	node,
+			XLocator*			xlocator)
+{
+	m_xpathExecutionContextDefault.associateXLocatorToNode(node, xlocator);
+}
+
+
+
+XalanDocument*
+StylesheetExecutionContextDefault::parseXML(
+			const XalanDOMString&	urlString,
+			const XalanDOMString&	base) const
+{
+	return m_xpathExecutionContextDefault.parseXML(urlString, base);
+}
+
+
+
+MutableNodeRefList
+StylesheetExecutionContextDefault::createMutableNodeRefList() const
+{
+	return m_xpathExecutionContextDefault.createMutableNodeRefList();
+}
+
+
+
+bool
+StylesheetExecutionContextDefault::getProcessNamespaces() const
+{
+	return m_xpathExecutionContextDefault.getProcessNamespaces();
+}
+
+
+
+const NodeRefListBase*
+StylesheetExecutionContextDefault::getNodeSetByKey(
+			const XalanNode&		doc,
+			const XalanDOMString&	name,
+			const XalanDOMString&	ref,
+			const XalanElement&		nscontext)
+{
+	return m_xpathExecutionContextDefault.getNodeSetByKey(doc, name, ref, nscontext);
+}
+
+
+
+const NodeRefListBase*
+StylesheetExecutionContextDefault::getNodeSetByKey(
+			const XalanNode&		doc,
+			const XalanDOMString&	name,
+			const XalanDOMString&	ref)
+{
+	return m_xpathExecutionContextDefault.getNodeSetByKey(doc, name, ref);
+}
+
+
+
+const NodeRefListBase*
+StylesheetExecutionContextDefault::getNodeSetByKey(
+			const XalanNode&		doc,
+			const XalanDOMString&	name,
+			const XalanDOMString&	ref,
+			const PrefixResolver&	resolver)
+{
+	return m_xpathExecutionContextDefault.getNodeSetByKey(doc, name, ref, resolver);
+}
+
+
+
+XObject*
+StylesheetExecutionContextDefault::getVariable(const QName&		name) const
+{
+	return m_xpathExecutionContextDefault.getVariable(name);
+}
+
+
+
+const PrefixResolver*
+StylesheetExecutionContextDefault::getPrefixResolver() const
+{
+	return m_xpathExecutionContextDefault.getPrefixResolver();
+}
+
+
+
+void
+StylesheetExecutionContextDefault::setPrefixResolver(const PrefixResolver*		thePrefixResolver)
+{
+	m_xpathExecutionContextDefault.setPrefixResolver(thePrefixResolver);
+}
+
+
+
+XalanDOMString
+StylesheetExecutionContextDefault::getNamespaceForPrefix(const XalanDOMString&	prefix) const
+{
+	return m_xpathExecutionContextDefault.getNamespaceForPrefix(prefix);
+}
+
+
+
+XalanDOMString
+StylesheetExecutionContextDefault::findURIFromDoc(const XalanDocument*	owner) const
+{
+	return m_xpathExecutionContextDefault.findURIFromDoc(owner);
+}
+
+
+
+XalanDOMString
+StylesheetExecutionContextDefault::getUnparsedEntityURI(
+			const XalanDOMString&	theName,
+			const XalanDocument&	theDocument) const
+{
+	return m_xpathExecutionContextDefault.getUnparsedEntityURI(theName, theDocument);
+}
+
+
+
+bool
+StylesheetExecutionContextDefault::shouldStripSourceNode(const XalanNode&	node) const
+{
+	return m_xpathExecutionContextDefault.shouldStripSourceNode(node);
+}
+
+
+
+bool
+StylesheetExecutionContextDefault::getThrowFoundIndex() const
+{
+	return m_xpathExecutionContextDefault.getThrowFoundIndex();
+}
+
+
+
+void
+StylesheetExecutionContextDefault::setThrowFoundIndex(bool 	fThrow)
+{
+	m_xpathExecutionContextDefault.setThrowFoundIndex(fThrow);
+}
+
+
+
+void
+StylesheetExecutionContextDefault::setCurrentPattern(const XalanDOMString&	thePattern)
+{
+	m_xpathExecutionContextDefault.setCurrentPattern(thePattern);
+}
+
+
+
+XalanDOMString
+StylesheetExecutionContextDefault::getCurrentPattern() const
+{
+	return m_xpathExecutionContextDefault.getCurrentPattern();
+}
+
+
+
+XalanDocument*
+StylesheetExecutionContextDefault::getSourceDocument(const XalanDOMString&	theURI) const
+{
+	return m_xpathExecutionContextDefault.getSourceDocument(theURI);
+}
+
+
+
+void
+StylesheetExecutionContextDefault::setSourceDocument(
+			const XalanDOMString&	theURI,
+			XalanDocument*			theDocument)
+{
+	m_xpathExecutionContextDefault.setSourceDocument(theURI, theDocument);
+}
+
+
+
+const DecimalFormatSymbols*
+StylesheetExecutionContextDefault::getDecimalFormatSymbols(const XalanDOMString&	name)
+{
+	if (m_stylesheetRoot == 0)
+	{
+		return m_xpathExecutionContextDefault.getDecimalFormatSymbols(name);
+	}
+	else
+	{
+		return m_stylesheetRoot->getDecimalFormatSymbols(name);
+	}
+}
+
+
+
+void
+StylesheetExecutionContextDefault::error(
+			const XalanDOMString&	msg,
+			const XalanNode* 		sourceNode,
+			const XalanNode*		styleNode) const
+{
+	m_xpathExecutionContextDefault.error(msg, sourceNode, styleNode);
+}
+
+
+
+void
+StylesheetExecutionContextDefault::warn(
+			const XalanDOMString&	msg,
+			const XalanNode* 		sourceNode,
+			const XalanNode*		styleNode) const
+{
+	m_xpathExecutionContextDefault.warn(msg, sourceNode, styleNode);
+}
+
+
+
+void
+StylesheetExecutionContextDefault::message(
+			const XalanDOMString&	msg,
+			const XalanNode* 		sourceNode,
+			const XalanNode*		styleNode) const
+{
+	m_xpathExecutionContextDefault.message(msg, sourceNode, styleNode);
 }

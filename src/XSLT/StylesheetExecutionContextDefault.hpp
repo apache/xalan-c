@@ -69,6 +69,10 @@
 
 
 
+#include <XPath/XPathExecutionContextDefault.hpp>
+
+
+
 class XPathProcessor;
 class XPathSupport;
 class XObjectFactory;
@@ -84,25 +88,18 @@ class XALAN_XSLT_EXPORT StylesheetExecutionContextDefault : public StylesheetExe
 public:
 
 	StylesheetExecutionContextDefault(
-			XPathExecutionContext&	xpathExecutionContext,
-			XSLTEngineImpl&			xsltProcessor);
+			XSLTEngineImpl&			xsltProcessor,
+			XPathEnvSupport&		theXPathEnvSupport,
+			XPathSupport&			theXPathSupport,
+			XObjectFactory&			theXObjectFactory,
+			XalanNode*				theCurrentNode = 0,
+			const NodeRefListBase&	theContextNodeList = NodeRefList(),
+			const PrefixResolver*	thePrefixResolver = 0);
 
 	virtual
 	~StylesheetExecutionContextDefault();
 
 	// These interfaces are inherited from StylesheetExecutionContext...
-
-	virtual XalanNode*
-	getParentOfNode(const XalanNode&	theNode) const;
-
-	virtual XPathExecutionContext&
-	getXPathExecutionContext();
-
-	virtual const NodeRefListBase&
-	getContextNodeList() const;
-
-	virtual void
-	setContextNodeList(const NodeRefListBase&	theContextNodeList);
 
 	virtual XObject*
 	getTopLevelVariable(const XalanDOMString&	theName) const;
@@ -241,11 +238,14 @@ public:
 	virtual XObject*
 	getParamVariable(const QName&	theName) const;
 
-	virtual int getCurrentStackFrameIndex() const;
+	virtual int
+	getCurrentStackFrameIndex() const;
 
-	virtual void setCurrentStackFrameIndex(int currentStackFrameIndex = -1);
+	virtual void
+	setCurrentStackFrameIndex(int currentStackFrameIndex = -1);
 
-	virtual void markGlobalStackFrame();
+	virtual void
+	markGlobalStackFrame();
 	
 	virtual void
 	startDocument();
@@ -329,6 +329,148 @@ public:
 	popElementRecursionStack();
 
 
+	// These interfaces are inherited from XPathExecutionContext...
+
+	virtual XalanNode*
+	getCurrentNode() const;
+
+	virtual void
+	setCurrentNode(XalanNode*	theCurrentNode);
+
+	virtual XObjectFactory&
+	getXObjectFactory() const;
+
+	virtual XalanDOMString
+	getNamespaceOfNode(const XalanNode&		n) const;
+
+	virtual XalanDOMString
+	getLocalNameOfNode(const XalanNode&		n) const;
+
+	virtual XalanNode*
+	getParentOfNode(const XalanNode&	n) const;
+
+	virtual XalanDOMString
+	getNodeData(const XalanNode&	n) const;
+
+	virtual XalanElement*
+	getElementByID(
+			const XalanDOMString&		id,
+			const XalanDocument&		doc) const;
+
+	virtual const NodeRefListBase&
+	getContextNodeList() const;
+
+	virtual void	
+	setContextNodeList(const NodeRefListBase&	theList);
+
+	virtual int
+	getContextNodeListLength() const;
+
+	virtual int
+	getContextNodeListPosition(const XalanNode&		contextNode) const;
+
+	virtual bool
+	elementAvailable(
+			const XalanDOMString&	theNamespace, 
+			const XalanDOMString&	extensionName) const;
+
+	virtual bool
+	functionAvailable(
+			const XalanDOMString&	theNamespace, 
+			const XalanDOMString&	extensionName) const;
+
+	virtual XObject*
+	extFunction(
+			const XalanDOMString&			theNamespace,
+			const XalanDOMString&			extensionName, 
+			const XObjectArgVectorType&		argVec);
+
+	virtual XLocator*
+	getXLocatorFromNode(const XalanNode*	node) const;
+
+	virtual void
+	associateXLocatorToNode(
+			const XalanNode*	node,
+			XLocator*			xlocator);
+
+	virtual XalanDocument*
+	parseXML(
+			const XalanDOMString&	urlString,
+			const XalanDOMString&	base) const;
+
+	virtual MutableNodeRefList
+	createMutableNodeRefList() const;
+
+	virtual bool
+	getProcessNamespaces() const;
+
+	virtual const NodeRefListBase*
+	getNodeSetByKey(
+			const XalanNode&		doc,
+			const XalanDOMString&	name,
+			const XalanDOMString&	ref,
+			const XalanElement&		nscontext);
+
+	virtual const NodeRefListBase*
+	getNodeSetByKey(
+			const XalanNode&		doc,
+			const XalanDOMString&	name,
+			const XalanDOMString&	ref);
+
+	virtual const NodeRefListBase*
+	getNodeSetByKey(
+			const XalanNode&		doc,
+			const XalanDOMString&	name,
+			const XalanDOMString&	ref,
+			const PrefixResolver&	resolver);
+
+	virtual XObject*
+	getVariable(const QName&	name) const;
+
+	virtual const PrefixResolver*
+	getPrefixResolver() const;
+
+	virtual void
+	setPrefixResolver(const PrefixResolver*		thePrefixResolver);
+
+	virtual XalanDOMString
+	getNamespaceForPrefix(const XalanDOMString&		prefix) const;
+
+	virtual XalanDOMString
+	findURIFromDoc(const XalanDocument*		owner) const;
+
+	virtual XalanDOMString
+	getUnparsedEntityURI(
+			const XalanDOMString&	theName,
+			const XalanDocument&	theDocument) const;
+
+	virtual bool
+	shouldStripSourceNode(const XalanNode&	node) const;
+
+	virtual bool
+	getThrowFoundIndex() const;
+
+	virtual void
+	setThrowFoundIndex(bool 	fThrow);
+
+	virtual void
+	setCurrentPattern(const XalanDOMString&		thePattern);
+
+	virtual XalanDOMString
+	getCurrentPattern() const;
+
+	virtual XalanDocument*
+	getSourceDocument(const XalanDOMString&		theURI) const;
+
+	virtual void
+	setSourceDocument(
+			const XalanDOMString&	theURI,
+			XalanDocument*			theDocument);
+
+
+	virtual const DecimalFormatSymbols*
+	getDecimalFormatSymbols(const XalanDOMString&	name);
+
 	// These interfaces are inherited from ExecutionContext...
 
 	virtual void
@@ -351,12 +493,16 @@ public:
 
 private:
 
-	XPathExecutionContext&			m_xpathExecutionContext;
+	XPathExecutionContextDefault	m_xpathExecutionContextDefault;
 
 	// $$ ToDo: Try to remove this dependency, and rely only on XSLTProcessor...
 	XSLTEngineImpl&					m_xsltProcessor;
 
+#if defined(XALAN_NO_NAMESPACES)
+	typedef vector<const ElemTemplateElement*>			ElementRecursionStackType;
+#else
 	typedef std::vector<const ElemTemplateElement*>		ElementRecursionStackType;
+#endif
 
 	ElementRecursionStackType		m_elementRecursionStack;
 
