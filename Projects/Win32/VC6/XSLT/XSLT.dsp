@@ -362,6 +362,10 @@ SOURCE=..\..\..\..\src\XSLT\ResultNamespacesStack.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\XSLT\ResultTreeFrag.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\XSLT\SelectionEvent.cpp
 # End Source File
 # Begin Source File
@@ -706,6 +710,10 @@ SOURCE=..\..\..\..\src\XSLT\ProblemListenerDefault.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\XSLT\ResultNamespacesStack.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XSLT\ResultTreeFrag.hpp
 # End Source File
 # Begin Source File
 

@@ -167,6 +167,10 @@ SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeDocument.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeDocumentFragment.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeDOMSupport.cpp
 # End Source File
 # Begin Source File
@@ -272,6 +276,10 @@ SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeDefinitions.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeDocument.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeDocumentFragment.hpp
 # End Source File
 # Begin Source File
 
