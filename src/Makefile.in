@@ -55,6 +55,9 @@
 # 
 #
 # $Log$
+# Revision 1.14  2000/09/22 18:21:48  auriemma
+# Resolve issues for AIX .
+#
 # Revision 1.13  2000/09/21 16:54:07  auriemma
 # Clean up.
 #
@@ -384,7 +387,11 @@ $(SAMPLES_DIR)/XPathWrapper/XPathWrapper: ${ALL_OBJECTS_DIR}/XPathWrapper.o ${AL
 	${LINK} $(XSL_BUILD_OPTIONS) ${PLATFORM_LIB_LINK_OPTIONS} ${LIBRARY_SEARCH_PATHS} \
 	${EXTRA_LINK_OPTIONS} -L$(LIB_DIR) -l$(PROJECT_NAME)$(VER) $(ALLLIBS) $(CXXFLAGS) $^ -o $@	
 ${ALL_OBJECTS_DIR}/%.o:$(SAMPLES_DIR)/XPathWrapper/%.cpp
-	$(CC1) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $<	
+ifeq ($(PLATFORM), AIX)
+	$(CC2) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $<
+else
+	$(CC1) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $<
+endif
 
 lib:	prepare compile $(THISLIB)$(VER)$(SHLIBSUFFIX)
 
