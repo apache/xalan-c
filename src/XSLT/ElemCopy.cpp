@@ -116,7 +116,7 @@ ElemCopy::execute(
 	if(XalanNode::DOCUMENT_NODE != nodeType)
 	{
 		executionContext.cloneToResultTree(
-			*sourceNode, 
+			*sourceNode,
 			false,
 			false,
 			false);
@@ -126,28 +126,27 @@ ElemCopy::execute(
 			assert(sourceNode != 0);
 
 			ElemUse::execute(
-				executionContext, 
-				sourceTree, 
-				sourceNode, 
+				executionContext,
+				sourceTree,
+				sourceNode,
 				mode);
 
-			executionContext.copyNamespaceAttributes(*sourceNode, 
-													 false);
+			executionContext.copyNamespaceAttributes(*sourceNode);
 
-			executeChildren(executionContext, 
-				sourceTree, 
-				sourceNode, 
+			executeChildren(executionContext,
+				sourceTree,
+				sourceNode,
 				mode);
 
 			const XalanDOMString&	s = sourceNode->getNodeName();
 
-			executionContext.endElement(toCharArray(s)); 
+			executionContext.endElement(toCharArray(s));
 		}
 		else
 		{
 			if(0 != executionContext.getTraceListeners())
 			{
-				executionContext.fireTraceEvent(TracerEvent(executionContext, 
+				executionContext.fireTraceEvent(TracerEvent(executionContext,
 					sourceTree,
 					sourceNode,
 					mode,
