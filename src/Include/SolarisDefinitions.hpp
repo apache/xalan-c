@@ -88,6 +88,11 @@
 
 #define XALAN_SIZE_T_IN_NAMESPACE_STD
 
+// A copy constructor should not need to be accessible to allow
+// implicit construction from a conversion constructor.  However,
+// later versions of the Sun compiler do not agree...
+#define XALAN_IMPLICIT_CONSTRUCTION_REQUIRES_COPY_CONSTRUCTOR
+
 #else
 
 #define XALAN_STLPORT_STL
@@ -97,7 +102,6 @@
 #define XALAN_NO_MUTABLE
 #define XALAN_SGI_BASED_STL
 #define XALAN_NO_MEMBER_TEMPLATES
-//#define XALAN_CANNOT_DELETE_CONST
 #define XALAN_BOOL_AS_INT
 #define XALAN_NO_DEFAULT_TEMPLATE_ARGUMENTS
 #define XALAN_NO_COVARIANT_RETURN_TYPE
