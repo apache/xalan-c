@@ -71,38 +71,17 @@
 /**
  * Structure to help in converting integers to roman numerals
  */
-class XALAN_XSLT_EXPORT DecimalToRoman 
+struct XALAN_XSLT_EXPORT DecimalToRoman 
 {
-public:
-
-	/**
-	 *  Construct a decimal to roman conversion object
-	 *
-	 * @param postValue  quantity corresponding to postLetter
-	 * @param postLetter letter for quantity, for example, "C" represents 100
-	 * @param preValue   quantity corresponding to preLetter                
-	 * @param preLetter  prefix for quantity, for example, "XC" represents 90
-	 */
-	DecimalToRoman(
-			long					postValue,
-			const XalanDOMString&	postLetter, 
-			long					preValue,
-			const XalanDOMString&	preLetter);
-
-	DecimalToRoman();
-
-	~DecimalToRoman();
-
-	void
-	swap(DecimalToRoman&	theOther);
+	enum { eMaxLetter = 2 };
 
 	long			m_postValue;
 
-	XalanDOMString	m_postLetter;
+	XalanDOMChar	m_postLetter[eMaxLetter + 1];
 
 	long			m_preValue;
 
-	XalanDOMString	m_preLetter;
+	XalanDOMChar	m_preLetter[eMaxLetter + 1];
 };
 
 
