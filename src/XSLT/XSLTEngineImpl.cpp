@@ -195,9 +195,10 @@ XSLTEngineImpl::XSLTEngineImpl(
 	m_resultNamespacesStack(),
 	m_dummyAttributesList(),
 	m_scratchString(),
-	m_hasStripOrPreserveSpace(false),
 	m_attributeNamesVisited(),
-	m_attributeNamesVisitedEnd(m_attributeNamesVisited.end())
+	m_attributeNamesVisitedEnd(m_attributeNamesVisited.end()),
+	m_hasStripOrPreserveSpace(false),
+	m_hasCDATASectionElements(false)
 {
 	m_outputContextStack.pushContext();
 }
@@ -231,9 +232,10 @@ XSLTEngineImpl::reset()
 
 	m_resultNamespacesStack.clear();
 
-	m_hasStripOrPreserveSpace = false;
-
 	m_attributeNamesVisited.clear();
+
+	m_hasStripOrPreserveSpace = false;
+	m_hasCDATASectionElements = false;
 }
 
 
@@ -384,8 +386,10 @@ XSLTEngineImpl::process(
 			theFormatter->setPrefixResolver(this);
 		}
 
-		m_hasStripOrPreserveSpace = m_stylesheetRoot->getWhitespacePreservingElements().size() > 0 ||
-			m_stylesheetRoot->getWhitespaceStrippingElements().size() > 0;
+		m_hasStripOrPreserveSpace = m_stylesheetRoot->getWhitespacePreservingElements().empty() == false ||
+			m_stylesheetRoot->getWhitespaceStrippingElements().empty() == false;
+
+		m_hasCDATASectionElements = m_stylesheetRoot->hasCDATASectionElements();
 
 		m_stylesheetRoot->process(sourceTree, outputTarget, executionContext);
 	}
@@ -428,8 +432,10 @@ XSLTEngineImpl::process(
 			theFormatter->setPrefixResolver(this);
 		}
 
-		m_hasStripOrPreserveSpace = m_stylesheetRoot->getWhitespacePreservingElements().size() > 0 ||
-			m_stylesheetRoot->getWhitespaceStrippingElements().size() > 0;
+		m_hasStripOrPreserveSpace = m_stylesheetRoot->getWhitespacePreservingElements().empty() == false ||
+			m_stylesheetRoot->getWhitespaceStrippingElements().empty() == false;
+
+		m_hasCDATASectionElements = m_stylesheetRoot->hasCDATASectionElements();
 
 		m_stylesheetRoot->process(sourceTree, outputTarget, executionContext);
 	}
@@ -1572,6 +1578,7 @@ XSLTEngineImpl::startDocument()
 {
 	assert(getFormatterListener() != 0);
 	assert(m_executionContext != 0);
+	assert(m_cdataStack.empty() == true);
 
 	if (getHasPendingStartDocument() == false)
 	{
@@ -1605,6 +1612,7 @@ XSLTEngineImpl::endDocument()
 {
 	assert(getFormatterListener() != 0);
 	assert(m_executionContext != 0);
+	assert(m_cdataStack.empty() == true);
 
 	setMustFlushPendingStartDocument(true);
 
@@ -1621,7 +1629,7 @@ XSLTEngineImpl::endDocument()
 
 	m_resultNamespacesStack.popContext();
 
-	assert(m_resultNamespacesStack.size() == 0);
+	assert(m_resultNamespacesStack.empty() == true);
 }
 
 
@@ -1793,7 +1801,10 @@ XSLTEngineImpl::flushPending()
 		assert(getFormatterListener() != 0);
 		assert(m_executionContext != 0);
 
-		m_cdataStack.push_back(isCDataResultElem(thePendingElementName) ? true : false);
+		if(m_hasCDATASectionElements == true)
+		{
+			m_cdataStack.push_back(isCDataResultElem(thePendingElementName));
+		}
 
 		AttributeListImpl&	thePendingAttributes =
 				getPendingAttributesImpl();
@@ -1847,7 +1858,7 @@ XSLTEngineImpl::startElement(
 
 	const unsigned int	nAtts = atts.getLength();
 
-	assert(m_outputContextStack.size() > 0);
+	assert(m_outputContextStack.empty() == false);
 
 	AttributeListImpl&	thePendingAttributes =
 		getPendingAttributesImpl();
@@ -1888,8 +1899,10 @@ XSLTEngineImpl::endElement(const XalanDOMChar*	name)
 
 	m_resultNamespacesStack.popContext();
 
-	if(m_stylesheetRoot->hasCDATASectionElements() == true)
+	if(m_hasCDATASectionElements == true)
 	{
+		assert(m_cdataStack.empty() == false);
+
 		m_cdataStack.pop_back();
 	}
 }
@@ -1916,6 +1929,7 @@ XSLTEngineImpl::characters(
 {
 	assert(getFormatterListener() != 0);
 	assert(ch != 0);
+	assert(m_hasCDATASectionElements == m_stylesheetRoot->hasCDATASectionElements());
 
 	doFlushPending();
 
@@ -1945,6 +1959,7 @@ void
 XSLTEngineImpl::characters(const XalanNode&		node)
 {
 	assert(getFormatterListener() != 0);
+	assert(m_hasCDATASectionElements == m_stylesheetRoot->hasCDATASectionElements());
 
 	doFlushPending();
 
@@ -1975,6 +1990,7 @@ XSLTEngineImpl::characters(const XObjectPtr&	xobject)
 {
 	assert(getFormatterListener() != 0);
 	assert(xobject.null() == false);
+	assert(m_hasCDATASectionElements == m_stylesheetRoot->hasCDATASectionElements());
 
 	doFlushPending();
 
@@ -2164,30 +2180,14 @@ XSLTEngineImpl::cdata(
 
 	flushPending();
 
-	if(m_stylesheetRoot->hasCDATASectionElements() == true &&
-	   0 != m_cdataStack.size())
-	{
-		getFormatterListener()->cdata(ch, length);
+	getFormatterListener()->cdata(ch, length);
 
-		if(getTraceListeners() > 0)
-		{
-			GenerateEvent ge(GenerateEvent::EVENTTYPE_CDATA, ch, start,
+	if(getTraceListeners() > 0)
+	{
+		GenerateEvent ge(GenerateEvent::EVENTTYPE_CDATA, ch, start,
 					length);
 
-			fireGenerateEvent(ge);
-		}
-	}
-	else
-	{
-		getFormatterListener()->characters(ch, length);
-
-		if(getTraceListeners() > 0)
-		{
-			GenerateEvent ge(GenerateEvent::EVENTTYPE_CHARACTERS, ch,
-					start, length);
-
-			fireGenerateEvent(ge);
-		}
+		fireGenerateEvent(ge);
 	}
 }
 
@@ -2242,7 +2242,6 @@ XSLTEngineImpl::cloneToResultTree(
 	if(!overrideStrip)
 	{
 		stripWhiteSpace = isLiteral ? true : false;
-		// stripWhiteSpace = isLiteral ? true : shouldStripSourceNode(*m_executionContext, node);
 	}
 
 	const bool	isIgnorableWhitespace = node.isIgnorableWhitespace();
@@ -2690,68 +2689,62 @@ bool
 XSLTEngineImpl::isCDataResultElem(const XalanDOMString&		elementName) const
 {
 	assert(m_executionContext != 0);
+	assert(m_hasCDATASectionElements == true);
 
-	if(m_stylesheetRoot->hasCDATASectionElements() == false)
+	bool	fResult = false;
+
+	const XalanDOMString::size_type		indexOfNSSep = indexOf(elementName, XalanUnicode::charColon);
+
+	if(indexOfNSSep == length(elementName))
 	{
-		return false;
-	}
-	else
-	{
-		bool	fResult = false;
-
-		const XalanDOMString::size_type		indexOfNSSep = indexOf(elementName, XalanUnicode::charColon);
-
-		if(indexOfNSSep == length(elementName))
-		{
-			const XalanDOMString* const		elemNS =
+		const XalanDOMString* const		elemNS =
 					getResultNamespaceForPrefix(s_emptyString);
 
-			if (elemNS != 0)
-			{
-				fResult = m_stylesheetRoot->isCDATASectionElementName(XalanQNameByReference(*elemNS, elementName));
-			}
-			else
-			{
-				fResult = m_stylesheetRoot->isCDATASectionElementName(XalanQNameByReference(s_emptyString, elementName));
-			}
+		if (elemNS != 0)
+		{
+			fResult = m_stylesheetRoot->isCDATASectionElementName(XalanQNameByReference(*elemNS, elementName));
 		}
 		else
 		{
-			typedef StylesheetExecutionContext::GetAndReleaseCachedString	GetAndReleaseCachedString;
+			fResult = m_stylesheetRoot->isCDATASectionElementName(XalanQNameByReference(s_emptyString, elementName));
+		}
+	}
+	else
+	{
+		typedef StylesheetExecutionContext::GetAndReleaseCachedString	GetAndReleaseCachedString;
 
-			GetAndReleaseCachedString	elemLocalNameGuard(*m_executionContext);
-			GetAndReleaseCachedString	prefixGuard(*m_executionContext);
+		GetAndReleaseCachedString	elemLocalNameGuard(*m_executionContext);
+		GetAndReleaseCachedString	prefixGuard(*m_executionContext);
 
-			XalanDOMString&		elemLocalName = elemLocalNameGuard.get();
-			XalanDOMString&		prefix = prefixGuard.get();
+		XalanDOMString&		elemLocalName = elemLocalNameGuard.get();
+		XalanDOMString&		prefix = prefixGuard.get();
 
-			substring(elementName, prefix, 0, indexOfNSSep);
-			substring(elementName, elemLocalName, indexOfNSSep + 1);
+		substring(elementName, prefix, 0, indexOfNSSep);
+		substring(elementName, elemLocalName, indexOfNSSep + 1);
 
-			if(equals(prefix, DOMServices::s_XMLString))
-			{
-				fResult =
+		if(equals(prefix, DOMServices::s_XMLString))
+		{
+			fResult =
 					m_stylesheetRoot->isCDATASectionElementName(XalanQNameByReference(DOMServices::s_XMLNamespaceURI, elemLocalName));
+		}
+		else
+		{
+			const XalanDOMString* const		elemNS =
+				getResultNamespaceForPrefix(prefix);
+
+			if(elemNS == 0)
+			{
+				error("Prefix must resolve to a namespace: " + prefix);
 			}
 			else
 			{
-				const XalanDOMString* const		elemNS =
-					getResultNamespaceForPrefix(prefix);
-
-				if(elemNS == 0)
-				{
-					error("Prefix must resolve to a namespace: " + prefix);
-				}
-				else
-				{
-					fResult =
+				fResult =
 						m_stylesheetRoot->isCDATASectionElementName(XalanQNameByReference(*elemNS, elemLocalName));
-				}
 			}
 		}
-
-		return fResult;
 	}
+
+	return fResult;
 }
 	
 
@@ -2993,7 +2986,7 @@ XSLTEngineImpl::copyNamespaceAttributes(const XalanNode&	src)
 
 		const unsigned int	nAttrs = nnm->getLength();
 
-		assert(m_outputContextStack.size() > 0);
+		assert(m_outputContextStack.empty() == false);
 
 		AttributeListImpl&	thePendingAttributes =
 				getPendingAttributesImpl();
@@ -3162,8 +3155,8 @@ XSLTEngineImpl::shouldStripSourceNode(
 	{
 		bool	strip = false;
 
-		assert(m_stylesheetRoot->getWhitespacePreservingElements().size() > 0 ||
-			   m_stylesheetRoot->getWhitespaceStrippingElements().size() > 0);
+		assert(m_stylesheetRoot->getWhitespacePreservingElements().empty() == false ||
+			   m_stylesheetRoot->getWhitespaceStrippingElements().empty() == false);
 
 		const XalanNode::NodeType	type = textNode.getNodeType();
 

@@ -468,7 +468,7 @@ public:
 			const XalanDOMString&	aname,
 			const XalanDOMString&	value)
 	{
-		assert(m_outputContextStack.size() > 0);
+		assert(m_outputContextStack.empty() == false);
 
 		addResultAttribute(getPendingAttributesImpl(),
 						   aname,
@@ -929,16 +929,6 @@ public:
 	 */
 	void
 	diag(const char*	s) const;
-
-	/**
-	 * Tell if a given element name should output it's text 
-	 * as cdata.
-	 *
-	 * @param elementName name of element
-	 * @return true if it should output as cdata
-	 */
-	bool
-	isCDataResultElem(const XalanDOMString&		elementName) const;
 
 	/**
 	 * Retrieve the result namespace corresponding to a prefix.
@@ -1665,8 +1655,16 @@ private:
 	bool
 	generateCDATASection() const
 	{
-		return 0 != m_cdataStack.size() &&
-			   m_cdataStack.back() == true;
+		if (m_hasCDATASectionElements == false)
+		{
+			return false;
+		}
+		else
+		{
+			assert(m_cdataStack.empty() == false);
+
+			return m_cdataStack.back();
+		}
 	}
 
 	void
@@ -1676,6 +1674,16 @@ private:
 
 		flushPending();
 	}
+
+	/**
+	 * Tell if a given element name should output its text 
+	 * as cdata.
+	 *
+	 * @param elementName name of element
+	 * @return true if it should output as cdata
+	 */
+	bool
+	isCDataResultElem(const XalanDOMString&		elementName) const;
 
 	void
 	fireCharacterGenerateEvent(
@@ -1732,11 +1740,14 @@ private:
 
 	XalanDOMString					m_scratchString;
 
-	bool							m_hasStripOrPreserveSpace;
-
 	XalanDOMStringPointerSetType	m_attributeNamesVisited;
 
 	const XalanDOMStringPointerSetType::iterator	m_attributeNamesVisitedEnd;
+
+	bool							m_hasStripOrPreserveSpace;
+
+	bool							m_hasCDATASectionElements;
+
 	static void
 	installFunctions();
 
