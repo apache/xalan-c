@@ -104,7 +104,6 @@
 #include <PlatformSupport/PrintWriter.hpp>
 #include <PlatformSupport/XalanOutputStream.hpp>
 #include <PlatformSupport/XalanUnicode.hpp>
-#include <PlatformSupport/XalanTranscodingServices.hpp>
 #include <PlatformSupport/XalanDOMStringCache.hpp>	
 
 
@@ -117,7 +116,6 @@
 #include <XPath/XPathExpression.hpp>
 #include <XPath/XPathFactoryBlock.hpp>
 #include <XPath/XPathFactoryDefault.hpp>
-#include <XPath/XPathFunctionTable.hpp>
 
 
 
@@ -191,7 +189,6 @@ foo(XPathExecutionContext&	theExecutionContext)
 		map<int,int,less<int> > theIntMap;
 		vector<NamespacesHandler::NamespacesMapType::iterator> theNamespacesMapTypeIteratorVector;
 		VariablesStack::ParamsVectorType	theParamsVector;
-		XalanTranscodingServices::MaximumCharacterValueMapType theMaximumCharacterValueMapType;
 		set<XalanNode*, less<XalanNode*> >	theInstanceSetType;
 		XalanTransformer::CompiledStylesheetPtrVectorType	theCompiledStylesheetVector;
 		XalanTransformer::ParsedSourcePtrVectorType			theParsedSourceVector;
@@ -219,14 +216,6 @@ foo(XPathExecutionContext&	theExecutionContext)
 			 XPathFactoryDefault::DeleteXPathFunctor(theXPath, true));
 	}
 
-	{
-		XPathFunctionTable::CollectionType theVector;
-		
-		for_each(theVector.begin(),
-			 theVector.end(),
-			 XPathFunctionTable::DeleteFunctorType());
-	}
-	
 	{
 		XalanDOMStringCache::StringListType theVector;	
 				
@@ -405,11 +394,18 @@ foo(XPathExecutionContext&	theExecutionContext)
 	}
 
 	{
-		StylesheetConstructionContextDefault::StylesheetSetType	theSet;
+		StylesheetConstructionContextDefault::StylesheetVectorType	theVector;
 		
+		StylesheetRoot*		theStylesheetRoot;
+
+		find(
+			theVector.begin(),
+			theVector.end(),
+			theStylesheetRoot);
+
 		for_each(
-			theSet.begin(),
-			theSet.end(),
+			theVector.begin(),
+			theVector.end(),
 			DeleteFunctor<StylesheetRoot>());
 	}
 
