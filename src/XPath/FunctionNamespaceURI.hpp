@@ -106,7 +106,7 @@ public:
 
 private:
 
-	static XalanDOMString
+	static const XalanDOMString*
 	getNamespaceFromNodeSet(const XObject&			theXObject,
 							XPathExecutionContext&	theContext);
 

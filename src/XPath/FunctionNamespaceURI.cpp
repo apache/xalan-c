@@ -78,11 +78,11 @@ FunctionNamespaceURI::execute(
 {
 	assert(arg1 != 0);
 	
-	XalanDOMString	theNamespace;
+	const XalanDOMString*	theNamespace = 0;
 
 	theNamespace = getNamespaceFromNodeSet(*arg1, executionContext);
 
-	return executionContext.getXObjectFactory().createString(theNamespace);
+	return executionContext.getXObjectFactory().createString(theNamespace == 0 ? XalanDOMString() : *theNamespace);
 }
 
 
@@ -91,8 +91,8 @@ XObject*
 FunctionNamespaceURI::execute(
 		XPathExecutionContext&			executionContext,
 		XalanNode*						context)
-{
-	XalanDOMString	theNamespace;
+{	
+	const XalanDOMString*	theNamespace = 0;
 
 	if (context == 0)
 	{
@@ -117,25 +117,28 @@ FunctionNamespaceURI::execute(
 		theNamespace = getNamespaceFromNodeSet(*theXObject.get(), executionContext);
 	}
 
-	return executionContext.getXObjectFactory().createString(theNamespace);
+	return executionContext.getXObjectFactory().createString(theNamespace == 0 ? XalanDOMString() : *theNamespace);
 }
 
 
 
-XalanDOMString
-FunctionNamespaceURI::getNamespaceFromNodeSet(const XObject&			theXObject,
+const XalanDOMString*
+FunctionNamespaceURI::getNamespaceFromNodeSet(
+						const XObject&			theXObject,
 						XPathExecutionContext&	theContext)
 {
-	XalanDOMString	theNamespace;
-
 	const NodeRefListBase&	theList = theXObject.nodeset();
 
-	if (theList.getLength() > 0)
+	if (theList.getLength() == 0)
 	{
-		theNamespace = theContext.getNamespaceOfNode(*theList.item(0));
+		return 0;
 	}
+	else
+	{
+		assert(theList.item(0) != 0);
 
-	return theNamespace;
+		return &theContext.getNamespaceOfNode(*theList.item(0));
+	}
 }
 
 
