@@ -81,8 +81,6 @@
 class Arg;
 class ElemTemplateElement;
 class StylesheetExecutionContext;
-class XObject;
-class XObjectPtr;
 class XalanNode;
 
 
@@ -443,6 +441,8 @@ private:
 	VariableStackStackType			m_stack;
 
 	int								m_globalStackFrameIndex;
+
+	bool							m_globalStackFrameMarked;
 
 	/**
 	 * This is the top of the stack frame from where a search 

@@ -123,7 +123,7 @@ ElemLiteralResult::ElemLiteralResult(
 
 			if(!equals(prefix, DOMServices::s_XMLNamespace))
 			{
-				const XalanDOMString&	ns = getNamespaceForPrefix(prefix);
+				const XalanDOMString&	ns = getNamespaceForPrefixInternal(prefix, true);
 
 				if(equals(ns, stylesheetTree.getXSLTNamespaceURI()))
 				{

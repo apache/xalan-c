@@ -74,7 +74,7 @@
 
 #include "FoundIndex.hpp"
 #include "MutableNodeRefList.hpp"
-#include "QName.hpp"
+#include "QNameByReference.hpp"
 #include "PrefixResolver.hpp"
 #include "SimpleNodeLocator.hpp"
 #include "XLocator.hpp"
@@ -1106,8 +1106,8 @@ XPath::variable(
 	const XObject&	varName = m_expression.m_tokenQueue[m_expression.m_opMap[opPos + 3]];
 
 	// $$$ ToDo: I don't this will be parsed right in the first place...
-	const QName		qname(ns.str(),
-						  varName.str());	
+	const QNameByReference	qname(ns.str(),
+								  varName.str());	
 
 	XObjectPtr result;
 

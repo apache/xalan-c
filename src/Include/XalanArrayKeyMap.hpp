@@ -79,21 +79,21 @@ public:
 	typedef std::deque<VectorType>								VectorHolderType;
 #endif
 
-	typedef MapType::key_type					key_type;
-	typedef MapType::value_type					value_type;
-	typedef ValueType							referent_type;
-	typedef CompareType							key_compare;
+	typedef typename MapType::key_type					key_type;
+	typedef typename MapType::value_type				value_type;
+	typedef ValueType									referent_type;
+	typedef CompareType									key_compare;
 #if !defined(XALAN_NO_STD_ALLOCATORS)
-	typedef MapType::allocator_type				allocator_type;
+	typedef typename MapType::allocator_type			allocator_type;
 #endif
-	typedef MapType::size_type					size_type;
-	typedef MapType::difference_type			difference_type;
-	typedef MapType::reference					reference;
-	typedef MapType::const_reference			const_reference;
-	typedef MapType::iterator					iterator;
-	typedef MapType::const_iterator				const_iterator;
-	typedef MapType::reverse_iterator			reverse_iterator;
-	typedef MapType::const_reverse_iterator		const_reverse_iterator;
+	typedef typename MapType::size_type					size_type;
+	typedef typename MapType::difference_type			difference_type;
+	typedef typename MapType::reference					reference;
+	typedef typename MapType::const_reference			const_reference;
+	typedef typename MapType::iterator					iterator;
+	typedef typename MapType::const_iterator			const_iterator;
+	typedef typename MapType::reverse_iterator			reverse_iterator;
+	typedef typename MapType::const_reverse_iterator	const_reverse_iterator;
 
 #if defined(XALAN_NO_NAMESPACES)
 	typedef pair<iterator, bool>					insert_pair_type;

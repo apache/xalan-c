@@ -57,21 +57,14 @@
 #if !defined(XALAN_ELEMCALLTEMPLATE_HEADER_GUARD)
 #define XALAN_ELEMCALLTEMPLATE_HEADER_GUARD 
 
-/**
- * $Id$
- * 
- * 
- * $State$
- * 
- * @author Myriam Midy (Myriam_Midy @lotus.com 
- */
+
 
 // Base include file.  Must be first.
 #include "XSLTDefinitions.hpp"
 
 
 
-#include <XPath/QName.hpp>
+#include <XPath/QNameByValue.hpp>
 
 
 
@@ -122,13 +115,13 @@ protected:
 private:
 
 	// not implemented
-	ElemCallTemplate(const ElemCallTemplate &);
+	ElemCallTemplate(const ElemCallTemplate&);
 
 	ElemCallTemplate&
-	operator=(const ElemCallTemplate &);
+	operator=(const ElemCallTemplate&);
 
 	// Data members...
-	QName	m_templateName;
+	QNameByValue	m_templateName;
 };
 
 

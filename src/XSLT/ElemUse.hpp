@@ -69,7 +69,7 @@
 
 
 
-#include <XPath/QName.hpp>
+#include <XPath/QNameByValue.hpp>
 
 
 
@@ -129,15 +129,15 @@ public:
 			XalanNode*						sourceNode,
 			const QName&					mode) const;
 
-private:
-
 #if defined(XALAN_NO_NAMESPACES)
-	typedef vector<QName>		QNameVectorType;
+	typedef vector<QNameByValue>		QNameVectorType;
 #else
-	typedef std::vector<QName>	QNameVectorType;
+	typedef std::vector<QNameByValue>	QNameVectorType;
 #endif
 
-	QNameVectorType m_attributeSetsNames;
+private:
+
+	QNameVectorType		m_attributeSetsNames;
 };
 
 

@@ -76,7 +76,7 @@
 
 
 
-#include <XPath/QName.hpp>
+#include <XPath/QNameByReference.hpp>
 #include <XPath/ResultTreeFragBase.hpp>
 #include <XPath/XObjectFactory.hpp>
 #include <XPath/XPath.hpp>
@@ -482,20 +482,17 @@ StylesheetExecutionContextDefault::pushVariable(
 			XalanNode*					contextNode,
 			const PrefixResolver&		resolver)
 {
-	XObjectPtr	var;
-
 	if (length(str) > 0)
 	{
-		var = m_xsltProcessor.evalXPathStr(
-						str,
-						contextNode,
-						resolver,
-						*this);
-		assert(var.null() == false);
+		m_variablesStack.pushVariable(
+			name,
+			m_xsltProcessor.evalXPathStr(
+							str,
+							contextNode,
+							resolver,
+							*this),
+			element);
 	}
-
-	// Call to our own member function, to keep track of the XObject...
-	pushVariable(name, var, element);
 }
 
 
@@ -519,9 +516,7 @@ StylesheetExecutionContextDefault::pushVariable(
 			XalanNode*					contextNode,
 			const PrefixResolver&		resolver)
 {
-	XObjectPtr	theXObject(xpath.execute(contextNode, resolver, *this));
-
-	pushVariable(name, theXObject, element);
+	m_variablesStack.pushVariable(name, xpath.execute(contextNode, resolver, *this), element);
 }
 
 
@@ -534,7 +529,7 @@ StylesheetExecutionContextDefault::pushVariable(
 			XalanNode*					sourceTree,
 			XalanNode*					sourceNode)
 {
-	pushVariable(name, createXResultTreeFrag(templateChild, sourceTree, sourceNode), element);
+	m_variablesStack.pushVariable(name, createXResultTreeFrag(templateChild, sourceTree, sourceNode), element);
 }
 
 
@@ -605,19 +600,28 @@ StylesheetExecutionContextDefault::pushParams(
 			const QName&				mode,
 			const ElemTemplateElement*	targetTemplate)
 {
-	typedef VariablesStack::ParamsVectorType	ParamsVectorType;
-	
-	ParamsVectorType	theParams;
-
 	const ElemTemplateElement*	child =
 			xslCallTemplateElement.getFirstChildElem();
 
+	// This will ensure that the contents of m_paramsVector are
+	// cleared.
+	CollectionClearGuard<ParamsVectorType>	theGuard(m_paramsVector);
+
 	if (0 != child)
 	{
+		assert(m_paramsVector.size() == 0);
+
 		// This object will take care of popping, then
 		// pushing the context marker at the top of the
-		// stack, even if an exception is thrown...
+		// stack, even if an exception is thrown.
 		PopPushContextMarker	thePopPush(*this);
+
+		// Make sure we have the default capacity for the params
+		// vector...
+		if (m_paramsVector.capacity() == 0)
+		{
+			 m_paramsVector.reserve(eDefaultParamsVectorSize);
+		}
 
 		while(0 != child)
 		{
@@ -654,15 +658,16 @@ StylesheetExecutionContextDefault::pushParams(
 							mode);
 				}
 
-				theParams.push_back(ParamsVectorType::value_type(&xslParamElement->getQName(), theXObject));
+				m_paramsVector.push_back(ParamsVectorType::value_type(&xslParamElement->getQName(), theXObject));
 			}
 
 			child = child->getNextSiblingElem();
 		}
 	}
 
-	m_variablesStack.pushParams(theParams,
-							   targetTemplate);
+	m_variablesStack.pushParams(
+				m_paramsVector,
+				targetTemplate);
 }
 
 
@@ -818,7 +823,7 @@ StylesheetExecutionContextDefault::createXResultTreeFrag(
 	return createXResultTreeFrag(templateChild,
 								 sourceTree,
 								 sourceNode,
-								 QName());
+								 QNameByReference());
 }
 
 

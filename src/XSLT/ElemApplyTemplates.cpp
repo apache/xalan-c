@@ -104,7 +104,7 @@ ElemApplyTemplates::ElemApplyTemplates(
 			break;
 
 		case Constants::TATTRNAME_MODE:
-			m_mode = QName(atts.getValue(i), getStylesheet().getNamespaces());
+			m_mode = QNameByValue(atts.getValue(i), getStylesheet().getNamespaces());
 			break;
 
 		default:
@@ -153,17 +153,34 @@ ElemApplyTemplates::execute(
 			mode,
 			this);
 
-		transformSelectedChildren(
-			executionContext,
-			getStylesheet(),
-			*this, 
-			0, 
-			sourceTree, 
-			sourceNode, 
-			m_isDefaultTemplate == false ? m_mode : mode,
-			m_pSelectPattern, 
-			Constants::ELEMNAME_APPLY_TEMPLATES,
-			thePushPop.getStackFrameIndex());
+		if (m_isDefaultTemplate == false)
+		{
+			transformSelectedChildren(
+				executionContext,
+				getStylesheet(),
+				*this,
+				0,
+				sourceTree,
+				sourceNode,
+				m_mode,
+				m_pSelectPattern,
+				Constants::ELEMNAME_APPLY_TEMPLATES,
+				thePushPop.getStackFrameIndex());
+		}
+		else
+		{
+			transformSelectedChildren(
+				executionContext,
+				getStylesheet(),
+				*this,
+				0,
+				sourceTree,
+				sourceNode,
+				mode,
+				m_pSelectPattern,
+				Constants::ELEMNAME_APPLY_TEMPLATES,
+				thePushPop.getStackFrameIndex());
+		}
 	}
     else
 	{

@@ -111,7 +111,7 @@ ElemTemplate::ElemTemplate(
 			break; 
 
 		case Constants::TATTRNAME_NAME:
-			m_name = QName(atts.getValue(i), getStylesheet().getNamespaces());
+			m_name = QNameByValue(atts.getValue(i), getStylesheet().getNamespaces());
 			break;
 
 		case Constants::TATTRNAME_PRIORITY:
@@ -123,7 +123,7 @@ ElemTemplate::ElemTemplate(
 			break;
 
 		case Constants::TATTRNAME_MODE:
-			m_mode = QName(atts.getValue(i), getStylesheet().getNamespaces());
+			m_mode = QNameByValue(atts.getValue(i), getStylesheet().getNamespaces());
 			break;
 
 		case Constants::TATTRNAME_XMLSPACE:

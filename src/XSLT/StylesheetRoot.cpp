@@ -87,6 +87,7 @@
 
 
 
+#include <XPath/QNameByReference.hpp>
 #include <XPath/XPathFactory.hpp>
 #include <XPath/XPathProcessor.hpp>
 
@@ -219,7 +220,7 @@ StylesheetRoot::process(
 
 	// Output the action of the found root rule.  All processing
 	// occurs from here.
-	rootRule->execute(executionContext, sourceTree, sourceTree, QName());
+	rootRule->execute(executionContext, sourceTree, sourceTree, QNameByReference());
 
 	executionContext.endDocument();
 
@@ -474,7 +475,7 @@ StylesheetRoot::processOutputSpec(
 			{
 				const XalanDOMString	token = tokenizer.nextToken();
 
-				const QName				qname(token, getNamespaces());
+				const QNameByValue		qname(token, getNamespaces());
 
 				m_cdataSectionElems.push_back(qname);
 			}

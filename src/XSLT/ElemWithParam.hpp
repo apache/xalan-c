@@ -69,7 +69,7 @@
 
 
 
-#include <XPath/QName.hpp>
+#include <XPath/QNameByValue.hpp>
 
 
 
@@ -131,7 +131,7 @@ private:
 	// Data members...
 	const XPath*	m_selectPattern;
 
-	QName			m_qname;
+	QNameByValue	m_qname;
 };
 
 

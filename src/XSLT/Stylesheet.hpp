@@ -81,7 +81,7 @@
 
 #include <XPath/PrefixResolver.hpp>
 #include <XPath/NameSpace.hpp>
-#include <XPath/QName.hpp>
+#include <XPath/QNameByValue.hpp>
 
 
 
@@ -132,7 +132,7 @@ public:
 	typedef map<XalanDOMString,
 				ExtensionNSHandler*,
 				less<XalanDOMString> >				ExtensionNamespacesMapType;
-	typedef map<QName,
+	typedef map<QNameByValue,
 				ElemTemplate*,
 				less<QName> >						ElemTemplateMapType;
 	typedef vector<ElemAttributeSet*> 				AttributeSetMapType;
@@ -141,7 +141,7 @@ public:
 	typedef map<const XalanNode*,
 				KeyTable*,
 				less<const XalanNode*> >			KeyTablesTableType;
-	typedef vector<QName> 							QNameVectorType;
+	typedef vector<QNameByValue> 					QNameVectorType;
 	typedef vector<Stylesheet*>						StylesheetVectorType;
 	typedef vector<XalanDOMString>					URLStackType;
 	typedef vector<const XPath*>					XPathVectorType;
@@ -149,12 +149,12 @@ public:
 #else
 	typedef std::map<XalanDOMString, XalanDOMString>		StringToStringMapType;
 	typedef std::map<XalanDOMString, ExtensionNSHandler*>	ExtensionNamespacesMapType;
-	typedef std::map<QName, ElemTemplate*>					ElemTemplateMapType;
+	typedef std::map<QNameByValue, ElemTemplate*>			ElemTemplateMapType;
 	typedef std::vector<ElemAttributeSet*> 					AttributeSetMapType;
 	typedef std::vector<ElemVariable*> 						ElemVariableVectorType;
 	typedef std::vector<KeyDeclaration>						KeyDeclarationVectorType;
 	typedef std::map<const XalanNode*, KeyTable*>			KeyTablesTableType;
-	typedef std::vector<QName> 								QNameVectorType;
+	typedef std::vector<QNameByValue> 						QNameVectorType;
 	typedef std::vector<Stylesheet*>						StylesheetVectorType;
 	typedef std::vector<XalanDOMString>						URLStackType;
 	typedef std::vector<const XPath*>						XPathVectorType;

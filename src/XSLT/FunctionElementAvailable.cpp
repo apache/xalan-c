@@ -89,11 +89,18 @@ FunctionElementAvailable::execute(
 
 	const XalanDOMString	prefix = indexOfNSSep < nameLength ? substring(fullName, 0, indexOfNSSep) : XalanDOMString();
 
-	const XalanDOMString	theNamespace = executionContext.getNamespaceForPrefix(prefix);
+	const XalanDOMString&	theNamespace = executionContext.getNamespaceForPrefix(prefix);
 
-	const XalanDOMString	elementName = indexOfNSSep == nameLength ? fullName : substring(fullName, indexOfNSSep + 1);
+	if (length(theNamespace) == 0)
+	{
+		return executionContext.getXObjectFactory().createBoolean(false);
+	}
+	else
+	{
+		const XalanDOMString	elementName = indexOfNSSep == nameLength ? fullName : substring(fullName, indexOfNSSep + 1);
 
-	return executionContext.getXObjectFactory().createBoolean(executionContext.elementAvailable(theNamespace, elementName));
+		return executionContext.getXObjectFactory().createBoolean(executionContext.elementAvailable(theNamespace, elementName));
+	}
 }
 
 

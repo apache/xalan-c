@@ -69,6 +69,7 @@
 VariablesStack::VariablesStack() :
 	m_stack(),
 	m_globalStackFrameIndex(-1),
+	m_globalStackFrameMarked(false),
 	m_currentStackFrameIndex(0)
 {
 	m_stack.reserve(eDefaultStackSize);
@@ -91,6 +92,8 @@ VariablesStack::reset()
 	}
 
 	m_stack.clear();
+
+	m_globalStackFrameMarked = false;
 }
 
 
@@ -227,6 +230,15 @@ VariablesStack::push(const StackEntry&	theEntry)
 	}
 
 	m_stack.push_back(theEntry);
+
+	// Increment the global stack frame index as long as we're pushing variables, and
+	// it already hasn't been marked.  This is a temporary work-around for problems
+	// with evaluating top-level variables as they're pushed, rather than as they're
+	// used.
+	if (m_globalStackFrameMarked == false && theEntry.getType() == StackEntry::eVariable)
+	{
+		m_globalStackFrameIndex = m_currentStackFrameIndex;
+	}
 }
 
 
@@ -310,6 +322,8 @@ VariablesStack::markGlobalStackFrame()
 {
 	m_globalStackFrameIndex = m_stack.size();
 
+	m_globalStackFrameMarked = true;
+
 	pushContextMarker();
 }
 
@@ -371,7 +385,7 @@ VariablesStack::findVariable(
 		}
 	}
 
-	if(0 == theResult && true == fSearchGlobalSpace)
+	if(0 == theResult && true == fSearchGlobalSpace && m_globalStackFrameIndex > 1)
 	{
 		// Look in the global space
 		for(unsigned int i = m_globalStackFrameIndex - 1; i > 0; i--)

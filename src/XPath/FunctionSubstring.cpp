@@ -70,85 +70,139 @@ FunctionSubstring::~FunctionSubstring()
 
 
 
+/*
+ * Get the value for the start index (C-style, not XPath).
+ */
+inline unsigned int
+getStartIndex(double	theSecondArgValue)
+{
+	// We always subtract 1 for C-style index, since XPath indexes from 1.
+	
+	// Anything less than, or equal to 1 is 0.
+	if (theSecondArgValue <= 1)
+	{
+		return 0;
+	}
+	else
+	{
+		return unsigned(FunctionRound::getRoundedValue(theSecondArgValue)) - 1;
+	}
+}
+
+
+
+/*
+ * Get the length of the substring.
+ */
+inline unsigned int
+getSubstringLength(
+			unsigned int	theSourceStringLength,
+			unsigned int	theStartIndex,
+			double			theThirdArgValue)
+{
+	// The last index must be less than theThirdArgValue.  Since it has
+	// already been rounded, subtracting 1 will do the job.
+	const unsigned int	theLastIndex = unsigned(theThirdArgValue - 1);
+
+	if (theLastIndex >= theSourceStringLength)
+	{
+		return theSourceStringLength - theStartIndex;
+	}
+	else
+	{
+		return theLastIndex - theStartIndex;
+	}
+}
+
+
+
+/*
+ * Get the total of the second and third arguments.
+ */
+inline double
+getTotal(
+			unsigned int		theSourceStringLength,
+			double				theSecondArgValue,
+			const XObjectPtr&	arg3)
+{
+	// Total the second and third arguments.  Ithe third argument is
+	// missing, make it the length of the string + 1 (for XPath
+	// indexing style).
+	if (arg3.null() == true || DoubleSupport::isPositiveInfinity(arg3->num()) == true)
+	{
+		return double(theSourceStringLength + 1);
+	}
+	else
+	{
+		return FunctionRound::getRoundedValue(theSecondArgValue + arg3->num());
+	}
+}
+
+
+
+inline XObjectPtr
+createEmptyString(XPathExecutionContext&	executionContext)
+{
+	return executionContext.getXObjectFactory().createString(XalanDOMString());
+}
+
+
+
 XObjectPtr
 FunctionSubstring::execute(
-		XPathExecutionContext&			executionContext,
-		XalanNode*						/* context */,			
-		const XObjectPtr				arg1,
-		const XObjectPtr				arg2,
-		const XObjectPtr				arg3)
+		XPathExecutionContext&	executionContext,
+		XalanNode*				/* context */,			
+		const XObjectPtr		arg1,
+		const XObjectPtr		arg2,
+		const XObjectPtr		arg3)
 {
 	assert(arg1.null() == false && arg2.null() == false);	
 
 	const XalanDOMString&	theSourceString = arg1->str();
 	const unsigned int		theSourceStringLength = length(theSourceString);
 
-#if defined(XALAN_NO_NAMESPACES)
-	typedef vector<XalanDOMChar>		VectorType;
-#else
-	typedef std::vector<XalanDOMChar>	VectorType;
-#endif
-
-	// This buffer will hold the output characters.
-	VectorType	theBuffer;
-
-	if (theSourceStringLength > 0)
+	if (theSourceStringLength == 0)
 	{
-		// The substring can only be as long as the source string,
-		// so reserve enough space now.  Also reserve space for
-		// the terminating 0.
-		theBuffer.reserve(theSourceStringLength);
-
-		// $$$ ToDo: Add support for NaN.
-
+		return createEmptyString(executionContext);
+	}
+	else
+	{
 		// Get the value of the second argument...
 		const double	theSecondArgValue =
 			FunctionRound::getRoundedValue(arg2->num());
 
-		// Now, total the second and third arguments.  If
-		// the third argument is missing, make the total
-		// DBL_MAX.
-		const double	theTotal =
-				arg3.null() == true ? DBL_MAX :
-								   FunctionRound::getRoundedValue(
-									   theSecondArgValue + arg3->num());
+		// XPath indexes from 1, so this is the first XPath index....
+		const unsigned int	theStartIndex = getStartIndex(theSecondArgValue);
 
-		if (DoubleSupport::isNaN(theSecondArgValue) == false &&
-			DoubleSupport::isNaN(theTotal) == false &&
-			DoubleSupport::isNegativeInfinity(theTotal) == false)
+		if (theStartIndex >= theSourceStringLength)
 		{
-			// Start with 1, since strings are index from 1 in the XPath spec,
-			for (unsigned int i = 1; i <= theSourceStringLength; i++)
+			return createEmptyString(executionContext);
+		}
+		else
+		{
+			const double	theTotal =
+				getTotal(theSourceStringLength, theSecondArgValue, arg3);
+
+			if (DoubleSupport::isNaN(theSecondArgValue) == true ||
+				DoubleSupport::isNaN(theTotal) == true ||
+				DoubleSupport::isNegativeInfinity(theTotal) == true ||
+				theTotal < double(theStartIndex))
 			{
-				// Is the index greater than or equal to the second argument?
-				if (i >= theSecondArgValue)
-				{
-					// Is it less than the sum of the second and
-					// third arguments?
-					if (i < theTotal)
-					{
-						// It is, so include the character.
-						theBuffer.push_back(charAt(theSourceString, i - 1));
-					}
-					else
-					{
-						// It's not, so stop.
-						break;
-					}
-				}
+				return createEmptyString(executionContext);
+			}
+			else
+			{
+				const unsigned int	theSubstringLength =
+					getSubstringLength(
+						theSourceStringLength,
+						theStartIndex,
+						theTotal);
+
+				return executionContext.getXObjectFactory().createString(
+								toCharArray(theSourceString) + theStartIndex,
+								theSubstringLength);
 			}
 		}
-	}
-
-	const VectorType::size_type		theSize = theBuffer.size();
-
-	if (theSize == 0)
-	{
-		return executionContext.getXObjectFactory().createString(XalanDOMString());
-	}
-	else
-	{
-		return executionContext.getXObjectFactory().createString(theBuffer.begin(), theSize);
 	}
 }
 
@@ -156,16 +210,14 @@ FunctionSubstring::execute(
 
 XObjectPtr
 FunctionSubstring::execute(
-		XPathExecutionContext&			executionContext,
-		XalanNode*						context,			
-		const XObjectPtr				arg1,
-		const XObjectPtr				arg2)
+		XPathExecutionContext&	executionContext,
+		XalanNode*				context,			
+		const XObjectPtr		arg1,
+		const XObjectPtr		arg2)
 {
 	assert(arg1.null() == false && arg2.null() == false);
-	
-	XObjectPtr dummy;
 
-	return execute(executionContext, context, arg1, arg2, dummy);
+	return execute(executionContext, context, arg1, arg2, XObjectPtr());
 }
 
 
@@ -188,4 +240,3 @@ FunctionSubstring::getError() const
 	return XALAN_STATIC_UCODE_STRING(
 		"The substring() function takes two or three arguments!");
 }
-

@@ -604,27 +604,27 @@ substring(
 
 				const XalanDOMChar* const	ptr = toCharArray(theString);
 
-	#if defined(XALAN_NO_ALGORITHMS_WITH_BUILTINS)
+#if defined(XALAN_NO_ALGORITHMS_WITH_BUILTINS)
 				XalanCopy(
 					ptr,
 					ptr + theLength,
 					back_inserter(theBuffer));
-	#else
+#else
 				copy(
 					ptr,
 					ptr + theLength,
 					back_inserter(theBuffer));
-	#endif
+#endif
 
 				return XalanDOMString(theBuffer.begin(), theBuffer.size());
 			}
 			else
 			{
-	#if defined(XALAN_USE_CUSTOM_STRING) || defined(XALAN_USE_STD_STRING)
+#if defined(XALAN_USE_CUSTOM_STRING) || defined(XALAN_USE_STD_STRING)
 				return theString.substr(theStartIndex, theLength);
-	#else
+#else
 				return theString.substringData(theStartIndex, theLength);
-	#endif
+#endif
 			}
 		}
 	}
@@ -1021,61 +1021,7 @@ compare(
 			const XalanDOMChar*		theLHS,
 			const XalanDOMChar*		theRHS)
 {
-#if 1
 	return doCompare(theLHS, length(theLHS), theRHS, length(theRHS));
-#else
-	const unsigned int	theLHSLength = length(theLHS);
-	const unsigned int	theRHSLength = length(theRHS);
-
-	int					theResult = 0;
-
-	if (theLHSLength != 0 || theRHSLength != 0)
-	{
-		XalanDOMChar		theLHSChar = 0;
-		XalanDOMChar		theRHSChar = 0;
-
-		unsigned int	i = 0;
-
-		for(; i < theLHSLength && i < theRHSLength; i++)
-		{
-			theLHSChar = theLHS[i];
-			theRHSChar = theRHS[i];
-
-			if (theLHSChar != theRHSChar)
-			{
-				break;
-			}
-		}
-
-		if (i == theLHSLength)
-		{
-			// We reached the end of theLHS...
-			if (i != theRHSLength)
-			{
-				// but not the end of theRHS.
-				theResult = -1;
-			}
-		}
-		else if (i == theRHSLength)
-		{
-			// We reached the end of theRHS string...
-			if (i != theLHSLength)
-			{
-				// but not the end of theLHS string.
-				theResult = 1;
-			}
-		}
-		else
-		{
-			// We didn't reach the end of _either_ string, so
-			// return the difference between the two characters
-			// that caused the problem.
-			theResult = theLHSChar - theRHSChar;
-		}
-	}
-
-	return theResult;
-#endif
 }
 
 
@@ -1348,6 +1294,45 @@ collationCompare(
 
 
 
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(bool)
+equals(
+			const XalanDOMChar*		theLHS,
+			const XalanDOMChar*		theRHS)
+{
+	assert(theLHS != 0 && theRHS != 0);
+
+	for(;;)
+	{
+		const XalanDOMChar	theLHSChar = *theLHS;
+		const XalanDOMChar	theRHSChar = *theRHS;
+
+		if (theLHSChar == 0)
+		{
+			return theRHSChar == 0 ? true : false;
+		}
+		else if (theRHSChar == 0)
+		{
+			return theLHSChar == 0 ? true : false;
+		}
+		else if (theLHSChar != theRHSChar)
+		{
+			return false;
+		}
+		else
+		{
+			++theLHS;
+			++theRHS;
+		}
+	}
+
+	assert(false);
+
+	// Dummy return value...
+	return false;
+}
+
+
+
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMCharVectorType)
 MakeXalanDOMCharVector(
 			const char*		data,
@@ -1444,22 +1429,53 @@ CopyStringToVector(
 
 
 
+template <class Type>
+Type
+WideStringToIntegral(
+			const XalanDOMChar*		theString,
+			Type					theDummy)
+{
+	if (theString == 0)
+	{
+		return Type(0);
+	}
+	else
+	{
+		Type	theResult = 0;
+
+		const bool	isNegative = *theString == XalanUnicode::charHyphenMinus ? true : false;
+
+		if (isNegative == true)
+		{
+			++theString;
+		}
+
+		while(*theString != 0)
+		{
+			if (*theString >= XalanUnicode::charDigit_0 && *theString <= XalanUnicode::charDigit_9)
+			{
+				theResult *= 10;
+
+				theResult += *theString - XalanUnicode::charDigit_0;
+
+				++theString;
+			}
+			else
+			{
+				return 0;
+			}
+		}
+
+		return isNegative == true ? -theResult : theResult;
+	}
+}
+
+
+
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(int)
 WideStringToInt(const XalanDOMChar*		theString)
 {
-	int				theResult = 0;
-
-	vector<char>	theVector;
-
-	CopyWideStringToVector(theString,
-						   theVector);
-
-	if (theVector.size() > 0)
-	{
-		theResult = atoi(theVector.begin());
-	}
-
-	return theResult;
+	return WideStringToIntegral(theString, int(0));
 }
 
 
@@ -1467,19 +1483,7 @@ WideStringToInt(const XalanDOMChar*		theString)
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(long)
 WideStringToLong(const XalanDOMChar*	theString)
 {
-	long			theResult = 0;
-
-	CharVectorType	theVector;
-
-	CopyWideStringToVector(theString,
-						   theVector);
-
-	if (theVector.size() > 0)
-	{
-		theResult = atol(theVector.begin());
-	}
-
-	return theResult;
+	return WideStringToIntegral(theString, long(0));
 }
 
 
@@ -1487,21 +1491,7 @@ WideStringToLong(const XalanDOMChar*	theString)
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(unsigned long)
 WideStringToUnsignedLong(const XalanDOMChar*	theString)
 {
-	unsigned long	theResult = 0;
-
-	CharVectorType	theVector;
-
-	CopyWideStringToVector(theString,
-						   theVector);
-
-	if (theVector.size() > 0)
-	{
-		istrstream	theFormatter(&theVector[0]);
-
-		theFormatter >> theResult;
-	}
-
-	return theResult;
+	return WideStringToIntegral(theString, (unsigned long)0);
 }
 
 
@@ -1630,7 +1620,7 @@ LongToHexDOMString(long		theLong)
 // I'm 99% sure that we don't need to use swprintf
 // to format, since strings of numbers don't to be
 // generated as wide strings.
-#if defined(XALAN_USE_WCHAR_SUPPORT)
+#if 0 // defined(XALAN_USE_WCHAR_SUPPORT)
 
 	wchar_t		theBuffer[MAX_PRINTF_DIGITS + 1];
 
@@ -1696,7 +1686,7 @@ UnsignedLongToHexDOMString(unsigned long	theUnsignedLong)
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString)
 LongToDOMString(long	theLong)
 {
-#if defined(XALAN_USE_WCHAR_SUPPORT)
+#if 0 // defined(XALAN_USE_WCHAR_SUPPORT)
 
 	wchar_t		theBuffer[MAX_PRINTF_DIGITS + 1];
 

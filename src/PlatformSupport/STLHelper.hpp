@@ -270,6 +270,44 @@ struct less_null_terminated_arrays : public std::binary_function<const T*, const
 
 
 
+template<class CollectionType>
+class CollectionClearGuard
+{
+public:
+
+	CollectionClearGuard(CollectionType&	theCollection) :
+		m_collection(&theCollection)
+	{
+	}
+
+	~CollectionClearGuard()
+	{
+		if (m_collection != 0)
+		{
+			m_collection->clear();
+		}
+	}
+
+	void
+	release()
+	{
+		m_collection = 0;
+	}
+
+private:
+
+	// Not implemented...
+	CollectionClearGuard(const CollectionClearGuard<CollectionType>&);
+
+	CollectionClearGuard<CollectionType>&
+	operator=(const CollectionClearGuard<CollectionType>&);
+
+	// Data members...
+	CollectionType*		m_collection;
+};
+
+
+
 template<class CollectionType, class DeleteFunctorType>
 class CollectionDeleteGuard
 {

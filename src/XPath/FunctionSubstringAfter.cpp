@@ -72,54 +72,48 @@ FunctionSubstringAfter::~FunctionSubstringAfter()
 
 XObjectPtr
 FunctionSubstringAfter::execute(
-		XPathExecutionContext&			executionContext,
-		XalanNode*						/* context */,			
-		const XObjectPtr				arg1,
-		const XObjectPtr				arg2)
+		XPathExecutionContext&	executionContext,
+		XalanNode*				/* context */,			
+		const XObjectPtr		arg1,
+		const XObjectPtr		arg2)
 {
 	assert(arg1.null() == false && arg2.null() == false);
 
 	const XalanDOMString&	theFirstString = arg1->str();
-	const XalanDOMString&	theSecondString = arg2->str();
-
-	const unsigned int		theIndex = indexOf(theFirstString,
-											   theSecondString);
 
 	const unsigned int		theFirstStringLength = length(theFirstString);
 
-#if defined(XALAN_NO_NAMESPACES)
-	typedef vector<XalanDOMChar>		VectorType;
-#else
-	typedef std::vector<XalanDOMChar>	VectorType;
-#endif
-
-	// This buffer will hold the output characters.
-	VectorType	theBuffer;
-
-	if (theIndex < theFirstStringLength)
-	{
-		unsigned int		theStartIndex = theIndex + length(theSecondString);
-
-		// The result string can only be as large as the source string, so
-		// just reserve the space now.  Also reserve a space for the
-		// terminating 0.
-		theBuffer.reserve(theFirstStringLength - theStartIndex + 1);
-
-		for (; theStartIndex < theFirstStringLength; theStartIndex++)
-		{
-			theBuffer.push_back(charAt(theFirstString, theStartIndex));
-		}
-	}
-
-	const VectorType::size_type		theSize = theBuffer.size();
-
-	if (theSize == 0)
+	if (theFirstStringLength == 0)
 	{
 		return executionContext.getXObjectFactory().createString(XalanDOMString());
 	}
 	else
 	{
-		return executionContext.getXObjectFactory().createString(theBuffer.begin(), theSize);
+		const XalanDOMString&	theSecondString = arg2->str();
+
+		const unsigned int		theIndex = indexOf(theFirstString,
+												   theSecondString);
+
+		if (theIndex == theFirstStringLength)
+		{
+			return executionContext.getXObjectFactory().createString(XalanDOMString());
+		}
+		else
+		{
+			const unsigned int		theSecondStringLength = length(theSecondString);
+
+			// Find the first character, which will be the offset of the index of the
+			// beginning of the second string, plus the length of the second string.
+			const XalanDOMChar* const	theFirstCharacter =
+				toCharArray(theFirstString) + theIndex + theSecondStringLength;
+
+			// The remaining length is just the opposite -- the length of the string,
+			// minus the index, minus the length of the second string.
+			const unsigned int		theSubstringLength =
+				theFirstStringLength  - theIndex - theSecondStringLength;
+
+			return executionContext.getXObjectFactory().createString(theFirstCharacter, theSubstringLength);
+		}
 	}
 }
 
@@ -143,4 +137,3 @@ FunctionSubstringAfter::getError() const
 	return XALAN_STATIC_UCODE_STRING(
 		"The substring-after() function takes two arguments!");
 }
-

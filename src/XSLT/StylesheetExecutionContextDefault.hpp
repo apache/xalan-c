@@ -122,7 +122,7 @@ public:
 #endif
 
 	typedef Stylesheet::KeyTablesTableType				KeyTablesTableType;
-
+	typedef VariablesStack::ParamsVectorType			ParamsVectorType;
 
 	StylesheetExecutionContextDefault(
 			XSLTEngineImpl&			xsltProcessor,
@@ -813,7 +813,8 @@ private:
 
 	enum { eDefaultVariablesCollectionSize = 10,
 		   eXPathCacheMax = 50,
-		   eDefaultVariablesStackSize = 200 };
+		   eDefaultVariablesStackSize = 200,
+		   eDefaultParamsVectorSize = 10 };
 
 	ElementRecursionStackType			m_elementRecursionStack;
 
@@ -833,6 +834,8 @@ private:
 	 * Holds all information about variables during execution.
 	 */
 	VariablesStack						m_variablesStack;
+
+	ParamsVectorType					m_paramsVector;
 
 	XPathCacheMapType					m_matchPatternCache;
 

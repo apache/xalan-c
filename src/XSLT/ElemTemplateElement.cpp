@@ -665,9 +665,7 @@ ElemTemplateElement::transformSelectedChildren(
 		// @@ JMD: Should this be an assert ??
 		if (theXObject.null() == false)
 		{
-			const XObjectPtr	result(theXObject);
-
-			const NodeRefListBase&	sourceNodes = result->nodeset();
+			const NodeRefListBase&	sourceNodes = theXObject->nodeset();
 
 			if(0 != executionContext.getTraceListeners())
 			{
@@ -677,7 +675,7 @@ ElemTemplateElement::transformSelectedChildren(
 							*this,
 							StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("select")),
 							*selectPattern,
-							result));
+							theXObject));
 			}
 
 			const unsigned int	nNodes = sourceNodes.getLength();
@@ -1457,7 +1455,7 @@ ElemTemplateElement::getElementsByTagNameNS(
 const XalanDOMString&
 ElemTemplateElement::getNamespaceForPrefix(const XalanDOMString&	prefix) const
 {
-	return getNamespaceForPrefixInternal(prefix, true);
+	return getNamespaceForPrefixInternal(prefix, false);
 }
 
 
@@ -1475,24 +1473,30 @@ ElemTemplateElement::getNamespaceForPrefixInternal(
 
 		if(m_finishedConstruction == true)
 		{
-			 if (equals(prefix, DOMServices::s_XMLString) == true)
-			 {
-				 nameSpace = &DOMServices::s_XMLNamespaceURI;
-			 }
-			 else if (equals(prefix, DOMServices::s_XMLNamespace) == true)
-			 {
-				 fEmptyIsError = false;
-			 }
-			 else
-			 {
-				 nameSpace = &getNamespacesHandler().getNamespace(prefix);
+			if (equals(prefix, DOMServices::s_XMLString) == true)
+			{
+				nameSpace = &DOMServices::s_XMLNamespaceURI;
+			}
+			else if (equals(prefix, DOMServices::s_XMLNamespace) == true)
+			{
+				fEmptyIsError = false;
+			}
+			else
+			{
+				nameSpace = &getNamespacesHandler().getNamespace(prefix);
 
 				if(isEmpty(*nameSpace) == true)
 				{
-					 if (m_parentNode != 0)
-					 {
+					if (m_parentNode != 0)
+					{
 						nameSpace = &m_parentNode->getNamespaceForPrefixInternal(prefix, false);
-					 }
+					}
+
+					// Try one last time with the stylesheet...
+					if(isEmpty(*nameSpace) == true)
+					{
+						nameSpace = &getStylesheet().getNamespaceForPrefix(prefix);
+					}
 				}
 			}
 		}

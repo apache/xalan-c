@@ -89,6 +89,7 @@
 #include <XPath/ElementPrefixResolverProxy.hpp>
 #include <XPath/XObject.hpp>
 #include <XPath/XPath.hpp>
+#include <XPath/QNameByReference.hpp>
 
 
 
@@ -575,7 +576,7 @@ Stylesheet::findNamedTemplate(
 			const XalanDOMString&			name,
 			StylesheetExecutionContext& 	executionContext) const
 {
-	return findNamedTemplate(QName(name, m_namespaces), executionContext);
+	return findNamedTemplate(QNameByValue(name, m_namespaces), executionContext);
 }
 
 
@@ -627,7 +628,7 @@ Stylesheet::findTemplate(
 {
 	const Stylesheet*	theDummy;
 
-	return findTemplate(executionContext, sourceTree, targetNode, QName(), false, theDummy);
+	return findTemplate(executionContext, sourceTree, targetNode, QNameByReference(), false, theDummy);
 }
 
 
@@ -1112,7 +1113,7 @@ Stylesheet::pushTopLevelVariables(
 			var->execute(executionContext,
 						 doc,
 						 doc,
-						 QName());
+						 QNameByReference());
 		}
 	}
 

@@ -93,7 +93,7 @@ ElemAttributeSet::ElemAttributeSet(
 
 		if(equals(aname,Constants::ATTRNAME_NAME))
 		{
-			m_QName = QName(atts.getValue(i), stylesheetTree.getNamespaces());
+			m_QName = QNameByValue(atts.getValue(i), stylesheetTree.getNamespaces());
 
 			stylesheetTree.addAttributeSet(m_QName, this);
 		}

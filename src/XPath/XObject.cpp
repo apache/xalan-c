@@ -243,11 +243,7 @@ getNumberFromNode(
 			const XalanNode&	theNode,
 			double&				theNumber)
 {
-	XalanDOMString	theString;
-
-	getStringFromNode(theNode, theString);
-
-	theNumber = DoubleSupport::toDouble(theString);
+	theNumber = getNumberFromNode(theNode);
 }
 
 

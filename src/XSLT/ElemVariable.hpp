@@ -74,15 +74,12 @@
 
 
 
-#include <XPath/QName.hpp>
+#include <XPath/QNameByValue.hpp>
 #include <XPath/XObject.hpp>
 
 
+
 #include <XSLT/Constants.hpp>
-
-
-
-class XObjectPtr;
 
 
 
@@ -156,7 +153,7 @@ public:
 
 protected:
 
-	QName			m_qname;
+	QNameByValue	m_qname;
 
 private:
 

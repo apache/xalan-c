@@ -853,6 +853,31 @@ TranscodeToLocalCodePage(const XalanDOMString&	theSourceString)
 
 
 /**
+ * Convert a string to a XalanDOMString, transcoding from
+ * the default local code page.
+ * 
+ * @param theSourceString The source string
+ * @param theSourceStringLength The source string length.
+ * @return The new string.
+ */
+#if defined(XALAN_USE_XERCES_DOMSTRING) || defined(XALAN_USE_STD_STRING)
+XALAN_DOM_EXPORT_FUNCTION(const XalanDOMString)
+TranscodeFromLocalCodePage(
+			const char*		theSourceString,
+			unsigned int	theSourceStringLength = unsigned(-1));
+#else 
+inline const XalanDOMString
+TranscodeFromLocalCodePage(
+			const char*		theSourceString,
+			unsigned int	theSourceStringLength = unsigned(-1))
+{
+	return XalanDOMString(theSourceString, theSourceStringLength);
+}
+#endif
+
+
+
+/**
  * Convert a string to a C++ standard library
  * vector, transcoding from the default local code
  * page.
@@ -891,17 +916,26 @@ TranscodeFromLocalCodePage(
 
 
 /**
- * Convert XalanDOMString to C++ standard library
- * vector, transcoding to the default local code
- * page.
+ * Convert a vector of characters to a XalanDOMString,
+ * transcoding from the default local code
  *
  * @param theSourceString source string
  * @return The transcoded string.
  */
-XALAN_DOM_EXPORT_FUNCTION(const XalanDOMString)
-TranscodeFromLocalCodePage(
-			const char*		theSourceString,
-			unsigned int	theSourceStringLength = unsigned(-1));
+inline const XalanDOMString
+TranscodeFromLocalCodePage(const CharVectorType&	theSourceString)
+{
+	const CharVectorType::size_type		theSize = theSourceString.size();
+
+	if (theSourceString[theSize - 1] == CharVectorType::value_type(0))
+	{
+		return TranscodeFromLocalCodePage(&*theSourceString.begin(), theSize - 1);
+	}
+	else
+	{
+		return TranscodeFromLocalCodePage(&*theSourceString.begin(), theSize);
+	}
+}
 
 
 

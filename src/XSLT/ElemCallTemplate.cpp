@@ -99,7 +99,7 @@ ElemCallTemplate::ElemCallTemplate(
 
 		if(equals(aname, Constants::ATTRNAME_NAME))
 		{
-			m_templateName = QName(atts.getValue(i), getStylesheet().getNamespaces());        
+			m_templateName = QNameByValue(atts.getValue(i), getStylesheet().getNamespaces());        
 		}
 		else if(!isAttrOK(aname, atts, i, constructionContext))
 		{

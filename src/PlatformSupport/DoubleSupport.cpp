@@ -464,11 +464,17 @@ doConvert(const XalanDOMChar*	theString)
 	}
 	else
 	{
+#if defined(XALAN_FULL_WCHAR_SUPPORT) && defined(XALAN_USE_WCHAR_SUPPORT)
+		XalanDOMChar*	theDummy;
+
+		return wcstod(theString, &theDummy);
+#else
 		CharVectorType	theVector;
 
 		CopyWideStringToVector(theString, theVector);
 
 		return atof(&theVector.front());
+#endif
 	}
 }
 

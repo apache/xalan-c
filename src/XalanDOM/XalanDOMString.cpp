@@ -636,6 +636,7 @@ TranscodeFromLocalCodePage(
 
 
 
+#if defined(XALAN_USE_XERCES_DOMSTRING) || defined(XALAN_USE_STD_STRING)
 XALAN_DOM_EXPORT_FUNCTION(const XalanDOMString)
 TranscodeFromLocalCodePage(
 			const char*		theSourceString,
@@ -663,3 +664,4 @@ TranscodeFromLocalCodePage(
 		return XalanDOMString(&theResult[0], theSize);
 	}
 }
+#endif

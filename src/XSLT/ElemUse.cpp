@@ -132,7 +132,7 @@ ElemUse::processUseAttributeSets(
 
 	if(Constants::ELEMNAME_LITERALRESULT == getXSLToken())
 	{
-		const QName		qname(attrName, getStylesheet().getNamespaces());
+		const QNameByValue	qname(attrName, getStylesheet().getNamespaces());
 
 		isUAS = ((equals(qname.getNamespace(),
 			constructionContext.getXSLTNamespaceURI())) &&
@@ -160,7 +160,7 @@ ElemUse::processUseAttributeSets(
 			const XalanDOMString		qname = tokenizer.nextToken();
 			assert(length(qname) != 0);
 
-			m_attributeSetsNames.push_back(QName(qname, getStylesheet().getNamespaces()));
+			m_attributeSetsNames.push_back(QNameVectorType::value_type(qname, getStylesheet().getNamespaces()));
 		}
 	}
 

@@ -71,7 +71,7 @@
 
 
 
-#include <XPath/QName.hpp>
+#include <XPath/QNameByValue.hpp>
 
 
 
@@ -103,7 +103,7 @@ public:
 
 	virtual
 	~ElemTemplate();
-	
+
 	/**
 	 * Retrieve the qualified name of element
 	 * 
@@ -164,10 +164,11 @@ private:
 	ElemTemplate&
 	operator=(const ElemTemplate &);
 
+	// Data members...
 	const XPath*	m_matchPattern;
 
-	QName			m_name;
-	QName			m_mode;
+	QNameByValue	m_name;
+	QNameByValue	m_mode;
 
 	double			m_priority;
 };

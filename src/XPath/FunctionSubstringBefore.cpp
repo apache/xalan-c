@@ -72,51 +72,39 @@ FunctionSubstringBefore::~FunctionSubstringBefore()
 
 XObjectPtr
 FunctionSubstringBefore::execute(
-		XPathExecutionContext&			executionContext,
-		XalanNode*						/* context */,			
-		const XObjectPtr				arg1,
-		const XObjectPtr				arg2)
+		XPathExecutionContext&	executionContext,
+		XalanNode*				/* context */,			
+		const XObjectPtr		arg1,
+		const XObjectPtr		arg2)
 {
 	assert(arg1.null() == false && arg2.null() == false);
 
 	const XalanDOMString&	theFirstString = arg1->str();
-	const XalanDOMString&	theSecondString = arg2->str();
 
-	const unsigned int		theIndex = indexOf(theFirstString,
-											   theSecondString);
+	const unsigned int		theFirstStringLength = length(theFirstString);
 
-#if defined(XALAN_NO_NAMESPACES)
-	typedef vector<XalanDOMChar>		VectorType;
-#else
-	typedef std::vector<XalanDOMChar>	VectorType;
-#endif
-
-	// This buffer will hold the output characters.
-	VectorType	theBuffer;
-
-	if (theIndex < length(theFirstString))
-	{
-		// The result string can only be as large as the source string, so
-		// just reserve the space now.  Also reserve a space for the
-		// terminating 0.
-		theBuffer.reserve(theIndex + 2);
-
-		// Stop with the last character before the index.
-		for (unsigned int i = 0; i < theIndex; i++)
-		{
-			theBuffer.push_back(charAt(theFirstString, i));
-		}
-	}
-
-	const VectorType::size_type		theSize = theBuffer.size();
-
-	if (theSize == 0)
+	if (theFirstStringLength == 0)
 	{
 		return executionContext.getXObjectFactory().createString(XalanDOMString());
 	}
 	else
 	{
-		return executionContext.getXObjectFactory().createString(theBuffer.begin(), theSize);
+		const XalanDOMString&	theSecondString = arg2->str();
+
+		const unsigned int		theIndex = indexOf(theFirstString,
+												   theSecondString);
+
+		if (theIndex == theFirstStringLength)
+		{
+			return executionContext.getXObjectFactory().createString(XalanDOMString());
+		}
+		else
+		{
+			// Create a string of the appropriate length...
+			return executionContext.getXObjectFactory().createString(
+					toCharArray(theFirstString),
+					theIndex);
+		}
 	}
 }
 
@@ -140,4 +128,3 @@ FunctionSubstringBefore::getError() const
 	return XALAN_STATIC_UCODE_STRING(
 		"The substring-before() function takes two arguments!");
 }
-

@@ -73,7 +73,7 @@
 
 
 
-#include <XPath/QName.hpp>
+#include <XPath/QNameByValue.hpp>
 #include <XPath/XObject.hpp>
 
 
@@ -106,7 +106,7 @@ public:
 	 * @param variable	the XObject instance.
 	 */
 	TopLevelArg(
-		const QName&		name = QName(),
+		const QName&		name = QNameByValue(),
 		const XObjectPtr	variable = XObjectPtr());
 
 	/**
@@ -172,7 +172,7 @@ public:
 
 private:
 
-	QName				m_qname;
+	QNameByValue		m_qname;
 
 	XalanDOMString		m_expression;
 

@@ -333,7 +333,7 @@ indexOf(
 {
 	// For the time being, we're using our own custom routine,
 	// since performance is better.
-#if defined(XALAN_USE_WCHAR_SUPPORT)
+#if 0 // defined(XALAN_USE_WCHAR_SUPPORT)
 
 	const XalanDOMChar* const	thePointer =
 			wcschr(theString, theChar);
@@ -432,7 +432,7 @@ indexOf(
 
 // For the time being, we're using our own custom routine,
 // since performance is better.
-#if defined(XALAN_USE_WCHAR_SUPPORT)
+#if 0 // defined(XALAN_USE_WCHAR_SUPPORT)
 
 inline unsigned int
 lastIndexOf(
@@ -1312,7 +1312,7 @@ compare(
 // For the time being, we're using our own custom routine,
 // since performance is better.
 
-#if defined(XALAN_USE_WCHAR_SUPPORT)
+#if 0 // defined(XALAN_USE_WCHAR_SUPPORT)
 
 /**
  * Compare the contents of two strings.
@@ -1440,7 +1440,7 @@ compareIgnoreCaseASCII(
 
 
 
-#if defined(XALAN_USE_WCHAR_SUPPORT)
+#if 0 // defined(XALAN_USE_WCHAR_SUPPORT)
 
 /**
  * Compare the contents of two strings using the
@@ -1554,12 +1554,10 @@ collationCompare(
  * @param theRHS second string to compare
  * @return true if the contents of both strings are identical
  */
-inline bool
-equals(const XalanDOMChar*	theLHS,
-	   const XalanDOMChar*	theRHS)
-{
-	return compare(theLHS, theRHS) == 0 ? true : false;
-}
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(bool)
+equals(
+			const XalanDOMChar*		theLHS,
+			const XalanDOMChar*		theRHS);
 
 
 
@@ -1571,8 +1569,9 @@ equals(const XalanDOMChar*	theLHS,
  * @return true if the contents of both strings are identical
  */
 inline bool
-equals(const XalanDOMChar*		theLHS,
-	   const XalanDOMString&	theRHS)
+equals(
+			const XalanDOMChar*		theLHS,
+			const XalanDOMString&	theRHS)
 {
 	assert(theLHS != 0);
 
@@ -1598,8 +1597,10 @@ equals(const XalanDOMString&	theLHS,
 {
 	assert(theRHS != 0);
 
-#if defined(XALAN_USE_CUSTOM_STRING) || defined(XALAN_USE_STD_STRING)
+#if defined(XALAN_USE_CUSTOM_STRING)
 	return theLHS == theRHS;
+#elif defined(XALAN_USE_STD_STRING)
+	return equals(c_wstr(theLHS), theRHS);
 #else
 	return theLHS.equals(theRHS);
 #endif
@@ -1686,8 +1687,10 @@ equals(
 			const XalanDOMString&	theLHS,
 			const XalanDOMString&	theRHS)
 {
-#if defined(XALAN_USE_CUSTOM_STRING) || defined(XALAN_USE_STD_STRING)
+#if defined(XALAN_USE_CUSTOM_STRING)
 	return theLHS == theRHS;
+#elif defined(XALAN_USE_STD_STRING)
+	return equals(c_wstr(theLHS), c_wstr(theRHS));
 #else
 	return theLHS.equals(theRHS) ? true : false;
 #endif

@@ -108,8 +108,10 @@
 
 
 #include <XPath/ElementPrefixResolverProxy.hpp>
+#include <XPath/QNameByReference.hpp>
 #include <XPath/ResultTreeFrag.hpp>
 #include <XPath/XObject.hpp>
+#include <XPath/XObjectFactory.hpp>
 #include <XPath/XPathEnvSupport.hpp>
 #include <XPath/XPathEnvSupportDefault.hpp>
 #include <XPath/XPathExecutionContextDefault.hpp>
@@ -117,8 +119,6 @@
 #include <XPath/XPathProcessorImpl.hpp>
 #include <XPath/XPathSupport.hpp>
 #include <XPath/XPathSupportDefault.hpp>
-#include <XPath/XObject.hpp>
-#include <XPath/XObjectFactory.hpp>
 #include <XPath/XResultTreeFrag.hpp>
 
 
@@ -2214,9 +2214,9 @@ XSLTEngineImpl::isCDataResultElem(const XalanDOMString&		elementName) const
 
 		for(Stylesheet::QNameVectorType::size_type i = 0; i < theSize && is == false; i++)
 		{
-			const QName& qname = cdataElems[i];
+			const QName&	qname = cdataElems[i];
 
-			is = qname.equals(QName(elemNS, elemLocalName));
+			is = qname.equals(QNameByReference(elemNS, elemLocalName));
 		}
 	}
 
@@ -2261,7 +2261,7 @@ XSLTEngineImpl::qnameEqualsResultElemName(
 		elemLocalName = elementName;
 	}
 
-	return qname.equals(QName(elemNS, elemLocalName));
+	return qname.equals(QNameByReference(elemNS, elemLocalName));
 }
 
 
@@ -2942,7 +2942,7 @@ XSLTEngineImpl::setStylesheetParam(
 			const XalanDOMString&	theName,
 			const XalanDOMString&	expression)
 {
-	const QName		qname(theName, 0, m_xpathEnvSupport, m_xpathSupport);
+	const QNameByValue	qname(theName, 0, m_xpathEnvSupport, m_xpathSupport);
 
 	m_topLevelParams.push_back(ParamVectorType::value_type(qname, expression));
 }
@@ -2954,7 +2954,7 @@ XSLTEngineImpl::setStylesheetParam(
 			const XalanDOMString&	theName,
 			XObjectPtr				theValue)
 {
-	const QName		qname(theName, 0, m_xpathEnvSupport, m_xpathSupport);
+	const QNameByValue	qname(theName, 0, m_xpathEnvSupport, m_xpathSupport);
 
 	m_topLevelParams.push_back(ParamVectorType::value_type(qname, theValue));
 }

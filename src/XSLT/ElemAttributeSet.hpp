@@ -57,31 +57,20 @@
 #if !defined(XALAN_ELEMATTRIBUTESET_HEADER_GUARD)
 #define XALAN_ELEMATTRIBUTESET_HEADER_GUARD 
 
-/**
- * $Id$
- * 
- * 
- * $State$
- * 
- * @author Myriam Midy (Myriam_Midy @lotus.com 
- */
+
 
 // Base include file.  Must be first.
 #include "XSLTDefinitions.hpp"
+
+
 
 // Base class header file.
 #include "ElemUse.hpp"
 
 
 
-//#include <dom/XalanDOMString.hpp>
+#include <XPath/QNameByValue.hpp>
 
-//#include <sax/AttributeList.hpp>
-
-//#include <XPath/NameSpace.hpp>
-#include <XPath/QName.hpp>
-//#include <XPath/XObject.hpp>
-//#include <XPath/XPath.hpp>
 
 
 class ElemAttributeSet : public ElemUse
@@ -136,7 +125,7 @@ protected:
 
 private:
 
-	QName	m_QName;
+	QNameByValue	m_QName;
 };
 
 

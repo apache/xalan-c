@@ -100,7 +100,7 @@ ElemWithParam::ElemWithParam(
 		}
 		else if(equals(aname, Constants::ATTRNAME_NAME))
 		{
-			m_qname = QName(atts.getValue(i), stylesheetTree.getNamespaces());
+			m_qname = QNameByValue(atts.getValue(i), stylesheetTree.getNamespaces());
 		}
 		else if(!isAttrOK(aname, atts, i, constructionContext))
 		{
