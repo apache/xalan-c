@@ -147,10 +147,6 @@ SOURCE=..\..\..\..\src\DOMSupport\DOMSupportInit.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\DOMSupport\NamespaceResolver.cpp
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\..\..\src\DOMSupport\TreeWalker.cpp
 # End Source File
 # End Group
@@ -180,14 +176,6 @@ SOURCE=..\..\..\..\src\DOMSupport\DOMSupportException.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\DOMSupport\DOMSupportInit.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\src\DOMSupport\NamespaceResolver.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\src\DOMSupport\NSInfo.hpp
 # End Source File
 # Begin Source File
 
