@@ -60,27 +60,13 @@ $(XSL_BIN_DIR)/ThreadTest: ${XSL_OBJ_DIR}/ThreadTest.o
 ${XSL_OBJ_DIR}/%.o:$(TESTS_DIR)/Threads/%.cpp
 	$(CC1) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $<
 
-Harness :  ${XSL_OBJ_DIR}/XMLFileReporter.o ${XSL_OBJ_DIR}/HarnessInit.o  ${XSL_OBJ_DIR}/FileUtility.o
+Conf: prepare $(XSL_BIN_DIR)/Conf
 
-${XSL_OBJ_DIR}/FileUtility.o:
-${XSL_OBJ_DIR}/%.o:$(TESTS_DIR)/Harness/%.cpp
-	$(CC1) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) -I$(TESTS_DIR) $(EXTRA_COMPILE_OPTIONS) -o $@ $<
-
-${XSL_OBJ_DIR}/HarnessInit.o:
-${XSL_OBJ_DIR}/%.o:$(TESTS_DIR)/Harness/%.cpp
-	$(CC1) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) -I$(TESTS_DIR) $(EXTRA_COMPILE_OPTIONS) -o $@ $<
-
-${XSL_OBJ_DIR}/XMLFileReporter.o:
-${XSL_OBJ_DIR}/%.o:$(TESTS_DIR)/Harness/%.cpp
-	$(CC1) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) -I$(TESTS_DIR) $(EXTRA_COMPILE_OPTIONS) -o $@ $<
-
-Conf: prepare Harness $(XSL_BIN_DIR)/Conf
-
-$(XSL_BIN_DIR)/Conf: ${XSL_OBJ_DIR}/conf.o ${XSL_OBJ_DIR}/HarnessInit.o ${XSL_OBJ_DIR}/FileUtility.o ${XSL_OBJ_DIR}/XMLFileReporter.o 
+$(XSL_BIN_DIR)/Conf: ${XSL_OBJ_DIR}/conf.o
 	${LINK} $(XSL_BUILD_OPTIONS) ${PLATFORM_LIB_LINK_OPTIONS}  \
 	${EXTRA_LINK_OPTIONS}  $(XALAN_LIB) $(ALLLIBS) $(CXXFLAGS) $^ -o $@	 $(OTHER_LINK_PARAMETERS)
 ${XSL_OBJ_DIR}/%.o:$(TESTS_DIR)/Conf/%.cpp
-	$(CC1) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) -I$(TESTS_DIR) $(EXTRA_COMPILE_OPTIONS) -o $@ $<
+	$(CC1) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $<
 
 prepare:
 	-${MKDIR} -p ${XSL_LIB_DIR}
