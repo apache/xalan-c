@@ -62,6 +62,21 @@
 # export XALANCROOT=<the directory where you installed XALAN-C>   #
 # export XERCESCROOT=<the directory where you installed XERCES-C> #
 #                                                                 #
+#                                                                 #
+# If you are going to do the OS390BATCH build, make sure you have #
+# the OS390BATCH environment variable set.                        #
+#                                                                 #
+#   export OS390BATCH=1                                           #
+#                                                                 #
+# Also,                                                           #
+#                                                                 #
+#   export LOADMOD=USERID.LOAD                                    #
+#   export LOADEXP=USERID.EXP                                     #
+#   export LOADSAMP=USERID.SAMP                                   #
+#                                                                 #
+# to specify your LOADMOD, the definition sidedeck dataset, and   #
+# the testXSLT/Xalan executable destination.                      #
+#                                                                 #
 ###################################################################
 
 DEPFILE=depends
@@ -120,7 +135,7 @@ TESTS_DIR = ${XALANCROOT}/Tests
 PROJECT_NAME = xalan-c
 LIBNAME = lib${PROJECT_NAME}
 THISLIB = ${LIB_DIR}/${LIBNAME}
-VER = 1_5_1
+VER = 1_5_0
 
 PRODUCTNAME = xalan
 PRODUCTVERSION = ${VER}
@@ -292,22 +307,29 @@ endif
 ifeq ($(PLATFORM), OS390)
 
   SUPPORTED = TRUE
-  PLATFORM_COMPILE_OPTIONS =-Wc,dll -W0,"langlvl(extended),float(ieee),targ(osv2r8)" -D${PLATFORM} -D_OPEN_THREADS -D_XOPEN_SOURCE_EXTENDED
-  PLATFORM_COMPILE_OPTIONS2 =-Wc,dll -W0,"langlvl(extended),notempinc,float(ieee),targ(osv2r8)" -D${PLATFORM} -D_OPEN_THREADS -D_XOPEN_SOURCE_EXTENDED
+  PLATFORM_COMPILE_OPTIONS =-Wc,dll,"langlvl(extended),float(ieee)" -D${PLATFORM} -D_OPEN_THREADS -D_XOPEN_SOURCE_EXTENDED
   ALLLIBS =
   SHLIBSUFFIX=.dll
   OS390SIDEDECK=.x
 
-  CC1 = $(CXX) $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS)  -I${STLPORTROOT}/stlport
+  CC1 = $(CXX) $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS)
 ifeq (-DNDEBUG,$(findstring -DNDEBUG,${CXXFLAGS}))
-  CC2 = $(CXX) $(PLATFORM_COMPILE_OPTIONS2) -DNDEBUG -I${STLPORTROOT}/stlport
+  CC2 = $(CXX) $(PLATFORM_COMPILE_OPTIONS) -DNDEBUG
 else
-  CC2 = $(CXX) $(PLATFORM_COMPILE_OPTIONS2) -I${STLPORTROOT}/stlport
+  CC2 = $(CXX) $(PLATFORM_COMPILE_OPTIONS)
 endif
-  CC3 = $(CXX) $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS2)  -I${STLPORTROOT}/stlport
+  CC3 = $(CXX) $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS)
   CC4 = $(CC) $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS)
   MAKE_SHARED = ${CXX} $(CXXFLAGS) -Wl,compat=pm3 -D${PLATFORM} -Wl,dll
-  LINK = $(CXX) -qnotempinc $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS) -Wl,compat=pm3
+  LINK = $(CXX) $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS) -Wl,compat=pm3
+
+## OS390BATCH
+ifeq (${OS390BATCH},1)
+    BATCH_PROJECT_NAME = IXMLC15
+    BATCH_TARGET = "//'${LOADMOD}(${BATCH_PROJECT_NAME})'"
+    ALLLIBSBATCH = "//'${LOADEXP}(IXM4C52X)'" "//'${LOADEXP}(IXM24UCX)'" "//'${LOADEXP}(IXMI24IN)'"
+endif  ## OS390BATCH
+
 
 endif
 
@@ -348,7 +370,7 @@ endif
 
 # We need the Xerces library
 ifeq ($(PLATFORM), OS390)
-  ALLLIBS += $(XERCESCROOT)/lib/libxerces-c1_7_0.x
+  ALLLIBS += $(XERCESCROOT)/lib/libxerces-c2_2_0.x
 else
   ifeq ($(PLATFORM), AIX)
     ALLLIBS += -L$(XERCESCROOT)/lib -lxerces-c22
@@ -360,7 +382,7 @@ endif
 # We need the ICU library if we are using the ICUBridge
 ifdef XALAN_USE_ICU
   ifeq ($(PLATFORM), OS390)
-    ALLLIBS += ${ICUROOT}/lib/libicuuc.x ${ICUROOT}/lib/libicui18n.x
+    ALLLIBS += ${XERCESCROOT}/lib/libicuuc24.0.x ${XERCESCROOT}/lib/libicui18n24.0.x
   else
     ifeq ($(PLATFORM), AIX)
       ALLLIBS += -L${ICUROOT}/lib -licuuc24
@@ -449,6 +471,25 @@ ${ALL_OBJECTS_DIR}/XalanTemplate.o:$(XSLT_DIR)/XalanTemplate.cpp
 endif
 endif
 
+ifeq (${OS390BATCH},1)
+XalanExe: lib  "//'$(LOADSAMP)(XALAN)'"
+
+"//'$(LOADSAMP)(XALAN)'": ${ALL_OBJECTS_DIR}/XalanExe.o
+	${LINK} $(XSL_BUILD_OPTIONS) ${PLATFORM_LIB_LINK_OPTIONS} ${LIBRARY_SEARCH_PATHS} \
+	${EXTRA_LINK_OPTIONS} "//'${LOADEXP}(${BATCH_PROJECT_NAME})'" $(ALLLIBSBATCH) $^ -o $@	
+${ALL_OBJECTS_DIR}/XalanExe.o: $(XALANEXE_DIR)/XalanExe.cpp                       
+	$(CC3) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $<
+
+testXSLT: lib  "//'$(LOADSAMP)(TESTXSLT)'"
+
+"//'$(LOADSAMP)(TESTXSLT)'": ${ALL_OBJECTS_DIR}/process.o
+	${LINK} $(XSL_BUILD_OPTIONS) ${PLATFORM_LIB_LINK_OPTIONS} ${LIBRARY_SEARCH_PATHS} \
+	${EXTRA_LINK_OPTIONS} "//'${LOADEXP}(${BATCH_PROJECT_NAME})'" $(ALLLIBSBATCH) $^ -o $@	
+${ALL_OBJECTS_DIR}/process.o: $(TESTXSLT_DIR)/process.cpp                       
+	$(CC3) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $<
+
+else # Not OS390BATCH
+
 XalanExe: lib  $(BINTARGETDIR)/Xalan
 
 ifeq ($(PLATFORM), OS390)                                                       
@@ -480,6 +521,7 @@ $(BINTARGETDIR)/testXSLT: ${ALL_OBJECTS_DIR}/process.o
 ${ALL_OBJECTS_DIR}/process.o: $(TESTXSLT_DIR)/process.cpp
 	$(CC1) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $<
 endif
+endif  ## OS390BATCH
 
 testXPath: lib  $(BINTARGETDIR)/testXPath
 
@@ -801,6 +843,16 @@ ${ALL_OBJECTS_DIR}/%.o:$(TESTS_DIR)/Conf/%.cpp
 	$(CC1) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) -I$(TESTS_DIR) $(EXTRA_COMPILE_OPTIONS) -o $@ $<
 endif
 
+## OS390BATCH
+ifeq (${OS390BATCH},1)
+lib:	prepare compile ${BATCH_TARGET}
+
+${BATCH_TARGET}: $(ALL_OBJECTS)
+	@echo Building ${BATCH_TARGET}
+	$(MAKE_SHARED) $(ALLLIBSBATCH) $^ -o $@
+
+else
+
 lib:	prepare compile $(THISLIB)$(VER)$(SHLIBSUFFIX)
 
 $(THISLIB)$(VER)$(SHLIBSUFFIX): $(ALL_OBJECTS)
@@ -808,6 +860,7 @@ $(THISLIB)$(VER)$(SHLIBSUFFIX): $(ALL_OBJECTS)
 ifeq ($(PLATFORM), OS390)
 	cp -p *.x  ${LIB_DIR}        
 endif                                
+endif ## OS390BATCH
 
 clean:	prepare doClean
 
