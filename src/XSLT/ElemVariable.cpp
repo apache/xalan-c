@@ -66,6 +66,7 @@
 
 
 
+#include <XPath/XObjectFactory.hpp>
 #include <XPath/ResultTreeFrag.hpp>
 #include <XPath/XPath.hpp>
 #include <XPath/XResultTreeFrag.hpp>
@@ -184,7 +185,14 @@ ElemVariable::getValue(
 {
 	if(m_selectPattern == 0)
 	{
-		return executionContext.createXResultTreeFrag(*this, sourceNode);
+		if (getFirstChild() == 0)
+		{
+			return executionContext.getXObjectFactory().createString(XalanDOMString());
+		}
+		else
+		{
+			return executionContext.createXResultTreeFrag(*this, sourceNode);
+		}
 	}
 	else
 	{
