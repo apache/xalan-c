@@ -122,12 +122,6 @@ public:
 			DocumentHandlerType&	handler,
 			const XalanDOMString&	identifier = XalanDOMString());
 
-	virtual XalanDocument*
-	createDocument();
-
-	virtual XalanDocument*
-	createDOMFactory();
-
 	virtual void
 	destroyDocument(XalanDocument*	theDocument);
 
@@ -171,6 +165,12 @@ public:
 			DTDHandlerType*			theDTDHandler = 0,
 			LexicalHandlerType*		theLexicalHandler = 0,
 			const XalanDOMString&	theIdentifier = XalanDOMString());
+
+	virtual DOMDocument_Type*
+	createDOMFactory();
+
+	virtual void
+	destroyDocument(DOMDocument_Type*   theDocument);
 
 	/** Get the 'include ignorable whitespace' flag.
 	  *

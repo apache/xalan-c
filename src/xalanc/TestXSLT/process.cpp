@@ -86,12 +86,15 @@
 
 
 
-#include <xalanc/XMLSupport/FormatterToDOM.hpp>
 #include <xalanc/XMLSupport/FormatterToHTML.hpp>
 #include <xalanc/XMLSupport/FormatterToNull.hpp>
 #include <xalanc/XMLSupport/FormatterToText.hpp>
 #include <xalanc/XMLSupport/FormatterToXML.hpp>
 #include <xalanc/XMLSupport/FormatterTreeWalker.hpp>
+
+
+
+#include <xalanc/XercesParserLiaison/FormatterToXercesDOM.hpp>
 
 
 
@@ -565,7 +568,7 @@ createFormatter(
 			int								indentAmount,
 			const XalanDOMString&			mimeEncoding,
 			const StylesheetRoot*			stylesheet,
-			XMLParserLiaison&				parserLiaison,
+			XercesParserLiaison&		    parserLiaison,
 			XalanSourceTreeParserLiaison&	sourceTreeParserLiaison,
 			const PrefixResolver&			prefixResolver,
 			const XalanDocument*&			theResultDocument)
@@ -673,18 +676,23 @@ createFormatter(
 		}
 		else
 		{
-			XalanDocument* const	theDocument =
+			DOMDocument_Type* const     theDocument =
 				parserLiaison.createDOMFactory();
 			assert(theDocument != 0);
 
-			theResultDocument = theDocument;
-
-			FormatterToDOM* const	fToDOM =
-				new FormatterToDOM(theDocument, 0);
+			FormatterToXercesDOM* const     fToDOM =
+				new FormatterToXercesDOM(theDocument, 0);
 
 			fToDOM->setPrefixResolver(&prefixResolver);
 
 			formatter = fToDOM;
+
+            theResultDocument =
+                parserLiaison.createDocument(
+                    theDocument,
+                    false,
+                    false,
+                    false);
 		}
 	}
 
@@ -929,7 +937,7 @@ xsltMain(const CmdLineParams&	params)
 				xmlParserLiaison.getIndent(),
 				mimeEncoding,
 				stylesheet,
-				xmlParserLiaison,
+				theXercesParserLiaison,
 				theXalanSourceTreeParserLiaison,
 				processor,
 				theResultDocument));
@@ -1033,7 +1041,7 @@ xsltMain(const CmdLineParams&	params)
 						xmlParserLiaison.getIndent(),
 						mimeEncoding,
 						stylesheet,
-						xmlParserLiaison,
+						theXercesParserLiaison,
 						theXalanSourceTreeParserLiaison,
 						processor,
 						theResultDocument));

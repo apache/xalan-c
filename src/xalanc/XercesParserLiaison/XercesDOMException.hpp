@@ -35,7 +35,9 @@
 
 
 
+#if defined(XALAN_BUILD_DEPRECATED_DOM_BRIDGE)
 #include <xalanc/XercesParserLiaison/Deprecated/XercesBridgeTypes.hpp>
+#endif
 #include <xalanc/XercesParserLiaison/XercesWrapperTypes.hpp>
 
 
@@ -59,8 +61,9 @@ public:
 	explicit
 	XercesDOMException(ExceptionCode 	code = UNKNOWN_ERR);
 
+#if defined(XALAN_BUILD_DEPRECATED_DOM_BRIDGE)
 	/**
-	  * This API is deprecated.
+	  * This constructor is deprecated.
 	  * 
 	  * Constructor which takes a Xerces exception and
 	  * translates it into a XercesDOMException.
@@ -69,6 +72,7 @@ public:
 	  * @param code The Xerces DOM_DOMException instance.
 	  */
 	XercesDOMException(const DOM_DOMExceptionType&	theException);
+#endif
 
 #if XERCES_VERSION_MAJOR >= 2
 	/**

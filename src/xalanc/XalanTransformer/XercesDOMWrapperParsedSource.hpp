@@ -58,6 +58,7 @@ class XALAN_TRANSFORMER_EXPORT XercesDOMWrapperParsedSource : public XalanParsed
 {
 public:
 
+#if defined(XALAN_BUILD_DEPRECATED_DOM_BRIDGE)
 	/**
 	 * Constructor
 	 *
@@ -73,6 +74,7 @@ public:
 			XercesParserLiaison&		theParserLiaison,
 			XercesDOMSupport&			theDOMSupport,
 			const XalanDOMString&		theURI = XalanDOMString());
+#endif
 
 	/**
 	 * Constructor

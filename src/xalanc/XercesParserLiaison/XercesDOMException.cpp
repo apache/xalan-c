@@ -115,10 +115,12 @@ XercesDOMException::XercesDOMException(ExceptionCode 	code) :
 
 
 
+#if defined(XALAN_BUILD_DEPRECATED_DOM_BRIDGE)
 XercesDOMException::XercesDOMException(const DOM_DOMExceptionType&	theException) :
 	XalanDOMException(translateErrorCode(theException))
 {
 }
+#endif
 
 
 

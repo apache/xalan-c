@@ -263,9 +263,6 @@ public:
 	virtual void
 	setRootDocument(XalanNode*	theDocument);
 
-	virtual XalanDocument*
-	createDocument() const;
-
 	virtual void
 	setStylesheetRoot(const StylesheetRoot*		theStylesheet);
 
@@ -714,25 +711,25 @@ public:
 			const XalanDecimalFormatSymbols*	theDFS,
 			XalanDOMString&						theResult,
 			const XalanNode*					context = 0,
-			const LocatorType*					locator = 0) const =0;
+			const LocatorType*					locator = 0) const = 0;
 	};
 
-	void 
+	virtual void
 	formatNumber(
-			double								number,
-			const XalanDOMString&				pattern,
-			XalanDOMString&						theResult,
-			const XalanNode*					context = 0,
-			const LocatorType*					locator = 0);
+			double					number,
+			const XalanDOMString&	pattern,
+			XalanDOMString&			theResult,
+			const XalanNode*		context = 0,
+			const LocatorType*		locator = 0);
 
-	void 
+	virtual void
 	formatNumber(
-			double								number,
-			const XalanDOMString&				pattern,
-			const XalanDOMString&				dfsName,
-			XalanDOMString&						theResult,
-			const XalanNode*					context = 0,
-			const LocatorType*					locator = 0);
+			double					number,
+			const XalanDOMString&	pattern,
+			const XalanDOMString&	dfsName,
+			XalanDOMString&			theResult,
+			const XalanNode*		context = 0,
+			const LocatorType*		locator = 0);
 
 
 	const FormatNumberFunctor * 
@@ -978,10 +975,10 @@ protected:
 	virtual bool
 	returnFormatterToText(FormatterToText*	theFormatter);
 
-	virtual const XalanDecimalFormatSymbols*
-	getDecimalFormatSymbols(const XalanQName&	qname);
-
 private:
+
+	const XalanDecimalFormatSymbols*
+	getDecimalFormatSymbols(const XalanQName&	qname);
 
 	/**
 	 * Given a context, create the params for a template

@@ -38,6 +38,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
+#if defined(XALAN_BUILD_DEPRECATED_DOM_BRIDGE)
 XercesDOMWrapperParsedSource::XercesDOMWrapperParsedSource(
 			const DOM_Document_Type&	theDocument,
 			XercesParserLiaison&		theParserLiaison,
@@ -51,6 +52,7 @@ XercesDOMWrapperParsedSource::XercesDOMWrapperParsedSource(
 {
 	assert(m_parsedSource != 0);
 }
+#endif
 
 
 

@@ -37,7 +37,9 @@
 
 
 
+#if defined(XALAN_BUILD_DEPRECATED_DOM_BRIDGE)
 #include <xalanc/XercesParserLiaison/Deprecated/XercesBridgeTypes.hpp>
+#endif
 #include <xalanc/XercesParserLiaison/XercesWrapperTypes.hpp>
 
 
@@ -55,11 +57,12 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-class DOMSupport;
 class XercesDOMSupport;
+#if defined(XALAN_BUILD_DEPRECATED_DOM_BRIDGE)
 class XercesDocumentBridge;
+#endif
 class XercesDocumentWrapper;
-class XSLProcessor;
+
 
 typedef XERCES_CPP_NAMESPACE_QUALIFIER SAXParseException	SAXParseExceptionType;
 
@@ -111,14 +114,6 @@ public:
 			DocumentHandlerType&	handler,
 			const XalanDOMString&	identifier = XalanDOMString());
 
-	// Create a non-thread safe document, with no synchronization and no bridge...
-	virtual XalanDocument*
-	createDocument();
-
-	// Create a non-thread safe document, with no synchronization and no bridge...
-	virtual XalanDocument*
-	createDOMFactory();
-
 	virtual void
 	destroyDocument(XalanDocument*	theDocument);
 
@@ -145,6 +140,26 @@ public:
 
 
 	// These interfaces are new to XercesParserLiaison...
+
+	/**
+	  * Create an instance of the Xerces default document that
+	  * is suitable as a raw document.  The new document instance
+      * is owned by this instance and will be destroyed when this
+      * instance goes out of scope, or by an explicit call to
+      * destroyDocument()
+	  *
+	  * @return a pointer to the new instance
+	  */
+	virtual DOMDocument_Type*
+	createDOMFactory();
+
+	/**
+	  * Destroy an instance created by a call to createDOMFactory().
+	  *
+	  * @theDocument a pointer to the instance to be destroyed
+	  */
+	virtual void
+	destroyDocument(DOMDocument_Type*   theDocument);
 
 	/** Get the 'include ignorable whitespace' flag.
 	  *
@@ -297,6 +312,7 @@ public:
 	virtual void
 	setExternalNoNamespaceSchemaLocation(const XalanDOMChar*	location);
 
+#if defined(XALAN_BUILD_DEPRECATED_DOM_BRIDGE)
 	/**
 	 * This API is deprecated.
 	 *
@@ -334,6 +350,7 @@ public:
 			const DOM_Document_Type& 	theXercesDocument,
 			bool						threadSafe,
 			bool						buildBridge);
+#endif
 
 	/**
 	 * Create a XalanDocument proxy for an existing Xerces document.
@@ -357,7 +374,7 @@ public:
 	 * liaison is destroyed.
 	 *
 	 * @param theXercesDocument The Xerces document.
-	 * @param threadSafe If true, read access to the tree will be thread-safe (implies buildBridge == true).
+	 * @param threadSafe If true, read access to the tree will be thread-safe (implies buildWrapper == true).
 	 * @param buildWrapper If true, the entire wrapper structure is built.
 	 * @param buildMaps If true, the map of Xerces to Xalan nodes is always built.
 	 * @return a pointer to a new XalanDocument-derived instance.
@@ -369,6 +386,7 @@ public:
 			bool						buildWrapper,
 			bool						buildMaps = false);
 
+#if defined(XALAN_BUILD_DEPRECATED_DOM_BRIDGE)
 	/**
 	 * This API is deprecated.
 	 *
@@ -383,6 +401,7 @@ public:
 	 */
 	XercesDocumentBridge*
 	mapDocument(const XalanDocument*	theDocument) const;
+#endif
 
 	/**
 	 * Map a pointer to a XalanDocument instance to its implementation
@@ -396,6 +415,7 @@ public:
 	XercesDocumentWrapper*
 	mapDocumentToWrapper(const XalanDocument*	theDocument) const;
 
+#if defined(XALAN_BUILD_DEPRECATED_DOM_BRIDGE)
 	/** 
 	 * This API is deprecated.
 	 *
@@ -410,6 +430,7 @@ public:
 	 */
 	DOM_Document_Type
 	mapXercesDocument(const XalanDocument*	theDocument) const;
+#endif
 
 	/** 
 	 * Map a pointer to a XalanDocument instance to its corresponding
@@ -439,9 +460,31 @@ public:
 
 	struct DocumentEntry
 	{
+#if defined(XALAN_BUILD_DEPRECATED_DOM_BRIDGE)
 		bool	m_isDeprecated;
-		bool	m_isOwned;
 
+        bool
+        isDeprecated() const
+        {
+            return m_isDeprecated;
+        }
+#else
+        bool
+        isDeprecated() const
+        {
+            return false;
+        }
+#endif
+
+        bool	m_isOwned;
+
+        bool
+        isOwned() const
+        {
+            return m_isOwned;
+        }
+
+#if defined(XALAN_BUILD_DEPRECATED_DOM_BRIDGE)
 		union
 		{
 			XercesDocumentBridge*	m_bridge;
@@ -460,7 +503,7 @@ public:
 			return *this;
 		}
 
-		DocumentEntry&
+        DocumentEntry&
 		operator=(XercesDocumentWrapper*	theWrapper)
 		{
 			m_isDeprecated = false;
@@ -471,6 +514,19 @@ public:
 
 			return *this;
 		}
+#else
+        XercesDocumentWrapper*  m_wrapper;
+
+        DocumentEntry&
+		operator=(XercesDocumentWrapper*	theWrapper)
+		{
+			m_wrapper = theWrapper;
+
+			m_isOwned = true;
+
+			return *this;
+		}
+#endif
 	};
 
 #if defined(XALAN_NO_STD_NAMESPACE)
@@ -639,6 +695,7 @@ protected:
 	virtual SAXParserType*
 	CreateSAXParser();
 
+#if defined(XALAN_BUILD_DEPRECATED_DOM_BRIDGE)
 	/**
 	 * Create a XalanDocument proxy for an existing Xerces document.
 	 *
@@ -654,6 +711,7 @@ protected:
 			const DOM_Document_Type& 	theXercesDocument,
 			bool						threadSafe,
 			bool						buildBridge);
+#endif
 
 	/**
 	 * Create a XalanDocument proxy for an existing Xerces document.

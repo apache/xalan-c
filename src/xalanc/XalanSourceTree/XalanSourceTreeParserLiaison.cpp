@@ -545,22 +545,6 @@ XalanSourceTreeParserLiaison::parseXMLStream(
 
 
 
-XalanDocument*
-XalanSourceTreeParserLiaison::createDocument()
-{
-	return createXalanSourceTreeDocument();
-}
-
-
-
-XalanDocument*
-XalanSourceTreeParserLiaison::createDOMFactory()
-{
-	return m_xercesParserLiaison.createDocument();
-}
-
-
-
 void
 XalanSourceTreeParserLiaison::destroyDocument(XalanDocument*	theDocument)
 {
@@ -635,6 +619,22 @@ XalanSourceTreeParserLiaison::parseXMLStream(
 	theReader->setLexicalHandler(theLexicalHandler);
 
 	theReader->parse(theInputSource);
+}
+
+
+
+DOMDocument_Type*
+XalanSourceTreeParserLiaison::createDOMFactory()
+{
+	return m_xercesParserLiaison.createDOMFactory();
+}
+
+
+
+void
+XalanSourceTreeParserLiaison::destroyDocument(DOMDocument_Type*     theDocument)
+{
+	m_xercesParserLiaison.destroyDocument(theDocument);
 }
 
 

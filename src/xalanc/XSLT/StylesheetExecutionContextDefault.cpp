@@ -232,16 +232,6 @@ StylesheetExecutionContextDefault::setRootDocument(XalanNode*	theDocument)
 
 
 
-XalanDocument*
-StylesheetExecutionContextDefault::createDocument() const
-{
-	assert(m_xsltProcessor != 0);
-
-	return m_xsltProcessor->getXMLParserLiaison().createDocument();
-}
-
-
-
 void
 StylesheetExecutionContextDefault::setStylesheetRoot(const StylesheetRoot*	theStylesheet)
 {
@@ -1641,7 +1631,8 @@ StylesheetExecutionContextDefault::formatNumber(
 		warn(
 				XalanMessageLoader::getMessage(XalanMessages::Decimal_formatElementNotFound_1Param,"format-number()"),
 				context,
-				locator);	
+				locator);
+
 		theDFS = getDecimalFormatSymbols(theEmptyQName);
 		
 	}

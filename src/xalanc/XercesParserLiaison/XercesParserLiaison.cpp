@@ -25,6 +25,7 @@
 
 
 
+#include <xercesc/dom/DOMImplementation.hpp>
 #include <xercesc/framework/URLInputSource.hpp>
 #if XERCES_VERSION_MAJOR >= 2
 #include <xercesc/parsers/XercesDOMParser.hpp>
@@ -51,7 +52,9 @@
 
 
 
+#if defined(XALAN_BUILD_DEPRECATED_DOM_BRIDGE)
 #include <xalanc/XercesParserLiaison/Deprecated/XercesDocumentBridge.hpp>
+#endif
 #include <xalanc/XercesParserLiaison/XercesDocumentWrapper.hpp>
 #include <xalanc/XercesParserLiaison/XercesDOMSupport.hpp>
 
@@ -117,8 +120,8 @@ XercesParserLiaison::reset()
 		i != m_documentMap.end();
 		++i)
 	{
-		if ((*i).second.m_isDeprecated == false &&
-			(*i).second.m_isOwned == true)
+		if ((*i).second.isDeprecated() == false &&
+			(*i).second.isOwned() == true)
 		{
 #if defined(XALAN_CANNOT_DELETE_CONST)
 			delete (DOMDocument_Type*)(*i).second.m_wrapper->getXercesDocument();
@@ -233,25 +236,6 @@ XercesParserLiaison::parseXMLStream(
 
 
 
-XalanDocument*
-XercesParserLiaison::createDocument()
-{
-	const DOM_Document_Type	theXercesDocument =
-		DOM_Document_Type::createDocument();
-
-	return createDocument(theXercesDocument, false, false);
-}
-
-
-
-XalanDocument*
-XercesParserLiaison::createDOMFactory()
-{
-	return createDocument();
-}
-
-
-
 void
 XercesParserLiaison::destroyDocument(XalanDocument* 	theDocument)
 {
@@ -304,6 +288,36 @@ const XalanDOMString
 XercesParserLiaison::getParserDescription() const
 {
 	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("Xerces"));
+}
+
+
+DOMDocument_Type*
+XercesParserLiaison::createDOMFactory()
+{
+    DOMDocument_Type* const     theXercesDocument =
+        DOMImplementationType::getImplementation()->createDocument();
+
+	createDocument(theXercesDocument, false, false);
+	
+    return theXercesDocument;
+}
+
+
+
+void
+XercesParserLiaison::destroyDocument(DOMDocument_Type*  theDocument)
+{
+	// Delete any live documents...
+	for(DocumentMapType::iterator i = m_documentMap.begin();
+		i != m_documentMap.end();
+		++i)
+	{
+		if ((*i).second.isDeprecated() == false &&
+			(*i).second.m_wrapper->getXercesDocument() == theDocument)
+		{
+            destroyDocument((XalanDocument*)(*i).first);
+		}
+	}
 }
 
 
@@ -434,6 +448,7 @@ XercesParserLiaison::setExternalNoNamespaceSchemaLocation(const XalanDOMChar*	lo
 
 
 
+#if defined(XALAN_BUILD_DEPRECATED_DOM_BRIDGE)
 XalanDocument*
 XercesParserLiaison::createDocument(
 			const DOM_Document_Type& 	theXercesDocument,
@@ -442,6 +457,7 @@ XercesParserLiaison::createDocument(
 {
 	return doCreateDocument(theXercesDocument, threadSafe, buildBridge);
 }
+#endif
 
 
 
@@ -459,6 +475,7 @@ XercesParserLiaison::createDocument(
 
 
 
+#if defined(XALAN_BUILD_DEPRECATED_DOM_BRIDGE)
 XercesDocumentBridge*
 XercesParserLiaison::mapDocument(const XalanDocument*	theDocument) const
 {
@@ -467,6 +484,7 @@ XercesParserLiaison::mapDocument(const XalanDocument*	theDocument) const
 
 	return i != m_documentMap.end() ? (*i).second.m_isDeprecated == true ? (*i).second.m_bridge : 0 : 0;
 }
+#endif
 
 
 
@@ -476,19 +494,21 @@ XercesParserLiaison::mapDocumentToWrapper(const XalanDocument*	theDocument) cons
 	const DocumentMapType::const_iterator	i =
 		m_documentMap.find(theDocument);
 
-	return i != m_documentMap.end() ? (*i).second.m_isDeprecated == false ? (*i).second.m_wrapper : 0 : 0;
+	return i != m_documentMap.end() ? (*i).second.isDeprecated() == false ? (*i).second.m_wrapper : 0 : 0;
 }
 
 
 
+#if defined(XALAN_BUILD_DEPRECATED_DOM_BRIDGE)
 DOM_Document_Type
 XercesParserLiaison::mapXercesDocument(const XalanDocument* 	theDocument) const
 {
 	const DocumentMapType::const_iterator	i =
 		m_documentMap.find(theDocument);
 
-	return i != m_documentMap.end() ? (*i).second.m_isDeprecated == true ? (*i).second.m_bridge->getXercesDocument() : DOM_Document_Type() : DOM_Document_Type();
+	return i != m_documentMap.end() ? (*i).second.isDeprecated() == true ? (*i).second.m_bridge->getXercesDocument() : DOM_Document_Type() : DOM_Document_Type();
 }
+#endif
 
 
 
@@ -498,7 +518,7 @@ XercesParserLiaison::mapToXercesDocument(const XalanDocument*	theDocument) const
 	const DocumentMapType::const_iterator	i =
 		m_documentMap.find(theDocument);
 
-	return i != m_documentMap.end() ? (*i).second.m_isDeprecated == false ? (*i).second.m_wrapper->getXercesDocument() : 0 : 0;
+	return i != m_documentMap.end() ? (*i).second.isDeprecated() == false ? (*i).second.m_wrapper->getXercesDocument() : 0 : 0;
 }
 
 
@@ -683,6 +703,7 @@ XercesParserLiaison::CreateSAXParser()
 
 
 
+#if defined(XALAN_BUILD_DEPRECATED_DOM_BRIDGE)
 XercesDocumentBridge*
 XercesParserLiaison::doCreateDocument(
 			const DOM_Document_Type& 	theXercesDocument,
@@ -696,6 +717,7 @@ XercesParserLiaison::doCreateDocument(
 
 	return theNewDocument;
 }
+#endif
 
 
 

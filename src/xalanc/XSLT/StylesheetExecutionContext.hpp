@@ -287,14 +287,6 @@ public:
 	setRootDocument(XalanNode*	theDocument) = 0;
 
 	/**
-	 * Create a new empty document.
-	 * 
-	 * @return new document
-	 */
-	virtual XalanDocument*
-	createDocument() const = 0;
-
-	/**
 	 * Set root stylesheet for stylesheet.
 	 * 
 	 * @param theStylesheet root stylesheet
@@ -1901,9 +1893,22 @@ public:
 			const XalanDOMString&	theURI,
 			XalanDocument*			theDocument) = 0;
 
+	virtual void
+    formatNumber(
+			double					number,
+			const XalanDOMString&	pattern,
+			XalanDOMString&			theResult,
+			const XalanNode*		context = 0,
+			const LocatorType*		locator = 0) = 0;
 
-	virtual const XalanDecimalFormatSymbols*
-	getDecimalFormatSymbols(const XalanQName&	qname) = 0;
+	virtual void
+    formatNumber(
+			double					number,
+			const XalanDOMString&	pattern,
+			const XalanDOMString&	dfsName,
+			XalanDOMString&			theResult,
+			const XalanNode*		context = 0,
+			const LocatorType*		locator = 0) = 0;
 
 	// These interfaces are inherited from ExecutionContext...
 

@@ -33,7 +33,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 XalanDefaultDocumentBuilder::XalanDefaultDocumentBuilder(const XalanDOMString&	theURI) :
 	m_domSupport(),
 	m_parserLiaison(),
-	m_contentHandler(m_parserLiaison.mapDocument(m_parserLiaison.createDocument())),
+	m_contentHandler(m_parserLiaison.createXalanSourceTreeDocument()),
 	m_uri(theURI)
 {
 	m_domSupport.setParserLiaison(&m_parserLiaison);
