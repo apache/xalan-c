@@ -1152,6 +1152,8 @@ FormatterToHTML::pushHasNamespace(const XalanDOMChar*	theElementName)
 
 			fHasNamespace = true;
 		}
+
+		clear(m_stringBuffer);
 	}
 
 	return fHasNamespace;
