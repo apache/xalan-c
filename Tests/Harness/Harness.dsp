@@ -54,7 +54,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /dll /machine:I386
-# ADD LINK32 ..\..\..\..\xml-xerces\c\Build\Win32\VC6\Release\xerces-c_1.lib ..\..\Build\Win32\VC6\Release\PlatformSupport.lib ..\..\Build\Win32\VC6\Release\XalanDOM.lib ..\..\Build\Win32\VC6\Release\XMLSupport.lib ..\..\Build\Win32\VC6\Release\XSLT.lib ..\..\Build\Win32\VC6\Release\XalanSourceTree.lib ..\..\Build\Win32\VC6\Release\DOMSupport.lib /nologo /dll /pdb:none /machine:I386
+# ADD LINK32 ..\..\..\..\xml-xerces\c\Build\Win32\VC6\Release\xerces-c_1.lib ..\..\Build\Win32\VC6\Release\PlatformSupport.lib ..\..\Build\Win32\VC6\Release\XalanDOM.lib ..\..\Build\Win32\VC6\Release\XMLSupport.lib ..\..\Build\Win32\VC6\Release\XSLT.lib ..\..\Build\Win32\VC6\Release\XalanSourceTree.lib ..\..\Build\Win32\VC6\Release\DOMSupport.lib ..\..\Build\Win32\VC6\Release\XalanTransformer.lib /nologo /dll /pdb:none /machine:I386
 # SUBTRACT LINK32 /debug
 
 !ELSEIF  "$(CFG)" == "Harness - Win32 Debug"
@@ -81,7 +81,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /dll /debug /machine:I386 /pdbtype:sept
-# ADD LINK32 ..\..\..\..\xml-xerces\c\Build\Win32\VC6\Debug\xerces-c_1D.lib ..\..\Build\Win32\VC6\Debug\PlatformSupportD.lib ..\..\Build\Win32\VC6\Debug\XalanDOMD.lib ..\..\Build\Win32\VC6\Debug\XMLSupportD.lib ..\..\Build\Win32\VC6\Debug\XalanSourceTreeD.lib ..\..\Build\Win32\VC6\Debug\XSLTD.lib ..\..\Build\Win32\VC6\Debug\DOMSupportD.lib /nologo /dll /debug /machine:I386 /pdbtype:sept
+# ADD LINK32 ..\..\..\..\xml-xerces\c\Build\Win32\VC6\Debug\xerces-c_1D.lib ..\..\Build\Win32\VC6\Debug\PlatformSupportD.lib ..\..\Build\Win32\VC6\Debug\XalanDOMD.lib ..\..\Build\Win32\VC6\Debug\XMLSupportD.lib ..\..\Build\Win32\VC6\Debug\XalanSourceTreeD.lib ..\..\Build\Win32\VC6\Debug\XSLTD.lib ..\..\Build\Win32\VC6\Debug\DOMSupportD.lib ..\..\Build\Win32\VC6\Debug\XalanTransformer.lib /nologo /dll /debug /machine:I386 /pdbtype:sept
 # SUBTRACT LINK32 /incremental:no
 
 !ELSEIF  "$(CFG)" == "Harness - Win32 Release with symbols"
@@ -110,7 +110,7 @@ BSC32=bscmake.exe
 LINK32=link.exe
 # ADD BASE LINK32 ..\..\..\..\xml-xerces\c\Build\Win32\VC6\Release\xerces-c_1.lib ..\..\Build\Win32\VC6\Release\PlatformSupport.lib ..\..\Build\Win32\VC6\Release\XalanDOM.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /dll /incremental:yes /machine:I386
 # SUBTRACT BASE LINK32 /debug
-# ADD LINK32 ..\..\..\..\xml-xerces\c\Build\Win32\VC6\Release\xerces-c_1.lib ..\..\Build\Win32\VC6\Release.symbols\PlatformSupportS.lib ..\..\Build\Win32\VC6\Release.symbols\DOMSupportS.lib ..\..\Build\Win32\VC6\Release.symbols\XalanDOMS.lib  ..\..\Build\Win32\VC6\Release.symbols\XMLSupportS.lib ..\..\Build\Win32\VC6\Release.symbols\XalanSourceTreeS.lib ..\..\Build\Win32\VC6\Release.symbols\XSLTS.lib /nologo /dll /debug /machine:I386
+# ADD LINK32 ..\..\..\..\xml-xerces\c\Build\Win32\VC6\Release\xerces-c_1.lib ..\..\Build\Win32\VC6\Release.symbols\PlatformSupportS.lib ..\..\Build\Win32\VC6\Release.symbols\DOMSupportS.lib ..\..\Build\Win32\VC6\Release.symbols\XalanDOMS.lib ..\..\Build\Win32\VC6\Release.symbols\XMLSupportS.lib ..\..\Build\Win32\VC6\Release.symbols\XalanSourceTreeS.lib ..\..\Build\Win32\VC6\Release.symbols\XSLTS.lib /nologo /dll /debug /machine:I386
 # SUBTRACT LINK32 /incremental:yes
 
 !ENDIF 
