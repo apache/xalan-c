@@ -663,7 +663,7 @@ ElemTemplateElement::transformChild(
 				executionContext.cloneToResultTree(
                     *child,
                     XalanNode::TEXT_NODE,
-                    false,
+                    true,
                     false,
                     getLocator());
 				break;

@@ -99,7 +99,7 @@ ElemCopy::execute(StylesheetExecutionContext&	executionContext) const
 		executionContext.cloneToResultTree(
 			*sourceNode,
 			nodeType,
-			false,
+			true,
 			false,
 			getLocator());
 
