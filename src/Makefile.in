@@ -339,8 +339,8 @@ ifdef XALAN_USE_ICU
 endif
 
 
-# We have to use the includes from the source distribution, since we use
-# headers that others normally wouldn't
+# We want to build from both the Xerces CVS tree and the distribution, so we need
+# multiple -I directives for Xerces.
 ifdef XALAN_USE_ICU
 # We need the ICU library if we are using the ICUBridge
   XSL_INCL = -I${ICUROOT}/include/ -I. -I$(XERCESCROOT)/src/ -I$(XERCESCROOT)/include/xercesc -I$(XERCESCROOT)/include/
