@@ -187,6 +187,13 @@ public:
 	{
 	}
 
+	// A dummy constructor for use internally.  Do not use this one!!!!
+	XalanEXSLTFunctionPadding(int	/* theDummy */) :
+		Function(),
+		m_space()
+	{
+	}
+
 	virtual
 	~XalanEXSLTFunctionPadding()
 	{

@@ -155,6 +155,15 @@ XalanEXSLTFunctionObjectType::execute(
 			const XObjectArgVectorType&		args,
 			const Locator*					locator) const
 {
+	// Make sure nothing's happened to our strings and that
+	// they were actually initialized...
+	assert(XalanDOMString::equals(m_boolean, s_booleanString) == true);
+	assert(XalanDOMString::equals(m_external, s_externalString) == true);
+	assert(XalanDOMString::equals(m_nodeSet, s_nodeSetString) == true);
+	assert(XalanDOMString::equals(m_number, s_numberString) == true);
+	assert(XalanDOMString::equals(m_rtf, s_rtfString) == true);
+	assert(XalanDOMString::equals(m_string, s_stringString) == true);
+
 	if (args.size() != 1)
 	{
 		executionContext.error(getError(), context, locator);
@@ -269,7 +278,10 @@ static const XalanDOMChar	s_objectTypeFunctionName[] =
 
 
 static const XalanEXSLTFunctionNodeSet		s_nodesetFunction;
-static const XalanEXSLTFunctionObjectType	s_objectTypeFunction;
+// Note this is a special constructor of XalanEXSLTFunctionObjectType which
+// allocates no memory.  It is only used here, so we can have table-based
+// initialization, but not have any memory allocation.
+static const XalanEXSLTFunctionObjectType	s_objectTypeFunction(1);
 
 
 

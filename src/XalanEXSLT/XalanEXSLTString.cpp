@@ -254,6 +254,8 @@ XalanEXSLTFunctionPadding::execute(
 			const XObjectArgVectorType&		args,
 			const Locator*					locator) const
 {
+	assert(m_space.length() == 1);
+
 	const XObjectArgVectorType::size_type	theSize = args.size();
 
 	if (theSize != 1 && theSize != 2)
@@ -383,7 +385,10 @@ static const XalanDOMChar	s_paddingFunctionName[] =
 
 static const XalanEXSLTFunctionAlign	s_alignFunction;
 static const XalanEXSLTFunctionConcat	s_concatFunction;
-static const XalanEXSLTFunctionPadding	s_paddingFunction;
+// Note this is a special constructor of XalanEXSLTFunctionPadding which
+// allocates no memory.  It is only used here, so we can have table-based
+// initialization, but not have any memory allocation.
+static const XalanEXSLTFunctionPadding	s_paddingFunction(1);
 
 
 

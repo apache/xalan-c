@@ -136,6 +136,18 @@ public:
 	{
 	}
 
+	// A dummy constructor for use internally.  Do not use this one!!!!
+	XalanEXSLTFunctionObjectType(int	/* theDummy */) :
+		Function(),
+		m_boolean(),
+		m_external(),
+		m_nodeSet(),
+		m_number(),
+		m_rtf(),
+		m_string()
+	{
+	}
+
 	virtual
 	~XalanEXSLTFunctionObjectType()
 	{
