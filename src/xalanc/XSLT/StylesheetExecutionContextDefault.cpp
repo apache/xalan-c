@@ -1060,8 +1060,7 @@ StylesheetExecutionContextDefault::cloneToResultTree(
 
 #if !defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 void
-StylesheetExecutionContextDefault::beginCreateXResultTreeFrag(
-			XalanNode*					sourceNode)
+StylesheetExecutionContextDefault::beginCreateXResultTreeFrag(XalanNode*    sourceNode)
 {
 	assert(m_xsltProcessor != 0);
 
@@ -1104,16 +1103,17 @@ const XObjectPtr
 StylesheetExecutionContextDefault::endCreateXResultTreeFrag()
 {
 	
-	FormatterToSourceTree* theFormatter = m_formatterToSourceTreeStack.top();
+	FormatterToSourceTree* const    theFormatter =
+        m_formatterToSourceTreeStack.top();
 
 	assert (theFormatter != 0);
 
 	theFormatter->endDocument();
 
-	XalanSourceTreeDocumentFragment* theDocumentFragment =
+	XalanSourceTreeDocumentFragment* const  theDocumentFragment =
 		theFormatter->getDocumentFragment();
 
-	assert (theDocumentFragment != 0);
+	assert(theDocumentFragment != 0);
 
 	XResultTreeFrag* const	theXResultTreeFrag =
 		m_xresultTreeFragAllocator.create(*theDocumentFragment);
