@@ -258,14 +258,6 @@ SOURCE=..\..\..\..\src\XPath\NodeRefListBase.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\NodeRefListResultTreeFragProxy.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\src\XPath\ResultTreeFrag.cpp
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\..\..\src\XPath\ResultTreeFragBase.cpp
 # End Source File
 # Begin Source File
@@ -634,10 +626,6 @@ SOURCE=..\..\..\..\src\XPath\NodeRefListBase.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\NodeRefListResultTreeFragProxy.hpp
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\..\..\src\XPath\QName.hpp
 # End Source File
 # Begin Source File
@@ -647,10 +635,6 @@ SOURCE=..\..\..\..\src\XPath\QNameByReference.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\XPath\QNameByValue.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\src\XPath\ResultTreeFrag.hpp
 # End Source File
 # Begin Source File
 
