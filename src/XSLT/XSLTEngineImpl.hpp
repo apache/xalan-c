@@ -1642,6 +1642,8 @@ private:
 
 	XalanDOMString					m_scratchString;
 
+	bool							m_hasStripOrPreserveSpace;
+
 	static void
 	installFunctions();
 

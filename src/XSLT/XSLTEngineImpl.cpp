@@ -193,7 +193,8 @@ XSLTEngineImpl::XSLTEngineImpl(
 	m_outputContextStack(),
 	m_resultNamespacesStack(),
 	m_dummyAttributesList(),
-	m_scratchString()
+	m_scratchString(),
+	m_hasStripOrPreserveSpace(false)
 {
 	m_outputContextStack.pushContext();
 }
@@ -226,6 +227,8 @@ XSLTEngineImpl::reset()
 	m_domSupport.reset();
 
 	m_resultNamespacesStack.clear();
+
+	m_hasStripOrPreserveSpace = false;
 }
 
 
@@ -305,7 +308,7 @@ XSLTEngineImpl::process(
 		{
 			if(XalanNode::PROCESSING_INSTRUCTION_NODE == child->getNodeType())
 			{
-				const XalanDOMString	nodeName(child->getNodeName());
+				const XalanDOMString&	nodeName = child->getNodeName();
 
 				if(equals(nodeName, stylesheetNodeName))
 				{
@@ -402,12 +405,15 @@ XSLTEngineImpl::process(
 			theFormatter->setPrefixResolver(this);
 		}
 
-		m_stylesheetRoot->process(sourceTree, outputTarget, executionContext);
+		m_hasStripOrPreserveSpace = m_stylesheetRoot->getWhitespacePreservingElements().size() > 0 ||
+			m_stylesheetRoot->getWhitespaceStrippingElements().size() > 0;
 
-		if(0 != m_diagnosticsPrintWriter)
-		{
-			displayDuration(StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("Total time")), &totalTimeID);
-		}
+		m_stylesheetRoot->process(sourceTree, outputTarget, executionContext);
+	}
+
+	if(0 != m_diagnosticsPrintWriter)
+	{
+		displayDuration(StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("Total time")), &totalTimeID);
 	}
 }
 
@@ -438,10 +444,13 @@ XSLTEngineImpl::process(
 		FormatterListener* const	theFormatter =
 				outputTarget.getDocumentHandler();
 
-		if (theFormatter != 0)
+		if (theFormatter != 0 && theFormatter->getPrefixResolver() == 0)
 		{
 			theFormatter->setPrefixResolver(this);
 		}
+
+		m_hasStripOrPreserveSpace = m_stylesheetRoot->getWhitespacePreservingElements().size() > 0 ||
+			m_stylesheetRoot->getWhitespaceStrippingElements().size() > 0;
 
 		m_stylesheetRoot->process(sourceTree, outputTarget, executionContext);
 	}
@@ -2939,7 +2948,7 @@ XSLTEngineImpl::shouldStripSourceNode(
 			XPathExecutionContext&	executionContext,
 			const XalanNode&		textNode) const
 {
-	if (m_stylesheetRoot == 0)
+	if (m_hasStripOrPreserveSpace == false || m_stylesheetRoot == 0)
 	{
 		return false;
 	}
@@ -2947,118 +2956,117 @@ XSLTEngineImpl::shouldStripSourceNode(
 	{
 		bool	strip = false; // return value
 
-		if((m_stylesheetRoot->getWhitespacePreservingElements().size() > 0 ||
-			m_stylesheetRoot->getWhitespaceStrippingElements().size() > 0))
+		assert(m_stylesheetRoot->getWhitespacePreservingElements().size() > 0 ||
+			   m_stylesheetRoot->getWhitespaceStrippingElements().size() > 0);
+
+		const XalanNode::NodeType	type = textNode.getNodeType();
+
+		if(XalanNode::TEXT_NODE == type || XalanNode::CDATA_SECTION_NODE == type)
 		{
-			const XalanNode::NodeType	type = textNode.getNodeType();
+			const XalanText& 	theTextNode =
+#if defined(XALAN_OLD_STYLE_CASTS)
+					(const XalanText&)textNode;
+#else
+					static_cast<const XalanText&>(textNode);
+#endif
 
-			if(XalanNode::TEXT_NODE == type || XalanNode::CDATA_SECTION_NODE == type)
+			if(!theTextNode.isIgnorableWhitespace())
 			{
-				const XalanText& 	theTextNode =
-#if defined(XALAN_OLD_STYLE_CASTS)
-						(const XalanText&)textNode;
-#else
-						static_cast<const XalanText&>(textNode);
-#endif
+				const XalanDOMString&	data = theTextNode.getData();
 
-				if(!theTextNode.isIgnorableWhitespace())
+				if(0 == length(data))
 				{
-					const XalanDOMString&	data = theTextNode.getData();
-
-					if(0 == length(data))
-					{
-						return true;
-					}
-					else if(!isXMLWhitespace(data))
-					{
-						return false;
-					}
+					return true;
 				}
-
-				XalanNode*	parent = DOMServices::getParentOfNode(textNode);
-
-				while(0 != parent)
+				else if(!isXMLWhitespace(data))
 				{
-					if(parent->getNodeType() == XalanNode::ELEMENT_NODE)
-					{
-						const XalanElement*	const	parentElem =
+					return false;
+				}
+			}
+
+			XalanNode*	parent = DOMServices::getParentOfNode(textNode);
+
+			while(0 != parent)
+			{
+				if(parent->getNodeType() == XalanNode::ELEMENT_NODE)
+				{
+					const XalanElement*	const	parentElem =
 #if defined(XALAN_OLD_STYLE_CASTS)
-							(const XalanElement*)parent;
+						(const XalanElement*)parent;
 #else
-							static_cast<const XalanElement*>(parent);
+						static_cast<const XalanElement*>(parent);
 #endif
 
-						XPath::eMatchScore	highPreserveScore = XPath::eMatchScoreNone;
-						XPath::eMatchScore	highStripScore = XPath::eMatchScoreNone;
+					XPath::eMatchScore	highPreserveScore = XPath::eMatchScoreNone;
+					XPath::eMatchScore	highStripScore = XPath::eMatchScoreNone;
 
-						ElementPrefixResolverProxy	theProxy(parentElem, m_xpathEnvSupport, m_domSupport);
+					ElementPrefixResolverProxy	theProxy(parentElem, m_xpathEnvSupport, m_domSupport);
 
-						{
-							// $$$ ToDo:  All of this should be moved into a member of
-							// Stylesheet, so as not to expose these two data members...
-							typedef Stylesheet::XPathVectorType		XPathVectorType;
+					{
+						// $$$ ToDo:  All of this should be moved into a member of
+						// Stylesheet, so as not to expose these two data members...
+						typedef Stylesheet::XPathVectorType		XPathVectorType;
 
-							const XPathVectorType&	theElements =
+						const XPathVectorType&	theElements =
 								m_stylesheetRoot->getWhitespacePreservingElements();
 
-							const XPathVectorType::size_type	nTests =
+						const XPathVectorType::size_type	nTests =
 								theElements.size();
 
-							for(XPathVectorType::size_type i = 0; i < nTests; i++)
-							{
-								const XPath* const	matchPat = theElements[i];
-								assert(matchPat != 0);
-
-								const XPath::eMatchScore	score = matchPat->getMatchScore(parent, theProxy, executionContext);
-
-								if(score > highPreserveScore)
-									highPreserveScore = score;
-							}
-						}
-
+						for(XPathVectorType::size_type i = 0; i < nTests; i++)
 						{
-							typedef Stylesheet::XPathVectorType		XPathVectorType;
+							const XPath* const	matchPat = theElements[i];
+							assert(matchPat != 0);
 
-							const XPathVectorType&	theElements =
-								m_stylesheetRoot->getWhitespaceStrippingElements();
+							const XPath::eMatchScore	score = matchPat->getMatchScore(parent, theProxy, executionContext);
 
-							const XPathVectorType::size_type	nTests =
-								theElements.size();
-
-							for(XPathVectorType::size_type i = 0; i < nTests; i++)
-							{
-								const XPath* const	matchPat =
-									theElements[i];
-								assert(matchPat != 0);
-
-								const XPath::eMatchScore	score = matchPat->getMatchScore(parent, theProxy, executionContext);
-
-								if(score > highStripScore)
-									highStripScore = score;
-							}
-						}
-
-						if(highPreserveScore > XPath::eMatchScoreNone ||
-						   highStripScore > XPath::eMatchScoreNone)
-						{
-							if(highPreserveScore > highStripScore)
-							{
-								strip = false;
-							}
-							else if(highStripScore > highPreserveScore)
-							{
-								strip = true;
-							}
-							else
-							{
-								warn("Match conflict between xsl:strip-space and xsl:preserve-space");
-							}
-							break;
+							if(score > highPreserveScore)
+								highPreserveScore = score;
 						}
 					}
 
-					parent = parent->getParentNode();
+					{
+						typedef Stylesheet::XPathVectorType		XPathVectorType;
+
+						const XPathVectorType&	theElements =
+								m_stylesheetRoot->getWhitespaceStrippingElements();
+
+						const XPathVectorType::size_type	nTests =
+							theElements.size();
+
+						for(XPathVectorType::size_type i = 0; i < nTests; i++)
+						{
+							const XPath* const	matchPat =
+									theElements[i];
+							assert(matchPat != 0);
+
+							const XPath::eMatchScore	score = matchPat->getMatchScore(parent, theProxy, executionContext);
+
+							if(score > highStripScore)
+								highStripScore = score;
+						}
+					}
+
+					if(highPreserveScore > XPath::eMatchScoreNone ||
+					   highStripScore > XPath::eMatchScoreNone)
+					{
+						if(highPreserveScore > highStripScore)
+						{
+							strip = false;
+						}
+						else if(highStripScore > highPreserveScore)
+						{
+							strip = true;
+						}
+						else
+						{
+							warn("Match conflict between xsl:strip-space and xsl:preserve-space");
+						}
+						break;
+					}
 				}
+
+				parent = parent->getParentNode();
 			}
 		}
 
