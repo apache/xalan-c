@@ -260,13 +260,6 @@ public:
 			XalanNode*	sourceTree,
 			XalanNode*	xmlNode);
 
-	virtual XalanDOMString
-	evaluateAttrVal(
-			XalanNode*				contextNode,
-			const PrefixResolver& 	namespaceContext,
-			const XalanDOMString&	stringedValue,
-			XPathExecutionContext&	executionContext);
-
 	virtual void
 	resolveTopLevelParams(StylesheetExecutionContext&	executionContext);
 

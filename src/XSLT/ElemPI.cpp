@@ -65,7 +65,7 @@
 #include <PlatformSupport/DOMStringHelper.hpp>
 
 
-
+#include "AVT.hpp"
 #include "Constants.hpp"
 #include "StylesheetConstructionContext.hpp"
 #include "StylesheetExecutionContext.hpp"
@@ -83,7 +83,7 @@ ElemPI::ElemPI(
 						lineNumber,
 						columnNumber,
 						Constants::ELEMNAME_PI),
-	m_name_atv()
+	m_nameAVT(0)
 {
 	const unsigned int	nAttrs = atts.getLength();
 
@@ -92,8 +92,9 @@ ElemPI::ElemPI(
 		const XalanDOMChar* const	aname = atts.getName(i);
 
 		if(equals(aname, Constants::ATTRNAME_NAME))
-		{
-			m_name_atv = atts.getValue(i);
+		{			
+			m_nameAVT = new AVT(aname,	atts.getType(i), atts.getValue(i),
+				*this, constructionContext);
 		}
 		else if(isAttrOK(aname, atts, i, constructionContext) == false || processSpaceAttr(aname, atts, i))
 		{
@@ -101,7 +102,7 @@ ElemPI::ElemPI(
 		}
 	}
 
-	if(isEmpty(m_name_atv) == true)
+	if(0 == m_nameAVT)
 	{
 		constructionContext.error(Constants::ELEMNAME_PI_WITH_PREFIX_STRING + " must have a name attribute.");
 	}
@@ -132,10 +133,9 @@ ElemPI::execute(
 {
 	ElemTemplateElement::execute(executionContext, sourceTree, sourceNode, mode);
 	
-	const XalanDOMString	piName =
-		executionContext.evaluateAttrVal(sourceNode,
-										 *this,
-										 m_name_atv);
+	XalanDOMString	piName;
+	
+	m_nameAVT->evaluate(piName, sourceNode, *this, executionContext);
 
 	if(equalsIgnoreCase(piName, XALAN_STATIC_UCODE_STRING("xml")))
 	{

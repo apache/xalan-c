@@ -256,26 +256,6 @@ public:
 	setExecutionContext(StylesheetExecutionContext*		theExecutionContext) = 0;
 
 	/**
-	 * Evaluates attribute values for attribute templates (Stuff in curly {}
-	 * braces that hold expressions).
-	 *
-	 * @param contextNode	   current node in the source tree
-	 * @param namespaceContext current namespace context for the
-	 *						   pattern-by-example structures when parsing
-	 *						   expressions
-	 * @param stringedValue    attribute value to be processed
-	 * @param executionContext current execution context
-	 * @return processed stringedValue with attribute templates resolved
-	 * @exception XSLProcessorException 
-	 */
-	virtual XalanDOMString
-	evaluateAttrVal(
-			XalanNode*				contextNode,
-			const PrefixResolver& 	namespaceContext,
-			const XalanDOMString&	stringedValue,
-			XPathExecutionContext&	executionContext) = 0;
-
-	/**
 	 * Resolve the params that were pushed by the caller.
 	 */
 	virtual void

@@ -440,20 +440,6 @@ StylesheetExecutionContextDefault::returnXPath(const XPath*		xpath)
 
 
 
-const XalanDOMString
-StylesheetExecutionContextDefault::evaluateAttrVal(
-			XalanNode*				contextNode,
-			const PrefixResolver&	namespaceContext,
-			const XalanDOMString&	stringedValue)
-{
-	return m_xsltProcessor.evaluateAttrVal(contextNode,
-										   namespaceContext,
-										   stringedValue,
-										   *this);
-}
-
-
-
 void
 StylesheetExecutionContextDefault::pushTopLevelVariables(const ParamVectorType&		topLevelParams)
 {

@@ -475,20 +475,6 @@ public:
 		const XPath*					m_xpath;
 	};
 
-	/**
-	 * Evaluate the value of an attribute within the context of a specified
-	 * context node and namespace
-	 *
-	 * @param contextNode      current context node
-	 * @param namespaceContext context for namespace resolution
-	 * @param stringedValue    value to evaluate
-	 */
-	virtual const XalanDOMString
-	evaluateAttrVal(
-			XalanNode*				contextNode,
-			const PrefixResolver&	namespaceContext,
-			const XalanDOMString&	stringedValue) = 0;
-
 #if defined(XALAN_NO_NAMESPACES)
 	typedef vector<TopLevelArg>			ParamVectorType;
 #else

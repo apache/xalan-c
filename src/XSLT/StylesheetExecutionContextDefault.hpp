@@ -303,12 +303,6 @@ public:
 	virtual void
 	returnXPath(const XPath*	xpath);
 
-	virtual const XalanDOMString
-	evaluateAttrVal(
-			XalanNode*				contextNode,
-			const PrefixResolver&	namespaceContext,
-			const XalanDOMString&	stringedValue);
-
 	virtual void
 	pushTopLevelVariables(const ParamVectorType&	topLevelParams);
 

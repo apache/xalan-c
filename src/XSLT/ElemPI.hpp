@@ -69,6 +69,10 @@
 
 
 
+class AVT;
+
+
+
 class ElemPI: public ElemTemplateElement
 {
 public:
@@ -112,7 +116,7 @@ protected:
 
 private:
 
-	XalanDOMString	m_name_atv;
+	const AVT*	m_nameAVT;
 };
 
 
