@@ -85,12 +85,6 @@ public:
 	typedef clock_t			ClockType;
 #endif
 
-#if defined(XALAN_STRICT_ANSI_HEADERS)
-	typedef std::size_t		size_type;
-#else
-	typedef size_t			size_type;
-#endif
-
 #if defined(XALAN_NO_STD_NAMESPACE)
 	typedef deque<const ElemTemplateElement*>			ElementTemplateElementStackType;
 	typedef vector<FormatterListener*>					FormatterListenerVectorType;
