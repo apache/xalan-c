@@ -58,6 +58,10 @@
 
 
 
+#include <XPath/XObjectFactory.hpp>
+
+
+
 XALAN_CPP_NAMESPACE_BEGIN
 
 
@@ -77,24 +81,12 @@ FunctionCurrent::~FunctionCurrent()
 XObjectPtr
 FunctionCurrent::execute(
 			XPathExecutionContext&	executionContext,
-			XalanNode*				context,
-			const LocatorType*		locator) const
+			XalanNode*				/* context */,
+			const LocatorType*		/* locator */) const
 {
 	assert(executionContext.getCurrentNode() != 0);
 
-	if (context == 0)
-	{
-		executionContext.error(
-			"The current() function is not allowed in patterns!",
-			context,
-			locator);
-
-		return XObjectPtr();
-	}
-	else
-	{
-		return executionContext.createNodeSet(*executionContext.getCurrentNode());
-	}
+	return executionContext.getXObjectFactory().createNodeSet(executionContext.getCurrentNode());
 }
 
 
