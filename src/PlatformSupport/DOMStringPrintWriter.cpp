@@ -153,7 +153,14 @@ DOMStringPrintWriter::write(
 void
 DOMStringPrintWriter::write(XalanDOMChar	c)
 {
-	m_outputString += c;
+	// Write the data as a null-terminated array,
+	// so we can guarantee null-termination of our
+	// string...
+	XalanDOMChar	theBuffer[2] = { 0, 0 };
+
+	theBuffer[0] = c;
+
+	m_outputString += theBuffer;
 }
 
 
