@@ -64,61 +64,41 @@
 
 
 
-#include <vector>
-
-
-
 // Base class header file...
 #include <XPath/Function.hpp>
-
-
-
-#include <XPath/XObject.hpp>
-#include <XPath/XObjectFactory.hpp>
-#include <XPath/XPathExecutionContext.hpp>
 
 
 
 /**
  * XPath implementation of "true" function.
  */
-//
-// These are all inline, even though
-// there are virtual functions, because we expect that they will only be
-// needed by the XPath class.
 class XALAN_XPATH_EXPORT FunctionTrue : public Function
 {
 public:
+
+	FunctionTrue();
+
+	virtual
+	~FunctionTrue();
 
 	// These methods are inherited from Function ...
 
 	virtual XObject*
 	execute(
 			XPathExecutionContext&			executionContext,
-			XalanNode*						context,
-			int								/* opPos */,
-			const XObjectArgVectorType&		args)
-	{
-		if(args.size() > 0)
-		{
-			executionContext.error("The true() function does not accept arguments!",
-								   context);
-		}
-
-		return executionContext.getXObjectFactory().createBoolean(true);
-	}
+			XalanNode*						context);
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
 	virtual Function*
 #else
 	virtual FunctionTrue*
 #endif
-	clone() const
-	{
-		return new FunctionTrue(*this);
-	}
+	clone() const;
 
 private:
+
+	virtual const XalanDOMString
+	getError() const;
 
 	// Not implemented...
 	FunctionTrue&
@@ -127,7 +107,6 @@ private:
 	bool
 	operator==(const FunctionTrue&) const;
 };
-
 
 
 #endif	// FUNCTIONTRUE_HEADER_GUARD_1357924680

@@ -76,7 +76,7 @@
 #include "FunctionLocalName.hpp"
 #include "FunctionName.hpp"
 #include "FunctionNamespaceURI.hpp"
-#include "FunctionNormalize.hpp"
+#include "FunctionNormalizeSpace.hpp"
 #include "FunctionNot.hpp"
 #include "FunctionNumber.hpp"
 #include "FunctionPosition.hpp"

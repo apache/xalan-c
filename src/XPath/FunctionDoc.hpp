@@ -76,12 +76,6 @@
 #include <XPath/Function.hpp>
 
 
-#include <XPath/XObject.hpp>
-#include <XPath/XObjectFactory.hpp>
-#include <XPath/XPathExecutionContext.hpp>
-
-
-
 /**
  * XPath implementation of "document" function.
  */

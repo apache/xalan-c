@@ -64,100 +64,43 @@
 
 
 
-#include <PlatformSupport/DOMStringHelper.hpp>
-
-
-
 // Base class header file...
 #include <XPath/Function.hpp>
-
-
-
-#include <XPath/NodeRefListBase.hpp>
-#include <XPath/XObject.hpp>
-#include <XPath/XObjectFactory.hpp>
-#include <XPath/XPathExecutionContext.hpp>
 
 
 
 /**
  * XPath implementation of "substring-before" function.
  */
-//
-// These are all inline, even though
-// there are virtual functions, because we expect that they will only be
-// needed by the XPath class.
 class XALAN_XPATH_EXPORT FunctionSubstringBefore : public Function
 {
 public:
+
+	FunctionSubstringBefore();
+
+	virtual
+	~FunctionSubstringBefore();
 
 	// These methods are inherited from Function ...
 
 	virtual XObject*
 	execute(
 			XPathExecutionContext&			executionContext,
-			XalanNode*						context,
-			int								/* opPos */,
-			const XObjectArgVectorType&		args)
-	{
-		if (args.size() != 2)
-		{
-			executionContext.error("The substring-before() function takes two arguments!",
-								   context);
-		}
-
-		const XalanDOMString&	theFirstString = args[0]->str();
-		const XalanDOMString&	theSecondString = args[1]->str();
-
-		const unsigned int		theIndex = indexOf(theFirstString,
-												   theSecondString);
-
-#if defined(XALAN_NO_NAMESPACES)
-		typedef vector<XalanDOMChar>		VectorType;
-#else
-		typedef std::vector<XalanDOMChar>	VectorType;
-#endif
-
-		// This buffer will hold the output characters.
-		VectorType	theBuffer;
-
-		if (theIndex < length(theFirstString))
-		{
-			// The result string can only be as large as the source string, so
-			// just reserve the space now.  Also reserve a space for the
-			// terminating 0.
-			theBuffer.reserve(theIndex + 2);
-
-			// Stop with the last character before the index.
-			for (unsigned int i = 0; i < theIndex; i++)
-			{
-				theBuffer.push_back(charAt(theFirstString, i));
-			}
-		}
-
-		const VectorType::size_type		theSize = theBuffer.size();
-
-		if (theSize == 0)
-		{
-			return executionContext.getXObjectFactory().createString(XalanDOMString());
-		}
-		else
-		{
-			return executionContext.getXObjectFactory().createString(XalanDOMString(theBuffer.begin(), theSize));
-		}
-	}
+			XalanNode*						context,			
+			const XObject*					arg1,
+			const XObject*					arg2);
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
 	virtual Function*
 #else
 	virtual FunctionSubstringBefore*
 #endif
-	clone() const
-	{
-		return new FunctionSubstringBefore(*this);
-	}
+	clone() const;
 
 private:
+
+	virtual const XalanDOMString
+	getError() const;
 
 	// Not implemented...
 	FunctionSubstringBefore&

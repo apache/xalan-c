@@ -79,115 +79,48 @@
 
 
 
-#include <DOMSupport/DOMServices.hpp>
-
-
-
 #include <XPath/NodeRefListBase.hpp>
-#include <XPath/XObject.hpp>
-#include <XPath/XObjectFactory.hpp>
-#include <XPath/XPathExecutionContext.hpp>
 
 
 
 /**
  * XPath implementation of "name" function.
  */
-//
-// These are all inline, even though
-// there are virtual functions, because we expect that they will only be
-// needed by the XPath class.
 class XALAN_XPATH_EXPORT FunctionName : public Function
 {
 public:
 
 	// These methods are inherited from Function ...
 
-	virtual XObject*
+	FunctionName();
+
+	virtual
+	~FunctionName();
+
+	// These methods are inherited from Function ...
+
+	XObject*
 	execute(
-			XPathExecutionContext&			executionContext,
-			XalanNode*						context,
-			int								/* opPos */,
-			const XObjectArgVectorType&		args)
-	{
-		const XObjectArgVectorType::size_type	theSize = args.size();
-
-		XObject*	theResult = 0;
-
-		if(theSize == 0)
-		{
-			if (context == 0)
-			{
-				executionContext.error("The name() function requires a non-null context node!",
-									   context);
-			}
-			else
-			{
-				theResult = getName(executionContext, *context);
-			}
-		}
-		else if (theSize == 1)
-		{
-			assert(args[0] != 0);
-
-			const NodeRefListBase&	theNodeList = args[0]->nodeset();
-
-			if (theNodeList.getLength() == 0)
-			{
-				theResult = executionContext.getXObjectFactory().createString(XalanDOMString());
-			}
-			else
-			{
-				assert(theNodeList.item(0) != 0);
-
-				theResult = getName(executionContext, *theNodeList.item(0));
-			}
-		}
-		else
-		{
-			executionContext.error("The name() function takes either zero arguments or one argument!",
-								   context);
-		}
-
-		assert(theResult != 0);
-
-		return theResult;
-	}
+		XPathExecutionContext&			executionContext,
+		XalanNode*						context,			
+		const XObject*					arg1);
+		
+	XObject*
+	execute(
+		XPathExecutionContext&			executionContext,
+		XalanNode*						context);
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
 	virtual Function*
 #else
 	virtual FunctionName*
 #endif
-	clone() const
-	{
-		return new FunctionName(*this);
-	}
-
+	clone() const;
+	
 private:
 
-	XObject*
-	getName(
-			XPathExecutionContext&	executionContext,
-			const XalanNode&		node)
-	{
-//		if (node.getNodeType() == XalanNode::ATTRIBUTE_NODE)
-//		{
-//			const XalanDOMString&	theName = executionContext.getNameOfNode(node);
-
-//			if (startsWith(theName, DOMServices::s_XMLNamespaceWithSeparator) == true)
-//			{
-//			}
-//			else
-//			{
-//				return executionContext.getXObjectFactory().createString();
-//			}
-//		}
-//		else
-		{
-			return executionContext.getXObjectFactory().createString(executionContext.getNameOfNode(node));
-		}
-	}
+	const XalanDOMString
+	getError() const;
 
 	// Not implemented...
 	FunctionName&

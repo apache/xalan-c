@@ -64,89 +64,47 @@
 
 
 
-#include <vector>
-
-
-
 // Base class header file...
 #include <XPath/Function.hpp>
 
 
 
-#include <XPath/XObject.hpp>
-#include <XPath/XObjectFactory.hpp>
-#include <XPath/XPathExecutionContext.hpp>
+#include <XPath/NodeRefListBase.hpp>
 
 
 
 /**
  * XPath implementation of "number" function.
  */
-//
-// These are all inline, even though
-// there are virtual functions, because we expect that they will only be
-// needed by the XPath class.
 class XALAN_XPATH_EXPORT FunctionNumber : public Function
 {
 public:
 
 	// These methods are inherited from Function ...
+	FunctionNumber();
 
-	virtual XObject*
+	virtual
+	~FunctionNumber();
+
+	XObject*
 	execute(
 			XPathExecutionContext&			executionContext,
-			XalanNode*						context,
-			int								/* opPos */,
-			const XObjectArgVectorType&		args)
-	{
-		double	theValue = 0.0L;
+			XalanNode*						context,			
+			const XObject*					arg1);
 
-		if (args.size() > 1)
-		{
-			executionContext.error("The number() function takes zero arguments or one argument!",
-								   context);
-		}
-		else if (args.size() == 1)
-		{
-			theValue = args[0]->num();
-		}
-		else if (context == 0)
-		{
-			executionContext.error("The number() function requires a non-null context node!",
-								   context);
-		}
-		else
-		{
-			// The XPath standard says that if there are no arguments,
-			// the argument defaults to a node set with the context node
-			// as the only member.
-			// So we have to create an XNodeList with the context node as
-			// the only member and call the num() function on it.  We shroud
-			// the temporary XNodeList in an XObjectGuard because it can be
-			// deleted once we've converted the context node to a number.
+	XObject*
+	execute(
+			XPathExecutionContext&			executionContext,
+			XalanNode*						context);	
 
-			// An XObject that contains the context node.
-			XObjectGuard	theXObject(executionContext.getXObjectFactory(),
-									   executionContext.createNodeSet(*context));
-
-			// Get the numeric value of the theXObject...
-			theValue = theXObject->num();
-		}
-
-		return executionContext.getXObjectFactory().createNumber(theValue);
-	}
-
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
 	virtual Function*
-#else
-	virtual FunctionNumber*
-#endif
-	clone() const
-	{
-		return new FunctionNumber(*this);
-	}
+	clone() const;
 
 private:
+
+	const XalanDOMString
+	getError() const;
+
 
 	// Not implemented...
 	FunctionNumber&

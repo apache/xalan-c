@@ -64,61 +64,42 @@
 
 
 
-#include <vector>
-
-
-
 // Base class header file...
 #include <XPath/Function.hpp>
-
-
-
-#include <XPath/XObject.hpp>
-#include <XPath/XObjectFactory.hpp>
-#include <XPath/XPathExecutionContext.hpp>
 
 
 
 /**
  * XPath implementation of "boolean" function.
  */
-//
-// These are all inline, even though
-// there are virtual functions, because we expect that they will only be
-// needed by the XPath class.
 class XALAN_XPATH_EXPORT FunctionBoolean : public Function
 {
 public:
+
+	FunctionBoolean();
+
+	virtual
+	~FunctionBoolean();
 
 	// These methods are inherited from Function ...
 
 	virtual XObject*
 	execute(
 			XPathExecutionContext&			executionContext,
-			XalanNode*						context,
-			int								/* opPos */,
-			const XObjectArgVectorType&		args)
-	{
-		if(args.size() != 1)
-		{
-			executionContext.error("The boolean() function takes one argument!",
-								   context);
-		}
-
-		return executionContext.getXObjectFactory().createBoolean(args[0]->boolean());
-	}
+			XalanNode*						context,			
+			const XObject*					arg1);
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
 	virtual Function*
 #else
 	virtual FunctionBoolean*
 #endif
-	clone() const
-	{
-		return new FunctionBoolean(*this);
-	}
+	clone() const;
 
 private:
+
+	virtual const XalanDOMString
+	getError() const;
 
 	// Not implemented...
 	FunctionBoolean&

@@ -64,64 +64,42 @@
 
 
 
-#include <vector>
-
-
-
 // Base class header file...
 #include <XPath/Function.hpp>
-
-
-
-#include <XPath/NodeRefListBase.hpp>
-#include <XPath/XObject.hpp>
-#include <XPath/XObjectFactory.hpp>
-#include <XPath/XPathExecutionContext.hpp>
 
 
 
 /**
  * XPath implementation of "count" function.
  */
-//
-// These are all inline, even though
-// there are virtual functions, because we expect that they will only be
-// needed by the XPath class.
 class XALAN_XPATH_EXPORT FunctionCount : public Function
 {
 public:
+
+	FunctionCount();
+
+	virtual
+	~FunctionCount();
 
 	// These methods are inherited from Function ...
 
 	virtual XObject*
 	execute(
 			XPathExecutionContext&			executionContext,
-			XalanNode*						context,
-			int								/* opPos */,
-			const XObjectArgVectorType&		args)
-	{
-		if(args.size() != 1)
-		{
-			executionContext.error("The count() function takes one argument!",
-								   context);
-		}
-
-		const NodeRefListBase&	theNodeList = args[0]->nodeset();
-
-		return executionContext.getXObjectFactory().createNumber(theNodeList.getLength());
-	}
+			XalanNode*						context,			
+			const XObject*					arg1);
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
 	virtual Function*
 #else
 	virtual FunctionCount*
 #endif
-	clone() const
-	{
-		return new FunctionCount(*this);
-	}
+	clone() const;
 
 private:
+
+	virtual const XalanDOMString
+	getError() const;
 
 	// Not implemented...
 	FunctionCount&

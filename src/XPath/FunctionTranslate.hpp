@@ -64,125 +64,44 @@
 
 
 
-#include <vector>
-
-
-
-#include <PlatformSupport/DOMStringHelper.hpp>
-
-
-
 // Base class header file...
 #include <XPath/Function.hpp>
-
-
-
-#include <XPath/XObject.hpp>
-#include <XPath/XObjectFactory.hpp>
-#include <XPath/XPathExecutionContext.hpp>
 
 
 
 /**
  * XPath implementation of "translate" function.
  */
-//
-// These are all inline, even though
-// there are virtual functions, because we expect that they will only be
-// needed by the XPath class.
 class XALAN_XPATH_EXPORT FunctionTranslate : public Function
 {
 public:
+
+	FunctionTranslate();
+
+	virtual
+	~FunctionTranslate();
 
 	// These methods are inherited from Function ...
 
 	virtual XObject*
 	execute(
 			XPathExecutionContext&			executionContext,
-			XalanNode*						context,
-			int								/* opPos */,
-			const XObjectArgVectorType&		args)
-	{
-		if (args.size() != 3)
-		{
-			executionContext.error("The translate() function takes three arguments!",
-								   context);
-		}
-
-		const XalanDOMString&	theFirstString = args[0]->str();
-		const XalanDOMString&	theSecondString = args[1]->str();
-		const XalanDOMString&	theThirdString = args[2]->str();
-
-		const unsigned int		theFirstStringLength = length(theFirstString);
-		const unsigned int		theSecondStringLength = length(theSecondString);
-		const unsigned int		theThirdStringLength = length(theThirdString);
-
-#if defined(XALAN_NO_NAMESPACES)
-		typedef vector<XalanDOMChar>		VectorType;
-#else
-		typedef std::vector<XalanDOMChar>	VectorType;
-#endif
-
-		// A vector to contain the new characters.  We'll use it to construct
-		// the result string.
-		VectorType	theBuffer;
-
-		// The result string can only be as large as the first string, so
-		// just reserve the space now.  Also reserve space for the
-		// terminating 0.
-		theBuffer.reserve(theFirstStringLength + 1);
-
-		for (unsigned int i = 0; i < theFirstStringLength; i++)
-		{
-			const XalanDOMChar		theCurrentChar = charAt(theFirstString, i);
-
-			const unsigned int		theIndex = indexOf(theSecondString, theCurrentChar);
-
-			if (theIndex >= theSecondStringLength)
-			{
-				// Didn't find the character in the second string, so it
-				// is not translated.
-				theBuffer.push_back(theCurrentChar);
-			}
-			else if (theIndex < theThirdStringLength)
-			{
-				// OK, there's a corresponding character in the
-				// third string, so do the translation...
-				theBuffer.push_back(charAt(theThirdString, theIndex));
-			}
-			else
-			{
-				// There's no corresponding character in the
-				// third string, since it's shorter than the
-				// second string.  In this case, the character
-				// is removed from the output string, so don't
-				// do anything.
-			}
-		}
-
-		const VectorType::size_type		theSize = theBuffer.size();
-
-		if (theSize == 0)
-		{
-			return executionContext.getXObjectFactory().createString(XalanDOMString());
-		}
-		else
-		{
-			return executionContext.getXObjectFactory().createString(XalanDOMString(theBuffer.begin(), theSize));
-		}
-	}
+			XalanNode*						/* context */,			
+			const XObject*					arg1,
+			const XObject*					arg2,
+			const XObject*					arg3);
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
 	virtual Function*
 #else
 	virtual FunctionTranslate*
 #endif
-	clone() const
-	{
-		return new FunctionTranslate(*this);
-	}
+	clone() const;
 
 private:
+
+	virtual const XalanDOMString
+	getError() const;
 
 	// Not implemented...
 	FunctionTranslate&

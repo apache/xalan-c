@@ -64,83 +64,47 @@
 
 
 
-#include <PlatformSupport/DOMStringHelper.hpp>
-
-
-
 // Base class header file...
-#include <XPath/FunctionDefaultStringArgument.hpp>
+#include <XPath/Function.hpp>
 
 
 
 #include <XPath/NodeRefListBase.hpp>
-#include <XPath/XObject.hpp>
-#include <XPath/XObjectFactory.hpp>
-#include <XPath/XPathExecutionContext.hpp>
 
 
 
 /**
  * XPath implementation of "string-length" function.
  */
-//
-// These are all inline, even though
-// there are virtual functions, because we expect that they will only be
-// needed by the XPath class.
-class XALAN_XPATH_EXPORT FunctionStringLength : public FunctionDefaultStringArgument
+class XALAN_XPATH_EXPORT FunctionStringLength : public Function
 {
 public:
 
-	// These methods are inherited from FunctionDefaultStringArgument ...
+	// These methods are inherited from Function ...
+	FunctionStringLength();
 
-	virtual XObject*
+	virtual
+	~FunctionStringLength();
+
+	XObject*
 	execute(
 			XPathExecutionContext&			executionContext,
-			XalanNode*						context,
-			int								/* opPos */,
-			const XObjectArgVectorType&		args)
-	{
-		const XObjectArgVectorType::size_type	theSize = args.size();
+			XalanNode*						context,			
+			const XObject*					arg1);
 
-		unsigned int	theLength = 0;
+	XObject*
+	execute(
+			XPathExecutionContext&			executionContext,
+			XalanNode*						context);	
 
-		if(theSize == 0)
-		{
-			if (context == 0)
-			{
-				executionContext.error("The string-length() function requires a non-null context node!",
-									   context);
-			}
-			else
-			{
-				theLength = length(getDefaultStringArgument(executionContext,
-															*context));
-			}
-		}
-		else if (theSize == 1)
-		{
-			theLength = length(args[0]->str());
-		}
-		else
-		{
-			executionContext.error("The string-length() function takes either zero arguments or one argument!",
-								   context);
-		}
-
-		return executionContext.getXObjectFactory().createNumber(theLength);
-	}
-
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
 	virtual Function*
-#else
-	virtual FunctionStringLength*
-#endif
-	clone() const
-	{
-		return new FunctionStringLength(*this);
-	}
+	clone() const;
 
 private:
+
+	const XalanDOMString
+	getError() const;
+
 
 	// Not implemented...
 	FunctionStringLength&

@@ -64,88 +64,43 @@
 
 
 
-#include <vector>
-
-
-
-#include <PlatformSupport/DOMStringHelper.hpp>
-
-
-
 // Base class header file...
 #include <XPath/Function.hpp>
-
-
-
-#include <XPath/XObject.hpp>
-#include <XPath/XObjectFactory.hpp>
-#include <XPath/XPathExecutionContext.hpp>
 
 
 
 /**
  * XPath implementation of "contains" function.
  */
-//
-// These are all inline, even though
-// there are virtual functions, because we expect that they will only be
-// needed by the XPath class.
 class XALAN_XPATH_EXPORT FunctionContains : public Function
 {
 public:
+
+	FunctionContains();
+
+	virtual
+	~FunctionContains();
 
 	// These methods are inherited from Function ...
 
 	virtual XObject*
 	execute(
 			XPathExecutionContext&			executionContext,
-			XalanNode*						context,
-			int								/* opPos */,
-			const XObjectArgVectorType&		args)
-	{
-		if(args.size() != 2)
-		{
-			executionContext.error("The contains() function takes two arguments!",
-								   context);
-		}
-
-		const XalanDOMString&	arg1 = args[0]->str();
-		const XalanDOMString&	arg2 = args[1]->str();
-
-		bool					fResult = true;
-
-		// If arg2 is empty, then don't bother to check anything.
-		if (isEmpty(arg2) == false)
-		{
-			// Is arg1 empty?
-			if (isEmpty(arg1) == true)
-			{
-				fResult = false;
-			}
-			else
-			{
-				// OK, both strings have some data, so look for
-				// the index...
-				const unsigned int		theIndex = indexOf(arg1, arg2);
-
-				fResult = theIndex < length(arg1) ? true : false;
-			}
-		}
-
-		return executionContext.getXObjectFactory().createBoolean(fResult);
-	}
+			XalanNode*						context,			
+			const XObject*					arg1,
+			const XObject*					arg2);
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
 	virtual Function*
 #else
 	virtual FunctionContains*
 #endif
-	clone() const
-	{
-		return new FunctionContains(*this);
-	}
+	clone() const;
 
 private:
+
+	virtual const XalanDOMString
+	getError() const;
 
 	// Not implemented...
 	FunctionContains&

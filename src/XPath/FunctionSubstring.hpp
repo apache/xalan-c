@@ -68,134 +68,60 @@
 
 
 
-#include <PlatformSupport/DoubleSupport.hpp>
-#include <PlatformSupport/DOMStringHelper.hpp>
-
-
-
 // Base class header file...
 #include <XPath/Function.hpp>
 
 
 
 #include <XPath/FunctionRound.hpp>
-#include <XPath/XObject.hpp>
-#include <XPath/XObjectFactory.hpp>
-#include <XPath/XPathExecutionContext.hpp>
+
+
+
+#include <PlatformSupport/DoubleSupport.hpp>
 
 
 
 /**
  * XPath implementation of "substring" function.
  */
-//
-// These are all inline, even though
-// there are virtual functions, because we expect that they will only be
-// needed by the XPath class.
 class XALAN_XPATH_EXPORT FunctionSubstring : public Function
 {
 public:
+
+	FunctionSubstring();
+
+	virtual
+	~FunctionSubstring();
 
 	// These methods are inherited from Function ...
 
 	virtual XObject*
 	execute(
 			XPathExecutionContext&			executionContext,
-			XalanNode*						context,
-			int								/* opPos */,
-			const XObjectArgVectorType&		args)
-	{
-		const XObjectArgVectorType::size_type	theArgCount =
-				args.size();
+			XalanNode*						context,			
+			const XObject*					arg1,
+			const XObject*					arg2,
+			const XObject*					arg3);
 
-		if (theArgCount < 2 || theArgCount > 3)
-		{
-			executionContext.error("The substring() function takes two or three arguments!",
-								   context);
-		}
+	virtual XObject*
+	execute(
+			XPathExecutionContext&			executionContext,
+			XalanNode*						context,			
+			const XObject*					arg1,
+			const XObject*					arg2);
 
-		const XalanDOMString&	theSourceString = args[0]->str();
-		const unsigned int		theSourceStringLength = length(theSourceString);
-
-#if defined(XALAN_NO_NAMESPACES)
-		typedef vector<XalanDOMChar>		VectorType;
-#else
-		typedef std::vector<XalanDOMChar>	VectorType;
-#endif
-
-		// This buffer will hold the output characters.
-		VectorType	theBuffer;
-
-		if (theSourceStringLength > 0)
-		{
-			// The substring can only be as long as the source string,
-			// so reserve enough space now.  Also reserve space for
-			// the terminating 0.
-			theBuffer.reserve(theSourceStringLength);
-
-			// $$$ ToDo: Add support for NaN.
-
-			// Get the value of the second argument...
-			const double	theSecondArgValue =
-				FunctionRound::getRoundedValue(args[1]->num());
-
-			// Now, total the second and third arguments.  If
-			// the third argument is missing, make the total
-			// DBL_MAX.
-			const double	theTotal =
-					theArgCount == 2 ? DBL_MAX :
-									   FunctionRound::getRoundedValue(theSecondArgValue + args[2]->num());
-
-			if (DoubleSupport::isNaN(theSecondArgValue) == false &&
-				DoubleSupport::isNaN(theTotal) == false &&
-				DoubleSupport::isNegativeInfinity(theTotal) == false)
-			{
-				// Start with 1, since strings are index from 1 in the XPath spec,
-				for (unsigned int i = 1; i <= theSourceStringLength; i++)
-				{
-					// Is the index greater than or equal to the second argument?
-					if (i >= theSecondArgValue)
-					{
-						// Is it less than the sum of the second and
-						// third arguments?
-						if (i < theTotal)
-						{
-							// It is, so include the character.
-							theBuffer.push_back(charAt(theSourceString, i - 1));
-						}
-						else
-						{
-							// It's not, so stop.
-							break;
-						}
-					}
-				}
-			}
-		}
-
-		const VectorType::size_type		theSize = theBuffer.size();
-
-		if (theSize == 0)
-		{
-			return executionContext.getXObjectFactory().createString(XalanDOMString());
-		}
-		else
-		{
-			return executionContext.getXObjectFactory().createString(XalanDOMString(theBuffer.begin(), theSize));
-		}
-	}
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
 	virtual Function*
 #else
 	virtual FunctionSubstring*
 #endif
-	clone() const
-	{
-		return new FunctionSubstring(*this);
-	}
+	clone() const;
 
 private:
+
+	virtual const XalanDOMString
+	getError() const;
 
 	// Not implemented...
 	FunctionSubstring&

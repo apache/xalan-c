@@ -74,97 +74,45 @@
 
 
 #include <XPath/NodeRefListBase.hpp>
-#include <XPath/XObject.hpp>
-#include <XPath/XObjectFactory.hpp>
-#include <XPath/XPathExecutionContext.hpp>
 
 
 
 /**
  * XPath implementation of "namespace-uri" function.
  */
-//
-// These are all inline, even though
-// there are virtual functions, because we expect that they will only be
-// needed by the XPath class.
 class XALAN_XPATH_EXPORT FunctionNamespaceURI : public Function
 {
 public:
 
 	// These methods are inherited from Function ...
+	FunctionNamespaceURI();
 
-	virtual XObject*
+	virtual
+	~FunctionNamespaceURI();
+
+	XObject*
 	execute(
 			XPathExecutionContext&			executionContext,
-			XalanNode*						context,
-			int								/* opPos */,
-			const XObjectArgVectorType&		args)
-	{
-		const XalanDOMString*	theNamespace = 0;
+			XalanNode*						context,			
+			const XObject*					arg1);
 
-		if (args.size() > 1)
-		{
-			executionContext.error("The namespace-uri() function takes zero arguments or one argument!",
-								   context);
-		}
-		else if (args.size() == 1)
-		{
-			theNamespace = getNamespaceFromNodeSet(*args[0],
-												   executionContext);
-		}
-		else if (context == 0)
-		{
-			executionContext.error("The namespace-uri() function requires a non-null context node!",
-								   context);
-		}
-		else
-		{
-			// The XPath standard says that if there are no arguments,
-			// the argument defaults to a node set with the context node
-			// as the only member.
-			// So we have to create an XObject with the context node as
-			// the only member.
-			// We shroud the temporary getNamespaceFromNodeSet( in a
-			// FactoryObjectAutoPointer because it can be deleted once
-			// we're done.
-
-			// An XObject that contains the context node.
-			XObjectGuard	theXObject(executionContext.getXObjectFactory(),
-									   executionContext.createNodeSet(*context));
-
-
-			theNamespace = getNamespaceFromNodeSet(*theXObject.get(),
-												   executionContext);
-		}
-
-		return executionContext.getXObjectFactory().createString(theNamespace == 0 ? XalanDOMString() : *theNamespace);
-	}
+	XObject*
+	execute(
+			XPathExecutionContext&			executionContext,
+			XalanNode*						context);	
 
 	virtual Function*
-	clone() const
-	{
-		return new FunctionNamespaceURI(*this);
-	}
+	clone() const;
 
 private:
 
-	static const XalanDOMString*
+	static XalanDOMString
 	getNamespaceFromNodeSet(const XObject&			theXObject,
-							XPathExecutionContext&	theContext)
-	{
-		const NodeRefListBase&	theList = theXObject.nodeset();
+							XPathExecutionContext&	theContext);
 
-		if (theList.getLength() == 0)
-		{
-			return 0;
-		}
-		else
-		{
-			assert(theList.item(0) != 0);
+	const XalanDOMString
+	getError() const;
 
-			return &theContext.getNamespaceOfNode(*theList.item(0));
-		}
-	}
 
 	// Not implemented...
 	FunctionNamespaceURI&

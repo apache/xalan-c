@@ -78,103 +78,45 @@
 
 
 #include <XPath/NodeRefListBase.hpp>
-#include <XPath/XObject.hpp>
-#include <XPath/XObjectFactory.hpp>
-#include <XPath/XPathExecutionContext.hpp>
 
 
 
 /**
  * XPath implementation of "local-name" function.
  */
-//
-// These are all inline, even though
-// there are virtual functions, because we expect that they will only be
-// needed by the XPath class.
 class XALAN_XPATH_EXPORT FunctionLocalName : public Function
 {
 public:
 
+	FunctionLocalName();
+
+	virtual
+	~FunctionLocalName();
+
 	// These methods are inherited from Function ...
 
-	virtual XObject*
+	XObject*
 	execute(
-			XPathExecutionContext&			executionContext,
-			XalanNode*						context,
-			int								/* opPos */,
-			const XObjectArgVectorType&		args)
-	{
-		const XObjectArgVectorType::size_type	theSize =
-			args.size();
-
-		if(theSize > 1)
-		{
-			executionContext.error("The local-name() function takes zero or one arguments!",
-								   context);
-		}
-
-		XObject*	theResult = 0;
-
-		if (theSize == 0)
-		{
-			if (context == 0)
-			{
-				executionContext.error("The local-name() function requires a non-null context node!");
-			}
-			else
-			{
-				theResult = getLocalName(executionContext, *context);
-			}
-		}
-		else
-		{
-			assert(args[0] != 0);
-
-			const NodeRefListBase&	theNodeList = args[0]->nodeset();
-
-			if (theNodeList.getLength() == 0)
-			{
-				theResult = executionContext.getXObjectFactory().createString(XalanDOMString());
-			}
-			else
-			{
-				theResult = getLocalName(executionContext, *theNodeList.item(0));
-			}
-		}
-
-		return theResult;
-	}
+		XPathExecutionContext&			executionContext,
+		XalanNode*						context,			
+		const XObject*					arg1);
+		
+	XObject*
+	execute(
+		XPathExecutionContext&			executionContext,
+		XalanNode*						context);
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
 	virtual Function*
 #else
 	virtual FunctionLocalName*
 #endif
-	clone() const
-	{
-		return new FunctionLocalName(*this);
-	}
+	clone() const;
 
 private:
 
-	XObject*
-	getLocalName(
-			XPathExecutionContext&	executionContext,
-			const XalanNode&		node)
-	{
-		const XalanNode::NodeType	theType = node.getNodeType();
-
-		if(theType == XalanNode::ATTRIBUTE_NODE ||
-			theType == XalanNode::ELEMENT_NODE ||
-			theType == XalanNode::PROCESSING_INSTRUCTION_NODE)
-		{
-			return executionContext.getXObjectFactory().createString(executionContext.getLocalNameOfNode(node));
-		}
-		else
-		{
-			return executionContext.getXObjectFactory().createString(XalanDOMString());
-		}
-	}
+	const XalanDOMString
+	getError() const;
 
 	// Not implemented...
 	FunctionLocalName&

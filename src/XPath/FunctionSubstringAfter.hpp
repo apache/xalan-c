@@ -64,102 +64,43 @@
 
 
 
-#include <PlatformSupport/DOMStringHelper.hpp>
-
-
-
 // Base class header file...
 #include <XPath/Function.hpp>
-
-
-
-#include <XPath/XObject.hpp>
-#include <XPath/XObjectFactory.hpp>
-#include <XPath/XPathExecutionContext.hpp>
 
 
 
 /**
  * XPath implementation of "substring-after" function.
  */
-//
-// These are all inline, even though
-// there are virtual functions, because we expect that they will only be
-// needed by the XPath class.
 class XALAN_XPATH_EXPORT FunctionSubstringAfter : public Function
 {
 public:
+
+	FunctionSubstringAfter();
+
+	virtual
+	~FunctionSubstringAfter();
 
 	// These methods are inherited from Function ...
 
 	virtual XObject*
 	execute(
 			XPathExecutionContext&			executionContext,
-			XalanNode*						context,
-			int								/* opPos */,
-			const XObjectArgVectorType&		args)
-	{
-		if (args.size() != 2)
-		{
-			executionContext.error("The substring-after() function takes two arguments!",
-								   context);
-		}
-
-		const XalanDOMString&	theFirstString = args[0]->str();
-		const XalanDOMString&	theSecondString = args[1]->str();
-
-		const unsigned int		theIndex = indexOf(theFirstString,
-												   theSecondString);
-
-		const unsigned int		theFirstStringLength = length(theFirstString);
-
-#if defined(XALAN_NO_NAMESPACES)
-		typedef vector<XalanDOMChar>		VectorType;
-#else
-		typedef std::vector<XalanDOMChar>	VectorType;
-#endif
-
-		// This buffer will hold the output characters.
-		VectorType	theBuffer;
-
-		if (theIndex < theFirstStringLength)
-		{
-			unsigned int		theStartIndex = theIndex + length(theSecondString);
-
-			// The result string can only be as large as the source string, so
-			// just reserve the space now.  Also reserve a space for the
-			// terminating 0.
-			theBuffer.reserve(theFirstStringLength - theStartIndex + 1);
-
-			for (; theStartIndex < theFirstStringLength; theStartIndex++)
-			{
-				theBuffer.push_back(charAt(theFirstString, theStartIndex));
-			}
-		}
-
-		const VectorType::size_type		theSize = theBuffer.size();
-
-		if (theSize == 0)
-		{
-			return executionContext.getXObjectFactory().createString(XalanDOMString());
-		}
-		else
-		{
-			return executionContext.getXObjectFactory().createString(XalanDOMString(theBuffer.begin(), theSize));
-		}
-	}
+			XalanNode*						context,			
+			const XObject*					arg1,
+			const XObject*					arg2);
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
 	virtual Function*
 #else
 	virtual FunctionSubstringAfter*
 #endif
-	clone() const
-	{
-		return new FunctionSubstringAfter(*this);
-	}
+	clone() const;
 
 private:
+
+	virtual const XalanDOMString
+	getError() const;
 
 	// Not implemented...
 	FunctionSubstringAfter&

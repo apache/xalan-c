@@ -68,86 +68,47 @@
 
 
 
-#include <PlatformSupport/DOMStringHelper.hpp>
-
-
-
 // Base class header file...
-#include <XPath/FunctionDefaultStringArgument.hpp>
+#include <XPath/Function.hpp>
 
 
 
-#include <XPath/XObject.hpp>
-#include <XPath/XObjectFactory.hpp>
-#include <XPath/XPathExecutionContext.hpp>
+#include <XPath/NodeRefListBase.hpp>
 
 
 
 /**
  * XPath implementation of "string" function.
  */
-//
-// These are all inline, even though
-// there are virtual functions, because we expect that they will only be
-// needed by the XPath class.
-class XALAN_XPATH_EXPORT FunctionString : public FunctionDefaultStringArgument
+class XALAN_XPATH_EXPORT FunctionString : public Function
 {
 public:
 
 	// These methods are inherited from Function ...
+	FunctionString();
 
-	virtual XObject*
+	virtual
+	~FunctionString();
+
+	XObject*
 	execute(
 			XPathExecutionContext&			executionContext,
-			XalanNode*						context,
-			int								/* opPos */,
-			const XObjectArgVectorType&		args)
-	{
-		XObject*		theResult = 0;
+			XalanNode*						context,			
+			const XObject*					arg1);
 
-		const XObjectArgVectorType::size_type	theSize = args.size();
+	XObject*
+	execute(
+			XPathExecutionContext&			executionContext,
+			XalanNode*						context);	
 
-		if(theSize > 1)
-		{
-			executionContext.error("The string() function takes zero or one argument!",
-								   context);
-		}
-		else if(theSize == 0)
-		{
-			if (context == 0)
-			{
-				executionContext.error("The string() function requires a non-null context node!",
-									   context);
-			}
-			else
-			{
-				theResult = executionContext.getXObjectFactory().createString(
-									getDefaultStringArgument(
-											executionContext,
-											*context));
-			}
-		}
-		else
-		{
-			assert(args[0] != 0);
-
-			theResult = executionContext.getXObjectFactory().createString(args[0]->str());
-		}
-
-		return theResult;
-	}
-
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
 	virtual Function*
-#else
-	virtual FunctionString*
-#endif
-	clone() const
-	{
-		return new FunctionString(*this);
-	}
+	clone() const;
 
 private:
+
+	const XalanDOMString
+	getError() const;
+
 
 	// Not implemented...
 	FunctionString&

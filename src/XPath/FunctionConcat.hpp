@@ -64,93 +64,58 @@
 
 
 
-#include <vector>
-
-
-
-#include <PlatformSupport/DOMStringHelper.hpp>
-
-
-
 // Base class header file...
 #include <XPath/Function.hpp>
-
-
-
-#include <XPath/XObject.hpp>
-#include <XPath/XObjectFactory.hpp>
-#include <XPath/XPathExecutionContext.hpp>
 
 
 
 /**
  * XPath implementation of "concat" function.
  */
-//
-// These are all inline, even though
-// there are virtual functions, because we expect that they will only be
-// needed by the XPath class.
 class XALAN_XPATH_EXPORT FunctionConcat : public Function
 {
 public:
+
+	FunctionConcat();
+
+	virtual
+	~FunctionConcat();
 
 	// These methods are inherited from Function ...
 
 	virtual XObject*
 	execute(
 			XPathExecutionContext&			executionContext,
-			XalanNode*						context,
-			int								/* opPos */,
-			const XObjectArgVectorType&		args)
-	{
-		const XObjectArgVectorType::size_type	theArgCount = args.size();
+			XalanNode*						/* context */,			
+			const XObject*					arg1,
+			const XObject*					arg2);
 
-		if (theArgCount < 2)
-		{
-			executionContext.error("The concat() function takes at least two arguments!",
-								   context);
-		}
+	virtual XObject*
+	execute(
+			XPathExecutionContext&			executionContext,
+			XalanNode*						/* context */,			
+			const XObject*					arg1,
+			const XObject*					arg2,
+			const XObject*					arg3);
 
-		unsigned int	theCombinedLength = 0;
-
-		const XObjectArgVectorType::const_iterator	theEnd = args.end();
-
-		{
-			XObjectArgVectorType::const_iterator	i = args.begin();
-
-			for(; i != theEnd; ++i)
-			{
-				theCombinedLength += length((*i)->str());
-			}
-		}
-
-		XalanDOMString	theResult;
-
-		reserve(theResult, theCombinedLength + 1);
-
-		{
-			XObjectArgVectorType::const_iterator	i = args.begin();
-
-			for(; i != theEnd; ++i)
-			{
-				theResult += (*i)->str();
-			}
-		}
-
-		return executionContext.getXObjectFactory().createString(theResult);
-	}
+	virtual XObject*
+	execute(
+		XPathExecutionContext&			executionContext,
+		XalanNode*						/* context */,
+		int								/* opPos */,
+		const XObjectArgVectorType&		args);
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
 	virtual Function*
 #else
 	virtual FunctionConcat*
 #endif
-	clone() const
-	{
-		return new FunctionConcat(*this);
-	}
+	clone() const;
 
 private:
+
+	virtual const XalanDOMString
+	getError() const;
 
 	// Not implemented...
 	FunctionConcat&

@@ -64,68 +64,41 @@
 
 
 
-#include <vector>
-
-
-
 // Base class header file...
 #include <XPath/Function.hpp>
-
-
-
-#include <XPath/XObject.hpp>
-#include <XPath/XObjectFactory.hpp>
-#include <XPath/XPathExecutionContext.hpp>
 
 
 
 /**
  * XPath implementation of "position" function.
  */
-//
-// These are all inline, even though
-// there are virtual functions, because we expect that they will only be
-// needed by the XPath class.
 class XALAN_XPATH_EXPORT FunctionPosition : public Function
 {
 public:
+
+	FunctionPosition();
+
+	virtual
+	~FunctionPosition();
 
 	// These methods are inherited from Function ...
 
 	virtual XObject*
 	execute(
 			XPathExecutionContext&			executionContext,
-			XalanNode*						context,
-			int								/* opPos */,
-			const XObjectArgVectorType&		args)
-	{
-		if (args.size() != 0)
-		{
-			executionContext.error("The position() function takes no arguments!",
-								   context);
-		}
-		else if (context == 0)
-		{
-			executionContext.error("The position() function requires a non-null context node!",
-								   context);
-		}
-
-		const unsigned int	theValue = executionContext.getContextNodeListPosition(*context);
-
-		return executionContext.getXObjectFactory().createNumber(theValue);
-	}
-
+			XalanNode*						context);
+	
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
 	virtual Function*
 #else
 	virtual FunctionPosition*
 #endif
-	clone() const
-	{
-		return new FunctionPosition(*this);
-	}
+	clone() const;
 
 private:
+
+	const XalanDOMString
+	getError() const;
 
 	// Not implemented...
 	FunctionPosition&

@@ -64,6 +64,12 @@
 
 
 
+#include <XPath/XObject.hpp>
+#include <XPath/XObjectFactory.hpp>
+#include <XPath/XPathExecutionContext.hpp>
+
+
+
 #include <vector>
 
 
@@ -88,11 +94,7 @@ public:
 	{
 	}
 
-#if defined(XALAN_NO_NAMESPACES)
-	typedef vector<const XObject*>			XObjectArgVectorType;
-#else
-	typedef std::vector<const XObject*>		XObjectArgVectorType;
-#endif
+	typedef XPathExecutionContext::XObjectArgVectorType	XObjectArgVectorType;
 
 	/**
 	 * Execute an XPath function object.  The function must return a valid
@@ -108,8 +110,89 @@ public:
 	execute(
 			XPathExecutionContext&			executionContext,
 			XalanNode*						context,
-			int								opPos,
-			const XObjectArgVectorType&		args) = 0;
+			int								/* opPos */,
+			const XObjectArgVectorType&		/* args */)
+	{
+		executionContext.error(getError(), context);
+		return 0;
+	}
+
+	/**
+	 * Execute an XPath function object.  The function must return a valid
+	 * object. Called if function has no parameters.
+	 *
+	 * @param executionContext executing context
+	 * @param context          current context node	 
+	 * @return                 pointer to the result XObject
+	 */
+	virtual XObject*
+	execute(
+			XPathExecutionContext&			executionContext,
+			XalanNode*						context)
+	{
+		executionContext.error(getError(), context);
+		return 0;
+	}
+
+	/**
+	 * Execute an XPath function object.  The function must return a valid
+	 * object. Called if function has one parameter.
+	 *
+	 * @param executionContext executing context
+	 * @param context          current context node
+	 * @param arg1             pointer to XObject arguments
+	 * @return                 pointer to the result XObject
+	 */
+	virtual XObject*
+	execute(
+			XPathExecutionContext&			executionContext,
+			XalanNode*						context,			
+			const XObject*					/* arg1 */)
+	{
+		executionContext.error(getError(), context);
+		return 0;
+	}
+
+	/**
+	 * Execute an XPath function object.  The function must return a valid
+	 * object. Called if function has two parameters.
+	 *
+	 * @param executionContext executing context
+	 * @param context          current context node
+	 * @param arg1             pointer to XObject arguments
+	 * @return                 pointer to the result XObject
+	 */
+	virtual XObject*
+	execute(
+			XPathExecutionContext&			executionContext,
+			XalanNode*						context,			
+			const XObject*					/* arg1 */,
+			const XObject*					/* arg2 */)
+	{
+		executionContext.error(getError(), context);
+		return 0;
+	}
+
+	/**
+	 * Execute an XPath function object.  The function must return a valid
+	 * object. Called if function has three parameters.
+	 *
+	 * @param executionContext executing context
+	 * @param context          current context node
+	 * @param arg1             pointer to XObject arguments
+	 * @return                 pointer to the result XObject
+	 */
+	virtual XObject*
+	execute(
+			XPathExecutionContext&			executionContext,
+			XalanNode*						context,			
+			const XObject*					/* arg1 */,
+			const XObject*					/* arg2 */,
+			const XObject*					/* arg3 */)
+	{
+		executionContext.error(getError(), context);
+		return 0;
+	}
 
 	/**
 	 * Create a copy of the function object.
@@ -121,6 +204,17 @@ public:
 
 private:
 
+	/**
+	 * Create a copy of the function object.
+	 *
+	 * @return string function name
+	 */
+	virtual const XalanDOMString
+	getError() const
+	{
+		return "Unknown function called.";
+	}
+	
 	// Not implemented...
 	Function&
 	operator=(const Function&);

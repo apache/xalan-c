@@ -64,68 +64,43 @@
 
 
 
-#include <vector>
-
-
-
-#include <PlatformSupport/DOMStringHelper.hpp>
-
-
-
 // Base class header file...
 #include <XPath/Function.hpp>
-
-
-
-#include <XPath/XObject.hpp>
-#include <XPath/XObjectFactory.hpp>
-#include <XPath/XPathExecutionContext.hpp>
 
 
 
 /**
  * XPath implementation of "starts-with" function.
  */
-//
-// These are all inline, even though
-// there are virtual functions, because we expect that they will only be
-// needed by the XPath class.
 class XALAN_XPATH_EXPORT FunctionStartsWith : public Function
 {
 public:
+
+	FunctionStartsWith();
+
+	virtual
+	~FunctionStartsWith();
 
 	// These methods are inherited from Function ...
 
 	virtual XObject*
 	execute(
 			XPathExecutionContext&			executionContext,
-			XalanNode*						context,
-			int								/* opPos */,
-			const XObjectArgVectorType&		args)
-	{
-		if(args.size() != 2)
-		{
-			executionContext.error("The starts-with() function takes one argument!",
-								   context);
-		}
-
-		const bool	fStartsWith = startsWith(args[0]->str(),
-											 args[1]->str());
-
-		return executionContext.getXObjectFactory().createBoolean(fStartsWith);
-	}
+			XalanNode*						context,			
+			const XObject*					arg1,
+			const XObject*					arg2);
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
 	virtual Function*
 #else
 	virtual FunctionStartsWith*
 #endif
-	clone() const
-	{
-		return new FunctionStartsWith(*this);
-	}
+	clone() const;
 
 private:
+
+	virtual const XalanDOMString
+	getError() const;
 
 	// Not implemented...
 	FunctionStartsWith&

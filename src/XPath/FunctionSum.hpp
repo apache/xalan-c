@@ -64,10 +64,6 @@
 
 
 
-#include <vector>
-
-
-
 #include <PlatformSupport/DOMStringHelper.hpp>
 #include <PlatformSupport/DoubleSupport.hpp>
 
@@ -78,68 +74,37 @@
 
 
 
-#include <XPath/NodeRefListBase.hpp>
-#include <XPath/XObject.hpp>
-#include <XPath/XObjectFactory.hpp>
-#include <XPath/XPathExecutionContext.hpp>
-
-
-
 /**
  * XPath implementation of "sum" function.
  */
-//
-// These are all inline, even though
-// there are virtual functions, because we expect that they will only be
-// needed by the XPath class.
 class XALAN_XPATH_EXPORT FunctionSum : public Function
 {
 public:
+
+	FunctionSum();
+
+	virtual
+	~FunctionSum();
 
 	// These methods are inherited from Function ...
 
 	virtual XObject*
 	execute(
 			XPathExecutionContext&			executionContext,
-			XalanNode*						context,
-			int								/* opPos */,
-			const XObjectArgVectorType&		args)
-	{
-		if (args.size() != 1)
-		{
-			executionContext.error("The sum() function takes one argument!",
-								   context);
-		}
-
-		const NodeRefListBase&	nl = args[0]->nodeset();
-
-		double					sum = 0.0;
-
-		const unsigned int		count = nl.getLength();
-
-		for (unsigned int i = 0; i < count; i++)
-		{
-			XalanDOMString	theData;
-
-			executionContext.getNodeData(*nl.item(i), theData);
-
-			sum += DoubleSupport::toDouble(theData);
-		}
-
-		return executionContext.getXObjectFactory().createNumber(sum);
-	}
+			XalanNode*						context,			
+			const XObject*					arg1);
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
 	virtual Function*
 #else
 	virtual FunctionSum*
 #endif
-	clone() const
-	{
-		return new FunctionSum(*this);
-	}
+	clone() const;
 
 private:
+
+	virtual const XalanDOMString
+	getError() const;
 
 	// Not implemented...
 	FunctionSum&

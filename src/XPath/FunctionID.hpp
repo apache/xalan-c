@@ -53,8 +53,6 @@
  * Business Machines, Inc., http://www.ibm.com.  For more
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
- *
- * @author <a href="mailto:david_n_bertoni@lotus.com">David N. Bertoni</a>
  */
 #if !defined(FUNCTIONID_HEADER_GUARD_1357924680)
 #define FUNCTIONID_HEADER_GUARD_1357924680
@@ -84,138 +82,40 @@
 
 #include <PlatformSupport/DOMStringHelper.hpp>
 #include <PlatformSupport/StringTokenizer.hpp>
-#include <PlatformSupport/XalanUnicode.hpp>
 
 
 
 #include <XPath/MutableNodeRefList.hpp>
 #include <XPath/NodeRefListBase.hpp>
-#include <XPath/XObject.hpp>
-#include <XPath/XObjectFactory.hpp>
-#include <XPath/XPathExecutionContext.hpp>
 
 
 
 /**
  * XPath implementation of "id" function.
  */
-//
-// These are all inline, even though
-// there are virtual functions, because we expect that they will only be
-// needed by the XPath class.
 class XALAN_XPATH_EXPORT FunctionID : public Function
 {
 public:
 
-	FunctionID() :
-		Function()
-	{
-	}
+	FunctionID();
+
+	virtual
+	~FunctionID();
 
 	// These methods are inherited from Function ...
 
 	virtual XObject*
 	execute(
 			XPathExecutionContext&			executionContext,
-			XalanNode*						context,
-			int								/* opPos */,
-			const XObjectArgVectorType&		args)
-	{
-		if (args.size() != 1)
-		{
-			executionContext.error("The id() function takes one argument!",
-								   context);
-		}
-		else if (context == 0)
-		{
-			executionContext.error("The id() function requires a non-null context node!",
-								   context);
-		}
-
-		assert(args[0] != 0);
-
-		// Do the callback to get the data.
-		FunctionIDXObjectTypeCallback	theCallback(executionContext);
-
-		const XalanDOMString	theResultString =
-			theCallback.processCallback(*args[0]);
-
-		// Get the context document, so we can search for nodes.
-		const XalanDocument* const	theDocContext = context->getNodeType() == XalanNode::DOCUMENT_NODE ?
-#if defined(XALAN_OLD_STYLE_CASTS)
-										(const XalanDocument*)context :
-#else
-										static_cast<const XalanDocument*>(context) :
-#endif
-										context->getOwnerDocument();
-		assert(theDocContext != 0);
-
-		typedef XPathExecutionContext::BorrowReturnMutableNodeRefList	BorrowReturnMutableNodeRefList;
-
-		// This list will hold the nodes we find.
-
-		BorrowReturnMutableNodeRefList	theNodeList(executionContext);
-
-		// If there is no context, we cannot continue.
-		if(0 == theDocContext)
-		{
-			executionContext.error("The context node does not have an owner document!",
-								   context);
-        }
-		else if (length(theResultString) > 0)
-		{
-#if defined(XALAN_NO_NAMESPACES)
-			typedef set<XalanDOMString, less<XalanDOMString> >	TokenSetType;
-#else
-			typedef std::set<XalanDOMString>	TokenSetType;
-#endif
-
-			// This set will hold tokens that we've previously found, so
-			// we can avoid looking more than once.
-			TokenSetType		thePreviousTokens;
-
-			StringTokenizer		theTokenizer(theResultString);
-
-			// Parse the result string...
-			while(theTokenizer.hasMoreTokens() == true)
-			{
-				const XalanDOMString	theToken = theTokenizer.nextToken();
-
-				if (length(theToken) > 0)
-				{
-					// See if we've already seen this one...
-					TokenSetType::const_iterator	i =
-						thePreviousTokens.find(theToken);
-
-					if (i == thePreviousTokens.end())
-					{
-						thePreviousTokens.insert(theToken);
-
-						XalanNode* const	theNode =
-							executionContext.getElementByID(theToken, *theDocContext);
-
-						if (theNode != 0)
-						{
-							theNodeList->addNodeInDocOrder(theNode, executionContext);
-						}
-					}
-				}
-			}
-		}
-
-		return executionContext.getXObjectFactory().createNodeSet(theNodeList);
-	}
+			XalanNode*						context,			
+			const XObject*					arg1);
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
 	virtual Function*
 #else
 	virtual FunctionID*
 #endif
-	clone() const
-	{
-		return new FunctionID(*this);
-	}
-
+	clone() const;
 
 private:
 
@@ -285,7 +185,7 @@ private:
 			{
 				m_executionContext.getNodeData(*theValue.item(i), m_resultString);
 
-				append(m_resultString, XalanDOMChar(XalanUnicode::charSpace));
+				append(m_resultString, XalanDOMChar(XalanUnicode::charSpace));			
 			}
 		}
 
@@ -306,6 +206,9 @@ private:
 
 		XPathExecutionContext&	m_executionContext;
 	};
+
+	virtual const XalanDOMString
+	getError() const;
 
 	// Not implemented...
 	FunctionID&

@@ -1402,9 +1402,73 @@ XPath::runFunction(
 	opPos++;
 
 	// Number of args is next, not used for now...
-//	const int	argCount = m_expression.m_opMap[opPos];
+	const int	argCount = m_expression.m_opMap[opPos];
 
 	opPos++;
+
+	XObjectFactory&		theFactory = executionContext.getXObjectFactory();
+
+	if (argCount == 0)
+	{
+		assert(opPos == endFunc);
+
+		return s_functions[funcID].execute(executionContext, context);
+	}
+	else if (argCount == 1)
+	{
+		const int	nextOpPos = m_expression.getNextOpCodePosition(opPos);
+
+		const XObjectGuard	theArg(theFactory, executeMore(context, opPos, executionContext));
+
+		opPos = nextOpPos;
+		
+		assert(opPos == endFunc);
+
+		return s_functions[funcID].execute(executionContext, context, theArg.get());
+	}
+	else if (argCount == 2)
+	{
+		int	nextOpPos = m_expression.getNextOpCodePosition(opPos);
+
+		const XObjectGuard	theArg1(theFactory, executeMore(context, opPos, executionContext));
+
+		opPos = nextOpPos;
+
+		nextOpPos = m_expression.getNextOpCodePosition(opPos);
+
+		const XObjectGuard	theArg2(theFactory, executeMore(context, opPos, executionContext));
+
+		opPos = nextOpPos;
+		
+		assert(opPos == endFunc);
+
+		return s_functions[funcID].execute(executionContext, context, theArg1.get(), theArg2.get());
+	}
+	else if (argCount == 3)
+	{
+
+		int	nextOpPos = m_expression.getNextOpCodePosition(opPos);
+
+		const XObjectGuard	theArg1(theFactory, executeMore(context, opPos, executionContext));
+
+		opPos = nextOpPos;
+
+		nextOpPos = m_expression.getNextOpCodePosition(opPos);
+
+		const XObjectGuard	theArg2(theFactory, executeMore(context, opPos, executionContext));
+
+		opPos = nextOpPos;
+
+		nextOpPos = m_expression.getNextOpCodePosition(opPos);
+
+		const XObjectGuard	theArg3(theFactory, executeMore(context, opPos, executionContext));
+
+		opPos = nextOpPos;
+
+		assert(opPos == endFunc);
+
+		return s_functions[funcID].execute(executionContext, context, theArg1.get(), theArg2.get(), theArg3.get());
+	}
 
 	typedef XPathExecutionContext::XObjectArgVectorType		XObjectArgVectorType;
 	typedef XPathExecutionContext::PushPopArgVector			PushPopArgVector;
@@ -1424,8 +1488,6 @@ XPath::runFunction(
 
 	const XObject* const		theResult =
 		function(context, opPos, funcID, args, executionContext);
-
-	XObjectFactory&		theFactory = executionContext.getXObjectFactory();
 
 	// Return the args...
 	while(args.size() > 0)

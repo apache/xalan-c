@@ -65,7 +65,6 @@
 
 
 #include <cmath>
-#include <vector>
 
 
 
@@ -74,102 +73,40 @@
 
 
 
-#include <PlatformSupport/DoubleSupport.hpp>
-
-
-
-#include <XPath/XObject.hpp>
-#include <XPath/XObjectFactory.hpp>
-#include <XPath/XPathExecutionContext.hpp>
-
-
-
 /**
  * XPath implementation of "round" function.
  */
-//
-// These are all inline, even though
-// there are virtual functions, because we expect that they will only be
-// needed by the XPath class.
 class XALAN_XPATH_EXPORT FunctionRound : public Function
 {
 public:
+
+	FunctionRound();
+
+	virtual
+	~FunctionRound();
 
 	// These methods are inherited from Function ...
 
 	virtual XObject*
 	execute(
 			XPathExecutionContext&			executionContext,
-			XalanNode*						context,
-			int								/* opPos */,
-			const XObjectArgVectorType&		args)
-	{
-		if (args.size() != 1)
-		{
-			executionContext.error("The round() function takes one argument!",
-								   context);
-		}
-
-		const double	theValue = args[0]->num();
-
-		return executionContext.getXObjectFactory().createNumber(getRoundedValue(theValue));
-	}
+			XalanNode*						context,			
+			const XObject*					arg1);
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
 	virtual Function*
 #else
 	virtual FunctionRound*
 #endif
-	clone() const
-	{
-		return new FunctionRound(*this);
-	}
+	clone() const;
 
 	static double
-	getRoundedValue(double	theValue)
-	{
-		if (DoubleSupport::isNaN(theValue))
-		{
-			return DoubleSupport::getNaN();
-		}
-		else if (DoubleSupport::isPositiveInfinity(theValue))
-		{
-			return DoubleSupport::getPositiveInfinity();
-		}
-		if (DoubleSupport::isNegativeInfinity(theValue))
-		{
-			return DoubleSupport::getNegativeInfinity();
-		}
-		else if (theValue == 0)
-		{
-			return 0.0;
-		}
-		else if (theValue > 0)
-		{
-			return long(theValue + 0.5);
-		}
-		else
-		{
-			// Negative numbers are a special case.  Any time we
-			// have -0.5 as the fractional part, we have to
-			// round up (toward 0), rather than down.
-			double			intPart = 0;
-
-			const double	fracPart = modf(theValue, &intPart);
-
-			if (fracPart == -0.5)
-			{
-				// special case -- we have have to round toward 0...
-				return long(theValue + 0.5);
-			}
-			else
-			{
-				return long(theValue - 0.5);
-			}
-		}
-	}
+	getRoundedValue(double	theValue);
 
 private:
+
+	virtual const XalanDOMString
+	getError() const;
 
 	// Not implemented...
 	FunctionRound&

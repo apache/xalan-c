@@ -80,7 +80,7 @@
 
 
 
-#include <XPath/Function.hpp>
+//#include <XPath/Function.hpp>
 #include <XPath/MutableNodeRefList.hpp>
 
 
@@ -108,7 +108,11 @@ class XALAN_XPATH_EXPORT XPathExecutionContext : public ExecutionContext
 {
 public:
 
-	typedef Function::XObjectArgVectorType	XObjectArgVectorType;
+#if defined(XALAN_NO_NAMESPACES)
+	typedef vector<const XObject*>			XObjectArgVectorType;
+#else
+	typedef std::vector<const XObject*>		XObjectArgVectorType;
+#endif
 
 	explicit
 	XPathExecutionContext();

@@ -64,17 +64,8 @@
 
 
 
-#include <vector>
-
-
-
 #include <XalanDOM/XalanElement.hpp>
 #include <XalanDOM/XalanNode.hpp>
-
-
-
-#include <PlatformSupport/DOMStringHelper.hpp>
-#include <PlatformSupport/XalanUnicode.hpp>
 
 
 
@@ -83,92 +74,37 @@
 
 
 
-#include <XPath/XObject.hpp>
-#include <XPath/XObjectFactory.hpp>
-#include <XPath/XPathExecutionContext.hpp>
-
-
-
 /**
  * XPath implementation of "lang" function.
  */
-//
-// These are all inline, even though
-// there are virtual functions, because we expect that they will only be
-// needed by the XPath class.
 class XALAN_XPATH_EXPORT FunctionLang : public Function
 {
 public:
+
+	FunctionLang();
+
+	virtual
+	~FunctionLang();
 
 	// These methods are inherited from Function ...
 
 	virtual XObject*
 	execute(
 			XPathExecutionContext&			executionContext,
-			XalanNode*						context,
-			int								/* opPos */,
-			const XObjectArgVectorType&		args)
-	{
-		if (args.size() != 1)
-		{
-			executionContext.error("The lang() function takes one argument!",
-								   context);
-		}
-
-		const XalanNode*		parent = context;
-
-		bool					fMatch = false;
-
-		const XalanDOMString&	lang = args[0]->str();
-
-		while(0 != parent)
-		{
-			if(XalanNode::ELEMENT_NODE == parent->getNodeType())
-			{
-				const XalanElement* const	theElementNode =
-#if defined(XALAN_OLD_STYLE_CASTS)
-					(const XalanElement*)parent;
-#else
-					static_cast<const XalanElement*>(parent);
-#endif
-
-				const XalanDOMString		langVal =
-					theElementNode->getAttribute(StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("xml:lang")));
-
-				if(0 != length(langVal))
-				{
-					if(startsWith(toLowerCase(langVal), toLowerCase(lang)))
-					{
-						const unsigned int	valLen = length(lang);
-
-						if(length(langVal) == valLen ||
-						   charAt(langVal, valLen) == XalanUnicode::charHyphenMinus)
-						{
-							fMatch = true;
-
-							break;
-						}
-					}
-				}
-			}
-
-			parent = executionContext.getParentOfNode(*parent);
-		}
-
-		return executionContext.getXObjectFactory().createBoolean(fMatch);
-	}
+			XalanNode*						context,			
+			const XObject*					arg1);
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
 	virtual Function*
 #else
 	virtual FunctionLang*
 #endif
-	clone() const
-	{
-		return new FunctionLang(*this);
-	}
+	clone() const;
 
 private:
+
+	virtual const XalanDOMString
+	getError() const;
 
 	// Not implemented...
 	FunctionLang&

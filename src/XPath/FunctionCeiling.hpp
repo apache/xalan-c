@@ -65,7 +65,6 @@
 
 
 #include <cmath>
-#include <vector>
 
 
 
@@ -74,51 +73,37 @@
 
 
 
-#include <XPath/XObjectFactory.hpp>
-#include <XPath/XPathExecutionContext.hpp>
-
-
-
 /**
  * XPath implementation of "ceiling" function.
  */
-//
-// These are all inline, even though
-// there are virtual functions, because we expect that they will only be
-// needed by the XPath class.
 class XALAN_XPATH_EXPORT FunctionCeiling : public Function
 {
 public:
+
+	FunctionCeiling();
+
+	virtual
+	~FunctionCeiling();
 
 	// These methods are inherited from Function ...
 
 	virtual XObject*
 	execute(
 			XPathExecutionContext&			executionContext,
-			XalanNode*						context,
-			int								/* opPos */,
-			const XObjectArgVectorType&		args)
-	{
-		if (args.size() != 1)
-		{
-			executionContext.error("The ceiling() function takes one argument!",
-								   context);
-		}
-
-		return executionContext.getXObjectFactory().createNumber(ceil(args[0]->num()));
-	}
+			XalanNode*						context,			
+			const XObject*					arg1);
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
 	virtual Function*
 #else
 	virtual FunctionCeiling*
 #endif
-	clone() const
-	{
-		return new FunctionCeiling(*this);
-	}
+	clone() const;
 
 private:
+
+	virtual const XalanDOMString
+	getError() const;
 
 	// Not implemented...
 	FunctionCeiling&
