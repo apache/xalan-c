@@ -86,7 +86,7 @@ public:
 
 #if defined(XALAN_NO_NAMESPACES)
 	StdBinInputStream(
-			istream&		theStream
+			istream&		theStream,
 #else
 	StdBinInputStream(
 			std::istream&	theStream,
