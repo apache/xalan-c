@@ -132,9 +132,9 @@ VariablesStack::pushContextMarker()
 void
 VariablesStack::popContextMarker()
 {
-	const unsigned int	nElems = m_stack.size();
+	const int	nElems = m_stack.size();
 
-	for(unsigned int i = (nElems - 1); i > 0 && m_stack.empty() == false; --i)
+	for(int i = (nElems - 1); i >= 0 && m_stack.empty() == false; --i)
 	{
 		const StackEntry&	theEntry = m_stack[i];
 		assert(theEntry == back());

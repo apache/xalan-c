@@ -227,15 +227,6 @@ public:
 	outputToResultTree(const XObject&	xobj) = 0;
 
 	/**
-	 * Retrieve a top level variable corresponding to name.
-	 * 
-	 * @param theName name of variable
-	 * @return pointer to XObject for variable
-	 */
-	virtual XObject*
-	getTopLevelVariable(const XalanDOMString&	theName) const = 0;
-
-	/**
 	 * Reset the state of execution to node 'xmlNode' in source tree
 	 * 'sourceTree.'
 	 * 
@@ -246,22 +237,6 @@ public:
 	resetCurrentState(
 			XalanNode*	sourceTree,
 			XalanNode*	xmlNode) = 0;
-
-	/**
-	 * Retrieve root document for stylesheet.
-	 * 
-	 * @return root document
-	 */
-	virtual XalanDocument*
-	getRootDoc() const = 0;
-
-	/**
-	 * Set root document for stylesheet.
-	 * 
-	 * @param doc root document
-	 */
-	virtual void
-	setRootDoc(XalanDocument*	doc) = 0;
 
 	/**
 	 * Retrieve the root stylesheet.
@@ -358,7 +333,7 @@ public:
    getUniqueNSValue() const = 0;
 
 	/**
-	 * Convenience function to create an XObject that represents a Result tree
+	 * Function to create an XObject that represents a Result tree
 	 * fragment.
 	 *
 	 * @param r result tree fragment to use
@@ -368,37 +343,15 @@ public:
    createXResultTreeFrag(const ResultTreeFragBase&	r) const = 0;
 
 	/**
-	 * Given a name, locate a variable in the current context, and return 
-	 * a pointer to the object.
+	 * Function to destroy an XObject that was returned
+	 * by executing.  It is safe to call this function
+	 * with any XObject.
 	 *
-	 * @param theName name of variable
-	 * @return pointer to an XObject if the variable was found, 0 if it was not
+	 * @param theXObject pointer to the XObject.
+	 * @return true if the object was destroyed.
 	 */
-   virtual XObject*
-   getVariable(const QName& qname) const = 0;
-
-	/**
-	 * Given a name, return a string representing the value, but don't look in
-	 * the global space.
-	 *
-	 * @param theName name of variable
-	 * @return pointer to XObject for variable
-	 */
-	virtual XObject*
-	getParamVariable(const QName&	theName) const = 0;
-
-	/**
-	 * Push a named variable onto the processor variable stack
-	 *
-	 * @param name	  name of variable
-	 * @param var	  pointer to XObject value
-	 * @param element element marker for variable
-	 */
-	virtual void
-	pushVariable(
-			const QName&		name,
-			XObject*			var,
-			const XalanNode*	element) = 0;
+   virtual bool
+   destroyXObject(XObject*	theXObject) const = 0;
 
   /**
 	* Push a top-level stylesheet parameter.  This value can be evaluated via

@@ -71,7 +71,6 @@
 
 
 
-#include "QName.hpp"
 #include "SimpleNodeLocator.hpp"
 #include "XObject.hpp"
 #include "XObjectFactory.hpp"
@@ -225,17 +224,6 @@ XPathEnvSupportDefault::getNodeSetByKey(
 			XPathExecutionContext&	/* executionContext */) const
 {
 	return 0;
-}
-
-
-
-XObject*
-XPathEnvSupportDefault::getVariable(
-			XObjectFactory&		xobjectFactory,
-			const QName&		name) const
-
-{
-	return xobjectFactory.createUnknown(name.getLocalPart());
 }
 
 
@@ -437,8 +425,7 @@ XPathEnvSupportDefault::extFunction(
 					0,
 					argVec);
 	}
-
-	if (theResult == 0)
+	else
 	{
 		XalanDOMString	theFunctionName;
 

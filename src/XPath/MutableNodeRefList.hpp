@@ -218,29 +218,6 @@ public:
 	virtual XPathSupport*
 	getSupport() const;
 
-protected:
-
-	// Default vector allocation size.  It seems high, but
-	// it's really worth it...
-	enum
-	{
-		eDefaultVectorSize = 1000
-	};
-
-	/**
-	 * Ensure that an allocation is either the default allocation
-	 * amount, or the amount specified in the parameter, whichever
-	 * is larger.
-	 *
-	 * @param theSize The requested size.
-	 */
-	void
-	ensureAllocation(NodeListVectorType::size_type	theSize = 0)
-	{
-		m_nodeList.reserve(eDefaultVectorSize > theSize ? eDefaultVectorSize : theSize);
-	}
-
-
 private:
 
 	XPathSupport*	m_support;

@@ -58,9 +58,18 @@
 
 
 
+#if !defined(NDEBUG)
+unsigned long	StackEntry::s_instanceCount = 0;
+#endif
+
+
+
 StackEntry::StackEntry(eStackEntryType	theType) :
 	m_type(theType)
 {
+#if !defined(NDEBUG)
+	++s_instanceCount;
+#endif
 }
 
 
@@ -68,12 +77,18 @@ StackEntry::StackEntry(eStackEntryType	theType) :
 StackEntry::StackEntry(const StackEntry&	theSource) :
 	m_type(theSource.m_type)
 {
+#if !defined(NDEBUG)
+	++s_instanceCount;
+#endif
 }
 
 
 
 StackEntry::~StackEntry()
 {
+#if !defined(NDEBUG)
+	--s_instanceCount;
+#endif
 }
 
 

@@ -91,6 +91,7 @@ XString::XString(
 XString::XString(const XString&	source) :
 	XObject(source),
 	m_value(source.m_value),
+	m_cachedNumberValue(source.m_cachedNumberValue),
 	m_resultTreeFrag(source.m_resultTreeFrag.get() == 0 ?
 						0 :
 						source.m_resultTreeFrag->clone(true))

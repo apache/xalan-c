@@ -64,6 +64,7 @@
 
 
 
+#include <deque>
 #include <vector>
 
 
@@ -128,11 +129,31 @@ public:
 
 protected:
 
+	// Default vector allocation size.  It seems high, but
+	// it's really worth it...
+	enum
+	{
+		eDefaultVectorSize = 100
+	};
+
 #if defined(XALAN_NO_NAMESPACES)
 	typedef vector<XalanNode*>			NodeListVectorType;
 #else
 	typedef std::vector<XalanNode*>		NodeListVectorType;
 #endif
+
+	/**
+	 * Ensure that an allocation is either the default allocation
+	 * amount, or the amount specified in the parameter, whichever
+	 * is larger.
+	 *
+	 * @param theSize The requested size.
+	 */
+	void
+	ensureAllocation(NodeListVectorType::size_type	theSize = 0)
+	{
+		m_nodeList.reserve(eDefaultVectorSize > theSize ? eDefaultVectorSize : theSize);
+	}
 
 	NodeListVectorType	m_nodeList;
 };

@@ -251,24 +251,6 @@ XSLTProcessorEnvSupportDefault::getNodeSetByKey(
 
 
 
-XObject*
-XSLTProcessorEnvSupportDefault::getVariable(
-			XObjectFactory&		factory,
-			const QName&		name) const
-{
-	if (m_processor == 0)
-	{
-		return m_defaultSupport.getVariable(factory,
-											name);
-	}
-	else
-	{
-		return m_processor->getVariable(name);
-	}
-}
-
-
-
 XalanDocument*
 XSLTProcessorEnvSupportDefault::parseXML(
 		const XalanDOMString&	urlString,

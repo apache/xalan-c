@@ -93,34 +93,13 @@ public:
 		return m_type;
 	}
 
-	/**
-	 * Create a copy of this stack entry object.
-	 * 
-	 * @return pointer to copy
-	 */
-	virtual StackEntry*
-	clone() const = 0;
-
-	/**
-	 * Compare this stack entry to another
-	 * 
-	 * @param rhs the object for comparison
-	 * @return true if both represent the same value
-	 */
-	virtual bool
-	equals(const StackEntry& rhs) const = 0;
-
-	/**
-	 * Compare this stack entry to another
-	 * 
-	 * @param rhs the object for comparison
-	 * @return true if both represent the same value
-	 */
-	bool
-	operator==(const StackEntry& theRHS) const
+#if !defined(NDEBUG)
+	static unsigned long
+	getInstanceCount()
 	{
-		return equals(theRHS);
+		return s_instanceCount;
 	}
+#endif
 
 
 protected:
@@ -130,6 +109,10 @@ protected:
 	StackEntry(const StackEntry&	theSource);
 
 private:
+
+#if !defined(NDEBUG)
+	static unsigned long	s_instanceCount;
+#endif
 
 	// Data members...
 	eStackEntryType		m_type;

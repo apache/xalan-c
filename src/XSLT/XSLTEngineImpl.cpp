@@ -121,12 +121,8 @@
 
 
 
-#include "Arg.hpp"
 #include "Constants.hpp"
-#include "ContextMarker.hpp"
 #include "ElemWithParam.hpp"
-#include "ElementFrameMarker.hpp"
-#include "ElementMarker.hpp"
 #include "FunctionCurrent.hpp"
 #include "FunctionDocument.hpp"
 #include "FunctionElementAvailable.hpp"
@@ -190,7 +186,6 @@ XSLTEngineImpl::XSLTEngineImpl(
 			XPathFactory&		xpathFactory) :
 	XSLTProcessor(),
 	DocumentHandler(),
-	m_rootDoc(),
 	m_outputCarriageReturns(false),
 	m_outputLinefeeds(false),
 	m_resultTreeFactory(0),
@@ -208,8 +203,8 @@ XSLTEngineImpl::XSLTEngineImpl(
 	m_xpathProcessor(new XPathProcessorImpl),
 	m_cdataStack(),
 	m_stylesheetLocatorStack(),
-	m_variableStacks(*this),
-	m_problemListener(new ProblemListenerDefault()),
+	m_defaultProblemListener(),
+	m_problemListener(&m_defaultProblemListener),
 	m_stylesheetRoot(0),
 	m_XSLDirectiveLookup(),
 	m_traceSelects(false),
@@ -224,12 +219,7 @@ XSLTEngineImpl::XSLTEngineImpl(
 	m_xpathSupport(xpathSupport),
 	m_xpathEnvSupport(xpathEnvSupport),
 	m_flistener(0),
-	m_contextNodeList(&xpathSupport),
-	m_topLevelVariables(),
-	m_executionContext(0),
-	m_needToCheckForInfiniteLoops(false),
-	m_stackGuard(*this),
-	m_attrSetStack()
+	m_executionContext(0)
 {
 }
 
@@ -247,6 +237,16 @@ XSLTEngineImpl::Initialize()
 
 
 
+void
+XSLTEngineImpl::Terminate()
+{
+	s_XSLT4JElementKeys.clear();
+	s_elementKeys.clear();
+	s_attributeKeys.clear();
+}
+
+
+
 /**
  * Reset the state.  This needs to be called after a process() call 
  * is invoked, if the processor is to be used again.
@@ -254,8 +254,6 @@ XSLTEngineImpl::Initialize()
 void
 XSLTEngineImpl::reset()
 {
-	m_rootDoc = 0;
-
 	m_topLevelParams.clear();
 	m_durationsTable.clear();
 	m_stylesheetLocatorStack.clear();
@@ -263,14 +261,11 @@ XSLTEngineImpl::reset()
 	m_pendingAttributes.clear();
 	m_cdataStack.clear();
 	m_resultTreeFactory = 0;
-	m_contextNodeList.clear();
 	m_currentNode = 0;
-	m_needToCheckForInfiniteLoops = false;
-	m_variableStacks.reset();
+
 	m_hasPendingStartDocument = false;
 	m_mustFlushStartDocument = false;
 
-	m_stackGuard.clear();
 	m_xpathSupport.reset();
 	m_xpathEnvSupport.reset();
 	m_xpathFactory.reset();
@@ -281,8 +276,6 @@ XSLTEngineImpl::reset()
 
 XSLTEngineImpl::~XSLTEngineImpl()
 {
-	delete m_problemListener;
-
 	reset();
 }
 
@@ -291,22 +284,6 @@ XSLTEngineImpl::~XSLTEngineImpl()
 //==========================================================
 // SECTION: Main API Functions
 //==========================================================
-
-
-
-XalanDocument*
-XSLTEngineImpl::getRootDoc() const
-{
-	return m_rootDoc;
-}
-
-
-
-void
-XSLTEngineImpl::setRootDoc(XalanDocument*	doc)
-{
-	m_rootDoc = doc;
-}
 
 
 
@@ -1477,8 +1454,6 @@ XSLTEngineImpl::endDocument()
 
 		fireGenerateEvent(ge);
 	}
-
-	m_variableStacks.popCurrentContext();
 }
 
 
@@ -3143,37 +3118,6 @@ XSLTEngineImpl::getDOMFactory() const
 
 
 /**
- * Given a name, locate a variable in the current context, and return 
- * the Object.
- */
-XObject*
-XSLTEngineImpl::getVariable(const QName& qname) const
-{
-	return m_variableStacks.getXObjectVariable(qname);
-}
-
-
-
-XObject*
-XSLTEngineImpl::getParamVariable(const QName&	theName) const
-{
-	return m_variableStacks.getXObjectParamVariable(theName);
-}
-
-
-
-void
-XSLTEngineImpl::pushVariable(
-				const QName&		name,
-				XObject*			val,
-				const XalanNode*	e)
-{
-	m_variableStacks.pushVariable(name, val, e);
-}
-
-
-
-/**
  * Create a document fragment.  This function may return null.
  */
 ResultTreeFragBase* XSLTEngineImpl::createDocFrag() const
@@ -3181,25 +3125,6 @@ ResultTreeFragBase* XSLTEngineImpl::createDocFrag() const
 	return new ResultTreeFrag(*getDOMFactory(), m_xpathSupport);
 }
   
-
-
-XObject*
-XSLTEngineImpl::getXObjectVariable(
-			StylesheetExecutionContext&		executionContext,
-			const XalanDOMString&			name) const
-{
-	assert(m_stylesheetRoot != 0);
-
-	XObject*	theResult = m_variableStacks.getXObjectVariable(name);
-
-    if(0 == theResult)
-    {
-		theResult = m_stylesheetRoot->getTopLevelVariable(name, executionContext);
-    }
-
-    return theResult;
-}
-
 
 
 XLocator*
@@ -3220,26 +3145,6 @@ XSLTEngineImpl::associateXLocatorToNode(
 
 
 
-XObject*
-XSLTEngineImpl::getTopLevelVariable(const XalanDOMString&	theName) const
-{
-	TopLevelVariablesMapType::const_iterator	i =
-		m_topLevelVariables.find(theName);
-
-	if (i == m_topLevelVariables.end())
-	{
-		return 0;
-	}
-	else
-	{
-		assert((*i).second != 0);
-
-		return (*i).second;
-	}
-}
-
-
-
 ResultTreeFragBase*
 XSLTEngineImpl::createResultTreeFrag() const
 {
@@ -3255,7 +3160,7 @@ XSLTEngineImpl::setStylesheetParam(
 {
 	const QName		qname(theName, 0, m_xpathEnvSupport, m_xpathSupport);
 
-	m_topLevelParams.push_back(Arg(qname, expression, true));
+	m_topLevelParams.push_back(ParamVectorType::value_type(qname, expression));
 }
 
 
@@ -3267,7 +3172,7 @@ XSLTEngineImpl::setStylesheetParam(
 {
 	const QName		qname(theName, 0, m_xpathEnvSupport, m_xpathSupport);
 
-	m_topLevelParams.push_back(Arg(qname, theValue, true));
+	m_topLevelParams.push_back(ParamVectorType::value_type(qname, theValue));
 }
 
 
@@ -3275,9 +3180,7 @@ XSLTEngineImpl::setStylesheetParam(
 void
 XSLTEngineImpl::resolveTopLevelParams(StylesheetExecutionContext&	executionContext)
 {
-	m_stylesheetRoot->pushTopLevelVariables(executionContext, m_topLevelParams);
-
-	getVariableStacks().markGlobalStackFrame();
+	executionContext.pushTopLevelVariables(m_topLevelParams);
 }
 
 
@@ -3477,647 +3380,12 @@ XSLTEngineImpl::createXResultTreeFrag(const ResultTreeFragBase&  r) const
 
 
 
-//@@ JMD: NOTE: java implementation of these classes does not pass reference
-//to processor
-
-//////////////////////////////////////////////////////////////////////////////
-// CLASS XSLTEngineImpl::StackGuard
-//////////////////////////////////////////////////////////////////////////////
-
-XSLTEngineImpl::StackGuard::StackGuard(
-			XSLTEngineImpl&			processor,
-			const XalanElement*		xslTemplate,
-			const XalanNode*		sourceXML) :
-	m_processor(&processor),
-	m_xslRule(xslTemplate),
-	m_sourceXML(sourceXML),
-	m_stack()
-{
-}
-
-
-
-XSLTEngineImpl::StackGuard::~StackGuard()
-{
-}
-
-
-
-void
-XSLTEngineImpl::StackGuard::print(PrintWriter&	pw) const
-{
-	// for the moment, these diagnostics are really bad...
-	const XalanNode::NodeType	theType = m_sourceXML->getNodeType();
-
-	if(theType == XalanNode::TEXT_NODE)
-	{
-#if defined(XALAN_OLD_STYLE_CASTS)
-		const XalanText* const	tx =
-			(const XalanText*)m_sourceXML;
-#else
-		const XalanText* const	tx =
-			static_cast<const XalanText*>(m_sourceXML);
-#endif
-		pw.println(tx->getData());
-	}
-	else if(theType == XalanNode::ELEMENT_NODE)
-	{
-		pw.println(m_sourceXML->getNodeName());
-	}
-}
-
-
-
-void
-XSLTEngineImpl::StackGuard::checkForInfiniteLoop(const StackGuard&	guard) const
-{
-	const int	nRules = m_stack.size();
-
-	int			loopCount = 0;
-
-	for(int i = (nRules - 1); i >= 0; --i)
-	{
-		if(m_stack[i] == guard)
-		{
-			loopCount++;
-		}
-
-		if(loopCount >= 4)
-		{
-			DOMStringPrintWriter	pw;
-
-			pw.println(XalanDOMString("Infinite loop diagnosed!  Stack trace:"));
-
-			int		k = 0;
-
-			for(; k < nRules; k++)
-			{
-				pw.println(XalanDOMString("Source Elem #") +
-								LongToDOMString(k) +
-								XalanDOMString(" "));
-
-				m_stack[i].print(pw);
-			}
-
-			pw.println(XalanDOMString("Source Elem #") +
-							LongToDOMString(k) +
-							XalanDOMString(" "));
-
-			guard.print(pw);
-
-			pw.println(XalanDOMString("End of infinite loop diagnosis."));
-
-			m_processor->diag(pw.getString());
-
-			throw XSLTEngineImpl::XSLInfiniteLoopException();
-		}
-	}
-}
-
-
-
-void
-XSLTEngineImpl::StackGuard::push(
-				const XalanElement*		xslTemplate,
-				const XalanNode*		sourceXML)
-{
-	const StackGuard	guard(*m_processor, xslTemplate, sourceXML);
-
-	checkForInfiniteLoop(guard);
-
-	m_stack.push_back(guard);
-}
-
-
-
-void
-XSLTEngineImpl::StackGuard::pop()
-{
-	m_stack.pop_back();
-}
-
-
-
-
-XSLTEngineImpl::XSLInfiniteLoopException::XSLInfiniteLoopException() :
-	XSLTProcessorException("XSLT infinite loop occurred!")
-{
-}
-
-
-
-XSLTEngineImpl::XSLInfiniteLoopException::~XSLInfiniteLoopException()
-{
-}
-
-
-
-//////////////////////////////////////////////////////////////////////////////
-// CLASS XSLTEngineImpl::VariableStack
-//////////////////////////////////////////////////////////////////////////////
-
-
-XSLTEngineImpl::VariableStack::VariableStack(XSLTEngineImpl&	theProcessor) :
-	m_caller(),
-	m_stack(),
-	m_stackEntries(),
-	m_processor(theProcessor),
-	m_globalStackFrameIndex(-1),
-	m_currentStackFrameIndex(0)
-{
-	m_stack.reserve(eDefaultVectorSize);
-
-	pushContextMarker(0, 0);	
-}
-
-
-
-XSLTEngineImpl::VariableStack::~VariableStack()
-{
-	reset();
-}
-
-
-
-void
-XSLTEngineImpl::VariableStack::reset()
-{
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::for_each;
-#endif
-
-	m_stack.clear();
-
-	// Delete all entries that we created...
-	for_each(m_stackEntries.begin(),
-			 m_stackEntries.end(),
-			 DeleteFunctor<StackEntry>());
-
-	m_stackEntries.clear();
-
-	// If the stack has grown past the default size,
-	// shrink it down...
-	if (m_stack.capacity() > eDefaultVectorSize)
-	{
-		VariableStackStackType	temp;
-
-		temp.reserve(eDefaultVectorSize);
-
-		m_stack.swap(temp);
-	}
-
-	pushContextMarker(0, 0);	
-}
-
-
-
-void
-XSLTEngineImpl::VariableStack::pushElementMarker(const XalanNode*	elem)
-{
-	StackEntry* const	theEntry = new ElementMarker(elem);
-
-	m_stackEntries.insert(theEntry);
-
-	push(theEntry);
-}
-
-
-
-void
-XSLTEngineImpl::VariableStack::popElementMarker(const XalanNode*	elem)
-{
-	if(elementMarkerAlreadyPushed(elem) == true)
-	{
-		const int	nElems = m_stack.size();
-
-		bool		fFound = false;
-
-		// Sub 1 extra for the context marker.
-		for(int i = (nElems - 1); i >= 0 && fFound == false; i--)
-		{
-			const StackEntry* const		theEntry = m_stack[i];
-			assert(theEntry != 0);
-
-			if(theEntry->getType() == StackEntry::eElementMarker)
-			{
-				pop();
-				fFound = true;
-			}
-			else
-			{
-				pop();
-			}
-
-		}
-	}
-}
-
-
-
 bool
-XSLTEngineImpl::VariableStack::elementMarkerAlreadyPushed(const XalanNode*	elem) const
+XSLTEngineImpl::destroyXObject(XObject*		theXObject) const
 {
-	const int	nElems = m_stack.size();
-	// Sub 1 extra for the context marker.
-	for(int i = (nElems - 1); i >= 0; i--)
-	{
-		const StackEntry* const		theEntry = m_stack[i];
-		assert(theEntry != 0);
+	assert(theXObject != 0);
 
-		if(theEntry->getType() == StackEntry::eElementMarker)
-		{
-			const ElementMarker* const	theElementMarkerEntry =
-					static_cast<const ElementMarker*>(theEntry);
-
-			if(theElementMarkerEntry->getElement() == elem)
-			{
-				return true;
-			}
-		}
-	}
-
-	return false;
-}
-
-
-
-void
-XSLTEngineImpl::VariableStack::pushContextMarker(
-			const XalanNode*	caller,
-			const XalanNode*	sourceNode)
-{
-	StackEntry* const	theEntry = new ContextMarker(caller, sourceNode);
-
-	m_stackEntries.insert(theEntry);
-
-	push(theEntry);
-}
-
-
-
-void
-XSLTEngineImpl::VariableStack::popCurrentContext()
-{
-	const int	nElems = m_stack.size();
-	bool		fFound = false;
-
-	// Sub 1 extra for the context marker.
-	for(int i = (nElems - 1); i >= 0 && fFound == false; i--)
-	{
-		const StackEntry* const		theEntry = m_stack[i];
-		assert(theEntry != 0 && theEntry == back());
-
-		const StackEntry::eStackEntryType	type = theEntry->getType();
-		assert(type < StackEntry::eNextValue && type >= 0);
-
-		fFound = type == StackEntry::eContextMarker ? true : false;
-
-		pop();
-	}
-}
-
-
-
-class PopPushStackEntry
-{
-public:
-
-	PopPushStackEntry(
-			XSLTEngineImpl::VariableStack&	theVariableStack) :
-		m_variableStack(theVariableStack),
-		m_stackEntry(theVariableStack.back())
-	{
-		theVariableStack.pop();
-	}
-
-	~PopPushStackEntry()
-	{
-		m_variableStack.push(m_stackEntry);
-	}
-
-private:
-
-	XSLTEngineImpl::VariableStack&	m_variableStack;
-
-	StackEntry* const				m_stackEntry;
-};
-
-
-
-class CommitPushElementMarker
-{
-public:
-
-	CommitPushElementMarker(
-			XSLTEngineImpl::VariableStack&	theVariableStack,
-			const XalanNode*				targetTemplate) :
-		m_variableStack(&theVariableStack),
-		m_targetTemplate(targetTemplate)
-	{
-		theVariableStack.pushElementMarker(targetTemplate);
-	}
-
-	~CommitPushElementMarker()
-	{
-		if (m_variableStack != 0)
-		{
-			m_variableStack->popElementMarker(m_targetTemplate);
-		}
-	}
-
-	void
-	commit()
-	{
-		m_variableStack = 0;
-	}
-
-private:
-
-	XSLTEngineImpl::VariableStack*	m_variableStack;
-
-	const XalanNode* const			m_targetTemplate;
-};
-
-
-
-void
-XSLTEngineImpl::VariableStack::pushParams(
-				StylesheetExecutionContext&		executionContext,
-				const ElemTemplateElement&		xslCallTemplateElement,
-				XalanNode*						sourceTree, 
-				XalanNode*						sourceNode,
-				const QName&					mode,
-				const XalanNode*				targetTemplate)
-{
-	StackEntry* const		theStackEntry = m_stack.back();
-
-	if (theStackEntry->getType() != StackEntry::eContextMarker)
-	{
-		throw InvalidStackContextException();
-	}
-
-	VariableStackStackType		tempStack;
-
-	const ElemTemplateElement*	child =
-			xslCallTemplateElement.getFirstChildElem();
-
-	if (0 != child)
-	{
-		// This object will take care of popping, then
-		// pushing the context marker at the top of the
-		// stack, even if an exception is thrown...
-		PopPushStackEntry	thePopPush(*this);
-
-		while(0 != child)
-		{
-			if(Constants::ELEMNAME_WITHPARAM == child->getXSLToken())
-			{
-				const ElemWithParam* const	xslParamElement =
-#if defined(XALAN_OLD_STYLE_CASTS)
-							(ElemWithParam*)child;
-#else
-				static_cast<const ElemWithParam*>(child);
-#endif
-
-				Arg*	theArg = 0;
-
-				const XPath* const	pxpath = xslParamElement->getSelectPattern();
-
-				if(0 != pxpath)
-				{
-					XObject* const	theXObject =
-								pxpath->execute(sourceNode,
-										*xslParamElement,
-										executionContext);
-
-					theArg = new Arg(xslParamElement->getQName(), theXObject, true);
-				}
-				else
-				{
-					ResultTreeFragBase* const	theDocFragment =
-								m_processor.createResultTreeFrag(executionContext,
-										*xslParamElement,
-										sourceTree,
-										sourceNode,
-										mode);
-					assert(theDocFragment != 0);
-
-#if !defined(XALAN_NO_NAMESPACES)
-					using std::auto_ptr;
-#endif
-
-					// Make sure this sucker gets cleaned up...
-					auto_ptr<ResultTreeFragBase>	theGuard(theDocFragment);
-
-					XObject* const	var = m_processor.createXResultTreeFrag(*theDocFragment);
-
-					theArg = new Arg(xslParamElement->getQName(), var, true);
-				}
-				assert(theArg != 0);
-
-				m_stackEntries.insert(theArg);
-
-				tempStack.push_back(theArg);
-			}
-
-			child = child->getNextSiblingElem();
-		}
-	}
-
-	// This object will push an element marker, and pop it
-	// if we don't call it's commit() member function.  So
-	// if an exception is thrown will transferring the
-	// parameters, the element marker will be popped.
-	// This keeps the stack in a consistent state.
-	CommitPushElementMarker		thePusher(*this,
-										  targetTemplate);
-
-	const VariableStackStackType::size_type		nParams = tempStack.size();
-
-	for(VariableStackStackType::size_type i = 0; i < nParams; ++i)
-	{
-		push(tempStack[i]);
-	}
-
-	thePusher.commit();
-}
-
-
-
-void
-XSLTEngineImpl::VariableStack::pushVariable(
-			const QName&		name,
-			XObject*			val,
-			const XalanNode*	e)
-{
-	if(elementMarkerAlreadyPushed(e) == false)
-	{
-		pushElementMarker(e);
-	}
-
-	StackEntry* const	theEntry = new Arg(name, val, false);
-
-	m_stackEntries.insert(theEntry);
-
-	push(theEntry);
-}
-
-
-
-
-XObject*
-XSLTEngineImpl::VariableStack::findXObject(
-			const QName&	name,
-			bool			fSearchGlobalSpace) const
-{
-	XObject*		theXObject = 0;
-
-	const Arg* const	theArg = findArg(name, fSearchGlobalSpace);
-
-	if (theArg != 0)
-	{
-		if (theArg->getArgType() == Arg::eXObject)
-		{
-			theXObject = theArg->getXObjectPtr();
-		}
-	}
-
-	return theXObject;
-}
-
-
-
-
-
-const Arg*
-XSLTEngineImpl::VariableStack::findArg(
-			const QName&	qname,
-			bool			fSearchGlobalSpace) const
-{
-	const Arg*	theResult = 0;
-
-	const int	nElems = getCurrentStackFrameIndex();
-
-	// Sub 1 extra for the context marker.
-	for(int i = nElems - 1; i >= 0; --i)
-	{
-		const StackEntry* const		theEntry =
-			m_stack[i];
-		assert(theEntry != 0);
-
-		if(theEntry->getType() == StackEntry::eArgument)
-		{
-			const Arg* const	theArg =
-				static_cast<const Arg*>(theEntry);
-
-			if(theArg->getName().equals(qname))
-			{
-				theResult = theArg;
-				break;
-			}
-		}
-		else if(theEntry->getType() == StackEntry::eContextMarker)
-		{
-			break;
-		}
-	}
-
-	if(0 == theResult && true == fSearchGlobalSpace)
-	{
-		// Look in the global space
-		for(int i = m_globalStackFrameIndex - 1; i >= 2; i--)
-		{
-			const StackEntry* const		theEntry = m_stack[i];
-			assert(theEntry != 0);
-
-			if(theEntry->getType() == StackEntry::eArgument)
-			{
-				const Arg* const	theArg =
-					static_cast<const Arg*>(theEntry);
-
-				if(theArg->getName().equals(qname))
-				{
-					theResult = theArg;
-					break;
-				}
-			}
-			else if(theEntry->getType() == StackEntry::eContextMarker)
-			{
-				break;
-			}
-		}
-	}
-
-	return theResult;
-}
-
-
-
-void
-XSLTEngineImpl::VariableStack::pushElementFrame(const ElemTemplateElement*	elem)
-{
-	StackEntry* const	theEntry = new ElementFrameMarker(elem);
-
-	m_stackEntries.insert(theEntry);
-
-	push(theEntry);
-}
-
-
-
-void
-XSLTEngineImpl::VariableStack::popElementFrame(const ElemTemplateElement*	elem)
-{
-	const int	nElems = getCurrentStackFrameIndex();
-
-	bool		fFound = false;
-
-	// Sub 1 extra for the context marker.
-	for(int i = nElems - 1; i >= 0 && fFound == false; --i)
-	{
-		const StackEntry* const		theEntry =
-			m_stack[i];
-		assert(theEntry != 0 && theEntry == back());
-
-		// Pop it off the stack...
-		pop();
-
-		if(theEntry->getType() == StackEntry::eContextMarker)
-		{
-			// Didn't really find it, but quit anyway...
-			// $$$ ToDo: Isn't this really a bad stack context???
-			fFound = true;
-		}
-		else if (theEntry->getType() == StackEntry::eElementFrameMarker)
-		{
-			const ElementFrameMarker* const		theMarker =
-					static_cast<const ElementFrameMarker*>(theEntry);
-
-			const ElemTemplateElement* const	theElement =
-				theMarker->getElement();
-
-			fFound = true;
-
-			if (theElement != elem)
-			{
-				throw InvalidStackContextException();
-			}
-		}
-    }
-}
-
-
-
-XSLTEngineImpl::VariableStack::InvalidStackContextException::InvalidStackContextException() :
-	XSLTProcessorException(XALAN_STATIC_UCODE_STRING("Invalid stack context"),
-						   XALAN_STATIC_UCODE_STRING("InvalidStackContextException"))
-{
-}
-
-
-
-XSLTEngineImpl::VariableStack::InvalidStackContextException::~InvalidStackContextException()
-{
+	return m_xobjectFactory.returnObject(theXObject);
 }
 
 

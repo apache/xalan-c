@@ -133,18 +133,6 @@ public:
 			XPathExecutionContext&	executionContext) const = 0;
 
 	/**
-	 * Given a name, locate a variable in the current context, and return 
-	 * a pointer to the object.
-	 *
-	 * @param theName name of variable
-	 * @return pointer to an XObject if the variable was found, 0 if it was not
-	 */
-	virtual XObject*
-	getVariable(
-			XObjectFactory&		factory,
-			const QName&		name) const = 0;
-
-	/**
 	 * Provides support for XML parsing service.
 	 *
 	 * @param urlString location of the XML

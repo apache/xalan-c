@@ -78,18 +78,16 @@ StylesheetExecutionContext::~StylesheetExecutionContext()
 
 StylesheetExecutionContext::ParamsPushPop::ParamsPushPop(
 			StylesheetExecutionContext&		executionContext,
-			const ElemTemplateElement*		contextElement,
+			const ElemTemplateElement*		/* contextElement */,
 			const ElemTemplateElement&		xslCallTemplateElement,
 			XalanNode*						sourceTree, 
 			XalanNode*						sourceNode,
 			const QName&					mode,
-			const XalanNode*				targetTemplate) :
+			const ElemTemplateElement*		targetTemplate) :
 	m_executionContext(executionContext),
 	m_savedStackFrameIndex(executionContext.getCurrentStackFrameIndex())
 {
-	executionContext.pushContextMarker(
-			contextElement,
-			sourceNode);
+	executionContext.pushContextMarker();
 
 	executionContext.setCurrentStackFrameIndex(m_savedStackFrameIndex);
 
@@ -107,7 +105,7 @@ StylesheetExecutionContext::ParamsPushPop::ParamsPushPop(
 
 StylesheetExecutionContext::ParamsPushPop::~ParamsPushPop()
 {
-	m_executionContext.popCurrentContext();
+	m_executionContext.popContextMarker();
 
 	m_executionContext.setCurrentStackFrameIndex(m_savedStackFrameIndex);
 }

@@ -82,7 +82,9 @@
 
 
 
-class XalanNode;
+class XalanDocument;
+class XalanDocumentFragment;
+class XalanElement;
 class Writer;
 
 
@@ -121,11 +123,25 @@ public:
 	XSLTResultTarget(Writer*	characterStream);
 
 	/**
-	 * Create a new output target with a DOM node.
+	 * Create a new output target with a DOM document.
 	 *
 	 * @param n root of DOM node tree that holds results
 	 */
-	XSLTResultTarget(XalanNode*	n);
+	XSLTResultTarget(XalanDocument*		document);
+
+	/**
+	 * Create a new output target with a DOM document fragment.
+	 *
+	 * @param n root of DOM node tree that holds results
+	 */
+	XSLTResultTarget(XalanDocumentFragment*		documentFragment);
+
+	/**
+	 * Create a new output target with a DOM element.
+	 *
+	 * @param n root of DOM node tree that holds results
+	 */
+	XSLTResultTarget(XalanElement*	element);
 
 	/**
 	 * Set the file name where the results will be written.
@@ -225,28 +241,87 @@ public:
 		return m_characterStream;
 	}
 
+	bool
+	hasDOMTarget() const
+	{
+		return m_document != 0 || m_documentFragment != 0 || m_element != 0;
+	}
+
 	/**
-	 * Set the node that will contain the result nodes.
+	 * Set the document node that will contain the result nodes.
 	 *
 	 * @param node DOM node to contain results
 	 */
 	void
-	setNode(XalanNode*	node)
+	setDocument(XalanDocument*		document)
 	{
-		m_node = node;
+		m_document = document;
+
+		m_documentFragment = 0;
+		m_element = 0;
 	}
 
 	/**
-	 * Get the node that will contain the result nodes.
+	 * Get the document node that will contain the result nodes.
 	 *
-	 * @return DOM node containing results
+	 * @return a pointer to the document node
 	 */
-	XalanNode*
-	getNode() const
+	XalanDocument*
+	getDocument() const
 	{
-		return m_node;
+		return m_document;
 	}
-	
+
+	/**
+	 * Set the document fragment node that will contain the result nodes.
+	 *
+	 * @param node DOM node to contain results
+	 */
+	void
+	setDocumentFragment(XalanDocumentFragment*	documentFragment)
+	{
+		m_documentFragment = documentFragment;
+
+		m_document = 0;
+		m_element = 0;
+	}
+
+	/**
+	 * Get the document node that will contain the result nodes.
+	 *
+	 * @return a pointer to the document node
+	 */
+	XalanDocumentFragment*
+	getDocumentFragment() const
+	{
+		return m_documentFragment;
+	}
+
+	/**
+	 * Set the element node that will contain the result nodes.
+	 *
+	 * @param node DOM node to contain results
+	 */
+	void
+	setElement(XalanElement*	element)
+	{
+		m_element = element;
+
+		m_documentFragment = 0;
+		m_document = 0;
+	}
+
+	/**
+	 * Get the document node that will contain the result nodes.
+	 *
+	 * @return a pointer to the document node
+	 */
+	XalanElement*
+	getElement() const
+	{
+		return m_element;
+	}
+
 	/**
 	 * Set a SAX DocumentHandler to process the result tree events.
 	 *
@@ -293,21 +368,25 @@ public:
 
 private:
 
-	XalanDOMString		m_fileName;
+	XalanDOMString			m_fileName;
 
 #if defined(XALAN_NO_NAMESPACES)
-	ostream*			m_byteStream;
+	ostream*				m_byteStream;
 #else
-	std::ostream*		m_byteStream;
+	std::ostream*			m_byteStream;
 #endif
 
-	XalanDOMString		m_encoding;
+	XalanDOMString			m_encoding;
 
-	Writer*				m_characterStream;
+	Writer*					m_characterStream;
 
-	XalanNode*			m_node;
+	XalanDocument*			m_document;
 
-	FormatterListener*	m_formatterListener;
+	XalanDocumentFragment*	m_documentFragment;
+
+	XalanElement*			m_element;
+
+	FormatterListener*		m_formatterListener;
 };
 
 

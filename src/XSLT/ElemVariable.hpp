@@ -119,11 +119,11 @@ public:
 	 * @param sourceTree       input source tree
 	 * @param sourceNode       current context node
 	 */
-	XObject*
-	getValue(
-			StylesheetExecutionContext&		executionContext,
-			XalanNode*						sourceTree, 
-			XalanNode*						sourceNode) const;
+//	XObject*
+//	getValue(
+//			StylesheetExecutionContext&		executionContext,
+//			XalanNode*						sourceTree, 
+//			XalanNode*						sourceNode) const;
 
 	/**
 	 * Determines if this is a top level variable.

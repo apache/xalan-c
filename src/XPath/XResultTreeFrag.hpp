@@ -92,22 +92,22 @@ public:
 	 * @param envSupport XPath environment support class instance
 	 * @param support    XPath support class instance
 	 * @param val        source result tree fragment
-	 * @param deepClone  true to copy all subobjects, default true
+	 * @param deepClone  true to copy all subobjects, default is false
 	 */
 	XResultTreeFrag(
 			XPathEnvSupport&			envSupport,
 			XPathSupport&				support,
 			const ResultTreeFragBase&	val,
-			bool						deepClone = true);
+			bool						deepClone = false);
 
 	/**
 	 * Construct an XResultTreeFrag object from another
 	 * 
 	 * @param source     source XResultTreeFrag
-	 * @param deepClone  true to copy all subobjects, default true
+	 * @param deepClone  true to copy all subobjects, default is false
 	 */
 	XResultTreeFrag(const XResultTreeFrag&	source,
-			bool							deepClone = true);
+			bool							deepClone = false);
 
 	virtual
 	~XResultTreeFrag();

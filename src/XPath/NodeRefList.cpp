@@ -108,7 +108,7 @@ NodeRefList::operator=(const NodeRefListBase&	theRHS)
 
 		const unsigned int	theLength = theRHS.getLength();
 
-		m_nodeList.reserve(theLength);
+		ensureAllocation(theLength);
 
 		for(unsigned int i = 0; i < theLength; i++)
 		{

@@ -106,11 +106,6 @@ public:
 			const PrefixResolver&	resolver,
 			XPathExecutionContext&	executionContext) const = 0;
 
-	virtual XObject*
-	getVariable(
-			XObjectFactory&		factory,
-			const QName&		name) const = 0;
-
 	virtual XalanDocument*
 	parseXML(
 			const XalanDOMString&	urlString,

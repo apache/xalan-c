@@ -93,14 +93,14 @@
 
 
 #include <XPath/Function.hpp>
-#include <XPath/MutableNodeRefList.hpp>
+//#include <XPath/MutableNodeRefList.hpp>
 #include <XPath/NameSpace.hpp>
 
 
 
-#include "Arg.hpp"
 #include "KeyDeclaration.hpp"
-#include "ProblemListener.hpp"
+#include "ProblemListenerDefault.hpp"
+#include "StylesheetExecutionContext.hpp"
 #include "XSLTProcessorException.hpp"
 
 
@@ -113,8 +113,6 @@ class GenerateEvent;
 class InputSource;
 class PrintWriter;
 class ResultTreeFragBase;
-class StackEntry;
-class Stylesheet;
 class StylesheetConstructionContext;
 class StylesheetExecutionContext;
 class StylesheetRoot;
@@ -124,7 +122,6 @@ class XLocator;
 class XMLParserLiaison;
 class XMLURL;
 class XObject;
-class XObjectObject;
 class XPathEnvSupport;
 class XPathFactory;
 class XPathProcessor;
@@ -154,26 +151,20 @@ public:
 #	define XALAN_STD std::
 #endif
 
-	typedef XALAN_STD auto_ptr<XPathProcessor>	  XPathProcessorPtrType;
-	typedef XALAN_STD map<XalanDOMString, XObject*>    TopLevelVariablesMapType;
-	typedef XALAN_STD map<XalanDOMString, int>		   AttributeKeysMapType;
-	typedef XALAN_STD map<XalanDOMString, int>		   ElementKeysMapType;
-	typedef XALAN_STD map<const void*, clock_t>   DurationsTableMapType;
-	typedef XALAN_STD set<XalanDOMString>			   TranslateCSSSetType;
-	typedef XALAN_STD vector<Arg>				  ParamVectorType;
-	typedef XALAN_STD vector<ElemAttributeSet*>   AttrStackType;
-	typedef XALAN_STD vector<KeyDeclaration>	  KeyDeclarationVectorType;
-	typedef XALAN_STD vector<const Locator*>	  LocatorStack;
-	typedef XALAN_STD vector<NameSpace> 		  NamespaceVectorType;
-	typedef XALAN_STD vector<NamespaceVectorType> NamespacesStackType;
-	typedef XALAN_STD vector<TraceListener*>	  TraceListenerVectorType;
-	typedef XALAN_STD vector<bool>				  BoolVectorType;
-
-
-	typedef XALAN_STD map<const XalanNode*, int>	XSLDirectiveMapType;
+	typedef XALAN_STD auto_ptr<XPathProcessor>			XPathProcessorPtrType;
+	typedef XALAN_STD map<XalanDOMString, int>			AttributeKeysMapType;
+	typedef XALAN_STD map<XalanDOMString, int>			ElementKeysMapType;
+	typedef XALAN_STD map<const void*, clock_t>			DurationsTableMapType;
+	typedef XALAN_STD vector<const Locator*>			LocatorStack;
+	typedef XALAN_STD vector<NameSpace> 				NamespaceVectorType;
+	typedef XALAN_STD vector<NamespaceVectorType>		NamespacesStackType;
+	typedef XALAN_STD vector<TraceListener*>			TraceListenerVectorType;
+	typedef XALAN_STD vector<bool>						BoolVectorType;
+	typedef XALAN_STD map<const XalanNode*, int>		XSLDirectiveMapType;
 #undef XALAN_STD
 
-	typedef Function::XObjectArgVectorType	XObjectArgVectorType;
+	typedef Function::XObjectArgVectorType				XObjectArgVectorType;
+	typedef StylesheetExecutionContext::ParamVectorType	ParamVectorType;
 
 	// Public members
 	//---------------------------------------------------------------------
@@ -240,6 +231,13 @@ public:
 	static void
 	Initialize();
 
+	/**
+	 * Perform termination of statics -- can be called to make memory
+	 * leak detection easier.
+	 */
+	static void
+	Terminate();
+
 	// These methods are inherited from XSLTProcessor ...
 	
 	virtual void
@@ -272,19 +270,10 @@ public:
 	virtual void
 	outputToResultTree(const XObject&	xobj);
 
-	virtual XObject*
-	getTopLevelVariable(const XalanDOMString&	theName) const;
-
 	virtual void
 	resetCurrentState(
 			XalanNode*	sourceTree,
 			XalanNode*	xmlNode);
-
-	virtual XalanDocument*
-	getRootDoc() const;
-
-	virtual void
-	setRootDoc(XalanDocument*	doc);
 
 	virtual XalanDOMString
 	evaluateAttrVal(
@@ -316,22 +305,22 @@ public:
 	virtual XObject*
 	createXResultTreeFrag(const ResultTreeFragBase&		r) const;
 
-	virtual XObject*
-	getVariable(const QName&	qname) const;
-
-	virtual XObject*
-	getParamVariable(const QName&	theName) const;
+	/**
+	 * Function to destroy an XObject that was returned
+	 * by executing.  It is safe to call this function
+	 * with any XObject.
+	 *
+	 * @param theXObject pointer to the XObject.
+	 * @return true if the object was destroyed.
+	 */
+	virtual bool
+	destroyXObject(XObject*		theXObject) const;
 
 	virtual void
-	pushVariable(
-			const QName&		name,
-			XObject*			var,
-			const XalanNode*	element);
-
-	virtual void setStylesheetParam(	
+	setStylesheetParam(	
 					const XalanDOMString&	key,
 					const XalanDOMString&	expression);
-	
+
 	virtual void
 	setStylesheetParam(
 			const XalanDOMString&	key,
@@ -974,59 +963,6 @@ public:
 			const XalanDocument& 	doc) const;
 
 	/**
-	 * Push a context marker onto the stack to let us know when to stop
-	 * searching for a var.
-	 *
-	 * @param caller	 caller node
-	 * @param sourceNode source node
-	 */
-	void
-	pushContextMarker(
-			const XalanNode*	caller,
-			const XalanNode*	sourceNode)
-	{
-		m_variableStacks.pushContextMarker(caller, sourceNode);
-	}
-
-	/**
-	 * Pop the current context from the current context stack.
-	 */
-	void
-	popCurrentContext()
-	{
-		m_variableStacks.popCurrentContext();
-	}
-
-	/**
-	 * Given a template, search for the arguments and push them on the stack.
-	 * Also, push default arguments on the stack. You <em>must</em> call
-	 * popContext() when you are done with the arguments.
-	 *
-	 * @param executionContext		 execution context
-	 * @param xslCallTemplateElement "call-template" element
-	 * @param sourceTree			 source tree
-	 * @param sourceNode			 source node
-	 * @param mode					 mode under which the template is operating
-	 * @param targetTemplate		 target template
-	 */
-	void
-	pushParams(
-			StylesheetExecutionContext& 	executionContext,
-			const ElemTemplateElement&		xslCallTemplateElement,
-			XalanNode* 						sourceTree, 
-			XalanNode* 						sourceNode,
-			const QName&					mode,
-			const XalanNode* 				targetTemplate)
-	{
-		m_variableStacks.pushParams(executionContext,
-									xslCallTemplateElement,
-									sourceTree,
-									sourceNode,
-									mode,
-									targetTemplate);
-	}
-
-	/**
 	 * Given an element, return an attribute value in the form of a string.
 	 *
 	 * @param el		  element from where to get the attribute
@@ -1220,25 +1156,6 @@ public:
 		return m_xpathEnvSupport;
 	}
 
-	// $$$ ToDo: why isn't this just a NodeRefListBase?
-	const MutableNodeRefList&
-	getContextNodeList() const
-	{
-		return m_contextNodeList;
-	}
-
-	/**
-	 * Set node list for current context.
-	 * 
-	 * @param ref new node list
-	 */
-	// $$$ ToDo: why isn't this just a NodeRefListBase?
-	void
-	setContextNodeList(const MutableNodeRefList&	ref)
-	{
-		m_contextNodeList = ref;		
-	}
-
 	/**
 	 * Set the problem listener property. The XSL class can have a single
 	 * listener that can be informed of errors and warnings, and can normally
@@ -1308,331 +1225,6 @@ public:
 	}
 
 	/**
-	 * An class for  exceptions that occur when a given stylesheet goes into an
-	 * infinite loop.
-	 */
-	class XSLInfiniteLoopException : public XSLTProcessorException
-	{
-	public:
-		XSLInfiniteLoopException();
-
-		virtual
-		~XSLInfiniteLoopException();
-	};
-
-	/**
-	 * Defines a class to keep track of a stack for macro arguments.
-	 */
-	class VariableStack
-	{
-	public:
-
-		/**
-		 * Constructor for a variable stack.
-		 * 
-		 * @param theProcessor XSL processor
-		 */
-		VariableStack(XSLTEngineImpl&		theProcessor);
-
-		~VariableStack();
-
-	
-		/**
-		 * Reset the stack.
-		 */
-		virtual void
-		reset();
-
-		/**
-		 * Push a context marker onto the stack to let us know when 
-		 * to stop searching for a var.
-		 * 
-		 * @param elem element for context
-		 */
-		void
-		pushElementMarker(const XalanNode*	elem);
-
-		/**
-		 * Pop the current context from the current context stack.
-		 * 
-		 * @param elem element for context
-		 */
-		void
-		popElementMarker(const XalanNode*	elem);
-
-		/**
-		 * Check to see if an element marker for the particular node has already
-		 * been pushed.
-		 * 
-		 * @param elem node in question
-		 * @return true if it has been pushed already
-		 */
-		bool
-		elementMarkerAlreadyPushed(const XalanNode*		elem) const;
-
-		/**
-		 * Push a context marker onto the stack to let us know when to stop
-		 * searching for a var.
-		 *
-		 * @param caller	 caller node
-		 * @param sourceNode source node
-		 */
-		void
-		pushContextMarker(
-				const XalanNode*	caller,
-				const XalanNode*	sourceNode);
-
-		/**
-		 * Pop the current context from the current context stack.
-		 */
-		void
-		popCurrentContext();
-
-		/**
-		 * Given a template, search for the arguments and push them on the stack.
-		 * Also, push default arguments on the stack. You <em>must</em> call
-		 * popContext() when you are done with the arguments.
-		 *
-		 * @param executionContext		 execution context
-		 * @param xslCallTemplateElement "call-template" element
-		 * @param sourceTree			 source tree
-		 * @param sourceNode			 source node
-		 * @param mode					 mode under which the template is operating
-		 * @param targetTemplate		 target template
-		 */
-		void
-		pushParams(
-				StylesheetExecutionContext& 	executionContext,
-				const ElemTemplateElement&		xslCallTemplateElement,
-				XalanNode*						sourceTree, 
-				XalanNode*						sourceNode,
-				const QName&					mode,
-				const XalanNode*				targetTemplate);
-
-		/**
-		 * Given a name, return a string representing the value, but don't look
-		 * in the global space.
-		 *
-		 * @param theName name of variable
-		 * @return pointer to XObject for variable
-		 */
-		XObject*
-		getXObjectParamVariable(const QName& qname) const
-		{
-			return findXObject(qname, false);
-		}
-
-		/**
-		 * Given a name, find the corresponding XObject.
-		 *
-		 * @param qname name of variable
-		 * @return pointer to the corresponding XObject
-		 */
-		XObject*
-		getXObjectVariable(const QName& 	name) const
-		{
-			return findXObject(name, true);
-		}
-
-		/**
-		 * Push a named variable onto the processor variable stack. Don't forget
-		 * to call startContext before pushing a series of arguments for a given
-		 * macro call.
-		 *
-		 * @param name	  name of variable
-		 * @param val	  pointer to XObject value
-		 * @param e 	  element marker for variable
-		 */
-		void
-		pushVariable(
-				const QName&		name,
-				XObject*			val,
-				const XalanNode*	e);
-
-		/**
-		 * Mark the top of the global stack frame.
-		 */
-		void
-		markGlobalStackFrame()
-		{
-			m_globalStackFrameIndex = m_stack.size();
-
-			pushContextMarker(0, 0);
-		}
-
-		/**
-		 * Set the top of the stack frame from where a search for a variable or
-		 * param should take place.  Calling with no parameter will cause the
-		 * index to be set to the size of the stack.
-		 *
-		 * @param currentStackFrameIndex new value of index
-		 */
-		void
-		setCurrentStackFrameIndex(int	currentStackFrameIndex = -1)
-		{
-			if (currentStackFrameIndex == -1)
-				m_currentStackFrameIndex = m_stack.size();
-			else
-				m_currentStackFrameIndex = currentStackFrameIndex;
-		}
-
-		/**
-		 * Get the top of the stack frame from where a search 
-		 * for a variable or param should take place.
-		 *
-		 * @return current value of index
-		 */
-		int
-		getCurrentStackFrameIndex() const
-		{
-			return m_currentStackFrameIndex;
-		}
-
-		/**
-		 * Push an entry onto the stack.
-		 *
-		 * @param stack entry to push
-		 */
-		void
-		push(StackEntry*	theEntry)
-		{
-			assert(theEntry != 0);
-			assert(theEntry->getType() < StackEntry::eNextValue && theEntry->getType() >= 0);
-
-			if(m_currentStackFrameIndex == m_stack.size())
-			{
-				++m_currentStackFrameIndex;
-			}
-
-			m_stack.push_back(theEntry);
-		}
-
-		/**
-		 * Override the pop in order to track the 
-		 * m_currentStackFrameIndex correctly.
-		 *
-		 * @return stack entry popped
-		 */
-		void
-		pop()
-		{
-			assert(m_stack.empty() == false);
-
-			if(m_currentStackFrameIndex == m_stack.size())
-			{
-				--m_currentStackFrameIndex;
-			}
-
-			// We can't really delete anything here, since
-			// the caller may still be referring to the
-			// stack entry...
-			m_stack.pop_back();
-		}
-
-		StackEntry*
-		back() const
-		{
-			assert(m_stack.empty() == false);
-
-			return m_stack.back();
-		}
-
-		/**
-		 * Push a frame marker for an element.
-		 *
-		 * @param elem the element
-		 */
-		void
-		pushElementFrame(const ElemTemplateElement*		elem);
-
-		/**
-		 * Pop a frame marker for an element.
-		 *
-		 * @param elem the element
-		 */
-		void
-		popElementFrame(const ElemTemplateElement*	elem);
-
-
-		class InvalidStackContextException : public XSLTProcessorException
-		{
-		public:
-
-			InvalidStackContextException();
-
-			virtual
-			~InvalidStackContextException();
-
-		private:
-
-		};
-
-	private:
-
-		// Default stack vector allocation size.
-		enum
-		{
-			eDefaultVectorSize = 200
-		};
-
-		XObject*
-		findXObject(
-				const QName&	name,
-				bool			fSearchGlobalSpace) const;
-
-		const Arg*
-		findArg(
-				const QName&	name,
-				bool			fSearchGlobalSpace) const;
-
-		// $$$ ToDo:  Is this really used?
-		/**
-		 * Holds caller, so that it may be searched for 
-		 * xsl:params, in order to resolve xsl:param-arg.
-		 */
-		const XalanElement* 			m_caller;
-
-
-#if defined(XALAN_NO_NAMESPACES)
-		typedef vector<StackEntry*>			VariableStackStackType;
-		typedef set<StackEntry*>			StackEntrySetType;
-#else
-		typedef std::vector<StackEntry*>	VariableStackStackType;
-		typedef std::set<StackEntry*>		StackEntrySetType;
-#endif
-
-		VariableStackStackType			m_stack;
-
-		StackEntrySetType				m_stackEntries;
-
-		XSLTEngineImpl&					m_processor;
-
-		int								m_globalStackFrameIndex;
-
-		/**
-		 * This is the top of the stack frame from where a search 
-		 * for a variable or param should take place.  It may not 
-		 * be the real stack top.
-		 */
-		unsigned int					m_currentStackFrameIndex;
-	
-	}; // end VariableStack
-
-	// Give VariableStack access to stuff.
-	friend class VariableStack;
-
-	/**
-	 * Accessor method for variable stack.
-	 * 
-	 * @return variable stack
-	 */
-	VariableStack&
-	getVariableStacks()
-	{
-		return m_variableStacks;
-	}
-
-	/**
 	 * Create a document fragment.	This function may return null.
 	 *
 	 * @return pointer to new document fragment
@@ -1671,17 +1263,6 @@ public:
 	 */
 	void
 	setPendingElementName(const XalanDOMString&		elementName);
-
-	/**
-	 * Accessor method for stack that keeps track of the attribute elements.
-	 *
-	 * @return attribute stack
-	 */
-	AttrStackType&
-	getAttrSetStack()
-	{ 
-		return m_attrSetStack; 
-	}
 
 	/**
 	 * Get the locator from the top of the locator stack.
@@ -1878,17 +1459,13 @@ private:
 	LocatorStack  m_stylesheetLocatorStack;
 
 	/**
-	 * The stack of Variable stacks.  A VariableStack will be 
-	 * pushed onto this stack for each template invocation.
-	 */
-	VariableStack	m_variableStacks;
-
-	/**
 	 * The XSL class can have a single listener that can be informed 
 	 * of errors and warnings, and can normally control if an exception
 	 * is thrown or not (or the problem listeners can throw their 
 	 * own RuntimeExceptions).
 	 */
+	ProblemListenerDefault	m_defaultProblemListener;
+
 	ProblemListener*	m_problemListener;
 
   /**
@@ -2001,19 +1578,6 @@ private:
 	 */
 	void
 	translateCSSAttrsToStyleAttr(AttributeListImpl&		attList);
-
-	/**
-	 * Given a name, locate a variable in the current context, and return 
-	 * the XObject.
-	 *
-	 * @param executionContext The current execution context.
-	 * @param name The name of the variable
-	 * @return a pointer to an XObject that represents the variable.
-	 */
-	XObject*
-	getXObjectVariable(
-			StylesheetExecutionContext&		executionContext,
-			const XalanDOMString&			name) const;
 
 	/**
 	 * Get an XLocator provider keyed by node.	This gets the association
@@ -2143,79 +1707,10 @@ private:
 	MutableNodeRefList	m_contextNodeList;
 
 	/**
-	 * Table for defined constants, keyed on the names.
+	 * Current execution context...
 	 */
-	TopLevelVariablesMapType		m_topLevelVariables;
-
 	StylesheetExecutionContext*		m_executionContext;
 
-	/**
-	 * The StackGuard class guard against infinite loops.
-	 */
-	class StackGuard
-	{
-	public:
-
-#if defined(XALAN_NO_NAMESPACES)
-		typedef vector<StackGuard>			StackGuardStackType;
-#else
-		typedef std::vector<StackGuard>		StackGuardStackType;
-#endif
-
-		StackGuard(
-				XSLTEngineImpl& 		processor,
-				const XalanElement*		xslTemplate = 0,
-				const XalanNode* 		sourceXML = 0);
-
-		~StackGuard();
-
-		bool operator==(const StackGuard&	theRHS) const
-		{
-			return m_xslRule == theRHS.m_xslRule &&
-				   m_sourceXML == theRHS.m_sourceXML;
-		}
-
-		void print(PrintWriter& pw) const;
-
-		void push(
-				const XalanElement*		xslTemplate,
-				const XalanNode* 		sourceXML);
-
-		void pop();
-
-		void clear()
-		{
-			m_stack.clear();
-		}
-
-		void
-		checkForInfiniteLoop(const StackGuard&	guard) const;
-
-	private:
-
-		XSLTEngineImpl*			m_processor;
-		const XalanElement* 	m_xslRule;
-		const XalanNode*		m_sourceXML;
-
-		StackGuardStackType 	m_stack;
-	};
-
-
-	// This is set to true when the "ancestor" attribute of 
-	// the select element is encountered.
-	bool		m_needToCheckForInfiniteLoops;
-
-	/**
-	 * Object to guard agains infinite recursion when 
-	 * doing queries.
-	 */
-	StackGuard	m_stackGuard;
-
-	/**
-	 * Stack for the purposes of flagging infinite recursion with 
-	 * attribute sets.
-	 */
-	AttrStackType	m_attrSetStack;
 
 	static void
 	InstallFunctions();

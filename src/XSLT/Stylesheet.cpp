@@ -119,7 +119,6 @@ Stylesheet::Stylesheet(
 	PrefixResolver(),
 	m_stylesheetRoot(root),
 	m_baseIdent(baseIdentifier),
-	m_document(),
 	m_key_tables(),
 	m_keyDeclarations(),
 	m_needToBuildKeysTable(false),
@@ -152,7 +151,7 @@ Stylesheet::Stylesheet(
 	{
 		typedef StylesheetConstructionContext::URLAutoPtrType	URLAutoPtrType;
 
-		URLAutoPtrType	url = constructionContext.getURLFromString(m_baseIdent);
+		URLAutoPtrType	url(constructionContext.getURLFromString(m_baseIdent));
 
 		if (url.get() != 0)
 		{
@@ -582,40 +581,6 @@ Stylesheet::findNamedTemplate(
 	return namedTemplate;
 }
 	
-
-
-XObject*
-Stylesheet::getTopLevelVariable(
-			const XalanDOMString&			name,
-			StylesheetExecutionContext& 	executionContext) const
-{
-	XObject*	theResult = executionContext.getTopLevelVariable(name);
-
-	if(0 == theResult)
-	{
-		const unsigned int	nImports = m_imports.size();
-
-		for(unsigned int i = 0; i < nImports; i++)
-		{
-			const Stylesheet* const		stylesheet = m_imports[i];
-			assert(stylesheet != 0);
-
-			theResult = stylesheet->getTopLevelVariable(name, executionContext);
-
-			if(0 != theResult)
-			{
-				break;
-			}
-		}
-	}
-
-	if(0 == theResult)
-	{
-		executionContext.warn(XalanDOMString("Could not find variable def for: ") + name);
-	}
-
-	return theResult;
-}
 
 
 ElemTemplate*
@@ -1120,19 +1085,21 @@ Stylesheet::addExtensionNamespace(
 
 void Stylesheet::pushTopLevelVariables(
 			StylesheetExecutionContext& 	executionContext,
-			ParamVectorType&				topLevelParams) const
+			const ParamVectorType&			topLevelParams) const
 {
 //	try
 	{
-		int i, nImports = m_imports.size();
-		for(i = 0; i < nImports; i++)
+		ParamVectorType::size_type			i = 0;
+		const ParamVectorType::size_type	nImports = m_imports.size();
+
+		for(; i < nImports; i++)
 		{
 			const Stylesheet* const stylesheet = m_imports[i];
 
 			stylesheet->pushTopLevelVariables(executionContext, topLevelParams);
 		}
 
-		const int	nVars = m_topLevelVariables.size();
+		const ParamVectorType::size_type	nVars = m_topLevelVariables.size();
 
 		for(i = 0; i < nVars; i++)
 		{
@@ -1145,33 +1112,33 @@ void Stylesheet::pushTopLevelVariables(
 			{
 				isParam = false;
 
-				const int	n = topLevelParams.size();
+				const ParamVectorType::size_type	n = topLevelParams.size();
 
-				for(int k = 0; k < n; k++)
+				for(ParamVectorType::size_type k = 0; k < n; k++)
 				{
-					Arg& a = topLevelParams[k];
+					const ParamVectorType::value_type&	arg = topLevelParams[k];
 
-					if(a.getName().equals(var->getName()))
+					if(arg.getName().equals(var->getName()))
 					{
 						isParam = true;
 
-						XObject *pXO = 0;
+						XObject* const	theXObject = arg.getXObject();
 
-						const XalanDOMString& expr = a.getExpression();
-
-						if(length(expr) != 0)
+						if (theXObject != 0)
 						{
-							pXO = executionContext.executeXPath(expr,
-																executionContext.getRootDocument(),
-																*this);
-
-							a.setXObjectPtr(pXO);
-							a.setExpression(0);
+							executionContext.pushVariable(arg.getName(),
+														  theXObject,
+														  0);
+						}
+						else
+						{
+							executionContext.pushVariable(arg.getName(),
+														  0,
+														  arg.getExpression(),
+														  executionContext.getRootDocument(),
+														  *this);
 						}
 
-						executionContext.pushVariable(a.getName(),
-													  pXO,
-													  this);
 						break;
 					}
 				}
@@ -1179,7 +1146,8 @@ void Stylesheet::pushTopLevelVariables(
 
 			if (isParam == false)
 			{
-				XalanDocument* const	doc = executionContext.getRootDocument();
+				XalanNode* const	doc = executionContext.getRootDocument();
+				assert(doc != 0);
 
 				var->execute(executionContext,
 							 doc,

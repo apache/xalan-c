@@ -107,7 +107,7 @@ public:
 	 */
 	XNull(
 			const XNull&	source,
-			bool			deepClone = true);
+			bool			deepClone = false);
 
 	virtual
 	~XNull();

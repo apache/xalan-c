@@ -137,7 +137,7 @@ public:
 	 */
 	XNodeSet(
 			const XNodeSet&		source,
-			bool				deepClone = true);
+			bool				deepClone = false);
 
 	virtual
 	~XNodeSet();

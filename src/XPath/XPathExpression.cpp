@@ -688,7 +688,15 @@ XPathExpression::pushArgumentOnOpCodeMap(XObject*	theToken)
 	assert(thePosition < tokenQueueSize());
 
 	// Set the entry in the token queue to the XObject.
+	XObject* const	thePreviousToken = m_tokenQueue[thePosition];
+	assert(thePreviousToken != 0);
+
 	m_tokenQueue[thePosition] = theToken;
+
+	if (m_xobjectFactory != 0)
+	{
+		m_xobjectFactory->returnObject(thePreviousToken);
+	}
 
 	// Push the index onto the op map.
 	m_opMap.push_back(thePosition);

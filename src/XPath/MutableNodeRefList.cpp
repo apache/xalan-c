@@ -185,7 +185,7 @@ MutableNodeRefList::insertNode(
 	{
 		ensureAllocation();
 
-		m_nodeList.insert(&m_nodeList[pos], n);
+		m_nodeList.insert(m_nodeList.begin() + pos, n);
 	}
 }
 
@@ -216,7 +216,7 @@ MutableNodeRefList::removeNode(unsigned int		pos)
 {
 	assert(pos < getLength());
 
-	m_nodeList.erase(&m_nodeList[pos]);
+	m_nodeList.erase(m_nodeList.begin() + pos);
 }
 
 
@@ -253,7 +253,7 @@ MutableNodeRefList::addNodes(const XalanNodeList&	nodelist)
 	// more space than necessary, but it's a small price to
 	// pay for the increased speed.  We can always shrink by
 	// swapping if we have way to much space.
-	m_nodeList.reserve(getLength() + theLength);
+	ensureAllocation(getLength() + theLength);
 
 	for (unsigned int i = 0; i < theLength; i++)
 	{

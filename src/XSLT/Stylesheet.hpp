@@ -85,8 +85,8 @@
 
 
 
-#include "Arg.hpp"
-#include "KeyDeclaration.hpp"
+#include <XSLT/KeyDeclaration.hpp>
+#include <XSLT/StylesheetExecutionContext.hpp>
 
 
 
@@ -103,7 +103,6 @@ class MatchPattern2;
 class NodeRefListBase;
 class PrefixResolver;
 class StylesheetConstructionContext;
-class StylesheetExecutionContext;
 class StylesheetRoot;
 class XMLURL;
 class XObject;
@@ -127,24 +126,25 @@ public:
 #	define XALAN_STD std::
 #endif
 
-typedef XALAN_STD map<XalanDOMString, XalanDOMString> PrefixAliasesMapType;
-typedef XALAN_STD map<XalanDOMString, ExtensionNSHandler*> ExtensionNamespacesMapType;
-typedef XALAN_STD map<QName, ElemTemplateElement*>	  ElemTemplateElementMapType;
-typedef XALAN_STD vector<Arg>						  ParamVectorType;
-typedef XALAN_STD vector<ElemAttributeSet*> 		  AttributeSetMapType;
-typedef XALAN_STD vector<ElemVariable*> 			  ElemVariableVectorType;
-typedef XALAN_STD vector<KeyDeclaration>			  KeyDeclarationVectorType;
-typedef XALAN_STD vector<KeyTable*> 				  KeyTableVectorType;
-typedef XALAN_STD map<const XalanNode*, KeyTable*>		KeyTablesTableType;
-typedef XALAN_STD vector<NameSpace> 				  NamespaceVectorType;
-typedef XALAN_STD vector<NamespaceVectorType>		  NamespacesStackType;
-typedef XALAN_STD vector<QName> 					  QNameVectorType;
-typedef XALAN_STD vector<const Stylesheet*>				StylesheetVectorType;
-typedef XALAN_STD vector<const XMLURL*> 			  URLStackType;
-typedef XALAN_STD vector<const XPath*>				  XPathVectorType;
-typedef XALAN_STD vector<ElemDecimalFormat*>			ElemDecimalFormatVectorType;
+typedef XALAN_STD map<XalanDOMString, XalanDOMString>		PrefixAliasesMapType;
+typedef XALAN_STD map<XalanDOMString, ExtensionNSHandler*>	ExtensionNamespacesMapType;
+typedef XALAN_STD map<QName, ElemTemplateElement*>			ElemTemplateElementMapType;
+typedef XALAN_STD vector<ElemAttributeSet*> 				AttributeSetMapType;
+typedef XALAN_STD vector<ElemVariable*> 					ElemVariableVectorType;
+typedef XALAN_STD vector<KeyDeclaration>					KeyDeclarationVectorType;
+typedef XALAN_STD vector<KeyTable*> 						KeyTableVectorType;
+typedef XALAN_STD map<const XalanNode*, KeyTable*>			KeyTablesTableType;
+typedef XALAN_STD vector<NameSpace> 						NamespaceVectorType;
+typedef XALAN_STD vector<NamespaceVectorType>				NamespacesStackType;
+typedef XALAN_STD vector<QName> 							QNameVectorType;
+typedef XALAN_STD vector<const Stylesheet*>					StylesheetVectorType;
+typedef XALAN_STD vector<const XMLURL*> 					URLStackType;
+typedef XALAN_STD vector<const XPath*>						XPathVectorType;
+typedef XALAN_STD vector<ElemDecimalFormat*>				ElemDecimalFormatVectorType;
 
 #undef XALAN_STD
+
+	typedef StylesheetExecutionContext::ParamVectorType	ParamVectorType;
 
 	/**
 	 * Constructor for a Stylesheet needs a Document.
@@ -634,18 +634,6 @@ typedef XALAN_STD vector<ElemDecimalFormat*>			ElemDecimalFormatVectorType;
 			StylesheetExecutionContext& 	executionContext) const;
 
 	/**
-	 * Given the name of a variable, return its corresponding XObject
-	 *
-	 * @param name				 name of variable
-	 * @param executionContext	 current execution context
-	 * @return pointer to object
-	 */
-	virtual XObject*
-	getTopLevelVariable(
-			const XalanDOMString&			name,
-			StylesheetExecutionContext& 	executionContext) const;
-
-	/**
 	 * Given a target element, find the template that best matches in the given
 	 * XSL document, according to the rules specified in the xsl draft. 
 	 *
@@ -935,7 +923,7 @@ typedef XALAN_STD vector<ElemDecimalFormat*>			ElemDecimalFormatVectorType;
 	void
 	pushTopLevelVariables(
 			StylesheetExecutionContext& 	executionContext,
-			ParamVectorType&				topLevelParams) const;
+			const ParamVectorType&			topLevelParams) const;
 
 	const XPathVectorType&
 	getWhitespacePreservingElements() const
@@ -1164,14 +1152,9 @@ private:
 	XPathVectorType 					m_whitespaceStrippingElements;
 
 	/**
-	 * The root XSL stylesheet.
-	 */
-	XalanDocument*						m_document;
-
-	/**
 	 * Table of tables of element keys. See KeyTable.
 	 */
-	mutable KeyTableVectorType			m_key_tables;
+	KeyTableVectorType					m_key_tables;
 
 	/**
 	 * Table of KeyDeclaration objects, which are set by the 

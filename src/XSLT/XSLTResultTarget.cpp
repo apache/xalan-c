@@ -72,7 +72,9 @@ XSLTResultTarget::XSLTResultTarget() :
 	m_byteStream(0),
 	m_encoding(),
 	m_characterStream(0),
-	m_node(),
+	m_document(0),
+	m_documentFragment(0),
+	m_element(0),
 	m_formatterListener(0)
 {
 }
@@ -84,7 +86,9 @@ XSLTResultTarget::XSLTResultTarget(const XalanDOMString&	fileName) :
 	m_byteStream(0),
 	m_encoding(),
 	m_characterStream(0),
-	m_node(),
+	m_document(0),
+	m_documentFragment(0),
+	m_element(0),
 	m_formatterListener(0)
 {
 }
@@ -100,7 +104,9 @@ XSLTResultTarget::XSLTResultTarget(std::ostream*	theStream) :
 	m_byteStream(theStream),
 	m_encoding(),
 	m_characterStream(0),
-	m_node(),
+	m_document(0),
+	m_documentFragment(0),
+	m_element(0),
 	m_formatterListener(0)
 {
 	assert(theStream != 0);
@@ -113,7 +119,9 @@ XSLTResultTarget::XSLTResultTarget(Writer*	characterStream) :
 	m_byteStream(0),
 	m_encoding(),
 	m_characterStream(characterStream),
-	m_node(),
+	m_document(0),
+	m_documentFragment(0),
+	m_element(0),
 	m_formatterListener(0)
 {
 	assert(characterStream != 0);
@@ -121,13 +129,47 @@ XSLTResultTarget::XSLTResultTarget(Writer*	characterStream) :
 
 
 
-XSLTResultTarget::XSLTResultTarget(XalanNode*	n) :
+XSLTResultTarget::XSLTResultTarget(XalanDocument*	document) :
 	m_fileName(),
 	m_byteStream(0),
 	m_encoding(),
 	m_characterStream(0),
-	m_node(n),
+	m_document(document),
+	m_documentFragment(0),
+	m_element(0),
 	m_formatterListener(0)
 {
-	assert(n != 0);
+	assert(document != 0);
 }
+
+
+
+XSLTResultTarget::XSLTResultTarget(XalanDocumentFragment*	documentFragment) :
+	m_fileName(),
+	m_byteStream(0),
+	m_encoding(),
+	m_characterStream(0),
+	m_document(0),
+	m_documentFragment(documentFragment),
+	m_element(0),
+	m_formatterListener(0)
+{
+	assert(documentFragment != 0);
+}
+
+
+
+XSLTResultTarget::XSLTResultTarget(XalanElement*	element) :
+	m_fileName(),
+	m_byteStream(0),
+	m_encoding(),
+	m_characterStream(0),
+	m_document(0),
+	m_documentFragment(0),
+	m_element(element),
+	m_formatterListener(0)
+{
+	assert(element != 0);
+}
+
+

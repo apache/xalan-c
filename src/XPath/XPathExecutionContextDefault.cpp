@@ -64,7 +64,9 @@
 
 #include "ElementPrefixResolverProxy.hpp"
 #include "FoundIndex.hpp"
+#include "XObjectFactory.hpp"
 #include "PrefixResolver.hpp"
+#include "QName.hpp"
 #include "XPathEnvSupport.hpp"
 #include "XPathSupport.hpp"
 
@@ -352,7 +354,7 @@ XPathExecutionContextDefault::getNodeSetByKey(
 XObject*
 XPathExecutionContextDefault::getVariable(const QName&	name) const
 {
-	return m_xpathEnvSupport.getVariable(m_xobjectFactory, name); 
+	return m_xobjectFactory.createUnknown(name.getLocalPart());
 }
 
 

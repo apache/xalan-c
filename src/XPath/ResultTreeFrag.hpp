@@ -99,27 +99,13 @@ public:
 	 * Construct a result tree fragment object from another.
 	 * 
 	 * @param theSource source to copy
-	 * @param deepClone true if subobjects should be copied, default true
+	 * @param deepClone true if subobjects should be copied, default is false
 	 */
 	ResultTreeFrag(const ResultTreeFrag&	theSource,
-				   bool						deepClone = true);
+				   bool						deepClone = false);
 
 	virtual
 	~ResultTreeFrag();
-
-	ResultTreeFrag&
-	operator=(const ResultTreeFrag&		theRHS)
-	{
-		if (&theRHS != this)
-		{
-			ResultTreeFragBase::operator==(theRHS);
-
-			m_document = theRHS.m_document;
-			m_children = m_children;
-		}
-
-		return *this;
-	}
 
 
 	// These interfaces are inherited from XalanDocumentFragment...
@@ -216,6 +202,9 @@ public:
 private:
 
 	// Not defined
+	ResultTreeFrag&
+	operator=(const ResultTreeFrag&		theRHS);
+
 	bool
 	operator==(const ResultTreeFrag&	theRHS) const;
 

@@ -66,6 +66,7 @@
 
 
 
+#include <deque>
 #include <memory>
 #include <set>
 #include <vector>
@@ -73,6 +74,10 @@
 
 
 #include <XPath/XPathExecutionContextDefault.hpp>
+
+
+
+#include <XSLT/VariablesStack.hpp>
 
 
 
@@ -108,17 +113,14 @@ public:
 	virtual void
 	reset();
 
-	virtual XObject*
-	getTopLevelVariable(const XalanDOMString&	theName) const;
-
 	virtual bool
 	getQuietConflictWarnings() const;
 
-	virtual XalanDocument*
+	virtual XalanNode*
 	getRootDocument() const;
 
 	virtual void
-	setRootDocument(XalanDocument*	theDocument);
+	setRootDocument(XalanNode*	theDocument);
 
 	virtual XalanDocument*
 	createDocument() const;
@@ -203,12 +205,7 @@ public:
 	virtual int
 	getIndent() const;
 
-	virtual XObject*
-	executeXPath(
-			const XalanDOMString&	str,
-			XalanNode*				contextNode,
-			const PrefixResolver&	resolver);
-
+	// $$$ ToDo: Get rid of this!!!!
 	virtual XObject*
 	executeXPath(
 			const XalanDOMString&	str,
@@ -230,18 +227,58 @@ public:
 			const XalanDOMString&	stringedValue);
 
 	virtual void
+	pushTopLevelVariables(const ParamVectorType&	topLevelParams);
+
+	virtual XObject*
+	createVariable(
+			const ElemTemplateElement*	element,
+			const XPath&				xpath,
+			XalanNode*					contextNode,
+			const PrefixResolver&		resolver);
+
+	virtual XObject*
+	createVariable(
+			const ElemTemplateElement*	element,
+			const ElemTemplateElement&	templateChild,
+			XalanNode*					sourceTree,
+			XalanNode*					sourceNode,
+			const QName&				mode);
+
+	virtual void
 	pushVariable(
-			const QName&		name,
-			XObject*			var,
-			const XalanNode*	element);
+			const QName&				name,
+			const ElemTemplateElement*	element,
+			const XalanDOMString&		str,
+			XalanNode*					contextNode,
+			const PrefixResolver&		resolver);
 
 	virtual void
-	pushContextMarker(
-			const XalanNode*	caller,
-			const XalanNode*	sourceNode);
+	pushVariable(
+			const QName&				name,
+			XObject*					var,
+			const ElemTemplateElement*	element);
 
 	virtual void
-	popCurrentContext();
+	pushVariable(
+			const QName&				name,
+			const ElemTemplateElement*	element,
+			const XPath&				xpath,
+			XalanNode*					contextNode,
+			const PrefixResolver&		resolver);
+
+	virtual void
+	pushVariable(
+			const QName&				name,
+			const ElemTemplateElement*	element,
+			const ElemTemplateElement&	templateChild,
+			XalanNode*					sourceTree,
+			XalanNode*					sourceNode);
+
+	virtual void
+	pushContextMarker();
+
+	virtual void
+	popContextMarker();
 
 	virtual void
 	resolveTopLevelParams();
@@ -255,7 +292,7 @@ public:
 			XalanNode*					sourceTree, 
 			XalanNode*					sourceNode,
 			const QName&				mode,
-			const XalanNode*			targetTemplate);
+			const ElemTemplateElement*	targetTemplate);
 
 	virtual XObject*
 	getParamVariable(const QName&	theName) const;
@@ -327,6 +364,9 @@ public:
 			XalanNode*					sourceNode,
 			const QName&				mode);
 
+	virtual bool
+	destroyXObject(XObject*		theXObject) const;
+
 	virtual void
 	outputResultTreeFragment(const XObject&		theTree);
 
@@ -374,8 +414,8 @@ public:
 	virtual FormatterToDOM*
 	createFormatterToDOM(
 			XalanDocument*			doc,
-			XalanDocumentFragment*	docFrag = 0,
-			XalanElement*			currentElement = 0);
+			XalanDocumentFragment*	docFrag,
+			XalanElement*			currentElement);
 
 	virtual FormatterToDOM*
 	createFormatterToDOM(
@@ -673,22 +713,36 @@ public:
 
 private:
 
+	void
+	popLiveVariablesStack();
+
+	void
+	clearLiveVariablesStack();
+
 	XPathExecutionContextDefault	m_xpathExecutionContextDefault;
 
 	// $$ ToDo: Try to remove this dependency, and rely only on XSLTProcessor...
 	XSLTEngineImpl&					m_xsltProcessor;
 
+	XalanNode*						m_rootDocument;
+
 #if defined(XALAN_NO_NAMESPACES)
-	typedef vector<const ElemTemplateElement*>			ElementRecursionStackType;
+	typedef deque<const ElemTemplateElement*>			ElementRecursionStackType;
 	typedef set<FormatterListener*>						FormatterListenerSetType;
 	typedef set<PrintWriter*>							PrintWriterSetType;
 	typedef set<TextOutputStream*>						TextOutputStreamSetType;
+	typedef vector<const XObject*>						VariablesCollectionType;
+	typedef vector<VariablesCollectionType>				LiveVariablesStackType;
 #else
-	typedef std::vector<const ElemTemplateElement*>		ElementRecursionStackType;
+	typedef std::deque<const ElemTemplateElement*>		ElementRecursionStackType;
 	typedef std::set<FormatterListener*>				FormatterListenerSetType;
 	typedef std::set<PrintWriter*>						PrintWriterSetType;
 	typedef std::set<TextOutputStream*>					TextOutputStreamSetType;
+	typedef std::vector<const XObject*>					VariablesCollectionType;
+	typedef std::vector<VariablesCollectionType>		LiveVariablesStackType;
 #endif
+
+	enum { eDefaultVariablesCollectionSize = 10, eDefaultVariablesStackSize = 200 };
 
 	ElementRecursionStackType			m_elementRecursionStack;
 
@@ -703,6 +757,13 @@ private:
 	TextOutputStreamSetType				m_textOutputStreams;
 
 	const CollationCompareFunctor*		m_collationCompareFunctor;
+
+	LiveVariablesStackType				m_liveVariablesStack;
+
+	/**
+	 * Holds all information about variables during execution.
+	 */
+	VariablesStack						m_variablesStack;
 
 	static XalanNumberFormatFactory		s_defaultXalanNumberFormatFactory;
 

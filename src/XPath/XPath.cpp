@@ -1069,7 +1069,7 @@ XPath::boolean(
 	assert(expr1.get() != 0);
 
 	// Try to optimize when the result of the execution is
-	// already a string.
+	// already a boolean.
 	if (expr1->getType() == XObject::eTypeBoolean)
 	{
 		return expr1.release();
@@ -1094,7 +1094,7 @@ XPath::number(
 	assert(expr1.get() != 0);
 
 	// Try to optimize when the result of the execution is
-	// already a string.
+	// already a number.
 	if (expr1->getType() == XObject::eTypeNumber)
 	{
 		return expr1.release();
@@ -1156,7 +1156,10 @@ XPath::literal(
 	assert(m_expression.m_opMap.size() > static_cast<unsigned>(opPos + 2));
 	assert(m_expression.m_tokenQueue.size() > static_cast<unsigned>(m_expression.m_opMap[opPos + 2]));
 
-	return executionContext.getXObjectFactory().createString(m_expression.m_tokenQueue[m_expression.m_opMap[opPos + 2]]->str());
+	XObject* const	theToken = m_expression.m_tokenQueue[m_expression.m_opMap[opPos + 2]];
+	assert(theToken != 0 && theToken->getType() == XObject::eTypeString);
+
+	return executionContext.getXObjectFactory().clone(*theToken);
 }
 
 
@@ -1195,12 +1198,6 @@ XPath::variable(
 							    varName->str(),
 							  context);
 	}
-	else
-	{
-		// Always clone the result of getting a variable, since it doesn't
-		// necessarily belong to our context.
-		result = executionContext.getXObjectFactory().clone(*result);
-	}
 
 	return result;
 }
@@ -1227,7 +1224,10 @@ XPath::numberlit(
 	assert(m_expression.m_opMap.size() > static_cast<unsigned>(opPos + 2));
 	assert(m_expression.m_tokenQueue.size() > static_cast<unsigned>(m_expression.m_opMap[opPos + 2]));
 
-	return executionContext.getXObjectFactory().createNumber(m_expression.m_tokenQueue[m_expression.m_opMap[opPos + 2]]->num());
+	XObject* const	theToken = m_expression.m_tokenQueue[m_expression.m_opMap[opPos + 2]];
+	assert(theToken != 0 && theToken->getType() == XObject::eTypeNumber);
+
+	return executionContext.getXObjectFactory().clone(*theToken);
 }
   
 

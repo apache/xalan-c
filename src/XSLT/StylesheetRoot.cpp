@@ -315,29 +315,34 @@ StylesheetRoot::process(
 	/*
 	 * Output target has a node
 	 */
-	else if(0 != outputTarget.getNode())
+	else if(outputTarget.hasDOMTarget() == true)
 	{
-		switch(outputTarget.getNode()->getNodeType())
+		if (outputTarget.getDocument() != 0)
 		{
-		case XalanNode::DOCUMENT_NODE:
-			flistener =
-					executionContext.createFormatterToDOM(static_cast<XalanDocument*>(outputTarget.getNode()));
-			break;
+				flistener = executionContext.createFormatterToDOM(outputTarget.getDocument(), 0);
+		}
+		else if (outputTarget.getDocumentFragment() != 0)
+		{
+			XalanDocumentFragment* const	theFragment =
+					outputTarget.getDocumentFragment();
 
-		case XalanNode::DOCUMENT_FRAGMENT_NODE:
-			flistener =
-					executionContext.createFormatterToDOM(executionContext.createDocument(),
-						static_cast<XalanDocumentFragment*>(outputTarget.getNode()));
-			break;
+			flistener = executionContext.createFormatterToDOM(
+								theFragment->getOwnerDocument(),
+								theFragment,
+								0);
+		}
+		else if (outputTarget.getElement() != 0)
+		{
+			XalanElement* const		theElement =
+					outputTarget.getElement();
 
-		case XalanNode::ELEMENT_NODE:
-			flistener =
-					executionContext.createFormatterToDOM(executionContext.createDocument(),
-						static_cast<XalanElement*>(outputTarget.getNode()));
-			break;
-
-		default:
-			executionContext.error("Can only output to an Element, DocumentFragment, Document, or PrintWriter.");
+				flistener = executionContext.createFormatterToDOM(
+								theElement->getOwnerDocument(),
+								theElement);
+		}
+		else
+		{
+			assert(0);
 		}
 	}
 	/*
@@ -345,16 +350,17 @@ StylesheetRoot::process(
 	 */
 	else
 	{
-		outputTarget.setNode(executionContext.createDocument());
+		XalanDocument* const	theDocument = executionContext.createDocument();
 
-		flistener =
-				executionContext.createFormatterToDOM(static_cast<XalanDocument*>(outputTarget.getNode()));
+		outputTarget.setDocument(theDocument);
+
+		flistener = executionContext.createFormatterToDOM(theDocument, 0);
 	}
 
 	executionContext.setFormatterListener(flistener);
 	executionContext.resetCurrentState(sourceTree, sourceTree);
 
-	executionContext.setRootDocument(static_cast<XalanDocument*>(sourceTree));
+	executionContext.setRootDocument(sourceTree);
 		
 	if(executionContext.doDiagnosticsOutput())
 	{
@@ -362,8 +368,6 @@ StylesheetRoot::process(
 		executionContext.diag(XALAN_STATIC_UCODE_STRING("Transforming..."));
 		executionContext.pushTime(&sourceTree);
 	}
-		
-	executionContext.pushContextMarker(0, 0);
 
 	try
 	{
@@ -379,11 +383,10 @@ StylesheetRoot::process(
 
 	// Output the action of the found root rule.	All processing
 	// occurs from here.	buildResultFromTemplate is highly recursive.
-	// java: rootRule->execute(*m_processor, sourceTree, sourceTree, 0);
 	rootRule->execute(executionContext, sourceTree, sourceTree, QName());
 
 	executionContext.endDocument();
-		
+
 	// Reset the top-level params for the next round.
 	executionContext.clearTopLevelParams();
 

@@ -94,6 +94,11 @@
 
 
 
+#include <XSLT/TopLevelArg.hpp>
+
+
+
+
 class ElemTemplateElement;
 class FormatterListener;
 class FormatterToDOM;
@@ -144,15 +149,6 @@ public:
 	reset() = 0;
 
 	/**
-	 * Retrieve a top level variable corresponding to name.
-	 * 
-	 * @param name name of variable
-	 * @return pointer to XObject for variable
-	 */
-	virtual XObject*
-	getTopLevelVariable(const XalanDOMString&	theName) const = 0;
-
-	/**
 	 * Determine whether conflicts should be reported.
 	 * 
 	 * @return true if conflicts should not be warned
@@ -161,20 +157,24 @@ public:
 	getQuietConflictWarnings() const = 0;
 
 	/**
-	 * Retrieve root document for stylesheet.
+	 * Retrieve root document for stylesheet.  Note that
+	 * this does not have to be a XalanDocument -- it can
+	 * be any node in a document.
 	 * 
 	 * @return root document
 	 */
-	virtual XalanDocument*
+	virtual XalanNode*
 	getRootDocument() const = 0;
 
 	/**
-	 * Set root document for stylesheet.
+	 * Set root document for stylesheet.  Note that
+	 * this does not have to be a XalanDocument -- it can
+	 * be any node in a document.
 	 * 
 	 * @param theDocument root document
 	 */
 	virtual void
-	setRootDocument(XalanDocument*	theDocument) = 0;
+	setRootDocument(XalanNode*	theDocument) = 0;
 
 	/**
 	 * Create a new empty document.
@@ -592,21 +592,7 @@ public:
 	virtual int
 	getIndent() const = 0;
 
-	/**
-	 * Execute an XPath and return the resulting XObject. The lifetime of this
-	 * XObject is not necessarily that of the Stylesheet.
-	 *
-	 * @param str         string expression for XPath evaluation
-	 * @param contextNode current node in the source tree
-	 * @param resolver    resolver for namespace resolution
-	 * @return pointer to resulting XObject
-	 */
-	virtual XObject*
-	executeXPath(
-			const XalanDOMString&	str,
-			XalanNode*				contextNode,
-			const PrefixResolver&	resolver) = 0;
-
+	// $$$ ToDo: Remove this one!!!!
 	/**
 	 * Execute an XPath and return the resulting XObject. The lifetime of this
 	 * XObject is not necessarily that of the Stylesheet.
@@ -712,6 +698,114 @@ public:
 			const PrefixResolver&	namespaceContext,
 			const XalanDOMString&	stringedValue) = 0;
 
+#if defined(XALAN_NO_NAMESPACES)
+	typedef vector<TopLevelArg>			ParamVectorType;
+#else
+	typedef std::vector<TopLevelArg>	ParamVectorType;
+#endif
+
+	/**
+	 * Set a list of top level variables in the specified execution context
+	 * stylesheet.
+	 *
+	 * @param topLevelParams   list of top level parameters
+	 */
+	virtual void
+	pushTopLevelVariables(const ParamVectorType&	topLevelParams) = 0;
+
+	/**
+	 * Execute the supplied XPath and and create a
+	 * variable in the current context.
+	 *
+	 * @param element	  element marker for variable
+	 * @param str         string expression for XPath evaluation
+	 * @param contextNode current node in the source tree
+	 * @param resolver    resolver for namespace resolution
+	 * @return a pointer to the XObject result
+	 */
+	virtual XObject*
+	createVariable(
+			const ElemTemplateElement*	element,
+			const XPath&				xpath,
+			XalanNode*					contextNode,
+			const PrefixResolver&		resolver) = 0;
+
+	/**
+	 * Create an ResultTreeFragment as a variable and push it
+	 * on to the stack with the current context.
+	 *
+	 * @param name    name of variable
+	 * @param element element marker for variable
+	 * @param templateChild result tree fragment to use.
+	 * @param sourceTree node for source tree
+	 * @param sourceNode source node
+	 * @return a pointer to the XObject result
+	 */
+	virtual XObject*
+	createVariable(
+			const ElemTemplateElement*	element,
+			const ElemTemplateElement&	templateChild,
+			XalanNode*					sourceTree,
+			XalanNode*					sourceNode,
+			const QName&				mode) = 0;
+
+	/**
+	 * Execute an XPath using the provided expression, 
+	 * and push the result as a variable in the context of
+	 * the supplied element.
+	 *
+	 * @param name		  name of variable
+	 * @param element	  element marker for variable
+	 * @param str         string expression for XPath evaluation
+	 * @param contextNode current node in the source tree
+	 * @param resolver    resolver for namespace resolution
+	 * @return nothing
+	 */
+	virtual void
+	pushVariable(
+			const QName&				name,
+			const ElemTemplateElement*	element,
+			const XalanDOMString&		str,
+			XalanNode*					contextNode,
+			const PrefixResolver&		resolver) = 0;
+
+	/**
+	 * Execute the supplied XPath and push the result as a
+	 * variable in the current context.
+	 *
+	 * @param name		  name of variable
+	 * @param element	  element marker for variable
+	 * @param str         string expression for XPath evaluation
+	 * @param contextNode current node in the source tree
+	 * @param resolver    resolver for namespace resolution
+	 * @return nothing
+	 */
+	virtual void
+	pushVariable(
+			const QName&				name,
+			const ElemTemplateElement*	element,
+			const XPath&				xpath,
+			XalanNode*					contextNode,
+			const PrefixResolver&		resolver) = 0;
+
+	/**
+	 * Create an ResultTreeFragment as a variable and push it
+	 * on to the stack with the current context.
+	 *
+	 * @param name    name of variable
+	 * @param element element marker for variable
+	 * @param templateChild result tree fragment to use.
+	 * @param sourceTree node for source tree
+	 * @param sourceNode source node
+	 */
+	virtual void
+	pushVariable(
+			const QName&				name,
+			const ElemTemplateElement*	element,
+			const ElemTemplateElement&	templateChild,
+			XalanNode*					sourceTree,
+			XalanNode*					sourceNode) = 0;
+
 	/**
 	 * Push a named variable onto the processor variable stack
 	 *
@@ -721,27 +815,22 @@ public:
 	 */
 	virtual void
 	pushVariable(
-			const QName&		name,
-			XObject*			var,
-			const XalanNode*	element) = 0;
+			const QName&				name,
+			XObject*					var,
+			const ElemTemplateElement*	element) = 0;
 
 	/**
 	 * Push a context marker onto the stack to let us know when to stop
 	 * searching for a var.
-	 *
-	 * @param caller     caller node
-	 * @param sourceNode source node
 	 */
 	virtual void
-	pushContextMarker(
-			const XalanNode*	caller,
-			const XalanNode*	sourceNode) = 0;
+	pushContextMarker() = 0;
 
 	/**
 	 * Pop the current context from the current context stack.
 	 */
 	virtual void
-	popCurrentContext() = 0;
+	popContextMarker() = 0;
 
 	/**
 	 * Resolve the params that were pushed by the caller.
@@ -771,7 +860,7 @@ public:
 			XalanNode*					sourceTree, 
 			XalanNode*					sourceNode,
 			const QName&				mode,
-			const XalanNode*			targetTemplate) = 0;
+			const ElemTemplateElement*	targetTemplate) = 0;
 
 	/**
 	 * Given a name, return a string representing the value, but don't look in
@@ -894,7 +983,7 @@ public:
 			XalanNode*						sourceTree, 
 			XalanNode*						sourceNode,
 			const QName&					mode,
-			const XalanNode*				targetTemplate);
+			const ElemTemplateElement*		targetTemplate);
 
 		~ParamsPushPop();
 
@@ -1098,6 +1187,17 @@ public:
 			const QName&				mode) = 0;
 
 	/**
+	 * Function to destroy an XObject that was returned
+	 * by executing.  It is safe to call this function
+	 * with any XObject.
+	 *
+	 * @param theXObject pointer to the XObject.
+	 * @return true if the object was destroyed.
+	 */
+	virtual bool
+	destroyXObject(XObject*		theXObject) const = 0;
+
+	/**
 	 * Given a result tree fragment, walk the tree and
 	 * output it to the result stream.
 	 *
@@ -1260,8 +1360,8 @@ public:
 	virtual FormatterToDOM*
 	createFormatterToDOM(
 			XalanDocument*			doc,
-			XalanDocumentFragment*	docFrag = 0,
-			XalanElement*			currentElement = 0) = 0;
+			XalanDocumentFragment*	docFrag,
+			XalanElement*			currentElement) = 0;
 
 	/**
 	 * Construct a FormatterToDOM instance.  it will add the DOM nodes 
