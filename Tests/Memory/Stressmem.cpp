@@ -240,8 +240,6 @@ main(
 
 		// Defined basic constants for file manipulation 
 
-		const XalanDOMString  XSLSuffix(XALAN_STATIC_UCODE_STRING(".xsl"));
-		const XalanDOMString  XMLSuffix(XALAN_STATIC_UCODE_STRING(".xml"));
 		const XalanDOMString  resultFilePrefix(XalanDOMString("cpp-mem"));
 		const XalanDOMString  resultsFile(outputRoot + resultFilePrefix + UniqRunid + XMLSuffix);
 		
@@ -256,10 +254,6 @@ main(
 
 			{
 				XalanTransformer		transformEngine;
-
-				const XalanDOMString	theXSLSuffix(XALAN_STATIC_UCODE_STRING(".xsl"));
-				const XalanDOMString	theXMLSuffix(XALAN_STATIC_UCODE_STRING(".xml"));
-  
 
 				for(FileNameVectorType::size_type	j = 0; j < dirs.size(); ++j)
 				{
