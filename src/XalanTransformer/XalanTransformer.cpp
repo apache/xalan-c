@@ -133,7 +133,9 @@ XalanTransformer::terminate()
 	delete m_xsltInit;
 
 	// Call the static terminator for Xerces.
-	XMLPlatformUtils::Terminate();
+	// We do not call terminate to Xerces because we have no way 
+	// of knowing if it is being used elsewhere in the process.
+	//XMLPlatformUtils::Terminate();
 }
 
 
