@@ -394,14 +394,8 @@ DOMServices::getNodeData(
 			const XalanDocumentFragment&	documentFragment,
 			XalanDOMString&					data)
 {
-	const XalanNodeList* const	nl = documentFragment.getChildNodes();
-	assert(nl != 0);
-
-	const unsigned int	n = nl->getLength();
-
-	for(unsigned int i = 0; i < n; ++i)
+	for(const XalanNode* child = documentFragment.getFirstChild(); child != 0; child = child->getNextSibling())
 	{
-		const XalanNode* const		child = nl->item(i);
 		assert(child != 0);
 
 		getChildData(child, data);
@@ -602,14 +596,8 @@ DOMServices::getNodeData(
 			FormatterListener&				formatterListener,
 			MemberFunctionPtr				function)
 {
-	const XalanNodeList* const	nl = documentFragment.getChildNodes();
-	assert(nl != 0);
-
-	const unsigned int	n = nl->getLength();
-
-	for(unsigned int i = 0; i < n; ++i)
+	for(const XalanNode* child = documentFragment.getFirstChild(); child != 0; child = child->getNextSibling())
 	{
-		const XalanNode* const		child = nl->item(i);
 		assert(child != 0);
 
 		getChildData(child, formatterListener, function);
