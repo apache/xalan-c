@@ -275,11 +275,12 @@ XMLFileReporter::logElement(int level, const XalanDOMString& element, Hashtable 
     {
 		char tmp[20];
 		sprintf(tmp, "%d", level);
-
-        printToFile("<" + escapestring(element) + " " + ATTR_LEVEL + "=\""
-                              + tmp + "\"");
-
-		
+//
+//		Took out this level attribute cuz we don't use it.
+//      printToFile("<" + escapestring(element) + " " + ATTR_LEVEL + "=\""
+//                      + tmp + "\"");
+        printToFile("<" + escapestring(element) + " ");
+	
 		Hashtable::iterator theEnd = attrs.end();	
     
        	for(Hashtable::iterator i = attrs.begin(); i != theEnd; ++i)
