@@ -192,33 +192,6 @@ FunctionDocument::execute(
 			base = executionContext.getPrefixResolver()->getURI();
 		}
 
-		// Chop off the file name part of the URI, this includes the
-		// trailing separator
-		XalanDOMString newBase;
-
-		if (length(base) > 0)
-		{
-			const unsigned int	theLength = length(base);
-
-			unsigned int		indexOfSlash = lastIndexOf(base, '/');
-#if defined(WIN32)				
-			const unsigned int	indexOfBackSlash = lastIndexOf(base, '\\');
-
-			if(indexOfBackSlash > indexOfSlash && indexOfBackSlash < theLength)
-			{
-				indexOfSlash = indexOfBackSlash;
-			}
-#endif
-			if (indexOfSlash < theLength)
-			{
-				newBase = substring(base, 0, indexOfSlash + 1);
-			}
-			else
-			{
-				newBase = base;
-			}
-		}
-
 		MutableNodeRefList		mnl(executionContext.createMutableNodeRefList());
 
 		const int				nRefs = XObject::eTypeNodeSet == arg->getType() ?
@@ -264,10 +237,10 @@ FunctionDocument::execute(
 				if(indexOfColon < theLength && indexOfSlash < theLength && indexOfColon < indexOfSlash)
 				{
 					// The url (or filename, for that matter) is absolute.
-					newBase = XalanDOMString();
+					base = XalanDOMString();
 				}
 
-				XalanDocument* const	newDoc = getDoc(executionContext, ref, newBase);
+				XalanDocument* const	newDoc = getDoc(executionContext, ref, base);
 
 				if(newDoc != 0)
 				{
