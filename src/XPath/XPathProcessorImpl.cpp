@@ -2146,7 +2146,7 @@ XPathProcessorImpl::Pattern()
 
 void
 XPathProcessorImpl::LocationPathPattern()
-{	 
+{
 	assert(m_xpath != 0);
 	assert(m_expression != 0);
 
@@ -2161,9 +2161,27 @@ XPathProcessorImpl::LocationPathPattern()
 				  tokenIs(FUNC_KEY_STRING) == true)
 	{
 		IdKeyPattern();
-	}
 
-	if(tokenIs('/') == true)
+		if(tokenIs('/') == true && lookahead('/', 1) == true)
+		{
+			const int	newOpPos = m_expression->opCodeMapLength();
+
+			XPathExpression::OpCodeMapValueVectorType	theArgs(1);
+
+			// Tell how long the step is without the predicate
+			theArgs[0] = 4;
+
+			m_expression->appendOpCode(XPathExpression::eMATCH_ANY_ANCESTOR,
+									   theArgs);
+
+			m_expression->appendOpCode(XPathExpression::eNODETYPE_ROOT);
+
+			m_expression->updateOpCodeLength(newOpPos);
+
+			nextToken();
+		}
+	}
+	else if(tokenIs('/') == true)
 	{
 		const int	newOpPos = m_expression->opCodeMapLength();
 
@@ -2174,7 +2192,7 @@ XPathProcessorImpl::LocationPathPattern()
 
 		if(lookahead('/', 1) == true)
 		{
-			m_expression->appendOpCode(XPathExpression::eMATCH_ANY_ANCESTOR_WITH_PREDICATE,
+			m_expression->appendOpCode(XPathExpression::eMATCH_ANY_ANCESTOR,
 									   theArgs);
 		}
 		else
