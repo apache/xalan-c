@@ -68,6 +68,10 @@
 
 
 
+#include <DOMSupport/DOMServices.hpp>
+
+
+
 #include <XMLSupport/Formatter.hpp>
 
 
@@ -1030,8 +1034,17 @@ StylesheetHandler::startElement(
 			if(!m_elemStack.empty())
 			{
 				ElemTemplateElement* const	parent = m_elemStack.back();
+
+				// Guard against an exception in appendChildElem()...
+				XalanAutoPtr<ElemTemplateElement>	theGuard(elem);
+
 				parent->appendChildElem(elem);
+
 				m_elemStackParentedElements.insert(elem);
+
+				// The element is parented and will now be
+				// deleted when the parent is delete...
+				theGuard.release();
 			}
 
 			m_elemStack.push_back(elem);
@@ -1128,10 +1141,17 @@ StylesheetHandler::initWrapperless(
 	m_foundStylesheet = true;
 	m_stylesheet.setWrapperless(true);
 
+	// This attempts to optimize for a literal result element with
+	// the name HTML, so we don't have to switch on-the-fly.
 	if(equalsIgnoreCase(name, Constants::ELEMNAME_HTML_STRING) == true)
 	{
-		m_stylesheet.getStylesheetRoot().setIndentResult(true);
-		m_stylesheet.getStylesheetRoot().setOutputMethod(OUTPUT_METHOD_HTML);
+		// If there's a default namespace, then we must output XML.
+		// Otherwise, we'll set the output method to HTML.
+		if (atts.getValue(c_wstr(DOMServices::s_XMLNamespace)) == 0)
+		{
+			m_stylesheet.getStylesheetRoot().setIndentResult(true);
+			m_stylesheet.getStylesheetRoot().setOutputMethod(OUTPUT_METHOD_HTML);
+		}
 	}
 
 	return pElem;
