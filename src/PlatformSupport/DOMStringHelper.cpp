@@ -1607,26 +1607,33 @@ doTranscodeToLocalCodePage(
 		tempSource = tempSourceJanitor.get();
 	}
 
-    // See now many chars we need to transcode.
-    const unsigned int targetLen = ::wcstombs(0, tempSource, 0);
+    // See how many chars we need to transcode.
+    const size_t	targetLen = ::wcstombs(0, tempSource, 0);
 
-	// Resize, adding one byte if terminating...
-	targetVector.resize(terminate == true ? targetLen + 1 : targetLen);
-
-    //  And transcode our temp source buffer to the local buffer. Terminate
-    //
-    if (wcstombs(&targetVector[0], tempSource, targetLen) == size_t(-1))
+	if (targetLen == size_t(-1))
 	{
 		return false;
 	}
 	else
 	{
-		if (terminate == true)
-		{
-			targetVector.back() = '\0';
-		}
+		// Resize, adding one byte if terminating...
+		targetVector.resize(terminate == true ? targetLen + 1 : targetLen);
 
-		return true;
+		//  And transcode our temp source buffer to the local buffer. Terminate
+		//
+		if (wcstombs(&targetVector[0], tempSource, targetLen) == size_t(-1))
+		{
+			return false;
+		}
+		else
+		{
+			if (terminate == true)
+			{
+				targetVector.back() = '\0';
+			}
+
+			return true;
+		}
 	}
 }
 
@@ -1639,60 +1646,7 @@ TranscodeToLocalCodePage(
 			CharVectorType&			targetVector,
 			bool					terminate)
 {
-#if 1
 	return doTranscodeToLocalCodePage(sourceString, sourceStringLength, false, targetVector, terminate);
-#else
-    // Short circuit if it's a null pointer, or of length 0.
-    if (!sourceString || (!sourceString[0]))
-    {
-		if (terminate == true)
-		{
-			targetVector.resize(1);
-
-			targetVector.back() = '\0';
-		}
-		else
-		{
-			targetVector.resize(0);
-		}
-
-        return true;
-	}
-
-	// If our char sizes are not the same, we have to use a temp buffer.
-	XalanArrayAutoPtr<wchar_t>	tempSourceJanitor(new wchar_t[sourceStringLength + 1]);
-
-	for (unsigned int index = 0; index < sourceStringLength; ++index)
-	{
-		tempSourceJanitor[index] = wchar_t(sourceString[index]);
-	}
-
-	tempSourceJanitor[sourceStringLength] = 0;
-
-	const XalanDOMChar*	const	tempSource = tempSourceJanitor.get();
-
-    // See now many chars we need to transcode.
-    const unsigned int targetLen = ::wcstombs(0, tempSource, 0);
-
-	// Resize, adding one byte if terminating...
-	targetVector.resize(terminate == true ? targetLen + 1 : targetLen);
-
-    //  And transcode our temp source buffer to the local buffer. Terminate
-    //
-    if (wcstombs(&targetVector[0], tempSource, targetLen) == size_t(-1))
-	{
-		return false;
-	}
-	else
-	{
-		if (terminate == true)
-		{
-			targetVector.back() = '\0';
-		}
-
-		return true;
-	}
-#endif
 }
 
 
@@ -1703,66 +1657,5 @@ TranscodeToLocalCodePage(
 			CharVectorType&			targetVector,
 			bool					terminate)
 {
-#if 1
 	return doTranscodeToLocalCodePage(sourceString, 0, true, targetVector, terminate);
-#else
-    // Short circuit if it's a null pointer, or of length 0.
-    if (!sourceString || (!sourceString[0]))
-    {
-		if (terminate == true)
-		{
-			targetVector.resize(1);
-
-			targetVector.back() = '\0';
-		}
-		else
-		{
-			targetVector.resize(0);
-		}
-
-        return true;
-	}
-
-#if !defined(XALAN_XALANDOMCHAR_USHORT_MISMATCH)
-	const XalanDOMChar*	const	tempSource = sourceString;
-#else
-    assert(sizeof(XalanDOMChar) != sizeof(wchar_t));
-
-	const unsigned int			len = length(sourceString);
-
-	// If our char sizes are not the same, we have to use a temp buffer.
-	XalanArrayAutoPtr<wchar_t>	tempSourceJanitor(new wchar_t[len + 1]);
-
-	for (unsigned int index = 0; index < len; ++index)
-	{
-		tempSourceJanitor[index] = wchar_t(sourceString[index]);
-	}
-
-	tempSourceJanitor[len] = 0;
-
-	const XalanDOMChar*	const	tempSource = tempSourceJanitor.get();
-#endif
-
-    // See now many chars we need to transcode.
-    const unsigned int targetLen = ::wcstombs(0, tempSource, 0);
-
-	// Resize, adding one byte if terminating...
-	targetVector.resize(terminate == true ? targetLen + 1 : targetLen);
-
-    //  And transcode our temp source buffer to the local buffer. Terminate
-    //
-    if (wcstombs(&targetVector[0], tempSource, targetLen) == size_t(-1))
-	{
-		return false;
-	}
-	else
-	{
-		if (terminate == true)
-		{
-			targetVector.back() = '\0';
-		}
-
-		return true;
-	}
-#endif
 }
