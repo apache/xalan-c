@@ -61,6 +61,8 @@
 
 #if !defined(XALAN_INLINE_INITIALIZATION)
 const size_t	Writer::npos = ~0u;
+#elif !defined(XALAN_INLINE_INITIALIZATION_IS_DEFINITION_BUG)
+const size_t	Writer::npos;
 #endif
 
 

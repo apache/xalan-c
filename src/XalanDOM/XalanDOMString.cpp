@@ -73,7 +73,7 @@
 
 const XalanDOMChar	XalanDOMString::s_empty = 0;
 
-#if defined(XALAN_INLINE_INITIALIZATION)
+#if defined(XALAN_INLINE_INITIALIZATION) && !defined(XALAN_INLINE_INITIALIZATION_IS_DEFINITION_BUG)
 const XalanDOMString::size_type     XalanDOMString::npos;
 #endif
  
