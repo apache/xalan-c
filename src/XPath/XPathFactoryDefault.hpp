@@ -67,7 +67,7 @@
 #if !defined(XALAN_XTREE_BUG)
 #include <set>
 #else
-#include <vector>
+#error Need to implement CollectionType as a vector
 #endif
 
 
@@ -79,6 +79,7 @@
 
 class XALAN_XPATH_EXPORT XPathFactoryDefault : public XPathFactory
 {
+
 public:
 
 	explicit

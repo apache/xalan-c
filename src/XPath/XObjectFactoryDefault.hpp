@@ -67,7 +67,7 @@
 #if !defined(XALAN_XTREE_BUG)
 #include <set>
 #else
-#include <vector>
+#error Need to implement CollectionType as a vector
 #endif
 
 
