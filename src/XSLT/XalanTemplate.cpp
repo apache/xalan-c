@@ -418,7 +418,7 @@ foo(XPathExecutionContext&	theExecutionContext)
 	}
 
 	{
-		ElemForEach::SortElemsVector	theVector;
+		ElemForEach::SortElemsVectorType	theVector;
 		
 		for_each(theVector.begin(),
 			 theVector.end(),
