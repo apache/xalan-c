@@ -217,7 +217,14 @@ ElemAttribute::execute(StylesheetExecutionContext&		executionContext) const
 				const XalanDOMString*  const	prefix =
 					executionContext.getResultPrefixForNamespace(attrNameSpace);
 
-				if(prefix != 0 && length(*prefix) != 0)
+				// If there is already a prefix for the namespace, and it's length
+				// is not 0, and there is no prefix on the attribute name, or
+				// it's equal to the prefix on the attribute, then go ahead
+				// and use that prefix.
+				if(prefix != 0 &&
+				   length(*prefix) != 0 &&
+				   (indexOfNSSep == origAttrNameLength ||
+				    equals(c_wstr(*prefix), c_wstr(attrName), indexOfNSSep) == true))
 				{
 					if(indexOfNSSep < origAttrNameLength)
 					{
