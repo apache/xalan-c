@@ -107,8 +107,8 @@ getParams(int argc,
 		  XalanDOMString& basedir,
 		  XalanDOMString& outdir)
 {
-bool fSuccess = true;	// Used to continue argument loop
-bool fSetOut = true;	// Set default output directory
+	bool fSuccess = true;	// Used to continue argument loop
+	bool fSetOut = true;	// Set default output directory
 
 	// Insure that required "-base" argument is there.
 	if (argc == 1 || argv[1][0] == '-')
@@ -186,6 +186,7 @@ getTestNumber(const XalanDOMString& theFile)
 	return charAt(theFile, 12) - XalanUnicode::charDigit_0;
 }
 
+
 int
 main(
 		  int			argc,
@@ -207,9 +208,6 @@ main(
 
 	if (getParams(argc, argv, f, baseDir, outputRoot) == true)
 	{
-
-		// Get the list of Directories that are below perf
-		// const FileNameVectorType	dirs = f.getDirectoryNames(baseDir);
 
 		// Generate Unique Run id. (Only used to name the result logfile.)
 		const XalanDOMString UniqRunid = f.GenerateUniqRunid();
@@ -254,7 +252,6 @@ main(
 						const XalanDOMString  theXMLFile = f.GenerateFileName(theXSLFile,"xml");
 						const XalanDOMString  theOutput =  outputRoot + xMan + pathSep + files[i]; 
 						const XalanDOMString  theOutputFile = f.GenerateFileName(theOutput, "out");
-						const XalanDOMString  testFile = f.GenerateFileName(theXSLFile,"");
 
 						XSLTResultTarget		theResultTarget(theOutputFile);
 						const XSLTInputSource	xslInputSource(c_wstr(theXSLFile));
