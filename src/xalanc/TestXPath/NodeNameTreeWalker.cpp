@@ -30,10 +30,10 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-NodeNameTreeWalker::NodeNameTreeWalker() :
+NodeNameTreeWalker::NodeNameTreeWalker(MemoryManagerType& theManager) :
 	TreeWalker(),
-	m_nodeName(),
-	m_matchingNodes()
+	m_nodeName(theManager),
+	m_matchingNodes(theManager)
 {
 }
 

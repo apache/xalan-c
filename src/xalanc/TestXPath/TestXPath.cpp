@@ -17,6 +17,8 @@
 #include <xalanc/Include/PlatformDefinitions.hpp>
 
 
+#include <xalanc/XalanTransformer/XalanTransformer.hpp>
+
 
 #include <cstdio>
 #include <ctime>
@@ -298,17 +300,20 @@ ParseXML(
 {
 	const URLInputSource	theURLInputSource(c_wstr(theFileName));
 
-	return theLiaison.parseXMLStream(theURLInputSource);
+    XalanDOMString empty(XalanMemMgrs::getDummyMemMgr());
+
+	return theLiaison.parseXMLStream(theURLInputSource, empty);
 }
 
 
 
-XalanDOMString
+XalanDOMString&
 GetAttributeFromNode(
 			const XalanNode*		theNode,
-			const XalanDOMString&	theAttributeName)
+			const XalanDOMString&	theAttributeName,
+            XalanDOMString&	        theResult)
 {
-	XalanDOMString	theResult;
+	
 
 	if (theNode->getNodeType() == XalanNode::ELEMENT_NODE)
 	{
@@ -327,15 +332,17 @@ GetAttributeFromNode(
 
 
 
-XalanDOMString
+XalanDOMString&
 FindNodeAndGetAttributeValue(
 			XalanNode*				theStartNode,
 			const XalanDOMString&	theNodeName,
-			const XalanDOMString&	theAttributeName)
+			const XalanDOMString&	theAttributeName,
+            XalanDOMString&			theResult)
 {
-	XalanDOMString			theResult;
+	
+    MemoryManagerType& theManager = XalanMemMgrs::getDefaultXercesMemMgr();
 
-	NodeNameTreeWalker	theTreeWalker;
+	NodeNameTreeWalker	theTreeWalker(theManager);
 
 	theTreeWalker.findMatchingNodes(theNodeName,
 									theStartNode);
@@ -349,8 +356,9 @@ FindNodeAndGetAttributeValue(
 
 		if (theMatchingNode != 0)
 		{
-			theResult = GetAttributeFromNode(theMatchingNode,
-											 theAttributeName);
+            GetAttributeFromNode(   theMatchingNode,
+									theAttributeName,
+                                    theResult);
 		}
 	}
 
@@ -368,28 +376,32 @@ GetXSLInput(
 {
 	bool					fResult = false;
 
+    MemoryManagerType& theManager = XalanMemMgrs::getDefaultXercesMemMgr();
+
 	XalanDocument* const	theDocument =
 		ParseXML(theLiaison,
 				 theXSLFileURL);
 
 	if (theDocument != 0)
 	{
-		const XalanDOMString	theContextNodeName(XALAN_STATIC_UCODE_STRING("xsl:for-each"));
-		const XalanDOMString	theAttributeName(XALAN_STATIC_UCODE_STRING("select"));
+		const XalanDOMString	theContextNodeName(XALAN_STATIC_UCODE_STRING("xsl:for-each"), theManager);
+		const XalanDOMString	theAttributeName(XALAN_STATIC_UCODE_STRING("select"), theManager);
 
-		theContextNodeMatchPattern =
-			 FindNodeAndGetAttributeValue(theDocument->getDocumentElement(),
+		 
+		FindNodeAndGetAttributeValue(theDocument->getDocumentElement(),
 										  theContextNodeName,
-										  theAttributeName);
+										  theAttributeName,
+                                          theContextNodeMatchPattern);
 
 		if (length(theContextNodeMatchPattern) != 0)
 		{
-			const XalanDOMString	theSelectNodeName(XALAN_STATIC_UCODE_STRING("xsl:apply-templates"));
+			const XalanDOMString	theSelectNodeName(XALAN_STATIC_UCODE_STRING("xsl:apply-templates"), theManager);
 
-			theXPathString =
-				 FindNodeAndGetAttributeValue(theDocument->getDocumentElement(),
+			 
+			FindNodeAndGetAttributeValue(theDocument->getDocumentElement(),
 											  theSelectNodeName,
-											  theAttributeName);
+											  theAttributeName,
+                                              theXPathString);
 			if (length(theXPathString) != 0)
 			{
 				fResult = true;
@@ -414,6 +426,8 @@ FindContextNode(
 			XPathExecutionContext&	theExecutionContext)
 {
 	XalanNode*		theResult = 0;
+    
+    MemoryManagerType& theManager = XalanMemMgrs::getDefaultXercesMemMgr();
 
 	XPath* const	theXPath = theXPathFactory.create();
 
@@ -425,7 +439,7 @@ FindContextNode(
 
 	XalanElement*				theNamespaceContext = 0;
 	ElementPrefixResolverProxy	thePrefixResolver(theNamespaceContext, theXPathEnvSupport, theDOMSupport);
-	NodeRefList					theContextNodeList;
+	NodeRefList					theContextNodeList(theManager);
 
 	const XObjectPtr	theXObject =
 		ExecuteXPath(
@@ -493,10 +507,14 @@ TestAxisResult(
 	XalanDocument* const	theXMLDocument = ParseXML(theLiaison,
 													  theXMLFileURL);
 
+
+    MemoryManagerType& theManager = XalanMemMgrs::getDefaultXercesMemMgr();
+
+
 	if (theXMLDocument != 0)
 	{
-		XalanDOMString		theContextNodeMatchPattern;
-		XalanDOMString		theXPathString;
+		XalanDOMString		theContextNodeMatchPattern(theManager);
+		XalanDOMString		theXPathString(theManager);
 
 		if (GetXSLInput(theLiaison,
 						theXSLFileURL,
@@ -517,11 +535,11 @@ TestAxisResult(
 			{
 				XalanElement* const				theNamespaceContext = 0;
 				ElementPrefixResolverProxy		thePrefixResolver(theNamespaceContext, theXPathEnvSupport, theDOMSupport);
-				NodeRefList						theContextNodeList;
+				NodeRefList						theContextNodeList(theManager);
 
 				XPath* const	theXPath = theXPathFactory.create();
 
-				XPathConstructionContextDefault		theXPathConstructionContext;
+				XPathConstructionContextDefault		theXPathConstructionContext(theManager);
 
 				XPathGuard		theGuard(theXPathFactory,
 										 theXPath);
@@ -608,10 +626,12 @@ TestPredicateResult(
 				ParseXML(theLiaison,
 						 theXMLFileURL);
 
+    MemoryManagerType& theManager = XalanMemMgrs::getDefaultXercesMemMgr();
+
 	if (theXMLDocument != 0)
 	{
-		XalanDOMString		theContextNodeMatchPattern;
-		XalanDOMString		theXPathString;
+		XalanDOMString		theContextNodeMatchPattern(theManager);
+		XalanDOMString		theXPathString(theManager);
 
 		if (GetXSLInput(theLiaison,
 						theXSLFileURL,
@@ -632,18 +652,20 @@ TestPredicateResult(
 			{
 				XalanElement* const				theNamespaceContext = 0;
 				ElementPrefixResolverProxy		thePrefixResolver(theNamespaceContext, theXPathEnvSupport, theDOMSupport);
-				NodeRefList						theContextNodeList;
+				NodeRefList						theContextNodeList(theManager);
 
 				XPath* const	theXPath1 = theXPathFactory.create();
 
-				XPathConstructionContextDefault		theXPathConstructionContext;
+				XPathConstructionContextDefault		theXPathConstructionContext(theManager);
 
 				XPathGuard	theGuard1(theXPathFactory,
 									  theXPath1);
 
+                XalanDOMString theResult(theManager);
+
 				theXPathProcessor.initXPath(*theXPath1,
 											theXPathConstructionContext,
-											TranscodeFromLocalCodePage("following-sibling::*"),
+											TranscodeFromLocalCodePage("following-sibling::*", theResult),
 											thePrefixResolver);
 
 				XPath* const	theXPath2 = theXPathFactory.create();
@@ -653,7 +675,7 @@ TestPredicateResult(
 
 				theXPathProcessor.initXPath(*theXPath2,
 											theXPathConstructionContext,
-											TranscodeFromLocalCodePage("descendant::*"),
+											TranscodeFromLocalCodePage("descendant::*", theResult),
 											thePrefixResolver);
 
 				bool	fDump = false;
@@ -817,20 +839,22 @@ TestNumericResults(
 		{
 			XPath* const	theXPath = theXPathFactory.create();
 
-			XPathConstructionContextDefault		theXPathConstructionContext;
+			XPathConstructionContextDefault		theXPathConstructionContext(XalanMemMgrs::getDefaultXercesMemMgr());
 
 			XPathGuard		theGuard(theXPathFactory,
 									 theXPath);
 
+            XalanDOMString theResult(XalanMemMgrs::getDefaultXercesMemMgr());
+
 			TestNumericResult(theXPathProcessor,
 							  *theXPath,
 							  theXPathConstructionContext,
-							  TranscodeFromLocalCodePage(theNumericTestInput[i]),
+							  TranscodeFromLocalCodePage(theNumericTestInput[i], theResult),
 							  thePrintWriter,
 							  theNumericTestExpectedOutput[i],
 							  0,
 							  ElementPrefixResolverProxy(0, theXPathEnvSupport, theDOMSupport),
-							  NodeRefList(),
+							  NodeRefList(XalanMemMgrs::getDefaultXercesMemMgr()),
 							  theExecutionContext);
 		}
 		catch(...)
@@ -944,26 +968,30 @@ TestStringResults(
 {
 	assert(sizeof(theStringTestInput) == sizeof(theStringTestExpectedOutput));
 
+    MemoryManagerType& theManager = XalanMemMgrs::getDefaultXercesMemMgr();
+
 	for(int i = 0; theStringTestInput[i] != 0; i++)
 	{
 		try
 		{
 			XPath* const	theXPath = theXPathFactory.create();
 
-			XPathConstructionContextDefault		theXPathConstructionContext;
+			XPathConstructionContextDefault		theXPathConstructionContext(theManager);
 
 			XPathGuard	theGuard(theXPathFactory,
 								 theXPath);
 
+            XalanDOMString theResult(theManager);
+
 			TestStringResult(theXPathProcessor,
 							 *theXPath,
 							 theXPathConstructionContext,
-							 TranscodeFromLocalCodePage(theStringTestInput[i]),
+							 TranscodeFromLocalCodePage(theStringTestInput[i], theResult),
 							 thePrintWriter,
-							 TranscodeFromLocalCodePage(theStringTestExpectedOutput[i]),
+							 TranscodeFromLocalCodePage(theStringTestExpectedOutput[i], theResult),
 							 0,
 							 ElementPrefixResolverProxy(0, theXPathEnvSupport, theDOMSupport),
-							 NodeRefList(),
+							 NodeRefList(theManager),
 							 theExecutionContext);
 		}
 		catch(...)
@@ -1080,6 +1108,8 @@ TestBooleanResults(
 {
 	assert(sizeof(theBooleanTestInput) / sizeof(theBooleanTestInput[0]) ==
 				sizeof(theBooleanTestExpectedOutput) / sizeof(theBooleanTestExpectedOutput[0]));
+    
+    MemoryManagerType& theManager = XalanMemMgrs::getDefaultXercesMemMgr();
 
 	for(int i = 0; theBooleanTestInput[i] != 0; i++)
 	{
@@ -1087,20 +1117,22 @@ TestBooleanResults(
 		{
 			XPath* const	theXPath = theXPathFactory.create();
 
-			XPathConstructionContextDefault		theXPathConstructionContext;
+			XPathConstructionContextDefault		theXPathConstructionContext(theManager);
 
 			XPathGuard	theGuard(theXPathFactory,
 								 theXPath);
 
+            XalanDOMString theResult(theManager);
+
 			TestBooleanResult(theXPathProcessor,
 							  *theXPath,
 							  theXPathConstructionContext,
-							  TranscodeFromLocalCodePage(theBooleanTestInput[i]),
+							  TranscodeFromLocalCodePage(theBooleanTestInput[i],theResult),
 							  thePrintWriter,
 							  theBooleanTestExpectedOutput[i],
 							  0,
 							  ElementPrefixResolverProxy(0, theXPathEnvSupport, theDOMSupport),
-							  NodeRefList(),
+							  NodeRefList(theManager),
 							  theExecutionContext);
 		}
 		catch(...)
@@ -1114,10 +1146,10 @@ TestBooleanResults(
 
 
 
-XalanDOMString
-GetXSLFileName(const XalanDOMString&		theXMLFileName)
+XalanDOMString&
+GetXSLFileName(const XalanDOMString&		theXMLFileName, XalanDOMString&	theResult)
 {
-	XalanDOMString	theResult;
+	
 
 	int			thePeriodIndex = -1;
 
@@ -1135,7 +1167,8 @@ GetXSLFileName(const XalanDOMString&		theXMLFileName)
 
 	if (thePeriodIndex != -1)
 	{
-		theResult = substring(theXMLFileName,
+		 substring(theXMLFileName,
+                              theResult,
 							  0,
 							  thePeriodIndex + 1);
 
@@ -1158,21 +1191,28 @@ TestAxes(
 			PrintWriter&			thePrintWriter,
 			XPathExecutionContext&	theExecutionContext)
 {
-	const XalanDOMString	theProtocol(XALAN_STATIC_UCODE_STRING("file://"));
-	const XalanDOMString	theBaseURL = theProtocol + theDirectory;
+    MemoryManagerType& theManager = XalanMemMgrs::getDefaultXercesMemMgr();
 
+	const XalanDOMString	theProtocol(XALAN_STATIC_UCODE_STRING("file://"), theManager);
+
+	XalanDOMString	theBaseURL (theProtocol , theManager);
+    theBaseURL += theDirectory;
+
+    XalanDOMString thetmp(theDirectory, theManager);
 #if defined(WIN32)
-	const XalanDOMString	theSearchSpecification(theDirectory + "\\*");
+    thetmp.append("\\*");
 #else
-	const XalanDOMString	theSearchSpecification(theDirectory + "/*");
+    thetmp.append("/*");
 #endif
-	const XalanDOMString	theXMLSuffix(XALAN_STATIC_UCODE_STRING(".xml"));
+	const XalanDOMString	theSearchSpecification(thetmp, theManager);
+
+	const XalanDOMString	theXMLSuffix(XALAN_STATIC_UCODE_STRING(".xml"), theManager);
 
 	typedef XalanVector<XalanDOMString>		FileNameVectorType;
 
 	DirectoryEnumeratorFunctor<FileNameVectorType, XalanDOMString>	theEnumerator;
 
-	FileNameVectorType	theFiles;
+	FileNameVectorType	theFiles(theManager);
 
 	theEnumerator(theSearchSpecification,
 				  theFiles);
@@ -1186,10 +1226,13 @@ TestAxes(
 			try
 			{
 				// Create a fully qualified URL specification...
-				const XalanDOMString	theXMLFileName = theBaseURL + theFiles[i];
+				XalanDOMString	theXMLFileName (theBaseURL, theManager);
+                theXMLFileName += theFiles[i];
 
 				// Get the name of the corresponding XSL file...
-				const XalanDOMString	theXSLFileName = GetXSLFileName(theXMLFileName);
+				XalanDOMString	theXSLFileName (theManager);
+
+                GetXSLFileName(theXMLFileName, theXSLFileName);
 
 				XPathGuard	theXPath(theXPathFactory,
 									 theXPathFactory.create());
@@ -1251,7 +1294,7 @@ RunTests(
 		     theXPathEnvSupport,
 			 theDOMSupport,
 			 theLiaison,
-			 StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("/xsl-test/conf/axes/")),
+			 XalanDOMString(XALAN_STATIC_UCODE_STRING("/xsl-test/conf/axes/"), XalanMemMgrs::getDefaultXercesMemMgr()),
 			 thePrintWriter,
 		     theExecutionContext);
 }
@@ -1274,23 +1317,27 @@ main(
 
 	XMLPlatformUtils::Initialize();
 
-	{
-		XMLSupportInit					theXMLSupportInit;
-		XPathInit						theXPathInit;
+    XalanTransformer::initialize();
 
-		XPathEnvSupportDefault			theXPathEnvSupport;
-		XalanSourceTreeDOMSupport		theDOMSupport;
-		XObjectFactoryDefault			theXObjectFactory;
-		XPathFactoryDefault				theXPathFactory;
-		XPathProcessorImpl				theXPathProcessor;
+	{
+        MemoryManagerType& theManager = XalanMemMgrs::getDefaultXercesMemMgr();
+
+		XMLSupportInit					theXMLSupportInit;
+		XPathInit						theXPathInit( theManager );
+
+		XPathEnvSupportDefault			theXPathEnvSupport( theManager );
+		XalanSourceTreeDOMSupport		theDOMSupport( theManager );
+		XObjectFactoryDefault			theXObjectFactory( theManager );
+		XPathFactoryDefault				theXPathFactory( theManager );
+		XPathProcessorImpl				theXPathProcessor( theManager );
 
 		XPathExecutionContextDefault	theExecutionContext(theXPathEnvSupport,
 															theDOMSupport,
 															theXObjectFactory);
 
-		XalanStdOutputStream			theStdOut(cout);
+		XalanStdOutputStream			theStdOut(cout, theManager);
 		XalanOutputStreamPrintWriter	thePrintWriter(theStdOut);
-		XalanSourceTreeParserLiaison	theLiaison(theDOMSupport);
+		XalanSourceTreeParserLiaison	theLiaison(theDOMSupport, theManager);
 
 		RunTests(theXPathFactory,
 				 theXPathProcessor,
@@ -1300,6 +1347,7 @@ main(
 				 thePrintWriter,
 				 theExecutionContext);
 	}
+    XalanTransformer::terminate();
 
 	XMLPlatformUtils::Terminate();
 
