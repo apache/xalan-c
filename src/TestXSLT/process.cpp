@@ -107,6 +107,7 @@
 #include <XPath/XPathEnvSupportDefault.hpp>
 #include <XPath/XPath.hpp>
 #include <XPath/XPathExecutionContextDefault.hpp>
+#include <XPath/XPathFactoryBlock.hpp>
 #include <XPath/XPathFactoryDefault.hpp>
 #include <XPath/XPathProcessorImpl.hpp>
 
@@ -589,7 +590,8 @@ createFormatter(
 			const XalanDOMString&			mimeEncoding,
 			const StylesheetRoot*			stylesheet,
 			XMLParserLiaison&				parserLiaison,
-			XalanSourceTreeParserLiaison&	sourceTreeParserLiaison)
+			XalanSourceTreeParserLiaison&	sourceTreeParserLiaison,
+			const PrefixResolver&			prefixResolver)
 {
 	FormatterListener*	formatter = 0;
 
@@ -616,7 +618,9 @@ createFormatter(
 			standalone = stylesheet->m_standalone;
 		}
 
-		FormatterToXML* fToXML = new FormatterToXML(resultWriter,
+		FormatterToXML* const	fToXML =
+			new FormatterToXML(
+					resultWriter,
 					version,
 					outputIndent,
 					indentAmount,
@@ -661,8 +665,8 @@ createFormatter(
 			standalone = stylesheet->m_standalone;
 		}
 
-		FormatterToHTML* fToHTML
-				= new FormatterToHTML(
+		FormatterToHTML* const	fToHTML =
+				new FormatterToHTML(
 						resultWriter,
 						mimeEncoding,
 						mediatype,
@@ -675,6 +679,7 @@ createFormatter(
 						false);	// xmlDecl
 
 		fToHTML->setStripCData(stripCData);
+		fToHTML->setPrefixResolver(&prefixResolver);
 
 		formatter = fToHTML;
 	}
@@ -682,11 +687,21 @@ createFormatter(
 	{
 		if (formatToSourceTree == true)
 		{
-			formatter = new FormatterToSourceTree(sourceTreeParserLiaison.createXalanSourceTreeDocument());
+			FormatterToSourceTree* const	fToSourceTree =
+				new FormatterToSourceTree(sourceTreeParserLiaison.createXalanSourceTreeDocument());
+
+			fToSourceTree->setPrefixResolver(&prefixResolver);
+
+			formatter = fToSourceTree;
 		}
 		else
 		{
-			formatter = new FormatterToDOM(parserLiaison.createDOMFactory(), 0);
+			FormatterToDOM* const	fToDOM =
+				new FormatterToDOM(parserLiaison.createDOMFactory(), 0);
+
+			fToDOM->setPrefixResolver(&prefixResolver);
+
+			formatter = fToDOM;
 		}
 	}
 
@@ -837,7 +852,7 @@ xsltMain(const CmdLineParams&	params)
 				params,
 				diagnosticsWriter));
 
-	XSLTEngineImpl processor(
+	XSLTEngineImpl	processor(
 			xmlParserLiaison,
 			theXSLProcessorSupport,
 			theDOMSupport,
@@ -852,10 +867,10 @@ xsltMain(const CmdLineParams&	params)
 		processor.addTraceListener(theTraceListener.get());
 	}
 
-	// Use a separate factory instance for the stylesheet.  This is really only necessary
-	// if you want to use the stylesheet with another processor, or you want to use
-	// it multiple times.
-	XPathFactoryDefault		theStylesheetXPathFactory;
+	// Use a different factory type for the stylesheet.  This is an optimization, since
+	// stylesheet XPath instances are built all at once and are deleted all at once when
+	// the stylesheet is destroyed.
+	XPathFactoryBlock	theStylesheetXPathFactory;
 
 	StylesheetConstructionContextDefault	theConstructionContext(processor,
 			theXSLProcessorSupport,
@@ -950,7 +965,8 @@ xsltMain(const CmdLineParams&	params)
 				mimeEncoding,
 				stylesheet,
 				xmlParserLiaison,
-				theXalanSourceTreeParserLiaison));
+				theXalanSourceTreeParserLiaison,
+				processor));
 
 	XSLTResultTarget	rTreeTarget;
 
@@ -1056,7 +1072,8 @@ xsltMain(const CmdLineParams&	params)
 						mimeEncoding,
 						stylesheet,
 						xmlParserLiaison,
-						theXalanSourceTreeParserLiaison));
+						theXalanSourceTreeParserLiaison,
+						processor));
 
 			// Create a FormatterTreeWalker with the the
 			// new formatter...
@@ -1114,7 +1131,7 @@ main(
 	int				theResult = 0;
 
 	CmdLineParams	theParams;
-	
+
 	/*
 	 *		Get command line arguments
 	 */
@@ -1274,7 +1291,6 @@ main(
 				}
 			}
 #endif
-
 		}
 	}
 
