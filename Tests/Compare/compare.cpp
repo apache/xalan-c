@@ -277,15 +277,9 @@ main(
 
 				for(FileNameVectorType::size_type i = 0; i < files.size(); i++)
 				{
-
-					Hashtable attrs;
 					fileName = files[i];
 					futil.data.reset();
 					futil.data.testOrFile = fileName;
-
-					attrs.insert(Hashtable::value_type(XalanDOMString("idref"), fileName));
-					attrs.insert(Hashtable::value_type(XalanDOMString("UniqRunid"),UniqRunid));
-					attrs.insert(Hashtable::value_type(XalanDOMString("processor"),processorType));
 
 					const XalanDOMString  theXSLFile= baseDir + xDir + pathSep + fileName;
 					const XalanDOMString  theXMLFile = futil.generateFileName(theXSLFile,"xml");
