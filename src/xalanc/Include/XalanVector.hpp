@@ -141,7 +141,7 @@ public:
 
     XalanVector(
             const ThisType&     theSource,
-            MemoryManagerType&  theManager,
+            MemoryManagerType&  theManager XALAN_DEFAULT_CONSTRACTOR_MEMORY_MGR,
             size_type           theInitialAllocation = size_type(0)) :
         m_memoryManager(&theManager),
         m_size(0),
