@@ -127,10 +127,9 @@ FormatterToHTML::FormatterToHTML(
 	m_isUTF8(XalanTranscodingServices::encodingIsUTF8(m_encoding)),
 	m_elementLevel(0),
 	m_hasNamespaceStack(),
-	m_omitMetaTag(omitMetaTag)
+	m_omitMetaTag(omitMetaTag),
+	m_elementPropertiesStack()
 {
-	assert(s_elementFlags != 0 && s_dummyDesc != 0);
-
 	initCharsMap();
 }
 
@@ -199,26 +198,6 @@ FormatterToHTML::initCharsMap()
 
 
 
-const FormatterToHTML::ElemDesc&
-FormatterToHTML::getElemDesc(const XalanDOMChar*	name)
-{
-	assert(s_elementFlags != 0 && s_dummyDesc != 0);
-
-	const ElementFlagsMapType::const_iterator	i =
-		s_elementFlags->find(name);
-
-	if (i == s_elementFlags->end())
-	{
-		return *s_dummyDesc;
-	}
-	else
-	{
-		return (*i).second;
-	}
-}
-
-
-
 void
 FormatterToHTML::startDocument()
 {
@@ -236,6 +215,7 @@ FormatterToHTML::startDocument()
 	m_isRawStack.clear();
 	m_inScriptElemStack.push_back(false);
 	m_hasNamespaceStack.clear();
+	m_elementPropertiesStack.clear();
 
 	const bool	isEmptySystem = isEmpty(m_doctypeSystem);
 
@@ -303,10 +283,15 @@ FormatterToHTML::startElement(
 	{
 		writeParentTagEnd();
 
-		const ElemDesc&		elemDesc =
-				getElemDesc(name);
+		const XalanHTMLElementsProperties::ElementProperties&	elemProperties =
+			XalanHTMLElementsProperties::find(name);
+		assert(elemProperties.null() == false);
 
-		const bool	isBlockElement = elemDesc.is(ElemDesc::BLOCK);
+		// Push a copy onto the stack for endElement().  Don't worry --
+		// the copy is cheap!
+		m_elementPropertiesStack.push_back(elemProperties);
+
+		const bool	isBlockElement = elemProperties.is(XalanHTMLElementsProperties::BLOCK);
 
 		if (equalsIgnoreCaseASCII(name, c_wstr(s_scriptString)) == true)
 		{
@@ -342,7 +327,7 @@ FormatterToHTML::startElement(
 
 		m_inBlockElem = !isBlockElement;
 
-		m_isRawStack.push_back(elemDesc.is(ElemDesc::RAW));
+		m_isRawStack.push_back(elemProperties.is(XalanHTMLElementsProperties::RAW));
 
 		accumContent(XalanUnicode::charLessThanSign);
 
@@ -352,7 +337,7 @@ FormatterToHTML::startElement(
 
 		for (unsigned int i = 0;  i < nAttrs ;  i++)
 		{
-			processAttribute(attrs.getName(i), attrs.getValue(i), elemDesc);
+			processAttribute(attrs.getName(i), attrs.getValue(i), elemProperties);
 		}
 
 		// Flag the current element as not yet having any children.
@@ -362,7 +347,7 @@ FormatterToHTML::startElement(
     
 		m_isprevtext = false;
 
-		if (elemDesc.is(ElemDesc::HEADELEM) == true)
+		if (elemProperties.is(XalanHTMLElementsProperties::HEADELEM) == true)
 		{
 			writeParentTagEnd();
 
@@ -405,14 +390,18 @@ FormatterToHTML::endElement(const XMLCh* const	name)
 
 		assert(m_isRawStack.empty() == false);
 		assert(m_inScriptElemStack.empty() == false);
+		assert(m_elementPropertiesStack.empty() == false);
 
 		m_isRawStack.pop_back();
 		m_inScriptElemStack.pop_back();
-    
-		const ElemDesc&		elemDesc =
-				getElemDesc(name);
 
-		const bool	isBlockElement = elemDesc.is(ElemDesc::BLOCK);
+		const XalanHTMLElementsProperties::ElementProperties	elemProperties =
+				m_elementPropertiesStack.back();
+		assert(elemProperties.null() == false);
+
+		m_elementPropertiesStack.pop_back();
+
+		const bool	isBlockElement = elemProperties.is(XalanHTMLElementsProperties::BLOCK);
 
 		bool shouldIndent = false;
 
@@ -443,7 +432,7 @@ FormatterToHTML::endElement(const XMLCh* const	name)
 		}
 		else
 		{
-			if(elemDesc.is(ElemDesc::EMPTY) == false)
+			if(elemProperties.is(XalanHTMLElementsProperties::EMPTY) == false)
 			{
 				accumContent(XalanUnicode::charGreaterThanSign);
 
@@ -458,7 +447,7 @@ FormatterToHTML::endElement(const XMLCh* const	name)
 			}
 		}
 
-		if (elemDesc.is(ElemDesc::WHITESPACESENSITIVE) == true)
+		if (elemProperties.is(XalanHTMLElementsProperties::WHITESPACESENSITIVE) == true)
 		{
 			m_ispreserve = true;
 		}
@@ -859,14 +848,14 @@ FormatterToHTML::copyEntityIntoBuffer(const XalanDOMString&		s)
 
 void
 FormatterToHTML::processAttribute(
-			const XalanDOMChar*		name,
-			const XalanDOMChar*		value,
-			const ElemDesc&			elemDesc)
+			const XalanDOMChar*										name,
+			const XalanDOMChar*										value,
+			const XalanHTMLElementsProperties::ElementProperties&	elemProperties)
 {
     accumContent(XalanUnicode::charSpace);
 
     if((length(value) == 0 || equalsIgnoreCaseASCII(name, value)) &&
-	   elemDesc.isAttrFlagSet(name, ElemDesc::ATTREMPTY) == true)
+	   elemProperties.isAttribute(name, XalanHTMLElementsProperties::ATTREMPTY) == true)
     {
 		accumName(name);
     }
@@ -876,7 +865,7 @@ FormatterToHTML::processAttribute(
 		accumContent(XalanUnicode::charEqualsSign);
 		accumContent(XalanUnicode::charQuoteMark);
 
-		if(elemDesc.isAttrFlagSet(name, ElemDesc::ATTRURL) == true)
+		if(elemProperties.isAttribute(name, XalanHTMLElementsProperties::ATTRURL) == true)
 		{
 			writeAttrURI(value);
 		}
@@ -1071,11 +1060,6 @@ FormatterToHTML::accumHexNumber(const XalanDOMChar	theChar)
 
 
 
-typedef FormatterToHTML::ElementFlagsMapType	ElementFlagsMapType;
-typedef FormatterToHTML::ElemDesc				ElemDesc;
-
-
-
 bool
 FormatterToHTML::popHasNamespace()
 {
@@ -1130,614 +1114,6 @@ FormatterToHTML::pushHasNamespace(const XalanDOMChar*	theElementName)
 
 	return fHasNamespace;
 }
-
-
-
-static void
-initializeElementFlagsMap1(ElementFlagsMapType&		theElementFlags)
-{
-#if defined(XALAN_NO_NAMESPACES)
-	typedef pair<ElementFlagsMapType::iterator, bool>	PairType;
-#else
-	typedef std::pair<ElementFlagsMapType::iterator, bool>	PairType;
-#endif
-
-	// HTML 4.0 loose DTD
-	theElementFlags.insert(
-		ElementFlagsMapType::value_type(
-			c_wstr(XALAN_STATIC_UCODE_STRING("BASEFONT")),
-			ElemDesc(0|ElemDesc::EMPTY)));
-
-	PairType	theResult =
-	theElementFlags.insert(
-		ElementFlagsMapType::value_type(
-			c_wstr(XALAN_STATIC_UCODE_STRING("FRAME")),
-			ElemDesc(0|ElemDesc::EMPTY|ElemDesc::BLOCK)));
-
-	(*theResult.first).second.setAttr(c_wstr(XALAN_STATIC_UCODE_STRING("SRC")), ElemDesc::ATTRURL);
-
-	theElementFlags.insert(
-		ElementFlagsMapType::value_type(
-			c_wstr(XALAN_STATIC_UCODE_STRING("FRAMESET")),
-			ElemDesc(0|ElemDesc::BLOCK)));
-
-	theElementFlags.insert(
-		ElementFlagsMapType::value_type(
-			c_wstr(XALAN_STATIC_UCODE_STRING("NOFRAMES")),
-			ElemDesc(0|ElemDesc::BLOCK)));
- 
-	theElementFlags.insert(
-		ElementFlagsMapType::value_type(
-			c_wstr(XALAN_STATIC_UCODE_STRING("ISINDEX")),
-			ElemDesc(0|ElemDesc::EMPTY|ElemDesc::BLOCK)));
-
-	theElementFlags.insert(
-		ElementFlagsMapType::value_type(
-			c_wstr(XALAN_STATIC_UCODE_STRING("APPLET")),
-			ElemDesc(0|ElemDesc::WHITESPACESENSITIVE)));
-
-	theElementFlags.insert(
-		ElementFlagsMapType::value_type(
-			c_wstr(XALAN_STATIC_UCODE_STRING("CENTER")),
-			ElemDesc(0|ElemDesc::BLOCK)));
-
-	theElementFlags.insert(
-		ElementFlagsMapType::value_type(
-			c_wstr(XALAN_STATIC_UCODE_STRING("DIR")),
-			ElemDesc(0|ElemDesc::BLOCK)));
-
-	theElementFlags.insert(
-		ElementFlagsMapType::value_type(
-			c_wstr(XALAN_STATIC_UCODE_STRING("MENU")),
-			ElemDesc(0|ElemDesc::BLOCK)));
-
-
-	// HTML 4.0 strict DTD
-	theElementFlags.insert(
-		ElementFlagsMapType::value_type(
-			c_wstr(XALAN_STATIC_UCODE_STRING("TT")),
-			ElemDesc(0|ElemDesc::FONTSTYLE)));
-
-	theElementFlags.insert(
-		ElementFlagsMapType::value_type(
-			c_wstr(XALAN_STATIC_UCODE_STRING("I")),
-			ElemDesc(0|ElemDesc::FONTSTYLE)));
-
-	theElementFlags.insert(
-		ElementFlagsMapType::value_type(
-			c_wstr(XALAN_STATIC_UCODE_STRING("B")),
-			ElemDesc(0|ElemDesc::FONTSTYLE)));
-
-	theElementFlags.insert(
-		ElementFlagsMapType::value_type(
-			c_wstr(XALAN_STATIC_UCODE_STRING("BIG")),
-			ElemDesc(0|ElemDesc::FONTSTYLE)));
-
-	theElementFlags.insert(
-		ElementFlagsMapType::value_type(
-			c_wstr(XALAN_STATIC_UCODE_STRING("SMALL")),
-			ElemDesc(0|ElemDesc::FONTSTYLE)));
-
-	theElementFlags.insert(
-		ElementFlagsMapType::value_type(
-			c_wstr(XALAN_STATIC_UCODE_STRING("EM")),
-			ElemDesc(0|ElemDesc::PHRASE)));
-
-	theElementFlags.insert(
-		ElementFlagsMapType::value_type(
-			c_wstr(XALAN_STATIC_UCODE_STRING("STRONG")),
-			ElemDesc(0|ElemDesc::PHRASE)));
-
-	theElementFlags.insert(
-		ElementFlagsMapType::value_type(
-			c_wstr(XALAN_STATIC_UCODE_STRING("DFN")),
-			ElemDesc(0|ElemDesc::PHRASE)));
-
-	theElementFlags.insert(
-		ElementFlagsMapType::value_type(
-			c_wstr(XALAN_STATIC_UCODE_STRING("CODE")),
-			ElemDesc(0|ElemDesc::PHRASE)));
-
-	theElementFlags.insert(
-		ElementFlagsMapType::value_type(
-			c_wstr(XALAN_STATIC_UCODE_STRING("SAMP")),
-			ElemDesc(0|ElemDesc::PHRASE)));
-
-	theElementFlags.insert(
-		ElementFlagsMapType::value_type(
-			c_wstr(XALAN_STATIC_UCODE_STRING("KBD")),
-			ElemDesc(0|ElemDesc::PHRASE)));
-
-	theElementFlags.insert(
-		ElementFlagsMapType::value_type(
-			c_wstr(XALAN_STATIC_UCODE_STRING("VAR")),
-			ElemDesc(0|ElemDesc::PHRASE)));
-	
-	theElementFlags.insert(
-		ElementFlagsMapType::value_type(
-			c_wstr(XALAN_STATIC_UCODE_STRING("CITE")),
-			ElemDesc(0|ElemDesc::PHRASE)));
-	
-	theElementFlags.insert(
-		ElementFlagsMapType::value_type(
-			c_wstr(XALAN_STATIC_UCODE_STRING("ABBR")),
-			ElemDesc(0|ElemDesc::PHRASE)));
-	
-	theElementFlags.insert(
-		ElementFlagsMapType::value_type(
-			c_wstr(XALAN_STATIC_UCODE_STRING("ACRONYM")),
-			ElemDesc(0|ElemDesc::PHRASE)));
-	
-	theElementFlags.insert(
-		ElementFlagsMapType::value_type(
-			c_wstr(XALAN_STATIC_UCODE_STRING("SUP")),
-			ElemDesc(0|ElemDesc::SPECIAL|ElemDesc::ASPECIAL)));
-	
-	theElementFlags.insert(
-		ElementFlagsMapType::value_type(
-			c_wstr(XALAN_STATIC_UCODE_STRING("SUB")),
-			ElemDesc(0|ElemDesc::SPECIAL|ElemDesc::ASPECIAL)));
-	
-	theElementFlags.insert(
-		ElementFlagsMapType::value_type(
-			c_wstr(XALAN_STATIC_UCODE_STRING("SPAN")),
-			ElemDesc(0|ElemDesc::SPECIAL|ElemDesc::ASPECIAL)));
-	
-	theElementFlags.insert(
-		ElementFlagsMapType::value_type(
-			c_wstr(XALAN_STATIC_UCODE_STRING("BDO")),
-			ElemDesc(0|ElemDesc::SPECIAL|ElemDesc::ASPECIAL)));
-	
-	theElementFlags.insert(
-		ElementFlagsMapType::value_type(
-			c_wstr(XALAN_STATIC_UCODE_STRING("BR")),
-			ElemDesc(0|ElemDesc::SPECIAL|ElemDesc::ASPECIAL|ElemDesc::EMPTY|ElemDesc::BLOCK)));
-	
-}
-
-
-
-static void
-initializeElementFlagsMap2(ElementFlagsMapType&		theElementFlags)
-{
-#if defined(XALAN_NO_NAMESPACES)
-	typedef pair<ElementFlagsMapType::iterator, bool>	PairType;
-#else
-	typedef std::pair<ElementFlagsMapType::iterator, bool>	PairType;
-#endif
-
-	theElementFlags.insert(
-		ElementFlagsMapType::value_type(
-			c_wstr(XALAN_STATIC_UCODE_STRING("BODY")),
-			ElemDesc(0|ElemDesc::BLOCK)));
-	
-	theElementFlags.insert(
-		ElementFlagsMapType::value_type(
-			c_wstr(XALAN_STATIC_UCODE_STRING("ADDRESS")),
-			ElemDesc(0|ElemDesc::BLOCK|ElemDesc::BLOCKFORM|ElemDesc::BLOCKFORMFIELDSET)));
-	
-	theElementFlags.insert(
-		ElementFlagsMapType::value_type(
-			c_wstr(XALAN_STATIC_UCODE_STRING("DIV")),
-			ElemDesc(0|ElemDesc::BLOCK|ElemDesc::BLOCKFORM|ElemDesc::BLOCKFORMFIELDSET)));
-
-	PairType	theResult =
-	theElementFlags.insert(
-		ElementFlagsMapType::value_type(
-			c_wstr(XALAN_STATIC_UCODE_STRING("A")),
-			ElemDesc(0|ElemDesc::SPECIAL)));
-
-	(*theResult.first).second.setAttr(c_wstr(XALAN_STATIC_UCODE_STRING("HREF")), ElemDesc::ATTRURL);
-	(*theResult.first).second.setAttr(c_wstr(XALAN_STATIC_UCODE_STRING("NAME")), ElemDesc::ATTRURL);
-
-	theElementFlags.insert(
-		ElementFlagsMapType::value_type(
-			c_wstr(XALAN_STATIC_UCODE_STRING("MAP")),
-			ElemDesc(0|ElemDesc::SPECIAL|ElemDesc::ASPECIAL|ElemDesc::BLOCK)));
-
-	theResult =
-	theElementFlags.insert(
-		ElementFlagsMapType::value_type(
-			c_wstr(XALAN_STATIC_UCODE_STRING("AREA")),
-			ElemDesc(0|ElemDesc::EMPTY|ElemDesc::BLOCK)));
-
-	(*theResult.first).second.setAttr(c_wstr(XALAN_STATIC_UCODE_STRING("HREF")), ElemDesc::ATTRURL);
-	(*theResult.first).second.setAttr(c_wstr(XALAN_STATIC_UCODE_STRING("NOHREF")), ElemDesc::ATTREMPTY);
-
-	theElementFlags.insert(
-		ElementFlagsMapType::value_type(
-			c_wstr(XALAN_STATIC_UCODE_STRING("LINK")),
-			ElemDesc(0|ElemDesc::HEADMISC|ElemDesc::EMPTY|ElemDesc::BLOCK)));
-
-	theResult =
-	theElementFlags.insert(
-		ElementFlagsMapType::value_type(
-			c_wstr(XALAN_STATIC_UCODE_STRING("IMG")),
-			ElemDesc(0|ElemDesc::SPECIAL|ElemDesc::ASPECIAL|ElemDesc::EMPTY|ElemDesc::WHITESPACESENSITIVE)));
-
-	(*theResult.first).second.setAttr(c_wstr(XALAN_STATIC_UCODE_STRING("SRC")), ElemDesc::ATTRURL);
-	(*theResult.first).second.setAttr(c_wstr(XALAN_STATIC_UCODE_STRING("LONGDESC")), ElemDesc::ATTRURL);
-	(*theResult.first).second.setAttr(c_wstr(XALAN_STATIC_UCODE_STRING("USEMAP")), ElemDesc::ATTRURL);
-	(*theResult.first).second.setAttr(c_wstr(XALAN_STATIC_UCODE_STRING("ISMAP")), ElemDesc::ATTREMPTY);
-
-	theResult =
-	theElementFlags.insert(
-		ElementFlagsMapType::value_type(
-			c_wstr(XALAN_STATIC_UCODE_STRING("OBJECT")),
-			ElemDesc(0|ElemDesc::SPECIAL|ElemDesc::ASPECIAL|ElemDesc::HEADMISC|ElemDesc::WHITESPACESENSITIVE)));
-
-	(*theResult.first).second.setAttr(c_wstr(XALAN_STATIC_UCODE_STRING("CLASSID")), ElemDesc::ATTRURL);
-	(*theResult.first).second.setAttr(c_wstr(XALAN_STATIC_UCODE_STRING("CODEBASE")), ElemDesc::ATTRURL);
-	(*theResult.first).second.setAttr(c_wstr(XALAN_STATIC_UCODE_STRING("DATA")), ElemDesc::ATTRURL);
-	(*theResult.first).second.setAttr(c_wstr(XALAN_STATIC_UCODE_STRING("ARCHIVE")), ElemDesc::ATTRURL);
-	(*theResult.first).second.setAttr(c_wstr(XALAN_STATIC_UCODE_STRING("USEMAP")), ElemDesc::ATTRURL);
-	(*theResult.first).second.setAttr(c_wstr(XALAN_STATIC_UCODE_STRING("DECLARE")), ElemDesc::ATTREMPTY);
-
-	theElementFlags.insert(
-		ElementFlagsMapType::value_type(
-			c_wstr(XALAN_STATIC_UCODE_STRING("PARAM")),
-			ElemDesc(0|ElemDesc::EMPTY)));
-
-	theElementFlags.insert(
-		ElementFlagsMapType::value_type(
-			c_wstr(XALAN_STATIC_UCODE_STRING("HR")),
-			ElemDesc(0|ElemDesc::BLOCK|ElemDesc::BLOCKFORM|ElemDesc::BLOCKFORMFIELDSET|ElemDesc::EMPTY)));
-	
-	theElementFlags.insert(
-		ElementFlagsMapType::value_type(
-			c_wstr(XALAN_STATIC_UCODE_STRING("P")),
-			ElemDesc(0|ElemDesc::BLOCK|ElemDesc::BLOCKFORM|ElemDesc::BLOCKFORMFIELDSET)));
-	
-	theElementFlags.insert(
-		ElementFlagsMapType::value_type(
-			c_wstr(XALAN_STATIC_UCODE_STRING("H1")),
-			ElemDesc(0|ElemDesc::HEAD|ElemDesc::BLOCK)));
-	
-	theElementFlags.insert(
-		ElementFlagsMapType::value_type(
-			c_wstr(XALAN_STATIC_UCODE_STRING("H2")),
-			ElemDesc(0|ElemDesc::HEAD|ElemDesc::BLOCK)));
-
-	theElementFlags.insert(
-		ElementFlagsMapType::value_type(
-			c_wstr(XALAN_STATIC_UCODE_STRING("H3")),
-			ElemDesc(0|ElemDesc::HEAD|ElemDesc::BLOCK)));
-
-	theElementFlags.insert(
-		ElementFlagsMapType::value_type(
-			c_wstr(XALAN_STATIC_UCODE_STRING("H4")),
-			ElemDesc(0|ElemDesc::HEAD|ElemDesc::BLOCK)));
-
-	theElementFlags.insert(
-		ElementFlagsMapType::value_type(
-			c_wstr(XALAN_STATIC_UCODE_STRING("H5")),
-			ElemDesc(0|ElemDesc::HEAD|ElemDesc::BLOCK)));
-
-	theElementFlags.insert(
-		ElementFlagsMapType::value_type(
-			c_wstr(XALAN_STATIC_UCODE_STRING("H6")),
-			ElemDesc(0|ElemDesc::HEAD|ElemDesc::BLOCK)));
-
-	theElementFlags.insert(
-		ElementFlagsMapType::value_type(
-			c_wstr(XALAN_STATIC_UCODE_STRING("PRE")),
-			ElemDesc(0|ElemDesc::PREFORMATTED|ElemDesc::BLOCK)));
-
-}
-
-
-
-static void
-initializeElementFlagsMap3(ElementFlagsMapType&		theElementFlags)
-{
-#if defined(XALAN_NO_NAMESPACES)
-	typedef pair<ElementFlagsMapType::iterator, bool>	PairType;
-#else
-	typedef std::pair<ElementFlagsMapType::iterator, bool>	PairType;
-#endif
-
-	PairType	theResult =
-	theElementFlags.insert(
-		ElementFlagsMapType::value_type(
-			c_wstr(XALAN_STATIC_UCODE_STRING("Q")),
-			ElemDesc(0|ElemDesc::SPECIAL|ElemDesc::ASPECIAL)));
-
-	(*theResult.first).second.setAttr(c_wstr(XALAN_STATIC_UCODE_STRING("CITE")), ElemDesc::ATTRURL);
-
-	theResult =
-	theElementFlags.insert(
-		ElementFlagsMapType::value_type(
-			c_wstr(XALAN_STATIC_UCODE_STRING("BLOCKQUOTE")),
-			ElemDesc(0|ElemDesc::BLOCK|ElemDesc::BLOCKFORM|ElemDesc::BLOCKFORMFIELDSET)));
-
-	(*theResult.first).second.setAttr(c_wstr(XALAN_STATIC_UCODE_STRING("CITE")), ElemDesc::ATTRURL);
-
-	theResult =
-	theElementFlags.insert(
-		ElementFlagsMapType::value_type(
-			c_wstr(XALAN_STATIC_UCODE_STRING("INS")),
-			ElemDesc(0)));
-	
-	(*theResult.first).second.setAttr(c_wstr(XALAN_STATIC_UCODE_STRING("CITE")), ElemDesc::ATTRURL);
-
-	theResult =
-	theElementFlags.insert(
-		ElementFlagsMapType::value_type(
-			c_wstr(XALAN_STATIC_UCODE_STRING("DEL")),
-			ElemDesc(0)));
-	
-	(*theResult.first).second.setAttr(c_wstr(XALAN_STATIC_UCODE_STRING("CITE")), ElemDesc::ATTRURL);
-
-	theElementFlags.insert(
-		ElementFlagsMapType::value_type(
-			c_wstr(XALAN_STATIC_UCODE_STRING("DL")),
-			ElemDesc(0|ElemDesc::BLOCK|ElemDesc::BLOCKFORM|ElemDesc::BLOCKFORMFIELDSET)));
-
-	theElementFlags.insert(
-		ElementFlagsMapType::value_type(
-			c_wstr(XALAN_STATIC_UCODE_STRING("DT")),
-			ElemDesc(0|ElemDesc::BLOCK)));
-
-	theElementFlags.insert(
-		ElementFlagsMapType::value_type(
-			c_wstr(XALAN_STATIC_UCODE_STRING("DD")),
-			ElemDesc(0|ElemDesc::BLOCK)));
-
-	theElementFlags.insert(
-		ElementFlagsMapType::value_type(
-			c_wstr(XALAN_STATIC_UCODE_STRING("OL")),
-			ElemDesc(0|ElemDesc::LIST|ElemDesc::BLOCK)));
-
-	theElementFlags.insert(
-		ElementFlagsMapType::value_type(
-			c_wstr(XALAN_STATIC_UCODE_STRING("UL")),
-			ElemDesc(0|ElemDesc::LIST|ElemDesc::BLOCK)));
-
-	theElementFlags.insert(
-		ElementFlagsMapType::value_type(
-			c_wstr(XALAN_STATIC_UCODE_STRING("LI")),
-			ElemDesc(0|ElemDesc::BLOCK)));
-
-	theResult =
-	theElementFlags.insert(
-		ElementFlagsMapType::value_type(
-			c_wstr(XALAN_STATIC_UCODE_STRING("FORM")),
-			ElemDesc(0|ElemDesc::BLOCK)));
-
-	(*theResult.first).second.setAttr(c_wstr(XALAN_STATIC_UCODE_STRING("ACTION")), ElemDesc::ATTRURL);
-
-	theElementFlags.insert(
-		ElementFlagsMapType::value_type(
-			c_wstr(XALAN_STATIC_UCODE_STRING("LABEL")),
-			ElemDesc(0|ElemDesc::FORMCTRL)));
-
-	theResult =
-	theElementFlags.insert(
-		ElementFlagsMapType::value_type(
-			c_wstr(XALAN_STATIC_UCODE_STRING("INPUT")),
-			ElemDesc(0|ElemDesc::FORMCTRL|ElemDesc::INLINELABEL|ElemDesc::EMPTY)));
-	
-	(*theResult.first).second.setAttr(c_wstr(XALAN_STATIC_UCODE_STRING("SRC")), ElemDesc::ATTRURL);
-	(*theResult.first).second.setAttr(c_wstr(XALAN_STATIC_UCODE_STRING("USEMAP")), ElemDesc::ATTRURL);
-	(*theResult.first).second.setAttr(c_wstr(XALAN_STATIC_UCODE_STRING("CHECKED")), ElemDesc::ATTREMPTY);
-	(*theResult.first).second.setAttr(c_wstr(XALAN_STATIC_UCODE_STRING("DISABLED")), ElemDesc::ATTREMPTY);
-	(*theResult.first).second.setAttr(c_wstr(XALAN_STATIC_UCODE_STRING("ISMAP")), ElemDesc::ATTREMPTY);
-	(*theResult.first).second.setAttr(c_wstr(XALAN_STATIC_UCODE_STRING("READONLY")), ElemDesc::ATTREMPTY);
-
-	theResult =
-	theElementFlags.insert(
-		ElementFlagsMapType::value_type(
-			c_wstr(XALAN_STATIC_UCODE_STRING("SELECT")),
-			ElemDesc(0|ElemDesc::FORMCTRL|ElemDesc::INLINELABEL)));
-
-	(*theResult.first).second.setAttr(c_wstr(XALAN_STATIC_UCODE_STRING("DISABLED")), ElemDesc::ATTREMPTY);
-	(*theResult.first).second.setAttr(c_wstr(XALAN_STATIC_UCODE_STRING("MULTIPLE")), ElemDesc::ATTREMPTY);
-
-	theResult =
-	theElementFlags.insert(
-		ElementFlagsMapType::value_type(
-			c_wstr(XALAN_STATIC_UCODE_STRING("OPTGROUP")),
-			ElemDesc(0)));
-
-	(*theResult.first).second.setAttr(c_wstr(XALAN_STATIC_UCODE_STRING("DISABLED")), ElemDesc::ATTREMPTY);
-
-	theResult =
-	theElementFlags.insert(
-		ElementFlagsMapType::value_type(
-			c_wstr(XALAN_STATIC_UCODE_STRING("OPTION")),
-			ElemDesc(0)));
-
-	(*theResult.first).second.setAttr(c_wstr(XALAN_STATIC_UCODE_STRING("DISABLED")), ElemDesc::ATTREMPTY);
-	(*theResult.first).second.setAttr(c_wstr(XALAN_STATIC_UCODE_STRING("SELECTED")), ElemDesc::ATTREMPTY);
-
-	theResult =
-	theElementFlags.insert(
-		ElementFlagsMapType::value_type(
-			c_wstr(XALAN_STATIC_UCODE_STRING("TEXTAREA")),
-			ElemDesc(0|ElemDesc::FORMCTRL|ElemDesc::INLINELABEL)));
-
-	(*theResult.first).second.setAttr(c_wstr(XALAN_STATIC_UCODE_STRING("DISABLED")), ElemDesc::ATTREMPTY);
-	(*theResult.first).second.setAttr(c_wstr(XALAN_STATIC_UCODE_STRING("READONLY")), ElemDesc::ATTREMPTY);
-
-	theElementFlags.insert(
-		ElementFlagsMapType::value_type(
-			c_wstr(XALAN_STATIC_UCODE_STRING("FIELDSET")),
-			ElemDesc(0|ElemDesc::BLOCK|ElemDesc::BLOCKFORM)));
-	
-	theElementFlags.insert(
-		ElementFlagsMapType::value_type(
-			c_wstr(XALAN_STATIC_UCODE_STRING("LEGEND")),
-			ElemDesc(0)));
-}
-
-
-
-static void
-initializeElementFlagsMap4(ElementFlagsMapType&		theElementFlags)
-{
-#if defined(XALAN_NO_NAMESPACES)
-	typedef pair<ElementFlagsMapType::iterator, bool>	PairType;
-#else
-	typedef std::pair<ElementFlagsMapType::iterator, bool>	PairType;
-#endif
-
-	PairType	theResult =
-	theElementFlags.insert(
-		ElementFlagsMapType::value_type(
-			c_wstr(XALAN_STATIC_UCODE_STRING("BUTTON")),
-			ElemDesc(0|ElemDesc::FORMCTRL|ElemDesc::INLINELABEL)));
-
-	(*theResult.first).second.setAttr(c_wstr(XALAN_STATIC_UCODE_STRING("DISABLED")), ElemDesc::ATTREMPTY);
-
-	theElementFlags.insert(
-		ElementFlagsMapType::value_type(
-			c_wstr(XALAN_STATIC_UCODE_STRING("TABLE")),
-			ElemDesc(0|ElemDesc::BLOCK|ElemDesc::BLOCKFORM|ElemDesc::BLOCKFORMFIELDSET)));
-	
-	theElementFlags.insert(
-		ElementFlagsMapType::value_type(
-			c_wstr(XALAN_STATIC_UCODE_STRING("CAPTION")),
-			ElemDesc(0|ElemDesc::BLOCK)));
-	
-	theElementFlags.insert(
-		ElementFlagsMapType::value_type(
-			c_wstr(XALAN_STATIC_UCODE_STRING("THEAD")),
-			ElemDesc(0|ElemDesc::BLOCK)));
-	
-	theElementFlags.insert(
-		ElementFlagsMapType::value_type(
-			c_wstr(XALAN_STATIC_UCODE_STRING("TFOOT")),
-			ElemDesc(0|ElemDesc::BLOCK)));
-	
-	theElementFlags.insert(
-		ElementFlagsMapType::value_type(
-			c_wstr(XALAN_STATIC_UCODE_STRING("TBODY")),
-			ElemDesc(0|ElemDesc::BLOCK)));
-	
-	theElementFlags.insert(
-		ElementFlagsMapType::value_type(
-			c_wstr(XALAN_STATIC_UCODE_STRING("COLGROUP")),
-			ElemDesc(0|ElemDesc::BLOCK)));
-	
-	theElementFlags.insert(
-		ElementFlagsMapType::value_type(
-			c_wstr(XALAN_STATIC_UCODE_STRING("COL")),
-			ElemDesc(0|ElemDesc::EMPTY|ElemDesc::BLOCK)));
-	
-	theElementFlags.insert(
-		ElementFlagsMapType::value_type(
-			c_wstr(XALAN_STATIC_UCODE_STRING("TR")),
-			ElemDesc(0|ElemDesc::BLOCK)));
-	
-	theElementFlags.insert(
-		ElementFlagsMapType::value_type(
-			c_wstr(XALAN_STATIC_UCODE_STRING("TH")),
-			ElemDesc(0)));
-	
-	theElementFlags.insert(
-		ElementFlagsMapType::value_type(
-			c_wstr(XALAN_STATIC_UCODE_STRING("TD")),
-			ElemDesc(0)));
-
-	theResult =
-	theElementFlags.insert(
-		ElementFlagsMapType::value_type(
-			c_wstr(XALAN_STATIC_UCODE_STRING("HEAD")),
-			ElemDesc(0|ElemDesc::BLOCK|ElemDesc::HEADELEM)));
-
-	(*theResult.first).second.setAttr(c_wstr(XALAN_STATIC_UCODE_STRING("PROFILE")), ElemDesc::ATTRURL);
-
-	theElementFlags.insert(
-		ElementFlagsMapType::value_type(
-			c_wstr(XALAN_STATIC_UCODE_STRING("TITLE")),
-			ElemDesc(0|ElemDesc::BLOCK)));
-
-	theResult =
-	theElementFlags.insert(
-		ElementFlagsMapType::value_type(
-			c_wstr(XALAN_STATIC_UCODE_STRING("BASE")),
-			ElemDesc(0|ElemDesc::EMPTY|ElemDesc::BLOCK)));
-
-	(*theResult.first).second.setAttr(c_wstr(XALAN_STATIC_UCODE_STRING("HREF")), ElemDesc::ATTRURL);
-
-	theElementFlags.insert(
-		ElementFlagsMapType::value_type(
-			c_wstr(XALAN_STATIC_UCODE_STRING("META")),
-			ElemDesc(0|ElemDesc::HEADMISC|ElemDesc::EMPTY|ElemDesc::BLOCK)));
-	
-	theElementFlags.insert(
-		ElementFlagsMapType::value_type(
-			c_wstr(XALAN_STATIC_UCODE_STRING("STYLE")),
-			ElemDesc(0|ElemDesc::HEADMISC|ElemDesc::RAW|ElemDesc::BLOCK)));
-
-	theResult =
-	theElementFlags.insert(
-		ElementFlagsMapType::value_type(
-			c_wstr(XALAN_STATIC_UCODE_STRING("SCRIPT")),
-			ElemDesc(0|ElemDesc::SPECIAL|ElemDesc::ASPECIAL|ElemDesc::HEADMISC|ElemDesc::RAW)));
-
-	(*theResult.first).second.setAttr(c_wstr(XALAN_STATIC_UCODE_STRING("SRC")), ElemDesc::ATTRURL);
-	(*theResult.first).second.setAttr(c_wstr(XALAN_STATIC_UCODE_STRING("FOR")), ElemDesc::ATTRURL);
-	(*theResult.first).second.setAttr(c_wstr(XALAN_STATIC_UCODE_STRING("DEFER")), ElemDesc::ATTREMPTY);
-
-	theElementFlags.insert(
-		ElementFlagsMapType::value_type(
-			c_wstr(XALAN_STATIC_UCODE_STRING("NOSCRIPT")),
-			ElemDesc(0|ElemDesc::BLOCK|ElemDesc::BLOCKFORM|ElemDesc::BLOCKFORMFIELDSET)));
-
-	theElementFlags.insert(
-		ElementFlagsMapType::value_type(
-			c_wstr(XALAN_STATIC_UCODE_STRING("HTML")),
-			ElemDesc(0|ElemDesc::BLOCK)));
-
-	theElementFlags.insert(
-		ElementFlagsMapType::value_type(
-			c_wstr(XALAN_STATIC_UCODE_STRING("FONT")),
-			ElemDesc(0 | ElemDesc::FONTSTYLE)));
-
-	theElementFlags.insert(
-		ElementFlagsMapType::value_type(
-			c_wstr(XALAN_STATIC_UCODE_STRING("S")),
-			ElemDesc(0 | ElemDesc::FONTSTYLE)));
-
-	theElementFlags.insert(
-		ElementFlagsMapType::value_type(
-			c_wstr(XALAN_STATIC_UCODE_STRING("STRIKE")),
-			ElemDesc(0 | ElemDesc::FONTSTYLE)));
-
-	theElementFlags.insert(
-		ElementFlagsMapType::value_type(
-			c_wstr(XALAN_STATIC_UCODE_STRING("U")),
-			ElemDesc(0 | ElemDesc::FONTSTYLE)));
-
-	theElementFlags.insert(
-		ElementFlagsMapType::value_type(
-			c_wstr(XALAN_STATIC_UCODE_STRING("NOBR")),
-			ElemDesc(0 | ElemDesc::FONTSTYLE)));
-}
-
-
-
-void
-FormatterToHTML::initializeElementFlagsMap(ElementFlagsMapType&		theElementFlags)
-{
-	initializeElementFlagsMap1(theElementFlags);
-	initializeElementFlagsMap2(theElementFlags);
-	initializeElementFlagsMap3(theElementFlags);
-	initializeElementFlagsMap4(theElementFlags);
-}
-
-
-
-static XalanAutoPtr<FormatterToHTML::ElementFlagsMapType>	s_elementFlags;
-
-
-const FormatterToHTML::ElementFlagsMapType*			FormatterToHTML::s_elementFlags = 0;
-
-
-static XalanAutoPtr<FormatterToHTML::ElemDesc>	s_dummyDesc;
-
-const FormatterToHTML::ElemDesc*	FormatterToHTML::s_dummyDesc = 0;
 
 
 
@@ -2105,21 +1481,9 @@ initializeEntities(
 const unsigned long		FormatterToHTML::s_entitiesSize =
 				sizeof(s_entities) / sizeof (s_entities[0]);
 
-
 void
 FormatterToHTML::initialize()
 {
-	// Make sure there's nothing there first...
-	::s_elementFlags.reset();
-	::s_dummyDesc.reset();
-
-	// New everything in a local so that an exception will clean up everything...
-	XalanAutoPtr<ElementFlagsMapType>	theElementFlags(new ElementFlagsMapType);
-	XalanAutoPtr<ElemDesc>				theDummyDesc(new ElemDesc(ElemDesc::BLOCK));
-
-	// Do initialization...
-	initializeElementFlagsMap(*theElementFlags.get());
-
 	::s_doctypeHeaderStartString = XALAN_STATIC_UCODE_STRING("<!DOCTYPE HTML");
 
 	::s_doctypeHeaderPublicString = XALAN_STATIC_UCODE_STRING(" PUBLIC \"");
@@ -2132,14 +1496,6 @@ FormatterToHTML::initialize()
 
 	::s_metaString = XALAN_STATIC_UCODE_STRING("<META http-equiv=\"Content-Type\" content=\"text/html; charset=");
 
-	// Everythings cool, so let the globals own the objects...
-	::s_elementFlags = theElementFlags;
-	::s_dummyDesc = theDummyDesc;
-
-	// Update the class members...
-	s_elementFlags = ::s_elementFlags.get();
-	s_dummyDesc = ::s_dummyDesc.get();
-
 #if defined(XALAN_LSTRSUPPORT) && !defined(XALAN_XALANDOMCHAR_USHORT_MISMATCH)
 #else
 	initializeEntities(theLocalEntities, FormatterToHTML::s_entities);
@@ -2151,12 +1507,6 @@ FormatterToHTML::initialize()
 void
 FormatterToHTML::terminate()
 {
-	s_elementFlags = 0;
-	s_dummyDesc = 0;
-
-	::s_elementFlags.reset();
-	::s_dummyDesc.reset();
-
 	releaseMemory(::s_doctypeHeaderStartString);
 
 	releaseMemory(::s_doctypeHeaderPublicString);

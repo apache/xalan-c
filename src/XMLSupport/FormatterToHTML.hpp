@@ -64,16 +64,20 @@
 
 
 
+#include <vector>
+
+
+
 // Base class header file.
 #include <XMLSupport/FormatterToXML.hpp>
 
 
 
-#include <Include/XalanArrayKeyMap.hpp>
-
-
-
 #include <PlatformSupport/DOMStringHelper.hpp>
+
+
+
+#include <XMLSupport/XalanHTMLElementsProperties.hpp>
 
 
 
@@ -82,8 +86,13 @@
  */
 class XALAN_XMLSUPPORT_EXPORT FormatterToHTML : public FormatterToXML 
 {  
-
 public:
+
+#if defined(XALAN_NO_NAMESPACES)
+	typedef vector<XalanHTMLElementsProperties::ElementProperties>	ElementPropertiesStackType;
+#else
+	typedef std::vector<XalanHTMLElementsProperties::ElementProperties>	ElementPropertiesStackType;
+#endif
 
 	/**
 	 * Perform static initialization.  See class XMLSupportInit.
@@ -186,104 +195,6 @@ public:
 		m_escapeURLs = flag;
 	}
 
-	class ElemDesc
-	{
-	public:
-
-		enum eFlags
-		{
-			EMPTY = (1 << 1),
-			FLOW = (1 << 2),
-			BLOCK = (1 << 3),
-			BLOCKFORM = (1 << 4),
-			BLOCKFORMFIELDSET = (1 << 5),
-			CDATA = (1 << 6),
-			PCDATA = (1 << 7),
-			RAW = (1 << 8),
-			INLINE = (1 << 9),
-			INLINEA = (1 << 10),
-			INLINELABEL = (1 << 11),
-			FONTSTYLE = (1 << 12),
-			PHRASE = (1 << 13),
-			FORMCTRL = (1 << 14),
-			SPECIAL = (1 << 15),
-			ASPECIAL = (1 << 16),
-			HEADMISC = (1 << 17),
-			HEAD = (1 << 18),
-			LIST = (1 << 19),
-			PREFORMATTED = (1 << 20),
-			WHITESPACESENSITIVE = (1 << 21),
-			HEADELEM = (1 << 22),
-
-			ATTRURL = (1 << 1),
-			ATTREMPTY = (1 << 2)
-		};
-
-		ElemDesc(unsigned int	flags = 0) :
-			m_flags(flags)
-		{
-		}
-
-		~ElemDesc()
-		{
-		}
-
-		bool
-		operator==(const ElemDesc&	theRHS) const
-		{
-			return m_flags == theRHS.m_flags && m_attrs == theRHS.m_attrs;
-		}
-
-		bool
-		is(unsigned int		flags) const
-		{
-			return m_flags & flags ? true : false;
-		}
-
-		void
-		setAttr(
-				const XalanDOMChar*		name,
-				unsigned int			flags)
-		{
-			m_attrs.insert(AttributeMapType::value_type(name, flags));
-		}
-
-		bool
-		isAttrFlagSet(
-				const XalanDOMChar*		name,
-				unsigned int			flags) const
-		{
-			const AttributeMapType::const_iterator	i =
-				m_attrs.find(name);
-
-			if (i == m_attrs.end())
-			{
-				return false;
-			}
-			else
-			{
-				return (*i).second & flags ? true : false;
-			}
-		}
-
-	private:
-
-		typedef XalanArrayKeyMap<
-					XalanDOMChar,
-					unsigned int,
-					less_no_case_ascii_wide_string>		AttributeMapType;
-
-		const unsigned int	m_flags;
-
-		AttributeMapType	m_attrs;
-	};
-
-
-	typedef XalanArrayKeyMap<
-				XalanDOMChar,
-				ElemDesc,
-				less_no_case_ascii_wide_string>		ElementFlagsMapType;
-
 	struct EntityPair
 	{
 		XalanDOMChar				m_char;
@@ -320,13 +231,6 @@ protected:
 			XalanDOMString::size_type	theLength = XalanDOMString::npos);
 
 private:
-
-	static const ElementFlagsMapType*							s_elementFlags;
-
-	/**
-	 * Dummy description for elements not found.
-	 */
-	static const ElemDesc*			s_dummyDesc;
 
 	/**
 	 * The string "<!DOCTYPE  HTML".
@@ -377,32 +281,15 @@ private:
 	copyEntityIntoBuffer(const XalanDOMString&	s);
 
 	/**
-	 * Get an ElemDesc instance for the specified name.
-	 *
-	 * @param name the name to search.
-	 * @return a const reference to the ElemDesc instance.
-	 */
-	static const ElemDesc&
-	getElemDesc(const XalanDOMChar*		name);
-
-	/**
-	 * Initialize the map of element flags.
-	 *
-	 * @return map of element flags.
-	 */
-	static void
-	initializeElementFlagsMap(ElementFlagsMapType&	theMap);
-
-	/**
 	 * Process an attribute.
 	 * @param   name	 The name of the attribute.
 	 * @param   value   The value of the attribute.
 	 */
 	virtual void
 	processAttribute(
-			const XalanDOMChar*		name,
-			const XalanDOMChar*		value,
-			const ElemDesc&			elemDesc);
+			const XalanDOMChar*										name,
+			const XalanDOMChar*										value,
+			const XalanHTMLElementsProperties::ElementProperties&	elemProperties);
 
 	/**
 	 * Write the specified string after substituting non ASCII characters,
@@ -468,6 +355,8 @@ private:
 	 * This is set to true if we should omit the META tag in HTML output (the default is false)
 	 */
 	bool					m_omitMetaTag;
+
+	ElementPropertiesStackType		m_elementPropertiesStack;
 
 	static const XalanDOMString		s_emptyString;
 
