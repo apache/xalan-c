@@ -94,7 +94,9 @@ static const XalanDOMChar	s_dateTimeNamespace[] =
 };
 
 
-#if defined(WIN32)
+
+#if defined(WIN32) || defined(__DECCXX)
+
 static struct tm *
 localtime_r(const time_t *clock, struct tm *res)
 {
@@ -135,7 +137,9 @@ gmtime_r(const time_t *clock, struct tm *res)
 	
 }
 
-#endif // WIN32
+#endif // defined(WIN32) || defined(__DECCXX)
+
+
 
 XObjectPtr
 XalanEXSLTFunctionDateTime::execute(
