@@ -103,12 +103,8 @@ StdBinInputStream::readBytes(
 			XMLByte* const      toFill,
 			const unsigned int	maxToRead)
 {
-#if !defined(XALAN_OLD_STREAM_HEADERS)
-#if defined(XALAN_NO_NAMESPACES)
-	typedef char_traits<char>		CharTraitsType;
-#else
+#if !defined(XALAN_OLD_STREAMS)
 	typedef std::char_traits<char>	CharTraitsType;
-#endif
 #endif
 
 	if (!m_stream)
@@ -123,7 +119,7 @@ StdBinInputStream::readBytes(
 		{
 			const int	ch = m_stream.get();
 
-#if defined(XALAN_OLD_STREAM_HEADERS)
+#if defined(XALAN_OLD_STREAMS)
 			if (ch == EOF)
 #else
 			if (ch == CharTraitsType::eof())
