@@ -81,7 +81,11 @@
 
 
 
-NodeSorter::NodeSorter()
+NodeSorter::NodeSorter() :
+	m_numberResultsCache(),
+	m_stringResultsCache(),
+	m_keys(),
+	m_scratchVector()
 {
 }
 
@@ -94,26 +98,30 @@ NodeSorter::~NodeSorter()
 
 
 void
-NodeSorter::sort(
-			StylesheetExecutionContext&		executionContext,
-			const MutableNodeRefList&		theList,
-			NodeVectorType&					v,
-			const NodeSortKeyVectorType&	keys) const
+NodeSorter::sort(StylesheetExecutionContext&	executionContext)
 {
+	assert(m_scratchVector.size() > 0);
+
+	// Make sure the caches are cleared when we're done...
+	CollectionClearGuard<NumberResultsCacheType>	guard1(m_numberResultsCache);
+	CollectionClearGuard<StringResultsCacheType>	guard2(m_stringResultsCache);
+
+	NodeSortKeyCompare	theComparer(
+					executionContext,
+					*this,
+					m_scratchVector,
+					m_keys);
+
 #if !defined(XALAN_NO_NAMESPACES)
 	using std::stable_sort;
 #endif
 
-	NodeSortKeyCompare	theComparer(executionContext,
-									theList,
-									v,
-									keys);
-
 	// Use the stl sort algorithm, which will use our compare functor,
 	// which returns true if first less than second
-	stable_sort(v.begin(),
-			    v.end(),
-			    theComparer);
+	stable_sort(
+			m_scratchVector.begin(),
+			m_scratchVector.end(),
+			theComparer);
 }
 
 
@@ -121,40 +129,41 @@ NodeSorter::sort(
 void
 NodeSorter::sort(
 			StylesheetExecutionContext&		executionContext,
-			MutableNodeRefList&				theList,
-			const NodeSortKeyVectorType&	keys) const
+			MutableNodeRefList&				theList)
 {
-	const unsigned int	theLength = theList.getLength();
-
-	// Copy the nodes to a vector...
-	NodeVectorType	theNodes;
-
-	theNodes.reserve(theLength);
-
-	unsigned int		i = 0;
-
-	for (; i < theLength; ++i)
+	if (m_keys.size() > 0)
 	{
-		theNodes.push_back(theList.item(i));
+		const unsigned int	theLength = theList.getLength();
+
+		// Copy the nodes to a vector...
+		assert(m_scratchVector.size() == 0);
+
+		// Make sure the scratch vector is cleared when we're done...
+		CollectionClearGuard<NodeVectorType>	guard(m_scratchVector);
+
+		m_scratchVector.reserve(theLength);
+
+		unsigned int	i = 0;
+
+		for (; i < theLength; ++i)
+		{
+			m_scratchVector.push_back(NodeVectorType::value_type(theList.item(i), i));
+		}
+
+		// Do the sort...
+		sort(executionContext);
+		assert(m_scratchVector.size() == NodeVectorType::size_type(theLength));
+
+		// Copy the nodes back to the list in sorted order.
+		theList.clear();
+
+		for (i = 0; i < theLength; ++i)
+		{
+			theList.addNode(m_scratchVector[i].m_node);
+		}
+
+		assert(theList.getLength() == theLength);
 	}
-
-	// Do the sort...
-	sort(
-			executionContext,
-			theList, 
-			theNodes,
-			keys);
-	assert(theNodes.size() == NodeVectorType::size_type(theLength));
-
-	// Copy the nodes back to the list in sorted order.
-	theList.clear();
-
-	for (i = 0; i < theLength; ++i)
-	{
-		theList.addNode(theNodes[i]);
-	}
-
-	assert(theList.getLength() == theLength);
 }
 
 
@@ -183,21 +192,24 @@ doCollationCompare(
 
 
 
-NodeSorter::NodeSortKeyCompare::result_type
-NodeSorter::NodeSortKeyCompare::operator()(
-			first_argument_type		theLHS,
-			second_argument_type	theRHS,
-			unsigned int			theKeyIndex) const
+int
+NodeSorter::NodeSortKeyCompare::compare(
+				first_argument_type		theLHS,
+				second_argument_type	theRHS,
+				unsigned int			theKeyIndex) const
 {
-	result_type			theResult = false;
+	assert(theLHS.m_node != 0 && theRHS.m_node != 0);
+	assert(theKeyIndex < m_nodeSortKeys.size());
+
+	int					theResult = 0;
 
 	const NodeSortKey&	theKey = m_nodeSortKeys[theKeyIndex];
 
 	// Compare as numbers
 	if(theKey.getTreatAsNumbers() == true)
 	{
-		double	n1Num = getNumberResult(theKey, theLHS);
-		double	n2Num = getNumberResult(theKey, theRHS);
+		double	n1Num = getNumberResult(theKey, theKeyIndex, theLHS);
+		double	n2Num = getNumberResult(theKey, theKeyIndex, theRHS);
 
 		if (DoubleSupport::isNaN(n1Num))
 			n1Num = 0.0;
@@ -205,100 +217,38 @@ NodeSorter::NodeSortKeyCompare::operator()(
 		if (DoubleSupport::isNaN(n2Num))
 			n2Num = 0.0;
 
-		if(n1Num == n2Num &&
-		  (theKeyIndex + 1 ) < m_nodeSortKeys.size())
+		if (DoubleSupport::lessThan(n1Num, n2Num) == true)
 		{
-			theResult = operator()(theLHS, theRHS, theKeyIndex + 1);
+			theResult = -1;
 		}
-		else
+		else if (DoubleSupport::greaterThan(n1Num, n2Num) == true)
 		{
-			const double	diff = n1Num - n2Num;
-
-			if (diff == 0.0)
-			{
-				// The nodes are equal, so if theLHS is
-				// before theRHS, return true.
-				theResult = isNodeBefore(theLHS, theRHS);
-			}
-			else if (theKey.getDescending() == true)
-			{
-				theResult =  diff < 0.0 ? false : true;
-			}
-			else
-			{
-				theResult =  diff < 0.0 ? true : false;
-			}
+			theResult = 1;
 		}
 	}
 	// Compare as strings
 	else
 	{
-
-		const int	theCompareResult = doCollationCompare(
+		theResult = doCollationCompare(
 				m_executionContext,
-#if defined(XALAN_SORT_CACHE_RESULTS)
-				getStringResult(theKey, theLHS),
-				getStringResult(theKey, theRHS),
-#else
-				getStringResult(theKey, theLHS)->str(),
-				getStringResult(theKey, theRHS)->str(),
-#endif
+				getStringResult(theKey, theKeyIndex, theLHS)->str(),
+				getStringResult(theKey, theKeyIndex, theRHS)->str(),
 				theKey.getLanguageString());
-
-		if(0 == theCompareResult)
-		{
-			if ((theKeyIndex + 1 ) < m_nodeSortKeys.size())
-			{
-				theResult = operator()(theLHS, theRHS, theKeyIndex + 1);
-			}
-		}
-		else
-		{
-			if (theCompareResult == 0)
-			{
-				// The nodes are equal, so if theLHS is
-				// before theRHS, return true.
-				theResult = isNodeBefore(theLHS, theRHS);
-			}
-			else if (theKey.getDescending() == true)
-			{
-				theResult = theCompareResult < 0 ? false : true;
-			}
-			else
-			{
-				theResult = theCompareResult < 0 ? true : false;
-			}
-		}
 	}
 
-	return theResult;
-}
-
-
-
-bool
-NodeSorter::NodeSortKeyCompare::isNodeBefore(
-			const XalanNode*	node1,
-			const XalanNode*	node2) const
-{
-	bool	theResult = true;
-
-	const unsigned int	theLength = m_list.getLength();
-
-	for(unsigned int i = 0; i < theLength; ++i)
+	// If they're not equal, the flip things if the
+	// order is descending...
+	if (theResult != 0)
+    {
+		if (theKey.getDescending() == true)
+		{
+			theResult = -theResult;
+		}
+	}
+	else if(theKeyIndex + 1 < m_nodeSortKeys.size())
 	{
-		const XalanNode* const	theCurrentNode = m_list.item(i);
-
-		if (theCurrentNode == node1)
-		{
-			break;
-		}
-		else if (theCurrentNode == node2)
-		{
-			theResult = false;
-
-			break;
-		}
+		// They're equal, so process the next key, if any...
+		theResult = compare(theLHS, theRHS, theKeyIndex + 1);
 	}
 
 	return theResult;
@@ -308,93 +258,109 @@ NodeSorter::NodeSortKeyCompare::isNodeBefore(
 
 double
 NodeSorter::NodeSortKeyCompare::getNumberResult(
-				const NodeSortKey&	theKey,
-				XalanNode*			node) const
+				const NodeSortKey&		theKey,
+				unsigned int			theKeyIndex,
+				first_argument_type		theEntry) const
 {
 	const XPath* const	xpath = theKey.getSelectPattern();
 	assert(xpath != 0);
 
-#if !defined(XALAN_SORT_CACHE_RESULTS)
-	return xpath->execute(node, *theKey.getPrefixResolver(), m_executionContext)->num();
-#else
-	const NumberResultsCacheMapType::const_iterator		i =
-		m_numberResultsCache.find(xpath);
+	typedef	NodeSorter::NumberResultsCacheType	NumberResultsCacheType;
 
-	if (i != m_numberResultsCache.end())
+	NumberResultsCacheType&		theCache =
+			m_sorter.m_numberResultsCache;
+
+	if (theCache.size() == 0)
 	{
-		const NumberResultsNodeCacheMapType::const_iterator	j =
-			(*i).second.find(node);
-
-		if (j != (*i).second.end())
-		{
-			// Yuck!!!!  Big ugly return here!!!
-			return (*j).second;
-		}
+		theCache.resize(m_nodeSortKeys.size());
 	}
 
-	const XObjectPtr	result(xpath->execute(node, *theKey.getPrefixResolver(), m_executionContext));
-	assert(result.null() == false);
+	// We need a dummy value to indicate that a slot has
+	// never been evaluated.  0 is probably a bad idea,
+	// as is NaN, since that would be fairly common with
+	// values that are not convertible to a number.  This
+	// is just a not-so-random number...
+	const double	theDummyValue = 135792468.0L;
 
-	const double	theResult = result->num();
+	if (theCache[theKeyIndex].size() != 0)
+	{
+		if (DoubleSupport::equal(theCache[theKeyIndex][theEntry.m_position], theDummyValue) == true)
+		{
+			theCache[theKeyIndex][theEntry.m_position] =
+				xpath->execute(theEntry.m_node, *theKey.getPrefixResolver(), m_executionContext)->num();
+		}
 
-#if defined(XALAN_NO_MUTABLE)
-	((NodeSortKeyCompare*)this)->m_numberResultsCache[xpath][node] = theResult;
-#else
-	m_numberResultsCache[xpath][node] = theResult;
+		return theCache[theKeyIndex][theEntry.m_position];
+	}
+	else
+	{
+		theCache[theKeyIndex].resize(m_nodes.size());
+
+#if !defined(XALAN_NO_NAMESPACES)
+		using std::fill;
 #endif
 
-	return theResult;
-#endif
+		// Fill with the dummy value...
+		fill(
+			theCache[theKeyIndex].begin(),
+			theCache[theKeyIndex].end(),
+			theDummyValue);
+
+		const XObjectPtr	result(xpath->execute(theEntry.m_node, *theKey.getPrefixResolver(), m_executionContext));
+		assert(result.null() == false);
+
+		const double	theResult = result->num();
+
+		theCache[theKeyIndex][theEntry.m_position] = theResult;
+
+		return theResult;
+	}
 }
 
 
 
-#if !defined(XALAN_SORT_CACHE_RESULTS)
-const XObjectPtr
-#else
-const XalanDOMString&
-#endif
+const XObjectPtr&
 NodeSorter::NodeSortKeyCompare::getStringResult(
-				const NodeSortKey&	theKey,
-				XalanNode*			node) const
+				const NodeSortKey&		theKey,
+				unsigned int			theKeyIndex,
+				first_argument_type		theEntry) const
 {
 	assert(theKey.getPrefixResolver() != 0);
 
 	const XPath* const	xpath = theKey.getSelectPattern();
 	assert(xpath != 0);
 
-#if !defined(XALAN_SORT_CACHE_RESULTS)
-	return xpath->execute(node, *theKey.getPrefixResolver(), m_executionContext);
-#else
-	const StringResultsCacheMapType::const_iterator		i =
-		m_stringResultsCache.find(xpath);
+	typedef	NodeSorter::StringResultsCacheType	StringResultsCacheType;
 
-	if (i != m_stringResultsCache.end())
+	StringResultsCacheType&		theCache =
+			m_sorter.m_stringResultsCache;
+
+	if (theCache.size() == 0)
 	{
-		const StringResultsNodeCacheMapType::const_iterator	j =
-			(*i).second.find(node);
-
-		if (j != (*i).second.end())
-		{
-			// Yuck!!!!  Big ugly return here!!!
-			return (*j).second;
-		}
+		theCache.resize(m_nodeSortKeys.size());
 	}
 
-	const XObjectPtr	result(xpath->execute(node, *theKey.getPrefixResolver(), m_executionContext));
-	assert(result.null() == false);
+	if (theCache[theKeyIndex].size() != 0)
+	{
+		if (theCache[theKeyIndex][theEntry.m_position].null() == true)
+		{
+			theCache[theKeyIndex][theEntry.m_position] =
+				xpath->execute(theEntry.m_node, *theKey.getPrefixResolver(), m_executionContext);
+		}
 
-	const XalanDOMString&	theResult = result->str();
+		assert(theCache[theKeyIndex][theEntry.m_position].null() == false);
 
-	XalanDOMString&		theString =
-#if defined(XALAN_NO_MUTABLE)
-		((NodeSortKeyCompare*)this)->m_stringResultsCache[xpath][node];
-#else
-		m_stringResultsCache[xpath][node];
-#endif
+		return theCache[theKeyIndex][theEntry.m_position];
+	}
+	else
+	{
+		theCache[theKeyIndex].resize(m_nodes.size());
 
-	assign(theString, theResult);
+		theCache[theKeyIndex][theEntry.m_position] =
+			xpath->execute(theEntry.m_node, *theKey.getPrefixResolver(), m_executionContext);
 
-	return theString;
-#endif
+		assert(theCache[theKeyIndex][theEntry.m_position].null() == false);
+
+		return theCache[theKeyIndex][theEntry.m_position];
+	}
 }

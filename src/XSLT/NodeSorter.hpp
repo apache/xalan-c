@@ -70,47 +70,66 @@
 
 
 #include <functional>
-#include <map>
 #include <vector>
 
 
 
-#include "NodeSortKey.hpp"
+#include <XPath/XObject.hpp>
+
+
+
+#include <XSLT/NodeSortKey.hpp>
 
 
 
 class MutableNodeRefList;
 class StylesheetExecutionContext;
 class XalanNode;
-class XObjectPtr;
 class XPath;
 
 
 
 /**
- * This class can sort vectors of DOM nodes according to a select pattern.
+ * This class can sort vectors of nodes according to a select pattern.
  */
- // TODO: Optimize this so it can reuse queries for each of the nodes.
 class NodeSorter
 {
 public:
 
+	struct VectorEntry
+	{
+	public:
+
+		VectorEntry(
+			XalanNode*		theNode,
+			unsigned int	thePosition) :
+			m_node(theNode),
+			m_position(thePosition)
+		{
+		}
+
+		XalanNode*		m_node;
+		unsigned int	m_position;
+	};
+
 #if defined(XALAN_NO_NAMESPACES)
-	typedef vector<XalanNode*>			NodeVectorType;
+	typedef vector<VectorEntry>			NodeVectorType;
 	typedef vector<NodeSortKey>			NodeSortKeyVectorType;
 #else
-	typedef std::vector<XalanNode*>		NodeVectorType;
+	typedef std::vector<VectorEntry>	NodeVectorType;
 	typedef std::vector<NodeSortKey>	NodeSortKeyVectorType;
 #endif
 
-	/**
-	 * Construct a NodeSorter, passing in the XSL Processor so it can know how
-	 * to get the node data according to the proper whitespace rules.
-	 */
 	explicit
 	NodeSorter();
   
 	~NodeSorter();
+
+	NodeSortKeyVectorType&
+	getSortKeys()
+	{
+		return m_keys;
+	}
 
 	/**
 	 * Given a list of nodes, sort each node according to the criteria in the
@@ -118,26 +137,19 @@ public:
 	 *
 	 * @param executionContext current execution context
 	 * @param v    list of Nodes
-	 * @param keys vector of NodeSortKeys
 	 */
 	void
 	sort(
 			StylesheetExecutionContext&		executionContext,
-			MutableNodeRefList&				theList,
-			const NodeSortKeyVectorType&	keys) const;
-
-	/*
-	 * TODO: Optimize compare -- cache the getStringExpr results,
-	 * key by m_selectPat + hash of node.
-	 */
+			MutableNodeRefList&				theList);
 
 	/**
 	 * Return the results of a compare of two nodes.
 	 */
 #if defined(XALAN_NO_NAMESPACES)
-	struct NodeSortKeyCompare : public binary_function<XalanNode*, XalanNode*, bool>
+	struct NodeSortKeyCompare : public binary_function<const NodeVectorType::value_type&, const NodeVectorType::value_type&, bool>
 #else
-	struct NodeSortKeyCompare : public std::binary_function<XalanNode*, XalanNode*, bool>
+	struct NodeSortKeyCompare : public std::binary_function<const NodeVectorType::value_type&, const NodeVectorType::value_type&, bool>
 #endif
 	{
 	public:
@@ -151,90 +163,86 @@ public:
 	 */
 		NodeSortKeyCompare(
 				StylesheetExecutionContext&		executionContext,
-				const MutableNodeRefList&		theList,
+				NodeSorter&						theSorter,
 				const NodeVectorType&			theNodes,
 				const NodeSortKeyVectorType&	theNodeSortKeys) :
 			m_executionContext(executionContext),
-			m_list(theList),
+			m_sorter(theSorter),
 			m_nodes(theNodes),
 			m_nodeSortKeys(theNodeSortKeys)
-#if defined(XALAN_SORT_CACHE_RESULTS)
-			,
-			m_numberResultsCache(),
-			m_stringResultsCache()
-#endif
 		{
 		}
 
-	/**
-	 * Compare two nodes
-	 *
-	 * @param executionContext current execution context
-	 * @param theNodes        vector or nodes to be sorted
-	 * @param theNodeSortKeys vector of keys upon which to sort
-	 */
+		/**
+		 * Compare two nodes, returning a value to indicate the
+		 * result
+		 *
+		 * @param theLHS the first node to compare
+		 * @param theRHS the second node to compare
+		 * @param theKeyIndex the index of the key to use
+		 * @result < 0 if theLHS is less than theRHS, 0 if they are equal, and > 0 if theLHS is greater than theRHS
+		 */
+		int
+		compare(
+				first_argument_type		theLHS,
+				second_argument_type	theRHS,
+				unsigned int			theKeyIndex = 0) const;
+
+		/**
+		 * Compare two nodes as a less predicate.
+		 *
+		 * @param theLHS the first node to compare
+		 * @param theRHS the second node to compare
+		 * @param theKeyIndex the index of the key to use
+		 * @return true if theLHS is less than theRHS
+		 */
 		result_type
-		operator()(first_argument_type		theLHS,
-				   second_argument_type		theRHS,
-				   unsigned int				theKeyIndex = 0) const;
+		operator()(
+				first_argument_type		theLHS,
+				second_argument_type	theRHS,
+				unsigned int			theKeyIndex = 0) const
+		{
+			return compare(theLHS, theRHS, theKeyIndex) < 0 ? true : false;
+		}
 
 	protected:
 
-		bool
-		isNodeBefore(
-				const XalanNode*	node1,
-				const XalanNode*	node2) const;
-
 		double
 		getNumberResult(
-				const NodeSortKey&	theKey,
-				XalanNode*			node) const;
+				const NodeSortKey&		theKey,
+				unsigned int			theKeyIndex,
+				first_argument_type		theEntry) const;
 
-#if !defined(XALAN_SORT_CACHE_RESULTS)
-		const XObjectPtr
-#else
-		const XalanDOMString&
-#endif
+		const XObjectPtr&
 		getStringResult(
-				const NodeSortKey&	theKey,
-				XalanNode*			node) const;
+				const NodeSortKey&		theKey,
+				unsigned int			theKeyIndex,
+				first_argument_type		theEntry) const;
 
 	private:
 
 		StylesheetExecutionContext&		m_executionContext;
-		const MutableNodeRefList&		m_list;
+		NodeSorter&						m_sorter;
 		const NodeVectorType&			m_nodes;
 		const NodeSortKeyVectorType&	m_nodeSortKeys;
+	};
+
+	friend struct NodeSortKeyCompare;
 
 #if defined(XALAN_NO_NAMESPACES)
-		typedef	map<const XalanNode*,
-					double,
-					less<const XalanNode*> >	NumberResultsNodeCacheMapType;
+	typedef	vector<double>		NumberResultsCacheVectorType;
 
-		typedef	map<const XalanNode*,
-				    XalanDOMString,
-					less<const XalanNode*> >	StringResultsNodeCacheMapType;
+	typedef	vector<XObjectPtr>	StringResultsCacheMapType;
 
-		typedef	map<const XPath*,
-					NumberResultsNodeCacheMapType,
-					less<const XPath*> >		NumberResultsCacheMapType;
-
-		typedef	map<const XPath*,
-					StringResultsNodeCacheMapType,
-					less<const XPath*> >		StringResultsCacheMapType;
+	typedef vector<NumberResultsCacheVectorType>	NumberResultsCacheType;
+	typedef vector<StringResultsCacheVectorType>	StringResultsCacheType;
 #else
-		typedef	std::map<const XalanNode*, double>			NumberResultsNodeCacheMapType;
-		typedef	std::map<const XalanNode*, XalanDOMString>	StringResultsNodeCacheMapType;
+	typedef	std::vector<double>			NumberResultsCacheVectorType;
+	typedef	std::vector<XObjectPtr>		StringResultsCacheVectorType;
 
-		typedef	std::map<const XPath*, NumberResultsNodeCacheMapType>	NumberResultsCacheMapType;
-		typedef	std::map<const XPath*, StringResultsNodeCacheMapType>	StringResultsCacheMapType;
+	typedef std::vector<NumberResultsCacheVectorType>	NumberResultsCacheType;
+	typedef std::vector<StringResultsCacheVectorType>	StringResultsCacheType;
 #endif
-
-#if defined(XALAN_SORT_CACHE_RESULTS)
-		mutable NumberResultsCacheMapType	m_numberResultsCache;
-		mutable StringResultsCacheMapType	m_stringResultsCache;
-#endif
-	};
 
 private:
 
@@ -243,16 +251,18 @@ private:
 	 * keys.
 	 *
 	 * @param executionContext current execution context
-	 * @param theList the original node list.
-	 * @param v    vector of Nodes
-	 * @param keys vector of NodeSortKeys
 	 */
 	void
-	sort(
-			StylesheetExecutionContext&		executionContext,
-			const MutableNodeRefList&		theList,
-			NodeVectorType&					v,
-			const NodeSortKeyVectorType&	keys) const;
+	sort(StylesheetExecutionContext&	executionContext);
+
+	// Data members...
+	NumberResultsCacheType	m_numberResultsCache;
+
+	StringResultsCacheType	m_stringResultsCache;
+
+	NodeSortKeyVectorType	m_keys;
+
+	NodeVectorType			m_scratchVector;
 };
 
 
