@@ -35,11 +35,17 @@
 	
   <resource id="Readme" title="Xalan Repository Release Notes" location="http://www.apache.org/websrc/cvsweb.cgi/xml-xalan/README"/>
   
-  <resource id="XSLT" title="W3C Recommendation 16 November 1999 XSL Transformations (XSLT) Version 1.0" location="http://www.w3.org/TR/xslt"/>
+  <resource id="XSL" title="Extensible Stylesheet Language (XSL) Version 1.0 W3C Candidate Recommendation"
+   location="http://www.w3.org/TR/xsl"/>
+
+  <resource id="XSLT" title="W3C Recommendation 16 November 1999 XSL Transformations (XSLT) Version 1.0" 
+   location="http://www.w3.org/TR/xslt"/>
   
   <resource id="XPath" title="XML Path Language (XPath) Version 1.0" location="http://www.w3.org/TR/xpath"/>
 
   <resource id="DOM" title="DOM" location="http://www.w3.org/DOM"/>
+  
+  <resource id="dpawsonxslfaq" title="XSL Frequently Asked Questions" location="http://www.dpawson.co.uk/xsl/xslfaq.html"/>
  
   <human-resource id="xalandev" name="Xalan Development Mailing List" mailto="xalan-dev@xml.apache.org"/>
 

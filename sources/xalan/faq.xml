@@ -8,8 +8,7 @@
     
     <a><p>The definitive sources are the W3C XSLT and XPath recommendations: <resource-ref idref="XSLT"/> and 
     <resource-ref idref="XPath"/>.</p>
-    <p>For general questions not specific to &xslt4c;, see Dave Pawson's <jump
-    href="http://freespace.virgin.net/b.pawson/xsl/index.html#top">XSL Frequently Asked Questions</jump> and Michael Kay's 
+    <p>For general questions not specific to &xslt4c;, see Dave Pawson's <resource-ref idref="dpawsonxslfaq"/> and Michael Kay's 
     <jump href="http://www.wrox.com/Consumer/Store/Details.asp?ISBN=1861003129">XSLT Programmer's Reference</jump>.</p>
     <p>For a brief listing of tutorials, discussion forums, and other materials, see <link idref="overview"
      anchor="uptospeed">Getting up to speed with XSLT</link>.</p></a>
@@ -17,10 +16,10 @@
   
 <faq title="Questions"><q>Where can I ask question?</q>
 
-<a><p>For generic questions about XSL stylesheets and transformations, use the XSL-list hosted by Mulberry Technologies. There is an archive that can be searched as well. Specific questions about &xslt4c; can be asked on the Xalan-dev list. Please review this document and the archives before posting new questions.</p>
+<a><p>For generic questions about XSL stylesheets and transformations, use the <jump href="http://www.mulberrytech.com/xsl/xsl-list/">XSL-List -- Open Forum on XSL</jump> hosted by Mulberry Technologies. There is an archive that can be searched as well. Specific questions about &xslt4c; can be asked on the Xalan-dev list. Please review this document and the archives before posting new questions.</p>
 
-<p>For specific questions on &xslt4c;:  <jump href="http://xml-archive.webweaving.org/xml-archive-xalan">http://xml-archive.webweaving.org/xml-archive-xalan</jump>.</p>
-<p>For general questions on XSLT: <jump href="http://www.biglist.com/lists/xsl-list/">http://www.biglist.com/lists/xsl-list/</jump>.</p></a>
+<p>For specific questions on &xslt4c;, see xalan-dev@xml.apache.org on <jump href="http://archive.covalent.net/">http://archive.covalent.net/</jump>.</p>
+</a>
 </faq>
 
 <faq title="What is &xml4c;?">
@@ -92,7 +91,7 @@
 
 <p>The STLPort is available for download from the site: <jump href="http://www.stlport.org/">http://www.stlport.org/</jump>.</p>
 
-<p>For more details on the STL, see: <jump href="http://www.sgi.com/Technology/STL/stl_introduction.html">http://www.sgi.com/Technology/STL/stl_introduction.html</jump>.</p></a>
+<p>For more details on the STL, see: <jump href="http://www.sgi.com/tech/stl/stl_introduction.html">http://www.sgi.com/tech/stl/stl_introduction.html</jump>.</p></a>
 </faq>
 
 <faq title="ICU">
@@ -123,7 +122,7 @@
 <faq title="&xslt4c; in Apache">
 <q>Is it possible to run &xslt4c; from an Apache server?</q>
 
-<a><p>A simple Apache module called <link idref="samples" anchor="apachemodulexslt">ApacheModuleXSLT</link> is provides as a sample. It demonstrates how to integrate &xslt4c; with Apache.</p></a>
+<a><p>A simple Apache module called <link idref="samples" anchor="apachemodulexslt">ApacheModuleXSLT</link> is provided as a sample. It demonstrates how to integrate &xslt4c; with Apache.</p></a>
 </faq>
 
     

@@ -73,8 +73,8 @@
     discussion groups, frequently asked questions, and tutorials on XSLT, see <link anchor="uptospeed">Getting up
     to speed with XSLT</link>.</p> 
     <note>XSL also includes a vocabulary for formatting documents, which is not part of &xslt4c;. 
-    For more information, see <jump href="http://www.w3.org/TR/xsl/">W3C XSL Working Draft</jump> and the <jump
-    href="http://xml.apache.org/fop">Apache XML FOP (Formatting Objects Project)</jump>.</note>
+    For more information, see <resource-ref idref="XSL"/> and the 
+    <jump href="http://xml.apache.org/fop">Apache XML FOP (Formatting Objects Project)</jump>.</note>
     <p>You use the XSLT language to compose XSL stylesheets. An XSL stylesheet contains instructions for
      transforming XML documents from one document type to another document type (XML, HTML, or other). In structural
      terms, an XSL stylesheet specifies the transformation of one tree of nodes (the XML input) into another tree of nodes 
@@ -121,16 +121,14 @@
     <ul>
       <li>Michael Kay's <jump href="http://www.wrox.com/Consumer/Store/Details.asp?ISBN=1861003129">XSLT Programmer's
        Reference</jump>, Wrox Press, 2000<br/><br/></li>
-       <li>Neil Bradley's <jump href="http://cseng.aw.com/bookpage.taf?ISBN=0-201-67487-4">XSL Companion</jump>,
-       Addison-Wesley, 2000<br/><br/></li>                 
+       <li>Neil Bradley's XSL Companion, Addison-Wesley, 2000<br/><br/></li>                 
         <li>Elliotte Rusty Harold's <jump href="http://metalab.unc.edu/xml/books/bible/updates/14.html">Chapter 14 of 
         the XML Bible: XSL Transformations</jump><br/><br/></li>
         <li>Crane Softwright's <jump href="http://www.CraneSoftwrights.com/training/">Free preview of Practical
          Transformation Using XSLT and XPath</jump><br/><br/></li>
         <li>The Mulberry <jump href="http://www.mulberrytech.com/xsl/xsl-list/">XSL-List -- Open Forum on XSL</jump> 
         (of interest to XSL users at all levels)<br/><br/></li>
-        <li>Dave Pawson's <jump href="http://www.dpawson.freeserve.co.uk/">XSL Frequently Asked
-         Questions</jump><br/><br/></li>
+        <li>Dave Pawson's <resource-ref idref="dpawsonxslfaq"/><br/><br/></li>
         <li>Objects by Design's <jump href="http://www.objectsbydesign.com/projects/xmi_to_html.html">Transforming XMI to
          HTML</jump> (oriented towards XMI, "an XML-based, stream representation of a UML model," but also covers "generic"
          XML transformations)<br/><br/></li>
@@ -145,9 +143,7 @@
          Designers</jump><br/><br/></li>
         <li>XSLT - XSL Transformations in 
         <jump href="http://www.brics.dk/~amoeller/XML/">The XML Revolution: Technologies for the future Web</jump> by
-        Anders M&oslash;ller and Michael I. Schwartzbach<br/><br/></li>
-	  <li>Elizabeth Castro's <jump href="http://www.peachpit.com/books/catalog/71098.html">XML for the World Wide Web: 
-	  Visual Quickstart Guide</jump></li>
+        Anders M&oslash;ller and Michael I. Schwartzbach</li>
     </ul>
     <p>When you come across other useful introductory or background materials, please email <human-resource-ref
      idref="xalandev"/>, so we can add them to this list.</p>
@@ -184,7 +180,7 @@
 
       </gloss>
       <p>For more definitions of XSLT terminology, see Dave Pawson's 
-      <jump href="http://freespace.virgin.net/b.pawson/xsl/jargon.html">XSLT Terminology
+      <jump href="http://www.dpawson.co.uk/xsl/vocab.html">XSLT Terminology
       Clarification</jump> and the Glossary in Michael Kay's 
       <jump href="http://www.wrox.com/Consumer/Store/Details.asp?ISBN=1861003129">XSLT Programmer's Reference</jump>.</p>
     </s2>
