@@ -167,7 +167,7 @@ ElemAttribute::execute(
 
 		const unsigned int		origAttrNameLength = length(origAttrName);
 
-		unsigned int			indexOfNSSep = 0;
+		unsigned int			indexOfNSSep = origAttrNameLength;
 
 		XalanDOMString			attrNameSpace;
 
@@ -177,7 +177,7 @@ ElemAttribute::execute(
 
 			if(!isEmpty(attrNameSpace))
 			{
-				XalanDOMString prefix = executionContext.getResultPrefixForNamespace(attrNameSpace);
+				XalanDOMString	prefix = executionContext.getResultPrefixForNamespace(attrNameSpace);
 
 				if(isEmpty(prefix))
 				{
