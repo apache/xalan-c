@@ -558,19 +558,23 @@ NumeratorFormatter::NumberFormatStringTokenizer::nextToken()
 
 	const int	start = m_currentPosition;
 
-	while ((m_currentPosition < m_maxPosition) && 
-		   isLetterOrDigit(charAt(m_str, m_currentPosition))) 
+	if (isLetterOrDigit(charAt(m_str, m_currentPosition)))
 	{
-		m_currentPosition++;
+		while ((m_currentPosition < m_maxPosition) &&
+				isLetterOrDigit(charAt(m_str, m_currentPosition))) 
+			m_currentPosition++;
+	}
+	else
+	{
+		while ((m_currentPosition < m_maxPosition) &&
+				!isLetterOrDigit(charAt(m_str, m_currentPosition))) 
+			m_currentPosition++;
 	}
 
-	if ((start == m_currentPosition) &&
-		(!isLetterOrDigit(charAt(m_str, m_currentPosition)))) 
-	{
-		m_currentPosition++;
-	}
-
-	return substring(m_str, start, m_currentPosition);
+	// @@ This didn't seem to be working right when start=current=0
+	// return substring(m_str, start, m_currentPosition);
+	DOMString sub = substring(m_str, start, m_currentPosition);
+	return DOMString(toCharArray(sub), m_currentPosition-start);
 }
 
 
@@ -581,24 +585,23 @@ NumeratorFormatter::NumberFormatStringTokenizer::countTokens() const
 	int 	count = 0;
 	int 	currpos = m_currentPosition;
 
+	// Tokens consist of sequences of alphabetic characters and sequences of
+	// non-alphabetic characters
 	while (currpos < m_maxPosition) 
 	{
-		const int	start = currpos;
-
-		while ((currpos < m_maxPosition) &&
-				isLetterOrDigit(charAt(m_str, currpos))) 
+		if (isLetterOrDigit(charAt(m_str, currpos)))
 		{
-			currpos++;
+			while ((currpos < m_maxPosition) &&
+					isLetterOrDigit(charAt(m_str, currpos))) 
+				currpos++;
 		}
-
-		if ((start == currpos) &&
-			(isLetterOrDigit(charAt(m_str, currpos)) == false)) 
+		else
 		{
-			currpos++;
+			while ((currpos < m_maxPosition) &&
+					!isLetterOrDigit(charAt(m_str, currpos))) 
+				currpos++;
 		}
-
 		count++;
 	}
-
 	return count;
 }
