@@ -53,8 +53,6 @@
  * Business Machines, Inc., http://www.ibm.com.  For more
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
- *
- * @author <a href="mailto:david_n_bertoni@lotus.com">David N. Bertoni</a>
  */
 
 #include "StylesheetConstructionContextDefault.hpp"
@@ -149,7 +147,8 @@ StylesheetConstructionContextDefault::StylesheetConstructionContextDefault(
 	m_elemTemplateAllocator(eDefaultElemTemplateBlockSize),
 	m_elemTextLiteralAllocator(eDefaultElemTextLiteralBlockSize),
 	m_elemValueOfAllocator(eDefaultElemValueOfBlockSize),
-	m_elemVariableAllocator(eDefaultElemVariableBlockSize)
+	m_elemVariableAllocator(eDefaultElemVariableBlockSize),
+	m_spaceAttrQName(DOMServices::s_XMLNamespaceURI, Constants::ATTRNAME_SPACE)
 {
 }
 
@@ -646,7 +645,7 @@ StylesheetConstructionContextDefault::isXMLSpaceAttribute(
 
 	m_scratchQName.set(theAttributeName, theStylesheet.getNamespaces(), theLocator, true);
 
-	return s_spaceAttrQName.equals(m_scratchQName);
+	return m_spaceAttrQName == m_scratchQName;
 }
 
 
@@ -661,7 +660,7 @@ StylesheetConstructionContextDefault::isXSLUseAttributeSetsAttribute(
 
 	m_scratchQName.set(theAttributeName, theStylesheet.getNamespaces(), theLocator, true);
 
-	return m_useAttributeSetsQName.equals(m_scratchQName);
+	return m_useAttributeSetsQName == m_scratchQName;
 }
 
 
@@ -1293,11 +1292,6 @@ StylesheetConstructionContextDefault::tokenizeQNames(
 		return theResult;
 	}
 }
-
-
-
-const XalanQNameByReference		StylesheetConstructionContextDefault::s_spaceAttrQName(DOMServices::s_XMLNamespaceURI, Constants::ATTRNAME_SPACE);
-
 
 
 

@@ -582,7 +582,7 @@ private:
 
 	XalanElemVariableAllocator				m_elemVariableAllocator;
 
-	static const XalanQNameByReference	s_spaceAttrQName;
+	const XalanQNameByReference				m_spaceAttrQName;
 
 	// Static strings for stylesheet compilation...
 
