@@ -150,6 +150,20 @@ public:
 			theOther.m_collator = theTemp;
 		}
 
+#if defined(XALAN_NO_SELECTIVE_TEMPLATE_INSTANTIATION)
+		bool
+		operator<(const CollationCacheStruct&  theRHS) const
+		{
+			return this < &theRHS;
+		}
+
+		bool
+		operator==(const CollationCacheStruct&	theRHS) const
+		{
+			return this == &theRHS;
+		}
+#endif
+
 		XalanDOMString	m_locale;
 
 		CollatorType*	m_collator;
