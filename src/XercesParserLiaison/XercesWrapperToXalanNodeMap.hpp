@@ -79,7 +79,7 @@ public:
 #if defined(XALAN_NO_NAMESPACES)
 	typedef map<XalanNode*, const DOMNode*, less<XalanNode*> >	XalanNodeMapType;
 
-	typedef map<const DOMNode*, XalanNode*, less<DOMNode*> >	XercesNodeMapType;
+	typedef map<const DOMNode*, XalanNode*, less<const DOMNode*> >	XercesNodeMapType;
 #else
 	typedef std::map<XalanNode*, const DOMNode*>	XalanNodeMapType;
 
