@@ -140,18 +140,13 @@
 </trans-unit>
 
 <trans-unit id="ExtraIllegalTokens">
-		<source>Extra illegal token!</source>
-		<target>Extra illegal token!</target>
+		<source>Extra illegal token.</source>
+		<target>Extra illegal token.</target>
 </trans-unit>
 
-<trans-unit id="ExpectedDoubleQuote">
-		<source>The literal expression is not terminated. A double quote is missing.</source>
-		<target>The literal expression is not terminated. A double quote is missing.</target>
-</trans-unit>
-
-<trans-unit id="ExpectedSingleQuote">
-		<source>The literal expression is not terminated. A single quote is missing.</source>
-		<target>The literal expression is not terminated. A single quote is missing.</target>
+<trans-unit id="UnterminatedStringLiteral">
+		<source>A string literal is not terminated. A '"' or "'" is missing.</source>
+		<target>A string literal is not terminated. A '"' or "'" is missing.</target>
 </trans-unit>
 
 <trans-unit id="EmptyExpression">
@@ -170,8 +165,8 @@
 </trans-unit>
 
 <trans-unit id="NotFoundWhatExpected_2Param">
-		<source>Expected token is '{0}', but found the '{1}' token.</source>
-		<target>Expected token is '{0}', but found the '{1}' token.</target>
+		<source>Expected '{0}', but found '{1}' instead.</source>
+		<target>Expected '{0}', but found '{1}' instead.</target>
 </trans-unit>
 
 <trans-unit id="LiteralArgumentIsRequired">
@@ -220,8 +215,8 @@ On<trans-unit id="FunctionDoesNotAcceptAnyArguments_1Param">
 </trans-unit>
 
 <trans-unit id="IllegalAxisName_1Param">
-		<source>The token '{0}' is an illegal axis name.</source>
-		<target>The token '{0}' is an illegal axis name.</target>
+		<source>'{0}' is not a valid axis.</source>
+		<target>'{0}' is not a valid axis.</target>
 </trans-unit>
 
 <trans-unit id="UnknownNodeType_1Param">
@@ -270,13 +265,13 @@ On<trans-unit id="FunctionDoesNotAcceptAnyArguments_1Param">
 </trans-unit>
 
 <trans-unit id="AttributesCannotBeAdded">
-		<source>Attributes cannot be added after a child has been added. The attribute(s) will not be added.</source>
-		<target>Attributes cannot be added after a child has been added. The attribute(s) will not be added.</target>
+		<source>xsl:attribute cannot create an attribute if no element node is open, or if a child node exists.</source>
+		<target>xsl:attribute cannot create an attribute if no element node is open, or if a child node exists.</target>
 </trans-unit>
 
 <trans-unit id="IllegalElementName_1Param">
-		<source>The name '{0}' is an illegal element name. The element will not be added.</source>
-		<target>The name '{0}' is an illegal element name. The element will not be added.</target>
+		<source>xsl:element cannot create an element because '{0}' is not a a legal name.</source>
+		<target>xsl:element cannot create an element because '{0}' is not a a legal name.</target>
 </trans-unit>
 
 <trans-unit id="XalanHandleExtensions">
@@ -477,18 +472,18 @@ On<trans-unit id="FunctionDoesNotAcceptAnyArguments_1Param">
 </trans-unit>
 
 <trans-unit id="Error_1Param">
-		<source>Error: {0}.</source>
-		<target>Error: {0}.</target>
+		<source>Error: {0}</source>
+		<target>Error: {0}</target>
 </trans-unit>
 
 <trans-unit id="Warning_1Param">
-		<source>Warning: {0}.</source>
-		<target>Warning: {0}.</target>
+		<source>Warning: {0}</source>
+		<target>Warning: {0}</target>
 </trans-unit>
 
 <trans-unit id="Message_1Param">
-		<source>Message: {0}.</source>
-		<target>Message: {0}.</target>
+		<source>Message: {0}</source>
+		<target>Message: {0}</target>
 </trans-unit>
 
 <trans-unit id="StyleTreeNode_1Param">
@@ -502,8 +497,8 @@ On<trans-unit id="FunctionDoesNotAcceptAnyArguments_1Param">
 </trans-unit>
 
 <trans-unit id="LineNumberColumnNumber_2Params">
-		<source>Line {0}, column {1}.</source>
-		<target>Line {0}, column {1}.</target>
+		<source>line {0}, column {1}.</source>
+		<target>line {0}, column {1}.</target>
 </trans-unit>
 
 <trans-unit id="HasInvalidAttribute_2Param">
