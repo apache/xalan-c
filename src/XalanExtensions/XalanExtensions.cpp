@@ -188,12 +188,27 @@ static const XalanDOMChar	s_intersectionFunctionName[] =
 
 
 
-static const XalanDOMChar	s_nodeSetFunctionName[] =
+static const XalanDOMChar	s_nodeSetFunctionName1[] =
 {
 	XalanUnicode::charLetter_n,
 	XalanUnicode::charLetter_o,
 	XalanUnicode::charLetter_d,
 	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_s,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_t,
+	0
+};
+
+
+
+static const XalanDOMChar	s_nodeSetFunctionName2[] =
+{
+	XalanUnicode::charLetter_n,
+	XalanUnicode::charLetter_o,
+	XalanUnicode::charLetter_d,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charHyphenMinus,
 	XalanUnicode::charLetter_s,
 	XalanUnicode::charLetter_e,
 	XalanUnicode::charLetter_t,
@@ -218,7 +233,8 @@ static const XalanExtensionsInstaller::FunctionTableEntry	theFunctionTable[] =
 	{ s_evaluateFunctionName, &s_evaluateFunction },
 	{ s_hasSameNodesFunctionName, &s_hasSameNodesFunction },
 	{ s_intersectionFunctionName, &s_intersectionFunction },
-	{ s_nodeSetFunctionName, &s_nodesetFunction },
+	{ s_nodeSetFunctionName1, &s_nodesetFunction },
+	{ s_nodeSetFunctionName2, &s_nodesetFunction },
 	{ 0, 0 }
 };
 
