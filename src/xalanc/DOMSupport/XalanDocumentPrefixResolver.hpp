@@ -59,7 +59,7 @@ public:
 
 	typedef XalanVector<const XalanNode*> 				AttributeVectorType;
 	typedef XalanMap<const XalanDOMString*,
-					AttributeVectorType*>				NamespacesMapType;
+					AttributeVectorType>				NamespacesMapType;
 
 	/**
 	 * Constructor.

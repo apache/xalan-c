@@ -65,21 +65,19 @@ XalanDocumentPrefixResolver::getNamespaceForPrefix(const XalanDOMString&	prefix)
 	}
 	else
 	{
-		const AttributeVectorType*	theVector = (*i).second;
+		const AttributeVectorType&	theVector = (*i).second;
 
-        assert( theVector != 0);
+		assert(theVector.empty() == false);
 
-		assert(theVector->empty() == false);
-
-		if (theVector->size() == 1)
+		if (theVector.size() == 1)
 		{
-			assert(theVector->front() != 0);
+			assert(theVector.front() != 0);
 
-			return &(theVector->front()->getNodeValue());
+			return &(theVector.front()->getNodeValue());
 		}
 		else
 		{
-			return duplicateBinding(*theVector);
+			return duplicateBinding(theVector);
 		}
 	}
 }
@@ -152,7 +150,7 @@ XalanDocumentPrefixResolver::NamespaceNodesTreeWalker::startNode(const XalanNode
 
 				if (DOMServices::isNamespaceDeclaration(*theAttr) == true)
 				{
-					m_map[&theAttr->getLocalName()]->push_back(theAttr);
+					m_map[&theAttr->getLocalName()].push_back(theAttr);
 				}
 			}
 		}

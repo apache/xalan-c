@@ -2372,6 +2372,12 @@ struct XalanMapKeyTraits<XalanDOMString*>
 	typedef pointer_equal<XalanDOMString>	Comparator;
 };
 
+template<>
+struct XalanMapKeyTraits<const XalanDOMString*>
+{
+	typedef DOMStringPointerHashFunction	Hasher;
+	typedef pointer_equal<XalanDOMString>	Comparator;
+};
 
 
 /**
