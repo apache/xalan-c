@@ -139,11 +139,13 @@ StylesheetHandler::StylesheetHandler(
 	FormatterListener(OUTPUT_METHOD_OTHER),
 	m_stylesheet(stylesheetTree),
 	m_constructionContext(constructionContext),
+	m_elemEmptyAllocator(eElemEmptyAllocatorBlockSize),
+	m_elemTextAllocator(eElemTextBlockSize),
 	m_elemStack(),
 	m_elemStackParentedElements(),
 	m_whiteSpaceElems(),
 	m_pTemplate(0),
-	m_lastPopped(),
+	m_lastPopped(*this),
 	m_inTemplate(false),
 	m_foundStylesheet(false),
 	m_foundNotImport(false),
@@ -179,8 +181,12 @@ StylesheetHandler::~StylesheetHandler()
 
 		if (j == m_elemStackParentedElements.end())
 		{
-			// Not found, so delete it...
-			delete *i;
+			if ((*i)->getXSLToken() != StylesheetConstructionContext::ELEMNAME_UNDEFINED &&
+				(*i)->getXSLToken() != StylesheetConstructionContext::ELEMNAME_TEXT)
+			{
+				// Not found, so delete it...
+				delete *i;
+			}
 		}
 		else
 		{
@@ -472,7 +478,7 @@ StylesheetHandler::startElement(
 						m_elemStackParentedElements.insert(foreach);
 
 						m_elemStack.push_back(
-							new ElemEmpty(
+							m_elemEmptyAllocator.create(
 									m_constructionContext,
 									m_stylesheet,
 									&Constants::ELEMNAME_SORT_WITH_PREFIX_STRING));
@@ -631,9 +637,13 @@ StylesheetHandler::startElement(
 					break;
 
 				case StylesheetConstructionContext::ELEMNAME_TEXT:
-					m_elemStack.push_back(new ElemText(m_constructionContext,
-											m_stylesheet,
-											atts, lineNumber, columnNumber));
+					m_elemStack.push_back(
+						m_elemTextAllocator.create(
+							m_constructionContext,
+							m_stylesheet,
+							atts,
+							lineNumber,
+							columnNumber));
 					break;
 
 				case StylesheetConstructionContext::ELEMNAME_ATTRIBUTE:
@@ -791,7 +801,7 @@ StylesheetHandler::startElement(
 		// object.
 		if(origStackSize == m_elemStack.size())
 		{
-			m_elemStack.push_back(new ElemEmpty(m_constructionContext, m_stylesheet));
+			m_elemStack.push_back(m_elemEmptyAllocator.create(m_constructionContext, m_stylesheet));
 
 			if (elem != 0)
 			{
@@ -1939,7 +1949,7 @@ StylesheetHandler::PushPopIncludeState::PushPopIncludeState(StylesheetHandler&	t
 	m_elemStack(theHandler.m_elemStack),
 	m_elemStackParentedElements(theHandler.m_elemStackParentedElements),
 	m_pTemplate(theHandler.m_pTemplate),
-	m_lastPopped(),
+	m_lastPopped(theHandler),
 	m_inTemplate(theHandler.m_inTemplate),
 	m_foundStylesheet(theHandler.m_foundStylesheet),
 	m_XSLNameSpaceURL(theHandler.m_stylesheet.getXSLTNamespaceURI()),
@@ -2013,10 +2023,21 @@ StylesheetHandler::LastPoppedHolder::cleanup()
 	{
 		const int tok = m_lastPopped->getXSLToken();
 
-		if (tok == StylesheetConstructionContext::ELEMNAME_UNDEFINED ||
-			tok == StylesheetConstructionContext::ELEMNAME_TEXT)
+		if (tok == StylesheetConstructionContext::ELEMNAME_UNDEFINED)
 		{
-			delete m_lastPopped;
+#if defined(XALAN_OLD_STYLE_CASTS)
+			m_stylesheetHandler.m_elemEmptyAllocator.destroy((ElemEmpty*)m_lastPopped);
+#else
+			m_stylesheetHandler.m_elemEmptyAllocator.destroy(static_cast<ElemEmpty*>(m_lastPopped));
+#endif
+		}
+		else if (tok == StylesheetConstructionContext::ELEMNAME_TEXT)
+		{
+#if defined(XALAN_OLD_STYLE_CASTS)
+			m_stylesheetHandler.m_elemTextAllocator.destroy((ElemText*)m_lastPopped);
+#else
+			m_stylesheetHandler.m_elemTextAllocator.destroy(static_cast<ElemText*>(m_lastPopped));
+#endif
 		}
 	}
 }

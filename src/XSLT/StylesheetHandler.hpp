@@ -85,6 +85,8 @@
 
 #include <XSLT/NamespacesHandler.hpp>
 #include <XSLT/Stylesheet.hpp>
+#include <XSLT/XalanElemEmptyAllocator.hpp>
+#include <XSLT/XalanElemTextAllocator.hpp>
 
 
 
@@ -444,6 +446,8 @@ protected:
 
 private:
 
+	enum { eElemEmptyAllocatorBlockSize = 10, eElemTextBlockSize = 10 };
+
 	// not implemented
 	StylesheetHandler(const StylesheetHandler&);
 
@@ -584,6 +588,16 @@ private:
 	StylesheetConstructionContext&	m_constructionContext;
 
 	/**
+	 * An allocator for ElemEmpty instances.
+	 */
+	XalanElemEmptyAllocator		m_elemEmptyAllocator;
+
+	/**
+	 * An allocator for ElemText instances.
+	 */
+	XalanElemTextAllocator		m_elemTextAllocator;
+
+	/**
 	 * The stack of elements, pushed and popped as events occur.
 	 */
 	ElemTemplateStackType	m_elemStack;
@@ -611,7 +625,8 @@ private:
 	{
 	public:
 
-		LastPoppedHolder() :
+		LastPoppedHolder(StylesheetHandler&		theStylesheetHandler) :
+			m_stylesheetHandler(theStylesheetHandler),
 			m_lastPopped(0)
 		{
 		}
@@ -690,8 +705,12 @@ private:
 		cleanup();
 
 		// Data members...
+		StylesheetHandler&		m_stylesheetHandler;
+
 		ElemTemplateElement*	m_lastPopped;
 	};
+
+	friend class LastPoppedHolder;
 
 	/**
 	 * Manages the last element popped from the stack.
