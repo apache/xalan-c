@@ -80,8 +80,10 @@
 #include <XalanTransformer/XalanTransformer.hpp>
 #include <XalanTransformer/XalanCompiledStylesheetDefault.hpp>
 
+#include <DOMSupport/DOMServices.hpp>
 #include <PlatformSupport/XalanOutputStreamPrintWriter.hpp>
 #include <PlatformSupport/XalanFileOutputStream.hpp>
+#include <PlatformSupport/XalanUnicode.hpp>
 
 #include <XMLSupport/FormatterToXML.hpp>
 #include <XMLSupport/FormatterTreeWalker.hpp>
@@ -109,8 +111,23 @@
 #include <crtdbg.h>
 #endif
 
+char *xalanNodeTypes[]=
+	{"UNKNOWN_NODE",
+	"ELEMENT_NODE",
+	"ATTRIBUTE_NODE",
+	"TEXT_NODE",
+	"CDATA_SECTION_NODE",
+	"ENTITY_REFERENCE_NODE",
+	"ENTITY_NODE",
+	"PROCESSING_INSTRUCTION_NODE",
+	"COMMENT_NODE",
+	"DOCUMENT_NODE",
+	"DOCUMENT_TYPE_NODE",
+	"DOCUMENT_FRAGMENT_NODE",
+	"NOTATION_NODE"};
+
 bool 
-domCompare(const XalanNode& gold ,const XalanNode& doc);
+domCompare(const XalanNode& gold ,const XalanNode& doc, XalanDOMString fileName);
 
 void
 printArgOptions()
@@ -248,101 +265,116 @@ getParams(int argc,
 }
 
 
-XalanDocument* getGoldDom(XalanSourceTreeParserLiaison& theParser, const XSLTInputSource&  goldInputSource)
-{
-
-	return theParser.parseXMLStream(goldInputSource);
-}
-
-/*
 void
-reportError(char* msg, int type, void& x)
+reportError( XalanDOMString file, XalanDOMString node, char* msg)
 {
-	switch (type)
-	{
-	case 1:
-		{
-			cout << msg << "Expected: " << c_str(TranscodeToLocalCodePage(*x));
-		}
 
-	case 2:
-		{
-			cout << "hello" << endl;
-		}
-	case 3:
-		{
-			cout << "boo" << endl;
-		}
-	}
+	cout << endl << "Failed "<< file << endl
+		 << "	Processing node : " << node << endl
+		 << "	" << msg ;
 }
 
-*/
 
-bool diffATTR(const XalanNode* gAttr, const XalanNode* dAttr)
+
+bool diffATTR(const XalanNode* gAttr, const XalanNode* dAttr, const XalanDOMString& fileName)
 {
-	//cout << "	Attr Name: " << c_str(TranscodeToLocalCodePage(goldData)) << endl;
-						
-	const XalanDOMString& goldAttrName = gAttr->getNodeValue();
-	const XalanDOMString& docAttrName  = dAttr->getNodeValue();
+
+	const XalanDOMString& goldAttrName = gAttr->getNodeName();
+	const XalanDOMString& docAttrName  = dAttr->getNodeName();
+
+
+#if !defined(NDEBUG) && defined(_MSC_VER)
+	cout << "	Attribute is: " << c_str(TranscodeToLocalCodePage(goldAttrName)) << endl;
+#endif
 
 	const XalanDOMString& goldAttrNsUri = gAttr->getNamespaceURI();
-	const XalanDOMString& docAttrNsUri  = dAttr->getNamespaceURI();
+	const XalanDOMString& docAttrNsUri	= dAttr->getNamespaceURI();
 
-	const XalanDOMString& goldAttrPrefix = gAttr->getPrefix();
-	const XalanDOMString& docAttrPrefix = dAttr->getPrefix();
+	//const XalanDOMString& goldAttrPrefix = gAttr->getPrefix();
+	//const XalanDOMString& docAttrPrefix = dAttr->getPrefix();
 
-	const XalanDOMString& goldAttrLName = gAttr->getLocalName();
-	const XalanDOMString& docAttrLName = dAttr->getLocalName();
+	//const XalanDOMString& goldAttrLName = gAttr->getLocalName();
+	//const XalanDOMString& docAttrLName = dAttr->getLocalName();
+	
+	const XalanDOMString& goldAttrValue = gAttr->getNodeValue();
+	const XalanDOMString& docAttrValue	= dAttr->getNodeValue();
 
-	if (goldAttrName != docAttrName)
+	if (goldAttrValue != docAttrValue)
 	{
-		cout << "Error6a: Wrong Attribute Value. Expecting: " << c_str(TranscodeToLocalCodePage(goldAttrName)) << endl;							
-		//return false;
+		reportError(fileName, docAttrName, "Error: Wrong Attribute Value. Expected: ");
+		cout << c_str(TranscodeToLocalCodePage(goldAttrValue));							
+		return false;
 	}
 
 	if (goldAttrNsUri != docAttrNsUri)
 	{
-		cout << "Error7a: Wrong NamespaceURI. Expecting: " << c_str(TranscodeToLocalCodePage(goldAttrNsUri)) << endl;							
-		//return false;
+		reportError(fileName, docAttrName, "Error: Wrong Attribute NamespaceURI. Expected: ");
+		cout << c_str(TranscodeToLocalCodePage(goldAttrNsUri)); 						
+		return false;
 	}
+
+/*	I think that these are not necessary. I assume that they will be caught earlier when
+	checking for named attributes.
 
 	if (goldAttrPrefix != docAttrPrefix)
 	{
-		cout << "Error8a: Wrong Namespace Prefix. Expecting: " << c_str(TranscodeToLocalCodePage(goldAttrPrefix)) << endl;							
-		//return false;
+		reportError(fileName, "Error: Wrong Attribute Namespace Prefix. Expected: ",errAttrName);
+		cout << c_str(TranscodeToLocalCodePage(goldAttrPrefix));							
+		return false;
 	}
 
 	if (goldAttrLName != docAttrLName)
 	{
-		cout << "Error9a: Wrong LocalName. Expecting: " << c_str(TranscodeToLocalCodePage(goldAttrLName)) << endl;							
-		//return false;
+		reportError(fileName, "Error: Wrong Attribute LocalName. Expected: ",errAttrName);
+		cout << c_str(TranscodeToLocalCodePage(goldAttrLName)); 						
+		return false;
 	}
-
+*/
 	return true;
 }
 
 bool
-diffElement(const XalanNode& gold, const XalanNode& doc)
+diffElement(const XalanNode& gold, const XalanNode& doc, const XalanDOMString& fileName)
 {
 	const XalanDOMString&  docNodeName  = doc.getNodeName();	
 	const XalanDOMString&  goldNodeName = gold.getNodeName();
 
-	const XalanDOMString&	docNsUri  = doc.getNamespaceURI();
-	const XalanDOMString&	goldNsUri = gold.getNamespaceURI();
+	const XalanDOMString&  docNsUri  = doc.getNamespaceURI();
+	const XalanDOMString&  goldNsUri = gold.getNamespaceURI();
 
-	cout << "Processing: " << c_str(TranscodeToLocalCodePage(docNodeName)) << endl;
-		
+	//const XalanDOMString&  docPrefix = doc.getPrefix();
+	//const XalanDOMString&  goldPrefix = gold.getPrefix();
+
+	//const XalanDOMString& docLName = doc.getLocalName();
+	//const XalanDOMString& goldLName = gold.getLocalName();
+
+#if !defined(NDEBUG) && defined(_MSC_VER)
+	cout << "Node is: " << c_str(TranscodeToLocalCodePage(docNodeName)) << endl;
+#endif
+
+	// This essentially checks 2 things, that the prefix and localname are the
+	// same.  So specific checks of these items are not necessary.
 	if (goldNodeName != docNodeName)
 	{
-		cout << "Error2: Element mismatch. Expected: " << c_str(TranscodeToLocalCodePage(goldNodeName)) << endl;		
+		reportError(fileName, docNodeName, "Error: Element mismatch. Expected: ");
+		cout << c_str(TranscodeToLocalCodePage(goldNodeName));		
 		return false;
 	}
 
 	if ( goldNsUri != docNsUri)
 	{
-		cout << "Error3: NamespaceURI mismatch. Expected: " << c_str(TranscodeToLocalCodePage(goldNsUri)) << endl;
+		reportError(fileName, docNodeName, "Error: Element NamespaceURI mismatch. Expected: ");
+		cout << c_str(TranscodeToLocalCodePage(goldNsUri));
 		return false;
 	}
+
+	if ( goldNsUri != docNsUri)
+	{
+		reportError(fileName, docNodeName, "Error: Element NamespaceURI mismatch. Expected: ");
+		cout << c_str(TranscodeToLocalCodePage(goldNsUri));
+		return false;
+	}
+
 
 	// Get Attributes for each Element Node. 
 	const XalanNamedNodeMap	*goldAttrs = gold.getAttributes();
@@ -352,7 +384,7 @@ diffElement(const XalanNode& gold, const XalanNode& doc)
 	int numGoldAttr = goldAttrs->getLength();
 	int numDomAttr  = docAttrs ->getLength();
 
-	// Check that each Element has same number of Attributes. 
+	// Check that each Element has same number of Attributes. If they don't report error 
 	if ( numGoldAttr == numDomAttr )
 	{
 		// Compare Attributes one at a time.
@@ -365,19 +397,21 @@ diffElement(const XalanNode& gold, const XalanNode& doc)
 			XalanNode *dAttr = docAttrs->getNamedItem(goldAttrName);
 			if (dAttr != 0)
 			{
-				if( ! (diffATTR(gAttr, dAttr)) )
+				if( ! (diffATTR(gAttr, dAttr, fileName)) )
 					return false;
 			}
 			else
 			{
-				cout << "Error5: Named Attribute missing. Expected: " << c_str(TranscodeToLocalCodePage(goldAttrName)) << endl;
+				reportError(fileName, docNodeName, "Error: Element missing named Attribute. Expected: ");
+				cout << c_str(TranscodeToLocalCodePage(goldAttrName));
 				return false;
 			}
 		}
 	}
 	else
 	{
-		cout << "Error 4: Number of attributes mismatch. Expecting: " << numGoldAttr << endl;
+		reportError( fileName, docNodeName, "Error: Elements don't have same number of attributes. Expected: ");
+		cout << numGoldAttr;;
 		return false;
 	}
 
@@ -391,12 +425,13 @@ diffElement(const XalanNode& gold, const XalanNode& doc)
 	{
 		if (0 != domNextNode)
 		{
-			if ( ! domCompare(*goldNextNode, *domNextNode) )
+			if ( ! domCompare(*goldNextNode, *domNextNode, fileName) )
 				return false;
 		}
 		else
 		{
-			cout << "Error 10: Missing ChildNode. Expecting: " << c_str(TranscodeToLocalCodePage(goldNextNode->getNodeName())) << endl;
+			reportError(fileName, docNodeName, "Error: Element missing ChildNode. Expected: ");
+			cout <<  c_str(TranscodeToLocalCodePage(goldNextNode->getNodeName()));
 			return false;
 		}
 	}
@@ -408,12 +443,13 @@ diffElement(const XalanNode& gold, const XalanNode& doc)
 	{
 		if (0 != domNextNode)
 		{
-			if ( ! domCompare(*goldNextNode, *domNextNode) )
+			if ( ! domCompare(*goldNextNode, *domNextNode, fileName) )
 				return false;
 		}
 		else
 		{
-			cout << "Error 11: Missing SiblingNode. Expecting: " << c_str(TranscodeToLocalCodePage(goldNextNode->getNodeName())) << endl;
+			reportError(fileName, docNodeName, "Error: Element missing SiblingNode. Expected: ");
+			cout << c_str(TranscodeToLocalCodePage(goldNextNode->getNodeName()));
 			return false;
 		}
 	}
@@ -423,7 +459,7 @@ diffElement(const XalanNode& gold, const XalanNode& doc)
 
 
 bool 
-domCompare(const XalanNode& gold ,const XalanNode& doc)
+domCompare(const XalanNode& gold ,const XalanNode& doc, const XalanDOMString fileName)
 {
 	const XalanNode::NodeType	docNodeType  = doc.getNodeType();
 	const XalanNode::NodeType	goldNodeType = gold.getNodeType();
@@ -434,9 +470,22 @@ domCompare(const XalanNode& gold ,const XalanNode& doc)
 	const XalanDOMString&	docNodeValue  = doc.getNodeValue();
 	const XalanDOMString&	goldNodeValue = gold.getNodeValue();
 
+
+	//const XalanDOMString&  docNsUri  = doc.getNamespaceURI();
+	//const XalanDOMString&  goldNsUri = gold.getNamespaceURI();
+
+	//const XalanDOMString&  docPrefix = doc.getPrefix();
+	//const XalanDOMString&  goldPrefix = gold.getPrefix();
+
+	//const XalanDOMString& docLName = doc.getLocalName();
+	//const XalanDOMString& goldLName = gold.getLocalName();
+
+
+
 	if (goldNodeType != docNodeType)
 	{
-		cout << "Error1: NodeType mismatch. Expected: " << goldNodeType << endl;				
+		reportError(fileName, docNodeName, "Error: NodeType mismatch. Expected: ");
+		cout << xalanNodeTypes[goldNodeType];				
 		return false;
 	}
 
@@ -445,7 +494,7 @@ domCompare(const XalanNode& gold ,const XalanNode& doc)
 	case XalanNode::ELEMENT_NODE:	// ATTRIBUTE_NODE's are processed with diffElement().
 	{ 
 
-		if ( ! diffElement(gold, doc) ) 
+		if ( ! diffElement(gold, doc, fileName) ) 
 		{
 			return false;
 		}
@@ -454,11 +503,15 @@ domCompare(const XalanNode& gold ,const XalanNode& doc)
 	}
 	case XalanNode::TEXT_NODE:	
 	{
-		cout << "Processing: " << c_str(TranscodeToLocalCodePage(docNodeValue)) << endl;
 
+#if !defined(NDEBUG) && defined(_MSC_VER)
+		cout << "Node is: " << c_str(TranscodeToLocalCodePage(docNodeValue)) << endl;
+#endif
+		
 		if(goldNodeValue != docNodeValue)
 		{
-			cout << "Error7: Text node mismatch. Expected: " << c_str(TranscodeToLocalCodePage(goldNodeValue)) << endl;
+			reportError(fileName, docNodeName, "Error: Text node mismatch. Expected: ");
+			cout << c_str(TranscodeToLocalCodePage(goldNodeValue));
 			return false;
 		}
 
@@ -474,10 +527,14 @@ domCompare(const XalanNode& gold ,const XalanNode& doc)
 	}
 	case XalanNode::DOCUMENT_NODE:
 	{
-		cout << "Processing: " << c_str(TranscodeToLocalCodePage(docNodeName)) << endl;
+
+#if !defined(NDEBUG) && defined(_MSC_VER)
+		cout << "Node is: " << c_str(TranscodeToLocalCodePage(docNodeName)) << endl;
+#endif
+
 		if (goldNodeName != docNodeName)  
 		{
-			cout << "Error 8: Missing Document Node" << endl;
+			reportError(fileName, docNodeName, "Error: Missing Document Node");
 		}
 		else
 		{
@@ -489,7 +546,7 @@ domCompare(const XalanNode& gold ,const XalanNode& doc)
 
 			if (0 != goldNextNode)
 			{
-				if( ! domCompare(*goldNextNode,*domNextNode) )
+				if( ! domCompare(*goldNextNode,*domNextNode, fileName) )
 					return false;
 			}
 
@@ -653,11 +710,6 @@ main(
 					XSLTResultTarget domResultTarget;
 					domResultTarget.setDocumentHandler(&domOut);
 
-					cout << endl << files[i] << endl;
-
-					//XalanSourceTreeDocument* goldDom=getGoldDom(parserLiaison, goldInputSource);
-					//XalanDocument* goldDom=getGoldDom(parserLiaison, goldInputSource);
-
 					//
 					// Parsing(compile) the XSL stylesheet and report the results..
 					//
@@ -697,8 +749,13 @@ main(
 						theTreeWalker.traverse(dom);
 						delete theFormatter;
 
+						
 						XalanDocument* goldDom = parserLiaison.parseXMLStream(goldInputSource);
-						domCompare(*goldDom, *dom);
+						if (domCompare(*goldDom, *dom, files[i]))
+						{
+							cout << "Passed: " << c_str(TranscodeToLocalCodePage(files[i]));
+						}
+
 					}
 					else
 					{
@@ -706,7 +763,7 @@ main(
 						return 0;
 					}
 
-
+					parserLiaison.reset();
 					xalan.destroyParsedSource(parsedSource);
 					xalan.destroyStylesheet(compiledSS);
 
