@@ -2023,7 +2023,7 @@ XalanFileUtility::analyzeResults(XalanTransformer& xalan, const XalanDOMString& 
         CharVectorType theBuffer(XalanMemMgrs::getDefaultXercesMemMgr());
         TranscodeToLocalCodePage(theHTMLFile, theBuffer, true);
 
-        system(c_str(theBuffer));
+        // system(c_str(theBuffer));
 #else
         cout << "The HTML output: " << theHTMLFile << " was created" << endl;
 #endif
