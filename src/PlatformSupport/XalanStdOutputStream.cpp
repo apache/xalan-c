@@ -64,6 +64,7 @@
 
 
 #if defined(XALAN_OLD_STREAM_HEADERS)
+#include <iostream.h>
 #include <strstream.h>
 #else
 #include <iostream>
