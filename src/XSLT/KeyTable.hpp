@@ -121,11 +121,13 @@ public:
 	/**
 	 * Build a keys table.
 	 *
-	 * @param doc The owner document key (normally the same as startNode).
-	 * @param startNode The node to start itterating from to build the keys index.
-	 * @param nscontext The stylesheet's namespace context.
-	 * @param keyDeclarations The stylesheet's xsl:key declarations.
-	 * @param executionContext The current execution context.
+	 * @param doc              owner document key (normally the same as
+	 *                         startNode)
+	 * @param startNode        node to start iterating from to build the keys
+	 *                         index
+	 * @param nscontext        stylesheet's namespace context
+	 * @param keyDeclarations  stylesheet's xsl:key declarations
+	 * @param executionContext current execution context
 	 */
 	KeyTable(
 			const DOM_Node&						doc,
@@ -175,16 +177,6 @@ private:
 	DOM_Node	m_docKey;
 
 	/**
-	 * Hashtable of keys.
-	 * The table is:
-	 * a) keyed by name,
-	 * b) each with a value of a hashtable, keyed by the value returned by 
-	 *    the use attribute,
-	 * c) each with a value that is a nodelist.
-	 * Thus, for a given key or keyref, look up hashtable by name, 
-	 * look up the nodelist by the given reference.
-	 */
-
 	/**
 	 * Table of element keys.  The table will be built on demand, 
 	 * when a key is requested, or set by the XMLParserLiaison or 
