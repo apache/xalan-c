@@ -56,6 +56,8 @@
  */
 #include "StylesheetHandler.hpp"
 
+#include <algorithm>
+#include <PlatformSupport/STLHelper.hpp>
 
 
 #include <sax/Locator.hpp>
@@ -138,6 +140,12 @@ StylesheetHandler::StylesheetHandler(
 
 StylesheetHandler::~StylesheetHandler()
 {
+	// Clean up the element stack vector
+	std::for_each(m_elemStack.begin(),
+			m_elemStack.end(),
+			DeleteFunctor<ElemTemplateElement>());
+	delete m_pTemplate;
+
 }
 
 
@@ -567,6 +575,7 @@ void StylesheetHandler::startElement (const XMLCh* const name, AttributeList& at
 												 m_stylesheet,
 												 name, atts, lineNumber, columnNumber);
             
+					// Note: deleted in ElemForEach destructor
 					foreach->getSortElems().push_back(sortElem);
 					sortElem->setParentNode(foreach);
 				}
@@ -899,6 +908,8 @@ void StylesheetHandler::startElement (const XMLCh* const name, AttributeList& at
 				parent->appendChild(elem);
 			}
 
+			assert(dynamic_cast<ElemTemplateElement *>(elem));
+
 			m_elemStack.push_back(elem);
 		}
 
@@ -1098,6 +1109,10 @@ void StylesheetHandler::processInclude(const DOMString& name, const AttributeLis
 			
 			m_stylesheet.getIncludeStack().pop_back();
 
+			// We've got a whole new set of pointers in the m_elemStack vector
+			// from the include, need to get rid of them
+			this->~StylesheetHandler();
+			
 			m_elemStack = saved_ElemStack;
 			m_pTemplate = saved_pTemplate;
 			m_pLastPopped = saved_pLastPopped;
@@ -1244,8 +1259,6 @@ void StylesheetHandler::characters (const XMLCh* const chars, const unsigned int
 				elem=0;
 			}
 		}
-
-		delete elem;
 	}
 	// BEGIN SANJIVA CODE
 	else if (m_inLXSLTScript)
@@ -1255,8 +1268,6 @@ void StylesheetHandler::characters (const XMLCh* const chars, const unsigned int
 	}
 	// END SANJIVA CODE
 	// TODO: Flag error if text inside of stylesheet
-
-
 }
 
 
