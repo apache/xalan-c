@@ -844,7 +844,8 @@ doXercesTranscode(
         typedef XalanMemMngArrayAllocate<SourceType> ArrayAllocateSourceType;
 
         theGuard.reset( &( theTargetVector.getMemoryManager()), 
-                        ArrayAllocateSourceType::allocate(theRealSourceStringLength + 1, theTargetVector.getMemoryManager()));
+                        ArrayAllocateSourceType::allocate(theRealSourceStringLength + 1, theTargetVector.getMemoryManager()),
+                        theRealSourceStringLength + 1);
 
 		assert(theGuard.get() != 0);
 
