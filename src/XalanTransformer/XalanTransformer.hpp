@@ -72,17 +72,13 @@
 
 
 
-#include <XSLT/StylesheetExecutionContextDefault.hpp>
 #include <XSLT/XSLTInputSource.hpp>
 #include <XSLT/XSLTResultTarget.hpp>
 
 
 
-#include <XalanTransformer/XalanTransformerOutputStream.hpp>
-
-
-
 class Function;
+class StylesheetExecutionContextDefault;
 class XSLTInit;
 class XalanDocumentBuilder;
 class XalanCompiledStylesheet;
@@ -533,8 +529,6 @@ private:
 
 	friend class EnsureReset;
 
-	StylesheetExecutionContextDefault		m_stylesheetExecutionContext;
-
 	CompiledStylesheetPtrVectorType 		m_compiledStylesheets;
 
 	ParsedSourcePtrVectorType				m_parsedSources;
@@ -544,6 +538,8 @@ private:
 	FunctionParamPairVectorType 			m_functionPairs;
 
 	CharVectorType							m_errorMessage;
+
+	StylesheetExecutionContextDefault*		m_stylesheetExecutionContext;
 
 	static XSLTInit*						s_xsltInit;
 };
