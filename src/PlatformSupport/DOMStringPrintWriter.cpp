@@ -133,7 +133,7 @@ DOMStringPrintWriter::write(
 	}
 	else
 	{
-		vector<XalanDOMChar>	theBuffer(theLength + 1);
+		vector<XalanDOMChar>	theBuffer(theLength + 1, 0);
 
 		// We'll copy the characters into the vector first.
 		copy(s + theOffset,
