@@ -63,7 +63,7 @@
 
 
 
-#include <xercesc/sax/AttributeList.hpp>
+#include <sax/AttributeList.hpp>
 
 
 
