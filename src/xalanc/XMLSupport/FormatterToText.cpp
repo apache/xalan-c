@@ -218,12 +218,16 @@ FormatterToText::characters(
 			}
 			else
 			{
-				// Normalize LF to CR/LF...
-				if (chars[i] == XalanUnicode::charLF &&
-					(i + 1 < length &&
-					 chars[i + 1] == XalanUnicode::charCR))
+				// Normalize LF and CR/LF to the appropriate line ending sequence.
+				if (chars[i] == XalanUnicode::charLF)
 				{
-					m_writer->write(m_newlineString, m_newlineStringLength);
+					m_writer->write(m_newlineString, 0, m_newlineStringLength);
+				}
+				else if (chars[i] == XalanUnicode::charCR &&
+					(i + 1 < length &&
+					 chars[i + 1] == XalanUnicode::charLF))
+				{
+					m_writer->write(m_newlineString, 0, m_newlineStringLength);
 
 					++i;
 				}
@@ -309,10 +313,6 @@ FormatterToText::cdata(
 
 
 
-static const XalanDOMChar	s_newlineChar = XalanUnicode::charLF;
-
-
-
 void
 FormatterToText::update(bool	fNormalizationOnly)
 {
@@ -322,8 +322,8 @@ FormatterToText::update(bool	fNormalizationOnly)
 
 	if (theStream == 0)
 	{
-		m_newlineString = &s_newlineChar;
-		m_newlineStringLength = 1;
+		m_newlineString = XalanOutputStream::defaultNewlineString();
+		m_newlineStringLength = length(m_newlineString);
 
 		if (fNormalizationOnly == false)
 		{
