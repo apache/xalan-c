@@ -230,6 +230,16 @@ XalanTransformer::initialize()
 void
 XalanTransformer::terminate()
 {
+	XalanExtensionsInstaller::uninstallGlobal();
+	XalanEXSLTCommonFunctionsInstaller::uninstallGlobal();
+	XalanEXSLTMathFunctionsInstaller::uninstallGlobal();
+	XalanEXSLTSetFunctionsInstaller::uninstallGlobal();
+	XalanEXSLTStringFunctionsInstaller::uninstallGlobal();
+
+#if defined(XALAN_USE_ICU)
+	XPath::uninstallFunction(XPathFunctionTable::s_formatNumber);
+#endif
+
 	// Terminate Xalan and release memory.
 #if defined(XALAN_CANNOT_DELETE_CONST)
 	delete (XSLTInputSource*) s_emptyInputSource
@@ -242,15 +252,7 @@ XalanTransformer::terminate()
 	s_emptyInputSource = 0;
 	s_xsltInit = 0;
 
-	XalanExtensionsInstaller::uninstallGlobal();
-	XalanEXSLTCommonFunctionsInstaller::uninstallGlobal();
-	XalanEXSLTMathFunctionsInstaller::uninstallGlobal();
-	XalanEXSLTSetFunctionsInstaller::uninstallGlobal();
-	XalanEXSLTStringFunctionsInstaller::uninstallGlobal();
-
 #if defined(XALAN_USE_ICU)
-	XPath::uninstallFunction(XPathFunctionTable::s_formatNumber);
-
 	ICUBridgeCleanup::cleanup();
 #endif
 }
