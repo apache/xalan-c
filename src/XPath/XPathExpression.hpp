@@ -753,8 +753,6 @@ public:
 	typedef OpCodeMapType::value_type		OpCodeMapValueType;
 	typedef OpCodeMapType::size_type		OpCodeMapSizeType;
 
-	typedef set<OpCodeMapValueType, less<OpCodeMapValueType> >	NodeTestSetType;
-
 	typedef vector<OpCodeMapValueType>		OpCodeMapValueVectorType;
 
 	typedef vector<double>					NumberLiteralValueVectorType;
@@ -768,7 +766,6 @@ public:
 	typedef OpCodeMapType::value_type		OpCodeMapValueType;
 	typedef OpCodeMapType::size_type		OpCodeMapSizeType;
 
-	typedef std::set<OpCodeMapValueType>	NodeTestSetType;
 	typedef std::vector<OpCodeMapValueType> OpCodeMapValueVectorType;
 
 	typedef std::vector<double>				NumberLiteralValueVectorType;
@@ -1501,11 +1498,7 @@ private:
 	static OpCodeLengthMapType
 	IntializeOpCodeLengthMap();
 
-	// A static set of Op codes that are node tests.
-	const static NodeTestSetType		s_NodeTestOpCodes;
-
-	static NodeTestSetType
-	InitializeNodeTestSet();
+	const static bool	s_nodeTestOpCodesArray[];
 };
 
 

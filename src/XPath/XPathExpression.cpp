@@ -87,8 +87,23 @@ const XPathExpression::OpCodeLengthMapType	XPathExpression::s_opCodeLengths =
 
 
 
-const XPathExpression::NodeTestSetType		XPathExpression::s_NodeTestOpCodes =
-				XPathExpression::InitializeNodeTestSet();
+const unsigned int	s_nodeTestOpCodesArraySize = 100;
+
+
+const bool	XPathExpression::s_nodeTestOpCodesArray[] =
+{
+	false, false, true,  false, false, false, false, false, false, false,
+	false, false, false, false, false, false, false, false, false, false,
+	false, false, false, false, false, false, false, false, false, false,
+	false, false, false, false, false, false, false, true,  true,  true,
+	true,  true,  true,  true,  true,  true,  true,  true,  true,  true,
+	false, false, false, false, false, false, false, false, false, false,
+	false, false, false, false, false, false, false, false, false, false,
+	false, false, false, false, false, false, false, false, false, false,
+	false, false, false, false, false, false, false, false, false, false,
+	false, false, false, false, true,  true,  true,  false, false, false
+};
+
 
 
 XPathExpression::XPathExpressionException::XPathExpressionException(const XalanDOMString&	theMessage) :
@@ -578,12 +593,9 @@ XPathExpression::updateOpCodeLength(
 bool
 XPathExpression::isNodeTestOpCode(OpCodeMapValueType	theOpCode)
 {
-	const NodeTestSetType::const_iterator	i =
-		s_NodeTestOpCodes.find(theOpCode);
-
-	if (i != s_NodeTestOpCodes.end())
+	if (theOpCode < s_nodeTestOpCodesArraySize)
 	{
-		return true;
+		return s_nodeTestOpCodesArray[theOpCode];
 	}
 	else
 	{
@@ -880,36 +892,4 @@ XPathExpression::IntializeOpCodeLengthMap()
 	theMap[eMATCH_ANY_ANCESTOR_WITH_FUNCTION_CALL] = 2 + s__opCodeMapLengthIndex;
 
 	return theMap;
-}
-
-
-
-XPathExpression::NodeTestSetType
-XPathExpression::InitializeNodeTestSet()
-{
-	NodeTestSetType		theSet;
-
-	theSet.insert(eMATCH_ANY_ANCESTOR);
-	theSet.insert(eMATCH_IMMEDIATE_ANCESTOR);
-	theSet.insert(eMATCH_ATTRIBUTE);
-	theSet.insert(eFROM_ATTRIBUTES);
-	theSet.insert(eFROM_DESCENDANTS_OR_SELF);
-	theSet.insert(eFROM_CHILDREN);
-	theSet.insert(eFROM_ANCESTORS);
-	theSet.insert(eFROM_ANCESTORS_OR_SELF);
-	theSet.insert(eFROM_ATTRIBUTES);
-	theSet.insert(eFROM_CHILDREN);
-	theSet.insert(eFROM_DESCENDANTS);
-	theSet.insert(eFROM_DESCENDANTS_OR_SELF);
-	theSet.insert(eFROM_FOLLOWING);
-	theSet.insert(eFROM_FOLLOWING_SIBLINGS);
-	theSet.insert(eFROM_PARENT);
-	theSet.insert(eFROM_PRECEDING);
-	theSet.insert(eFROM_PRECEDING_SIBLINGS);
-	theSet.insert(eFROM_SELF);
-	theSet.insert(eFROM_NAMESPACE);
-	theSet.insert(eFROM_ROOT);
-	theSet.insert(eOP_OR);
-
-	return theSet;
 }
