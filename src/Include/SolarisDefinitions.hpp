@@ -65,8 +65,6 @@
 //  These defines provide the platform specific keywords that they need
 //  to do this.
 // ---------------------------------------------------------------------------
-
-
 #define XALAN_PLATFORM_EXPORT
 #define XALAN_PLATFORM_IMPORT
 #define XALAN_PLATFORM_EXPORT_FUNCTION(T) T XALAN_PLATFORM_EXPORT
@@ -78,9 +76,13 @@
 // broken with extra cv-qualifiers, so we'll use old-style casts.
 #define XALAN_OLD_STYLE_CASTS
 
+
+
 // Standard allocators don't seem to work correctly with STLport.
 // I don't know if this is their bug, or ours...
 #define XALAN_NO_STD_ALLOCATORS
+
+
 
 #define XALAN_NO_NAMESPACES
 #define XALAN_NO_MUTABLE
@@ -94,11 +96,13 @@
 #define XALAN_BIG_ENDIAN
 #define XALAN_STLPORT_STL
 #define XALAN_NO_DEFAULT_BUILTIN_ARRAY_INITIALIZATION
+#define XALAN_POSIX2_AVAILABLE
 
 
 
 // STL Port Definitions
 #define __STL_NO_SGI_IOSTREAMS
 #include <stl/_config.h>
+
 
 #endif	// SOLARISDEFINITIONS_HEADER_GUARD_1357924680
