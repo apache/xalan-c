@@ -127,6 +127,104 @@ const XalanDOMChar	XalanSourceTreeParserLiaison::validationString[] = {
 
 
 
+// http://xml.org/sax/features/namespaces
+const XalanDOMChar	XalanSourceTreeParserLiaison::namespacesString[] = {
+	XalanUnicode::charLetter_h,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_p,
+	XalanUnicode::charColon,
+	XalanUnicode::charSolidus,
+	XalanUnicode::charSolidus,
+	XalanUnicode::charLetter_x,
+	XalanUnicode::charLetter_m,
+	XalanUnicode::charLetter_l,
+	XalanUnicode::charFullStop,
+	XalanUnicode::charLetter_o,
+	XalanUnicode::charLetter_r,
+	XalanUnicode::charLetter_g,
+	XalanUnicode::charSolidus,
+	XalanUnicode::charLetter_s,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_x,
+	XalanUnicode::charSolidus,
+	XalanUnicode::charLetter_f,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_u,
+	XalanUnicode::charLetter_r,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_s,
+	XalanUnicode::charSolidus,
+	XalanUnicode::charLetter_n,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_m,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_s,
+	XalanUnicode::charLetter_p,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_c,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_s,
+	0
+};
+
+
+
+// http://xml.org/sax/features/namespace-prefixes
+const XalanDOMChar	XalanSourceTreeParserLiaison::namespacePrefixesString[] = {
+	XalanUnicode::charLetter_h,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_p,
+	XalanUnicode::charColon,
+	XalanUnicode::charSolidus,
+	XalanUnicode::charSolidus,
+	XalanUnicode::charLetter_x,
+	XalanUnicode::charLetter_m,
+	XalanUnicode::charLetter_l,
+	XalanUnicode::charFullStop,
+	XalanUnicode::charLetter_o,
+	XalanUnicode::charLetter_r,
+	XalanUnicode::charLetter_g,
+	XalanUnicode::charSolidus,
+	XalanUnicode::charLetter_s,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_x,
+	XalanUnicode::charSolidus,
+	XalanUnicode::charLetter_f,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_u,
+	XalanUnicode::charLetter_r,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_s,
+	XalanUnicode::charSolidus,
+	XalanUnicode::charLetter_n,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_m,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_s,
+	XalanUnicode::charLetter_p,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_c,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charHyphenMinus,
+	XalanUnicode::charLetter_p,
+	XalanUnicode::charLetter_r,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_f,
+	XalanUnicode::charLetter_i,
+	XalanUnicode::charLetter_x,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_s,
+	0
+};
+
+
+
 XalanSourceTreeParserLiaison::XalanSourceTreeParserLiaison(
 			XalanSourceTreeDOMSupport&	/* theSupport */,
 			DocumentNumberType			theStartingNumber) :
@@ -227,6 +325,14 @@ XalanSourceTreeParserLiaison::parseXMLStream(
 	theReader->setFeature(
 		validationString,
 		m_xercesParserLiaison.getUseValidation());
+
+	theReader->setFeature(
+		namespacesString,
+		true);
+
+	theReader->setFeature(
+		namespacePrefixesString,
+		true);
 
 	theReader->setContentHandler(&theContentHandler);
 

@@ -385,6 +385,10 @@ private:
 	bool						m_poolAllText;
 
 	static const XalanDOMChar	validationString[];
+
+	static const XalanDOMChar	namespacesString[];
+
+	static const XalanDOMChar	namespacePrefixesString[];
 };
 
 
