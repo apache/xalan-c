@@ -368,50 +368,6 @@ public:
 			const XObjectArgVectorType&		argVec) = 0;
 
 	/**
-	 * Push an arg vector on the execution context and
-	 * return a reference to it.  Must be followed by
-	 * a pop.
-	 * 
-	 * @return a reference to an arg vector.
-	 */
-	virtual XObjectArgVectorType&
-	pushArgVector() = 0;
-
-	/**
-	 * Pop the arg vector from the execution context.
-	 */
-	virtual void
-	popArgVector() = 0;
-
-	class PushPopArgVector
-	{
-	public:
-
-		PushPopArgVector(XPathExecutionContext&		executionContext) :
-			m_xpathExecutionContext(executionContext),
-			m_argVector(executionContext.pushArgVector())
-		{
-		}
-
-		~PushPopArgVector()
-		{
-			m_xpathExecutionContext.popArgVector();
-		}
-
-		XObjectArgVectorType&
-		getVector()
-		{
-			return m_argVector;
-		}
-
-	private:
-
-		XPathExecutionContext&	m_xpathExecutionContext;
-
-		XObjectArgVectorType&	m_argVector;
-	};
-
-	/**
 	 * Get an XLocator provider keyed by node.  This gets the association
 	 * based on the root of the tree that is the node's parent.
 	 *
