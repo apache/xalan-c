@@ -129,14 +129,14 @@ public:
 	 */
 	virtual void
 	problem(
-			eProblemSource			where,
-			eClassification			classification,
-			const XalanNode*		sourceNode,
-			const XalanNode*		styleNode,
-			const XalanDOMString&	msg,
-			const XalanDOMChar*		uri,
-			int						lineNo,
-			int						charOffset) = 0;
+			eProblemSource				where,
+			eClassification				classification,
+			const XalanNode*			sourceNode,
+			const ElemTemplateElement*	styleNode,
+			const XalanDOMString&		msg,
+			const XalanDOMChar*			uri,
+			int							lineNo,
+			int							charOffset) = 0;
 
 };
 

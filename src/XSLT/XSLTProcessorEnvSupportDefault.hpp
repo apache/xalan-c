@@ -150,6 +150,20 @@ public:
 			const XalanDOMString&	theNamespace,
 			const XalanDOMString&	functionName);
 
+
+	// These interfaces are inherited from XSLTProcessorEnvSupport...
+
+	virtual bool
+	problem(
+			eSource						where,
+			eClassification				classification,
+			const XalanNode*			sourceNode,
+			const ElemTemplateElement*	styleNode,
+			const XalanDOMString&		msg,
+			const XalanDOMChar*			uri,
+			int							lineNo,
+			int							charOffset) const;
+
 	// These interfaces are inherited from XPathEnvSupport...
 
 	virtual XalanDocument*
@@ -186,17 +200,6 @@ public:
 			XalanNode*						context,
 			const XObjectArgVectorType&		argVec,
 			const Locator*					locator) const;
-
-	virtual bool
-	problem(
-			eSource					where,
-			eClassification			classification,
-			const XalanNode*		styleNode,
-			const XalanNode*		sourceNode,
-			const XalanDOMString&	msg,
-			const XalanDOMChar*		uri,
-			int						lineNo,
-			int						charOffset) const;
 
 	virtual bool
 	problem(

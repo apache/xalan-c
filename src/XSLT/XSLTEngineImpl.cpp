@@ -263,7 +263,7 @@ XSLTEngineImpl::process(
 
 	if (0 == stylesheetSource.getSystemId())
 	{
-		xslIdentifier = XalanDOMString(XALAN_STATIC_UCODE_STRING("Input XSL"));
+		xslIdentifier = XALAN_STATIC_UCODE_STRING("Input XSL");
 	}
 	else
 	{
@@ -367,7 +367,7 @@ XSLTEngineImpl::process(
 
 	if(0 == m_stylesheetRoot)
 	{
-		error("Failed to process stylesheet!");
+		error(StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("Failed to process stylesheet!")));
 	}
 	else if(0 != sourceTree)
 	{
@@ -416,7 +416,7 @@ XSLTEngineImpl::process(
 	{
 		if (m_stylesheetRoot == 0)
 		{
-			error("No stylesheet is available to process!");
+			error(StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("No stylesheet is available to process!")));
 		}
 
 		FormatterListener* const	theFormatter =
@@ -1058,17 +1058,6 @@ XSLTEngineImpl::setTraceSelects(bool	b)
 
 void
 XSLTEngineImpl::message(
-			const XalanDOMString&	msg,
-			const XalanNode*		sourceNode,
-			const XalanNode*		styleNode) const
-{
-	problem(msg, ProblemListener::eMESSAGE, sourceNode, styleNode);
-}
-
-
-
-void
-XSLTEngineImpl::message(
 			const XalanDOMString&		msg,
 			const XalanNode*			sourceNode,
 			const ElemTemplateElement*	styleNode) const
@@ -1085,72 +1074,6 @@ XSLTEngineImpl::message(
 			const XalanNode*		sourceNode) const
 {
 	problem(msg, ProblemListener::eMESSAGE, locator, sourceNode);
-}
-
-
-
-void
-XSLTEngineImpl::message(
-			const char*			msg,
-			const XalanNode*	sourceNode,
-			const XalanNode*	styleNode) const
-{
-	message(TranscodeFromLocalCodePage(msg), sourceNode, styleNode);
-}
-
-
-
-void
-XSLTEngineImpl::problem(
-			const XalanDOMString&				msg, 
-			ProblemListener::eClassification	classification,
-			const XalanNode*					sourceNode,
-			const XalanNode*					styleNode) const
-{
-	const Locator* const	locator = getLocatorFromStack();
-
-	const XalanDOMChar*		id = 0;
-
-	XalanDOMString			uri;
-
-	XalanLocator::size_type		lineNumber = -1;
-	XalanLocator::size_type		columnNumber = -1;
-
-	if (locator != 0)
-	{
-		id = locator->getPublicId();
-
-		if (id == 0)
-		{
-			id = locator->getSystemId();
-		}
-
-		if (id != 0)
-		{
-			uri = id;
-		}
-
-		lineNumber = locator->getLineNumber();
-		columnNumber = locator->getColumnNumber();
-	}
-
-	if (m_problemListener != 0)
-	{
-		m_problemListener->problem(
-					ProblemListener::eXSLPROCESSOR,
-					classification,
-					sourceNode,
-					styleNode,
-					msg,
-					id,
-					lineNumber,
-					columnNumber);
-	}
-
-	if (classification == ProblemListener::eERROR)
-	{
-		throw XSLTProcessorException(msg, uri, lineNumber, columnNumber);
-	}
 }
 
 
@@ -1264,17 +1187,6 @@ XSLTEngineImpl::problem(
 
 void
 XSLTEngineImpl::warn(
-			const XalanDOMString&	msg,
-			const XalanNode*		sourceNode,
-			const XalanNode*		styleNode) const
-{
-	problem(msg, ProblemListener::eWARNING, sourceNode, styleNode);
-}
-
-
-
-void
-XSLTEngineImpl::warn(
 			const XalanDOMString&		msg,
 			const XalanNode*			sourceNode,
 			const ElemTemplateElement*	styleNode) const
@@ -1306,33 +1218,11 @@ XSLTEngineImpl::warn(
 
 void
 XSLTEngineImpl::warn(
-			const char*			msg,
-			const XalanNode*	sourceNode,
-			const XalanNode*	styleNode) const
-{
-	warn(TranscodeFromLocalCodePage(msg), sourceNode, styleNode);
-}
-
-
-
-void
-XSLTEngineImpl::warn(
 			const char*					msg,
 			const XalanNode*			sourceNode,
 			const ElemTemplateElement*	styleNode) const
 {
 	warn(TranscodeFromLocalCodePage(msg), sourceNode, styleNode);
-}
-
-
-
-void
-XSLTEngineImpl::error(
-			const XalanDOMString&	msg,
-			const XalanNode*		sourceNode,
-			const XalanNode*		styleNode) const
-{
-	problem(msg, ProblemListener::eERROR, sourceNode, styleNode);
 }
 
 
@@ -1355,17 +1245,6 @@ XSLTEngineImpl::error(
 			const XalanNode*			sourceNode) const
 {
 	problem(msg, ProblemListener::eERROR, locator, sourceNode);
-}
-
-
-
-void
-XSLTEngineImpl::error(
-			const char*			msg,
-			const XalanNode*	sourceNode,
-			const XalanNode*	styleNode) const
-{
-	error(TranscodeFromLocalCodePage(msg), sourceNode, styleNode);
 }
 
 
@@ -2394,10 +2273,6 @@ XSLTEngineImpl::cloneToResultTree(
 			comment(c_wstr(node.getNodeValue()));
 			break;
 
-		case XalanNode::DOCUMENT_FRAGMENT_NODE:
-			error("No clone of a document fragment!");
-			break;
-		
 		case XalanNode::ENTITY_REFERENCE_NODE:
 			entityReference(c_wstr(node.getNodeName()));
 			break;

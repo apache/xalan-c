@@ -420,22 +420,9 @@ public:
 	 */
 	virtual void
 	message(
-			const XalanDOMString&	msg,
-			const XalanNode*		sourceNode = 0,
-			const XalanNode*		styleNode = 0) const = 0;
-
-	/**
-	 * Report a message.
-	 * 
-	 * @param msg		 text of message to output
-	 * @param sourceNode node in source where message occurred
-	 * @param styleNode  node in stylesheet where message occurred
-	 */
-	virtual void
-	message(
 			const XalanDOMString&		msg,
-			const XalanNode*			sourceNode,
-			const ElemTemplateElement*	styleNode) const = 0;
+			const XalanNode*			sourceNode = 0,
+			const ElemTemplateElement*	styleNode = 0) const = 0;
 
 	/**
 	 * Report a message.
@@ -449,19 +436,6 @@ public:
 			const XalanDOMString&	msg,
 			const Locator&			locator,
 			const XalanNode*		sourceNode = 0) const = 0;
-
-	/**
-	 * Report a warning.
-	 * 
-	 * @param msg		 text of message to output
-	 * @param sourceNode node in source where the warning occurred
-	 * @param styleNode  node in stylesheet where the warning occurred
-	 */
-	virtual void
-	warn(
-			const XalanDOMString&	msg,
-			const XalanNode*		sourceNode = 0,
-			const XalanNode*		styleNode = 0) const = 0;
 
 	/**
 	 * Report a warning.
@@ -473,8 +447,8 @@ public:
 	virtual void
 	warn(
 			const XalanDOMString&		msg,
-			const XalanNode*			sourceNode,
-			const ElemTemplateElement*	styleNode) const = 0;
+			const XalanNode*			sourceNode = 0,
+			const ElemTemplateElement*	styleNode = 0) const = 0;
 
 	/**
 	 * Report a warning.
@@ -489,18 +463,6 @@ public:
 			const Locator&			locator,
 			const XalanNode*		sourceNode = 0) const = 0;
 
-	/**
-	 * Report an error and throw an exception.
-	 * 
-	 * @param msg		 text of message to output
-	 * @param sourceNode node in source where error occurred
-	 * @param styleNode  node in stylesheet where error occurred
-	 */
-	virtual void
-	error(
-			const XalanDOMString&	msg,
-			const XalanNode*		sourceNode = 0,
-			const XalanNode*		styleNode = 0) const = 0;
 
 	/**
 	 * Report an error and throw an exception.
@@ -512,8 +474,8 @@ public:
 	virtual void
 	error(
 			const XalanDOMString&		msg,
-			const XalanNode*			sourceNode,
-			const ElemTemplateElement*	styleNode) const = 0;
+			const XalanNode*			sourceNode = 0,
+			const ElemTemplateElement*	styleNode = 0) const = 0;
 
 	/**
 	 * Report an error and throw an exception.

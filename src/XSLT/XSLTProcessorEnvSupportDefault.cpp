@@ -304,21 +304,21 @@ XSLTProcessorEnvSupportDefault::extFunction(
 
 bool
 XSLTProcessorEnvSupportDefault::problem(
-			eSource					/* where */,
-			eClassification			classification,
-			const XalanNode*		styleNode,
-			const XalanNode*		sourceNode,
-			const XalanDOMString&	msg,
-			const XalanDOMChar*		/* uri */,
-			int						/* lineNo */,
-			int						/* charOffset */) const
+			eSource						/* where */,
+			eClassification				classification,
+			const XalanNode*			sourceNode,
+			const ElemTemplateElement*	styleNode,
+			const XalanDOMString&		msg,
+			const XalanDOMChar*			/* uri */,
+			int							/* lineNo */,
+			int							/* charOffset */) const
 {
 	if (classification == XPathEnvSupport::eError)
 	{
 		m_processor->error(
 					msg,
-					styleNode,
-					sourceNode);
+					sourceNode,
+					styleNode);
 
 		return true;
 	}
@@ -326,8 +326,8 @@ XSLTProcessorEnvSupportDefault::problem(
 	{
 		m_processor->warn(
 					msg,
-					styleNode,
-					sourceNode);
+					sourceNode,
+					styleNode);
 
 		return false;
 	}
@@ -335,8 +335,8 @@ XSLTProcessorEnvSupportDefault::problem(
 	{
 		m_processor->message(
 					msg,
-					styleNode,
-					sourceNode);
+					sourceNode,
+					styleNode);
 
 		return false;
 	}
@@ -359,7 +359,6 @@ XSLTProcessorEnvSupportDefault::problem(
 	{
 		m_processor->error(
 					msg,
-					0,
 					sourceNode);
 
 		return true;
@@ -368,7 +367,6 @@ XSLTProcessorEnvSupportDefault::problem(
 	{
 		m_processor->warn(
 					msg,
-					0,
 					sourceNode);
 
 		return false;
@@ -377,7 +375,6 @@ XSLTProcessorEnvSupportDefault::problem(
 	{
 		m_processor->message(
 					msg,
-					0,
 					sourceNode);
 
 		return false;

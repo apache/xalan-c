@@ -88,14 +88,14 @@ public:
 
 	virtual void
 	problem(
-			eProblemSource			where,
-			eClassification			classification, 
-			const XalanNode*		sourceNode,
-			const XalanNode*		styleNode,
-			const XalanDOMString&	msg,
-			const XalanDOMChar*		uri,
-			int						lineNo,
-			int						charOffset);
+			eProblemSource				where,
+			eClassification				classification, 
+			const XalanNode*			sourceNode,
+			const ElemTemplateElement*	styleNode,
+			const XalanDOMString&		msg,
+			const XalanDOMChar*			uri,
+			int							lineNo,
+			int							charOffset);
 
 	// These methods are new...
 
@@ -107,15 +107,15 @@ public:
 
 	static void
 	problem(
-			PrintWriter&			pw,
-			eProblemSource			where,
-			eClassification			classification, 
-			const XalanNode*		sourceNode,
-			const XalanNode*		styleNode,
-			const XalanDOMString&	msg,
-			const XalanDOMChar*		uri,
-			int						lineNo,
-			int						charOffset);
+			PrintWriter&				pw,
+			eProblemSource				where,
+			eClassification				classification,
+			const XalanNode*			sourceNode,
+			const ElemTemplateElement*	styleNode,
+			const XalanDOMString&		msg,
+			const XalanDOMChar*			uri,
+			int							lineNo,
+			int							charOffset);
 
 private:
 

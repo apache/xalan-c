@@ -71,6 +71,7 @@
 
 
 
+class ElemTemplateElement;
 class XSLTProcessor;
 
 
@@ -84,6 +85,39 @@ public:
 	virtual
 	~XSLTProcessorEnvSupport();
 
+
+	// These interfaces are new...
+
+	/**
+	 * Function that is called when a problem event occurs.
+	 * 
+	 * @param where 			either eXMLParser, eXSLTProcessor,
+	 *			 			      eXPATHParser, eXPATHProcessor, or eDataSource.
+	 * @param classification	either eWarning, or eError
+	 * @param resolver       resolver for namespace resolution
+	 * @param sourceNode     source tree node where the problem occurred
+	 *                       (may be 0)
+	 * @param styleNode     stylesheet node where the problem occurred
+	 *                       (may be 0)
+	 * @param msg            string message explaining the problem.
+	 * @param   uri				  the URI of the stylesheet, if available.  May be 0;
+	 * @param lineNo         line number where the problem occurred,  
+	 *                       if it is known, else -1
+	 * @param charOffset     character offset where the problem,  
+	 *                       occurred if it is known, else -1
+	 * @return true if the return is an ERROR, in which case exception will be
+	 *         thrown.  Otherwise the processor will continue to process.
+	 */
+	virtual bool
+	problem(
+			eSource						where,
+			eClassification				classification,
+			const XalanNode*			sourceNode,
+			const ElemTemplateElement*	styleNode,
+			const XalanDOMString&		msg,
+			const XalanDOMChar*			uri,
+			int							lineNo,
+			int							charOffset) const = 0;
 
 	// These interfaces are inherited from XPathEnvSupport...
 
@@ -121,17 +155,6 @@ public:
 			XalanNode*						context,
 			const XObjectArgVectorType&		argVec,
 			const Locator*					locator) const = 0;
-
-	virtual bool
-	problem(
-			eSource					where,
-			eClassification			classification,
-			const XalanNode*		styleNode,
-			const XalanNode*		sourceNode,
-			const XalanDOMString&	msg,
-			const XalanDOMChar*		uri,
-			int						lineNo,
-			int						charOffset) const = 0;
 
 	virtual bool
 	problem(

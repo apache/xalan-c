@@ -161,7 +161,7 @@ TraceListenerDefault::trace(const TracerEvent&	ev)
 				m_printWriter.print(XALAN_STATIC_UCODE_STRING("\" "));
 			}
 
-			const XalanQName&	theName = et.getName();
+			const XalanQName&	theName = et.getNameAttribute();
 
 			if(theName.isEmpty() == false)
 			{

@@ -110,7 +110,6 @@
 
 
 
-#include "KeyDeclaration.hpp"
 #include "OutputContextStack.hpp"
 #include "ProblemListenerDefault.hpp"
 #include "ResultNamespacesStack.hpp"
@@ -812,15 +811,21 @@ public:
 
 	virtual void
 	message(
-			const XalanDOMString&	msg,
-			const XalanNode*		sourceNode = 0,
-			const XalanNode*		styleNode = 0) const;
+			const XalanDOMString&		msg,
+			const XalanNode*			sourceNode = 0,
+			const ElemTemplateElement*	styleNode = 0) const;
 
 	virtual void
 	message(
+			const XalanDOMString&	msg,
+			const Locator&			locator,
+			const XalanNode*		sourceNode = 0) const;
+
+	virtual void
+	warn(
 			const XalanDOMString&		msg,
-			const XalanNode*			sourceNode,
-			const ElemTemplateElement*	styleNode) const;
+			const XalanNode*			sourceNode = 0,
+			const ElemTemplateElement*	styleNode = 0) const;
 
 	/**
 	 * Report a message
@@ -830,58 +835,22 @@ public:
 	 * @param styleNode  node in stylesheet where error occurred
 	 */
 	virtual void
-	message(
-			const char*			msg,
-			const XalanNode*	sourceNode = 0,
-			const XalanNode*	styleNode = 0) const;
-
-	virtual void
-	message(
-			const XalanDOMString&	msg,
-			const Locator&			locator,
-			const XalanNode*		sourceNode = 0) const;
-
-	virtual void
-	warn(
-			const XalanDOMString&	msg,
-			const XalanNode*		sourceNode = 0,
-			const XalanNode*		styleNode = 0) const;
-
-	virtual void
-	warn(
-			const XalanDOMString&		msg,
-			const XalanNode*			sourceNode,
-			const ElemTemplateElement*	styleNode) const;
-
-	virtual void
 	warn(
 			const char*					msg,
-			const XalanNode*			sourceNode,
-			const ElemTemplateElement*	styleNode) const;
-
-	virtual void
-	warn(
-			const char*			msg,
-			const XalanNode*	sourceNode = 0,
-			const XalanNode*	styleNode = 0) const;
+			const XalanNode*			sourceNode = 0,
+			const ElemTemplateElement*	styleNode = 0) const;
 
 	virtual void
 	warn(
 			const XalanDOMString&	msg,
 			const Locator&			locator,
 			const XalanNode*		sourceNode = 0) const;
-
-	virtual void
-	error(
-			const XalanDOMString&	msg,
-			const XalanNode*		sourceNode = 0,
-			const XalanNode*		styleNode = 0) const;
 
 	virtual void
 	error(
 			const XalanDOMString&		msg,
-			const XalanNode*			sourceNode,
-			const ElemTemplateElement*	styleNode) const;
+			const XalanNode*			sourceNode = 0,
+			const ElemTemplateElement*	styleNode = 0) const;
 
 	virtual void
 	error(
@@ -889,18 +858,7 @@ public:
 			const Locator&			locator,
 			const XalanNode*		sourceNode = 0) const;
 
-	/**
-	 * Report an error, and throw an exception.
-	 * 
-	 * @param msg		 text of message to output
-	 * @param sourceNode node in source where error occurred
-	 * @param styleNode  node in stylesheet where error occurred
-	 */
-	virtual void
-	error(
-			const char*			msg,
-			const XalanNode*	sourceNode = 0,
-			const XalanNode*	styleNode = 0) const;
+public:
 
 	/**
 	 * Mark the time, so that displayDuration can later display the elapsed
@@ -1603,14 +1561,6 @@ private:
 	 */
 	TraceListenerVectorType 	m_traceListeners;
 	
-	// Common processing for errors and warnings
-	void
-	problem(
-			const XalanDOMString&				msg, 
-			ProblemListener::eClassification	classification,
-			const XalanNode*					sourceNode,
-			const XalanNode*					styleNode) const;
-
 	void
 	problem(
 			const XalanDOMString&				msg, 
