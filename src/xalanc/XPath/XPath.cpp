@@ -47,6 +47,7 @@
 #include "XalanQNameByReference.hpp"
 #include "XObject.hpp"
 #include "XObjectFactory.hpp"
+#include "XPathConstructionContext.hpp"
 #include "XPathEnvSupport.hpp"
 
 
@@ -4768,6 +4769,17 @@ XPath::predicates(
 
 
 
+XPath::NodeTester::NodeTester(const NodeTester&		theSource) :
+	m_executionContext(theSource.m_executionContext),
+	m_targetNamespace(theSource.m_targetNamespace),
+	m_targetLocalName(theSource.m_targetLocalName),
+	m_testFunction(theSource.m_testFunction),
+    m_testFunction2(theSource.m_testFunction2)
+{
+}
+
+
+
 XPath::NodeTester::NodeTester(
 			const XPath&			xpath,
 			XPathExecutionContext&	executionContext,
@@ -4929,14 +4941,140 @@ XPath::NodeTester::NodeTester() :
 
 
 XPath::NodeTester::NodeTester(
+            XPathConstructionContext&	theConstructionContext,
+            const XalanDOMString&       theNameTest,
+            const PrefixResolver&       thePrefixResolver,
+            const LocatorType*          theLocator,
+            eMatchScore*				theMatchScore) :
+	m_executionContext(0),
+	m_targetNamespace(0),
+	m_targetLocalName(0),
+	m_testFunction(&NodeTester::testDefault),
+    m_testFunction2(&NodeTester::testDefault2)
+{
+	const XalanDOMString::size_type     theLength =
+                length(theNameTest);
+
+    if (theLength == 1 && theNameTest[0] == XPath::PSEUDONAME_ANY[0])
+    {
+		initialize(s_emptyString, s_emptyString, theMatchScore);
+    }
+    else
+    {
+        const XalanDOMString::size_type     theIndex =
+                indexOf(theNameTest, XalanUnicode::charColon);
+
+        // If there's no ':', it's an NCName...
+        if (theIndex == theLength)
+        {
+            if (XalanQName::isValidNCName(theNameTest) == false)
+            {
+		        theConstructionContext.error(
+                    XalanMessageLoader::getMessage(
+                        XalanMessages::IsNotValidQName_1Param,
+                        theNameTest),
+                        0,
+                        theLocator);
+            }
+            else
+            {
+                initialize(
+					s_emptyString,
+					theConstructionContext.getPooledString(theNameTest),
+                    theMatchScore);
+            }
+        }
+        else
+        {
+            XPathConstructionContext::GetAndReleaseCachedString		scratchGuard(theConstructionContext);
+
+	        XalanDOMString&		theScratchString = scratchGuard.get();
+
+            theScratchString.assign(theNameTest, 0, theIndex);
+
+            // Get the namespace URI for the prefix...
+            const XalanDOMString* const     theNamespaceURI =
+                thePrefixResolver.getNamespaceForPrefix(theScratchString);
+
+            if (theNamespaceURI == 0)
+            {
+		        theConstructionContext.error(
+                    XalanMessageLoader::getMessage(
+                        XalanMessages::UndeclaredNamespacePrefix_1Param,
+                        theScratchString),
+                        0,
+                        theLocator);
+            }
+            else
+            {
+                // OK, now we have a namespace URI...
+                if (XalanQName::isValidNCName(theScratchString) == false)
+                {
+		            theConstructionContext.error(
+                        XalanMessageLoader::getMessage(
+                            XalanMessages::IsNotValidQName_1Param,
+                            theNameTest),
+                            0,
+                            theLocator);
+                }
+                else if (theIndex == theLength - 2 &&
+                         theNameTest[theIndex + 1] == XPath::PSEUDONAME_ANY[0])
+                {
+                    // It's of the form "NCName:*"
+					initialize(
+                        theConstructionContext.getPooledString(*theNamespaceURI),
+                        s_emptyString,
+                        theMatchScore);
+                }
+                else
+                {
+                    theScratchString.assign(theNameTest, theIndex + 1, theLength - theIndex - 1);
+
+                    if (XalanQName::isValidNCName(theScratchString) == false)
+                    {
+		                theConstructionContext.error(
+                            XalanMessageLoader::getMessage(
+                                XalanMessages::IsNotValidQName_1Param,
+                                theNameTest),
+                                0,
+                                theLocator);
+                    }
+                    else
+                    {
+                        // It's of the form "NCName:NCName"
+						initialize(
+                            theConstructionContext.getPooledString(*theNamespaceURI),
+                            theConstructionContext.getPooledString(theScratchString),
+                            theMatchScore);
+                    }
+                }
+            }
+        }
+    }
+}
+    
+
+
+XPath::NodeTester::NodeTester(
             const XalanDOMString&   theNamespaceURI,
             const XalanDOMString&   theLocalName,
-            eMatchScore&            theMatchScore) :
+            eMatchScore*            theMatchScore) :
 	m_executionContext(0),
 	m_targetNamespace(0),
 	m_targetLocalName(0),
 	m_testFunction(&NodeTester::testDefault),
     m_testFunction2(0)
+{
+	initialize(theNamespaceURI, theLocalName, theMatchScore);
+}
+
+
+
+void
+XPath::NodeTester::initialize(
+            const XalanDOMString&   theNamespaceURI,
+            const XalanDOMString&   theLocalName,
+            eMatchScore*            theMatchScore)
 {
     if (theNamespaceURI.empty() == false)
     {
@@ -4946,7 +5084,10 @@ XPath::NodeTester::NodeTester(
         {
             m_testFunction2 = &NodeTester::testElementNamespaceOnly2;
 
-            theMatchScore = eMatchScoreNSWild;
+			if (theMatchScore != 0)
+			{
+				*theMatchScore = eMatchScoreNSWild;
+			}
         }
         else
         {
@@ -4954,7 +5095,10 @@ XPath::NodeTester::NodeTester(
 
 			m_targetLocalName = &theLocalName;
 
-            theMatchScore = eMatchScoreQName;
+			if (theMatchScore != 0)
+			{
+				*theMatchScore = eMatchScoreQName;
+			}
         }
     }
     else if (theLocalName.empty() == false)
@@ -4963,13 +5107,19 @@ XPath::NodeTester::NodeTester(
 
         m_targetLocalName = &theLocalName;
 
-        theMatchScore = eMatchScoreQName;
+		if (theMatchScore != 0)
+		{
+			*theMatchScore = eMatchScoreQName;
+		}
     }
     else
     {
         m_testFunction2 = &NodeTester::testElementTotallyWild2;
 
-        theMatchScore = eMatchScoreNodeTest;
+		if (theMatchScore != 0)
+		{
+			*theMatchScore = eMatchScoreNodeTest;
+		}
     }
 }
 
@@ -5271,12 +5421,11 @@ XPath::NodeTester::testElementTotallyWild(
 
 
 XPath::eMatchScore
-XPath::NodeTester::testElementNCName2(const XalanNode&  context) const
+XPath::NodeTester::testElementNCName2(const XalanElement&	context) const
 {
 	assert(
         m_targetNamespace == 0 &&
-        m_targetLocalName != 0 &&
-        XalanNode::ELEMENT_NODE == context.getNodeType());
+        m_targetLocalName != 0);
 
 	if (matchLocalName(context) == false)
 	{
@@ -5291,12 +5440,11 @@ XPath::NodeTester::testElementNCName2(const XalanNode&  context) const
 
 
 XPath::eMatchScore
-XPath::NodeTester::testElementQName2(const XalanNode&   context) const
+XPath::NodeTester::testElementQName2(const XalanElement&	context) const
 {
 	assert(
         m_targetNamespace != 0 &&
-        m_targetLocalName != 0 &&
-        XalanNode::ELEMENT_NODE == context.getNodeType());
+        m_targetLocalName != 0);
 
 	if (matchLocalNameAndNamespaceURI(context) == false)
 	{
@@ -5311,12 +5459,11 @@ XPath::NodeTester::testElementQName2(const XalanNode&   context) const
 
 
 XPath::eMatchScore
-XPath::NodeTester::testElementNamespaceOnly2(const XalanNode&   context) const
+XPath::NodeTester::testElementNamespaceOnly2(const XalanElement&	context) const
 {
 	assert(
         m_targetNamespace != 0 &&
-        m_targetLocalName == 0 &&
-        XalanNode::ELEMENT_NODE == context.getNodeType());
+        m_targetLocalName == 0);
 
 	if (matchNamespaceURI(context) == false)
 	{
@@ -5331,12 +5478,11 @@ XPath::NodeTester::testElementNamespaceOnly2(const XalanNode&   context) const
 
 
 XPath::eMatchScore
-XPath::NodeTester::testElementTotallyWild2(const XalanNode&     context) const
+XPath::NodeTester::testElementTotallyWild2(const XalanElement&	/* context */) const
 {
 	assert(
         m_targetNamespace == 0 &&
-        m_targetLocalName == 0 &&
-        XalanNode::ELEMENT_NODE == context.getNodeType());
+        m_targetLocalName == 0);
 
 	return eMatchScoreNodeTest;
 }
@@ -5395,7 +5541,7 @@ XPath::NodeTester::testDefault(
 
 
 XPath::eMatchScore
-XPath::NodeTester::testDefault2(const XalanNode&    /* context */) const
+XPath::NodeTester::testDefault2(const XalanElement&		/* context */) const
 {
 	return eMatchScoreNone;
 }

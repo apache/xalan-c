@@ -75,6 +75,18 @@ public:
 	virtual bool
 	releaseCachedString(XalanDOMString&		theString);
 
+	virtual void
+	error(
+			const XalanDOMString&	msg,
+			const XalanNode* 		sourceNode,
+			const LocatorType* 		locator) const;
+
+	virtual void
+	warn(
+			const XalanDOMString&	msg,
+			const XalanNode* 		sourceNode,
+			const LocatorType* 		locator) const;
+
 private:
 
 	XalanDOMStringPool		m_stringPool;

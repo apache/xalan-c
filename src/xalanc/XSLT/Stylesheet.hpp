@@ -46,6 +46,7 @@
 #include <xalanc/XSLT/NamespacesHandler.hpp>
 #include <xalanc/XSLT/KeyDeclaration.hpp>
 #include <xalanc/XSLT/StylesheetExecutionContext.hpp>
+#include <xalanc/XSLT/XalanSpaceNodeTester.hpp>
 
 
 
@@ -104,6 +105,7 @@ public:
 	typedef vector<Stylesheet*>						StylesheetVectorType;
 	typedef vector<XalanDOMString>					URLStackType;
 	typedef vector<ElemDecimalFormat*>				ElemDecimalFormatVectorType;
+	typedef vector<XalanSpaceNodeTester>			WhitespaceElementsVectorType;
 #else
 	typedef std::map<XalanDOMString, ExtensionNSHandler*>	ExtensionNamespacesMapType;
 	typedef std::map<XalanQNameByReference,
@@ -115,6 +117,7 @@ public:
 	typedef std::vector<Stylesheet*>						StylesheetVectorType;
 	typedef std::vector<XalanDOMString>						URLStackType;
 	typedef std::vector<ElemDecimalFormat*>					ElemDecimalFormatVectorType;
+	typedef std::vector<XalanSpaceNodeTester>				WhitespaceElementsVectorType;
 #endif
 
 	/**
@@ -260,6 +263,9 @@ public:
 
 		m_namespaces.pop_back(); 
 	}
+
+	void
+	addWhitespaceElement(const XalanSpaceNodeTester&	theTester);
 
 	/**
 	 * Called after construction is completed.
@@ -856,6 +862,8 @@ protected:
 	 * xsl:key element.
 	 */
 	KeyDeclarationVectorType			m_keyDeclarations;
+
+	WhitespaceElementsVectorType		m_whitespaceElements;
 
 	static const XalanQNameByReference	s_emptyQName;
 

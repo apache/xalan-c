@@ -53,7 +53,9 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 class PrefixResolver;
 class XObject;
+class XalanElement;
 class XalanNode;
+class XPathConstructionContext;
 
 
 
@@ -1030,6 +1032,10 @@ public:
 	{
 	public:
 
+		NodeTester();
+
+		NodeTester(const NodeTester&	theSource);
+
 		NodeTester(
 			const XPath&			xpath,
 			XPathExecutionContext&	executionContext,
@@ -1037,12 +1043,17 @@ public:
 			OpCodeMapValueType 	    argLen,
 			OpCodeMapValueType 		stepType);
 
-		NodeTester();
+		NodeTester(
+            XPathConstructionContext&	theContext,
+            const XalanDOMString&       theNameTest,
+            const PrefixResolver&       thePrefixResolver,
+            const LocatorType*          theLocator = 0,
+            eMatchScore*				theMatchScore = 0);
 
 		NodeTester(
             const XalanDOMString&   theNamespaceURI,
             const XalanDOMString&   theLocalName,
-            eMatchScore&            theMatchScore);
+            eMatchScore*            theMatchScore = 0);
 
 		eMatchScore
 		operator()(
@@ -1055,15 +1066,34 @@ public:
 		}
 
 		eMatchScore
-		operator()(const XalanNode&     context) const
+		operator()(const XalanElement&	context) const
 		{
 			return (this->*m_testFunction2)(context);
 		}
 
+		NodeTester&
+		operator=(const NodeTester&		theRHS)
+		{
+			m_executionContext = theRHS.m_executionContext;
+			m_targetNamespace = theRHS.m_targetNamespace;
+			m_targetLocalName = theRHS.m_targetLocalName;
+			m_testFunction = theRHS.m_testFunction;
+			m_testFunction2 = theRHS.m_testFunction2;
+
+			return *this;
+		}
+
 	private:
 
+		void
+		initialize(
+            const XalanDOMString&   theNamespaceURI,
+            const XalanDOMString&   theLocalName,
+            eMatchScore*            theMatchScore = 0);
+
+
 		typedef eMatchScore (NodeTester::*TestFunctionPtr)(const XalanNode&, XalanNode::NodeType) const;
-		typedef eMatchScore (NodeTester::*TestFunctionPtr2)(const XalanNode&) const;
+		typedef eMatchScore (NodeTester::*TestFunctionPtr2)(const XalanElement&) const;
 
 
 		eMatchScore
@@ -1137,16 +1167,16 @@ public:
 			XalanNode::NodeType		nodeType) const;
 
 		eMatchScore
-		testElementNCName2(const XalanNode&     context) const;
+		testElementNCName2(const XalanElement&	context) const;
 
 		eMatchScore
-		testElementQName2(const XalanNode& 		context) const;
+		testElementQName2(const XalanElement&	context) const;
 
 		eMatchScore
-		testElementNamespaceOnly2(const XalanNode&  context) const;
+		testElementNamespaceOnly2(const XalanElement&	context) const;
 
 		eMatchScore
-		testElementTotallyWild2(const XalanNode&    context) const;
+		testElementTotallyWild2(const XalanElement&		context) const;
 
 		eMatchScore
 		testNamespaceNCName(
@@ -1164,7 +1194,7 @@ public:
 			XalanNode::NodeType		nodeType) const;
 
 		eMatchScore
-		testDefault2(const XalanNode&   context) const;
+		testDefault2(const XalanElement&	context) const;
 
 		bool
 		matchLocalName(const XalanNode&		context) const;
@@ -1192,6 +1222,8 @@ public:
 
         TestFunctionPtr2        m_testFunction2;
 	};
+
+	friend class NodeTester;
 
 protected:
 

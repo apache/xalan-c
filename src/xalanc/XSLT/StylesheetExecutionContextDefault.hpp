@@ -1116,6 +1116,8 @@ private:
 	// Determines whether or not to override the property in the stylesheet.
 	eOmitMETATag						m_omitMETATag;
 
+	bool								m_hasStripOrPreserveSpace;
+
 	static XalanNumberFormatFactory		s_defaultXalanNumberFormatFactory;
 
 	static XalanNumberFormatFactory*	s_xalanNumberFormatFactory;

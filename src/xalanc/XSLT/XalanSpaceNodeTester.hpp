@@ -41,13 +41,24 @@ class StylesheetConstructionContext;
 
 
 
-class XalanSpaceNodeTester
+class XalanSpaceNodeTester : public XPath::NodeTester
 {
 public:
 
+	typedef XPath::NodeTester	ParentType;
+
+	enum eType
+	{
+		eStrip,
+		ePreserve
+	};
+
     XalanSpaceNodeTester();
 
+    XalanSpaceNodeTester(const XalanSpaceNodeTester&	theSource);
+
     XalanSpaceNodeTester(
+			eType							theType,
             StylesheetConstructionContext&  theContext,
             const XalanDOMString&           theNameTest,
             const PrefixResolver&           thePrefixResolver,
@@ -61,17 +72,28 @@ public:
         return m_matchScore;
     }
 
-	XPath::eMatchScore
-	operator()(const XalanNode&     context) const
+	eType
+	getType() const
 	{
-	    return m_nodeTester(context);
+		return m_type;
+	}
+
+	XalanSpaceNodeTester&
+	operator=(const XalanSpaceNodeTester&	theRHS)
+	{
+		m_matchScore = theRHS.m_matchScore;
+		m_type = theRHS.m_type;
+
+		ParentType::operator=(theRHS);
+
+		return *this;
 	}
 
 private:
 
-    XPath::NodeTester   m_nodeTester;
-
     XPath::eMatchScore  m_matchScore;
+
+	eType				m_type;
 };
 
 

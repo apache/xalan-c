@@ -1000,29 +1000,17 @@ StylesheetHandler::processPreserveStripSpace(
 
 			while(tokenizer.hasMoreTokens())
 			{
-				// Use only the root, at least for right now.
 				tokenizer.nextToken(theNameTest);
 
-				/**
-				 * Creating a match pattern is too much overhead, but it's a reasonably 
-				 * easy and safe way to do this right now.
-				 */
-				const XPath* const	matchPat =
-						m_constructionContext.createMatchPattern(
-								0,
-								theNameTest,
-								theProxy);
-
-                const XalanSpaceNodeTester  theNodeTest(m_constructionContext, theNameTest, theProxy, locator);
-
-				if(isPreserveSpace == true)
-				{
-					m_stylesheet.getStylesheetRoot().pushWhitespacePreservingElement(matchPat);
-				}
-				else
-				{
-					m_stylesheet.getStylesheetRoot().pushWhitespaceStrippingElement(matchPat);
-				}
+				m_stylesheet.addWhitespaceElement(
+					XalanSpaceNodeTester(
+							isPreserveSpace == true ?
+								XalanSpaceNodeTester::ePreserve :
+								XalanSpaceNodeTester::eStrip,
+							m_constructionContext,
+							theNameTest,
+							theProxy,
+							locator));
 			}
 		}
 		else if(!isAttrOK(aname, atts, i))
@@ -1037,7 +1025,8 @@ StylesheetHandler::processPreserveStripSpace(
 			XalanMessageLoader::getMessage(
 				XalanMessages::ElementRequiresAttribute_2Param,
 				isPreserveSpace == true ? 
-				Constants::ELEMNAME_PRESERVESPACE_WITH_PREFIX_STRING : Constants::ELEMNAME_STRIPSPACE_WITH_PREFIX_STRING,
+				    Constants::ELEMNAME_PRESERVESPACE_WITH_PREFIX_STRING :
+					Constants::ELEMNAME_STRIPSPACE_WITH_PREFIX_STRING,
 				Constants::ATTRNAME_ELEMENTS),
 			locator);
 	}

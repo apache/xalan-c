@@ -18,6 +18,10 @@
 
 
 
+#include "xalanc/PlatformSupport/XSLException.hpp"
+
+
+
 XALAN_CPP_NAMESPACE_BEGIN
 
 
@@ -76,6 +80,33 @@ bool
 XPathConstructionContextDefault::releaseCachedString(XalanDOMString&	theString)
 {
 	return m_stringCache.release(theString);
+}
+
+
+
+void
+XPathConstructionContextDefault::error(
+			const XalanDOMString&	msg,
+			const XalanNode* 		/* sourceNode */,
+			const LocatorType* 		locator) const
+{
+	if (locator != 0)
+	{
+		throw XSLException(*locator, msg);
+	}
+	else
+	{
+		throw XSLException(msg);
+	}
+}
+
+
+void
+XPathConstructionContextDefault::warn(
+			const XalanDOMString&	/* msg */,
+			const XalanNode* 		/* sourceNode */,
+			const LocatorType* 		/* locator */) const
+{
 }
 
 

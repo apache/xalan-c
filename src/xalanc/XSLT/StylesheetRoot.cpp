@@ -103,8 +103,6 @@ StylesheetRoot::StylesheetRoot(
 	m_indentAmount(-1),
 	m_omitMETATag(false),
 	m_elemNumberNextID(0),
-	m_whitespacePreservingElements(),
-	m_whitespaceStrippingElements(),
 	m_attributeSetsMap()
 {
 	// Our base class has already resolved the URI and pushed it on
@@ -802,76 +800,35 @@ StylesheetRoot::getNodeSetByKey(
 
 
 bool
-StylesheetRoot::shouldStripSourceNode(
-			StylesheetExecutionContext&		executionContext,
-			const XalanText&				textNode) const
+StylesheetRoot::shouldStripSourceNode(const XalanText&	textNode) const
 {
-	bool	strip = false;
+	const XalanNode* const	parent = textNode.getParentNode();
+	assert(parent != 0);
 
-	XalanNode* const	parent = textNode.getParentNode();
-	assert(parent != 0 && parent->getNodeType() == XalanNode::ELEMENT_NODE);
-
-	XPath::eMatchScore	highPreserveScore = XPath::eMatchScoreNone;
-	XPath::eMatchScore	highStripScore = XPath::eMatchScoreNone;
-
+	if (textNode.isIgnorableWhitespace() == true &&
+		parent->getNodeType() == XalanNode::ELEMENT_NODE)
 	{
-		const XPathVectorType&	theElements =
-				m_whitespacePreservingElements;
+		const XalanElement* const	theElement =
+#if defined(XALAN_OLD_STYLE_CASTS)
+				(const XalanElement*)parent;
+#else
+				static_cast<const XalanElement*>(parent);
+#endif
 
-		const XPathVectorType::size_type	nTests =
-				theElements.size();
+		typedef WhitespaceElementsVectorType::const_iterator	const_iterator;
 
-		for(XPathVectorType::size_type i = 0; i < nTests; i++)
+		for (const_iterator i = m_whitespaceElements.begin();
+				i != m_whitespaceElements.end();
+					++i)
 		{
-			const XPath* const	matchPat = theElements[i];
-			assert(matchPat != 0);
-
-			const XPath::eMatchScore	score = matchPat->getMatchScore(parent, executionContext);
-
-			if(score > highPreserveScore)
-				highPreserveScore = score;
+			if ((*i)(*theElement) != XPath::eMatchScoreNone)
+			{
+				return (*i).getType() == XalanSpaceNodeTester::eStrip;
+			}
 		}
 	}
 
-	{
-		const XPathVectorType&	theElements =
-				m_whitespaceStrippingElements;
-
-		const XPathVectorType::size_type	nTests =
-			theElements.size();
-
-		for(XPathVectorType::size_type i = 0; i < nTests; i++)
-		{
-			const XPath* const	matchPat =
-									theElements[i];
-			assert(matchPat != 0);
-
-			const XPath::eMatchScore	score = matchPat->getMatchScore(parent, executionContext);
-
-			if(score > highStripScore)
-				highStripScore = score;
-		}
-	}
-			
-	if(highPreserveScore > XPath::eMatchScoreNone ||
-	   highStripScore > XPath::eMatchScoreNone)
-	{
-		if(highPreserveScore > highStripScore)
-		{
-			strip = false;
-		}
-		else if(highStripScore > highPreserveScore)
-		{
-			strip = true;
-		}
-		else
-		{
-			executionContext.warn(
-					XalanMessageLoader::getMessage(XalanMessages::MatchConflictBetween_strip_space_preserve_space)); 
-		}
-	}
-
-	return strip;
+	return false;
 }
 
 

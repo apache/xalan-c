@@ -57,14 +57,12 @@ public:
 
 #if defined(XALAN_NO_STD_NAMESPACE)
 	typedef vector<const XalanQName*> 		XalanQNameVectorType;
-	typedef vector<const XPath*>			XPathVectorType;
 	typedef vector<ElemAttributeSet*> 		AttributeSetVectorType;
 	typedef map<const XalanQName*,
 			    AttributeSetVectorType,
 				pointer_less<const XalanQName> >	AttributeSetMapType;
 #else
 	typedef std::vector<const XalanQName*>	XalanQNameVectorType;
-	typedef std::vector<const XPath*>		XPathVectorType;
 	typedef std::vector<ElemAttributeSet*> 	AttributeSetVectorType;
 	typedef std::map<const XalanQName*,
 					 AttributeSetVectorType,
@@ -380,26 +378,11 @@ public:
 	bool
 	hasPreserveOrStripSpaceElements() const
 	{
-		return m_whitespacePreservingElements.empty() == false ||
-			   m_whitespaceStrippingElements.empty() == false;
-	}
-
-	void
-	pushWhitespacePreservingElement(const XPath*	theXPath)
-	{
-		m_whitespacePreservingElements.push_back(theXPath);
-	}
-
-	void
-	pushWhitespaceStrippingElement(const XPath*		theXPath)
-	{
-		m_whitespaceStrippingElements.push_back(theXPath);
+		return m_whitespaceElements.empty() == false;
 	}
 
 	bool
-	shouldStripSourceNode(
-			StylesheetExecutionContext&		executionContext,
-			const XalanText&				textNode) const;
+	shouldStripSourceNode(const XalanText&	textNode) const;
 
 	void
 	addAttributeSet(ElemAttributeSet&	theAttributeSet);
@@ -549,16 +532,6 @@ private:
 	 * This is set to true if we should omit the META tag in HTML output (the default is false)
 	 */
 	unsigned long				m_elemNumberNextID;
-
-	/**
-	 * A lookup table of all space preserving elements.
-	 */
-	XPathVectorType 			m_whitespacePreservingElements;
-  
-	/**
-	 * A lookup table of all space stripping elements.
-	 */
-	XPathVectorType 			m_whitespaceStrippingElements;
 
 	/**
 	 * A lookup table of all attribute sets.

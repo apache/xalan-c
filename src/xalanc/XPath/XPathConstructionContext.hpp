@@ -27,7 +27,19 @@
 
 
 
+XALAN_DECLARE_XERCES_CLASS(Locator)
+
+
+
 XALAN_CPP_NAMESPACE_BEGIN
+
+
+
+typedef XERCES_CPP_NAMESPACE_QUALIFIER Locator	LocatorType;
+
+
+
+class XalanNode;
 
 
 
@@ -153,6 +165,17 @@ public:
 		XalanDOMString*				m_string;
 	};
 
+	virtual void
+	error(
+			const XalanDOMString&	msg,
+			const XalanNode* 		sourceNode,
+			const LocatorType* 		locator) const = 0;
+
+	virtual void
+	warn(
+			const XalanDOMString&	msg,
+			const XalanNode* 		sourceNode,
+			const LocatorType* 		locator) const = 0;
 };
 
 

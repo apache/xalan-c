@@ -84,6 +84,7 @@ Stylesheet::Stylesheet(
 	m_stylesheetRoot(root),
 	m_baseIdent(baseIdentifier),
 	m_keyDeclarations(),
+	m_whitespaceElements(),
 	m_XSLTNamespaceURI(constructionContext.getXSLTNamespaceURI()),
 	m_imports(),
 	m_importsSize(0),
@@ -441,13 +442,40 @@ addToTable(
 
 
 void
+Stylesheet::addWhitespaceElement(const XalanSpaceNodeTester&	theTester)
+{
+	typedef WhitespaceElementsVectorType::iterator	iterator;
+
+	const XPath::eMatchScore	theMatchScore = theTester.getMatchScore();
+
+	iterator	i = m_whitespaceElements.begin();
+
+	while(i != m_whitespaceElements.end())
+	{
+		if (theMatchScore >= (*i).getMatchScore())
+		{
+			break;
+		}
+		else
+		{
+			++i;
+		}
+	}
+
+	m_whitespaceElements.insert(i, theTester);
+}
+
+
+
+void
 Stylesheet::postConstruction(StylesheetConstructionContext&		constructionContext)
 {
 	{
 		m_importsSize = m_imports.size();
 
-		// Call postConstruction() on any imported stylesheets, the get any aliases
-		// in reverse order, to preserve import precedence. Also, get any key declarations.
+		// Call postConstruction() on any imported stylesheets, the get things
+		// in reverse order, to preserve import precedence. Also, get any key
+		// declarations and preserve/strip space information.
 		const StylesheetVectorType::reverse_iterator	theEnd = m_imports.rend();
 		StylesheetVectorType::reverse_iterator	i = m_imports.rbegin();
 
@@ -457,12 +485,19 @@ Stylesheet::postConstruction(StylesheetConstructionContext&		constructionContext
 
 			m_namespacesHandler.copyNamespaceAliases((*i)->getNamespacesHandler());
 
-			// $$ ToDo: Should we clear the imported stylesheet's key
-			// declarations after we copy them?
 			m_keyDeclarations.insert(
 				m_keyDeclarations.end(),
 				(*i)->m_keyDeclarations.begin(),
 				(*i)->m_keyDeclarations.end());
+
+			KeyDeclarationVectorType().swap((*i)->m_keyDeclarations);
+
+			m_whitespaceElements.insert(
+				m_whitespaceElements.end(),
+				(*i)->m_whitespaceElements.begin(),
+				(*i)->m_whitespaceElements.end());
+
+			WhitespaceElementsVectorType().swap((*i)->m_whitespaceElements);
 
 			++i;
 		}

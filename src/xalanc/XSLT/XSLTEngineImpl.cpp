@@ -156,7 +156,6 @@ XSLTEngineImpl::XSLTEngineImpl(
 	m_dummyAttributesList(),
 	m_scratchString(),
 	m_attributeNamesVisited(),
-	m_hasStripOrPreserveSpace(false),
 	m_hasCDATASectionElements(false),
 	m_xpathConstructionContext()
 {
@@ -188,7 +187,6 @@ XSLTEngineImpl::reset()
 
 	m_attributeNamesVisited.clear();
 
-	m_hasStripOrPreserveSpace = false;
 	m_hasCDATASectionElements = false;
 
 	m_xpathConstructionContext.reset();
@@ -342,8 +340,6 @@ XSLTEngineImpl::process(
 			theFormatter->setPrefixResolver(this);
 		}
 
-		m_hasStripOrPreserveSpace = m_stylesheetRoot->hasPreserveOrStripSpaceElements();
-
 		m_hasCDATASectionElements = m_stylesheetRoot->hasCDATASectionElements();
 
 		m_stylesheetRoot->process(sourceTree, outputTarget, executionContext);
@@ -386,8 +382,6 @@ XSLTEngineImpl::process(
 		{
 			theFormatter->setPrefixResolver(this);
 		}
-
-		m_hasStripOrPreserveSpace = m_stylesheetRoot->hasPreserveOrStripSpaceElements();
 
 		m_hasCDATASectionElements = m_stylesheetRoot->hasCDATASectionElements();
 
@@ -2040,7 +2034,7 @@ XSLTEngineImpl::cloneToResultTree(
 		   node.getParentNode()->getNodeType() != XalanNode::DOCUMENT_NODE);
 
     if (overrideStrip == true ||
-        shouldStripSourceNode(*m_executionContext, node) == false)
+        m_executionContext->shouldStripSourceNode(node) == false)
     {
 	    const XalanDOMString&	data = node.getData();
         assert(0 != length(data));
@@ -2938,35 +2932,6 @@ XSLTEngineImpl::copyAttributesToAttList(
 				attr->getNodeName(),
 				attr->getNodeValue(),
 				attList);
-		}
-	}
-}
-
-
-
-bool
-XSLTEngineImpl::shouldStripSourceNode(
-			StylesheetExecutionContext&		executionContext,
-			const XalanText&				textNode) const
-{
-	if (m_hasStripOrPreserveSpace == false || m_stylesheetRoot == 0)
-	{
-		return false;
-	}
-	else
-	{
-		assert(m_stylesheetRoot->hasPreserveOrStripSpaceElements() == true);
-        assert(length(textNode.getData()) != 0);
-
-        if(textNode.isIgnorableWhitespace() == false)
-        {
-            return false;
-        }
-        else
-		{
-			return m_stylesheetRoot->shouldStripSourceNode(
-							executionContext,
-							textNode);
 		}
 	}
 }
