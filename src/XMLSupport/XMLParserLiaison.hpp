@@ -68,16 +68,24 @@
 
 
 
+XALAN_DECLARE_XERCES_CLASS(DocumentHandler);
+XALAN_DECLARE_XERCES_CLASS(EntityResolver);
+XALAN_DECLARE_XERCES_CLASS(ErrorHandler);
+XALAN_DECLARE_XERCES_CLASS(InputSource);
+
+
+
 XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-class DocumentHandler;
-class EntityResolver;
-class ErrorHandler;
+typedef XERCES_CPP_NAMESPACE_QUALIFIER DocumentHandler	DocumentHandlerType;
+typedef XERCES_CPP_NAMESPACE_QUALIFIER EntityResolver	EntityResolverType;
+typedef XERCES_CPP_NAMESPACE_QUALIFIER ErrorHandler		ErrorHandlerType;
+typedef XERCES_CPP_NAMESPACE_QUALIFIER InputSource		InputSourceType;
+
 class ExecutionContext;
 class FormatterListener;
-class InputSource;
 class XalanAttr;
 class XalanDocument;
 class XalanElement;
@@ -124,7 +132,7 @@ public:
 	 */
 	virtual XalanDocument*
 	parseXMLStream(
-			const InputSource&		inputSource,
+			const InputSourceType&	inputSource,
 			const XalanDOMString&	identifier = XalanDOMString()) = 0;
 
 	/**
@@ -140,8 +148,8 @@ public:
 	 */
 	virtual void
 	parseXMLStream(
-			const InputSource&		inputSource,
-			DocumentHandler&		handler,
+			const InputSourceType&	inputSource,
+			DocumentHandlerType&	handler,
 			const XalanDOMString&	identifier = XalanDOMString()) = 0;
 
 	/**
@@ -229,7 +237,7 @@ public:
 	  *
 	  * @return The pointer to the installed entity resolver object.
 	  */
-	virtual EntityResolver*
+	virtual EntityResolverType*
 	getEntityResolver() const = 0;
 
 	/**
@@ -242,14 +250,14 @@ public:
 	  * 			   entities in the XML file.
 	  */
 	virtual void
-	setEntityResolver(EntityResolver*	resolver) = 0;
+	setEntityResolver(EntityResolverType*	resolver) = 0;
 
 	/**
 	  * This method returns the installed error handler.
 	  *
 	  * @return The pointer to the installed error handler object.
 	  */
-	virtual ErrorHandler*
+	virtual ErrorHandlerType*
 	getErrorHandler() const = 0;
 
 	/**
@@ -258,7 +266,7 @@ public:
 	  * @param handler A pointer to the error handler to be called upon error.
 	  */
 	virtual void
-	setErrorHandler(ErrorHandler*	handler) = 0;
+	setErrorHandler(ErrorHandlerType*	handler) = 0;
 
 private:
 
