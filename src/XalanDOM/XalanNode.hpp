@@ -108,10 +108,7 @@ public:
 		NOTATION_NODE				= 12
 	};
 
-	// On most platforms, this is a 32-bit value, so that
-	// seems adequate.  It could be increased on 64-bit
-	// platforms, if need be.
-	typedef unsigned int	IndexType;
+	typedef unsigned long	IndexType;
 
 	virtual const XalanDOMString&
 	getNodeName() const = 0;
