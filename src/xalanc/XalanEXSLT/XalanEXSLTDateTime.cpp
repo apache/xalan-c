@@ -75,11 +75,9 @@
 XALAN_CPP_NAMESPACE_BEGIN
 
 
-#define MAX_DATE_TIME_LEN  100
-
-
 
 static const XalanEXSLTFunctionDateTime			s_dateTimeFunction;
+
 
 
 static const XalanDOMChar	s_dateTimeFunctionName[] =
@@ -156,16 +154,28 @@ XalanEXSLTFunctionDateTime::execute(
 
 	XalanDOMString&		theResult = theGuard.get();
 
+#if defined(XALAN_STRICT_ANSI_HEADERS)
+	using std::localtime;
+	using std::tm;
+	using std::time_t;
+	using std::time;
+	using std::size_t;
+	using std::strftime;
+	using std::gmtime;
+#endif
+
 	time_t long_time;
 
 	time( &long_time );
-	
+
 	const struct tm*	strctTime = localtime(&long_time);
 
 	assert (strctTime != 0 );
 
 	//save hours - the struct going to be overrided
 	const int	iHours = strctTime->tm_hour;
+
+	const size_t	MAX_DATE_TIME_LEN = 1000;
 
 	char stringTime[MAX_DATE_TIME_LEN + 1];
 	
