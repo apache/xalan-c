@@ -436,6 +436,15 @@ public:
 		m_zeroDigit = theZeroDigit;
 	}
 
+	bool
+	operator==(const XalanDecimalFormatSymbols&		theRHS) const;
+
+	bool
+	operator!=(const XalanDecimalFormatSymbols&		theRHS) const
+	{
+		return !operator==(theRHS);
+	}
+
 private:
 
 	XalanDOMString	m_currencySymbol;

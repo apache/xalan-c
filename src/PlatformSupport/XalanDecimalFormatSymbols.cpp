@@ -159,3 +159,24 @@ XalanDecimalFormatSymbols::operator=(const XalanDecimalFormatSymbols&		theRHS)
 
 	return *this;
 }
+
+
+
+bool
+XalanDecimalFormatSymbols::operator==(const XalanDecimalFormatSymbols&	theRHS) const
+{
+	return 
+		m_currencySymbol == theRHS.m_currencySymbol &&
+		m_decimalSeparator == theRHS.m_decimalSeparator &&
+		m_digit == theRHS.m_digit &&
+		m_groupingSeparator == theRHS.m_groupingSeparator &&
+		m_infinity == theRHS.m_infinity &&
+		m_internationalCurrencySymbol == theRHS.m_internationalCurrencySymbol &&
+		m_minusSign == theRHS.m_minusSign &&
+		m_monetaryDecimalSeparator == theRHS.m_monetaryDecimalSeparator &&
+		m_NaN == theRHS.m_NaN &&
+		m_patternSeparator == theRHS.m_patternSeparator &&
+		m_percent == theRHS.m_percent &&
+		m_perMill == theRHS.m_perMill &&
+		m_zeroDigit == theRHS.m_zeroDigit;
+}
