@@ -58,6 +58,9 @@
 # 
 #
 # $Log$
+# Revision 1.11  2002/08/05 20:41:24  dbertoni
+# Merge in HP changes.
+#
 # Revision 1.10  2002/08/05 20:33:54  dbertoni
 # Changes to implement 32 and 64-bit builds.
 #
@@ -145,7 +148,12 @@ if test $1 = "-h"; then
 fi
 
 # Get the command line parameters
-set -- `getopt p:c:x:dm:n:t:r:l:z:h:b $*`
+if test -x /usr/bin/getopt; then
+set -- `getopt p:c:x:dm:n:t:r:b:l:z:h $*`
+else
+set -- `getopts p:c:x:dm:n:t:r:b:l:z:h $*`
+fi
+
 if [ $? != 0 ]
    then
    usage
@@ -156,9 +164,9 @@ fi
 debug=off                # by default debug is off
 bitsToBuild=32           # by default 32 bit build assumed
 
-for i in $*
+while [ $# -gt 0 ]
    do
-   case $i in
+   case $1 in
    -p) 
         platform=$2; shift 2;;
 
