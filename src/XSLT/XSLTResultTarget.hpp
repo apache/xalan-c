@@ -65,7 +65,7 @@
 #include "XSLTDefinitions.hpp"
 
 
-#define XALAN_NO_IOSFWD
+
 #if defined(XALAN_NO_IOSFWD)
 #include <ostream>
 #else

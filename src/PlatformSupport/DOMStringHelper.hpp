@@ -63,7 +63,6 @@
 #include <PlatformSupport/PlatformSupportDefinitions.hpp>
 
 
-#define XALAN_NO_IOSFWD
 
 #include <cassert>
 #include <functional>
