@@ -50,7 +50,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 #pragma warning(disable: 4100)
 #endif
 
-template <class Type>
+template <class Type, class ConstructionTraits = MemoryManagedConstructionTraits<Type> >
 class XalanVector
 {
 public:
@@ -106,7 +106,7 @@ public:
 
     typedef XalanVector<value_type>     ThisType;
 
-    typedef typename MemoryManagedConstructionTraits<value_type>::Constructor Constructor;
+    typedef typename ConstructionTraits::Constructor Constructor;
 
     XalanVector(
             MemoryManagerType*  theManager = 0,

@@ -32,11 +32,33 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 typedef XERCES_CPP_NAMESPACE_QUALIFIER MemoryManager		MemoryManagerType;
 
+template <class C>
+struct ConstructValueWithNoMemoryManager 
+{   
+    ConstructValueWithNoMemoryManager(MemoryManagerType& /*mgr*/) :
+        value()
+    {
+    }
 
+    const C value;
+};
+
+template <class C>
+struct ConstructValueWithMemoryManager
+{   
+    ConstructValueWithMemoryManager(MemoryManagerType& mgr) :
+        value(mgr)
+    {
+    }
+
+    const C value;
+};
 
 template <class C>
 struct ConstructWithNoMemoryManager
 {
+    typedef ConstructValueWithNoMemoryManager<C>   ConstructableType;
+
     static C* construct(C* address, MemoryManagerType& /* mgr */)
     {
         return (C*) new (address) C;
@@ -51,6 +73,8 @@ struct ConstructWithNoMemoryManager
 template <class C>
 struct ConstructWithMemoryManager
 {
+    typedef ConstructValueWithNoMemoryManager<C>    ConstructableType;
+
     static C* construct(C* address, MemoryManagerType& mgr)
     {
         return (C*) new (address) C(mgr);
@@ -66,6 +90,7 @@ template <class C>
 struct MemoryManagedConstructionTraits
 {
     typedef ConstructWithNoMemoryManager<C> Constructor;
+
 };
 
 #define  XALAN_USES_MEMORY_MANAGER(Type)  \
@@ -76,6 +101,19 @@ struct MemoryManagedConstructionTraits<Type> \
     { \
         typedef ConstructWithMemoryManager<Type> Constructor; \
     };
+
+template <class C>
+struct ConstructWithMemoryManagerTraits 
+{
+    typedef ConstructWithMemoryManager<C>       Constructor;
+};
+
+template <class C>
+struct ConstructWithNoMemoryManagerTraits
+{
+    typedef ConstructWithNoMemoryManager<C> Constructor;
+};
+
 
 
 

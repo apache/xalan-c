@@ -156,7 +156,7 @@ struct  XalanDequeIterator
 /**
  * Xalan implementation of deque
  */
-template <class Type>
+template <class Type, class ConstructionTraits = MemoryManagedConstructionTraits<Type> >
 class XalanDeque
 {
 public:
@@ -169,7 +169,7 @@ public:
     typedef Type&           reference;
     typedef const Type&     const_reference;
 
-    typedef XalanVector<Type>	    BlockType;
+    typedef XalanVector<Type, ConstructionTraits>	    BlockType;
 
     typedef XalanVector<BlockType*> BlockIndexType;
 
@@ -335,11 +335,12 @@ public:
 
     void resize(size_type newSize)
     {
+        typename ConstructionTraits::Constructor::ConstructableType defaultValue(*m_memoryManager);
         if (newSize > size())
         {
             for (size_type i = 0; i < newSize - size(); ++i)
             {
-                push_back(value_type());
+                push_back(defaultValue.value);
             }
         }
         else
