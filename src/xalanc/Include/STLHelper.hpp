@@ -287,6 +287,11 @@ struct less_null_terminated_arrays : public std::binary_function<const T*, const
 template<class T>
 struct equal_null_terminated_arrays : public XALAN_STD_QUALIFIER binary_function<const T*, const T*, bool>
 {
+	typedef XALAN_STD_QUALIFIER binary_function<const T*, const T*, bool>		BaseClassType;
+
+	typedef typename BaseClassType::result_type				result_type;
+	typedef typename BaseClassType::first_argument_type		first_argument_type;
+	typedef typename BaseClassType::second_argument_type	second_argument_type;
 	/**
 	 * Compare the values of two objects.
 	 *
@@ -327,6 +332,11 @@ struct equal_null_terminated_arrays : public XALAN_STD_QUALIFIER binary_function
 template <class T>
 struct hash_null_terminated_arrays : public XALAN_STD_QUALIFIER unary_function<const T*, size_t>
 {
+	typedef XALAN_STD_QUALIFIER unary_function<const T*, size_t>		BaseClassType;
+
+	typedef typename BaseClassType::result_type				result_type;
+	typedef typename BaseClassType::argument_type		argument_type;
+
 	result_type
 	operator() (argument_type	theKey) const
 	{

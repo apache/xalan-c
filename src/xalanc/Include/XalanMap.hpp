@@ -63,17 +63,6 @@ public:
 };
 
 template <class Key>
-class XalanHashPointer
-{
-public:
-	size_type operator() (const Key *key) const
-	{
-		assert(key != 0);
-		return Hash<Key>()(*key);
-	}
-};
-
-template <class Key>
 struct XalanHashMemberPointer
 {
 
@@ -133,16 +122,16 @@ public:
 
 	typedef XalanVector<typename EntryListType::iterator>	EntryPosVectorType;
 
-	template<class Value, class Ref, class Ptr, class Iterator, class Map>
+	template<class ValueType, class Ref, class Ptr, class Iterator, class Map>
 	struct iterator_base
 	{	
-		typedef Value	value_type;
+		typedef ValueType	value_type;
 		typedef Ref		reference_type;
 		typedef Ptr		pointer_type;
 
 		typedef ThisType MapType;
 
-		typedef iterator_base<value_type, reference_type, pointer_type, Iterator, Map> ThisType;
+		typedef iterator_base<value_type, reference_type, pointer_type, Iterator, Map> IteratorType;
 
 		typedef iterator_base<value_type, value_type&, value_type*, EntryListIterator, MapType> iterator;
 
@@ -160,7 +149,7 @@ public:
 		{
 		} 
 		
-		const ThisType & operator=(const ThisType& theRhs)
+		const IteratorType & operator=(const IteratorType& theRhs)
 		{
 			m_map = theRhs.m_map;
 			m_bucketPos = theRhs.m_bucketPos;
@@ -172,25 +161,25 @@ public:
 			return *m_bucketPos;
 		}
 
-		int operator!=(const ThisType& theRhs) const 
+		int operator!=(const IteratorType& theRhs) const 
 		{
 			return !operator==(theRhs);
 		}
 
-		int operator==(const ThisType& theRhs) const 
+		int operator==(const IteratorType& theRhs) const 
 		{
 			return (theRhs.m_map == m_map)
 				&& (theRhs.m_bucketPos == m_bucketPos);
 		}
 
-		ThisType& operator++()
+		IteratorType& operator++()
 		{
 			m_bucketPos++;	
 			return *this;
 		}
 
-		typename Map*		m_map;
-		typename Iterator	m_bucketPos;
+		Map*		m_map;
+		Iterator	m_bucketPos;
 	};
 
 	typedef iterator_base<
@@ -424,7 +413,7 @@ public:
 	void doRemoveEntry(const EntryListIterator & toRemoveIter)
 	{
 		size_type index = toRemoveIter->bucketIndex;
-		EntryListType::iterator nextPosition = ++(EntryListType::iterator(toRemoveIter));
+		EntryListIterator nextPosition = ++(EntryListIterator(toRemoveIter));
 
 		if (m_buckets[index] == toRemoveIter)
 		{
