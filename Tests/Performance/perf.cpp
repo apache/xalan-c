@@ -54,8 +54,7 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-#include <cassert>
-#include <fstream>
+
 #include <iostream>
 #include <strstream>
 
@@ -63,11 +62,6 @@
 #include <crtdbg.h>
 #endif
 
-//These came from the debug test.
-#include <cstdio>
-#include <ctime>
-#include <string>
-#include <string.h>
 #include <vector>
 
 #include <util/PlatformUtils.hpp>
@@ -94,13 +88,6 @@
 #include <XMLFileReporter.hpp>
 #include <FileUtility.hpp>
 
-
-//This is here for the threads.
-#define WIN32_LEAN_AND_MEAN
-#include <windows.h>
-#include <winbase.h>
-#define THREADFUNCTIONRETURN DWORD WINAPI
-
 #if !defined(XALAN_NO_NAMESPACES)
 	using std::cerr;
 	using std::cout;
@@ -121,6 +108,7 @@
 
 const char* const 	excludeStylesheets[] =
 {
+	"basic-all_well.xml",
 	"large-evans_large.xml",
 	0
 };
@@ -130,8 +118,11 @@ checkForExclusion(XalanDOMString currentFile)
 {
 
 		for (int i=0; excludeStylesheets[i] != 0; i++)
-			{	if (equals(currentFile, XalanDOMString(excludeStylesheets[i])))
-				return true;
+			{	
+				if (equals(currentFile, XalanDOMString(excludeStylesheets[i])))
+					{
+						return true;
+					}
 			}
 		return false;
 }
@@ -236,7 +227,7 @@ eTOeTransform(const XSLTInputSource&		inputSource,
 	return endTime - startTime;
 }
 
-void
+bool
 getParams(int argc, 
 		  const char*	argv[], 
 		  long& iterCount, 
@@ -245,22 +236,24 @@ getParams(int argc,
 	if (argc >= 4 )
 	{
 		cout << "Usage perf {count, -s(kip)} " << endl;
-		exit(1);
+		return false;
 	}
+
 	if (argc >= 2)
 	{
 		iterCount = atol(argv[1]);
 		if (iterCount <= 0)
 		{
 			cerr << "Usage: perf <count, -s(kip)>" << endl  << endl;
-			exit(1);
+			return false;
 		}
-		if (argc >= 3 && !stricmp(argv[2], "-s"))
+		else if (argc >= 3 && !stricmp(argv[2], "-s"))
 		{
 			skip = true;
+			return true;
 		}
-		return;
-	}			
+	}
+	return true;
 }
 
 #if defined(XALAN_NO_NAMESPACES)
@@ -274,14 +267,6 @@ main(
 	 int			argc,
 	 const char*	argv[])
 {
-
-	long iterCount = 5;	// Default number of iterations
-	bool skip = false;	// Default will not skip long tests
-
-	// Defined root for performance directory. Based on PD's machine. 
-	const XalanDOMString	perfDir(XALAN_STATIC_UCODE_STRING("d:\\xslt\\xsl-test\\perf\\"));
-
-
 #if !defined(NDEBUG) && defined(_MSC_VER)
 	_CrtSetDbgFlag(_CrtSetDbgFlag(_CRTDBG_REPORT_FLAG) | _CRTDBG_LEAK_CHECK_DF);
 
@@ -289,237 +274,247 @@ main(
 	_CrtSetReportFile(_CRT_WARN, _CRTDBG_FILE_STDERR);
 #endif
 
-	FileUtility f;
-	FileNameVectorType dirs, files;
+	long iterCount = 5;	// Default number of iterations
+	bool skip = false;	// Default will not skip long tests
 
-	// Get the list of Directories that are below perf
-	dirs = f.getDirectoryNames(perfDir);
-
-	XMLFileReporter	logFile("cpp.xml");
-	logFile.logTestFileInit("Performance Testing - Reports performance times for single transform, and average for multiple transforms using compiled stylesheet");
-
-	getParams(argc, argv, iterCount, skip);
-	try
+	if (getParams(argc, argv, iterCount, skip) == true)
 	{
-		// Call the static initializers... and define file suffixes
-		XMLPlatformUtils::Initialize();
+
+		FileUtility f;
+
+		// Defined root for performance directory. Based on PD's machine. 
+		const XalanDOMString	perfDir(XALAN_STATIC_UCODE_STRING("d:\\xslt\\xsl-test\\perf\\"));
+
+		// Get the list of Directories that are below perf
+		const FileNameVectorType dirs = f.getDirectoryNames(perfDir);
+
+		XMLFileReporter	logFile("cpp.xml");
+		logFile.logTestFileInit("Performance Testing - Reports performance times for single transform, and average for multiple transforms using compiled stylesheet");
+
+
+		try
 		{
-			XSLTInit	theInit;
-			
-			// Define some constants for file suffixes ...
-			const XalanDOMString  XSLSuffix(".xsl");
-			const XalanDOMString  XMLSuffix(".xml");
-			const XalanDOMString  outputDir("\\xslt-results\\perf\\test\\");
-			const XalanDOMString  pathSep(XALAN_STATIC_UCODE_STRING("\\"));  
-			const XalanDOMString  outputSuffix(".out");
-
-			// Define some variables used for timing...
-			clock_t startTime, endTime, accmTime;
-			double timeinMilliseconds, theAverage;
-
-
-			for(FileNameVectorType::size_type	j = 0; j < dirs.size(); j++)
+			// Call the static initializers... and define file suffixes
+			XMLPlatformUtils::Initialize();
 			{
-			  files = f.getTestFileNames(perfDir, dirs[j]);
-			  for(FileNameVectorType::size_type i = 0; i < files.size(); i++)
-			  {
-				if (skip)
+				XSLTInit	theInit;
+			
+				// Define some constants for file suffixes ...
+				const XalanDOMString  XSLSuffix(XALAN_STATIC_UCODE_STRING(".xsl"));
+				const XalanDOMString  XMLSuffix(XALAN_STATIC_UCODE_STRING(".xml"));
+				const XalanDOMString  outputDir(XALAN_STATIC_UCODE_STRING("\\xslt-results\\perf\\test\\"));
+				const XalanDOMString  pathSep(XALAN_STATIC_UCODE_STRING("\\"));  
+				const XalanDOMString  outputSuffix(XALAN_STATIC_UCODE_STRING(".out"));
+
+				// Define some variables used for timing...
+				clock_t startTime, endTime, accmTime;
+				double timeinMilliseconds, theAverage;
+
+
+				for(FileNameVectorType::size_type	j = 0; j < dirs.size(); j++)
 				{
-					if (checkForExclusion(files[i]))
+					const FileNameVectorType files = f.getTestFileNames(perfDir, dirs[j]);
+					for(FileNameVectorType::size_type i = 0; i < files.size(); i++)
 					{
-						continue;
-					}
-				}
-				// Output file name to result log.
-				logFile.logTestCaseInit(files[i]);
+						if (skip)
+						{
+							if (checkForExclusion(files[i]))
+								continue;
+						}
+						// Output file name to result log.
+						logFile.logTestCaseInit(files[i]);
 
-				const XalanDOMString  theXMLFile= perfDir + dirs[j] + pathSep + files[i];
-				const XalanDOMString  theXSLFile = f.GenerateFileName(theXMLFile,"xsl");
-				const XalanDOMString  theOutputFile = f.GenerateFileName(theXMLFile, "out");
+						const XalanDOMString  theXMLFile= perfDir + dirs[j] + pathSep + files[i];
+						const XalanDOMString  theXSLFile = f.GenerateFileName(theXMLFile,"xsl");
+						const XalanDOMString  theOutputFile = f.GenerateFileName(theXMLFile, "out");
 
 
-				// Create the necessary support objects to instantiate a processor.
-				XalanSourceTreeDOMSupport		csDOMSupport;
-				XalanSourceTreeParserLiaison	csParserLiaison(csDOMSupport);
+						// Create the necessary support objects to instantiate a processor.
+						XalanSourceTreeDOMSupport		csDOMSupport;
+						XalanSourceTreeParserLiaison	csParserLiaison(csDOMSupport);
 
-				csDOMSupport.setParserLiaison(&csParserLiaison);
+						csDOMSupport.setParserLiaison(&csParserLiaison);
 
-				XSLTProcessorEnvSupportDefault	csXSLTProcessorEnvSupport;
-				XObjectFactoryDefault			csXObjectFactory;
-				XPathFactoryDefault				csXPathFactory;
+						XSLTProcessorEnvSupportDefault	csXSLTProcessorEnvSupport;
+						XObjectFactoryDefault			csXObjectFactory;
+						XPathFactoryDefault				csXPathFactory;
+	
+						// Create a processor and connect to ProcessorEnvSupport object
+						XSLTEngineImpl	csProcessor(
+								csParserLiaison,
+								csXSLTProcessorEnvSupport,
+								csDOMSupport,
+								csXObjectFactory,
+								csXPathFactory);
 
-				// Create a processor and connect to ProcessorEnvSupport object
-				XSLTEngineImpl	csProcessor(
-							csParserLiaison,
-							csXSLTProcessorEnvSupport,
-							csDOMSupport,
-							csXObjectFactory,
-							csXPathFactory);
+						// Hook up the processor the the support object.
+						csXSLTProcessorEnvSupport.setProcessor(&csProcessor);
 
-				// Hook up the processor the the support object.
-				csXSLTProcessorEnvSupport.setProcessor(&csProcessor);
+						// Create separate factory support object, so the stylesheet's
+						// factory-created XPath instance are independent from processor's.
+						XPathFactoryDefault			ssXPathFactory;
 
-				// Create separate factory support object, so the stylesheet's
-				// factory-created XPath instance are independent from processor's.
-				XPathFactoryDefault			ssXPathFactory;
-
-				// Create a stylesheet construction context, using the
-				// stylesheet's factory support objects.
-				StylesheetConstructionContextDefault	csConstructionContext(
+						// Create a stylesheet construction context, using the
+						// stylesheet's factory support objects.
+						StylesheetConstructionContextDefault	csConstructionContext(
 														csProcessor,
 														csXSLTProcessorEnvSupport,
 														ssXPathFactory);
-				cout << endl << files[i] << endl;
+						cout << endl << files[i] << endl;
 
-				// Create a parsed stylesheet (StylesheetRoot) for the
-				// specified input XSL. We don't have to delete it, since
-				// it is owned by the StylesheetConstructionContextDefault
-				// instance. Time it as well...
-
-				startTime = clock();
-				const StylesheetRoot* const glbStylesheetRoot = processStylesheet(
+						// Create a parsed stylesheet (StylesheetRoot) for the
+						// specified input XSL. We don't have to delete it, since
+						// it is owned by the StylesheetConstructionContextDefault
+						// instance. Time it as well...
+	
+						startTime = clock();
+						const StylesheetRoot* const glbStylesheetRoot = processStylesheet(
 																theXSLFile,
 																csProcessor,
 																csConstructionContext);
-				endTime = clock();
-				assert(glbStylesheetRoot != 0);
+						endTime = clock();
+						assert(glbStylesheetRoot != 0);
 
-				// Calculate & report performance on stylesheet parse to console and log file.
-				timeinMilliseconds = calculateElapsedTime(startTime, endTime);
-				cout << "   XSL parse: " << timeinMilliseconds << " milliseconds." << endl;
-				logFile.logStatistic(60,
+						// Calculate & report performance on stylesheet parse to console and log file.
+						timeinMilliseconds = calculateElapsedTime(startTime, endTime);
+						cout << "   XSL parse: " << timeinMilliseconds << " milliseconds." << endl;
+						logFile.logStatistic(60,
 									long(timeinMilliseconds),
 									timeinMilliseconds,
 									"Parse of XSL: ");
 
-				// Parse the input XML and report how long it took...                             
-				startTime = clock();
-				XalanNode* const  glbSourceXML = parseSourceDocument(theXMLFile, 
+						// Parse the input XML and report how long it took...                             
+						startTime = clock();
+						XalanNode* const  glbSourceXML = parseSourceDocument(theXMLFile, 
 																	csProcessor);
-				endTime = clock();
+						endTime = clock();
 
-				// Calculate & report performance on source document parse to console and log file.
-				timeinMilliseconds = calculateElapsedTime(startTime, endTime);
-				cout << "   XML parse: " << timeinMilliseconds << " milliseconds." << endl;
-				logFile.logStatistic(60,
+						// Calculate & report performance on source document parse to console and log file.
+						timeinMilliseconds = calculateElapsedTime(startTime, endTime);
+						cout << "   XML parse: " << timeinMilliseconds << " milliseconds." << endl;
+						logFile.logStatistic(60,
 									long(timeinMilliseconds),
 									timeinMilliseconds,
 									"Parse of XML: ");
 
-				assert(glbSourceXML != 0);
+						assert(glbSourceXML != 0);
 
-				// The execution context uses the same factory support objects as
-				// the processor, since those objects have the same lifetime as
-				// other objects created as a result of the execution.
-				StylesheetExecutionContextDefault	psExecutionContext(
-									csProcessor,
-									csXSLTProcessorEnvSupport,
-									csDOMSupport,
-									csXObjectFactory);
+						// The execution context uses the same factory support objects as
+						// the processor, since those objects have the same lifetime as
+						// other objects created as a result of the execution.
+						StylesheetExecutionContextDefault	psExecutionContext(
+											csProcessor,
+											csXSLTProcessorEnvSupport,
+											csDOMSupport,
+											csXObjectFactory);
 
 			
 
-				// Do a total end to end transform with no pre parsing of either xsl or xml files.
-				XSLTResultTarget		theResultTarget(theOutputFile);
-				const XSLTInputSource	xslInputSource(c_wstr(theXSLFile));
-				const XSLTInputSource	xmlInputSource(c_wstr(theXMLFile));
-				const etoetran = eTOeTransform(xmlInputSource, 
-												xslInputSource,
-												theResultTarget,
-												csConstructionContext,
-												psExecutionContext,
-												csProcessor);
+						// Do a total end to end transform with no pre parsing of either xsl or xml files.
+						XSLTResultTarget		theResultTarget(theOutputFile);
+						const XSLTInputSource	xslInputSource(c_wstr(theXSLFile));
+						const XSLTInputSource	xmlInputSource(c_wstr(theXMLFile));
+						const etoetran = eTOeTransform(xmlInputSource, 
+													xslInputSource,
+													theResultTarget,
+													csConstructionContext,
+													psExecutionContext,
+													csProcessor);
+	
+						// Output single transform time to console and result log
+						cout << "   eTOe transform: " << etoetran << " milliseconds." << endl;
+						logFile.logStatistic(60,
+										etoetran,
+										etoetran,
+										"end To end transform: ");
 
-				// Output single transform time to console and result log
-				cout << "   eTOe transform: " << etoetran << " milliseconds." << endl;
-				logFile.logStatistic(60,
-									etoetran,
-									etoetran,
-									"end To end transform: ");
 
+						// Perform a single transform using compiled stylesheet and report results...
+						csProcessor.setStylesheetRoot(glbStylesheetRoot);
+						const XSLTInputSource	csSourceDocument(glbSourceXML);
 
-				// Perform a single transform using compiled stylesheet and report results...
-				csProcessor.setStylesheetRoot(glbStylesheetRoot);
-				const XSLTInputSource	csSourceDocument(glbSourceXML);
-
-				startTime = clock();
-				csProcessor.process(csSourceDocument, 
+						startTime = clock();
+						csProcessor.process(csSourceDocument, 
 									theResultTarget, 
 									psExecutionContext);
-				endTime = clock();
+						endTime = clock();
 
-				psExecutionContext.reset();	// Reset the execution context...
-				timeinMilliseconds = calculateElapsedTime(startTime, endTime);
+						psExecutionContext.reset();	// Reset the execution context...
+						timeinMilliseconds = calculateElapsedTime(startTime, endTime);
 
-				// Output single transform time to console and result log
-				cout << "   One transform w/Parsed XSL: " << timeinMilliseconds << " milliseconds." << endl;
-				logFile.logStatistic(60,
+						// Output single transform time to console and result log
+						cout << "   One transform w/Parsed XSL: " << timeinMilliseconds << " milliseconds." << endl;
+						logFile.logStatistic(60,
 									long(timeinMilliseconds),
 									timeinMilliseconds,
 									"Single transform took: ");
 
-				// Perform multiple transforms and calculate the average time ..
-				accmTime = 0;
-				for(int j = 0; j < iterCount; ++j)
-				{	
-					accmTime += transformWParsedSource(glbSourceXML,
+						// Perform multiple transforms and calculate the average time ..
+						accmTime = 0;
+						for(int j = 0; j < iterCount; ++j)
+						{	
+							accmTime += transformWParsedSource(glbSourceXML,
 														 csProcessor,
 														 glbStylesheetRoot,
 														 theResultTarget,
 														 psExecutionContext);
-					psExecutionContext.reset();							
-				}
-				csParserLiaison.reset();
-				theAverage = accmTime / iterCount;
+							psExecutionContext.reset();							
+						}
+						csParserLiaison.reset();
+						theAverage = accmTime / iterCount;
 
-				// Output average transform time to console and result log
-				cout << "   Avg: " << theAverage << " for " << iterCount << " iter's w/Parsed XML" << endl;
+						// Output average transform time to console and result log
+						cout << "   Avg: " << theAverage << " for " << iterCount << " iter's w/Parsed XML" << endl;
 
-				char tmp[100];
-				sprintf(tmp, "%s%d%s","Avg: transform of ", iterCount, " iter's w/Parsed XML.");
-				logFile.logStatistic(60, 
+						char tmp[100];
+						sprintf(tmp, "%s%d%s","Avg: transform of ", iterCount, " iter's w/Parsed XML.");
+						logFile.logStatistic(60, 
 									long(theAverage), 
 									theAverage, 
 									tmp);
 
-				//	This is currently how the XalanJ 2.0 is performing transforms,
-				//	i.e. with the unparsed XML Source.
+						//	This is currently how the XalanJ 2.0 is performing transforms,
+						//	i.e. with the unparsed XML Source.
 						
-				accmTime = 0;
-				for(int k = 0; k < iterCount; ++k)
-				{
-					accmTime += transformWUnparsedSource(theXMLFile,
+						accmTime = 0;
+						for(int k = 0; k < iterCount; ++k)
+						{
+							accmTime += transformWUnparsedSource(theXMLFile,
 														 csProcessor,
 														 glbStylesheetRoot,
 														 theResultTarget,
 														 psExecutionContext);
-					psExecutionContext.reset();		// Resets the execution context
-					csParserLiaison.reset();		// This deletes the document
-				}
-				theAverage = accmTime / iterCount;
-				cout << "   Avg: " << theAverage << " for " << iterCount << " iter's w/Source XML" << endl;
+							psExecutionContext.reset();		// Resets the execution context
+							csParserLiaison.reset();		// This deletes the document
+						}
+						theAverage = accmTime / iterCount;
+						cout << "   Avg: " << theAverage << " for " << iterCount << " iter's w/Source XML" << endl;
 
-				sprintf(tmp, "%s%d%s","Avg: transform of ", iterCount, " iter's w/Source XML.");
-				logFile.logStatistic(60, 
+						sprintf(tmp, "%s%d%s","Avg: transform of ", iterCount, " iter's w/Source XML.");
+						logFile.logStatistic(60, 
 									long(theAverage), 
 									theAverage, 
 									tmp);
 
-				logFile.logTestCaseClose(files[i], XalanDOMString("Done"));
-			  }
-			}
+						logFile.logTestCaseClose(files[i], XalanDOMString("Done"));
+					}//for files
+				}//for dirs
+			}//xsltinit
+
+
+			logFile.logTestFileClose("Performance", "Done");
+			logFile.close();
+
+			XMLPlatformUtils::Terminate();
+
+		}//try
+
+		catch(...)
+		{
+			cerr << "Exception caught!!!" << endl  << endl;
 		}
 
-		logFile.logTestFileClose("Performance", "Done");
-		logFile.close();
-
-		XMLPlatformUtils::Terminate();
-	}
-	catch(...)
-	{
-		cerr << "Exception caught!!!" << endl  << endl;
-	}
-
+	} //if getParams
 
 	return 0;
 }
