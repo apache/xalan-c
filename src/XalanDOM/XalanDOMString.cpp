@@ -140,7 +140,7 @@ XalanDOMString::XalanDOMString(
 {
 	if (theCount != 0)
 	{
-		XalanDOMCharVectorType(real_size_type(theCount) + 1, theChar).swap(m_data);
+		XalanDOMCharVectorType(theCount + 1, theChar).swap(m_data);
 
 		// Null-terminate it...
 		m_data.back() = 0;
@@ -168,7 +168,7 @@ XalanDOMString::resize(
 		{
 			// If the string is of 0 length, resize but add an
 			// extra byte for the terminating byte.
-			m_data.resize(real_size_type(theCount) + 1, theChar);
+			m_data.resize(real_size_type(theCount + 1), theChar);
 		}
 		else
 		{
