@@ -654,6 +654,10 @@ SOURCE=..\..\..\..\src\XPath\SimpleNodeLocator.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\XSLT\StackEntry.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\PlatformSupport\StdBinInputStream.cpp
 # End Source File
 # Begin Source File
@@ -938,6 +942,10 @@ SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeDocument.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\XSLT\XalanSourceTreeDocumentAllocator.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeDocumentFragment.cpp
 # End Source File
 # Begin Source File
@@ -1007,6 +1015,10 @@ SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeTextIWSAllocator.cpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\PlatformSupport\XalanStdOutputStream.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XSLT\XalanTemplate.cpp
 # End Source File
 # Begin Source File
 
@@ -1449,6 +1461,18 @@ SOURCE=..\..\..\..\src\Include\AIXDefinitions.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\PlatformSupport\ArenaAllocator.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\PlatformSupport\ArenaBlock.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\PlatformSupport\AttributeListImpl.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\PlatformSupport\AttributesImpl.hpp
 # End Source File
 # Begin Source File
@@ -1497,11 +1521,39 @@ SOURCE=..\..\..\..\src\PlatformSupport\DirectoryEnumerator.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\DOMSupport\DOMServices.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\PlatformSupport\DOMStringHelper.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\PlatformSupport\DOMStringPrintWriter.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\DOMSupport\DOMSupport.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\DOMSupport\DOMSupportDefault.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\DOMSupport\DOMSupportDefinitions.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\DOMSupport\DOMSupportException.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\DOMSupport\DOMSupportInit.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\PlatformSupport\DoubleSupport.hpp
 # End Source File
 # Begin Source File
 
@@ -1554,6 +1606,10 @@ SOURCE=..\..\..\..\src\XSLT\ElemEmpty.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\XSLT\ElementFrameMarker.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XPath\ElementPrefixResolverProxy.hpp
 # End Source File
 # Begin Source File
 
@@ -1641,7 +1697,27 @@ SOURCE=..\..\..\..\src\XSLT\ElemWithParam.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\PlatformSupport\ExecutionContext.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\XSLT\ExtensionFunctionHandler.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XSLT\ExtensionNSHandler.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\PlatformSupport\FormatterListener.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XMLSupport\FormatterToDOM.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XMLSupport\FormatterToHTML.hpp
 # End Source File
 # Begin Source File
 
@@ -1649,7 +1725,27 @@ SOURCE=..\..\..\..\src\XMLSupport\FormatterToNull.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\XalanSourceTree\FormatterToSourceTree.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XMLSupport\FormatterToText.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XMLSupport\FormatterToXML.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XMLSupport\FormatterTreeWalker.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\XPath\FoundIndex.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XPath\Function.hpp
 # End Source File
 # Begin Source File
 
@@ -1841,7 +1937,15 @@ SOURCE=..\..\..\..\src\XSLT\KeyTable.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\XPath\MutableNodeRefList.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\PlatformSupport\NamedNodeMapAttributeList.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XPath\NameSpace.hpp
 # End Source File
 # Begin Source File
 
@@ -1854,6 +1958,14 @@ SOURCE=..\..\..\..\src\XSLT\NamespacesHandler.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\XPath\NodeListImplSurrogate.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XPath\NodeRefList.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XPath\NodeRefListBase.hpp
 # End Source File
 # Begin Source File
 
@@ -1889,11 +2001,31 @@ SOURCE=..\..\..\..\src\PlatformSupport\PlatformSupport.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\PlatformSupport\PlatformSupportDefinitions.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\PlatformSupport\PlatformSupportInit.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\PlatformSupport\PrefixResolver.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\PlatformSupport\PrintWriter.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\XSLT\ProblemListener.hpp
 # End Source File
 # Begin Source File
 
 SOURCE=..\..\..\..\src\XSLT\ProblemListenerDefault.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\PlatformSupport\Resettable.hpp
 # End Source File
 # Begin Source File
 
@@ -1909,6 +2041,18 @@ SOURCE=..\..\..\..\src\XSLT\ResultTreeFragAllocator.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\XPath\ResultTreeFragBase.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\PlatformSupport\ReusableArenaAllocator.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\PlatformSupport\ReusableArenaBlock.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\XSLT\SelectionEvent.hpp
 # End Source File
 # Begin Source File
@@ -1921,7 +2065,19 @@ SOURCE=..\..\..\..\src\Include\SolarisDefinitions.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\XSLT\StackEntry.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\PlatformSupport\StdBinInputStream.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\Include\STLHelper.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\PlatformSupport\StringTokenizer.hpp
 # End Source File
 # Begin Source File
 
@@ -1969,7 +2125,15 @@ SOURCE=..\..\..\..\src\XSLT\TracerEvent.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\DOMSupport\TreeWalker.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\Include\TRU64Definitions.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\PlatformSupport\URISupport.hpp
 # End Source File
 # Begin Source File
 
@@ -1981,6 +2145,10 @@ SOURCE=..\..\..\..\src\Include\VCPPDefinitions.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\PlatformSupport\Writer.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\PlatformSupport\XalanAllocator.hpp
 # End Source File
 # Begin Source File
@@ -1989,11 +2157,31 @@ SOURCE=..\..\..\..\src\Include\XalanArrayKeyMap.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\XalanDOM\XalanAttr.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\Include\XalanAutoPtr.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\PlatformSupport\XalanBitmap.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\XalanTransformer\XalanCAPI.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XalanDOM\XalanCDATASection.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XalanDOM\XalanCharacterData.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XalanDOM\XalanComment.hpp
 # End Source File
 # Begin Source File
 
@@ -2005,6 +2193,14 @@ SOURCE=..\..\..\..\src\XalanTransformer\XalanCompiledStylesheetDefault.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\PlatformSupport\XalanDecimalFormat.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\PlatformSupport\XalanDecimalFormatSymbols.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\XalanTransformer\XalanDefaultDocumentBuilder.hpp
 # End Source File
 # Begin Source File
@@ -2013,7 +2209,27 @@ SOURCE=..\..\..\..\src\XalanTransformer\XalanDefaultParsedSource.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\XalanDOM\XalanDocument.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\XalanTransformer\XalanDocumentBuilder.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XalanDOM\XalanDocumentFragment.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XalanDOM\XalanDocumentType.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XalanDOM\XalanDOMDefinitions.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XalanDOM\XalanDOMException.hpp
 # End Source File
 # Begin Source File
 
@@ -2021,7 +2237,39 @@ SOURCE=..\..\..\..\src\XalanDOM\XalanDOMImplementation.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\XalanDOM\XalanDOMInit.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XalanDOM\XalanDOMString.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\PlatformSupport\XalanDOMStringCache.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\PlatformSupport\XalanDOMStringHashTable.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\PlatformSupport\XalanDOMStringPool.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XalanDOM\XalanElement.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XalanDOM\XalanEmptyNamedNodeMap.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\PlatformSupport\XalanEncodingPropertyCache.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XalanDOM\XalanEntity.hpp
 # End Source File
 # Begin Source File
 
@@ -2037,11 +2285,39 @@ SOURCE=..\..\..\..\src\XalanExtensions\XalanExtensionsDefinitions.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\PlatformSupport\XalanFileOutputStream.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XalanDOM\XalanNamedNodeMap.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XalanDOM\XalanNode.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XalanDOM\XalanNodeList.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XalanDOM\XalanNodeListDummy.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XalanDOM\XalanNodeListSurrogate.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\XalanDOM\XalanNotation.hpp
 # End Source File
 # Begin Source File
 
 SOURCE=..\..\..\..\src\PlatformSupport\XalanNullOutputStream.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\PlatformSupport\XalanNumberFormat.hpp
 # End Source File
 # Begin Source File
 
@@ -2053,11 +2329,87 @@ SOURCE=..\..\..\..\src\Include\XalanObjectCache.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\PlatformSupport\XalanOutputStream.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\PlatformSupport\XalanOutputStreamPrintWriter.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\XalanTransformer\XalanParsedSource.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\XalanDOM\XalanProcessingInstruction.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XPath\XalanQName.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XPath\XalanQNameByReference.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XPath\XalanQNameByValue.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\PlatformSupport\XalanReferenceCountedObject.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\PlatformSupport\XalanSimplePrefixResolver.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeAttr.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeAttributeAllocator.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeAttributeNSAllocator.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeAttributesVector.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeAttrNS.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeComment.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeCommentAllocator.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeContentHandler.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeDefinitions.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeDocument.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XSLT\XalanSourceTreeDocumentAllocator.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeDocumentFragment.hpp
 # End Source File
 # Begin Source File
 
@@ -2069,7 +2421,27 @@ SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeDOMSupport.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeElement.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeElementAllocator.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeElementNS.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeElementNSAllocator.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeHelper.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeInit.hpp
 # End Source File
 # Begin Source File
 
@@ -2078,6 +2450,38 @@ SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeNamedNodeMap.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeParserLiaison.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeProcessingInstruction.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeProcessingInstructionAllocator.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeText.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeTextAllocator.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeTextIWS.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeTextIWSAllocator.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\PlatformSupport\XalanStdOutputStream.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XalanDOM\XalanText.hpp
 # End Source File
 # Begin Source File
 
@@ -2105,7 +2509,19 @@ SOURCE=..\..\..\..\src\XalanTransformer\XalanTransformerProblemListener.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\PlatformSupport\XalanUnicode.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\PlatformSupport\XalanUTF16Transcoder.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\PlatformSupport\XalanXMLChar.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XPath\XalanXPathException.hpp
 # End Source File
 # Begin Source File
 
@@ -2253,7 +2669,19 @@ SOURCE=..\..\..\..\src\XPath\XLocator.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\XMLSupport\XMLParserLiaison.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XMLSupport\XMLSupportDefinitions.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\XMLSupport\XMLSupportException.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XMLSupport\XMLSupportInit.hpp
 # End Source File
 # Begin Source File
 
@@ -2289,6 +2717,14 @@ SOURCE=..\..\..\..\src\XPath\XNumberBase.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\XPath\XObject.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XPath\XObjectFactory.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\XPath\XObjectFactoryDefault.hpp
 # End Source File
 # Begin Source File
@@ -2305,6 +2741,14 @@ SOURCE=..\..\..\..\src\XPath\XObjectResultTreeFragProxyText.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\XPath\XObjectTypeCallback.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XPath\XPath.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\XPath\XPathAllocator.hpp
 # End Source File
 # Begin Source File
@@ -2313,7 +2757,35 @@ SOURCE=..\..\..\..\src\XPathCAPI\XPathCAPI.h
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\XPath\XPathDefinitions.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XPath\XPathEnvSupport.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XPath\XPathEnvSupportDefault.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\XPath\XPathEvaluator.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XPath\XPathExecutionContext.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XPath\XPathExecutionContextDefault.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XPath\XPathExpression.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XPath\XPathFactory.hpp
 # End Source File
 # Begin Source File
 
@@ -2325,7 +2797,23 @@ SOURCE=..\..\..\..\src\XPath\XPathFactoryDefault.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\XPath\XPathFunctionTable.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XPath\XPathInit.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\XPath\XPathParserException.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XPath\XPathProcessor.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XPath\XPathProcessorImpl.hpp
 # End Source File
 # Begin Source File
 
@@ -2334,6 +2822,10 @@ SOURCE=..\..\..\..\src\XSLT\XResultTreeFrag.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\XSLT\XResultTreeFragAllocator.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\PlatformSupport\XSLException.hpp
 # End Source File
 # Begin Source File
 
@@ -2410,6 +2902,10 @@ SOURCE=..\..\..\..\src\XPath\XStringReference.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\XPath\XStringReferenceAllocator.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XPath\XToken.hpp
 # End Source File
 # Begin Source File
 
