@@ -53,6 +53,42 @@
   <target name="clean">
     <delete dir="${build.dir}"/>
     <delete dir="${site.dir}"/>
-  </target>   
+  </target>
+  
+  <!-- =================================================================== -->
+  <!-- Use FOP to create preliminary print (pdf) doc                       -->
+  <!-- Note: fop.jar and xml.jar (from xml-fop) must be on classpath       -->
+
+  <!-- This is VERY preliminary, not yet for inclusion in distribution     -->
+  <!-- =================================================================== -->
+
+  <!--Collate the xml sources into a single xml source with a litle extra structure -->
+  <target name="print.docs" depends="prepare">
+    <echo message="fop.jar and xml.jar must be on the classpath"/>
+    <java fork="yes" classname="org.apache.xalan.xslt.Process"
+      classpath="${java.class.path}:${build.dir}/xalan.jar">
+      <arg line="-xsl ${xdocs.dir}/sources/xalan-c-collate.xsl 
+                 -out ${xdocs.dir}/sources/xalan/xalan-c-collate.xml"/>
+    </java>
+    
+    <!-- Transform collation into Formatting Objects 
+         (with a little work on links along the way) -->    
+    <java fork="yes" classname="org.apache.xalan.xslt.Process"
+      classpath="${java.class.path}:${build.dir}/xalan.jar">
+      <arg line="-in  ${xdocs.dir}/sources/xalan/xalan-c-collate.xml
+                 -param resourceFile '../../sources/xalan/resources.xml'
+                 -param project ${Name}
+                 -xsl ${xdocs.style}/stylesheets/xml2fo.xsl 
+                 -out ${build.docs}/xalan-c-collate.fo"/>
+    </java>
+    
+    <!-- Use FOP to generate a pdf file -->
+    <java fork="yes" classname="org.apache.fop.apps.CommandLine"
+      classpath="${java.class.path}:${build.dir}/xalan.jar:${bin.dir}/fop.jar:${bin.dir}/w3c.jar">
+      <arg line="${build.docs}/xalan-c-collate.fo build/docs/xalan-c.pdf"/>
+    </java>
+  </target>
+
+  
     
 </project>
