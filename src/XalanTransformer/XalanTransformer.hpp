@@ -353,7 +353,7 @@ public:
 
 #if defined(XALAN_NO_NAMESPACES)
 	typedef vector<const XalanCompiledStylesheet*>		CompiledStylesheetPtrVectorType;
-	typedef vector<const ParsedDocument*>				ParsedSourcePtrVectorType;
+	typedef vector<const XalanParsedSource*>			ParsedSourcePtrVectorType;
 #else
 	typedef std::vector<const XalanCompiledStylesheet*>	CompiledStylesheetPtrVectorType;
 	typedef std::vector<const XalanParsedSource*>		ParsedSourcePtrVectorType;
