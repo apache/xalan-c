@@ -179,6 +179,7 @@
 #include "FunctionUnparsedEntityURI.hpp"
 #include "FunctionSystemProperty.hpp"
 #include "FunctionGenerateID.hpp"
+#include "FunctionDocument.hpp"
 #include "GenerateEvent.hpp"
 #include "NodeSorter.hpp"
 #include "ProblemListener.hpp"
@@ -4315,6 +4316,7 @@ XSLTEngineImpl::InstallFunctions()
 	XPath::installFunction(XALAN_STATIC_UCODE_STRING("unparsed-entity-uri"), FunctionUnparsedEntityURI());
 	XPath::installFunction(XALAN_STATIC_UCODE_STRING("system-property"), FunctionSystemProperty());
 	XPath::installFunction(XALAN_STATIC_UCODE_STRING("generate-id"), FunctionGenerateID());
+	XPath::installFunction(XALAN_STATIC_UCODE_STRING("document"), FunctionDocument());
 }
 
 
