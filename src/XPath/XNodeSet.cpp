@@ -78,9 +78,9 @@
 XNodeSet::XNodeSet(BorrowReturnMutableNodeRefList&	value) :
 	XObject(eTypeNodeSet),
 	m_value(value),
-	m_cachedStringValue(),
-	m_cachedNumberValue(0.0),
 	m_resultTreeFrag()
+	m_cachedStringValue(),
+	m_cachedNumberValue(0.0)	
 {
 }
 
