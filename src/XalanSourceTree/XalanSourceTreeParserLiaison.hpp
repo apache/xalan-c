@@ -76,6 +76,7 @@
 class ContentHandler;
 class DTDHandler;
 class LexicalHandler;
+class SAX2XMLReader;
 class XalanSourceTreeDOMSupport;
 class XalanSourceTreeDocument;
 
@@ -315,6 +316,42 @@ public:
 	virtual void
 	setExitOnFirstFatalError(bool	newState);
 
+	/**
+	  * This method returns the location for an external schema document
+	  * for parsing.
+	  *
+	  * @return A string representing the location of the external schema document
+	  */
+	virtual const XalanDOMChar*
+	getExternalSchemaLocation() const;
+
+	/**
+	  * This method sets the location for an external schema document
+	  * for parsing.
+	  *
+	  * @param location A string representing the location of the external schema document
+	  */
+	virtual void
+	setExternalSchemaLocation(const XalanDOMChar*	location);
+
+	/**
+	  * This method returns the location for an external schema document
+	  * for parsing.
+	  *
+	  * @return A string representing the location of the external schema document
+	  */
+	virtual const XalanDOMChar*
+	getExternalNoNamespaceSchemaLocation() const;
+
+	/**
+	  * This method sets the location for an external schema document
+	  * for parsing.
+	  *
+	  * @param location A string representing the location of the external schema document
+	  */
+	virtual void
+	setExternalNoNamespaceSchemaLocation(const XalanDOMChar*	location);
+
 	/** 
 	 * Map a pointer to a XalanDocument instance to its implementation
 	 * class pointer.  Normally, you should have no reason for doing
@@ -335,12 +372,6 @@ public:
 	XalanSourceTreeDocument*
 	createXalanSourceTreeDocument();
 
-	bool
-	setPersistent(XalanSourceTreeDocument*	theDocument);
-
-	bool
-	unsetPersistent(XalanSourceTreeDocument*	theDocument);
-
 #if defined(XALAN_NO_NAMESPACES)
 	typedef map<const XalanDocument*,
 				XalanSourceTreeDocument*,
@@ -349,6 +380,11 @@ public:
 	typedef std::map<const XalanDocument*,
 					 XalanSourceTreeDocument*>	DocumentMapType;
 #endif
+
+protected:
+
+	virtual SAX2XMLReader*
+	createReader();
 
 private:
 
@@ -364,19 +400,21 @@ private:
 
 	DocumentMapType 			m_documentMap;
 
-	DocumentMapType 			m_persistentDocumentMap;
-
 	bool						m_poolAllText;
 
-	static const XalanDOMChar	validationString[];
+	static const XalanDOMChar	s_validationString[];
 
-	static const XalanDOMChar	dynamicValidationString[];
+	static const XalanDOMChar	s_dynamicValidationString[];
 
-	static const XalanDOMChar	namespacesString[];
+	static const XalanDOMChar	s_namespacesString[];
 
-	static const XalanDOMChar	namespacePrefixesString[];
+	static const XalanDOMChar	s_namespacePrefixesString[];
 
-	static const XalanDOMChar	schemaString[];
+	static const XalanDOMChar	s_schemaString[];
+
+	static const XalanDOMChar	s_externalSchemaLocationString[];
+
+	static const XalanDOMChar	s_externalNoNamespaceSchemaLocationString[];
 };
 
 

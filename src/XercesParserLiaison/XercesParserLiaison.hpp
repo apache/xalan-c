@@ -284,6 +284,42 @@ public:
 	setExitOnFirstFatalError(bool	newState);
 
 	/**
+	  * This method returns the location for an external schema document
+	  * for parsing.
+	  *
+	  * @return A string representing the location of the external schema document
+	  */
+	virtual const XalanDOMChar*
+	getExternalSchemaLocation() const;
+
+	/**
+	  * This method sets the location for an external schema document
+	  * for parsing.
+	  *
+	  * @param location A string representing the location of the external schema document
+	  */
+	virtual void
+	setExternalSchemaLocation(const XalanDOMChar*	location);
+
+	/**
+	  * This method returns the location for an external schema document
+	  * for parsing.
+	  *
+	  * @return A string representing the location of the external schema document
+	  */
+	virtual const XalanDOMChar*
+	getExternalNoNamespaceSchemaLocation() const;
+
+	/**
+	  * This method sets the location for an external schema document
+	  * for parsing.
+	  *
+	  * @param location A string representing the location of the external schema document
+	  */
+	virtual void
+	setExternalNoNamespaceSchemaLocation(const XalanDOMChar*	location);
+
+	/**
 	 * Create a XalanDocument proxy for an existing Xerces document.
 	 * The parser liaison owns the instance, and you must not delete
 	 * it.	The liaison will delete it when reset() is called, or the
@@ -458,6 +494,10 @@ private:
 	EntityResolver* 	m_entityResolver;
 
 	ErrorHandler*		m_errorHandler;
+
+	XalanDOMString		m_externalSchemaLocation;
+
+	XalanDOMString		m_externalNoNamespaceSchemaLocation;
 
 	DocumentMapType 	m_documentMap;
 

@@ -109,6 +109,8 @@ XercesParserLiaison::XercesParserLiaison(XercesDOMSupport&	/* theSupport */) :
 	m_exitOnFirstFatalError(true),
 	m_entityResolver(0),
 	m_errorHandler(this),
+	m_externalSchemaLocation(),
+	m_externalNoNamespaceSchemaLocation(),
 	m_documentMap(),
 	m_buildBridge(true),
 	m_threadSafe(false),
@@ -126,6 +128,8 @@ XercesParserLiaison::XercesParserLiaison() :
 	m_exitOnFirstFatalError(true),
 	m_entityResolver(0),
 	m_errorHandler(this),
+	m_externalSchemaLocation(),
+	m_externalNoNamespaceSchemaLocation(),
 	m_documentMap(),
 	m_buildBridge(true),
 	m_threadSafe(false),
@@ -390,6 +394,42 @@ XercesParserLiaison::setEntityResolver(EntityResolver*	resolver)
 
 
 
+const XalanDOMChar*
+XercesParserLiaison::getExternalSchemaLocation() const
+{
+	return c_wstr(m_externalSchemaLocation);
+}
+
+
+
+void
+XercesParserLiaison::setExternalSchemaLocation(const XalanDOMChar*	location)
+{
+	assert(location != 0);
+
+	m_externalSchemaLocation = location;
+}
+
+
+
+const XalanDOMChar*
+XercesParserLiaison::getExternalNoNamespaceSchemaLocation() const
+{
+	return c_wstr(m_externalNoNamespaceSchemaLocation);
+}
+
+
+
+void
+XercesParserLiaison::setExternalNoNamespaceSchemaLocation(const XalanDOMChar*	location)
+{
+	assert(location != 0);
+
+	m_externalNoNamespaceSchemaLocation = location;
+}
+
+
+
 XalanDocument*
 XercesParserLiaison::createDocument(
 			const DOM_Document&		theXercesDocument,
@@ -560,6 +600,16 @@ XercesParserLiaison::CreateDOMParser()
 	}
 
 	theParser->setErrorHandler(m_errorHandler);
+
+	if (m_externalSchemaLocation.length() > 0)
+	{
+		theParser->setExternalSchemaLocation(c_wstr(m_externalSchemaLocation));
+	}
+
+	if (m_externalNoNamespaceSchemaLocation.length() > 0)
+	{
+		theParser->setExternalNoNamespaceSchemaLocation(c_wstr(m_externalNoNamespaceSchemaLocation));
+	}
 
 	// Xerces has a non-standard node type to represent the XML decl.
 	// Why did they ever do this?

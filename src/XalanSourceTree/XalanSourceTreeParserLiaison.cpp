@@ -83,7 +83,7 @@
 
 
 // http://xml.org/sax/features/validation
-const XalanDOMChar	XalanSourceTreeParserLiaison::validationString[] = {
+const XalanDOMChar	XalanSourceTreeParserLiaison::s_validationString[] = {
 	XalanUnicode::charLetter_h,
 	XalanUnicode::charLetter_t,
 	XalanUnicode::charLetter_t,
@@ -128,7 +128,7 @@ const XalanDOMChar	XalanSourceTreeParserLiaison::validationString[] = {
 
 
 // http://apache.org/xml/features/validation/dynamic
-const XalanDOMChar	XalanSourceTreeParserLiaison::dynamicValidationString[] = {
+const XalanDOMChar	XalanSourceTreeParserLiaison::s_dynamicValidationString[] = {
 	XalanUnicode::charLetter_h,
 	XalanUnicode::charLetter_t,
 	XalanUnicode::charLetter_t,
@@ -184,7 +184,7 @@ const XalanDOMChar	XalanSourceTreeParserLiaison::dynamicValidationString[] = {
 
 
 // http://xml.org/sax/features/namespaces
-const XalanDOMChar	XalanSourceTreeParserLiaison::namespacesString[] = {
+const XalanDOMChar	XalanSourceTreeParserLiaison::s_namespacesString[] = {
 	XalanUnicode::charLetter_h,
 	XalanUnicode::charLetter_t,
 	XalanUnicode::charLetter_t,
@@ -229,7 +229,7 @@ const XalanDOMChar	XalanSourceTreeParserLiaison::namespacesString[] = {
 
 
 // http://xml.org/sax/features/namespace-prefixes
-const XalanDOMChar	XalanSourceTreeParserLiaison::namespacePrefixesString[] = {
+const XalanDOMChar	XalanSourceTreeParserLiaison::s_namespacePrefixesString[] = {
 	XalanUnicode::charLetter_h,
 	XalanUnicode::charLetter_t,
 	XalanUnicode::charLetter_t,
@@ -281,7 +281,7 @@ const XalanDOMChar	XalanSourceTreeParserLiaison::namespacePrefixesString[] = {
 
 
 // http://apache.org/xml/features/validation/schema
-const XalanDOMChar	XalanSourceTreeParserLiaison::schemaString[] =
+const XalanDOMChar	XalanSourceTreeParserLiaison::s_schemaString[] =
 {
 	XalanUnicode::charLetter_h,
 	XalanUnicode::charLetter_t,
@@ -336,12 +336,163 @@ const XalanDOMChar	XalanSourceTreeParserLiaison::schemaString[] =
 
 
 
+// http://apache.org/xml/properties/schema/external-schemaLocation
+const XalanDOMChar	XalanSourceTreeParserLiaison::s_externalSchemaLocationString[] =
+{
+	XalanUnicode::charLetter_h,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_p,
+	XalanUnicode::charColon,
+	XalanUnicode::charSolidus,
+	XalanUnicode::charSolidus,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_p,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_c,
+	XalanUnicode::charLetter_h,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charFullStop,
+	XalanUnicode::charLetter_o,
+	XalanUnicode::charLetter_r,
+	XalanUnicode::charLetter_g,
+	XalanUnicode::charSolidus,
+	XalanUnicode::charLetter_x,
+	XalanUnicode::charLetter_m,
+	XalanUnicode::charLetter_l,
+	XalanUnicode::charSolidus,
+	XalanUnicode::charLetter_p,
+	XalanUnicode::charLetter_r,
+	XalanUnicode::charLetter_o,
+	XalanUnicode::charLetter_p,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_r,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_i,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_s,
+	XalanUnicode::charSolidus,
+	XalanUnicode::charLetter_s,
+	XalanUnicode::charLetter_c,
+	XalanUnicode::charLetter_h,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_m,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charSolidus,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_x,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_r,
+	XalanUnicode::charLetter_n,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_l,
+	XalanUnicode::charHyphenMinus,
+	XalanUnicode::charLetter_s,
+	XalanUnicode::charLetter_c,
+	XalanUnicode::charLetter_h,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_m,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_L,
+	XalanUnicode::charLetter_o,
+	XalanUnicode::charLetter_c,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_i,
+	XalanUnicode::charLetter_o,
+	XalanUnicode::charLetter_n,
+	0
+};
+
+
+
+// http://apache.org/xml/properties/schema/external-noNamespaceSchemaLocation
+const XalanDOMChar	XalanSourceTreeParserLiaison::s_externalNoNamespaceSchemaLocationString[] =
+{
+	XalanUnicode::charLetter_h,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_p,
+	XalanUnicode::charColon,
+	XalanUnicode::charSolidus,
+	XalanUnicode::charSolidus,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_p,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_c,
+	XalanUnicode::charLetter_h,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charFullStop,
+	XalanUnicode::charLetter_o,
+	XalanUnicode::charLetter_r,
+	XalanUnicode::charLetter_g,
+	XalanUnicode::charSolidus,
+	XalanUnicode::charLetter_x,
+	XalanUnicode::charLetter_m,
+	XalanUnicode::charLetter_l,
+	XalanUnicode::charSolidus,
+	XalanUnicode::charLetter_p,
+	XalanUnicode::charLetter_r,
+	XalanUnicode::charLetter_o,
+	XalanUnicode::charLetter_p,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_r,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_i,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_s,
+	XalanUnicode::charSolidus,
+	XalanUnicode::charLetter_s,
+	XalanUnicode::charLetter_c,
+	XalanUnicode::charLetter_h,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_m,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charSolidus,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_x,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_r,
+	XalanUnicode::charLetter_n,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_l,
+	XalanUnicode::charHyphenMinus,
+	XalanUnicode::charLetter_n,
+	XalanUnicode::charLetter_o,
+	XalanUnicode::charLetter_N,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_m,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_s,
+	XalanUnicode::charLetter_p,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_c,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_S,
+	XalanUnicode::charLetter_c,
+	XalanUnicode::charLetter_h,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_m,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_L,
+	XalanUnicode::charLetter_o,
+	XalanUnicode::charLetter_c,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_i,
+	XalanUnicode::charLetter_o,
+	XalanUnicode::charLetter_n,
+	0
+};
+
+
 
 XalanSourceTreeParserLiaison::XalanSourceTreeParserLiaison(
 			XalanSourceTreeDOMSupport&	/* theSupport */) :
 	m_xercesParserLiaison(),
 	m_documentMap(),
-	m_persistentDocumentMap(),
 	m_poolAllText(true)
 {
 }
@@ -351,7 +502,6 @@ XalanSourceTreeParserLiaison::XalanSourceTreeParserLiaison(
 XalanSourceTreeParserLiaison::XalanSourceTreeParserLiaison() :
 	m_xercesParserLiaison(),
 	m_documentMap(),
-	m_persistentDocumentMap(),
 	m_poolAllText(true)
 {
 }
@@ -365,13 +515,6 @@ XalanSourceTreeParserLiaison::~XalanSourceTreeParserLiaison()
 #if !defined(XALAN_NO_NAMESPACES)
 	using std::for_each;
 #endif
-
-	// Delete any persistent documents.
-	for_each(m_persistentDocumentMap.begin(),
-			 m_persistentDocumentMap.end(),
-			 makeMapValueDeleteFunctor(m_persistentDocumentMap));
-
-	m_persistentDocumentMap.clear();
 }
 
 
@@ -429,57 +572,13 @@ XalanSourceTreeParserLiaison::parseXMLStream(
 {
 	XalanSourceTreeContentHandler	theContentHandler(createXalanSourceTreeDocument());
 
-	XalanAutoPtr<SAX2XMLReader>		theReader(XMLReaderFactory::createXMLReader());
-
-	const bool	fValidate = m_xercesParserLiaison.getUseValidation();
-
-	if (fValidate == false)
-	{
-		theReader->setFeature(
-			validationString,
-			false);
-
-		theReader->setFeature(
-			schemaString,
-			false);
-	}
-	else
-	{
-		theReader->setFeature(
-			dynamicValidationString,
-			true);
-
-		theReader->setFeature(
-			schemaString,
-			true);
-	}
-
-	theReader->setFeature(
-		namespacesString,
-		true);
-
-	theReader->setFeature(
-		namespacePrefixesString,
-		true);
+	XalanAutoPtr<SAX2XMLReader>		theReader(createReader());
 
 	theReader->setContentHandler(&theContentHandler);
 
 	theReader->setDTDHandler(&theContentHandler);
 
-	ErrorHandler* const		theHandler = getErrorHandler();
-
-	if (theHandler == 0)
-	{
-		theReader->setErrorHandler(&m_xercesParserLiaison);
-	}
-	else
-	{
-		theReader->setErrorHandler(theHandler);
-	}
-
 	theReader->setLexicalHandler(&theContentHandler);
-
-	theReader->setEntityResolver(getEntityResolver());
 
 	theReader->parse(inputSource);
 
@@ -569,35 +668,13 @@ XalanSourceTreeParserLiaison::parseXMLStream(
 			LexicalHandler*			theLexicalHandler,
 			const XalanDOMString&	/* theIdentifier */)
 {
-	XalanAutoPtr<SAX2XMLReader>		theReader(XMLReaderFactory::createXMLReader());
-
-	theReader->setFeature(
-		validationString,
-		m_xercesParserLiaison.getUseValidation());
+	XalanAutoPtr<SAX2XMLReader>		theReader(createReader());
 
 	theReader->setContentHandler(&theContentHandler);
 
 	theReader->setDTDHandler(theDTDHandler);
 
-	ErrorHandler* const		theHandler = getErrorHandler();
-
-	if (theHandler == 0)
-	{
-		theReader->setErrorHandler(&m_xercesParserLiaison);
-	}
-	else
-	{
-		theReader->setErrorHandler(theHandler);
-	}
-
 	theReader->setLexicalHandler(theLexicalHandler);
-
-	EntityResolver* const	theResolver = getEntityResolver();
-
-	if (theResolver != 0)
-	{
-		theReader->setEntityResolver(theResolver);
-	}
 
 	theReader->parse(theInputSource);
 }
@@ -684,29 +761,45 @@ XalanSourceTreeParserLiaison::setEntityResolver(EntityResolver*	resolver)
 
 
 
+const XalanDOMChar*
+XalanSourceTreeParserLiaison::getExternalSchemaLocation() const
+{
+	return m_xercesParserLiaison.getExternalSchemaLocation();
+}
+
+
+
+void
+XalanSourceTreeParserLiaison::setExternalSchemaLocation(const XalanDOMChar*		location)
+{
+	m_xercesParserLiaison.setExternalSchemaLocation(location);
+}
+
+
+
+const XalanDOMChar*
+XalanSourceTreeParserLiaison::getExternalNoNamespaceSchemaLocation() const
+{
+	return m_xercesParserLiaison.getExternalNoNamespaceSchemaLocation();
+}
+
+
+
+void
+XalanSourceTreeParserLiaison::setExternalNoNamespaceSchemaLocation(const XalanDOMChar*	location)
+{
+	m_xercesParserLiaison.setExternalNoNamespaceSchemaLocation(location);
+}
+
+
+
 XalanSourceTreeDocument*
 XalanSourceTreeParserLiaison::mapDocument(const XalanDocument*	theDocument) const
 {
 	DocumentMapType::const_iterator		i =
 		m_documentMap.find(theDocument);
 
-	if (i != m_documentMap.end())
-	{
-		return (*i).second;
-	}
-	else
-	{
-		i =	m_persistentDocumentMap.find(theDocument);
-
-		if (i != m_persistentDocumentMap.end())
-		{
-			return (*i).second;
-		}
-		else
-		{
-			return 0;
-		}
-	}
+	return i != m_documentMap.end() ? (*i).second : 0;
 }
 
 
@@ -724,43 +817,86 @@ XalanSourceTreeParserLiaison::createXalanSourceTreeDocument()
 
 
 
-bool
-XalanSourceTreeParserLiaison::setPersistent(XalanSourceTreeDocument*	theDocument)
+SAX2XMLReader*
+XalanSourceTreeParserLiaison::createReader()
 {
-	const DocumentMapType::iterator		i =
-		m_documentMap.find(theDocument);
+	XalanAutoPtr<SAX2XMLReader>		theReader(XMLReaderFactory::createXMLReader());
 
-	if (i != m_documentMap.end())
+	const bool	fValidate = m_xercesParserLiaison.getUseValidation();
+
+	if (fValidate == false)
 	{
-		return false;
+		theReader->setFeature(
+			s_validationString,
+			false);
+
+		theReader->setFeature(
+			s_schemaString,
+			false);
 	}
 	else
 	{
-		m_persistentDocumentMap[(*i).first] = (*i).second;
+		theReader->setFeature(
+			s_dynamicValidationString,
+			true);
 
-		m_documentMap.erase(i);
-
-		return true;
+		theReader->setFeature(
+			s_schemaString,
+			true);
 	}
-}
 
+	theReader->setFeature(
+		s_namespacesString,
+		true);
 
-bool
-XalanSourceTreeParserLiaison::unsetPersistent(XalanSourceTreeDocument*	theDocument)
-{
-	const DocumentMapType::iterator		i =
-		m_persistentDocumentMap.find(theDocument);
+	theReader->setFeature(
+		s_namespacePrefixesString,
+		true);
 
-	if (i != m_persistentDocumentMap.end())
+	ErrorHandler* const		theHandler = getErrorHandler();
+
+	if (theHandler == 0)
 	{
-		return false;
+		theReader->setErrorHandler(&m_xercesParserLiaison);
 	}
 	else
 	{
-		m_documentMap[(*i).first] = (*i).second;
-
-		m_persistentDocumentMap.erase(i);
-
-		return true;
+		theReader->setErrorHandler(theHandler);
 	}
+
+	theReader->setEntityResolver(getEntityResolver());
+
+	{
+		const XalanDOMChar* const	theLocation =
+			getExternalSchemaLocation();
+
+		if (theLocation != 0)
+		{
+			theReader->setProperty(
+				s_externalSchemaLocationString,
+#if defined(XALAN_OLD_STYLE_CASTS)
+				(void*)theLocation);
+#else
+				const_cast<XalanDOMChar*>(theLocation));
+#endif
+		}
+	}
+
+	{
+		const XalanDOMChar* const	theLocation =
+			getExternalNoNamespaceSchemaLocation();
+
+		if (theLocation != 0)
+		{
+			theReader->setProperty(
+				s_externalNoNamespaceSchemaLocationString,
+#if defined(XALAN_OLD_STYLE_CASTS)
+				(void*)theLocation);
+#else
+				const_cast<XalanDOMChar*>(theLocation));
+#endif
+		}
+	}
+
+	return theReader.release();
 }
