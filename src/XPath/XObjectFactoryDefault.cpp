@@ -266,9 +266,7 @@ XObjectFactoryDefault::doReturnObject(
 
 	default:
 		{
-#if !defined(XALAN_NO_NAMESPACES)
-			using std::find;
-#endif
+			XALAN_USING_STD(find)
 
 			const XObjectCollectionType::iterator	i =
 					find(m_xobjects.begin(), m_xobjects.end(), theXObject);

@@ -1310,11 +1310,7 @@ public:
 	 * @param theStream The output stream
 	 */
 	void
-#if defined(XALAN_NO_NAMESPACES)
-	dumpRemainingTokenQueue(ostream&		theStream) const;
-#else
-	dumpRemainingTokenQueue(std::ostream&	theStream) const;
-#endif
+	dumpRemainingTokenQueue(OstreamType&	theStream) const;
 
 	/**
 	 * Push a value onto the operations code

@@ -188,7 +188,7 @@ public:
 	createUnknown(
 			const XalanDOMString&	theValue);
 
-#if defined(XALAN_NO_NAMESPACES)
+#if defined(XALAN_NO_STD_NAMESPACE)
 	typedef vector<XObject*>		XObjectCollectionType;
 	typedef vector<XNumber*>		XNumberCacheType;
 	typedef vector<XNodeSet*>		XNodeSetCacheType;

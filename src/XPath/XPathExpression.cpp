@@ -788,11 +788,7 @@ XPathExpression::dumpRemainingTokenQueue(PrintWriter&	thePrintWriter) const
 
 
 void
-#if defined(XALAN_NO_NAMESPACES)
-XPathExpression::dumpRemainingTokenQueue(ostream&		theStream) const
-#else
-XPathExpression::dumpRemainingTokenQueue(std::ostream&	theStream) const
-#endif
+XPathExpression::dumpRemainingTokenQueue(OstreamType&	theStream) const
 {
 	theStream << "Remaining tokens: (";
 

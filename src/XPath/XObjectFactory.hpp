@@ -258,7 +258,7 @@ public:
 	 * A public functor for use with stl algorithms.
 	 *
 	 */
-#if defined(XALAN_NO_NAMESPACES)
+#if defined(XALAN_NO_STD_NAMESPACE)
 	struct DeleteXObjectFunctor : public unary_function<XObject*, void>
 #else
 	struct DeleteXObjectFunctor : public std::unary_function<XObject*, void>
