@@ -92,7 +92,7 @@ ElemUse::postConstruction(
 }
 
 
-#if defined(ITERATIVE_EXECUTION)
+#if !defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 const ElemTemplateElement*
 ElemUse::startElement(StylesheetExecutionContext&	executionContext) const
 {
@@ -228,7 +228,7 @@ ElemUse::evaluateAVTs(
 #endif
 
 
-#if !defined(ITERATIVE_EXECUTION)
+#if defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 void
 ElemUse::execute(StylesheetExecutionContext&	executionContext) const
 {

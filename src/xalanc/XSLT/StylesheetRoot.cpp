@@ -838,7 +838,7 @@ StylesheetRoot::addAttributeSet(ElemAttributeSet&	theAttributeSet)
 }
 
 
-#if defined(ITERATIVE_EXECUTION)
+#if !defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 const ElemAttributeSet*
 StylesheetRoot::getAttributeSet(
 			StylesheetExecutionContext&		executionContext,
@@ -873,7 +873,7 @@ StylesheetRoot::getAttributeSet(
 
 
 
-#if !defined (ITERATIVE_EXECUTION)
+#if defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 void
 StylesheetRoot::executeAttributeSet(
 			StylesheetExecutionContext&		theExecutionContext,

@@ -89,7 +89,7 @@ ElemForwardCompatible::~ElemForwardCompatible()
 }
 
 
-#if defined(ITERATIVE_EXECUTION)
+#if !defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 const ElemTemplateElement*
 ElemForwardCompatible::startElement(StylesheetExecutionContext& executionContext) const
 {
@@ -110,7 +110,7 @@ ElemForwardCompatible::executeChildElement(
 
 
 
-#if !defined(ITERATIVE_EXECUTION)
+#if defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 void
 ElemForwardCompatible::execute(StylesheetExecutionContext&		executionContext) const
 {

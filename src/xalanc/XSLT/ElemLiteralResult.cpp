@@ -300,7 +300,7 @@ ElemLiteralResult::namespacesPostConstruction(
 }
 
 
-#if defined(ITERATIVE_EXECUTION)
+#if !defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 const ElemTemplateElement*
 ElemLiteralResult::startElement(StylesheetExecutionContext&		executionContext) const
 {
@@ -384,7 +384,7 @@ ElemLiteralResult::evaluateAVTs(StylesheetExecutionContext& executionContext) co
 
 
 
-#if !defined(ITERATIVE_EXECUTION)
+#if defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 void
 ElemLiteralResult::execute(StylesheetExecutionContext&	executionContext) const
 {

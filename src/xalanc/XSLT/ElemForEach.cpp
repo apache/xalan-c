@@ -177,7 +177,7 @@ ElemForEach::postConstruction(
 
 
 
-#if defined(ITERATIVE_EXECUTION)
+#if !defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 const ElemTemplateElement*
 ElemForEach::startElement(StylesheetExecutionContext&		executionContext) const
 {
@@ -487,7 +487,7 @@ ElemForEach::sortChildren(
 
 
 
-#if !defined(ITERATIVE_EXECUTION)
+#if defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 void
 ElemForEach::execute(StylesheetExecutionContext&	executionContext) const
 {

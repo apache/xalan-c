@@ -89,7 +89,7 @@ public:
 			StylesheetConstructionContext&	constructionContext,
 			const NamespacesHandler&		theParentHandler);
 
-#if defined(ITERATIVE_EXECUTION)
+#if !defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 		virtual const ElemTemplateElement*
 	startElement(StylesheetExecutionContext&	executionContext) const;
 
@@ -112,7 +112,7 @@ public:
 
 protected:
 
-#if defined(ITERATIVE_EXECUTION)
+#if !defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 	/**
 	 * Get the next attribute set to execute.
 	 * 

@@ -178,7 +178,7 @@ ElemTemplate::getElementName() const
 
 
 
-#if defined(ITERATIVE_EXECUTION)
+#if !defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 const ElemTemplateElement*
 ElemTemplate::startElement(StylesheetExecutionContext&	executionContext) const
 {
@@ -210,7 +210,7 @@ ElemTemplate::getInvoker(StylesheetExecutionContext&	executionContext) const
 
 
 
-#if !defined(ITERATIVE_EXECUTION)
+#if defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 void
 ElemTemplate::execute(StylesheetExecutionContext&	executionContext) const
 {
@@ -228,7 +228,7 @@ ElemTemplate::getXPath(unsigned int	index) const
 }
 
 
-#if !defined(ITERATIVE_EXECUTION)
+#if defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 void
 ElemTemplate::executeChildren(StylesheetExecutionContext&	executionContext) const
 {

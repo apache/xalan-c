@@ -209,7 +209,7 @@ ElemTemplateElement::isValidNCName(const XalanDOMString&	s)
 }
 
 
-#if defined(ITERATIVE_EXECUTION)
+#if !defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 const ElemTemplateElement*
 ElemTemplateElement::startElement(StylesheetExecutionContext&	executionContext) const 
 {
@@ -371,7 +371,7 @@ ElemTemplateElement::getInvoker(StylesheetExecutionContext& /*executionContext*/
 
 
 
-#if !defined(ITERATIVE_EXECUTION)
+#if defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 void
 ElemTemplateElement::execute(StylesheetExecutionContext&	executionContext) const
 {
@@ -745,7 +745,7 @@ ElemTemplateElement::getXPath(unsigned int	/* index */) const
 }
 
 
-#if defined(ITERATIVE_EXECUTION)
+#if !defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 const ElemTemplateElement*
 ElemTemplateElement::findTemplateToTransformChild(
 			StylesheetExecutionContext&		executionContext,
@@ -1245,7 +1245,7 @@ ElemTemplateElement::childTypeAllowed(int	/* xslToken */) const
 }
 
 
-#if defined(ITERATIVE_EXECUTION)
+#if !defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 const ElemTemplateElement*
 ElemTemplateElement::getNextChildElemToExecute(StylesheetExecutionContext& executionContext,
 								 const ElemTemplateElement* currentElem) const

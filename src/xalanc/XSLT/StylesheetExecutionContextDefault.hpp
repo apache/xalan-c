@@ -260,7 +260,7 @@ public:
 	virtual bool
 	popCopyTextNodesOnly();
 
-#if defined(ITERATIVE_EXECUTION)
+#if !defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 	virtual void
 	pushProcessCurrentAttribute(bool processAttribute);
 
@@ -397,7 +397,7 @@ public:
 			XalanNode*					contextNode,
 			const PrefixResolver&		resolver);
 
-#if !defined(ITERATIVE_EXECUTION)
+#if defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 	virtual const XObjectPtr
 	createVariable(
 			const ElemTemplateElement&	templateChild,
@@ -432,7 +432,7 @@ public:
 			XalanNode*					contextNode,
 			const PrefixResolver&		resolver);
 
-#if !defined(ITERATIVE_EXECUTION)
+#if defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 	virtual void
 	pushVariable(
 			const XalanQName&			name,
@@ -454,7 +454,7 @@ public:
 	virtual void
 	clearTopLevelParams();
 
-#if defined(ITERATIVE_EXECUTION)
+#if !defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 	virtual void beginParams();
 
 	virtual void endParams();
@@ -534,7 +534,7 @@ public:
 			bool					shouldCloneAttributes,
 			const LocatorType*		locator);
 
-#if defined(ITERATIVE_EXECUTION)
+#if !defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 	virtual void
 	beginCreateXResultTreeFrag(
 			XalanNode*					sourceNode);
@@ -552,7 +552,7 @@ public:
 #endif
 
 
-#if !defined(ITERATIVE_EXECUTION)
+#if defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 	virtual const XObjectPtr
 	createXResultTreeFrag(
 			const ElemTemplateElement&	templateChild,
@@ -629,7 +629,7 @@ public:
 			Writer&					writer,
 			const XalanDOMString&	encoding);
 
-#if defined(ITERATIVE_EXECUTION)
+#if !defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 	virtual NodeSorter*
 	getNodeSorter();
 #else
@@ -909,7 +909,7 @@ public:
 	virtual MutableNodeRefList*
 	createMutableNodeRefList() const;
 
-#if defined(ITERATIVE_EXECUTION)
+#if !defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 	virtual void
 	createUseAttributeSetIndexesOnStack();
 
@@ -1077,7 +1077,7 @@ public:
 	XalanSourceTreeDocument*
 	getSourceTreeFactory() const;
 
-#if !defined(ITERATIVE_EXECUTION)
+#if defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 protected:
 
 	virtual FormatterToText*
@@ -1092,7 +1092,7 @@ private:
 	const XalanDecimalFormatSymbols*
 	getDecimalFormatSymbols(const XalanQName&	qname);
 
-#if !defined(ITERATIVE_EXECUTION)
+#if defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 	/**
 	 * Given a context, create the params for a template
 	 * call.
@@ -1216,7 +1216,7 @@ private:
 	ModeStackType						m_modeStack;
 	IntStackType						m_currentIndexStack;
 
-#if !defined(ITERATIVE_EXECUTION)
+#if defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 	typedef XalanObjectCacheDefault<FormatterToText>	FormatterToTextCacheType;
 	typedef XalanObjectCacheDefault<FormatterToSourceTree>	FormatterToSourceTreeCacheType;
 	typedef XalanObjectCacheDefault<NodeSorter>		NodeSorterCacheType;
@@ -1228,7 +1228,7 @@ private:
 	NodeSorterCacheType					m_nodeSorterCache;
 #endif
 
-#if defined(ITERATIVE_EXECUTION)
+#if !defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 	typedef XALAN_STD_QUALIFIER vector<XObjectPtr>			XObjectPtrStackType;
 	typedef XALAN_STD_QUALIFIER vector<ParamsVectorType>		ParamsVectorStackType;
 	typedef XALAN_STD_QUALIFIER vector<UseAttributeSetIndexes>  	UseAttributeSetIndexesStackType;

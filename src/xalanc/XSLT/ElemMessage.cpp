@@ -95,7 +95,7 @@ ElemMessage::getElementName() const
 
 
 
-#if defined(ITERATIVE_EXECUTION)
+#if !defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 const ElemTemplateElement*
 ElemMessage::startElement(StylesheetExecutionContext&		executionContext) const
 {
@@ -139,7 +139,7 @@ ElemMessage::endElement(StylesheetExecutionContext&		executionContext) const
 
 
 
-#if !defined(ITERATIVE_EXECUTION)
+#if defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 void
 ElemMessage::execute(StylesheetExecutionContext&	executionContext) const
 {

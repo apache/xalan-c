@@ -134,7 +134,7 @@ StylesheetExecutionContextDefault::StylesheetExecutionContextDefault(
 	m_copyTextNodesOnlyStack(),
 	m_modeStack(),
 	m_currentIndexStack(),
-#if defined(ITERATIVE_EXECUTION)
+#if !defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 	m_xobjectPtrStack(),
 	m_mutableNodeRefListStack(),
 	m_nodesToTransformStack(),
@@ -194,7 +194,7 @@ StylesheetExecutionContextDefault::StylesheetExecutionContextDefault(
 	m_copyTextNodesOnlyStack(),
 	m_modeStack(),
 	m_currentIndexStack(),
-#if defined(ITERATIVE_EXECUTION)
+#if !defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 	m_xobjectPtrStack(),
 	m_mutableNodeRefListStack(),
 	m_nodesToTransformStack(),
@@ -664,7 +664,7 @@ StylesheetExecutionContextDefault::createVariable(
 }
 
 
-#if !defined(ITERATIVE_EXECUTION)
+#if defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 const XObjectPtr
 StylesheetExecutionContextDefault::createVariable(
 			const ElemTemplateElement&	templateChild,
@@ -736,7 +736,7 @@ StylesheetExecutionContextDefault::pushVariable(
 
 
 
-#if !defined(ITERATIVE_EXECUTION)
+#if defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 void
 StylesheetExecutionContextDefault::pushVariable(
 			const XalanQName&			name,
@@ -791,7 +791,7 @@ StylesheetExecutionContextDefault::clearTopLevelParams()
 
 
 
-#if defined(ITERATIVE_EXECUTION)
+#if !defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 void
 StylesheetExecutionContextDefault::beginParams()
 {
@@ -825,7 +825,7 @@ StylesheetExecutionContextDefault::pushParam(
 #endif
 
 
-#if !defined(ITERATIVE_EXECUTION)
+#if defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 void
 StylesheetExecutionContextDefault::pushParams(const ElemTemplateElement&	xslCallTemplateElement)
 {
@@ -1060,7 +1060,7 @@ StylesheetExecutionContextDefault::cloneToResultTree(
 }
 
 
-#if defined(ITERATIVE_EXECUTION)
+#if !defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 void
 StylesheetExecutionContextDefault::beginCreateXResultTreeFrag(
 			XalanNode*					sourceNode)
@@ -1133,7 +1133,7 @@ StylesheetExecutionContextDefault::endCreateXResultTreeFrag()
 
 
 
-#if !defined(ITERATIVE_EXECUTION)
+#if defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 const XObjectPtr
 StylesheetExecutionContextDefault::createXResultTreeFrag(
 			const ElemTemplateElement&	templateChild,
@@ -1505,7 +1505,7 @@ StylesheetExecutionContextDefault::createFormatterToText(
 }
 
 
-#if !defined (ITERATIVE_EXECUTION)
+#if defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 FormatterToText*
 StylesheetExecutionContextDefault::borrowFormatterToText()
 {
@@ -1523,7 +1523,7 @@ StylesheetExecutionContextDefault::returnFormatterToText(FormatterToText*	theFor
 
 
 
-#if defined(ITERATIVE_EXECUTION)
+#if !defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 NodeSorter*
 StylesheetExecutionContextDefault::getNodeSorter()
 {
@@ -1532,7 +1532,7 @@ StylesheetExecutionContextDefault::getNodeSorter()
 #endif
 
 
-#if !defined(ITERATIVE_EXECUTION)
+#if defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 NodeSorter*
 StylesheetExecutionContextDefault::borrowNodeSorter()
 {
@@ -1884,7 +1884,7 @@ StylesheetExecutionContextDefault::reset()
 	m_currentTemplateStack.clear();
     m_currentTemplateStack.push_back(0);
 
-#if !defined(ITERATIVE_EXECUTION)
+#if defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 	m_formatterToTextCache.reset();
 	m_formatterToSourceTreeCache.reset();
 	m_nodeSorterCache.reset();
@@ -1912,7 +1912,7 @@ StylesheetExecutionContextDefault::reset()
 
 	m_currentIndexStack.clear();
 
-#if defined (ITERATIVE_EXECUTION)
+#if !defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 	m_xobjectPtrStack.clear();
 	m_nodesToTransformStack.clear();
 	m_processCurrentAttributeStack.clear();
@@ -2663,7 +2663,7 @@ private:
 };
 
 
-#if !defined(ITERATIVE_EXECUTION)
+#if defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 void
 StylesheetExecutionContextDefault::getParams(
 			const ElemTemplateElement&	xslCallTemplateElement,
@@ -2898,7 +2898,7 @@ StylesheetExecutionContextDefault::cleanUpTransients()
 
 
 
-#if defined(ITERATIVE_EXECUTION)
+#if !defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 void
 StylesheetExecutionContextDefault::createUseAttributeSetIndexesOnStack()
 {

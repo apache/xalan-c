@@ -239,7 +239,7 @@ private:
 
 
 
-#if defined(ITERATIVE_EXECUTION)
+#if !defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 const ElemTemplateElement*
 ElemValueOf::startElement(StylesheetExecutionContext&		executionContext) const
 {
@@ -294,7 +294,7 @@ ElemValueOf::startElement(StylesheetExecutionContext&		executionContext) const
 
 
 
-#if !defined(ITERATIVE_EXECUTION)
+#if defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 void
 ElemValueOf::execute(StylesheetExecutionContext&	executionContext) const
 {

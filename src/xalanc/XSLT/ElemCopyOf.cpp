@@ -113,7 +113,7 @@ ElemCopyOf::getElementName() const
 }
 
 
-#if defined(ITERATIVE_EXECUTION)
+#if !defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 const ElemTemplateElement*
 ElemCopyOf::startElement(StylesheetExecutionContext&		executionContext) const
 {
@@ -198,7 +198,7 @@ ElemCopyOf::startElement(StylesheetExecutionContext&		executionContext) const
 
 
 
-#if !defined(ITERATIVE_EXECUTION)
+#if defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 void
 ElemCopyOf::execute(StylesheetExecutionContext&		executionContext) const
 {

@@ -113,7 +113,7 @@ ElemAttributeSet::getElementName() const
 
 
 
-#if defined(ITERATIVE_EXECUTION)
+#if !defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 const ElemTemplateElement*
 ElemAttributeSet::startElement(StylesheetExecutionContext& executionContext) const
 {
@@ -147,7 +147,7 @@ ElemAttributeSet::getInvoker(StylesheetExecutionContext&	executionContext) const
 
 
 
-#if !defined(ITERATIVE_EXECUTION)
+#if defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 void
 ElemAttributeSet::execute(StylesheetExecutionContext&	executionContext) const
 {

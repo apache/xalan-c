@@ -219,7 +219,7 @@ ElemVariable::setParentNodeElem(ElemTemplateElement*	theParent)
 
 
 
-#if defined(ITERATIVE_EXECUTION)
+#if !defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 const ElemTemplateElement*
 ElemVariable::startElement(StylesheetExecutionContext& executionContext) const
 {
@@ -358,7 +358,7 @@ ElemVariable::getValue(
 		else
 		{
 			
-#if defined(ITERATIVE_EXECUTION)
+#if !defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 			executionContext.beginCreateXResultTreeFrag(sourceNode);
 			this->executeChildren(executionContext);
 			return executionContext.endCreateXResultTreeFrag();

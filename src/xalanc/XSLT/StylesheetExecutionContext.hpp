@@ -271,7 +271,7 @@ public:
 
 	};
 	
-#if defined(ITERATIVE_EXECUTION)
+#if !defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 	/**
 	 * Set the flag that determines if the current attribute should be executed
 	 * @param processAttribute the value of the flag
@@ -724,7 +724,7 @@ public:
 			XalanNode*					contextNode,
 			const PrefixResolver&		resolver) = 0;
 
-#if !defined(ITERATIVE_EXECUTION)
+#if defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 	/**
 	 * Create an ResultTreeFragment as a variable and push it
 	 * on to the stack with the current context.
@@ -778,7 +778,7 @@ public:
 			XalanNode*					contextNode,
 			const PrefixResolver&		resolver) = 0;
 
-#if !defined(ITERATIVE_EXECUTION)
+#if defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 	/**
 	 * Create an ResultTreeFragment as a variable and push it
 	 * on to the stack with the current context.
@@ -909,7 +909,7 @@ public:
 		StylesheetExecutionContext&		m_executionContext;
 	};
 
-#if defined(ITERATIVE_EXECUTION)
+#if !defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 	/**
 	 *  Initiate context to accept a new set of parameters
 	 */
@@ -1216,7 +1216,7 @@ public:
 			bool					shouldCloneAttributes,
 			const LocatorType*		locator) = 0;
 
-#if defined(ITERATIVE_EXECUTION)	
+#if !defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)	
 	/**
 	 * Initiate creation of a result tree fragment
 	 * @param sourceNode the source Node
@@ -1510,7 +1510,7 @@ public:
 			Writer&					writer,
 			const XalanDOMString&	encoding) = 0;
 
-#if !defined(ITERATIVE_EXECUTION)
+#if defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 	class BorrowReturnFormatterToText
 	{
 	public:
@@ -1561,7 +1561,7 @@ public:
 	friend class BorrowReturnFormatterToText;
 #endif
 
-#if defined(ITERATIVE_EXECUTION)
+#if !defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 	/**
 	 * Get node sorter instance
 	 */
@@ -1645,7 +1645,7 @@ public:
 	virtual XalanNumberFormatAutoPtr
 	createXalanNumberFormat() = 0;
 
-#if defined(ITERATIVE_EXECUTION)
+#if !defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 	/*
 	 * A class to manage the attribute sets that have been executed
 	 * by an element
@@ -2022,7 +2022,7 @@ public:
 	virtual MutableNodeRefList*
 	createMutableNodeRefList() const = 0;
 
-#if defined(ITERATIVE_EXECUTION)
+#if !defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 
 	virtual MutableNodeRefList& 
 	createAndPushMutableNodeRefList() = 0;
@@ -2180,7 +2180,7 @@ public:
 			const XalanNode* 	sourceNode = 0,
 			const LocatorType* 	locator = 0) const = 0;
 
-#if !defined(ITERATIVE_EXECUTION)
+#if defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 protected:
 	/**
 	 * Borrow a cached FormatterToText instance.

@@ -102,7 +102,7 @@ ElemPI::getElementName() const
 
 
 
-#if defined(ITERATIVE_EXECUTION)
+#if !defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 const ElemTemplateElement*
 ElemPI::startElement(StylesheetExecutionContext& executionContext) const
 {
@@ -152,7 +152,7 @@ ElemPI::endElement(StylesheetExecutionContext& executionContext) const
 
 
 
-#if !defined(ITERATIVE_EXECUTION)
+#if defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 void
 ElemPI::execute(StylesheetExecutionContext&		executionContext) const
 {

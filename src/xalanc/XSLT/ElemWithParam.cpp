@@ -131,7 +131,7 @@ ElemWithParam::getXPath(unsigned int	index) const
 
 
 
-#if defined(ITERATIVE_EXECUTION)
+#if !defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 
 const ElemTemplateElement* 
 ElemWithParam::startElement(StylesheetExecutionContext& executionContext) const

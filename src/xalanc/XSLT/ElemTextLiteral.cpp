@@ -85,7 +85,7 @@ ElemTextLiteral::isWhitespace() const
 }
 
 
-#if defined(ITERATIVE_EXECUTION)
+#if !defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 const ElemTemplateElement*
 ElemTextLiteral::startElement(StylesheetExecutionContext&	executionContext) const
 {
@@ -105,7 +105,7 @@ ElemTextLiteral::startElement(StylesheetExecutionContext&	executionContext) cons
 
 
 
-#if !defined(ITERATIVE_EXECUTION)
+#if defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 void
 ElemTextLiteral::execute(StylesheetExecutionContext&	executionContext) const
 {

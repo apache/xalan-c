@@ -85,7 +85,7 @@ ElemApplyImport::getElementName() const
 
 
 
-#if defined(ITERATIVE_EXECUTION)
+#if !defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 const ElemTemplateElement*
 ElemApplyImport::startElement(StylesheetExecutionContext&	executionContext) const
 {
@@ -133,7 +133,7 @@ ElemApplyImport::getNextChildElemToExecute(
 
 
 
-#if !defined(ITERATIVE_EXECUTION)
+#if defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 void
 ElemApplyImport::execute(StylesheetExecutionContext&	executionContext) const
 {

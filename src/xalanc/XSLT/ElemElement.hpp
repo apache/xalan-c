@@ -71,7 +71,7 @@ public:
 	virtual const XalanDOMString&
 	getElementName() const;
 
-#if defined(ITERATIVE_EXECUTION)
+#if !defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 	virtual const ElemTemplateElement*
 	startElement(StylesheetExecutionContext&	executionContext) const;
 
@@ -89,7 +89,7 @@ public:
 
 protected:
 
-#if !defined(ITERATIVE_EXECUTION)
+#if defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 	/** 
 	 * Process the children of a template.
 	 * 

@@ -387,7 +387,7 @@ public:
 	void
 	addAttributeSet(ElemAttributeSet&	theAttributeSet);
 	
-#if defined(ITERATIVE_EXECUTION)
+#if !defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 	/**
 	 * Get the nth attribute set with the specified name.
 	 *  

@@ -160,7 +160,7 @@ public:
 	static bool
 	isValidNCName(const XalanDOMString& 	s);
 
-#if defined(ITERATIVE_EXECUTION)
+#if !defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 
 	/**
 	 * Completes  "pre-processing" before any sub-elements are invoked 
@@ -208,7 +208,7 @@ public:
 
 
 
-#if !defined(ITERATIVE_EXECUTION)
+#if defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 	/** 
 	 * Execute the element's primary function.	Subclasses of this function may
 	 * recursively execute down the element tree.
@@ -452,7 +452,7 @@ public:
 	virtual ElemTemplateElement*
 	getFirstChildElem() const;
 
-#if defined(ITERATIVE_EXECUTION)
+#if !defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 	/**
 	 * Method to initiate the execution of the element's children.
 	 *
@@ -526,7 +526,7 @@ public:
 	virtual ElemTemplateElement*
 	getNextSiblingElem() const;
 
-#if defined(ITERATIVE_EXECUTION)
+#if !defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 
 	/**
 	 * Returns the next sub-element 
@@ -788,7 +788,7 @@ protected:
 	const XalanDOMString*
 	getNamespaceForPrefixInternal(const XalanDOMString& 	prefix) const;
 
-#if defined(ITERATIVE_EXECUTION)
+#if !defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 	/**
 	 * Given an element, find the corresponding
 	 * template.
@@ -934,7 +934,7 @@ private:
 	}
 
 
-#if !defined(ITERATIVE_EXECUTION)
+#if defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 	/** 
 	 * Take the contents of a template element, process it, and
 	 * convert it to a string.

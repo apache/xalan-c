@@ -86,7 +86,7 @@ ElemChoose::getElementName() const
 
 
 
-#if defined(ITERATIVE_EXECUTION)
+#if !defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 const ElemTemplateElement*
 ElemChoose::startElement(StylesheetExecutionContext&		executionContext) const
 {
@@ -148,7 +148,7 @@ ElemChoose::getNextChildElemToExecute(
 
 
 
-#if !defined(ITERATIVE_EXECUTION)
+#if defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 void
 ElemChoose::execute(StylesheetExecutionContext&		executionContext) const
 {

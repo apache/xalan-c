@@ -42,7 +42,7 @@ StylesheetExecutionContext::~StylesheetExecutionContext()
 }
 
 
-#if !defined(ITERATIVE_EXECUTION)
+#if defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 void
 StylesheetExecutionContext::ParamsPushPop::doPush(
 			const ElemTemplateElement&		xslCallTemplateElement,
