@@ -58,6 +58,9 @@
 # 
 #
 # $Log$
+# Revision 1.13  2002/10/04 23:42:48  dbertoni
+# Fixed getop problem.
+#
 # Revision 1.12  2002/08/05 21:21:02  dbertoni
 # Fixed statement termination problem.
 #
@@ -152,9 +155,9 @@ fi
 
 # Get the command line parameters
 if test -x /usr/bin/getopt; then
-set -- `getopt p:c:x:dm:n:t:r:b:l:z:h $*`
+set -- `getopt C:p:c:x:dm:n:t:r:b:l:z:h $*`
 else
-set -- `getopts p:c:x:dm:n:t:r:b:l:z:h $*`
+set -- `getopts C:p:c:x:dm:n:t:r:b:l:z:h $*`
 fi
 
 if [ $? != 0 ]
