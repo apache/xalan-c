@@ -1870,7 +1870,8 @@ XPathProcessorImpl::Step()
 	else if (tokenIs(XalanUnicode::charAsterisk) ||
 			 tokenIs(XalanUnicode::charCommercialAt) ||
 			 tokenIs(XalanUnicode::charSolidus) ||
-			 XalanXMLChar::isLetter(charAt(m_token, 0)))
+			 (tokenIs(XalanUnicode::charLowLine) ||
+			  XalanXMLChar::isLetter(charAt(m_token, 0))))
 	{
 		Basis();
 
