@@ -69,6 +69,7 @@
 #include <PlatformSupport/DOMStringHelper.hpp>
 #include <PlatformSupport/DoubleSupport.hpp>
 #include <PlatformSupport/XalanNumberFormat.hpp>
+#include <PlatformSupport/XalanSimplePrefixResolver.hpp>
 #include <PlatformSupport/XalanUnicode.hpp>
 
 
@@ -81,6 +82,7 @@
 
 
 
+#include <XPath/ElementPrefixResolverProxy.hpp>
 #include <XPath/XPath.hpp>
 #include <XPath/XObjectFactory.hpp>
 
@@ -342,14 +344,92 @@ ElemNumber::getCountMatchPattern(
 	switch(contextNode->getNodeType())
 	{
 	case XalanNode::ELEMENT_NODE:
-		countMatchPattern =
-				executionContext.createMatchPattern(contextNode->getNodeName(), *this);
+		{
+			// Check to see if we have any fiddling to do with the match pattern
+			// we create...
+			const XalanDOMString&	theNamespaceURI = contextNode->getNamespaceURI();
+			const XalanDOMString&	theNodeName = contextNode->getNodeName();
+
+			if (isEmpty(theNamespaceURI) == true)
+			{
+				// No namespace URI means no prefix, so this is easy...
+				assert(isEmpty(contextNode->getLocalName()) == true);
+
+				// We can pass any PrefixResolver instance, so just
+				// pass ourself...
+				countMatchPattern =
+						executionContext.createMatchPattern(theNodeName, *this);
+			}
+			else if (length(theNodeName) != length(contextNode->getLocalName()))
+			{
+				// OK, there's a prefix, so create a prefix resolver so the
+				// prefix can be properly resolved...
+				const XalanElement* const	theElement =
+#if defined(XALAN_OLD_STYLE_CASTS)
+					(const XalanElement*)contextNode;
+#else
+					static_cast<const XalanElement*>(contextNode);
+#endif
+					const ElementPrefixResolverProxy	theProxy(theElement);
+
+				countMatchPattern =
+						executionContext.createMatchPattern(theNodeName, theProxy);
+			}
+			else
+			{
+				// OK, this is ugly.  We have to get a unique prefix and
+				// construct a match pattern with that prefix...
+				StylesheetExecutionContext::GetAndReleaseCachedString	thePrefix(executionContext);
+
+				executionContext.getUniqueNamespaceValue(thePrefix.get());
+
+				StylesheetExecutionContext::GetAndReleaseCachedString	theMatchPatternString(executionContext);
+
+				assign(theMatchPatternString.get(), thePrefix.get());
+				append(theMatchPatternString.get(), XalanUnicode::charColon);
+				append(theMatchPatternString.get(), theNodeName);
+
+				// Use this class to resolve the synthesized prefix to the
+				// appropriate namespace URI.  We could see if a prefix is
+				// already in scope for the namespace URI, but it would take
+				// more effort to find that out than it would to just
+				// create this simple resolver.
+				const XalanSimplePrefixResolver		theResolver(
+														thePrefix.get(),
+														theNamespaceURI,
+														getURI());
+
+				countMatchPattern =
+						executionContext.createMatchPattern(
+							theMatchPatternString.get(),
+							theResolver);
+			}
+		}
 		break;
 
 	case XalanNode::ATTRIBUTE_NODE:
-		countMatchPattern = executionContext.createMatchPattern(
-						s_atString + contextNode->getNodeName(),
-						*this);
+		{
+			const XalanAttr* const	theAttribute =
+#if defined(XALAN_OLD_STYLE_CASTS)
+				(const XalanAttr*)contextNode;
+#else
+				static_cast<const XalanAttr*>(contextNode);
+#endif
+			assert(theAttribute->getOwnerElement() != 0);
+
+			const XalanDOMString&	theNodeName = theAttribute->getNodeName();
+
+			const ElementPrefixResolverProxy	theProxy(theAttribute->getOwnerElement());
+
+			StylesheetExecutionContext::GetAndReleaseCachedString	theMatchPatternString(executionContext);
+
+			assign(theMatchPatternString.get(), s_atString);
+			append(theMatchPatternString.get(), theNodeName);
+
+			countMatchPattern = executionContext.createMatchPattern(
+							theMatchPatternString.get(),
+							theProxy);
+		}
 		break;
 
 	case XalanNode::CDATA_SECTION_NODE:
@@ -369,10 +449,17 @@ ElemNumber::getCountMatchPattern(
 		break;
 
 	case XalanNode::PROCESSING_INSTRUCTION_NODE:
-		countMatchPattern = executionContext.createMatchPattern(
-				s_piString + 
-				contextNode->getNodeName() +
-				s_leftParenString, *this);
+		{
+			StylesheetExecutionContext::GetAndReleaseCachedString	theMatchPatternString(executionContext);
+
+			assign(theMatchPatternString.get(), s_piString);
+			append(theMatchPatternString.get(), contextNode->getNodeName());
+			append(theMatchPatternString.get(), s_leftParenString);
+
+			countMatchPattern = executionContext.createMatchPattern(
+					theMatchPatternString.get(),
+					*this);
+		}
 		break;
 
 	default:

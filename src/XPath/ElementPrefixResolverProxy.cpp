@@ -67,6 +67,7 @@
 
 
 
+#include <DOMSupport/DOMServices.hpp>
 #include <DOMSupport/DOMSupport.hpp>
 
 
@@ -80,8 +81,18 @@ ElementPrefixResolverProxy::ElementPrefixResolverProxy(
 			const XPathEnvSupport&	envSupport,
 			const DOMSupport& 		domSupport) :
 	m_namespaceContext(namespaceContext),
+	m_envSupport(&envSupport),
+	m_uri()
+{
+}
+
+
+
+ElementPrefixResolverProxy::ElementPrefixResolverProxy(
+			const XalanElement*		namespaceContext,
+			const XPathEnvSupport*	envSupport) :
+	m_namespaceContext(namespaceContext),
 	m_envSupport(envSupport),
-	m_domSupport(domSupport),
 	m_uri()
 {
 }
@@ -103,7 +114,7 @@ ElementPrefixResolverProxy::getNamespaceForPrefix(const XalanDOMString&		prefix)
 	}
 	else
 	{
-		return m_domSupport.getNamespaceForPrefix(prefix, *m_namespaceContext);
+		return DOMServices::getNamespaceForPrefix(prefix, *m_namespaceContext);
 	}
 }
 
@@ -112,14 +123,14 @@ ElementPrefixResolverProxy::getNamespaceForPrefix(const XalanDOMString&		prefix)
 const XalanDOMString&
 ElementPrefixResolverProxy::getURI() const
 {
-	if (m_namespaceContext != 0 && length(m_uri) == 0)
+	if (m_envSupport != 0 && m_namespaceContext != 0 && length(m_uri) == 0)
 	{
 #if defined(XALAN_NO_MUTABLE)
 		((ElementPrefixResolverProxy*)this)->m_uri =
 #else
 		m_uri =
 #endif
-				m_envSupport.findURIFromDoc(m_namespaceContext->getOwnerDocument());
+				m_envSupport->findURIFromDoc(m_namespaceContext->getOwnerDocument());
 	}
 
 	return m_uri;

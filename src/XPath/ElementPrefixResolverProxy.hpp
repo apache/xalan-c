@@ -89,11 +89,26 @@ public:
 	 * @param namespaceContext context object for namespace resolution
 	 * @param envSupport XPath environment support class instance
 	 * @param domSupport DOMSupport class instance
+	 *
+	 * @deprecated
 	 */
 	ElementPrefixResolverProxy(
 			const XalanElement*		namespaceContext,
 			const XPathEnvSupport&	envSupport,
 			const DOMSupport& 		domSupport);
+
+	/**
+	 * Construct an instance of an element prefix resolver proxy
+	 * 
+	 * @param namespaceContext context object for namespace resolution
+	 * @param envSupport XPath environment support class instance
+	 * @param domSupport DOMSupport class instance
+	 *
+	 * @deprecated
+	 */
+	ElementPrefixResolverProxy(
+			const XalanElement*		namespaceContext,
+			const XPathEnvSupport*	envSupport = 0);
 
 	virtual
 	~ElementPrefixResolverProxy();
@@ -110,9 +125,7 @@ private:
 
 	const XalanElement* const		m_namespaceContext;
 
-	const XPathEnvSupport&			m_envSupport;
-
-	const DOMSupport&				m_domSupport;
+	const XPathEnvSupport*			m_envSupport;
 
 	mutable XalanDOMString			m_uri;
 };
