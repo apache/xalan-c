@@ -382,6 +382,18 @@ protected:
 	virtual SAXParser*
 	CreateSAXParser();
 
+	/**
+	 * Create a XalanDocument proxy for an existing Xerces document.
+	 *
+	 * @param theXercesDocument The Xerces document.
+	 * @param buildBridge If true, the entire bridge structure is built.
+	 * @return a pointer to a new XercesDocumentBridge instance.
+	 */
+	virtual XercesDocumentBridge*
+	createDocument(
+			const DOM_Document&		theXercesDocument,
+			bool					buildBridge);
+
 private:
 
 #if defined(XALAN_NO_NAMESPACES)

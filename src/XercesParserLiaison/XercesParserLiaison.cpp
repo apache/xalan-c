@@ -179,7 +179,7 @@ XercesParserLiaison::parseXMLStream(
 
 	if (theXercesDocument.isNull() == false)
 	{
-		theNewDocument = new XercesDocumentBridge(theXercesDocument);
+		theNewDocument = createDocument(theXercesDocument, true);
 
 		m_documentMap[theNewDocument] = theNewDocument;
 	}
@@ -195,7 +195,7 @@ XercesParserLiaison::createDocument()
 	const DOM_Document	theXercesDocument =
 		DOM_Document::createDocument();
 
-	return createDocument(theXercesDocument);
+	return createDocument(theXercesDocument, false);
 }
 
 
@@ -403,12 +403,7 @@ XercesParserLiaison::setEntityResolver(EntityResolver*	resolver)
 XalanDocument*
 XercesParserLiaison::createDocument(const DOM_Document&		theXercesDocument)
 {
-	XercesDocumentBridge* const		theNewDocument =
-		new XercesDocumentBridge(theXercesDocument);
-
-	m_documentMap[theNewDocument] = theNewDocument;
-
-	return theNewDocument;
+	return createDocument(theXercesDocument, false);
 }
 
 
@@ -533,4 +528,19 @@ XercesParserLiaison::CreateSAXParser()
 	theParser->setErrorHandler(m_errorHandler);
 
 	return theParser;
+}
+
+
+
+XercesDocumentBridge*
+XercesParserLiaison::createDocument(
+			const DOM_Document&		theXercesDocument,
+			bool					buildBridge)
+{
+	XercesDocumentBridge* const		theNewDocument =
+		new XercesDocumentBridge(theXercesDocument, buildBridge);
+
+	m_documentMap[theNewDocument] = theNewDocument;
+
+	return theNewDocument;
 }
