@@ -155,19 +155,9 @@ private:
     XalanFileOutputStream&
 	operator=(const XalanFileOutputStream&);
 
-	void
-	flushBuffer();
-
-	void
-	doWrite(const XalanDOMChar*		theBuffer);
-
-	void
-	doWrite(
-			const char*		theBuffer,
-			unsigned long	theBufferLength);
-
     bool
 	operator==(const XalanFileOutputStream&) const;
+
 
 	// Data members...
 	const XalanDOMString	m_fileName;
