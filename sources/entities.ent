@@ -7,17 +7,19 @@
 <!ENTITY xslt4c-linuxlib "libxalan-c1_0.so">
 <!ENTITY xslt4c-aixlib "libxalan-c1_0.a">
 <!ENTITY xml4c "Xerces-C++">
-<!ENTITY xml4c-used "Xerces-C++ version 1.2.0a">
-<!ENTITY xml4c-windll "xerces-c_1_2.dll">
+<!ENTITY xml4c-used "Xerces-C++ version 1.3.0">
+<!ENTITY xml4c-windll "xerces-c_1_3.dll">
 <!ENTITY xml4c-winlib "xerces-c_1.lib">
-<!ENTITY xml4c-linuxlib "libxerces-c1_2.so">
-<!ENTITY xml4c-aixlib "libxerces-c1_2.a">
+<!ENTITY xml4c-linuxlib "libxerces-c1_3.so">
+<!ENTITY xml4c-aixlib "libxerces-c1_3.a">
 <!ENTITY xslt4j "Xalan-Java">
 <!ENTITY icu-used "International Components for Unicode(ICU) 1.6 source files">
 <!ENTITY icu-windlls "icui18n.dll, icuuc.dll">
 <!ENTITY icu-unixlib "libicu-1_6.so">
 <!ENTITY icu-aixlib "libicu-1_6.a">
+<!ENTITY icubridge-win "ICUBridge.dll">
+<!ENTITY icubridge-linux "ICUBridge.so">
+<!ENTITY icubridge-aix "ICUBridge.a">
 <!ENTITY done SYSTEM "sbk:/sources/xalan/DONE">
 <!ENTITY status SYSTEM "sbk:/sources/xalan/STATUS">
 <!ENTITY bugs SYSTEM "sbk:/sources/xalan/BUGS">
-

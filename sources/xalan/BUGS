@@ -2,5 +2,5 @@
   <p>Outstanding bugs are recorded in the Apache XML <jump href="http://xml.apache.org/bugs/">Bug Tracking System</jump>. 
   If you find a bug, please use this system to report it.</p> 
   <note>If the Apache XML Bug Tracking System is not working, please report the bug to the
-  <human-resource-ref idref="xalandev"/>.</note>
+  <human-resource-ref idref="xalandev"/>, and please be sure to note in the subject line that the bug applies to &xslt4c;.</note>
 </s3>    

@@ -123,15 +123,16 @@
   </s3><anchor name="win32"/>
   <s3 title="Steps for doing a Windows build">
   <ol>
-    <li>Rearrange the &xslt4c; binary distribution as indicated above so the headers are in
+    <li>Rearrange the &xml4c; binary distribution as indicated above so the headers are in
      the xml-xerces/c/src tree and xml-xerces is at the same level as the xml-xerces root
      directory.<br/><br/></li>
      <li>(Optional) If you are rebuilding the ICUBridge, install the ICU so the icu root directory
       is at the same level as the xml-xerces root directory (see <link 
-      idref="usagepatterns" anchor="icu">Using the ICU</link> <br/><br/></li>
-    <li>If you want TestXSLT to use ICU support for number formatting and sorting, complete the
-     preceding step, #define XALAN_USE_ICU in process.cpp, and add ICUBridge to the list of
-     dependencies for TestXSLT.<br/><br/></li>
+      idref="usagepatterns" anchor="icu">Using the ICU</link> <br/><br/>
+      If you want TestXSLT to use ICU support for number formatting and sorting, install the ICU,
+      uncomment the <code>#define XALAN_USE_ICU</code> statement in process.cpp, and add ICUBridge to the Visual
+      C++ list of TestXSLT dependencies (see <link idref="commandline" anchor="icu">Enabling ICU support for
+      TestXSLT</link>).<br/><br/></li>
     <li>Use Visual C++ to open the Xalan workspace from the xml-xalan\c\Projects\Win32\VC6.
     <br/><br/></li>
     <li>Use Visual C++ to rebuild everything or specific dynamic link libraries and executables of
@@ -140,7 +141,7 @@
   </s3><anchor name="unix"/>
 <s3 title="Steps for doing a Linux or AIX build">
     <ol>
-      <li>Rearrange the &xslt4c; binary distribution as indicated above so the headers are in the
+      <li>Rearrange the &xml4c; binary distribution as indicated above so the headers are in the
         <ref>xerces-c_x_y_z-platform</ref>/c/src tree, and set the XERCESCROOT environment variable
         to the complete path to <ref>xerces-c_x_y_z-platform</ref>.<br/><br/></li>    
       <li>Set the XALANCROOT environment variable to the complete path to the root of the &xslt4c;
@@ -149,21 +150,23 @@
        variable to the complete path to the STLPort distribution. The Linux GNU compiler includes
        the STL (Standard Template Library).<br/><br/></li>
       <li>(Optional) If you are rebuilding the ICUBridge, install the ICU and define XALAN_USE_ICU
-       (see <link idref="usagepatterns" anchor="icu">Using the ICU</link> <br/><br/></li>
+       (see <link idref="usagepatterns" anchor="icu">Using the ICU</link>) <br/><br/></li>
       <li>Change directory to xml-xalan/c/src in the &xslt4c; distribution.<br/><br/></li>      
       <li>Use the chmod +x command to set the executable flags for conf* and
-       runConfigure.<br/><br/></li>
+       runConfigure.<br/><br/>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<code>chmod +x runConfigure</code><br/>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<code>chmod +x conf*</code><br/><br/></li>
       <li>Run the runConfigure utility with at least the platform flag (Linux) or the platform, C compilier, and C++ compiler flags (AIX) as indicated below.<br/><br/>
       <ref>Linux:</ref>&nbsp;&nbsp;<code>runConfigure -p linux</code><br/>
-      <ref>AIX:</ref>&nbsp;&nbsp;&nbsp;runConfigure -p aix -c xlc_r -x xlC-r<br/><br/>
-      To see the other runConfigure flags you may include, use the help flag:<br/>
-      &nbsp;&nbsp;<code>runConfigure -h</code><br/><br/></li>
+      <ref>AIX:</ref>&nbsp;&nbsp;&nbsp;<code>runConfigure -p aix -c xlc_r -x xlC-r</code><br/><br/>
+      To see the other runConfigure flags you may include, use the help flag:<br/><br/>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<code>runConfigure -h</code><br/><br/></li>
       <li>Run the make file:<br/><br/>
-      &nbsp;&nbsp;<code>make</code> (rebuild all)<br/>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<code>make</code><br/>
       or<br/>
-      &nbsp;&nbsp;<code>make <ref>targ</ref></code><br/><br/>
-      where <ref>targ</ref> is all (rebuild all), lib (the XSLT libary), or TestXSLT (the
-      TestSXSLT executable). ICUBridge is included in the build if XALAN_USE_ICU is
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<code>make <ref>targ</ref></code><br/><br/>
+      where <ref>targ</ref> is ommitted or is <code>all</code> (rebuild all), <code>lib</code> (the XSLT libary), or
+      <code>TestXSLT</code> (the TestSXSLT executable). ICUBridge is included in the build of TestXSLT if XALAN_USE_ICU is
       defined.<br/><br/></li>
     </ol>
     <note>The command you use for setting environment variables depends on the shell you are
@@ -171,13 +174,13 @@
      For Bourne Shell, K Shell, or Bash use <em>export</em> ENVAR "val"<br/>
      For C Shell, use <em>setenv</em> ENVAR="val"<br/>
      where ENVAR is the environment variable name and val is the environment variable
-     setting.</note>
+     setting. You can check the setting of an environment variable with <em>echo</em> $ENVAR</note>
    </s3><anchor name="samples"/>
    <s3 title="Rebuilding a sample application">
    <p>The Windows32 distribution includes Visual C++ project files for each of the sample applications. The project files are in the samples subdirectories along with the source files. If you modify a sample and want to recompile it, you can recompile the .cpp file(s) and rebuild the executable.</p>
-<p>The make files that come with the Linux and AIX distributions include targets for rebuilding one or all of the sample applications (with the exception of the ThreadSafe sample, which in its current form only runs under Windows). To rebuild one or more sample applications, go to the xml-xerces/c/src directory and run<br/><br/>
-&nbsp;&nbsp;<code>make <ref>Targ</ref></code><br/><br/>
-where <ref>Targ</ref> is Samples (all the samples), CompileStylesheet, ExternalFunction, SimpleTransform, TraceListen, UseStylesheetParam, or XPathWrapper.</p>
+<p>The make files that come with the Linux and AIX distributions include targets for rebuilding one or all of the sample applications (with the exception of the ThreadSafe sample, which in its current form only runs under Windows). To rebuild one or more sample applications, go to the xml-xalan/c/src directory and run<br/><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<code>make <ref>targ</ref></code><br/><br/>
+where <ref>targ</ref> is <code>Samples</code> (all the samples), <code>CompileStylesheet</code>, <code>ExternalFunction</code>, <code>SimpleTransform</code>, <code>TraceListen</code>, <code>UseStylesheetParam</code>, or <code>XPathWrapper</code>.</p>
    </s3>
  </s2><anchor name="contact"/>
  <s2 title="Getting in Touch">

@@ -72,10 +72,7 @@
   <anchor name="getstarted"/>
 	<s2 title="Samples to help you get started">
     <p>Each of the subdirectories in the &xslt4c; samples directory contains the source files for a
-    sample application. In the Windows32 distribution, the executables for all the samples are in the build
-     subdirectory, which should be on the system path. If you are using the Linux distribution, you must build the
-     sample application executables yourself. Of course you can also consult the sample application source files for
-     useful information about how to perform basic operations.</p>
+    sample application. The executables for the samples are in the build subdirectory, which should be on the system path.</p>
     <p>With most of the samples, you can use the following procedure:</p>
      <ol>
       <li>Go to the samples subdirectory containing the sample (use the DOS shell if you are running Windows)
@@ -170,6 +167,8 @@ theProcessor.addTraceListener(&amp;theTraceListener);
     <p>where <ref>XMLFile</ref> is an XML source file, <ref>ContextNode</ref> is the location path to the context
      node, and <ref>XPathExpression</ref> is an XPath expression to apply to that context node. The XPathWrapper
      subdirectory contains an XML file named xml.foo (part of it appears below).</p>
+     <note>If an XPathWrapper argument includes characters (such as *) that the shell intercepts, enclose the argument 
+     in double quotes.</note>   
      <source>&lt;?xml version="1.0"?&gt;
 &lt;doc&gt;
   &lt;name first="David" last="Marston"/&gt;
@@ -181,7 +180,7 @@ theProcessor.addTraceListener(&amp;theTraceListener);
     <p><code>TestDriver foo.xml /doc name/@last</code></p>
     <p>and</p>
     <p><code>TestDriver foo.xml //name[position()="4"]./@first</code></p>
-    <p>See also: <link idref="usagepatterns" anchor="xpath">Working with XPath expressions</link>.</p>    
+    <p>See also: <link idref="usagepatterns" anchor="xpath">Working with XPath expressions</link>.</p> 
   </s2><anchor name="externalfunctions"/>
   <s2 title="ExternalFunctions">
     <p>What it does: implement, install, and illustrate the usage of three extension functions. The functions return a
