@@ -454,7 +454,7 @@ SOURCE=..\..\..\..\src\XPath\FunctionNamespaceURI.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\FunctionNormalize.hpp
+SOURCE=..\..\..\..\src\XPath\FunctionNormalizeSpace.hpp
 # End Source File
 # Begin Source File
 
