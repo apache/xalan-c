@@ -663,6 +663,16 @@ public:
 			m_executionContext.setPrefixResolver(theResolver);
 		}
 
+		PrefixResolverSetAndRestore(
+				XPathExecutionContext&	theExecutionContext,
+				const PrefixResolver*	theOldResolver,
+				const PrefixResolver*	theNewResolver) :
+			m_executionContext(theExecutionContext),
+			m_savedResolver(theOldResolver)
+		{
+			m_executionContext.setPrefixResolver(theNewResolver);
+		}
+
 		~PrefixResolverSetAndRestore()
 		{
 			m_executionContext.setPrefixResolver(m_savedResolver);
