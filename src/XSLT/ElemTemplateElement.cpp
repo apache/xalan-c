@@ -582,16 +582,38 @@ ElemTemplateElement::transformSelectedChildren(
 		{
 			ElemSort* sort = foreach->getSortElems()[i];
 			assert(sort != 0);
-			
-			const XalanDOMString langString = (!isEmpty(sort->getLangAVT())) ? 
-				executionContext.evaluateAttrVal(sourceNodeContext, *sort, sort->getLangAVT()): XalanDOMString();
 
-			const XalanDOMString dataTypeString = executionContext.evaluateAttrVal(sourceNodeContext, *sort, sort->getDataTypeAVT());
+			const AVT* avt = 0;
+
+			XalanDOMString langString;
+						
+			avt = sort->getLangAVT();
+
+			if(0 != avt)
+			{
+				avt->evaluate(langString, sourceNodeContext, xslInstruction, executionContext);
+			}
+
+			XalanDOMString dataTypeString;
+
+			avt = sort->getDataTypeAVT();
+
+			if(0 != avt)
+			{
+				avt->evaluate(dataTypeString, sourceNodeContext, xslInstruction, executionContext);
+			}			
 
 			bool treatAsNumbers = ((!isEmpty(dataTypeString)) && equals(dataTypeString,Constants::ATTRVAL_DATATYPE_NUMBER)) ? 
 				true : false;
 
-			const XalanDOMString	orderString = executionContext.evaluateAttrVal(sourceNodeContext, *sort, sort->getOrderAVT());
+			XalanDOMString orderString;
+
+			avt = sort->getOrderAVT();
+
+			if(0 != avt)
+			{
+				avt->evaluate(orderString, sourceNodeContext, xslInstruction, executionContext);
+			}			
 
 			bool descending = ((!isEmpty(orderString)) &&  equals(orderString,Constants::ATTRVAL_ORDER_DESCENDING))? 
 				true : false;

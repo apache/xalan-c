@@ -65,6 +65,7 @@
 
 
 // Base class header file.
+#include "AVT.hpp"
 #include "ElemTemplateElement.hpp"
 
 
@@ -74,6 +75,7 @@
 
 
 class XPath;
+class AVT;
 
 
 
@@ -97,12 +99,14 @@ public:
 			int								lineNumber,
 			int								columnNumber);
 
+	~ElemSort();
+
 	/**
 	 * Retrieve the language attribute value template(AVT) 
 	 * 
-	 * @return string corresponding the language AVT
+	 * @return the language AVT
 	 */
-	const XalanDOMString&
+	const AVT*
 	getLangAVT() const
 	{
 		return m_langAVT;
@@ -111,9 +115,9 @@ public:
 	/**
 	 * Retrieve the order attribute value template(AVT) 
 	 * 
-	 * @return string corresponding the order AVT
+	 * @return the order AVT
 	 */
-	const XalanDOMString&
+	const AVT*
 	getOrderAVT() const
 	{
 		return m_orderAVT;
@@ -122,9 +126,9 @@ public:
 	/**
 	 * Retrieve the data type attribute value template(AVT) 
 	 * 
-	 * @return string corresponding the data type AVT
+	 * @return the data type AVT
 	 */
-	const XalanDOMString&
+	const AVT*
 	getDataTypeAVT() const
 	{
 		return m_dataTypeAVT;
@@ -148,10 +152,10 @@ private:
 
 	const XPath*	m_selectPattern;
 
-    XalanDOMString	m_langAVT;
-    XalanDOMString	m_dataTypeAVT;
-	XalanDOMString	m_orderAVT;
-    XalanDOMString	m_caseOrderAVT;
+    const AVT*		m_langAVT;
+    const AVT*		m_dataTypeAVT;
+	const AVT*		m_orderAVT;
+    const AVT*		m_caseOrderAVT;
 };
 
 

@@ -83,10 +83,10 @@ ElemSort::ElemSort(
 						columnNumber,
 						Constants::ELEMNAME_SORT),
 	m_selectPattern(0),
-	m_langAVT(),
-	m_dataTypeAVT(Constants::ATTRVAL_DATATYPE_TEXT),
-	m_orderAVT(Constants::ATTRVAL_ORDER_ASCENDING),
-	m_caseOrderAVT()
+	m_langAVT(0),
+	m_dataTypeAVT(0),
+	m_orderAVT(0),
+	m_caseOrderAVT(0)
 {
 	const unsigned int nAttrs = atts.getLength();
 
@@ -100,27 +100,47 @@ ElemSort::ElemSort(
 				= constructionContext.createXPath(atts.getValue(i), *this);
 		}
 		else if(equals(aname, Constants::ATTRNAME_LANG))
-		{
-			m_langAVT = atts.getValue(i);
+		{			
+			m_langAVT = new AVT(aname,	atts.getType(i), atts.getValue(i),
+				*this, constructionContext);
 		}
 		else if(equals(aname, Constants::ATTRNAME_DATATYPE))
 		{
-			m_dataTypeAVT = atts.getValue(i);
+			m_dataTypeAVT = new AVT(aname,	atts.getType(i), atts.getValue(i),
+				*this, constructionContext);
 		}
 		else if(equals(aname, Constants::ATTRNAME_ORDER))
 		{
-			m_orderAVT = atts.getValue(i);
+			m_orderAVT = new AVT(aname,	atts.getType(i), atts.getValue(i),
+				*this, constructionContext);
 		}
 		else if(equals(aname, Constants::ATTRNAME_CASEORDER))
 		{
 			constructionContext.warn("Xalan C++ does not yet handle the " + Constants::ATTRNAME_CASEORDER + " attribute!");
 
-			m_caseOrderAVT = atts.getValue(i);
+			m_caseOrderAVT = new AVT(aname,	atts.getType(i), atts.getValue(i),
+				*this, constructionContext);
 		}
 		else if(!isAttrOK(aname, atts, i, constructionContext))
 		{
 			constructionContext.error(Constants::ELEMNAME_SORT_WITH_PREFIX_STRING + " has an illegal attribute: " + aname);
 		}
+	}
+
+	//m_dataTypeAVT(Constants::ATTRVAL_DATATYPE_TEXT),
+	//m_orderAVT(Constants::ATTRVAL_ORDER_ASCENDING),
+
+
+	if(0 == m_dataTypeAVT)
+	{
+		m_dataTypeAVT = new AVT(c_wstr(Constants::ATTRNAME_DATATYPE), c_wstr(Constants::ATTRTYPE_CDATA), c_wstr(Constants::ATTRVAL_DATATYPE_TEXT), 
+			*this, constructionContext);
+	}
+
+	if(0 == m_orderAVT)
+	{
+		m_orderAVT = new AVT(c_wstr(Constants::ATTRNAME_ORDER),	c_wstr(Constants::ATTRTYPE_CDATA), c_wstr(Constants::ATTRVAL_ORDER_ASCENDING),
+			*this, constructionContext);
 	}
 
 	if(0 == m_selectPattern)
@@ -129,6 +149,27 @@ ElemSort::ElemSort(
 	}
 }
 
+
+ElemSort::~ElemSort()
+{
+#if defined(XALAN_CANNOT_DELETE_CONST)
+	delete (AVT*)m_langAVT;
+
+	delete (AVT*)m_dataTypeAVT;
+
+	delete (AVT*)m_orderAVT;
+
+	delete (AVT*)m_caseOrderAVT;
+#else
+	delete m_langAVT;
+
+	delete m_dataTypeAVT;
+
+	delete m_orderAVT;
+
+	delete m_caseOrderAVT;
+#endif
+}
 
 
 const XalanDOMString&
