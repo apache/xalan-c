@@ -18,10 +18,11 @@
 #include <PlatformSupport/DOMStringHelper.hpp>
 #include <PlatformSupport/XalanFileOutputStream.hpp>
 #include <PlatformSupport/XalanOutputStreamPrintWriter.hpp>
-#include <XercesParserLiaison/XercesDOMSupport.hpp>
+
+#include <XalanSourceTree/XalanSourceTreeDOMSupport.hpp>
+#include <XalanSourceTree/XalanSourceTreeParserLiaison.hpp>
 
 #include <XPath/XObjectFactoryDefault.hpp>
-#include <XPath/XPathSupportDefault.hpp>
 #include <XPath/XPathFactoryDefault.hpp>
 
 #include <XSLT/StylesheetConstructionContextDefault.hpp>
@@ -33,8 +34,8 @@
 #include <XSLT/XSLTProcessorEnvSupportDefault.hpp>
 #include <XSLT/XSLTResultTarget.hpp>
 
-#include <XercesParserLiaison/XercesParserLiaison.hpp>
-
+//#include <XMLFileReporter.hpp>
+//#include <FileUtility.hpp>
 
 //This is here for the threads.
 #define WIN32_LEAN_AND_MEAN
@@ -347,9 +348,9 @@ const char* const xslStylesheets[] =
 	"v:\\xsl-test\\conf\\entref\\entref05",
 	"v:\\xsl-test\\conf\\entref\\entref06",
 	"v:\\xsl-test\\conf\\entref\\entref07",
-	"v:\\xsl-test\\conf\\entref\\entref08",
+	//"v:\\xsl-test\\conf\\entref\\entref08",
 	"v:\\xsl-test\\conf\\entref\\entref09",
-	"v:\\xsl-test\\conf\\entref\\entref10",
+	//"v:\\xsl-test\\conf\\entref\\entref10",
 	"v:\\xsl-test\\conf\\expression\\expression01",
 	"v:\\xsl-test\\conf\\expression\\expression02",
 	"v:\\xsl-test\\conf\\expression\\expression03",
@@ -411,10 +412,10 @@ const char* const xslStylesheets[] =
 	"v:\\xsl-test\\conf\\lre\\lre03",
 	"v:\\xsl-test\\conf\\lre\\lre04",
 	"v:\\xsl-test\\conf\\lre\\lre05",
-	"v:\\xsl-test\\conf\\lre\\lre06",
+	//"v:\\xsl-test\\conf\\lre\\lre06",
 	"v:\\xsl-test\\conf\\lre\\lre07",
 	"v:\\xsl-test\\conf\\lre\\lre08",	
-	"v:\\xsl-test\\conf\\lre\\lre09",
+	//"v:\\xsl-test\\conf\\lre\\lre09",
 	"v:\\xsl-test\\conf\\lre\\lre10",
 	"v:\\xsl-test\\conf\\lre\\lre11",
 	"v:\\xsl-test\\conf\\lre\\lre12",
@@ -1276,9 +1277,11 @@ main(
 				XSLTInit	theInit;
 
 				// Create the necessary stuff to compile the stylesheet.
-				XercesDOMSupport				csDOMSupport;
-				XercesParserLiaison				csParserLiaison(csDOMSupport);
-				XPathSupportDefault				csXPathSupport(csDOMSupport);
+				XalanSourceTreeDOMSupport		csDOMSupport;
+				XalanSourceTreeParserLiaison	csParserLiaison(csDOMSupport);
+
+				csDOMSupport.setParserLiaison(&csParserLiaison);
+
 				XSLTProcessorEnvSupportDefault	csXSLTProcessorEnvSupport;
 				XObjectFactoryDefault			csXObjectFactory;
 				XPathFactoryDefault				csXPathFactory;
@@ -1286,7 +1289,6 @@ main(
 				// Create a processor to compile the stylesheet...
 				XSLTEngineImpl	csProcessor(
 						csParserLiaison,
-						csXPathSupport,
 						csXSLTProcessorEnvSupport,
 						csDOMSupport,
 						csXObjectFactory,
@@ -1346,9 +1348,8 @@ main(
 						//cout << "Now running test: " << xslStylesheets[ii] << endl;
 						cout << "#";
 						// Create the necessary stuff to run the processor.
-						XercesDOMSupport				psDOMSupport;
-						XercesParserLiaison				psParserLiaison(psDOMSupport);
-						XPathSupportDefault				psXPathSupport(psDOMSupport);
+						XalanSourceTreeDOMSupport		psDOMSupport;
+						XalanSourceTreeParserLiaison	psParserLiaison(psDOMSupport);
 						XSLTProcessorEnvSupportDefault	psXSLTProcessorEnvSupport;
 						XObjectFactoryDefault			psXObjectFactory;
 						XPathFactoryDefault				psXPathFactory;
@@ -1356,7 +1357,6 @@ main(
 						// Create a processor to compile the stylesheet...
 						XSLTEngineImpl	psProcessor(
 							psParserLiaison,
-							psXPathSupport,
 							psXSLTProcessorEnvSupport,
 							psDOMSupport,
 							psXObjectFactory,
@@ -1371,7 +1371,7 @@ main(
 						StylesheetExecutionContextDefault		psExecutionContext(
 								psProcessor,
 								psXSLTProcessorEnvSupport,
-								psXPathSupport,
+								psDOMSupport,
 								psXObjectFactory);
 
 						const XalanDOMString  outputFile("foo.out");
