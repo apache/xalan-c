@@ -102,21 +102,21 @@ public:
 			const XalanNode&	node1,
 			const XalanNode&	node2) const;
 
-	XalanSourceTreeParserLiaison*
+	const XalanSourceTreeParserLiaison*
 	getParserLiaison() const
 	{
 		return m_parserLiaison;
 	}
 
 	void
-	setParserLiaison(XalanSourceTreeParserLiaison*	theParserLiaison)
+	setParserLiaison(const XalanSourceTreeParserLiaison*	theParserLiaison)
 	{
 		m_parserLiaison = theParserLiaison;
 	}
 
 private:
 
-	XalanSourceTreeParserLiaison*	m_parserLiaison;
+	const XalanSourceTreeParserLiaison*		m_parserLiaison;
 };
 
 
