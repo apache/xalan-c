@@ -127,6 +127,8 @@ XalanSourceTreeContentHandler::endDocument()
 	// startDocument()...
 	m_elementStack.pop_back();
 
+	assert(m_document->getDocumentElement() != 0);
+
 	assert(m_elementStack.empty() == true);
 	assert(m_lastChildStack.empty() == true);
 
@@ -204,7 +206,10 @@ doAppendChildNode(
 
 	if (theCurrentElement == 0)
 	{
-		doAppendChildNode(theDocument, theLastChild, theNewChild);
+		// If there is no current element. it means we haven't
+		// created the document element yet, so always append
+		// to the document, rather than the last child.
+		theDocument->appendChildNode(theNewChild);
 	}
 	else
 	{
