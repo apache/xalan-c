@@ -1335,11 +1335,8 @@ XPath::runExtFunction(
 	opPos++;
 
 	typedef XPathExecutionContext::XObjectArgVectorType		XObjectArgVectorType;
-	typedef XPathExecutionContext::PushPopArgVector			PushPopArgVector;
 
-	PushPopArgVector	thePushPop(executionContext);
-
-	XObjectArgVectorType&	args = thePushPop.getVector();
+	XObjectArgVectorType	args;
 
 	while(opPos < endExtFunc)
 	{
@@ -1391,6 +1388,8 @@ XPath::runFunction(
 			int						opPos,
 			XPathExecutionContext&	executionContext) const
 {
+	const XObject*	theResult = 0;
+
 	const int	endFunc = opPos + m_expression.m_opMap[opPos + 1] - 1;
 
 	opPos += 2;
@@ -1412,7 +1411,7 @@ XPath::runFunction(
 	{
 		assert(opPos == endFunc);
 
-		return s_functions[funcID].execute(executionContext, context);
+		theResult =  s_functions[funcID].execute(executionContext, context);
 	}
 	else if (argCount == 1)
 	{
@@ -1424,7 +1423,7 @@ XPath::runFunction(
 		
 		assert(opPos == endFunc);
 
-		return s_functions[funcID].execute(executionContext, context, theArg.get());
+		theResult =  s_functions[funcID].execute(executionContext, context, theArg.get());
 	}
 	else if (argCount == 2)
 	{
@@ -1442,7 +1441,7 @@ XPath::runFunction(
 		
 		assert(opPos == endFunc);
 
-		return s_functions[funcID].execute(executionContext, context, theArg1.get(), theArg2.get());
+		theResult =  s_functions[funcID].execute(executionContext, context, theArg1.get(), theArg2.get());
 	}
 	else if (argCount == 3)
 	{
@@ -1467,34 +1466,34 @@ XPath::runFunction(
 
 		assert(opPos == endFunc);
 
-		return s_functions[funcID].execute(executionContext, context, theArg1.get(), theArg2.get(), theArg3.get());
+		theResult =  s_functions[funcID].execute(executionContext, context, theArg1.get(), theArg2.get(), theArg3.get());
 	}
-
-	typedef XPathExecutionContext::XObjectArgVectorType		XObjectArgVectorType;
-	typedef XPathExecutionContext::PushPopArgVector			PushPopArgVector;
-
-	PushPopArgVector	thePushPop(executionContext);
-
-	XObjectArgVectorType&	args = thePushPop.getVector();
-
-	while(opPos < endFunc)
+	else
 	{
-		const int	nextOpPos = m_expression.getNextOpCodePosition(opPos);
+		typedef XPathExecutionContext::XObjectArgVectorType		XObjectArgVectorType;
 
-		args.push_back(executeMore(context, opPos, executionContext));
+		XObjectArgVectorType	args;
 
-		opPos = nextOpPos;
-	}
+		args.reserve(argCount);
 
-	const XObject* const		theResult =
-		function(context, opPos, funcID, args, executionContext);
+		while(opPos < endFunc)
+		{
+			const int	nextOpPos = m_expression.getNextOpCodePosition(opPos);
 
-	// Return the args...
-	while(args.size() > 0)
-	{
-		theFactory.returnObject(args.back());
+			args.push_back(executeMore(context, opPos, executionContext));
 
-		args.pop_back();
+			opPos = nextOpPos;
+		}
+
+		theResult = function(context, opPos, funcID, args, executionContext);
+
+		// Return the args...
+		while(args.size() > 0)
+		{
+			theFactory.returnObject(args.back());
+
+			args.pop_back();
+		}
 	}
 
 	return theResult;
