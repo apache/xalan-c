@@ -56,14 +56,17 @@
  */
 #include "StylesheetHandler.hpp"
 
+
+
 #include <algorithm>
-#include <PlatformSupport/STLHelper.hpp>
+#include <memory>
+
 
 
 #include <sax/Locator.hpp>
 #include <sax/SAXException.hpp>
-
 #include <util/XMLURL.hpp>
+
 
 
 #include <XMLSupport/Formatter.hpp>
@@ -73,6 +76,7 @@
 #include <PlatformSupport/AttributeListImpl.hpp>
 #include <PlatformSupport/DOMStringHelper.hpp>
 #include <PlatformSupport/StringTokenizer.hpp>
+#include <PlatformSupport/STLHelper.hpp>
 
 
 
@@ -305,7 +309,7 @@ StylesheetHandler::startElement (const XMLCh* const name, AttributeList& atts)
 												name, atts, lineNumber, columnNumber);
 					m_elemStack.push_back(m_pTemplate);
 					m_inTemplate = true;
-					m_stylesheet.addTemplate(m_pTemplate);
+					m_stylesheet.addTemplate(m_pTemplate, m_constructionContext);
 					break;
 
 				case Constants::ELEMNAME_EXTENSION:
@@ -1015,16 +1019,24 @@ StylesheetHandler::startElement (const XMLCh* const name, AttributeList& atts)
 	{
 		m_exceptionPending = true;
 
-		m_pendingException = e.getMessage();
+		// Pop anything that's not an empty element...
+		while(m_elemStack.back()->getXSLToken() != Constants::ELEMNAME_UNDEFINED)
+		{
+			m_elemStack.pop_back();
+		}
 
-		m_elemStack.clear();
+		m_pendingException = e.getMessage();
 	}
 	catch(...)
 	{
 		// $$$ ToDo: This probably should't happen, but it does...
 		m_exceptionPending = true;
 
-		m_elemStack.clear();
+		// Pop anything that's not an empty element...
+		while(m_elemStack.back()->getXSLToken() != Constants::ELEMNAME_UNDEFINED)
+		{
+			m_elemStack.pop_back();
+		}
 
 		throw;
 	}
@@ -1112,6 +1124,9 @@ StylesheetHandler::processImport(
 
 		if(equals(aname, Constants::ATTRNAME_HREF))
 		{
+#if !defined(XALAN_NO_NAMESPACES)
+			using std::auto_ptr;
+#endif
 			foundIt = true;
 			
 			if(m_foundNotImport)
@@ -1145,19 +1160,23 @@ StylesheetHandler::processImport(
 
 			const XalanDOMString	theImportURI(hrefUrl->getURLText());
 
-			Stylesheet* pImportedStylesheet = new Stylesheet(
+			// This will take care of cleaning up the stylesheet if an exception
+			// is thrown.
+			auto_ptr<Stylesheet>	importedStylesheet( 
+				m_constructionContext.create(
 				m_stylesheet.getStylesheetRoot(), 
-				theImportURI,
-				m_constructionContext);
+				theImportURI));
 
-			StylesheetHandler tp(*pImportedStylesheet, m_constructionContext);
+			StylesheetHandler tp(*importedStylesheet.get(), m_constructionContext);
 
-			m_constructionContext.parseXML(*hrefUrl, &tp, pImportedStylesheet);
+			m_constructionContext.parseXML(*hrefUrl, &tp, importedStylesheet.get());
 
-			// I'm going to insert the elements in backwards order, 
-			// so I can walk them 0 to n.
-			m_stylesheet.getImports().insert(m_stylesheet.getImports().begin(),
-				pImportedStylesheet);
+			// Add it to the front of the imports
+			m_stylesheet.addImport(importedStylesheet.get(), true);
+
+			// The imported stylesheet is now owned by the stylesheet, so
+			// release the auto_ptr.
+			importedStylesheet.release();
 
 			importStack.pop_back();
 			

@@ -184,6 +184,22 @@ StylesheetConstructionContextDefault::create(XSLTInputSource&	theInputSource)
 
 
 
+Stylesheet*
+StylesheetConstructionContextDefault::create(
+			StylesheetRoot&			theStylesheetRoot,
+			const XalanDOMString&	theBaseIdentifier)
+{
+	Stylesheet* const	theStylesheet =
+		new Stylesheet(
+			theStylesheetRoot,
+			theBaseIdentifier,
+			*this);
+
+	return theStylesheet;
+}
+
+
+
 void
 StylesheetConstructionContextDefault::destroy(StylesheetRoot*	theStylesheetRoot)
 {

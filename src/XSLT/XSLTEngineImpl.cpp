@@ -463,7 +463,7 @@ XSLTEngineImpl::process(
 
 				if(false == isRoot)
 				{
-					prevStylesheet->getImports().push_back(stylesheet);
+					prevStylesheet->addImport(stylesheet, false);
 				}
 
 				prevStylesheet = stylesheet;
@@ -856,7 +856,7 @@ XSLTEngineImpl::getStylesheetFromPIURL(
 			}
 			else
 			{
-				stylesheet = new Stylesheet(*const_cast<StylesheetRoot*>(m_stylesheetRoot), stringHolder, constructionContext);
+				stylesheet = constructionContext.create(*const_cast<StylesheetRoot*>(m_stylesheetRoot), stringHolder);
 			}
 
 			StylesheetHandler stylesheetProcessor(*stylesheet, constructionContext);

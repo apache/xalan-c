@@ -82,6 +82,7 @@
 class DocumentHandler;
 class Locator;
 class PrefixResolver;
+class Stylesheet;
 class StylesheetRoot;
 class XalanDocument;
 class XPath;
@@ -137,9 +138,22 @@ public:
 	create(XSLTInputSource&		theInputSource) = 0;
 
 	/**
+	 * Create a new Stylesheet instance.  The StylesheetConstructionContext
+	 * instance owns the Stylesheet instance, and will delete it when asked
+	 * or when the StylesheetConstructionContext instance is destroyed.
+	 *
+	 * @param A reference to the StylesheetRoot instance.
+	 * @param theBaseIdentifier A URI to the stylesheet file.
+	 * @return A pointer to a new StylesheetRoot instance.
+	 */
+	virtual Stylesheet*
+	create(
+			StylesheetRoot&			theStylesheetRoot,
+			const XalanDOMString&	theBaseIdentifier) = 0;
+
+	/**
 	 * Destroy a StylesheetRoot instance.  If this StylesheetConstructionContext
-	 * instance does not own the StylesheetRoot, it will not delete the
-	 * StylesheetRoot.
+	 * instance does not own the StylesheetRoot, it will not delete it
 	 *
 	 * @param theStylesheet A pointer to the StylesheetRoot instance to delete.
 	 */

@@ -138,7 +138,7 @@ typedef XALAN_STD map<const XalanNode*, KeyTable*>		KeyTablesTableType;
 typedef XALAN_STD vector<NameSpace> 				  NamespaceVectorType;
 typedef XALAN_STD vector<NamespaceVectorType>		  NamespacesStackType;
 typedef XALAN_STD vector<QName> 					  QNameVectorType;
-typedef XALAN_STD vector<Stylesheet*>				  StylesheetVectorType;
+typedef XALAN_STD vector<const Stylesheet*>				StylesheetVectorType;
 typedef XALAN_STD vector<const XMLURL*> 			  URLStackType;
 typedef XALAN_STD vector<const XPath*>				  XPathVectorType;
 typedef XALAN_STD vector<ElemDecimalFormat*>			ElemDecimalFormatVectorType;
@@ -313,16 +313,19 @@ typedef XALAN_STD vector<ElemDecimalFormat*>			ElemDecimalFormatVectorType;
 	 * Add a template to the list of names templates
 	 * 
 	 * @param tmpl template to add
+	 * @param constructionContext context for construction
 	 */
 	void
-	addTemplate(ElemTemplate *tmpl);
+	addTemplate(
+			ElemTemplate*					tmpl,
+			StylesheetConstructionContext&	constructionContext);
 
 	/**
 	 * Process an attribute that has the value of 'yes' or 'no'.
 	 * 
 	 * @param aname name of attribute
 	 * @param val value
-	 * @param constructionContext context for evaluation
+	 * @param constructionContext context for construction
 	 * @return true if value equals string constant for "yes," false otherwise
 	 */
 	virtual bool
@@ -463,14 +466,17 @@ typedef XALAN_STD vector<ElemDecimalFormat*>			ElemDecimalFormatVectorType;
 	}
 
 	/**
-	 * Retrieve the list of imported stylesheets
-	 * 
-	 * @return vector of imported stylesheets
+	 * Add an imported stylesheet.
+	 *
+	 * @param theStylesheet The stylesheet to add.
+	 * @param fFront If true, the stylesheet is added to the front of the imports, instead of the end.
 	 */
-	StylesheetVectorType&
-	getImports()
+	void
+	addImport(
+			const Stylesheet*	theStylesheet,
+			bool				fFront)
 	{
-		return m_imports;
+		m_imports.insert(fFront ? m_imports.begin() : m_imports.end(), theStylesheet);
 	}
 
 	/**

@@ -415,7 +415,9 @@ Stylesheet::getYesOrNo(
  * Add a template to the template list.
  */
 void
-Stylesheet::addTemplate(ElemTemplate *tmpl)
+Stylesheet::addTemplate(
+			ElemTemplate*					tmpl,
+			StylesheetConstructionContext&	constructionContext)
 {
 	unsigned int	pos = 0;
 
@@ -443,9 +445,30 @@ Stylesheet::addTemplate(ElemTemplate *tmpl)
 		}
 	}
 
-	if(tmpl->getName().isEmpty() == false)
+	const QName&	theName = tmpl->getName();
+
+	if(theName.isEmpty() == false)
 	{
-		m_namedTemplates.insert(ElemTemplateElementMapType::value_type(tmpl->getName(), tmpl));
+		if (m_namedTemplates.find(theName) != m_namedTemplates.end())
+		{
+			XalanDOMString	theMessage("The stylesheet already has a template with the name ");
+
+			const XalanDOMString&	theNamespace = theName.getNamespace();
+
+			if (length(theNamespace) != 0)
+			{
+				theMessage += theNamespace;
+				theMessage += ":";
+			}
+
+			theMessage += theName.getLocalPart();
+
+			constructionContext.error(theMessage, 0, tmpl);
+		}
+		else
+		{
+			m_namedTemplates[theName] = tmpl;
+		}
 	}
 
 	const XPath* const	xp = tmpl->getMatchPattern();
@@ -556,11 +579,11 @@ Stylesheet::getTopLevelVariable(
 
 	if(0 == theResult)
 	{
-		const int	nImports = m_imports.size();
+		const unsigned int	nImports = m_imports.size();
 
-		for(int i = 0; i < nImports; i++)
+		for(unsigned int i = 0; i < nImports; i++)
 		{
-			Stylesheet* const	stylesheet = m_imports[i];
+			const Stylesheet* const		stylesheet = m_imports[i];
 			assert(stylesheet != 0);
 
 			theResult = stylesheet->getTopLevelVariable(name, executionContext);
@@ -635,7 +658,6 @@ Stylesheet::findTemplate(
 			{
 			case XalanNode::ELEMENT_NODE:
 				{
-					//java: XalanDOMString targetName = m_processor->getParserLiaison().getLocalNameOfNode(targetNode);
 					const XalanDOMString	targetName = DOMServices::getLocalNameOfNode(*targetNode);
 					matchPatternList = locateMatchPatternList2(targetName, true);
 				}

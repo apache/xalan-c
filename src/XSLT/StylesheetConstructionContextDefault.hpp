@@ -135,6 +135,11 @@ public:
 	virtual StylesheetRoot*
 	create(XSLTInputSource&		theInputSource);
 
+	virtual Stylesheet*
+	create(
+			StylesheetRoot&			theStylesheetRoot,
+			const XalanDOMString&	theBaseIdentifier);
+
 	virtual void
 	destroy(StylesheetRoot*		theStylesheetRoot);
 
