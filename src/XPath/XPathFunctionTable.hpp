@@ -342,6 +342,87 @@ private:
 	CollectionType				m_FunctionCollection;
 
 	FunctionNameIndexMapType	m_FunctionNameIndex;
+
+	// The string "id"
+	static const XalanDOMChar	s_id[];
+
+	// The string "not"
+	static const XalanDOMChar	s_not[];
+
+	// The string "sum"
+	static const XalanDOMChar	s_sum[];
+
+	// The string "lang"
+	static const XalanDOMChar	s_lang[];
+
+	// The string "last"
+	static const XalanDOMChar	s_last[];
+
+	// The string "name"
+	static const XalanDOMChar	s_name[];
+
+	// The string "true"
+	static const XalanDOMChar	s_true[];
+
+	// The string "count"
+	static const XalanDOMChar	s_count[];
+
+	// The string "false"
+	static const XalanDOMChar	s_false[];
+
+	// The string "floor"
+	static const XalanDOMChar	s_floor[];
+
+	// The string "round"
+	static const XalanDOMChar	s_round[];
+
+	// The string "concat"
+	static const XalanDOMChar	s_concat[];
+
+	// The string "number"
+	static const XalanDOMChar	s_number[];
+
+	// The string "string"
+	static const XalanDOMChar	s_string[];
+
+	// The string "boolean"
+	static const XalanDOMChar	s_boolean[];
+
+	// The string "ceiling"
+	static const XalanDOMChar	s_ceiling[];
+
+	// The string "contains"
+	static const XalanDOMChar	s_contains[];
+
+	// The string "position"
+	static const XalanDOMChar	s_position[];
+
+	// The string "substring"
+	static const XalanDOMChar	s_substring[];
+
+	// The string "translate"
+	static const XalanDOMChar	s_translate[];
+
+	// The string "local-name"
+	static const XalanDOMChar	s_localName[];
+
+	// The string "starts-with"
+	static const XalanDOMChar	s_startsWith[];
+
+	// The string "namespace-uri"
+	static const XalanDOMChar	s_namespaceUri[];
+
+	// The string "string-length"
+	static const XalanDOMChar	s_stringLength[];
+
+	// The string "normalize-space"
+	static const XalanDOMChar	s_normalizeSpace[];
+
+	// The string "substring-after"
+	static const XalanDOMChar	s_substringAfter[];
+
+	// The string "substring-before"
+	static const XalanDOMChar	s_substringBefore[];
 };
 
 

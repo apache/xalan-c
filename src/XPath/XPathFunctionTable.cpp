@@ -184,6 +184,87 @@ XPathFunctionTable::UninstallFunction(const XalanDOMString&		theFunctionName)
 }
 
 
+#if 0
+#include <fstream>
+
+void
+dumpTable(
+			const XPathFunctionTable::FunctionNameIndexMapType&		theTable,
+			std::ostream&											theSourceStream,
+			std::ostream&											theHeaderStream)
+{
+	XPathFunctionTable::FunctionNameIndexMapType::const_iterator	i = theTable.begin();
+
+	while(i != theTable.end())
+	{
+		theSourceStream << "const XalanDOMChar\tXPathFunctionTable::s_";
+
+		const XalanDOMString&	theString = (*i).first;
+
+		theHeaderStream << "\t// The string \"" << theString << "\"\n\tstatic const XalanDOMChar\ts_";
+
+		bool	nextCap = false;
+
+		XalanDOMString::const_iterator	j = theString.begin();
+
+		while(*j)
+		{
+			if (*j == '-')
+			{
+				nextCap = true;
+			}
+			else
+			{
+				assert(*j >= 'a' && *j <= 'z');
+
+				if (nextCap)
+				{
+					theSourceStream << char(*j -'a' + 'A');
+					theHeaderStream << char(*j -'a' + 'A');
+
+					nextCap = false;
+				}
+				else
+				{
+					theSourceStream << char(*j);
+					theHeaderStream << char(*j);
+				}
+			}
+
+			++j;
+		}
+
+		j = theString.begin();
+
+		theSourceStream << "[] =\n{\n";
+		theHeaderStream << "[];\n\n";
+
+		while(*j)
+		{
+			if (*j == '-')
+			{
+				theSourceStream << "\tXalanUnicode::charHyphenMinus,\n";
+			}
+			else
+			{
+				assert(*j >= 'a' && *j <= 'z');
+
+				theSourceStream << "\tXalanUnicode::charLetter_";
+
+				theSourceStream << char(*j) << ",\n";
+			}
+
+			++j;
+		}
+
+		theSourceStream << "\t0\n};\n\n";
+
+		++i;
+	}
+}
+#endif
+
+
 
 void
 XPathFunctionTable::CreateTable()
@@ -272,6 +353,12 @@ XPathFunctionTable::CreateTable()
 
 		InstallFunction(StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("round")),
 						FunctionRound());
+#if 0
+		std::ofstream	theSourceStream("\\foo.cpp");
+		std::ofstream	theHeaderStream("\\foo.hpp");
+
+		dumpTable(m_FunctionNameIndex, theSourceStream, theHeaderStream);
+#endif
 	}
 	catch(...)
 	{
@@ -346,3 +433,343 @@ XPathExceptionFunctionNotAvailable::XPathExceptionFunctionNotAvailable(
 XPathExceptionFunctionNotAvailable::~XPathExceptionFunctionNotAvailable()
 {
 }
+
+
+
+const XalanDOMChar	XPathFunctionTable::s_id[] =
+{
+	XalanUnicode::charLetter_i,
+	XalanUnicode::charLetter_d,
+	0
+};
+
+const XalanDOMChar	XPathFunctionTable::s_not[] =
+{
+	XalanUnicode::charLetter_n,
+	XalanUnicode::charLetter_o,
+	XalanUnicode::charLetter_t,
+	0
+};
+
+const XalanDOMChar	XPathFunctionTable::s_sum[] =
+{
+	XalanUnicode::charLetter_s,
+	XalanUnicode::charLetter_u,
+	XalanUnicode::charLetter_m,
+	0
+};
+
+const XalanDOMChar	XPathFunctionTable::s_lang[] =
+{
+	XalanUnicode::charLetter_l,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_n,
+	XalanUnicode::charLetter_g,
+	0
+};
+
+const XalanDOMChar	XPathFunctionTable::s_last[] =
+{
+	XalanUnicode::charLetter_l,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_s,
+	XalanUnicode::charLetter_t,
+	0
+};
+
+const XalanDOMChar	XPathFunctionTable::s_name[] =
+{
+	XalanUnicode::charLetter_n,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_m,
+	XalanUnicode::charLetter_e,
+	0
+};
+
+const XalanDOMChar	XPathFunctionTable::s_true[] =
+{
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_r,
+	XalanUnicode::charLetter_u,
+	XalanUnicode::charLetter_e,
+	0
+};
+
+const XalanDOMChar	XPathFunctionTable::s_count[] =
+{
+	XalanUnicode::charLetter_c,
+	XalanUnicode::charLetter_o,
+	XalanUnicode::charLetter_u,
+	XalanUnicode::charLetter_n,
+	XalanUnicode::charLetter_t,
+	0
+};
+
+const XalanDOMChar	XPathFunctionTable::s_false[] =
+{
+	XalanUnicode::charLetter_f,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_l,
+	XalanUnicode::charLetter_s,
+	XalanUnicode::charLetter_e,
+	0
+};
+
+const XalanDOMChar	XPathFunctionTable::s_floor[] =
+{
+	XalanUnicode::charLetter_f,
+	XalanUnicode::charLetter_l,
+	XalanUnicode::charLetter_o,
+	XalanUnicode::charLetter_o,
+	XalanUnicode::charLetter_r,
+	0
+};
+
+const XalanDOMChar	XPathFunctionTable::s_round[] =
+{
+	XalanUnicode::charLetter_r,
+	XalanUnicode::charLetter_o,
+	XalanUnicode::charLetter_u,
+	XalanUnicode::charLetter_n,
+	XalanUnicode::charLetter_d,
+	0
+};
+
+const XalanDOMChar	XPathFunctionTable::s_concat[] =
+{
+	XalanUnicode::charLetter_c,
+	XalanUnicode::charLetter_o,
+	XalanUnicode::charLetter_n,
+	XalanUnicode::charLetter_c,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_t,
+	0
+};
+
+const XalanDOMChar	XPathFunctionTable::s_number[] =
+{
+	XalanUnicode::charLetter_n,
+	XalanUnicode::charLetter_u,
+	XalanUnicode::charLetter_m,
+	XalanUnicode::charLetter_b,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_r,
+	0
+};
+
+const XalanDOMChar	XPathFunctionTable::s_string[] =
+{
+	XalanUnicode::charLetter_s,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_r,
+	XalanUnicode::charLetter_i,
+	XalanUnicode::charLetter_n,
+	XalanUnicode::charLetter_g,
+	0
+};
+
+const XalanDOMChar	XPathFunctionTable::s_boolean[] =
+{
+	XalanUnicode::charLetter_b,
+	XalanUnicode::charLetter_o,
+	XalanUnicode::charLetter_o,
+	XalanUnicode::charLetter_l,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_n,
+	0
+};
+
+const XalanDOMChar	XPathFunctionTable::s_ceiling[] =
+{
+	XalanUnicode::charLetter_c,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_i,
+	XalanUnicode::charLetter_l,
+	XalanUnicode::charLetter_i,
+	XalanUnicode::charLetter_n,
+	XalanUnicode::charLetter_g,
+	0
+};
+
+const XalanDOMChar	XPathFunctionTable::s_contains[] =
+{
+	XalanUnicode::charLetter_c,
+	XalanUnicode::charLetter_o,
+	XalanUnicode::charLetter_n,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_i,
+	XalanUnicode::charLetter_n,
+	XalanUnicode::charLetter_s,
+	0
+};
+
+const XalanDOMChar	XPathFunctionTable::s_position[] =
+{
+	XalanUnicode::charLetter_p,
+	XalanUnicode::charLetter_o,
+	XalanUnicode::charLetter_s,
+	XalanUnicode::charLetter_i,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_i,
+	XalanUnicode::charLetter_o,
+	XalanUnicode::charLetter_n,
+	0
+};
+
+const XalanDOMChar	XPathFunctionTable::s_substring[] =
+{
+	XalanUnicode::charLetter_s,
+	XalanUnicode::charLetter_u,
+	XalanUnicode::charLetter_b,
+	XalanUnicode::charLetter_s,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_r,
+	XalanUnicode::charLetter_i,
+	XalanUnicode::charLetter_n,
+	XalanUnicode::charLetter_g,
+	0
+};
+
+const XalanDOMChar	XPathFunctionTable::s_translate[] =
+{
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_r,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_n,
+	XalanUnicode::charLetter_s,
+	XalanUnicode::charLetter_l,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_e,
+	0
+};
+
+const XalanDOMChar	XPathFunctionTable::s_localName[] =
+{
+	XalanUnicode::charLetter_l,
+	XalanUnicode::charLetter_o,
+	XalanUnicode::charLetter_c,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_l,
+	XalanUnicode::charHyphenMinus,
+	XalanUnicode::charLetter_n,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_m,
+	XalanUnicode::charLetter_e,
+	0
+};
+
+const XalanDOMChar	XPathFunctionTable::s_startsWith[] =
+{
+	XalanUnicode::charLetter_s,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_r,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_s,
+	XalanUnicode::charHyphenMinus,
+	XalanUnicode::charLetter_w,
+	XalanUnicode::charLetter_i,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_h,
+	0
+};
+
+const XalanDOMChar	XPathFunctionTable::s_namespaceUri[] =
+{
+	XalanUnicode::charLetter_n,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_m,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_s,
+	XalanUnicode::charLetter_p,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_c,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charHyphenMinus,
+	XalanUnicode::charLetter_u,
+	XalanUnicode::charLetter_r,
+	XalanUnicode::charLetter_i,
+	0
+};
+
+const XalanDOMChar	XPathFunctionTable::s_stringLength[] =
+{
+	XalanUnicode::charLetter_s,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_r,
+	XalanUnicode::charLetter_i,
+	XalanUnicode::charLetter_n,
+	XalanUnicode::charLetter_g,
+	XalanUnicode::charHyphenMinus,
+	XalanUnicode::charLetter_l,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_n,
+	XalanUnicode::charLetter_g,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_h,
+	0
+};
+
+const XalanDOMChar	XPathFunctionTable::s_normalizeSpace[] =
+{
+	XalanUnicode::charLetter_n,
+	XalanUnicode::charLetter_o,
+	XalanUnicode::charLetter_r,
+	XalanUnicode::charLetter_m,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_l,
+	XalanUnicode::charLetter_i,
+	XalanUnicode::charLetter_z,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charHyphenMinus,
+	XalanUnicode::charLetter_s,
+	XalanUnicode::charLetter_p,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_c,
+	XalanUnicode::charLetter_e,
+	0
+};
+
+const XalanDOMChar	XPathFunctionTable::s_substringAfter[] =
+{
+	XalanUnicode::charLetter_s,
+	XalanUnicode::charLetter_u,
+	XalanUnicode::charLetter_b,
+	XalanUnicode::charLetter_s,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_r,
+	XalanUnicode::charLetter_i,
+	XalanUnicode::charLetter_n,
+	XalanUnicode::charLetter_g,
+	XalanUnicode::charHyphenMinus,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_f,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_r,
+	0
+};
+
+const XalanDOMChar	XPathFunctionTable::s_substringBefore[] =
+{
+	XalanUnicode::charLetter_s,
+	XalanUnicode::charLetter_u,
+	XalanUnicode::charLetter_b,
+	XalanUnicode::charLetter_s,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_r,
+	XalanUnicode::charLetter_i,
+	XalanUnicode::charLetter_n,
+	XalanUnicode::charLetter_g,
+	XalanUnicode::charHyphenMinus,
+	XalanUnicode::charLetter_b,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_f,
+	XalanUnicode::charLetter_o,
+	XalanUnicode::charLetter_r,
+	XalanUnicode::charLetter_e,
+	0
+};
