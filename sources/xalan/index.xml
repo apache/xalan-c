@@ -77,27 +77,27 @@
        </tr>
        <tr>
          <td>Windows32</td>
-        <td><resource-ref idref="xalan-c-win32-download"/></td>
+        <td><resource-ref idref="xslt4c-win32-download"/></td>
       </tr>
       <tr>
         <td>Linux</td>
-        <td><resource-ref idref="xalan-c-linux-download"/></td>
+        <td><resource-ref idref="xslt4c-linux-download"/></td>
   </tr>
   </table>
   <p>We plan to add builds for other platforms as soon as possible. Volunteers are more than welcome!</p>
   </s2>
   
   <s2 title="Where do I get Xerces?">
-    <p>Both distributions include the Xerces runtime environment for Xalan -- xerces-c_1_1.dll for Windows,
-     and libxerces-c_1_1.so for Linux. To build applications with Xalan and Xerces, you also need the &xml4c;
+    <p>Both distributions include the Xerces runtime environment for Xalan -- xerces-c_1_2.dll for Windows,
+     and libxerces-c_1_2.so for Linux. To build applications with Xalan and Xerces, you also need the &xml4c;
      binary distribution for your platform, which you can download from the  
-     <resource-ref idref="Xerces-c-dist"/>.</p>
-     <note>Be sure you are using a compatible Xerces-C build. For information about the build with which this release
-     of Xalan-C was tested, see <link idref="readme" anchor="status">Version of Xerces to use</link>.</note>
+     <resource-ref idref="xml4c-distdir"/>.</p>
+     <note>Be sure you are using a compatible Xerces-C++ build. For information about the build with which this release
+     of Xalan-C++ was tested, see <link idref="readme" anchor="status">Version of Xerces to use</link>.</note>
   </s2>  
     <s2 title="For more information...">
-    <p>For more information, go to the <link idref="overview">Xalan-C Overview</link> and 
-    <link idref="getstarted">Getting Started with Xalan-C</link>. All of the Xalan documentation on this website is
+    <p>For more information, go to the <link idref="overview">Xalan-C++ Overview</link> and 
+    <link idref="getstarted">Getting Started with Xalan-C++</link>. All of the Xalan documentation on this website is
     included in the Xalan downloads, as are a number of samples to help you start using Xalan to transform XML
     documents.</p>
   </s2>   

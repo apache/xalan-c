@@ -57,7 +57,7 @@
  -->
 
 <!DOCTYPE s1 SYSTEM "sbk:/style/dtd/document.dtd">
-<s1 title="Xalan-C Samples">
+<s1 title="&xslt4c; Samples">
   <ul>
     <li><link anchor="getstarted">Samples to help you get started</link></li>
     <li><link anchor="simpletransform">SimpleTransform</link></li>

@@ -59,7 +59,7 @@
  -->
  
 
-<s1 title="Xalan-C Command-Line Utility">
+<s1 title="&xslt4c; Command-Line Utility">
    
    <s2 title="Using the Command-Line Utility">
       <p>To perform a transformation, you can call &xslt4c; from the command line (or script), 
