@@ -877,6 +877,12 @@ public:
 		m_XSLTNamespaceURI = theURI;
 	}
 
+	const ElemTemplate*	
+	getFirstTemplate() const	
+	{
+		return m_firstTemplate;
+	}
+	
 protected:
 
 	/**
