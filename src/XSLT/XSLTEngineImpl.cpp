@@ -144,31 +144,6 @@
 #include "XSLTInputSource.hpp"
 #include "XSLTProcessorException.hpp"
 
- // @@@@
-#include <iostream>
-void dumpStack(XSLTEngineImpl::VariableStackStackType& m_stack)
-{
-	int  size = m_stack.size();
-	assert (size < 100);
-	for(int i = 0; i < size; i++)
-	{
-		const StackEntry* const		theEntry = m_stack[i];
-		if(theEntry->getType() == StackEntry::eArgument)
-		{
-			const Arg* const	theArg =
-				dynamic_cast<const Arg*>(theEntry);
-			std::cout << i << ": " << theArg->getName().getLocalPart() << "\n";
-		}
-		else if(theEntry->getType() == StackEntry::eContextMarker)
-			std::cout << i << " Context marker" << "\n";
-		else if(theEntry->getType() == StackEntry::eElementMarker)
-			std::cout << i <<  " Element marker" << "\n";
-		else
-			std::cout << "??" << "\n";
-	}
-//	std::cout << m_globalStackFrameIndex <<  ": global stack frame index" << "\n";
-//	std::cout << m_currentStackFrameIndex <<  ": current stack frame index" << "\n";
-}
 
 
 const double			XSLTEngineImpl::s_XSLTVerSupported(1.0);
@@ -4106,8 +4081,6 @@ XSLTEngineImpl::VariableStack::popCurrentContext()
 		const StackEntry* const		theEntry = m_stack[i];
 		assert(theEntry != 0);
 		int type = theEntry->getType();
-		if (type >3 || type < 0)
-			dumpStack(m_stack);
 		assert(type <4 && type >= 0);
 		fFound  = (type == StackEntry::eContextMarker);
 		pop();
