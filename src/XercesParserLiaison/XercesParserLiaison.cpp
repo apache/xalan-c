@@ -469,6 +469,11 @@ XercesParserLiaison::error(const SAXParseException&		e)
 
 		cerr << endl << theMessage << endl;
 	}
+
+	if (m_useValidation == true)
+	{
+		throw e;
+	}
 }
 
 
@@ -506,7 +511,7 @@ XercesParserLiaison::formatErrorMessage(
 
 	const XalanDOMChar* const	theSystemID = e.getSystemId();
 
-	if (theSystemID == 0)
+	if (theSystemID == 0 || length(theSystemID) == 0)
 	{
 		append(theMessage, "<unknown>");
 	}
@@ -537,7 +542,7 @@ XercesParserLiaison::CreateDOMParser()
 {
 	DOMParser* const	theParser = new DOMParser;
 
-	theParser->setDoValidation(m_useValidation);
+	theParser->setValidationScheme(m_useValidation == true ? DOMParser::Val_Auto : DOMParser::Val_Never);
 
 	theParser->setIncludeIgnorableWhitespace(m_includeIgnorableWhitespace);
 
