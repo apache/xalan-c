@@ -112,33 +112,8 @@ public:
 			const XalanDOMString&	identifier = XalanDOMString()) = 0;
 
 	/**
-	 * Create an empty DOM Document.  Mainly used for creating an 
-	 * output document.
-	 *
-	 * The liaison owns the XalanDocument instance, and will delete it when
-	 * when asked (see DestroyDocument()), or when the liaison is reset, or
-	 * goes out of scope.
-	 * 
-	 * @return DOM document created
-	 */
-	virtual XalanDocument*
-	createDocument() = 0;
-
-	/**
-	 * Get a factory object required to create nodes in the result tree.
-	 *
-	 * The liaison owns the XalanDocument instance, and will delete it when
-	 * when asked (see destroyDocument()), or when the liaison is reset, or
-	 * goes out of scope.
-	 * 
-	 * @return A XalanDocument instance.
-	 */
-	virtual XalanDocument*
-	createDOMFactory() = 0;
-
-	/**
 	 * Destroy the supplied XalanDocument instance.  It must be an instance that
-	 * was created by a previous call to createDocument() or getDOMFactory().
+	 * was created by a previous call to parseXMLStream().
 	 *
 	 * @param theDocument The XalanDocument instance to destroy.
 	 */
