@@ -70,8 +70,9 @@
 
 XercesTextOutputStream::XercesTextOutputStream(BufferType::size_type	theBufferSize) :
 	m_buffer(),
-	m_bufferSize(theBufferSize)
+	m_bufferSize(0)
 {
+	setBufferSize(theBufferSize);
 }
 
 
@@ -204,11 +205,28 @@ XercesTextOutputStream::doWrite(const XalanDOMChar*		theBuffer)
 void
 XercesTextOutputStream::setBufferSize(BufferType::size_type		theBufferSize)
 {
+	flushBuffer();
+
 	m_bufferSize = theBufferSize;
 
-	if (m_buffer.size() > m_bufferSize)
+	if (m_buffer.size() < m_bufferSize)
 	{
-		flushBuffer();
+		// Enlarge the buffer...
+		m_buffer.reserve(theBufferSize);
+	}
+	else if (m_buffer.size() > m_bufferSize)
+	{
+		// Shrink the buffer.
+
+		// Create a temp buffer and make it
+		// the correct size.
+		BufferType	temp;
+		
+		temp.reserve(theBufferSize);
+		
+		// Swap temp with m_buffer so that
+		// m_buffer is now the correct size.
+		temp.swap(m_buffer);
 	}
 }
 
