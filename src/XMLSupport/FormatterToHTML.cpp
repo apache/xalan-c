@@ -180,25 +180,6 @@ FormatterToHTML::startElement(
 				m_writer.write(">");
 				m_writer.write(m_lineSep);
 			}
-			else
-			{
-				m_writer.write("<!DOCTYPE ");
-				if(equals(theName, "HTML"))
-					m_writer.write("html");  // match Clark
-				else
-					m_writer.write(name);
-				if(! isEmpty(m_version))
-				{
-					// Not totally sure about this.
-					m_writer.write(" PUBLIC \"-//W3C//DTD "+m_version+" //EN\">");
-					m_writer.write(m_lineSep);
-				}
-				else
-				{
-					m_writer.write(" PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\">");
-					m_writer.write(m_lineSep);
-				}
-			}
 		}
 		// java: catch(IOException ioe)
 		catch(...)

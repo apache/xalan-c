@@ -296,6 +296,8 @@ bool Stylesheet::isAttrOK(
 
 			attrOK = indexOf(ns, constructionContext.getXSLNameSpaceURLPre()) >= 0;
 		}
+		else
+			attrOK = true;
 	}
 
 	return attrOK;
