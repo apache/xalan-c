@@ -72,12 +72,25 @@
 
 
 
+FormatterToText::FormatterToText() :
+	FormatterListener(OUTPUT_METHOD_TEXT),
+	m_writer(0),
+	m_maxCharacter(XalanDOMChar(~0)),
+	m_encoding(),
+	m_haveEncoding(false),
+	m_normalize(true),
+	m_handleIgnorableWhitespace(true)
+{
+}
+
+
+
 FormatterToText::FormatterToText(
 			Writer&		writer,
 			bool		normalizeLinefeed,
 			bool		handleIgnorableWhitespace) :
 	FormatterListener(OUTPUT_METHOD_TEXT),
-	m_writer(writer),
+	m_writer(&writer),
 	m_maxCharacter(XalanDOMChar(~0)),
 	m_encoding(),
 	m_haveEncoding(false),
@@ -94,46 +107,32 @@ FormatterToText::FormatterToText(
 			bool					normalizeLinefeed,
 			bool					handleIgnorableWhitespace) :
 	FormatterListener(OUTPUT_METHOD_TEXT),
-	m_writer(writer),
+	m_writer(&writer),
 	m_maxCharacter(0),
 	m_encoding(isEmpty(encoding) == false ? encoding : XalanDOMString(XalanTranscodingServices::s_utf8String)),
 	m_haveEncoding(true),
 	m_normalize(normalizeLinefeed),
 	m_handleIgnorableWhitespace(handleIgnorableWhitespace)
 {
-	XalanOutputStream* const	theStream = m_writer.getStream();
-
-	if (theStream == 0)
-	{
-		// We're pretty much screwed here, since we can't transcode, so get the
-		// maximum character for the local code page.
-		m_maxCharacter = XalanTranscodingServices::getMaximumCharacterValue();
-	}
-	else
-	{
-		try
-		{
-			theStream->setOutputEncoding(m_encoding);
-		}
-		catch(const XalanOutputStream::UnsupportedEncodingException&)
-		{
-			const XalanDOMString	theUTF8String(XalanTranscodingServices::s_utf8String);
-
-			// Default to UTF-8 if the requested encoding is not supported...
-			theStream->setOutputEncoding(theUTF8String);
-
-			m_encoding = theUTF8String;
-		}
-
-		m_maxCharacter = XalanTranscodingServices::getMaximumCharacterValue(theStream->getOutputEncoding());
-	}
+	update();
 }
 
 
 
 FormatterToText::~FormatterToText()
 {
-	m_writer.flush();
+}
+
+
+
+void
+FormatterToText::clearEncoding()
+{
+	clear(m_encoding);
+
+	m_maxCharacter = XalanDOMChar(~0);
+
+	m_haveEncoding = false;
 }
 
 
@@ -157,7 +156,11 @@ FormatterToText::startDocument()
 void
 FormatterToText::endDocument()
 {
-	m_writer.close();
+	assert(m_writer != 0);
+
+	m_writer->flush();
+
+	m_writer->close();
 }
 
 
@@ -186,9 +189,11 @@ FormatterToText::characters(
 			const XMLCh* const	chars,
 			const unsigned int	length)
 {
+	assert(m_writer != 0);
+
 	if (m_normalize == false && m_haveEncoding == false)
 	{
-		m_writer.write(chars, 0, length);
+		m_writer->write(chars, 0, length);
 	}
 	else
 	{
@@ -202,7 +207,7 @@ FormatterToText::characters(
 					(i == 0 ||
 					 chars[i - 1] != XalanUnicode::charCR))
 				{
-					m_writer.write(XalanUnicode::charCR);
+					m_writer->write(XalanUnicode::charCR);
 				}
 			}
 #endif
@@ -211,7 +216,7 @@ FormatterToText::characters(
 				//$$$ ToDo: Figure out what we're going to do here...
 			}
 
-			m_writer.write(chars[i]);
+			m_writer->write(chars[i]);
 		}
 	}
 }
@@ -280,4 +285,41 @@ FormatterToText::cdata(
 			const unsigned int 	length)
 {
 	characters(ch, length);
+}
+
+
+
+void
+FormatterToText::update()
+{
+	assert(m_writer != 0);
+
+	XalanOutputStream* const	theStream = m_writer->getStream();
+
+	if (theStream == 0)
+	{
+		// We're pretty much screwed here, since we can't transcode, so get the
+		// maximum character for the local code page.
+		m_maxCharacter = XalanTranscodingServices::getMaximumCharacterValue();
+	}
+	else
+	{
+		try
+		{
+			theStream->setOutputEncoding(m_encoding);
+		}
+		catch(const XalanOutputStream::UnsupportedEncodingException&)
+		{
+			const XalanDOMString	theUTF8String(XalanTranscodingServices::s_utf8String);
+
+			// Default to UTF-8 if the requested encoding is not supported...
+			theStream->setOutputEncoding(theUTF8String);
+
+			m_encoding = theUTF8String;
+
+			m_haveEncoding = true;
+		}
+
+		m_maxCharacter = XalanTranscodingServices::getMaximumCharacterValue(theStream->getOutputEncoding());
+	}
 }

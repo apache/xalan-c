@@ -88,6 +88,11 @@ public:
 
 	/**
 	 * FormatterToText instance constructor.
+	 */
+	FormatterToText();
+
+	/**
+	 * FormatterToText instance constructor.
 	 *
 	 * @param writer writer for output
 	 * @param normalizeLindefeed Normalize \n or \r\n (on certain platforms).
@@ -115,6 +120,73 @@ public:
 	virtual
 	~FormatterToText();
 
+
+	Writer*
+	getWriter() const
+	{
+		return m_writer;
+	}
+
+	void
+	setWriter(Writer*	theWriter)
+	{
+		m_writer = theWriter;
+
+		update();
+	}
+
+	void
+	clearEncoding();
+
+	const XalanDOMString&
+	getEncoding() const
+	{
+		return m_encoding;
+	}
+
+	void
+	setEncoding(const XalanDOMString&	theEncoding)
+	{
+		m_encoding = theEncoding;
+
+		update();
+	}
+
+	XalanDOMChar
+	getMaxCharacter() const
+	{
+		return m_maxCharacter;
+	}
+
+	void
+	setMaxCharacter(XalanDOMChar	theMaxChar)
+	{
+		m_maxCharacter = theMaxChar;
+	}
+
+	bool
+	getNormalizeLinefeed() const
+	{
+		return m_normalize;
+	}
+
+	void
+	setNormalizeLinefeed(bool	fNormalize)
+	{
+		m_normalize = fNormalize;
+	}
+
+	bool
+	getHandleIgnorableWhitespace() const
+	{
+		return m_handleIgnorableWhitespace;
+	}
+
+	void
+	setHandleIgnorableWhitespace(bool	fHandle)
+	{
+		m_handleIgnorableWhitespace = fHandle;
+	}
 
 	// These methods are inherited from FormatterListener ...
 
@@ -158,8 +230,7 @@ public:
 			const XMLCh* const	target,
 			const XMLCh* const	data);
 
-
-   virtual void
+	virtual void
 	resetDocument();
 
 	virtual void
@@ -181,18 +252,23 @@ private:
 	bool
 	operator==(const FormatterToText&) const;
 
+	// Utility function to update various member variables
+	// when data changes.
+	void
+	update();
+
 	// Data members...
-	Writer&			m_writer;
+	Writer*			m_writer;
 
 	XalanDOMChar	m_maxCharacter;
 
 	XalanDOMString	m_encoding;
 
-	const bool		m_haveEncoding;
+	bool			m_haveEncoding;
 
-	const bool		m_normalize;
+	bool			m_normalize;
 
-	const bool		m_handleIgnorableWhitespace;
+	bool			m_handleIgnorableWhitespace;
 };
 
 
