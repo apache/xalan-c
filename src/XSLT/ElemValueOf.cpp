@@ -66,6 +66,7 @@
 
 
 
+#include <XPath/XObjectFactory.hpp>
 #include <XPath/XPath.hpp>
 
 
@@ -93,7 +94,8 @@ ElemValueOf::ElemValueOf(
 						columnNumber,
 						Constants::ELEMNAME_VALUEOF),
 	m_selectPattern(0),
-	m_disableOutputEscaping(false)
+	m_disableOutputEscaping(false),
+	m_isDot(false)
 {
 	const unsigned int	nAttrs = atts.getLength();
 
@@ -107,8 +109,18 @@ ElemValueOf::ElemValueOf(
 		switch(tok)
 		{
 		case Constants::TATTRNAME_SELECT:
-			m_selectPattern = constructionContext.createXPath(atts.getValue(i), 
-															  *this);
+			{
+				const XalanDOMChar* const	avalue = atts.getValue(i);
+				assert(avalue != 0);
+
+				if (avalue[0] == '.' && avalue[1] == 0)
+				{
+					m_isDot = true;
+				}
+
+				m_selectPattern = constructionContext.createXPath(avalue, 
+																  *this);
+			}
 			break;
 
 		case Constants::TATTRNAME_DISABLE_OUTPUT_ESCAPING:
@@ -148,46 +160,76 @@ ElemValueOf::execute(
 			XalanNode*						sourceTree,
 			XalanNode*						sourceNode,
 			const QName&					mode) const
-{    
+{
 	ElemTemplateElement::execute(executionContext, sourceTree, sourceNode, mode);
-	
-	const XObject* const	value =
-		m_selectPattern->execute(sourceNode,
-								 *this,
-								 executionContext);
 
-	if(0 != getStylesheet().getStylesheetRoot().getTraceListeners())
+	XalanDOMString	theValue;
+
+	if (m_isDot == true)
 	{
-		getStylesheet().getStylesheetRoot().fireSelectedEvent(
-			SelectionEvent(executionContext,
-						   sourceNode,
-						   *this,
-						   XalanDOMString(XALAN_STATIC_UCODE_STRING("select")),
-						   *m_selectPattern,
-						   value));       
+		const XalanNode::NodeType	type = sourceNode->getNodeType();
+
+		if(type == XalanNode::COMMENT_NODE ||
+           type == XalanNode::PROCESSING_INSTRUCTION_NODE)
+		{
+			theValue = sourceNode->getNodeValue();
+		}
+		else
+		{
+			theValue = executionContext.getNodeData(*sourceNode);
+		}
+
+		if(0 != getStylesheet().getStylesheetRoot().getTraceListeners())
+		{
+			getStylesheet().getStylesheetRoot().fireSelectedEvent(
+				SelectionEvent(executionContext,
+							   sourceNode,
+							   *this,
+							   XalanDOMString(XALAN_STATIC_UCODE_STRING("select")),
+							   *m_selectPattern,
+							   executionContext.getXObjectFactory().createString(theValue)));       
+		}
+	}
+	else
+	{
+		const XObject* const	value =
+			m_selectPattern->execute(sourceNode,
+									 *this,
+									 executionContext);
+
+		if(0 != getStylesheet().getStylesheetRoot().getTraceListeners())
+		{
+			getStylesheet().getStylesheetRoot().fireSelectedEvent(
+				SelectionEvent(executionContext,
+							   sourceNode,
+							   *this,
+							   XalanDOMString(XALAN_STATIC_UCODE_STRING("select")),
+							   *m_selectPattern,
+							   value));       
+		}
+
+		if(0 != value)
+		{
+			const int	type = value->getType();
+
+			if (XObject::eTypeNull != type)
+			{
+				theValue = value->str();
+			}
+		}
 	}
 
-	if(0 != value)
+	const unsigned int		len = length(theValue);
+
+	if(len > 0)
 	{
-		const int	type = value->getType();
-
-		if (XObject::eTypeNull != type)
+		if(m_disableOutputEscaping == false)
 		{
-			const XalanDOMString	s = value->str();
-
-			const unsigned int		len = length(s);
-
-			if(len > 0)
-			{
-				if(m_disableOutputEscaping == false)
-				{
-					executionContext.characters(toCharArray(s), 0, len);
-				}
-				else
-				{
-					executionContext.charactersRaw(toCharArray(s), 0, len);
-				}
-			}
+			executionContext.characters(toCharArray(theValue), 0, len);
+		}
+		else
+		{
+			executionContext.charactersRaw(toCharArray(theValue), 0, len);
 		}
 	}
 }

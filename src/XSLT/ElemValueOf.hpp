@@ -118,6 +118,11 @@ private:
 	 * Tells if this element should disable escaping.
 	 */
 	bool			m_disableOutputEscaping;
+
+	/**
+	 * True if the select pattern is '.'
+	 */
+	bool			m_isDot;
 };
 
 
