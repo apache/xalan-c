@@ -78,6 +78,7 @@
 
 
 #include <PlatformSupport/DOMStringHelper.hpp>
+#include <PlatformSupport/XalanUnicode.hpp>
 
 
 
@@ -120,6 +121,34 @@ public:
 		return attrib & eAttributeDirectory ? true : false;
 	}
 
+	bool
+	isSelfOrParent() const
+	{
+		if (isDirectory() == false)
+		{
+			return false;
+		}
+		else if (name[0] == XalanUnicode::charFullStop)
+		{
+			if (name[1] == 0)
+			{
+				return true;
+			}
+			else if (name[1] == XalanUnicode::charFullStop &&
+					 name[2] == 0)
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+		else
+		{
+			return false;
+		}
+	}
 };
 
 #else
@@ -199,7 +228,8 @@ EnumerateDirectory(
 			const StringType&			theFullSearchSpec,
 			OutputIteratorType			theOutputIterator,
 			FilterPredicateType			theFilterPredicate,
-			StringConversionFunction	theConversionFunction)
+			StringConversionFunction	theConversionFunction,
+			bool						fIncludeSelfAndParent = false)
 {
 #if defined(_MSC_VER)
 	FindFileStruct 		theFindData;
@@ -213,7 +243,8 @@ EnumerateDirectory(
 		{
 			do
 			{
-				if (theFilterPredicate(theFindData) == true)
+				if ((fIncludeSelfAndParent == true || theFindData.isSelfOrParent() == false) &&
+					theFilterPredicate(theFindData) == true)
 				{
 					*theOutputIterator = StringType(theFindData.getName());
 				}
@@ -250,13 +281,14 @@ EnumerateDirectory(
 			const StringType&			theSearchSpec,
 			OutputIteratorType			theOutputIterator,
 			FilterPredicateType			theFilterPredicate,
-			StringConversionFunction	theConversionFunction)
+			StringConversionFunction	theConversionFunction,
+			bool						fIncludeSelfAndParent = false)
 {
 	StringType	theFullSearchSpec(theDirectory);
 
 	theFullSearchSpec += theSearchSpec;
 
-	EnumerateDirectory(theFullSearchSpec, theOutputIterator, theFilterPredicate, theConversionFunction);
+	EnumerateDirectory(theFullSearchSpec, theOutputIterator, theFilterPredicate, theConversionFunction, fIncludeSelfAndParent);
 }
 
 
@@ -303,6 +335,12 @@ struct DirectoryEnumeratorFunctor : public std::unary_function<StringType, Colle
 	typedef typename BaseClassType::result_type		result_type;
 	typedef typename BaseClassType::argument_type	argument_type;
 
+	explicit
+	DirectoryEnumeratorFunctor(bool		fIncludeSelfAndParent = false) :
+		m_includeSelfAndParent(fIncludeSelfAndParent)
+	{
+	}
+			
 	void
 	operator()(
 			const argument_type&	theFullSearchSpec,
@@ -315,7 +353,8 @@ struct DirectoryEnumeratorFunctor : public std::unary_function<StringType, Colle
 		EnumerateDirectory(theFullSearchSpec,
 						   back_inserter(theCollection),
 						   m_filterPredicate,
-						   m_conversionFunction);
+						   m_conversionFunction,
+						   m_includeSelfAndParent);
 	}
 
 	result_type
@@ -345,7 +384,8 @@ struct DirectoryEnumeratorFunctor : public std::unary_function<StringType, Colle
 				theSearchSpec,
 				back_inserter(theCollection),
 				m_filterPredicate,
-				m_conversionFunction);
+				m_conversionFunction,
+				m_includeSelfAndParent);
 	}
 
 	result_type
@@ -366,7 +406,10 @@ struct DirectoryEnumeratorFunctor : public std::unary_function<StringType, Colle
 private:
 
 	FilterPredicateType			m_filterPredicate;
+
 	StringConversionFunction	m_conversionFunction;
+
+	const bool					m_includeSelfAndParent;
 };
 #endif
 
