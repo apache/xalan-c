@@ -19,7 +19,7 @@ CreateXPath(
 	assert(theXalanHandle);
 	assert(theXPathHandle);
 
-	theResult = XalanCreateXPath(theXalanHandle, theXPathExpression, "foo-8", theXPathHandle);
+	theResult = XalanCreateXPath(theXalanHandle, theXPathExpression, 0, theXPathHandle);
 
 	if (theResult != XALAN_XPATH_API_SUCCESS)
 	{
