@@ -206,6 +206,27 @@ void XalanParsedURI::parse(
 	}
 }
 
+/* Case insensitive comparison for URIs.  Limited to A-Za-z */
+static int ci_equals(const XalanDOMString &s1, const XalanDOMString &s2)
+{
+	if (s1.length() != s2.length())
+		return false;
+
+	const XalanDOMChar *p1 = s1.c_str(), *p2 = s2.c_str();
+	for ( ; *p1 ; p1++, p2++)
+	{
+		XalanDOMChar c1 = *p1, c2 = *p2;
+		if (c1 >= XalanUnicode::charLetter_A && c1 <= XalanUnicode::charLetter_Z)
+			c1 = XalanUnicode::charLetter_a + (c1 - XalanUnicode::charLetter_A);
+		if (c2 >= XalanUnicode::charLetter_A && c2 <= XalanUnicode::charLetter_Z)
+			c2 = XalanUnicode::charLetter_a + (c2 - XalanUnicode::charLetter_A);
+		if (c1 != c2)
+			return false;
+	}
+
+	return true;
+}
+
 /* Resolve this URI relative to another according to RFC2396, section 5.2 */
 void XalanParsedURI::resolve(
 	const XalanParsedURI &base
@@ -233,7 +254,11 @@ void XalanParsedURI::resolve(
 	}
 
 	// A defined scheme component implies that this is an absolute URI (step 3)
-	if (!(m_defined & d_scheme))
+	// Also allow a scheme without authority that matches the base scheme to be 
+	// interpreted as a relative URI
+	if (!(m_defined & d_scheme) || ( 
+			(base.m_defined & d_scheme) && !(m_defined & d_authority) 
+			&& ci_equals(m_scheme, base.m_scheme)))
 	{
 		// Inherit the base scheme
 		m_scheme = base.m_scheme;
