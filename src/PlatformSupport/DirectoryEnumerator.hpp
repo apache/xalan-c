@@ -236,7 +236,7 @@ EnumerateDirectory(
 		_findclose(theSearchHandle);
 	}
 #elif defined(__GNUC__)
-	assert(false);
+	// Do nothing for now...
 #else
 #error Unsupported platform!!!
 #endif
