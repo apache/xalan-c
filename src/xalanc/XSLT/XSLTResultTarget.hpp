@@ -299,6 +299,17 @@ public:
 	}
 
 	/**
+	 * Set the stream for this output target.
+	 *
+	 * @theStream pointer to stream.
+	 */
+	void
+	setStream(FILE*		theStream)
+	{
+		m_stream = theStream;
+	}
+
+	/**
 	 * Set a FormatterListener to process the result tree events.
 	 *
 	 * @param handler pointer to new listener
