@@ -180,7 +180,7 @@ static const XalanDOMString		theEmptyString;
 inline XObjectPtr
 createEmptyString(XPathExecutionContext&	executionContext)
 {
-	return executionContext.getXObjectFactory().createString(theEmptyString);
+	return executionContext.getXObjectFactory().createStringReference(theEmptyString);
 }
 
 

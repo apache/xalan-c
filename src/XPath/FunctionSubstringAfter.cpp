@@ -78,6 +78,17 @@ FunctionSubstringAfter::~FunctionSubstringAfter()
 
 
 
+static const XalanDOMString		theEmptyString;
+
+
+inline XObjectPtr
+createEmptyString(XPathExecutionContext&	executionContext)
+{
+	return executionContext.getXObjectFactory().createStringReference(theEmptyString);
+}
+
+
+
 XObjectPtr
 FunctionSubstringAfter::execute(
 			XPathExecutionContext&	executionContext,
@@ -94,7 +105,7 @@ FunctionSubstringAfter::execute(
 
 	if (theFirstStringLength == 0)
 	{
-		return executionContext.getXObjectFactory().createString(XalanDOMString());
+		return createEmptyString(executionContext);
 	}
 	else
 	{
@@ -105,7 +116,7 @@ FunctionSubstringAfter::execute(
 
 		if (theIndex == theFirstStringLength)
 		{
-			return executionContext.getXObjectFactory().createString(XalanDOMString());
+			return createEmptyString(executionContext);
 		}
 		else
 		{

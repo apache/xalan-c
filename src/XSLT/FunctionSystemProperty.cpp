@@ -109,12 +109,6 @@ FunctionSystemProperty::execute(
 	const XalanDOMString::size_type		fullNameLength = length(fullName);
 	const XalanDOMString::size_type		indexOfNSSep = indexOf(fullName, XalanUnicode::charColon);
 
-	bool			fNumberResult = false;
-
-	XalanDOMString	result;
-
-	double			numberResult = 0.0;
-
 	if(indexOfNSSep < fullNameLength)
 	{
 		XPathExecutionContext::GetAndReleaseCachedString	guard(executionContext);
@@ -133,17 +127,15 @@ FunctionSystemProperty::execute(
 			{
 				if(equals(theBuffer, m_versionPropertyString))
 				{
-					numberResult = 1.0;
-
-					fNumberResult = true;
+					return executionContext.getXObjectFactory().createNumber(1.0);
 				}
 				else if(equals(theBuffer, m_vendorPropertyString))
 				{
-					result = m_vendorString;
+					return executionContext.getXObjectFactory().createStringReference(m_vendorString);
 				}
 				else if(equals(theBuffer, m_vendorURLPropertyString))
 				{
-					result = m_vendorURLString;
+					return executionContext.getXObjectFactory().createStringReference(m_vendorURLString);
 				}
 				else
 				{
@@ -180,18 +172,20 @@ FunctionSystemProperty::execute(
 		}
 		else
 		{
+			XPathExecutionContext::GetAndReleaseCachedString	guard(executionContext);
+
+			XalanDOMString&		result = guard.get();
+
 			result = TranscodeFromLocalCodePage(theEnvString);
+
+			return executionContext.getXObjectFactory().createString(result);
 		}
 	}
 
-	if (fNumberResult == true)
-	{
-		return executionContext.getXObjectFactory().createNumber(numberResult);
-	}
-	else
-	{
-		return executionContext.getXObjectFactory().createString(result);
-	}
+	// We should never get here...
+	assert(false);
+
+	return XObjectPtr();
 }
 
 

@@ -156,7 +156,7 @@ FunctionGenerateID::execute(
 
 	if (theNodeList.getLength() == 0)
 	{
-		return executionContext.getXObjectFactory().createString(s_emptyString);
+		return executionContext.getXObjectFactory().createStringReference(s_emptyString);
 	}
 	else
 	{
