@@ -51,7 +51,9 @@ main(
 
 			// Set the stylesheet parameter name and
 			// expression (a string expression).
-			theXalanTransformer.setStylesheetParam(argv[1], argv[2]);
+			theXalanTransformer.setStylesheetParam(
+					XalanDOMString(argv[1]),
+					XalanDOMString(argv[2]));
 
 			// Our input files...The assumption is that the executable will be run
 			// from same directory as the input files.
