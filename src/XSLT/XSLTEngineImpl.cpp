@@ -477,11 +477,31 @@ XSLTEngineImpl::processStylesheet(
 
 		if(stylesheetNode != 0)
 		{
-			xslIdentifier = XALAN_STATIC_UCODE_STRING("Input XSL");
+			const XalanNode::NodeType	theType = stylesheetNode->getNodeType();
 
-			FormatterTreeWalker tw(stylesheetProcessor);
+			if (theType != XalanNode::ELEMENT_NODE && theType != XalanNode::DOCUMENT_NODE)
+			{
+				error(StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("Compiling a stylesheet from a DOM instance requires a Document or Element node")));
+			}
+			else
+			{
+				xslIdentifier = XALAN_STATIC_UCODE_STRING("Input XSL");
 
-			tw.traverse(stylesheetSource.getNode());
+				FormatterTreeWalker tw(stylesheetProcessor);
+
+				if (theType == XalanNode::DOCUMENT_NODE)
+				{
+					tw.traverse(stylesheetNode);
+				}
+				else
+				{
+					stylesheetProcessor.startDocument();
+
+					tw.traverseSubtree(stylesheetNode);
+
+					stylesheetProcessor.endDocument();
+				}
+			}
 		}
 		else
 		{
@@ -819,7 +839,11 @@ XSLTEngineImpl::getStylesheetFromPIURL(
 
 			FormatterTreeWalker tw(stylesheetProcessor);
 
-			tw.traverse(frag, frag->getParentNode());
+			stylesheetProcessor.startDocument();
+
+			tw.traverseSubtree(frag);
+
+			stylesheetProcessor.endDocument();
 
 			if(m_diagnosticsPrintWriter != 0)
 			{
