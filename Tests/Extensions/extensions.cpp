@@ -114,108 +114,7 @@ setHelp()
 		 << endl;
 }
 
-/*
-bool
-getParams(int argc, 
-		  const char*	argv[],
-		  XalanDOMString& baseDir,
-		  XalanDOMString& outDir,
-		  XalanDOMString& goldRoot)
-{
-	bool fSuccess = true;	// Used to continue argument loop
-	bool fSetOut = true;	// Set default output directory, set to false if data is provided
-	bool fsetGold = true;	// Set default gold directory, set to false if data is provided
 
-	// Insure that required "-base" argument is there.
-	if (argc == 1 || argv[1][0] == '-')
-	{
-		printArgOptions(); 
-		return false;
-	}
-	else
-	{
-		if (h.checkDir(XalanDOMString(argv[1])))
-		{
-			assign(baseDir, XalanDOMString(argv[1]));
-			if ( !endsWith(baseDir, XalanDOMString("extensions")) )
-			{
-				cout << endl << "Given base directory \"" << argv[1] << "\" not valid extensions directory" << endl;
-				printArgOptions();
-				return false;
-			}
-		}
-		else
-		{
-			cout << endl << "Given base directory \"" << argv[1] << "\" does not exist" << endl;
-			printArgOptions();
-			return false;
-		}
-	}
-
-	// Get the rest of the arguments in any order.
-	for (int i = 2; i < argc && fSuccess == true; ++i)
-	{
-		if(!stricmp("-out", argv[i]))
-		{
-			++i;
-			if(i < argc && argv[i][0] != '-')
-			{
-				assign(outDir, XalanDOMString(argv[i]));
-//				insert(outDir, 0, XalanDOMString("\\"));
-				append(outDir, XalanDOMString("\\"));
-				h.checkAndCreateDir(outDir);
-				fSetOut = false;
-			}
-			else
-			{
-				printArgOptions();
-				fSuccess = false;
-			}
-		}
-		else if(!stricmp("-gold", argv[i]))
-		{
-			++i;
-			if(i < argc && argv[i][0] != '-')
-			{
-				assign(goldRoot, XalanDOMString(argv[i]));
-			}
-			else
-			{
-				printArgOptions();
-				fSuccess = false;
-			}
-		}
-
-		else
-		{
-			printArgOptions();
-			fSuccess = false;
-		}
-
-	} // End of for-loop
-
-	// Do we need to set the default output directory??
-	if (fSetOut)
-	{
-		unsigned int ii = lastIndexOf(baseDir,charAt(pathSep,0));
-		outDir = substring(baseDir, 0, ii+1);
-		append(outDir,XalanDOMString("CEXTENSIONS-RESULTS\\"));
-		h.checkAndCreateDir(outDir);
-	}
-	
-	if (fsetGold)
-	{
-		goldRoot = baseDir;
-		append(goldRoot,XalanDOMString("-gold\\"));
-		h.checkAndCreateDir(goldRoot);
-//		append(goldRoot,pathSep);
-	}
-
-	// Add the path seperator to the end of the base directory
-	append(baseDir, pathSep);
-	return fSuccess;
-}
-*/
 // Generate the various filenames needed for testing.
 void generateFiles(const XalanDOMString &fileName, 
 				   XalanDOMString &xml, 
@@ -423,7 +322,7 @@ main(int			argc,
 	// Set the program help string,  then get the command line parameters.
 	//
 	setHelp();	
-	if (h.getParams(argc, argv) == true)
+	if (h.getParams(argc, argv, "EXTENSION-RESULTS") == true)
 	{
 		// Generate Unique Run id. (Only used to name the result logfile.)
 		const XalanDOMString  UniqRunid = h.generateUniqRunid();
