@@ -159,6 +159,13 @@ public:
 	XSLTResultTarget(XalanElement*	element);
 
 	/**
+	 * Create a new output target with a FormatterListener.
+	 *
+	 * @param flistener A FormatterListener instance for result tree events.
+	 */
+	XSLTResultTarget(FormatterListener&		flistener);
+
+	/**
 	 * Set the file name where the results will be written.
 	 *
 	 * @param fileName system identifier as a string

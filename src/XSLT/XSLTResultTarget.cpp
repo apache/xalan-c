@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -202,4 +202,18 @@ XSLTResultTarget::XSLTResultTarget(XalanElement*	element) :
 	m_formatterListener(0)
 {
 	assert(element != 0);
+}
+
+
+
+XSLTResultTarget::XSLTResultTarget(FormatterListener&		flistener) :
+	m_fileName(),
+	m_byteStream(0),
+	m_encoding(),
+	m_characterStream(0),
+	m_document(0),
+	m_documentFragment(0),
+	m_element(0),
+	m_formatterListener(&flistener)
+{
 }
