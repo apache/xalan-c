@@ -60,8 +60,13 @@
 
 
 #include <cerrno>
+
+
+
+#if !defined(XALAN_OLD_STREAM_HEADERS)
 #include <iostream>
 #include <strstream>
+#endif
 
 
 
