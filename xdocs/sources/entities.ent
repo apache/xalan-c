@@ -23,7 +23,7 @@
 <!ENTITY xml4c-hp64dist "&xml4c-dist;-HP11ACC_64.tar.gz">
 <!ENTITY xml4c-solarisdist "&xml4c-dist;-.Sol2.7ForCC.tar.gz">
 <!ENTITY xslt4j "Xalan-Java">
-<!ENTITY icu-used "International Components for Unicode(ICU) 2.0 source files">
+<!ENTITY icu-used "International Components for Unicode(ICU) 2.2 source files">
 <!ENTITY icu-windlls "icui18n.dll, icuuc.dll">
 <!ENTITY icubridge-win "ICUBridge.dll">
 <!ENTITY done SYSTEM "xalan/DONE">
