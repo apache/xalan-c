@@ -62,12 +62,12 @@
        </tr>
        <tr>
          <td>AIX 4.3</td>
-         <td>IBM C and C++ for AIX 3.6.6</td>
+         <td>IBM C and C++ for AIX 5.02</td>
          <td>Yes</td>
       </tr>
        <tr>
          <td>Solaris 2.6 &solarisbuild;</td>
-         <td>Workshop 4.2</td>
+         <td>[Workshop 4.2]</td>
          <td>Yes</td>
       </tr>
        <tr>

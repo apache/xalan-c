@@ -71,7 +71,7 @@
  <anchor name="status"/>
  <s2 title="Status">
    <ul>
-    <li><link anchor="done">Changes since &xslt4c; version 1.1</link></li>    
+    <li><link anchor="done">Changes since &xslt4c; version 1.2</link></li>
     <li><link anchor="bugs">Bug reporting</link></li>    
     <li><link anchor="xml4c">Version of &xml4c; to use</link></li>
     <li><link anchor="to-do">To-do tasks for future &xslt4c; releases</link></li>
@@ -143,10 +143,10 @@
      <li>(Optional) If you are rebuilding the ICUBridge, install the ICU so the icu root directory
       is at the same level as the xml-xerces root directory (see <link 
       idref="usagepatterns" anchor="icu">Using the ICU</link>.<br/><br/>
-      If you want TestXSLT to use ICU support for number formatting and sorting, install the ICU,
+      If you want the Xalan and/or testXSLT executable to use ICU support for number formatting and sorting, install the ICU,
       uncomment the <code>#define XALAN_USE_ICU</code> statement in process.cpp, and use the Visual C++ 
-      Project Dependencies command to add ICUBridge to the list of TestXSLT dependencies (see <link idref="commandline"
-      anchor="icu">Enabling ICU support for TestXSLT</link>).<br/><br/></li>
+      Project Dependencies command to add ICUBridge to the list of XalanTransformer and/or TestXSLT dependencies (see <link idref="commandline"
+      anchor="icu">Enabling ICU support for the Xalan and/or TestXSLT executable</link>).<br/><br/></li>
     <li>Use Visual C++ to open the Xalan workspace from the xml-xalan\c\Projects\Win32\VC6.
     <br/><br/></li>
     <li>Use Visual C++ to rebuild everything or specific dynamic link libraries and executables of
@@ -185,8 +185,8 @@
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<code>make</code><br/>
       or<br/>
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<code>make <ref>targ</ref></code><br/><br/>
-      where <ref>targ</ref> is ommitted or is <code>all</code> (rebuild all), <code>lib</code> (the XSLT libary), or
-      <code>testXSLT</code> (the testSXSLT executable). ICUBridge is included in the build of TestXSLT if XALAN_USE_ICU is
+      where <ref>targ</ref> is ommitted or is <code>all</code> (rebuild all), <code>lib</code> (the XSLT libary), <code>Xalan</code> (the Xalan executable), or
+      <code>testXSLT</code> (the testXSLT executable). ICUBridge is included in the build of Xalan and TestXSLT if XALAN_USE_ICU is
       defined.<br/><br/></li>
     </ol>
     <note>The command you use for setting environment variables depends on the shell you are
