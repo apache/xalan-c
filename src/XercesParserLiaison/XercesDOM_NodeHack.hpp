@@ -96,7 +96,11 @@ public:
 	ElementImpl*
 	getImpl() const
 	{
+#if defined(XALAN_OLD_STYLE_CASTS)
 		return (ElementImpl*)fImpl;
+#else
+		return reinterpret_cast<ElementImpl*>(fImpl);
+#endif
 	}
 
 	static ElementImpl*
@@ -144,7 +148,11 @@ public:
 	TextImpl*
 	getImpl() const
 	{
+#if defined(XALAN_OLD_STYLE_CASTS)
 		return (TextImpl*)fImpl;
+#else
+		return reinterpret_cast<TextImpl*>(fImpl);
+#endif
 	}
 
 	static TextImpl*
