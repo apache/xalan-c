@@ -83,7 +83,7 @@
 
 
 // This will change, depending upon the target platform.
-#if defined(SOLARIS) || defined(powerpc) || defined(__sparc__)
+#if defined(SOLARIS) || defined(powerpc) || defined(__sparc__) || defined(AIX)
 #define XALAN_BIG_ENDIAN
 #elif defined(__i386__) || defined(__alpha__)
 #define XALAN_LITLE_ENDIAN
