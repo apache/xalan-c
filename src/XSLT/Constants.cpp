@@ -182,6 +182,7 @@ static XalanDOMString		ATTRVAL_SIMPLE;
 static XalanDOMString		ATTRVAL_SINGLE;
 static XalanDOMString		ATTRVAL_STRIP;
 static XalanDOMString		ATTRVAL_THIS;
+static XalanDOMString		ATTRVAL_TRADITIONAL;
 static XalanDOMString		ATTRVAL_YES;
 
 static XalanDOMString		DEFAULT_DECIMAL_FORMAT;
@@ -385,6 +386,7 @@ const XalanDOMString&		Constants::ATTRVAL_SIMPLE = ::ATTRVAL_SIMPLE;
 const XalanDOMString&		Constants::ATTRVAL_SINGLE = ::ATTRVAL_SINGLE;
 const XalanDOMString&		Constants::ATTRVAL_STRIP = ::ATTRVAL_STRIP;
 const XalanDOMString&		Constants::ATTRVAL_THIS = ::ATTRVAL_THIS;
+const XalanDOMString&		Constants::ATTRVAL_TRADITIONAL = ::ATTRVAL_TRADITIONAL;
 const XalanDOMString&		Constants::ATTRVAL_YES = ::ATTRVAL_YES;
 
 const XalanDOMString&		Constants::DEFAULT_DECIMAL_FORMAT = ::DEFAULT_DECIMAL_FORMAT;
@@ -590,6 +592,7 @@ Constants::initialize()
 	::ATTRVAL_SINGLE = XALAN_STATIC_UCODE_STRING("single");
 	::ATTRVAL_STRIP = XALAN_STATIC_UCODE_STRING("strip");
 	::ATTRVAL_THIS = XALAN_STATIC_UCODE_STRING(".");
+	::ATTRVAL_TRADITIONAL = XALAN_STATIC_UCODE_STRING("traditional");
 	::ATTRVAL_YES = XALAN_STATIC_UCODE_STRING("yes");
 
 	::DEFAULT_DECIMAL_FORMAT = XALAN_STATIC_UCODE_STRING("#default");

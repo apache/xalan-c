@@ -357,7 +357,8 @@ public:
 	  // For letter-value attribute (part of conversion attributes).
 	static const XalanDOMString&	ATTRVAL_ALPHABETIC;
 	static const XalanDOMString&	ATTRVAL_OTHER;
-  
+    static const XalanDOMString&	ATTRVAL_TRADITIONAL;
+
 	  // For level attribute in xsl:number.
 	static const XalanDOMString&	ATTRVAL_SINGLE;
 	static const XalanDOMString&	ATTRVAL_MULTI;
