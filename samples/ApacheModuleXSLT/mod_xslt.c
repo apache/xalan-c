@@ -187,9 +187,9 @@ static int xslt_handler(request_rec *r)
 
 	if(error)
 	{
+	    const char* const	msg = XalanGetLastError(xalan);
 
-	    char *msg = XalanGetLastError(xalan);
-	    fprintf(stderr,"mod_xslt: %s: %s\n", r->filename,msg);
+	    fprintf(stderr,"mod_xslt: %s: %s\n", r->filename, msg);
 
 		r->uri = filename;
 
