@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -131,64 +131,75 @@ ProblemListenerDefault::problem(
 {
 	if (m_pw != 0)
 	{
-		if (eXMLPARSER == where)
-		{
-			m_pw->print(xmlHeader);
-		}
-		else if (eXPATH == where)
-		{
-			m_pw->print(xpathHeader);
-		}
-		else
-		{
-			m_pw->print(xslHeader);
-		}
-
-		if (eERROR == classification)
-		{
-			m_pw->print(errorHeader);
-		}
-		else
-		{
-			m_pw->print(warningHeader);
-		}
-
-		m_pw->print(msg);
-
-		if (0 != styleNode)
-		{
-			m_pw->print(styleTreeNodeHeader);
-			m_pw->print(styleNode->getNodeName());
-		}
-
-		if (0 != sourceNode)
-		{
-			m_pw->print(sourceTreeNodeHeader);
-			m_pw->print(sourceNode->getNodeName());
-		}
-
-		m_pw->print(locationOpen);
-
-		if (0 != uri)
-		{
-			m_pw->print(uriHeader);
-			m_pw->print(uri);
-		}
-
-		if (0 != lineNo)
-		{
-			m_pw->print(lineNoHeader);
-			m_pw->print(lineNo);
-		}
-
-		if (0 != charOffset)
-		{
-			m_pw->print(charOffsetHeader);
-			m_pw->print(charOffset);
-		}
-
-		m_pw->print(locationClose);
-
-		m_pw->println();
+		problem(*m_pw, where, classification, sourceNode, styleNode, msg, uri, lineNo, charOffset);
 	}
+}
+
+
+
+void
+ProblemListenerDefault::problem(
+			PrintWriter&			pw,
+			eProblemSource			where,
+			eClassification			classification, 
+			const XalanNode*		sourceNode,
+			const XalanNode*		styleNode,
+			const XalanDOMString&	msg,
+			const XalanDOMChar*		uri,
+			int						lineNo,
+			int						charOffset)
+{
+	if (eXMLPARSER == where)
+	{
+		pw.print(xmlHeader);
+	}
+	else if (eXPATH == where)
+	{
+		pw.print(xpathHeader);
+	}
+	else
+	{
+		pw.print(xslHeader);
+	}
+
+	if (eERROR == classification)
+	{
+		pw.print(errorHeader);
+	}
+	else
+	{
+		pw.print(warningHeader);
+	}
+
+	pw.print(msg);
+
+	if (0 != styleNode)
+	{
+		pw.print(styleTreeNodeHeader);
+		pw.print(styleNode->getNodeName());
+	}
+
+	if (0 != sourceNode)
+	{
+		pw.print(sourceTreeNodeHeader);
+		pw.print(sourceNode->getNodeName());
+	}
+
+	pw.print(locationOpen);
+
+	if (0 != uri)
+	{
+		pw.print(uriHeader);
+		pw.print(uri);
+	}
+
+	pw.print(lineNoHeader);
+	pw.print(lineNo);
+
+	pw.print(charOffsetHeader);
+	pw.print(charOffset);
+
+	pw.print(locationClose);
+
+	pw.println();
 }

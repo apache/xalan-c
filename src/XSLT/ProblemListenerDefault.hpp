@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -57,12 +57,6 @@
 #if !defined(XALAN_PROBLEMLISTENERDEFAULT_HEADER_GUARD)
 #define XALAN_PROBLEMLISTENERDEFAULT_HEADER_GUARD
 
-/**
- * $State$
- * 
- * @author Scott Boag (scott_boag@lotus.com)
- * */
-
 
 
 // Base include file.  Must be first.
@@ -110,6 +104,18 @@ public:
 	{
 		return m_pw;
 	}
+
+	static void
+	problem(
+			PrintWriter&			pw,
+			eProblemSource			where,
+			eClassification			classification, 
+			const XalanNode*		sourceNode,
+			const XalanNode*		styleNode,
+			const XalanDOMString&	msg,
+			const XalanDOMChar*		uri,
+			int						lineNo,
+			int						charOffset);
 
 private:
 
