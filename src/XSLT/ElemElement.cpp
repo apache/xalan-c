@@ -209,7 +209,7 @@ ElemElement::execute(StylesheetExecutionContext&		executionContext) const
 			else
 			{
 				const XalanDOMString* const		theNamespace =
-					m_namespacesHandler.getNamespace(prefix);
+					getNamespacesHandler().getNamespace(prefix);
 
 				if(theNamespace == 0 && namespaceLen == 0)
 				{
@@ -349,7 +349,7 @@ ElemElement::execute(StylesheetExecutionContext&		executionContext) const
 
 
 void
-ElemElement::postConstruction(
+ElemElement::namespacesPostConstruction(
 			StylesheetConstructionContext&	constructionContext,
 			const NamespacesHandler&		theParentHandler,
 			NamespacesHandler&				theHandler)
@@ -396,7 +396,7 @@ ElemElement::outputResultNamespaces(
 			bool							hasUnresolvedPrefix,
 			bool							supressDefault) const
 {
-	m_namespacesHandler.outputResultNamespaces(executionContext, supressDefault);
+	getNamespacesHandler().outputResultNamespaces(executionContext, supressDefault);
 
 	if (supressDefault == false)
 	{
@@ -407,7 +407,7 @@ ElemElement::outputResultNamespaces(
 		if (theCurrentDefaultNamespace != 0)
 		{
 			const XalanDOMString* const		theElementDefaultNamespace =
-						m_namespacesHandler.getNamespace(s_emptyString);
+						getNamespacesHandler().getNamespace(s_emptyString);
 
 			if (hasUnresolvedPrefix == true || theElementDefaultNamespace == 0)
 			{

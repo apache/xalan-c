@@ -282,7 +282,7 @@ ElemLiteralResult::postConstruction(
 			const NamespacesHandler&		theParentHandler)
 {
 	if (m_avtsCount != 0 ||
-		m_namespacesHandler.getNamespaceDeclarationsCount() != 0)
+		getNamespacesHandler().getNamespaceDeclarationsCount() != 0)
 	{
 		canGenerateAttributes(true);
 	}
@@ -320,7 +320,7 @@ ElemLiteralResult::postConstruction(
 
 
 void
-ElemLiteralResult::postConstruction(
+ElemLiteralResult::namespacesPostConstruction(
 			StylesheetConstructionContext&	constructionContext,
 			const NamespacesHandler&		theParentHandler,
 			NamespacesHandler&				theHandler)
@@ -346,7 +346,9 @@ ElemLiteralResult::execute(StylesheetExecutionContext&	executionContext) const
 
 	ElemUse::execute(executionContext);
 
-	m_namespacesHandler.outputResultNamespaces(executionContext);
+	const NamespacesHandler&	theNamespacesHandler = getNamespacesHandler();
+
+	theNamespacesHandler.outputResultNamespaces(executionContext);
 
 	if (hasPrefix() == false)
 	{
@@ -357,7 +359,7 @@ ElemLiteralResult::execute(StylesheetExecutionContext&	executionContext) const
 		if (theCurrentDefaultNamespace != 0)
 		{
 			const XalanDOMString* const		theElementDefaultNamespace =
-							m_namespacesHandler.getNamespace(s_emptyString);
+							theNamespacesHandler.getNamespace(s_emptyString);
 
 			if (theElementDefaultNamespace == 0)
 			{
@@ -435,37 +437,4 @@ ElemLiteralResult::isAttrOK(
     }
 
     return isAttrOK;
-}
-
-
-
-bool
-ElemLiteralResult::processPrefixControl(
-			StylesheetConstructionContext&	constructionContext,
-			const Stylesheet&				stylesheetTree,
-			const XalanDOMString&			localName,
-			const XalanDOMChar*				attrValue)
-{
-	if(equals(localName, Constants::ATTRNAME_EXTENSIONELEMENTPREFIXES))
-	{
-		m_namespacesHandler.processExtensionElementPrefixes(
-				constructionContext,
-				attrValue,
-				stylesheetTree.getNamespaces());
-
-		return true;
-	}
-	else if (equals(localName, Constants::ATTRNAME_EXCLUDE_RESULT_PREFIXES))
-	{
-		m_namespacesHandler.processExcludeResultPrefixes(
-				constructionContext,
-				attrValue,
-				stylesheetTree.getNamespaces());
-
-		return true;
-	}
-	else
-	{
-		return false;
-	}
 }

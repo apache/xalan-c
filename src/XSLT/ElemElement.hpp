@@ -125,7 +125,7 @@ protected:
 			bool							skipAttributeChildren) const;
 
 	virtual void
-	postConstruction(
+	namespacesPostConstruction(
 			StylesheetConstructionContext&	constructionContext,
 			const NamespacesHandler&		theParentHandler,
 			NamespacesHandler&				theHandler);

@@ -156,7 +156,7 @@ protected:
 			int								xslToken);
 
 	virtual void
-	postConstruction(
+	namespacesPostConstruction(
 			StylesheetConstructionContext&	constructionContext,
 			const NamespacesHandler&		theParentHandler,
 			NamespacesHandler&				theHandler);
@@ -169,21 +169,6 @@ private:
 	ElemLiteralResult&
 	operator=(const ElemLiteralResult&);
 
-	/**
-	 * Process the exclude-result-prefixes or the extension-element-prefixes
-	 * attributes, for the purpose of prefix exclusion.
-	 *
-	 * @param constructionContext  context when object consructed
-	 * @param stylesheetTree The current Stylesheet object.
-	 * @param localName The local name of the attribute.
-	 * @param attrValue The value of the attribute.
-	 */
-	bool
-	processPrefixControl(
-			StylesheetConstructionContext&	constructionContext,
-			const Stylesheet&				stylesheetTree,
-			const XalanDOMString&			localName,
-			const XalanDOMChar*				attrValue);
 
 	/**
 	 * The name of the literal result element.

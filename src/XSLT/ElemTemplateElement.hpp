@@ -835,6 +835,22 @@ protected:
 	}
 
 	/**
+	 * Process the exclude-result-prefixes or the extension-element-prefixes
+	 * attributes, for the purpose of prefix exclusion.
+	 *
+	 * @param constructionContext  context when object consructed
+	 * @param stylesheetTree The current Stylesheet object.
+	 * @param localName The local name of the attribute.
+	 * @param attrValue The value of the attribute.
+	 */
+	bool
+	processPrefixControl(
+			StylesheetConstructionContext&	constructionContext,
+			const Stylesheet&				stylesheetTree,
+			const XalanDOMString&			localName,
+			const XalanDOMChar*				attrValue);
+
+	/**
 	 * Get the namespace for a given prefix.
 	 * 
 	 * @param prefix The prefix to search for
@@ -879,22 +895,23 @@ protected:
 
 	/**
 	 * Called after construction is completed.  This is a hook for
-	 * deriving classes to handle post-constructio with the
+	 * deriving classes to handle post-construction with the
 	 * instances HamespaceHandler instance, which is otherwise only
 	 * available through a const accessor.
 	 */
 	virtual void
-	postConstruction(
+	namespacesPostConstruction(
 			StylesheetConstructionContext&	constructionContext,
 			const NamespacesHandler&		theParentHandler,
 			NamespacesHandler&				theHandler);
 
-	/*
-	 * This object handles all result tree namespace processing.
-	 */
-	NamespacesHandler		m_namespacesHandler;
-
 	static const XalanDOMString 	s_emptyString;
+
+	const NamespacesHandler&
+	getNamespaces() const
+	{
+		return m_namespacesHandler;
+	}
 
 private:
 
@@ -947,6 +964,11 @@ private:
 			XalanDOMString& 				result) const;
 
 	Stylesheet& 			m_stylesheet;
+
+	/*
+	 * This object handles all result tree namespace processing.
+	 */
+	NamespacesHandler		m_namespacesHandler;
 
 	const int				m_lineNumber;
 	const int				m_columnNumber;

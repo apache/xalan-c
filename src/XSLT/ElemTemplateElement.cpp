@@ -125,12 +125,12 @@ ElemTemplateElement::ElemTemplateElement(
 			int								xslToken) :
 	XalanElement(),
 	PrefixResolver(),
+	m_stylesheet(stylesheetTree),
 	m_namespacesHandler(
 			constructionContext,
 			stylesheetTree.getNamespacesHandler(),
 			stylesheetTree.getNamespaces(),
 			stylesheetTree.getXSLTNamespaceURI()),
-	m_stylesheet(stylesheetTree),
 	m_lineNumber(lineNumber),
 	m_columnNumber(columnNumber),
 	m_xslToken(xslToken),
@@ -1074,7 +1074,7 @@ ElemTemplateElement::postConstruction(
 			StylesheetConstructionContext&	constructionContext,
 			const NamespacesHandler&		theParentHandler)
 {
-	postConstruction(
+	namespacesPostConstruction(
 			constructionContext,
 			theParentHandler,
 			m_namespacesHandler);
@@ -1143,7 +1143,7 @@ ElemTemplateElement::postConstruction(
 
 
 void
-ElemTemplateElement::postConstruction(
+ElemTemplateElement::namespacesPostConstruction(
 			StylesheetConstructionContext&	constructionContext,
 			const NamespacesHandler&		theParentHandler,
 			NamespacesHandler&				theHandler)
@@ -1268,6 +1268,39 @@ const XalanDOMString*
 ElemTemplateElement::getNamespaceForPrefix(const XalanDOMString&	prefix) const
 {
 	return getNamespaceForPrefixInternal(prefix);
+}
+
+
+
+bool
+ElemTemplateElement::processPrefixControl(
+			StylesheetConstructionContext&	constructionContext,
+			const Stylesheet&				stylesheetTree,
+			const XalanDOMString&			localName,
+			const XalanDOMChar*				attrValue)
+{
+	if(equals(localName, Constants::ATTRNAME_EXTENSIONELEMENTPREFIXES))
+	{
+		m_namespacesHandler.processExtensionElementPrefixes(
+				constructionContext,
+				attrValue,
+				stylesheetTree.getNamespaces());
+
+		return true;
+	}
+	else if (equals(localName, Constants::ATTRNAME_EXCLUDE_RESULT_PREFIXES))
+	{
+		m_namespacesHandler.processExcludeResultPrefixes(
+				constructionContext,
+				attrValue,
+				stylesheetTree.getNamespaces());
+
+		return true;
+	}
+	else
+	{
+		return false;
+	}
 }
 
 
