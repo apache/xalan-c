@@ -305,7 +305,7 @@ XalanSourceTreeComment::normalize()
 
 
 bool
-XalanSourceTreeComment::supports(
+XalanSourceTreeComment::isSupported(
 			const XalanDOMString&	/* feature */,
 			const XalanDOMString&	/* version */) const
 {

@@ -306,7 +306,7 @@ XalanSourceTreeProcessingInstruction::normalize()
 
 
 bool
-XalanSourceTreeProcessingInstruction::supports(
+XalanSourceTreeProcessingInstruction::isSupported(
 			const XalanDOMString&	/* feature */,
 			const XalanDOMString&	/* version */) const
 {

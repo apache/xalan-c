@@ -278,7 +278,7 @@ XalanSourceTreeDocumentFragment::normalize()
 
 
 bool
-XalanSourceTreeDocumentFragment::supports(
+XalanSourceTreeDocumentFragment::isSupported(
 			const XalanDOMString&	/* feature */,
 			const XalanDOMString&	/* version */) const
 {

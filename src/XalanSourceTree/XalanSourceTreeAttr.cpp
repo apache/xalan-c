@@ -288,7 +288,7 @@ XalanSourceTreeAttr::normalize()
 
 
 bool
-XalanSourceTreeAttr::supports(
+XalanSourceTreeAttr::isSupported(
 			const XalanDOMString&	/* feature */,
 			const XalanDOMString&	/* version */) const
 {

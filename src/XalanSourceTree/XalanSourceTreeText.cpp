@@ -293,7 +293,7 @@ XalanSourceTreeText::normalize()
 
 
 bool
-XalanSourceTreeText::supports(
+XalanSourceTreeText::isSupported(
 			const XalanDOMString&	/* feature */,
 			const XalanDOMString&	/* version */) const
 {
