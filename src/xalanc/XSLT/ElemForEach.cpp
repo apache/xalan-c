@@ -252,7 +252,12 @@ ElemForEach::endElement(StylesheetExecutionContext&		executionContext) const
 {
 	if (hasChildren() == true)
 	{
-		endExecuteChildren(executionContext);
+		// Children only executed if there were selected nodes
+		if(executionContext.getContextNodeList().getLength() > 0)
+		{
+		    endExecuteChildren(executionContext);
+		}
+
 		executionContext.popNodesToTransformList();
 		executionContext.popContextNodeList();
 		releaseSelectedAndSortedNodeList(executionContext);

@@ -1912,6 +1912,10 @@ StylesheetExecutionContextDefault::reset()
 
 	m_variablesStack.reset();
 
+#if !defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
+	m_xobjectPtrStack.clear();
+#endif
+
 	if (m_xsltProcessor != 0)
 	{
 		m_xsltProcessor->reset();
@@ -1953,7 +1957,6 @@ StylesheetExecutionContextDefault::reset()
 	m_currentIndexStack.clear();
 
 #if !defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
-	m_xobjectPtrStack.clear();
 	m_nodesToTransformStack.clear();
 	m_processCurrentAttributeStack.clear();
 	m_skipElementAttributesStack.clear();
