@@ -142,6 +142,7 @@
 #include <XercesParserLiaison/XercesDocumentBridge.hpp>
 #include <XercesParserLiaison/XercesNamedNodeListCache.hpp>
 #include <XercesParserLiaison/XercesParserLiaison.hpp>
+#include <XercesParserLiaison/XercesToXalanNodeMap.hpp>
 
 
 
@@ -227,7 +228,7 @@ foo(XPathExecutionContext&	theExecutionContext)
 	using std::replace;
 #endif
 
-	{		
+	{
 		XObjectFactoryDefault::XObjectCollectionType 	theVector;
 		XObjectFactoryDefault			theFactory;
 		
@@ -236,16 +237,16 @@ foo(XPathExecutionContext&	theExecutionContext)
 			 XObjectFactoryDefault::DeleteXObjectFunctor(theFactory, true));
 	}
 	
-	{	
+	{
 		XPathFactoryDefault::CollectionType 	theVector;	
-		XPathFactoryDefault			theXPath;		
+		XPathFactoryDefault						theXPath;		
 
 		for_each(theVector.begin(),
 			 theVector.end(),
 			 XPathFactoryDefault::DeleteXPathFunctor(theXPath, true));
 	}
-	
-	{		
+
+	{
 		XPathFunctionTable::CollectionType theVector;
 		
 		for_each(theVector.begin(),
@@ -253,7 +254,7 @@ foo(XPathExecutionContext&	theExecutionContext)
 			 XPathFunctionTable::DeleteFunctorType());
 	}
 	
-	{	
+	{
 		XalanDOMStringCache::StringListType theVector;	
 				
 		for_each(theVector.begin(),
@@ -636,6 +637,229 @@ foo(XPathExecutionContext&	theExecutionContext)
 				 theVector.end(),
 				 DeleteFunctor<XalanParsedSource>());
 	}
+
+#if __SGI_STL_PORT >= 452
+
+	{
+		VariablesStack::RecursionGuardStackType		theStack;
+
+		const ElemVariable* const	var = 0;
+
+		find(
+			theStack.begin(),
+			theStack.end(),
+			var);
+	}
+
+	{
+		XalanTransformer::CompiledStylesheetPtrVectorType	theVector;
+
+		const XalanCompiledStylesheet*	theStylesheet = 0;
+
+		find(
+			theVector.begin(),
+			theVector.end(),
+			theStylesheet);
+	}
+
+	{
+		XalanTransformer::ParsedSourcePtrVectorType		theVector;
+
+		const XalanParsedSource*	theParsedSource = 0;
+
+		find(
+			theVector.begin(),
+			theVector.end(),
+			theParsedSource);
+	}
+
+	{
+		const XMLCh* const name = 0;
+
+		AttributeListImpl::AttributeVectorType	theVector;
+
+		find_if(
+			theVector.begin(),
+			theVector.end(),
+			AttributeListImpl::NameCompareFunctor(name));
+	}
+
+	{
+		const XMLCh* const name = 0;
+
+		const AttributeListImpl::AttributeVectorType	theVector;
+
+		find_if(
+			theVector.begin(),
+			theVector.end(),
+			AttributeListImpl::NameCompareFunctor(name));
+	}
+
+	{
+		const XMLCh* const	uri = 0;
+		const XMLCh* const	localName = 0;
+
+		const AttributesImpl::AttributesVectorType	theVector;
+
+		find_if(
+			theVector.begin(),
+			theVector.end(),
+			AttributesImpl::URIAndLocalNameCompareFunctor(uri, localName));
+	}
+
+	{
+		const XMLCh* const	uri = 0;
+		const XMLCh* const	localName = 0;
+
+		const AttributesImpl::AttributesVectorType	theVector;
+
+		find_if(
+			theVector.begin(),
+			theVector.end(),
+			AttributesImpl::URIAndLocalNameCompareFunctor(uri, localName));
+	}
+
+	{
+		const XMLCh* const name = 0;
+
+		AttributesImpl::AttributesVectorType	theVector;
+
+		find_if(
+			theVector.begin(),
+			theVector.end(),
+			AttributesImpl::NameCompareFunctor(name));
+	}
+
+	{
+		const XMLCh* const name = 0;
+
+		const AttributesImpl::AttributesVectorType	theVector;
+
+		find_if(
+			theVector.begin(),
+			theVector.end(),
+			AttributesImpl::NameCompareFunctor(name));
+	}
+
+	{
+		const XalanDOMChar*		theString = 0;
+
+		const XalanDOMStringHashTable::BucketType		theBucket;
+
+		find_if(
+			theBucket.begin(),
+			theBucket.end(),
+			XalanDOMStringHashTable::equalsXalanDOMString(theString, 0));
+	}
+
+	{
+		const XalanNode*	theXalanNode = 0;
+
+		const XercesToXalanNodeMap::XercesNodeMapType	theMap;
+
+		find_if(
+			theMap.begin(),
+			theMap.end(),
+			XercesToXalanNodeMap::NameMapEqualsFunctor(theXalanNode));
+	}
+
+	{
+		const XalanNode*	theXalanNode = 0;
+
+		NodeRefList::NodeListVectorType		theVector;
+
+		find(
+			theVector.begin(),
+			theVector.end(),
+			theXalanNode);
+	}
+
+	{
+		const XalanNode*	theXalanNode = 0;
+
+		const NodeRefList::NodeListVectorType	theVector;
+
+		find(
+			theVector.begin(),
+			theVector.end(),
+			theXalanNode);
+	}
+
+	{
+		const Stylesheet::MatchPattern2*	thePattern = 0;
+
+		Stylesheet::PatternTableVectorType	theVector;
+
+		find(
+			theVector.begin(),
+			theVector.end(),
+			thePattern);
+	}
+
+	{
+		XalanNode*	theXalanNode = 0;
+
+		XercesDocumentBridge::NodeVectorType	theVector;
+
+		find(
+			theVector.begin(),
+			theVector.end(),
+			theXalanNode);
+	}
+
+	{
+		XalanDOMString*		theString = 0;
+
+		XalanDOMStringCache::StringListType		theList;
+
+		find(
+			theList.begin(),
+			theList.end(),
+			theString);
+	}
+
+	{
+		const XalanQName*	theQName;
+
+		const StylesheetRoot::QNameVectorType	theVector;
+
+		find(
+			theVector.begin(),
+			theVector.end(),
+			*theQName);
+	}
+
+	{
+		const StylesheetHandler::BoolStackType	theStack;
+
+		find(
+			theStack.rbegin(),
+			theStack.rend(),
+			true);
+	}
+
+	{
+		const ElemTemplateElement*	theElement = 0;
+
+		const StylesheetExecutionContextDefault::ElementRecursionStackType	theStack;
+
+		find(
+			theStack.begin(),
+			theStack.end(),
+			theElement);
+	}
+
+	{
+		XObjectFactoryDefault::XObjectCollectionType	theCollection;	
+		XObject*										theXObject;		
+
+		find(
+			theCollection.begin(),
+			theCollection.end(),
+			theXObject);
+	}
+
+#endif
 }
 
 
