@@ -32,6 +32,7 @@
 
 #if defined(_HP_NAMESPACE_STD)
 #define XALAN_HAS_STD_ITERATORS
+#define XALAN_HAS_STD_DISTANCE
 #else
 #if defined(RWSTD_MULTI_THREAD) && !defined(__HPACC_THREAD_SAFE_RB_TREE)
 #define __HPACC_THREAD_SAFE_RB_TREE

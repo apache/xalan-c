@@ -204,7 +204,7 @@ public:
                 end(),
                 theFirst);
 
-            shrinkCount(XALAN_STD_QUALIFIER distance(theFirst, theLast));
+            shrinkCount(local_distance(theFirst, theLast));
         }
 
         invariants();
@@ -227,7 +227,7 @@ public:
         invariants();
 
         const size_type     theInsertSize =
-            XALAN_STD_QUALIFIER distance(theStart, theEnd);
+            local_distance(theStart, theEnd);
 
         if (theInsertSize == 0)
         {
@@ -272,7 +272,7 @@ public:
                 const iterator      theOriginalEnd = end();
 
                 const size_type     theRightSplitSize =
-                    XALAN_STD_QUALIFIER distance(thePosition, end());
+                    local_distance(thePosition, theOriginalEnd);
 
                 if (theRightSplitSize <= theInsertSize)
                 {
@@ -384,8 +384,9 @@ public:
             {
                 // insert into the middle of the vector that has enough capacity            
                 const iterator      theOriginalEnd = end();
+
                 const size_type     theRightSplitSize =
-                                            XALAN_STD_QUALIFIER distance(thePosition, end());
+                                            local_distance(thePosition, theOriginalEnd);
 
                 if (theRightSplitSize <= theCount)
                 {
@@ -452,7 +453,7 @@ public:
         else
         {
             const size_type     theDistance =
-                XALAN_STD_QUALIFIER distance(begin(), thePosition);
+                local_distance(begin(), thePosition);
 
             insert(thePosition, 1, theData);
 
@@ -821,6 +822,22 @@ private:
         assert(m_data == 0 && m_allocation == 0 || m_data != 0 && m_allocation != 0);
     }
 #endif
+
+    size_type
+    local_distance(
+            const_iterator  theStart,
+            const_iterator  theEnd)
+    {
+#if defined(XALAN_HAS_STD_DISTANCE)
+        return XALAN_STD_QUALIFIER distance(theStart, theEnd);
+#else
+        size_type   theDistance;
+
+        XALAN_STD_QUALIFIER distance(theStart, theEnd, theDistance);
+
+        return theDistance;
+#endif
+    }
 
     value_type*
     allocate(size_type  size)
