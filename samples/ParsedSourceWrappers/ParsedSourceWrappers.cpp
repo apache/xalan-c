@@ -70,7 +70,7 @@
 
 #include <xercesc/framework/URLInputSource.hpp>
 #if XERCES_VERSION_MAJOR >= 2
-#include <xercesc/dom/deprecated/DOMParser.hpp>
+#include <xercesc/parsers/XercesDOMParser.hpp>
 #else
 #include <xercesc/parsers/DOMParser.hpp>
 #endif
@@ -107,16 +107,18 @@ transformXercesDOM(
 {
 	const URLInputSource	theInputSource(theURI.c_str());
 
-	DOMParser				theParser;
+	XercesParserLiaison::DOMParserType	theParser;
 
 	theParser.parse(theInputSource);
-
-	DOM_Document			theDocument = theParser.getDocument();
 
 	XercesParserLiaison		theParserLiaison;
 	XercesDOMSupport		theDOMSupport;
 
-	XercesDOMWrapperParsedSource	theWrapper(theDocument, theParserLiaison, theDOMSupport, theURI);
+	const XercesDOMWrapperParsedSource	theWrapper(
+				theParser.getDocument(),
+				theParserLiaison,
+				theDOMSupport,
+				theURI);
 
 	return theTransformer.transform(
 						theWrapper,
