@@ -214,11 +214,39 @@ FunctionFormatNumber::doFormat(
 			const XalanDecimalFormatSymbols*	theDFS,
 			XalanDOMString&						theResult)
 {
-	if (DoubleSupport::isNaN(theNumber) == true ||
-		DoubleSupport::isNegativeInfinity(theNumber) == true ||
-		DoubleSupport::isPositiveInfinity(theNumber) == true )
+	if (DoubleSupport::isNaN(theNumber) == true)
 	{
-		DoubleToDOMString(theNumber, theResult);
+		if (theDFS != 0)
+		{
+			theResult = theDFS->getNaN();
+		}
+		else
+		{
+			DoubleToDOMString(theNumber, theResult);
+		}
+	}
+	else if (DoubleSupport::isNegativeInfinity(theNumber) == true)
+	{
+		if (theDFS != 0)
+		{
+			theResult = theDFS->getMinusSign();
+			theResult += theDFS->getInfinity();
+		}
+		else
+		{
+			DoubleToDOMString(theNumber, theResult);
+		}
+	}
+	else if (DoubleSupport::isPositiveInfinity(theNumber) == true )
+	{
+		if (theDFS != 0)
+		{
+			theResult = theDFS->getInfinity();
+		}
+		else
+		{
+			DoubleToDOMString(theNumber, theResult);
+		}
 	}
 	else
 	{
