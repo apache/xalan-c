@@ -138,7 +138,7 @@ AttributeListImpl::operator=(const AttributeListImpl&	theRHS)
 		{
 			assert(theRHS.m_AttributeVector[i] != 0);
 
-			const AttributeVectorEntry* const	theEntry =
+			AttributeVectorEntry* const	theEntry =
 				new AttributeVectorEntry(*theRHS.m_AttributeVector[i]);
 
 			// Add the item...
@@ -342,8 +342,20 @@ AttributeListImpl::addAttribute(
 
 	bool	fResult = false;
 
-	// Don't add it if it's already there.
-	if (m_AttributeKeyMap.find(name) == m_AttributeKeyMap.end())
+	// Update the attribute, if it's already there
+	const AttributeKeyMapType::iterator		i =
+		m_AttributeKeyMap.find(name);
+
+	if (i != m_AttributeKeyMap.end())
+	{
+		// Create the new vectors, then swap them...
+		XMLChVectorType		theNewType(type, endArray(type) + 1);
+		XMLChVectorType		theNewValue(value, endArray(value) + 1);
+
+		theNewType.swap(i->second->m_Type);
+		theNewValue.swap(i->second->m_Value); 
+	}
+	else
 	{
 		AttributeVectorEntry*	const	theEntry =
 						new AttributeVectorEntry(XMLChVectorType(name, endArray(name) + 1),
