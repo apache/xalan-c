@@ -223,7 +223,7 @@ public:
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
 	virtual XalanNode*
 #else
-	virtual XalanElementBridge*
+	virtual XercesElementBridge*
 #endif
 	cloneNode(bool deep) const;
 
