@@ -883,3 +883,48 @@ doConvert(const XalanDOMChar*	theString)
 }
 
 #endif
+
+
+double
+DoubleSupport::round(double		theValue)
+{
+	if (isNaN(theValue))
+	{
+		return getNaN();
+	}
+	else if (isPositiveInfinity(theValue))
+	{
+		return getPositiveInfinity();
+	}
+	if (isNegativeInfinity(theValue))
+	{
+		return getNegativeInfinity();
+	}
+	else if (theValue == 0)
+	{
+		return 0.0;
+	}
+	else if (theValue > 0)
+	{
+		return long(theValue + 0.5);
+	}
+	else
+	{
+		// Negative numbers are a special case.  Any time we
+		// have -0.5 as the fractional part, we have to
+		// round up (toward 0), rather than down.
+		double			intPart = 0;
+
+		const double	fracPart = modf(theValue, &intPart);
+
+		if (fracPart == -0.5)
+		{
+			// special case -- we have have to round toward 0...
+			return long(theValue + 0.5);
+		}
+		else
+		{
+			return long(theValue - 0.5);
+		}
+	}
+}

@@ -593,6 +593,16 @@ public:
 	static double
 	toDouble(const XalanDOMChar*	theString);
 
+	/**
+	 * Round a number according to the XPath
+	 * rules.
+	 *
+	 * @param theValue The value to round.
+	 * @return The result of the rounding
+	 */
+	static double
+	round(double	theValue);
+
 private:
 
 	static const double				s_NaN;
