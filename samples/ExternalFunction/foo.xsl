@@ -17,7 +17,7 @@
     <result>
       Accordingly, the length of each side is <xsl:value-of select="external:square-root(@value)"/>
       <xsl:text> </xsl:text><xsl:value-of select="@units"/> and the volume of the cube is 
-      <xsl:value-of select="external:cube(external:square-root(@value)))"/>
+      <xsl:value-of select="external:cube(external:square-root(@value))"/>
       <xsl:text> cubic </xsl:text> <xsl:value-of select="@units"/>.
     </result>
   </xsl:template>
