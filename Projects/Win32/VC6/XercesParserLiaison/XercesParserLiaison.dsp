@@ -355,15 +355,15 @@ SOURCE=..\..\..\..\src\XercesParserLiaison\XercesAttrWrapperAllocator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesBridgeCommon.hpp
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\..\..\src\XercesParserLiaison\XercesBridgeHelper.hpp
 # End Source File
 # Begin Source File
 
 SOURCE=..\..\..\..\src\XercesParserLiaison\XercesBridgeNavigator.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesBridgeTypes.hpp
 # End Source File
 # Begin Source File
 
@@ -552,6 +552,10 @@ SOURCE=..\..\..\..\src\XercesParserLiaison\XercesWrapperNavigator.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\XercesParserLiaison\XercesWrapperToXalanNodeMap.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesWrapperTypes.hpp
 # End Source File
 # End Group
 # Begin Group "Resource Files"
