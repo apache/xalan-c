@@ -197,6 +197,15 @@ XercesParserLiaison::parseXMLStream(
 
 	theParser->setDocumentHandler(&handler);
 
+	if (m_errorHandler == 0)
+	{
+		theParser->setErrorHandler(this);
+	}
+	else
+	{
+		theParser->setErrorHandler(m_errorHandler);
+	}
+
 	theParser->parse(urlInputSource);
 }
 
@@ -208,6 +217,15 @@ XercesParserLiaison::parseXMLStream(
 			const XalanDOMString&	/* identifier */)
 {
 	XalanAutoPtr<DOMParser>		theParser(CreateDOMParser());
+
+	if (m_errorHandler == 0)
+	{
+		theParser->setErrorHandler(this);
+	}
+	else
+	{
+		theParser->setErrorHandler(m_errorHandler);
+	}
 
 	theParser->parse(reader);
 
