@@ -93,13 +93,27 @@
 
 //This is here for Unix threads
 #elif defined(XALAN_POSIX2_AVAILABLE)
+
+    // This is a workaround for a Tru64 compiler bug...
+#if defined(TRU64)
+#if  defined(XALAN_STRICT_ANSI_HEADERS)
+#include <csetjmp>
+typedef long sigjmp_buf[_JBLEN];
+#endif
+extern "C" void  *theThread(void   *param);
+#endif
+
 #include <pthread.h>
 #include <unistd.h>
-    typedef   unsigned long     theThreadIDType;
-    typedef   pthread_t         theThreadType;
+    typedef   pthread_t     theThreadIDType;
+    typedef   pthread_t     theThreadType;
 
 #else
 //error Unsupported Platform!
+#endif
+
+#if  defined(XALAN_STRICT_ANSI_HEADERS)
+    using std::perror;
 #endif
 
 #define NUM_THREADS 10
