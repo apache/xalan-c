@@ -267,7 +267,15 @@ XMLFileReporter::logMessage(int level, const XalanDOMString& msg)
     }
 }
 
+void XMLFileReporter::addMetricToAttrs(char* desc, double theMetric, Hashtable& attrs)
+{
+	XalanDOMString	temp;
 
+	DoubleToDOMString(theMetric, temp);
+	attrs.insert(Hashtable::value_type(XalanDOMString(desc), temp));
+
+	return;
+}
 
 void 
 XMLFileReporter::logElement(int level, const XalanDOMString& element, Hashtable attrs,const XalanDOMString& msg)
