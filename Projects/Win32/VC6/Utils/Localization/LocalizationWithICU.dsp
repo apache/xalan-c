@@ -8,12 +8,12 @@ CFG=LocalizationWithICU - Win32 Release
 !MESSAGE This is not a valid makefile. To build this project using NMAKE,
 !MESSAGE use the Export Makefile command and run
 !MESSAGE 
-!MESSAGE NMAKE /f "Localization.mak".
+!MESSAGE NMAKE /f "BuildMessages.mak".
 !MESSAGE 
 !MESSAGE You can specify a configuration when running NMAKE
 !MESSAGE by defining the macro CFG on the command line. For example:
 !MESSAGE 
-!MESSAGE NMAKE /f "Localization.mak" CFG="LocalizationWithICU - Win32 Release"
+!MESSAGE NMAKE /f "BuildMessages.mak" CFG="LocalizationWithICU - Win32 Release"
 !MESSAGE 
 !MESSAGE Possible choices for configuration are:
 !MESSAGE 
@@ -33,11 +33,11 @@ CFG=LocalizationWithICU - Win32 Release
 
 # PROP BASE Use_MFC 0
 # PROP BASE Use_Debug_Libraries 0
-# PROP BASE Cmd_Line "NMAKE /f Localization.mak"
+# PROP BASE Cmd_Line "NMAKE /f BuildMessages.mak"
 # PROP BASE Rebuild_Opt "/a"
 # PROP Use_MFC 0
 # PROP Use_Debug_Libraries 0
-# PROP Cmd_Line "nmake /f "Localization.mak"  TYPE=icu LOCALE=en_US"
+# PROP Cmd_Line "nmake /f "BuildMessages.mak"  TYPE=icu LOCALE=en_US"
 # PROP Rebuild_Opt "/a"
 # PROP Target_File "LocalizationWithICU"
 
@@ -45,11 +45,11 @@ CFG=LocalizationWithICU - Win32 Release
 
 # PROP BASE Use_MFC 0
 # PROP BASE Use_Debug_Libraries 1
-# PROP BASE Cmd_Line "NMAKE /f Localization.mak"
+# PROP BASE Cmd_Line "NMAKE /f BuildMessages.mak"
 # PROP BASE Rebuild_Opt "/a"
 # PROP Use_MFC 0
 # PROP Use_Debug_Libraries 1
-# PROP Cmd_Line "nmake    /f "Localization.mak" /NOLOGO CFG=Debug TYPE=icu LOCALE=en_US"
+# PROP Cmd_Line "nmake    /f "BuildMessages.mak" /NOLOGO CFG=Debug TYPE=icu LOCALE=en_US"
 # PROP Rebuild_Opt "/a"
 # PROP Target_File "LocalizationWithICU"
 
@@ -57,13 +57,13 @@ CFG=LocalizationWithICU - Win32 Release
 
 # PROP BASE Use_MFC 0
 # PROP BASE Use_Debug_Libraries 0
-# PROP BASE Cmd_Line "nmake /f "Localization.mak"  TYPE=icu LOCALE=en_US"
+# PROP BASE Cmd_Line "nmake /f "BuildMessages.mak"  TYPE=icu LOCALE=en_US"
 # PROP BASE Rebuild_Opt "/a"
 # PROP BASE Target_File "LocalizationWithICU"
 # PROP BASE Target_Dir ""
 # PROP Use_MFC 0
 # PROP Use_Debug_Libraries 0
-# PROP Cmd_Line "nmake /f "Localization.mak"  TYPE=icu CFG=Release.symbols LOCALE=en_US"
+# PROP Cmd_Line "nmake /f "BuildMessages.mak"  TYPE=icu CFG=Release.symbols LOCALE=en_US"
 # PROP Rebuild_Opt "/a"
 # PROP Target_File "LocalizationWithICU"
 
@@ -71,13 +71,13 @@ CFG=LocalizationWithICU - Win32 Release
 
 # PROP BASE Use_MFC 0
 # PROP BASE Use_Debug_Libraries 0
-# PROP BASE Cmd_Line "nmake /f "Localization.mak"  TYPE=icu LOCALE=en_US"
+# PROP BASE Cmd_Line "nmake /f "BuildMessages.mak"  TYPE=icu LOCALE=en_US"
 # PROP BASE Rebuild_Opt "/a"
 # PROP BASE Target_File "LocalizationWithICU"
 # PROP BASE Target_Dir ""
 # PROP Use_MFC 0
 # PROP Use_Debug_Libraries 0
-# PROP Cmd_Line "nmake /f "Localization.mak"  TYPE=icu BITS=Win64 LOCALE=en_US"
+# PROP Cmd_Line "nmake /f "BuildMessages.mak"  TYPE=icu BITS=Win64 LOCALE=en_US"
 # PROP Rebuild_Opt "/a"
 # PROP Target_File "LocalizationWithICU"
 
@@ -85,13 +85,13 @@ CFG=LocalizationWithICU - Win32 Release
 
 # PROP BASE Use_MFC 0
 # PROP BASE Use_Debug_Libraries 1
-# PROP BASE Cmd_Line "nmake    /f "Localization.mak" /NOLOGO CFG=Debug TYPE=icu LOCALE=en_US"
+# PROP BASE Cmd_Line "nmake    /f "BuildMessages.mak" /NOLOGO CFG=Debug TYPE=icu LOCALE=en_US"
 # PROP BASE Rebuild_Opt "/a"
 # PROP BASE Target_File "LocalizationWithICU"
 # PROP BASE Target_Dir ""
 # PROP Use_MFC 0
 # PROP Use_Debug_Libraries 1
-# PROP Cmd_Line "nmake    /f "Localization.mak" /NOLOGO CFG=Debug TYPE=icu BITS=Win64 LOCALE=en_US"
+# PROP Cmd_Line "nmake    /f "BuildMessages.mak" /NOLOGO CFG=Debug TYPE=icu BITS=Win64 LOCALE=en_US"
 # PROP Rebuild_Opt "/a"
 # PROP Target_File "LocalizationWithICU"
 
