@@ -148,15 +148,18 @@ AttributeListImpl::operator=(const AttributeListImpl&	theRHS)
 		// Reserve the appropriate capacity right now...
 		tempVector.reserve(theLength);
 
-		try
 		{
+			// This will delete everything in tempVector when we're done...
+			CollectionDeleteGuard<AttributeVectorType,
+								  DeleteFunctor<AttributeVectorEntry> >		theGuard(tempVector);
+
 			// Copy the vector entries, and build the index map...
 			for(unsigned int i = 0; i < theLength; i++)
 			{
 				assert(theRHS.m_AttributeVector[i] != 0);
 
 				XalanAutoPtr<AttributeVectorEntry>	theEntry(
-					new AttributeVectorEntry(*theRHS.m_AttributeVector[i]));
+						new AttributeVectorEntry(*theRHS.m_AttributeVector[i]));
 
 				// Add the item...
 				tempVector.push_back(theEntry.get());
@@ -167,23 +170,14 @@ AttributeListImpl::operator=(const AttributeListImpl&	theRHS)
 
 				// Create an entry in the index map...
 				tempMap.insert(AttributeKeyMapType::value_type(entry->m_Name.begin(),
-															   entry));
+																   entry));
 			}
+
+			// OK, we're safe, so swap the contents of the
+			// containers.  This is guaranteed not to throw.
+			m_AttributeKeyMap.swap(tempMap);
+			m_AttributeVector.swap(tempVector);
 		}
-		catch(...)
-		{
-			deleteEntries(tempVector);
-
-			throw;
-		}
-
-		// OK, we're safe, so swap the contents of the
-		// containers.  This is guaranteed not to throw.
-		m_AttributeKeyMap.swap(tempMap);
-		m_AttributeVector.swap(tempVector);
-
-		// This will delete all of the old entries.
-		deleteEntries(tempVector);
 
 		assert(getLength() == theLength);
 		assert(m_AttributeKeyMap.size() == m_AttributeVector.size());
@@ -202,46 +196,27 @@ AttributeListImpl::operator=(const AttributeList&	theRHS)
 		// Note that we can't chain up to our base class operator=()
 		// because it's private.
 
+		// Add all of the attributes to this temp list,
+		// then swap at the end.  This means we're exception
+		// safe and don't need any try blocks.
+		AttributeListImpl	theTempList;
+
 		const unsigned int	theLength = theRHS.getLength();
 
-		// Some temporary structures to hold everything
-		// until we're done.
-		AttributeKeyMapType		tempMap;
-		AttributeVectorType		tempVector;
+		theTempList.reserve(theLength);
 
-		// Keep our old entries, in case something
-		// bad happens.
-		tempMap.swap(m_AttributeKeyMap);
-		tempVector.swap(m_AttributeVector);
-
-		try
+		// Add each attribute.
+		for(unsigned int i = 0; i < theLength; i++)
 		{
-			// Reserve the appropriate capacity right now...
-			m_AttributeVector.reserve(theLength);
-
-			// Add each attribute.
-			for(unsigned int i = 0; i < theLength; i++)
-			{
-				addAttribute(theRHS.getName(i),
-							 theRHS.getType(i),
-							 theRHS.getValue(i));
-			}
-		}
-		catch(...)
-		{
-			// Swap everything back...
-			tempMap.swap(m_AttributeKeyMap);
-			tempVector.swap(m_AttributeVector);
-
-			// This will delete anything new we've
-			// created.
-			deleteEntries(tempVector);
-
-			throw;
+			theTempList.addAttribute(
+					theRHS.getName(i),
+					theRHS.getType(i),
+					theRHS.getValue(i));
 		}
 
-		assert(getLength() == theLength);
-		assert(m_AttributeKeyMap.size() == m_AttributeVector.size());
+		// Now that the temp list is built, swap everything. This is
+		// guaranteed not to throw.
+		swap(theTempList);
 	}
 
 	return *this;

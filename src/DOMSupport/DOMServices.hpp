@@ -87,26 +87,15 @@ class XALAN_DOMSUPPORT_EXPORT DOMServices
 {
 public:
 
-#if defined(XALAN_INLINE_INITIALIZATION)
+	static const XalanDOMString&	s_XMLString;
+	static const XalanDOMString&	s_XMLNamespaceURI;
+	static const XalanDOMString&	s_XMLNamespace;
+	static const XalanDOMString&	s_XMLNamespaceWithSeparator;
 
-	static const XalanDOMString		s_XMLString(XALAN_STATIC_UCODE_STRING("xml"));
-	static const XalanDOMString		s_XMLNamespaceURI(XALAN_STATIC_UCODE_STRING("http://www.w3.org/XML/1998/namespace"));
-	static const XalanDOMString		s_XMLNamespace(XALAN_STATIC_UCODE_STRING("xmlns"));
-	static const XalanDOMString		s_XMLNamespaceWithSeparator(XALAN_STATIC_UCODE_STRING("xmlns:"));
-
-#else
-
-	static const XalanDOMString		s_XMLString;
-	static const XalanDOMString		s_XMLNamespaceURI;
-	static const XalanDOMString		s_XMLNamespace;
-	static const XalanDOMString		s_XMLNamespaceWithSeparator;
-
-#endif
-
-	static const unsigned int		s_XMLStringLength;
-	static const unsigned int		s_XMLNamespaceURILength;
-	static const unsigned int		s_XMLNamespaceLength;
-	static const unsigned int		s_XMLNamespaceWithSeparatorLength;
+	static const unsigned int&		s_XMLStringLength;
+	static const unsigned int&		s_XMLNamespaceURILength;
+	static const unsigned int&		s_XMLNamespaceLength;
+	static const unsigned int&		s_XMLNamespaceWithSeparatorLength;
 
 	class XALAN_DOMSUPPORT_EXPORT WhitespaceSupport
 	{
@@ -148,6 +137,20 @@ public:
 		virtual bool
 		isIgnorableWhitespace(const XalanText&	node) const;
 	};
+
+	/**
+	 * Initialize static data.  Must be called before any
+	 * other functions are called.
+	 */
+	static void
+	initialize();
+
+	/**
+	 * Destroy static data.  After thus function is called,
+	 * no other functions can be called.
+	 */
+	static void
+	terminate();
 
 	/**
 	 * Retrieves data for node

@@ -1214,7 +1214,32 @@ StylesheetExecutionContextDefault::collationCompare(
 {
 	assert(m_collationCompareFunctor != 0);
 
-	return (*m_collationCompareFunctor)(c_wstr(theLHS), c_wstr(theRHS));
+	if (theLHS == 0)
+	{
+		if (theRHS == 0)
+		{
+			return 0;
+		}
+		else
+		{
+			return -1;
+		}
+	}
+	else if (theRHS == 0)
+	{
+		if (theLHS == 0)
+		{
+			return 0;
+		}
+		else
+		{
+			return 1;
+		}
+	}
+	else
+	{
+		return (*m_collationCompareFunctor)(c_wstr(theLHS), c_wstr(theRHS));
+	}
 }
 
 

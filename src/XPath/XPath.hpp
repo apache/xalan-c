@@ -99,21 +99,12 @@ class XALAN_XPATH_EXPORT XPath
 {
 public:
 
-#if defined(XALAN_INLINE_INITIALIZATION)
-	const XalanDOMString			PSEUDONAME_ANY(XALAN_STATIC_UCODE_STRING("*"));
-	const XalanDOMString			PSEUDONAME_ROOT(XALAN_STATIC_UCODE_STRING("/"));
-	const XalanDOMString			PSEUDONAME_TEXT(XALAN_STATIC_UCODE_STRING("#text"));
-	const XalanDOMString			PSEUDONAME_COMMENT(XALAN_STATIC_UCODE_STRING("#comment"));
-	const XalanDOMString			PSEUDONAME_PI(XALAN_STATIC_UCODE_STRING("#pi"));
-	const XalanDOMString			PSEUDONAME_OTHER(XALAN_STATIC_UCODE_STRING("*"));
-#else
-	static const XalanDOMString		PSEUDONAME_ANY;
-	static const XalanDOMString		PSEUDONAME_ROOT;
-	static const XalanDOMString		PSEUDONAME_TEXT;
-	static const XalanDOMString		PSEUDONAME_COMMENT;
-	static const XalanDOMString		PSEUDONAME_PI;
-	static const XalanDOMString		PSEUDONAME_OTHER;
-#endif
+	static const XalanDOMString&	PSEUDONAME_ANY;
+	static const XalanDOMString&	PSEUDONAME_ROOT;
+	static const XalanDOMString&	PSEUDONAME_TEXT;
+	static const XalanDOMString&	PSEUDONAME_COMMENT;
+	static const XalanDOMString&	PSEUDONAME_PI;
+	static const XalanDOMString&	PSEUDONAME_OTHER;
 
 #if defined(XALAN_NO_NAMESPACES)
 	typedef vector<XalanDOMString>			TargetElementStringsVectorType;
@@ -121,6 +112,18 @@ public:
 	typedef std::vector<XalanDOMString>		TargetElementStringsVectorType;
 #endif
 
+
+	/**
+	 * Perform static initialization.  See class XPathInit.
+	 */
+	static void
+	initialize();
+
+	/**
+	 * Perform static shut down.  See class XPathInit.
+	 */
+	static void
+	terminate();
 
 	/**
 	 * Construct an XPath and optionally a default locator 

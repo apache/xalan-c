@@ -122,7 +122,18 @@ public:
 
 	typedef std::vector<XalanDOMString>				DOMStringVectorType;
 #endif
-	
+
+	/**
+	 * Perform static initialization.  See class XPathInit.
+	 */
+	static void
+	initialize();
+
+	/**
+	 * Perform static shut down.  See class XPathInit.
+	 */
+	static void
+	terminate();
 
 	explicit
 	XPathProcessorImpl();
@@ -756,16 +767,16 @@ private:
 	FunctionCallArguments();
 
 	static void
-	initializeKeywordsTable();
+	initializeKeywordsTable(KeywordsMapType&	theKeywords);
 
 	static void
-	initializeFunctionTable();
+	initializeFunctionTable(FunctionNameMapType&	theFunctions);
 
 	static void
-	initializeAxisNamesTable();
+	initializeAxisNamesTable(AxisNamesMapType&		theAxisNames);
 
 	static void
-	initializeNodeTypesTable();
+	initializeNodeTypesTable(NodeTypesMapType&		theNodeTypes);
 
 	/**
 	 * The current input token.
@@ -801,29 +812,26 @@ private:
 		TARGETEXTRA = 10000
 	};
 
+	// This shouldn't really be here, since it duplicates a string that is part
+	// of the information that is maintained by the class XPathFunctionTable,
+	// but this is a reasonable optimization.
+	static const XalanDOMString&	FUNC_ID_STRING;
+
+
+	// This shouldn't really be here, since it's not part of the XPath standard,
+	// but rather a part ofthe XSLT standard.
+	static const XalanDOMString&	FUNC_KEY_STRING;
+
 	/**
 	 * Map of keyword names to token values.
 	 */
-	static KeywordsMapType			s_keywords;
+	static const KeywordsMapType&		s_keywords;
 
-	static FunctionNameMapType		s_functions;
+	static const FunctionNameMapType&	s_functions;
 
-	static AxisNamesMapType			s_axisNames;
+	static const AxisNamesMapType&		s_axisNames;
 
-	static NodeTypesMapType			s_nodeTypes;
-
-	class StaticInitializer
-	{
-	public:
-
-		StaticInitializer();
-
-		~StaticInitializer()
-		{
-		}
-	};
-
-	friend class StaticInitializer;
+	static const NodeTypesMapType&		s_nodeTypes;
 };
 
 

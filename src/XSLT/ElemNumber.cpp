@@ -85,35 +85,8 @@
 
 
 #if !defined(XALAN_NO_NAMESPACES)
-	using std::vector;
+using std::vector;
 #endif
-
-
-
-const XalanDOMString	ElemNumber::s_alphaCountTable(XALAN_STATIC_UCODE_STRING("ZABCDEFGHIJKLMNOPQRSTUVWXY"));
-
-const XalanDOMChar	elalphaCountTable[] =
-{
-	0x03c9, 0x03b1,0x03b2,0x03b3,0x03b4,0x03b5,0x03b6,0x03b7,0x03b8,0x03b9,0x03ba,
-	0x03bb,0x03bc,0x03bd,0x03be,0x03bf,0x03c0,0x03c1,0x03c2,0x03c3,0x03c4,
-	0x03c5,0x03c6,0x03c7,0x03c8,0
-};
-
-
-const XalanDOMString	s_elalphaCountTable = elalphaCountTable;
-
-
-
-const DecimalToRoman	ElemNumber::s_romanConvertTable[] = 
-{
-	DecimalToRoman(1000, XALAN_STATIC_UCODE_STRING("M"), 900, XALAN_STATIC_UCODE_STRING("CM")),
-	DecimalToRoman(500, XALAN_STATIC_UCODE_STRING("D"), 400, XALAN_STATIC_UCODE_STRING("CD")),
-	DecimalToRoman(100L, XALAN_STATIC_UCODE_STRING("C"), 90L, XALAN_STATIC_UCODE_STRING("XC")),
-	DecimalToRoman(50L, XALAN_STATIC_UCODE_STRING("L"), 40L, XALAN_STATIC_UCODE_STRING("XL")),
-	DecimalToRoman(10L, XALAN_STATIC_UCODE_STRING("X"), 9L, XALAN_STATIC_UCODE_STRING("IX")),
-	DecimalToRoman(5L, XALAN_STATIC_UCODE_STRING("V"), 4L, XALAN_STATIC_UCODE_STRING("IV")),
-	DecimalToRoman(1L, XALAN_STATIC_UCODE_STRING("I"), 1L, XALAN_STATIC_UCODE_STRING("I"))
-};
 
 
 
@@ -695,10 +668,6 @@ ElemNumber::formatNumberList(
 
 	NumberFormatStringTokenizer		formatTokenizer(formatValue);
 
-#if ! defined(__GNUC__)
-//	std::locale		loc = getLocale(executionContext, contextNode);
-#endif
-
 	typedef vector<XalanDOMString>		StringVectorType;
 	typedef StringVectorType::iterator	StringVectorTypeIterator;
 
@@ -1200,4 +1169,62 @@ XalanNode* ElemNumber::Counter::getLast()
 {
 	const int size = m_countNodes.getLength();
 	return (size > 0) ? m_countNodes.item(size-1) : 0;
+}
+
+
+
+const XalanDOMChar	elalphaCountTable[] =
+{
+	0x03c9, 0x03b1,0x03b2,0x03b3,0x03b4,0x03b5,0x03b6,0x03b7,0x03b8,0x03b9,0x03ba,
+	0x03bb,0x03bc,0x03bd,0x03be,0x03bf,0x03c0,0x03c1,0x03c2,0x03c3,0x03c4,
+	0x03c5,0x03c6,0x03c7,0x03c8,0
+};
+
+
+
+static XalanDOMString							s_elalphaCountTable;
+
+static XalanDOMString							s_alphaCountTable;
+
+static ElemNumber::DecimalToRomanVectorType		s_romanConvertTable;
+
+
+
+const XalanDOMString&	ElemNumber::s_elalphaCountTable = ::s_elalphaCountTable;
+
+const XalanDOMString&	ElemNumber::s_alphaCountTable = ::s_alphaCountTable;
+
+const ElemNumber::DecimalToRomanVectorType&		ElemNumber::s_romanConvertTable =
+				::s_romanConvertTable;
+
+
+
+void
+ElemNumber::initialize()
+{
+	::s_alphaCountTable = XALAN_STATIC_UCODE_STRING("ZABCDEFGHIJKLMNOPQRSTUVWXY");
+
+	::s_elalphaCountTable = elalphaCountTable;
+
+	::s_romanConvertTable.reserve(7);
+
+	::s_romanConvertTable.push_back(DecimalToRoman(1000, XALAN_STATIC_UCODE_STRING("M"), 900, XALAN_STATIC_UCODE_STRING("CM")));
+	::s_romanConvertTable.push_back(DecimalToRoman(500, XALAN_STATIC_UCODE_STRING("D"), 400, XALAN_STATIC_UCODE_STRING("CD")));
+	::s_romanConvertTable.push_back(DecimalToRoman(100L, XALAN_STATIC_UCODE_STRING("C"), 90L, XALAN_STATIC_UCODE_STRING("XC")));
+	::s_romanConvertTable.push_back(DecimalToRoman(50L, XALAN_STATIC_UCODE_STRING("L"), 40L, XALAN_STATIC_UCODE_STRING("XL")));
+	::s_romanConvertTable.push_back(DecimalToRoman(10L, XALAN_STATIC_UCODE_STRING("X"), 9L, XALAN_STATIC_UCODE_STRING("IX")));
+	::s_romanConvertTable.push_back(DecimalToRoman(5L, XALAN_STATIC_UCODE_STRING("V"), 4L, XALAN_STATIC_UCODE_STRING("IV")));
+	::s_romanConvertTable.push_back(DecimalToRoman(1L, XALAN_STATIC_UCODE_STRING("I"), 1L, XALAN_STATIC_UCODE_STRING("I")));
+}
+
+
+
+
+void
+ElemNumber::terminate()
+{
+	clear(::s_alphaCountTable);
+	clear(::s_elalphaCountTable);;
+
+	DecimalToRomanVectorType().swap(::s_romanConvertTable);
 }

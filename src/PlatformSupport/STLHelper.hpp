@@ -64,7 +64,9 @@
 
 
 
+#include <algorithm>
 #include <functional>
+
 
 
 /**
@@ -264,6 +266,51 @@ struct less_null_terminated_arrays : public std::binary_function<const T*, const
 
 		return *theLHS < *theRHS ? true : false;
 	}
+};
+
+
+
+template<class CollectionType, class DeleteFunctorType>
+class CollectionDeleteGuard
+{
+public:
+
+	CollectionDeleteGuard(CollectionType&	theCollection) :
+		m_collection(&theCollection)
+	{
+	}
+
+	~CollectionDeleteGuard()
+	{
+		if (m_collection != 0)
+		{
+#if !defined(XALAN_NO_NAMESPACES)
+			using std::for_each;
+#endif
+
+			// Delete all of the objects in the temp vector.
+			for_each(m_collection->begin(),
+					 m_collection->end(),
+					 DeleteFunctorType());
+		}
+	}
+
+	void
+	release()
+	{
+		m_collection = 0;
+	}
+
+private:
+
+	// Not implemented...
+	CollectionDeleteGuard(const CollectionDeleteGuard<CollectionType, DeleteFunctorType>&);
+
+	CollectionDeleteGuard<CollectionType, DeleteFunctorType>&
+	operator=(const CollectionDeleteGuard<CollectionType, DeleteFunctorType>&);
+
+	// Data members...
+	CollectionType*		m_collection;
 };
 
 

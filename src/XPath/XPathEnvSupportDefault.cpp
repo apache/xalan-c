@@ -82,11 +82,54 @@
 #if !defined(XALAN_NO_NAMESPACES)
 	using std::cerr;
 	using std::endl;
+	using std::for_each;
 #endif
 		
 
 
 XPathEnvSupportDefault::NamespaceFunctionTablesType		XPathEnvSupportDefault::s_externalFunctions;
+
+
+
+struct NamespaceFunctionTableDeleteFunctor
+{
+	typedef XPathEnvSupportDefault::FunctionTableType				FunctionTableType;
+	typedef XPathEnvSupportDefault::NamespaceFunctionTablesType		NamespaceFunctionTablesType;
+	/**
+	 * Delete the value object in a map value pair.  The value of the pair must
+	 * be of pointer type.
+	 *
+	 * @param thePair key-value pair
+	 */
+	void
+	operator()(const NamespaceFunctionTablesType::value_type&	thePair) const
+	{
+		// Clean up the extension namespaces vector
+		for_each(thePair.second.begin(),
+				 thePair.second.end(),
+				 MapValueDeleteFunctor<FunctionTableType>());
+	}
+};
+
+
+
+void
+XPathEnvSupportDefault::initialize()
+{
+}
+
+
+
+void
+XPathEnvSupportDefault::terminate()
+{
+	// Clean up the extension namespaces vector
+	for_each(s_externalFunctions.begin(),
+			 s_externalFunctions.end(),
+			 NamespaceFunctionTableDeleteFunctor());
+
+	NamespaceFunctionTablesType().swap(s_externalFunctions);
+}
 
 
 
@@ -101,6 +144,12 @@ XPathEnvSupportDefault::XPathEnvSupportDefault() :
 
 XPathEnvSupportDefault::~XPathEnvSupportDefault()
 {
+	// Clean up the extension namespaces vector
+	for_each(m_externalFunctions.begin(),
+			 m_externalFunctions.end(),
+			 NamespaceFunctionTableDeleteFunctor());
+
+	NamespaceFunctionTablesType().swap(m_externalFunctions);
 }
 
 

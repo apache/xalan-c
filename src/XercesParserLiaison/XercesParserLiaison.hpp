@@ -159,7 +159,7 @@ public:
 	virtual void
 	setUseValidation(bool	b);
 
-	virtual const XalanDOMString&
+	virtual const XalanDOMString
 	getParserDescription() const;
 
 

@@ -84,14 +84,9 @@
 
 
 
-static const XalanDOMString		theParserName(XALAN_STATIC_UCODE_STRING("Xerces"));
-static const XalanDOMString		theDefaultSpecialCharacters(XALAN_STATIC_UCODE_STRING("<>&\"\'\r\n"));
-
-
-
 XercesParserLiaison::XercesParserLiaison(DOMSupport&	theSupport) :
 	m_DOMSupport(theSupport),
-	m_specialCharacters(theDefaultSpecialCharacters),
+	m_specialCharacters(XALAN_STATIC_UCODE_STRING("<>&\"\'\r\n")),
 	m_indent(-1),
 	m_shouldExpandEntityRefs(false),
 	m_useValidation(false),
@@ -286,10 +281,10 @@ XercesParserLiaison::setUseValidation(bool	b)
 
 
 
-const XalanDOMString&
+const XalanDOMString
 XercesParserLiaison::getParserDescription() const
 {
-	return theParserName;
+	return XALAN_STATIC_UCODE_STRING("Xerces");
 }
 
 

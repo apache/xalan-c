@@ -204,17 +204,16 @@ public:
 
 	/**
 	 * Perform initialization of statics -- must be called before any
-	 * processing occurs
+	 * processing occurs.  See class XSLTInit.
 	 */
 	static void
-	Initialize();
+	initialize();
 
 	/**
-	 * Perform termination of statics -- can be called to make memory
-	 * leak detection easier.
+	 * Perform termination of statics.  See class XSLTInit.
 	 */
 	static void
-	Terminate();
+	terminate();
 
 	// These methods are inherited from XSLTProcessor ...
 	
@@ -1441,33 +1440,33 @@ private:
 	/**
 	 * The namespace that we must match as a minimum for XSLT.
 	 */
-	static const XalanDOMString		s_XSLNameSpaceURL;	//"http://www.w3.org/1999/XSL/Transform"
+	static const XalanDOMString&		s_XSLNameSpaceURL;	//"http://www.w3.org/1999/XSL/Transform"
 
 	/**
 	 * The minimum version of XSLT supported.
 	 */
-	static const double s_XSLTVerSupported; // 1.0
+	static const double					s_XSLTVerSupported; // 1.0
 
 	/**
 	 * Special Xalan namespace for built-in extensions.
 	 */
-	static const XalanDOMString s_XSLT4JNameSpaceURL; // "http://xml.apache.org/xslt"
+	static const XalanDOMString&		s_XSLT4JNameSpaceURL; // "http://xml.apache.org/xslt"
 
 
 	/**
-	 * Hash table that can look up XSLT4J extensions element IDs via name.
+	 * Map that can look up XSLT4J extensions element IDs via name.
 	 */
-	static ElementKeysMapType		s_XSLT4JElementKeys;
+	static const ElementKeysMapType&	s_XSLT4JElementKeys;
 
 	/**
-	 * Hash table of XSLT IDs for attribute names.
+	 * Map of XSLT IDs for attribute names.
 	 */
-	static AttributeKeysMapType s_attributeKeys;
+	static const AttributeKeysMapType&	s_attributeKeys;
 
 	/**
-	 * Hash table of XSLT element IDs for element names.
+	 * Map of XSLT element IDs for element names.
 	 */
-	static ElementKeysMapType	s_elementKeys;
+	static const ElementKeysMapType&	s_elementKeys;
 
 	/**
 	 * If this is set to true, selects will be traced
@@ -1485,7 +1484,7 @@ private:
 	 */
 	PrintWriter*	m_diagnosticsPrintWriter;
 
-  /* For diagnostics */
+	/* For diagnostics */
 	mutable DurationsTableMapType	m_durationsTable;
 
 	/**
@@ -1555,18 +1554,6 @@ private:
 	 * attribute on xsl:stylesheet.
 	 */
 	bool	m_stripWhiteSpace; // default default-space="preserve"
-
-//	typedef std::set<XalanDOMString>		WhitespaceLookupTableType;
-
-	/**
-	 * A lookup table of all space preserving elements.
-	 */
-//	WhitespaceLookupTableType	m_whitespacePreservingElements;
-
-	/**
-	 * A lookup table of all space stripping elements.
-	 */
-//	WhitespaceLookupTableType	m_whitespaceStrippingElements;
 
 	/**
 	 * Control if the xsl:variable is resolved early or 
@@ -1649,16 +1636,19 @@ public:
 
 
 	static void
-	InstallFunctions();
+	installFunctions();
 
 	static void
-	InitializeAttributeKeysTable();
+	uninstallFunctions();
 
 	static void
-	InitializeElementKeysTable();
+	initializeAttributeKeysTable(AttributeKeysMapType&	theAttributeKeys);
 
 	static void
-	InitializeXSLT4JElementKeys();
+	initializeElementKeysTable(ElementKeysMapType&	theElementKeys);
+
+	static void
+	initializeXSLT4JElementKeys(ElementKeysMapType&		theElementKeys);
 };
 
 

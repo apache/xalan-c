@@ -198,42 +198,6 @@ static const XMLCh* const	theHTMLLatin1Symbols[] =
 #endif
 
 
-const FormatterToHTML::ElementFlagsMapType		FormatterToHTML::s_elementFlags =
-	FormatterToHTML::createElementFlagsMap();
-
-
-const FormatterToHTML::ElemDesc					FormatterToHTML::s_dummyDesc(FormatterToHTML::ElemDesc::BLOCK);
-
-
-const XalanDOMCharVectorType	FormatterToHTML::s_doctypeHeaderStartString =
-		MakeXalanDOMCharVector(c_wstr(XALAN_STATIC_UCODE_STRING("<!DOCTYPE HTML")));
-
-const XalanDOMCharVectorType	FormatterToHTML::s_doctypeHeaderPublicString =
-		MakeXalanDOMCharVector(c_wstr(XALAN_STATIC_UCODE_STRING(" PUBLIC \"")));
-
-const XalanDOMCharVectorType	FormatterToHTML::s_doctypeHeaderSystemString =
-		MakeXalanDOMCharVector(c_wstr(XALAN_STATIC_UCODE_STRING(" SYSTEM")));
-
-
-const XalanDOMCharVectorType	FormatterToHTML::s_scriptString =
-		MakeXalanDOMCharVector(c_wstr(XALAN_STATIC_UCODE_STRING("SCRIPT")));
-
-const XalanDOMCharVectorType	FormatterToHTML::s_styleString =
-		MakeXalanDOMCharVector(c_wstr(XALAN_STATIC_UCODE_STRING("STYLE")));
-
-const XalanDOMCharVectorType	FormatterToHTML::s_ltString =
-		MakeXalanDOMCharVector(c_wstr(XALAN_STATIC_UCODE_STRING("lt")));
-
-const XalanDOMCharVectorType	FormatterToHTML::s_gtString =
-		MakeXalanDOMCharVector(c_wstr(XALAN_STATIC_UCODE_STRING("gt")));
-
-const XalanDOMCharVectorType	FormatterToHTML::s_ampString =
-		MakeXalanDOMCharVector(c_wstr(XALAN_STATIC_UCODE_STRING("amp")));
-
-const XalanDOMCharVectorType	FormatterToHTML::s_fnofString =
-		MakeXalanDOMCharVector(c_wstr(XALAN_STATIC_UCODE_STRING("fnof")));
-
-
 FormatterToHTML::FormatterToHTML(
 	  Writer&				writer,
 	  const XalanDOMString& encoding, 
@@ -963,16 +927,14 @@ FormatterToHTML::writeAttrURI(
 
 
 
-FormatterToHTML::ElementFlagsMapType
-FormatterToHTML::createElementFlagsMap()
+void
+FormatterToHTML::initializeElementFlagsMap(ElementFlagsMapType&		theElementFlags)
 {
 #if defined(XALAN_NO_NAMESPACES)
 	typedef pair<ElementFlagsMapType::iterator, bool>	PairType;
 #else
 	typedef std::pair<ElementFlagsMapType::iterator, bool>	PairType;
 #endif
-
-	ElementFlagsMapType 	theElementFlags;
 
 	// HTML 4.0 loose DTD
 	theElementFlags.insert(
@@ -1475,6 +1437,114 @@ FormatterToHTML::createElementFlagsMap()
 		ElementFlagsMapType::value_type(
 			XALAN_STATIC_UCODE_STRING("HTML"),
 			ElemDesc(0|ElemDesc::BLOCK)));
+}
 
-	return theElementFlags;
+
+
+static FormatterToHTML::ElementFlagsMapType		s_elementFlags;
+
+
+const FormatterToHTML::ElementFlagsMapType&		FormatterToHTML::s_elementFlags = ::s_elementFlags;
+
+
+const FormatterToHTML::ElemDesc					FormatterToHTML::s_dummyDesc(FormatterToHTML::ElemDesc::BLOCK);
+
+
+static XalanDOMCharVectorType	s_doctypeHeaderStartString;
+
+static XalanDOMCharVectorType	s_doctypeHeaderPublicString;
+
+static XalanDOMCharVectorType	s_doctypeHeaderSystemString;
+
+static XalanDOMCharVectorType	s_scriptString;
+
+static XalanDOMCharVectorType	s_styleString;
+
+static XalanDOMCharVectorType	s_ltString;
+
+static XalanDOMCharVectorType	s_gtString;
+
+static XalanDOMCharVectorType	s_ampString;
+
+static XalanDOMCharVectorType	s_fnofString;
+
+
+
+const XalanDOMCharVectorType&	FormatterToHTML::s_doctypeHeaderStartString =
+			::s_doctypeHeaderStartString;
+
+const XalanDOMCharVectorType&	FormatterToHTML::s_doctypeHeaderPublicString =
+			::s_doctypeHeaderPublicString;
+
+const XalanDOMCharVectorType&	FormatterToHTML::s_doctypeHeaderSystemString =
+			::s_doctypeHeaderSystemString;
+
+const XalanDOMCharVectorType&	FormatterToHTML::s_scriptString =
+			::s_scriptString;
+
+const XalanDOMCharVectorType&	FormatterToHTML::s_styleString =
+			::s_styleString;
+
+const XalanDOMCharVectorType&	FormatterToHTML::s_ltString =
+			::s_ltString;
+
+const XalanDOMCharVectorType&	FormatterToHTML::s_gtString =
+			::s_gtString;
+
+const XalanDOMCharVectorType&	FormatterToHTML::s_ampString =
+			::s_ampString;
+
+const XalanDOMCharVectorType&	FormatterToHTML::s_fnofString =
+			::s_fnofString;
+
+
+
+void
+FormatterToHTML::initialize()
+{
+	initializeElementFlagsMap(::s_elementFlags);
+
+	::s_doctypeHeaderStartString = MakeXalanDOMCharVector(c_wstr(XALAN_STATIC_UCODE_STRING("<!DOCTYPE HTML")));
+
+	::s_doctypeHeaderPublicString = MakeXalanDOMCharVector(c_wstr(XALAN_STATIC_UCODE_STRING(" PUBLIC \"")));
+
+	::s_doctypeHeaderSystemString = MakeXalanDOMCharVector(c_wstr(XALAN_STATIC_UCODE_STRING(" SYSTEM")));
+
+	::s_scriptString = MakeXalanDOMCharVector(c_wstr(XALAN_STATIC_UCODE_STRING("SCRIPT")));
+
+	::s_styleString = MakeXalanDOMCharVector(c_wstr(XALAN_STATIC_UCODE_STRING("STYLE")));
+
+	::s_ltString = MakeXalanDOMCharVector(c_wstr(XALAN_STATIC_UCODE_STRING("lt")));
+
+	::s_gtString = MakeXalanDOMCharVector(c_wstr(XALAN_STATIC_UCODE_STRING("gt")));
+
+	::s_ampString = MakeXalanDOMCharVector(c_wstr(XALAN_STATIC_UCODE_STRING("amp")));
+
+	::s_fnofString = MakeXalanDOMCharVector(c_wstr(XALAN_STATIC_UCODE_STRING("fnof")));
+}
+
+
+
+void
+FormatterToHTML::terminate()
+{
+	ElementFlagsMapType().swap(::s_elementFlags);
+
+	XalanDOMCharVectorType().swap(::s_doctypeHeaderStartString);
+
+	XalanDOMCharVectorType().swap(::s_doctypeHeaderPublicString);
+
+	XalanDOMCharVectorType().swap(::s_doctypeHeaderSystemString);
+
+	XalanDOMCharVectorType().swap(::s_scriptString);
+
+	XalanDOMCharVectorType().swap(::s_styleString);
+
+	XalanDOMCharVectorType().swap(::s_ltString);
+
+	XalanDOMCharVectorType().swap(::s_gtString);
+
+	XalanDOMCharVectorType().swap(::s_ampString);
+
+	XalanDOMCharVectorType().swap(::s_fnofString);
 }

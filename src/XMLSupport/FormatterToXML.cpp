@@ -74,60 +74,6 @@
 static const XalanDOMChar 	theDefaultAttrSpecialChars[] = {'<', '>', '&', '"', '\r', '\n', 0 };
 
 
-const XalanDOMCharVectorType	FormatterToXML::s_xsltNextIsRawString =
-		MakeXalanDOMCharVector(c_wstr(XALAN_STATIC_UCODE_STRING("xslt-next-is-raw")));
-
-const XalanDOMCharVectorType	FormatterToXML::s_formatterToDOMString =
-		MakeXalanDOMCharVector(c_wstr(XALAN_STATIC_UCODE_STRING("formatter-to-dom")));
-
-const XalanDOMCharVectorType	FormatterToXML::s_defaultMIMEEncoding = 
-		MakeXalanDOMCharVector(c_wstr(XALAN_STATIC_UCODE_STRING("UTF-8")));
-
-const XalanDOMCharVectorType	FormatterToXML::s_doctypeHeaderStartString =
-		MakeXalanDOMCharVector(c_wstr(XALAN_STATIC_UCODE_STRING("<!DOCTYPE ")));
-
-const XalanDOMCharVectorType	FormatterToXML::s_doctypeHeaderPublicString =
-		MakeXalanDOMCharVector(c_wstr(XALAN_STATIC_UCODE_STRING(" PUBLIC \"")));
-
-const XalanDOMCharVectorType	FormatterToXML::s_doctypeHeaderSystemString =
-		MakeXalanDOMCharVector(c_wstr(XALAN_STATIC_UCODE_STRING(" SYSTEM \"")));
-
-const XalanDOMCharVectorType	FormatterToXML::s_defaultVersionString =
-		MakeXalanDOMCharVector(c_wstr(XALAN_STATIC_UCODE_STRING("1.0")));
-
-const XalanDOMCharVectorType	FormatterToXML::s_xmlHeaderStartString =
-		MakeXalanDOMCharVector(c_wstr(XALAN_STATIC_UCODE_STRING("<?xml version=\"")));
-
-const XalanDOMCharVectorType	FormatterToXML::s_xmlHeaderEncodingString =
-		MakeXalanDOMCharVector(c_wstr(XALAN_STATIC_UCODE_STRING("\" encoding=\"")));
-
-const XalanDOMCharVectorType	FormatterToXML::s_xmlHeaderStandaloneString =
-		MakeXalanDOMCharVector(c_wstr(XALAN_STATIC_UCODE_STRING("\" standalone=\"")));
-
-const XalanDOMCharVectorType	FormatterToXML::s_xmlHeaderEndString =
-		MakeXalanDOMCharVector(c_wstr(XALAN_STATIC_UCODE_STRING("\"?>")));
-
-const XalanDOMCharVectorType	FormatterToXML::s_windows1250EncodingString =
-		MakeXalanDOMCharVector(c_wstr(XALAN_STATIC_UCODE_STRING("WINDOWS-1250")));
-
-const XalanDOMCharVectorType	FormatterToXML::s_usASCIIEncodingString =
-		MakeXalanDOMCharVector(c_wstr(XALAN_STATIC_UCODE_STRING("US-ASCII")));
-
-const XalanDOMCharVectorType	FormatterToXML::s_asciiEncodingString =
-		MakeXalanDOMCharVector(c_wstr(XALAN_STATIC_UCODE_STRING("ASCII")));
-
-const XalanDOMCharVectorType	FormatterToXML::s_utf8EncodingString=
-		MakeXalanDOMCharVector(c_wstr(XALAN_STATIC_UCODE_STRING("UTF-8")));
-
-XalanDOMChar				FormatterToXML::s_lineSep = '\n';
-
-
-bool						FormatterToXML::s_javaEncodingIsISO = false; 
-
-
-const FormatterToXML::DOMCharBufferType::size_type	FormatterToXML::s_maxBufferSize = 512;
-
-
 FormatterToXML::FormatterToXML(
 			Writer& 				writer,
 			const XalanDOMString&	version,
@@ -1550,3 +1496,161 @@ void FormatterToXML::initEncodings()
 	s_revhash.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("CP918")), XalanDOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-AR2"))));
 }
 #endif
+
+
+static XalanDOMCharVectorType	s_xsltNextIsRawString;
+
+static XalanDOMCharVectorType	s_formatterToDOMString;
+
+static XalanDOMCharVectorType	s_defaultMIMEEncoding;
+
+static XalanDOMCharVectorType	s_doctypeHeaderStartString;
+
+static XalanDOMCharVectorType	s_doctypeHeaderPublicString;
+
+static XalanDOMCharVectorType	s_doctypeHeaderSystemString;
+
+static XalanDOMCharVectorType	s_defaultVersionString;
+
+static XalanDOMCharVectorType	s_xmlHeaderStartString;
+
+static XalanDOMCharVectorType	s_xmlHeaderEncodingString;
+
+static XalanDOMCharVectorType	s_xmlHeaderStandaloneString;
+
+static XalanDOMCharVectorType	s_xmlHeaderEndString;
+
+static XalanDOMCharVectorType	s_windows1250EncodingString;
+
+static XalanDOMCharVectorType	s_usASCIIEncodingString;
+
+static XalanDOMCharVectorType	s_asciiEncodingString;
+
+static XalanDOMCharVectorType	s_utf8EncodingString ;
+
+
+
+const XalanDOMCharVectorType&	FormatterToXML::s_xsltNextIsRawString = ::s_xsltNextIsRawString;
+
+const XalanDOMCharVectorType&	FormatterToXML::s_formatterToDOMString = ::s_formatterToDOMString;
+
+const XalanDOMCharVectorType&	FormatterToXML::s_defaultMIMEEncoding = ::s_defaultMIMEEncoding;
+
+const XalanDOMCharVectorType&	FormatterToXML::s_doctypeHeaderStartString = ::s_doctypeHeaderStartString;
+
+const XalanDOMCharVectorType&	FormatterToXML::s_doctypeHeaderPublicString = ::s_doctypeHeaderPublicString;
+
+const XalanDOMCharVectorType&	FormatterToXML::s_doctypeHeaderSystemString = ::s_doctypeHeaderSystemString;
+
+const XalanDOMCharVectorType&	FormatterToXML::s_defaultVersionString = ::s_defaultVersionString;
+
+const XalanDOMCharVectorType&	FormatterToXML::s_xmlHeaderStartString = ::s_xmlHeaderStartString;
+
+const XalanDOMCharVectorType&	FormatterToXML::s_xmlHeaderEncodingString = ::s_xmlHeaderEncodingString;
+
+const XalanDOMCharVectorType&	FormatterToXML::s_xmlHeaderStandaloneString = ::s_xmlHeaderStandaloneString;
+
+const XalanDOMCharVectorType&	FormatterToXML::s_xmlHeaderEndString = ::s_xmlHeaderEndString;
+
+const XalanDOMCharVectorType&	FormatterToXML::s_windows1250EncodingString = ::s_windows1250EncodingString;
+
+const XalanDOMCharVectorType&	FormatterToXML::s_usASCIIEncodingString = ::s_usASCIIEncodingString;
+
+const XalanDOMCharVectorType&	FormatterToXML::s_asciiEncodingString = ::s_asciiEncodingString;
+
+const XalanDOMCharVectorType&	FormatterToXML::s_utf8EncodingString = ::s_utf8EncodingString;
+
+XalanDOMChar					FormatterToXML::s_lineSep = '\n';
+
+
+bool							FormatterToXML::s_javaEncodingIsISO = false; 
+
+
+const FormatterToXML::DOMCharBufferType::size_type	FormatterToXML::s_maxBufferSize = 512;
+
+
+
+void
+FormatterToXML::initialize()
+{
+	::s_xsltNextIsRawString =
+		MakeXalanDOMCharVector(c_wstr(XALAN_STATIC_UCODE_STRING("xslt-next-is-raw")));
+
+	::s_formatterToDOMString =
+		MakeXalanDOMCharVector(c_wstr(XALAN_STATIC_UCODE_STRING("formatter-to-dom")));
+
+	::s_defaultMIMEEncoding = 
+		MakeXalanDOMCharVector(c_wstr(XALAN_STATIC_UCODE_STRING("UTF-8")));
+
+	::s_doctypeHeaderStartString =
+		MakeXalanDOMCharVector(c_wstr(XALAN_STATIC_UCODE_STRING("<!DOCTYPE ")));
+
+	::s_doctypeHeaderPublicString =
+		MakeXalanDOMCharVector(c_wstr(XALAN_STATIC_UCODE_STRING(" PUBLIC \"")));
+
+	::s_doctypeHeaderSystemString =
+		MakeXalanDOMCharVector(c_wstr(XALAN_STATIC_UCODE_STRING(" SYSTEM \"")));
+
+	::s_defaultVersionString =
+		MakeXalanDOMCharVector(c_wstr(XALAN_STATIC_UCODE_STRING("1.0")));
+
+	::s_xmlHeaderStartString =
+		MakeXalanDOMCharVector(c_wstr(XALAN_STATIC_UCODE_STRING("<?xml version=\"")));
+
+	::s_xmlHeaderEncodingString =
+		MakeXalanDOMCharVector(c_wstr(XALAN_STATIC_UCODE_STRING("\" encoding=\"")));
+
+	::s_xmlHeaderStandaloneString =
+		MakeXalanDOMCharVector(c_wstr(XALAN_STATIC_UCODE_STRING("\" standalone=\"")));
+
+	::s_xmlHeaderEndString =
+		MakeXalanDOMCharVector(c_wstr(XALAN_STATIC_UCODE_STRING("\"?>")));
+
+	::s_windows1250EncodingString =
+		MakeXalanDOMCharVector(c_wstr(XALAN_STATIC_UCODE_STRING("WINDOWS-1250")));
+
+	::s_usASCIIEncodingString =
+		MakeXalanDOMCharVector(c_wstr(XALAN_STATIC_UCODE_STRING("US-ASCII")));
+
+	::s_asciiEncodingString =
+		MakeXalanDOMCharVector(c_wstr(XALAN_STATIC_UCODE_STRING("ASCII")));
+
+	::s_utf8EncodingString =
+		MakeXalanDOMCharVector(c_wstr(XALAN_STATIC_UCODE_STRING("UTF-8")));
+}
+
+
+
+void
+FormatterToXML::terminate()
+{
+	XalanDOMCharVectorType().swap(::s_xsltNextIsRawString);
+
+	XalanDOMCharVectorType().swap(::s_formatterToDOMString);
+
+	XalanDOMCharVectorType().swap(::s_defaultMIMEEncoding);
+
+	XalanDOMCharVectorType().swap(::s_doctypeHeaderStartString);
+
+	XalanDOMCharVectorType().swap(::s_doctypeHeaderPublicString);
+
+	XalanDOMCharVectorType().swap(::s_doctypeHeaderSystemString);
+
+	XalanDOMCharVectorType().swap(::s_defaultVersionString);
+
+	XalanDOMCharVectorType().swap(::s_xmlHeaderStartString);
+
+	XalanDOMCharVectorType().swap(::s_xmlHeaderEncodingString);
+
+	XalanDOMCharVectorType().swap(::s_xmlHeaderStandaloneString);
+
+	XalanDOMCharVectorType().swap(::s_xmlHeaderEndString);
+
+	XalanDOMCharVectorType().swap(::s_windows1250EncodingString);
+
+	XalanDOMCharVectorType().swap(::s_usASCIIEncodingString);
+
+	XalanDOMCharVectorType().swap(::s_asciiEncodingString);
+
+	XalanDOMCharVectorType().swap(::s_utf8EncodingString);
+}

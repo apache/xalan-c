@@ -67,16 +67,13 @@
 
 
 
-XMLParserLiaisonDefault::XMLParserLiaisonDefault(
-			DOMSupport&				theDOMSupport,
-			const XalanDOMString&	theParserDescription) :
+XMLParserLiaisonDefault::XMLParserLiaisonDefault(DOMSupport&	theDOMSupport) :
 	XMLParserLiaison(),
 	m_DOMSupport(theDOMSupport),
 	m_SpecialCharacters(),
 	m_Indent(-1),
 	m_fShouldExpandEntityRefs(false),
-	m_fUseValidation(false),
-	m_ParserDescription(theParserDescription)
+	m_fUseValidation(false)
 {
 }
 
@@ -164,3 +161,12 @@ XMLParserLiaisonDefault::getExpandedAttributeName(const XalanAttr&	attr) const
 {
 	return m_DOMSupport.getExpandedAttributeName(attr);
 }
+
+
+
+const XalanDOMString
+XMLParserLiaisonDefault::getParserDescription() const
+{
+	return XALAN_STATIC_UCODE_STRING("(No parser - generic DOM)");
+}
+

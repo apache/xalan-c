@@ -86,26 +86,6 @@
 
 
 
-#if !defined(XALAN_INLINE_INITIALIZATION)
-const XalanDOMString			XPath::PSEUDONAME_ANY(XALAN_STATIC_UCODE_STRING("*"));
-const XalanDOMString			XPath::PSEUDONAME_ROOT(XALAN_STATIC_UCODE_STRING("/"));
-const XalanDOMString			XPath::PSEUDONAME_TEXT(XALAN_STATIC_UCODE_STRING("#text"));
-const XalanDOMString			XPath::PSEUDONAME_COMMENT(XALAN_STATIC_UCODE_STRING("#comment"));
-const XalanDOMString			XPath::PSEUDONAME_PI(XALAN_STATIC_UCODE_STRING("#pi"));
-const XalanDOMString			XPath::PSEUDONAME_OTHER(XALAN_STATIC_UCODE_STRING("*"));
-
-const double					XPath::s_MatchScoreNone = -9999999999999.0;
-const double					XPath::s_MatchScoreQName = 0.0;
-const double					XPath::s_MatchScoreNSWild = -0.25;
-const double					XPath::s_MatchScoreNodeTest = -0.5;
-const double					XPath::s_MatchScoreOther = 0.5;
-
-#endif
-
-XPath::FunctionTableType		XPath::s_functions;
-
-
-
 XPath::XPath(bool	createDefaultLocator) :
 	m_defaultXLocator(createDefaultLocator == false ? 0 : createXLocatorHandler()),
 	m_expression()
@@ -1468,4 +1448,65 @@ XPath::function(
  
 {
 	return s_functions[funcID].execute(executionContext, context, opPos, argVec);
+}
+
+
+
+static XalanDOMString	PSEUDONAME_ANY;
+static XalanDOMString	PSEUDONAME_ROOT;
+static XalanDOMString	PSEUDONAME_TEXT;
+static XalanDOMString	PSEUDONAME_COMMENT;
+static XalanDOMString	PSEUDONAME_PI;
+static XalanDOMString	PSEUDONAME_OTHER;
+
+
+
+const XalanDOMString&	XPath::PSEUDONAME_ANY = ::PSEUDONAME_ANY;
+const XalanDOMString&	XPath::PSEUDONAME_ROOT = ::PSEUDONAME_ROOT;
+const XalanDOMString&	XPath::PSEUDONAME_TEXT = ::PSEUDONAME_TEXT;
+const XalanDOMString&	XPath::PSEUDONAME_COMMENT = ::PSEUDONAME_COMMENT;
+const XalanDOMString&	XPath::PSEUDONAME_PI = ::PSEUDONAME_PI;
+const XalanDOMString&	XPath::PSEUDONAME_OTHER = ::PSEUDONAME_OTHER;
+
+
+
+const double			XPath::s_MatchScoreNone = -9999999999999.0;
+const double			XPath::s_MatchScoreQName = 0.0;
+const double			XPath::s_MatchScoreNSWild = -0.25;
+const double			XPath::s_MatchScoreNodeTest = -0.5;
+const double			XPath::s_MatchScoreOther = 0.5;
+
+
+
+// Don't auto-create the table...
+XPath::FunctionTableType		XPath::s_functions(false);
+
+
+
+void
+XPath::initialize()
+{
+	s_functions.CreateTable();
+
+	::PSEUDONAME_ANY = XALAN_STATIC_UCODE_STRING("*");
+	::PSEUDONAME_ROOT = XALAN_STATIC_UCODE_STRING("/");
+	::PSEUDONAME_TEXT = XALAN_STATIC_UCODE_STRING("#text");
+	::PSEUDONAME_COMMENT = XALAN_STATIC_UCODE_STRING("#comment");
+	::PSEUDONAME_PI = XALAN_STATIC_UCODE_STRING("#pi");
+	::PSEUDONAME_OTHER = XALAN_STATIC_UCODE_STRING("*");
+}
+
+
+
+void
+XPath::terminate()
+{
+	clear(::PSEUDONAME_ANY);
+	clear(::PSEUDONAME_ROOT);
+	clear(::PSEUDONAME_TEXT);
+	clear(::PSEUDONAME_COMMENT);
+	clear(::PSEUDONAME_PI);
+	clear(::PSEUDONAME_OTHER);
+
+	s_functions.DestroyTable();
 }

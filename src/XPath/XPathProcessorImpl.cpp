@@ -76,48 +76,6 @@
 
 
 
-static XalanDOMString	FROM_ANCESTORS_STRING(XALAN_STATIC_UCODE_STRING("ancestor"));
-static XalanDOMString	FROM_ANCESTORS_OR_SELF_STRING(XALAN_STATIC_UCODE_STRING("ancestor-or-self"));
-static XalanDOMString	FROM_ATTRIBUTES_STRING(XALAN_STATIC_UCODE_STRING("attribute"));
-static XalanDOMString	FROM_CHILDREN_STRING(XALAN_STATIC_UCODE_STRING("child"));
-static XalanDOMString	FROM_DESCENDANTS_STRING(XALAN_STATIC_UCODE_STRING("descendant"));
-static XalanDOMString	FROM_DESCENDANTS_OR_SELF_STRING(XALAN_STATIC_UCODE_STRING("descendant-or-self"));
-static XalanDOMString	FROM_FOLLOWING_STRING(XALAN_STATIC_UCODE_STRING("following"));
-static XalanDOMString	FROM_FOLLOWING_SIBLINGS_STRING(XALAN_STATIC_UCODE_STRING("following-sibling"));
-static XalanDOMString	FROM_PARENT_STRING(XALAN_STATIC_UCODE_STRING("parent"));
-static XalanDOMString	FROM_PRECEDING_STRING(XALAN_STATIC_UCODE_STRING("preceding"));
-static XalanDOMString	FROM_PRECEDING_SIBLINGS_STRING(XALAN_STATIC_UCODE_STRING("preceding-sibling"));
-static XalanDOMString	FROM_SELF_STRING(XALAN_STATIC_UCODE_STRING("self"));
-static XalanDOMString	FROM_SELF_ABBREVIATED_STRING(XALAN_STATIC_UCODE_STRING("."));
-static XalanDOMString	FROM_NAMESPACE_STRING(XALAN_STATIC_UCODE_STRING("namespace"));
-
-// This shouldn't really be here, since it duplicates a string that is part
-// of the information that is maintained by the class XPathFunctionTable,
-// but this is a reasonable optimization.
-static XalanDOMString	FUNC_ID_STRING(XALAN_STATIC_UCODE_STRING("id"));
-
-
-// These shouldn't really be here, since they are not part of the XPath standard,
-// but rather a part ofthe XSLT standard.
-static XalanDOMString	FUNC_KEY_STRING(XALAN_STATIC_UCODE_STRING("key"));
-static XalanDOMString	FUNC_DOC_STRING(XALAN_STATIC_UCODE_STRING("doc"));
-static XalanDOMString	FUNC_DOCUMENT_STRING(XALAN_STATIC_UCODE_STRING("document"));
-
-static XalanDOMString	NODETYPE_COMMENT_STRING(XALAN_STATIC_UCODE_STRING("comment"));
-static XalanDOMString	NODETYPE_TEXT_STRING(XALAN_STATIC_UCODE_STRING("text"));
-static XalanDOMString	NODETYPE_PI_STRING(XALAN_STATIC_UCODE_STRING("processing-instruction"));
-static XalanDOMString	NODETYPE_NODE_STRING(XALAN_STATIC_UCODE_STRING("node"));
-static XalanDOMString	NODETYPE_ANYELEMENT_STRING(XALAN_STATIC_UCODE_STRING("*"));
-
-
-
-XPathProcessorImpl::KeywordsMapType 			XPathProcessorImpl::s_keywords;
-XPathProcessorImpl::FunctionNameMapType 		XPathProcessorImpl::s_functions;
-XPathProcessorImpl::AxisNamesMapType			XPathProcessorImpl::s_axisNames;
-XPathProcessorImpl::NodeTypesMapType			XPathProcessorImpl::s_nodeTypes;
-
-
-
 XPathProcessorImpl::XPathProcessorImpl() :
 	m_token(),
 	m_tokenChar(0),
@@ -126,8 +84,6 @@ XPathProcessorImpl::XPathProcessorImpl() :
 	m_prefixResolver(0),
 	m_envSupport(0)
 {
-	// $$$ ToDo: This is not thread-safe!!!
-	static StaticInitializer	theInitializer;
 }
 
 
@@ -528,31 +484,31 @@ XPathProcessorImpl::recordTokenString(DOMStringVectorType&	targetStrings)
 		switch(tok)
 		{
 		case XPathExpression::eNODETYPE_COMMENT:
-			targetStrings.push_back(m_xpath->PSEUDONAME_COMMENT);
+			targetStrings.push_back(XPath::PSEUDONAME_COMMENT);
 			break;
 
 		case XPathExpression::eNODETYPE_TEXT:
-			targetStrings.push_back(m_xpath->PSEUDONAME_TEXT);
+			targetStrings.push_back(XPath::PSEUDONAME_TEXT);
 			break;
 
 		case XPathExpression::eNODETYPE_NODE:
-			targetStrings.push_back(m_xpath->PSEUDONAME_ANY);
+			targetStrings.push_back(XPath::PSEUDONAME_ANY);
 			break;
 
 		case XPathExpression::eNODETYPE_ROOT:
-			targetStrings.push_back(m_xpath->PSEUDONAME_ROOT);
+			targetStrings.push_back(XPath::PSEUDONAME_ROOT);
 			break;
 
 		case XPathExpression::eNODETYPE_ANYELEMENT:
-			targetStrings.push_back(m_xpath->PSEUDONAME_ANY);
+			targetStrings.push_back(XPath::PSEUDONAME_ANY);
 			break;
 
 		case XPathExpression::eNODETYPE_PI:
-			targetStrings.push_back(m_xpath->PSEUDONAME_ANY);
+			targetStrings.push_back(XPath::PSEUDONAME_ANY);
 			break;
 
 		default:
-			targetStrings.push_back(m_xpath->PSEUDONAME_ANY);
+			targetStrings.push_back(XPath::PSEUDONAME_ANY);
 			break;
 		}
 	}
@@ -2371,73 +2327,118 @@ XPathProcessorImpl::isValidFunction(const XalanDOMString&	key) const
 
 
 void
-XPathProcessorImpl::initializeKeywordsTable()
+XPathProcessorImpl::initializeKeywordsTable(KeywordsMapType&	/* theKeywords */)
 {
 	// $$$ ToDo: This is very confusing.  This table is only used
 	// by getKeywordToken().  But if you look at the switch
 	// statement there, none of these values are considered in the
 	// case statement.  So what's the point?
 
-	// s_keywords[FROM_SELF_ABBREVIATED_STRING] = XPathExpression::eFROM_SELF;
-	// s_keywords[FROM_ATTRIBUTE_STRING] = XPathExpression::eFROM_ATTRIBUTE;
-	// s_keywords[FROM_DOC_STRING] = XPathExpression::eFROM_DOC;
-	// s_keywords[FROM_DOCREF_STRING] = XPathExpression::eFROM_DOCREF;
-	// s_keywords[FROM_ID_STRING] = XPathExpression::eFROM_ID;
-	// s_keywords[FROM_IDREF_STRING] = XPathExpression::eFROM_IDREF;
-	// s_keywords[FUNC_ID_STRING] = XPathExpression::eFUNC_ID;
-	// s_keywords[FUNC_KEY_STRING] = XPathExpression::eFUNC_KEY;
-	// s_keywords[FUNC_DOCUMENT_STRING] = XPathExpression::eFUNC_DOC;
+	// theKeywords[FROM_SELF_ABBREVIATED_STRING] = XPathExpression::eFROM_SELF;
+	// theKeywords[FROM_ATTRIBUTE_STRING] = XPathExpression::eFROM_ATTRIBUTE;
+	// theKeywords[FROM_DOC_STRING] = XPathExpression::eFROM_DOC;
+	// theKeywords[FROM_DOCREF_STRING] = XPathExpression::eFROM_DOCREF;
+	// theKeywords[FROM_ID_STRING] = XPathExpression::eFROM_ID;
+	// theKeywords[FROM_IDREF_STRING] = XPathExpression::eFROM_IDREF;
+	// theKeywords[FUNC_ID_STRING] = XPathExpression::eFUNC_ID;
+	// theKeywords[FUNC_KEY_STRING] = XPathExpression::eFUNC_KEY;
+	// theKeywords[FUNC_DOCUMENT_STRING] = XPathExpression::eFUNC_DOC;
 }
 
 
 
 void
-XPathProcessorImpl::initializeFunctionTable()
+XPathProcessorImpl::initializeFunctionTable(FunctionNameMapType&	theFunctions)
 {
-	s_functions[NODETYPE_PI_STRING] = XPathExpression::eNODETYPE_PI;
-	s_functions[NODETYPE_COMMENT_STRING] = XPathExpression::eNODETYPE_COMMENT;
-	s_functions[NODETYPE_TEXT_STRING] = XPathExpression::eNODETYPE_TEXT;
-	s_functions[NODETYPE_NODE_STRING] = XPathExpression::eNODETYPE_NODE;
+	theFunctions[XALAN_STATIC_UCODE_STRING("processing-instruction")] = XPathExpression::eNODETYPE_PI;
+	theFunctions[XALAN_STATIC_UCODE_STRING("comment")] = XPathExpression::eNODETYPE_COMMENT;
+	theFunctions[XALAN_STATIC_UCODE_STRING("text")] = XPathExpression::eNODETYPE_TEXT;
+	theFunctions[XALAN_STATIC_UCODE_STRING("node")] = XPathExpression::eNODETYPE_NODE;
 }
 
 
 
 void
-XPathProcessorImpl::initializeAxisNamesTable()
+XPathProcessorImpl::initializeAxisNamesTable(AxisNamesMapType&		theAxisNames)
 {
-	s_axisNames[FROM_ANCESTORS_STRING] = XPathExpression::eFROM_ANCESTORS;
-	s_axisNames[FROM_ANCESTORS_OR_SELF_STRING] = XPathExpression::eFROM_ANCESTORS_OR_SELF;
-	s_axisNames[FROM_ATTRIBUTES_STRING] = XPathExpression::eFROM_ATTRIBUTES;
-	s_axisNames[FROM_CHILDREN_STRING] = XPathExpression::eFROM_CHILDREN;
-	s_axisNames[FROM_DESCENDANTS_STRING] = XPathExpression::eFROM_DESCENDANTS;
-	s_axisNames[FROM_DESCENDANTS_OR_SELF_STRING] = XPathExpression::eFROM_DESCENDANTS_OR_SELF;
-	s_axisNames[FROM_FOLLOWING_STRING] = XPathExpression::eFROM_FOLLOWING;
-	s_axisNames[FROM_FOLLOWING_SIBLINGS_STRING] = XPathExpression::eFROM_FOLLOWING_SIBLINGS;
-	s_axisNames[FROM_PARENT_STRING] = XPathExpression::eFROM_PARENT;
-	s_axisNames[FROM_PRECEDING_STRING] = XPathExpression::eFROM_PRECEDING;
-	s_axisNames[FROM_PRECEDING_SIBLINGS_STRING] = XPathExpression::eFROM_PRECEDING_SIBLINGS;
-	s_axisNames[FROM_SELF_STRING] = XPathExpression::eFROM_SELF;
-	s_axisNames[FROM_NAMESPACE_STRING] = XPathExpression::eFROM_NAMESPACE;
+	theAxisNames[XALAN_STATIC_UCODE_STRING("ancestor")] = XPathExpression::eFROM_ANCESTORS;
+	theAxisNames[XALAN_STATIC_UCODE_STRING("ancestor-or-self")] = XPathExpression::eFROM_ANCESTORS_OR_SELF;
+	theAxisNames[XALAN_STATIC_UCODE_STRING("attribute")] = XPathExpression::eFROM_ATTRIBUTES;
+	theAxisNames[XALAN_STATIC_UCODE_STRING("child")] = XPathExpression::eFROM_CHILDREN;
+	theAxisNames[XALAN_STATIC_UCODE_STRING("descendant")] = XPathExpression::eFROM_DESCENDANTS;
+	theAxisNames[XALAN_STATIC_UCODE_STRING("descendant-or-self")] = XPathExpression::eFROM_DESCENDANTS_OR_SELF;
+	theAxisNames[XALAN_STATIC_UCODE_STRING("following")] = XPathExpression::eFROM_FOLLOWING;
+	theAxisNames[XALAN_STATIC_UCODE_STRING("following-sibling")] = XPathExpression::eFROM_FOLLOWING_SIBLINGS;
+	theAxisNames[XALAN_STATIC_UCODE_STRING("parent")] = XPathExpression::eFROM_PARENT;
+	theAxisNames[XALAN_STATIC_UCODE_STRING("preceding")] = XPathExpression::eFROM_PRECEDING;
+	theAxisNames[XALAN_STATIC_UCODE_STRING("preceding-sibling")] = XPathExpression::eFROM_PRECEDING_SIBLINGS;
+	theAxisNames[XALAN_STATIC_UCODE_STRING("self")] = XPathExpression::eFROM_SELF;
+	theAxisNames[XALAN_STATIC_UCODE_STRING("namespace")] = XPathExpression::eFROM_NAMESPACE;
 }
 
 
 
 void
-XPathProcessorImpl::initializeNodeTypesTable()
+XPathProcessorImpl::initializeNodeTypesTable(NodeTypesMapType&		theNodeTypes)
 {
-	s_nodeTypes[NODETYPE_COMMENT_STRING] = XPathExpression::eNODETYPE_COMMENT;
-	s_nodeTypes[NODETYPE_TEXT_STRING] = XPathExpression::eNODETYPE_TEXT;
-	s_nodeTypes[NODETYPE_PI_STRING] = XPathExpression::eNODETYPE_PI;
-	s_nodeTypes[NODETYPE_NODE_STRING] = XPathExpression::eNODETYPE_NODE;
-	s_nodeTypes[NODETYPE_ANYELEMENT_STRING] = XPathExpression::eNODETYPE_ANYELEMENT;
+	theNodeTypes[XALAN_STATIC_UCODE_STRING("comment")] = XPathExpression::eNODETYPE_COMMENT;
+	theNodeTypes[XALAN_STATIC_UCODE_STRING("text")] = XPathExpression::eNODETYPE_TEXT;
+	theNodeTypes[XALAN_STATIC_UCODE_STRING("processing-instruction")] = XPathExpression::eNODETYPE_PI;
+	theNodeTypes[XALAN_STATIC_UCODE_STRING("node")] = XPathExpression::eNODETYPE_NODE;
+	theNodeTypes[XALAN_STATIC_UCODE_STRING("*")] = XPathExpression::eNODETYPE_ANYELEMENT;
 }
 
 
 
-XPathProcessorImpl::StaticInitializer::StaticInitializer()
+static XalanDOMString		FUNC_ID_STRING;
+
+static XalanDOMString		FUNC_KEY_STRING;
+
+
+const XalanDOMString&	XPathProcessorImpl::FUNC_ID_STRING = ::FUNC_ID_STRING;
+
+
+	// This shouldn't really be here, since it's not part of the XPath standard,
+	// but rather a part ofthe XSLT standard.
+const XalanDOMString&	XPathProcessorImpl::FUNC_KEY_STRING = ::FUNC_KEY_STRING;
+
+
+static XPathProcessorImpl::KeywordsMapType 		s_keywords;
+static XPathProcessorImpl::FunctionNameMapType 	s_functions;
+static XPathProcessorImpl::AxisNamesMapType		s_axisNames;
+static XPathProcessorImpl::NodeTypesMapType		s_nodeTypes;
+
+
+
+const XPathProcessorImpl::KeywordsMapType& 		XPathProcessorImpl::s_keywords = ::s_keywords;
+const XPathProcessorImpl::FunctionNameMapType& 	XPathProcessorImpl::s_functions = ::s_functions;
+const XPathProcessorImpl::AxisNamesMapType&		XPathProcessorImpl::s_axisNames = ::s_axisNames;
+const XPathProcessorImpl::NodeTypesMapType&		XPathProcessorImpl::s_nodeTypes = ::s_nodeTypes;
+
+
+
+void
+XPathProcessorImpl::initialize()
 {
-	XPathProcessorImpl::initializeKeywordsTable();
-	XPathProcessorImpl::initializeFunctionTable();
-	XPathProcessorImpl::initializeAxisNamesTable();
-	XPathProcessorImpl::initializeNodeTypesTable();
+	XPathProcessorImpl::initializeKeywordsTable(::s_keywords);
+	XPathProcessorImpl::initializeFunctionTable(::s_functions);
+	XPathProcessorImpl::initializeAxisNamesTable(::s_axisNames);
+	XPathProcessorImpl::initializeNodeTypesTable(::s_nodeTypes);
+
+	::FUNC_ID_STRING = XALAN_STATIC_UCODE_STRING("id");
+	::FUNC_KEY_STRING = XALAN_STATIC_UCODE_STRING("key");
+}
+
+
+
+void
+XPathProcessorImpl::terminate()
+{
+	KeywordsMapType().swap(::s_keywords);
+	FunctionNameMapType().swap(::s_functions);
+	AxisNamesMapType().swap(::s_axisNames);
+	NodeTypesMapType().swap(::s_nodeTypes);
+
+	clear(::FUNC_ID_STRING);
+	clear(::FUNC_KEY_STRING);
 }

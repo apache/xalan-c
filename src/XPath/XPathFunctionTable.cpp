@@ -93,11 +93,14 @@
 
 
 
-XPathFunctionTable::XPathFunctionTable() :
+XPathFunctionTable::XPathFunctionTable(bool		fCreateTable) :
 	m_FunctionCollection(),
 	m_FunctionNameIndex()
 {
-	CreateTable();
+	if (fCreateTable == true)
+	{
+		CreateTable();
+	}
 }
 
 
@@ -164,8 +167,8 @@ XPathFunctionTable::UninstallFunction(const XalanDOMString&		theFunctionName)
 		// Delete the function...
 		delete m_FunctionCollection[(*i).second];
 
-		// Erase it from the table...
-		m_FunctionCollection.erase(&m_FunctionCollection[(*i).second]);
+		// Set the entry in the table to 0...
+		m_FunctionCollection[(*i).second] = 0;
 
 		return true;
 	}
@@ -283,8 +286,9 @@ XPathFunctionTable::DestroyTable()
 				 m_FunctionCollection.end(),
 				 DeleteFunctorType());
 
-		m_FunctionCollection.clear();
-		m_FunctionNameIndex.clear();
+		CollectionType().swap(m_FunctionCollection);
+
+		FunctionNameIndexMapType().swap(m_FunctionNameIndex);
 	}
 	catch(...)
 	{

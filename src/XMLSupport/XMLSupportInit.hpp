@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2000 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -54,135 +54,56 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-// Class header file...
-#include "TextFileOutputStream.hpp"
+
+#if !defined(XMLSUPPORTINIT_INCLUDE_GUARD_1357924680)
+#define XMLSUPPORTINIT_INCLUDE_GUARD_1357924680
 
 
 
-#include <cerrno>
-#include <strstream>
+// Base include file.  Must be first.
+#include <XMLSupport/XMLSupportDefinitions.hpp>
 
 
 
-#include <PlatformSupport/DOMStringHelper.hpp>
-#include <PlatformSupport/XalanAutoPtr.hpp>
+#include <PlatformSupport/PlatformSupportInit.hpp>
 
 
 
+#include <DOMSupport/DOMSupportInit.hpp>
 
-TextFileOutputStream::TextFileOutputStream(const DOMString&		theFileName) :
-	XercesTextOutputStream(),
-	m_fileName(theFileName),
-	m_handle(0)
+
+
+class XALAN_XMLSUPPORT_EXPORT XMLSupportInit
 {
-	const XalanArrayAutoPtr<char>	tmpName(theFileName.transcode());
+public:
 
-	m_handle = fopen(tmpName.get(), "wt");
+	explicit
+	XMLSupportInit();
 
-    if (m_handle == 0)
-	{
-		throw TextFileOutputStreamOpenException(theFileName,
-												errno);
-	}
-}
+	~XMLSupportInit();
 
+private:
 
+	// Not implemented...
+	XMLSupportInit(const XMLSupportInit&);
 
-TextFileOutputStream::~TextFileOutputStream()
-{
-    if (m_handle != 0)
-	{
-		fclose(m_handle);
-	}
-}
+	XMLSupportInit&
+	operator=(const XMLSupportInit&);
 
+	
+	static void
+	initialize();
 
+	static void
+	terminate();
 
-void
-TextFileOutputStream::doFlush()
-{
-	fflush(m_handle);
-}
+	const PlatformSupportInit	m_platformSupportInit;
 
+	const DOMSupportInit		m_domSupportInit;
 
-
-void
-TextFileOutputStream::writeData(
-			const char*		theBuffer,
-			unsigned long	theBufferLength)
-{
-	const size_t	theBytesWritten =
-		fwrite(theBuffer,
-			   1,
-			   theBufferLength,
-			   m_handle);
-
-	if(theBytesWritten != theBufferLength)
-	{
-		throw TextFileOutputStreamWriteException(m_fileName,
-												 errno);
-	}
-}
+	static unsigned long		s_initCounter;
+};
 
 
 
-static DOMString
-FormatMessageLocal(
-			const DOMString&	theMessage,
-			const DOMString&	theFileName,
-			int					theErrorCode)
-{
-	DOMString	theResult(clone(theMessage));
-
-	theResult += theFileName;
-
-#if !defined(XALAN_NO_NAMESPACES)
-using std::ostrstream;
-#endif
-
-	ostrstream	theFormatter;
-
-	theFormatter << ".  The error code was "
-				 << theErrorCode << "." << '\0';
-
-	theResult += theFormatter.str();
-
-	delete theFormatter.str();
-	return theResult;
-}
-
-
-
-TextFileOutputStreamOpenException::TextFileOutputStreamOpenException(
-		const DOMString&	theFileName,
-		int					theErrorCode) :
-	XercesTextOutputStreamException(FormatMessageLocal("Error opening file: ",
-													 theFileName,
-													 theErrorCode),
-								   XALAN_STATIC_UCODE_STRING("TextFileOutputStreamOpenException"))
-{
-}
-
-
-
-TextFileOutputStreamOpenException::~TextFileOutputStreamOpenException()
-{
-}
-
-
-
-TextFileOutputStreamWriteException::TextFileOutputStreamWriteException(
-		const DOMString&	theFileName,
-		int					theErrorCode) :
-	XercesTextOutputStreamException(FormatMessageLocal("Error writing file: ",
-													 theFileName,
-													 theErrorCode),
-								    XALAN_STATIC_UCODE_STRING("TextFileOutputStreamWriteException"))
-{
-}
-
-
-
-TextFileOutputStreamWriteException::~TextFileOutputStreamWriteException()
-{
-}
+#endif	// !defined(XMLSUPPORTINIT_INCLUDE_GUARD_1357924680)

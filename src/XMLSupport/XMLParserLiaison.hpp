@@ -248,7 +248,7 @@ public:
 	 *
 	 * @return string describing parser
 	 */
-	virtual const XalanDOMString&
+	virtual const XalanDOMString
 	getParserDescription() const = 0;
 
 private:

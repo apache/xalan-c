@@ -82,6 +82,30 @@ class XALAN_XPATH_EXPORT XPathEnvSupportDefault : public XPathEnvSupport
 {
 public:
 
+#if defined(XALAN_NO_NAMESPACES)
+	typedef map<XalanDOMString, XalanDocument*, less<XalanDOMString> >		SourceDocsTableType;
+	typedef map<XalanDOMString, Function*, less<XalanDOMString> >			FunctionTableType;
+	typedef map<XalanDOMString, FunctionTableType, less<XalanDOMString> >	NamespaceFunctionTablesType;
+#else
+	typedef std::map<XalanDOMString, XalanDocument*>	SourceDocsTableType;
+	typedef std::map<XalanDOMString, Function*>			FunctionTableType;
+	typedef std::map<XalanDOMString, FunctionTableType>	NamespaceFunctionTablesType;
+#endif
+
+	/**
+	 * Perform initialization of statics -- must be called before any
+	 * processing occurs.  See class XPathInit.
+	 */
+	static void
+	initialize();
+
+	/**
+	 * Perform termination of statics.  See class XPathInit.
+	 */
+	static void
+	terminate();
+
+
 	XPathEnvSupportDefault();
 
 	virtual
@@ -244,16 +268,6 @@ private:
 
 	bool
 	operator==(const XPathEnvSupportDefault&) const;
-
-#if defined(XALAN_NO_NAMESPACES)
-	typedef map<XalanDOMString, XalanDocument*, less<XalanDOMString> >		SourceDocsTableType;
-	typedef map<XalanDOMString, Function*, less<XalanDOMString> >			FunctionTableType;
-	typedef map<XalanDOMString, FunctionTableType, less<XalanDOMString> >	NamespaceFunctionTablesType;
-#else
-	typedef std::map<XalanDOMString, XalanDocument*>	SourceDocsTableType;
-	typedef std::map<XalanDOMString, Function*>			FunctionTableType;
-	typedef std::map<XalanDOMString, FunctionTableType>	NamespaceFunctionTablesType;
-#endif
 
 	/**
 	 * Update the supplied function table.  If the parameter

@@ -119,10 +119,6 @@ XercesStdTextOutputStream::writeData(
 
 
 
-static const DOMString	theWriteExceptionType(XALAN_STATIC_UCODE_STRING("XercesStdTextOutputStreamWriteException"));
-
-
-
 static DOMString
 FormatMessageLocal(
 			const DOMString&	theMessage,
@@ -152,7 +148,7 @@ XercesStdTextOutputStreamWriteException::XercesStdTextOutputStreamWriteException
 		int					theErrorCode) :
 	XercesTextOutputStreamException(FormatMessageLocal("Error writing to standard stream!",
 													   theErrorCode),
-								    theWriteExceptionType)
+								    XALAN_STATIC_UCODE_STRING("XercesStdTextOutputStreamWriteException"))
 {
 }
 

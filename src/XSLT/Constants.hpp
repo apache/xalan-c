@@ -78,6 +78,19 @@ class XALAN_XSLT_EXPORT Constants
 public:
 
 	/**
+	 * Perform initialization of statics -- must be called before any
+	 * processing occurs.  See class XSLTInit.
+	 */
+	static void
+	initialize();
+
+	/**
+	 * Perform termination of statics.  See class XSLTInit.
+	 */
+	static void
+	terminate();
+
+	/**
 	 * IDs for XSL element types. These are associated 
 	 * with the string literals in the XSLTProcessor class.
 	 * Don't change the numbers.
@@ -178,206 +191,206 @@ public:
 	 */
 
 	// Result tree counting
-	static const XalanDOMString	ELEMNAME_ANCHOR_STRING;
-	static const XalanDOMString	ELEMNAME_ANY_STRING; // pattern-by-example support
-	static const XalanDOMString	ELEMNAME_APPLY_IMPORTS_STRING;
-	static const XalanDOMString	ELEMNAME_APPLY_TEMPLATES_STRING;
-	static const XalanDOMString	ELEMNAME_ARG_STRING;
-	static const XalanDOMString	ELEMNAME_ATTRIBUTESET_STRING;
-	static const XalanDOMString	ELEMNAME_ATTRIBUTE_STRING; // pattern-by-example support
-	static const XalanDOMString	ELEMNAME_CALLTEMPLATEARG_STRING;
-	static const XalanDOMString	ELEMNAME_CALLTEMPLATE_STRING;
-	static const XalanDOMString	ELEMNAME_CALL_STRING;
-	static const XalanDOMString	ELEMNAME_CHILDREN_STRING;
-	static const XalanDOMString	ELEMNAME_CHOOSE_STRING;
-	static const XalanDOMString	ELEMNAME_COMMENT_STRING;
-	static const XalanDOMString	ELEMNAME_CONSTRUCT_STRING; // my own
-	static const XalanDOMString	ELEMNAME_CONTENTS_STRING;
-	static const XalanDOMString	ELEMNAME_COPY_OF_STRING;
-	static const XalanDOMString	ELEMNAME_COPY_STRING;
-	static const XalanDOMString	ELEMNAME_COUNTERINCREMENT_STRING;
-	static const XalanDOMString	ELEMNAME_COUNTERRESET_STRING;
-	static const XalanDOMString	ELEMNAME_COUNTERSCOPE_STRING;
-	static const XalanDOMString	ELEMNAME_COUNTERS_STRING;
-	static const XalanDOMString	ELEMNAME_COUNTER_STRING;
-	static const XalanDOMString	ELEMNAME_DECIMALFORMAT_STRING;
-	static const XalanDOMString	ELEMNAME_DISPLAYIF_STRING; // my own
-	static const XalanDOMString	ELEMNAME_ELEMENT_STRING;  // pattern-by-example support
-	static const XalanDOMString	ELEMNAME_EMPTY_STRING;
-	static const XalanDOMString	ELEMNAME_EVAL_STRING;
-	static const XalanDOMString	ELEMNAME_EXPECTEDCHILDREN_STRING;
-	static const XalanDOMString	ELEMNAME_EXTENSIONHANDLER_STRING;
-	static const XalanDOMString	ELEMNAME_EXTENSION_STRING;
-	static const XalanDOMString	ELEMNAME_FALLBACK_STRING;
-	static const XalanDOMString	ELEMNAME_FOREACH_STRING;
-	static const XalanDOMString	ELEMNAME_HTML_STRING;
-	static const XalanDOMString	ELEMNAME_IF_STRING;
-	static const XalanDOMString	ELEMNAME_IMPORT_STRING;
-	static const XalanDOMString	ELEMNAME_INCLUDE_STRING;
-	static const XalanDOMString	ELEMNAME_KEY_STRING;
-	static const XalanDOMString	ELEMNAME_LOCALE_STRING;
-	static const XalanDOMString	ELEMNAME_MESSAGE_STRING;
-	static const XalanDOMString	ELEMNAME_NSALIAS_STRING;
-	static const XalanDOMString	ELEMNAME_NUMBER_STRING;
-	static const XalanDOMString	ELEMNAME_OTHERWISE_STRING;
-	static const XalanDOMString	ELEMNAME_PRESERVESPACE_STRING;
-	static const XalanDOMString	ELEMNAME_ROOT_STRING; // pattern-by-example support
-	static const XalanDOMString	ELEMNAME_SORT_STRING;
-	static const XalanDOMString	ELEMNAME_STRIPSPACE_STRING;
-	static const XalanDOMString	ELEMNAME_STYLESHEET_STRING;
-	static const XalanDOMString	ELEMNAME_TARGETATTRIBUTE_STRING; // pattern-by-example support
-	static const XalanDOMString	ELEMNAME_TARGETCOMMENT_STRING;
-	static const XalanDOMString	ELEMNAME_TARGETELEMENT_STRING; // pattern-by-example support
-	static const XalanDOMString	ELEMNAME_TARGETPI_STRING;
-	static const XalanDOMString	ELEMNAME_TARGETTEXT_STRING;
-	static const XalanDOMString	ELEMNAME_TEMPLATE_STRING;
-	static const XalanDOMString	ELEMNAME_TEXT_STRING;
-	static const XalanDOMString	ELEMNAME_TRANSFORM_STRING;
-	static const XalanDOMString	ELEMNAME_URL_STRING; // pattern-by-example support
-	static const XalanDOMString	ELEMNAME_USE_STRING;
-	static const XalanDOMString	ELEMNAME_VALUEOF_STRING;
-	static const XalanDOMString	ELEMNAME_VARIABLE_STRING;
-	static const XalanDOMString	ELEMNAME_WHEN_STRING;
-	static const XalanDOMString	ELEMNAME_COMPONENT_STRING;
-	static const XalanDOMString	ELEMNAME_OUTPUT_STRING;
-	static const XalanDOMString	ELEMNAME_PARAMVARIABLE_STRING;
-	static const XalanDOMString	ELEMNAME_PI_OLD_STRING;
-	static const XalanDOMString	ELEMNAME_PI_STRING;
-	static const XalanDOMString	ELEMNAME_SCRIPT_STRING;
-	static const XalanDOMString	ELEMNAME_WITHPARAM_STRING;
+	static const XalanDOMString&	ELEMNAME_ANCHOR_STRING;
+	static const XalanDOMString&	ELEMNAME_ANY_STRING; // pattern-by-example support
+	static const XalanDOMString&	ELEMNAME_APPLY_IMPORTS_STRING;
+	static const XalanDOMString&	ELEMNAME_APPLY_TEMPLATES_STRING;
+	static const XalanDOMString&	ELEMNAME_ARG_STRING;
+	static const XalanDOMString&	ELEMNAME_ATTRIBUTESET_STRING;
+	static const XalanDOMString&	ELEMNAME_ATTRIBUTE_STRING; // pattern-by-example support
+	static const XalanDOMString&	ELEMNAME_CALLTEMPLATEARG_STRING;
+	static const XalanDOMString&	ELEMNAME_CALLTEMPLATE_STRING;
+	static const XalanDOMString&	ELEMNAME_CALL_STRING;
+	static const XalanDOMString&	ELEMNAME_CHILDREN_STRING;
+	static const XalanDOMString&	ELEMNAME_CHOOSE_STRING;
+	static const XalanDOMString&	ELEMNAME_COMMENT_STRING;
+	static const XalanDOMString&	ELEMNAME_CONSTRUCT_STRING; // my own
+	static const XalanDOMString&	ELEMNAME_CONTENTS_STRING;
+	static const XalanDOMString&	ELEMNAME_COPY_OF_STRING;
+	static const XalanDOMString&	ELEMNAME_COPY_STRING;
+	static const XalanDOMString&	ELEMNAME_COUNTERINCREMENT_STRING;
+	static const XalanDOMString&	ELEMNAME_COUNTERRESET_STRING;
+	static const XalanDOMString&	ELEMNAME_COUNTERSCOPE_STRING;
+	static const XalanDOMString&	ELEMNAME_COUNTERS_STRING;
+	static const XalanDOMString&	ELEMNAME_COUNTER_STRING;
+	static const XalanDOMString&	ELEMNAME_DECIMALFORMAT_STRING;
+	static const XalanDOMString&	ELEMNAME_DISPLAYIF_STRING; // my own
+	static const XalanDOMString&	ELEMNAME_ELEMENT_STRING;  // pattern-by-example support
+	static const XalanDOMString&	ELEMNAME_EMPTY_STRING;
+	static const XalanDOMString&	ELEMNAME_EVAL_STRING;
+	static const XalanDOMString&	ELEMNAME_EXPECTEDCHILDREN_STRING;
+	static const XalanDOMString&	ELEMNAME_EXTENSIONHANDLER_STRING;
+	static const XalanDOMString&	ELEMNAME_EXTENSION_STRING;
+	static const XalanDOMString&	ELEMNAME_FALLBACK_STRING;
+	static const XalanDOMString&	ELEMNAME_FOREACH_STRING;
+	static const XalanDOMString&	ELEMNAME_HTML_STRING;
+	static const XalanDOMString&	ELEMNAME_IF_STRING;
+	static const XalanDOMString&	ELEMNAME_IMPORT_STRING;
+	static const XalanDOMString&	ELEMNAME_INCLUDE_STRING;
+	static const XalanDOMString&	ELEMNAME_KEY_STRING;
+	static const XalanDOMString&	ELEMNAME_LOCALE_STRING;
+	static const XalanDOMString&	ELEMNAME_MESSAGE_STRING;
+	static const XalanDOMString&	ELEMNAME_NSALIAS_STRING;
+	static const XalanDOMString&	ELEMNAME_NUMBER_STRING;
+	static const XalanDOMString&	ELEMNAME_OTHERWISE_STRING;
+	static const XalanDOMString&	ELEMNAME_PRESERVESPACE_STRING;
+	static const XalanDOMString&	ELEMNAME_ROOT_STRING; // pattern-by-example support
+	static const XalanDOMString&	ELEMNAME_SORT_STRING;
+	static const XalanDOMString&	ELEMNAME_STRIPSPACE_STRING;
+	static const XalanDOMString&	ELEMNAME_STYLESHEET_STRING;
+	static const XalanDOMString&	ELEMNAME_TARGETATTRIBUTE_STRING; // pattern-by-example support
+	static const XalanDOMString&	ELEMNAME_TARGETCOMMENT_STRING;
+	static const XalanDOMString&	ELEMNAME_TARGETELEMENT_STRING; // pattern-by-example support
+	static const XalanDOMString&	ELEMNAME_TARGETPI_STRING;
+	static const XalanDOMString&	ELEMNAME_TARGETTEXT_STRING;
+	static const XalanDOMString&	ELEMNAME_TEMPLATE_STRING;
+	static const XalanDOMString&	ELEMNAME_TEXT_STRING;
+	static const XalanDOMString&	ELEMNAME_TRANSFORM_STRING;
+	static const XalanDOMString&	ELEMNAME_URL_STRING; // pattern-by-example support
+	static const XalanDOMString&	ELEMNAME_USE_STRING;
+	static const XalanDOMString&	ELEMNAME_VALUEOF_STRING;
+	static const XalanDOMString&	ELEMNAME_VARIABLE_STRING;
+	static const XalanDOMString&	ELEMNAME_WHEN_STRING;
+	static const XalanDOMString&	ELEMNAME_COMPONENT_STRING;
+	static const XalanDOMString&	ELEMNAME_OUTPUT_STRING;
+	static const XalanDOMString&	ELEMNAME_PARAMVARIABLE_STRING;
+	static const XalanDOMString&	ELEMNAME_PI_OLD_STRING;
+	static const XalanDOMString&	ELEMNAME_PI_STRING;
+	static const XalanDOMString&	ELEMNAME_SCRIPT_STRING;
+	static const XalanDOMString&	ELEMNAME_WITHPARAM_STRING;
   
 	/*---------------------------------------------
 	 * Literals for XSL attribute names.
 	 */
-	static const XalanDOMString	ATTRNAME_AMOUNT;
-	static const XalanDOMString	ATTRNAME_ANCESTOR;
-	static const XalanDOMString	ATTRNAME_ATTRIBUTE;
-	static const XalanDOMString	ATTRNAME_ATTRIBUTE_SET;
-	static const XalanDOMString	ATTRNAME_CASEORDER;
-	static const XalanDOMString	ATTRNAME_CLASS;
-	static const XalanDOMString	ATTRNAME_CONDITION;
-	static const XalanDOMString	ATTRNAME_COPYTYPE;
-	static const XalanDOMString	ATTRNAME_COUNT;
-	static const XalanDOMString	ATTRNAME_DATATYPE;
-	static const XalanDOMString	ATTRNAME_DECIMALSEPARATOR;
-	static const XalanDOMString	ATTRNAME_DEFAULT;
-	static const XalanDOMString	ATTRNAME_DEFAULTSPACE;
-	static const XalanDOMString	ATTRNAME_DEPTH;
-	static const XalanDOMString	ATTRNAME_DIGIT;
-	static const XalanDOMString	ATTRNAME_DIGITGROUPSEP;
-	static const XalanDOMString	ATTRNAME_ELEMENT;
-	static const XalanDOMString	ATTRNAME_ELEMENTS;
-	static const XalanDOMString	ATTRNAME_EXCLUDE_RESULT_PREFIXES;
-	static const XalanDOMString	ATTRNAME_EXPR;
-	static const XalanDOMString	ATTRNAME_EXTENSIONELEMENTPREFIXES;
-	static const XalanDOMString	ATTRNAME_FORMAT;
-	static const XalanDOMString	ATTRNAME_FROM;
-	static const XalanDOMString	ATTRNAME_GROUPINGSEPARATOR;
-	static const XalanDOMString	ATTRNAME_GROUPINGSIZE;
-	static const XalanDOMString	ATTRNAME_HREF;
-	static const XalanDOMString	ATTRNAME_ID;
-	static const XalanDOMString	ATTRNAME_IMPORTANCE;
-	static const XalanDOMString	ATTRNAME_INDENTRESULT;
-	static const XalanDOMString	ATTRNAME_INFINITY;
-	static const XalanDOMString	ATTRNAME_LANG;
-	static const XalanDOMString	ATTRNAME_LETTERVALUE;
-	static const XalanDOMString	ATTRNAME_LEVEL;
-	static const XalanDOMString	ATTRNAME_MATCH;
-	static const XalanDOMString	ATTRNAME_MINUSSIGN;
-	static const XalanDOMString	ATTRNAME_MODE;
-	static const XalanDOMString	ATTRNAME_NAME;
-	static const XalanDOMString	ATTRNAME_NAMESPACE;
-	static const XalanDOMString	ATTRNAME_NAN;
-	static const XalanDOMString	ATTRNAME_NDIGITSPERGROUP;
-	static const XalanDOMString	ATTRNAME_ONLY;
-	static const XalanDOMString	ATTRNAME_ORDER;
-	static const XalanDOMString	ATTRNAME_PATTERNSEPARATOR;
-	static const XalanDOMString	ATTRNAME_PERCENT;
-	static const XalanDOMString	ATTRNAME_PERMILLE;
-	static const XalanDOMString	ATTRNAME_PRIORITY;
-	static const XalanDOMString	ATTRNAME_REFID;
-	static const XalanDOMString	ATTRNAME_RESULTNS;
-	static const XalanDOMString	ATTRNAME_RESULT_PREFIX;
-	static const XalanDOMString	ATTRNAME_SELECT;
-	static const XalanDOMString	ATTRNAME_SEQUENCESRC;
-	static const XalanDOMString	ATTRNAME_STYLE;
-	static const XalanDOMString	ATTRNAME_TERMINATE;
-	static const XalanDOMString	ATTRNAME_TEST;
-	static const XalanDOMString	ATTRNAME_TOSTRING;
-	static const XalanDOMString	ATTRNAME_TYPE;
-	static const XalanDOMString	ATTRNAME_USE;
-	static const XalanDOMString	ATTRNAME_USEATTRIBUTESETS;
-	static const XalanDOMString	ATTRNAME_VALUE;
-	static const XalanDOMString	ATTRNAME_VERSION;
-	static const XalanDOMString	ATTRNAME_XMLNS;
-	static const XalanDOMString	ATTRNAME_XMLNSDEF;
-	static const XalanDOMString	ATTRNAME_XMLSPACE;
-	static const XalanDOMString	ATTRNAME_ZERODIGIT;
-	static const XalanDOMString	ATTRNAME_STYLESHEET_PREFIX;
+	static const XalanDOMString&	ATTRNAME_AMOUNT;
+	static const XalanDOMString&	ATTRNAME_ANCESTOR;
+	static const XalanDOMString&	ATTRNAME_ATTRIBUTE;
+	static const XalanDOMString&	ATTRNAME_ATTRIBUTE_SET;
+	static const XalanDOMString&	ATTRNAME_CASEORDER;
+	static const XalanDOMString&	ATTRNAME_CLASS;
+	static const XalanDOMString&	ATTRNAME_CONDITION;
+	static const XalanDOMString&	ATTRNAME_COPYTYPE;
+	static const XalanDOMString&	ATTRNAME_COUNT;
+	static const XalanDOMString&	ATTRNAME_DATATYPE;
+	static const XalanDOMString&	ATTRNAME_DECIMALSEPARATOR;
+	static const XalanDOMString&	ATTRNAME_DEFAULT;
+	static const XalanDOMString&	ATTRNAME_DEFAULTSPACE;
+	static const XalanDOMString&	ATTRNAME_DEPTH;
+	static const XalanDOMString&	ATTRNAME_DIGIT;
+	static const XalanDOMString&	ATTRNAME_DIGITGROUPSEP;
+	static const XalanDOMString&	ATTRNAME_ELEMENT;
+	static const XalanDOMString&	ATTRNAME_ELEMENTS;
+	static const XalanDOMString&	ATTRNAME_EXCLUDE_RESULT_PREFIXES;
+	static const XalanDOMString&	ATTRNAME_EXPR;
+	static const XalanDOMString&	ATTRNAME_EXTENSIONELEMENTPREFIXES;
+	static const XalanDOMString&	ATTRNAME_FORMAT;
+	static const XalanDOMString&	ATTRNAME_FROM;
+	static const XalanDOMString&	ATTRNAME_GROUPINGSEPARATOR;
+	static const XalanDOMString&	ATTRNAME_GROUPINGSIZE;
+	static const XalanDOMString&	ATTRNAME_HREF;
+	static const XalanDOMString&	ATTRNAME_ID;
+	static const XalanDOMString&	ATTRNAME_IMPORTANCE;
+	static const XalanDOMString&	ATTRNAME_INDENTRESULT;
+	static const XalanDOMString&	ATTRNAME_INFINITY;
+	static const XalanDOMString&	ATTRNAME_LANG;
+	static const XalanDOMString&	ATTRNAME_LETTERVALUE;
+	static const XalanDOMString&	ATTRNAME_LEVEL;
+	static const XalanDOMString&	ATTRNAME_MATCH;
+	static const XalanDOMString&	ATTRNAME_MINUSSIGN;
+	static const XalanDOMString&	ATTRNAME_MODE;
+	static const XalanDOMString&	ATTRNAME_NAME;
+	static const XalanDOMString&	ATTRNAME_NAMESPACE;
+	static const XalanDOMString&	ATTRNAME_NAN;
+	static const XalanDOMString&	ATTRNAME_NDIGITSPERGROUP;
+	static const XalanDOMString&	ATTRNAME_ONLY;
+	static const XalanDOMString&	ATTRNAME_ORDER;
+	static const XalanDOMString&	ATTRNAME_PATTERNSEPARATOR;
+	static const XalanDOMString&	ATTRNAME_PERCENT;
+	static const XalanDOMString&	ATTRNAME_PERMILLE;
+	static const XalanDOMString&	ATTRNAME_PRIORITY;
+	static const XalanDOMString&	ATTRNAME_REFID;
+	static const XalanDOMString&	ATTRNAME_RESULTNS;
+	static const XalanDOMString&	ATTRNAME_RESULT_PREFIX;
+	static const XalanDOMString&	ATTRNAME_SELECT;
+	static const XalanDOMString&	ATTRNAME_SEQUENCESRC;
+	static const XalanDOMString&	ATTRNAME_STYLE;
+	static const XalanDOMString&	ATTRNAME_TERMINATE;
+	static const XalanDOMString&	ATTRNAME_TEST;
+	static const XalanDOMString&	ATTRNAME_TOSTRING;
+	static const XalanDOMString&	ATTRNAME_TYPE;
+	static const XalanDOMString&	ATTRNAME_USE;
+	static const XalanDOMString&	ATTRNAME_USEATTRIBUTESETS;
+	static const XalanDOMString&	ATTRNAME_VALUE;
+	static const XalanDOMString&	ATTRNAME_VERSION;
+	static const XalanDOMString&	ATTRNAME_XMLNS;
+	static const XalanDOMString&	ATTRNAME_XMLNSDEF;
+	static const XalanDOMString&	ATTRNAME_XMLSPACE;
+	static const XalanDOMString&	ATTRNAME_ZERODIGIT;
+	static const XalanDOMString&	ATTRNAME_STYLESHEET_PREFIX;
  
 	  // Atributes on the functions element
-	static const XalanDOMString	ATTRNAME_NS;
-	static const XalanDOMString	ATTRNAME_CLASSID;
-	static const XalanDOMString	ATTRNAME_ARCHIVE;
-	static const XalanDOMString	ATTRNAME_CODETYPE;
-	static const XalanDOMString	ATTRNAME_CODEBASE;
-	static const XalanDOMString	ATTRNAME_METHOD;
+	static const XalanDOMString&	ATTRNAME_NS;
+	static const XalanDOMString&	ATTRNAME_CLASSID;
+	static const XalanDOMString&	ATTRNAME_ARCHIVE;
+	static const XalanDOMString&	ATTRNAME_CODETYPE;
+	static const XalanDOMString&	ATTRNAME_CODEBASE;
+	static const XalanDOMString&	ATTRNAME_METHOD;
   
 	  // For space-att
-	static const XalanDOMString	ATTRVAL_PRESERVE;
-	static const XalanDOMString	ATTRVAL_STRIP;
+	static const XalanDOMString&	ATTRVAL_PRESERVE;
+	static const XalanDOMString&	ATTRVAL_STRIP;
   
 	  // For indent-result
-	static const XalanDOMString	ATTRVAL_YES;
-	static const XalanDOMString	ATTRVAL_NO;
+	static const XalanDOMString&	ATTRVAL_YES;
+	static const XalanDOMString&	ATTRVAL_NO;
   
 	  // For letter-value attribute (part of conversion attributes).
-	static const XalanDOMString	ATTRVAL_ALPHABETIC;
-	static const XalanDOMString	ATTRVAL_OTHER;
+	static const XalanDOMString&	ATTRVAL_ALPHABETIC;
+	static const XalanDOMString&	ATTRVAL_OTHER;
   
 	  // For level attribute in xsl:number.
-	static const XalanDOMString	ATTRVAL_SINGLE;
-	static const XalanDOMString	ATTRVAL_MULTI;
-	static const XalanDOMString	ATTRVAL_ANY;
+	static const XalanDOMString&	ATTRVAL_SINGLE;
+	static const XalanDOMString&	ATTRVAL_MULTI;
+	static const XalanDOMString&	ATTRVAL_ANY;
 
 	// Output stuff
-	static const XalanDOMString	ATTRNAME_OUTPUT_METHOD;
-	static const XalanDOMString	ATTRNAME_DISABLE_OUTPUT_ESCAPING;
-	static const XalanDOMString	ATTRNAME_OUTPUT_CDATA_SECTION_ELEMENTS;
-	static const XalanDOMString	ATTRNAME_OUTPUT_DOCTYPE_PUBLIC;
-	static const XalanDOMString	ATTRNAME_OUTPUT_DOCTYPE_SYSTEM;
-	static const XalanDOMString	ATTRNAME_OUTPUT_ENCODING;
-	static const XalanDOMString	ATTRNAME_OUTPUT_INDENT;
-	static const XalanDOMString	ATTRNAME_OUTPUT_MEDIATYPE;
-	static const XalanDOMString	ATTRNAME_OUTPUT_STANDALONE;
-	static const XalanDOMString	ATTRNAME_OUTPUT_VERSION;
-//	static const XalanDOMString	ATTRNAME_OUTPUT_XMLDECL;
-   static const XalanDOMString	ATTRNAME_OUTPUT_OMITXMLDECL;
+	static const XalanDOMString&	ATTRNAME_OUTPUT_METHOD;
+	static const XalanDOMString&	ATTRNAME_DISABLE_OUTPUT_ESCAPING;
+	static const XalanDOMString&	ATTRNAME_OUTPUT_CDATA_SECTION_ELEMENTS;
+	static const XalanDOMString&	ATTRNAME_OUTPUT_DOCTYPE_PUBLIC;
+	static const XalanDOMString&	ATTRNAME_OUTPUT_DOCTYPE_SYSTEM;
+	static const XalanDOMString&	ATTRNAME_OUTPUT_ENCODING;
+	static const XalanDOMString&	ATTRNAME_OUTPUT_INDENT;
+	static const XalanDOMString&	ATTRNAME_OUTPUT_MEDIATYPE;
+	static const XalanDOMString&	ATTRNAME_OUTPUT_STANDALONE;
+	static const XalanDOMString&	ATTRNAME_OUTPUT_VERSION;
+//	static const XalanDOMString&	ATTRNAME_OUTPUT_XMLDECL;
+   static const XalanDOMString&	ATTRNAME_OUTPUT_OMITXMLDECL;
 
-	static const XalanDOMString	ATTRVAL_OUTPUT_METHOD_HTML;
-	static const XalanDOMString	ATTRVAL_OUTPUT_METHOD_XML;
-	static const XalanDOMString	ATTRVAL_OUTPUT_METHOD_TEXT;
+	static const XalanDOMString&	ATTRVAL_OUTPUT_METHOD_HTML;
+	static const XalanDOMString&	ATTRVAL_OUTPUT_METHOD_XML;
+	static const XalanDOMString&	ATTRVAL_OUTPUT_METHOD_TEXT;
 
 	// some stuff for my patterns-by-example
-	static const XalanDOMString	ATTRVAL_THIS;
-	static const XalanDOMString	ATTRVAL_PARENT;
-	static const XalanDOMString	ATTRVAL_ANCESTOR;
-	static const XalanDOMString	ATTRVAL_ID;
+	static const XalanDOMString&	ATTRVAL_THIS;
+	static const XalanDOMString&	ATTRVAL_PARENT;
+	static const XalanDOMString&	ATTRVAL_ANCESTOR;
+	static const XalanDOMString&	ATTRVAL_ID;
 
   // Stuff for sorting
-	static const XalanDOMString	ATTRVAL_DATATYPE_TEXT;
-	static const XalanDOMString	ATTRVAL_DATATYPE_NUMBER;
-	static const XalanDOMString	ATTRVAL_ORDER_ASCENDING;
-	static const XalanDOMString	ATTRVAL_ORDER_DESCENDING;
-	static const XalanDOMString	ATTRVAL_CASEORDER_UPPER;
-	static const XalanDOMString	ATTRVAL_CASEORDER_LOWER;
+	static const XalanDOMString&	ATTRVAL_DATATYPE_TEXT;
+	static const XalanDOMString&	ATTRVAL_DATATYPE_NUMBER;
+	static const XalanDOMString&	ATTRVAL_ORDER_ASCENDING;
+	static const XalanDOMString&	ATTRVAL_ORDER_DESCENDING;
+	static const XalanDOMString&	ATTRVAL_CASEORDER_UPPER;
+	static const XalanDOMString&	ATTRVAL_CASEORDER_LOWER;
 
 	// Stuff for xsl:decimal-format...
-	static const XalanDOMString	ATTRVAL_INFINITY;
-	static const XalanDOMString	ATTRVAL_NAN;
+	static const XalanDOMString&	ATTRVAL_INFINITY;
+	static const XalanDOMString&	ATTRVAL_NAN;
 
 	// Name of default for xsl:decimal-format element
-	static const XalanDOMString DEFAULT_DECIMAL_FORMAT;
+	static const XalanDOMString& DEFAULT_DECIMAL_FORMAT;
 
 
 	enum eNumberLevel
@@ -393,7 +406,7 @@ public:
 	};
 
 	// For Stylesheet-prefix and result-prefix in xsl:namespace-alias 
-	static const XalanDOMString	ATTRVAL_DEFAULT_PREFIX;
+	static const XalanDOMString&	ATTRVAL_DEFAULT_PREFIX;
 
 	enum eAttributeName
 	{
@@ -471,12 +484,12 @@ public:
 
 	// These are used mainly for keys in the pattern lookup table,
 	// for those nodes that don't have unique lookup values
-	static const XalanDOMString	PSEUDONAME_ANY;
-	static const XalanDOMString	PSEUDONAME_ROOT;
-	static const XalanDOMString	PSEUDONAME_TEXT;
-	static const XalanDOMString	PSEUDONAME_COMMENT;
-	static const XalanDOMString	PSEUDONAME_PI;
-	static const XalanDOMString	PSEUDONAME_OTHER;
+	static const XalanDOMString&	PSEUDONAME_ANY;
+	static const XalanDOMString&	PSEUDONAME_ROOT;
+	static const XalanDOMString&	PSEUDONAME_TEXT;
+	static const XalanDOMString&	PSEUDONAME_COMMENT;
+	static const XalanDOMString&	PSEUDONAME_PI;
+	static const XalanDOMString&	PSEUDONAME_OTHER;
 
 };
 

@@ -101,6 +101,18 @@ public:
 	};
 
 	/**
+	 * Perform static initialization.  See class XMLSupportInit.
+	 */
+	static void
+	initialize();
+
+	/**
+	 * Perform static shut down.  See class XMLSupportInit.
+	 */
+	static void
+	terminate();
+
+	/**
 	 * Constructor for customized encoding and doctype.
 	 *
 	 * @param writer            character output stream to use
@@ -598,12 +610,12 @@ protected:
 	/**
 	 * The text "xslt-next-is-raw".
 	 */
-	static const XalanDOMCharVectorType		s_xsltNextIsRawString;
+	static const XalanDOMCharVectorType&	s_xsltNextIsRawString;
 
 	/**
 	 * The string "formatter-to-dom".
 	 */
-	static const XalanDOMCharVectorType		s_formatterToDOMString;
+	static const XalanDOMCharVectorType&	s_formatterToDOMString;
 
 #if defined(XALAN_NO_NAMESPACES)
 	typedef vector<bool>				BoolStackType;
@@ -682,6 +694,7 @@ private:
 
 	// Data members...
 	bool		m_shouldFlush;
+
 	bool		m_bytesEqualChars;
 
 	/**
@@ -729,67 +742,67 @@ private:
 	/**
 	 * The default MIME encoding.
 	 */
-	static const XalanDOMCharVectorType		s_defaultMIMEEncoding;
+	static const XalanDOMCharVectorType&	s_defaultMIMEEncoding;
 
 	/**
 	 * The string "<!DOCTYPE ".
 	 */
-	static const XalanDOMCharVectorType		s_doctypeHeaderStartString;
+	static const XalanDOMCharVectorType&	s_doctypeHeaderStartString;
 
 	/**
 	 * The string " PUBLIC \"".
 	 */
-	static const XalanDOMCharVectorType		s_doctypeHeaderPublicString;
+	static const XalanDOMCharVectorType&	s_doctypeHeaderPublicString;
 
 	/**
 	 * The string " SYSTEM \"".
 	 */
-	static const XalanDOMCharVectorType		s_doctypeHeaderSystemString;
+	static const XalanDOMCharVectorType&	s_doctypeHeaderSystemString;
 
 	/**
 	 * The string "<?xml version=\"".
 	 */
-	static const XalanDOMCharVectorType		s_xmlHeaderStartString;
+	static const XalanDOMCharVectorType&	s_xmlHeaderStartString;
 
 	/**
 	 * The string "<?xml version=\"".
 	 */
-	static const XalanDOMCharVectorType		s_xmlHeaderEncodingString;
+	static const XalanDOMCharVectorType&	s_xmlHeaderEncodingString;
 
 	/**
 	 * The string "\" standalone=\"".
 	 */
-	static const XalanDOMCharVectorType		s_xmlHeaderStandaloneString;
+	static const XalanDOMCharVectorType&	s_xmlHeaderStandaloneString;
 
 	/**
 	 * The string "\"?>".
 	 */
-	static const XalanDOMCharVectorType		s_xmlHeaderEndString;
+	static const XalanDOMCharVectorType&	s_xmlHeaderEndString;
 
 	/**
 	 * The string "1.0".
 	 */
-	static const XalanDOMCharVectorType		s_defaultVersionString;
+	static const XalanDOMCharVectorType&	s_defaultVersionString;
 
 	/**
 	 * The string "WINDOWS-1250".
 	 */
-	static const XalanDOMCharVectorType		s_windows1250EncodingString;
+	static const XalanDOMCharVectorType&	s_windows1250EncodingString;
 
 	/**
 	 * The string "US-ASCII".
 	 */
-	static const XalanDOMCharVectorType		s_usASCIIEncodingString;
+	static const XalanDOMCharVectorType&	s_usASCIIEncodingString;
 
 	/**
 	 * The string "ASCII".
 	 */
-	static const XalanDOMCharVectorType		s_asciiEncodingString;
+	static const XalanDOMCharVectorType&	s_asciiEncodingString;
 
 	/**
 	 * The string "UTF-8".
 	 */
-	static const XalanDOMCharVectorType		s_utf8EncodingString;
+	static const XalanDOMCharVectorType&	s_utf8EncodingString;
 
 
 	DOMCharBufferType		m_charBuf;

@@ -130,7 +130,7 @@ FunctionSystemProperty::execute(
 			}
 			else if(equals(propName, XALAN_STATIC_UCODE_STRING("vendor")))
 			{
-				result = XALAN_STATIC_UCODE_STRING("xml.apache.org");
+				result = XALAN_STATIC_UCODE_STRING("Apache Software Foundation");
 			}
 			else if(equals(propName, XALAN_STATIC_UCODE_STRING("vendor-url")))
 			{

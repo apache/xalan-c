@@ -121,9 +121,26 @@ public:
 
 	typedef DeleteFunctor<Function>		DeleteFunctorType;
 
-	XPathFunctionTable();
+	/**
+	 * Constructor.
+	 *
+	 * @param fCreateTable If true, the internal table will be created.  Otherwise, CreateTable() must be called.
+	 */
+	XPathFunctionTable(bool		fCreateTable = true);
 
 	~XPathFunctionTable();
+
+	/**
+	 * Set up the internal table.
+	 */
+	void
+	CreateTable();
+
+	/**
+	 * Destroy the internal table.
+	 */
+	void
+	DestroyTable();
 
 	/**
 	 * Retrieve the function object for a specified function name.
@@ -304,14 +321,6 @@ public:
 		}
 	}
 #endif
-
-	void
-	DestroyTable();
-
-protected:
-
-	void
-	CreateTable();
 
 private:
 

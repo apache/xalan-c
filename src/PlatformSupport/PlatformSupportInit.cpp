@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2000 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -54,135 +54,48 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-// Class header file...
-#include "TextFileOutputStream.hpp"
+
+#include "PlatformSupportInit.hpp"
 
 
 
-#include <cerrno>
-#include <strstream>
+unsigned long	PlatformSupportInit::s_initCounter = 0;
 
 
 
-#include <PlatformSupport/DOMStringHelper.hpp>
-#include <PlatformSupport/XalanAutoPtr.hpp>
-
-
-
-
-TextFileOutputStream::TextFileOutputStream(const DOMString&		theFileName) :
-	XercesTextOutputStream(),
-	m_fileName(theFileName),
-	m_handle(0)
+PlatformSupportInit::PlatformSupportInit() :
+	m_xalanDOMInit()
 {
-	const XalanArrayAutoPtr<char>	tmpName(theFileName.transcode());
+	++s_initCounter;
 
-	m_handle = fopen(tmpName.get(), "wt");
-
-    if (m_handle == 0)
+	if (s_initCounter == 1)
 	{
-		throw TextFileOutputStreamOpenException(theFileName,
-												errno);
+		initialize();
 	}
 }
 
 
 
-TextFileOutputStream::~TextFileOutputStream()
+PlatformSupportInit::~PlatformSupportInit()
 {
-    if (m_handle != 0)
+	--s_initCounter;
+
+	if (s_initCounter == 0)
 	{
-		fclose(m_handle);
+		terminate();
 	}
 }
 
 
 
 void
-TextFileOutputStream::doFlush()
+PlatformSupportInit::initialize()
 {
-	fflush(m_handle);
 }
 
 
 
 void
-TextFileOutputStream::writeData(
-			const char*		theBuffer,
-			unsigned long	theBufferLength)
-{
-	const size_t	theBytesWritten =
-		fwrite(theBuffer,
-			   1,
-			   theBufferLength,
-			   m_handle);
-
-	if(theBytesWritten != theBufferLength)
-	{
-		throw TextFileOutputStreamWriteException(m_fileName,
-												 errno);
-	}
-}
-
-
-
-static DOMString
-FormatMessageLocal(
-			const DOMString&	theMessage,
-			const DOMString&	theFileName,
-			int					theErrorCode)
-{
-	DOMString	theResult(clone(theMessage));
-
-	theResult += theFileName;
-
-#if !defined(XALAN_NO_NAMESPACES)
-using std::ostrstream;
-#endif
-
-	ostrstream	theFormatter;
-
-	theFormatter << ".  The error code was "
-				 << theErrorCode << "." << '\0';
-
-	theResult += theFormatter.str();
-
-	delete theFormatter.str();
-	return theResult;
-}
-
-
-
-TextFileOutputStreamOpenException::TextFileOutputStreamOpenException(
-		const DOMString&	theFileName,
-		int					theErrorCode) :
-	XercesTextOutputStreamException(FormatMessageLocal("Error opening file: ",
-													 theFileName,
-													 theErrorCode),
-								   XALAN_STATIC_UCODE_STRING("TextFileOutputStreamOpenException"))
-{
-}
-
-
-
-TextFileOutputStreamOpenException::~TextFileOutputStreamOpenException()
-{
-}
-
-
-
-TextFileOutputStreamWriteException::TextFileOutputStreamWriteException(
-		const DOMString&	theFileName,
-		int					theErrorCode) :
-	XercesTextOutputStreamException(FormatMessageLocal("Error writing file: ",
-													 theFileName,
-													 theErrorCode),
-								    XALAN_STATIC_UCODE_STRING("TextFileOutputStreamWriteException"))
-{
-}
-
-
-
-TextFileOutputStreamWriteException::~TextFileOutputStreamWriteException()
+PlatformSupportInit::terminate()
 {
 }

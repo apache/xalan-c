@@ -63,6 +63,11 @@
 #include <cstring>
 #include <iostream>
 #include <string>
+#include <strstream>
+
+#if !defined(NDEBUG) && defined(_MSC_VER)
+#include <crtdbg.h>
+#endif
 
 
 
@@ -74,12 +79,15 @@
 #include <XalanDOM/XalanDOMException.hpp>
 
 
+
 #include <PlatformSupport/DOMStringHelper.hpp>
 #include <PlatformSupport/DOMStringPrintWriter.hpp>
 #include <PlatformSupport/XalanAutoPtr.hpp>
 
 
+
 #include <DOMSupport/DOMSupportDefault.hpp>
+
 
 
 #include <XPath/XObjectFactoryDefault.hpp>
@@ -91,13 +99,16 @@
 #include <XPath/XPathProcessorImpl.hpp>
 
 
+
 #include <XercesPlatformSupport/XercesDOMPrintWriter.hpp>
 #include <XercesPlatformSupport/TextFileOutputStream.hpp>
 #include <XercesPlatformSupport/XercesStdTextOutputStream.hpp>
 
 
+
 #include <XercesParserLiaison/XercesParserLiaison.hpp>
 #include <XercesParserLiaison/XercesDOMSupport.hpp>
+
 
 
 #include <XMLSupport/FormatterToDOM.hpp>
@@ -107,7 +118,9 @@
 #include <XMLSupport/FormatterTreeWalker.hpp>
 
 
+
 #include <XSLT/XSLTEngineImpl.hpp>
+#include <XSLT/XSLTInit.hpp>
 #include <XSLT/XSLTInputSource.hpp>
 #include <XSLT/XSLTResultTarget.hpp>
 #include <XSLT/StylesheetRoot.hpp>
@@ -117,6 +130,7 @@
 #include <XSLT/XSLTProcessorEnvSupportDefault.hpp>
 
 
+
 //#define XALAN_USE_ICU
 #if defined(XALAN_USE_ICU)
 #include <ICUBridge/ICUBridge.hpp>
@@ -124,6 +138,8 @@
 #include <ICUBridge/ICUXalanNumberFormatFactory.hpp>
 #include <ICUBridge/ICUBridgeCollationCompareFunctor.hpp>
 #endif
+
+
 
 
 //#define XALAN_USE_BLOCK_XOBJECT_FACTORY
@@ -1006,7 +1022,14 @@ main(
 			int				argc,
 			const char*		argv[])
 {
-	/**
+#if !defined(XALAN_USE_ICU) && defined(NDEBUG) && defined(_MSC_VER)
+	_CrtSetDbgFlag(_CrtSetDbgFlag(_CRTDBG_REPORT_FLAG) | _CRTDBG_LEAK_CHECK_DF);
+
+	_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_FILE);
+	_CrtSetReportFile(_CRT_WARN, _CRTDBG_FILE_STDERR);
+#endif
+
+   /**
 	 * Command line interface to transform the XML according to 
 	 * the instructions found in the XSL document.
 	 *		-in inputXMLURL
@@ -1014,9 +1037,8 @@ main(
 	 *		-out outputFileName
 	 *		-F (Format output pretty-printed)
 	 */
-	
+
 	XMLPlatformUtils::Initialize();
-	XSLTEngineImpl::Initialize();
 
 	int				theResult = 0;
 
@@ -1050,7 +1072,10 @@ main(
 		{
 			try
 			{
+				XSLTInit	theInit;
+
 				theResult = xsltMain(theParams);
+
 			}
 			catch (XSLException& e)
 			{
@@ -1164,6 +1189,8 @@ main(
 
 		}
 	}
+
+	XMLPlatformUtils::Terminate();
 
 	return theResult;
 }

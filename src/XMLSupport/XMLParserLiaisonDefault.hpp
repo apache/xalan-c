@@ -85,12 +85,8 @@ public:
 	 *                          (toXMLString, digest, ...)
 	 *
 	 * @param theDOMSupport        instance of DOMSupport object
-	 * @param theParserDescription string description of parser
 	 */
-	XMLParserLiaisonDefault(
-			DOMSupport&				theDOMSupport,
-			const XalanDOMString&	theParserDescription =
-					XalanDOMString(XALAN_STATIC_UCODE_STRING("(No parser - generic DOM)")));
+	XMLParserLiaisonDefault(DOMSupport&		theDOMSupport);
 
 	virtual
 	~XMLParserLiaisonDefault();
@@ -152,8 +148,8 @@ public:
 	virtual void
 	setUseValidation(bool b) { m_fUseValidation = b; }
 
-	virtual const XalanDOMString&
-	getParserDescription() const { return m_ParserDescription; }
+	virtual const XalanDOMString
+	getParserDescription() const;
 
 protected:
 
@@ -175,8 +171,6 @@ private:
 
 	bool					m_fShouldExpandEntityRefs;
 	bool					m_fUseValidation;
-
-	const XalanDOMString	m_ParserDescription;
 };
 
 

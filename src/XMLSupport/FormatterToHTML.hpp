@@ -99,6 +99,18 @@ class XALAN_XMLSUPPORT_EXPORT FormatterToHTML : public FormatterToXML
 
 public:
 
+	/**
+	 * Perform static initialization.  See class XMLSupportInit.
+	 */
+	static void
+	initialize();
+
+	/**
+	 * Perform static shut down.  See class XMLSupportInit.
+	 */
+	static void
+	terminate();
+
 	enum eDummy
 	{
 		eDefaultIndentAmount = 4
@@ -161,21 +173,6 @@ public:
 			const XMLCh* const	target,
 			const XMLCh* const	data);
 
-
-protected:
-
-	// These methods are new ...
-	/**
-	 * Write an attribute string.
-	 * @param string The string to write.
-	 * @param encoding The current encoding.
-	 */
-	virtual void
-	writeAttrString(
-			const XalanDOMChar*		string,
-			const XalanDOMString&	encoding);
-
-private:
 
 	class ElemDesc
 	{
@@ -265,12 +262,29 @@ private:
 
 
 #if defined(XALAN_NO_NAMESPACES)
-	typedef map<XalanDOMString, ElemDesc, less<XalanDOMString> >	ElementFlagsMapType;
+	typedef map<XalanDOMString,
+				ElemDesc,
+				less<XalanDOMString> >			ElementFlagsMapType;
 #else
 	typedef std::map<XalanDOMString, ElemDesc>	ElementFlagsMapType;
 #endif
 
-	static const ElementFlagsMapType	s_elementFlags;
+protected:
+
+	// These methods are new ...
+	/**
+	 * Write an attribute string.
+	 * @param string The string to write.
+	 * @param encoding The current encoding.
+	 */
+	virtual void
+	writeAttrString(
+			const XalanDOMChar*		string,
+			const XalanDOMString&	encoding);
+
+private:
+
+	static const ElementFlagsMapType&	s_elementFlags;
 
 	/**
 	 * Dummy description for elements not found.
@@ -280,47 +294,47 @@ private:
 	/**
 	 * The string "<!DOCTYPE  HTML".
 	 */
-	static const XalanDOMCharVectorType		s_doctypeHeaderStartString;
+	static const XalanDOMCharVectorType&	s_doctypeHeaderStartString;
 
 	/**
 	 * The string " PUBLIC \"".
 	 */
-	static const XalanDOMCharVectorType		s_doctypeHeaderPublicString;
+	static const XalanDOMCharVectorType&	s_doctypeHeaderPublicString;
 
 	/**
 	 * The string " SYSTEM".
 	 */
-	static const XalanDOMCharVectorType		s_doctypeHeaderSystemString;
+	static const XalanDOMCharVectorType&	s_doctypeHeaderSystemString;
 
 	/**
 	 * The string "SCRIPT".
 	 */
-	static const XalanDOMCharVectorType		s_scriptString;
+	static const XalanDOMCharVectorType&	s_scriptString;
 
 	/**
 	 * The string "STYLE".
 	 */
-	static const XalanDOMCharVectorType		s_styleString;
+	static const XalanDOMCharVectorType&	s_styleString;
 
 	/**
 	 * The string "lt".
 	 */
-	static const XalanDOMCharVectorType		s_ltString;
+	static const XalanDOMCharVectorType&	s_ltString;
 
 	/**
 	 * The string "gt".
 	 */
-	static const XalanDOMCharVectorType		s_gtString;
+	static const XalanDOMCharVectorType&	s_gtString;
 
 	/**
 	 * The string "amp.
 	 */
-	static const XalanDOMCharVectorType		s_ampString;
+	static const XalanDOMCharVectorType&	s_ampString;
 
 	/**
 	 * The string "fnof".
 	 */
-	static const XalanDOMCharVectorType		s_fnofString;
+	static const XalanDOMCharVectorType&	s_fnofString;
 
 	/**
 	 * Set the attribute characters what will require special mapping.
@@ -369,8 +383,8 @@ private:
 	 *
 	 * @return map of element flags.
 	 */
-	static ElementFlagsMapType
-	createElementFlagsMap();
+	static void
+	initializeElementFlagsMap(ElementFlagsMapType&	);
 
 	/**
 	 * Process an attribute.
@@ -396,7 +410,7 @@ private:
 			const XalanDOMChar*		string,
 			const XalanDOMString	encoding);
 
-	 XalanDOMString	m_currentElementName;
+	XalanDOMString	m_currentElementName;
 
 	bool			m_inBlockElem;
 

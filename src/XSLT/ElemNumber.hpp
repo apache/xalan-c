@@ -100,17 +100,31 @@ struct Counter;
 public:
 
 #if defined(XALAN_NO_NAMESPACES)
+	typedef vector<DecimalToRoman>			DecimalToRomanVectorType;
 	typedef vector<int>						IntArrayType;
 	typedef vector<Counter>					CounterVectorType;
 	typedef map<const ElemNumber*,
 				CounterVectorType,
 				less<const ElemNumber*> >	ElemToCounterVectorMapType;
 #else
+	typedef std::vector<DecimalToRoman>		DecimalToRomanVectorType;
 	typedef std::vector<int>				IntArrayType;
 	typedef std::vector<Counter>			CounterVectorType;
 	typedef std::map<const ElemNumber*,
 					 CounterVectorType>		ElemToCounterVectorMapType;
 #endif
+
+	/**
+	 * Perform static initialization.  See class XSLTInit.
+	 */
+	static void
+	initialize();
+
+	/**
+	 * Perform static shut down.  See class XSLTInit.
+	 */
+	static void
+	terminate();
 
 	/**
 	 * Construct an object corresponding to an "xsl:number" element
@@ -338,14 +352,16 @@ private:
 	* Chars for converting integers into alpha counts.
 	* @see XSLTEngineImpl#int2alphaCount
 	*/
-	static const XalanDOMString		s_alphaCountTable;
+	static const XalanDOMString&			s_alphaCountTable;
+
+	static const XalanDOMString&			s_elalphaCountTable;
 
 	/**
 	 * Table to help in converting decimals to roman numerals.
 	 * @see XSLTEngineImpl#DecimalToRoman
 	 * @see XSLTEngineImpl#long2roman
 	 */
-	static const DecimalToRoman		s_romanConvertTable[];
+	static const DecimalToRomanVectorType&	s_romanConvertTable;
 
 
 

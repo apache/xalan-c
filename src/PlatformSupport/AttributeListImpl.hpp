@@ -148,6 +148,32 @@ public:
 	virtual bool
 	removeAttribute(const XMLCh*	name);
 
+	/**
+	 * Swap the contents of two instances.  This must _never_
+	 * throw an exception.
+	 *
+	 * @param thOther The instance with which to swap.
+	 */
+	void
+	swap(AttributeListImpl&		theOther)
+	{
+		m_AttributeKeyMap.swap(theOther.m_AttributeKeyMap);
+
+		m_AttributeVector.swap(theOther.m_AttributeVector);
+	}
+
+	/**
+	 * Reserve room for the given number of
+	 * attributes.
+	 *
+	 * @param theCount The number to reserve
+	 */
+	void
+	reserve(unsigned int	theCount)
+	{
+		m_AttributeVector.reserve(theCount);
+	}
+
 protected:
 
 	// This is not implemented.
