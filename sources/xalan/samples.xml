@@ -100,7 +100,7 @@
   </s2><anchor name="streamtransform"/>
   <s2 title="StreamTransform">
   <p>What it does: The StreamTransform class processes input streams containing a stylesheet and an XML document, and
-   writes the transformation output to an output stream.</p>
+   writes the transformation output to an output stream. This sample illustrates the process for working with stylesheets and documents that you assemble in memory.</p>
       <p>You can run it from the SimpleTransform subdirectory with</p>
     <p><code>StreamTransform</code></p>
   </s2><anchor name="usestylesheetparam"/>    

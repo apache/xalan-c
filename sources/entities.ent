@@ -8,12 +8,12 @@
 <!ENTITY xslt4c-aixlib "libxalan-c1_1.a">
 <!ENTITY xslt4c-hplib "libxalan-c1_1.sl">
 <!ENTITY xml4c "Xerces-C++">
-<!ENTITY xml4c-used "Xerces-C++ version 1.3.0">
-<!ENTITY xml4c-windll "xerces-c_1_3.dll">
-<!ENTITY xml4c-winlib "xerces-c_1.lib">
-<!ENTITY xml4c-linuxlib "libxerces-c1_3.so">
-<!ENTITY xml4c-aixlib "libxerces-c1_3.a">
-<!ENTITY xml4c-hplib "libxerces-c1_3.sl">
+<!ENTITY xml4c-used "Xerces-C++ version 1.3.5">
+<!ENTITY xml4c-windll "xerces-c1_3_5.dll">
+<!ENTITY xml4c-winlib "xerces-c1_3_5.lib">
+<!ENTITY xml4c-linuxlib "libxerces-c1_3_5.so">
+<!ENTITY xml4c-aixlib "libxerces-c1_3_5.a">
+<!ENTITY xml4c-hplib "libxerces-c1_3_5.sl">
 <!ENTITY xslt4j "Xalan-Java">
 <!ENTITY icu-used "International Components for Unicode(ICU) 1.6 source files">
 <!ENTITY icu-windlls "icui18n.dll, icuuc.dll">

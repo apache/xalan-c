@@ -2,7 +2,8 @@
 <!DOCTYPE s1 SYSTEM "sbk:/style/dtd/document.dtd"[
 <!ENTITY done-c SYSTEM "DONE">
 <!ENTITY status-c SYSTEM "STATUS">
-<!ENTITY bugs-c SYSTEM "BUGS">]>
+<!ENTITY bugs-c SYSTEM "BUGS">
+<!ENTITY history-c SYSTEM "history.xml">]>]>
 
 <!--
  * The Apache Software License, Version 1.1
@@ -66,6 +67,7 @@
   <li><link anchor="status">Status</link></li>
   <li><link anchor="build">Build Notes</link></li>
   <li><link anchor="contact">Getting in touch</link></li>
+  <li><link anchor="history">History of software changes</link></li>  
  </ul>
  <anchor name="status"/>
  <s2 title="Status">
@@ -189,4 +191,8 @@ where <ref>targ</ref> is <code>Samples</code> (all the samples), <code>CompileSt
   <p>Your feedback is more than welcome. Offers of help are even more so! Perhaps you would like to contribute to the ongoing development, testing, or documentation of &xslt4c;.</p> 
 <p>Please email your comments, questions, suggestions, bug reports, and offers to help to <human-resource-ref idref="xalandev"/>.</p>
  </s2>
+ </s2><anchor name="history"/>
+ <s2 title="Cumulative history of software changes">
+   &history-j;
+ </s2> 
 </s1>

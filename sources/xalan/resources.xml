@@ -23,7 +23,7 @@
   <resource id="xslt4c-win32-download" title="&xslt4c-dist;-win32.zip" location="http://xml.apache.org/dist/xalan-c/&xslt4c-dist;-win32.zip"/>
   <resource id="xslt4c-linux-download" title="&xslt4c-dist;-linux.tar.gz" location="http://xml.apache.org/dist/xalan-c/&xslt4c-dist;-linux.tar.gz"/>
 <resource id="xslt4c-aix-download" title="&xslt4c-dist;-aix.tar.gz" location="http://xml.apache.org/dist/xalan-c/&xslt4c-dist;-aix.tar.gz"/>
-<resource id="xslt4c-hp-download" title="&xslt4c-dist;-hp.tar.gz" location="http://xml.apache.org/dist/xalan-c/&xslt4c-dist;-hp.tar.gz"/>
+<resource id="xslt4c-hp-ux-download" title="&xslt4c-dist;-hp-ux.tar.gz" location="http://xml.apache.org/dist/xalan-c/&xslt4c-dist;-hp-ux.tar.gz"/>
   
   <resource id="icu" title="International Components for Unicode (ICU)" location="http://oss.software.ibm.com/developerworks/opensource/icu/project/index.html"/>
 <resource id="icu-download" title="International Components for Unicode (ICU) 1.6 source files" location="http://oss.software.ibm.com/developerworks/opensource/icu/project/download/index.html"/>

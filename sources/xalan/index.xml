@@ -64,8 +64,9 @@
     <p>Xalan is an XSLT processor for transforming XML documents into HTML, text, or other XML
      document types.</p>
     <p>&xslt4c-current; is a robust implementation of the W3C Recommendations 
-    for XSL Transformations (XSLT) and the XML Path Language (XPath). It uses the &xml4c-used;
-    XML parser.</p>
+    for XSL Transformations (XSLT) and the XML Path Language (XPath). It includes a custom release of the 
+    &xml4c; XML parser: &xml4c-used;. In addition to adding a build for HP-UX 11, the focus for this release 
+    is on bug fixes and performance enhancements. For the details, see the <link idref="readme">Release Notes</link>.</p>
 	</s2>
   
   <s2 title="How do I get it?">
@@ -91,7 +92,7 @@
       </tr>
       <tr>
         <td>HP-UX 11</td>
-        <td><resource-ref idref="xslt4c-hp-download"/></td>
+        <td><resource-ref idref="xslt4c-hp-ux-download"/></td>
       </tr>      
      </table>
   <p>Volunteers are more than welcome to help develop builds for other platforms!</p>
