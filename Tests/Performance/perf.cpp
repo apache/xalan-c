@@ -59,9 +59,9 @@
 #include <strstream>
 #include <stdio.h>
 #include <direct.h>
-//#include <stdlib.h>
 
 
+// This is here for memory leak testing.
 #if !defined(NDEBUG) && defined(_MSC_VER)
 #include <crtdbg.h>
 #endif
@@ -105,19 +105,6 @@
 #endif
 
 
-// This is here for memory leak testing.
-#if defined(_DEBUG)
-#include <crtdbg.h>
-#endif
-
-
-#if defined(XALAN_NO_NAMESPACES)
-	typedef vector<XalanDOMString>		FileNameVectorType;
-#else
-	typedef std::vector<XalanDOMString>	FileNameVectorType;
-#endif
-
-
 #if defined(XALAN_NO_NAMESPACES)
 	typedef map<XalanDOMString, XalanDOMString, less<XalanDOMString> >	Hashtable;
 #else
@@ -132,7 +119,6 @@ const char* const 	excludeStylesheets[] =
 	//"large-cem10k.xsl",
 	0
 };
-const XalanDOMString	pathSep(XalanDOMString("\\"));
 
 
 inline bool
@@ -260,16 +246,6 @@ eTOeTransform(const XSLTInputSource&		inputSource,
 	return endTime - startTime;
 }
 
-void
-addMetricToAttrs(char* desc, double theMetric, Hashtable& attrs)
-{
-	XalanDOMString	temp;
-
-	DoubleToDOMString(theMetric, temp);
-	attrs.insert(Hashtable::value_type(XalanDOMString(desc), temp));
-
-	return;
-}
 
 void
 printArgOptions()
@@ -290,30 +266,10 @@ printArgOptions()
 		 << endl;
 }
 
-void
-checkAndCreateDir(XalanDOMString directory )
-{
-char buffer[_MAX_PATH];
-
-	_getcwd( buffer, _MAX_PATH );
-
-
-	if ( (_chdir(c_str(TranscodeToLocalCodePage(directory)))) )
-	{
-		//cout << "Couldn't change to " << directory << ", will create it." << endl;
-		if ( !(_mkdir(c_str(TranscodeToLocalCodePage(directory)))))
-		{
-			cout << directory << " created." << endl;
-		}
-	}
-
-	_chdir(buffer);
-}
-
-
 bool
 getParams(int argc, 
 		  const char*	argv[],
+		  FileUtility& f,
 		  XalanDOMString& basedir,
 		  XalanDOMString& outdir,
 		  XalanDOMString& category,
@@ -332,8 +288,17 @@ bool fSetOut = true;	// Set default output directory
 	}
 	else
 	{
-		assign(basedir, XalanDOMString(argv[1]));
-		insert(basedir, 0, pathSep);
+		if (f.checkDir(pathSep + XalanDOMString(argv[1])))
+		{
+			assign(basedir, XalanDOMString(argv[1]));
+			insert(basedir, 0, pathSep);
+		}
+		else
+		{
+			cout << endl << "Given base directory \"" << argv[1] << "\" does not exist" << endl;
+			printArgOptions();
+			return false;
+		}
 	}
 
 	// Get the rest of the arguments in any order.
@@ -347,7 +312,7 @@ bool fSetOut = true;	// Set default output directory
 				assign(outdir, XalanDOMString(argv[i]));
 				insert(outdir, 0, XalanDOMString("\\"));
 				append(outdir, XalanDOMString("\\"));
-				checkAndCreateDir(outdir);
+				f.checkAndCreateDir(outdir);
 				fSetOut = false;
 			}
 			else
@@ -402,7 +367,7 @@ bool fSetOut = true;	// Set default output directory
 		unsigned int ii = lastIndexOf(basedir,charAt(pathSep,0));
 		outdir = substring(basedir, 0, ii+1);
 		append(outdir,XalanDOMString("PERF-RESULTS\\"));
-		checkAndCreateDir(outdir);
+		f.checkAndCreateDir(outdir);
 	}
 	
 	// Add the path seperator to the end of the base directory
@@ -423,36 +388,26 @@ main(
 	_CrtSetReportFile(_CRT_WARN, _CRTDBG_FILE_STDERR);
 #endif
 
-	Hashtable runAttrs;
-	long iterCount = 5;	// Default number of iterations
-	bool skip = true;	// Default will skip long tests
+	Hashtable runAttrs;		// Attribute list for perfdata element
+	long iterCount = 5;		// Default number of iterations
+	bool skip = true;		// Default will skip long tests
 
 	XalanDOMString  category;	// Test all of base dir by default
-	XalanDOMString  baseDir;	//(XALAN_STATIC_UCODE_STRING("\\xslt\\xsl-test\\perf\\"));
-	XalanDOMString  outputRoot;	//(XALAN_STATIC_UCODE_STRING(""));
+	XalanDOMString  baseDir;	
+	XalanDOMString  outputRoot;	
 
+	FileUtility f;
 
-	if (getParams(argc, argv, baseDir, outputRoot, category, skip, iterCount) == true)
+	if (getParams(argc, argv, f, baseDir, outputRoot, category, skip, iterCount) == true)
 	{
-
-		FileUtility f;
 
 		// Generate Unique Run id and processor info
 		const XalanDOMString UniqRunid = f.GenerateUniqRunid();
-
 		const XalanDOMString processorType(XALAN_STATIC_UCODE_STRING("XalanC"));
 
-		// Defined basic constants for file manipulation 
-
-		const XalanDOMString  XSLSuffix(XALAN_STATIC_UCODE_STRING(".xsl"));
-		const XalanDOMString  XMLSuffix(XALAN_STATIC_UCODE_STRING(".xml"));
+		// Defined basic constants for file manipulation and open results file
 		const XalanDOMString  resultFilePrefix(XalanDOMString("cpp"));
 		const XalanDOMString  resultsFile(outputRoot + resultFilePrefix + UniqRunid + XMLSuffix);
-
-
-
-		// Get the list of Directories that are below perf
-		const FileNameVectorType dirs = f.getDirectoryNames(baseDir);
 
 		XMLFileReporter	logFile(resultsFile);
 		logFile.logTestFileInit("Performance Testing - Reports performance times for single transform, and average for multiple transforms using compiled stylesheet");
@@ -460,7 +415,7 @@ main(
 		// Create initial entry in results file that has info somewhat equivlent to what XalanJ
 		// reports in the hashtable entries.
 		runAttrs.insert(Hashtable::value_type(XalanDOMString("UniqRunid"), UniqRunid));
-		addMetricToAttrs("Iterations",iterCount, runAttrs);
+		logFile.addMetricToAttrs("Iterations",iterCount, runAttrs);
 		logFile.logElement(10, "perfdata", runAttrs, "xxx");
 
 		try
@@ -473,6 +428,9 @@ main(
 
 			{
 				XSLTInit	theInit;  
+		
+				// Get the list of Directories that are below perf and iterate through them
+				const FileNameVectorType dirs = f.getDirectoryNames(baseDir);
 
 				for(FileNameVectorType::size_type	j = 0; j < dirs.size(); j++)
 				{
@@ -486,7 +444,7 @@ main(
 
 					// Check that output directory is there.
 					const XalanDOMString  theOutputDir = outputRoot + dirs[j];
-					checkAndCreateDir(theOutputDir);
+					f.checkAndCreateDir(theOutputDir);
 
 					logFile.logTestCaseInit(XalanDOMString("Performance Directory: ") + dirs[j] ); 
 					const FileNameVectorType files = f.getTestFileNames(baseDir, dirs[j], false);
@@ -564,7 +522,7 @@ main(
 						// Calculate & report performance on stylesheet parse to console and log file.
 						timeinMilliseconds = calculateElapsedTime(startTime, endTime);
 						cout << "   XSL parse: " << timeinMilliseconds << " milliseconds." << endl;
-						addMetricToAttrs("parsexsl",timeinMilliseconds, attrs);						
+						logFile.addMetricToAttrs("parsexsl",timeinMilliseconds, attrs);						
 
 						
 						// Parse the input XML and report how long it took...                             
@@ -577,7 +535,7 @@ main(
 						// Calculate & report performance on source document parse to console and log file.
 						timeinMilliseconds = calculateElapsedTime(startTime, endTime);
 						cout << "   XML parse: " << timeinMilliseconds << " milliseconds." << endl;
-						addMetricToAttrs("parsexml",timeinMilliseconds, attrs);
+						logFile.addMetricToAttrs("parsexml",timeinMilliseconds, attrs);
 
 
 
@@ -605,7 +563,7 @@ main(
 	
 						// Output single etoe transform time to console and result log
 						cout << "   Single eTOe: " << etoetran << " milliseconds." << endl;
-						addMetricToAttrs("etoe", etoetran, attrs);
+						logFile.addMetricToAttrs("etoe", etoetran, attrs);
 
 
 						// Perform a single transform using parsed stylesheet and unparsed xml source, report results...
@@ -623,7 +581,7 @@ main(
 
 						// Output single transform time to console and result log
 						cout << "   One transform w/Parsed XSL: " << timeinMilliseconds << " milliseconds." << endl;
-						addMetricToAttrs("single",timeinMilliseconds, attrs);
+						logFile.addMetricToAttrs("single",timeinMilliseconds, attrs);
 
 
 
@@ -649,7 +607,7 @@ main(
 						// Output average transform time to console and result log
 						cout << "   Avg: " << theAverage << " for " << iterCount << " iter's w/Parsed XML" << endl;
 
-						addMetricToAttrs("avgparsedxml",theAverage, attrs);
+						logFile.addMetricToAttrs("avgparsedxml",theAverage, attrs);
 
 						// SECOND: Parsed Stylesheet and UnParsed XML Source.
 						// This is currently how the XalanJ 2.0 is performing transforms,
@@ -670,7 +628,7 @@ main(
 						theAverage = calculateAvgTime(accmTime, iterCount);
 						cout << "   Avg: " << theAverage << " for " << iterCount << " iter's w/UnParsed XML" << endl;
 
-						addMetricToAttrs("avgunparsedxml",theAverage, attrs);
+						logFile.addMetricToAttrs("avgunparsedxml",theAverage, attrs);
 
 						// THIRD: Neither Stylesheet nor XML Source are parsed.
 						// Perform multiple etoe transforms and calculate the average ...
@@ -693,7 +651,7 @@ main(
 						// Output average transform time to console and result log
 						cout << "   Avg: " << theAverage << " for " << iterCount << " iter's of eToe" << endl;
 
-						addMetricToAttrs("avgetoe",theAverage, attrs);
+						logFile.addMetricToAttrs("avgetoe",theAverage, attrs);
 
 
 						logFile.logElement(10, "perf", attrs, "xxx");
@@ -719,9 +677,6 @@ main(
 			cerr << "Exception caught!!!" << endl  << endl;
 		}
 		
-
-
-		//XMLPlatformUtils::Terminate();
 
 	} //if getParams
 
