@@ -1002,7 +1002,7 @@ ElemNumber::traditionalAlphaCount(
 			XalanDOMCharVectorType::size_type	j = 0;
 
 			// need to start filling the table up at index 1
-			for (0; j < thelettersSize; j++)
+			for (; j < thelettersSize; j++)
 			{
 				table[j + 1] = theletters[j];
 			}
@@ -1605,7 +1605,9 @@ addTraditionalElalphaBundle(ElemNumber::NumberingResourceBundleMapType&		theBund
 		theElalphaDigitsTable,
 		theDigitsTableTable);
 
-	theBundleMap[elalphaNumberType] = theElaphaBundle;
+	typedef ElemNumber::NumberingResourceBundleMapType::value_type	value_type;
+
+	theBundleMap.insert(value_type(elalphaNumberType, theElaphaBundle));
 }
 
 
