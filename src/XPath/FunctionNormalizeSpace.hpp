@@ -57,156 +57,58 @@
 #if !defined(FUNCTIONNORMALIZE_HEADER_GUARD_1357924680)
 #define FUNCTIONNORMALIZE_HEADER_GUARD_1357924680
 
+
+
 // Base header file.  Must be first.
 #include <XPath/XPathDefinitions.hpp>
 
 
 
-#include <PlatformSupport/DOMStringHelper.hpp>
-#include <PlatformSupport/XalanUnicode.hpp>
-
-
-
 // Base class header file...
-#include <XPath/FunctionDefaultStringArgument.hpp>
+#include <XPath/Function.hpp>
 
 
 
 #include <XPath/NodeRefListBase.hpp>
-#include <XPath/XObject.hpp>
-#include <XPath/XObjectFactory.hpp>
-#include <XPath/XPathExecutionContext.hpp>
 
 
 
 /**
  * XPath implementation of "normalize-space" function.
  */
-//
-// These are all inline, even though
-// there are virtual functions, because we expect that they will only be
-// needed by the XPath class.
-class XALAN_XPATH_EXPORT FunctionNormalizeSpace : public FunctionDefaultStringArgument
+class XALAN_XPATH_EXPORT FunctionNormalizeSpace : public Function
 {
 public:
 
-	// These methods are inherited from FunctionDefaultStringArgument ...
+	// These methods are inherited from Function ...
+	FunctionNormalizeSpace();
 
-	virtual XObject*
+	virtual
+	~FunctionNormalizeSpace();
+
+	XObject*
 	execute(
 			XPathExecutionContext&			executionContext,
-			XalanNode*						context,
-			int								/* opPos */,
-			const XObjectArgVectorType&		args)
-	{
-		XalanDOMString	theSourceString;
+			XalanNode*						context,			
+			const XObject*					arg1);
 
-		if(args.size() > 2)
-		{
-			executionContext.error("The normalize-space() function takes zero arguments or one argument!",
-								   context);
+	XObject*
+	execute(
+			XPathExecutionContext&			executionContext,
+			XalanNode*						context);	
 
-			// Dummy return...
-			return 0;
-		}
-		else if (args.size() == 1)
-		{
-			return normalize(executionContext, args[0]->str());
-		}
-		else if (context == 0)
-		{
-			executionContext.error("The normalize-space() function requires a non-null context node!",
-								   context);
-
-			// Dummy return...
-			return 0;
-		}
-		else
-		{
-			return normalize(executionContext, getDefaultStringArgument(executionContext, *context));
-		}
-	}
-
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
 	virtual Function*
-#else
-	virtual FunctionNormalizeSpace*
-#endif
-	clone() const
-	{
-		return new FunctionNormalizeSpace(*this);
-	}
+	clone() const;
 
 private:
 
-	XObject*
-	normalize(
-			XPathExecutionContext&	executionContext,
-			const XalanDOMString&	theString)
-	{
-		const unsigned int		theStringLength = length(theString);
+	const XalanDOMString
+	NormalizeSpace(
+			const XalanDOMString& theSourceString) const;
 
-		XalanDOMChar			thePreviousChar = 0;
+	const XalanDOMString
+	getError() const;
 
-		// A vector to contain the new characters.  We'll use it to construct
-		// the result string.
-#if !defined(XALAN_NO_NAMESPACES)
-		using std::vector;
-#endif
-
-#if defined(XALAN_NO_NAMESPACES)
-		typedef vector<XalanDOMChar>		VectorType;
-#else
-		typedef std::vector<XalanDOMChar>	VectorType;
-#endif
-
-		// A vector to contain the result.
-		VectorType				theVector;
-
-		// The result string can only be as large as the source string, so
-		// just reserve the space now.
-		theVector.reserve(theStringLength);
-
-		// OK, strip out any multiple spaces...
-		for (unsigned int i = 0; i < theStringLength; i++)
-		{
-			const XalanDOMChar	theCurrentChar = charAt(theString, i);
-
-			if (isXMLWhitespace(theCurrentChar) == true)
-			{
-				// If the previous character wasn't a space, and we've
-				// encountered some non-space characters, then push the
-				// space.
-				if (isXMLWhitespace(thePreviousChar) == false && theVector.size() > 0)
-				{
-					theVector.push_back(XalanDOMChar(XalanUnicode::charSpace));
-				}
-			}
-			else
-			{
-				theVector.push_back(theCurrentChar);
-			}
-
-			thePreviousChar = theCurrentChar;
-		}
-
-		VectorType::size_type	theSize = theVector.size();
-
-		if (theSize == 0)
-		{
-			return executionContext.getXObjectFactory().createString(XalanDOMString());
-		}
-		else
-		{
-			if (isXMLWhitespace(theVector.back()) == true)
-			{
-				// The last character is a space, so remove it
-				--theSize;
-			}
-
-			return executionContext.getXObjectFactory().createString(XalanDOMString(theVector.begin(), theSize));
-		}
-	}
 
 	// Not implemented...
 	FunctionNormalizeSpace&
