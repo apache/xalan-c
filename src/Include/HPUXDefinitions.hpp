@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -76,6 +76,7 @@
 #define XALAN_OLD_STREAMS
 #define XALAN_NO_NAMESPACES
 #define XALAN_NO_STD_ALLOCATORS
+#define XALAN_SGI_BASED_STL
 #endif
 
 #define XALAN_XALANDOMCHAR_USHORT_MISMATCH
