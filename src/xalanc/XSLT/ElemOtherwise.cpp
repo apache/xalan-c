@@ -76,7 +76,27 @@ ElemOtherwise::getElementName() const
 }
 
 
+#if defined(ITERATIVE_EXECUTION)
+const ElemTemplateElement*
+ElemOtherwise::startElement(StylesheetExecutionContext&	executionContext) const
+{
+	ElemTemplateElement::startElement(executionContext);
 
+	return beginExecuteChildren(executionContext);
+}
+
+
+
+void
+ElemOtherwise::endElement(StylesheetExecutionContext&	executionContext) const
+{
+	endExecuteChildren(executionContext);
+}
+#endif
+
+
+
+#if !defined(ITERATIVE_EXECUTION)
 void
 ElemOtherwise::execute(StylesheetExecutionContext&	executionContext) const
 {
@@ -84,7 +104,7 @@ ElemOtherwise::execute(StylesheetExecutionContext&	executionContext) const
 
 	executeChildren(executionContext);
 }
-
+#endif
 
 
 XALAN_CPP_NAMESPACE_END

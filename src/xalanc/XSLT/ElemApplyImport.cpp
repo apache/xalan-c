@@ -85,6 +85,55 @@ ElemApplyImport::getElementName() const
 
 
 
+#if defined(ITERATIVE_EXECUTION)
+const ElemTemplateElement*
+ElemApplyImport::startElement(StylesheetExecutionContext&	executionContext) const
+{
+	if (executionContext.getCurrentTemplate() == 0)
+	{
+		executionContext.error(XalanMessageLoader::getMessage(XalanMessages::NoCurrentTemplate),
+				executionContext.getCurrentNode(), getLocator());
+	}
+
+	ElemTemplateElement::startElement(executionContext);
+
+	executionContext.pushInvoker(this);
+
+	executionContext.pushContextMarker();
+	
+	return findTemplateToTransformChild(	
+			executionContext,
+			*this,
+			0,
+			executionContext.getCurrentNode());
+}
+
+
+
+void
+ElemApplyImport::endElement(StylesheetExecutionContext&		executionContext) const
+{
+	executionContext.popContextMarker();
+
+	executionContext.popInvoker();
+
+	ElemTemplateElement::endElement(executionContext);
+}
+
+
+
+const ElemTemplateElement*
+ElemApplyImport::getNextChildElemToExecute(
+		StylesheetExecutionContext&		/* execution Context */,
+		const ElemTemplateElement*		/* currentElem */) const
+{
+	return 0;
+}
+#endif
+
+
+
+#if !defined(ITERATIVE_EXECUTION)
 void
 ElemApplyImport::execute(StylesheetExecutionContext&	executionContext) const
 {
@@ -107,6 +156,7 @@ ElemApplyImport::execute(StylesheetExecutionContext&	executionContext) const
 			0,
 			sourceNode);
 }
+#endif
 
 
 

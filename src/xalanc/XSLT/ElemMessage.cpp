@@ -95,6 +95,51 @@ ElemMessage::getElementName() const
 
 
 
+#if defined(ITERATIVE_EXECUTION)
+const ElemTemplateElement*
+ElemMessage::startElement(StylesheetExecutionContext&		executionContext) const
+{
+	ElemTemplateElement::startElement(executionContext);
+	
+	XalanDOMString& theResult = executionContext.getAndPushCachedString();
+
+	return beginChildrenToString(executionContext,theResult);
+}
+
+
+
+void
+ElemMessage::endElement(StylesheetExecutionContext&		executionContext) const
+{
+	endChildrenToString(executionContext);
+
+	XalanDOMString& theResult = executionContext.getAndPopCachedString();
+
+	const LocatorType* const	theLocator = getLocator();
+
+	executionContext.message(
+			theResult,
+			executionContext.getCurrentNode(),
+			theLocator);
+
+	if (m_terminate == true)
+	{
+		if (theLocator != 0)
+		{
+			throw ElemMessageTerminateException(*theLocator, theResult);
+		}
+		else
+		{
+			throw ElemMessageTerminateException(theResult);
+		}
+	}
+
+}
+#endif
+
+
+
+#if !defined(ITERATIVE_EXECUTION)
 void
 ElemMessage::execute(StylesheetExecutionContext&	executionContext) const
 {
@@ -126,7 +171,7 @@ ElemMessage::execute(StylesheetExecutionContext&	executionContext) const
 		}
 	}
 }
-
+#endif
 
 
 ElemMessage::ElemMessageTerminateException::ElemMessageTerminateException(const XalanDOMString&		theMessage) :

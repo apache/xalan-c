@@ -89,11 +89,49 @@ public:
 			StylesheetConstructionContext&	constructionContext,
 			const NamespacesHandler&		theParentHandler);
 
+#if defined(ITERATIVE_EXECUTION)
+		virtual const ElemTemplateElement*
+	startElement(StylesheetExecutionContext&	executionContext) const;
+
+	virtual void
+	endElement(StylesheetExecutionContext&		executionContext) const;
+
+	virtual const ElemTemplateElement*
+	getNextChildElemToExecute(
+			StylesheetExecutionContext&		executionContext,
+			const ElemTemplateElement*		currentElem) const;
+
+	virtual const ElemTemplateElement*
+	getFirstChildElemToExecute(
+			StylesheetExecutionContext&		executionContext) const;
+#else
 	virtual void
 	execute(StylesheetExecutionContext&		executionContext) const;
+#endif
+
 
 protected:
 
+#if defined(ITERATIVE_EXECUTION)
+	/**
+	 * Get the next attribute set to execute.
+	 * 
+	 * @param executionContext	context to execute this element
+	 * @returns a pointer to the attribute set element,  0 if no more attribute sets
+	 */
+	const ElemTemplateElement*
+	getNextAttributeSet(
+			StylesheetExecutionContext&		executionContext) const;
+	
+	/**
+	 * Evalute the AVTs for this element
+	 * 
+	 * @param executionContext	context to execute this element
+	 */
+	virtual void
+	evaluateAVTs(
+			StylesheetExecutionContext&			executionContext) const;
+#else
 	/** 
 	 * Execute and conditionally apply any attribute sets.  To be used
 	 * by deriving classes who want ElemUse to do any default execution
@@ -107,6 +145,7 @@ protected:
 	doExecute(
 			StylesheetExecutionContext&		executionContext,
 			bool							applyAttributeSets) const;
+#endif
 
 private:
 

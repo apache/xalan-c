@@ -28,6 +28,7 @@
 
 
 #include <xalanc/PlatformSupport/DOMStringHelper.hpp>
+#include <xalanc/PlatformSupport/DOMStringPrintWriter.hpp>
 #include <xalanc/PlatformSupport/XalanOutputStream.hpp>
 #include <xalanc/PlatformSupport/XalanNumberFormat.hpp>
 #include <xalanc/PlatformSupport/XalanOutputStreamPrintWriter.hpp>
@@ -51,6 +52,7 @@
 #include <xalanc/XMLSupport/FormatterToXML_UTF8.hpp>
 #include <xalanc/XMLSupport/FormatterToXML_UTF16.hpp>
 #include <xalanc/XMLSupport/FormatterToHTML.hpp>
+#include <xalanc/XMLSupport/FormatterToText.hpp>
 #include <xalanc/XMLSupport/XMLParserLiaison.hpp>
 
 
@@ -124,20 +126,38 @@ StylesheetExecutionContextDefault::StylesheetExecutionContextDefault(
 	m_keyDeclarationSet(),
 	m_countersTable(),
 	m_sourceTreeResultTreeFactory(),
-	m_mode(0),
 	m_currentTemplateStack(),
+	m_copyTextNodesOnlyStack(),
+	m_modeStack(),
+	m_currentIndexStack(),
+#if defined(ITERATIVE_EXECUTION)
+	m_xobjectPtrStack(),
+	m_mutableNodeRefListStack(),
+	m_nodesToTransformStack(),
+	m_processCurrentAttributeStack(),
+	m_executeIfStack(),
+	m_stringStack(),
+	m_formatterToTextStack(),
+	m_skipElementAttributesStack(),
+	m_formatterToSourceTreeStack(),
+	m_paramsVectorStack(),
+	m_elementInvokerStack(),
+	m_useAttributeSetIndexesStack(),
+	m_nodeSorter(),
+#else
 	m_formatterToTextCache(),
 	m_formatterToSourceTreeCache(),
 	m_nodeSorterCache(),
+#endif
 	m_indentAmount(-1),
 	m_xresultTreeFragAllocator(eXResultTreeFragAllocatorBlockSize),
 	m_documentFragmentAllocator(eDocumentFragmentAllocatorBlockSize),
 	m_documentAllocator(eDocumentAllocatorBlockSize),
 	m_usePerInstanceDocumentFactory(false),
-	m_cloneTextNodesOnly(false),
 	m_escapeURLs(eEscapeURLsDefault),
 	m_omitMETATag(eOmitMETATagDefault),
 	m_hasStripOrPreserveSpace(false)
+
 {
     m_currentTemplateStack.push_back(0);
 }
@@ -167,17 +187,34 @@ StylesheetExecutionContextDefault::StylesheetExecutionContextDefault(
 	m_keyDeclarationSet(),
 	m_countersTable(),
 	m_sourceTreeResultTreeFactory(),
-	m_mode(0),
 	m_currentTemplateStack(),
+	m_copyTextNodesOnlyStack(),
+	m_modeStack(),
+	m_currentIndexStack(),
+#if defined(ITERATIVE_EXECUTION)
+	m_xobjectPtrStack(),
+	m_mutableNodeRefListStack(),
+	m_nodesToTransformStack(),
+	m_processCurrentAttributeStack(),
+	m_executeIfStack(),
+	m_stringStack(),
+	m_formatterToTextStack(),
+	m_skipElementAttributesStack(),
+	m_formatterToSourceTreeStack(),
+	m_paramsVectorStack(),
+	m_elementInvokerStack(),
+	m_useAttributeSetIndexesStack(),
+	m_nodeSorter(),
+#else
 	m_formatterToTextCache(),
 	m_formatterToSourceTreeCache(),
 	m_nodeSorterCache(),
+#endif
 	m_indentAmount(-1),
 	m_xresultTreeFragAllocator(eXResultTreeFragAllocatorBlockSize),
 	m_documentFragmentAllocator(eDocumentFragmentAllocatorBlockSize),
 	m_documentAllocator(eDocumentAllocatorBlockSize),
 	m_usePerInstanceDocumentFactory(false),
-	m_cloneTextNodesOnly(false),
 	m_escapeURLs(eEscapeURLsDefault),
 	m_hasStripOrPreserveSpace(false)
 {
@@ -206,16 +243,17 @@ StylesheetExecutionContextDefault::getQuietConflictWarnings() const
 bool
 StylesheetExecutionContextDefault::getCopyTextNodesOnly() const
 {
-	return m_cloneTextNodesOnly;
+	if (m_copyTextNodesOnlyStack.size() == 0)
+	{
+		return false;
+	}
+	else
+	{
+		return m_copyTextNodesOnlyStack.back();
+	}
 }
 
 
-
-void
-StylesheetExecutionContextDefault::setCopyTextNodesOnly(bool	fValue)
-{
-	m_cloneTextNodesOnly = fValue;
-}
 
 
 
@@ -263,16 +301,32 @@ StylesheetExecutionContextDefault::setStylesheetRoot(const StylesheetRoot*	theSt
 const XalanQName*
 StylesheetExecutionContextDefault::getCurrentMode() const
 {
-	return m_mode;
+	if (m_modeStack.size() == 0) 
+	{
+		return 0;
+	}
+	else
+	{
+		return m_modeStack.back();
+	}
 }
 
 
 
 void
-StylesheetExecutionContextDefault::setCurrentMode(const XalanQName*		theMode)
+StylesheetExecutionContextDefault::pushCurrentMode(const XalanQName*		theMode)
 {		
-	m_mode = theMode;
+	m_modeStack.push_back(theMode);
 }
+
+
+
+void
+StylesheetExecutionContextDefault::popCurrentMode()
+{		
+	m_modeStack.pop_back();
+}
+
 
 
 
@@ -611,7 +665,7 @@ StylesheetExecutionContextDefault::createVariable(
 }
 
 
-
+#if !defined(ITERATIVE_EXECUTION)
 const XObjectPtr
 StylesheetExecutionContextDefault::createVariable(
 			const ElemTemplateElement&	templateChild,
@@ -619,6 +673,7 @@ StylesheetExecutionContextDefault::createVariable(
 {
 	return createXResultTreeFrag(templateChild, sourceNode);
 }
+#endif
 
 
 
@@ -682,6 +737,7 @@ StylesheetExecutionContextDefault::pushVariable(
 
 
 
+#if !defined(ITERATIVE_EXECUTION)
 void
 StylesheetExecutionContextDefault::pushVariable(
 			const XalanQName&			name,
@@ -689,8 +745,10 @@ StylesheetExecutionContextDefault::pushVariable(
 			const ElemTemplateElement&	templateChild,
 			XalanNode*					sourceNode)
 {
+
 	m_variablesStack.pushVariable(name, createXResultTreeFrag(templateChild, sourceNode), element);
 }
+#endif
 
 
 
@@ -734,9 +792,45 @@ StylesheetExecutionContextDefault::clearTopLevelParams()
 
 
 
+#if defined(ITERATIVE_EXECUTION)
+void
+StylesheetExecutionContextDefault::beginParams()
+{
+	ParamsVectorType  newParamsVector;
+	m_paramsVectorStack.push_back(newParamsVector);
+}
+
+
+
+void
+StylesheetExecutionContextDefault::endParams()
+{
+	assert(m_paramsVectorStack.size() > 0);
+
+	m_variablesStack.pushParams(m_paramsVectorStack.back());
+
+	m_paramsVectorStack.pop_back();
+}
+
+	
+
+void
+StylesheetExecutionContextDefault::pushParam(
+		const XalanQName& qName,
+		const XObjectPtr& theValue)
+{
+	ParamsVectorType& currentParamVector = m_paramsVectorStack.back();
+	
+	currentParamVector.push_back(ParamsVectorType::value_type(&qName, theValue));
+}
+#endif
+
+
+#if !defined(ITERATIVE_EXECUTION)
 void
 StylesheetExecutionContextDefault::pushParams(const ElemTemplateElement&	xslCallTemplateElement)
 {
+
 	// We have a params vector that we reuse, but occasionally, a
 	// param will result in recursive execution, so we'll use a
 	// temporary when we detect such a situation.
@@ -766,6 +860,7 @@ StylesheetExecutionContextDefault::pushParams(const ElemTemplateElement&	xslCall
 		m_variablesStack.pushParams(tempParams);
 	}
 }
+#endif
 
 
 
@@ -811,13 +906,28 @@ StylesheetExecutionContextDefault::getCurrentStackFrameIndex() const
 
 
 
+
 void
-StylesheetExecutionContextDefault::setCurrentStackFrameIndex(int	currentStackFrameIndex)
+StylesheetExecutionContextDefault::pushCurrentStackFrameIndex(int currentStackFrameIndex)
 {
+	m_currentIndexStack.push_back(getCurrentStackFrameIndex());
 	m_variablesStack.setCurrentStackFrameIndex(currentStackFrameIndex);
+
 }
 
 
+
+void
+StylesheetExecutionContextDefault::popCurrentStackFrameIndex()
+{
+	assert (m_currentIndexStack.size() > 0);
+
+	int previousStackFrameIndex = m_currentIndexStack.back();
+
+	m_currentIndexStack.pop_back();
+
+	m_variablesStack.setCurrentStackFrameIndex(previousStackFrameIndex);
+}
 
 void
 StylesheetExecutionContextDefault::startDocument()
@@ -926,7 +1036,7 @@ StylesheetExecutionContextDefault::cloneToResultTree(
 			const XalanNode&	node,
 			const LocatorType*	locator)
 {
-	m_xsltProcessor->cloneToResultTree(node, m_cloneTextNodesOnly, locator);
+	m_xsltProcessor->cloneToResultTree(node, getCopyTextNodesOnly(), locator);
 }
 
 
@@ -946,12 +1056,85 @@ StylesheetExecutionContextDefault::cloneToResultTree(
 			nodeType,
 			overrideStrip,
 			shouldCloneAttributes,
-			m_cloneTextNodesOnly,
+			getCopyTextNodesOnly(),
 			locator);
 }
 
 
+#if defined(ITERATIVE_EXECUTION)
+void
+StylesheetExecutionContextDefault::beginCreateXResultTreeFrag(
+			XalanNode*					sourceNode)
+{
+	assert(m_xsltProcessor != 0);
 
+	XalanSourceTreeDocument* const	theDocument = m_usePerInstanceDocumentFactory == true ?
+		m_documentAllocator.create(
+			eDefaultAttributeAllocatorBlockSize,
+			eDefaultAttributeNSAllocatorBlockSize,
+			eDefaultCommentAllocatorBlockSize,
+			eDefaultElementAllocatorBlockSize,
+			eDefaultElementNSAllocatorBlockSize,
+			eDefaultPIAllocatorBlockSize,
+			eDefaultTextAllocatorBlockSize,
+			eDefaultTextIWSAllocatorBlockSize) :
+		getSourceTreeFactory();
+	assert(theDocument != 0);
+
+	XalanSourceTreeDocumentFragment* const	theDocumentFragment =
+		m_documentFragmentAllocator.create(*theDocument);
+	assert(theDocumentFragment != 0);
+
+	FormatterToSourceTree* const	theFormatter = m_formatterToSourceTreeStack.get();
+	assert(theFormatter != 0);
+
+	theFormatter->setDocument(theDocument);
+
+	theFormatter->setDocumentFragment(theDocumentFragment);
+
+	theFormatter->setPrefixResolver(m_xsltProcessor);
+
+	pushOutputContext(theFormatter);
+
+	theFormatter->startDocument();
+
+	pushCurrentNode(sourceNode);
+}
+
+
+
+const XObjectPtr
+StylesheetExecutionContextDefault::endCreateXResultTreeFrag()
+{
+	
+	FormatterToSourceTree* theFormatter = m_formatterToSourceTreeStack.top();
+
+	assert (theFormatter != 0);
+
+	theFormatter->endDocument();
+
+	XalanSourceTreeDocumentFragment* theDocumentFragment =
+		theFormatter->getDocumentFragment();
+
+	assert (theDocumentFragment != 0);
+
+	XResultTreeFrag* const	theXResultTreeFrag =
+		m_xresultTreeFragAllocator.create(*theDocumentFragment);
+
+	theXResultTreeFrag->setExecutionContext(this);
+
+	popCurrentNode();
+	popOutputContext();
+
+	m_formatterToSourceTreeStack.release();
+
+	return XObjectPtr(theXResultTreeFrag);
+}
+#endif
+
+
+
+#if !defined(ITERATIVE_EXECUTION)
 const XObjectPtr
 StylesheetExecutionContextDefault::createXResultTreeFrag(
 			const ElemTemplateElement&	templateChild,
@@ -1004,6 +1187,7 @@ StylesheetExecutionContextDefault::createXResultTreeFrag(
 
 	return XObjectPtr(theXResultTreeFrag);
 }
+#endif
 
 
 
@@ -1014,7 +1198,7 @@ StylesheetExecutionContextDefault::outputToResultTree(
 {
 	assert(m_xsltProcessor != 0);
 
-	m_xsltProcessor->outputToResultTree(xobj, m_cloneTextNodesOnly, locator);
+	m_xsltProcessor->outputToResultTree(xobj, getCopyTextNodesOnly(), locator);
 }
 
 
@@ -1026,7 +1210,7 @@ StylesheetExecutionContextDefault::outputResultTreeFragment(
 {
 	assert(m_xsltProcessor != 0);
 
-	m_xsltProcessor->outputResultTreeFragment(theTree, m_cloneTextNodesOnly, locator);
+	m_xsltProcessor->outputResultTreeFragment(theTree, getCopyTextNodesOnly(), locator);
 }
 
 
@@ -1322,7 +1506,7 @@ StylesheetExecutionContextDefault::createFormatterToText(
 }
 
 
-
+#if !defined (ITERATIVE_EXECUTION)
 FormatterToText*
 StylesheetExecutionContextDefault::borrowFormatterToText()
 {
@@ -1336,9 +1520,20 @@ StylesheetExecutionContextDefault::returnFormatterToText(FormatterToText*	theFor
 {
 	return m_formatterToTextCache.release(theFormatter);
 }
+#endif
 
 
 
+#if defined(ITERATIVE_EXECUTION)
+NodeSorter*
+StylesheetExecutionContextDefault::getNodeSorter()
+{
+	return &m_nodeSorter;
+}
+#endif
+
+
+#if !defined(ITERATIVE_EXECUTION)
 NodeSorter*
 StylesheetExecutionContextDefault::borrowNodeSorter()
 {
@@ -1352,6 +1547,7 @@ StylesheetExecutionContextDefault::returnNodeSorter(NodeSorter*		theSorter)
 {
 	return m_nodeSorterCache.release(theSorter);
 }
+#endif
 
 
 
@@ -1689,9 +1885,11 @@ StylesheetExecutionContextDefault::reset()
 	m_currentTemplateStack.clear();
     m_currentTemplateStack.push_back(0);
 
+#if !defined(ITERATIVE_EXECUTION)
 	m_formatterToTextCache.reset();
 	m_formatterToSourceTreeCache.reset();
 	m_nodeSorterCache.reset();
+#endif
 
 	m_xresultTreeFragAllocator.reset();
     m_documentFragmentAllocator.reset();
@@ -1709,7 +1907,26 @@ StylesheetExecutionContextDefault::reset()
 	// Reset the default execution context...
 	m_xpathExecutionContextDefault.reset();
 
-	m_cloneTextNodesOnly = false;
+	m_copyTextNodesOnlyStack.clear();
+
+	m_modeStack.clear();
+
+	m_currentIndexStack.clear();
+
+#if defined (ITERATIVE_EXECUTION)
+	m_xobjectPtrStack.clear();
+	m_nodesToTransformStack.clear();
+	m_processCurrentAttributeStack.clear();
+	m_skipElementAttributesStack.clear();
+	m_executeIfStack.clear();
+	m_paramsVectorStack.clear();
+	m_elementInvokerStack.clear();
+	m_useAttributeSetIndexesStack.clear();
+	m_formatterToSourceTreeStack.reset();
+	m_stringStack.reset();
+	m_mutableNodeRefListStack.reset();
+	m_formatterToTextStack.reset();
+#endif
 
 	m_hasStripOrPreserveSpace = false;
 }
@@ -1876,6 +2093,25 @@ bool
 StylesheetExecutionContextDefault::returnMutableNodeRefList(MutableNodeRefList*		theList)
 {
 	return m_xpathExecutionContextDefault.returnMutableNodeRefList(theList);
+}
+
+
+
+void
+StylesheetExecutionContextDefault::pushCopyTextNodesOnly(bool copyTextNodesOnly)
+{
+	m_copyTextNodesOnlyStack.push_back(copyTextNodesOnly);
+}
+
+
+bool
+StylesheetExecutionContextDefault::popCopyTextNodesOnly()
+{
+	assert (m_copyTextNodesOnlyStack.size() > 0);
+
+	bool copyTextNodesOnly = m_copyTextNodesOnlyStack.back();
+	m_copyTextNodesOnlyStack.pop_back();
+	return copyTextNodesOnly;
 }
 
 
@@ -2428,7 +2664,7 @@ private:
 };
 
 
-
+#if !defined(ITERATIVE_EXECUTION)
 void
 StylesheetExecutionContextDefault::getParams(
 			const ElemTemplateElement&	xslCallTemplateElement,
@@ -2485,7 +2721,7 @@ StylesheetExecutionContextDefault::getParams(
 		}
 	}
 }
-
+#endif
 
 
 XalanSourceTreeDocument*
@@ -2660,6 +2896,288 @@ StylesheetExecutionContextDefault::cleanUpTransients()
 
 	assert(m_matchPatternCache.empty() == true);
 }
+
+
+
+#if defined(ITERATIVE_EXECUTION)
+void
+StylesheetExecutionContextDefault::createUseAttributeSetIndexesOnStack()
+{
+	UseAttributeSetIndexes useAttributeSetIndexes;
+	m_useAttributeSetIndexesStack.push_back(useAttributeSetIndexes);
+}
+
+
+
+StylesheetExecutionContextDefault::UseAttributeSetIndexes&
+StylesheetExecutionContextDefault::getUseAttributeSetIndexes()
+{
+	assert(m_useAttributeSetIndexesStack.size() > 0);
+
+	return m_useAttributeSetIndexesStack.back();
+}
+
+
+
+void
+StylesheetExecutionContextDefault::popUseAttributeSetIndexesFromStack()
+{	
+	assert(m_useAttributeSetIndexesStack.size() > 0);
+
+	m_useAttributeSetIndexesStack.pop_back();
+
+}
+
+
+
+void
+StylesheetExecutionContextDefault::pushInvoker(const ElemTemplateElement * invoker)
+{
+	m_elementInvokerStack.push_back(invoker);
+}
+
+
+
+void
+StylesheetExecutionContextDefault::popInvoker()
+{
+	assert (m_elementInvokerStack.size() > 0);
+
+	m_elementInvokerStack.pop_back();
+}
+
+
+
+const ElemTemplateElement*
+StylesheetExecutionContextDefault::getInvoker() const
+{
+	 assert (m_elementInvokerStack.size() > 0);
+
+	 return m_elementInvokerStack.back();
+}
+
+
+
+
+XalanDOMString&
+StylesheetExecutionContextDefault::getAndPushCachedString()
+{
+	XalanDOMString& theString = *(m_stringStack.get());
+
+	theString.clear();
+
+	return theString;
+}
+
+
+
+XalanDOMString&
+StylesheetExecutionContextDefault::getLastCachedString()
+{
+	return *(m_stringStack.top());
+}
+
+
+
+XalanDOMString&
+StylesheetExecutionContextDefault::getAndPopCachedString()
+{
+	return *(m_stringStack.release());
+}
+
+
+
+void
+StylesheetExecutionContextDefault::pushProcessCurrentAttribute(const bool processAttribute)
+{
+	m_processCurrentAttributeStack.push_back(processAttribute);
+}
+
+
+
+bool
+StylesheetExecutionContextDefault::popProcessCurrentAttribute()
+{
+	assert (m_processCurrentAttributeStack.size() > 0);
+
+	bool processAttribute = m_processCurrentAttributeStack.back();
+	m_processCurrentAttributeStack.pop_back();
+	return processAttribute;
+}
+
+
+
+void
+StylesheetExecutionContextDefault::pushSkipElementAttributes(bool skipAttributes)
+{
+	m_skipElementAttributesStack.push_back(skipAttributes);
+}
+
+
+
+bool
+StylesheetExecutionContextDefault::getSkipElementAttributes() const
+{
+	if (m_skipElementAttributesStack.size() == 0)
+	{
+		return false;
+	}
+	else
+	{
+		return m_skipElementAttributesStack.back();
+	}
+}
+
+
+
+bool
+StylesheetExecutionContextDefault::popSkipElementAttributes()
+{
+	assert(m_skipElementAttributesStack.size() > 0);
+
+	bool skipAttributes = m_skipElementAttributesStack.back();
+
+	m_skipElementAttributesStack.pop_back();
+
+	return skipAttributes;
+}
+
+
+
+void
+StylesheetExecutionContextDefault::pushExecuteIf(bool executeIf)
+{
+	m_executeIfStack.push_back(executeIf);
+}
+
+
+
+bool
+StylesheetExecutionContextDefault::popExecuteIf()
+{
+	assert(m_executeIfStack.size() > 0);
+
+	bool executeIf = m_executeIfStack.back();
+
+	m_executeIfStack.pop_back();
+
+	return executeIf;
+}
+
+
+
+void
+StylesheetExecutionContextDefault::beginFormatToText(XalanDOMString&  theResult)
+{
+	FormatterToText* theFormatter = m_formatterToTextStack.get();
+
+	if (theFormatter->getWriter() == 0)
+	{
+		theFormatter->setWriter(new DOMStringPrintWriter(theResult));
+		theFormatter->setNormalizeLinefeed(false);
+		theFormatter->setHandleIgnorableWhitespace(true);
+		theFormatter->clearEncoding();
+	}
+	else
+	{
+		 DOMStringPrintWriter*	thePrinterWriter  =
+#if defined(XALAN_OLD_STYLE_CASTS)
+				(DOMStringPrintWriter*)(theFormatter->getWriter());
+#else
+				static_cast<DOMStringPrintWriter*>(theFormatter->getWriter());
+#endif
+		thePrinterWriter->setString(theResult);
+	}
+	
+	pushOutputContext(theFormatter);
+	
+	theFormatter->startDocument();
+}
+
+
+
+void
+StylesheetExecutionContextDefault::endFormatToText()
+{
+	FormatterToText* theFormatter = m_formatterToTextStack.top();
+	
+	theFormatter->endDocument();
+
+	popOutputContext();
+
+	m_formatterToTextStack.release();
+}
+
+
+
+void
+StylesheetExecutionContextDefault::pushXObjectPtr(const XObjectPtr & xobjectPtr)
+{	
+	m_xobjectPtrStack.push_back(xobjectPtr);
+}
+
+
+
+void 
+StylesheetExecutionContextDefault::popXObjectPtr()
+{
+	assert(m_xobjectPtrStack.size() > 0);
+
+	m_xobjectPtrStack.back().release();
+	m_xobjectPtrStack.pop_back();
+}
+
+
+
+MutableNodeRefList&
+StylesheetExecutionContextDefault::createAndPushMutableNodeRefList()
+{
+	MutableNodeRefList& nodeList = *(m_mutableNodeRefListStack.get());
+
+	nodeList.clear();
+
+	return nodeList;
+}
+
+
+
+void 
+StylesheetExecutionContextDefault::releaseAndPopMutableNodeRefList()
+{
+	m_mutableNodeRefListStack.release();
+}
+
+
+
+void
+StylesheetExecutionContextDefault::createAndPushNodesToTransformList(const NodeRefListBase* nodeList)
+{
+	assert(nodeList != 0);
+
+	NodesToTransform nodesToTransform(nodeList);
+	m_nodesToTransformStack.push_back(nodesToTransform);
+}
+
+
+
+XalanNode* 
+StylesheetExecutionContextDefault::getNextNodeToTransform()
+{
+	assert(m_nodesToTransformStack.size() > 0);
+
+	return m_nodesToTransformStack.back().next();
+}
+
+
+
+void 
+StylesheetExecutionContextDefault::popNodesToTransformList()
+{
+	assert(m_nodesToTransformStack.size() > 0);
+
+	m_nodesToTransformStack.pop_back();
+}
+#endif
 
 
 

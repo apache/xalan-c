@@ -179,7 +179,32 @@ ElemNumber::getElementName() const
 }
 
 
+#if defined(ITERATIVE_EXECUTION)
+const ElemTemplateElement*
+ElemNumber::startElement(StylesheetExecutionContext&		executionContext) const
+{
+	ElemTemplateElement::startElement(executionContext);
 
+	typedef XPathExecutionContext::GetAndReleaseCachedString	GetAndReleaseCachedString;
+
+	GetAndReleaseCachedString	theGuard(executionContext);
+
+	XalanDOMString&				countString = theGuard.get();
+
+	getCountString(executionContext, countString);
+
+	if (!isEmpty(countString))
+	{
+		executionContext.characters(toCharArray(countString), 0, length(countString));
+	}
+	
+	return 0;
+}
+#endif
+
+
+
+#if !defined(ITERATIVE_EXECUTION)
 void
 ElemNumber::execute(StylesheetExecutionContext&		executionContext) const
 {
@@ -198,6 +223,7 @@ ElemNumber::execute(StylesheetExecutionContext&		executionContext) const
 		executionContext.characters(toCharArray(countString), 0, length(countString));
 	}
 }
+#endif
 
 
 

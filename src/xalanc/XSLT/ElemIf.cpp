@@ -101,7 +101,54 @@ ElemIf::getElementName() const
 }
 
 
+#if defined(ITERATIVE_EXECUTION)
+const ElemTemplateElement*
+ElemIf::startElement(StylesheetExecutionContext&		executionContext) const
+{
+	assert(m_test != 0);
 
+	ElemTemplateElement::startElement(executionContext);
+
+	bool	fResult;
+
+	m_test->execute(*this, executionContext, fResult);
+
+	if(0 != executionContext.getTraceListeners())
+	{
+		executionContext.fireSelectEvent(
+			SelectionEvent(executionContext,
+			executionContext.getCurrentNode(),
+			*this,
+			StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("test")),
+			*m_test,
+			fResult));
+	}
+
+	if(fResult == true)
+	{
+		executionContext.pushExecuteIf(true);
+		return beginExecuteChildren(executionContext);
+	}
+
+	executionContext.pushExecuteIf(false);
+	return 0;
+}
+
+
+
+void
+ElemIf::endElement(StylesheetExecutionContext&	executionContext) const
+{
+	if(executionContext.popExecuteIf())
+	{
+		endExecuteChildren(executionContext);
+	}
+}
+#endif
+
+
+
+#if !defined(ITERATIVE_EXECUTION)
 void
 ElemIf::execute(StylesheetExecutionContext&		executionContext) const
 {
@@ -129,6 +176,7 @@ ElemIf::execute(StylesheetExecutionContext&		executionContext) const
 		executeChildren(executionContext);
 	}
 }
+#endif
 
 
 

@@ -78,6 +78,15 @@ public:
 	virtual	const XPath*
 	getXPath(unsigned int	index = 0) const;
 
+#if defined(ITERATIVE_EXECUTION)
+	virtual const ElemTemplateElement* 
+	startElement(StylesheetExecutionContext&	executionContext) const;
+
+	virtual void
+	endElement(StylesheetExecutionContext&		executionContext) const;
+#endif
+
+
 private:
 
 	// not implemented

@@ -78,8 +78,19 @@ public:
 			int								which,
 			StylesheetConstructionContext&	constructionContext) const;
 
+#if defined(ITERATIVE_EXECUTION)
+	virtual const ElemTemplateElement*
+	startElement(StylesheetExecutionContext&		executionContext) const;
+
+	virtual void
+	endElement(StylesheetExecutionContext&		executionContext) const;
+
+	virtual void
+	evaluateAVTs(StylesheetExecutionContext&	executionContext) const;
+#else
 	virtual void
 	execute(StylesheetExecutionContext&		executionContext) const;
+#endif
 
 protected:
 

@@ -85,7 +85,27 @@ ElemTextLiteral::isWhitespace() const
 }
 
 
+#if defined(ITERATIVE_EXECUTION)
+const ElemTemplateElement*
+ElemTextLiteral::startElement(StylesheetExecutionContext&	executionContext) const
+{
+	ElemTemplateElement::startElement(executionContext);
 
+    if(disableOutputEscaping() == false)
+    {
+		executionContext.characters(m_ch, 0, m_length);
+    }
+    else
+    {
+		executionContext.charactersRaw(m_ch, 0, m_length);
+    }
+	return 0;
+}
+#endif
+
+
+
+#if !defined(ITERATIVE_EXECUTION)
 void
 ElemTextLiteral::execute(StylesheetExecutionContext&	executionContext) const
 {
@@ -100,6 +120,7 @@ ElemTextLiteral::execute(StylesheetExecutionContext&	executionContext) const
 		executionContext.charactersRaw(m_ch, 0, m_length);
     }
 }
+#endif
 
 
 

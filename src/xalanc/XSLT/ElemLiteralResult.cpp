@@ -300,7 +300,91 @@ ElemLiteralResult::namespacesPostConstruction(
 }
 
 
+#if defined(ITERATIVE_EXECUTION)
+const ElemTemplateElement*
+ElemLiteralResult::startElement(StylesheetExecutionContext&		executionContext) const
+{
+	const XalanDOMString&	theElementName = getElementName();
 
+	executionContext.startElement(c_wstr(theElementName));
+
+	ElemUse::startElement(executionContext);
+
+	const NamespacesHandler&	theNamespacesHandler = getNamespacesHandler();
+
+	theNamespacesHandler.outputResultNamespaces(executionContext);
+
+	if (hasPrefix() == false)
+	{
+		// OK, let's check to make sure we don't have to change the default namespace...
+		const XalanDOMString* const		theCurrentDefaultNamespace =
+					executionContext.getResultNamespaceForPrefix(s_emptyString);
+
+		if (theCurrentDefaultNamespace != 0)
+		{
+			const XalanDOMString* const		theElementDefaultNamespace =
+							theNamespacesHandler.getNamespace(s_emptyString);
+
+			if (theElementDefaultNamespace == 0)
+			{
+				// There was no default namespace, so we have to turn the
+				// current one off.
+				executionContext.addResultAttribute(DOMServices::s_XMLNamespace, s_emptyString);
+			}
+			else if (equals(*theCurrentDefaultNamespace, *theElementDefaultNamespace) == false)
+			{
+				executionContext.addResultAttribute(DOMServices::s_XMLNamespace, *theElementDefaultNamespace);
+			}
+		}
+	}
+
+	evaluateAVTs(executionContext);
+
+	return beginExecuteChildren(executionContext);
+
+}
+
+
+void
+ElemLiteralResult::endElement(StylesheetExecutionContext&		executionContext) const
+{
+	endExecuteChildren(executionContext);
+	
+	executionContext.endElement(c_wstr(getElementName()));
+
+	ElemUse::endElement(executionContext);
+}
+
+
+
+void
+ElemLiteralResult::evaluateAVTs(StylesheetExecutionContext& executionContext) const
+{
+	if(m_avtsCount > 0)
+	{
+		StylesheetExecutionContext::GetAndReleaseCachedString	theGuard(executionContext);
+
+		XalanDOMString&		theStringedValue = theGuard.get();
+
+		for(unsigned int i = 0; i < m_avtsCount; ++i)
+		{
+			const AVT* const	avt = m_avts[i];
+
+			const XalanDOMString&	theName = avt->getName();
+
+			avt->evaluate(theStringedValue, *this, executionContext);
+
+			executionContext.addResultAttribute(theName, theStringedValue);
+
+			theStringedValue.clear();
+		}
+	}
+}
+#endif
+
+
+
+#if !defined(ITERATIVE_EXECUTION
 void
 ElemLiteralResult::execute(StylesheetExecutionContext&	executionContext) const
 {
@@ -362,6 +446,7 @@ ElemLiteralResult::execute(StylesheetExecutionContext&	executionContext) const
 
 	executionContext.endElement(c_wstr(theElementName));
 }
+#endif
 
 
 

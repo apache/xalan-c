@@ -42,7 +42,7 @@ StylesheetExecutionContext::~StylesheetExecutionContext()
 }
 
 
-
+#if !defined(ITERATIVE_EXECUTION)
 void
 StylesheetExecutionContext::ParamsPushPop::doPush(
 			const ElemTemplateElement&		xslCallTemplateElement,
@@ -50,7 +50,7 @@ StylesheetExecutionContext::ParamsPushPop::doPush(
 {
 	if (xslCallTemplateElement.hasParams() == true)
 	{
-		getExecutionContext().setCurrentStackFrameIndex(savedStackFrameIndex);
+		getExecutionContext().pushCurrentStackFrameIndex(savedStackFrameIndex);
 
 		getExecutionContext().pushParams(xslCallTemplateElement);
 	}
@@ -84,6 +84,7 @@ StylesheetExecutionContext::BorrowReturnFormatterToText::BorrowReturnFormatterTo
 	m_formatter->clearEncoding();
 	m_formatter->setWriter(&writer);
 }
+#endif
 
 
 

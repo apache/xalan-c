@@ -86,7 +86,40 @@ ElemFallback::~ElemFallback()
 }
 
 
+#if defined(ITERATIVE_EXECUTION)
+const ElemTemplateElement*
+ElemFallback::startElement(StylesheetExecutionContext&		executionContext) const
+{
+	ElemTemplateElement::startElement(executionContext);
 
+	return getFirstChildElem();
+}
+
+
+	
+const ElemTemplateElement*
+ElemFallback::getNextChildElemToExecute(StylesheetExecutionContext& /*executionContext*/,
+								 const ElemTemplateElement*			currentElem) const
+{
+	const ElemTemplateElement* previousElement = currentElem;
+
+	const ElemTemplateElement* nextElement = currentElem->getNextSiblingElem();
+
+	while (nextElement != 0
+		   && nextElement->getXSLToken() == StylesheetConstructionContext::ELEMNAME_FALLBACK
+		   && previousElement->getXSLToken() == StylesheetConstructionContext::ELEMNAME_FORWARD_COMPATIBLE)
+	{
+		previousElement = nextElement;
+		nextElement = nextElement->getNextSiblingElem();
+	}
+
+	return nextElement;
+}
+#endif
+
+
+
+#if !defined(ITERATIVE_EXECUTION)
 void
 ElemFallback::execute(StylesheetExecutionContext&		executionContext) const
 {
@@ -115,7 +148,7 @@ ElemFallback::execute(StylesheetExecutionContext&		executionContext) const
 		thePreviousToken = theCurrentToken;
 	}
 }
-
+#endif
 
 
 XALAN_CPP_NAMESPACE_END

@@ -64,9 +64,25 @@ public:
 	virtual const XalanDOMString&
 	getElementName() const;
 
+#if defined(ITERATIVE_EXECUTION)
+	virtual const ElemTemplateElement*
+	startElement(StylesheetExecutionContext&	executionContext) const;
+
+	virtual void
+	endElement(StylesheetExecutionContext&		executionContext) const;
+
+	virtual const ElemTemplateElement*
+	getNextChildElemToExecute(
+			StylesheetExecutionContext&		executionContext,
+			 const ElemTemplateElement*		currentElem) const;
+
+	virtual const ElemTemplateElement*
+	getFirstChildElemToExecute(
+			StylesheetExecutionContext& executionContext) const;
+#else
 	virtual void
 	execute(StylesheetExecutionContext&		executionContext) const;
-
+#endif
 	virtual void
 	postConstruction(
 			StylesheetConstructionContext&	constructionContext,

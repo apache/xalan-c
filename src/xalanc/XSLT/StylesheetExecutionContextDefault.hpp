@@ -32,6 +32,7 @@
 
 
 #include <xalanc/Include/XalanObjectCache.hpp>
+#include <xalanc/Include/XalanObjectStackCache.hpp>
 
 
 
@@ -84,6 +85,12 @@ public:
 	typedef clock_t			ClockType;
 #endif
 
+#if defined(XALAN_STRICT_ANSI_HEADERS)
+	typedef std::size_t		size_type;
+#else
+	typedef size_t			size_type;
+#endif
+
 #if defined(XALAN_NO_STD_NAMESPACE)
 	typedef deque<const ElemTemplateElement*>			ElementTemplateElementStackType;
 	typedef vector<FormatterListener*>					FormatterListenerVectorType;
@@ -109,7 +116,6 @@ public:
 
 	typedef Stylesheet::KeyTablesTableType				KeyTablesTableType;
 	typedef VariablesStack::ParamsVectorType			ParamsVectorType;
-
 
 	/**
 	 * Construct a StylesheetExecutionContextDefault object
@@ -255,7 +261,33 @@ public:
 	getCopyTextNodesOnly() const;
 
 	virtual void
-	setCopyTextNodesOnly(bool	fValue);
+	pushCopyTextNodesOnly(bool copyTextNodesOnly);
+
+	virtual bool
+	popCopyTextNodesOnly();
+
+#if defined(ITERATIVE_EXECUTION)
+	virtual void
+	pushProcessCurrentAttribute(bool processAttribute);
+
+	virtual bool
+	popProcessCurrentAttribute();
+
+	virtual void
+	pushSkipElementAttributes(bool skipAttributes);
+
+	virtual bool
+	getSkipElementAttributes() const;
+
+	virtual bool
+	popSkipElementAttributes();
+
+	virtual void
+	pushExecuteIf(bool executeIf);
+	
+	virtual bool
+	popExecuteIf();
+#endif
 
 	virtual XalanNode*
 	getRootDocument() const;
@@ -270,7 +302,10 @@ public:
 	getCurrentMode() const;
 
 	virtual	void
-	setCurrentMode(const XalanQName*	theMode); 
+	pushCurrentMode(const XalanQName*	theMode);
+	
+	virtual void
+	popCurrentMode();
 
 	virtual const ElemTemplate*
 	getCurrentTemplate() const;
@@ -361,16 +396,19 @@ public:
 	virtual void
 	pushTopLevelVariables(const ParamVectorType&	topLevelParams);
 
+
 	virtual const XObjectPtr
 	createVariable(
 			const XPath&				xpath,
 			XalanNode*					contextNode,
 			const PrefixResolver&		resolver);
 
+#if !defined(ITERATIVE_EXECUTION)
 	virtual const XObjectPtr
 	createVariable(
 			const ElemTemplateElement&	templateChild,
 			XalanNode*					sourceNode);
+#endif
 
 	virtual void
 	pushVariable(
@@ -400,12 +438,15 @@ public:
 			XalanNode*					contextNode,
 			const PrefixResolver&		resolver);
 
+#if !defined(ITERATIVE_EXECUTION)
 	virtual void
 	pushVariable(
 			const XalanQName&			name,
 			const ElemTemplateElement*	element,
 			const ElemTemplateElement&	templateChild,
 			XalanNode*					sourceNode);
+#endif
+
 
 	virtual void
 	pushContextMarker();
@@ -419,8 +460,16 @@ public:
 	virtual void
 	clearTopLevelParams();
 
+#if defined(ITERATIVE_EXECUTION)
+	virtual void beginParams();
+
+	virtual void endParams();
+
+	virtual void pushParam(const XalanQName& qName,const XObjectPtr& theValue);
+#else
 	virtual	void
 	pushParams(const ElemTemplateElement&	xslCallTemplateElement);
+#endif
 
 	virtual const XObjectPtr
 	getParamVariable(const XalanQName&	theName);
@@ -438,7 +487,10 @@ public:
 	getCurrentStackFrameIndex() const;
 
 	virtual void
-	setCurrentStackFrameIndex(int currentStackFrameIndex = -1);
+	pushCurrentStackFrameIndex(int currentStackFrameIndex = -1);
+
+	virtual void
+	popCurrentStackFrameIndex();
 
 	virtual void
 	startDocument();
@@ -488,10 +540,30 @@ public:
 			bool					shouldCloneAttributes,
 			const LocatorType*		locator);
 
+#if defined(ITERATIVE_EXECUTION)
+	virtual void
+	beginCreateXResultTreeFrag(
+			XalanNode*					sourceNode);
+
+	
+	virtual const XObjectPtr
+	endCreateXResultTreeFrag();
+
+	virtual void
+	beginFormatToText(
+			XalanDOMString&				theResult);
+
+	virtual void
+	endFormatToText();
+#endif
+
+
+#if !defined(ITERATIVE_EXECUTION)
 	virtual const XObjectPtr
 	createXResultTreeFrag(
 			const ElemTemplateElement&	templateChild,
 			XalanNode*					sourceNode);
+#endif
 
 	virtual void
 	outputToResultTree(
@@ -563,11 +635,16 @@ public:
 			Writer&					writer,
 			const XalanDOMString&	encoding);
 
+#if defined(ITERATIVE_EXECUTION)
+	virtual NodeSorter*
+	getNodeSorter();
+#else
 	virtual NodeSorter*
 	borrowNodeSorter();
 
 	virtual bool
 	returnNodeSorter(NodeSorter*	theSorter);
+#endif
 
 	virtual XalanNumberFormatAutoPtr
 	createXalanNumberFormat();
@@ -838,11 +915,62 @@ public:
 	virtual MutableNodeRefList*
 	createMutableNodeRefList() const;
 
+#if defined(ITERATIVE_EXECUTION)
+	virtual void
+	createUseAttributeSetIndexesOnStack();
+
+	virtual UseAttributeSetIndexes&
+	getUseAttributeSetIndexes();
+
+	virtual void
+	popUseAttributeSetIndexesFromStack();
+	
+	virtual void
+	pushInvoker(const ElemTemplateElement * invoker);
+
+	virtual void
+	popInvoker();
+
+	virtual const ElemTemplateElement*
+	getInvoker() const;
+
+	virtual MutableNodeRefList& 
+	createAndPushMutableNodeRefList();
+
+	virtual void 
+	releaseAndPopMutableNodeRefList();
+
+	virtual void
+	pushXObjectPtr(const XObjectPtr& xobjectPtr);
+
+	virtual void 
+	popXObjectPtr();
+
+	virtual void
+	createAndPushNodesToTransformList(const NodeRefListBase* nodeList);
+
+	virtual XalanNode* 
+	getNextNodeToTransform();
+
+	virtual void 
+	popNodesToTransformList();
+
+	virtual XalanDOMString&
+	getAndPushCachedString();
+
+	virtual XalanDOMString&
+	getLastCachedString();
+
+	virtual XalanDOMString&
+	getAndPopCachedString();
+#endif
+
 	virtual XalanDOMString&
 	getCachedString();
 
 	virtual bool
 	releaseCachedString(XalanDOMString&		theString);
+
 
 	virtual void
 	getNodeSetByKey(
@@ -891,7 +1019,6 @@ public:
 	setSourceDocument(
 			const XalanDOMString&	theURI,
 			XalanDocument*			theDocument);
-
 
 	// These interfaces are inherited from ExecutionContext...
 
@@ -956,6 +1083,7 @@ public:
 	XalanSourceTreeDocument*
 	getSourceTreeFactory() const;
 
+#if !defined(ITERATIVE_EXECUTION)
 protected:
 
 	virtual FormatterToText*
@@ -963,12 +1091,14 @@ protected:
 
 	virtual bool
 	returnFormatterToText(FormatterToText*	theFormatter);
+#endif
 
 private:
 
 	const XalanDecimalFormatSymbols*
 	getDecimalFormatSymbols(const XalanQName&	qname);
 
+#if !defined(ITERATIVE_EXECUTION)
 	/**
 	 * Given a context, create the params for a template
 	 * call.
@@ -980,6 +1110,7 @@ private:
 	getParams(
 			const ElemTemplateElement&	xslCallTemplateElement,
 			ParamsVectorType&			params);
+#endif
 
 	/**
 	 * Determine if the XPath is one that we have cached.
@@ -1075,15 +1206,17 @@ private:
 
 	CurrentTemplateStackType			m_currentTemplateStack;
 
+#if !defined(ITERATIVE_EXECUTION)
 	typedef XalanObjectCacheDefault<FormatterToText>		FormatterToTextCacheType;
 	typedef XalanObjectCacheDefault<FormatterToSourceTree>	FormatterToSourceTreeCacheType;
 	typedef XalanObjectCacheDefault<NodeSorter>				NodeSorterCacheType;
-
+	
 	FormatterToTextCacheType			m_formatterToTextCache;
 
 	FormatterToSourceTreeCacheType		m_formatterToSourceTreeCache;
 
 	NodeSorterCacheType					m_nodeSorterCache;
+#endif
 
 	int									m_indentAmount;
 
@@ -1093,12 +1226,81 @@ private:
 
 	XalanSourceTreeDocumentAllocator	m_documentAllocator;
 
+	typedef XALAN_STD_QUALIFIER vector<bool>				BooleanStackType;
+	typedef XALAN_STD_QUALIFIER vector<const XalanQName*>	ModeStackType;
+	typedef XALAN_STD_QUALIFIER vector<int>					IntStackType;
+
+	BooleanStackType					m_copyTextNodesOnlyStack;
+	ModeStackType						m_modeStack;
+	IntStackType						m_currentIndexStack;
+
+#if defined(ITERATIVE_EXECUTION)
+	typedef XALAN_STD_QUALIFIER vector<XObjectPtr>				XObjectPtrStackType;
+	typedef XALAN_STD_QUALIFIER vector<ParamsVectorType>		ParamsVectorStackType;
+	typedef XALAN_STD_QUALIFIER vector<UseAttributeSetIndexes>  UseAttributeSetIndexesStackType;
+
+	typedef XalanObjectStackCache<MutableNodeRefList>		MutableNodeRefListStackType;
+	typedef XalanObjectStackCache<XalanDOMString>			StringStackType;
+	typedef XalanObjectStackCache<FormatterToText>			FormatterToTextStackType;
+	typedef XalanObjectStackCache<FormatterToSourceTree>	FormatterToSourceTreeStackType;
+
+	/*
+	 * class to maintain the list of nodes to be transformed by an element
+	 */
+	class NodesToTransform
+	{
+	public:
+		NodesToTransform(const NodeRefListBase* nodeList) : 
+			m_nodeList(nodeList), m_index(0)
+		{
+			assert(m_nodeList != 0);
+		}
+
+		const NodeRefListBase* operator() () 
+		{
+			return m_nodeList;
+		}
+
+		NodeRefListBase::size_type& index()
+		{
+			return m_index;
+		}
+
+		XalanNode* next()
+		{
+			if (m_index < m_nodeList->getLength())
+			{
+				return m_nodeList->item(m_index++);
+			}
+			return 0;
+		}
+
+	private:
+		const NodeRefListBase*	m_nodeList;
+		NodeRefListBase::size_type  m_index;
+	};
+
+	typedef XALAN_STD_QUALIFIER vector<NodesToTransform>			NodesToTransformStackType;
+
+	XObjectPtrStackType					m_xobjectPtrStack;
+	MutableNodeRefListStackType			m_mutableNodeRefListStack;
+	NodesToTransformStackType			m_nodesToTransformStack;
+	BooleanStackType					m_processCurrentAttributeStack;
+	BooleanStackType					m_executeIfStack;
+	StringStackType						m_stringStack;
+	FormatterToTextStackType			m_formatterToTextStack;
+	BooleanStackType					m_skipElementAttributesStack;
+	FormatterToSourceTreeStackType		m_formatterToSourceTreeStack;
+	ParamsVectorStackType				m_paramsVectorStack;
+	ElementTemplateElementStackType		m_elementInvokerStack;
+	UseAttributeSetIndexesStackType		m_useAttributeSetIndexesStack;
+
+	NodeSorter							m_nodeSorter;
+#endif
+
 	// If true, we will use a separate document factory for
 	// result tree fragments.
 	bool								m_usePerInstanceDocumentFactory;
-
-	// If true, only text nodes will be cloned in the output...
-	bool								m_cloneTextNodesOnly;
 
 	// Determines whether or not to override the property in the stylesheet.
 	eEscapeURLs							m_escapeURLs;

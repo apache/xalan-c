@@ -63,8 +63,22 @@ public:
 	
 	// These methods are inherited from ElemLiteralResult ...
 
+#if defined(ITERATIVE_EXECUTION)
+	virtual const ElemTemplateElement*
+	startElement(StylesheetExecutionContext&	executionContext) const;
+
+	virtual void 
+	endElement(StylesheetExecutionContext&		executionContext) const;
+
+	virtual bool 
+	executeChildElement(
+			StylesheetExecutionContext& executionContext,
+			const ElemTemplateElement*	element) const;
+	
+#else
 	virtual void
 	execute(StylesheetExecutionContext&		executionContext) const;
+#endif
 
 	bool
 	elementAvailable(StylesheetExecutionContext&	executionContext) const;

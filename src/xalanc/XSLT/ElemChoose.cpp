@@ -86,6 +86,69 @@ ElemChoose::getElementName() const
 
 
 
+#if defined(ITERATIVE_EXECUTION)
+const ElemTemplateElement*
+ElemChoose::startElement(StylesheetExecutionContext&		executionContext) const
+{
+	ElemTemplateElement::startElement(executionContext);
+
+	XalanNode* sourceNode = executionContext.getCurrentNode();
+
+    for (const ElemTemplateElement* node = getFirstChildElem();
+			node != 0;
+				node = node->getNextSiblingElem()) 
+    {
+		const int	type = node->getXSLToken();
+
+		if(StylesheetConstructionContext::ELEMNAME_WHEN == type)
+		{
+
+			const XPath* const		theXPath = node->getXPath();
+			assert(theXPath != 0);
+
+			bool	test;
+
+			theXPath->execute(*this, executionContext, test);
+
+			if(0 != executionContext.getTraceListeners())
+			{
+				executionContext.fireSelectEvent(
+					SelectionEvent(executionContext,
+					sourceNode,
+					*node,
+					Constants::ATTRNAME_TEST,
+					*theXPath,
+					test));
+			}
+
+			if(test == true)
+			{
+				return node;
+			}
+		}
+		else
+		{
+			// xsl:otherwise
+			return node;
+		}
+    }
+	return 0;
+}
+
+
+
+const ElemTemplateElement*
+ElemChoose::getNextChildElemToExecute(
+			StylesheetExecutionContext& /*executionContext*/,
+			const ElemTemplateElement*	/*currentElem*/) const
+{
+	return 0;
+}
+#endif
+
+
+
+#if !defined(ITERATIVE_EXECUTION)
 void
 ElemChoose::execute(StylesheetExecutionContext&		executionContext) const
 {
@@ -134,6 +197,7 @@ ElemChoose::execute(StylesheetExecutionContext&		executionContext) const
 		}
     }
 }
+#endif
 
 
 

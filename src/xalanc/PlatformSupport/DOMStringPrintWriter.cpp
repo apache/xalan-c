@@ -32,7 +32,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 DOMStringPrintWriter::DOMStringPrintWriter(XalanDOMString&	theString) :
 	PrintWriter(true),
-	m_outputString(theString)
+	m_outputString(&theString)
 {
 }
 
@@ -90,7 +90,7 @@ DOMStringPrintWriter::write(
 {
 	assert(s != 0);
 
-	append(m_outputString, (s + theOffset), theLength);
+	append(*m_outputString, (s + theOffset), theLength);
 }
 
 
@@ -98,7 +98,7 @@ DOMStringPrintWriter::write(
 void
 DOMStringPrintWriter::write(XalanDOMChar	c)
 {
-	m_outputString += c;
+	(*m_outputString) += c;
 }
 
 
@@ -114,11 +114,11 @@ DOMStringPrintWriter::write(
 
 	if (theOffset == 0 && theLength == npos)
 	{
-		m_outputString += s;
+		(*m_outputString) += s;
 	}
 	else
 	{
-		m_outputString.append(s, theOffset, theLength);
+		(*m_outputString).append(s, theOffset, theLength);
 	}
 }
 
@@ -176,7 +176,7 @@ DOMStringPrintWriter::print(
 void
 DOMStringPrintWriter::print(double	d)
 {
-	m_outputString += DoubleToDOMString(d);
+	(*m_outputString) += DoubleToDOMString(d);
 }
 
 
@@ -184,7 +184,7 @@ DOMStringPrintWriter::print(double	d)
 void
 DOMStringPrintWriter::print(int	i)
 {
-	m_outputString += LongToDOMString(i);
+	(*m_outputString) += LongToDOMString(i);
 }
 
 
@@ -192,7 +192,7 @@ DOMStringPrintWriter::print(int	i)
 void
 DOMStringPrintWriter::print(long	l)
 {
-	m_outputString += LongToDOMString(l);
+	(*m_outputString) += LongToDOMString(l);
 }
 
 
@@ -200,7 +200,7 @@ DOMStringPrintWriter::print(long	l)
 void
 DOMStringPrintWriter::print(const XalanDOMString&	s)
 {
-	m_outputString += s;
+	(*m_outputString) += s;
 }
 
 
@@ -208,7 +208,7 @@ DOMStringPrintWriter::print(const XalanDOMString&	s)
 void
 DOMStringPrintWriter::println()
 {
-	m_outputString += s_newlineString;
+	(*m_outputString) += s_newlineString;
 }
 
 

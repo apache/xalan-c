@@ -98,8 +98,16 @@ public:
 	virtual const XalanDOMString&
 	getElementName() const;
 
+#if defined(ITERATIVE_EXECUTION)
+	const ElemTemplateElement*
+	startElement(StylesheetExecutionContext&	executionContext) const;
+
+	void
+	endElement(StylesheetExecutionContext&		executionContext) const;
+#else
 	virtual void
 	execute(StylesheetExecutionContext&		executionContext) const;
+#endif
 
 	const XObjectPtr
 	getValue(

@@ -219,6 +219,95 @@ ElemVariable::setParentNodeElem(ElemTemplateElement*	theParent)
 
 
 
+#if defined(ITERATIVE_EXECUTION)
+const ElemTemplateElement*
+ElemVariable::startElement(StylesheetExecutionContext& executionContext) const
+{
+	assert(m_qname != 0);
+
+	ParentType::startElement(executionContext);
+
+	XObjectPtr theValue;
+
+	if(m_selectPattern == 0)
+	{
+		if (getFirstChildElem() == 0)
+		{
+			theValue = executionContext.getXObjectFactory().createStringReference(s_emptyString);
+		}
+		else
+		{
+			executionContext.beginCreateXResultTreeFrag(executionContext.getCurrentNode());
+			return beginExecuteChildren(executionContext);
+		}
+	}
+	else
+	{
+		theValue = m_selectPattern->execute(*this, executionContext);
+	
+		if(0 != executionContext.getTraceListeners())
+		{
+			executionContext.fireSelectEvent(
+				SelectionEvent(
+					executionContext,
+					executionContext.getCurrentNode(),
+					*this,
+					StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("select")),
+					*m_selectPattern,
+					theValue));
+		}
+
+	}
+
+	if (theValue.null() == false)
+	{
+		executionContext.pushVariable(
+				*m_qname,
+				theValue,
+				getParentNodeElem());
+	}
+	else
+	{
+		executionContext.pushVariable(
+				*m_qname,
+				this,
+				getParentNodeElem());
+	}
+
+	return 0;
+}
+
+
+void
+ElemVariable::endElement(StylesheetExecutionContext& executionContext) const
+{
+	XObjectPtr theValue;
+
+	if (0 == m_selectPattern && 0 != getFirstChildElem())
+	{
+		theValue = executionContext.endCreateXResultTreeFrag();
+		if (theValue.null() == false)
+		{
+			executionContext.pushVariable(
+					*m_qname,
+					theValue,
+					getParentNodeElem());
+		}
+		else
+		{
+			executionContext.pushVariable(
+					*m_qname,
+					this,
+					getParentNodeElem());
+		}
+	}
+
+	
+}
+
+
+
+#else
 void
 ElemVariable::execute(StylesheetExecutionContext&	executionContext) const
 {
@@ -243,6 +332,7 @@ ElemVariable::execute(StylesheetExecutionContext&	executionContext) const
 				getParentNodeElem());
 	}
 }
+#endif
 
 
 
@@ -267,7 +357,14 @@ ElemVariable::getValue(
 		}
 		else
 		{
+			
+#if defined(ITERATIVE_EXECUTION)
+			executionContext.beginCreateXResultTreeFrag(sourceNode);
+			this->executeChildren(executionContext);
+			return executionContext.endCreateXResultTreeFrag();
+#else
 			return executionContext.createXResultTreeFrag(*this, sourceNode);
+#endif
 		}
 	}
 	else

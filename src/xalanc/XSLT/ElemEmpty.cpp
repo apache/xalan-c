@@ -74,7 +74,20 @@ ElemEmpty::getElementName() const
 }
 
 
+#if defined(ITERATIVE_EXECUTION)
+const ElemTemplateElement*
+ElemEmpty::startElement(StylesheetExecutionContext&		executionContext) const
+{
+	assert(false);	// really shouldn't be executing empty nodes
 
+	ElemTemplateElement::startElement(executionContext);
+
+	return 0;
+}
+#endif
+
+
+#if !defined(ITERATIVE_EXECUTION)
 void
 ElemEmpty::execute(StylesheetExecutionContext&		executionContext) const
 {
@@ -82,6 +95,7 @@ ElemEmpty::execute(StylesheetExecutionContext&		executionContext) const
 
 	ElemTemplateElement::execute(executionContext);
 }
+#endif
 
 
 

@@ -71,11 +71,25 @@ public:
 	virtual const XalanDOMString&
 	getElementName() const;
 
+#if defined(ITERATIVE_EXECUTION)
+	virtual const ElemTemplateElement*
+	startElement(StylesheetExecutionContext&	executionContext) const;
+
+	virtual void
+	endElement(StylesheetExecutionContext&		executionContext) const;
+
+	virtual bool 
+	executeChildElement(
+			StylesheetExecutionContext& executionContext,
+			const ElemTemplateElement*	element) const;
+#else
 	virtual void 
 	execute(StylesheetExecutionContext&		executionContext) const;
+#endif
 
 protected:
 
+#if !defined(ITERATIVE_EXECUTION)
 	/** 
 	 * Process the children of a template.
 	 * 
@@ -86,6 +100,7 @@ protected:
 	doExecuteChildren(
 			StylesheetExecutionContext&		executionContext,
 			bool							skipAttributeChildren) const;
+#endif
 
 	virtual void
 	namespacesPostConstruction(

@@ -386,12 +386,31 @@ public:
 
 	void
 	addAttributeSet(ElemAttributeSet&	theAttributeSet);
-
+	
+#if defined(ITERATIVE_EXECUTION)
+	/**
+	 * Get the nth attribute set with the specified name.
+	 *  
+	 * @param execution		context for executing this stylesheet
+	 * @param theQName		the name of the attribute set
+	 * @param matchingIndex	index of the attribute set with the specified name
+	 * @param theLocator	the locator
+	 * @returns a pointer to the attribute, 0 if no matching attribute set 
+	 */
+	const ElemAttributeSet*
+	getAttributeSet(
+			StylesheetExecutionContext&		theExecutionContext,
+			const XalanQName&				theQName,
+			size_type						matchingIndex,
+			const LocatorType*				theLocator) const;
+#else
 	void
 	executeAttributeSet(
 			StylesheetExecutionContext&		theExecutionContext,
 			const XalanQName&				theQName,
 			const LocatorType*				theLocator) const;
+#endif
+
 
 private:
 

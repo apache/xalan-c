@@ -129,6 +129,148 @@ ElemApplyTemplates::getElementName() const
 
 
 
+#if defined(ITERATIVE_EXECUTION)
+const ElemTemplateElement*
+ElemApplyTemplates::startElement(StylesheetExecutionContext&		executionContext) const
+{
+	ElemTemplateElement::startElement(executionContext);
+
+	if (isDefaultTemplate() == false)
+	{
+		executionContext.pushCurrentMode(m_mode);
+	}
+
+	executionContext.pushInvoker(this);
+
+	return getFirstChildElemToExecute(executionContext);
+
+
+}
+
+
+
+void
+ElemApplyTemplates::endElement(StylesheetExecutionContext&		executionContext) const
+{
+	executionContext.popContextNodeList();
+	executionContext.popNodesToTransformList();
+
+	releaseSelectedAndSortedNodeList(executionContext);
+
+	if (isDefaultTemplate() == false)
+	{
+		executionContext.popCurrentMode();
+	}
+
+	executionContext.popContextMarker();
+
+	executionContext.popInvoker();
+
+	ElemTemplateElement::endElement(executionContext);
+}
+
+
+
+const ElemTemplateElement*
+ElemApplyTemplates::getNextChildElemToExecute(
+			   StylesheetExecutionContext& executionContext,
+			   const ElemTemplateElement* currentElem) const
+{
+	if (currentElem->getXSLToken() == StylesheetConstructionContext::ELEMNAME_TEMPLATE)
+	{
+		executionContext.popCurrentNode();
+
+		return findNextTemplateToExecute(executionContext);
+	}
+	else
+	{
+		const ElemTemplateElement* nextElement = ElemTemplateElement::getNextChildElemToExecute(executionContext, currentElem);
+
+		if (nextElement == 0)
+		{
+			const NodeRefListBase* nodesToTransform = createSelectedAndSortedNodeList(
+												executionContext);
+
+			executionContext.createAndPushNodesToTransformList(nodesToTransform);
+	
+			executionContext.pushContextNodeList(*nodesToTransform);
+
+			executionContext.pushContextMarker();
+
+			executionContext.endParams();
+	
+			return findNextTemplateToExecute(executionContext);
+
+		}
+
+		return nextElement;
+	}
+}
+
+
+
+const ElemTemplateElement*
+ElemApplyTemplates::getFirstChildElemToExecute(
+			   StylesheetExecutionContext& executionContext) const
+			   
+{
+	const ElemTemplateElement* firstElement = getFirstChildElem();
+
+	if (firstElement != 0)
+	{
+		executionContext.beginParams();
+		return firstElement;
+	}
+	else
+	{
+		const NodeRefListBase* nodesToTransform = createSelectedAndSortedNodeList(
+												executionContext);
+
+		executionContext.createAndPushNodesToTransformList(nodesToTransform);
+	
+		executionContext.pushContextNodeList(*nodesToTransform);
+		
+		executionContext.pushContextMarker();
+
+		return findNextTemplateToExecute(executionContext);
+	}
+}
+
+const ElemTemplateElement*
+ElemApplyTemplates::findNextTemplateToExecute(
+				StylesheetExecutionContext& executionContext) const
+{
+	const ElemTemplateElement* selectedTemplate = 0;
+
+	do
+	{
+		XalanNode* nextNode =  executionContext.getNextNodeToTransform();
+		if (nextNode == 0)
+		{
+			break;
+		}
+
+		executionContext.pushCurrentNode(nextNode);
+
+		selectedTemplate = findTemplateToTransformChild(
+						executionContext,
+						*this,
+						0,
+						nextNode);
+
+		if (0 == selectedTemplate)
+		{
+			executionContext.popCurrentNode();
+		}
+
+	} while (0 == selectedTemplate);
+
+	return selectedTemplate;
+}
+#endif
+
+
+#if !defined(ITERATIVE_EXECUTION)
 void
 ElemApplyTemplates::execute(StylesheetExecutionContext&		executionContext) const
 {
@@ -200,7 +342,7 @@ ElemApplyTemplates::selectAndSortChildren(
 	if (isDefaultTemplate() == false &&
 		!m_mode->equals(*currentMode))
 	{
-		executionContext.setCurrentMode(m_mode);
+		executionContext.pushCurrentMode(m_mode);
 
 		ParentType::selectAndSortChildren(
 				executionContext,
@@ -208,7 +350,7 @@ ElemApplyTemplates::selectAndSortChildren(
 				sorter,
 				savedStackFrameIndex);
 
-		executionContext.setCurrentMode(currentMode);
+		executionContext.popCurrentMode();
 	}
 	else
 	{
@@ -219,6 +361,7 @@ ElemApplyTemplates::selectAndSortChildren(
 				savedStackFrameIndex);
 	}
 }
+#endif
 
 
 

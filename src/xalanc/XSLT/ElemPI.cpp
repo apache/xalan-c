@@ -102,6 +102,57 @@ ElemPI::getElementName() const
 
 
 
+#if defined(ITERATIVE_EXECUTION)
+const ElemTemplateElement*
+ElemPI::startElement(StylesheetExecutionContext& executionContext) const
+{
+	ElemTemplateElement::startElement(executionContext);
+	
+	XalanDOMString&	piName = executionContext.getAndPushCachedString();
+
+	m_nameAVT->evaluate(piName, *this, executionContext);
+
+	if(equalsIgnoreCaseASCII(piName, Constants::ATTRVAL_OUTPUT_METHOD_XML))
+	{
+		executionContext.error(
+			XalanMessageLoader::getMessage(XalanMessages::NameCanNotBe_1Param,"xml"),
+			0, getLocator());
+	}
+	else if(!isValidNCName(piName))
+	{
+		executionContext.error(
+			XalanMessageLoader::getMessage(XalanMessages::NameMustBeValidNCName),
+			0, getLocator());
+	}
+
+	XalanDOMString& theResult = executionContext.getAndPushCachedString();
+
+	executionContext.pushCopyTextNodesOnly(true);
+
+	return beginChildrenToString(executionContext,theResult);
+}
+
+
+
+void
+ElemPI::endElement(StylesheetExecutionContext& executionContext) const
+{
+	endChildrenToString(executionContext);
+
+	XalanDOMString & theResult = executionContext.getAndPopCachedString();
+	XalanDOMString & piName = executionContext.getAndPopCachedString();
+
+	executionContext.processingInstruction(
+				c_wstr(piName),
+				c_wstr(theResult));
+
+	executionContext.popCopyTextNodesOnly();
+}
+#endif
+
+
+
+#if !defined(ITERATIVE_EXECUTION)
 void
 ElemPI::execute(StylesheetExecutionContext&		executionContext) const
 {
@@ -132,6 +183,7 @@ ElemPI::execute(StylesheetExecutionContext&		executionContext) const
 			executionContext,
 			piName);
 }
+#endif
 
 
 

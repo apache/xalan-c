@@ -160,6 +160,55 @@ public:
 	static bool
 	isValidNCName(const XalanDOMString& 	s);
 
+#if defined(ITERATIVE_EXECUTION)
+
+	/**
+	 * Completes  "pre-processing" before any sub-elements are invoked 
+	 * (i.e. children, attribute sets and templates).   If there are 
+	 * no sub-elements it executes the primary function of the element.
+	 *
+	 * @param executionContext	context to execute this element
+	 */
+	virtual const ElemTemplateElement*
+	startElement(StylesheetExecutionContext&	executionContext) const;
+
+	/**
+	 * Completes  "post-processing" afer any sub-elements are invoked 
+	 * (i.e. children, attribute sets and templates).   If there are 
+	 * no sub-elements it does nothing
+	 *
+	 * @param executionContext	context to execute this element
+	 */
+	virtual void
+	endElement(StylesheetExecutionContext&		executionContext) const;
+
+	/**
+	 * Execute the element.
+	 *
+	 * @param execute	context to execute this element
+	 */
+	virtual void
+	execute(StylesheetExecutionContext&			executionContext) const;
+
+	/** 
+	 * Execute the children of this element.
+	 * 
+	 * @param execute	context to execute this element
+	 */
+	virtual void
+	executeChildren(StylesheetExecutionContext& 	executionContext) const;
+
+	/**
+	 * Returns the element that invoked this element.
+	 * @returns element that invoked this element.
+     */
+	virtual const ElemTemplateElement*
+	getInvoker(StylesheetExecutionContext& executionContext) const;
+#endif
+
+
+
+#if !defined(ITERATIVE_EXECUTION)
 	/** 
 	 * Execute the element's primary function.	Subclasses of this function may
 	 * recursively execute down the element tree.
@@ -248,6 +297,8 @@ public:
 	 *		   class
 	 * @see class Constants
 	 */
+#endif
+	
 	int
 	getXSLToken() const
 	{
@@ -401,6 +452,54 @@ public:
 	virtual ElemTemplateElement*
 	getFirstChildElem() const;
 
+#if defined(ITERATIVE_EXECUTION)
+	/**
+	 * Method to initiate the execution of the element's children.
+	 *
+	 * @param executionContext	context to execute this element
+	 * @returns the first child element to execute
+	 */
+	virtual const ElemTemplateElement*
+	beginExecuteChildren(
+			StylesheetExecutionContext&	executionContext) const;
+
+
+	/**
+	 * Method to indicate the execution of the element's children
+	 * is complete
+	 *
+	 * @param executionContext	context to execute this element
+	 */
+	virtual void
+	endExecuteChildren(
+			StylesheetExecutionContext&	executionContext) const;
+
+	/**
+	 * Method to initiate output from the children
+	 * to a string.
+	 *
+	 * @param executionContext		context to execute this element
+	 * @param result				string to contain the final result
+	 * @returns						the first child element to execute
+	 */
+	const ElemTemplateElement*
+	beginChildrenToString(
+			StylesheetExecutionContext&		executionContext,
+			XalanDOMString&					result) const;
+
+	
+	/**
+	 * Method to indicate string output from the children is 
+	 * complete.
+	 *
+	 * @param executionContext		context to execute this element
+	 */
+	void
+	endChildrenToString(
+			StylesheetExecutionContext&		executionContext) const;
+#endif
+
+
 	/**
 	 * Set the first child.
 	 *
@@ -426,6 +525,44 @@ public:
 	 */
 	virtual ElemTemplateElement*
 	getNextSiblingElem() const;
+
+#if defined(ITERATIVE_EXECUTION)
+
+	/**
+	 * Returns the next sub-element 
+	 *(i.e. children, attribute-sets, templates) to execute.
+	 *
+	 * @param executionContext		context to execute element
+	 * @param currentElem			the last sub-element to be executed
+	 * @returns						next sub-element to execute,  0 only if no more sub-elements to execute
+	 */
+	virtual const ElemTemplateElement*
+	getNextChildElemToExecute(
+			StylesheetExecutionContext& executionContext,
+			const ElemTemplateElement*	currentElem) const;
+
+	/**
+	 * Returns the first sub-element
+	 *(i.e. children, attribute-sets, templates) to execute.
+	 *
+	 * @param executionContext		context to execute element
+	 * @returns						first sub-element to execute,  0 only if no sub-elements to execute
+	 */
+	virtual const ElemTemplateElement*
+	getFirstChildElemToExecute(
+			StylesheetExecutionContext& executionContext) const;
+
+	/**
+	 * Filters sub-elements that should be executed
+	 *
+	 * @param executionContext		context to execute element
+	 * @param element				the element to be executed
+	 * @returns						true if element should be executed, false otherwise
+	 */
+	virtual bool executeChildElement(
+			StylesheetExecutionContext& executionContext,
+			const ElemTemplateElement* element) const;
+#endif
 
 	/**
 	 * Set the next sibling.
@@ -651,6 +788,43 @@ protected:
 	const XalanDOMString*
 	getNamespaceForPrefixInternal(const XalanDOMString& 	prefix) const;
 
+#if defined(ITERATIVE_EXECUTION)
+	/**
+	 * Given an element, find the corresponding
+	 * template.
+	 * 
+	 * @param executionContext	The current execution context
+	 * @param xslInstruction	The calling element
+	 * @param template			The template to use if xsl:for-each, or null.
+	 * @param child				The source context node.
+	 * @returns					matching template if any.  Returns 0 if no matching template or corresponds to a default rule.
+	 */
+	virtual const ElemTemplateElement*
+	findTemplateToTransformChild(
+			StylesheetExecutionContext& 	executionContext,
+			const ElemTemplateElement&		xslInstruction,
+			const ElemTemplateElement*		theTemplate,
+			XalanNode*						child) const;
+
+	/**
+	 * Given an element, find the corresponding
+	 * template.
+	 * 
+	 * @param executionContext	The current execution context
+	 * @param xslInstruction	The calling element
+	 * @param template			The template to use if xsl:for-each, or null.
+	 * @param child				The source context node.
+	 * @param nodeType The type of child.
+	 * @returns					matching template if any.  Returns 0 if no matching template or corresponds to a default rule.
+	 */
+	virtual const ElemTemplateElement*
+	findTemplateToTransformChild(
+			StylesheetExecutionContext& 	executionContext,
+			const ElemTemplateElement&		xslInstruction,
+			const ElemTemplateElement*		theTemplate,
+			XalanNode*						child,
+			XalanNode::NodeType				nodeType) const;
+#else
 	/**
 	 * Given an element, find the corresponding
 	 * template and process the contents.
@@ -684,7 +858,9 @@ protected:
 			const ElemTemplateElement*		theTemplate,
 			XalanNode*						child,
 			XalanNode::NodeType				nodeType) const;
+#endif
 
+	
 	/**
 	 * Given an xsl token type, determine whether or not a child
 	 * of that type is allowed.  This is so derived types can
@@ -757,6 +933,8 @@ private:
 		}
 	}
 
+
+#if !defined(ITERATIVE_EXECUTION)
 	/** 
 	 * Take the contents of a template element, process it, and
 	 * convert it to a string.
@@ -769,6 +947,7 @@ private:
 	doChildrenToString(
 			StylesheetExecutionContext& 	executionContext, 
 			XalanDOMString& 				result) const;
+#endif
 
 	Stylesheet& 			m_stylesheet;
 

@@ -84,7 +84,93 @@ ElemCopy::getElementName() const
 }
 
 
+#if defined(ITERATIVE_EXECUTION)
+const ElemTemplateElement*
+ElemCopy::startElement(StylesheetExecutionContext&	executionContext) const
+{
+	XalanNode* const	sourceNode = executionContext.getCurrentNode();
 
+	assert(sourceNode != 0);
+
+	const XalanNode::NodeType	nodeType = sourceNode->getNodeType();
+
+	if(XalanNode::DOCUMENT_NODE != nodeType)
+	{
+		executionContext.cloneToResultTree(
+			*sourceNode,
+			nodeType,
+			true,
+			false,
+			getLocator());
+
+		if(XalanNode::ELEMENT_NODE == nodeType)
+		{
+			ElemUse::startElement(executionContext);
+
+			executionContext.copyNamespaceAttributes(*sourceNode);
+
+			return beginExecuteChildren(executionContext);
+
+		}
+		else
+		{
+			if(0 != executionContext.getTraceListeners())
+			{
+				executionContext.fireTraceEvent(TracerEvent(executionContext,
+					*this));
+			}
+		}
+	}
+	else
+	{
+		if(0 != executionContext.getTraceListeners())
+		{
+			executionContext.fireTraceEvent(TracerEvent(executionContext, 				
+				*this));
+		}
+
+		ElemUse::startElement(executionContext);
+
+		return beginExecuteChildren(executionContext);
+	}  
+
+	return 0;
+}
+
+
+
+void
+ElemCopy::endElement(StylesheetExecutionContext& executionContext) const
+{
+	XalanNode* const	sourceNode = executionContext.getCurrentNode();
+
+	assert(sourceNode != 0);
+
+	const XalanNode::NodeType	nodeType = sourceNode->getNodeType();
+
+	if(XalanNode::DOCUMENT_NODE != nodeType)
+	{
+		if(XalanNode::ELEMENT_NODE == nodeType)
+		{
+			endExecuteChildren(executionContext);
+
+			executionContext.endElement(c_wstr(sourceNode->getNodeName()));
+
+			ElemUse::endElement(executionContext);
+		}
+	}
+	else
+	{
+		endExecuteChildren(executionContext);
+
+		ElemUse::endElement(executionContext);
+	}
+}
+#endif
+
+
+
+#if !defined(ITERATIVE_EXECUTION)
 void
 ElemCopy::execute(StylesheetExecutionContext&	executionContext) const
 {
@@ -135,6 +221,7 @@ ElemCopy::execute(StylesheetExecutionContext&	executionContext) const
 		executeChildren(executionContext);
 	}  
 }
+#endif
 
 
 

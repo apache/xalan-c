@@ -59,8 +59,16 @@ public:
 	virtual const XalanDOMString&
 	getElementName() const;
 
+#if defined(ITERATIVE_EXECUTION)
+	virtual const ElemTemplateElement*
+	startElement(StylesheetExecutionContext&	executionContext) const;
+
+	virtual void
+	endElement(StylesheetExecutionContext&	executionContext) const;
+#else
 	virtual void
 	execute(StylesheetExecutionContext&		executionContext) const;
+#endif
 
 	virtual	const XPath*
 	getXPath(unsigned int	index = 0) const;

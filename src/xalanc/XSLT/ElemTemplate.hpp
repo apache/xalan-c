@@ -110,6 +110,16 @@ public:
 	getElementName() const;
 
 	// These methods are inherited from ElemTemplateElement ...
+#if defined(ITERATIVE_EXECUTION)
+	virtual const ElemTemplateElement*
+	startElement(StylesheetExecutionContext&	executionContext) const;
+
+	virtual void
+	endElement(StylesheetExecutionContext&		executionContext) const;
+
+	virtual const ElemTemplateElement*
+	getInvoker(StylesheetExecutionContext&	executionContext) const;
+#else
 	virtual void
 	execute(StylesheetExecutionContext&		executionContext) const;
 
@@ -120,15 +130,16 @@ public:
 	executeChildren(
 			StylesheetExecutionContext& 	executionContext,
 			XalanNode*						sourceNode) const;
-
-	virtual	const XPath*
-	getXPath(unsigned int	index = 0) const;
-
     void
     executeAsNamed(StylesheetExecutionContext&  executionContext) const
     {
 	    ParentType::executeChildren(executionContext);
     }
+#endif
+
+    	virtual	const XPath*
+	getXPath(unsigned int	index = 0) const;
+
 
 private:
 

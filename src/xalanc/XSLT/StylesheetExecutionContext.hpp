@@ -224,10 +224,17 @@ public:
 	 * Set the flag that determines if only text nodes
 	 * can be copied to the result tree.
 	 * 
-	 * @param fValue The value of the flag
+	 * @param copyTextNodesOnly The value of the flag
 	 */
 	virtual void
-	setCopyTextNodesOnly(bool	fValue) = 0;
+	pushCopyTextNodesOnly(bool copyTextNodesOnly) = 0;
+
+	/**
+	 * Pop the last flag setting that determines if only text nodes
+	 * can be copied to the result tree.
+	 */
+	virtual bool
+	popCopyTextNodesOnly() = 0;
 
 	/*
 	 * A class to manage setting and restoring the flag
@@ -241,15 +248,14 @@ public:
 		SetAndRestoreCopyTextNodesOnly(
 			StylesheetExecutionContext&		executionContext,
 			bool							fValue) :
-			m_executionContext(executionContext),
-			m_fValue(executionContext.getCopyTextNodesOnly())
+			m_executionContext(executionContext)
 		{
-			executionContext.setCopyTextNodesOnly(fValue);
+			executionContext.pushCopyTextNodesOnly(fValue);
 		}
 
 		~SetAndRestoreCopyTextNodesOnly()
 		{
-			m_executionContext.setCopyTextNodesOnly(m_fValue);
+			m_executionContext.popCopyTextNodesOnly();
 		}
 
 	private:
@@ -263,8 +269,59 @@ public:
 		// Data members...
 		StylesheetExecutionContext&		m_executionContext;
 
-		const bool						m_fValue;
 	};
+	
+#if defined(ITERATIVE_EXECUTION)
+	/**
+	 * Set the flag that determines if the current attribute should be executed
+	 * @param processAttribute the value of the flag
+	 */
+	virtual void
+	pushProcessCurrentAttribute(bool processAttribute) = 0;
+
+	/**
+	 * Pops the last flag setting that determines if the current attribute should be executed
+	 */
+	virtual bool
+	popProcessCurrentAttribute() = 0;
+
+	/**
+	 * Set the flag that determines if an element's attributes should be skipped
+	 *
+	 * @param skipAttributes the value of the flag
+	 */
+	virtual void
+	pushSkipElementAttributes(bool skipAttributes) = 0;
+
+	/**
+	 * Get the last flag setting that determines if an element's attributes should be skipped 
+	 * @returns the value of the flag
+	 */
+	virtual bool
+	getSkipElementAttributes() const = 0;
+
+	/**
+	 * Pops the last flag setting that determines if an element's attributes should be skipped 
+	 */
+	virtual bool
+	popSkipElementAttributes() =  0;
+
+	/**
+	 * Set flag that determines if the if test was true
+	 *
+	 * @param executeIf the value of the flag
+	 */
+	virtual void
+	pushExecuteIf(bool executeIf) = 0;
+	
+	/**
+	 * Pop the flag that determines if the if test was true
+	 *
+	 * @param executeIf the value of the flag
+	 */
+	virtual bool
+	popExecuteIf() = 0;
+#endif
 
 	/**
 	 * Retrieve root document for stylesheet.  Note that
@@ -308,7 +365,14 @@ public:
 	 * @param theMode QName for mode
 	 */
 	virtual	void
-	setCurrentMode(const XalanQName* theMode) = 0; 
+	pushCurrentMode(const XalanQName* theMode) = 0; 
+
+
+	/**
+	 * Pop the current mode
+	 */
+	virtual void
+	popCurrentMode() =0;
 
 	/**
 	 * Retrieve the current template
@@ -660,6 +724,7 @@ public:
 			XalanNode*					contextNode,
 			const PrefixResolver&		resolver) = 0;
 
+#if !defined(ITERATIVE_EXECUTION)
 	/**
 	 * Create an ResultTreeFragment as a variable and push it
 	 * on to the stack with the current context.
@@ -672,6 +737,7 @@ public:
 	createVariable(
 			const ElemTemplateElement&	templateChild,
 			XalanNode*					sourceNode) = 0;
+#endif
 
 	/**
 	 * Execute an XPath using the provided expression, 
@@ -712,6 +778,7 @@ public:
 			XalanNode*					contextNode,
 			const PrefixResolver&		resolver) = 0;
 
+#if !defined(ITERATIVE_EXECUTION)
 	/**
 	 * Create an ResultTreeFragment as a variable and push it
 	 * on to the stack with the current context.
@@ -727,6 +794,7 @@ public:
 			const ElemTemplateElement*	element,
 			const ElemTemplateElement&	templateChild,
 			XalanNode*					sourceNode) = 0;
+#endif
 
 	/**
 	 * Push a named variable onto the variables stack.
@@ -841,6 +909,24 @@ public:
 		StylesheetExecutionContext&		m_executionContext;
 	};
 
+#if defined(ITERATIVE_EXECUTION)
+	/**
+	 *  Initiate context to accept a new set of parameters
+	 */
+	virtual void beginParams() = 0;
+
+	/**
+	 *  Indicate parameter set is complete
+	 */
+	virtual void endParams() = 0;
+
+	/**
+	 * Push a single paramter onto the latest initialized paramter set
+	 * @param qName		the name of the parameter
+	 * @param theValue	the value of the parameter
+	 */
+	virtual void pushParam(const XalanQName& qName,const XObjectPtr& theValue) = 0;
+#else
 	/**
 	 * Given a template, search for the arguments and push them on the stack.
 	 * Also, push default arguments on the stack.
@@ -849,6 +935,7 @@ public:
 	 */
 	virtual	void
 	pushParams(const ElemTemplateElement&	xslCallTemplateElement) = 0;
+#endif
 
 	/**
 	 * Given a name, return a string representing the value, but don't look in
@@ -926,7 +1013,13 @@ public:
 	 * @param currentStackFrameIndex new value of index
 	 */
 	virtual void
-	setCurrentStackFrameIndex(int	currentStackFrameIndex = -1) = 0;
+	pushCurrentStackFrameIndex(int currentStackFrameIndex = -1) =  0;
+
+	/**
+	 * Pop the last stack frame index setting
+	 */
+	virtual void
+	popCurrentStackFrameIndex() = 0;
 
 	/*
 	 * A class to manage the state of the variable stacks frame index.
@@ -941,12 +1034,12 @@ public:
 			m_executionContext(executionContext),
 			m_savedIndex(executionContext.getCurrentStackFrameIndex())
 		{
-			executionContext.setCurrentStackFrameIndex(newIndex);
+			executionContext.pushCurrentStackFrameIndex(newIndex);
 		}
 
 		~SetAndRestoreCurrentStackFrameIndex()
 		{
-			m_executionContext.setCurrentStackFrameIndex(m_savedIndex);
+			m_executionContext.popCurrentStackFrameIndex();
 		}
 
 	private:
@@ -1120,6 +1213,38 @@ public:
 			bool					shouldCloneAttributes,
 			const LocatorType*		locator) = 0;
 
+#if defined(ITERATIVE_EXECUTION)	
+	/**
+	 * Initiate creation of a result tree fragment
+	 * @param sourceNode the source Node
+	 */
+	virtual void
+	beginCreateXResultTreeFrag(
+			XalanNode*					sourceNode) = 0;
+
+	/**
+	 * Indicate sthe completion of result tree fragment
+	 * @return a pointer to the result tree fragment
+	 */
+	virtual const XObjectPtr
+	endCreateXResultTreeFrag() = 0;
+
+	/**
+	 * Initiate to put execution result in string
+	 * 
+	 * @param theResult the string to contain the result
+	 */
+	virtual void
+	beginFormatToText(
+			XalanDOMString&				theResult) = 0;
+
+	/**
+	 * Indicates the completion of the result string
+	 *
+	 */
+	virtual void
+	endFormatToText() = 0;
+#else
 	/**
 	 * Create an XObject that represents a Result tree fragment.
 	 *
@@ -1131,6 +1256,7 @@ public:
 	createXResultTreeFrag(
 			const ElemTemplateElement&	templateChild,
 			XalanNode*					sourceNode) = 0;
+#endif
 
 	/**
 	 * Output an object to the result tree by doing the right conversions.
@@ -1381,6 +1507,7 @@ public:
 			Writer&					writer,
 			const XalanDOMString&	encoding) = 0;
 
+#if !defined(ITERATIVE_EXECUTION)
 	class BorrowReturnFormatterToText
 	{
 	public:
@@ -1429,7 +1556,16 @@ public:
 
 
 	friend class BorrowReturnFormatterToText;
+#endif
 
+#if defined(ITERATIVE_EXECUTION)
+	/**
+	 * Get node sorter instance
+	 */
+	virtual NodeSorter*
+	getNodeSorter() = 0;
+
+#else
 	/**
 	 * Borrow a cached NodeSorter instance.
 	 *
@@ -1493,7 +1629,7 @@ public:
 
 		NodeSorter*						m_sorter;
 	};
-
+#endif
 
 	typedef XalanAutoPtr<XalanNumberFormat>		XalanNumberFormatAutoPtr;
 
@@ -1506,8 +1642,54 @@ public:
 	virtual XalanNumberFormatAutoPtr
 	createXalanNumberFormat() = 0;
 
+#if defined(ITERATIVE_EXECUTION)
+	/*
+	 * A class to manage the attribute sets that have been executed
+	 * by an element
+	 */
+	struct UseAttributeSetIndexes
+	{
+		UseAttributeSetIndexes() :
+			attributeSetNameIndex(0),
+			matchingAttributeSetIndex(0) {}
+			
+		size_type attributeSetNameIndex;
+		size_type matchingAttributeSetIndex;
 
-	// Trace interface...
+
+	};
+
+	virtual void
+	createUseAttributeSetIndexesOnStack() = 0;
+
+	virtual UseAttributeSetIndexes&
+	getUseAttributeSetIndexes() = 0;
+
+	virtual void
+	popUseAttributeSetIndexesFromStack() = 0;
+
+	/**
+	 * Push the element that will invoke 
+	 * non children elements (i.e templates, attribute-sets)
+	 *
+	 * @param invokers the element that will invoke non children elements
+	 */
+	virtual void
+	pushInvoker(const ElemTemplateElement * invoker) = 0;
+
+	/**
+	 * Pop the element that invoked non children elements
+	 */
+	virtual void
+	popInvoker() = 0;
+
+	/**
+	 * Get the lastest element that has invoked 
+	 * a non-child element
+	 */
+	virtual const ElemTemplateElement*
+	getInvoker() const = 0;
+#endif
 
 	/**
 	 * Determine the number of trace listeners.
@@ -1837,11 +2019,60 @@ public:
 	virtual MutableNodeRefList*
 	createMutableNodeRefList() const = 0;
 
+#if defined(ITERATIVE_EXECUTION)
+
+	virtual MutableNodeRefList& 
+	createAndPushMutableNodeRefList() = 0;
+
+	virtual void 
+	releaseAndPopMutableNodeRefList() = 0;
+
+	virtual void
+	pushXObjectPtr(const XObjectPtr& xobjectPtr) = 0;
+
+	virtual void 
+	popXObjectPtr() = 0;
+
+	virtual void 
+	createAndPushNodesToTransformList(const NodeRefListBase* nodeList) = 0;
+
+	virtual XalanNode* 
+	getNextNodeToTransform() = 0;
+
+	virtual void 
+	popNodesToTransformList() = 0;
+
+	/**
+	 * Get a string that is cached on a stack
+	 * @returns a cached string
+	 */
+	virtual XalanDOMString&
+	getAndPushCachedString() = 0;
+
+	/**
+	 * Gets the last string that was cached on the stack
+	 * @returns the last string to be cached
+	 */
+	virtual XalanDOMString&
+	getLastCachedString() = 0;
+
+	/**
+	 * Gets the last string to be cached on the stack and 
+	 * pops it from the stack.   The reference is valid until
+	 * the next request is made for a cached string
+	 *
+	 * @returns the last string to be cached
+	 */
+	virtual XalanDOMString&
+	getAndPopCachedString() = 0;
+#endif
+
 	virtual XalanDOMString&
 	getCachedString() = 0;
 
 	virtual bool
 	releaseCachedString(XalanDOMString&		theString) = 0;
+
 
 	virtual void
 	getNodeSetByKey(
@@ -1946,8 +2177,8 @@ public:
 			const XalanNode* 	sourceNode = 0,
 			const LocatorType* 	locator = 0) const = 0;
 
+#if !defined(ITERATIVE_EXECUTION)
 protected:
-
 	/**
 	 * Borrow a cached FormatterToText instance.
 	 *
@@ -1964,6 +2195,7 @@ protected:
 	 */
 	virtual bool
 	returnFormatterToText(FormatterToText*	theFormatter) = 0;
+#endif
 };
 
 

@@ -113,7 +113,92 @@ ElemCopyOf::getElementName() const
 }
 
 
+#if defined(ITERATIVE_EXECUTION)
+const ElemTemplateElement*
+ElemCopyOf::startElement(StylesheetExecutionContext&		executionContext) const
+{
+	ElemTemplateElement::startElement(executionContext);
 
+	XalanNode* const	sourceNode = executionContext.getCurrentNode();
+	assert(sourceNode != 0);
+
+	if (m_selectPattern == 0)
+	{
+		if(0 != executionContext.getTraceListeners())
+		{
+			StylesheetExecutionContext::BorrowReturnMutableNodeRefList	theNodeList(executionContext);
+
+			theNodeList->addNode(sourceNode);
+
+			executionContext.fireSelectEvent(
+				SelectionEvent(
+					executionContext,
+					sourceNode,
+					*this,
+					StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("select")),
+					StaticStringToDOMString(XALAN_STATIC_UCODE_STRING(".")),
+					executionContext.getXObjectFactory().createNodeSet(theNodeList)));
+		}
+
+		executionContext.cloneToResultTree(*sourceNode, getLocator());
+	}
+	else
+	{
+		const XObjectPtr	value(m_selectPattern->execute(*this, executionContext));
+		assert(value.null() == false);
+
+		if(0 != executionContext.getTraceListeners())
+		{
+			executionContext.fireSelectEvent(
+				SelectionEvent(
+					executionContext,
+					sourceNode,
+					*this,
+					StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("select")),
+					*m_selectPattern,
+					value));
+		}
+
+		const XObject::eObjectType	type = value->getType();
+
+		switch(type)
+		{
+		case XObject::eTypeBoolean:
+		case XObject::eTypeNumber:
+		case XObject::eTypeString:
+			executionContext.characters(value);
+			break;
+
+		case XObject::eTypeNodeSet:
+			{
+				const NodeRefListBase&				theNodeList = value->nodeset();
+				const NodeRefListBase::size_type	nChildren = theNodeList.getLength();
+
+				for(NodeRefListBase::size_type i = 0; i < nChildren; i++)
+				{
+					assert(theNodeList.item(i) != 0);
+
+					executionContext.cloneToResultTree(*theNodeList.item(i), getLocator());
+				}
+			}
+			break;
+
+		case XObject::eTypeResultTreeFrag:
+			executionContext.outputResultTreeFragment(*value.get(), getLocator());
+			break;
+
+		default:
+			executionContext.characters(value);
+			break;
+		}
+	}
+	return 0;
+}
+#endif
+
+
+
+#if !defined(ITERATIVE_EXECUTION)
 void
 ElemCopyOf::execute(StylesheetExecutionContext&		executionContext) const
 {
@@ -193,6 +278,7 @@ ElemCopyOf::execute(StylesheetExecutionContext&		executionContext) const
 		}
 	}
 }
+#endif
 
 
 

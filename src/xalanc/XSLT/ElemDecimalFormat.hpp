@@ -67,9 +67,6 @@ public:
 	virtual const XalanDOMString&
 	getElementName() const;
 
-	virtual void
-	execute(StylesheetExecutionContext&		executionContext) const;
-
 	const XalanDecimalFormatSymbols&
 	getDecimalFormatSymbols() const
 	{

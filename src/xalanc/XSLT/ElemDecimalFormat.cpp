@@ -325,14 +325,6 @@ ElemDecimalFormat::getElementName() const
 
 
 
-void
-ElemDecimalFormat::execute(StylesheetExecutionContext&	executionContext) const
-{
-	ElemTemplateElement::execute(executionContext);
-}
-
-
-
 const XPath*
 ElemDecimalFormat::getXPath(unsigned int	index) const
 {

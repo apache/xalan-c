@@ -113,6 +113,41 @@ ElemAttributeSet::getElementName() const
 
 
 
+#if defined(ITERATIVE_EXECUTION)
+const ElemTemplateElement*
+ElemAttributeSet::startElement(StylesheetExecutionContext& executionContext) const
+{
+	ElemUse::startElement(executionContext);
+
+	executionContext.pushCurrentStackFrameIndex(executionContext.getGlobalStackFrameIndex());
+	executionContext.pushOnElementRecursionStack(this);
+
+	return getFirstChildElemToExecute(executionContext);
+}
+
+
+
+void
+ElemAttributeSet::endElement(StylesheetExecutionContext& executionContext) const
+{
+	executionContext.popElementRecursionStack();
+	executionContext.popCurrentStackFrameIndex();
+
+	ElemUse::endElement(executionContext);
+}
+
+
+
+const ElemTemplateElement*
+ElemAttributeSet::getInvoker(StylesheetExecutionContext&	executionContext) const
+{
+	return executionContext.getInvoker();
+}
+#endif
+
+
+
+#if !defined(ITERATIVE_EXECUTION)
 void
 ElemAttributeSet::execute(StylesheetExecutionContext&	executionContext) const
 {
@@ -138,6 +173,7 @@ ElemAttributeSet::execute(StylesheetExecutionContext&	executionContext) const
 		attr = attr->getNextSiblingElem();
 	}
 }
+#endif
 
 
 

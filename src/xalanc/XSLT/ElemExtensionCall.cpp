@@ -54,7 +54,41 @@ ElemExtensionCall::ElemExtensionCall(
 }
 
 
+#if defined(ITERATIVE_EXECUTION)
+const ElemTemplateElement*
+ElemExtensionCall::startElement(StylesheetExecutionContext&	executionContext) const
+{
+	ElemTemplateElement::startElement(executionContext);
 
+	executionContext.warn( 
+		XalanMessageLoader::getMessage(XalanMessages::XalanHandleExtensions),
+		0,
+		getLocator());
+
+	return ElemTemplateElement::getFirstChildElemToExecute(executionContext);
+}
+
+
+
+void 
+ElemExtensionCall::endElement(StylesheetExecutionContext&	/*executionContext*/) const
+{
+}
+
+
+
+bool
+ElemExtensionCall::executeChildElement(
+					StylesheetExecutionContext& /*executionContext*/,
+					const ElemTemplateElement*	element) const
+{
+	return  element->getXSLToken() == StylesheetConstructionContext::ELEMNAME_FALLBACK;
+}
+#endif
+
+
+
+#if !defined(ITERATIVE_EXECUTION)
 void
 ElemExtensionCall::execute(StylesheetExecutionContext&	executionContext) const
 {
@@ -73,7 +107,7 @@ ElemExtensionCall::execute(StylesheetExecutionContext&	executionContext) const
 		}
 	}
 }
-
+#endif
 
 
 bool

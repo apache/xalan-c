@@ -226,12 +226,13 @@ StylesheetRoot::process(
 
 	executionContext.startDocument();
 
-	executionContext.setCurrentMode(&s_emptyQName);
+	executionContext.pushCurrentMode(&s_emptyQName);
 
 	const XPathExecutionContext::CurrentNodePushAndPop	theCurrentNodePushAndPop(executionContext, sourceTree);
 
 	// Output the action of the found root rule.  All processing
 	// occurs from here.
+	
 	rootRule->execute(executionContext);
 
 	// At this point, anything transient during the tranformation
@@ -837,7 +838,42 @@ StylesheetRoot::addAttributeSet(ElemAttributeSet&	theAttributeSet)
 }
 
 
+#if defined(ITERATIVE_EXECUTION)
+const ElemAttributeSet*
+StylesheetRoot::getAttributeSet(
+			StylesheetExecutionContext&		executionContext,
+			const XalanQName&				theQName,
+			size_type						matchingIndex,
+			const LocatorType*				theLocator) const
+{
+	const AttributeSetMapType::const_iterator	i =
+		m_attributeSetsMap.find(&theQName);
 
+	if (i == m_attributeSetsMap.end())
+	{
+		executionContext.error(
+			XalanMessageLoader::getMessage(XalanMessages::UnknownNodeType_1Param,Constants::ELEMNAME_ATTRIBUTESET_WITH_PREFIX_STRING),
+			executionContext.getCurrentNode(),
+			theLocator);
+	}
+	else
+	{
+		const AttributeSetVectorType&					theAttributeSets = (*i).second;
+
+		if (matchingIndex < theAttributeSets.size())
+		{
+			return theAttributeSets[matchingIndex];
+		}
+	}
+
+	return 0;
+
+}
+#endif
+
+
+
+#if !defined (ITERATIVE_EXECUTION)
 void
 StylesheetRoot::executeAttributeSet(
 			StylesheetExecutionContext&		theExecutionContext,
@@ -867,6 +903,7 @@ StylesheetRoot::executeAttributeSet(
 		}
 	}
 }
+#endif
 
 
 

@@ -209,7 +209,173 @@ ElemTemplateElement::isValidNCName(const XalanDOMString&	s)
 }
 
 
+#if defined(ITERATIVE_EXECUTION)
+const ElemTemplateElement*
+ElemTemplateElement::startElement(StylesheetExecutionContext&	executionContext) const 
+{
+	if(0 != executionContext.getTraceListeners())
+    {
+		executionContext.fireTraceEvent(
+			TracerEvent(executionContext, *this));
+	} 
+	return 0;
+};
 
+
+
+
+void
+ElemTemplateElement::endElement(StylesheetExecutionContext&		/*executionContext*/) const
+{
+}
+
+
+
+void
+ElemTemplateElement::execute(StylesheetExecutionContext&			executionContext) const
+{
+	const ElemTemplateElement const * invoker = getParentNodeElem();
+	const ElemTemplateElement * currentElement = this;
+	const ElemTemplateElement * nextElement = 0;
+
+	executionContext.pushInvoker(invoker);
+
+	while (currentElement != 0)
+	{
+		nextElement = currentElement->startElement(executionContext);
+
+		while (0 == nextElement)
+		{
+			currentElement->endElement(executionContext);
+
+			if (currentElement->getInvoker(executionContext) == invoker)
+			{
+				nextElement = 0;
+				break;
+			}
+		
+			nextElement = currentElement->getInvoker(executionContext)->getNextChildElemToExecute(executionContext,currentElement);
+
+			if (0 == nextElement)
+			{
+				currentElement = currentElement->getInvoker(executionContext);
+
+				if (invoker == currentElement)
+				{
+					nextElement == 0;
+				}
+			}
+			
+		}
+
+		currentElement = nextElement;
+
+	}
+
+	executionContext.popInvoker();
+}
+
+
+
+void
+ElemTemplateElement::executeChildren(StylesheetExecutionContext&	executionContext) const
+{
+	const ElemTemplateElement* element = beginExecuteChildren(executionContext);
+
+	while (element != 0)
+	{
+		element->execute(executionContext);
+
+		element = getNextChildElemToExecute(executionContext,element);
+	}
+
+	endExecuteChildren(executionContext);
+}
+
+
+
+const ElemTemplateElement*
+ElemTemplateElement::beginExecuteChildren(StylesheetExecutionContext&	executionContext) const
+{
+	if (hasParams() == true || hasVariables() == true)
+	{
+		executionContext.pushElementFrame(this);
+	}
+
+	if (hasDirectTemplate() == true)
+	{
+		executionContext.pushInvoker(this);
+	}
+
+	return getFirstChildElemToExecute(executionContext);
+}
+
+
+
+void 
+ElemTemplateElement::endExecuteChildren(StylesheetExecutionContext&	executionContext) const
+{
+	if (hasParams() == true || hasVariables() == true)
+	{
+		executionContext.popElementFrame();
+	}
+
+	if (hasDirectTemplate() == true)
+	{
+		executionContext.popInvoker();
+	}
+}
+
+
+
+const ElemTemplateElement*
+ElemTemplateElement::beginChildrenToString(
+			StylesheetExecutionContext&		executionContext,			
+			XalanDOMString&					result) const
+{
+	if (hasSingleTextChild() == true)
+	{
+		assert(m_textLiteralChild != 0);
+
+		assign(result, m_textLiteralChild->getText(), m_textLiteralChild->getLength());
+		return 0;
+	}
+	else
+	{
+		reserve(result, length(result) + 1024);
+
+		executionContext.beginFormatToText(result);
+
+		return beginExecuteChildren(executionContext);
+	}
+}
+
+
+
+void
+ElemTemplateElement::endChildrenToString(
+			StylesheetExecutionContext&		executionContext) const
+{
+	if (hasSingleTextChild() == false)
+	{
+		endExecuteChildren(executionContext);
+
+		executionContext.endFormatToText();
+	}
+}
+
+
+
+const ElemTemplateElement*
+ElemTemplateElement::getInvoker(StylesheetExecutionContext& /*executionContext*/) const
+{
+	return getParentNodeElem();
+}
+#endif
+
+
+
+#if !defined(ITERATIVE_EXECUTION)
 void
 ElemTemplateElement::execute(StylesheetExecutionContext&	executionContext) const
 {
@@ -284,51 +450,6 @@ ElemTemplateElement::executeChildren(
 }
 
 
-
-const XalanQName&
-ElemTemplateElement::getNameAttribute() const
-{
-	return s_emptyQName;
-}
-
-
-
-void
-ElemTemplateElement::addToStylesheet(
-			StylesheetConstructionContext&	constructionContext,
-			Stylesheet&						/* theStylesheet */)
-{
-	// An illegal call to addToStylesheet() was made during compilation of the stylesheet.
-	assert ( false );
-}
-
-
-
-void
-ElemTemplateElement::processSortElement(
-			StylesheetConstructionContext&	constructionContext,
-			Stylesheet&						/* theStylesheet */,
-			const AttributeListType&		/* atts */,
-			const LocatorType*				locator)
-{
-	constructionContext.error(
-		XalanMessageLoader::getMessage(XalanMessages::TemplateIsNotAllowedAtThisPosition_1Param,Constants::ELEMNAME_SORT_WITH_PREFIX_STRING),
-		0,
-		locator);
-}
-
-
-
-void
-ElemTemplateElement::setDefaultTemplate(bool	value)
-{
-	m_flags |= eDefaultTemplate;
-
-	for (ElemTemplateElement* node = m_firstChild; node != 0; node = node->m_nextSibling) 
-	{
-		node->setDefaultTemplate(value);
-	}
-}
 
 
 
@@ -455,6 +576,55 @@ ElemTemplateElement::childrenToResultPI(
 				c_wstr(theResult.get()));
 	}
 }
+#endif
+
+
+
+
+const XalanQName&
+ElemTemplateElement::getNameAttribute() const
+{
+	return s_emptyQName;
+}
+
+
+
+void
+ElemTemplateElement::addToStylesheet(
+			StylesheetConstructionContext&	constructionContext,
+			Stylesheet&						/* theStylesheet */)
+{
+	// An illegal call to addToStylesheet() was made during compilation of the stylesheet.
+	assert ( false );
+}
+
+
+
+void
+ElemTemplateElement::processSortElement(
+			StylesheetConstructionContext&	constructionContext,
+			Stylesheet&						/* theStylesheet */,
+			const AttributeListType&		/* atts */,
+			const LocatorType*				locator)
+{
+	constructionContext.error(
+		XalanMessageLoader::getMessage(XalanMessages::TemplateIsNotAllowedAtThisPosition_1Param,Constants::ELEMNAME_SORT_WITH_PREFIX_STRING),
+		0,
+		locator);
+}
+
+
+
+void
+ElemTemplateElement::setDefaultTemplate(bool	value)
+{
+	m_flags |= eDefaultTemplate;
+
+	for (ElemTemplateElement* node = m_firstChild; node != 0; node = node->m_nextSibling) 
+	{
+		node->setDefaultTemplate(value);
+	}
+}
 
 
 
@@ -579,7 +749,135 @@ ElemTemplateElement::getXPath(unsigned int	/* index */) const
 }
 
 
+#if defined(ITERATIVE_EXECUTION)
+const ElemTemplateElement*
+ElemTemplateElement::findTemplateToTransformChild(
+			StylesheetExecutionContext&		executionContext,
+			const ElemTemplateElement&		xslInstruction,
+			const ElemTemplateElement*		theTemplate,
+			XalanNode*						child) const
+{
+	assert(child != 0);
 
+	return findTemplateToTransformChild(
+		executionContext,
+		xslInstruction,
+		theTemplate,
+		child,
+		child->getNodeType());
+}
+
+
+const ElemTemplateElement*
+ElemTemplateElement::findTemplateToTransformChild(
+			StylesheetExecutionContext&		executionContext,
+			const ElemTemplateElement&		xslInstruction,
+			const ElemTemplateElement*		theTemplate,
+			XalanNode*						child,
+			XalanNode::NodeType				nodeType) const
+{
+	assert(child != 0);
+
+	if(0 == theTemplate)
+	{
+		// Find the XSL template that is the best match for the 
+		// element...
+		const bool			isApplyImports = xslInstruction.getXSLToken() ==
+			StylesheetConstructionContext::ELEMNAME_APPLY_IMPORTS;
+        assert(isApplyImports == false || executionContext.getCurrentTemplate() != 0);
+
+		const Stylesheet*	stylesheetTree = isApplyImports == true ?
+								&executionContext.getCurrentTemplate()->getStylesheet() :
+								&getStylesheet().getStylesheetRoot();
+
+		theTemplate = stylesheetTree->findTemplate(
+						executionContext,
+						child,
+						nodeType,
+						*executionContext.getCurrentMode(),
+						isApplyImports);
+	}
+
+	if(0 == theTemplate)
+	{
+		switch(nodeType)
+		{
+		case XalanNode::DOCUMENT_FRAGMENT_NODE:
+		case XalanNode::ELEMENT_NODE:
+			theTemplate = getStylesheet().getStylesheetRoot().getDefaultRule();
+			break;
+
+		case XalanNode::CDATA_SECTION_NODE:
+		case XalanNode::TEXT_NODE:
+		case XalanNode::ATTRIBUTE_NODE:
+			theTemplate = getStylesheet().getStylesheetRoot().getDefaultTextRule();
+			break;
+
+		case XalanNode::DOCUMENT_NODE:
+			theTemplate = getStylesheet().getStylesheetRoot().getDefaultRootRule();
+			break;
+
+		default:
+			break;
+		}     
+	}
+				
+	if(0 != theTemplate)
+	{
+		if(theTemplate == getStylesheet().getStylesheetRoot().getDefaultTextRule())
+		{
+			switch(nodeType)
+			{
+		    case XalanNode::CDATA_SECTION_NODE:
+			case XalanNode::TEXT_NODE:
+				executionContext.cloneToResultTree(
+                    *child,
+                    XalanNode::TEXT_NODE,
+                    true,
+                    false,
+                    getLocator());
+				break;
+
+			case XalanNode::ATTRIBUTE_NODE:
+				{
+					const XalanDOMString&	val = child->getNodeValue();
+
+					const XalanDOMString::size_type		len = length(val);
+
+					if (len > 0)
+					{
+						executionContext.characters(
+							toCharArray(val), 
+							0,
+							len);
+					}
+				}
+				break;
+
+			default:
+				assert(false);
+				break;
+			}
+		}
+		else
+		{
+			if(0 != executionContext.getTraceListeners())
+			{
+				const TracerEvent   te(executionContext,							   
+								       *theTemplate);
+
+				executionContext.fireTraceEvent(te);
+			}
+
+			return theTemplate;
+		}
+	}
+	return 0;
+}
+
+
+
+#else
 void
 ElemTemplateElement::transformChild(
 			StylesheetExecutionContext&		executionContext,
@@ -705,6 +1003,8 @@ ElemTemplateElement::transformChild(
 		}
 	}
 }
+#endif
+
 
 
 void
@@ -949,5 +1249,62 @@ ElemTemplateElement::childTypeAllowed(int	/* xslToken */) const
 }
 
 
+#if defined(ITERATIVE_EXECUTION)
+const ElemTemplateElement*
+ElemTemplateElement::getNextChildElemToExecute(StylesheetExecutionContext& executionContext,
+								 const ElemTemplateElement* currentElem) const
+{
+	if (hasDirectTemplate() == true)
+	{
+		return 0;
+	}
+
+	assert(currentElem != 0);
+
+	const ElemTemplateElement* nextElement;
+	
+	while((nextElement = currentElem->getNextSiblingElem()) != 0
+		  && !executeChildElement(executionContext, nextElement))
+	{
+		currentElem = nextElement;
+	}
+			
+	return nextElement;
+
+}
+
+
+
+const ElemTemplateElement*
+ElemTemplateElement::getFirstChildElemToExecute(StylesheetExecutionContext& executionContext) const
+{
+	if (hasDirectTemplate() == true)
+	{
+		assert(m_directTemplate != 0);
+
+		return m_directTemplate;
+	}
+	
+	const ElemTemplateElement * firstElement = getFirstChildElem();
+
+	if (firstElement != 0 && !executeChildElement(executionContext, firstElement))
+	{
+		firstElement = ElemTemplateElement::getNextChildElemToExecute(executionContext,firstElement);
+	}
+
+	return firstElement;
+
+}
+
+
+
+bool 
+ElemTemplateElement::executeChildElement(
+			StylesheetExecutionContext& /*executionContext*/,
+			const ElemTemplateElement*	/*element*/) const
+{
+	return true;
+}
+#endif
 
 XALAN_CPP_NAMESPACE_END

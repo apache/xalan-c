@@ -92,7 +92,143 @@ ElemUse::postConstruction(
 }
 
 
+#if defined(ITERATIVE_EXECUTION)
+const ElemTemplateElement*
+ElemUse::startElement(StylesheetExecutionContext&	executionContext) const
+{
 
+	if (m_attributeSetsNamesCount > 0)
+	{
+		assert(canGenerateAttributes() == true);
+
+		executionContext.pushInvoker(this);
+
+		executionContext.createUseAttributeSetIndexesOnStack();
+
+		return getNextAttributeSet(executionContext);
+	}
+
+	return 0;
+
+}
+
+
+
+void
+ElemUse::endElement(StylesheetExecutionContext&	executionContext) const
+{
+	if (m_attributeSetsNamesCount > 0)
+	{
+		executionContext.popInvoker();
+
+		executionContext.popUseAttributeSetIndexesFromStack();
+	}
+}
+
+
+
+const ElemTemplateElement*
+ElemUse::getNextChildElemToExecute(
+			StylesheetExecutionContext& executionContext,
+			const ElemTemplateElement* currentElem) const
+{	
+	const ElemTemplateElement* nextElement = 0;
+	
+	if (m_attributeSetsNamesCount > 0)
+	{
+		nextElement = getNextAttributeSet(executionContext);
+	}
+
+	// no more attribute sets,  check for next child element
+	if (0 == nextElement)
+	{
+		nextElement = ElemTemplateElement::getNextChildElemToExecute(executionContext, currentElem);
+	}
+
+	// if next element to execute is the first child after executing attribute set(s),  
+	// evalute the element's AVTs first
+	if (0 == nextElement && currentElem->getXSLToken() == StylesheetConstructionContext::ELEMNAME_ATTRIBUTE_SET)
+	{
+		evaluateAVTs(executionContext);
+		nextElement = ElemTemplateElement::getFirstChildElemToExecute(executionContext);
+	}
+
+	return nextElement;
+}
+
+
+
+const ElemTemplateElement*
+ElemUse::getFirstChildElemToExecute(
+			StylesheetExecutionContext& executionContext) const
+{
+	const ElemTemplateElement* nextElement = 0;
+	
+	if (m_attributeSetsNamesCount > 0)
+	{
+		// reset
+		executionContext.getUseAttributeSetIndexes().attributeSetNameIndex = 0;
+		executionContext.getUseAttributeSetIndexes().matchingAttributeSetIndex = 0;
+
+		nextElement = getNextAttributeSet(executionContext);
+	} 
+	else 
+	{
+		evaluateAVTs(executionContext);
+	}
+
+	if (0 == nextElement)
+	{
+		nextElement = ElemTemplateElement::getFirstChildElemToExecute(executionContext);
+	}
+
+	return nextElement;
+}
+
+
+
+const ElemTemplateElement*
+ElemUse::getNextAttributeSet(
+			StylesheetExecutionContext& executionContext) const
+{
+	const StylesheetRoot& theStylesheetRoot = getStylesheet().getStylesheetRoot();
+
+	StylesheetExecutionContext::UseAttributeSetIndexes& useAttributeSetIndexes = executionContext.getUseAttributeSetIndexes();
+	
+	const ElemTemplateElement* attributeSet = 0;
+
+	while (0 == attributeSet &&
+		   useAttributeSetIndexes.attributeSetNameIndex < m_attributeSetsNamesCount)
+	{
+		attributeSet = theStylesheetRoot.getAttributeSet(
+				executionContext,
+				*m_attributeSetsNames[useAttributeSetIndexes.attributeSetNameIndex],
+				 useAttributeSetIndexes.matchingAttributeSetIndex++,
+				getLocator());
+
+		if (0 == attributeSet)
+		{
+
+			useAttributeSetIndexes.attributeSetNameIndex++;
+			useAttributeSetIndexes.matchingAttributeSetIndex = 0;
+		}
+	}
+
+	return attributeSet;
+
+}
+
+
+
+void
+ElemUse::evaluateAVTs(
+		StylesheetExecutionContext&			/*executionContext*/) const
+{
+}
+#endif
+
+
+#if !defined(ITERATIVE_EXECUTION)
 void
 ElemUse::execute(StylesheetExecutionContext&	executionContext) const
 {
@@ -123,6 +259,7 @@ ElemUse::doExecute(
 		}
 	}
 }
+#endif
 
 
 

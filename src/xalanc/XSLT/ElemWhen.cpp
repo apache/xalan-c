@@ -92,7 +92,27 @@ ElemWhen::getElementName() const
 }
 
 
+#if defined(ITERATIVE_EXECUTION)
+const ElemTemplateElement*
+ElemWhen::startElement(StylesheetExecutionContext&	executionContext) const
+{
+	ElemTemplateElement::startElement(executionContext);
+	
+	return beginExecuteChildren(executionContext);
+}
 
+
+
+void
+ElemWhen::endElement(StylesheetExecutionContext&	executionContext) const
+{
+	 endExecuteChildren(executionContext);
+}
+#endif
+
+
+
+#if !defined(ITERATIVE_EXECUTION)
 void
 ElemWhen::execute(StylesheetExecutionContext&	executionContext) const
 {
@@ -100,6 +120,7 @@ ElemWhen::execute(StylesheetExecutionContext&	executionContext) const
 
 	executeChildren(executionContext);
 }
+#endif
 
 
 

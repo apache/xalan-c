@@ -239,6 +239,62 @@ private:
 
 
 
+#if defined(ITERATIVE_EXECUTION)
+const ElemTemplateElement*
+ElemValueOf::startElement(StylesheetExecutionContext&		executionContext) const
+{
+	ElemTemplateElement::startElement(executionContext);
+
+	XalanNode* const	sourceNode = executionContext.getCurrentNode();
+	assert(sourceNode != 0);
+
+	if (m_selectPattern == 0)
+	{
+		if (disableOutputEscaping() == false)
+		{
+			executionContext.characters(*sourceNode);
+		}
+		else
+		{
+			executionContext.charactersRaw(*sourceNode);
+		}
+
+		if(0 != executionContext.getTraceListeners())
+		{
+			const StylesheetExecutionContext::GetAndReleaseCachedString		theString(executionContext);
+
+			DOMServices::getNodeData(*sourceNode, theString.get());
+
+			fireSelectionEvent(executionContext, sourceNode, theString.get());
+		}
+	}
+	else
+	{
+		FormatterListenerAdapater	theAdapter(executionContext);
+
+		XPath::MemberFunctionPtr	theFunction = disableOutputEscaping() == false ?
+			&FormatterListener::characters : &FormatterListener::charactersRaw;
+
+		m_selectPattern->execute(*this, executionContext, theAdapter, theFunction);
+
+		if(0 != executionContext.getTraceListeners())
+		{
+			const XObjectPtr	value(m_selectPattern->execute(sourceNode, *this, executionContext));
+
+			if (value.null() == false)
+			{
+				fireSelectionEvent(executionContext, sourceNode, value);
+			}
+		}
+	}
+
+	return 0;
+}
+#endif
+
+
+
+#if !defined(ITERATIVE_EXECUTION)
 void
 ElemValueOf::execute(StylesheetExecutionContext&	executionContext) const
 {
@@ -287,6 +343,7 @@ ElemValueOf::execute(StylesheetExecutionContext&	executionContext) const
 		}
 	}
 }
+#endif
 
 
 

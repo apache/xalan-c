@@ -83,7 +83,39 @@ ElemComment::getElementName() const
 }
 
 
+#if defined(ITERATIVE_EXECUTION)
+const ElemTemplateElement*
+ElemComment::startElement(StylesheetExecutionContext&		executionContext) const
+{
+	ElemTemplateElement::startElement(executionContext);
 
+	executionContext.pushCopyTextNodesOnly(true);
+
+	XalanDOMString& theResult = executionContext.getAndPushCachedString();
+
+	return beginChildrenToString(executionContext,theResult);
+
+}
+
+
+
+void
+ElemComment::endElement(StylesheetExecutionContext&		executionContext) const
+{
+	
+	endChildrenToString(executionContext);
+
+	XalanDOMString& theResult = executionContext.getAndPopCachedString();
+
+	executionContext.comment(c_wstr(theResult));
+
+	executionContext.popCopyTextNodesOnly();
+}
+#endif
+
+
+
+#if !defined(ITERATIVE_EXECUTION)
 void
 ElemComment::execute(StylesheetExecutionContext&	executionContext) const
 {
@@ -93,6 +125,7 @@ ElemComment::execute(StylesheetExecutionContext&	executionContext) const
 
     childrenToResultComment(executionContext);
 }
+#endif
 
 
 

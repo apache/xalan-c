@@ -26,6 +26,11 @@
 
 
 
+#include <xalanc/XPath/XObjectFactory.hpp>
+
+
+
+#include "SelectionEvent.hpp"
 #include "Constants.hpp"
 #include "Stylesheet.hpp"
 #include "StylesheetConstructionContext.hpp"
@@ -124,6 +129,89 @@ ElemWithParam::getXPath(unsigned int	index) const
 	return index == 0 ? m_selectPattern : 0;
 }
 
+
+
+#if defined(ITERATIVE_EXECUTION)
+
+const ElemTemplateElement* 
+ElemWithParam::startElement(StylesheetExecutionContext& executionContext) const
+{
+	assert(m_qname != 0);
+
+	ElemTemplateElement::startElement(executionContext);
+
+	XObjectPtr theValue;
+
+	if(m_selectPattern == 0)
+	{
+		if (getFirstChildElem() == 0)
+		{
+			theValue = executionContext.getXObjectFactory().createStringReference(s_emptyString);
+		}
+		else
+		{
+			executionContext.beginCreateXResultTreeFrag(executionContext.getCurrentNode());
+			return beginExecuteChildren(executionContext);
+		}
+	}
+	else
+	{
+		theValue = m_selectPattern->execute(*this, executionContext);
+	
+		if(0 != executionContext.getTraceListeners())
+		{
+			executionContext.fireSelectEvent(
+				SelectionEvent(
+					executionContext,
+					executionContext.getCurrentNode(),
+					*this,
+					StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("select")),
+					*m_selectPattern,
+					theValue));
+		}
+
+	}
+
+	if (theValue.null() == false)
+	{
+		executionContext.pushParam(
+				*m_qname,
+				theValue);
+	}
+	else
+	{
+		executionContext.pushParam(
+				*m_qname,
+				theValue);
+	}
+
+	return 0;
+}
+
+
+void
+ElemWithParam::endElement(StylesheetExecutionContext& executionContext) const
+{
+	XObjectPtr theValue;
+
+	if (0 == m_selectPattern && 0 != getFirstChildElem())
+	{
+		theValue = executionContext.endCreateXResultTreeFrag();
+		if (theValue.null() == false)
+		{
+			executionContext.pushParam(
+					*m_qname,
+					theValue);
+		}
+		else
+		{
+			executionContext.pushParam(
+					*m_qname,
+					theValue);
+		}
+	}
+}
+#endif
 
 
 XALAN_CPP_NAMESPACE_END

@@ -118,6 +118,77 @@ ElemCallTemplate::getElementName() const
 
 
 
+#if defined(ITERATIVE_EXECUTION)
+const ElemTemplateElement*
+ElemCallTemplate::startElement(StylesheetExecutionContext&		executionContext) const
+{
+	ElemTemplateElement::startElement(executionContext);
+
+	assert(m_template != 0);
+
+	executionContext.pushInvoker(this);
+
+	return getFirstChildElemToExecute(executionContext);
+}
+
+void
+ElemCallTemplate::endElement(StylesheetExecutionContext&		executionContext) const 
+{
+	executionContext.popContextMarker();
+
+	executionContext.popInvoker();
+}
+
+
+
+const ElemTemplateElement*
+ElemCallTemplate::getNextChildElemToExecute(
+		StylesheetExecutionContext& executionContext,
+		const ElemTemplateElement* currentElem) const
+{
+	if (currentElem == m_template)
+	{
+		return 0;
+	}
+
+	const ElemTemplateElement* nextElement = ElemTemplateElement::getNextChildElemToExecute(executionContext,currentElem);
+
+	if (nextElement == 0)
+	{
+		executionContext.pushContextMarker();
+		executionContext.endParams();
+		
+		return m_template;
+	}
+
+	return nextElement;
+}
+
+
+
+const ElemTemplateElement*
+ElemCallTemplate::getFirstChildElemToExecute(
+		StylesheetExecutionContext& executionContext) const
+{
+	const ElemTemplateElement* firstElement = ElemTemplateElement::getFirstChildElemToExecute(executionContext);
+
+	if (firstElement != 0)
+	{
+		executionContext.beginParams();
+		return firstElement;
+	}
+	else
+	{
+		executionContext.pushContextMarker();
+		return m_template;
+	}
+}
+#endif
+
+
+
+
+#if !defined(ITERATIVE_EXECUTION)
 void
 ElemCallTemplate::execute(StylesheetExecutionContext&	executionContext) const
 {
@@ -131,7 +202,7 @@ ElemCallTemplate::execute(StylesheetExecutionContext&	executionContext) const
 
 	m_template->executeAsNamed(executionContext);
 }
-
+#endif
 
 
 void

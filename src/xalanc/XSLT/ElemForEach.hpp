@@ -33,6 +33,8 @@
 
 
 #include <xalanc/XPath/NodeRefListBase.hpp>
+#include <xalanc/XPath/MutableNodeRefList.hpp>
+#include <xalanc/XPath/XObject.hpp>
 
 
 
@@ -98,8 +100,21 @@ public:
 			StylesheetConstructionContext&	constructionContext,
 			const NamespacesHandler&		theParentHandler);
 
+#if defined(ITERATIVE_EXECUTION)
+	virtual const ElemTemplateElement*
+	startElement(StylesheetExecutionContext&	executionContext) const;
+	
+	virtual void
+	endElement(StylesheetExecutionContext&		executionContext) const;
+
+	virtual const ElemTemplateElement*
+	getNextChildElemToExecute(
+			   StylesheetExecutionContext&	executionContext,
+			   const ElemTemplateElement*	currentElem) const;
+#else
 	virtual void
 	execute(StylesheetExecutionContext&		executionContext) const;
+#endif
 	
 	virtual	const XPath*
 	getXPath(unsigned int	index = 0) const;
@@ -122,6 +137,45 @@ protected:
 			int								columnNumber,
 			int								xslToken);
 
+#if defined(ITERATIVE_EXECUTION)
+
+	/*
+	 * Returns a pointer to a list of the selected nodes.  The
+	 * nodes are sorted if required. 
+	 * 
+	 * @param executionContext	context for executing this element
+	 * @return pointer to the list of selected (and sorted) nodes
+	 */
+	virtual const NodeRefListBase*
+	createSelectedAndSortedNodeList(
+			StylesheetExecutionContext&		executionContext) const;
+	
+	/*
+	 * Release any objects used to maintain the last selected 
+	 * (and sorted) node list to be created
+	 * 
+	 * @param executionContext	context for executing this element
+	 */
+	virtual void
+	releaseSelectedAndSortedNodeList(
+			StylesheetExecutionContext&		executionContext) const;
+
+	/*
+	 * Sorts a list of nodes 
+	 *
+	 * @param executionContext	context for executing this element
+	 * @param selectedNodeList	list of nodes to be sorted
+	 * @param sortedNodeList	list for sorted nodes
+	 *
+	 * @returns pointer to list of sorted nodes
+	 */
+	virtual const NodeRefListBase*
+	sortChildren(	
+			StylesheetExecutionContext&		executionContext,
+			const NodeRefListBase&			selectedNodeList,
+			MutableNodeRefList&				sortedNodeList) const;
+
+#else
 	/**
 	 * Perform a query if needed, and call transformChild for each child.
 	 * 
@@ -164,6 +218,7 @@ protected:
 			const ElemTemplateElement*		theTemplate,
 			NodeSorter* 					sorter,
 			int 							selectStackFrameIndex) const;
+#endif
 
 	const XPath*			m_selectPattern;
 

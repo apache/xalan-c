@@ -89,7 +89,28 @@ ElemForwardCompatible::~ElemForwardCompatible()
 }
 
 
+#if defined(ITERATIVE_EXECUTION)
+const ElemTemplateElement*
+ElemForwardCompatible::startElement(StylesheetExecutionContext& executionContext) const
+{
+	return getFirstChildElemToExecute(executionContext);
 
+}
+	
+
+
+bool
+ElemForwardCompatible::executeChildElement(
+			StylesheetExecutionContext& /*executionContext*/,
+			const ElemTemplateElement*  element) const
+{
+	return element->getXSLToken() == StylesheetConstructionContext::ELEMNAME_FALLBACK;
+}
+#endif
+
+
+
+#if !defined(ITERATIVE_EXECUTION)
 void
 ElemForwardCompatible::execute(StylesheetExecutionContext&		executionContext) const
 {
@@ -103,6 +124,7 @@ ElemForwardCompatible::execute(StylesheetExecutionContext&		executionContext) co
 		}
 	}
 }
+#endif
 
 
 

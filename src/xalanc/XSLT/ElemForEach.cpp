@@ -177,6 +177,318 @@ ElemForEach::postConstruction(
 
 
 
+#if defined(ITERATIVE_EXECUTION)
+const ElemTemplateElement*
+ElemForEach::startElement(StylesheetExecutionContext&		executionContext) const
+{
+	assert(executionContext.getCurrentNode() != 0);
+
+	if (hasChildren() == true)
+	{
+		executionContext.pushCurrentTemplate(0);
+		const NodeRefListBase * nodeList = createSelectedAndSortedNodeList(
+				executionContext);
+		NodeRefListBase::size_type nNodes = nodeList->getLength();
+		executionContext.createAndPushNodesToTransformList(nodeList);
+		executionContext.pushContextNodeList(*nodeList);
+		
+	    XalanNode* currentNode = executionContext.getNextNodeToTransform();
+		if (currentNode == 0)
+		{
+			return 0;
+		}
+		executionContext.pushCurrentNode(currentNode);
+
+		return beginExecuteChildren(executionContext);	
+	}
+	
+	return 0;
+}
+
+
+
+const ElemTemplateElement*
+ElemForEach::getNextChildElemToExecute(
+				   StylesheetExecutionContext& executionContext,
+				   const ElemTemplateElement* currentElem) const
+{
+	ElemTemplateElement* nextElement = currentElem->getNextSiblingElem();
+
+	if (nextElement != 0)
+	{
+		return nextElement;
+	}
+
+	executionContext.popCurrentNode();
+
+
+	XalanNode * nextNode = executionContext.getNextNodeToTransform();
+
+	if (nextNode == 0)
+	{
+		return 0;
+	}
+
+	executionContext.pushCurrentNode(nextNode);
+	endExecuteChildren(executionContext);
+	return beginExecuteChildren(executionContext);
+}
+
+
+
+void
+ElemForEach::endElement(StylesheetExecutionContext&		executionContext) const
+{
+	if (hasChildren() == true)
+	{
+		endExecuteChildren(executionContext);
+		executionContext.popNodesToTransformList();
+		executionContext.popContextNodeList();
+		releaseSelectedAndSortedNodeList(executionContext);
+		executionContext.popCurrentTemplate();
+	}	
+}
+
+
+
+const NodeRefListBase*
+ElemForEach::createSelectedAndSortedNodeList(
+			StylesheetExecutionContext&		executionContext) const 
+{
+	assert(m_selectPattern != 0);
+
+	typedef StylesheetExecutionContext::SetAndRestoreCurrentStackFrameIndex		SetAndRestoreCurrentStackFrameIndex;
+
+	MutableNodeRefList& selectedNodeList = executionContext.createAndPushMutableNodeRefList();	
+
+	XObjectPtr xobjectResult;
+		
+	const NodeRefListBase*	nodesToTransform = 0;
+
+	{
+		xobjectResult = m_selectPattern->execute(
+						*this,
+						executionContext,
+						selectedNodeList);
+
+		if (xobjectResult.null() == true)
+		{
+			nodesToTransform = &selectedNodeList;
+		}
+		else
+		{
+			nodesToTransform = &xobjectResult->nodeset();
+		}
+	}
+	executionContext.pushXObjectPtr(xobjectResult);
+
+	if(0 != executionContext.getTraceListeners())
+	{
+		executionContext.fireSelectEvent(
+				SelectionEvent(
+					executionContext, 
+					executionContext.getCurrentNode(),
+					*this,
+					StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("select")),
+					*m_selectPattern,
+					*nodesToTransform));
+	}
+
+	if (m_sortElemsCount > 0) 
+		//&& nodesToTransform->getLength() > 1)
+	{
+		MutableNodeRefList& sortedNodeList = executionContext.createAndPushMutableNodeRefList();
+
+		nodesToTransform = sortChildren(
+				executionContext,
+				*nodesToTransform,
+				sortedNodeList);
+	}
+
+	return nodesToTransform;
+}
+
+
+
+void
+ElemForEach::releaseSelectedAndSortedNodeList(
+		StylesheetExecutionContext& executionContext) const
+{
+	executionContext.popXObjectPtr();
+	executionContext.releaseAndPopMutableNodeRefList();
+	if (m_sortElemsCount > 0)
+	{
+		executionContext.releaseAndPopMutableNodeRefList();
+	}
+}
+
+
+
+const NodeRefListBase*
+ElemForEach::sortChildren(	
+			StylesheetExecutionContext&		executionContext,
+			const NodeRefListBase&			selectedNodeList,
+			MutableNodeRefList&				sortedNodeList) const
+{
+	typedef NodeSorter::NodeSortKeyVectorType					NodeSortKeyVectorType;
+	typedef StylesheetExecutionContext::SetAndRestoreCurrentStackFrameIndex		SetAndRestoreCurrentStackFrameIndex;
+	typedef StylesheetExecutionContext::ContextNodeListPushAndPop				ContextNodeListPushAndPop;
+	
+	NodeSorter* sorter = executionContext.getNodeSorter();
+
+	NodeSortKeyVectorType&	keys = sorter->getSortKeys();
+	assert(keys.empty() == true);
+
+	CollectionClearGuard<NodeSortKeyVectorType>		guard(keys);
+
+	// Reserve the space now...
+	keys.reserve(m_sortElemsCount);
+
+	// Get some temporary strings to use for evaluting the AVTs...
+	StylesheetExecutionContext::GetAndReleaseCachedString	theTemp1(executionContext);
+
+	XalanDOMString&		langString = theTemp1.get();
+
+	StylesheetExecutionContext::GetAndReleaseCachedString	theTemp2(executionContext);
+
+	XalanDOMString&		scratchString = theTemp2.get();
+
+	// March backwards, performing a sort on each xsl:sort child.
+	// Probably not the most efficient method.
+	for(SortElemsVectorType::size_type	i = 0; i < m_sortElemsCount; i++)
+	{
+		const ElemSort* const	sort = m_sortElems[i];
+		assert(sort != 0);
+
+		const AVT* avt = sort->getLangAVT();
+
+		if(0 != avt)
+		{
+			avt->evaluate(langString, *this, executionContext);
+		}
+
+		avt = sort->getDataTypeAVT();
+
+		if(0 != avt)
+		{
+			avt->evaluate(scratchString, *this, executionContext);
+		}			
+
+		bool	treatAsNumbers = false;
+
+		if (isEmpty(scratchString) == false)
+		{
+			if (equals(scratchString, Constants::ATTRVAL_DATATYPE_NUMBER) == true)
+			{
+				treatAsNumbers = true;
+			}
+			else if (equals(scratchString, Constants::ATTRVAL_DATATYPE_TEXT) == false)
+			{
+				const XalanQNameByValue		theQName(scratchString, this);
+
+				if (theQName.getNamespace().length() == 0)
+				{
+					executionContext.error(
+						XalanMessageLoader::getMessage(XalanMessages::XslSortDataTypeMustBe),
+						executionContext.getCurrentNode(),
+						sort->getLocator());
+				}
+				else
+				{
+					executionContext.warn(
+						XalanMessageLoader::getMessage(XalanMessages::XslSortHasUnlnownDataType),
+						executionContext.getCurrentNode(),
+						sort->getLocator());
+				}
+			}
+		}
+
+		clear(scratchString);
+
+		avt = sort->getOrderAVT();
+
+		if(0 != avt)
+		{
+			avt->evaluate(scratchString, *this, executionContext);
+		}			
+
+		bool	descending = false;
+		
+		if (isEmpty(scratchString) == false)
+		{
+			if (equals(scratchString, Constants::ATTRVAL_ORDER_DESCENDING) == true)
+			{
+				descending = true;
+			}
+			else if (equals(scratchString, Constants::ATTRVAL_ORDER_ASCENDING) == false)
+			{
+				executionContext.error(
+					XalanMessageLoader::getMessage(XalanMessages::XslSortMustBeAscendOrDescend),
+					executionContext.getCurrentNode(),
+					sort->getLocator());
+			}
+		}
+
+		clear(scratchString);
+
+		avt = sort->getCaseOrderAVT();
+
+		if(0 != avt)
+		{
+			avt->evaluate(scratchString, *this, executionContext);
+		}			
+
+		XalanCollationServices::eCaseOrder	caseOrder = XalanCollationServices::eDefault;
+
+		if (isEmpty(scratchString) == false)
+		{
+			if (equals(scratchString, Constants::ATTRVAL_CASEORDER_UPPER) == true)
+			{
+				caseOrder = XalanCollationServices::eUpperFirst;
+			}
+			else if (equals(scratchString, Constants::ATTRVAL_CASEORDER_LOWER) == true)
+			{
+				caseOrder = XalanCollationServices::eLowerFirst;
+			}
+			else
+			{
+				executionContext.error(
+					XalanMessageLoader::getMessage(XalanMessages::XslSortCaseOrderMustBe),
+					executionContext.getCurrentNode(),
+					sort->getLocator());
+			}
+		}
+
+		clear(scratchString);
+
+		keys.push_back(
+				NodeSortKey(
+					executionContext,
+					sort->getSelectPattern(),
+					treatAsNumbers,
+					descending,
+					caseOrder,
+					langString,
+					*this));
+	}
+
+	sortedNodeList = selectedNodeList;
+
+	{
+		ContextNodeListPushAndPop	theContextNodeListPushAndPop(
+				executionContext,
+				selectedNodeList);
+
+		sorter->sort(executionContext, sortedNodeList);
+	}
+
+	return &sortedNodeList;
+}
+#endif
+
+
+
+#if !defined(ITERATIVE_EXECUTION)
 void
 ElemForEach::execute(StylesheetExecutionContext&	executionContext) const
 {
@@ -191,14 +503,6 @@ ElemForEach::execute(StylesheetExecutionContext&	executionContext) const
 			executionContext,
 			this);
 	}
-}
-
-
-
-const XPath*
-ElemForEach::getXPath(unsigned int	index) const
-{
-	return index == 0 ? m_selectPattern : 0;
 }
 
 
@@ -235,11 +539,11 @@ ElemForEach::transformSelectedChildren(
 		keys.reserve(m_sortElemsCount);
 
 		// Get some temporary strings to use for evaluting the AVTs...
-		XPathExecutionContext::GetAndReleaseCachedString	theTemp1(executionContext);
+		StylesheetExecutionContext::GetAndReleaseCachedString	theTemp1(executionContext);
 
 		XalanDOMString&		langString = theTemp1.get();
 
-		XPathExecutionContext::GetAndReleaseCachedString	theTemp2(executionContext);
+		StylesheetExecutionContext::GetAndReleaseCachedString	theTemp2(executionContext);
 
 		XalanDOMString&		scratchString = theTemp2.get();
 
@@ -503,6 +807,15 @@ ElemForEach::transformSelectedChildren(
 				theTemplate,
 				childNode);
 	}
+}
+#endif
+
+
+
+const XPath*
+ElemForEach::getXPath(unsigned int	index) const
+{
+	return index == 0 ? m_selectPattern : 0;
 }
 
 

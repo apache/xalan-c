@@ -178,6 +178,39 @@ ElemTemplate::getElementName() const
 
 
 
+#if defined(ITERATIVE_EXECUTION)
+const ElemTemplateElement*
+ElemTemplate::startElement(StylesheetExecutionContext&	executionContext) const
+{
+	ParentType::startElement(executionContext);
+
+	executionContext.pushCurrentTemplate(this);
+
+	return beginExecuteChildren(executionContext);
+}
+
+
+
+void
+ElemTemplate::endElement(StylesheetExecutionContext& executionContext) const
+{
+	executionContext.popCurrentTemplate();
+	
+	endExecuteChildren(executionContext);
+}
+
+
+
+const ElemTemplateElement*
+ElemTemplate::getInvoker(StylesheetExecutionContext&	executionContext) const
+{
+	return executionContext.getInvoker();
+}
+#endif
+
+
+
+#if !defined(ITERATIVE_EXECUTION)
 void
 ElemTemplate::execute(StylesheetExecutionContext&	executionContext) const
 {
@@ -185,7 +218,7 @@ ElemTemplate::execute(StylesheetExecutionContext&	executionContext) const
 
 	executeChildren(executionContext);
 }
-
+#endif
 
 
 const XPath*
@@ -195,7 +228,7 @@ ElemTemplate::getXPath(unsigned int	index) const
 }
 
 
-
+#if !defined(ITERATIVE_EXECUTION)
 void
 ElemTemplate::executeChildren(StylesheetExecutionContext&	executionContext) const
 {
@@ -213,6 +246,7 @@ ElemTemplate::executeChildren(
 {
 	ParentType::executeChildren(executionContext, sourceNode);
 }
+#endif
 
 
 

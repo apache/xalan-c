@@ -240,7 +240,7 @@ getResult(
 			const PrefixResolver&	thePrefixResolver,
 			XPathExecutionContext&	theExecutionContext)
 {
-	typedef StylesheetExecutionContext::GetAndReleaseCachedString	GetAndReleaseCachedString;
+	typedef XPathExecutionContext::GetAndReleaseCachedString	GetAndReleaseCachedString;
 
 	if (theXPath == 0)
 	{

@@ -59,6 +59,52 @@ ElemParam::getElementName() const
 
 
 
+#if defined(ITERATIVE_EXECUTION)
+const ElemTemplateElement*
+ElemParam::startElement(StylesheetExecutionContext&		executionContext) const
+{
+	assert(m_qname != 0);
+
+	const XObjectPtr	obj = executionContext.getParamVariable(*m_qname);
+
+	// If not found, evaluate as variable for default value
+	if (obj.null() == true)
+	{
+		return ElemVariable::startElement(executionContext);
+	}
+	else
+	{
+		if(0 != executionContext.getTraceListeners())
+		{
+			executionContext.fireTraceEvent(
+				TracerEvent(
+					executionContext,					
+					*this));
+		}
+	}
+	return 0;
+}
+
+
+
+void
+ElemParam::endElement(StylesheetExecutionContext&		executionContext) const
+{
+	assert(m_qname != 0);
+
+	const XObjectPtr	obj = executionContext.getParamVariable(*m_qname);
+
+	// If not found, evaluate as variable for default value
+	if (obj.null() == true)
+	{
+		ElemVariable::endElement(executionContext);
+	}
+}
+#endif
+
+
+
+#if !defined (ITERATIVE_EXECUTION)
 void
 ElemParam::execute(StylesheetExecutionContext&		executionContext) const
 {
@@ -81,6 +127,7 @@ ElemParam::execute(StylesheetExecutionContext&		executionContext) const
 		}
 	}
 }
+#endif
 
 
 

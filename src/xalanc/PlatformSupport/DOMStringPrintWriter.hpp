@@ -47,9 +47,14 @@ public:
 	XalanDOMString&
 	getString() const
 	{
-		return m_outputString;
+		return *m_outputString;
 	}
 
+	void
+	setString(XalanDOMString& newString) 
+	{
+		m_outputString = &newString;
+	}
 
 	// Output functions inherited from PrintWriter...
 
@@ -148,7 +153,7 @@ public:
 
 protected:
 
-	XalanDOMString&		m_outputString;
+	XalanDOMString*		m_outputString;
 
 private:
 
