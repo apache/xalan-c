@@ -3,16 +3,24 @@
 #include <cassert>
 #include <iostream>
 
+
+
+#include <framework/MemBufInputSource.hpp>
+#include <framework/URLInputSource.hpp>
 #include <parsers/DOMParser.hpp>
 #include <util/PlatformUtils.hpp>
-#include <dom/DOM_Node.hpp>
-#include <dom/DOM_Document.hpp>
-#include <dom/DOM_Element.hpp>
-#include <dom/DOM_NodeList.hpp>
-#include <framework/URLInputSource.hpp>
+
+
+
+#include <XalanDOM/XalanDocument.hpp>
+#include <XalanDOM/XalanElement.hpp>
+
 #include <PlatformSupport/DirectoryEnumerator.hpp>
 #include <PlatformSupport/DOMStringHelper.hpp>
+#include <PlatformSupport/STLHelper.hpp>
+
 #include <DOMSupport/DOMSupportDefault.hpp>
+
 #include <XPath/XObjectFactoryDefault.hpp>
 #include <XPath/XPathEnvSupportDefault.hpp>
 #include <XPath/XPathExecutionContextDefault.hpp>
@@ -21,13 +29,22 @@
 #include <XPath/XPathProcessorImpl.hpp>
 #include <XPath/XPathFactoryDefault.hpp>
 #include <XPath/ElementPrefixResolverProxy.hpp>
+
 #include <XMLSupport/FormatterTreeWalker.hpp>
 #include <XMLSupport/FormatterToXML.hpp>
+
 #include <XercesParserLiaison/XercesParserLiaison.hpp>
 
-#include <framework/MemBufInputSource.hpp>
-
 #include "XPathWrapper.hpp"
+
+
+#if !defined(XALAN_NO_NAMESPACES)
+using std::cerr;
+using std::endl;
+using std::string;
+using std::vector;
+#endif
+
 
 
 ////////////////////////////////////////////////////
@@ -35,39 +52,31 @@
 // the implementation class, that does all calls to XPath and Xerces
 class XPathWrapperImpl
 {
-private:
-	std::string DOMStringToStdString(const DOMString& domString)
-	{
-		std::string ret;
-
-		for (int i=0; i< domString.length(); i++)
-		{
-			ret += (char)domString.charAt(i);
-		}
-
-		return ret;
-	}
-
 public:
-	std::vector<std::string> evaluate(
-		const std::string& xml, 
-		const std::string& context, 
-		const std::string& expr)
+
+	vector<string>
+	evaluate(
+		const string&	xml, 
+		const string&	context, 
+		const string&	expr)
 	{
-		//initialize XML4C
+		//initialize Xerces...
 		try
 		{
 			XMLPlatformUtils::Initialize();
 		}
-
-		catch(const XMLException& e)
+		catch(const XMLException&)
 		{
+			cerr << "XMLPlatformUtils::Initialize() failed!" << endl;
+
 			throw;
 		}
 
 		// parse the XML file
-		DOM_Element rootNode;
-		DOMParser parser;
+		DOMSupportDefault				theDOMSupport;
+		XercesParserLiaison				theLiaison(theDOMSupport);
+
+		XalanElement*	rootElem = 0;
 
 		try
 		{
@@ -75,99 +84,127 @@ public:
 			MemBufInputSource inStream((const XMLByte*)xml.c_str(), 
 				xml.length(), "foo", false);
 
-			parser.parse(inStream);
+			XalanDocument* const	doc = theLiaison.parseXMLStream(inStream);
+			assert(doc != 0);
 
-			DOM_Document doc = parser.getDocument();
-			rootNode = doc.getDocumentElement();
+			rootElem = doc->getDocumentElement();
+			assert(rootElem != 0);
 		}
-
-		catch(const XMLException& e)
+		catch(const XMLException&)
 		{
+			cerr << "Caught XMLExecption..." << endl;
+
 			throw;
 		}
 
-
 		// configure the objects needed for XPath to work with the Xerces DOM
 		XPathEnvSupportDefault			theEnvSupport;
-		DOMSupportDefault				theDOMSupport;
 		XPathSupportDefault				theSupport(theDOMSupport);
 		XObjectFactoryDefault			theXObjectFactory(theEnvSupport, theSupport);
 		XPathExecutionContextDefault	theExecutionContext(theEnvSupport, theSupport, theXObjectFactory);
 		XPathFactoryDefault				theXPathFactory;
 		XPathProcessorImpl				theXPathProcessor;
-		XercesParserLiaison				theLiaison(theDOMSupport);
 
-		std::vector<std::string> theResultList;
+		vector<string>	theResultList;
 
 		try
 		{
 			// first get the context nodeset
-			XPath *contextXPath = theXPathFactory.create();
+			XPath* const	contextXPath = theXPathFactory.create();
 			theXPathProcessor.initXPath(*contextXPath,
-										DOMString(context.c_str()),
-										ElementPrefixResolverProxy(rootNode,theSupport),
+										XalanDOMString(context.c_str()),
+										ElementPrefixResolverProxy(rootElem, theEnvSupport, theSupport),
 										theXObjectFactory,
 										theEnvSupport);
 
-			MutableNodeRefList contextNodeList;		//default empty context
-	   		XObject* xObj = contextXPath->execute(rootNode,
-												  ElementPrefixResolverProxy(rootNode,theSupport),
-												  contextNodeList,
-												  theExecutionContext);
+	   		XObject*	xObj =
+				contextXPath->execute(rootElem,
+									  ElementPrefixResolverProxy(rootElem, theEnvSupport, theSupport),
+									  theExecutionContext);
 
-			contextNodeList = xObj->mutableNodeset();
+			const NodeRefListBase&	contextNodeList = xObj->mutableNodeset();
 
+			const unsigned int	theLength =
+					contextNodeList.getLength();
 
-			// and now get the result of the primary xpath expression
-			XPath *xpath = theXPathFactory.create();
-			theXPathProcessor.initXPath(*xpath,
-										DOMString(expr.c_str()),
-										ElementPrefixResolverProxy(rootNode, theSupport),
-										theXObjectFactory,
-										theEnvSupport);
-
-			xObj = xpath->execute(rootNode,
-								  ElementPrefixResolverProxy(rootNode,theSupport),
-								  contextNodeList,
-								  theExecutionContext);
-
-			// now encode the results.  For all types but nodelist, we'll just convert it to a string
-			// but, for nodelist, we'll convert each node to a string and return a list of them
-			switch (xObj->getType())
+			if (theLength == 0)
 			{
-				case XObject::eTypeNodeSet:
+					cerr << "Warning -- No nodes matched the location path \""
+						 << context
+						 << "\"."
+						 << endl
+						 << "Execution cannot continue..."
+						 << endl
+						 << endl;
+			}
+			else
+			{
+				if (theLength > 1)
 				{
-					const NodeRefListBase& nodeset = xObj->nodeset();
-					size_t len = nodeset.getLength();
-
-					for (size_t i=0; i<len; i++)
-					{
-						DOM_Node node = nodeset.item(i);
-						DOMString str;
-						
-						const int theType = node.getNodeType();
-
-						if (theType==DOM_Node::COMMENT_NODE || theType==DOM_Node::PROCESSING_INSTRUCTION_NODE)
-							str = node.getNodeValue();
-						else
-							str = theSupport.getNodeData(node);
-
-						theResultList.push_back(DOMStringToStdString(str));
-					}
-
-					break;
+					cerr << "Warning -- More than one node matched the location path \""
+						 << context
+						 << "\"."
+						 << endl
+						 << "The first node matched will be used as the context node."
+						 << endl
+						 << endl;
 				}
 
-				default:
+				// and now get the result of the primary xpath expression
+				XPath* const	xpath = theXPathFactory.create();
+				theXPathProcessor.initXPath(*xpath,
+											XalanDOMString(expr.c_str()),
+											ElementPrefixResolverProxy(rootElem, theEnvSupport, theSupport),
+											theXObjectFactory,
+											theEnvSupport);
+
+				xObj = xpath->execute(contextNodeList.item(0),
+									  ElementPrefixResolverProxy(rootElem, theEnvSupport, theSupport),
+									  theExecutionContext);
+
+				// now encode the results.  For all types but nodelist, we'll just convert it to a string
+				// but, for nodelist, we'll convert each node to a string and return a list of them
+				switch (xObj->getType())
 				{
-					theResultList.push_back(DOMStringToStdString(xObj->str()));
-					break;
+					case XObject::eTypeNodeSet:
+					{
+						const NodeRefListBase& nodeset = xObj->nodeset();
+						size_t len = nodeset.getLength();
+
+						for (size_t i=0; i<len; i++)
+						{
+							XalanNode* const	node = nodeset.item(i);
+							XalanDOMString		str;
+
+							const int theType = node->getNodeType();
+
+							if (theType == XalanNode::COMMENT_NODE ||
+								theType == XalanNode::PROCESSING_INSTRUCTION_NODE)
+								str = node->getNodeValue();
+							else if (theType == XalanNode::ELEMENT_NODE)
+								str = node->getNodeName();
+							else
+								str = theSupport.getNodeData(*node);
+
+							theResultList.push_back(DOMStringToStdString(str));
+						}
+
+						break;
+					}
+
+					default:
+					{
+						theResultList.push_back(DOMStringToStdString(xObj->str()));
+
+						break;
+					}
 				}
 			}
 		}
-
-		catch(const XMLException& e)
+		catch(const XMLException&)
 		{
+			cerr << "Caught XMLExecption..." << endl;
+
 			throw;
 		}
 
@@ -180,20 +217,25 @@ public:
 
 // The public XPathWrapper methods just delegate to our impl class
 
-XPathWrapper::XPathWrapper()
+XPathWrapper::XPathWrapper() :
+	pImpl(new XPathWrapperImpl())
 {
-	pImpl = new XPathWrapperImpl();
 }
+
+
 
 XPathWrapper::~XPathWrapper()
 {
 	delete pImpl;
 }
 
-std::vector<std::string> XPathWrapper::evaluate(
-	const std::string& xml, 
-	const std::string& context, 
-	const std::string& path)
+
+
+vector<string>
+XPathWrapper::evaluate(
+	const string&	xml, 
+	const string&	context, 
+	const string&	path)
 {
 	return pImpl->evaluate(xml,context,path);
 }

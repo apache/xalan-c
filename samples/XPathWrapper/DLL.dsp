@@ -38,12 +38,12 @@ RSC=rc.exe
 # PROP BASE Target_Dir ""
 # PROP Use_MFC 0
 # PROP Use_Debug_Libraries 0
-# PROP Output_Dir "Release"
-# PROP Intermediate_Dir "Release"
+# PROP Output_Dir "..\..\Build\Win32\VC6\Release"
+# PROP Intermediate_Dir "..\..\Build\Win32\VC6\Release\XPathWrapper"
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MT /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "DLL_EXPORTS" /YX /FD /c
-# ADD CPP /nologo /MD /W3 /GX /O2 /I "..\..\..\..\xml-xerces\c\src" /I "..\..\src" /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "DLL_EXPORTS" /D "_XPathWrapper" /YX /FD /c
+# ADD CPP /nologo /MD /W3 /GR /GX /O2 /I "..\..\..\..\xml-xerces\c\src" /I "..\..\src" /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "DLL_EXPORTS" /D "_XPathWrapper" /YX /FD /c
 # ADD BASE MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD BASE RSC /l 0x409 /d "NDEBUG"
@@ -53,7 +53,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /dll /machine:I386
-# ADD LINK32 ..\..\..\..\xml-xerces\c\Build\Win32\VC6\Release\xerces-c_1.lib ..\..\Build\Win32\VC6\Release\PlatformSupport.lib ..\..\Build\Win32\VC6\Release\XercesPlatformSupport.lib ..\..\Build\Win32\VC6\Release\XPath.lib ..\..\Build\Win32\VC6\Release\DOMSupport.lib ..\..\Build\Win32\VC6\Release\XercesParserLiaison.lib /nologo /dll /machine:I386
+# ADD LINK32 ..\..\..\..\xml-xerces\c\Build\Win32\VC6\Release\xerces-c_1.lib ..\..\Build\Win32\VC6\Release\PlatformSupport.lib ..\..\Build\Win32\VC6\Release\XercesPlatformSupport.lib ..\..\Build\Win32\VC6\Release\XPath.lib ..\..\Build\Win32\VC6\Release\DOMSupport.lib ..\..\Build\Win32\VC6\Release\XercesParserLiaison.lib /nologo /dll /machine:I386 /out:"..\..\Build\Win32\VC6\Release/XPathWrapper.dll"
 
 !ELSEIF  "$(CFG)" == "DLL - Win32 Debug"
 
@@ -64,12 +64,12 @@ LINK32=link.exe
 # PROP BASE Target_Dir ""
 # PROP Use_MFC 0
 # PROP Use_Debug_Libraries 1
-# PROP Output_Dir "Debug"
-# PROP Intermediate_Dir "Debug"
+# PROP Output_Dir "..\..\Build\Win32\VC6\Debug"
+# PROP Intermediate_Dir "..\..\Build\Win32\VC6\Debug\XPathWrapper"
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MTd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "DLL_EXPORTS" /YX /FD /GZ /c
-# ADD CPP /nologo /MDd /W3 /Gm /GR /GX /ZI /I "..\..\..\..\xml-xerces\c\src" /I "..\..\src" /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "DLL_EXPORTS" /D "_XPathWrapper" /YX /FD /GZ /c
+# ADD CPP /nologo /MDd /W3 /Gm /GR /GX /ZI /I "..\..\..\..\xml-xerces\c\src" /I "..\..\src" /D "_WINDOWS" /D "_USRDLL" /D "DLL_EXPORTS" /D "_XPathWrapper" /D "WIN32" /D "_DEBUG" /D "_MBCS" /D "XML_DEBUG" /YX /FD /GZ /c
 # ADD BASE MTL /nologo /D "_DEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "_DEBUG" /mktyplib203 /win32
 # ADD BASE RSC /l 0x409 /d "_DEBUG"
@@ -79,7 +79,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /dll /debug /machine:I386 /pdbtype:sept
-# ADD LINK32 ..\..\..\..\xml-xerces\c\Build\Win32\VC6\Debug\xerces-c_1.lib ..\..\Build\Win32\VC6\Debug\PlatformSupport.lib ..\..\Build\Win32\VC6\Debug\XercesPlatformSupport.lib ..\..\Build\Win32\VC6\Debug\XPath.lib ..\..\Build\Win32\VC6\Debug\DOMSupport.lib ..\..\Build\Win32\VC6\Debug\XercesParserLiaison.lib /nologo /dll /debug /machine:I386 /pdbtype:sept
+# ADD LINK32 ..\..\..\..\xml-xerces\c\Build\Win32\VC6\Debug\xerces-c_1.lib ..\..\Build\Win32\VC6\Debug\PlatformSupport.lib ..\..\Build\Win32\VC6\Debug\XercesPlatformSupport.lib ..\..\Build\Win32\VC6\Debug\XPath.lib ..\..\Build\Win32\VC6\Debug\DOMSupport.lib ..\..\Build\Win32\VC6\Debug\XercesParserLiaison.lib /nologo /dll /debug /machine:I386 /out:"..\..\Build\Win32\VC6\Debug/XPathWrapper.dll" /pdbtype:sept
 
 !ENDIF 
 
