@@ -80,13 +80,13 @@
 
 
 template<class VectorType>
-const VectorType::value_type*
+const typename VectorType::value_type*
 findByPrefix(
 			const VectorType&		theVector,
 			const XalanDOMString&	thePrefix)
 {
-	const VectorType::const_iterator	theEnd(theVector.end());
-	VectorType::const_iterator	theCurrent(theVector.begin());
+	const typename VectorType::const_iterator	theEnd(theVector.end());
+	typename VectorType::const_iterator			theCurrent(theVector.begin());
 
 	while(theCurrent != theEnd)
 	{
@@ -108,13 +108,13 @@ findByPrefix(
 #if defined(_MSC_VER)
 
 template<class VectorType>
-VectorType::value_type*
+typename VectorType::value_type*
 findByPrefixNonConst(
 			VectorType&				theVector,
 			const XalanDOMString&	thePrefix)
 {
-	const VectorType::iterator	theEnd(theVector.end());
-	VectorType::iterator		theCurrent(theVector.begin());
+	const typename VectorType::iterator		theEnd(theVector.end());
+	typename VectorType::iterator			theCurrent(theVector.begin());
 
 	while(theCurrent != theEnd)
 	{
@@ -134,13 +134,13 @@ findByPrefixNonConst(
 #else
 
 template<class VectorType>
-VectorType::value_type*
+typename VectorType::value_type*
 findByPrefix(
 			VectorType&				theVector,
 			const XalanDOMString&	thePrefix)
 {
-	const VectorType::const_iterator	theEnd(theVector.end());
-	VectorType::const_iterator	theCurrent(theVector.begin());
+	typename const VectorType::iterator		theEnd(theVector.end());
+	typename VectorType::iterator			theCurrent(theVector.begin());
 
 	while(theCurrent != theEnd)
 	{
@@ -158,7 +158,7 @@ findByPrefix(
 }
 
 template<class VectorType>
-VectorType::value_type*
+typename VectorType::value_type*
 findByPrefixNonConst(
 			VectorType&				theVector,
 			const XalanDOMString&	thePrefix)
@@ -170,13 +170,13 @@ findByPrefixNonConst(
 
 
 template<class VectorType>
-const VectorType::value_type*
+const typename VectorType::value_type*
 findByURI(
 			const VectorType&		theVector,
 			const XalanDOMString&	theNamespaceURI)
 {
-	const VectorType::const_iterator	theEnd(theVector.end());
-	VectorType::const_iterator			theCurrent(theVector.begin());
+	const typename VectorType::const_iterator	theEnd(theVector.end());
+	typename VectorType::const_iterator			theCurrent(theVector.begin());
 
 	while(theCurrent != theEnd)
 	{
@@ -203,7 +203,7 @@ addByPrefix(
 			const XalanDOMString&			thePrefix,
 			const XalanDOMString&			theURI)
 {
-	const VectorType::value_type* const		theEntry =
+	const typename VectorType::value_type* const		theEntry =
 		findByPrefix(theVector, thePrefix);
 
 	if (theEntry != 0)
@@ -231,7 +231,7 @@ addOrUpdateByPrefix(
 			const XalanDOMString&			thePrefix,
 			const XalanDOMString&			theURI)
 {
-	VectorType::value_type* const	theEntry =
+	typename VectorType::value_type* const	theEntry =
 		findByPrefixNonConst(theVector, thePrefix);
 
 	if (theEntry == 0)
@@ -266,7 +266,7 @@ findNamespace(
 			const VectorType&		theVector,
 			const XalanDOMString&	thePrefix)
 {
-	const VectorType::value_type* const		theEntry =
+	const typename VectorType::value_type* const	theEntry =
 		findByPrefix(theVector, thePrefix);
 
 	if (theEntry == 0)
