@@ -175,7 +175,11 @@ FileUtility::cmdParams::getHelpMessage()
 
     const char* const   data = help.str();
 
-    help.freeze(false);
+#if defined(HPUX)
+   help.rdbuf() -> freeze(false);
+#else
+	help.freeze(false);
+#endif
 
     return data;
 }
