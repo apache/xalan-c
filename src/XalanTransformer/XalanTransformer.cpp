@@ -973,7 +973,7 @@ XalanTransformer::parseSource(
 
 		TranscodeToLocalCodePage(theMessage, m_errorMessage, true);
 
-		theResult = -3;
+		theResult = -4;
 	}
 
 	return theResult;
