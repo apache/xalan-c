@@ -174,6 +174,9 @@ const XalanCompiledStylesheet*	glbCompiledStylesheet = 0;
 const XalanParsedSource*		glbParsedSource = 0;
 bool							fContinue = true;
 
+const XalanDOMChar*				theStylesheetFileName = 0;
+const XalanDOMChar*				theSourceFileName = 0;
+
 
 #if defined(WIN32)
 static BOOL __stdcall
@@ -208,18 +211,28 @@ signalHandler(int)
 
 #if defined(WIN32)
 
-extern "C" void theThreadRoutine(void* param);
+extern "C"
+{
+	void thePreparsedThreadRoutine(void* param);
+
+	typedef void (*ThreadRoutineType)(void* param);
+}
 
 void
 #elif defined(XALAN_POSIX2_AVAILABLE)
 
-extern "C" void* theThreadRoutine(void* param);
+extern "C"
+{
+	void* thePreparsedThreadRoutine(void* param);
+
+	typedef void* (*ThreadRoutineType)(void* param);
+}
 
 void*
 #else
 #error Unsupported platform!
 #endif
-theThreadRoutine(void*		param)
+thePreparsedThreadRoutine(void*		param)
 {
 // This routine uses compiled stylesheet (glbStylesheetRoot), which is set using the 
 // theProcessor.setStylesheetRoot method. The transform is done using the theProcessor's
@@ -269,6 +282,72 @@ theThreadRoutine(void*		param)
 
 
 
+#if defined(WIN32)
+
+extern "C" void theUnparsedThreadRoutine(void* param);
+
+void
+#elif defined(XALAN_POSIX2_AVAILABLE)
+
+extern "C" void* theUnparsedThreadRoutine(void* param);
+
+void*
+#else
+#error Unsupported platform!
+#endif
+theUnparsedThreadRoutine(void*		param)
+{
+// This routine compiles a stylesheet and a source document
+
+#if defined(XALAN_OLD_STYLE_CASTS)
+	ThreadInfo* const		theInfo = (ThreadInfo*)param;
+#else
+	ThreadInfo* const		theInfo = reinterpret_cast<ThreadInfo*>(param);
+#endif
+
+	assert(theInfo != 0);
+
+	theInfo->m_counter->increment();
+
+	try
+	{
+		// Our input file.  The assumption is that the executable will be run
+		// from same directory as the input files.
+
+		// Generate the output file name.
+		const XalanDOMString	theOutputFile(
+				XalanDOMString("birds") +
+				UnsignedLongToDOMString(theInfo->m_threadNumber) +
+				XalanDOMString(".out"));
+
+		// Create a transformer...
+		XalanTransformer	theTransformer;
+
+		assert(theSourceFileName != 0 && theStylesheetFileName != 0);
+
+		// Do the transform...
+		theTransformer.transform(
+			theSourceFileName,
+			theStylesheetFileName,
+			XSLTResultTarget(theOutputFile));
+	}
+	catch(...)
+	{
+		cerr << "Exception caught in thread " << theInfo->m_threadNumber;
+	}
+
+	// Decrement the counter because we're done...
+	theInfo->m_counter->decrement();
+
+	theInfo->m_done = true;
+
+#if defined(XALAN_POSIX2_AVAILABLE)
+	return 0;
+#endif
+}
+
+
+
 inline void
 doSleep(unsigned int	theMilliseconds)
 {
@@ -284,7 +363,9 @@ doSleep(unsigned int	theMilliseconds)
 
 
 bool
-createThread(ThreadInfo&	theThreadInfo)
+createThread(
+			ThreadInfo&			theThreadInfo,
+			ThreadRoutineType	theThreadRoutine)
 {
 	theThreadInfo.m_done = false;
 
@@ -364,6 +445,45 @@ doCountedThreads(
 
 
 void
+startThread(
+			ThreadInfo					theThreadInfo[],
+			long						theThreadNumber)
+{
+	bool	fResult = false;
+
+	const bool	fPreparsed = theThreadNumber % 2 == 0 ? true : false;
+
+	if (fPreparsed == true)
+	{
+		fResult = createThread(theThreadInfo[theThreadNumber], thePreparsedThreadRoutine);
+	}
+	else
+	{
+		fResult = createThread(theThreadInfo[theThreadNumber], theUnparsedThreadRoutine);
+	}
+
+	if (fResult == false)
+	{
+		cerr << endl << "Unable to create thread!" << endl;
+	}
+	else
+	{
+		cout << "Started thread number " << theThreadNumber << ", using ";
+
+		if (fPreparsed == true)
+		{
+			cout << "pre-parsed documents." << endl;
+		}
+		else
+		{
+			cout << "unparsed documents." << endl;
+		}
+	}
+}
+
+
+
+void
 doContinuousThreads(
 			const SynchronizedCounter&	theCounter,
 			ThreadInfo					theThreadInfo[],
@@ -372,22 +492,13 @@ doContinuousThreads(
 {
 	while(fContinue == true)
 	{
-//		doSleep(100);
-
 		if (theCounter.getCounter() < theThreadCount)
 		{
 			for (long i = 0; i < theThreadCount && fContinue == true; ++i)
 			{
 				if (theThreadInfo[i].m_done == true)
 				{
-					if (createThread(theThreadInfo[i]) == false)
-					{
-						cerr << endl << "Unable to create thread!" << endl;
-					}
-					else
-					{
-						cout << "Started thread number " << i << "." << endl;
-					}
+					startThread(theThreadInfo, i);
 				}
 			}
 		}
@@ -439,14 +550,7 @@ doThreads(
 			theThreadInfo[i].m_threadNumber = i;
 			theThreadInfo[i].m_counter = &theCounter;
 
-			if (createThread(theThreadInfo[i]) == false)
-			{
-				cerr << endl << "Unable to create thread!" << endl;
-			}
-			else
-			{
-				cout << "Started thread number " << i << "." << endl;
-			}
+			startThread(theThreadInfo.get(), i);
 
 			++i;
 		}
@@ -568,21 +672,28 @@ main(
 					// pre-parsed source document.  Note that we can't let the individual
 					// threads use this as a factory without serializing access to it, but
 					// we can share the stylesheet and source document.
-					XalanTransformer	theXalanTransformer;
+					XalanTransformer		theXalanTransformer;
 
-					const char* const	theXSLFileName = "birds.xsl";
+					const XalanDOMString	theXSLFileName("birds.xsl");
 
-					theXalanTransformer.compileStylesheet(theXSLFileName, glbCompiledStylesheet);
+					theStylesheetFileName = theXSLFileName.c_str();
+
+					theXalanTransformer.compileStylesheet(theStylesheetFileName, glbCompiledStylesheet);
 					assert(glbCompiledStylesheet != 0);
 
 					// Compile the XML source document as well. All threads will use
 					// this binary representation of the source tree.
-					const char* const	theXMLFileName = "birds.xml";
+					const XalanDOMString	theXMLFileName("birds.xml");
 
-					theXalanTransformer.parseSource(theXMLFileName, glbParsedSource);
+					theSourceFileName = theXMLFileName.c_str();
+
+					theXalanTransformer.parseSource(theSourceFileName, glbParsedSource);
 					assert(glbParsedSource != 0);
 
 					doThreads(threadCount, fContinuous);
+
+					theStylesheetFileName = 0;
+					theSourceFileName = 0;
 				}
 				catch(...)
 				{
