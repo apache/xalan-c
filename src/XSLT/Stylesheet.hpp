@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -85,6 +85,7 @@
 
 #include <XPath/NameSpace.hpp>
 #include <XPath/XalanQNameByReference.hpp>
+#include <XPath/XPath.hpp>
 
 
 
@@ -109,7 +110,6 @@ class StylesheetConstructionContext;
 class StylesheetRoot;
 class XMLURL;
 class XObject;
-class XPath;
 class StylesheetExecutionContext;
 
 
@@ -377,24 +377,6 @@ public:
 
 		return XalanQName::getNamespaceForPrefix(m_namespaces, XalanDOMString(prefix));
 	}
-
-	/**
-	 * See if there is a namespace alias.
-	 * 
-	 * @param uri the URI of the namespace.
-	 * @return the alias URI, if found.
-	 */
-	XalanDOMString
-	getAliasNamespaceURI(const XalanDOMChar*	uri) const;
-
-	/**
-	 * See if there is a namespace alias.
-	 * 
-	 * @param uri the URI of the namespace.
-	 * @return the alias URI, if found.
-	 */
-	XalanDOMString
-	getAliasNamespaceURI(const XalanDOMString&	uri) const;
 
 	/**
 	 * See if a namespace should be excluded.
@@ -694,6 +676,9 @@ public:
 	{
 	public:
 
+		typedef unsigned long		size_type;
+		typedef XPath::eMatchScore	eMatchScore;
+
 		/**
 		 * Construct a match pattern from a pattern and template.
 		 *
@@ -702,18 +687,21 @@ public:
 		 * @param targetString target string
 		 * @param matchPattern the match pattern
 		 * @param pattern the pattern string
+		 * @param priority the default priority
 		 */
 		MatchPattern2(
 				const ElemTemplate&		theTemplate,
-				int 					posInStylesheet,
+				size_type 				posInStylesheet,
 				const XalanDOMString&	targetString,
 				const XPath&			matchPattern,
-				const XalanDOMString&	pattern) :
+				const XalanDOMString&	pattern,
+				eMatchScore				priority) :
 			m_template(&theTemplate),
 			m_posInStylesheet(posInStylesheet),
 			m_targetString(targetString),
 			m_matchPattern(&matchPattern),
-			m_pattern(&pattern)
+			m_pattern(&pattern),
+			m_priority(priority)
 		{
 		}
 
@@ -722,7 +710,8 @@ public:
 			m_posInStylesheet(0),
 			m_targetString(),
 			m_matchPattern(0),
-			m_pattern(0)
+			m_pattern(0),
+			m_priority(XPath::eMatchScoreNone)
 		{
 		}
 
@@ -757,7 +746,7 @@ public:
 		 * 
 		 * @return position in stylesheet
 		 */
-		int
+		size_type
 		getPositionInStylesheet() const
 		{
 			return m_posInStylesheet;
@@ -785,13 +774,23 @@ public:
 			return m_template;
 		}
 
+		eMatchScore
+		getDefaultPriority() const
+		{
+			m_priority;
+		}
+
+		double
+		getPriorityOrDefault() const;
+
 	private:
 
 		const ElemTemplate*		m_template;
-		int						m_posInStylesheet;
+		size_type				m_posInStylesheet;
 		XalanDOMString			m_targetString;
 		const XPath*			m_matchPattern;
 		const XalanDOMString*	m_pattern;
+		eMatchScore				m_priority;
 	};
 
 #if defined(XALAN_NO_NAMESPACES)
@@ -849,7 +848,17 @@ public:
 	 * @param theName The name to match
 	 */
 	const PatternTableListType*
-	locateMatchPatternList2(const XalanDOMString&	theName) const;
+	locateElementMatchPatternList2(const XalanDOMString&	theName) const;
+
+	/**
+	 * Given a name, locate the start of a list of 
+	 * possible templates that match that name.  If
+	 * none match, then use the default list.
+	 *
+	 * @param theName The name to match
+	 */
+	const PatternTableListType*
+	locateAttributeMatchPatternList2(const XalanDOMString&	theName) const;
 
 	/**
 	 * Given a XalanNode, locate the start of a list of 
@@ -1139,6 +1148,22 @@ private:
 	bool
 	operator==(const Stylesheet&) const;
 
+
+	/**
+	 * Given a target element, find the template that best matches in the given
+	 * stylesheet, using only imports
+	 *
+	 * @param executionContext current execution context
+	 * @param targetElem        element that needs a rule
+	 * @param mode              string indicating the display mode
+	 * @return pointer to rule that best matches targetElem
+	 */
+	const ElemTemplate*
+	findTemplateInImports(
+			StylesheetExecutionContext& 	executionContext,
+			XalanNode*						targetNode, 
+			const XalanQName&				mode) const;
+
 	/**
 	 * The full XSLT Namespace URI.  To be replaced by the one actually
 	 * found.
@@ -1225,9 +1250,22 @@ private:
 	 * lists of the actual patterns that match the target element to some degree
 	 * of specifity.
 	 */
-	PatternTableMapType 						m_patternTable;
+	PatternTableMapType 						m_elementPatternTable;
 
-	const PatternTableMapType::const_iterator	m_patternTableEnd;
+	const PatternTableMapType::const_iterator	m_elementPatternTableEnd;
+
+	PatternTableListType						m_elementAnyPatternList;
+
+	/**
+	 * This table is keyed on the target attributes of patterns, and contains linked
+	 * lists of the actual patterns that match the target attribute to some degree
+	 * of specifity.
+	 */
+	PatternTableMapType 						m_attributePatternTable;
+
+	const PatternTableMapType::const_iterator	m_attributePatternTableEnd;
+
+	PatternTableListType						m_attributeAnyPatternList;
 
 	/**
 	 * These tables are for text, comment, root, and PI node templates.
@@ -1241,17 +1279,9 @@ private:
 	PatternTableListType					m_piPatternList;
 
 	/**
-	 * This table is for patterns that match "node()".  Once
-	 * all of the templates have been processed, we'll combine
-	 * this list with m_anyPatternList, and use that for Element
-	 * and Attribute nodes which don't have a specific template.
+	 * This table is for patterns that match "node()".
 	 */
 	PatternTableListType					m_nodePatternList;
-
-	/**
-	 * This table is for patterns that match "*"
-	 */
-	PatternTableListType					m_anyPatternList;
 
 	/**
 	 * This will hold all of the MatchPattern2 instances for the

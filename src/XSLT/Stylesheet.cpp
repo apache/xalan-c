@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -141,14 +141,17 @@ Stylesheet::Stylesheet(
 	m_topLevelVariables(),
 	m_XSLTVerDeclared(1.0L),
 	m_isRoot(&root == this ? true: false),
-	m_patternTable(),
-	m_patternTableEnd(m_patternTable.end()),
+	m_elementPatternTable(),
+	m_elementPatternTableEnd(m_elementPatternTable.end()),
+	m_elementAnyPatternList(),
+	m_attributePatternTable(),
+	m_attributePatternTableEnd(m_attributePatternTable.end()),
+	m_attributeAnyPatternList(),
 	m_textPatternList(),
 	m_commentPatternList(),
 	m_rootPatternList(),
 	m_piPatternList(),
 	m_nodePatternList(),
-	m_anyPatternList(),
 	m_matchPattern2Container(),
 	m_patternCount(0),
 	m_attributeSets(),
@@ -355,6 +358,75 @@ private:
 
 
 
+static void
+addToList(
+			Stylesheet::PatternTableListType&	theList,
+			const Stylesheet::MatchPattern2*	thePattern)
+{
+	typedef Stylesheet::MatchPattern2::size_type	size_type;
+	assert(thePattern != 0);
+
+	const double		thePatternPriority = thePattern->getPriorityOrDefault();
+	const size_type		thePatternPosition = thePattern->getPositionInStylesheet();
+
+	typedef Stylesheet::PatternTableListType	PatternTableListType;
+	typedef PatternTableListType::iterator		iterator;
+
+	iterator		theCurrent = theList.begin();
+
+	const iterator	theEnd = theList.end();
+
+	while(theCurrent != theEnd)
+	{
+		const double	theCurrentPriority = (*theCurrent)->getPriorityOrDefault();
+
+		if (thePatternPriority > theCurrentPriority)
+		{
+			break;
+		}
+		else if (thePatternPriority == theCurrentPriority &&
+				 thePatternPosition > (*theCurrent)->getPositionInStylesheet())
+		{
+			break;
+		}
+
+		++theCurrent;
+	}
+
+	theList.insert(theCurrent, thePattern);
+}
+
+
+
+static void
+addToTable(
+		   Stylesheet::PatternTableMapType&			theTable,
+		   const Stylesheet::PatternTableListType&	theList)
+{
+	typedef Stylesheet::PatternTableMapType		PatternTableMapType;
+	typedef Stylesheet::PatternTableListType	PatternTableListType;
+
+	PatternTableMapType::iterator				theCurrentTable = theTable.begin();
+	const PatternTableMapType::iterator			theTableEnd = theTable.end();
+	const PatternTableListType::const_iterator	theListEnd = theList.end();
+
+	while(theCurrentTable != theTableEnd)
+	{
+		PatternTableListType::const_iterator	theCurrent = theList.begin();
+
+		while(theCurrent != theListEnd)
+		{
+			addToList((*theCurrentTable).second, *theCurrent);
+
+			++theCurrent;
+		}
+
+		++theCurrentTable;
+	}
+}
+
+
+
 void
 Stylesheet::postConstruction(StylesheetConstructionContext&		constructionContext)
 {
@@ -417,54 +489,8 @@ Stylesheet::postConstruction(StylesheetConstructionContext&		constructionContext
 	// Cache the size...
 	m_attributeSetsSize = m_attributeSets.size();
 
-	// OK, now we need to add everything template that matches "node()"
-	// to the end of the text, comment, and PI template lists.
-	PatternTableListType::iterator	theBegin = m_nodePatternList.begin();
-	PatternTableListType::iterator	theEnd = m_nodePatternList.end();
-
-	if (theBegin != theEnd)
-	{
-		m_textPatternList.insert(
-			m_textPatternList.end(),
-			theBegin,
-			theEnd);
-
-		m_commentPatternList.insert(
-			m_commentPatternList.end(),
-			theBegin,
-			theEnd);
-
-		m_piPatternList.insert(
-			m_piPatternList.end(),
-			theBegin,
-			theEnd);
-	}
-
-	m_nodePatternList.insert(
-			theEnd,
-			m_anyPatternList.begin(),
-			m_anyPatternList.end());
-
-	theBegin = m_nodePatternList.begin();
-	theEnd = m_nodePatternList.end();
-
-	if (theBegin != theEnd)
-	{
-		PatternTableMapType::iterator	i =
-				m_patternTable.begin();
-
-		while(i != m_patternTable.end())
-		{
-			PatternTableListType&	theTable = (*i).second;
-
-			theTable.insert(
-				theTable.end(),
-				theBegin,
-				theEnd);
-
-			++i;
-		}
-	}
+	addToTable(m_elementPatternTable, m_elementAnyPatternList);
+	addToTable(m_attributePatternTable, m_attributeAnyPatternList);
 
 	m_patternCount = m_matchPattern2Container.size();
 }
@@ -549,14 +575,30 @@ Stylesheet::getYesOrNo(
 
 
 
+double
+Stylesheet::MatchPattern2::getPriorityOrDefault() const
+{
+	const double	templatePriority =
+		m_template->getPriority();
+
+	if (DoubleSupport::isNegativeInfinity(templatePriority) == true)
+	{
+		return XPath::getMatchScoreValue(m_priority);
+	}
+	else
+	{
+		return templatePriority;
+	}
+}
+
+
+
 void
 Stylesheet::addTemplate(
 			ElemTemplate*					theTemplate,
 			StylesheetConstructionContext&	constructionContext)
 {
 	assert(theTemplate != 0);
-
-	unsigned int	pos = 0;
 
 	if(0 == m_firstTemplate)
 	{
@@ -576,8 +618,6 @@ Stylesheet::addTemplate(
 				theTemplate->setPreviousSiblingElem(next);
 				break;
 			}
-
-			pos++;
 
 			next = next->getNextSiblingElem();
 		}
@@ -614,29 +654,30 @@ Stylesheet::addTemplate(
 		 * entry for the string, otherwise add to the existing pattern table list
 		 * for that string
 		 */
-		typedef XPath::TargetElementStringsVectorType	TargetElementStringsVectorType;
+		typedef XPath::TargetDataVectorType		TargetDataVectorType;
 
-		TargetElementStringsVectorType		strings;
+		TargetDataVectorType	data;
 
-		xp->getTargetElementStrings(strings);
+		xp->getTargetData(data);
 
-		TargetElementStringsVectorType::size_type	nTargets =
-				strings.size();
+		TargetDataVectorType::size_type	nTargets =
+				data.size();
 
 		if(nTargets != 0)
 		{
-			for(TargetElementStringsVectorType::size_type stringIndex = 0;
-								stringIndex < nTargets; stringIndex++) 
+			for(TargetDataVectorType::size_type i = 0;
+								i < nTargets; ++i) 
 			{
-				const XalanDOMString& target = strings[stringIndex];
+				const XalanDOMString& target = data[i].getString();
 
 				m_matchPattern2Container.push_back(
 					MatchPattern2(
 						*theTemplate,
-						pos,
+						m_matchPattern2Container.size(),
 						target,
 						*xp,
-						xp->getExpression().getCurrentPattern()));
+						xp->getExpression().getCurrentPattern(),
+						data[i].getDefaultPriority()));
 
 				const MatchPattern2* const	newMatchPat =
 					&m_matchPattern2Container.back();
@@ -646,49 +687,56 @@ Stylesheet::addTemplate(
 				// selected first.
 				if (equals(target, XPath::PSEUDONAME_TEXT) == true)
 				{
-					m_textPatternList.insert(
-						m_textPatternList.begin(),
-						newMatchPat);
+					addToList(m_textPatternList, newMatchPat);
 				}
 				else if (equals(target, XPath::PSEUDONAME_COMMENT) == true)
 				{
-					m_commentPatternList.insert(
-						m_commentPatternList.begin(),
-						newMatchPat);
+					addToList(m_commentPatternList, newMatchPat);
 				}
 				else if (equals(target, XPath::PSEUDONAME_ROOT) == true)
 				{
-					m_rootPatternList.insert(
-						m_rootPatternList.begin(),
-						newMatchPat);
+					addToList(m_rootPatternList, newMatchPat);
 				}
 				else if (equals(target, XPath::PSEUDONAME_PI) == true)
 				{
-					m_piPatternList.insert(
-						m_piPatternList.begin(),
-						newMatchPat);
+					addToList(m_piPatternList, newMatchPat);
 				}
 				else if (equals(target, XPath::PSEUDONAME_NODE) == true)
 				{
-					m_nodePatternList.insert(
-						m_nodePatternList.begin(),
-						newMatchPat);
+					addToList(m_nodePatternList, newMatchPat);
+
+					addToList(m_elementAnyPatternList, newMatchPat);
+					addToList(m_attributeAnyPatternList, newMatchPat);
+					addToList(m_commentPatternList, newMatchPat);
+					addToList(m_textPatternList, newMatchPat);
+					addToList(m_piPatternList, newMatchPat);
 				}
 				else if (equals(target, XPath::PSEUDONAME_ANY) == true)
 				{
-					m_anyPatternList.insert(
-						m_anyPatternList.begin(),
-						newMatchPat);
+					if (data[i].getTargetType() == XPath::TargetData::eElement)
+					{
+						addToList(m_elementAnyPatternList, newMatchPat);
+					}
+					else if (data[i].getTargetType() == XPath::TargetData::eAttribute)
+					{
+						addToList(m_attributeAnyPatternList, newMatchPat);
+					}
+					else if (data[i].getTargetType() == XPath::TargetData::eAny)
+					{
+						addToList(m_elementAnyPatternList, newMatchPat);
+						addToList(m_attributeAnyPatternList, newMatchPat);
+					}
 				}
 				else
 				{
-					// Put it in the map.
-					PatternTableListType&	theTable =
-						m_patternTable[target];
-
-					theTable.insert(
-						theTable.begin(),
-						newMatchPat);
+					if (data[i].getTargetType() == XPath::TargetData::eElement)
+					{
+						addToList(m_elementPatternTable[target], newMatchPat);
+					}
+					else if (data[i].getTargetType() == XPath::TargetData::eAttribute)
+					{
+						addToList(m_attributePatternTable[target], newMatchPat);
+					}
 				}
 			}
 		}
@@ -700,7 +748,9 @@ Stylesheet::addTemplate(
 const ElemTemplate*
 Stylesheet::findNamedTemplate(const XalanQName&		qname) const
 {
-	ElemTemplateMapType::const_iterator it = m_namedTemplates.find(qname);
+	assert(m_importsSize == m_imports.size());
+
+	const ElemTemplateMapType::const_iterator	it = m_namedTemplates.find(qname);
 
 	if(it != m_namedTemplates.end())
 	{
@@ -711,9 +761,7 @@ Stylesheet::findNamedTemplate(const XalanQName&		qname) const
 		const ElemTemplate*		namedTemplate = 0;
 
 		// Look for the template in the imports
-		const StylesheetVectorType::size_type	nImports = m_imports.size();
-
-		for(StylesheetVectorType::size_type i = 0; i < nImports; ++i)
+		for(StylesheetVectorType::size_type i = 0; i < m_importsSize; ++i)
 		{
 			const Stylesheet* const stylesheet = m_imports[i];
 
@@ -791,20 +839,40 @@ Stylesheet::addObjectIfNotFound(
 
 
 inline const Stylesheet::PatternTableListType* 
-Stylesheet::locateMatchPatternList2(const XalanDOMString&	theName) const
+Stylesheet::locateElementMatchPatternList2(const XalanDOMString&	theName) const
 {
-	assert(m_patternTableEnd == m_patternTable.end());
+	assert(m_elementPatternTableEnd == m_elementPatternTable.end());
 
 	const PatternTableMapType::const_iterator	i =
-		m_patternTable.find(theName);
+		m_elementPatternTable.find(theName);
 
-	if (i != m_patternTableEnd)
+	if (i != m_elementPatternTableEnd)
 	{
 		return &(*i).second;
 	}
 	else
 	{
-		return &m_nodePatternList;
+		return &m_elementAnyPatternList;
+	}
+}
+
+
+
+inline const Stylesheet::PatternTableListType* 
+Stylesheet::locateAttributeMatchPatternList2(const XalanDOMString&	theName) const
+{
+	assert(m_attributePatternTableEnd == m_attributePatternTable.end());
+
+	const PatternTableMapType::const_iterator	i =
+		m_attributePatternTable.find(theName);
+
+	if (i != m_attributePatternTableEnd)
+	{
+		return &(*i).second;
+	}
+	else
+	{
+		return &m_attributeAnyPatternList;
 	}
 }
 
@@ -816,7 +884,7 @@ Stylesheet::locateMatchPatternList2(const XalanNode&	theNode) const
 	switch(theNode.getNodeType())
 	{
 	case XalanNode::ELEMENT_NODE:
-		return locateMatchPatternList2(DOMServices::getLocalNameOfNode(theNode));
+		return locateElementMatchPatternList2(DOMServices::getLocalNameOfNode(theNode));
 		break;
 
 	case XalanNode::PROCESSING_INSTRUCTION_NODE:
@@ -824,7 +892,7 @@ Stylesheet::locateMatchPatternList2(const XalanNode&	theNode) const
 		break;
 
 	case XalanNode::ATTRIBUTE_NODE:
-		return locateMatchPatternList2(DOMServices::getLocalNameOfNode(theNode));
+		return locateAttributeMatchPatternList2(DOMServices::getLocalNameOfNode(theNode));
 		break;
 
 	case XalanNode::CDATA_SECTION_NODE:
@@ -840,16 +908,42 @@ Stylesheet::locateMatchPatternList2(const XalanNode&	theNode) const
 		return &m_rootPatternList;
 		break;
 
-	case XalanNode::DOCUMENT_FRAGMENT_NODE:
-		return &m_anyPatternList;
-		break;
-
 	default:
-		return &m_nodePatternList;
 		break;
 	}
 
-	return locateMatchPatternList2(theNode.getNodeName());
+	return &m_nodePatternList;
+}
+
+
+
+inline const ElemTemplate*
+Stylesheet::findTemplateInImports(
+			StylesheetExecutionContext& 	executionContext,
+			XalanNode*						targetNode, 
+			const XalanQName&				mode) const
+{
+	assert(m_importsSize == m_imports.size());
+
+	for(StylesheetVectorType::size_type i = 0; i < m_importsSize; i++)
+	{
+		const Stylesheet* const 	stylesheet =
+			m_imports[i];
+
+		const ElemTemplate* const	bestMatchedRule =
+			stylesheet->findTemplate(
+				executionContext,
+				targetNode,
+				mode, 
+				false);
+
+		if(bestMatchedRule != 0)
+		{
+			return bestMatchedRule;
+		}
+	}
+
+	return 0;
 }
 
 
@@ -868,41 +962,100 @@ Stylesheet::findTemplate(
 	{
 		return m_wrapperlessTemplate;
 	}
+	else if (onlyUseImports == true)
+	{
+		return findTemplateInImports(executionContext, targetNode, mode);
+	}
 	else
 	{
 		const ElemTemplate*		bestMatchedRule = 0;
-		const MatchPattern2*	bestMatchedPattern = 0; // Syncs with bestMatchedRule
-		const double			matchScoreNoneValue = 
-			XPath::getMatchScoreValue(XPath::eMatchScoreNone);
 
-		double					bestMatchPatPriority = matchScoreNoneValue;
-			
-
-		unsigned int			nConflicts = 0;
-
-		// Use a stack-based array when possible...
-		const MatchPattern2*	conflictsArray[100];
-
-		XalanArrayAutoPtr<const MatchPattern2*>		conflictsVector;
-
-		const MatchPattern2**	conflicts = 0;
-
-		if(onlyUseImports == false)
+		if (executionContext.getQuietConflictWarnings() == true)
 		{
 			// Points to the current list of match patterns.  Note
 			// that this may point to more than one table.
 			const PatternTableListType* 	matchPatternList =
-				locateMatchPatternList2(*targetNode);
+					locateMatchPatternList2(*targetNode);
 			assert(matchPatternList != 0);
 
 			PatternTableListType::const_iterator		theCurrentEntry =
-				matchPatternList->begin();
+					matchPatternList->begin();
 
 			const PatternTableListType::const_iterator	theTableEnd =
-				matchPatternList->end();
+					matchPatternList->end();
+
+			while(theCurrentEntry != theTableEnd)
+			{
+				const MatchPattern2*	matchPat = *theCurrentEntry;
+				assert(matchPat != 0);
+
+				const ElemTemplate*	const	rule = matchPat->getTemplate();
+				assert(rule != 0);
+
+				// We'll be needing to match rules according to what 
+				// mode we're in.
+				const XalanQName&	ruleMode = rule->getMode();
+
+				// The logic here should be that if we are not in a mode AND
+				// the rule does not have a node, then go ahead.
+				// OR if we are in a mode, AND the rule has a node, 
+				// AND the rules match, then go ahead.
+				const bool	haveMode = !mode.isEmpty();
+				const bool	haveRuleMode = !ruleMode.isEmpty();
+
+				if ((!haveMode && !haveRuleMode) ||
+					(haveMode && haveRuleMode && ruleMode.equals(mode)))
+				{
+					const XPath* const	xpath = matchPat->getExpression();
+
+					XPath::eMatchScore	score =
+								xpath->getMatchScore(targetNode, *this, executionContext);
+
+					if(XPath::eMatchScoreNone != score)
+					{
+						bestMatchedRule = rule;
+
+						break;
+					}
+				}
+
+				++theCurrentEntry;
+			}
+
+			if(0 == bestMatchedRule)
+			{
+				bestMatchedRule = findTemplateInImports(executionContext, targetNode, mode);
+			}
+		}
+		else
+		{
+			const PatternTableListType* 	matchPatternList =
+					locateMatchPatternList2(*targetNode);
+			assert(matchPatternList != 0);
+
+			PatternTableListType::const_iterator		theCurrentEntry =
+					matchPatternList->begin();
+
+			const PatternTableListType::const_iterator	theTableEnd =
+					matchPatternList->end();
 
 			if (theCurrentEntry != theTableEnd)
 			{
+				const MatchPattern2*	bestMatchedPattern = 0; // Syncs with bestMatchedRule
+				const double			matchScoreNoneValue = 
+					XPath::getMatchScoreValue(XPath::eMatchScoreNone);
+
+				double					bestMatchPatPriority = matchScoreNoneValue;
+
+				unsigned int			nConflicts = 0;
+
+				// Use a stack-based array when possible...
+				const MatchPattern2*	conflictsArray[100];
+
+				XalanArrayAutoPtr<const MatchPattern2*>		conflictsVector;
+
+				const MatchPattern2**	conflicts = 0;
+
 				const XalanDOMString*	prevPat = 0;
 				const MatchPattern2*	prevMatchPat = 0;
 
@@ -944,20 +1097,20 @@ Stylesheet::findTemplate(
 							const XPath* const	xpath = matchPat->getExpression();
 
 							XPath::eMatchScore	score =
-									xpath->getMatchScore(targetNode, *this, executionContext);
+										xpath->getMatchScore(targetNode, *this, executionContext);
 
 							if(XPath::eMatchScoreNone != score)
 							{
 								const double priorityVal = rule->getPriority();
 								const double priorityOfRule 
-										  = (matchScoreNoneValue != priorityVal) 
-										  ? priorityVal : XPath::getMatchScoreValue(score);
+											  = (matchScoreNoneValue != priorityVal) 
+											  ? priorityVal : XPath::getMatchScoreValue(score);
 
 								matchPatPriority = priorityOfRule;
 								const double priorityOfBestMatched =
-											(0 != bestMatchedPattern) ?
-													bestMatchPatPriority : 
-													matchScoreNoneValue;
+												(0 != bestMatchedPattern) ?
+														bestMatchPatPriority : 
+														matchScoreNoneValue;
 
 								if(priorityOfRule > priorityOfBestMatched)
 								{
@@ -1002,77 +1155,49 @@ Stylesheet::findTemplate(
 					++theCurrentEntry;
 
 				} while(theCurrentEntry != theTableEnd);
-			}
-		} // end if(useImports == false)
 
-		if(0 == bestMatchedRule)
-		{
-			assert(m_importsSize == m_imports.size());
-
-			for(unsigned int i = 0; i < m_importsSize; i++)
-			{
-				const Stylesheet* const 	stylesheet =
-					m_imports[i];
-
-				bestMatchedRule = stylesheet->findTemplate(executionContext,
-														   targetNode,
-														   mode, 
-														   false);
-				if(0 != bestMatchedRule)
-					break;
-			}
-		}
-
-		if(nConflicts > 0)
-		{
-			assert(conflicts != 0);
-
-			const bool		quietConflictWarnings = executionContext.getQuietConflictWarnings();
-
-			XalanDOMString	conflictsString;
-			
-			if (quietConflictWarnings == false)
-			{
-				conflictsString = XALAN_STATIC_UCODE_STRING("Specificity conflicts found: ");
-			}
-
-			for(unsigned int i = 0; i < nConflicts; i++)
-			{
-				const MatchPattern2* const	conflictPat = conflicts[i];
-
-				if(0 != i)
+				if(nConflicts > 0)
 				{
-					if(quietConflictWarnings == false)
+					assert(conflicts != 0);
+
+					XalanDOMString	conflictsString(XALAN_STATIC_UCODE_STRING("Specificity conflicts found: "));
+					
+					for(unsigned int i = 0; i < nConflicts; i++)
 					{
-						conflictsString += XALAN_STATIC_UCODE_STRING(", ");
-					}
-					// Find the furthest one towards the bottom of the document.
-					if(conflictPat->getPositionInStylesheet() >
-						bestMatchedPattern->getPositionInStylesheet())
-					{
-						bestMatchedPattern = conflictPat;
-					}
-				}
-				else
-				{
-					bestMatchedPattern = conflictPat;
-				}
+						const MatchPattern2* const	conflictPat = conflicts[i];
 
-				if(quietConflictWarnings == false)
-				{
-					conflictsString += XalanDOMString(XALAN_STATIC_UCODE_STRING("\"")) +
-										*conflictPat->getPattern() +
-										XalanDOMString(XALAN_STATIC_UCODE_STRING("\""));
+						if(0 != i)
+						{
+							conflictsString += XALAN_STATIC_UCODE_STRING(", ");
+
+							// Find the furthest one towards the bottom of the document.
+							if(conflictPat->getPositionInStylesheet() >
+								bestMatchedPattern->getPositionInStylesheet())
+							{
+								bestMatchedPattern = conflictPat;
+							}
+						}
+						else
+						{
+							bestMatchedPattern = conflictPat;
+						}
+
+						conflictsString += XalanDOMString(XALAN_STATIC_UCODE_STRING("\"")) +
+												*conflictPat->getPattern() +
+												XalanDOMString(XALAN_STATIC_UCODE_STRING("\""));
+					}
+
+					bestMatchedRule = bestMatchedPattern->getTemplate();
+
+					conflictsString += XALAN_STATIC_UCODE_STRING(" ");
+					conflictsString += XALAN_STATIC_UCODE_STRING("Last found in stylesheet will be used.");
+					executionContext.warn(conflictsString, targetNode, bestMatchedRule->getLocator());
 				}
 			}
 
-			bestMatchedRule = bestMatchedPattern->getTemplate();
-
-			if(quietConflictWarnings == false)
+			if(0 == bestMatchedRule)
 			{
-				conflictsString += XALAN_STATIC_UCODE_STRING(" ");
-				conflictsString += XALAN_STATIC_UCODE_STRING("Last found in stylesheet will be used.");
-				executionContext.warn(conflictsString);
+				bestMatchedRule = findTemplateInImports(executionContext, targetNode, mode);
 			}
 		}
 
@@ -1247,51 +1372,6 @@ Stylesheet::processNSAliasElement(
 	}
 }
 
-
-#if 0
-XalanDOMString
-Stylesheet::getAliasNamespaceURI(const XalanDOMChar*	uri) const
-{
-	assert(uri != 0);
-
-	return getAliasNamespaceURI(XalanDOMString(uri));
-}
-
-
-
-XalanDOMString
-Stylesheet::getAliasNamespaceURI(const XalanDOMString&	uri) const
-{
-	const StringToStringMapType::const_iterator	i =
-		m_prefixAliases.find(uri);
-
-	if (i != m_prefixAliases.end())
-	{
-		assert(length((*i).second) > 0);
-
-		return (*i).second;
-	}
-	else
-	{
-		XalanDOMString	theResult;
-
-		const StylesheetVectorType::size_type	nImports =
-			m_imports.size();
-
-		for(StylesheetVectorType::size_type i = 0; i < nImports; ++i)
-		{
-			theResult = m_imports[i]->getAliasNamespaceURI(uri);
-
-			if(length(theResult) != 0)
-			{
-				break;
-			}
-		}
-
-		return theResult;
-	}
-}
-#endif
 
 
 const XalanDecimalFormatSymbols*
