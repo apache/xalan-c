@@ -119,7 +119,7 @@ XPathFunctionTable::InstallFunction(
 	assert(length(theFunctionName) != 0);
 
 	// See if a function of that name is already installed...
-	const FunctionNameIndexMapType::const_iterator	i =
+	const FunctionNameIndexMapType::iterator	i =
 		m_FunctionNameIndex.find(theFunctionName);
 
 	if (i != m_FunctionNameIndex.end())

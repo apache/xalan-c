@@ -68,7 +68,7 @@
 
 
 
-#if defined(XALAN_AUTO_PTR_NEEDS_DEFINITION)
+#if defined(XALAN_AUTO_PTR_REQUIRES_DEFINITION)
 #include <XPath/ResultTreeFragBase.hpp>
 #endif
 

@@ -101,7 +101,9 @@ FunctionString::execute(
 		// Get a cached string...
 		XPathExecutionContext::GetAndReleaseCachedString	theData(executionContext);
 
-		DOMServices::getNodeData(*context, theData);
+		XalanDOMString&		theString = theData.get();
+
+		DOMServices::getNodeData(*context, theString);
 
 		return executionContext.getXObjectFactory().createString(theData);
 	}

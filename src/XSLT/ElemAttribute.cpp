@@ -158,14 +158,18 @@ ElemAttribute::execute(
 
 	ElemTemplateElement::execute(executionContext, sourceTree, sourceNode, mode);
 
-	StylesheetExecutionContext::GetAndReleaseCachedString	attrName(executionContext);
+	StylesheetExecutionContext::GetAndReleaseCachedString	attrNameGuard(executionContext);
+
+	XalanDOMString&		attrName = attrNameGuard.get();
 
 	m_pNameAVT->evaluate(attrName, sourceNode, *this, executionContext);
 
 	if(!isEmpty(attrName))
 	{
 		// save original attribute name
-		StylesheetExecutionContext::GetAndReleaseCachedString	origAttrName(executionContext);
+		StylesheetExecutionContext::GetAndReleaseCachedString	origAttrNameGuard(executionContext);
+
+		XalanDOMString&		origAttrName = origAttrNameGuard.get();
 
 		assign(origAttrName, attrName);
 
@@ -173,8 +177,9 @@ ElemAttribute::execute(
 
 		unsigned int			indexOfNSSep = 0;
 
-		// save original attribute name
-		StylesheetExecutionContext::GetAndReleaseCachedString	attrNameSpace(executionContext);
+		StylesheetExecutionContext::GetAndReleaseCachedString	attrNameSpaceGuard(executionContext);
+
+		XalanDOMString&		attrNameSpace = attrNameSpaceGuard.get();
 
 		if(0 != m_pNamespaceAVT)
 		{
@@ -206,11 +211,15 @@ ElemAttribute::execute(
 				}
 				else
 				{
-					StylesheetExecutionContext::GetAndReleaseCachedString	newPrefix(executionContext);
+					StylesheetExecutionContext::GetAndReleaseCachedString	newPrefixGuard(executionContext);
+
+					XalanDOMString&		newPrefix = newPrefixGuard.get();
 
 					executionContext.getUniqueNamespaceValue(newPrefix);
 
-					StylesheetExecutionContext::GetAndReleaseCachedString	nsDecl(executionContext);
+					StylesheetExecutionContext::GetAndReleaseCachedString	nsDeclGuard(executionContext);
+
+					XalanDOMString&		nsDecl = nsDeclGuard.get();
 
 					reserve(nsDecl, DOMServices::s_XMLNamespaceWithSeparatorLength + length(newPrefix) + 1);
 

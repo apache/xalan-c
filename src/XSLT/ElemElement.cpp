@@ -165,7 +165,9 @@ ElemElement::execute(
 			XalanNode*						sourceNode,
 			const QName&					mode) const
 {
-	StylesheetExecutionContext::GetAndReleaseCachedString	elemName(executionContext);
+	StylesheetExecutionContext::GetAndReleaseCachedString	elemNameGuard(executionContext);
+
+	XalanDOMString&		elemName = elemNameGuard.get();
 
 	m_nameAVT->evaluate(elemName, sourceNode, *this, executionContext);
 
@@ -211,7 +213,9 @@ ElemElement::execute(
 	{
 		if(0 != m_namespaceAVT)
 		{
-			StylesheetExecutionContext::GetAndReleaseCachedString	elemNameSpace(executionContext);
+			StylesheetExecutionContext::GetAndReleaseCachedString	elemNameSpaceGuard(executionContext);
+
+			XalanDOMString&		elemNameSpace = elemNameSpaceGuard.get();
 
 			m_namespaceAVT->evaluate(elemNameSpace, sourceNode, *this, executionContext);
 
@@ -235,11 +239,15 @@ ElemElement::execute(
 				}
 				else
 				{
-					StylesheetExecutionContext::GetAndReleaseCachedString	newPrefix(executionContext);
+					StylesheetExecutionContext::GetAndReleaseCachedString	newPrefixGuard(executionContext);
+
+					XalanDOMString&		newPrefix = newPrefixGuard.get();
 
 					executionContext.getUniqueNamespaceValue(newPrefix);
 
-					StylesheetExecutionContext::GetAndReleaseCachedString	nsDecl(executionContext);
+					StylesheetExecutionContext::GetAndReleaseCachedString	nsDeclGuard(executionContext);
+
+					XalanDOMString&		nsDecl = nsDeclGuard.get();
 
 					reserve(nsDecl, DOMServices::s_XMLNamespaceWithSeparatorLength + length(newPrefix) + 1);
 

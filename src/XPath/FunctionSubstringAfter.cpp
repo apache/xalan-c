@@ -143,8 +143,10 @@ FunctionSubstringAfter::execute(
 
 			XPathExecutionContext::GetAndReleaseCachedString	theResult(executionContext);
 
+			XalanDOMString&		theString = theResult.get();
+
 			assign(
-					theResult,
+					theString,
 					theFirstCharacter,
 					theSubstringLength);
 

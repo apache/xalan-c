@@ -65,6 +65,7 @@
 #include <PlatformSupport/DOMStringHelper.hpp>
 #include <PlatformSupport/DOMStringPrintWriter.hpp>
 #include <PlatformSupport/DoubleSupport.hpp>
+#include <PlatformSupport/XalanXMLChar.hpp>
 
 
 
@@ -118,6 +119,11 @@ XPathProcessorImpl::initXPath(
 
 	Expr();
 
+	if (length(m_token) != 0)
+	{
+		error("Extra illegal tokens!");
+	}
+
 	m_xpath = 0;
 	m_expression = 0;
 	m_prefixResolver = 0;
@@ -148,6 +154,11 @@ XPathProcessorImpl::initMatchPattern(
 
 	Pattern();
 
+	if (length(m_token) != 0)
+	{
+		error("Extra illegal tokens!");
+	}
+
 	// Terminate for safety.
 	m_expression->appendOpCode(XPathExpression::eENDOP);
 
@@ -175,7 +186,6 @@ XPathProcessorImpl::tokenize(
 
 	bool		isStartOfPat = true;
 	bool		isAttrName = false;
-	bool		isNum = false;
 
 	// Nesting of '[' so we can know if the given element should be 
 	// counted inside the m_patternMap.
@@ -192,7 +202,6 @@ XPathProcessorImpl::tokenize(
 			{
 				if(startSubstring != -1)
 				{
-					isNum = false;
 					isStartOfPat = mapPatternElemPos(nesting, isStartOfPat, isAttrName);
 
 					isAttrName = false;
@@ -227,7 +236,6 @@ XPathProcessorImpl::tokenize(
 			{
 				if(startSubstring != -1)
 				{
-					isNum = false;
 					isStartOfPat = mapPatternElemPos(nesting, isStartOfPat, isAttrName);
 					isAttrName = false;
 
@@ -264,7 +272,6 @@ XPathProcessorImpl::tokenize(
 			{
 				if(startSubstring != -1)
 				{
-					isNum = false;
 					isStartOfPat = mapPatternElemPos(nesting, isStartOfPat, isAttrName);
 					isAttrName = false;
 
@@ -290,12 +297,10 @@ XPathProcessorImpl::tokenize(
 			{
 				if(XalanUnicode::charHyphenMinus == c)
 				{
-					if(!(isNum || startSubstring == -1))
+					if(!(startSubstring == -1))
 					{
 						break;
 					}
-
-					isNum = false;
 				}
 			}
 			// fall-through on purpose
@@ -319,7 +324,6 @@ XPathProcessorImpl::tokenize(
 			{
 				if(startSubstring != -1)
 				{
-					isNum = false;
 					isStartOfPat = mapPatternElemPos(nesting, isStartOfPat, isAttrName);
 					isAttrName = false;
 
@@ -382,7 +386,6 @@ XPathProcessorImpl::tokenize(
 						}
 					}
 
-					isNum = false;
 					isAttrName = false;
 					startSubstring = -1;
 					posOfNSSep = -1;
@@ -404,11 +407,41 @@ XPathProcessorImpl::tokenize(
 				{
 					startSubstring = i;
 
-					isNum = isXMLDigit(c);
-				}
-				else if(isNum == true)
-				{
-					isNum = isXMLDigit(c);
+					if (XalanXMLChar::isDigit(c) == true)
+					{
+						bool	gotFullStop = false;
+
+						while(i < nChars - 1)
+						{
+							++i;
+
+							const XalanDOMChar	currentChar = charAt(pat, i);
+
+							if (currentChar == XalanUnicode::charFullStop)
+							{
+								if (gotFullStop == false)
+								{
+									gotFullStop = true;
+								}
+								else
+								{
+									--i;
+
+									break;
+								}
+							}
+							else if (XalanXMLChar::isDigit(currentChar) == false)
+							{
+								--i;
+
+								break;
+							}
+						}
+
+						addToTokenQueue(substring(pat, startSubstring, i + 1));
+
+						startSubstring = -1;
+					}
 				}
 			}
 		}
@@ -416,8 +449,6 @@ XPathProcessorImpl::tokenize(
 
 	if(startSubstring != -1)
 	{
-		isNum = false;
-
 		isStartOfPat = mapPatternElemPos(nesting, isStartOfPat, isAttrName);
 
 		if(-1 != posOfNSSep)
@@ -430,11 +461,11 @@ XPathProcessorImpl::tokenize(
 		}
 	}
 
-	if(0 == m_expression->tokenQueueSize())
+	if (0 == m_expression->tokenQueueSize())
 	{
 		error("Empty expression!");
 	}
-	else if(0 != targetStrings)
+	else if (0 != targetStrings)
 	{
 		recordTokenString(*targetStrings);
 	}
@@ -534,7 +565,6 @@ XPathProcessorImpl::recordTokenString(DOMStringVectorType&	targetStrings)
 		targetStrings.push_back(m_expression->getToken(tokPos)->str());
 	}
 }
-
 
 
 
@@ -756,7 +786,14 @@ XPathProcessorImpl::nextToken()
 	const XObject* const	theNextToken =
 			m_expression->getNextToken();
 
-	m_token = theNextToken == 0 ? XalanDOMString() : theNextToken->str();
+	if (theNextToken == 0)
+	{
+		clear(m_token);
+	}
+	else
+	{
+		m_token = theNextToken->str();
+	}
 
 	if(length(m_token) > 0)
 	{
@@ -906,14 +943,21 @@ XPathProcessorImpl::error(
 
 		DOMStringPrintWriter	thePrintWriter(emsg);
 
+		thePrintWriter.print(msg);
+
+		thePrintWriter.println();
+
 		if (length(theCurrentPattern) != 0)
 		{
 			thePrintWriter.print(XALAN_STATIC_UCODE_STRING("pattern = '"));
-			thePrintWriter.println(theCurrentPattern);
+			thePrintWriter.print(theCurrentPattern);
+			thePrintWriter.println("'");
 		}
 
-		thePrintWriter.print(msg);
+		// Back up one token, since we've consumed one...
+		m_expression->getPreviousToken();
 
+		// Ask the expression to dump the remaining tokens...
 		m_expression->dumpRemainingTokenQueue(thePrintWriter);
 	}
 
@@ -1330,7 +1374,7 @@ XPathProcessorImpl::UnaryExpr()
 
 	bool		isNeg = false;
 
-	if(m_tokenChar == XalanUnicode::charHyphenMinus)
+	if(tokenIs(XalanUnicode::charHyphenMinus) == true)
 	{
 		nextToken();
 
@@ -1528,7 +1572,8 @@ XPathProcessorImpl::PrimaryExpr()
 
 	const int	opPos = m_expression->opCodeMapLength();
 
-	if(m_tokenChar == XalanUnicode::charApostrophe || m_tokenChar == XalanUnicode::charQuoteMark)
+	if(tokenIs(XalanUnicode::charApostrophe) == true ||
+	   tokenIs(XalanUnicode::charQuoteMark) == true)
 	{
 		m_expression->appendOpCode(XPathExpression::eOP_LITERAL);
 
@@ -1537,7 +1582,7 @@ XPathProcessorImpl::PrimaryExpr()
 		m_expression->updateOpCodeLength(XPathExpression::eOP_LITERAL,
 										 opPos);
 	}
-	else if(m_tokenChar == XalanUnicode::charDollarSign)
+	else if(tokenIs(XalanUnicode::charDollarSign) == true)
 	{
 		nextToken(); // consume '$'
 
@@ -1548,7 +1593,7 @@ XPathProcessorImpl::PrimaryExpr()
 		m_expression->updateOpCodeLength(XPathExpression::eOP_VARIABLE,
 											 opPos);
 	}
-	else if(m_tokenChar == XalanUnicode::charLeftParenthesis)
+	else if(tokenIs(XalanUnicode::charLeftParenthesis) == true)
 	{
 		nextToken();
 
@@ -1561,10 +1606,10 @@ XPathProcessorImpl::PrimaryExpr()
 		m_expression->updateOpCodeLength(XPathExpression::eOP_GROUP,
 										 opPos);
 	}
-	else if((XalanUnicode::charFullStop == m_tokenChar &&
-				m_token.length() > 1 &&
-				isXMLDigit(charAt(m_token, 1)) == true)
-			 || isXMLDigit(m_tokenChar) == true)
+	else if((tokenIs(XalanUnicode::charFullStop) == true &&
+				length(m_token) > 1 &&
+				XalanXMLChar::isDigit(charAt(m_token, 1)) == true) ||
+				XalanXMLChar::isDigit(m_tokenChar) == true)
 	{
 		m_expression->appendOpCode(XPathExpression::eOP_NUMBERLIT);
 
@@ -1610,7 +1655,7 @@ XPathProcessorImpl::FunctionCallArguments()
 
 	consumeExpected(XalanUnicode::charLeftParenthesis);
 
-	while(tokenIs(XalanUnicode::charRightParenthesis) == false)
+	while(tokenIs(XalanUnicode::charRightParenthesis) == false && isEmpty(m_token) == false)
 	{
 		if(tokenIs(XalanUnicode::charComma) == true)
 		{
@@ -1623,7 +1668,6 @@ XPathProcessorImpl::FunctionCallArguments()
 
 		if(tokenIs(XalanUnicode::charRightParenthesis) == false)
 		{
-
 			consumeExpected(XalanUnicode::charComma);
 
 			if(tokenIs(XalanUnicode::charRightParenthesis) == true)
@@ -1804,6 +1848,9 @@ XPathProcessorImpl::Step()
 								   theArgs);
 
 		m_expression->appendOpCode(XPathExpression::eNODETYPE_NODE);
+
+		// Tell how long the entire step is.
+		m_expression->updateOpCodeLength(opPos);
 	}
 	else if(tokenIs(s_dotDotString) == true)
 	{
@@ -1816,8 +1863,14 @@ XPathProcessorImpl::Step()
 								   theArgs);
 
 		m_expression->appendOpCode(XPathExpression::eNODETYPE_NODE);
+
+		// Tell how long the entire step is.
+		m_expression->updateOpCodeLength(opPos);
 	}
-	else
+	else if (tokenIs(XalanUnicode::charAsterisk) ||
+			 tokenIs(XalanUnicode::charCommercialAt) ||
+			 tokenIs(XalanUnicode::charSolidus) ||
+			 XalanXMLChar::isLetter(charAt(m_token, 0)))
 	{
 		Basis();
 
@@ -1825,10 +1878,10 @@ XPathProcessorImpl::Step()
 		{
 			Predicate();
 		}
-	}
 
-	// Tell how long the entire step is.
-	m_expression->updateOpCodeLength(opPos);
+		// Tell how long the entire step is.
+		m_expression->updateOpCodeLength(opPos);
+	}
 }
 
 

@@ -106,13 +106,15 @@ FunctionSum::execute(
 
 	XPathExecutionContext::GetAndReleaseCachedString	theData(executionContext);
 
+	XalanDOMString&		theString = theData.get();
+
 	for (unsigned int i = 0; i < count; i++)
 	{
-		DOMServices::getNodeData(*nl.item(i), theData);
+		DOMServices::getNodeData(*nl.item(i), theString);
 
-		sum += DoubleSupport::toDouble(theData);
+		sum += DoubleSupport::toDouble(theString);
 
-		clear(theData);
+		clear(theString);
 	}
 
 	return executionContext.getXObjectFactory().createNumber(sum);

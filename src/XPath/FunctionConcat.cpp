@@ -110,13 +110,15 @@ FunctionConcat::execute(
 
 	XPathExecutionContext::GetAndReleaseCachedString	theResult(executionContext);
 
+	XalanDOMString&			theString = theResult.get();
+
 	const XalanDOMString&	theArg1 = arg1->str();
 	const XalanDOMString&	theArg2 = arg2->str();
 
-	reserve(theResult, length(theArg1) + length(theArg2) + 1);
+	reserve(theString, length(theArg1) + length(theArg2) + 1);
 
-	append(theResult, theArg1);
-	append(theResult, theArg2);
+	append(theString, theArg1);
+	append(theString, theArg2);
 
 	return executionContext.getXObjectFactory().createString(theResult);
 }
@@ -135,15 +137,17 @@ FunctionConcat::execute(
 
 	XPathExecutionContext::GetAndReleaseCachedString	theResult(executionContext);
 
+	XalanDOMString&			theString = theResult.get();
+
 	const XalanDOMString&	theArg1 = arg1->str();
 	const XalanDOMString&	theArg2 = arg2->str();
 	const XalanDOMString&	theArg3 = arg3->str();
 
-	reserve(theResult, length(theArg1) + length(theArg2) + length(theArg3) + 1);
+	reserve(theString, length(theArg1) + length(theArg2) + length(theArg3) + 1);
 
-	append(theResult, theArg1);
-	append(theResult, theArg2);
-	append(theResult, theArg3);
+	append(theString, theArg1);
+	append(theString, theArg2);
+	append(theString, theArg3);
 
 	return executionContext.getXObjectFactory().createString(theResult);
 }
@@ -174,14 +178,16 @@ FunctionConcat::execute(
 
 	XPathExecutionContext::GetAndReleaseCachedString	theResult(executionContext);
 
-	reserve(theResult, theCombinedLength + 1);
+	XalanDOMString&		theString = theResult.get();
+
+	reserve(theString, theCombinedLength + 1);
 
 	{
 		XObjectArgVectorType::const_iterator	i = args.begin();
 
 		for(; i != theEnd; ++i)
 		{
-			append(theResult, (*i)->str());
+			append(theString, (*i)->str());
 		}
 	}
 
@@ -205,7 +211,5 @@ FunctionConcat::clone() const
 const XalanDOMString
 FunctionConcat::getError() const
 {
-	return XALAN_STATIC_UCODE_STRING(
-		"The concat() function takes at least two arguments!");
+	return XALAN_STATIC_UCODE_STRING("The concat() function takes at least two arguments!");
 }
-

@@ -140,10 +140,12 @@ FunctionTranslate::execute(
 	// A string to hold the result.
 	XPathExecutionContext::GetAndReleaseCachedString	theResult(executionContext);
 
+	XalanDOMString&		theString = theResult.get();
+
 	// The result string can only be as large as the first string, so
 	// just reserve the space now.  Also reserve space for the
 	// terminating 0.
-	reserve(theResult, theFirstStringLength + 1);
+	reserve(theString, theFirstStringLength + 1);
 
 	for (unsigned int i = 0; i < theFirstStringLength; i++)
 	{
@@ -155,13 +157,13 @@ FunctionTranslate::execute(
 		{
 			// Didn't find the character in the second string, so it
 			// is not translated.
-			append(theResult, theCurrentChar);
+			append(theString, theCurrentChar);
 		}
 		else if (theIndex < theThirdStringLength)
 		{
 			// OK, there's a corresponding character in the
 			// third string, so do the translation...
-			append(theResult, charAt(theThirdString, theIndex));
+			append(theString, charAt(theThirdString, theIndex));
 		}
 		else
 		{
@@ -207,7 +209,5 @@ FunctionTranslate::clone() const
 const XalanDOMString
 FunctionTranslate::getError() const
 {
-	return XALAN_STATIC_UCODE_STRING(
-		"The translate() function takes three arguments!");
+	return XALAN_STATIC_UCODE_STRING("The translate() function takes three arguments!");
 }
-

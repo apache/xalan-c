@@ -101,9 +101,11 @@ FunctionStringLength::execute(
 		// Get a cached string...
 		XPathExecutionContext::GetAndReleaseCachedString	theData(executionContext);
 
-		DOMServices::getNodeData(*context, theData);
+		XalanDOMString&		theString = theData.get();
 
-		return executionContext.getXObjectFactory().createNumber(length(theData));
+		DOMServices::getNodeData(*context, theString);
+
+		return executionContext.getXObjectFactory().createNumber(length(theString));
 	}
 }
 

@@ -481,13 +481,6 @@ public:
 			return *m_string;
 		}
 
-		operator XalanDOMString& () const
-		{
-			assert(m_string != 0);
-
-			return *m_string;
-		}
-
 		XPathExecutionContext&
 		getExecutionContext() const
 		{

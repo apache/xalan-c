@@ -648,7 +648,15 @@ XPathExpression::dumpTokenQueue(
 	{
 		assert(getToken(i) != 0);
 
-		thePrintWriter.print(" '");
+		if (i > 0)
+		{
+			thePrintWriter.print(" '");
+		}
+		else
+		{
+			thePrintWriter.print("'");
+		}
+
 		thePrintWriter.print(getToken(i)->str());
 		thePrintWriter.print("'");
 	}

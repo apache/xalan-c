@@ -133,7 +133,7 @@ FunctionGenerateID::execute(
 
 		theID.get() = m_prefix;
 
-		getSuffix(context, theID);
+		getSuffix(context, theID.get());
 
 		return executionContext.getXObjectFactory().createString(theID);
 	}

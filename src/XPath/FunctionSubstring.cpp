@@ -254,10 +254,12 @@ FunctionSubstring::execute(
 
 				XPathExecutionContext::GetAndReleaseCachedString	theResult(executionContext);
 
+				XalanDOMString&		theString = theResult.get();
+
 				assign(
-						theResult,
+						theString,
 						toCharArray(theSourceString) + theStartIndex,
-						theSubstringLength );
+						theSubstringLength);
 
 				return executionContext.getXObjectFactory().createString(theResult);
 			}

@@ -101,7 +101,7 @@ XStringCached::clone(void*	theAddress) const
 const XalanDOMString&
 XStringCached::str() const
 {
-	return m_value;
+	return m_value.get();
 }
 
 

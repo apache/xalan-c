@@ -214,7 +214,9 @@ getStringFromNodeFunction
 	const XalanDOMString
 	operator()(const XalanNode&		theNode) const
 	{
-		XPathExecutionContext::GetAndReleaseCachedString	theString(m_executionContext);
+		XPathExecutionContext::GetAndReleaseCachedString	theGuard(m_executionContext);
+
+		XalanDOMString&		theString = theGuard.get();
 
 		getStringFromNode(theNode, theString);
 
@@ -265,9 +267,9 @@ private:
 	{
 		XPathExecutionContext::GetAndReleaseCachedString	theString(m_executionContext);
 
-		getStringFromNode(theNode, theString);
+		getStringFromNode(theNode, theString.get());
 
-		return DoubleSupport::toDouble(theString);
+		return DoubleSupport::toDouble(theString.get());
 	}
 
 	void
@@ -323,24 +325,24 @@ doCompareNodeSets(
 				const XalanNode* const	theLHSNode = theLHSNodeSet.item(i);
 				assert(theLHSNode != 0);
 
-				theTypeFunction(*theLHSNode, s1);
+				theTypeFunction(*theLHSNode, s1.get());
 
 				for(unsigned int k = 0; k < len2 && theResult == false; k++)
 				{
 					const XalanNode* const	theRHSNode = theRHSNodeSet.item(k);
 					assert(theRHSNode != 0);
 
-					theTypeFunction(*theRHSNode, s2);
+					theTypeFunction(*theRHSNode, s2.get());
 
-					if(theCompareFunction(s1, s2) == true)
+					if(theCompareFunction(s1.get(), s2.get()) == true)
 					{
 						theResult = true;
 					}
 
-					clear(s2);
+					clear(s2.get());
 				}
 
-				clear(s1);
+				clear(s1.get());
 			}
 		}
 	}
@@ -363,7 +365,9 @@ doCompareString(
 
 	const unsigned int	len1 = theLHSNodeSet.getLength();
 
-	XPathExecutionContext::GetAndReleaseCachedString	theLHS(executionContext);
+	XPathExecutionContext::GetAndReleaseCachedString	theGuard(executionContext);
+
+	XalanDOMString&		theLHS = theGuard.get();
 
 	for(unsigned int i = 0; i < len1 && theResult == false; i++)
 	{
