@@ -222,14 +222,14 @@ void generateFiles(const XalanDOMString &fileName,
 	const XalanDOMString testName(test + XalanDOMString(".out"));
 
 	xsl = baseDir + currentDir + pathSep + fileName;
-	xml = futil.GenerateFileName(xsl,"xml");
+	xml = futil.generateFileName(xsl,"xml");
 	futil.data.xmlFileURL = xml;
 	futil.data.xslFileURL = xsl;
 
 	out =  outputRoot + currentDir + pathSep + testName; 
 
 	gold = goldRoot +currentDir + pathSep + fileName;
-	gold = futil.GenerateFileName(gold, "out");
+	gold = futil.generateFileName(gold, "out");
 
 }
 
@@ -458,7 +458,7 @@ main(
 	if (getParams(argc, argv, baseDir, outputRoot, goldRoot) == true)
 	{
 		// Generate Unique Run id. (Only used to name the result logfile.)
-		const XalanDOMString UniqRunid = futil.GenerateUniqRunid();
+		const XalanDOMString UniqRunid = futil.generateUniqRunid();
 
 		// Defined basic constants for file manipulation 
 		const XalanDOMString drive(futil.getDrive());
@@ -499,7 +499,7 @@ main(
 			logFile.logTestFileClose("C++ Extension Testing: ", "Done");
 			logFile.close();
 
-			futil.analyzeResults(xalan, resultsFile);
+			futil.analyzeResults(xalan, baseDir, resultsFile);
 			XalanTransformer::terminate();
 		}
 		catch(...)

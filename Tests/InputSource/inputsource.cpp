@@ -387,7 +387,7 @@ main(int			argc,
 	{
 
 		// Generate Unique Run id. (Only used to name the result logfile.)
-		const XalanDOMString UniqRunid = futil.GenerateUniqRunid();
+		const XalanDOMString UniqRunid = futil.generateUniqRunid();
 
 		// Defined basic constants for file manipulation
 		const XalanDOMString drive(futil.getDrive());
@@ -427,13 +427,13 @@ main(int			argc,
 
 					// Set up the input/output files.
 					const XalanDOMString  theXSLFile= baseDir + currentDir + pathSep + fileName;
-					const XalanDOMString  theXMLFile = futil.GenerateFileName(theXSLFile,"xml");
+					const XalanDOMString  theXMLFile = futil.generateFileName(theXSLFile,"xml");
 					futil.data.xmlFileURL = theXMLFile;
 					futil.data.xslFileURL = theXSLFile;
 
 					// Set the gold file.
 					XalanDOMString  theGoldFile = goldRoot +currentDir + pathSep + fileName;
-					theGoldFile = futil.GenerateFileName(theGoldFile, "out");
+					theGoldFile = futil.generateFileName(theGoldFile, "out");
 					
 					// Execute the test cases. 
 					testCase1(xalan, logFile, theXMLFile, theXSLFile, theOutputDir, theGoldFile);
@@ -449,7 +449,7 @@ main(int			argc,
 			logFile.logTestFileClose("ISource Testing: ", "Done");
 			logFile.close();
 
-			futil.analyzeResults(xalan, resultsFile);
+			futil.analyzeResults(xalan, baseDir, resultsFile);
 			XalanTransformer::terminate();
 		}
 		catch(...)

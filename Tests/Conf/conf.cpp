@@ -326,6 +326,7 @@ main(
 				const XalanDOMString  theXMLFile = futil.generateFileName(theXSLFile,"xml");
 				futil.data.xmlFileURL = theXMLFile;
 				futil.data.xslFileURL = theXSLFile;
+				futil.data.testBase = baseDir;
 
 				XalanDOMString  theGoldFile = goldRoot + currentDir + pathSep + currentFile;
 				theGoldFile = futil.generateFileName(theGoldFile, "out");

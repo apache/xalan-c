@@ -399,7 +399,7 @@ main(
 	{
 
 		// Generate Unique Run id and processor info
-		const XalanDOMString UniqRunid = f.GenerateUniqRunid();
+		const XalanDOMString UniqRunid = f.generateUniqRunid();
 		const XalanDOMString processorType(XALAN_STATIC_UCODE_STRING("XalanC"));
 
 		// Defined basic constants for file manipulation and open results file
@@ -463,10 +463,10 @@ main(
 						}
 
 						const XalanDOMString  theXSLFile= baseDir + dirs[j] + pathSep + files[i];
-						const XalanDOMString  theXMLFile = f.GenerateFileName(theXSLFile,"xml");
+						const XalanDOMString  theXMLFile = f.generateFileName(theXSLFile,"xml");
 
 						const XalanDOMString  theOutput =  outputRoot + dirs[j] + pathSep + files[i]; 
-						const XalanDOMString  theOutputFile = f.GenerateFileName(theOutput, "out");
+						const XalanDOMString  theOutputFile = f.generateFileName(theOutput, "out");
 
 
 						attrs.insert(Hashtable::value_type(XalanDOMString("href"), theXSLFile));

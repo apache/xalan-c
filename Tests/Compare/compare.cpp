@@ -250,7 +250,7 @@ main(
 
 
 			// Generate Unique Run id and processor info
-			const XalanDOMString UniqRunid = futil.GenerateUniqRunid();
+			const XalanDOMString UniqRunid = futil.generateUniqRunid();
 
 
 			// Defined basic constants for file manipulation and open results file
@@ -288,12 +288,12 @@ main(
 					attrs.insert(Hashtable::value_type(XalanDOMString("processor"),processorType));
 
 					const XalanDOMString  theXSLFile= baseDir + xDir + pathSep + fileName;
-					const XalanDOMString  theXMLFile = futil.GenerateFileName(theXSLFile,"xml");
+					const XalanDOMString  theXMLFile = futil.generateFileName(theXSLFile,"xml");
 					XalanDOMString  theGoldFile = goldRoot +xDir + pathSep + fileName;
-					theGoldFile = futil.GenerateFileName(theGoldFile, "out");
+					theGoldFile = futil.generateFileName(theGoldFile, "out");
 
 					const XalanDOMString  outbase =  outputRoot + xDir + pathSep + fileName; 
-					const XalanDOMString  theOutputFile = futil.GenerateFileName(outbase, "out");
+					const XalanDOMString  theOutputFile = futil.generateFileName(outbase, "out");
 					//cout << endl << endl << "Processing: " << fileName << endl;
 
 					const XSLTInputSource	xslInputSource(c_wstr(theXSLFile));

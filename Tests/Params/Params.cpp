@@ -224,7 +224,7 @@ main(
 		XalanTransformer	xalan;
 
 		// Generate Unique Run id. (Only used to name the result logfile.)
-		const XalanDOMString UniqRunid = futil.GenerateUniqRunid();
+		const XalanDOMString UniqRunid = futil.generateUniqRunid();
 
 		// Defined basic constants for file manipulation
 		const XalanDOMString  drive(futil.getDrive());
@@ -256,14 +256,14 @@ main(
 
 				// Set up the input/output files.
 				const XalanDOMString  theXSLFile= baseDir + currentDir + pathSep + fileName;
-				const XalanDOMString  theXMLFile = futil.GenerateFileName(theXSLFile,"xml");
+				const XalanDOMString  theXMLFile = futil.generateFileName(theXSLFile,"xml");
 				futil.data.xmlFileURL = theXMLFile;
 				futil.data.xslFileURL = theXSLFile;
 
 				const XalanDOMString  theOutput =  outputRoot + currentDir + pathSep + fileName; 
-				const XalanDOMString  theOutputFile = futil.GenerateFileName(theOutput, "out");
+				const XalanDOMString  theOutputFile = futil.generateFileName(theOutput, "out");
 				theGoldFile = goldRoot +currentDir + pathSep + fileName;
-				theGoldFile = futil.GenerateFileName(theGoldFile, "out");
+				theGoldFile = futil.generateFileName(theGoldFile, "out");
 
 				XSLTResultTarget		theResultTarget(theOutputFile);
 				const XSLTInputSource	xslInputSource(c_wstr(theXSLFile));

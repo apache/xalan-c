@@ -236,7 +236,7 @@ main(
 		const FileNameVectorType	dirs = f.getDirectoryNames(baseDir);
 
 		// Generate Unique Run id. (Only used to name the result logfile.)
-		const XalanDOMString UniqRunid = f.GenerateUniqRunid();
+		const XalanDOMString UniqRunid = f.generateUniqRunid();
 
 		// Defined basic constants for file manipulation 
 
@@ -279,9 +279,9 @@ main(
 
 
 							const XalanDOMString  theXSLFile= baseDir + dirs[j] + pathSep + files[i];
-							const XalanDOMString  theXMLFile = f.GenerateFileName(theXSLFile,"xml");
+							const XalanDOMString  theXMLFile = f.generateFileName(theXSLFile,"xml");
 							const XalanDOMString  theOutput =  outputRoot + dirs[j] + pathSep + files[i]; 
-							const XalanDOMString  theOutputFile = f.GenerateFileName(theOutput, "out");
+							const XalanDOMString  theOutputFile = f.generateFileName(theOutput, "out");
 
 							// Do a total end to end transform with no pre parsing of either xsl or xml files.
 							XSLTResultTarget		theResultTarget(theOutputFile);

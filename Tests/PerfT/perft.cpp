@@ -297,7 +297,7 @@ main(
 			XalanTransformer xalan;
 
 			// Generate Unique Run id and processor info
-			const XalanDOMString UniqRunid = futil.GenerateUniqRunid();
+			const XalanDOMString UniqRunid = futil.generateUniqRunid();
 
 
 			// Defined basic constants for file manipulation and open results file
@@ -356,10 +356,10 @@ main(
 					}
 
 					const XalanDOMString  theXSLFile= baseDir + dirs[j] + pathSep + files[i];
-					const XalanDOMString  theXMLFile = futil.GenerateFileName(theXSLFile,"xml");
+					const XalanDOMString  theXMLFile = futil.generateFileName(theXSLFile,"xml");
 
 					const XalanDOMString  outbase =  outputRoot + dirs[j] + pathSep + files[i]; 
-					const XalanDOMString  theOutputFile = futil.GenerateFileName(outbase, "out");
+					const XalanDOMString  theOutputFile = futil.generateFileName(outbase, "out");
 
 					const XSLTInputSource	xslInputSource(c_wstr(theXSLFile));
 					const XSLTInputSource	xmlInputSource(c_wstr(theXMLFile));
