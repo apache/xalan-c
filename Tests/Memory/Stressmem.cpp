@@ -136,7 +136,7 @@ main(int			argc,
 	// Set the program help string,  then get the command line parameters.
 	//
 	setHelp();
-	if (h.getParams(argc, argv) == true)
+	if (h.getParams(argc, argv, "MEM-RESULTS") == true)
 	{
 		// Get the list of Directories that are below perf
 		const FileNameVectorType	dirs = h.getDirectoryNames(h.args.base);

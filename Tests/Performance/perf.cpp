@@ -285,7 +285,7 @@ main(int			argc,
 	//
 	setHelp();
 
-	if (h.getParams(argc, argv) == true)
+	if (h.getParams(argc, argv, "PERF-RESULTS") == true)
 	{
 
 		// Generate Unique Run id and processor info

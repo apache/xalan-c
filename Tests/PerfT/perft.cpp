@@ -172,7 +172,7 @@ main(int			argc,
 		long iterCount;			// Default number of iterations
 		bool skip = true;		// Default will skip long tests
 
-		if (h.getParams(argc, argv) == true)
+		if (h.getParams(argc, argv, "PERFT-RESULTS") == true)
 		{
 			//
 			// Call the static initializers for xerces and xalan, and create a transformer

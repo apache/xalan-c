@@ -219,7 +219,7 @@ main(int			argc,
 	// Set the program help string,  then get the command line parameters.
 	//
 	setHelp();	
-	if (h.getParams(argc, argv) == true)
+	if (h.getParams(argc, argv, "PARAMS-RESULTS") == true)
 	{
 		// Call the static initializers...
 		HarnessInit xmlPlatformUtils;

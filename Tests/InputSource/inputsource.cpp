@@ -327,7 +327,7 @@ main(int		  argc,
 	// Set the program help string,  then get the command line parameters.
 	//
 	setHelp();
-	if (h.getParams(argc, argv) == true)
+	if (h.getParams(argc, argv, "INPUTSOURCE-RESULTS") == true)
 	{
 		// Generate and Initialize Unique result logfile, and get drive designation
 		//
