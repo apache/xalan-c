@@ -59,7 +59,9 @@
 
 
 
+#if !defined(WIN32)
 #include <cerrno>
+#endif
 
 
 
@@ -153,14 +155,19 @@ XalanFileOutputStream::XalanFileOutputStream(
 {
 #if defined(WIN32)
     if (m_handle == INVALID_HANDLE_VALUE)
+	{
+		throw XalanFileOutputStreamOpenException(
+					theFileName,
+					GetLastError());
+	}
 #else
     if (m_handle == 0)
-#endif
 	{
 		throw XalanFileOutputStreamOpenException(
 					theFileName,
 					errno);
 	}
+#endif
 }
 
 
@@ -242,7 +249,11 @@ FormatMessageLocal(
 
 	theResult += theFileName;
 
+#if defined(WIN32)
+	append(theResult, ".  The Windows error code is ");
+#else
 	append(theResult, ".  The C++ run-time error code (errno) is ");
+#endif
 
 	LongToDOMString(theErrorCode, theResult);
 
