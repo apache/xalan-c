@@ -249,8 +249,11 @@ EnumerateDirectory(
 		typedef	long	theHandleType;
 	#endif
 
+#pragma warning(push)
+#pragma warning(disable: 4244)
 	theHandleType	theSearchHandle = _wfindfirst(const_cast<wchar_t*>(theConversionFunction(theFullSearchSpec)),
 										  &theFindData);
+#pragma warning(pop)
 
 	if (theSearchHandle != -1)
 	{
