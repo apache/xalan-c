@@ -225,14 +225,43 @@ XalanTransformer::terminate()
 {
 	// Terminate Xalan and release memory.
 #if defined(XALAN_CANNOT_DELETE_CONST)
-	(XSLTInit*) s_xsltInit;
+	delete (XSLTInit*) s_xsltInit;
 #else
 	delete s_xsltInit;
 #endif
 
 	s_xsltInit = 0;
 
+	const XalanDOMString	theXalanNamespace(StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("http://xml.apache.org/xalan")));
+
+	XalanTransformer::uninstallExternalFunctionGlobal(
+			theXalanNamespace,
+			StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("difference")));
+
+	XalanTransformer::uninstallExternalFunctionGlobal(
+			theXalanNamespace,
+			StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("distinct")));
+
+	XalanTransformer::uninstallExternalFunctionGlobal(
+			theXalanNamespace,
+			StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("evaluate")));
+
+	XalanTransformer::uninstallExternalFunctionGlobal(
+			theXalanNamespace,
+			StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("hasSameNodes")));
+
+	XalanTransformer::uninstallExternalFunctionGlobal(
+			theXalanNamespace,
+			StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("intersection")));
+
+	XalanTransformer::uninstallExternalFunctionGlobal(
+			theXalanNamespace,
+			StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("nodeset")));
+
 #if defined(XALAN_USE_ICU)
+	XPath::uninstallFunction(
+			StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("format-number")));
+
 #if defined(XALAN_CANNOT_DELETE_CONST)
 	delete (ICUBridgeCollationCompareFunctor*)theICUFunctor;
 #else
@@ -1024,7 +1053,7 @@ XalanTransformer::destroyParsedSource(const XalanParsedSource*	theParsedSource)
 		m_parsedSources.erase(i);
 
 #if defined(XALAN_CANNOT_DELETE_CONST)
-		delete (XalanCompiledStylesheet*) theParsedSource;
+		delete (XalanParsedSource*) theParsedSource;
 #else
 		delete theParsedSource;
 #endif
