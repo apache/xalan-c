@@ -82,6 +82,10 @@
 #include <XSLT/XSLTEngineImpl.hpp>
 
 
+#include <XalanSourceTree/XalanSourceTreeDOMSupport.hpp>
+#include <XalanSourceTree/XalanSourceTreeParserLiaison.hpp>
+
+
 #include <XalanTransformer/XalanTransformer.hpp>
 #include <XalanTransformer/XercesDOMWrapperParsedSource.hpp>
 
