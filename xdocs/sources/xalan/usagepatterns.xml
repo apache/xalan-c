@@ -113,11 +113,10 @@ function, which means you can begin processing the output while the transformati
 an integer code, 0 for success. If an error occurs, you can use the getLastError() method to return a pointer to the error message. 
 For the details, see XalanTransormer/XalanTransformer.hpp in the source tree. For an example, see the 
 <link idref="samples" anchor="xalantransform">XalanTransform</link> sample.</p>
-<p>Transform an XML file to an output file. The XML file contains a stylesheeet processing instruction.</p>
+<p>Transform an XML file with a stylesheet processing instruction to an output file.</p>
 <source>int
-transform(
-const  char*  xmlInFile, 
-const  char*  xmlOutFile);</source>
+transform(const  char*  xmlInFile, 
+          const  char*  xmlOutFile);</source>
 <p>Transform from files to an output stream:</p>
 <source>int
 transform(const char* xmlInFile,
@@ -128,6 +127,11 @@ transform(const char* xmlInFile,
 transform(istream&amp; xmlInStream,
           istream&amp; xslInStram,
           ostream&amp; resultOutStream);</source>
+<p>Transform an input stream that contains the XML input with a stylesheet processing instruction to an output stream.</p>
+<source>int
+transform(istream&amp; xmlInStream,
+          ostream&amp; resultOutStream);</source>
+
 <p>Transform from files to an output handler that receives the output in blocks. </p>          
 <source>int
 transform(const char* xmlInFile
@@ -165,6 +169,7 @@ The <link idref="samples" anchor="apachemodulexslt">ApacheModuleXSLT</link> samp
   <li>Shut down Xalan and Xerces<br/>
   <code>XalanTerminate();</code></li>
 </ol>
+<p>If the XML input file contains a stylesheet processing instruction that you want to use, include an empty string ("") for the xslfilename argument.</p>
 </s3><anchor name="cvar"/>
 <s3 title="Variations with the XalanTransformer C API">
 <p>The C API supports basically the same options as the C++ API.</p>
@@ -174,6 +179,7 @@ XalanTransformToData(const char*  xmlInFile,
                      const char*  xslFile,
                      const char** transformOutput,
                      XalanHandle  xalan);</source>
+<p>If the XML input contains a stylesheet processing instruction that you want to use, include an empty string ("") for the xslFile argument.</p>                     
 <p>After calling XalanTransformToData(), call XalanFreeData() with the address of the pointer to the character array:</p>
 <p><code>XalanFreeData(transformOutput);</code></p>
 <p>Transform to a callback function that receives the output in blocks (see the <link idref="samples" 
