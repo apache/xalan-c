@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding = "Windows-1252"?>
+<VisualStudioProject
+	ProjectType="Visual C++"
+	Version="7.00"
+	Name="Localization"
+	SccProjectName=""
+	SccLocalPath=""
+	Keyword="MakeFileProj">
+	<Platforms>
+		<Platform
+			Name="Win32"/>
+	</Platforms>
+	<Configurations>
+		<Configuration
+			Name="Debug|Win32"
+			OutputDirectory="."
+			IntermediateDirectory="."
+			ConfigurationType="0"
+			UseOfMFC="0"
+			ATLMinimizesCRunTimeLibraryUsage="FALSE">
+			<Tool
+				Name="VCNMakeTool"
+				BuildCommandLine="nmake    /f &quot;BuildMessages.mak&quot; /NOLOGO CFG=Debug TYPE=inmem LOCALE=en_US"
+				ReBuildCommandLine="nmake    /f &quot;BuildMessages.mak&quot; /NOLOGO CFG=Debug TYPE=inmem LOCALE=en_US /a"
+				Output="Localization"/>
+		</Configuration>
+		<Configuration
+			Name="Release|Win32"
+			OutputDirectory="."
+			IntermediateDirectory="."
+			ConfigurationType="0"
+			UseOfMFC="0"
+			ATLMinimizesCRunTimeLibraryUsage="FALSE">
+			<Tool
+				Name="VCNMakeTool"
+				BuildCommandLine="nmake /f &quot;BuildMessages.mak&quot;  TYPE=inmem LOCALE=en_US"
+				ReBuildCommandLine="nmake /f &quot;BuildMessages.mak&quot;  TYPE=inmem LOCALE=en_US /a"
+				Output="Localization"/>
+		</Configuration>
+		<Configuration
+			Name="Release with symbols|Win32"
+			OutputDirectory="."
+			IntermediateDirectory="."
+			ConfigurationType="0"
+			UseOfMFC="0"
+			ATLMinimizesCRunTimeLibraryUsage="FALSE">
+			<Tool
+				Name="VCNMakeTool"
+				BuildCommandLine="nmake /f &quot;BuildMessages.mak&quot;  TYPE=inmem CFG=Release.symbols LOCALE=en_US"
+				ReBuildCommandLine="nmake /f &quot;BuildMessages.mak&quot;  TYPE=inmem CFG=Release.symbols LOCALE=en_US /a"
+				Output="Localization"/>
+		</Configuration>
+	</Configurations>
+	<Files>
+		<File
+			RelativePath="..\..\..\..\..\src\xalanc\NLS\en_US\XalanMsg_en_US.xlf">
+		</File>
+	</Files>
+	<Globals>
+	</Globals>
+</VisualStudioProject>
