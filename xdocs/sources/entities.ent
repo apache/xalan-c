@@ -9,7 +9,7 @@
 <!ENTITY xslt4c-hplib "libxalan-c1_1.sl">
 <!ENTITY xslt4c-solarislib "libxalan-c1_1.so">
 <!ENTITY xml4c "Xerces-C++">
-<!ENTITY xml4c-used "Xerces-C++ version 1.4.0">
+<!ENTITY xml4c-used "Xerces-C++ version 1.4">
 <!ENTITY xml4c-windll "xerces-c_1_4.dll">
 <!ENTITY xml4c-winlib "xerces-c_1.lib">
 <!ENTITY xml4c-linuxlib "libxerces-c1_4.so">
