@@ -215,6 +215,7 @@ TreeWalker::traverse(
 			if(0 == nextNode)
 			{
 				thePos = thePos->getParentNode();
+				assert(thePos != 0);
 
 				if(parent == thePos)
 				{
@@ -267,6 +268,7 @@ TreeWalker::traverse(
 			if(0 == nextNode)
 			{
 				thePos = thePos->getParentNode();
+				assert(thePos != 0);
 
 				if(parent == thePos)
 				{
