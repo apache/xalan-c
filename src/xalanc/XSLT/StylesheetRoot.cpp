@@ -808,75 +808,67 @@ StylesheetRoot::shouldStripSourceNode(
 {
 	bool	strip = false;
 
-	XalanNode*	parent = DOMServices::getParentOfNode(textNode);
+	XalanNode* const	parent = textNode.getParentNode();
+	assert(parent != 0 && parent->getNodeType() == XalanNode::ELEMENT_NODE);
 
-	while(0 != parent)
+	XPath::eMatchScore	highPreserveScore = XPath::eMatchScoreNone;
+	XPath::eMatchScore	highStripScore = XPath::eMatchScoreNone;
+
 	{
-		if(parent->getNodeType() == XalanNode::ELEMENT_NODE)
+		const XPathVectorType&	theElements =
+				m_whitespacePreservingElements;
+
+		const XPathVectorType::size_type	nTests =
+				theElements.size();
+
+		for(XPathVectorType::size_type i = 0; i < nTests; i++)
 		{
-			XPath::eMatchScore	highPreserveScore = XPath::eMatchScoreNone;
-			XPath::eMatchScore	highStripScore = XPath::eMatchScoreNone;
+			const XPath* const	matchPat = theElements[i];
+			assert(matchPat != 0);
 
-			{
-				const XPathVectorType&	theElements =
-						m_whitespacePreservingElements;
+			const XPath::eMatchScore	score = matchPat->getMatchScore(parent, executionContext);
 
-				const XPathVectorType::size_type	nTests =
-						theElements.size();
-
-				for(XPathVectorType::size_type i = 0; i < nTests; i++)
-				{
-					const XPath* const	matchPat = theElements[i];
-					assert(matchPat != 0);
-
-					const XPath::eMatchScore	score = matchPat->getMatchScore(parent, executionContext);
-
-					if(score > highPreserveScore)
-						highPreserveScore = score;
-				}
-			}
-
-			{
-				const XPathVectorType&	theElements =
-						m_whitespaceStrippingElements;
-
-				const XPathVectorType::size_type	nTests =
-					theElements.size();
-
-				for(XPathVectorType::size_type i = 0; i < nTests; i++)
-				{
-					const XPath* const	matchPat =
-									theElements[i];
-					assert(matchPat != 0);
-
-					const XPath::eMatchScore	score = matchPat->getMatchScore(parent, executionContext);
-
-					if(score > highStripScore)
-						highStripScore = score;
-				}
-			}
-
-			if(highPreserveScore > XPath::eMatchScoreNone ||
-			   highStripScore > XPath::eMatchScoreNone)
-			{
-				if(highPreserveScore > highStripScore)
-				{
-					strip = false;
-				}
-				else if(highStripScore > highPreserveScore)
-				{
-					strip = true;
-				}
-				else
-				{
-					executionContext.warn(
-						XalanMessageLoader::getMessage(XalanMessages::MatchConflictBetween_strip_space_preserve_space)); 
-				}
-				break;
-			}
+			if(score > highPreserveScore)
+				highPreserveScore = score;
 		}
+	}
 
-		parent = parent->getParentNode();
+	{
+		const XPathVectorType&	theElements =
+				m_whitespaceStrippingElements;
+
+		const XPathVectorType::size_type	nTests =
+			theElements.size();
+
+		for(XPathVectorType::size_type i = 0; i < nTests; i++)
+		{
+			const XPath* const	matchPat =
+									theElements[i];
+			assert(matchPat != 0);
+
+			const XPath::eMatchScore	score = matchPat->getMatchScore(parent, executionContext);
+
+			if(score > highStripScore)
+				highStripScore = score;
+		}
+	}
+			
+	if(highPreserveScore > XPath::eMatchScoreNone ||
+	   highStripScore > XPath::eMatchScoreNone)
+	{
+		if(highPreserveScore > highStripScore)
+		{
+			strip = false;
+		}
+		else if(highStripScore > highPreserveScore)
+		{
+			strip = true;
+		}
+		else
+		{
+			executionContext.warn(
+					XalanMessageLoader::getMessage(XalanMessages::MatchConflictBetween_strip_space_preserve_space)); 
+		}
 	}
 
 	return strip;
