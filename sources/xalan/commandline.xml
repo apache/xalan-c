@@ -144,8 +144,9 @@ The -XML or -HTML flag must be set:
      <note>The make file uses the XALAN_USE_ICU environment variable to do the equivalent of a #define and to add
      ICUBridge to the list of dependencies for TestXSLT. If you uncomment the <code>#define XALAN_USE_ICU</code>
      statement in process.cpp (which is the right thing to do in Windows), you will get an error in AIX ("The
-     macro 'XALAN_USER{ICU' has already been defined") and a warning in Linux about duplicate settings when you
-     run the make, and TextXSLT will not link with ICUBridge. WHAT HAPPENS IN HP??</note>
+     macro 'XALAN_USE_ICU' has already been defined"), an error in HP-UX 11 ("Redefinition of macro 'XALAN-USE_ICU' 
+     differs from previous definition"), or a warning in Linux about duplicate settings when you
+     run the make, and TestXSLT does not link with ICUBridge.</note>
      </s3>
    </s2>
 </s1>
