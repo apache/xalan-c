@@ -1332,6 +1332,18 @@ StylesheetExecutionContextDefault::returnXResultTreeFrag(XResultTreeFrag*	theXRe
 		XalanDocumentFragment* const	theDocumentFragment =
 			theXResultTreeFrag->release();
 
+        const KeyTablesTableType::iterator  i =
+            m_keyTables.find(theDocumentFragment);
+
+        if (i != m_keyTables.end())
+        {
+            KeyTable* const     theTable = (*i).second;
+
+            m_keyTables.erase(i);
+
+            delete theTable;
+        }
+
 		m_xresultTreeFragAllocator.destroy(theXResultTreeFrag);
 
 		if (m_usePerInstanceDocumentFactory == true)
