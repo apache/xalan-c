@@ -102,6 +102,8 @@ public:
 		PREFORMATTED = (1 << 20),
 		WHITESPACESENSITIVE = (1 << 21),
 		HEADELEM = (1 << 22),
+		STYLEELEM = (1 << 23),
+		SCRIPTELEM = (1 << 24),
 
 		ATTRURL = (1 << 1),
 		ATTREMPTY = (1 << 2)

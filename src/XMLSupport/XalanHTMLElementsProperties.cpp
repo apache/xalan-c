@@ -900,7 +900,7 @@ const XalanHTMLElementsProperties::InternalElementProperties	XalanHTMLElementsPr
 	},
 	{
 		{ XalanUnicode::charLetter_S, XalanUnicode::charLetter_T, XalanUnicode::charLetter_Y, XalanUnicode::charLetter_L, XalanUnicode::charLetter_E, 0 },
-		ElemDesc::BLOCK | ElemDesc::RAW | ElemDesc::HEADMISC,
+		ElemDesc::BLOCK | ElemDesc::RAW | ElemDesc::HEADMISC | ElemDesc::STYLEELEM,
 		{
 			{
 				{ 0 },
@@ -1057,7 +1057,7 @@ const XalanHTMLElementsProperties::InternalElementProperties	XalanHTMLElementsPr
 	},
 	{
 		{ XalanUnicode::charLetter_S, XalanUnicode::charLetter_C, XalanUnicode::charLetter_R, XalanUnicode::charLetter_I, XalanUnicode::charLetter_P, XalanUnicode::charLetter_T, 0 },
-		ElemDesc::RAW | ElemDesc::SPECIAL | ElemDesc::ASPECIAL | ElemDesc::HEADMISC,
+		ElemDesc::RAW | ElemDesc::SPECIAL | ElemDesc::ASPECIAL | ElemDesc::HEADMISC | ElemDesc::SCRIPTELEM,
 		{
 			{
 				{ XalanUnicode::charLetter_F, XalanUnicode::charLetter_O, XalanUnicode::charLetter_R, 0 },
