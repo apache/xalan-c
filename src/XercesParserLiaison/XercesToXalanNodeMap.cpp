@@ -140,6 +140,8 @@ XercesToXalanNodeMap::clear()
 {
 	m_xalanMap.clear();
 	m_xercesMap.clear();
+
+	m_counter = 0;
 }
 
 
