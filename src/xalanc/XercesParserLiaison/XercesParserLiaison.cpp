@@ -162,7 +162,7 @@ XercesParserLiaison::reset()
 			(*i).second.m_isOwned == true)
 		{
 #if defined(XALAN_CANNOT_DELETE_CONST)
-			delete (DOMDocument*)(*i).second.m_wrapper->getXercesDocument();
+			delete (DOMDocument_Type*)(*i).second.m_wrapper->getXercesDocument();
 #else
 			delete (*i).second.m_wrapper->getXercesDocument();
 #endif
