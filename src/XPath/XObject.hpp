@@ -99,10 +99,11 @@ public:
 	/**
 	 * Clone the instance
 	 *
+	 * @param If theAddress is not null, the XObject will clone itself into that address.
 	 * @return a clone of the instance.
 	 */
 	virtual XObject*
-	clone() const = 0;
+	clone(void*		theAddress = 0) const = 0;
 
 	/**
 	 * Given a request type, return the equivalent string. 

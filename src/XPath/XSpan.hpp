@@ -119,7 +119,7 @@ public:
 #else
 	virtual XSpan*
 #endif
-	clone() const;
+	clone(void*		theAddress = 0) const;
 
 	/**
 	 * Get the start span offset from the first node, or -1 if offset isn't

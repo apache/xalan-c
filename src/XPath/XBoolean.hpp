@@ -94,7 +94,7 @@ public:
 #else
 	virtual XBoolean*
 #endif
-	clone() const;
+	clone(void*		theAddress = 0) const;
 
 	virtual eObjectType
 	getType() const;

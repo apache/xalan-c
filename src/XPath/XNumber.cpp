@@ -100,9 +100,9 @@ XObject*
 #else
 XNumber*
 #endif
-XNumber::clone() const
+XNumber::clone(void*	theAddress) const
 {
-	return new XNumber(*this);
+	return theAddress == 0 ? new XNumber(*this) : new (theAddress) XNumber(*this);
 };
 
 

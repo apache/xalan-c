@@ -119,7 +119,7 @@ public:
 #else
 	virtual XNull*
 #endif
-	clone() const;
+	clone(void*		theAddress = 0) const;
 
 	virtual eObjectType
 	getType() const;

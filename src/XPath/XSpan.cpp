@@ -120,9 +120,9 @@ XObject*
 #else
 XSpan*
 #endif
-XSpan::clone() const
+XSpan::clone(void*	theAddress) const
 {
-	return new XSpan(*this);
+	return theAddress == 0 ? new XSpan(*this) : new (theAddress) XSpan(*this);
 };
 
 

@@ -120,7 +120,7 @@ public:
 #else
 	virtual XResultTreeFrag*
 #endif
-	clone() const;
+	clone(void*		theAddress = 0) const;
 
 	virtual eObjectType
 	getType() const;

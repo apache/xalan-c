@@ -110,9 +110,9 @@ XObject*
 #else
 XString*
 #endif
-XString::clone() const
+XString::clone(void*	theAddress) const
 {
-	return new XString(*this);
+	return theAddress == 0 ? new XString(*this) : new (theAddress) XString(*this);
 };
 
 

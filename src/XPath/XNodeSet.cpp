@@ -143,9 +143,9 @@ XObject*
 #else
 XNodeSet*
 #endif
-XNodeSet::clone() const
+XNodeSet::clone(void*	theAddress) const
 {
-	return new XNodeSet(*this, false);
+	return theAddress == 0 ? new XNodeSet(*this) : new (theAddress) XNodeSet(*this);
 };
 
 

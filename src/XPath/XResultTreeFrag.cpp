@@ -111,9 +111,9 @@ XObject*
 #else
 XResultTreeFrag*
 #endif
-XResultTreeFrag::clone() const
+XResultTreeFrag::clone(void*	theAddress) const
 {
-	return new XResultTreeFrag(*this, false);
+	return theAddress == 0 ? new XResultTreeFrag(*this) : new (theAddress) XResultTreeFrag(*this);
 };
 
 

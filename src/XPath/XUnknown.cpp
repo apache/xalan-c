@@ -97,9 +97,9 @@ XObject*
 #else
 XUnknown*
 #endif
-XUnknown::clone() const
+XUnknown::clone(void*	theAddress) const
 {
-	return new XUnknown(*this);
+	return theAddress == 0 ? new XUnknown(*this) : new (theAddress) XUnknown(*this);
 };
 
 

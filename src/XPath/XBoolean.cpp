@@ -108,9 +108,9 @@ XObject*
 #else
 XBoolean*
 #endif
-XBoolean::clone() const
+XBoolean::clone(void*	theAddress) const
 {
-	return new XBoolean(*this);
+	return theAddress == 0 ? new XBoolean(*this) : new (theAddress) XBoolean(*this);
 };
 
 
