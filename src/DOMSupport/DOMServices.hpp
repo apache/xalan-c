@@ -379,6 +379,17 @@ public:
 	}
 
 	/**
+	 * Retrieve the namespace of the node, taking into
+	 * account the differences between the DOM and
+	 * XSLT data models.
+	 * 
+	 * @param node	DOM node whose namespace is returned
+	 * @return namespace of the node
+	 */
+	static const XalanDOMString&
+	getNamespaceOfNode(const XalanNode&	n);
+
+	/**
 	 * Retrieve the parent of a node. This function has to be implemented,
 	 * because the DOM WG decided that attributes don't have parents.
 	 * 

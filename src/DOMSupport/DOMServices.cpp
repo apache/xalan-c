@@ -464,6 +464,32 @@ DOMServices::getNameOfNode(const XalanNode&		n)
 
 
 
+const XalanDOMString&
+DOMServices::getNamespaceOfNode(const XalanNode&	n)
+{
+	if (n.getNodeType() == XalanNode::ATTRIBUTE_NODE)
+	{
+		const XalanDOMString&	theNodeName = n.getNodeName();
+
+		// Special case for namespace nodes...
+		if (startsWith(theNodeName, DOMServices::s_XMLNamespaceWithSeparator) == true ||
+			equals(theNodeName, DOMServices::s_XMLNamespace) == true)
+		{
+			return s_emptyString;
+		}
+		else
+		{
+			return n.getNamespaceURI();
+		}
+	}
+	else
+	{
+		return n.getNamespaceURI();
+	}
+}
+
+
+
 // Note functional overlap with NamespaceResolver's 
 // getNamespaceOfNode() method.  
 //
