@@ -91,7 +91,7 @@ FunctionPosition::execute(
 	}
 	else
 	{
-		const unsigned int	theValue = executionContext.getContextNodeListPosition(*context);
+		const NodeRefListBase::size_type	theValue = executionContext.getContextNodeListPosition(*context);
 
 		return executionContext.getXObjectFactory().createNumber(theValue);
 	}

@@ -115,9 +115,9 @@ public:
 	nodeset() const;
 
 	virtual XalanNode*
-	item(unsigned int	index) const;
+	item(size_type	index) const;
 
-	virtual unsigned int
+	virtual size_type
 	getLength() const;
 
 	/**

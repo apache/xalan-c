@@ -80,7 +80,7 @@ FunctionLast::execute(
 			XalanNode*				/* context */,
 			const Locator*			/* locator */) const
 {
-	const unsigned int	theValue = executionContext.getContextNodeListLength();
+	const NodeRefListBase::size_type	theValue = executionContext.getContextNodeListLength();
 
 	return executionContext.getXObjectFactory().createNumber(theValue);
 }

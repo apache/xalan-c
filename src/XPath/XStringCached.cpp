@@ -111,7 +111,9 @@ XStringCached::str(
 			FormatterListener&	formatterListener,
 			MemberFunctionPtr	function) const
 {
-	(formatterListener.*function)(c_wstr(m_value.get()), length(m_value.get()));
+	assert(length(m_value.get()) == FormatterListener::size_type(length(m_value.get())));
+
+	(formatterListener.*function)(c_wstr(m_value.get()), FormatterListener::size_type(length(m_value.get())));
 }
 
 

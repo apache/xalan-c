@@ -324,13 +324,13 @@ doCompareNodeSets(
 	// is true if and only if some node in $x has the string-value 
 	// foo; the latter is true if and only if all nodes in $x have 
 	// the string-value foo.
-	bool				theResult = false;
+	bool	theResult = false;
 
-	const unsigned int	len1 = theLHSNodeSet.getLength();
+	const NodeRefListBase::size_type	len1 = theLHSNodeSet.getLength();
 
 	if (len1 > 0)
 	{
-		const unsigned int	len2 = theRHSNodeSet.getLength();
+		const NodeRefListBase::size_type	len2 = theRHSNodeSet.getLength();
 
 		if (len2 > 0)
 		{
@@ -338,14 +338,14 @@ doCompareNodeSets(
 
 			XPathExecutionContext::GetAndReleaseCachedString	s2(executionContext);
 
-			for(unsigned int i = 0; i < len1 && theResult == false; i++)
+			for(NodeRefListBase::size_type i = 0; i < len1 && theResult == false; i++)
 			{
 				const XalanNode* const	theLHSNode = theLHSNodeSet.item(i);
 				assert(theLHSNode != 0);
 
 				theTypeFunction(*theLHSNode, s1.get());
 
-				for(unsigned int k = 0; k < len2 && theResult == false; k++)
+				for(NodeRefListBase::size_type k = 0; k < len2 && theResult == false; k++)
 				{
 					const XalanNode* const	theRHSNode = theRHSNodeSet.item(k);
 					assert(theRHSNode != 0);
@@ -381,13 +381,13 @@ doCompareString(
 {
 	bool				theResult = false;
 
-	const unsigned int	len1 = theLHSNodeSet.getLength();
+	const NodeRefListBase::size_type	len1 = theLHSNodeSet.getLength();
 
 	XPathExecutionContext::GetAndReleaseCachedString	theGuard(executionContext);
 
 	XalanDOMString&		theLHS = theGuard.get();
 
-	for(unsigned int i = 0; i < len1 && theResult == false; i++)
+	for(NodeRefListBase::size_type i = 0; i < len1 && theResult == false; i++)
 	{
 		const XalanNode* const	theLHSNode = theLHSNodeSet.item(i);
 		assert(theLHSNode != 0);
@@ -417,9 +417,9 @@ doCompareNumber(
 {
 	bool				theResult = false;
 
-	const unsigned int	len1 = theLHSNodeSet.getLength();
+	const NodeRefListBase::size_type	len1 = theLHSNodeSet.getLength();
 
-	for(unsigned int i = 0; i < len1 && theResult == false; i++)
+	for(NodeRefListBase::size_type i = 0; i < len1 && theResult == false; i++)
 	{
 		const XalanNode* const	theLHSNode = theLHSNodeSet.item(i);
 		assert(theLHSNode != 0);

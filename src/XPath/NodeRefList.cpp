@@ -106,11 +106,11 @@ NodeRefList::operator=(const NodeRefListBase&	theRHS)
 	{
 		m_nodeList.clear();
 
-		const unsigned int	theLength = theRHS.getLength();
+		const size_type		theLength = theRHS.getLength();
 
 		ensureAllocation(theLength);
 
-		for(unsigned int i = 0; i < theLength; i++)
+		for(size_type i = 0; i < theLength; i++)
 		{
 			XalanNode* const	theNode = theRHS.item(i);
 
@@ -146,7 +146,7 @@ NodeRefList::operator=(const NodeRefList&	theRHS)
 
 
 XalanNode*
-NodeRefList::item(unsigned int	index) const
+NodeRefList::item(size_type		index) const
 {
 	assert(index < m_nodeList.size());
 
@@ -155,7 +155,7 @@ NodeRefList::item(unsigned int	index) const
 
 
 
-unsigned int
+NodeRefList::size_type
 NodeRefList::getLength() const
 {
 	return m_nodeList.size();
@@ -163,7 +163,7 @@ NodeRefList::getLength() const
 
 
 
-unsigned int
+NodeRefList::size_type
 NodeRefList::indexOf(const XalanNode*	theNode) const
 {
 #if !defined(XALAN_NO_NAMESPACES)
@@ -195,13 +195,13 @@ NodeRefList::checkForDuplicates() const
 
 	bool	fResult = false;
 
-	const unsigned int	theLength = getLength();
+	const size_type		theLength = getLength();
 
 	if (theLength > 0)
 	{
 		NodeSetType		theNodes;
 
-		for (unsigned i = 0; i < theLength && fResult == false; ++i)
+		for (size_type i = 0; i < theLength && fResult == false; ++i)
 		{
 			const XalanNode* const	theNode = item(i);
 

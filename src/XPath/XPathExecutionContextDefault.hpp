@@ -206,10 +206,10 @@ public:
 	virtual void	
 	setContextNodeList(const NodeRefListBase&	theList);
 
-	virtual unsigned int
+	virtual size_type
 	getContextNodeListLength() const;
 
-	virtual unsigned int
+	virtual size_type
 	getContextNodeListPosition(const XalanNode&		contextNode) const;
 
 	virtual bool

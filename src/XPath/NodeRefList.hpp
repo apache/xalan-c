@@ -109,12 +109,12 @@ public:
 	// These methods are inherited from NodeRefListBase ...
 
 	virtual XalanNode*
-	item(unsigned int	index) const;
+	item(size_type	index) const;
 
-	virtual unsigned int
+	virtual size_type
 	getLength() const;
 
-	virtual unsigned int
+	virtual size_type
 	indexOf(const XalanNode*	theNode) const;
 
 #if !defined(NDEBUG)

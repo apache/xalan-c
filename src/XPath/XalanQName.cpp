@@ -94,11 +94,13 @@ XalanQName::getNamespaceForPrefix(
 	}
 	else
 	{
+		const NamespaceVectorType::size_type	theSize = namespaces.size();
+
 		if (reverse)
 		{
-			for(int j = namespaces.size()-1; j >= 0; j--)
+			for(NamespaceVectorType::size_type j = theSize; j > 0; --j)
 			{
-				const NameSpace&	ns = namespaces[j];
+				const NameSpace&	ns = namespaces[j - 1];
 
 				const XalanDOMString&	thisPrefix = ns.getPrefix();
 
@@ -112,7 +114,7 @@ XalanQName::getNamespaceForPrefix(
 		}
 		else
 		{
-			for(unsigned int j = 0; j < namespaces.size(); j++)
+			for(NamespaceVectorType::size_type j = 0; j < theSize; j++)
 			{
 				const NameSpace&	ns = namespaces[j];
 
@@ -141,11 +143,9 @@ XalanQName::getNamespaceForPrefix(
 {
 	const XalanDOMString*	nsURI = 0;
 
-	const int depth = nsStack.size();
-
-	for(int i = depth-1; i >= 0; i--)
+	for(NamespacesStackType::size_type i = nsStack.size(); i > 0; --i)
 	{
-		const NamespaceVectorType&	namespaces = nsStack[i];
+		const NamespaceVectorType&	namespaces = nsStack[i - 1];
 
 		nsURI = getNamespaceForPrefix(namespaces, prefix, reverse);
 
@@ -166,9 +166,9 @@ XalanQName::getPrefixForNamespace(
 {
 	const XalanDOMString*	thePrefix = 0;
 
-	for(int j = namespaces.size()-1; j >= 0; j--)
+	for(NamespaceVectorType::size_type j = namespaces.size(); j > 0; --j)
 	{
-		const NameSpace&		ns = namespaces[j];
+		const NameSpace&		ns = namespaces[j - 1];
 		const XalanDOMString&	thisURI = ns.getURI();
 
 		if(::equals(uri, thisURI))
@@ -190,15 +190,15 @@ XalanQName::getPrefixForNamespace(
 			const XalanDOMString&		uri,
 			bool						reverse)
 {
-	const XalanDOMString*	thePrefix = 0;
+	const XalanDOMString*					thePrefix = 0;
 
-	const int		depth = nsStack.size();
+	const NamespacesStackType::size_type	depth = nsStack.size();
 
 	if (reverse)
 	{
-		for(int i = depth-1; i >= 0; i--)
+		for(NamespacesStackType::size_type i = depth; i > 0; --i)
 		{
-			const NamespaceVectorType&	namespaces = nsStack[i];
+			const NamespaceVectorType&	namespaces = nsStack[i - 1];
 
 			thePrefix = getPrefixForNamespace(namespaces, uri, reverse);
 
@@ -208,7 +208,7 @@ XalanQName::getPrefixForNamespace(
 	}
 	else
 	{
-		for(int i = 0; i < depth; i++)
+		for(NamespacesStackType::size_type i = 0; i < depth; i++)
 		{
 			const NamespaceVectorType&	namespaces = nsStack[i];
 

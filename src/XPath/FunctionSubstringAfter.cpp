@@ -84,9 +84,9 @@ FunctionSubstringAfter::execute(
 {
 	assert(arg1.null() == false && arg2.null() == false);
 
-	const XalanDOMString&	theFirstString = arg1->str();
+	const XalanDOMString&				theFirstString = arg1->str();
 
-	const unsigned int		theFirstStringLength = length(theFirstString);
+	const XalanDOMString::size_type		theFirstStringLength = length(theFirstString);
 
 	if (theFirstStringLength == 0)
 	{
@@ -96,7 +96,7 @@ FunctionSubstringAfter::execute(
 	{
 		const XalanDOMString&	theSecondString = arg2->str();
 
-		const unsigned int		theIndex = indexOf(theFirstString,
+		const XalanDOMString::size_type		theIndex = indexOf(theFirstString,
 												   theSecondString);
 
 		if (theIndex == theFirstStringLength)
@@ -105,7 +105,7 @@ FunctionSubstringAfter::execute(
 		}
 		else
 		{
-			const unsigned int		theSecondStringLength = length(theSecondString);
+			const XalanDOMString::size_type		theSecondStringLength = length(theSecondString);
 
 			// Find the first character, which will be the offset of the index of the
 			// beginning of the second string, plus the length of the second string.
@@ -114,7 +114,7 @@ FunctionSubstringAfter::execute(
 
 			// The remaining length is just the opposite -- the length of the string,
 			// minus the index, minus the length of the second string.
-			const unsigned int		theSubstringLength =
+			const XalanDOMString::size_type		theSubstringLength =
 				theFirstStringLength  - theIndex - theSecondStringLength;
 
 			XPathExecutionContext::GetAndReleaseCachedString	theResult(executionContext);

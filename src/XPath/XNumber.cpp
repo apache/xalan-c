@@ -131,7 +131,9 @@ XNumber::str(
 {
 	const XalanDOMString&	theValue = str();
 
-	(formatterListener.*function)(c_wstr(theValue), length(theValue));
+	assert(length(theValue) == FormatterListener::size_type(length(theValue)));
+
+	(formatterListener.*function)(c_wstr(theValue), FormatterListener::size_type(length(theValue)));
 }
 
 

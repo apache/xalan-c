@@ -84,9 +84,9 @@ FunctionSubstringBefore::execute(
 {
 	assert(arg1.null() == false && arg2.null() == false);
 
-	const XalanDOMString&	theFirstString = arg1->str();
+	const XalanDOMString&				theFirstString = arg1->str();
 
-	const unsigned int		theFirstStringLength = length(theFirstString);
+	const XalanDOMString::size_type		theFirstStringLength = length(theFirstString);
 
 	if (theFirstStringLength == 0)
 	{
@@ -94,9 +94,9 @@ FunctionSubstringBefore::execute(
 	}
 	else
 	{
-		const XalanDOMString&	theSecondString = arg2->str();
+		const XalanDOMString&				theSecondString = arg2->str();
 
-		const unsigned int		theIndex = indexOf(theFirstString,
+		const XalanDOMString::size_type		theIndex = indexOf(theFirstString,
 												   theSecondString);
 
 		if (theIndex == theFirstStringLength)

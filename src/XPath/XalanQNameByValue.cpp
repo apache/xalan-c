@@ -188,7 +188,7 @@ XalanQNameByValue::initialize(
 			const XalanDOMChar*			qname,
 			const NamespacesStackType&	namespaces)
 {
-	const unsigned int	indexOfNSSep = indexOf(qname, XalanUnicode::charColon);
+	const XalanDOMString::size_type		indexOfNSSep = indexOf(qname, XalanUnicode::charColon);
 
 	if(indexOfNSSep < length(qname))
 	{
@@ -224,8 +224,8 @@ XalanQNameByValue::resolvePrefix(
 			const XalanDOMString&	qname,
 			const PrefixResolver&	theResolver)
 {
-	const unsigned int	indexOfNSSep = indexOf(qname, XalanUnicode::charColon);
-	const unsigned int	theLength = length(qname);
+	const XalanDOMString::size_type		indexOfNSSep = indexOf(qname, XalanUnicode::charColon);
+	const XalanDOMString::size_type		theLength = length(qname);
 
 	if(indexOfNSSep < theLength)
 	{

@@ -89,15 +89,15 @@ FunctionSum::execute(
 
 	const NodeRefListBase&	nl = arg1->nodeset();
 
-	double					sum = 0.0;
+	double								sum = 0.0;
 
-	const unsigned int		count = nl.getLength();
+	const NodeRefListBase::size_type	count = nl.getLength();
 
 	XPathExecutionContext::GetAndReleaseCachedString	theData(executionContext);
 
 	XalanDOMString&		theString = theData.get();
 
-	for (unsigned int i = 0; i < count; i++)
+	for (NodeRefListBase::size_type i = 0; i < count; i++)
 	{
 		DOMServices::getNodeData(*nl.item(i), theString);
 

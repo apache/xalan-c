@@ -133,7 +133,7 @@ FunctionNormalizeSpace::normalize(
 			XPathExecutionContext&	executionContext,
 			const XalanDOMString&	theString) const
 {
-	const unsigned int	theStringLength = length(theString);
+	const XalanDOMString::size_type		theStringLength = length(theString);
 
 	// A string contain the result...
 	XPathExecutionContext::GetAndReleaseCachedString	theResult(executionContext);
@@ -177,7 +177,7 @@ FunctionNormalizeSpace::normalize(
 		}
 	}
 
-	const unsigned int	theNewStringLength = length(theNewString);
+	const XalanDOMString::size_type		theNewStringLength = length(theNewString);
 
 	if (theNewStringLength == 0)
 	{
@@ -241,7 +241,7 @@ FunctionNormalizeSpace::getError() const
 bool
 FunctionNormalizeSpace::needsNormalization(const XalanDOMString&	theString) const
 {
-	const unsigned int	theStringLength = length(theString);
+	const XalanDOMString::size_type		theStringLength = length(theString);
 
 	bool	fNormalize = false;
 
@@ -249,7 +249,7 @@ FunctionNormalizeSpace::needsNormalization(const XalanDOMString&	theString) cons
 
 	// OK, search for multiple spaces, or whitespace that is not the
 	// space character...
-	for (unsigned int i = 0; i < theStringLength && fNormalize == false; ++i)
+	for (XalanDOMString::size_type i = 0; i < theStringLength && fNormalize == false; ++i)
 	{
 		const XalanDOMChar	theCurrentChar = charAt(theString, i);
 

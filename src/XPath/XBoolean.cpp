@@ -146,11 +146,11 @@ XBoolean::str(
 {
 	if (m_value == true)
 	{
-		(formatterListener.*function)(c_wstr(s_trueString), length(s_trueString));
+		(formatterListener.*function)(c_wstr(s_trueString), FormatterListener::size_type(length(s_trueString)));
 	}
 	else
 	{
-		(formatterListener.*function)(c_wstr(s_falseString), length(s_falseString));
+		(formatterListener.*function)(c_wstr(s_falseString), FormatterListener::size_type(length(s_falseString)));
 	}
 }
 

@@ -88,11 +88,11 @@ ResultTreeFrag::ResultTreeFrag(const ResultTreeFrag&	theSource,
 {
 	if (deepClone == true)
 	{
-		const unsigned int	theLength = theSource.m_children.size();
+		const NodeVectorType::size_type	theLength = theSource.m_children.size();
 
 		m_children.reserve(theLength);
 
-		for (unsigned int i = 0; i < theLength; ++i)
+		for (NodeVectorType::size_type i = 0; i < theLength; ++i)
 		{
 			assert(theSource.m_children[i] != 0);
 
@@ -168,9 +168,8 @@ ResultTreeFrag::getFirstChild() const
 XalanNode*
 ResultTreeFrag::getLastChild() const
 {
-	const unsigned int	theLength = m_children.size();
+	const NodeVectorType::size_type		theLength = m_children.size();
 	
-
 	return theLength == 0 ? 0 : m_children.back();
 }
 
@@ -441,5 +440,7 @@ ResultTreeFrag::item(unsigned int	index) const
 unsigned int
 ResultTreeFrag::getLength() const
 {
-	return m_children.size();
+	assert(unsigned(m_children.size()) == m_children.size());
+
+	return unsigned(m_children.size());
 }

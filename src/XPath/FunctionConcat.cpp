@@ -138,7 +138,7 @@ FunctionConcat::execute(
 			const XObjectArgVectorType&		args,
 			const Locator*					/* locator */) const
 {
-	unsigned int	theCombinedLength = 0;
+	XalanDOMString::size_type	theCombinedLength = 0;
 
 	const XObjectArgVectorType::const_iterator	theEnd = args.end();
 

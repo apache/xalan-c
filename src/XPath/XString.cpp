@@ -128,5 +128,7 @@ XString::str(
 			FormatterListener&	formatterListener,
 			MemberFunctionPtr	function) const
 {
-	(formatterListener.*function)(c_wstr(m_value), length(m_value));
+	assert(length(m_value) == FormatterListener::size_type(length(m_value)));
+
+	(formatterListener.*function)(c_wstr(m_value), FormatterListener::size_type(length(m_value)));
 }

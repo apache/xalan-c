@@ -150,7 +150,9 @@ XToken::str(
 			FormatterListener&	formatterListener,
 			MemberFunctionPtr	function) const
 {
-	(formatterListener.*function)(c_wstr(m_stringValue), length(m_stringValue));
+	assert(length(m_stringValue) == FormatterListener::size_type(length(m_stringValue)));
+
+	(formatterListener.*function)(c_wstr(m_stringValue), FormatterListener::size_type(length(m_stringValue)));
 }
 
 

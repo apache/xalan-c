@@ -245,9 +245,9 @@ SimpleNodeLocator::step(
 
 	if(XPathExpression::eENDOP != nextStepType && continueStepRecursion == true)
 	{
-		const unsigned int	nContexts = subQueryResults->getLength();
+		const NodeRefListBase::size_type	nContexts = subQueryResults->getLength();
 
-		for(unsigned int i = 0; i < nContexts; i++)
+		for(NodeRefListBase::size_type i = 0; i < nContexts; i++)
 		{
 			XalanNode* const	node = subQueryResults->item(i);
 
@@ -358,9 +358,9 @@ SimpleNodeLocator::stepPattern(
 			const XObjectPtr		obj(xpath.executeMore(context, opPos, executionContext));
 			assert(obj.get() != 0);
 
-			const NodeRefListBase&	nl = obj->nodeset();
+			const NodeRefListBase&				nl = obj->nodeset();
 
-			const unsigned int		len = nl.getLength();
+			const NodeRefListBase::size_type	len = nl.getLength();
 
 			if (nextStepType == XPathExpression::eMATCH_ANY_ANCESTOR_WITH_FUNCTION_CALL)
 			{
@@ -368,7 +368,7 @@ SimpleNodeLocator::stepPattern(
 
 				while(context != 0 && fFound == false)
 				{
-					for(unsigned int i = 0; i < len; i++)
+					for(NodeRefListBase::size_type i = 0; i < len; i++)
 					{
 						XalanNode* const	n = nl.item(i);
 
@@ -389,7 +389,7 @@ SimpleNodeLocator::stepPattern(
 			}
 			else
 			{
-				for(unsigned int i = 0; i < len; i++)
+				for(NodeRefListBase::size_type i = 0; i < len; i++)
 				{
 					XalanNode* const	n = nl.item(i);
 
@@ -1830,9 +1830,9 @@ SimpleNodeLocator::predicates(
 
 	while(XPathExpression::eOP_PREDICATE == nextStepType)
 	{
-		unsigned int 		i = 0;
+		NodeRefListBase::size_type 			i = 0;
 
-		const unsigned int	theLength = subQueryResults.getLength();
+		const NodeRefListBase::size_type	theLength = subQueryResults.getLength();
 
 		while(i < theLength)
 		{

@@ -134,8 +134,8 @@ public:
 	 */
 	void
 	insertNode(
-			XalanNode*		n,
-			unsigned int	pos);
+			XalanNode*	n,
+			size_type	pos);
 
 	/**
 	 * Remove a node from the list.
@@ -151,7 +151,7 @@ public:
 	 * @param pos position of node in list
 	 */
 	void
-	removeNode(unsigned int		pos);
+	removeNode(size_type	pos);
 
 	/**
 	 * Remove all nodes.
@@ -166,8 +166,9 @@ public:
 	 * @param n   node to insert, default is empty node
 	 */
 	void
-	setNode(unsigned int	pos,
-			XalanNode*		n = 0);
+	setNode(
+			size_type	pos,
+			XalanNode*	n = 0);
 
 	/**
 	 * Copy NodeList members into this nodelist, adding in document order.  If
@@ -258,7 +259,7 @@ public:
 	 * @param theCount the number of nodes to reserve space for
 	 */
 	void
-	reserve(unsigned int	theCount)
+	reserve(size_type	theCount)
 	{
 		m_nodeList.reserve(theCount);
 	}

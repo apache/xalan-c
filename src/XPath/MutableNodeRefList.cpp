@@ -182,8 +182,8 @@ MutableNodeRefList::addNode(XalanNode*	n)
 
 void
 MutableNodeRefList::insertNode(
-			XalanNode*		n,
-			unsigned int	pos)
+			XalanNode*	n,
+			size_type	pos)
 {
  	assert(m_nodeList.size() >= pos);
 
@@ -216,7 +216,7 @@ MutableNodeRefList::removeNode(const XalanNode*		n)
 
 
 void
-MutableNodeRefList::removeNode(unsigned int		pos)
+MutableNodeRefList::removeNode(size_type	pos)
 {
 	assert(pos < m_nodeList.size());
 
@@ -237,8 +237,8 @@ MutableNodeRefList::clear()
 
 void
 MutableNodeRefList::setNode(
-			unsigned int	pos,
-			XalanNode*		theNode)
+			size_type	pos,
+			XalanNode*	theNode)
 {
 	assert(pos < m_nodeList.size());
 
@@ -250,11 +250,13 @@ MutableNodeRefList::setNode(
 void
 MutableNodeRefList::addNodes(const XalanNodeList&	nodelist)
 {
-	const unsigned int	theLength = nodelist.getLength();
+	const size_type		theLength = nodelist.getLength();
 
-	for (unsigned int i = 0; i < theLength; i++)
+	for (size_type i = 0; i < theLength; i++)
 	{
-		XalanNode* const	theNode = nodelist.item(i);
+		assert(unsigned(i) == i);
+
+		XalanNode* const	theNode = nodelist.item(unsigned(i));
 
 		if (theNode != 0)
 		{
@@ -269,9 +271,9 @@ MutableNodeRefList::addNodes(const XalanNodeList&	nodelist)
 void
 MutableNodeRefList::addNodes(const NodeRefListBase&		nodelist)
 {
-	const unsigned int	theLength = nodelist.getLength();
+	const size_type	theLength = nodelist.getLength();
 
-	for (unsigned int i = 0; i < theLength; i++)
+	for (size_type i = 0; i < theLength; i++)
 	{
 		XalanNode* const	theNode = nodelist.item(i);
 
@@ -305,9 +307,9 @@ MutableNodeRefList::addNodesInDocOrder(
 			const NodeRefListBase&	nodelist,
 			XPathExecutionContext&	executionContext)
 {
-	const unsigned int	theOtherLength = nodelist.getLength();
+	const size_type		theOtherLength = nodelist.getLength();
 
-	for(unsigned int i = 0; i < theOtherLength; i++)
+	for(size_type i = 0; i < theOtherLength; i++)
 	{
 		addNodeInDocOrder(nodelist.item(i), executionContext);
 	}
@@ -591,7 +593,7 @@ MutableNodeRefList::addNodeInDocOrder(
 {
 	if (node != 0)
 	{
-		const unsigned int	size = m_nodeList.size();
+		const size_type		size = m_nodeList.size();
 
 		if (size == 0)
 		{

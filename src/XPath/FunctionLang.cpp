@@ -112,7 +112,7 @@ FunctionLang::execute(
 			{
 				if(startsWith(toLowerCaseASCII(langVal), toLowerCaseASCII(lang)))
 				{
-					const unsigned int	valLen = length(lang);
+					const XalanDOMString::size_type		valLen = length(lang);
 
 					if(length(langVal) == valLen ||
 					   charAt(langVal, valLen) == XalanUnicode::charHyphenMinus)

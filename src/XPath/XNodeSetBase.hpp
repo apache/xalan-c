@@ -80,6 +80,8 @@ class XALAN_XPATH_EXPORT XNodeSetBase : public XObject
 {
 public:
 
+	typedef size_t	size_type;
+
 	/**
 	 * Create an XNodeSetBase
 	 */
@@ -137,9 +139,9 @@ public:
 	ProcessXObjectTypeCallback(XObjectTypeCallback&		theCallbackObject) const;
 
 	virtual XalanNode*
-	item(unsigned int	index) const = 0;
+	item(size_type	index) const = 0;
 
-	virtual unsigned int
+	virtual size_type
 	getLength() const = 0;
 
 protected:

@@ -145,7 +145,7 @@ NodeRefListResultTreeFragProxy::getFirstChild() const
 XalanNode*
 NodeRefListResultTreeFragProxy::getLastChild() const
 {
-	const unsigned int	theLength = m_value.getLength();
+	const NodeRefListBase::size_type	theLength = m_value.getLength();
 	
 	return theLength == 0 ? 0 : m_value.item(theLength - 1);
 }
@@ -353,5 +353,7 @@ NodeRefListResultTreeFragProxy::item(unsigned int	index) const
 unsigned int
 NodeRefListResultTreeFragProxy::getLength() const
 {
-	return m_value.getLength();
+	assert(unsigned(m_value.getLength()) == m_value.getLength());
+
+	return unsigned(m_value.getLength());
 }

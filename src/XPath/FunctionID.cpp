@@ -270,9 +270,9 @@ FunctionID::FunctionIDXObjectTypeCallback::NodeSet(
 			const XObject&			/* theXObject */,
 			const NodeRefListBase&	theValue)
 {
-	const unsigned int	theNodeCount = theValue.getLength();
+	const NodeRefListBase::size_type	theNodeCount = theValue.getLength();
 
-	for (unsigned int i = 0 ; i < theNodeCount; i++)
+	for (NodeRefListBase::size_type i = 0 ; i < theNodeCount; i++)
 	{
 		DOMServices::getNodeData(*theValue.item(i), m_resultString);
 

@@ -169,7 +169,9 @@ XNodeSetBase::str(
 {
 	if (isEmpty(m_cachedStringValue) == false)
 	{
-		(formatterListener.*function)(c_wstr(m_cachedStringValue), length(m_cachedStringValue));
+		assert(length(m_cachedStringValue) == FormatterListener::size_type(length(m_cachedStringValue)));
+
+		(formatterListener.*function)(c_wstr(m_cachedStringValue), FormatterListener::size_type(length(m_cachedStringValue)));
 	}
 	else if (getLength() > 0)
 	{

@@ -81,6 +81,8 @@ public:
 	virtual
 	~NodeRefListBase();
 
+	typedef size_t	size_type;
+
 	/**
 	 * Returns the <code>index</code>th item in the collection. If
 	 * <code>index</code> is greater than or equal to the number of nodes in
@@ -92,7 +94,7 @@ public:
 	 *         valid index
 	 */
 	virtual XalanNode*
-	item(unsigned int	index) const = 0;
+	item(size_type	index) const = 0;
 
 	/**
 	 * Determine the number of nodes in the list. The range of valid child node
@@ -100,7 +102,7 @@ public:
 	 *
 	 * @return number of nodes
 	 */
-	virtual unsigned int
+	virtual size_type
 	getLength() const = 0;
 
 	/**
@@ -109,13 +111,13 @@ public:
 	 * @param theNode node whose index to find
 	 * @return index of node
 	 */
-	virtual unsigned int
+	virtual size_type
 	indexOf(const XalanNode*	theNode) const = 0;
 
 #if defined(XALAN_INLINE_INITIALIZATION)
-	static const unsigned int	npos = ~0u;
+	static const size_type	npos = ~0u;
 #else
-	static const unsigned int	npos;
+	static const size_type	npos;
 #endif
 
 protected:

@@ -89,9 +89,9 @@ FunctionTranslate::execute(
 	const XalanDOMString&	theSecondString = arg2->str();
 	const XalanDOMString&	theThirdString = arg3->str();
 
-	const unsigned int		theFirstStringLength = length(theFirstString);
-	const unsigned int		theSecondStringLength = length(theSecondString);
-	const unsigned int		theThirdStringLength = length(theThirdString);
+	const XalanDOMString::size_type		theFirstStringLength = length(theFirstString);
+	const XalanDOMString::size_type		theSecondStringLength = length(theSecondString);
+	const XalanDOMString::size_type		theThirdStringLength = length(theThirdString);
 
 #if defined(XALAN_NO_NAMESPACES)
 	typedef vector<XalanDOMChar>		VectorType;
@@ -109,11 +109,11 @@ FunctionTranslate::execute(
 	// terminating 0.
 	reserve(theString, theFirstStringLength + 1);
 
-	for (unsigned int i = 0; i < theFirstStringLength; i++)
+	for (XalanDOMString::size_type i = 0; i < theFirstStringLength; i++)
 	{
-		const XalanDOMChar		theCurrentChar = charAt(theFirstString, i);
+		const XalanDOMChar					theCurrentChar = charAt(theFirstString, i);
 
-		const unsigned int		theIndex = indexOf(theSecondString, theCurrentChar);
+		const XalanDOMString::size_type		theIndex = indexOf(theSecondString, theCurrentChar);
 
 		if (theIndex >= theSecondStringLength)
 		{

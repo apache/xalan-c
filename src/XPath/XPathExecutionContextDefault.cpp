@@ -239,7 +239,7 @@ XPathExecutionContextDefault::setContextNodeList(const NodeRefListBase&	theList)
 
 
 
-unsigned int
+XPathExecutionContextDefault::size_type
 XPathExecutionContextDefault::getContextNodeListLength() const
 {
 	if (m_throwFoundIndex == true)
@@ -252,7 +252,7 @@ XPathExecutionContextDefault::getContextNodeListLength() const
 
 
 
-unsigned int
+XPathExecutionContextDefault::size_type
 XPathExecutionContextDefault::getContextNodeListPosition(const XalanNode&	contextNode) const
 {
 	if (m_throwFoundIndex == true)
@@ -261,7 +261,7 @@ XPathExecutionContextDefault::getContextNodeListPosition(const XalanNode&	contex
 	}
 
 	// Get the index of the node...
-	const unsigned int	theIndex = m_contextNodeList->indexOf(&contextNode);
+	const size_type		theIndex = m_contextNodeList->indexOf(&contextNode);
 
 	// If not found return 0.  Otherwise, return the index + 1
 	return theIndex == NodeRefListBase::npos ? 0 : theIndex + 1;

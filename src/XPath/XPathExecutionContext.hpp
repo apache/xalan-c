@@ -115,6 +115,8 @@ public:
 	typedef std::vector<XObjectPtr>		XObjectArgVectorType;
 #endif
 
+	typedef NodeRefListBase::size_type	size_type;
+
 	explicit
 	XPathExecutionContext();
 
@@ -243,7 +245,7 @@ public:
 	 *
 	 * @return length of list
 	 */
-	virtual unsigned int
+	virtual size_type
 	getContextNodeListLength() const = 0;
 
 	/*
@@ -253,7 +255,7 @@ public:
 	 *
 	 * @return position in list
 	 */
-	virtual unsigned int
+	virtual size_type
 	getContextNodeListPosition(const XalanNode&		contextNode) const = 0;
 
 	/**

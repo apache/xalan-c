@@ -101,7 +101,7 @@ FunctionContains::execute(
 		{
 			// OK, both strings have some data, so look for
 			// the index...
-			const unsigned int		theIndex = indexOf(str1, str2);
+			const XalanDOMString::size_type		theIndex = indexOf(str1, str2);
 
 			fResult = theIndex < length(str1) ? true : false;
 		}

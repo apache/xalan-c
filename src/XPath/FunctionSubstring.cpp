@@ -85,7 +85,7 @@ FunctionSubstring::~FunctionSubstring()
 /*
  * Get the value for the start index (C-style, not XPath).
  */
-inline unsigned int
+inline XalanDOMString::size_type
 getStartIndex(double	theSecondArgValue)
 {
 	// We always subtract 1 for C-style index, since XPath indexes from 1.
@@ -97,7 +97,7 @@ getStartIndex(double	theSecondArgValue)
 	}
 	else
 	{
-		return unsigned(DoubleSupport::round(theSecondArgValue)) - 1;
+		return XalanDOMString::size_type(DoubleSupport::round(theSecondArgValue)) - 1;
 	}
 }
 
@@ -106,15 +106,15 @@ getStartIndex(double	theSecondArgValue)
 /*
  * Get the length of the substring.
  */
-inline unsigned int
+inline XalanDOMString::size_type
 getSubstringLength(
-			unsigned int	theSourceStringLength,
-			unsigned int	theStartIndex,
-			double			theThirdArgValue)
+			XalanDOMString::size_type	theSourceStringLength,
+			XalanDOMString::size_type	theStartIndex,
+			double						theThirdArgValue)
 {
 	// The last index must be less than theThirdArgValue.  Since it has
 	// already been rounded, subtracting 1 will do the job.
-	const unsigned int	theLastIndex = unsigned(theThirdArgValue - 1);
+	const XalanDOMString::size_type		theLastIndex = XalanDOMString::size_type(theThirdArgValue - 1);
 
 	if (theLastIndex >= theSourceStringLength)
 	{
@@ -133,9 +133,9 @@ getSubstringLength(
  */
 inline double
 getTotal(
-			unsigned int		theSourceStringLength,
-			double				theSecondArgValue,
-			const XObjectPtr&	arg3)
+			XalanDOMString::size_type	theSourceStringLength,
+			double						theSecondArgValue,
+			const XObjectPtr&			arg3)
 {
 	// Total the second and third arguments.  Ithe third argument is
 	// missing, make it the length of the string + 1 (for XPath
@@ -200,8 +200,8 @@ FunctionSubstring::execute(
 {
 	assert(arg1.null() == false && arg2.null() == false);	
 
-	const XalanDOMString&	theSourceString = arg1->str();
-	const unsigned int		theSourceStringLength = length(theSourceString);
+	const XalanDOMString&				theSourceString = arg1->str();
+	const XalanDOMString::size_type		theSourceStringLength = length(theSourceString);
 
 	if (theSourceStringLength == 0)
 	{
@@ -214,7 +214,7 @@ FunctionSubstring::execute(
 			DoubleSupport::round(arg2->num());
 
 		// XPath indexes from 1, so this is the first XPath index....
-		const unsigned int	theStartIndex = getStartIndex(theSecondArgValue);
+		const XalanDOMString::size_type		theStartIndex = getStartIndex(theSecondArgValue);
 
 		if (theStartIndex >= theSourceStringLength)
 		{
@@ -234,7 +234,7 @@ FunctionSubstring::execute(
 			}
 			else
 			{
-				const unsigned int	theSubstringLength =
+				const XalanDOMString::size_type		theSubstringLength =
 					getSubstringLength(
 						theSourceStringLength,
 						theStartIndex,

@@ -781,14 +781,15 @@ public:
 
 		if (theSize > s_opCodeMapLengthIndex)
 		{
-			assert(theSize ==
-				OpCodeMapSizeType(m_opMap[s_opCodeMapLengthIndex]));
+			assert(theSize == OpCodeMapSizeType(m_opMap[s_opCodeMapLengthIndex]));
 
 			return m_opMap[s_opCodeMapLengthIndex];
 		}
 		else
 		{
-			return theSize;
+			assert(theSize == OpCodeMapValueType(theSize));
+
+			return OpCodeMapValueType(theSize);
 		}
 	}
 
@@ -855,7 +856,9 @@ public:
 	{
 		assert(opPos < opCodeMapSize());
 
-		return opPos + m_opMap[opPos + s_opCodeMapLengthIndex];
+		assert(opPos + m_opMap[opPos + s_opCodeMapLengthIndex] == OpCodeMapValueType(opPos + m_opMap[opPos + s_opCodeMapLengthIndex]));
+
+		return OpCodeMapValueType(opPos + m_opMap[opPos + s_opCodeMapLengthIndex]);
 	}
 
 	/**
