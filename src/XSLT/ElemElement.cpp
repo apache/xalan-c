@@ -179,6 +179,8 @@ ElemElement::execute(
 
 	const bool				haveNamespace = indexOfNSSep == len ? false : true;
 
+	bool					outputNSDecl = false;
+
 	const XalanDOMString*	ns = 0;
 
 	if(haveNamespace == true)
@@ -211,7 +213,11 @@ ElemElement::execute(
 
 	if (len != 0 && (haveNamespace == false || nsLength != 0))
 	{
-		if(0 != m_namespaceAVT)
+		if(0 == m_namespaceAVT)
+		{
+			executionContext.startElement(toCharArray(elemName));   
+		}
+		else
 		{
 			StylesheetExecutionContext::GetAndReleaseCachedString	elemNameSpaceGuard(executionContext);
 
@@ -219,7 +225,11 @@ ElemElement::execute(
 
 			m_namespaceAVT->evaluate(elemNameSpace, sourceNode, *this, executionContext);
 
-			if(!isEmpty(elemNameSpace))
+			if(isEmpty(elemNameSpace) == true)
+			{
+				executionContext.startElement(toCharArray(elemName));   
+			}
+			else
 			{
 				if(indexOfNSSep < len)
 				{
@@ -236,6 +246,8 @@ ElemElement::execute(
 
 					insert(elemName, 0, DOMServices::s_XMLNamespaceSeparatorString);
 					insert(elemName, 0, prefix);
+			
+					executionContext.startElement(toCharArray(elemName));   
 				}
 				else
 				{
@@ -255,19 +267,19 @@ ElemElement::execute(
 
 					append(nsDecl, newPrefix);
 
-					executionContext.addResultAttribute(nsDecl, elemNameSpace);
-
 					reserve(
 						elemName,
 						length(elemName) + DOMServices::s_XMLNamespaceSeparatorStringLength + length(newPrefix) + 1);
 
 					insert(elemName, 0, DOMServices::s_XMLNamespaceSeparatorString);
 					insert(elemName, 0, newPrefix);
+
+					executionContext.startElement(toCharArray(elemName));   
+
+					executionContext.addResultAttribute(nsDecl, elemNameSpace);
 				}
 			}
 		}
-
-		executionContext.startElement(toCharArray(elemName));   
 	}
 
 	ElemUse::execute(executionContext, sourceTree, sourceNode, mode);
