@@ -1504,9 +1504,9 @@ StylesheetExecutionContextDefault::installXalanNumberFormatFactory(XalanNumberFo
 
 int
 StylesheetExecutionContextDefault::collationCompare(
-			const XalanDOMString&	theLHS,
-			const XalanDOMString&	theRHS,
-			eCaseOrder				theCaseOrder)
+			const XalanDOMString&				theLHS,
+			const XalanDOMString&				theRHS,
+			XalanCollationServices::eCaseOrder	theCaseOrder)
 {
 	if (m_collationCompareFunctor == 0)
 	{
@@ -1522,10 +1522,10 @@ StylesheetExecutionContextDefault::collationCompare(
 
 int
 StylesheetExecutionContextDefault::collationCompare(
-			const XalanDOMString&	theLHS,
-			const XalanDOMString&	theRHS,
-			const XalanDOMString&	theLocale,
-			eCaseOrder				theCaseOrder)
+			const XalanDOMString&				theLHS,
+			const XalanDOMString&				theRHS,
+			const XalanDOMString&				theLocale,
+			XalanCollationServices::eCaseOrder	theCaseOrder)
 {
 	if (m_collationCompareFunctor == 0)
 	{
@@ -1541,9 +1541,9 @@ StylesheetExecutionContextDefault::collationCompare(
 
 int
 StylesheetExecutionContextDefault::collationCompare(
-			const XalanDOMChar*		theLHS,
-			const XalanDOMChar*		theRHS,
-			eCaseOrder				theCaseOrder)
+			const XalanDOMChar*					theLHS,
+			const XalanDOMChar*					theRHS,
+			XalanCollationServices::eCaseOrder	theCaseOrder)
 {
 	assert(theLHS != 0 && theRHS != 0);
 
@@ -1561,10 +1561,10 @@ StylesheetExecutionContextDefault::collationCompare(
 
 int
 StylesheetExecutionContextDefault::collationCompare(
-			const XalanDOMChar*		theLHS,
-			const XalanDOMChar*		theRHS,
-			const XalanDOMChar*		theLocale,
-			eCaseOrder				theCaseOrder)
+			const XalanDOMChar*					theLHS,
+			const XalanDOMChar*					theRHS,
+			const XalanDOMChar*					theLocale,
+			XalanCollationServices::eCaseOrder	theCaseOrder)
 {
 	assert(theLHS != 0 && theRHS != 0);
 
@@ -1576,18 +1576,6 @@ StylesheetExecutionContextDefault::collationCompare(
 	{
 		return (*m_collationCompareFunctor)(theLHS, theRHS, theLocale, theCaseOrder);
 	}
-}
-
-
-
-StylesheetExecutionContextDefault::CollationCompareFunctor::CollationCompareFunctor()
-{
-}
-
-
-
-StylesheetExecutionContextDefault::CollationCompareFunctor::~CollationCompareFunctor()
-{
 }
 
 
@@ -1606,9 +1594,9 @@ StylesheetExecutionContextDefault::DefaultCollationCompareFunctor::~DefaultColla
 
 int
 StylesheetExecutionContextDefault::DefaultCollationCompareFunctor::operator()(
-			const XalanDOMChar*		theLHS,
-			const XalanDOMChar*		theRHS,
-			eCaseOrder				/* theCaseOrder */) const
+			const XalanDOMChar*					theLHS,
+			const XalanDOMChar*					theRHS,
+			XalanCollationServices::eCaseOrder	/* theCaseOrder */) const
 {
 	return XALAN_CPP_NAMESPACE :: collationCompare(theLHS, theRHS);
 }
@@ -1617,10 +1605,10 @@ StylesheetExecutionContextDefault::DefaultCollationCompareFunctor::operator()(
 
 int
 StylesheetExecutionContextDefault::DefaultCollationCompareFunctor::operator()(
-			const XalanDOMChar*		theLHS,
-			const XalanDOMChar*		theRHS,
-			const XalanDOMChar*		/* theLocale */,
-			eCaseOrder				theCaseOrder) const
+			const XalanDOMChar*					theLHS,
+			const XalanDOMChar*					theRHS,
+			const XalanDOMChar*					/* theLocale */,
+			XalanCollationServices::eCaseOrder	theCaseOrder) const
 {
 	return (*this)(theLHS, theRHS, theCaseOrder);
 }

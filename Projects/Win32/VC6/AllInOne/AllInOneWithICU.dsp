@@ -586,6 +586,10 @@ SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XalanBitmap.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XalanCollationServices.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\xalanc\PlatformSupport\XalanDecimalFormat.cpp
 # End Source File
 # Begin Source File

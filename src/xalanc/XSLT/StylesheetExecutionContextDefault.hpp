@@ -716,56 +716,31 @@ public:
 
 	virtual int
 	collationCompare(
-			const XalanDOMString&	theLHS,
-			const XalanDOMString&	theRHS,
-			eCaseOrder				theCaseOrder = eDefault);
+			const XalanDOMString&				theLHS,
+			const XalanDOMString&				theRHS,
+			XalanCollationServices::eCaseOrder	theCaseOrder = XalanCollationServices::eDefault);
 
 	virtual int
 	collationCompare(
-			const XalanDOMString&	theLHS,
-			const XalanDOMString&	theRHS,
-			const XalanDOMString&	theLocale,
-			eCaseOrder				theCaseOrder = eDefault);
+			const XalanDOMString&				theLHS,
+			const XalanDOMString&				theRHS,
+			const XalanDOMString&				theLocale,
+			XalanCollationServices::eCaseOrder	theCaseOrder = XalanCollationServices::eDefault);
 
 	virtual int
 	collationCompare(
-			const XalanDOMChar*		theLHS,
-			const XalanDOMChar*		theRHS,
-			eCaseOrder				theCaseOrder = eDefault);
+			const XalanDOMChar*					theLHS,
+			const XalanDOMChar*					theRHS,
+			XalanCollationServices::eCaseOrder	theCaseOrder = XalanCollationServices::eDefault);
 
 	virtual int
 	collationCompare(
-			const XalanDOMChar*		theLHS,
-			const XalanDOMChar*		theRHS,
-			const XalanDOMChar*		theLocale,
-			eCaseOrder				theCaseOrder = eDefault);
+			const XalanDOMChar*					theLHS,
+			const XalanDOMChar*					theRHS,
+			const XalanDOMChar*					theLocale,
+			XalanCollationServices::eCaseOrder	theCaseOrder = XalanCollationServices::eDefault);
 
-	class XALAN_XSLT_EXPORT CollationCompareFunctor
-	{
-	public:
-
-		CollationCompareFunctor();
-
-		virtual
-		~CollationCompareFunctor();
-
-		// Const version is suitable for use by
-		// multiple threads.
-		virtual int
-		operator()(
-			const XalanDOMChar*		theLHS,
-			const XalanDOMChar*		theRHS,
-			eCaseOrder				theCaseOrder = eDefault) const = 0;
-
-		// Const version is suitable for use by
-		// multiple threads.
-		virtual int
-		operator()(
-			const XalanDOMChar*		theLHS,
-			const XalanDOMChar*		theRHS,
-			const XalanDOMChar*		theLocale,
-			eCaseOrder				theCaseOrder = eDefault) const = 0;
-	};
+	typedef XalanCollationServices::CollationCompareFunctor		CollationCompareFunctor;
 
 	class XALAN_XSLT_EXPORT DefaultCollationCompareFunctor : public CollationCompareFunctor
 	{
@@ -778,16 +753,16 @@ public:
 
 		virtual int
 		operator()(
-			const XalanDOMChar*		theLHS,
-			const XalanDOMChar*		theRHS,
-			eCaseOrder				theCaseOrder = eDefault) const;
+			const XalanDOMChar*					theLHS,
+			const XalanDOMChar*					theRHS,
+			XalanCollationServices::eCaseOrder	theCaseOrder = XalanCollationServices::eDefault) const;
 
 		virtual int
 		operator()(
-			const XalanDOMChar*		theLHS,
-			const XalanDOMChar*		theRHS,
-			const XalanDOMChar*		theLocale,
-			eCaseOrder				theCaseOrder = eDefault) const;
+			const XalanDOMChar*					theLHS,
+			const XalanDOMChar*					theRHS,
+			const XalanDOMChar*					theLocale,
+			XalanCollationServices::eCaseOrder	theCaseOrder = XalanCollationServices::eDefault) const;
 	};
 
 	const CollationCompareFunctor*

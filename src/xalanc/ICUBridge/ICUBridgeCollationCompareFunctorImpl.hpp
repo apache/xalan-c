@@ -81,12 +81,9 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-class XALAN_ICUBRIDGE_EXPORT ICUBridgeCollationCompareFunctorImpl : public StylesheetExecutionContextDefault::CollationCompareFunctor
+class XALAN_ICUBRIDGE_EXPORT ICUBridgeCollationCompareFunctorImpl : public XalanCollationServices::CollationCompareFunctor
 {
 public:
-
-	typedef StylesheetExecutionContextDefault::eCaseOrder	eCaseOrder;
-
 
 	/**
 	 * Constructor.
@@ -99,16 +96,16 @@ public:
 
 	int
 	operator()(
-			const XalanDOMChar*		theLHS,
-			const XalanDOMChar*		theRHS,
-			eCaseOrder				theCaseOrder = StylesheetExecutionContextDefault::eDefault) const;
+			const XalanDOMChar*					theLHS,
+			const XalanDOMChar*					theRHS,
+			XalanCollationServices::eCaseOrder	theCaseOrder = XalanCollationServices::eDefault) const;
 
 	int
 	operator()(
-			const XalanDOMChar*		theLHS,
-			const XalanDOMChar*		theRHS,
-			const XalanDOMChar*		theLocale,
-			eCaseOrder				theCaseOrder = StylesheetExecutionContextDefault::eDefault) const;
+			const XalanDOMChar*					theLHS,
+			const XalanDOMChar*					theRHS,
+			const XalanDOMChar*					theLocale,
+			XalanCollationServices::eCaseOrder	theCaseOrder = XalanCollationServices::eDefault) const;
 
 	bool
 	isValid() const
@@ -211,17 +208,17 @@ private:
 
 	int
 	doCompare(
-			const XalanDOMChar*		theLHS,
-			const XalanDOMChar*		theRHS,
-			const XalanDOMChar*		theLocale,
-			eCaseOrder				theCaseOrder) const;
+			const XalanDOMChar*					theLHS,
+			const XalanDOMChar*					theRHS,
+			const XalanDOMChar*					theLocale,
+			XalanCollationServices::eCaseOrder	theCaseOrder) const;
 
 	int
 	doCompareCached(
-			const XalanDOMChar*		theLHS,
-			const XalanDOMChar*		theRHS,
-			const XalanDOMChar*		theLocale,
-			eCaseOrder				theCaseOrder) const;
+			const XalanDOMChar*					theLHS,
+			const XalanDOMChar*					theRHS,
+			const XalanDOMChar*					theLocale,
+			XalanCollationServices::eCaseOrder	theCaseOrder) const;
 
 	int
 	doCompare(
@@ -231,10 +228,10 @@ private:
 
 	int
 	doCompare(
-			CollatorType&			theCollator,
-			const XalanDOMChar*		theLHS,
-			const XalanDOMChar*		theRHS,
-			eCaseOrder				theCaseOrder) const;
+			CollatorType&						theCollator,
+			const XalanDOMChar*					theLHS,
+			const XalanDOMChar*					theRHS,
+			XalanCollationServices::eCaseOrder	theCaseOrder) const;
 
 	CollatorType*
 	getCachedCollator(const XalanDOMChar*	theLocale) const;

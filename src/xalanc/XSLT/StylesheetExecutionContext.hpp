@@ -97,6 +97,7 @@
 
 
 #include <xalanc/PlatformSupport/AttributeListImpl.hpp>
+#include <xalanc/PlatformSupport/XalanCollationServices.hpp>
 
 
 
@@ -1610,8 +1611,6 @@ public:
 			const NodeRefListBase&		nl,
 			const XPath*				xpath) = 0;
 
-	enum eCaseOrder { eDefault, eLowerFirst, eUpperFirst };
-
 	/**
 	 * Compare two strings using the collation of the
 	 * current locale.
@@ -1623,9 +1622,9 @@ public:
 	 */
 	virtual int
 	collationCompare(
-			const XalanDOMString&	theLHS,
-			const XalanDOMString&	theRHS,
-			eCaseOrder				theCaseOrder = eDefault) = 0;
+			const XalanDOMString&				theLHS,
+			const XalanDOMString&				theRHS,
+			XalanCollationServices::eCaseOrder	theCaseOrder = XalanCollationServices::eDefault) = 0;
 
 	/**
 	 * Compare two strings using the collation of the
@@ -1639,10 +1638,10 @@ public:
 	 */
 	virtual int
 	collationCompare(
-			const XalanDOMString&	theLHS,
-			const XalanDOMString&	theRHS,
-			const XalanDOMString&	theLocale,
-			eCaseOrder				theCaseOrder = eDefault) = 0;
+			const XalanDOMString&				theLHS,
+			const XalanDOMString&				theRHS,
+			const XalanDOMString&				theLocale,
+			XalanCollationServices::eCaseOrder	theCaseOrder = XalanCollationServices::eDefault) = 0;
 
 	/**
 	 * Compare two strings using the collation of the
@@ -1655,9 +1654,9 @@ public:
 	 */
 	virtual int
 	collationCompare(
-			const XalanDOMChar*		theLHS,
-			const XalanDOMChar*		theRHS,
-			eCaseOrder				theCaseOrder = eDefault) = 0;
+			const XalanDOMChar*					theLHS,
+			const XalanDOMChar*					theRHS,
+			XalanCollationServices::eCaseOrder	theCaseOrder = XalanCollationServices::eDefault) = 0;
 
 	/**
 	 * Compare two strings using the collation of the
@@ -1671,10 +1670,10 @@ public:
 	 */
 	virtual int
 	collationCompare(
-			const XalanDOMChar*		theLHS,
-			const XalanDOMChar*		theRHS,
-			const XalanDOMChar*		theLocale,
-			eCaseOrder				theCaseOrder = eDefault) = 0;
+			const XalanDOMChar*					theLHS,
+			const XalanDOMChar*					theRHS,
+			const XalanDOMChar*					theLocale,
+			XalanCollationServices::eCaseOrder	theCaseOrder = XalanCollationServices::eDefault) = 0;
 
 	/**
 	 * Determine if a KeyDeclaration is being constructed.

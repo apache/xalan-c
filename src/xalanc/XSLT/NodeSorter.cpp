@@ -170,46 +170,20 @@ NodeSorter::sort(
 
 
 
-inline StylesheetExecutionContext::eCaseOrder
-caseOrderConvert(NodeSortKey::eCaseOrder	theCaseOrder)
-{
-	switch(theCaseOrder)
-	{
-	case NodeSortKey::eLowerFirst:
-		return StylesheetExecutionContext::eLowerFirst;
-		break;
-
-	case NodeSortKey::eUpperFirst:
-		return StylesheetExecutionContext::eUpperFirst;
-		break;
-
-	case NodeSortKey::eDefault:
-		break;
-
-	default:
-		assert(false);
-		break;
-	}
-
-	return StylesheetExecutionContext::eDefault;
-}
-
-
-
 static inline int
 doCollationCompare(
-			StylesheetExecutionContext&		executionContext,
-			const XalanDOMString&			theLHS,
-			const XalanDOMString&			theRHS,
-			const XalanDOMString&			theLanguage,
-			NodeSortKey::eCaseOrder			theCaseOrder)
+			StylesheetExecutionContext&			executionContext,
+			const XalanDOMString&				theLHS,
+			const XalanDOMString&				theRHS,
+			const XalanDOMString&				theLanguage,
+			XalanCollationServices::eCaseOrder	theCaseOrder)
 {
 	if (length(theLanguage) == 0)
 	{
 		return executionContext.collationCompare(
 				theLHS,
 				theRHS,
-				caseOrderConvert(theCaseOrder));
+				theCaseOrder);
 	}
 	else
 	{
@@ -217,7 +191,7 @@ doCollationCompare(
 				theLHS,
 				theRHS,
 				theLanguage,
-				caseOrderConvert(theCaseOrder));
+				theCaseOrder);
 	}
 }
 

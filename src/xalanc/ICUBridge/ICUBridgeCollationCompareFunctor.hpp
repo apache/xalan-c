@@ -64,7 +64,7 @@
 
 
 
-#include <xalanc/XSLT/StylesheetExecutionContextDefault.hpp>
+#include <xalanc/PlatformSupport/XalanCollationServices.hpp>
 
 
 
@@ -76,12 +76,9 @@ class ICUBridgeCollationCompareFunctorImpl;
 
 
 
-class XALAN_ICUBRIDGE_EXPORT ICUBridgeCollationCompareFunctor : public StylesheetExecutionContextDefault::CollationCompareFunctor
+class XALAN_ICUBRIDGE_EXPORT ICUBridgeCollationCompareFunctor : public XalanCollationServices::CollationCompareFunctor
 {
 public:
-
-	typedef StylesheetExecutionContextDefault::eCaseOrder	eCaseOrder;
-
 
 	/**
 	 * Constructor.
@@ -95,16 +92,16 @@ public:
 
 	virtual int
 	operator()(
-			const XalanDOMChar*		theLHS,
-			const XalanDOMChar*		theRHS,
-			eCaseOrder				theCaseOrder = StylesheetExecutionContextDefault::eDefault) const;
+			const XalanDOMChar*					theLHS,
+			const XalanDOMChar*					theRHS,
+			XalanCollationServices::eCaseOrder	theCaseOrder = XalanCollationServices::eDefault) const;
 
 	virtual int
 	operator()(
 			const XalanDOMChar*		theLHS,
 			const XalanDOMChar*		theRHS,
 			const XalanDOMChar*		theLocale,
-			eCaseOrder				theCaseOrder = StylesheetExecutionContextDefault::eDefault) const;
+			XalanCollationServices::eCaseOrder	theCaseOrder = XalanCollationServices::eDefault) const;
 private:
 
 	ICUBridgeCollationCompareFunctorImpl* const		m_impl;

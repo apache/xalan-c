@@ -354,17 +354,17 @@ ElemForEach::transformSelectedChildren(
 				avt->evaluate(scratchString, *this, executionContext);
 			}			
 
-			NodeSortKey::eCaseOrder		caseOrder = NodeSortKey::eDefault;
+			XalanCollationServices::eCaseOrder	caseOrder = XalanCollationServices::eDefault;
 
 			if (isEmpty(scratchString) == false)
 			{
 				if (equals(scratchString, Constants::ATTRVAL_CASEORDER_UPPER) == true)
 				{
-					caseOrder = NodeSortKey::eUpperFirst;
+					caseOrder = XalanCollationServices::eUpperFirst;
 				}
 				else if (equals(scratchString, Constants::ATTRVAL_CASEORDER_LOWER) == true)
 				{
-					caseOrder = NodeSortKey::eLowerFirst;
+					caseOrder = XalanCollationServices::eLowerFirst;
 				}
 				else
 				{

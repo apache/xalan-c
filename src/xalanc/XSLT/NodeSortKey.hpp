@@ -79,6 +79,10 @@
 
 
 
+#include <xalanc/PlatformSupport/XalanCollationServices.hpp>
+
+
+
 XALAN_CPP_NAMESPACE_BEGIN
 
 
@@ -96,8 +100,6 @@ class XALAN_XSLT_EXPORT NodeSortKey
 {
 public:
 
-	enum eCaseOrder { eDefault, eLowerFirst, eUpperFirst };
-
 	/**
 	 * Construct a node sort key.
 	 *
@@ -110,13 +112,13 @@ public:
 	 * @param resolver         resolver for namespace resolution
 	 */
 	NodeSortKey(
-			ExecutionContext&		executionContext,
-			const XPath*			selectPat, 
-			bool					treatAsNumbers, 
-			bool					descending,
-			eCaseOrder				caseOrder,
-			const XalanDOMString&	langValue, 
-			const PrefixResolver&	resolver);
+			ExecutionContext&					executionContext,
+			const XPath*						selectPat,
+			bool								treatAsNumbers, 
+			bool								descending,
+			XalanCollationServices::eCaseOrder	caseOrder,
+			const XalanDOMString&				langValue, 
+			const PrefixResolver&				resolver);
 
 	NodeSortKey();
 
@@ -165,7 +167,7 @@ public:
 	 * 
 	 * @return sort upper case before lower case if true
 	 */
-	eCaseOrder
+	XalanCollationServices::eCaseOrder
 	getCaseOrder() const
 	{
 		return m_caseOrder;
@@ -190,18 +192,18 @@ public:
 
 private:
 
-	ExecutionContext*		m_executionContext; // needed for error reporting.
+	ExecutionContext*					m_executionContext; // needed for error reporting.
 
-	const XPath*			m_selectPat;
+	const XPath*						m_selectPat;
 
-	bool					m_treatAsNumbers;
-	bool					m_descending;
+	bool								m_treatAsNumbers;
+	bool								m_descending;
 
-	eCaseOrder				m_caseOrder;	
+	XalanCollationServices::eCaseOrder	m_caseOrder;	
 
-	const PrefixResolver*	m_prefixResolver;
+	const PrefixResolver*				m_prefixResolver;
 
-	const XalanDOMString*	m_languageString;
+	const XalanDOMString*				m_languageString;
 };
 
 

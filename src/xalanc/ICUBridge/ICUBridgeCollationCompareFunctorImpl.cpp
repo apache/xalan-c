@@ -193,19 +193,19 @@ ICUBridgeCollationCompareFunctorImpl::doCompare(
 
 
 inline UColAttributeValue
-caseOrderConvert(ICUBridgeCollationCompareFunctorImpl::eCaseOrder	theCaseOrder)
+caseOrderConvert(XalanCollationServices::eCaseOrder		theCaseOrder)
 {
 	switch(theCaseOrder)
 	{
-	case StylesheetExecutionContext::eLowerFirst:
+	case XalanCollationServices::eLowerFirst:
 		return UCOL_LOWER_FIRST;
 		break;
 
-	case StylesheetExecutionContext::eUpperFirst:
+	case XalanCollationServices::eUpperFirst:
 		return UCOL_UPPER_FIRST;
 		break;
 
-	case StylesheetExecutionContext::eDefault:
+	case XalanCollationServices::eDefault:
 		break;
 
 	default:
@@ -225,7 +225,7 @@ ICUBridgeCollationCompareFunctorImpl::doDefaultCompare(
 {
 	if (isValid() == false)
 	{
-		return s_defaultFunctor(theLHS, theRHS, StylesheetExecutionContext::eDefault);
+		return s_defaultFunctor(theLHS, theRHS, XalanCollationServices::eDefault);
 	}
 	else
 	{
@@ -280,10 +280,10 @@ createCollator(
 
 int
 ICUBridgeCollationCompareFunctorImpl::doCompare(
-			const XalanDOMChar*		theLHS,
-			const XalanDOMChar*		theRHS,
-			const XalanDOMChar*		theLocale,
-			eCaseOrder				theCaseOrder) const
+			const XalanDOMChar*					theLHS,
+			const XalanDOMChar*					theRHS,
+			const XalanDOMChar*					theLocale,
+			XalanCollationServices::eCaseOrder	theCaseOrder) const
 {
 	UErrorCode	theStatus = U_ZERO_ERROR;
 
@@ -309,10 +309,10 @@ ICUBridgeCollationCompareFunctorImpl::doCompare(
 
 int
 ICUBridgeCollationCompareFunctorImpl::doCompareCached(
-			const XalanDOMChar*		theLHS,
-			const XalanDOMChar*		theRHS,
-			const XalanDOMChar*		theLocale,
-			eCaseOrder				theCaseOrder) const
+			const XalanDOMChar*					theLHS,
+			const XalanDOMChar*					theRHS,
+			const XalanDOMChar*					theLocale,
+			XalanCollationServices::eCaseOrder	theCaseOrder) const
 {
 	CollatorType*	theCollator = getCachedCollator(theLocale);
 
@@ -354,10 +354,10 @@ ICUBridgeCollationCompareFunctorImpl::doCompareCached(
 
 int
 ICUBridgeCollationCompareFunctorImpl::doCompare(
-			CollatorType&			theCollator,
-			const XalanDOMChar*		theLHS,
-			const XalanDOMChar*		theRHS,
-			eCaseOrder				theCaseOrder) const
+			CollatorType&						theCollator,
+			const XalanDOMChar*					theLHS,
+			const XalanDOMChar*					theRHS,
+			XalanCollationServices::eCaseOrder	theCaseOrder) const
 {
 	UErrorCode	theStatus = U_ZERO_ERROR;
 
@@ -385,11 +385,11 @@ ICUBridgeCollationCompareFunctorImpl::doCompare(
 
 int
 ICUBridgeCollationCompareFunctorImpl::operator()(
-			const XalanDOMChar*		theLHS,
-			const XalanDOMChar*		theRHS,
-			eCaseOrder				theCaseOrder) const
+			const XalanDOMChar*					theLHS,
+			const XalanDOMChar*					theRHS,
+			XalanCollationServices::eCaseOrder	theCaseOrder) const
 {
-	if (theCaseOrder == StylesheetExecutionContext::eDefault)
+	if (theCaseOrder == XalanCollationServices::eDefault)
 	{
 		return doDefaultCompare(theLHS, theRHS);
 	}
@@ -407,12 +407,12 @@ ICUBridgeCollationCompareFunctorImpl::operator()(
 
 int
 ICUBridgeCollationCompareFunctorImpl::operator()(
-			const XalanDOMChar*		theLHS,
-			const XalanDOMChar*		theRHS,
-			const XalanDOMChar*		theLocale,
-			eCaseOrder				theCaseOrder) const
+			const XalanDOMChar*					theLHS,
+			const XalanDOMChar*					theRHS,
+			const XalanDOMChar*					theLocale,
+			XalanCollationServices::eCaseOrder	theCaseOrder) const
 {
-	if (theCaseOrder == StylesheetExecutionContext::eDefault &&
+	if (theCaseOrder == XalanCollationServices::eDefault &&
 		XalanDOMString::equals(m_defaultCollatorLocaleName, theLocale) == true)
 	{
 		return doDefaultCompare(theLHS, theRHS);
