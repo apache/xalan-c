@@ -66,7 +66,7 @@ public:
 			DOMElementType*				currentElement);
 
 	/**
-	 * Construct a FormatterToDOM instance.  it will add the DOM nodes 
+	 * Construct a FormatterToXercesDOM instance.  it will add the DOM nodes 
 	 * to the document.
 	 *
 	 * @param doc  document for nodes
