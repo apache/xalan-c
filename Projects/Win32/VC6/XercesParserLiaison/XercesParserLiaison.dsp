@@ -102,6 +102,10 @@ SOURCE=..\..\..\..\src\XercesParserLiaison\XercesAttrBridge.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesAttributeBridgeAllocator.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\XercesParserLiaison\XercesBridgeNavigator.cpp
 # End Source File
 # Begin Source File
@@ -142,7 +146,15 @@ SOURCE=..\..\..\..\src\XercesParserLiaison\XercesDOMImplementationBridge.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesDOMSupport.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\XercesParserLiaison\XercesElementBridge.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesElementBridgeAllocator.cpp
 # End Source File
 # Begin Source File
 
@@ -186,7 +198,15 @@ SOURCE=..\..\..\..\src\XercesParserLiaison\XercesTextBridge.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesTextBridgeAllocator.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\XercesParserLiaison\XercesToXalanNodeMap.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesTreeWalker.cpp
 # End Source File
 # End Group
 # Begin Group "Header Files"
@@ -199,6 +219,10 @@ SOURCE=..\..\..\..\src\XercesParserLiaison\NullTreeWalker.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\XercesParserLiaison\XercesAttrBridge.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesAttributeBridgeAllocator.hpp
 # End Source File
 # Begin Source File
 
@@ -250,7 +274,15 @@ SOURCE=..\..\..\..\src\XercesParserLiaison\XercesDOMImplementationBridge.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesDOMSupport.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\XercesParserLiaison\XercesElementBridge.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesElementBridgeAllocator.hpp
 # End Source File
 # Begin Source File
 
@@ -298,7 +330,15 @@ SOURCE=..\..\..\..\src\XercesParserLiaison\XercesTextBridge.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesTextBridgeAllocator.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\XercesParserLiaison\XercesToXalanNodeMap.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesTreeWalker.hpp
 # End Source File
 # End Group
 # Begin Group "Resource Files"
