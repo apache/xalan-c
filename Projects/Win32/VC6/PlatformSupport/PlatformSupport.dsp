@@ -266,6 +266,14 @@ SOURCE=..\..\..\..\src\PlatformSupport\Writer.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\PlatformSupport\XalanAllocator.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\PlatformSupport\XalanAutoPtr.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\PlatformSupport\XalanBitmap.hpp
 # End Source File
 # Begin Source File
