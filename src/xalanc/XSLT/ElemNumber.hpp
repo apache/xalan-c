@@ -175,6 +175,9 @@ public:
 			StylesheetExecutionContext&		executionContext,
 			XalanNode*						sourceNode) const;
 
+	virtual	const XPath*
+	getXPath(unsigned int	index = 0) const;
+
 protected:
 
 	/**

@@ -287,6 +287,14 @@ ElemVariable::execute(StylesheetExecutionContext&	executionContext) const
 
 
 
+const XPath*
+ElemVariable::getXPath(unsigned int		index) const
+{
+	return index == 0 ? m_selectPattern : 0;
+}
+
+
+
 const XObjectPtr
 ElemVariable::getValue(
 			StylesheetExecutionContext&		executionContext,

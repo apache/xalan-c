@@ -229,6 +229,14 @@ ElemTemplate::execute(StylesheetExecutionContext&	executionContext) const
 
 
 
+const XPath*
+ElemTemplate::getXPath(unsigned int	index) const
+{
+	return index == 0 ? m_matchPattern : 0;
+}
+
+
+
 void
 ElemTemplate::executeChildren(StylesheetExecutionContext&	executionContext) const
 {

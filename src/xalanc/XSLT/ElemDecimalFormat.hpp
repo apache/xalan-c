@@ -125,6 +125,9 @@ public:
 		return *m_qname;
 	}
 
+	virtual	const XPath*
+	getXPath(unsigned int	index = 0) const;
+
 private:
 
 	const XPath*				m_countMatchPattern;

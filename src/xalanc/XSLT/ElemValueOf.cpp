@@ -331,6 +331,14 @@ ElemValueOf::execute(StylesheetExecutionContext&	executionContext) const
 
 
 
+const XPath*
+ElemValueOf::getXPath(unsigned int	index) const
+{
+	return index == 0 ? m_selectPattern : 0;
+}
+
+
+
 void
 ElemValueOf::fireSelectionEvent(
 			StylesheetExecutionContext&		executionContext,

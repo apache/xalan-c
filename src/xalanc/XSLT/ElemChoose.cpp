@@ -142,14 +142,8 @@ ElemChoose::execute(StylesheetExecutionContext&		executionContext) const
 
 		if(StylesheetConstructionContext::ELEMNAME_WHEN == type)
 		{
-			const ElemWhen* when = 
-#if defined(XALAN_OLD_STYLE_CASTS)
-				(const ElemWhen*)node;
-#else
-				static_cast<const ElemWhen*>(node);
-#endif
 
-			const XPath* const		theXPath = when->getXPath();
+			const XPath* const		theXPath = node->getXPath();
 			assert(theXPath != 0);
 
 			bool	test;
@@ -161,7 +155,7 @@ ElemChoose::execute(StylesheetExecutionContext&		executionContext) const
 				executionContext.fireSelectEvent(
 					SelectionEvent(executionContext,
 					sourceNode,
-					*when,
+					*node,
 					Constants::ATTRNAME_TEST,
 					*theXPath,
 					test));

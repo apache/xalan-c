@@ -173,4 +173,12 @@ ElemIf::execute(StylesheetExecutionContext&		executionContext) const
 
 
 
+const XPath*
+ElemIf::getXPath(unsigned int	index) const
+{
+	return index == 0 ? m_test : 0;
+}
+
+
+
 XALAN_CPP_NAMESPACE_END

@@ -159,4 +159,12 @@ ElemWithParam::getElementName() const
 
 
 
+const XPath*
+ElemWithParam::getXPath(unsigned int	index) const
+{
+	return index == 0 ? m_selectPattern : 0;
+}
+
+
+
 XALAN_CPP_NAMESPACE_END

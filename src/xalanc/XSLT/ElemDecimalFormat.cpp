@@ -374,4 +374,32 @@ ElemDecimalFormat::execute(StylesheetExecutionContext&	executionContext) const
 
 
 
+const XPath*
+ElemDecimalFormat::getXPath(unsigned int	index) const
+{
+	const XPath*	result = 0;
+
+	switch(index)
+	{
+	case 0:
+		result = m_valueExpr;
+		break;
+
+	case 1:
+		result = m_countMatchPattern;
+		break;
+
+	case 2:
+		result = m_fromMatchPattern;
+		break;
+
+	default:
+		break;
+	}
+
+	return result;
+}
+
+
+
 XALAN_CPP_NAMESPACE_END

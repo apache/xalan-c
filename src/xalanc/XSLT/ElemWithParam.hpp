@@ -113,19 +113,11 @@ public:
 		return *m_qname;
 	}
 
-	/**
-	 * Retrieve XPath corresponding to "select" attribute
-	 * 
-	 * @return pointer to XPath for select pattern
-	 */
-	const XPath*
-	getSelectPattern() const
-	{
-		return m_selectPattern;
-	}
-
 	virtual const XalanDOMString&
 	getElementName() const;
+
+	virtual	const XPath*
+	getXPath(unsigned int	index = 0) const;
 
 private:
 

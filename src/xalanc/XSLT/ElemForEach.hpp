@@ -141,6 +141,9 @@ public:
 
 	virtual void
 	execute(StylesheetExecutionContext&		executionContext) const;
+	
+	virtual	const XPath*
+	getXPath(unsigned int	index = 0) const;
 
 protected:
 

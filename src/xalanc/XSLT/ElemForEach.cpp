@@ -236,6 +236,14 @@ ElemForEach::execute(StylesheetExecutionContext&	executionContext) const
 
 
 
+const XPath*
+ElemForEach::getXPath(unsigned int	index) const
+{
+	return index == 0 ? m_selectPattern : 0;
+}
+
+
+
 void
 ElemForEach::transformSelectedChildren(
 			StylesheetExecutionContext&		executionContext,

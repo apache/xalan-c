@@ -87,7 +87,7 @@ ElemWhen::ElemWhen(
 						lineNumber,
 						columnNumber,
 						StylesheetConstructionContext::ELEMNAME_WHEN),
-	m_pTest(0)
+	m_test(0)
 {
 	const unsigned int	nAttrs = atts.getLength();
 
@@ -97,7 +97,7 @@ ElemWhen::ElemWhen(
 
 		if (equals(aname, Constants::ATTRNAME_TEST))
 		{
-			m_pTest = constructionContext.createXPath(getLocator(), atts.getValue(i), *this);
+			m_test = constructionContext.createXPath(getLocator(), atts.getValue(i), *this);
 		}
 		else if(!(isAttrOK(aname, atts, i, constructionContext) || 
 				 processSpaceAttr(aname, atts, i, constructionContext)))
@@ -112,7 +112,7 @@ ElemWhen::ElemWhen(
 		}
 	}
 
-	if(0 == m_pTest)
+	if(0 == m_test)
 	{
 		constructionContext.error(
 			XalanMessageLoader::getMessage(
@@ -140,6 +140,14 @@ ElemWhen::execute(StylesheetExecutionContext&	executionContext) const
 	ElemTemplateElement::execute(executionContext);
 
 	executeChildren(executionContext);
+}
+
+
+
+const XPath*
+ElemWhen::getXPath(unsigned int	index) const
+{
+	return index == 0 ? m_test : 0;
 }
 
 

@@ -97,26 +97,18 @@ public:
 			int								lineNumber,
 			int								columnNumber);
 
-	/**
-	 * Retrieve the XPath corresponding to the "test" attribute
-	 * 
-	 * @return XPath object
-	 */
-	const XPath*
-	getXPath() const
-	{
-		return m_pTest;
-	}
-
 	virtual const XalanDOMString&
 	getElementName() const;
 
 	virtual void
 	execute(StylesheetExecutionContext& 	executionContext) const;
 
+	virtual	const XPath*
+	getXPath(unsigned int	index = 0) const;
+
 private:
 
-	const XPath*	m_pTest;
+	const XPath*	m_test;
 };
 
 

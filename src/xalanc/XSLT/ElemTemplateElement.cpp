@@ -611,6 +611,14 @@ ElemTemplateElement::appendChildElem(ElemTemplateElement*	newChild)
 
 
 
+const XPath*
+ElemTemplateElement::getXPath(unsigned int	/* index */) const
+{
+	return 0;
+}
+
+
+
 void
 ElemTemplateElement::transformChild(
 			StylesheetExecutionContext&		executionContext,
@@ -730,7 +738,6 @@ ElemTemplateElement::transformChild(
 		}
 	}
 }
-
 
 
 void

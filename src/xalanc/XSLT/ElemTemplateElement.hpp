@@ -103,7 +103,7 @@ class NamespacesHandler;
 class Stylesheet;
 class StylesheetConstructionContext;
 class StylesheetExecutionContext;
-
+class XPath;
 
 
 class XALAN_XSLT_EXPORT ElemTemplateElement : public PrefixResolver
@@ -524,6 +524,17 @@ public:
 	virtual ElemTemplateElement*
 	appendChildElem(ElemTemplateElement*	newChild);
 
+	/**
+	 * Get XPath pattern/expression of one of the element atribute
+	 *
+	 * @index	number of the attribute. If an attribute has more
+	 *				then one attribute with pattern/expression,the order of 
+	 *				the returned expressions are undefined
+	 *
+	 * @return pointer or null 
+	 */
+	virtual	const XPath*
+	getXPath(unsigned int	index = 0) const;
 
 	// These interfaces are inherited from PrefixResolver...
 

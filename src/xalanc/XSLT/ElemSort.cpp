@@ -163,12 +163,20 @@ ElemSort::~ElemSort()
 }
 
 
+
 const XalanDOMString&
 ElemSort::getElementName() const
 {
 	return Constants::ELEMNAME_SORT_WITH_PREFIX_STRING;
 }
 
+
+
+const XPath*
+ElemSort::getXPath(unsigned int		index) const
+{
+	return index == 0 ? m_selectPattern : 0;
+}
 
 
 

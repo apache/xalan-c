@@ -150,6 +150,9 @@ public:
 	virtual void
 	setParentNodeElem(ElemTemplateElement*		theParent);
 
+	virtual	const XPath*
+	getXPath(unsigned int	index = 0) const;
+
 protected:
 
 	/**

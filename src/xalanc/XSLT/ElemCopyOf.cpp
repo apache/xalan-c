@@ -237,4 +237,12 @@ ElemCopyOf::execute(StylesheetExecutionContext&		executionContext) const
 
 
 
+const XPath*
+ElemCopyOf::getXPath(unsigned int	index) const
+{
+	return index == 0 ? m_selectPattern : 0;
+}
+
+
+
 XALAN_CPP_NAMESPACE_END

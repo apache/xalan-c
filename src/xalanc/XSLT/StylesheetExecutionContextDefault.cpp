@@ -2443,14 +2443,7 @@ StylesheetExecutionContextDefault::getParams(
 		{
 			if(StylesheetConstructionContext::ELEMNAME_WITH_PARAM == child->getXSLToken())
 			{
-				const ElemWithParam* const	xslParamElement =
-#if defined(XALAN_OLD_STYLE_CASTS)
-						(ElemWithParam*)child;
-#else
-						static_cast<const ElemWithParam*>(child);
-#endif
-
-				const XPath* const	pxpath = xslParamElement->getSelectPattern();
+				const XPath* const	pxpath = child->getXPath();
 
 				XObjectPtr	theXObject;
 
@@ -2460,15 +2453,22 @@ StylesheetExecutionContextDefault::getParams(
 						createVariable(
 							*pxpath,
 							getCurrentNode(),
-							*xslParamElement);
+							*child);
 				}
 				else
 				{
 					theXObject =
 						createVariable(
-							*xslParamElement,
+							*child,
 							getCurrentNode());
 				}
+
+				const ElemWithParam* const	xslParamElement =
+#if defined(XALAN_OLD_STYLE_CASTS)
+						(ElemWithParam*)child;
+#else
+						static_cast<const ElemWithParam*>(child);
+#endif
 
 				params.push_back(ParamsVectorType::value_type(&xslParamElement->getQName(), theXObject));
 			}
