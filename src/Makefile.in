@@ -62,7 +62,23 @@
 # export XALANCROOT=<the directory where you installed XALAN-C>   #
 # export XERCESCROOT=<the directory where you installed XERCES-C> #
 #                                                                 #
+# If you are going to do the OS390BATCH build, make sure you have #
+# the OS390BATCH environment variable set.                        #
+#                                                                 #
+#   export OS390BATCH=1                                           #
+#                                                                 #
+# Also,                                                           #
+#                                                                 #
+#   export LOADMOD=USERID.LOAD                                    #
+#   export LOADEXP=USERID.EXP                                     #
+#                                                                 #
+# to specify your LOADMOD and the definition sidedeck dataset.    #
+#                                                                 #
 ###################################################################
+#@DEM
+#OS390BATCH=1
+#LOADMOD=SDULIN.V1R4.LOAD
+#LOADEXP=SDULIN.V1R4.EXP
 
 DEPFILE=depends
 
@@ -86,6 +102,11 @@ endif
 ifndef ICUI18NROOT
 ICUI18NROOT=${ICUROOT}
 endif
+endif
+
+## OS390BATCH                                     
+ifeq (${OS390BATCH},1)
+BATCH_TARGET = "//'${LOADMOD}(IXMLC13)'"                         
 endif
 
 XALANDOM_DIR = XalanDOM
@@ -267,6 +288,8 @@ ifeq ($(PLATFORM), OS390)
   SHLIBSUFFIX=.dll
   OS390SIDEDECK=.x
 
+  OS390NAME=$(LIB_DIR)/lib$(PROJECT_NAME)$(VER)$(OS390SIDEDECK)   
+
   CC1 = $(CXX) $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS)  -I${STLPORTROOT}/stlport
   CC2 = $(CXX) $(PLATFORM_COMPILE_OPTIONS2) -I${STLPORTROOT}/stlport
   CC3 = $(CXX) $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS2)  -I${STLPORTROOT}/stlport
@@ -313,7 +336,11 @@ endif
 
 # We need the Xerces library
 ifeq ($(PLATFORM), OS390)
-  ALLLIBS += $(XERCESCROOT)/lib/libxerces-c1_6_0.x
+  ## OS390BATCH
+  ifeq (${OS390BATCH},1)
+    ALLLIBSBATCH = "//'${LOADEXP}(IXM4C40X)'"
+  endif
+  ALLLIBS = $(XERCESCROOT)/lib/libxerces-c1_6_0.x
 else
   ALLLIBS += -L$(XERCESCROOT)/lib -lxerces-c1_6_0
 endif
@@ -321,7 +348,10 @@ endif
 # We need the ICU library if we are using the ICUBridge
 ifdef XALAN_USE_ICU
   ifeq ($(PLATFORM), OS390)
-    ALLLIBS += ${ICUROOT}/lib/libicuuc.x ${ICUROOT}/lib/libicui18n.x
+    ifeq (${OS390BATCH},1)
+      ALLLIBSBATCH += "//'${LOADEXP}(IXM20UCX)'" "//'${LOADEXP}(IXM2018X)'"
+    endif
+    ALLLIBS += ${ICUROOT}/lib/libicuuc.20.0.x ${ICUROOT}/lib/libicui18n.20.0.x
   else
     ALLLIBS += -L${ICUROOT}/lib -licuuc
     ALLLIBS += -L${ICUI18NROOT}/lib -licui18n
@@ -407,7 +437,7 @@ XalanExe: lib  $(BINTARGETDIR)/Xalan
 ifeq ($(PLATFORM), OS390)                                                       
 $(BINTARGETDIR)/Xalan: ${ALL_OBJECTS_DIR}/XalanExe.o                          
 	${LINK} $(XSL_BUILD_OPTIONS) ${PLATFORM_LIB_LINK_OPTIONS} ${LIBRARY_SEARCH_PATHS} \
-	${EXTRA_LINK_OPTIONS} $(LIB_DIR)/lib$(PROJECT_NAME)$(VER).x $(ALLLIBS) $^ -o $@	
+	${EXTRA_LINK_OPTIONS} $(OS390NAME) $(ALLLIBS) $^ -o $@	
 ${ALL_OBJECTS_DIR}/XalanExe.o: $(XALANEXE_DIR)/XalanExe.cpp                       
 	$(CC3) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $<
 else                                                            
@@ -423,7 +453,7 @@ testXSLT: lib  $(BINTARGETDIR)/testXSLT
 ifeq ($(PLATFORM), OS390)                                                       
 $(BINTARGETDIR)/testXSLT: ${ALL_OBJECTS_DIR}/process.o                          
 	${LINK} $(XSL_BUILD_OPTIONS) ${PLATFORM_LIB_LINK_OPTIONS} ${LIBRARY_SEARCH_PATHS} \
-	${EXTRA_LINK_OPTIONS} $(LIB_DIR)/lib$(PROJECT_NAME)$(VER).x $(ALLLIBS) $^ -o $@	
+	${EXTRA_LINK_OPTIONS} $(OS390NAME) $(ALLLIBS) $^ -o $@	
 ${ALL_OBJECTS_DIR}/process.o: $(TESTXSLT_DIR)/process.cpp                       
 	$(CC3) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $<
 else                                                            
@@ -439,7 +469,7 @@ testXPath: lib  $(BINTARGETDIR)/testXPath
 ifeq ($(PLATFORM), OS390)                                                       
 $(BINTARGETDIR)/testXPath: ${ALL_OBJECTS_DIR}/TestXPath.o ${ALL_OBJECTS_DIR}/NodeNameTreeWalker.o
 	${LINK} $(XSL_BUILD_OPTIONS) ${PLATFORM_LIB_LINK_OPTIONS} ${LIBRARY_SEARCH_PATHS} \
-	${EXTRA_LINK_OPTIONS} $(LIB_DIR)/lib$(PROJECT_NAME)$(VER).x $(ALLLIBS) $(CXXFLAGS) $^ -o $@	
+	${EXTRA_LINK_OPTIONS} $(OS390NAME) $(ALLLIBS) $(CXXFLAGS) $^ -o $@	
 ${ALL_OBJECTS_DIR}/TestXPath.o: $(TESTXPATH_DIR)/TestXPath.cpp
 	$(CC3) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $<
 ${ALL_OBJECTS_DIR}/NodeNameTreeWalker.o: $(TESTXPATH_DIR)/NodeNameTreeWalker.cpp
@@ -463,7 +493,7 @@ ApacheModuleXSLT: lib ${LIB_DIR}/mod_xslt$(SHLIBSUFFIX)
 ${LIB_DIR}/mod_xslt$(SHLIBSUFFIX) : ${ALL_OBJECTS_DIR}/mod_xslt.o
 ifeq ($(PLATFORM), OS390)                                                       
 	$(MAKE_SHARED) $(XSL_BUILD_OPTIONS) ${PLATFORM_LIB_LINK_OPTIONS} ${LIBRARY_SEARCH_PATHS} \
-	${EXTRA_LINK_OPTIONS} $(LIB_DIR)/lib$(PROJECT_NAME)$(VER).x  $(ALLLIBS) $(CXXFLAGS) $^ -o $@	
+	${EXTRA_LINK_OPTIONS} $(OS390NAME) $(ALLLIBS) $(CXXFLAGS) $^ -o $@	
 ${ALL_OBJECTS_DIR}/%.o:$(SAMPLES_DIR)/ApacheModuleXSLT/%.c
 	$(CC3) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) -I/usr/include/apache/ $(EXTRA_COMPILE_OPTIONS) -o $@ $<
 else
@@ -478,7 +508,7 @@ CompileStylesheet: lib $(BINTARGETDIR)/CompileStylesheet
 $(BINTARGETDIR)/CompileStylesheet: ${ALL_OBJECTS_DIR}/CompileStylesheet.o
 ifeq ($(PLATFORM), OS390)                                                       
 	${LINK} $(XSL_BUILD_OPTIONS) ${PLATFORM_LIB_LINK_OPTIONS} ${LIBRARY_SEARCH_PATHS} \
-	${EXTRA_LINK_OPTIONS} $(LIB_DIR)/lib$(PROJECT_NAME)$(VER).x $(ALLLIBS) $(CXXFLAGS) $^ -o $@	
+	${EXTRA_LINK_OPTIONS} $(OS390NAME) $(ALLLIBS) $(CXXFLAGS) $^ -o $@	
 ${ALL_OBJECTS_DIR}/%.o:$(SAMPLES_DIR)/CompileStylesheet/%.cpp
 	$(CC3) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $<
 else
@@ -493,7 +523,7 @@ DocumentBuilder: lib $(BINTARGETDIR)/DocumentBuilder
 $(BINTARGETDIR)/DocumentBuilder: ${ALL_OBJECTS_DIR}/DocumentBuilder.o
 ifeq ($(PLATFORM), OS390)
 	${LINK} $(XSL_BUILD_OPTIONS) ${PLATFORM_LIB_LINK_OPTIONS} ${LIBRARY_SEARCH_PATHS} \
-	${EXTRA_LINK_OPTIONS} $(LIB_DIR)/lib$(PROJECT_NAME)$(VER).x $(ALLLIBS) $(CXXFLAGS) $^ -o $@	
+	${EXTRA_LINK_OPTIONS} $(OS390NAME) $(ALLLIBS) $(CXXFLAGS) $^ -o $@	
 ${ALL_OBJECTS_DIR}/%.o:$(SAMPLES_DIR)/DocumentBuilder/%.cpp
 	$(CC3) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $<
 else
@@ -508,7 +538,7 @@ ExternalFunction: lib $(BINTARGETDIR)/ExternalFunction
 $(BINTARGETDIR)/ExternalFunction: ${ALL_OBJECTS_DIR}/ExternalFunction.o
 ifeq ($(PLATFORM), OS390)
 	${LINK} $(XSL_BUILD_OPTIONS) ${PLATFORM_LIB_LINK_OPTIONS} ${LIBRARY_SEARCH_PATHS} \
-	${EXTRA_LINK_OPTIONS} $(LIB_DIR)/lib$(PROJECT_NAME)$(VER).x $(ALLLIBS) $(CXXFLAGS) $^ -o $@	
+	${EXTRA_LINK_OPTIONS} $(OS390NAME) $(ALLLIBS) $(CXXFLAGS) $^ -o $@	
 ${ALL_OBJECTS_DIR}/%.o:$(SAMPLES_DIR)/ExternalFunction/%.cpp
 	$(CC3) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $<
 else
@@ -523,7 +553,7 @@ SerializeNodeSet: lib $(BINTARGETDIR)/SerializeNodeSet
 $(BINTARGETDIR)/SerializeNodeSet: ${ALL_OBJECTS_DIR}/SerializeNodeSet.o
 ifeq ($(PLATFORM), OS390)
 	${LINK} $(XSL_BUILD_OPTIONS) ${PLATFORM_LIB_LINK_OPTIONS} ${LIBRARY_SEARCH_PATHS} \
-	${EXTRA_LINK_OPTIONS} $(LIB_DIR)/lib$(PROJECT_NAME)$(VER).x $(ALLLIBS) $(CXXFLAGS) $^ -o $@	
+	${EXTRA_LINK_OPTIONS} $(OS390NAME) $(ALLLIBS) $(CXXFLAGS) $^ -o $@	
 ${ALL_OBJECTS_DIR}/%.o:$(SAMPLES_DIR)/SerializeNodeSet/%.cpp
 	$(CC3) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $<
 else
@@ -538,7 +568,7 @@ SimpleTransform: lib $(BINTARGETDIR)/SimpleTransform
 $(BINTARGETDIR)/SimpleTransform: ${ALL_OBJECTS_DIR}/SimpleTransform.o
 ifeq ($(PLATFORM), OS390)
 	${LINK} $(XSL_BUILD_OPTIONS) ${PLATFORM_LIB_LINK_OPTIONS} ${LIBRARY_SEARCH_PATHS} \
-	${EXTRA_LINK_OPTIONS} $(LIB_DIR)/lib$(PROJECT_NAME)$(VER).x $(ALLLIBS) $(CXXFLAGS) $^ -o $@	
+	${EXTRA_LINK_OPTIONS} $(OS390NAME) $(ALLLIBS) $(CXXFLAGS) $^ -o $@	
 ${ALL_OBJECTS_DIR}/%.o:$(SAMPLES_DIR)/SimpleTransform/%.cpp
 	$(CC3) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $<
 else
@@ -553,7 +583,7 @@ SimpleXPathAPI: lib $(BINTARGETDIR)/SimpleXPathAPI
 $(BINTARGETDIR)/SimpleXPathAPI: ${ALL_OBJECTS_DIR}/SimpleXPathAPI.o
 ifeq ($(PLATFORM), OS390)
 	${LINK} $(XSL_BUILD_OPTIONS) ${PLATFORM_LIB_LINK_OPTIONS} ${LIBRARY_SEARCH_PATHS} \
-	${EXTRA_LINK_OPTIONS} $(LIB_DIR)/lib$(PROJECT_NAME)$(VER).x $(ALLLIBS) $(CXXFLAGS) $^ -o $@	
+	${EXTRA_LINK_OPTIONS} $(OS390NAME) $(ALLLIBS) $(CXXFLAGS) $^ -o $@	
 ${ALL_OBJECTS_DIR}/%.o:$(SAMPLES_DIR)/SimpleXPathAPI/%.cpp
 	$(CC3) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $<
 else
@@ -568,7 +598,7 @@ SimpleXPathCAPI: lib $(BINTARGETDIR)/SimpleXPathCAPI
 $(BINTARGETDIR)/SimpleXPathCAPI: ${ALL_OBJECTS_DIR}/SimpleXPathCAPI.o
 ifeq ($(PLATFORM), OS390)
 	${LINK} $(XSL_BUILD_OPTIONS) ${PLATFORM_LIB_LINK_OPTIONS} ${LIBRARY_SEARCH_PATHS} \
-	${EXTRA_LINK_OPTIONS} $(LIB_DIR)/lib$(PROJECT_NAME)$(VER).x $(ALLLIBS) $(CXXFLAGS) $^ -o $@	
+	${EXTRA_LINK_OPTIONS} $(OS390NAME) $(ALLLIBS) $(CXXFLAGS) $^ -o $@	
 ${ALL_OBJECTS_DIR}/%.o:$(SAMPLES_DIR)/SimpleXPathCAPI/%.c
 	$(CC4) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $<
 else
@@ -583,7 +613,7 @@ StreamTransform: lib $(BINTARGETDIR)/StreamTransform
 $(BINTARGETDIR)/StreamTransform: ${ALL_OBJECTS_DIR}/StreamTransform.o
 ifeq ($(PLATFORM), OS390)
 	${LINK} $(XSL_BUILD_OPTIONS) ${PLATFORM_LIB_LINK_OPTIONS} ${LIBRARY_SEARCH_PATHS} \
-	${EXTRA_LINK_OPTIONS} $(LIB_DIR)/lib$(PROJECT_NAME)$(VER).x $(ALLLIBS) $(CXXFLAGS) $^ -o $@	
+	${EXTRA_LINK_OPTIONS} $(OS390NAME) $(ALLLIBS) $(CXXFLAGS) $^ -o $@	
 ${ALL_OBJECTS_DIR}/%.o:$(SAMPLES_DIR)/StreamTransform/%.cpp
 	$(CC3) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $<		
 else
@@ -598,7 +628,7 @@ TraceListen: lib $(BINTARGETDIR)/TraceListen
 $(BINTARGETDIR)/TraceListen: ${ALL_OBJECTS_DIR}/TraceListen.o
 ifeq ($(PLATFORM), OS390)
 	${LINK} $(XSL_BUILD_OPTIONS) ${PLATFORM_LIB_LINK_OPTIONS} ${LIBRARY_SEARCH_PATHS} \
-	${EXTRA_LINK_OPTIONS} $(LIB_DIR)/lib$(PROJECT_NAME)$(VER).x $(ALLLIBS) $(CXXFLAGS) $^ -o $@	
+	${EXTRA_LINK_OPTIONS} $(OS390NAME) $(ALLLIBS) $(CXXFLAGS) $^ -o $@	
 ${ALL_OBJECTS_DIR}/%.o:$(SAMPLES_DIR)/TraceListen/%.cpp
 	$(CC3) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $<		
 else
@@ -613,7 +643,7 @@ UseStylesheetParam: lib $(BINTARGETDIR)/UseStylesheetParam
 $(BINTARGETDIR)/UseStylesheetParam: ${ALL_OBJECTS_DIR}/UseStylesheetParam.o
 ifeq ($(PLATFORM), OS390)
 	${LINK} $(XSL_BUILD_OPTIONS) ${PLATFORM_LIB_LINK_OPTIONS} ${LIBRARY_SEARCH_PATHS} \
-	${EXTRA_LINK_OPTIONS} $(LIB_DIR)/lib$(PROJECT_NAME)$(VER).x $(ALLLIBS) $(CXXFLAGS) $^ -o $@	
+	${EXTRA_LINK_OPTIONS} $(OS390NAME) $(ALLLIBS) $(CXXFLAGS) $^ -o $@	
 ${ALL_OBJECTS_DIR}/%.o:$(SAMPLES_DIR)/UseStylesheetParam/%.cpp
 	$(CC3) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $<	
 else
@@ -628,7 +658,7 @@ XalanTransform: lib $(BINTARGETDIR)/XalanTransform
 $(BINTARGETDIR)/XalanTransform: ${ALL_OBJECTS_DIR}/XalanTransform.o
 ifeq ($(PLATFORM), OS390)
 	${LINK} $(XSL_BUILD_OPTIONS) ${PLATFORM_LIB_LINK_OPTIONS} ${LIBRARY_SEARCH_PATHS} \
-	${EXTRA_LINK_OPTIONS} $(LIB_DIR)/lib$(PROJECT_NAME)$(VER).x $(ALLLIBS) $(CXXFLAGS) $^ -o $@	
+	${EXTRA_LINK_OPTIONS} $(OS390NAME) $(ALLLIBS) $(CXXFLAGS) $^ -o $@	
 ${ALL_OBJECTS_DIR}/%.o:$(SAMPLES_DIR)/XalanTransform/%.cpp
 	$(CC3) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $<
 else
@@ -643,7 +673,7 @@ XalanTransformerCallback: lib $(BINTARGETDIR)/XalanTransformerCallback
 $(BINTARGETDIR)/XalanTransformerCallback: ${ALL_OBJECTS_DIR}/XalanTransformerCallback.o
 ifeq ($(PLATFORM), OS390)
 	${LINK} $(XSL_BUILD_OPTIONS) ${PLATFORM_LIB_LINK_OPTIONS} ${LIBRARY_SEARCH_PATHS} \
-	${EXTRA_LINK_OPTIONS} $(LIB_DIR)/lib$(PROJECT_NAME)$(VER).x $(ALLLIBS) $(CXXFLAGS) $^ -o $@	
+	${EXTRA_LINK_OPTIONS} $(OS390NAME) $(ALLLIBS) $(CXXFLAGS) $^ -o $@	
 ${ALL_OBJECTS_DIR}/%.o:$(SAMPLES_DIR)/XalanTransformerCallback/%.cpp
 	$(CC3) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $<
 else
@@ -658,7 +688,7 @@ XPathWrapper: lib $(BINTARGETDIR)/XPathWrapper
 $(BINTARGETDIR)/XPathWrapper: ${ALL_OBJECTS_DIR}/XPathWrapper.o ${ALL_OBJECTS_DIR}/TestDriver.o
 ifeq ($(PLATFORM), OS390)
 	${LINK} $(XSL_BUILD_OPTIONS) ${PLATFORM_LIB_LINK_OPTIONS} ${LIBRARY_SEARCH_PATHS} \
-	${EXTRA_LINK_OPTIONS} $(LIB_DIR)/lib$(PROJECT_NAME)$(VER).x $(ALLLIBS) $(CXXFLAGS) $^ -o $@	
+	${EXTRA_LINK_OPTIONS} $(OS390NAME) $(ALLLIBS) $(CXXFLAGS) $^ -o $@	
 ${ALL_OBJECTS_DIR}/%.o:$(SAMPLES_DIR)/XPathWrapper/%.cpp
 	$(CC3) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $<
 else
@@ -675,7 +705,7 @@ ThreadTest: lib $(BINTARGETDIR)/ThreadTest
 $(BINTARGETDIR)/ThreadTest: ${ALL_OBJECTS_DIR}/ThreadTest.o 
 ifeq ($(PLATFORM), OS390)
 	${LINK} $(XSL_BUILD_OPTIONS) ${PLATFORM_LIB_LINK_OPTIONS} ${LIBRARY_SEARCH_PATHS} \
-	${EXTRA_LINK_OPTIONS} $(LIB_DIR)/lib$(PROJECT_NAME)$(VER).x $(ALLLIBS) $(CXXFLAGS) $^ -o $@	
+	${EXTRA_LINK_OPTIONS} $(OS390NAME) $(ALLLIBS) $(CXXFLAGS) $^ -o $@	
 ${ALL_OBJECTS_DIR}/%.o:$(TESTS_DIR)/Threads/%.cpp
 	$(CC3) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $<
 else
@@ -711,7 +741,7 @@ Conf: Harness $(BINTARGETDIR)/Conf
 $(BINTARGETDIR)/Conf: ${ALL_OBJECTS_DIR}/conf.o ${ALL_OBJECTS_DIR}/FileUtility.o ${ALL_OBJECTS_DIR}/XMLFileReporter.o 
 ifeq ($(PLATFORM), OS390)
 	${LINK} $(XSL_BUILD_OPTIONS) ${PLATFORM_LIB_LINK_OPTIONS} ${LIBRARY_SEARCH_PATHS} \
-	${EXTRA_LINK_OPTIONS} $(LIB_DIR)/lib$(PROJECT_NAME)$(VER).x $(ALLLIBS) $(CXXFLAGS) $^ -o $@	
+	${EXTRA_LINK_OPTIONS} $(OS390NAME) $(ALLLIBS) $(CXXFLAGS) $^ -o $@	
 ${ALL_OBJECTS_DIR}/%.o:$(TESTS_DIR)/Conf/%.cpp
 	$(CC3) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) -I$(TESTS_DIR) $(EXTRA_COMPILE_OPTIONS) -o $@ $<
 else
@@ -721,7 +751,17 @@ ${ALL_OBJECTS_DIR}/%.o:$(TESTS_DIR)/Conf/%.cpp
 	$(CC1) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) -I$(TESTS_DIR) $(EXTRA_COMPILE_OPTIONS) -o $@ $<
 endif
 
-lib:	prepare compile $(THISLIB)$(VER)$(SHLIBSUFFIX)
+## Start OS390BATCH ##
+ifeq (${OS390BATCH},1)
+lib:    prepare compile $(THISLIB)$(VER)$(SHLIBSUFFIX) ${BATCH_TARGET}
+
+${BATCH_TARGET}: $(ALL_OBJECTS)
+	@echo Building ${BATCH_TARGET}
+	$(MAKE_SHARED) $(PLATFORM_LIBRARIES) $(EXTRA_LINK_OPTIONS) $(ALLLIBSBATCH) $^ -o $@
+else
+lib:    prepare compile $(THISLIB)$(VER)$(SHLIBSUFFIX)
+endif
+## End OS390BATCH ##
 
 $(THISLIB)$(VER)$(SHLIBSUFFIX): $(ALL_OBJECTS)
 	$(MAKE_SHARED) $(PLATFORM_LIBRARIES) $(EXTRA_LINK_OPTIONS) $(ALLLIBS) $^ -o $@ 
