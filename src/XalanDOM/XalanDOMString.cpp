@@ -132,18 +132,7 @@ XalanDOMString::XalanDOMString(
 
 	if (*theString != 0)
 	{
-		if (theCount == size_type(npos))
-		{
-            TranscodeFromLocalCodePage(theString, m_data, true);
-		}
-		else
-		{
-			TranscodeFromLocalCodePage(theString, theCount, m_data, true);
-		}
-
-#if defined(XALAN_DOMSTRING_CACHE_SIZE)
-		m_size = m_data.size() - 1;
-#endif
+		append(theString, theCount);
 	}
 
 	invariants();
@@ -172,20 +161,6 @@ XalanDOMString::XalanDOMString(
 	}
 
 	invariants();
-}
-
-
-
-XalanDOMString&
-XalanDOMString::operator=(const XalanDOMChar*	theRHS)
-{
-	erase();
-
-	append(theRHS, length(theRHS));
-
-	invariants();
-
-	return *this;
 }
 
 
@@ -334,11 +309,75 @@ XalanDOMString::append(
 
 
 
+static inline void
+doTranscode(
+			const char*					theString,
+			XalanDOMString::size_type	theCount,
+			XalanDOMCharVectorType&		theVector)
+{
+	assert(theString != 0);
+
+	if (theCount == XalanDOMString::size_type(XalanDOMString::npos))
+	{
+		if (TranscodeFromLocalCodePage(theString, theVector, true) == false)
+		{
+			throw XalanDOMString::TranscodingError();
+		}
+	}
+	else
+	{
+		if (TranscodeFromLocalCodePage(theString, theCount, theVector, true) == false)
+		{
+			throw XalanDOMString::TranscodingError();
+		}
+	}
+}
+
+
+
+XalanDOMString&
+XalanDOMString::append(
+			const char*		theString,
+			size_type		theCount)
+{
+	invariants();
+
+	const size_type		theLength =
+			theCount == size_type(npos) ? length(theString) : theCount;
+
+	if (theLength != 0)
+	{
+		if (size() == 0)
+		{
+			doTranscode(theString, theCount, m_data);
+		}
+		else
+		{
+			XalanDOMCharVectorType	theTempVector;
+
+			doTranscode(theString, theCount, theTempVector);
+
+			append(&*theTempVector.begin(), theTempVector.size());
+		}
+
+	#if defined(XALAN_DOMSTRING_CACHE_SIZE)
+		m_size = m_data.size() - 1;
+	#endif
+	}
+
+	invariants();
+
+	return *this;
+}
+
+
 XalanDOMString&
 XalanDOMString::append(
 			size_type		theCount,
 			XalanDOMChar	theChar)
 {
+	invariants();
+
 	if (m_data.size() == 0)
 	{
 		m_data.insert(m_data.end(), theCount + 1, theChar);
@@ -373,6 +412,8 @@ XalanDOMString::insert(
 			const XalanDOMChar*		theString,
 			size_type				theCount)
 {
+	invariants();
+
 	m_data.insert(getIteratorForPosition(thePosition), theString, theString + theCount);
 
 #if defined(XALAN_DOMSTRING_CACHE_SIZE)
@@ -392,6 +433,8 @@ XalanDOMString::insert(
 			size_type		theCount,
 			XalanDOMChar	theChar)
 {
+	invariants();
+
 	m_data.insert(getIteratorForPosition(thePosition), theCount, theChar);
 
 #if defined(XALAN_DOMSTRING_CACHE_SIZE)
@@ -410,6 +453,8 @@ XalanDOMString::insert(
 			iterator		thePosition,
 			XalanDOMChar	theChar)
 {
+	invariants();
+
 	m_data.insert(thePosition, theChar);
 
 #if defined(XALAN_DOMSTRING_CACHE_SIZE)
@@ -429,6 +474,8 @@ XalanDOMString::insert(
 			size_type		theCount,
 			XalanDOMChar	theChar)
 {
+	invariants();
+
 	m_data.insert(thePosition, theCount, theChar);
 
 #if defined(XALAN_DOMSTRING_CACHE_SIZE)
@@ -446,6 +493,8 @@ XalanDOMString::insert(
 		const_iterator	theFirstPosition,
 		const_iterator	theLastPosition)
 {
+	invariants();
+
 	m_data.insert(theInsertPosition, theFirstPosition, theLastPosition);
 
 #if defined(XALAN_DOMSTRING_CACHE_SIZE)
@@ -548,7 +597,10 @@ XalanDOMString::transcode() const
 
 	CharVectorType	theResult;
 
-	TranscodeToLocalCodePage(c_str(), length(), theResult, true);
+	if (TranscodeToLocalCodePage(c_str(), length(), theResult, true) == false)
+	{
+		throw TranscodingError();
+	}
 
 	return theResult;
 }
@@ -639,6 +691,16 @@ XalanDOMString::length(const XalanDOMChar*	theString)
 
 
 
+XalanDOMString::size_type
+XalanDOMString::length(const char*	theString)
+{
+	assert(theString != 0);
+
+	return strlen(theString);
+}
+
+
+
 #if defined(XALAN_USE_XERCES_LOCAL_CODEPAGE_TRANSCODERS)
 
 
@@ -697,6 +759,9 @@ doXercesTranscode(
 
 	do
 	{
+		// $$$ ToDo: We should use the Xerces transcoder interface
+		// instead of XMLString::transcode(), so we can better control
+		// error handling and failures due to inadequate space.
 		fSuccess = XMLString::transcode(
 					theRealSourceString,
 					&*theTargetVector.begin(),

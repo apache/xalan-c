@@ -67,6 +67,10 @@
 
 
 
+#include <XalanDOM/XalanDOMException.hpp>
+
+
+
 // UTF-16 character...
 typedef unsigned short	XalanDOMChar;
 
@@ -136,38 +140,25 @@ public:
 	XalanDOMString&
 	operator=(const XalanDOMString&	theRHS)
 	{
-		if (&theRHS != this)
-		{
-			m_data = theRHS.m_data;
-
-#if defined(XALAN_DOMSTRING_CACHE_SIZE)
-			m_size = theRHS.m_size;
-#endif
-		}
-
-		invariants();
-
-		return *this;
+		return assign(theRHS);
 	}
 
 	XalanDOMString&
-	operator=(const XalanDOMChar*	theRHS);
+	operator=(const XalanDOMChar*	theRHS)
+	{
+		return assign(theRHS);
+	}
+
+	XalanDOMString&
+	operator=(const char*	theRHS)
+	{
+		return assign(theRHS);
+	}
 
 	XalanDOMString&
 	operator=(XalanDOMChar	theRHS)
 	{
-		m_data.resize(2);
-
-		m_data[0] = theRHS;
-		m_data[1] = XalanDOMChar(0);
-
-#if defined(XALAN_DOMSTRING_CACHE_SIZE)
-		m_size = 1;
-#endif
-
-		invariants();
-
-		return *this;
+		return assign(1, theRHS);
 	}
 
 	iterator
@@ -365,24 +356,18 @@ public:
 	XalanDOMString&
 	operator+=(const XalanDOMString&	theSource)
 	{
-		invariants();
-
 		return append(theSource);
 	}
 
 	XalanDOMString&
 	operator+=(const XalanDOMChar*	theString)
 	{
-		invariants();
-
 		return append(theString);
 	}
 
 	XalanDOMString&
 	operator+=(XalanDOMChar theChar)
 	{
-		invariants();
-
 		append(1, theChar);
 
 		return *this;
@@ -415,10 +400,7 @@ public:
 	}
 
 	XalanDOMString&
-	assign(
-			const XalanDOMString&	theSource,
-			size_type				thePosition,
-			size_type				theCount)
+	assign(const char*	theSource)
 	{
 		invariants();
 
@@ -426,7 +408,41 @@ public:
 
 		invariants();
 
-		return append(theSource, thePosition, theCount);
+		return append(theSource);
+	}
+
+	XalanDOMString&
+	assign(
+			const char*		theSource,
+			size_type		theCount)
+	{
+		invariants();
+
+		erase();
+
+		invariants();
+
+		return append(theSource, theCount);
+	}
+
+	XalanDOMString&
+	assign(
+			const XalanDOMString&	theSource,
+			size_type				thePosition,
+			size_type				theCount)
+	{
+		invariants();
+
+		if (&theSource != this)
+		{
+			erase();
+
+			append(theSource, thePosition, theCount);
+		}
+
+		invariants();
+
+		return *this;
 	}
 
 	XalanDOMString&
@@ -434,7 +450,14 @@ public:
 	{
 		invariants();
 
-		m_data = theSource.m_data;
+		if (&theSource != this)
+		{
+			m_data = theSource.m_data;
+
+#if defined(XALAN_DOMSTRING_CACHE_SIZE)
+			m_size = theSource.m_size;
+#endif
+		}
 
 		invariants();
 
@@ -463,8 +486,6 @@ public:
 	XalanDOMString&
 	append(const XalanDOMString&	theSource)
 	{
-		invariants();
-
 		return append(theSource.c_str(), theSource.length());
 	}
 
@@ -474,7 +495,8 @@ public:
 			size_type				thePosition,
 			size_type				theCount)
 	{
-		invariants();
+		assert(thePosition < theSource.length() &&
+			   (theCount == size_type(npos) || thePosition + theCount <= theSource.length()));
 
 		return append(theSource.c_str() + thePosition, theCount);
 	}
@@ -487,10 +509,17 @@ public:
 	XalanDOMString&
 	append(const XalanDOMChar*	theString)
 	{
-		assert(theString != 0);
+		return append(theString, length(theString));
+	}
 
-		invariants();
+	XalanDOMString&
+	append(
+			const char*		theString,
+			size_type		theCount);
 
+	XalanDOMString&
+	append(const char*	theString)
+	{
 		return append(theString, length(theString));
 	}
 
@@ -514,8 +543,6 @@ public:
 			size_type				thePosition,
 			const XalanDOMString&	theString)
 	{
-		invariants();
-
 		return insert(thePosition, theString.c_str(), theString.length());
 	}
 
@@ -526,8 +553,6 @@ public:
 			size_type				thePosition2,
 			size_type				theCount)
 	{
-		invariants();
-
 		return insert(thePosition1, theString.c_str() + thePosition2, theCount);
 	}
 
@@ -542,8 +567,6 @@ public:
 			size_type				thePosition,
 			const XalanDOMChar*		theString)
 	{
-		invariants();
-
 		return insert(thePosition, theString, length(theString));
 	}
 
@@ -707,6 +730,31 @@ public:
 	 */
 	static size_type
 	length(const XalanDOMChar*	theString);
+
+	/*
+	 * Helper function to determine the length of a null-
+	 * terminated string.
+	 *
+	 * @theString The string
+	 * @return the length
+	 */
+	static size_type
+	length(const char*	theString);
+
+	class TranscodingError : public XalanDOMException
+	{
+	public:
+
+		TranscodingError() :
+			XalanDOMException(ExceptionCode::TRANSCODING_ERR)
+		{
+		}
+
+		virtual
+		~TranscodingError()
+		{
+		}
+	};
 
 protected:
 
