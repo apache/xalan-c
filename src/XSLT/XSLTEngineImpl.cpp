@@ -666,7 +666,7 @@ XSLTEngineImpl::getStylesheetFromPIURL(
 
 	XalanDOMString			stringHolder;
 
-	const XalanDOMString	localXSLURLString = trim(xslURLString);
+	XalanDOMString			localXSLURLString = trim(xslURLString);
 
 	const unsigned int		fragIndex = indexOf(localXSLURLString, XalanUnicode::charNumberSign);
 
@@ -848,6 +848,21 @@ XSLTEngineImpl::getStylesheetFromPIURL(
 
 		if(isRoot)
 		{
+			const XalanDocument* const	theOwnerDocument =
+				fragBase.getNodeType() == XalanNode::DOCUMENT_NODE ?
+#if defined(XALAN_OLD_STYLE_CASTS)
+				(const XalanDocument*)&fragBase :
+#else
+				static_cast<const XalanDocument*>(&fragBase) :
+#endif
+				fragBase.getOwnerDocument();
+			assert(theOwnerDocument != 0);
+
+			localXSLURLString =
+				URISupport::getURLStringFromString(
+					localXSLURLString,
+					m_xpathEnvSupport.findURIFromDoc(theOwnerDocument));
+
 			StylesheetRoot* const	theLocalRoot =
 					constructionContext.create(localXSLURLString);
 
@@ -967,8 +982,6 @@ XSLTEngineImpl::outputToResultTree(
 
 	case XObject::eTypeNodeSet:
 		{
-//			XalanDOMString			s;
-
 			const NodeRefListBase&	nl = value.nodeset();
 
 			const unsigned int		nChildren = nl.getLength();
