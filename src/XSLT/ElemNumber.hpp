@@ -366,6 +366,46 @@ private:
 	const AVT*		m_groupingSize_avt;
 
 	/**
+ 	 * The string "@".
+ 	 */
+ 	static const XalanDOMString&			s_atString;
+
+		/**
+ 	 * The string "text()".
+ 	 */
+ 	static const XalanDOMString&			s_textString;
+
+	/**
+ 	 * The string "comment()".
+ 	 */
+ 	static const XalanDOMString&			s_commentString;
+
+	/**
+ 	 * The string "/".
+ 	 */
+ 	static const XalanDOMString&			s_slashString;
+
+	/**
+ 	 * The string "pi(".
+ 	 */
+ 	static const XalanDOMString&			s_piString;
+
+	/**
+ 	 * The string ")".
+ 	 */
+ 	static const XalanDOMString&			s_leftParenString;
+
+	/**
+ 	 * The string ".".
+ 	 */
+ 	static const XalanDOMString&			s_dotString;
+
+	/**
+ 	 * The string "1".
+ 	 */
+ 	static const XalanDOMString&			s_oneString;
+
+	/**
 	* Chars for converting integers into alpha counts.
 	* @see XSLTEngineImpl#int2alphaCount
 	*/

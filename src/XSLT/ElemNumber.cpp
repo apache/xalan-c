@@ -330,31 +330,31 @@ ElemNumber::getCountMatchPattern(
 
 	case XalanNode::ATTRIBUTE_NODE:
 		countMatchPattern = executionContext.createMatchPattern(
-						XalanDOMString(XALAN_STATIC_UCODE_STRING("@")) + contextNode->getNodeName(),
+						s_atString + contextNode->getNodeName(),
 						*this);
 		break;
 
 	case XalanNode::CDATA_SECTION_NODE:
 	case XalanNode::TEXT_NODE:
 		countMatchPattern = executionContext.createMatchPattern(
-					XalanDOMString(XALAN_STATIC_UCODE_STRING("text()")), *this);
+					s_textString, *this);
 		break;
 
 	case XalanNode::COMMENT_NODE:
 		countMatchPattern = executionContext.createMatchPattern(
-					XalanDOMString(XALAN_STATIC_UCODE_STRING("comment()")), *this);
+					s_commentString, *this);
 		break;
 
 	case XalanNode::DOCUMENT_NODE:
 		countMatchPattern = executionContext.createMatchPattern(
-					XalanDOMString(XALAN_STATIC_UCODE_STRING("/")), *this);
+					s_slashString, *this);
 		break;
 
 	case XalanNode::PROCESSING_INSTRUCTION_NODE:
 		countMatchPattern = executionContext.createMatchPattern(
-				XalanDOMString(XALAN_STATIC_UCODE_STRING("pi(")) + 
+				s_piString + 
 				contextNode->getNodeName() +
-				XalanDOMString(XALAN_STATIC_UCODE_STRING(")")), *this);
+				s_leftParenString, *this);
 		break;
 
 	default:
@@ -1556,7 +1556,21 @@ static const XalanDOMChar	elalphaCountTable[] =
 	0
 };
 
+static XalanDOMString								s_atString;
 
+static XalanDOMString								s_textString;
+
+static XalanDOMString								s_commentString;
+
+static XalanDOMString								s_slashString;
+
+static XalanDOMString								s_piString;
+
+static XalanDOMString								s_leftParenString;
+
+static XalanDOMString								s_dotString;
+
+static XalanDOMString								s_oneString;
 
 static XalanDOMString								s_elalphaCountTable;
 
@@ -1565,6 +1579,22 @@ static XalanDOMString								s_alphaCountTable;
 static ElemNumber::DecimalToRomanVectorType			s_romanConvertTable;
 
 static ElemNumber::NumberingResourceBundleMapType	s_resourceBundles;
+
+const XalanDOMString&	ElemNumber::s_atString = ::s_atString;
+
+const XalanDOMString&	ElemNumber::s_textString = ::s_textString;
+
+const XalanDOMString&	ElemNumber::s_commentString = ::s_commentString;
+
+const XalanDOMString&	ElemNumber::s_slashString = ::s_slashString;
+
+const XalanDOMString&	ElemNumber::s_piString = ::s_piString;
+
+const XalanDOMString&	ElemNumber::s_leftParenString = ::s_leftParenString;
+
+const XalanDOMString&	ElemNumber::s_dotString = ::s_dotString;
+
+const XalanDOMString&	ElemNumber::s_oneString = ::s_oneString;
 
 const XalanDOMString&	ElemNumber::s_elalphaCountTable = ::s_elalphaCountTable;
 
@@ -1579,6 +1609,22 @@ const ElemNumber::NumberingResourceBundleMapType&	ElemNumber::s_resourceBundles 
 void
 ElemNumber::initialize()
 {
+	::s_atString = XALAN_STATIC_UCODE_STRING("@");
+
+	::s_textString = XALAN_STATIC_UCODE_STRING("text()");
+
+	::s_commentString = XALAN_STATIC_UCODE_STRING("comment()");
+
+	::s_slashString = XALAN_STATIC_UCODE_STRING("/");
+
+	::s_piString = XALAN_STATIC_UCODE_STRING("pi(");
+
+	::s_leftParenString = XALAN_STATIC_UCODE_STRING(")");
+
+	::s_dotString = XALAN_STATIC_UCODE_STRING(".");
+
+	::s_oneString = XALAN_STATIC_UCODE_STRING("1");
+
 	::s_alphaCountTable = alphaCountTable;
 
 	::s_elalphaCountTable = elalphaCountTable;
@@ -1640,8 +1686,17 @@ ElemNumber::initialize()
 void
 ElemNumber::terminate()
 {
+	clear(::s_atString);
+	clear(::s_textString);
+	clear(::s_commentString);
+	clear(::s_slashString);
+	clear(::s_piString);
+	clear(::s_leftParenString);
+	clear(::s_dotString);
+	clear(::s_oneString);
+
 	clear(::s_alphaCountTable);
-	clear(::s_elalphaCountTable);;
+	clear(::s_elalphaCountTable);
 
 	DecimalToRomanVectorType().swap(::s_romanConvertTable);
 
