@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2000 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -137,6 +137,7 @@ FunctionStringLength::clone() const
 const XalanDOMString
 FunctionStringLength::getError() const
 {
-	return "The string-length() function takes zero or one argument!";
+	return XALAN_STATIC_UCODE_STRING(
+		"The string-length() function takes zero or one argument!");
 }
 

@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2000 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -139,6 +139,7 @@ FunctionLang::clone() const
 const XalanDOMString
 FunctionLang::getError() const
 {
-	return "The lang() function takes one argument!";
+	return XALAN_STATIC_UCODE_STRING(
+		"The lang() function takes one argument!");
 }
 

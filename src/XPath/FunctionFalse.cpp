@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2000 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -95,6 +95,7 @@ FunctionFalse::clone() const
 const XalanDOMString
 FunctionFalse::getError() const
 {
-	return "The false() function does not accept arguments!";
+	return XALAN_STATIC_UCODE_STRING(
+		"The false() function does not accept arguments!");
 }
 

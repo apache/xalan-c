@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2000 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -140,6 +140,7 @@ FunctionSubstringAfter::clone() const
 const XalanDOMString
 FunctionSubstringAfter::getError() const
 {
-	return "The substring-after() function takes two arguments!";
+	return XALAN_STATIC_UCODE_STRING(
+		"The substring-after() function takes two arguments!");
 }
 

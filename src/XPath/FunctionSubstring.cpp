@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2000 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -148,7 +148,8 @@ FunctionSubstring::execute(
 	}
 	else
 	{
-		return executionContext.getXObjectFactory().createString(XalanDOMString(theBuffer.begin(), theSize));
+		return executionContext.getXObjectFactory().createString(
+			XalanDOMString(theBuffer.begin(), theSize));
 	}
 }
 
@@ -183,6 +184,7 @@ FunctionSubstring::clone() const
 const XalanDOMString
 FunctionSubstring::getError() const
 {
-	return "The substring() function takes two or three arguments!";
+	return XALAN_STATIC_UCODE_STRING(
+		"The substring() function takes two or three arguments!");
 }
 

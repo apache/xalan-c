@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2000 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -82,7 +82,8 @@ FunctionRound::execute(
 {
 	assert(arg1 != 0);
 
-	return executionContext.getXObjectFactory().createNumber(getRoundedValue(arg1->num()));
+	return executionContext.getXObjectFactory().createNumber(
+		getRoundedValue(arg1->num()));
 }
 
 
@@ -148,6 +149,7 @@ FunctionRound::getRoundedValue(double	theValue)
 const XalanDOMString
 FunctionRound::getError() const
 {
-	return "The round() function takes one argument!";
+	return XALAN_STATIC_UCODE_STRING(
+		"The round() function takes one argument!");
 }
 

@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2000 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -173,6 +173,7 @@ FunctionID::clone() const
 const XalanDOMString
 FunctionID::getError() const
 {
-	return "The id() function takes one argument!";
+	return XALAN_STATIC_UCODE_STRING(
+		"The id() function takes one argument!");
 }
 

@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2000 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -130,6 +130,7 @@ FunctionName::clone() const
 const XalanDOMString
 FunctionName::getError() const
 {
-	return "The name() function takes zero or one arguments!";
+	return XALAN_STATIC_UCODE_STRING(
+		"The name() function takes zero or one arguments!");
 }
 

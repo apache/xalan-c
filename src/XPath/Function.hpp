@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2000 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -212,7 +212,7 @@ private:
 	virtual const XalanDOMString
 	getError() const
 	{
-		return "Unknown function called.";
+		return XALAN_STATIC_UCODE_STRING("Unknown function called.");
 	}
 	
 	// Not implemented...
