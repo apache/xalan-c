@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
+ * Copyright 1999-2005 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -649,9 +649,8 @@ XSLTEngineImpl::parseXML(
 		}
 		else
 		{
-			const XalanMemMgrAutoPtr<InputSourceType, true>		resolverInputSource(
-                                            getMemoryManager(),
-				                            theResolver->resolveEntity(0, c_wstr(urlString)));
+			const XalanAutoPtr<InputSourceType> resolverInputSource =  
+                                theResolver->resolveEntity(0, c_wstr(urlString));
 
 			if (resolverInputSource.get() != 0)
 			{
