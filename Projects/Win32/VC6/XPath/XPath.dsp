@@ -526,10 +526,6 @@ SOURCE=..\..\..\..\src\XPath\FunctionDefaultStringArgument.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\FunctionDoc.hpp
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\..\..\src\XPath\FunctionFalse.hpp
 # End Source File
 # Begin Source File
