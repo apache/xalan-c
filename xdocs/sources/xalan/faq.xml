@@ -14,11 +14,11 @@
      anchor="uptospeed">Getting up to speed with XSLT</link>.</p></a>
   </faq>
   
-<faq title="Asking questions"><q>Where can I ask a question?</q>
+<faq title="Questions"><q>Where can I ask question?</q>
 
-<a><p>For generic questions about XSL stylesheets and transformations, use the <jump href="http://www.mulberrytech.com/xsl/xsl-list/">XSL-List -- Open Forum on XSL</jump> hosted by Mulberry Technologies. There is an archive that can be searched as well. Please review the archive before posting a new question.</p>
+<a><p>For generic questions about XSL stylesheets and transformations, use the <jump href="http://www.mulberrytech.com/xsl/xsl-list/">XSL-List -- Open Forum on XSL</jump> hosted by Mulberry Technologies. There is an archive that can be searched as well. Specific questions about &xslt4c; can be asked on the Xalan-dev list. Please review this document and the archives before posting new questions.</p>
 
-<p>For specific questions on &xslt4c;, see xalan-c-users@xml.apache.org and xalan-dev@xml.apache.org on <jump href="http://archive.covalent.net/">http://archive.covalent.net/</jump>. To subscribe to these mailing lists, see <jump href="http://xml.apache.org/mail.html">Mailing Lists</jump>. Again, please review the archives before posting a new question.</p>
+<p>For specific questions on &xslt4c;, see xalan-c-users@xml.apache.org and xalan-dev@xml.apache.org on <jump href="http://archive.covalent.net/">http://archive.covalent.net/</jump>. To subscribe to these mailing lists, see <jump href="http://xml.apache.org/mail.html">Mailing Lists</jump>.</p>
 </a>
 </faq>
 

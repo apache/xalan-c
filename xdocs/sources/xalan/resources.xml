@@ -26,7 +26,7 @@
 <resource id="xslt4c-Solaris-download" title="&xslt4c-dist;-solaris.tar.gz" location="http://xml.apache.org/dist/xalan-c/&xslt4c-dist;-solaris.tar.gz"/>
   
   <resource id="icu" title="International Components for Unicode (ICU)" location="http://oss.software.ibm.com/developerworks/opensource/icu/project/index.html"/>
-<resource id="icu-download" title="&icu-used;" location="http://oss.software.ibm.com/developerworks/opensource/icu/project/download/index.html"/>
+<resource id="icu-download" title="International Components for Unicode (ICU) 2.0 source files" location="http://oss.software.ibm.com/developerworks/opensource/icu/project/download/index.html"/>
 <resource id="xerces-build-icu" title="Building ICU for &xml4c;" location="http://xml.apache.org/xerces-c/build.html#BuildICU"/>
 
   <resource id="stlport" title="STLport" location="http://www.stlport.org/"/>
