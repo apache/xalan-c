@@ -150,15 +150,17 @@ ElemAttribute::execute(
 	assert(m_pNameAVT != 0);
 
 	DOMString attrName;
+	DOMString origAttrName = attrName;      // save original attribute name
+	int indexOfNSSep = 0;
 
 	m_pNameAVT->evaluate(attrName, sourceNode, *this, 
 		executionContext.getXPathExecutionContext());
 
 	if(!isEmpty(attrName))
 	{
+	   DOMString attrNameSpace;
 		if(0 != m_pNamespaceAVT)
 		{
-			DOMString attrNameSpace;
 			m_pNamespaceAVT->evaluate(attrNameSpace, sourceNode, 
 				*this, executionContext.getXPathExecutionContext());
 
@@ -174,20 +176,38 @@ ElemAttribute::execute(
 
 					executionContext.addResultAttribute(nsDecl, attrNameSpace);
 				}
-
+				indexOfNSSep = indexOf(origAttrName, ':');
+				if(indexOfNSSep >= 0)          
+					attrName = substring(attrName, indexOfNSSep+1);
 				attrName = prefix + DOMString(":") + attrName;
 			}
 		}
-		
-		if(!isEmpty(executionContext.getPendingElementName()))
+      // Note we are using original attribute name for these tests. 
+		else if(!isEmpty(executionContext.getPendingElementName())
+				&& !equals(origAttrName, "xmlns"))
 		{
-			const DOMString	val = childrenToString(executionContext, sourceTree, sourceNode, mode);
-			
-			executionContext.addResultAttribute(attrName, val);
-		}
-		else
-		{
-			//warn(templateChild, sourceNode, "Trying to add attribute after element child has been added, ignoring...");
+			// make sure that if a prefix is specified on the attribute name, it is valid
+			indexOfNSSep = indexOf(origAttrName, ':');
+			if(indexOfNSSep >= 0)
+			{
+				DOMString nsprefix = substring(origAttrName, 0, indexOfNSSep);
+				attrNameSpace = getNamespaceForPrefix(nsprefix);
+				if (isEmpty(attrNameSpace))
+				{
+					// Could not resolve prefix
+					// @@ TODO: processor.warn(XSLTErrorResources.WG_COULD_NOT_RESOLVE_PREFIX, new Object[]{nsprefix});            
+				}
+			}
+			if (indexOfNSSep<0 || ! isEmpty(attrNameSpace))
+			{  
+				const DOMString val = childrenToString(executionContext,
+					sourceTree, sourceNode, mode);
+				executionContext.addResultAttribute(attrName, val);
+			}
+			else
+			{
+				//warn(templateChild, sourceNode, "Trying to add attribute after element child has been added, ignoring...");
+			}
 		}
 	}
 }
