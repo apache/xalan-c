@@ -113,6 +113,7 @@ public:
 	{
 	}
 
+    virtual
 	~AttributeVectorEntryExtended()
 	{
 	}
