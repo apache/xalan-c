@@ -246,7 +246,7 @@ private:
 
 	unsigned long			m_index;
 
-	const static XalanDOMString	s_emptyString;
+	static const XalanDOMString		s_emptyString;
 };
 
 
