@@ -102,13 +102,11 @@ public:
 	};
 
 #if defined(XALAN_NO_NAMESPACES)
-	typedef vector<DecimalToRoman>					DecimalToRomanVectorType;
 	typedef vector<int>								IntArrayType;
 	typedef map<XalanDOMChar,
 				XalanNumberingResourceBundle,
 				less<XalanDOMChar> >				NumberingResourceBundleMapType;
 #else
-	typedef std::vector<DecimalToRoman>				DecimalToRomanVectorType;
 	typedef std::vector<int>						IntArrayType;
 	typedef std::map<XalanDOMChar,
 					 XalanNumberingResourceBundle>	NumberingResourceBundleMapType;
@@ -466,7 +464,7 @@ private:
 	 * @see XSLTEngineImpl#DecimalToRoman
 	 * @see XSLTEngineImpl#long2roman
 	 */
-	static const DecimalToRomanVectorType&	s_romanConvertTable;
+	static const DecimalToRoman				s_romanConvertTable[];
 
 	/**
 	 * A map of supported numbering resource bundles.

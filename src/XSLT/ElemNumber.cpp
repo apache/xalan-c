@@ -1826,8 +1826,6 @@ static XalanDOMString								s_slashString;
 
 
 
-static ElemNumber::DecimalToRomanVectorType			s_romanConvertTable;
-
 static ElemNumber::NumberingResourceBundleMapType	s_resourceBundles;
 
 
@@ -1944,8 +1942,58 @@ const XalanDOMChar		ElemNumber::s_traditionalString[] =
 	0
 };
 
-const ElemNumber::DecimalToRomanVectorType&		ElemNumber::s_romanConvertTable =
-				::s_romanConvertTable;
+const DecimalToRoman	ElemNumber::s_romanConvertTable[] =
+{
+	{
+		1000L,
+		{ XalanUnicode::charLetter_M, 0 },
+		900L,
+		{ XalanUnicode::charLetter_C, XalanUnicode::charLetter_M, 0 }
+	},
+
+	{
+		500L,
+		{ XalanUnicode::charLetter_D, 0 },
+		400L,
+		{ XalanUnicode::charLetter_C, XalanUnicode::charLetter_D, 0 }
+	},
+
+	{
+		100L,
+		{ XalanUnicode::charLetter_C, 0 },
+		90L,
+		{ XalanUnicode::charLetter_X, XalanUnicode::charLetter_C, 0 }
+	},
+
+	{
+		50L,
+		{ XalanUnicode::charLetter_L, 0 },
+		40L,
+		{ XalanUnicode::charLetter_X, XalanUnicode::charLetter_L, 0 }
+	},
+
+	{
+		10L,
+		{ XalanUnicode::charLetter_X, 0 },
+		9L,
+		{ XalanUnicode::charLetter_I, XalanUnicode::charLetter_X, 0 }
+	},
+
+	{
+		5L,
+		{ XalanUnicode::charLetter_V, 0 },
+		4L,
+		{ XalanUnicode::charLetter_I, XalanUnicode::charLetter_V, 0 }
+	},
+
+	{
+		1L,
+		{ XalanUnicode::charLetter_I, 0 },
+		1L,
+		{ XalanUnicode::charLetter_I, 0 }
+	}
+};
+
 
 const ElemNumber::NumberingResourceBundleMapType&	ElemNumber::s_resourceBundles =
 				::s_resourceBundles;
@@ -2066,57 +2114,6 @@ ElemNumber::initialize()
 
 	::s_slashString = XALAN_STATIC_UCODE_STRING("/");
 
-	::s_romanConvertTable.reserve(7);
-
-	::s_romanConvertTable.push_back(
-		DecimalToRoman(
-			1000L,
-			StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("M")),
-			900L,
-			StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("CM"))));
-
-	::s_romanConvertTable.push_back(
-		DecimalToRoman(
-			500L,
-			StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("D")),
-			400,
-			StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("CD"))));
-
-	::s_romanConvertTable.push_back(
-		DecimalToRoman(
-			100L,
-			StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("C")),
-			90L,
-			StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("XC"))));
-
-	::s_romanConvertTable.push_back(
-		DecimalToRoman(
-			50L,
-			StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("L")),
-			40L,
-			StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("XL"))));
-
-	::s_romanConvertTable.push_back(
-		DecimalToRoman(
-			10L,
-			StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("X")),
-			9L,
-			StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("IX"))));
-
-	::s_romanConvertTable.push_back(
-		DecimalToRoman(
-			5L,
-			StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("V")),
-			4L,
-			StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("IV"))));
-
-	::s_romanConvertTable.push_back(
-		DecimalToRoman(
-			1L,
-			StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("I")),
-			1L,
-			StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("I"))));
-
 	addTraditionalElalphaBundle(::s_resourceBundles);
 }
 
@@ -2128,8 +2125,6 @@ ElemNumber::terminate()
 	releaseMemory(::s_textString);
 	releaseMemory(::s_commentString);
 	releaseMemory(::s_slashString);
-
-	DecimalToRomanVectorType().swap(::s_romanConvertTable);
 
 	NumberingResourceBundleMapType().swap(::s_resourceBundles);
 }
