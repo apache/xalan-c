@@ -142,7 +142,6 @@ public:
 			const XalanDOMString&	srcURL,
 			const XalanDOMString&	scriptSrc); 
 
-
 	/**
 	 * Set element local parts of extension NS.
 	 *
@@ -151,7 +150,6 @@ public:
 	 */
 	void
 	setElements(const XalanDOMString&	elemNames); 
-	
 
 	/**
 	 * Tests whether a certain element name is known within this namespace.
@@ -160,8 +158,7 @@ public:
 	 * @return true if known, false if not
 	 */
 	bool
-	isElementAvailable (const XalanDOMString&	element); 
-
+	isElementAvailable (const XalanDOMString&	element) const;
 
 	/**
 	 * Process a call to this extension namespace via an element. As a side

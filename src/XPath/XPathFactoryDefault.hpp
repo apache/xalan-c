@@ -96,7 +96,7 @@ public:
 
 
 #if defined(XALAN_NO_NAMESPACES)
-	typedef set<const XPath*>		CollectionType;
+	typedef set<const XPath*, less<const XPath*> >	CollectionType;
 #else
 	typedef std::set<const XPath*>	CollectionType;
 #endif

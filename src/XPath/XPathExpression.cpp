@@ -249,6 +249,14 @@ XPathExpression::InvalidRelativeTokenPosition::FormatErrorMessage(int	theOffset)
 
 
 
+XPathExpression::XToken::XToken() :
+	m_stringValue(),
+	m_numberValue(DoubleSupport::getNaN())
+{
+}
+
+
+
 XPathExpression::XToken::XToken(const XalanDOMString&	theString) :
 	m_stringValue(theString),
 	m_numberValue(DoubleSupport::toDouble(theString))

@@ -261,7 +261,11 @@ protected:
 	void
 	deleteObject(const XObject*		theXObject) const
 	{
+#if defined(XALAN_CANNOT_DELETE_CONST)
+		delete (XObject*)theXObject;
+#else
 		delete theXObject;
+#endif
 	}
 
 	/**

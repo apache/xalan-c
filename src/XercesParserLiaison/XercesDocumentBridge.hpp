@@ -87,7 +87,7 @@
 #include <XercesParserLiaison/XercesDocumentNamedNodeListCache.hpp>
 #include <XercesParserLiaison/XercesNodeListBridge.hpp>
 
-//#define XALAN_USE_BLOCK_ALLOCATORS
+#define XALAN_USE_BLOCK_ALLOCATORS
 
 #if defined(XALAN_USE_BLOCK_ALLOCATORS)
 #include <XercesParserLiaison/XercesElementBridgeAllocator.hpp>

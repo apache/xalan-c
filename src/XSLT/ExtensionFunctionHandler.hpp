@@ -61,8 +61,10 @@
 #if !defined(XALAN_EXTENSIONFUNCTIONHANDLER_HEADER_GUARD)
 #define XALAN_EXTENSIONFUNCTIONHANDLER_HEADER_GUARD
 
+
+
 // Base include file.	Must be first.
-#include "XSLTDefinitions.hpp"
+#include <XSLT/XSLTDefinitions.hpp>
 
 
 
@@ -71,7 +73,7 @@
 
 
 
-#include <dom/DOMString.hpp>
+#include <XalanDOM/XalanDOMString.hpp>
 
 
 
@@ -96,7 +98,7 @@ public:
 	 * 
 	 * @param namespaceUri the extension namespace URI that I'm implementing
 	 */
-	ExtensionFunctionHandler (const DOMString& namespaceUri);
+	ExtensionFunctionHandler(const XalanDOMString&	namespaceUri);
 
 	/**
 	 * Construct a new extension namespace handler given all the information
@@ -110,14 +112,16 @@ public:
 	 *                     srcURL is not null, then scriptSrc is ignored.
 	 * @param scriptSrc    the actual script code (if any)
 	 */
-	ExtensionFunctionHandler (const DOMString& namespaceUri,
-										const DOMString& funcNames,
-										const DOMString& lang,
-										const DOMString& srcURL,
-										const DOMString& scriptSrc);
+	ExtensionFunctionHandler(
+			const XalanDOMString&	namespaceUri,
+			const XalanDOMString&	funcNames,
+			const XalanDOMString&	lang,
+			const XalanDOMString&	srcURL,
+			const XalanDOMString&	scriptSrc);
 
 
-	virtual ~ExtensionFunctionHandler();
+	virtual
+	~ExtensionFunctionHandler();
 
 	/**
 	 * Set function local parts of extension NS.
@@ -125,8 +129,9 @@ public:
 	 * @param functions whitespace separated list of function names defined
 	 *                  by this extension namespace.
 	 */
-	virtual void setFunctions (const DOMString& funcNames);
-	
+	virtual void
+	setFunctions(const XalanDOMString&	funcNames);
+
 	/**
 	 * Set the script data for this extension NS. If srcURL is !null then
 	 * the script body is read from that URL. If not the scriptSrc is used
@@ -140,9 +145,11 @@ public:
 	 *                  srcURL is not null, then scriptSrc is ignored.
 	 * @param scriptSrc the actual script code (if any)
 	 */
-	virtual void setScript (const DOMString& lang,
-								const DOMString& srcURL,
-								const DOMString& scriptSrc);
+	virtual void
+	setScript(
+			const XalanDOMString&	lang,
+			const XalanDOMString&	srcURL,
+			const XalanDOMString&	scriptSrc);
 
 	/**
 	 * Tests whether a certain function name is known within this namespace.
@@ -150,11 +157,15 @@ public:
 	 * @param function name of the function being tested
 	 * @return true if its known, false if not.
 	 */
-	virtual bool isFunctionAvailable (const DOMString& function);
-
+	virtual bool
+	isFunctionAvailable(const XalanDOMString&	function) const;
 
 	/// Vector of pointers to function arguments
-	typedef std::vector<void*> ArgVector;
+#if defined(XALAN_NO_NAMESPACES)
+	typedef vector<void*>		ArgVectorType;
+#else
+	typedef std::vector<void*>	ArgVectorType;
+#endif
 
 	/**
 	 * Process a call to a function.
@@ -172,20 +183,32 @@ public:
 	 * @exception SAXException          if parsing trouble
 	 */
 
-	virtual XObject* callFunction (const DOMString& funcName, const ArgVector& args);
+	virtual XObject*
+	callFunction(
+			const XalanDOMString&	funcName,
+			const ArgVectorType&	args);
 
 protected:
 
-	DOMString m_namespaceUri;  // uri of the extension namespace
-	DOMString m_scriptLang;    // scripting language of implementation
-	DOMString m_scriptSrc;     // script source to run (if any)
-	DOMString m_scriptSrcURL;  // URL of source of script (if any)
-	// @@
+	XalanDOMString	m_namespaceUri;  // uri of the extension namespace
+	XalanDOMString	m_scriptLang;    // scripting language of implementation
+	XalanDOMString	m_scriptSrc;     // script source to run (if any)
+	XalanDOMString	m_scriptSrcURL;  // URL of source of script (if any)
+
 	void* m_javaObject;		    // object for javaclass engine
-	typedef std::set<DOMString> StringSetType;
-	StringSetType m_functions; // functions of namespace
+
+#if defined(XALAN_NO_NAMESPACES)
+	typedef set<XalanDOMString, less<XalanDOMString> > StringSetType;
+#else
+	typedef std::set<XalanDOMString> StringSetType;
+#endif
+
+	StringSetType	m_functions; // functions of namespace
+
 	//  BSFManager mgr = new BSFManager (); // mgr used to run scripts
-	bool m_componentStarted; // true when the scripts in a
+
+	bool			m_componentStarted; // true when the scripts in a
+
 	// component description (if any) have been run
 
 	/**
@@ -195,9 +218,10 @@ protected:
 	 * 
 	 * @exception XPathProcessorException if something bad happens.
 	 */
-	virtual void startupComponent();
+	virtual void
+	startupComponent();
 };
  
+
+
 #endif	// XALAN_EXTENSIONFUNCTIONHANDLER_HEADER_GUARD
-
-

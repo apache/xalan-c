@@ -146,7 +146,7 @@ public:
 		}
 		else if (theValue > 0)
 		{
-			return static_cast<long>(theValue + 0.5);
+			return long(theValue + 0.5);
 		}
 		else
 		{
@@ -160,11 +160,11 @@ public:
 			if (fracPart == -0.5)
 			{
 				// special case -- we have have to round toward 0...
-				return static_cast<long>(theValue + 0.5);
+				return long(theValue + 0.5);
 			}
 			else
 			{
-				return static_cast<long>(theValue - 0.5);
+				return long(theValue - 0.5);
 			}
 		}
 	}

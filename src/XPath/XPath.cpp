@@ -1155,8 +1155,8 @@ XPath::literal(
 			int						opPos,
 			XPathExecutionContext&	executionContext) const
 {
-	assert(m_expression.m_opMap.size() > static_cast<unsigned>(opPos + 2));
-	assert(m_expression.m_tokenQueue.size() > static_cast<unsigned>(m_expression.m_opMap[opPos + 2]));
+	assert(m_expression.m_opMap.size() > unsigned(opPos + 2));
+	assert(m_expression.m_tokenQueue.size() > unsigned(m_expression.m_opMap[opPos + 2]));
 
 	const XObject&	theLiteral = m_expression.m_tokenQueue[m_expression.m_opMap[opPos + 2]];
 
@@ -1222,8 +1222,8 @@ XPath::numberlit(
 			int						opPos,
 			XPathExecutionContext&	executionContext) const
 {
-	assert(m_expression.m_opMap.size() > static_cast<unsigned>(opPos + 2));
-	assert(m_expression.m_tokenQueue.size() > static_cast<unsigned>(m_expression.m_opMap[opPos + 2]));
+	assert(m_expression.m_opMap.size() > unsigned(opPos + 2));
+	assert(m_expression.m_tokenQueue.size() > unsigned(m_expression.m_opMap[opPos + 2]));
 
 	const XObject&	theLiteral = m_expression.m_tokenQueue[m_expression.m_opMap[opPos + 2]];
 

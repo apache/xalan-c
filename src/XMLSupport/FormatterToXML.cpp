@@ -241,6 +241,11 @@ FormatterToXML::initAttrCharsMap()
 
 	m_attrCharsMap[0x0A] = 'S';
 	m_attrCharsMap[0x0D] = 'S';
+
+	for(i = 160; i < SPECIALSSIZE; i++)
+	{
+		m_attrCharsMap[i] = 'S';
+	}
 }
 
 
@@ -259,6 +264,7 @@ FormatterToXML::initCharsMap()
 
 	memset(m_charsMap, 'S', 20);
 
+	// $$$ ToDo: I believe these are redundant...
 	m_charsMap[0x0A] = 'S';
 	m_charsMap[0x0D] = 'S';
 	m_charsMap[9] = '\0';
@@ -330,7 +336,7 @@ FormatterToXML::accum(XalanDOMChar	ch)
 {
 	if(m_bytesEqualChars == true)
 	{
-		m_byteBuf[m_pos++] = static_cast<ByteBufferType::value_type>(ch);
+		m_byteBuf[m_pos++] = ByteBufferType::value_type(ch);
 
 		if(m_pos == s_maxBufferSize)
 		{
@@ -362,7 +368,7 @@ FormatterToXML::accum(
 	{
 		for(DOMCharBufferType::size_type i = start; i < n; ++i)
 		{
-			m_byteBuf[m_pos++] = static_cast<ByteBufferType::value_type>(chars[i]);
+			m_byteBuf[m_pos++] = ByteBufferType::value_type(chars[i]);
 
 			if(m_pos == s_maxBufferSize)
 			{

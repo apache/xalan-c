@@ -794,10 +794,14 @@ private:
 
 #if defined(XALAN_NO_NAMESPACES)
 	typedef deque<const ElemTemplateElement*>			ElementRecursionStackType;
-	typedef set<FormatterListener*>						FormatterListenerSetType;
-	typedef set<PrintWriter*>							PrintWriterSetType;
-	typedef set<TextOutputStream*>						TextOutputStreamSetType;
-	typedef set<const KeyDeclaration*>					KeyDeclarationSetType;
+	typedef set<FormatterListener*,
+				less<FormatterListener*> >				FormatterListenerSetType;
+	typedef set<PrintWriter*,
+				less<PrintWriter*> >					PrintWriterSetType;
+	typedef set<TextOutputStream*,
+				less<TextOutputStream*> >				TextOutputStreamSetType;
+	typedef set<const KeyDeclaration*,
+				less<const KeyDeclaration*> >			KeyDeclarationSetType;
 	typedef vector<const XObject*>						VariablesCollectionType;
 	typedef vector<VariablesCollectionType>				LiveVariablesStackType;
 	typedef pair<const XPath*, clock_t>					XPathCacheEntry;

@@ -67,10 +67,6 @@
 
 
 
-#include <PlatformSupport/DirectoryEnumerator.hpp>
-
-
-
 #include <DOMSupport/DOMServices.hpp>
 
 
@@ -104,104 +100,6 @@ SimpleNodeLocator::SimpleNodeLocator() :
 
 SimpleNodeLocator::~SimpleNodeLocator()
 {
-}
-
-
-
-const XObject*
-SimpleNodeLocator::connectToNodes(
-			const XPath&					/* xpath */,
-			XPathExecutionContext&			executionContext,
-			XalanNode&						/* context */, 
-			int 							/* opPos */,
-			const ConnectArgsVectorType&	connectArgs)
-{
-#if 0
-	assert(connectArgs.size() > 0 && connectArgs.size() < 3);
-
-	XObjectFactory& 		theFactory =
-		executionContext.getXObjectFactory();
-
-	XObjectGuard			results(theFactory,
-									theFactory.createNodeSet(executionContext.createMutableNodeRefList()));
-
-	const XPathExpression&	currentExpression =
-		xpath.getExpression();
-
-	const XalanDOMString	theFileSpec = connectArgs[0]->str();
-
-
-	const XalanDOMString	filterSpec = connectArgs.size() > 1 ? connectArgs[0]->str() : XalanDOMString();
-	const unsigned int		filterSpecLength = length(filterSpec);
-
-#if defined(XALAN_NO_NAMESPACES)
-	typedef vector<XalanDOMString>			DOMStringVectorType;
-#else
-	typedef std::vector<XalanDOMString>		DOMStringVectorType;
-#endif
-
-	DirectoryEnumeratorFunctor<DOMStringVectorType> 	theEnumerator;
-
-	const DOMStringVectorType							theFiles = theEnumerator(theFileSpec);
-
-	const DOMStringVectorType::size_type				nFiles = theFiles.size();
-
-	if (nFiles > 0)
-	{
-		MutableNodeRefList& 	theNodeList = results->mutableNodeset();
-
-		for(DOMStringVectorType::size_type i = 0; i < nFiles; ++i)
-		{
-			try
-			{
-				// If there's no filter spec, or the spec matches the file, then
-				// parse the XML.
-				if (filterSpecLength == 0 ||
-					endsWith(theFiles[i], filterSpec) == true)
-				{
-					XalanDocument* const	doc = executionContext.parseXML(theFiles[i], theFileSpec);
-
-					if(0 != doc)
-					{
-						const int	value =
-									currentExpression.getOpCodeMapValue(opPos);
-
-						if(XPathExpression::eOP_LOCATIONPATH == value)
-						{
-							const XObjectGuard		xnl(
-										executionContext.getXObjectFactory(),
-										xpath.locationPath(doc, opPos, executionContext));
-
-							if(0 != xnl.get())
-							{
-								theNodeList.addNodes(xnl->nodeset());
-
-								executionContext.associateXLocatorToNode(doc, this);
-							}
-						}
-						else
-						{
-							theNodeList.addNode(doc);
-
-							executionContext.associateXLocatorToNode(doc, this);
-						}
-					}
-				}
-			}
-			catch(...)
-			{
-				executionContext.warn(XalanDOMString("Couldn't parse XML file: ") + theFiles[i]);
-			}
-		}
-	}
-	else
-	{
-		executionContext.warn("No files matched the file specification!");
-	}
-	return results.release();
-#endif
-
-	return 0;
 }
 
 
@@ -956,7 +854,11 @@ SimpleNodeLocator::findAttributes(
 	if(0 != context && context->getNodeType() == XalanNode::ELEMENT_NODE)
 	{
 		const XalanElement* const		e =
-			static_cast<const XalanElement*>(context);
+#if defined(XALAN_OLD_STYLE_CASTS)
+					(const XalanElement*)context;
+#else
+					static_cast<const XalanElement*>(context);
+#endif
 
 		const XalanNamedNodeMap* const	attributeList = e->getAttributes();
 
@@ -1639,7 +1541,11 @@ SimpleNodeLocator::nodeTest(
 									if (isNamespace == true)
 									{
 										const XalanAttr* const	theAttrNode =
+#if defined(XALAN_OLD_STYLE_CASTS)
+											(const XalanAttr*)context;
+#else
 											static_cast<const XalanAttr*>(context);
+#endif
 										assert(theAttrNode != 0);
 
 										const XalanDOMString	theNamespace =

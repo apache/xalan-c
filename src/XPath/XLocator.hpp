@@ -91,29 +91,6 @@ public:
 	typedef	std::vector<XObject*>	ConnectArgsVectorType;
 #endif
 
-  /**
-	* Execute a connection (if it was not executed by the static connect
-	* method) and process the following LocationPath, if it is present.
-	* Normally, the connection functionality should be executed by this
-	* function and not the static connect function, which is really a factory
-	* method for the XLocator instance.  The arguments to the static connect
-	* function are re-passed to this function.
-	*
-   * @param xpath       XPath that is executing
-   * @param context     current source tree context node
-   * @param opPos       current position in the xpath.m_opMap array
-	* @param connectArgs arguments that were passed to the static connect
-	*                    function
-   * @return pointer to result of the query in an XObject
-   */
-	virtual const XObject*
-	connectToNodes(
-			const XPath&					xpath,
-			XPathExecutionContext&			executionContext,
-			XalanNode&						context, 
-            int								opPos,
-			const ConnectArgsVectorType&	connectArgs) = 0;
-  
 	/**
 	 * Execute a location path.  Normally, this method simply moves past the
 	 * OP_LOCATIONPATH and it's length member, and calls the Step function,

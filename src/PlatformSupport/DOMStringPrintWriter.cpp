@@ -179,6 +179,7 @@ DOMStringPrintWriter::write(
 
 
 
+#if !defined(XALAN_BOOL_AS_INT)
 void
 DOMStringPrintWriter::print(bool	b)
 {
@@ -191,6 +192,7 @@ DOMStringPrintWriter::print(bool	b)
 		print(XALAN_STATIC_UCODE_STRING("false"));
 	}
 }
+#endif
 
 
 
@@ -266,6 +268,7 @@ DOMStringPrintWriter::println()
 
 
 
+#if !defined(XALAN_BOOL_AS_INT)
 void
 DOMStringPrintWriter::println(bool	b)
 {
@@ -273,6 +276,7 @@ DOMStringPrintWriter::println(bool	b)
 
 	println();
 }
+#endif
 
 
 

@@ -84,8 +84,8 @@ public:
 
 	explicit
 	XercesBridgeNavigator(
-			XercesDocumentBridge*	theOwnerDocument,
-			bool					mappingMode);
+			XercesDocumentBridge*	theOwnerDocument = 0,
+			bool					mappingMode = true);
 
 	XercesBridgeNavigator(const XercesBridgeNavigator&	theSource);
 
@@ -97,6 +97,12 @@ public:
 	getOwnerDocument() const
 	{
 		return m_ownerDocument;
+	}
+
+	void
+	setOwnerDocument(XercesDocumentBridge*	theDocument)
+	{
+		m_ownerDocument = theDocument;
 	}
 
 	XalanNode*

@@ -736,6 +736,9 @@ public:
 	{
 	public:
 
+		explicit
+		XToken();
+
 		XToken(const XalanDOMString&	theString);
 
 		XToken(double	theNumber);
@@ -773,12 +776,9 @@ public:
 		XToken&
 		operator=(const XToken&		theRHS)
 		{
-			if (&theRHS != this)
-			{
-				m_stringValue = theRHS.m_stringValue;
+			m_stringValue = theRHS.m_stringValue;
 
-				m_numberValue = theRHS.m_numberValue;
-			}
+			m_numberValue = theRHS.m_numberValue;
 
 			return *this;
 		}
@@ -803,28 +803,39 @@ public:
 
 
 #if defined(XALAN_NO_NAMESPACES)
-#	define XALAN_STD
-#else
-#	define XALAN_STD std::
-#endif
 
-	typedef XALAN_STD vector<int>				OpCodeMapType;
+	typedef vector<int>						OpCodeMapType;
+	typedef deque<XToken>					TokenQueueType;
+	typedef vector<int>						PatternMapType;
 
-	typedef XALAN_STD deque<XToken>				TokenQueueType;
-	typedef XALAN_STD vector<int>				PatternMapType;
-	typedef XALAN_STD map<int, int>				OpCodeLengthMapType;
+	typedef map<int, int, less<int> >		OpCodeLengthMapType;
 
 	typedef OpCodeMapType::value_type		OpCodeMapValueType;
 	typedef OpCodeMapType::size_type		OpCodeMapSizeType;
+
+	typedef set<OpCodeMapValueType, less<OpCodeMapValueType> >	NodeTestSetType;
+
+	typedef vector<OpCodeMapValueType>		OpCodeMapValueVectorType;
+
+#else
+
+	typedef std::vector<int>				OpCodeMapType;
+	typedef std::deque<XToken>				TokenQueueType;
+	typedef std::vector<int>				PatternMapType;
+	typedef std::map<int, int>				OpCodeLengthMapType;
+
+	typedef OpCodeMapType::value_type		OpCodeMapValueType;
+	typedef OpCodeMapType::size_type		OpCodeMapSizeType;
+
+	typedef std::set<OpCodeMapValueType>	NodeTestSetType;
+	typedef std::vector<OpCodeMapValueType> OpCodeMapValueVectorType;
+
+#endif
+
 	typedef TokenQueueType::value_type		TokenQueueValueType;
 	typedef TokenQueueType::size_type		TokenQueueSizeType;
 	typedef PatternMapType::value_type		PatternMapValueType;
 	typedef PatternMapType::size_type		PatternMapSizeType;
-
-	typedef XALAN_STD set<OpCodeMapValueType>	NodeTestSetType;
-	typedef XALAN_STD vector<OpCodeMapValueType> OpCodeMapValueVectorType;
-
-#undef XALAN_STD
 
 	explicit
 	XPathExpression();
@@ -873,7 +884,7 @@ public:
 		if (theSize > s__opCodeMapLengthIndex)
 		{
 			assert(theSize ==
-				static_cast<OpCodeMapSizeType>(m_opMap[s__opCodeMapLengthIndex]));
+				OpCodeMapSizeType(m_opMap[s__opCodeMapLengthIndex]));
 
 			return m_opMap[s__opCodeMapLengthIndex];
 		}
@@ -1110,7 +1121,7 @@ public:
 	void
 	setTokenPosition(int	thePosition)
 	{
-		setTokenPosition(thePosition > 0 ? static_cast<TokenQueueSizeType>(thePosition) : 0);
+		setTokenPosition(thePosition > 0 ? TokenQueueSizeType(thePosition) : 0);
 	}
 
 	/**
@@ -1173,11 +1184,10 @@ public:
 	const XObject*
 	getRelativeToken(int	theOffset) const
 	{
-		const int	thePosition =
-			static_cast<int>(m_currentPosition) + theOffset;
+		const int	thePosition = int(m_currentPosition) + theOffset;
 
 		if (thePosition < 0 ||
-			thePosition >= static_cast<int>(tokenQueueSize()))
+			thePosition >= int(tokenQueueSize()))
 		{
 			return 0;
 		}
@@ -1222,11 +1232,10 @@ public:
 	{
 		assert(theToken != 0);
 
-		const int	thePosition =
-			static_cast<int>(m_currentPosition) + theOffset;
+		const int	thePosition = int(m_currentPosition) + theOffset;
 
 		if (thePosition < 0 ||
-			thePosition >= static_cast<int>(tokenQueueSize()))
+			thePosition >= int(tokenQueueSize()))
 		{
 			throw InvalidRelativeTokenPosition(theOffset);
 		}
@@ -1247,11 +1256,9 @@ public:
 	{
 		assert(theToken != 0);
 
-		const int	thePosition =
-			static_cast<int>(m_currentPosition) + theOffset;
+		const int	thePosition = int(m_currentPosition) + theOffset;
 
-		if (thePosition < 0 ||
-			thePosition >= static_cast<int>(tokenQueueSize()))
+		if (thePosition < 0 || thePosition >= int(tokenQueueSize()))
 		{
 			throw InvalidRelativeTokenPosition(theOffset);
 		}
@@ -1322,7 +1329,7 @@ public:
 	PatternMapValueType
 	getPattern(int	thePatternPosition) const
 	{
-		assert(static_cast<int>(patternMapSize()) > thePatternPosition);
+		assert(int(patternMapSize()) > thePatternPosition);
 
 		return m_patternMap[thePatternPosition];
 	}

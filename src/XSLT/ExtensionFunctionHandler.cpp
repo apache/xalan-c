@@ -78,7 +78,7 @@
  * @author Sanjiva Weerawarana (sanjiva@watson.ibm.com)
  */
 
-ExtensionFunctionHandler::ExtensionFunctionHandler(const DOMString& namespaceUri) :
+ExtensionFunctionHandler::ExtensionFunctionHandler(const XalanDOMString&		namespaceUri) :
 	m_namespaceUri(namespaceUri),
 	m_scriptLang(),
 	m_scriptSrc(),
@@ -97,26 +97,12 @@ ExtensionFunctionHandler::~ExtensionFunctionHandler()
 
 
 
-/////////////////////////////////////////////////////////////////////////
-
-/**
- * Construct a new extension namespace handler given all the information
- * needed. 
- * 
- * @param namespaceUri the extension namespace URI that I'm implementing
- * @param funcNames    string containing list of functions of extension NS
- * @param lang         language of code implementing the extension
- * @param srcURL       value of src attribute (if any) - treated as a URL
- *                     or a classname depending on the value of lang. If
- *                     srcURL is not null, then scriptSrc is ignored.
- * @param scriptSrc    the actual script code (if any)
- */
 ExtensionFunctionHandler::ExtensionFunctionHandler (
-									const DOMString& namespaceUri,
-									const DOMString& funcNames,
-									const DOMString& lang,
-									const DOMString& srcURL,
-									const DOMString& src) :
+			const XalanDOMString&	namespaceUri,
+			const XalanDOMString&	funcNames,
+			const XalanDOMString&	lang,
+			const XalanDOMString&	srcURL,
+			const XalanDOMString&	src) :
 	m_namespaceUri(namespaceUri),
 	m_scriptLang(lang),
 	m_scriptSrc(src),
@@ -128,129 +114,85 @@ ExtensionFunctionHandler::ExtensionFunctionHandler (
 	setFunctions (funcNames);
 }
 
-/////////////////////////////////////////////////////////////////////////
-// Main API
-/////////////////////////////////////////////////////////////////////////
 
-/**
- * Set function local parts of extension NS.
- *
- * @param functions whitespace separated list of function names defined
- *        by this extension namespace.
- */
-void ExtensionFunctionHandler::setFunctions (const DOMString& funcNames) 
+
+void
+ExtensionFunctionHandler::setFunctions(const XalanDOMString&	funcNames) 
 {
 	if (isEmpty(funcNames)) 
 	{
 		return;
 	}
-	StringTokenizer st(funcNames, " \t\n\r", false);
-	while (st.hasMoreTokens ()) 
+
+	StringTokenizer		st(funcNames, " \t\n\r", false);
+
+	while (st.hasMoreTokens() == true)
 	{
-		DOMString tok = st.nextToken();
-		m_functions.insert(tok);
+		m_functions.insert(st.nextToken());
 	}
 }
 
-/////////////////////////////////////////////////////////////////////////
 
-/**
- * Set the script data for this extension NS. If srcURL is !null then
- * the script body is read from that URL. If not the scriptSrc is used
- * as the src. This method does not actually execute anything - that's
- * done when the component is first hit by the user by an element or 
- * a function call.
- *
- * @param lang      language of the script.
- * @param srcURL    value of src attribute (if any) - treated as a URL
- *                  or a classname depending on the value of lang. If
- *                  srcURL is not null, then scriptSrc is ignored.
- * @param scriptSrc the actual script code (if any)
- */
-void ExtensionFunctionHandler::setScript (const DOMString& lang,
-							const DOMString& srcURL,
-							const DOMString& scriptSrc) 
+void
+ExtensionFunctionHandler::setScript(
+			const XalanDOMString&	lang,
+			const XalanDOMString&	srcURL,
+			const XalanDOMString&	scriptSrc)
 {
 	m_scriptLang = lang;
 	m_scriptSrcURL = srcURL;
 	m_scriptSrc = scriptSrc;
 }
 
-/////////////////////////////////////////////////////////////////////////
 
-/**
- * Tests whether a certain function name is known within this namespace.
- *
- * @param function name of the function being tested
- *
- * @return true if its known, false if not.
- */
-bool ExtensionFunctionHandler::isFunctionAvailable (const DOMString& function) 
+
+bool
+ExtensionFunctionHandler::isFunctionAvailable (const XalanDOMString&	function) const
 {
 	return m_functions.find(function) != m_functions.end();
 }
 
-/////////////////////////////////////////////////////////////////////////
 
-/**
- * Process a call to a function.
- *
- * @param funcName Function name.
- * @param args     The arguments of the function call.
- *
- * @return the return value of the function evaluation.
- *
- * @exception XSLProcessorException thrown if something goes wrong 
- *            while running the extension handler.
- * @exception MalformedURLException if loading trouble
- * @exception FileNotFoundException if loading trouble
- * @exception IOException           if loading trouble
- * @exception SAXException          if parsing trouble
- */
+
 XObject*
 ExtensionFunctionHandler::callFunction(
-			const DOMString&	/* funcName */,
-			const ArgVector&	/* args */)
+			const XalanDOMString&	/* funcName */,
+			const ArgVectorType&	/* args */)
 {
 	assert(0);	// @@ TODO: Not implemented
+
 	if (!m_componentStarted) 
 	{
-		startupComponent ();
+		startupComponent();
 	}
 
-	// System.out.println("Extensions not implemented!");
 	return 0;
 }
 
-/////////////////////////////////////////////////////////////////////////
-// Private/Protected Functions
-/////////////////////////////////////////////////////////////////////////
 
-/**
- * Start the component up by executing any script that needs to run
- * at startup time. This needs to happen before any functions can be
- * called on the component. 
- * 
- * @exception XPathProcessorException if something bad happens.
- */
 
-void ExtensionFunctionHandler::startupComponent()
+void
+ExtensionFunctionHandler::startupComponent()
 {
 	// special case the javaclass engine - the scriptSrcURL is 
 	// the class name to run. If it starts with class: then use the
 	// class object with that name instead of init'ing it as the
 	// target of the calls later
-	if (m_scriptLang.equals ("javaclass")) 
+	if (equals(m_scriptLang, "javaclass")) 
 	{
 		try 
 		{
-			DOMString cname = m_scriptSrcURL;
+			XalanDOMString	cname = m_scriptSrcURL;
+
 			bool isClass = false;
-			if (startsWith (m_scriptSrcURL, "class:")) 
+
+			if (startsWith(m_scriptSrcURL, "class:")) 
 			{
-				cname = substring (m_scriptSrcURL, 6);
+				cname = substring(m_scriptSrcURL, 6);
+
 				isClass = true;
 			}
+
 			// @@ JMD: Can't do this in C++
 			/*
 			Class cl = Class.forName (cname);
@@ -301,5 +243,6 @@ void ExtensionFunctionHandler::startupComponent()
 		throw new XPathProcessorException (bsfe.getMessage (), bsfe);
 	}
 	*/
+
 	m_componentStarted = true;
 }

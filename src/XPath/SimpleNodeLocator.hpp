@@ -99,14 +99,6 @@ public:
 	// These methods are inherited from XLocator ...
 
 	virtual const XObject*
-	connectToNodes(
-			const XPath&					xpath,
-			XPathExecutionContext&			executionContext,
-			XalanNode& 						context, 
-			int 							opPos,
-			const ConnectArgsVectorType&	connectArgs);
-  
-	virtual const XObject*
 	locationPath(
 			const XPath&			xpath,
 			XPathExecutionContext&	executionContext,

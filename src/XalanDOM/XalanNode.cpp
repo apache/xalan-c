@@ -67,7 +67,7 @@ unsigned long	XalanNode::s_instanceCount = 0;
 
 #if defined(XALAN_NO_NAMESPACES)
 
-typedef set<XalanNode*>			InstanceSetType;
+typedef set<XalanNode*, less<XalanNode*> >	InstanceSetType;
 
 #else
 

@@ -75,7 +75,7 @@
 
 
 
-#include "NodeRefListBase.hpp"
+#include "NodeRefList.hpp"
 
 
 
@@ -136,8 +136,15 @@ XObject::rtree(XPathExecutionContext&	/* executionContext */) const
 	throw XObjectInvalidCastException(getTypeString(), XALAN_STATIC_UCODE_STRING("result tree fragment"));
 
 	// This is just a dummy value to satisfy the compiler.
+#if defined(XALAN_OLD_STYLE_CASTS)
+	return *((ResultTreeFragBase*)0);
+#else
 	return *static_cast<ResultTreeFragBase*>(0);
+#endif
 }
+
+
+static const NodeRefList	s_dummyList;
 
 
 
@@ -148,7 +155,7 @@ XObject::nodeset() const
 
 	// error will throw, so this is just a dummy
 	// value to satisfy the compiler.
-	return *static_cast<NodeRefListBase*>(0);
+	return s_dummyList;
 }
 
 

@@ -216,14 +216,17 @@ private:
 	XPathFactory&						m_xpathFactory;
 
 #if defined(XALAN_NO_NAMESPACES)
-	auto_ptr<XPathProcessor>			m_xpathProcessor;
+	typedef auto_ptr<XPathProcessor>		XPathProcessAutoPtr;
 
-	typedef set<StylesheetRoot*>		StylesheetSetType;
+	typedef set<StylesheetRoot*,
+				less<StylesheetRoot*> >		StylesheetSetType;
 #else
-	std::auto_ptr<XPathProcessor>		m_xpathProcessor;
+	typedef std::auto_ptr<XPathProcessor>	XPathProcessAutoPtr;
 
-	typedef std::set<StylesheetRoot*>	StylesheetSetType;
+	typedef std::set<StylesheetRoot*>		StylesheetSetType;
 #endif
+
+	XPathProcessAutoPtr					m_xpathProcessor;
 
 	StylesheetSetType					m_stylesheets;
 };

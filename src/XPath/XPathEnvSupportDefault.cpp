@@ -471,9 +471,9 @@ XPathEnvSupportDefault::problem(
 {
 	cerr << msg
 		 << ", at line number "
-		 << static_cast<long>(lineNo)
+		 << lineNo
 		 << " at offset "
-		 << static_cast<long>(charOffset)
+		 << charOffset
 		 << endl;
 
 	return classification == XPathEnvSupport::eError ? true : false;
@@ -493,9 +493,9 @@ XPathEnvSupportDefault::problem(
 {
 	cerr << msg
 		 << ", at line number "
-		 << static_cast<long>(lineNo)
+		 << lineNo
 		 << " at offset "
-		 << static_cast<long>(charOffset)
+		 << charOffset
 		 << endl;
 
 	return classification == XPathEnvSupport::eError ? true :false;

@@ -199,8 +199,10 @@ NodeRefList::clone() const
 bool
 NodeRefList::checkForDuplicates() const
 {
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::set;
+#if defined(XALAN_NO_NAMESPACES)
+	typedef set<const XalanNode*, less<const XalanNode*> >	NodeSetType;
+#else
+	typedef std::set<const XalanNode*>	NodeSetType;
 #endif
 
 	bool	fResult = false;
@@ -209,7 +211,7 @@ NodeRefList::checkForDuplicates() const
 
 	if (theLength > 0)
 	{
-		set<const XalanNode*>	theNodes;
+		NodeSetType		theNodes;
 
 		for (unsigned i = 0; i < theLength && fResult == false; ++i)
 		{

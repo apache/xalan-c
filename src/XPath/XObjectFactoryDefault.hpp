@@ -142,7 +142,7 @@ public:
 			bool								fOptimize = true);
 
 #if defined(XALAN_NO_NAMESPACES)
-	typedef set<const XObject*>		CollectionType;
+	typedef set<const XObject*, less<const XObject*> >	CollectionType;
 #else
 	typedef std::set<const XObject*>	CollectionType;
 #endif

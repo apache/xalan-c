@@ -113,7 +113,7 @@ struct XSLProcessorContext
  * 
  * @param namespaceUri the extension namespace URI that I'm implementing
  */
-ExtensionNSHandler::ExtensionNSHandler(const XalanDOMString&		namespaceUri) :
+ExtensionNSHandler::ExtensionNSHandler(const XalanDOMString&	namespaceUri) :
 	ExtensionFunctionHandler(namespaceUri),
 	m_elements(),
 	m_componentDescLoaded(false)
@@ -137,121 +137,80 @@ ExtensionNSHandler::ExtensionNSHandler(const XalanDOMString&		namespaceUri) :
  * @param scriptSrc		the actual script code (if any)
  */
 ExtensionNSHandler::ExtensionNSHandler (
-	const XalanDOMString& namespaceUri,
-	const XalanDOMString& elemNames,
-	const XalanDOMString& funcNames,
-	const XalanDOMString& lang,
-	const XalanDOMString& srcURL,
-	const XalanDOMString& src) :
-		ExtensionFunctionHandler (namespaceUri, funcNames, lang, srcURL, src),
+			const XalanDOMString& namespaceUri,
+			const XalanDOMString& elemNames,
+			const XalanDOMString& funcNames,
+			const XalanDOMString& lang,
+			const XalanDOMString& srcURL,
+			const XalanDOMString& src) :
+	ExtensionFunctionHandler(namespaceUri, funcNames, lang, srcURL, src),
 	m_elements(),
 	m_componentDescLoaded(true)
 		 
 {
-	setElements (elemNames);
+	setElements(elemNames);
 }
 
 
 
-/////////////////////////////////////////////////////////////////////////
-// Main API
-/////////////////////////////////////////////////////////////////////////
-
-/*
-* Set function local parts of extension NS. Super does the work; I
-* just record that a component desc has been loaded.
-*
-* @param functions whitespace separated list of function names defined
-*				by this extension namespace.
-*/
-void ExtensionNSHandler::setFunctions (const XalanDOMString& funcNames)
+void
+ExtensionNSHandler::setFunctions(const XalanDOMString&	funcNames)
 {
-    ExtensionFunctionHandler::setFunctions (funcNames);
+    ExtensionFunctionHandler::setFunctions(funcNames);
+
     m_componentDescLoaded = true;
 }
 
-/////////////////////////////////////////////////////////////////////////
 
-/**
- * Set the script data for this extension NS. Deferred to super for
- * actual work - I only record that a component desc has been loaded.
- *
- * @param lang			language of the script.
- * @param srcURL		value of src attribute (if any) - treated as a URL
- *									or a classname depending on the value of lang. If
- *									srcURL is not null, then scriptSrc is ignored.
- * @param scriptSrc the actual script code (if any)
- */
-void ExtensionNSHandler::setScript (const XalanDOMString& lang, const XalanDOMString& srcURL, const XalanDOMString& scriptSrc)
+
+void
+ExtensionNSHandler::setScript(
+			const XalanDOMString&	lang,
+			const XalanDOMString&	srcURL,
+			const XalanDOMString&	scriptSrc)
 {
-    ExtensionFunctionHandler::setScript (lang, srcURL, scriptSrc);
+    ExtensionFunctionHandler::setScript(lang, srcURL, scriptSrc);
+
     m_componentDescLoaded = true;
 }
 
-/////////////////////////////////////////////////////////////////////////
 
-/**
- * Set element local parts of extension NS.
- *
- * @param elemNames whitespace separated list of element names defined
- *				by this extension namespace.
- */
-void ExtensionNSHandler::setElements (const XalanDOMString& elemNames)
+
+void
+ExtensionNSHandler::setElements(const XalanDOMString&	elemNames)
 {
-    if (elemNames.length() == 0) 
-      return;
-    StringTokenizer st(elemNames, " \t\n\r", false);
-    while (st.hasMoreTokens()) 
-    {
-      XalanDOMString tok = st.nextToken();
-      m_elements.insert(tok); // just stick it in there basically
-    }
-    m_componentDescLoaded = true;
+    if (length(elemNames) != 0)
+	{
+		StringTokenizer		st(elemNames, " \t\n\r", false);
+
+		while (st.hasMoreTokens() == true)
+		{
+		  m_elements.insert(st.nextToken()); // just stick it in there basically
+		}
+	
+		m_componentDescLoaded = true;
+	}
 }
 
-/////////////////////////////////////////////////////////////////////////
 
-/**
- * Tests whether a certain element name is known within this namespace.
- * @param element name of the element being tested
- * @return true if its known, false if not.
- */
-bool ExtensionNSHandler::isElementAvailable (const XalanDOMString& element)
+
+bool
+ExtensionNSHandler::isElementAvailable(const XalanDOMString&	element) const
 {
     return (m_elements.find(element) != m_elements.end());
 }
 
-/////////////////////////////////////////////////////////////////////////
 
-/**
- * Process a call to this extension namespace via an element. As a side
- * effect, the results are sent to the XSLTProcessor's result tree.
- *
- * @param localPart			Element name's local part.
- * @param element				The extension element being processed.
- * @param processor			Handle to XSLTProcessor.
- * @param stylesheetTree The compiled stylesheet tree.
- * @param mode					 The current mode.
- * @param sourceTree		 The root of the source tree (but don't assume
- *											 it's a Document).
- * @param sourceNode		 The current context node.
- *
- * @exception XSLProcessorException thrown if something goes wrong 
- *						while running the extension handler.
- * @exception MalformedURLException if loading trouble
- * @exception FileNotFoundException if loading trouble
- * @exception IOException					 if loading trouble
- * @exception SAXException					if parsing trouble
- */
+
 void
 ExtensionNSHandler::processElement(
 			StylesheetExecutionContext&		executionContext,
 			const XalanDOMString&			localPart,
 			const XalanElement*				/* element */,
-			Stylesheet&						stylesheetTree, 
-			const XalanNode*				sourceTree,
-			const XalanNode*				sourceNode,
-			const QName&					mode)
+			Stylesheet&						/* stylesheetTree */, 
+			const XalanNode*				/* sourceTree */,
+			const XalanNode*				/* sourceNode */,
+			const QName&					/* mode */)
 {
 	const XObject*	result = 0;
 
@@ -261,7 +220,7 @@ ExtensionNSHandler::processElement(
 		{
 			startupComponent();
 
-			ExtensionFunctionHandler::ArgVector argv;
+			ArgVectorType	argv;
 			
 //			XSLProcessorContext xpc(processor,
 //					stylesheetTree, sourceTree, sourceNode, mode);
@@ -295,17 +254,6 @@ ExtensionNSHandler::processElement(
 
 
 
-/////////////////////////////////////////////////////////////////////////
-// Private/Protected Functions
-/////////////////////////////////////////////////////////////////////////
-
-/**
- * Start the component up by executing any script that needs to run
- * at startup time. This needs to happen before any functions can be
- * called on the component.
- * 
- * @exception XPathProcessorException if something bad happens.
- */
 void
 ExtensionNSHandler::startupComponent()
 {
@@ -313,7 +261,7 @@ ExtensionNSHandler::startupComponent()
 	{
 		try 
 		{
-			loadComponentDescription ();
+			loadComponentDescription();
 		}
 		catch (...) 
 		// catch (Exception e) 
@@ -322,21 +270,12 @@ ExtensionNSHandler::startupComponent()
 			//@@ TODO: Error reporting, or throw
 		}
 	}
-	ExtensionFunctionHandler::startupComponent ();
+
+	ExtensionFunctionHandler::startupComponent();
 }
 
-/////////////////////////////////////////////////////////////////////////
 
-/**
- * Load the component spec for this extension namespace taking the URI
- * of this namespace as the URL to read from.
- * 
- * @exception XSLProcessorException if something bad happens.
- * @exception MalformedURLException if loading trouble
- * @exception FileNotFoundException if loading trouble
- * @exception IOException					 if loading trouble
- * @exception SAXException					if parsing trouble
- */
+
 void
 ExtensionNSHandler::loadComponentDescription()
 {
@@ -393,25 +332,15 @@ ExtensionNSHandler::loadComponentDescription()
 	m_componentDescLoaded = true;
 */
 }
-/////////////////////////////////////////////////////////////////////////
 
-/**
- * extract the text nodes and CDATA content children of the given
- * elem and return as a string. Any other types of node children
- * are ignored
- *
- * @param elem element whose text and cdata children are to be 
- *				concatenated together.
- *
- * @return string resulting from concatenating the text/cdata child
- *				 nodes' values.
- */
+
+
 XalanDOMString
 ExtensionNSHandler::getScriptString(const XalanElement&		elem)
 {
 	XalanDOMString strBuf;
 
-	for (const XalanNode*	n = elem.getFirstChild (); n != 0; n = n->getNextSibling ()) 
+	for (const XalanNode*	n = elem.getFirstChild (); n != 0; n = n->getNextSibling())
 	{
 		switch (n->getNodeType()) 
 		{
@@ -419,6 +348,7 @@ ExtensionNSHandler::getScriptString(const XalanElement&		elem)
 		case XalanNode::CDATA_SECTION_NODE:
 			strBuf += n->getNodeValue();
 			break;
+
 		default:
 			break;
 		}

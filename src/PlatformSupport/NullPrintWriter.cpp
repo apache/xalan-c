@@ -130,10 +130,13 @@ NullPrintWriter::write(
 }
 
 
+
+#if !defined(XALAN_BOOL_AS_INT)
 void
 NullPrintWriter::print(bool	/* b */)
 {
 }
+#endif
 
 
 
@@ -197,10 +200,12 @@ NullPrintWriter::println()
 
 
 
+#if !defined(XALAN_BOOL_AS_INT)
 void
 NullPrintWriter::println(bool	/* x */)
 {
 }
+#endif
 
 
 

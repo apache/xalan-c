@@ -312,7 +312,7 @@ DoubleSupport::modulus(
 	}
 	else
 	{
-		return static_cast<long>(theLHS) % static_cast<long>(theRHS);
+		return long(theLHS) % long(theRHS);
 	}
 }
 

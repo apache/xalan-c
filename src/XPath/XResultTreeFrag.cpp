@@ -163,7 +163,11 @@ XResultTreeFrag::boolean() const
 		if(XalanNode::TEXT_NODE == theCurrentNode->getNodeType())
 		{
 			const XalanText* const	theTextNode =
+#if defined(XALAN_OLD_STYLE_CASTS)
+				(const XalanText*)theCurrentNode;
+#else
 				static_cast<const XalanText*>(theCurrentNode);
+#endif
 
 			if (theTextNode->isIgnorableWhitespace() ||
 			    length(trim(theTextNode->getData())) == 0)

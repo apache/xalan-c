@@ -159,11 +159,11 @@ public:
         }
 		else if (length(theResultString) > 0)
 		{
-#if !defined(XALAN_NO_NAMESPACES)
-			using std::set;
+#if defined(XALAN_NO_NAMESPACES)
+			typedef set<XalanDOMString, less<XalanDOMString> >	TokenSetType;
+#else
+			typedef std::set<XalanDOMString>	TokenSetType;
 #endif
-
-			typedef set<XalanDOMString>		TokenSetType;
 
 			// This set will hold tokens that we've previously found, so
 			// we can avoid looking more than once.

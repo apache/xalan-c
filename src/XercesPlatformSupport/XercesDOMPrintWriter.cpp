@@ -197,6 +197,7 @@ XercesDOMPrintWriter::write(
 
 
 
+#if !defined(XALAN_BOOL_AS_INT)
 void
 XercesDOMPrintWriter::print(bool	b)
 {
@@ -209,6 +210,7 @@ XercesDOMPrintWriter::print(bool	b)
 		print(XALAN_STATIC_UCODE_STRING("false"));
 	}
 }
+#endif
 
 
 
@@ -289,6 +291,7 @@ XercesDOMPrintWriter::println()
 
 
 
+#if !defined(XALAN_BOOL_AS_INT)
 void
 XercesDOMPrintWriter::println(bool	b)
 {
@@ -296,6 +299,7 @@ XercesDOMPrintWriter::println(bool	b)
 
 	println();
 }
+#endif
 
 
 

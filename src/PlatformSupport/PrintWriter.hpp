@@ -126,8 +126,10 @@ public:
 
 	// Output functions which are new...
 
+#if !defined(XALAN_BOOL_AS_INT)
 	virtual void
 	print(bool	b) = 0;
+#endif
 
 	virtual void
 	print(char	c) = 0;
@@ -155,8 +157,10 @@ public:
 	virtual void
 	println() = 0;
 
+#if !defined(XALAN_BOOL_AS_INT)
 	virtual void
-	println(bool	x) = 0;
+	println(bool	b) = 0;
+#endif
 
 	virtual void
 	println(char	x) = 0;

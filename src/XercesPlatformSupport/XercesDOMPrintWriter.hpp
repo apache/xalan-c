@@ -121,8 +121,10 @@ public:
 		  unsigned int		theOffset = 0,
 		  unsigned int		theLength = UINT_MAX);
 
+#if !defined(XALAN_BOOL_AS_INT)
 	virtual void
 	print(bool	b);
+#endif
 
 	virtual void
 	print(char	c);
@@ -150,8 +152,10 @@ public:
 	virtual void
 	println();
 
+#if !defined(XALAN_BOOL_AS_INT)
 	virtual void
 	println(bool	b);
+#endif
 
 	virtual void
 	println(char	c);

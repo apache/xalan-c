@@ -155,11 +155,13 @@ FunctionKey::execute(
 
 			if (nRefs > 0)
 			{
-#if !defined(XALAN_NO_NAMESPACES)
-				using std::set;
+#if defined(XALAN_NO_NAMESPACES)
+				typedef set<XalanDOMString, less<XalanDOMString> >	StringSetType;
+#else
+				typedef std::set<XalanDOMString>	StringSetType;
 #endif
 
-				set<XalanDOMString>		usedrefs;
+				StringSetType	usedrefs;
 
 				for(unsigned int i = 0; i < nRefs; i++)
 				{
