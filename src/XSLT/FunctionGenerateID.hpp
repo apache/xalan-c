@@ -82,13 +82,17 @@ public:
 	~FunctionGenerateID();
 
 	// These methods are inherited from XPath/Function ...
-	
+
 	virtual XObject*
 	execute(
-			XPathExecutionContext&			executionContext,
-			XalanNode*						context,
-			int								opPos,
-			const XObjectArgVectorType&		args);
+		XPathExecutionContext&			executionContext,
+		XalanNode*						context,			
+		const XObject*					arg1);
+
+	virtual XObject*
+	execute(
+		XPathExecutionContext&			executionContext,
+		XalanNode*						context);
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
 	virtual Function*
@@ -98,6 +102,9 @@ public:
 	clone() const;
 
 private:
+
+	const XalanDOMString
+	getError() const;
 
 	// Not implemented...
 	FunctionGenerateID&	operator=(const FunctionGenerateID&);

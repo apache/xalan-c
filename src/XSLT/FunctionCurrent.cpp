@@ -58,13 +58,6 @@
 
 
 
-#include <XPath/XObject.hpp>
-#include <XPath/XObjectFactory.hpp>
-#include <XPath/XPathExecutionContext.hpp>
-
-
-
-
 FunctionCurrent::FunctionCurrent()
 {
 }
@@ -79,21 +72,12 @@ FunctionCurrent::~FunctionCurrent()
 
 XObject*
 FunctionCurrent::execute(
-			XPathExecutionContext&			executionContext,
-			XalanNode*						context,
-			int								/* opPos */,
-			const XObjectArgVectorType&		args)
+		XPathExecutionContext&			executionContext,
+		XalanNode*						context)
 {
 	assert(executionContext.getCurrentNode() != 0);
 
-	if (args.size() != 0)
-	{
-		executionContext.error("The current() function does not take any arguments!",
-							   context);
-
-		return 0;
-	}
-	else if (context == 0)
+	if (context == 0)
 	{
 		executionContext.error("The current() function is not allowed in patterns!",
 							   context);
@@ -116,4 +100,12 @@ FunctionCurrent*
 FunctionCurrent::clone() const
 {
 	return new FunctionCurrent(*this);
+}
+
+
+
+const XalanDOMString
+FunctionCurrent::getError() const
+{
+	return "The current() function does not take any arguments!";
 }

@@ -84,9 +84,8 @@ public:
 	virtual XObject*
 	execute(
 			XPathExecutionContext&			executionContext,
-			XalanNode*						context,
-			int								opPos,
-			const XObjectArgVectorType&		args);
+			XalanNode*						context,			
+			const XObject*					arg1);
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
 	virtual Function*
@@ -96,6 +95,9 @@ public:
 	clone() const;
 
 private:
+
+	virtual const XalanDOMString
+	getError() const;
 
 	// Not implemented...
 	FunctionSystemProperty&

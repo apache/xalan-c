@@ -78,9 +78,7 @@
 
 #include <XPath/MutableNodeRefList.hpp>
 #include <XPath/NodeRefListBase.hpp>
-#include <XPath/XObject.hpp>
-#include <XPath/XObjectFactory.hpp>
-#include <XPath/XPathExecutionContext.hpp>
+
 
 
 #if !defined(XALAN_NO_NAMESPACES)
@@ -104,19 +102,14 @@ FunctionKey::~FunctionKey()
 
 XObject*
 FunctionKey::execute(
-			XPathExecutionContext&			executionContext,
-			XalanNode*						context,
-			int								/* opPos */,
-			const XObjectArgVectorType&		args)
+		XPathExecutionContext&			executionContext,
+		XalanNode*						context,			
+		const XObject*					arg1,
+		const XObject*					arg2)
 {
-	if (args.size() != 2)
-	{
-		executionContext.error("The key() function takes two arguments!",
-							   context);
+	assert(arg1 != 0 || arg2 != 0);	
 
-		return 0;
-	}
-	else if (context == 0)
+	if (context == 0)
 	{
 		executionContext.error("The key() function requires a non-null context node!",
 							   context);
@@ -142,13 +135,12 @@ FunctionKey::execute(
 
 		assert(executionContext.getPrefixResolver() != 0);
 
-		const XalanDOMString	keyname = args[0]->str();
+		const XalanDOMString	keyname = arg1->str();
 
-		const XObject* const	arg = args[1];
-		assert(arg != 0);
+		assert(arg2 != 0);
 
 		const bool				argIsNodeSet =
-				XObject::eTypeNodeSet == arg->getType() ? true : false;
+				XObject::eTypeNodeSet == arg2->getType() ? true : false;
 
 		typedef XPathExecutionContext::BorrowReturnMutableNodeRefList	BorrowReturnMutableNodeRefList;
 
@@ -157,7 +149,7 @@ FunctionKey::execute(
 
 		if(argIsNodeSet == true)
 		{
-			const NodeRefListBase&	theNodeSet = arg->nodeset();
+			const NodeRefListBase&	theNodeSet = arg2->nodeset();
 
 			const unsigned int		nRefs = theNodeSet.getLength();
 
@@ -197,7 +189,7 @@ FunctionKey::execute(
 		}
 		else
 		{
-			const XalanDOMString			ref = arg->str();
+			const XalanDOMString			ref = arg2->str();
 
 					executionContext.getNodeSetByKey(docContext,
 											keyname,
@@ -220,4 +212,12 @@ FunctionKey*
 FunctionKey::clone() const
 {
 	return new FunctionKey(*this);
+}
+
+
+
+const XalanDOMString
+FunctionKey::getError() const
+{
+	return "The key() function takes two arguments!";
 }

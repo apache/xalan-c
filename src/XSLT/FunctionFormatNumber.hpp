@@ -82,7 +82,7 @@ class XPathExecutionContext;
 
 
 
-// Class that implements the XSLT function format-number.
+// Implementation of the XSLT function format-number.
 //
 class XALAN_XSLT_EXPORT FunctionFormatNumber : public Function
 {
@@ -98,9 +98,17 @@ public:
 	virtual XObject*
 	execute(
 			XPathExecutionContext&			executionContext,
-			XalanNode*						context,
-			int								opPos,
-			const XObjectArgVectorType&		args);
+			XalanNode*						context,			
+			const XObject*					arg1,
+			const XObject*					arg2);
+
+	virtual XObject*
+	execute(
+			XPathExecutionContext&			executionContext,
+			XalanNode*						context,			
+			const XObject*					arg1, 
+			const XObject*					arg2,
+			const XObject*					arg3);
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
 	virtual Function*
@@ -120,6 +128,9 @@ protected:
 			const XalanDecimalFormatSymbols*	theDFS);
 
 private:
+
+	const XalanDOMString
+	getError() const;
 
 	// Not implemented...
 	FunctionFormatNumber&

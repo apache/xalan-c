@@ -67,9 +67,6 @@
 
 
 #include <XPath/NodeRefListBase.hpp>
-#include <XPath/XObject.hpp>
-#include <XPath/XObjectFactory.hpp>
-#include <XPath/XPathExecutionContext.hpp>
 
 
 
@@ -113,28 +110,45 @@ getSuffix(const XalanNode*	theNode)
 
 XObject*
 FunctionGenerateID::execute(
-			XPathExecutionContext&			executionContext,
-			XalanNode*						context,
-			int								/* opPos */,
-			const XObjectArgVectorType&		args)
+		XPathExecutionContext&			executionContext,
+		XalanNode*						context,			
+		const XObject*					arg1)
 {
-	XalanNode*	theContext = context;
+	assert(arg1 != 0);	
 
-	if (args.size() > 0)
+	const NodeRefListBase&	theNodeList = arg1->nodeset();
+
+	if (theNodeList.getLength() > 0)
 	{
-		const NodeRefListBase&	nl = args[0]->nodeset();
-
-		if (nl.getLength() > 0)
-			theContext = nl.item(0);
-		else
-			theContext = 0;
+		context = theNodeList.item(0);
 	}
+	else
+	{	
+		context = 0;
+	}
+
+
+	return execute(executionContext, context);
+}
+
+
+
+XObject*
+FunctionGenerateID::execute(
+		XPathExecutionContext&			executionContext,
+		XalanNode*						context)
+{
 
 	XalanDOMString id;
 
-	if (0 != theContext)
+	//if (context == 0)
+	//{
+	//	executionContext.error("The generate-id function requires a non-null context node!");
+	//}
+
+	if (context != 0)
 	{
-		const XalanDOMString	theSuffix = getSuffix(theContext);
+		const XalanDOMString	theSuffix = getSuffix(context);
 		assert(length(theSuffix) != 0);
 
 		reserve(id, m_prefixLength + length(theSuffix) + 1);
@@ -157,3 +171,12 @@ FunctionGenerateID::clone() const
 {
 	return new FunctionGenerateID(*this);
 }
+
+
+
+const XalanDOMString
+FunctionGenerateID::getError() const
+{
+	return "The generate-id function takes zero or one arguments!";
+}
+

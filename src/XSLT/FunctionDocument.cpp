@@ -72,9 +72,6 @@
 
 
 #include <XPath/PrefixResolver.hpp>
-#include <XPath/XObject.hpp>
-#include <XPath/XObjectFactory.hpp>
-#include <XPath/XPathExecutionContext.hpp>
 
 
 
@@ -143,19 +140,16 @@ getDoc(
 
 XObject*
 FunctionDocument::execute(
-			XPathExecutionContext&			executionContext,
-			XalanNode*						context,
-			int								/* opPos */,
-			const XObjectArgVectorType&		args)
+		XPathExecutionContext&			executionContext,
+		XalanNode*						context,			
+		const XObject*					arg1,
+		const XObject*					arg2)
 {
-	if (args.size() == 0)
-	{
-		executionContext.error("The document() function requires at least one argument!",
-							   context);
+	assert(arg1 != 0 || arg2 != 0);	
 
-		return 0;
-	}
-	else if (context == 0)
+	XalanDOMString				base;
+
+	if (context == 0)
 	{
 		executionContext.error("The document() function requires a non-null context node!",
 							   context);
@@ -164,139 +158,162 @@ FunctionDocument::execute(
 	}
 	else
 	{
-		XalanDocument* const	docContext = XalanNode::DOCUMENT_NODE == context->getNodeType() ?
-#if defined(XALAN_OLD_STYLE_CASTS)
-										(XalanDocument*)context :
-#else
-										static_cast<XalanDocument*>(context) :
-#endif
-											context->getOwnerDocument();
-
-		const XObject* const		arg = args[0];
-		assert(arg != 0);
-
-		const XObject::eObjectType	theType = arg->getType();
-
-		XalanDOMString				base;
-
-		if(args.size() == 1)
+		if(XObject::eTypeNodeSet == arg2->getType())
 		{
-			assert(executionContext.getPrefixResolver() != 0);
+			const NodeRefListBase&	nodeset = arg2->nodeset();
 
-			base = executionContext.getPrefixResolver()->getURI();
-		}
-		else
-		{
-			const XObject* const	arg2 = args[1];
-			assert(arg2 != 0);
-
-			if(XObject::eTypeNodeSet == arg2->getType())
+			if (nodeset.getLength() == 0)
 			{
-				const NodeRefListBase&	nodeset = arg2->nodeset();
+				executionContext.warn("Ignoring the empty node-set provided as the second argument to the function document().",
+									  context);
 
-				if (nodeset.getLength() == 0)
-				{
-					executionContext.warn("Ignoring the empty node-set provided as the second argument to the function document().",
-										  context);
+				assert(executionContext.getPrefixResolver() != 0);
 
-					assert(executionContext.getPrefixResolver() != 0);
-
-					base = executionContext.getPrefixResolver()->getURI();
-				}
-				else
-				{
-					XalanNode* const		baseNode =
-								nodeset.item(0);
-					assert(baseNode != 0);
-
-					XalanDocument* const	baseDoc = XalanNode::DOCUMENT_NODE == baseNode->getNodeType() ?
-#if defined(XALAN_OLD_STYLE_CASTS)
-													(XalanDocument*)baseNode :
-#else
-													static_cast<XalanDocument*>(baseNode) :
-#endif
-														baseNode->getOwnerDocument();
-
-					base = executionContext.findURIFromDoc(baseDoc);
-				}
+				base = executionContext.getPrefixResolver()->getURI();
 			}
 			else
 			{
-				base = arg2->str();
+				XalanNode* const	baseNode =	nodeset.item(0);
+				assert(baseNode != 0);
+
+				XalanDocument* const	baseDoc = XalanNode::DOCUMENT_NODE == baseNode->getNodeType() ?
+#if defined(XALAN_OLD_STYLE_CASTS)
+					(XalanDocument*)baseNode :
+#else
+					static_cast<XalanDocument*>(baseNode) :
+#endif
+					baseNode->getOwnerDocument();
+
+				base = executionContext.findURIFromDoc(baseDoc);
 			}
 		}
-
-		typedef XPathExecutionContext::BorrowReturnMutableNodeRefList	BorrowReturnMutableNodeRefList;
-
-		// This list will hold the nodes...
-		BorrowReturnMutableNodeRefList	mnl(executionContext);
-
-		const unsigned int		nRefs = XObject::eTypeNodeSet == theType ?
-													arg->nodeset().getLength()
-													: 1;
-
-		for(unsigned int i = 0; i < nRefs; i++)
+		else
 		{
-			assert(XObject::eTypeNodeSet != theType ||
-								arg->nodeset().item(i) != 0);
+			base = arg2->str();
+		}
+	}
 
-			XalanDOMString	ref = XObject::eTypeNodeSet == theType ?
-													DOMServices::getNodeData(*arg->nodeset().item(i)) :
-													arg->str();
+	return execute(executionContext, context, arg1, &base, 2);
+}
 
-			// This is the case where the function was called with
-			// an empty string, which refers to the stylesheet itself.
-			if (nRefs == 1 && isEmpty(ref) == true && args.size() == 1)
+
+
+XObject*
+FunctionDocument::execute(
+		XPathExecutionContext&			executionContext,
+		XalanNode*						context,			
+		const XObject*					arg1)
+{
+	assert(arg1 != 0);	
+
+	if (context == 0)
+	{
+		executionContext.error("The document() function requires a non-null context node!",
+							   context);
+
+		return 0;
+	}
+
+	XalanDOMString				base;
+
+	assert(executionContext.getPrefixResolver() != 0);
+
+	base = executionContext.getPrefixResolver()->getURI();
+
+	return execute(executionContext, context, arg1, &base, 1);
+}
+
+
+
+XObject*
+FunctionDocument::execute(
+		XPathExecutionContext&			executionContext,
+		XalanNode*						context,			
+		const XObject*					arg,
+		XalanDOMString*					base,
+		int								argCount)
+{
+	typedef XPathExecutionContext::BorrowReturnMutableNodeRefList	BorrowReturnMutableNodeRefList;
+
+	// This list will hold the nodes...
+	BorrowReturnMutableNodeRefList	mnl(executionContext);
+
+	const XObject::eObjectType	theType = arg->getType();
+
+	XalanDocument* const	docContext = XalanNode::DOCUMENT_NODE == context->getNodeType() ?
+#if defined(XALAN_OLD_STYLE_CASTS)
+			(XalanDocument*)context :
+#else
+			static_cast<XalanDocument*>(context) :
+#endif
+			context->getOwnerDocument();
+
+	const unsigned int		nRefs = XObject::eTypeNodeSet == theType ?
+												arg->nodeset().getLength()
+												: 1;
+
+	for(unsigned int i = 0; i < nRefs; i++)
+	{
+		assert(XObject::eTypeNodeSet != theType ||
+							arg->nodeset().item(i) != 0);
+
+		XalanDOMString	ref = XObject::eTypeNodeSet == theType ?
+												DOMServices::getNodeData(*arg->nodeset().item(i)) :
+												arg->str();	
+
+		// This is the case where the function was called with
+		// an empty string, which refers to the stylesheet itself.
+		if (nRefs == 1 && isEmpty(ref) == true && argCount == 1)
+		{
+			ref = *base;
+		}
+
+		if(!isEmpty(ref))
+		{
+
+			if(docContext == 0)
 			{
-				ref = base;
+				executionContext.error("The context node does not have an owner document!");
 			}
 
-			if(!isEmpty(ref))
-			{
-				if(docContext == 0)
-				{
-					executionContext.error("The context node does not have an owner document!");
-				}
+			// From http://www.ics.uci.edu/pub/ietf/uri/rfc1630.txt
+			// A partial form can be distinguished from an absolute form in that the
+			// latter must have a colon and that colon must occur before any slash
+			// characters. Systems not requiring partial forms should not use any
+			// unencoded slashes in their naming schemes.  If they do, absolute URIs
+			// will still work, but confusion may result.
+			const unsigned int	theLength = length(ref);
 
-				// From http://www.ics.uci.edu/pub/ietf/uri/rfc1630.txt
-				// A partial form can be distinguished from an absolute form in that the
-				// latter must have a colon and that colon must occur before any slash
-				// characters. Systems not requiring partial forms should not use any
-				// unencoded slashes in their naming schemes.  If they do, absolute URIs
-				// will still work, but confusion may result.
-				const unsigned int	theLength = length(ref);
-
-				const unsigned int	indexOfColon = indexOf(ref, XalanUnicode::charColon);
-				unsigned int		indexOfSlash = indexOf(ref, XalanUnicode::charSolidus);
+			const unsigned int	indexOfColon = indexOf(ref, XalanUnicode::charColon);
+			unsigned int		indexOfSlash = indexOf(ref, XalanUnicode::charSolidus);
 
 #if defined(WIN32)				
-				const unsigned int	indexOfBackSlash = indexOf(ref, XalanUnicode::charReverseSolidus);
+			const unsigned int	indexOfBackSlash = indexOf(ref, XalanUnicode::charReverseSolidus);
 
-				if(indexOfBackSlash > indexOfSlash && indexOfBackSlash < theLength)
-				{
-					indexOfSlash = indexOfBackSlash;
-				}
+			if(indexOfBackSlash > indexOfSlash && indexOfBackSlash < theLength)
+			{
+				indexOfSlash = indexOfBackSlash;
+			}
 #endif				
 
-				if(indexOfColon < theLength && indexOfSlash < theLength && indexOfColon < indexOfSlash)
-				{
-					// The url (or filename, for that matter) is absolute.
-					clear(base);
-				}
+			if(indexOfColon < theLength && indexOfSlash < theLength && indexOfColon < indexOfSlash)
+			{
+				// The url (or filename, for that matter) is absolute.
+				clear(*base);
+			}
 
-				XalanDocument* const	newDoc = getDoc(executionContext, ref, base);
+			XalanDocument* const	newDoc = getDoc(executionContext, ref, *base);
 
-				if(newDoc != 0)
-				{
-					mnl->addNodeInDocOrder(newDoc, executionContext);
-				}
+			if(newDoc != 0)
+			{
+				mnl->addNodeInDocOrder(newDoc, executionContext);
 			}
 		}
-
-		assert(mnl->checkForDuplicates() == false);
-
-		return executionContext.getXObjectFactory().createNodeSet(mnl);
 	}
+
+	assert(mnl->checkForDuplicates() == false);
+
+	return executionContext.getXObjectFactory().createNodeSet(mnl);
 }
 
 
@@ -309,4 +326,12 @@ FunctionDocument*
 FunctionDocument::clone() const
 {
 	return new FunctionDocument(*this);
+}
+
+
+
+const XalanDOMString
+FunctionDocument::getError() const
+{
+	return "The document() function requires at least one argument!";
 }

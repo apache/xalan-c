@@ -68,7 +68,7 @@
 
 
 
-// Implements the XSLT current() function.
+// Implementation of the XSLT function document().
 //
 class XALAN_XSLT_EXPORT FunctionDocument : public Function
 {
@@ -80,13 +80,19 @@ public:
 	~FunctionDocument();
 
 	// These methods are inherited from XPath/Function ...
-	
+
 	virtual XObject*
 	execute(
-			XPathExecutionContext&			executionContext,
-			XalanNode*						context,
-			int								opPos,
-			const XObjectArgVectorType&		args);
+		XPathExecutionContext&			executionContext,
+		XalanNode*						context,			
+		const XObject*					arg1);
+
+	virtual XObject*
+	execute(
+		XPathExecutionContext&			executionContext,
+		XalanNode*						context,
+		const XObject*					arg1,		
+		const XObject*					arg2);
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
 	virtual Function*
@@ -96,6 +102,17 @@ public:
 	clone() const;
 
 private:
+
+	XObject*
+	execute(
+			XPathExecutionContext&			executionContext,
+			XalanNode*						context,			
+			const XObject*					arg,
+			XalanDOMString*					base,
+			int								argCount);
+
+	const XalanDOMString
+	getError() const;
 
 	// Not implemented...
 	FunctionDocument&

@@ -65,12 +65,6 @@
 
 
 
-#include <XPath/XObject.hpp>
-#include <XPath/XObjectFactory.hpp>
-#include <XPath/XPathExecutionContext.hpp>
-
-
-
 #include "Constants.hpp"
 
 
@@ -89,72 +83,71 @@ FunctionFormatNumber::~FunctionFormatNumber()
 
 XObject*
 FunctionFormatNumber::execute(
-			XPathExecutionContext&			executionContext,
-			XalanNode*						context,
-			int								/* opPos */,
-			const XObjectArgVectorType&		args)
+		XPathExecutionContext&			executionContext,
+		XalanNode*						context,			
+		const XObject*					arg1,
+		const XObject*					arg2)
 {
-	const XObjectArgVectorType::size_type	theSize =
-		args.size();
+	assert(arg1 != 0 || arg2 != 0);	
+	
+	const double						theNumber = arg1->num();
+	const XalanDOMString&				thePattern = arg2->str();
+	
+	const XalanDecimalFormatSymbols*	theDFS = 0;
 
-	if (theSize < 2 || theSize > 3)
+	if (theDFS == 0)
 	{
-		executionContext.error("The format-number() function takes two or three arguments!",
-							   context);
-
-		return 0;
+		theDFS = executionContext.getDecimalFormatSymbols(Constants::DEFAULT_DECIMAL_FORMAT);
 	}
-	else
-	{
-		assert(args[0] != 0);
-		assert(args[1] != 0);
-		assert(theSize == 2 || args[2] != 0);
 
-		const double						theNumber = args[0]->num();
-		const XalanDOMString&				thePattern = args[1]->str();
+	const XalanDOMString	theString = doFormat(
+					executionContext,
+					context,
+					theNumber,
+					thePattern,
+					theDFS);
 
-		const XalanDecimalFormatSymbols*	theDFS = 0;
-
-		if (theSize == 3)
-		{
-			const XalanDOMString&				theDecimalFormatName = args[2]->str();
-			assert(length(theDecimalFormatName) != 0);
-
-			theDFS = executionContext.getDecimalFormatSymbols(theDecimalFormatName);
-
-			if (theDFS == 0)
-			{
-				executionContext.warn("format-number:  Specified decimal-format element not found!!!",
-									  context);
-			}
-		}
-
-		if (theDFS == 0)
-		{
-			theDFS = executionContext.getDecimalFormatSymbols(Constants::DEFAULT_DECIMAL_FORMAT);
-		}
-
-		const XalanDOMString	theString = doFormat(
-						executionContext,
-						context,
-						theNumber,
-						thePattern,
-						theDFS);
-
-		return executionContext.getXObjectFactory().createString(theString);
-	}
+	return executionContext.getXObjectFactory().createString(theString);
 }
 
 
 
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-Function*
-#else
-FunctionFormatNumber*
-#endif
-FunctionFormatNumber::clone() const
+XObject*
+FunctionFormatNumber::execute(
+		XPathExecutionContext&			executionContext,
+		XalanNode*						context,			
+		const XObject*					arg1, 
+		const XObject*					arg2,
+		const XObject*					arg3)
 {
-	return new FunctionFormatNumber(*this);
+	assert(arg1 != 0 || arg2 != 0 || arg3 != 0);
+	
+	const double						theNumber = arg1->num();
+	const XalanDOMString&				thePattern = arg2->str();
+
+	const XalanDecimalFormatSymbols*	theDFS = 0;
+	
+	const XalanDOMString&				theDecimalFormatName = arg3->str();
+	assert(length(theDecimalFormatName) != 0);
+
+	theDFS = executionContext.getDecimalFormatSymbols(theDecimalFormatName);
+
+	if (theDFS == 0)
+	{
+		executionContext.warn("format-number:  Specified decimal-format element not found!!!",
+							  context);		
+		theDFS = executionContext.getDecimalFormatSymbols(Constants::DEFAULT_DECIMAL_FORMAT);
+	
+	}	
+
+	const XalanDOMString	theString = doFormat(
+					executionContext,
+					context,
+					theNumber,
+					thePattern,
+					theDFS);
+
+	return executionContext.getXObjectFactory().createString(theString);
 }
 
 
@@ -187,4 +180,24 @@ FunctionFormatNumber::doFormat(
 
 		return theFormatter.format(theNumber);
 	}
+}
+
+
+
+#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
+Function*
+#else
+FunctionFormatNumber*
+#endif
+FunctionFormatNumber::clone() const
+{
+	return new FunctionFormatNumber(*this);
+}
+
+
+
+const XalanDOMString
+FunctionFormatNumber::getError() const
+{
+	return "The format-number() function takes two or three arguments!";
 }

@@ -69,9 +69,6 @@
 
 #include <XPath/MutableNodeRefList.hpp>
 #include <XPath/NodeRefListBase.hpp>
-#include <XPath/XObject.hpp>
-#include <XPath/XObjectFactory.hpp>
-#include <XPath/XPathExecutionContext.hpp>
 
 
 
@@ -90,19 +87,13 @@ FunctionSystemProperty::~FunctionSystemProperty()
 
 XObject*
 FunctionSystemProperty::execute(
-			XPathExecutionContext&			executionContext,
-			XalanNode*						context,
-			int								/* opPos */,
-			const XObjectArgVectorType&		args)
+		XPathExecutionContext&			executionContext,
+		XalanNode*						/* context */,			
+		const XObject*					arg1)
 {
-	if (args.size() != 1)
-	{
-		executionContext.error("The system-property() function takes a single argument!", context);
+	assert(arg1 != 0);
 
-		return 0;
-	}
-
-	const XalanDOMString&	fullName = args[0]->str();
+	const XalanDOMString&	fullName = arg1->str();
 	const unsigned int		fullNameLength = length(fullName);
 	const unsigned int		indexOfNSSep = indexOf(fullName, XalanUnicode::charColon);
 
@@ -173,4 +164,12 @@ FunctionSystemProperty*
 FunctionSystemProperty::clone() const
 {
 	return new FunctionSystemProperty(*this);
+}
+
+
+
+const XalanDOMString
+FunctionSystemProperty::getError() const
+{
+	return "The system-property() function takes a single argument!";
 }

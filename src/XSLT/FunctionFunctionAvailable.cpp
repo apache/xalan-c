@@ -62,13 +62,6 @@
 
 
 
-#include <XPath/XObject.hpp>
-#include <XPath/XObjectFactory.hpp>
-#include <XPath/XPathExecutionContext.hpp>
-
-
-
-
 FunctionFunctionAvailable::FunctionFunctionAvailable()
 {
 }
@@ -83,18 +76,13 @@ FunctionFunctionAvailable::~FunctionFunctionAvailable()
 
 XObject*
 FunctionFunctionAvailable::execute(
-			XPathExecutionContext&			executionContext,
-			XalanNode*						context,
-			int								/* opPos */,
-			const XObjectArgVectorType&		args)
+		XPathExecutionContext&			executionContext,
+		XalanNode*						/* context */,			
+		const XObject*					arg1)
 {
-	if (args.size() != 1)
-	{
-		executionContext.error("The function-available() function takes one argument!",
-							   context);
-	}
+	assert(arg1 != 0);
 
-	const XalanDOMString&	fullName = args[0]->str();
+	const XalanDOMString&	fullName = arg1->str();
 
 	const unsigned int		nameLength = length(fullName);
 	const unsigned int		indexOfNSSep = indexOf(fullName, XalanUnicode::charColon);
@@ -118,4 +106,12 @@ FunctionFunctionAvailable*
 FunctionFunctionAvailable::clone() const
 {
 	return new FunctionFunctionAvailable(*this);
+}
+
+
+
+const XalanDOMString
+FunctionFunctionAvailable::getError() const
+{
+	return "The function-available() function takes one argument!";
 }
