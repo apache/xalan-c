@@ -334,7 +334,7 @@ public:
 			{
 				theString.assign(
 					s_functionNames[i].m_name,
-					s_functionNames[i].size);
+					s_functionNames[i].m_size);
 
 				*theIterator = theString;
 
