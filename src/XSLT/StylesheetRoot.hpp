@@ -125,8 +125,8 @@ public:
 	/**
 	 * Transform the source tree to the output in the given result tree target.
 	 *
-	 * @param inputSource  The input source tree
-	 * @param outputTarget The output source tree
+	 * @param inputSource  The input source
+	 * @param outputTarget The output result target
 	 * @param constructionContext context for construction of object
 	 */
 	void
@@ -434,6 +434,16 @@ public:
 			const XalanText&				textNode) const;
 
 private:
+
+	/**
+	 * Choose the encoding to use.
+	 *
+	 * @param outputTarget The output result target
+	 *
+	 * @return The chosen encoding
+	 */
+	const XalanDOMString&
+	getEncoding(const XSLTResultTarget&		outputTarget) const;
 
 	/**
 	 * Create the default rule if needed.

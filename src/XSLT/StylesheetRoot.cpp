@@ -177,7 +177,12 @@ StylesheetRoot::postConstruction(StylesheetConstructionContext&		constructionCon
 		m_needToBuildKeysTable = true;
 	}
 
-	if (m_cdataSectionElems.size() > 0)
+	// cdata-section-elements only applies to the XML output method...
+	if (m_outputMethod != FormatterListener::OUTPUT_METHOD_XML)
+	{
+		m_cdataSectionElems.clear();
+	}
+	else if (m_cdataSectionElems.size() > 0)
 	{
 		XALAN_USING_STD(sort)
 
@@ -270,6 +275,23 @@ StylesheetRoot::process(
 
 
 
+const XalanDOMString&
+StylesheetRoot::getEncoding(const XSLTResultTarget&		outputTarget) const
+{
+	const XalanDOMString&	theEncoding = outputTarget.getEncoding();
+
+	if (theEncoding.length() != 0)
+	{
+		return theEncoding;
+	}
+	else
+	{
+		return m_encoding;
+	}
+}
+
+
+
 FormatterListener*
 StylesheetRoot::setupFormatterListener(
 			XSLTResultTarget&				outputTarget,
@@ -331,6 +353,8 @@ StylesheetRoot::setupFormatterListener(
 
 		const bool	doIndent = (indentAmount > -1) ? true : m_indentResult;
 
+		const XalanDOMString&	theEncoding = getEncoding(outputTarget);
+
 		switch(m_outputMethod)
 		{
 		case FormatterListener::OUTPUT_METHOD_HTML:
@@ -380,7 +404,7 @@ StylesheetRoot::setupFormatterListener(
 
 				flistener = executionContext.createFormatterToHTML(
 								*pw,
-								m_encoding,
+								theEncoding,
 								m_mediatype,
 								m_doctypeSystem,
 								m_doctypePublic,
@@ -392,7 +416,7 @@ StylesheetRoot::setupFormatterListener(
 			break;
 
 		case FormatterListener::OUTPUT_METHOD_TEXT:
-			flistener = executionContext.createFormatterToText(*pw, m_encoding);
+			flistener = executionContext.createFormatterToText(*pw, theEncoding);
 			break;
 
 		case FormatterListener::OUTPUT_METHOD_NONE:
@@ -406,7 +430,7 @@ StylesheetRoot::setupFormatterListener(
 			}
 
 			flistener = executionContext.createFormatterToXML(
-						*pw, m_version, doIndent, indentAmount, m_encoding, m_mediatype,
+						*pw, m_version, doIndent, indentAmount, theEncoding, m_mediatype,
 						m_doctypeSystem, m_doctypePublic, !m_omitxmlDecl, m_standalone);
 			break;
 		}
@@ -538,26 +562,30 @@ StylesheetRoot::processOutputSpec(
 		}
 		else if(equals(aname,Constants::ATTRNAME_OUTPUT_CDATA_SECTION_ELEMENTS))
 		{
-			StringTokenizer	theTokenizer(atts.getValue(i));
-
-			StringTokenizer::size_type	theTokenCount =
-				theTokenizer.countTokens();
-
-			m_cdataSectionElems.reserve(m_cdataSectionElems.size() + theTokenCount);
-
-			XalanDOMString	theToken;
-
-			while(theTokenCount > 0)
+			if (m_outputMethod == FormatterListener::OUTPUT_METHOD_NONE ||
+				m_outputMethod == FormatterListener::OUTPUT_METHOD_XML)
 			{
-				theTokenizer.nextToken(theToken);
+				StringTokenizer	theTokenizer(atts.getValue(i));
 
-				--theTokenCount;
+				StringTokenizer::size_type	theTokenCount =
+					theTokenizer.countTokens();
 
-				m_cdataSectionElems.push_back(
-					constructionContext.createXalanQName(theToken, getNamespaces(), theLocator, true));
+				m_cdataSectionElems.reserve(m_cdataSectionElems.size() + theTokenCount);
+
+				XalanDOMString	theToken;
+
+				while(theTokenCount > 0)
+				{
+					theTokenizer.nextToken(theToken);
+
+					--theTokenCount;
+
+					m_cdataSectionElems.push_back(
+						constructionContext.createXalanQName(theToken, getNamespaces(), theLocator, true));
+				}
+
+				assert(theTokenizer.hasMoreTokens() == false);
 			}
-
-			assert(theTokenizer.hasMoreTokens() == false);
 		}
 		else
 		{
