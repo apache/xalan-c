@@ -78,40 +78,95 @@
 
 
 
-XalanFileOutputStream::XalanFileOutputStream(
-			const XalanDOMString&	theFileName,
-			unsigned int			theBufferSize) :
-	XalanOutputStream(theBufferSize),
-	m_fileName(theFileName),
+static  XalanFileOutputStream::HandleType
+openFile(const XalanDOMString&	theFileName)
+{
+	typedef XalanFileOutputStream::HandleType	HandleType;
+
 #if defined(WIN32)
-	m_handle(CreateFileW(
+	HandleType	theFileHandle = CreateFileW(
 			c_wstr(theFileName),
 			GENERIC_WRITE,
 			0,
 			0,
 			CREATE_ALWAYS,
 			FILE_ATTRIBUTE_NORMAL,
-			0))
+			0);
+
+	if (theFileHandle != INVALID_HANDLE_VALUE)
+	{
+		return theFileHandle;
+	}
+	else
+	{
+		const CharVectorType	theResult(TranscodeToLocalCodePage(theFileName));
+
+		if (theResult.size() == 0)
+		{
+			return INVALID_HANDLE_VALUE;
+		}
+		else
+		{
+			const char* const	tmpName = &theResult[0];
+
+			if (tmpName == 0)
+			{
+				return INVALID_HANDLE_VALUE;
+			}
+			else
+			{
+				return CreateFile(
+							tmpName,
+							GENERIC_WRITE,
+							0,
+							0,
+							CREATE_ALWAYS,
+							FILE_ATTRIBUTE_NORMAL,
+							0);
+			}
+		}
+	}
 #else
-	m_handle(0)
+	const CharVectorType	theResult(TranscodeToLocalCodePage(theFileName));
+
+	if (theResult.size() == 0)
+	{
+		return false;
+	}
+	else
+	{
+		const char* const	tmpName = &theResult[0];
+
+		if (tmpName == 0)
+		{
+			return 0;
+		}
+		else
+		{
+			return fopen(tmpName, "wb");
+		}
+	}
 #endif
+}
+
+
+
+XalanFileOutputStream::XalanFileOutputStream(
+			const XalanDOMString&	theFileName,
+			unsigned int			theBufferSize) :
+	XalanOutputStream(theBufferSize),
+	m_fileName(theFileName),
+	m_handle(openFile(theFileName))
 {
 #if defined(WIN32)
     if (m_handle == INVALID_HANDLE_VALUE)
 #else
-	const CharVectorType	theResult(TranscodeToLocalCodePage(theFileName));
-
-	assert(theResult.size() > 0);
-
-	const char* const	tmpName = &theResult[0];
-
-	m_handle = fopen(tmpName, "wb");
-
     if (m_handle == 0)
 #endif
 	{
-		throw XalanFileOutputStreamOpenException(theFileName,
-												errno);
+		throw XalanFileOutputStreamOpenException(
+					theFileName,
+					errno);
 	}
 }
 

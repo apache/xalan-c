@@ -85,6 +85,12 @@ public :
 
 	enum { eDefaultBufferSize = 8192 };
 
+#if defined(WIN32)
+	typedef HANDLE	HandleType;
+#else
+	typedef FILE*	HandleType;
+#endif
+
 	/**
 	 * Construct an XalanFileOutputStream object.
 	 * 
@@ -162,11 +168,7 @@ private:
 	// Data members...
 	const XalanDOMString	m_fileName;
 
-#if defined(WIN32)
-	const HANDLE			m_handle;
-#else
-	FILE*					m_handle;
-#endif
+	const HandleType		m_handle;
 };
 
 
