@@ -277,7 +277,7 @@ main(
 		XalanTransformer xalan;
 
 		// Generate Unique Run id and processor info
-		const XalanDOMString& UniqRunid = futil.GenerateUniqRunid();
+		const XalanDOMString& UniqRunid = futil.generateUniqRunid();
 
 
 		// Defined basic constants for file manipulation and open results file
@@ -322,16 +322,16 @@ main(
 				if (checkForExclusion(currentFile))
 					continue;
 
-				const XalanDOMString  theXSLFile= baseDir + currentDir + pathSep + currentFile;
-				const XalanDOMString  theXMLFile = futil.GenerateFileName(theXSLFile,"xml");
+				const XalanDOMString  theXSLFile = baseDir + currentDir + pathSep + currentFile;
+				const XalanDOMString  theXMLFile = futil.generateFileName(theXSLFile,"xml");
 				futil.data.xmlFileURL = theXMLFile;
 				futil.data.xslFileURL = theXSLFile;
 
 				XalanDOMString  theGoldFile = goldRoot + currentDir + pathSep + currentFile;
-				theGoldFile = futil.GenerateFileName(theGoldFile, "out");
+				theGoldFile = futil.generateFileName(theGoldFile, "out");
 
 				const XalanDOMString  outbase =  outputRoot + currentDir + pathSep + currentFile; 
-				const XalanDOMString  theOutputFile = futil.GenerateFileName(outbase, "out");
+				const XalanDOMString  theOutputFile = futil.generateFileName(outbase, "out");
 
 				const XSLTInputSource	xslInputSource(c_wstr(theXSLFile));
 				const XSLTInputSource	xmlInputSource(c_wstr(theXMLFile));
@@ -387,7 +387,7 @@ main(
 		logFile.logTestFileClose("Conformance ", "Done");
 		logFile.close();
 
-		futil.analyzeResults(xalan, resultsFile);
+		futil.analyzeResults(xalan, baseDir, resultsFile);
 
 	} //if getParams
 
