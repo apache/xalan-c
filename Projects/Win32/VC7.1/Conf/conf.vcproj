@@ -12,8 +12,8 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory=".\..\..\Build\Win32\VC7.1\debug"
-			IntermediateDirectory=".\..\..\Build\Win32\VC7.1\debug\conf"
+			OutputDirectory=".\..\..\..\..\Build\Win32\VC7.1\debug"
+			IntermediateDirectory=".\..\..\..\..\Build\Win32\VC7.1\debug\conf"
 			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="FALSE"
@@ -31,7 +31,7 @@
 				ForceConformanceInForLoopScope="TRUE"
 				RuntimeTypeInfo="TRUE"
 				UsePrecompiledHeader="2"
-				PrecompiledHeaderFile=".\..\..\Build\Win32\VC7.1\debug\conf/conf.pch"
+				PrecompiledHeaderFile=".\..\..\..\..\Build\Win32\VC7.1\debug\conf/conf.pch"
 				AssemblerListingLocation=".\..\..\..\..\Build\Win32\VC7.1\Debug\conf/"
 				ObjectFile=".\..\..\..\..\Build\Win32\VC7.1\Debug\conf/"
 				ProgramDataBaseFileName=".\..\..\..\..\Build\Win32\VC7.1\Debug\conf/"
@@ -55,7 +55,7 @@
 				StackReserveSize="2048000"/>
 			<Tool
 				Name="VCMIDLTool"
-				TypeLibraryName=".\..\..\Build\Win32\VC7.1\debug/conf.tlb"/>
+				TypeLibraryName=".\..\..\..\..\Build\Win32\VC7.1\debug/conf.tlb"/>
 			<Tool
 				Name="VCPostBuildEventTool"/>
 			<Tool
@@ -96,7 +96,7 @@
 				EnableFunctionLevelLinking="TRUE"
 				ForceConformanceInForLoopScope="TRUE"
 				RuntimeTypeInfo="TRUE"
-				PrecompiledHeaderFile=".\..\..\Build\Win32\VC7.1\Release\conf/conf.pch"
+				PrecompiledHeaderFile=".\..\..\..\..\Build\Win32\VC7.1\Release\conf/conf.pch"
 				AssemblerListingLocation=".\..\..\..\..\Build\Win32\VC7.1\Release\conf/"
 				ObjectFile=".\..\..\..\..\Build\Win32\VC7.1\Release\conf/"
 				ProgramDataBaseFileName=".\..\..\..\..\Build\Win32\VC7.1\Release\conf/"
@@ -117,7 +117,7 @@
 				StackReserveSize="2048000"/>
 			<Tool
 				Name="VCMIDLTool"
-				TypeLibraryName=".\..\..\Build\Win32\VC7.1\Release/conf.tlb"/>
+				TypeLibraryName=".\..\..\..\..\Build\Win32\VC7.1\Release/conf.tlb"/>
 			<Tool
 				Name="VCPostBuildEventTool"/>
 			<Tool
@@ -158,7 +158,7 @@
 				EnableFunctionLevelLinking="TRUE"
 				ForceConformanceInForLoopScope="TRUE"
 				RuntimeTypeInfo="TRUE"
-				PrecompiledHeaderFile=".\..\..\Build\Win32\VC7.1\Release.symbols\conf/conf.pch"
+				PrecompiledHeaderFile=".\..\..\..\..\Build\Win32\VC7.1\Release.symbols\conf/conf.pch"
 				AssemblerListingLocation=".\..\..\..\..\Build\Win32\VC7.1\Release.symbols\conf/"
 				ObjectFile=".\..\..\..\..\Build\Win32\VC7.1\Release.symbols\conf/"
 				ProgramDataBaseFileName=".\..\..\..\..\Build\Win32\VC7.1\Release.symbols\conf/"
@@ -182,7 +182,7 @@
 				StackReserveSize="2048000"/>
 			<Tool
 				Name="VCMIDLTool"
-				TypeLibraryName=".\..\..\Build\Win32\VC7.1\Release.symbols/conf.tlb"/>
+				TypeLibraryName=".\..\..\..\..\Build\Win32\VC7.1\Release.symbols/conf.tlb"/>
 			<Tool
 				Name="VCPostBuildEventTool"/>
 			<Tool

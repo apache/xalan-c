@@ -35,6 +35,8 @@
 
 #include <xercesc/util/PlatformUtils.hpp>
 
+
+
 #include <xalanc/PlatformSupport/DOMStringHelper.hpp>
 #include <xalanc/PlatformSupport/XalanFileOutputStream.hpp>
 #include <xalanc/PlatformSupport/XalanOutputStreamPrintWriter.hpp>
@@ -253,8 +255,10 @@ main(
 	_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_FILE);
 	_CrtSetReportFile(_CRT_WARN, _CRTDBG_FILE_STDERR);
 #endif
+    
+	XERCES_CPP_NAMESPACE_QUALIFIER XMLPlatformUtils::Initialize();
 
-    MemoryManagerType& theManager = XalanMemMgrs::getDefaultXercesMemMgr();
+	MemoryManagerType & theManager = XalanMemMgrs::getDefaultXercesMemMgr();
 
 	const XalanDOMString	processorType(XALAN_STATIC_UCODE_STRING("XalanC"), theManager);
 	bool skip = true;		// Default will skip long tests
@@ -264,18 +268,21 @@ main(
 
 	// Set the program help string,  then get the command line parameters.
 	//
-	setHelp(h, theManager);
+	setHelp(h);
 
 	if (h.getParams(argc, argv, "PERF-RESULTS", setGold) == true)
 	{
 
 		// Generate Unique Run id and processor info
 		XalanDOMString	UniqRunid(theManager);
-        h.generateUniqRunid(theManager);
-		const XalanDOMString	resultFilePrefix(XalanDOMString("cpp"), theManager);
-		const XalanDOMString	resultsFile(h.args.output,  + resultFilePrefix + UniqRunid + XalanFileUtility::s_xmlSuffix);
+        h.generateUniqRunid(UniqRunid);
+		const XalanDOMString	resultFilePrefix(XalanDOMString("cpp"));
+		XalanDOMString	resultsFile = h.args.output;
+		resultsFile += resultFilePrefix;
+		resultsFile += UniqRunid;
+		resultsFile += XalanFileUtility::s_xmlSuffix;
 
-		XalanXMLFileReporter	logFile(resultsFile);
+		XalanXMLFileReporter	logFile(theManager, resultsFile);
 
 		logFile.logTestFileInit("Performance Testing - Reports performance times for single transform, and average for multiple transforms using compiled stylesheet");
 
@@ -287,12 +294,14 @@ main(
 			// cleaned up when this instance goes out of scope.
 			bool foundDir = false;	// Flag indicates directory found. Used in conjunction with -sub cmd-line arg.
 			{
-				XSLTInit	theInit;  
+				XSLTInit	theInit(theManager);  
 		
 				typedef XalanFileUtility::FileNameVectorType		FileNameVectorType;
 
 				// Get the list of Directories that are below perf and iterate through them
-				const FileNameVectorType dirs = h.getDirectoryNames(h.args.base);
+				FileNameVectorType dirs(theManager);
+				
+				h.getDirectoryNames(h.args.base, dirs);
 
 				const long 	iterCount = h.args.iters;
 
@@ -305,14 +314,18 @@ main(
 					}
 
 					// Check that output directory is there.
-					const XalanDOMString  theOutputDir = h.args.output + dirs[j];
+					XalanDOMString  theOutputDir = h.args.output;
+					theOutputDir += dirs[j];
 					h.checkAndCreateDir(theOutputDir);
 
-					logFile.logTestCaseInit(XalanDOMString("Performance Directory: ") + dirs[j] );
+					XalanDOMString logEntry("Performance Directory: ");
+					logEntry += dirs[j];
+					logFile.logTestCaseInit(logEntry);
 					
 					// Indicate that directory was processed and get test files from the directory
 					foundDir = true;
-					const FileNameVectorType files = h.getTestFileNames(h.args.base, dirs[j], false);
+					FileNameVectorType files(theManager);
+					h.getTestFileNames(h.args.base, dirs[j], false, files);
 
 					for(FileNameVectorType::size_type i = 0; i < files.size(); i++)
 					{
@@ -322,25 +335,33 @@ main(
 
 						typedef XalanXMLFileReporter::Hashtable	Hashtable;
 
-						Hashtable attrs;
+						Hashtable attrs(theManager);
 					
 						if (skip && checkForExclusion(files[i]))
 						{
 							continue;
 						}
 
-						const XalanDOMString  theXSLFile= h.args.base + dirs[j] + XalanFileUtility::s_pathSep + files[i];
-						const XalanDOMString  theXMLFile = h.generateFileName(theXSLFile,"xml");
+						XalanDOMString  theXSLFile= h.args.base;
+						theXSLFile += dirs[j];
+						theXSLFile += XalanFileUtility::s_pathSep;
+						theXSLFile += files[i];
+						XalanDOMString  theXMLFile(theManager);
+						h.generateFileName(theXSLFile,"xml", theXMLFile);
 
-						const XalanDOMString  theOutput =  h.args.output + dirs[j] + XalanFileUtility::s_pathSep + files[i]; 
-						const XalanDOMString  theOutputFile = h.generateFileName(theOutput, "out");
+						XalanDOMString  theOutput = h.args.output;
+						theOutput += dirs[j];
+						theOutput += XalanFileUtility::s_pathSep;
+						theOutput += files[i]; 
+						XalanDOMString  theOutputFile;
+						h.generateFileName(theOutput, "out", theOutputFile);
 
 
 						attrs.insert(Hashtable::value_type(XalanDOMString("href"), theXSLFile));
 						// Create the necessary support objects to instantiate a processor.
 
 						XercesDOMSupport				csDOMSupport;
-						XercesParserLiaison				csParserLiaison(csDOMSupport);
+						XercesParserLiaison				csParserLiaison(theManager, csDOMSupport);
 
 						/*XalanSourceTreeDOMSupport		csDOMSupport;
 						XalanSourceTreeParserLiaison	csParserLiaison(csDOMSupport);
@@ -348,12 +369,13 @@ main(
 						csDOMSupport.setParserLiaison(&csParserLiaison);
 						*/
 
-						XSLTProcessorEnvSupportDefault	csXSLTProcessorEnvSupport;
+						XSLTProcessorEnvSupportDefault	csXSLTProcessorEnvSupport(theManager);
 						XObjectFactoryDefault			csXObjectFactory;
 						XPathFactoryDefault				csXPathFactory;
 	
 						// Create a processor and connect to ProcessorEnvSupport object
 						XSLTEngineImpl	csProcessor(
+								theManager,
 								csParserLiaison,
 								csXSLTProcessorEnvSupport,
 								csDOMSupport,
@@ -370,6 +392,7 @@ main(
 						// Create a stylesheet construction context, using the
 						// stylesheet's factory support objects.
 						StylesheetConstructionContextDefault	csConstructionContext(
+														theManager,
 														csProcessor,
 														ssXPathFactory);
 						cout << endl << files[i] << endl;
@@ -416,6 +439,7 @@ main(
 						const XSLTInputSource	xmlInputSource(theXMLFile);
 
 						StylesheetExecutionContextDefault	psExecutionContext(
+											theManager,
 											csProcessor,
 											csXSLTProcessorEnvSupport,
 											csDOMSupport,
@@ -517,15 +541,17 @@ main(
 						logFile.addMetricToAttrs("avgetoe",theAverage, attrs);
 						logFile.logElementWAttrs(10, "perf", attrs, "xxx");
 					}
-
-					logFile.logTestCaseClose(XalanDOMString("Performance Directory: ") + dirs[j], XalanDOMString("Done") );
+	
+					logEntry = "Performance Directory: ";
+					logEntry += dirs[j];
+					logFile.logTestCaseClose(logEntry, XalanDOMString("Done"));
 				}
 
 			}
 
 			// Check to see if -sub cmd-line directory was processed correctly.
 			if (!foundDir)
-			{
+			{	
 				cout << "Specified test directory: \"" << c_str(TranscodeToLocalCodePage(h.args.sub)) << "\" not found" << endl;
 			}
 
@@ -542,6 +568,8 @@ main(
 			cerr << "Exception caught!!!" << endl  << endl;
 		}
 	}
+
+	XERCES_CPP_NAMESPACE_QUALIFIER XMLPlatformUtils::Terminate();
 
 	return 0;
 }

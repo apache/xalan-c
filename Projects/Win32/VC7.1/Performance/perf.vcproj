@@ -12,8 +12,8 @@
 	<Configurations>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory=".\..\..\Build\Win32\VC7.1\Release"
-			IntermediateDirectory=".\..\..\Build\Win32\VC7.1\Release\Performance"
+			OutputDirectory=".\..\..\..\..\Build\Win32\VC7.1\Release"
+			IntermediateDirectory=".\..\..\..\..\Build\Win32\VC7.1\Release\Performance"
 			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="FALSE"
@@ -27,10 +27,10 @@
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="TRUE"
 				RuntimeTypeInfo="TRUE"
-				PrecompiledHeaderFile=".\..\..\Build\Win32\VC7.1\Release\Performance/perf.pch"
-				AssemblerListingLocation=".\..\..\Build\Win32\VC7.1\Release\Performance/"
-				ObjectFile=".\..\..\Build\Win32\VC7.1\Release\Performance/"
-				ProgramDataBaseFileName=".\..\..\Build\Win32\VC7.1\Release\Performance/"
+				PrecompiledHeaderFile=".\..\..\..\..\Build\Win32\VC7.1\Release\Performance/perf.pch"
+				AssemblerListingLocation=".\..\..\..\..\Build\Win32\VC7.1\Release\Performance/"
+				ObjectFile=".\..\..\..\..\Build\Win32\VC7.1\Release\Performance/"
+				ProgramDataBaseFileName=".\..\..\..\..\Build\Win32\VC7.1\Release\Performance/"
 				WarningLevel="4"
 				SuppressStartupBanner="TRUE"
 				CompileAs="0"/>
@@ -40,7 +40,7 @@
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
 				AdditionalDependencies="xerces-c_2.lib"
-				OutputFile=".\..\..\Build\Win32\VC7.1\Release/perf.exe"
+				OutputFile=".\..\..\..\..\Build\Win32\VC7.1\Release/perf.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
 				AdditionalLibraryDirectories="..\..\..\..\xml-xerces\c\Build\Win32\VC7.1\Release;$(XERCESCROOT)\Build\Win32\VC7.1\Release;$(XERCESCROOT)\lib"
@@ -48,7 +48,7 @@
 				StackReserveSize="2048000"/>
 			<Tool
 				Name="VCMIDLTool"
-				TypeLibraryName=".\..\..\Build\Win32\VC7.1\Release/perf.tlb"/>
+				TypeLibraryName=".\..\..\..\..\Build\Win32\VC7.1\Release/perf.tlb"/>
 			<Tool
 				Name="VCPostBuildEventTool"/>
 			<Tool
@@ -72,8 +72,8 @@
 		</Configuration>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory=".\..\..\Build\Win32\VC7.1\Debug"
-			IntermediateDirectory=".\..\..\Build\Win32\VC7.1\Debug\Performance"
+			OutputDirectory=".\..\..\..\..\Build\Win32\VC7.1\Debug"
+			IntermediateDirectory=".\..\..\..\..\Build\Win32\VC7.1\Debug\Performance"
 			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="FALSE"
@@ -89,10 +89,10 @@
 				EnableFunctionLevelLinking="TRUE"
 				RuntimeTypeInfo="TRUE"
 				UsePrecompiledHeader="2"
-				PrecompiledHeaderFile=".\..\..\Build\Win32\VC7.1\Debug\Performance/perf.pch"
-				AssemblerListingLocation=".\..\..\Build\Win32\VC7.1\Debug\Performance/"
-				ObjectFile=".\..\..\Build\Win32\VC7.1\Debug\Performance/"
-				ProgramDataBaseFileName=".\..\..\Build\Win32\VC7.1\Debug\Performance/"
+				PrecompiledHeaderFile=".\..\..\..\..\Build\Win32\VC7.1\Debug\Performance/perf.pch"
+				AssemblerListingLocation=".\..\..\..\..\Build\Win32\VC7.1\Debug\Performance/"
+				ObjectFile=".\..\..\..\..\Build\Win32\VC7.1\Debug\Performance/"
+				ProgramDataBaseFileName=".\..\..\..\..\Build\Win32\VC7.1\Debug\Performance/"
 				WarningLevel="4"
 				SuppressStartupBanner="TRUE"
 				DebugInformationFormat="3"
@@ -103,17 +103,17 @@
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
 				AdditionalDependencies="xerces-c_2D.lib"
-				OutputFile=".\..\..\Build\Win32\VC7.1\Debug/perf.exe"
+				OutputFile=".\..\..\..\..\Build\Win32\VC7.1\Debug/perf.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
-				AdditionalLibraryDirectories="..\..\..\..\xml-xerces\c\Build\Win32\VC7.1\Debug;$(XERCESCROOT)\Build\Win32\VC7.1\Debug;$(XERCESCROOT)\lib"
+				AdditionalLibraryDirectories="&quot;..\..\..\..\xml-xerces\c\Build\Win32\VC7.1\Debug&quot;;&quot;$(XERCESCROOT)\Build\Win32\VC7.1\Debug&quot;;&quot;$(XERCESCROOT)\lib&quot;"
 				GenerateDebugInformation="TRUE"
-				ProgramDatabaseFile=".\..\..\Build\Win32\VC7.1\Debug/perf.pdb"
+				ProgramDatabaseFile=".\..\..\..\..\Build\Win32\VC7.1\Debug\perf.pdb"
 				SubSystem="1"
 				StackReserveSize="2048000"/>
 			<Tool
 				Name="VCMIDLTool"
-				TypeLibraryName=".\..\..\Build\Win32\VC7.1\Debug/perf.tlb"/>
+				TypeLibraryName=".\..\..\..\..\Build\Win32\VC7.1\Debug/perf.tlb"/>
 			<Tool
 				Name="VCPostBuildEventTool"/>
 			<Tool
@@ -137,8 +137,8 @@
 		</Configuration>
 		<Configuration
 			Name="Release with symbols|Win32"
-			OutputDirectory=".\..\..\Build\Win32\VC7.1\Release.symbols"
-			IntermediateDirectory=".\..\..\Build\Win32\VC7.1\Release.symbols\Performance"
+			OutputDirectory=".\..\..\..\..\Build\Win32\VC7.1\Release.symbols"
+			IntermediateDirectory=".\..\..\..\..\Build\Win32\VC7.1\Release.symbols\Performance"
 			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="FALSE"
@@ -152,10 +152,10 @@
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="TRUE"
 				RuntimeTypeInfo="TRUE"
-				PrecompiledHeaderFile=".\..\..\Build\Win32\VC7.1\Release.symbols\Performance/perf.pch"
-				AssemblerListingLocation=".\..\..\Build\Win32\VC7.1\Release.symbols\Performance/"
-				ObjectFile=".\..\..\Build\Win32\VC7.1\Release.symbols\Performance/"
-				ProgramDataBaseFileName=".\..\..\Build\Win32\VC7.1\Release.symbols\Performance/"
+				PrecompiledHeaderFile=".\..\..\..\..\Build\Win32\VC7.1\Release.symbols\Performance/perf.pch"
+				AssemblerListingLocation=".\..\..\..\..\Build\Win32\VC7.1\Release.symbols\Performance/"
+				ObjectFile=".\..\..\..\..\Build\Win32\VC7.1\Release.symbols\Performance/"
+				ProgramDataBaseFileName=".\..\..\..\..\Build\Win32\VC7.1\Release.symbols\Performance/"
 				WarningLevel="4"
 				SuppressStartupBanner="TRUE"
 				DebugInformationFormat="3"
@@ -166,17 +166,17 @@
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386 /FIXED:NO"
 				AdditionalDependencies="xerces-c_2.lib"
-				OutputFile=".\..\..\Build\Win32\VC7.1\Release.symbols/perf.exe"
+				OutputFile=".\..\..\..\..\Build\Win32\VC7.1\Release.symbols/perf.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
 				AdditionalLibraryDirectories="..\..\..\..\xml-xerces\c\Build\Win32\VC7.1\Release;$(XERCESCROOT)\Build\Win32\VC7.1\Release;$(XERCESCROOT)\lib"
 				GenerateDebugInformation="TRUE"
-				ProgramDatabaseFile=".\..\..\Build\Win32\VC7.1\Release.symbols/perf.pdb"
+				ProgramDatabaseFile=".\..\..\..\..\Build\Win32\VC7.1\Release.symbols/perf.pdb"
 				SubSystem="1"
 				StackReserveSize="2048000"/>
 			<Tool
 				Name="VCMIDLTool"
-				TypeLibraryName=".\..\..\Build\Win32\VC7.1\Release.symbols/perf.tlb"/>
+				TypeLibraryName=".\..\..\..\..\Build\Win32\VC7.1\Release.symbols/perf.tlb"/>
 			<Tool
 				Name="VCPostBuildEventTool"/>
 			<Tool

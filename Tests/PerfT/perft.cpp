@@ -123,7 +123,9 @@ runTests(
 	// Just hoist everything...
 	XALAN_CPP_NAMESPACE_USE
 
-	XalanFileUtility	h;
+	MemoryManagerType& theManager = XalanMemMgrs::getDefaultXercesMemMgr();
+
+	XalanFileUtility	h(theManager);
 
 	// Set the program help string,  then get the command line parameters.
 	//
@@ -138,15 +140,19 @@ runTests(
 		XalanTransformer xalan;
 
 		// Generate Unique Run id and processor info
-		const XalanDOMString UniqRunid = h.generateUniqRunid();
+		XalanDOMString UniqRunid;
+		h.generateUniqRunid(UniqRunid);
 
 
 		// Defined basic constants for file manipulation and open results file
 		const XalanDOMString  resultFilePrefix("cpp");
-		const XalanDOMString  resultsFile(h.args.output + resultFilePrefix + UniqRunid + XalanFileUtility::s_xmlSuffix);
+		XalanDOMString  resultsFile= h.args.output;
+		resultsFile += resultFilePrefix;
+		resultsFile += UniqRunid;
+		resultsFile += XalanFileUtility::s_xmlSuffix;
 
 
-		XalanXMLFileReporter	logFile(resultsFile);
+		XalanXMLFileReporter	logFile(theManager, resultsFile);
 		logFile.logTestFileInit("Performance Testing - Reports various performance metrics using the Transformer");
 
 		// Get the list of sub-directories below "base" and iterate through them
@@ -154,7 +160,8 @@ runTests(
 
 		typedef XalanFileUtility::FileNameVectorType		FileNameVectorType;
 
-		const FileNameVectorType dirs = h.getDirectoryNames(h.args.base);
+		FileNameVectorType dirs;
+		h.getDirectoryNames(h.args.base, dirs);
 
 		for(FileNameVectorType::size_type	j = 0; j < dirs.size(); j++)
 		{
@@ -167,14 +174,19 @@ runTests(
 			cout << "Processing files in Directory: " << dirs[j] << endl;
 
 			// Check that output directory is there.
-			const XalanDOMString  theOutputDir = h.args.output + dirs[j];
+			XalanDOMString  theOutputDir = h.args.output;
+			theOutputDir += dirs[j];
 			h.checkAndCreateDir(theOutputDir);
 
 					
 			// Indicate that directory was processed and get test files from the directory
 			foundDir = true;
-			const FileNameVectorType files = h.getTestFileNames(h.args.base, dirs[j], false);
-			logFile.logTestCaseInit(XalanDOMString("Performance Directory: ") + dirs[j] ); 
+			FileNameVectorType files;
+			h.getTestFileNames(h.args.base, dirs[j], false, files);
+			XalanDOMString logEntry;
+			logEntry = "Performance Directory: ";
+			logEntry += dirs[j];
+			logFile.logTestCaseInit(logEntry);
 
 			const long	iterCount = h.args.iters;
 
@@ -187,7 +199,7 @@ runTests(
 
 				typedef XalanXMLFileReporter::Hashtable	Hashtable;
 
-				Hashtable attrs;
+				Hashtable attrs(theManager);
 
 				attrs.insert(Hashtable::value_type(XalanDOMString("idref"), files[i]));
 				attrs.insert(Hashtable::value_type(XalanDOMString("UniqRunid"),UniqRunid));
@@ -200,11 +212,20 @@ runTests(
 						continue;
 				}
 
-				const XalanDOMString  theXSLFile= h.args.base + dirs[j] + XalanFileUtility::s_pathSep + files[i];
-				const XalanDOMString  theXMLFile = h.generateFileName(theXSLFile,"xml");
+				XalanDOMString  theXSLFile = h.args.base;
+				theXSLFile += dirs[j];
+				theXSLFile += XalanFileUtility::s_pathSep;
+				theXSLFile += files[i];
 
-				const XalanDOMString  outbase =  h.args.output + dirs[j] + XalanFileUtility::s_pathSep + files[i]; 
-				const XalanDOMString  theOutputFile = h.generateFileName(outbase, "out");
+				XalanDOMString  theXMLFile; 
+				h.generateFileName(theXSLFile,"xml", theXMLFile);
+
+				XalanDOMString  outbase = h.args.output;
+				outbase += dirs[j];
+				outbase += XalanFileUtility::s_pathSep;
+				outbase += files[i]; 
+				XalanDOMString  theOutputFile;
+				h.generateFileName(outbase, "out", theOutputFile);
 
 				const XSLTInputSource	xslInputSource(theXSLFile);
 				const XSLTInputSource	xmlInputSource(theXMLFile);
@@ -342,7 +363,9 @@ runTests(
 
 			}
 
-			logFile.logTestCaseClose(XalanDOMString("Performance Directory: ") + dirs[j], XalanDOMString("Done") );
+			logEntry = "Performance Directory: ";
+			logEntry += dirs[j];
+ 			logFile.logTestCaseClose(logEntry, XalanDOMString("Done"));
 		}
 
 		// Check to see if -sub cmd-line directory was processed correctly.
