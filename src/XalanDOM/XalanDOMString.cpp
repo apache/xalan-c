@@ -73,10 +73,6 @@
 
 const XalanDOMChar	XalanDOMString::s_empty = 0;
 
-#if __INTEL_COMPILER >= 600
-const XalanDOMString::size_type     XalanDOMString::npos;
-#endif
- 
 
 
 XalanDOMString::XalanDOMString() :
@@ -749,7 +745,7 @@ XalanDOMString::length(const char*	theString)
 
 
 
-#include <xercesc/util/XMLString.hpp>
+#include <util/XMLString.hpp>
 
 
 
