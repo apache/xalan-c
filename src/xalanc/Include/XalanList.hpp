@@ -44,6 +44,112 @@
 XALAN_CPP_NAMESPACE_BEGIN
 
 
+
+template <class Value>
+struct XalanListIteratorTraits
+{
+	typedef Value	value_type;
+	typedef Value&	reference;
+	typedef Value*	pointer;
+};
+
+template <class Value>
+struct XalanListConstIteratorTraits
+{
+	typedef Value	value_type;
+	typedef const	Value&	reference;
+	typedef const	Value*	pointer;
+};
+
+template<class XalanListTraits, class Node>
+struct XalanListIteratorBase 
+{
+	typedef typename XalanListTraits::value_type	value_type;
+	typedef typename XalanListTraits::reference		reference;
+	typedef typename XalanListTraits::pointer		pointer;
+	
+	typedef ptrdiff_t		difference_type;
+
+	typedef XALAN_STD_QUALIFIER bidirectional_iterator_tag iterator_category;
+
+	typedef XalanListIteratorBase<XalanListIteratorTraits<value_type>, Node> iterator;
+
+	XalanListIteratorBase(Node& node) : 
+		currentNode(&node)
+	{
+	}
+
+	XalanListIteratorBase(const iterator& theRhs) :
+		currentNode(theRhs.currentNode)
+	{
+	}
+
+	XalanListIteratorBase operator++()
+	{
+		currentNode = currentNode->next;
+		return *this;
+	}
+
+	XalanListIteratorBase operator++(int)
+	{
+		Node& origNode = *currentNode;
+		currentNode = currentNode->next;
+		return XalanListIteratorBase(origNode);
+	}
+
+	XalanListIteratorBase operator--()
+	{
+		currentNode = currentNode->prev;
+		return *this;
+	}
+
+	XalanListIteratorBase operator-(difference_type decrement) const 
+	{
+		Node* node = currentNode;
+		while (decrement > 0)
+		{
+			node = node->prev;
+			--decrement;
+		};
+		return XalanListIteratorBase(*node);
+	}
+
+	reference operator*() const
+	{
+		return currentNode->value;
+	}
+
+	pointer operator->() const
+	{
+		return &currentNode->value;
+	}
+
+	const XalanListIteratorBase & operator=(const XalanListIteratorBase& theRhs)
+	{
+		currentNode = theRhs.currentNode;
+		return *this;
+	}
+
+	bool operator!=(const XalanListIteratorBase& theRhs) const 
+	{
+		return !operator==(theRhs);
+	}
+
+	bool operator==(const XalanListIteratorBase& theRhs) const 
+	{
+		return currentNode == theRhs.currentNode;
+	}
+
+	Node& node()
+	{
+		return *currentNode;
+	}
+
+	Node*	currentNode;
+};
+
+
+
 /**
  * Xalan implementation of a doubly linked list
  */
@@ -80,102 +186,22 @@ public:
 		Node*		next;
 	};
 
-
-	template<class Value>
-	struct iterator_base 
-	{
-		typedef Value		value_type;
-		typedef Value&		reference;
-		typedef Value*		pointer;
-
-		typedef size_type	difference_type;
-		typedef XALAN_STD_QUALIFIER bidirectional_iterator_tag iterator_category;
-		
-		typedef iterator_base<Type> iterator;
+	typedef XalanListIteratorBase<XalanListIteratorTraits<value_type>, Node>		iterator;
 	
-		typedef iterator_base<value_type> ThisType;
-
-		iterator_base(Node& node) : 
-			currentNode(&node)
-		{
-		}
-
-		iterator_base(const iterator& theRhs) :
-			currentNode(theRhs.currentNode)
-		{
-		}
-
-		iterator_base operator++()
-		{
-			currentNode = currentNode->next;
-			return *this;
-		}
-
-		iterator_base operator++(int)
-		{
-			Node& origNode = *currentNode;
-			currentNode = currentNode->next;
-			return iterator_base(origNode);
-		}
-
-		iterator_base operator--()
-		{
-			currentNode = currentNode->prev;
-			return *this;
-		}
-
-		iterator_base operator-(difference_type decrement) const 
-		{
-			Node* node = currentNode;
-			while (decrement > 0)
-			{
-				node = node->prev;
-				--decrement;
-			};
-			return iterator_base(*node);
-		}
-
-		reference operator*() const
-		{
-			return currentNode->value;
-		}
-
-		pointer operator->() const
-		{
-			return &currentNode->value;
-		}
-
-		const ThisType & operator=(const ThisType& theRhs)
-		{
-			currentNode = theRhs.currentNode;
-			return *this;
-		}
-
-		bool operator!=(const ThisType& theRhs) const 
-		{
-			return !operator==(theRhs);
-		}
-
-		bool operator==(const ThisType& theRhs) const 
-		{
-			return currentNode == theRhs.currentNode;
-		}
-
-		Node& node()
-		{
-			return *currentNode;
-		}
-
-		Node*	currentNode;
-	};
-
-	typedef iterator_base<value_type>		iterator;
-	
-	typedef iterator_base<const value_type>	const_iterator;
-		
+	typedef XalanListIteratorBase<XalanListConstIteratorTraits<value_type>, Node>	const_iterator;
+			
 #if defined(XALAN_HAS_STD_ITERATORS)
-	typedef XALAN_STD_QUALIFIER reverse_iterator<iterator>			reverse_iterator_;
-	typedef XALAN_STD_QUALIFIER reverse_iterator<const_iterator>	const_reverse_iterator_;
+	typedef XALAN_STD_QUALIFIER reverse_iterator<iterator, XALAN_STD_QUALIFIER bidirectional_iterator_tag, value_type>			reverse_iterator_;
+	typedef XALAN_STD_QUALIFIER reverse_iterator<const_iterator, XALAN_STD_QUALIFIER bidirectional_iterator_tag, value_type>	const_reverse_iterator_;
+#elif defined(XALAN_RW_NO_CLASS_PARTIAL_SPEC)
+	typedef XALAN_STD_QUALIFIER reverse_iterator<
+		iterator,
+		XALAN_STD_QUALIFIER bidirectional_iterator_tag,
+		value_type> reverse_iterator_;
+	typedef XALAN_STD_QUALIFIER reverse_iterator<
+		const_iterator,
+		XALAN_STD_QUALIFIER bidirectional_iterator_tag,
+		const value_type> const_reverse_iterator_;
 #else
 	typedef XALAN_STD_QUALIFIER reverse_iterator<iterator, value_type>							reverse_iterator_;
 	typedef XALAN_STD_QUALIFIER reverse_iterator<const_iterator, value_type, const_reference>	const_reverse_iterator_;

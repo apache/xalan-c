@@ -23,7 +23,14 @@
 
 
 #include <cstdio>
-#include <map>
+
+
+
+#include "xalanc/Include/XalanMap.hpp"
+
+
+
+#include "xalanc/PlatformSupport/DOMStringHelper.hpp"
 
 
 
@@ -40,11 +47,7 @@ class XALAN_HARNESS_EXPORT XalanXMLFileReporter
 {
 public:
 
-#if defined(XALAN_NO_STD_NAMESPACE)
-    typedef map<XalanDOMString, XalanDOMString, less<XalanDOMString> >  Hashtable;
-#else
-    typedef std::map<XalanDOMString, XalanDOMString>    Hashtable;
-#endif
+    typedef XalanMap<XalanDOMString, XalanDOMString>  Hashtable;
 
 #if defined(XALAN_STRICT_ANSI_HEADERS)
     typedef std::FILE   FileHandleType;

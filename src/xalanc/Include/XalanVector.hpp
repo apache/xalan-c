@@ -89,6 +89,15 @@ public:
 #if defined(XALAN_HAS_STD_ITERATORS)
     typedef XALAN_STD_QUALIFIER reverse_iterator<iterator>          reverse_iterator_;
     typedef XALAN_STD_QUALIFIER reverse_iterator<const_iterator>    const_reverse_iterator_;
+#elif defined(XALAN_RW_NO_CLASS_PARTIAL_SPEC)
+    typedef XALAN_STD_QUALIFIER reverse_iterator<
+        iterator,
+        XALAN_STD_QUALIFIER random_access_iterator_tag,
+        value_type> reverse_iterator_;
+    typedef XALAN_STD_QUALIFIER reverse_iterator<
+        const_iterator,
+        XALAN_STD_QUALIFIER random_access_iterator_tag,
+        const value_type> const_reverse_iterator_;
 #else
     typedef XALAN_STD_QUALIFIER reverse_iterator<iterator, value_type>                          reverse_iterator_;
     typedef XALAN_STD_QUALIFIER reverse_iterator<const_iterator, value_type, const_reference>   const_reverse_iterator_;
@@ -537,7 +546,12 @@ public:
     void
     resize(
             size_type           theSize,
-            const value_type&   theValue = value_type())
+#if !defined(SOLARIS)  // Causes Solaris 5.3 compiler assert
+            const value_type&   theValue = value_type()
+#else
+	    value_type 		theValue = value_type()
+#endif
+)
     {
         invariants();
 

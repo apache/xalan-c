@@ -63,6 +63,7 @@
 // Standard allocators don't seem to work correctly with this compiler.
 // I don't know if this is their bug, or ours...
 #define XALAN_NO_STD_ALLOCATORS
+#define XALAN_RW_NO_CLASS_PARTIAL_SPEC
 
 #define XALAN_XALANDOMCHAR_USHORT_MISMATCH
 #define XALAN_POSIX2_AVAILABLE
