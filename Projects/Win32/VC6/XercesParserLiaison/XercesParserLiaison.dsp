@@ -127,6 +127,10 @@ LINK32=link.exe
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 # Begin Source File
 
+SOURCE=..\..\..\..\src\XercesParserLiaison\FormatterToXercesDOM.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\XercesParserLiaison\XercesAttrBridge.cpp
 # End Source File
 # Begin Source File
@@ -199,6 +203,10 @@ SOURCE=..\..\..\..\src\XercesParserLiaison\XercesDOMException.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesDOMFormatterWalker.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\XercesParserLiaison\XercesDOMImplementationBridge.cpp
 # End Source File
 # Begin Source File
@@ -260,6 +268,10 @@ SOURCE=..\..\..\..\src\XercesParserLiaison\XercesLiaisonXalanDOMStringPool.cpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\XercesParserLiaison\XercesNamedNodeListCache.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesNamedNodeMapAttributeList.cpp
 # End Source File
 # Begin Source File
 
@@ -339,6 +351,10 @@ SOURCE=..\..\..\..\src\XercesParserLiaison\XercesWrapperToXalanNodeMap.cpp
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
 # Begin Source File
 
+SOURCE=..\..\..\..\src\XercesParserLiaison\FormatterToXercesDOM.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\XercesParserLiaison\XercesAttrBridge.hpp
 # End Source File
 # Begin Source File
@@ -412,6 +428,10 @@ SOURCE=..\..\..\..\src\XercesParserLiaison\XercesDOM_NodeHack.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\XercesParserLiaison\XercesDOMException.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesDOMFormatterWalker.hpp
 # End Source File
 # Begin Source File
 

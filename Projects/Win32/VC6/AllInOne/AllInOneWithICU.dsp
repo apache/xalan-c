@@ -1602,6 +1602,14 @@ SOURCE=..\..\..\..\src\XMLSupport\XMLSupportInit.hpp
 # PROP Default_Filter ""
 # Begin Source File
 
+SOURCE=..\..\..\..\src\XercesParserLiaison\FormatterToXercesDOM.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XercesParserLiaison\FormatterToXercesDOM.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\XercesParserLiaison\XercesAttrBridge.cpp
 # End Source File
 # Begin Source File
@@ -1750,6 +1758,14 @@ SOURCE=..\..\..\..\src\XercesParserLiaison\XercesDOMException.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesDOMFormatterWalker.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesDOMFormatterWalker.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\XercesParserLiaison\XercesDOMImplementationBridge.cpp
 # End Source File
 # Begin Source File
@@ -1875,6 +1891,14 @@ SOURCE=..\..\..\..\src\XercesParserLiaison\XercesNamedNodeListCache.cpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\XercesParserLiaison\XercesNamedNodeListCache.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesNamedNodeMapAttributeList.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesNamedNodeMapAttributeList.hpp
 # End Source File
 # Begin Source File
 
