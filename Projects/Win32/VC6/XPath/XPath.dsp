@@ -313,6 +313,10 @@ SOURCE=..\..\..\..\src\XPath\XNumberAllocator.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\XPath\XNumberBase.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\XPath\XObject.cpp
 # End Source File
 # Begin Source File
@@ -434,6 +438,26 @@ SOURCE=..\..\..\..\src\XPath\XStringReference.cpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\XPath\XStringReferenceAllocator.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XPath\XToken.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XPath\XTokenNumberAdapter.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XPath\XTokenNumberAdapterAllocator.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XPath\XTokenStringAdapter.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XPath\XTokenStringAdapterAllocator.cpp
 # End Source File
 # Begin Source File
 
@@ -645,6 +669,10 @@ SOURCE=..\..\..\..\src\XPath\XNumberAllocator.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\XPath\XNumberBase.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\XPath\XObject.hpp
 # End Source File
 # Begin Source File
@@ -766,6 +794,26 @@ SOURCE=..\..\..\..\src\XPath\XStringReference.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\XPath\XStringReferenceAllocator.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XPath\XToken.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XPath\XTokenNumberAdapter.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XPath\XTokenNumberAdapterAllocator.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XPath\XTokenStringAdapter.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XPath\XTokenStringAdapterAllocator.hpp
 # End Source File
 # Begin Source File
 
