@@ -55,11 +55,15 @@
  * <http://www.apache.org/>.
  */
 #include "XalanNodeListSurrogate.hpp"
+
+
+
 #include "XalanNode.hpp"
 
 
 
 XalanNodeListSurrogate::XalanNodeListSurrogate(const XalanNode&		theNode) :
+	XalanNodeList(),
 	m_node(&theNode)
 {
 }
@@ -67,6 +71,7 @@ XalanNodeListSurrogate::XalanNodeListSurrogate(const XalanNode&		theNode) :
 
 
 XalanNodeListSurrogate::XalanNodeListSurrogate(const XalanNodeListSurrogate&	theSource) :
+	XalanNodeList(theSource),
 	m_node(theSource.m_node)
 {
 }
