@@ -112,12 +112,11 @@ XercesDOMImplementationBridge::hasFeature(
 
 XalanDocumentType*
 XercesDOMImplementationBridge::createDocumentType(
-			const XalanDOMString&	qualifiedName,
-			const XalanDOMString&	publicId,
-			const XalanDOMString&	systemId)
+			const XalanDOMString&	/* qualifiedName */,
+			const XalanDOMString&	/* publicId */,
+			const XalanDOMString&	/* systemId */)
 {
-	// $$$ ToDo: Fix this!!!
-	throw XercesDOMException(XercesDOMException::NO_MODIFICATION_ALLOWED_ERR);
+	throw XercesDOMException(XercesDOMException::NOT_SUPPORTED_ERR);
 
 	return 0;
 }
@@ -126,12 +125,11 @@ XercesDOMImplementationBridge::createDocumentType(
 
 XalanDocument*
 XercesDOMImplementationBridge::createDocument(
-			const XalanDOMString&		namespaceURI,
-			const XalanDOMString&		qualifiedName,
-			const XalanDocumentType&	doctype)
+			const XalanDOMString&		/* namespaceURI */,
+			const XalanDOMString&		/* qualifiedName */,
+			const XalanDocumentType&	/* doctype */)
 {
-	// $$$ ToDo: Fix this!!!
-	throw XercesDOMException(XercesDOMException::NO_MODIFICATION_ALLOWED_ERR);
+	throw XercesDOMException(XercesDOMException::NOT_SUPPORTED_ERR);
 
 	return 0;
 }
