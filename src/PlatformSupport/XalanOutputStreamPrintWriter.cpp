@@ -244,7 +244,6 @@ XalanOutputStreamPrintWriter::print(
 			XalanDOMString::size_type	theLength)
 {
 	assert(s != 0);
-	assert(theLength >= 0 || theLength == UINT_MAX);
 
 	write(s,
 		  0,
