@@ -476,9 +476,11 @@ StylesheetHandler::startElement(
 
 						m_elemStackParentedElements.insert(foreach);
 
-						m_elemStack.push_back(new ElemEmpty(m_constructionContext,
-									 m_stylesheet,
-									 lineNumber, columnNumber, &Constants::ELEMNAME_SORT_WITH_PREFIX_STRING));
+						m_elemStack.push_back(
+							new ElemEmpty(
+									m_constructionContext,
+									m_stylesheet,
+									&Constants::ELEMNAME_SORT_WITH_PREFIX_STRING));
 					}
 					break;
 
@@ -800,9 +802,7 @@ StylesheetHandler::startElement(
 		// object.
 		if(origStackSize == m_elemStack.size())
 		{
-			m_elemStack.push_back(new ElemEmpty(m_constructionContext,
-									 m_stylesheet,
-									 lineNumber, columnNumber));
+			m_elemStack.push_back(new ElemEmpty(m_constructionContext, m_stylesheet));
 
 			if (elem != 0)
 			{

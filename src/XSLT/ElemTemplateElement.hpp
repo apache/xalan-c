@@ -117,6 +117,19 @@ public:
 			int 							columnNumber,
 			int 							xslToken);
 
+	/**
+	 * Special constructor used by dummy elements which do not exist in the
+	 * final stylesheet.
+	 * 
+	 * @param constructionContext  context when object constructed
+	 * @param stylesheetTree	   owning stylesheet
+	 * @param xslToken			   an integer representing the type of instance.
+	 */
+	ElemTemplateElement(
+			StylesheetConstructionContext&	constructionContext,
+			Stylesheet& 					stylesheetTree,
+			int 							xslToken);
+
 	virtual
 	~ElemTemplateElement();
 

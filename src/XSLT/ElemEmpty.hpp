@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -81,7 +81,6 @@ public:
 	 * 
 	 * @param constructionContext context for construction of object
 	 * @param stylesheetTree      stylesheet containing element
-	 * @param atts                list of attributes for element
 	 * @param lineNumber				line number in document
 	 * @param columnNumber			column number in document
 	 * @param elementName The element name for which this instance is representing
@@ -91,6 +90,20 @@ public:
 			Stylesheet&						stylesheetTree,
 			int								lineNumber,
 			int								columnNumber,
+			const XalanDOMString*			elementName = 0);
+
+	/**
+	 * Construct an object corresponding to an empty element.  This
+	 * constructor is used for surrogate empty elements that do not
+	 * need namespace contexts and Locator information, etc.
+	 *
+	 * @param constructionContext context for construction of object
+	 * @param stylesheetTree      stylesheet containing element
+	 * @param elementName The element name for which this instance is representing
+	 */
+	ElemEmpty(
+			StylesheetConstructionContext&	constructionContext,
+			Stylesheet&						stylesheetTree,
 			const XalanDOMString*			elementName = 0);
 
 	virtual

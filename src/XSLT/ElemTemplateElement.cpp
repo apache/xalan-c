@@ -147,6 +147,32 @@ ElemTemplateElement::ElemTemplateElement(
 
 
 
+ElemTemplateElement::ElemTemplateElement(
+			StylesheetConstructionContext&	/* constructionContext */,
+			Stylesheet&						stylesheetTree,
+			int								xslToken) :
+	XalanElement(),
+	PrefixResolver(),
+	m_finishedConstruction(false),
+	m_namespacesHandler(),
+	m_stylesheet(stylesheetTree),
+	m_lineNumber(-1),
+	m_columnNumber(-1),
+	m_defaultSpace(true),
+	m_xslToken(xslToken),
+	m_parentNode(0),
+	m_nextSibling(0),
+	m_previousSibling(0),
+	m_firstChild(0),
+	m_surrogateChildren(*this),
+	m_baseIndentifier(s_emptyString),
+	m_optimizationFlags(eCanGenerateAttributes),
+	m_locatorProxy(*this)
+{
+}
+
+
+
 ElemTemplateElement::~ElemTemplateElement()
 {
 	delete m_nextSibling;

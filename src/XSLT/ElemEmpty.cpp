@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -75,6 +75,19 @@ ElemEmpty::ElemEmpty(
 						stylesheetTree,
 						lineNumber,
 						columnNumber,
+						StylesheetConstructionContext::ELEMNAME_UNDEFINED),
+	m_elementName(elementName)
+{
+}
+
+
+
+ElemEmpty::ElemEmpty(
+			StylesheetConstructionContext&	constructionContext,
+			Stylesheet&						stylesheetTree,
+			const XalanDOMString*			elementName) :
+	ElemTemplateElement(constructionContext,
+						stylesheetTree,
 						StylesheetConstructionContext::ELEMNAME_UNDEFINED),
 	m_elementName(elementName)
 {
