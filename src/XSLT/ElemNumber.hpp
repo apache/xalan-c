@@ -57,13 +57,7 @@
 #if !defined(XALAN_ELEMNUMBER_HEADER_GUARD)
 #define XALAN_ELEMNUMBER_HEADER_GUARD 
 
-/**
- * $Id$
- * 
- * $State$
- * 
- * @author Myriam Midy (Myriam_Midy @lotus.com 
- */
+
 
 // Base include file.  Must be first.
 #include <XSLT/XSLTDefinitions.hpp>
@@ -85,6 +79,7 @@
 
 
 class AVT;
+class CountersTable;
 class QName;
 class XalanNumberFormat;
 class XPath;
@@ -96,7 +91,7 @@ class ElemNumber: public ElemTemplateElement
 {
 private:
 
-struct Counter;
+	struct Counter;
 
 public:
 
@@ -214,8 +209,20 @@ protected:
 	 * Given an XML source node, get the count according to the 
 	 * parameters set up by the xsl:number attributes.
 	 */
-	XalanDOMString
-	getCountString(StylesheetExecutionContext&		executionContext) const;
+	void
+	getCountString(
+			StylesheetExecutionContext&		executionContext,
+			XalanDOMString&					theResult) const;
+
+	void
+	getCountString(
+			StylesheetExecutionContext&		executionContext,
+			XalanNode*						sourceNode,
+			const MutableNodeRefList&		ancestors,
+			CountersTable&					ctable,
+			int								numberList[],
+			unsigned int					numberListLength,
+			XalanDOMString&					theResult) const;
 
 	/**
 	 * Get the ancestors, up to the root, that match the
@@ -223,12 +230,15 @@ protected:
 	 * @param patterns if non-0, count only nodes
 	 * that match this pattern, if 0 count all ancestors.
 	 * @param node Count this node and it's ancestors.
-	 * @return The number of ancestors that match the pattern.
+	 * @param stopAtFirstFound If true, only get the first matching ancestor
+	 * @param ancestors The ancestors that match the pattern.
 	 */
-	MutableNodeRefList getMatchingAncestors(
+	void
+	getMatchingAncestors(
 			StylesheetExecutionContext&		executionContext,
 			XalanNode*						node, 
-			bool							stopAtFirstFound) const;
+			bool							stopAtFirstFound,
+			MutableNodeRefList&				ancestors) const;
 
 	/**
 	 * Get a formatter.
@@ -242,50 +252,55 @@ protected:
 			XalanNode*						contextNode) const;
 
 	/**
-	 * Format a vector of numbers into a formatted string.
+	 * Format an array of integers into a formatted string.
+	 *
 	 * @param executionContext The current execution context.
-	 * @param xslNumberElement Element that takes %conversion-atts; attributes.
-	 * @param list Array of one or more integer numbers.
-	 * @return String that represents list according to 
-	 * %conversion-atts; attributes.
-	 * TODO: Optimize formatNumberList so that it caches the last count and
-	 * reuses that info for the next count.
+	 * @param theList Array of one or more integer numbers.
+	 * @param theListLength The length of the array.
+	 * @param contextNode The context node.
+	 * @param formattedNumber The formatted number result.
 	 */
-	XalanDOMString
+	void
 	formatNumberList(	
 			StylesheetExecutionContext&		executionContext,
-			const IntArrayType&				theList,
-			XalanNode*						contextNode) const;
+			const int						theList[],
+			unsigned int					theListLength,
+			XalanNode*						contextNode,
+			XalanDOMString&					formattedNumber) const;
 
 	/**
 	 * Convert a long integer into alphabetic counting, in other words
 	 * count using the sequence A B C ... Z.
 	 * @param val Value to convert -- must be greater than zero.
 	 * @param table a table containing one character for each digit in the radix
-	 * @return String representing alpha count of number.
+	 * @param theResult A string representing alpha count of number.
 	 * @see XSLTEngineImpl#DecimalToRoman
 	 *
 	 * Note that the radix of the conversion is inferred from the size
 	 * of the table.
 	 */
-	XalanDOMString int2singlealphaCount(int val, 
-			const XalanDOMString&	table);
+	static void
+	int2singlealphaCount(
+			int						val,
+			const XalanDOMString&	table,
+			XalanDOMString&			theResult);
 		
 	/**
 	 * Convert a long integer into alphabetic counting, in other words 
 	 * count using the sequence A B C ... Z AA AB AC.... etc.
 	 * @param val Value to convert -- must be greater than zero.
 	 * @param table a table containing one character for each digit in the radix
-	 * @return String representing alpha count of number.
+	 * @param result returns the stringrepresenting alpha count of number.
 	 * @see XSLTEngineImpl#DecimalToRoman
 	 * 
 	 * Note that the radix of the conversion is inferred from the size
 	 * of the table.
 	 */
-	static XalanDOMString
+	static void
 	int2alphaCount(
 			int						val,
-			const XalanDOMString&	table);
+			const XalanDOMString&	table,
+			XalanDOMString&			theResult);
 
 	/**
 	 * Convert a long integer into traditional alphabetic counting, in other words
@@ -298,22 +313,24 @@ protected:
 	 * Note that the radix of the conversion is inferred from the size
 	 * of the table.
 	 */
-	static XalanDOMString
-	tradAlphaCount(int val);
+	static void
+	tradAlphaCount(
+			int					val,
+			XalanDOMString&		theResult);
 
 	/**
 	 * Convert a long integer into roman numerals.
 	 * @param val Value to convert.
-	 * @param prefixesAreOK true_ to enable prefix notation (e.g. 4 = "IV"),
-	 * false_ to disable prefix notation (e.g. 4 = "IIII").
-	 * @return Roman numeral string.
+	 * @param prefixesAreOK true to enable prefix notation (e.g. 4 = "IV"), false to disable prefix notation (e.g. 4 = "IIII").
+	 * @param theResult The formatted Roman numeral string.
 	 * @see DecimalToRoman
 	 * @see m_romanConvertTable
 	 */
-	static XalanDOMString
+	static void
 	long2roman(
-			long	val,
-			bool	prefixesAreOK);
+			long				val,
+			bool				prefixesAreOK,
+			XalanDOMString&		theResult);
 
 private:
 
@@ -323,21 +340,23 @@ private:
 			XalanNode* 						contextNode,
 			const XalanDOMString&			compareValue) const;
 
-	XalanDOMString
+	void
 	traditionalAlphaCount(
 			int										theValue,
-			const XalanNumberingResourceBundle&		theResourceBundle) const;
+			const XalanNumberingResourceBundle&		theResourceBundle,
+			XalanDOMString&							theResult) const;
 
 	/*
 	 * Get Formatted number
 	 */
-	XalanDOMString 
+	void
 	getFormattedNumber(
 			StylesheetExecutionContext&		executionContext,
 			XalanNode*						contextNode,
 			XalanDOMChar					numberType,
 			int								numberWidth,
-			int								listElement) const;
+			int								listElement,
+			XalanDOMString&					theResult) const;
 
 	const XPath*	m_countMatchPattern;
 	const XPath*	m_fromMatchPattern;
@@ -392,6 +411,11 @@ private:
  	static const XalanDOMString&			s_oneString;
 
 	/**
+ 	 * The string ".".
+ 	 */
+ 	static const XalanDOMString&			s_defaultSeparatorString;
+
+	/**
 	* Chars for converting integers into alpha counts.
 	* @see XSLTEngineImpl#int2alphaCount
 	*/
@@ -418,68 +442,78 @@ private:
 	 */
 	class NumberFormatStringTokenizer
 	{
-		public:
+	public:
 
-			/**
-			 * Construct a NumberFormatStringTokenizer.
-			 *
-			 * @param theStr string to tokenize
-			 */
-			explicit
-				NumberFormatStringTokenizer(const XalanDOMString&	theStr = XalanDOMString());
+		/**
+		 * Construct a NumberFormatStringTokenizer.
+		 *
+		 * @param theString string to tokenize
+		 */
+		NumberFormatStringTokenizer(const XalanDOMString&	theString);
 
-			/**
-			 * Sets the string to tokenize.
-			 *
-			 * @param theString  new string to tokenize
-			 */
-			void
-				setString(const XalanDOMString&	theString);
+		/**
+		 * Sets the string to tokenize.
+		 *
+		 * @param theString  new string to tokenize
+		 */
+		void
+		setString(const XalanDOMString&	theString);
 
-			/**
-			 * Reset tokenizer so that nextToken() starts from the beginning.
-			 */
-			void
-				reset()
-				{
-					m_currentPosition = 0;
-				}
+		/**
+		 * Reset tokenizer so that nextToken() starts from the beginning.
+		 */
+		void
+		reset()
+		{
+			m_currentPosition = 0;
+		}
 
-			/**
-			 * Retrieve the next token to be parsed; behavior is undefined if there
-			 * are no more tokens
-			 * 
-			 * @return next token string
-			 */
-			XalanDOMString
-				nextToken();
+		/**
+		 * Retrieve the next token to be parsed; behavior is undefined if there
+		 * are no more tokens
+		 * 
+		 * @return next token string
+		 */
+		XalanDOMString
+		nextToken();
 
-			/**
-			 * Determine if there are tokens remaining
-			 * 
-			 * @return true if there are more tokens
-			 */
-			bool
-				hasMoreTokens() const
-				{
-					return (m_currentPosition >= m_maxPosition) ? false : true;
-				}
+		/**
+		 * Retrieve the next token to be parsed.
+		 * 
+		 * @param theToken The next token string
+		 */
+		void
+		nextToken(XalanDOMString&	theToken);
 
-			/**
-			 * Count the number of tokens yet to be parsed
-			 * 
-			 * @return number of remaining tokens
-			 */
-			int
-				countTokens() const;
+		/**
+		 * Determine if there are tokens remaining
+		 * 
+		 * @return true if there are more tokens
+		 */
+		bool
+		hasMoreTokens() const
+		{
+			return m_currentPosition >= m_maxPosition ? false : true;
+		}
 
-		private:
+		/**
+		 * Count the number of tokens yet to be parsed
+		 * 
+		 * @return number of remaining tokens
+		 */
+		unsigned int
+		countTokens() const;
 
-			int				m_currentPosition;
-			int				m_maxPosition;
-			XalanDOMString	m_str;
-	}; // end NumberFormatStringTokenizer
+	private:
 
-}; // end ElemNumber
+		unsigned int			m_currentPosition;
+
+		unsigned int			m_maxPosition;
+
+		const XalanDOMString*	m_string;
+	};
+};
+
+
 
 #endif	// XALAN_ELEMNUMBER_HEADER_GUARD

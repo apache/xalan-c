@@ -217,7 +217,13 @@ ElemNumber::execute(StylesheetExecutionContext&		executionContext) const
 {
 	ElemTemplateElement::execute(executionContext);
 
-	const XalanDOMString	countString = getCountString(executionContext);
+	typedef XPathExecutionContext::GetAndReleaseCachedString	GetAndReleaseCachedString;
+
+	GetAndReleaseCachedString	theGuard(executionContext);
+
+	XalanDOMString&				countString = theGuard.get();
+
+	getCountString(executionContext, countString);
 
 	if (!isEmpty(countString))
 	{
@@ -314,6 +320,7 @@ ElemNumber::findPrecedingOrAncestorOrSelf(
 				contextCopy = prevSibling;
 		}
 	}
+
 	return contextCopy;
 }
 
@@ -371,14 +378,44 @@ ElemNumber::getCountMatchPattern(
 
 
 
-XalanDOMString
-ElemNumber::getCountString(StylesheetExecutionContext&		executionContext) const
+inline void
+ElemNumber::getCountString(
+			StylesheetExecutionContext&		executionContext,
+			XalanNode*						sourceNode,
+			const MutableNodeRefList&		ancestors,
+			CountersTable&					ctable,
+			int								numberList[],
+			unsigned int					numberListLength,
+			XalanDOMString&					theResult) const
+{
+	for(unsigned int i = 0; i < numberListLength; i++)
+	{
+		XalanNode* const target = ancestors.item(numberListLength - i - 1);
+
+		numberList[i] = ctable.countNode(
+							executionContext,
+							this,
+							target);
+	}
+
+	formatNumberList(
+			executionContext,
+			numberList,
+			numberListLength,
+			sourceNode,
+			theResult);
+}
+
+
+
+void
+ElemNumber::getCountString(
+			StylesheetExecutionContext&		executionContext,
+			XalanDOMString&					theResult) const
 {
 	XalanNode* sourceNode = executionContext.getCurrentNode();
 
 	assert(sourceNode != 0);
-
-	IntArrayType	numberList;
 
 	if(0 != m_valueExpr)
 	{
@@ -387,14 +424,19 @@ ElemNumber::getCountString(StylesheetExecutionContext&		executionContext) const
 
 		const double	theValue = countObj->num();
 
-		if (DoubleSupport::isNaN(theValue) == true)
+		int	theNumber = 0;
+
+		if (DoubleSupport::isNaN(theValue) == false)
 		{
-			numberList.push_back(0);
+			theNumber = int(DoubleSupport::round(theValue));
 		}
-		else
-		{
-			numberList.push_back(int(DoubleSupport::round(theValue)));
-		}
+
+		formatNumberList(
+				executionContext,
+				&theNumber,
+				1,
+				sourceNode,
+				theResult);
 	}
 	else
 	{
@@ -402,34 +444,65 @@ ElemNumber::getCountString(StylesheetExecutionContext&		executionContext) const
 
 		if(Constants::NUMBERLEVEL_ANY == m_level)
 		{
-			numberList.push_back(ctable.countNode(
-						executionContext, 
-						this,
-						sourceNode));
+			const int	theNumber =
+				ctable.countNode(executionContext, this, sourceNode);
+
+			formatNumberList(
+				executionContext,
+				&theNumber,
+				1,
+				sourceNode,
+				theResult);
 		}
 		else
 		{
-			const MutableNodeRefList	ancestors = getMatchingAncestors(executionContext, sourceNode,
-				Constants::NUMBERLEVEL_SINGLE == m_level);
+			typedef XPathExecutionContext::BorrowReturnMutableNodeRefList	BorrowReturnMutableNodeRefList;
 
-			const unsigned int	lastIndex = ancestors.getLength();
+			BorrowReturnMutableNodeRefList	ancestors(executionContext);
+
+			getMatchingAncestors(
+				executionContext,
+				sourceNode,
+				Constants::NUMBERLEVEL_SINGLE == m_level,
+				*ancestors.get());
+
+			const unsigned int	lastIndex = ancestors->getLength();
 
 			if(lastIndex > 0)
 			{
-				for(unsigned int i = 0; i < lastIndex; i++)
-				{
-					XalanNode* const target = ancestors.item(lastIndex - i - 1);
+				const unsigned int	theStackArrayThreshold = 100;
 
-					numberList.push_back(ctable.countNode(
+				if (lastIndex < theStackArrayThreshold)
+				{
+					int		numberList[theStackArrayThreshold];
+
+					getCountString(
 						executionContext,
-						this,
-						target));
+						sourceNode,
+						*ancestors.get(),
+						ctable,
+						numberList,
+						lastIndex,
+						theResult);
+				}
+				else
+				{
+					IntArrayType	numberList;
+
+					numberList.resize(lastIndex);
+
+					getCountString(
+						executionContext,
+						sourceNode,
+						*ancestors.get(),
+						ctable,
+						&*numberList.begin(),
+						lastIndex,
+						theResult);
 				}
 			}
 		}
 	}
-
-	return numberList.size() > 0 ? formatNumberList(executionContext, numberList, sourceNode) : XalanDOMString();
 }
 
 
@@ -456,7 +529,7 @@ ElemNumber::getPreviousNode(
 
 	if(Constants::NUMBERLEVEL_ANY == m_level)
 	{
-		const XPath* fromMatchPattern = m_fromMatchPattern;
+		const XPath* const	fromMatchPattern = m_fromMatchPattern;
 
 		// Do a backwards document-order walk 'till a node is found that matches 
 		// the 'from' pattern, or a node is found that matches the 'count' pattern, 
@@ -467,16 +540,21 @@ ElemNumber::getPreviousNode(
 			// then count the parent, but if there is a previous sibling, 
 			// dive down to the lowest right-hand (last) child of that sibling.
 			XalanNode* next = pos->getPreviousSibling();
+
 			if(0 == next)
 			{
 				next = pos->getParentNode();
-				if((0 != next) && ((((0 != fromMatchPattern) &&
-						(fromMatchPattern->getMatchScore(next, *this,
-						executionContext) !=
-									 XPath::s_MatchScoreNone))) || 
-							(next->getNodeType() == XalanNode::DOCUMENT_NODE)))
+
+				if(0 != next &&
+				   next->getNodeType() == XalanNode::DOCUMENT_NODE ||
+				   (0 != fromMatchPattern &&
+						fromMatchPattern->getMatchScore(
+							next,
+							*this,
+							executionContext) != XPath::s_MatchScoreNone))
 				{
 					pos = 0; // return 0 from function.
+
 					break; // from while loop
 				}
 			}
@@ -484,19 +562,24 @@ ElemNumber::getPreviousNode(
 			{
 				// dive down to the lowest right child.
 				XalanNode* child = next;
+
 				while(0 != child)
 				{
 					child = next->getLastChild();
+
 					if(0 != child)
 						next = child;
 				}
 			}
+
 			pos = next;
 
-			if((0 != pos) && ((0 == countMatchPattern) ||
-						(countMatchPattern->getMatchScore(pos, *this,
-						executionContext) !=
-						 XPath::s_MatchScoreNone)))
+			if(0 != pos &&
+			   (0 == countMatchPattern ||
+				countMatchPattern->getMatchScore(
+						pos,
+						*this,
+						executionContext) != XPath::s_MatchScoreNone))
 			{
 				break;
 			}
@@ -507,17 +590,22 @@ ElemNumber::getPreviousNode(
 		while(0 != pos)
 		{            
 			pos = pos->getPreviousSibling();
-			if((0 != pos) && ((0 == countMatchPattern) ||
-						(countMatchPattern->getMatchScore(pos, *this,
-						executionContext) !=
-						 XPath::s_MatchScoreNone)))
+
+			if(0 != pos &&
+			   (0 == countMatchPattern ||
+				countMatchPattern->getMatchScore(
+						pos,
+						*this,
+						executionContext) != XPath::s_MatchScoreNone))
 			{
 				break;
 			}
 		}
 	}
+
 	return pos;
 }
+
 
 
 XalanNode*
@@ -565,22 +653,14 @@ ElemNumber::getTargetNode(
 }
 
 
-/**
- * Get the ancestors, up to the root, that match the
- * pattern.
- * @param patterns if non-0, count only nodes
- * that match this pattern, if 0 count all ancestors.
- * @param node Count this node and it's ancestors.
- * @return The number of ancestors that match the pattern.
- */
-MutableNodeRefList
-ElemNumber::getMatchingAncestors(
-		StylesheetExecutionContext&		executionContext,
-		XalanNode* node, 
-		bool stopAtFirstFound) const
-{
-	MutableNodeRefList ancestors;
 
+void
+ElemNumber::getMatchingAncestors(
+			StylesheetExecutionContext&		executionContext,
+			XalanNode*						node, 
+			bool							stopAtFirstFound,
+			MutableNodeRefList&				ancestors) const
+{
 	// Create an XPathGuard, since we may need to
 	// create a new XPath...
 	StylesheetExecutionContext::XPathGuard	xpathGuard(
@@ -596,7 +676,7 @@ ElemNumber::getMatchingAncestors(
 		countMatchPattern = xpathGuard.get();
 	}
 
-	while( 0 != node )
+	while(0 != node)
 	{
 		if((0 != m_fromMatchPattern) &&
 				(m_fromMatchPattern->getMatchScore(node, *this, executionContext) !=
@@ -619,13 +699,14 @@ ElemNumber::getMatchingAncestors(
 				XPath::s_MatchScoreNone)
 		{
 			ancestors.addNode(node);
+
 			if(stopAtFirstFound)
 				break;
 		}
+
 		node = DOMServices::getParentOfNode(*node);
 	}
-	return ancestors;
-} // end getMatchingAncestors method
+}
 
 
 
@@ -637,12 +718,21 @@ ElemNumber::getNumberFormatter(
     // Helper to format local specific numbers to strings.
 	XalanAutoPtr<XalanNumberFormat>		formatter(executionContext.createXalanNumberFormat());
 
-	XalanDOMString	digitGroupSepValue;
+	typedef XPathExecutionContext::GetAndReleaseCachedString	GetAndReleaseCachedString;
+
+	GetAndReleaseCachedString	theGuard1(executionContext);
+
+	XalanDOMString&				digitGroupSepValue = theGuard1.get();
+
 	if (0 != m_groupingSeparator_avt)
 		 m_groupingSeparator_avt->evaluate(digitGroupSepValue, contextNode,
 				 *this, executionContext);
 									 
-	XalanDOMString	nDigitsPerGroupValue;
+
+	GetAndReleaseCachedString	theGuard2(executionContext);
+
+	XalanDOMString&				nDigitsPerGroupValue = theGuard2.get();
+
 	if (0 != m_groupingSize_avt)
 		m_groupingSize_avt->evaluate(nDigitsPerGroupValue, contextNode, *this,
 				executionContext);
@@ -660,69 +750,98 @@ ElemNumber::getNumberFormatter(
 }
 
 
-//@@ JMD: this is different from the java version, but seems to work, so I'll
-//leave it alone
-XalanDOMString
+
+void
 ElemNumber::formatNumberList(
 			StylesheetExecutionContext&		executionContext,
-			const IntArrayType&				theList,
-			XalanNode*						contextNode) const
+			const int						theList[],
+			unsigned int					theListLength,
+			XalanNode*						contextNode,
+			XalanDOMString&					theResult) const
 {
-	const IntArrayType::size_type	nNumbers = theList.size();
-	XalanDOMChar	numberType(XalanUnicode::charDigit_1);
-	int			numberWidth = 1;
-
-	XalanDOMString	formattedNumber;
-	XalanDOMString	formatToken;
-	XalanDOMString	sepString(XALAN_STATIC_UCODE_STRING("."));
-	XalanDOMString	lastSepString;
+	assert(theListLength > 0);
 
 	// Pathological cases
-	if (nNumbers == 0) return formattedNumber;
-	if (contextNode == 0) return formattedNumber;
+	if (contextNode == 0) return;
 
-	XalanDOMString	formatValue;
-	if (m_format_avt != 0)
-		 m_format_avt->evaluate(formatValue, contextNode, *this, executionContext);
+	XalanDOMChar	numberType = XalanUnicode::charDigit_1;
 
-	if(isEmpty(formatValue)) 
-		formatValue = XALAN_STATIC_UCODE_STRING("1");
-
-	NumberFormatStringTokenizer		formatTokenizer(formatValue);
+	int			numberWidth = 1;
 
 	typedef vector<XalanDOMString>		StringVectorType;
 	typedef StringVectorType::iterator	StringVectorTypeIterator;
 
 	// Construct an array of tokens.  We need to be able to check if the last
 	// token in non-alphabetic, in which case the penultimate non-alphabetic is
-	// the repeating separator
-	StringVectorType tokenVector;
-	while(formatTokenizer.hasMoreTokens())
-		tokenVector.push_back(formatTokenizer.nextToken());
+	// the repeating separator.
+	//
+	// We should be able to replace this with a vector of the indexes in
+	// the evaluated string where the tokens start.  But for now, this will
+	// have to do...
+	StringVectorType	tokenVector;
 
-	// Get rid of the leading and trailing non-alphabetics, save for later
-	XalanDOMString leaderStr;
-	XalanDOMString trailerStr;
-	StringVectorTypeIterator it;
-
-	if (tokenVector.size() > 0)
 	{
-		it = tokenVector.begin();
+		typedef XPathExecutionContext::GetAndReleaseCachedString	GetAndReleaseCachedString;
 
-		if(!isXMLLetterOrDigit(charAt(*it, 0)))
+		GetAndReleaseCachedString	theGuard1(executionContext);
+
+		XalanDOMString&				formatValue = theGuard1.get();
+
+		if (m_format_avt != 0)
 		{
-			leaderStr = *it;
-			tokenVector.erase(it);
+			 m_format_avt->evaluate(formatValue, contextNode, *this, executionContext);
 		}
 
-		if (tokenVector.size() > 0)
+		if(isEmpty(formatValue) == true)
 		{
-			it = tokenVector.end() - 1;
+			formatValue = XalanUnicode::charDigit_1;
+		}
 
-			if(!isXMLLetterOrDigit(charAt(*it, 0)))
+		NumberFormatStringTokenizer		formatTokenizer(formatValue);
+
+		const unsigned int	theTokenCount = formatTokenizer.countTokens();
+
+		tokenVector.resize(theTokenCount);
+
+		// Tokenize directly into the vector...
+		for(unsigned int i = 0; i < theTokenCount; ++i)
+		{
+			formatTokenizer.nextToken(tokenVector[i]);
+		}
+
+		assert(theTokenCount == tokenVector.size());
+	}
+
+	// These are iterators which will either point to tokenVector.end(),
+	// or the appropriate string in the vector...
+	StringVectorTypeIterator		leaderStrIt = tokenVector.end();
+	StringVectorTypeIterator		trailerStrIt = leaderStrIt;
+	StringVectorTypeIterator		sepStringIt = leaderStrIt;
+	const StringVectorTypeIterator	endIt = leaderStrIt;
+
+	StringVectorTypeIterator	it = tokenVector.begin();
+
+	const StringVectorType::size_type	theVectorSize =
+		tokenVector.size();
+
+	if (theVectorSize > 0)
+	{
+		if(!isXMLLetterOrDigit(charAt(*it, 0)))
+		{
+			leaderStrIt = it;
+
+			// Move the iterator up one, so it
+			// points at the first numbering token...
+			++it;
+		}
+
+		if (theVectorSize > 1)
+		{
+			if(!isXMLLetterOrDigit(charAt(tokenVector.back(), 0)))
 			{
-				trailerStr = *it;
-				tokenVector.erase(it);
+				// Move the iterator back one, so it's pointing
+				// at the trailing string...
+				--trailerStrIt;
 			}
 		}
 	}
@@ -730,35 +849,70 @@ ElemNumber::formatNumberList(
 	// Now we're left with a sequence of alpha,non-alpha tokens, format them
 	// with the corresponding entry in the format string, or the last one if no
 	// more matching ones
-	formattedNumber = leaderStr;
-	it = tokenVector.begin();
-	for(unsigned int i = 0; i < nNumbers; i++)
-	{
-		if (it != tokenVector.end())
-		{
-			// $$$ ToDo: This assert is commented out until we get
-			// out character classification problems fixed.
-			// assert(isXMLLetterOrDigit(charAt((*it), 0)));
-			formatToken = *it++;
-			numberWidth = length(formatToken);
-			numberType = charAt(formatToken, numberWidth - 1);
-		}
-		if (it != tokenVector.end())
-		{
-			// $$$ ToDo: This assert is commented out until we get
-			// out character classification problems fixed.
-			//assert(!isXMLLetterOrDigit(charAt((*it), 0)));
-			sepString = *it++;
-		}
-		formattedNumber += getFormattedNumber(executionContext, contextNode,
-				numberType, numberWidth, theList[i]);
-		// All but the last one
-		if (i < nNumbers-1)
-			formattedNumber += sepString;
-	}
-	formattedNumber += trailerStr;
 
-	return formattedNumber;  
+	if (leaderStrIt != endIt)
+	{
+		theResult += *leaderStrIt;
+	}
+
+	typedef XPathExecutionContext::GetAndReleaseCachedString	GetAndReleaseCachedString;
+
+	GetAndReleaseCachedString	theGuard2(executionContext);
+
+	XalanDOMString&				theIntermediateResult = theGuard2.get();
+
+	for(unsigned int i = 0; i < theListLength; i++)
+	{
+		if (it != trailerStrIt)
+		{
+			assert(isXMLLetterOrDigit(charAt(*it, 0)));
+
+			numberWidth = length(*it);
+
+			numberType = charAt(*it, numberWidth - 1);
+
+			++it;
+		}
+
+		if (it != trailerStrIt)
+		{
+			assert(!isXMLLetterOrDigit(charAt(*it, 0)));
+
+			sepStringIt = it;
+
+			++it;
+		}
+
+		getFormattedNumber(
+				executionContext,
+				contextNode,
+				numberType,
+				numberWidth,
+				theList[i],
+				theIntermediateResult);
+
+		theResult += theIntermediateResult;
+
+		// All but the last one
+		if (i < theListLength - 1)
+		{
+			if (sepStringIt != endIt)
+			{
+				theResult += *sepStringIt;
+			}
+			else
+			{
+				theResult += s_defaultSeparatorString;
+			}
+
+			clear(theIntermediateResult);
+		}
+	}
+
+	if (trailerStrIt != endIt)
+	{
+		theResult += *trailerStrIt;
+	}
 }
 
 
@@ -790,15 +944,18 @@ ElemNumber::evaluateLetterValueAVT(
 
 
 
-XalanDOMString
+void
 ElemNumber::traditionalAlphaCount(
 			int										theValue,
-			const XalanNumberingResourceBundle&		theResourceBundle) const
+			const XalanNumberingResourceBundle&		theResourceBundle,
+			XalanDOMString&							theResult) const
 {
 	typedef XalanNumberingResourceBundle::IntVectorType			IntVectorType;
 	typedef XalanNumberingResourceBundle::DigitsTableVectorType	DigitsTableVectorType;
 	typedef XalanNumberingResourceBundle::eNumberingMethod		eNumberingMethod;
 	typedef XalanNumberingResourceBundle::eMultiplierOrder		eMultiplierOrder;
+
+	bool	fError = false;
 
 	// if this number is larger than the largest number we can represent, error!
 	//if (val > theResourceBundle.getMaxNumericalValue())
@@ -809,7 +966,7 @@ ElemNumber::traditionalAlphaCount(
 	IntVectorType::size_type	lookupIndex = 1;  // start off with anything other than zero to make correction work
 
 	// Create a buffer to hold the result
-	// TODO:  size of the table can be detereined by computing
+	// TODO:  size of the table can be determined by computing
 	// logs of the radix.  For now, we fake it.
 	XalanDOMChar	buf[100];
 
@@ -954,17 +1111,19 @@ ElemNumber::traditionalAlphaCount(
 								}
 								else
 								{
-									buf[charPos++] =  table[lookupIndex];
+									buf[charPos++] = table[lookupIndex];
 								}
 
-								buf[charPos++] =	multiplierChar ;
+								buf[charPos++] = multiplierChar;
 							}
 
 							break;		 // all done!
 						}
 						else
 						{
-							return XALAN_STATIC_UCODE_STRING("#error");
+							fError = true;
+
+							break;
 						}
 					} //end else
 				} // end while	
@@ -973,11 +1132,10 @@ ElemNumber::traditionalAlphaCount(
 
 			} // end else if
 		} // end do while
-		while ( i < multiplierSize);		
+		while (i < multiplierSize && fError == false);		
 	}
 
 	// Now do additive part...
-
 	IntVectorType::size_type	count = 0;
 
 	// do this for each table of hundreds, tens, digits...
@@ -1027,15 +1185,23 @@ ElemNumber::traditionalAlphaCount(
 			}
 			else
 			{
-				return XALAN_STATIC_UCODE_STRING("#error");
+				fError = true;
+
+				break;
 			}
 
 			count++;
 		}
 	} // end while
 
-	// String s = new String(buf, 0, charPos);
-	return XalanDOMString(buf, charPos);
+	if (fError == true)
+	{
+		theResult = XALAN_STATIC_UCODE_STRING("#error");
+	}
+	else
+	{
+		assign(theResult, buf, charPos);
+	}
 }
 
 
@@ -1044,30 +1210,35 @@ const XalanDOMChar	elalphaNumberType = 0x03B1;
 
 
 
-XalanDOMString
+void
 ElemNumber::getFormattedNumber(
 			StylesheetExecutionContext&		executionContext,
 			XalanNode*						contextNode,
 			XalanDOMChar					numberType,
 			int								numberWidth,
-			int								listElement) const
+			int								listElement,
+			XalanDOMString&					theResult) const
 {
 	switch(numberType)
 	{
 		case XalanUnicode::charLetter_A:
-			return int2alphaCount(listElement, s_alphaCountTable);
+			int2alphaCount(listElement, s_alphaCountTable, theResult);
 			break;
 
 		case XalanUnicode::charLetter_a:
-			return toLowerCase(int2alphaCount(listElement, s_alphaCountTable));
+			int2alphaCount(listElement, s_alphaCountTable, theResult);
+
+			theResult = toLowerCase(theResult);
 			break;
 
 		case XalanUnicode::charLetter_I:
-			return long2roman(listElement, true);
+			long2roman(listElement, true, theResult);
 			break;
 
 		case XalanUnicode::charLetter_i:
-			return toLowerCase(long2roman(listElement, true));
+			long2roman(listElement, true, theResult);
+
+			theResult = toLowerCase(theResult);
 			break;
 
 		case 0x3042:
@@ -1081,7 +1252,6 @@ ElemNumber::getFormattedNumber(
 		case 0x10D0:
 		case 0x0430:
 			executionContext.error(LongToDOMString(numberType) + " format not supported yet!");
-			return XalanDOMString();
 			break;
 
 		// Handle the special case of Greek letters for now
@@ -1092,16 +1262,12 @@ ElemNumber::getFormattedNumber(
 
 				if (i != s_resourceBundles.end())
 				{
-					return traditionalAlphaCount(listElement, (*i).second);
-				}
-				else
-				{
-					return XalanDOMString();
+					traditionalAlphaCount(listElement, (*i).second, theResult);
 				}
 			}
 			else
 			{
-				return int2alphaCount(listElement, s_elalphaCountTable);
+				int2alphaCount(listElement, s_elalphaCountTable, theResult);
 			}
 			break;
 
@@ -1110,10 +1276,9 @@ ElemNumber::getFormattedNumber(
 				StylesheetExecutionContext::XalanNumberFormatAutoPtr	formatter(
 						getNumberFormatter(executionContext, contextNode));
 
-				XalanDOMString	numString =
-					formatter->format(listElement);
+				formatter->format(listElement, theResult);
 
-				const unsigned int	lengthNumString = length(numString);
+				const unsigned int	lengthNumString = length(theResult);
 
 				const int	nPadding = numberWidth - lengthNumString;
 
@@ -1121,15 +1286,13 @@ ElemNumber::getFormattedNumber(
 				{
 					const XalanDOMString	padString = formatter->format(0);
 
-					reserve(numString, nPadding * length(padString) + lengthNumString + 1);
+					reserve(theResult, nPadding * length(padString) + lengthNumString + 1);
 
 					for(int i = 0; i < nPadding; i++)
 					{
-						insert(numString, 0, padString);
+						insert(theResult, 0, padString);
 					}
 				}
-
-				return numString;
 			}
 			break;
 	}
@@ -1137,17 +1300,18 @@ ElemNumber::getFormattedNumber(
 
 
 
-XalanDOMString
+void
 ElemNumber::int2singlealphaCount(
 		int						val, 
-		const XalanDOMString&	table)
+		const XalanDOMString&	table,
+		XalanDOMString&			theResult)
 {
 	const int		radix = length(table);
 
 	// TODO:  throw error on out of range input
 	if (val > radix)
 	{
-		return XalanDOMString(XALAN_STATIC_UCODE_STRING("#E(") +
+		theResult = XalanDOMString(XALAN_STATIC_UCODE_STRING("#E(") +
 				LongToDOMString(val) +
 				XALAN_STATIC_UCODE_STRING(")"));
 	}
@@ -1155,16 +1319,17 @@ ElemNumber::int2singlealphaCount(
 	{
 		const XalanDOMChar	theChar = charAt(table, val - 1);
 
-		return XalanDOMString(&theChar, 1);
+		assign(theResult, &theChar, 1);
 	}
 }
 
 
 
-XalanDOMString
+void
 ElemNumber::int2alphaCount(
 			int						val,
-			const XalanDOMString&	table)
+			const XalanDOMString&	table,
+			XalanDOMString&			theResult)
 {
 	const int		radix = length(table);
 
@@ -1234,157 +1399,188 @@ ElemNumber::int2alphaCount(
 	}
 	while (val > 0);
 
-	const XalanDOMString	retStr(buf + charPos + 1, (buflen - charPos - 1));
-
-	return retStr;
+	assign(theResult, buf + charPos + 1, buflen - charPos - 1);
 }
 
-XalanDOMString ElemNumber::tradAlphaCount(int	/* val */)
+
+
+void
+ElemNumber::tradAlphaCount(
+			int					/* val */,
+			XalanDOMString&		/* theResult */)
 {
 //	@@ JMD: We don't do languages yet, so this is just a placeholder
-	assert(0);
-	return XalanDOMString();	// To keep compiler happy
+	assert(false);
 }
 
 
-XalanDOMString
+
+void
 ElemNumber::long2roman(
-			long	val,
-			bool	prefixesAreOK)
+			long				val,
+			bool				prefixesAreOK,
+			XalanDOMString&		theResult)
 {
 	if(val < 0)
 	{
-		return XalanDOMString(XALAN_STATIC_UCODE_STRING("#E(") +
+		theResult = XalanDOMString(XALAN_STATIC_UCODE_STRING("#E(") +
 								LongToDOMString(val) +
 								XALAN_STATIC_UCODE_STRING(")"));
 	}
-	// Make this match the conformance test
 	else if(val == 0)
 	{
-		return XalanDOMString(XALAN_STATIC_UCODE_STRING("0"));
+		theResult = XALAN_STATIC_UCODE_STRING("0");
 	}
-
-
-	XalanDOMString	roman;
-
-	int			place = 0;
-
-	if (val <= 3999L)
+	else if (val <= 3999L)
 	{
+		clear(theResult);
+
+		int	place = 0;
+
 		do      
 		{
-			while (val >= s_romanConvertTable[place].m_postValue)            
+			while (val >= s_romanConvertTable[place].m_postValue)
 			{
-				roman += s_romanConvertTable[place].m_postLetter;
+				theResult += s_romanConvertTable[place].m_postLetter;
 				val -= s_romanConvertTable[place].m_postValue;
 			}
-			if (prefixesAreOK)            
+
+			if (prefixesAreOK)
 			{
-				if (val >= s_romanConvertTable[place].m_preValue)                  
+				if (val >= s_romanConvertTable[place].m_preValue)
 				{
-					roman += s_romanConvertTable[place].m_preLetter;
+					theResult += s_romanConvertTable[place].m_preLetter;
 					val -= s_romanConvertTable[place].m_preValue;
 				}
 			} 
-			place++;      
+
+			++place;      
 		}
 		while (val > 0);
 	}
 	else
 	{
-		roman = XALAN_STATIC_UCODE_STRING("#error");
+		theResult = XALAN_STATIC_UCODE_STRING("#error");
 	}
-
-	return roman;
 }
 
 
-/*
- *				NumberFormatStringTokenizer Class Implementation
- */
 
 ElemNumber::NumberFormatStringTokenizer::NumberFormatStringTokenizer(
-			const XalanDOMString&	theStr) :
+			const XalanDOMString&	theString) :
 	m_currentPosition(0),
-	m_maxPosition(length(theStr)),
-	m_str(theStr)
+	m_maxPosition(length(theString)),
+	m_string(&theString)
 {
 }
 
 
 
-/*
-@@ Obsolete ??
 void
 ElemNumber::NumberFormatStringTokenizer::setString(const XalanDOMString&	theString)
 {
-	m_str = theString;
+	m_string = &theString;
 
 	m_currentPosition = 0;
 	m_maxPosition = length(theString);
 }
 
-*/
 
-// @@ JMD: This seemed to be working OK in previous version and is
-// functionally equivalent to java, so I left it alone.  Other java methods do
-// not seem to be needed in this implementation
 
 XalanDOMString
 ElemNumber::NumberFormatStringTokenizer::nextToken() 
 {
 	if (m_currentPosition >= m_maxPosition) 
 	{
-		// $$$ Todo: Implement!
-//				throw new NoSuchElementException();
+		return XalanDOMString();
 	}
 
-	const int	start = m_currentPosition;
+	const unsigned int	start = m_currentPosition;
 
-	if (isXMLLetterOrDigit(charAt(m_str, m_currentPosition)))
+	if (isXMLLetterOrDigit(charAt(*m_string, m_currentPosition)))
 	{
-		while ((m_currentPosition < m_maxPosition) &&
-				isXMLLetterOrDigit(charAt(m_str, m_currentPosition))) 
+		while (m_currentPosition < m_maxPosition &&
+			   isXMLLetterOrDigit(charAt(*m_string, m_currentPosition)))
+		{
 			m_currentPosition++;
+		}
 	}
 	else
 	{
-		while ((m_currentPosition < m_maxPosition) &&
-				!isXMLLetterOrDigit(charAt(m_str, m_currentPosition))) 
+		while (m_currentPosition < m_maxPosition &&
+			   !isXMLLetterOrDigit(charAt(*m_string, m_currentPosition)))
+		{
 			m_currentPosition++;
+		}
 	}
 
-	// @@ This wasn't working right when start=current=0 with DOMStrings
-	// need to check it with XalanDOMString's
-	return substring(m_str, start, m_currentPosition);
+	return substring(*m_string, start, m_currentPosition);
 }
 
 
 
-int
+void
+ElemNumber::NumberFormatStringTokenizer::nextToken(XalanDOMString&	theToken)
+{
+	if (m_currentPosition >= m_maxPosition) 
+	{
+		clear(theToken);
+	}
+
+	const unsigned int	start = m_currentPosition;
+
+	if (isXMLLetterOrDigit(charAt(*m_string, m_currentPosition)))
+	{
+		while (m_currentPosition < m_maxPosition &&
+			   isXMLLetterOrDigit(charAt(*m_string, m_currentPosition)))
+		{
+			m_currentPosition++;
+		}
+	}
+	else
+	{
+		while (m_currentPosition < m_maxPosition &&
+			   !isXMLLetterOrDigit(charAt(*m_string, m_currentPosition)))
+		{
+			m_currentPosition++;
+		}
+	}
+
+	substring(*m_string, theToken, start, m_currentPosition);
+}
+
+
+
+unsigned int
 ElemNumber::NumberFormatStringTokenizer::countTokens() const
 {
-	int 	count = 0;
-	int 	currpos = m_currentPosition;
+	unsigned int 	count = 0;
+	unsigned int 	currpos = m_currentPosition;
 
 	// Tokens consist of sequences of alphabetic characters and sequences of
 	// non-alphabetic characters
 	while (currpos < m_maxPosition) 
 	{
-		if (isXMLLetterOrDigit(charAt(m_str, currpos)))
+		if (isXMLLetterOrDigit(charAt(*m_string, currpos)))
 		{
-			while ((currpos < m_maxPosition) &&
-					isXMLLetterOrDigit(charAt(m_str, currpos))) 
+			while (currpos < m_maxPosition &&
+				   isXMLLetterOrDigit(charAt(*m_string, currpos)))
+			{
 				currpos++;
+			}
 		}
 		else
 		{
-			while ((currpos < m_maxPosition) &&
-					!isXMLLetterOrDigit(charAt(m_str, currpos))) 
+			while (currpos < m_maxPosition &&
+				   !isXMLLetterOrDigit(charAt(*m_string, currpos)))
+			{
 				currpos++;
+			}
 		}
+
 		count++;
 	}
+
 	return count;
 }
 
@@ -1471,6 +1667,8 @@ static XalanDOMString								s_dotString;
 
 static XalanDOMString								s_oneString;
 
+static XalanDOMString								s_defaultSeparatorString;
+
 static XalanDOMString								s_alphaCountTable;
 
 static XalanDOMString								s_elalphaCountTable;
@@ -1497,6 +1695,8 @@ const XalanDOMString&	ElemNumber::s_leftParenString = ::s_leftParenString;
 const XalanDOMString&	ElemNumber::s_dotString = ::s_dotString;
 
 const XalanDOMString&	ElemNumber::s_oneString = ::s_oneString;
+
+const XalanDOMString&	ElemNumber::s_defaultSeparatorString = ::s_defaultSeparatorString;
 
 const XalanDOMString&	ElemNumber::s_alphaCountTable = ::s_alphaCountTable;
 
@@ -1634,6 +1834,8 @@ ElemNumber::initialize()
 
 	::s_oneString = XALAN_STATIC_UCODE_STRING("1");
 
+	::s_defaultSeparatorString = XALAN_STATIC_UCODE_STRING(".");
+
 	::s_alphaCountTable = alphaCountTable;
 
 	::s_elalphaCountTable = elalphaCountTable;
@@ -1705,6 +1907,7 @@ ElemNumber::terminate()
 	releaseMemory(::s_leftParenString);
 	releaseMemory(::s_dotString);
 	releaseMemory(::s_oneString);
+	releaseMemory(::s_defaultSeparatorString);
 
 	releaseMemory(::s_alphaCountTable);
 	releaseMemory(::s_elalphaCountTable);
