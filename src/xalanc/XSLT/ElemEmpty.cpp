@@ -77,9 +77,10 @@ ElemEmpty::ElemEmpty(
 			const XalanDOMString*			elementName) :
 	ElemTemplateElement(constructionContext,
 						stylesheetTree,
+						StylesheetConstructionContext::ELEMNAME_UNDEFINED,
+						XalanDOMString(),
 						lineNumber,
-						columnNumber,
-						StylesheetConstructionContext::ELEMNAME_UNDEFINED),
+						columnNumber),
 	m_elementName(elementName)
 {
 }
@@ -87,10 +88,11 @@ ElemEmpty::ElemEmpty(
 
 
 ElemEmpty::ElemEmpty(
-			StylesheetConstructionContext&	/* constructionContext */,
+			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
 			const XalanDOMString*			elementName) :
 	ElemTemplateElement(
+			constructionContext,
 			stylesheetTree,
 			StylesheetConstructionContext::ELEMNAME_UNDEFINED),
 	m_elementName(elementName)

@@ -67,6 +67,7 @@
 
 
 #include "Constants.hpp"
+#include "Stylesheet.hpp"
 #include "StylesheetConstructionContext.hpp"
 #include "StylesheetExecutionContext.hpp"
 
@@ -87,10 +88,12 @@ ElemTextLiteral::ElemTextLiteral(
 			bool							fPreserveSpace,
             bool							fDisableOutputEscaping) :
 	ElemTemplateElement(
+		constructionContext,
 		stylesheetTree,
+		StylesheetConstructionContext::ELEMNAME_TEXT_LITERAL_RESULT,
+		stylesheetTree.getBaseIdentifier(),
 		lineNumber,
-		columnNumber,
-		StylesheetConstructionContext::ELEMNAME_TEXT_LITERAL_RESULT),
+		columnNumber),
 	m_isWhitespace(isXMLWhitespace(ch, start, length)),
 	// Always null-terminate our buffer, since we may need it that way.
 	m_ch(constructionContext.allocateXalanDOMCharVector(ch + start, length, true)),

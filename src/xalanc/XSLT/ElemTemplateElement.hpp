@@ -131,15 +131,19 @@ public:
 	 * Special constructor used by dummy elements which do not exist in the
 	 * final stylesheet.
 	 * 
+	 * @param constructionContext  context when object constructed
 	 * @param stylesheetTree	   owning stylesheet
+	 * @param baseURI              The base URI of the XSLT file where the element occurs.
 	 * @param lineNumber		   line in the XSLT file where the element occurs
 	 * @param columnNumber		   column index in the XSLT file where the
 	 *							   element occurs
 	 * @param xslToken			   an integer representing the type of instance.
 	 */
 	ElemTemplateElement(
+			StylesheetConstructionContext&	constructionContext,
 			Stylesheet& 					stylesheetTree,
 			int 							xslToken,
+			const XalanDOMString&			baseURI = XalanDOMString(),
 			int 							lineNumber = XalanLocator::getUnknownValue(),
 			int 							columnNumber = XalanLocator::getUnknownValue());
 

@@ -148,10 +148,12 @@ ElemTemplateElement::ElemTemplateElement(
 
 
 ElemTemplateElement::ElemTemplateElement(
+			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
+			int								xslToken,
+			const XalanDOMString&			baseURI,
 			int								lineNumber,
-			int								columnNumber,
-			int								xslToken) :
+			int								columnNumber) :
 	PrefixResolver(),
 	m_stylesheet(stylesheetTree),
 	m_namespacesHandler(),
@@ -162,7 +164,7 @@ ElemTemplateElement::ElemTemplateElement(
 	m_nextSibling(0),
 	m_previousSibling(0),
 	m_firstChild(0),
-	m_baseIndentifier(s_emptyString),
+	m_baseIndentifier(constructionContext.getPooledString(baseURI)),
 	m_locatorProxy(*this),
 	m_flags(eCanGenerateAttributes)
 {
@@ -580,8 +582,7 @@ ElemTemplateElement::appendChildElem(ElemTemplateElement*	newChild)
 	assert(newChild->getXSLToken() != StylesheetConstructionContext::ELEMNAME_TEXT);
 	assert(newChild->getXSLToken() != StylesheetConstructionContext::ELEMNAME_UNDEFINED);
 
-	if (newChild->isWhitespace() == false &&
-		childTypeAllowed(newChild->getXSLToken()) == false)
+	if (childTypeAllowed(newChild->getXSLToken()) == false)
 	{
 		throw XalanDOMException(XalanDOMException::HIERARCHY_REQUEST_ERR);
 	}
