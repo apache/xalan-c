@@ -154,6 +154,7 @@ ALL_HEADERS_DIRS = \
 	XalanExtensions \
 	XalanSourceTree \
 	XercesParserLiaison \
+	XercesParserLiaison/Deprecated \
 	XalanTransformer \
 	XPathCAPI
 
