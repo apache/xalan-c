@@ -98,9 +98,16 @@ public:
 	/**
 	 * Construct a XercesParserLiaison instance.
 	 *
-	 * @param theSupport		   instance of DOMSupport object
+	 * @param theSupport instance of DOMSupport object
+	 *
+	 * @deprecated This constructor is deprecated.  Use the default constructor instead.
 	 */
 	XercesParserLiaison(XercesDOMSupport&	theSupport);
+
+	/**
+	 * Construct a XercesParserLiaison instance.
+	 */
+	XercesParserLiaison();
 
 	virtual
 	~XercesParserLiaison();
@@ -459,8 +466,6 @@ protected:
 private:
 
 	// Data members...
-	XercesDOMSupport& 	m_DOMSupport;
-
 	XalanDOMString		m_specialCharacters;
 
 	int 				m_indent;

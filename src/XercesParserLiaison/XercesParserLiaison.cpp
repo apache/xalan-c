@@ -111,8 +111,26 @@ static const XalanDOMChar	theDefaultSpecialCharacters[] =
 
 
 
-XercesParserLiaison::XercesParserLiaison(XercesDOMSupport&	theSupport) :
-	m_DOMSupport(theSupport),
+XercesParserLiaison::XercesParserLiaison(XercesDOMSupport&	/* theSupport */) :
+	m_specialCharacters(theDefaultSpecialCharacters),
+	m_indent(-1),
+	m_shouldExpandEntityRefs(true),
+	m_useValidation(false),
+	m_includeIgnorableWhitespace(true),
+	m_doNamespaces(true),
+	m_exitOnFirstFatalError(true),
+	m_entityResolver(0),
+	m_errorHandler(this),
+	m_documentMap(),
+	m_buildBridge(true),
+	m_threadSafe(false),
+	m_executionContext(0)
+{
+}
+
+
+
+XercesParserLiaison::XercesParserLiaison() :
 	m_specialCharacters(theDefaultSpecialCharacters),
 	m_indent(-1),
 	m_shouldExpandEntityRefs(true),
@@ -151,8 +169,6 @@ XercesParserLiaison::reset()
 			 makeMapValueDeleteFunctor(m_documentMap));
 
 	m_documentMap.clear();
-
-	m_DOMSupport.reset();
 
 	m_executionContext = 0;
 }
