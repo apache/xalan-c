@@ -62,7 +62,6 @@
 #include "Constants.hpp"
 #include "ElemNumber.hpp"
 #include "FunctionFormatNumber.hpp"
-#include "NamespacesHandler.hpp"
 #include "StylesheetHandler.hpp"
 #include "XSLTEngineImpl.hpp"
 
@@ -110,8 +109,6 @@ XSLTInit::initialize()
 
 	FunctionFormatNumber::initialize();
 
-	NamespacesHandler::initialize();
-
 	XSLTEngineImpl::initialize();
 
 	StylesheetHandler::initialize();
@@ -125,8 +122,6 @@ XSLTInit::terminate()
 	StylesheetHandler::terminate();
 
 	XSLTEngineImpl::terminate();
-
-	NamespacesHandler::terminate();
 
 	FunctionFormatNumber::terminate();
 
