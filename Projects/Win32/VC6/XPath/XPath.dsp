@@ -210,6 +210,10 @@ SOURCE=..\..\..\..\src\XPath\XPathFunctionTable.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\XPath\XPathInit.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\XPath\XPathParserException.cpp
 # End Source File
 # Begin Source File
@@ -495,6 +499,10 @@ SOURCE=..\..\..\..\src\XPath\XPathFactoryDefault.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\XPath\XPathFunctionTable.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XPath\XPathInit.hpp
 # End Source File
 # Begin Source File
 

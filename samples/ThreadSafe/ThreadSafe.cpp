@@ -16,6 +16,7 @@
 #include <XSLT/StylesheetExecutionContextDefault.hpp>
 #include <XSLT/StylesheetRoot.hpp>
 #include <XSLT/XSLTEngineImpl.hpp>
+#include <XSLT/XSLTInit.hpp>
 #include <XSLT/XSLTInputSource.hpp>
 #include <XSLT/XSLTProcessorEnvSupportDefault.hpp>
 #include <XSLT/XSLTResultTarget.hpp>
@@ -62,7 +63,7 @@ THREADFUNCTIONRETURN theThread(LPVOID	param)
 // This routine uses a compiled stylesheet (glbStylesheetRoot), 
 // and a binary source tree (glbSourceDoc) to perform the 
 // transformation.
-   
+
 	const int	number = reinterpret_cast<int>(param);
 	const DWORD		theThreadID = GetCurrentThreadId();
 
@@ -182,64 +183,67 @@ int main(int argc, const char*	/* argv */[])
 	{
 		try
 		{
-			// Call the static initializers...
+			// Call the static initializer for Xerces...
 			XMLPlatformUtils::Initialize();
-			XSLTEngineImpl::Initialize();
 
-			// Create the support objects required to run the processor...
-			DOMSupportDefault				ssDOMSupport;
-			XercesParserLiaison				ssParserLiaison(ssDOMSupport);
-			XPathSupportDefault				ssXPathSupport(ssDOMSupport);
-			XSLTProcessorEnvSupportDefault	ssXSLTProcessorEnvSupport;
-			XObjectFactoryDefault			ssXObjectFactory;
-			XPathFactoryDefault				ssXPathFactory;
+			{
+				// Initialize the Xalan XSLT subsystem...
+				XSLTInit						theInit;
 
-			// Create a processor...
-			// This processor is used to compile the stylesheet and the source document. 
-			// Each thread uses its own processor to perform a transformation.
+				// Create the support objects required to run the processor...
+				DOMSupportDefault				ssDOMSupport;
+				XercesParserLiaison				ssParserLiaison(ssDOMSupport);
+				XPathSupportDefault				ssXPathSupport(ssDOMSupport);
+				XSLTProcessorEnvSupportDefault	ssXSLTProcessorEnvSupport;
+				XObjectFactoryDefault			ssXObjectFactory;
+				XPathFactoryDefault				ssXPathFactory;
 
-			XSLTEngineImpl	ssProcessor(
-					ssParserLiaison,
-					ssXPathSupport,
-					ssXSLTProcessorEnvSupport,
-					ssXObjectFactory,
-					ssXPathFactory);
+				// Create a processor...
+				// This processor is used to compile the stylesheet and the source document. 
+				// Each thread uses its own processor to perform a transformation.
 
-			// Create a stylesheet construction context, using the
-			// stylesheet's factory support objects.
-			StylesheetConstructionContextDefault	ssConstructionContext(
-													ssProcessor,
-													ssXSLTProcessorEnvSupport,
-													ssXPathFactory);
+				XSLTEngineImpl	ssProcessor(
+						ssParserLiaison,
+						ssXPathSupport,
+						ssXSLTProcessorEnvSupport,
+						ssXObjectFactory,
+						ssXPathFactory);
 
-			const XalanDOMString  theXSLFileName("birds.xsl");
-			const XalanDOMString  theXMLFileName("birds.xml");
+				// Create a stylesheet construction context, using the
+				// stylesheet's factory support objects.
+				StylesheetConstructionContextDefault	ssConstructionContext(
+														ssProcessor,
+														ssXSLTProcessorEnvSupport,
+														ssXPathFactory);
 
-			// Our stylesheet XML input document and XSL stylesheet
-			XSLTInputSource   xmlDocSource(c_wstr(theXMLFileName));
-			XSLTInputSource		xslStylesheetSource(c_wstr(theXSLFileName));
+				const XalanDOMString  theXSLFileName("birds.xsl");
+				const XalanDOMString  theXMLFileName("birds.xml");
 
-			// Use the processor to create a StylesheetRoot for the specified
-			// input XSL.  This is the compiled stylesheet.  We don't have to
-			// delete it, since it is owned by the StylesheetConstructionContext
-			// instance.
-			glbStylesheetRoot = ssProcessor.processStylesheet(xslStylesheetSource,
-													   ssConstructionContext);
-			assert(glbStylesheetRoot != 0);
-			
-			// Compile the XML source document as well. All threads will use
-			// this binary representation of the source tree.
-			glbDocSource = ssProcessor.getSourceTreeFromInput(xmlDocSource);
-			assert(glbDocSource != 0);
+				// Our stylesheet XML input document and XSL stylesheet
+				XSLTInputSource   xmlDocSource(c_wstr(theXMLFileName));
+				XSLTInputSource		xslStylesheetSource(c_wstr(theXSLFileName));
 
-			// Create and run the threads...
-			// Each thread uses the same XalanNode and 
-			// StylesheetRoot to perform a transformation.
-			doThreads(10);
+				// Use the processor to create a StylesheetRoot for the specified
+				// input XSL.  This is the compiled stylesheet.  We don't have to
+				// delete it, since it is owned by the StylesheetConstructionContext
+				// instance.
+				glbStylesheetRoot = ssProcessor.processStylesheet(xslStylesheetSource,
+														   ssConstructionContext);
+				assert(glbStylesheetRoot != 0);
+				
+				// Compile the XML source document as well. All threads will use
+				// this binary representation of the source tree.
+				glbDocSource = ssProcessor.getSourceTreeFromInput(xmlDocSource);
+				assert(glbDocSource != 0);
 
-			// Call the static terminators...
+				// Create and run the threads...
+				// Each thread uses the same XalanNode and 
+				// StylesheetRoot to perform a transformation.
+				doThreads(10);
+			}
+
+			// Call the static terminator for Xerces...
 			XMLPlatformUtils::Terminate();
-			XSLTEngineImpl::Terminate();
 		}
 		catch(...)
 		{

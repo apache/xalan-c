@@ -132,6 +132,10 @@ SOURCE=..\..\..\..\src\XMLSupport\XMLParserLiaisonDefault.cpp
 
 SOURCE=..\..\..\..\src\XMLSupport\XMLSupportException.cpp
 # End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XMLSupport\XMLSupportInit.cpp
+# End Source File
 # End Group
 # Begin Group "Header Files"
 
@@ -179,6 +183,10 @@ SOURCE=..\..\..\..\src\XMLSupport\XMLSupportDefinitions.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\XMLSupport\XMLSupportException.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XMLSupport\XMLSupportInit.hpp
 # End Source File
 # End Group
 # Begin Group "Resource Files"

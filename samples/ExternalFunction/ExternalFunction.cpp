@@ -32,6 +32,7 @@
 #include <XSLT/StylesheetConstructionContextDefault.hpp>
 #include <XSLT/StylesheetExecutionContextDefault.hpp>
 #include <XSLT/XSLTEngineImpl.hpp>
+#include <XSLT/XSLTInit.hpp>
 #include <XSLT/XSLTInputSource.hpp>
 #include <XSLT/XSLTProcessorEnvSupportDefault.hpp>
 #include <XSLT/XSLTResultTarget.hpp>
@@ -256,101 +257,104 @@ main(
 	{
 		try
 		{
-			// Call the static initializers...
+			// Call the static initializer for Xerces...
 			XMLPlatformUtils::Initialize();
-			XSLTEngineImpl::Initialize();
 
-			// Create the support objects that are necessary for running the processor...
-			DOMSupportDefault				theDOMSupport;
-			XercesParserLiaison				theParserLiaison(theDOMSupport);
-			XPathSupportDefault				theXPathSupport(theDOMSupport);
-			XSLTProcessorEnvSupportDefault	theXSLTProcessorEnvSupport;
-			XObjectFactoryDefault			theXObjectFactory;
-			XPathFactoryDefault				theXPathFactory;
+			{
+				// Initialize the Xalan XSLT subsystem...
+				XSLTInit						theInit;
 
-			// Create a processor...
-			XSLTEngineImpl	theProcessor(
-					theParserLiaison,
-					theXPathSupport,
-					theXSLTProcessorEnvSupport,
-					theXObjectFactory,
-					theXPathFactory);
+				// Create the support objects that are necessary for running the processor...
+				DOMSupportDefault				theDOMSupport;
+				XercesParserLiaison				theParserLiaison(theDOMSupport);
+				XPathSupportDefault				theXPathSupport(theDOMSupport);
+				XSLTProcessorEnvSupportDefault	theXSLTProcessorEnvSupport;
+				XObjectFactoryDefault			theXObjectFactory;
+				XPathFactoryDefault				theXPathFactory;
 
-			// Connect the processor to the support object...
-			theXSLTProcessorEnvSupport.setProcessor(&theProcessor);
-
-			// Create a stylesheet construction context, and a stylesheet
-			// execution context...
-			StylesheetConstructionContextDefault	theConstructionContext(
-						theProcessor,
+				// Create a processor...
+				XSLTEngineImpl	theProcessor(
+						theParserLiaison,
+						theXPathSupport,
 						theXSLTProcessorEnvSupport,
+						theXObjectFactory,
 						theXPathFactory);
 
-			StylesheetExecutionContextDefault		theExecutionContext(
-						theProcessor,
-						theXSLTProcessorEnvSupport,
-						theXPathSupport,
-						theXObjectFactory);
+				// Connect the processor to the support object...
+				theXSLTProcessorEnvSupport.setProcessor(&theProcessor);
 
-			// Our input files...
-			// WARNING!!! You may need to modify these absolute paths depending on where
-			// you've put the Xalan sources.
-			const XalanDOMString		theXMLFileName("foo.xml");
-			const XalanDOMString		theXSLFileName("foo.xsl");
+				// Create a stylesheet construction context, and a stylesheet
+				// execution context...
+				StylesheetConstructionContextDefault	theConstructionContext(
+							theProcessor,
+							theXSLTProcessorEnvSupport,
+							theXPathFactory);
 
-			// Our input sources...
-			XSLTInputSource		theInputSource(c_wstr(theXMLFileName));
-			XSLTInputSource		theStylesheetSource(c_wstr(theXSLFileName));
+				StylesheetExecutionContextDefault		theExecutionContext(
+							theProcessor,
+							theXSLTProcessorEnvSupport,
+							theXPathSupport,
+							theXObjectFactory);
 
-			// Our output target...
-			TextFileOutputStream	theOutputStream("foo.out");
-			XercesDOMPrintWriter	theResultWriter(theOutputStream);
-			XSLTResultTarget		theResultTarget(&theResultWriter);
+				// Our input files...
+				// WARNING!!! You may need to modify these absolute paths depending on where
+				// you've put the Xalan sources.
+				const XalanDOMString		theXMLFileName("foo.xml");
+				const XalanDOMString		theXSLFileName("foo.xsl");
 
-			// Install the function directly into the XPath
-			// function table.  We don't recommend doing this,
-			// but you can if you want to be evil! ;-)  Since
-			// the function is in the XPath table, the XPath
-			// parser will treat it like any other XPath
-			// function.  Therefore, it cannot have a namespace
-			// prefix.  It will also be available to every
-			// processor in the executable's process, since there
-			// is one static XPath function table.
-			XPath::installFunction(
-				"asctime",
-				FunctionAsctime());
+				// Our input sources...
+				XSLTInputSource		theInputSource(c_wstr(theXMLFileName));
+				XSLTInputSource		theStylesheetSource(c_wstr(theXSLFileName));
 
-			// The namespace for our functions...
-			const XalanDOMString	theNamespace("http://ExternalFunction.xalan-c++.xml.apache.org");
+				// Our output target...
+				TextFileOutputStream	theOutputStream("foo.out");
+				XercesDOMPrintWriter	theResultWriter(theOutputStream);
+				XSLTResultTarget		theResultTarget(&theResultWriter);
 
-			// Install the function in the global space.  All
-			// instances will know about the function, so all
-			// processors which use an instance of this the
-			// class XPathEnvSupportDefault will be able to
-			// use the function.
-			XSLTProcessorEnvSupportDefault::installExternalFunctionGlobal(
-				theNamespace,
-				"square-root",
-				FunctionSquareRoot());
+				// Install the function directly into the XPath
+				// function table.  We don't recommend doing this,
+				// but you can if you want to be evil! ;-)  Since
+				// the function is in the XPath table, the XPath
+				// parser will treat it like any other XPath
+				// function.  Therefore, it cannot have a namespace
+				// prefix.  It will also be available to every
+				// processor in the executable's process, since there
+				// is one static XPath function table.
+				XPath::installFunction(
+					"asctime",
+					FunctionAsctime());
 
-			// Install the function in the local space.  It will only
-			// be installed in this instance, so no other instances
-			// will know about the function...
-			theXSLTProcessorEnvSupport.installExternalFunctionLocal(
-				theNamespace,
-				"cube",
-				FunctionCube());
+				// The namespace for our functions...
+				const XalanDOMString	theNamespace("http://ExternalFunction.xalan-c++.xml.apache.org");
 
-			theProcessor.process(
-						theInputSource,
-						theStylesheetSource,
-						theResultTarget,
-						theConstructionContext,
-						theExecutionContext);
+				// Install the function in the global space.  All
+				// instances will know about the function, so all
+				// processors which use an instance of this the
+				// class XPathEnvSupportDefault will be able to
+				// use the function.
+				XSLTProcessorEnvSupportDefault::installExternalFunctionGlobal(
+					theNamespace,
+					"square-root",
+					FunctionSquareRoot());
 
-			// Call the static terminators...
+				// Install the function in the local space.  It will only
+				// be installed in this instance, so no other instances
+				// will know about the function...
+				theXSLTProcessorEnvSupport.installExternalFunctionLocal(
+					theNamespace,
+					"cube",
+					FunctionCube());
+
+				theProcessor.process(
+							theInputSource,
+							theStylesheetSource,
+							theResultTarget,
+							theConstructionContext,
+							theExecutionContext);
+			}
+
+			// Call the static terminator for Xerces...
 			XMLPlatformUtils::Terminate();
-			XSLTEngineImpl::Terminate();
 		}
 		catch(...)
 		{

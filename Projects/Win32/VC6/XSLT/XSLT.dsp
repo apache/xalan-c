@@ -383,6 +383,10 @@ SOURCE=..\..\..\..\src\XSLT\XSLTEngineImpl.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\XSLT\XSLTInit.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\XSLT\XSLTInputSource.cpp
 # End Source File
 # Begin Source File
@@ -700,6 +704,10 @@ SOURCE=..\..\..\..\src\XSLT\XSLTDefinitions.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\XSLT\XSLTEngineImpl.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XSLT\XSLTInit.hpp
 # End Source File
 # Begin Source File
 

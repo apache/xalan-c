@@ -22,6 +22,7 @@
 #include <XercesParserLiaison/XercesParserLiaison.hpp>
 
 #include <XSLT/XSLTEngineImpl.hpp>
+#include <XSLT/XSLTInit.hpp>
 #include <XSLT/XSLTInputSource.hpp>
 #include <XSLT/XSLTResultTarget.hpp>
 #include <XSLT/StylesheetConstructionContextDefault.hpp>
@@ -84,81 +85,85 @@ main(
 	{
 		// Call the static initializers...
 		XMLPlatformUtils::Initialize();
-		XSLTEngineImpl::Initialize();	  
 
-		// Create the support objects that are necessary for running the processor...
-		DOMSupportDefault				theDOMSupport;
-		XercesParserLiaison				theParserLiaison(theDOMSupport);
-		XPathSupportDefault				theXPathSupport(theDOMSupport);
-		XSLTProcessorEnvSupportDefault	theXSLTProcessorEnvSupport;
-		XObjectFactoryDefault			theXObjectFactory;
-		XPathFactoryDefault				theXPathFactory;
+		{
+			// Initialize the Xalan XSLT subsystem...
+			XSLTInit						theInit;
 
-		// Create a processor...
-		XSLTEngineImpl	theProcessor(
-					theParserLiaison,
-					theXPathSupport,
-					theXSLTProcessorEnvSupport,
-					theXObjectFactory,
-					theXPathFactory);
+			// Create the support objects that are necessary for running the processor...
+			DOMSupportDefault				theDOMSupport;
+			XercesParserLiaison				theParserLiaison(theDOMSupport);
+			XPathSupportDefault				theXPathSupport(theDOMSupport);
+			XSLTProcessorEnvSupportDefault	theXSLTProcessorEnvSupport;
+			XObjectFactoryDefault			theXObjectFactory;
+			XPathFactoryDefault				theXPathFactory;
 
-		// Connect the processor to the support object...
-		theXSLTProcessorEnvSupport.setProcessor(&theProcessor);
-
-		// Create a stylesheet construction context, and a stylesheet
-		// execution context...
-		StylesheetConstructionContextDefault	theConstructionContext(
-						theProcessor,
+			// Create a processor...
+			XSLTEngineImpl	theProcessor(
+						theParserLiaison,
+						theXPathSupport,
 						theXSLTProcessorEnvSupport,
+						theXObjectFactory,
 						theXPathFactory);
 
-		StylesheetExecutionContextDefault		theExecutionContext(
-						theProcessor,
-						theXSLTProcessorEnvSupport,
-						theXPathSupport,
-						theXObjectFactory);
+			// Connect the processor to the support object...
+			theXSLTProcessorEnvSupport.setProcessor(&theProcessor);
 
-		// Our input files...The assumption is that the executable will be run
-		// from same directory as the input files.
-		const XalanDOMString		theXMLFileName("birds.xml");
-		const XalanDOMString		theXSLFileName("birds.xsl");
+			// Create a stylesheet construction context, and a stylesheet
+			// execution context...
+			StylesheetConstructionContextDefault	theConstructionContext(
+							theProcessor,
+							theXSLTProcessorEnvSupport,
+							theXPathFactory);
 
-		// Our input sources...
-		XSLTInputSource		theInputSource(c_wstr(theXMLFileName));
-		XSLTInputSource		theStylesheetSource(c_wstr(theXSLFileName));
+			StylesheetExecutionContextDefault		theExecutionContext(
+							theProcessor,
+							theXSLTProcessorEnvSupport,
+							theXPathSupport,
+							theXObjectFactory);
 
-		// Our output target...
-		TextFileOutputStream	theOutputStream("birds.out");
-		XercesDOMPrintWriter	theResultWriter(theOutputStream);
-		XSLTResultTarget		theResultTarget(&theResultWriter);
+			// Our input files...The assumption is that the executable will be run
+			// from same directory as the input files.
+			const XalanDOMString		theXMLFileName("birds.xml");
+			const XalanDOMString		theXSLFileName("birds.xsl");
 
-		// Set up a diagnostic writer to be used by the TraceListener...
-		XercesStdTextOutputStream				theStdErr(cerr);
-		XercesDOMPrintWriter					diagnosticsWriter(theStdErr);
+			// Our input sources...
+			XSLTInputSource		theInputSource(c_wstr(theXMLFileName));
+			XSLTInputSource		theStylesheetSource(c_wstr(theXSLFileName));
 
-		// Set up the TraceListener... 
-		TraceListenerDefault		theTraceListener(				
-				diagnosticsWriter,
-				traceTemplates,
-				traceTemplateChildren,
-				traceGenerationEvent,
-				traceSelectionEvent);
+			// Our output target...
+			TextFileOutputStream	theOutputStream("birds.out");
+			XercesDOMPrintWriter	theResultWriter(theOutputStream);
+			XSLTResultTarget		theResultTarget(&theResultWriter);
 
-		// Add the TraceListener to the XSLT processor...
-		theProcessor.setTraceSelects(traceSelectionEvent);
-		theProcessor.addTraceListener(&theTraceListener);
+			// Set up a diagnostic writer to be used by the TraceListener...
+			XercesStdTextOutputStream				theStdErr(cerr);
+			XercesDOMPrintWriter					diagnosticsWriter(theStdErr);
 
-		// Perform the transformation...
-		theProcessor.process(
-						theInputSource,
-						theStylesheetSource,
-						theResultTarget,
-						theConstructionContext,
-						theExecutionContext);
+			// Set up the TraceListener... 
+			TraceListenerDefault		theTraceListener(				
+					diagnosticsWriter,
+					traceTemplates,
+					traceTemplateChildren,
+					traceGenerationEvent,
+					traceSelectionEvent);
 
-		// Call the static terminators...
+			// Add the TraceListener to the XSLT processor...
+			theProcessor.setTraceSelects(traceSelectionEvent);
+			theProcessor.addTraceListener(&theTraceListener);
+
+			// Perform the transformation...
+			theProcessor.process(
+							theInputSource,
+							theStylesheetSource,
+							theResultTarget,
+							theConstructionContext,
+							theExecutionContext);
+
+		}
+
+		// Call the static terminator for Xerces...
 		XMLPlatformUtils::Terminate();
-		XSLTEngineImpl::Terminate();
 	}
 	catch(...)
 	{

@@ -29,6 +29,7 @@
 #include <XSLT/StylesheetConstructionContextDefault.hpp>
 #include <XSLT/StylesheetExecutionContextDefault.hpp>
 #include <XSLT/XSLTEngineImpl.hpp>
+#include <XSLT/XSLTInit.hpp>
 #include <XSLT/XSLTInputSource.hpp>
 #include <XSLT/XSLTProcessorEnvSupportDefault.hpp>
 #include <XSLT/XSLTResultTarget.hpp>
@@ -65,66 +66,70 @@ main(
 	{
 		try
 		{
-			// Call the static initializers...
+			// Call the static initializer for Xerces...
 			XMLPlatformUtils::Initialize();
-			XSLTEngineImpl::Initialize();
 
-			// Create the support objects that are necessary for running the processor...
-			DOMSupportDefault				theDOMSupport;
-			XercesParserLiaison				theParserLiaison(theDOMSupport);
-			XPathSupportDefault				theXPathSupport(theDOMSupport);
-			XSLTProcessorEnvSupportDefault	theXSLTProcessorEnvSupport;
-			XObjectFactoryDefault			theXObjectFactory;
-			XPathFactoryDefault				theXPathFactory;
+			{
+				// Initialize the Xalan XSLT subsystem...
+				XSLTInit						theInit;
 
-			// Create a processor...
-			XSLTEngineImpl	theProcessor(
-					theParserLiaison,
-					theXPathSupport,
-					theXSLTProcessorEnvSupport,
-					theXObjectFactory,
-					theXPathFactory);
+				// Create the support objects that are necessary for running the processor...
+				DOMSupportDefault				theDOMSupport;
+				XercesParserLiaison				theParserLiaison(theDOMSupport);
+				XPathSupportDefault				theXPathSupport(theDOMSupport);
+				XSLTProcessorEnvSupportDefault	theXSLTProcessorEnvSupport;
+				XObjectFactoryDefault			theXObjectFactory;
+				XPathFactoryDefault				theXPathFactory;
 
-			// Connect the processor to the support object...
-			theXSLTProcessorEnvSupport.setProcessor(&theProcessor);
-
-			// Create a stylesheet construction context, and a stylesheet
-			// execution context...
-			StylesheetConstructionContextDefault	theConstructionContext(
-						theProcessor,
+				// Create a processor...
+				XSLTEngineImpl	theProcessor(
+						theParserLiaison,
+						theXPathSupport,
 						theXSLTProcessorEnvSupport,
+						theXObjectFactory,
 						theXPathFactory);
 
-			StylesheetExecutionContextDefault		theExecutionContext(
-						theProcessor,
-						theXSLTProcessorEnvSupport,
-						theXPathSupport,
-						theXObjectFactory);
+				// Connect the processor to the support object...
+				theXSLTProcessorEnvSupport.setProcessor(&theProcessor);
 
-			// Our input files...The assumption is that the executable will be run
-			// from same directory as the input files.
-			const XalanDOMString		theXMLFileName("foo.xml");
-			const XalanDOMString		theXSLFileName("foo.xsl");
+				// Create a stylesheet construction context, and a stylesheet
+				// execution context...
+				StylesheetConstructionContextDefault	theConstructionContext(
+							theProcessor,
+							theXSLTProcessorEnvSupport,
+							theXPathFactory);
 
-			// Our input sources...
-			XSLTInputSource		theInputSource(c_wstr(theXMLFileName));
-			XSLTInputSource		theStylesheetSource(c_wstr(theXSLFileName));
+				StylesheetExecutionContextDefault		theExecutionContext(
+							theProcessor,
+							theXSLTProcessorEnvSupport,
+							theXPathSupport,
+							theXObjectFactory);
 
-			// Our output target...
-			TextFileOutputStream	theOutputStream("foo.out");
-			XercesDOMPrintWriter	theResultWriter(theOutputStream);
-			XSLTResultTarget		theResultTarget(&theResultWriter);
+				// Our input files...The assumption is that the executable will be run
+				// from same directory as the input files.
+				const XalanDOMString		theXMLFileName("foo.xml");
+				const XalanDOMString		theXSLFileName("foo.xsl");
 
-			theProcessor.process(
-						theInputSource,
-						theStylesheetSource,
-						theResultTarget,
-						theConstructionContext,
-						theExecutionContext);
+				// Our input sources...
+				XSLTInputSource		theInputSource(c_wstr(theXMLFileName));
+				XSLTInputSource		theStylesheetSource(c_wstr(theXSLFileName));
 
-			// Call the static terminators...
+				// Our output target...
+				TextFileOutputStream	theOutputStream("foo.out");
+				XercesDOMPrintWriter	theResultWriter(theOutputStream);
+				XSLTResultTarget		theResultTarget(&theResultWriter);
+
+				theProcessor.process(
+							theInputSource,
+							theStylesheetSource,
+							theResultTarget,
+							theConstructionContext,
+							theExecutionContext);
+
+			}
+
+			// Call the static terminator for Xerces...
 			XMLPlatformUtils::Terminate();
-			XSLTEngineImpl::Terminate();
 		}
 		catch(...)
 		{

@@ -126,6 +126,10 @@ SOURCE=..\..\..\..\src\PlatformSupport\NullPrintWriter.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\PlatformSupport\PlatformSupportInit.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\PlatformSupport\PrintWriter.cpp
 # End Source File
 # Begin Source File
@@ -194,10 +198,6 @@ SOURCE=..\..\..\..\src\PlatformSupport\Cloneable.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\DirectoryEnumerator.hpp
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\..\..\src\PlatformSupport\DOMStringHelper.hpp
 # End Source File
 # Begin Source File
@@ -223,6 +223,10 @@ SOURCE=..\..\..\..\src\PlatformSupport\NullPrintWriter.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\PlatformSupport\PlatformSupportDefinitions.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\PlatformSupport\PlatformSupportInit.hpp
 # End Source File
 # Begin Source File
 

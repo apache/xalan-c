@@ -29,6 +29,7 @@
 #include <XSLT/StylesheetExecutionContextDefault.hpp>
 #include <XSLT/StylesheetRoot.hpp>
 #include <XSLT/XSLTEngineImpl.hpp>
+#include <XSLT/XSLTInit.hpp>
 #include <XSLT/XSLTInputSource.hpp>
 #include <XSLT/XSLTProcessorEnvSupportDefault.hpp>
 #include <XSLT/XSLTResultTarget.hpp>
@@ -67,105 +68,108 @@ main(
 	{
 		try
 		{
-			// Call the static initializers...
+			// Call the static initializer for Xerces...
 			XMLPlatformUtils::Initialize();
-			XSLTEngineImpl::Initialize();
 
-			// Create the support objects that are necessary for running the processor...
-			DOMSupportDefault				theDOMSupport;
-			XercesParserLiaison				theParserLiaison(theDOMSupport);
-			XPathSupportDefault				theXPathSupport(theDOMSupport);
-			XSLTProcessorEnvSupportDefault	theXSLTProcessorEnvSupport;
-			XObjectFactoryDefault			theXObjectFactory;
-			XPathFactoryDefault				theXPathFactory;
-
-			// Create a processor...
-			XSLTEngineImpl	theProcessor(
-					theParserLiaison,
-					theXPathSupport,
-					theXSLTProcessorEnvSupport,
-					theXObjectFactory,
-					theXPathFactory);
-
-			// Connect the processor to the support object...
-			theXSLTProcessorEnvSupport.setProcessor(&theProcessor);
-
-			// Create separate factory support objects so the stylesheet's
-			// factory-created XPath instances are independent from the
-			// processor's.
-			XPathFactoryDefault				theStylesheetXPathFactory;
-
-			// Create a stylesheet construction context, using the
-			// stylesheet's factory support objects.
-			StylesheetConstructionContextDefault	theConstructionContext(
-						theProcessor,
-						theXSLTProcessorEnvSupport,
-						theStylesheetXPathFactory);
-
-			// The execution context uses the same factory support objects as
-			// the processor, since those objects have the same lifetime as
-			// other objects created as a result of the execution.
-			StylesheetExecutionContextDefault		theExecutionContext(
-						theProcessor,
-						theXSLTProcessorEnvSupport,
-						theXPathSupport,
-						theXObjectFactory);
-
-			// Our input files.  The assumption is that the executable will be run
-			// from same directory as the input files.
-			const XalanDOMString		theXMLFileName("foo.xml");
-			const XalanDOMString		theXSLFileName("foo.xsl");
-			
-			// Buffers passed in to ostrstream.
-			char inBuffer[10];
-			char outBuffer[10];
-
-			// Our stylesheet input source...
-			XSLTInputSource			theStylesheetSource(c_wstr(theXSLFileName));
-
-			// Ask the processor to create a StylesheetRoot for the specified
-			// input XSL.  This is the compiled stylesheet.  We don't have to
-			// delete it, since it is owned by the StylesheetConstructionContext
-			// instance.
-			StylesheetRoot* const	theStylesheetRoot =
-				theProcessor.processStylesheet(
-							theStylesheetSource,
-							theConstructionContext);
-			assert(theStylesheetRoot != 0);
-
-			for (unsigned int i = 0; i < 10; i++)
 			{
-				theExecutionContext.setStylesheetRoot(theStylesheetRoot);
+				// Initialize the Xalan XSLT subsystem...
+				XSLTInit						theInit;
 
-				// Generate the input and output file names.
-				ostrstream theFormatterIn(inBuffer, sizeof(inBuffer));
-				ostrstream theFormatterOut(outBuffer, sizeof(outBuffer));
+				// Create the support objects that are necessary for running the processor...
+				DOMSupportDefault				theDOMSupport;
+				XercesParserLiaison				theParserLiaison(theDOMSupport);
+				XPathSupportDefault				theXPathSupport(theDOMSupport);
+				XSLTProcessorEnvSupportDefault	theXSLTProcessorEnvSupport;
+				XObjectFactoryDefault			theXObjectFactory;
+				XPathFactoryDefault				theXPathFactory;
+
+				// Create a processor...
+				XSLTEngineImpl	theProcessor(
+						theParserLiaison,
+						theXPathSupport,
+						theXSLTProcessorEnvSupport,
+						theXObjectFactory,
+						theXPathFactory);
+
+				// Connect the processor to the support object...
+				theXSLTProcessorEnvSupport.setProcessor(&theProcessor);
+
+				// Create separate factory support objects so the stylesheet's
+				// factory-created XPath instances are independent from the
+				// processor's.
+				XPathFactoryDefault				theStylesheetXPathFactory;
+
+				// Create a stylesheet construction context, using the
+				// stylesheet's factory support objects.
+				StylesheetConstructionContextDefault	theConstructionContext(
+							theProcessor,
+							theXSLTProcessorEnvSupport,
+							theStylesheetXPathFactory);
+
+				// The execution context uses the same factory support objects as
+				// the processor, since those objects have the same lifetime as
+				// other objects created as a result of the execution.
+				StylesheetExecutionContextDefault		theExecutionContext(
+							theProcessor,
+							theXSLTProcessorEnvSupport,
+							theXPathSupport,
+							theXObjectFactory);
+
+				// Our input files.  The assumption is that the executable will be run
+				// from same directory as the input files.
+				const XalanDOMString		theXMLFileName("foo.xml");
+				const XalanDOMString		theXSLFileName("foo.xsl");
 				
-				theFormatterIn << "foo" << i + 1 << ".xml" << '\0';
-				theFormatterOut << "foo" << i + 1 << ".out" << '\0';
+				// Our stylesheet input source...
+				XSLTInputSource			theStylesheetSource(c_wstr(theXSLFileName));
 
-				//Generate the XML input and output objects.
-				XSLTInputSource		theInputSource(theFormatterIn.str());
-				XSLTResultTarget	theResultTarget(theFormatterOut.str());
+				// Ask the processor to create a StylesheetRoot for the specified
+				// input XSL.  This is the compiled stylesheet.  We don't have to
+				// delete it, since it is owned by the StylesheetConstructionContext
+				// instance.
+				StylesheetRoot* const	theStylesheetRoot =
+					theProcessor.processStylesheet(
+								theStylesheetSource,
+								theConstructionContext);
+				assert(theStylesheetRoot != 0);
 
-				// Do the tranformation...
-				theProcessor.process(
-					 theInputSource,
-					 theResultTarget,
-					 theExecutionContext);
+				for (unsigned int i = 0; i < 10; i++)
+				{
+					theExecutionContext.setStylesheetRoot(theStylesheetRoot);
 
-				// Reset the processor and the execution context
-				// so we can perform the next transformation.
-				// Reset the parser liaison to clear out the
-				// source document we just transformed.
-				theProcessor.reset();
-				theExecutionContext.reset();
-				theParserLiaison.reset();
+					// Buffers passed in to ostrstream.
+					char		inBuffer[10];
+					char		outBuffer[10];
+
+					// Generate the input and output file names.
+					ostrstream	theFormatterIn(inBuffer, sizeof(inBuffer));
+					ostrstream	theFormatterOut(outBuffer, sizeof(outBuffer));
+					
+					theFormatterIn << "foo" << i + 1 << ".xml" << '\0';
+					theFormatterOut << "foo" << i + 1 << ".out" << '\0';
+
+					//Generate the XML input and output objects.
+					XSLTInputSource		theInputSource(theFormatterIn.str());
+					XSLTResultTarget	theResultTarget(theFormatterOut.str());
+
+					// Do the tranformation...
+					theProcessor.process(
+						 theInputSource,
+						 theResultTarget,
+						 theExecutionContext);
+
+					// Reset the processor and the execution context
+					// so we can perform the next transformation.
+					// Reset the parser liaison to clear out the
+					// source document we just transformed.
+					theProcessor.reset();
+					theExecutionContext.reset();
+					theParserLiaison.reset();
+				}
 			}
 
-			// Call the static terminators...
+			// Call the static terminator for Xerces...
 			XMLPlatformUtils::Terminate();
-			XSLTEngineImpl::Terminate();
 		}
 		catch(...)
 		{

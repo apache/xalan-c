@@ -110,6 +110,10 @@ SOURCE=..\..\..\..\src\DOMSupport\DOMSupportException.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\DOMSupport\DOMSupportInit.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\DOMSupport\NamespaceResolver.cpp
 # End Source File
 # Begin Source File
@@ -139,6 +143,10 @@ SOURCE=..\..\..\..\src\DOMSupport\DOMSupportDefinitions.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\DOMSupport\DOMSupportException.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\DOMSupport\DOMSupportInit.hpp
 # End Source File
 # Begin Source File
 
