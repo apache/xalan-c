@@ -888,7 +888,11 @@ FormatterToHTML::writeAttrURI(const XalanDOMChar*	theString)
 				// 
 				// Unicode, A Primer, by Tony Graham, p. 92.
 				//
-				if(ch <= 0x7F)
+				if (ch == XalanUnicode::charSpace)
+				{
+					accumContent(ch);
+				}
+				else if(ch <= 0x7F)
 				{
 					accumHexNumber(ch);
 				}
@@ -963,10 +967,6 @@ FormatterToHTML::writeAttrURI(const XalanDOMChar*	theString)
 
 					accumHexNumber(lowByte);
 				}
-			}
-			else if (ch == XalanUnicode::charSpace)
-			{
-				accumHexNumber(ch);
 			}
 			else if (ch < m_maxCharacter)
 			{
