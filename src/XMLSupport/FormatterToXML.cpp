@@ -125,7 +125,7 @@ XalanDOMChar				FormatterToXML::s_lineSep = '\n';
 bool						FormatterToXML::s_javaEncodingIsISO = false; 
 
 
-const FormatterToXML::DOMCharBufferType::size_type	FormatterToXML::s_maxBufferSize = 1024;
+const FormatterToXML::DOMCharBufferType::size_type	FormatterToXML::s_maxBufferSize = 512;
 
 
 FormatterToXML::FormatterToXML(
