@@ -3777,7 +3777,7 @@ XMLURL* XSLTEngineImpl::getURLFromString(const XalanDOMString&	urlString, const 
 	const unsigned int	i1 = lastIndexOf(base,'/');
 	const unsigned int	i2 = lastIndexOf(base,'\\');
 
-	const unsigned int	i = i1 > i2 && i1 < theLength ? i1: i2;
+	const unsigned int	i = i1 > i2 && i1 < theLength ? i1 : i2 < theLength ? i2 : i1;
 
 	if (i < theLength)
 		context = substring(base, 0, i + 1);
