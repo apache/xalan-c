@@ -101,6 +101,13 @@ XALAN_USING_STD(endl)
 
 
 
+//#define XALAN_VQ_SPECIAL_TRACE
+#if defined(XALAN_VQ_SPECIAL_TRACE)
+#include "C:/Program Files/Rational/Quantify/pure.h"
+#endif
+
+
+
 // Just hoist everything...
 XALAN_CPP_NAMESPACE_USE
 
@@ -421,6 +428,11 @@ main(
 	_CrtSetDbgFlag(_CrtSetDbgFlag(_CRTDBG_REPORT_FLAG) | _CRTDBG_LEAK_CHECK_DF);
 	_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_FILE);
 	_CrtSetReportFile(_CRT_WARN, _CRTDBG_FILE_STDERR);
+#endif
+
+#if defined(XALAN_VQ_SPECIAL_TRACE)
+	QuantifyStopRecordingData();
+	QuantifyClearData();
 #endif
 
 	int	theResult = 0;
