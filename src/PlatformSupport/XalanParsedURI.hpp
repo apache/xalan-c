@@ -101,7 +101,7 @@ public:
 	/** 
 	 * Default constructor 
 	 */
-	XalanParsedURI::XalanParsedURI() :
+	XalanParsedURI() :
 		m_defined(0)
 	{
 	}
@@ -112,7 +112,7 @@ public:
 	 * @param uriString		URI to parse
 	 * @param uriStringLen	Length of the URI string
 	 */
-	XalanParsedURI::XalanParsedURI(
+	XalanParsedURI(
 		const XalanDOMChar*			uriString,
 		XalanDOMString::size_type	uriStringLen) : 
 		m_defined(0)
@@ -125,7 +125,7 @@ public:
 	 *
 	 * @param uriString		URI to parse
 	 */
-	XalanParsedURI::XalanParsedURI(
+	XalanParsedURI(
 		const XalanDOMString		&uriString) :
 		m_defined(0)
 	{
