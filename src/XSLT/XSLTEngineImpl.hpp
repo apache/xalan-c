@@ -1710,8 +1710,11 @@ public:
 				m_currentStackFrameIndex-=1;
 			StackEntry* theEntry = m_stack.back();
 			m_stack.pop_back();
+			// @@ JMD: This should work, but seems to be causing problems ...
+			/*
 			if (m_isNew.back() == true)
 				delete theEntry;
+			*/
 			m_isNew.pop_back();
 		}
 
