@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2001 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -54,8 +54,8 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-#if !defined(RESULTTREEFRAG_HEADER_GUARD_1357924680)
-#define RESULTTREEFRAG_HEADER_GUARD_1357924680
+#if !defined(XNODESETRESULTTREEFRAGPROXY_HEADER_GUARD_1357924680)
+#define XNODESETRESULTTREEFRAGPROXY_HEADER_GUARD_1357924680
 
 
 
@@ -64,12 +64,7 @@
 
 
 
-#include <vector>
-
-
-
 #include <XalanDOM/XalanNodeList.hpp>
-#include <XalanDOM/XalanDocument.hpp>
 
 
 
@@ -77,37 +72,23 @@
 
 
 
-/**
- * The holder of result tree fragments.
- */
-class XALAN_XPATH_EXPORT ResultTreeFrag : public ResultTreeFragBase, private XalanNodeList
+class XNodeSetBase;
+
+
+
+class XALAN_XPATH_EXPORT XNodeSetResultTreeFragProxy : public ResultTreeFragBase, private XalanNodeList
 {
 public:
 
-	/**
-	 * Construct a result tree fragment object from a DOM document.
-	 */
-	ResultTreeFrag();
-
-	/**
-	 * Construct a result tree fragment object from another.
-	 * 
-	 * @param theSource source to copy
-	 * @param deepClone true if subobjects should be copied, default is false
-	 */
-	ResultTreeFrag(const ResultTreeFrag&	theSource,
-				   bool						deepClone = false);
+	XNodeSetResultTreeFragProxy(const XNodeSetBase&	value);
 
 	virtual
-	~ResultTreeFrag();
-
+	~XNodeSetResultTreeFragProxy();
 
 	// These interfaces are inherited from ResultTreeFragBase...
 
 	virtual void
 	clear();
-
-	// These interfaces are inherited from XalanDocumentFragment...
 
 	virtual const XalanDOMString&
 	getNodeName() const;
@@ -145,7 +126,7 @@ public:
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
 	virtual XalanNode*
 #else
-	virtual ResultTreeFrag*
+	virtual ResultTreeFragBase*
 #endif
 	cloneNode(bool deep) const;
 
@@ -197,14 +178,20 @@ public:
 	virtual unsigned long
 	getIndex() const;
 
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
 	virtual ResultTreeFragBase*
-#else
-	virtual ResultTreeFrag*
-#endif
 	clone(bool	deep) const;
 
 private:
+
+	// Not implemented...
+	XNodeSetResultTreeFragProxy(const XNodeSetResultTreeFragProxy&	theSource);
+
+	XNodeSetResultTreeFragProxy&
+	operator=(const XNodeSetResultTreeFragProxy&	theRHS);
+
+	bool
+	operator==(const XNodeSetResultTreeFragProxy&	theRHS);
+
 
 	// These methods are inherited from XalanNodeList...
 
@@ -214,25 +201,13 @@ private:
 	virtual unsigned int
 	getLength() const;
 
-	// Not defined
-	ResultTreeFrag&
-	operator=(const ResultTreeFrag&		theRHS);
-
-	bool
-	operator==(const ResultTreeFrag&	theRHS) const;
-
-
-#if defined(XALAN_NO_NAMESPACES)
-	typedef vector<XalanNode*>			NodeVectorType;
-#else
-	typedef std::vector<XalanNode*>		NodeVectorType;
-#endif
-
-	NodeVectorType					m_children;
+	// Data members...
+	const XNodeSetBase&		m_value;
 
 	static const XalanDOMString		s_emptyString;
+
 };
 
 
 
-#endif	// RESULTTREEFRAGBASE_HEADER_GUARD_1357924680
+#endif	// XNODESETRESULTTREEFRAGPROXY_HEADER_GUARD_1357924680

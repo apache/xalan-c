@@ -449,9 +449,7 @@ XPathExecutionContextDefault::getUnparsedEntityURI(
 bool
 XPathExecutionContextDefault::shouldStripSourceNode(const XalanNode&	node)
 {
-	assert(m_xpathEnvSupport != 0);
-
-	return m_xpathEnvSupport->shouldStripSourceNode(*this, node);
+	return false;
 }
 
 

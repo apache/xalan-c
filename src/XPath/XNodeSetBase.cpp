@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2001 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -54,18 +54,21 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-
 // Class header file.
-#include "XStringBase.hpp"
+#include "XNodeSetBase.hpp"
 
 
 
-#include <XalanDOM/XalanText.hpp>
+#include <XalanDOM/XalanNode.hpp>
 
 
 
 #include <PlatformSupport/DOMStringHelper.hpp>
 #include <PlatformSupport/DoubleSupport.hpp>
+
+
+
+#include <DOMSupport/DOMServices.hpp>
 
 
 
@@ -75,47 +78,51 @@
 
 
 
-XStringBase::XStringBase() :
-	XObject(eTypeString),
-	m_cachedNumberValue(0.0),
-	m_resultTreeFrag(0)
+const double	theBogusNumberValue = 123456789;
+
+
+
+XNodeSetBase::XNodeSetBase() :
+	XObject(eTypeNodeSet),
+	m_proxy(*this),
+	m_cachedStringValue(),
+	m_cachedNumberValue(theBogusNumberValue)
 {
 }
 
 
 
-XStringBase::XStringBase(const XStringBase&		source) :
+XNodeSetBase::XNodeSetBase(const XNodeSetBase&	source) :
 	XObject(source),
-	m_cachedNumberValue(source.m_cachedNumberValue),
-	m_resultTreeFrag(source.m_resultTreeFrag.get() == 0 ?
-						0 :
-						source.m_resultTreeFrag->clone(true))
+	m_proxy(*this),
+	m_cachedStringValue(source.m_cachedStringValue),
+	m_cachedNumberValue(source.m_cachedNumberValue)
 {
 }
 
 
 
-XStringBase::~XStringBase()
+XNodeSetBase::~XNodeSetBase()
 {
 }
 
 
 
 XalanDOMString
-XStringBase::getTypeString() const
+XNodeSetBase::getTypeString() const
 {
-	return XALAN_STATIC_UCODE_STRING("#STRING");
+	return XALAN_STATIC_UCODE_STRING("#NODESET");
 }
 
 
 
 double
-XStringBase::num() const
+XNodeSetBase::num() const
 {
-	if (m_cachedNumberValue == 0.0)
+	if (DoubleSupport::equal(m_cachedNumberValue, theBogusNumberValue) == true)
 	{
 #if defined(XALAN_NO_MUTABLE)
-		((XStringBase*)this)->m_cachedNumberValue = DoubleSupport::toDouble(str());
+		((XNodeSetBase*)this)->m_cachedNumberValue = DoubleSupport::toDouble(str());
 #else
 		m_cachedNumberValue = DoubleSupport::toDouble(str());
 #endif
@@ -127,55 +134,102 @@ XStringBase::num() const
 
 
 bool
-XStringBase::boolean() const
+XNodeSetBase::boolean() const
 {
-	return length(str()) > 0 ? true : false;
+	return getLength() > 0 ? true : false;
+}
+
+
+
+const XalanDOMString&
+XNodeSetBase::str() const
+{
+	if (isEmpty(m_cachedStringValue) == true &&
+		getLength() > 0)
+	{
+		const XalanNode* const	theNode = item(0);
+		assert(theNode != 0);
+
+#if defined(XALAN_NO_MUTABLE)
+		DOMServices::getNodeData(*theNode, ((XNodeSetBase*)this)->m_cachedStringValue);
+#else
+		DOMServices::getNodeData(*theNode, m_cachedStringValue);
+#endif
+	}
+
+	return m_cachedStringValue;
+}
+
+
+
+void
+XNodeSetBase::str(
+			FormatterListener&	formatterListener,
+			MemberFunctionPtr	function) const
+{
+	if (isEmpty(m_cachedStringValue) == false)
+	{
+		(formatterListener.*function)(c_wstr(m_cachedStringValue), length(m_cachedStringValue));
+	}
+	else if (getLength() > 0)
+	{
+		const XalanNode* const	theNode = item(0);
+		assert(theNode != 0);
+
+		DOMServices::getNodeData(*theNode, formatterListener, function);
+	}
+}
+
+
+
+void
+XNodeSetBase::str(XalanDOMString&	theBuffer) const
+{
+	if (isEmpty(m_cachedStringValue) == false)
+	{
+		append(theBuffer, m_cachedStringValue);
+	}
+	else if (getLength() > 0)
+	{
+		const XalanNode* const	theNode = item(0);
+		assert(theNode != 0);
+
+		DOMServices::getNodeData(*theNode, theBuffer);
+	}
 }
 
 
 
 const ResultTreeFragBase&
-XStringBase::rtree(XPathExecutionContext&	executionContext) const
+XNodeSetBase::rtree(XPathExecutionContext&	/* executionContext */) const
 {
-	if (m_resultTreeFrag.get() == 0)
-	{
-		ResultTreeFrag* const	theFrag = new ResultTreeFrag;
-
-		XalanDocument* const	theFactory = executionContext.getDOMFactory();
-
-		if (theFactory != 0)
-		{
-			XalanNode* const	textNode =
-				theFactory->createTextNode(str());
-			assert(textNode != 0);
-
-			theFrag->appendChild(textNode);
-		}
-
-#if defined(XALAN_NO_MUTABLE)
-		((XStringBase*)this)->m_resultTreeFrag.reset(theFrag);
-#else
-		m_resultTreeFrag.reset(theFrag);
-#endif
-	}
-
-	return *m_resultTreeFrag.get();
+	return m_proxy;
 }
 
 
 
 void
-XStringBase::ProcessXObjectTypeCallback(XObjectTypeCallback&	theCallbackObject)
+XNodeSetBase::ProcessXObjectTypeCallback(XObjectTypeCallback&	theCallbackObject)
 {
-	theCallbackObject.String(*this,
-							 str());
+	theCallbackObject.NodeSet(*this,
+							  nodeset());
 }
 
 
 
 void
-XStringBase::ProcessXObjectTypeCallback(XObjectTypeCallback&	theCallbackObject) const
+XNodeSetBase::ProcessXObjectTypeCallback(XObjectTypeCallback&	theCallbackObject) const
 {
-	theCallbackObject.String(*this,
-							 str());
+	theCallbackObject.NodeSet(*this,
+							  nodeset());
+}
+
+
+
+void
+XNodeSetBase::clearCachedValues()
+{
+	m_cachedNumberValue = theBogusNumberValue;
+
+	clear(m_cachedStringValue);
 }

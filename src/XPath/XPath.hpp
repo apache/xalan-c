@@ -304,26 +304,6 @@ public:
 			XPathExecutionContext&	executionContext) const;
 
 	/**
-	 * Test a node.  This should be implemented by a derived class.
-	 * Returns s_MatchScoreNone by default.
-	 *
-	 * @param context  current source tree context node
-	 * @param opPos    current position in the m_opMap array
-	 * @param argLen   argument length
-	 * @param stepType type of step
-	 * @param executionContext current execution context
-	 * @return      one of s_MatchScoreNone, s_MatchScoreNodeTest,
-	 *              s_MatchScoreQName
-	 */
-	virtual double
-	nodeTest(
-			XalanNode*				context,
-			int						opPos,
-			int						argLen,
-			int						stepType,
-			XPathExecutionContext&	executionContext) const;
-
-	/**
 	 * Evaluate a predicate.
 	 *
 	 * @param context          current source tree context node
@@ -443,18 +423,6 @@ protected:
 	 */
 	virtual XLocator*
 	createXLocatorHandler() const;
-
-	/**
-	 * Execute from the beginning of the xpath.
-	 * @param context The current source tree context node.
-	 * @param opPos The current position in the m_opMap array.
-	 * @return The result of the expression.
-	 */
-	virtual const XObjectPtr
-	xpath(
-			XalanNode*				context,
-			int						opPos,
-			XPathExecutionContext&	executionContext) const;
 
 	/**
 	 * Computes the union of its operands which must be node-sets.
@@ -652,19 +620,6 @@ protected:
 			int						opPos,
 			XPathExecutionContext&	executionContext) const;
 
-	/**
-	 * Return the remainder from a truncating division.
-	 * (Quo is no longer supported by xpath).
-	 * @param context The current source tree context node.
-	 * @param opPos The current position in the m_opMap array.
-	 * @return arg1 mod arg2.
-	 */
-	const XObjectPtr
-	quo(
-			XalanNode*				context,
-			int						opPos,
-			XPathExecutionContext&	executionContext) const;
-	
 	/**
 	 * Return the negation of a number.
 	 * @param context The current source tree context node.

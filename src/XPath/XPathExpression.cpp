@@ -847,9 +847,7 @@ XPathExpression::IntializeOpCodeLengthMap()
 	theMap[eOP_MULT] = 1 + s__opCodeMapLengthIndex;
 	theMap[eOP_DIV] = 1 + s__opCodeMapLengthIndex;
 	theMap[eOP_MOD] = 1 + s__opCodeMapLengthIndex;
-	theMap[eOP_QUO] = 1 + s__opCodeMapLengthIndex;
 	theMap[eOP_NEG] = 1 + s__opCodeMapLengthIndex;
-	theMap[eOP_STRING] = 1 + s__opCodeMapLengthIndex;
 	theMap[eOP_BOOL] = 1 + s__opCodeMapLengthIndex;
 	theMap[eOP_NUMBER] = 1 + s__opCodeMapLengthIndex;
 	theMap[eOP_UNION] = 1 + s__opCodeMapLengthIndex;

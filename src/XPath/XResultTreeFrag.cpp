@@ -274,6 +274,7 @@ XResultTreeFrag::item(unsigned int	index) const
 unsigned int
 XResultTreeFrag::getLength() const
 {
+	return 1;
 	assert(m_value.get() != 0);
 
 	unsigned int	theLength = 0;
@@ -336,7 +337,14 @@ XResultTreeFrag::NodeRefListBaseProxy::~NodeRefListBaseProxy()
 XalanNode*
 XResultTreeFrag::NodeRefListBaseProxy::item(unsigned int	index) const
 {
-	return m_xresultTreeFrag.item(index);
+	if (index == 0)
+	{
+		return m_xresultTreeFrag.m_value.get();
+	}
+	else
+	{
+		return 0;
+	}
 }
 
 
@@ -344,7 +352,7 @@ XResultTreeFrag::NodeRefListBaseProxy::item(unsigned int	index) const
 unsigned int
 XResultTreeFrag::NodeRefListBaseProxy::getLength() const
 {
-	return m_xresultTreeFrag.getLength();
+	return 1;
 }
 
 
@@ -352,7 +360,14 @@ XResultTreeFrag::NodeRefListBaseProxy::getLength() const
 unsigned int
 XResultTreeFrag::NodeRefListBaseProxy::indexOf(const XalanNode*	theNode) const
 {
-	return m_xresultTreeFrag.indexOf(theNode);
+	if (theNode == m_xresultTreeFrag.m_value.get())
+	{
+		return 0;
+	}
+	else
+	{
+		return NodeRefListBase::npos;
+	}
 }
 
 

@@ -86,7 +86,6 @@ XPathProcessorImpl::XPathProcessorImpl() :
 	m_xpath(0),
 	m_expression(0),
 	m_prefixResolver(0),
-	m_envSupport(0),
 	m_requireLiterals(false)
 {
 }
@@ -103,16 +102,15 @@ void
 XPathProcessorImpl::initXPath(
 			XPath&						pathObj,
 			const XalanDOMString&		expression,
-			const PrefixResolver&		prefixResolver,
-			const XPathEnvSupport&		envSupport)
+			const PrefixResolver&		prefixResolver)
 {
 	m_requireLiterals = false;
 
 	m_xpath = &pathObj;
+
 	m_expression = &m_xpath->getExpression();
 
 	m_prefixResolver = &prefixResolver;
-	m_envSupport = &envSupport;
 
 	tokenize(expression);
 
@@ -130,7 +128,6 @@ XPathProcessorImpl::initXPath(
 	m_xpath = 0;
 	m_expression = 0;
 	m_prefixResolver = 0;
-	m_envSupport = 0;
 }
 
 
@@ -139,14 +136,14 @@ void
 XPathProcessorImpl::initMatchPattern(
 			XPath&					pathObj,
 			const XalanDOMString&	expression,
-			const PrefixResolver&	prefixResolver,
-			const XPathEnvSupport&	envSupport)
+			const PrefixResolver&	prefixResolver)
 {
 	m_xpath = &pathObj;
+
 	m_expression = &m_xpath->getExpression();
 
 	m_prefixResolver = &prefixResolver;
-	m_envSupport = &envSupport;
+
 	m_expression->reset();
 
 	tokenize(expression);
@@ -170,7 +167,6 @@ XPathProcessorImpl::initMatchPattern(
 	m_xpath = 0;
 	m_expression = 0;
 	m_prefixResolver = 0;
-	m_envSupport = 0;
 }
 
 
@@ -895,40 +891,6 @@ XPathProcessorImpl::consumeExpected(char	expected)
 
 
 void
-XPathProcessorImpl::warn(
-			const XalanDOMString&	msg,
-			XalanNode* 				sourceNode) const
-{
-	assert(m_envSupport != 0);
-
-	const bool	shouldThrow =
-		m_envSupport->problem(XPathEnvSupport::eXPATHParser, 
-							  XPathEnvSupport::eWarning,
-							  m_prefixResolver, 
-							  sourceNode,
-							  msg,
-							  0,
-							  0);
-
-	if(shouldThrow == true)
-	{
-	  throw XPathParserException(msg);
-	}
-}
- 
-
-
-void
-XPathProcessorImpl::warn(
-			const char*		msg,
-			XalanNode*		sourceNode) const
-{
-	warn(TranscodeFromLocalCodePage(msg), sourceNode);
-}
-
-
-
-void
 XPathProcessorImpl::error(
 			const XalanDOMString&	msg,
 			XalanNode*				sourceNode) const
@@ -964,21 +926,7 @@ XPathProcessorImpl::error(
 		m_expression->dumpRemainingTokenQueue(thePrintWriter);
 	}
 
-	assert(m_envSupport != 0);
-
-	const bool	shouldThrow =
-		m_envSupport->problem(XPathEnvSupport::eXPATHParser, 
-							  XPathEnvSupport::eError,
-							  m_prefixResolver, 
-							  sourceNode,
-							  emsg,
-							  0,
-							  0);
-
-	if(shouldThrow == true)
-	{
-		throw XPathParserException(emsg);
-	}
+	throw XPathParserException(emsg);
 }
 
 
@@ -1323,10 +1271,6 @@ XPathProcessorImpl::MultiplicativeExpr(int	opCodePos)
 		{
 			theOpCode = XPathExpression::eOP_MOD;
 		}
-		else if(tokenIs(s_quoString) == true)
-		{
-			theOpCode = XPathExpression::eOP_QUO;
-		}
 
 		if (theOpCode != XPathExpression::eENDOP)
 		{
@@ -1396,22 +1340,6 @@ XPathProcessorImpl::UnaryExpr()
 	}
 }
   
-
-
-void
-XPathProcessorImpl::StringExpr()
-{
-	const int	opPos = m_expression->opCodeMapLength();
-
-	m_expression->appendOpCode(XPathExpression::eOP_STRING);
-
-	Expr();
-
-	// $$$ ToDo: Is this really necessary?
-	m_expression->updateOpCodeLength(XPathExpression::eOP_STRING,
-									 opPos);
-}
-
 
 
 void
@@ -1727,7 +1655,7 @@ XPathProcessorImpl::FunctionCall()
 	{
 		if (isValidFunction(m_token) == false)
 		{
-			warn(TranscodeFromLocalCodePage("Could not find function: ") +
+			error(TranscodeFromLocalCodePage("Could not find function: ") +
 				 m_token +
 				 TranscodeFromLocalCodePage("()"));
 		}
@@ -2554,8 +2482,6 @@ static XalanDOMString	s_divString;
 
 static XalanDOMString	s_modString;
 
-static XalanDOMString	s_quoString;
-
 static XalanDOMString	s_dotString;
 
 static XalanDOMString	s_dotDotString;
@@ -2581,8 +2507,6 @@ const XalanDOMString&	XPathProcessorImpl::s_andString = ::s_andString;
 const XalanDOMString&	XPathProcessorImpl::s_divString = ::s_divString;
 
 const XalanDOMString&	XPathProcessorImpl::s_modString = ::s_modString;
-
-const XalanDOMString&	XPathProcessorImpl::s_quoString = ::s_quoString;
 
 const XalanDOMString&	XPathProcessorImpl::s_dotString = ::s_dotString;
 
@@ -2623,7 +2547,6 @@ XPathProcessorImpl::initialize()
 	::s_andString = XALAN_STATIC_UCODE_STRING("and");
 	::s_divString = XALAN_STATIC_UCODE_STRING("div");
 	::s_modString = XALAN_STATIC_UCODE_STRING("mod");
-	::s_quoString = XALAN_STATIC_UCODE_STRING("quo");
 	::s_dotString = XALAN_STATIC_UCODE_STRING(".");
 	::s_dotDotString = XALAN_STATIC_UCODE_STRING("..");
 	::s_axisString = XALAN_STATIC_UCODE_STRING("::");
@@ -2647,7 +2570,6 @@ XPathProcessorImpl::terminate()
 	releaseMemory(::s_andString);
 	releaseMemory(::s_divString);
 	releaseMemory(::s_modString);
-	releaseMemory(::s_quoString);
 	releaseMemory(::s_dotString);
 	releaseMemory(::s_dotDotString);
 	releaseMemory(::s_axisString);

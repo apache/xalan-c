@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2001 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -54,84 +54,59 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-#if !defined(XRESULTTREEFRAG_HEADER_GUARD_1357924680)
-#define XRESULTTREEFRAG_HEADER_GUARD_1357924680
+#if !defined(XNODESETBASE_HEADER_GUARD_1357924680)
+#define XNODESETBASE_HEADER_GUARD_1357924680
 
 
 
-// Base header file.  Must be first.
+// Base include file.  Must be first.
 #include <XPath/XPathDefinitions.hpp>
 
 
 
-#include <XalanDOM/XalanDOMString.hpp>
-
-
-
-#if defined(XALAN_AUTO_PTR_REQUIRES_DEFINITION)
-#include <XPath/ResultTreeFragBase.hpp>
-#endif
-
-
-
-#include <Include/XalanAutoPtr.hpp>
-
-
-
 // Base class header file.
-#include <XPath/NodeRefListBase.hpp>
 #include <XPath/XObject.hpp>
 
 
 
-#include <XPath/XPathExecutionContext.hpp>
+#include <XPath/XNodeSetResultTreeFragProxy.hpp>
 
 
 
-class ResultTreeFragBase;
-class XResultTreeFrag;
-
-
-class XALAN_XPATH_EXPORT XResultTreeFrag : public XObject
+/**
+ * Class to hold XPath return types.
+ */
+class XALAN_XPATH_EXPORT XNodeSetBase : public XObject
 {
 public:
 
-	typedef XObject												ParentType;
-	typedef XPathExecutionContext::BorrowReturnResultTreeFrag	BorrowReturnResultTreeFrag;
-
+	/**
+	 * Create an XNodeSetBase
+	 */
+	XNodeSetBase();
 
 	/**
-	 * Construct an XResultTreeFrag object from a result tree fragment
-	 * 
-	 * @param val source result tree fragment.  The XResultTreeFrag instance will adopt the object.
+	 * Create an XNodeSetBase from another.
+	 *
+	 * @param source    object to copy
 	 */
-	XResultTreeFrag(BorrowReturnResultTreeFrag&		val);
-
-	/**
-	 * Construct an XResultTreeFrag object from another
-	 * 
-	 * @param source     source XResultTreeFrag
-	 * @param deepClone  true to copy all subobjects, default is false
-	 */
-	XResultTreeFrag(const XResultTreeFrag&	source,
-			bool							deepClone = false);
+	XNodeSetBase(const XNodeSetBase&	source);
 
 	virtual
-	~XResultTreeFrag();
-
+	~XNodeSetBase();
 
 	// These methods are inherited from XObject ...
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
 	virtual XObject*
 #else
-	virtual XResultTreeFrag*
+	virtual XNodeSetBase*
 #endif
-	clone(void*		theAddress = 0) const;
+	clone(void*		theAddress = 0) const = 0;
 
 	virtual XalanDOMString
 	getTypeString() const;
-  
+
 	virtual double
 	num() const;
 
@@ -152,11 +127,8 @@ public:
 	virtual const ResultTreeFragBase&
 	rtree(XPathExecutionContext&	executionContext) const;
 
-	virtual const ResultTreeFragBase&
-	rtree() const;
-
 	virtual const NodeRefListBase&
-	nodeset() const;
+	nodeset() const = 0;
 
 	virtual void
 	ProcessXObjectTypeCallback(XObjectTypeCallback&		theCallbackObject);
@@ -164,75 +136,31 @@ public:
 	virtual void
 	ProcessXObjectTypeCallback(XObjectTypeCallback&		theCallbackObject) const;
 
-	/**
-	 * Release the ResultTreeFrag held by the instance.
-	 */
+	virtual XalanNode*
+	item(unsigned int	index) const = 0;
+
+	virtual unsigned int
+	getLength() const = 0;
+
+protected:
+
 	void
-	release();
-
-	/**
-	 * Change the value of an XResultTreeFrag
-	 *
-	 * @param theValue The new value.
-	 */
-	void
-	set(BorrowReturnResultTreeFrag&	theValue);
-
-	// This is a proxy class for result tree fragment to node-set
-	// conversion.
-	class XALAN_XPATH_EXPORT NodeRefListBaseProxy : public NodeRefListBase
-	{
-	public:
-
-		NodeRefListBaseProxy(const XResultTreeFrag&		theXResultTreeFrag);
-
-		virtual
-		~NodeRefListBaseProxy();
-
-		virtual XalanNode*
-		item(unsigned int	index) const;
-
-		virtual unsigned int
-		getLength() const;
-
-		virtual unsigned int
-		indexOf(const XalanNode*	theNode) const;
-
-	private:
-
-		// Not implemented...
-		NodeRefListBaseProxy(const NodeRefListBaseProxy&);
-
-		const XResultTreeFrag&	m_xresultTreeFrag;		
-	};
-
-	friend class NodeRefListBaseProxy;
+	clearCachedValues();
 
 private:
 
-	// New member functions for node list compatibility...
-	XalanNode*
-	item(unsigned int	index) const;
-
-	unsigned int
-	getLength() const;
-
-	unsigned int
-	indexOf(const XalanNode*	theNode) const;
-
+	// Not implemented...
+	XNodeSetBase&
+	operator=(const XNodeSetBase&);
 
 	// Data members...
-	BorrowReturnResultTreeFrag		m_value;	
+	XNodeSetResultTreeFragProxy					m_proxy;
 
-	mutable XalanDOMString			m_cachedStringValue;
+	mutable XalanDOMString						m_cachedStringValue;
 
-	mutable double					m_cachedNumberValue;
-
-#if XALAN_RTREEFRAG_TO_NODESET_CONVERSION
-	const NodeRefListBaseProxy		m_nodeRefListBaseProxy;
-#endif
+	mutable double								m_cachedNumberValue;
 };
 
 
 
-#endif	// XRESULTTREEFRAG_HEADER_GUARD_1357924680
+#endif	// XNODESETBASE_HEADER_GUARD_1357924680

@@ -64,31 +64,19 @@
 
 
 
-#if defined(XALAN_AUTO_PTR_REQUIRES_DEFINITION)
-#include <XPath/ResultTreeFragBase.hpp>
-#endif
-
-
-
-#include <Include/XalanAutoPtr.hpp>
-
-
-
 // Base class header file.
-#include <XPath/XObject.hpp>
+#include <XPath/XNodeSetBase.hpp>
+
+
+
 #include <XPath/XPathExecutionContext.hpp>
-
-
-
-class ResultTreeFragBase;
-class XalanNode;
 
 
 
 /**
  * Class to hold XPath return types.
  */
-class XALAN_XPATH_EXPORT XNodeSet : public XObject
+class XALAN_XPATH_EXPORT XNodeSet : public XNodeSetBase
 {
 public:
 
@@ -114,7 +102,7 @@ public:
 	virtual
 	~XNodeSet();
 
-	// These methods are inherited from XObject ...
+	// These methods are inherited from XNodeSetBase...
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
 	virtual XObject*
@@ -123,37 +111,14 @@ public:
 #endif
 	clone(void*		theAddress = 0) const;
 
-	virtual XalanDOMString
-	getTypeString() const;
-
-	virtual double
-	num() const;
-
-	virtual bool
-	boolean() const;
-
-	virtual const XalanDOMString&
-	str() const;
-
-	virtual void
-	str(
-			FormatterListener&	formatterListener,
-			MemberFunctionPtr	function) const;
-
-	virtual void
-	str(XalanDOMString&	theBuffer) const;
-
-	virtual const ResultTreeFragBase&
-	rtree(XPathExecutionContext&	executionContext) const;
-
 	virtual const NodeRefListBase&
 	nodeset() const;
 
-	virtual void
-	ProcessXObjectTypeCallback(XObjectTypeCallback&		theCallbackObject);
+	virtual XalanNode*
+	item(unsigned int	index) const;
 
-	virtual void
-	ProcessXObjectTypeCallback(XObjectTypeCallback&		theCallbackObject) const;
+	virtual unsigned int
+	getLength() const;
 
 	/**
 	 * Release the node set held by the instance.
@@ -176,15 +141,7 @@ private:
 	operator=(const XNodeSet&);
 
 	// Data members...
-
-
 	BorrowReturnMutableNodeRefList				m_value;
-
-	mutable XalanAutoPtr<ResultTreeFragBase>	m_resultTreeFrag;
-
-	mutable XalanDOMString						m_cachedStringValue;
-
-	mutable double								m_cachedNumberValue;
 };
 
 

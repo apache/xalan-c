@@ -82,9 +82,7 @@ class XALAN_XPATH_EXPORT ResultTreeFragBase : public XalanDocumentFragment
 public:
 
 	/**
-	 * Construct a result tree fragment object from a DOM document.
-	 * 
-	 * @param theOwnerDocument document used to construct result tree fragment
+	 * Construct a result tree fragment object.
 	 */
 	ResultTreeFragBase();
 
@@ -104,16 +102,6 @@ public:
 	 */
 	virtual void
 	clear() = 0;
-
-	/**
-	 * Set the owner document for the result tree fragment.  This will
-	 * cause all of the children to be cleared as well.
-	 *
-	 * @param theOwnerDocument The new owner document instance.
-	 */
-	virtual void
-	setOwnerDocument(XalanDocument*		theOwnerDocument) = 0;
-
 
 	// These interfaces are inherited from XalanDocumentFragment...
 	virtual const XalanDOMString&

@@ -255,8 +255,7 @@ XPathEvaluator::evaluate(
     theProcessor.initXPath(
 			theXPath,
 			XalanDOMString(xpathString),
-			prefixResolver,
-			envSupport);
+			prefixResolver);
 
 	// Set up the connections between the execution context and
 	// the provided support objects...

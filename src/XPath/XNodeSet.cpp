@@ -84,11 +84,8 @@ const double	theBogusNumberValue = 123456789;
 
 
 XNodeSet::XNodeSet(BorrowReturnMutableNodeRefList&	value) :
-	XObject(eTypeNodeSet),
-	m_value(value),
-	m_resultTreeFrag(),
-	m_cachedStringValue(),
-	m_cachedNumberValue(theBogusNumberValue)
+	XNodeSetBase(),
+	m_value(value)
 {
 }
 
@@ -96,13 +93,8 @@ XNodeSet::XNodeSet(BorrowReturnMutableNodeRefList&	value) :
 
 XNodeSet::XNodeSet(const XNodeSet&	source,
 				   bool				deepClone) :
-	XObject(source),
-	m_value(source.m_value.clone()),
-	m_resultTreeFrag(source.m_resultTreeFrag.get() == 0 ?
-						0 :
-						source.m_resultTreeFrag->clone(deepClone)),
-	m_cachedStringValue(source.m_cachedStringValue),
-	m_cachedNumberValue(source.m_cachedNumberValue)
+	XNodeSetBase(source),
+	m_value(source.m_value.clone())
 {
 }
 
@@ -126,128 +118,6 @@ XNodeSet::clone(void*	theAddress) const
 
 
 
-XalanDOMString
-XNodeSet::getTypeString() const
-{
-	return XALAN_STATIC_UCODE_STRING("#NODESET");
-}
-
-
-
-double
-XNodeSet::num() const
-{
-	if (DoubleSupport::equal(m_cachedNumberValue, theBogusNumberValue) == true)
-	{
-#if defined(XALAN_NO_MUTABLE)
-		((XNodeSet*)this)->m_cachedNumberValue = DoubleSupport::toDouble(str());
-#else
-		m_cachedNumberValue = DoubleSupport::toDouble(str());
-#endif
-	}
-
-	return m_cachedNumberValue;
-}
-
-
-
-bool
-XNodeSet::boolean() const
-{
-	return m_value->getLength() > 0 ? true : false;
-}
-
-
-
-const XalanDOMString&
-XNodeSet::str() const
-{
-	if (isEmpty(m_cachedStringValue) == true &&
-		m_value->getLength() > 0)
-	{
-		const XalanNode* const	theNode = m_value->item(0);
-		assert(theNode != 0);
-
-#if defined(XALAN_NO_MUTABLE)
-		DOMServices::getNodeData(*theNode, ((XNodeSet*)this)->m_cachedStringValue);
-#else
-		DOMServices::getNodeData(*theNode, m_cachedStringValue);
-#endif
-	}
-
-	return m_cachedStringValue;
-}
-
-
-
-void
-XNodeSet::str(
-			FormatterListener&	formatterListener,
-			MemberFunctionPtr	function) const
-{
-	if (isEmpty(m_cachedStringValue) == false)
-	{
-		(formatterListener.*function)(c_wstr(m_cachedStringValue), length(m_cachedStringValue));
-	}
-	else if (m_value->getLength() > 0)
-	{
-		const XalanNode* const	theNode = m_value->item(0);
-		assert(theNode != 0);
-
-		DOMServices::getNodeData(*theNode, formatterListener, function);
-	}
-}
-
-
-
-void
-XNodeSet::str(XalanDOMString&	theBuffer) const
-{
-	if (isEmpty(m_cachedStringValue) == false)
-	{
-		append(theBuffer, m_cachedStringValue);
-	}
-	else if (m_value->getLength() > 0)
-	{
-		const XalanNode* const	theNode = m_value->item(0);
-		assert(theNode != 0);
-
-		DOMServices::getNodeData(*theNode, theBuffer);
-	}
-}
-
-
-
-const ResultTreeFragBase&
-XNodeSet::rtree(XPathExecutionContext&	executionContext) const
-{
-	if (m_resultTreeFrag.get() == 0)
-	{
-		XalanDocument* const	theFactory = executionContext.getDOMFactory();
-		assert(theFactory != 0);
-
-		ResultTreeFrag* const	theFrag =
-			new ResultTreeFrag(theFactory);
-
-		const int	nNodes = m_value->getLength();
-
-		for(int i = 0; i < nNodes; i++)
-		{
-			theFrag->appendChild(m_value->item(i));
-		}
-
-#if defined(XALAN_NO_MUTABLE)
-		((XNodeSet*)this)->m_resultTreeFrag.reset(theFrag);
-#else
-	    m_resultTreeFrag.reset(theFrag);
-#endif
-	}
-
-	return *m_resultTreeFrag.get();
-}
-
-
-
 const NodeRefListBase&
 XNodeSet::nodeset() const
 {
@@ -257,31 +127,11 @@ XNodeSet::nodeset() const
 
 
 void
-XNodeSet::ProcessXObjectTypeCallback(XObjectTypeCallback&	theCallbackObject)
-{
-	theCallbackObject.NodeSet(*this,
-							  nodeset());
-}
-
-
-
-void
-XNodeSet::ProcessXObjectTypeCallback(XObjectTypeCallback&	theCallbackObject) const
-{
-	theCallbackObject.NodeSet(*this,
-							  nodeset());
-}
-
-
-
-void
 XNodeSet::release()
 {
 	m_value.release();
 
-	m_cachedNumberValue = theBogusNumberValue;
-
-	clear(m_cachedStringValue);
+	clearCachedValues();
 }
 
 
@@ -292,4 +142,20 @@ XNodeSet::set(BorrowReturnMutableNodeRefList&	value)
 	release();
 
 	m_value = value;
+}
+
+
+
+XalanNode*
+XNodeSet::item(unsigned int	index) const
+{
+	return m_value->item(index);
+}
+
+
+
+unsigned int
+XNodeSet::getLength() const
+{
+	return m_value->getLength();
 }

@@ -72,10 +72,9 @@ const XalanDOMString	ResultTreeFrag::s_emptyString;
 
 
 
-ResultTreeFrag::ResultTreeFrag(XalanDocument*	theOwnerDocument) :
+ResultTreeFrag::ResultTreeFrag() :
 	ResultTreeFragBase(),
-	XalanNodeList(),
-	m_document(theOwnerDocument)
+	XalanNodeList()
 {
 }
 
@@ -85,7 +84,6 @@ ResultTreeFrag::ResultTreeFrag(const ResultTreeFrag&	theSource,
 							   bool						deepClone) :
 	ResultTreeFragBase(theSource),
 	XalanNodeList(),
-	m_document(theSource.m_document),
 	m_children(deepClone == false ? theSource.m_children : NodeVectorType())
 {
 	if (deepClone == true)
@@ -115,16 +113,6 @@ void
 ResultTreeFrag::clear()
 {
 	m_children.clear();
-}
-
-
-
-void
-ResultTreeFrag::setOwnerDocument(XalanDocument*		theOwnerDocument)
-{
-	m_document = theOwnerDocument;
-
-	clear();
 }
 
 
@@ -215,7 +203,7 @@ ResultTreeFrag::getAttributes() const
 XalanDocument*
 ResultTreeFrag::getOwnerDocument() const
 {
-	return m_document;
+	return 0;
 }
 
 

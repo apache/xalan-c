@@ -72,7 +72,6 @@
 class Function;
 class PrefixResolver;
 class XPath;
-class XPathEnvSupport;
 
 
 
@@ -100,8 +99,7 @@ public:
 	initXPath(
 			XPath&					pathObj,
 			const XalanDOMString&	expression,
-			const PrefixResolver&	resolver,
-			const XPathEnvSupport&	envSupport) = 0;
+			const PrefixResolver&	resolver) = 0;
 
 	/**
 	 * Given a string, create an XSLT Match Pattern object.
@@ -109,15 +107,12 @@ public:
 	 * @param pathObj        XPath object to be initialized
 	 * @param expression     expression that will be evaluated
 	 * @param resolver       prefix resolver to use
-	 * @param xobjectFactory factory class instance for XObjects
-	 * @param envSupport     XPath environment support class instance
 	 */
 	virtual void
 	initMatchPattern(
 			XPath&					pathObj,
 			const XalanDOMString&	expression,
-			const PrefixResolver&	resolver,
-			const XPathEnvSupport&	envSupport) = 0;
+			const PrefixResolver&	resolver) = 0;
 
 	/**
 	 * Given a string, and a reference to a function object, install the

@@ -464,16 +464,6 @@ XPathEnvSupportDefault::extFunction(
 
 
 bool
-XPathEnvSupportDefault::shouldStripSourceNode(
-			XPathExecutionContext&	/* executionContext */,
-			const XalanNode&		/* node */) const
-{
-	return false;
-}
-
-
-
-bool
 XPathEnvSupportDefault::problem(
 			eSource					/* where */,
 			eClassification			classification,

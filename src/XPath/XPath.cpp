@@ -261,16 +261,8 @@ XPath::executeMore(
 		return mod(context, opPos, executionContext);
 		break;
 
-	case XPathExpression::eOP_QUO:
-		return quo(context, opPos, executionContext);
-		break;
-
 	case XPathExpression::eOP_NEG:
 		return neg(context, opPos, executionContext);
-		break;
-
-	case XPathExpression::eOP_STRING:
-		return string(context, opPos, executionContext);
 		break;
 
 	case XPathExpression::eOP_BOOL:
@@ -407,22 +399,6 @@ XPath::getMatchScore(XalanNode*					context,
 
 
 
-double
-XPath::nodeTest(
-			XalanNode*				context,
-			int						/* opPos */,
-			int						/* argLen */,
-			int						/* stepType */,
-			XPathExecutionContext&	executionContext) const
-{
-	executionContext.warn(TranscodeFromLocalCodePage("XPath needs a derived object to implement nodeTest!"),
-						  context);
-
-    return s_MatchScoreNone;
-}
-
-
-
 void
 XPath::getTargetElementStrings(TargetElementStringsVectorType&	targetStrings) const
 {
@@ -534,17 +510,6 @@ XPath::getTargetElementStrings(TargetElementStringsVectorType&	targetStrings) co
 
 		opPos = nextOpPos;
 	}
-}
-
-
-
-const XObjectPtr
-XPath::xpath(
-			XalanNode*				context,
-			int						opPos,
-			XPathExecutionContext&	executionContext) const
-{
-	return executeMore(context, opPos + 2, executionContext);
 }
 
 
@@ -902,20 +867,6 @@ XPath::mod(
 
 
 const XObjectPtr
-XPath::quo(
-			XalanNode*				context,
-			int						opPos,
-			XPathExecutionContext&	executionContext) const
-{
-	// Actually, this is no longer supported by xpath...
-	executionContext.warn(TranscodeFromLocalCodePage("Old syntax: quo(...) is no longer defined in XPath."));
-
-	return div(context, opPos, executionContext);
-}
-
-
-
-const XObjectPtr
 XPath::neg(
 			XalanNode*				context,
 			int						opPos,
@@ -925,29 +876,6 @@ XPath::neg(
 	assert(expr1.get() != 0);
 
 	return executionContext.getXObjectFactory().createNumber(DoubleSupport::negative(expr1->num()));
-}
-
-
-
-const XObjectPtr
-XPath::string(
-			XalanNode*				context,
-			int						opPos,
-			XPathExecutionContext&	executionContext) const
-{
-	XObjectPtr	expr1(executeMore(context, opPos + 2, executionContext));
-	assert(expr1.get() != 0);
-
-	// Try to optimize when the result of the execution is
-	// already a string.
-	if (expr1->getType() == XObject::eTypeString)
-	{
-		return expr1;
-	}
-	else
-	{
-		return executionContext.getXObjectFactory().createStringAdapter(expr1);
-	}
 }
 
 

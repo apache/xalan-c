@@ -305,7 +305,8 @@ public:
 		 * returns: 
 		 *	XNumber
 		 */
-		eOP_QUO = 15,
+// No longer supported...
+//		eOP_QUO = 15,
 
 		/**
 		 * [OP_NEG]
@@ -325,7 +326,8 @@ public:
 		 * returns: 
 		 *	XString
 		 */
-		eOP_STRING = 17,
+// No longer supported...
+//		eOP_STRING = 17,
 
 		/**
 		 * [OP_BOOL] (cast operation)

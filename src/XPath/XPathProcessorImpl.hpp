@@ -147,15 +147,13 @@ public:
 	initXPath(
 			XPath&					pathObj,
 			const XalanDOMString&	expression,
-			const PrefixResolver&	prefixResolver,
-			const XPathEnvSupport&	envSupport);
+			const PrefixResolver&	prefixResolver);
 
 	virtual void
 	initMatchPattern(
 			XPath&					pathObj,
 			const XalanDOMString&	expression,
-			const PrefixResolver&	prefixResolver,
-			const XPathEnvSupport&	envSupport);
+			const PrefixResolver&	prefixResolver);
 
 private:
 
@@ -390,24 +388,7 @@ private:
 	isCurrentLiteral() const;
 
 	/**
-	 * Warn the user of an problem.
-	 */
-	void
-	warn(
-			const XalanDOMString&	msg,
-			XalanNode*				sourceNode = 0) const;
-
-	/**
-	 * Warn the user of an problem.
-	 */
-	void
-	warn(
-			const char*		msg,
-			XalanNode*		sourceNode = 0) const;
-
-	/**
-	 * Tell the user of an error, and probably throw an 
-	 * exception.
+	 * Throw an exception using the provided message text.
 	 */
 	void
 	error(
@@ -415,8 +396,7 @@ private:
 			XalanNode*				sourceNode = 0) const;
 
 	/**
-	 * Tell the user of an error, and probably throw an 
-	 * exception.
+	 * Throw an exception using the provided message text.
 	 */
 	void
 	error(
@@ -531,14 +511,6 @@ private:
 	 */
 	void
 	UnaryExpr();
-  
-	/**
-	 * --------------------------------------------------------------------------------
-	 StringExpr  ::=	Expr   
-	 * --------------------------------------------------------------------------------
-	 */
-	void
-	StringExpr();
 
 	/**
 	 * 
@@ -832,8 +804,6 @@ private:
 	 */
 	const PrefixResolver*			m_prefixResolver;
 
-	const XPathEnvSupport*			m_envSupport;
-
 	bool							m_requireLiterals;
 
 	enum eDummy
@@ -858,8 +828,6 @@ private:
 	static const XalanDOMString&	s_divString;
 
 	static const XalanDOMString&	s_modString;
-
-	static const XalanDOMString&	s_quoString;
 
 	static const XalanDOMString&	s_dotString;
 
