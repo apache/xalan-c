@@ -959,12 +959,12 @@ Stylesheet::locateMatchPatternList2(
 
 const NodeRefListBase*
 Stylesheet::getNodeSetByKey(
-			XalanNode*				doc,
-			const XalanDOMString&	name,
-			const XalanDOMString&	ref,
-			const PrefixResolver&	resolver,
-			XPathExecutionContext&	executionContext,
-			KeyTablesTableType& 	theKeysTable) const
+			XalanNode*					doc,
+			const XalanDOMString&		name,
+			const XalanDOMString&		ref,
+			const PrefixResolver&		resolver,
+			StylesheetExecutionContext&	executionContext,
+			KeyTablesTableType& 		theKeysTable) const
 {
 	const NodeRefListBase *nl = 0;
 

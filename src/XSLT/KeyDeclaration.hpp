@@ -92,8 +92,7 @@ public:
 			XPath&					use) :
 		m_name(name),
 		m_match(&matchPattern),
-		m_use(&use),
-		m_inConstruction(false)
+		m_use(&use)
 	{
 	}
 
@@ -113,7 +112,7 @@ public:
 	 * 
 	 * @return XPath for "use" attribute
 	 */
-	XPath&
+	const XPath&
 	getUse() const
 	{
 		return *m_use;
@@ -124,47 +123,20 @@ public:
 	 * 
 	 * @return XPath for "match" attribute
 	 */
-	XPath&
+	const XPath&
 	getMatchPattern() const
 	{
 		return *m_match;
-	}
-
-	bool
-	getInConstruction() const
-	{
-		return m_inConstruction;
-	}
-
-	void
-	beginConstruction() const
-	{
-#if defined(XALAN_NO_MUTABLE)
-		((KeyDeclaration*)this)->m_inConstruction = true;
-#else
-		m_inConstruction = true;
-#endif
-	}
-
-	void
-	endConstruction() const
-	{
-#if defined(XALAN_NO_MUTABLE)
-		((KeyDeclaration*)this)->m_inConstruction = false;
-#else
-		m_inConstruction = false;
-#endif
 	}
 
 private:
 
 	XalanDOMString	m_name;
 
-	XPath*			m_match;
+	const XPath*	m_match;
 
-	XPath*			m_use;
+	const XPath*	m_use;
 
-	mutable bool	m_inConstruction;
 };
 
 

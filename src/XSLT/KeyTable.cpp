@@ -71,12 +71,11 @@
 
 
 #include <XPath/XPath.hpp>
-#include <XPath/XPathExecutionContext.hpp>
 
 
 
 #include "KeyDeclaration.hpp"
-
+#include "StylesheetExecutionContext.hpp"
 
 
 const MutableNodeRefList	KeyTable::s_dummyList;
@@ -89,7 +88,7 @@ KeyTable::KeyTable(
 			const PrefixResolver&				resolver,
 			const XalanDOMString&				name,
 			const KeyDeclarationVectorType&		keyDeclarations,
-			XPathExecutionContext&				executionContext) :
+			StylesheetExecutionContext&			executionContext) :
 	m_docKey(doc),
 	m_keys()
 {
@@ -135,13 +134,13 @@ KeyTable::KeyTable(
 
 				if (equals(kd.getName(), name))
 				{
-					if (kd.getInConstruction() == true)
+					if (executionContext.getInConstruction(kd) == true)			
 					{
 						fDone = true;
 					}
 					else
 					{
-						kd.beginConstruction();
+						executionContext.beginConstruction(kd);
 
 						// See if our node matches the given key declaration according to 
 						// the match attribute on xsl:key.
@@ -151,7 +150,7 @@ KeyTable::KeyTable(
 
 						if(score == XPath::s_MatchScoreNone)
 						{
-							kd.endConstruction();
+							executionContext.endConstruction(kd);
 						}
 						else
 						{
@@ -216,7 +215,7 @@ KeyTable::KeyTable(
 								}
 							} // end for(int k = 0; k < nUseValues; k++)
 
-							kd.endConstruction();
+							executionContext.endConstruction(kd);
 						} // if(score != kd.getMatchPattern().s_MatchScoreNone)
 					} // if (kd.getInConstruction() == true)
 				} // if (equals(kd.getName(), name)

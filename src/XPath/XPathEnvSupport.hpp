@@ -109,29 +109,6 @@ public:
 	virtual
 	~XPathEnvSupport();
 
-
-	/**
-	 * Given a valid element key, return the corresponding node list.
-	 *
-	 * @param doc              source document
-	 * @param name             name of the key, which must match the 'name'
-	 *                         attribute on xsl:key
-	 * @param ref              value that must match the value found by the
-	 *                         'match' attribute on xsl:key
-	 * @param resolver         resolver for namespace resolution
-	 * @param executionContext current execution context
-	 * @return if the name was not declared with xsl:key, this will return
-	 *         null, if the identifier is not found, it will return an empty
-	 *         node set, otherwise it will return a nodeset of nodes.
-	 */
-	virtual const NodeRefListBase*
-	getNodeSetByKey(
-			const XalanNode&		doc,
-			const XalanDOMString&	name,
-			const XalanDOMString&	ref,
-			const PrefixResolver&	resolver,
-			XPathExecutionContext&	executionContext) const = 0;
-
 	/**
 	 * Provides support for XML parsing service.
 	 *

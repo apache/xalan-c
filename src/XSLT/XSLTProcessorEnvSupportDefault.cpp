@@ -94,7 +94,6 @@ XSLTProcessorEnvSupportDefault::XSLTProcessorEnvSupportDefault(XSLTProcessor*	th
 	XSLTProcessorEnvSupport(),
 	m_defaultSupport(),
 	m_processor(theProcessor),
-	m_keyTables(),
 	m_xlocatorTable()
 {
 }
@@ -159,94 +158,7 @@ XSLTProcessorEnvSupportDefault::reset()
 
 	m_defaultSupport.reset();
 
-	// Clean up the key table vector
-	for_each(m_keyTables.begin(),
-			 m_keyTables.end(),
-			 makeMapValueDeleteFunctor(m_keyTables));
-
-	m_keyTables.clear();
-
 	m_xlocatorTable.clear();
-}
-
-
-
-KeyTable*
-XSLTProcessorEnvSupportDefault::getKeyTable(const XalanNode*	doc) const
-{
-	const KeyTablesTableType::const_iterator		i =
-					m_keyTables.find(doc);
-
-	if (i == m_keyTables.end())
-	{
-		return 0;
-	}
-	else
-	{
-		return (*i).second;
-	}
-}
-
-
-
-void
-XSLTProcessorEnvSupportDefault::setKeyTable(
-			KeyTable*			keytable,
-			const XalanNode*	doc)
-{
-	// Get rid of any existing keytable
-	delete m_keyTables[doc];
-
-	m_keyTables[doc] = keytable;
-}
-
-
-
-const NodeRefListBase*
-XSLTProcessorEnvSupportDefault::getNodeSetByKey(
-			const XalanNode&		doc,
-			const XalanDOMString&	name,
-			const XalanDOMString&	ref,
-			const PrefixResolver&	resolver,
-			XPathExecutionContext&	executionContext) const
-{
-	if (m_processor == 0)
-	{
-		return m_defaultSupport.getNodeSetByKey(doc,
-											    name,
-												ref,
-												resolver,
-												executionContext);
-	}
-	else
-	{
-		const NodeRefListBase*	nl = 0;
-
-		const Stylesheet* const		theStylesheet =
-			m_processor->getStylesheetRoot();
-
-		if (theStylesheet != 0)
-		{
-			// $$$ ToDo: Figure out this const stuff!!!
-			nl = theStylesheet->getNodeSetByKey(&const_cast<XalanNode&>(doc),
-												name,
-												ref,
-												resolver,
-												executionContext,
-#if defined(XALAN_NO_MUTABLE)
-												(KeysTableType&)m_keyTables);
-#else
-												m_keyTables);
-#endif
-		}
-
-		if(0 == nl)
-		{
-			m_processor->error(XalanDOMString("There is no xsl:key declaration for '") + name + XalanDOMString("'!"));
-		}
-
-		return nl;
-	}
 }
 
 

@@ -85,8 +85,8 @@
 
 
 
-#include <XSLT/KeyDeclaration.hpp>
-#include <XSLT/StylesheetExecutionContext.hpp>
+#include "KeyDeclaration.hpp"
+#include "StylesheetExecutionContext.hpp"
 
 
 
@@ -107,7 +107,7 @@ class StylesheetRoot;
 class XMLURL;
 class XObject;
 class XPath;
-class XPathExecutionContext;
+class StylesheetExecutionContext;
 
 
 
@@ -841,12 +841,12 @@ typedef XALAN_STD vector<ElemDecimalFormat*>				ElemDecimalFormatVectorType;
 	 */
 	const NodeRefListBase*
 	getNodeSetByKey(
-			XalanNode*				doc,
-			const XalanDOMString&	name,
-			const XalanDOMString&	ref,
-			const PrefixResolver&	resolver,
-			XPathExecutionContext&	executionContext,
-			KeyTablesTableType&		theKeysTable) const;
+			XalanNode*					doc,
+			const XalanDOMString&		name,
+			const XalanDOMString&		ref,
+			const PrefixResolver&		resolver,
+			StylesheetExecutionContext&	executionContext,
+			KeyTablesTableType&			theKeysTable) const;
 
 	/**
 	 * Add an extension namespace handler. This provides methods for calling

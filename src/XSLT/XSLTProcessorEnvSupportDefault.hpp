@@ -72,7 +72,6 @@
 
 // Base class header file...
 #include <XSLT/XSLTProcessorEnvSupport.hpp>
-#include <XSLT/Stylesheet.hpp>
 
 
 
@@ -80,7 +79,6 @@
 
 
 
-class KeyTable;
 class XSLTProcessor;
 
 
@@ -156,26 +154,7 @@ public:
 			const XalanDOMString&	theNamespace,
 			const XalanDOMString&	functionName);
 
-
-	// These interfaces are inherited from XSLTProcessorEnvSupport...
-
-	virtual KeyTable*
-	getKeyTable(const XalanNode*	doc) const;
-
-	virtual void
-	setKeyTable(
-			KeyTable*			keytable,
-			const XalanNode*	doc);
-
 	// These interfaces are inherited from XPathEnvSupport...
-
-	virtual const NodeRefListBase*
-	getNodeSetByKey(
-			const XalanNode&		doc,
-			const XalanDOMString&	name,
-			const XalanDOMString&	ref,
-			const PrefixResolver&	resolver,
-			XPathExecutionContext&	executionContext) const;
 
 	virtual XalanDocument*
 	parseXML(
@@ -271,15 +250,11 @@ private:
 	typedef std::map<const XalanNode*, XLocator*>	XLocatorTableType;
 #endif
 
-	typedef Stylesheet::KeyTablesTableType			KeyTablesTableType;
-
 	// Data members...
 
 	XPathEnvSupportDefault		m_defaultSupport;
 
 	XSLTProcessor*				m_processor;
-
-	mutable KeyTablesTableType	m_keyTables;
 
 	XLocatorTableType			m_xlocatorTable;
 };

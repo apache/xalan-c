@@ -114,7 +114,32 @@ StylesheetExecutionContextDefault::XalanNumberFormatFactory*		StylesheetExecutio
 
 const StylesheetExecutionContextDefault::DefaultCollationCompareFunctor		StylesheetExecutionContextDefault::s_defaultFunctor;
 
+bool
+StylesheetExecutionContextDefault::getInConstruction(const KeyDeclaration& keyDeclaration) const
+{
+	return m_keyDeclarationSet.count(&keyDeclaration)?true:false;
+}
 
+void
+StylesheetExecutionContextDefault::beginConstruction(const KeyDeclaration& keyDeclaration) const
+{	
+#if defined(XALAN_NO_MUTABLE)
+	((StylesheetExecutionContextDefault*)this)->m_keyDeclarationSet.insert(&keyDeclaration);
+#else
+	m_keyDeclarationSet.insert(&keyDeclaration);
+#endif
+}
+
+	
+void
+StylesheetExecutionContextDefault::endConstruction(const KeyDeclaration& keyDeclaration) const
+{
+#if defined(XALAN_NO_MUTABLE)
+	((StylesheetExecutionContextDefault*)this)->m_keyDeclarationSet.erase(&keyDeclaration);
+#else
+	m_keyDeclarationSet.erase(&keyDeclaration);
+#endif	
+}
 
 StylesheetExecutionContextDefault::StylesheetExecutionContextDefault(
 			XSLTEngineImpl&			xsltProcessor,
@@ -142,7 +167,8 @@ StylesheetExecutionContextDefault::StylesheetExecutionContextDefault(
 	m_collationCompareFunctor(&s_defaultFunctor),
 	m_liveVariablesStack(),
 	m_variablesStack(),
-	m_matchPatternCache()
+	m_matchPatternCache(),
+	m_keyTables()
 {
 	m_liveVariablesStack.reserve(eDefaultVariablesStackSize);
 }
@@ -162,7 +188,7 @@ StylesheetExecutionContextDefault::reset()
 #if !defined(XALAN_NO_NAMESPACES)
 	using std::for_each;
 #endif
-
+	
 	for_each(m_formatterListeners.begin(),
 			 m_formatterListeners.end(),
 			 DeleteFunctor<FormatterListener>());
@@ -185,6 +211,12 @@ StylesheetExecutionContextDefault::reset()
 
 	m_variablesStack.reset();
 
+	// Clean up the key table vector
+	for_each(m_keyTables.begin(),
+			 m_keyTables.end(),
+			 makeMapValueDeleteFunctor(m_keyTables));
+
+	m_keyTables.clear();
 	assert(m_matchPatternCache.size() == 0);
 }
 
@@ -1567,35 +1599,14 @@ StylesheetExecutionContextDefault::getProcessNamespaces() const
 
 const NodeRefListBase*
 StylesheetExecutionContextDefault::getNodeSetByKey(
-			const XalanNode&		doc,
-			const XalanDOMString&	name,
-			const XalanDOMString&	ref,
-			const XalanElement&		nscontext)
-{
-	return m_xpathExecutionContextDefault.getNodeSetByKey(doc, name, ref, nscontext);
-}
-
-
-
-const NodeRefListBase*
-StylesheetExecutionContextDefault::getNodeSetByKey(
-			const XalanNode&		doc,
-			const XalanDOMString&	name,
-			const XalanDOMString&	ref)
-{
-	return m_xpathExecutionContextDefault.getNodeSetByKey(doc, name, ref);
-}
-
-
-
-const NodeRefListBase*
-StylesheetExecutionContextDefault::getNodeSetByKey(
-			const XalanNode&		doc,
+			XalanNode*				doc,
 			const XalanDOMString&	name,
 			const XalanDOMString&	ref,
 			const PrefixResolver&	resolver)
 {
-	return m_xpathExecutionContextDefault.getNodeSetByKey(doc, name, ref, resolver);
+	assert(m_stylesheetRoot != 0);
+
+	return m_stylesheetRoot->getNodeSetByKey(doc, name, ref, resolver, *this, m_keyTables);
 }
 
 
@@ -2032,3 +2043,35 @@ StylesheetExecutionContextDefault::addToXPathCache(
 	// Add the XPath with the current clock
 	m_matchPatternCache.insert(XPathCacheMapType::value_type(pattern, XPathCacheEntry(theXPath, addClock)));
 }
+
+
+KeyTable*
+StylesheetExecutionContextDefault::getKeyTable(const XalanNode*	doc) const
+{
+	const KeyTablesTableType::const_iterator		i =
+					m_keyTables.find(doc);
+
+	if (i == m_keyTables.end())
+	{
+		return 0;
+	}
+	else
+	{
+		return (*i).second;
+	}
+}
+
+
+
+void
+StylesheetExecutionContextDefault::setKeyTable(
+			KeyTable*			keytable,
+			const XalanNode*	doc)
+{
+	// Get rid of any existing keytable
+	delete m_keyTables[doc];
+
+	m_keyTables[doc] = keytable;
+}
+
+

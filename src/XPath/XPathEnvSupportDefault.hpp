@@ -145,14 +145,6 @@ public:
 
 	// These interfaces are inherited from XPathEnvSupport...
 
-	virtual const NodeRefListBase*
-	getNodeSetByKey(
-			const XalanNode&		doc,
-			const XalanDOMString&	name,
-			const XalanDOMString&	ref,
-			const PrefixResolver&	resolver,
-			XPathExecutionContext&	executionContext) const;
-
 	virtual XalanDocument*
 	parseXML(
 			const XalanDOMString&	urlString,

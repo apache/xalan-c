@@ -62,7 +62,8 @@
 
 
 // Base class include file.
-#include <XSLT/StylesheetExecutionContext.hpp>
+#include "Stylesheet.hpp"
+#include "StylesheetExecutionContext.hpp"
 
 
 
@@ -81,7 +82,7 @@
 #include <XSLT/VariablesStack.hpp>
 
 
-
+class Stylesheet;
 class TextOutputStream;
 class XPathProcessor;
 class XPathSupport;
@@ -528,6 +529,15 @@ public:
 	const CollationCompareFunctor*
 	installCollationCompareFunctor(const CollationCompareFunctor*	theFunctor);
 
+	virtual	bool
+	getInConstruction(const KeyDeclaration& keyDeclaration) const;
+
+	virtual	void
+	beginConstruction(const KeyDeclaration& keyDeclaration) const;
+
+	virtual	void
+	endConstruction(const KeyDeclaration& keyDeclaration) const;
+
 	// These interfaces are inherited from XPathExecutionContext...
 
 	virtual XalanNode*
@@ -631,21 +641,8 @@ public:
 	getProcessNamespaces() const;
 
 	virtual const NodeRefListBase*
-	getNodeSetByKey(
-			const XalanNode&		doc,
-			const XalanDOMString&	name,
-			const XalanDOMString&	ref,
-			const XalanElement&		nscontext);
-
-	virtual const NodeRefListBase*
-	getNodeSetByKey(
-			const XalanNode&		doc,
-			const XalanDOMString&	name,
-			const XalanDOMString&	ref);
-
-	virtual const NodeRefListBase*
-	getNodeSetByKey(
-			const XalanNode&		doc,
+	getNodeSetByKey(			
+			XalanNode*				doc,
 			const XalanDOMString&	name,
 			const XalanDOMString&	ref,
 			const PrefixResolver&	resolver);
@@ -714,6 +711,17 @@ public:
 #else
 	createPrintWriter(std::ostream&		theStream);
 #endif
+
+	// These interfaces are inherited from StylesheetExecutionContext...
+
+	virtual KeyTable*
+	getKeyTable(const XalanNode*	doc) const;
+
+	virtual void
+	setKeyTable(
+			KeyTable*			keytable,
+			const XalanNode*	doc);
+
 
 	// These interfaces are inherited from ExecutionContext...
 
@@ -789,6 +797,7 @@ private:
 	typedef set<FormatterListener*>						FormatterListenerSetType;
 	typedef set<PrintWriter*>							PrintWriterSetType;
 	typedef set<TextOutputStream*>						TextOutputStreamSetType;
+	typedef set<const KeyDeclaration*>					KeyDeclarationSetType;
 	typedef vector<const XObject*>						VariablesCollectionType;
 	typedef vector<VariablesCollectionType>				LiveVariablesStackType;
 	typedef pair<const XPath*, clock_t>					XPathCacheEntry;
@@ -800,11 +809,13 @@ private:
 	typedef std::set<FormatterListener*>				FormatterListenerSetType;
 	typedef std::set<PrintWriter*>						PrintWriterSetType;
 	typedef std::set<TextOutputStream*>					TextOutputStreamSetType;
+	typedef std::set<const KeyDeclaration*>				KeyDeclarationSetType;
 	typedef std::vector<const XObject*>					VariablesCollectionType;
 	typedef std::vector<VariablesCollectionType>		LiveVariablesStackType;
 	typedef std::pair<const XPath*, clock_t>			XPathCacheEntry;
 	typedef std::map<XalanDOMString, XPathCacheEntry>	XPathCacheMapType;
 #endif
+	typedef Stylesheet::KeyTablesTableType				KeyTablesTableType;
 
 	enum { eDefaultVariablesCollectionSize = 10,
 		   eXPathCacheMax = 50,
@@ -838,6 +849,10 @@ private:
 	static XalanNumberFormatFactory*	s_xalanNumberFormatFactory;
 
 	const static DefaultCollationCompareFunctor		s_defaultFunctor;
+
+	mutable KeyTablesTableType			m_keyTables;
+
+	mutable KeyDeclarationSetType		m_keyDeclarationSet;
 };
 
 

@@ -175,7 +175,7 @@ FunctionKey::execute(
 							usedrefs.insert(ref);
 
 							const NodeRefListBase* const		nl =
-									executionContext.getNodeSetByKey(*docContext, 
+									executionContext.getNodeSetByKey(docContext, 
 											keyname,
 											ref,
 											*executionContext.getPrefixResolver());
@@ -192,7 +192,7 @@ FunctionKey::execute(
 			const XalanDOMString			ref = arg->str();
 
 			const NodeRefListBase* const	nl =
-					executionContext.getNodeSetByKey(*docContext,
+					executionContext.getNodeSetByKey(docContext,
 											keyname,
 											ref,
 											*executionContext.getPrefixResolver());

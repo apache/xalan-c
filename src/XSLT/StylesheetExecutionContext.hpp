@@ -98,6 +98,9 @@
 
 
 
+#include "KeyTable.hpp"
+
+
 
 class ElemTemplateElement;
 class FormatterListener;
@@ -106,6 +109,7 @@ class FormatterToHTML;
 class FormatterToText;
 class FormatterToXML;
 class GenerateEvent;
+class KeyTable;
 class PrefixResolver;
 class NodeRefListBase;
 class PrintWriter;
@@ -1488,6 +1492,30 @@ public:
 			const XalanDOMChar*		theLHS,
 			const XalanDOMChar*		theRHS) const = 0;
 
+	/**
+	 * Determine if a keydeclaration is being constructed.
+	 *
+	 * @param id keydeclaration
+	 * @return true if being constructed
+	 */
+	virtual	bool
+	getInConstruction(const KeyDeclaration& keyDeclaration) const = 0;
+
+	/**
+	 * Add keydeclaration to construction list.
+	 * 
+	 * @param keydeclaration being constructed
+	 */
+	virtual	void
+	beginConstruction(const KeyDeclaration& keyDeclaration) const = 0; 
+	
+	/**
+	 * Remove keydeclaration from construction list.
+	 * 
+	 * @param constructed keydeclaration
+	 */
+	virtual	void
+	endConstruction(const KeyDeclaration& keyDeclaration) const = 0;
 
 	// These interfaces are inherited from XPathExecutionContext...
 
@@ -1593,20 +1621,7 @@ public:
 
 	virtual const NodeRefListBase*
 	getNodeSetByKey(
-			const XalanNode&		doc,
-			const XalanDOMString&	name,
-			const XalanDOMString&	ref,
-			const XalanElement&		nscontext) = 0;
-
-	virtual const NodeRefListBase*
-	getNodeSetByKey(
-			const XalanNode&		doc,
-			const XalanDOMString&	name,
-			const XalanDOMString&	ref) = 0;
-
-	virtual const NodeRefListBase*
-	getNodeSetByKey(
-			const XalanNode&		doc,
+			XalanNode*				doc,
 			const XalanDOMString&	name,
 			const XalanDOMString&	ref,
 			const PrefixResolver&	resolver) = 0;
@@ -1695,6 +1710,14 @@ public:
 			const XalanDOMString&	msg,
 			const XalanNode* 		sourceNode = 0,
 			const XalanNode*		styleNode = 0) const = 0;
+	
+	virtual KeyTable*
+	getKeyTable(const XalanNode*	doc) const = 0;
+
+	virtual void
+	setKeyTable(
+			KeyTable*			keytable,
+			const XalanNode*	doc) = 0;
 };
 
 

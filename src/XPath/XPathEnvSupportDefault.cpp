@@ -215,19 +215,6 @@ XPathEnvSupportDefault::reset()
 
 
 
-const NodeRefListBase*
-XPathEnvSupportDefault::getNodeSetByKey(
-			const XalanNode&		/* doc */,
-			const XalanDOMString&	/* name */,
-			const XalanDOMString&	/* ref */,
-			const PrefixResolver&	/* resolver */,
-			XPathExecutionContext&	/* executionContext */) const
-{
-	return 0;
-}
-
-
-
 XalanDocument*
 XPathEnvSupportDefault::parseXML(
 			const XalanDOMString&	/* urlString */,

@@ -66,7 +66,6 @@
 
 
 
-#include "ElementPrefixResolverProxy.hpp"
 #include "FoundIndex.hpp"
 #include "XObjectFactory.hpp"
 #include "PrefixResolver.hpp"
@@ -455,47 +454,12 @@ XPathExecutionContextDefault::getProcessNamespaces() const
 
 const NodeRefListBase*
 XPathExecutionContextDefault::getNodeSetByKey(
-			const XalanNode&		doc,
-			const XalanDOMString&	name,
-			const XalanDOMString&	ref,
-			const XalanElement&		nscontext)
+			XalanNode*				/* doc */,
+			const XalanDOMString&	/* name */,
+			const XalanDOMString&	/* ref */,
+			const PrefixResolver&	/* resolver */)
 {
-	return getNodeSetByKey(doc,
-						   name,
-						   ref,
-						   ElementPrefixResolverProxy(&nscontext, m_xpathEnvSupport, m_xpathSupport));
-}
-
-
-
-const NodeRefListBase*
-XPathExecutionContextDefault::getNodeSetByKey(
-			const XalanNode&		doc,
-			const XalanDOMString&	name,
-			const XalanDOMString&	ref)
-{
-	assert(m_prefixResolver != 0);
-
-	return getNodeSetByKey(doc,
-						   name,
-						   ref,
-						   *m_prefixResolver);
-}
-
-
-
-const NodeRefListBase*
-XPathExecutionContextDefault::getNodeSetByKey(
-			const XalanNode&		doc,
-			const XalanDOMString&	name,
-			const XalanDOMString&	ref,
-			const PrefixResolver&	resolver)
-{
-	return m_xpathEnvSupport.getNodeSetByKey(doc,
-											 name,
-											 ref,
-											 resolver,
-											 *this);
+	return 0;
 }
 
 

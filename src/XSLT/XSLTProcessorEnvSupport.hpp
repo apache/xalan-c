@@ -71,7 +71,6 @@
 
 
 
-class KeyTable;
 class XSLTProcessor;
 
 
@@ -86,25 +85,7 @@ public:
 	~XSLTProcessorEnvSupport();
 
 
-	// These interfaces are new to  XSLTProcessorEnvSupport...
-
-	virtual KeyTable*
-	getKeyTable(const XalanNode*	doc) const = 0;
-
-	virtual void
-	setKeyTable(
-			KeyTable*			keytable,
-			const XalanNode*	doc) = 0;
-
 	// These interfaces are inherited from XPathEnvSupport...
-
-	virtual const NodeRefListBase*
-	getNodeSetByKey(
-			const XalanNode&		doc,
-			const XalanDOMString&	name,
-			const XalanDOMString&	ref,
-			const PrefixResolver&	resolver,
-			XPathExecutionContext&	executionContext) const = 0;
 
 	virtual XalanDocument*
 	parseXML(

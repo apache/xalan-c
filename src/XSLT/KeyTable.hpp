@@ -88,9 +88,10 @@
 class KeyDeclaration;
 class NodeRefListBase;
 class PrefixResolver;
+class StylesheetExecutionContext;
 class XalanElement;
 class XalanNode;
-class XPathExecutionContext;
+
 
 
 
@@ -127,7 +128,7 @@ public:
 			const PrefixResolver&				resolver,
 			const XalanDOMString&				name,
 			const KeyDeclarationVectorType&		keyDeclarations,
-			XPathExecutionContext&				executionContext);
+			StylesheetExecutionContext&			executionContext);
 
 	virtual
 	~KeyTable();

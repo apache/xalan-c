@@ -224,20 +224,7 @@ public:
 
 	virtual const NodeRefListBase*
 	getNodeSetByKey(
-			const XalanNode&		doc,
-			const XalanDOMString&	name,
-			const XalanDOMString&	ref,
-			const XalanElement&		nscontext);
-
-	virtual const NodeRefListBase*
-	getNodeSetByKey(
-			const XalanNode&			doc,
-			const XalanDOMString&		name,
-			const XalanDOMString&		ref);
-
-	virtual const NodeRefListBase*
-	getNodeSetByKey(
-			const XalanNode&		doc,
+			XalanNode*				doc,
 			const XalanDOMString&	name,
 			const XalanDOMString&	ref,
 			const PrefixResolver&	resolver);
