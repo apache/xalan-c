@@ -85,34 +85,36 @@ public:
 	typedef size_t	size_type;
 
 	/**
-	 * Constructs a tokenizer for the target string
-	 * 
+	 * Constructs a tokenizer for the target string.  No copies of any input
+	 * strings are made.
+	 *
 	 * @param theString     string to tokenize
 	 * @param theTokens     string of delimiters used to parse target, default
-	 *                      is "\t\n\r"
+	 *                      is " \t\n\r"
 	 * @param fReturnTokens if true, delimiter characters are also returned
 	 *                      as tokens, default is false
 	 */
 	StringTokenizer(const XalanDOMString&	theString,
-					const XalanDOMString&	theTokens = XalanDOMString(s_defaultTokens),
+					const XalanDOMString&	theTokens,
 					bool					fReturnTokens = false);
 
 	/**
-	 * Constructs a tokenizer for the target string
+	 * Constructs a tokenizer for the target string.  No copies of any input
+	 * strings are made.
 	 * 
 	 * @param theString     string to tokenize
 	 * @param theTokens     string of delimiters used to parse target, default
-	 *                      is "\t\n\r"
+	 *                      is " \t\n\r"
 	 * @param fReturnTokens if true, delimiter characters are also returned
 	 *                      as tokens, default is false
 	 */
 	StringTokenizer(const XalanDOMString&	theString,
-					const XalanDOMChar*		theTokens,
+					const XalanDOMChar*		theTokens = s_defaultTokens,
 					bool					fReturnTokens = false);
 
 	/**
-	 * Constructs a tokenizer for the target string.  This version constructs
-	 * from null-terminated wide strings, like those we get from SAX-like APIs.
+	 * Constructs a tokenizer for the target string.  No copies of any input
+	 * strings are made.
 	 *
 	 * @param theString     string to tokenize
 	 * @param theTokens     string of delimiters used to parse target.
@@ -124,8 +126,8 @@ public:
 					bool					fReturnTokens = false);
 
 	/**
-	 * Constructs a tokenizer for the target string.  This version constructs
-	 * from null-terminated wide strings, like those we get from SAX-like APIs.
+	 * Constructs a tokenizer for the target string.  No copies of any input
+	 * strings are made.
 	 *
 	 * @param theString     string to tokenize
 	 * @param theTokens     string of delimiters used to parse target.
@@ -185,9 +187,9 @@ protected:
 
 private:
 
-	const XalanDOMString				m_string;
+	const XalanDOMChar* const			m_string;
 
-	const XalanDOMString				m_tokens;
+	const XalanDOMChar*	const			m_tokens;
 
 	const bool							m_returnTokens;
 

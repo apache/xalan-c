@@ -87,8 +87,8 @@ StringTokenizer::StringTokenizer(
 			const XalanDOMString&	theString,
 			const XalanDOMString&	theTokens,
 			bool					fReturnTokens) :
-	m_string(theString),
-	m_tokens(theTokens),
+	m_string(theString.c_str()),
+	m_tokens(theTokens.c_str()),
 	m_returnTokens(fReturnTokens),
 	m_currentIndex(0),
 	m_stringLength(length(theString)),
@@ -102,13 +102,14 @@ StringTokenizer::StringTokenizer(
 			const XalanDOMString&	theString,
 			const XalanDOMChar*		theTokens,
 			bool					fReturnTokens) :
-	m_string(theString),
-	m_tokens(XalanDOMString(theTokens)),
+	m_string(theString.c_str()),
+	m_tokens(theTokens),
 	m_returnTokens(fReturnTokens),
 	m_currentIndex(0),
 	m_stringLength(length(theString)),
 	m_tokensLength(length(theTokens))
 {
+	assert(m_string != 0 && m_tokens != 0);
 }
 
 
@@ -117,13 +118,14 @@ StringTokenizer::StringTokenizer(
 			const XalanDOMChar*		theString,
 			const XalanDOMChar*		theTokens,
 			bool					fReturnTokens) :
-	m_string(XalanDOMString(theString)),
-	m_tokens(XalanDOMString(theTokens)),
+	m_string(theString),
+	m_tokens(theTokens),
 	m_returnTokens(fReturnTokens),
 	m_currentIndex(0),
 	m_stringLength(length(theString)),
 	m_tokensLength(length(theTokens))
 {
+	assert(m_string != 0 && m_tokens != 0);
 }
 
 
@@ -132,13 +134,14 @@ StringTokenizer::StringTokenizer(
 			const XalanDOMChar*		theString,
 			const XalanDOMString&	theTokens,
 			bool					fReturnTokens) :
-	m_string(XalanDOMString(theString)),
-	m_tokens(theTokens),
+	m_string(theString),
+	m_tokens(theTokens.c_str()),
 	m_returnTokens(fReturnTokens),
 	m_currentIndex(0),
 	m_stringLength(length(theString)),
 	m_tokensLength(length(theTokens))
 {
+	assert(m_string != 0 && m_tokens != 0);
 }
 
 
@@ -305,8 +308,7 @@ StringTokenizer::FindNextDelimiterIndex(XalanDOMString::size_type	theStartIndex)
 		  fTokenFound == false)
 	{
 		const XalanDOMChar	theCurrentChar =
-			charAt(m_string,
-				   theIndex);
+			m_string[theIndex];
 
 		if (indexOf(m_tokens,
 					theCurrentChar) < m_tokensLength)
