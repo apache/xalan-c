@@ -15,12 +15,14 @@
 </xsl:template>
 
 <xsl:template match="Family">
+  <xsl:processing-instruction name="{parent::Order/@Name}">Parent Order</xsl:processing-instruction>
   <xsl:element name="{@Name}">
 	<xsl:apply-templates select="*"/>
   </xsl:element>
 </xsl:template>
 
 <xsl:template match="Species">
+    <xsl:comment>This is a species...</xsl:comment>
 	<xsl:copy-of select="."/>
 </xsl:template>
 
