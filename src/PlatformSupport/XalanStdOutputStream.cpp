@@ -104,6 +104,11 @@ void
 XalanStdOutputStream::doFlush()
 {
 	m_outputStream.flush();
+
+	if(!m_outputStream)
+	{
+		throw XalanStdOutputStreamWriteException(errno);
+	}
 }
 
 
