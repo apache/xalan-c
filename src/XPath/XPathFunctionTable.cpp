@@ -470,10 +470,6 @@ XPathFunctionTable::CreateTable()
 				FunctionNotImplemented(s_elementAvailable));
 
 		InstallFunction(
-				s_elementAvailable,
-				FunctionNotImplemented(s_elementAvailable));
-
-		InstallFunction(
 				s_functionAvailable,
 				FunctionNotImplemented(s_functionAvailable));
 
