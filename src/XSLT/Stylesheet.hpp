@@ -1152,11 +1152,6 @@ private:
 	XPathVectorType 					m_whitespaceStrippingElements;
 
 	/**
-	 * Table of tables of element keys. See KeyTable.
-	 */
-	KeyTableVectorType					m_key_tables;
-
-	/**
 	 * Table of KeyDeclaration objects, which are set by the 
 	 * xsl:key element.
 	 */

@@ -119,7 +119,6 @@ Stylesheet::Stylesheet(
 	PrefixResolver(),
 	m_stylesheetRoot(root),
 	m_baseIdent(baseIdentifier),
-	m_key_tables(),
 	m_keyDeclarations(),
 	m_needToBuildKeysTable(false),
 	m_imports(),
@@ -174,11 +173,6 @@ Stylesheet::~Stylesheet()
 	for_each(m_imports.begin(),
 			 m_imports.end(),
 			 DeleteFunctor<Stylesheet>());
-
-	// Clean up the key table vector
-	for_each(m_key_tables.begin(),
-			 m_key_tables.end(),
-			 DeleteFunctor<KeyTable>());
 
 	// Clean up the atribute sets vector
 	for_each(m_attributeSets.begin(),
