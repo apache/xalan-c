@@ -120,8 +120,57 @@ public:
 			const NodeRefListBase*	theContextNodeList = 0,
 			const PrefixResolver*	thePrefixResolver = 0);
 
+	/**
+	 * Construct an XPathExecutionContextDefault object
+	 *
+	 * @param theXPathEnvSupport XPathEnvSupport class instance
+	 * @param theXObjectFactory  factory class instance for XObjects
+	 * @param theCurrentNode     current node in the source tree
+	 * @param theContextNodeList node list for current context
+	 * @param thePrefixResolver  pointer to prefix resolver to use
+	 */
+	explicit
+	XPathExecutionContextDefault(
+			XalanNode*				theCurrentNode = 0,
+			const NodeRefListBase*	theContextNodeList = 0,
+			const PrefixResolver*	thePrefixResolver = 0);
+
 	virtual
 	~XPathExecutionContextDefault();
+
+
+	/**
+	 * Set the XPathEnvSupport instance.
+	 *
+	 * @param theSupport a reference to the instance to use.
+	 */
+	void
+	setXPathEnvSupport(XPathEnvSupport*		theSupport)
+	{
+		m_xpathEnvSupport = theSupport;
+	}
+
+	/**
+	 * Set the XObjectFactory instance.
+	 *
+	 * @param theFactory a reference to the instance to use.
+	 */
+	void
+	setXObjectFactory(XObjectFactory*	theFactory)
+	{
+		m_xobjectFactory = theFactory;
+	}
+
+	/**
+	 * Set the DOMSupport instance.
+	 *
+	 * @param theDOMSupport a reference to the instance to use.
+	 */
+	void
+	setDOMSupport(DOMSupport*	theDOMSupport)
+	{
+		m_domSupport = theDOMSupport;
+	}
 
 
 	// These interfaces are inherited from XPathExecutionContext...
@@ -174,14 +223,6 @@ public:
 			const XalanDOMString&			functionName,
 			XalanNode*						context,
 			const XObjectArgVectorType&		argVec);
-
-	virtual XLocator*
-	getXLocatorFromNode(const XalanNode*	node) const;
-
-	virtual void
-	associateXLocatorToNode(
-			const XalanNode*	node,
-			XLocator*			xlocator);
 
 	virtual XalanDocument*
 	parseXML(
@@ -313,11 +354,11 @@ protected:
 		   eResultTreeFragListCacheMax = 50,
 		   eCachedArgVectorDefaultSize = 10 };
 
-	XPathEnvSupport&			m_xpathEnvSupport;
+	XPathEnvSupport*			m_xpathEnvSupport;
 
-	DOMSupport&					m_domSupport;
+	DOMSupport*					m_domSupport;
 
-	XObjectFactory&				m_xobjectFactory;
+	XObjectFactory*				m_xobjectFactory;
 
 	XalanNode*					m_currentNode;
 

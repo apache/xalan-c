@@ -91,9 +91,9 @@ XPathExecutionContextDefault::XPathExecutionContextDefault(
 			const NodeRefListBase*	theContextNodeList,
 			const PrefixResolver*	thePrefixResolver) :
 	XPathExecutionContext(),
-	m_xpathEnvSupport(theXPathEnvSupport),
-	m_domSupport(theDOMSupport),
-	m_xobjectFactory(theXObjectFactory),
+	m_xpathEnvSupport(&theXPathEnvSupport),
+	m_domSupport(&theDOMSupport),
+	m_xobjectFactory(&theXObjectFactory),
 	m_currentNode(theCurrentNode),
 	m_contextNodeList(theContextNodeList == 0 ? &s_dummyList : theContextNodeList),
 	m_prefixResolver(thePrefixResolver),
@@ -108,6 +108,32 @@ XPathExecutionContextDefault::XPathExecutionContextDefault(
 
 	m_busyCachedNodeLists.reserve(eMutableNodeRefListCacheMax);
 }
+
+
+
+XPathExecutionContextDefault::XPathExecutionContextDefault(
+			XalanNode*				theCurrentNode,
+			const NodeRefListBase*	theContextNodeList,
+			const PrefixResolver*	thePrefixResolver) :
+	XPathExecutionContext(),
+	m_xpathEnvSupport(0),
+	m_domSupport(0),
+	m_xobjectFactory(0),
+	m_currentNode(theCurrentNode),
+	m_contextNodeList(theContextNodeList == 0 ? &s_dummyList : theContextNodeList),
+	m_prefixResolver(thePrefixResolver),
+	m_throwFoundIndex(false),
+	m_availableCachedNodeLists(),
+	m_busyCachedNodeLists(),
+	m_availableCachedResultTreeFrags(),
+	m_busyCachedResultTreeFrags(),
+	m_stringCache()
+{
+	m_availableCachedNodeLists.reserve(eMutableNodeRefListCacheMax);
+
+	m_busyCachedNodeLists.reserve(eMutableNodeRefListCacheMax);
+}
+
 
 
 
@@ -135,9 +161,20 @@ XPathExecutionContextDefault::~XPathExecutionContextDefault()
 void
 XPathExecutionContextDefault::reset()
 {
-	m_xpathEnvSupport.reset();
-	m_domSupport.reset();
-	m_xobjectFactory.reset();
+	if (m_xpathEnvSupport != 0)
+	{
+		m_xpathEnvSupport->reset();
+	}
+
+	if (m_domSupport != 0)
+	{
+		m_domSupport->reset();
+	}
+
+	if (m_xobjectFactory != 0)
+	{
+		m_xobjectFactory->reset();
+	}
 
 	m_currentNode = 0;
 	m_contextNodeList = &s_dummyList;
@@ -182,7 +219,9 @@ XPathExecutionContextDefault::setCurrentNode(XalanNode*		theCurrentNode)
 XObjectFactory&
 XPathExecutionContextDefault::getXObjectFactory() const
 {
-	return m_xobjectFactory;
+	assert(m_xobjectFactory != 0);
+
+	return *m_xobjectFactory;
 }
 
 
@@ -190,12 +229,14 @@ XPathExecutionContextDefault::getXObjectFactory() const
 XObjectPtr
 XPathExecutionContextDefault::createNodeSet(XalanNode&	theNode)
 {
+	assert(m_xobjectFactory != 0);
+
 	// This list will hold the node...
 	BorrowReturnMutableNodeRefList	theNodeList(*this);
 
 	theNodeList->addNode(&theNode);
 
-	return m_xobjectFactory.createNodeSet(theNodeList);
+	return m_xobjectFactory->createNodeSet(theNodeList);
 }
 
 
@@ -205,7 +246,7 @@ XPathExecutionContextDefault::isNodeAfter(
 			const XalanNode&	node1,
 			const XalanNode&	node2) const
 {
-	return m_domSupport.isNodeAfter(node1, node2);
+	return m_domSupport->isNodeAfter(node1, node2);
 }
 
 
@@ -261,7 +302,9 @@ XPathExecutionContextDefault::elementAvailable(
 			const XalanDOMString&	theNamespace, 
 			const XalanDOMString&	elementName) const
 {
-	return m_xpathEnvSupport.elementAvailable(theNamespace, elementName);
+	assert(m_xpathEnvSupport != 0);
+
+	return m_xpathEnvSupport->elementAvailable(theNamespace, elementName);
 }
 
 
@@ -271,7 +314,9 @@ XPathExecutionContextDefault::functionAvailable(
 			const XalanDOMString&	theNamespace, 
 			const XalanDOMString&	functionName) const
 {
-	return m_xpathEnvSupport.functionAvailable(theNamespace, functionName);
+	assert(m_xpathEnvSupport != 0);
+
+	return m_xpathEnvSupport->functionAvailable(theNamespace, functionName);
 }
 
 
@@ -283,25 +328,9 @@ XPathExecutionContextDefault::extFunction(
 			XalanNode*						context,
 			const XObjectArgVectorType&		argVec)
 {
-	return m_xpathEnvSupport.extFunction(*this, theNamespace, functionName, context, argVec);
-}
+	assert(m_xpathEnvSupport != 0);
 
-
-
-XLocator*
-XPathExecutionContextDefault::getXLocatorFromNode(const XalanNode*	node) const
-{
-	return m_xpathEnvSupport.getXLocatorFromNode(node);
-}
-
-
-
-void
-XPathExecutionContextDefault::associateXLocatorToNode(
-			const XalanNode*	node,
-			XLocator*			xlocator)
-{
-	m_xpathEnvSupport.associateXLocatorToNode(node, xlocator);
+	return m_xpathEnvSupport->extFunction(*this, theNamespace, functionName, context, argVec);
 }
 
 
@@ -311,7 +340,9 @@ XPathExecutionContextDefault::parseXML(
 			const XalanDOMString&	urlString,
 			const XalanDOMString&	base) const
 {
-	return m_xpathEnvSupport.parseXML(urlString, base);
+	assert(m_xpathEnvSupport != 0);
+
+	return m_xpathEnvSupport->parseXML(urlString, base);
 }
 
 
@@ -453,7 +484,9 @@ XPathExecutionContextDefault::getNodeSetByKey(
 const XObjectPtr
 XPathExecutionContextDefault::getVariable(const QName&	name)
 {
-	return m_xobjectFactory.createUnknown(name.getLocalPart());
+	assert(m_xobjectFactory != 0);
+
+	return m_xobjectFactory->createUnknown(name.getLocalPart());
 }
 
 
@@ -487,7 +520,9 @@ XPathExecutionContextDefault::getNamespaceForPrefix(const XalanDOMString&	prefix
 XalanDocument*
 XPathExecutionContextDefault::getDOMFactory() const
 {
-	return m_xpathEnvSupport.getDOMFactory();
+	assert(m_xpathEnvSupport != 0);
+
+	return m_xpathEnvSupport->getDOMFactory();
 }
 
 
@@ -495,7 +530,9 @@ XPathExecutionContextDefault::getDOMFactory() const
 XalanDOMString
 XPathExecutionContextDefault::findURIFromDoc(const XalanDocument*	owner) const
 {
-	return m_xpathEnvSupport.findURIFromDoc(owner);
+	assert(m_xpathEnvSupport != 0);
+
+	return m_xpathEnvSupport->findURIFromDoc(owner);
 }
 
 
@@ -505,7 +542,7 @@ XPathExecutionContextDefault::getUnparsedEntityURI(
 			const XalanDOMString&	theName,
 			const XalanDocument&	theDocument) const
 {
-	return m_domSupport.getUnparsedEntityURI(theName, theDocument);
+	return m_domSupport->getUnparsedEntityURI(theName, theDocument);
 }
 
 
@@ -513,7 +550,9 @@ XPathExecutionContextDefault::getUnparsedEntityURI(
 bool
 XPathExecutionContextDefault::shouldStripSourceNode(const XalanNode&	node)
 {
-	return m_xpathEnvSupport.shouldStripSourceNode(*this, node);
+	assert(m_xpathEnvSupport != 0);
+
+	return m_xpathEnvSupport->shouldStripSourceNode(*this, node);
 }
 
 
@@ -524,7 +563,9 @@ XPathExecutionContextDefault::error(
 			const XalanNode*		sourceNode,
 			const XalanNode*		/* styleNode */) const
 {
-	if (m_xpathEnvSupport.problem(XPathEnvSupport::eXPATHProcessor, 
+	assert(m_xpathEnvSupport != 0);
+
+	if (m_xpathEnvSupport->problem(XPathEnvSupport::eXPATHProcessor, 
 								  XPathEnvSupport::eError,
 								  m_prefixResolver, 
 								  sourceNode,
@@ -556,7 +597,9 @@ XPathExecutionContextDefault::warn(
 			const XalanNode*		sourceNode,
 			const XalanNode*		/* styleNode */) const
 {
-	if (m_xpathEnvSupport.problem(XPathEnvSupport::eXPATHProcessor, 
+	assert(m_xpathEnvSupport != 0);
+
+	if (m_xpathEnvSupport->problem(XPathEnvSupport::eXPATHProcessor, 
 								  XPathEnvSupport::eWarning,
 								  m_prefixResolver, 
 								  sourceNode,
@@ -588,7 +631,9 @@ XPathExecutionContextDefault::message(
 			const XalanNode*		sourceNode,
 			const XalanNode*		/* styleNode */) const
 {
-	if (m_xpathEnvSupport.problem(XPathEnvSupport::eXPATHProcessor, 
+	assert(m_xpathEnvSupport != 0);
+
+	if (m_xpathEnvSupport->problem(XPathEnvSupport::eXPATHProcessor, 
 								  XPathEnvSupport::eMessage,
 								  m_prefixResolver, 
 								  sourceNode,
@@ -633,7 +678,9 @@ XPathExecutionContextDefault::setThrowFoundIndex(bool 	fThrow)
 XalanDocument*
 XPathExecutionContextDefault::getSourceDocument(const XalanDOMString&	theURI) const
 {
-	return m_xpathEnvSupport.getSourceDocument(theURI);
+	assert(m_xpathEnvSupport != 0);
+
+	return m_xpathEnvSupport->getSourceDocument(theURI);
 }
 
 
@@ -643,7 +690,9 @@ XPathExecutionContextDefault::setSourceDocument(
 			const XalanDOMString&	theURI,
 			XalanDocument*			theDocument)
 {
-	m_xpathEnvSupport.setSourceDocument(theURI, theDocument);
+	assert(m_xpathEnvSupport != 0);
+
+	m_xpathEnvSupport->setSourceDocument(theURI, theDocument);
 }
 
 
