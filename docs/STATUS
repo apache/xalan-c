@@ -3,8 +3,7 @@
     <ul>
       <li>Work on number formatting<br/><br/></li>
       <li>Fix up our implementation of XPath node-set objects<br/><br/></li>
-      <li>Support for Linux builds<br/><br/></li>
-      <li>Verify conformance to <resource-ref idref="xsl-draft-used"/><br/><br/></li>
+      <li>Verify conformance to <resource-ref idref="XSLT"/><br/><br/></li>
       <li>Work on stability and performance<br/><br/></li>
     </ul>
 </s3>    
