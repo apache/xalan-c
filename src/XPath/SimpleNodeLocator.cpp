@@ -511,10 +511,6 @@ SimpleNodeLocator::stepPattern(
 		{
 			executionContext.setThrowFoundIndex(true);
 
-			// $$$ ToDo: Why is this variable introduced?
-			int startPredicates = opPos;
-			opPos = startPredicates;
-
 			while(XPathExpression::eOP_PREDICATE == nextStepType)
 			{
 				const XObjectPtr		pred(xpath.predicate(localContext, opPos, executionContext));
