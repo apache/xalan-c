@@ -189,7 +189,7 @@ Usage()
 		bErrorState = false;
 	} 
 
-	for (int i = XalanMessages::XalanExeHelpMenu; bErrorState && ( i <=  XalanMessages::XalanExeHelpMenu11 );  ++i)
+	for (int i = XalanMessages::XalanExeHelpMenu; bErrorState && ( i <=  XalanMessages::XalanExeHelpMenu12 );  ++i)
 	{
 		try
 		{

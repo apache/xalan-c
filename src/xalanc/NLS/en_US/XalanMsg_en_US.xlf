@@ -995,29 +995,35 @@
 
 <trans-unit id="XalanExeHelpMenu7">
 		<note> Messages XalanExeHelpMenu - XalanExeHelpMenu10 are messages for the one menu. Don't change the order and don't add in the middle other messages</note> 
+		<source>  -t                    Display timing information.</source>
+		<target>  -t                    Display timing information.</target>
+</trans-unit> 
+
+<trans-unit id="XalanExeHelpMenu8">
+		<note> Messages XalanExeHelpMenu - XalanExeHelpMenu10 are messages for the one menu. Don't change the order and don't add in the middle other messages</note> 
 		<source>  -u                    Disable escaping of URLs in HTML output.</source>
 		<target>  -u                    Disable escaping of URLs in HTML output.</target>
 </trans-unit>
 
-<trans-unit id="XalanExeHelpMenu8">
+<trans-unit id="XalanExeHelpMenu9">
 		<note> Messages XalanExeHelpMenu - XalanExeHelpMenu10 are messages for the one menu. Don't change the order and don't add in the middle other messages</note> 
 		<source>  -?                    Display this message.</source>
 		<target>  -?                    Display this message.</target>
 </trans-unit>
 
-<trans-unit id="XalanExeHelpMenu9">
+<trans-unit id="XalanExeHelpMenu10">
 		<note> Messages XalanExeHelpMenu - XalanExeHelpMenu10 are messages for the one menu. Don't change the order and don't add in the middle other messages</note> 
 		<source>  -v                    Validates source documents.</source>
 		<target>  -v                    Validates source documents.</target>
 </trans-unit>
 
-<trans-unit id="XalanExeHelpMenu10">
+<trans-unit id="XalanExeHelpMenu11">
 		<note> Messages XalanExeHelpMenu - XalanExeHelpMenu10 are messages for the one menu. Don't change the order and don't add in the middle other messages</note> 
 		<source>  -                     A dash as the 'source' argument reads from stdin.</source>
 		<target>  -                     A dash as the 'source' argument reads from stdin.</target>
 </trans-unit>
 
-<trans-unit id="XalanExeHelpMenu11">
+<trans-unit id="XalanExeHelpMenu12">
 		<note> Messages XalanExeHelpMenu - XalanExeHelpMenu10 are messages for the one menu. Don't change the order and don't add in the middle other messages</note> 
 		<source>                        ('-' cannot be used for both arguments.)</source>
 		<target>                        ('-' cannot be used for both arguments.)</target>
