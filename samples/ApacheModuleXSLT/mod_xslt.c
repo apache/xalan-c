@@ -138,10 +138,11 @@ static int xslt_handler(request_rec *r)
 	if(error)
 	{
 		r->uri = filename;
+
 		return DECLINED;
 	}
 
-	DeleteXalanTransformer(&xalan);
+	DeleteXalanTransformer(xalan);
 
 	return OK;
 }
