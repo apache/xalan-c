@@ -26,7 +26,7 @@
   <separator/>
   
   <document id="index"
-            label="Xalan-C++ 1.7"
+            label="Xalan-C++ 1.8"
             source="xalan/index.xml"/>
             
  <separator/>            

@@ -55,7 +55,7 @@
      <note> Each sample application looks for input files in the current directory, the directory from
      which you run the application. The input files are in the samples subdirectory along with the sample source
      files. For the UNIX builds, application executables are in the bin subdirectory. For the Windows32 build, the
-     application executable is in the build subdirectory (&xslt4c-dist;-&lt;my_Windows_distribution&gt;\Build\Win32\VC6\ Debug and Release). To run a sample, be sure the
+     application executable is in the bin subdirectory (&xslt4c-dist;-&lt;my_Windows_distribution&gt;\bin). To run a sample, be sure the
      executable is on the path, and run it from the samples subdirectory that contains the input files.</note>
   </s2><anchor name="xalantransform"/>
   <s2 title="XalanTransform">
@@ -98,7 +98,7 @@
   <s2 title="XalanTransformerCallback">
   <p>What it does: Return transformation output in blocks to a callback function, which writes the output to a file.
   This sample illustrates the use of a callback function to incrementally process a transformation result, that is to begin
-  working with the transformation result before the transformation has beeen completed. See <link idref="usagepatterns"
+  working with the transformation result before the transformation has been completed. See <link idref="usagepatterns"
   anchor="incremental">Processing output incrementally</link>.</p>
   <p>You can run it from the XalanTransformerCallback subdirectory with</p>
   <p><code>XalanTransformerCallback foo.xml foo.xsl [foo.out]</code></p>
@@ -277,7 +277,7 @@ theProcessor.addTraceListener(&amp;theTraceListener);
     /usr/lib; see <link idref="getstarted" anchor="path">Setting up the path/library path</link>), and copy the Apache module to 
     /usr/lib/apache.<br/><br/></li>
     <li>Add LoadModule and (UNIX only) AddModule entries to the Apache configuration file: httpd.conf.<br/><br/>
-    Windows: <code>LoadModule xslt_module &xslt4c-dist;-&lt;my_Windows_distribution&gt;\Build\Win32\VC6\Release\ApacheModuleXSLT.dll</code><br/><br/>
+    Windows: <code>LoadModule xslt_module &xslt4c-dist;-&lt;my_Windows_distribution&gt;\bin\ApacheModuleXSLT.dll</code><br/><br/>
     UNIX: <code>AddModule mod_xslt.c</code><br/>
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;and<br/>
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<code>LoadModule xslt_module /usr/lib/apache/mod_xslt.<ref>xx</ref></code><br/><br/>

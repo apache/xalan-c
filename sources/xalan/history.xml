@@ -14,6 +14,37 @@
  * limitations under the License.
 -->
 
+   <s3 title="Changes for &xslt4c; version 1.7">
+     <p>Major updates since version 1.7 include:</p>
+     <ul>
+      <li><resource-ref idref="bugsfixedforthisrelease"/>.</li>
+      <li>Message Localization Support. This feature enables &xslt4c; to issue diagnostic messages 
+      in languages other than the default language (English). In order to utilize this feature, 
+      the user must provide a version of the &xslt4c; message catalog that has been translated in 
+      their language of choice. For more information on how to exploit this feature, please see  
+      <link anchor="locale">Steps for doing a Build with Message Localization Support</link>.</li>
+      <li>Build, packaging, and installation improvements. Changes to the &xslt4c; makefiles now 
+      allow for a more flexible build, packaging, and install process. Each step in a typical 
+      build process can be invoked by specifying the appropriate target, for example to build the 
+      executable, and/or samples, or install the build at user-specified location. For more 
+      information on building &xslt4c;, please see <link anchor="unix">Steps for doing a Unix build
+      </link>.</li>
+      <li>Deprecated DOM Support. The XercesBridge classes have been marked deprecated and moved 
+      into an exclusive directory within the xalanc/XercesParserLiaison directory called 
+      'Deprecated'. If your application is dependent on these classes to interface with the 
+      deprecated Xerces DOM you must alter your include directive with the 'Deprecated' directory. 
+      For example:<br/><br/>
+      <code>#include "xalanc/XercesParserLiaison/XercesDocumentBridge.hpp"</code><br/><br/>
+      should be changed to:<br/><br/>
+      <code>#include "xalanc/XercesParserLiaison/Deprecated/XercesDocumentBridge.hpp"</code><br/><br/></li>
+      <li>Upgrade from Xerces-C 2.3 to Xerces-C 2.4. </li>
+      <li>Porting of ThreadSafe example to UNIX platform.</li>
+      <li>Implementation of EXSLT string extension functions encode-uri() and decode-uri(). </li>
+      <li>Implementation of EXSLT dynamic extension function evaluate(). </li>
+      <li>Implementation of EXSLT date-time extension function date-time().</li>
+     </ul>  
+   </s3>  
+
    <s3 title="Changes for &xslt4c; version 1.6">
      <p>Major updates since version 1.5 include:</p>
      <ul>
