@@ -69,7 +69,7 @@
 
 
 
-#include <PlatformSupport/DecimalFormatSymbols.hpp>
+#include <PlatformSupport/XalanDecimalFormatSymbols.hpp>
 
 
 
@@ -110,7 +110,7 @@ public:
 			XalanNode*						sourceNode,
 			const QName&					mode) const;
 
-	const DecimalFormatSymbols&
+	const XalanDecimalFormatSymbols&
 	getDecimalFormatSymbols() const
 	{
 		return m_decimalFormatSymbols;
@@ -124,13 +124,13 @@ public:
 
 private:
 
-	const XPath*			m_countMatchPattern;
-	const XPath*			m_fromMatchPattern;
-	const XPath*			m_valueExpr;
+	const XPath*				m_countMatchPattern;
+	const XPath*				m_fromMatchPattern;
+	const XPath*				m_valueExpr;
 
-	XalanDOMString			m_name_avt;
+	XalanDOMString				m_name_avt;
 
-	DecimalFormatSymbols	m_decimalFormatSymbols;
+	XalanDecimalFormatSymbols	m_decimalFormatSymbols;
 };
 
 

@@ -176,7 +176,7 @@ XSLTInputSource::makeStream() const
 			// It could be a DOS-style file spec...
 			const unsigned int	theBackslashIndex = indexOf(theSystemID, '\\');
 
-			if (theBackslashIndex < theLength && theBackslashIndex == 3)
+			if (theBackslashIndex < theLength && theBackslashIndex == 2)
 			{
 				// OK, another shot at a file...
 				theResult = new BinFileInputStream(theSystemID);

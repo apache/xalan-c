@@ -517,12 +517,14 @@ XSLTEngineImpl::processStylesheet(
 #if !defined(XALAN_NO_NAMESPACES)
 		using std::auto_ptr;
 #endif
-
+#if 0
 		auto_ptr<XMLURL> url(getURLFromString(xsldocURLString));
 		assert(url.get() != 0);
 
 		XSLTInputSource		input(url->getURLText(), 0);
-
+#else
+		XSLTInputSource		input(c_wstr(xsldocURLString));
+#endif
 		return processStylesheet(input, constructionContext);
 	}
 	catch(SAXException& se)
@@ -921,8 +923,6 @@ XSLTEngineImpl::getXSLToken(const XalanNode&	node) const
 		const XalanDOMString 	localName =
 			m_xpathSupport.getLocalNameOfNode(node);
 
-		// $$$ ToDo: Why can't this iterator be a 
-		// const_iterator?	VC++ pukes if it is.
 		const ElementKeysMapType::const_iterator		j =
 						s_elementKeys.find(localName);
 		if(j != s_elementKeys.end())
@@ -961,16 +961,8 @@ XSLTEngineImpl::isXSLTagOfType(const XalanNode&	node,
 
 
 void
-XSLTEngineImpl::outputToResultTree(
-			const XObject&		value)
+XSLTEngineImpl::outputToResultTree(const XObject&	value)
 {
-	 // java:
-    // Make the return object into an XObject because it 
-    // will be easier below.  One of the reasons to do this 
-    // is to keep all the conversion functionality in the 
-    // XObject classes.
-	 // JMD: Has to be an XObject
-
 	const int	type = value.getType();
 
 	XalanDOMString s;
@@ -1040,6 +1032,7 @@ XSLTEngineImpl::outputToResultTree(
 	case XObject::eTypeResultTreeFrag:
 		outputResultTreeFragment(value);
 		break;
+
 	case XObject::eTypeNull:
 	case XObject::eTypeUnknown:
 	case XObject::eUnknown:
@@ -1539,16 +1532,33 @@ XSLTEngineImpl::addResultAttribute(
 			const XalanDOMString&	aname,
 			const XalanDOMString&	value)
 {
-	assert(length(value) > 0);
-
 	const bool	isPrefix = startsWith(aname, DOMServices::s_XMLNamespaceWithSeparator);
+
 	if (equals(aname, DOMServices::s_XMLNamespace) || isPrefix == true) 
 	{
 		const XalanDOMString		p = isPrefix == true ? substring(aname, 6) : XalanDOMString();
 		addResultNamespaceDecl(p, value);
 	}
+
 	attList.removeAttribute(c_wstr(aname));
-	attList.addAttribute(c_wstr(aname), c_wstr(XALAN_STATIC_UCODE_STRING("CDATA")), c_wstr(value));
+
+	if (length(value) > 0)
+	{
+		attList.addAttribute(
+			c_wstr(aname),
+			c_wstr(XALAN_STATIC_UCODE_STRING("CDATA")),
+			c_wstr(value));
+	}
+	else
+	{
+		const XMLCh		theDummy = 0;
+
+		attList.addAttribute(
+			c_wstr(aname),
+			c_wstr(XALAN_STATIC_UCODE_STRING("CDATA")),
+			&theDummy);
+	}
+
 }
 
 
@@ -3562,7 +3572,7 @@ XSLTEngineImpl::findElementByAttribute(
 
 
 XMLURL*
-XSLTEngineImpl::getURLFromString (const XalanDOMString&	urlString) const
+XSLTEngineImpl::getURLFromString(const XalanDOMString&	urlString) const
 {
 #if !defined(XALAN_NO_NAMESPACES)
 	using std::auto_ptr;
@@ -3572,25 +3582,30 @@ XSLTEngineImpl::getURLFromString (const XalanDOMString&	urlString) const
 
 	try 
 	{
-		url->setURL(c_wstr(urlString));
-	}
-	// 'urlString' not a valid url, try to construct a file url
-	catch (const MalformedURLException&)
-	{
-		XalanDOMString fullpath("file:///");
+		// Let's see what sort of URI we have...
+		const unsigned int	index = indexOf(urlString, ':');
 
-		try 
+		if (index == 1 || index == length(urlString))
 		{
-//			XMLCh* lastPart = XMLPlatformUtils::getBasePath(c_wstr(urlString));
-//			fullpath += lastPart;
+			// OK, it's some sort of file specification,
+			// so prepend "file:///"
+			XalanDOMString fullpath("file:///");
+
 			fullpath += urlString;
+
 			url->setURL(c_wstr(fullpath));
 		}
-		catch (MalformedURLException& e2)
+		else
 		{
-			diag("Error! Cannot create url for: " + fullpath);
-			throw e2;
+			// OK, assume it's already got a protocol
+			url->setURL(c_wstr(urlString));
 		}
+	}
+	catch (...)
+	{
+		diag("Error! Cannot create url for: " + urlString);
+
+		throw;
 	}
 
 	return url.release();
@@ -3598,36 +3613,156 @@ XSLTEngineImpl::getURLFromString (const XalanDOMString&	urlString) const
 
 
 
+XalanDOMString
+NormalizeURI(
+			const XalanDOMString&	uriString,
+			XalanDOMChar			theOldSeparator,
+			XalanDOMChar			theNewSeparator)
+{
+#if !defined(XALAN_NO_NAMESPACES)
+	using std::vector;
+#endif
+
+	vector<XalanDOMChar>	theBuffer;
+
+	const unsigned int		theLength = length(uriString);
+
+	// Reserve enough characters in the buffer...
+	theBuffer.reserve(theLength);
+
+	// See if we have a hybrid DOS-style URI, like
+	// file:///c:\foo\foo.xml
+	const unsigned int	i1 = indexOf(uriString, ':');
+	const unsigned int	i2 = lastIndexOf(uriString, ':');
+
+	bool				fHybrid = i1 == i2 ? false : true;
+	assert(fHybrid == false || theNewSeparator == '\\');
+
+	for(unsigned int i = 0; i < theLength; ++i)
+	{
+		const XalanDOMChar	theChar = charAt(uriString, i);
+
+		if (fHybrid == true)
+		{
+			if (theChar == theOldSeparator && i > i2)
+			{
+				theBuffer.push_back(theNewSeparator);
+			}
+			else
+			{
+				theBuffer.push_back(theChar);
+			}
+		}
+		else if (theChar == theOldSeparator)
+		{
+			theBuffer.push_back(theNewSeparator);
+		}
+		else
+		{
+			theBuffer.push_back(theChar);
+		}
+	}
+
+	return XalanDOMString(&theBuffer[0], theBuffer.size());
+}
+
+
+
 XMLURL* XSLTEngineImpl::getURLFromString(const XalanDOMString&	urlString, const XalanDOMString& base) const
 {
-	if (isEmpty(base))
-		return getURLFromString(urlString);
+	XalanDOMString	context;
 
-	// We'll only do the really simple case for now:
-	// base is a complete file URL and urlString is a forward relative path, i.e. 
-	// in the same directory as the urlString or a subdirectory
+	bool			fNormalizeToSlash = false;
+	bool			fNormalizeToBackslash = false;
 
-	XalanDOMString context;
+	if (isEmpty(base) == false)
+	{
+		// We'll only do the really simple case for now:
+		// base is a complete file URL and urlString is a forward relative path, i.e. 
+		// in the same directory as the urlString or a subdirectory
 
-	// just to be robust, we'll accept a forward or back slash
-	const unsigned int	theLength = length(base);
+		// just to be robust, we'll accept a forward or back slash
+		const unsigned int	theLength = length(base);
 
-	const unsigned int	i1 = lastIndexOf(base,'/');
-	const unsigned int	i2 = lastIndexOf(base,'\\');
+		const unsigned int	i1 = lastIndexOf(base,'/');
+		const unsigned int	i2 = lastIndexOf(base,'\\');
 
-	const unsigned int	i = i1 > i2 && i1 < theLength ? i1 : i2 < theLength ? i2 : i1;
+		unsigned int		i = 0;
 
-	if (i < theLength)
-		context = substring(base, 0, i + 1);
+		if (i1 > i2 && i1 < theLength)
+		{
+			i = i1;
 
-	context += urlString;
+			fNormalizeToSlash = true;
+		}
+		else if (i2 < theLength)
+		{
+			i = i2;
+
+			fNormalizeToBackslash = true;
+		}
+		else
+		{
+			i = i1;
+
+			assert(i2 == theLength);
+		}
+
+		if (i < theLength)
+		{
+			context = substring(base, 0, i + 1);
+		}
+	}
+
+	// OK, now let's look at the urlString...
+
+	// Is there a colon, indicating some sort of drive spec, or protocol?
+	const unsigned int	theLength = length(urlString);
+	const unsigned int	theColonIndex = indexOf(urlString, ':');
+
+	if (theColonIndex == theLength)
+	{
+		// No colon, so just use the urlString as is...
+		context += urlString;
+	}
+	else if (theColonIndex == 1)
+	{
+		// Ahh, it's a drive letter, so ignore the context...
+		context = urlString;
+	}
+	else
+	{
+		// Assume it's a protocol...
+		const XalanDOMString	theProtocol(substring(urlString, 0, theColonIndex));
+
+		if (startsWith(context, theProtocol) == true)
+		{
+			// OK, everything looks good, so strip off the protocol and colon...
+			context += substring(urlString, theColonIndex + 1, theLength);
+		}
+		else
+		{
+			// OK, not the same protocol, so what can we do???
+			context = urlString;
+		}
+	}
+
+	if (fNormalizeToSlash == true)
+	{
+		context = NormalizeURI(context, '\\', '/');
+	}
+	else if (fNormalizeToBackslash == true)
+	{
+		context = NormalizeURI(context, '/', '\\');
+	}
 
 	return getURLFromString(context);
 }	
 
 
+
 void
-XSLTEngineImpl::setFormatter(Formatter*	formatter)
+XSLTEngineImpl::setFormatter(Formatter*		formatter)
 {
 	flushPending();
 

@@ -66,8 +66,8 @@
 
 
 
-// std stream forward declarations.
 #include <iosfwd>
+#include <memory>
 
 
 
@@ -98,9 +98,10 @@ class QName;
 class Stylesheet;
 class StylesheetRoot;
 class TextOutputStream;
+class XalanDocument;
 class XalanElement;
 class XalanNode;
-class XalanDocument;
+class XalanNumberFormat;
 class XPath;
 class XObject;
 
@@ -914,6 +915,22 @@ public:
 		StylesheetExecutionContext&			m_executionContext;
 	};
 
+
+#if defined(XALAN_NO_NAMESPACES)
+	typedef auto_ptr<XalanNumberFormat>			XalanNumberFormatAutoPtr;
+#else
+	typedef std::auto_ptr<XalanNumberFormat>	XalanNumberFormatAutoPtr;
+#endif
+
+	/**
+	 * Create a new XalanNumberFormat instance.
+	 *
+	 * @return an auto_ptr that owns a new XalanNumberFormat instance.
+	 */
+	virtual XalanNumberFormatAutoPtr
+	createXalanNumberFormat() = 0;
+
+
 	// These interfaces are inherited from XPathExecutionContext...
 
 	virtual XalanNode*
@@ -1059,7 +1076,7 @@ public:
 			XalanDocument*			theDocument) = 0;
 
 
-	virtual const DecimalFormatSymbols*
+	virtual const XalanDecimalFormatSymbols*
 	getDecimalFormatSymbols(const XalanDOMString&	name) = 0;
 
 	virtual PrintWriter*

@@ -89,8 +89,8 @@
 
 
 
-class NumberFormat;
 class QName;
+class XalanNumberFormat;
 class XPath;
 class XPathExecutionContext;
 
@@ -238,7 +238,7 @@ protected:
 			XalanNode*						contextNode) const;
 #endif
 
-	NumberFormat*
+	XalanNumberFormat*
 	getNumberFormatter(
 			StylesheetExecutionContext&		executionContext,
 			XalanNode*						contextNode) const;

@@ -67,7 +67,7 @@
 
 
 #include <PlatformSupport/DOMStringHelper.hpp>
-#include <PlatformSupport/NumberFormat.hpp>
+#include <PlatformSupport/XalanNumberFormat.hpp>
 
 
 
@@ -576,17 +576,17 @@ ElemNumber::getLocale(
 #endif
 
 
-NumberFormat*
+XalanNumberFormat*
 ElemNumber::getNumberFormatter(
 			StylesheetExecutionContext&		executionContext,
 			XalanNode*						contextNode) const
 {
 #if ! defined(__GNUC__)
-	std::locale loc = getLocale(executionContext, contextNode);
+//	std::locale loc = getLocale(executionContext, contextNode);
 #endif
-    
+
     // Helper to format local specific numbers to strings.
-	std::auto_ptr<NumberFormat>		formatter(new NumberFormat);
+	std::auto_ptr<XalanNumberFormat>	formatter(executionContext.createXalanNumberFormat());
 
 	XalanDOMString	digitGroupSepValue;
 	if (0 != m_groupingSeparator_avt)
@@ -604,7 +604,7 @@ ElemNumber::getNumberFormatter(
 	{
 		formatter->setGroupingUsed(true);
 		formatter->setGroupingSeparator(digitGroupSepValue);
-		formatter->setGroupingSize(nDigitsPerGroupValue);
+		formatter->setGroupingSize(DOMStringToUnsignedLong(nDigitsPerGroupValue));
 	}
 
 	return formatter.release();
@@ -642,7 +642,7 @@ ElemNumber::formatNumberList(
 	NumberFormatStringTokenizer		formatTokenizer(formatValue);
 
 #if ! defined(__GNUC__)
-	std::locale		loc = getLocale(executionContext, contextNode);
+//	std::locale		loc = getLocale(executionContext, contextNode);
 #endif
 
 	typedef vector<XalanDOMString>		StringVectorType;
@@ -713,7 +713,7 @@ ElemNumber::getFormattedNumber(
 			int								listElement) const
 {
 
-	std::auto_ptr<NumberFormat> formatter(
+	StylesheetExecutionContext::XalanNumberFormatAutoPtr	formatter(
 			getNumberFormatter(executionContext, contextNode));
 
 	XalanDOMString	padString = formatter->format(0);

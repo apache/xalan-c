@@ -1106,10 +1106,13 @@ StylesheetHandler::processImport(
 
 			const XalanDOMString	href = atts.getValue(i);
 
-			const XMLURL* const		hrefUrl = m_processor.getURLFromString(href, m_stylesheet.getBaseIdentifier());
+			Stylesheet::URLStackType& includeStack = m_stylesheet.getIncludeStack();
+			assert(includeStack.size() > 0);
+
+			const XMLURL* const		hrefUrl = m_processor.getURLFromString(href, includeStack.back()->getURLText());
 			assert(hrefUrl != 0);
 
-			StylesheetRoot::URLStackType& importStack = m_stylesheet.getStylesheetRoot().getImportStack();
+			Stylesheet::URLStackType& importStack = m_stylesheet.getStylesheetRoot().getImportStack();
 
 			if(stackContains(importStack, *hrefUrl))
 			{
@@ -1120,14 +1123,16 @@ StylesheetHandler::processImport(
 
 			importStack.push_back(hrefUrl);
 
+			const XalanDOMString	theImportURI(hrefUrl->getURLText());
+
 			Stylesheet* pImportedStylesheet = new Stylesheet(
 				m_stylesheet.getStylesheetRoot(), 
-				m_stylesheet.getBaseIdentifier(),
+				theImportURI,
 				m_constructionContext);
 
 			StylesheetHandler tp(m_processor, *pImportedStylesheet, m_constructionContext);
 
-			pImportedStylesheet->setBaseIdentifier(hrefUrl->getURLText());
+//			pImportedStylesheet->setBaseIdentifier();
 
 			m_processor.parseXML(*hrefUrl, &tp, pImportedStylesheet);
 

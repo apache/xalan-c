@@ -68,6 +68,7 @@
 
 #include <PlatformSupport/STLHelper.hpp>
 #include <PlatformSupport/TextOutputStream.hpp>
+#include <PlatformSupport/XalanNumberFormat.hpp>
 
 
 
@@ -91,6 +92,13 @@
 
 #include "StylesheetRoot.hpp"
 #include "XSLTEngineImpl.hpp"
+
+
+
+StylesheetExecutionContextDefault::XalanNumberFormatFactory		StylesheetExecutionContextDefault::s_defaultXalanNumberFormatFactory;
+
+StylesheetExecutionContextDefault::XalanNumberFormatFactory*	StylesheetExecutionContextDefault::s_xalanNumberFormatFactory =
+		&StylesheetExecutionContextDefault::getDefaultXalanNumberFormatFactory();
 
 
 
@@ -724,6 +732,55 @@ StylesheetExecutionContextDefault::popElementRecursionStack()
 
 
 
+StylesheetExecutionContextDefault::XalanNumberFormatAutoPtr
+StylesheetExecutionContextDefault::createXalanNumberFormat()
+{
+	return XalanNumberFormatAutoPtr(s_xalanNumberFormatFactory->create());
+}
+
+
+
+StylesheetExecutionContextDefault::XalanNumberFormatFactory::XalanNumberFormatFactory()
+{
+}
+
+
+
+StylesheetExecutionContextDefault::XalanNumberFormatFactory::~XalanNumberFormatFactory()
+{
+}
+
+
+
+XalanNumberFormat*
+StylesheetExecutionContextDefault::XalanNumberFormatFactory::create()
+{
+	return new XalanNumberFormat();
+}
+
+
+
+StylesheetExecutionContextDefault::XalanNumberFormatFactory*
+StylesheetExecutionContextDefault::installXalanNumberFormatFactory(XalanNumberFormatFactory*	theFactory)
+{
+	XalanNumberFormatFactory* const		theOldFactory =
+		s_xalanNumberFormatFactory;
+
+	if (theFactory == 0)
+	{
+		s_xalanNumberFormatFactory = &s_defaultXalanNumberFormatFactory;
+	}
+	else
+	{
+		s_xalanNumberFormatFactory = theFactory;
+	}
+
+	return theOldFactory;
+}
+
+
+
+
 XalanNode*
 StylesheetExecutionContextDefault::getCurrentNode() const
 {
@@ -1051,7 +1108,7 @@ StylesheetExecutionContextDefault::setSourceDocument(
 
 
 
-const DecimalFormatSymbols*
+const XalanDecimalFormatSymbols*
 StylesheetExecutionContextDefault::getDecimalFormatSymbols(const XalanDOMString&	name)
 {
 	if (m_stylesheetRoot == 0)

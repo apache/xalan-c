@@ -68,10 +68,15 @@
 
 
 
+#include <XalanDOM/XalanDOMString.hpp>
+
+
+
 #include <XPath/Function.hpp>
 
 
 
+class XalanDecimalFormatSymbols;
 class XObject;
 class XPathExecutionContext;
 
@@ -103,6 +108,16 @@ public:
 	virtual FunctionFormatNumber*
 #endif
 	clone() const;
+
+protected:
+
+	virtual XalanDOMString
+	doFormat(
+			XPathExecutionContext&				executionContext,
+			XalanNode*							context,
+			double								theNumber,
+			const XalanDOMString&				thePattern,
+			const XalanDecimalFormatSymbols*	theDFS);
 
 private:
 

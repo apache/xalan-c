@@ -58,12 +58,8 @@
 
 
 
-#include <dom/DOMString.hpp>
-
-
-
-#include <PlatformSupport/DecimalFormat.hpp>
-#include <PlatformSupport/DecimalFormatSymbols.hpp>
+#include <PlatformSupport/XalanDecimalFormat.hpp>
+#include <PlatformSupport/XalanDecimalFormatSymbols.hpp>
 #include <PlatformSupport/DOMStringHelper.hpp>
 
 
@@ -109,19 +105,14 @@ FunctionFormatNumber::execute(
 	}
 	else
 	{
-		executionContext.warn(XALAN_STATIC_UCODE_STRING("format-number() is not fully implemented!"),
-							  context);
-
 		assert(args[0] != 0);
 		assert(args[1] != 0);
 		assert(theSize == 2 || args[2] != 0);
 
-		DecimalFormat					theFormatter;
+		const double						theNumber = args[0]->num();
+		const XalanDOMString				thePattern = args[1]->str();
 
-		const double					theNumber = args[0]->num();
-		const XalanDOMString			theFormatString = args[1]->str();
-
-		const DecimalFormatSymbols*		theDFS = 0;
+		const XalanDecimalFormatSymbols*	theDFS = 0;
 
 		if (theSize == 3)
 		{
@@ -142,12 +133,14 @@ FunctionFormatNumber::execute(
 			theDFS = executionContext.getDecimalFormatSymbols(Constants::DEFAULT_DECIMAL_FORMAT);
 		}
 
-		theFormatter.setDecimalFormatSymbols(theDFS == 0 ? DecimalFormatSymbols() : *theDFS);
+		const XalanDOMString	theString = doFormat(
+						executionContext,
+						context,
+						theNumber,
+						thePattern,
+						theDFS);
 
-		theFormatter.applyLocalizedPattern(theFormatString);
-
-		// $$$ ToDo: This is not really working according to the spec.
-		return executionContext.getXObjectFactory().createString(theFormatter.format(theNumber));
+		return executionContext.getXObjectFactory().createString(theString);
 	}
 }
 
@@ -161,4 +154,26 @@ FunctionFormatNumber*
 FunctionFormatNumber::clone() const
 {
 	return new FunctionFormatNumber(*this);
+}
+
+
+
+XalanDOMString
+FunctionFormatNumber::doFormat(
+			XPathExecutionContext&				executionContext,
+			XalanNode*							context,
+			double								theNumber,
+			const XalanDOMString&				thePattern,
+			const XalanDecimalFormatSymbols*	theDFS)
+{
+	executionContext.warn(XALAN_STATIC_UCODE_STRING("format-number() is not fully implemented!"),
+						  context);
+
+	XalanDecimalFormat	theFormatter;
+
+	theFormatter.setDecimalFormatSymbols(theDFS != 0 ? *theDFS : XalanDecimalFormatSymbols());
+
+	theFormatter.applyLocalizedPattern(thePattern);
+
+	return theFormatter.format(theNumber);
 }

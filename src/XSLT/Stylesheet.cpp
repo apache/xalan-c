@@ -1213,10 +1213,10 @@ Stylesheet::processDecimalFormatElement(
 
 
 
-const DecimalFormatSymbols*
+const XalanDecimalFormatSymbols*
 Stylesheet::getDecimalFormatSymbols(const XalanDOMString&	name) const
 {
-	const DecimalFormatSymbols* 					dfs = 0;
+	const XalanDecimalFormatSymbols* 				dfs = 0;
 
 	const ElemDecimalFormatVectorType::size_type	theSize =
 		m_elemDecimalFormats.size();

@@ -92,7 +92,7 @@
 
 class AttributeList;
 class ExtensionNSHandler;
-class DecimalFormatSymbols;
+class XalanDecimalFormatSymbols;
 class ElemAttributeSet;
 class ElemDecimalFormat;
 class ElemTemplate;
@@ -391,13 +391,13 @@ typedef XALAN_STD vector<ElemDecimalFormat*>			ElemDecimalFormatVectorType;
 			StylesheetConstructionContext&	constructionContext);
 
 	/**
-	 * Retrieve the DecimalFormatSymbols instance associated with
+	 * Retrieve the XalanDecimalFormatSymbols instance associated with
 	 * the name.
 	 *
 	 * @param name the name for the lookup
 	 * @return a pointer to the matching instance, or 0 if none was found
 	 */
-	const DecimalFormatSymbols*
+	const XalanDecimalFormatSymbols*
 	getDecimalFormatSymbols(const XalanDOMString&	name) const;
 
 	/**

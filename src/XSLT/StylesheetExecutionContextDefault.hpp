@@ -335,6 +335,41 @@ public:
 	virtual const ElemTemplateElement*
 	popElementRecursionStack();
 
+	virtual XalanNumberFormatAutoPtr
+	createXalanNumberFormat();
+
+
+	// A basic class to create XalanNumberFormat instances...
+	class XALAN_XSLT_EXPORT XalanNumberFormatFactory
+	{
+	public:
+
+		explicit
+		XalanNumberFormatFactory();
+
+		virtual
+		~XalanNumberFormatFactory();
+
+		virtual XalanNumberFormat*
+		create();
+	};
+
+	static XalanNumberFormatFactory&
+	getDefaultXalanNumberFormatFactory()
+	{
+		return s_defaultXalanNumberFormatFactory;
+	}
+
+	/**
+	 * Static function to install a new XalanNumberFormatFactory.
+	 * The caller owns the XalanNumberFormatFactory instance.
+	 *
+	 * @param a pointer to the new factory instance to use.
+	 * @return a pointer to the old factory instance.
+	 */
+	// 
+	static XalanNumberFormatFactory*
+	installXalanNumberFormatFactory(XalanNumberFormatFactory*	theFactory);
 
 	// These interfaces are inherited from XPathExecutionContext...
 
@@ -481,7 +516,7 @@ public:
 			XalanDocument*			theDocument);
 
 
-	virtual const DecimalFormatSymbols*
+	virtual const XalanDecimalFormatSymbols*
 	getDecimalFormatSymbols(const XalanDOMString&	name);
 
 	virtual PrintWriter*
@@ -536,15 +571,19 @@ private:
 	typedef std::set<TextOutputStream*>					TextOutputStreamSetType;
 #endif
 
-	ElementRecursionStackType		m_elementRecursionStack;
+	ElementRecursionStackType			m_elementRecursionStack;
 
-	const PrefixResolver*			m_prefixResolver;
+	const PrefixResolver*				m_prefixResolver;
 
-	StylesheetRoot*					m_stylesheetRoot;
+	StylesheetRoot*						m_stylesheetRoot;
 
-	PrintWriterSetType				m_printWriters;
+	PrintWriterSetType					m_printWriters;
 
-	TextOutputStreamSetType			m_textOutputStreams;
+	TextOutputStreamSetType				m_textOutputStreams;
+
+	static XalanNumberFormatFactory		s_defaultXalanNumberFormatFactory;
+
+	static XalanNumberFormatFactory*	s_xalanNumberFormatFactory;
 };
 
 
