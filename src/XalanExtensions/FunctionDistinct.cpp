@@ -125,7 +125,7 @@ FunctionDistinct::execute(
 
 		XalanDOMString&				theCachedString = theGuard.get();
 
-#if defined(XALAN_NO_NAMESPACES)
+#if defined(XALAN_NO_STD_NAMESPACE)
 		typedef set<XalanDOMString, less<XalanDOMString> >	SetType;
 #else
 		typedef std::set<XalanDOMString>					SetType;
