@@ -62,14 +62,17 @@
 
 
 
+#include <sax/AttributeList.hpp>
+
+
+
 #include <PlatformSupport/DOMStringHelper.hpp>
 
 
 
 #include "Constants.hpp"
-#include "ElemExtensionCall.hpp"
 #include "StylesheetConstructionContext.hpp"
-#include "StylesheetExecutionContext.hpp"
+//#include "StylesheetExecutionContext.hpp"
 
 
 
@@ -131,32 +134,7 @@ ElemFallback::~ElemFallback()
 void
 ElemFallback::execute(StylesheetExecutionContext&		executionContext) const
 {
-	const ElemTemplateElement* const	parent =
-			getParentNodeElem();
-	assert(parent != 0);
+	ElemTemplateElement::execute(executionContext);
 
-	if(parent->getXSLToken() == Constants::ELEMNAME_EXTENSIONCALL)
-	{
-		const ElemExtensionCall* const	extensionParent =
-#if defined(XALAN_OLD_STYLE_CASTS)
-			(const ElemExtensionCall*)parent;
-#else
-			static_cast<const ElemExtensionCall*>(parent); 
-#endif
-
-		if(extensionParent->elementAvailable(executionContext) == false)
-		{
-			ElemTemplateElement::execute(executionContext);
-
-			executeChildren(executionContext);
-		}
-	}
-	else
-	{
-		// Should never happen
-		executionContext.error(
-			"Parent of xsl:fallback must be an extension element",
-			executionContext.getCurrentNode(),
-			this);
-	}
+	executeChildren(executionContext);
 }
