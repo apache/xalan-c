@@ -92,7 +92,7 @@ XercesDOMFormatterWalker::~XercesDOMFormatterWalker()
 
 
 
-void
+bool
 XercesDOMFormatterWalker::startNode(const DOMNodeType*	node)
 {
 	assert(node != 0);
@@ -158,7 +158,7 @@ XercesDOMFormatterWalker::startNode(const DOMNodeType*	node)
 			assert(length(data) == FormatterListener::size_type(length(data)));
 
 			m_formatterListener.characters(data, FormatterListener::size_type(length(data)));
-		}
+		} 
 		break;
 
 	case DOMNodeType::ENTITY_REFERENCE_NODE:
@@ -169,11 +169,13 @@ XercesDOMFormatterWalker::startNode(const DOMNodeType*	node)
 		// Do nothing...
 		break;
 	}
+
+	return false;
 }
 
 
 
-void
+bool
 XercesDOMFormatterWalker::endNode(const DOMNodeType*	node)
 {
 	assert(node != 0);
@@ -192,6 +194,8 @@ XercesDOMFormatterWalker::endNode(const DOMNodeType*	node)
 		// Do nothing
 		break;
 	}
+
+	return false;
 }
 
 

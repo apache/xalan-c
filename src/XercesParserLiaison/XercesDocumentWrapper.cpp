@@ -1469,7 +1469,7 @@ XercesDocumentWrapper::BuildWrapperTreeWalker::~BuildWrapperTreeWalker()
 
 
 
-void
+bool
 XercesDocumentWrapper::BuildWrapperTreeWalker::startNode(const DOMNodeType*		node)
 {
 	XalanNode* const	theWrapperNode =
@@ -1603,11 +1603,13 @@ XercesDocumentWrapper::BuildWrapperTreeWalker::startNode(const DOMNodeType*		nod
 			++m_currentIndex;
 		}
 	}
+
+	return false;
 }
 
 
 
-void
+bool
 XercesDocumentWrapper::BuildWrapperTreeWalker::endNode(const DOMNodeType*	/* node */)
 {
 	assert(m_parentNavigatorStack.empty() == false);
@@ -1630,6 +1632,8 @@ XercesDocumentWrapper::BuildWrapperTreeWalker::endNode(const DOMNodeType*	/* nod
 
 	// Pop the context marker...
 	m_siblingNavigatorStack.pop_back();
+
+	return false;
 }
 
 

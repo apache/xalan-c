@@ -59,6 +59,10 @@
 
 
 
+#include <cassert>
+
+
+
 // Xerces header files...
 #include <xercesc/dom/DOMNode.hpp>
 
@@ -80,20 +84,31 @@ XercesDOMWalker::~XercesDOMWalker()
 
 
 
-void
+const DOMNodeType*
 XercesDOMWalker::traverse(const DOMNodeType*	pos)
 {
+	assert(pos != 0);
+
 	const DOMNodeType*	thePos = pos;
 
-	while(thePos != 0)
+	bool	fStop = false;
+
+	while(thePos != 0 && fStop == false)
 	{
-		startNode(thePos);
+		fStop = startNode(thePos);
 
 		const DOMNodeType*	nextNode = thePos->getFirstChild();
 
 		while(nextNode == 0)
 		{
-			endNode(thePos);
+			if (fStop == false)
+			{
+				fStop = endNode(thePos);
+			}
+			else
+			{
+				endNode(thePos);
+			}
 
 			nextNode = thePos->getNextSibling();
 
@@ -112,24 +127,37 @@ XercesDOMWalker::traverse(const DOMNodeType*	pos)
 
 		thePos = nextNode;
 	}
+
+	return thePos;
 }
 
 
 
-void
+DOMNodeType*
 XercesDOMWalker::traverse(DOMNodeType*	pos)
 {
+	assert(pos != 0);
+
 	DOMNodeType*	thePos = pos;
 
-	while(thePos != 0)
+	bool	fStop = false;
+
+	while(thePos != 0 && fStop == false)
 	{
-		startNode(thePos);
+		fStop = startNode(thePos);
 
 		DOMNodeType*	nextNode = thePos->getFirstChild();
 
 		while(nextNode == 0)
 		{
-			endNode(thePos);
+			if (fStop == false)
+			{
+				fStop = endNode(thePos);
+			}
+			else
+			{
+				endNode(thePos);
+			}
 
 			nextNode = thePos->getNextSibling();
 
@@ -148,26 +176,40 @@ XercesDOMWalker::traverse(DOMNodeType*	pos)
 
 		thePos = nextNode;
 	}
+
+	return thePos;
 }
 
 
 
-void
+const DOMNodeType*
 XercesDOMWalker::traverse(
 			const DOMNodeType*	pos,
 			const DOMNodeType*	parent)
 {
+	assert(pos != 0);
+	assert(parent != 0);
+
 	const DOMNodeType*	thePos = pos;
 
-	while(parent != thePos)
-	{	  
-		startNode(thePos);
+	bool	fStop = false;
+
+	while(parent != thePos && fStop == false)
+	{
+		fStop = startNode(thePos);
 	  
 		const DOMNodeType*	nextNode = thePos->getFirstChild();
 
 		while(nextNode == 0)
 		{
-			endNode(thePos);
+			if (fStop == false)
+			{
+				fStop = endNode(thePos);
+			}
+			else
+			{
+				endNode(thePos);
+			}
 
 			nextNode = thePos->getNextSibling();
 
@@ -186,26 +228,40 @@ XercesDOMWalker::traverse(
 
 		thePos = nextNode;
 	}
+
+	return thePos;
 }
 
 
 
-void
+DOMNodeType*
 XercesDOMWalker::traverse(
 			DOMNodeType*	pos,
 			DOMNodeType*	parent)
 {
+	assert(pos != 0);
+	assert(parent != 0);
+
 	DOMNodeType*	thePos = pos;
 
-	while(parent != thePos)
-	{	  
-		startNode(thePos);
+	bool	fStop = false;
+
+	while(parent != thePos && fStop == false)
+	{
+		fStop = startNode(thePos);
 	  
 		DOMNodeType*	nextNode = thePos->getFirstChild();
 
 		while(nextNode == 0)
 		{
-			endNode(thePos);
+			if (fStop == false)
+			{
+				fStop = endNode(thePos);
+			}
+			else
+			{
+				endNode(thePos);
+			}
 
 			nextNode = thePos->getNextSibling();
 
@@ -224,6 +280,8 @@ XercesDOMWalker::traverse(
 
 		thePos = nextNode;
 	}
+
+	return thePos;
 }
 
 
@@ -268,25 +326,25 @@ XercesDOMWalker::traverseSubtree(DOMNodeType*	pos)
 
 
 
-void
+bool
 XercesDOMWalker::startNode(DOMNodeType*		node)
 {
 #if defined(XALAN_OLD_STYLE_CASTS)
-	startNode((const DOMNodeType*)node);
+	return startNode((const DOMNodeType*)node);
 #else
-	startNode(const_cast<const DOMNodeType*>(node));
+	return startNode(const_cast<const DOMNodeType*>(node));
 #endif
 }
 
 
 
-void
+bool
 XercesDOMWalker::endNode(DOMNodeType*	node)
 {
 #if defined(XALAN_OLD_STYLE_CASTS)
-	endNode((const DOMNodeType*)node);
+	return endNode((const DOMNodeType*)node);
 #else
-	endNode(const_cast<const DOMNodeType*>(node));
+	return endNode(const_cast<const DOMNodeType*>(node));
 #endif
 }
 

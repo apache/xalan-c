@@ -81,29 +81,81 @@ public:
 	~XercesDOMWalker();
 
 	/**
-	 * Perform a pre-order traversal non-recursive style.
+	 * Perform a document-order traversal.
+	 *
+	 * Derived classes and stop the traversal by returning
+	 * true from startNode() or endNode().  If that happens,
+	 * the function will return the next node in document
+	 * order.  If desired, the caller can start traversing
+	 * the tree again from that point.  Note that terminal
+	 * nodes will always have startNode() and endNode()
+	 * called before the traversal terminates.
+	 *
+	 * @param pos The node in the tree with which to start the walk
+	 *
+	 * @return 0 if the traversal completes, or the next node if the traversal doesn't complete.
 	 */
-	virtual void
+	virtual const DOMNodeType*
 	traverse(const DOMNodeType*		pos);
 
 	/**
-	 * Perform a pre-order traversal non-recursive style.
+	 * Perform a document-order traversal.
+	 *
+	 * Derived classes and stop the traversal by returning
+	 * true from startNode() or endNode().  If that happens,
+	 * the function will return the next node in document
+	 * order.  If desired, the caller can start traversing
+	 * the tree again from that point.  Note that terminal
+	 * nodes will always have startNode() and endNode()
+	 * called before the traversal terminates.
+	 *
+	 * @param pos The node in the tree with which to start the walk
+	 *
+	 * @return 0 if the traversal completes, or the next node if the traversal doesn't complete.
 	 */
-	virtual void
+	virtual DOMNodeType*
 	traverse(DOMNodeType*	pos);
 
 	/**
-	 * Perform a pre-order traversal non-recursive style.
+	 * Perform a document-order traversal stopping at the
+	 * provided parent node.
+	 *
+	 * Derived classes and stop the traversal by returning
+	 * true from startNode() or endNode().  If that happens,
+	 * the function will return the next node in document
+	 * order.  If desired, the caller can start traversing
+	 * the tree again from that point.  Note that terminal
+	 * nodes will always have startNode() and endNode()
+	 * called before the traversal terminates.
+	 *
+	 * @param pos The node in the tree with which to start the walk
+	 * @param parent The parent of pos.  Note that for multiple calls that continue the traversal, this node must remain the same.
+	 *
+	 * @return parent if the traversal completes, or the next node if the traversal doesn't complete.
 	 */
-	virtual void
+	virtual const DOMNodeType*
 	traverse(
 			const DOMNodeType*	pos,
 			const DOMNodeType*	parent);
 
 	/**
-	 * Perform a pre-order traversal non-recursive style.
+	 * Perform a document-order traversal stopping at the
+	 * provided parent node.
+	 *
+	 * Derived classes and stop the traversal by returning
+	 * true from startNode() or endNode().  If that happens,
+	 * the function will return the next node in document
+	 * order.  If desired, the caller can start traversing
+	 * the tree again from that point.  Note that terminal
+	 * nodes will always have startNode() and endNode()
+	 * called before the traversal terminates.
+	 *
+	 * @param pos The node in the tree with which to start the walk
+	 * @param parent The parent of pos.  Note that for multiple calls that continue the traversal, this node must remain the same.
+	 *
+	 * @return parent if the traversal completes, or the next node if the traversal doesn't complete.
 	 */
-	virtual void
+	virtual DOMNodeType*
 	traverse(
 			DOMNodeType*	pos,
 			DOMNodeType*	parent);
@@ -117,7 +169,7 @@ public:
 	traverseSubtree(const DOMNodeType*	pos);
 
 	/**
-	 * Perform a pre-order traversal non-recursive style.
+	 * Perform a document-order traversal non-recursive style.
 	 * 
 	 * @param pos starting node
 	 */
@@ -126,16 +178,44 @@ public:
 
 protected:
 
-	virtual void
+	/**
+	 * Called when first walking a node
+	 * 
+	 * @param node The node
+	 *
+	 * @return return false if the walk should continue, or true if it should not.
+	 */
+	virtual bool
 	startNode(const DOMNodeType*	node) = 0;
 
-	virtual void
+	/**
+	 * Called when first walking a node
+	 * 
+	 * @param node The node
+	 *
+	 * @return return false if the walk should continue, or true if it should not.
+	 */
+	virtual bool
 	startNode(DOMNodeType*	node);
 
-	virtual void
+	/**
+	 * Called when leaving a node
+	 * 
+	 * @param node The node
+	 *
+	 * @return return false if the walk should continue, or true if it should not.
+	 */
+	virtual bool
 	endNode(const DOMNodeType*	node) = 0;
 
-	virtual void
+	/**
+	 * Called when leaving a node
+	 * 
+	 * @param node The node
+	 *
+	 * @return return false if the walk should continue, or true if it should not.
+	 */
+	virtual bool
 	endNode(DOMNodeType*	node);
 };
 

@@ -443,10 +443,10 @@ public:
 
 	protected:
 
-		virtual void
+		virtual bool
 		startNode(const DOMNodeType*	node);
 
-		virtual void
+		virtual bool
 		endNode(const DOMNodeType*	node);
 
 	private:
