@@ -96,7 +96,7 @@
 // GLOBAL VARIABLES...
 FileUtility				futil;
 XalanDOMString			baseDir, outputRoot, goldRoot;  // These are set by the getParams routine.
-const XalanDOMString	testDir("cextension");
+const XalanDOMString	testDir("extensions");
 const XalanDOMString	theNamespace("http://xml.apache.org/xalan");
 
 
@@ -199,7 +199,7 @@ getParams(int argc,
 	if (fsetGold)
 	{
 		goldRoot = baseDir;
-		append(goldRoot,XalanDOMString("\\xout"));
+		append(goldRoot,XalanDOMString("-gold"));
 		futil.checkAndCreateDir(goldRoot);
 		append(goldRoot,pathSep);
 	}
