@@ -232,7 +232,7 @@ XalanTransformer::ICUCleanUp();
   <s2 title="Using a stylesheet processing instruction">
 	<p>
 	  If you want to use the stylesheet referred to by a stylesheet 
-	  processing instruction in the XMl document, simply call transform() 
+	  processing instruction in the XML document, simply call transform() 
 	  without the second XSLTInputSource argument. For example:
 	</p>
 	<source>
@@ -256,7 +256,7 @@ int theResult =
 	<p>
 	  To set a stylesheet parameter, use the 
 	  <jump href="apidocs/classXalanTransformer.html">XalanTransformer
-	  </jump> setStylesheetParam() method. The setStytlesheetParam() method 
+	  </jump> setStylesheetParam() method. The setStylesheetParam() method 
 	  takes two arguments: the parameter name and the expression. For example:
 	</p>
 	<source>
@@ -304,7 +304,7 @@ int
 transform(const XSLTInputSource&amp; xmlIn,
           const XSLTInputSource&amp; xslIn,
           void* theOutputHandle,
-          XalanOutputHandlerType theOutputHandler
+          XalanOutputHandlerType theOutputHandler,
           XalanFlushHanderType theFlushHandler = 0);
 	</source>
 	<p>
@@ -452,13 +452,13 @@ XALAN_USING_XALAN(XalanTransformer)
 
 void parseWithXerces(XalanTransformer &amp;xalan, 
                      const XSLTInputSource &amp;xmlInput,
-                     const XalanCompiledStylesheet* styleSheer,
+                     const XalanCompiledStylesheet* styleSheet,
                      const XSLTResultTarget &amp;output,
                      XMLFileReporter &amp;logFile)
 {
     XercesDOMParser theParser;
   
-    // Turn on validatiion and namespace support.
+    // Turn on validation and namespace support.
     theParser.setDoValidation(true);
     theParser.setDoNamespaces(true);
 
@@ -583,8 +583,8 @@ void parseWithXerces(XalanTransformer &amp;xalan,
 		<li>Define the XALAN_USE_ICU environment variable.<br/><br/></li>
 		<li>Set the XALANROOT environment variable to the path to to the ICU root (unless you have copied the ICU library to
 		  /usr/lib).<br/><br/></li> 
-		<li><link idref="readme" anchor="unix">Rebuild the Xalan library</link> (&xml4c-linuxlib; for Linux, &xml4c-aixlib; for AIX,
-		  &xml4c-hplib; for HP-UX 11, and &xml4c-solarislib; for Solaris).<br/><br/></li>
+		<li><link idref="readme" anchor="unix">Rebuild the Xalan library</link> (&xslt4c-linuxlib; for Linux, &xslt4c-aixlib; for AIX,
+		  &xslt4c-hplib; for HP-UX 11, and &xslt4c-solarislib; for Solaris).<br/><br/></li>
 		<li>Be sure the Xalan library is on the library path (LD_LIBRARY_PATH for Red Hat Linux, LIBPATH for AIX, SHLIB_PATH for HP-UX 11, LD_LIBRARY_PATH for Solaris).</li>
 	  </ol>
 	  <note>
