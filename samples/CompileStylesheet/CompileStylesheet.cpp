@@ -60,9 +60,7 @@ main(
 			XercesParserLiaison				theParserLiaison(theDOMSupport);
 			XPathSupportDefault				theXPathSupport(theDOMSupport);
 			XSLTProcessorEnvSupportDefault	theXSLTProcessorEnvSupport;
-			XObjectFactoryDefault			theXObjectFactory(
-					theXSLTProcessorEnvSupport,
-					theXPathSupport);
+			XObjectFactoryDefault			theXObjectFactory;
 			XPathFactoryDefault				theXPathFactory;
 
 			// Create a processor...
@@ -77,11 +75,8 @@ main(
 			theXSLTProcessorEnvSupport.setProcessor(&theProcessor);
 
 			// Create separate factory support objects so the stylesheet's
-			// factory-created XObject and XPath instances are independent 
-			// from processor's.
-			XObjectFactoryDefault			theStylesheetXObjectFactory(
-						theXSLTProcessorEnvSupport,
-						theXPathSupport);
+			// factory-created XPath instances are independent from the
+			// processor's.
 			XPathFactoryDefault				theStylesheetXPathFactory;
 
 			// Create a stylesheet construction context, using the
@@ -89,7 +84,6 @@ main(
 			StylesheetConstructionContextDefault	theConstructionContext(
 						theProcessor,
 						theXSLTProcessorEnvSupport,
-						theStylesheetXObjectFactory,
 						theStylesheetXPathFactory);
 
 			// The execution context uses the same factory support objects as

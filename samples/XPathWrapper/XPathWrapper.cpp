@@ -100,7 +100,7 @@ public:
 		// configure the objects needed for XPath to work with the Xerces DOM
 		XPathEnvSupportDefault			theEnvSupport;
 		XPathSupportDefault				theSupport(theDOMSupport);
-		XObjectFactoryDefault			theXObjectFactory(theEnvSupport, theSupport);
+		XObjectFactoryDefault			theXObjectFactory;
 		XPathExecutionContextDefault	theExecutionContext(theEnvSupport, theSupport, theXObjectFactory);
 		XPathFactoryDefault				theXPathFactory;
 		XPathProcessorImpl				theXPathProcessor;
@@ -114,15 +114,14 @@ public:
 			theXPathProcessor.initXPath(*contextXPath,
 										XalanDOMString(context.c_str()),
 										ElementPrefixResolverProxy(rootElem, theEnvSupport, theSupport),
-										theXObjectFactory,
 										theEnvSupport);
 
-	   		XObject*	xObj =
+	   		const XObject*	xObj =
 				contextXPath->execute(rootElem,
 									  ElementPrefixResolverProxy(rootElem, theEnvSupport, theSupport),
 									  theExecutionContext);
 
-			const NodeRefListBase&	contextNodeList = xObj->mutableNodeset();
+			const NodeRefListBase&	contextNodeList = xObj->nodeset();
 
 			const unsigned int	theLength =
 					contextNodeList.getLength();
@@ -155,7 +154,6 @@ public:
 				theXPathProcessor.initXPath(*xpath,
 											XalanDOMString(expr.c_str()),
 											ElementPrefixResolverProxy(rootElem, theEnvSupport, theSupport),
-											theXObjectFactory,
 											theEnvSupport);
 
 				xObj = xpath->execute(contextNodeList.item(0),

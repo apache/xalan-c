@@ -69,7 +69,7 @@ main(
 			XercesParserLiaison				theParserLiaison(theDOMSupport);
 			XPathSupportDefault				theXPathSupport(theDOMSupport);
 			XSLTProcessorEnvSupportDefault	theXSLTProcessorEnvSupport;
-			XObjectFactoryDefault			theXObjectFactory(theXSLTProcessorEnvSupport, theXPathSupport);
+			XObjectFactoryDefault			theXObjectFactory;
 			XPathFactoryDefault				theXPathFactory;
 
 			// Create a processor...
@@ -88,7 +88,6 @@ main(
 			StylesheetConstructionContextDefault	theConstructionContext(
 						theProcessor,
 						theXSLTProcessorEnvSupport,
-						theXObjectFactory,
 						theXPathFactory);
 
 			StylesheetExecutionContextDefault		theExecutionContext(

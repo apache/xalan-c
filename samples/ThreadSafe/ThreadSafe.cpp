@@ -71,8 +71,7 @@ THREADFUNCTIONRETURN theThread(LPVOID	param)
 	XercesParserLiaison				theParserLiaison(theDOMSupport);
 	XPathSupportDefault				theXPathSupport(theDOMSupport);
 	XSLTProcessorEnvSupportDefault	theXSLTProcessorEnvSupport;
-	XObjectFactoryDefault			theXObjectFactory(theXSLTProcessorEnvSupport,
-													  theXPathSupport);
+	XObjectFactoryDefault			theXObjectFactory;
 	XPathFactoryDefault				theXPathFactory;
 
 	// Create a processor...and output the start message.
@@ -192,8 +191,7 @@ int main(int argc, const char*	/* argv */[])
 			XercesParserLiaison				ssParserLiaison(ssDOMSupport);
 			XPathSupportDefault				ssXPathSupport(ssDOMSupport);
 			XSLTProcessorEnvSupportDefault	ssXSLTProcessorEnvSupport;
-			XObjectFactoryDefault			ssXObjectFactory(ssXSLTProcessorEnvSupport,
-															 ssXPathSupport);
+			XObjectFactoryDefault			ssXObjectFactory;
 			XPathFactoryDefault				ssXPathFactory;
 
 			// Create a processor...
@@ -201,27 +199,18 @@ int main(int argc, const char*	/* argv */[])
 			// Each thread uses its own processor to perform a transformation.
 
 			XSLTEngineImpl	ssProcessor(
-      					  ssParserLiaison,
-	      		    	ssXPathSupport,
-		  	        	ssXSLTProcessorEnvSupport,
-		    	  		  ssXObjectFactory,
-        				  ssXPathFactory);
-
-			// Create separate factory support objects so the stylesheet's
-			// factory-created XObject and XPath instances are independent 
-			// from the processor's.
-			XObjectFactoryDefault	ssStylesheetXObjectFactory(
-									ssXSLTProcessorEnvSupport,
-									ssXPathSupport);
-			XPathFactoryDefault		ssStylesheetXPathFactory;
+					ssParserLiaison,
+					ssXPathSupport,
+					ssXSLTProcessorEnvSupport,
+					ssXObjectFactory,
+					ssXPathFactory);
 
 			// Create a stylesheet construction context, using the
 			// stylesheet's factory support objects.
 			StylesheetConstructionContextDefault	ssConstructionContext(
 													ssProcessor,
 													ssXSLTProcessorEnvSupport,
-													ssStylesheetXObjectFactory,
-													ssStylesheetXPathFactory);
+													ssXPathFactory);
 
 			const XalanDOMString  theXSLFileName("birds.xsl");
 			const XalanDOMString  theXMLFileName("birds.xml");
