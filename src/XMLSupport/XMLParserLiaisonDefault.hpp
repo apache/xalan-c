@@ -148,6 +148,12 @@ public:
 	virtual void
 	setEntityResolver(EntityResolver*	resolver) { m_entityResolver = resolver; }
 
+	virtual ErrorHandler*
+	getErrorHandler() { return m_errorHandler; }
+
+	virtual void
+	setErrorHandler(ErrorHandler*	handler) { m_errorHandler = handler; }
+
 private:
 
 	// Not implemented...
@@ -162,6 +168,8 @@ private:
 	bool				m_fUseValidation;
 
 	EntityResolver*		m_entityResolver;
+
+	ErrorHandler*		m_errorHandler;
 
 	unsigned long		m_documentNumber;
 };

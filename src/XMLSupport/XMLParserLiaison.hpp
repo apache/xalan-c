@@ -74,6 +74,7 @@
 
 class DocumentHandler;
 class EntityResolver;
+class ErrorHandler;
 class ExecutionContext;
 class FormatterListener;
 class InputSource;
@@ -238,7 +239,7 @@ public:
 	  * @return The pointer to the installed entity resolver object.
 	  */
 	virtual EntityResolver*
-	getEntityResolver() = 0;
+	getEntityResolver() const = 0;
 
 	/**
 	  * This method installs the user specified entity resolver on the
@@ -251,6 +252,22 @@ public:
 	  */
 	virtual void
 	setEntityResolver(EntityResolver*	resolver) = 0;
+
+	/**
+	  * This method returns the installed error handler.
+	  *
+	  * @return The pointer to the installed error handler object.
+	  */
+	virtual ErrorHandler*
+	getErrorHandler() const = 0;
+
+	/**
+	  * This method installs the user-specified error handler.
+	  *
+	  * @param handler A pointer to the error handler to be called upon error.
+	  */
+	virtual void
+	setErrorHandler(ErrorHandler*	handler) = 0;
 
 private:
 

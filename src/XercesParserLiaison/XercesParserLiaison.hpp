@@ -164,7 +164,7 @@ public:
 	getParserDescription() const;
 
 	virtual EntityResolver*
-	getEntityResolver();
+	getEntityResolver() const;
 
 	virtual void
 	setEntityResolver(EntityResolver*	resolver);
@@ -207,21 +207,11 @@ public:
 	setIncludeIgnorableWhitespace(bool	include);
 
 	/**
-	  * This method returns the installed error handler. Suitable
-	  * for 'lvalue' usages.
+	  * This method returns the installed error handler.
 	  *
-	  * @return The pointer to the installed error handler object.
+	  * @return A pointer to the installed error handler object.
 	  */
 	virtual ErrorHandler*
-	getErrorHandler();
-
-	/**
-	  * This method returns the installed error handler. Suitable
-	  * for 'rvalue' usages.
-	  *
-	  * @return A const pointer to the installed error handler object.
-	  */
-	virtual const ErrorHandler*
 	getErrorHandler() const;
 
 	/**
@@ -231,8 +221,6 @@ public:
 	  * @param handler A pointer to the error handler to be called
 	  * 			   when the parser comes across 'error' events
 	  * 			   as per the SAX specification.
-	  *
-	  * @see Parser#setErrorHandler
 	  */
 	virtual void
 	setErrorHandler(ErrorHandler*	handler);

@@ -327,14 +327,6 @@ XercesParserLiaison::setIncludeIgnorableWhitespace(bool	include)
 
 
 ErrorHandler*
-XercesParserLiaison::getErrorHandler()
-{
-	return m_errorHandler;
-}
-
-
-
-const ErrorHandler*
 XercesParserLiaison::getErrorHandler() const
 {
 	return m_errorHandler;
@@ -345,8 +337,6 @@ XercesParserLiaison::getErrorHandler() const
 void
 XercesParserLiaison::setErrorHandler(ErrorHandler*	handler)
 {
-	assert(handler != 0);
-
 	m_errorHandler = handler;
 }
 
@@ -385,7 +375,7 @@ XercesParserLiaison::setExitOnFirstFatalError(bool	newState)
 
 
 EntityResolver*
-XercesParserLiaison::getEntityResolver()
+XercesParserLiaison::getEntityResolver() const
 {
 	return m_entityResolver;
 }

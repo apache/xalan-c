@@ -389,14 +389,6 @@ XalanSourceTreeParserLiaison::setIncludeIgnorableWhitespace(bool	include)
 
 
 ErrorHandler*
-XalanSourceTreeParserLiaison::getErrorHandler()
-{
-	return m_xercesParserLiaison.getErrorHandler();
-}
-
-
-
-const ErrorHandler*
 XalanSourceTreeParserLiaison::getErrorHandler() const
 {
 	return m_xercesParserLiaison.getErrorHandler();
@@ -445,7 +437,7 @@ XalanSourceTreeParserLiaison::setExitOnFirstFatalError(bool		newState)
 
 
 EntityResolver*
-XalanSourceTreeParserLiaison::getEntityResolver()
+XalanSourceTreeParserLiaison::getEntityResolver() const
 {
 	return m_xercesParserLiaison.getEntityResolver();
 }
