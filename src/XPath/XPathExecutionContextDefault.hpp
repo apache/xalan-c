@@ -150,6 +150,17 @@ public:
 
 
 	/**
+	 * Get the XPathEnvSupport instance.
+	 *
+	 * @return a pointer to the instance.
+	 */
+	XPathEnvSupport*
+	getXPathEnvSupport() const
+	{
+		return m_xpathEnvSupport;
+	}
+
+	/**
 	 * Set the XPathEnvSupport instance.
 	 *
 	 * @param theSupport a reference to the instance to use.
