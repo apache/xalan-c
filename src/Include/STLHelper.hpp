@@ -116,13 +116,13 @@ template <class PairType>
 #if defined(XALAN_NO_NAMESPACES)
 struct select1st : public unary_function<PairType, PairType::first_type>
 #else
-struct select1st : public std::unary_function<PairType, PairType::first_type>
+struct select1st : public std::unary_function<PairType, typename PairType::first_type>
 #endif
 {
 #if defined(XALAN_NO_NAMESPACES)
 	typedef unary_function<PairType, PairType::first_type>	BaseClassType;
 #else
-	typedef std::unary_function<PairType, PairType::first_type>	BaseClassType;
+	typedef std::unary_function<PairType, typename PairType::first_type>	BaseClassType;
 #endif
 
 	typedef typename BaseClassType::result_type		result_type;
@@ -153,13 +153,13 @@ template <class PairType>
 #if defined(XALAN_NO_NAMESPACES)
 struct select2nd : public unary_function<PairType, PairType::second_type>
 #else
-struct select2nd : public std::unary_function<PairType, PairType::second_type>
+struct select2nd : public std::unary_function<PairType, typename PairType::second_type>
 #endif
 {
 #if defined(XALAN_NO_NAMESPACES)
 	typedef unary_function<PairType, PairType::second_type>	BaseClassType;
 #else
-	typedef std::unary_function<PairType, PairType::second_type>	BaseClassType;
+	typedef std::unary_function<PairType, typename PairType::second_type>	BaseClassType;
 #endif
 
 	typedef typename BaseClassType::result_type		result_type;
