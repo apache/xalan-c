@@ -521,11 +521,6 @@ On<trans-unit id="FunctionDoesNotAcceptAnyArguments_1Param">
 		<target>The stylesheet already has a template with this name.</target>
 </trans-unit>
 
-<trans-unit id="LastFoundStylesheetWillBeUsed">
-		<source>Last found in stylesheet will be used.</source>
-		<target>Last found in stylesheet will be used.</target>
-</trans-unit>
-
 <trans-unit id="UnknownXSLTToken_1Param">
 		<source>The token '{0}' is an unknown XSLT token value.</source>
 		<target>The token '{0}' is an unknown XSLT token value.</target>
@@ -678,8 +673,8 @@ On<trans-unit id="FunctionDoesNotAcceptAnyArguments_1Param">
 </trans-unit>
 
 <trans-unit id="AtUnknownFileLineColumn_2Param">
-		<source>Occurred at unknown file , line {1} , column {2}.</source>
-		<target>Occurred at unknown file , line {1} , column {2}.</target>
+		<source>Occurred at unknown file , line {0} , column {1}.</source>
+		<target>Occurred at unknown file , line {0} , column {1}.</target>
 </trans-unit>
 
 <trans-unit id="EmptyNodeList">
@@ -793,8 +788,8 @@ On<trans-unit id="FunctionDoesNotAcceptAnyArguments_1Param">
 </trans-unit>
 
 <trans-unit id="ConflictsFound">
-		<source>Specificity conflicts found:  </source>
-		<target>Specificity conflicts found:  </target>
+		<source>More than one matching template was found. The last found in stylesheet will be used.</source>
+		<target>More than one matching template was found. The last found in stylesheet will be used.</target>
 </trans-unit>
 
 <trans-unit id="CircularVariableDefWasDetected">
