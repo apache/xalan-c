@@ -2906,6 +2906,54 @@ SOURCE=..\..\..\..\src\XSLT\XalanAVTPartXPathAllocator.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\XSLT\XalanElemApplyTemplatesAllocator.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XSLT\XalanElemApplyTemplatesAllocator.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XSLT\XalanElemAttributeAllocator.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XSLT\XalanElemAttributeAllocator.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XSLT\XalanElemAttributeSetAllocator.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XSLT\XalanElemAttributeSetAllocator.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XSLT\XalanElemCallTemplateAllocator.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XSLT\XalanElemCallTemplateAllocator.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XSLT\XalanElemElementAllocator.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XSLT\XalanElemElementAllocator.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XSLT\XalanElemEmptyAllocator.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XSLT\XalanElemEmptyAllocator.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\XSLT\XalanElemLiteralResultAllocator.cpp
 # End Source File
 # Begin Source File
@@ -2919,6 +2967,22 @@ SOURCE=..\..\..\..\src\XSLT\XalanElemTemplateAllocator.cpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\XSLT\XalanElemTemplateAllocator.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XSLT\XalanElemTextAllocator.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XSLT\XalanElemTextAllocator.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XSLT\XalanElemTextLiteralAllocator.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XSLT\XalanElemTextLiteralAllocator.hpp
 # End Source File
 # Begin Source File
 
