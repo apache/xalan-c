@@ -144,9 +144,16 @@ main(
 
 				// Reset the processor and the execution context
 				// so we can perform the next transformation.
+				// Reset the parser liaison to clear out the
+				// source document we just transformed.
 				theProcessor.reset();
 				theExecutionContext.reset();
+				theParserLiaison.reset();
 			}
+
+			// Call the static terminators...
+			XMLPlatformUtils::Terminate();
+			XSLTEngineImpl::Terminate();
 		}
 		catch(...)
 		{
