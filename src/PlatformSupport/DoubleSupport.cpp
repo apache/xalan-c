@@ -340,9 +340,21 @@ DoubleSupport::modulus(
 	{
 		return theRHS;
 	}
-	else
+	else if (theRHS == 0.0)
+	{
+		return getNaN();
+	}
+	else if (long(theLHS) == theLHS && long(theRHS) == theRHS)
 	{
 		return long(theLHS) % long(theRHS);
+	}
+	else
+	{
+		double	theDummy;
+
+		double	theResult = divide(theLHS, theRHS);
+
+		return modf(theResult, &theDummy) * theRHS;
 	}
 }
 

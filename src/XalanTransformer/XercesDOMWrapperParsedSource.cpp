@@ -117,6 +117,7 @@ XercesDOMWrapperParsedSource::XercesDOMWrapperParsedSource(
 
 XercesDOMWrapperParsedSource::~XercesDOMWrapperParsedSource()
 {
+	m_parserLiaison.destroyDocument(m_parsedSource);
 }
 
 

@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -175,9 +175,7 @@ XalanDOMString::resize(
 			// If the string is not of 0 length, resize but
 			// put a copy of theChar where the terminating
 			// byte used to be.
-			m_data.resize(theCount, theChar);
-
-			m_data[theOldSize] = theChar;
+			m_data.resize(theCount + 1, theChar);
 		}
 
 		m_size = theCount;
@@ -232,16 +230,80 @@ XalanDOMString::erase(
 
 XalanDOMString&
 XalanDOMString::assign(
+			const XalanDOMString&	theSource,
+			size_type				thePosition,
+			size_type				theCount)
+{
+	invariants();
+
+	assert(thePosition < theSource.size() && thePosition + theCount <= theSource.size());
+
+	if (&theSource != this)
+	{
+		erase();
+
+		append(theSource, thePosition, theCount);
+	}
+	else
+	{
+		if (thePosition == 0)
+		{
+			// See if we're being asked to
+			// assign everything to ourself,
+			// which is a noop...
+			if (theCount != m_size)
+			{
+				// We're being asked to truncate...
+				resize(theCount);
+			}
+		}
+		else
+		{
+			// Yuck.  We have to move data...
+			memmove(&*begin(), &*begin() + thePosition, theCount * sizeof(XalanDOMChar));
+
+			resize(theCount);
+		}
+	}
+
+	invariants();
+
+	return *this;
+}
+
+
+
+XalanDOMString&
+XalanDOMString::assign(
 		const_iterator	theFirstPosition,
 		const_iterator	theLastPosition)
 {
 	invariants();
 
-	erase();
+#if __SGI_STL_PORT <= 0x400
+	XalanDOMString  temp;
 
-	invariants();
+	temp.reserve(theLastPosition - theFirstPosition + 1);
 
-	insert(begin(), theFirstPosition, theLastPosition);
+	while(theFirstPosition != theLastPosition)
+	{
+		temp.push_back(*theFirstPosition);
+
+		++theFirstPosition;
+	}
+
+	temp.m_data.push_back(XalanDOMChar(0));
+
+	temp.m_size = temp.m_data.size() - 1;
+
+	swap(temp);
+#else
+	m_data.assign(theFirstPosition, theLastPosition);
+
+	m_data.push_back(XalanDOMChar(0));
+
+	m_size = m_data.size() - 1;
+#endif
 
 	invariants();
 
@@ -291,20 +353,21 @@ static inline void
 doTranscode(
 			const char*					theString,
 			XalanDOMString::size_type	theCount,
-			XalanDOMCharVectorType&		theVector)
+			XalanDOMCharVectorType&		theVector,
+			bool						fTerminate)
 {
 	assert(theString != 0);
 
 	if (theCount == XalanDOMString::size_type(XalanDOMString::npos))
 	{
-		if (TranscodeFromLocalCodePage(theString, theVector, true) == false)
+		if (TranscodeFromLocalCodePage(theString, theVector, fTerminate) == false)
 		{
 			throw XalanDOMString::TranscodingError();
 		}
 	}
 	else
 	{
-		if (TranscodeFromLocalCodePage(theString, theCount, theVector, true) == false)
+		if (TranscodeFromLocalCodePage(theString, theCount, theVector, fTerminate) == false)
 		{
 			throw XalanDOMString::TranscodingError();
 		}
@@ -327,13 +390,13 @@ XalanDOMString::append(
 	{
 		if (size() == 0)
 		{
-			doTranscode(theString, theLength, m_data);
+			doTranscode(theString, theLength, m_data, true);
 		}
 		else
 		{
 			XalanDOMCharVectorType	theTempVector;
 
-			doTranscode(theString, theLength, theTempVector);
+			doTranscode(theString, theLength, theTempVector, false);
 
 			append(&*theTempVector.begin(), size_type(theTempVector.size()));
 		}
@@ -932,11 +995,23 @@ doTranscodeFromLocalCodePage(
 					strlen);
 	}
 #else
+	XalanArrayAutoPtr<char>		tempString;
+
 	if (theSourceStringIsNullTerminated == true)
 	{
 		assert(strlen(theSourceString) < XalanDOMString::npos);
 
 		theSourceStringLength = size_type(strlen(theSourceString));
+	}
+	else
+	{
+		tempString.reset(new char[theSourceStringLength + 1]);
+
+		strncpy(tempString.get(), theSourceString, theSourceStringLength);
+
+		tempString[theSourceStringLength] = '\0';
+
+		theSourceString = tempString.get();
 	}
 
     // See how many chars we need to transcode.

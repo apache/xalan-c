@@ -522,8 +522,19 @@ XPathEnvSupportDefault::problem(
 void
 XPathEnvSupportDefault::NamespaceFunctionTableDeleteFunctor::operator()(const NamespaceFunctionTablesInnerType::value_type&	thePair) const
 {
+#if defined(XALAN_CANNOT_DELETE_CONST)
+	FunctionTableInnerType::const_iterator	i = thePair.second.begin();
+
+	while(i != thePair.second.end())
+	{
+		delete (Function*) (*i).second;
+
+		++i;
+	}
+#else
 	// Clean up the extension namespaces vector
 	for_each(thePair.second.begin(),
 			 thePair.second.end(),
 			 MapValueDeleteFunctor<FunctionTableInnerType>());
+#endif
 }

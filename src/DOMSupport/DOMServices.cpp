@@ -211,14 +211,22 @@ void
 DOMServices::terminate()
 {
 	releaseMemory(::s_XMLString);
+	releaseMemory(::s_XMLStringWithSeparator);
+	releaseMemory(::s_XMLNamespacePrefix);
 	releaseMemory(::s_XMLNamespaceURI);
 	releaseMemory(::s_XMLNamespace);
 	releaseMemory(::s_XMLNamespaceWithSeparator);
+	releaseMemory(::s_XMLNamespaceSeparatorString);
+	releaseMemory(::s_XMLNamespacePrefixURI);
 
 	::s_XMLStringLength = 0;
+	::s_XMLStringWithSeparatorLength = 0;
+	::s_XMLNamespacePrefixLength = 0;
 	::s_XMLNamespaceURILength = 0;
 	::s_XMLNamespaceLength = 0;
 	::s_XMLNamespaceWithSeparatorLength = 0;
+	::s_XMLNamespaceSeparatorStringLength = 0;
+	::s_XMLNamespacePrefixURILength = 0;
 }
 
 

@@ -54,59 +54,47 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-#if !defined(OS390DEFINITIONS_HEADER_GUARD_1357924680)
-#define OS390DEFINITIONS_HEADER_GUARD_1357924680
+#if !defined(XPOINTER_HEADER_GUARD_1357924680)
+#define XPOINTER_HEADER_GUARD_1357924680
 
 
 
-// ---------------------------------------------------------------------------
-//  A define in the build for each project is also used to control whether
-//  the export keyword is from the project's viewpoint or the client's.
-//  These defines provide the platform specific keywords that they need
-//  to do this.
-// ---------------------------------------------------------------------------
-
-
-#define XALAN_PLATFORM_EXPORT _Export
-#define XALAN_PLATFORM_IMPORT _Export
-#define XALAN_PLATFORM_EXPORT_FUNCTION(T) T XALAN_PLATFORM_EXPORT
-#define XALAN_PLATFORM_IMPORT_FUNCTION(T) T XALAN_PLATFORM_IMPORT
+// Base include file.  Must be first.
+#include <XPath/XPathDefinitions.hpp>
 
 
 
-#define XALAN_OLD_STYLE_CASTS
-#define XALAN_NO_NAMESPACES
-#define XALAN_NO_MUTABLE
-#define XALAN_SGI_BASED_STL
-#define XALAN_NO_MEMBER_TEMPLATES
-#define XALAN_AMBIGUOUS_EVEN_IF_NOT_CALLED
-#define XALAN_CANNOT_DELETE_CONST
-#define XALAN_BOOL_AS_INT
-#define XALAN_NO_STD_ALLOCATORS
-#define XALAN_NO_SELECTIVE_TEMPLATE_INSTANTIATION
-#define XALAN_NO_ALGORITHMS_WITH_BUILTINS
-#define XALAN_NO_DEFAULT_TEMPLATE_ARGUMENTS
-#define XALAN_NO_COVARIANT_RETURN_TYPE
-#define XALAN_AUTO_PTR_REQUIRES_DEFINITION
-#define XALAN_NEEDS_EXPLICIT_TEMPLATE_INSTANTIATION
-#define XALAN_XALANDOMCHAR_USHORT_MISMATCH 
-#define XALAN_USE_WCHAR_CAST_HACK
-#define XALAN_BIG_ENDIAN
-#define XALAN_STLPORT_STL
-#define XALAN_TEMPLATE_FUNCTION_NO_DEFAULT_PARAMETERS
-#define XALAN_NON_ASCII_PLATFORM
-#define XALAN_USE_XERCES_LOCAL_CODEPAGE_TRANSCODERS
-#define XALAN_POSIX2_AVAILABLE
-#define XALAN_ICU_DEFAULT_LOCALE_PROBLEM
-#define XALAN_OLD_STREAMS
+// $$$ ToDo: This is necessary while XalanDOMString is still a typedef...
+#include <XalanDOM/XalanDOMString.hpp>
 
 
-#define XALAN_UNALIGNED
 
-// STL Port Definitions
-#define _REENTRANT
-#define __STL_NO_SGI_IOSTREAMS
-#include <stl/_config.h>
+class XPath;
+class XSpan;
 
 
-#endif	// OS390DEFINITIONS_HEADER_GUARD_1357924680
+
+class XALAN_XPATH_EXPORT XPointer
+{
+public:
+
+	/**
+	 * Gets a span from an XPointer string.
+	 *
+	 * @param xpointer XPointer string
+	 */
+	static XSpan*
+	getNode(const XalanDOMString&	xpointer);
+
+	/**
+	 * Get a span from an XPath (compiled XPointer) object.
+	 *
+	 * @param xpath XPath object
+	 */
+	static XSpan*
+	getNode(XPath&	xpath);
+};
+
+
+
+#endif	// XPOINTER_HEADER_GUARD_1357924680

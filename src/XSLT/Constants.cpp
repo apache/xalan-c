@@ -794,6 +794,8 @@ Constants::terminate()
 	releaseMemory(::ATTRNAME_XMLSPACE);
 	releaseMemory(::ATTRNAME_ZERODIGIT);
 
+	releaseMemory(::ATTRTYPE_CDATA);
+
 	releaseMemory(::ATTRVAL_ALPHABETIC);
 	releaseMemory(::ATTRVAL_ANCESTOR);
 	releaseMemory(::ATTRVAL_ANY);
@@ -821,6 +823,7 @@ Constants::terminate()
 	releaseMemory(::ATTRVAL_SINGLE);
 	releaseMemory(::ATTRVAL_STRIP);
 	releaseMemory(::ATTRVAL_THIS);
+	releaseMemory(::ATTRVAL_TRADITIONAL);
 	releaseMemory(::ATTRVAL_YES);
 
 	releaseMemory(::DEFAULT_WHITESPACE_SEPARATOR_STRING);

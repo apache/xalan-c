@@ -67,7 +67,7 @@
 
 
 FunctionLang::FunctionLang() :
-	m_attributeName(XALAN_STATIC_UCODE_STRING("xml:lang"))
+	m_attributeName(XALAN_STATIC_UCODE_STRING("lang"))
 {
 }
 
@@ -106,7 +106,7 @@ FunctionLang::execute(
 #endif
 
 			const XalanDOMString		langVal =
-				theElementNode->getAttribute(m_attributeName);
+				theElementNode->getAttributeNS(DOMServices::s_XMLNamespaceURI, m_attributeName);
 
 			if(0 != length(langVal))
 			{
