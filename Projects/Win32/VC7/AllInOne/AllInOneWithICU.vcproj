@@ -24,7 +24,7 @@
 				AdditionalOptions="/Zm125 "
 				InlineFunctionExpansion="2"
 				AdditionalIncludeDirectories="$(ICUROOT)\include;$(XERCESCROOT)\include;$(XERCESCROOT)\src;..\..\..\..\..\..\xml-xerces\c\src,..\..\..\..\src\,..\..\..\..\..\..\icu\include,..\..\..\..\Build\Win32\VC7\Release\Nls\Include"
-				PreprocessorDefinitions="NDEBUG;XALAN_DOMSUPPORT_BUILD_DLL;WIN32;_WINDOWS;_USRDLL;XALAN_XSLT_BUILD_DLL;XALAN_PLATFORMSUPPORT_BUILD_DLL;XALAN_DOM_BUILD_DLL;XALAN_XALANEXTENSIONS_BUILD_DLL;XALAN_XALANSOURCETREE_BUILD_DLL;XALAN_TRANSFORMER_BUILD_DLL;XALAN_XERCESPARSERLIAISON_BUILD_DLL;XALAN_XMLSUPPORT_BUILD_DLL;XALAN_XPATH_BUILD_DLL;XALAN_XPATHCAPI_BUILD_DLL;XALAN_ALLINONE_BUILD_DLL;XALAN_EXSLT_BUILD_DLL;XALAN_ICUBRIDGE_BUILD_DLL;XALAN_USE_ICU;XALAN_ICU_MSG_LOADER"
+				PreprocessorDefinitions="NDEBUG;XALAN_DOMSUPPORT_BUILD_DLL;WIN32;_WINDOWS;_USRDLL;XALAN_XSLT_BUILD_DLL;XALAN_PLATFORMSUPPORT_BUILD_DLL;XALAN_DOM_BUILD_DLL;XALAN_XALANEXTENSIONS_BUILD_DLL;XALAN_XALANSOURCETREE_BUILD_DLL;XALAN_TRANSFORMER_BUILD_DLL;XALAN_XERCESPARSERLIAISON_BUILD_DLL;XALAN_XMLSUPPORT_BUILD_DLL;XALAN_XPATH_BUILD_DLL;XALAN_XPATHCAPI_BUILD_DLL;XALAN_ALLINONE_BUILD_DLL;XALAN_EXSLT_BUILD_DLL;XALAN_ICUBRIDGE_BUILD_DLL;XALAN_HARNESS_BUILD_DLL;XALAN_USE_ICU;XALAN_ICU_MSG_LOADER"
 				StringPooling="TRUE"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="TRUE"
@@ -82,7 +82,7 @@
 				AdditionalOptions="/Zm125 "
 				Optimization="0"
 				AdditionalIncludeDirectories="$(ICUROOT)\include;$(XERCESCROOT)\include;$(XERCESCROOT)\src;..\..\..\..\..\..\xml-xerces\c\src,..\..\..\..\src\,..\..\..\..\..\..\icu\include,..\..\..\..\Build\Win32\VC7\Debug\Nls\Include"
-				PreprocessorDefinitions="_DEBUG;XALAN_DOMSUPPORT_BUILD_DLL;WIN32;_WINDOWS;_USRDLL;XALAN_XSLT_BUILD_DLL;XALAN_PLATFORMSUPPORT_BUILD_DLL;XALAN_DOM_BUILD_DLL;XALAN_XALANEXTENSIONS_BUILD_DLL;XALAN_XALANSOURCETREE_BUILD_DLL;XALAN_TRANSFORMER_BUILD_DLL;XALAN_XERCESPARSERLIAISON_BUILD_DLL;XALAN_XMLSUPPORT_BUILD_DLL;XALAN_XPATH_BUILD_DLL;XALAN_XPATHCAPI_BUILD_DLL;XALAN_ALLINONE_BUILD_DLL;XALAN_EXSLT_BUILD_DLL;XALAN_ICUBRIDGE_BUILD_DLL;XALAN_USE_ICU;XALAN_ICU_MSG_LOADER"
+				PreprocessorDefinitions="_DEBUG;XALAN_DOMSUPPORT_BUILD_DLL;WIN32;_WINDOWS;_USRDLL;XALAN_XSLT_BUILD_DLL;XALAN_PLATFORMSUPPORT_BUILD_DLL;XALAN_DOM_BUILD_DLL;XALAN_XALANEXTENSIONS_BUILD_DLL;XALAN_XALANSOURCETREE_BUILD_DLL;XALAN_TRANSFORMER_BUILD_DLL;XALAN_XERCESPARSERLIAISON_BUILD_DLL;XALAN_XMLSUPPORT_BUILD_DLL;XALAN_XPATH_BUILD_DLL;XALAN_XPATHCAPI_BUILD_DLL;XALAN_ALLINONE_BUILD_DLL;XALAN_EXSLT_BUILD_DLL;XALAN_ICUBRIDGE_BUILD_DLL;XALAN_HARNESS_BUILD_DLL;XALAN_USE_ICU;XALAN_ICU_MSG_LOADER"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				RuntimeTypeInfo="TRUE"
@@ -143,7 +143,7 @@
 				AdditionalOptions="/Zm125 "
 				InlineFunctionExpansion="2"
 				AdditionalIncludeDirectories="$(ICUROOT)\include;$(XERCESCROOT)\include;$(XERCESCROOT)\src;..\..\..\..\..\..\xml-xerces\c\src,..\..\..\..\src\,..\..\..\..\..\..\icu\include,..\..\..\..\Build\Win32\VC7\Release.symbols\Nls\Include"
-				PreprocessorDefinitions="NDEBUG;NDEBUG_SYMBOLS;XALAN_DOMSUPPORT_BUILD_DLL;WIN32;_WINDOWS;_USRDLL;XALAN_XSLT_BUILD_DLL;XALAN_PLATFORMSUPPORT_BUILD_DLL;XALAN_DOM_BUILD_DLL;XALAN_XALANEXTENSIONS_BUILD_DLL;XALAN_XALANSOURCETREE_BUILD_DLL;XALAN_TRANSFORMER_BUILD_DLL;XALAN_XERCESPARSERLIAISON_BUILD_DLL;XALAN_XMLSUPPORT_BUILD_DLL;XALAN_XPATH_BUILD_DLL;XALAN_XPATHCAPI_BUILD_DLL;XALAN_ALLINONE_BUILD_DLL;XALAN_EXSLT_BUILD_DLL;XALAN_ICUBRIDGE_BUILD_DLL;XALAN_USE_ICU;XALAN_ICU_MSG_LOADER"
+				PreprocessorDefinitions="NDEBUG;NDEBUG_SYMBOLS;XALAN_DOMSUPPORT_BUILD_DLL;WIN32;_WINDOWS;_USRDLL;XALAN_XSLT_BUILD_DLL;XALAN_PLATFORMSUPPORT_BUILD_DLL;XALAN_DOM_BUILD_DLL;XALAN_XALANEXTENSIONS_BUILD_DLL;XALAN_XALANSOURCETREE_BUILD_DLL;XALAN_TRANSFORMER_BUILD_DLL;XALAN_XERCESPARSERLIAISON_BUILD_DLL;XALAN_XMLSUPPORT_BUILD_DLL;XALAN_XPATH_BUILD_DLL;XALAN_XPATHCAPI_BUILD_DLL;XALAN_ALLINONE_BUILD_DLL;XALAN_EXSLT_BUILD_DLL;XALAN_ICUBRIDGE_BUILD_DLL;XALAN_HARNESS_BUILD_DLL;XALAN_USE_ICU;XALAN_ICU_MSG_LOADER"
 				StringPooling="TRUE"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="TRUE"
@@ -371,7 +371,7 @@
 			</File>
 			<File
 				RelativePath="..\..\..\..\src\xalanc\PlatformSupport\ArenaBlockBase.hpp">
-			</File>			
+			</File>
 			<File
 				RelativePath="..\..\..\..\src\xalanc\PlatformSupport\AttributeListImpl.cpp">
 			</File>
@@ -2053,6 +2053,18 @@
 				RelativePath="..\..\..\..\src\xalanc\XSLT\XalanElemVariableAllocator.hpp">
 			</File>
 			<File
+				RelativePath="..\..\..\..\src\xalanc\XSLT\XalanMatchPatternData.cpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\src\xalanc\XSLT\XalanMatchPatternData.hpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\src\xalanc\XSLT\XalanMatchPatternDataAllocator.cpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\src\xalanc\XSLT\XalanMatchPatternDataAllocator.hpp">
+			</File>
+			<File
 				RelativePath="..\..\..\..\src\xalanc\XSLT\XalanNumberingResourceBundle.cpp">
 			</File>
 			<File
@@ -2677,6 +2689,25 @@
 					RelativePath="..\..\..\..\src\xalanc\XercesParserLiaison\Deprecated\XercesTreeWalker.hpp">
 				</File>
 			</Filter>
+		</Filter>
+		<Filter
+			Name="Harness"
+			Filter="">
+			<File
+				RelativePath="..\..\..\..\src\xalanc\Harness\XalanFileUtility.cpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\src\xalanc\Harness\XalanFileUtility.hpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\src\xalanc\Harness\XalanHarnessDefinitions.hpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\src\xalanc\Harness\XalanXMLFileReporter.cpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\src\xalanc\Harness\XalanXMLFileReporter.hpp">
+			</File>
 		</Filter>
 	</Files>
 	<Globals>
