@@ -139,13 +139,6 @@
 
 
 
-//#define XALAN_USE_BLOCK_XOBJECT_FACTORY
-#if defined(XALAN_USE_BLOCK_XOBJECT_FACTORY)
-#include <XalanHiPerf/XObjectFactoryArena.hpp>
-#endif
-
-
-
 #if !defined (XALAN_NO_NAMESPACES)
 using std::cerr;
 using std::cout;
@@ -210,14 +203,6 @@ printArgOptions()
 		 << endl
 		 << " [-PARAM name expression (Sets a stylesheet parameter.)]"
 		 << endl
-#if defined(XALAN_USE_BLOCK_XOBJECT_FACTORY)
-		 << " [-B (Use block allocation for XObjects.)]"
-		 << endl
-#endif
-#if !defined(NDEBUG)
-		 << " [-S (Display some interesting statistics.)]"
-		 << endl
-#endif
 		 << endl
 		 << "The following options are valid only with -HTML or -XML."
 		 << endl
@@ -261,12 +246,6 @@ struct CmdLineParams
 	bool traceTemplateChildren;
 	bool shouldWriteXMLHeader;
 	bool doValidation;
-#if defined(XALAN_USE_BLOCK_XOBJECT_FACTORY)
-	bool useBlockXObjectFactory;
-#endif
-#if !defined(NDEBUG)
-	bool showStats;
-#endif
 	int indentAmount;
 	int outputType;
 	CharVectorType outFileName;
@@ -289,12 +268,6 @@ struct CmdLineParams
 		traceTemplateChildren(false),
 		shouldWriteXMLHeader(true),
 		doValidation(false),
-#if defined(XALAN_USE_BLOCK_XOBJECT_FACTORY)
-		useBlockXObjectFactory(false),
-#endif
-#if !defined(NDEBUG)
-		showStats(false),
-#endif
 		indentAmount(0),
 		outputType(-1),
 		specialCharacters(),
@@ -451,18 +424,6 @@ getArgs(
 				fSuccess = false;
 			}
 		}
-#if defined(XALAN_USE_BLOCK_XOBJECT_FACTORY)
-		else if(!stricmp("-B", argv[i]))
-		{
-			p.useBlockXObjectFactory = true;
-		}
-#endif
-#if !defined(NDEBUG)
-		else if(!stricmp("-S", argv[i]))
-		{
-			p.showStats = true;
-		}
-#endif
 		else if(!stricmp("-V", argv[i]))
 		{
 			p.versionOnly = true;
@@ -691,25 +652,6 @@ createTraceListener(
 
 
 
-#if defined(XALAN_USE_BLOCK_XOBJECT_FACTORY)
-inline XObjectFactory&
-selectXObjectFactory(
-	XObjectFactory&		theDefaultFactory,
-	XObjectFactory&		theBlockFactory,
-	bool				useBlockXObjectFactory)
-{
-	if (useBlockXObjectFactory == true)
-	{
-		return theBlockFactory;
-	}
-	else
-	{
-		return theDefaultFactory;
-	}
-}
-#endif
-
-
 int
 xsltMain(const CmdLineParams&	params)
 {
@@ -740,22 +682,7 @@ xsltMain(const CmdLineParams&	params)
 	XPathSupportDefault				theXPathSupport(theDOMSupport);
 	XSLTProcessorEnvSupportDefault	theXSLProcessorSupport;
 
-#if defined(XALAN_USE_BLOCK_XOBJECT_FACTORY)
-	XObjectFactoryArena				theBlockXObjectFactory;
-
-	XObjectFactoryDefault			theXObjectFactoryDefault;
-
-	XObjectFactory&					theXObjectFactory =
-		selectXObjectFactory(
-				theXObjectFactoryDefault,
-				theBlockXObjectFactory,
-				params.useBlockXObjectFactory);
-
-#else
-
 	XObjectFactoryDefault			theXObjectFactory;
-
-#endif
 
 	XPathFactoryDefault theXPathFactory;
 
@@ -955,55 +882,6 @@ xsltMain(const CmdLineParams&	params)
 			theTreeWalker.traverse(theResultDocument);
 		}
 	}
-
-#if !defined(NDEBUG)
-	if (params.showStats == true)
-	{
-		cerr << endl
-#if !defined(XALAN_USE_BLOCK_XOBJECT_FACTORY)
-			 << "Execution XObject details:"
-			 << endl
-			 << endl
-			 << "Total number of XBoolean instances created: "
-			 << theXObjectFactory.getTotalBooleanInstanceCount()
-			 << endl
-			 << "Total number of XNodeSet instances created: "
-			 << theXObjectFactory.getTotalNodeSetInstanceCount()
-			 << endl
-			 << "Total number of XNull instances created: "
-			 << theXObjectFactory.getTotalNullInstanceCount()
-			 << endl
-			 << "Total number of XNumber instances created: "
-			 << theXObjectFactory.getTotalNumberInstanceCount()
-			 << endl
-			 << "Total number of XResultTreeFrag instances created: "
-			 << theXObjectFactory.getTotalResultTreeFragInstanceCount()
-			 << endl
-			 << "Total number of XString instances created: "
-			 << theXObjectFactory.getTotalStringInstanceCount()
-			 << endl
-			 << "Total number of XUnknown instances created: "
-			 << theXObjectFactory.getTotalUnknownInstanceCount()
-			 << endl
-			 << endl
-#endif
-			 << "Execution XPath details:"
-			 << endl
-			 << endl
-			 << "Total number of XPath instances created: "
-			 << theXPathFactory.getTotalInstanceCount()
-			 << endl
-			 << endl
-			 << endl
-			 << "Stylesheet XPath details:"
-			 << endl
-			 << endl
-			 << "Total number of XPath instances created: "
-			 << theStylesheetXPathFactory.getTotalInstanceCount()
-			 << endl
-			 << endl;
-	}
-#endif
 
 	theExecutionContext.reset();
 
