@@ -133,55 +133,64 @@ KeyTable::KeyTable(
 					// Query from the node, according the the select pattern in the
 					// use attribute in xsl:key.
 					const XObject* const	xuse =
-					// @@ JMD: is this kosher	
 						kd.getUse().execute(testNode, resolver, NodeRefList(), executionContext);
 
-					const NodeRefListBase&	nl = xuse->nodeset(); 
+				const NodeRefListBase*	nl = 0;
+				int nUseValues;
+				DOMString		exprResult;
+				if(xuse->getType() != xuse->eTypeNodeSet)
+				{
+					nUseValues = 1;
+					exprResult = xuse->str();
+				}
+				else
+				{
+					nl = &xuse->nodeset();
+					// Use each node in the node list as a key value that we'll be 
+					// able to use to look up the given node.
+					nUseValues = nl->getLength();
+				}  
+				// Use each node in the node list as a key value that we'll be 
+				// able to use to look up the given node.
+				for(int k = 0; k < nUseValues; k++)
+				{
 
-					const int				nUseValues = nl.getLength();
-
-					if(0 != nUseValues)
+					// Use getExpr to get the string value of the given node. I hope 
+					// the string assumption is the right thing... I can't see how 
+					// it could work any other way.
+					if(0 != nl)
 					{
-						// Use each node in the node list as a key value that we'll be 
-						// able to use to look up the given node.
-						for(int k = 0; k < nUseValues; k++)
+						DOM_Node	useNode = nl->item(k);
+						exprResult = executionContext.getNodeData(useNode);
+					}
+
+					if(length(exprResult) != 0)
+					{
+						MutableNodeRefList&		keyNodes =
+							m_keys[kd.getName()][exprResult];
+
+						// See if the matched node is already in the 
+						// table set.  If it is there, we're done, otherwise 
+						// add it.
+						bool foundit = false;
+
+						const int	nKeyNodes = keyNodes.getLength(); //size();
+
+						for(int j = 0; j < nKeyNodes; j++)
 						{
-							DOM_Node	useNode = nl.item(k);
-
-							// Use getExpr to get the string value of the given node. I hope 
-							// the string assumption is the right thing... I can't see how 
-							// it could work any other way.
-							const DOMString		exprResult =
-								executionContext.getNodeData(useNode);
-
-							if(length(exprResult) != 0)
+							if(testNode == keyNodes.item(j))
 							{
-								MutableNodeRefList&		keyNodes =
-											m_keys[kd.getName()][exprResult];
-
-								// See if the matched node is already in the 
-								// table set.  If it is there, we're done, otherwise 
-								// add it.
-								bool foundit = false;
-
-								const int	nKeyNodes = keyNodes.getLength(); //size();
-
-								for(int j = 0; j < nKeyNodes; j++)
-								{
-									if(testNode == keyNodes.item(j))
-									{
-										foundit = true;
-										break;
-									}
-								} // end for j
-
-								if(foundit == false)
-								{
-									keyNodes.addNode(testNode);
-								}
+								foundit = true;
+								break;
 							}
-						} // end for(int k = 0; k < nUseValues; k++)
-					} // if(0 != nUseValues)
+						} // end for j
+
+						if(foundit == false)
+						{
+							keyNodes.addNode(testNode);
+						}
+					}
+				} // end for(int k = 0; k < nUseValues; k++)
 				} // if(score != kd.getMatchPattern().s_MatchScoreNone)
 			} // end for(int i = 0; i < nDeclarations; i++)
 
@@ -238,22 +247,24 @@ KeyTable::getNodeSetByKey(
 					  const DOMString&	name, 
 					  const DOMString&	ref) const
 {
-    const MutableNodeRefList*	nl =0;
+	const MutableNodeRefList*	nl =0;
 
 	KeysMapType::const_iterator		i = m_keys.find(name);
-
 	if (i != m_keys.end())
 	{
 		const NodeListMapType&				theMap = (*i).second;
-
 		NodeListMapType::const_iterator		j = theMap.find(ref);
-
 		if (j != theMap.end())
 		{
 			nl = &(*j).second;
+			return nl;
+		}
+		else
+		{
+			std::auto_ptr<MutableNodeRefList> newnl(new MutableNodeRefList());
+			return newnl.release();
 		}
 	}
-
-    return nl;
+	return nl;
 }
 
