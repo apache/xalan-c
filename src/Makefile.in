@@ -55,6 +55,9 @@
 # 
 #
 # $Log$
+# Revision 1.7  2000/07/07 15:04:23  dbertoni
+# Updated library name.
+#
 # Revision 1.6  2000/06/23 22:04:48  dbertoni
 # Bumped up revision numbers for new Xerces version, and for the next Xalan version.
 #
@@ -184,7 +187,7 @@ LIB_DIR = ${XALANCROOT}/lib
 PROJECT_NAME = xalan-c
 LIBNAME = lib${PROJECT_NAME}
 THISLIB = ${LIB_DIR}/${LIBNAME}
-VER = 0_31_0
+VER = 0_40
 
 PRODUCTNAME=xalan
 PRODUCTVERSION=${VER}
