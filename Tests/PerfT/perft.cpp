@@ -170,7 +170,6 @@ main(int			argc,
 	bool setGold = false;
 	{
 		const XalanDOMString	processorType(XALAN_STATIC_UCODE_STRING("XalanC"));
-		long iterCount;			// Default number of iterations
 		bool skip = true;		// Default will skip long tests
 
 		if (h.getParams(argc, argv, "PERFT-RESULTS", setGold) == true)
@@ -218,6 +217,8 @@ main(int			argc,
 					foundDir = true;
 					const FileNameVectorType files = h.getTestFileNames(h.args.base, dirs[j], false);
 					logFile.logTestCaseInit(XalanDOMString("Performance Directory: ") + dirs[j] ); 
+
+					const long	iterCount = h.args.iters;
 
 					for(FileNameVectorType::size_type i = 0; i < files.size(); i++)
 					{
@@ -324,7 +325,6 @@ main(int			argc,
 						//
 						// FIRST: Parsed XSL Stylesheet and Parsed XML Source.
 						//
-						iterCount = h.args.iters;
 						accmTime = 0;
 						for(int j = 0; j < iterCount; ++j)
 						{	

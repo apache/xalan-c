@@ -286,7 +286,6 @@ main(int			argc,
 
 
 	const XalanDOMString	processorType(XALAN_STATIC_UCODE_STRING("XalanC"));
-	long iterCount;			// Default number of iterations
 	bool skip = true;		// Default will skip long tests
 	bool setGold = false;
 
@@ -321,6 +320,8 @@ main(int			argc,
 		
 				// Get the list of Directories that are below perf and iterate through them
 				const FileNameVectorType dirs = h.getDirectoryNames(h.args.base);
+
+				const long 	iterCount = h.args.iters;
 
 				for(FileNameVectorType::size_type	j = 0; j < dirs.size(); j++)
 				{
@@ -481,7 +482,6 @@ main(int			argc,
 						// These are done 3 different ways.
 						// FIRST: Parsed XSL Stylesheet and Parsed XML Source.
 
-						iterCount = h.args.iters;
 						accmTime = 0;
 						for(int j = 0; j < iterCount; ++j)
 						{	
