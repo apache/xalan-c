@@ -222,8 +222,6 @@ const XSLTEngineImpl::ElementKeysMapType		XSLTEngineImpl::s_XSLT4JElementKeys =
 					XSLTEngineImpl::InitializeXSLT4JElementKeys();
 
 
-const XSLTEngineImpl::StaticInitializer			XSLTEngineImpl::s_staticInitializer;
-
 
 
 //==========================================================
@@ -292,10 +290,15 @@ XSLTEngineImpl::XSLTEngineImpl(XMLParserLiaison&	parserLiaison, XPathSupport&		x
 	m_stackGuard(*this),
 	m_variableStacks(*this)
 {
-	// @@ what's this
-	// FormatterToXML.initEncodings();
 }
 
+void XSLTEngineImpl::Initialize()
+{
+	InstallFunctions();
+	InitializeAttributeKeysTable();
+	InitializeElementKeysTable();
+	InitializeXSLT4JElementKeys();
+}
 
 
 /**
@@ -4494,16 +4497,5 @@ XSLTEngineImpl::InitializeXSLT4JElementKeys()
 }
 
 
-
-XSLTEngineImpl::StaticInitializer::StaticInitializer()
-{
-	XSLTEngineImpl::InstallFunctions();
-}
-
-
-
-XSLTEngineImpl::StaticInitializer::~StaticInitializer()
-{
-}
 
 //////////////////////////////////////////////////////////////////////////////

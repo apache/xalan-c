@@ -301,6 +301,12 @@ protected:
 public:
 
 	/**
+	 * Perform initialization of statics -- must be called before any
+	 * processing occurs
+	 */
+	static void Initialize();
+
+	/**
 	 * Transform the source tree to the output in the given 
 	 * result tree target.
 	 * @param inputSource  The input source.
@@ -2799,19 +2805,6 @@ private:
 	static ElementKeysMapType
 	InitializeXSLT4JElementKeys();
 
-	// Class to provide static initialization for XSLTEngineImpl...
-	class StaticInitializer
-	{
-	public:
-
-		StaticInitializer();
-
-		~StaticInitializer();
-	};
-
-	friend class StaticInitializer;
-
-	static const StaticInitializer	s_staticInitializer;
 
 }; // end XSLTEngineImpl class
 
