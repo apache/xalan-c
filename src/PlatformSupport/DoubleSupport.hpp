@@ -92,14 +92,14 @@ public:
 	isNaN(double	theNumber)
 	{
 		// Compare the two DWORDs of the double as unsigned longs.
-		const unsigned int* const	theFirstDWORD =
+		const DWORDPointerType	theFirstDWORD =
 #if defined(XALAN_OLD_STYLE_CASTS)
-			(const unsigned int*)&theNumber;
+			(DWORDPointerType)&theNumber;
 #else
-			reinterpret_cast<const unsigned int*>(&theNumber);
+			reinterpret_cast<DWORDPointerType>(&theNumber);
 #endif
 
-		const unsigned int* const	theSecondDWORD =
+		const UnalignedDWORDPointerType		theSecondDWORD =
 							theFirstDWORD + 1;
 
 		return *theFirstDWORD == *s_NaNFirstDWORD &&
@@ -140,14 +140,14 @@ public:
 	isPositiveZero(double	theNumber)
 	{
 		// Compare the two DWORDs of the double as unsigned longs.
-		const unsigned int* const	theFirstDWORD =
+		const DWORDPointerType	theFirstDWORD =
 #if defined(XALAN_OLD_STYLE_CASTS)
-			(const unsigned int*)&theNumber;
+			(DWORDPointerType)&theNumber;
 #else
-			reinterpret_cast<const unsigned int*>(&theNumber);
+			reinterpret_cast<DWORDPointerType>(&theNumber);
 #endif
 
-		const unsigned int* const	theSecondDWORD =
+		const UnalignedDWORDPointerType		theSecondDWORD =
 							theFirstDWORD + 1;
 
 		return *theFirstDWORD == *s_positiveZeroFirstDWORD &&
@@ -164,14 +164,14 @@ public:
 	isNegativeZero(double	theNumber)
 	{
 		// Compare the two DWORDs of the double as unsigned longs.
-		const unsigned int* const	theFirstDWORD =
+		const DWORDPointerType	theFirstDWORD =
 #if defined(XALAN_OLD_STYLE_CASTS)
-			(const unsigned int*)&theNumber;
+			(DWORDPointerType)&theNumber;
 #else
-			reinterpret_cast<const unsigned int*>(&theNumber);
+			reinterpret_cast<DWORDPointerType>(&theNumber);
 #endif
 
-		const unsigned int* const	theSecondDWORD =
+		const UnalignedDWORDPointerType		theSecondDWORD =
 							theFirstDWORD + 1;
 
 		return *theFirstDWORD == *s_negativeZeroFirstDWORD &&
@@ -603,22 +603,25 @@ public:
 	static double
 	round(double	theValue);
 
+	typedef const unsigned int*						DWORDPointerType;
+	typedef XALAN_UNALIGNED const unsigned int*		UnalignedDWORDPointerType;
+
 private:
 
-	static const double					s_NaN;
-	static const double					s_positiveInfinity;
-	static const double					s_negativeInfinity;
-	static const double					s_positiveZero;
-	static const double					s_negativeZero;
+	static const double			s_NaN;
+	static const double			s_positiveInfinity;
+	static const double			s_negativeInfinity;
+	static const double			s_positiveZero;
+	static const double			s_negativeZero;
 
-	static const unsigned int* const	s_NaNFirstDWORD;
-	static const unsigned int* const	s_NaNSecondDWORD;
+	static const DWORDPointerType			s_NaNFirstDWORD;
+	static const UnalignedDWORDPointerType	s_NaNSecondDWORD;
 
-	static const unsigned int* const	s_positiveZeroFirstDWORD;
-	static const unsigned int* const	s_positiveZeroSecondDWORD;
+	static const DWORDPointerType			s_positiveZeroFirstDWORD;
+	static const UnalignedDWORDPointerType	s_positiveZeroSecondDWORD;
 
-	static const unsigned int* const	s_negativeZeroFirstDWORD;
-	static const unsigned int* const	s_negativeZeroSecondDWORD;
+	static const DWORDPointerType			s_negativeZeroFirstDWORD;
+	static const UnalignedDWORDPointerType	s_negativeZeroSecondDWORD;
 };
 
 

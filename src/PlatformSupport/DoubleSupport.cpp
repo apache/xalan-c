@@ -97,36 +97,39 @@ const double	DoubleSupport::s_negativeZero = modf(-7.0, &theDummy);
 #endif
 
 
+typedef DoubleSupport::DWORDPointerType				DWORDPointerType;
+typedef DoubleSupport::UnalignedDWORDPointerType	UnalignedDWORDPointerType;
 
-const unsigned int*	const	DoubleSupport::s_NaNFirstDWORD =
+
+const DWORDPointerType				DoubleSupport::s_NaNFirstDWORD =
 #if defined(XALAN_OLD_STYLE_CASTS)
-					(const unsigned int*)&s_NaN;
+					(DWORDPointerType)&s_NaN;
 #else
-					reinterpret_cast<const unsigned int*>(&s_NaN);
+					reinterpret_cast<DWORDPointerType>(&s_NaN);
 #endif
 
-const unsigned int*	const	DoubleSupport::s_NaNSecondDWORD =
+const UnalignedDWORDPointerType		DoubleSupport::s_NaNSecondDWORD =
 					s_NaNFirstDWORD + 1;
 
 
-const unsigned int*	const	DoubleSupport::s_positiveZeroFirstDWORD =
+const DWORDPointerType				DoubleSupport::s_positiveZeroFirstDWORD =
 #if defined(XALAN_OLD_STYLE_CASTS)
-					(const unsigned int*)&s_positiveZero;
+					(DWORDPointerType)&s_positiveZero;
 #else
-					reinterpret_cast<const unsigned int*>(&s_positiveZero);
+					reinterpret_cast<DWORDPointerType>(&s_positiveZero);
 #endif
 
-const unsigned int*	const	DoubleSupport::s_positiveZeroSecondDWORD = s_positiveZeroFirstDWORD + 1;
+const UnalignedDWORDPointerType		DoubleSupport::s_positiveZeroSecondDWORD = s_positiveZeroFirstDWORD + 1;
 
 
-const unsigned int*	const	DoubleSupport::s_negativeZeroFirstDWORD =
+const DWORDPointerType				DoubleSupport::s_negativeZeroFirstDWORD =
 #if defined(XALAN_OLD_STYLE_CASTS)
-					(const unsigned int*)&s_negativeZero;
+					(DWORDPointerType)&s_negativeZero;
 #else
-					reinterpret_cast<const unsigned int*>(&s_negativeZero);
+					reinterpret_cast<DWORDPointerType>(&s_negativeZero);
 #endif
 
-const unsigned int*	const	DoubleSupport::s_negativeZeroSecondDWORD = s_negativeZeroFirstDWORD + 1;
+const UnalignedDWORDPointerType		DoubleSupport::s_negativeZeroSecondDWORD = s_negativeZeroFirstDWORD + 1;
 
 
 
