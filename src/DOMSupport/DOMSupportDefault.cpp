@@ -70,7 +70,7 @@
 
 
 
-#include <include/DOMHelper.hpp>
+#include <Include/DOMHelper.hpp>
 #include <PlatformSupport/DOMStringHelper.hpp>
 #include "DOMServices.hpp"
 #include "DOMSupportException.hpp"

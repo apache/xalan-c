@@ -79,6 +79,7 @@ struct DeleteFunctor : public std::unary_function<const T*, void>
 };
 
 
+#if ! defined(__GNUC__)
 
 template <class PairType>
 struct select1st : public std::unary_function<PairType, PairType::first_type>
@@ -106,13 +107,14 @@ struct select2nd : public std::unary_function<PairType, PairType::second_type>
 	}
 };
 
+#endif
 
 
 template <class OutputIteratorType, class PairMemberSelectType>
 struct PairIsolatorOutputIterator
 {
 	typedef std::output_iterator_tag			iterator_category;
-	typedef PairMemberSelectType::value_type	value_type;
+	typedef typename PairMemberSelectType::value_type        value_type;
 	typedef void								difference_type;
 	typedef void								pointer;
 	typedef void								reference;
@@ -163,7 +165,7 @@ private:
 
 
 template <class T>
-struct MapValueDeleteFunctor : public std::unary_function<const T::value_type&, void>
+struct MapValueDeleteFunctor : public std::unary_function<const typename T::value_type&, void>
 {
 	result_type
 	operator()(argument_type	thePair)
@@ -175,14 +177,14 @@ struct MapValueDeleteFunctor : public std::unary_function<const T::value_type&, 
 
 
 template<class T, class Functor>
-struct nested_for_each_functor : public std::unary_function<const T::value_type&, Functor>
+struct nested_for_each_functor : public std::unary_function<const typename T::value_type&, Functor>
 {
 	nested_for_each_functor(Functor		theFunctor) :
 		m_functor(theFunctor)
 	{
 	}
 
-	result_type
+ 	typename T::result_type
 	operator()(argument_type	theContainer)
 	{
 		return for_each(theContainer.begin(),
@@ -211,7 +213,7 @@ nested_for_each(
 */
 
 
-// This functor is designed to compare 0-terminated arrays.  It substitues for
+// This functor is designed to compare 0-terminated arrays.  It substitutes for
 // the default less<type*> so that pointers to arrays can be compared, rather than
 // copies of arrays.  For example, you might want to use C-style strings as keys
 // in a map, rather than string objects.  The default algorithm less<const char*>

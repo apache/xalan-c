@@ -67,7 +67,11 @@
 #if defined(_MSC_VER)
 #include <io.h>
 #else
-#error Unsupport platform!!!
+#	if defined(__GNUC__)
+#include <dirent.h>
+#	else
+#		error Unsupport platform!!!
+#	endif
 #endif
 
 #include <functional>
@@ -143,12 +147,73 @@ public:
 	}
 };
 
-
-
 #else
-#error Unsupported platform!!!
-#endif
+#	if defined(__GNUC__)
 
+class FindFileStruct
+{
+	XMLCh m_name[MAXNAMLEN];
+	int m_attrib;
+public:
+
+	enum eAttributes
+	{
+		eAttributeArchive = 1,
+		eAttributeDirectory = 2,
+		eAttributeHidden = 4,
+		eAttributeNormal = 8,
+		eReadOnly = 16,
+		eSystem = 32
+	};
+
+	const XMLCh*
+	getName() const
+	{
+		return m_name;
+	}
+
+	bool
+	isArchive() const
+	{
+		return m_attrib & eAttributeArchive ? true : false;
+	}
+
+	bool
+	isDirectory() const
+	{
+		return m_attrib & eAttributeDirectory ? true : false;
+	}
+
+	bool
+	isHidden() const
+	{
+		return m_attrib & eAttributeHidden ? true : false;
+	}
+
+	bool
+	isNormal() const
+	{
+		return m_attrib == eAttributeNormal ? true : false;
+	}
+
+	bool
+	isReadOnly() const
+	{
+		return m_attrib & eReadOnly ? true : false;
+	}
+
+	bool
+	isSystem() const
+	{
+		return m_attrib & eSystem ? true : false;
+	}
+};
+
+
+#	else
+#		error Unsupported platform!
+#	endif
+#endif
 
 
 struct ArchiveFileFilterPredicate : public std::unary_function<FindFileStruct, bool>
@@ -222,10 +287,14 @@ struct FilesOnlyFilterPredicate : public std::unary_function<FindFileStruct, boo
 	result_type
 	operator()(const argument_type&		theFindData) const
 	{
-		return !DirectoryFilterPredicate()(theFindData) &&
-			   (ArchiveFileFilterPredicate()(theFindData) ||
-			    NormalFileFilterPredicate()(theFindData) ||
-				ReadOnlyFileFilterPredicate()(theFindData));
+		DirectoryFilterPredicate		directoryfilterpredicate;
+		ArchiveFileFilterPredicate    archivefilefilterpredicate;
+		NormalFileFilterPredicate     normalfilefilterpredicate;
+		ReadOnlyFileFilterPredicate   readonlyfilefilterpredicate;
+		return !directoryfilterpredicate(theFindData) &&
+			   (archivefilefilterpredicate(theFindData) ||
+			    normalfilefilterpredicate(theFindData) ||
+				readonlyfilefilterpredicate(theFindData));
 			   
 	}
 
@@ -282,7 +351,14 @@ EnumerateDirectory(
 		_findclose(theSearchHandle);
 	}
 #else
-#error Unsupported platform!!!
+
+#	if defined(__GNUC__)
+	// @@ Need to implement this !!
+	assert(0);
+#	else
+#		error Unsupport platform!!!
+#	endif
+
 #endif
 }
 

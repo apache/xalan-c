@@ -172,7 +172,14 @@ length(const XMLCh*		theBuffer)
 inline bool 
 isEmpty(const DOMString& str)
 {
+#if defined(__GNUC__)
+	// @@ JMD: linux had problems with this 
+ 	DOM_NullPtr *nil = 0;
+ 	assert( (length(str)>0 && str.operator!=(nil)) ||
+ 			(length(str)==0 && str.operator==(nil)) );
+#else			
 	assert( (length(str)>0 && str!=0) || (length(str)==0 && str==0) );
+#endif	
 
 	return length(str) == 0; 
 }

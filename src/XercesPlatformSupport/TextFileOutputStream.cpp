@@ -59,7 +59,7 @@
 
 
 
-#include <sstream>
+#include <strstream>
 
 
 
@@ -211,13 +211,13 @@ FormatMessageLocal(
 
 	theResult += theFileName;
 
-	std::stringstream	theFormatter;
+	std::strstream	theFormatter;
 
 	theFormatter << ".  The error code was "
 				 << theErrorCode
 				 << ".";
 
-	theResult += theFormatter.str().c_str();
+	theResult += theFormatter.str();
 
 	return theResult;
 }

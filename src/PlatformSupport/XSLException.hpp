@@ -64,7 +64,7 @@
 
 
 
-#include <DOM/DOMString.hpp>
+#include <dom/DOMString.hpp>
 #include <util/XMLException.hpp>
 
 

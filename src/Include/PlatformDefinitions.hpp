@@ -60,9 +60,22 @@
 
 
 #if defined(_MSC_VER)
-#include "VCPPDefinitions.hpp"
+#	include "VCPPDefinitions.hpp"
 #else
-#error Unsupported platform!
+#	if defined(__GNUC__)
+#		define XALAN_PLATFORM_EXPORT    
+#		define XALAN_PLATFORM_IMPORT   
+#		define XALAN_PLATFORM_EXPORT_FUNCTION(T) T 
+#		define XALAN_PLATFORM_IMPORT_FUNCTION(T) T 
+#		define XALAN_NO_MEMBER_TEMPLATES
+#		define XALAN_OLD_AUTO_PTR
+#		define XALAN_NO_COVARIANT_RETURN_TYPE
+#		define XALAN_XTREE_BUG
+//#		define XALAN_NEED_SPECIAL_NAN_SUPPORT
+//#		define XALAN_HASH_CONTAINERS_AVAILABLE
+#	else
+#		error Unsupported platform!
+#	endif
 #endif
 
 

@@ -93,16 +93,12 @@ operator==(void*			theAddress,
 	return theProxy.operator==(reinterpret_cast<const DOM_NullPtr*>(theAddress));
 }
 
-
-
 inline int
 operator==(void*					theAddress,
 		   const DOM_NamedNodeMap&	theProxy)
 {
 	return theProxy.operator==(reinterpret_cast<const DOM_NullPtr*>(theAddress));
 }
-
-
 
 inline int
 operator==(void*				theAddress,
@@ -111,11 +107,65 @@ operator==(void*				theAddress,
 	return theProxy.operator==(reinterpret_cast<const DOM_NullPtr*>(theAddress));
 }
 
-
-
 #endif
 
+#if  defined(__GNUC__)
 
+
+// Doesn't recognize 0 as a possible void *
+// If this was a template, then it tries to do all sorts of nasty conversions
+// that we don't want
+
+inline int
+operator!=(const DOM_Node&		theProxy,
+		   int		theAddress)
+{
+	void *p = reinterpret_cast<void*>(theAddress);
+	return !(p == theProxy);
+}
+
+inline int
+operator!=(const DOM_NamedNodeMap&		theProxy,
+		   int		theAddress)
+{
+	void *p = reinterpret_cast<void*>(theAddress);
+	return !(p == theProxy);
+}
+
+inline int
+operator!=(const DOM_NodeList&		theProxy,
+		   int		theAddress)
+{
+	void *p = reinterpret_cast<void*>(theAddress);
+	return !(p == theProxy);
+}
+
+inline int
+operator!=(int		theAddress,
+		   const DOM_Node&		theProxy)
+{
+	void *p = reinterpret_cast<void*>(theAddress);
+	return !(p == theProxy);
+}
+
+inline int
+operator!=(int		theAddress,
+		   const DOM_NamedNodeMap&		theProxy)
+{
+	void *p = reinterpret_cast<void*>(theAddress);
+	return !(p == theProxy);
+}
+
+inline int
+operator!=(int		theAddress,
+		   const DOM_NodeList&		theProxy)
+{
+	void *p = reinterpret_cast<void*>(theAddress);
+	return !(p == theProxy);
+}
+
+
+#else
 
 template<class T>
 inline int
@@ -125,7 +175,15 @@ operator!=(void*		theAddress,
 	return !(theAddress == theProxy);
 }
 
+template<class T>
+inline int
+operator!=(const T&		theProxy,
+		   void*		theAddress)
+{
+	return !(theAddress == theProxy);
+}
 
+#endif
 
 template<class T, class U>
 class DOM_ConstSurrogate

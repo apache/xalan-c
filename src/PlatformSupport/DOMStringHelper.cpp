@@ -66,7 +66,7 @@
 
 
 
-#include <sstream>
+#include <strstream>
 #include <vector>
 
 
@@ -676,7 +676,7 @@ DoubleToDOMString(double	theDouble)
 		using namespace std;
 #endif
 
-		stringstream	theFormatter;
+		std::strstream	theFormatter;
 
 		// $$$ ToDo: this is all temporary, until we get the NumberFormat and DecimalFormat
 		// classes working.
@@ -692,7 +692,7 @@ DoubleToDOMString(double	theDouble)
 		{
 			theFormatter << static_cast<long>(theDouble);
 
-			theResult = theFormatter.str().c_str();
+			theResult = theFormatter.str();
 		}
 		else
 		{
@@ -707,7 +707,7 @@ DoubleToDOMString(double	theDouble)
 			// point, and and least 1 non-zero digit after
 			// the decimal point, since any values with no
 			// fractional part were printed as integers
-			theResult = theFormatter.str().c_str();
+			theResult = theFormatter.str();
 
 			string::iterator	thePosition = theResult.end();
 
@@ -731,11 +731,11 @@ LongToHexDOMString(long		theLong)
 	using namespace std;
 #endif
 
-	stringstream	theFormatter;
+	std::strstream	theFormatter;
 
 	theFormatter << hex << theLong;
 
-	return theFormatter.str().c_str();;
+	return theFormatter.str();
 }
 
 
@@ -747,11 +747,11 @@ LongToDOMString(long	theLong)
 	using namespace std;
 #endif
 
-	stringstream	theFormatter;
+	std::strstream	theFormatter;
 
 	theFormatter << theLong;
 
-	return theFormatter.str().c_str();;
+	return theFormatter.str();
 }
 
 
@@ -763,11 +763,11 @@ UnsignedLongToDOMString(unsigned long	theUnsignedLong)
 	using namespace std;
 #endif
 
-	stringstream	theFormatter;
+	std::strstream	theFormatter;
 
 	theFormatter << theUnsignedLong;
 
-	return theFormatter.str().c_str();
+	return theFormatter.str();
 }
 
 

@@ -60,12 +60,14 @@
 
 
 static XMLCh	theNaNDefault[] = { 0xFFFD, 0 };
-
 static XMLCh	theInfinityDefault[] = { 0x221E, 0 };
 
 
-
+#if defined(__GNUC__)
+DecimalFormatSymbols::DecimalFormatSymbols() :
+#else
 DecimalFormatSymbols::DecimalFormatSymbols(const std::locale&	/* theLocale */) :
+#endif
 	m_currencySymbol("$"),
 	m_decimalSeparator('.'),
 	m_digit(0),

@@ -57,8 +57,15 @@
 #include "DoubleSupport.hpp"
 
 
-
+#if defined(__GNUC__)
+#include <math.h>
+// @@ JMD: Shouldn't need this as well ??
+#include <bits/nan.h>
+#else
 #include <limits>
+#endif
+
+
 
 
 
@@ -67,7 +74,13 @@ const double			DoubleSupport::s_NaN = std::numeric_limits<double>::quiet_NaN();
 const double			DoubleSupport::s_positiveInfinity = std::numeric_limits<double>::infinity();
 const double			DoubleSupport::s_negativeInfinity = std::numeric_limits<double>::signaling_NaN();
 #else
-#error Unsupported platform!!!
+#if defined(__GNUC__)
+const double	DoubleSupport::s_NaN = NAN;
+const double	DoubleSupport::s_positiveInfinity = HUGE_VAL;
+const double	DoubleSupport::s_negativeInfinity = -HUGE_VAL;
+#else
+#	error Unsupported platform!
+#endif
 #endif
 
 
