@@ -119,12 +119,12 @@ public:
 	}
 
 	virtual XalanNode*
-	item(unsigned int	index) const
+	item(size_type	index) const
 	{
 		return m_proxy.item(index);
 	}
 
-	virtual unsigned int
+	virtual size_type
 	getLength() const
 	{
 		return m_proxy.getLength();
