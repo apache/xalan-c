@@ -65,23 +65,20 @@
 
 
 #include <XalanDOM/XalanDOMString.hpp>
+#include <XalanDOM/XalanAttr.hpp>
+#include <XalanDOM/XalanComment.hpp>
+#include <XalanDOM/XalanElement.hpp>
+#include <XalanDOM/XalanProcessingInstruction.hpp>
+#include <XalanDOM/XalanText.hpp>
 
 
 
-#if defined(XALAN_INLINE_INITIALIZATION)
 #include <PlatformSupport/DOMStringHelper.hpp>
-#endif
 
 
 
-class XalanAttr;
-class XalanComment;
 class XalanDocument;
 class XalanDocumentFragment;
-class XalanElement;
-class XalanNode;
-class XalanProcessingInstruction;
-class XalanText;
 
 
 
@@ -187,7 +184,10 @@ public:
 	 * @return a string representation of the node's data
 	 */
 	static XalanDOMString
-	getNodeData(const XalanAttr&	attribute);
+	getNodeData(const XalanAttr&	attribute)
+	{
+		return attribute.getNodeValue();
+	}
 
 	/**
 	 * Retrieves data for node
@@ -198,7 +198,10 @@ public:
 	static void
 	getNodeData(
 			const XalanAttr&	attribute,
-			XalanDOMString&		data);
+			XalanDOMString&		data)
+	{
+		append(data, attribute.getNodeValue());
+	}
 
 	/**
 	 * Retrieves data for node
@@ -207,7 +210,10 @@ public:
 	 * @return a string representation of the node's data
 	 */
 	static XalanDOMString
-	getNodeData(const XalanComment&		comment);
+	getNodeData(const XalanComment&		comment)
+	{
+		return comment.getData();
+	}
 
 	/**
 	 * Retrieves data for node
@@ -218,7 +224,10 @@ public:
 	static void
 	getNodeData(
 			const XalanComment&		comment,
-			XalanDOMString&			data);
+			XalanDOMString&			data)
+	{
+		append(data, comment.getData());
+	}
 
 	/**
 	 * Retrieves data for node
@@ -287,7 +296,10 @@ public:
 	 * @return a string representation of the node's data
 	 */
 	static XalanDOMString
-	getNodeData(const XalanProcessingInstruction&	pi);
+	getNodeData(const XalanProcessingInstruction&	pi)
+	{
+		return pi.getData();
+	}
 
 	/**
 	 * Retrieves data for node
@@ -298,7 +310,10 @@ public:
 	static void
 	getNodeData(
 			const XalanProcessingInstruction&	pi,
-			XalanDOMString&						data);
+			XalanDOMString&						data)
+	{
+		append(data, pi.getData());
+	}
 
 	/**
 	 * Retrieves data for node
@@ -307,7 +322,10 @@ public:
 	 * @return a string representation of the node's data
 	 */
 	static XalanDOMString
-	getNodeData(const XalanText&	text);
+	getNodeData(const XalanText&	text)
+	{
+		return text.getData();
+	}
 
 	/**
 	 * Retrieves data for node
@@ -318,7 +336,10 @@ public:
 	static void
 	getNodeData(
 			const XalanText&	text,
-			XalanDOMString&		data);
+			XalanDOMString&		data)
+	{
+		append(data, text.getData());
+	}
 
 	/**
 	 * Retrieve the name of the node, taking into
@@ -340,7 +361,21 @@ public:
 	 * @return name of node without namespace
 	 */
 	static const XalanDOMString&
-	getLocalNameOfNode(const XalanNode&		n);
+	getLocalNameOfNode(const XalanNode&		n)
+	{
+		const XalanDOMString&	theLocalName = n.getLocalName();
+
+		if (length(theLocalName) != 0)
+		{
+			return theLocalName;
+		}
+		else
+		{
+			assert(length(n.getNodeName()) != 0);
+
+			return n.getNodeName();
+		}
+	}
 
 	/**
 	 * Retrieve the parent of a node. This function has to be implemented,
@@ -350,7 +385,21 @@ public:
 	 * @return parent node
 	 */
 	static XalanNode*
-	getParentOfNode(const XalanNode&	node);
+	getParentOfNode(const XalanNode&	node)
+	{
+		if(node.getNodeType() == XalanNode::ATTRIBUTE_NODE)
+		{
+	#if defined(XALAN_OLD_STYLE_CASTS)
+			return ((const XalanAttr&)node).getOwnerElement();
+	#else
+			return static_cast<const XalanAttr&>(node).getOwnerElement();
+	#endif
+		}
+		else
+		{
+			return node.getParentNode();
+		}
+	}
 
 	/**
 	 * Retrieve the URI corresponding to a namespace prefix
