@@ -421,11 +421,7 @@ XalanSourceTreeContentHandler::createElement(
 			const Attributes& 			attrs,
 			XalanSourceTreeElement*		theOwnerElement)
 {
-#if 1
-	if (equals(uri, XALAN_STATIC_UCODE_STRING("EMPTY")) == false)
-#else
-	if (uri != 0 && length(uri) != 0)
-#endif
+	if (length(uri) != 0)
 	{
 		return m_document->createElementNode(uri, localname, qname, attrs, theOwnerElement);
 	}

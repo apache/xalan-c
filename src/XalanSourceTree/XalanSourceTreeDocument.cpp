@@ -910,11 +910,7 @@ XalanSourceTreeDocument::createAttributes(
 		const XalanDOMChar* const	theURI =
 			theAttributes.getURI(i);
 
-#if 1
-		if (equals(theURI, XALAN_STATIC_UCODE_STRING("EMPTY")) == true)
-#else
-		if (theURI == 0 || length(theURI) == 0)
-#endif
+		if (length(theURI) == 0)
 		{
 			theAttributeVector[i] =
 				m_attributeAllocator.create(

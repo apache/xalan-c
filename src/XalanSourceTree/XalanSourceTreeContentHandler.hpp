@@ -70,19 +70,7 @@
 #include <sax/DocumentHandler.hpp>
 #include <sax/DTDHandler.hpp>
 #include <sax2/ContentHandler.hpp>
-
-#if defined(XALAN_XERCES_HAS_LEXICAL_HANDLER)
 #include <sax2/LexicalHandler.hpp>
-#else
-
-class XALAN_XALANSOURCETREE_EXPORT LexicalHandler
-{
-public:
-
-    LexicalHandler() {}
-};
-
-#endif
 
 
 

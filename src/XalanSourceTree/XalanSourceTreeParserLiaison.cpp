@@ -159,9 +159,7 @@ XalanSourceTreeParserLiaison::parseXMLStream(
 
 	theReader->setErrorHandler(&m_xercesParserLiaison);
 
-#if defined(XALAN_XERCES_HAS_LEXICAL_HANDLER)
 	theReader->setLexicalHandler(&theContentHandler);
-#endif
 
 	theReader->parse(inputSource);
 
