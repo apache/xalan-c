@@ -147,7 +147,7 @@ StylesheetHandler::~StylesheetHandler()
 }
 
 
-void StylesheetHandler::setDocumentLocator(Locator* const		locator)
+void StylesheetHandler::setDocumentLocator(const Locator* const		locator)
 {
 	m_processor.pushLocatorOnStack(locator);
 }

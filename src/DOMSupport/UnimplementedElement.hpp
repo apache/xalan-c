@@ -209,7 +209,7 @@ public:
     virtual AttrImpl*
 	removeAttributeNode(AttrImpl*	oldAttr);
 
-    virtual void
+    virtual AttrImpl*
 	setAttribute(
 			const DOMString&	name,
 			const DOMString&	value);

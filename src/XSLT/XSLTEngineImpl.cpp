@@ -1572,7 +1572,7 @@ XSLTEngineImpl::diagnoseTemplateChildren(
   
 
 void
-XSLTEngineImpl::setDocumentLocator(Locator* const		/* locator */)
+XSLTEngineImpl::setDocumentLocator(const Locator* const		/* locator */)
 {
 	// Do nothing for now
 }

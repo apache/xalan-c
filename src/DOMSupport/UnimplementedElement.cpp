@@ -410,12 +410,14 @@ UnimplementedElement::removeAttributeNode(AttrImpl*		/* oldAttr */)
 
 
 
-void
+AttrImpl*
 UnimplementedElement::setAttribute(
 			const DOMString&	/* name */,
 			const DOMString&	/* value */)
 {
 	assert(false);
+
+	return 0;
 }
 
 
