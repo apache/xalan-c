@@ -267,7 +267,7 @@ else
 	CC2 = $(CXX) $(PLATFORM_COMPILE_OPTIONS) -I${STLPORTROOT}/stlport
 endif
     CC4 = $(CC) $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS)
-	MAKE_SHARED = makeC++SharedLib_r -p 5000 -brtl
+	MAKE_SHARED = makeC++SharedLib_r -p 1024 -brtl
 	LINK = $(CXX) -qnotempinc $(CXXFLAGS)  -brtl $(PLATFORM_COMPILE_OPTIONS)
 
   endif
