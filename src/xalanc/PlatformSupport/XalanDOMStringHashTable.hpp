@@ -200,6 +200,22 @@ public:
 	};
 #endif
 
+    MemoryManagerType&
+    getMemoryManager()
+    {
+        assert(m_buckets.getMemoryManager() != 0);
+
+        return *m_buckets.getMemoryManager();
+    }
+
+    const MemoryManagerType&
+    getMemoryManager() const
+    {
+        assert(m_buckets.getMemoryManager() != 0);
+
+        return *m_buckets.getMemoryManager();
+    }
+
 private:
 
 	// Not implemented, for now...

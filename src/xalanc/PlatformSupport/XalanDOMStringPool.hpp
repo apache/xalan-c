@@ -121,6 +121,18 @@ public:
 		return m_hashTable;
 	}
 
+    MemoryManagerType&
+    getMemoryManager()
+    {
+        return m_hashTable.getMemoryManager();
+    }
+
+    const MemoryManagerType&
+    getMemoryManager() const
+    {
+        return m_hashTable.getMemoryManager();
+    }
+
 private:
 
 	// Not implemented, for now...
