@@ -858,6 +858,23 @@ public:
 		return m_opMap[opPos];
 	}
 
+	/**
+	 * Retrieve the value of an operation code at a specified position in the
+	 * list.
+	 * 
+	 * @param opPos position in list
+	 * @return value of operation code
+	 */
+	void
+	setOpCodeMapValue(
+            OpCodeMapSizeType	        opPos,
+            const OpCodeMapValueType&   theValue)
+	{
+        assert(opPos < opCodeMapLength());
+
+		m_opMap[opPos] = theValue;
+	}
+
 	OpCodeMapValueType
 	getOpCodeArgumentLength(OpCodeMapSizeType	opPos) const
 	{
@@ -1030,7 +1047,7 @@ public:
 	bool
 	hasMoreTokens() const
 	{
-		return tokenQueueSize() - m_currentPosition > 0 ? true : false;
+		return tokenQueueSize() > m_currentPosition ? true : false;
 	}
 
 	/**
@@ -1054,37 +1071,12 @@ public:
 	}
 
 	/**
-	 * Set the current position in the token queue to a specified value.
-	 *
-	 * @param thePosition value of position to set
-	 */
-	void
-	setTokenPosition(TokenQueueSizeType		thePosition)
-	{
-		const TokenQueueSizeType	theSize = tokenQueueSize();
-
-		m_currentPosition = thePosition > theSize ? theSize : thePosition;
-	}
-
-#if 0
-	/**
-	 * Set the current position in the token queue to a specified value.
-	 *
-	 * @param thePosition value of position to set
-	 */
-	void
-	setTokenPosition(int	thePosition)
-	{
-		setTokenPosition(thePosition > 0 ? TokenQueueSizeType(thePosition) : 0);
-	}
-#endif
-	/**
 	 * Retrieve a token at the specified position in the token queue.
 	 * 
 	 * @param thePosition position in queue
 	 * @return pointer to XObject token
 	 */
-	const XObject*
+	const XToken*
 	getToken(TokenQueueSizeType		thePosition) const
 	{
 		assert(thePosition < tokenQueueSize());
@@ -1097,7 +1089,7 @@ public:
 	 * 
 	 * @return pointer to XObject token
 	 */
-	const XObject*
+	const XToken*
 	getNextToken()
 	{
 		if (hasMoreTokens() == true)
@@ -1115,7 +1107,7 @@ public:
 	 * 
 	 * @return pointer to XObject token
 	 */
-	const XObject*
+	const XToken*
 	getPreviousToken()
 	{
 		if (m_currentPosition > 0)
@@ -1135,7 +1127,7 @@ public:
 	 * @param theOffset offset from current position
 	 * @return pointer to XObject token
 	 */
-	const XObject*
+	const XToken*
 	getRelativeToken(int	theOffset) const
 	{
 		const int	thePosition = int(m_currentPosition) + theOffset;
@@ -1229,7 +1221,7 @@ public:
 	 * Replace a token in the token queue.
 	 * 
 	 * @param theOffset the offset at which to replace the token.
-	 * @param theString The string data for the token.  The instance will keep a point to this string, so it must be persistent.
+	 * @param theString The string data for the token.  The instance will keep a pointer to this string, so it must be persistent.
 	 */
 	void
 	replaceRelativeToken(
@@ -1320,7 +1312,7 @@ public:
 		m_opMap.push_back(theValue);
 
 		// Update the op map length.
-		m_opMap[s_opCodeMapLengthIndex]++;
+		++m_opMap[s_opCodeMapLengthIndex];
 	}
 
 	/**
@@ -1336,7 +1328,7 @@ public:
 	 * Push a token onto the token queue and its index onto the operations code
 	 * map.
 	 *
-	 * @param theString The string data for the token.  The instance will keep a point to this string, so it must be persistent.
+	 * @param theString The string data for the token.  The instance will keep a pointer to this string, so it must be persistent.
 	 */
 	void
 	pushArgumentOnOpCodeMap(const XalanDOMString&	theString);
@@ -1346,7 +1338,7 @@ public:
 	 * map.
 	 *
 	 * @param theNumber The numeric data for the token.  This must be consistent with the lexical value in theString.
-	 * @param theString The string data for the token.  The instance will keep a point to this string, so it must be persistent.
+	 * @param theString The string data for the token.  The instance will keep a pointer to this string, so it must be persistent.
 	 */
 	void
 	pushArgumentOnOpCodeMap(
@@ -1407,6 +1399,8 @@ public:
 		return *m_currentPattern;
 	}
 
+private:
+
 	/**
 	 * An operations map is used instead of a proper parse tree.  It contains
 	 * operations codes and indexes into the m_tokenQueue. We use an array
@@ -1437,8 +1431,6 @@ public:
 	 * The current pattern string, for diagnostics purposes.
 	 */
 	const XalanDOMString*	m_currentPattern;
-
-private:
 
 	// Default vector allocation sizes.
 	enum

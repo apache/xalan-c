@@ -477,7 +477,7 @@ XPathProcessorImpl::tokenize(const XalanDOMString&	pat)
 
 	}
 
-	m_expression->setTokenPosition(0);
+	m_expression->resetTokenPosition();
 }
 
 
@@ -749,16 +749,6 @@ XPathProcessorImpl::getTokenRelative(int	theOffset) const
 		m_expression->getRelativeToken(theOffset);
 
 	return theToken == 0 ? s_emptyString : theToken->str();
-}
-
-
-
-void
-XPathProcessorImpl::resetTokenMark(int	mark)
-{
-	m_expression->setTokenPosition(mark);
-
-	nextToken();
 }
 
 
@@ -1567,7 +1557,7 @@ XPathProcessorImpl::FunctionCall()
 
 		default:
 			{
-				// The position must be at least zero, since
+				// The position must be at least 1, since
 				// we've looked at a token.
 				assert(m_expression->getTokenPosition() > 0);
 
@@ -1595,10 +1585,10 @@ XPathProcessorImpl::FunctionCall()
 				// Get the arguments, and the argument count...
 				const int	argCount = FunctionCallArguments();
 
-				assert(m_expression->m_opMap[opPos + 3] == 0);
+				assert(m_expression->getOpCodeMapValue(opPos + 3) == 0);
 
 				// update the arg count in the op map...
-				m_expression->m_opMap[opPos + 3] = argCount;
+				m_expression->setOpCodeMapValue(opPos + 3, argCount);
 			}
 		}
 	}
@@ -2718,7 +2708,7 @@ XPathProcessorImpl::AbbreviatedNodeTestStep()
 	{
 		assert(m_expression->opCodeMapLength() > matchTypePos);
 
-		m_expression->m_opMap[matchTypePos] = XPathExpression::eMATCH_ANY_ANCESTOR;
+		m_expression->setOpCodeMapValue(matchTypePos, XPathExpression::eMATCH_ANY_ANCESTOR);
 	}
 
 	m_expression->updateOpCodeLength(opPos);

@@ -282,13 +282,6 @@ private:
 	prevToken();
 
 	/**
-	 * Reset token queue mark and m_token to a 
-	 * given position.
-	 */
-	void
-	resetTokenMark(int	mark);
-
-	/**
 	 * Consume an expected token, throwing an exception if it 
 	 * isn't there.
 	 */

@@ -104,6 +104,9 @@ public:
 
 	typedef XERCES_CPP_NAMESPACE_QUALIFIER Locator	LocatorType;
 
+    typedef XPathExpression::OpCodeMapSizeType      OpCodePositionType;
+    typedef XPathExpression::OpCodeMapValueType     OpCodeMapValueType;
+
 	static const XalanDOMChar	PSEUDONAME_ANY[];
 	static const XalanDOMChar	PSEUDONAME_ROOT[];
 	static const XalanDOMChar	PSEUDONAME_TEXT[];
@@ -857,14 +860,14 @@ public:
 	 * Evaluate a predicate.
 	 *
 	 * @param context          current source tree context node
-	 * @param opPos            current position in the m_opMap array
+	 * @param opPos            current position in the Op Map
 	 * @param executionContext current execution context
 	 * @return pointer to either a boolean or a number
 	 */
 	const XObjectPtr
 	predicate(
 			XalanNode*				context,
-			int						opPos,
+			OpCodePositionType		opPos,
 			XPathExecutionContext&	executionContext) const
 	{
 		return executeMore(context, opPos + 2, executionContext);
@@ -917,7 +920,7 @@ public:
 	static bool
 	uninstallFunction(const XalanDOMString&		funcName)
 	{
-		return 	s_functions.UninstallFunction(funcName);
+		return s_functions.UninstallFunction(funcName);
 	}
 
 	/**
@@ -929,7 +932,7 @@ public:
 	static bool
 	uninstallFunction(const XalanDOMChar*	funcName)
 	{
-		return 	s_functions.UninstallFunction(funcName);
+		return s_functions.UninstallFunction(funcName);
 	}
 
 	/**
@@ -1021,28 +1024,28 @@ protected:
 	 * Execute a location path.
 	 *
 	 * @param context          current source tree context node
-	 * @param opPos            current position in the m_opMap array
+	 * @param opPos            current position in the Op Mpa
 	 * @param executionContext current execution context
 	 * @return node-set
 	 */
 	const XObjectPtr
 	locationPath(
 			XalanNode*				context,
-			int						opPos,
+			OpCodePositionType		opPos,
 			XPathExecutionContext&	executionContext) const;
 
 	/**
 	 * Execute a location path.
 	 *
 	 * @param context          current source tree context node
-	 * @param opPos            current position in the m_opMap array
+	 * @param opPos            current position in the Op Map
 	 * @param executionContext current execution context
 	 * @param theResult	       the result as a node list
 	 */
 	void
 	locationPath(
 			XalanNode*				context,
-			int						opPos,
+			OpCodePositionType		opPos,
 			XPathExecutionContext&	executionContext,
 			bool&					theResult) const;
 
@@ -1050,14 +1053,14 @@ protected:
 	 * Execute a location path.
 	 *
 	 * @param context          current source tree context node
-	 * @param opPos            current position in the m_opMap array
+	 * @param opPos            current position in the Op Map
 	 * @param executionContext current execution context
 	 * @param theResult	       the result as a node list
 	 */
 	void
 	locationPath(
 			XalanNode*				context,
-			int						opPos,
+			OpCodePositionType		opPos,
 			XPathExecutionContext&	executionContext,
 			double&					theResult) const;
 
@@ -1065,14 +1068,14 @@ protected:
 	 * Execute a location path.
 	 *
 	 * @param context          current source tree context node
-	 * @param opPos            current position in the m_opMap array
+	 * @param opPos            current position in the Op Map
 	 * @param executionContext current execution context
 	 * @param theResult	       the result as a node list
 	 */
 	void
 	locationPath(
 			XalanNode*				context,
-			int						opPos,
+			OpCodePositionType		opPos,
 			XPathExecutionContext&	executionContext,
 			XalanDOMString&			theResult) const;
 
@@ -1080,7 +1083,7 @@ protected:
 	 * Execute a location path.
 	 *
 	 * @param context          current source tree context node
-	 * @param opPos            current position in the m_opMap array
+	 * @param opPos            current position in the Op Map
 	 * @param executionContext current execution context
 	 * @param formatterListener the FormatterListener instance to receive the result
 	 * @param function A pointer to the member function of FormatterListener to call
@@ -1088,7 +1091,7 @@ protected:
 	void
 	locationPath(
 			XalanNode*				context,
-			int						opPos,
+			OpCodePositionType		opPos,
 			XPathExecutionContext&	executionContext,
 			FormatterListener&		formatterListener,
 			MemberFunctionPtr		function) const;
@@ -1097,14 +1100,14 @@ protected:
 	 * Execute a location path.
 	 *
 	 * @param context          current source tree context node
-	 * @param opPos            current position in the m_opMap array
+	 * @param opPos            current position in the Op Map
 	 * @param executionContext current execution context
 	 * @param theResult	       the result as a node list
 	 */
 	void
 	locationPath(
 			XalanNode*				context,
-			int						opPos,
+			OpCodePositionType		opPos,
 			XPathExecutionContext&	executionContext,
 			MutableNodeRefList&		theResult) const
 	{
@@ -1115,28 +1118,28 @@ protected:
 	 * Execute the XPath from the provided context.
 	 *
 	 * @param context          current source tree context node
-	 * @param opPos            current position in the m_opMap array
+	 * @param opPos            current position in the Op Map
 	 * @param executionContext current execution context
 	 * @return pointer to union of node-set operands
 	 */
 	const XObjectPtr
 	executeMore(
 			XalanNode* 				context,
-			int 					opPos,
+			OpCodePositionType 		opPos,
 			XPathExecutionContext&	executionContext) const;
 
 	/**
 	 * Execute the XPath from the provided context.
 	 *
 	 * @param context          current source tree context node
-	 * @param opPos            current position in the m_opMap array
+	 * @param opPos            current position in the Op Map
 	 * @param executionContext current execution context
 	 * @param theResult        The result of the execution
 	 */
 	void
 	executeMore(
 			XalanNode* 				context,
-			int 					opPos,
+			OpCodePositionType 		opPos,
 			XPathExecutionContext&	executionContext,
 			bool&					theResult) const;
 
@@ -1144,14 +1147,14 @@ protected:
 	 * Execute the XPath from the provided context.
 	 *
 	 * @param context          current source tree context node
-	 * @param opPos            current position in the m_opMap array
+	 * @param opPos            current position in the Op Map
 	 * @param executionContext current execution context
 	 * @param theResult        The result of the execution
 	 */
 	void
 	executeMore(
 			XalanNode* 				context,
-			int 					opPos,
+			OpCodePositionType 		opPos,
 			XPathExecutionContext&	executionContext,
 			double&					theResult) const;
 
@@ -1160,14 +1163,14 @@ protected:
 	 * is appended to the supplied string.
 	 *
 	 * @param context          current source tree context node
-	 * @param opPos            current position in the m_opMap array
+	 * @param opPos            current position in the Op Map
 	 * @param executionContext current execution context
 	 * @param theResult        The result of the execution
 	 */
 	void
 	executeMore(
 			XalanNode* 				context,
-			int 					opPos,
+			OpCodePositionType 		opPos,
 			XPathExecutionContext&	executionContext,
 			XalanDOMString&			theResult) const;
 
@@ -1175,7 +1178,7 @@ protected:
 	 * Execute the XPath from the provided context.
 	 *
 	 * @param context          current source tree context node
-	 * @param opPos            current position in the m_opMap array
+	 * @param opPos            current position in the Op Map
 	 * @param executionContext current execution context
 	 * @param formatterListener the FormatterListener instance to receive the result
 	 * @param function A pointer to the member function of FormatterListener to call
@@ -1183,7 +1186,7 @@ protected:
 	void
 	executeMore(
 			XalanNode* 				context,
-			int 					opPos,
+			OpCodePositionType 		opPos,
 			XPathExecutionContext&	executionContext,
 			FormatterListener&		formatterListener,
 			MemberFunctionPtr		function) const;
@@ -1192,7 +1195,7 @@ protected:
 	 * Execute the XPath from the provided context.
 	 *
 	 * @param context          current source tree context node
-	 * @param opPos            current position in the m_opMap array
+	 * @param opPos            current position in the Op Map
 	 * @param executionContext current execution context
 	 * @param theResult        The result of the execution
 	 * @return the node-set result, if the result was not returned in the parameter
@@ -1200,7 +1203,7 @@ protected:
 	const XObjectPtr
 	executeMore(
 			XalanNode* 				context,
-			int 					opPos,
+			OpCodePositionType 		opPos,
 			XPathExecutionContext&	executionContext,
 			MutableNodeRefList&		theResult) const;
 
@@ -1219,124 +1222,124 @@ protected:
 	/**
 	 * OR two expressions and return the boolean result.
 	 * @param context The current source tree context node.
-	 * @param opPos The current position in the m_opMap array.
+	 * @param opPos The current position in the Op Map.
 	 * @param executionContext current execution context
 	 * @return true if the one of the two arguments are true.
 	 */
 	bool
 	Or(
 			XalanNode*				context,
-			int						opPos,
+			OpCodePositionType		opPos,
 			XPathExecutionContext&	executionContext) const;
 
 	/**
 	 * OR two expressions and return the boolean result.
 	 * @param context The current source tree context node.
-	 * @param opPos The current position in the m_opMap array.
+	 * @param opPos The current position in the Op Map.
 	 * @param executionContext current execution context
 	 * @return true if the two arguments are both true.
 	 */
 	bool
 	And(
 			XalanNode*				context,
-			int						opPos,
+			OpCodePositionType		opPos,
 			XPathExecutionContext&	executionContext) const;
 
 	/**
 	 * Tell if two expressions are functionally not equal.
 	 * @param context The current source tree context node.
-	 * @param opPos The current position in the m_opMap array.
+	 * @param opPos The current position in the Op Map.
 	 * @param executionContext current execution context
 	 * @return true if the two arguments are not equal.
 	 */
 	bool
 	notequals(
 			XalanNode*				context,
-			int						opPos,
+			OpCodePositionType		opPos,
 			XPathExecutionContext&	executionContext) const;
 
 	/**
 	 * Tell if two expressions are functionally equal.
 	 * @param context The current source tree context node.
-	 * @param opPos The current position in the m_opMap array.
+	 * @param opPos The current position in the Op Map.
 	 * @param executionContext current execution context
 	 * @return true if the two arguments are equal.
 	 */
 	bool
 	equals(
 			XalanNode*				context,
-			int						opPos,
+			OpCodePositionType		opPos,
 			XPathExecutionContext&	executionContext) const;
 
 	/**
 	 * Tell if one argument is less than or equal to the other argument.
 	 * @param context The current source tree context node.
-	 * @param opPos The current position in the m_opMap array.
+	 * @param opPos The current position in the Op Map.
 	 * @param executionContext current execution context
 	 * @return true if arg 1 is less than or equal to arg 2.
 	 */
 	bool
 	lte(
 			XalanNode*				context,
-			int						opPos,
+			OpCodePositionType		opPos,
 			XPathExecutionContext&	executionContext) const;
 
 	/**
 	 * Tell if one argument is less than the other argument.
 	 * @param context The current source tree context node.
-	 * @param opPos The current position in the m_opMap array.
+	 * @param opPos The current position in the Op Map.
 	 * @param executionContext current execution context
 	 * @return true if arg 1 is less than arg 2.
 	 */
 	bool
 	lt(
 			XalanNode*				context,
-			int						opPos,
+			OpCodePositionType		opPos,
 			XPathExecutionContext&	executionContext) const;
 
 	/**
 	 * Tell if one argument is greater than or equal to the other argument.
 	 * @param context The current source tree context node.
-	 * @param opPos The current position in the m_opMap array.
+	 * @param opPos The current position in the Op Map.
 	 * @param executionContext current execution context
 	 * @return true if arg 1 is greater than or equal to arg 2.
 	 */
 	bool
 	gte(
 			XalanNode*				context,
-			int						opPos,
+			OpCodePositionType		opPos,
 			XPathExecutionContext&	executionContext) const;
 
 	/**
 	 * Tell if one argument is greater than the other argument.
 	 * @param context The current source tree context node.
-	 * @param opPos The current position in the m_opMap array.
+	 * @param opPos The current position in the Op Map.
 	 * @param executionContext current execution context
 	 * @return true if arg 1 is greater than arg 2.
 	 */
 	bool
 	gt(
 			XalanNode*				context,
-			int						opPos,
+			OpCodePositionType		opPos,
 			XPathExecutionContext&	executionContext) const;
 
 	/**
 	 * Give the sum of two arguments.
 	 * @param context The current source tree context node.
-	 * @param opPos The current position in the m_opMap array.
+	 * @param opPos The current position in the Op Map.
 	 * @param executionContext current execution context
 	 * @return sum of arg1 and arg2.
 	 */
 	double
 	plus(
 			XalanNode*				context,
-			int						opPos,
+			OpCodePositionType		opPos,
 			XPathExecutionContext&	executionContext) const;
 
 	/**
 	 * Give the sum of two arguments.
 	 * @param context The current source tree context node.
-	 * @param opPos The current position in the m_opMap array.
+	 * @param opPos The current position in the Op Map.
 	 * @param executionContext current execution context
 	 * @param formatterListener the FormatterListener instance to receive the result
 	 * @param function A pointer to the member function of FormatterListener to call
@@ -1344,7 +1347,7 @@ protected:
 	void
 	plus(
 			XalanNode*				context,
-			int						opPos,
+			OpCodePositionType		opPos,
 			XPathExecutionContext&	executionContext,
 			FormatterListener&		formatterListener,
 			MemberFunctionPtr		function) const;
@@ -1352,20 +1355,20 @@ protected:
 	/**
 	 * Give the difference of two arguments.
 	 * @param context The current source tree context node.
-	 * @param opPos The current position in the m_opMap array.
+	 * @param opPos The current position in the Op Map.
 	 * @param executionContext current execution context
 	 * @return difference of arg1 and arg2.
 	 */
 	double
 	minus(
 			XalanNode*				context,
-			int						opPos,
+			OpCodePositionType		opPos,
 			XPathExecutionContext&	executionContext) const;
 
 	/**
 	 * Give the difference of two arguments.
 	 * @param context The current source tree context node.
-	 * @param opPos The current position in the m_opMap array.
+	 * @param opPos The current position in the Op Map.
 	 * @param executionContext current execution context
 	 * @param formatterListener the FormatterListener instance to receive the result
 	 * @param function A pointer to the member function of FormatterListener to call
@@ -1373,7 +1376,7 @@ protected:
 	void
 	minus(
 			XalanNode*				context,
-			int						opPos,
+			OpCodePositionType		opPos,
 			XPathExecutionContext&	executionContext,
 			FormatterListener&		formatterListener,
 			MemberFunctionPtr		function) const;
@@ -1381,20 +1384,20 @@ protected:
 	/**
 	 * Multiply two arguments.
 	 * @param context The current source tree context node.
-	 * @param opPos The current position in the m_opMap array.
+	 * @param opPos The current position in the Op Map.
 	 * @param executionContext current execution context
 	 * @return arg1 * arg2.
 	 */
 	double
 	mult(
 			XalanNode*				context,
-			int						opPos,
+			OpCodePositionType		opPos,
 			XPathExecutionContext&	executionContext) const;
 
 	/**
 	 * Multiply two arguments.
 	 * @param context The current source tree context node.
-	 * @param opPos The current position in the m_opMap array.
+	 * @param opPos The current position in the Op Map.
 	 * @param executionContext current execution context
 	 * @param formatterListener the FormatterListener instance to receive the result
 	 * @param function A pointer to the member function of FormatterListener to call
@@ -1402,7 +1405,7 @@ protected:
 	void
 	mult(
 			XalanNode*				context,
-			int						opPos,
+			OpCodePositionType		opPos,
 			XPathExecutionContext&	executionContext,
 			FormatterListener&		formatterListener,
 			MemberFunctionPtr		function) const;
@@ -1410,20 +1413,20 @@ protected:
 	/**
 	 * Divide a number.
 	 * @param context The current source tree context node.
-	 * @param opPos The current position in the m_opMap array.
+	 * @param opPos The current position in the Op Map.
 	 * @param executionContext current execution context
 	 * @return arg1 / arg2.
 	 */
 	double
 	div(
 			XalanNode*				context,
-			int						opPos,
+			OpCodePositionType		opPos,
 			XPathExecutionContext&	executionContext) const;
 
 	/**
 	 * Divide a number.
 	 * @param context The current source tree context node.
-	 * @param opPos The current position in the m_opMap array.
+	 * @param opPos The current position in the Op Map.
 	 * @param executionContext current execution context
 	 * @param formatterListener the FormatterListener instance to receive the result
 	 * @param function A pointer to the member function of FormatterListener to call
@@ -1431,7 +1434,7 @@ protected:
 	void
 	div(
 			XalanNode*				context,
-			int						opPos,
+			OpCodePositionType		opPos,
 			XPathExecutionContext&	executionContext,
 			FormatterListener&		formatterListener,
 			MemberFunctionPtr		function) const;
@@ -1439,20 +1442,20 @@ protected:
 	/**
 	 * Return the remainder from a truncating division.
 	 * @param context The current source tree context node.
-	 * @param opPos The current position in the m_opMap array.
+	 * @param opPos The current position in the Op Map.
 	 * @param executionContext current execution context
 	 * @return arg1 mod arg2.
 	 */
 	double
 	mod(
 			XalanNode*				context,
-			int						opPos,
+			OpCodePositionType		opPos,
 			XPathExecutionContext&	executionContext) const;
 
 	/**
 	 * Return the remainder from a truncating division.
 	 * @param context The current source tree context node.
-	 * @param opPos The current position in the m_opMap array.
+	 * @param opPos The current position in the Op Map.
 	 * @param executionContext current execution context
 	 * @param formatterListener the FormatterListener instance to receive the result
 	 * @param function A pointer to the member function of FormatterListener to call
@@ -1460,7 +1463,7 @@ protected:
 	void
 	mod(
 			XalanNode*				context,
-			int						opPos,
+			OpCodePositionType		opPos,
 			XPathExecutionContext&	executionContext,
 			FormatterListener&		formatterListener,
 			MemberFunctionPtr		function) const;
@@ -1468,20 +1471,20 @@ protected:
 	/**
 	 * Return the negation of a number.
 	 * @param context The current source tree context node.
-	 * @param opPos The current position in the m_opMap array.
+	 * @param opPos The current position in the Op Map.
 	 * @param executionContext current execution context
 	 * @return -arg.
 	 */
 	double
 	neg(
 			XalanNode*				context,
-			int						opPos,
+			OpCodePositionType		opPos,
 			XPathExecutionContext&	executionContext) const;
 
 	/**
 	 * Return the negation of a number.
 	 * @param context The current source tree context node.
-	 * @param opPos The current position in the m_opMap array.
+	 * @param opPos The current position in the Op Map.
 	 * @param executionContext current execution context
 	 * @param formatterListener the FormatterListener instance to receive the result
 	 * @param function A pointer to the member function of FormatterListener to call
@@ -1489,7 +1492,7 @@ protected:
 	void
 	neg(
 			XalanNode*				context,
-			int						opPos,
+			OpCodePositionType		opPos,
 			XPathExecutionContext&	executionContext,
 			FormatterListener&		formatterListener,
 			MemberFunctionPtr		function) const;
@@ -1497,28 +1500,28 @@ protected:
 	/**
 	 * Computes the union of its operands which must be node-sets.
 	 * @param context The current source tree context node.
-	 * @param opPos The current position in the m_opMap array.
+	 * @param opPos The current position in the Op Map.
 	 * @param executionContext current execution context
 	 * @return the union of node-set operands.
 	 */
 	const XObjectPtr
 	Union(
 			XalanNode*				context,
-			int						opPos,
+			OpCodePositionType		opPos,
 			XPathExecutionContext&	executionContext) const;
 
 	/**
 	 * Computes the union of its operands which must be node-sets.
 	 *
 	 * @param context The current source tree context node.
-	 * @param opPos The current position in the m_opMap array.
+	 * @param opPos The current position in the Op Map.
 	 * @param executionContext current execution context
 	 * @result the result of the union of node-set operands.
 	 */
 	void
 	Union(
 			XalanNode*				context,
-			int						opPos,
+			OpCodePositionType		opPos,
 			XPathExecutionContext&	executionContext,
 			bool&					result) const;
 
@@ -1526,14 +1529,14 @@ protected:
 	 * Computes the union of its operands which must be node-sets.
 	 *
 	 * @param context The current source tree context node.
-	 * @param opPos The current position in the m_opMap array.
+	 * @param opPos The current position in the Op Map.
 	 * @param executionContext current execution context
 	 * @result the result of the union of node-set operands.
 	 */
 	void
 	Union(
 			XalanNode*				context,
-			int						opPos,
+			OpCodePositionType		opPos,
 			XPathExecutionContext&	executionContext,
 			double&					result) const;
 
@@ -1541,14 +1544,14 @@ protected:
 	 * Computes the union of its operands which must be node-sets.
 	 *
 	 * @param context The current source tree context node.
-	 * @param opPos The current position in the m_opMap array.
+	 * @param opPos The current position in the Op Map.
 	 * @param executionContext current execution context
 	 * @result the result of the union of node-set operands.
 	 */
 	void
 	Union(
 			XalanNode*				context,
-			int						opPos,
+			OpCodePositionType		opPos,
 			XPathExecutionContext&	executionContext,
 			XalanDOMString&			result) const;
 
@@ -1556,7 +1559,7 @@ protected:
 	 * Computes the union of its operands which must be node-sets.
 	 *
 	 * @param context The current source tree context node.
-	 * @param opPos The current position in the m_opMap array.
+	 * @param opPos The current position in the Op Map.
 	 * @param executionContext current execution context
 	 * @param formatterListener the FormatterListener instance to receive the result
 	 * @param function A pointer to the member function of FormatterListener to call
@@ -1564,7 +1567,7 @@ protected:
 	void
 	Union(
 			XalanNode*				context,
-			int						opPos,
+			OpCodePositionType		opPos,
 			XPathExecutionContext&	executionContext,
 			FormatterListener&		formatterListener,
 			MemberFunctionPtr		function) const;
@@ -1572,96 +1575,96 @@ protected:
 	/**
 	 * Computes the union of its operands which must be node-sets.
 	 * @param context The current source tree context node.
-	 * @param opPos The current position in the m_opMap array.
+	 * @param opPos The current position in the Op Map.
 	 * @param executionContext current execution context
 	 * @result the result of the union of node-set operands.
 	 */
 	void
 	Union(
 			XalanNode*				context,
-			int						opPos,
+			OpCodePositionType		opPos,
 			XPathExecutionContext&	executionContext,
 			MutableNodeRefList&		result) const;
 
 	/**
 	 * Get a literal value.
-	 * @param opPos The current position in the m_opMap array.
+	 * @param opPos The current position in the Op Map.
 	 * @param executionContext current execution context
 	 * @return an XObject object.
 	 */
 	const XObjectPtr
 	literal(
-			int						opPos,
+			OpCodePositionType		opPos,
 			XPathExecutionContext&	executionContext) const;
   
 	/**
 	 * Get a literal value as a boolean.
 	 *
-	 * @param opPos The current position in the m_opMap array.
+	 * @param opPos The current position in the Op Map.
 	 * @param theResult The value.
 	 */
 	void
 	literal(
-			int		opPos,
-			bool&	theResult) const;
+			OpCodePositionType	opPos,
+			bool&	            theResult) const;
 
 	/**
 	 * Get a literal value as a number.
 	 *
-	 * @param opPos The current position in the m_opMap array.
+	 * @param opPos The current position in the Op Map.
 	 * @param theResult The value.
 	 */
 	void
 	literal(
-			int			opPos,
-			double&		theResult) const;
+			OpCodePositionType	opPos,
+			double&		        theResult) const;
 
 	/**
 	 * Get a literal value.  The value is appended to the
 	 * supplied string.
 	 *
-	 * @param opPos The current position in the m_opMap array.
+	 * @param opPos The current position in the Op Map.
 	 * @param theResult The string.
 	 */
 	void
 	literal(
-			int					opPos,
+			OpCodePositionType	opPos,
 			XalanDOMString&		theResult) const;
 
 	/**
 	 * Get a literal value.
-	 * @param opPos The current position in the m_opMap array.
+	 * @param opPos The current position in the Op Map.
 	 * @param executionContext current execution context
 	 * @return The result as a double.
 	 */
 	void
 	literal(
-			int					opPos,
+			OpCodePositionType	opPos,
 			FormatterListener&	formatterListener,
 			MemberFunctionPtr	function) const;
 
 	/**
 	 * Get the value of a variable.
-	 * @param opPos The current position in the m_opMap array.
+	 * @param opPos The current position in the Op Map.
 	 * @param executionContext current execution context
 	 * @return an XObject object.
 	 */
 	const XObjectPtr
 	variable(
-			int						opPos,
+			OpCodePositionType		opPos,
 			XPathExecutionContext&	executionContext) const;
 
 	/**
 	 * Execute an expression as a group.
 	 * @param context The current source tree context node.
-	 * @param opPos The current position in the m_opMap array.
+	 * @param opPos The current position in the Op Map.
 	 * @param executionContext current execution context
 	 * @return arg.
 	 */
 	const XObjectPtr
 	group(
 			XalanNode*				context,
-			int						opPos,
+			OpCodePositionType		opPos,
 			XPathExecutionContext&	executionContext) const
 	{
 		return executeMore(context, opPos + 2, executionContext);
@@ -1670,14 +1673,14 @@ protected:
 	/**
 	 * Execute an expression as a group.
 	 * @param context The current source tree context node.
-	 * @param opPos The current position in the m_opMap array.
+	 * @param opPos The current position in the Op Map.
 	 * @param executionContext current execution context
 	 * @param theResult The result of the execution
 	 */
 	void
 	group(
 			XalanNode*				context,
-			int						opPos,
+			OpCodePositionType		opPos,
 			XPathExecutionContext&	executionContext,
 			bool&					theResult) const
 	{
@@ -1687,14 +1690,14 @@ protected:
 	/**
 	 * Execute an expression as a group.
 	 * @param context The current source tree context node.
-	 * @param opPos The current position in the m_opMap array.
+	 * @param opPos The current position in the Op Map.
 	 * @param executionContext current execution context
 	 * @param theResult The result of the execution
 	 */
 	void
 	group(
 			XalanNode*				context,
-			int						opPos,
+			OpCodePositionType		opPos,
 			XPathExecutionContext&	executionContext,
 			double&					theResult) const
 	{
@@ -1704,14 +1707,14 @@ protected:
 	/**
 	 * Execute an expression as a group.
 	 * @param context The current source tree context node.
-	 * @param opPos The current position in the m_opMap array.
+	 * @param opPos The current position in the Op Map.
 	 * @param executionContext current execution context
 	 * @param theResult The result of the execution
 	 */
 	void
 	group(
 			XalanNode*				context,
-			int						opPos,
+			OpCodePositionType		opPos,
 			XPathExecutionContext&	executionContext,
 			XalanDOMString&			theResult) const
 	{
@@ -1722,7 +1725,7 @@ protected:
 	 * Execute an expression as a group.
 	 *
 	 * @param context The current source tree context node.
-	 * @param opPos The current position in the m_opMap array.
+	 * @param opPos The current position in the Op Map.
 	 * @param executionContext current execution context
 	 * @param formatterListener the FormatterListener instance to receive the result
 	 * @param function A pointer to the member function of FormatterListener to call
@@ -1730,7 +1733,7 @@ protected:
 	void
 	group(
 			XalanNode*				context,
-			int						opPos,
+			OpCodePositionType		opPos,
 			XPathExecutionContext&	executionContext,
 			FormatterListener&		formatterListener,
 			MemberFunctionPtr		function) const
@@ -1741,14 +1744,14 @@ protected:
 	/**
 	 * Execute an expression as a group.
 	 * @param context The current source tree context node.
-	 * @param opPos The current position in the m_opMap array.
+	 * @param opPos The current position in the Op Map.
 	 * @param executionContext current execution context
 	 * @param theResult The result of the execution
 	 */
 	void
 	group(
 			XalanNode*				context,
-			int						opPos,
+			OpCodePositionType		opPos,
 			XPathExecutionContext&	executionContext,
 			MutableNodeRefList&		theResult) const
 	{
@@ -1757,85 +1760,84 @@ protected:
 
 	/**
 	 * Get a literal value.
-	 * @param opPos The current position in the m_opMap array.
+	 * @param opPos The current position in the Op Map.
 	 * @return The result as a double.
 	 */
 	double
-	numberlit(int	opPos) const;
+	numberlit(OpCodePositionType	opPos) const;
 
 	/**
 	 * Get a literal value.
-	 * @param opPos The current position in the m_opMap array.
+	 * @param opPos The current position in the Op Map.
 	 * @return The result as a double.
 	 */
 	const XObjectPtr
 	numberlit(
-			int						opPos,
+			OpCodePositionType		opPos,
 			XPathExecutionContext&	executionContext) const;
 
 	/**
 	 * Get a literal value as a boolean.
 	 *
-	 * @param opPos The current position in the m_opMap array.
+	 * @param opPos The current position in the Op Map.
 	 * @param theResult The string.
 	 */
 	void
 	numberlit(
-			int		opPos,
-			bool&	theResult) const;
+			OpCodePositionType	opPos,
+			bool&	            theResult) const;
 
 	/**
 	 * Get a literal value.  The value is appended to the
 	 * supplied string.
 	 *
-	 * @param opPos The current position in the m_opMap array.
+	 * @param opPos The current position in the Op Map.
 	 * @param theResult The string.
 	 */
 	void
 	numberlit(
-			int					opPos,
+			OpCodePositionType	opPos,
 			XalanDOMString&		theResult) const;
 
 	/**
 	 * Get a literal value.
 	 *
-	 * @param opPos The current position in the m_opMap array.
+	 * @param opPos The current position in the Op Map.
 	 * @param formatterListener the FormatterListener instance to receive the result
 	 * @param function A pointer to the member function of FormatterListener to call
 	 */
 	void
 	numberlit(
-			int					opPos,
+			OpCodePositionType	opPos,
 			FormatterListener&	formatterListener,
 			MemberFunctionPtr	function) const;
 
 	/**
 	 * Setup for and run an extension function.
 	 * @param context The current source tree context node.
-	 * @param opPos The current position in the m_opMap array.
+	 * @param opPos The current position in the Op Map.
 	 * @param executionContext current execution context
 	 * @return the result of the function.
 	 */
 	const XObjectPtr
 	runExtFunction(
 			XalanNode*				context,
-			int						opPos,
+			OpCodePositionType		opPos,
 			XPathExecutionContext&	executionContext) const;
 
 	/**
 	 * Handle an extension function.
 	 * @param context The current source tree context node.
-	 * @param opPos The current position in the m_opMap array.
+	 * @param opPos The current position in the Op Map.
 	 * @param theNamespace The namespace of the function.
 	 * @param functionName The name of the function.
-	 * @param opPos The current position in the m_opMap array.
 	 * @param executionContext current execution context
 	 * @return the result of the function.
 	 */
 	const XObjectPtr
 	extfunction(
 			XalanNode*								context,
-			int										/* opPos */,
+			OpCodePositionType						/* opPos */,
 			const XalanDOMString&					theNamespace,
 			const XalanDOMString&					functionName, 
 			const Function::XObjectArgVectorType&	argVec,
@@ -1851,20 +1853,20 @@ protected:
 	/**
 	 * Setup for and run a function.
 	 * @param context The current source tree context node.
-	 * @param opPos The current position in the m_opMap array.
+	 * @param opPos The current position in the Op Map.
 	 * @param executionContext current execution context
 	 * @return the result of the function.
 	 */
 	const XObjectPtr
 	runFunction(
 			XalanNode*				context,
-			int						opPos,
+			OpCodePositionType		opPos,
 			XPathExecutionContext&	executionContext) const;
 
 	/**
 	 * Handle a built-in function.
 	 * @param context The current source tree context node.
-	 * @param opPos The current position in the m_opMap array.
+	 * @param funcID The function ID.
 	 * @param argVec The arguments for the function.
 	 * @param executionContext current execution context
 	 * @return the result of the function.
@@ -1872,7 +1874,7 @@ protected:
 	const XObjectPtr
 	function(
 			XalanNode*								context,
-			int										funcID,
+			OpCodeMapValueType						funcID,
 			const Function::XObjectArgVectorType&	argVec,
 			XPathExecutionContext&					executionContext) const
 	{
@@ -1912,28 +1914,28 @@ protected:
 	 * Handle the built-in function "count".
 	 *
 	 * @param context The current source tree context node.
-	 * @param opPos The current position in the m_opMap array.
+	 * @param opPos The current position in the Op Map.
 	 * @param executionContext current execution context
 	 * @return the result of the function.
 	 */
 	double
 	functionCount(
 			XalanNode*				context,
-			int						opPos,
+			OpCodePositionType		opPos,
 			XPathExecutionContext&	executionContext) const;
 
 	/**
 	 * Handle the built-in function "not".
 	 *
 	 * @param context The current source tree context node, which must not be 0.
-	 * @param opPos The current position in the m_opMap array.
+	 * @param opPos The current position in the Op Map.
 	 * @param executionContext current execution context
 	 * @return the result of the function.
 	 */
 	bool
 	functionNot(
 			XalanNode*				context,
-			int						opPos,
+			OpCodePositionType		opPos,
 			XPathExecutionContext&	executionContext) const
 	{
 		assert(context != 0);
@@ -1945,14 +1947,14 @@ protected:
 	 * Handle the built-in function "boolean".
 	 *
 	 * @param context The current source tree context node, which must not be 0.
-	 * @param opPos The current position in the m_opMap array.
+	 * @param opPos The current position in the Op Map.
 	 * @param executionContext current execution context
 	 * @return the result of the function.
 	 */
 	bool
 	functionBoolean(
 			XalanNode*				context,
-			int						opPos,
+			OpCodePositionType		opPos,
 			XPathExecutionContext&	executionContext) const
 	{
 		assert(context != 0);
@@ -1982,14 +1984,14 @@ protected:
 	 * Handle the built-in function "name".
 	 *
 	 * @param context The current source tree context node, which must not be 0.
-	 * @param opPos The current position in the m_opMap array.
+	 * @param opPos The current position in the Op Map.
 	 * @param executionContext current execution context
 	 * @return the result of the function.
 	 */
 	const XalanDOMString&
 	functionName(
 			XalanNode*				context,
-			int						opPos,
+			OpCodePositionType		opPos,
 			XPathExecutionContext&	executionContext) const;
 
 	/**
@@ -2005,14 +2007,14 @@ protected:
 	 * Handle the built-in function "local-name".
 	 *
 	 * @param context The current source tree context node, which must not be 0.
-	 * @param opPos The current position in the m_opMap array.
+	 * @param opPos The current position in the Op Map.
 	 * @param executionContext current execution context
 	 * @return the result of the function.
 	 */
 	const XalanDOMString&
 	functionLocalName(
 			XalanNode*				context,
-			int						opPos,
+			OpCodePositionType		opPos,
 			XPathExecutionContext&	executionContext) const;
 
 	/**
@@ -2036,14 +2038,14 @@ protected:
 	 * Handle the built-in function "number".
 	 *
 	 * @param context The current source tree context node, which must not be 0.
-	 * @param opPos The current position in the m_opMap array.
+	 * @param opPos The current position in the Op Map.
 	 * @param executionContext current execution context
 	 * @return the result of the function.
 	 */
 	double
 	functionNumber(
 			XalanNode*				context,
-			int						opPos,
+			OpCodePositionType		opPos,
 			XPathExecutionContext&	executionContext) const
 	{
 		double	result;
@@ -2057,14 +2059,14 @@ protected:
 	 * Handle the built-in function "floor".
 	 *
 	 * @param context The current source tree context node, which must not be 0.
-	 * @param opPos The current position in the m_opMap array.
+	 * @param opPos The current position in the Op Map.
 	 * @param executionContext current execution context
 	 * @return the result of the function.
 	 */
 	double
 	functionFloor(
 			XalanNode*				context,
-			int						opPos,
+			OpCodePositionType		opPos,
 			XPathExecutionContext&	executionContext) const
 	{
 		return DoubleSupport::floor(functionNumber(context, opPos, executionContext));
@@ -2074,14 +2076,14 @@ protected:
 	 * Handle the built-in function "ceiling".
 	 *
 	 * @param context The current source tree context node, which must not be 0.
-	 * @param opPos The current position in the m_opMap array.
+	 * @param opPos The current position in the Op Map.
 	 * @param executionContext current execution context
 	 * @return the result of the function.
 	 */
 	double
 	functionCeiling(
 			XalanNode*				context,
-			int						opPos,
+			OpCodePositionType		opPos,
 			XPathExecutionContext&	executionContext) const
 	{
 		return DoubleSupport::ceiling(functionNumber(context, opPos, executionContext));
@@ -2091,14 +2093,14 @@ protected:
 	 * Handle the built-in function "round".
 	 *
 	 * @param context The current source tree context node, which must not be 0.
-	 * @param opPos The current position in the m_opMap array.
+	 * @param opPos The current position in the Op Map.
 	 * @param executionContext current execution context
 	 * @return the result of the function.
 	 */
 	double
 	functionRound(
 			XalanNode*				context,
-			int						opPos,
+			OpCodePositionType		opPos,
 			XPathExecutionContext&	executionContext) const
 	{
 		return DoubleSupport::round(functionNumber(context, opPos, executionContext));
@@ -2117,41 +2119,41 @@ protected:
 	 * Handle the built-in function "string-length".
 	 *
 	 * @param context The current source tree context node, which must not be 0.
-	 * @param opPos The current position in the m_opMap array.
+	 * @param opPos The current position in the Op Map.
 	 * @param executionContext current execution context
 	 * @return the result of the function.
 	 */
 	double
 	functionStringLength(
 			XalanNode*				context,
-			int						opPos,
+			OpCodePositionType		opPos,
 			XPathExecutionContext&	executionContext) const;
 
 	/**
 	 * Handle the built-in function "sum".
 	 *
 	 * @param context The current source tree context node.
-	 * @param opPos The current position in the m_opMap array.
+	 * @param opPos The current position in the Op Map.
 	 * @param executionContext current execution context
 	 * @return the result of the function.
 	 */
 	double
 	functionSum(
 			XalanNode*				context,
-			int						opPos,
+			OpCodePositionType		opPos,
 			XPathExecutionContext&	executionContext) const;
 
 	/**
 	 * Get a numeric operand for an expression.
 	 * @param context The current source tree context node.
-	 * @param opPos The current position in the m_opMap array.
+	 * @param opPos The current position in the Op Map.
 	 * @param executionContext current execution context
 	 * @return The value of the operand.
 	 */
 	double
 	getNumericOperand(
 			XalanNode*				context,
-			int						opPos,
+			OpCodePositionType		opPos,
 			XPathExecutionContext&	executionContext) const;
 
 private:
@@ -2175,7 +2177,7 @@ private:
 	locationPathPattern(
 			XPathExecutionContext&	executionContext,
 			XalanNode& 				context, 
-			int 					opPos) const;
+			OpCodePositionType 		opPos) const;
 
 	class NodeTester
 	{
@@ -2184,9 +2186,9 @@ private:
 		NodeTester(
 			const XPath&			xpath,
 			XPathExecutionContext&	executionContext,
-			int 					opPos,
-			int 					argLen,
-			int 					stepType);
+			OpCodePositionType 		opPos,
+			OpCodePositionType 		argLen,
+			OpCodeMapValueType 		stepType);
 
 		eMatchScore
 		operator()(
@@ -2319,7 +2321,7 @@ protected:
 	step(
 			XPathExecutionContext&	executionContext,
 			XalanNode* 				context, 
-			int 					opPos,
+			OpCodePositionType 		opPos,
 			MutableNodeRefList&		queryResults) const;
 
 	/**
@@ -2336,127 +2338,127 @@ protected:
 	stepPattern(
 			XPathExecutionContext&	executionContext,
 			XalanNode* 				context, 
-			int 					opPos,
+			OpCodePositionType 		opPos,
 			eMatchScore& 			scoreHolder) const;
 
-	int
+	OpCodePositionType
 	findNodeSet(
 			XPathExecutionContext&	executionContext,
 			XalanNode* 				context, 
-			int 					opPos,
-			int 					stepType,
+			OpCodePositionType 		opPos,
+			OpCodeMapValueType 	    stepType,
 			MutableNodeRefList& 	subQueryResults) const;
 
-	int
+	OpCodePositionType
 	findRoot(
 			XPathExecutionContext&	executionContext,
 			XalanNode* 				context, 
-			int 					opPos,
-			int 					stepType,
+			OpCodePositionType 		opPos,
+			OpCodeMapValueType 		stepType,
 			MutableNodeRefList& 	subQueryResults) const;
 
-	int
+	OpCodePositionType
 	findParent(
 			XPathExecutionContext&	executionContext,
 			XalanNode* 				context, 
-			int 					opPos,
-			int 					stepType,
+			OpCodePositionType 		opPos,
+			OpCodeMapValueType 		stepType,
 			MutableNodeRefList& 	subQueryResults) const;
 
-	int
+	OpCodePositionType
 	findSelf(
 			XPathExecutionContext&	executionContext,
 			XalanNode* 				context, 
-			int 					opPos,
-			int 					stepType,
+			OpCodePositionType 		opPos,
+			OpCodeMapValueType 		stepType,
 			MutableNodeRefList& 	subQueryResults) const;
 
-	int
+	OpCodePositionType
 	findAncestors(
 			XPathExecutionContext&	executionContext,
 			XalanNode* 				context, 
-			int 					opPos,
-			int 					stepType,
+			OpCodePositionType 		opPos,
+			OpCodeMapValueType 		stepType,
 			MutableNodeRefList& 	subQueryResults) const;
 
-	int
+	OpCodePositionType
 	findAncestorsOrSelf(
 			XPathExecutionContext&	executionContext,
 			XalanNode* 				context, 
-			int 					opPos,
-			int 					stepType,
+			OpCodePositionType 		opPos,
+			OpCodeMapValueType 		stepType,
 			MutableNodeRefList& 	subQueryResults) const;
 
-	int
+	OpCodePositionType
 	findAttributes(
 			XPathExecutionContext&	executionContext,
 			XalanNode* 				context, 
-			int 					opPos,
-			int 					stepType,
+			OpCodePositionType 		opPos,
+			OpCodeMapValueType 		stepType,
 			MutableNodeRefList& 	subQueryResults) const;
 
-	int
+	OpCodePositionType
 	findChildren(
 			XPathExecutionContext&	executionContext,
 			XalanNode* 				context, 
-			int 					opPos,
-			int 					stepType,
+			OpCodePositionType 		opPos,
+			OpCodeMapValueType 		stepType,
 			MutableNodeRefList& 	subQueryResults) const;
 
-	int
+	OpCodePositionType
 	findDescendants(
 			XPathExecutionContext&	executionContext,
 			XalanNode* 				context, 
-			int 					opPos,
-			int 					stepType,
+			OpCodePositionType 		opPos,
+			OpCodeMapValueType 		stepType,
 			MutableNodeRefList& 	subQueryResults) const;
 
-	int
+	OpCodePositionType
 	findFollowing(
 			XPathExecutionContext&	executionContext,
 			XalanNode* 				context, 
-			int 					opPos,
-			int 					stepType,
+			OpCodePositionType 		opPos,
+			OpCodeMapValueType 		stepType,
 			MutableNodeRefList& 	subQueryResults) const;
 
-	int
+	OpCodePositionType
 	findFollowingSiblings(
 			XPathExecutionContext&	executionContext,
 			XalanNode* 				context, 
-			int 					opPos,
-			int 					stepType,
+			OpCodePositionType 		opPos,
+			OpCodeMapValueType 		stepType,
 			MutableNodeRefList& 	subQueryResults) const;
 
-	int
+	OpCodePositionType
 	findPreceeding(
 			XPathExecutionContext&	executionContext,
 			XalanNode* 				context, 
-			int 					opPos,
-			int 					stepType,
+			OpCodePositionType 		opPos,
+			OpCodeMapValueType 		stepType,
 			MutableNodeRefList& 	subQueryResults) const;
 
-	int
+	OpCodePositionType
 	findPreceedingSiblings(
 			XPathExecutionContext&	executionContext,
 			XalanNode* 				context, 
-			int 					opPos,
-			int 					stepType,
+			OpCodePositionType 		opPos,
+			OpCodeMapValueType 		stepType,
 			MutableNodeRefList& 	subQueryResults) const;
 
-	int
+	OpCodePositionType
 	findNamespace(
 			XPathExecutionContext&	executionContext,
 			XalanNode* 				context, 
-			int 					opPos,
-			int 					stepType,
+			OpCodePositionType 		opPos,
+			OpCodeMapValueType 		stepType,
 			MutableNodeRefList& 	subQueryResults) const;
 
-	int
+	OpCodePositionType
 	findNodesOnUnknownAxis(
 			XPathExecutionContext&	executionContext,
 			XalanNode* 				context, 
-			int 					opPos,
-			int 					stepType,
+			OpCodePositionType 		opPos,
+			OpCodeMapValueType 		stepType,
 			MutableNodeRefList& 	subQueryResults) const;
 
 	eMatchScore
@@ -2464,27 +2466,27 @@ protected:
 			XPathExecutionContext&	executionContext,
 			XalanNode* 				context,
 			XalanNode::NodeType		nodeType,
-			int 					opPos,
-			int 					argLen,
-			int 					stepType) const;
+			OpCodePositionType 		opPos,
+			OpCodePositionType 		argLen,
+			OpCodeMapValueType 		stepType) const;
 
-	int
+	OpCodePositionType
 	predicates(
 			XPathExecutionContext&	executionContext,
-			int 					opPos,
+			OpCodePositionType 		opPos,
 			MutableNodeRefList& 	subQueryResults) const;
 
 	eMatchScore
 	handleFoundIndex(
 			XPathExecutionContext&	executionContext,
 			XalanNode* 				localContext,
-			int 					startOpPos) const;
+			OpCodePositionType 		startOpPos) const;
 
 	eMatchScore
 	handleFoundIndexPositional(
 			XPathExecutionContext&	executionContext,
 			XalanNode* 				localContext,
-			int 					startOpPos) const;
+			OpCodePositionType 		startOpPos) const;
 
 private:
 
@@ -2492,7 +2494,7 @@ private:
 	unknownOpCodeError(
 			XalanNode*				context,
 			XPathExecutionContext&	executionContext,
-			int						opPos) const;
+			OpCodePositionType		opPos) const;
 
 	void
 	notNodeSetError(

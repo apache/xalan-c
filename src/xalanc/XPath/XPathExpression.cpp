@@ -836,7 +836,7 @@ XPathExpression::pushArgumentOnOpCodeMap(const XToken&	theXToken)
 	m_opMap.push_back(thePosition);
 
 	// Update the op map length.
-	m_opMap[s_opCodeMapLengthIndex]++;
+	++m_opMap[s_opCodeMapLengthIndex];
 }
 
 
@@ -857,7 +857,7 @@ XPathExpression::pushArgumentOnOpCodeMap(const XalanDOMString&	theToken)
 	m_opMap.push_back(thePosition);
 
 	// Update the op map length.
-	m_opMap[s_opCodeMapLengthIndex]++;
+	++m_opMap[s_opCodeMapLengthIndex];
 }
 
 
@@ -880,7 +880,7 @@ XPathExpression::pushArgumentOnOpCodeMap(
 	m_opMap.push_back(thePosition);
 
 	// Update the op map length.
-	m_opMap[s_opCodeMapLengthIndex]++;
+	++m_opMap[s_opCodeMapLengthIndex];
 }
 
 
@@ -897,7 +897,7 @@ XPathExpression::pushNumberLiteralOnOpCodeMap(double	theNumber)
 	m_opMap.push_back(theIndex);
 
 	// Update the op map length.
-	m_opMap[s_opCodeMapLengthIndex]++;
+	++m_opMap[s_opCodeMapLengthIndex];
 
 	m_numberLiteralValues.push_back(theNumber);
 }
@@ -917,7 +917,7 @@ XPathExpression::pushCurrentTokenOnOpCodeMap()
 	m_opMap.push_back(thePosition);
 
 	// Update the op map length.
-	m_opMap[s_opCodeMapLengthIndex]++;
+	++m_opMap[s_opCodeMapLengthIndex];
 }
 
 
