@@ -502,6 +502,15 @@ StylesheetHandler::startElement(
 							atts,
 							XalanLocator::getLineNumber(locator),
 							XalanLocator::getColumnNumber(locator)));
+
+                    // This fixes Bugzilla 26354, but it's really a workaround
+                    // for the bizarre way we handle literal text in the
+                    // stylesheet.  We should examine this strategy, because
+                    // an xml:space attribute on an xsl:text element results
+                    // in building a stylesheet that tries to parent an
+                    // ElenTextLiteral instance to an ElemText instance, which
+                    // should not ever happen.
+                    fSpaceAttrProcessed = true;
 					break;
 
 				case StylesheetConstructionContext::ELEMNAME_TEMPLATE:
