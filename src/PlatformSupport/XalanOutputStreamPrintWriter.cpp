@@ -131,8 +131,8 @@ XalanOutputStreamPrintWriter::getStream() const
 void
 XalanOutputStreamPrintWriter::write(
 			const char*		s,
-			unsigned int	theOffset,
-			unsigned int	theLength)
+			size_t			theOffset,
+			size_t			theLength)
 {
 	assert(s != 0);
 
@@ -157,9 +157,9 @@ XalanOutputStreamPrintWriter::write(
 
 void
 XalanOutputStreamPrintWriter::write(
-			const XalanDOMChar*		s,
-			unsigned int			theOffset,
-			unsigned int			theLength)
+			const XalanDOMChar*			s,
+			XalanDOMString::size_type	theOffset,
+			XalanDOMString::size_type	theLength)
 {
 	assert(s != 0);
 
@@ -192,9 +192,9 @@ XalanOutputStreamPrintWriter::write(XalanDOMChar	c)
 
 void
 XalanOutputStreamPrintWriter::write(
-			const XalanDOMString&	s,
-			unsigned int			theOffset,
-			unsigned int			theLength)
+			const XalanDOMString&		s,
+			XalanDOMString::size_type	theOffset,
+			XalanDOMString::size_type	theLength)
 {
 	write(c_wstr(s), theOffset, theLength);
 }
@@ -229,7 +229,7 @@ XalanOutputStreamPrintWriter::print(char	c)
 void
 XalanOutputStreamPrintWriter::print(
 			const char*		s,
-			unsigned int	theLength)
+			size_t			theLength)
 {
 	write(s,
 		  0,
@@ -240,8 +240,8 @@ XalanOutputStreamPrintWriter::print(
 
 void
 XalanOutputStreamPrintWriter::print(
-			const XalanDOMChar*		s,
-			unsigned int			theLength)
+			const XalanDOMChar*			s,
+			XalanDOMString::size_type	theLength)
 {
 	assert(s != 0);
 	assert(theLength >= 0 || theLength == UINT_MAX);
@@ -320,7 +320,7 @@ XalanOutputStreamPrintWriter::println(char	c)
 void
 XalanOutputStreamPrintWriter::println(
 			const char*		s,
-			unsigned int	theLength)
+			size_t			theLength)
 {
 	print(s, theLength);
 
@@ -331,8 +331,8 @@ XalanOutputStreamPrintWriter::println(
 
 void
 XalanOutputStreamPrintWriter::println(
-			const XalanDOMChar*		s,
-			unsigned int			theLength)
+			const XalanDOMChar*			s,
+			XalanDOMString::size_type	theLength)
 {
 	print(s, theLength);
 

@@ -360,7 +360,9 @@ XalanSourceTreeText::getData() const
 unsigned int
 XalanSourceTreeText::getLength() const
 {
-	return length(m_data);
+	assert(unsigned(length(m_data)) == length(m_data));
+
+	return unsigned(length(m_data));
 }
 
 

@@ -102,26 +102,26 @@ public:
 
 	// Output functions inherited from Writer...
 
-	// If the length is UINT_MAX, then the array is assumed to be null-terminated.
 	virtual void
-	write(const char*	s,
-		  unsigned int	theOffset = 0,
-		  unsigned int	theLength = UINT_MAX) = 0;
+	write(
+			const char*		s,
+			size_t			theOffset = 0,
+			size_t			theLength = size_t(-1)) = 0;
 
-	// If the length is UINT_MAX, then the array is assumed to be null-terminated.
 	virtual void
-	write(const XalanDOMChar*	s,
-		  unsigned int			theOffset = 0,
-		  unsigned int			theLength = UINT_MAX) = 0;
+	write(
+			const XalanDOMChar*			s,
+			XalanDOMString::size_type	theOffset = 0,
+			XalanDOMString::size_type	theLength = XalanDOMString::npos) = 0;
 
 	virtual void
 	write(XalanDOMChar	c) = 0;
 
-	// If the length is UINT_MAX, then the entire string is printed.
 	virtual void
-	write(const XalanDOMString&		s,
-		  unsigned int				theOffset = 0,
-		  unsigned int				theLength = UINT_MAX) = 0;
+	write(
+			const XalanDOMString&		s,
+			XalanDOMString::size_type	theOffset = 0,
+			XalanDOMString::size_type	theLength = XalanDOMString::npos) = 0;
 
 	// Output functions which are new...
 
@@ -134,12 +134,14 @@ public:
 	print(char	c) = 0;
 
 	virtual void
-	print(const char*	s,
-		  unsigned int	theLength = UINT_MAX) = 0;
+	print(
+			const char*		s,
+			size_t			theLength = size_t(-1)) = 0;
 
 	virtual void
-	print(const XalanDOMChar*	s,
-		  unsigned int			theLength = UINT_MAX) = 0;
+	print(
+			const XalanDOMChar*			s,
+			XalanDOMString::size_type	theLength = XalanDOMString::npos) = 0;
 
 	virtual void
 	print(double	d) = 0;
@@ -165,12 +167,14 @@ public:
 	println(char	x) = 0;
 
 	virtual void
-	println(const char*		s,
-		    unsigned int	theLength = UINT_MAX) = 0;
+	println(
+			const char*		s,
+		    size_t			theLength = size_t(-1)) = 0;
 
 	virtual void
-	println(const XalanDOMChar*		s,
-			unsigned int			theLength = UINT_MAX) = 0;
+	println(
+			const XalanDOMChar*			s,
+			XalanDOMString::size_type	theLength = XalanDOMString::npos) = 0;
 
 	virtual void
 	println(double	x) = 0;

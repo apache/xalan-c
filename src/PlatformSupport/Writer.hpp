@@ -64,11 +64,6 @@
 
 
 
-#include <climits>
-
-
-
-// $$$ ToDo: Necessary will XalanDOMString is still a typedef.
 #include <XalanDOM/XalanDOMString.hpp>
 
 
@@ -98,7 +93,6 @@ public:
 	virtual void
 	flush() = 0;
 
-
 	/**
 	 * Get the stream associated with the writer...
 	 */
@@ -119,28 +113,26 @@ public:
 	 * 
 	 * @param 	s         string to write
 	 * @param 	theOffset starting offset in string to begin writing, default 0
-	 * @param 	theLength number of characters to write. If the length is
-	 *                    UINT_MAX, then the array is assumed to be
-	 *                    null-terminated.  Default is UINT_MAX.
+	 * @param 	theLength number of characters to write. If the length is -1, then the array is assumed to be null-terminated.
 	 */
 	virtual void
-	write(const char*	s,
-		  unsigned int	theOffset = 0,
-		  unsigned int	theLength = UINT_MAX) = 0;
+	write(
+			const char*		s,
+			size_t			theOffset = 0,
+			size_t			theLength = size_t(-1)) = 0;
 
 	/**
 	 * Writes a string
 	 * 
 	 * @param 	s         string to write
 	 * @param 	theOffset starting offset in string to begin writing, default 0
-	 * @param 	theLength number of characters to write. If the length is
-	 *                    UINT_MAX, then the array is assumed to be
-	 *                    null-terminated.  Default is UINT_MAX.
+	 * @param 	theLength number of characters to write. If the length is XalanDOMString::npos, then the array is assumed to be null-terminated.
 	 */
 	virtual void
-	write(const XalanDOMChar*	s,
-		  unsigned int			theOffset = 0,
-		  unsigned int			theLength = UINT_MAX) = 0;
+	write(
+			const XalanDOMChar*			s,
+			XalanDOMString::size_type	theOffset = 0,
+			XalanDOMString::size_type	theLength = XalanDOMString::npos) = 0;
 
 	/**
 	 * Writes a character
@@ -155,14 +147,13 @@ public:
 	 * 
 	 * @param 	s         string to write
 	 * @param 	theOffset starting offset in string to begin writing, default 0
-	 * @param 	theLength number of characters to write. If the length is
-	 *                    UINT_MAX,  then the entire string is printed. Default
-	 *                    is UINT_MAX.
+	 * @param 	theLength number of characters to write. If the length is XalanDOMString::npos,  then the entire string is printed.
 	 */
 	virtual void
-	write(const XalanDOMString&		s,
-		  unsigned int				theOffset = 0,
-		  unsigned int				theLength = UINT_MAX) = 0;
+	write(
+			const XalanDOMString&		s,
+			XalanDOMString::size_type	theOffset = 0,
+			XalanDOMString::size_type	theLength = XalanDOMString::npos) = 0;
 
 private:
 

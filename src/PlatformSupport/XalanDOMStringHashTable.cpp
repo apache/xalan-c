@@ -69,8 +69,8 @@
 
 
 XalanDOMStringHashTable::XalanDOMStringHashTable(
-			unsigned int	theBucketCount,
-			unsigned int	theBucketSize) :
+			size_t		theBucketCount,
+			size_t		theBucketSize) :
 
 	m_bucketCount(theBucketCount),
 	m_bucketSize(theBucketSize),
@@ -85,7 +85,7 @@ XalanDOMStringHashTable::XalanDOMStringHashTable(
 void
 XalanDOMStringHashTable::clear()
 {
-	for(unsigned int i = 0; i < m_bucketCount; ++i)
+	for(size_t i = 0; i < m_bucketCount; ++i)
 	{
 		m_buckets[i].clear();
 	}
@@ -101,9 +101,11 @@ XalanDOMStringHashTable::clear()
 void
 XalanDOMStringHashTable::getBucketCounts(BucketCountsType&	theVector) const
 {
-	for(unsigned int i = 0; i < m_bucketCount; ++i)
+	for(size_t i = 0; i < m_bucketCount; ++i)
 	{
-		theVector.push_back(m_buckets[i].size());
+		const bucket_size_type	size = m_buckets[i].size();
+
+		theVector.push_back(size);
 	}
 }
 
@@ -113,8 +115,8 @@ struct
 equalsXalanDOMString
 {
 	equalsXalanDOMString(
-			const XalanDOMChar*		theString,
-			unsigned int			theLength) :
+			const XalanDOMChar*			theString,
+			XalanDOMString::size_type	theLength) :
 		m_string(theString),
 		m_length(theLength)
 	{
@@ -135,9 +137,9 @@ equalsXalanDOMString
 
 private:
 
-	const XalanDOMChar* const	m_string;
+	const XalanDOMChar* const			m_string;
 
-	const unsigned int			m_length;
+	const XalanDOMString::size_type		m_length;
 };
 
 
@@ -145,27 +147,27 @@ private:
 const XalanDOMString*
 XalanDOMStringHashTable::find(
 			const XalanDOMString&	theString,
-			unsigned int*			theBucketIndex) const
+			size_t*					theBucketIndex) const
 {
 	return find(c_wstr(theString), length(theString), theBucketIndex);
 }
 
 
 
-inline unsigned int
+inline size_t
 hashString(
-			const XalanDOMChar*		theString,
-			unsigned int			theLength)
+			const XalanDOMChar*			theString,
+			XalanDOMString::size_type	theLength)
 {
 	assert(theString != 0);
 
-    unsigned int				theResult = 0;
+    size_t				theResult = 0;
 
 	const XalanDOMChar* const	theEnd = theString + theLength;
 
 	while (theString != theEnd)
     {
-        theResult += (theResult * 37) + (theResult >> 24) + unsigned(*theString);
+        theResult += (theResult * 37) + (theResult >> 24) + size_t(*theString);
 
         ++theString;
     }
@@ -177,18 +179,18 @@ hashString(
 
 const XalanDOMString*
 XalanDOMStringHashTable::find(
-			const XalanDOMChar*		theString,
-			unsigned int			theLength,
-			unsigned int*			theBucketIndex) const
+			const XalanDOMChar*			theString,
+			XalanDOMString::size_type	theLength,
+			size_t*						theBucketIndex) const
 {
 	assert(theString != 0);
 
-	const unsigned int	theActualLength =
-		theLength == unsigned(-1) ? length(theString) : theLength;
+	const XalanDOMString::size_type		theActualLength =
+		theLength == XalanDOMString::npos ? length(theString) : theLength;
 
-	const unsigned int	theHash = hashString(theString, theActualLength);
+	const size_t	theHash = hashString(theString, theActualLength);
 
-	const unsigned int	theLocalBucketIndex = theHash % m_bucketCount;
+	const size_t	theLocalBucketIndex = theHash % m_bucketCount;
 
 	assert(theLocalBucketIndex < m_bucketCount);
 
@@ -224,9 +226,9 @@ XalanDOMStringHashTable::find(
 void
 XalanDOMStringHashTable::insert(const XalanDOMString&	theString)
 {
-	const unsigned int	theHash = hashString(c_wstr(theString), length(theString));
+	const size_t	theHash = hashString(c_wstr(theString), length(theString));
 
-	const unsigned int	theBucketIndex = theHash % m_bucketCount;
+	const size_t	theBucketIndex = theHash % m_bucketCount;
 
 	assert(theBucketIndex < m_bucketCount);
 
@@ -251,12 +253,12 @@ XalanDOMStringHashTable::insert(const XalanDOMString&	theString)
 void
 XalanDOMStringHashTable::insert(
 			const XalanDOMString&	theString,
-			unsigned int			theBucketIndex)
+			size_t					theBucketIndex)
 {
 	assert(theBucketIndex == hashString(c_wstr(theString), length(theString)) % m_bucketCount);
 	assert(theBucketIndex < m_bucketCount);
 
-	BucketType&	theBucket = m_buckets[theBucketIndex];
+	BucketType&		theBucket = m_buckets[theBucketIndex];
 
 #if !defined(NDEBUG)
 	if (theBucket.size() > 0)

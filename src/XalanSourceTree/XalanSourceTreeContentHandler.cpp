@@ -518,6 +518,8 @@ XalanSourceTreeContentHandler::processAccumulatedText()
 
 	if (isEmpty(m_textBuffer) == false)
 	{
+		assert(unsigned(length(m_textBuffer)) == length(m_textBuffer));
+
 		doCharacters(c_wstr(m_textBuffer), length(m_textBuffer));
 
 		clear(m_textBuffer);

@@ -352,8 +352,8 @@ FormatterToSourceTree::processAccumulatedText()
 
 void
 FormatterToSourceTree::doCharacters(
-			const XMLCh*	chars,
-			unsigned int	length)
+			const XMLCh*				chars,
+			XalanDOMString::size_type	length)
 {
 	if (m_currentElement != 0)
 	{

@@ -164,8 +164,9 @@ FormatterTreeWalker::startNode(const XalanNode*		node)
 
 			const XalanDOMString&	data = theTextNode->getData();
 
-			m_formatterListener.cdata(c_wstr(data),
-									  length(data));
+			assert(length(data) == FormatterListener::size_type(length(data)));
+
+			m_formatterListener.cdata(c_wstr(data), FormatterListener::size_type(length(data)));
 		}
 		break;
 
@@ -180,7 +181,9 @@ FormatterTreeWalker::startNode(const XalanNode*		node)
 
 			const XalanDOMString&	data = theTextNode->getData();
 
-			m_formatterListener.characters(c_wstr(data), length(data));
+			assert(length(data) == FormatterListener::size_type(length(data)));
+
+			m_formatterListener.characters(c_wstr(data), FormatterListener::size_type(length(data)));
 		}
 		break;
 

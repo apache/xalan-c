@@ -82,11 +82,14 @@ public:
 
 #if defined(XALAN_NO_NAMESPACES)
 	typedef vector<const XalanDOMString*>	BucketType;
-	typedef vector<unsigned int>			BucketCountsType;
+	typedef BucketType::size_type			bucket_size_type;
+	typedef vector<bucket_size_type>		BucketCountsType;
 #else
 	typedef std::vector<const XalanDOMString*>	BucketType;
-	typedef std::vector<unsigned int>			BucketCountsType;
+	typedef BucketType::size_type				bucket_size_type;
+	typedef std::vector<bucket_size_type>		BucketCountsType;
 #endif
+
 
 	enum { eDefaultBucketCount = 101, eDefaultBucketSize = 15 };
 
@@ -99,8 +102,8 @@ public:
 	 */
 	explicit
 	XalanDOMStringHashTable(
-			unsigned int	theBucketCount = eDefaultBucketCount,
-			unsigned int	theBucketSize = eDefaultBucketSize);
+			size_t				theBucketCount = eDefaultBucketCount,
+			bucket_size_type	theBucketSize = eDefaultBucketSize);
 
 	~XalanDOMStringHashTable() { }
 
@@ -115,7 +118,7 @@ public:
 	 *
 	 * @return The number of strings in the table
 	 */
-	unsigned int
+	size_t
 	size() const
 	{
 		return m_count;
@@ -126,7 +129,7 @@ public:
 	 *
 	 * @return The number of buckets in the table
 	 */
-	unsigned int
+	size_t
 	bucketCount() const
 	{
 		return m_bucketCount;
@@ -146,7 +149,7 @@ public:
 	 *
 	 * @return The number of collisions.  Valid only for non-release builds.
 	 */
-	unsigned int
+	size_t
 	collisions() const
 	{
 		return m_collisions;
@@ -162,7 +165,7 @@ public:
 	const XalanDOMString*
 	find(
 			const XalanDOMString&	theString,
-			unsigned int*			theBucketIndex = 0) const;
+			size_t*					theBucketIndex = 0) const;
 
 	/**
 	 * Find a string.  If the string is not found, return null.
@@ -178,9 +181,9 @@ public:
 	 */
 	const XalanDOMString*
 	find(
-			const XalanDOMChar*		theString,
-			unsigned int			theLength = unsigned(-1),
-			unsigned int*			theBucketIndex = 0) const;
+			const XalanDOMChar*			theString,
+			XalanDOMString::size_type	theLength = XalanDOMString::npos,
+			size_t*						theBucketIndex = 0) const;
 
 	/**
 	 * Insert a pointer to a string into the table.  If the string
@@ -215,7 +218,7 @@ public:
 	void
 	insert(
 			const XalanDOMString&	theString,
-			unsigned int			theBucketIndex);
+			size_t					theBucketIndex);
 
 private:
 
@@ -230,13 +233,13 @@ private:
 
 
 	// Data members...
-	const unsigned int				m_bucketCount;
+	const size_t					m_bucketCount;
 
-	const unsigned int				m_bucketSize;
+	const bucket_size_type			m_bucketSize;
 
 	XalanArrayAutoPtr<BucketType>	m_buckets;
 
-	unsigned int					m_count;
+	size_t							m_count;
 
 	unsigned int					m_collisions;		
 };

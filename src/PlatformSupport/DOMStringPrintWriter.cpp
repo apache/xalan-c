@@ -105,8 +105,8 @@ DOMStringPrintWriter::flush()
 void
 DOMStringPrintWriter::write(
 			const char*		s,
-			unsigned int	theOffset,
-			unsigned int	theLength)
+			size_t			theOffset,
+			size_t			theLength)
 {
 	write(TranscodeFromLocalCodePage(s), theOffset, theLength);
 }
@@ -115,9 +115,9 @@ DOMStringPrintWriter::write(
 
 void
 DOMStringPrintWriter::write(
-			const XalanDOMChar*		s,
-			unsigned int			theOffset,
-			unsigned int			theLength)
+			const XalanDOMChar*			s,
+			XalanDOMString::size_type	theOffset,
+			XalanDOMString::size_type	theLength)
 {
 #if !defined(XALAN_NO_NAMESPACES)
 	using std::vector;
@@ -141,9 +141,9 @@ DOMStringPrintWriter::write(XalanDOMChar	c)
 
 void
 DOMStringPrintWriter::write(
-			const XalanDOMString&	s,
-			unsigned int			theOffset,
-			unsigned int			theLength)
+			const XalanDOMString&		s,
+			XalanDOMString::size_type	theOffset,
+			XalanDOMString::size_type	theLength)
 {
 	assert(c_wstr(s) != 0);
 	assert(theLength == UINT_MAX || length(s) >= theOffset + theLength);
@@ -188,7 +188,7 @@ DOMStringPrintWriter::print(char	c)
 void
 DOMStringPrintWriter::print(
 			const char*		s,
-			unsigned int	theLength)
+			size_t			theLength)
 {
 	write(s,
 		  0,
@@ -199,8 +199,8 @@ DOMStringPrintWriter::print(
 
 void
 DOMStringPrintWriter::print(
-			const XalanDOMChar*		s,
-			unsigned int			theLength)
+			const XalanDOMChar*			s,
+			XalanDOMString::size_type	theLength)
 {
 	write(s,
 		  0,
@@ -274,7 +274,7 @@ DOMStringPrintWriter::println(char	c)
 void
 DOMStringPrintWriter::println(
 			const char*		s,
-			unsigned int	theLength)
+			size_t			theLength)
 {
 	print(s, theLength);
 
@@ -285,8 +285,8 @@ DOMStringPrintWriter::println(
 
 void
 DOMStringPrintWriter::println(
-			const XalanDOMChar*		s,
-			unsigned int			theLength)
+			const XalanDOMChar*			s,
+			XalanDOMString::size_type	theLength)
 {
 	print(s, theLength);
 

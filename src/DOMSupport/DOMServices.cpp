@@ -112,22 +112,22 @@ const XalanDOMString	DOMServices::s_emptyString;
 // These four unsigned ints will hold the actual
 // data.  This way, the DOMSupport references can be const,
 // but we can initialize the data when we want to.
-static unsigned int		s_XMLStringLength = 0;
-static unsigned int		s_XMLStringWithSeparatorLength = 0;
-static unsigned int		s_XMLNamespaceURILength = 0;
-static unsigned int		s_XMLNamespaceLength = 0;
-static unsigned int		s_XMLNamespaceWithSeparatorLength = 0;
-static unsigned int		s_XMLNamespaceSeparatorStringLength = 0;
-static unsigned int		s_XMLNamespacePrefixURILength = 0;
+static XalanDOMString::size_type	s_XMLStringLength = 0;
+static XalanDOMString::size_type	s_XMLStringWithSeparatorLength = 0;
+static XalanDOMString::size_type	s_XMLNamespaceURILength = 0;
+static XalanDOMString::size_type	s_XMLNamespaceLength = 0;
+static XalanDOMString::size_type	s_XMLNamespaceWithSeparatorLength = 0;
+static XalanDOMString::size_type	s_XMLNamespaceSeparatorStringLength = 0;
+static XalanDOMString::size_type	s_XMLNamespacePrefixURILength = 0;
 
 
 
-const unsigned int&		DOMServices::s_XMLStringLength = ::s_XMLStringLength;
-const unsigned int&		DOMServices::s_XMLStringWithSeparatorLength = ::s_XMLStringWithSeparatorLength;
-const unsigned int&		DOMServices::s_XMLNamespaceURILength = ::s_XMLNamespaceURILength;
-const unsigned int&		DOMServices::s_XMLNamespaceLength = ::s_XMLNamespaceLength;
-const unsigned int&		DOMServices::s_XMLNamespaceWithSeparatorLength = ::s_XMLNamespaceWithSeparatorLength;
-const unsigned int&		DOMServices::s_XMLNamespaceSeparatorStringLength = ::s_XMLNamespaceSeparatorStringLength;
+const XalanDOMString::size_type&	DOMServices::s_XMLStringLength = ::s_XMLStringLength;
+const XalanDOMString::size_type&	DOMServices::s_XMLStringWithSeparatorLength = ::s_XMLStringWithSeparatorLength;
+const XalanDOMString::size_type&	DOMServices::s_XMLNamespaceURILength = ::s_XMLNamespaceURILength;
+const XalanDOMString::size_type&	DOMServices::s_XMLNamespaceLength = ::s_XMLNamespaceLength;
+const XalanDOMString::size_type&	DOMServices::s_XMLNamespaceWithSeparatorLength = ::s_XMLNamespaceWithSeparatorLength;
+const XalanDOMString::size_type&	DOMServices::s_XMLNamespaceSeparatorStringLength = ::s_XMLNamespaceSeparatorStringLength;
 
 
 
@@ -158,11 +158,11 @@ DOMServices::WhitespaceSupportDefault::~WhitespaceSupportDefault()
 bool
 DOMServices::WhitespaceSupportDefault::isIgnorableWhitespace(const XalanText&	node) const
 {
-	const XalanDOMString	theData(node.getData());
+	const XalanDOMString				theData(node.getData());
 
-	const unsigned int	theLength = length(theData);
+	const XalanDOMString::size_type		theLength = length(theData);
 
-	unsigned int i = 0;
+	XalanDOMString::size_type	i = 0;
 
 	for (; i < theLength; i++)
 	{
@@ -778,7 +778,7 @@ DOMServices::getNamespaceForPrefix(
 
 					const XalanDOMString&	aname = attr->getNodeName();
 
-					const unsigned int		len = length(aname);
+					const XalanDOMString::size_type		len = length(aname);
 
 					const bool isPrefix = len <= s_XMLNamespaceWithSeparatorLength ? false :
 							equals(substring(aname,
@@ -789,11 +789,11 @@ DOMServices::getNamespaceForPrefix(
 					if (equals(aname, s_XMLNamespace) || isPrefix) 
 					{
 						// slightly inefficient for default decl.
-						const unsigned int	index = indexOf(aname,
-															XalanUnicode::charColon);
+						const XalanDOMString::size_type		index =
+							indexOf(aname, XalanUnicode::charColon);
 
-						const XalanDOMString	p = (isPrefix)
-							? substring(aname,index + 1,len) 
+						const XalanDOMString	p = isPrefix ?
+							substring(aname,index + 1,len) 
 							: XalanDOMString();
 
 						if (equals(p, prefix) == true)

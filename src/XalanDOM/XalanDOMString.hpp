@@ -98,11 +98,7 @@ public:
 	typedef XalanDOMChar&				reference;
 	typedef const XalanDOMChar&			const_reference;
 
-	// We're stuck with 32-bit lengths because of the DOMs IDL
-	// bindings.  Ideally, we'ed like to re-visit this in the
-	// future.  See typedef below of real_size_type.
-	typedef unsigned int									size_type;
-	typedef XalanDOMCharVectorType::size_type				real_size_type;
+	typedef XalanDOMCharVectorType::size_type				size_type;
 
 	typedef XalanDOMCharVectorType::iterator				iterator;
 	typedef XalanDOMCharVectorType::const_iterator			const_iterator;
@@ -239,9 +235,7 @@ public:
 	{
 		invariants();
 
-		assert(real_size_type(size_type(m_data.capacity())) == m_data.capacity());
-
-		return size_type(m_data.capacity()) - 1;
+		return m_data.capacity() - 1;
 	}
 
 	void
@@ -249,7 +243,7 @@ public:
 	{
 		invariants();
 
-		m_data.reserve(real_size_type(theCount) + 1);
+		m_data.reserve(theCount + 1);
 	}
 
 	void
@@ -282,7 +276,7 @@ public:
 	{
 		invariants();
 
-		return m_data[real_size_type(theIndex)];
+		return m_data[theIndex];
 	}
 
 	reference
@@ -290,7 +284,7 @@ public:
 	{
 		invariants();
 
-		return m_data[real_size_type(theIndex)];
+		return m_data[theIndex];
 	}
 
 #if 0
@@ -301,7 +295,7 @@ public:
 	{
 		invariants();
 
-		return m_data.at(real_size_type(theIndex));
+		return m_data.at(theIndex);
 	}
 
 	reference
@@ -309,7 +303,7 @@ public:
 	{
 		invariants();
 
-		return m_data.at(real_size_type(theIndex));
+		return m_data.at(theIndex);
 	}
 #endif
 
@@ -1107,10 +1101,8 @@ inline const XalanDOMString
 TranscodeFromLocalCodePage(const CharVectorType&	theSourceString)
 {
 	typedef XalanDOMString::size_type		size_type;
-	typedef XalanDOMString::real_size_type	real_size_type;
 
 	const CharVectorType::size_type		theSize = theSourceString.size();
-	assert(real_size_type(size_type(theSize)) == theSize);
 
 	if (theSourceString[theSize - 1] == CharVectorType::value_type(0))
 	{

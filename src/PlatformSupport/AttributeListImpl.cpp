@@ -227,7 +227,10 @@ AttributeListImpl::operator=(const AttributeList&	theRHS)
 unsigned int
 AttributeListImpl::getLength() const
 {
-	return m_AttributeVector.size();
+	// Make sure the mismatch between Xerces and vector<> doesn't cause a problem...
+	assert(m_AttributeVector.size() == unsigned(m_AttributeVector.size()));
+
+	return unsigned(m_AttributeVector.size());
 }
 
 

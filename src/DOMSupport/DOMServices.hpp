@@ -96,13 +96,13 @@ public:
 	static const XalanDOMString&	s_XMLNamespaceSeparatorString;
 	static const XalanDOMString&	s_XMLNamespacePrefixURI;
 
-	static const unsigned int&		s_XMLStringLength;
-	static const unsigned int&		s_XMLStringWithSeparatorLength;
-	static const unsigned int&		s_XMLNamespaceURILength;
-	static const unsigned int&		s_XMLNamespaceLength;
-	static const unsigned int&		s_XMLNamespaceWithSeparatorLength;
-	static const unsigned int&		s_XMLNamespaceSeparatorStringLength;
-	static const unsigned int&		s_XMLNamespacePrefixURILength;
+	static const XalanDOMString::size_type&		s_XMLStringLength;
+	static const XalanDOMString::size_type&		s_XMLStringWithSeparatorLength;
+	static const XalanDOMString::size_type&		s_XMLNamespaceURILength;
+	static const XalanDOMString::size_type&		s_XMLNamespaceLength;
+	static const XalanDOMString::size_type&		s_XMLNamespaceWithSeparatorLength;
+	static const XalanDOMString::size_type&		s_XMLNamespaceSeparatorStringLength;
+	static const XalanDOMString::size_type&		s_XMLNamespacePrefixURILength;
 
 
 	// A dummy string to return when we need an emtpy string...
@@ -683,7 +683,9 @@ private:
 			MemberFunctionPtr		function,
 			const XalanDOMString&	data)
 	{
-		(formatterListener.*function)(c_wstr(data), length(data));
+		assert(length(data) == FormatterListener::size_type(length(data)));
+
+		(formatterListener.*function)(c_wstr(data), FormatterListener::size_type(length(data)));
 	}
 };
 

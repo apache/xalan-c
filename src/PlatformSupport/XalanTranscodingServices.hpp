@@ -100,7 +100,7 @@ public:
 
 	typedef unsigned char	XalanXMLByte;
 
-	static unsigned int
+	static size_t
 	length(const XalanXMLByte*	theBytes)
 	{
 		assert(theBytes != 0);
@@ -146,7 +146,7 @@ public:
 	makeNewTranscoder(
 			const XalanDOMString&	theEncodingName,
 			eCode&					theResult,
-			unsigned int			theBlockSize);
+			size_t					theBlockSize);
 
 	/**
 	 * Destroy a transcoder instance.
@@ -313,11 +313,11 @@ public:
 	virtual eCode
 	transcode(
 			const XalanDOMChar*		theSourceData,
-			unsigned int			theSourceCount,
+			size_t					theSourceCount,
 			XalanXMLByte*			theTarget,
-			unsigned int			theTargetSize,
-			unsigned int&			theSourceCharsTranscoded,
-			unsigned int&			theTargetBytesUsed) = 0;
+			size_t					theTargetSize,
+			size_t&					theSourceCharsTranscoded,
+			size_t&					theTargetBytesUsed) = 0;
 
 	/**
 	 * Transcode data from the transcoder's encoding to UTF-16.  If successfull,
@@ -336,11 +336,11 @@ public:
 	virtual eCode
 	transcode(
 			const XalanXMLByte*		theSourceData,
-			unsigned int			theSourceCount,
+			size_t					theSourceCount,
 			XalanDOMChar*			theTarget,
-			unsigned int			theTargetSize,
-			unsigned int&			theSourceCharsTranscoded,
-			unsigned int&			theTargetBytesUsed,
+			size_t					theTargetSize,
+			size_t&					theSourceCharsTranscoded,
+			size_t&					theTargetBytesUsed,
 			unsigned char*			theCharSizes) = 0;
 
 private:

@@ -84,7 +84,7 @@ XercesLiaisonXalanDOMStringPool::clear()
 
 
 
-unsigned int
+size_t
 XercesLiaisonXalanDOMStringPool::size() const
 {
 #if defined(XALAN_NO_MUTABLE)

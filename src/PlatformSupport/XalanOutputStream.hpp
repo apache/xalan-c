@@ -191,7 +191,7 @@ public :
     void
 	write(
 			const char*		theBuffer,
-			unsigned long	theBufferLength)
+			size_t			theBufferLength)
 	{
 		assert(theBuffer != 0);
 
@@ -211,7 +211,7 @@ public :
     void
 	write(
 			const XalanDOMChar*		theBuffer,
-			unsigned long			theBufferLength);
+			size_t					theBufferLength);
 
 	/**
 	 * Get the output encoding for the stream.
@@ -357,12 +357,12 @@ protected:
 	void
 	transcode(
 			const XalanDOMChar*		theBuffer,
-			unsigned long			theBufferLength,
+			size_t					theBufferLength,
 			TranscodeVectorType&	theDestination);
 
 	virtual void
-	writeData(const char*		theBuffer,
-			  unsigned long		theBufferLength) = 0;
+	writeData(const char*	theBuffer,
+			  size_t		theBufferLength) = 0;
 
 	virtual void
 	doFlush() = 0;
@@ -385,7 +385,7 @@ private:
 	void
 	doWrite(
 			const XalanDOMChar*		theBuffer,
-			unsigned long			theBufferLength);
+			size_t					theBufferLength);
 
 
 	const TranscodeVectorType::size_type	m_transcoderBlockSize;

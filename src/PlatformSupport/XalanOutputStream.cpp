@@ -101,7 +101,7 @@ XalanOutputStream::~XalanOutputStream()
 void
 XalanOutputStream::write(
 			const XalanDOMChar*		theBuffer,
-			unsigned long			theBufferLength)
+			size_t					theBufferLength)
 {
 	assert(theBuffer != 0);
 
@@ -127,7 +127,7 @@ XalanOutputStream::write(
 void
 XalanOutputStream::transcode(
 			const XalanDOMChar*		theBuffer,
-			unsigned long			theBufferLength,
+			size_t					theBufferLength,
 			TranscodeVectorType&	theDestination)
 {
 	if (m_transcoder == 0)
@@ -160,7 +160,7 @@ XalanOutputStream::transcode(
 		// and amount remaining in the buffer, since we may not be
 		// able to transcode it all at once.
 		const XalanDOMChar*		theBufferPosition = theBuffer;
-		unsigned int			theRemainingBufferLength = theBufferLength;
+		size_t					theRemainingBufferLength = theBufferLength;
 
 		// Keep track of the destination size, and the target size, which is
 		// the size of the destination that has not yet been filled with
@@ -168,8 +168,8 @@ XalanOutputStream::transcode(
 		// transcoding to a 16-bit encoding.
 		// $$$ ToDo: We need to know the size of an encoding, so we can
 		// do the right thing with the destination size.
-		unsigned int			theDestinationSize = theBufferLength * 2;
-		unsigned int			theTargetSize = theDestinationSize;
+		size_t	theDestinationSize = theBufferLength * 2;
+		size_t	theTargetSize = theDestinationSize;
 
 		do
 		{
@@ -285,7 +285,7 @@ XalanOutputStream::setOutputEncoding(const XalanDOMString&	theEncoding)
 		XalanTranscodingServices::getStreamProlog(theEncoding);
 	assert(theProlog != 0);
 
-	const unsigned int	theLength = XalanTranscodingServices::length(theProlog);
+	const size_t	theLength = XalanTranscodingServices::length(theProlog);
 
 	if (theLength > 0)
 	{
@@ -315,7 +315,7 @@ XalanOutputStream::flushBuffer()
 void
 XalanOutputStream::doWrite(
 			const XalanDOMChar*		theBuffer,
-			unsigned long			theBufferLength)
+			size_t					theBufferLength)
 {
 	assert(theBuffer != 0);
 

@@ -605,9 +605,9 @@ convertHelper(
 	// string is less than n characters, we'll convert
 	// it as a long and coerce that to a double.  This
 	// is _much_ cheaper...
-	const unsigned int	theLongHackThreshold = 10;
+	const XalanDOMString::size_type		theLongHackThreshold = 10;
 
-	unsigned int	theLength = length(theString);
+	XalanDOMString::size_type	theLength = length(theString);
 
 	if (fGotDecimalPoint == false && theLength < theLongHackThreshold)
 	{
@@ -619,7 +619,7 @@ convertHelper(
 		consumeWhitespace(theString, theLength);
 
 		// Use a stack-based buffer, when possible...
-		const unsigned int	theBufferSize = 200u;
+		const XalanDOMString::size_type		theBufferSize = 200u;
 
 		if (theLength < theBufferSize)
 		{

@@ -237,7 +237,7 @@ XalanNumberFormat::applyGrouping(
 	}
 	else
 	{
-		const unsigned int len = length(value);
+		const XalanDOMString::size_type		len = length(value);
 
 		if (len == 0)
 		{
@@ -245,7 +245,7 @@ XalanNumberFormat::applyGrouping(
 		}
 		else
 		{
-			const unsigned int	bufsize = len + len/m_groupingSize + 1;
+			const XalanDOMString::size_type		bufsize = len + len/m_groupingSize + 1;
 
 			XalanDOMChar* const		buffer = new XalanDOMChar[bufsize];
 
@@ -255,14 +255,14 @@ XalanNumberFormat::applyGrouping(
 
 			*p-- = 0;	// null terminate
 
-			for (unsigned int i = 0, ix = len - 1; i < len; i++, ix--)
+			for (XalanDOMString::size_type i = 0, ix = len - 1; i < len; i++, ix--)
 			{
 				const XalanDOMChar		c = charAt(value, ix);
 
 				if (i && !(i% m_groupingSize))
 				{
 					// Could be a multiple character separator??
-					for (int j= m_groupingSeparator.length()-1; j>=0; j--)
+					for (long j = long(m_groupingSeparator.length() - 1); j>=0; j--)
 						*p-- = charAt(m_groupingSeparator, j);
 				}
 

@@ -386,8 +386,8 @@ FormatterToDOM::getNamespaceForPrefix(
 			const PrefixResolver&	thePrefixResolver,
 			XalanDOMString&			thePrefix)
 {
-	const unsigned int	theLength = length(theName);
-	const unsigned int	theColonIndex = indexOf(theName, XalanUnicode::charColon);
+	const XalanDOMString::size_type		theLength = length(theName);
+	const XalanDOMString::size_type		theColonIndex = indexOf(theName, XalanUnicode::charColon);
 
 	if (theColonIndex == theLength)
 	{

@@ -90,26 +90,26 @@ public:
 	virtual void
 	flush();
 
-	// If the length is UINT_MAX, then the array is assumed to be null-terminated.
 	virtual void
-	write(const char*	s,
-		  unsigned int	theOffset = 0,
-		  unsigned int	theLength = UINT_MAX);
+	write(
+			const char*		s,
+			size_t			theOffset = 0,
+			size_t			theLength = size_t(-1));
 
-	// If the length is UINT_MAX, then the array is assumed to be null-terminated.
 	virtual void
-	write(const XalanDOMChar*	s,
-		  unsigned int	theOffset = 0,
-		  unsigned int	theLength = UINT_MAX);
+	write(
+			const XalanDOMChar*			s,
+			XalanDOMString::size_type	theOffset = 0,
+			XalanDOMString::size_type	theLength = XalanDOMString::npos);
 
 	virtual void
 	write(XalanDOMChar		c);
 
-	// If the length is UINT_MAX, then the entire string is printed.
 	virtual void
-	write(const XalanDOMString&		s,
-		  unsigned int				theOffset = 0,
-		  unsigned int				theLength = UINT_MAX);
+	write(
+			const XalanDOMString&		s,
+			XalanDOMString::size_type	theOffset = 0,
+			XalanDOMString::size_type	theLength = XalanDOMString::npos);
 
 #if !defined(XALAN_BOOL_AS_INT)
 	virtual void
@@ -120,12 +120,14 @@ public:
 	print(char	c);
 
 	virtual void
-	print(const char*	s,
-		  unsigned int	theLength = UINT_MAX);
+	print(
+			const char*		s,
+			size_t			theLength = size_t(-1));
 
 	virtual void
-	print(const XalanDOMChar*	s,
-		  unsigned int			theLength = UINT_MAX);
+	print(
+			const XalanDOMChar*			s,
+			XalanDOMString::size_type	theLength = XalanDOMString::npos);
 
 	virtual void
 	print(double	d);
@@ -151,12 +153,14 @@ public:
 	println(char	x);
 
 	virtual void
-	println(const char*		s,
-			unsigned int	theLength = UINT_MAX);
+	println(
+			const char*		s,
+		    size_t			theLength = size_t(-1));
 
 	virtual void
-	println(const XalanDOMChar*		s,
-			unsigned int			theLength = UINT_MAX);
+	println(
+			const XalanDOMChar*			s,
+			XalanDOMString::size_type	theLength = XalanDOMString::npos);
 
 	virtual void
 	println(double	x);

@@ -81,14 +81,14 @@ static const XalanDOMString		s_emptyString;
 
 
 XalanSourceTreeDocument::XalanSourceTreeDocument(
-			unsigned long	theNumber,
-			bool			fPoolAllText,
-			unsigned int	theNamesStringPoolBlockSize,
-			unsigned int	theNamesStringPoolBucketCount,
-			unsigned int	theNamesStringPoolBucketSize,
-			unsigned int	theValuesStringPoolBlockSize,
-			unsigned int	theValuesStringPoolBucketCount,
-			unsigned int	theValuesStringPoolBucketSize) :
+			unsigned long		theNumber,
+			bool				fPoolAllText,
+			block_size_type		theNamesStringPoolBlockSize,
+			bucket_count_type	theNamesStringPoolBucketCount,
+			bucket_size_type	theNamesStringPoolBucketSize,
+			block_size_type		theValuesStringPoolBlockSize,
+			bucket_count_type	theValuesStringPoolBucketCount,
+			bucket_size_type	theValuesStringPoolBucketSize) :
 	XalanDocument(),
 	m_number(theNumber),
 	m_firstChild(0),
@@ -659,10 +659,10 @@ XalanSourceTreeDocument::createElementNode(
 
 inline const XalanDOMString&
 getElementNodePrefix(
-			const XalanDOMChar*		qname,
-			XalanDOMStringPool*		theStringPool,
-			unsigned int			theLength,			
-			unsigned int			theColonIndex)
+			const XalanDOMChar*			qname,
+			XalanDOMStringPool*			theStringPool,
+			XalanDOMString::size_type	theLength,			
+			XalanDOMString::size_type	theColonIndex)
 {
 	if(theColonIndex == theLength)
 	{
@@ -698,8 +698,8 @@ XalanSourceTreeDocument::createElementNode(
 	XalanSourceTreeAttr** const		theAttributeVector =
 		theAttributeCount == 0 ? 0 : m_attributesVector.allocate(theAttributeCount);
 
-	const unsigned int	theColonIndex = indexOf(qname, XalanUnicode::charColon);
-	const unsigned int	theLength = length(qname);
+	const XalanDOMString::size_type		theColonIndex = indexOf(qname, XalanUnicode::charColon);
+	const XalanDOMString::size_type		theLength = length(qname);
 
 	XalanSourceTreeElement* const	theNewElement =
 		m_elementNSAllocator.create(
@@ -769,7 +769,7 @@ XalanSourceTreeDocument::createElementNode(
 XalanSourceTreeComment*
 XalanSourceTreeDocument::createCommentNode(
 			const XalanDOMChar*			data,
-			unsigned int				length,
+			XalanDOMString::size_type	length,
 			XalanSourceTreeElement*		theParentElement,
 			XalanNode*					thePreviousSibling,
 			XalanNode*					theNextSibling)
@@ -810,8 +810,8 @@ XalanSourceTreeDocument::createProcessingInstructionNode(
 
 inline const XalanDOMString&
 XalanSourceTreeDocument::getTextNodeString(
-			const XalanDOMChar*		chars,
-			unsigned int			length)
+			const XalanDOMChar*			chars,
+			XalanDOMString::size_type	length)
 {
 	if (m_poolAllText == true)
 	{
@@ -841,8 +841,8 @@ XalanSourceTreeDocument::getNamespaceForPrefix(
 			XalanDOMString&			thePrefix,
 			bool					fUseDefault)
 {
-	const unsigned int	theLength = length(theName);
-	const unsigned int	theColonIndex = indexOf(theName, XalanUnicode::charColon);
+	const XalanDOMString::size_type		theLength = length(theName);
+	const XalanDOMString::size_type		theColonIndex = indexOf(theName, XalanUnicode::charColon);
 
 	if (theColonIndex != theLength)
 	{
@@ -1047,9 +1047,9 @@ XalanSourceTreeDocument::createElement(
 		// the local name is the same as the tag name.  Otherwise, we need
 		// to remove the prefix and the ':' that separates them.  If
 		// m_stringBuffer is of length 0, there's no prefix.
-		const unsigned int			thePrefixLength = length(m_stringBuffer);
+		const XalanDOMString::size_type		thePrefixLength = length(m_stringBuffer);
 
-		const XalanDOMChar* const	theLocalName =
+		const XalanDOMChar* const			theLocalName =
 			thePrefixLength == 0 ? theTagName : theTagName + thePrefixLength + 1;
 
 		// The constructor parameters for ElementNS are:
@@ -1119,7 +1119,7 @@ XalanSourceTreeDocument::createAttributes(
 				theAttributes.getLocalName(i);
 			assert(theLocalName != 0);
 
-			const unsigned int	theColonIndex = indexOf(theQName, XalanUnicode::charColon);
+			const XalanDOMString::size_type		theColonIndex = indexOf(theQName, XalanUnicode::charColon);
 			assert(theColonIndex != length(theQName));
 
 			// The constructor parameters for AttrNS are:

@@ -177,9 +177,9 @@ NamespaceResolver::getNamespaceOfNode(const XalanNode&	theNode) const
 	}
 	else
 	{
-		const XalanDOMString&	nodeName = theLocalNode->getNodeName();
+		const XalanDOMString&		nodeName = theLocalNode->getNodeName();
 
-		unsigned int			indexOfNSSep = indexOf(nodeName, XalanUnicode::charColon);
+		XalanDOMString::size_type	indexOfNSSep = indexOf(nodeName, XalanUnicode::charColon);
 
 		XalanDOMString			prefix;
 
@@ -338,7 +338,8 @@ NamespaceResolver::getNamespaceOfNode(const XalanNode&	theNode) const
 			}
 
 			// Anotation pass over the "any other node" queue
-			const unsigned int	nCandidates = candidateNoAncestorXMLNS.size();
+			const CandidateNoAncestorVectorType::size_type	nCandidates =
+				candidateNoAncestorXMLNS.size();
 
 			if(nCandidates > 0)
 			{

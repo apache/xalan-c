@@ -79,7 +79,6 @@ public:
 
 	typedef XalanDOMStringPool	BaseClassType;
 
-
 	explicit
 	XercesLiaisonXalanDOMStringPool();
 
@@ -91,7 +90,7 @@ public:
 	virtual void
 	clear();
 
-	virtual unsigned int
+	virtual size_t
 	size() const;
 
 	virtual const XalanDOMString&
@@ -112,7 +111,6 @@ private:
 
 	bool
 	operator==(const XercesLiaisonXalanDOMStringPool&) const;
-
 
 	// Data members...
 	mutable XMLMutex	m_mutex;

@@ -231,7 +231,7 @@ AttributesImpl::operator=(const Attributes&		theRHS)
 unsigned int
 AttributesImpl::getLength() const
 {
-	return m_attributesVector.size();
+	return unsigned(m_attributesVector.size());
 }
 
 
@@ -341,7 +341,7 @@ AttributesImpl::getType(const XMLCh* const	qname) const
 	}
 	else
 	{
-		return getType(AttributesVectorType::size_type(theIndex));
+		return getType(theIndex);
 	}
 }
 
@@ -358,7 +358,7 @@ AttributesImpl::getValue(const XMLCh* const		qname) const
 	}
 	else
 	{
-		return getValue(AttributesVectorType::size_type(theIndex));
+		return getValue(theIndex);
 	}
 }
 
@@ -377,7 +377,7 @@ AttributesImpl::getType(
 	}
 	else
 	{
-		return getType(AttributesVectorType::size_type(theIndex));
+		return getType(theIndex);
 	}
 }
 
@@ -396,7 +396,7 @@ AttributesImpl::getValue(
 	}
 	else
 	{
-		return getValue(AttributesVectorType::size_type(theIndex));
+		return getValue(theIndex);
 	}
 }
 

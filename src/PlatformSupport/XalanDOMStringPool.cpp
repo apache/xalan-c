@@ -65,9 +65,9 @@ const XalanDOMString	XalanDOMStringPool::s_emptyString;
 
 
 XalanDOMStringPool::XalanDOMStringPool(
-			unsigned int	theBlockSize,
-			unsigned int	theBucketCount,
-			unsigned int	theBucketSize) :
+			block_size_type		theBlockSize,
+			bucket_count_type	theBucketCount,
+			bucket_size_type	theBucketSize) :
 	m_stringAllocator(theBlockSize),
 	m_stringCount(0),
 	m_hashTable(theBucketCount, theBucketSize)
@@ -114,8 +114,8 @@ XalanDOMStringPool::get(const XalanDOMString&	theString)
 
 const XalanDOMString&
 XalanDOMStringPool::get(
-			const XalanDOMChar*		theString,
-			unsigned int			theLength)
+			const XalanDOMChar*			theString,
+			XalanDOMString::size_type	theLength)
 {
 	assert(m_stringCount == m_hashTable.size());
 
@@ -125,9 +125,9 @@ XalanDOMStringPool::get(
 	}
 	else
 	{
-		const unsigned int	theActualLength = theLength == unsigned(-1) ? length(theString) : theLength;
+		const XalanDOMString::size_type		theActualLength = theLength == XalanDOMString::npos ? length(theString) : theLength;
 
-		unsigned int	theBucketIndex;
+		size_t	theBucketIndex;
 
 		const XalanDOMString*	theTableString = m_hashTable.find(theString, theActualLength, &theBucketIndex);
 

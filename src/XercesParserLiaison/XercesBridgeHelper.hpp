@@ -87,10 +87,14 @@ class XALAN_XERCESPARSERLIAISON_EXPORT XercesBridgeHelper
 {
 public:
 
+	typedef unsigned int	XercesStringLengthType;
+
 	static const DOMString
 	XalanDOMStringToXercesDOMString(const XalanDOMString&	theString)
 	{
-		return DOMString(&theString[0], theString.length());
+		assert(XercesStringLengthType(theString.length()) == theString.length());
+
+		return DOMString(&theString[0], XercesStringLengthType(theString.length()));
 	}
 
 	static void

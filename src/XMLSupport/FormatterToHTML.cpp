@@ -148,7 +148,7 @@ FormatterToHTML::initAttrCharsMap()
 	m_attrCharsMap[XalanUnicode::charLessThanSign] = 0;
 	m_attrCharsMap[XalanUnicode::charGreaterThanSign] = 0;
 
-	for(unsigned int i = 160; i < SPECIALSSIZE; i++)
+	for(XalanDOMString::size_type i = 160; i < SPECIALSSIZE; i++)
 	{
 		m_attrCharsMap[i] = 'S';
 	}
@@ -652,8 +652,8 @@ FormatterToHTML::writeCharacters(const XalanDOMString&	theString)
 
 void
 FormatterToHTML::writeCharacters(
-			const XalanDOMChar*		theString,
-			unsigned int			theLength)
+			const XalanDOMChar*			theString,
+			XalanDOMString::size_type	theLength)
 {
 	assert(theString != 0);
 
@@ -662,7 +662,7 @@ FormatterToHTML::writeCharacters(
 		theLength = length(theString);
 	}
 
-	for (unsigned int i = 0; i < theLength; ++i) 
+	for (XalanDOMString::size_type i = 0; i < theLength; ++i) 
 	{
 		const XalanDOMChar	ch = theString[i];
 
@@ -679,7 +679,7 @@ FormatterToHTML::writeCharacters(
 			if (m_isUTF8 == true && 0xd800 <= ch && ch < 0xdc00)
 			{
 				// UTF-16 surrogate
-				unsigned int	next = 0;
+				XalanDOMChar	next = 0;
 
 				if (i + 1 >= theLength) 
 				{
@@ -694,7 +694,7 @@ FormatterToHTML::writeCharacters(
 						throwInvalidUTF16SurrogateException(ch, next);
 					}
 
-					next = ((ch - 0xd800) << 10) + next - 0xdc00 + 0x00010000;
+					next = XalanDOMChar(((ch - 0xd800) << 10) + next - 0xdc00 + 0x00010000);
 				}
 
 				writeNumberedEntityReference(next);
@@ -719,9 +719,9 @@ FormatterToHTML::writeAttrString(const XalanDOMChar*	theString)
 {
 	assert(theString != 0);
 
-    const unsigned int	theLength = length(theString);
+    const XalanDOMString::size_type		theLength = length(theString);
 
-    for (unsigned int i = 0;  i < theLength;  i ++)
+    for (XalanDOMString::size_type i = 0;  i < theLength;  i ++)
     {
 		const XalanDOMChar	ch = theString[i];
 
@@ -741,7 +741,7 @@ FormatterToHTML::writeAttrString(const XalanDOMChar*	theString)
 			{
 				// UTF-16 surrogate
 
-				unsigned int next = 0;
+				XalanDOMChar	next = 0;
 
 				if (i + 1 >= theLength) 
 				{
@@ -756,7 +756,7 @@ FormatterToHTML::writeAttrString(const XalanDOMChar*	theString)
 						throwInvalidUTF16SurrogateException(ch, next);
 					}
 
-					next = ((ch - 0xd800) << 10) + next -0xdc00 + 0x00010000;
+					next = XalanDOMChar(((ch - 0xd800) << 10) + next -0xdc00 + 0x00010000);
 				}
 
 				accumContent(XalanUnicode::charAmpersand);
@@ -788,11 +788,11 @@ FormatterToHTML::accumCommentData(const XalanDOMChar*	data)
 void
 FormatterToHTML::copyEntityIntoBuffer(const XalanDOMChar*	s)
 {
-	const unsigned int	len = length(s);
+	const XalanDOMString::size_type		len = length(s);
 
     accumContent(XalanUnicode::charAmpersand);
 
-    for(unsigned int i = 0; i < len; ++i)
+    for(XalanDOMString::size_type i = 0; i < len; ++i)
     {
 		accumContent(s[i]);
     }
@@ -805,11 +805,11 @@ FormatterToHTML::copyEntityIntoBuffer(const XalanDOMChar*	s)
 void
 FormatterToHTML::copyEntityIntoBuffer(const XalanDOMString&		s)
 {
-	const unsigned int	len = length(s);
+	const XalanDOMString::size_type		len = length(s);
 
     accumContent(XalanUnicode::charAmpersand);
 
-    for(unsigned int i = 0; i < len; ++i)
+    for(XalanDOMString::size_type i = 0; i < len; ++i)
     {
 		accumContent(charAt(s, i));
     }
@@ -873,9 +873,9 @@ FormatterToHTML::writeAttrURI(const XalanDOMChar*	theString)
 	// causing damage.	If the URL is already properly escaped, in theory, this 
 	// function should not change the string value.
 
-	const unsigned int	len = length(theString);
+	const XalanDOMString::size_type		len = length(theString);
 
-    for (unsigned int i = 0; i < len; ++i)
+    for (XalanDOMString::size_type i = 0; i < len; ++i)
     {
 		const XalanDOMChar	ch = theString[i];
 
@@ -1060,8 +1060,8 @@ FormatterToHTML::pushHasNamespace(const XalanDOMChar*	theElementName)
 
 	if (m_prefixResolver != 0)
 	{
-		const unsigned int	theLength = length(theElementName);
-		const unsigned int	theColonIndex = indexOf(theElementName, XalanUnicode::charColon);
+		const XalanDOMString::size_type		theLength = length(theElementName);
+		const XalanDOMString::size_type		theColonIndex = indexOf(theElementName, XalanUnicode::charColon);
 
 		const XalanDOMString*	thePrefix = &s_emptyString;
 

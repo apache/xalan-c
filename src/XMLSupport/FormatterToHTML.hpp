@@ -172,11 +172,11 @@ public:
 
 	virtual bool
 	accumDefaultEntity(
-			XalanDOMChar		ch,
-			unsigned int		i,
-			const XalanDOMChar	chars[],
-			unsigned int		len,
-			bool				escLF);
+			XalanDOMChar				ch,
+			XalanDOMString::size_type	i,
+			const XalanDOMChar			chars[],
+			XalanDOMString::size_type	len,
+			bool						escLF);
 
 	// These methods are inherited from FormatterListener ...
 
@@ -305,8 +305,8 @@ protected:
 
 	void
 	writeCharacters(
-			const XalanDOMChar*		theString,
-			unsigned int			theLength = unsigned(-1));
+			const XalanDOMChar*			theString,
+			XalanDOMString::size_type	theLength = XalanDOMString::npos);
 
 private:
 

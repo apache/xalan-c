@@ -164,27 +164,27 @@ public:
 	 * 
 	 * @return number of remaining tokens
 	 */
-	virtual unsigned int
+	virtual size_t
 	countTokens() const;
 
 protected:
 
-	unsigned int
-	FindNextDelimiterIndex(unsigned int	theStartIndex) const;
+	XalanDOMString::size_type
+	FindNextDelimiterIndex(XalanDOMString::size_type	theStartIndex) const;
 
 private:
 
-	const XalanDOMString	m_String;
+	const XalanDOMString				m_String;
 
-	const XalanDOMString	m_Tokens;
+	const XalanDOMString				m_Tokens;
 
-	const bool				m_fReturnTokens;
+	const bool							m_fReturnTokens;
 
-	unsigned int			m_CurrentIndex;
+	XalanDOMString::size_type			m_CurrentIndex;
 
-	const unsigned int		m_StringLength;
+	const XalanDOMString::size_type		m_StringLength;
 
-	const unsigned int		m_tokensLength;
+	const XalanDOMString::size_type		m_tokensLength;
 };
 
 

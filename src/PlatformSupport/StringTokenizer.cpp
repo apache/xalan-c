@@ -162,7 +162,7 @@ StringTokenizer::nextToken()
 	XalanDOMString	theToken;
 
 	// Find the index of the next delimiter.
-	unsigned int	theIndex = FindNextDelimiterIndex(m_CurrentIndex);
+	XalanDOMString::size_type	theIndex = FindNextDelimiterIndex(m_CurrentIndex);
 
 	if (theIndex == m_CurrentIndex)
 	{
@@ -208,7 +208,7 @@ StringTokenizer::nextToken(XalanDOMString&	theToken)
 	assert(m_CurrentIndex < m_StringLength);
 
 	// Find the index of the next delimiter.
-	unsigned int	theIndex = FindNextDelimiterIndex(m_CurrentIndex);
+	XalanDOMString::size_type	theIndex = FindNextDelimiterIndex(m_CurrentIndex);
 
 	if (theIndex == m_CurrentIndex)
 	{
@@ -250,17 +250,19 @@ StringTokenizer::nextToken(XalanDOMString&	theToken)
 
 
 
-unsigned int
+size_t
 StringTokenizer::countTokens() const
 {
-	unsigned int	theCount = 0;
-	unsigned int	theCurrentIndex = m_CurrentIndex;
+	size_t						theCount = 0;
+
+	XalanDOMString::size_type	theCurrentIndex = m_CurrentIndex;
 
 	if (theCurrentIndex < m_StringLength)
 	{
 		while(theCurrentIndex < m_StringLength)
 		{
-			const unsigned int	theNextIndex = FindNextDelimiterIndex(theCurrentIndex);
+			const XalanDOMString::size_type		theNextIndex =
+				FindNextDelimiterIndex(theCurrentIndex);
 
 			if (theNextIndex == theCurrentIndex)
 			{
@@ -288,8 +290,9 @@ StringTokenizer::countTokens() const
 unsigned int
 StringTokenizer::FindNextDelimiterIndex(unsigned int	theStartIndex) const
 {
-	bool			fTokenFound = false;
-	unsigned int	theIndex = theStartIndex;
+	bool						fTokenFound = false;
+
+	XalanDOMString::size_type	theIndex = theStartIndex;
 
 	while(theIndex < m_StringLength &&
 		  fTokenFound == false)

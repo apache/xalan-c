@@ -168,16 +168,16 @@ XalanDOMString::resize(
 		{
 			// If the string is of 0 length, resize but add an
 			// extra byte for the terminating byte.
-			m_data.resize(real_size_type(theCount + 1), theChar);
+			m_data.resize(theCount + 1, theChar);
 		}
 		else
 		{
 			// If the string is not of 0 length, resize but
 			// put a copy of theChar where the terminating
 			// byte used to be.
-			m_data.resize(real_size_type(theCount), theChar);
+			m_data.resize(theCount, theChar);
 
-			m_data[real_size_type(theOldSize)] = theChar;
+			m_data[theOldSize] = theChar;
 		}
 
 		m_size = theCount;
@@ -213,8 +213,7 @@ XalanDOMString::erase(
 
 		m_data.erase(i, i + (theActualCount));
 
-		const size_type		theNewSize = size_type(m_data.size());
-		assert(real_size_type(theNewSize) == m_data.size());
+		const size_type		theNewSize = m_data.size();
 
 		if (theNewSize < 2)
 		{
@@ -263,7 +262,7 @@ XalanDOMString::append(
 	{
 		if (m_data.size() == 0)
 		{
-			m_data.reserve(real_size_type(theLength) + 1);
+			m_data.reserve(theLength + 1);
 
 			m_data.insert(m_data.end(), theString, theString + theLength);
 
@@ -339,9 +338,7 @@ XalanDOMString::append(
 			append(&*theTempVector.begin(), size_type(theTempVector.size()));
 		}
 
-		m_size = size_type(m_data.size()) - 1;
-
-		assert(real_size_type(m_size) == m_data.size() - 1);
+		m_size = m_data.size() - 1;
 	}
 
 	invariants();
@@ -359,7 +356,7 @@ XalanDOMString::append(
 
 	if (m_data.size() == 0)
 	{
-		m_data.insert(m_data.end(), real_size_type(theCount) + 1, theChar);
+		m_data.insert(m_data.end(), theCount + 1, theChar);
 
 		m_data.back() = 0;
 
@@ -369,7 +366,7 @@ XalanDOMString::append(
 	}
 	else
 	{
-		m_data.insert(getBackInsertIterator(), real_size_type(theCount), theChar);
+		m_data.insert(getBackInsertIterator(), theCount, theChar);
 
 		m_size += theCount;
 	}
@@ -408,7 +405,7 @@ XalanDOMString::insert(
 {
 	invariants();
 
-	m_data.insert(getIteratorForPosition(thePosition), real_size_type(theCount), theChar);
+	m_data.insert(getIteratorForPosition(thePosition), theCount, theChar);
 
 	m_size += theCount;
 
@@ -445,7 +442,7 @@ XalanDOMString::insert(
 {
 	invariants();
 
-	m_data.insert(thePosition, real_size_type(theCount), theChar);
+	m_data.insert(thePosition, theCount, theChar);
 
 	m_size += theCount;
 
@@ -464,9 +461,9 @@ XalanDOMString::insert(
 
 	m_data.insert(theInsertPosition, theFirstPosition, theLastPosition);
 
-	m_size = size_type(m_data.size()) - 1;
+	m_size = m_data.size() - 1;
 
-	assert(real_size_type(m_size) == m_data.size() - 1);
+	assert(m_size == m_data.size() - 1);
 
 	invariants();
 }
@@ -663,7 +660,7 @@ XalanDOMString::length(const char*	theString)
 {
 	assert(theString != 0);
 
-	assert(strlen(theString) < real_size_type(npos));
+	assert(strlen(theString) < size_type(npos));
 
 	return size_type(strlen(theString));
 }
@@ -778,8 +775,6 @@ doTranscodeToLocalCodePage(
 			CharVectorType&				theTargetVector,
 			bool						terminate)
 {
-	typedef XalanDOMString::real_size_type	real_size_type;
-
     // Short circuit if it's a null pointer, or of length 0.
     if (!theSourceString || (!theSourceString[0]))
     {
@@ -829,14 +824,14 @@ doTranscodeToLocalCodePage(
 			theSourceStringLength = length(theSourceString);
 		}
 
-		theTempSourceJanitor.reset(new wchar_t[real_size_type(theSourceStringLength) + 1]);
+		theTempSourceJanitor.reset(new wchar_t[theSourceStringLength + 1]);
 
-		for (size_t	index = 0; index < size_t(theSourceStringLength); ++index)
+		for (size_t	index = 0; index < theSourceStringLength; ++index)
 		{
 			theTempSourceJanitor[index] = wchar_t(theSourceString[index]);
 		}
 
-		theTempSourceJanitor[size_t(theSourceStringLength)] = 0;
+		theTempSourceJanitor[theSourceStringLength] = 0;
 
 		theTempSource = theTempSourceJanitor.get();
 	}

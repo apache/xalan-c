@@ -83,6 +83,19 @@ public:
 		   eDefaultBucketCount = XalanDOMStringHashTable::eDefaultBucketCount,
 		   eDefaultBucketSize = XalanDOMStringHashTable::eDefaultBucketSize };
 
+#if defined(XALAN_NO_DEFAULT_TEMPLATE_ARGUMENTS)
+	typedef ArenaBlock<XalanDOMString>		ArenaBlockType;
+
+	typedef ArenaAllocator<XalanDOMString,
+						   ArenaBlockType>	ArenaAllocatorType;
+#else
+	typedef ArenaAllocator<XalanDOMString>	ArenaAllocatorType;
+#endif
+
+	typedef ArenaAllocatorType::size_type				block_size_type;
+	typedef size_t										bucket_count_type;
+	typedef XalanDOMStringHashTable::bucket_size_type	bucket_size_type;
+
 	/**
 	 * Create a string pool.
 	 *
@@ -92,9 +105,9 @@ public:
 	 */
 	explicit
 	XalanDOMStringPool(
-			unsigned int	theBlockSize = eDefaultBlockSize,
-			unsigned int	theBucketCount = eDefaultBucketCount,
-			unsigned int	theBucketSize = eDefaultBucketSize);
+			block_size_type		theBlockSize = eDefaultBlockSize,
+			bucket_count_type	theBucketCount = eDefaultBucketCount,
+			bucket_size_type	theBucketSize = eDefaultBucketSize);
 
 	virtual
 	~XalanDOMStringPool();
@@ -111,7 +124,7 @@ public:
 	 *
 	 * @return the size of the pool.
 	 */
-	virtual unsigned int
+	virtual size_t
 	size() const;
 
 	/**
@@ -127,13 +140,13 @@ public:
 	 * Get a pooled string.  If the string is not pooled, it is added.
 	 *
 	 * @param theString The string to pool.
-	 * @param theLength The length of the string.  If -1, the string is assumed to be null-terminated.
+	 * @param theLength The length of the string.  If XalanDOMString::npos, the string is assumed to be null-terminated.
 	 * @return a const reference to the pooled string.
 	 */
 	virtual const XalanDOMString&
 	get(
-			const XalanDOMChar*		theString,
-			unsigned int			theLength = unsigned(-1));
+			const XalanDOMChar*			theString,
+			XalanDOMString::size_type	theLength = XalanDOMString::npos);
 
 	/**
 	 * Get a reference to the pool's hash table.  Useful for diagnostic
@@ -158,19 +171,10 @@ private:
 	bool
 	operator==(const XalanDOMStringPool&) const;
 
-#if defined(XALAN_NO_DEFAULT_TEMPLATE_ARGUMENTS)
-	typedef ArenaBlock<XalanDOMString>		ArenaBlockType;
-
-	typedef ArenaAllocator<XalanDOMString,
-						   ArenaBlockType>	ArenaAllocatorType;
-#else
-	typedef ArenaAllocator<XalanDOMString>	ArenaAllocatorType;
-#endif
-
 	// Data members...
 	ArenaAllocatorType				m_stringAllocator;
 
-	unsigned int					m_stringCount;
+	size_t							m_stringCount;
 
 	XalanDOMStringHashTable			m_hashTable;
 

@@ -292,9 +292,9 @@ private:
 
 		if (m_freeBlockCount > 0)
 		{
-			const unsigned long	theFreeListSize = m_freeList.getSize();
+			const size_type		theFreeListSize = m_freeList.getSize();
 
-			for(unsigned long i = 0; i < theFreeListSize; ++i)
+			for(size_type i = 0; i < theFreeListSize; ++i)
 			{
 				if (m_freeList.isSet(i) == true)
 				{
@@ -314,7 +314,7 @@ private:
 	XalanBitmap		m_freeList;
 
 	// The number of blocks on the free list.)
-	unsigned long	m_freeBlockCount;
+	size_type		m_freeBlockCount;
 };
 
 

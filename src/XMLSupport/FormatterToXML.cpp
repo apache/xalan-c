@@ -324,10 +324,10 @@ FormatterToXML::initAttrCharsMap()
 {
 	memset(m_attrCharsMap, 0, sizeof(m_attrCharsMap));
 
-	const unsigned int	nSpecials = length(m_attrSpecialChars);
+	const XalanDOMString::size_type		nSpecials = length(m_attrSpecialChars);
 
 	{
-		for(unsigned int i = 0; i < nSpecials; ++i)
+		for(XalanDOMString::size_type i = 0; i < nSpecials; ++i)
 		{
 			m_attrCharsMap[charAt(m_attrSpecialChars, i)] = 'S';
 		}
@@ -728,7 +728,7 @@ FormatterToXML::throwInvalidUTF16SurrogateException(XalanDOMChar	ch)
 void
 FormatterToXML::throwInvalidUTF16SurrogateException(
 			XalanDOMChar	ch,
-			unsigned int	next)
+			XalanDOMChar	next)
 {
 	const XalanDOMString	theMessage(TranscodeFromLocalCodePage("Invalid UTF-16 surrogate detected: ") +
 									   UnsignedLongToHexDOMString(ch) +
@@ -742,18 +742,18 @@ FormatterToXML::throwInvalidUTF16SurrogateException(
 
 void
 FormatterToXML::accumDefaultEscape(
-			XalanDOMChar		ch,
-			unsigned int		i,
-			const XalanDOMChar	chars[],
-			unsigned int		len,
-			bool				escLF)
+			XalanDOMChar				ch,
+			XalanDOMString::size_type	i,
+			const XalanDOMChar			chars[],
+			XalanDOMString::size_type	len,
+			bool						escLF)
 {
 	if(!accumDefaultEntity(ch, i, chars, len, escLF))
 	{
 		if (0xd800 <= ch && ch < 0xdc00) 
 		{
 			// UTF-16 surrogate
-			unsigned int next = 0;
+			XalanDOMChar	next = 0;
 
 			if (i + 1 >= len) 
 			{
@@ -768,7 +768,7 @@ FormatterToXML::accumDefaultEscape(
 					throwInvalidUTF16SurrogateException(ch, next);
 				}
 
-				next = ((ch - 0xd800u) << 10) + next - 0xdc00u + 0x00010000u;
+				next = XalanDOMChar(((ch - 0xd800u) << 10) + next - 0xdc00u + 0x00010000u);
 			}
 
 			writeNumberedEntityReference(next);
@@ -791,11 +791,11 @@ FormatterToXML::accumDefaultEscape(
 
 bool
 FormatterToXML::accumDefaultEntity(
-			XalanDOMChar		ch,
-			unsigned int		i,
-			const XalanDOMChar	chars[],
-			unsigned int		len,
-			bool				escLF)
+			XalanDOMChar				ch,
+			XalanDOMString::size_type	i,
+			const XalanDOMChar			chars[],
+			XalanDOMString::size_type	len,
+			bool						escLF)
 {
 	if (escLF == false &&
 		XalanUnicode::charCR == ch &&
@@ -1086,7 +1086,7 @@ FormatterToXML::processingInstruction(
 			accumName(XalanUnicode::charQuestionMark);
 			accumName(target);
 
-			const unsigned int	len = length(data);
+			const XalanDOMString::size_type		len = length(data);
 
 			if ( len > 0 && !isXMLWhitespace(data[0]))
 			{
@@ -1181,9 +1181,9 @@ FormatterToXML::charactersRaw(
 void
 FormatterToXML::writeAttrString(const XalanDOMChar*		theString)
 {
-    const unsigned int	len = length(theString);
+    const XalanDOMString::size_type		len = length(theString);
 
-    for (unsigned int i = 0;  i < len;  i ++) 
+    for (XalanDOMString::size_type i = 0;  i < len;  i ++) 
     {
 		const XalanDOMChar	ch = theString[i];
 
@@ -1246,7 +1246,7 @@ FormatterToXML::writeNormalizedChars(
 			if (0xd800u <= unsigned(c) && unsigned(c) < 0xdc00) 
 			{
 				// UTF-16 surrogate
-				unsigned int	next = 0;
+				XalanDOMChar	next = 0;
 
 				if (i + 1 >= end) 
 				{
@@ -1261,7 +1261,7 @@ FormatterToXML::writeNormalizedChars(
 						throwInvalidUTF16SurrogateException(c, next);
 					}
 
-					next = ((c - 0xd800) << 10) + next - 0xdc00 + 0x00010000;
+					next = XalanDOMChar(((c - 0xd800) << 10) + next - 0xdc00 + 0x00010000);
 				}
 
 				writeNumberedEntityReference(next);
@@ -1320,7 +1320,7 @@ FormatterToXML::writeNormalizedChars(
 			else if (0xd800 <= c && c < 0xdc00)
 			{
 				// UTF-16 surrogate
-				unsigned int	next = 0;
+				XalanDOMChar	next = 0;
 
 				if (i + 1 >= end) 
 				{
@@ -1335,7 +1335,7 @@ FormatterToXML::writeNormalizedChars(
 						throwInvalidUTF16SurrogateException(c, next);
 					}
 
-					next = ((c - 0xd800) << 10) + next - 0xdc00 + 0x00010000;
+					next = XalanDOMChar(((c - 0xd800) << 10) + next - 0xdc00 + 0x00010000);
 				}
 
 				writeNumberedEntityReference(next);

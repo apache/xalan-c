@@ -92,6 +92,9 @@ class XALAN_PLATFORMSUPPORT_EXPORT FormatterListener : public DocumentHandler
 {
 public:
 
+	// A handy typedef...  Must match DocumentHandler's type for characters(), etc...
+	typedef unsigned int	size_type;
+
 	/**
 	 * Perform static initialization.  See class XMLSupportInit.
 	 */
@@ -161,7 +164,7 @@ public:
 	virtual void
 	charactersRaw(
 			const XMLCh* const	chars,
-			const unsigned int	length) = 0;
+			const size_type		length) = 0;
 
 	/**
 	 * Called when a Comment is to be constructed.
@@ -196,7 +199,7 @@ public:
 	virtual void
 	cdata(
 			const XMLCh* const	ch,
-			const unsigned int 	length) = 0;
+			const size_type 	length) = 0;
 
 	/**
 	 * Receive notification of a entityReference.
@@ -213,7 +216,7 @@ public:
     virtual void
 	characters(
 			const XMLCh* const	chars,
-			const unsigned int	length) = 0;
+			const size_type		length) = 0;
 
     virtual void
 	endDocument() = 0;
@@ -224,7 +227,7 @@ public:
 	virtual void
 	ignorableWhitespace(
 			const XMLCh* const	chars,
-			const unsigned int	length) = 0;
+			const size_type		length) = 0;
 
 	virtual void
 	processingInstruction(

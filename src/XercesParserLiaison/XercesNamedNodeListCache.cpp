@@ -137,8 +137,8 @@ XercesNamedNodeListCache::getElementsByTagNameNS(
 			const XalanDOMString&	namespaceURI,
 			const XalanDOMString&	localName) const
 {
-	const unsigned int	theNamespaceURILength = length(namespaceURI);
-	const unsigned int	theLocalNameLength = length(localName);
+	const XalanDOMString::size_type		theNamespaceURILength = length(namespaceURI);
+	const XalanDOMString::size_type		theLocalNameLength = length(localName);
 
 	XalanDOMString	theSearchString;
 	

@@ -272,8 +272,8 @@ toCharArray(const CharVectorType&	theString)
  */
 inline void
 reserve(
-			XalanDOMString&		theString,
-			unsigned int		theCount)
+			XalanDOMString&				theString,
+			XalanDOMString::size_type	theCount)
 {
 	theString.reserve(theCount);
 }
@@ -286,7 +286,7 @@ reserve(
  * @param theString target string
  * @return the length of the target string
  */
-inline unsigned int
+inline XalanDOMString::size_type
 length(const XalanDOMString&	theString)
 {
 	return theString.length();
@@ -301,7 +301,7 @@ length(const XalanDOMString&	theString)
  * @param theString target string
  * @return the length of the target string
  */
-inline unsigned int
+inline XalanDOMString::size_type
 length(const XalanDOMChar*	theString)
 {
 	assert(theString != 0);
@@ -313,7 +313,7 @@ length(const XalanDOMChar*	theString)
 		theBufferPointer++;
 	}
 
-	return unsigned(theBufferPointer - theString);
+	return XalanDOMString::size_type(theBufferPointer - theString);
 }
 
 
@@ -324,12 +324,12 @@ length(const XalanDOMChar*	theString)
  * @param theString target string
  * @return the length of the target string
  */
-inline unsigned int
+inline XalanDOMString::size_type
 length(const char*	theString)
 {
 	assert(theString != 0);
 
-	return unsigned(strlen(theString));
+	return XalanDOMString::size_type(strlen(theString));
 }
 
 
@@ -357,7 +357,7 @@ isEmpty(const XalanDOMString&	str)
  * or length(theString) if the character is not
  * found.    
  */
-inline unsigned int
+inline XalanDOMString::size_type
 indexOf(
 			const XalanDOMChar*		theString,
 			XalanDOMChar			theChar)
@@ -371,7 +371,7 @@ indexOf(
 		++thePointer;
 	}
 
-	return unsigned(thePointer - theString);
+	return XalanDOMString::size_type(thePointer - theString);
 }
 
 
@@ -386,11 +386,11 @@ indexOf(
  * or length(theString) if the character is not
  * found.    
  */
-inline unsigned int
+inline XalanDOMString::size_type
 indexOf(
-			const XalanDOMChar*		theString,
-			unsigned int			theStringLength,
-			XalanDOMChar			theChar)
+			const XalanDOMChar*			theString,
+			XalanDOMString::size_type	theStringLength,
+			XalanDOMChar				theChar)
 {
 	assert(theString != 0);
 
@@ -402,7 +402,7 @@ indexOf(
 		++thePointer;
 	}
 
-	return unsigned(thePointer - theString);
+	return XalanDOMString::size_type(thePointer - theString);
 }
 
 
@@ -416,7 +416,7 @@ indexOf(
  * or length(theString) if the character is not
  * found.    
  */
-inline unsigned int
+inline XalanDOMString::size_type
 indexOf(
 			const XalanDOMString&	theString,
 			XalanDOMChar			theChar)
@@ -435,7 +435,7 @@ indexOf(
  * or length(theString) if the string is not
  * found.
  */
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(unsigned int)
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString::size_type)
 indexOf(
 			const XalanDOMChar*		theString,
 			const XalanDOMChar*		theSubstring);
@@ -450,7 +450,7 @@ indexOf(
  * or length(theString) if the string is not
  * found.
  */
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(unsigned int)
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString::size_type)
 indexOf(
 			const XalanDOMString&	theString,
 			const XalanDOMString&	theSubstring);
@@ -467,7 +467,7 @@ indexOf(
  * found.
  */
 
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(unsigned int)
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString::size_type)
 lastIndexOf(
 			const XalanDOMChar*		theString,
 			XalanDOMChar			theChar);
@@ -483,7 +483,7 @@ lastIndexOf(
  * or length(theString) if the character is not
  * found.
  */
-inline unsigned int
+inline XalanDOMString::size_type
 lastIndexOf(
 			const XalanDOMString&	theString,
 			XalanDOMChar			theChar)
@@ -1114,8 +1114,8 @@ operator<<(
  */
 inline XalanDOMChar
 charAt(
-			const XalanDOMString&	theString,
-			unsigned int			theIndex)
+			const XalanDOMString&		theString,
+			XalanDOMString::size_type	theIndex)
 {
 	return theString[theIndex];
 }
@@ -1178,9 +1178,9 @@ isXMLLetterOrDigit(XalanDOMChar		theChar)
  */
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString)
 substring(
-			const XalanDOMChar*		theString,
-			unsigned int			theStartIndex,
-			unsigned int			theEndIndex = unsigned(-1));
+			const XalanDOMChar*			theString,
+			XalanDOMString::size_type	theStartIndex,
+			XalanDOMString::size_type	theEndIndex = XalanDOMString::npos);
 
 
 
@@ -1198,10 +1198,10 @@ substring(
  */
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString)&
 substring(
-			const XalanDOMChar*		theString,
-			XalanDOMString&			theSubstring,
-			unsigned int			theStartIndex,
-			unsigned int			theEndIndex = unsigned(-1));
+			const XalanDOMChar*			theString,
+			XalanDOMString&				theSubstring,
+			XalanDOMString::size_type	theStartIndex,
+			XalanDOMString::size_type	theEndIndex = XalanDOMString::npos);
 
 
 
@@ -1218,10 +1218,10 @@ substring(
  */
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(void)
 substring(
-			const XalanDOMString&	theString,
-			XalanDOMString&			theSubstring,
-			unsigned int			theStartIndex,
-			unsigned int			theEndIndex = unsigned(-1));
+			const XalanDOMString&		theString,
+			XalanDOMString&				theSubstring,
+			XalanDOMString::size_type	theStartIndex,
+			XalanDOMString::size_type	theEndIndex = XalanDOMString::npos);
 
 
 
@@ -1238,9 +1238,9 @@ substring(
  */
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString)
 substring(
-			const XalanDOMString&	theString,
-			unsigned int			theStartIndex,
-			unsigned int			theEndIndex = unsigned(-1));
+			const XalanDOMString&		theString,
+			XalanDOMString::size_type	theStartIndex,
+			XalanDOMString::size_type	theEndIndex = XalanDOMString::npos);
 
 
 
@@ -1376,10 +1376,10 @@ compare(
  */
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(int)
 compare(
-			const XalanDOMChar*		theLHS,
-			unsigned int			theLHSLength,
-			const XalanDOMChar*		theRHS,
-			unsigned int			theRHSLength);
+			const XalanDOMChar*			theLHS,
+			XalanDOMString::size_type	theLHSLength,
+			const XalanDOMChar*			theRHS,
+			XalanDOMString::size_type	theRHSLength);
 
 
 
@@ -1480,10 +1480,10 @@ compare(
  */
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(int)
 compareIgnoreCaseASCII(
-			const XalanDOMChar*		theLHS,
-			unsigned int			theLHSLength,
-			const XalanDOMChar*		theRHS,
-			unsigned int			theRHSLength);
+			const XalanDOMChar*			theLHS,
+			XalanDOMString::size_type	theLHSLength,
+			const XalanDOMChar*			theRHS,
+			XalanDOMString::size_type	theRHSLength);
 
 
 
@@ -1587,10 +1587,10 @@ compareIgnoreCaseASCII(
  */
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(int)
 collationCompare(
-			const XalanDOMChar*		theLHS,
-			unsigned int			theLHSLength,
-			const XalanDOMChar*		theRHS,
-			unsigned int			theRHSLength);
+			const XalanDOMChar*			theLHS,
+			XalanDOMString::size_type	theLHSLength,
+			const XalanDOMChar*			theRHS,
+			XalanDOMString::size_type	theRHSLength);
 
  
  
@@ -1680,9 +1680,9 @@ collationCompare(
  */
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(bool)
 equals(
-			const XalanDOMChar*		theLHS,
-			const XalanDOMChar*		theRHS,
-			unsigned int			theLength);
+			const XalanDOMChar*			theLHS,
+			const XalanDOMChar*			theRHS,
+			XalanDOMString::size_type	theLength);
 
 
 
@@ -1698,7 +1698,7 @@ equals(
 			const XalanDOMChar*		theLHS,
 			const XalanDOMChar*		theRHS)
 {
-	const unsigned int	theLHSLength = length(theLHS);
+	const XalanDOMString::size_type		theLHSLength = length(theLHS);
 
 	return theLHSLength != length(theRHS) ? false : equals(theLHS, theRHS, theLHSLength);
 }
@@ -1771,7 +1771,7 @@ equals(const XalanDOMString&	theLHS,
 {
 	assert(theRHS != 0);
 
-	const unsigned int	theRHSLength = length(theRHS);
+	const XalanDOMString::size_type		theRHSLength = length(theRHS);
 
 	if (theRHSLength != length(theLHS))
 	{
@@ -1815,7 +1815,7 @@ equals(const XalanDOMChar*	theLHS,
 	assert(theLHS != 0);
 	assert(theRHS != 0);
 
-	const unsigned int	theRHSLength = length(theRHS);
+	const XalanDOMString::size_type		theRHSLength = length(theRHS);
 
 	if (theRHSLength != length(theLHS))
 	{
@@ -1855,9 +1855,9 @@ equals(const char*			theLHS,
  */
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(bool)
 equalsIgnoreCaseASCII(
-			const XalanDOMChar*		theLHS,
-			const XalanDOMChar*		theRHS,
-			unsigned int			theLength);
+			const XalanDOMChar*			theLHS,
+			const XalanDOMChar*			theRHS,
+			XalanDOMString::size_type	theLength);
 
 
 
@@ -1874,7 +1874,7 @@ equalsIgnoreCaseASCII(
 			const XalanDOMChar*		theLHS,
 			const XalanDOMChar*		theRHS)
 {
-	const unsigned int	theLength = length(theLHS);
+	const XalanDOMString::size_type		theLength = length(theLHS);
 
 	return theLength != length(theRHS) ? false :
 		equalsIgnoreCaseASCII(theLHS, theRHS, theLength);
@@ -1895,7 +1895,7 @@ equalsIgnoreCaseASCII(
 			const XalanDOMString&	theLHS,
 			const XalanDOMString&	theRHS)
 {
-	const unsigned int	theLength = length(theLHS);
+	const XalanDOMString::size_type		theLength = length(theLHS);
 
 	return theLength != length(theRHS) ? false :
 		equalsIgnoreCaseASCII(toCharArray(theLHS), toCharArray(theRHS), theLength);
@@ -1916,7 +1916,7 @@ equalsIgnoreCaseASCII(
 			const XalanDOMChar*		theLHS,
 			const XalanDOMString&	theRHS)
 {
-	const unsigned int	theRHSLength = length(theRHS);
+	const XalanDOMString::size_type		theRHSLength = length(theRHS);
 
 	return theRHSLength != length(theLHS) ? false :
 		equalsIgnoreCaseASCII(theLHS, toCharArray(theRHS), theRHSLength);
@@ -1985,7 +1985,7 @@ operator<(
  * 
  * @param theString         target string
  * @param theStringToAppend string to assign
- * @param theStringToAppendLength length of the string (-1 implies the string is null-terminated)
+ * @param theStringToAppendLength length of the string (XalanDOMString::npos implies the string is null-terminated)
  * @return a reference to the target string
  */
 inline XalanDOMString&
@@ -2005,16 +2005,16 @@ assign(
  * 
  * @param theString         target string
  * @param theStringToAppend string to assign
- * @param theStringToAppendLength length of the string (-1 implies the string is null-terminated)
+ * @param theStringToAppendLength length of the string (XalanDOMString::npos implies the string is null-terminated)
  * @return a reference to the target string
  */
 inline XalanDOMString&
 assign(
-			XalanDOMString&			theString,
-			const XalanDOMChar*		theStringToAssign,
-			unsigned int			theStringToAssignLength = unsigned(-1))
+			XalanDOMString&				theString,
+			const XalanDOMChar*			theStringToAssign,
+			XalanDOMString::size_type	theStringToAssignLength = XalanDOMString::npos)
 {
-	if (theStringToAssignLength == unsigned(-1))
+	if (theStringToAssignLength == XalanDOMString::npos)
 	{
 		theString.assign(theStringToAssign);
 	}
@@ -2052,18 +2052,18 @@ append(
  * 
  * @param theString         target string
  * @param theStringToAppend string to add to target
- * @param theStringToAppendLength length of the string (-1 implies the string is null-terminated)
+ * @param theStringToAppendLength length of the string (XalanDOMString::npos implies the string is null-terminated)
  * @return a reference to the target string
  */
 inline XalanDOMString&
 append(
-			XalanDOMString&			theString,
-			const XalanDOMChar*		theStringToAppend,
-			unsigned int			theStringToAppendLength = unsigned(-1))
+			XalanDOMString&				theString,
+			const XalanDOMChar*			theStringToAppend,
+			XalanDOMString::size_type	theStringToAppendLength = XalanDOMString::npos)
 {
 	assert(theStringToAppend != 0);
 
-	if (theStringToAppendLength == unsigned(-1))
+	if (theStringToAppendLength == XalanDOMString::npos)
 	{
 		theString.append(theStringToAppend);
 	}
@@ -2082,14 +2082,14 @@ append(
  * 
  * @param theString         target string
  * @param theStringToAppend string to add to target
- * @param theStringToAppendLength length of the string (-1 implies the string is null-terminated)
+ * @param theStringToAppendLength length of the string (XalanDOMString::npos implies the string is null-terminated)
  * @return string with contents of 'theStringToAppend' added to target string
  */
 inline XalanDOMString&
 append(
-			XalanDOMString&		theString,
-			const char*			theStringToAppend,
-			unsigned int		theStringToAppendLength = unsigned(-1))
+			XalanDOMString&				theString,
+			const char*					theStringToAppend,
+			XalanDOMString::size_type	theStringToAppendLength = XalanDOMString::npos)
 {
 	theString.append(TranscodeFromLocalCodePage(theStringToAppend, theStringToAppendLength));
 
@@ -2147,9 +2147,9 @@ append(
  */
 inline XalanDOMString&
 insert(
-			XalanDOMString&			theString,
-			unsigned int			thePosition,
-			const XalanDOMString&	theStringToInsert)
+			XalanDOMString&				theString,
+			XalanDOMString::size_type	thePosition,
+			const XalanDOMString&		theStringToInsert)
 {
 	theString.insert(thePosition, theStringToInsert);
 
@@ -2168,9 +2168,9 @@ insert(
  */
 inline XalanDOMString&
 insert(
-			XalanDOMString&			theString,
-			unsigned int			thePosition,
-			const XalanDOMChar*		theStringToInsert)
+			XalanDOMString&				theString,
+			XalanDOMString::size_type	thePosition,
+			const XalanDOMChar*			theStringToInsert)
 {
 	theString.insert(thePosition, theStringToInsert);
 
@@ -2548,9 +2548,9 @@ isXMLWhitespace(const XalanDOMString&	string);
  */
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(bool)
 isXMLWhitespace(
-			const XalanDOMChar	ch[],
-			unsigned int		start,
-			unsigned int		length);
+			const XalanDOMChar			ch[],
+			XalanDOMString::size_type	start,
+			XalanDOMString::size_type	length);
 
 
 

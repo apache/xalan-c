@@ -94,11 +94,11 @@ public:
 	virtual eCode
 	transcode(
 			const XalanDOMChar*		theSourceData,
-			unsigned int			theSourceCount,
+			size_t					theSourceCount,
 			XalanXMLByte*			theTarget,
-			unsigned int			theTargetSize,
-			unsigned int&			theSourceCharsTranscoded,
-			unsigned int&			theTargetBytesUsed);
+			size_t					theTargetSize,
+			size_t&					theSourceCharsTranscoded,
+			size_t&					theTargetBytesUsed);
 
 	/**
 	 * Transcode data from UTF-16 to UTF-16.
@@ -115,11 +115,11 @@ public:
 	virtual eCode
 	transcode(
 			const XalanXMLByte*		theSourceData,
-			unsigned int			theSourceCount,
+			size_t					theSourceCount,
 			XalanDOMChar*			theTarget,
-			unsigned int			theTargetSize,
-			unsigned int&			theSourceCharsTranscoded,
-			unsigned int&			theTargetBytesUsed,
+			size_t					theTargetSize,
+			size_t&					theSourceCharsTranscoded,
+			size_t&					theTargetBytesUsed,
 			unsigned char*			theCharSizes);
 
 private:

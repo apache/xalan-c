@@ -150,6 +150,10 @@ public:
 		   eDefaultValuesStringPoolBucketSize = XalanDOMStringPool::eDefaultBucketSize };
 
 
+	typedef XalanDOMStringPool::block_size_type		block_size_type;
+	typedef XalanDOMStringPool::bucket_count_type	bucket_count_type;
+	typedef XalanDOMStringPool::bucket_size_type	bucket_size_type;
+
 	/**
 	 *
 	 * Constructor for XalanSourceTreeDocument.
@@ -165,14 +169,14 @@ public:
 	 *
 	 */
 	XalanSourceTreeDocument(
-			unsigned long	theNumber,
-			bool			fPoolAllText = true,
-			unsigned int	theNamesStringPoolBlockSize = eDefaultNamesStringPoolBlockSize,
-			unsigned int	theNamesStringPoolBucketCount = eDefaultNamesStringPoolBucketCount,
-			unsigned int	theNamesStringPoolBucketSize = eDefaultNamesStringPoolBucketSize,
-			unsigned int	theValuesStringPoolBlockSize = eDefaultValuesStringPoolBlockSize,
-			unsigned int	theValuesStringPoolBucketCount = eDefaultValuesStringPoolBucketCount,
-			unsigned int	theValuesStringPoolBucketSize = eDefaultValuesStringPoolBucketSize);
+			unsigned long		theNumber,
+			bool				fPoolAllText = true,
+			block_size_type		theNamesStringPoolBlockSize = eDefaultNamesStringPoolBlockSize,
+			bucket_count_type	theNamesStringPoolBucketCount = eDefaultNamesStringPoolBucketCount,
+			bucket_size_type	theNamesStringPoolBucketSize = eDefaultNamesStringPoolBucketSize,
+			block_size_type		theValuesStringPoolBlockSize = eDefaultValuesStringPoolBlockSize,
+			bucket_count_type	theValuesStringPoolBucketCount = eDefaultValuesStringPoolBucketCount,
+			bucket_size_type	theValuesStringPoolBucketSize = eDefaultValuesStringPoolBucketSize);
 
 	virtual
 	~XalanSourceTreeDocument();
@@ -372,7 +376,7 @@ public:
 	XalanSourceTreeComment*
 	createCommentNode(
 			const XalanDOMChar*			data,
-			unsigned int				length,
+			XalanDOMString::size_type	length,
 			XalanSourceTreeElement*		theParentElement = 0,
 			XalanNode*					thePreviousSibling = 0,
 			XalanNode*					theNextSibling = 0);
@@ -388,7 +392,7 @@ public:
 	XalanSourceTreeText*
 	createTextNode(
 			const XalanDOMChar*			chars,
-			unsigned int				length,
+			XalanDOMString::size_type	length,
 			XalanSourceTreeElement*		theParentElement = 0,
 			XalanNode*					thePreviousSibling = 0,
 			XalanNode*					theNextSibling = 0);
@@ -396,7 +400,7 @@ public:
 	XalanSourceTreeText*
 	createTextIWSNode(
 			const XalanDOMChar*			chars,
-			unsigned int				length,
+			XalanDOMString::size_type	length,
 			XalanSourceTreeElement*		theParentElement = 0,
 			XalanNode*					thePreviousSibling = 0,
 			XalanNode*					theNextSibling = 0);
@@ -465,8 +469,8 @@ private:
 
 	const XalanDOMString&
 	getTextNodeString(
-			const XalanDOMChar*		chars,
-			unsigned int			length);
+			const XalanDOMChar*			chars,
+			XalanDOMString::size_type	length);
 
 	const XalanDOMString*
 	getNamespaceForPrefix(

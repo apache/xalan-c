@@ -140,11 +140,11 @@ URISupport::getURLStringFromString(const XalanDOMChar*	urlString)
 	XalanDOMString	theNormalizedURI(urlString);
 
 	// Let's see what sort of URI we have...
-	const unsigned int	len = length(theNormalizedURI);
+	const XalanDOMString::size_type		len = length(theNormalizedURI);
 
 	if (len != 0)
 	{
-		const unsigned int	index = indexOf(theNormalizedURI, XalanUnicode::charColon);
+		const XalanDOMString::size_type		index = indexOf(theNormalizedURI, XalanUnicode::charColon);
 
 		bool				protocolPresent = false;
 
@@ -220,9 +220,9 @@ URISupport::getURLStringFromString(
 
 	NormalizeURIText(context);
 
-	const unsigned int	theContextLength = length(context);
+	const XalanDOMString::size_type		theContextLength = length(context);
 
-	const unsigned int	indexOfSlash = theContextLength == 0 ?
+	const XalanDOMString::size_type		indexOfSlash = theContextLength == 0 ?
 							0 :
 							lastIndexOf(context, XalanUnicode::charSolidus);
 
@@ -240,8 +240,8 @@ URISupport::getURLStringFromString(
 	// OK, now let's look at the urlString...
 
 	// Is there a colon, indicating some sort of drive spec, or protocol?
-	const unsigned int	theURLStringLength = length(urlString);
-	const unsigned int	theColonIndex = indexOf(urlString, XalanUnicode::charColon);
+	const XalanDOMString::size_type		theURLStringLength = length(urlString);
+	const XalanDOMString::size_type		theColonIndex = indexOf(urlString, XalanUnicode::charColon);
 
 	if (theColonIndex == theURLStringLength)
 	{
@@ -313,8 +313,8 @@ URISupport::NormalizeURIText(XalanDOMString&	uriString)
 #endif
 
 	// OK, look for a quick, cheap exit...
-	const unsigned int	len = length(uriString);
-	const unsigned int	index = indexOf(uriString, XalanUnicode::charReverseSolidus);
+	const XalanDOMString::size_type		len = length(uriString);
+	const XalanDOMString::size_type		index = indexOf(uriString, XalanUnicode::charReverseSolidus);
 
 	if (index != len)
 	{

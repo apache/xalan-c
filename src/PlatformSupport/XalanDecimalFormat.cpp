@@ -208,7 +208,7 @@ XalanDecimalFormat::getNormalizedPattern(const XalanDOMString&	thePattern)
 		m_decimalFormatSymbols->getPatternSeparator();
 
 	// Is the a separator?
-	const unsigned int	theSeparatorIndex =
+	const XalanDOMString::size_type		theSeparatorIndex =
 		indexOf(thePattern, thePatternSeparatorChar);
 
 	if (theSeparatorIndex < length(thePattern))

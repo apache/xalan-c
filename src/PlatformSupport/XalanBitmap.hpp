@@ -73,7 +73,10 @@ class XALAN_PLATFORMSUPPORT_EXPORT XalanBitmap
 public:
 
 	// The basic storage unit for the bitmaps.
-	typedef char	UnitType;
+	typedef char		UnitType;
+
+	// A handy typedef...
+	typedef size_t		size_type;
 
 	// Really all we're assuming is that a char is at least
 	// 8 bits.  If it's more, then we'll just waste some
@@ -89,7 +92,7 @@ public:
 	 *
 	 * @param  theSize   The number of bits in the map.
 	 */
-	XalanBitmap(unsigned long	theSize);
+	XalanBitmap(size_type	theSize);
 
 	~XalanBitmap();
 
@@ -101,7 +104,7 @@ public:
 	 * @return true if the bit is set, false if not.
 	 */
 	bool
-	isSet(unsigned long	theBit) const;
+	isSet(size_type		theBit) const;
 
 	/**
 	 * Set a bit.
@@ -109,7 +112,7 @@ public:
 	 * @param theBit The number of the bit to set.
 	 */
 	void
-	set(unsigned long	theBit);
+	set(size_type	theBit);
 
 	/**
 	 * Clear a bit.
@@ -117,7 +120,7 @@ public:
 	 * @param theBit The number of the bit to clear.
 	 */
 	void
-	clear(unsigned long	theBit);
+	clear(size_type		theBit);
 
 	/**
 	 * Toggle a bit.
@@ -125,7 +128,7 @@ public:
 	 * @param theBit The number of the bit to toggle.
 	 */
 	void
-	toggle(unsigned long	theBit);
+	toggle(size_type	theBit);
 
 	/**
 	 * Clear all of the bits.
@@ -138,7 +141,7 @@ public:
 	 *
 	 * @return The number of bits in the map.
 	 */
-	unsigned long
+	size_type
 	getSize() const
 	{
 		return m_size;
@@ -152,9 +155,9 @@ private:
 	typedef std::vector<UnitType>	BitmapVectorType;
 #endif
 
-	const unsigned long		m_size;
+	const size_type		m_size;
 
-	BitmapVectorType		m_bitmap;
+	BitmapVectorType	m_bitmap;
 };
 
 

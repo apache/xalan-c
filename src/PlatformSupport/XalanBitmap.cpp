@@ -69,9 +69,9 @@ static const int	theClearMasks[XalanBitmap::eBitsPerUnit] = { ~1, ~2, ~4, ~8, ~1
 
 
 
-XalanBitmap::XalanBitmap(unsigned long	theSize) :
+XalanBitmap::XalanBitmap(size_type	theSize) :
 	m_size(theSize),
-	m_bitmap(unsigned((theSize + eBitsPerUnit) / eBitsPerUnit), BitmapVectorType::value_type(0))
+	m_bitmap(size_type((theSize + eBitsPerUnit) / eBitsPerUnit), BitmapVectorType::value_type(0))
 {
 }
 
@@ -84,7 +84,7 @@ XalanBitmap::~XalanBitmap()
 
 
 bool
-XalanBitmap::isSet(unsigned long	theBit) const
+XalanBitmap::isSet(size_type	theBit) const
 {
 	if (theBit >= m_size)
 	{
@@ -99,7 +99,7 @@ XalanBitmap::isSet(unsigned long	theBit) const
 
 
 void
-XalanBitmap::set(unsigned long	theBit)
+XalanBitmap::set(size_type	theBit)
 {
 	if (theBit < m_size)
 	{
@@ -110,7 +110,7 @@ XalanBitmap::set(unsigned long	theBit)
 
 
 void
-XalanBitmap::clear(unsigned long	theBit)
+XalanBitmap::clear(size_type	theBit)
 {
 	if (theBit < m_size)
 	{
@@ -121,7 +121,7 @@ XalanBitmap::clear(unsigned long	theBit)
 
 
 void
-XalanBitmap::toggle(unsigned long	theBit)
+XalanBitmap::toggle(size_type	theBit)
 {
 	if (theBit < m_size)
 	{

@@ -195,7 +195,7 @@ public:
 			// If no memory has yet been allocated, then allocate it...
 			if (m_objectBlock == 0)
 			{
-				m_objectBlock = m_allocator.allocate(m_blockSize, 0);
+				m_objectBlock = m_allocator.allocate(m_blockSize);
 			}
 			assert(m_objectBlock != 0);
 

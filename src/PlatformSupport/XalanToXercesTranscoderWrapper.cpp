@@ -85,27 +85,34 @@ XalanToXercesTranscoderWrapper::~XalanToXercesTranscoderWrapper()
 XalanToXercesTranscoderWrapper::eCode
 XalanToXercesTranscoderWrapper::transcode(
 			const XalanDOMChar*		theSourceData,
-			unsigned int			theSourceCount,
+			size_t					theSourceCount,
 			XalanXMLByte*			theTarget,
-			unsigned int			theTargetSize,
-			unsigned int&			theSourceCharsTranscoded,
-			unsigned int&			theTargetBytesUsed)
+			size_t					theTargetSize,
+			size_t&					theSourceCharsTranscoded,
+			size_t&					theTargetBytesUsed)
 {
 	eCode	theCode = XalanTranscodingServices::OK;
 
 	try
 	{
+		XercesSizeType	theXercesSourceCharsTranscoded = 0;
+
+		assert(XercesSizeType(theSourceCount) == theSourceCount);
+		assert(XercesSizeType(theTargetSize) == theTargetSize);
+
 		theTargetBytesUsed = m_transcoder->transcodeTo(
 			theSourceData,
-			theSourceCount,
+			XercesSizeType(theSourceCount),
 			theTarget,
-			theTargetSize,
-			theSourceCharsTranscoded,
+			XercesSizeType(theTargetSize),
+			theXercesSourceCharsTranscoded,
 			// $$$ ToDo: Eventually, we're going to want to
 			// replace this with UnRep_Throw, and let the
 			// caller try to recover.
 //			XMLTranscoder::UnRep_Throw);
 			XMLTranscoder::UnRep_RepChar);
+
+		theSourceCharsTranscoded = theXercesSourceCharsTranscoded;
 	}
 	catch(const XMLException&)
 	{
@@ -122,24 +129,30 @@ XalanToXercesTranscoderWrapper::transcode(
 XalanToXercesTranscoderWrapper::eCode
 XalanToXercesTranscoderWrapper::transcode(
 			const XalanXMLByte*		theSourceData,
-			unsigned int			theSourceCount,
+			size_t					theSourceCount,
 			XalanDOMChar*			theTarget,
-			unsigned int			theTargetSize,
-			unsigned int&			theSourceCharsTranscoded,
-			unsigned int&			theTargetBytesUsed,
+			size_t					theTargetSize,
+			size_t&					theSourceCharsTranscoded,
+			size_t&					theTargetBytesUsed,
 			unsigned char*			theCharSizes)
 {
 	eCode	theCode = XalanTranscodingServices::OK;
 
 	try
 	{
-		theTargetBytesUsed = m_transcoder->transcodeFrom(
+		assert(XercesSizeType(theSourceCount) == theSourceCount);
+		assert(XercesSizeType(theTargetSize) == theTargetSize);
+
+		const XercesSizeType	theXercesTargetBytesUsed =
+				m_transcoder->transcodeFrom(
 			theSourceData,
-			theSourceCount,
+			XercesSizeType(theSourceCount),
 			theTarget,
-			theTargetSize,
+			XercesSizeType(theTargetSize),
 			theSourceCharsTranscoded,
 			theCharSizes);
+
+		theTargetBytesUsed = theXercesTargetBytesUsed;
 	}
 	catch(const XMLException&)
 	{

@@ -235,8 +235,8 @@ private:
 
 	void
 	doCharacters(
-			const XalanDOMChar*		chars,
-			unsigned int			length);
+			const XalanDOMChar*			chars,
+			XalanDOMString::size_type	length);
 
 	void
 	doProcessingInstruction(

@@ -179,8 +179,8 @@ indexOf(
 	assert(theString != 0);
 	assert(theSubstring != 0);
 
-	const unsigned int	theStringLength = length(theString);
-	const unsigned int	theSubstringLength = length(theSubstring);
+	const XalanDOMString::size_type		theStringLength = length(theString);
+	const XalanDOMString::size_type		theSubstringLength = length(theSubstring);
 
 	// If the substring is longer than the string, then
 	// it's not a substring.
@@ -203,13 +203,13 @@ indexOf(
 			  theStringLength - theStringIndex >= theSubstringLength)
 		{
 			// We always start over from the beginning of the second string.
-			unsigned int	theSubstringIndex = 0;
+			XalanDOMString::size_type	theSubstringIndex = 0;
 
 			// This variable will be incremented to index into the first
 			// string.  That way, we preserve the first string index for
 			// when we have to restart the following loop with the next
 			// position in the first string.
-			unsigned int	theOffset = 0;
+			XalanDOMString::size_type	theOffset = 0;
 
 			// Compare the characters in the two strings, at the
 			// current indices, until the characters don't match.
@@ -266,7 +266,7 @@ lastIndexOf(
 			const XalanDOMChar*		theString,
 			XalanDOMChar			theChar)
 {
-	const unsigned int	theLength = length(theString);
+	const XalanDOMString::size_type		theLength = length(theString);
 
 	if (theLength == 0)
 	{
@@ -274,15 +274,14 @@ lastIndexOf(
 	}
 	else
 	{
-		unsigned int	theIndex = theLength - 1;
+		XalanDOMString::size_type	theIndex = theLength;
 
-		// Rely on wrap-around...
-		while(theIndex < theLength && theString[theIndex] != theChar)
+		while(theIndex > 0 && theString[theIndex - 1] != theChar)
 		{
 			theIndex--;
 		}
 
-		return theIndex > theLength ? theLength : theIndex;
+		return theIndex == 0 ? theLength : theIndex - 1;
 	}
 }
 
@@ -295,9 +294,9 @@ startsWith(
 {
 	bool		fResult = false;
 
-	const unsigned int	theStringLength = length(theString);
+	const XalanDOMString::size_type		theStringLength = length(theString);
 
-	const unsigned int	theSubstringLength = length(theSubstring);
+	const XalanDOMString::size_type		theSubstringLength = length(theSubstring);
 
 	if (theSubstringLength == 0)
 	{
@@ -306,7 +305,7 @@ startsWith(
 	}
 	else if (theStringLength >= theSubstringLength)
 	{
-		unsigned int	i = 0;
+		XalanDOMString::size_type	i = 0;
 
 		// Compare each character...
 		for (;
@@ -383,22 +382,25 @@ endsWith(
 			const XalanDOMChar*		theString,
 			const XalanDOMChar*		theSubstring)
 {
+	assert(theString != 0);
+	assert(theSubstring != 0);
+
 	bool				fResult = false;
 
-	const unsigned int	theStringLength = length(theString);
+	const XalanDOMString::size_type		theStringLength = length(theString);
 
-	const unsigned int	theSubStringLength = length(theSubstring);
+	const XalanDOMString::size_type		theSubstringLength = length(theSubstring);
 
 	// If the substring is longer, there's no point in continuing.
-	if (theStringLength >= theSubStringLength)
+	if (theSubstringLength >  0 && theStringLength >= theSubstringLength)
 	{
-		int		i = theStringLength - 1;
-		int		j = theSubStringLength - 1;
+		XalanDOMString::size_type	i = theStringLength;
+		XalanDOMString::size_type	j = theSubstringLength;
 
 		// Compare each character...
 		for (;
-				j >= 0 &&
-						theString[i] == theSubstring[j];
+				j > 0 &&
+						theString[i - 1] == theSubstring[j - 1];
 					--j, --i)
 		{
 			;
@@ -406,7 +408,7 @@ endsWith(
 
 		// If we've gotten to the beginning of the substring, then
 		// return true.
-		if (j == -1)
+		if (j == 0)
 		{
 			fResult = true;
 		}
@@ -474,13 +476,13 @@ OutputString(
 
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString)
 substring(
-			const XalanDOMChar*		theString,
-			unsigned int			theStartIndex,
-			unsigned int			theEndIndex)
+			const XalanDOMChar*			theString,
+			XalanDOMString::size_type	theStartIndex,
+			XalanDOMString::size_type	theEndIndex)
 {
 	assert(theString != 0);
 
-	const unsigned int	theStringLength = length(theString);
+	const XalanDOMString::size_type		theStringLength = length(theString);
 
 	// $$$ ToDo: In Java-land, any failing of this
 	// assertion would result in an exception being thrown.
@@ -493,7 +495,7 @@ substring(
 	}
 	else
 	{
-		const unsigned int	theLength = theEndIndex == UINT_MAX ? theStringLength - theStartIndex :
+		const XalanDOMString::size_type		theLength = theEndIndex == XalanDOMString::npos ? theStringLength - theStartIndex :
 													theEndIndex - theStartIndex;
 		assert(theStartIndex + theLength <= theStringLength);
 
@@ -505,14 +507,14 @@ substring(
 
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString)&
 substring(
-			const XalanDOMChar*		theString,
-			XalanDOMString&			theSubstring,
-			unsigned int			theStartIndex,
-			unsigned int			theEndIndex)
+			const XalanDOMChar*			theString,
+			XalanDOMString&				theSubstring,
+			XalanDOMString::size_type	theStartIndex,
+			XalanDOMString::size_type	theEndIndex)
 {
 	assert(theString != 0);
 
-	const unsigned int	theStringLength = length(theString);
+	const XalanDOMString::size_type		theStringLength = length(theString);
 
 	// $$$ ToDo: In Java-land, any failing of this
 	// assertion would result in an exception being thrown.
@@ -525,7 +527,7 @@ substring(
 	}
 	else
 	{
-		const unsigned int	theLength = theEndIndex == UINT_MAX ? theStringLength - theStartIndex :
+		const XalanDOMString::size_type		theLength = theEndIndex == XalanDOMString::npos ? theStringLength - theStartIndex :
 													theEndIndex - theStartIndex;
 		assert(theStartIndex + theLength <= theStringLength);
 
@@ -539,12 +541,12 @@ substring(
 
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(void)
 substring(
-			const XalanDOMString&	theString,
-			XalanDOMString&			theSubstring,
-			unsigned int			theStartIndex,
-			unsigned int			theEndIndex)
+			const XalanDOMString&		theString,
+			XalanDOMString&				theSubstring,
+			XalanDOMString::size_type	theStartIndex,
+			XalanDOMString::size_type	theEndIndex)
 {
-	const unsigned int	theStringLength = length(theString);
+	const XalanDOMString::size_type		theStringLength = length(theString);
 
 	// $$$ ToDo: In Java-land, any failing of this
 	// assertion would result in an exception being thrown.
@@ -557,7 +559,7 @@ substring(
 	}
 	else
 	{
-		const unsigned int	theLength = theEndIndex == UINT_MAX ? theStringLength - theStartIndex :
+		const XalanDOMString::size_type		theLength = theEndIndex == XalanDOMString::npos ? theStringLength - theStartIndex :
 													theEndIndex - theStartIndex;
 
 		if (theLength == 0)
@@ -577,11 +579,11 @@ substring(
 
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString)
 substring(
-			const XalanDOMString&	theString,
-			unsigned int			theStartIndex,
-			unsigned int			theEndIndex)
+			const XalanDOMString&		theString,
+			XalanDOMString::size_type	theStartIndex,
+			XalanDOMString::size_type	theEndIndex)
 {
-	const unsigned int	theStringLength = length(theString);
+	const XalanDOMString::size_type		theStringLength = length(theString);
 
 	// $$$ ToDo: In Java-land, any failing of this
 	// assertion would result in an exception being thrown.
@@ -594,7 +596,7 @@ substring(
 	}
 	else
 	{
-		const unsigned int	theLength = theEndIndex == UINT_MAX ? theStringLength - theStartIndex :
+		const XalanDOMString::size_type		theLength = theEndIndex == XalanDOMString::npos ? theStringLength - theStartIndex :
 													theEndIndex - theStartIndex;
 
 		if (theLength == 0)
@@ -704,7 +706,7 @@ TransformXalanDOMString(
 			const XalanDOMString&	theInputString,
 			FunctionType			theFunction)
 {
-	const unsigned int	theStringLength = length(theInputString);
+	const XalanDOMString::size_type		theStringLength = length(theInputString);
 
 	if (theStringLength == 0)
 	{
@@ -1091,7 +1093,7 @@ MakeXalanDOMCharVector(
 	else
 	{
 		// Include the terminating null byte...
-		const unsigned int	theLength = strlen(data) + 1;
+		const size_t	theLength = strlen(data) + 1;
 
 		theResult.reserve(theLength);
 
@@ -1118,7 +1120,7 @@ MakeXalanDOMCharVector(const XalanDOMChar*	data)
 {
 	assert(data != 0);
 
-	unsigned int	theLength = length(data);
+	const XalanDOMString::size_type		theLength = length(data);
 
 	// Create a vector which includes the terminating 0.
 	return XalanDOMCharVectorType(data, data + theLength + 1);
@@ -1131,13 +1133,13 @@ CopyWideStringToVector(
 			const XalanDOMChar*		theString,
 			CharVectorType&			theVector)
 {
-	const unsigned int	theLength = length(theString);
+	const XalanDOMString::size_type		theLength = length(theString);
 
 	if (theLength != 0)
 	{
 		theVector.reserve(theVector.size() + theLength + 1);
 
-		for(unsigned int i = 0; i < theLength; i++)
+		for(XalanDOMString::size_type i = 0; i < theLength; i++)
 		{
 			// Assert that the truncation will not affect the resulting character.
 			assert(theString[i] == char(theString[i]));
@@ -1259,23 +1261,24 @@ trim(const XalanDOMString&	theString)
 	if (isEmpty(theString))
 		return theString;
 
-	const int	strLen = length(theString);
-	
+	const XalanDOMString::size_type		strLen = length(theString);
+	assert(strLen > 0);
+
 	// index of first non-whitespace character
-	int			leadingSpace = 0;
+	XalanDOMString::size_type	leadingSpace = 0;
 
 	for (; leadingSpace < strLen; ++leadingSpace)
 		if (!isXMLWhitespace(charAt(theString, leadingSpace)))
 			break;
 
 	// index of last non-whitespace character
-	int trailingSpace = strLen - 1;
+	XalanDOMString::size_type	trailingSpace = strLen - 1;
 
-	for (; trailingSpace>=0; --trailingSpace)
-		if (!isXMLWhitespace(charAt(theString, trailingSpace)))
+	for (; trailingSpace > 0; --trailingSpace)
+		if (!isXMLWhitespace(charAt(theString, trailingSpace - 1)))
 			break;
 
-	return substring(theString, leadingSpace, trailingSpace + 1);
+	return substring(theString, leadingSpace, trailingSpace);
 }
 
 
@@ -1692,7 +1695,7 @@ UnsignedLongToDOMString(
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(bool)
 isXMLWhitespace(const XalanDOMString&	string)
 {
-	const unsigned int	theLength = length(string);
+	const XalanDOMString::size_type		theLength = length(string);
 
 	if (theLength == 0)
 	{
