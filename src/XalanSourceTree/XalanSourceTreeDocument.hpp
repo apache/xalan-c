@@ -488,6 +488,14 @@ private:
 			const XalanDOMChar*			theValue,
 			XalanSourceTreeElement*		theOwnerElement);
 
+	size_t
+	createAttributes(
+			XalanSourceTreeAttr**		theAttributeVector,
+			const AttributeListType&	attrs,
+			size_t						theStartIndex,
+			XalanSourceTreeElement*		theOwnerElement,
+			bool						fCreateNamespaces);
+
 	XalanSourceTreeElement*
 	createElementNode(
 			const XalanDOMChar*		theTagName,
@@ -497,6 +505,14 @@ private:
 			XalanNode*				thePreviousSibling,
 			XalanNode*				theNextSibling,
 			const PrefixResolver&	thePrefixResolver);
+
+	size_t
+	createAttributes(
+			XalanSourceTreeAttr**		theAttributeVector,
+			const AttributesType&		theAttributes,
+			size_t						theStartIndex,
+			XalanSourceTreeElement*		theOwnerElement,
+			bool						fCreateNamespaces);
 
 	void
 	createAttributes(

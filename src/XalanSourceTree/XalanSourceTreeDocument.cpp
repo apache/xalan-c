@@ -628,6 +628,51 @@ hasXMLNamespaceAttribute(const AttributesType&	attrs)
 
 
 
+size_t
+XalanSourceTreeDocument::createAttributes(
+			XalanSourceTreeAttr**		theAttributeVector,
+			const AttributeListType&	attrs,
+			size_t						theStartIndex,
+			XalanSourceTreeElement*		theOwnerElement,
+			bool						fCreateNamespaces)
+{
+	const unsigned int	theSAXAttributeCount = attrs.getLength();
+
+	// Now, create the attributes...
+	for(unsigned int i = 0; i < theSAXAttributeCount; ++i)
+	{
+		const XalanDOMChar* const	theName =
+			attrs.getName(i);
+		assert(theName != 0);
+
+		const bool	isNamespaceNode = startsWith(theName, DOMServices::s_XMLNamespaceWithSeparator) == true ||
+						theName == DOMServices::s_XMLNamespace;
+
+		if ((isNamespaceNode == true && fCreateNamespaces == true) ||
+			(isNamespaceNode == false && fCreateNamespaces == false))
+		{
+			const XalanDOMChar* const	theValue =
+				attrs.getValue(i);
+			assert(theValue != 0);
+
+			theAttributeVector[theStartIndex] =
+				m_attributeAllocator.create(
+					m_namesStringPool.get(theName),
+					m_valuesStringPool.get(theValue),
+					theOwnerElement,
+					m_nextIndexValue++);
+
+			assert(theAttributeVector[theStartIndex] != 0);
+
+			++theStartIndex;
+		}
+	}
+
+	return theStartIndex;
+}
+
+
+
 XalanSourceTreeElement*
 XalanSourceTreeDocument::createElementNode(
 			const XalanDOMChar*			name,
@@ -699,28 +744,21 @@ XalanSourceTreeDocument::createElementNode(
 		++theIndex;
 	}
 
-	const unsigned int	theSAXAttributeCount = attrs.getLength();
-
-	// Now, create the attributes...
-	for(unsigned int i = 0; i < theSAXAttributeCount; ++i, ++theIndex)
-	{
-		const XalanDOMChar* const	theName =
-			attrs.getName(i);
-		assert(theName != 0);
-
-		const XalanDOMChar* const	theValue =
-			attrs.getValue(i);
-		assert(theValue != 0);
-
-		theAttributeVector[theIndex] =
-			m_attributeAllocator.create(
-				m_namesStringPool.get(theName),
-				m_valuesStringPool.get(theValue),
+	// Create the namespace "nodes" first...
+	theIndex = createAttributes(
+				theAttributeVector,
+				attrs,
+				theIndex,
 				theNewElement,
-				m_nextIndexValue++);
+				true);
 
-		assert(theAttributeVector[theIndex] != 0);
-	}
+	// Now, create the attribute "nodes"...
+	theIndex = createAttributes(
+				theAttributeVector,
+				attrs,
+				theIndex,
+				theNewElement,
+				false);
 
 	return theNewElement;
 }
@@ -799,28 +837,21 @@ XalanSourceTreeDocument::createElementNode(
 		++theIndex;
 	}
 
-	const unsigned int	theSAXAttributeCount = attrs.getLength();
-
-	// Now, create the attributes...
-	for(unsigned int i = 0; i < theSAXAttributeCount; ++i, ++theIndex)
-	{
-		const XalanDOMChar* const	theName =
-			attrs.getName(i);
-		assert(theName != 0);
-
-		const XalanDOMChar* const	theValue =
-			attrs.getValue(i);
-		assert(theValue != 0);
-
-		theAttributeVector[theIndex] =
-			createAttribute(
-				theName,
-				theValue,
+	// Create the namespace "nodes" first...
+	theIndex = createAttributes(
+				theAttributeVector,
+				attrs,
+				theIndex,
 				theNewElement,
-				thePrefixResolver);
+				true);
 
-		assert(theAttributeVector[theIndex] != 0);
-	}
+	// Now, create the attribute "nodes"...
+	theIndex = createAttributes(
+				theAttributeVector,
+				attrs,
+				theIndex,
+				theNewElement,
+				false);
 
 	return theNewElement;
 }
@@ -1279,6 +1310,106 @@ XalanSourceTreeDocument::createElementNode(
 
 
 
+size_t
+XalanSourceTreeDocument::createAttributes(
+			XalanSourceTreeAttr**		theAttributeVector,
+			const AttributesType&		theAttributes,
+			size_t						theStartIndex,
+			XalanSourceTreeElement*		theOwnerElement,
+			bool						fCreateNamespaces)
+{
+	const unsigned int	theSAXAttributeCount = theAttributes.getLength();
+
+	// Now, create the attributes...
+	for(unsigned int i = 0; i < theSAXAttributeCount; ++i)
+	{
+		const XalanDOMChar* const	theQName =
+			theAttributes.getQName(i);
+		assert(theQName != 0);
+
+		const bool	isNamespaceNode = startsWith(theQName, DOMServices::s_XMLNamespaceWithSeparator) == true ||
+						theQName == DOMServices::s_XMLNamespace;
+
+		if ((isNamespaceNode == true && fCreateNamespaces == true) ||
+			(isNamespaceNode == false && fCreateNamespaces == false))
+		{
+			const XalanDOMChar* const	theValue =
+				theAttributes.getValue(i);
+			assert(theValue != 0);
+
+			const XalanDOMChar* const	theURI =
+				theAttributes.getURI(i);
+			assert(theURI != 0);
+
+			if (length(theURI) == 0)
+			{
+				theAttributeVector[theStartIndex] =
+					m_attributeAllocator.create(
+						m_namesStringPool.get(theQName),
+						m_valuesStringPool.get(theValue),
+						theOwnerElement,
+						m_nextIndexValue++);
+			}
+			else
+			{
+				const XalanDOMChar* const	theLocalName =
+					theAttributes.getLocalName(i);
+				assert(theLocalName != 0);
+
+				const XalanDOMString::size_type		theColonIndex = indexOf(theQName, XalanUnicode::charColon);
+				assert(theColonIndex != length(theQName));
+
+				// The constructor parameters for AttrNS are:
+				//
+				// name
+				// local name
+				// namespace URI
+				// prefix
+				// value
+				// owner element
+				// index
+				//
+				theAttributeVector[theStartIndex] =
+					m_attributeNSAllocator.create(
+							m_namesStringPool.get(theQName),
+							m_namesStringPool.get(theLocalName),
+							m_namesStringPool.get(theURI),
+							// This is the prefix...
+							m_namesStringPool.get(theQName, theColonIndex),
+							m_valuesStringPool.get(theValue),
+							theOwnerElement,
+							m_nextIndexValue++);
+			}
+
+			// OK, now let's see if we have an ID attribute...
+			const XalanDOMChar*		theType =
+				theAttributes.getType(i);
+
+			// Look for an attribute that was declared as type ID in the DTD.
+			// Note that we can just save a pointer to the attribute's XalanDOMString
+			// data, since the attribute is guaranteed to exist for as long as the
+			// document does.
+			if (*theType == XalanUnicode::charLetter_I &&
+				*++theType == XalanUnicode::charLetter_D &&
+				*++theType == 0)
+			{
+				// The XPath says that if there are duplicate IDs, the first node is
+				// always returned, so use insert(), rather than []
+				m_elementsByID.insert(
+					ElementByIDMapType::value_type(
+						c_wstr(theAttributeVector[theStartIndex]->getValue()),
+						theOwnerElement));
+			}
+
+			++theStartIndex;
+		}
+	}
+
+	return theStartIndex;
+}
+
+
+
 void
 XalanSourceTreeDocument::createAttributes(
 			const AttributesType&		theAttributes,
@@ -1313,83 +1444,21 @@ XalanSourceTreeDocument::createAttributes(
 		++theIndex;
 	}
 
-	const unsigned int	theSAXAttributeCount = theAttributes.getLength();
+	// Create the namespace "nodes" first...
+	theIndex = createAttributes(
+				theAttributeVector,
+				theAttributes,
+				theIndex,
+				theOwnerElement,
+				true);
 
-	// Now, create the attributes...
-	for(unsigned int i = 0; i < theSAXAttributeCount; ++i, ++theIndex)
-	{
-		const XalanDOMChar* const	theQName =
-			theAttributes.getQName(i);
-		assert(theQName != 0);
-
-		const XalanDOMChar* const	theValue =
-			theAttributes.getValue(i);
-		assert(theValue != 0);
-
-		const XalanDOMChar* const	theURI =
-			theAttributes.getURI(i);
-		assert(theURI != 0);
-
-		if (length(theURI) == 0)
-		{
-			theAttributeVector[theIndex] =
-				m_attributeAllocator.create(
-					m_namesStringPool.get(theQName),
-					m_valuesStringPool.get(theValue),
-					theOwnerElement,
-					m_nextIndexValue++);
-		}
-		else
-		{
-			const XalanDOMChar* const	theLocalName =
-				theAttributes.getLocalName(i);
-			assert(theLocalName != 0);
-
-			const XalanDOMString::size_type		theColonIndex = indexOf(theQName, XalanUnicode::charColon);
-			assert(theColonIndex != length(theQName));
-
-			// The constructor parameters for AttrNS are:
-			//
-			// name
-			// local name
-			// namespace URI
-			// prefix
-			// value
-			// owner element
-			// index
-			//
-			theAttributeVector[theIndex] =
-				m_attributeNSAllocator.create(
-						m_namesStringPool.get(theQName),
-						m_namesStringPool.get(theLocalName),
-						m_namesStringPool.get(theURI),
-						// This is the prefix...
-						m_namesStringPool.get(theQName, theColonIndex),
-						m_valuesStringPool.get(theValue),
-						theOwnerElement,
-						m_nextIndexValue++);
-		}
-
-		// OK, now let's see if we have an ID attribute...
-		const XalanDOMChar*		theType =
-			theAttributes.getType(i);
-
-		// Look for an attribute that was declared as type ID in the DTD.
-		// Note that we can just save a pointer to the attribute's XalanDOMString
-		// data, since the attribute is guaranteed to exist for as long as the
-		// document does.
-		if (*theType == XalanUnicode::charLetter_I &&
-			*++theType == XalanUnicode::charLetter_D &&
-			*++theType == 0)
-		{
-			// The XPath says that if there are duplicate IDs, the first node is
-			// always returned, so use insert(), rather than []
-			m_elementsByID.insert(
-				ElementByIDMapType::value_type(
-					c_wstr(theAttributeVector[theIndex]->getValue()),
-					theOwnerElement));
-		}
-	}
+	// Now, create the attribute "nodes"...
+	theIndex = createAttributes(
+				theAttributeVector,
+				theAttributes,
+				theIndex,
+				theOwnerElement,
+				false);
 }
 
 
