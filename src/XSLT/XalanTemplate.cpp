@@ -190,7 +190,6 @@ foo(XPathExecutionContext&	theExecutionContext)
 		XPathExpression::TokenQueueType theTokenQueueType;
 		set<const XalanNode*,less<const XalanNode*> > theXalanNodeSet;
 		XPathExecutionContext::XObjectArgVectorType theVector;
-		Stylesheet::PatternTableListType	thePatternTableList;
 		Stylesheet::PatternTableVectorType thePatternTableVector;
 		map<int,int,less<int> > theIntMap;
 		vector<NamespacesHandler::NamespacesMapType::iterator> theNamespacesMapTypeIteratorVector;
@@ -333,15 +332,16 @@ foo(XPathExecutionContext&	theExecutionContext)
 			 theVector.end(),
 			 DeleteFunctor<ElemVariable>());
 	}
-	
+
 	{
-		const Stylesheet::PatternTableListType	theList;
-		
-		for_each(theList.begin(),
-			 theList.end(),
-			 DeleteFunctor<Stylesheet::MatchPattern2>());
+		const Stylesheet::PatternTableVectorType	theList;
+
+		for_each(
+			theList.begin(),
+			theList.end(),
+			DeleteFunctor<Stylesheet::MatchPattern2>());
 	}
-	
+
 	{
 		StylesheetHandler::ElemTemplateStackType	theVector;
 		
