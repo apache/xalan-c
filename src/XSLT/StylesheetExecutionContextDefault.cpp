@@ -82,6 +82,7 @@
 #include <XPath/ResultTreeFragBase.hpp>
 #include <XPath/XObjectFactory.hpp>
 #include <XPath/XPath.hpp>
+#include <XPath/XPathEnvSupport.hpp>
 #include <XPath/XPathExecutionContext.hpp>
 #include <XPath/XObject.hpp>
 
@@ -1821,7 +1822,9 @@ StylesheetExecutionContextDefault::extFunction(
 			const XObjectArgVectorType&		argVec,
 			const LocatorType*				locator)
 {
-	return m_xpathExecutionContextDefault.extFunction(theNamespace, functionName, context, argVec, locator);
+	assert(m_xpathExecutionContextDefault.getXPathEnvSupport() != 0);
+
+	return m_xpathExecutionContextDefault.getXPathEnvSupport()->extFunction(*this, theNamespace, functionName, context, argVec, locator);
 }
 
 
