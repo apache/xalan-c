@@ -161,31 +161,19 @@ XPath::execute(
 			const PrefixResolver&	prefixResolver,
 			XPathExecutionContext&	executionContext) const
 {
-	const PrefixResolver* const		theSavedResolver =
-			executionContext.getPrefixResolver();
+	// Push and pop the PrefixResolver...
+	XPathExecutionContext::PrefixResolverPusher		theResolverPusher(
+									executionContext,
+									&prefixResolver);
 
-	XalanNode* const				theSavedCurrentNode =
-			executionContext.getCurrentNode();
+	// Push and pop the current node...
+	XPathExecutionContext::CurrentNodePusher		theNodePusher(
+									executionContext,
+									context);
 
 	XObject*	theResult = 0;
 
-	try
-	{
-		executionContext.setPrefixResolver(&prefixResolver);
-		executionContext.setCurrentNode(context);
-
-		theResult = execute(executionContext);
-	}
-	catch(...)
-	{
-		executionContext.setPrefixResolver(theSavedResolver);
-		executionContext.setCurrentNode(theSavedCurrentNode);
-
-		throw;
-	}
-
-	executionContext.setPrefixResolver(theSavedResolver);
-	executionContext.setCurrentNode(theSavedCurrentNode);
+	theResult = execute(executionContext);
 
 	return theResult;
 }
@@ -199,24 +187,14 @@ XPath::execute(
 			const NodeRefListBase&	contextNodeList,
 			XPathExecutionContext&	executionContext) const
 {
-	const MutableNodeRefList	theSavedContextNodeList(executionContext.getContextNodeList());
+	// Push and pop the PrefixResolver...
+	XPathExecutionContext::ContextNodeListPusher	thePusher(
+									executionContext,
+									contextNodeList);
 
 	XObject*	theResult = 0;
 
-	try
-	{
-		executionContext.setContextNodeList(contextNodeList);
-
-		theResult = execute(context, prefixResolver, executionContext);
-	}
-	catch(...)
-	{
-		executionContext.setContextNodeList(theSavedContextNodeList);
-
-		throw;
-	}
-
-	executionContext.setContextNodeList(theSavedContextNodeList);
+	theResult = execute(context, prefixResolver, executionContext);
 
 	return theResult;
 }
@@ -467,45 +445,34 @@ XPath::getMatchScore(XalanNode*					context,
 	{
 		assert(context != 0);
 
-		const PrefixResolver* const		theSavedResolver =
-				executionContext.getPrefixResolver();
+		// Push and pop the PrefixResolver...
+		XPathExecutionContext::PrefixResolverPusher		thePusher(
+									executionContext,
+									&resolver);
 
-		executionContext.setPrefixResolver(&resolver);
+		opPos += 2;
 
-		try
+		XLocator*	locator = executionContext.getXLocatorFromNode(context);
+
+		if(0 == locator)
 		{
-			opPos += 2;
+			locator = m_defaultXLocator;
+		}
+		assert(locator != 0);
 
-			XLocator*	locator = executionContext.getXLocatorFromNode(context);
+		while(m_expression.m_opMap[opPos] == XPathExpression::eOP_LOCATIONPATHPATTERN &&
+			  score == s_MatchScoreNone)
+		{
+			const int	nextOpPos = m_expression.getNextOpCodePosition(opPos);
 
-			if(0 == locator)
+			// opPos+=2;		
+			score = locator->locationPathPattern(*this, executionContext, *context, opPos);
+
+			if(score == s_MatchScoreNone)
 			{
-				locator = m_defaultXLocator;
-			}
-			assert(locator != 0);
-
-			while(m_expression.m_opMap[opPos] == XPathExpression::eOP_LOCATIONPATHPATTERN &&
-				  score == s_MatchScoreNone)
-			{
-				const int	nextOpPos = m_expression.getNextOpCodePosition(opPos);
-
-				// opPos+=2;		
-				score = locator->locationPathPattern(*this, executionContext, *context, opPos);
-
-				if(score == s_MatchScoreNone)
-				{
-					opPos = nextOpPos;
-				}
+				opPos = nextOpPos;
 			}
 		}
-		catch(...)
-		{
-			executionContext.setPrefixResolver(theSavedResolver);
-
-			throw;
-		}
-
-		executionContext.setPrefixResolver(theSavedResolver);
 	}
 	else
 	{
@@ -1240,6 +1207,8 @@ XPath::variable(
 	catch(...)
 	{
 		executionContext.error(XalanDOMString("Could not get variable named ") + varName->str());
+
+		throw;
 	}
 
 	if(0 == result)

@@ -128,6 +128,30 @@ public:
 	virtual void
 	setCurrentNode(XalanNode*	theCurrentNode) = 0;
 
+	class CurrentNodePusher
+	{
+	public:
+
+		CurrentNodePusher(
+				XPathExecutionContext&	theExecutionContext,
+				XalanNode*				theNode) :
+			m_executionContext(theExecutionContext),
+			m_savedNode(theExecutionContext.getCurrentNode())
+		{
+			m_executionContext.setCurrentNode(theNode);
+		}
+
+		~CurrentNodePusher()
+		{
+			m_executionContext.setCurrentNode(m_savedNode);
+		}
+
+	private:
+
+		XPathExecutionContext&	m_executionContext;
+		XalanNode* const		m_savedNode;
+	};
+
 	/**
 	 * Retrieve the factory object for creating XObjects.
 	 * 
@@ -200,6 +224,30 @@ public:
 	 */
 	virtual void	
 	setContextNodeList(const NodeRefListBase&	theList) = 0;
+
+	class ContextNodeListPusher
+	{
+	public:
+
+		ContextNodeListPusher(
+				XPathExecutionContext&		theExecutionContext,
+				const NodeRefListBase&		theNodeList) :
+			m_executionContext(theExecutionContext),
+			m_savedNodeList(theExecutionContext.getContextNodeList())
+		{
+			m_executionContext.setContextNodeList(theNodeList);
+		}
+
+		~ContextNodeListPusher()
+		{
+			m_executionContext.setContextNodeList(m_savedNodeList);
+		}
+
+	private:
+
+		XPathExecutionContext&		m_executionContext;
+		const MutableNodeRefList	m_savedNodeList;
+	};
 
 	/*
 	 * Get the count of nodes in the current context node list.
@@ -388,6 +436,30 @@ public:
 	 */
 	virtual void
 	setPrefixResolver(const PrefixResolver*		thePrefixResolver) = 0;
+
+	class PrefixResolverPusher
+	{
+	public:
+
+		PrefixResolverPusher(
+				XPathExecutionContext&	theExecutionContext,
+				const PrefixResolver*	theResolver) :
+			m_executionContext(theExecutionContext),
+			m_savedResolver(theExecutionContext.getPrefixResolver())
+		{
+			m_executionContext.setPrefixResolver(theResolver);
+		}
+
+		~PrefixResolverPusher()
+		{
+			m_executionContext.setPrefixResolver(m_savedResolver);
+		}
+
+	private:
+
+		XPathExecutionContext&			m_executionContext;
+		const PrefixResolver* const		m_savedResolver;
+	};
 
 	/**
 	 * Retrieve the URI corresponding to a namespace prefix

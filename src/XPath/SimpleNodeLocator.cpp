@@ -337,79 +337,63 @@ SimpleNodeLocator::step(
 		break;
 	}
 
-	MutableNodeRefList	savedContextNodeList = executionContext.createMutableNodeRefList();
+	// Push and pop the PrefixResolver...
+	XPathExecutionContext::ContextNodeListPusher	thePusher(
+									executionContext,
+									subQueryResults);
 
-	savedContextNodeList = executionContext.getContextNodeList();
+	opPos += argLen;
 
-	executionContext.setContextNodeList(subQueryResults);
+	int		nextStepType = currentExpression.getOpCodeMapValue(opPos);
 
-	try
+	if(XPathExpression::eOP_PREDICATE == nextStepType)
 	{
-		opPos += argLen;
+		predicates(xpath,
+				   executionContext,
+				   context,
+				   opPos, 
+				   subQueryResults,
+				   opPos);
 
-		int 	nextStepType = currentExpression.getOpCodeMapValue(opPos);
+		nextStepType = currentExpression.getOpCodeMapValue(opPos);
+	}
 
-		if(XPathExpression::eOP_PREDICATE == nextStepType)
+	if(XPathExpression::eENDOP != nextStepType && continueStepRecursion == true)
+	{
+		const unsigned int	nContexts = subQueryResults.getLength();
+
+		for(unsigned int i = 0; i < nContexts; i++)
 		{
-			predicates(xpath,
-					   executionContext,
-					   context,
-					   opPos, 
-					   subQueryResults,
-					   opPos);
+			XalanNode* const	node = subQueryResults.item(i);
 
-			nextStepType = currentExpression.getOpCodeMapValue(opPos);
-		}
-
-		if(XPathExpression::eENDOP != nextStepType && continueStepRecursion == true)
-		{
-
-			const unsigned int	nContexts = subQueryResults.getLength();
-
-			for(unsigned int i = 0; i < nContexts; i++)
+			if(0 != node)
 			{
-				XalanNode* const	node = subQueryResults.item(i);
+				MutableNodeRefList	mnl(executionContext.createMutableNodeRefList());
 
-				if(0 != node)
+				step(xpath, executionContext, node, opPos, mnl);
+
+				if(queryResults.getLength() == 0)
 				{
-					MutableNodeRefList	mnl(executionContext.createMutableNodeRefList());
-
-					step(xpath, executionContext, node, opPos, mnl);
-
-					if(queryResults.getLength() == 0)
-					{
-						queryResults = mnl;
-					}
-					else
-					{
-						queryResults.addNodesInDocOrder(mnl);
-//						queryResults.addNodes(mnl);
-					}
+					queryResults = mnl;
+				}
+				else
+				{
+					queryResults.addNodesInDocOrder(mnl);
 				}
 			}
 		}
+	}
+	else
+	{
+		if (shouldReorder == true)
+		{
+			queryResults.addNodesInDocOrder(subQueryResults);
+		}
 		else
 		{
-			if (shouldReorder == true)
-			{
-				queryResults.addNodesInDocOrder(subQueryResults);
-			}
-			else
-			{
-				queryResults = subQueryResults;
-			}
+			queryResults = subQueryResults;
 		}
 	}
-	catch(...)
-	{
-		executionContext.setContextNodeList(savedContextNodeList);
-
-		throw;
-	}
-
-	executionContext.setContextNodeList(savedContextNodeList);
-
-//	return queryResults;
 }
 
 
