@@ -448,6 +448,33 @@ SimpleNodeLocator::stepPattern(
 			{
 				score = XPath::s_MatchScoreOther;
 			}
+			else
+			{
+				const int   prevPos = currentExpression.getNextOpCodePosition(startOpPos);		
+				const int	prevStepType = currentExpression.getOpCodeMapValue(prevPos);
+
+				if (xpath.s_MatchScoreNone == score  && 
+				    (prevStepType == XPathExpression::eMATCH_ANY_ANCESTOR ||
+					 prevStepType == XPathExpression::eMATCH_ANY_ANCESTOR_WITH_PREDICATE))
+				{
+					while(0 != context)
+					{
+						score = nodeTest(
+							xpath,
+							executionContext,
+							context,
+							context->getNodeType(),
+							opPos,
+							argLen,
+							stepType);
+
+						if(xpath.s_MatchScoreNone != score)
+							break;
+
+						context = DOMServices::getParentOfNode(*context);
+					}
+				}
+			}
 		}
 		break;
 
