@@ -109,7 +109,6 @@ ExecuteXPath(
 	theXPathProcessor.initXPath(theXPath,
 								theXPathString,
 								thePrefixResolver,
-								theXObjectFactory,
 								theXPathEnvSupport);
 
 	XPathExecutionContextDefault	theExecutionContext(theXPathEnvSupport,
@@ -422,8 +421,10 @@ FindContextNode(
 {
 	XalanNode*							theResult = 0;
 
-	XPathGuard	theXPath(theXPathFactory,
-						 theXPathFactory.create());
+	XPath* const	theXPath = theXPathFactory.create();
+
+	XPathGuard	theGuard(theXPathFactory,
+						 theXPath);
 
 	XalanElement*				theNamespaceContext = 0;
 	ElementPrefixResolverProxy	thePrefixResolver(theNamespaceContext, theXPathEnvSupport, theXPathSupport);
@@ -431,7 +432,7 @@ FindContextNode(
 
 	const XObject* const	theXObject =
 		ExecuteXPath(theXPathProcessor,
-					 *theXPath.get(),
+					 *theXPath,
 					 theContextNodeMatchPattern,
 					 theXPathEnvSupport,
 					 theXPathSupport,
@@ -521,13 +522,14 @@ TestAxisResult(
 				ElementPrefixResolverProxy		thePrefixResolver(theNamespaceContext, theXPathEnvSupport, theXPathSupport);
 				NodeRefList						theContextNodeList;
 
-				XPathGuard	theXPath(theXPathFactory,
-									 theXPathFactory.create());
+				XPath* const	theXPath = theXPathFactory.create();
 
-				theXPathProcessor.initXPath(*theXPath.get(),
+				XPathGuard		theGuard(theXPathFactory,
+										 theXPath);
+
+				theXPathProcessor.initXPath(*theXPath,
 											theXPathString,
 											thePrefixResolver,
-											theXObjectFactory,
 											theXPathEnvSupport);
 
 				bool	fDump = false;
@@ -636,22 +638,24 @@ TestPredicateResult(
 				ElementPrefixResolverProxy		thePrefixResolver(theNamespaceContext, theXPathEnvSupport, theXPathSupport);
 				NodeRefList						theContextNodeList;
 
-				XPathGuard	theXPath1(theXPathFactory,
-									  theXPathFactory.create());
+				XPath* const	theXPath1 = theXPathFactory.create();
 
-				theXPathProcessor.initXPath(*theXPath1.get(),
+				XPathGuard	theGuard1(theXPathFactory,
+									  theXPath1);
+
+				theXPathProcessor.initXPath(*theXPath1,
 											"following-sibling::*",
 											thePrefixResolver,
-											theXObjectFactory,
 											theXPathEnvSupport);
 
-				XPathGuard	theXPath2(theXPathFactory,
-									  theXPathFactory.create());
+				XPath* const	theXPath2 = theXPathFactory.create();
 
-				theXPathProcessor.initXPath(*theXPath2.get(),
+				XPathGuard	theGuard2(theXPathFactory,
+									  theXPath2);
+
+				theXPathProcessor.initXPath(*theXPath2,
 											"descendant::*",
 											thePrefixResolver,
-											theXObjectFactory,
 											theXPathEnvSupport);
 
 				bool	fDump = false;
@@ -818,11 +822,13 @@ TestNumericResults(
 
 	for(int i = 0; theNumericTestInput[i] != 0; i++)
 	{
-		XPathGuard	theXPath(theXPathFactory,
-							 theXPathFactory.create());
+		XPath* const	theXPath = theXPathFactory.create();
+
+		XPathGuard		theGuard(theXPathFactory,
+								 theXPath);
 
 		TestNumericResult(theXPathProcessor,
-						  *theXPath.get(),
+						  *theXPath,
 						  theNumericTestInput[i],
 						  thePrintWriter,
 						  theNumericTestExpectedOutput[i],
@@ -939,11 +945,13 @@ TestStringResults(
 
 	for(int i = 0; theStringTestInput[i] != 0; i++)
 	{
-		XPathGuard	theXPath(theXPathFactory,
-							 theXPathFactory.create());
+		XPath* const	theXPath = theXPathFactory.create();
+
+		XPathGuard	theGuard(theXPathFactory,
+							 theXPath);
 
 		TestStringResult(theXPathProcessor,
-						 *theXPath.get(),
+						 *theXPath,
 						 theStringTestInput[i],
 						 thePrintWriter,
 						 theStringTestExpectedOutput[i],
@@ -1064,11 +1072,13 @@ TestBooleanResults(
 
 	for(int i = 0; theBooleanTestInput[i] != 0; i++)
 	{
-		XPathGuard	theXPath(theXPathFactory,
-							 theXPathFactory.create());
+		XPath* const	theXPath = theXPathFactory.create();
+
+		XPathGuard	theGuard(theXPathFactory,
+							 theXPath);
 
 		TestBooleanResult(theXPathProcessor,
-						  *theXPath.get(),
+						  *theXPath,
 						  theBooleanTestInput[i],
 						  thePrintWriter,
 						  theBooleanTestExpectedOutput[i],
@@ -1220,7 +1230,7 @@ RunTests(
 
 int
 main(int			/* argc */,
-	 const char*	argv[])
+	 const char*	/* argv[] */)
 {
 #if !defined (XALAN_NO_NAMESPACES)
 	using std::cout;
@@ -1231,7 +1241,7 @@ main(int			/* argc */,
 	XPathEnvSupportDefault		theXPathEnvSupport;
 	DOMSupportDefault			theDOMSupport;
 	XPathSupportDefault			theXPathSupport(theDOMSupport);
-	XObjectFactoryDefault		theXObjectFactory(theXPathEnvSupport, theXPathSupport);
+	XObjectFactoryDefault		theXObjectFactory;
 	XPathFactoryDefault			theXPathFactory;
 	XPathProcessorImpl			theXPathProcessor;
 
@@ -1246,4 +1256,6 @@ main(int			/* argc */,
 		     theXPathSupport,
 			 theLiaison,
 			 thePrintWriter);
+
+	return 0;
 }
