@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2003 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -88,7 +88,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 #if defined(_MSC_VER)
 
-class FindFileStruct : public _wfinddata_t
+struct FindFileStruct : public _wfinddata_t
 {
 
 	enum eAttributes
@@ -132,14 +132,14 @@ public:
 		{
 			return false;
 		}
-		else if (name[0] == XalanUnicode::charFullStop)
+		else if (name[0] == '.')
 		{
-			if (name[1] == 0)
+			if (name[1] == '\0')
 			{
 				return true;
 			}
-			else if (name[1] == XalanUnicode::charFullStop &&
-					 name[2] == 0)
+			else if (name[1] == '.' &&
+					 name[2] == '\0')
 			{
 				return true;
 			}
@@ -157,7 +157,7 @@ public:
 
 #else
 
-class FindFileStruct : public dirent
+struct FindFileStruct : public dirent
 {
 public:
 
@@ -181,8 +181,48 @@ public:
 #if defined(AIX) || defined(HPUX) || defined(SOLARIS) || defined(OS390) || defined(TRU64)
 		return false;
 #else		
-		return d_type == DT_DIR;		
+		if (d_type == DT_DIR || d_type == DT_UNKNOWN)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
 #endif		
+	}
+
+	bool
+	isSelfOrParent() const
+	{
+#if defined(AIX) || defined(HPUX) || defined(SOLARIS) || defined(OS390) || defined(TRU64)
+		return false;
+#else		
+		if (isDirectory() == false)
+		{
+			return false;
+		}
+		else if (d_name[0] == '.')
+		{
+			if (d_name[1] == '\0')
+			{
+				return true;
+			}
+			else if (d_name[1] == '.' &&
+					 d_name[2] == '\0')
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+		else
+		{
+			return false;
+		}
+#endif
 	}
 };
 
@@ -271,6 +311,61 @@ EnumerateDirectory(
 	}
 
 	
+#elif defined(LINUX)
+
+	CharVectorType	theTargetVector;
+
+	TranscodeToLocalCodePage(theFullSearchSpec, theTargetVector, false);
+
+	const CharVectorType::size_type		theSize = theTargetVector.size();
+
+	if (theSize > 0)
+	{
+		if (theTargetVector.back() == '*')
+		{
+			theTargetVector.pop_back();
+
+			if (theSize == 1)
+			{
+				theTargetVector.push_back('.');
+			}
+		}
+
+		theTargetVector.push_back('\0');
+
+		const char* const	theSpec = c_str(theTargetVector);
+		assert(theSpec != 0);
+
+		DIR* const	theDirectory = opendir(theSpec);
+
+		if (theDirectory != 0)
+		{
+			try
+			{
+				const FindFileStruct*	theEntry =
+					(FindFileStruct*)readdir(theDirectory);
+	
+				while(theEntry != 0)
+				{
+					if ((fIncludeSelfAndParent == true || theEntry->isSelfOrParent() == false) &&
+						theFilterPredicate(*theEntry) == true)
+					{
+						*theOutputIterator = StringType(theEntry->getName());
+					}
+
+					theEntry = (FindFileStruct*)readdir(theDirectory);
+				}
+			}
+			catch(...)
+			{
+				closedir(theDirectory);
+
+				throw;
+			}
+
+			closedir(theDirectory);
+		}
+	}
 #else
 	// Do nothing for now...
 	// Unsupported platform!!!
