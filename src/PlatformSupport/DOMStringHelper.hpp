@@ -1861,6 +1861,25 @@ equals(const XalanDOMString&	theLHS,
  * 
  * @param theLHS first string to compare
  * @param theRHS second string to compare
+ * @param theRHSLength the length of the theRHS
+ * @return true if the contents of both strings are identical
+ */
+inline bool
+equals(
+			const XalanDOMString&		theLHS,
+			const XalanDOMChar*			theRHS,
+			XalanDOMString::size_type	theRHSLength)
+{
+	return theRHSLength != length(theLHS) ? false : equals(c_wstr(theLHS), theRHSLength, theRHS, theRHSLength);
+}
+
+
+
+/**
+ * Compare the contents of two strings for equality
+ * 
+ * @param theLHS first string to compare
+ * @param theRHS second string to compare
  * @return true if the contents of both strings are identical
  */
 inline bool
@@ -1956,6 +1975,29 @@ equalsIgnoreCaseASCII(
 			const XalanDOMChar*			theLHS,
 			const XalanDOMChar*			theRHS,
 			XalanDOMString::size_type	theLength);
+
+
+
+/**
+ * Compare the contents of two strings for equality, without regard for case.
+ * Only the characters a-z and A-Z are considered characters with "case".
+ *
+ * @param theLHS first string to compare
+ * @param theLHSLength the length of the theLHS
+ * @param theRHS second string to compare
+ * @param theRHSLength the length of the theRHS
+ * @return true if both strings are identical
+ */
+inline bool
+equalsIgnoreCaseASCII(
+			const XalanDOMChar*			theLHS,
+			XalanDOMString::size_type	theLHSLength,
+			const XalanDOMChar*			theRHS,
+			XalanDOMString::size_type	theRHSLength)
+{
+	return theLHSLength != theRHSLength ? false :
+		equalsIgnoreCaseASCII(theLHS, theRHS, theLHSLength);
+}
 
 
 
