@@ -684,9 +684,7 @@ MutableNodeRefList::addNodeInDocOrder(
 void
 MutableNodeRefList::clearNulls()
 {
-#if !defined(XALAN_NO_STD_NAMESPACE)
-	using std::remove;
-#endif
+	XALAN_USING_STD(remove);
 
 	m_nodeList.erase(
 		remove(
@@ -708,9 +706,11 @@ MutableNodeRefList::clearNulls()
 void
 MutableNodeRefList::reverse()
 {
-	XALAN_USING_STD(reverse)
-
-	reverse(
+#if defined(XALAN_NO_STD_NAMESPACE)
+	::reverse(
+#else
+	std::reverse(
+#endif
 		m_nodeList.begin(),
 		m_nodeList.end());
 
