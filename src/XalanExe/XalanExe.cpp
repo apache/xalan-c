@@ -222,7 +222,11 @@ getArgs(
 	{
 		if (argv[i][0] == '-')
 		{
+#if defined(XALAN_STRICT_ANSI_HEADERS)
+			if (std::strlen(argv[i]) != 2)
+#else
 			if (strlen(argv[i]) != 2)
+#endif
 			{
 				fSuccess = false;
 			}
