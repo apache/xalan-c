@@ -138,6 +138,7 @@ public:
 		XalanDOMString	expected;
 		int				pass;
 		int				fail;
+		int				nogold;
 
 		void reset()
 		{
