@@ -229,12 +229,7 @@ XalanSourceTreeParserLiaison::parseXMLStream(
 
 	theReader->setLexicalHandler(&theContentHandler);
 
-	EntityResolver* const	theResolver = getEntityResolver();
-
-	if (theResolver != 0)
-	{
-		theReader->setEntityResolver(theResolver);
-	}
+	theReader->setEntityResolver(getEntityResolver());
 
 	theReader->parse(inputSource);
 
