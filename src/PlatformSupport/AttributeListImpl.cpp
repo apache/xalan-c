@@ -74,7 +74,8 @@
 
 AttributeListImpl::AttributeListImpl() :
 	AttributeList(),
-	m_AttributeVector()
+	m_AttributeVector(),
+	m_cacheVector()
 {
 }
 
@@ -84,6 +85,10 @@ AttributeListImpl::~AttributeListImpl()
 {
 	// Clean up everything...
 	clear();
+
+	assert(m_AttributeVector.empty() == true);
+
+	deleteEntries(m_cacheVector);
 }
 
 
@@ -157,10 +162,16 @@ AttributeListImpl::operator=(const AttributeListImpl&	theRHS)
 			// Copy the vector entries, and build the index map...
 			for(const_iterator i = theRHS.m_AttributeVector.end(); i != theEnd; ++i)
 			{
-				assert(*i != 0);
+				AttributeVectorEntry* const		theEntry = *i;
+
+				assert(theEntry != 0);
 
 				// Add the item...
-				tempVector.push_back(new AttributeVectorEntry(**i));
+				tempVector.push_back(
+					getNewEntry(
+						theEntry->m_Name.begin(),
+						theEntry->m_Type.begin(),
+						theEntry->m_Value.begin()));
 			}
 
 			// OK, we're safe, so swap the contents of the
@@ -337,16 +348,11 @@ AttributeListImpl::getValue(const XMLCh* const name) const
 void
 AttributeListImpl::clear()
 {
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::for_each;
-#endif
-
-	deleteEntries(m_AttributeVector);
+	m_cacheVector.insert(m_cacheVector.end(), m_AttributeVector.begin(), m_AttributeVector.end());
 
 	// Clear everything out.
 	m_AttributeVector.clear();
 }
-
 
 
 
@@ -434,7 +440,7 @@ AttributeListImpl::addAttribute(
 			m_AttributeVector.reserve(eDefaultVectorSize);
 		}
 
-		XalanAutoPtr<AttributeVectorEntry>	theEntry(new AttributeVectorEntry(name, value, type));
+		XalanAutoPtr<AttributeVectorEntry>	theEntry(getNewEntry(name, type, value));
 
 		// Add the new one.
 		m_AttributeVector.push_back(theEntry.get());
@@ -447,6 +453,37 @@ AttributeListImpl::addAttribute(
 	}
 
 	return fResult;
+}
+
+
+
+AttributeListImpl::AttributeVectorEntry*
+AttributeListImpl::getNewEntry(
+			const XMLCh*	name,
+			const XMLCh*	type,
+			const XMLCh*	value)
+{
+	if (m_cacheVector.size() == 0)
+	{
+		return new AttributeVectorEntry(name, value, type);
+	}
+	else
+	{
+		AttributeVectorEntry* const		theEntry =
+			m_cacheVector.back();
+
+		theEntry->clear();
+
+		assert(theEntry->m_Name.size() == 0 && theEntry->m_Value.size() == 0 && theEntry->m_Type.size() == 0);
+
+		theEntry->m_Name.insert(theEntry->m_Name.begin(), name, endArray(name) + 1);
+		theEntry->m_Value.insert(theEntry->m_Value.begin(), value, endArray(value) + 1);
+		theEntry->m_Type.insert(theEntry->m_Type.begin(), type, endArray(type) + 1);
+
+		m_cacheVector.pop_back();
+
+		return theEntry;
+	}
 }
 
 
@@ -471,9 +508,10 @@ AttributeListImpl::removeAttribute(const XMLCh*		name)
 
 	if (i != m_AttributeVector.end())
 	{
-		delete *i;
+		m_cacheVector.push_back(*i);
 
 		m_AttributeVector.erase(i);
+
 		fResult = true;
 	}
 

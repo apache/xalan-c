@@ -119,9 +119,10 @@ XObjectFactoryDefault::doReturnObject(
 	{
 	case XObject::eTypeBoolean:
 	case XObject::eTypeNull:
-	{		
-		bStatus = true;
-	}	
+		{		
+			bStatus = true;
+		}
+
 	case XObject::eTypeString:
 		{
 			XString* const	theXString =
@@ -134,6 +135,7 @@ XObjectFactoryDefault::doReturnObject(
 			bStatus = m_xstringAllocator.destroy(theXString);
 		}
 		break;
+
 	case  XObject::eTypeNumber:
 		{
 			XNumber* const	theXNumber =
@@ -146,6 +148,7 @@ XObjectFactoryDefault::doReturnObject(
 			bStatus = m_xnumberAllocator.destroy(theXNumber);
 		}
 		break;
+
 	case XObject::eTypeNodeSet:
 		{
 			XNodeSet* const	theXNodeSet =
@@ -158,6 +161,7 @@ XObjectFactoryDefault::doReturnObject(
 			bStatus = m_xnodesetAllocator.destroy(theXNodeSet);
 		}
 		break;
+
 	case XObject::eTypeResultTreeFrag:	
 		{
 			XResultTreeFrag* const	theXResultTreeFrag =	
@@ -170,6 +174,7 @@ XObjectFactoryDefault::doReturnObject(
 			bStatus = m_xresultTreeFragAllocator.destroy(theXResultTreeFrag);
 		}
 		break;
+
 	default:
 		{
 			const CollectionType::iterator	i =
@@ -228,6 +233,7 @@ XObjectFactoryDefault::clone(const XObject&		theXObject)
 #endif
 
 			break;
+
 		case  XObject::eTypeNumber:
 			theClone = m_xnumberAllocator.clone(
 #if defined(XALAN_OLD_STYLE_CASTS)
@@ -237,6 +243,7 @@ XObjectFactoryDefault::clone(const XObject&		theXObject)
 #endif
 
 			break;
+
 		case XObject::eTypeNodeSet:
 			theClone = m_xnodesetAllocator.clone(
 #if defined(XALAN_OLD_STYLE_CASTS)
@@ -246,6 +253,7 @@ XObjectFactoryDefault::clone(const XObject&		theXObject)
 #endif
 
 			break;
+
 		case XObject::eTypeResultTreeFrag:
 			theClone = m_xresultTreeFragAllocator.clone(
 #if defined(XALAN_OLD_STYLE_CASTS)
@@ -255,6 +263,7 @@ XObjectFactoryDefault::clone(const XObject&		theXObject)
 #endif
 
 			break;
+
 		default:
 			XObject* const	theClone = theXObject.clone();
 
@@ -338,6 +347,29 @@ XObjectFactoryDefault::createString(
 			const XalanDOMString&	theValue)
 {
 	XString* const	theXString = m_xstringAllocator.createString(theValue);
+
+	return theXString;
+}
+
+
+
+XObject*
+XObjectFactoryDefault::createString(
+			const XalanDOMChar*		theValue)
+{
+	XString* const	theXString = m_xstringAllocator.createString(theValue);
+
+	return theXString;
+}
+
+
+
+XObject*
+XObjectFactoryDefault::createString(
+			const XalanDOMChar*		theValue,
+			unsigned int			theLength)
+{
+	XString* const	theXString = m_xstringAllocator.createString(theValue, theLength);
 
 	return theXString;
 }

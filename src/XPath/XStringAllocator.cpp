@@ -89,6 +89,38 @@ XStringAllocator::createString(const XalanDOMString&	theString)
 
 
 XStringAllocator::string_type*
+XStringAllocator::createString(const XalanDOMChar*	theString)
+{
+	string_type* const	theBlock = m_allocator.allocateBlock();
+	assert(theBlock != 0);
+
+	string_type* const	theResult = new(theBlock) string_type(theString);
+
+	m_allocator.commitAllocation(theBlock);
+
+	return theResult;
+}
+
+
+
+XStringAllocator::string_type*
+XStringAllocator::createString(
+			const XalanDOMChar*		theString,
+			unsigned int			theLength)
+{
+	string_type* const	theBlock = m_allocator.allocateBlock();
+	assert(theBlock != 0);
+
+	string_type* const	theResult = new(theBlock) string_type(theString, theLength);
+
+	m_allocator.commitAllocation(theBlock);
+
+	return theResult;
+}
+
+
+
+XStringAllocator::string_type*
 XStringAllocator::clone(const XString&	value)
 {
 	string_type* const		theBlock = m_allocator.allocateBlock();

@@ -107,8 +107,6 @@ public:
 				less<XalanOutputStream*> >				OutputStreamSetType;
 	typedef set<const KeyDeclaration*,
 				less<const KeyDeclaration*> >			KeyDeclarationSetType;
-	typedef vector<const XObject*>						VariablesCollectionType;
-	typedef vector<VariablesCollectionType>				LiveVariablesStackType;
 	typedef pair<const XPath*, clock_t>					XPathCacheEntry;
 	typedef map<XalanDOMString,
 				XPathCacheEntry,
@@ -119,8 +117,6 @@ public:
 	typedef std::set<PrintWriter*>						PrintWriterSetType;
 	typedef std::set<XalanOutputStream*>				OutputStreamSetType;
 	typedef std::set<const KeyDeclaration*>				KeyDeclarationSetType;
-	typedef std::vector<const XObject*>					VariablesCollectionType;
-	typedef std::vector<VariablesCollectionType>		LiveVariablesStackType;
 	typedef std::pair<const XPath*, clock_t>			XPathCacheEntry;
 	typedef std::map<XalanDOMString, XPathCacheEntry>	XPathCacheMapType;
 #endif
@@ -667,6 +663,12 @@ public:
 	virtual MutableNodeRefList*
 	createMutableNodeRefList() const;
 
+	virtual XalanDOMString&
+	getCachedString();
+
+	virtual bool
+	releaseCachedString(XalanDOMString&		theString);
+
 	virtual bool
 	getProcessNamespaces() const;
 
@@ -775,19 +777,64 @@ public:
 		XSLTEngineImpl&		m_xsltProcessor;
 	};
 
+	class LiveVariablesStack
+	{
+	public:
+
+#if defined(XALAN_NO_NAMESPACES)
+			typedef vector<bool>							BoolVectorType;
+			typedef vector<const XObject*>					VariablesCollectionType;
+			typedef deque<VariablesCollectionType>			LiveVariablesStackType;
+#else
+			typedef std::vector<bool>						BoolVectorType;
+			typedef std::vector<const XObject*>				VariablesCollectionType;
+			typedef std::deque<VariablesCollectionType>		LiveVariablesStackType;
+#endif
+
+		LiveVariablesStack(XObjectFactory&	theXObjectFactory);
+
+		~LiveVariablesStack();
+
+		void
+		pushVariable(const XObject*		theVariable);
+
+		void
+		pushContext();
+
+		void
+		popContext();
+
+		void
+		clear();
+
+		bool
+		empty() const
+		{
+			return m_createNewContextStack.empty();
+		}
+
+	private:
+
+		// not implemented
+		LiveVariablesStack(const LiveVariablesStack&);
+
+		bool
+		operator==(const LiveVariablesStack&) const;
+
+		LiveVariablesStack&
+		operator=(const LiveVariablesStack&);
+
+		enum { eDefaultCreateNewContextStackSize = 100, eDefaultVariablesCollectionSize = 10 };
+
+
+		XObjectFactory&			m_xobjectFactory;
+
+		LiveVariablesStackType	m_variablesStack;
+
+		BoolVectorType			m_createNewContextStack;
+	};
+
 private:
-
-	/**
-	 * Pop the top entry from the live variables.
-	 */
-	void
-	popLiveVariablesStack();
-
-	/**
-	 * Clear out the entire stack of live variables.
-	 */
-	void
-	clearLiveVariablesStack();
 
 	/**
 	 * Determine if the XPath is one that we have cached.
@@ -842,7 +889,7 @@ private:
 
 	const CollationCompareFunctor*		m_collationCompareFunctor;
 
-	LiveVariablesStackType				m_liveVariablesStack;
+	LiveVariablesStack					m_liveVariablesStack;
 
 	/**
 	 * Holds all information about variables during execution.

@@ -116,19 +116,16 @@ ElemComment::execute(
 {
 	ElemTemplateElement::execute(executionContext, sourceTree, sourceNode, mode);
 
-    // Note the content model is:
-    // <!ENTITY % instructions "
-    // %char-instructions;
-    // | xsl:processing-instruction
-    // | xsl:comment
-    // | xsl:element
-    // | xsl:attribute
-    // ">
-    XalanDOMString	data;
+	StylesheetExecutionContext::GetAndReleaseCachedString	theResult(executionContext);
 
-	childrenToString(executionContext, sourceTree, sourceNode, mode, data);
+	childrenToString(
+			executionContext,
+			sourceTree,
+			sourceNode,
+			mode,
+			theResult.get());
 
-    executionContext.comment(toCharArray(data));
+    executionContext.comment(c_wstr(theResult.get()));
 }
 
 

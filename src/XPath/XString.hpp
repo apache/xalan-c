@@ -100,6 +100,12 @@ public:
 	 */
 	XString(const XalanDOMString&	val);
 
+	XString(const XalanDOMChar*		val);
+
+	XString(
+			const XalanDOMChar*		val,
+			unsigned int			len);
+
 	XString(const XString&	source);
 
 	virtual

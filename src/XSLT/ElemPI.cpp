@@ -140,11 +140,16 @@ ElemPI::execute(
 		error("processing-instruction name must be a valid NCName: " + piName);
 	}
 
-	XalanDOMString	data;
+	StylesheetExecutionContext::GetAndReleaseCachedString	theResult(executionContext);
 
-	childrenToString(executionContext, sourceTree, sourceNode, mode, data);
+	childrenToString(
+			executionContext,
+			sourceTree,
+			sourceNode,
+			mode,
+			theResult.get());
 
-	executionContext.processingInstruction(toCharArray(piName), toCharArray(data));
+	executionContext.processingInstruction(toCharArray(piName), toCharArray(theResult.get()));
 }
 
 

@@ -612,13 +612,13 @@ LongToHexDOMString(long		theLong);
 
 
 /**
- * Converts a long value into a XalanDOMString
+ * Converts an unsigned long value into a XalanDOMString
  * 
- * @param theInt number to be converted
+ * @param theUnsignedLong number to be converted
  * @return hexadecimal string representation of the number
  */
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString)
-UnsignedLongToHexDOMString(unsigned long	theUnsignedLong);
+UnsignedLongToHexDOMString(unsigned long	theValue);
 
 
 
@@ -629,7 +629,20 @@ UnsignedLongToHexDOMString(unsigned long	theUnsignedLong);
  * @return decimal string representation of the number
  */
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString)
-LongToDOMString(long	theLong);
+LongToDOMString(long	theValue);
+
+
+
+/**
+ * Converts an unsigned long value into a XalanDOMString
+ * 
+ * @param theValue number to be converted
+ * @param theString The string for the result.
+ */
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(void)
+UnsignedLongToDOMString(
+			unsigned long		theValue,
+			XalanDOMString&		theResult);
 
 
 
@@ -639,8 +652,15 @@ LongToDOMString(long	theLong);
  * @param theInt number to be converted
  * @return decimal string representation of the number
  */
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString)
-UnsignedLongToDOMString(unsigned long	theInt);
+inline const XalanDOMString
+UnsignedLongToDOMString(unsigned long	theValue)
+{
+	XalanDOMString	theResult;
+
+	UnsignedLongToDOMString(theValue, theResult);
+
+	return theResult;
+}
 
 
 
@@ -1896,23 +1916,37 @@ append(
 
 
 /**
- * Concatenate two strings
+ * Assign one string to another
  * 
  * @param theString         target string
- * @param theStringToAppend string to add to target
- * @return string with contents of 'theStringToAppend' added to target string
+ * @param theStringToAppend string to assign
+ * @param theStringToAppendLength length of the string (-1 implies the string is null-terminated)
+ * @return a reference to the target string
  */
 inline XalanDOMString&
-append(
+assign(
 			XalanDOMString&			theString,
-			const XalanDOMChar*		theStringToAppend)
+			const XalanDOMChar*		theStringToAssign,
+			unsigned int			theStringToAssignLength = -1)
 {
-	assert(theStringToAppend != 0);
-
 #if defined(XALAN_USE_CUSTOM_STRING) || defined(XALAN_USE_STD_STRING)
-	theString.append(theStringToAppend);
+	if (theStringToAssignLength == unsigned(-1))
+	{
+		theString.assign(theStringToAssign);
+	}
+	else
+	{
+		theString.assign(theStringToAssign, theStringToAssignLength);
+	}
 #else
-	theString.appendData(theStringToAppend);
+	if (theStringToAssignLength == unsigned(-1))
+	{
+		theString = XalanDOMString(theStringToAssign);
+	}
+	else
+	{
+		theString = XalanDOMString(theStringToAssign, theStringToAssignLength);
+	}
 #endif
 
 	return theString;
@@ -1925,17 +1959,67 @@ append(
  * 
  * @param theString         target string
  * @param theStringToAppend string to add to target
+ * @param theStringToAppendLength length of the string (-1 implies the string is null-terminated)
+ * @return a reference to the target string
+ */
+inline XalanDOMString&
+append(
+			XalanDOMString&			theString,
+			const XalanDOMChar*		theStringToAppend,
+			unsigned int			theStringToAppendLength = -1)
+{
+	assert(theStringToAppend != 0);
+
+#if defined(XALAN_USE_CUSTOM_STRING) || defined(XALAN_USE_STD_STRING)
+	if (theStringToAppendLength == unsigned(-1))
+	{
+		theString.append(theStringToAppend);
+	}
+	else
+	{
+		theString.append(theStringToAppend, theStringToAppendLength);
+	}
+#else
+	if (theStringToAppendLength == unsigned(-1))
+	{
+		theString.appendData(theStringToAppend);
+	}
+	else
+	{
+		append(theString, XalanDOMString(theStringToAppend, theStringToAppendLength);
+	}
+#endif
+
+	return theString;
+}
+
+
+
+/**
+ * Concatenate two strings
+ * 
+ * @param theString         target string
+ * @param theStringToAppend string to add to target
+ * @param theStringToAppendLength length of the string (-1 implies the string is null-terminated)
  * @return string with contents of 'theStringToAppend' added to target string
  */
 inline XalanDOMString&
 append(
 			XalanDOMString&		theString,
-			const char*			theStringToAppend)
+			const char*			theStringToAppend,
+			unsigned int		theStringToAppendLength = -1)
 {
 #if defined(XALAN_USE_CUSTOM_STRING) || defined(XALAN_USE_STD_STRING)
-	theString.append(TranscodeFromLocalCodePage(theStringToAppend));
+		theString.append(TranscodeFromLocalCodePage(theStringToAppend, theStringToAppendLength));
 #else
-	theString.appendData(theStringToAppend);
+	if (theStringToAppendLength == unsigned(-1))
+	{
+		theString.appendData(theStringToAppend);
+	}
+	else
+	{
+		append(theString, XalanDOMString(theStringToAppend, theStringToAppendLength);
+	}
 #endif
 
 	return theString;

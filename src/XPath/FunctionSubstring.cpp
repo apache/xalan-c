@@ -148,8 +148,7 @@ FunctionSubstring::execute(
 	}
 	else
 	{
-		return executionContext.getXObjectFactory().createString(
-			XalanDOMString(theBuffer.begin(), theSize));
+		return executionContext.getXObjectFactory().createString(theBuffer.begin(), theSize);
 	}
 }
 

@@ -82,6 +82,10 @@
 
 
 
+#include <PlatformSupport/XalanDOMStringCache.hpp>
+
+
+
 #include <XPath/NodeRefList.hpp>
 
 
@@ -218,6 +222,12 @@ public:
 	virtual MutableNodeRefList*
 	createMutableNodeRefList() const;
 
+	virtual XalanDOMString&
+	getCachedString();
+
+	virtual bool
+	releaseCachedString(XalanDOMString&		theString);
+
 	virtual bool
 	getProcessNamespaces() const;
 
@@ -318,34 +328,34 @@ public:
 	typedef std::vector<MutableNodeRefList*>	NodeRefListCacheType;
 #endif
 
-
-
 protected:
 
 	enum { eMutableNodeRefListCacheMax = 50,
 		   eCachedArgVectorDefaultSize = 10 };
 
-	XPathEnvSupport&				m_xpathEnvSupport;
+	XPathEnvSupport&			m_xpathEnvSupport;
 
-	XPathSupport&					m_xpathSupport;
+	XPathSupport&				m_xpathSupport;
 
-	XObjectFactory&					m_xobjectFactory;
+	XObjectFactory&				m_xobjectFactory;
 
-	XalanNode*						m_currentNode;
+	XalanNode*					m_currentNode;
 
-	const NodeRefListBase*			m_contextNodeList;
+	const NodeRefListBase*		m_contextNodeList;
 
-	const PrefixResolver*			m_prefixResolver;
+	const PrefixResolver*		m_prefixResolver;
 
-	bool							m_throwFoundIndex;
+	bool						m_throwFoundIndex;
 
-	XalanDOMString					m_currentPattern;
+	XalanDOMString				m_currentPattern;
 
-	NodeRefListCacheType			m_availableCachedNodeLists;
+	NodeRefListCacheType		m_availableCachedNodeLists;
 
-	NodeRefListCacheType			m_busyCachedNodeLists;
+	NodeRefListCacheType		m_busyCachedNodeLists;
 
-	static const NodeRefList		s_dummyList;
+	XalanDOMStringCache			m_stringCache;
+
+	static const NodeRefList	s_dummyList;
 };
 
 

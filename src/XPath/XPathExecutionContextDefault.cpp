@@ -95,7 +95,8 @@ XPathExecutionContextDefault::XPathExecutionContextDefault(
 	m_prefixResolver(thePrefixResolver),
 	m_throwFoundIndex(false),
 	m_availableCachedNodeLists(),
-	m_busyCachedNodeLists()
+	m_busyCachedNodeLists(),
+	m_stringCache()
 {
 	m_availableCachedNodeLists.reserve(eMutableNodeRefListCacheMax);
 
@@ -106,7 +107,16 @@ XPathExecutionContextDefault::XPathExecutionContextDefault(
 
 XPathExecutionContextDefault::~XPathExecutionContextDefault()
 {
+#if !defined(XALAN_NO_NAMESPACES)
+	using std::for_each;
+#endif
+
 	reset();
+
+	for_each(
+		m_availableCachedNodeLists.begin(),
+		m_availableCachedNodeLists.end(),
+		DeleteFunctor<MutableNodeRefList>());
 }
 
 
@@ -118,18 +128,14 @@ XPathExecutionContextDefault::reset()
 	m_xpathSupport.reset();
 	m_xobjectFactory.reset();
 
-	assert(m_busyCachedNodeLists.size() == 0);
+	while (m_busyCachedNodeLists.size() != 0)
+	{
+		m_availableCachedNodeLists.push_back(m_busyCachedNodeLists.back());
 
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::for_each;
-#endif
+		m_busyCachedNodeLists.pop_back();
+	}
 
-	for_each(
-		m_availableCachedNodeLists.begin(),
-		m_availableCachedNodeLists.end(),
-		DeleteFunctor<MutableNodeRefList>());
-
-	m_availableCachedNodeLists.clear();
+	m_stringCache.reset();
 }
 
 
@@ -401,6 +407,22 @@ MutableNodeRefList*
 XPathExecutionContextDefault::createMutableNodeRefList() const
 {
 	return new MutableNodeRefList;
+}
+
+
+
+XalanDOMString&
+XPathExecutionContextDefault::getCachedString()
+{
+	return m_stringCache.get();
+}
+
+
+
+bool
+XPathExecutionContextDefault::releaseCachedString(XalanDOMString&	theString)
+{
+	return m_stringCache.release(theString);
 }
 
 

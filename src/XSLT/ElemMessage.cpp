@@ -125,15 +125,20 @@ ElemMessage::execute(
 {
 	ElemTemplateElement::execute(executionContext, sourceTree, sourceNode, mode);
 
-    XalanDOMString	data;
+	StylesheetExecutionContext::GetAndReleaseCachedString	theResult(executionContext);
 
-	childrenToString(executionContext, sourceTree, sourceNode, mode, data);
+	childrenToString(
+			executionContext,
+			sourceTree,
+			sourceNode,
+			mode,
+			theResult.get());
 
-    executionContext.message(data, sourceNode, this);
+    executionContext.message(theResult.get(), sourceNode, this);
 
 	if (m_terminate == true)
 	{
-		throw ElemMessageTerminateException(data);
+		throw ElemMessageTerminateException(theResult.get());
 	}
 }
 

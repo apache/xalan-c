@@ -88,11 +88,11 @@ FunctionString::execute(
 		XPathExecutionContext&			executionContext,
 		XalanNode*						context)
 {
-	XalanDOMString	theValue;
-
 	if (context == 0)
 	{
 		executionContext.error("The string() function requires a non-null context node!");
+
+		return 0;
 	}
 	else
 	{
@@ -108,11 +108,8 @@ FunctionString::execute(
 		XObjectGuard	theXObject(executionContext.getXObjectFactory(),
 								   executionContext.createNodeSet(*context));
 
-		// Get the value of the theXObject...
-		theValue = theXObject->str();
+		return executionContext.getXObjectFactory().createString(theXObject->str());
 	}
-
-	return executionContext.getXObjectFactory().createString(theValue);
 }
 
 

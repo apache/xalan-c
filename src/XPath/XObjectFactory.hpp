@@ -176,6 +176,28 @@ public:
 			const XalanDOMString&	theValue) = 0;
 
 	/**
+	 * Create a string XObject from a null-terminated array of characters.
+	 * 
+	 * @param theValue  a pointer to the array
+	 * @return pointer to new object
+	 */
+	virtual XObject*
+	createString(
+			const XalanDOMChar*		theValue) = 0;
+
+	/**
+	 * Create a string XObject from an array of characters.
+	 * 
+	 * @param theValue  a pointer to the array
+	 * @paran theLength the length of the array
+	 * @return pointer to new object
+	 */
+	virtual XObject*
+	createString(
+			const XalanDOMChar*		theValue,
+			unsigned int			theLength) = 0;
+
+	/**
 	 * Create an "unknown" XObject from a string.
 	 * 
 	 * @param theValue  value used to create object	 

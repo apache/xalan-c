@@ -135,13 +135,12 @@ StylesheetExecutionContextDefault::StylesheetExecutionContextDefault(
 	m_printWriters(),
 	m_outputStreams(),
 	m_collationCompareFunctor(&s_defaultFunctor),
-	m_liveVariablesStack(),
+	m_liveVariablesStack(theXObjectFactory),
 	m_variablesStack(),
 	m_matchPatternCache(),
 	m_keyTables(),
 	m_keyDeclarationSet()
 {
-	m_liveVariablesStack.reserve(eDefaultVariablesStackSize);
 }
 
 
@@ -461,11 +460,9 @@ StylesheetExecutionContextDefault::createVariable(
 	const XObject* const	theVariable =
 		xpath.execute(contextNode, resolver, *this);
 
-	assert(m_liveVariablesStack.empty() == false);
-
 	// We'll want to return this variable after the current element frame
 	// has finished executing, so save this off for later...
-	m_liveVariablesStack.back().push_back(theVariable);
+	m_liveVariablesStack.pushVariable(theVariable);
 
 	return theVariable;
 }
@@ -485,7 +482,7 @@ StylesheetExecutionContextDefault::createVariable(
 
 	// We'll want to return this variable after the current element frame
 	// has finished executing, so save this off for later...
-	m_liveVariablesStack.back().push_back(theVariable);
+	m_liveVariablesStack.pushVariable(theVariable);
 
 	return theVariable;
 }
@@ -530,7 +527,7 @@ StylesheetExecutionContextDefault::pushVariable(
 	{
 		// We'll want to return this variable after the current element frame
 		// has finished executing, so save this off for later...
-		m_liveVariablesStack.back().push_back(var);
+		m_liveVariablesStack.pushVariable(var);
 	}
 }
 
@@ -579,9 +576,7 @@ StylesheetExecutionContextDefault::pushContextMarker()
 {
 	m_variablesStack.pushContextMarker();
 
-	m_liveVariablesStack.resize(m_liveVariablesStack.size() + 1); //LiveVariablesStackType::value_type());
-
-	m_liveVariablesStack.back().reserve(eDefaultVariablesCollectionSize);
+	m_liveVariablesStack.pushContext();
 }
 
 
@@ -591,7 +586,7 @@ StylesheetExecutionContextDefault::popContextMarker()
 {
 	m_variablesStack.popContextMarker();
 
-	popLiveVariablesStack();
+	m_liveVariablesStack.popContext();
 }
 
 
@@ -721,7 +716,7 @@ StylesheetExecutionContextDefault::pushElementFrame(const ElemTemplateElement*	e
 {
 	m_variablesStack.pushElementFrame(elem);
 
-	m_liveVariablesStack.resize(m_liveVariablesStack.size() + 1); //(LiveVariablesStackType::value_type());
+	m_liveVariablesStack.pushContext();
 }
 
 
@@ -731,7 +726,7 @@ StylesheetExecutionContextDefault::popElementFrame(const ElemTemplateElement*	el
 {
 	m_variablesStack.popElementFrame(elem);
 
-	popLiveVariablesStack();
+	m_liveVariablesStack.popContext();
 }
 
 
@@ -1312,7 +1307,7 @@ StylesheetExecutionContextDefault::reset()
 
 	m_outputStreams.clear();
 
-	clearLiveVariablesStack();
+	m_liveVariablesStack.clear();
 
 	m_variablesStack.reset();
 
@@ -1551,6 +1546,22 @@ MutableNodeRefList*
 StylesheetExecutionContextDefault::createMutableNodeRefList() const
 {
 	return m_xpathExecutionContextDefault.createMutableNodeRefList();
+}
+
+
+
+XalanDOMString&
+StylesheetExecutionContextDefault::getCachedString()
+{
+	return m_xpathExecutionContextDefault.getCachedString();
+}
+
+
+
+bool
+StylesheetExecutionContextDefault::releaseCachedString(XalanDOMString&	theString)
+{
+	return m_xpathExecutionContextDefault.releaseCachedString(theString);
 }
 
 
@@ -1851,39 +1862,6 @@ StylesheetExecutionContextDefault::message(
 
 
 
-void
-StylesheetExecutionContextDefault::popLiveVariablesStack()
-{
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::for_each;
-#endif
-
-	assert(m_liveVariablesStack.empty() == false);
-
-	// Clean up any XObjects we created...
-	for_each(
-			m_liveVariablesStack.back().begin(),
-			m_liveVariablesStack.back().end(),
-			XObjectFactory::DeleteXObjectFunctor(getXObjectFactory()));
-
-	// Pop the stack...
-	m_liveVariablesStack.pop_back();
-}
-
-
-
-void
-StylesheetExecutionContextDefault::clearLiveVariablesStack()
-{
-	// Clean up the entire stack.
-	while(m_liveVariablesStack.empty() == false)
-	{
-		popLiveVariablesStack();
-	}
-}
-
-
-
 bool
 StylesheetExecutionContextDefault::isCached(const XPath*	theXPath)
 {
@@ -1986,4 +1964,92 @@ StylesheetExecutionContextDefault::addToXPathCache(
 
 	// Add the XPath with the current clock
 	m_matchPatternCache.insert(XPathCacheMapType::value_type(pattern, XPathCacheEntry(theXPath, addClock)));
+}
+
+
+
+StylesheetExecutionContextDefault::LiveVariablesStack::LiveVariablesStack(XObjectFactory&	theXObjectFactory) :
+	m_xobjectFactory(theXObjectFactory),
+	m_variablesStack(),
+	m_createNewContextStack()
+{
+}
+
+
+
+StylesheetExecutionContextDefault::LiveVariablesStack::~LiveVariablesStack()
+{
+	clear();
+}
+
+
+
+void
+StylesheetExecutionContextDefault::LiveVariablesStack::pushVariable(const XObject*	theVariable)
+{
+	assert(m_createNewContextStack.size() != 0);
+
+	// Check to see if we need to create a new context and do so if necessary...
+	if (m_createNewContextStack.back() == true)
+	{
+		m_variablesStack.resize(m_variablesStack.size() + 1);
+
+		m_variablesStack.back().reserve(eDefaultVariablesCollectionSize);
+
+		m_createNewContextStack.back() = false;
+	}
+
+	m_variablesStack.back().push_back(theVariable);
+}
+
+
+
+void
+StylesheetExecutionContextDefault::LiveVariablesStack::pushContext()
+{
+	if (m_createNewContextStack.size() == 0)
+	{
+		m_createNewContextStack.reserve(eDefaultCreateNewContextStackSize);
+	}
+
+	m_createNewContextStack.push_back(true);
+}
+
+
+
+void
+StylesheetExecutionContextDefault::LiveVariablesStack::popContext()
+{
+	assert(m_createNewContextStack.size() != 0);
+
+	if (m_createNewContextStack.back() == false)
+	{
+#if !defined(XALAN_NO_NAMESPACES)
+		using std::for_each;
+#endif
+
+		assert(m_variablesStack.empty() == false);
+
+		// Clean up any XObjects we created...
+		for_each(
+				m_variablesStack.back().begin(),
+				m_variablesStack.back().end(),
+				XObjectFactory::DeleteXObjectFunctor(m_xobjectFactory));
+
+		// Pop the stack...
+		m_variablesStack.pop_back();
+	}
+
+	m_createNewContextStack.pop_back();
+}
+
+
+
+void
+StylesheetExecutionContextDefault::LiveVariablesStack::clear()
+{
+	while(m_variablesStack.empty() == false)
+	{
+		popContext();
+	}
 }

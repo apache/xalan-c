@@ -84,6 +84,28 @@ XString::XString(const XalanDOMString&	val) :
 
 
 
+XString::XString(const XalanDOMChar*	val) :
+	XObject(eTypeString),
+	m_value(val),
+	m_cachedNumberValue(0.0),
+	m_resultTreeFrag(0)
+{
+}
+
+
+
+XString::XString(
+			const XalanDOMChar*		val,
+			unsigned int			len) :
+	XObject(eTypeString),
+	m_value(val, len),
+	m_cachedNumberValue(0.0),
+	m_resultTreeFrag(0)
+{
+}
+
+
+
 XString::XString(const XString&	source) :
 	XObject(source),
 	m_value(source.m_value),

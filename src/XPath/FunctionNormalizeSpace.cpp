@@ -88,12 +88,12 @@ FunctionNormalizeSpace::execute(
 		XPathExecutionContext&			executionContext,
 		XalanNode*						context)
 {
-	XalanDOMString	theSourceString;
-
 	if (context == 0)
 	{
 		executionContext.error("The normalize-space() function requires a non-null context node!",
 							   context);
+
+		return 0;
 	}
 	else
 	{
@@ -107,12 +107,10 @@ FunctionNormalizeSpace::execute(
 		XObjectGuard	theXObject(executionContext.getXObjectFactory(),
 								executionContext.createNodeSet(*context));
 
-		// Now, get the string from the XObject.
-		theSourceString = theXObject->str();		
+		return normalize(executionContext, theXObject->str());
 	}
-
-	return normalize(executionContext, theSourceString);
 }
+
 
 
 XObject*
@@ -120,16 +118,12 @@ FunctionNormalizeSpace::normalize(
 		XPathExecutionContext&	executionContext,
 		const XalanDOMString&	theString)
 {
-	const unsigned int		theStringLength = length(theString);
+	const unsigned int	theStringLength = length(theString);
 
-	XalanDOMChar			thePreviousChar = 0;
+	XalanDOMChar		thePreviousChar = 0;
 
 	// A vector to contain the new characters.  We'll use it to construct
 	// the result string.
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::vector;
-#endif
-
 #if defined(XALAN_NO_NAMESPACES)
 	typedef vector<XalanDOMChar>		VectorType;
 #else
@@ -137,7 +131,7 @@ FunctionNormalizeSpace::normalize(
 #endif
 
 	// A vector to contain the result.
-	VectorType				theVector;
+	VectorType	theVector;
 
 	// The result string can only be as large as the source string, so
 	// just reserve the space now.
@@ -176,11 +170,11 @@ FunctionNormalizeSpace::normalize(
 	{
 		if (isXMLWhitespace(theVector.back()) == true)
 		{
-			// The last character is a space, so remove it
+			// The last character is a space, so remove it...
 			--theSize;
 		}
 
-		return executionContext.getXObjectFactory().createString(XalanDOMString(theVector.begin(), theSize));
+		return executionContext.getXObjectFactory().createString(theVector.begin(), theSize);
 	}
 }
 
@@ -204,4 +198,3 @@ FunctionNormalizeSpace::getError() const
 	return XALAN_STATIC_UCODE_STRING(
 		"The normalize-space() function takes zero arguments or one argument!");
 }
-

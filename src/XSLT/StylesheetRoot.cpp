@@ -111,6 +111,13 @@
 
 
 
+//#define XALAN_VQ_SPECIAL_TRACE
+#if defined(XALAN_VQ_SPECIAL_TRACE)
+#include "d:/Rational/Quantify/pure.h"
+#endif
+
+
+
 /**
  * Constructor for a Stylesheet needs a Document.
  * @exception XSLProcessorException thrown if the active ProblemListener and
@@ -204,6 +211,10 @@ StylesheetRoot::process(
 		throw SAXException("StylesheetRoot.process error");
 	}
 
+#if defined(XALAN_VQ_SPECIAL_TRACE)
+	QuantifyStartRecordingData();
+#endif
+
 	executionContext.startDocument();
 
 	// Output the action of the found root rule.  All processing
@@ -211,6 +222,10 @@ StylesheetRoot::process(
 	rootRule->execute(executionContext, sourceTree, sourceTree, QName());
 
 	executionContext.endDocument();
+
+#if defined(XALAN_VQ_SPECIAL_TRACE)
+	QuantifyStopRecordingData();
+#endif
 
 	// Reset the top-level params for the next round.
 	executionContext.clearTopLevelParams();

@@ -167,8 +167,6 @@ XSLTEngineImpl::XSLTEngineImpl(
 	m_resultNameSpacePrefix(),
 	m_resultNameSpaceURL(),
 	m_currentNode(),
-	m_resultNameSpaces(),
-	m_emptyNamespace(),
 	m_xpathFactory(xpathFactory),
 	m_xobjectFactory(xobjectFactory),
 	m_xpathProcessor(new XPathProcessorImpl),
@@ -189,9 +187,10 @@ XSLTEngineImpl::XSLTEngineImpl(
 	m_xpathEnvSupport(xpathEnvSupport),
 	m_domSupport(domSupport),
 	m_executionContext(0),
-	m_outputContextStack(1),
-	m_outputContextStackPosition(m_outputContextStack.begin())
+	m_outputContextStack(),
+	m_resultNamespacesStack()
 {
+	m_outputContextStack.pushContext();
 }
 
 
@@ -206,15 +205,16 @@ XSLTEngineImpl::reset()
 	m_resultTreeFactory = 0;
 	m_currentNode = 0;
 
-	m_outputContextStack.clear();
+	m_outputContextStack.reset();
 
-	m_outputContextStack.push_back(OutputContextStackType::value_type());
-	m_outputContextStackPosition = m_outputContextStack.begin();
+	m_outputContextStack.pushContext();
 
 	m_xpathSupport.reset();
 	m_xpathEnvSupport.reset();
 	m_xpathFactory.reset();
 	m_xobjectFactory.reset();
+
+	m_resultNamespacesStack.clear();
 }
 
 
@@ -1409,6 +1409,8 @@ XSLTEngineImpl::startDocument()
 	assert(getFormatterListener() != 0);
 	assert(m_executionContext != 0);
 
+	m_resultNamespacesStack.pushContext();
+
 	if (getHasPendingStartDocument() == false)
 	{
 		setHasPendingStartDocument(true);
@@ -1452,6 +1454,8 @@ XSLTEngineImpl::endDocument()
 
 		fireGenerateEvent(ge);
 	}
+
+	m_resultNamespacesStack.popContext();
 }
 
 
@@ -1461,30 +1465,7 @@ XSLTEngineImpl::addResultNamespaceDecl(
 			const XalanDOMString&	prefix, 
 	        const XalanDOMString&	namespaceVal)
 {
-	const NameSpace		ns(prefix, namespaceVal);
-
-	if (m_resultNameSpaces.size() == 0)
-	{
-		NamespaceVectorType		nsVector(1, ns);
-
-		m_resultNameSpaces.push_back(nsVector);
-	}
-	else
-	{
-		NamespaceVectorType&	nsOnStack = m_resultNameSpaces.back();
-
-		// If the last vector contains only an empty namespace, replace it with a
-		// new vector containing only this namespace
-		if(isEmpty(nsOnStack.front().getURI()))
-		{
-			nsOnStack.front() = ns;
-		}
-		// Otherwise, add the namespace at the end of the last vector
-		else
-		{
-			nsOnStack.push_back(ns);
-		}
-	}
+	m_resultNamespacesStack.addDeclaration(prefix, namespaceVal);
 }
 
 
@@ -1631,10 +1612,7 @@ XSLTEngineImpl::startElement(const XMLCh* const	name)
 
 	flushPending();
 
-	// Push a new container on the stack.
-	m_resultNameSpaces.resize(m_resultNameSpaces.size() + 1);
-
-	m_resultNameSpaces.back().resize(1);
+	m_resultNamespacesStack.pushContext();
 
 	setPendingElementName(name);
 
@@ -1670,11 +1648,7 @@ XSLTEngineImpl::startElement(
 			atts.getValue(i));
 	}
 
-	// Push a new container on the stack, then resize it
-	// to contain one empty namespaces vector.
-	m_resultNameSpaces.resize(m_resultNameSpaces.size() + 1);
-
-	m_resultNameSpaces.back().resize(1);
+	m_resultNamespacesStack.pushContext();
 
 	setPendingElementName(name);
 }
@@ -1698,7 +1672,7 @@ XSLTEngineImpl::endElement(const XMLCh* const 	name)
 		fireGenerateEvent(ge);
 	}
 
-	m_resultNameSpaces.pop_back();
+	m_resultNamespacesStack.popContext();
 
 	const Stylesheet::QNameVectorType&	cdataElems =
 		m_stylesheetRoot->getCDATASectionElems();
@@ -2303,8 +2277,7 @@ XSLTEngineImpl::qnameEqualsResultElemName(
 const XalanDOMString&
 XSLTEngineImpl::getResultNamespaceForPrefix(const XalanDOMString&	prefix) const
 {
-	// Search vector from first element back
-	return QName::getNamespaceForPrefix(m_resultNameSpaces, prefix, false);
+	return m_resultNamespacesStack.getNamespaceForPrefix(prefix);
 }
   
 
@@ -2312,8 +2285,7 @@ XSLTEngineImpl::getResultNamespaceForPrefix(const XalanDOMString&	prefix) const
 const XalanDOMString&
 XSLTEngineImpl::getResultPrefixForNamespace(const XalanDOMString&	theNamespace) const
 {
-	// Search vector from first element back
-	return QName::getPrefixForNamespace(m_resultNameSpaces, theNamespace, false);
+	return m_resultNamespacesStack.getPrefixForNamespace(theNamespace);
 }
 
 

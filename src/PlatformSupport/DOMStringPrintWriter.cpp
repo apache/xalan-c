@@ -127,25 +127,7 @@ DOMStringPrintWriter::write(
 	assert(s != 0);
 	assert(theLength == UINT_MAX || length(s) >= theOffset + theLength);
 
-	if (theLength == UINT_MAX)
-	{
-			m_outputString += (s + theOffset);
-	}
-	else
-	{
-		vector<XalanDOMChar>	theBuffer(theLength + 1, 0);
-
-		// We'll copy the characters into the vector first.
-		copy(s + theOffset,
-			 s + theOffset + theLength,
-			 theBuffer.begin());
-
-		// Now append a terminated 0.
-		theBuffer.back() = 0;
-
-		// Now append the data.
-		m_outputString += theBuffer.begin();
-	}
+	append(m_outputString, (s + theOffset), theLength);
 }
 
 
@@ -153,6 +135,7 @@ DOMStringPrintWriter::write(
 void
 DOMStringPrintWriter::write(XalanDOMChar	c)
 {
+#if defined(XALAN_USE_XERCES_DOMSTRING)
 	// Write the data as a null-terminated array,
 	// so we can guarantee null-termination of our
 	// string...
@@ -161,6 +144,9 @@ DOMStringPrintWriter::write(XalanDOMChar	c)
 	theBuffer[0] = c;
 
 	m_outputString += theBuffer;
+#else
+	m_outputString += c;
+#endif
 }
 
 

@@ -1732,8 +1732,10 @@ LongToDOMString(long	theLong)
 
 
 
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString)
-UnsignedLongToDOMString(unsigned long	theUnsignedLong)
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(void)
+UnsignedLongToDOMString(
+			unsigned long		theValue,
+			XalanDOMString&		theResult)
 {
 #if 1
 
@@ -1751,14 +1753,14 @@ UnsignedLongToDOMString(unsigned long	theUnsignedLong)
 		--thePointer;
 
 		// Isolate the left most character.
-		*thePointer = XalanDOMChar(theUnsignedLong % 10 + XalanUnicode::charDigit_0);
+		*thePointer = XalanDOMChar(theValue % 10 + XalanUnicode::charDigit_0);
 
 		// OK, we're done with it...
-		theUnsignedLong /= 10;
+		theValue /= 10;
 	}
-	while(theUnsignedLong != 0);
+	while(theValue != 0);
 
-	return XalanDOMString(thePointer, theEnd - thePointer);
+	assign(theResult, thePointer, theEnd - thePointer);
 
 #elif defined(XALAN_USE_WCHAR_SUPPORT)
 
@@ -1766,9 +1768,9 @@ UnsignedLongToDOMString(unsigned long	theUnsignedLong)
 
 	swprintf(theBuffer,
 			 L"%lu",
-			 theUnsignedLong);
+			 theValue);
 
-	return XalanDOMString(theBuffer, length(theBuffer));
+	assign(theResult, theBuffer, length(theBuffer));
 
 #else
 
@@ -1776,19 +1778,19 @@ UnsignedLongToDOMString(unsigned long	theUnsignedLong)
 
 	ostrstream	theFormatter(theBuffer, sizeof(theBuffer));
 
-	theFormatter << theUnsignedLong << '\0';
+	theFormatter << theValue << '\0';
 
-	XalanDOMChar	theResult[MAX_PRINTF_DIGITS + 1];
+	XalanDOMChar	theWideBuffer[MAX_PRINTF_DIGITS + 1];
 
 	const unsigned int	theLength = length(theBuffer);
 
 #if defined(XALAN_NO_ALGORITHMS_WITH_BUILTINS)
-	XalanCopy(theBuffer, theBuffer + theLength, theResult);
+	XalanCopy(theBuffer, theBuffer + theLength, theWideBuffer);
 #else
-	copy(theBuffer, theBuffer + theLength, theResult);
+	copy(theBuffer, theBuffer + theLength, theWideBuffer);
 #endif
 
-	return XalanDOMString(theResult, theLength);
+	assign(theResult, theWideBuffer, theLength);
 #endif
 }
 

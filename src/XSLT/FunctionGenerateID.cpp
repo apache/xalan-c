@@ -70,6 +70,10 @@
 
 
 
+const XalanDOMString	FunctionGenerateID::s_emptyString;
+
+
+
 FunctionGenerateID::FunctionGenerateID() :
 	Function(),
 	m_prefix(XALAN_STATIC_UCODE_STRING("N")),
@@ -85,8 +89,10 @@ FunctionGenerateID::~FunctionGenerateID()
 
 
 
-const XalanDOMString
-getSuffix(const XalanNode*	theNode)
+void
+getSuffix(
+		const XalanNode*	theNode,
+		XalanDOMString&		theResult)
 {
 	const unsigned long		theIndex = theNode->getIndex();
 
@@ -95,14 +101,14 @@ getSuffix(const XalanNode*	theNode)
 		// We're assuming here that each nodes has an implementation with a 
 		// unique address that we can convert into a string
 #if defined(XALAN_OLD_STYLE_CASTS)
-		return UnsignedLongToDOMString((unsigned long)theNode);
+		UnsignedLongToDOMString((unsigned long)theNode, theResult);
 #else
-		return UnsignedLongToDOMString(reinterpret_cast<unsigned long>(theNode));
+		UnsignedLongToDOMString(reinterpret_cast<unsigned long>(theNode), theResult);
 #endif
 	}
 	else
 	{
-		return UnsignedLongToDOMString(theIndex);
+		UnsignedLongToDOMString(theIndex, theResult);
 	}
 }
 
@@ -110,54 +116,50 @@ getSuffix(const XalanNode*	theNode)
 
 XObject*
 FunctionGenerateID::execute(
-		XPathExecutionContext&			executionContext,
-		XalanNode*						context,			
-		const XObject*					arg1)
+			XPathExecutionContext&		executionContext,
+			XalanNode*					context,			
+			const XObject*				arg1)
 {
 	assert(arg1 != 0);	
 
 	const NodeRefListBase&	theNodeList = arg1->nodeset();
 
-	if (theNodeList.getLength() > 0)
+	if (theNodeList.getLength() == 0)
 	{
-		context = theNodeList.item(0);
+		return executionContext.getXObjectFactory().createString(s_emptyString);
 	}
 	else
-	{	
-		context = 0;
+	{
+		return execute(executionContext, theNodeList.item(0));
 	}
-
-
-	return execute(executionContext, context);
 }
 
 
 
 XObject*
 FunctionGenerateID::execute(
-		XPathExecutionContext&			executionContext,
-		XalanNode*						context)
+			XPathExecutionContext&		executionContext,
+			XalanNode*					context)
 {
-
-	XalanDOMString id;
-
-	//if (context == 0)
-	//{
-	//	executionContext.error("The generate-id function requires a non-null context node!");
-	//}
-
-	if (context != 0)
+	if (context == 0)
 	{
-		const XalanDOMString	theSuffix = getSuffix(context);
-		assert(length(theSuffix) != 0);
+		executionContext.error("The function generate-id requires a non-null node!");
 
-		reserve(id, m_prefixLength + length(theSuffix) + 1);
-
-		id += m_prefix;
-		id += theSuffix;
+		return 0;
 	}
+	else
+	{
+		XPathExecutionContext::GetAndReleaseCachedString	theGuard(executionContext);
 
-	return executionContext.getXObjectFactory().createString(id);
+		XalanDOMString&		theID = theGuard.get();
+
+		getSuffix(context, theID);
+		assert(length(theID) != 0);
+
+		insert(theID, 0, m_prefix);
+
+		return executionContext.getXObjectFactory().createString(theID);
+	}
 }
 
 
@@ -180,4 +182,3 @@ FunctionGenerateID::getError() const
 	return XALAN_STATIC_UCODE_STRING(
 		"The generate-id function takes zero or one arguments!");
 }
-

@@ -170,12 +170,12 @@ ElemValueOf::execute(
 	if (m_isDot == true)
 	{
 //		const XalanNode::NodeType	type = sourceNode->getNodeType();
-
+//
 //		if(type == XalanNode::COMMENT_NODE ||
 //         type == XalanNode::PROCESSING_INSTRUCTION_NODE)
 //		{
 //			outputValue(executionContext, sourceNode->getNodeValue());
-
+//
 //			if(0 != executionContext.getTraceListeners())
 //			{
 //				fireSelectionEvent(executionContext, sourceNode, theValue);
@@ -183,13 +183,15 @@ ElemValueOf::execute(
 //		}
 //		else
 		{
-			const XalanDOMString	theValue = DOMServices::getNodeData(*sourceNode);
+			StylesheetExecutionContext::GetAndReleaseCachedString	theResult(executionContext);
 
-			outputValue(executionContext, theValue);
+			DOMServices::getNodeData(*sourceNode, theResult.get());
+
+			outputValue(executionContext, theResult.get());
 
 			if(0 != executionContext.getTraceListeners())
 			{
-				fireSelectionEvent(executionContext, sourceNode, theValue);
+				fireSelectionEvent(executionContext, sourceNode, theResult.get());
 			}
 		}
 	}

@@ -1424,6 +1424,12 @@ public:
 	virtual MutableNodeRefList*
 	createMutableNodeRefList() const = 0;
 
+	virtual XalanDOMString&
+	getCachedString() = 0;
+
+	virtual bool
+	releaseCachedString(XalanDOMString&		theString) = 0;
+
 	virtual bool
 	getProcessNamespaces() const = 0;
 

@@ -73,7 +73,6 @@
 // Standard library headers
 #include <cassert>
 #include <ctime>
-#include <deque>
 #include <map>
 #include <set>
 
@@ -83,7 +82,6 @@
 
 
 
-// XSL header files.
 #include <XalanDOM/XalanDOMString.hpp>
 
 
@@ -109,7 +107,9 @@
 
 
 #include "KeyDeclaration.hpp"
+#include "OutputContextStack.hpp"
 #include "ProblemListenerDefault.hpp"
+#include "ResultNamespacesStack.hpp"
 #include "StylesheetExecutionContext.hpp"
 #include "XSLTProcessorException.hpp"
 
@@ -153,35 +153,6 @@ class XALAN_XSLT_EXPORT XSLTEngineImpl : public XSLTProcessor, private DocumentH
 {
 public:
 
-	typedef QName::NamespaceVectorType		NamespaceVectorType;
-	typedef QName::NamespacesStackType		NamespacesStackType;
-
-	struct OutputContext
-	{
-		OutputContext(FormatterListener*	theListener = 0) :
-			m_flistener(theListener),
-			m_pendingAttributes(),
-			m_pendingElementName(),
-			m_hasPendingStartDocument(false),
-			m_mustFlushPendingStartDocument(false)
-		{
-		}
-
-		~OutputContext()
-		{
-		}
-
-		FormatterListener*	m_flistener;
-
-		AttributeListImpl	m_pendingAttributes;
-
-		XalanDOMString		m_pendingElementName;
-
-		bool				m_hasPendingStartDocument;
-
-		bool				m_mustFlushPendingStartDocument;
-	};
-
 #if defined(XALAN_NO_NAMESPACES)
 	typedef map<XalanDOMString,
 				int,
@@ -195,7 +166,6 @@ public:
 	typedef vector<const Locator*>			LocatorStack;
 	typedef vector<TraceListener*>			TraceListenerVectorType;
 	typedef vector<bool>					BoolVectorType;
-	typedef deque<OutputContext>			OutputContextStackType;
 #else
 	typedef std::map<XalanDOMString, int>		AttributeKeysMapType;
 	typedef std::map<XalanDOMString, int>		ElementKeysMapType;
@@ -203,7 +173,6 @@ public:
 	typedef std::vector<const Locator*>			LocatorStack;
 	typedef std::vector<TraceListener*>			TraceListenerVectorType;
 	typedef std::vector<bool>					BoolVectorType;
-	typedef std::deque<OutputContext>			OutputContextStackType;
 #endif
 
 	typedef XalanAutoPtr<XPathProcessor>				XPathProcessorPtrType;
@@ -1108,11 +1077,7 @@ public:
 	void
 	pushOutputContext(FormatterListener*	theListener)
 	{
-		m_outputContextStack.resize(m_outputContextStack.size() + 1);
-
-		++m_outputContextStackPosition;
-
-		(*m_outputContextStackPosition).m_flistener = theListener;
+		m_outputContextStack.pushContext(theListener);
 	}
 
 	/*
@@ -1121,11 +1086,7 @@ public:
 	void
 	popOutputContext()
 	{
-		assert(m_outputContextStack.empty() == false);
-
-		m_outputContextStack.pop_back();
-
-		m_outputContextStackPosition--;
+		m_outputContextStack.popContext();
 	}
 
 	/*
@@ -1331,7 +1292,7 @@ protected:
 	const AttributeListImpl&
 	getPendingAttributesImpl() const
 	{
-		return (*m_outputContextStackPosition).m_pendingAttributes;
+		return m_outputContextStack.getPendingAttributes();
 	}
 
 	/**
@@ -1342,7 +1303,7 @@ protected:
 	AttributeListImpl&
 	getPendingAttributesImpl()
 	{
-		return (*m_outputContextStackPosition).m_pendingAttributes;
+		return m_outputContextStack.getPendingAttributes();
 	}
 
 	/**
@@ -1364,7 +1325,7 @@ protected:
 	const XalanDOMString&
 	getPendingElementNameImpl() const
 	{
-		return (*m_outputContextStackPosition).m_pendingElementName;
+		return m_outputContextStack.getPendingElementName();
 	}
 
 	/**
@@ -1375,7 +1336,7 @@ protected:
 	XalanDOMString&
 	getPendingElementNameImpl()
 	{
-		return (*m_outputContextStackPosition).m_pendingElementName;
+		return m_outputContextStack.getPendingElementName();
 	}
 
 	/**
@@ -1386,7 +1347,7 @@ protected:
 	void
 	setPendingElementNameImpl(const XalanDOMString&		elementName)
 	{
-		(*m_outputContextStackPosition).m_pendingElementName = elementName;
+		m_outputContextStack.getPendingElementName() = elementName;
 	}
 
 	/**
@@ -1399,7 +1360,7 @@ protected:
 	{
 		assert(elementName != 0);
 
-		(*m_outputContextStackPosition).m_pendingElementName = elementName;
+		m_outputContextStack.getPendingElementName() = elementName;
 	}
 
 	/*
@@ -1409,7 +1370,7 @@ protected:
 	bool
 	getHasPendingStartDocumentImpl() const
 	{
-		return (*m_outputContextStackPosition).m_hasPendingStartDocument;
+		return m_outputContextStack.getHasPendingStartDocument();
 	}
 
 	/*
@@ -1417,9 +1378,9 @@ protected:
 	 * @param the new value
 	 */
 	void
-	setHasPendingStartDocumentImpl(bool	b)
+	setHasPendingStartDocumentImpl(bool		b)
 	{
-		(*m_outputContextStackPosition).m_hasPendingStartDocument = b;
+		m_outputContextStack.getHasPendingStartDocument() = b;
 	}
 
 	/*
@@ -1429,7 +1390,7 @@ protected:
 	bool
 	getMustFlushPendingStartDocumentImpl() const
 	{
-		return (*m_outputContextStackPosition).m_mustFlushPendingStartDocument;
+		return m_outputContextStack.getMustFlushPendingStartDocument();
 	}
 
 	/*
@@ -1439,19 +1400,19 @@ protected:
 	void
 	setMustFlushPendingStartDocumentImpl(bool	b)
 	{
-		(*m_outputContextStackPosition).m_mustFlushPendingStartDocument = b;
+		m_outputContextStack.getMustFlushPendingStartDocument() = b;
 	}
 
 	FormatterListener*
 	getFormatterListenerImpl() const
 	{
-		return (*m_outputContextStackPosition).m_flistener;
+		return m_outputContextStack.getFormatterListener();
 	}
 
 	void
 	setFormatterListenerImpl(FormatterListener*		flistener)
 	{
-		(*m_outputContextStackPosition).m_flistener = flistener;
+		m_outputContextStack.getFormatterListener() = flistener;
 	}
 
 	/**
@@ -1514,23 +1475,11 @@ protected:
 			const XalanElement&		templateChild,
 			AttributeListImpl&		attList);
 
-	/**
-	 * A stack to keep track of the result tree namespaces.
-	 */
-	NamespacesStackType m_resultNameSpaces;
-
-	/**
-	 * This is pushed on the m_resultNameSpaces stack until a 
-	 * xmlns attribute is found.  It's special because it has
-	 * and empty prefix and uri field.
-	 */
-	NameSpace			m_emptyNamespace;
-	
 	// Factory for creating xpaths.
-	XPathFactory&		m_xpathFactory;
+	XPathFactory&			m_xpathFactory;
 
 	// Factory for creating xobjects
-	XObjectFactory& 	m_xobjectFactory;
+	XObjectFactory& 		m_xobjectFactory;
 
 	// The query/pattern-matcher object.
 	XPathProcessorPtrType	m_xpathProcessor;
@@ -1540,7 +1489,7 @@ protected:
 	 * cdata instead of escaped text.
 	 * ## Optimization: use array stack instead of object stack.
 	 */
-	BoolVectorType	m_cdataStack;
+	BoolVectorType			m_cdataStack;
 
 private:
 
@@ -1746,13 +1695,15 @@ private:
 	 */
 	StylesheetExecutionContext*		m_executionContext;
 
-
 	/*
 	 * Stack of current output contexts...
 	 */
-	OutputContextStackType				m_outputContextStack;
+	OutputContextStack				m_outputContextStack;
 
-	OutputContextStackType::iterator	m_outputContextStackPosition;
+	/*
+	 * Stack of current result namespaces...
+	 */
+	ResultNamespacesStack			m_resultNamespacesStack;
 
 	static void
 	installFunctions();

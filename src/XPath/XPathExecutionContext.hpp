@@ -482,6 +482,40 @@ public:
 		MutableNodeRefList*		m_mutableNodeRefList;
 	};
 
+	virtual XalanDOMString&
+	getCachedString() = 0;
+
+	virtual bool
+	releaseCachedString(XalanDOMString&		theString) = 0;
+
+	class GetAndReleaseCachedString
+	{
+	public:
+
+		GetAndReleaseCachedString(XPathExecutionContext&	theExecutionContext) :
+			m_executionContext(theExecutionContext),
+			m_string(&m_executionContext.getCachedString())
+		{
+		}
+
+		~GetAndReleaseCachedString()
+		{
+			m_executionContext.releaseCachedString(*m_string);
+		}
+
+		XalanDOMString&
+		get() const
+		{
+			return *m_string;
+		}
+
+	private:
+
+		XPathExecutionContext&	m_executionContext;
+
+		XalanDOMString* const	m_string;
+	};
+
 	/**
 	 * Create a MutableNodeRefList with the appropriate context.
 	 *

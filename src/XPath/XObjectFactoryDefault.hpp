@@ -155,6 +155,15 @@ public:
 			const XalanDOMString&	theValue);
 
 	virtual XObject*
+	createString(
+			const XalanDOMChar*		theValue);
+
+	virtual XObject*
+	createString(
+			const XalanDOMChar*		theValue,
+			unsigned int			theLength);
+
+	virtual XObject*
 	createUnknown(
 			const XalanDOMString&	theValue);
 

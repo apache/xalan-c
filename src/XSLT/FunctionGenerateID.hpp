@@ -112,10 +112,13 @@ private:
 	bool
 	operator==(const FunctionGenerateID&) const;
 
-	const XalanDOMString	m_prefix;
+	const XalanDOMString			m_prefix;
 
-	const unsigned int		m_prefixLength;
+	const unsigned int				m_prefixLength;
+
+	static const XalanDOMString		s_emptyString;
 };
+
 
 
 #endif	// FUNCTIONGENERATEID_HEADER_GUARD_1357924680

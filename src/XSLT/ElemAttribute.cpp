@@ -263,17 +263,17 @@ ElemAttribute::execute(
 		// If there was no namespace, or the namespace was resolved, process
 		// the result attribute.
 		if (indexOfNSSep == origAttrNameLength || !isEmpty(attrNameSpace))
-		{  
-			XalanDOMString	val;
+		{
+			StylesheetExecutionContext::GetAndReleaseCachedString	theResult(executionContext);
 
 			childrenToString(
 					executionContext,
 					sourceTree,
 					sourceNode,
 					mode,
-					val);
+					theResult.get());
 
-			executionContext.addResultAttribute(attrName, val);
+			executionContext.addResultAttribute(attrName, theResult.get());
 		}
 	}
 }

@@ -134,9 +134,10 @@ public:
 	 * @param value  attribute value
 	 */
 	virtual bool
-	addAttribute(const XMLCh*	name,
-				 const XMLCh*	type,
-				 const XMLCh*	value);
+	addAttribute(
+			const XMLCh*	name,
+			const XMLCh*	type,
+			const XMLCh*	value);
 
 	/**
 	 * Removes an attribute from the attribute list
@@ -197,6 +198,14 @@ public:
 		{
 		}
 
+		void
+		clear()
+		{
+			m_Name.clear();
+			m_Value.clear();
+			m_Type.clear();
+		}
+
 		XMLChVectorType		m_Name;
 		XMLChVectorType		m_Value;
 		XMLChVectorType		m_Type;
@@ -206,10 +215,10 @@ public:
 
 #if defined(XALAN_NO_NAMESPACES)
 	// This vector will hold the entries.
-	typedef vector<AttributeVectorEntry*>				AttributeVectorType;
+	typedef vector<AttributeVectorEntry*>			AttributeVectorType;
 #else
 	// This vector will hold the entries.
-	typedef std::vector<AttributeVectorEntry*>				AttributeVectorType;
+	typedef std::vector<AttributeVectorEntry*>		AttributeVectorType;
 #endif
 
 private:
@@ -224,11 +233,19 @@ private:
 		eDefaultVectorSize = 5
 	};
 
+	AttributeVectorEntry*
+	getNewEntry(
+			const XMLCh*	name,
+			const XMLCh*	type,
+			const XMLCh*	value);
+
 	// Helper function to delete entries...
 	static void
 	deleteEntries(AttributeVectorType&	theVector);
 
 	AttributeVectorType		m_AttributeVector;
+
+	AttributeVectorType		m_cacheVector;
 };
 
 

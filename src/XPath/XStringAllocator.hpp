@@ -92,7 +92,7 @@ public:
 	~XStringAllocator();
 
 	/**
-	 * Create an XString object using allocator from a string.
+	 * Create an XString object from a string.
 	 * 
 	 * @param theString     source string
 	 *
@@ -100,6 +100,29 @@ public:
 	 */
 	string_type*
 	createString(const XalanDOMString&	theString);
+
+	/**
+	 * Create an XString object from a null-terminated array of characters.
+	 * 
+	 * @param theString     a pointer to the array
+	 *
+	 * @return a pointer to string
+	 */
+	string_type*
+	createString(const XalanDOMChar*	theString);
+
+	/**
+	 * Create an XString object from an array of characters.
+	 * 
+	 * @param theString     a pointer to the array
+	 * @param theLength     the length of the array.
+	 *
+	 * @return a pointer to string
+	 */
+	string_type*
+	createString(
+			const XalanDOMChar*		theString,
+			unsigned int			theLength);
 
 	/**
 	 * Clone an XString object.

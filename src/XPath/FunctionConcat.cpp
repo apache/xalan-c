@@ -75,16 +75,19 @@ FunctionConcat::execute(
 		XPathExecutionContext&			executionContext,
 		XalanNode*						/* context */,			
 		const XObject*					arg1,
-		const XObject*					arg2,
-		const XObject*					arg3)
+		const XObject*					arg2)
 {
-	assert(arg1 != 0 || arg2 != 0 || arg3 != 0);	
+	assert(arg1 != 0 && arg2 != 0);	
 	
 	XalanDOMString	theResult;
 
-	theResult += arg1->str();
-	theResult += arg2->str();
-	theResult += arg3->str();	
+	const XalanDOMString&	theArg1 = arg1->str();
+	const XalanDOMString&	theArg2 = arg2->str();
+
+	reserve(theResult, length(theArg1) + length(theArg2) + 1);
+
+	theResult += theArg1;
+	theResult += theArg2;
 
 	return executionContext.getXObjectFactory().createString(theResult);
 }
@@ -96,14 +99,22 @@ FunctionConcat::execute(
 		XPathExecutionContext&			executionContext,
 		XalanNode*						/* context */,			
 		const XObject*					arg1,
-		const XObject*					arg2)
+		const XObject*					arg2,
+		const XObject*					arg3)
 {
-	assert(arg1 != 0 || arg2 != 0);	
+	assert(arg1 != 0 && arg2 != 0 && arg3 != 0);	
 	
 	XalanDOMString	theResult;
 
-	theResult += arg1->str();
-	theResult += arg2->str();
+	const XalanDOMString&	theArg1 = arg1->str();
+	const XalanDOMString&	theArg2 = arg2->str();
+	const XalanDOMString&	theArg3 = arg3->str();
+
+	reserve(theResult, length(theArg1) + length(theArg2) + length(theArg3) + 1);
+
+	theResult += theArg1;
+	theResult += theArg2;
+	theResult += theArg3;
 
 	return executionContext.getXObjectFactory().createString(theResult);
 }
@@ -126,6 +137,8 @@ FunctionConcat::execute(
 
 		for(; i != theEnd; ++i)
 		{
+			assert(*i != 0);
+
 			theCombinedLength += length((*i)->str());
 		}
 	}
