@@ -317,7 +317,7 @@ NodeSorter::NodeSortKeyCompare::getNumberResult(
 
 
 
-const XalanDOMString
+const XalanDOMString&
 NodeSorter::NodeSortKeyCompare::getStringResult(
 				const NodeSortKey&	theKey,
 				XalanNode*			node) const
@@ -348,11 +348,14 @@ NodeSorter::NodeSortKeyCompare::getStringResult(
 
 	const XalanDOMString&	theResult = result->str();
 
+	XalanDOMString&		theString =
 #if defined(XALAN_NO_MUTABLE)
-	((NodeSortKeyCompare*)this)->m_stringResultsCache[xpath][node] = theResult;
+		((NodeSortKeyCompare*)this)->m_stringResultsCache[xpath][node];
 #else
-	m_stringResultsCache[xpath][node] = theResult;
+		m_stringResultsCache[xpath][node];
 #endif
 
-	return theResult;
+	assign(theString, theResult);
+
+	return theString;
 }

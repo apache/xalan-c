@@ -186,7 +186,7 @@ public:
 				const NodeSortKey&	theKey,
 				XalanNode*			node) const;
 
-		const XalanDOMString
+		const XalanDOMString&
 		getStringResult(
 				const NodeSortKey&	theKey,
 				XalanNode*			node) const;
@@ -205,15 +205,15 @@ public:
 
 		typedef	map<const XalanNode*,
 				    XalanDOMString,
-					less<const XalanNode*> >		StringResultsNodeCacheMapType;
+					less<const XalanNode*> >	StringResultsNodeCacheMapType;
 
 		typedef	map<const XPath*,
 					NumberResultsNodeCacheMapType,
-					less<const XPath*> >	NumberResultsCacheMapType;
+					less<const XPath*> >		NumberResultsCacheMapType;
 
 		typedef	map<const XPath*,
 					StringResultsNodeCacheMapType,
-					less<const XPath*> >	StringResultsCacheMapType;
+					less<const XPath*> >		StringResultsCacheMapType;
 #else
 		typedef	std::map<const XalanNode*, double>			NumberResultsNodeCacheMapType;
 		typedef	std::map<const XalanNode*, XalanDOMString>	StringResultsNodeCacheMapType;
