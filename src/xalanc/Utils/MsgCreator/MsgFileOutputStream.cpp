@@ -110,8 +110,6 @@ XalanFileOutputStream::writeData(
 #if defined(WIN32)
 	DWORD			theBytesWritten;
 
-	assert(size_t(DWORD(theBufferLength)) == theBufferLength);
-
 	if (WriteFile(m_handle, theBuffer, DWORD(theBufferLength), &theBytesWritten, 0) == false ||
 	    theBytesWritten != theBufferLength)
 	{
