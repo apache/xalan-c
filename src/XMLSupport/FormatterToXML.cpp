@@ -1201,11 +1201,11 @@ FormatterToXML::charactersRaw(
 
 
 void
-FormatterToXML::writeAttrString(const XalanDOMChar*		theString)
+FormatterToXML::writeAttrString(
+			const XalanDOMChar*			theString,
+			XalanDOMString::size_type	theStringLength)
 {
-    const XalanDOMString::size_type		len = length(theString);
-
-    for (XalanDOMString::size_type i = 0;  i < len;  i ++) 
+    for (XalanDOMString::size_type i = 0;  i < theStringLength;  i ++) 
     {
 		const XalanDOMChar	ch = theString[i];
 
@@ -1213,7 +1213,7 @@ FormatterToXML::writeAttrString(const XalanDOMChar*		theString)
 		    m_attrCharsMap[ch] == 'S') ||
 			ch > m_maxCharacter)
 		{
-			accumDefaultEscape(ch, i, theString, len, true);
+			accumDefaultEscape(ch, i, theString, theStringLength, true);
 		}
 		else
 		{
@@ -1634,7 +1634,7 @@ FormatterToXML::processAttribute(
 		accumName(name);
 		accumContent(XalanUnicode::charEqualsSign);
 		accumContent(XalanUnicode::charQuoteMark);
-		writeAttrString(value);
+		writeAttrString(value, length(value));
 		accumContent(XalanUnicode::charQuoteMark);
 	}
 }

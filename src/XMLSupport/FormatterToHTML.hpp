@@ -197,7 +197,9 @@ public:
 protected:
 
 	virtual void
-	writeAttrString(const XalanDOMChar*		theString);
+	writeAttrString(
+			const XalanDOMChar*			theString,
+			XalanDOMString::size_type	theStringLength);
 
 	virtual void
 	accumCommentData(const XalanDOMChar*	data);
@@ -291,10 +293,13 @@ private:
 	 * Write the specified string after substituting non ASCII characters,
 	 * with %HH, where HH is the hex of the byte value.
 	 *
-	 * @param   theString     String to convert to XML format.
+	 * @param theString String to convert to HTML format.
+	 * @param theStringLength The length of the string.
 	 */
 	void
-	writeAttrURI(const XalanDOMChar*	theString);
+	writeAttrURI(
+			const XalanDOMChar*			theString,
+			XalanDOMString::size_type	theStringLength);
 
 	/**
 	 * Accumulate the specified character by converting its numeric value to

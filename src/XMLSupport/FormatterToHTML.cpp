@@ -746,13 +746,13 @@ FormatterToHTML::writeCharacters(
 
 
 void
-FormatterToHTML::writeAttrString(const XalanDOMChar*	theString)
+FormatterToHTML::writeAttrString(
+			const XalanDOMChar*			theString,
+			XalanDOMString::size_type	theStringLength)
 {
 	assert(theString != 0);
 
-    const XalanDOMString::size_type		theLength = length(theString);
-
-    for (XalanDOMString::size_type i = 0;  i < theLength;  i ++)
+    for (XalanDOMString::size_type i = 0;  i < theStringLength;  i ++)
     {
 		const XalanDOMChar	ch = theString[i];
 
@@ -761,12 +761,12 @@ FormatterToHTML::writeAttrString(const XalanDOMChar*	theString)
 			accumContent(ch);
 		}
 		else if(XalanUnicode::charAmpersand == ch &&
-				i + 1 < theLength &&
+				i + 1 < theStringLength &&
 				XalanUnicode::charLeftCurlyBracket == theString[i + 1])
 		{
 			accumContent(ch); // no escaping in this case, as specified in 15.2
 		}
-		else if (accumDefaultEntity(ch, i, theString, theLength, true) == false)
+		else if (accumDefaultEntity(ch, i, theString, theStringLength, true) == false)
 		{
 			if (0xd800 <= ch && ch < 0xdc00) 
 			{
@@ -774,7 +774,7 @@ FormatterToHTML::writeAttrString(const XalanDOMChar*	theString)
 
 				XalanDOMChar	next = 0;
 
-				if (i + 1 >= theLength) 
+				if (i + 1 >= theStringLength) 
 				{
 					throwInvalidUTF16SurrogateException(ch);
 				}
@@ -855,28 +855,32 @@ FormatterToHTML::processAttribute(
 	// here...
 	// $$$ ToDo: It would be better if we didn't have to do
 	// this here.
-	if (equals(name, DOMServices::s_XMLNamespacePrefix) == false)
+	const XalanDOMString::size_type		nameLength = length(name);
+
+	if (equals(name, nameLength, c_wstr(DOMServices::s_XMLNamespacePrefix), DOMServices::s_XMLNamespacePrefixLength) == false)
 	{
 		accumContent(XalanUnicode::charSpace);
 
-		if((length(value) == 0 || equalsIgnoreCaseASCII(name, value)) &&
+		const XalanDOMString::size_type		valueLength = length(value);
+
+		if((valueLength == 0 || equalsIgnoreCaseASCII(name, nameLength, value, valueLength)) &&
 		   elemProperties.isAttribute(name, XalanHTMLElementsProperties::ATTREMPTY) == true)
 		{
 			accumName(name);
 		}
 		else
 		{
-			accumName(name);
+			accumName(name, 0, nameLength);
 			accumContent(XalanUnicode::charEqualsSign);
 			accumContent(XalanUnicode::charQuoteMark);
 
 			if(elemProperties.isAttribute(name, XalanHTMLElementsProperties::ATTRURL) == true)
 			{
-				writeAttrURI(value);
+				writeAttrURI(value, valueLength);
 			}
 			else
 			{
-				writeAttrString(value);
+				writeAttrString(value, valueLength);
 			}
 
 			accumContent(XalanUnicode::charQuoteMark);
@@ -887,7 +891,9 @@ FormatterToHTML::processAttribute(
 
 
 void
-FormatterToHTML::writeAttrURI(const XalanDOMChar*	theString)
+FormatterToHTML::writeAttrURI(
+			const XalanDOMChar*			theString,
+			XalanDOMString::size_type	theStringLength)
 {
 	assert(theString != 0);
 
@@ -906,9 +912,7 @@ FormatterToHTML::writeAttrURI(const XalanDOMChar*	theString)
 	// causing damage.	If the URL is already properly escaped, in theory, this 
 	// function should not change the string value.
 
-	const XalanDOMString::size_type		len = length(theString);
-
-    for (XalanDOMString::size_type i = 0; i < len; ++i)
+    for (XalanDOMString::size_type i = 0; i < theStringLength; ++i)
     {
 		const XalanDOMChar	ch = theString[i];
 
@@ -1029,12 +1033,12 @@ FormatterToHTML::writeAttrURI(const XalanDOMChar*	theString)
 			}
 			else
 			{
-				accumDefaultEntity(ch, i, theString, len, true);
+				accumDefaultEntity(ch, i, theString, theStringLength, true);
 			}
 		}
 		else if (ch == XalanUnicode::charAmpersand)
 		{
-			accumDefaultEntity(ch, i, theString, len, true);
+			accumDefaultEntity(ch, i, theString, theStringLength, true);
 		}
 		else
 		{

@@ -575,10 +575,14 @@ protected:
 
 	/**
 	 * Write an attribute string.
+	 *
 	 * @param theString The string to write.
+	 * @param theStringLength The length of the string.
 	 */
 	virtual void
-	writeAttrString(const XalanDOMChar*		theString);
+	writeAttrString(
+			const XalanDOMChar*			theString,
+			XalanDOMString::size_type	theStringLength);
 
 	/**
 	 * Write the data for a comment
