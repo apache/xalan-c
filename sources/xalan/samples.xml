@@ -126,17 +126,16 @@ XercesDOMPrintWriter       diagnosticsWriter(theStdErr);
 // Set up the TraceListener...
 // traceTemplates, traceTemplateChildren, traceGenerationEvent,
 // and TraceSelectionEvent are booleans set by the command line.
-auto_ptr&lt;TraceListener&gt; theTraceListener;
-theTraceListener = auto_ptr&lt;TraceListener&gt;(new TraceListenerDefault(
+TraceListenerDefault theTraceListener(
         diagnosticsWriter,
         traceTemplates,
         traceTemplateChildren,
         traceGenerationEvent,
-        traceSelectionEvent));
+        traceSelectionEvent);
 
 // Add the TraceListener to the XSLT processor...
 theProcessor.setTraceSelects(traceSelectionEvent);
-theProcessor.addTraceListener(theTraceListener.get());
+theProcessor.addTraceListener(&amp;theTraceListener);
 
 // Perform the transformation
 ....</source>
