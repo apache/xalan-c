@@ -1033,11 +1033,11 @@ XPath::runExtFunction(
 
 	const XalanDOMString&	ns = m_expression.m_tokenQueue[m_expression.m_opMap[opPos]].str();
 
-	opPos++;
+	++opPos;
 
 	const XalanDOMString&	funcName = m_expression.m_tokenQueue[m_expression.m_opMap[opPos]].str();
 
-	opPos++;
+	++opPos;
 
 	typedef XPathExecutionContext::XObjectArgVectorType		XObjectArgVectorType;
 
@@ -1052,10 +1052,7 @@ XPath::runExtFunction(
 		opPos = nextOpPos;
 	}
 
-	const XObjectPtr	theResult =
-		extfunction(context, opPos, ns, funcName, args, executionContext);
-
-	return theResult;
+	return extfunction(context, opPos, ns, funcName, args, executionContext);
 }
 
 
