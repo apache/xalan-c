@@ -72,6 +72,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 XalanSourceTreeWrapperParsedSource::XalanSourceTreeWrapperParsedSource(
 			XalanSourceTreeDocument*		theDocument,
 			XalanSourceTreeParserLiaison&	theParserLiaison,
@@ -115,3 +119,7 @@ XalanSourceTreeWrapperParsedSource::getURI() const
 {
 	return m_uri;
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

@@ -73,9 +73,7 @@
 
 
 
-class EntityResolver;
-class ErrorHandler;
-class InputSource;
+XALAN_CPP_NAMESPACE_BEGIN
 
 
 
@@ -111,10 +109,10 @@ class XALAN_TRANSFORMER_EXPORT XercesDOMParsedSource : public XalanParsedSource
 public:
 	
 	XercesDOMParsedSource(
-			const InputSource&		theInputSource,
+			const InputSourceType&	theInputSource,
 			bool					fValidate = false,
-			ErrorHandler*			theErrorHandler = 0,
-			EntityResolver*			theEntityResolver = 0,
+			ErrorHandlerType*		theErrorHandler = 0,
+			EntityResolverType*		theEntityResolver = 0,
 			const XalanDOMChar*		theExternalSchemaLocation = 0,
 			const XalanDOMChar*		theExternalNoNamespaceSchemaLocation = 0);
 
@@ -141,7 +139,8 @@ private:
 
 
 
+XALAN_CPP_NAMESPACE_END
+
+
+
 #endif	// XERCESDOMPARSEDSOURCE_HEADER_GUARD
-
-
-

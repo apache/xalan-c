@@ -64,7 +64,15 @@
 
 
 
+#include <XalanDOM/XalanDOMString.hpp>
+
+
+
 #include <XalanTransformer/XalanParsedSource.hpp>
+
+
+
+XALAN_CPP_NAMESPACE_BEGIN
 
 
 
@@ -110,6 +118,10 @@ private:
 
 	const XalanDOMString			m_uri;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

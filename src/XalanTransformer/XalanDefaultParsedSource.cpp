@@ -78,6 +78,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 XalanDefaultParsedSourceDOMSupport::XalanDefaultParsedSourceDOMSupport(
 			const XalanSourceTreeParserLiaison&		theParserLiaison,
 			const XalanSourceTreeDOMSupport&		theDOMSupport) :
@@ -170,10 +174,10 @@ XalanDefaultParsedSourceHelper::getParserLiaison()
 
 
 XalanDefaultParsedSource::XalanDefaultParsedSource(
-			const InputSource&		theInputSource,
+			const InputSourceType&	theInputSource,
 			bool					fValidate,
-			ErrorHandler*			theErrorHandler,
-			EntityResolver*			theEntityResolver,
+			ErrorHandlerType*		theErrorHandler,
+			EntityResolverType*		theEntityResolver,
 			const XalanDOMChar*		theExternalSchemaLocation,
 			const XalanDOMChar*		theExternalNoNamespaceSchemaLocation) :
 	XalanParsedSource(),
@@ -200,7 +204,7 @@ XalanDefaultParsedSource::XalanDefaultParsedSource(
 		{
 			m_uri = URISupport::getURLStringFromString(theSystemID);
 		}
-		catch(const XMLException&)
+		catch(const XERCES_CPP_NAMESPACE_QUALIFIER XMLException&)
 		{
 			// Assume that any exception here relates to get the url from
 			// the system ID.  We'll assume that it's just a fake base identifier
@@ -240,3 +244,7 @@ XalanDefaultParsedSource::getURI() const
 {
 	return m_uri;
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -67,6 +67,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 XalanDefaultDocumentBuilder::XalanDefaultDocumentBuilder(const XalanDOMString&	theURI) :
 	m_domSupport(),
 	m_parserLiaison(),
@@ -100,7 +104,7 @@ XalanDefaultDocumentBuilder::createHelper() const
 
 
 
-ContentHandler*
+ContentHandlerType*
 XalanDefaultDocumentBuilder::getContentHandler()
 {
 	return &m_contentHandler;
@@ -108,7 +112,7 @@ XalanDefaultDocumentBuilder::getContentHandler()
 
 
 
-DTDHandler*
+DTDHandlerType*
 XalanDefaultDocumentBuilder::getDTDHandler()
 {
 	return &m_contentHandler;
@@ -116,7 +120,7 @@ XalanDefaultDocumentBuilder::getDTDHandler()
 
 
 
-LexicalHandler*
+LexicalHandlerType*
 XalanDefaultDocumentBuilder::getLexicalHandler()
 {
 	return &m_contentHandler;
@@ -129,3 +133,7 @@ XalanDefaultDocumentBuilder::getURI() const
 {
 	return m_uri;
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

@@ -71,14 +71,19 @@
 
 
 
-#if !defined(XALAN_NO_NAMESPACES)
-using std::istrstream;
-#endif
-
-
-
 #include "XalanCAPI.h"
 #include "XalanTransformer.hpp"
+
+
+
+XALAN_USING_STD(istrstream)
+
+XALAN_USING_XALAN(XalanCompiledStylesheet)
+XALAN_USING_XALAN(XalanDOMString)
+XALAN_USING_XALAN(XalanParsedSource)
+XALAN_USING_XALAN(XalanTransformer)
+XALAN_USING_XERCES(XMLPlatformUtils)
+
 
 
 static bool	fInitialized = false;
@@ -233,9 +238,7 @@ XalanTransformToData(
 			char**			theOutput,
 			XalanHandle		theXalanHandle)
 {
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::ostrstream;
-#endif
+	XALAN_USING_STD(ostrstream)
 
 	int	status = 0;		
 
@@ -275,9 +278,7 @@ XalanTransformToDataPrebuilt(
 			char**			theOutput,
 			XalanHandle		theXalanHandle)
 {
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::ostrstream;
-#endif
+	XALAN_USING_STD(ostrstream)
 
 	ostrstream	theOutputStream;	
 

@@ -78,16 +78,22 @@ class ostream;
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 class XALAN_TRANSFORMER_EXPORT XalanTransformerProblemListener : public ProblemListener
 {
 public:
 
-	XalanTransformerProblemListener(
-#if defined(XALAN_NO_NAMESPACES)
-			ostream*		theWarningStream,
+#if defined(XALAN_NO_STD_NAMESPACE)
+	typedef ostream			StreamType;
 #else
-			std::ostream*	theWarningStream,
+	typedef std::ostream	StreamType;
 #endif
+
+	XalanTransformerProblemListener(
+			StreamType*		theStream,
 			PrintWriter*	thePrintWriter);
 
 	virtual
@@ -113,12 +119,12 @@ private:
 
 	ProblemListenerDefault	m_problemListener;
 
-#if defined(XALAN_NO_NAMESPACES)
-	ostream*		m_warningStream;
-#else
-	std::ostream*	m_warningStream;
-#endif
+	StreamType*		m_warningStream;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

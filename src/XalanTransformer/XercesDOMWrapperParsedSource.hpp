@@ -64,12 +64,28 @@
 
 
 
+#include <XalanDOM/XalanDOMString.hpp>
+
+
+
 #include <XalanTransformer/XalanParsedSource.hpp>
 
 
 
-class DOMDocument;
-class DOM_Document;
+XALAN_DECLARE_XERCES_CLASS(DOM_Document)
+XALAN_DECLARE_XERCES_CLASS(DOMDocument)
+
+
+
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
+typedef XERCES_CPP_NAMESPACE_QUALIFIER DOM_Document	DOM_DocumentType;
+typedef XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument	DOMDocumentType;
+
+
+
 class XercesParserLiaison;
 class XercesDOMSupport;
 
@@ -94,10 +110,10 @@ public:
 	 * @deprecated This constructor is deprecated.
 	 */
 	XercesDOMWrapperParsedSource(
-			const DOM_Document&		theDocument,
-			XercesParserLiaison&	theParserLiaison,
-			XercesDOMSupport&		theDOMSupport,
-			const XalanDOMString&	theURI = XalanDOMString());
+			const DOM_DocumentType&		theDocument,
+			XercesParserLiaison&		theParserLiaison,
+			XercesDOMSupport&			theDOMSupport,
+			const XalanDOMString&		theURI = XalanDOMString());
 
 	/**
 	 * Constructor
@@ -108,7 +124,7 @@ public:
 	 * @param theURI The URI of the document, if any.
 	 */
 	XercesDOMWrapperParsedSource(
-			const DOMDocument*		theDocument,
+			const DOMDocumentType*	theDocument,
 			XercesParserLiaison&	theParserLiaison,
 			XercesDOMSupport&		theDOMSupport,
 			const XalanDOMString&	theURI = XalanDOMString());
@@ -135,6 +151,10 @@ private:
 
 	const XalanDOMString	m_uri;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -69,10 +69,23 @@
 
 
 
-class ContentHandler;
+XALAN_DECLARE_XERCES_CLASS(ContentHandler)
+XALAN_DECLARE_XERCES_CLASS(DTDHandler)
+XALAN_DECLARE_XERCES_CLASS(LexicalHandler)
+
+
+
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
+typedef XERCES_CPP_NAMESPACE_QUALIFIER ContentHandler		ContentHandlerType;
+typedef XERCES_CPP_NAMESPACE_QUALIFIER DTDHandler			DTDHandlerType;
+typedef XERCES_CPP_NAMESPACE_QUALIFIER LexicalHandler		LexicalHandlerType;
+
+
+
 class DOMSupport;
-class DTDHandler;
-class LexicalHandler;
 class XalanDocument;
 
 
@@ -101,17 +114,21 @@ public:
 	getURI() const = 0;
 
 	// These are new to XalanDocumentBuilder...
-	virtual ContentHandler*
+	virtual ContentHandlerType*
 	getContentHandler() = 0;
 
-	virtual DTDHandler*
+	virtual DTDHandlerType*
 	getDTDHandler() = 0;
 
-	virtual LexicalHandler*
+	virtual LexicalHandlerType*
 	getLexicalHandler() = 0;
 
 private:
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

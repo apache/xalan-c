@@ -70,6 +70,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 XercesDOMParsedSourceHelper::XercesDOMParsedSourceHelper() :
 	m_domSupport(),
 	m_parserLiaison()
@@ -101,10 +105,10 @@ XercesDOMParsedSourceHelper::getParserLiaison()
 
 
 XercesDOMParsedSource::XercesDOMParsedSource(
-			const InputSource&		theInputSource,
+			const InputSourceType&	theInputSource,
 			bool					fValidate,
-			ErrorHandler*			theErrorHandler,
-			EntityResolver*			theEntityResolver,
+			ErrorHandlerType*		theErrorHandler,
+			EntityResolverType*		theEntityResolver,
 			const XalanDOMChar*		theExternalSchemaLocation,
 			const XalanDOMChar*		theExternalNoNamespaceSchemaLocation) :
 	XalanParsedSource(),
@@ -128,7 +132,7 @@ XercesDOMParsedSource::XercesDOMParsedSource(
 		{
 			m_uri = URISupport::getURLStringFromString(theSystemID);
 		}
-		catch(const XMLException&)
+		catch(const XERCES_CPP_NAMESPACE_QUALIFIER XMLException&)
 		{
 			// Assume that any exception here relates to get the url from
 			// the system ID.  We'll assume that it's just a fake base identifier
@@ -168,3 +172,7 @@ XercesDOMParsedSource::getURI() const
 {
 	return m_uri;
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

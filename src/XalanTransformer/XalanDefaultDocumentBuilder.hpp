@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -74,6 +74,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 /**
  * This is class is designed to allow a XalanTranfomer object
  * to use a document that is build dynamically by a user.
@@ -101,13 +105,13 @@ public:
 	virtual const XalanDOMString&
 	getURI() const;
 
-	virtual ContentHandler*
+	virtual ContentHandlerType*
 	getContentHandler();
 
-	virtual DTDHandler*
+	virtual DTDHandlerType*
 	getDTDHandler();
 
-	virtual LexicalHandler*
+	virtual LexicalHandlerType*
 	getLexicalHandler();
 
 private:
@@ -127,6 +131,10 @@ private:
 
 	const XalanDOMString			m_uri;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

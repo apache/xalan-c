@@ -79,12 +79,12 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 XalanTransformerProblemListener::XalanTransformerProblemListener(
-#if defined(XALAN_NO_NAMESPACES)
-			ostream*		theWarningStream,
-#else
-			std::ostream*	theWarningStream,
-#endif
+			StreamType*		theWarningStream,
 			PrintWriter*	thePrintWriter) :
 	ProblemListener(),
 	m_problemListener(thePrintWriter),
@@ -151,3 +151,7 @@ XalanTransformerProblemListener::problem(
 		*m_warningStream << theWarning;
 	}
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

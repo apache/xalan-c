@@ -62,14 +62,18 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 class SetAndRestoreHandlers
 {
 public:
 
 	SetAndRestoreHandlers(
-			XMLParserLiaison&	theParserLiaison,
-			ErrorHandler*		theErrorHandler,
-			EntityResolver*		theEntityResolver) :
+			XMLParserLiaison&		theParserLiaison,
+			ErrorHandlerType*		theErrorHandler,
+			EntityResolverType*		theEntityResolver) :
 		m_parserLiaison(theParserLiaison),
 		m_errorHandler(theParserLiaison.getErrorHandler()),
 		m_entityResolver(theParserLiaison.getEntityResolver())
@@ -94,11 +98,11 @@ public:
 
 private:
 
-	XMLParserLiaison&		m_parserLiaison;
+	XMLParserLiaison&			m_parserLiaison;
 
-	ErrorHandler* const		m_errorHandler;
+	ErrorHandlerType* const		m_errorHandler;
 
-	EntityResolver*	const	m_entityResolver;
+	EntityResolverType*	const	m_entityResolver;
 };
 
 
@@ -109,8 +113,8 @@ compileStylesheet(
 			const XSLTInputSource&					theStylesheetSource,
 			XSLTEngineImpl&							theProcessor,
 			StylesheetConstructionContextDefault&	theConstructionContext,
-			ErrorHandler*							theErrorHandler,
-			EntityResolver*							theEntityResolver)
+			ErrorHandlerType*						theErrorHandler,
+			EntityResolverType*						theEntityResolver)
 {
 	const SetAndRestoreHandlers		theSetAndRestore(
 			theProcessor.getXMLParserLiaison(),
@@ -123,10 +127,10 @@ compileStylesheet(
 
 
 XalanCompiledStylesheetDefault::XalanCompiledStylesheetDefault(
-			const XSLTInputSource&				theStylesheetSource,
-			XSLTEngineImpl&						theProcessor,
-			ErrorHandler*						theErrorHandler,
-			EntityResolver*						theEntityResolver):
+			const XSLTInputSource&	theStylesheetSource,
+			XSLTEngineImpl&			theProcessor,
+			ErrorHandlerType*		theErrorHandler,
+			EntityResolverType*		theEntityResolver):
 	XalanCompiledStylesheet(),
 	m_stylesheetXPathFactory(),
 	m_stylesheetConstructionContext(
@@ -154,3 +158,7 @@ XalanCompiledStylesheetDefault::getStylesheetRoot() const
 {
 	return m_stylesheetRoot;
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

@@ -130,6 +130,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 const XSLTInit*		XalanTransformer::s_xsltInit = 0;
 
 
@@ -147,7 +151,7 @@ XalanTransformer::XalanTransformer():
 	m_externalSchemaLocation(),
 	m_externalNoNamespaceSchemaLocation(),
 	m_problemListener(0),
-#if defined(XALAN_NO_NAMESPACES)
+#if defined(XALAN_NO_STD_NAMESPACE)
 	m_warningStream(&cerr),
 #else
 	m_warningStream(&std::cerr),
@@ -169,9 +173,7 @@ XalanTransformer::XalanTransformer():
 
 XalanTransformer::~XalanTransformer()
 {
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::for_each;
-#endif
+	XALAN_USING_STD(for_each)
 
 	// Clean up all entries in the compliledStylesheets vector.
 	for_each(m_compiledStylesheets.begin(),
@@ -430,6 +432,11 @@ XalanTransformer::transform(
 
 
 
+XALAN_USING_XERCES(XMLException)
+XALAN_USING_XERCES(SAXException)
+
+
+
 int
 XalanTransformer::compileStylesheet(
 			const XSLTInputSource&				theStylesheetSource,
@@ -566,9 +573,7 @@ XalanTransformer::compileStylesheet(
 int
 XalanTransformer::destroyStylesheet(const XalanCompiledStylesheet*	theStylesheet)
 {
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::find;
-#endif
+	XALAN_USING_STD(find)
 
 	const CompiledStylesheetPtrVectorType::iterator 	i =
 		find(
@@ -760,9 +765,7 @@ XalanTransformer::setStylesheetParam(
 bool
 XalanTransformer::removeTraceListener(TraceListener*	theTraceListener)
 {
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::find;
-#endif
+	XALAN_USING_STD(find)
 
 	const TraceListenerVectorType::iterator 	i =
 		find(
@@ -1243,3 +1246,7 @@ XalanTransformer::doTransform(
 
 	return theResult;
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

@@ -73,8 +73,10 @@
 
 
 
-class EntityResolver;
-class ErrorHandler;
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 class XSLTInputSource;
 class XalanSourceTreeDocument;
 
@@ -161,10 +163,10 @@ class XALAN_TRANSFORMER_EXPORT XalanDefaultParsedSource : public XalanParsedSour
 public:
 
 	XalanDefaultParsedSource(
-			const InputSource&		theInputSource,
+			const InputSourceType&	theInputSource,
 			bool					fValidate = false,
-			ErrorHandler*			theErrorHandler = 0,
-			EntityResolver*			theEntityResolver = 0,
+			ErrorHandlerType*		theErrorHandler = 0,
+			EntityResolverType*		theEntityResolver = 0,
 			const XalanDOMChar*		theExternalSchemaLocation = 0,
 			const XalanDOMChar*		theExternalNoNamespaceSchemaLocation = 0);
 
@@ -198,6 +200,10 @@ private:
 
 	XalanDOMString					m_uri;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

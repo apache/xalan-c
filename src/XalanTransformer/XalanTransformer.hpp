@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -84,8 +84,20 @@ class ostream;
 
 
 
-class EntityResolver;
-class ErrorHandler;
+XALAN_DECLARE_XERCES_CLASS(EntityResolver)
+XALAN_DECLARE_XERCES_CLASS(ErrorHandler)
+
+
+
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
+typedef XERCES_CPP_NAMESPACE_QUALIFIER EntityResolver	EntityResolverType;
+typedef XERCES_CPP_NAMESPACE_QUALIFIER ErrorHandler		ErrorHandlerType;
+
+
+
 class Function;
 class StylesheetExecutionContextDefault;
 class ProblemListener;
@@ -108,7 +120,7 @@ class XALAN_TRANSFORMER_EXPORT XalanTransformer
 {
 public:
 	
-#if defined(XALAN_NO_NAMESPACES)
+#if defined(XALAN_NO_STD_NAMESPACE)
 	typedef ostream			StreamType;
 #else
 	typedef std::ostream	StreamType;
@@ -530,7 +542,7 @@ public:
 	 *
 	 * @return The pointer to the installed entity resolver object.
 	 */
-	EntityResolver*
+	EntityResolverType*
 	getEntityResolver() const
 	{
 		return m_entityResolver;
@@ -546,7 +558,7 @@ public:
 	 * 			   entities in the XML file.
 	 */
 	void
-	setEntityResolver(EntityResolver*	theResolver)
+	setEntityResolver(EntityResolverType*	theResolver)
 	{
 		m_entityResolver = theResolver;
 	}
@@ -556,7 +568,7 @@ public:
 	 *
 	 * @return The pointer to the installed error handler object.
 	 */
-	ErrorHandler*
+	ErrorHandlerType*
 	getErrorHandler() const
 	{
 		return m_errorHandler;
@@ -568,7 +580,7 @@ public:
 	 * @param handler A pointer to the error handler to be called upon error.
 	 */
 	void
-	setErrorHandler(ErrorHandler*	theErrorHandler)
+	setErrorHandler(ErrorHandlerType*	theErrorHandler)
 	{
 		m_errorHandler = theErrorHandler;
 	}
@@ -755,7 +767,7 @@ public:
 		return m_warningStream;
 	}
 
-#if defined(XALAN_NO_NAMESPACES)
+#if defined(XALAN_NO_STD_NAMESPACE)
 	typedef vector<const XalanCompiledStylesheet*>		CompiledStylesheetPtrVectorType;
 	typedef vector<const XalanParsedSource*>			ParsedSourcePtrVectorType;
 	typedef pair<XalanDOMString, XalanDOMString>		ParamPairType;
@@ -889,9 +901,9 @@ private:
 
 	bool									m_useValidation;
 
-	EntityResolver*							m_entityResolver;
+	EntityResolverType*						m_entityResolver;
 
-	ErrorHandler*							m_errorHandler;
+	ErrorHandlerType*						m_errorHandler;
 
 	XalanDOMString							m_externalSchemaLocation;
 
@@ -906,6 +918,10 @@ private:
 
 	static const XSLTInit*					s_xsltInit;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

@@ -76,11 +76,15 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 XercesDOMWrapperParsedSource::XercesDOMWrapperParsedSource(
-			const DOM_Document&		theDocument,
-			XercesParserLiaison&	theParserLiaison,
-			XercesDOMSupport&		theDOMSupport,
-			const XalanDOMString&	theURI) :
+			const DOM_DocumentType&		theDocument,
+			XercesParserLiaison&		theParserLiaison,
+			XercesDOMSupport&			theDOMSupport,
+			const XalanDOMString&		theURI) :
 	XalanParsedSource(),
 	m_parserLiaison(theParserLiaison),
 	m_domSupport(theDOMSupport),
@@ -93,7 +97,7 @@ XercesDOMWrapperParsedSource::XercesDOMWrapperParsedSource(
 
 
 XercesDOMWrapperParsedSource::XercesDOMWrapperParsedSource(
-			const DOMDocument*		theDocument,
+			const DOMDocumentType*	theDocument,
 			XercesParserLiaison&	theParserLiaison,
 			XercesDOMSupport&		theDOMSupport,
 			const XalanDOMString&	theURI) :
@@ -136,3 +140,7 @@ XercesDOMWrapperParsedSource::getURI() const
 {
 	return m_uri;
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

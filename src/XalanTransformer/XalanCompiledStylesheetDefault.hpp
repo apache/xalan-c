@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 2000 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -81,8 +81,17 @@
 
 
 
-class EntityResolver;
-class ErrorHandler;
+XALAN_DECLARE_XERCES_CLASS(EntityResolver)
+XALAN_DECLARE_XERCES_CLASS(ErrorHandler)
+
+
+
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
+typedef XERCES_CPP_NAMESPACE_QUALIFIER EntityResolver	EntityResolverType;
+typedef XERCES_CPP_NAMESPACE_QUALIFIER ErrorHandler		ErrorHandlerType;
 
 
 
@@ -91,10 +100,10 @@ class XALAN_TRANSFORMER_EXPORT XalanCompiledStylesheetDefault : public XalanComp
 public:
 	
 	XalanCompiledStylesheetDefault(
-			const XSLTInputSource&				theStylesheetSource,
-			XSLTEngineImpl&						theProcessor,
-			ErrorHandler*						theErrorHandler = 0,
-			EntityResolver*						theEntityResolver = 0);
+			const XSLTInputSource&	theStylesheetSource,
+			XSLTEngineImpl&			theProcessor,
+			ErrorHandlerType*		theErrorHandler = 0,
+			EntityResolverType*		theEntityResolver = 0);
 
 	virtual
 	~XalanCompiledStylesheetDefault();
@@ -110,6 +119,10 @@ private:
 
 	const StylesheetRoot* const				m_stylesheetRoot;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

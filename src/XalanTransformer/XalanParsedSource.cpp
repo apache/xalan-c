@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 2000 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -57,6 +57,10 @@
 #include <XalanTransformer/XalanParsedSource.hpp>
 
 
+
+XALAN_CPP_NAMESPACE_BEGIN
+
+
 	
 XalanParsedSource::XalanParsedSource()
 {
@@ -67,3 +71,7 @@ XalanParsedSource::XalanParsedSource()
 XalanParsedSource::~XalanParsedSource()
 {
 }
+
+
+
+XALAN_CPP_NAMESPACE_END
