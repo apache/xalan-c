@@ -112,6 +112,13 @@ public:
 
 private:
 
+	// not implemented...
+	XalanDefaultDocumentBuilder(const XalanDefaultDocumentBuilder&);
+
+	XalanDefaultDocumentBuilder&
+	operator=(const XalanDefaultDocumentBuilder&);
+
+	// Data members...
 	XalanSourceTreeDOMSupport		m_domSupport;
 
 	XalanSourceTreeParserLiaison	m_parserLiaison;
