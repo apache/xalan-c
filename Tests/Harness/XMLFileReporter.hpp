@@ -54,20 +54,16 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  *
- * XMLFileReporter.java
+ * XMLFileReporter.hpp
  */
 #if !defined(HARNESS_HEADER_GUARD_1357924680)
 #define HARNESS_HEADER_GUARD_1357924680
 
-
-#include<string>
 #include<stdio.h>
 #include <time.h>
 
-
-
-using namespace std;
-
+//#include <util/PlatformUtils.hpp>
+#include <PlatformSupport/DOMStringHelper.hpp>
 
 
 /**
@@ -94,7 +90,10 @@ public:
 
 
 	/** Construct and initialize this reporter with specified filename.  */
-	XMLFileReporter(const string& fileName);
+	XMLFileReporter(const XalanDOMString& fileName);
+
+	/** Construct and initialize this reporter with specified filename.  */
+	XMLFileReporter::XMLFileReporter(const char* fileName);
 
 	/** Initialize this XMLFileReporter.  Must be called before attempting to log anything.  */
 	bool initialize();
@@ -103,10 +102,16 @@ public:
 	bool getFlushOnCaseClose();
 
 	/** Accessor methods for our properties block.  */
-	const string& getFileName() const;
+	const XalanDOMString& getFileName() const;
 
 	/** Accessor methods for our properties block.  */
-	void setFileName(const string& fileName);
+	void setFileName(const XalanDOMString& fileName);
+
+	/** Accessor methods for our properties block.  */
+	void setFileName(const char* fileName)
+	{
+		setFileName(XalanDOMString(fileName));
+	}
 
 	/**
 	* Is this Reporter still running OK?  
@@ -115,7 +120,7 @@ public:
 	*/
 	bool checkError();
 
-
+	  
 	/**
 	* Is this Reporter ready to log results?  
 	* @returns status - true if it's ready to report, false otherwise
@@ -137,24 +142,43 @@ public:
 	* Report that a testfile has started.  
 	* @param msg message to log out
 	*/
-	void logTestFileInit(const string& msg);
+	void logTestFileInit(const XalanDOMString& msg);
+
+	void logTestFileInit(const char*	msg)
+	{
+		logTestFileInit(XalanDOMString(msg));
+	}
 
 	/**
 	* Report that a testfile has finished, and report it's result.  
 	* @param msg message to log out
 	* @param result result of testfile
 	*/
-	void logTestFileClose(const string& msg, const string& result);
+	void logTestFileClose(const XalanDOMString& msg, const XalanDOMString& result);
 
-	void logTestCaseInit(const string& msg);
+	void logTestFileClose(const char* msg, const char* result)
+	{
+		logTestFileClose(XalanDOMString(msg), XalanDOMString(result));	
+	}
+
+	void logTestCaseInit(const XalanDOMString& msg);
+
+	void logTestCaseInit(const char*	msg)
+	{
+		logTestCaseInit(XalanDOMString(msg));
+	}
 
 	/**
 	* Report that a testcase has finished, and report it's result.  
 	* @param msg message to log out
 	* @param result result of testfile
 	*/
-	void logTestCaseClose(const string& msg, const string& result);
+	void logTestCaseClose(const XalanDOMString& msg, const XalanDOMString& result);
 
+	void logTestCaseClose(const char* msg, const char* result)
+	{
+		logTestCaseClose(XalanDOMString(msg), XalanDOMString(result));
+	}
 	//-----------------------------------------------------
 	//-------- Test results reporting and logging routines --------
 	//-----------------------------------------------------
@@ -166,7 +190,7 @@ public:
 	* @param level severity or class of message.
 	* @param msg comment to log out.
 	*/
-	void logMessage(int level, const string& msg);
+	void logMessage(int level, const XalanDOMString& msg);
 
 	/**
 	* Logs out statistics to result file with specified severity.  
@@ -176,10 +200,15 @@ public:
 	* @param dVal statistic in double format.
 	* @param msg comment to log out.
 	*/
-	void logStatistic (int level, long lVal, double dVal, const string& msg);
+	void logStatistic (int level, long lVal, double dVal, const XalanDOMString& msg);
+
+	void logStatistic (int level, long lVal, double dVal, const char*	msg)
+	{
+		logStatistic(level, lVal, dVal, XalanDOMString(msg));
+	}
 
 	/**
-	* Report an arbitrary string to result file with specified severity.  
+	* Report an arbitrary XalanDOMString to result file with specified severity.  
 	* <P>Appends and prepends \\n newline characters at the start and 
 	* end of the message to separate it from the tags.</P>
 	* <P>Record format: &lt;arbitrary level="##"&gt;<BR/>
@@ -187,9 +216,9 @@ public:
 	* &lt;/arbitrary&gt;
 	* </P>
 	* @param level severity or class of message.
-	* @param msg arbitrary string to log out.
+	* @param msg arbitrary XalanDOMString to log out.
 	*/
-	void logArbitraryMessage (int level, const string& msg);
+	void logArbitraryMessage (int level, const XalanDOMString& msg);
 
 	/**
 	* Report a complete Hashtable to result file with specified severity.  
@@ -204,7 +233,7 @@ public:
 	* @param msg decription of the Hashtable.
 	*/
 	/*
-	void logHashtable (int level, Hashtable hash, const string& msg);
+	void logHashtable (int level, Hashtable hash, const XalanDOMString& msg);
 	*/
 
 	/**
@@ -212,36 +241,37 @@ public:
 	* <P>Record format: &lt;checkresult result="PASS" desc="comment"/&gt;</P>
 	* @param comment comment to log with the pass record.
 	*/
-	void logCheckPass(const string& comment);
+	void logCheckPass(const XalanDOMString& comment);
 
 	/**
 	* Writes out an ambiguous record with comment.  
 	* <P>Record format: &lt;checkresult result="AMBG" desc="comment"/&gt;</P>
 	* @param comment comment to log with the ambg record.
 	*/
-	void logCheckAmbiguous(const string& comment);
+	void logCheckAmbiguous(const XalanDOMString& comment);
 
 	/**
 	* Writes out a Fail record with comment.  
 	* <P>Record format: &lt;checkresult result="FAIL" desc="comment"/&gt;</P>
 	* @param comment comment to log with the fail record.
 	*/
-	void logCheckFail(const string& comment);
+	void logCheckFail(const XalanDOMString& comment);
 
 	/**
 	* Writes out a Error record with comment.  
 	* <P>Record format: &lt;checkresult result="ERRR" desc="comment"/&gt;</P>
 	* @param comment comment to log with the error record.
 	*/
-	void logCheckErr(const string& comment);
+	void logCheckErr(const XalanDOMString& comment);
 
 	/**
-	* Escapes a string to remove < and > so it's valid XML.  
+	* Escapes a XalanDOMString to remove < and > so it's valid XML.  
 	* <P>Stolen mostly from Xalan applet sample.</P>
-	* @param s string to escape.
-	* @return string that has been escaped.
+	* @param s XalanDOMString to escape.
+	* @return XalanDOMString that has been escaped.
 	*/
-	string escapestring(const string& s);
+	XalanDOMString escapestring(const XalanDOMString& s);
+
 
 private:
 
@@ -258,60 +288,60 @@ private:
 	/**
 	* worker method to prints to the resultsfile.  
 	*/
-	bool printToFile(const string& output);
+	bool printToFile(const XalanDOMString& output);
 
 	/**
 	* worker method to prints to the resultsfile.  
 	*/
-	string getDateTimeString();
+	XalanDOMString getDateTimeString();
 	
 	/** Key for Properties block that denotes our output filename.  */
-	static const string OPT_FILENAME;
+	static const XalanDOMString OPT_FILENAME;
 
 	/** XML tagnames for results file structure.  */
-	static const string ELEM_RESULTSFILE;
-	static const string ELEM_TESTFILE;
-	static const string ELEM_FILERESULT;
-	static const string ELEM_TESTCASE;
-	static const string ELEM_CASERESULT;
-	static const string ELEM_CHECKRESULT;
-	static const string ELEM_STATISTIC;
-	static const string ELEM_LONGVAL;
-	static const string ELEM_DOUBLEVAL;
-	static const string ELEM_MESSAGE;
-	static const string ELEM_ARBITRARY;
-	static const string ELEM_HASHTABLE;
-	static const string ELEM_HASHITEM;
+	static const XalanDOMString ELEM_RESULTSFILE;
+	static const XalanDOMString ELEM_TESTFILE;
+	static const XalanDOMString ELEM_FILERESULT;
+	static const XalanDOMString ELEM_TESTCASE;
+	static const XalanDOMString ELEM_CASERESULT;
+	static const XalanDOMString ELEM_CHECKRESULT;
+	static const XalanDOMString ELEM_STATISTIC;
+	static const XalanDOMString ELEM_LONGVAL;
+	static const XalanDOMString ELEM_DOUBLEVAL;
+	static const XalanDOMString ELEM_MESSAGE;
+	static const XalanDOMString ELEM_ARBITRARY;
+	static const XalanDOMString ELEM_HASHTABLE;
+	static const XalanDOMString ELEM_HASHITEM;
 
 	/** XML attribute names for results file structure.  */
-	static const string ATTR_LEVEL;
-	static const string ATTR_DESC;
-	static const string ATTR_TIME;
-	static const string ATTR_RESULT;
-	static const string ATTR_KEY;
-	static const string ATTR_FILENAME;
+	static const XalanDOMString ATTR_LEVEL;
+	static const XalanDOMString ATTR_DESC;
+	static const XalanDOMString ATTR_TIME;
+	static const XalanDOMString ATTR_RESULT;
+	static const XalanDOMString ATTR_KEY;
+	static const XalanDOMString ATTR_FILENAME;
 
 	/** 
-	* Optimization: for heavy use methods, form pre-defined constants to save on string concatenation.  
+	* Optimization: for heavy use methods, form pre-defined constants to save on XalanDOMString concatenation.  
 	* <P>Note the indent; must be updated if we ever switch to another indenting method.</P>
 	*/
-	static const string TESTCASEINIT_HDR;
-	static const string TESTCASECLOSE_HDR;
-	static const string MESSAGE_HDR;
-	static const string STATISTIC_HDR;
-	static const string ARBITRARY_HDR;
-	static const string HASHTABLE_HDR;
-	static const string HASHITEM_HDR;
-	static const string CHECKPASS_HDR;
-	static const string CHECKAMBG_HDR;
-	static const string CHECKERRR_HDR;
-	static const string CHECKFAIL_HDR;
+	static const XalanDOMString TESTCASEINIT_HDR;
+	static const XalanDOMString TESTCASECLOSE_HDR;
+	static const XalanDOMString MESSAGE_HDR;
+	static const XalanDOMString STATISTIC_HDR;
+	static const XalanDOMString ARBITRARY_HDR;
+	static const XalanDOMString HASHTABLE_HDR;
+	static const XalanDOMString HASHITEM_HDR;
+	static const XalanDOMString CHECKPASS_HDR;
+	static const XalanDOMString CHECKAMBG_HDR;
+	static const XalanDOMString CHECKERRR_HDR;
+	static const XalanDOMString CHECKFAIL_HDR;
 
 	/** If we have output anything yet.  */
 	bool m_anyOutput;
 
 	/** Name of the file we're outputing to.  */
-	string m_fileName;
+	XalanDOMString m_fileName;
 
 	/** File reference and other internal convenience variables.  */
 	FILE* m_fileHandle;

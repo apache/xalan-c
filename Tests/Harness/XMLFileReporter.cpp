@@ -6,44 +6,46 @@
 * This software is subject to the Lotus Software Agreement, Restricted
 * Rights for U.S. government users and applicable export regulations.
 */
-#include "XMLFileReporter.hpp" 
+
 #include <stdlib.h>
+#include "XMLFileReporter.hpp" 
 
 
-const string  XMLFileReporter::OPT_FILENAME = "filename";
+#include "PlatformSupport/XalanUnicode.hpp"
 
-const string  XMLFileReporter::ELEM_RESULTSFILE = "resultsfile";
-const string  XMLFileReporter::ELEM_TESTFILE = "testfile";
-const string  XMLFileReporter::ELEM_FILERESULT = "fileresult";
-const string  XMLFileReporter::ELEM_TESTCASE = "testcase";
-const string  XMLFileReporter::ELEM_CASERESULT = "caseresult";
-const string  XMLFileReporter::ELEM_CHECKRESULT = "checkresult";
-const string  XMLFileReporter::ELEM_STATISTIC = "statistic";
-const string  XMLFileReporter::ELEM_LONGVAL = "longval";
-const string  XMLFileReporter::ELEM_DOUBLEVAL = "doubleval";
-const string  XMLFileReporter::ELEM_MESSAGE = "message";
-const string  XMLFileReporter::ELEM_ARBITRARY = "arbitrary";
-const string  XMLFileReporter::ELEM_HASHTABLE = "hashtable";
-const string  XMLFileReporter::ELEM_HASHITEM = "hashitem";
 
-const string  XMLFileReporter::ATTR_LEVEL = "level";
-const string  XMLFileReporter::ATTR_DESC = "desc";
-const string  XMLFileReporter::ATTR_TIME = "time";
-const string  XMLFileReporter::ATTR_RESULT = "result";
-const string  XMLFileReporter::ATTR_KEY = "key";
-const string  XMLFileReporter::ATTR_FILENAME = XMLFileReporter::OPT_FILENAME;
+const XalanDOMString  XMLFileReporter::OPT_FILENAME("filename");
+const XalanDOMString  XMLFileReporter::ELEM_RESULTSFILE("resultsfile");
+const XalanDOMString  XMLFileReporter::ELEM_TESTFILE("testfile");
+const XalanDOMString  XMLFileReporter::ELEM_FILERESULT("fileresult");
+const XalanDOMString  XMLFileReporter::ELEM_TESTCASE("testcase");
+const XalanDOMString  XMLFileReporter::ELEM_CASERESULT("caseresult");
+const XalanDOMString  XMLFileReporter::ELEM_CHECKRESULT("checkresult");
+const XalanDOMString  XMLFileReporter::ELEM_STATISTIC("statistic");
+const XalanDOMString  XMLFileReporter::ELEM_LONGVAL("longval");
+const XalanDOMString  XMLFileReporter::ELEM_DOUBLEVAL("doubleval");
+const XalanDOMString  XMLFileReporter::ELEM_MESSAGE("message");
+const XalanDOMString  XMLFileReporter::ELEM_ARBITRARY("arbitrary");
+const XalanDOMString  XMLFileReporter::ELEM_HASHTABLE("hashtable");
+const XalanDOMString  XMLFileReporter::ELEM_HASHITEM("hashitem");
+const XalanDOMString  XMLFileReporter::ATTR_LEVEL("level");
+const XalanDOMString  XMLFileReporter::ATTR_DESC("desc");
+const XalanDOMString  XMLFileReporter::ATTR_TIME("time");
+const XalanDOMString  XMLFileReporter::ATTR_RESULT("result");
+const XalanDOMString  XMLFileReporter::ATTR_KEY("key");
+const XalanDOMString  XMLFileReporter::ATTR_FILENAME = XMLFileReporter::OPT_FILENAME;
 
-const string XMLFileReporter::TESTCASEINIT_HDR = "<" + ELEM_TESTCASE + " " + ATTR_DESC + "=\"";
-const string XMLFileReporter::TESTCASECLOSE_HDR = "<" + ELEM_CASERESULT + " " + ATTR_DESC + "=\"";
-const string XMLFileReporter::MESSAGE_HDR = "<" + ELEM_MESSAGE + " " + ATTR_LEVEL + "=\"";
-const string XMLFileReporter::STATISTIC_HDR = "<" + ELEM_STATISTIC + " " + ATTR_LEVEL + "=\"";
-const string XMLFileReporter::ARBITRARY_HDR = "<" + ELEM_ARBITRARY + " " + ATTR_LEVEL + "=\"";
-const string XMLFileReporter::HASHTABLE_HDR = "<" + ELEM_HASHTABLE + " " + ATTR_LEVEL + "=\"";
-const string XMLFileReporter::HASHITEM_HDR = "  <" + ELEM_HASHITEM + " " + ATTR_KEY + "=\"";
-const string XMLFileReporter::CHECKPASS_HDR = "<" + ELEM_CHECKRESULT + " " + ATTR_RESULT + "=\"" + "PASS" + "\" " + ATTR_DESC + "=\"";
-const string XMLFileReporter::CHECKAMBG_HDR = "<" + ELEM_CHECKRESULT + " " + ATTR_RESULT + "=\"" + "AMBG" + "\" " + ATTR_DESC + "=\"";
-const string XMLFileReporter::CHECKERRR_HDR = "<" + ELEM_CHECKRESULT + " " + ATTR_RESULT + "=\"" + "ERRR" + "\" " + ATTR_DESC + "=\"";
-const string XMLFileReporter::CHECKFAIL_HDR = "<" + ELEM_CHECKRESULT + " " + ATTR_RESULT + "=\"" + "FAIL" + "\" " + ATTR_DESC + "=\"";
+const XalanDOMString XMLFileReporter::TESTCASEINIT_HDR("<" + ELEM_TESTCASE + " " + ATTR_DESC + "=\"");
+const XalanDOMString XMLFileReporter::TESTCASECLOSE_HDR("<" + ELEM_CASERESULT + " " + ATTR_DESC + "=\"");
+const XalanDOMString XMLFileReporter::MESSAGE_HDR("<" + ELEM_MESSAGE + " " + ATTR_LEVEL + "=\"");
+const XalanDOMString XMLFileReporter::STATISTIC_HDR("<" + ELEM_STATISTIC + " " + ATTR_LEVEL + "=\"");
+const XalanDOMString XMLFileReporter::ARBITRARY_HDR("<" + ELEM_ARBITRARY + " " + ATTR_LEVEL + "=\"");
+const XalanDOMString XMLFileReporter::HASHTABLE_HDR("<" + ELEM_HASHTABLE + " " + ATTR_LEVEL + "=\"");
+const XalanDOMString XMLFileReporter::HASHITEM_HDR("  <" + ELEM_HASHITEM + " " + ATTR_KEY + "=\"");
+const XalanDOMString XMLFileReporter::CHECKPASS_HDR("<" + ELEM_CHECKRESULT + " " + ATTR_RESULT + "=\"" + "PASS" + "\" " + ATTR_DESC + "=\"");
+const XalanDOMString XMLFileReporter::CHECKAMBG_HDR("<" + ELEM_CHECKRESULT + " " + ATTR_RESULT + "=\"" + "AMBG" + "\" " + ATTR_DESC + "=\"");
+const XalanDOMString XMLFileReporter::CHECKERRR_HDR("<" + ELEM_CHECKRESULT + " " + ATTR_RESULT + "=\"" + "ERRR" + "\" " + ATTR_DESC + "=\"");
+const XalanDOMString XMLFileReporter::CHECKFAIL_HDR("<" + ELEM_CHECKRESULT + " " + ATTR_RESULT + "=\"" + "FAIL" + "\" " + ATTR_DESC + "=\"");
 
 
 
@@ -59,7 +61,7 @@ XMLFileReporter::XMLFileReporter():
 
 
 
-XMLFileReporter::XMLFileReporter(const string& fileName):
+XMLFileReporter::XMLFileReporter(const XalanDOMString& fileName):
 	m_anyOutput(false),
 	m_fileName(fileName),
 	m_fileHandle(0),
@@ -70,12 +72,21 @@ XMLFileReporter::XMLFileReporter(const string& fileName):
     m_ready = initialize();
 }
 
-
+XMLFileReporter::XMLFileReporter(const char* fileName):
+	m_anyOutput(false),
+	m_fileName(XalanDOMString(fileName)),
+	m_fileHandle(0),
+	m_ready(false),
+	m_error(false),
+	m_flushOnCaseClose(true)
+{         
+    m_ready = initialize();
+}
 
 bool 
 XMLFileReporter::initialize()
 {   	
-    if (m_fileName.length == 0)
+    if (length(m_fileName) == 0)
     {
         // We don't have a valid file, so bail
         m_error = true;
@@ -85,7 +96,7 @@ XMLFileReporter::initialize()
     }
 
     // Create a file and ensure it has a place to live
-	m_fileHandle = fopen(m_fileName.c_str(), "w");
+	m_fileHandle = fopen(&m_fileName.transcode().front(), "w");
 	if (m_fileHandle == 0)
 	{
         // Couldn't create or find the directory for the file to live in, so bail
@@ -112,7 +123,7 @@ XMLFileReporter::getFlushOnCaseClose()
 
 
 
-const string& 
+const XalanDOMString& 
 XMLFileReporter::getFileName() const
 {
     return(m_fileName);
@@ -121,7 +132,7 @@ XMLFileReporter::getFileName() const
 
 
 void 
-XMLFileReporter::setFileName(const string& fileName)
+XMLFileReporter::setFileName(const XalanDOMString& fileName)
 {
 	m_fileName = fileName;
 }
@@ -186,7 +197,7 @@ XMLFileReporter::close()
 
 
 void 
-XMLFileReporter::logTestFileInit(const string& msg)
+XMLFileReporter::logTestFileInit(const XalanDOMString& msg)
 {
     if (isReady())
     {
@@ -198,7 +209,7 @@ XMLFileReporter::logTestFileInit(const string& msg)
 
 
 void 
-XMLFileReporter::logTestFileClose(const string& msg, const string& result)
+XMLFileReporter::logTestFileClose(const XalanDOMString& msg, const XalanDOMString& result)
 {
     if (isReady())
     {
@@ -212,7 +223,7 @@ XMLFileReporter::logTestFileClose(const string& msg, const string& result)
 
 
 void 
-XMLFileReporter::logTestCaseInit(const string& msg)
+XMLFileReporter::logTestCaseInit(const XalanDOMString& msg)
 {
     if (isReady())
     {
@@ -223,7 +234,7 @@ XMLFileReporter::logTestCaseInit(const string& msg)
 
 
 void 
-XMLFileReporter::logTestCaseClose(const string& msg, const string& result)
+XMLFileReporter::logTestCaseClose(const XalanDOMString& msg, const XalanDOMString& result)
 {
     if (isReady())
     {
@@ -239,7 +250,7 @@ XMLFileReporter::logTestCaseClose(const string& msg, const string& result)
 
 
 void 
-XMLFileReporter::logMessage(int level, const string& msg)
+XMLFileReporter::logMessage(int level, const XalanDOMString& msg)
 {
 	char tmp[20];
 	sprintf(tmp, "%d", level);
@@ -255,17 +266,23 @@ XMLFileReporter::logMessage(int level, const string& msg)
 
 
 void 
-XMLFileReporter::logStatistic (int level, long lVal, double dVal, const string& msg)
+XMLFileReporter::logStatistic (int level, long lVal, double dVal, const XalanDOMString& msg)
 {
-    if (isReady())
+ 	char tmp[20];
+
+
+	if (isReady())
     {
-        //printToFile(STATISTIC_HDR + level + "\" " + ATTR_DESC + "=\"" + escapestring(msg) + "\">");
-        fprintf(m_fileHandle, "%s%d%s%s%s%s%s", STATISTIC_HDR.c_str(), level, "\" ", ATTR_DESC.c_str(), "=\"", escapestring(msg).c_str(), "\">\n");
-		//printToFile("<" + ELEM_LONGVAL + ">" + lVal + "</" + ELEM_LONGVAL + ">");
-		fprintf(m_fileHandle, "%s%s%s%d%s%s%s", "<", ELEM_LONGVAL.c_str(), ">", lVal, "</", ELEM_LONGVAL.c_str(), ">\n");
-        //printToFile("<" + ELEM_DOUBLEVAL + ">" + dVal + "</" + ELEM_DOUBLEVAL + ">");
-		fprintf(m_fileHandle, "%s%s%s%f%s%s%s", "<", ELEM_DOUBLEVAL.c_str(), ">", dVal, "</", ELEM_DOUBLEVAL.c_str(), ">\n");
-        printToFile("</" + ELEM_STATISTIC + ">");
+		sprintf(tmp, "%d", level);
+        printToFile(STATISTIC_HDR + tmp + "\" " + ATTR_DESC + "=\"" + escapestring(msg) + "\">");
+		
+		sprintf(tmp, "%d", lVal);
+		printToFile("<" + ELEM_LONGVAL + ">" + tmp + "</" + ELEM_LONGVAL + ">");
+		
+		sprintf(tmp, "%d", dVal);
+        printToFile("<" + ELEM_DOUBLEVAL + ">" + tmp + "</" + ELEM_DOUBLEVAL + ">");
+        
+		printToFile("</" + ELEM_STATISTIC + ">");
 		
     }
 }
@@ -273,7 +290,7 @@ XMLFileReporter::logStatistic (int level, long lVal, double dVal, const string& 
 
 
 void 
-XMLFileReporter::logArbitraryMessage (int level, const string& msg)
+XMLFileReporter::logArbitraryMessage (int level, const XalanDOMString& msg)
 {
 	char tmp[20];
 	sprintf(tmp, "%d", level);
@@ -287,7 +304,7 @@ XMLFileReporter::logArbitraryMessage (int level, const string& msg)
 }
 
 /*
-void logHashtable (int level, Hashtable hash, string msg)
+void logHashtable (int level, Hashtable hash, XalanDOMString msg)
 {
     if (isReady())
     {
@@ -303,7 +320,7 @@ void logHashtable (int level, Hashtable hash, string msg)
             {
                 Object key = enum.nextElement();
                 // Ensure we'll have clean output by pre-fetching value before outputting anything
-                string value = hash.get(key).tostring();
+                XalanDOMString value = hash.get(key).tostring();
                 printToFile(HASHITEM_HDR + key.tostring() + "\">");
                 printToFile(value);
                 printToFile("</" + ELEM_HASHITEM + ">");
@@ -321,7 +338,7 @@ void logHashtable (int level, Hashtable hash, string msg)
 
 
 void 
-XMLFileReporter::logCheckPass(const string& comment)
+XMLFileReporter::logCheckPass(const XalanDOMString& comment)
 {
     if (isReady())
     {
@@ -332,7 +349,7 @@ XMLFileReporter::logCheckPass(const string& comment)
 
 
 void 
-XMLFileReporter::logCheckAmbiguous(const string& comment)
+XMLFileReporter::logCheckAmbiguous(const XalanDOMString& comment)
 {
     if (isReady())
     {
@@ -343,7 +360,7 @@ XMLFileReporter::logCheckAmbiguous(const string& comment)
 
 
 void 
-XMLFileReporter::logCheckFail(const string& comment)
+XMLFileReporter::logCheckFail(const XalanDOMString& comment)
 {
     if (isReady())
     {
@@ -354,7 +371,7 @@ XMLFileReporter::logCheckFail(const string& comment)
 
 
 void 
-XMLFileReporter::logCheckErr(const string& comment)
+XMLFileReporter::logCheckErr(const XalanDOMString& comment)
 {
     if (isReady())
     {
@@ -363,32 +380,55 @@ XMLFileReporter::logCheckErr(const string& comment)
 }
 
 
-
-string 
-XMLFileReporter::escapestring(const string&  s)
+static const XalanDOMChar	theLessThanString[] =
 {
-    string sb;
-    const int length = s.length();
+	XalanUnicode::charAmpersand,
+	XalanUnicode::charLetter_l,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charSemicolon,
+	0
+};
 
-    for (int i = 0; i < length; i++)
+
+static const XalanDOMChar	theGreaterThanString[] =
+{
+	XalanUnicode::charAmpersand,
+	XalanUnicode::charLetter_g,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charSemicolon,
+	0
+};
+
+
+
+XalanDOMString
+XMLFileReporter::escapestring(const XalanDOMString&  s)
+{
+    XalanDOMString		sb;
+
+    const unsigned int	length = s.length();
+
+    for (unsigned int i = 0; i < length; i++)
     {
-        char ch = s.at(i);
-        if ('<' == ch)
+        const XalanDOMChar	ch = charAt(s, i);
+
+        if (XalanUnicode::charLessThanSign == ch)
         {
-            sb.append("&lt;");
+			append(sb, theLessThanString);
         }
-        else if ('>' == ch)
+        else if (XalanUnicode::charGreaterThanSign == ch)
         {
-            sb.append("&gt;");
+			append(sb, theGreaterThanString);
         }
         // Note: Skipping escaping of UTF-16 surrogates and & ampersands, since 
         //  I don't think we'll be outputting them or they won't affect our output
         else
         {
-            sb += ch;
+            append(sb, ch);
         }
     }
-    return sb;
+
+	return sb;
 }
 
 
@@ -399,13 +439,17 @@ XMLFileReporter::startResultsFile()
     if (isReady())
     {
         // Write out XML header and root test result element
-        printToFile("<?xml version=\"1.0\"?>");
+        printToFile(XalanDOMString("<?xml version=\"1.0\"?>"));
+
         // Note: this tag is closed in our .close() method, which the caller had better call!
         printToFile("<" + ELEM_RESULTSFILE + " " + ATTR_FILENAME + "=\"" + m_fileName + "\">");
+
         return true;
     }
     else
+	{
         return false;
+	}
 }
 
 
@@ -424,11 +468,11 @@ XMLFileReporter::closeResultsFile()
 
 
 bool 
-XMLFileReporter::printToFile(const string& output) 
+XMLFileReporter::printToFile(const XalanDOMString&	output) 
 {
     if (isReady())
     {
-        fprintf(m_fileHandle, output.c_str());
+        fprintf(m_fileHandle, &output.transcode().front());
 		fprintf(m_fileHandle, "\n");
         return true;
     }
@@ -438,17 +482,16 @@ XMLFileReporter::printToFile(const string& output)
 
 
 
-string 
+XalanDOMString 
 XMLFileReporter::getDateTimeString() 
 {
 	struct tm *tmNow;
 	time_t time_tNow;
-	string dateTimeString;
 
 	time(&time_tNow);     
-	tmNow = localtime(&time_tNow);  							
-	dateTimeString = asctime(tmNow); 
-	dateTimeString.replace(dateTimeString.length()-1, 1, "");
+	tmNow = localtime(&time_tNow);
+	
+	const char* const	theTime = asctime(tmNow);
 
-	return dateTimeString;       
+	return XalanDOMString(theTime, strlen(theTime) - 1);
 }
