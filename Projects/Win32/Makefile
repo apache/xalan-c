@@ -52,12 +52,7 @@ INSTALL_MODE=Release
 BUILD_DEBUG=build_debug
 !ENDIF
 
-!IF "$(PROJECT_NAME)"=="xalan-c"
 MSGLIB_PREFIX=XalanMessages
-!ELSE
-MSGLIB_PREFIX=xslt4cMessages
-!ENDIF
-
 
 !IF "$(PROJECT_NAME)"!="xalan-c" 
 ICUTARGET=icu
@@ -216,5 +211,5 @@ clean:
 
 	
 build_debug:
-	$(MAKE) XALANCROOT=$(XALANCROOT) prefix=$(prefix) INSTALL_MODE=Debug PACKAGE_NAME=$(PACKAGE_NAME) libs
+	$(MAKE) XALANCROOT=$(XALANCROOT) prefix=$(prefix) INSTALL_MODE=Debug PACKAGE_NAME=$(PACKAGE_NAME) libs COPY="$(COPY)"
 
