@@ -76,10 +76,6 @@
 
 
 
-#include <xercesc/sax/SAXException.hpp>
-
-
-
 #include <XalanDOM/XalanDocumentFragment.hpp>
 
 

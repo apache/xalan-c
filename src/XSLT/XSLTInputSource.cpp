@@ -66,10 +66,6 @@
 
 
 
-#include <xercesc/framework/URLInputSource.hpp>
-
-
-
 #include <PlatformSupport/DOMStringHelper.hpp>
 #include <PlatformSupport/StdBinInputStream.hpp>
 #include <PlatformSupport/URISupport.hpp>

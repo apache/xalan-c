@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -71,7 +71,6 @@
 // Xerces DOM header files
 #include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/sax/ErrorHandler.hpp>
-#include <xercesc/dom/DOM_Document.hpp>
 
 
 
@@ -80,6 +79,7 @@
 
 
 
+class DOM_Document;
 class DOMParser;
 class DOMSupport;
 class EntityResolver;
