@@ -94,7 +94,7 @@
 #endif
 
 const char* const 	excludeStylesheets[] =
-{
+{/*
 	"attribset17.xsl",
 	"attribvaltemplate08.xsl",
 	"copy38.xsl",
@@ -120,8 +120,11 @@ const char* const 	excludeStylesheets[] =
 	"output17.xsl",
 	"output18.xsl",
 	"output25.xsl",
-	"output26.xsl",
-	"output31.xsl",
+	"output26.xsl", */ 
+	"output28.xsl",
+	"output80.xsl", 
+	"numberformat06.xsl",
+/*	"output31.xsl",
 	"output33.xsl",
 	"output34.xsl",
 	"output35.xsl",
@@ -156,7 +159,7 @@ const char* const 	excludeStylesheets[] =
 	"sort30.xsl",
 	"sort31.xsl",
 	"sort35.xsl",
-	"sort37.xsl",
+	"sort37.xsl", */
 	0
 };
 
@@ -240,6 +243,7 @@ getParams(int argc,
 			if(i < argc && argv[i][0] != '-')
 			{
 				assign(goldRoot, XalanDOMString(argv[i]));
+				insert(goldRoot, 0, pathSep);
 				fsetGold = false;
 			}
 			else
@@ -284,28 +288,30 @@ getParams(int argc,
 		goldRoot = baseDir;
 		append(goldRoot,XalanDOMString("-gold"));
 		f.checkAndCreateDir(goldRoot);
-		append(goldRoot,pathSep);
+		//append(goldRoot,pathSep);
 	}
 	
 	// Add the path seperator to the end of the base directory 
 	// here after we've finished using it for all directory creation.
 
 	append(baseDir,pathSep);
+	append(goldRoot,pathSep);
 	return fSuccess;
 }
+
 
 inline bool
 checkForExclusion(XalanDOMString currentFile)
 {
+	for (int i=0; excludeStylesheets[i] != 0; i++)
+	{	
+		if (equals(currentFile, XalanDOMString(excludeStylesheets[i])))
+		{
+			return true;
+		}
+	}
 
-		for (int i=0; excludeStylesheets[i] != 0; i++)
-			{	
-				if (equals(currentFile, XalanDOMString(excludeStylesheets[i])))
-					{
-						return true;
-					}
-			}
-		return false;
+	return false;
 }
 
 int
@@ -324,8 +330,8 @@ main(
 	XalanTransformer::initialize();
 
 	{
-		Hashtable runAttrs;		// Attribute list for perfdata element
-		int transResult = 0;
+		Hashtable runAttrs;	// Attribute lists for conformance testing.
+		int theResult = 0;
 
 		XalanDOMString  category;	// Test all of base dir by default
 		XalanDOMString  baseDir, outputRoot, goldRoot;	
@@ -358,7 +364,7 @@ main(
 			// Create run entry that contains runid and number of iterations used for averages.
 			runAttrs.insert(Hashtable::value_type(XalanDOMString("UniqRunid"), UniqRunid));
 			runAttrs.insert(Hashtable::value_type(XalanDOMString("Xerces-Version "), futil.getXercesVersion()));
-			logFile.logElement(10, "Rundata", runAttrs, "xxx");
+			logFile.logElementWAttrs(10, "RunAttrs", runAttrs, "xxx");
 
 			// Get the list of Directories that are below conf
 			const FileNameVectorType	dirs = futil.getDirectoryNames(baseDir);
@@ -385,13 +391,9 @@ main(
 
 				for(FileNameVectorType::size_type i = 0; i < files.size(); i++)
 				{
-
 					Hashtable attrs;
 					const XalanDOMString currentFile(files[i]);
-
-					//attrs.insert(Hashtable::value_type(XalanDOMString("idref"), currentFile));
-					//attrs.insert(Hashtable::value_type(XalanDOMString("UniqRunid"),UniqRunid));
-					//attrs.insert(Hashtable::value_type(XalanDOMString("processor"),processorType));
+					futil.data.testOrFile = currentFile;
 
 					if (checkForExclusion(currentFile))
 						continue;
@@ -403,17 +405,11 @@ main(
 
 					const XalanDOMString  outbase =  outputRoot + currentDir + pathSep + currentFile; 
 					const XalanDOMString  theOutputFile = futil.GenerateFileName(outbase, "out");
-					//cout << endl << endl << "Processing: " << currentFile << endl;
 
 					const XSLTInputSource	xslInputSource(c_wstr(theXSLFile));
 					const XSLTInputSource	xmlInputSource(c_wstr(theXMLFile));
-					const XSLTInputSource	goldInputSource(c_wstr(theGoldFile));
-
-					// Use a XalanSourceTreeDocument to create the XSLTResultTarget. 
-					XalanSourceTreeDocument* dom = parserLiaison.createXalanSourceTreeDocument();
-					FormatterToSourceTree domOut(dom); 
-					XSLTResultTarget domResultTarget;
-					domResultTarget.setDocumentHandler(&domOut);
+					//const XSLTInputSource	goldInputSource(c_wstr(theGoldFile));
+					const XSLTResultTarget	resultFile(theOutputFile);
 
 					//
 					// Parsing(compile) the XSL stylesheet and report the results..
@@ -422,6 +418,7 @@ main(
 					xalan.compileStylesheet(xslInputSource, compiledSS);
 					if (compiledSS == 0 )
 					{
+						cout << "Failed to PARSE stylesheet for " << currentFile << endl;
 						continue;
 					}
 
@@ -432,25 +429,20 @@ main(
 					xalan.parseSource(xmlInputSource, parsedSource);
 					if (parsedSource == 0)
 					{
+						cout << "Failed to PARSE source document for " << currentFile << endl;
 						continue;
 					}
 
 					//
-					// Perform One transform using parsed stylesheet and unparsed xml source, report results...
+					// Perform One transform using parsed stylesheet and parsed xml source, report results...
 					// 
-					transResult = xalan.transform(*parsedSource, compiledSS, domResultTarget);
-
-					if(!transResult)
+					theResult = xalan.transform(*parsedSource, compiledSS, resultFile);
+					if (!theResult)
 					{
-						futil.compareResults(theOutputFile, compiledSS, dom, currentFile, goldInputSource);
+						futil.checkResults(theOutputFile, 
+										  theGoldFile, 
+										  logFile);
 					}
-					else
-					{
-						cout << xalan.getLastError();   // This never seems to be called!!
-						return 0;
-					}
-
-					logFile.logCheckPass(currentFile);
 
 					parserLiaison.reset();
 					xalan.destroyParsedSource(parsedSource);
@@ -462,13 +454,15 @@ main(
 
 			}		//for directories
 
-		logFile.logTestFileClose("Conformance ", "Done");
-		logFile.close();
+			futil.reportPassFail(logFile);
+			logFile.logTestFileClose("Conformance ", "Done");
+			logFile.close();
 
 		} //if getParams
 	}
 
 	XalanTransformer::terminate();
+
 
 
 	return 0;

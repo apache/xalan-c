@@ -223,6 +223,7 @@ void testCase1(XalanTransformer &xalan, const XalanDOMString &xml,
 
 	const XalanDOMString	theOutputFile = futil.GenerateFileName(outBase, "out1");
 	const XSLTResultTarget	theResultTarget(theOutputFile);
+	futil.data.testOrFile = xsl;
 
 	// This code excersized the stated methods of XSLTInputSource
 	const XSLTInputSource	xmlInputSource(c_wstr(xml));
@@ -231,10 +232,17 @@ void testCase1(XalanTransformer &xalan, const XalanDOMString &xml,
 	// Do the transform and report the results.
 	int	theResult = xalan.transform(xmlInputSource, xslInputSource, theResultTarget);
 	if (!theResult)
-	{
-		const XSLTInputSource resultInputSource(c_wstr(theOutputFile));
-		const XSLTInputSource goldInputSource(c_wstr(goldInputFile));
-		futil.compareSerializedResults(resultInputSource, goldInputSource, fileName, "TestCase1"); 
+	{ 
+		if(futil.compareSerializedResults(theOutputFile, goldInputFile))
+		{
+			cout << "Passed: " << "TestCase1" << endl;
+//			logFile.logCheckPass(currentFile);
+		}
+		else
+		{
+//			logFile.logCheckFail(currentFile);
+		}
+
 	}
 
 }
@@ -250,19 +258,27 @@ void testCase2(XalanTransformer &xalan, const XalanDOMString outBase,
 	const XalanDOMString	theOutputFile = futil.GenerateFileName(outBase, "one2");
 	const XSLTResultTarget	theResultTarget2(theOutputFile);
 
+	futil.data.testOrFile = "TestCase2";
 
 	// This code excersized the stated methods of XSLTInputSource
-	const XSLTInputSource	xslStringSource("\\xslt\\xsl-test\\conf\\capi\\capi01.xsl","public-smublic");
-	const XSLTInputSource	xmlStringSource("\\xslt\\xsl-test\\conf\\capi\\capi01.xml");
+	const XSLTInputSource	xslStringSource("\\xml-xalan\\test\\tests\\capi\\smoke\\smoke01.xsl","public-smublic");
+	const XSLTInputSource	xmlStringSource("\\xml-xalan\\test\\tests\\capi\\smoke\\smoke01.xml");
 
 
 	// Do the transform and report the results.
 	int theResult = xalan.transform(xmlStringSource, xslStringSource, theResultTarget2);
 	if (!theResult)
-	{
-		const XSLTInputSource resultInputSource(c_wstr(theOutputFile));
-		const XSLTInputSource goldInputSource(c_wstr(goldInputFile));
-		futil.compareSerializedResults(resultInputSource, goldInputSource, fileName, "TestCase2"); 
+	{ 
+		if(futil.compareSerializedResults(theOutputFile, goldInputFile))
+		{
+			cout << "Passed: " << "TestCase2" << endl;
+//			logFile.logCheckPass(currentFile);
+		}
+		else
+		{
+//			logFile.logCheckFail(currentFile);
+		}
+
 	}
 
 }
@@ -317,7 +333,7 @@ void testCase3(XalanTransformer &xalan, XMLFileReporter &logFile,
 											xObjectFactory);
 
 	// Create the XSL Input Source
-	const XSLTInputSource	xslStringSource("\\xslt\\xsl-test\\conf\\capi\\capi01.xsl","public-smublic");
+	const XSLTInputSource	xslStringSource("\\xml-xalan\\test\\tests\\capi\\smoke\\smoke01.xsl","public-smublic");
 	XalanDocument* domXSL = parserLiaison.createXalanSourceTreeDocument();
 	domXSL = parserLiaison.parseXMLStream(xslStringSource);
 
@@ -350,6 +366,35 @@ void testCase3(XalanTransformer &xalan, XMLFileReporter &logFile,
 
 	//int theResult = xalan.transform(xmlXalanNode, xslXalanNode, theResultTarget3);
 	reportResult("testCase3", theResult, logFile, xalan);
+
+}
+
+// TestCase4 will use the following API.  Default constructor of XSLTInputSource will take a string.
+//		- XSLTInputSource(const char*)
+//		- XSLTInputSource(const char*)
+void testCase4(XalanTransformer &xalan)
+{
+	// This code excersized the stated methods of XSLTInputSource
+
+	// Do the transform and report the results.
+	int theResult = xalan.transform("\\xml-xalan\\test\\tests\\capi\\smoke\\smoke01.xml", 
+									"\\xml-xalan\\test\\tests\\capi\\smoke\\smoke01.xsl",
+									"\\xml-xalan\\test\\tests\\ISOURCE-results\\smoke\\testCase4.out");
+	if (!theResult)
+	{
+		const XalanDOMString result("\\xml-xalan\\test\\tests\\ISOURCE-results\\smoke\\testCase4.out");
+		const XalanDOMString gold("\\xml-xalan\\test\\tests\\capi-gold\\smoke\\capi01.out");
+		if(futil.compareSerializedResults(result, gold))
+		{
+			cout << "Passed: " << "TestCase4" << endl;
+//			logFile.logCheckPass(currentFile);
+		}
+		else
+		{
+//			logFile.logCheckFail(currentFile);
+		}
+		
+	}
 
 }
 
@@ -413,7 +458,8 @@ main(
 					// Output file name to result log and console.
 					//logFile.logTestCaseInit(files[i]);
 					fileName = files[i];
-					cout << fileName << endl;
+					futil.data.testOrFile = fileName;
+					//cout << fileName << endl;
 
 					// Set up the input/output files.
 					const XalanDOMString  theXSLFile= baseDir + xDir + pathSep + fileName;
@@ -434,6 +480,8 @@ main(
 					testCase2(transformEngine, theOutput, theGoldFile, fileName);
 
 					//testCase3(transformEngine, logFile, theXMLFile, theXSLFile, theOutput);
+
+					testCase4(transformEngine);
 				}
 				
 			}
