@@ -75,7 +75,6 @@ VariablesStack::VariablesStack() :
 	m_stack(),
 	m_globalStackFrameIndex(-1),
 	m_globalStackFrameMarked(false),
-	m_forceGlobalOnlySearch(false),
 	m_currentStackFrameIndex(0)
 {
 	m_stack.reserve(eDefaultStackSize);
@@ -358,31 +357,6 @@ VariablesStack::markGlobalStackFrame()
 
 
 
-class SetAndRestoreForceGlobalSearch
-{
-public:
-
-	SetAndRestoreForceGlobalSearch(VariablesStack&	variablesStack) :
-			m_variablesStack(variablesStack),
-			m_savedForceSearch(variablesStack.m_forceGlobalOnlySearch)
-		{
-			variablesStack.m_forceGlobalOnlySearch = true;
-		}
-
-	~SetAndRestoreForceGlobalSearch()
-		{
-			m_variablesStack.m_forceGlobalOnlySearch = m_savedForceSearch;
-		}
-
-private:
-
-	VariablesStack&		m_variablesStack;
-
-	const bool			m_savedForceSearch;
-};
-
-
-
 const XObjectPtr
 VariablesStack::findXObject(
 			const QName&					name,
@@ -425,7 +399,10 @@ VariablesStack::findXObject(
 				XalanNode* const	doc = executionContext.getRootDocument();
 				assert(doc != 0);
 
-				SetAndRestoreForceGlobalSearch	theGuard(*this);
+				// We need to set up a stack frame for the variable's execution...
+				typedef StylesheetExecutionContext::PushAndPopContextMarker	PushAndPopContextMarker;
+
+				const PushAndPopContextMarker	theContextMarkerPushPop(executionContext);
 
 				theNewValue = var->getValue(executionContext, doc);
 				assert(theNewValue.null() == false);
@@ -449,49 +426,46 @@ VariablesStack::findEntry(
 {
 	StackEntry*		theResult = 0;
 
-	if (m_forceGlobalOnlySearch == false)
+	const unsigned int	nElems = getCurrentStackFrameIndex();
+
+	// There is guaranteed to be a context marker at
+	// the bottom of the stack, so i should stop at
+	// 1.
+	for(unsigned int i = nElems - 1; i > 0; --i)
 	{
-		const unsigned int	nElems = getCurrentStackFrameIndex();
+		StackEntry&					theEntry = m_stack[i];
 
-		// There is guaranteed to be a context marker at
-		// the bottom of the stack, so i should stop at
-		// 1.
-		for(unsigned int i = nElems - 1; i > 0; --i)
+		const StackEntry::eType		theType = theEntry.getType();
+
+		if(theType == StackEntry::eVariable ||
+		   theType == StackEntry::eActiveParam)
 		{
-			StackEntry&					theEntry = m_stack[i];
+			assert(theEntry.getName() != 0);
 
-			const StackEntry::eType		theType = theEntry.getType();
-
-			if(theType == StackEntry::eVariable ||
-			   theType == StackEntry::eActiveParam)
+			if(theEntry.getName()->equals(qname))
 			{
-				assert(theEntry.getName() != 0);
+				theResult = &theEntry;
 
+				break;
+			}
+		}
+		else if (theType == StackEntry::eParam)
+		{
+			if (fIsParam == true)
+			{
 				if(theEntry.getName()->equals(qname))
 				{
+					theEntry.activate();
+
 					theResult = &theEntry;
 
 					break;
 				}
 			}
-			else if (theType == StackEntry::eParam)
-			{
-				if (fIsParam == true)
-				{
-					if(theEntry.getName()->equals(qname))
-					{
-						theEntry.activate();
-
-						theResult = &theEntry;
-
-						break;
-					}
-				}
-			}
-			else if(theType == StackEntry::eContextMarker)
-			{
-				break;
-			}
+		}
+		else if(theType == StackEntry::eContextMarker)
+		{
+			break;
 		}
 	}
 

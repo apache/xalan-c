@@ -558,8 +558,6 @@ private:
 
 	bool					m_globalStackFrameMarked;
 
-	bool					m_forceGlobalOnlySearch;
-
 	/**
 	 * This is the top of the stack frame from where a search 
 	 * for a variable or param should take place.  It may not 
