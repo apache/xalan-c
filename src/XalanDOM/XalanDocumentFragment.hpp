@@ -176,6 +176,15 @@ public:
 	virtual void
 	setPrefix(const XalanDOMString&		prefix) = 0;
 
+	virtual bool
+	isIndexed() const = 0;
+
+	virtual unsigned long
+	getIndex() const = 0;
+
+	virtual XalanDOMString
+	getXSLTData() const = 0;
+
 protected:
 
 	XalanDocumentFragment(const XalanDocumentFragment&	theSource);

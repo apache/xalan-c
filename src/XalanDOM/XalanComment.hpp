@@ -414,6 +414,32 @@ public:
 	virtual void
 	setPrefix(const XalanDOMString&	prefix) = 0;
 
+	/**
+	 * Determine if the document is node-order indexed.
+	 *
+	 * @return true if the document is indexed, otherwise false.
+	 */
+	virtual bool
+	isIndexed() const = 0;
+
+	/**
+	 * Get the node's index.  Valid only if the owner document
+	 * reports that the document is node-order indexed.
+	 *
+	 * @return The index value, or 0 if the node is not indexed.
+	 */
+	virtual unsigned long
+	getIndex() const = 0;
+
+	/**
+	 * Returns the character data of the node that implements this interface,
+	 * according to the XSLT specification.
+	 *
+	 * @return a string containing the data.
+	 */
+	virtual XalanDOMString
+	getXSLTData() const = 0;
+
 	//@}
 
 	// These interfaces are inherited from XalanCharacterData...
