@@ -94,7 +94,7 @@ public:
 	~FormatterStringLengthCounter();
 
 
-	unsigned long
+	size_type
 	getCount() const
 	{
 		return m_count;
