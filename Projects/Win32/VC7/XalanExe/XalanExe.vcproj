@@ -26,7 +26,7 @@
 				ImproveFloatingPointConsistency="TRUE"
 				FavorSizeOrSpeed="1"
 				OmitFramePointers="TRUE"
-				AdditionalIncludeDirectories="..\..\..\..\..\..\xml-xerces\c\src,..\..\..\..\src\,..\..\..\..\Build\Win32\VC7\Release\Nls\Include"
+				AdditionalIncludeDirectories="$(XERCESCROOT)\include;$(XERCESCROOT)\src;..\..\..\..\..\..\xml-xerces\c\src,..\..\..\..\src\,..\..\..\..\Build\Win32\VC7\Release\Nls\Include"
 				PreprocessorDefinitions="NDEBUG,_USRDLL,WIN32,_WINDOWS,_CONSOLE"
 				StringPooling="TRUE"
 				RuntimeLibrary="2"
@@ -49,7 +49,7 @@
 				OutputFile="..\..\..\..\Build\Win32\VC7\Release/Xalan.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
-				AdditionalLibraryDirectories="..\..\..\..\..\..\xml-xerces\c\Build\Win32\VC7\Release"
+				AdditionalLibraryDirectories="$(XERCESCROOT)\Build\Win32\VC7\Release;$(XERCESCROOT)\lib;..\..\..\..\..\..\xml-xerces\c\Build\Win32\VC7\Release"
 				IgnoreDefaultLibraryNames="libc"
 				StackReserveSize="3096576"/>
 			<Tool
@@ -81,7 +81,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\..\..\..\..\..\xml-xerces\c\src,..\..\..\..\src\,..\..\..\..\Build\Win32\VC7\Debug\Nls\Include"
+				AdditionalIncludeDirectories="$(XERCESCROOT)\include;$(XERCESCROOT)\src;..\..\..\..\..\..\xml-xerces\c\src,..\..\..\..\src\,..\..\..\..\Build\Win32\VC7\Debug\Nls\Include"
 				PreprocessorDefinitions="_DEBUG,WIN32,_WINDOWS,_CONSOLE"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -104,7 +104,7 @@
 				OutputFile="..\..\..\..\Build\Win32\VC7\Debug/Xalan.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="TRUE"
-				AdditionalLibraryDirectories="..\..\..\..\..\..\xml-xerces\c\Build\Win32\VC7\Debug\"
+				AdditionalLibraryDirectories="$(XERCESCROOT)\Build\Win32\VC7\Debug;$(XERCESCROOT)\lib;..\..\..\..\..\..\xml-xerces\c\Build\Win32\VC7\Debug\"
 				IgnoreDefaultLibraryNames="libc"
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile=".\..\..\..\..\Build\Win32\VC7\Debug/Xalan.pdb"
@@ -138,7 +138,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				InlineFunctionExpansion="2"
-				AdditionalIncludeDirectories="..\..\..\..\..\..\xml-xerces\c\src,..\..\..\..\src\,..\..\..\..\Build\Win32\VC7\Release.symbols\Nls\Include"
+				AdditionalIncludeDirectories="$(XERCESCROOT)\include;$(XERCESCROOT)\src;..\..\..\..\..\..\xml-xerces\c\src,..\..\..\..\src\,..\..\..\..\Build\Win32\VC7\Release.symbols\Nls\Include"
 				PreprocessorDefinitions="NDEBUG,_USRDLL,XALAN_XERCES,WIN32,_WINDOWS,_CONSOLE"
 				StringPooling="TRUE"
 				RuntimeLibrary="2"
@@ -161,7 +161,7 @@
 				OutputFile="..\..\..\..\Build\Win32\VC7\Release.symbols/Xalan.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
-				AdditionalLibraryDirectories="..\..\..\..\..\..\xml-xerces\c\Build\Win32\VC7\Release"
+				AdditionalLibraryDirectories="$(XERCESCROOT)\Build\Win32\VC7\Release;$(XERCESCROOT)\lib;..\..\..\..\..\..\xml-xerces\c\Build\Win32\VC7\Release"
 				IgnoreDefaultLibraryNames="libc"
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile=".\..\..\..\..\Build\Win32\VC7\Release.symbols/Xalan.pdb"

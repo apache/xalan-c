@@ -21,7 +21,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				InlineFunctionExpansion="2"
-				AdditionalIncludeDirectories="..\..\..\..\xml-xerces\c\src,..\..\src\,.."
+				AdditionalIncludeDirectories="..\..\..\..\xml-xerces\c\src,..\..\src\,..;$(XERCESCROOT)\include;$(XERCESCROOT)\src"
 				PreprocessorDefinitions="WIN32,NDEBUG,_CONSOLE"
 				StringPooling="TRUE"
 				RuntimeLibrary="2"
@@ -43,7 +43,7 @@
 				OutputFile=".\..\..\Build\Win32\VC7\Release/extensions.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
-				AdditionalLibraryDirectories="..\..\..\..\xml-xerces\c\Build\Win32\VC7\Release"
+				AdditionalLibraryDirectories="..\..\..\..\xml-xerces\c\Build\Win32\VC7\Release;$(XERCESCROOT)\Build\Win32\VC7\Release;$(XERCESCROOT)\lib"
 				SubSystem="1"
 				StackReserveSize="2048000"/>
 			<Tool
@@ -75,7 +75,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\..\..\..\xml-xerces\c\src,..\..\src\,.."
+				AdditionalIncludeDirectories="..\..\..\..\xml-xerces\c\src,..\..\src\,..;$(XERCESCROOT)\include;$(XERCESCROOT)\src"
 				PreprocessorDefinitions="_WINDOWS,_CONSOLE,WIN32,_DEBUG"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="5"
@@ -97,7 +97,7 @@
 				OutputFile=".\..\..\Build\Win32\VC7\debug/extensions.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="TRUE"
-				AdditionalLibraryDirectories="..\..\..\..\xml-xerces\c\Build\Win32\VC7\Debug"
+				AdditionalLibraryDirectories="..\..\..\..\xml-xerces\c\Build\Win32\VC7\Debug;$(XERCESCROOT)\Build\Win32\VC7\Debug;$(XERCESCROOT)\lib"
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile=".\..\..\Build\Win32\VC7\debug/extensions.pdb"
 				SubSystem="1"
@@ -131,7 +131,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				InlineFunctionExpansion="2"
-				AdditionalIncludeDirectories="..\..\..\..\xml-xerces\c\src,..\..\src\,.."
+				AdditionalIncludeDirectories="..\..\..\..\xml-xerces\c\src,..\..\src\,..;$(XERCESCROOT)\include;$(XERCESCROOT)\src"
 				PreprocessorDefinitions="WIN32,NDEBUG,_CONSOLE"
 				StringPooling="TRUE"
 				RuntimeLibrary="2"
@@ -154,7 +154,7 @@
 				OutputFile=".\..\..\Build\Win32\VC7\Release.symbols/extensions.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
-				AdditionalLibraryDirectories="..\..\..\..\xml-xerces\c\Build\Win32\VC7\Release"
+				AdditionalLibraryDirectories="..\..\..\..\xml-xerces\c\Build\Win32\VC7\Release;$(XERCESCROOT)\Build\Win32\VC7\Release;$(XERCESCROOT)\lib"
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile=".\..\..\Build\Win32\VC7\Release.symbols/extensions.pdb"
 				SubSystem="1"

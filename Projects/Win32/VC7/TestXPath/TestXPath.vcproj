@@ -21,7 +21,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				InlineFunctionExpansion="2"
-				AdditionalIncludeDirectories="..\..\..\..\..\..\xml-xerces\c\src,..\..\..\..\src\"
+				AdditionalIncludeDirectories="$(XERCESCROOT)\include;$(XERCESCROOT)\src;..\..\..\..\..\..\xml-xerces\c\src,..\..\..\..\src\"
 				PreprocessorDefinitions="NDEBUG,WIN32,_CONSOLE"
 				StringPooling="TRUE"
 				RuntimeLibrary="2"
@@ -43,7 +43,7 @@
 				OutputFile=".\..\..\..\..\Build\Win32\VC7\Release/TestXPath.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
-				AdditionalLibraryDirectories="..\..\..\..\..\..\xml-xerces\c\Build\Win32\VC7\Release"
+				AdditionalLibraryDirectories="$(XERCESCROOT)\Build\Win32\VC7\Release;$(XERCESCROOT)\lib;..\..\..\..\..\..\xml-xerces\c\Build\Win32\VC7\Release"
 				SubSystem="1"/>
 			<Tool
 				Name="VCMIDLTool"
@@ -74,7 +74,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				InlineFunctionExpansion="2"
-				AdditionalIncludeDirectories="..\..\..\..\..\..\xml-xerces\c\src,..\..\..\..\src\"
+				AdditionalIncludeDirectories="$(XERCESCROOT)\include;$(XERCESCROOT)\src;..\..\..\..\..\..\xml-xerces\c\src,..\..\..\..\src\"
 				PreprocessorDefinitions="NDEBUG,WIN32,_CONSOLE,XALAN_XERCES"
 				StringPooling="TRUE"
 				RuntimeLibrary="2"
@@ -97,7 +97,7 @@
 				OutputFile=".\..\..\..\..\Build\Win32\VC7\Release.symbols/TestXPath.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
-				AdditionalLibraryDirectories="..\..\..\..\..\..\xml-xerces\c\Build\Win32\VC7\Release"
+				AdditionalLibraryDirectories="$(XERCESCROOT)\Build\Win32\VC7\Release;$(XERCESCROOT)\lib;..\..\..\..\..\..\xml-xerces\c\Build\Win32\VC7\Release"
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile=".\..\..\..\..\Build\Win32\VC7\Release.symbols/TestXPath.pdb"
 				SubSystem="1"/>
@@ -130,7 +130,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\..\..\..\..\..\xml-xerces\c\src,..\..\..\..\src\"
+				AdditionalIncludeDirectories="$(XERCESCROOT)\include;$(XERCESCROOT)\src;..\..\..\..\..\..\xml-xerces\c\src,..\..\..\..\src\"
 				PreprocessorDefinitions="_CONSOLE,WIN32,_DEBUG"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -153,7 +153,7 @@
 				OutputFile=".\..\..\..\..\Build\Win32\VC7\Debug/TestXPath.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="TRUE"
-				AdditionalLibraryDirectories="..\..\..\..\..\..\xml-xerces\c\Build\Win32\VC7\Debug"
+				AdditionalLibraryDirectories="$(XERCESCROOT)\Build\Win32\VC7\Debug;$(XERCESCROOT)\lib;..\..\..\..\..\..\xml-xerces\c\Build\Win32\VC7\Debug"
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile=".\..\..\..\..\Build\Win32\VC7\Debug/TestXPath.pdb"
 				SubSystem="1"/>

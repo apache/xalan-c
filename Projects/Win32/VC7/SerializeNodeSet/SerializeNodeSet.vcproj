@@ -21,7 +21,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\..\..\..\src"
+				AdditionalIncludeDirectories="$(XERCESCROOT)\include;$(XERCESCROOT)\src;..\..\..\..\src"
 				PreprocessorDefinitions="WIN32,_DEBUG,_CONSOLE"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -43,6 +43,7 @@
 				AdditionalDependencies="xerces-c_2D.lib"
 				OutputFile=".\..\..\..\..\Build\Win32\VC7\Debug/SerializeNodeSet.exe"
 				LinkIncremental="2"
+				AdditionalLibraryDirectories="$(XERCESCROOT)\Build\Win32\VC7\Debug;$(XERCESCROOT)\lib"
 				SuppressStartupBanner="TRUE"
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile=".\..\..\..\..\Build\Win32\VC7\Debug/SerializeNodeSet.pdb"
@@ -76,7 +77,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				InlineFunctionExpansion="2"
-				AdditionalIncludeDirectories="..\..\..\..\src"
+				AdditionalIncludeDirectories="$(XERCESCROOT)\include;$(XERCESCROOT)\src;..\..\..\..\src"
 				PreprocessorDefinitions="WIN32,NDEBUG,_CONSOLE"
 				StringPooling="TRUE"
 				RuntimeLibrary="2"
@@ -97,6 +98,7 @@
 				AdditionalDependencies="xerces-c_2.lib"
 				OutputFile=".\..\..\..\..\Build\Win32\VC7\Release/SerializeNodeSet.exe"
 				LinkIncremental="1"
+				AdditionalLibraryDirectories="$(XERCESCROOT)\Build\Win32\VC7\Release;$(XERCESCROOT)\lib"
 				SuppressStartupBanner="TRUE"
 				ProgramDatabaseFile=".\..\..\..\..\Build\Win32\VC7\Release/SerializeNodeSet.pdb"
 				SubSystem="1"/>

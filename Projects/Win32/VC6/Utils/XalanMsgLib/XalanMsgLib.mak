@@ -44,7 +44,7 @@ XERCESLIB=/libpath:"$(XERCESCROOT)\lib"
 
 !IF  "$(CFG)" == "XalanMsgLib - Win32 Release.symbols"
 
-BUILDRESDIR=.\..\..\..\..\..\Build\Win32\VC6\Release.symbols
+BUILDRESDIR=.\..\..\..\..\..\Build\Win32\VC7\Release.symbols
 OUTDIR=$(BUILDRESDIR)\Util\XalanMsgLib
 INTDIR=$(BUILDRESDIR)\Util\XalanMsgLib
 
@@ -52,14 +52,14 @@ ALL : "$(BUILDRESDIR)\$(DLLNAME).dll"
 
 
 CLEAN :
-	-@erase "$(INTDIR)\vc60.idb"
+	-@erase "$(INTDIR)\VC70.idb"
 	-@erase "$(INTDIR)\XalanMsgLib.obj"
 	-@erase "$(BUILDRESDIR)\$(DLLNAME).dll"
 	-@erase "$(BUILDRESDIR)\$(DLLNAME).exp"
 	-@erase "$(BUILDRESDIR)\$(DLLNAME).lib"
 	-@erase "$(BUILDRESDIR)\$(DLLNAME).pdb"	
-	-@erase "$(INTDIR)\vc60.pdb"
-	-@erase "$(INTDIR)\vc60.idb"	
+	-@erase "$(INTDIR)\VC70.pdb"
+	-@erase "$(INTDIR)\VC70.idb"	
 "$(OUTDIR)" :
     if not exist "$(OUTDIR)/$(NULL)" mkdir "$(OUTDIR)"
 
@@ -80,7 +80,7 @@ LINK32_OBJS= \
 <<
 !ELSEIF  "$(CFG)" == "XalanMsgLib - Win32 Release"
 
-BUILDRESDIR=.\..\..\..\..\..\Build\Win32\VC6\Release
+BUILDRESDIR=.\..\..\..\..\..\Build\Win32\VC7\Release
 OUTDIR=.\$(BUILDRESDIR)\Util\XalanMsgLib
 INTDIR=.\$(BUILDRESDIR)\Util\XalanMsgLib
 
@@ -88,7 +88,7 @@ ALL : "$(BUILDRESDIR)\$(DLLNAME).dll"
 
 
 CLEAN :
-	-@erase "$(INTDIR)\vc60.idb"
+	-@erase "$(INTDIR)\VC70.idb"
 	-@erase "$(INTDIR)\XalanMsgLib.obj"
 	-@erase "$(BUILDRESDIR)\$(DLLNAME).dll"
 	-@erase "$(BUILDRESDIR)\$(DLLNAME).exp"
@@ -115,7 +115,7 @@ LINK32_OBJS= \
 
 !ELSEIF  "$(CFG)" == "XalanMsgLib - Win32 Debug"
 
-BUILDRESDIR=.\..\..\..\..\..\Build\Win32\VC6\Debug
+BUILDRESDIR=.\..\..\..\..\..\Build\Win32\VC7\Debug
 OUTDIR=.\$(BUILDRESDIR)\Util\XalanMsgLib
 INTDIR=.\$(BUILDRESDIR)\Util\XalanMsgLib
 # Begin Custom Macros
@@ -126,8 +126,8 @@ ALL : "$(BUILDRESDIR)\$(DLLNAME).dll"
 
 
 CLEAN :
-	-@erase "$(INTDIR)\vc60.idb"
-	-@erase "$(INTDIR)\vc60.pdb"
+	-@erase "$(INTDIR)\VC70.idb"
+	-@erase "$(INTDIR)\VC70.pdb"
 	-@erase "$(INTDIR)\XalanMsgLib.obj"
 	-@erase "$(INTDIR)\XalanMsgLib.sbr"
 	-@erase "$(OUTDIR)\XalanMsgLib.bsc"
@@ -152,7 +152,7 @@ LINK32_OBJS= \
 <<
 !ELSEIF  "$(CFG)" == "XalanMsgLib - Win64 Release"
 
-BUILDRESDIR=.\..\..\..\..\..\Build\Win64\VC6\Release
+BUILDRESDIR=.\..\..\..\..\..\Build\Win64\VC7\Release
 OUTDIR=.\$(BUILDRESDIR)\Util\XalanMsgLib
 INTDIR=.\$(BUILDRESDIR)\Util\XalanMsgLib
 
@@ -160,7 +160,7 @@ ALL : "$(BUILDRESDIR)\$(DLLNAME).dll"
 
 
 CLEAN :
-	-@erase "$(INTDIR)\vc60.idb"
+	-@erase "$(INTDIR)\VC70.idb"
 	-@erase "$(INTDIR)\XalanMsgLib.obj"
 	-@erase "$(BUILDRESDIR)\$(DLLNAME).dll"
 	-@erase "$(BUILDRESDIR)\$(DLLNAME).exp"
@@ -184,7 +184,7 @@ LINK32_OBJS= \
 
 !ELSEIF  "$(CFG)" == "XalanMsgLib - Win64 Debug"
 
-BUILDRESDIR=.\..\..\..\..\..\Build\Win32\VC6\Debug
+BUILDRESDIR=.\..\..\..\..\..\Build\Win32\VC7\Debug
 OUTDIR=.\$(BUILDRESDIR)\Util\XalanMsgLib
 INTDIR=.\$(BUILDRESDIR)\Util\XalanMsgLib
 # Begin Custom Macros
@@ -195,8 +195,8 @@ ALL : "$(BUILDRESDIR)\$(DLLNAME).dll"
 
 
 CLEAN :
-	-@erase "$(INTDIR)\vc60.idb"
-	-@erase "$(INTDIR)\vc60.pdb"
+	-@erase "$(INTDIR)\VC70.idb"
+	-@erase "$(INTDIR)\VC70.pdb"
 	-@erase "$(INTDIR)\XalanMsgLib.obj"
 	-@erase "$(OUTDIR)\XalanMsgLib.exp"
 	-@erase "$(OUTDIR)\$(DLLNAME).lib"
