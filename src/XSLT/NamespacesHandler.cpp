@@ -543,6 +543,17 @@ NamespacesHandler::processExcludeResultPrefixes(const XalanDOMString&	theElement
 {
 	if (m_excludedResultPrefixes.size() > 0)
 	{
+#if defined(XALAN_NO_NAMESPACES)
+	typedef vector<NamespacesMapType::iterator> 		IteratorVectorType;
+#else
+	typedef std::vector<NamespacesMapType::iterator> 	IteratorVectorType;
+#endif
+
+		// This vector will hold all of the iterators that we need to erase...
+		IteratorVectorType	theDeadEntries;
+
+		theDeadEntries.reserve(m_excludedResultPrefixes.size());
+
 		const NamespacesMapType::iterator	theEnd =
 				m_namespaceDeclarations.end();
 
@@ -565,12 +576,17 @@ NamespacesHandler::processExcludeResultPrefixes(const XalanDOMString&	theElement
 				 m_extensionNamespaceURIs.find(theURI) != m_extensionNamespaceURIs.end()))
 			{
 				// It's excluded, so remove it...
-				i = m_namespaceDeclarations.erase(i);
+				theDeadEntries.push_back(i);
 			}
-			else
-			{
-				++i;
-			}
+
+			++i;
+		}
+
+		while(theDeadEntries.size() > 0)
+		{
+			m_namespaceDeclarations.erase(theDeadEntries.back());
+
+			theDeadEntries.pop_back();
 		}
 	}
 }
