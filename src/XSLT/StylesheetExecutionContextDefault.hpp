@@ -476,10 +476,11 @@ public:
 
 	virtual void
 	cloneToResultTree(
-			XalanNode&	node, 
-			bool		isLiteral,
-			bool		overrideStrip,
-			bool		shouldCloneAttributes);
+			XalanNode&				node,
+			XalanNode::NodeType		nodeType,
+			bool					isLiteral,
+			bool					overrideStrip,
+			bool					shouldCloneAttributes);
 
 	virtual const XObjectPtr
 	createXResultTreeFrag(

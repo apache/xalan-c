@@ -882,17 +882,20 @@ StylesheetExecutionContextDefault::flushPending()
 
 void
 StylesheetExecutionContextDefault::cloneToResultTree(
-			XalanNode&	node, 
-			bool		isLiteral,
-			bool		overrideStrip,
-			bool		shouldCloneAttributes)
+			XalanNode&				node,
+			XalanNode::NodeType		nodeType,
+			bool					isLiteral,
+			bool					overrideStrip,
+			bool					shouldCloneAttributes)
 {
 	assert(m_xsltProcessor != 0);
 
-	m_xsltProcessor->cloneToResultTree(node,
-									  isLiteral,
-									  overrideStrip,
-									  shouldCloneAttributes);
+	m_xsltProcessor->cloneToResultTree(
+			node,
+			nodeType,
+			isLiteral,
+			overrideStrip,
+			shouldCloneAttributes);
 }
 
 

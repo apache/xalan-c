@@ -833,6 +833,8 @@ ElemTemplateElement::transformChild(
 			const ElemTemplateElement*		theTemplate,
 			XalanNode*						child) const
 {
+	assert(child != 0);
+
 	const XalanNode::NodeType	nodeType = child->getNodeType();
 
 	if(0 == theTemplate)
@@ -884,24 +886,17 @@ ElemTemplateElement::transformChild(
 			{
 			case XalanNode::CDATA_SECTION_NODE:
 			case XalanNode::TEXT_NODE:
-				executionContext.cloneToResultTree(
-							*child, false, false, false);
+				executionContext.cloneToResultTree(*child, nodeType, false, false, false);
 				break;
 
 			case XalanNode::ATTRIBUTE_NODE:
 				{
-					const XalanAttr* const	attr =
-#if defined(XALAN_OLD_STYLE_CASTS)
-						(const XalanAttr*)child;
-#else
-						static_cast<const XalanAttr*>(child);
-#endif
+					const XalanDOMString&	val = child->getNodeValue();
 
-					const XalanDOMString&	val = attr->getValue();
-
-					executionContext.characters(toCharArray(val), 
-												0,
-												length(val));
+					executionContext.characters(
+						toCharArray(val), 
+						0,
+						length(val));
 				}
 				break;
 

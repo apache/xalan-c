@@ -994,16 +994,18 @@ public:
 	 * Clone an element with or without children.
 	 *
 	 * @param node                  node to clone
+	 * @param nodeType				the type of the node
 	 * @param isLiteral             true if a literal element
 	 * @param overrideStrip         false if white space stripping should be done
 	 * @param shouldCloneAttributes true if attributes should be cloned
 	 */
 	virtual void
 	cloneToResultTree(
-			XalanNode&	node, 
-			bool		isLiteral,
-			bool		overrideStrip,
-			bool		shouldCloneAttributes) = 0;
+			XalanNode&				node,
+			XalanNode::NodeType		nodeType,
+			bool					isLiteral,
+			bool					overrideStrip,
+			bool					shouldCloneAttributes) = 0;
 
 	/**
 	 * Create an XObject that represents a Result tree fragment.

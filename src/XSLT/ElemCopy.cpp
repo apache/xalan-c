@@ -116,35 +116,32 @@ ElemCopy::getElementName() const
 
 
 void
-ElemCopy::execute(StylesheetExecutionContext&		executionContext) const
+ElemCopy::execute(StylesheetExecutionContext&	executionContext) const
 {
-	XalanNode* sourceNode = executionContext.getCurrentNode();
+	XalanNode* const	sourceNode = executionContext.getCurrentNode();
 
 	assert(sourceNode != 0);
 
-	const XalanNode::NodeType	nodeType = executionContext.getCurrentNode()->getNodeType();
+	const XalanNode::NodeType	nodeType = sourceNode->getNodeType();
 
 	if(XalanNode::DOCUMENT_NODE != nodeType)
 	{
 		executionContext.cloneToResultTree(
 			*sourceNode,
+			nodeType,
 			false,
 			false,
 			false);
 
 		if(XalanNode::ELEMENT_NODE == nodeType)
 		{
-			assert(sourceNode != 0);
-
 			ElemUse::execute(executionContext);
 
 			executionContext.copyNamespaceAttributes(*sourceNode);
 
 			executeChildren(executionContext);
 
-			const XalanDOMString&	s = DOMServices::getNameOfNode(*sourceNode);
-
-			executionContext.endElement(c_wstr(s));
+			executionContext.endElement(c_wstr(sourceNode->getNodeName()));
 		}
 		else
 		{
@@ -163,8 +160,7 @@ ElemCopy::execute(StylesheetExecutionContext&		executionContext) const
 				*this));
 		}
 
-		ElemUse::execute(
-			executionContext);
+		ElemUse::execute(executionContext);
 
 		executeChildren(executionContext);
 	}  

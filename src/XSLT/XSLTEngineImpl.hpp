@@ -589,16 +589,18 @@ public:
 	 * Clone an element with or without children.
 	 *
 	 * @param node					node to clone
+	 * @param nodeType				the type of the node
 	 * @param isLiteral 			true if a literal element
 	 * @param overrideStrip 		false if white space stripping should be done
 	 * @param shouldCloneAttributes true if attributes should be cloned
 	 */
 	void
 	cloneToResultTree(
-			XalanNode& 	node, 
-			bool		isLiteral,
-			bool		overrideStrip,
-			bool		shouldCloneAttributes);
+			XalanNode& 				node,
+			XalanNode::NodeType		nodeType,
+			bool					isLiteral,
+			bool					overrideStrip,
+			bool					shouldCloneAttributes);
 
 	/**
 	 * Given a result tree fragment, walk the tree and output it to the result
@@ -1004,23 +1006,17 @@ public:
 			XPathExecutionContext&	executionContext);
 
 	/**
-	 * Copy an attribute to the created output element, executing attribute
-	 * templates as need be, and processing the 'xsl:use' attribute.
+	 * Copy an attribute to an AttributeListImpl.
 	 *
-	 * @param attr			   attribute to copy
-	 * @param contextNode	   current context node
-	 * @param stylesheetTree   associated stylesheet object
-	 * @param attrList		   attribute list added to
-	 * @param namespaceContext context for namespace
-	 * @exception XSLProcessorException 
+	 * @param attrName The name of the attribute
+	 * @param attrValue The value of the attribute
+	 * @param attrList The attribute list added to
 	 */
 	void
 	copyAttributeToTarget(
-			const XalanAttr& 		attr,
-			XalanNode* 				contextNode,
-			const Stylesheet*		stylesheetTree,
-			AttributeListImpl&		attrList, 
-			const XalanElement&		namespaceContext);
+			const XalanDOMString&	attrName,
+			const XalanDOMString&	attrValue,
+			AttributeListImpl&		attrList);
 
 	/**
 	 * Get the factory for making xpaths.
@@ -1462,17 +1458,13 @@ protected:
 
 	/**
 	 * Copy the attributes from the XSL element to the created 
-	 * output element, executing attribute templates and 
-	 * processing the xsl:use attribute as need be.
-	 * @exception XSLProcessorException thrown if the active ProblemListener and XMLParserLiaison decide 
-	 * the error condition is severe enough to halt processing.
+	 * output element.
 	 */
 	void
 	copyAttributesToAttList(
-			XalanNode* 				contextNode,
-			const Stylesheet*		stylesheetTree,
-			const XalanElement&		templateChild,
-			AttributeListImpl&		attList);
+			const Stylesheet*	stylesheetTree,
+			const XalanNode&	node,
+			AttributeListImpl&	attList);
 
 	// Factory for creating xpaths.
 	XPathFactory&			m_xpathFactory;

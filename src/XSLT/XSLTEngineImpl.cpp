@@ -61,9 +61,6 @@
 #include "XSLTEngineImpl.hpp"
 
 
-#include <memory>
-
-
 
 #include <sax/DocumentHandler.hpp>
 #include <sax/EntityResolver.hpp>
@@ -464,8 +461,6 @@ XSLTEngineImpl::processStylesheet(
 	const XSLTInputSource	input(c_wstr(xsldocURLString));
 
 	return processStylesheet(input, constructionContext);
-
-	return 0;
 }
 
 
@@ -972,7 +967,7 @@ XSLTEngineImpl::outputToResultTree(
 
 	case XObject::eTypeNodeSet:
 		{
-			XalanDOMString			s;
+//			XalanDOMString			s;
 
 			const NodeRefListBase&	nl = value.nodeset();
 
@@ -981,19 +976,23 @@ XSLTEngineImpl::outputToResultTree(
 			for(unsigned int i = 0; i < nChildren; i++)
 			{
 				XalanNode*			pos = nl.item(i);
+				assert(pos != 0);
+
 				XalanNode* const	top = pos;
 
 				while(0 != pos)
 				{
 					flushPending();
 
-					cloneToResultTree(*pos, false, false, true);
+					XalanNode::NodeType		posNodeType = pos->getNodeType();
+
+					cloneToResultTree(*pos, posNodeType, false, false, true);
 
 					XalanNode*	nextNode = pos->getFirstChild();
 
 					while(0 == nextNode)
 					{
-						if(XalanNode::ELEMENT_NODE == pos->getNodeType())
+						if(XalanNode::ELEMENT_NODE == posNodeType)
 						{
 							endElement(c_wstr(pos->getNodeName()));
 						}
@@ -1006,10 +1005,13 @@ XSLTEngineImpl::outputToResultTree(
 						if(0 == nextNode)
 						{
 							pos = pos->getParentNode();
+							assert(pos != 0);
+
+							posNodeType = pos->getNodeType();
 
 							if(top == pos)
 							{
-								if(XalanNode::ELEMENT_NODE == pos->getNodeType())
+								if(XalanNode::ELEMENT_NODE == posNodeType)
 								{
 									endElement(c_wstr(pos->getNodeName()));
 								}
@@ -1021,6 +1023,11 @@ XSLTEngineImpl::outputToResultTree(
 					}
 
 					pos = nextNode;
+
+					if (pos != 0)
+					{
+						posNodeType = pos->getNodeType();
+					}
 				}
 			}
 		}
@@ -2145,14 +2152,15 @@ XSLTEngineImpl::cdata(
 
 void
 XSLTEngineImpl::cloneToResultTree(
-			XalanNode&			node, 
-			bool				isLiteral,
-			bool				overrideStrip,
-			bool				shouldCloneAttributes)
+			XalanNode&				node,
+			XalanNode::NodeType		nodeType,
+			bool					isLiteral,
+			bool					overrideStrip,
+			bool					shouldCloneAttributes)
 {
-	const XalanNode::NodeType	theType = node.getNodeType();
+	assert(nodeType == node.getNodeType());
 
-	switch(theType)
+	switch(nodeType)
 	{
 	case XalanNode::TEXT_NODE:
 		{
@@ -2173,7 +2181,9 @@ XSLTEngineImpl::cloneToResultTree(
 				static_cast<const XalanText&>(node);
 #endif
 
-			if(stripWhiteSpace == false || tx.isIgnorableWhitespace() == false)
+			const bool	isIgnorableWhitespace = tx.isIgnorableWhitespace();
+
+			if(stripWhiteSpace == false || isIgnorableWhitespace == false)
 			{
 				assert(tx.getParentNode() == 0 ||
 					   tx.getParentNode()->getNodeType() != XalanNode::DOCUMENT_NODE);
@@ -2182,17 +2192,7 @@ XSLTEngineImpl::cloneToResultTree(
 
 				if(0 != length(data))
 				{
-					// TODO: Hack around the issue of comments next to literals.
-					// This would be, when a comment is present, the whitespace 
-					// after the comment must be added to the literal.	The 
-					// parser should do this, but XML4J doesn't seem to.
-					// <foo>some lit text
-					//	 <!-- comment -->	
-					//	 </foo>
-					// Loop through next siblings while they are comments, then, 
-					// if the node after that is a ignorable text node, append 
-					// it to the text node just added.
-					if(tx.isIgnorableWhitespace())
+					if(isIgnorableWhitespace == true)
 					{
 						ignorableWhitespace(toCharArray(data), length(data));
 					}
@@ -2206,98 +2206,54 @@ XSLTEngineImpl::cloneToResultTree(
 		break;
 
 	case XalanNode::ELEMENT_NODE:
+		startElement(c_wstr(node.getNodeName()));
+
+		if(shouldCloneAttributes == true)
 		{
-			startElement(c_wstr(DOMServices::getNameOfNode(node)));
+			copyAttributesToAttList(
+									m_stylesheetRoot,
+									node,
+									getPendingAttributesImpl());
 
-			if(shouldCloneAttributes == true)
-			{
-				copyAttributesToAttList(&node,
-										m_stylesheetRoot,
-#if defined(XALAN_OLD_STYLE_CASTS)
-										(const XalanElement&)node,
-#else
-										static_cast<const XalanElement&>(node),
-#endif
-										getPendingAttributesImpl());
-
-				copyNamespaceAttributes(node);
-			}
+			copyNamespaceAttributes(node);
 		}
 		break;
 
 	case XalanNode::CDATA_SECTION_NODE:
 		{
-			const XalanCDATASection& 	theCDATA =
-#if defined(XALAN_OLD_STYLE_CASTS)
-				(const XalanCDATASection&)node;
-#else
-				static_cast<const XalanCDATASection&>(node);
-#endif
-
-			const XalanDOMString& 	data = theCDATA.getData();
+			const XalanDOMString& 	data = node.getNodeValue();
 
 			cdata(toCharArray(data), 0, length(data));
 		}
 		break;
 
 	case XalanNode::ATTRIBUTE_NODE:
-		{
-			const XalanAttr& 	attr =
+		addResultAttribute(
+				getPendingAttributesImpl(),
 #if defined(XALAN_OLD_STYLE_CASTS)
-				(const XalanAttr&)node;
+				DOMServices::getNameOfNode((const XalanAttr&)node),
 #else
-				static_cast<const XalanAttr&>(node);
+				DOMServices::getNameOfNode(static_cast<const XalanAttr&>(node)),
 #endif
-			addResultAttribute(getPendingAttributesImpl(),
-							   DOMServices::getNameOfNode(attr),
-							   attr.getValue());
-		}
+				node.getNodeValue());
 		break;
 
 	case XalanNode::COMMENT_NODE:
-		{
-			const XalanComment&		theComment =
-#if defined(XALAN_OLD_STYLE_CASTS)
-				(const XalanComment&)node;
-#else
-				static_cast<const XalanComment&>(node);
-#endif
-
-			const XalanDOMString& 	theData = theComment.getData();
-
-			comment(c_wstr(theData));
-		}
+		comment(c_wstr(node.getNodeValue()));
 		break;
 
 	case XalanNode::DOCUMENT_FRAGMENT_NODE:
-		{
-			error("No clone of a document fragment!");
-		}
+		error("No clone of a document fragment!");
 		break;
 	
 	case XalanNode::ENTITY_REFERENCE_NODE:
-		{
-			const XalanDOMString &	theName = node.getNodeName();
-
-			entityReference(c_wstr(theName));
-		}
+		entityReference(c_wstr(node.getNodeName()));
 		break;
 
 	case XalanNode::PROCESSING_INSTRUCTION_NODE:
-		{
-			const XalanProcessingInstruction&	pi =
-#if defined(XALAN_OLD_STYLE_CASTS)
-				(const XalanProcessingInstruction&)node;
-#else
-				static_cast<const XalanProcessingInstruction&>(node);
-#endif
-
-			const XalanDOMString& 	theTarget = pi.getTarget();
-			const XalanDOMString& 	theData = pi.getData();
-
-			processingInstruction(c_wstr(theTarget),
-								  c_wstr(theData));
-		}
+		processingInstruction(
+				c_wstr(node.getNodeName()),
+				c_wstr(node.getNodeValue()));
 		break;
 
 	// Can't really do this, but we won't throw an error so that copy-of will
@@ -2329,20 +2285,24 @@ XSLTEngineImpl::outputResultTreeFragment(
 
 	for(unsigned int i = 0; i < nChildren; i++)
 	{
-		XalanNode*			pos = nl->item(i);
-		XalanNode* const	top = pos;
+		XalanNode*				pos = nl->item(i);
+		assert(pos != 0);
+
+		XalanNode::NodeType		posNodeType = pos->getNodeType();
+
+		XalanNode* const		top = pos;
 
 		while(0 != pos)
 		{
 			flushPending();
 
-			cloneToResultTree(*pos, false, false, true);
+			cloneToResultTree(*pos, posNodeType, false, false, true);
 
 			XalanNode*	nextNode = pos->getFirstChild();
 
 			while(0 == nextNode)
 			{
-				if(XalanNode::ELEMENT_NODE == pos->getNodeType())
+				if(XalanNode::ELEMENT_NODE == posNodeType)
 				{
 					endElement(c_wstr(pos->getNodeName()));
 				}
@@ -2356,23 +2316,39 @@ XSLTEngineImpl::outputResultTreeFragment(
 				{
 					pos = pos->getParentNode();
 
-					if(top == pos || 0 == pos)
+					if(0 == pos)
 					{
-						if (0 != pos)
+						nextNode = 0;
+
+						break;
+					}
+					else
+					{
+						assert(0 != pos);
+
+						posNodeType = pos->getNodeType();
+
+						if(top == pos)
 						{
-							if(XalanNode::ELEMENT_NODE == pos->getNodeType())
+							if(XalanNode::ELEMENT_NODE == posNodeType)
 							{
 								endElement(c_wstr(pos->getNodeName()));
 							}
-						}
 
-						nextNode = 0;
-						break;
+							nextNode = 0;
+
+							break;
+						}
 					}
 				}
 			}
 
 			pos = nextNode;
+
+			if (pos != 0)
+			{
+				posNodeType = pos->getNodeType();
+			}
 		}
 	}
 }
@@ -2655,12 +2631,10 @@ XSLTEngineImpl::addResultNamespace(
 void
 XSLTEngineImpl::copyNamespaceAttributes(const XalanNode&	src) 
 {
-	int type;
-
 	const XalanNode*	parent = &src;
 
 	while (parent != 0 &&
-		   (type = parent->getNodeType()) == XalanNode::ELEMENT_NODE) 
+		   parent->getNodeType() == XalanNode::ELEMENT_NODE) 
 	{
 		const XalanNamedNodeMap* const	nnm =
 				parent->getAttributes();
@@ -2775,18 +2749,12 @@ XSLTEngineImpl::returnXPath(const XPath*	xpath)
 
 
 
-void
+inline void
 XSLTEngineImpl::copyAttributeToTarget(
-			const XalanAttr&		attr,
-			XalanNode*				/* contextNode */,
-			const Stylesheet* 		/* stylesheetTree */,
-			AttributeListImpl&		attrList,
-			const XalanElement& 	/* namespaceContext */)
+			const XalanDOMString&	attrName,
+			const XalanDOMString&	attrValue,
+			AttributeListImpl&		attrList)
 {
-	const XalanDOMString& 	attrName = attr.getName();
-
-	const XalanDOMString&	attrValue = attr.getValue();
-
 	// TODO: Find out about empty attribute template expression handling.
 	if(0 != length(attrValue))
 	{
@@ -2798,16 +2766,15 @@ XSLTEngineImpl::copyAttributeToTarget(
 
 void
 XSLTEngineImpl::copyAttributesToAttList(
-			XalanNode*				contextNode,
-			const Stylesheet* 		stylesheetTree,
-			const XalanElement& 	templateChild,
-			AttributeListImpl&		attList)
+			const Stylesheet* 	stylesheetTree,
+			const XalanNode& 	node,
+			AttributeListImpl&	attList)
 {
 	assert(m_stylesheetRoot != 0);
 	assert(stylesheetTree != 0);
 
 	const XalanNamedNodeMap* const	attributes =
-		templateChild.getAttributes();
+		node.getAttributes();
 
 	if (attributes != 0)
 	{
@@ -2815,20 +2782,13 @@ XSLTEngineImpl::copyAttributesToAttList(
 
 		for(unsigned int i = 0; i < nAttributes; ++i)  
 		{	
-			const XalanAttr* const 	attr =
-#if defined(XALAN_OLD_STYLE_CASTS)
-				(const XalanAttr*)attributes->item(i);
-#else
-				static_cast<const XalanAttr*>(attributes->item(i));
-#endif
+			const XalanNode* const 	attr = attributes->item(i);
 			assert(attr != 0);
 
 			copyAttributeToTarget(
-					*attr,
-					contextNode,
-					stylesheetTree, 
-					attList,
-					templateChild);
+				attr->getNodeName(),
+				attr->getNodeValue(),
+				attList);
 		}
 	}
 }

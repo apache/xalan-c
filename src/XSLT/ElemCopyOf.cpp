@@ -143,17 +143,19 @@ ElemCopyOf::doCloneNode(
 			StylesheetExecutionContext&		executionContext,
 			XalanNode&						theNode) const
 {
-	XalanNode*			pos = &theNode;
+	XalanNode*				pos = &theNode;
+	XalanNode::NodeType		posNodeType = pos->getNodeType();
 
 	while(pos != 0)
 	{
-		if(pos->getNodeType() != XalanNode::ATTRIBUTE_NODE)
+		if(posNodeType != XalanNode::ATTRIBUTE_NODE)
 		{
 			executionContext.flushPending();
 		}
 
 		executionContext.cloneToResultTree(
 						*pos,
+						posNodeType,
 						false,
 						false,
 						true);
@@ -162,7 +164,7 @@ ElemCopyOf::doCloneNode(
 
 		while(nextNode == 0)
 		{
-			if(XalanNode::ELEMENT_NODE == pos->getNodeType())
+			if(XalanNode::ELEMENT_NODE == posNodeType)
 			{
 				executionContext.endElement(c_wstr(pos->getNodeName()));
 			}
@@ -175,10 +177,13 @@ ElemCopyOf::doCloneNode(
 			if(nextNode == 0)
 			{
 				pos = pos->getParentNode();
+				assert(pos != 0);
+
+				posNodeType = pos->getNodeType();
 
 				if(&theNode == pos)
 				{
-					if(XalanNode::ELEMENT_NODE == pos->getNodeType())
+					if(XalanNode::ELEMENT_NODE == posNodeType)
 					{
 						executionContext.endElement(c_wstr(pos->getNodeName()));
 					}
@@ -190,6 +195,11 @@ ElemCopyOf::doCloneNode(
 		}
 
 		pos = nextNode;
+
+		if (pos != 0)
+		{
+			posNodeType = pos->getNodeType();
+		}
 	}
 }
 
