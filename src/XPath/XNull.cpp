@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2003 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -94,7 +94,14 @@ XNull*
 #endif
 XNull::clone(void*	theAddress) const
 {
-	return theAddress == 0 ? new XNull(*this) : new (theAddress) XNull(*this);
+	if (theAddress == 0)
+	{
+		return new XNull(*this);
+	}
+	else
+	{
+		return new (theAddress) XNull(*this);
+	}
 }
 
 

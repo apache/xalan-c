@@ -100,7 +100,14 @@ XBoolean*
 #endif
 XBoolean::clone(void*	theAddress) const
 {
-	return theAddress == 0 ? new XBoolean(*this) : new (theAddress) XBoolean(*this);
+	if (theAddress == 0)
+	{
+		return new XBoolean(*this);
+	}
+	else
+	{
+		return new (theAddress) XBoolean(*this);
+	}
 }
 
 

@@ -143,7 +143,14 @@ XNodeSetNodeProxy*
 #endif
 XNodeSetNodeProxy::clone(void*	theAddress) const
 {
-	return theAddress == 0 ? new XNodeSetNodeProxy(*this) : new (theAddress) XNodeSetNodeProxy(*this);
+	if (theAddress == 0)
+	{
+		return new XNodeSetNodeProxy(*this);
+	}
+	else
+	{
+		return new (theAddress) XNodeSetNodeProxy(*this);
+	}
 }
 
 
