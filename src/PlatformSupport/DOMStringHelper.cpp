@@ -1458,10 +1458,10 @@ UnsignedLongToDOMString(unsigned long	theUnsignedLong)
 {
 #if 1
 
-	wchar_t			theBuffer[MAX_PRINTF_DIGITS + 1];
+	XalanDOMChar				theBuffer[MAX_PRINTF_DIGITS + 1];
 
-	wchar_t*		thePointer = &theBuffer[MAX_PRINTF_DIGITS];
-	wchar_t* const	theEnd = thePointer;
+	XalanDOMChar*				thePointer = &theBuffer[MAX_PRINTF_DIGITS];
+	const XalanDOMChar* const	theEnd = thePointer;
 
 	// Null terminate it...
 	*thePointer = 0;
@@ -1472,7 +1472,7 @@ UnsignedLongToDOMString(unsigned long	theUnsignedLong)
 		--thePointer;
 
 		// Isolate the left most character.
-		*thePointer = wchar_t(theUnsignedLong % 10 + XalanUnicode::charDigit_0);
+		*thePointer = XalanDOMChar(theUnsignedLong % 10 + XalanUnicode::charDigit_0);
 
 		// OK, we're done with it...
 		theUnsignedLong /= 10;
