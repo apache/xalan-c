@@ -377,11 +377,11 @@ ALLSOURCE = \
 	$(wildcard $(DOMSUPPORT_DIR)/*.cpp) \
 	$(wildcard $(XMLSUPPORT_DIR)/*.cpp) \
 	$(wildcard $(XPATH_DIR)/*.cpp) \
+	$(wildcard $(XERCESPARSERLIAISON_DIR)/*.cpp) \
 	$(wildcard $(XALANSOURCETREE_DIR)/*.cpp) \
 	$(wildcard $(XPATHCAPI_DIR)/*.cpp) \
 	$(wildcard $(XSLT_DIR)/*.cpp) \
 	$(wildcard $(XALANEXTENSIONS_DIR)/*.cpp) \
-	$(wildcard $(XERCESPARSERLIAISON_DIR)/*.cpp) \
 	$(wildcard $(XALANTRANSFORMER_DIR)/*.cpp) \
 	$(wildcard $(XALANEXSLT_DIR)/*.cpp) \
 
