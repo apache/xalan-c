@@ -247,29 +247,11 @@ XalanDOMString::assign(
 
 XalanDOMString&
 XalanDOMString::assign(
-		const_iterator	theFirstPosition,
-		const_iterator	theLastPosition)
+		    iterator	theFirstPosition,
+		    iterator	theLastPosition)
 {
 	invariants();
 
-#if defined(__SGI_STL_PORT) && __SGI_STL_PORT <= 0x400
-	XalanDOMString  temp;
-
-	temp.m_data.reserve(theLastPosition - theFirstPosition + 1);
-
-	while(theFirstPosition != theLastPosition)
-	{
-		temp.m_data.push_back(*theFirstPosition);
-
-		++theFirstPosition;
-	}
-
-	temp.m_data.push_back(XalanDOMChar(0));
-
-	temp.m_size = temp.m_data.size() - 1;
-
-	swap(temp);
-#else
 	m_data.reserve(theLastPosition - theFirstPosition + 1);
 
 	m_data.assign(theFirstPosition, theLastPosition);
@@ -278,8 +260,6 @@ XalanDOMString::assign(
 
 	m_size = size_type(m_data.size()) - 1;
     assert(m_data.size() - 1 == m_size);
-
-#endif
 
 	invariants();
 
@@ -536,8 +516,8 @@ XalanDOMString::insert(
 void
 XalanDOMString::insert(
 		iterator		theInsertPosition,
-		const_iterator	theFirstPosition,
-		const_iterator	theLastPosition)
+		iterator	theFirstPosition,
+		iterator	theLastPosition)
 {
 	invariants();
 

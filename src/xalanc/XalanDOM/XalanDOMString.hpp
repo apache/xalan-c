@@ -62,7 +62,6 @@ public:
 	enum { npos = -1 };
 #endif
 
-	explicit
 	XalanDOMString();
 
 	explicit
@@ -284,9 +283,6 @@ public:
 		return m_data[theIndex];
 	}
 
-#if 0
-	// $$$ ToDo: at() is not supported in the current version of GCC's vector<>
-	// implementation.  Eventually, it should be.
 	const_reference
 	at(size_type	theIndex) const
 	{
@@ -302,7 +298,6 @@ public:
 
 		return m_data.at(theIndex);
 	}
-#endif
 
 	const XalanDOMChar*
 	c_str() const
@@ -445,8 +440,8 @@ public:
 
 	XalanDOMString&
 	assign(
-		const_iterator	theFirstPosition,
-		const_iterator	theLastPosition);
+		iterator	theFirstPosition,
+		iterator	theLastPosition);
 
 	XalanDOMString&
 	append(const XalanDOMString&	theSource)
@@ -555,8 +550,8 @@ public:
 	void
 	insert(
 		iterator		theInsertPosition,
-		const_iterator	theFirstPosition,
-		const_iterator	theLastPosition);
+		iterator	theFirstPosition,
+		iterator	theLastPosition);
 
 	XalanDOMString
 	substr(
