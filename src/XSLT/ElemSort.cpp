@@ -83,16 +83,16 @@ ElemSort::ElemSort(
 						name,
 						lineNumber,
 						columnNumber,
-						Constants::ELEMNAME_SORT),	
+						Constants::ELEMNAME_SORT),
 	m_selectPattern(0),
 	m_langAVT(),
-	m_dataTypeAVT(XALAN_STATIC_UCODE_STRING("text")),
-	m_orderAVT(XALAN_STATIC_UCODE_STRING("ascending")),
-	m_caseOrderAVT()	
+	m_dataTypeAVT(Constants::ATTRVAL_DATATYPE_TEXT),
+	m_orderAVT(Constants::ATTRVAL_ORDER_ASCENDING),
+	m_caseOrderAVT()
 {
-	const int nAttrs = atts.getLength();
+	const unsigned int nAttrs = atts.getLength();
 
-	for(int i = 0; i < nAttrs; i++)
+	for(unsigned int i = 0; i < nAttrs; i++)
 	{
 		const XalanDOMChar* const	aname = atts.getName(i);
 
