@@ -127,10 +127,6 @@ ElemSort::ElemSort(
 		}
 	}
 
-	//m_dataTypeAVT(Constants::ATTRVAL_DATATYPE_TEXT),
-	//m_orderAVT(Constants::ATTRVAL_ORDER_ASCENDING),
-
-
 	if(0 == m_dataTypeAVT)
 	{
 		m_dataTypeAVT = new AVT(c_wstr(Constants::ATTRNAME_DATATYPE), c_wstr(Constants::ATTRTYPE_CDATA), c_wstr(Constants::ATTRVAL_DATATYPE_TEXT), 
