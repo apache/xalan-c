@@ -3085,6 +3085,8 @@ XPath::predicates(
 
 					// Add the node back in...
 					subQueryResults.addNode(theNode);
+
+					subQueryResults.setDocumentOrder();
 				}
 				else
 				{
