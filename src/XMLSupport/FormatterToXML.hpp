@@ -504,9 +504,6 @@ protected:
 	virtual bool
 	accumDefaultEntity(
 			XalanDOMChar				ch,
-			XalanDOMString::size_type	i,
-			const XalanDOMChar			chars[],
-			XalanDOMString::size_type	len,
 			bool						escLF);
 
 	/**

@@ -774,7 +774,7 @@ FormatterToXML::accumDefaultEscape(
 			XalanDOMString::size_type	len,
 			bool						escLF)
 {
-	if(!accumDefaultEntity(ch, i, chars, len, escLF))
+	if(!accumDefaultEntity(ch, escLF))
 	{
 		if (0xd800 <= ch && ch < 0xdc00) 
 		{
@@ -787,7 +787,7 @@ FormatterToXML::accumDefaultEscape(
 			}
 			else 
 			{
-				next = chars[++i];
+				next = chars[i + 1];
 
 				if (!(0xdc00u <= next && next < 0xe000u))
 				{
@@ -818,21 +818,9 @@ FormatterToXML::accumDefaultEscape(
 bool
 FormatterToXML::accumDefaultEntity(
 			XalanDOMChar				ch,
-			XalanDOMString::size_type	i,
-			const XalanDOMChar			chars[],
-			XalanDOMString::size_type	len,
 			bool						escLF)
 {
-	if (escLF == false &&
-		XalanUnicode::charCR == ch &&
-		i + 1 < len &&
-		XalanUnicode::charLF == chars[i + 1]) 
-	{
-		outputLineSep();
-
-		i++;
-	}
-	else if (escLF == false && XalanUnicode::charLF == ch) 
+	if (escLF == false && XalanUnicode::charLF == ch) 
 	{
 		outputLineSep();
 	}
@@ -1163,7 +1151,10 @@ FormatterToXML::characters(
 
 			m_ispreserve = true;
 
-			for (unsigned int i = 0; i < length; ++i) 
+			unsigned int	i = 0;
+			unsigned int	firstIndex = 0;
+
+			while(i < length) 
 			{
 				const XalanDOMChar	ch = chars[i];
 
@@ -1171,13 +1162,21 @@ FormatterToXML::characters(
 					m_charsMap[ch] == 'S') ||
 					ch > m_maxCharacter)
 				{
+					accumContent(chars, firstIndex, i - firstIndex);
+
 					accumDefaultEscape(ch, i, chars, length, false);
+
+					++i;
+
+					firstIndex = i;
 				}
 				else
 				{
-					accumContent(ch);
+					++i;
 				}
 			}
+
+			accumContent(chars, firstIndex, i - firstIndex);
 
 			if (m_isprevtext == false)
 			{
@@ -1211,7 +1210,12 @@ FormatterToXML::writeAttrString(
 			const XalanDOMChar*			theString,
 			XalanDOMString::size_type	theStringLength)
 {
-    for (XalanDOMString::size_type i = 0;  i < theStringLength;  i ++) 
+	assert(theString != 0);
+
+	XalanDOMString::size_type	i = 0;
+	XalanDOMString::size_type	firstIndex = 0;
+
+    while(i < theStringLength)
     {
 		const XalanDOMChar	ch = theString[i];
 
@@ -1219,13 +1223,21 @@ FormatterToXML::writeAttrString(
 		    m_attrCharsMap[ch] == 'S') ||
 			ch > m_maxCharacter)
 		{
+			accumContent(theString, firstIndex, i - firstIndex);
+
 			accumDefaultEscape(ch, i, theString, theStringLength, true);
+
+			++i;
+
+			firstIndex = i;
 		}
 		else
 		{
-			accumName(ch);
+			++i;
 		}
     }
+
+	accumContent(theString, firstIndex, i - firstIndex);
 }
 
 
