@@ -107,7 +107,7 @@ typedef struct CONTROL_STRUCT_TAG
 
 
 
-static unsigned long xalan_output_handler(const void *data, unsigned long length, const void *handle)
+static CallbackSizeType xalan_output_handler(const void *data, CallbackSizeType length, const void *handle)
 {
 	CONTROL_STRUCT* c = (CONTROL_STRUCT*)handle;
 
