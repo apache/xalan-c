@@ -104,8 +104,9 @@ public:
 
 	typedef XERCES_CPP_NAMESPACE_QUALIFIER Locator	LocatorType;
 
-    typedef XPathExpression::OpCodeMapSizeType      OpCodePositionType;
-    typedef XPathExpression::OpCodeMapValueType     OpCodeMapValueType;
+    typedef XPathExpression::OpCodeMapPositionType      OpCodeMapPositionType;
+    typedef XPathExpression::OpCodeMapValueType         OpCodeMapValueType;
+    typedef XPathExpression::TokenQueuePositionType     TokenQueuePositionType;
 
 	static const XalanDOMChar	PSEUDONAME_ANY[];
 	static const XalanDOMChar	PSEUDONAME_ROOT[];
@@ -495,7 +496,10 @@ public:
 		assert(executionContext.getCurrentNode() != 0);
 		assert(executionContext.getPrefixResolver() != 0);
 
-		return executeMore(executionContext.getCurrentNode(), 0, executionContext);
+		return executeMore(
+                executionContext.getCurrentNode(),
+                m_expression.getInitialOpCodePosition(),
+                executionContext);
 	}
 
 	/**
@@ -515,7 +519,11 @@ public:
 		assert(executionContext.getCurrentNode() != 0);
 		assert(executionContext.getPrefixResolver() != 0);
 
-		executeMore(executionContext.getCurrentNode(), 0, executionContext, result);
+		executeMore(
+                executionContext.getCurrentNode(),
+                m_expression.getInitialOpCodePosition(),
+                executionContext,
+                result);
 	}
 
 	/**
@@ -535,7 +543,11 @@ public:
 		assert(executionContext.getCurrentNode() != 0);
 		assert(executionContext.getPrefixResolver() != 0);
 
-		executeMore(executionContext.getCurrentNode(), 0, executionContext, result);
+		executeMore(
+                executionContext.getCurrentNode(),
+                m_expression.getInitialOpCodePosition(),
+                executionContext,
+                result);
 	}
 
 	/**
@@ -556,7 +568,11 @@ public:
 		assert(executionContext.getCurrentNode() != 0);
 		assert(executionContext.getPrefixResolver() != 0);
 
-		executeMore(executionContext.getCurrentNode(), 0, executionContext, result);
+		executeMore(
+                executionContext.getCurrentNode(),
+                m_expression.getInitialOpCodePosition(),
+                executionContext,
+                result);
 	}
 
 	/**
@@ -578,7 +594,12 @@ public:
 		assert(executionContext.getCurrentNode() != 0);
 		assert(executionContext.getPrefixResolver() != 0);
 
-		executeMore(executionContext.getCurrentNode(), 0, executionContext, formatterListener, function);
+		executeMore(
+                executionContext.getCurrentNode(),
+                m_expression.getInitialOpCodePosition(),
+                executionContext,
+                formatterListener,
+                function);
 	}
 
 	/**
@@ -609,7 +630,11 @@ public:
 		assert(executionContext.getCurrentNode() != 0);
 		assert(executionContext.getPrefixResolver() != 0);
 
-		return executeMore(executionContext.getCurrentNode(), 0, executionContext, result);
+		return executeMore(
+                executionContext.getCurrentNode(),
+                m_expression.getInitialOpCodePosition(),
+                executionContext,
+                result);
 	}
 
 	/**
@@ -630,11 +655,14 @@ public:
 		assert(executionContext.getCurrentNode() != 0);
 
 		// Push and pop the PrefixResolver...
-		XPathExecutionContext::PrefixResolverSetAndRestore	theResolverSetAndRestore(
+		const XPathExecutionContext::PrefixResolverSetAndRestore	theResolverSetAndRestore(
 										executionContext,
 										&prefixResolver);
 
-		return executeMore(executionContext.getCurrentNode(), 0, executionContext);
+		return executeMore(
+                executionContext.getCurrentNode(),
+                m_expression.getInitialOpCodePosition(),
+                executionContext);
 	}
 
 	/**
@@ -656,11 +684,15 @@ public:
 		assert(executionContext.getCurrentNode() != 0);
 
 		// Push and pop the PrefixResolver...
-		XPathExecutionContext::PrefixResolverSetAndRestore	theResolverSetAndRestore(
+		const XPathExecutionContext::PrefixResolverSetAndRestore	theResolverSetAndRestore(
 										executionContext,
 										&prefixResolver);
 
-		executeMore(executionContext.getCurrentNode(), 0, executionContext, result);
+		executeMore(
+                executionContext.getCurrentNode(),
+                m_expression.getInitialOpCodePosition(),
+                executionContext,
+                result);
 	}
 
 	/**
@@ -682,11 +714,15 @@ public:
 		assert(executionContext.getCurrentNode() != 0);
 
 		// Push and pop the PrefixResolver...
-		XPathExecutionContext::PrefixResolverSetAndRestore	theResolverSetAndRestore(
+		const XPathExecutionContext::PrefixResolverSetAndRestore	theResolverSetAndRestore(
 										executionContext,
 										&prefixResolver);
 
-		executeMore(executionContext.getCurrentNode(), 0, executionContext, result);
+		executeMore(
+                executionContext.getCurrentNode(),
+                m_expression.getInitialOpCodePosition(),
+                executionContext,
+                result);
 	}
 
 	/**
@@ -709,11 +745,15 @@ public:
 		assert(executionContext.getCurrentNode() != 0);
 
 		// Push and pop the PrefixResolver...
-		XPathExecutionContext::PrefixResolverSetAndRestore	theResolverSetAndRestore(
+		const XPathExecutionContext::PrefixResolverSetAndRestore	theResolverSetAndRestore(
 										executionContext,
 										&prefixResolver);
 
-		executeMore(executionContext.getCurrentNode(), 0, executionContext, result);
+		executeMore(
+                executionContext.getCurrentNode(),
+                m_expression.getInitialOpCodePosition(),
+                executionContext,
+                result);
 	}
 
 	/**
@@ -734,11 +774,16 @@ public:
 		assert(executionContext.getCurrentNode() != 0);
 
 		// Push and pop the PrefixResolver...
-		XPathExecutionContext::PrefixResolverSetAndRestore	theResolverSetAndRestore(
+		const XPathExecutionContext::PrefixResolverSetAndRestore	theResolverSetAndRestore(
 										executionContext,
 										&prefixResolver);
 
-		executeMore(executionContext.getCurrentNode(), 0, executionContext, formatterListener, function);
+		executeMore(
+                executionContext.getCurrentNode(),
+                m_expression.getInitialOpCodePosition(),
+                executionContext,
+                formatterListener,
+                function);
 	}
 
 	/**
@@ -771,11 +816,15 @@ public:
 		assert(executionContext.getCurrentNode() != 0);
 
 		// Push and pop the PrefixResolver...
-		XPathExecutionContext::PrefixResolverSetAndRestore	theResolverSetAndRestore(
+		const XPathExecutionContext::PrefixResolverSetAndRestore	theResolverSetAndRestore(
 										executionContext,
 										&prefixResolver);
 
-		return executeMore(executionContext.getCurrentNode(), 0, executionContext, result);
+		return executeMore(
+                executionContext.getCurrentNode(),
+                m_expression.getInitialOpCodePosition(),
+                executionContext,
+                result);
 	}
 
 	/**
@@ -867,7 +916,7 @@ public:
 	const XObjectPtr
 	predicate(
 			XalanNode*				context,
-			OpCodePositionType		opPos,
+			OpCodeMapPositionType	opPos,
 			XPathExecutionContext&	executionContext) const
 	{
 		return executeMore(context, opPos + 2, executionContext);
@@ -1031,7 +1080,7 @@ protected:
 	const XObjectPtr
 	locationPath(
 			XalanNode*				context,
-			OpCodePositionType		opPos,
+			OpCodeMapPositionType	opPos,
 			XPathExecutionContext&	executionContext) const;
 
 	/**
@@ -1045,7 +1094,7 @@ protected:
 	void
 	locationPath(
 			XalanNode*				context,
-			OpCodePositionType		opPos,
+			OpCodeMapPositionType	opPos,
 			XPathExecutionContext&	executionContext,
 			bool&					theResult) const;
 
@@ -1060,7 +1109,7 @@ protected:
 	void
 	locationPath(
 			XalanNode*				context,
-			OpCodePositionType		opPos,
+			OpCodeMapPositionType	opPos,
 			XPathExecutionContext&	executionContext,
 			double&					theResult) const;
 
@@ -1075,7 +1124,7 @@ protected:
 	void
 	locationPath(
 			XalanNode*				context,
-			OpCodePositionType		opPos,
+			OpCodeMapPositionType	opPos,
 			XPathExecutionContext&	executionContext,
 			XalanDOMString&			theResult) const;
 
@@ -1091,7 +1140,7 @@ protected:
 	void
 	locationPath(
 			XalanNode*				context,
-			OpCodePositionType		opPos,
+			OpCodeMapPositionType	opPos,
 			XPathExecutionContext&	executionContext,
 			FormatterListener&		formatterListener,
 			MemberFunctionPtr		function) const;
@@ -1107,7 +1156,7 @@ protected:
 	void
 	locationPath(
 			XalanNode*				context,
-			OpCodePositionType		opPos,
+			OpCodeMapPositionType	opPos,
 			XPathExecutionContext&	executionContext,
 			MutableNodeRefList&		theResult) const
 	{
@@ -1125,7 +1174,7 @@ protected:
 	const XObjectPtr
 	executeMore(
 			XalanNode* 				context,
-			OpCodePositionType 		opPos,
+			OpCodeMapPositionType 	opPos,
 			XPathExecutionContext&	executionContext) const;
 
 	/**
@@ -1139,7 +1188,7 @@ protected:
 	void
 	executeMore(
 			XalanNode* 				context,
-			OpCodePositionType 		opPos,
+			OpCodeMapPositionType 	opPos,
 			XPathExecutionContext&	executionContext,
 			bool&					theResult) const;
 
@@ -1154,7 +1203,7 @@ protected:
 	void
 	executeMore(
 			XalanNode* 				context,
-			OpCodePositionType 		opPos,
+			OpCodeMapPositionType 	opPos,
 			XPathExecutionContext&	executionContext,
 			double&					theResult) const;
 
@@ -1170,7 +1219,7 @@ protected:
 	void
 	executeMore(
 			XalanNode* 				context,
-			OpCodePositionType 		opPos,
+			OpCodeMapPositionType 	opPos,
 			XPathExecutionContext&	executionContext,
 			XalanDOMString&			theResult) const;
 
@@ -1186,7 +1235,7 @@ protected:
 	void
 	executeMore(
 			XalanNode* 				context,
-			OpCodePositionType 		opPos,
+			OpCodeMapPositionType 	opPos,
 			XPathExecutionContext&	executionContext,
 			FormatterListener&		formatterListener,
 			MemberFunctionPtr		function) const;
@@ -1203,7 +1252,7 @@ protected:
 	const XObjectPtr
 	executeMore(
 			XalanNode* 				context,
-			OpCodePositionType 		opPos,
+			OpCodeMapPositionType 	opPos,
 			XPathExecutionContext&	executionContext,
 			MutableNodeRefList&		theResult) const;
 
@@ -1229,7 +1278,7 @@ protected:
 	bool
 	Or(
 			XalanNode*				context,
-			OpCodePositionType		opPos,
+			OpCodeMapPositionType	opPos,
 			XPathExecutionContext&	executionContext) const;
 
 	/**
@@ -1242,7 +1291,7 @@ protected:
 	bool
 	And(
 			XalanNode*				context,
-			OpCodePositionType		opPos,
+			OpCodeMapPositionType	opPos,
 			XPathExecutionContext&	executionContext) const;
 
 	/**
@@ -1255,7 +1304,7 @@ protected:
 	bool
 	notequals(
 			XalanNode*				context,
-			OpCodePositionType		opPos,
+			OpCodeMapPositionType	opPos,
 			XPathExecutionContext&	executionContext) const;
 
 	/**
@@ -1268,7 +1317,7 @@ protected:
 	bool
 	equals(
 			XalanNode*				context,
-			OpCodePositionType		opPos,
+			OpCodeMapPositionType	opPos,
 			XPathExecutionContext&	executionContext) const;
 
 	/**
@@ -1281,7 +1330,7 @@ protected:
 	bool
 	lte(
 			XalanNode*				context,
-			OpCodePositionType		opPos,
+			OpCodeMapPositionType	opPos,
 			XPathExecutionContext&	executionContext) const;
 
 	/**
@@ -1294,7 +1343,7 @@ protected:
 	bool
 	lt(
 			XalanNode*				context,
-			OpCodePositionType		opPos,
+			OpCodeMapPositionType	opPos,
 			XPathExecutionContext&	executionContext) const;
 
 	/**
@@ -1307,7 +1356,7 @@ protected:
 	bool
 	gte(
 			XalanNode*				context,
-			OpCodePositionType		opPos,
+			OpCodeMapPositionType	opPos,
 			XPathExecutionContext&	executionContext) const;
 
 	/**
@@ -1320,7 +1369,7 @@ protected:
 	bool
 	gt(
 			XalanNode*				context,
-			OpCodePositionType		opPos,
+			OpCodeMapPositionType	opPos,
 			XPathExecutionContext&	executionContext) const;
 
 	/**
@@ -1333,7 +1382,7 @@ protected:
 	double
 	plus(
 			XalanNode*				context,
-			OpCodePositionType		opPos,
+			OpCodeMapPositionType	opPos,
 			XPathExecutionContext&	executionContext) const;
 
 	/**
@@ -1347,7 +1396,7 @@ protected:
 	void
 	plus(
 			XalanNode*				context,
-			OpCodePositionType		opPos,
+			OpCodeMapPositionType	opPos,
 			XPathExecutionContext&	executionContext,
 			FormatterListener&		formatterListener,
 			MemberFunctionPtr		function) const;
@@ -1362,7 +1411,7 @@ protected:
 	double
 	minus(
 			XalanNode*				context,
-			OpCodePositionType		opPos,
+			OpCodeMapPositionType	opPos,
 			XPathExecutionContext&	executionContext) const;
 
 	/**
@@ -1376,7 +1425,7 @@ protected:
 	void
 	minus(
 			XalanNode*				context,
-			OpCodePositionType		opPos,
+			OpCodeMapPositionType	opPos,
 			XPathExecutionContext&	executionContext,
 			FormatterListener&		formatterListener,
 			MemberFunctionPtr		function) const;
@@ -1391,7 +1440,7 @@ protected:
 	double
 	mult(
 			XalanNode*				context,
-			OpCodePositionType		opPos,
+			OpCodeMapPositionType	opPos,
 			XPathExecutionContext&	executionContext) const;
 
 	/**
@@ -1405,7 +1454,7 @@ protected:
 	void
 	mult(
 			XalanNode*				context,
-			OpCodePositionType		opPos,
+			OpCodeMapPositionType	opPos,
 			XPathExecutionContext&	executionContext,
 			FormatterListener&		formatterListener,
 			MemberFunctionPtr		function) const;
@@ -1420,7 +1469,7 @@ protected:
 	double
 	div(
 			XalanNode*				context,
-			OpCodePositionType		opPos,
+			OpCodeMapPositionType	opPos,
 			XPathExecutionContext&	executionContext) const;
 
 	/**
@@ -1434,7 +1483,7 @@ protected:
 	void
 	div(
 			XalanNode*				context,
-			OpCodePositionType		opPos,
+			OpCodeMapPositionType	opPos,
 			XPathExecutionContext&	executionContext,
 			FormatterListener&		formatterListener,
 			MemberFunctionPtr		function) const;
@@ -1449,7 +1498,7 @@ protected:
 	double
 	mod(
 			XalanNode*				context,
-			OpCodePositionType		opPos,
+			OpCodeMapPositionType	opPos,
 			XPathExecutionContext&	executionContext) const;
 
 	/**
@@ -1463,7 +1512,7 @@ protected:
 	void
 	mod(
 			XalanNode*				context,
-			OpCodePositionType		opPos,
+			OpCodeMapPositionType	opPos,
 			XPathExecutionContext&	executionContext,
 			FormatterListener&		formatterListener,
 			MemberFunctionPtr		function) const;
@@ -1478,7 +1527,7 @@ protected:
 	double
 	neg(
 			XalanNode*				context,
-			OpCodePositionType		opPos,
+			OpCodeMapPositionType	opPos,
 			XPathExecutionContext&	executionContext) const;
 
 	/**
@@ -1492,7 +1541,7 @@ protected:
 	void
 	neg(
 			XalanNode*				context,
-			OpCodePositionType		opPos,
+			OpCodeMapPositionType	opPos,
 			XPathExecutionContext&	executionContext,
 			FormatterListener&		formatterListener,
 			MemberFunctionPtr		function) const;
@@ -1507,7 +1556,7 @@ protected:
 	const XObjectPtr
 	Union(
 			XalanNode*				context,
-			OpCodePositionType		opPos,
+			OpCodeMapPositionType	opPos,
 			XPathExecutionContext&	executionContext) const;
 
 	/**
@@ -1521,7 +1570,7 @@ protected:
 	void
 	Union(
 			XalanNode*				context,
-			OpCodePositionType		opPos,
+			OpCodeMapPositionType	opPos,
 			XPathExecutionContext&	executionContext,
 			bool&					result) const;
 
@@ -1536,7 +1585,7 @@ protected:
 	void
 	Union(
 			XalanNode*				context,
-			OpCodePositionType		opPos,
+			OpCodeMapPositionType	opPos,
 			XPathExecutionContext&	executionContext,
 			double&					result) const;
 
@@ -1551,7 +1600,7 @@ protected:
 	void
 	Union(
 			XalanNode*				context,
-			OpCodePositionType		opPos,
+			OpCodeMapPositionType	opPos,
 			XPathExecutionContext&	executionContext,
 			XalanDOMString&			result) const;
 
@@ -1567,7 +1616,7 @@ protected:
 	void
 	Union(
 			XalanNode*				context,
-			OpCodePositionType		opPos,
+			OpCodeMapPositionType	opPos,
 			XPathExecutionContext&	executionContext,
 			FormatterListener&		formatterListener,
 			MemberFunctionPtr		function) const;
@@ -1582,7 +1631,7 @@ protected:
 	void
 	Union(
 			XalanNode*				context,
-			OpCodePositionType		opPos,
+			OpCodeMapPositionType	opPos,
 			XPathExecutionContext&	executionContext,
 			MutableNodeRefList&		result) const;
 
@@ -1594,7 +1643,7 @@ protected:
 	 */
 	const XObjectPtr
 	literal(
-			OpCodePositionType		opPos,
+			OpCodeMapPositionType	opPos,
 			XPathExecutionContext&	executionContext) const;
   
 	/**
@@ -1605,8 +1654,8 @@ protected:
 	 */
 	void
 	literal(
-			OpCodePositionType	opPos,
-			bool&	            theResult) const;
+			OpCodeMapPositionType	opPos,
+			bool&	                theResult) const;
 
 	/**
 	 * Get a literal value as a number.
@@ -1616,8 +1665,8 @@ protected:
 	 */
 	void
 	literal(
-			OpCodePositionType	opPos,
-			double&		        theResult) const;
+			OpCodeMapPositionType	opPos,
+			double&		            theResult) const;
 
 	/**
 	 * Get a literal value.  The value is appended to the
@@ -1628,8 +1677,8 @@ protected:
 	 */
 	void
 	literal(
-			OpCodePositionType	opPos,
-			XalanDOMString&		theResult) const;
+			OpCodeMapPositionType	opPos,
+			XalanDOMString&		    theResult) const;
 
 	/**
 	 * Get a literal value.
@@ -1639,9 +1688,9 @@ protected:
 	 */
 	void
 	literal(
-			OpCodePositionType	opPos,
-			FormatterListener&	formatterListener,
-			MemberFunctionPtr	function) const;
+			OpCodeMapPositionType	opPos,
+			FormatterListener&	    formatterListener,
+			MemberFunctionPtr	    function) const;
 
 	/**
 	 * Get the value of a variable.
@@ -1651,7 +1700,7 @@ protected:
 	 */
 	const XObjectPtr
 	variable(
-			OpCodePositionType		opPos,
+			OpCodeMapPositionType	opPos,
 			XPathExecutionContext&	executionContext) const;
 
 	/**
@@ -1664,7 +1713,7 @@ protected:
 	const XObjectPtr
 	group(
 			XalanNode*				context,
-			OpCodePositionType		opPos,
+			OpCodeMapPositionType	opPos,
 			XPathExecutionContext&	executionContext) const
 	{
 		return executeMore(context, opPos + 2, executionContext);
@@ -1680,7 +1729,7 @@ protected:
 	void
 	group(
 			XalanNode*				context,
-			OpCodePositionType		opPos,
+			OpCodeMapPositionType	opPos,
 			XPathExecutionContext&	executionContext,
 			bool&					theResult) const
 	{
@@ -1697,7 +1746,7 @@ protected:
 	void
 	group(
 			XalanNode*				context,
-			OpCodePositionType		opPos,
+			OpCodeMapPositionType	opPos,
 			XPathExecutionContext&	executionContext,
 			double&					theResult) const
 	{
@@ -1714,7 +1763,7 @@ protected:
 	void
 	group(
 			XalanNode*				context,
-			OpCodePositionType		opPos,
+			OpCodeMapPositionType	opPos,
 			XPathExecutionContext&	executionContext,
 			XalanDOMString&			theResult) const
 	{
@@ -1733,7 +1782,7 @@ protected:
 	void
 	group(
 			XalanNode*				context,
-			OpCodePositionType		opPos,
+			OpCodeMapPositionType	opPos,
 			XPathExecutionContext&	executionContext,
 			FormatterListener&		formatterListener,
 			MemberFunctionPtr		function) const
@@ -1751,7 +1800,7 @@ protected:
 	void
 	group(
 			XalanNode*				context,
-			OpCodePositionType		opPos,
+			OpCodeMapPositionType	opPos,
 			XPathExecutionContext&	executionContext,
 			MutableNodeRefList&		theResult) const
 	{
@@ -1764,7 +1813,7 @@ protected:
 	 * @return The result as a double.
 	 */
 	double
-	numberlit(OpCodePositionType	opPos) const;
+	numberlit(OpCodeMapPositionType	    opPos) const;
 
 	/**
 	 * Get a literal value.
@@ -1773,7 +1822,7 @@ protected:
 	 */
 	const XObjectPtr
 	numberlit(
-			OpCodePositionType		opPos,
+			OpCodeMapPositionType	opPos,
 			XPathExecutionContext&	executionContext) const;
 
 	/**
@@ -1784,8 +1833,8 @@ protected:
 	 */
 	void
 	numberlit(
-			OpCodePositionType	opPos,
-			bool&	            theResult) const;
+			OpCodeMapPositionType	opPos,
+			bool&	                theResult) const;
 
 	/**
 	 * Get a literal value.  The value is appended to the
@@ -1796,8 +1845,8 @@ protected:
 	 */
 	void
 	numberlit(
-			OpCodePositionType	opPos,
-			XalanDOMString&		theResult) const;
+			OpCodeMapPositionType	opPos,
+			XalanDOMString&		    theResult) const;
 
 	/**
 	 * Get a literal value.
@@ -1808,9 +1857,9 @@ protected:
 	 */
 	void
 	numberlit(
-			OpCodePositionType	opPos,
-			FormatterListener&	formatterListener,
-			MemberFunctionPtr	function) const;
+			OpCodeMapPositionType	opPos,
+			FormatterListener&	    formatterListener,
+			MemberFunctionPtr	    function) const;
 
 	/**
 	 * Setup for and run an extension function.
@@ -1822,7 +1871,7 @@ protected:
 	const XObjectPtr
 	runExtFunction(
 			XalanNode*				context,
-			OpCodePositionType		opPos,
+			OpCodeMapPositionType	opPos,
 			XPathExecutionContext&	executionContext) const;
 
 	/**
@@ -1837,7 +1886,7 @@ protected:
 	const XObjectPtr
 	extfunction(
 			XalanNode*								context,
-			OpCodePositionType						/* opPos */,
+			OpCodeMapPositionType					/* opPos */,
 			const XalanDOMString&					theNamespace,
 			const XalanDOMString&					functionName, 
 			const Function::XObjectArgVectorType&	argVec,
@@ -1860,7 +1909,7 @@ protected:
 	const XObjectPtr
 	runFunction(
 			XalanNode*				context,
-			OpCodePositionType		opPos,
+			OpCodeMapPositionType	opPos,
 			XPathExecutionContext&	executionContext) const;
 
 	/**
@@ -1921,7 +1970,7 @@ protected:
 	double
 	functionCount(
 			XalanNode*				context,
-			OpCodePositionType		opPos,
+			OpCodeMapPositionType	opPos,
 			XPathExecutionContext&	executionContext) const;
 
 	/**
@@ -1935,7 +1984,7 @@ protected:
 	bool
 	functionNot(
 			XalanNode*				context,
-			OpCodePositionType		opPos,
+			OpCodeMapPositionType	opPos,
 			XPathExecutionContext&	executionContext) const
 	{
 		assert(context != 0);
@@ -1954,7 +2003,7 @@ protected:
 	bool
 	functionBoolean(
 			XalanNode*				context,
-			OpCodePositionType		opPos,
+			OpCodeMapPositionType	opPos,
 			XPathExecutionContext&	executionContext) const
 	{
 		assert(context != 0);
@@ -1991,7 +2040,7 @@ protected:
 	const XalanDOMString&
 	functionName(
 			XalanNode*				context,
-			OpCodePositionType		opPos,
+			OpCodeMapPositionType	opPos,
 			XPathExecutionContext&	executionContext) const;
 
 	/**
@@ -2014,7 +2063,7 @@ protected:
 	const XalanDOMString&
 	functionLocalName(
 			XalanNode*				context,
-			OpCodePositionType		opPos,
+			OpCodeMapPositionType	opPos,
 			XPathExecutionContext&	executionContext) const;
 
 	/**
@@ -2045,7 +2094,7 @@ protected:
 	double
 	functionNumber(
 			XalanNode*				context,
-			OpCodePositionType		opPos,
+			OpCodeMapPositionType	opPos,
 			XPathExecutionContext&	executionContext) const
 	{
 		double	result;
@@ -2066,7 +2115,7 @@ protected:
 	double
 	functionFloor(
 			XalanNode*				context,
-			OpCodePositionType		opPos,
+			OpCodeMapPositionType	opPos,
 			XPathExecutionContext&	executionContext) const
 	{
 		return DoubleSupport::floor(functionNumber(context, opPos, executionContext));
@@ -2083,7 +2132,7 @@ protected:
 	double
 	functionCeiling(
 			XalanNode*				context,
-			OpCodePositionType		opPos,
+			OpCodeMapPositionType	opPos,
 			XPathExecutionContext&	executionContext) const
 	{
 		return DoubleSupport::ceiling(functionNumber(context, opPos, executionContext));
@@ -2100,7 +2149,7 @@ protected:
 	double
 	functionRound(
 			XalanNode*				context,
-			OpCodePositionType		opPos,
+			OpCodeMapPositionType	opPos,
 			XPathExecutionContext&	executionContext) const
 	{
 		return DoubleSupport::round(functionNumber(context, opPos, executionContext));
@@ -2126,7 +2175,7 @@ protected:
 	double
 	functionStringLength(
 			XalanNode*				context,
-			OpCodePositionType		opPos,
+			OpCodeMapPositionType	opPos,
 			XPathExecutionContext&	executionContext) const;
 
 	/**
@@ -2140,7 +2189,7 @@ protected:
 	double
 	functionSum(
 			XalanNode*				context,
-			OpCodePositionType		opPos,
+			OpCodeMapPositionType	opPos,
 			XPathExecutionContext&	executionContext) const;
 
 	/**
@@ -2153,7 +2202,7 @@ protected:
 	double
 	getNumericOperand(
 			XalanNode*				context,
-			OpCodePositionType		opPos,
+			OpCodeMapPositionType	opPos,
 			XPathExecutionContext&	executionContext) const;
 
 private:
@@ -2177,7 +2226,7 @@ private:
 	locationPathPattern(
 			XPathExecutionContext&	executionContext,
 			XalanNode& 				context, 
-			OpCodePositionType 		opPos) const;
+			OpCodeMapPositionType 	opPos) const;
 
 	class NodeTester
 	{
@@ -2186,8 +2235,8 @@ private:
 		NodeTester(
 			const XPath&			xpath,
 			XPathExecutionContext&	executionContext,
-			OpCodePositionType 		opPos,
-			OpCodePositionType 		argLen,
+			OpCodeMapPositionType 	opPos,
+			OpCodeMapValueType 	    argLen,
 			OpCodeMapValueType 		stepType);
 
 		eMatchScore
@@ -2321,7 +2370,7 @@ protected:
 	step(
 			XPathExecutionContext&	executionContext,
 			XalanNode* 				context, 
-			OpCodePositionType 		opPos,
+			OpCodeMapPositionType 	opPos,
 			MutableNodeRefList&		queryResults) const;
 
 	/**
@@ -2338,126 +2387,126 @@ protected:
 	stepPattern(
 			XPathExecutionContext&	executionContext,
 			XalanNode* 				context, 
-			OpCodePositionType 		opPos,
+			OpCodeMapPositionType 	opPos,
 			eMatchScore& 			scoreHolder) const;
 
-	OpCodePositionType
+	OpCodeMapPositionType
 	findNodeSet(
 			XPathExecutionContext&	executionContext,
 			XalanNode* 				context, 
-			OpCodePositionType 		opPos,
+			OpCodeMapPositionType 	opPos,
 			OpCodeMapValueType 	    stepType,
 			MutableNodeRefList& 	subQueryResults) const;
 
-	OpCodePositionType
+	OpCodeMapPositionType
 	findRoot(
 			XPathExecutionContext&	executionContext,
 			XalanNode* 				context, 
-			OpCodePositionType 		opPos,
+			OpCodeMapPositionType 	opPos,
 			OpCodeMapValueType 		stepType,
 			MutableNodeRefList& 	subQueryResults) const;
 
-	OpCodePositionType
+	OpCodeMapPositionType
 	findParent(
 			XPathExecutionContext&	executionContext,
 			XalanNode* 				context, 
-			OpCodePositionType 		opPos,
+			OpCodeMapPositionType 	opPos,
 			OpCodeMapValueType 		stepType,
 			MutableNodeRefList& 	subQueryResults) const;
 
-	OpCodePositionType
+	OpCodeMapPositionType
 	findSelf(
 			XPathExecutionContext&	executionContext,
 			XalanNode* 				context, 
-			OpCodePositionType 		opPos,
+			OpCodeMapPositionType 	opPos,
 			OpCodeMapValueType 		stepType,
 			MutableNodeRefList& 	subQueryResults) const;
 
-	OpCodePositionType
+	OpCodeMapPositionType
 	findAncestors(
 			XPathExecutionContext&	executionContext,
 			XalanNode* 				context, 
-			OpCodePositionType 		opPos,
+			OpCodeMapPositionType 	opPos,
 			OpCodeMapValueType 		stepType,
 			MutableNodeRefList& 	subQueryResults) const;
 
-	OpCodePositionType
+	OpCodeMapPositionType
 	findAncestorsOrSelf(
 			XPathExecutionContext&	executionContext,
 			XalanNode* 				context, 
-			OpCodePositionType 		opPos,
+			OpCodeMapPositionType 	opPos,
 			OpCodeMapValueType 		stepType,
 			MutableNodeRefList& 	subQueryResults) const;
 
-	OpCodePositionType
+	OpCodeMapPositionType
 	findAttributes(
 			XPathExecutionContext&	executionContext,
 			XalanNode* 				context, 
-			OpCodePositionType 		opPos,
+			OpCodeMapPositionType 	opPos,
 			OpCodeMapValueType 		stepType,
 			MutableNodeRefList& 	subQueryResults) const;
 
-	OpCodePositionType
+	OpCodeMapPositionType
 	findChildren(
 			XPathExecutionContext&	executionContext,
 			XalanNode* 				context, 
-			OpCodePositionType 		opPos,
+			OpCodeMapPositionType 	opPos,
 			OpCodeMapValueType 		stepType,
 			MutableNodeRefList& 	subQueryResults) const;
 
-	OpCodePositionType
+	OpCodeMapPositionType
 	findDescendants(
 			XPathExecutionContext&	executionContext,
 			XalanNode* 				context, 
-			OpCodePositionType 		opPos,
+			OpCodeMapPositionType 	opPos,
 			OpCodeMapValueType 		stepType,
 			MutableNodeRefList& 	subQueryResults) const;
 
-	OpCodePositionType
+	OpCodeMapPositionType
 	findFollowing(
 			XPathExecutionContext&	executionContext,
 			XalanNode* 				context, 
-			OpCodePositionType 		opPos,
+			OpCodeMapPositionType 	opPos,
 			OpCodeMapValueType 		stepType,
 			MutableNodeRefList& 	subQueryResults) const;
 
-	OpCodePositionType
+	OpCodeMapPositionType
 	findFollowingSiblings(
 			XPathExecutionContext&	executionContext,
 			XalanNode* 				context, 
-			OpCodePositionType 		opPos,
+			OpCodeMapPositionType 	opPos,
 			OpCodeMapValueType 		stepType,
 			MutableNodeRefList& 	subQueryResults) const;
 
-	OpCodePositionType
+	OpCodeMapPositionType
 	findPreceeding(
 			XPathExecutionContext&	executionContext,
 			XalanNode* 				context, 
-			OpCodePositionType 		opPos,
+			OpCodeMapPositionType 	opPos,
 			OpCodeMapValueType 		stepType,
 			MutableNodeRefList& 	subQueryResults) const;
 
-	OpCodePositionType
+	OpCodeMapPositionType
 	findPreceedingSiblings(
 			XPathExecutionContext&	executionContext,
 			XalanNode* 				context, 
-			OpCodePositionType 		opPos,
+			OpCodeMapPositionType 	opPos,
 			OpCodeMapValueType 		stepType,
 			MutableNodeRefList& 	subQueryResults) const;
 
-	OpCodePositionType
+	OpCodeMapPositionType
 	findNamespace(
 			XPathExecutionContext&	executionContext,
 			XalanNode* 				context, 
-			OpCodePositionType 		opPos,
+			OpCodeMapPositionType 	opPos,
 			OpCodeMapValueType 		stepType,
 			MutableNodeRefList& 	subQueryResults) const;
 
-	OpCodePositionType
+	OpCodeMapPositionType
 	findNodesOnUnknownAxis(
 			XPathExecutionContext&	executionContext,
 			XalanNode* 				context, 
-			OpCodePositionType 		opPos,
+			OpCodeMapPositionType 	opPos,
 			OpCodeMapValueType 		stepType,
 			MutableNodeRefList& 	subQueryResults) const;
 
@@ -2466,27 +2515,27 @@ protected:
 			XPathExecutionContext&	executionContext,
 			XalanNode* 				context,
 			XalanNode::NodeType		nodeType,
-			OpCodePositionType 		opPos,
-			OpCodePositionType 		argLen,
+			OpCodeMapPositionType 	opPos,
+			OpCodeMapValueType 	    argLen,
 			OpCodeMapValueType 		stepType) const;
 
-	OpCodePositionType
+	OpCodeMapPositionType
 	predicates(
 			XPathExecutionContext&	executionContext,
-			OpCodePositionType 		opPos,
+			OpCodeMapPositionType 	opPos,
 			MutableNodeRefList& 	subQueryResults) const;
 
 	eMatchScore
 	handleFoundIndex(
 			XPathExecutionContext&	executionContext,
 			XalanNode* 				localContext,
-			OpCodePositionType 		startOpPos) const;
+			OpCodeMapPositionType 	startOpPos) const;
 
 	eMatchScore
 	handleFoundIndexPositional(
 			XPathExecutionContext&	executionContext,
 			XalanNode* 				localContext,
-			OpCodePositionType 		startOpPos) const;
+			OpCodeMapPositionType 	startOpPos) const;
 
 private:
 
@@ -2494,7 +2543,7 @@ private:
 	unknownOpCodeError(
 			XalanNode*				context,
 			XPathExecutionContext&	executionContext,
-			OpCodePositionType		opPos) const;
+			OpCodeMapPositionType	opPos) const;
 
 	void
 	notNodeSetError(
@@ -2527,9 +2576,9 @@ private:
 	 * This is the table of installed functions.
 	 *
 	 */
-	static FunctionTableType			s_functions;
+	static FunctionTableType		s_functions;
 
-	static const XalanDOMString			s_emptyString;
+	static const XalanDOMString     s_emptyString;
 };
 
 

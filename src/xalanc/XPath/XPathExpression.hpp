@@ -122,8 +122,17 @@ public:
 	typedef std::vector<double>				NumberLiteralValueVectorType;
 #endif
 
-	typedef TokenQueueType::value_type		TokenQueueValueType;
+#define XALAN_XPATH_EXPRESSION_USE_ITERATORS
+
+#if defined(XALAN_XPATH_EXPRESSION_USE_ITERATORS)
+    typedef OpCodeMapType::const_iterator   OpCodeMapPositionType;
+#else
+    typedef OpCodeMapSizeType               OpCodeMapPositionType;
+#endif
+    typedef OpCodeMapType::difference_type  OpCodeMapDifferenceType;
+	typedef TokenQueueType::value_type      TokenQueueValueType;
 	typedef int		                        TokenQueueSizeType;
+	typedef TokenQueueSizeType		        TokenQueuePositionType;
 
 	/**
 	 * List of operations codes.
@@ -809,16 +818,48 @@ public:
 		}
 	}
 
-	/**
-	 * Retrieve number of elements in the token queue.
+    OpCodeMapPositionType
+    getInitialOpCodePosition() const
+    {
+#if defined(XALAN_XPATH_EXPRESSION_USE_ITERATORS)
+        return m_opMap.begin();
+#else
+        return 0;
+#endif
+    }
+
+    bool
+    isValidOpCodePosition(OpCodeMapPositionType     opPos) const
+    {
+        const OpCodeMapDifferenceType  theDifference =
+            OpCodeMapDifferenceType(opPos - getInitialOpCodePosition());
+
+        return theDifference >= 0 && 
+               theDifference < opCodeMapSize();
+    }
+
+#if defined(XALAN_XPATH_EXPRESSION_USE_ITERATORS)
+    bool
+    isValidOpCodePosition(OpCodeMapSizeType     theIndex) const
+    {
+        return theIndex >= 0 && theIndex < opCodeMapSize();
+    }
+
+    /**
+	 * Retrieve the value of an operation code at a specified index in the
+	 * op code map.
 	 * 
-	 * @return size of token queue
+	 * @param theIndex The index in list
+	 * @return value of operation code
 	 */
-	TokenQueueSizeType
-	tokenQueueSize() const
+	OpCodeMapValueType
+	getOpCodeMapValue(OpCodeMapSizeType     theIndex) const
 	{
-		return TokenQueueSizeType(m_tokenQueue.size());
+        assert(theIndex < opCodeMapLength());
+
+		return m_opMap[theIndex];
 	}
+#endif
 
 	/**
 	 * Retrieve the value of an operation code at a specified position in the
@@ -828,30 +869,37 @@ public:
 	 * @return value of operation code
 	 */
 	OpCodeMapValueType
-	getOpCodeMapValue(OpCodeMapSizeType		opPos) const
+	getOpCodeMapValue(OpCodeMapPositionType     opPos) const
 	{
+        assert(opPos < getInitialOpCodePosition() + opCodeMapLength());
+
+#if defined(XALAN_XPATH_EXPRESSION_USE_ITERATORS)
+        return *opPos;
+#else
+
 		return m_opMap[opPos];
+#endif
 	}
 
 	/**
-	 * Retrieve the value of an operation code at a specified position in the
-	 * list.
+	 * Set the value of an operation code at a specified index in the
+	 * OpCode map.
 	 * 
-	 * @param opPos position in list
-	 * @return value of operation code
+	 * @param theOpCodeMapIndex The index in the OpCode map
+	 * @param theValue value of operation code
 	 */
 	void
 	setOpCodeMapValue(
-            OpCodeMapSizeType	        opPos,
+            OpCodeMapSizeType	        theOpCodeMapIndex,
             const OpCodeMapValueType&   theValue)
 	{
-        assert(opPos < opCodeMapLength());
+        assert(theOpCodeMapIndex < opCodeMapLength());
 
-		m_opMap[opPos] = theValue;
+		m_opMap[theOpCodeMapIndex] = theValue;
 	}
 
 	OpCodeMapValueType
-	getOpCodeArgumentLength(OpCodeMapSizeType	opPos) const
+	getOpCodeArgumentLength(OpCodeMapPositionType	opPos) const
 	{
 		return getOpCodeMapValue(opPos + XPathExpression::s_opCodeMapLengthIndex + 1) - 3;
 	}
@@ -864,8 +912,21 @@ public:
 	 * @return length of operation code
 	 */
 	OpCodeMapValueType
-	getOpCodeLengthFromOpMap(OpCodeMapSizeType	opPos) const;
+	getOpCodeLengthFromOpMap(OpCodeMapPositionType  opPos) const;
 
+#if defined(XALAN_XPATH_EXPRESSION_USE_ITERATORS)
+	/**
+	 * Retrieve the length of an operation code at a specified index in the
+	 * op map.
+	 * 
+	 * @param theIndex The index in the op map
+	 * @return length of operation code
+	 */
+	OpCodeMapValueType
+	getOpCodeLengthFromOpMap(OpCodeMapSizeType  theIndex) const;
+#endif
+
+#if defined(XALAN_XPATH_EXPRESSION_USE_ITERATORS)
 	/**
 	 * Retrieve the position of the next operation code at a specified position
 	 * in the list.
@@ -873,14 +934,35 @@ public:
 	 * @param opPos position in list
 	 * @return position of next operation code
 	 */
-	OpCodeMapValueType
-	getNextOpCodePosition(OpCodeMapSizeType		opPos) const
+	OpCodeMapPositionType
+	getNextOpCodePosition(OpCodeMapPositionType	    opPos) const
 	{
-		assert(opPos < opCodeMapSize());
+        assert(opPos < getInitialOpCodePosition() + opCodeMapLength());
 
-		assert(opPos + m_opMap[opPos + s_opCodeMapLengthIndex] == OpCodeMapValueType(opPos + m_opMap[opPos + s_opCodeMapLengthIndex]));
+		return opPos + *(opPos + s_opCodeMapLengthIndex);
+	}
+#endif
 
-		return OpCodeMapValueType(opPos + m_opMap[opPos + s_opCodeMapLengthIndex]);
+	/**
+	 * Retrieve the position of the next operation code at a specified index
+	 * in the list.
+	 * 
+	 * @param theIndex theIndex in list
+	 * @return position of next operation code
+	 */
+	OpCodeMapSizeType
+#if defined(XALAN_XPATH_EXPRESSION_USE_ITERATORS)
+	getNextOpCodePosition(OpCodeMapSizeType     theIndex) const
+#else
+	getNextOpCodePosition(OpCodeMapPositionType     theIndex) const
+#endif
+	{
+        assert(theIndex < opCodeMapLength());
+
+		assert(theIndex + m_opMap[theIndex + s_opCodeMapLengthIndex] ==
+               OpCodeMapSizeType(theIndex + m_opMap[theIndex + s_opCodeMapLengthIndex]));
+
+		return OpCodeMapSizeType(theIndex + m_opMap[theIndex + s_opCodeMapLengthIndex]);
 	}
 
 	/**
@@ -895,7 +977,7 @@ public:
 	void
 	setOpCodeArgs(
 			eOpCodes							theOpCode,
-			OpCodeMapSizeType					theIndex,
+			OpCodeMapSizeType				    theIndex,
 			const OpCodeMapValueVectorType&		theArgs);
 
 	/**
@@ -914,8 +996,9 @@ public:
 	 * @param theArgs   vector or arguments to supply
 	 */
 	OpCodeMapSizeType
-	appendOpCode(eOpCodes							theOpCode,
-				 const OpCodeMapValueVectorType&	theArgs)
+	appendOpCode(
+            eOpCodes							theOpCode,
+			const OpCodeMapValueVectorType&	    theArgs)
 	{
 		const OpCodeMapSizeType		thePosition = appendOpCode(theOpCode);
 
@@ -935,7 +1018,7 @@ public:
 	 */
 	void
 	replaceOpCode(
-			OpCodeMapSizeType	theIndex,
+			OpCodeMapSizeType   theIndex,
 			eOpCodes			theOldOpCode,
 			eOpCodes			theNewOpCode);
 
@@ -960,7 +1043,7 @@ public:
 	 * @param theIndex  index in list
 	 */
 	void
-	updateOpCodeLength(OpCodeMapValueType	theIndex)
+	updateOpCodeLength(OpCodeMapSizeType	theIndex)
 	{
 		assert(theIndex < opCodeMapSize());
 
@@ -978,8 +1061,8 @@ public:
 	void
 	updateShiftedOpCodeLength(
 			OpCodeMapValueType	theOpCode,
-			OpCodeMapValueType	theOriginalIndex,
-			OpCodeMapValueType	theNewIndex);
+			OpCodeMapSizeType	theOriginalIndex,
+			OpCodeMapSizeType	theNewIndex);
 
 	/**
 	 * Update the length of an operation code at a specified index in the list.
@@ -994,7 +1077,7 @@ public:
 	void
 	updateOpCodeLength(
 			OpCodeMapValueType	theOpCode,
-			OpCodeMapValueType	theIndex);
+			OpCodeMapSizeType	theIndex);
 
 	/**
 	 * Whether the operation code is one of the node test types, for example,
@@ -1012,7 +1095,7 @@ public:
 	 * @param theIndex  index in list
 	 */
 	void
-	updateOpCodeLengthAfterNodeTest(OpCodeMapValueType	theIndex);
+	updateOpCodeLengthAfterNodeTest(OpCodeMapSizeType   theIndex);
 
 	/**
 	 * Whether there are any more tokens in the token queue.
@@ -1024,6 +1107,23 @@ public:
 	{
 		return tokenQueueSize() > m_currentPosition ? true : false;
 	}
+
+	/**
+	 * Retrieve number of elements in the token queue.
+	 * 
+	 * @return size of token queue
+	 */
+	TokenQueueSizeType
+	tokenQueueSize() const
+	{
+		return TokenQueueSizeType(m_tokenQueue.size());
+	}
+
+    bool
+    isValidTokenQueuePosition(TokenQueueSizeType    thePosition) const
+    {
+        return thePosition < tokenQueueSize();
+    }
 
 	/**
 	 * Retrieve the current position in the token queue.
@@ -1052,7 +1152,7 @@ public:
 	 * @return pointer to XObject token
 	 */
 	const XToken*
-	getToken(TokenQueueSizeType		thePosition) const
+	getToken(TokenQueuePositionType     thePosition) const
 	{
 		assert(thePosition < tokenQueueSize());
 
@@ -1111,10 +1211,10 @@ public:
 	 */
 	const XToken*
 	getRelativeToken(
-        TokenQueueSizeType	theOffset,
-        eRelativeDirection  theDirection) const
+        TokenQueuePositionType	theOffset,
+        eRelativeDirection      theDirection) const
 	{
-		const TokenQueueSizeType	thePosition =
+		const TokenQueuePositionType	thePosition =
             calculateRelativePosition(theOffset, theDirection);
 
 		if (thePosition == tokenQueueSize())
@@ -1187,11 +1287,11 @@ public:
 	 */
 	void
 	replaceRelativeToken(
-            TokenQueueSizeType	    theOffset,
+            TokenQueuePositionType  theOffset,
             eRelativeDirection      theDirection,
 			const XalanDOMString&	theString)
 	{
-		const TokenQueueSizeType	thePosition =
+		const TokenQueuePositionType	thePosition =
             calculateRelativePosition(theOffset, theDirection);
         assert(thePosition < tokenQueueSize());
 
@@ -1369,10 +1469,10 @@ private:
      * @param theDirection the direction in which to move
 	 * @return thePosition
 	 */
-	TokenQueueSizeType
+	TokenQueuePositionType
 	calculateRelativePosition(
-        TokenQueueSizeType	theOffset,
-        eRelativeDirection  theDirection) const
+        TokenQueuePositionType	theOffset,
+        eRelativeDirection      theDirection) const
 	{
         if (theDirection == eRelativeBackward &&
             theOffset <= m_currentPosition)

@@ -378,19 +378,55 @@ XPathExpression::shrink()
 
 
 
+#if defined(XALAN_XPATH_EXPRESSION_USE_ITERATORS)
+
 XPathExpression::OpCodeMapValueType
-XPathExpression::getOpCodeLengthFromOpMap(OpCodeMapSizeType		opPos) const
+XPathExpression::getOpCodeLengthFromOpMap(OpCodeMapPositionType     opPos) const
+{
+    assert(opPos - getInitialOpCodePosition() >= 0 &&
+           opPos - getInitialOpCodePosition() < opCodeMapSize());
+
+    OpCodeMapValueType	theResult = 0;
+
+	// Is there a valid opcode?
+	const int	theOpCodeLength = getOpCodeLength(*opPos);
+
+	if (theOpCodeLength == 0)
+	{
+		throw InvalidOpCodeException(-1);
+	}
+	else
+	{
+		// Does the Op code have a length > 1?
+		if (theOpCodeLength > 1)
+		{
+			// Yes, so get the length.
+			theResult = *(opPos + s_opCodeMapLengthIndex);
+		}
+	}
+
+	return theResult;
+}
+
+#endif
+
+XPathExpression::OpCodeMapValueType
+#if defined(XALAN_XPATH_EXPRESSION_USE_ITERATORS)
+XPathExpression::getOpCodeLengthFromOpMap(OpCodeMapSizeType     theIndex) const
+#else
+XPathExpression::getOpCodeLengthFromOpMap(OpCodeMapPositionType     theIndex) const
+#endif
 {
 	OpCodeMapValueType	theResult = 0;
 
-	if (opPos >= opCodeMapSize())
+	if (theIndex >= opCodeMapSize())
 	{
 		throw InvalidOpCodeException(-1);
 	}
 	else
 	{
 		// Is there a valid opcode?
-		const int	theOpCodeLength = getOpCodeLength(m_opMap[opPos]);
+		const int	theOpCodeLength = getOpCodeLength(m_opMap[theIndex]);
 
 		if (theOpCodeLength == 0)
 		{
@@ -402,7 +438,7 @@ XPathExpression::getOpCodeLengthFromOpMap(OpCodeMapSizeType		opPos) const
 			if (theOpCodeLength > 1)
 			{
 				// Yes, so get the length.
-				theResult = m_opMap[opPos + s_opCodeMapLengthIndex];
+				theResult = m_opMap[theIndex + s_opCodeMapLengthIndex];
 			}
 		}
 	}
@@ -567,11 +603,11 @@ void
 XPathExpression::updateShiftedOpCodeLength(
 			OpCodeMapValueType	theOpCode,
 #if defined(NDEBUG)
-			OpCodeMapValueType	/* theOriginalIndex */,
+			OpCodeMapSizeType	/* theOriginalIndex */,
 #else
-			OpCodeMapValueType	theOriginalIndex,
+			OpCodeMapSizeType	theOriginalIndex,
 #endif
-			OpCodeMapValueType	theNewIndex)
+			OpCodeMapSizeType	theNewIndex)
 {
 	// There must be some other expressions in
 	// the buffer...
@@ -667,7 +703,7 @@ XPathExpression::isNodeTestOpCode(OpCodeMapValueType	theOpCode)
 
 
 void
-XPathExpression::updateOpCodeLengthAfterNodeTest(OpCodeMapValueType	    theIndex)
+XPathExpression::updateOpCodeLengthAfterNodeTest(OpCodeMapSizeType  theIndex)
 {
 	// There must be some other expressions in
 	// the buffer...

@@ -121,7 +121,7 @@ void
 XPath::unknownOpCodeError(
 			XalanNode*				context,
 			XPathExecutionContext&	executionContext,
-			OpCodePositionType		opPos) const
+			OpCodeMapPositionType	opPos) const
 {
 	XalanDOMString	theOpCode;
 			
@@ -155,16 +155,19 @@ XPath::execute(
 			XPathExecutionContext&	executionContext) const
 {
 	// Push and pop the PrefixResolver...
-	XPathExecutionContext::PrefixResolverSetAndRestore	theResolverSetAndRestore(
+	const XPathExecutionContext::PrefixResolverSetAndRestore	theResolverSetAndRestore(
 									executionContext,
 									&prefixResolver);
 
 	// Push and pop the current node...
-	XPathExecutionContext::CurrentNodePushAndPop		theNodePushAndPop(
+	const XPathExecutionContext::CurrentNodePushAndPop	theNodePushAndPop(
 									executionContext,
 									context);
 
-	return executeMore(context, 0, executionContext);
+	return executeMore(
+            context,
+            m_expression.getInitialOpCodePosition(),
+            executionContext);
 }
 
 
@@ -179,16 +182,20 @@ XPath::execute(
 	assert(context != 0);
 
 	// Push and pop the PrefixResolver...
-	XPathExecutionContext::PrefixResolverSetAndRestore	theResolverSetAndRestore(
+	const XPathExecutionContext::PrefixResolverSetAndRestore	theResolverSetAndRestore(
 									executionContext,
 									&prefixResolver);
 
 	// Push and pop the current node...
-	XPathExecutionContext::CurrentNodePushAndPop		theNodePushAndPop(
+	const XPathExecutionContext::CurrentNodePushAndPop	theNodePushAndPop(
 									executionContext,
 									context);
 
-	executeMore(context, 0, executionContext, result);
+	executeMore(
+            context,
+            m_expression.getInitialOpCodePosition(),
+            executionContext,
+            result);
 }
 
 
@@ -203,16 +210,20 @@ XPath::execute(
 	assert(context != 0);
 
 	// Push and pop the PrefixResolver...
-	XPathExecutionContext::PrefixResolverSetAndRestore	theResolverSetAndRestore(
+	const XPathExecutionContext::PrefixResolverSetAndRestore	theResolverSetAndRestore(
 									executionContext,
 									&prefixResolver);
 
 	// Push and pop the current node...
-	XPathExecutionContext::CurrentNodePushAndPop		theNodePushAndPop(
+	const XPathExecutionContext::CurrentNodePushAndPop	theNodePushAndPop(
 									executionContext,
 									context);
 
-	executeMore(context, 0, executionContext, result);
+	executeMore(
+            context,
+            m_expression.getInitialOpCodePosition(),
+            executionContext,
+            result);
 }
 
 
@@ -227,16 +238,20 @@ XPath::execute(
 	assert(context != 0);
 
 	// Push and pop the PrefixResolver...
-	XPathExecutionContext::PrefixResolverSetAndRestore	theResolverSetAndRestore(
+	const XPathExecutionContext::PrefixResolverSetAndRestore	theResolverSetAndRestore(
 									executionContext,
 									&prefixResolver);
 
 	// Push and pop the current node...
-	XPathExecutionContext::CurrentNodePushAndPop		theNodePushAndPop(
+	const XPathExecutionContext::CurrentNodePushAndPop	theNodePushAndPop(
 									executionContext,
 									context);
 
-	executeMore(context, 0, executionContext, result);
+	executeMore(
+            context,
+            m_expression.getInitialOpCodePosition(),
+            executionContext,
+            result);
 }
 
 
@@ -252,16 +267,21 @@ XPath::execute(
 	assert(context != 0);
 
 	// Push and pop the PrefixResolver...
-	XPathExecutionContext::PrefixResolverSetAndRestore	theResolverSetAndRestore(
+	const XPathExecutionContext::PrefixResolverSetAndRestore	theResolverSetAndRestore(
 									executionContext,
 									&prefixResolver);
 
 	// Push and pop the current node...
-	XPathExecutionContext::CurrentNodePushAndPop		theNodePushAndPop(
+	const XPathExecutionContext::CurrentNodePushAndPop	theNodePushAndPop(
 									executionContext,
 									context);
 
-	executeMore(context, 0, executionContext, formatterListener, function);
+	executeMore(
+            context,
+            m_expression.getInitialOpCodePosition(),
+            executionContext,
+            formatterListener,
+            function);
 }
 
 
@@ -282,11 +302,15 @@ XPath::execute(
 									&prefixResolver);
 
 	// Push and pop the current node...
-	XPathExecutionContext::CurrentNodePushAndPop		theNodePushAndPop(
+	XPathExecutionContext::CurrentNodePushAndPop	theNodePushAndPop(
 									executionContext,
 									context);
 
-	return executeMore(context, 0, executionContext, result);
+	return executeMore(
+            context,
+            m_expression.getInitialOpCodePosition(),
+            executionContext,
+            result);
 }
 
 
@@ -294,7 +318,7 @@ XPath::execute(
 const XObjectPtr
 XPath::executeMore(
 			XalanNode* 				context,
-			OpCodePositionType 		opPos,
+			OpCodeMapPositionType 	opPos,
 			XPathExecutionContext&	executionContext) const
 {
 	switch(m_expression.getOpCodeMapValue(opPos))
@@ -488,7 +512,7 @@ XPath::executeMore(
 void
 XPath::executeMore(
 			XalanNode* 				context,
-			OpCodePositionType 		opPos,
+			OpCodeMapPositionType 	opPos,
 			XPathExecutionContext&	executionContext,
 			bool&					result) const
 {
@@ -673,7 +697,7 @@ XPath::executeMore(
 void
 XPath::executeMore(
 			XalanNode* 				context,
-			OpCodePositionType 		opPos,
+			OpCodeMapPositionType 	opPos,
 			XPathExecutionContext&	executionContext,
 			double&					result) const
 {
@@ -858,7 +882,7 @@ XPath::executeMore(
 void
 XPath::executeMore(
 			XalanNode* 				context,
-			OpCodePositionType 		opPos,
+			OpCodeMapPositionType 	opPos,
 			XPathExecutionContext&	executionContext,
 			XalanDOMString&			result) const
 {
@@ -1054,7 +1078,7 @@ stringToCharacters(
 void
 XPath::executeMore(
 			XalanNode* 				context,
-			OpCodePositionType 		opPos,
+			OpCodeMapPositionType 	opPos,
 			XPathExecutionContext&	executionContext,
 			FormatterListener&		formatterListener,
 			MemberFunctionPtr		function) const
@@ -1264,7 +1288,7 @@ XPath::executeMore(
 const XObjectPtr
 XPath::executeMore(
 			XalanNode* 				context,
-			OpCodePositionType 		opPos,
+			OpCodeMapPositionType 	opPos,
 			XPathExecutionContext&	executionContext,
 			MutableNodeRefList&		result) const
 {
@@ -1365,11 +1389,12 @@ XPath::doGetMatchScore(
 {
 	assert(context != 0);
 
-	OpCodePositionType	opPos = 2;
+	OpCodeMapPositionType	opPos =
+        m_expression.getInitialOpCodePosition() + 2;
 
 	while(m_expression.getOpCodeMapValue(opPos) == XPathExpression::eOP_LOCATIONPATHPATTERN)
 	{
-		const OpCodePositionType	nextOpPos = m_expression.getNextOpCodePosition(opPos);
+		const OpCodeMapPositionType	    nextOpPos = m_expression.getNextOpCodePosition(opPos);
 
 		score = locationPathPattern(executionContext, *context, opPos);
 
@@ -1441,18 +1466,21 @@ XPath::getMatchScore(
 
 inline const XalanDOMString*
 getStringFromTokenQueue(
-			const XPathExpression&	    expression,
-            XPath::OpCodePositionType	opPos)
+			const XPathExpression&	        expression,
+            XPath::OpCodeMapPositionType	opPos)
 {
-	const XPath::OpCodePositionType     tokenPosition =
+	const XPath::OpCodeMapValueType     tokenPosition =
 				expression.getOpCodeMapValue(opPos);
 
-	if (tokenPosition < 0)
+    if (tokenPosition == XPathExpression::eEMPTY ||
+        tokenPosition == XPathExpression::eELEMWILDCARD)
 	{
 		return 0;
 	}
 	else
 	{
+        assert(tokenPosition != XPathExpression::eENDOP);
+
 		const XObject* const	token =
 					expression.getToken(tokenPosition);
 		assert(token != 0);
@@ -1466,13 +1494,14 @@ getStringFromTokenQueue(
 void
 XPath::getTargetData(TargetDataVectorType&	targetData) const
 {
-	OpCodePositionType opPos = 2;
+	OpCodeMapPositionType   opPos =
+        m_expression.getInitialOpCodePosition() + 2;
 
 	targetData.reserve(eDefaultTargetDataSize);
 
 	while(m_expression.getOpCodeMapValue(opPos) == XPathExpression::eOP_LOCATIONPATHPATTERN)
 	{
-		const OpCodePositionType	nextOpPos = m_expression.getNextOpCodePosition(opPos);
+		const OpCodeMapPositionType	    nextOpPos = m_expression.getNextOpCodePosition(opPos);
 
 		opPos += 2;
 	 
@@ -1482,10 +1511,10 @@ XPath::getTargetData(TargetDataVectorType&	targetData) const
 		{
 			++stepCount;
 
-			const OpCodePositionType	nextStepPos =
+			const OpCodeMapPositionType	    nextStepPos =
 				m_expression.getNextOpCodePosition(opPos);
 
-			const OpCodePositionType	nextOp = m_expression.getOpCodeMapValue(nextStepPos);
+			const OpCodeMapValueType    nextOp = m_expression.getOpCodeMapValue(nextStepPos);
 
 			if(nextOp == XPathExpression::eENDOP)
 			{
@@ -1553,8 +1582,8 @@ XPath::getTargetData(TargetDataVectorType&	targetData) const
 
 						case XPathExpression::eNODETYPE_PI:
 							{
-								const OpCodePositionType	argLen =
-									m_expression.getOpCodeMapValue(opPos - 3 + XPathExpression::s_opCodeMapLengthIndex + 1) - 3;
+								const OpCodeMapValueType	argLen =
+									m_expression.getOpCodeArgumentLength(opPos - 3);
 
 								targetLocalName = PSEUDONAME_PI;
 
@@ -1663,7 +1692,7 @@ XPath::getTargetData(TargetDataVectorType&	targetData) const
 bool
 XPath::Or(
 			XalanNode*				context,
-			OpCodePositionType		opPos,
+			OpCodeMapPositionType	opPos,
 			XPathExecutionContext&	executionContext) const
 {
 	opPos += 2;
@@ -1687,7 +1716,7 @@ XPath::Or(
 bool
 XPath::And(
 			XalanNode*				context,
-			OpCodePositionType		opPos,
+			OpCodeMapPositionType	opPos,
 			XPathExecutionContext&	executionContext) const
 {
 	opPos += 2;	
@@ -1711,7 +1740,7 @@ XPath::And(
 bool
 XPath::notequals(
 			XalanNode*				context,
-			OpCodePositionType		opPos,
+			OpCodeMapPositionType	opPos,
 			XPathExecutionContext&	executionContext) const
 {
 	opPos += 2;	
@@ -1731,7 +1760,7 @@ XPath::notequals(
 bool
 XPath::equals(
 			XalanNode*				context,
-			OpCodePositionType		opPos,
+			OpCodeMapPositionType	opPos,
 			XPathExecutionContext&	executionContext) const
 {
 	opPos += 2;	
@@ -1751,7 +1780,7 @@ XPath::equals(
 bool
 XPath::lte(
 			XalanNode*				context,
-			OpCodePositionType		opPos,
+			OpCodeMapPositionType	opPos,
 			XPathExecutionContext&	executionContext) const
 {
 	opPos += 2;	
@@ -1771,7 +1800,7 @@ XPath::lte(
 bool
 XPath::lt(
 			XalanNode*				context,
-			OpCodePositionType		opPos,
+			OpCodeMapPositionType	opPos,
 			XPathExecutionContext&	executionContext) const
 {
 	opPos += 2;
@@ -1791,7 +1820,7 @@ XPath::lt(
 bool
 XPath::gte(
 			XalanNode*				context,
-			OpCodePositionType		opPos,
+			OpCodeMapPositionType	opPos,
 			XPathExecutionContext&	executionContext) const
 {
 	opPos += 2;
@@ -1811,7 +1840,7 @@ XPath::gte(
 bool
 XPath::gt(
 			XalanNode*				context,
-			OpCodePositionType		opPos,
+			OpCodeMapPositionType	opPos,
 			XPathExecutionContext&	executionContext) const
 {
 	opPos += 2;
@@ -1831,7 +1860,7 @@ XPath::gt(
 double
 XPath::getNumericOperand(
 			XalanNode*				context,
-			OpCodePositionType		opPos,
+			OpCodeMapPositionType	opPos,
 			XPathExecutionContext&	executionContext) const
 {
 	if (m_expression.getOpCodeMapValue(opPos) == XPathExpression::eOP_NUMBERLIT)
@@ -1856,7 +1885,7 @@ XPath::getNumericOperand(
 double
 XPath::plus(
 			XalanNode*				context,
-			OpCodePositionType		opPos,
+			OpCodeMapPositionType	opPos,
 			XPathExecutionContext&	executionContext) const
 {
 	opPos += 2;
@@ -1875,7 +1904,7 @@ XPath::plus(
 void
 XPath::plus(
 			XalanNode*				context,
-			OpCodePositionType		opPos,
+			OpCodeMapPositionType	opPos,
 			XPathExecutionContext&	executionContext,
 			FormatterListener&		formatterListener,
 			MemberFunctionPtr		function) const
@@ -1890,7 +1919,7 @@ XPath::plus(
 double
 XPath::minus(
 			XalanNode*				context,
-			OpCodePositionType		opPos,
+			OpCodeMapPositionType	opPos,
 			XPathExecutionContext&	executionContext) const
 {
 	opPos += 2;
@@ -1909,7 +1938,7 @@ XPath::minus(
 void
 XPath::minus(
 			XalanNode*				context,
-			OpCodePositionType		opPos,
+			OpCodeMapPositionType	opPos,
 			XPathExecutionContext&	executionContext,
 			FormatterListener&		formatterListener,
 			MemberFunctionPtr		function) const
@@ -1924,7 +1953,7 @@ XPath::minus(
 double
 XPath::mult(
 			XalanNode*				context,
-			OpCodePositionType		opPos,
+			OpCodeMapPositionType	opPos,
 			XPathExecutionContext&	executionContext) const
 {
 	opPos += 2;
@@ -1943,7 +1972,7 @@ XPath::mult(
 void
 XPath::mult(
 			XalanNode*				context,
-			OpCodePositionType		opPos,
+			OpCodeMapPositionType	opPos,
 			XPathExecutionContext&	executionContext,
 			FormatterListener&		formatterListener,
 			MemberFunctionPtr		function) const
@@ -1958,7 +1987,7 @@ XPath::mult(
 double
 XPath::div(
 			XalanNode*				context,
-			OpCodePositionType		opPos,
+			OpCodeMapPositionType	opPos,
 			XPathExecutionContext&	executionContext) const
 {
 	opPos += 2;
@@ -1977,7 +2006,7 @@ XPath::div(
 void
 XPath::div(
 			XalanNode*				context,
-			OpCodePositionType		opPos,
+			OpCodeMapPositionType	opPos,
 			XPathExecutionContext&	executionContext,
 			FormatterListener&		formatterListener,
 			MemberFunctionPtr		function) const
@@ -1992,7 +2021,7 @@ XPath::div(
 double
 XPath::mod(
 			XalanNode*				context,
-			OpCodePositionType		opPos,
+			OpCodeMapPositionType	opPos,
 			XPathExecutionContext&	executionContext) const
 {
 	opPos += 2;	
@@ -2011,7 +2040,7 @@ XPath::mod(
 void
 XPath::mod(
 			XalanNode*				context,
-			OpCodePositionType		opPos,
+			OpCodeMapPositionType	opPos,
 			XPathExecutionContext&	executionContext,
 			FormatterListener&		formatterListener,
 			MemberFunctionPtr		function) const
@@ -2026,7 +2055,7 @@ XPath::mod(
 double
 XPath::neg(
 			XalanNode*				context,
-			OpCodePositionType		opPos,
+			OpCodeMapPositionType	opPos,
 			XPathExecutionContext&	executionContext) const
 {
 	return DoubleSupport::negative(getNumericOperand(context, opPos + 2, executionContext));
@@ -2037,7 +2066,7 @@ XPath::neg(
 void
 XPath::neg(
 			XalanNode*				context,
-			OpCodePositionType						opPos,
+			OpCodeMapPositionType	opPos,
 			XPathExecutionContext&	executionContext,
 			FormatterListener&		formatterListener,
 			MemberFunctionPtr		function) const
@@ -2052,7 +2081,7 @@ XPath::neg(
 const XObjectPtr
 XPath::Union(
 			XalanNode*				context,
-			OpCodePositionType						opPos,
+			OpCodeMapPositionType	opPos,
 			XPathExecutionContext&	executionContext) const
 {
 	typedef XPathExecutionContext::BorrowReturnMutableNodeRefList	BorrowReturnMutableNodeRefList;
@@ -2069,7 +2098,7 @@ XPath::Union(
 void
 XPath::Union(
 			XalanNode*				context,
-			OpCodePositionType						opPos,
+			OpCodeMapPositionType	opPos,
 			XPathExecutionContext&	executionContext,
 			bool&					result) const
 {
@@ -2087,7 +2116,7 @@ XPath::Union(
 void
 XPath::Union(
 			XalanNode*				context,
-			OpCodePositionType						opPos,
+			OpCodeMapPositionType	opPos,
 			XPathExecutionContext&	executionContext,
 			double&					result) const
 {
@@ -2105,7 +2134,7 @@ XPath::Union(
 void
 XPath::Union(
 			XalanNode*				context,
-			OpCodePositionType						opPos,
+			OpCodeMapPositionType	opPos,
 			XPathExecutionContext&	executionContext,
 			XalanDOMString&			result) const
 {
@@ -2123,7 +2152,7 @@ XPath::Union(
 void
 XPath::Union(
 			XalanNode*				context,
-			OpCodePositionType						opPos,
+			OpCodeMapPositionType	opPos,
 			XPathExecutionContext&	executionContext,
 			FormatterListener&		formatterListener,
 			MemberFunctionPtr		function) const
@@ -2142,7 +2171,7 @@ XPath::Union(
 void
 XPath::Union(
 			XalanNode*				context,
-			OpCodePositionType						opPos,
+			OpCodeMapPositionType	opPos,
 			XPathExecutionContext&	executionContext,
 			MutableNodeRefList&		result) const
 {
@@ -2181,11 +2210,11 @@ XPath::Union(
 
 const XObjectPtr
 XPath::literal(
-			OpCodePositionType		opPos,
+			OpCodeMapPositionType	opPos,
 			XPathExecutionContext&	executionContext) const
 {
-	assert(m_expression.opCodeMapSize() > opPos + 2);
-	assert(m_expression.tokenQueueSize() > m_expression.getOpCodeMapValue(opPos + 2));
+	assert(m_expression.isValidOpCodePosition(opPos + 2));
+    assert(m_expression.isValidTokenQueuePosition(m_expression.getOpCodeMapValue(opPos + 2)));
 
     const XToken* const	    theLiteral = m_expression.getToken(m_expression.getOpCodeMapValue(opPos + 2));
     assert(theLiteral != 0);
@@ -2204,11 +2233,11 @@ XPath::literal(
 
 void
 XPath::literal(
-			OpCodePositionType	opPos,
-			bool&	            theResult) const
+			OpCodeMapPositionType	opPos,
+			bool&	                theResult) const
 {
-	assert(m_expression.opCodeMapSize() > opPos + 2);
-    assert(m_expression.tokenQueueSize() > m_expression.getOpCodeMapValue(opPos + 2));
+	assert(m_expression.isValidOpCodePosition(opPos + 2));
+    assert(m_expression.isValidTokenQueuePosition(m_expression.getOpCodeMapValue(opPos + 2)));
 
     const XToken* const	    theLiteral = m_expression.getToken(m_expression.getOpCodeMapValue(opPos + 2));
     assert(theLiteral != 0);
@@ -2220,11 +2249,11 @@ XPath::literal(
 
 void
 XPath::literal(
-			OpCodePositionType	opPos,
-			double&		        theResult) const
+			OpCodeMapPositionType	opPos,
+			double&		            theResult) const
 {
-	assert(m_expression.opCodeMapSize() > opPos + 2);
-    assert(m_expression.tokenQueueSize() > m_expression.getOpCodeMapValue(opPos + 2));
+	assert(m_expression.isValidOpCodePosition(opPos + 2));
+    assert(m_expression.isValidTokenQueuePosition(m_expression.getOpCodeMapValue(opPos + 2)));
 
     const XToken* const	    theLiteral = m_expression.getToken(m_expression.getOpCodeMapValue(opPos + 2));
     assert(theLiteral != 0);
@@ -2236,11 +2265,11 @@ XPath::literal(
 
 void
 XPath::literal(
-			OpCodePositionType	opPos,
-			XalanDOMString&		theString) const
+			OpCodeMapPositionType	opPos,
+			XalanDOMString&		    theString) const
 {
-	assert(m_expression.opCodeMapSize() > opPos + 2);
-    assert(m_expression.tokenQueueSize() > m_expression.getOpCodeMapValue(opPos + 2));
+	assert(m_expression.isValidOpCodePosition(opPos + 2));
+    assert(m_expression.isValidTokenQueuePosition(m_expression.getOpCodeMapValue(opPos + 2)));
 
     const XToken* const	    theLiteral = m_expression.getToken(m_expression.getOpCodeMapValue(opPos + 2));
     assert(theLiteral != 0);
@@ -2252,12 +2281,12 @@ XPath::literal(
 
 void
 XPath::literal(
-			OpCodePositionType	opPos,
-			FormatterListener&	formatterListener,
-			MemberFunctionPtr	function) const
+			OpCodeMapPositionType	opPos,
+			FormatterListener&	    formatterListener,
+			MemberFunctionPtr	    function) const
 {
-	assert(m_expression.opCodeMapSize() > opPos + 2);
-    assert(m_expression.tokenQueueSize() > m_expression.getOpCodeMapValue(opPos + 2));
+	assert(m_expression.isValidOpCodePosition(opPos + 2));
+    assert(m_expression.isValidTokenQueuePosition(m_expression.getOpCodeMapValue(opPos + 2)));
 
     const XToken* const	    theLiteral = m_expression.getToken(m_expression.getOpCodeMapValue(opPos + 2));
     assert(theLiteral != 0);
@@ -2269,11 +2298,11 @@ XPath::literal(
 
 const XObjectPtr
 XPath::variable(
-			OpCodePositionType	    opPos,
+			OpCodeMapPositionType	opPos,
 			XPathExecutionContext&	executionContext) const
 {
-	assert(m_expression.opCodeMapSize() > opPos + 3);
-    assert(m_expression.tokenQueueSize() > m_expression.getOpCodeMapValue(opPos + 3));
+	assert(m_expression.isValidOpCodePosition(opPos + 3));
+    assert(m_expression.isValidTokenQueuePosition(m_expression.getOpCodeMapValue(opPos + 3)));
 
     const XToken* const	    ns =
         m_expression.getToken(m_expression.getOpCodeMapValue(opPos + 2));
@@ -2290,11 +2319,11 @@ XPath::variable(
 
 const XObjectPtr
 XPath::numberlit(
-			OpCodePositionType		opPos,
+			OpCodeMapPositionType	opPos,
 			XPathExecutionContext&	executionContext) const
 {
-	assert(m_expression.opCodeMapSize() > opPos + 3);
-    assert(m_expression.tokenQueueSize() > m_expression.getOpCodeMapValue(opPos + 3));
+	assert(m_expression.isValidOpCodePosition(opPos + 3));
+    assert(m_expression.isValidTokenQueuePosition(m_expression.getOpCodeMapValue(opPos + 3)));
 
 	const XToken* const	    theLiteral =
         m_expression.getToken(m_expression.getOpCodeMapValue(opPos + 3));
@@ -2313,10 +2342,10 @@ XPath::numberlit(
 
 
 double
-XPath::numberlit(OpCodePositionType	opPos) const
+XPath::numberlit(OpCodeMapPositionType	opPos) const
 {
-	assert(m_expression.opCodeMapSize() > opPos + 3);
-    assert(m_expression.tokenQueueSize() > m_expression.getOpCodeMapValue(opPos + 3));
+	assert(m_expression.isValidOpCodePosition(opPos + 3));
+    assert(m_expression.isValidTokenQueuePosition(m_expression.getOpCodeMapValue(opPos + 3)));
 
 	const XToken* const	    theLiteral =
         m_expression.getToken(m_expression.getOpCodeMapValue(opPos + 3));
@@ -2329,11 +2358,11 @@ XPath::numberlit(OpCodePositionType	opPos) const
 
 void
 XPath::numberlit(
-			OpCodePositionType	opPos,
-			bool&	            theResult) const
+			OpCodeMapPositionType	opPos,
+			bool&	                theResult) const
 {
-	assert(m_expression.opCodeMapSize() > opPos + 3);
-    assert(m_expression.tokenQueueSize() > m_expression.getOpCodeMapValue(opPos + 3));
+	assert(m_expression.isValidOpCodePosition(opPos + 3));
+    assert(m_expression.isValidTokenQueuePosition(m_expression.getOpCodeMapValue(opPos + 3)));
 
 	const XToken* const	    theLiteral =
         m_expression.getToken(m_expression.getOpCodeMapValue(opPos + 3));
@@ -2346,11 +2375,11 @@ XPath::numberlit(
 
 void
 XPath::numberlit(
-			OpCodePositionType	opPos,
-			XalanDOMString&		theString) const
+			OpCodeMapPositionType	opPos,
+			XalanDOMString&		    theString) const
 {
-	assert(m_expression.opCodeMapSize() > opPos + 3);
-    assert(m_expression.tokenQueueSize() > m_expression.getOpCodeMapValue(opPos + 3));
+	assert(m_expression.isValidOpCodePosition(opPos + 3));
+    assert(m_expression.isValidTokenQueuePosition(m_expression.getOpCodeMapValue(opPos + 3)));
 
 	const XToken* const	    theLiteral =
         m_expression.getToken(m_expression.getOpCodeMapValue(opPos + 3));
@@ -2363,12 +2392,12 @@ XPath::numberlit(
 
 void
 XPath::numberlit(
-			OpCodePositionType	opPos,
-			FormatterListener&	formatterListener,
-			MemberFunctionPtr	function) const
+			OpCodeMapPositionType	opPos,
+			FormatterListener&	    formatterListener,
+			MemberFunctionPtr	    function) const
 {
-	assert(m_expression.opCodeMapSize() > opPos + 3);
-    assert(m_expression.tokenQueueSize() > m_expression.getOpCodeMapValue(opPos + 3));
+	assert(m_expression.isValidOpCodePosition(opPos + 3));
+    assert(m_expression.isValidTokenQueuePosition(m_expression.getOpCodeMapValue(opPos + 3)));
 
 	const XToken* const	    theLiteral =
         m_expression.getToken(m_expression.getOpCodeMapValue(opPos + 3));
@@ -2382,7 +2411,7 @@ XPath::numberlit(
 const XObjectPtr
 XPath::locationPath(
 			XalanNode*				context,
-			OpCodePositionType		opPos,
+			OpCodeMapPositionType	opPos,
 			XPathExecutionContext&	executionContext) const
 {    
 	assert(context != 0);
@@ -2401,7 +2430,7 @@ XPath::locationPath(
 void
 XPath::locationPath(
 			XalanNode*				context,
-			OpCodePositionType		opPos,
+			OpCodeMapPositionType	opPos,
 			XPathExecutionContext&	executionContext,
 			bool&					theResult) const
 {
@@ -2421,7 +2450,7 @@ XPath::locationPath(
 void
 XPath::locationPath(
 			XalanNode*				context,
-			OpCodePositionType		opPos,
+			OpCodeMapPositionType	opPos,
 			XPathExecutionContext&	executionContext,
 			double&					theResult) const
 {
@@ -2441,7 +2470,7 @@ XPath::locationPath(
 void
 XPath::locationPath(
 			XalanNode*				context,
-			OpCodePositionType		opPos,
+			OpCodeMapPositionType	opPos,
 			XPathExecutionContext&	executionContext,
 			XalanDOMString&			theResult) const
 {
@@ -2461,7 +2490,7 @@ XPath::locationPath(
 void
 XPath::locationPath(
 			XalanNode*				context,
-			OpCodePositionType		opPos,
+			OpCodeMapPositionType	opPos,
 			XPathExecutionContext&	executionContext,
 			FormatterListener&		formatterListener,
 			MemberFunctionPtr		function) const
@@ -2482,12 +2511,13 @@ XPath::locationPath(
 const XObjectPtr
 XPath::runExtFunction(
 			XalanNode*				context,
-			OpCodePositionType		opPos,
+			OpCodeMapPositionType	opPos,
 			XPathExecutionContext&	executionContext) const
 {
 	assert(context != 0);
 
-	const OpCodePositionType	endExtFunc = opPos + m_expression.getOpCodeMapValue(opPos + 1) - 1;
+	const OpCodeMapPositionType	    endExtFunc =
+        opPos + m_expression.getOpCodeMapValue(opPos + 1) - 1;
 
 	opPos += 2;
 
@@ -2507,7 +2537,8 @@ XPath::runExtFunction(
 
 	while(opPos < endExtFunc)
 	{
-		const OpCodePositionType	nextOpPos = m_expression.getNextOpCodePosition(opPos);
+		const OpCodeMapPositionType	    nextOpPos =
+            m_expression.getNextOpCodePosition(opPos);
 
 		args.push_back(executeMore(context, opPos, executionContext));
 
@@ -2522,10 +2553,11 @@ XPath::runExtFunction(
 const XObjectPtr
 XPath::runFunction(
 			XalanNode*				context,
-			OpCodePositionType		opPos,
+			OpCodeMapPositionType	opPos,
 			XPathExecutionContext&	executionContext) const
 {
-	const OpCodePositionType	endFunc = opPos + m_expression.getOpCodeMapValue(opPos + 1) - 1;
+	const OpCodeMapPositionType	    endFunc =
+        opPos + m_expression.getOpCodeMapValue(opPos + 1) - 1;
 
 	opPos += 2;
 
@@ -2613,7 +2645,7 @@ XPath::runFunction(
 double
 XPath::functionCount(
 			XalanNode*				context,
-			OpCodePositionType						opPos,
+			OpCodeMapPositionType	opPos,
 			XPathExecutionContext&	executionContext) const
 {
 	assert(context != 0);
@@ -2639,7 +2671,7 @@ XPath::functionCount(
 const XalanDOMString&
 XPath::functionName(
 			XalanNode*				context,
-			OpCodePositionType						opPos,
+			OpCodeMapPositionType	opPos,
 			XPathExecutionContext&	executionContext) const
 {
 	assert(context != 0);
@@ -2700,7 +2732,7 @@ XPath::functionLocalName(XalanNode*		context) const
 const XalanDOMString&
 XPath::functionLocalName(
 			XalanNode*				context,
-			OpCodePositionType						opPos,
+			OpCodeMapPositionType	opPos,
 			XPathExecutionContext&	executionContext) const
 {
 	assert(context != 0);
@@ -2746,7 +2778,7 @@ XPath::functionStringLength(XalanNode*	context) const
 double
 XPath::functionStringLength(
 			XalanNode*				context,
-			OpCodePositionType						opPos,
+			OpCodeMapPositionType	opPos,
 			XPathExecutionContext&	executionContext) const
 {
 	assert(context != 0);
@@ -2763,7 +2795,7 @@ XPath::functionStringLength(
 double
 XPath::functionSum(
 			XalanNode*				context,
-			OpCodePositionType						opPos,
+			OpCodeMapPositionType	opPos,
 			XPathExecutionContext&	executionContext) const
 {
 	assert(context != 0);
@@ -2809,7 +2841,7 @@ XPath::eMatchScore
 XPath::locationPathPattern(
 			XPathExecutionContext&	executionContext,
 			XalanNode&				context, 
-			OpCodePositionType 					opPos) const
+			OpCodeMapPositionType 	opPos) const
 {
 	eMatchScore	score = eMatchScoreNone;
 
@@ -2823,16 +2855,14 @@ XPath::locationPathPattern(
 void
 XPath::step(
 			XPathExecutionContext&	executionContext,
-			XalanNode*				context, 
-			OpCodePositionType 		opPos,
+			XalanNode*				context,
+			OpCodeMapPositionType 	opPos,
 			MutableNodeRefList& 	queryResults) const
 {
 	const XPathExpression&	currentExpression = getExpression();
 
 	const OpCodeMapValueType   stepType =
 		currentExpression.getOpCodeMapValue(opPos);
-
-	OpCodePositionType 		argLen = 0;
 
 	typedef XPathExecutionContext::BorrowReturnMutableNodeRefList	BorrowReturnMutableNodeRefList;
 
@@ -2846,27 +2876,27 @@ XPath::step(
 	case XPathExpression::eOP_EXTFUNCTION:
 	case XPathExpression::eOP_FUNCTION:
 	case XPathExpression::eOP_GROUP:
-		argLen = findNodeSet(executionContext, context, opPos, stepType, *subQueryResults);
+		opPos = findNodeSet(executionContext, context, opPos, stepType, *subQueryResults);
 		break;
 
 	case XPathExpression::eFROM_ROOT:
-		argLen = findRoot(executionContext, context, opPos, stepType, *subQueryResults);
+		opPos = findRoot(executionContext, context, opPos, stepType, *subQueryResults);
 		break;
 
 	case XPathExpression::eFROM_PARENT:
-		argLen = findParent(executionContext, context, opPos, stepType, *subQueryResults);
+		opPos = findParent(executionContext, context, opPos, stepType, *subQueryResults);
 		break;
 
 	case XPathExpression::eFROM_SELF:
-		argLen = findSelf(executionContext, context, opPos, stepType, *subQueryResults);
+		opPos = findSelf(executionContext, context, opPos, stepType, *subQueryResults);
 		break;
 
 	case XPathExpression::eFROM_ANCESTORS:
-		argLen = findAncestors(executionContext, context, opPos, stepType, *subQueryResults);
+		opPos = findAncestors(executionContext, context, opPos, stepType, *subQueryResults);
 		break;
 
 	case XPathExpression::eFROM_ANCESTORS_OR_SELF:
-		argLen = findAncestorsOrSelf(executionContext, context, opPos, stepType, *subQueryResults);
+		opPos = findAncestorsOrSelf(executionContext, context, opPos, stepType, *subQueryResults);
 		break;
 
 	case XPathExpression::eMATCH_ATTRIBUTE:
@@ -2874,7 +2904,7 @@ XPath::step(
 		// fall-through on purpose.
 
 	case XPathExpression::eFROM_ATTRIBUTES:
-		argLen = findAttributes(executionContext, context, opPos, stepType, *subQueryResults);
+		opPos = findAttributes(executionContext, context, opPos, stepType, *subQueryResults);
 		break;
 
 	case XPathExpression::eMATCH_ANY_ANCESTOR:
@@ -2884,40 +2914,38 @@ XPath::step(
 		// fall-through on purpose.
 
 	case XPathExpression::eFROM_CHILDREN:
-		argLen = findChildren(executionContext, context, opPos, stepType, *subQueryResults);
+		opPos = findChildren(executionContext, context, opPos, stepType, *subQueryResults);
 		break;
 
 	case XPathExpression::eFROM_DESCENDANTS:
 	case XPathExpression::eFROM_DESCENDANTS_OR_SELF:
-		argLen = findDescendants(executionContext, context, opPos, stepType, *subQueryResults);
+		opPos = findDescendants(executionContext, context, opPos, stepType, *subQueryResults);
 		break;
 
 	case XPathExpression::eFROM_FOLLOWING:
-		argLen = findFollowing(executionContext, context, opPos, stepType, *subQueryResults);
+		opPos = findFollowing(executionContext, context, opPos, stepType, *subQueryResults);
 		break;
 
 	case XPathExpression::eFROM_FOLLOWING_SIBLINGS:
-		argLen = findFollowingSiblings(executionContext, context, opPos, stepType, *subQueryResults);
+		opPos = findFollowingSiblings(executionContext, context, opPos, stepType, *subQueryResults);
 		break;
 
 	case XPathExpression::eFROM_PRECEDING:
-		argLen = findPreceeding(executionContext, context, opPos, stepType, *subQueryResults);
+		opPos = findPreceeding(executionContext, context, opPos, stepType, *subQueryResults);
 		break;
 
 	case XPathExpression::eFROM_PRECEDING_SIBLINGS:
-		argLen = findPreceedingSiblings(executionContext, context, opPos, stepType, *subQueryResults);
+		opPos = findPreceedingSiblings(executionContext, context, opPos, stepType, *subQueryResults);
 		break;
 
 	case XPathExpression::eFROM_NAMESPACE:
-		argLen = findNamespace(executionContext, context, opPos,  stepType, *subQueryResults);
+		opPos = findNamespace(executionContext, context, opPos,  stepType, *subQueryResults);
 		break;
 
 	default:
-		argLen = findNodesOnUnknownAxis(executionContext, context, opPos, stepType, *subQueryResults);
+		opPos = findNodesOnUnknownAxis(executionContext, context, opPos, stepType, *subQueryResults);
 		break;
 	}
-
-	opPos += argLen;
 
 	OpCodeMapValueType  nextStepType = currentExpression.getOpCodeMapValue(opPos);
 
@@ -3002,13 +3030,13 @@ XalanNode*
 XPath::stepPattern(
 			XPathExecutionContext&	executionContext,
 			XalanNode*				context, 
-			OpCodePositionType 		opPos,
+			OpCodeMapPositionType 	opPos,
 			eMatchScore& 			scoreHolder) const
 {
 	const XPathExpression&	currentExpression = getExpression();
 
-	const OpCodePositionType    endStep = currentExpression.getNextOpCodePosition(opPos);
-	OpCodeMapValueType          nextStepType = currentExpression.getOpCodeMapValue(endStep);
+	const OpCodeMapPositionType     endStep = currentExpression.getNextOpCodePosition(opPos);
+	OpCodeMapValueType              nextStepType = currentExpression.getOpCodeMapValue(endStep);
 
 	if(XPathExpression::eENDOP != nextStepType)
 	{
@@ -3047,12 +3075,12 @@ XPath::stepPattern(
 
 	assert(context != 0);
 
-	OpCodePositionType	argLen = 0;
+	OpCodeMapValueType	argLen = 0;
 
 	eMatchScore		    score = eMatchScoreNone;
 
-	const OpCodePositionType	startOpPos = opPos;
-	const OpCodeMapValueType	stepType =
+	const OpCodeMapPositionType	    startOpPos = opPos;
+	const OpCodeMapValueType	    stepType =
         currentExpression.getOpCodeMapValue(opPos);
 
 	switch(stepType)
@@ -3118,10 +3146,7 @@ XPath::stepPattern(
 
 	case XPathExpression::eFROM_ROOT:
 		{
-			// $$ ToDO: Can we reduce this to some call on the
-			// XPathExpression interface?
-			argLen =
-				currentExpression.getOpCodeMapValue(opPos + XPathExpression::s_opCodeMapLengthIndex + 1) - 3;
+			argLen = currentExpression.getOpCodeArgumentLength(opPos);
 
 			opPos += 3;
 
@@ -3134,8 +3159,8 @@ XPath::stepPattern(
 			}
 			else
 			{
-				const OpCodePositionType    prevPos = currentExpression.getNextOpCodePosition(startOpPos);		
-				const OpCodeMapValueType	prevStepType = currentExpression.getOpCodeMapValue(prevPos);
+				const OpCodeMapPositionType     prevPos = currentExpression.getNextOpCodePosition(startOpPos);		
+				const OpCodeMapValueType        prevStepType = currentExpression.getOpCodeMapValue(prevPos);
 
 				if (eMatchScoreNone == score  && 
 				    (prevStepType == XPathExpression::eMATCH_ANY_ANCESTOR ||
@@ -3166,10 +3191,7 @@ XPath::stepPattern(
 
 	case XPathExpression::eMATCH_ATTRIBUTE:
 		{
-			// $$ ToDO: Can we reduce this to some call on the
-			// XPathExpression interface?
-			argLen =
-				currentExpression.getOpCodeMapValue(opPos + XPathExpression::s_opCodeMapLengthIndex + 1) - 3;
+			argLen = currentExpression.getOpCodeArgumentLength(opPos);
 
 			opPos += 3;
 
@@ -3193,10 +3215,7 @@ XPath::stepPattern(
 	case XPathExpression::eMATCH_ANY_ANCESTOR:
 	case XPathExpression::eMATCH_ANY_ANCESTOR_WITH_PREDICATE:
 		{
-			// $$ ToDO: Can we reduce this to some call on the
-			// XPathExpression interface?
-			argLen =
-					currentExpression.getOpCodeMapValue(opPos + XPathExpression::s_opCodeMapLengthIndex + 1) - 3;
+			argLen = currentExpression.getOpCodeArgumentLength(opPos);
 
 			XalanNode::NodeType		nodeType = context->getNodeType();
 
@@ -3232,10 +3251,7 @@ XPath::stepPattern(
 
 	case XPathExpression::eMATCH_IMMEDIATE_ANCESTOR:
 		{
-			// $$ ToDO: Can we reduce this to some call on the
-			// XPathExpression interface?
-			argLen =
-				currentExpression.getOpCodeMapValue(opPos + XPathExpression::s_opCodeMapLengthIndex + 1) - 3;
+			argLen = currentExpression.getOpCodeArgumentLength(opPos);
 
 			const XalanNode::NodeType	nodeType = context->getNodeType();
 
@@ -3336,7 +3352,7 @@ XPath::eMatchScore
 XPath::handleFoundIndex(
 			XPathExecutionContext&	executionContext,
 			XalanNode* 				localContext, 
-			OpCodePositionType 					startOpPos) const
+			OpCodeMapPositionType 	startOpPos) const
 {
 	// We have an index somewhere in our pattern.  So, we have 
 	// to do a full search for our step, using the parent as 
@@ -3375,7 +3391,7 @@ XPath::eMatchScore
 XPath::handleFoundIndexPositional(
 			XPathExecutionContext&	executionContext,
 			XalanNode* 				localContext,
-			OpCodePositionType 					startOpPos) const
+			OpCodeMapPositionType 	startOpPos) const
 {
 	XalanNode* const	parentContext =
 				DOMServices::getParentOfNode(*localContext);
@@ -3407,11 +3423,11 @@ XPath::handleFoundIndexPositional(
 
 
 
-XPath::OpCodePositionType
+XPath::OpCodeMapPositionType
 XPath::findNodeSet(
 			XPathExecutionContext&	executionContext,
 			XalanNode*				context, 
-			OpCodePositionType 		opPos,
+			OpCodeMapPositionType 	opPos,
 			OpCodeMapValueType 		/* stepType */,
 			MutableNodeRefList& 	subQueryResults) const
 {
@@ -3430,16 +3446,16 @@ XPath::findNodeSet(
 		subQueryResults.setDocumentOrder();
 	}
 
-	return getExpression().getOpCodeLengthFromOpMap(opPos);
+	return opPos + getExpression().getOpCodeLengthFromOpMap(opPos);
 }
 
 
 
-XPath::OpCodePositionType
+XPath::OpCodeMapPositionType
 XPath::findRoot(
 			XPathExecutionContext&	/* executionContext */,
 			XalanNode*				context, 
-			OpCodePositionType 		opPos,
+			OpCodeMapPositionType 	opPos,
 			OpCodeMapValueType 		/* stepType */,
 			MutableNodeRefList& 	subQueryResults) const
 {
@@ -3447,10 +3463,8 @@ XPath::findRoot(
 
 	const XPathExpression&	currentExpression = getExpression();
 
-	// $$ ToDO: Can we reduce this to some call on the
-	// XPathExpression interface?
-	const OpCodePositionType	argLen =
-		currentExpression.getOpCodeMapValue(opPos + XPathExpression::s_opCodeMapLengthIndex + 1) - 3;
+	const OpCodeMapValueType    argLen =
+		currentExpression.getOpCodeArgumentLength(opPos);
 
 	XalanNode* const	docContext = XalanNode::DOCUMENT_NODE == context->getNodeType() ?
 									context :
@@ -3461,16 +3475,16 @@ XPath::findRoot(
 
 	subQueryResults.setDocumentOrder();
 
-	return argLen + 3;
+	return opPos + argLen + 3;
 }
 
 
 
-XPath::OpCodePositionType
+XPath::OpCodeMapPositionType
 XPath::findParent(
 			XPathExecutionContext&	executionContext,
 			XalanNode*				context, 
-			OpCodePositionType 		opPos,
+			OpCodeMapPositionType 	opPos,
 			OpCodeMapValueType 		stepType,
 			MutableNodeRefList& 	subQueryResults) const
 {
@@ -3479,19 +3493,17 @@ XPath::findParent(
 
 	const XPathExpression&	currentExpression = getExpression();
 
-	// $$ ToDO: Can we reduce this to some call on the
-	// XPathExpression interface?
-	const OpCodePositionType	argLen =
-			currentExpression.getOpCodeMapValue(opPos + XPathExpression::s_opCodeMapLengthIndex + 1) - 3;
+	const OpCodeMapValueType    argLen =
+			currentExpression.getOpCodeArgumentLength(opPos);
 
 	XalanNode* const	theParent = DOMServices::getParentOfNode(*context);
+
+	opPos += 3;
 
 	if(0 != theParent)
 	{
 		if(argLen > 0)
 		{
-			opPos += 3;
-
 			const NodeTester	theTester(
 							*this,
 							executionContext,
@@ -3515,16 +3527,16 @@ XPath::findParent(
 
 	subQueryResults.setDocumentOrder();
 
-	return argLen + 3;
+	return opPos + argLen;
 }
 
 
 
-XPath::OpCodePositionType
+XPath::OpCodeMapPositionType
 XPath::findSelf(
 			XPathExecutionContext&	executionContext,
 			XalanNode*				context, 
-			OpCodePositionType 		opPos,
+			OpCodeMapPositionType 	opPos,
 			OpCodeMapValueType 		stepType,
 			MutableNodeRefList& 	subQueryResults) const
 {
@@ -3533,10 +3545,10 @@ XPath::findSelf(
 
 	const XPathExpression&	currentExpression = getExpression();
 
-	// $$ ToDO: Can we reduce this to some call on the
-	// XPathExpression interface?
-	const OpCodePositionType	argLen =
-		currentExpression.getOpCodeMapValue(opPos + XPathExpression::s_opCodeMapLengthIndex + 1) - 3;
+	const OpCodeMapValueType    argLen =
+		currentExpression.getOpCodeArgumentLength(opPos);
+
+	opPos += 3;
 
 	if(argLen == 0)
 	{
@@ -3544,8 +3556,6 @@ XPath::findSelf(
 	}
 	else
 	{
-		opPos += 3;
-
 		const NodeTester	theTester(
 						*this,
 						executionContext,
@@ -3565,16 +3575,16 @@ XPath::findSelf(
 
 	subQueryResults.setDocumentOrder();
 
-	return argLen + 3;
+	return opPos + argLen;
 }
 
 
 
-XPath::OpCodePositionType
+XPath::OpCodeMapPositionType
 XPath::findAncestors(
 			XPathExecutionContext&	executionContext,
 			XalanNode*				context, 
-			OpCodePositionType 		opPos,
+			OpCodeMapPositionType 	opPos,
 			OpCodeMapValueType 		stepType,
 			MutableNodeRefList& 	subQueryResults) const
 {
@@ -3585,15 +3595,13 @@ XPath::findAncestors(
 
 	const XPathExpression&	currentExpression = getExpression();
 
-	// $$ ToDO: Can we reduce this to some call on the
-	// XPathExpression interface?
-	const OpCodePositionType	argLen =
-			currentExpression.getOpCodeMapValue(opPos + XPathExpression::s_opCodeMapLengthIndex + 1) - 3;
+	const OpCodeMapValueType    argLen =
+			currentExpression.getOpCodeArgumentLength(opPos);
+
+	opPos += 3;
 
 	if (context != 0)
 	{
-		opPos += 3;
-
 		const NodeTester	theTester(
 						*this,
 						executionContext,
@@ -3618,16 +3626,16 @@ XPath::findAncestors(
 
 	subQueryResults.setReverseDocumentOrder();
 
-	return argLen + 3;
+	return opPos + argLen;
 }
 
 
 
-XPath::OpCodePositionType
+XPath::OpCodeMapPositionType
 XPath::findAncestorsOrSelf(
 			XPathExecutionContext&	executionContext,
 			XalanNode*				context, 
-			OpCodePositionType 		opPos,
+			OpCodeMapPositionType 	opPos,
 			OpCodeMapValueType 		stepType,
 			MutableNodeRefList& 	subQueryResults) const
 {
@@ -3636,10 +3644,8 @@ XPath::findAncestorsOrSelf(
 
 	const XPathExpression&	currentExpression = getExpression();
 
-	// $$ ToDO: Can we reduce this to some call on the
-	// XPathExpression interface?
-	const OpCodePositionType	argLen =
-		currentExpression.getOpCodeMapValue(opPos + XPathExpression::s_opCodeMapLengthIndex + 1) - 3;
+	const OpCodeMapValueType	argLen =
+		currentExpression.getOpCodeArgumentLength(opPos);
 
 	opPos += 3;
 
@@ -3666,16 +3672,16 @@ XPath::findAncestorsOrSelf(
 
 	subQueryResults.setReverseDocumentOrder();
 
-	return argLen + 3;
+	return opPos + argLen;
 }
 
 
 
-XPath::OpCodePositionType
+XPath::OpCodeMapPositionType
 XPath::findAttributes(
 			XPathExecutionContext&	executionContext,
 			XalanNode*				context, 
-			OpCodePositionType 		opPos,
+			OpCodeMapPositionType 	opPos,
 			OpCodeMapValueType		stepType,
 			MutableNodeRefList& 	subQueryResults) const
 {
@@ -3684,10 +3690,10 @@ XPath::findAttributes(
 
 	const XPathExpression&	currentExpression = getExpression();
 
-	// $$ ToDO: Can we reduce this to some call on the
-	// XPathExpression interface?
-	const OpCodePositionType	argLen =
-				currentExpression.getOpCodeMapValue(opPos + XPathExpression::s_opCodeMapLengthIndex + 1) - 3;
+	const OpCodeMapValueType	argLen =
+				currentExpression.getOpCodeArgumentLength(opPos);
+
+	opPos += 3;
 
 	if(context->getNodeType() == XalanNode::ELEMENT_NODE)
 	{
@@ -3695,8 +3701,6 @@ XPath::findAttributes(
 
 		if(attributeList != 0) 
 		{
-			opPos += 3;
-
 			const unsigned int	nAttrs = attributeList->getLength();
 
 			if (nAttrs != 0)
@@ -3728,16 +3732,16 @@ XPath::findAttributes(
 
 	subQueryResults.setDocumentOrder();
 
-	return argLen + 3;
+	return opPos + argLen;
 }
 
 
 
-XPath::OpCodePositionType
+XPath::OpCodeMapPositionType
 XPath::findChildren(
 			XPathExecutionContext&	executionContext,
 			XalanNode*				context, 
-			OpCodePositionType 		opPos,
+			OpCodeMapPositionType 	opPos,
 			OpCodeMapValueType		stepType,
 			MutableNodeRefList& 	subQueryResults) const
 {
@@ -3748,15 +3752,13 @@ XPath::findChildren(
 
 	const XPathExpression&	currentExpression = getExpression();
 
-	// $$ ToDO: Can we reduce this to some call on the
-	// XPathExpression interface?
-	const OpCodePositionType	argLen =
-		currentExpression.getOpCodeMapValue(opPos + XPathExpression::s_opCodeMapLengthIndex + 1) - 3;
+	const OpCodeMapValueType    argLen =
+		currentExpression.getOpCodeArgumentLength(opPos);
+
+	opPos += 3;
 
 	if (child != 0)
 	{
-		opPos += 3;
-
 		const NodeTester	theTester(
 						*this,
 						executionContext,
@@ -3781,16 +3783,16 @@ XPath::findChildren(
 
 	subQueryResults.setDocumentOrder();
 
-	return argLen + 3;
+	return opPos + argLen;
 }
 
 
 
-XPath::OpCodePositionType
+XPath::OpCodeMapPositionType
 XPath::findDescendants(
 			XPathExecutionContext&	executionContext,
 			XalanNode*				context, 
-			OpCodePositionType 	    opPos,
+			OpCodeMapPositionType 	opPos,
 			OpCodeMapValueType 		stepType,
 			MutableNodeRefList& 	subQueryResults) const
 {
@@ -3799,10 +3801,8 @@ XPath::findDescendants(
 
 	const XPathExpression&	currentExpression = getExpression();
 
-	// $$ ToDO: Can we reduce this to some call on the
-	// XPathExpression interface?
-	const OpCodePositionType	argLen =
-		currentExpression.getOpCodeMapValue(opPos + XPathExpression::s_opCodeMapLengthIndex + 1) - 3;
+	const OpCodeMapValueType    argLen =
+		currentExpression.getOpCodeArgumentLength(opPos);
 
 	// Perform a pre-order traversal of descendents...
 	XalanNode*	pos = context;
@@ -3857,16 +3857,16 @@ XPath::findDescendants(
 
 	subQueryResults.setDocumentOrder();
 
-	return argLen + 3;
+	return opPos + argLen;
 }
 
 
 
-XPath::OpCodePositionType
+XPath::OpCodeMapPositionType
 XPath::findFollowing(
 			XPathExecutionContext&	executionContext,
 			XalanNode*				context, 
-			OpCodePositionType 		opPos,
+			OpCodeMapPositionType 	opPos,
 			OpCodeMapValueType 		stepType,
 			MutableNodeRefList& 	subQueryResults) const
 {
@@ -3875,10 +3875,8 @@ XPath::findFollowing(
 
 	const XPathExpression&	currentExpression = getExpression();
 
-	// $$ ToDO: Can we reduce this to some call on the
-	// XPathExpression interface?
-	const OpCodePositionType	argLen =
-		currentExpression.getOpCodeMapValue(opPos + XPathExpression::s_opCodeMapLengthIndex + 1) - 3;
+	const OpCodeMapValueType    argLen =
+		currentExpression.getOpCodeArgumentLength(opPos);
 
 	opPos += 3;
 
@@ -3954,16 +3952,16 @@ XPath::findFollowing(
 
 	subQueryResults.setDocumentOrder();
 
-	return argLen + 3;
+	return opPos + argLen;
 }
 
 
 
-XPath::OpCodePositionType
+XPath::OpCodeMapPositionType
 XPath::findFollowingSiblings(
 			XPathExecutionContext&	executionContext,
 			XalanNode*				context, 
-			OpCodePositionType 		opPos,
+			OpCodeMapPositionType 	opPos,
 			OpCodeMapValueType 		stepType,
 			MutableNodeRefList& 	subQueryResults) const
 {
@@ -3972,17 +3970,15 @@ XPath::findFollowingSiblings(
 
 	const XPathExpression&	currentExpression = getExpression();
 
-	// $$ ToDO: Can we reduce this to some call on the
-	// XPathExpression interface?
-	const OpCodePositionType	argLen =
-		currentExpression.getOpCodeMapValue(opPos + XPathExpression::s_opCodeMapLengthIndex + 1) - 3;
+	const OpCodeMapValueType	argLen =
+		currentExpression.getOpCodeArgumentLength(opPos);
 
 	XalanNode*	pos = context->getNextSibling();
 
+	opPos += 3;
+
 	if (pos != 0)
 	{
-		opPos += 3;
-
 		const NodeTester	theTester(
 						*this,
 						executionContext,
@@ -4007,7 +4003,7 @@ XPath::findFollowingSiblings(
 
 	subQueryResults.setDocumentOrder();
 
-	return argLen + 3;
+	return opPos + argLen;
 }
 
 
@@ -4058,11 +4054,11 @@ findTopNode(
 
 
 
-XPath::OpCodePositionType
+XPath::OpCodeMapPositionType
 XPath::findPreceeding(
 			XPathExecutionContext&	executionContext,
 			XalanNode*				context, 
-			OpCodePositionType 		opPos,
+			OpCodeMapPositionType 	opPos,
 			OpCodeMapValueType		stepType,
 			MutableNodeRefList& 	subQueryResults) const
 {
@@ -4071,10 +4067,8 @@ XPath::findPreceeding(
 
 	const XPathExpression&	currentExpression = getExpression();
 
-	// $$ ToDO: Can we reduce this to some call on the
-	// XPathExpression interface?
-	const OpCodePositionType	argLen =
-		currentExpression.getOpCodeMapValue(opPos + XPathExpression::s_opCodeMapLengthIndex + 1) - 3;
+	const OpCodeMapValueType    argLen =
+		currentExpression.getOpCodeArgumentLength(opPos);
 
 	opPos += 3;
 
@@ -4177,16 +4171,16 @@ XPath::findPreceeding(
 
 	subQueryResults.setReverseDocumentOrder();
 
-	return argLen + 3;
+	return opPos + argLen;
 }
 
 
 
-XPath::OpCodePositionType
+XPath::OpCodeMapPositionType
 XPath::findPreceedingSiblings(
 			XPathExecutionContext&	executionContext,
 			XalanNode*				context, 
-			OpCodePositionType 		opPos,
+			OpCodeMapPositionType 	opPos,
 			OpCodeMapValueType		stepType,
 			MutableNodeRefList& 	subQueryResults) const
 {
@@ -4195,18 +4189,16 @@ XPath::findPreceedingSiblings(
 
 	const XPathExpression&	currentExpression = getExpression();
 
-	// $$ ToDO: Can we reduce this to some call on the
-	// XPathExpression interface?
-	const OpCodePositionType	argLen =
-		currentExpression.getOpCodeMapValue(opPos + XPathExpression::s_opCodeMapLengthIndex + 1) - 3;
+	const OpCodeMapValueType    argLen =
+		currentExpression.getOpCodeArgumentLength(opPos);
+
+	opPos += 3;
 
 #if 1
 	XalanNode*	pos = context->getPreviousSibling();
 
 	if (pos != 0)
 	{
-		opPos += 3;
-
 		const NodeTester	theTester(
 						*this,
 						executionContext,
@@ -4239,8 +4231,6 @@ XPath::findPreceedingSiblings(
 
 		if (pos != context)
 		{
-			opPos += 3;
-
 			const NodeTester	theTester(
 							*this,
 							executionContext,
@@ -4272,16 +4262,16 @@ XPath::findPreceedingSiblings(
 
 	subQueryResults.setReverseDocumentOrder();
 
-	return argLen + 3;
+	return opPos + argLen;
 }
 
 
 
-XPath::OpCodePositionType
+XPath::OpCodeMapPositionType
 XPath::findNamespace(
 			XPathExecutionContext&	executionContext,
 			XalanNode*				context, 
-			OpCodePositionType 		opPos,
+			OpCodeMapPositionType 	opPos,
 			OpCodeMapValueType		stepType,
 			MutableNodeRefList& 	subQueryResults) const
 {
@@ -4290,15 +4280,13 @@ XPath::findNamespace(
 
 	const XPathExpression&	currentExpression = getExpression();
 
-	// $$ ToDO: Can we reduce this to some call on the
-	// XPathExpression interface?
-	const OpCodePositionType	argLen =
-		currentExpression.getOpCodeMapValue(opPos + XPathExpression::s_opCodeMapLengthIndex + 1) - 3;
+	const OpCodeMapValueType	argLen =
+		currentExpression.getOpCodeArgumentLength(opPos);
+
+	opPos += 3;
 
 	if(context->getNodeType() == XalanNode::ELEMENT_NODE)
 	{
-		opPos += 3;
-
 		// Look up the element chain until we hit the document, so that we
 		// get all of the attribute/namespace nodes.
 		const XalanNode* const	theOwnerDocument = context->getOwnerDocument();
@@ -4389,32 +4377,30 @@ XPath::findNamespace(
 
 	subQueryResults.setDocumentOrder();
 
-	return argLen + 3;
+	return opPos + argLen;
 }
 
 
 
-XPath::OpCodePositionType
+XPath::OpCodeMapPositionType
 XPath::findNodesOnUnknownAxis(
 			XPathExecutionContext&	executionContext,
 			XalanNode*				context, 
-			OpCodePositionType 		opPos,
+			OpCodeMapPositionType 	opPos,
 			OpCodeMapValueType 	    /* stepType */,
 			MutableNodeRefList& 	/* subQueryResults */) const
 {
 	const XPathExpression&	currentExpression = getExpression();
 
-	// $$ ToDO: Can we reduce this to some call on the
-	// XPathExpression interface?
-	const OpCodePositionType	argLen =
-		currentExpression.getOpCodeMapValue(opPos + XPathExpression::s_opCodeMapLengthIndex + 1) - 3;
+	const OpCodeMapValueType	argLen =
+		currentExpression.getOpCodeArgumentLength(opPos);
 
 	executionContext.error(
 			XalanMessageLoader::getMessage(XalanMessages::UnknownAxis),
 			context,
 			getLocator());
 
-	return argLen + 3;
+	return opPos + argLen + 3;
 }
 
 
@@ -4424,8 +4410,8 @@ XPath::nodeTest(
 			XPathExecutionContext&	executionContext,
 			XalanNode* 				context,
 			XalanNode::NodeType		nodeType,
-			OpCodePositionType 		opPos,
-			OpCodePositionType 		argLen,
+			OpCodeMapPositionType 	opPos,
+			OpCodeMapValueType 	    argLen,
 			OpCodeMapValueType 		stepType) const
 {
 	assert(context->getNodeType() == nodeType);
@@ -4518,8 +4504,10 @@ XPath::nodeTest(
 				bool					test = false;
 
 				OpCodeMapValueType 		queueIndex = currentExpression.getOpCodeMapValue(opPos);
+                assert(queueIndex == XPathExpression::eEMPTY ||
+                       queueIndex < currentExpression.tokenQueueSize());
 
-				const XalanDOMString&	targetNS = queueIndex >= 0 ?
+                const XalanDOMString&	targetNS = queueIndex != XPathExpression::eEMPTY ?
 										currentExpression.getToken(queueIndex)->str() :
 											s_emptyString;
 
@@ -4698,10 +4686,10 @@ XPath::nodeTest(
 
 
 
-XPath::OpCodePositionType
+XPath::OpCodeMapPositionType
 XPath::predicates(
 			XPathExecutionContext&	executionContext,
-			OpCodePositionType 		opPos,
+			OpCodeMapPositionType 	opPos,
 			MutableNodeRefList& 	subQueryResults) const
 {
 	assert(&executionContext.getContextNodeList() == &subQueryResults);
@@ -4720,7 +4708,7 @@ XPath::predicates(
 		// update endPredicatePos.
 		if (theLength > 0)
 		{
-			const OpCodePositionType	predOpPos = opPos + 2;
+			const OpCodeMapPositionType	predOpPos = opPos + 2;
 
 			// OK, this is a huge hack/optimization.  If the predicate is
 			// simple a number, such as [2], we can just get the
@@ -4816,8 +4804,8 @@ XPath::predicates(
 XPath::NodeTester::NodeTester(
 			const XPath&			xpath,
 			XPathExecutionContext&	executionContext,
-			OpCodePositionType 		opPos,
-			OpCodePositionType 		argLen,
+			OpCodeMapPositionType 	opPos,
+			OpCodeMapValueType 	    argLen,
 			OpCodeMapValueType		stepType) :
 	m_executionContext(executionContext),
 	m_targetNamespace(0),
