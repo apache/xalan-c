@@ -1186,8 +1186,8 @@ FileUtility::diffElement(
 	else
 	{
 		char  buf1[2], buf2[2];
-		sprintf(buf1, "%d", numGoldAttr);
-		sprintf(buf2, "%d", numDomAttr);
+		sprintf(buf1, "%u", numGoldAttr);
+		sprintf(buf2, "%u", numDomAttr);
 		collectData("Wrong number of attributes. ",
 						 docNodeName,
 						 XalanDOMString(buf1),
@@ -1443,7 +1443,7 @@ FileUtility::reportPassFail(
 	runResults.insert(Hashtable::value_type(XalanDOMString("BaseDrive "), XalanDOMString(getDrive())));
 	runResults.insert(Hashtable::value_type(XalanDOMString("TestBase "), XalanDOMString(args.base)));
 	runResults.insert(Hashtable::value_type(XalanDOMString("xmlFormat "), data.xmlFormat));
-	sprintf(temp, "%d", args.iters);
+	sprintf(temp, "%ld", args.iters);
 	runResults.insert(Hashtable::value_type(XalanDOMString("Iters "), XalanDOMString(temp)));
 
 	sprintf(temp, "%d", data.pass);

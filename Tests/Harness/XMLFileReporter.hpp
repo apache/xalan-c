@@ -394,4 +394,7 @@ private:
 	bool m_flushOnCaseClose;
 
 };        // end of class XMLFileReporter
+
+
+
 #endif
