@@ -166,11 +166,13 @@
 
 #if !defined (XALAN_NO_NAMESPACES)
 using std::cerr;
+using std::cin;
 using std::cout;
 using std::endl;
 using std::hex;
 using std::less;
 using std::map;
+using std::pair;
 using std::vector;
 #endif
 
@@ -189,7 +191,13 @@ printArgOptions()
 		 << "Options are not case-sensitive."
 		 << endl
 		 << endl
-		 << "	-IN inputXMLURL"
+		 << " [-? Shows this message.]"
+		 << endl
+		 << endl
+		 << " [-h Shows this message.]"
+		 << endl
+		 << endl
+		 << " [-IN inputXMLURL (If not specified, stdin is used.)]"
 		 << endl
 		 << endl
 		 << " [-XSL XSLTransformationURL]"
@@ -206,7 +214,7 @@ printArgOptions()
 		 << endl
 		 << " [-INDENT n (Controls how many spaces to indent. {default is 0})]"
 		 << endl
-		 << " [-VALIDATE (Controls whether validation occurs. Validation is off by default.)]"
+		 << " [-NOVALIDATE (Controls whether validation occurs. Validation is on by default.)]"
 		 << endl
 		 << " [-TT (Trace the templates as they are being called.)]"
 		 << endl
@@ -257,13 +265,13 @@ printArgOptions()
 #include<stl/_tree.c>
 #endif
 
-typedef map<CharVectorType, CharVectorType, less<CharVectorType> > String2StringMapType;
+typedef vector<pair<const char*, const char*> >	StringPairVectorType;
 
 
 
 struct CmdLineParams
 {
-	String2StringMapType paramsMap;
+	StringPairVectorType params;
 	bool doStackDumpOnError;
 	bool escapeCData;
 	bool setQuietConflictWarnings;
@@ -282,13 +290,13 @@ struct CmdLineParams
 	bool useDOM;
 	int indentAmount;
 	int outputType;
-	CharVectorType outFileName;
-	CharVectorType specialCharacters;
-	CharVectorType xslFileName;
-	CharVectorType inFileName;
+	const char* outFileName;
+	const char* specialCharacters;
+	const char* xslFileName;
+	const char* inFileName;
 
 	CmdLineParams() :
-		paramsMap(),
+		params(),
 		doStackDumpOnError(false),
 		escapeCData(false),
 		setQuietConflictWarnings(false),
@@ -300,17 +308,17 @@ struct CmdLineParams
 		traceSelectionEvent(false),
 		traceTemplateChildren(false),
 		shouldWriteXMLHeader(true),
-		doValidation(false),
+		doValidation(true),
 		noIndent(false),
 		formatToNull(false),
 		formatToSourceTree(false),
 		useDOM(false),
 		indentAmount(-1),
 		outputType(-1),
-		outFileName(),
-		specialCharacters(),
-		xslFileName(),
-		inFileName()
+		outFileName(0),
+		specialCharacters(0),
+		xslFileName(0),
+		inFileName(0)
 	{
 	}
 };
@@ -381,13 +389,17 @@ getArgs(
 
 	for (int i = 1; i < argc && fSuccess == true; ++i)
 	{
-		if (!compareNoCase("-IN", argv[i]))
+		if (!compareNoCase("-h", argv[i]) || !compareNoCase("-?", argv[i]))
+		{
+			fSuccess = false;
+		}
+		else if (!compareNoCase("-IN", argv[i]))
 		{
 			++i;
 
 			if(i < argc && argv[i][0] != '-')
 			{
-				CopyStringToVector(argv[i], p.inFileName);
+				p.inFileName = argv[i];
 			}
 			else
 			{
@@ -400,7 +412,7 @@ getArgs(
 
 			if(i < argc && argv[i][0] != '-')
 			{
-				CopyStringToVector(argv[i], p.xslFileName);
+				p.xslFileName = argv[i];
 			}
 			else
 			{
@@ -413,7 +425,7 @@ getArgs(
 
 			if(i < argc && argv[i][0] != '-')
 			{
-				CopyStringToVector(argv[i], p.outFileName);
+				p.outFileName = argv[i];
 			}
 			else
 			{
@@ -426,7 +438,7 @@ getArgs(
 
 			if(i < argc && argv[i][0] != '-')
 			{
-				CopyStringToVector(argv[i], p.specialCharacters);
+				p.specialCharacters = argv[i];
 			}
 			else
 			{
@@ -450,9 +462,9 @@ getArgs(
 				fSuccess = false;
 			}
 		}
-		else if(!compareNoCase("-VALIDATE", argv[i]))
+		else if(!compareNoCase("-NOVALIDATE", argv[i]))
 		{
-			p.doValidation = true;
+			p.doValidation = false;
 		}
 		else if (!compareNoCase("-PARAM", argv[i])) 
 		{
@@ -460,9 +472,7 @@ getArgs(
 
 			if(i < argc && argv[i][0] != '-')
 			{
-				CharVectorType	name;
-
-				CopyStringToVector(argv[i], name);
+				const char* const	name = argv[i];
 
 				++i;
 
@@ -470,11 +480,9 @@ getArgs(
 				// be a valid character in a parameter value.
 				if(i < argc)
 				{
-					CharVectorType	expression;
+					typedef StringPairVectorType::value_type	value_type;
 
-					CopyStringToVector(argv[i], expression);
-
-					p.paramsMap[name] = expression;
+					p.params.push_back(value_type(name, argv[i]));
 				}
 				else
 				{
@@ -729,13 +737,13 @@ createFormatter(
 XalanOutputStream*
 createOutputStream(const CmdLineParams&		params)
 {
-	if (params.outFileName.empty())
+	if (params.outFileName == 0)
 	{
 		return new XalanStdOutputStream(cout);
 	}
 	else
 	{
-		return new XalanFileOutputStream(TranscodeFromLocalCodePage(c_str(params.outFileName)));
+		return new XalanFileOutputStream(TranscodeFromLocalCodePage(params.outFileName));
 	}
 }
 
@@ -820,7 +828,7 @@ xsltMain(const CmdLineParams&	params)
 	ICUXalanNumberFormatFactory		theXalanNumberFormatFactory;
 
 	// Install the ICU-based factory...
-	StylesheetExecutionContextDefault::installXalanNumberFormatFactory(&theXalanNumberFormatFactory);
+//	StylesheetExecutionContextDefault::installXalanNumberFormatFactory(&theXalanNumberFormatFactory);
 #endif
 
 	const XalanDOMString	mimeEncoding(XALAN_STATIC_UCODE_STRING("UTF-8"));
@@ -897,15 +905,17 @@ xsltMain(const CmdLineParams&	params)
 	 */
 	processor.setQuietConflictWarnings(params.setQuietConflictWarnings);
 
-	if (params.paramsMap.size())	
+	if (params.params.size() > 0)
 	{
-		String2StringMapType::const_iterator	it = params.paramsMap.begin();
+		StringPairVectorType::const_iterator	it = params.params.begin();
 
-		for ( ; it != params.paramsMap.end(); ++it)
+		for ( ; it != params.params.end(); ++it)
 		{
+			assert((*it).first != 0 && (*it).second != 0);
+
 			processor.setStylesheetParam(
-					TranscodeFromLocalCodePage(c_str((*it).first)),
-					TranscodeFromLocalCodePage(c_str((*it).second)));
+					XalanDOMString((*it).first),
+					XalanDOMString((*it).second));
 		}
 	}
 
@@ -917,14 +927,12 @@ xsltMain(const CmdLineParams&	params)
 		xmlParserLiaison.setIndent(params.indentAmount);
 	}
 
-	if (params.specialCharacters.size() != 0)
+	if (params.specialCharacters != 0)
 	{
-		xmlParserLiaison.setSpecialCharacters(TranscodeFromLocalCodePage(c_str(params.specialCharacters)));
+		xmlParserLiaison.setSpecialCharacters(XalanDOMString(params.specialCharacters));
 	}
 
 	xmlParserLiaison.setUseValidation(params.doValidation);
-
-	assert(params.inFileName.size() > 0);
 
 	if (!params.setQuietMode)
 	{
@@ -933,9 +941,9 @@ xsltMain(const CmdLineParams&	params)
 
 	XalanDOMString	xslFileName;
 
-	if(0 != params.xslFileName.size())
+	if(params.xslFileName != 0)
 	{
-		xslFileName = TranscodeFromLocalCodePage(c_str(params.xslFileName));
+		xslFileName = params.xslFileName;
 	}
 
 	const StylesheetRoot*	stylesheet = 0;
@@ -979,7 +987,16 @@ xsltMain(const CmdLineParams&	params)
 	}
 
 	// Do the transformation...
-	XSLTInputSource		theInputSource(c_str(params.inFileName));
+	XSLTInputSource		theInputSource;
+
+	if (params.inFileName != 0)
+	{
+		theInputSource.setSystemId(c_wstr(XalanDOMString(params.inFileName)));
+	}
+	else
+	{
+		theInputSource.setStream(&cin);
+	}
 
 	StylesheetExecutionContextDefault	theExecutionContext(processor,
 			theXSLProcessorSupport,
@@ -1139,167 +1156,156 @@ main(
 	/*
 	 *		Get command line arguments
 	 */
-	if (argc == 1)
+	if (getArgs(argc, argv, theParams) == false)
 	{
 		printArgOptions();
 	}
+	else if (theParams.versionOnly == true)
+	{
+		cout << endl
+			 << "TestXSLT version 1.1.0 (Xalan C++ version 1.1.0)"
+			 << endl;
+	}
 	else
 	{
-		if (getArgs(argc, argv, theParams) == false)
+		XMLPlatformUtils::Initialize();
+
+		try
 		{
-			printArgOptions();
+			theResult = xsltMain(theParams);
 		}
-		else if (theParams.versionOnly == true)
+		catch (XSLException& e)
+		{
+			cout << "\nXSLException ";
+
+#if defined(XALAN_OSTREAM_HAS_WCHAR_T)
+			cout << "Type is : ";
+
+			OutputString(cout, e.getType());
+
+			cout << endl;
+
+			cout << "Message is : ";
+
+			OutputString(cout, e.getMessage());
+
+			cout << endl;
+#else
+			cout << "Type is : " << e.getType() << endl;
+
+			cout << "Message is : " << e.getMessage() << endl;
+#endif
+			theResult = -1;
+		}
+		catch (SAXException& e)
+		{
+			cout << "\nSAXException ";
+
+#if defined(XALAN_OSTREAM_HAS_WCHAR_T)
+			cout << "Message is : ";
+
+			OutputString(cout, e.getMessage());
+
+			cout << endl;
+#else
+			cout << "Message is : " << e.getMessage() << endl;
+
+#endif
+			theResult = -2;
+		}
+		catch (XMLException& e)
+		{
+			cout << "\nXMLException ";
+
+#if defined(XALAN_OSTREAM_HAS_WCHAR_T)
+			cout << "Type is : ";
+
+			OutputString(cout, e.getType());
+
+			cout << endl;
+
+			cout << "Message is : ";
+
+			OutputString(cout, e.getMessage());
+
+			cout << endl;
+#else
+			cout << "Type is : " << e.getType() << endl;
+
+			cout << "Message is : " << e.getMessage() << endl;
+#endif
+			theResult = -3;
+		}
+		catch(const XalanDOMException&	e)
 		{
 			cout << endl
-				 << "TestXSLT version 1.1.0 (Xalan C++ version 1.1.0)"
+				 << "XalanDOMException caught.  The code is "
+				 << int(e.getExceptionCode())
+				 << "."
 				 << endl;
+
+			theResult = -4;
 		}
-		else if (theParams.inFileName.size() == 0)
+		catch (...)
 		{
-			printArgOptions();
+			cout << "\nUnhandled Exception\n";
+
+			theResult = -5;
 		}
-		else
-		{
-			XMLPlatformUtils::Initialize();
-
-			try
-			{
-				theResult = xsltMain(theParams);
-			}
-			catch (XSLException& e)
-			{
-				cout << "\nXSLException ";
-
-#if defined(XALAN_OSTREAM_HAS_WCHAR_T)
-				cout << "Type is : ";
-
-				OutputString(cout, e.getType());
-
-				cout << endl;
-
-				cout << "Message is : ";
-
-				OutputString(cout, e.getMessage());
-
-				cout << endl;
-#else
-				cout << "Type is : " << e.getType() << endl;
-
-				cout << "Message is : " << e.getMessage() << endl;
-#endif
-				theResult = -1;
-			}
-			catch (SAXException& e)
-			{
-				cout << "\nSAXException ";
-
-#if defined(XALAN_OSTREAM_HAS_WCHAR_T)
-				cout << "Message is : ";
-
-				OutputString(cout, e.getMessage());
-
-				cout << endl;
-#else
-				cout << "Message is : " << e.getMessage() << endl;
-
-#endif
-				theResult = -2;
-			}
-			catch (XMLException& e)
-			{
-				cout << "\nXMLException ";
-
-#if defined(XALAN_OSTREAM_HAS_WCHAR_T)
-				cout << "Type is : ";
-
-				OutputString(cout, e.getType());
-
-				cout << endl;
-
-				cout << "Message is : ";
-
-				OutputString(cout, e.getMessage());
-
-				cout << endl;
-#else
-				cout << "Type is : " << e.getType() << endl;
-
-				cout << "Message is : " << e.getMessage() << endl;
-#endif
-				theResult = -3;
-			}
-			catch(const XalanDOMException&	e)
-			{
-				cout << endl
-					 << "XalanDOMException caught.  The code is "
-					 << int(e.getExceptionCode())
-					 << "."
-					 << endl;
-
-				theResult = -4;
-			}
-			catch (...)
-			{
-				cout << "\nUnhandled Exception\n";
-
-				theResult = -5;
-			}
 
 #if !defined(NDEBUG)
-			const size_t	theInstanceCount =
+		const size_t	theInstanceCount =
 				XalanNode::getInstanceCount();
 
-			if (theInstanceCount > 0)
+		if (theInstanceCount > 0)
+		{
+			cout << "There are "
+				 << XalanNode::getInstanceCount()
+				 << " XalanNode instances still alive!"
+				 << endl
+				 << endl
+				 << "A dump of these instances follows..."
+				 << endl
+				 << endl;
+
+			typedef vector<XalanNode*>	NodeVectorType;
+
+			NodeVectorType	theNodes(theInstanceCount, NodeVectorType::value_type(0));
+
+			XalanNode::getLiveInstances(&*theNodes.begin());
+
+			for(unsigned int i = 0; i < theInstanceCount; ++i)
 			{
-				cout << "There are "
-					 << XalanNode::getInstanceCount()
-					 << " XalanNode instances still alive!"
-					 << endl
-					 << endl
-					 << "A dump of these instances follows..."
-					 << endl
-					 << endl;
+				const XalanNode* const	theInstance = theNodes[i];
 
-				typedef vector<XalanNode*>	NodeVectorType;
-
-				NodeVectorType	theNodes(theInstanceCount, NodeVectorType::value_type(0));
-
-				XalanNode::getLiveInstances(&*theNodes.begin());
-
-				for(unsigned int i = 0; i < theInstanceCount; ++i)
+				if(theInstance == 0)
 				{
-					const XalanNode* const	theInstance = theNodes[i];
-
-					if(theInstance == 0)
-					{
-						cout << "No instance information is available..."
-							 << endl;
-					}
-					else
-					{
-						cout << "("
-							 << hex
-							 << theInstance
-							 << ")  Node name: \""
-							 << theInstance->getNodeName()
-							 << "\"  Node value: \""
-							 << theInstance->getNodeValue()
-							 << "\""
+					cout << "No instance information is available..."
+						 << endl;
+				}
+				else
+				{
+					cout << "("
+						 << hex
+						 << theInstance
+						 << ")  Node name: \""
+						 << theInstance->getNodeName()
+						 << "\"  Node value: \""
+						 << theInstance->getNodeValue()
+						 << "\""
 #if defined(XALAN_RTTI_AVAILABLE) && !defined(XALAN_NO_TYPEINFO)
-							 << "  Type: \""
-							 << typeid(*theInstance).name()
-							 << "\""
+						 << "  Type: \""
+						 << typeid(*theInstance).name()
+						 << "\""
 #endif
-							 << endl
-							 << endl;
-					}
+						 << endl
+						 << endl;
 				}
 			}
+		}
 #endif
 
-			XMLPlatformUtils::Terminate();
-		}
+		XMLPlatformUtils::Terminate();
 	}
 
 	return theResult;
