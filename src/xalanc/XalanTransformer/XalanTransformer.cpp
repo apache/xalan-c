@@ -119,6 +119,7 @@ XalanTransformer::XalanTransformer():
 	m_warningStream(&std::cerr),
 #endif
 	m_outputEncoding(),
+    m_poolAllTextNodes(XalanSourceTreeDocument::getPoolAllTextNodes()),
 	m_stylesheetExecutionContext(new StylesheetExecutionContextDefault)
 {
 #if defined(XALAN_USE_ICU)
@@ -132,7 +133,6 @@ XalanTransformer::XalanTransformer():
 	m_stylesheetExecutionContext->installFormatNumberFunctor(theFormatNumberFunctor.get());
 	theICUFunctor.release();
 	theFormatNumberFunctor.release();
-
 #endif
 }
 
@@ -174,10 +174,10 @@ XalanTransformer::initialize()
 	// Initialize Xalan. 
 	XalanAutoPtr<XSLTInit>			initGuard(new XSLTInit);
 	XalanAutoPtr<XSLTInputSource>	inputSourceGuard(new XSLTInputSource);
-	EnsureFunctionsInstallation		instalGuard; 
-	instalGuard.install();
+	EnsureFunctionsInstallation		installGuard; 
+	installGuard.install();
 
-	instalGuard.release();
+	installGuard.release();
 	s_xsltInit = initGuard.release();
 	s_emptyInputSource = inputSourceGuard.release();
 }
@@ -678,7 +678,8 @@ XalanTransformer::parseSource(
 						m_errorHandler,
 						m_entityResolver,
 						getExternalSchemaLocation(),
-						getExternalNoNamespaceSchemaLocation());
+						getExternalNoNamespaceSchemaLocation(),
+                        m_poolAllTextNodes);
 		}
 
 		// Store it in a vector.

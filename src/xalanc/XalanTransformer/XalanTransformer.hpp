@@ -637,6 +637,32 @@ public:
 	}
 
 	/**
+	  * This member functions gets the flag to determine of a default parsed source
+	  * tree will pool the values of all of the text nodes in the XML document.
+      *
+	  * @return The boolean value for the flag.
+	  */
+    bool
+    getPoolAllTextNodes() const
+    {
+        return m_poolAllTextNodes;
+    }
+
+	/**
+	  * This member functions sets the flag to determine of a default parsed source
+	  * tree will pool the values of all of the text nodes in the XML document.  This
+	  * can result in significant memory savings if there are lots of repeated values
+      * in text nodes.
+      *
+	  * @param fPool The boolean value for the flag.
+	  */
+    void
+    setPoolAllTextNodes(bool    fPool)
+    {
+        m_poolAllTextNodes = fPool;
+    }
+
+	/**
 	 * This method returns the installed ProblemListener instance.
 	 *
 	 * @return The pointer to the installed ProblemListener instance.
@@ -962,6 +988,8 @@ private:
 	StreamType*								m_warningStream;
 
 	XalanDOMString							m_outputEncoding;
+
+    bool                                    m_poolAllTextNodes;
 
 	// This should always be the latest data member!!!
 	StylesheetExecutionContextDefault*		m_stylesheetExecutionContext;
