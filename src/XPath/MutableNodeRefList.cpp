@@ -705,7 +705,7 @@ MutableNodeRefList::reverse()
 	using std::reverse;
 #endif
 
-	reverse(
+	::reverse(
 		m_nodeList.begin(),
 		m_nodeList.end());
 
