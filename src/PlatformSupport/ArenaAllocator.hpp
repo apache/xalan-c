@@ -135,7 +135,7 @@ public:
 	 *
 	 * @param theSize The size of the block
 	 */
-	size_type
+	void
 	setBlockSize(size_type	theSize)
 	{
 		m_blockSize = theSize;
