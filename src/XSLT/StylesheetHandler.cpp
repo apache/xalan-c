@@ -1233,7 +1233,8 @@ StylesheetHandler::processInclude(
 
 
 
-void StylesheetHandler::endElement(const XMLCh* const name) 
+void
+StylesheetHandler::endElement(const XMLCh* const name) 
 {
 	// if we have apending exception, we don't want to even try to process this
 	if (m_exceptionPending == true)
@@ -1303,7 +1304,11 @@ void StylesheetHandler::endElement(const XMLCh* const name)
 }
 
 
-void StylesheetHandler::characters (const XMLCh* const chars, const unsigned int length)
+
+void
+StylesheetHandler::characters(
+			const XMLCh* const	chars,
+			const unsigned int	length)
 {
 	// if we have apending exception, we don't want to even try to process this
 	if (m_exceptionPending == true)
@@ -1384,13 +1389,14 @@ void StylesheetHandler::characters (const XMLCh* const chars, const unsigned int
 	}
 	// END SANJIVA CODE
 	// TODO: Flag error if text inside of stylesheet
-
-//	m_lastPopped = 0;
 }
 
 
 
-void StylesheetHandler::cdata(const XMLCh* const chars, const unsigned int length)
+void
+StylesheetHandler::cdata(
+			const XMLCh* const	chars,
+			const unsigned int	length)
 {
 	// if we have apending exception, we don't want to even try to process this
 	if (m_exceptionPending == true)
@@ -1473,60 +1479,76 @@ void StylesheetHandler::cdata(const XMLCh* const chars, const unsigned int lengt
 }
 
 
-void StylesheetHandler::ignorableWhitespace (const XMLCh* const /*chars*/, const unsigned int /*length*/)
+
+void
+StylesheetHandler::ignorableWhitespace(
+			const XMLCh* const	/*chars*/,
+			const unsigned int	/*length*/)
 {
 	// if we have apending exception, we don't want to even try to process this
 	if (m_exceptionPending == true)
 		return;
 
-  // Ignore!
-
+	// Ignore!
 	m_lastPopped = 0;
 }
 
-
-void StylesheetHandler::processingInstruction (const XMLCh* const /*target*/, const XMLCh* const /*data*/)
-{
-	// if we have apending exception, we don't want to even try to process this
-	if (m_exceptionPending == true)
-		return;
-
-	m_lastPopped = 0;
-}
-
-
-void StylesheetHandler::comment(const XMLCh* const /*data*/)
-{
-	// if we have apending exception, we don't want to even try to process this
-	if (m_exceptionPending == true)
-		return;
-
-  // No action for the moment.
-}
-
-
-void StylesheetHandler::entityReference(const XMLCh* const /*name*/)
-{
-	// if we have apending exception, we don't want to even try to process this
-	if (m_exceptionPending == true)
-		return;
-
-  // No action for the moment.
-}
-
-
-void StylesheetHandler::resetDocument()
-{
-	// if we have apending exception, we don't want to even try to process this
-	if (m_exceptionPending == true)
-		return;
-
-  // No action for the moment.
-}
 
 
 void
-StylesheetHandler::charactersRaw(const XMLCh* const /* chars */, const unsigned int	/* length */)
+StylesheetHandler::processingInstruction(
+			const XMLCh* const	/*target*/,
+			const XMLCh* const	/*data*/)
+{
+	// if we have apending exception, we don't want to even try to process this
+	if (m_exceptionPending == true)
+		return;
+
+	// No action for the moment.
+}
+
+
+
+void
+StylesheetHandler::comment(const XMLCh* const /*data*/)
+{
+	// if we have apending exception, we don't want to even try to process this
+	if (m_exceptionPending == true)
+		return;
+
+	// No action for the moment.
+}
+
+
+
+void
+StylesheetHandler::entityReference(const XMLCh* const /*name*/)
+{
+	// if we have apending exception, we don't want to even try to process this
+	if (m_exceptionPending == true)
+		return;
+
+  // No action for the moment.
+}
+
+
+
+void
+StylesheetHandler::resetDocument()
+{
+	// if we have apending exception, we don't want to even try to process this
+	if (m_exceptionPending == true)
+		return;
+
+  // No action for the moment.
+}
+
+
+
+void
+StylesheetHandler::charactersRaw(
+			const XMLCh* const	/* chars */,
+			const unsigned int	/* length */)
 {
 	// if we have a pending exception, we don't want to even try to process this
 	if (m_exceptionPending == true)
