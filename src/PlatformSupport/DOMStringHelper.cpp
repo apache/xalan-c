@@ -285,21 +285,21 @@ lastIndexOf(
 
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(bool)
 startsWith(
-			const XalanDOMChar*		theString,
-			const XalanDOMChar*		theSubstring)
+			const XalanDOMChar*			theString,
+			XalanDOMString::size_type	theStringLength,
+			const XalanDOMChar*			theSubstring,
+			XalanDOMString::size_type	theSubstringLength)
 {
-	bool		fResult = false;
-
-	const XalanDOMString::size_type		theStringLength = length(theString);
-
-	const XalanDOMString::size_type		theSubstringLength = length(theSubstring);
-
 	if (theSubstringLength == 0)
 	{
 		// Make this work like Java...
 		return true;
 	}
-	else if (theStringLength >= theSubstringLength)
+	else if (theStringLength < theSubstringLength)
+	{
+		return false;
+	}
+	else
 	{
 		XalanDOMString::size_type	i = 0;
 
@@ -307,7 +307,7 @@ startsWith(
 		for (;
 				i < theSubstringLength &&
 						theString[i] == theSubstring[i];
-					i++)
+					++i)
 		{
 			;
 		}
@@ -316,76 +316,28 @@ startsWith(
 		// return true.
 		if (i == theSubstringLength)
 		{
-			fResult = true;
+			return true;
+		}
+		else
+		{
+			return false;
 		}
 	}
-
-	return fResult;
-}
-
-
-
-static const XalanDOMChar	theDummyEmptyString = 0;
-
-
-
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(bool)
-startsWith(
-			const XalanDOMChar*		theString,
-			const XalanDOMString&	theSubstring)
-{
-	const XalanDOMChar*	const	theBuffer =
-		c_wstr(theSubstring);
-
-	return startsWith(theString, theBuffer == 0 ? &theDummyEmptyString : theBuffer);
-}
-
-
-
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(bool)
-startsWith(
-			const XalanDOMString&	theString,
-			const XalanDOMChar*		theSubstring)
-{
-	const XalanDOMChar*	const	theBuffer =
-		c_wstr(theString);
-
-	return startsWith(theBuffer == 0 ? &theDummyEmptyString : theBuffer, theSubstring);
-}
-
-
-
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(bool)
-startsWith(
-			const XalanDOMString&	theString,
-			const XalanDOMString&	theSubstring)
-{
-	const XalanDOMChar*	const	theStringBuffer =
-		c_wstr(theString);
-
-	const XalanDOMChar*	const	theSubstringBuffer =
-		c_wstr(theSubstring);
-
-	return startsWith(
-		theStringBuffer == 0 ? &theDummyEmptyString : theStringBuffer,
-		theSubstringBuffer == 0 ? &theDummyEmptyString : theSubstringBuffer);
 }
 
 
 
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(bool)
 endsWith(
-			const XalanDOMChar*		theString,
-			const XalanDOMChar*		theSubstring)
+			const XalanDOMChar*			theString,
+			XalanDOMString::size_type	theStringLength,
+			const XalanDOMChar*			theSubstring,
+			XalanDOMString::size_type	theSubstringLength)
 {
 	assert(theString != 0);
 	assert(theSubstring != 0);
 
 	bool				fResult = false;
-
-	const XalanDOMString::size_type		theStringLength = length(theString);
-
-	const XalanDOMString::size_type		theSubstringLength = length(theSubstring);
 
 	// If the substring is longer, there's no point in continuing.
 	if (theSubstringLength >  0 && theStringLength >= theSubstringLength)
@@ -1455,6 +1407,10 @@ PointerToDOMString(
 {
 	char			theBuffer[MAX_PRINTF_DIGITS + 1];
 
+#if defined(XALAN_STRICT_ANSI_HEADERS)
+        using std::sprintf;
+#endif
+
 	unsigned int	theCharsWritten = sprintf(theBuffer, "%p", theValue);
 	assert(theCharsWritten != 0);
 
@@ -1502,6 +1458,10 @@ DoubleToDOMString(
 	else
 	{
 		char			theBuffer[MAX_PRINTF_DIGITS + 1];
+
+#if defined(XALAN_STRICT_ANSI_HEADERS)
+		using std::sprintf;
+#endif
 
 		unsigned int	theCharsWritten = sprintf(theBuffer, "%f", theDouble);
 		assert(theCharsWritten != 0);

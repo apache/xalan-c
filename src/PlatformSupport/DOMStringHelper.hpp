@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -498,8 +498,10 @@ lastIndexOf(
  */
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(bool)
 startsWith(
-			const XalanDOMChar*		theString,
-			const XalanDOMChar*		theSubstring);
+			const XalanDOMChar*			theString,
+			XalanDOMString::size_type	theStringLength,
+			const XalanDOMChar*			theSubstring,
+			XalanDOMString::size_type	theSubstringLength);
 
 
 
@@ -510,10 +512,15 @@ startsWith(
  * @param theSubstring substring searched for
  * @return true if the target string begins with the substring
  */
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(bool)
+inline bool
 startsWith(
 			const XalanDOMChar*		theString,
-			const XalanDOMString&	theSubstring);
+			const XalanDOMChar*		theSubstring)
+{
+	assert(theString != 0 && theSubstring != 0);
+
+	return startsWith(theString, length(theString), theSubstring, length(theSubstring));
+}
 
 
 
@@ -524,10 +531,15 @@ startsWith(
  * @param theSubstring substring searched for
  * @return true if the target string begins with the substring
  */
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(bool)
+inline bool
 startsWith(
-			const XalanDOMString&	theString,
-			const XalanDOMChar*		theSubstring);
+			const XalanDOMChar*		theString,
+			const XalanDOMString&	theSubstring)
+{
+	assert(theString != 0);
+
+	return startsWith(theString, length(theString), c_wstr(theSubstring), length(theSubstring));
+}
 
 
 
@@ -538,10 +550,15 @@ startsWith(
  * @param theSubstring substring searched for
  * @return true if the target string begins with the substring
  */
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(bool)
+inline bool
 startsWith(
 			const XalanDOMString&	theString,
-			const XalanDOMString&	theSubstring);
+			const XalanDOMChar*		theSubstring)
+{
+	assert(theSubstring != 0);
+
+	return startsWith(c_wstr(theString), length(theString), theSubstring, length(theSubstring));
+}
 
 
 
@@ -549,6 +566,23 @@ startsWith(
  * Simulates the java String method startsWith().
  * 
  * @param theDOMString target string to search
+ * @param theSubstring substring searched for
+ * @return true if the target string begins with the substring
+ */
+inline bool
+startsWith(
+			const XalanDOMString&	theString,
+			const XalanDOMString&	theSubstring)
+{
+	return startsWith(c_wstr(theString), length(theString), c_wstr(theSubstring), length(theSubstring));
+}
+
+
+
+/**
+ * Simulates the java String method startsWith().
+ * 
+ * @param theString target string to search
  * @param theSubstring substring searched for
  * @return true if the target string begins with the substring
  */
@@ -567,30 +601,51 @@ startsWith(
 /**
  * Simulates the java String method endsWith().
  * 
- * @param theDOMString target string to search
+ * @param theString target string to search
  * @param theSubstring substring searched for
  * @return true if the target string ends with the substring
  */
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(bool)
 endsWith(
-			const XalanDOMChar*		theString,
-			const XalanDOMChar*		theSubstring);
+			const XalanDOMChar*			theString,
+			XalanDOMString::size_type	theStringLength,
+			const XalanDOMChar*			theSubstring,
+			XalanDOMString::size_type	theSubstringLength);
 
 
 
 /**
  * Simulates the java String method endsWith().
  * 
- * @param theDOMString target string to search
+ * @param theString target string to search
  * @param theSubstring substring searched for
  * @return true if the target string ends with the substring
  */
 inline bool
 endsWith(
-			const XalanDOMString&	theDOMString,
+			const XalanDOMChar*		theString,
+			const XalanDOMChar*		theSubstring)
+{
+	assert(theString != 0 && theSubstring != 0);
+
+	return endsWith(theString, length(theString), theSubstring, length(theSubstring));
+}
+
+
+
+/**
+ * Simulates the java String method endsWith().
+ * 
+ * @param theString target string to search
+ * @param theSubstring substring searched for
+ * @return true if the target string ends with the substring
+ */
+inline bool
+endsWith(
+			const XalanDOMString&	theString,
 			const XalanDOMString&	theSubstring)
 {
-	return endsWith(c_wstr(theDOMString), c_wstr(theSubstring));
+	return endsWith(c_wstr(theString), length(theString), c_wstr(theSubstring), length(theSubstring));
 }
 
 
@@ -1222,7 +1277,7 @@ substring(
  * @param theSubstring  target string
  * @param theStartIndex starting index, inclusive
  * @param theEndIndex   ending index, exclusive
- * @return Returns a reference to theSubstring
+ * @return A reference to theSubstring
  */
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString)&
 substring(
@@ -1435,6 +1490,9 @@ compare(
 /**
  * Compare the contents of two strings.
  * 
+ * THIS FUNCTION DOES NOT COMPARE STRINGS LIKE strcmp() OR ANY
+ * OTHER "COLLATION" ALGORITHM.
+ *
  * @param theLHS first string to compare
  * @param theRHS second string to compare
  * @return Returns 0 for equal strings, less than 0 if theLHS is less
@@ -1499,6 +1557,9 @@ compare(
  * manner.  Only the characters a-z and A-Z are considered as
  * characters with "case".
  *
+ * THIS FUNCTION DOES NOT COMPARE STRINGS LIKE strcmp() OR ANY
+ * OTHER "COLLATION" ALGORITHM.
+ *
  * @param theLHS first array to compare
  * @param theLHSLength the length of the first array
  * @param theRHS second array to compare
@@ -1520,6 +1581,9 @@ compareIgnoreCaseASCII(
  * manner.  Only the characters a-z and A-Z are considered as
  * characters with "case".
  *
+ * THIS FUNCTION DOES NOT COMPARE STRINGS LIKE strcmp() OR ANY
+ * OTHER "COLLATION" ALGORITHM.
+ *
  * @param theLHS first string to compare
  * @param theRHS second string to compare
  * @return Returns 0 for equal strings, less than 0 if theLHS is less
@@ -1539,6 +1603,9 @@ compareIgnoreCaseASCII(
  * Compare the contents of two strings, in a case insensitive
  * manner.  Only the characters a-z and A-Z are considered as
  * characters with "case".
+ *
+ * THIS FUNCTION DOES NOT COMPARE STRINGS LIKE strcmp() OR ANY
+ * OTHER "COLLATION" ALGORITHM.
  *
  * @param theLHS first string to compare
  * @param theRHS second string to compare
