@@ -225,11 +225,11 @@ FormatterToHTML::startDocument()
 	// specified
 	if(isEmptySystem == false || isEmptyPublic == false)
 	{
-		accumContent(s_doctypeHeaderStartString);
+		accumContent(s_doctypeHeaderStartString, 0, s_doctypeHeaderStartStringLength);
 
 		if(isEmptyPublic == false)
 		{
-			accumContent(s_doctypeHeaderPublicString);
+			accumContent(s_doctypeHeaderPublicString, 0, s_doctypeHeaderPublicStringLength);
 			accumContent(m_doctypePublic);
 			accumContent(XalanUnicode::charQuoteMark);
 		}
@@ -238,7 +238,7 @@ FormatterToHTML::startDocument()
 		{
 			if(isEmptyPublic == true)
 			{
-				accumContent(s_doctypeHeaderSystemString);
+				accumContent(s_doctypeHeaderSystemString, 0, s_doctypeHeaderSystemStringLength);
 			}
 
 			accumContent(XalanUnicode::charSpace);
@@ -293,7 +293,7 @@ FormatterToHTML::startElement(
 
 		const bool	isBlockElement = elemProperties.is(XalanHTMLElementsProperties::BLOCK);
 
-		if (equalsIgnoreCaseASCII(name, c_wstr(s_scriptString)) == true)
+		if (equalsIgnoreCaseASCII(name, length(name), s_scriptString, s_scriptStringLength) == true)
 		{
 			m_isScriptOrStyleElem = true;
 
@@ -301,7 +301,7 @@ FormatterToHTML::startElement(
 		}
 		else
 		{
-			if (equalsIgnoreCaseASCII(name, c_wstr(s_styleString)) == true)
+			if (equalsIgnoreCaseASCII(name, length(name), s_styleString, s_styleStringLength) == true)
 			{
 				m_isScriptOrStyleElem = true;
 			}
@@ -354,9 +354,11 @@ FormatterToHTML::startElement(
 			if (m_omitMetaTag == false)
 			{
 				if (m_doIndent)
+				{
 					indent(m_currentIndent);
+				}
 
-				accumContent(s_metaString);
+				accumContent(s_metaString, 0, s_metaStringLength);
 				accumContent(getEncoding());      
 				accumContent(XalanUnicode::charQuoteMark);
 				accumContent(XalanUnicode::charGreaterThanSign);
@@ -557,6 +559,8 @@ FormatterToHTML::accumDefaultEntity(
 			}
 			else
 			{
+				assert(length(theCurrent->m_string) == theCurrent->m_length);
+
 				copyEntityIntoBuffer(theCurrent->m_string, theCurrent->m_length);
 
 				return true;
@@ -1111,40 +1115,6 @@ FormatterToHTML::pushHasNamespace(const XalanDOMChar*	theElementName)
 
 
 
-static XalanDOMString	s_doctypeHeaderStartString;
-
-static XalanDOMString	s_doctypeHeaderPublicString;
-
-static XalanDOMString	s_doctypeHeaderSystemString;
-
-static XalanDOMString	s_scriptString;
-
-static XalanDOMString	s_styleString;
-
-static XalanDOMString	s_ampString;
-
-static XalanDOMString	s_metaString;
-
-
-const XalanDOMString&	FormatterToHTML::s_doctypeHeaderStartString =
-			::s_doctypeHeaderStartString;
-
-const XalanDOMString&	FormatterToHTML::s_doctypeHeaderPublicString =
-			::s_doctypeHeaderPublicString;
-
-const XalanDOMString&	FormatterToHTML::s_doctypeHeaderSystemString =
-			::s_doctypeHeaderSystemString;
-
-const XalanDOMString&	FormatterToHTML::s_scriptString =
-			::s_scriptString;
-
-const XalanDOMString&	FormatterToHTML::s_styleString =
-			::s_styleString;
-
-const XalanDOMString&	FormatterToHTML::s_metaString =
-			::s_metaString;
-
-
 const FormatterToHTML::Entity	FormatterToHTML::s_entities[] =
 {
 	// These must always be in order by the character.
@@ -1404,36 +1374,154 @@ const FormatterToHTML::Entity* const	FormatterToHTML::s_lastEntity =
 
 
 
-void
-FormatterToHTML::initialize()
+#define FHTML_SIZE(str)	((sizeof(str) / sizeof(str[0]) - 1))
+
+const XalanDOMChar						FormatterToHTML::s_doctypeHeaderStartString[] =
 {
-	::s_doctypeHeaderStartString = XALAN_STATIC_UCODE_STRING("<!DOCTYPE HTML");
+	XalanUnicode::charLessThanSign,
+	XalanUnicode::charExclamationMark,
+	XalanUnicode::charLetter_D,
+	XalanUnicode::charLetter_O,
+	XalanUnicode::charLetter_C,
+	XalanUnicode::charLetter_T,
+	XalanUnicode::charLetter_Y,
+	XalanUnicode::charLetter_P,
+	XalanUnicode::charLetter_E,
+	XalanUnicode::charSpace,
+	XalanUnicode::charLetter_H,
+	XalanUnicode::charLetter_T,
+	XalanUnicode::charLetter_M,
+	XalanUnicode::charLetter_L,
+	0
+};
 
-	::s_doctypeHeaderPublicString = XALAN_STATIC_UCODE_STRING(" PUBLIC \"");
+const FormatterToHTML::size_type		FormatterToHTML::s_doctypeHeaderStartStringLength =
+		FHTML_SIZE(s_doctypeHeaderStartString);
 
-	::s_doctypeHeaderSystemString = XALAN_STATIC_UCODE_STRING(" SYSTEM");
-
-	::s_scriptString = XALAN_STATIC_UCODE_STRING("SCRIPT");
-
-	::s_styleString = XALAN_STATIC_UCODE_STRING("STYLE");
-
-	::s_metaString = XALAN_STATIC_UCODE_STRING("<META http-equiv=\"Content-Type\" content=\"text/html; charset=");
-}
-
-
-
-void
-FormatterToHTML::terminate()
+const XalanDOMChar						FormatterToHTML::s_doctypeHeaderPublicString[] =
 {
-	releaseMemory(::s_doctypeHeaderStartString);
+	XalanUnicode::charSpace,
+	XalanUnicode::charLetter_P,
+	XalanUnicode::charLetter_U,
+	XalanUnicode::charLetter_B,
+	XalanUnicode::charLetter_L,
+	XalanUnicode::charLetter_I,
+	XalanUnicode::charLetter_C,
+	XalanUnicode::charSpace,
+	XalanUnicode::charQuoteMark,
+	0
+};
 
-	releaseMemory(::s_doctypeHeaderPublicString);
+const FormatterToHTML::size_type		FormatterToHTML::s_doctypeHeaderPublicStringLength =
+		FHTML_SIZE(s_doctypeHeaderPublicString);
 
-	releaseMemory(::s_doctypeHeaderSystemString);
+const XalanDOMChar						FormatterToHTML::s_doctypeHeaderSystemString[] =
+{
+	XalanUnicode::charSpace,
+	XalanUnicode::charLetter_S,
+	XalanUnicode::charLetter_Y,
+	XalanUnicode::charLetter_S,
+	XalanUnicode::charLetter_T,
+	XalanUnicode::charLetter_E,
+	XalanUnicode::charLetter_M,
+	0
+};
 
-	releaseMemory(::s_scriptString);
+const FormatterToHTML::size_type		FormatterToHTML::s_doctypeHeaderSystemStringLength =
+		FHTML_SIZE(s_doctypeHeaderSystemString);
 
-	releaseMemory(::s_styleString);
+const XalanDOMChar						FormatterToHTML::s_scriptString[] =
+{
+	XalanUnicode::charLetter_S,
+	XalanUnicode::charLetter_C,
+	XalanUnicode::charLetter_R,
+	XalanUnicode::charLetter_I,
+	XalanUnicode::charLetter_P,
+	XalanUnicode::charLetter_T,
+	0
+};
 
-	releaseMemory(::s_metaString);		
-}
+const FormatterToHTML::size_type		FormatterToHTML::s_scriptStringLength =
+		FHTML_SIZE(s_scriptString);
+
+const XalanDOMChar						FormatterToHTML::s_styleString[] =
+{
+	XalanUnicode::charLetter_S,
+	XalanUnicode::charLetter_T,
+	XalanUnicode::charLetter_Y,
+	XalanUnicode::charLetter_L,
+	XalanUnicode::charLetter_E,
+	0
+};
+
+const FormatterToHTML::size_type		FormatterToHTML::s_styleStringLength =
+		FHTML_SIZE(s_styleString);
+
+const XalanDOMChar						FormatterToHTML::s_metaString[] =
+{
+	XalanUnicode::charLessThanSign,
+	XalanUnicode::charLetter_M,
+	XalanUnicode::charLetter_E,
+	XalanUnicode::charLetter_T,
+	XalanUnicode::charLetter_A,
+	XalanUnicode::charSpace,
+	XalanUnicode::charLetter_h,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_p,
+	XalanUnicode::charHyphenMinus,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_q,
+	XalanUnicode::charLetter_u,
+	XalanUnicode::charLetter_i,
+	XalanUnicode::charLetter_v,
+	XalanUnicode::charEqualsSign,
+	XalanUnicode::charQuoteMark,
+	XalanUnicode::charLetter_C,
+	XalanUnicode::charLetter_o,
+	XalanUnicode::charLetter_n,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_n,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charHyphenMinus,
+	XalanUnicode::charLetter_T,
+	XalanUnicode::charLetter_y,
+	XalanUnicode::charLetter_p,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charQuoteMark,
+	XalanUnicode::charSpace,
+	XalanUnicode::charLetter_c,
+	XalanUnicode::charLetter_o,
+	XalanUnicode::charLetter_n,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_n,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charEqualsSign,
+	XalanUnicode::charQuoteMark,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_x,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charSolidus,
+	XalanUnicode::charLetter_h,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_m,
+	XalanUnicode::charLetter_l,
+	XalanUnicode::charSemicolon,
+	XalanUnicode::charSpace,
+	XalanUnicode::charLetter_c,
+	XalanUnicode::charLetter_h,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_r,
+	XalanUnicode::charLetter_s,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charEqualsSign,
+	0
+};
+
+
+const FormatterToHTML::size_type		FormatterToHTML::s_metaStringLength =
+		FHTML_SIZE(s_metaString);

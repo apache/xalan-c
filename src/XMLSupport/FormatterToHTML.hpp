@@ -94,19 +94,7 @@ public:
 	typedef std::vector<XalanHTMLElementsProperties::ElementProperties>	ElementPropertiesStackType;
 #endif
 
-	/**
-	 * Perform static initialization.  See class XMLSupportInit.
-	 */
-	static void
-	initialize();
-
-	/**
-	 * Perform static shut down.  See class XMLSupportInit.
-	 */
-	static void
-	terminate();
-
-	enum eDummy
+	enum
 	{
 		eDefaultIndentAmount = 0
 	};
@@ -224,35 +212,49 @@ protected:
 
 private:
 
+	typedef XalanDOMString::size_type	size_type;
+
 	/**
 	 * The string "<!DOCTYPE  HTML".
 	 */
-	static const XalanDOMString&	s_doctypeHeaderStartString;
+	static const XalanDOMChar	s_doctypeHeaderStartString[];
+
+	static const size_type		s_doctypeHeaderStartStringLength;
 
 	/**
 	 * The string " PUBLIC \"".
 	 */
-	static const XalanDOMString&	s_doctypeHeaderPublicString;
+	static const XalanDOMChar	s_doctypeHeaderPublicString[];
+
+	static const size_type		s_doctypeHeaderPublicStringLength;
 
 	/**
 	 * The string " SYSTEM".
 	 */
-	static const XalanDOMString&	s_doctypeHeaderSystemString;
+	static const XalanDOMChar	s_doctypeHeaderSystemString[];
+
+	static const size_type		s_doctypeHeaderSystemStringLength;
 
 	/**
 	 * The string "SCRIPT".
 	 */
-	static const XalanDOMString&	s_scriptString;
+	static const XalanDOMChar	s_scriptString[];
+
+	static const size_type		s_scriptStringLength;
 
 	/**
 	 * The string "STYLE".
 	 */
-	static const XalanDOMString&	s_styleString;
+	static const XalanDOMChar	s_styleString[];
+
+	static const size_type		s_styleStringLength;
 
 	/**
 	 * The string "<META http-equiv=\"Content-Type\" content=\"text/html; charset=".
 	 */
-	static const XalanDOMString&	s_metaString;
+	static const XalanDOMChar	s_metaString[];
+
+	static const size_type		s_metaStringLength;
 
 	/**
 	 * Set the attribute characters what will require special mapping.
