@@ -65,7 +65,7 @@
      document types.</p>
     <p>&xslt4c-current; is a robust implementation of the W3C Recommendations 
     for XSL Transformations (XSLT) and the XML Path Language (XPath). It works with a compatible release of the 
-    &xml4c; XML parser: &xml4c-used;. The focus for this release is on bug fixes, a new sample that shows how to wrap pre-built Xerces DOM input and XalanSourceTree input, a 64-bit HP-UX build, and alpha support for a number of EXSLT extension functions. For the details, see the <link idref="readme">Release Notes</link>.</p>
+    &xml4c; XML parser: &xml4c-used;. The focus for this release is on bug fixes, a new sample that shows how to wrap pre-built Xerces DOM input and XalanSourceTree input, and beta support for a number of EXSLT extension functions. For the details, see the <link idref="readme">Release Notes</link>.</p>
 	</s2>
   
   <s2 title="How do I get it?">
