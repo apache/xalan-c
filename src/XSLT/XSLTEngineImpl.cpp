@@ -3571,6 +3571,44 @@ XSLTEngineImpl::findElementByAttribute(
 
 
 
+#if !defined(WIN32)
+inline constXalanDOMString&
+NormalizeURI(const XalanDOMString&	uriString)
+{
+	return uriString;
+}
+#else
+XalanDOMString
+NormalizeURI(const XalanDOMString&	uriString)
+{
+	using std::vector;
+
+	XalanDOMString	theResult;
+
+	// OK, look for a quick, cheap exit...
+	const unsigned int	len = length(uriString);
+	const unsigned int	index = indexOf(uriString, '\\');
+
+	if (index == len)
+	{
+		// Nothing to normalize, so we're done...
+		theResult = uriString;
+	}
+	else
+	{
+		vector<XalanDOMChar>	theBuffer(c_wstr(uriString), c_wstr(uriString) + len);
+
+		std::replace(theBuffer.begin(), theBuffer.end(), '\\', '/');
+
+		theResult = XalanDOMString(&theBuffer[0], theBuffer.size());
+	}
+
+	return theResult;
+}
+#endif
+
+
+
 XMLURL*
 XSLTEngineImpl::getURLFromString(const XalanDOMString&	urlString) const
 {
@@ -3582,24 +3620,41 @@ XSLTEngineImpl::getURLFromString(const XalanDOMString&	urlString) const
 
 	try 
 	{
+		XalanDOMString	theNormalizedURI;
+
 		// Let's see what sort of URI we have...
+		const unsigned int	len = length(urlString);
 		const unsigned int	index = indexOf(urlString, ':');
 
-		if (index == 1 || index == length(urlString))
+#if !defined(WIN32)
+		const bool			protocolPresent = index != len;
+#else
+		// This test will fail if someone uses the form v:/foo/foo.xsl,
+		// so I hope they don't do that...
+		const bool			protocolPresent = index != len &&
+									!(index == 1 && charAt(urlString, index + 1) == '\\');
+#endif
+
+		if (protocolPresent == true)
 		{
-			// OK, it's some sort of file specification,
-			// so prepend "file:///"
-			XalanDOMString fullpath("file:///");
-
-			fullpath += urlString;
-
-			url->setURL(c_wstr(fullpath));
+			theNormalizedURI = NormalizeURI(urlString);
 		}
 		else
 		{
-			// OK, assume it's already got a protocol
-			url->setURL(c_wstr(urlString));
+			// Assume it's a file specification...
+			array_auto_ptr<XMLCh>	theFullPath(XMLPlatformUtils::getFullPath(c_wstr(urlString)));
+			assert(theFullPath.get() != 0);
+
+			theNormalizedURI =
+#if defined(WIN32)
+				XALAN_STATIC_UCODE_STRING("file:///")
+#else
+				XALAN_STATIC_UCODE_STRING("file://")
+#endif
+					+ NormalizeURI(theFullPath.get());
 		}
+
+		url->setURL(c_wstr(theNormalizedURI));
 	}
 	catch (...)
 	{
@@ -3613,104 +3668,19 @@ XSLTEngineImpl::getURLFromString(const XalanDOMString&	urlString) const
 
 
 
-XalanDOMString
-NormalizeURI(
-			const XalanDOMString&	uriString,
-			XalanDOMChar			theOldSeparator,
-			XalanDOMChar			theNewSeparator)
-{
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::vector;
-#endif
-
-	vector<XalanDOMChar>	theBuffer;
-
-	const unsigned int		theLength = length(uriString);
-
-	// Reserve enough characters in the buffer...
-	theBuffer.reserve(theLength);
-
-	// See if we have a hybrid DOS-style URI, like
-	// file:///c:\foo\foo.xml
-	const unsigned int	i1 = indexOf(uriString, ':');
-	const unsigned int	i2 = lastIndexOf(uriString, ':');
-
-	bool				fHybrid = i1 == i2 ? false : true;
-	assert(fHybrid == false || theNewSeparator == '\\');
-
-	for(unsigned int i = 0; i < theLength; ++i)
-	{
-		const XalanDOMChar	theChar = charAt(uriString, i);
-
-		if (fHybrid == true)
-		{
-			if (theChar == theOldSeparator && i > i2)
-			{
-				theBuffer.push_back(theNewSeparator);
-			}
-			else
-			{
-				theBuffer.push_back(theChar);
-			}
-		}
-		else if (theChar == theOldSeparator)
-		{
-			theBuffer.push_back(theNewSeparator);
-		}
-		else
-		{
-			theBuffer.push_back(theChar);
-		}
-	}
-
-	return XalanDOMString(&theBuffer[0], theBuffer.size());
-}
-
-
-
 XMLURL* XSLTEngineImpl::getURLFromString(const XalanDOMString&	urlString, const XalanDOMString& base) const
 {
-	XalanDOMString	context;
+	XalanDOMString	context(NormalizeURI(base));
 
-	bool			fNormalizeToSlash = false;
-	bool			fNormalizeToBackslash = false;
-
-	if (isEmpty(base) == false)
+	if (isEmpty(context) == false)
 	{
-		// We'll only do the really simple case for now:
-		// base is a complete file URL and urlString is a forward relative path, i.e. 
-		// in the same directory as the urlString or a subdirectory
-
-		// just to be robust, we'll accept a forward or back slash
 		const unsigned int	theLength = length(base);
 
-		const unsigned int	i1 = lastIndexOf(base,'/');
-		const unsigned int	i2 = lastIndexOf(base,'\\');
+		const unsigned int	index = lastIndexOf(base,'/');
 
-		unsigned int		i = 0;
-
-		if (i1 > i2 && i1 < theLength)
+		if (index < theLength)
 		{
-			i = i1;
-
-			fNormalizeToSlash = true;
-		}
-		else if (i2 < theLength)
-		{
-			i = i2;
-
-			fNormalizeToBackslash = true;
-		}
-		else
-		{
-			i = i1;
-
-			assert(i2 == theLength);
-		}
-
-		if (i < theLength)
-		{
-			context = substring(base, 0, i + 1);
+			context = substring(context, 0, index + 1);
 		}
 	}
 
@@ -3725,11 +3695,15 @@ XMLURL* XSLTEngineImpl::getURLFromString(const XalanDOMString&	urlString, const 
 		// No colon, so just use the urlString as is...
 		context += urlString;
 	}
-	else if (theColonIndex == 1)
+#if defined(WIN32)
+	else if (theColonIndex == 1 && charAt(urlString, theColonIndex + 1) == '\\')
 	{
 		// Ahh, it's a drive letter, so ignore the context...
+		// $$$ ToDo: This is not quite right. Perhaps a
+		// protocol can be one character?
 		context = urlString;
 	}
+#endif
 	else
 	{
 		// Assume it's a protocol...
@@ -3745,15 +3719,6 @@ XMLURL* XSLTEngineImpl::getURLFromString(const XalanDOMString&	urlString, const 
 			// OK, not the same protocol, so what can we do???
 			context = urlString;
 		}
-	}
-
-	if (fNormalizeToSlash == true)
-	{
-		context = NormalizeURI(context, '\\', '/');
-	}
-	else if (fNormalizeToBackslash == true)
-	{
-		context = NormalizeURI(context, '/', '\\');
 	}
 
 	return getURLFromString(context);
