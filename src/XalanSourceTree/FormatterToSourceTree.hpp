@@ -78,6 +78,7 @@
 
 
 class XalanDocument;
+class XalanDocumentFragment;
 class XalanElement;
 class XalanNode;
 class XalanSourceTreeDocument;
@@ -94,13 +95,36 @@ class XALAN_XALANSOURCETREE_EXPORT FormatterToSourceTree : public FormatterListe
 public:
 
 	/**
+	 * Perform static initialization.  See class XalanSourceTreeInit.
+	 */
+	static void
+	initialize();
+
+	/**
+	 * Perform static shut down.  See class XalanSourceTreeInit.
+	 */
+	static void
+	terminate();
+
+
+	/**
 	 * Construct a FormatterToSourceTree instance.  it will add the nodes 
 	 * to the document.
 	 *
-	 * @param doc  document for nodes
-	 * @param elem current element for nodes
+	 * @param theDocument The document for nodes
 	 */
 	FormatterToSourceTree(XalanSourceTreeDocument*	theDocument);
+
+	/**
+	 * Construct a FormatterToSourceTree instance.  it will add the nodes 
+	 * to the document fragment.
+	 *
+	 * @param theDocument The document for nodes
+	 * @param theDocumentFragment The document fragment for nodes
+	 */
+	FormatterToSourceTree(
+			XalanSourceTreeDocument*	theDocument,
+			XalanDocumentFragment*		theDocumentFragment);
 
 	virtual
 	~FormatterToSourceTree();
@@ -165,6 +189,36 @@ public:
 		return m_document;
 	}
 
+	void
+	setDocument(XalanSourceTreeDocument*	theDocument)
+	{
+		m_document = theDocument;
+	}
+
+	XalanDocumentFragment*
+	getDocumentFragment() const
+	{
+		return m_documentFragment;
+	}
+
+	void
+	setDocumentFragment(XalanDocumentFragment*	theDocumentFragment)
+	{
+		m_documentFragment = theDocumentFragment;
+	}
+
+	XalanSourceTreeElement*
+	getCurrentElement() const
+	{
+		return m_currentElement;
+	}
+
+	void
+	setCurrentElement(XalanSourceTreeElement*	theElement)
+	{
+		m_currentElement = theElement;
+	}
+
 private:
 
 	// Some utility functions...
@@ -176,8 +230,16 @@ private:
 			const XMLCh*	chars,
 			unsigned int	length);
 
+	void
+	doProcessingInstruction(
+			const XMLCh*	target,
+			const XMLCh*	data);
+
+
 	// Data members...
 	XalanSourceTreeDocument*						m_document;
+
+	XalanDocumentFragment*							m_documentFragment;
 
 	XalanSourceTreeElement*							m_currentElement;
 
@@ -190,6 +252,10 @@ private:
 	ElementStackType								m_elementStack;
 
 	XalanDOMString									m_textBuffer;
+
+	static const XalanDOMString&					s_xsltNextIsRawString;
+
+	static const XalanDOMString&					s_formatterToDOMString;
 };
 
 

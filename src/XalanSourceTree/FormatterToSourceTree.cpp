@@ -68,10 +68,15 @@
 
 
 #include <XalanDOM/XalanDOMException.hpp>
+#include <XalanDOM/XalanDocumentFragment.hpp>
 
 
 
 #include <PlatformSupport/DOMStringHelper.hpp>
+
+
+
+#include <XMLSupport/FormatterToDOM.hpp>
 
 
 
@@ -86,11 +91,28 @@
 FormatterToSourceTree::FormatterToSourceTree(XalanSourceTreeDocument*	theDocument) :
 	FormatterListener(OUTPUT_METHOD_DOM),
 	m_document(theDocument),
+	m_documentFragment(0),
 	m_currentElement(0),
 	m_elementStack(),
 	m_textBuffer()
 {
 	assert(m_document != 0);
+}
+
+
+
+FormatterToSourceTree::FormatterToSourceTree(
+			XalanSourceTreeDocument*	theDocument,
+			XalanDocumentFragment*		theDocumentFragment) :
+	FormatterListener(OUTPUT_METHOD_DOM),
+	m_document(theDocument),
+	m_documentFragment(theDocumentFragment),
+	m_currentElement(0),
+	m_elementStack(),
+	m_textBuffer()
+{
+	assert(m_document != 0);
+	assert(m_documentFragment != 0);
 }
 
 
@@ -133,13 +155,17 @@ FormatterToSourceTree::startElement(
 	XalanSourceTreeElement* const	theNewElement =
 		m_document->createElementNode(name, attrs, m_currentElement);
 
-	if (m_currentElement == 0)
+	if (m_currentElement != 0)
 	{
-		m_document->appendChildNode(theNewElement);
+		m_currentElement->appendChildNode(theNewElement);
+	}
+	else if(m_documentFragment != 0)
+	{
+		m_documentFragment->appendChild(theNewElement);
 	}
 	else
 	{
-		m_currentElement->appendChildNode(theNewElement);
+		m_document->appendChildNode(theNewElement);
 	}
 
 	m_elementStack.push_back(theNewElement);
@@ -178,7 +204,11 @@ FormatterToSourceTree::characters(
 			const XMLCh* const	chars,
 			const unsigned int	length)
 {
-	if (m_currentElement == 0)
+	if (m_documentFragment != 0)
+	{
+		doCharacters(chars, length);
+	}
+	else if (m_currentElement == 0)
 	{
 		if (isXMLWhitespace(chars) == false)
 		{
@@ -188,7 +218,6 @@ FormatterToSourceTree::characters(
 	else
 	{
 		append(m_textBuffer, chars, length);
-		m_currentElement->appendChildNode(m_document->createTextNode(chars, length, m_currentElement));
 	}
 }
 
@@ -202,6 +231,8 @@ FormatterToSourceTree::charactersRaw(
 	assert(m_document != 0);
 
 	processAccumulatedText();
+
+	doProcessingInstruction(c_wstr(s_xsltNextIsRawString), c_wstr(s_formatterToDOMString));
 
 	characters(chars, length);
 }
@@ -220,12 +251,31 @@ FormatterToSourceTree::ignorableWhitespace(
 			const XMLCh* const	chars,
 			const unsigned int	length)
 {
+	assert(m_document != 0);
+
 	// Ignore any whitespace reported before the document element has been parsed.
 	if (m_elementStack.empty() == false)
 	{
+		assert(m_documentFragment != 0 || m_document->getDocumentElement() != 0);
+
 		processAccumulatedText();
 
-		m_currentElement->appendChildNode(m_document->createTextIWSNode(chars, length, m_currentElement));
+		XalanSourceTreeText* const	theNewTextNode =
+			m_document->createTextIWSNode(chars, length, m_currentElement);
+
+		if (m_currentElement != 0)
+		{
+			m_currentElement->appendChildNode(theNewTextNode);
+		}
+	}
+	else if(m_documentFragment != 0)
+	{
+		processAccumulatedText();
+
+		XalanSourceTreeText* const	theNewTextNode =
+			m_document->createTextIWSNode(chars, length, m_currentElement);
+
+		m_documentFragment->appendChild(theNewTextNode);
 	}
 }
 
@@ -236,18 +286,11 @@ FormatterToSourceTree::processingInstruction(
 			const XMLCh* const	target,
 			const XMLCh* const	data)
 {
-	if (m_currentElement == 0)
-	{
-		assert(m_document != 0);
+	assert(m_document != 0);
 
-		m_document->appendChildNode(m_document->createProcessingInstructionNode(target, data));
-	}
-	else
-	{
-		processAccumulatedText();
+	processAccumulatedText();
 
-		m_currentElement->appendChildNode(m_document->createProcessingInstructionNode(target, data, m_currentElement));
-	}
+	doProcessingInstruction(target, data);
 }
 
 
@@ -272,6 +315,10 @@ FormatterToSourceTree::comment(const XMLCh* const	data)
 	if (m_currentElement != 0)
 	{
 		m_currentElement->appendChildNode(theNewComment);
+	}
+	else if(m_documentFragment != 0)
+	{
+		m_documentFragment->appendChild(theNewComment);
 	}
 	else
 	{
@@ -308,5 +355,72 @@ FormatterToSourceTree::doCharacters(
 			const XMLCh*	chars,
 			unsigned int	length)
 {
-	m_currentElement->appendChildNode(m_document->createTextNode(chars, length, m_currentElement));
+	if (m_currentElement != 0)
+	{
+		m_currentElement->appendChildNode(m_document->createTextNode(chars, length, m_currentElement));
+	}
+	else if(m_documentFragment != 0)
+	{
+		m_documentFragment->appendChild(m_document->createTextNode(chars, length, m_currentElement));
+	}
+	else
+	{
+		throw XalanDOMException(XalanDOMException::HIERARCHY_REQUEST_ERR);
+	}
+}
+
+
+
+void
+FormatterToSourceTree::doProcessingInstruction(
+			const XMLCh*	target,
+			const XMLCh*	data)
+{
+	XalanSourceTreeProcessingInstruction* const		theNewPI =
+		m_document->createProcessingInstructionNode(target, data);
+
+	if (m_currentElement != 0)
+	{
+		m_currentElement->appendChildNode(m_document->createProcessingInstructionNode(target, data, m_currentElement));
+	}
+	else if(m_documentFragment != 0)
+	{
+		m_documentFragment->appendChild(theNewPI);
+	}
+	else
+	{
+		m_document->appendChildNode(theNewPI);
+	}
+}
+
+
+
+static XalanDOMString	s_xsltNextIsRawString;
+
+static XalanDOMString	s_formatterToDOMString;
+
+
+
+const XalanDOMString&	FormatterToSourceTree::s_xsltNextIsRawString = ::s_xsltNextIsRawString;
+
+const XalanDOMString&	FormatterToSourceTree::s_formatterToDOMString = ::s_formatterToDOMString;
+
+
+
+void
+FormatterToSourceTree::initialize()
+{
+	::s_xsltNextIsRawString = XALAN_STATIC_UCODE_STRING("xslt-next-is-raw");
+
+	::s_formatterToDOMString = XALAN_STATIC_UCODE_STRING("formatter-to-dom");
+}
+
+
+
+void
+FormatterToSourceTree::terminate()
+{
+	clear(::s_xsltNextIsRawString);
+
+	clear(::s_formatterToDOMString);
 }
