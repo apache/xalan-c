@@ -59,10 +59,7 @@
 
 
 #include <algorithm>
-
-
-
-#include <util/StdOut.hpp>
+#include <iostream>
 
 
 
@@ -323,18 +320,14 @@ XPathEnvSupportDefault::problem(
 	}
 	else
 	{
-#if 0
-		// $$$ ToDo: Xerces-specific code!
-		XMLStdErr	theStdErr;
-
-		theStdErr << msg
+		std::cerr << msg
 				  << ", at line number "
 				  << static_cast<long>(lineNo)
 				  << " at offset "
 				  << static_cast<long>(charOffset)
-				  << XMLStdErr::EndLine;
-#endif
-		return classification == XPathEnvSupport::eWarning ? false : true;
+				  << std::endl;
+
+		return classification == XPathEnvSupport::eError ? true : false;
 	}
 }
 
