@@ -54,74 +54,28 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-#if !defined(FUNCTIONDOC_HEADER_GUARD_1357924680)
-#define FUNCTIONDOC_HEADER_GUARD_1357924680
+#include "XPointer.hpp"
 
 
 
-// Base header file.  Must be first.
-#include <XSLT/XSLTDefinitions.hpp>
+#include "XPathException.hpp"
 
 
 
-#include <vector>
-
-
-
-#include <PlatformSupport/DOMStringHelper.hpp>
-
-
-
-// Base class header file...
-#include <XPath/Function.hpp>
-
-
-/**
- * XPath implementation of "document" function.
- */
-//
-// These are all inline, even though
-// there are virtual functions, because we expect that they will only be
-// needed by the XSLT class.
-class XALAN_XSLT_EXPORT FunctionDoc : public Function
+XSpan*
+XPointer::getNode(const XalanDOMString&		/* xpointer */)
 {
-public:
+	throw XPathException(TranscodeFromLocalCodePage("Error!  XPointer::getNode not yet implemented!"));
 
-	// These methods are inherited from Function ...
-
-	virtual XObjectPtr
-	execute(
-			XPathExecutionContext&			executionContext,
-			const DOM_Node&					context,
-			int								/* opPos */,
-			const XObjectArgVectorType&		args)
-	{
-		executionContext.error("Document() function implementation has been replaced by xslt/FunctionDocument!",
-							   context);
-
-		return executionContext.getXObjectFactory().createNull();
-	}
-
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-	virtual Function*
-#else
-	virtual FunctionDoc*
-#endif
-	clone() const
-	{
-		return new FunctionDoc(*this);
-	}
-
-private:
-
-	// Not implemented...
-	FunctionDoc&
-	operator=(const FunctionDoc&);
-
-	bool
-	operator==(const FunctionDoc&) const;
-};
+	return 0;
+}
 
 
 
-#endif	// FUNCTIONDOC_HEADER_GUARD_1357924680
+XSpan*
+XPointer::getNode(XPath&	/* xpath */)
+{
+	throw XPathException(TranscodeFromLocalCodePage("Error!  XPointer::getNode not yet implemented!"));
+
+	return 0;
+}
