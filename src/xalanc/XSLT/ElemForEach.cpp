@@ -188,11 +188,10 @@ ElemForEach::startElement(StylesheetExecutionContext&		executionContext) const
 		executionContext.pushCurrentTemplate(0);
 		const NodeRefListBase * nodeList = createSelectedAndSortedNodeList(
 				executionContext);
-		NodeRefListBase::size_type nNodes = nodeList->getLength();
 		executionContext.createAndPushNodesToTransformList(nodeList);
 		executionContext.pushContextNodeList(*nodeList);
 		
-	    XalanNode* currentNode = executionContext.getNextNodeToTransform();
+		XalanNode* currentNode = executionContext.getNextNodeToTransform();
 		if (currentNode == 0)
 		{
 			return 0;

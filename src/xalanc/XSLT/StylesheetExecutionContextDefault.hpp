@@ -1206,18 +1206,6 @@ private:
 
 	CurrentTemplateStackType			m_currentTemplateStack;
 
-#if !defined(ITERATIVE_EXECUTION)
-	typedef XalanObjectCacheDefault<FormatterToText>		FormatterToTextCacheType;
-	typedef XalanObjectCacheDefault<FormatterToSourceTree>	FormatterToSourceTreeCacheType;
-	typedef XalanObjectCacheDefault<NodeSorter>				NodeSorterCacheType;
-	
-	FormatterToTextCacheType			m_formatterToTextCache;
-
-	FormatterToSourceTreeCacheType		m_formatterToSourceTreeCache;
-
-	NodeSorterCacheType					m_nodeSorterCache;
-#endif
-
 	int									m_indentAmount;
 
 	XResultTreeFragAllocator			m_xresultTreeFragAllocator;
@@ -1226,23 +1214,35 @@ private:
 
 	XalanSourceTreeDocumentAllocator	m_documentAllocator;
 
-	typedef XALAN_STD_QUALIFIER vector<bool>				BooleanStackType;
+	typedef XALAN_STD_QUALIFIER vector<bool>		BooleanStackType;
 	typedef XALAN_STD_QUALIFIER vector<const XalanQName*>	ModeStackType;
-	typedef XALAN_STD_QUALIFIER vector<int>					IntStackType;
+	typedef XALAN_STD_QUALIFIER vector<int>			IntStackType;
 
 	BooleanStackType					m_copyTextNodesOnlyStack;
 	ModeStackType						m_modeStack;
 	IntStackType						m_currentIndexStack;
 
+#if !defined(ITERATIVE_EXECUTION)
+	typedef XalanObjectCacheDefault<FormatterToText>	FormatterToTextCacheType;
+	typedef XalanObjectCacheDefault<FormatterToSourceTree>	FormatterToSourceTreeCacheType;
+	typedef XalanObjectCacheDefault<NodeSorter>		NodeSorterCacheType;
+	
+	FormatterToTextCacheType			m_formatterToTextCache;
+
+	FormatterToSourceTreeCacheType		m_formatterToSourceTreeCache;
+
+	NodeSorterCacheType					m_nodeSorterCache;
+#endif
+
 #if defined(ITERATIVE_EXECUTION)
-	typedef XALAN_STD_QUALIFIER vector<XObjectPtr>				XObjectPtrStackType;
+	typedef XALAN_STD_QUALIFIER vector<XObjectPtr>			XObjectPtrStackType;
 	typedef XALAN_STD_QUALIFIER vector<ParamsVectorType>		ParamsVectorStackType;
-	typedef XALAN_STD_QUALIFIER vector<UseAttributeSetIndexes>  UseAttributeSetIndexesStackType;
+	typedef XALAN_STD_QUALIFIER vector<UseAttributeSetIndexes>  	UseAttributeSetIndexesStackType;
 
 	typedef XalanObjectStackCache<MutableNodeRefList>		MutableNodeRefListStackType;
 	typedef XalanObjectStackCache<XalanDOMString>			StringStackType;
 	typedef XalanObjectStackCache<FormatterToText>			FormatterToTextStackType;
-	typedef XalanObjectStackCache<FormatterToSourceTree>	FormatterToSourceTreeStackType;
+	typedef XalanObjectStackCache<FormatterToSourceTree>		FormatterToSourceTreeStackType;
 
 	/*
 	 * class to maintain the list of nodes to be transformed by an element

@@ -259,13 +259,7 @@ ElemTemplateElement::execute(StylesheetExecutionContext&			executionContext) con
 			if (0 == nextElement)
 			{
 				currentElement = currentElement->getInvoker(executionContext);
-
-				if (invoker == currentElement)
-				{
-					nextElement == 0;
-				}
 			}
-			
 		}
 
 		currentElement = nextElement;

@@ -127,6 +127,10 @@ StylesheetExecutionContextDefault::StylesheetExecutionContextDefault(
 	m_countersTable(),
 	m_sourceTreeResultTreeFactory(),
 	m_currentTemplateStack(),
+	m_indentAmount(-1),
+	m_xresultTreeFragAllocator(eXResultTreeFragAllocatorBlockSize),
+	m_documentFragmentAllocator(eDocumentFragmentAllocatorBlockSize),
+	m_documentAllocator(eDocumentAllocatorBlockSize),
 	m_copyTextNodesOnlyStack(),
 	m_modeStack(),
 	m_currentIndexStack(),
@@ -149,15 +153,10 @@ StylesheetExecutionContextDefault::StylesheetExecutionContextDefault(
 	m_formatterToSourceTreeCache(),
 	m_nodeSorterCache(),
 #endif
-	m_indentAmount(-1),
-	m_xresultTreeFragAllocator(eXResultTreeFragAllocatorBlockSize),
-	m_documentFragmentAllocator(eDocumentFragmentAllocatorBlockSize),
-	m_documentAllocator(eDocumentAllocatorBlockSize),
 	m_usePerInstanceDocumentFactory(false),
 	m_escapeURLs(eEscapeURLsDefault),
 	m_omitMETATag(eOmitMETATagDefault),
 	m_hasStripOrPreserveSpace(false)
-
 {
     m_currentTemplateStack.push_back(0);
 }
@@ -188,6 +187,10 @@ StylesheetExecutionContextDefault::StylesheetExecutionContextDefault(
 	m_countersTable(),
 	m_sourceTreeResultTreeFactory(),
 	m_currentTemplateStack(),
+	m_indentAmount(-1),
+	m_xresultTreeFragAllocator(eXResultTreeFragAllocatorBlockSize),
+	m_documentFragmentAllocator(eDocumentFragmentAllocatorBlockSize),
+	m_documentAllocator(eDocumentAllocatorBlockSize),
 	m_copyTextNodesOnlyStack(),
 	m_modeStack(),
 	m_currentIndexStack(),
@@ -210,10 +213,6 @@ StylesheetExecutionContextDefault::StylesheetExecutionContextDefault(
 	m_formatterToSourceTreeCache(),
 	m_nodeSorterCache(),
 #endif
-	m_indentAmount(-1),
-	m_xresultTreeFragAllocator(eXResultTreeFragAllocatorBlockSize),
-	m_documentFragmentAllocator(eDocumentFragmentAllocatorBlockSize),
-	m_documentAllocator(eDocumentAllocatorBlockSize),
 	m_usePerInstanceDocumentFactory(false),
 	m_escapeURLs(eEscapeURLsDefault),
 	m_hasStripOrPreserveSpace(false)

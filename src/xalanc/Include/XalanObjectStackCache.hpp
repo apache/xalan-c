@@ -110,7 +110,7 @@ public:
 	void
 	reset()
 	{
-		VectorType::iterator iterator;
+		typename VectorType::iterator iterator;
 
 		for (iterator = m_stack.begin(); iterator < m_stack.end(); iterator++)
 		{
@@ -137,7 +137,7 @@ private:
 	// Data members...
 	VectorType			m_stack;
 
-	VectorType::size_type m_numObjectsOnStack;
+	typename VectorType::size_type m_numObjectsOnStack;
 
 };
 
