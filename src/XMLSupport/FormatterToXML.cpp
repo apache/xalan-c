@@ -133,7 +133,7 @@ FormatterToXML::FormatterToXML(
 	m_preserves(),
 	m_stringBuffer(),
 	m_bytesEqualChars(false),
-	m_shouldFlush(true),
+	m_shouldFlush(fBufferData),
 	m_spaceBeforeClose(false),
 	m_escapeCData(false),
 	m_inEntityRef(false),
@@ -983,9 +983,13 @@ FormatterToXML::endDocument()
 		outputLineSep();
 	}
 
-	(this->*m_flushFunction)();
+	if (m_shouldFlush == true)
+	{
+		(this->*m_flushFunction)();
+	}
 
 	flushWriter();
+
 }
 
 
