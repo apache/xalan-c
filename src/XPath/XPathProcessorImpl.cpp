@@ -499,7 +499,7 @@ XPathProcessorImpl::mapPatternElemPos(
 	{
 		if(!isStart)
 		{
-			m_expression->adjustPattern(m_expression->patternMapSize(),
+			m_expression->adjustPattern(m_expression->patternMapSize() - 1,
 										-TARGETEXTRA);
 		}
 
