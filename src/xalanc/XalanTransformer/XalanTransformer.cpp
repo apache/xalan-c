@@ -174,15 +174,10 @@ XalanTransformer::initialize()
 	// Initialize Xalan. 
 	XalanAutoPtr<XSLTInit>			initGuard(new XSLTInit);
 	XalanAutoPtr<XSLTInputSource>	inputSourceGuard(new XSLTInputSource);
+	EnsureFunctionsInstallation		instalGuard; 
+	instalGuard.install();
 
-	XalanExtensionsInstaller::installGlobal();
-	XalanEXSLTCommonFunctionsInstaller::installGlobal();
-	XalanEXSLTDynamicFunctionsInstaller::installGlobal();
-	XalanEXSLTMathFunctionsInstaller::installGlobal();
-	XalanEXSLTSetFunctionsInstaller::installGlobal();
-	XalanEXSLTStringFunctionsInstaller::installGlobal();
-	XalanEXSLTDateTimeFunctionsInstaller::installGlobal();
-
+	instalGuard.release();
 	s_xsltInit = initGuard.release();
 	s_emptyInputSource = inputSourceGuard.release();
 }
@@ -192,19 +187,10 @@ XalanTransformer::initialize()
 void
 XalanTransformer::terminate()
 {
-	XalanExtensionsInstaller::uninstallGlobal();
-	XalanEXSLTCommonFunctionsInstaller::uninstallGlobal();
-	XalanEXSLTDynamicFunctionsInstaller::uninstallGlobal();
-	XalanEXSLTMathFunctionsInstaller::uninstallGlobal();
-	XalanEXSLTSetFunctionsInstaller::uninstallGlobal();
-	XalanEXSLTStringFunctionsInstaller::uninstallGlobal();
-	XalanEXSLTDateTimeFunctionsInstaller::uninstallGlobal();
+	{
+		EnsureFunctionsInstallation		uninstalGuard;
+	}
 
-#if defined(XALAN_USE_ICU)
-	XPath::uninstallFunction(XPathFunctionTable::s_formatNumber);
-#endif
-
-	// Terminate Xalan and release memory.
 #if defined(XALAN_CANNOT_DELETE_CONST)
 	delete (XSLTInputSource*) s_emptyInputSource;
 	delete (XSLTInit*) s_xsltInit;
@@ -1296,6 +1282,36 @@ XalanTransformer::doTransform(
 	return theResult;
 }
 
+void
+XalanTransformer::EnsureFunctionsInstallation::install()
+{
+
+	XalanExtensionsInstaller::installGlobal();
+	XalanEXSLTCommonFunctionsInstaller::installGlobal();
+	XalanEXSLTDynamicFunctionsInstaller::installGlobal();
+	XalanEXSLTMathFunctionsInstaller::installGlobal();
+	XalanEXSLTSetFunctionsInstaller::installGlobal();
+	XalanEXSLTStringFunctionsInstaller::installGlobal();
+	XalanEXSLTDateTimeFunctionsInstaller::installGlobal();
+}
+
+XalanTransformer::EnsureFunctionsInstallation::~EnsureFunctionsInstallation()
+{
+	if ( !m_release )
+	{
+		XalanExtensionsInstaller::uninstallGlobal();
+		XalanEXSLTCommonFunctionsInstaller::uninstallGlobal();
+		XalanEXSLTDynamicFunctionsInstaller::uninstallGlobal();
+		XalanEXSLTMathFunctionsInstaller::uninstallGlobal();
+		XalanEXSLTSetFunctionsInstaller::uninstallGlobal();
+		XalanEXSLTStringFunctionsInstaller::uninstallGlobal();
+		XalanEXSLTDateTimeFunctionsInstaller::uninstallGlobal();
+
+#if defined(XALAN_USE_ICU)
+		XPath::uninstallFunction(XPathFunctionTable::s_formatNumber);
+#endif
+	}
+}
 
 
 XALAN_CPP_NAMESPACE_END

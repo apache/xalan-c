@@ -815,6 +815,31 @@ public:
 	typedef std::vector<TraceListener*>					TraceListenerVectorType;
 #endif
 
+	class EnsureFunctionsInstallation
+	{
+	public:
+		
+		EnsureFunctionsInstallation() : 
+		  m_release(false)
+		{	  
+		}
+
+		~EnsureFunctionsInstallation();
+
+		static void
+		install();
+
+		void
+		release()
+		{
+			m_release = true;
+		}
+
+	private:
+
+		bool m_release;
+	};
+
 	class EnsureDestroyParsedSource
 	{
 	public:
