@@ -1254,54 +1254,6 @@ substring(
 
 
 /**
- * Simulates the java String method toLowerCase(). Returns a new string
- * containing only lower case characters of target string.
- * 
- * @param theString target string
- * @return string containing lower case characters
- */
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString)
-toLowerCase(const XalanDOMChar*		theString);
-
-
-
-/**
- * Simulates the java String method toLowerCase(). Returns a new string
- * containing only lower case characters of target string.
- * 
- * @param theString target string
- * @return string containing lower case characters
- */
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString)
-toLowerCase(const XalanDOMString&	theString);
-
-
-
-/**
- * Simulates the java String method toUpperCase(). Returns a new string
- * containing only upper case characters of target string.
- * 
- * @param theString target string
- * @return string containing upper case characters
- */
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString)
-toUpperCase(const XalanDOMChar*		theString);
-
-
-
-/**
- * Simulates the java String method toUpperCase(). Returns a new string
- * containing only upper case characters of target string.
- * 
- * @param theString target string
- * @return string containing upper case characters
- */
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString)
-toUpperCase(const XalanDOMString&	theString);
-
-
-
-/**
  * Converts ASCII alphabetic characters from upper case to
  * lower case.  This function works only with the Unicode
  * characters A-Z.

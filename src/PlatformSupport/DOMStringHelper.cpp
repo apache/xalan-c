@@ -722,38 +722,6 @@ TransformXalanDOMString(
 
 
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString)
-toLowerCase(const XalanDOMChar*		theString)
-{
-	return TransformString(theString, length(theString), towlower);
-}
-
-
-
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString)
-toLowerCase(const XalanDOMString&	theString)
-{
-	return TransformXalanDOMString(theString, towlower);
-}
-
-
-
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString)
-toUpperCase(const XalanDOMChar*		theString)
-{
-	return TransformString(theString, length(theString), towupper);
-}
-
-
-
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString)
-toUpperCase(const XalanDOMString&	theString)
-{
-	return TransformXalanDOMString(theString, towupper);
-}
-
-
-
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString)
 toLowerCaseASCII(const XalanDOMChar*	theString)
 {
 	return TransformString(theString, length(theString), toLowerASCII);
@@ -1530,13 +1498,13 @@ DoubleToDOMString(
 	{
 		theResult = theNegativeInfinityString;
 	}
-	else if (DoubleSupport::isNegativeZero(theDouble) == true)
-	{
-		theResult = theNegativeZeroString;
-	}
 	else if (DoubleSupport::isPositiveZero(theDouble) == true)
 	{
 		theResult = thePositiveZeroString;
+	}
+	else if (DoubleSupport::isNegativeZero(theDouble) == true)
+	{
+		theResult = theNegativeZeroString;
 	}
 	else if (long(theDouble) == theDouble)
 	{
