@@ -66,6 +66,7 @@
 #include <XalanDOM/XalanDocument.hpp>
 #include <XalanDOM/XalanElement.hpp>
 #include <XalanDOM/XalanNamedNodeMap.hpp>
+#include <XalanDOM/XalanNodeList.hpp>
 #include <XalanDOM/XalanText.hpp>
 
 
@@ -149,6 +150,27 @@ DOMServices::getNodeData(const XalanNode&	node)
 	switch(node.getNodeType())
 	{
 	case XalanNode::DOCUMENT_FRAGMENT_NODE:
+		{
+			const XalanNodeList* const	mnl = node.getChildNodes();
+			assert(mnl != 0);
+
+			const unsigned int	n = mnl->getLength();
+
+			for(unsigned int i = 0; i < n; ++i)
+			{
+				assert(mnl->item(i) != 0);
+
+				const XalanDOMString 	nodeData =
+					getNodeData(*mnl->item(i));
+
+				if(0 < length(nodeData))
+				{
+					data += nodeData;
+				}
+			}
+		}
+		break;
+
 	case XalanNode::DOCUMENT_NODE:
 	case XalanNode::ELEMENT_NODE:
 		{
