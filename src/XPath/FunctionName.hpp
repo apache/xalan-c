@@ -119,19 +119,21 @@ public:
 			}
 			else
 			{
-				// Make a temporary XObject from the context node.
-				XObjectFactory&						theFactory =
-							executionContext.getXObjectFactory();
-
-				FactoryObjectAutoPointer<XObject>	theXObject(&theFactory,
-															   theFactory.createNodeSet(*context));
-
-				theResult = getNameFromNodeList(theXObject->nodeset());
+				theResult = getNameFromNode(*context);
 			}
 		}
 		else if (theSize == 1)
 		{
-			theResult = getNameFromNodeList(args[0]->nodeset());
+			assert(args[0] != 0);
+
+			const NodeRefListBase&	theNodeList = args[0]->nodeset();
+
+			if (theNodeList.getLength() != 0)
+			{
+				assert(theNodeList.item(0) != 0);
+
+				theResult = getNameFromNode(*theNodeList.item(0));
+			}
 		}
 		else
 		{
@@ -161,26 +163,24 @@ protected:
 	 * @return name string of node, or an empty string if node list is empty
 	 */
 	virtual XalanDOMString
-	getNameFromNodeList(const NodeRefListBase&	theNodeList) const
+	getNameFromNode(const XalanNode&	theNode) const
 	{
 		XalanDOMString	theResult;
 
-		if (theNodeList.getLength() > 0)
+		const XalanNode::NodeType	theNodeType =
+				theNode.getNodeType();
+
+		if (theNodeType == XalanNode::ATTRIBUTE_NODE)
 		{
-			const XalanNode* const	theNode	= theNodeList.item(0);
-			assert(theNode != 0);
+			const XalanAttr&	theAttributeNode =
+					reinterpret_cast<const XalanAttr&>(theNode);
 
-			if (XalanNode::ATTRIBUTE_NODE == theNode->getNodeType())
-			{
-				const XalanAttr* const	theAttributeNode =
-					reinterpret_cast<const XalanAttr*>(theNode);
-
-				theResult = theAttributeNode->getName();
-			}
-			else
-			{
-				theResult = theNode->getNodeName();
-			}
+			theResult = theAttributeNode.getName();
+		}
+		else if (theNodeType == XalanNode::ELEMENT_NODE ||
+				 theNodeType == XalanNode::PROCESSING_INSTRUCTION_NODE)
+		{
+			theResult = theNode.getNodeName();
 		}
 
 		return theResult;
