@@ -1162,7 +1162,7 @@ StylesheetExecutionContextDefault::returnXResultTreeFrag(XResultTreeFrag*	theXRe
 		{
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
 #if defined(XALAN_OLD_STYLE_CASTS)
-			m_documentAllocator.destroy((const XalanSourceTreeDocument*)theDocumentFragment->getOwnerDocument());
+			m_documentAllocator.destroy((XalanSourceTreeDocument*)theDocumentFragment->getOwnerDocument());
 #else
 			m_documentAllocator.destroy(static_cast<XalanSourceTreeDocument*>(theDocumentFragment->getOwnerDocument()));
 #endif
