@@ -165,8 +165,8 @@ public:
 
 	virtual void
 	startElement(
-			const	XMLCh* const	name,
-			AttributeList&			attrs);
+			const XMLCh* const	name,
+			AttributeList&		attrs);
 
     virtual void
 	endElement(const XMLCh* const	name);
@@ -330,6 +330,9 @@ protected:
 	void
 	outputLineSep();
 
+	typedef void (FormatterToXML::*AccumFunctionType)(XalanDOMChar);
+	typedef void (FormatterToXML::*FlushFunctionType)();
+
 	/**
 	 * Append a wide character to the buffer.
 	 *
@@ -424,8 +427,6 @@ protected:
 	void
 	accumName(const XalanDOMString&		str);
 
-	typedef void (FormatterToXML::*AccumFunctionType)(XalanDOMChar);
-
 	/**
 	 * Append a string to the buffer.
 	 *
@@ -480,9 +481,6 @@ protected:
 	 */
 	void
 	flushBytes();
-
-	void
-	flush();
 
 	void
 	flushWriter();
@@ -948,6 +946,11 @@ private:
 	 * for content.
 	 */
 	AccumFunctionType	m_accumContentFunction;
+
+	/**
+	 * A pointer to the member function that will flush the buffer.
+	 */
+	FlushFunctionType	m_flushFunction;
 };
 
 

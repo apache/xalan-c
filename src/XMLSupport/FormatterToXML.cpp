@@ -189,6 +189,8 @@ FormatterToXML::FormatterToXML(
 
 			m_accumContentFunction = &FormatterToXML::accumContentAsByte;
 		}
+
+		m_flushFunction = &FormatterToXML::flushBytes;
 	}
 	else
 	{
@@ -206,6 +208,8 @@ FormatterToXML::FormatterToXML(
 
 			m_accumContentFunction = &FormatterToXML::accumContentAsChar;
 		}
+
+		m_flushFunction = &FormatterToXML::flushChars;
 	}
 
 	// Do this last so we initialize the map according to the value of
@@ -396,7 +400,7 @@ FormatterToXML::accumNameAsCharDirect(XalanDOMChar	ch)
 {
 	if (ch > m_maxCharacter)
 	{
-		m_stream->write(XalanUnicode::charQuestionMark);
+		m_stream->write(XalanDOMChar(XalanUnicode::charQuestionMark));
 	}
 	else
 	{
@@ -681,28 +685,6 @@ FormatterToXML::flushBytes()
 }
 
 
-	
-void
-FormatterToXML::flush()
-{
-	if (m_stream != 0)
-	{
-		m_stream->flush();
-	}
-	else
-	{
-		if (m_bytesEqualChars == true)
-		{
-			flushBytes();
-		}
-		else
-		{
-			flushChars();
-		}
-	}
-}
-
-
 
 void
 FormatterToXML::flushWriter()
@@ -775,12 +757,14 @@ FormatterToXML::startDocument()
 void
 FormatterToXML::endDocument()
 {
+	assert(m_flushFunction != 0);
+
 	if(m_doIndent == true && m_isprevtext == false)
 	{
 		outputLineSep();
 	}
 
-	flush();
+	(this->*m_flushFunction)();
 
 	flushWriter();
 }
@@ -789,8 +773,8 @@ FormatterToXML::endDocument()
 
 void
 FormatterToXML::startElement(
-			const	XMLCh* const	name,
-			AttributeList&			attrs)
+			const XMLCh* const	name,
+			AttributeList&		attrs)
 {
     if(m_inEntityRef == false)
 	{
