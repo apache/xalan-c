@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 2002 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2002-2003 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -169,6 +169,8 @@ class XALAN_EXSLT_EXPORT XalanEXSLTFunctionHasSameNode : public Function
 {
 public:
 
+	typedef Function	ParentType;
+
 	XalanEXSLTFunctionHasSameNode() :
 		Function()
 	{
@@ -180,6 +182,10 @@ public:
 	}
 
 	// These methods are inherited from Function ...
+
+#if !defined(XALAN_NO_USING_DECLARATION)
+	using ParentType::execute;
+#endif
 
 	virtual XObjectPtr
 	execute(
@@ -266,6 +272,8 @@ class XALAN_EXSLT_EXPORT XalanEXSLTFunctionLeading : public Function
 {
 public:
 
+	typedef Function	ParentType;
+
 	XalanEXSLTFunctionLeading() :
 		Function()
 	{
@@ -277,6 +285,10 @@ public:
 	}
 
 	// These methods are inherited from Function ...
+
+#if !defined(XALAN_NO_USING_DECLARATION)
+	using ParentType::execute;
+#endif
 
 	virtual XObjectPtr
 	execute(
@@ -319,6 +331,8 @@ class XALAN_EXSLT_EXPORT XalanEXSLTFunctionTrailing : public Function
 {
 public:
 
+	typedef Function	ParentType;
+
 	XalanEXSLTFunctionTrailing() :
 		Function()
 	{
@@ -330,6 +344,10 @@ public:
 	}
 
 	// These methods are inherited from Function ...
+
+#if !defined(XALAN_NO_USING_DECLARATION)
+	using ParentType::execute;
+#endif
 
 	virtual XObjectPtr
 	execute(

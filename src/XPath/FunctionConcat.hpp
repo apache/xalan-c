@@ -80,12 +80,18 @@ class XALAN_XPATH_EXPORT FunctionConcat : public Function
 {
 public:
 
+	typedef Function	ParentType;
+
 	FunctionConcat();
 
 	virtual
 	~FunctionConcat();	
 
 	// These methods are inherited from Function ...
+
+#if !defined(XALAN_NO_USING_DECLARATION)
+	using ParentType::execute;
+#endif
 
 	virtual XObjectPtr
 	execute(

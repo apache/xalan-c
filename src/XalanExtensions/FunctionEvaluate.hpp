@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -80,12 +80,18 @@ class XALAN_XALANEXTENSIONS_EXPORT FunctionEvaluate : public Function
 {
 public:
 
+	typedef Function	ParentType;
+
 	FunctionEvaluate();
 
 	virtual
 	~FunctionEvaluate();
 
 	// These methods are inherited from Function ...
+
+#if !defined(XALAN_NO_USING_DECLARATION)
+	using ParentType::execute;
+#endif
 
 	virtual XObjectPtr
 	execute(

@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 2002 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2002-2003 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -75,6 +75,8 @@ class XALAN_EXSLT_EXPORT XalanEXSLTFunctionAbs : public Function
 {
 public:
 
+	typedef Function	ParentType;
+
 	XalanEXSLTFunctionAbs()
 	{
 	}
@@ -85,6 +87,10 @@ public:
 	}
 
 	// These methods are inherited from Function ...
+
+#if !defined(XALAN_NO_USING_DECLARATION)
+	using ParentType::execute;
+#endif
 
 	virtual XObjectPtr
 	execute(
@@ -124,6 +130,8 @@ class XALAN_EXSLT_EXPORT XalanEXSLTFunctionAcos : public Function
 {
 public:
 
+	typedef Function	ParentType;
+
 	XalanEXSLTFunctionAcos()
 	{
 	}
@@ -134,6 +142,10 @@ public:
 	}
 
 	// These methods are inherited from Function ...
+
+#if !defined(XALAN_NO_USING_DECLARATION)
+	using ParentType::execute;
+#endif
 
 	virtual XObjectPtr
 	execute(
@@ -173,6 +185,8 @@ class XALAN_EXSLT_EXPORT XalanEXSLTFunctionAsin : public Function
 {
 public:
 
+	typedef Function	ParentType;
+
 	XalanEXSLTFunctionAsin()
 	{
 	}
@@ -183,6 +197,10 @@ public:
 	}
 
 	// These methods are inherited from Function ...
+
+#if !defined(XALAN_NO_USING_DECLARATION)
+	using ParentType::execute;
+#endif
 
 	virtual XObjectPtr
 	execute(
@@ -222,6 +240,8 @@ class XALAN_EXSLT_EXPORT XalanEXSLTFunctionAtan : public Function
 {
 public:
 
+	typedef Function	ParentType;
+
 	XalanEXSLTFunctionAtan()
 	{
 	}
@@ -232,6 +252,10 @@ public:
 	}
 
 	// These methods are inherited from Function ...
+
+#if !defined(XALAN_NO_USING_DECLARATION)
+	using ParentType::execute;
+#endif
 
 	virtual XObjectPtr
 	execute(
@@ -271,6 +295,8 @@ class XALAN_EXSLT_EXPORT XalanEXSLTFunctionAtan2 : public Function
 {
 public:
 
+	typedef Function	ParentType;
+
 	XalanEXSLTFunctionAtan2()
 	{
 	}
@@ -281,6 +307,10 @@ public:
 	}
 
 	// These methods are inherited from Function ...
+
+#if !defined(XALAN_NO_USING_DECLARATION)
+	using ParentType::execute;
+#endif
 
 	virtual XObjectPtr
 	execute(
@@ -320,6 +350,8 @@ class XALAN_EXSLT_EXPORT XalanEXSLTFunctionConstant : public Function
 {
 public:
 
+	typedef Function	ParentType;
+
 	XalanEXSLTFunctionConstant()
 	{
 	}
@@ -330,6 +362,10 @@ public:
 	}
 
 	// These methods are inherited from Function ...
+
+#if !defined(XALAN_NO_USING_DECLARATION)
+	using ParentType::execute;
+#endif
 
 	virtual XObjectPtr
 	execute(
@@ -389,6 +425,8 @@ class XALAN_EXSLT_EXPORT XalanEXSLTFunctionCos : public Function
 {
 public:
 
+	typedef Function	ParentType;
+
 	XalanEXSLTFunctionCos()
 	{
 	}
@@ -399,6 +437,10 @@ public:
 	}
 
 	// These methods are inherited from Function ...
+
+#if !defined(XALAN_NO_USING_DECLARATION)
+	using ParentType::execute;
+#endif
 
 	virtual XObjectPtr
 	execute(
@@ -438,6 +480,8 @@ class XALAN_EXSLT_EXPORT XalanEXSLTFunctionExp : public Function
 {
 public:
 
+	typedef Function	ParentType;
+
 	XalanEXSLTFunctionExp()
 	{
 	}
@@ -448,6 +492,10 @@ public:
 	}
 
 	// These methods are inherited from Function ...
+
+#if !defined(XALAN_NO_USING_DECLARATION)
+	using ParentType::execute;
+#endif
 
 	virtual XObjectPtr
 	execute(
@@ -487,6 +535,8 @@ class XALAN_EXSLT_EXPORT XalanEXSLTFunctionHighest : public Function
 {
 public:
 
+	typedef Function	ParentType;
+
 	XalanEXSLTFunctionHighest()
 	{
 	}
@@ -497,6 +547,10 @@ public:
 	}
 
 	// These methods are inherited from Function ...
+
+#if !defined(XALAN_NO_USING_DECLARATION)
+	using ParentType::execute;
+#endif
 
 	virtual XObjectPtr
 	execute(
@@ -536,6 +590,8 @@ class XALAN_EXSLT_EXPORT XalanEXSLTFunctionLog : public Function
 {
 public:
 
+	typedef Function	ParentType;
+
 	XalanEXSLTFunctionLog()
 	{
 	}
@@ -546,6 +602,10 @@ public:
 	}
 
 	// These methods are inherited from Function ...
+
+#if !defined(XALAN_NO_USING_DECLARATION)
+	using ParentType::execute;
+#endif
 
 	virtual XObjectPtr
 	execute(
@@ -585,6 +645,8 @@ class XALAN_EXSLT_EXPORT XalanEXSLTFunctionLowest : public Function
 {
 public:
 
+	typedef Function	ParentType;
+
 	XalanEXSLTFunctionLowest()
 	{
 	}
@@ -595,6 +657,10 @@ public:
 	}
 
 	// These methods are inherited from Function ...
+
+#if !defined(XALAN_NO_USING_DECLARATION)
+	using ParentType::execute;
+#endif
 
 	virtual XObjectPtr
 	execute(
@@ -634,6 +700,8 @@ class XALAN_EXSLT_EXPORT XalanEXSLTFunctionMax : public Function
 {
 public:
 
+	typedef Function	ParentType;
+
 	XalanEXSLTFunctionMax()
 	{
 	}
@@ -644,6 +712,10 @@ public:
 	}
 
 	// These methods are inherited from Function ...
+
+#if !defined(XALAN_NO_USING_DECLARATION)
+	using ParentType::execute;
+#endif
 
 	virtual XObjectPtr
 	execute(
@@ -683,6 +755,8 @@ class XALAN_EXSLT_EXPORT XalanEXSLTFunctionMin : public Function
 {
 public:
 
+	typedef Function	ParentType;
+
 	XalanEXSLTFunctionMin()
 	{
 	}
@@ -693,6 +767,10 @@ public:
 	}
 
 	// These methods are inherited from Function ...
+
+#if !defined(XALAN_NO_USING_DECLARATION)
+	using ParentType::execute;
+#endif
 
 	virtual XObjectPtr
 	execute(
@@ -732,6 +810,8 @@ class XALAN_EXSLT_EXPORT XalanEXSLTFunctionPower : public Function
 {
 public:
 
+	typedef Function	ParentType;
+
 	XalanEXSLTFunctionPower()
 	{
 	}
@@ -742,6 +822,10 @@ public:
 	}
 
 	// These methods are inherited from Function ...
+
+#if !defined(XALAN_NO_USING_DECLARATION)
+	using ParentType::execute;
+#endif
 
 	virtual XObjectPtr
 	execute(
@@ -781,6 +865,8 @@ class XALAN_EXSLT_EXPORT XalanEXSLTFunctionSin : public Function
 {
 public:
 
+	typedef Function	ParentType;
+
 	XalanEXSLTFunctionSin()
 	{
 	}
@@ -791,6 +877,10 @@ public:
 	}
 
 	// These methods are inherited from Function ...
+
+#if !defined(XALAN_NO_USING_DECLARATION)
+	using ParentType::execute;
+#endif
 
 	virtual XObjectPtr
 	execute(
@@ -830,6 +920,8 @@ class XALAN_EXSLT_EXPORT XalanEXSLTFunctionSqrt : public Function
 {
 public:
 
+	typedef Function	ParentType;
+
 	XalanEXSLTFunctionSqrt()
 	{
 	}
@@ -840,6 +932,10 @@ public:
 	}
 
 	// These methods are inherited from Function ...
+
+#if !defined(XALAN_NO_USING_DECLARATION)
+	using ParentType::execute;
+#endif
 
 	virtual XObjectPtr
 	execute(
@@ -879,6 +975,8 @@ class XALAN_EXSLT_EXPORT XalanEXSLTFunctionTan : public Function
 {
 public:
 
+	typedef Function	ParentType;
+
 	XalanEXSLTFunctionTan()
 	{
 	}
@@ -889,6 +987,10 @@ public:
 	}
 
 	// These methods are inherited from Function ...
+
+#if !defined(XALAN_NO_USING_DECLARATION)
+	using ParentType::execute;
+#endif
 
 	virtual XObjectPtr
 	execute(

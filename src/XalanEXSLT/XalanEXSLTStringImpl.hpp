@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 2002 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2002-2003 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -75,6 +75,8 @@ class XALAN_EXSLT_EXPORT XalanEXSLTFunctionAlign : public Function
 {
 public:
 
+	typedef Function	ParentType;
+
 	XalanEXSLTFunctionAlign()
 	{
 	}
@@ -85,6 +87,10 @@ public:
 	}
 
 	// These methods are inherited from Function ...
+
+#if !defined(XALAN_NO_USING_DECLARATION)
+	using ParentType::execute;
+#endif
 
 	virtual XObjectPtr
 	execute(
@@ -132,6 +138,8 @@ class XALAN_EXSLT_EXPORT XalanEXSLTFunctionConcat : public Function
 {
 public:
 
+	typedef Function	ParentType;
+
 	XalanEXSLTFunctionConcat() :
 		Function()
 	{
@@ -143,6 +151,10 @@ public:
 	}
 
 	// These methods are inherited from Function ...
+
+#if !defined(XALAN_NO_USING_DECLARATION)
+	using ParentType::execute;
+#endif
 
 	virtual XObjectPtr
 	execute(
@@ -185,6 +197,8 @@ class XALAN_EXSLT_EXPORT XalanEXSLTFunctionPadding : public Function
 {
 public:
 
+	typedef Function	ParentType;
+
 	XalanEXSLTFunctionPadding() :
 		Function(),
 		m_space(s_spaceString)
@@ -204,6 +218,10 @@ public:
 	}
 
 	// These methods are inherited from Function ...
+
+#if !defined(XALAN_NO_USING_DECLARATION)
+	using ParentType::execute;
+#endif
 
 	virtual XObjectPtr
 	execute(

@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 2002 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2002-2003 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -129,6 +129,8 @@ class XALAN_EXSLT_EXPORT XalanEXSLTFunctionObjectType : public Function
 {
 public:
 
+	typedef Function	ParentType;
+
 	XalanEXSLTFunctionObjectType() :
 		Function(),
 		m_boolean(s_booleanString),
@@ -158,6 +160,10 @@ public:
 	}
 
 	// These methods are inherited from Function ...
+
+#if !defined(XALAN_NO_USING_DECLARATION)
+	using ParentType::execute;
+#endif
 
 	virtual XObjectPtr
 	execute(

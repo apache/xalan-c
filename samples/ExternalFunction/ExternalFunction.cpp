@@ -41,6 +41,10 @@ class FunctionSquareRoot : public Function
 {
 public:
 
+#if !defined(XALAN_NO_USING_DECLARATION)
+	using Function::execute;
+#endif
+
 	/**
 	 * Execute an XPath function object.  The function must return a valid
 	 * object.  Extension functions should override this version of execute(),
@@ -122,6 +126,10 @@ class FunctionCube : public Function
 {
 public:
 
+#if !defined(XALAN_NO_USING_DECLARATION)
+	using Function::execute;
+#endif
+
 	/**
 	 * Execute an XPath function object.  The function must return a valid
 	 * object.  Extension functions should override this version of execute(),
@@ -202,6 +210,10 @@ private:
 class FunctionAsctime : public Function
 {
 public:
+
+#if !defined(XALAN_NO_USING_DECLARATION)
+	using Function::execute;
+#endif
 
 	/**
 	 * Execute an XPath function object.  The function must return a valid

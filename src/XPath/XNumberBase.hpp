@@ -81,6 +81,8 @@ class XALAN_XPATH_EXPORT XNumberBase : public XObject
 {
 public:
 
+	typedef XObject	ParentType;
+
 	XNumberBase(const XNumberBase&	source);
 
 	virtual
@@ -96,6 +98,10 @@ public:
 
 	virtual bool
 	boolean() const;
+
+#if !defined(XALAN_NO_USING_DECLARATION)
+	using ParentType::str;
+#endif
 
 	virtual const XalanDOMString&
 	str() const = 0;
