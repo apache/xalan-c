@@ -21,6 +21,51 @@ Package=<4>
 
 ###############################################################################
 
+Project: "Errortests"="..\..\..\Tests\Errortests\Errortests.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name Harness
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "Harness"="..\..\..\Tests\Harness\Harness.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name DOMSupport
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name PlatformSupport
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name XMLSupport
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name XalanSourceTree
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name XSLT
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name XalanTransformer
+    End Project Dependency
+}}}
+
+###############################################################################
+
 Project: "ICUBridge"=".\ICUBridge\ICUBridge.dsp" - Package Owner=<4>
 
 Package=<5>
@@ -40,6 +85,51 @@ Package=<4>
     End Project Dependency
     Begin Project Dependency
     Project_Dep_Name XalanDOM
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "Memory"="..\..\..\Tests\Memory\Memory.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name Harness
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "Params"="..\..\..\Tests\Params\Params.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name Harness
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "PerfT"="..\..\..\Tests\PerfT\PerfT.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name Harness
     End Project Dependency
 }}}
 
@@ -370,6 +460,36 @@ Package=<4>
     End Project Dependency
     Begin Project Dependency
     Project_Dep_Name DOMSupport
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "conf"="..\..\..\Tests\Conf\conf.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name Harness
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "extensions"="..\..\..\Tests\Extensions\extensions.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name Harness
     End Project Dependency
 }}}
 
