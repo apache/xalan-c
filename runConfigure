@@ -17,6 +17,9 @@
 #
 #
 # $Log$
+# Revision 1.11  2004/04/19 14:54:08  dmitryh
+# Fix for Bugzilla Bug 28452
+#
 # Revision 1.10  2004/04/06 15:08:44  dmitryh
 # Changes for a cygwin build
 #
@@ -139,7 +142,7 @@ usage()
     echo "Usage: runConfigure \"options\""
     echo "       where options may be any of the following:"
     echo "       -p <platform> (accepts 'aix', 'linux', 'freebsd', 'netbsd', 'solaris',
-            'hp-10', 'hp-11', 'irix', 'tru64', 'macosx', 'os400', 'cygwin')"
+            'hp-10', 'hp-11', 'hp-11-ia64', 'irix', 'tru64', 'macosx', 'os400', 'cygwin')"
     echo "       -c <C compiler name> (e.g. gcc, cc, xlc)"
     echo "       -x <C++ compiler name> (e.g. g++, CC, xlC)"
     echo "       -d (specifies that you want to build debug version)"
