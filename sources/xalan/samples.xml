@@ -253,7 +253,7 @@ theProcessor.addTraceListener(&amp;theTraceListener);
     Windows: <code>LoadModule mod_xslt xml-xalan\c\Build\Win32\VC6\Release\ApacheModuleXSLT.dll</code><br/><br/>
     UNIX: <code>AddModule mod_xslt.c</code><br/>
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;and<br/>
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<code>LoadModule mod_xslt usr/lib/apache/mod_xslt.<ref>xx</ref></code><br/><br/>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<code>LoadModule mod_xslt /usr/lib/apache/mod_xslt.<ref>xx</ref></code><br/><br/>
     where <ref>xx</ref> is the appropriate library suffix for the UNIX platform ("so" or "a").<br/><br/></li>
     <li>Add a &lt;Location&gt; entry to httpd.conf that indicates where xml/xsl file pairs are to be found, and what target file extensions
     to recognize. We suggest the following:<br/><br/>
