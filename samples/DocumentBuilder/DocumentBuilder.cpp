@@ -11,8 +11,8 @@
 
 
 
-#include <xercesc/sax2/ContentHandler.hpp>
-#include <xercesc/util/PlatformUtils.hpp>
+#include <sax2/ContentHandler.hpp>
+#include <util/PlatformUtils.hpp>
 
 
 
