@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -65,16 +65,15 @@
 
 
 #include <PlatformSupport/DOMStringHelper.hpp>
-
-
-
-class Locator;
+#include <PlatformSupport/XalanLocator.hpp>
 
 
 
 class XALAN_PLATFORMSUPPORT_EXPORT XSLException
 {
 public:
+
+	typedef XalanLocator::size_type		size_type;
 
 	/**
 	 * Constructor
@@ -155,7 +154,7 @@ public:
 	 * 
 	 * @return the line number
 	 */
-	int
+	size_type
 	getLineNumber() const
 	{
 		return m_lineNumber;
@@ -166,7 +165,7 @@ public:
 	 * 
 	 * @return the column number
 	 */
-	int
+	size_type
 	getColumnNumber() const
 	{
 		return m_columnNumber;
@@ -182,8 +181,8 @@ public:
 	defaultFormat(
 			const XalanDOMString&	theMessage,
 			const XalanDOMString&	theURI,
-			int						theLineNumber,
-			int						theColumnNumber,
+			size_type				theLineNumber,
+			size_type				theColumnNumber,
 			const XalanDOMString&	theType,
 			XalanDOMString&			theBuffer);
 
@@ -192,8 +191,8 @@ private:
 	const XalanDOMString	m_message;
 	const XalanDOMString	m_uri;
 
-	const int				m_lineNumber;
-	const int				m_columnNumber;
+	const size_type			m_lineNumber;
+	const size_type			m_columnNumber;
 
 	const XalanDOMString	m_type;
 };

@@ -103,8 +103,8 @@ XSLException::XSLException(
 		const XalanDOMString&	theType) :
 	m_message(theMessage),
 	m_uri(),
-	m_lineNumber(-1),
-	m_columnNumber(-1),
+	m_lineNumber(size_type(-1)),
+	m_columnNumber(size_type(-1)),
 	m_type(theType)
 {
 }
@@ -183,8 +183,8 @@ void
 XSLException::defaultFormat(
 			const XalanDOMString&	theMessage,
 			const XalanDOMString&	theURI,
-			int						theLineNumber,
-			int						theColumnNumber,
+			size_type				theLineNumber,
+			size_type				theColumnNumber,
 			const XalanDOMString&	theType,
 			XalanDOMString&			theBuffer)
 {
