@@ -211,11 +211,10 @@ FormatMessageLocal(
 
 	theResult += theFileName;
 
-	std::strstream	theFormatter;
+	std::ostrstream	theFormatter;
 
 	theFormatter << ".  The error code was "
-				 << theErrorCode
-				 << ".";
+				 << theErrorCode << "." << '\0';
 
 	theResult += theFormatter.str();
 

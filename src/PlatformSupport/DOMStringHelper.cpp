@@ -676,7 +676,7 @@ DoubleToDOMString(double	theDouble)
 		using namespace std;
 #endif
 
-		std::strstream	theFormatter;
+		std::ostrstream	theFormatter;
 
 		// $$$ ToDo: this is all temporary, until we get the NumberFormat and DecimalFormat
 		// classes working.
@@ -690,13 +690,13 @@ DoubleToDOMString(double	theDouble)
 
 		if (fracPart == 0)
 		{
-			theFormatter << static_cast<long>(theDouble);
+			theFormatter << static_cast<long>(theDouble) << '\0';
 
 			theResult = theFormatter.str();
 		}
 		else
 		{
-			theFormatter << theDouble;
+			theFormatter << theDouble << '\0';
 
 			// OK, now we have to clean up the output for
 			// the XPath standard, which says no trailing
@@ -731,9 +731,9 @@ LongToHexDOMString(long		theLong)
 	using namespace std;
 #endif
 
-	std::strstream	theFormatter;
+	std::ostrstream	theFormatter;
 
-	theFormatter << hex << theLong;
+	theFormatter << hex << theLong << '\0';
 
 	return theFormatter.str();
 }
@@ -747,9 +747,9 @@ LongToDOMString(long	theLong)
 	using namespace std;
 #endif
 
-	std::strstream	theFormatter;
+	std::ostrstream	theFormatter;
 
-	theFormatter << theLong;
+	theFormatter << theLong << '\0';
 
 	return theFormatter.str();
 }
@@ -763,9 +763,9 @@ UnsignedLongToDOMString(unsigned long	theUnsignedLong)
 	using namespace std;
 #endif
 
-	std::strstream	theFormatter;
+	std::ostrstream	theFormatter;
 
-	theFormatter << theUnsignedLong;
+	theFormatter << theUnsignedLong << '\0';
 
 	return theFormatter.str();
 }
