@@ -123,7 +123,7 @@ public:
 		
 		if ( this->m_objectCount == this->m_blockSize )
 		{
-			assert ( this->m_firstFreeBlock == (m_blockSize + 1) );
+			assert ( this->m_firstFreeBlock == (this->m_blockSize + 1) );
 
 			return 0;
 		}
@@ -151,7 +151,7 @@ public:
 				this->m_nextFreeBlock = (reinterpret_cast<NextBlock*>(theResult))->next;
 
 				assert ( ( reinterpret_cast<NextBlock*>(theResult ))->isValidFor( this->m_blockSize ) );
-				assert ( this->m_nextFreeBlock <= m_blockSize );
+				assert ( this->m_nextFreeBlock <= this->m_blockSize );
 
 				++this->m_objectCount;
 			}
