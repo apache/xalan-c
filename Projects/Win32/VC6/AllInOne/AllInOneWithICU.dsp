@@ -3057,5 +3057,9 @@ SOURCE=..\..\Res\AllInOne\AllInOne.rc
 SOURCE=..\..\Res\AllInOne\resource.h
 # End Source File
 # End Group
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XSLT\ResultTreeFragBaseNodeRefListBaseProxy.cpp
+# End Source File
 # End Target
 # End Project
