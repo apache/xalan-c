@@ -72,10 +72,10 @@ const XalanDOMString	ResultTreeFrag::s_emptyString;
 
 
 
-ResultTreeFrag::ResultTreeFrag(XalanDocument&	theOwnerDocument) :
+ResultTreeFrag::ResultTreeFrag(XalanDocument*	theOwnerDocument) :
 	ResultTreeFragBase(),
 	XalanNodeList(),
-	m_document(&theOwnerDocument)
+	m_document(theOwnerDocument)
 {
 }
 
@@ -107,6 +107,24 @@ ResultTreeFrag::ResultTreeFrag(const ResultTreeFrag&	theSource,
 
 ResultTreeFrag::~ResultTreeFrag()
 {
+}
+
+
+
+void
+ResultTreeFrag::clear()
+{
+	m_children.clear();
+}
+
+
+
+void
+ResultTreeFrag::setOwnerDocument(XalanDocument*		theOwnerDocument)
+{
+	m_document = theOwnerDocument;
+
+	clear();
 }
 
 

@@ -89,7 +89,7 @@ public:
 	 * 
 	 * @param theOwnerDocument The document used to construct result tree fragment
 	 */
-	ResultTreeFrag(XalanDocument&	theOwnerDocument);
+	ResultTreeFrag(XalanDocument*	theOwnerDocument = 0);
 
 	/**
 	 * Construct a result tree fragment object from another.
@@ -104,7 +104,17 @@ public:
 	~ResultTreeFrag();
 
 
+	// These interfaces are inherited from ResultTreeFragBase...
+
+	virtual void
+	clear();
+
+	virtual void
+	setOwnerDocument(XalanDocument*		theOwnerDocument);
+
+
 	// These interfaces are inherited from XalanDocumentFragment...
+
 	virtual const XalanDOMString&
 	getNodeName() const;
 
@@ -218,7 +228,7 @@ private:
 	operator==(const ResultTreeFrag&	theRHS) const;
 
 
-	XalanDocument*	m_document;
+	XalanDocument*					m_document;
 
 #if defined(XALAN_NO_NAMESPACES)
 	typedef vector<XalanNode*>			NodeVectorType;
@@ -226,7 +236,7 @@ private:
 	typedef std::vector<XalanNode*>		NodeVectorType;
 #endif
 
-	NodeVectorType	m_children;
+	NodeVectorType					m_children;
 
 	static const XalanDOMString		s_emptyString;
 };

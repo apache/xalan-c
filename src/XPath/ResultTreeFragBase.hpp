@@ -99,6 +99,22 @@ public:
 	~ResultTreeFragBase();
 
 
+	/**
+	 * Clear all of the children from the ResultTreeFrag instance.
+	 */
+	virtual void
+	clear() = 0;
+
+	/**
+	 * Set the owner document for the result tree fragment.  This will
+	 * cause all of the children to be cleared as well.
+	 *
+	 * @param theOwnerDocument The new owner document instance.
+	 */
+	virtual void
+	setOwnerDocument(XalanDocument*		theOwnerDocument) = 0;
+
+
 	// These interfaces are inherited from XalanDocumentFragment...
 	virtual const XalanDOMString&
 	getNodeName() const = 0;
