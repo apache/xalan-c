@@ -185,6 +185,9 @@ XalanEXSLTFunctionObjectType::execute(
 	case XObject::eTypeString:
 		theResult = &m_string;
 		break;
+
+	default:
+		break;
 	}
 
 	assert(theResult != 0);
