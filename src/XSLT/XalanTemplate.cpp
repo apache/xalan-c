@@ -219,7 +219,7 @@ static vector<pair<const char*, const char*> >				theStringPairVector;
 
 
 static void
-foo()
+foo(XPathExecutionContext&	theExecutionContext)
 {
 #if !defined(XALAN_NO_NAMESPACES)
 	using std::for_each;
@@ -567,13 +567,42 @@ foo()
 	
 	{
 		NodeRefList::NodeListVectorType theVector;
-		
+
 		remove(	
 			theVector.begin(),
 			theVector.end(),
 			NodeRefList::NodeListVectorType::value_type(0));
 	}
-	
+
+	{
+#if !defined(XALAN_NO_NAMESPACES)
+		using std::back_inserter;
+		using std::copy;
+#endif
+
+		typedef MutableNodeRefList::addNodeInDocOrderFunctor	addNodeInDocOrderFunctor;
+
+		MutableNodeRefList				theList;
+		NodeRefList::NodeListVectorType theVector;
+
+		copy(
+			nodelist.m_nodeList.rbegin(),
+			nodelist.m_nodeList.rend(),
+			back_inserter(m_nodeList));
+
+		addNodeInDocOrderFunctor	theFunctor(theList, executionContext)
+
+		for_each(
+			theVector.begin(),
+			theVector.end(),
+			theFunctor);
+
+		for_each(
+			nodelist.m_nodeList.rbegin(),
+			nodelist.m_nodeList.rend(),
+			theFunctor);
+	}
+
 	{
 		NodeSorter::NodeVectorType			theVector;
 		NodeSorter::NodeSortKeyCompare*		theComparer;
