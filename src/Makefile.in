@@ -1,7 +1,7 @@
 #
 # The Apache Software License, Version 1.1
 # 
-# Copyright (c) 1999 The Apache Software Foundation.  All rights 
+# Copyright (c) 1999-2003 The Apache Software Foundation.  All rights 
 # reserved.
 # 
 # Redistribution and use in source and binary forms, with or without
@@ -207,7 +207,6 @@ ifeq ($(PLATFORM), SOLARIS)
   ifeq (${CXX}, g++)
 
 	PLATFORM_COMPILE_OPTIONS = -Wall -fPIC -D${PLATFORM} -D_REENTRANT  -fno-elide-constructors
-	ALLLIBS = ${LIBS} -L/usr/lib -L/usr/local/lib -lc
 
 	ifdef XALAN_USE_ICU
 	LD_RPATH_PRE=  -Wl,-rpath,
@@ -488,7 +487,10 @@ samples : Samples
 
 tests : ThreadTest
 
-Samples: lib CompileStylesheet DocumentBuilder ExternalFunction ParsedSourceWrappers SimpleTransform SerializeNodeSet SimpleXPathAPI SimpleXPathCAPI StreamTransform TraceListen UseStylesheetParam XalanTransform XalanTransformerCallback XPathWrapper
+Samples: lib CompileStylesheet DocumentBuilder ExternalFunction ParsedSourceWrappers \
+         SimpleTransform SerializeNodeSet SimpleXPathAPI SimpleXPathCAPI StreamTransform \
+		 TraceListen TransformToXercesDOM UseStylesheetParam XalanTransform \
+		 XalanTransformerCallback XPathWrapper
 
 ApacheModuleXSLT: lib ${LIB_DIR}/mod_xslt$(SHLIBSUFFIX) 
 
@@ -655,6 +657,21 @@ ${ALL_OBJECTS_DIR}/%.o:$(SAMPLES_DIR)/TraceListen/%.cpp
 	$(CC1) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $<		
 endif
 
+TransformToXercesDOM: lib $(BINTARGETDIR)/TransformToXercesDOM
+
+$(BINTARGETDIR)/TransformToXercesDOM: ${ALL_OBJECTS_DIR}/TransformToXercesDOM.o
+ifeq ($(PLATFORM), OS390)
+	${LINK} $(XSL_BUILD_OPTIONS) ${PLATFORM_LIB_LINK_OPTIONS} ${LIBRARY_SEARCH_PATHS} \
+	${EXTRA_LINK_OPTIONS} $(LIB_DIR)/lib$(PROJECT_NAME)$(VER).x $(ALLLIBS) $(CXXFLAGS) $^ -o $@	
+${ALL_OBJECTS_DIR}/%.o:$(SAMPLES_DIR)/TransformToXercesDOM/%.cpp
+	$(CC3) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $<		
+else
+	${LINK} $(XSL_BUILD_OPTIONS) ${PLATFORM_LIB_LINK_OPTIONS} ${LIBRARY_SEARCH_PATHS} \
+	${EXTRA_LINK_OPTIONS} -L$(LIB_DIR) -l$(PROJECT_NAME)$(VER) $(ALLLIBS) $(CXXFLAGS) $^ -o $@	
+${ALL_OBJECTS_DIR}/%.o:$(SAMPLES_DIR)/TransformToXercesDOM/%.cpp
+	$(CC1) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $<		
+endif
+
 UseStylesheetParam: lib $(BINTARGETDIR)/UseStylesheetParam
 
 $(BINTARGETDIR)/UseStylesheetParam: ${ALL_OBJECTS_DIR}/UseStylesheetParam.o
@@ -797,6 +814,7 @@ endif
 	rm -f $(BINTARGETDIR)/StreamTransform
 	rm -f $(BINTARGETDIR)/ThreadTest
 	rm -f $(BINTARGETDIR)/TraceListen
+	rm -f $(BINTARGETDIR)/TransformToXercesDOM
 	rm -f $(BINTARGETDIR)/UseStylesheetParam
 	rm -f $(BINTARGETDIR)/Xalan
 	rm -f $(BINTARGETDIR)/XalanTransform
