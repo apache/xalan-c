@@ -432,7 +432,7 @@ public:
 	 *
 	 * @return The index value, or 0 if the node is not indexed.
 	 */
-	virtual unsigned long
+	virtual IndexType
 	getIndex() const = 0;
 
 	//@}

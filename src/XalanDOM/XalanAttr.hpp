@@ -73,11 +73,7 @@ class XalanElement;
 
 
 /*
- * <meta name="usage" content="experimental"/>
- *
  * Base class for the DOM Attr interface.
- *
- * This class is experimental and subject to change!!
  */
 
 class XALAN_DOM_EXPORT XalanAttr : public XalanNode
@@ -437,7 +433,7 @@ public:
 	 *
 	 * @return The index value, or 0 if the node is not indexed.
 	 */
-	virtual unsigned long
+	virtual IndexType
 	getIndex() const = 0;
 
 	//@}
