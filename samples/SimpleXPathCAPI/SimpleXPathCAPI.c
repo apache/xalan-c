@@ -105,6 +105,8 @@ ReadFile(const char*	theXMLFileName)
 				}
 			}
 		}
+
+        fclose(theFile);
 	}
 
 	return theBuffer;
