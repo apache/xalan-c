@@ -133,8 +133,8 @@
      <p>See also: <link idref="usagepatterns" anchor="params">Setting stylesheet parameters</link>.</p>     
   </s2><anchor name="xalantransformercallback"/>
   <s2 title="XalanTransformerCallback">
-  <p>What it does: it returns transformation output in blocks to a callback function, which writes the output to a file.
-  This sample illustrats the use of a callback function to incrementally process a transformation result, that is to begin
+  <p>What it does: Return transformation output in blocks to a callback function, which writes the output to a file.
+  This sample illustrates the use of a callback function to incrementally process a transformation result, that is to begin
   working with the transformation result before the transformation has beeen completed. See <link idref="usagepatterns"
   anchor="incremental">Processing output incrementally</link>.</p>
   <p>You can run it from the XalanTransformerCallback subdirectory with</p>
@@ -189,7 +189,7 @@ theProcessor.addTraceListener(&amp;theTraceListener);
   <p><code>DocumentBuilder</code></p>
   </s2><anchor name="threadsafe"/>
   <s2 title="ThreadSafe (Windows32 Only)">
-  <p>What it does: multiple threads use a single compiled stylesheet (StylesheetRoot) and DOM source tree (XalanNode) to perform
+  <p>What it does: Multiple threads use a single compiled stylesheet (StylesheetRoot) and DOM source tree (XalanNode) to perform
   transformations concurrently. The application tracks the progress of the threads in messages to the screen, and each thread
   writes its own output file. Imagine a server application responding to multiple clients who happen to request the same
   transformation.</p>
@@ -214,8 +214,8 @@ theProcessor.addTraceListener(&amp;theTraceListener);
     executable is XPathWrapper.</p> 
   </s2><anchor name="simplexpathapi"/>
   <s2 title="SimpleXPathAPI">
-  <p>What it does: uses the XPathEvaluator interface to evaluate an XPath expression from the specified context node of 
-  an XML file, and displays the nodeset returned by the expression.</p>
+  <p>What it does: Use the XPathEvaluator interface to evaluate an XPath expression from the specified context node of 
+  an XML file and display the nodeset returned by the expression.</p>
   <note>You can use this sample as an aid when you want to find out what a given XPath expression returns from a
   given context node in an XML file.</note>
   <p>Run this sample from the SimpleXPathAPI subdirectory with</p>

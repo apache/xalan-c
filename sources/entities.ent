@@ -3,7 +3,7 @@
 <!ENTITY xslt4c "Xalan-C++">
 <!ENTITY xslt4c-dist "Xalan-C_1_2">
 <!ENTITY xslt4c-current "Xalan-C++ version 1.2">
-<!ENTITY xslt4c-windlls "DOMSupport.dll, PlatformSupport.dll, XalanDOM.dll, XalanSourceTree,dll, XercesParserLiaison.dll, XMLSupport.dll, XPath.dll, XSLT.dll, XalanTransformer.dll">
+<!ENTITY xslt4c-windlls "DOMSupport.dll, PlatformSupport.dll, XalanDOM.dll, XalanSourceTree,dll, XercesParserLiaison.dll, XMLSupport.dll, XPath.dll, XSLT.dll, XalanTransformer.dll, XalanExtensions.dll">
 <!ENTITY xslt4c-linuxlib "libxalan-c1_2.so">
 <!ENTITY xslt4c-aixlib "libxalan-c1_2.a">
 <!ENTITY xslt4c-hplib "libxalan-c1_2.sl">

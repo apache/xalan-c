@@ -69,7 +69,7 @@
 <li><link anchor="hassamenodes">hasSameNodes</link></li>
 </ul><anchor name="intro"/>
 <s2 title= "Introduction">
-<p>Extension elements and functions provide a powerful mechanism
+<p>Extension functions provide a powerful mechanism
 for extending and simplifying what you can do with an XLST processor like
 Xalan. With input and contributions from the XML open-source developer community, we are working on placing the most useful
 extensions in an extensions library distributed with &xslt4c;. If you have ideas and/or contributions you would like to make, please email us at the <human-resource-ref idref="xalandev"/>.</p>
