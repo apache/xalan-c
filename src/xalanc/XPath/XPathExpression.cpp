@@ -235,7 +235,7 @@ XPathExpression::XPathExpressionException::~XPathExpressionException()
 
 
 
-XPathExpression::InvalidOpCodeException::InvalidOpCodeException(int		theOpCode) :
+XPathExpression::InvalidOpCodeException::InvalidOpCodeException(OpCodeMapValueType	theOpCode) :
 	XPathExpressionException(FormatErrorMessage(theOpCode))
 {
 }
@@ -249,7 +249,7 @@ XPathExpression::InvalidOpCodeException::~InvalidOpCodeException()
 
 
 XalanDOMString
-XPathExpression::InvalidOpCodeException::FormatErrorMessage(int		theOpCode)
+XPathExpression::InvalidOpCodeException::FormatErrorMessage(OpCodeMapValueType  theOpCode)
 {
 	XalanDOMString	theOpcode; 
 
@@ -261,9 +261,9 @@ XPathExpression::InvalidOpCodeException::FormatErrorMessage(int		theOpCode)
 
 
 XPathExpression::InvalidArgumentCountException::InvalidArgumentCountException(
-			int		theOpCode,
-			int		theExpectedCount,
-			int		theSuppliedCount) :
+			OpCodeMapValueType	theOpCode,
+			OpCodeMapValueType	theExpectedCount,
+			OpCodeMapValueType	theSuppliedCount) :
 	XPathExpressionException(FormatErrorMessage(theOpCode, theExpectedCount, theSuppliedCount))
 {
 }
@@ -278,9 +278,9 @@ XPathExpression::InvalidArgumentCountException::~InvalidArgumentCountException()
 
 XalanDOMString
 XPathExpression::InvalidArgumentCountException::FormatErrorMessage(
-			int		theOpCode,
-			int		theExpectedCount,
-			int		theSuppliedCount)
+			OpCodeMapValueType	theOpCode,
+			OpCodeMapValueType	theExpectedCount,
+			OpCodeMapValueType	theSuppliedCount)
 {
 	XalanDOMString	theResult;
 
@@ -299,8 +299,8 @@ XPathExpression::InvalidArgumentCountException::FormatErrorMessage(
 
 
 XPathExpression::InvalidArgumentException::InvalidArgumentException(
-			int	theOpCode,
-			int	theValue) :
+			OpCodeMapValueType	theOpCode,
+			OpCodeMapValueType	theValue) :
 	XPathExpressionException(FormatErrorMessage(theOpCode, theValue))
 {
 }
@@ -315,8 +315,8 @@ XPathExpression::InvalidArgumentException::~InvalidArgumentException()
 
 XalanDOMString
 XPathExpression::InvalidArgumentException::FormatErrorMessage(
-				int		theOpCode,
-				int		theValue)
+				OpCodeMapValueType	theOpCode,
+				OpCodeMapValueType	theValue)
 {
 	XalanDOMString	theResult; 
 
@@ -324,35 +324,9 @@ XPathExpression::InvalidArgumentException::FormatErrorMessage(
 
 	
 	XalanDOMString	theResult1;
-	LongToDOMString(theOpCode, theResult1);
-
+	UnsignedLongToDOMString(theOpCode, theResult1);
 
 	return XalanMessageLoader::getMessage(XalanMessages::InvalidNumberOfArgsWasSupplied_2Param, theResult, theResult1) ;
-}
-
-
-
-XPathExpression::InvalidRelativeTokenPosition::InvalidRelativeTokenPosition(int		theOffset) :
-	XPathExpressionException(FormatErrorMessage(theOffset))
-{
-}
-
-
-
-XPathExpression::InvalidRelativeTokenPosition::~InvalidRelativeTokenPosition()
-{
-}
-
-
-
-XalanDOMString
-XPathExpression::InvalidRelativeTokenPosition::FormatErrorMessage(int	theOffset)
-{
-	XalanDOMString	theResult; 
-
-	LongToDOMString(theOffset, theResult);
-
-	return XalanMessageLoader::getMessage(XalanMessages::InvalidOffsetWasSupplied_1Param, theResult);
 }
 
 

@@ -507,7 +507,8 @@ XPathProcessorImpl::replaceTokenWithNamespaceToken() const
 	assert(theNamespaceURI != 0 && theNamespaceURI->empty() == false);
 
 	m_expression->replaceRelativeToken(
-			-1,
+			1,
+            XPathExpression::eRelativeBackward,
 			m_constructionContext->getPooledString(*theNamespaceURI));
 }
 
@@ -745,8 +746,22 @@ XPathProcessorImpl::getTokenRelative(int	theOffset) const
 {
 	assert(m_expression != 0);
 
-	const XObject* const	theToken =
-		m_expression->getRelativeToken(theOffset);
+    const XObject*  theToken = 0;
+
+    if (theOffset < 0)
+    {
+        theToken = 
+            m_expression->getRelativeToken(
+                    XPathExpression::TokenQueueSizeType(-theOffset),
+                    XPathExpression::eRelativeBackward);
+    }
+    else
+    {
+        theToken =
+            m_expression->getRelativeToken(
+                    XPathExpression::TokenQueueSizeType(theOffset),
+                    XPathExpression::eRelativeForward);
+    }
 
 	return theToken == 0 ? s_emptyString : theToken->str();
 }

@@ -97,10 +97,33 @@ class XALAN_XPATH_EXPORT XPathExpression
 public:
 
 #if defined(XALAN_NO_STD_NAMESPACE)
-	typedef ostream			OstreamType;
+	typedef ostream			                OstreamType;
+
+    typedef vector<int>						OpCodeMapType;
+	typedef vector<XToken>					TokenQueueType;
+
+	typedef OpCodeMapType::value_type		OpCodeMapValueType;
+	typedef OpCodeMapValueType		        OpCodeMapSizeType;
+
+	typedef vector<OpCodeMapValueType>		OpCodeMapValueVectorType;
+
+	typedef vector<double>					NumberLiteralValueVectorType;
 #else
-	typedef std::ostream	OstreamType;
+	typedef std::ostream	                OstreamType;
+
+    typedef std::vector<int>				OpCodeMapType;
+	typedef std::vector<XToken>				TokenQueueType;
+
+	typedef OpCodeMapType::value_type		OpCodeMapValueType;
+	typedef OpCodeMapValueType		        OpCodeMapSizeType;
+
+	typedef std::vector<OpCodeMapValueType> OpCodeMapValueVectorType;
+
+	typedef std::vector<double>				NumberLiteralValueVectorType;
 #endif
+
+	typedef TokenQueueType::value_type		TokenQueueValueType;
+	typedef int		                        TokenQueueSizeType;
 
 	/**
 	 * List of operations codes.
@@ -641,7 +664,7 @@ public:
 		 * 
 		 * @param theOpCode operation code that caused the exception
 		 */
-		InvalidOpCodeException(int	theOpCode);
+		InvalidOpCodeException(OpCodeMapValueType	theOpCode);
 
 		virtual~
 		InvalidOpCodeException();
@@ -649,7 +672,7 @@ public:
 	private:
 
 		static XalanDOMString
-		FormatErrorMessage(int	theOpCode);
+		FormatErrorMessage(OpCodeMapValueType	theOpCode);
 	};
 
 	/**
@@ -668,9 +691,9 @@ public:
 		 * @param theSuppliedCount the number of arguments supplied
 		 */
 		InvalidArgumentCountException(
-			int		theOpCode,
-			int		theExpectedCount,
-			int		theSuppliedCount);
+			OpCodeMapValueType	theOpCode,
+			OpCodeMapValueType	theExpectedCount,
+			OpCodeMapValueType	theSuppliedCount);
 
 		virtual~
 		InvalidArgumentCountException();
@@ -679,9 +702,9 @@ public:
 
 		static XalanDOMString
 		FormatErrorMessage(
-			int		theOpCode,
-			int		theExpectedCount,
-			int		theSuppliedCount);
+			OpCodeMapValueType	theOpCode,
+			OpCodeMapValueType	theExpectedCount,
+			OpCodeMapValueType	theSuppliedCount);
 	};
 
 	/**
@@ -698,8 +721,8 @@ public:
 		 * @param theValue invalid argument value
 		 */
 		InvalidArgumentException(
-			int	theOpCode,
-			int	theValue);
+			OpCodeMapValueType	theOpCode,
+			OpCodeMapValueType	theValue);
 
 		virtual~
 		InvalidArgumentException();
@@ -708,60 +731,12 @@ public:
 
 		static XalanDOMString
 		FormatErrorMessage(
-				int		theOpCode,
-				int		theValue);
-	};
-
-	/**
-	 * Exception class thrown when an invalid token position is encountered
-	 */
-	class XALAN_XPATH_EXPORT InvalidRelativeTokenPosition : public XPathExpressionException
-	{
-	public:
-
-		/**
-		 * Construct an InvalidRelativeTokenPosition object.
-		 * 
-		 * @param theOffset the offset that caused the problem.
-		 */
-		InvalidRelativeTokenPosition(int	theOffset);
-
-		virtual~
-		InvalidRelativeTokenPosition();
-
-	private:
-
-		static XalanDOMString
-		FormatErrorMessage(int	theOffset);
+				OpCodeMapValueType	theOpCode,
+				OpCodeMapValueType	theValue);
 	};
 
 
-#if defined(XALAN_NO_STD_NAMESPACE)
-	typedef vector<int>						OpCodeMapType;
-	typedef vector<XToken>					TokenQueueType;
-
-	typedef OpCodeMapType::value_type		OpCodeMapValueType;
-	typedef OpCodeMapValueType		        OpCodeMapSizeType;
-
-	typedef vector<OpCodeMapValueType>		OpCodeMapValueVectorType;
-
-	typedef vector<double>					NumberLiteralValueVectorType;
-#else
-	typedef std::vector<int>				OpCodeMapType;
-	typedef std::vector<XToken>				TokenQueueType;
-
-	typedef OpCodeMapType::value_type		OpCodeMapValueType;
-	typedef OpCodeMapValueType		        OpCodeMapSizeType;
-
-	typedef std::vector<OpCodeMapValueType> OpCodeMapValueVectorType;
-
-	typedef std::vector<double>				NumberLiteralValueVectorType;
-#endif
-
-	typedef TokenQueueType::value_type		TokenQueueValueType;
-	typedef int		                        TokenQueueSizeType;
-
-	/**
+    /**
 	 * The length is always the opcode position + 1. Length is always expressed
 	 * as the opcode+length bytes, so it is always 2 or greater.  This is the
 	 * offset from the op code where the length is stored.  It will always
@@ -1120,20 +1095,29 @@ public:
 		}
 	}
 
+    enum eRelativeDirection
+    {
+        eRelativeBackward,
+        eRelativeForward
+    };
+
 	/**
 	 * Retrieve a token at the specified offset relative to the current
 	 * position in the token queue.
 	 * 
 	 * @param theOffset offset from current position
+     * @param theDirection the direction in which to move
 	 * @return pointer to XObject token
 	 */
 	const XToken*
-	getRelativeToken(int	theOffset) const
+	getRelativeToken(
+        TokenQueueSizeType	theOffset,
+        eRelativeDirection  theDirection) const
 	{
-		const int	thePosition = int(m_currentPosition) + theOffset;
+		const TokenQueueSizeType	thePosition =
+            calculateRelativePosition(theOffset, theDirection);
 
-		if (thePosition < 0 ||
-			thePosition >= int(tokenQueueSize()))
+		if (thePosition == tokenQueueSize())
 		{
 			return 0;
 		}
@@ -1199,42 +1183,17 @@ public:
 	 * Replace a token in the token queue.
 	 * 
 	 * @param theOffset the offset at which to replace the token.
-	 * @param theToken The new token
-	 */
-	void
-	replaceRelativeToken(
-			int				theOffset,
-			const XToken&	theToken)
-	{
-		const int	thePosition = int(m_currentPosition) + theOffset;
-
-		if (thePosition < 0 ||
-			thePosition >= int(tokenQueueSize()))
-		{
-			throw InvalidRelativeTokenPosition(theOffset);
-		}
-
-		m_tokenQueue[thePosition] = theToken;
-	}
-
-	/**
-	 * Replace a token in the token queue.
-	 * 
-	 * @param theOffset the offset at which to replace the token.
 	 * @param theString The string data for the token.  The instance will keep a pointer to this string, so it must be persistent.
 	 */
 	void
 	replaceRelativeToken(
-			int						theOffset,
+            TokenQueueSizeType	    theOffset,
+            eRelativeDirection      theDirection,
 			const XalanDOMString&	theString)
 	{
-		const int	thePosition = int(m_currentPosition) + theOffset;
-
-		if (thePosition < 0 ||
-			thePosition >= int(tokenQueueSize()))
-		{
-			throw InvalidRelativeTokenPosition(theOffset);
-		}
+		const TokenQueueSizeType	thePosition =
+            calculateRelativePosition(theOffset, theDirection);
+        assert(thePosition < tokenQueueSize());
 
 		m_tokenQueue[thePosition].set(theString);
 	}
@@ -1402,6 +1361,36 @@ public:
 private:
 
 	/**
+	 * Calculate the relative token position given the offset
+	 * and direction.  Returns the size of the token queue
+	 * if the offset is not valid.
+     *
+	 * @param theOffset offset from current position
+     * @param theDirection the direction in which to move
+	 * @return thePosition
+	 */
+	TokenQueueSizeType
+	calculateRelativePosition(
+        TokenQueueSizeType	theOffset,
+        eRelativeDirection  theDirection) const
+	{
+        if (theDirection == eRelativeBackward &&
+            theOffset <= m_currentPosition)
+        {
+            return m_currentPosition - theOffset;
+        }
+        else if (theDirection == eRelativeForward &&
+                 m_currentPosition + theOffset < tokenQueueSize())
+        {
+            return m_currentPosition + theOffset;
+        }
+        else
+        {
+            return tokenQueueSize();
+        }
+    }
+
+    /**
 	 * An operations map is used instead of a proper parse tree.  It contains
 	 * operations codes and indexes into the m_tokenQueue. We use an array
 	 * instead of a full parse tree in order to cut down on the number of
