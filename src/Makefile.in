@@ -55,6 +55,9 @@
 # 
 #
 # $Log$
+# Revision 1.6  2000/06/23 22:04:48  dbertoni
+# Bumped up revision numbers for new Xerces version, and for the next Xalan version.
+#
 # Revision 1.5  2000/06/01 17:44:23  dbertoni
 # New source directory.
 #
@@ -128,8 +131,8 @@ nogood:
 endif
 
 # We need the Xerces library
-ALLLIBS += -L$(XERCESCROOT)/lib -lxerces-c1_1
-XERCESLIB = $(XERCESCROOT)/lib/libxerces-c1_1.so
+ALLLIBS += -L$(XERCESCROOT)/lib -lxerces-c1_2
+XERCESLIB = $(XERCESCROOT)/lib/libxerces-c1_2.so
 
 
 XSL_BUILD_OPTIONS =
@@ -181,7 +184,7 @@ LIB_DIR = ${XALANCROOT}/lib
 PROJECT_NAME = xalan-c
 LIBNAME = lib${PROJECT_NAME}
 THISLIB = ${LIB_DIR}/${LIBNAME}
-VER = 0_30_0
+VER = 0_31_0
 
 PRODUCTNAME=xalan
 PRODUCTVERSION=${VER}
@@ -194,7 +197,7 @@ $(XERCESPARSERLIAISON_DIR):$(XERCESPLATFORMSUPPORT_DIR)
 
 ${ALL_OBJECTS_DIR}/%.o:%.cpp
 	$(CC1) -c $(XSL_BUILD_OPTIONS) $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $<
-	 
+
 ${ALL_OBJECTS_DIR}/%.o:%.hpp
 	$(CC1) -c $(XSL_BUILD_OPTIONS) $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $(patsubst .hpp,.cpp,$<)
 
