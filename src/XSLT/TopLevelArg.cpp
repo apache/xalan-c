@@ -62,6 +62,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 TopLevelArg::TopLevelArg(
 		const XalanQName&		name,
 		const XalanDOMString&	expr) :
@@ -96,3 +100,7 @@ TopLevelArg::TopLevelArg(const TopLevelArg&		theSource) :
 TopLevelArg::~TopLevelArg()
 {
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

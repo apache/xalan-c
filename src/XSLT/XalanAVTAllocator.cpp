@@ -60,6 +60,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 XalanAVTAllocator::XalanAVTAllocator(size_type	theBlockCount) :
 	m_allocator(theBlockCount)
 {
@@ -76,7 +80,7 @@ XalanAVTAllocator::~XalanAVTAllocator()
 XalanAVTAllocator::data_type*
 XalanAVTAllocator::create(
 			StylesheetConstructionContext&	constructionContext,
-			const Locator*					locator,
+			const LocatorType*				locator,
 			const XalanDOMChar*				name,
 			const XalanDOMChar*				stringedValue,
 			const PrefixResolver&			resolver)
@@ -96,3 +100,7 @@ XalanAVTAllocator::create(
 
 	return theResult;
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

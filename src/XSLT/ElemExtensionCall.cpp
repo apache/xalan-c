@@ -65,11 +65,15 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 ElemExtensionCall::ElemExtensionCall(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
 			const XalanDOMChar*				name,
-			const AttributeList&			atts,
+			const AttributeListType&		atts,
 			int								lineNumber,
 			int								columnNumber,
 			ExtensionNSHandler&				ns) :
@@ -112,3 +116,7 @@ ElemExtensionCall::elementAvailable(StylesheetExecutionContext&		executionContex
 {
 	return executionContext.elementAvailable(m_qname->getNamespace(), m_qname->getLocalPart());
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

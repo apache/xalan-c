@@ -71,6 +71,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 VariablesStack::VariablesStack() :
 	m_stack(),
 	m_globalStackFrameIndex(-1),
@@ -274,9 +278,7 @@ VariablesStack::pushParams(
 	CommitPushElementFrame		thePusher(*this,
 										  targetTemplate);
 
-#if !defined (XALAN_NO_NAMESPACES)
-	using std::for_each;
-#endif
+	XALAN_USING_STD(for_each)
 
 	for_each(theParams.begin(), theParams.end(), PushParamFunctor(*this));
 
@@ -422,9 +424,7 @@ VariablesStack::findXObject(
 				XalanNode* const	doc = executionContext.getRootDocument();
 				assert(doc != 0);
 
-#if !defined (XALAN_NO_NAMESPACES)
-				using std::find;
-#endif
+				XALAN_USING_STD(find)
 
 				// See if the ElemVariable instance is already being evaluated...
 				if (find(m_guardStack.begin(), m_guardStack.end(), var) != m_guardStack.end())
@@ -775,3 +775,7 @@ VariablesStack::InvalidStackContextException::InvalidStackContextException() :
 VariablesStack::InvalidStackContextException::~InvalidStackContextException()
 {
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

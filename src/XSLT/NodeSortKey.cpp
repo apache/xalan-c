@@ -66,6 +66,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 static const XalanDOMString		s_emptyString;
 
 
@@ -140,3 +144,7 @@ NodeSortKey::operator=(const NodeSortKey&	theRHS)
 
 	return *this;
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

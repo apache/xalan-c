@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -57,14 +57,6 @@
 #if !defined(XALAN_ELEMIF_HEADER_GUARD)
 #define XALAN_ELEMIF_HEADER_GUARD 
 
-/**
- * $Id$
- * 
- * $State$
- * 
- * @author Myriam Midy (Myriam_Midy @lotus.com 
- */
-
 // Base include file.  Must be first.
 #include "XSLTDefinitions.hpp"
 
@@ -72,6 +64,10 @@
 
 // Base class header file.
 #include "ElemTemplateElement.hpp"
+
+
+
+XALAN_CPP_NAMESPACE_BEGIN
 
 
 
@@ -95,7 +91,7 @@ public:
 	ElemIf(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
-			const AttributeList&			atts,
+			const AttributeListType&		atts,
 			int								lineNumber,
 			int								columnNumber);
 
@@ -111,6 +107,10 @@ private:
 
 	const XPath*	m_test;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

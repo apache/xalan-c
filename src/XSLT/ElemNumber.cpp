@@ -95,16 +95,14 @@
 
 
 
-#if !defined(XALAN_NO_NAMESPACES)
-using std::vector;
-#endif
+XALAN_CPP_NAMESPACE_BEGIN
 
 
 
 ElemNumber::ElemNumber(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
-			const AttributeList&			atts,
+			const AttributeListType&		atts,
 			int								lineNumber,
 			int								columnNumber,
 			unsigned long					id) :
@@ -448,11 +446,7 @@ ElemNumber::getCountMatchPattern(
 
 			theMatchPatternString.get() = s_piString;
 			append(theMatchPatternString.get(), contextNode->getNodeName());
-#if defined(XALAN_NO_NAMESPACES)
 			append(theMatchPatternString.get(), XalanDOMChar(XalanUnicode::charRightParenthesis));
-#else
-			append(theMatchPatternString.get(), XalanUnicode::charRightParenthesis);
-#endif
 
 			countMatchPattern = executionContext.createMatchPattern(
 					theMatchPatternString.get(),
@@ -866,6 +860,8 @@ ElemNumber::formatNumberList(
 	XalanDOMChar	numberType = XalanUnicode::charDigit_1;
 
 	XalanDOMString::size_type	numberWidth = 1;
+
+	XALAN_USING_STD(vector)
 
 	typedef vector<XalanDOMString>		StringVectorType;
 	typedef StringVectorType::iterator	StringVectorTypeIterator;
@@ -1776,11 +1772,11 @@ const XalanDOMString::size_type		ElemNumber::s_elalphaCountTableSize =
 		ELEMNUMBER_SIZE(s_elalphaCountTable);
 
 
-static XalanDOMString								s_textString;
+static XalanDOMString	s_staticTextString;
 
-static XalanDOMString								s_commentString;
+static XalanDOMString	s_staticCommentString;
 
-static XalanDOMString								s_slashString;
+static XalanDOMString	s_staticSlashString;
 
 
 
@@ -1790,11 +1786,11 @@ const XalanDOMChar		ElemNumber::s_atString[] =
 	0
 };
 
-const XalanDOMString&	ElemNumber::s_textString = ::s_textString;
+const XalanDOMString&	ElemNumber::s_textString = s_staticTextString;
 
-const XalanDOMString&	ElemNumber::s_commentString = ::s_commentString;
+const XalanDOMString&	ElemNumber::s_commentString = s_staticCommentString;
 
-const XalanDOMString&	ElemNumber::s_slashString = ::s_slashString;
+const XalanDOMString&	ElemNumber::s_slashString = s_staticSlashString;
 
 const XalanDOMChar		ElemNumber::s_piString[] =
 {
@@ -1966,10 +1962,10 @@ const DecimalToRoman	ElemNumber::s_romanConvertTable[] =
 
 
 
-static XalanNumberingResourceBundle		s_elalphaResourceBundle;
+static XalanNumberingResourceBundle		s_staticElalphaResourceBundle;
 
 const XalanNumberingResourceBundle&	ElemNumber::s_elalphaResourceBundle =
-		::s_elalphaResourceBundle;
+		s_staticElalphaResourceBundle;
 
 
 
@@ -2083,13 +2079,13 @@ initializeTraditionalElalphaBundle(XalanNumberingResourceBundle&	theBundle)
 void
 ElemNumber::initialize()
 {
-	::s_textString = XALAN_STATIC_UCODE_STRING("text()");
+	s_staticTextString = XALAN_STATIC_UCODE_STRING("text()");
 
-	::s_commentString = XALAN_STATIC_UCODE_STRING("comment()");
+	s_staticCommentString = XALAN_STATIC_UCODE_STRING("comment()");
 
-	::s_slashString = XALAN_STATIC_UCODE_STRING("/");
+	s_staticSlashString = XALAN_STATIC_UCODE_STRING("/");
 
-	initializeTraditionalElalphaBundle(::s_elalphaResourceBundle);
+	initializeTraditionalElalphaBundle(s_staticElalphaResourceBundle);
 }
 
 
@@ -2097,9 +2093,13 @@ ElemNumber::initialize()
 void
 ElemNumber::terminate()
 {
-	releaseMemory(::s_textString);
-	releaseMemory(::s_commentString);
-	releaseMemory(::s_slashString);
+	releaseMemory(s_staticTextString);
+	releaseMemory(s_staticCommentString);
+	releaseMemory(s_staticSlashString);
 
-	XalanNumberingResourceBundle().swap(::s_elalphaResourceBundle);
+	XalanNumberingResourceBundle().swap(s_staticElalphaResourceBundle);
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

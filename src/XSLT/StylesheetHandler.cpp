@@ -100,6 +100,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 typedef StylesheetConstructionContext::GetAndReleaseCachedString	GetAndReleaseCachedString;
 
 
@@ -139,7 +143,7 @@ StylesheetHandler::~StylesheetHandler()
 
 
 
-void StylesheetHandler::setDocumentLocator(const Locator* const		locator)
+void StylesheetHandler::setDocumentLocator(const LocatorType* const		locator)
 {
 	m_constructionContext.pushLocatorOnStack(locator);
 
@@ -172,9 +176,9 @@ StylesheetHandler::endDocument()
 
 bool
 StylesheetHandler::isAttrOK(
-			const XalanDOMChar*		attrName,
-			const AttributeList&	atts,
-			int						which)
+			const XalanDOMChar*			attrName,
+			const AttributeListType&	atts,
+			int							which)
 {
 	return m_stylesheet.isAttrOK(attrName, atts, which, m_constructionContext);
 }
@@ -183,11 +187,11 @@ StylesheetHandler::isAttrOK(
 
 bool
 StylesheetHandler::processSpaceAttr(
-			const XalanDOMChar*				aname,
-			const AttributeList&			atts,
-			int								which,
-			const Locator*					locator,
-			bool&							fPreserve)
+			const XalanDOMChar*			aname,
+			const AttributeListType&	atts,
+			int							which,
+			const LocatorType*			locator,
+			bool&						fPreserve)
 {
 	if(m_constructionContext.isXMLSpaceAttribute(aname, m_stylesheet, locator) == false)
 	{
@@ -219,7 +223,7 @@ StylesheetHandler::processSpaceAttr(
 
 
 inline int
-getLineNumber(const Locator*	theLocator)
+getLineNumber(const LocatorType*	theLocator)
 {
 	return theLocator == 0 ? -1 : theLocator->getLineNumber();
 }
@@ -227,7 +231,7 @@ getLineNumber(const Locator*	theLocator)
 
 
 inline int
-getColumnNumber(const Locator*	theLocator)
+getColumnNumber(const LocatorType*	theLocator)
 {
 	return theLocator == 0 ? -1 : theLocator->getColumnNumber();
 }
@@ -236,9 +240,9 @@ getColumnNumber(const Locator*	theLocator)
 
 bool
 StylesheetHandler::processSpaceAttr(
-			const AttributeList&			atts,
-			const Locator*					locator,
-			bool&							fPreserve)
+			const AttributeListType&	atts,
+			const LocatorType*			locator,
+			bool&						fPreserve)
 {
 	const unsigned int	len = atts.getLength();
 
@@ -258,7 +262,7 @@ StylesheetHandler::processSpaceAttr(
 void
 StylesheetHandler::startElement(
 			const XMLCh* const	name,
-			AttributeList&		atts)
+			AttributeListType&	atts)
 {
 	m_inExtensionElementStack.push_back(false);
 
@@ -273,24 +277,15 @@ StylesheetHandler::startElement(
 
 	try
 	{
-#if !defined(XALAN_NO_NAMESPACES)
-		using std::for_each;
-#endif
-
 		// By default, space is not preserved...
 		bool	fPreserveSpace = false;
 		bool	fSpaceAttrProcessed = false;
 
 		processAccumulatedText();
 
-		// Clean up the whitespace elements.
-//		for_each(m_whiteSpaceElems.begin(),
-//				 m_whiteSpaceElems.end(),
-//				 DeleteFunctor<ElemTemplateElement>());
-//
 		m_whiteSpaceElems.clear();
 
-		const Locator* const	locator = m_constructionContext.getLocatorFromStack();
+		const LocatorType* const	locator = m_constructionContext.getLocatorFromStack();
 
 		// First push namespaces
 		m_stylesheet.pushNamespaces(atts);
@@ -636,9 +631,9 @@ StylesheetHandler::startElement(
 
 ElemTemplateElement*
 StylesheetHandler::initWrapperless(
-			const XalanDOMChar*		name,
-			const AttributeList&	atts,
-			const Locator*			locator)
+			const XalanDOMChar*			name,
+			const AttributeListType&	atts,
+			const LocatorType*			locator)
 {
 	assert(m_pTemplate == 0);
 
@@ -695,12 +690,12 @@ StylesheetHandler::getNamespaceForPrefixFromStack(const XalanDOMString&		thePref
 
 void
 StylesheetHandler::processTopLevelElement(
-			const XalanDOMChar*		name,
-			const AttributeList&	atts,
-			int						xslToken,
-			const Locator*			locator,
-			bool&					fPreserveSpace,
-			bool&					fSpaceAttrProcessed)
+			const XalanDOMChar*			name,
+			const AttributeListType&	atts,
+			int							xslToken,
+			const LocatorType*			locator,
+			bool&						fPreserveSpace,
+			bool&						fSpaceAttrProcessed)
 {
 	if(m_foundStylesheet && StylesheetConstructionContext::ELEMNAME_IMPORT != xslToken)
 	{
@@ -837,11 +832,11 @@ StylesheetHandler::processTopLevelElement(
 
 void
 StylesheetHandler::processStylesheet(
-			const XalanDOMChar*		name,
-			const AttributeList&	atts,
-			const Locator*			locator,
-			bool&					fPreserveSpace,
-			bool&					fSpaceAttrProcessed)
+			const XalanDOMChar*			name,
+			const AttributeListType&	atts,
+			const LocatorType*			locator,
+			bool&						fPreserveSpace,
+			bool&						fSpaceAttrProcessed)
 {
 	m_foundStylesheet = true;
 
@@ -921,10 +916,10 @@ StylesheetHandler::processStylesheet(
 
 void
 StylesheetHandler::processExtensionElement(
-			const XalanDOMChar*		/* name */,
-			const XalanDOMString&	/* localName */,
-			const AttributeList&	/* atts */,
-			const Locator*			/* locator */)
+			const XalanDOMChar*			/* name */,
+			const XalanDOMString&		/* localName */,
+			const AttributeListType&	/* atts */,
+			const LocatorType*			/* locator */)
 {
 }
 
@@ -933,7 +928,7 @@ StylesheetHandler::processExtensionElement(
 void
 StylesheetHandler::checkForOrAddVariableName(
 			const XalanQName&	theVariableName,
-			const Locator*		theLocator)
+			const LocatorType*	theLocator)
 {
 	if (m_inTemplate == false)
 	{
@@ -977,10 +972,10 @@ StylesheetHandler::checkForOrAddVariableName(
 
 void
 StylesheetHandler::processPreserveStripSpace(
-			const XalanDOMChar*		name,
-			const AttributeList&	atts,
-			const Locator*			locator,
-			int						xslToken)
+			const XalanDOMChar*			name,
+			const AttributeListType&	atts,
+			const LocatorType*			locator,
+			int							xslToken)
 {
 	const unsigned int	nAttrs = atts.getLength();
 
@@ -1057,7 +1052,7 @@ StylesheetHandler::appendChildElementToParent(
 void
 StylesheetHandler::appendChildElementToParent(
 			ElemTemplateElement*	elem,
-			const Locator*			locator)
+			const LocatorType*		locator)
 {
 	appendChildElementToParent(m_elemStack.back(), elem, locator);
 }
@@ -1068,7 +1063,7 @@ void
 StylesheetHandler::appendChildElementToParent(
 			ElemTemplateElement*	parent,
 			ElemTemplateElement*	elem,
-			const Locator*			locator)
+			const LocatorType*		locator)
 {
 	assert(parent != 0 && elem != 0);
 
@@ -1129,9 +1124,9 @@ stackContains(
 
 void
 StylesheetHandler::processImport(
-			const XalanDOMChar*		name,
-			const AttributeList&	atts,
-			const Locator*			locator)
+			const XalanDOMChar*			name,
+			const AttributeListType&	atts,
+			const LocatorType*			locator)
 {
 	const unsigned int	nAttrs = atts.getLength();
 
@@ -1218,9 +1213,9 @@ StylesheetHandler::processImport(
 
 void
 StylesheetHandler::processInclude(
-			const XalanDOMChar*		name,
-			const AttributeList&	atts,
-			const Locator*			locator)
+			const XalanDOMChar*			name,
+			const AttributeListType&	atts,
+			const LocatorType*			locator)
 {
 	const unsigned int	nAttrs = atts.getLength();
 
@@ -1272,16 +1267,7 @@ StylesheetHandler::processInclude(
 void
 StylesheetHandler::endElement(const XMLCh* const /* name */)
 {
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::for_each;
-#endif
-
 	processAccumulatedText();
-
-	// Clean up the whitespace elements.
-//	for_each(m_whiteSpaceElems.begin(),
-//			 m_whiteSpaceElems.end(),
-//			 DeleteFunctor<ElemTemplateElement>());
 
 	m_whiteSpaceElems.clear();
 
@@ -1448,7 +1434,7 @@ StylesheetHandler::processText(
 			parent = m_elemStack[m_elemStack.size() - 2];
 		}
 
-		const Locator* const	locator = m_constructionContext.getLocatorFromStack();
+		const LocatorType* const	locator = m_constructionContext.getLocatorFromStack();
 
 		ElemTemplateElement* const	elem =
 			m_constructionContext.createElement(
@@ -1544,9 +1530,7 @@ StylesheetHandler::processAccumulatedText()
 bool
 StylesheetHandler::inExtensionElement() const
 {
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::find;
-#endif
+	XALAN_USING_STD(find)
 
 	if (find(
 			m_inExtensionElementStack.rbegin(),
@@ -1565,8 +1549,8 @@ StylesheetHandler::inExtensionElement() const
 
 void
 StylesheetHandler::error(
-			const char*		theMessage,
-			const Locator*	theLocator) const
+			const char*			theMessage,
+			const LocatorType*	theLocator) const
 {
 	m_constructionContext.error(theMessage, 0, theLocator);
 }
@@ -1576,7 +1560,7 @@ StylesheetHandler::error(
 void
 StylesheetHandler::error(
 			const XalanDOMString&	theMessage,
-			const Locator*			theLocator) const
+			const LocatorType*		theLocator) const
 {
 	m_constructionContext.error(theMessage, 0, theLocator);
 }
@@ -1587,7 +1571,7 @@ void
 StylesheetHandler::error(
 			const XalanDOMChar*		theMessage1,
 			const XalanDOMChar*		theMessage2,
-			const Locator*			theLocator) const
+			const LocatorType*		theLocator) const
 {
 	const GetAndReleaseCachedString		theGuard(m_constructionContext);
 
@@ -1606,7 +1590,7 @@ void
 StylesheetHandler::error(
 			const XalanDOMChar*		theMessage1,
 			const XalanDOMString&	theMessage2,
-			const Locator*			theLocator) const
+			const LocatorType*		theLocator) const
 {
 	error(theMessage1, theMessage2.c_str(), theLocator);
 }
@@ -1617,7 +1601,7 @@ void
 StylesheetHandler::error(
 			const XalanDOMString&	theMessage1,
 			const XalanDOMChar*		theMessage2,
-			const Locator*			theLocator) const
+			const LocatorType*		theLocator) const
 {
 	error(theMessage1.c_str(), theMessage2, theLocator);
 }
@@ -1629,7 +1613,7 @@ void
 StylesheetHandler::error(
 			const XalanDOMString&	theMessage1,
 			const XalanDOMString&	theMessage2,
-			const Locator*			theLocator) const
+			const LocatorType*		theLocator) const
 {
 	error(theMessage1.c_str(), theMessage2.c_str(), theLocator);
 }
@@ -1640,7 +1624,7 @@ void
 StylesheetHandler::warn(
 			const XalanDOMChar*		theMessage1,
 			const XalanDOMString&	theMessage2,
-			const Locator*			theLocator) const
+			const LocatorType*		theLocator) const
 {
 	warn(theMessage1, theMessage2.c_str(), theLocator);
 }
@@ -1652,7 +1636,7 @@ void
 StylesheetHandler::warn(
 			const XalanDOMChar*		theMessage1,
 			const XalanDOMChar*		theMessage2,
-			const Locator*			theLocator) const
+			const LocatorType*		theLocator) const
 {
 	const GetAndReleaseCachedString		theGuard(m_constructionContext);
 
@@ -1670,7 +1654,7 @@ void
 StylesheetHandler::illegalAttributeError(
 			const XalanDOMChar*		theElementName,
 			const XalanDOMChar*		theAttributeName,
-			const Locator*			theLocator) const
+			const LocatorType*		theLocator) const
 
 {
 	const GetAndReleaseCachedString		theGuard(m_constructionContext);
@@ -1726,9 +1710,7 @@ StylesheetHandler::PushPopIncludeState::PushPopIncludeState(StylesheetHandler&	t
 StylesheetHandler::PushPopIncludeState::~PushPopIncludeState()
 {
 	// Clean up the element stack vector
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::for_each;
-#endif
+	XALAN_USING_STD(for_each)
 
 	// Clean up the element stack vector
 	for_each(m_handler.m_elemStack.begin(),
@@ -1800,3 +1782,7 @@ void
 StylesheetHandler::terminate()
 {
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

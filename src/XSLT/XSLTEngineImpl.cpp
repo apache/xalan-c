@@ -153,6 +153,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 const XalanDOMString	XSLTEngineImpl::s_emptyString;
 
 
@@ -584,7 +588,7 @@ XSLTEngineImpl::getURI() const
 XalanDocument*
 XSLTEngineImpl::parseXML(
 			const XalanDOMString&	urlString,
-			DocumentHandler*		docHandler,
+			DocumentHandlerType*	docHandler,
 			XalanDocument*			docToRegister)
 {
 	
@@ -593,7 +597,7 @@ XSLTEngineImpl::parseXML(
 
 	if(doc == 0)
 	{
-		EntityResolver* const	theResolver = 
+		EntityResolverType* const	theResolver = 
 			m_parserLiaison.getEntityResolver();
 
 		if (theResolver == 0)
@@ -604,7 +608,7 @@ XSLTEngineImpl::parseXML(
 		}
 		else
 		{
-			const XalanAutoPtr<InputSource>		resolverInputSource =
+			const XalanAutoPtr<InputSourceType>		resolverInputSource =
 				theResolver->resolveEntity(0, c_wstr(urlString));
 
 			if (resolverInputSource.get() != 0)
@@ -632,9 +636,9 @@ XSLTEngineImpl::parseXML(
 
 XalanDocument*
 XSLTEngineImpl::parseXML(
-			const InputSource&	inputSource,
-			DocumentHandler*	docHandler,
-			XalanDocument*		docToRegister)
+			const InputSourceType&	inputSource,
+			DocumentHandlerType*	docHandler,
+			XalanDocument*			docToRegister)
 {
 	if(0 != docHandler)
 	{
@@ -879,7 +883,7 @@ XSLTEngineImpl::getStylesheetFromPIURL(
 							localXSLURLString);
 			}
 		}
-		catch(const XMLException&)
+		catch(const XERCES_CPP_NAMESPACE_QUALIFIER XMLException&)
 		{
 		}
 
@@ -978,9 +982,7 @@ XSLTEngineImpl::addTraceListener(TraceListener* tl)
 void
 XSLTEngineImpl::removeTraceListener(TraceListener*	tl)
 {
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::remove;
-#endif
+	XALAN_USING_STD(remove)
 
 	const TraceListenerVectorType::iterator		i =
 		remove(
@@ -996,9 +998,7 @@ XSLTEngineImpl::removeTraceListener(TraceListener*	tl)
 void
 XSLTEngineImpl::fireGenerateEvent(const GenerateEvent&	ge)
 {
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::for_each;
-#endif
+	XALAN_USING_STD(for_each)
 
 	for_each(
 		m_traceListeners.begin(),
@@ -1011,9 +1011,7 @@ XSLTEngineImpl::fireGenerateEvent(const GenerateEvent&	ge)
 void
 XSLTEngineImpl::fireSelectEvent(const SelectionEvent&	se)
 {
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::for_each;
-#endif
+	XALAN_USING_STD(for_each)
 
 	for_each(
 		m_traceListeners.begin(),
@@ -1026,9 +1024,7 @@ XSLTEngineImpl::fireSelectEvent(const SelectionEvent&	se)
 void
 XSLTEngineImpl::fireTraceEvent(const TracerEvent& te)
 {
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::for_each;
-#endif
+	XALAN_USING_STD(for_each)
 
 	for_each(
 		m_traceListeners.begin(),
@@ -1068,7 +1064,7 @@ XSLTEngineImpl::message(
 void
 XSLTEngineImpl::message(
 			const XalanDOMString&	msg,
-			const Locator&			locator,
+			const LocatorType&		locator,
 			const XalanNode*		sourceNode) const
 {
 	problem(msg, ProblemListener::eMESSAGE, locator, sourceNode);
@@ -1090,7 +1086,7 @@ XSLTEngineImpl::problem(
 	int						lineNumber = -1;
 	int 					columnNumber = -1;
 
-	const Locator*			locator = getLocatorFromStack();
+	const LocatorType*		locator = getLocatorFromStack();
 
 	if (locator == 0 && styleNode != 0)
 	{
@@ -1149,7 +1145,7 @@ void
 XSLTEngineImpl::problem(
 			const XalanDOMString&				msg, 
 			ProblemListener::eClassification	classification,
-			const Locator&						locator,
+			const LocatorType&					locator,
 			const XalanNode*					sourceNode) const
 {
 	const XalanDOMChar*		id = locator.getSystemId();
@@ -1189,7 +1185,7 @@ XSLTEngineImpl::warn(
 			const XalanNode*			sourceNode,
 			const ElemTemplateElement*	styleNode) const
 {
-	const Locator* const	locator = styleNode == 0 ? 0 : styleNode->getLocator();
+	const LocatorType* const	locator = styleNode == 0 ? 0 : styleNode->getLocator();
 
 	if (locator != 0)
 	{
@@ -1205,9 +1201,9 @@ XSLTEngineImpl::warn(
 
 void
 XSLTEngineImpl::warn(
-			const XalanDOMString&		msg,
-			const Locator&				locator,
-			const XalanNode*			sourceNode) const
+			const XalanDOMString&	msg,
+			const LocatorType&		locator,
+			const XalanNode*		sourceNode) const
 {
 	problem(msg, ProblemListener::eWARNING, locator, sourceNode);
 }
@@ -1238,9 +1234,9 @@ XSLTEngineImpl::error(
 
 void
 XSLTEngineImpl::error(
-			const XalanDOMString&		msg,
-			const Locator&				locator,
-			const XalanNode*			sourceNode) const
+			const XalanDOMString&	msg,
+			const LocatorType&		locator,
+			const XalanNode*		sourceNode) const
 {
 	problem(msg, ProblemListener::eERROR, locator, sourceNode);
 }
@@ -1351,7 +1347,7 @@ XSLTEngineImpl::setQuietConflictWarnings(bool	b)
 
 
 void
-XSLTEngineImpl::setDocumentLocator(const Locator*	/* locator */)
+XSLTEngineImpl::setDocumentLocator(const LocatorType*	/* locator */)
 {
 	// Do nothing for now
 }
@@ -1671,7 +1667,7 @@ XSLTEngineImpl::startElement(const XalanDOMChar*	name)
 void
 XSLTEngineImpl::startElement(
 			const XalanDOMChar*		name,
-			AttributeList&			atts)
+			AttributeListType&		atts)
 {
 	assert(getFormatterListener() != 0);
 	assert(name != 0);
@@ -2668,7 +2664,7 @@ isPrefixUsedOrDeclared(
 
 inline bool
 isPendingAttributePrefix(
-			const AttributeList&		thePendingAttributes,
+			const AttributeListType&	thePendingAttributes,
 			const XalanDOMString&		thePrefix,
 			XalanDOMString::size_type	thePrefixLength)
 {
@@ -2816,9 +2812,7 @@ XSLTEngineImpl::copyNamespaceAttributes(const XalanNode&	src)
 
 			const XalanDOMString&	nodeName = attr->getNodeName();
 
-#if !defined(XALAN_NO_NAMESPACES)
-			using std::find_if;
-#endif
+			XALAN_USING_STD(find_if)
 
 			if (find_if(
 					m_attributeNamesVisited.begin(),
@@ -3195,6 +3189,13 @@ XSLTEngineImpl::uninstallFunctions()
 
 
 
+XALAN_CPP_NAMESPACE_END
+
+
+XALAN_USING_XALAN(XalanDOMString)
+
+
+
 static XalanDOMString	s_XSLNameSpaceURL;
 
 static XalanDOMString	s_XalanNamespaceURL;
@@ -3216,6 +3217,10 @@ static XalanDOMString	s_typeValueString2;
 static XalanDOMString	s_typeValueString3;
 
 static XalanDOMString	s_typeValueString4;
+
+
+
+XALAN_CPP_NAMESPACE_BEGIN
 
 
 
@@ -3380,3 +3385,7 @@ XSLTEngineImpl::terminate()
 
 	releaseMemory(::s_typeValueString4);
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

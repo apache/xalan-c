@@ -89,13 +89,16 @@
 
 
 
-#include "NamespacesHandler.hpp"
-#include "KeyDeclaration.hpp"
-#include "StylesheetExecutionContext.hpp"
+#include <XSLT/NamespacesHandler.hpp>
+#include <XSLT/KeyDeclaration.hpp>
+#include <XSLT/StylesheetExecutionContext.hpp>
 
 
 
-class AttributeList;
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 class ExtensionNSHandler;
 class XalanDecimalFormatSymbols;
 class ElemAttributeSet;
@@ -104,13 +107,11 @@ class ElemTemplate;
 class ElemTemplateElement;
 class ElemVariable;
 class KeyTable;
-class Locator;
 class NodeRefListBase;
 class PrefixResolver;
 class StylesheetConstructionContext;
 class StylesheetRoot;
 class XalanQName;
-class XMLURL;
 class XObject;
 class StylesheetExecutionContext;
 
@@ -135,7 +136,7 @@ public:
 	typedef XalanQName::NamespaceVectorType					NamespaceVectorType;
 	typedef XalanQName::NamespacesStackType					NamespacesStackType;
 
-#if defined(XALAN_NO_NAMESPACES)
+#if defined(XALAN_NO_STD_NAMESPACE)
 	typedef map<XalanDOMString,
 				ExtensionNSHandler*,
 				less<XalanDOMString> >				ExtensionNamespacesMapType;
@@ -296,7 +297,7 @@ public:
 	 * @param atts attribute list constaining namespaces
 	 */
 	void
-	pushNamespaces(const AttributeList& 	atts);
+	pushNamespaces(const AttributeListType& 	atts);
 
 	/**
 	 * Pop a namespace declaration from the namespace stack.
@@ -327,7 +328,7 @@ public:
 	bool
 	isAttrOK(
 			const XalanDOMChar*				attrName,
-			const AttributeList&			atts,
+			const AttributeListType&		atts,
 			int 							which,
 			StylesheetConstructionContext&	constructionContext) const;
 
@@ -480,7 +481,7 @@ public:
 	void
 	processNSAliasElement(
 			const XalanDOMChar*				name,
-			const AttributeList&			atts,
+			const AttributeListType&		atts,
 			StylesheetConstructionContext&	constructionContext);
 
 	/**
@@ -491,8 +492,8 @@ public:
 	void
 	processDecimalFormatElement(
 			StylesheetConstructionContext&	constructionContext,
-			const AttributeList&			atts,
-			const Locator*					locator = 0);
+			const AttributeListType&		atts,
+			const LocatorType*				locator = 0);
 
 	/**
 	 * Retrieve the XalanDecimalFormatSymbols instance associated with
@@ -558,7 +559,7 @@ public:
 	ElemTemplateElement*
 	initWrapperless(
 			StylesheetConstructionContext&	constructionContext,
-			const Locator*					locator);
+			const LocatorType*				locator);
 
 	/**
 	 * Retrieve the stack of who's including who
@@ -582,8 +583,8 @@ public:
 	void
 	processKeyElement(
 			const PrefixResolver&			nsContext,
-			const AttributeList&			atts,
-			const Locator*					locator,
+			const AttributeListType&		atts,
+			const LocatorType*				locator,
 			StylesheetConstructionContext&	constructionContext);
 
 	/**
@@ -752,7 +753,7 @@ public:
 		eMatchScore				m_priority;
 	};
 
-#if defined(XALAN_NO_NAMESPACES)
+#if defined(XALAN_NO_STD_NAMESPACE)
 	typedef vector<const MatchPattern2*>		PatternTableListType;
 
 	typedef vector<const MatchPattern2*>		PatternTableVectorType;
@@ -1229,6 +1230,10 @@ private:
 
 	static const XalanEmptyNamedNodeMap		s_fakeAttributes;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

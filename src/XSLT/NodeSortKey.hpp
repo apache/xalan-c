@@ -79,6 +79,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 class ExecutionContext;
 class PrefixResolver;
 class XPath;
@@ -201,8 +205,9 @@ private:
 };
 
 
-#endif
 
-/*
- *      $ Log: $
- */
+XALAN_CPP_NAMESPACE_END
+
+
+
+#endif

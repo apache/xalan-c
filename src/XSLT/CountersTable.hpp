@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -78,6 +78,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 class ElemNumber;
 class StylesheetExecutionContext;
 
@@ -94,7 +98,7 @@ struct Counter
 {
 	typedef unsigned long	CountType;
 
-#if defined(XALAN_NO_NAMESPACES)
+#if defined(XALAN_NO_STD_NAMESPACE)
 	typedef vector<XalanNode*>			NodeVectorType;
 #else
 	typedef std::vector<XalanNode*>		NodeVectorType;
@@ -186,7 +190,7 @@ public:
 
 	typedef Counter::CountType	CountType;
 
-#if defined(XALAN_NO_NAMESPACES)
+#if defined(XALAN_NO_STD_NAMESPACE)
 	typedef vector<Counter>					CounterVectorType;
 	typedef vector<CounterVectorType>		ElemCounterVectorVectorType;
 #else
@@ -259,6 +263,11 @@ private:
 	 */
 	NodeVectorType					m_newFound;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
+
 
 
 #endif	// !defined(XALAN_COUNTERSTABLE_HEADER_GUARD_1357924680)

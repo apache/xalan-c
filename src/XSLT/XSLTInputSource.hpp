@@ -80,15 +80,31 @@
 
 
 
-class BinInputStream;
+XALAN_DECLARE_XERCES_CLASS(Locator)
+
+
+
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
+typedef XERCES_CPP_NAMESPACE_QUALIFIER BinInputStream	BinInputStreamType;
+typedef XERCES_CPP_NAMESPACE_QUALIFIER InputSource		InputSourceType;
+
+
 class XalanNode;
 
 
 
-class XALAN_XSLT_EXPORT XSLTInputSource : public InputSource
+class XALAN_XSLT_EXPORT XSLTInputSource : public InputSourceType
 {
-
 public:
+
+#if defined(XALAN_NO_STD_NAMESPACE)
+	typedef istream			StreamType;
+#else
+	typedef std::istream	StreamType;
+#endif
 
 	explicit
 	XSLTInputSource();
@@ -174,11 +190,7 @@ public:
 	 *
 	 * @param stream the input stream...
 	 */
-#if defined(XALAN_NO_NAMESPACES)
-	XSLTInputSource(istream*		stream);
-#else
-	XSLTInputSource(std::istream*	stream);
-#endif
+	XSLTInputSource(StreamType*		stream);
 
 	/**
 	 * Makes the byte stream for this input source.
@@ -190,7 +202,7 @@ public:
 	 *
 	 * @return pointer to byte stream created
 	 */
-	virtual BinInputStream*
+	virtual BinInputStreamType*
 	makeStream() const;
 
 	/**
@@ -215,36 +227,28 @@ public:
 		return m_node;
 	}
 
-#if defined(XALAN_NO_NAMESPACES)
-	istream*
-#else
-	std::istream*
-#endif
+	StreamType*
 	getStream() const
 	{
 		return m_stream;
 	}
 
 	void
-#if defined(XALAN_NO_NAMESPACES)
-	setStream(istream*	stream)
-#else
-	setStream(std::istream*	stream)
-#endif
+	setStream(StreamType*	stream)
 	{
 		m_stream = stream;
 	}
 
 private:
 
-#if defined(XALAN_NO_NAMESPACES)
-	istream*		m_stream;
-#else
-	std::istream*	m_stream;
-#endif
+	StreamType*		m_stream;
 
 	XalanNode*		m_node;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

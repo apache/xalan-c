@@ -108,6 +108,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 const XalanDOMString			Stylesheet::s_emptyString;
 
 const XalanQNameByReference		Stylesheet::s_emptyQName;
@@ -174,7 +178,7 @@ Stylesheet::Stylesheet(
 				m_baseIdent = urlString;
 			}
 		}
-		catch(const XMLPlatformUtilsException&)
+		catch(const XERCES_CPP_NAMESPACE_QUALIFIER XMLPlatformUtilsException&)
 		{
 			// Assume that any exception here relates to get the urlString from
 			// m_baseIdent.  We'll assume that it's just a fake base identifier
@@ -189,7 +193,7 @@ Stylesheet::Stylesheet(
 
 Stylesheet::~Stylesheet()
 {
-#if !defined(XALAN_NO_NAMESPACES)
+#if !defined(XALAN_NO_STD_NAMESPACE)
 	using std::for_each;
 #endif
 
@@ -214,7 +218,7 @@ Stylesheet::~Stylesheet()
 ElemTemplateElement*
 Stylesheet::initWrapperless(
 			StylesheetConstructionContext&	constructionContext,
-			const Locator*					locator)
+			const LocatorType*				locator)
 {
 	if (m_isWrapperless == true)
 	{
@@ -254,8 +258,8 @@ Stylesheet::initWrapperless(
 void
 Stylesheet::processKeyElement(
 			const PrefixResolver&			nsContext,
-			const AttributeList&			atts,
-			const Locator*					locator,
+			const AttributeListType&		atts,
+			const LocatorType*				locator,
 			StylesheetConstructionContext&	constructionContext)
 {
 	const XalanDOMChar* 	nameAttr = 0;
@@ -339,7 +343,7 @@ Stylesheet::processKeyElement(
 
 
 void
-Stylesheet::pushNamespaces(const AttributeList&		atts)
+Stylesheet::pushNamespaces(const AttributeListType&		atts)
 {
 	const unsigned int		nAttrs = atts.getLength();
 
@@ -531,7 +535,7 @@ Stylesheet::postConstruction(StylesheetConstructionContext&		constructionContext
 bool
 Stylesheet::isAttrOK(
 			const XalanDOMChar* 			attrName,
-			const AttributeList&			/* atts */,
+			const AttributeListType&		/* atts */,
 			int 							/* which */,
 			StylesheetConstructionContext&	constructionContext) const
 {
@@ -550,7 +554,7 @@ Stylesheet::isAttrOK(
 			const XalanDOMString	prefix(attrName, indexOfNSSep);
 			const XalanDOMString*	ns = getNamespaceForPrefixFromStack(prefix);
 
-			attrOK = ns != 0 && !::isEmpty(*ns) && !equals(*ns, constructionContext.getXSLTNamespaceURI());
+			attrOK = ns != 0 && !ns->empty() && *ns != constructionContext.getXSLTNamespaceURI();
 		}
 		else if (m_XSLTVerDeclared > constructionContext.getXSLTVersionSupported())
 		{
@@ -833,9 +837,7 @@ Stylesheet::addObjectIfNotFound(
 			const MatchPattern2*		thePattern,
 			PatternTableVectorType& 	theVector)
 {
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::find;
-#endif
+	XALAN_USING_STD(find)
 
 	const PatternTableVectorType::const_iterator 	theResult =
 		find(
@@ -1351,7 +1353,7 @@ Stylesheet::pushTopLevelVariables(
 void
 Stylesheet::processNSAliasElement(
 			const XalanDOMChar*				/* name */,
-			const AttributeList&			atts,
+			const AttributeListType&		atts,
 			StylesheetConstructionContext&	constructionContext)
 {
 	const unsigned int		nAttrs = atts.getLength();
@@ -1418,8 +1420,8 @@ Stylesheet::processNSAliasElement(
 void
 Stylesheet::processDecimalFormatElement(
 			StylesheetConstructionContext&	constructionContext,
-			const AttributeList&			atts,
-			const Locator*					locator)
+			const AttributeListType&		atts,
+			const LocatorType*				locator)
 {
 	const int	lineNumber = locator != 0 ? locator->getLineNumber() : -1;
 	const int	columnNumber = locator != 0 ? locator->getColumnNumber() : -1;
@@ -1958,3 +1960,7 @@ Stylesheet::getURI() const
 {
 	return m_baseIdent;
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

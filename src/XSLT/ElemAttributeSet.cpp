@@ -69,10 +69,14 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 ElemAttributeSet::ElemAttributeSet(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
-			const AttributeList&			atts,
+			const AttributeListType&		atts,
 			int								lineNumber,
 			int								columnNumber) :
 	ElemUse(constructionContext,
@@ -184,3 +188,7 @@ ElemAttributeSet::childTypeAllowed(int	xslToken) const
 
 	return fResult;
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

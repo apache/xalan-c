@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 2000 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -71,14 +71,16 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 const XalanDOMString	FunctionGenerateID::s_emptyString;
 
 
 
 FunctionGenerateID::FunctionGenerateID() :
-	Function(),
-	m_prefix(XALAN_STATIC_UCODE_STRING("N")),
-	m_prefixLength(length(m_prefix))
+	Function()
 {
 }
 
@@ -116,7 +118,7 @@ XObjectPtr
 FunctionGenerateID::execute(
 			XPathExecutionContext&	executionContext,
 			XalanNode*				context,
-			const Locator*			locator) const
+			const LocatorType*		locator) const
 {
 	if (context == 0)
 	{
@@ -131,7 +133,7 @@ FunctionGenerateID::execute(
 	{
 		XPathExecutionContext::GetAndReleaseCachedString	theID(executionContext);
 
-		theID.get() = m_prefix;
+		theID.get() = XalanUnicode::charLetter_N;
 
 		getSuffix(context, theID.get());
 
@@ -146,7 +148,7 @@ FunctionGenerateID::execute(
 			XPathExecutionContext&	executionContext,
 			XalanNode*				/* context */,
 			const XObjectPtr		arg1,
-			const Locator*			locator) const
+			const LocatorType*		locator) const
 {
 	assert(arg1.null() == false);
 
@@ -181,3 +183,7 @@ FunctionGenerateID::getError() const
 {
 	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The generate-id function takes zero or one arguments!"));
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

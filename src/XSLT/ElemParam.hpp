@@ -69,6 +69,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 class ElemParam: public ElemVariable
 {
 public:
@@ -85,7 +89,7 @@ public:
 	ElemParam(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
-			const AttributeList&			atts,
+			const AttributeListType&		atts,
 			int								lineNumber,
 			int								columnNumber);
 
@@ -97,6 +101,10 @@ public:
 	virtual void
 	execute(StylesheetExecutionContext&		executionContext) const;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

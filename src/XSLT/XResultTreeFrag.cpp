@@ -84,6 +84,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 inline const XalanDOMString*
 getSingleTextChildValue(const ResultTreeFragBase&	theRTreeFrag)
 {
@@ -354,3 +358,7 @@ XResultTreeFrag::dereferenced()
 		delete this;
 	}
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

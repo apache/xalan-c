@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -81,6 +81,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 class ElemSort;
 class ElemTemplate;
 class NodeSorter;
@@ -104,14 +108,14 @@ public:
 	ElemForEach(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
-			const AttributeList&			atts,
+			const AttributeListType&		atts,
 			int								lineNumber,
 			int								columnNumber);
 
 	virtual
 	~ElemForEach();
 
-#if defined(XALAN_NO_NAMESPACES)
+#if defined(XALAN_NO_STD_NAMESPACE)
 	typedef vector<ElemSort*>		SortElemsVectorType;
 #else
 	typedef std::vector<ElemSort*>	SortElemsVectorType;
@@ -127,8 +131,8 @@ public:
 	processSortElement(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						theStylesheet,
-			const AttributeList&			atts,
-			const Locator*					locator = 0);
+			const AttributeListType&		atts,
+			const LocatorType*				locator = 0);
 
 	virtual void
 	postConstruction(
@@ -213,6 +217,10 @@ private:
 	SortElemsVectorType::size_type	m_sortElemsCount;
 
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

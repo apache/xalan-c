@@ -68,6 +68,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 // Implementation of the XSLT function document().
 //
 class XALAN_XSLT_EXPORT FunctionDocument : public Function
@@ -86,7 +90,7 @@ public:
 			XPathExecutionContext&	executionContext,
 			XalanNode*				context,
 			const XObjectPtr		arg,
-			const Locator*			locator) const;
+			const LocatorType*		locator) const;
 
 	virtual XObjectPtr
 	execute(
@@ -94,7 +98,7 @@ public:
 			XalanNode*				context,
 			const XObjectPtr		arg1,
 			const XObjectPtr		arg2,
-			const Locator*			locator) const;
+			const LocatorType*		locator) const;
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
 	virtual Function*
@@ -117,7 +121,7 @@ private:
 			const XObjectPtr		arg,
 			XalanDOMString*			base,
 			int						argCount,
-			const Locator*			locator) const;
+			const LocatorType*		locator) const;
 
 	// Not implemented...
 	FunctionDocument&
@@ -126,6 +130,10 @@ private:
 	bool
 	operator==(const FunctionDocument&) const;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

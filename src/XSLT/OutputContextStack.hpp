@@ -77,6 +77,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 class FormatterListener;
 
 
@@ -107,7 +111,7 @@ public:
 
 			m_pendingAttributes.clear();
 
-			::clear(m_pendingElementName);
+			m_pendingElementName.clear();
 
 			m_hasPendingStartDocument = false;
 
@@ -125,7 +129,7 @@ public:
 		bool				m_mustFlushPendingStartDocument;
 	};
 
-#if defined(XALAN_NO_NAMESPACES)
+#if defined(XALAN_NO_STD_NAMESPACE)
 	typedef deque<OutputContext>			OutputContextStackType;
 #else
 	typedef std::deque<OutputContext>		OutputContextStackType;
@@ -242,6 +246,10 @@ private:
 
 	OutputContextStackType::iterator	m_stackPosition;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

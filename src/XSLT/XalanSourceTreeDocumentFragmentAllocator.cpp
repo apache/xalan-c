@@ -60,6 +60,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 XalanSourceTreeDocumentFragmentAllocator::XalanSourceTreeDocumentFragmentAllocator(size_type	theBlockCount) :
 	m_allocator(theBlockCount)
 {
@@ -117,3 +121,7 @@ XalanSourceTreeDocumentFragmentAllocator::reset()
 {
 	m_allocator.reset();
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

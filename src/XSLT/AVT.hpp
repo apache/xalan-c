@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -57,13 +57,6 @@
 #if !defined(XALAN_AVT_HEADER_GUARD)
 #define XALAN_AVT_HEADER_GUARD 
 
-/**
- * $Id$
- * 
- * $State$
- * 
- */
-
 // Base include file.  Must be first.
 #include <XSLT/XSLTDefinitions.hpp>
 
@@ -73,8 +66,19 @@
 
 
 
+XALAN_DECLARE_XERCES_CLASS(Locator)
+
+
+
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
+typedef XERCES_CPP_NAMESPACE_QUALIFIER Locator	LocatorType;
+
+
+
 class AVTPart;
-class Locator;
 class PrefixResolver;
 class XPathExecutionContext;
 class XalanNode;
@@ -109,7 +113,7 @@ public:
 	 */
 	AVT(
 			StylesheetConstructionContext&	constructionContext,
-			const Locator*					locator,
+			const LocatorType*				locator,
 			const XalanDOMChar*				name,
 			const XalanDOMChar*				stringedValue,
 			const PrefixResolver&			resolver);
@@ -157,7 +161,7 @@ private:
 	void
 	nextToken(
 			StylesheetConstructionContext&	constructionContext,
-			const Locator*					locator,
+			const LocatorType*				locator,
 			StringTokenizer&				tokenizer,
 			XalanDOMString&					token);
 
@@ -184,6 +188,10 @@ private:
 
 	static const XalanDOMString		s_emptyString;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

@@ -72,10 +72,14 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 ElemMessage::ElemMessage(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
-			const AttributeList&			atts,
+			const AttributeListType&		atts,
 			int								lineNumber,
 			int								columnNumber) :
 	ElemTemplateElement(constructionContext,
@@ -140,7 +144,7 @@ ElemMessage::execute(StylesheetExecutionContext&	executionContext) const
 			executionContext,
 			theResult.get());
 
-	const Locator* const	theLocator = getLocator();
+	const LocatorType* const	theLocator = getLocator();
 
 	executionContext.message(
 			theString,
@@ -172,7 +176,7 @@ ElemMessage::ElemMessageTerminateException::ElemMessageTerminateException(const 
 
 
 ElemMessage::ElemMessageTerminateException::ElemMessageTerminateException(
-			const Locator&			theLocator,
+			const LocatorType&		theLocator,
 			const XalanDOMString&	theMessage) :
 	XSLTProcessorException(
 			theLocator,
@@ -186,3 +190,7 @@ ElemMessage::ElemMessageTerminateException::ElemMessageTerminateException(
 ElemMessage::ElemMessageTerminateException::~ElemMessageTerminateException()
 {
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

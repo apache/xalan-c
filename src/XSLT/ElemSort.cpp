@@ -71,10 +71,14 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 ElemSort::ElemSort(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
-			const AttributeList&			atts,
+			const AttributeListType&		atts,
 			int								lineNumber,
 			int								columnNumber) :
 	ElemTemplateElement(constructionContext,
@@ -166,3 +170,7 @@ ElemSort::getElementName() const
 	return Constants::ELEMNAME_SORT_WITH_PREFIX_STRING;
 }
 
+
+
+
+XALAN_CPP_NAMESPACE_END

@@ -64,8 +64,12 @@
 
 #include "StylesheetConstructionContext.hpp"
 
- 
- 
+
+
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 /**
  * Simple string part of a complex AVT.
  */
@@ -91,3 +95,7 @@ AVTPartSimple::evaluate(
 {
 	append(buf, m_val, m_len);
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

@@ -79,6 +79,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 static const char* const	errorHeader = "error: ";
 static const char* const	warningHeader = "warning: ";
 static const char* const	messageHeader = "message: ";
@@ -208,3 +212,7 @@ ProblemListenerDefault::problem(
 
 	pw.println();
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

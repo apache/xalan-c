@@ -59,6 +59,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 XalanNumberingResourceBundle::XalanNumberingResourceBundle(
 		const XalanDOMString&			theLanguage,
 		const XalanDOMString&			theUILanguage,
@@ -185,3 +189,7 @@ XalanNumberingResourceBundle::swap(XalanNumberingResourceBundle&	theOther)
 
 	m_digitsTableTable.swap(theOther.m_digitsTableTable);
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

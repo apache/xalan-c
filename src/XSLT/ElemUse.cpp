@@ -70,8 +70,13 @@
 
 
 
+#include "Constants.hpp"
 #include "StylesheetRoot.hpp"
 #include "StylesheetConstructionContext.hpp"
+
+
+
+XALAN_CPP_NAMESPACE_BEGIN
 
 
 
@@ -163,7 +168,7 @@ bool
 ElemUse::processUseAttributeSets(
 			StylesheetConstructionContext&	constructionContext,
 			const XalanDOMChar*				attrName,
-			const AttributeList&			atts,
+			const AttributeListType&		atts,
 			int								which)
 {
 	bool isUAS = false;
@@ -182,7 +187,6 @@ ElemUse::processUseAttributeSets(
 
 	if(isUAS == true)
 	{
-#if 1
 		m_attributeSetsNames =
 			constructionContext.tokenizeQNames(
 				m_attributeSetsNamesCount,
@@ -190,39 +194,11 @@ ElemUse::processUseAttributeSets(
 				getStylesheet().getNamespaces(),
 				getLocator());
 		assert(m_attributeSetsNamesCount == 0 || m_attributeSetsNames != 0);
-#else
-		const XalanDOMChar* const	qnames = atts.getValue(which);
-
-		StringTokenizer		tokenizer(qnames);
-
-		m_attributeSetsNamesCount = tokenizer.countTokens();
-
-		if (m_attributeSetsNamesCount > 0)
-		{
-			m_attributeSetsNames = constructionContext.allocateQNamePointerVector(m_attributeSetsNamesCount);
-
-			const StylesheetConstructionContext::GetAndReleaseCachedString	theGuard(constructionContext);
-
-			XalanDOMString&		qname = theGuard.get();
-
-			size_type	theCurrentIndex = 0;
-
-			while(tokenizer.hasMoreTokens())
-			{
-				tokenizer.nextToken(qname);
-				assert(length(qname) != 0);
-
-				m_attributeSetsNames[theCurrentIndex++] =
-					constructionContext.createQNameByValue(
-						qname,
-						getStylesheet().getNamespaces(),
-						getLocator());
-			}
-
-			assert(theCurrentIndex == m_attributeSetsNamesCount); 
-		}
-#endif
 	}
 
 	return isUAS;
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

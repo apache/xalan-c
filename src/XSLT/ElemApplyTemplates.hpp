@@ -57,21 +57,17 @@
 #if !defined(XALAN_ELEMAPPLYTEMPLATES_HEADER_GUARD)
 #define XALAN_ELEMAPPLYTEMPLATES_HEADER_GUARD 
 
-/**
- * $Id$
- * 
- * $State$
- * 
- * @author Myriam Midy (Myriam_Midy @lotus.com 
- */
-
 // Base include file.  Must be first.
-#include "XSLTDefinitions.hpp"
+#include <XSLT/XSLTDefinitions.hpp>
 
 
 
 // Base class header file.
-#include "ElemForEach.hpp"
+#include <XSLT/ElemForEach.hpp>
+
+
+
+XALAN_CPP_NAMESPACE_BEGIN
 
 
 
@@ -97,7 +93,7 @@ public:
 	ElemApplyTemplates(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
-			const AttributeList&			atts,
+			const AttributeListType&		atts,
 			int								lineNumber, 
 			int								columnNumber);
 
@@ -121,6 +117,10 @@ private:
 
 	const XalanQName*	m_mode;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

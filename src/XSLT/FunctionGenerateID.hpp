@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -70,6 +70,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 // Implementation of the XSLT function generate-id().
 //
 class XALAN_XSLT_EXPORT FunctionGenerateID : public Function
@@ -87,14 +91,14 @@ public:
 	execute(
 			XPathExecutionContext&	executionContext,
 			XalanNode*				context,
-			const Locator*			locator) const;
+			const LocatorType*		locator) const;
 
 	virtual XObjectPtr
 	execute(
 			XPathExecutionContext&	executionContext,
 			XalanNode*				context,
 			const XObjectPtr		arg1,
-			const Locator*			locator) const;
+			const LocatorType*		locator) const;
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
 	virtual Function*
@@ -116,12 +120,12 @@ private:
 	bool
 	operator==(const FunctionGenerateID&) const;
 
-	const XalanDOMString				m_prefix;
-
-	const XalanDOMString::size_type		m_prefixLength;
-
 	static const XalanDOMString			s_emptyString;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

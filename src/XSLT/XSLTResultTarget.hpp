@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -78,6 +78,10 @@ class ostream;
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 class FormatterListener;
 class XalanDocument;
 class XalanDocumentFragment;
@@ -89,6 +93,12 @@ class Writer;
 class XALAN_XSLT_EXPORT XSLTResultTarget
 {
 public:
+
+#if defined(XALAN_NO_STD_NAMESPACE)
+	typedef ostream			StreamType;
+#else
+	typedef std::ostream	StreamType;
+#endif
 
 	explicit
 	XSLTResultTarget();
@@ -112,22 +122,14 @@ public:
 	 *
 	 * @param byteStream a pointer to a std ostream for the output
 	 */
-#if defined(XALAN_NO_NAMESPACES)
-	XSLTResultTarget(ostream*		theStream);
-#else
-	XSLTResultTarget(std::ostream*	theStream);
-#endif
+	XSLTResultTarget(StreamType*	theStream);
 
 	/**
 	 * Create a new output target with a stream.
 	 *
 	 * @param byteStream a reference to a std ostream for the output
 	 */
-#if defined(XALAN_NO_NAMESPACES)
-	XSLTResultTarget(ostream&		theStream);
-#else
-	XSLTResultTarget(std::ostream&	theStream);
-#endif
+	XSLTResultTarget(StreamType&	theStream);
 
 	/**
 	 * Create a new output target with a character stream.
@@ -196,11 +198,7 @@ public:
 	 *                   document
 	 */
 	void
-#if defined(XALAN_NO_NAMESPACES)
-	setByteStream(ostream*			byteStream)
-#else
-	setByteStream(std::ostream*		byteStream)
-#endif
+	setByteStream(StreamType*			byteStream)
 	{
 		m_byteStream = byteStream;
 	}
@@ -210,11 +208,7 @@ public:
 	 *
 	 * @return pointer to byte stream, or null if none was supplied.
 	 */
-#if defined(XALAN_NO_NAMESPACES)
-	ostream*
-#else
-	std::ostream*
-#endif
+	StreamType*
 	getByteStream() const
 	{
 		return m_byteStream;
@@ -394,11 +388,7 @@ private:
 
 	XalanDOMString			m_fileName;
 
-#if defined(XALAN_NO_NAMESPACES)
-	ostream*				m_byteStream;
-#else
-	std::ostream*			m_byteStream;
-#endif
+	StreamType*				m_byteStream;
 
 	XalanDOMString			m_encoding;
 
@@ -412,6 +402,10 @@ private:
 
 	FormatterListener*		m_formatterListener;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

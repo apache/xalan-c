@@ -75,10 +75,14 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 ElemFallback::ElemFallback(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet& 					stylesheetTree,
-			const AttributeList&			atts,
+			const AttributeListType&		atts,
 			int 							lineNumber,
 			int 							columnNumber) :
 	ElemTemplateElement(constructionContext,
@@ -127,3 +131,7 @@ ElemFallback::execute(StylesheetExecutionContext&		executionContext) const
 
 	executeChildren(executionContext);
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

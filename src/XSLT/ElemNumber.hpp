@@ -83,6 +83,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 class AVT;
 class MutableNodeRefList;
 class XalanNumberFormat;
@@ -104,7 +108,7 @@ public:
 		eAny
 	};
 
-#if defined(XALAN_NO_NAMESPACES)
+#if defined(XALAN_NO_STD_NAMESPACE)
 	typedef vector<CountType>		CountTypeArrayType;
 #else
 	typedef std::vector<CountType>	CountTypeArrayType;
@@ -135,7 +139,7 @@ public:
 	ElemNumber(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
-			const AttributeList&			atts,
+			const AttributeListType&		atts,
 			int								lineNumber,
 			int								columnNumber,
 			unsigned long					id);
@@ -554,6 +558,10 @@ public:
 	
 private:
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

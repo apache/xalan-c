@@ -72,6 +72,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 /**
  * This primarily acts as a marker on the element 
  * stack to signal that whitespace should be preserved.
@@ -79,7 +83,7 @@
 ElemText::ElemText(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
-			const AttributeList&			atts,
+			const AttributeListType&		atts,
 			int								lineNumber,
 			int								columnNumber) :
 	ElemTemplateElement(constructionContext,
@@ -134,3 +138,7 @@ ElemText::childTypeAllowed(int	/* xslToken */) const
 {
 	return false;
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

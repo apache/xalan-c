@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -68,7 +68,15 @@
 
 
 
-class AttributeList;
+XALAN_DECLARE_XERCES_CLASS(AttributeList)
+
+
+
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
+typedef XERCES_CPP_NAMESPACE_QUALIFIER AttributeList	AttributeListType;
 
 
 
@@ -156,7 +164,7 @@ public:
 	GenerateEvent(
 			EventType				eventType,
 			const XalanDOMChar*		name,
-			AttributeList*			atts);
+			AttributeListType*		atts);
 
 	/** 
 	* Constructor for startElement, endElement events.
@@ -166,9 +174,9 @@ public:
 	* @param atts      SAX attribute list
 	*/
 	GenerateEvent(
-			EventType				eventType,
-			const XalanDOMString&	name,
-			const AttributeList*	atts = 0);
+			EventType					eventType,
+			const XalanDOMString&		name,
+			const AttributeListType*	atts = 0);
 
 	/** 
 	* Constructor for characters, cdate events.
@@ -241,8 +249,12 @@ public:
 	/** 
 	 * The current attribute list.
 	 */
-	const AttributeList*	m_pAtts;
+	const AttributeListType*	m_pAtts;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

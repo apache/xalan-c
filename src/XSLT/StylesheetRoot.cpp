@@ -113,6 +113,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 StylesheetRoot::StylesheetRoot(
         const XalanDOMString&			baseIdentifier,
 		StylesheetConstructionContext&	constructionContext) :
@@ -175,9 +179,7 @@ StylesheetRoot::postConstruction(StylesheetConstructionContext&		constructionCon
 
 	if (m_cdataSectionElems.size() > 0)
 	{
-#if !defined(XALAN_NO_NAMESPACES)
-		using std::sort;
-#endif
+		XALAN_USING_STD(sort)
 
 		sort(
 			m_cdataSectionElems.begin(),
@@ -466,14 +468,14 @@ StylesheetRoot::setupFormatterListener(
 void 
 StylesheetRoot::processOutputSpec(
 			const XalanDOMChar*				name, 
-			const AttributeList&			atts,
+			const AttributeListType&		atts,
 			StylesheetConstructionContext&	constructionContext)
 {
 	const unsigned int		nAttrs = atts.getLength();
 
 	bool					didSpecifyIndent = false;
 
-	const Locator* const	theLocator = constructionContext.getLocatorFromStack();
+	const LocatorType* const	theLocator = constructionContext.getLocatorFromStack();
 
 	for(unsigned int i = 0; i < nAttrs; i++)
 	{
@@ -709,9 +711,7 @@ StylesheetRoot::initDefaultRule(StylesheetConstructionContext&	constructionConte
 bool
 StylesheetRoot::isCDATASectionElementName(const XalanQName&		theQName) const
 {
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::find_if;
-#endif
+	XALAN_USING_STD(find_if)
 
 	return find_if(
 			m_cdataSectionElems.begin(),
@@ -859,3 +859,7 @@ StylesheetRoot::shouldStripSourceNode(
 
 	return strip;
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

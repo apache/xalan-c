@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -82,6 +82,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 class XPath;
 
 
@@ -104,7 +108,7 @@ public:
 	ElemVariable(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
-			const AttributeList&			atts,
+			const AttributeListType&		atts,
 			int								lineNumber,
 			int								columnNumber);
 
@@ -160,7 +164,7 @@ protected:
 	ElemVariable(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
-			const AttributeList&			atts,
+			const AttributeListType&		atts,
 			int								lineNumber,
 			int								columnNumber,
 			int								xslToken);
@@ -176,7 +180,7 @@ protected:
 	init(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
-			const AttributeList&			atts);
+			const AttributeListType&		atts);
 
 
 	const XalanQName*	m_qname;
@@ -197,6 +201,10 @@ private:
 
 	XalanNode*		m_varContext;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

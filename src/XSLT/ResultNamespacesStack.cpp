@@ -60,6 +60,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 ResultNamespacesStack::ResultNamespacesStack() :
 	m_resultNamespaces(1),
 	m_stackBegin(m_resultNamespaces.begin()),
@@ -209,7 +213,7 @@ ResultNamespacesStack::prefixIsPresentLocal(const XalanDOMString&	thePrefix)
 
 			const XalanDOMString&	thisPrefix = ns.getPrefix();
 
-			if(::equals(thePrefix, thisPrefix))
+			if(thePrefix == thisPrefix)
 			{
 				fResult = true;
 			}
@@ -238,3 +242,7 @@ ResultNamespacesStack::clear()
 
 	m_createNewContextStack.clear();
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

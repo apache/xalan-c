@@ -90,6 +90,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 class ElemTemplate;
 class ElemTemplateElement;
 class ElemTextLiteral;
@@ -109,7 +113,7 @@ class XALAN_XSLT_EXPORT StylesheetHandler : public FormatterListener
 
 public:
 
-#if defined(XALAN_NO_NAMESPACES)
+#if defined(XALAN_NO_STD_NAMESPACE)
 	typedef vector<ElemTemplateElement*>		ElemTemplateStackType;
 	typedef vector<ElemTemplateElement*>		ElemTextLiteralStackType;
 	typedef vector<bool>						BoolStackType;
@@ -299,7 +303,7 @@ public:
 	 *                any SAX document event.
 	 * @see org.xml.sax.Locator
 	 */
-	virtual void setDocumentLocator(const Locator* const	locator);
+	virtual void setDocumentLocator(const LocatorType* const	locator);
 
 	/**
 	 * Receive notification of the beginning of a document.
@@ -323,7 +327,7 @@ public:
 	 *
 	 * @exception SAXException
 	 */
-	virtual void endDocument ();
+	virtual void endDocument();
 	
 	/**
 	 * Receive notification of the beginning of an element.
@@ -346,7 +350,7 @@ public:
 	 * @see #endElement
 	 * @see org.xml.sax.AttributeList
 	 */
-	virtual void startElement (const XMLCh* const name, AttributeList& attrs);
+	virtual void startElement(const XMLCh* const name, AttributeListType& attrs);
 	
 	/**
 	 * Receive notification of the end of an element.
@@ -384,9 +388,9 @@ protected:
 	 */
 	bool
 	isAttrOK(
-			const XalanDOMChar*		attrName,
-			const AttributeList&	atts,
-			int						which);
+			const XalanDOMChar*			attrName,
+			const AttributeListType&	atts,
+			int							which);
 
 	/** 
 	 * Tell whether or not this is a xml:space attribute and, if so, process it.
@@ -400,11 +404,11 @@ protected:
 	 */
 	bool
 	processSpaceAttr(
-			const XalanDOMChar*				aname,
-			const AttributeList&			atts,
-			int								which,
-			const Locator*					locator,
-			bool&							fPreserve);
+			const XalanDOMChar*			aname,
+			const AttributeListType&	atts,
+			int							which,
+			const LocatorType*			locator,
+			bool&						fPreserve);
 
 	/** 
 	 * Tell whether or not this is a xml:space attribute and, if so, process it.
@@ -416,27 +420,27 @@ protected:
 	 */
 	bool
 	processSpaceAttr(
-			const AttributeList&			atts,
-			const Locator*					locator,
-			bool&							fPreserve);
+			const AttributeListType&	atts,
+			const LocatorType*			locator,
+			bool&						fPreserve);
 
 	/**
 	 * Process xsl:import.
 	 */
 	void
 	processImport(
-			const XalanDOMChar*		name,
-			const AttributeList&	atts,
-			const Locator*			locator);
+			const XalanDOMChar*			name,
+			const AttributeListType&	atts,
+			const LocatorType*			locator);
 
 	/**
 	 * Process xsl:include.
 	 */
 	void
 	processInclude(
-			const XalanDOMChar*		name,
-			const AttributeList&	atts,
-			const Locator*			locator);
+			const XalanDOMChar*			name,
+			const AttributeListType&	atts,
+			const LocatorType*			locator);
 
 	void
 	doCleanup();
@@ -454,55 +458,55 @@ private:
 	// Utility functions...
 	void
 	error(
-			const char*		theMessage,
-			const Locator*	theLocator) const;
+			const char*			theMessage,
+			const LocatorType*	theLocator) const;
 
 	void
 	illegalAttributeError(
 			const XalanDOMChar*		theElementName,
 			const XalanDOMChar*		theAttributeName,
-			const Locator*			theLocator) const;
+			const LocatorType*		theLocator) const;
 
 	void
 	error(
 			const XalanDOMChar*		theMessage1,
 			const XalanDOMChar*		theMessage2,
-			const Locator*			theLocator) const;
+			const LocatorType*		theLocator) const;
 
 	void
 	error(
 			const XalanDOMChar*		theMessage1,
 			const XalanDOMString&	theMessage2,
-			const Locator*			theLocator) const;
+			const LocatorType*		theLocator) const;
 
 	void
 	error(
 			const XalanDOMString&	theMessage1,
 			const XalanDOMChar*		theMessage2,
-			const Locator*			theLocator) const;
+			const LocatorType*		theLocator) const;
 
 	void
 	error(
 			const XalanDOMString&	theMessage1,
 			const XalanDOMString&	theMessage2,
-			const Locator*			theLocator) const;
+			const LocatorType*		theLocator) const;
 
 	void
 	warn(
 			const XalanDOMChar*		theMessage1,
 			const XalanDOMChar*		theMessage2,
-			const Locator*			theLocator) const;
+			const LocatorType*		theLocator) const;
 
 	void
 	warn(
 			const XalanDOMChar*		theMessage1,
 			const XalanDOMString&	theMessage2,
-			const Locator*			theLocator) const;
+			const LocatorType*		theLocator) const;
 
 	void
 	error(
 			const XalanDOMString&	theMessage,
-			const Locator*			theLocator) const;
+			const LocatorType*		theLocator) const;
 
 	void
 	processText(
@@ -519,32 +523,32 @@ private:
 
 	void
 	processTopLevelElement(
-			const XalanDOMChar*		name,
-			const AttributeList&	atts,
-			int						xslToken,
-			const Locator*			locator,
-			bool&					fPreserveSpace,
-			bool&					fSpaceAttrProcessed);
+			const XalanDOMChar*			name,
+			const AttributeListType&	atts,
+			int							xslToken,
+			const LocatorType*			locator,
+			bool&						fPreserveSpace,
+			bool&						fSpaceAttrProcessed);
 
 	void
 	processStylesheet(
-			const XalanDOMChar*		name,
-			const AttributeList&	atts,
-			const Locator*			locator,
-			bool&					fPreserveSpace,
-			bool&					fSpaceAttrProcessed);
+			const XalanDOMChar*			name,
+			const AttributeListType&	atts,
+			const LocatorType*			locator,
+			bool&						fPreserveSpace,
+			bool&						fSpaceAttrProcessed);
 
 	void
 	processPreserveStripSpace(
-			const XalanDOMChar*		name,
-			const AttributeList&	atts,
-			const Locator*			locator,
-			int						xslToken);
+			const XalanDOMChar*			name,
+			const AttributeListType&	atts,
+			const LocatorType*			locator,
+			int							xslToken);
 
 	void
 	appendChildElementToParent(
 			ElemTemplateElement*	elem,
-			const Locator*			locator);
+			const LocatorType*		locator);
 
 	void
 	appendChildElementToParent(
@@ -555,22 +559,22 @@ private:
 	appendChildElementToParent(
 			ElemTemplateElement*	parent,
 			ElemTemplateElement*	elem,
-			const Locator*			locator);
+			const LocatorType*		locator);
 
 	bool
 	inExtensionElement() const;
 
 	void
 	processExtensionElement(
-			const XalanDOMChar*		name,
-			const XalanDOMString&	localName,
-			const AttributeList&	atts,
-			const Locator*			locator);
+			const XalanDOMChar*			name,
+			const XalanDOMString&		localName,
+			const AttributeListType&	atts,
+			const LocatorType*			locator);
 
 	void
 	checkForOrAddVariableName(
 			const XalanQName&	theVariableName,
-			const Locator*		theLocator);
+			const LocatorType*	theLocator);
 
 	// Data members...
 
@@ -754,9 +758,9 @@ private:
 	 */
 	ElemTemplateElement*
 	initWrapperless(
-			const XalanDOMChar*		name,
-			const AttributeList&	atts,
-			const Locator*			locator);
+			const XalanDOMChar*			name,
+			const AttributeListType&	atts,
+			const LocatorType*			locator);
 
 	const XalanDOMString*
 	getNamespaceFromStack(const XalanDOMChar*	theName) const;
@@ -807,6 +811,10 @@ private:
 
 	static const XalanDOMString				s_emptyString;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

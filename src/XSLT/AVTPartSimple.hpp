@@ -77,6 +77,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 class StylesheetConstructionContext;
 
 
@@ -119,6 +123,10 @@ private:
 
 	const XalanDOMString::size_type		m_len;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -94,6 +94,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 XSLTProcessorEnvSupportDefault::XSLTProcessorEnvSupportDefault(XSLTProcessor*	theProcessor) :
 	XSLTProcessorEnvSupport(),
 	m_defaultSupport(),
@@ -155,10 +159,6 @@ XSLTProcessorEnvSupportDefault::uninstallExternalFunctionLocal(
 void
 XSLTProcessorEnvSupportDefault::reset()
 {
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::for_each;
-#endif
-
 	m_defaultSupport.reset();
 }
 
@@ -196,7 +196,7 @@ XSLTProcessorEnvSupportDefault::parseXML(
 
 			XSLTInputSource		inputSource(c_wstr(urlText));
 
-			EntityResolver* const	theResolver = 
+			EntityResolverType* const	theResolver = 
 				parserLiaison.getEntityResolver();
 
 			if (theResolver == 0)
@@ -207,7 +207,7 @@ XSLTProcessorEnvSupportDefault::parseXML(
 			}
 			else
 			{
-				const XalanAutoPtr<InputSource>		resolverInputSource =
+				const XalanAutoPtr<InputSourceType>		resolverInputSource =
 					theResolver->resolveEntity(0, c_wstr(urlText));
 
 				if (resolverInputSource.get() != 0)
@@ -289,7 +289,7 @@ XSLTProcessorEnvSupportDefault::extFunction(
 			const XalanDOMString&			functionName,
 			XalanNode*						context,
 			const XObjectArgVectorType&		argVec,
-			const Locator*					locator) const
+			const LocatorType*				locator) const
 {
 	return m_defaultSupport.extFunction(
 			executionContext,
@@ -380,3 +380,7 @@ XSLTProcessorEnvSupportDefault::problem(
 		return false;
 	}
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

@@ -76,11 +76,15 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 class XALAN_XSLT_EXPORT ResultNamespacesStack
 {
 public:
 
-#if defined(XALAN_NO_NAMESPACES)
+#if defined(XALAN_NO_STD_NAMESPACE)
 	typedef vector<bool>					BoolVectorType;
 #else
 	typedef std::vector<bool>				BoolVectorType;
@@ -183,6 +187,10 @@ private:
 
 	BoolVectorType					m_createNewContextStack;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

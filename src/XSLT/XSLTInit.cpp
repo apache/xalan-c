@@ -67,6 +67,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 unsigned long	XSLTInit::s_initCounter = 0;
 
 
@@ -129,3 +133,7 @@ XSLTInit::terminate()
 
 	Constants::terminate();
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

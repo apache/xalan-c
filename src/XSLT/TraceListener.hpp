@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -60,9 +60,17 @@
 // Base include file.  Must be first.
 #include "XSLTDefinitions.hpp"
 
+
+
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 class TracerEvent;
 class SelectionEvent;
 class GenerateEvent;
+
+
 
 class XALAN_XSLT_EXPORT TraceListener
 {
@@ -147,6 +155,10 @@ public:
 	};
 
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

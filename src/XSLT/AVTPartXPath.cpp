@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -66,6 +66,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 /**
  * Construct a simple AVT part.
  * @param val A pure string section of an AVT.
@@ -103,3 +107,7 @@ AVTPartXPath::evaluate(
 		xobj->str(buf);
 	}
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

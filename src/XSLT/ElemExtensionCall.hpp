@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -69,6 +69,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 class ExtensionNSHandler;
 class XalanQName;
 
@@ -93,7 +97,7 @@ public:
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
 			const XalanDOMChar*				name,
-			const AttributeList&			atts,
+			const AttributeListType&		atts,
 			int								lineNumber,
 			int								columnNumber,
 			ExtensionNSHandler&				ns);
@@ -112,6 +116,10 @@ private:
 
 	ExtensionNSHandler&			m_nsh;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

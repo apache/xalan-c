@@ -73,6 +73,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 XSLTResultTarget::XSLTResultTarget() :
 	m_fileName(),
 	m_byteStream(0),
@@ -115,11 +119,7 @@ XSLTResultTarget::XSLTResultTarget(const char*	fileName) :
 
 
 
-#if defined(XALAN_NO_NAMESPACES)
-XSLTResultTarget::XSLTResultTarget(ostream*		theStream) :
-#else
-XSLTResultTarget::XSLTResultTarget(std::ostream*	theStream) :
-#endif
+XSLTResultTarget::XSLTResultTarget(StreamType*	theStream) :
 	m_fileName(),
 	m_byteStream(theStream),
 	m_encoding(),
@@ -134,11 +134,7 @@ XSLTResultTarget::XSLTResultTarget(std::ostream*	theStream) :
 
 
 
-#if defined(XALAN_NO_NAMESPACES)
-XSLTResultTarget::XSLTResultTarget(ostream&		theStream) :
-#else
-XSLTResultTarget::XSLTResultTarget(std::ostream&	theStream) :
-#endif
+XSLTResultTarget::XSLTResultTarget(StreamType&	theStream) :
 	m_fileName(),
 	m_byteStream(&theStream),
 	m_encoding(),
@@ -229,3 +225,7 @@ XSLTResultTarget::XSLTResultTarget(FormatterListener&		flistener) :
 XSLTResultTarget::~XSLTResultTarget()
 {
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

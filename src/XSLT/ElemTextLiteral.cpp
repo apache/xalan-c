@@ -72,6 +72,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 ElemTextLiteral::ElemTextLiteral(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
@@ -134,3 +138,7 @@ ElemTextLiteral::execute(StylesheetExecutionContext&	executionContext) const
 		executionContext.charactersRaw(m_ch, 0, m_length);
     }
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

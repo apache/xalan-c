@@ -69,6 +69,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 class ResultTreeFragBase;
 
 
@@ -111,6 +115,10 @@ private:
 	// Data members...
 	const ResultTreeFragBase&	m_value;	
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

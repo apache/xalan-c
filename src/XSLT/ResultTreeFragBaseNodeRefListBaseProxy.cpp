@@ -60,7 +60,15 @@
 
 
 
+#include <cassert>
+
+
+
 #include <XPath/ResultTreeFragBase.hpp>
+
+
+
+XALAN_CPP_NAMESPACE_BEGIN
 
 
 
@@ -117,3 +125,7 @@ ResultTreeFragBaseNodeRefListBaseProxy::indexOf(const XalanNode*	theNode) const
 {
 	return theNode == &m_value ? 1 : 0;
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

@@ -65,6 +65,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 ElemEmpty::ElemEmpty(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
@@ -125,3 +129,7 @@ ElemEmpty::childTypeAllowed(int		/* xslToken */) const
 {
 	return false;
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

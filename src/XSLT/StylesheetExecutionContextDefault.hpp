@@ -106,6 +106,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 class XalanSourceTreeDocument;
 class XPathProcessor;
 class XSLTEngineImpl;
@@ -125,7 +129,7 @@ public:
 	typedef clock_t			ClockType;
 #endif
 
-#if defined(XALAN_NO_NAMESPACES)
+#if defined(XALAN_NO_STD_NAMESPACE)
 	typedef deque<const ElemTemplateElement*>			ElementRecursionStackType;
 	typedef vector<FormatterListener*>					FormatterListenerVectorType;
 	typedef vector<PrintWriter*>						PrintWriterVectorType;
@@ -824,11 +828,7 @@ public:
 			const XalanDOMString&		theEncoding);
 
 	virtual PrintWriter*
-#if defined(XALAN_NO_NAMESPACES)
-	createPrintWriter(ostream&			theStream);
-#else
-	createPrintWriter(std::ostream&		theStream);
-#endif
+	createPrintWriter(StreamType&	theStream);
 
 	virtual CountersTable&
 	getCountersTable();
@@ -893,7 +893,7 @@ public:
 			const XalanDOMString&			functionName,
 			XalanNode*						context,
 			const XObjectArgVectorType&		argVec,
-			const Locator*					locator);
+			const LocatorType*				locator);
 
 	virtual XalanDocument*
 	parseXML(
@@ -927,13 +927,13 @@ public:
 			XalanDocument*			doc,
 			const XalanDOMString&	name,
 			const XalanDOMString&	ref,
-			const Locator*			locator,
+			const LocatorType*		locator,
 			MutableNodeRefList&		nodelist);
 
 	virtual const XObjectPtr
 	getVariable(
 			const XalanQName&	name,
-			const Locator*		locator = 0);
+			const LocatorType*	locator = 0);
 
 	virtual const PrefixResolver*
 	getPrefixResolver() const;
@@ -976,37 +976,37 @@ public:
 	error(
 			const XalanDOMString&	msg,
 			const XalanNode* 		sourceNode,
-			const Locator* 			locator) const;
+			const LocatorType* 		locator) const;
 
 	virtual void
 	error(
 			const char*			msg,
 			const XalanNode* 	sourceNode,
-			const Locator* 		locator) const;
+			const LocatorType* 	locator) const;
 
 	virtual void
 	warn(
 			const XalanDOMString&	msg,
 			const XalanNode* 		sourceNode,
-			const Locator* 			locator) const;
+			const LocatorType* 		locator) const;
 
 	virtual void
 	warn(
 			const char*			msg,
 			const XalanNode* 	sourceNode,
-			const Locator* 		locator) const;
+			const LocatorType* 	locator) const;
 
 	virtual void
 	message(
 			const XalanDOMString&	msg,
 			const XalanNode* 	sourceNode,
-			const Locator* 		locator) const;
+			const LocatorType* 	locator) const;
 
 	virtual void
 	message(
 			const char*			msg,
 			const XalanNode* 	sourceNode,
-			const Locator* 		locator) const;
+			const LocatorType* 	locator) const;
 
 
 	class XPathCacheReturnFunctor
@@ -1190,6 +1190,10 @@ private:
 
 	static const DefaultCollationCompareFunctor		s_defaultCollationFunctor;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

@@ -72,6 +72,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 class ElemEmpty : public ElemTemplateElement
 {
 public:
@@ -128,6 +132,9 @@ private:
 };
 
 
+
+XALAN_CPP_NAMESPACE_END
+
+
+
 #endif	// XALAN_ELEMEMPTY_HEADER_GUARD
-
-

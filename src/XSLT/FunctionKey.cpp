@@ -83,10 +83,7 @@
 
 
 
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::set;
-#endif 
-
+XALAN_CPP_NAMESPACE_BEGIN
 
 
 
@@ -108,7 +105,7 @@ getNodeSet(
 			XalanDocument*			document,
 			const XalanDOMString&	keyname,
 			const XalanDOMString&	ref,
-			const Locator*			locator,
+			const LocatorType*		locator,
 			MutableNodeRefList&		theNodeRefList)
 {
 	assert(document != 0);
@@ -142,7 +139,7 @@ FunctionKey::execute(
 			XalanNode*				context,
 			const XObjectPtr		arg1,
 			const XObjectPtr		arg2,
-			const Locator*			locator) const
+			const LocatorType*		locator) const
 {
 	assert(arg1.null() == false && arg2.null() == false);
 
@@ -255,3 +252,7 @@ FunctionKey::getError() const
 {
 	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The key() function takes two arguments!"));
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

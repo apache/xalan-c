@@ -64,6 +64,7 @@
 #include <PlatformSupport/DOMStringHelper.hpp>
 
 
+XALAN_USING_XALAN(XalanDOMString)
 
 static XalanDOMString		ATTRNAME_CASEORDER;
 static XalanDOMString		ATTRNAME_COUNT;
@@ -183,6 +184,10 @@ static XalanDOMString		ELEMNAME_WHEN_WITH_PREFIX_STRING;
 static XalanDOMString		ELEMNAME_WITHPARAM_WITH_PREFIX_STRING;
 
 static XalanDOMString		PSEUDONAME_NODE;
+
+
+
+XALAN_CPP_NAMESPACE_BEGIN
 
 
 
@@ -553,3 +558,7 @@ Constants::terminate()
 
 	releaseMemory(::PSEUDONAME_NODE);
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

@@ -60,6 +60,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 XalanAVTPartSimpleAllocator::XalanAVTPartSimpleAllocator(size_type	theBlockCount) :
 	m_allocator(theBlockCount)
 {
@@ -89,3 +93,7 @@ XalanAVTPartSimpleAllocator::create(
 
 	return theResult;
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

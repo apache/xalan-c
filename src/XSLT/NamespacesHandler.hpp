@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 2000 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -80,6 +80,10 @@
 
 #include <XPath/NameSpace.hpp>
 #include <XPath/XalanQName.hpp>
+
+
+
+XALAN_CPP_NAMESPACE_BEGIN
 
 
 
@@ -232,7 +236,7 @@ public:
 	typedef XalanQName::NamespaceVectorType				NamespaceVectorType;
 	typedef XalanQName::NamespacesStackType				NamespacesStackType;
 
-#if defined(XALAN_NO_NAMESPACES)
+#if defined(XALAN_NO_STD_NAMESPACE)
 	typedef vector<Namespace>							NamespacesVectorType;
 
 	typedef vector<NamespaceExtended>					NamespaceExtendedVectorType;
@@ -486,21 +490,6 @@ private:
 	copyExcludeResultPrefixes(const NamespacesVectorType&	theExcludeResultPrefixes);
 
 	/**
-	 * Determine if a given namespace should be excluded.  For use during
-	 * stylesheet construction only.
-	 *
-	 * @param theXSLTNamespaceURI The namespace URI for XSLT.
-	 * @param parentNamespacesHandler The parent handler instance.
-	 * @param theNamespace The namespace.
-	 * @return true of the namespace should be excluded, false if not.
-	 */
-	bool
-	shouldExcludeResultNamespaceNode(
-			const XalanDOMString&		theXSLTNamespaceURI,
-			const NamespacesHandler&	parentNamespacesHandler,
-			const NameSpace&			theNamespace) const;
-
-	/**
 	 * Determine if a given namespace should be excluded as a result of
 	 * an exclude-result-prefixes declaration.
 	 *
@@ -548,6 +537,10 @@ private:
 
 	NamespaceAliasesMapType				m_namespaceAliases;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

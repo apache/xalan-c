@@ -84,6 +84,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 const MutableNodeRefList	KeyTable::s_dummyList;
 
 
@@ -337,3 +341,7 @@ KeyTable::processKeyDeclaration(
 		}
 	}  
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

@@ -78,11 +78,15 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 ElemLiteralResult::ElemLiteralResult(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
 			const XalanDOMChar*				name,
-			const AttributeList&			atts,
+			const AttributeListType&		atts,
 			int								lineNumber,
 			int								columnNumber) :
 	ElemUse(constructionContext,
@@ -103,7 +107,7 @@ ElemLiteralResult::ElemLiteralResult(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
 			const XalanDOMChar*				name,
-			const AttributeList&			atts,
+			const AttributeListType&		atts,
 			int								lineNumber,
 			int								columnNumber,
 			int								xslToken) :
@@ -126,7 +130,7 @@ ElemLiteralResult::init(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
 			const XalanDOMChar*				name,
-			const AttributeList&			atts)
+			const AttributeListType&		atts)
 {
 	assert(name != 0);
 
@@ -402,7 +406,7 @@ ElemLiteralResult::execute(StylesheetExecutionContext&	executionContext) const
 bool
 ElemLiteralResult::isAttrOK(
 			const XalanDOMChar*				attrName,
-			const AttributeList&			/* atts */,
+			const AttributeListType&		/* atts */,
 			int								/* which */,
 			StylesheetConstructionContext&	constructionContext) const
 {
@@ -438,3 +442,7 @@ ElemLiteralResult::isAttrOK(
 
     return isAttrOK;
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

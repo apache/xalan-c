@@ -60,6 +60,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 XalanElemApplyTemplatesAllocator::XalanElemApplyTemplatesAllocator(size_type	theBlockCount) :
 	m_allocator(theBlockCount)
 {
@@ -77,7 +81,7 @@ XalanElemApplyTemplatesAllocator::data_type*
 XalanElemApplyTemplatesAllocator::create(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
-			const AttributeList&			atts,
+			const AttributeListType&		atts,
 			int								lineNumber,
 			int								columnNumber)
 {
@@ -96,3 +100,7 @@ XalanElemApplyTemplatesAllocator::create(
 
 	return theResult;
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

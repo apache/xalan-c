@@ -73,13 +73,17 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 class XalanNumberingResourceBundle
 {
 public:
 
 	typedef unsigned long							NumberType;
 
-#if defined(XALAN_NO_NAMESPACES)
+#if defined(XALAN_NO_STD_NAMESPACE)
 	typedef vector<NumberType>						NumberTypeVectorType;
 	typedef vector<XalanDOMCharVectorType>			DigitsTableVectorType;
 #else
@@ -253,6 +257,10 @@ private:
 
 	NumberTypeVectorType	m_digitsTableTable;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

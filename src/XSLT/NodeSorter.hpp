@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -82,6 +82,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 class MutableNodeRefList;
 class StylesheetExecutionContext;
 class XalanNode;
@@ -112,7 +116,7 @@ public:
 		unsigned int	m_position;
 	};
 
-#if defined(XALAN_NO_NAMESPACES)
+#if defined(XALAN_NO_STD_NAMESPACE)
 	typedef vector<VectorEntry>			NodeVectorType;
 	typedef vector<NodeSortKey>			NodeSortKeyVectorType;
 #else
@@ -146,7 +150,7 @@ public:
 	/**
 	 * Return the results of a compare of two nodes.
 	 */
-#if defined(XALAN_NO_NAMESPACES)
+#if defined(XALAN_NO_STD_NAMESPACE)
 	struct XALAN_XSLT_EXPORT NodeSortKeyCompare : public binary_function<const NodeVectorType::value_type&, const NodeVectorType::value_type&, bool>
 #else
 	struct XALAN_XSLT_EXPORT NodeSortKeyCompare : public std::binary_function<const NodeVectorType::value_type&, const NodeVectorType::value_type&, bool>
@@ -229,7 +233,7 @@ public:
 
 	friend struct NodeSortKeyCompare;
 
-#if defined(XALAN_NO_NAMESPACES)
+#if defined(XALAN_NO_STD_NAMESPACE)
 	typedef	vector<double>		NumberResultsCacheVectorType;
 
 	typedef	vector<XObjectPtr>	StringResultsCacheVectorType;
@@ -264,6 +268,10 @@ private:
 
 	NodeVectorType			m_scratchVector;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

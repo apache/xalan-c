@@ -81,6 +81,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 NodeSorter::NodeSorter() :
 	m_numberResultsCache(),
 	m_stringResultsCache(),
@@ -112,9 +116,7 @@ NodeSorter::sort(StylesheetExecutionContext&	executionContext)
 					m_scratchVector,
 					m_keys);
 
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::stable_sort;
-#endif
+	XALAN_USING_STD(stable_sort)
 
 	// Use the stl sort algorithm, which will use our compare functor,
 	// which returns true if first less than second
@@ -338,9 +340,7 @@ NodeSorter::NodeSortKeyCompare::getNumberResult(
 	{
 		theCache[theKeyIndex].resize(m_nodes.size());
 
-#if !defined(XALAN_NO_NAMESPACES)
-		using std::fill;
-#endif
+		XALAN_USING_STD(fill)
 
 		// Fill with the dummy value...
 		fill(
@@ -406,3 +406,7 @@ NodeSorter::NodeSortKeyCompare::getStringResult(
 		return theCache[theKeyIndex][theEntry.m_position];
 	}
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

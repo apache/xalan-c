@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -170,10 +170,9 @@
 static void
 foo(XPathExecutionContext&	theExecutionContext)
 {
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::for_each;
-	using std::replace;
-#endif
+	XALAN_USING_STD(for_each)
+	XALAN_USING_STD(replace)
+
 	{
 		vector<XalanDOMString> theDOMStringVector;
 		vector<char> theCharVector;
@@ -379,10 +378,7 @@ foo(XPathExecutionContext&	theExecutionContext)
 	}
 
 	{
-#if !defined(XALAN_NO_NAMESPACES)
-		using std::sort;
-		using std::less;
-#endif
+		XALAN_UISNG_STD(sort)
 
 		StylesheetRoot::XalanQNameVectorType	theVector;
 
@@ -515,10 +511,8 @@ foo(XPathExecutionContext&	theExecutionContext)
 	}
 
 	{
-#if !defined(XALAN_NO_NAMESPACES)
-		using std::back_inserter;
-		using std::copy;
-#endif
+		XALAN_UISNG_STD(back_inserter)
+		XALAN_UISNG_STD(copy)
 
 		typedef MutableNodeRefList::addNodeInDocOrderFunctor	addNodeInDocOrderFunctor;
 

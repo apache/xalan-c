@@ -87,10 +87,14 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 ElemForEach::ElemForEach(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
-			const AttributeList&			atts,
+			const AttributeListType&		atts,
 			int								lineNumber,
 			int								columnNumber) :
 	ElemTemplateElement(constructionContext,
@@ -154,9 +158,7 @@ ElemForEach::ElemForEach(
 
 ElemForEach::~ElemForEach()
 {
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::for_each;
-#endif
+	XALAN_USING_STD(for_each)
 
 	for_each(m_sortElems.begin(),
 			 m_sortElems.end(),
@@ -169,8 +171,8 @@ void
 ElemForEach::processSortElement(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						theStylesheet,
-			const AttributeList&			atts,
-			const Locator*					locator)
+			const AttributeListType&		atts,
+			const LocatorType*				locator)
 {
 	const int	lineNumber = locator != 0 ? locator->getLineNumber() : -1;
 	const int	columnNumber = locator != 0 ? locator->getColumnNumber() : -1;
@@ -543,3 +545,7 @@ ElemForEach::transformSelectedChildren(
 				childNode);
 	}
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

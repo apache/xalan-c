@@ -71,10 +71,14 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 ElemParam::ElemParam(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
-			const AttributeList&			atts,
+			const AttributeListType&		atts,
 			int								lineNumber,
 			int								columnNumber) :
 	ElemVariable(constructionContext,
@@ -118,3 +122,7 @@ ElemParam::execute(StylesheetExecutionContext&		executionContext) const
 		}
 	}
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

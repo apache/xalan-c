@@ -60,6 +60,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 XalanElemEmptyAllocator::XalanElemEmptyAllocator(size_type	theBlockCount) :
 	m_allocator(theBlockCount)
 {
@@ -118,3 +122,7 @@ XalanElemEmptyAllocator::create(
 
 	return theResult;
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

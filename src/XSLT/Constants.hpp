@@ -70,6 +70,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 /**
  * Primary constants used in the XSLTProcessor classes.
  */
@@ -235,6 +239,11 @@ public:
 	// This is used for trace reporting.
 	static const XalanDOMString&	PSEUDONAME_NODE;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
+
 
 
 #endif	// XALAN_CONSTANTS_HEADER_GUARD

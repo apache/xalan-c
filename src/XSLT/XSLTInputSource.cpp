@@ -72,6 +72,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 XSLTInputSource::XSLTInputSource() :
 	InputSource(),
 	m_stream(0),
@@ -212,11 +216,7 @@ XSLTInputSource::XSLTInputSource(XalanNode*		node) :
 
 
 
-#if defined(XALAN_NO_NAMESPACES)
-XSLTInputSource::XSLTInputSource(istream*		stream) :
-#else
-XSLTInputSource::XSLTInputSource(std::istream*	stream) :
-#endif
+XSLTInputSource::XSLTInputSource(StreamType*	stream) :
 	InputSource(),
 	m_stream(stream),
 	m_node(0)
@@ -225,10 +225,10 @@ XSLTInputSource::XSLTInputSource(std::istream*	stream) :
 
 
 
-BinInputStream*
+BinInputStreamType*
 XSLTInputSource::makeStream() const
 {
-	BinInputStream*		theResult = 0;
+	BinInputStreamType*		theResult = 0;
 
 	if (m_stream != 0)
 	{
@@ -240,7 +240,7 @@ XSLTInputSource::makeStream() const
 
 		if (theSystemId != 0)
 		{
-			XMLURL	theURL;
+			XERCES_CPP_NAMESPACE_QUALIFIER XMLURL	theURL;
 
 			URISupport::getURLFromString(theSystemId, theURL);
 
@@ -250,3 +250,7 @@ XSLTInputSource::makeStream() const
 
 	return theResult;
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

@@ -60,6 +60,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 XResultTreeFragAllocator::XResultTreeFragAllocator(size_type	theBlockCount) :
 	m_allocator(theBlockCount)
 {
@@ -117,3 +121,7 @@ XResultTreeFragAllocator::reset()
 {
 	m_allocator.reset();
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

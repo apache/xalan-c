@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -72,14 +72,21 @@
 
 
 
-#include <XalanDOM/XalanDOMString.hpp>
+XALAN_DECLARE_XERCES_CLASS(Locator)
+
+
+
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
+typedef XERCES_CPP_NAMESPACE_QUALIFIER Locator	LocatorType;
 
 
 
 class ElemTemplateElement;
 class FormatterListener;
 class GenerateEvent;
-class Locator;
 class NodeRefListBase;
 class PrefixResolver;
 class PrintWriter;
@@ -90,6 +97,7 @@ class StylesheetExecutionContext;
 class StylesheetRoot;
 class TraceListener;
 class TracerEvent;
+class XalanDOMString;
 class XalanDocument;
 class XalanElement;
 class XalanNode;
@@ -428,13 +436,13 @@ public:
 	 * Report a message.
 	 * 
 	 * @param msg		 text of message to output
-	 * @param locator  A Locator for error reporting
+	 * @param locator  A LocatorType for error reporting
 	 * @param sourceNode node in source where message occurred
 	 */
 	virtual void
 	message(
 			const XalanDOMString&	msg,
-			const Locator&			locator,
+			const LocatorType&		locator,
 			const XalanNode*		sourceNode = 0) const = 0;
 
 	/**
@@ -454,13 +462,13 @@ public:
 	 * Report a warning.
 	 * 
 	 * @param msg		 text of message to output
-	 * @param locator  A Locator for error reporting
+	 * @param locator  A LocatorType for error reporting
 	 * @param sourceNode node in source where error occurred
 	 */
 	virtual void
 	warn(
 			const XalanDOMString&	msg,
-			const Locator&			locator,
+			const LocatorType&		locator,
 			const XalanNode*		sourceNode = 0) const = 0;
 
 
@@ -481,15 +489,19 @@ public:
 	 * Report an error and throw an exception.
 	 * 
 	 * @param msg		 text of message to output
-	 * @param locator  A Locator for error reporting
+	 * @param locator  A LocatorType for error reporting
 	 * @param sourceNode node in source where error occurred
 	 */
 	virtual void
 	error(
 			const XalanDOMString&	msg,
-			const Locator&			locator,
+			const LocatorType&		locator,
 			const XalanNode*		sourceNode = 0) const = 0;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

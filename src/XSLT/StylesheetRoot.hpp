@@ -76,6 +76,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 class StylesheetConstructionContext;
 class XalanText;
 class XSLTResultTarget;
@@ -91,7 +95,7 @@ class XALAN_XSLT_EXPORT StylesheetRoot : public Stylesheet
 {
 public:
 
-#if defined(XALAN_NO_NAMESPACES)
+#if defined(XALAN_NO_STD_NAMESPACE)
 	typedef vector<const XalanQName*> 		XalanQNameVectorType;
 	typedef vector<const XPath*>			XPathVectorType;
 #else
@@ -304,7 +308,7 @@ public:
 	void 
 	processOutputSpec(
 			const XalanDOMChar*				name, 
-			const AttributeList&			atts,
+			const AttributeListType&		atts,
 			StylesheetConstructionContext&	constructionContext);
 
 	/**
@@ -578,6 +582,10 @@ private:
     bool
     operator==(const StylesheetRoot&) const;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

@@ -88,6 +88,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 class ResultTreeFrag;
 
 
@@ -202,6 +206,10 @@ private:
 
 	mutable double					m_cachedNumberValue;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

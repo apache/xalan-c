@@ -89,7 +89,20 @@
 
 
 
-class AttributeList;
+XALAN_DECLARE_XERCES_CLASS(AttributeList)
+XALAN_DECLARE_XERCES_CLASS(Locator)
+
+
+
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
+typedef XERCES_CPP_NAMESPACE_QUALIFIER AttributeList	AttributeListType;
+typedef XERCES_CPP_NAMESPACE_QUALIFIER Locator			LocatorType;
+
+
+
 class ElemTemplate;
 class ElemTextLiteral;
 class NamespacesHandler;
@@ -146,7 +159,7 @@ public:
 	 * 
 	 * @return The Locator for the node.
 	 */
-	virtual const Locator*
+	virtual const LocatorType*
 	getLocator() const;
 
 	/** 
@@ -162,7 +175,7 @@ public:
 	virtual bool
 	isAttrOK(
 			const XalanDOMChar* 			attrName,
-			const AttributeList&			atts,
+			const AttributeListType&		atts,
 			int 							which,
 			StylesheetConstructionContext&	constructionContext) const;
 
@@ -178,7 +191,7 @@ public:
 	bool
 	processSpaceAttr(
 			const XalanDOMChar* 			aname,
-			const AttributeList&			atts,
+			const AttributeListType&		atts,
 			int 							which,
 			StylesheetConstructionContext&	constructionContext);
 
@@ -364,8 +377,8 @@ public:
 	processSortElement(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						theStylesheet,
-			const AttributeList&			atts,
-			const Locator*					locator = 0);
+			const AttributeListType&		atts,
+			const LocatorType*				locator = 0);
 
 	/**
 	 * Sets a flag indicating this is the default template
@@ -374,15 +387,6 @@ public:
 	 */
 	virtual void
 	setDefaultTemplate(bool		value);
-
-#if defined(XALAN_NO_NAMESPACES)
-	typedef map<XalanDOMString,
-				XalanDOMString,
-				less<XalanDOMString> >	StringToStringMapType;
-#else
-	typedef std::map<XalanDOMString,
-					 XalanDOMString>	StringToStringMapType;
-#endif
 
 	/** 
 	 * Get the namespaces handler for this element.
@@ -1005,6 +1009,10 @@ private:
 	bool
 	operator==(const ElemTemplateElement&) const;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

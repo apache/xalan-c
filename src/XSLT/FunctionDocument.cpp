@@ -76,6 +76,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 FunctionDocument::FunctionDocument()
 {
 }
@@ -97,7 +101,7 @@ doWarn(
 			const XalanDOMString&				uri,
 			const XalanDOMString&				base,
 			const XalanNode*					sourceNode,
-			const Locator*						locator)
+			const LocatorType*					locator)
 {
 	XalanDOMString	theMessage(TranscodeFromLocalCodePage("Cannot load requested document: "));
 
@@ -121,7 +125,7 @@ parseDoc(
 			const XalanDOMString&	uri,
 			const XalanDOMString&	base,
 			const XalanNode*		sourceNode,
-			const Locator*			locator)
+			const LocatorType*		locator)
 {
 	try
 	{
@@ -144,7 +148,7 @@ getDoc(
 			const XalanDOMString&				base,
 			BorrowReturnMutableNodeRefList&		mnl,
 			const XalanNode*					sourceNode,
-			const Locator*						locator)
+			const LocatorType*					locator)
 {
     XalanDocument*	newDoc = executionContext.getSourceDocument(uri);
 
@@ -182,7 +186,7 @@ getDoc(
 			const XalanDOMString&				uri,
 			BorrowReturnMutableNodeRefList&		mnl,
 			const XalanNode*					sourceNode,
-			const Locator*						locator)
+			const LocatorType*					locator)
 {
 	getDoc(executionContext, uri, XalanDOMString(), mnl, sourceNode, locator);
 }
@@ -195,7 +199,7 @@ getDoc(
 			const XalanDOMString&				uri,
 			const XalanNode*					resolver,
 			BorrowReturnMutableNodeRefList&		mnl,
-			const Locator*						locator)
+			const LocatorType*					locator)
 {
 	assert(resolver != 0);
 
@@ -223,7 +227,7 @@ FunctionDocument::execute(
 			XPathExecutionContext&	executionContext,
 			XalanNode*				context,			
 			const XObjectPtr		arg1,
-			const Locator*			locator) const
+			const LocatorType*		locator) const
 {
 	assert(arg1.null() == false);
 
@@ -251,7 +255,7 @@ FunctionDocument::execute(
 			XalanNode*				context,			
 			const XObjectPtr		arg1,
 			const XObjectPtr		arg2,
-			const Locator*			locator) const
+			const LocatorType*		locator) const
 {
 	assert(arg1.null() == false && arg2.null() == false);
 
@@ -318,7 +322,7 @@ FunctionDocument::doExecute(
 			const XObjectPtr				arg,
 			XalanDOMString*					base,
 			int								argCount,
-			const Locator*					locator) const
+			const LocatorType*				locator) const
 {
 	typedef XPathExecutionContext::BorrowReturnMutableNodeRefList	BorrowReturnMutableNodeRefList;
 
@@ -442,3 +446,7 @@ FunctionDocument::getError() const
 {
 	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The document() function accepts one or two arguments!"));
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

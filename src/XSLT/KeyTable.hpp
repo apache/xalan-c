@@ -85,6 +85,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 class KeyDeclaration;
 class NodeRefListBase;
 class PrefixResolver;
@@ -106,7 +110,7 @@ class KeyTable
 {
 public:
 
-#if defined(XALAN_NO_NAMESPACES)
+#if defined(XALAN_NO_STD_NAMESPACE)
 	typedef vector<KeyDeclaration>			KeyDeclarationVectorType;
 
 	typedef map<XalanDOMString,
@@ -194,6 +198,10 @@ private:
 
 	static const MutableNodeRefList		s_dummyList;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

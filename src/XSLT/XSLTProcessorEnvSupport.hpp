@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -68,6 +68,10 @@
 
 // Base class header file...
 #include <XPath/XPathEnvSupport.hpp>
+
+
+
+XALAN_CPP_NAMESPACE_BEGIN
 
 
 
@@ -154,7 +158,7 @@ public:
 			const XalanDOMString&			functionName,
 			XalanNode*						context,
 			const XObjectArgVectorType&		argVec,
-			const Locator*					locator) const = 0;
+			const LocatorType*				locator) const = 0;
 
 	virtual bool
 	problem(
@@ -183,6 +187,10 @@ private:
 	bool
 	operator==(const XSLTProcessorEnvSupport&) const;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -63,6 +63,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 XSLTProcessorException::XSLTProcessorException(
 		const XalanDOMString&	theMessage,
 		const XalanDOMString&	theURI,
@@ -76,7 +80,7 @@ XSLTProcessorException::XSLTProcessorException(
 
 
 XSLTProcessorException::XSLTProcessorException(
-			const Locator&			theLocator,
+			const LocatorType&		theLocator,
 			const XalanDOMString&	theMessage,
 			const XalanDOMString&	theType) :
 	XSLException(theLocator, theMessage, theType)
@@ -97,3 +101,7 @@ XSLTProcessorException::XSLTProcessorException(
 XSLTProcessorException::~XSLTProcessorException()
 {
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

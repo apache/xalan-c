@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 2000 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -75,6 +75,10 @@
 
 
 #include <XSLT/XSLTProcessorException.hpp>
+
+
+
+XALAN_CPP_NAMESPACE_BEGIN
 
 
 
@@ -174,7 +178,7 @@ public:
 		const ElemVariable*		m_variable;
 	};
 
-#if defined(XALAN_NO_NAMESPACES)
+#if defined(XALAN_NO_STD_NAMESPACE)
 	typedef vector<ParamsVectorEntry>		ParamsVectorType;
 	typedef vector<const ElemVariable*>		RecursionGuardStackType;
 #else
@@ -501,7 +505,7 @@ public:
 		const ElemTemplateElement*	m_element;
 	};
 
-#if defined(XALAN_NO_NAMESPACES)
+#if defined(XALAN_NO_STD_NAMESPACE)
 	typedef vector<StackEntry>			VariableStackStackType;
 #else
 	typedef std::vector<StackEntry>		VariableStackStackType;
@@ -588,6 +592,10 @@ private:
 	 */
 	RecursionGuardStackType		m_guardStack;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

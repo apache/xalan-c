@@ -60,6 +60,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 XalanElemTextLiteralAllocator::XalanElemTextLiteralAllocator(size_type	theBlockCount) :
 	m_allocator(theBlockCount)
 {
@@ -104,3 +108,7 @@ XalanElemTextLiteralAllocator::create(
 
 	return theResult;
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

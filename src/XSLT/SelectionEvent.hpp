@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -69,6 +69,11 @@
 
 
 #include <XPath/XObject.hpp>
+
+
+
+XALAN_CPP_NAMESPACE_BEGIN
+
 
 
 class XalanNode;
@@ -160,6 +165,10 @@ private:
 	SelectionEvent&
 	operator=(const SelectionEvent&	other);
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

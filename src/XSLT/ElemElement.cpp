@@ -74,10 +74,14 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 ElemElement::ElemElement(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
-			const AttributeList&			atts,
+			const AttributeListType&		atts,
 			int								lineNumber,
 			int								columnNumber) :
 	ElemUse(constructionContext,
@@ -450,3 +454,7 @@ ElemElement::getParentDefaultNamespace() const
 		}
 	}
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

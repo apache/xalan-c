@@ -117,6 +117,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 StylesheetExecutionContextDefault::XalanNumberFormatFactory			StylesheetExecutionContextDefault::s_defaultXalanNumberFormatFactory;
 
 StylesheetExecutionContextDefault::XalanNumberFormatFactory*		StylesheetExecutionContextDefault::s_xalanNumberFormatFactory =
@@ -1132,9 +1136,7 @@ StylesheetExecutionContextDefault::traceSelect(
 bool
 StylesheetExecutionContextDefault::findOnElementRecursionStack(const ElemTemplateElement*	theElement) const
 {
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::find;
-#endif
+	XALAN_USING_STD(find)
 
 	const ElementRecursionStackType::const_iterator	i =
 				find(m_elementRecursionStack.begin(),
@@ -1575,7 +1577,7 @@ StylesheetExecutionContextDefault::DefaultCollationCompareFunctor::operator()(
 			const XalanDOMChar*		theRHS,
 			eCaseOrder				/* theCaseOrder */) const
 {
-	return ::collationCompare(theLHS, theRHS);
+	return XALAN_CPP_NAMESPACE_QUALIFIER collationCompare(theLHS, theRHS);
 }
 
 
@@ -1790,7 +1792,7 @@ StylesheetExecutionContextDefault::extFunction(
 			const XalanDOMString&			functionName,
 			XalanNode*						context,
 			const XObjectArgVectorType&		argVec,
-			const Locator*					locator)
+			const LocatorType*				locator)
 {
 	return m_xpathExecutionContextDefault.extFunction(theNamespace, functionName, context, argVec, locator);
 }
@@ -1873,7 +1875,7 @@ StylesheetExecutionContextDefault::getNodeSetByKey(
 			XalanDocument*			doc,
 			const XalanDOMString&	name,
 			const XalanDOMString&	ref,
-			const Locator*			locator,
+			const LocatorType*		locator,
 			MutableNodeRefList&		nodelist)
 {
 	assert(m_stylesheetRoot != 0);
@@ -1899,7 +1901,7 @@ StylesheetExecutionContextDefault::getNodeSetByKey(
 const XObjectPtr
 StylesheetExecutionContextDefault::getVariable(
 			const XalanQName&	name,
-			const Locator*		locator)
+			const LocatorType*	locator)
 {
 	bool				fFound;
 
@@ -2069,11 +2071,7 @@ StylesheetExecutionContextDefault::createPrintWriter(
 
 
 PrintWriter*
-#if defined(XALAN_NO_NAMESPACES)
-StylesheetExecutionContextDefault::createPrintWriter(ostream&	theStream)
-#else
-StylesheetExecutionContextDefault::createPrintWriter(std::ostream&	theStream)
-#endif
+StylesheetExecutionContextDefault::createPrintWriter(StreamType&	theStream)
 {
 	XalanOutputStream* const		theOutputStream =
 		new XalanStdOutputStream(theStream);
@@ -2181,7 +2179,7 @@ void
 StylesheetExecutionContextDefault::error(
 			const XalanDOMString&	msg,
 			const XalanNode* 		sourceNode,
-			const Locator*			locator) const
+			const LocatorType*		locator) const
 {
 	assert(m_xsltProcessor != 0);
 
@@ -2217,7 +2215,7 @@ void
 StylesheetExecutionContextDefault::error(
 			const char*			msg,
 			const XalanNode*	sourceNode,
-			const Locator*		locator) const
+			const LocatorType*	locator) const
 {
 	error(TranscodeFromLocalCodePage(msg), sourceNode, locator);
 }
@@ -2246,7 +2244,7 @@ void
 StylesheetExecutionContextDefault::warn(
 			const XalanDOMString&	msg,
 			const XalanNode* 		sourceNode,
-			const Locator*			locator) const
+			const LocatorType*		locator) const
 {
 	assert(m_xsltProcessor != 0);
 
@@ -2282,7 +2280,7 @@ void
 StylesheetExecutionContextDefault::warn(
 			const char*			msg,
 			const XalanNode*	sourceNode,
-			const Locator*		locator) const
+			const LocatorType*	locator) const
 {
 	warn(TranscodeFromLocalCodePage(msg), sourceNode, locator);
 }
@@ -2311,7 +2309,7 @@ void
 StylesheetExecutionContextDefault::message(
 			const XalanDOMString&	msg,
 			const XalanNode* 		sourceNode,
-			const Locator*			locator) const
+			const LocatorType*		locator) const
 {
 	assert(m_xsltProcessor != 0);
 
@@ -2347,7 +2345,7 @@ void
 StylesheetExecutionContextDefault::message(
 			const char*			msg,
 			const XalanNode*	sourceNode,
-			const Locator*		locator) const
+			const LocatorType*	locator) const
 {
 	message(TranscodeFromLocalCodePage(msg), sourceNode, locator);
 }
@@ -2493,9 +2491,7 @@ StylesheetExecutionContextDefault::XPathCacheReturnFunctor::operator()(const XPa
 void
 StylesheetExecutionContextDefault::clearXPathCache()
 {
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::for_each;
-#endif
+	XALAN_USING_STD(for_each)
 
 	assert(m_matchPatternCache.empty() == true || m_xsltProcessor != 0);
 
@@ -2575,9 +2571,7 @@ StylesheetExecutionContextDefault::addToXPathCache(
 void
 StylesheetExecutionContextDefault::cleanUpTransients()
 {
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::for_each;
-#endif
+	XALAN_USING_STD(for_each)
 
 	for_each(m_formatterListeners.begin(),
 			 m_formatterListeners.end(),
@@ -2611,3 +2605,7 @@ StylesheetExecutionContextDefault::cleanUpTransients()
 
 	assert(m_matchPatternCache.empty() == true);
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

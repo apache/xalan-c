@@ -79,6 +79,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 template<class VectorType, class MemberFunctionType>
 const typename VectorType::value_type*
 find(
@@ -452,7 +456,7 @@ NamespacesHandler::processExcludeResultPrefixes(
 
 		if(equalsIgnoreCaseASCII(thePrefix, Constants::ATTRVAL_DEFAULT_PREFIX) == true)
 		{
-			::clear(thePrefix);
+			thePrefix.clear();
 		}
 
 		const XalanDOMString* const		theNamespaceURI =
@@ -498,7 +502,7 @@ NamespacesHandler::processExtensionElementPrefixes(
 
 		if(equalsIgnoreCaseASCII(thePrefix, Constants::ATTRVAL_DEFAULT_PREFIX) == true)
 		{
-			::clear(thePrefix);
+			thePrefix.clear();
 		}
 
 		const XalanDOMString* const		theNamespace =
@@ -652,26 +656,6 @@ NamespacesHandler::outputResultNamespaces(
 	}
 }
 
-
-#if 0
-bool
-NamespacesHandler::shouldExcludeResultNamespaceNode(
-			const XalanDOMString&		theXSLTNamespaceURI,
-			const NamespacesHandler&	stylesheetNamespacesHandler,
-			const NameSpace&			theNamespace) const
-{
-	const XalanDOMString&	theURI = theNamespace.getURI();
-
-	if(shouldExcludeResultNamespaceNode(theXSLTNamespaceURI, theURI) == true)
-	{
-		return true;
-	}
-	else
-	{
-		return stylesheetNamespacesHandler.isExcludedNamespaceURI(theURI);
-	}
-}
-#endif
 
 
 bool
@@ -957,3 +941,7 @@ NamespacesHandler::copyExcludeResultPrefixes(const NamespacesVectorType&	theExcl
 		}
 	}
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

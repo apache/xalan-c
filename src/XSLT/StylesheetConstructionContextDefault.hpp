@@ -120,6 +120,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 class XPathEnvSupport;
 class XPathFactory;
 class XPathProcessor;
@@ -200,7 +204,7 @@ public:
 	error(
 			const XalanDOMString&	msg,
 			const XalanNode* 		sourceNode,
-			const Locator* 			locator) const;
+			const LocatorType* 		locator) const;
 
 	virtual void
 	error(
@@ -212,7 +216,7 @@ public:
 	error(
 			const char*			msg,
 			const XalanNode* 	sourceNode,
-			const Locator* 		locator) const;
+			const LocatorType* 	locator) const;
 
 	virtual void
 	warn(
@@ -224,7 +228,7 @@ public:
 	warn(
 			const XalanDOMString&	msg,
 			const XalanNode* 		sourceNode,
-			const Locator* 			locator) const;
+			const LocatorType* 		locator) const;
 
 	virtual void
 	warn(
@@ -236,7 +240,7 @@ public:
 	warn(
 			const char*			msg,
 			const XalanNode* 	sourceNode,
-			const Locator* 		locator) const;
+			const LocatorType* 	locator) const;
 
 	virtual void
 	message(
@@ -248,7 +252,7 @@ public:
 	message(
 			const XalanDOMString&	msg,
 			const XalanNode* 		sourceNode,
-			const Locator* 			locator) const;
+			const LocatorType*		locator) const;
 
 	virtual void
 	message(
@@ -260,7 +264,7 @@ public:
 	message(
 			const char*			msg,
 			const XalanNode* 	sourceNode,
-			const Locator* 		locator) const;
+			const LocatorType* 	locator) const;
 
 	// These interfaces are inherited from StylesheetConstructionContext...
 
@@ -302,40 +306,40 @@ public:
 
 	virtual XPath*
 	createMatchPattern(
-			const Locator*			locator,
+			const LocatorType*		locator,
 			const XalanDOMString&	str,
 			const PrefixResolver&	resolver);
 
 	virtual XPath*
 	createMatchPattern(
-			const Locator*			locator,
+			const LocatorType*		locator,
 			const XalanDOMChar*		str,
 			const PrefixResolver&	resolver);
 
 	virtual XPath*
 	createXPath(
-			const Locator*			locator,
+			const LocatorType*		locator,
 			const XalanDOMString&	str,
 			const PrefixResolver&	resolver);
 
 	virtual XPath*
 	createXPath(
-			const Locator*				locator,
+			const LocatorType*			locator,
 			const XalanDOMChar*			str,
 			XalanDOMString::size_type	len,
 			const PrefixResolver&		resolver);
 
 	virtual XPath*
 	createXPath(
-			const Locator*			locator,
+			const LocatorType*		locator,
 			const XalanDOMChar*		str,
 			const PrefixResolver&	resolver);
 
-	virtual const Locator*
+	virtual const LocatorType*
 	getLocatorFromStack() const;
 
 	virtual void
-	pushLocatorOnStack(const Locator*	locator);
+	pushLocatorOnStack(const LocatorType*	locator);
 
 	virtual void
 	popLocatorStack();
@@ -346,26 +350,26 @@ public:
 	virtual XalanDocument*
 	parseXML(
 			const XalanDOMString&	urlString,
-			DocumentHandler*		docHandler, 
+			DocumentHandlerType*	docHandler, 
 			XalanDocument*			docToRegister);
 
 	virtual bool
 	isXMLSpaceAttribute(
 			const XalanDOMChar*		theAttributeName,
 			const Stylesheet&		theStylesheet,
-			const Locator*			theLocator = 0);
+			const LocatorType*		theLocator = 0);
 
 	virtual bool
 	isXSLUseAttributeSetsAttribute(
 			const XalanDOMChar*		theAttributeName,
 			const Stylesheet&		theStylesheet,
-			const Locator*			theLocator = 0);
+			const LocatorType*		theLocator = 0);
 
 	virtual bool
 	isValidQName(
 			const XalanDOMChar*		theName,
 			const Stylesheet&		theStylesheet,
-			const Locator*			theLocator = 0);
+			const LocatorType*		theLocator = 0);
 
 	virtual eElementToken
 	getElementToken(const XalanDOMString&	name) const;
@@ -398,10 +402,10 @@ public:
 
 	virtual const AVT*
 	createAVT(
-			const Locator*					locator,
-			const XalanDOMChar*				name,
-			const XalanDOMChar*				stringedValue,
-			const PrefixResolver&			resolver);
+			const LocatorType*		locator,
+			const XalanDOMChar*		name,
+			const XalanDOMChar*		stringedValue,
+			const PrefixResolver&	resolver);
 
 	virtual const AVTPart*
 	createAVTPart(
@@ -410,7 +414,7 @@ public:
 
 	virtual const AVTPart*
 	createAVTPart(
-			const Locator*				locator,
+			const LocatorType*			locator,
 			const XalanDOMChar*			str,
 			XalanDOMString::size_type	len,
 			const PrefixResolver&		resolver);
@@ -425,14 +429,14 @@ public:
 	createXalanQName(
 			const XalanDOMString&		qname,
 			const NamespacesStackType&	namespaces,
-			const Locator*				locator = 0,
+			const LocatorType*			locator = 0,
 			bool						fUseDefault = false);
 
 	virtual const XalanQName*
 	createXalanQName(
 			const XalanDOMChar*			qname,
 			const NamespacesStackType&	namespaces,
-			const Locator*				locator = 0,
+			const LocatorType*			locator = 0,
 			bool						fUseDefault = false);
 
 	virtual const XalanQName**
@@ -440,22 +444,22 @@ public:
 			size_type&					count,
 			const XalanDOMChar*			qnameTokens,
 			const NamespacesStackType&	namespaces,
-			const Locator*				locator = 0,
+			const LocatorType*			locator = 0,
 			bool						fUseDefault = false);
 
 	virtual ElemTemplateElement*
 	createElement(
-			int						token,
-			Stylesheet&				stylesheetTree,
-			const AttributeList&	atts,
-			const Locator*			locator = 0);
+			int							token,
+			Stylesheet&					stylesheetTree,
+			const AttributeListType&	atts,
+			const LocatorType*			locator = 0);
 
 	virtual ElemTemplateElement*
 	createElement(
-			Stylesheet&				stylesheetTree,
-			const XalanDOMChar*		name,
-			const AttributeList&	atts,
-			const Locator*			locator = 0);
+			Stylesheet&					stylesheetTree,
+			const XalanDOMChar*			name,
+			const AttributeListType&	atts,
+			const LocatorType*			locator = 0);
 
 	virtual ElemTemplateElement*
 	createElement(
@@ -464,20 +468,20 @@ public:
 			XalanDOMString::size_type	length,
 			bool						preserveSpace,
             bool						disableOutputEscaping,
-			const Locator*				locator = 0);
+			const LocatorType*			locator = 0);
 
 	virtual ElemTemplateElement*
 	createElement(
-			Stylesheet&				stylesheetTree,
-			const XalanDOMChar*		name,
-			const AttributeList&	atts,
-			ExtensionNSHandler&		handler,
-			const Locator*			locator = 0);
+			Stylesheet&					stylesheetTree,
+			const XalanDOMChar*			name,
+			const AttributeListType&	atts,
+			ExtensionNSHandler&			handler,
+			const LocatorType*			locator = 0);
 
 	static eElementToken
 	getElementNameToken(const XalanDOMString&	name);
 
-#if defined(XALAN_NO_NAMESPACES)
+#if defined(XALAN_NO_STD_NAMESPACE)
 	typedef vector<StylesheetRoot*>			StylesheetVectorType;
 	typedef vector<ElemTemplateElement*>	ElemTemplateElementVectorType;
 #else
@@ -707,6 +711,10 @@ private:
 
 	static const ElementTokenTableEntry&	s_elementTokenTableDummy;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

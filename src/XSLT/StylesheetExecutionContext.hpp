@@ -104,6 +104,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 class CountersTable;
 class ElemTemplate;
 class ElemTemplateElement;
@@ -144,6 +148,12 @@ class XResultTreeFrag;
 class XALAN_XSLT_EXPORT StylesheetExecutionContext : public XPathExecutionContext
 {
 public:
+
+#if defined(XALAN_NO_STD_NAMESPACE)
+	typedef ostream			StreamType;
+#else
+	typedef std::ostream	StreamType;
+#endif
 
 	typedef size_t	size_type;
 
@@ -691,7 +701,7 @@ public:
 		const XPath*					m_xpath;
 	};
 
-#if defined(XALAN_NO_NAMESPACES)
+#if defined(XALAN_NO_STD_NAMESPACE)
 	typedef vector<TopLevelArg>			ParamVectorType;
 #else
 	typedef std::vector<TopLevelArg>	ParamVectorType;
@@ -1768,15 +1778,11 @@ public:
 	/**
 	 * Create a PrintWriter using the provided ostream instance.
 	 * 
-	 * @param ostream The output stream for the PrintWriter.
+	 * @param theStream The output stream for the PrintWriter.
 	 * @return The new instance.
 	 */
 	virtual PrintWriter*
-#if defined(XALAN_NO_NAMESPACES)
-	createPrintWriter(ostream&			theStream) = 0;
-#else
-	createPrintWriter(std::ostream&		theStream) = 0;
-#endif
+	createPrintWriter(StreamType&	theStream) = 0;
 
 	/**
 	 * Get the counters table, which is a table of cached
@@ -1868,7 +1874,7 @@ public:
 			const XalanDOMString&			functionName,
 			XalanNode*						context,
 			const XObjectArgVectorType&		argVec,
-			const Locator*					locator) = 0;
+			const LocatorType*				locator) = 0;
 
 	virtual XalanDocument*
 	parseXML(
@@ -1902,13 +1908,13 @@ public:
 			XalanDocument*			doc,
 			const XalanDOMString&	name,
 			const XalanDOMString&	ref,
-			const Locator*			locator,
+			const LocatorType*		locator,
 			MutableNodeRefList&		nodelist) = 0;
 
 	virtual const XObjectPtr
 	getVariable(
 			const XalanQName&	name,
-			const Locator*		locator = 0) = 0;
+			const LocatorType*	locator = 0) = 0;
 
 	virtual const PrefixResolver*
 	getPrefixResolver() const = 0;
@@ -1954,38 +1960,42 @@ public:
 	error(
 			const XalanDOMString&	msg,
 			const XalanNode* 		sourceNode,
-			const Locator* 			locator) const = 0;
+			const LocatorType* 		locator) const = 0;
 
 	virtual void
 	error(
 			const char*			msg,
 			const XalanNode* 	sourceNode,
-			const Locator* 		locator) const = 0;
+			const LocatorType* 	locator) const = 0;
 
 	virtual void
 	warn(
 			const XalanDOMString&	msg,
 			const XalanNode* 		sourceNode = 0,
-			const Locator* 			locator = 0) const = 0;
+			const LocatorType* 		locator = 0) const = 0;
 
 	virtual void
 	warn(
 			const char*			msg,
 			const XalanNode* 	sourceNode = 0,
-			const Locator* 		locator = 0) const = 0;
+			const LocatorType* 	locator = 0) const = 0;
 
 	virtual void
 	message(
 			const XalanDOMString&	msg,
 			const XalanNode* 		sourceNode = 0,
-			const Locator* 			locator = 0) const = 0;
+			const LocatorType* 		locator = 0) const = 0;
 
 	virtual void
 	message(
 			const char*			msg,
 			const XalanNode* 	sourceNode = 0,
-			const Locator* 		locator = 0) const = 0;
+			const LocatorType* 	locator = 0) const = 0;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

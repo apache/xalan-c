@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -78,6 +78,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 class XSLTProcessor;
 
 
@@ -122,20 +126,6 @@ ExtensionNSHandler::ExtensionNSHandler(const XalanDOMString&	namespaceUri) :
 
 
 
-/**
- * Construct a new extension namespace handler given all the information
- * needed. 
- * 
- * @param xslp				 handle to the XSL processor that I'm working for
- * @param namespaceUri the extension namespace URI that I'm implementing
- * @param elemNames		string containing list of elements of extension NS
- * @param funcNames		string containing list of functions of extension NS
- * @param lang				 language of code implementing the extension
- * @param srcURL			 value of src attribute (if any) - treated as a URL
- *										 or a classname depending on the value of lang. If
- *										 srcURL is not null, then scriptSrc is ignored.
- * @param scriptSrc		the actual script code (if any)
- */
 ExtensionNSHandler::ExtensionNSHandler (
 			const XalanDOMString& namespaceUri,
 			const XalanDOMString& elemNames,
@@ -204,52 +194,14 @@ ExtensionNSHandler::isElementAvailable(const XalanDOMString&	element) const
 
 void
 ExtensionNSHandler::processElement(
-			StylesheetExecutionContext&		executionContext,
-			const XalanDOMString&			localPart,
+			StylesheetExecutionContext&		/* executionContext */,
+			const XalanDOMString&			/* localPart */,
 			const XalanElement*				/* element */,
 			Stylesheet&						/* stylesheetTree */, 
 			const XalanNode*				/* sourceTree */,
 			const XalanNode*				/* sourceNode */,
 			const XalanQName&				/* mode */)
 {
-	XObjectPtr	result;
-
-	if (!m_componentStarted) 
-	{
-		try 
-		{
-			startupComponent();
-
-			ArgVectorType	argv;
-			
-//			XSLProcessorContext xpc(processor,
-//					stylesheetTree, sourceTree, sourceNode, mode);
-			/*
-				java:
-				Vector argv = new Vector (2);
-				argv.addElement (xpc);
-				argv.addElement (element);
-			*/
-				// $$$ ToDo: There's no way this will ever work...
-//				argv.push_back(static_cast<void *>(&xpc));
-//				argv.push_back(static_cast<void *>(&element));
-			result = ExtensionFunctionHandler::callFunction (localPart, argv);
-		}
-		// catch (XPathProcessorException e) 
-		catch (...) 
-		{
-			/*
-				e.printStackTrace ();
-				throw new XSLProcessorException (e.getMessage (), e);
-			*/
-			//@@ TODO: Error reporting, or throw
-		} 
-	}
-
-	if (result.null() == false) 
-	{
-		executionContext.outputToResultTree(*result, 0);
-	}
 }
 
 
@@ -257,20 +209,6 @@ ExtensionNSHandler::processElement(
 void
 ExtensionNSHandler::startupComponent()
 {
-	if (!m_componentDescLoaded) 
-	{
-		try 
-		{
-			loadComponentDescription();
-		}
-		catch (...) 
-		// catch (Exception e) 
-		{
-			// throw new XPathProcessorException (e.getMessage (), e);
-			//@@ TODO: Error reporting, or throw
-		}
-	}
-
 	ExtensionFunctionHandler::startupComponent();
 }
 
@@ -279,58 +217,7 @@ ExtensionNSHandler::startupComponent()
 void
 ExtensionNSHandler::loadComponentDescription()
 {
-	// First try treaing the URI of the extension as a fully qualified
-	// class name; if it works then go with treating this an extension
-	// implemented in "javaclass" for with that class being the srcURL.
-	// forget about setting elements and functions in that case - so if
-	// u do extension-{element,function}-available then u get false, 
-	// but that's ok.
 	assert(0);		// Don't try this in C++
-	// @@ How to do this in C++ ??
-/*
-	try {
-		String cname = namespaceUri.startsWith ("class:") ?
-										 namespaceUri.substring (6) : namespaceUri;
-		Class.forName (cname); // does it load?
-		setScript ("javaclass", namespaceUri, null);
-		m_componentDescLoaded = true;
-		return;
-	} catch (Exception e) {
-		// oops, it failed .. ok, so this path ain't gonna pan out. shucks.
-	}
-
-	// parse the document at the URI of the extension, if any
-	URL url = m_XSLProcessor.getURLFromString(namespaceUri,
-																	m_XSLProcessor.m_stylesheetRoot.m_baseIdent);
-	
-	m_XSLProcessor.m_parserLiaison.parse(new InputSource(url.toString()));
-	Document compSpec = m_XSLProcessor.m_parserLiaison.getDocument();
-	Element componentElement = compSpec.getDocumentElement ();
-
-	// determine the functions and elements of this component
-	setElements (componentElement.getAttribute ("elements"));
-	setFunctions (componentElement.getAttribute ("functions"));
-
-	// is there an lxslt:script element child? [NOTE THAT THIS IS NOT
-	// PROPER NAMESPACE-WISE .. I'll FIX IT LATER. .. Sanjiva 8/20/99.]
-	NodeList nl = componentElement.getElementsByTagName ("lxslt:script");
-	switch (nl.getLength ()) 
-	{
-	case 0:
-		break;
-	case 1:
-		Element scriptElem = (Element) nl.item (0);
-		String lang = scriptElem.getAttribute ("lang");
-		Attr srcURLAttr = scriptElem.getAttributeNode ("src");
-		String srcURL = (srcURLAttr == null) ? null : srcURLAttr.getValue ();
-		String src = getScriptString (scriptElem);
-		setScript (lang, srcURL, src);
-		break;
-	default:
-		throw new XSLProcessorException ("too many <script>s in component");
-	}
-	m_componentDescLoaded = true;
-*/
 }
 
 
@@ -338,21 +225,9 @@ ExtensionNSHandler::loadComponentDescription()
 XalanDOMString
 ExtensionNSHandler::getScriptString(const XalanElement&		elem)
 {
-	XalanDOMString strBuf;
-
-	for (const XalanNode*	n = elem.getFirstChild (); n != 0; n = n->getNextSibling())
-	{
-		switch (n->getNodeType()) 
-		{
-		case XalanNode::TEXT_NODE:
-		case XalanNode::CDATA_SECTION_NODE:
-			strBuf += n->getNodeValue();
-			break;
-
-		default:
-			break;
-		}
-	}
-
-	return strBuf;
+	return XalanDOMString();
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

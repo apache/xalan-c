@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -69,6 +69,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 class XalanDOMString;
 class XalanNode;
 class PrefixResolver;
@@ -104,6 +108,10 @@ public:
 			const PrefixResolver&	prefixResolver,
 			XPathExecutionContext&	executionContext) const = 0;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

@@ -109,6 +109,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 const XalanDOMString			ElemTemplateElement::s_emptyString;
 
 const XalanEmptyNamedNodeMap	ElemTemplateElement::s_fakeAttributes;
@@ -176,7 +180,7 @@ ElemTemplateElement::~ElemTemplateElement()
 
 
 
-const Locator*
+const LocatorType*
 ElemTemplateElement::getLocator() const
 {
 	return &m_locatorProxy;
@@ -195,7 +199,7 @@ ElemTemplateElement::isWhitespace() const
 bool
 ElemTemplateElement::isAttrOK(
 			const XalanDOMChar*				attrName,
-			const AttributeList&			atts,
+			const AttributeListType&		atts,
 			int								which,
 			StylesheetConstructionContext&	constructionContext) const
 {
@@ -207,7 +211,7 @@ ElemTemplateElement::isAttrOK(
 bool
 ElemTemplateElement::processSpaceAttr(
 			const XalanDOMChar*				aname, 
-			const AttributeList&			atts,
+			const AttributeListType&		atts,
 			int								which,
 			StylesheetConstructionContext&	constructionContext)
 {
@@ -335,8 +339,8 @@ void
 ElemTemplateElement::processSortElement(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						/* theStylesheet */,
-			const AttributeList&			/* atts */,
-			const Locator*					locator)
+			const AttributeListType&		/* atts */,
+			const LocatorType*				locator)
 {
 	constructionContext.error(
 		"xsl:sort is not allowed at this position in the stylesheet",
@@ -1416,3 +1420,7 @@ ElemTemplateElement::childTypeAllowed(int	/* xslToken */) const
 {
 	return true;
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

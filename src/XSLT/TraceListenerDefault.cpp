@@ -83,6 +83,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 TraceListenerDefault::TraceListenerDefault(
 			PrintWriter&	thePrintWriter,
 			bool			traceTemplates,
@@ -343,3 +347,7 @@ TraceListenerDefault::generated(const GenerateEvent&	ev)
 		}
 	}
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

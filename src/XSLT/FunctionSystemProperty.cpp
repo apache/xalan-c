@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 2000 The Apache Software Foundation.  All rights 
+ * Copyright (c) 200-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -73,6 +73,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 FunctionSystemProperty::FunctionSystemProperty() :
 	Function(),
 	m_xsltNamespaceURI(XALAN_STATIC_UCODE_STRING("http://www.w3.org/1999/XSL/Transform")),
@@ -97,7 +101,7 @@ FunctionSystemProperty::execute(
 			XPathExecutionContext&	executionContext,
 			XalanNode*				context,			
 			const XObjectPtr		arg1,
-			const Locator*			locator) const
+			const LocatorType*		locator) const
 {
 	assert(arg1.null() == false);
 
@@ -209,3 +213,7 @@ FunctionSystemProperty::getError() const
 {
 	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The system-property() function accepts one argument!"));
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

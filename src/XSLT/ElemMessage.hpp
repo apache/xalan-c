@@ -70,6 +70,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 class ElemMessage: public ElemTemplateElement
 {
 public:
@@ -87,7 +91,7 @@ public:
 	ElemMessage(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
-			const AttributeList&			atts,
+			const AttributeListType&		atts,
 			int								lineNumber,
 			int								columnNumber);
 
@@ -117,7 +121,7 @@ public:
 		 * @param theMessage message to print when exception thrown
 		 */
 		ElemMessageTerminateException(
-				const Locator&			theLocator,
+				const LocatorType&		theLocator,
 				const XalanDOMString&	theMessage);
 
 		virtual
@@ -128,6 +132,10 @@ private:
 
 	bool	m_terminate;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

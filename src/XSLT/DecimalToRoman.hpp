@@ -68,6 +68,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 /**
  * Structure to help in converting integrals to roman numerals
  */
@@ -85,6 +89,10 @@ struct XALAN_XSLT_EXPORT DecimalToRoman
 
 	XalanDOMChar	m_preLetter[eMaxLetter + 1];
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 2000 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -66,6 +66,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 const XalanDOMString	FunctionFunctionAvailable::s_emptyString;
 
 
@@ -87,7 +91,7 @@ FunctionFunctionAvailable::execute(
 			XPathExecutionContext&	executionContext,
 			XalanNode*				/* context */,
 			const XObjectPtr		arg,
-			const Locator*			/* locator */) const
+			const LocatorType*		/* locator */) const
 {
 	assert(arg.null() == false);
 
@@ -144,3 +148,7 @@ FunctionFunctionAvailable::getError() const
 {
 	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The function-available() function takes one argument!"));
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

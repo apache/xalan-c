@@ -69,6 +69,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 class AVT;
 
 
@@ -91,7 +95,7 @@ public:
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
 			const XalanDOMChar*				name,
-			const AttributeList&			atts,
+			const AttributeListType&		atts,
 			int								lineNumber,
 			int								columnNumber);
 
@@ -111,7 +115,7 @@ public:
 	virtual bool
 	isAttrOK(
 			const XalanDOMChar*				attrName,
-			const AttributeList&			atts,
+			const AttributeListType&		atts,
 			int								which,
 			StylesheetConstructionContext&	constructionContext) const;
 
@@ -133,7 +137,7 @@ protected:
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
 			const XalanDOMChar*				name,
-			const AttributeList&			atts);
+			const AttributeListType&		atts);
 
 	/**
 	 * Construct an object corresponding to a literal result element
@@ -150,7 +154,7 @@ protected:
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
 			const XalanDOMChar*				name,
-			const AttributeList&			atts,
+			const AttributeListType&		atts,
 			int								lineNumber,
 			int								columnNumber,
 			int								xslToken);
@@ -185,6 +189,10 @@ private:
 	 */
 	unsigned int			m_avtsCount;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

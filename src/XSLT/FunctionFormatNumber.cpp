@@ -74,6 +74,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 FunctionFormatNumber::FunctionFormatNumber()
 {
 }
@@ -96,7 +100,7 @@ FunctionFormatNumber::execute(
 			XalanNode*				context,
 			const XObjectPtr		arg1,
 			const XObjectPtr		arg2,
-			const Locator*			locator) const
+			const LocatorType*		locator) const
 {
 	assert(arg1.null() == false && arg2.null() == false);	
 	
@@ -135,7 +139,7 @@ FunctionFormatNumber::execute(
 			const XObjectPtr		arg1,
 			const XObjectPtr		arg2,
 			const XObjectPtr		arg3,
-			const Locator*			locator) const
+			const LocatorType*		locator) const
 {
 	assert(arg1.null() == false && arg2.null() == false && arg3.null() == false);
 	
@@ -187,7 +191,7 @@ FunctionFormatNumber::doFormat(
 			const XalanDOMString&				thePattern,
 			const XalanDecimalFormatSymbols*	theDFS,
 			XalanDOMString&						theResult,
-			const Locator*						locator,
+			const LocatorType*					locator,
 			bool								fWarn) const
 {
 	if (DoubleSupport::isNaN(theNumber) == true)
@@ -272,15 +276,15 @@ FunctionFormatNumber::getError() const
 
 
 
-static XalanDOMString	s_warningNotImplementedString;
-static XalanDOMString	s_warningNotFoundString;
+static XalanDOMString	s_staticWarningNotImplementedString;
+static XalanDOMString	s_staticWarningNotFoundString;
 
 
 const XalanDOMString&	FunctionFormatNumber::s_warningNotImplementedString =
-		::s_warningNotImplementedString;
+		s_staticWarningNotImplementedString;
 
 const XalanDOMString&	FunctionFormatNumber::s_warningNotFoundString =
-		::s_warningNotFoundString;
+		s_staticWarningNotFoundString;
 
 const XalanDOMString	FunctionFormatNumber::s_emptyString;
 
@@ -288,9 +292,9 @@ const XalanDOMString	FunctionFormatNumber::s_emptyString;
 void
 FunctionFormatNumber::initialize()
 {
-	::s_warningNotImplementedString = XALAN_STATIC_UCODE_STRING("format-number() is not fully implemented!");
+	s_staticWarningNotImplementedString = XALAN_STATIC_UCODE_STRING("format-number() is not fully implemented!");
 
-	::s_warningNotFoundString = XALAN_STATIC_UCODE_STRING("format-number: Specified decimal-format element not found!");
+	s_staticWarningNotFoundString = XALAN_STATIC_UCODE_STRING("format-number: Specified decimal-format element not found!");
 }
 
 
@@ -298,7 +302,11 @@ FunctionFormatNumber::initialize()
 void
 FunctionFormatNumber::terminate()
 {
-	releaseMemory(::s_warningNotImplementedString);
+	releaseMemory(s_staticWarningNotImplementedString);
 
-	releaseMemory(::s_warningNotFoundString);
+	releaseMemory(s_staticWarningNotFoundString);
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

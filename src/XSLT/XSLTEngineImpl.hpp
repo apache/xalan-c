@@ -118,11 +118,23 @@
 
 
 
+XALAN_DECLARE_XERCES_CLASS(InputSource)
+XALAN_DECLARE_XERCES_CLASS(DocumentHandler)
+
+
+
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
+typedef XERCES_CPP_NAMESPACE_QUALIFIER InputSource		InputSourceType;
+typedef XERCES_CPP_NAMESPACE_QUALIFIER DocumentHandler	DocumentHandlerType;
+
+
+
 // Forward declarations...
-class DocumentHandler;
 class DOMSupport;
 class GenerateEvent;
-class InputSource;
 class PrintWriter;
 class ResultTreeFragBase;
 class StylesheetConstructionContext;
@@ -132,7 +144,6 @@ class XalanAttr;
 class XalanSourceTreeDocument;
 class XalanText;
 class XMLParserLiaison;
-class XMLURL;
 class XObject;
 class XPathEnvSupport;
 class XPathFactory;
@@ -185,17 +196,17 @@ public:
 		}
 	};
 
-#if defined(XALAN_NO_NAMESPACES)
+#if defined(XALAN_NO_STD_NAMESPACE)
 	typedef map<const void*,
 				ClockType,
 				less<const void*> >			DurationsTableMapType;
-	typedef vector<const Locator*>			LocatorStack;
+	typedef vector<const LocatorType*>		LocatorStack;
 	typedef vector<TraceListener*>			TraceListenerVectorType;
 	typedef vector<bool>					BoolVectorType;
 	typedef vector<const XalanDOMString*>	XalanDOMStringPointerVectorType;
 #else
 	typedef std::map<const void*, ClockType>	DurationsTableMapType;
-	typedef std::vector<const Locator*>			LocatorStack;
+	typedef std::vector<const LocatorType*>		LocatorStack;
 	typedef std::vector<TraceListener*>			TraceListenerVectorType;
 	typedef std::vector<bool>					BoolVectorType;
 	typedef std::vector<const XalanDOMString*>	XalanDOMStringPointerVectorType;
@@ -400,7 +411,7 @@ public:
 	XalanDocument*
 	parseXML(
 			const XalanDOMString&	urlString,
-			DocumentHandler*		docHandler,
+			DocumentHandlerType*	docHandler,
 			XalanDocument*			docToRegister);
 
 	/**
@@ -416,9 +427,9 @@ public:
 	 */
 	XalanDocument*
 	parseXML(
-			const InputSource&	inputSource,
-			DocumentHandler*	docHandler,
-			XalanDocument*		docToRegister);
+			const InputSourceType&	inputSource,
+			DocumentHandlerType*	docHandler,
+			XalanDocument*			docToRegister);
 
 	/**
 	 * Reset the state of the XSL processor by reading in a new XSL stylesheet
@@ -557,7 +568,7 @@ public:
 	}
 
 	void
-	setDocumentLocator(const Locator*	locator);
+	setDocumentLocator(const LocatorType*	locator);
 
 	void
 	startDocument();
@@ -568,7 +579,7 @@ public:
 	void
 	startElement(
 			const XalanDOMChar*		name,
-			AttributeList&			atts);
+			AttributeListType&		atts);
 
 	void
 	endElement(const XalanDOMChar*	name);
@@ -817,7 +828,7 @@ public:
 	virtual void
 	message(
 			const XalanDOMString&	msg,
-			const Locator&			locator,
+			const LocatorType&		locator,
 			const XalanNode*		sourceNode = 0) const;
 
 	virtual void
@@ -842,7 +853,7 @@ public:
 	virtual void
 	warn(
 			const XalanDOMString&	msg,
-			const Locator&			locator,
+			const LocatorType&		locator,
 			const XalanNode*		sourceNode = 0) const;
 
 	virtual void
@@ -854,7 +865,7 @@ public:
 	virtual void
 	error(
 			const XalanDOMString&	msg,
-			const Locator&			locator,
+			const LocatorType&		locator,
 			const XalanNode*		sourceNode = 0) const;
 
 public:
@@ -1178,7 +1189,7 @@ public:
 	 * 
 	 * @return attribute list
 	 */
-	const AttributeList&
+	const AttributeListType&
 	getPendingAttributes() const
 	{
 		return getPendingAttributesImpl();
@@ -1190,7 +1201,7 @@ public:
 	 * @param pendingAttributes The attribute list
 	 */
 	void
-	setPendingAttributes(const AttributeList&	pendingAttributes)
+	setPendingAttributes(const AttributeListType&	pendingAttributes)
 	{
 		getPendingAttributesImpl() = pendingAttributes;
 	}
@@ -1252,7 +1263,7 @@ public:
 	 *
 	 * @return A pointer to the Locator, or 0 if there is nothing on the stack.
 	 */
-	const Locator*
+	const LocatorType*
 	getLocatorFromStack() const
 	{
 		return m_stylesheetLocatorStack.empty() == true ? 0 : m_stylesheetLocatorStack.back();
@@ -1264,7 +1275,7 @@ public:
 	 * @param A pointer to the Locator to push.
 	 */
 	void
-	pushLocatorOnStack(const Locator*	locator)
+	pushLocatorOnStack(const LocatorType*	locator)
 	{
 		m_stylesheetLocatorStack.push_back(locator);
 	}
@@ -1311,7 +1322,7 @@ protected:
 	 * @param pendingAttributes The attribute list
 	 */
 	void
-	setPendingAttributesImpl(const AttributeList&	pendingAttributes)
+	setPendingAttributesImpl(const AttributeListType&	pendingAttributes)
 	{
 		getPendingAttributesImpl() = pendingAttributes;
 	}
@@ -1571,7 +1582,7 @@ private:
 	problem(
 			const XalanDOMString&				msg, 
 			ProblemListener::eClassification	classification,
-			const Locator&						locator,
+			const LocatorType&					locator,
 			const XalanNode*					sourceNode) const;
 
   //==========================================================
@@ -1581,7 +1592,7 @@ private:
 	/**
 	 * This is used whenever a unique namespace is needed.
 	 */
-	unsigned long	m_uniqueNSValue;
+	unsigned long		m_uniqueNSValue;
 
 	ParamVectorType 	m_topLevelParams;
 
@@ -1721,6 +1732,10 @@ private:
     bool
     operator==(const XSLTEngineImpl&) const;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

@@ -75,6 +75,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 static const XalanQNameByValue	s_defaultMode;
 
 
@@ -82,7 +86,7 @@ static const XalanQNameByValue	s_defaultMode;
 ElemApplyTemplates::ElemApplyTemplates(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
-			const AttributeList&			atts,
+			const AttributeListType&		atts,
 			int								lineNumber,
 			int								columnNumber) :
 	ParentType(
@@ -224,3 +228,7 @@ ElemApplyTemplates::childTypeAllowed(int	xslToken) const
 
 	return fResult;
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

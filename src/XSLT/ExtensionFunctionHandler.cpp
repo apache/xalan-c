@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -68,6 +68,10 @@
 
 #include <PlatformSupport/StringTokenizer.hpp>
 #include <PlatformSupport/DOMStringHelper.hpp>
+
+
+
+XALAN_CPP_NAMESPACE_BEGIN
 
 
 
@@ -165,11 +169,6 @@ ExtensionFunctionHandler::callFunction(
 {
 	assert(0);	// @@ TODO: Not implemented
 
-	if (!m_componentStarted) 
-	{
-		startupComponent();
-	}
-
 	return XObjectPtr();
 }
 
@@ -178,75 +177,8 @@ ExtensionFunctionHandler::callFunction(
 void
 ExtensionFunctionHandler::startupComponent()
 {
-	// special case the javaclass engine - the scriptSrcURL is 
-	// the class name to run. If it starts with class: then use the
-	// class object with that name instead of init'ing it as the
-	// target of the calls later
-	if (equals(m_scriptLang, "javaclass")) 
-	{
-		try 
-		{
-			XalanDOMString	cname(m_scriptSrcURL);
-
-			bool isClass = false;
-
-			if (startsWith(m_scriptSrcURL, "class:")) 
-			{
-				substring(m_scriptSrcURL, cname, 6);
-
-				isClass = true;
-			}
-
-			// @@ JMD: Can't do this in C++
-			/*
-			Class cl = Class.forName (cname);
-			if (isClass) 
-			{
-				m_javaObject = cl;
-			}
-			else
-			{
-				m_javaObject = cl.newInstance ();
-			}
-			*/
-			m_componentStarted = true;
-			return;
-		}
-		//catch (Exception e) 
-		catch (...) 
-		{
-			assert(0);
-			// System.out.println("Extension error: "+e.getMessage ());
-			// throw new XPathProcessorException (e.getMessage (), e);
-		}
-	}
-
-	// if scriptSrcURL is specified read it off
-	if (!isEmpty(m_scriptSrcURL)) 
-	{
-		assert(0);
-		// throw new XPathProcessorException ("src attr not supported (yet)");
-	}
-
-	if (isEmpty(m_scriptSrc)) 
-	{
-		return;
-	}
-
-	// evaluate the src to load whatever content is in that string to 
-	// the engines
-	assert(0);
-	// System.out.println("Error!	Extensions not implemented!");
-	/*
-	try 
-	{
-		mgr.exec (m_scriptLang, "XSLTScript", -1, -1, scriptSrc);
-	}
-	catch (BSFException bsfe) 
-	{
-		throw new XPathProcessorException (bsfe.getMessage (), bsfe);
-	}
-	*/
-
-	m_componentStarted = true;
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

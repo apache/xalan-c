@@ -69,6 +69,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 /**
  * The implementation of the default error handling for Xalan.
  */
@@ -82,7 +86,7 @@ public:
 	~ProblemListenerDefault();
 
 	// These methods are inherited from ProblemListener ...
-	
+
 	virtual void
 	setPrintWriter(PrintWriter*		pw);
 
@@ -121,6 +125,10 @@ private:
 
 	PrintWriter*	m_pw;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

@@ -72,10 +72,14 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 ElemPI::ElemPI(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
-			const AttributeList&			atts,
+			const AttributeListType&		atts,
 			int								lineNumber,
 			int								columnNumber) :
 	ElemTemplateElement(constructionContext,
@@ -190,3 +194,7 @@ ElemPI::childTypeAllowed(int	xslToken) const
 	
 	return fResult;
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

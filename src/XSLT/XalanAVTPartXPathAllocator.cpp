@@ -60,6 +60,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 XalanAVTPartXPathAllocator::XalanAVTPartXPathAllocator(size_type	theBlockCount) :
 	m_allocator(theBlockCount)
 {
@@ -86,3 +90,7 @@ XalanAVTPartXPathAllocator::create(const XPath*	xpath)
 
 	return theResult;
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

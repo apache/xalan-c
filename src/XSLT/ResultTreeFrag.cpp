@@ -59,11 +59,20 @@
 
 
 
+#include <cassert>
+
+
+
 #include <XalanDOM/XalanDOMException.hpp>
+#include <XalanDOM/XalanDOMString.hpp>
 
 
 
 #include <XalanSourceTree/XalanSourceTreeDocumentFragment.hpp>
+
+
+
+XALAN_CPP_NAMESPACE_BEGIN
 
 
 
@@ -561,3 +570,7 @@ ResultTreeFrag::getLength() const
 		return theLength;
 	}
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

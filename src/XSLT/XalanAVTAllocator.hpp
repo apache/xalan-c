@@ -73,6 +73,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 class XALAN_XSLT_EXPORT XalanAVTAllocator
 {
 public:
@@ -112,7 +116,7 @@ public:
 	data_type*
 	create(
 			StylesheetConstructionContext&	constructionContext,
-			const Locator*					locator,
+			const LocatorType*				locator,
 			const XalanDOMChar*				name,
 			const XalanDOMChar*				stringedValue,
 			const PrefixResolver&			resolver);
@@ -169,6 +173,10 @@ private:
 	// Data members...
 	ArenaAllocatorType	m_allocator;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 
