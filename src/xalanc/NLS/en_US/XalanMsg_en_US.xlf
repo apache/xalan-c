@@ -110,8 +110,8 @@
 </trans-unit>
 
 <trans-unit id="InvalidNumberOfArgsWasDetected_3Param">
-		<source>An invalid number of arguments for op code '{0}' was detected. The required number of arguments is '{1}', but '{2}' arguments(s) were supplied.</source>
-		<target>An invalid number of arguments for op code '{0}' was detected. The required number of arguments is '{1}', but '{2}' arguments(s) were supplied.</target>
+		<source>An invalid number of arguments for op code '{0}' was detected. The required number of arguments is '{1}', but '{2}' argument(s) were supplied.</source>
+		<target>An invalid number of arguments for op code '{0}' was detected. The required number of arguments is '{1}', but '{2}' argument(s) were supplied.</target>
 </trans-unit>
 
 <trans-unit id="InvalidNumberOfArgsWasSupplied_2Param">
@@ -145,13 +145,13 @@
 </trans-unit>
 
 <trans-unit id="ExpectedDoubleQuote">
-		<source>The literal expression is not terminated. An double quote is missing.</source>
-		<target>The literal expression is not terminated. An double quote is missing.</target>
+		<source>The literal expression is not terminated. A double quote is missing.</source>
+		<target>The literal expression is not terminated. A double quote is missing.</target>
 </trans-unit>
 
 <trans-unit id="ExpectedSingleQuote">
-		<source>The literal expression is not terminated. An single quote is missing.</source>
-		<target>The literal expression is not terminated. An single quote is missing.</target>
+		<source>The literal expression is not terminated. A single quote is missing.</source>
+		<target>The literal expression is not terminated. A single quote is missing.</target>
 </trans-unit>
 
 <trans-unit id="EmptyExpression">
@@ -171,7 +171,7 @@
 
 <trans-unit id="NotFoundWhatExpected_2Param">
 		<source>Expected token is '{0}', but found the '{1}' token.</source>
-		<target>Expected token is '{0}', but found the '{1}' token</target>
+		<target>Expected token is '{0}', but found the '{1}' token.</target>
 </trans-unit>
 
 <trans-unit id="LiteralArgumentIsRequired">
@@ -270,8 +270,8 @@ On<trans-unit id="FunctionDoesNotAcceptAnyArguments_1Param">
 </trans-unit>
 
 <trans-unit id="AttributesCannotBeAdded">
-		<source>Attributes cannot be added after a child has been added.  The attribute(s) will not be added.</source>
-		<target>Attributes cannot be added after a child has been added.  The attribute(s) will not be added.</target>
+		<source>Attributes cannot be added after a child has been added. The attribute(s) will not be added.</source>
+		<target>Attributes cannot be added after a child has been added. The attribute(s) will not be added.</target>
 </trans-unit>
 
 <trans-unit id="IllegalElementName_1Param">
