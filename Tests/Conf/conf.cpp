@@ -215,11 +215,11 @@ parseWithXerces(
 	try
 	{
 		const XercesDOMWrapperParsedSource	parsedSource(
-                    mgr,
 					theDOM, 
 					theParserLiaison, 
 					theDOMSupport, 
-					XalanDOMString(xmlInput.getSystemId(), mgr));
+					XalanDOMString(xmlInput.getSystemId(), mgr),
+                    mgr);
 
 		theResult = xalan.transform(parsedSource, styleSheet, output);
 	}
