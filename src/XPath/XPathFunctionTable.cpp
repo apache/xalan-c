@@ -273,86 +273,171 @@ XPathFunctionTable::CreateTable()
 	{
 		m_FunctionCollection.reserve(eDefaultTableSize);
 
-		InstallFunction(StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("last")),
-						FunctionLast());
+		// Start with the longest function name, so we only have
+		// one allocation for this string.
+		XalanDOMString	theFunctionName;
 
-		InstallFunction(StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("position")),
-						FunctionPosition());
+		theFunctionName = s_substringBefore;
 
-		InstallFunction(StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("count")),
-						FunctionCount());
+		InstallFunction(
+				theFunctionName,
+				FunctionSubstringBefore());
 
-		InstallFunction(StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("id")),
-						FunctionID());
+		theFunctionName = s_last;
 
-		InstallFunction(StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("local-name")),
-						FunctionLocalName());
+		InstallFunction(
+				theFunctionName,
+				FunctionLast());
 
-		InstallFunction(StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("namespace-uri")),
-						FunctionNamespaceURI());
+		theFunctionName = s_position;
 
-		InstallFunction(StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("name")),
-						FunctionName());
+		InstallFunction(
+				theFunctionName,
+				FunctionPosition());
 
-		InstallFunction(StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("string")),
-						FunctionString());
+		theFunctionName = s_count;
 
-		InstallFunction(StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("concat")),
-						FunctionConcat());
+		InstallFunction(
+				theFunctionName,
+				FunctionCount());
 
-		InstallFunction(StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("starts-with")),
-						FunctionStartsWith());
+		theFunctionName = s_id;
 
-		InstallFunction(StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("contains")),
-						FunctionContains());
+		InstallFunction(
+				theFunctionName,
+				FunctionID());
 
-		InstallFunction(StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("substring-before")),
-						FunctionSubstringBefore());
+		theFunctionName = s_localName;
 
-		InstallFunction(StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("substring-after")),
-						FunctionSubstringAfter());
+		InstallFunction(
+				theFunctionName,
+				FunctionLocalName());
 
-		InstallFunction(StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("substring")),
-						FunctionSubstring());
+		theFunctionName = s_namespaceUri;
 
-		InstallFunction(StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("string-length")),
-						FunctionStringLength());
+		InstallFunction(
+				theFunctionName,
+				FunctionNamespaceURI());
 
-		InstallFunction(StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("normalize-space")),
-						FunctionNormalizeSpace());
+		theFunctionName = s_name;
 
-		InstallFunction(StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("translate")),
-						FunctionTranslate());
+		InstallFunction(
+				theFunctionName,
+				FunctionName());
 
-		InstallFunction(StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("boolean")),
-						FunctionBoolean());
+		theFunctionName = s_string;
 
-		InstallFunction(StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("not")),
-						FunctionNot());
+		InstallFunction(
+				theFunctionName,
+				FunctionString());
 
-		InstallFunction(StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("true")),
-						FunctionTrue());
+		theFunctionName = s_concat;
 
-		InstallFunction(StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("false")),
-						FunctionFalse());
+		InstallFunction(
+				theFunctionName,
+				FunctionConcat());
 
-		InstallFunction(StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("lang")),
-						FunctionLang());
+		theFunctionName = s_startsWith;
 
-		InstallFunction(StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("number")),
-						FunctionNumber());
+		InstallFunction(
+				theFunctionName,
+				FunctionStartsWith());
 
-		InstallFunction(StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("sum")),
-						FunctionSum());
+		theFunctionName = s_contains;
 
-		InstallFunction(StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("floor")),
-						FunctionFloor());
+		InstallFunction(
+				theFunctionName,
+				FunctionContains());
 
-		InstallFunction(StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("ceiling")),
-						FunctionCeiling());
+		theFunctionName = s_substringAfter;
 
-		InstallFunction(StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("round")),
-						FunctionRound());
+		InstallFunction(
+				theFunctionName,
+				FunctionSubstringAfter());
+
+		theFunctionName = s_substring;
+
+		InstallFunction(
+				theFunctionName,
+				FunctionSubstring());
+
+		theFunctionName = s_stringLength;
+
+		InstallFunction(
+				theFunctionName,
+				FunctionStringLength());
+
+		theFunctionName = s_normalizeSpace;
+
+		InstallFunction(
+				theFunctionName,
+				FunctionNormalizeSpace());
+
+		theFunctionName = s_translate;
+
+		InstallFunction(
+				theFunctionName,
+				FunctionTranslate());
+
+		theFunctionName = s_boolean;
+
+		InstallFunction(
+				theFunctionName,
+				FunctionBoolean());
+
+		theFunctionName = s_not;
+
+		InstallFunction(
+				theFunctionName,
+				FunctionNot());
+
+		theFunctionName = s_true;
+
+		InstallFunction(
+				theFunctionName,
+				FunctionTrue());
+
+		theFunctionName = s_false;
+
+		InstallFunction(
+				theFunctionName,
+				FunctionFalse());
+
+		theFunctionName = s_lang;
+
+		InstallFunction(
+				theFunctionName,
+				FunctionLang());
+
+		theFunctionName = s_number;
+
+		InstallFunction(
+				theFunctionName,
+				FunctionNumber());
+
+		theFunctionName = s_sum;
+
+		InstallFunction(
+				theFunctionName,
+				FunctionSum());
+
+		theFunctionName = s_floor;
+
+		InstallFunction(
+				theFunctionName,
+				FunctionFloor());
+
+		theFunctionName = s_ceiling;
+
+		InstallFunction(
+				theFunctionName,
+				FunctionCeiling());
+
+		theFunctionName = s_round;
+
+		InstallFunction(
+				theFunctionName,
+				FunctionRound());
 #if 0
 		std::ofstream	theSourceStream("\\foo.cpp");
 		std::ofstream	theHeaderStream("\\foo.hpp");
