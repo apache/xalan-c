@@ -83,7 +83,7 @@ TESTS_DIR = ${XALANCROOT}/Tests
 
 ALL_VPATH_CPP = \
 $(XALANDOM_DIR):$(PLATFORMSUPPORT_DIR):$(DOMSUPPORT_DIR):$(XMLSUPPORT_DIR): \
-$(XPATH_DIR):$(XERCESPARSERLIAISON_DIR):$(DEPRECATED_XERCESPARSERLIAISON_DIR):$(XALANSOURCETREE_DIR):$(XPATHCAPI_DIR): \
+$(XPATH_DIR):$(XERCESPARSERLIAISON_DIR):$(XALANSOURCETREE_DIR):$(XPATHCAPI_DIR): \
 $(XSLT_DIR):$(XALANEXTENSIONS_DIR):$(XALANEXSLT_DIR):$(XALANTRANSFORMER_DIR): \
 $(TESTXPATH_DIR):$(TESTXSLT_DIR) \
 
@@ -94,7 +94,6 @@ ALLSOURCE = \
 	$(wildcard $(XMLSUPPORT_DIR)/*.cpp) \
 	$(wildcard $(XPATH_DIR)/*.cpp) \
 	$(wildcard $(XERCESPARSERLIAISON_DIR)/*.cpp) \
-	$(wildcard $(DEPRECATED_XERCESPARSERLIAISON_DIR)/*.cpp) \
 	$(wildcard $(XALANSOURCETREE_DIR)/*.cpp) \
 	$(wildcard $(XPATHCAPI_DIR)/*.cpp) \
 	$(wildcard $(XSLT_DIR)/*.cpp) \
@@ -114,7 +113,6 @@ ALL_HEADERS_DIRS = \
 	XalanExtensions \
 	XalanSourceTree \
 	XercesParserLiaison \
-	XercesParserLiaison/Deprecated \
 	XalanTransformer \
 	XPathCAPI
 
@@ -122,6 +120,12 @@ ALL_BINARIES = Xalan
 
 include $(XALANCROOT)/version.incl
 include ../../Makefile.incl
+
+ifdef XALAN_BUILD_DEPRECATED_DOM_BRIDGE
+	ALL_VPATH_CPP+=:$(DEPRECATED_XERCESPARSERLIAISON_DIR)
+	ALLSOURCE += $(wildcard $(DEPRECATED_XERCESPARSERLIAISON_DIR)/*.cpp)
+    ALL_HEADERS_DIRS += XercesParserLiaison/Deprecated
+endif
 
 # Using ICUBridge
 ifdef XALAN_USE_ICU
