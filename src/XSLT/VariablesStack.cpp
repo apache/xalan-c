@@ -488,7 +488,7 @@ VariablesStack::findEntry(
 					}
 				}
 			}
-			else if(theEntry.getType() == StackEntry::eContextMarker)
+			else if(theType == StackEntry::eContextMarker)
 			{
 				break;
 			}
