@@ -129,6 +129,19 @@ public:
 	}
 
 	/*
+	 * Set size of an ArenaBlock, that is, the number
+	 * of objects in each block.  Only affects blocks
+	 * allocated after the call.
+	 *
+	 * @param theSize The size of the block
+	 */
+	size_type
+	setBlockSize(size_type	theSize)
+	{
+		m_blockSize = theSize;
+	}
+
+	/*
 	 * Get the number of ArenaBlocks currently allocated.
 	 *
 	 * @return The number of blocks.
@@ -197,7 +210,7 @@ protected:
 	typedef std::vector<ArenaBlockType*>	ArenaBlockListType;
 #endif
 
-	const size_type		m_blockSize;
+	size_type			m_blockSize;
 
 	ArenaBlockListType	m_blocks;
 
