@@ -1681,7 +1681,7 @@ private:
 
 	private:
 
-		typedef eMatchScore (NodeTester::*MemberFunctionPtr)(const XalanNode&, XalanNode::NodeType) const;
+		typedef eMatchScore (NodeTester::*TestFunctionPtr)(const XalanNode&, XalanNode::NodeType) const;
 
 
 		eMatchScore
@@ -1791,7 +1791,7 @@ private:
 
 		const XalanDOMString*	m_targetLocalName;
 
-		MemberFunctionPtr		m_testFunction;
+		TestFunctionPtr			m_testFunction;
 	};
 
 protected:
