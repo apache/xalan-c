@@ -795,6 +795,7 @@ const char* const	theNumericTestInput[] =
 	"1 * 0.25",
 	"3 * 3 * 3",
 	"9 div 3 div 3",
+	"15.95 - 13.56",
 	0
 };
 
@@ -809,6 +810,7 @@ const double	theNumericTestExpectedOutput[] =
 	0.25,
 	27,
 	1,
+	15.95 - 13.56,
 	0	// This is a dummy entry and should be last.
 };
 
