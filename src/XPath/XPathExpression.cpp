@@ -811,6 +811,27 @@ XPathExpression::dumpRemainingTokenQueue(std::ostream&	theStream) const
 
 
 void
+XPathExpression::pushArgumentOnOpCodeMap(const XToken&	theXToken)
+{
+	assert(m_currentPosition != 0);
+
+	const TokenQueueSizeType	thePosition = m_currentPosition - 1;
+
+	assert(thePosition < tokenQueueSize());
+
+	// Set the entry in the token queue to the XObject.
+	m_tokenQueue[thePosition] = theXToken;
+
+	// Push the index onto the op map.
+	m_opMap.push_back(thePosition);
+
+	// Update the op map length.
+	m_opMap[s_opCodeMapLengthIndex]++;
+}
+
+
+
+void
 XPathExpression::pushArgumentOnOpCodeMap(const XalanDOMString&	theToken)
 {
 	assert(m_currentPosition != 0);

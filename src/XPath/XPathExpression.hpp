@@ -1173,6 +1173,29 @@ public:
 		m_tokenQueue.insert(m_tokenQueue.begin() + (m_currentPosition - 1), XToken(theToken));
 	}
 
+#if 1
+	/**
+	 * Replace a token in the token queue.
+	 * 
+	 * @param theOffset the offset at which to replace the token.
+	 * @param theToken The new token
+	 */
+	void
+	replaceRelativeToken(
+			int				theOffset,
+			const XToken&	theToken)
+	{
+		const int	thePosition = int(m_currentPosition) + theOffset;
+
+		if (thePosition < 0 ||
+			thePosition >= int(tokenQueueSize()))
+		{
+			throw InvalidRelativeTokenPosition(theOffset);
+		}
+
+		m_tokenQueue[thePosition] = theToken;
+	}
+#else
 	/**
 	 * Replace a token in the token queue.
 	 * 
@@ -1219,7 +1242,7 @@ public:
 
 		m_tokenQueue[thePosition] = theToken;
 	}
-
+#endif
 	/**
 	 * Diagnostic function to output the operation code map.
 	 * 
@@ -1305,6 +1328,15 @@ public:
 		// Update the op map length.
 		m_opMap[s_opCodeMapLengthIndex]++;
 	}
+
+	/**
+	 * Push a token onto the token queue and its index onto the operations code
+	 * map.
+	 *
+	 * @param theXToken the XToken to push
+	 */
+	void
+	pushArgumentOnOpCodeMap(const XToken&	theXToken);
 
 	/**
 	 * Push a token onto the token queue and its index onto the operations code
