@@ -120,6 +120,7 @@
 
 
 #include <XercesParserLiaison/XercesDocumentBridge.hpp>
+#include <XercesParserLiaison/XercesDocumentWrapper.hpp>
 #include <XercesParserLiaison/XercesNamedNodeListCache.hpp>
 #include <XercesParserLiaison/XercesParserLiaison.hpp>
 #include <XercesParserLiaison/XercesToXalanNodeMap.hpp>
@@ -269,14 +270,6 @@ foo(XPathExecutionContext&	theExecutionContext)
 		for_each(theCache.begin(),
 			 theCache.end(),
 			 MapValueDeleteFunctor<XercesNamedNodeListCache::NodeListCacheType>());
-	}
-
-	{
-		XercesParserLiaison::DocumentMapType	theMap;
-		
-		for_each(theMap.begin(),
-			 theMap.end(),
-			 MapValueDeleteFunctor<XercesParserLiaison::DocumentMapType>());
 	}
 
 	{
@@ -507,12 +500,24 @@ foo(XPathExecutionContext&	theExecutionContext)
 
 	{
 		XSLTEngineImpl::TraceListenerVectorType		theVector;
-		
+
 		remove(
 			theVector.begin(),
 			theVector.end(),
 		 	XSLTEngineImpl::TraceListenerVectorType::value_type(0));
 	}
+
+	{
+		XSLTEngineImpl::XalanDOMStringPointerVectorType		theVector;
+		
+		XalanDOMString	nodeName;
+
+		find_if(
+			theVector.begin(),
+			theVector.end(),
+			XSLTEngineImpl::FindStringPointerFunctor(nodeName));
+	}
+
 
 	{
 		XalanDOMString	theString;
