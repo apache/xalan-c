@@ -50,6 +50,8 @@ class XalanNode;
 /**
  * This class takes SAX events (in addition to some extra events that SAX
  * doesn't handle yet) and adds the result to a document or document fragment.
+ *
+ * This class is deprecated and will be removed!!!!
  */
 class XALAN_XMLSUPPORT_EXPORT FormatterToDOM : public FormatterListener
 {
