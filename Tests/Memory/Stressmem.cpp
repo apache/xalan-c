@@ -205,18 +205,9 @@ bool fSetOut = true;	// Set default output directory
 	}
 	
 	// Add the path seperator to the end of the base directory
-	append(basedir,pathSep);
+	append(basedir, pathSep);
 	return fSuccess;
 }
-
-
-#if defined(XALAN_NO_NAMESPACES)
-typedef vector<XalanDOMString>		FileNameVectorType;
-#else
-typedef std::vector<XalanDOMString>	FileNameVectorType;
-#endif
-
-
 
 int
 main(
