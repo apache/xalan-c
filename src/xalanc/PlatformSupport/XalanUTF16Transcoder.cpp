@@ -82,14 +82,14 @@ XalanUTF16Transcoder::~XalanUTF16Transcoder()
 XalanUTF16Transcoder::eCode
 XalanUTF16Transcoder::transcode(
 			const XalanDOMChar*		theSourceData,
-			size_t					theSourceCount,
+			size_type				theSourceCount,
 			XalanXMLByte*			theTarget,
-			size_t					theTargetSize,
-			size_t&					theSourceCharsTranscoded,
-			size_t&					theTargetBytesUsed)
+			size_type				theTargetSize,
+			size_type&				theSourceCharsTranscoded,
+			size_type&				theTargetBytesUsed)
 {
-	unsigned int	theSourceEaten = 0;
-	unsigned int	theTargetPosition = 0;
+	size_type	theSourceEaten = 0;
+	size_type	theTargetPosition = 0;
 
 	while(theSourceEaten < theSourceCount)
 	{
@@ -122,15 +122,15 @@ XalanUTF16Transcoder::transcode(
 XalanUTF16Transcoder::eCode
 XalanUTF16Transcoder::transcode(
 			const XalanXMLByte*		theSourceData,
-			size_t					theSourceCount,
+			size_type				theSourceCount,
 			XalanDOMChar*			theTarget,
-			size_t					theTargetSize,
-			size_t&					theSourceCharsTranscoded,
-			size_t&					theTargetBytesUsed,
+			size_type				theTargetSize,
+			size_type&				theSourceCharsTranscoded,
+			size_type&				theTargetBytesUsed,
 			unsigned char*			theCharSizes)
 {
-	unsigned int	theSourceEaten = 0;
-	unsigned int	theTargetPosition = 0;
+	size_type	theSourceEaten = 0;
+	size_type	theTargetPosition = 0;
 
 	while(theSourceEaten + 1 < theSourceCount)
 	{
@@ -161,7 +161,7 @@ XalanUTF16Transcoder::transcode(
 
 
 bool
-XalanUTF16Transcoder::canTranscodeTo(unsigned int	/* theChar */) const
+XalanUTF16Transcoder::canTranscodeTo(UnicodeCharType	/* theChar */) const
 {
 	return true;
 }

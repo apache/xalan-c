@@ -92,24 +92,24 @@ public:
 	virtual eCode
 	transcode(
 			const XalanDOMChar*		theSourceData,
-			size_t					theSourceCount,
+			size_type				theSourceCount,
 			XalanXMLByte*			theTarget,
-			size_t					theTargetSize,
-			size_t&					theSourceCharsTranscoded,
-			size_t&					theTargetBytesUsed);
+			size_type				theTargetSize,
+			size_type&				theSourceCharsTranscoded,
+			size_type&				theTargetBytesUsed);
 
 	virtual eCode
 	transcode(
 			const XalanXMLByte*		theSourceData,
-			size_t					theSourceCount,
+			size_type				theSourceCount,
 			XalanDOMChar*			theTarget,
-			size_t					theTargetSize,
-			size_t&					theSourceCharsTranscoded,
-			size_t&					theTargetBytesUsed,
+			size_type				theTargetSize,
+			size_type&				theSourceCharsTranscoded,
+			size_type&				theTargetBytesUsed,
 			unsigned char*			theCharSizes);
 
 	virtual bool
-	canTranscodeTo(unsigned int		theChar) const;
+	canTranscodeTo(UnicodeCharType	theChar) const;
 
 private:
 
@@ -119,8 +119,6 @@ private:
 	XalanToXercesTranscoderWrapper&
 	operator=(const XalanToXercesTranscoderWrapper&);
 
-	// A handy typedef...
-	typedef unsigned int		XercesSizeType;
 
 	// Data members...
 	XMLTranscoderType* const	m_transcoder;
