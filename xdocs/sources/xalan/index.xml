@@ -24,12 +24,12 @@
      document types.</p>
     <p>&xslt4c-current; is a robust implementation of the W3C Recommendations 
     for XSL Transformations (XSLT) and the XML Path Language (XPath). It works with a compatible release of the 
-    &xml4c; XML parser: &xml4c-used;. The focus for this release is on bug fixes, build and packaging improvements, and a number of new features such as Message Localization Support and additional EXSLT extension functions. For the details, see the <link idref="readme">Release Notes</link>.</p>
+    &xml4c; XML parser: &xml4c-used;. The focus for this release is on bug fixes, build support for a number of new platforms, and changes to the Xerces Deprecated DOM support. For the details, see the <link idref="readme">Release Notes</link>.</p>
 	</s2>
   
   <s2 title="How do I get it?">
-    <p>Download and unzip the &xslt4c; distribution file and the corresponding &xml4c; distributions file for your platform. For the details, see <link idref="getstarted" anchor="download">Downloading what you need</link>. The &xslt4c; distribution includes platform-specific binaries, documentation, sample applications, the complete &xslt4c; source tree.</p>
-    <p>A source-only distribution is also available, if you want to build your own binaries.</p>
+    <p>Download and unzip the &xslt4c; distribution file and the corresponding &xml4c; distributions file for your platform. For the details, see <link idref="getstarted" anchor="download">Downloading what you need</link>. The &xslt4c; distribution includes source-only distribution, documentation, sample applications, the complete &xslt4c; source tree.</p>
+    <p>Binary distributions are also available for a limited set of platforms.</p>
   </s2>
   <s2 title="How about support for internationalization?">
     <p>To extend Unicode support for encoding, number formatting, and sorting, you can download,

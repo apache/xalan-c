@@ -57,7 +57,7 @@ See</p>
 <li><jump href="http://www.exslt.org/dyn/dyn.html">EXSLT dynamic functions</jump></li>
 <li><jump href="http://www.exslt.org/date/date.html">EXSLT date-time functions</jump></li>
 </ul>
-<p>Anyone who would like to participate in the &xslt4c; initiative to support EXSLT by testing these implementations or implementating other EXSLT functions is more than welcome. Please email us 
+<p>Anyone who would like to participate in the &xslt4c; initiative to support EXSLT by testing these implementations or implementing other EXSLT functions is more than welcome. Please email us 
 at the <human-resource-ref idref="xalandev"/>.</p>
 </s2>
 <anchor name="xalanns"/>

@@ -119,7 +119,7 @@ XALAN_USING_XALAN(XalanTransformer)
 		Whilst you can use the standard C++ namespace syntax directly, 
 		the &xml4c; and &xslt4c; namespaces are linked to the version
 		number.  For example, the Xalan namespace is currently
-		<em>xalanc_1_7</em>.  The macros will automatically take care
+		<em>xalanc_1_8</em>.  The macros will automatically take care
 		of this when code is re-compiled against a new version of the
 		libraries.  Using the namespaces directly will require each
 		namespace related statement be updated by hand.
@@ -277,8 +277,6 @@ theXalanTransformer.transform("foo.xml","foo.xsl","foo-out.xml")
 	  the string expression (in single quotes). For example:
 	</p>
 	<p><code>Xalan -p param1 'boo' foo.xml foo.xsl</code></p>
-	<p>or</p>
-	<p><code>testXSLT -in foo.xml -xsl foo.xsl -param param1 'boo'</code></p>
 	<p>
 	  If the string expression includes spaces or other characters that 
 	  the shell intercepts, first enclose the string in single quotes 
@@ -287,12 +285,6 @@ theXalanTransformer.transform("foo.xml","foo.xsl","foo-out.xml")
 	  a single argument. For example:
 	</p>
 	<p><code>Xalan -p "'hello there'" foo.xml foo.xsl</code></p>
-	<p>or</p>
-	<p>
-	  <code>
-		testXSLT -in foo.xml -xsl foo.xsl -param param1 "'hello there'"
-	  </code>
-	</p>
 	<p>
 	  The <link idref="samples" anchor="usestylesheetparam">
 		UseStylesheetParam</link> sample application also uses a 
@@ -524,7 +516,7 @@ void parseWithXerces(XalanTransformer &amp;xalan,
 	  To construct a TraceListener with TraceListenerDefault, you need a PrintWriter and a boolean for each of these four tracing options. You can then use the XSLTEngimeImpl setTraceSelects and addTraceListener methods to add the TraceListener to an XSLTProcessor. See the <link idref="samples" anchor="tracelisten">TraceListen</link> sample application.
 	</p>
 	<p>
-	  The <link idref="commandline" anchor="testxslt">testXSLT command-line utility</link> and TraceListen both use TraceListenerDefault to write events to the screen.
+	  The TraceListen uses TraceListenerDefault to write events to the screen.
 	</p>
   </s2>
   <anchor name="icu"/>
@@ -553,8 +545,8 @@ void parseWithXerces(XalanTransformer &amp;xalan,
 		developerWorks open source zone.<br/><br/></li>
       <li>Do an ICU build -- see the Windows NT or Unix build instructions in the readme.html that
 		accompanies the download. 
-		<br/><em>Important</em> For Windows, be sure to install the ICU on the same drive and at 
-		the same level as &xslt4c; and &xml4c;.<br/><br/></li>
+		<br/><em>Important</em> For Windows, define the environment variable ICUROOT and then restart Visual C++ or Visual Studio .NET. 
+		in order for the ICUROOT variable to take effect.<br/><br/></li>
     </ol>
 	<anchor name="icusupport"/>
     <s3 title="Enabling ICU support for encoding">
@@ -571,7 +563,7 @@ void parseWithXerces(XalanTransformer &amp;xalan,
     want to enable ICU support:
 	  </p>
 	  <ol>
-		<li>Include the ICUBridge headers.<br/><br/></li>
+		<li>Define the environment variable ICUROOT.<br/><br/></li>
 		<li>Substitute ICU support for format-number(), xsl:number, and/or xsl:sort.<br/><br/></li>
 		<li>Rebuild the Xalan library to include the ICUBridge.</li>
       </ol>
@@ -585,7 +577,7 @@ void parseWithXerces(XalanTransformer &amp;xalan,
 #include &lt;xalanc/ICUBridge/ICUXalanNumberFormatFactory.hpp&gt;
 #include &lt;xalanc/ICUBridge/ICUBridgeCollationCompareFunctor.hpp&gt;
 	  </source>
-	  <p>For Windows, do a clean build of the Xalan library using the "AllInOneWithICU" project.</p>
+	  <p>For Windows, do a clean build of the Xalan library using the "XalanICU.dsw" workspace (for Visual C++ users) or "XalanICU.sln" solution (for Visual Studio .NET users).</p>
 	  <p>For UNIX:</p>
 	  <ol>
 		<li>Define the XALAN_USE_ICU environment variable.<br/><br/></li>

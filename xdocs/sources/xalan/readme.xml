@@ -30,40 +30,28 @@
  <anchor name="status"/>
  <s2 title="Status">
    <ul>
-    <li><link anchor="done">Changes for &xslt4c; version 1.7</link></li>
+    <li><link anchor="done">Changes for &xslt4c; version 1.8</link></li>
     <li><link anchor="bugs">Bug reporting</link></li>    
     <li><link anchor="xml4c">Version of &xml4c; to use</link></li>
     <li><link anchor="to-do">To-do tasks for future &xslt4c; releases</link></li>
    </ul>
    <anchor name="done"/>
-   <s3 title="Changes for &xslt4c; version 1.7">
-     <p>Major updates since version 1.6 include:</p>
+   <s3 title="Changes for &xslt4c; version 1.8">
+     <p>Major updates since version 1.7 include:</p>
      <ul>
       <li><resource-ref idref="bugsfixedforthisrelease"/>.</li>
-      <li>Message Localization Support. This feature enables &xslt4c; to issue diagnostic messages 
-      in languages other than the default language (English). In order to utilize this feature, 
-      the user must provide a version of the &xslt4c; message catalog that has been translated in 
-      their language of choice. For more information on how to exploit this feature, please see  
-      <link anchor="locale">Steps for doing a Build with Message Localization Support</link>.</li>
-      <li>Build, packaging, and installation improvements. Changes to the &xslt4c; makefiles now 
-      allow for a more flexible build, packaging, and install process. Each step in a typical 
-      build process can be invoked by specifying the appropriate target, for example to build the 
-      executable, and/or samples, or install the build at user-specified location. For more 
-      information on building &xslt4c;, please see <link anchor="unix">Steps for doing a Unix build
-      </link>.</li>
-      <li>Deprecated DOM Support. The XercesBridge classes have been marked deprecated and moved 
-      into an exclusive directory within the xalanc/XercesParserLiaison directory called 
-      'Deprecated'. If your application is dependent on these classes to interface with the 
-      deprecated Xerces DOM you must alter your include directive with the 'Deprecated' directory. 
-      For example:<br/><br/>
-      <code>#include "xalanc/XercesParserLiaison/XercesDocumentBridge.hpp"</code><br/><br/>
-      should be changed to:<br/><br/>
-      <code>#include "xalanc/XercesParserLiaison/Deprecated/XercesDocumentBridge.hpp"</code><br/><br/></li>
-      <li>Upgrade from Xerces-C 2.3 to Xerces-C 2.4. </li>
-      <li>Porting of ThreadSafe example to UNIX platform.</li>
-      <li>Implementation of EXSLT string extension functions encode-uri() and decode-uri(). </li>
-      <li>Implementation of EXSLT dynamic extension function evaluate(). </li>
-      <li>Implementation of EXSLT date-time extension function date-time().</li>
+      <li>Upgrade from Xerces-C 2.4 to Xerces-C 2.5. </li>
+      <li>Provide build support for Cygwin and HP-UX 11.00 on Itanium.  Although binary distributions are not provided for the Cygwin environment and 
+          HP-UX 11.00 on Itanium platform, the build configuration files provided in the source distribution can be used to build on these platforms. </li>
+      <li>Project files for supporting Microsoft Visual Studio .NET.  Although a binary distribution for the Microsoft Visual Studio .NET 
+          is not provided in this release, Visual Studio solution files are provided in the Windows source distribution for those who choose to build
+          on this platform.  Please see <link anchor="dotNet">"Step for doing a Windows Build with Visual Studio .NET"</link> for details.</li>
+      <li>Additional changes to Xerces Deprecated DOM support.  This is another step towards phasing out the support for Xerces Deprecated DOM.  Users are encouraged to modify their applications to interface with the new Xerces DOM support.  For more information on the effects of these changes to your build environment, please see <link anchor="xercesdepdom">"Steps for doing a Build with Xerces Deprecated DOM Support"</link></li>
+      <!--
+      <li>Porting of conf utility to the UNIX platform.  The conf utility is a test harness designed to run the conformance tests located under the xml-xalan/test/tests directory.  After the tests have been run, a results report is generated in HTML format for easy viewing.  For more information on how to use this tool, please see <link idref="commandline" anchor="confexe">"Using the command line utility"</link>.</li>
+      -->
+      <li>Implemented optimizations to significantly improve the throughput of the ICU-enabled "format-number" function.</li>
+      <li>Changes in the XML Serializer. The serializer will no longer put a newline after the xml header tag unless indent="yes". See bugzilla <jump href="http://nagoya.apache.org/bugzilla/show_bug.cgi?id=24304">24304</jump> and <jump href="http://nagoya.apache.org/bugzilla/show_bug.cgi?id=28386">28386</jump>.</li>
      </ul>  
    </s3>  
 
@@ -89,50 +77,71 @@
    <s3 title="Rebuilding &xslt4c;">
    <ul>
     <li><link anchor="needed">What you need from the distributions</link></li>   
-    <li><link anchor="win32">Steps for doing a Windows build</link></li>
+    <li><link anchor="win32">Steps for doing a Windows Build</link></li>
+    <li><link anchor="dotNet">Steps for doing a Windows Build with Visual Studio .NET</link></li>
     <li><link anchor="unix">Steps for doing a UNIX build</link></li>       
     <li><link anchor="locale">Steps for doing a Build with Message Localization Support</link></li>
+    <li><link anchor="xercesdepdom">Steps for doing a Build with Xerces Deprecated DOM Support</link></li>
    </ul></s3><anchor name="needed"/>
    <s3 title="What you need from the distributions">
    <p>To rebuild &xslt4c;, you need the &xslt4c; source files, the &xml4c; header files, and
    for Windows the &xml4c; .lib file. If you want to rebuild with the ICU, you will need to download the ICU source package to build the ICU libraries. </p>
-  <p>The &xslt4c; source tree is in the src subdirectory of the &xslt4c; <link idref="getstarted" anchor="download">binary distributions</link>. The &xml4c; header files are in the include/xercesc tree of the corresponding &xml4c; binary distributions. The Windows Xerces .lib file is in the lib directory of the &xml4c; Windows binary distribution.</p> 
 
 <note>You can also download &xslt4c; source distributions from <resource-ref idref="xslt4c-distdir"/>: &xslt4c-dist;-src.zip and &xslt4c-dist;-src.tar.gz. &xml4c; source distributions are available from <resource-ref idref="xml4c-distdir"/>: 
 &xml4c-dist;-src.zip and &xml4c-dist;-src.tar.gz.</note>
 <p>Keep in mind that at any given point in time the &xslt4c; and &xml4c; source trees in the Apache XML repository may not be consistent. When we release a version of &xslt4c; we certify that it is compatible with a given version of &xml4c;. To be safe, use the Xerces distributions that we certify as compatible. Reminder: &xslt4c-current; is compatible with &xml4c-used;.</p>
    <p>For information on using the <resource-ref idref="icu"/>, see
    <link idref="usagepatterns" anchor="icu">Using the ICU</link>.
-   &xslt4c-current; has been tested with &icu-used;. You may be able to use newer ICU releases as they appear.</p>
+   The recommended version of ICU for &xslt4c-current; is &icu-current;. You may be able to use newer ICU releases as they appear.</p>
    </s3><anchor name="win32"/>
   <s3 title="Steps for doing a Windows build">
-  <p>To build &xslt4c; on Windows, you need &xml4c; and MS Visual C++ 6.0 installed with Service Pack 3 for Visual C++ and Visual Studio. You should also apply the bug fixes for the C++ standard library that shipped with Visual C++ 6.0. These fixes are available from the Dinkumware site: <jump href="http://www.dinkumware.com/vc_fixes.html">http://www.dinkumware.com/vc_fixes.html</jump>.</p> 
-  <p>If you do not want to apply the Dinkumware patches, or you are using a different Service Pack, you must rebuild all of the Xerces and Xalan binaries.</p>
+  <p>To build &xslt4c; on Windows, you need &xml4c; and MS Visual C++ 6.0 installed with Service Pack 5 for Visual C++ and Visual Studio .NET.</p> 
+  <p>If you are using a different Service Pack, you must rebuild all of the Xerces and Xalan binaries.</p>
 <p>Before you do the following, be sure you have <link idref="getstarted" anchor="windowspath">provided Visual C++ the paths to the Xerces headers and libraries</link>.</p>
   <ol>    
-     <li>If you want to enable ICU support, install the ICU so the ICU root directory is at the same level as the xml-xerces directory (see <link 
-      idref="usagepatterns" anchor="icu">Using the ICU</link>).  If you choose to build Xalan with ICU, you will need to rebuild the Xerces binary with ICU as well.<br/><br/></li>
-    <li>Use Visual C++ to open the Xalan workspace from the &xslt4c-win_root;\Projects\Win32\VC6.  If you are building with ICU, then use XalanICU.dsw.  Otherwise, open the Xalan.dsw workspace.
-    <br/><br/></li>
-    <li>From Visual C++, go to "Tools" and select "Options".  From the "Options" window, click on the "Directories" tab and do the following:
+    <li>Create the ICUROOT environment variable and set it the the path of the ICU root.</li>
+    <li>Create the XERCESCROOT environment variable and set it to the path of the root of &xml4c;.</li>
+    <li>Use Visual C++ to open the Xalan workspace (.dsw) from the &xslt4c-win_root;\Projects\Win32\VC6.  If you are building with ICU, then use XalanICU.dsw.  Otherwise, open the Xalan.dsw workspace.<br/><br/>
+    <note>You may need to restart Visual Studio .NET in order for ICUROOT and XERCESCROOT to take effect.</note>
+    <br/>
+    As an alternative method to the steps described above, would be to go to "Tools" and select "Options" from Visual C++.  From the "Options" window, click on the "Directories" tab and do the following:
     <ol>
     <li>Show Directories for: Executable files.  Add the Xerces bin directory to the list.</li>
     <li>Show Directories for: Include files.  Add the Xerces include directory to the list.  If you are building with ICU, add the ICU include directory to the list as well.</li>
     <li>Show Directories for: Library files. Add the Xerces lib directory to the list.  If you are building with ICU, add the ICU lib directory to the list as well.</li>
     </ol></li>
-    <li>Use Visual C++ to build the Xalan library and executables of interest.</li>
   </ol>
   <note>To recompile existing applications without changing your source code, be sure to modify your Project settings to pick up the Xalan headers in its new location. (see image below)</note>
   <p><img src="options-sane.gif" alt="Visual C++ 6.0 Include Directories change"/></p>
+</s3>
+<anchor name="dotNet"/>
+<s3 title="Steps for doing a Windows Build with Microsoft Visual Studio .NET">
+  <p>For users who want to build with Visual Studio .NET,</p>
+  <ol>
+    <li>Create the ICUROOT environment variable and set it the the path of the ICU root.</li>
+    <li>Create the XERCESCROOT environment variable and set it to the path of the root of &xml4c;.</li>
+    <li>Use Visual Studio .NET to open the Xalan solution (.sln) from the &xslt4c-win_root;\Projects\Win32\VC7.  If you are building with ICU, then use XalanICU.sln.  Otherwise, open the Xalan.sln solution file.<br/><br/>
+    <note>You may need to restart Visual Studio .NET in order for ICUROOT and XERCESCROOT to take effect.</note>
+    <br/>
+    An alternative method to the steps described above, would be to go to "Tools" and select "Options" from Visual Studio .NET.  From the "Options" window, click on the "Projects" folder to expand the list.  Select "VC++ Directories" from the list and do the following:
+    <ol>
+    <li>Show Directories for: Executable files.  Add the Xerces bin directory to the list.</li>
+    <li>Show Directories for: Include files.  Add the Xerces include directory to the list.  If you are building with ICU, add the ICU include directory to the list as well.</li>
+    <li>Show Directories for: Library files. Add the Xerces lib directory to the list.  If you are building with ICU, add the ICU lib directory to the list as well.</li>
+    </ol></li>
+  </ol>
+  <note>To recompile existing applications without changing your source code, be sure to modify your Project settings to pick up the Xalan headers in its new location. (see image below)</note>
+  <p><img src="NET_options.jpg" alt="Visual Studio .NET Include Directories change"/></p>
   </s3><anchor name="unix"/>
 <s3 title="Steps for doing a UNIX build">
+    <p>For users who want to build in the UNIX environment,</p>
     <ol>
       <li>The Xalan build files are written for GNU make, and will not work with other make utilities.<br/><br/></li>    
       <li>Set the XERCESCROOT environment variable to the path to the root of &xml4c;.<br/><br/></li>    
       <li>Set the XALANCROOT environment variable to the path to the c directory in the root of the &xslt4c;
        distribution.  For example, if the distribution is located in "/home/mydir", you would set the XALANCROOT to "/home/mydir/&xslt4c-unix_root;". <br/><br/></li>
       <li>(Optional) If you are including the ICUBridge, install the ICU, use the shell to define XALAN_USE_ICU and to set the ICUROOT environment variable to the path to the ICU root. For more information, see (see <link idref="usagepatterns" anchor="icu">Using the ICU</link>).  Note that building Xalan with ICU requires that Xerces must also be built with ICU.<br/><br/></li>
-      <li>Change directory to &xslt4c-unix_root; in the &xslt4c; distribution. You can also 
+      <li>Change directory to XALANCROOT. You can also 
           build Xalan-C outside of the source tree, but you will need to adjust the path to the
           runConfigure script in the next step.<br/><br/></li>      
       <li>Run the runConfigure utility and provide the platform, C compiler, and C++ compiler flags as 
@@ -143,9 +152,9 @@
           <table>
           <tr><th>flag</th><th>Description</th></tr>
           <tr><td>p</td><td>Build platform. Option must be provided by user. Valid values <br/>include: 
-          aix, linux, freebsd, netbsd, solaris, hp-10, hp-11, irix, tru64, <br/>macosx. </td></tr>
-          <tr><td>c</td><td>C compiler name. Example: gcc, cc, c89, xlc, etc.</td></tr>
-          <tr><td>x</td><td>C++ compiler name. Example: g++, xlC, CC, etc.</td></tr>
+          aix, linux, freebsd, netbsd, solaris, hp-10, hp-11, hp-11-ia64, irix,<br/> tru64, macosx, cygwin. </td></tr>
+          <tr><td>c</td><td>C compiler name. Example: gcc, cc, c89, xlc_r, etc.</td></tr>
+          <tr><td>x</td><td>C++ compiler name. Example: g++, xlC_r, CC, etc.</td></tr>
           <tr><td>d</td><td>Indicates build is a debug build. Takes no values. Default is no <br/>debug.</td></tr>
           <tr><td>t</td><td>Transcoder to use. Valid value is 'icu'. Default is null.</td></tr>
           <tr><td>m</td><td>Type of localization support method. Valid values include: inmem, <br/>icu, and nls. 
@@ -163,17 +172,20 @@
           </table><br/>
           <ref>Linux using GCC:</ref>&nbsp;&nbsp;<code>./runConfigure -p linux -c gcc -x c++</code><br/>
           <ref>Linux using the Intel compiler:</ref>&nbsp;&nbsp;<code>./runConfigure -p linux -c icc -x icpc</code><br/>
-          <ref>AIX (32-bit):</ref>&nbsp;&nbsp;&nbsp;&nbsp;<code>./runConfigure -p aix -c xlc -x xlC</code><br/><br/>
-          <ref>AIX (64-bit):</ref>&nbsp;&nbsp;&nbsp;&nbsp;<code>./runConfigure -p aix -c xlc -x xlC -b 64</code><br/><br/>
+          <ref>AIX (32-bit):</ref>&nbsp;&nbsp;&nbsp;&nbsp;<code>./runConfigure -p aix -c xlc_r -x xlC_r</code><br/><br/>
+          <ref>AIX (64-bit):</ref>&nbsp;&nbsp;&nbsp;&nbsp;<code>./runConfigure -p aix -c xlc_r -x xlC_r -b 64</code><br/><br/>
+          <ref>Cygwin (32-bit):</ref>&nbsp;&nbsp;<code>./runConfigure -p cygwin -c gcc -x g++</code><br/><br/>
           <ref>HP-UX 11 (32-bit):</ref>&nbsp;&nbsp;<code>./runConfigure -p hp-11 -c cc -x aCC</code><br/><br/>
           <ref>HP-UX 11 (64-bit):</ref>&nbsp;&nbsp;<code>./runConfigure -p hp-11 -c cc -x aCC -b 64</code><br/><br/>
-          <ref>Solaris (32-bit):</ref>&nbsp;&nbsp;<code>./runConfigure -p Solaris -c cc -x CC</code><br/><br/>
-          <ref>Solaris (64-bit):</ref>&nbsp;&nbsp;<code>./runConfigure -p Solaris -c cc -x CC -b 64</code><br/><br/>
+          <ref>HP-UX 11 for Itanium (32-bit):</ref>&nbsp;&nbsp;<code>./runConfigure -p hp-11-ia64 -c cc -x aCC</code><br/><br/>
+          <ref>HP-UX 11 for Itanium (64-bit):</ref>&nbsp;&nbsp;<code>./runConfigure -p hp-11-ia64 -c cc -x aCC -b 64</code><br/><br/>
+          <ref>Solaris (32-bit):</ref>&nbsp;&nbsp;<code>./runConfigure -p solaris -c cc -x CC</code><br/><br/>
+          <ref>Solaris (64-bit):</ref>&nbsp;&nbsp;<code>./runConfigure -p solaris -c cc -x CC -b 64</code><br/><br/>
           If you choose to install the distribution after building the libraries and executables, 
           then you will need to indicate where you would like the distribution to be installed. 
           To specify the install directory for your distribution, specify the flag -P &lt;install directory&gt;. 
           For example, building and installing on the AIX platform:<br/><br/>
-          <code>./runConfigure -p aix -c xlc -x xlC -P $HOME/my_xalan</code><br/><br/>
+          <code>./runConfigure -p aix -c xlc_r -x xlC_r -P $HOME/my_xalan</code><br/><br/>
           <note>The standard binary directories bin, lib, and include are created in the specified directory only if the install or install-package option is 
           specified in the build process.<br/><br/></note>
           To see the other runConfigure flags you may include, use the help flag:<br/><br/>
@@ -193,8 +205,8 @@
           <tr><td>install</td><td>Build the library, executables and copy them (along with <br/>the header files) 
           the specified install location.</td></tr>
           <tr><td>install-package</td><td>Installs the library, executables, samples to the <br/>specified location.</td></tr>
-          <tr><td>samples</td><td>Builds the samples.</td></tr>
-          <tr><td>tests</td><td>Builds the tests.</td></tr>
+          <tr><td>Samples</td><td>Builds the samples.</td></tr>
+          <tr><td>Tests</td><td>Builds the tests.</td></tr>
           </table>
       </li>
     </ol>
@@ -218,7 +230,7 @@
    </ul>
    <p>Regardless of which method you choose, a message file containing translated messages in the 
    language of your choice must be provided. The standard message file provided in the &xslt4c; 
-   version 1.7 source package is in XML Localization Interchange File Format (XLIFF) format 
+   version 1.8 source package is in XML Localization Interchange File Format (XLIFF) format 
    and conforms to the XLIFF 1.1 standard (please see 
    <jump href="http://www.oasis-open.org/committees/xliff/documents/xliff-specification.htm">
    http://www.oasis-open.org/committees/xliff/documents/xliff-specification.htm</jump> for more 
@@ -229,26 +241,24 @@
    as shown above for building in Unix or Windows but with a small change.</p>
    <p>For building on Windows platform with "In Memory" method:</p>
    <ol>
+   <li>Create the environment variable XERCESCROOT and set it to the path to the root of &xml4c;.</li>
+   <li>Create the environment variable ICUROOT and set it to the path to the ICU root.</li>
    <li>Open the Xalan.dsw workspace using Microsoft Visual C++. The "inmem" localization method should be configured by default.</li>
    <li>Select the Localization project, and go to Settings and click on the "General" tab.Verify 
    the build command line to use "nmake /f BuildMessages.mak TYPE=inmem LOCAL=en_US"</li>
-   <li>Add the Xerces-C bin directory to the PATH </li>
-   <li>Add the Xerces-C lib directory to the library directory list </li>
-   <li>Add the Xerces-C include directory to the include directory list. </li>
    <li>Run "Build all" with the configuration of your choice. </li>
    </ol>
    <p>For building on the Windows platform with ICU method:</p>
    <ol>
+   <li>Create the environment variable XERCESCROOT and set it to the path to the root of &xml4c;.</li>
+   <li>Create the environment variable ICUROOT and set it to the path to the ICU root.</li>
    <li>Open the XalanICU.dsw workspace using Microsoft Visual C++. </li>
    <li>Select the AllInOneWithICU project, and ensure that the project depends on the LocalizationWithICU 
    project. </li>
    <li>Select the LocalizationWithICU project, and go to Settings and click on the "General" tab. Modify 
    the build command line to use "nmake /f BuildMessages.mak TYPE=icu LOCAL=en_US"</li>
-   <li>Add the Xerces-C bin directory and ICU bin directory to the PATH </li>
-   <li>Add the Xerces-C lib directory and ICU lib directory to the library directory list </li>
-   <li>Add the Xerces-C include directory and ICU include directory to the include directory list </li>
    <li>Open the tools.ini file under Projects\Win32\VC6\Utils\Localization and add the ICU root 
-   directory to the ICUROOT variable setting. Another option is to define ICUROOT as an environmental variable. </li>
+   directory to the ICUROOT variable setting.</li>
    <li>Run "Build all" with the configuration of your choice. </li>
    </ol>
    <p>For building on the Unix platform:</p>
@@ -257,11 +267,11 @@
    <li>Run the runConfigure and provide the platform, C compiler, C++ compiler, the message locale 
    system flavour you are intending to build, and the locale support.<br/><br/>
    Example 1: to use the NLS method for localization support using the default locale en_US:<br/><br/>
-   <ref>AIX (32-bit):</ref>&nbsp;&nbsp;<code>./runConfigure -p aix -c xlc -x xlC -m nls</code><br/><br/>
-   <ref>AIX (64-bit):</ref>&nbsp;&nbsp;.<code>/runConfigure -p aix -c xlc -x xlC -b 64 -m nls</code><br/><br/>
+   <ref>AIX (32-bit):</ref>&nbsp;&nbsp;<code>./runConfigure -p aix -c xlc_r -x xlC -m nls</code><br/><br/>
+   <ref>AIX (64-bit):</ref>&nbsp;&nbsp;.<code>/runConfigure -p aix -c xlc_r -x xlC_r -b 64 -m nls</code><br/><br/>
    Example 2: to use the 'icu' method for localization support using the locale fr_FR:<br/><br/>
-   <ref>AIX (32-bit):</ref>&nbsp;&nbsp;<code>./runConfigure -p aix -c xlc -x xlC -m icu -M fr_Fr</code><br/><br/>
-   <ref>AIX (64-bit):</ref>&nbsp;&nbsp;<code>./runConfigure -p aix -c xlc -x xlC -b 64 -m icu -M fr_Fr</code><br/><br/>
+   <ref>AIX (32-bit):</ref>&nbsp;&nbsp;<code>./runConfigure -p aix -c xlc_r -x xlC_r -m icu -M fr_Fr</code><br/><br/>
+   <ref>AIX (64-bit):</ref>&nbsp;&nbsp;<code>./runConfigure -p aix -c xlc_r -x xlC_r -b 64 -m icu -M fr_Fr</code><br/><br/>
    </li>
    <li>Perform steps 7 and 8 as outlined under "Steps for doing a UNIX Build" </li>
    </ol>
@@ -269,10 +279,10 @@
    will be stored in the directory &xslt4c-unix_root;/bin.<br/><br/>
    <table>
    <tr><th>Localization Build Type</th><th>File Name</th></tr>
-   <tr><td><ref>ICU or "in memory" method:</ref></td><td>libxalanMsg17.so (for UNIX)<br/>
-   XalanMessages_1_8_0.dll and XalanMessages_1_8_0.lib (for Windows)
+   <tr><td><ref>ICU or "in memory" method:</ref></td><td>libxalanMsg18.so (for UNIX)<br/>
+   XalanMessages_1_8.dll and XalanMessages_1_8.lib (for Windows)
    </td></tr>
-   <tr><td><ref>NLS method:</ref></td><td>xalanMsg1_7.cat can be found in $XALANCROOT/nls/&lt;locale_name&gt;/ directory</td></tr>
+   <tr><td><ref>NLS method:</ref></td><td>xalanMsg1_8.cat can be found in $XALANCROOT/nls/&lt;locale_name&gt;/ directory</td></tr>
    </table>
    </p>
    <p>The location of the message library, &xslt4c; and &xml4c; binaries need to be added to the PATH and 
@@ -290,9 +300,24 @@
    <li>For an NLS build, the message catalog will need to be added to the NLSPATH. </li>
    </ul>   
    </s3>   
+   <anchor name="xercesdepdom"/>
+   <s3 title="Steps for doing a Build with Xerces Deprecated DOM Support">
+   <p>If you application is dependent on the XercesBridge classes to interface with the deprecated Xerces DOM, then the following steps must be taken.</p>
+   <p>For a Windows build using Microsoft Visual C++ version 6.0:</p>
+   <ol>
+   <li>Open the Xalan.dsw workspace</li>
+   <li>Go to "Projects" and select "Settings".  From the "Project Settings panel", highlight the AllInOne project.</li>
+   <li>Click on the "C/C++" tab on the right hand side.  From the "Category" pull down menu, scroll down to find "Preprocessor" and click to highlight this category.</li>
+   <li>Under the "Preprocessor Definitions" box, add "XALAN_BUILD_DEPRECATED_DOM_BRIDGE" to the list of definitions.</li>
+   <li>Rebuild &xslt4c; as described under <link anchor="win32">"Steps for doing a Windows Build"</link></li>
+   </ol>
+   <p>For a UNIX build, the following parameter should be added to your runConfigure step: <code>-z -DXALAN_BUILD_DEPRECATED_DOM_BRIDGE</code>.  for example,</p>
+   &nbsp;&nbsp;&nbsp;&nbsp;<code>./runConfigure -p aix -c xlc_r -x xlC_r -z -DXALAN_BUILD_DEPRECATED_DOM_BRIDGE</code><br/><br/>
+
+   </s3>
    <anchor name="samples"/>
    <s3 title="Rebuilding a Sample application">
-   <p>In the Windows32 distribution, all of the sample applications can be built from the Xalan.dsw Visual C++ workspace.</p>
+   <p>In the 32-bit Windows distribution, all of the sample applications can be built from the Xalan.dsw Visual C++ workspace.</p>
 <p>The Makefile that come with the UNIX distributions include targets for rebuilding one or all of the sample applications . To rebuild one or more sample applications, go to the root directory of your source package or the samples directory of your binary package, and run<br/><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<code>gmake <ref>Target</ref></code><br/><br/>
 where <ref>Target</ref> is <code>Samples</code> (all the samples), <code>ApacheModuleXSLT</code>, <code>CompileStylesheet</code>, <code>DocumentBuilder</code>, <code>ExternalFunctions</code>, <code>ParsedSourceWrappers</code>, <code>SerializedNodeSet</code>, <code>SimpleTransform</code>,  <code>SimpleXPathAPI</code>, <code>SimpleXPathCAPI</code>, <code>StreamTransform</code>, <code>ThreadSafe</code> (Windows only), <code>TraceListen</code>, <code>TransformToXercesDOM</code>, <code>UseStylesheetParam</code>, <code>XPathWrapper</code>, <code>XalanTransform</code>, or <code>XalanTransformerCallback</code>.</p>

@@ -29,22 +29,24 @@
 <s2 title="Downloading what you need">
 <p>For &xslt4c-current;, we are distributing the following: 
 <ul>
-<li>Windows 32-bit and 64-bit Visual C++ builds</li>
-<li>Red Hat Linux 7.2 32-bit and 64-bit Intel C++ builds</li>
-<li>AIX 5.1 32-bit and 64-bit xlC builds</li> 
+<li>AIX 5.1 32-bit and 64-bit xlC_r builds</li> 
 <li>HP-UX 11 32-bit and 64-bit aCC builds</li>
+<li>Red Hat Linux 7.2 32-bit and 64-bit Intel C++ builds</li>
 <li>Solaris 2.7 32-bit and 64-bit Forte C++ builds</li>
+<li>SuSE Linux 8.1 for IA-32 gcc 3.2.2 build  </li>
+<li>Windows 32-bit and 64-bit Visual C++ builds</li>
 </ul>
 </p>
+<!-- Leave this section in for future releases 
 <p>New to the &xslt4c-current; binary distribution list, we are also providing the following: 
 <ul>
-<li>SuSE Linux 8.1 for IA-32 gcc 3.2.2 build  </li>
 </ul>
 </p>
+-->
 <p>As with previous releases, the documentation build containing this User's Guide and API documentation
 will be provided in a separate distribution.</p>
 <p>Please contact us at <human-resource-ref idref="xalandev"/> if you would like to help provide builds for other platforms.</p>
-<p>If you do not already have it, you must also download the &xml4c; 2.4.0 build as indicated below.</p> 
+<p>If you do not already have it, you must also download the &xml4c-used; build as indicated below.</p> 
 <note>The Xalan distribution files are in <resource-ref idref="xslt4c-distdir"/>. The Xerces distribution files are in <resource-ref idref="xml4c-distdir"/>.  Xalan documentation is provided in a separate package from the binary distribution files.  For Windows, documentation is packaged with the file name &xslt4c-docs_dist_zip;.  For UNIX, documentation is packaged with the file name of &xslt4c-docs_dist_targz;.</note>
 <table>
   <tr>
@@ -98,15 +100,14 @@ will be provided in a separate distribution.</p>
   <td>SuSE Linux 8.1 (32-bit)</td>
   </tr>
   <tr>
-  <td>
-  &xslt4c-winnt-dist;<br/>
-  </td>
-  <td>
-  &xml4c-winnt-dist;<br/>
-  </td>
-  <td>
-  Windows NT<br/>
-  </td>
+  <td>&xslt4c-win2k-dist;<br/></td>
+  <td>&xml4c-winnt-dist;<br/></td>
+  <td>Windows 2000<br/></td>
+  </tr>
+  <tr>
+  <td>&xslt4c-win2003l_64-dist;<br/></td>
+  <td>&xml4c-win2003c_64-dist;<br/></td>
+  <td>Windows 2003 Server (64-bit)<br/></td>
   </tr>
 </table>
 <p>The compiler version used for each platform is listed in the table below.
@@ -120,16 +121,16 @@ will be provided in a separate distribution.</p>
          <td>IBM C and C++ for AIX 6.00</td>
        </tr>
        <tr>
-         <td>Solaris 2.7</td>
-         <td>Sun Workshop 6 update 2</td>
-       </tr>
-       <tr>
          <td>HP/UX 11.0</td>
-         <td>aCC A.03.37</td>
+         <td>aCC A.03.52</td>
        </tr>
        <tr>
          <td>Red Hat Linux 7.2</td>
          <td>Intel C++ Compiler, version 7.1</td>
+       </tr>
+       <tr>
+         <td>Solaris 2.7</td>
+         <td>Sun Workshop 6 update 2</td>
        </tr>
        <tr>
          <td>SuSE Linux 8.1</td>
@@ -137,8 +138,7 @@ will be provided in a separate distribution.</p>
        </tr>
        <tr>
          <td>Windows NT, 2000, and XP</td>
-         <td>Microsoft Visual C++ with SP3 and <jump href="http://www.dinkumware.com/vc_fixes.html">
-         Dinkumware fixes</jump> (for 32-bit)<br/>
+         <td>Microsoft Visual C++ with SP5 (for 32-bit)<br/>
          Intel C++ Compiler, version 7.1 (for 64-bit)</td>
        </tr>
     </table>
@@ -155,9 +155,9 @@ will be provided in a separate distribution.</p>
   <li><link anchor="unixpath">For UNIX</link></li>  
 </ul><anchor name="windowspath"/>
 <s3 title="For Windows">
-<p>To use the Windows distribution, you must place the Xalan executables and the Xalan and Xerces libraries on the path:</p>
+<p>To use the Windows binary distribution, you must place the Xalan executables and the Xalan and Xerces libraries on the path:</p>
 <ul>
-<li>Put &xslt4c-win_root;\Build\Win32\VC6\Release and &xml4c-dist;-&lt;my_Windows_distribution&gt;\bin on the path.</li>
+<li>Put &xslt4c-dist;-&lt;my_Windows_distribution&gt;\bin and &xml4c-dist;-&lt;my_Windows_distribution&gt;\bin on the path.</li>
 </ul>
 <p>The Visual C++ Xalan project included with the Windows release knows the relative paths to the Xalan headers and libraries, but it does not know where you have unzipped the Xerces distribution. If you plan to use Visual C++ to build Xalan applications or <link idref="readme" anchor="jar">rebuild Xalan</link>, you must also provide Visual C++ with access to the Xerces headers and libraries.</p> 
 <p>Use the Visual C++ Tools menu to open the Options dialog box, go to the Directories tab, and do the following:</p>
@@ -168,30 +168,30 @@ will be provided in a separate distribution.</p>
 
 </s3><anchor name="unixpath"/>
 <s3 title="For UNIX">
-<p>To use one of the UNIX distributions, you must place the &xslt4c; executable on the path, and 
+<p>To use one of the UNIX binary distributions, you must place the &xslt4c; executable on the path, and 
 the &xslt4c; and &xml4c; libraries on the library path.</p>
 <p>For the &xslt4c; AIX distributions:</p>
 <ul>
-<li>Put &xslt4c-unix_root;/bin on the path (PATH).</li>
-<li>Put &xslt4c-unix_root;/lib and &xml4c-dist;-&lt;my_AIX_distribution&gt;/lib 
+<li>Put &xslt4c-dist;-&lt;my_AIX_distribution&gt;/bin on the path (PATH).</li>
+<li>Put &xslt4c-dist;-&lt;my_AIX_distribution&gt;/lib and &xml4c-dist;-&lt;my_AIX_distribution&gt;/lib 
 on the library path (LIBPATH), or copy the shared libraries to /usr/lib.</li>
 </ul>
 <p>For the &xslt4c; HP-UX 11 distributions:</p>
 <ul>
-<li>Put &xslt4c-unix_root;/bin on the path (PATH).<br/><br/></li>
-<li>Put &xslt4c-unix_root;/lib and &xml4c-dist;-&lt;my_HPUX_distribution&gt;/lib on the library path (SHLIB_PATH), or copy 
+<li>Put &xslt4c-dist;-&lt;my_HPUX_distribution&gt;/bin on the path (PATH).<br/><br/></li>
+<li>Put &xslt4c-dist;-&lt;my_HPUX_distribution&gt;/lib and &xml4c-dist;-&lt;my_HPUX_distribution&gt;/lib on the library path (SHLIB_PATH), or copy 
 the shared libraries to /usr/lib.</li>
 </ul>
 <p>For the &xslt4c; Solaris distributions:</p>
 <ul>
-<li>Put &xslt4c-unix_root;/bin on the path (PATH).<br/><br/></li>
-<li>Put &xslt4c-unix_root;/lib and &xml4c-dist;-&lt;my_solaris_distribution&gt;/lib on the library path 
+<li>Put &xslt4c-dist;-&lt;my_Solaris_distribution&gt;/bin on the path (PATH).<br/><br/></li>
+<li>Put &xslt4c-dist;-&lt;my_Solaris_distribution&gt;/lib and &xml4c-dist;-&lt;my_Solaris_distribution&gt;/lib on the library path 
 (LD_LIBRARY_PATH), or copy the shared libraries to /usr/lib.</li>
 </ul>
 <p>For the &xslt4c; RedHat and SuSE Linux distributions:</p>
 <ul>
-<li>Put &xslt4c-unix_root;/bin on the path (PATH).</li>
-<li>Put &xslt4c-unix_root;/lib and &xml4c-dist;-&lt;my_linux_distribution&gt;/lib on the library path (LD_LIBRARY_PATH), 
+<li>Put &xslt4c-dist;-&lt;my_Linux_distribution&gt;/bin on the path (PATH).</li>
+<li>Put &xslt4c-dist;-&lt;my_Linux_distribution&gt;/lib and &xml4c-dist;-&lt;my_Linux_distribution&gt;/lib on the library path (LD_LIBRARY_PATH), 
 or copy the shared libraries to /usr/lib.</li>
 </ul>
 </s3>
@@ -201,7 +201,7 @@ or copy the shared libraries to /usr/lib.</li>
 <p>To run the samples, do the following:</p>
 <ol>
 <li>Set up your path (see above). In the Windows32 distribution, the sample executables are in
-&xslt4c-win_root;\Build\Win32\VC6\Release. In the UNIX distributions, the executables are in &xslt4c-unix_root;/bin.</li>
+&xslt4c-dist;-&lt;my_Windows_distribution&gt;\bin. In the UNIX distributions, the executables are in &xslt4c-dist;-&lt;my_UNIX_distribution&gt;/bin.</li>
 <li>Go to the samples subdirectory containing the sample.</li>
 <li>Run the sample from the command line (in Windows, use the DOS shell).</li>
 <li>Examine the application source files.</li>
