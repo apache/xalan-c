@@ -120,46 +120,29 @@
 
 const char* const excludeStylesheets[] =
 {
-
-	"attribset15.xml",
-	"entref08.xml",
-	"entref10.xml",
-	"extend01.xml",
+//	"impincl16.xml",
 	0
 };
 
 
-const char* const xslStylesheets[] =
-{
-	"attribset15.xml",
-	"entref08.xml",
-	"entref10.xml",
-	"extend01.xml",
-	0
-
-};
 
 inline bool
 checkForExclusion(XalanDOMString currentFile)
 {
 
 		for (int i=0; excludeStylesheets[i] != 0; i++)
-			{	if (equals(currentFile, XalanDOMString(excludeStylesheets[i])))
-				return true;
+			{	
+				if (equals(currentFile, XalanDOMString(excludeStylesheets[i])))
+					return true;
 			}
 		return false;
-}
-
-void
-outputMessage(int iter)
-{
-		cout << "\n" << "Starting Iteration: " << iter << '\0';
 }
 
 void
 getParams(int argc, 
 		  const char*	argv[])
 {
+	// This needs additional work.
 	if (argc != 1)
 	{
 		cerr << "Usage: ThreadTest" << endl;
@@ -196,37 +179,32 @@ main(
 	// Get the list of Directories that are below perf
 	dirs = f.getDirectoryNames(confDir);
 
-	XMLFileReporter	logFile("cpp.xml");
-	logFile.logTestFileInit("Memory Testing - Memory leaks detected during ConformanceTests. ");
+	//XMLFileReporter	logFile("cpp.xml");
+	//logFile.logTestFileInit("Memory Testing - Memory leaks detected during ConformanceTests. ");
 
 	getParams(argc, argv);
 
 	try
 	{
 		// Call the static initializers...
-		//XMLPlatformUtils::Initialize();
+		XMLPlatformUtils::Initialize();
 		XalanTransformer::initialize();
-
+		XalanTransformer transformEngine;
 		{
-			//XSLTInit	theInit;
-			XalanTransformer transformEngine;
 			const XalanDOMString  theXSLSuffix(".xsl");
 			const XalanDOMString  theXMLSuffix(".xml");
 			const XalanDOMString  pathSep(XALAN_STATIC_UCODE_STRING("\\"));  
-//			const XalanDOMString  outputSuffix(".out");
 
 			for(FileNameVectorType::size_type	j = 0; j < dirs.size(); j++)
 			{
 			  files = f.getTestFileNames(confDir, dirs[j]);
 			  for(FileNameVectorType::size_type i = 0; i < files.size(); i++)
-			  { /*
-				if (skip)
-				{
-					if (checkForExclusion(files[i]))
+			  { 
+				if (checkForExclusion(files[i]))
 					{
 						continue;
 					}
-				} */
+
 				// Output file name to result log.
 				//logFile.logTestCaseInit(files[i]);
 			    cout << files[i] << endl;
@@ -241,18 +219,19 @@ main(
 				const XSLTInputSource	xslInputSource(c_wstr(theXSLFile));
 				const XSLTInputSource	xmlInputSource(c_wstr(theXMLFile));
 				int theResult = 0;
-				/*
-				const etoetran = eTOeTransform(xmlInputSource, 
-												xslInputSource,
-												theResultTarget,
-												csConstructionContext,
-												psExecutionContext,
-												csProcessor); */
+
 			    theResult = transformEngine.transform(xmlInputSource, xslInputSource, theResultTarget);
+				if(theResult != 0)
+				{
+					cerr << "XalanError: \n" << transformEngine.getLastError();
+					//exit (1);
+				}
+
 			  }
 			}
 		}
 		XalanTransformer::terminate();
+		XMLPlatformUtils::Terminate();
 	}
 	catch(...)
 	{
