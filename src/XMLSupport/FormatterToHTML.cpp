@@ -526,10 +526,10 @@ FormatterToHTML::processAttribute(
 			else
 				pval = prepAttrString(value, m_attrSpecialChars, m_encoding);
 
-			if(s_attrempties.find(toLowerCase(aname)) == s_attrempties.end())
+			if(s_attrempties.find(aname) == s_attrempties.end())
 			{
 				m_writer.write(' ');
-				m_writer.write(aname);
+				m_writer.write(name);
 				m_writer.write("=\"");
 				m_writer.write(pval);
 				m_writer.write('\"');
@@ -539,11 +539,11 @@ FormatterToHTML::processAttribute(
 				m_writer.write(' ');
 				if((pval.length() == 0) || equalsIgnoreCase(pval, aname))
 				{
-					m_writer.write(aname);
+					m_writer.write(name);
 				}
 				else
 				{
-					m_writer.write(aname);
+					m_writer.write(name);
 					m_writer.write("=\"");
 					m_writer.write(pval);
 					m_writer.write('\"');
@@ -566,17 +566,14 @@ FormatterToHTML::processAttribute(
  * @param   specials    Characters, should be represented in character references.
  * @param   encoding    CURRENTLY NOT IMPLEMENTED.
  * @return              XML-formatted string.
- * @see #backReference
- * NOTE: return value destroyed on subsequent calls
  */
-const DOMString& FormatterToHTML::prepAttrURI(
+const DOMString FormatterToHTML::prepAttrURI(
 			const DOMString& string,
 			const DOMString& /* specials */,
 			const DOMString& /* encoding */)
 	// java: throws SAXException
 {
-	static DOMString sb;
-	sb = "";
+	DOMString sb;
 	const unsigned int	theLength = length(string);
 
 	for (unsigned int i = 0;  i < theLength;  i ++)
@@ -588,7 +585,7 @@ const DOMString& FormatterToHTML::prepAttrURI(
 					(ch < 0x7F)) &&   // X'7F' not valid
 				(s_escapetb.find(sch)== s_escapetb.end())  ) // characters in the table
 		{
-			sb += ch;   // valid character, append it
+			sb += sch;   // valid character, append it
 		}
 		else
 		{
@@ -609,7 +606,6 @@ const DOMString& FormatterToHTML::prepAttrURI(
 			sb += LongToHexDOMString(b2);
 		}
 	}
-
 	return sb;
 }
   

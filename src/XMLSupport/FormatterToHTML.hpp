@@ -248,7 +248,7 @@ protected:
 	 * @see #backReference
 	 * NOTE: return value destroyed on subsequent calls
 	 */
-	const DOMString& prepAttrURI(
+	const DOMString prepAttrURI(
 			const DOMString& string,
 			const DOMString& specials,
 			const DOMString& encoding);
