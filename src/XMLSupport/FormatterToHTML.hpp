@@ -310,16 +310,16 @@ protected:
 
 private:
 
-	static const ElementFlagsMapType&							s_elementFlags;
+	static const ElementFlagsMapType*							s_elementFlags;
 
-	static const XalanEntityReferenceMapType&					s_xalanHTMLEntities;
+	static const XalanEntityReferenceMapType*					s_xalanHTMLEntities;
 
 	static const XalanEntityReferenceMapType::const_iterator&	s_xalanHTMLEntitiesIteratorEnd; 
 
 	/**
 	 * Dummy description for elements not found.
 	 */
-	static const ElemDesc			s_dummyDesc;
+	static const ElemDesc*			s_dummyDesc;
 
 	/**
 	 * The string "<!DOCTYPE  HTML".

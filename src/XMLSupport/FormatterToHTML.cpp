@@ -74,6 +74,10 @@
 
 
 
+#include <Include/XalanAutoPtr.hpp>
+
+
+
 #include <PlatformSupport/DOMStringHelper.hpp>
 #include <PlatformSupport/PrefixResolver.hpp>
 #include <PlatformSupport/Writer.hpp>
@@ -125,6 +129,8 @@ FormatterToHTML::FormatterToHTML(
 	m_elementLevel(0),
 	m_hasNamespaceStack()
 {
+	assert(s_elementFlags != 0 && s_dummyDesc != 0 && s_xalanHTMLEntities != 0);
+
 	initCharsMap();
 }
 
@@ -188,12 +194,14 @@ FormatterToHTML::initCharsMap()
 const FormatterToHTML::ElemDesc&
 FormatterToHTML::getElemDesc(const XalanDOMChar*	name)
 {
-	const ElementFlagsMapType::const_iterator	i =
-		s_elementFlags.find(name);
+	assert(s_elementFlags != 0 && s_dummyDesc != 0);
 
-	if (i == s_elementFlags.end())
+	const ElementFlagsMapType::const_iterator	i =
+		s_elementFlags->find(name);
+
+	if (i == s_elementFlags->end())
 	{
-		return s_dummyDesc;
+		return *s_dummyDesc;
 	}
 	else
 	{
@@ -522,11 +530,13 @@ FormatterToHTML::accumDefaultEntity(
 		XalanDOMString::size_type	len,
 		bool						escLF)
 {
+	assert(s_xalanHTMLEntities != 0);
+
 	if(FormatterToXML::accumDefaultEntity(ch, i, chars, len, escLF) == false)
 	{	
-		const XalanEntityReferenceMapType::const_iterator	theIterator = s_xalanHTMLEntities.find(ch);
+		const XalanEntityReferenceMapType::const_iterator	theIterator = s_xalanHTMLEntities->find(ch);
 
-		if (theIterator == s_xalanHTMLEntitiesIteratorEnd)	
+		if (theIterator == s_xalanHTMLEntitiesIteratorEnd)
 		{
 			return false;
 		}
@@ -2025,16 +2035,16 @@ FormatterToHTML::initializeXalanEntityReferenceMap(XalanEntityReferenceMapType&	
 
 
 
-static FormatterToHTML::ElementFlagsMapType			s_elementFlags;
+static XalanAutoPtr<FormatterToHTML::ElementFlagsMapType>	s_elementFlags;
 
 
-const FormatterToHTML::ElementFlagsMapType&			FormatterToHTML::s_elementFlags = ::s_elementFlags;
+const FormatterToHTML::ElementFlagsMapType*			FormatterToHTML::s_elementFlags = 0;
 
 
-static FormatterToHTML::XalanEntityReferenceMapType	s_xalanHTMLEntities;
+static XalanAutoPtr<FormatterToHTML::XalanEntityReferenceMapType>	s_xalanHTMLEntities;
 
 
-const FormatterToHTML::XalanEntityReferenceMapType&	FormatterToHTML::s_xalanHTMLEntities = ::s_xalanHTMLEntities;
+const FormatterToHTML::XalanEntityReferenceMapType*		FormatterToHTML::s_xalanHTMLEntities = 0;
 
 
 static FormatterToHTML::XalanEntityReferenceMapType::const_iterator s_xalanHTMLEntitiesIteratorEnd; 
@@ -2043,7 +2053,10 @@ static FormatterToHTML::XalanEntityReferenceMapType::const_iterator s_xalanHTMLE
 const  FormatterToHTML::XalanEntityReferenceMapType::const_iterator& FormatterToHTML::s_xalanHTMLEntitiesIteratorEnd = ::s_xalanHTMLEntitiesIteratorEnd;
 
 
-const FormatterToHTML::ElemDesc						FormatterToHTML::s_dummyDesc(FormatterToHTML::ElemDesc::BLOCK);
+static XalanAutoPtr<FormatterToHTML::ElemDesc>	s_dummyDesc;
+
+const FormatterToHTML::ElemDesc*	FormatterToHTML::s_dummyDesc = 0;
+
 
 
 static XalanDOMString	s_doctypeHeaderStartString;
@@ -2089,11 +2102,19 @@ const XalanDOMString&	FormatterToHTML::s_metaString =
 void
 FormatterToHTML::initialize()
 {
-	initializeElementFlagsMap(::s_elementFlags);
+	// Make sure there's nothing there first...
+	::s_elementFlags.reset();
+	::s_xalanHTMLEntities.reset();
+	::s_dummyDesc.reset();
 
-	initializeXalanEntityReferenceMap(::s_xalanHTMLEntities);
-	
-	::s_xalanHTMLEntitiesIteratorEnd = ::s_xalanHTMLEntities.end();
+	// New everything in a local so that an exception will clean up everything...
+	XalanAutoPtr<ElementFlagsMapType>			theElementFlags(new ElementFlagsMapType);
+	XalanAutoPtr<XalanEntityReferenceMapType>	theHTMLEntities(new XalanEntityReferenceMapType);
+	XalanAutoPtr<FormatterToHTML::ElemDesc>		theDummyDesc(new FormatterToHTML::ElemDesc(FormatterToHTML::ElemDesc::BLOCK));
+
+	// Do initialization...
+	initializeElementFlagsMap(*theElementFlags.get());
+	initializeXalanEntityReferenceMap(*theHTMLEntities.get());
 
 	::s_doctypeHeaderStartString = XALAN_STATIC_UCODE_STRING("<!DOCTYPE HTML");
 
@@ -2108,6 +2129,17 @@ FormatterToHTML::initialize()
 	::s_fnofString = XALAN_STATIC_UCODE_STRING("fnof");
 
 	::s_metaString = XALAN_STATIC_UCODE_STRING("<META http-equiv=\"Content-Type\" content=\"text/html; charset=");
+
+	// Everythings cool, so let the globals own the objects...
+	::s_elementFlags = theElementFlags;
+	::s_xalanHTMLEntities = theHTMLEntities;
+	::s_dummyDesc = theDummyDesc;
+
+	// Update the class members...
+	s_elementFlags = ::s_elementFlags.get();
+	s_xalanHTMLEntities = ::s_xalanHTMLEntities.get();
+	s_dummyDesc = ::s_dummyDesc.get();
+	::s_xalanHTMLEntitiesIteratorEnd = ::s_xalanHTMLEntities->end();
 }
 
 
@@ -2115,9 +2147,13 @@ FormatterToHTML::initialize()
 void
 FormatterToHTML::terminate()
 {
-	ElementFlagsMapType().swap(::s_elementFlags);
+	s_elementFlags = 0;
+	s_xalanHTMLEntities = 0;
+	s_dummyDesc = 0;
 
-	XalanEntityReferenceMapType().swap(::s_xalanHTMLEntities);
+	::s_elementFlags.reset();
+	::s_xalanHTMLEntities.reset();
+	::s_dummyDesc.reset();
 
 	releaseMemory(::s_doctypeHeaderStartString);
 
