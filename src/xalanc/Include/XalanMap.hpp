@@ -152,14 +152,21 @@ struct XalanMapIterator : public BaseIterator
 	typedef ptrdiff_t		                    difference_type;
 	typedef XALAN_STD_QUALIFIER bidirectional_iterator_tag iterator_category;
 
-    typedef typename BaseIterator::iterator             Iterator;
+    typedef XalanMapIterator<
+		XalanMapIteratorTraits<value_type>, 
+  		typename BaseIterator::iterator>	Iterator; 
 
     XalanMapIterator() :
             BaseIterator()
     {
     }
 
-    XalanMapIterator(const BaseIterator & theRhs) :
+    XalanMapIterator(const Iterator & theRhs) :
+            BaseIterator(theRhs)
+    {
+    }
+
+    XalanMapIterator(const BaseIterator& theRhs) :
             BaseIterator(theRhs)
     {
     }
