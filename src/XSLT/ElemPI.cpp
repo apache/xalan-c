@@ -112,6 +112,11 @@ ElemPI::ElemPI(
 
 ElemPI::~ElemPI()
 {
+#if defined(XALAN_CANNOT_DELETE_CONST)
+	delete (AVT*)m_nameAVT;
+#else
+	delete m_nameAVT;
+#endif
 }
 
 
