@@ -94,72 +94,7 @@
 #endif
 
 const char* const 	excludeStylesheets[] =
-{/*
-	"attribset17.xsl",
-	"attribvaltemplate08.xsl",
-	"copy38.xsl",
-	"embed06.xsl",
-	"extend05.xsl",
-	"idkey01.xsl",
-	"lre13.xsl",
-	"message01.xsl",
-	"numberformat06.xsl",
-	"numbering14.xsl",
-	"numbering15.xsl",
-	"output01.xsl",
-	"output02.xsl",
-	"output03.xsl",
-	"output04.xsl",
-	"output05.xsl",
-	"output06.xsl",
-	"output08.xsl",
-	"output10.xsl",
-	"output13.xsl",
-	"output15.xsl",
-	"output16.xsl",
-	"output17.xsl",
-	"output18.xsl",
-	"output25.xsl",
-	"output26.xsl", */ 
-	"output28.xsl",
-	"output80.xsl", 
-	"numberformat06.xsl",
-/*	"output31.xsl",
-	"output33.xsl",
-	"output34.xsl",
-	"output35.xsl",
-	"output36.xsl",
-	"output37.xsl",
-	"output38.xsl",
-	"output39.xsl",
-	"output40.xsl",
-	"output42.xsl",
-	"output43.xsl",
-	"output46.xsl",
-	"output48.xsl",
-	"output49.xsl",
-	"output52.xsl",
-	"output58.xsl",
-	"output59.xsl",
-	"output60.xsl",
-	"output61.xsl",
-	"output62.xsl",
-	"output64.xsl",
-	"output65.xsl",
-	"output73.xsl",
-	"output74.xsl",
-	"output75.xsl",
-	"output76.xsl",
-	"select07.xsl",
-	"select74.xsl",
-	"sort22.xsl",
-	"sort23.xsl",
-	"sort24.xsl",
-	"sort25.xsl",
-	"sort30.xsl",
-	"sort31.xsl",
-	"sort35.xsl",
-	"sort37.xsl", */
+{
 	0
 };
 
@@ -408,7 +343,6 @@ main(
 
 					const XSLTInputSource	xslInputSource(c_wstr(theXSLFile));
 					const XSLTInputSource	xmlInputSource(c_wstr(theXMLFile));
-					//const XSLTInputSource	goldInputSource(c_wstr(theGoldFile));
 					const XSLTResultTarget	resultFile(theOutputFile);
 
 					//
@@ -418,7 +352,10 @@ main(
 					xalan.compileStylesheet(xslInputSource, compiledSS);
 					if (compiledSS == 0 )
 					{
+						// Report the failure and be sure to increment fail count.
 						cout << "Failed to PARSE stylesheet for " << currentFile << endl;
+						futil.data.fail += 1;
+						logFile.logCheckFail(currentFile);
 						continue;
 					}
 
@@ -429,20 +366,21 @@ main(
 					xalan.parseSource(xmlInputSource, parsedSource);
 					if (parsedSource == 0)
 					{
+						// Report the failure and be sure to increment fail count.
 						cout << "Failed to PARSE source document for " << currentFile << endl;
+						futil.data.fail += 1;
+						logFile.logCheckFail(currentFile);
 						continue;
 					}
 
 					//
 					// Perform One transform using parsed stylesheet and parsed xml source, report results...
 					// 
-					theResult = xalan.transform(*parsedSource, compiledSS, resultFile);
-					if (!theResult)
-					{
-						futil.checkResults(theOutputFile, 
-										  theGoldFile, 
-										  logFile);
-					}
+					xalan.transform(*parsedSource, compiledSS, resultFile);
+
+					futil.checkResults(theOutputFile, 
+									  theGoldFile, 
+									  logFile);
 
 					parserLiaison.reset();
 					xalan.destroyParsedSource(parsedSource);
@@ -462,8 +400,6 @@ main(
 	}
 
 	XalanTransformer::terminate();
-
-
 
 	return 0;
 }
