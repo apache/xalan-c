@@ -99,27 +99,37 @@ static void xslt_child_exit(server_rec *s, pool *p)
 
 
 
+typedef struct CONTROL_STRUCT_TAG
+{
+	request_rec*	r;
+	int				fHeaderSent;
+} CONTROL_STRUCT;
+
+
+
 static unsigned long xalan_output_handler(const void *data, unsigned long length, const void *handle)
 {
-	request_rec *r = (request_rec*)handle;
+	CONTROL_STRUCT* c = (CONTROL_STRUCT*)handle;
 
 	char* d = (char *)data;
 
-	if (r->status != HTTP_OK)
+	if (c->fHeaderSent == 0)
 	{
-		r->status = HTTP_OK;
+		c->fHeaderSent = 1;
+
+		ap_send_http_header(c->r);
 	}
 
-	return ap_rwrite(d, length, r);
+	return ap_rwrite(d, length, c->r);
 }
 
 
 
 static void xalan_flush_handler(const void *handle)
 {
-	request_rec *r = (request_rec*)handle;
+	CONTROL_STRUCT* c = (CONTROL_STRUCT*)handle;
 
-	ap_rflush(r);
+	ap_rflush(c->r);
 }
 
 
@@ -130,11 +140,19 @@ static int xslt_handler(request_rec *r)
 	char * filename		= NULL;
 	char * xmlfilename	= NULL;
 	char * xslfilename	= NULL;
-	
+
 	XalanHandle xalan = NULL;
 
 	int	error = DECLINED;
-	
+
+	CONTROL_STRUCT	control_struct =
+	{
+		0,
+		0
+	};
+
+	control_struct.r = r;
+
 	mimetype = ap_pstrcat(r->pool, r->filename, NULL);
 
 	filename = ap_getword_nulls_nc(r->pool, &mimetype,'.');
@@ -145,9 +163,7 @@ static int xslt_handler(request_rec *r)
 	
 	xalan = CreateXalanTransformer();
 	
-	//ap_send_http_header(r);
-
-	error = XalanTransformToHandler(xmlfilename, xslfilename, xalan, r, xalan_output_handler, xalan_flush_handler);
+	error = XalanTransformToHandler(xmlfilename, xslfilename, xalan, &control_struct, xalan_output_handler, xalan_flush_handler);
 
 	if(error)
 	{
