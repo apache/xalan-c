@@ -89,7 +89,7 @@ main(
 							theDOMSupport,
 							theDocument,
 							XalanDOMString(argv[2]).c_str(),
-							0);
+							theDocument->getDocumentElement());
 
 				if (theContextNode == 0)
 				{
@@ -109,7 +109,7 @@ main(
 								theDOMSupport,
 								theContextNode,
 								XalanDOMString(argv[3]).c_str(),
-								0));
+								theDocument->getDocumentElement()));
 
 					assert(theResult.null() == false);
 
