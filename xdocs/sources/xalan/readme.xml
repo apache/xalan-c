@@ -149,8 +149,8 @@
       <li>AIX only: Download <resource-ref idref="stlport"/> and set the STLPORTROOT environment
        variable to the complete path to the STLPort distribution. The Linux GNU compiler includes
        the STL (Standard Template Library).<br/><br/></li>
-      <li>(Optional) If you are rebuilding the ICUBridge, install the ICU and define XALAN_USE_ICU
-       (see <link idref="usagepatterns" anchor="icu">Using the ICU</link>) <br/><br/></li>
+      <li>(Optional) If you are including the ICUBridge, install the ICU (see <link idref="usagepatterns"
+      anchor="icu">Using the ICU</link>)and define XALAN_USE_ICU.<br/><br/></li>
       <li>Change directory to xml-xalan/c/src in the &xslt4c; distribution.<br/><br/></li>      
       <li>Use the chmod +x command to set the executable flags for conf* and
        runConfigure.<br/><br/>

@@ -72,7 +72,8 @@
   <anchor name="getstarted"/>
 	<s2 title="Samples to help you get started">
     <p>Each of the subdirectories in the &xslt4c; samples directory contains the source files for a
-    sample application. The executables for the samples are in the build subdirectory, which should be on the system path.</p>
+    sample application. The executables for the samples are in the build subdirectory, which should be on the system
+    path.</p>
     <p>With most of the samples, you can use the following procedure:</p>
      <ol>
       <li>Go to the samples subdirectory containing the sample (use the DOS shell if you are running Windows)
@@ -82,6 +83,10 @@
       modify a .cpp file, you must rebuild the executable and place it on the path before you can run the
       modified application.</li>
      </ol>
+     <p><em>Caution:</em> Each sample application looks for input files in the current directory, the directory from
+     which you run the application. The input files are in the samples subdirectory along with the sample source
+     files. The application executable, on the other hand, is in the build subdirectory. To run a sample, be sure the
+     executable is on the path, and run it from the samples subdirectory that contains the input files.</p>
   </s2><anchor name="simpletransform"/>
   <s2 title="SimpleTransform">
     <p>What it does: The SimpleTransform class uses the foo.xsl stylesheet to transform foo.xml, and writes the
@@ -117,8 +122,8 @@
   <p>These flags are also available in the <link idref="commandline">command-line utility (TestXSLT)</link>.</p>
   <p>The core of this example is the following fragment:</p>
   <source>// Set up a diagnostic writer to be used by the TraceListener...
-XercesStdTextOutputStream  theStdErr(std::cerr);
-XercesDOMPrintWriter       diagnosticsWriter(theStdErr);
+XalanStdOutputStream  theStdErr(cerr);
+XalanOutputStreamPrintWriter  diagnosticsWriter(theStdErr);
 
 // Set up the TraceListener...
 // traceTemplates, traceTemplateChildren, traceGenerationEvent,

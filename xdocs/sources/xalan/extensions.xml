@@ -107,9 +107,9 @@ data types: node-set, result-tree-fragment, string, boolean, or number.</p>
 #include &lt;XSLT/XSLTInputSource.hpp&gt;
 #include &lt;XSLT/XSLTProcessorEnvSupportDefault.hpp&gt;
 #include &lt;XSLT/XSLTResultTarget.hpp&gt;
+
+#include &lt;XercesParserLiaison/XercesDOMSupport.hpp&gt;
 #include &lt;XercesParserLiaison/XercesParserLiaison.hpp&gt;
-#include &lt;XercesPlatformSupport/TextFileOutputStream.hpp&gt;
-#include &lt;XercesPlatformSupport/XercesDOMPrintWriter.hpp&gt;
 
 // This class defines a function that will return the square root
 // of its argument.

@@ -137,6 +137,8 @@ The -XML or -HTML flag must be set:
      
      </s3>
      <s3 title="Rebuilding TestXSLT in Linux or AIX">
+     <p>In Linux and AIX, the ICUBridge is in the core Xalan library (&xml4c-linuxlib; in Linux; &xml4c-aixlib; in
+     AIX), so you must rebuild this library along with TestXSLT.</p>
        <ol>       
          <li>Define the XALAN_USE_ICU environment variable.<br/>
          The syntax for defining an environment variable depends on the shell you are using. 
@@ -144,14 +146,15 @@ The -XML or -HTML flag must be set:
          <br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<code>export XALAN_USE_ICU "1"</code><br/><br/>
          If you are using C Shell, use
          <br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <code>setenv XALAN_USE_ICU="1"</code><br/><br/></li>
-         <li>Delete the existing TestXSLT.<br/><br/></li>
-         <li>Run make:<br/><br/>
-         <code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;make TestXSLT</code></li>
+         <li>Delete the previous build:<br/><br/>
+         </li><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;make clean</code><br/><br/></li>
+         <li>Run a complete build<br/><br/>
+         <code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;make</code></li>
         </ol>
-        <note>The make file uses the XALAN_USE_ICU environment variable to do the equivalent of a #define and to add ICUBridge
-        to the list of dependencies for TestXSLT. If you uncomment the <code>#define XALAN_USE_ICU</code> statement in
-        process.cpp (which is the right thing to do in Windows), you will get a warning about duplicate settings when you run
-        the make, and TestXSLT will not link with ICUBridge.</note>
+        <note>The make file uses the XALAN_USE_ICU environment variable to do the equivalent of a #define and to add
+         ICUBridge to the list of dependencies for TestXSLT. If you uncomment the <code>#define XALAN_USE_ICU</code>
+         statement in process.cpp (which is the right thing to do in Windows), you will get a warning about duplicate
+         settings when you run the make, and TestXSLT will not link with ICUBridge.</note>
      </s3>
    </s2>
 </s1>
