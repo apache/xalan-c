@@ -385,14 +385,6 @@ SOURCE=..\..\..\..\src\XPath\XPathProcessorImpl.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XPathSupport.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\src\XPath\XPathSupportDefault.cpp
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\..\..\src\XPath\XPointer.cpp
 # End Source File
 # Begin Source File
@@ -726,14 +718,6 @@ SOURCE=..\..\..\..\src\XPath\XPathProcessor.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\XPath\XPathProcessorImpl.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\src\XPath\XPathSupport.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\src\XPath\XPathSupportDefault.hpp
 # End Source File
 # Begin Source File
 
