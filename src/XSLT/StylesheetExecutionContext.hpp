@@ -629,11 +629,36 @@ public:
 	virtual void
 	setCurrentStackFrameIndex(int	currentStackFrameIndex = -1) = 0;
 
-	/**
-	 * Mark the top of the global stack where global searches should start.
+	/*
+	 * A class to manage stack state during execution.
 	 */
-	virtual void
-	markGlobalStackFrame() = 0;
+	class ParamsPushPop
+	{
+	public:
+
+		ParamsPushPop(
+			StylesheetExecutionContext&		executionContext,
+			const ElemTemplateElement*		contextElement,
+			const ElemTemplateElement&		xslCallTemplateElement,
+			XalanNode*						sourceTree, 
+			XalanNode*						sourceNode,
+			const QName&					mode,
+			const XalanNode*				targetTemplate);
+
+		~ParamsPushPop();
+
+		int
+		getStackFrameIndex() const
+		{
+			return m_savedStackFrameIndex;
+		}
+
+	private:
+
+		StylesheetExecutionContext&		m_executionContext;
+	
+		const int						m_savedStackFrameIndex;
+	};
 
 	/**
 	 * Receive notification of the beginning of a document.
@@ -1058,7 +1083,7 @@ public:
 			const XalanDocument&	theDocument) const = 0;
 
 	virtual bool
-	shouldStripSourceNode(const XalanNode&	node) const = 0;
+	shouldStripSourceNode(const XalanNode&	node) = 0;
 
 	virtual bool
 	getThrowFoundIndex() const = 0;

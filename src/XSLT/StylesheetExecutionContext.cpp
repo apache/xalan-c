@@ -59,6 +59,10 @@
 
 
 
+#include "ElemTemplateElement.hpp"
+
+
+
 StylesheetExecutionContext::StylesheetExecutionContext() :
 	XPathExecutionContext()
 {
@@ -68,4 +72,42 @@ StylesheetExecutionContext::StylesheetExecutionContext() :
 
 StylesheetExecutionContext::~StylesheetExecutionContext()
 {
+}
+
+
+
+StylesheetExecutionContext::ParamsPushPop::ParamsPushPop(
+			StylesheetExecutionContext&		executionContext,
+			const ElemTemplateElement*		contextElement,
+			const ElemTemplateElement&		xslCallTemplateElement,
+			XalanNode*						sourceTree, 
+			XalanNode*						sourceNode,
+			const QName&					mode,
+			const XalanNode*				targetTemplate) :
+	m_executionContext(executionContext),
+	m_savedStackFrameIndex(executionContext.getCurrentStackFrameIndex())
+{
+	executionContext.pushContextMarker(
+			contextElement,
+			sourceNode);
+
+	executionContext.setCurrentStackFrameIndex(m_savedStackFrameIndex);
+
+	executionContext.pushParams(
+			xslCallTemplateElement,
+			sourceTree,
+			sourceNode,
+			mode,
+			targetTemplate);
+
+	executionContext.setCurrentStackFrameIndex();
+}
+
+
+
+StylesheetExecutionContext::ParamsPushPop::~ParamsPushPop()
+{
+	m_executionContext.popCurrentContext();
+
+	m_executionContext.setCurrentStackFrameIndex(m_savedStackFrameIndex);
 }

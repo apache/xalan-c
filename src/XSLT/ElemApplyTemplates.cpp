@@ -144,22 +144,19 @@ ElemApplyTemplates::execute(
 	}
 	if (0 != sourceNode)
 	{
-		ElemTemplateElement* const	theTemplate = 
-			const_cast<ElemTemplateElement* const>
-				(static_cast<const ElemTemplateElement* const>(this));
-
 		// Dragons here.  Push the params & stack frame, but then execute the
 		// select statement inside transformSelectedChildren, which must be
 		// executed in the stack frame before the new stack frame.  Because of
 		// depth-first searching, this gets worse.
-		int selectStackFrameIndex = executionContext.getCurrentStackFrameIndex();
-		executionContext.pushContextMarker(theTemplate,
-				sourceNode);
-		executionContext.setCurrentStackFrameIndex(selectStackFrameIndex);
-		executionContext.pushParams(*this, sourceTree, sourceNode, mode,
-				theTemplate);
+		StylesheetExecutionContext::ParamsPushPop	thePushPop(
+			executionContext,
+			this,
+			*this,
+			sourceTree,
+			sourceNode,
+			mode,
+			this);
 
-		executionContext.setCurrentStackFrameIndex();
 		transformSelectedChildren(
 			executionContext,
 			getStylesheet(),
@@ -170,11 +167,7 @@ ElemApplyTemplates::execute(
 			m_isDefaultTemplate == false ? m_mode : mode,
 			m_pSelectPattern, 
 			Constants::ELEMNAME_APPLY_TEMPLATES,
-			selectStackFrameIndex);
-
-		executionContext.popCurrentContext();
-		executionContext.setCurrentStackFrameIndex(selectStackFrameIndex);
-
+			thePushPop.getStackFrameIndex());
 	}
     else
 	{
@@ -188,7 +181,7 @@ bool
 ElemApplyTemplates::childTypeAllowed(int	xslToken) const
 {
 	bool	fResult = false;
-	
+
 	switch(xslToken)
 	{
 	// char-instructions 
@@ -196,10 +189,10 @@ ElemApplyTemplates::childTypeAllowed(int	xslToken) const
 	case Constants::ELEMNAME_WITHPARAM:
 		fResult = true;
 		break;
-		
+
 	default:
 		break;
 	}
-	
+
 	return fResult;
 }

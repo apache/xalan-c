@@ -837,22 +837,6 @@ ElemTemplateElement::transformChild(
 				}
 				else
 				{
-					bool doPush = (xslToken != Constants::ELEMNAME_FOREACH);
-
-					if(doPush)
-					{
-						executionContext.pushContextMarker(theTemplate, child);
-
-						if (xslInstruction != 0)
-						{
-							executionContext.pushParams(*xslInstruction, 
-														sourceTree,
-														selectContext,
-														mode,
-														theTemplate);
-						}
-					}
-
 					if(0 != getStylesheet().getStylesheetRoot().getTraceListeners())
 					{
 						TracerEvent te(executionContext,
@@ -863,15 +847,11 @@ ElemTemplateElement::transformChild(
 
 						getStylesheet().getStylesheetRoot().fireTraceEvent(te);
 					}
+
 					theTemplate->executeChildren(executionContext, 
 												 sourceTree,
 												 child,
 												 mode);
-
-					if(doPush)
-					{
-						executionContext.popCurrentContext();
-					}
 				}
 
 				executionContext.resetCurrentState(sourceTree, selectContext);

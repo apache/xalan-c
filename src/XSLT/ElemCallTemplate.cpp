@@ -98,7 +98,7 @@ ElemCallTemplate::ElemCallTemplate(
 
 		if(equals(aname, Constants::ATTRNAME_NAME))
 		{
-        m_templateName = new QName(atts.getValue(i), getStylesheet().getNamespaces());        
+			m_templateName = new QName(atts.getValue(i), getStylesheet().getNamespaces());        
 
 /*
 			m_pNameAVT = new AVT(aname,	atts.getType(i), atts.getValue(i),
@@ -138,19 +138,16 @@ ElemCallTemplate::execute(
 
 		if(0 != theTemplate)
 		{
-			int selectStackFrameIndex = executionContext.getCurrentStackFrameIndex();
-			executionContext.pushContextMarker(theTemplate,
-					sourceNode);
-			executionContext.setCurrentStackFrameIndex(selectStackFrameIndex);
-			executionContext.pushParams(*this, sourceTree, sourceNode, mode,
-					theTemplate);
-			executionContext.markGlobalStackFrame();
+			StylesheetExecutionContext::ParamsPushPop	thePushPop(
+				executionContext,
+				theTemplate,
+				*this,
+				sourceTree,
+				sourceNode,
+				mode,
+				theTemplate);
 
-			executionContext.setCurrentStackFrameIndex();
 			theTemplate->execute(executionContext, sourceTree, sourceNode, mode);
-
-			executionContext.popCurrentContext();
-			executionContext.setCurrentStackFrameIndex(selectStackFrameIndex);
 		}
 		else
 		{

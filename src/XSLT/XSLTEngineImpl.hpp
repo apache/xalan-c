@@ -343,18 +343,10 @@ public:
 			const XalanDOMString&	key,
 			XObject*				value);
 
-	/**
-	 * Tells, through the combination of the default-space attribute on
-	 * xsl:stylesheet, xsl:strip-space, xsl:preserve-space, and the xml:space
-	 * attribute, whether or not extra whitespace should be stripped from the
-	 * node.  Literal elements from template elements should <em>not</em> be
-	 * tested with this function.
-	 *
-	 * @param textNode text node from the source tree
-	 * @return true if the text node should be stripped of extra whitespace
-	 */
 	virtual bool
-	shouldStripSourceNode(const XalanNode&	textNode) const;
+	shouldStripSourceNode(
+			XPathExecutionContext&	executionContext,
+			const XalanNode&		node) const;
 
 	virtual FormatterListener*
 	getFormatterListener() const;
@@ -1590,6 +1582,8 @@ public:
 		markGlobalStackFrame()
 		{
 			m_globalStackFrameIndex = m_stack.size();
+
+			pushContextMarker(0, 0);
 		}
 
 		/**
@@ -1987,8 +1981,6 @@ private:
    */
 	StylesheetRoot* 				m_stylesheetRoot;
 
-	StylesheetExecutionContext* 	m_stylesheetExecutionContext;
-
 /**
  * The namespace that we must match as a minimum for XSLT.
  */
@@ -2149,11 +2141,15 @@ private:
 	/**
 	 * Given a name, locate a variable in the current context, and return 
 	 * the XObject.
-	 * @exception XSLProcessorException thrown if the active ProblemListener and XMLParserLiaison decide 
-	 * the error condition is severe enough to halt processing.
+	 *
+	 * @param executionContext The current execution context.
+	 * @param name The name of the variable
+	 * @return a pointer to an XObject that represents the variable.
 	 */
 	XObject*
-	getXObjectVariable(const XalanDOMString&	name) const;
+	getXObjectVariable(
+			StylesheetExecutionContext&		executionContext,
+			const XalanDOMString&			name) const;
 
 	/**
 	 * Get an XLocator provider keyed by node.	This gets the association
