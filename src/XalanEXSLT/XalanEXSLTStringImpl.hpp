@@ -88,16 +88,16 @@ public:
 
 	// These methods are inherited from Function ...
 
-#if !defined(XALAN_NO_USING_DECLARATION)
-	using ParentType::execute;
-#endif
-
 	virtual XObjectPtr
 	execute(
 			XPathExecutionContext&			executionContext,
 			XalanNode*						context,
 			const XObjectArgVectorType&		args,
 			const LocatorType*				locator) const;
+
+#if !defined(XALAN_NO_USING_DECLARATION)
+	using ParentType::execute;
+#endif
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
 	virtual Function*
@@ -152,16 +152,16 @@ public:
 
 	// These methods are inherited from Function ...
 
-#if !defined(XALAN_NO_USING_DECLARATION)
-	using ParentType::execute;
-#endif
-
 	virtual XObjectPtr
 	execute(
 			XPathExecutionContext&			executionContext,
 			XalanNode*						context,
 			const XObjectArgVectorType&		args,
 			const LocatorType*				locator) const;
+
+#if !defined(XALAN_NO_USING_DECLARATION)
+	using ParentType::execute;
+#endif
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
 	virtual Function*
@@ -219,16 +219,16 @@ public:
 
 	// These methods are inherited from Function ...
 
-#if !defined(XALAN_NO_USING_DECLARATION)
-	using ParentType::execute;
-#endif
-
 	virtual XObjectPtr
 	execute(
 			XPathExecutionContext&			executionContext,
 			XalanNode*						context,
 			const XObjectArgVectorType&		args,
 			const LocatorType*				locator) const;
+
+#if !defined(XALAN_NO_USING_DECLARATION)
+	using ParentType::execute;
+#endif
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
 	virtual Function*

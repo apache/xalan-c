@@ -41,10 +41,6 @@ class FunctionSquareRoot : public Function
 {
 public:
 
-#if !defined(XALAN_NO_USING_DECLARATION)
-	using Function::execute;
-#endif
-
 	/**
 	 * Execute an XPath function object.  The function must return a valid
 	 * object.  Extension functions should override this version of execute(),
@@ -77,6 +73,10 @@ public:
 
 		return executionContext.getXObjectFactory().createNumber(sqrt(args[0]->num()));
 	}
+
+#if !defined(XALAN_NO_USING_DECLARATION)
+	using Function::execute;
+#endif
 
 	/**
 	 * Create a copy of the function object.
@@ -126,10 +126,6 @@ class FunctionCube : public Function
 {
 public:
 
-#if !defined(XALAN_NO_USING_DECLARATION)
-	using Function::execute;
-#endif
-
 	/**
 	 * Execute an XPath function object.  The function must return a valid
 	 * object.  Extension functions should override this version of execute(),
@@ -162,6 +158,10 @@ public:
 
 		return executionContext.getXObjectFactory().createNumber(pow(args[0]->num(), 3));
 	}
+
+#if !defined(XALAN_NO_USING_DECLARATION)
+	using Function::execute;
+#endif
 
 	/**
 	 * Create a copy of the function object.
@@ -211,10 +211,6 @@ class FunctionAsctime : public Function
 {
 public:
 
-#if !defined(XALAN_NO_USING_DECLARATION)
-	using Function::execute;
-#endif
-
 	/**
 	 * Execute an XPath function object.  The function must return a valid
 	 * object.  Extension functions should override this version of execute(),
@@ -260,6 +256,10 @@ public:
 
 		return executionContext.getXObjectFactory().createString(XalanDOMString(theTimeString));
 	}
+
+#if !defined(XALAN_NO_USING_DECLARATION)
+	using Function::execute;
+#endif
 
 	/**
 	 * Create a copy of the function object.
