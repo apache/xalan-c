@@ -228,8 +228,10 @@ $(XSL_LIB_DIR)/$(LIB): $(ALL_OBJECTS)
 ifeq ($(PLATFORM), OS390)
 	cp -p *.x  ${XSL_LIB_DIR}        
 else
-	$(LN) -fs $(LIB) $(XSL_LIB_DIR)/$(LINK_NAME)
-	$(LN) -fs $(LIB) $(XSL_LIB_DIR)/$(SO_NAME)
+	rm -f $(XSL_LIB_DIR)/$(LINK_NAME) && \
+		$(LN) -fs $(LIB) $(XSL_LIB_DIR)/$(LINK_NAME)
+	rm -f $(XSL_LIB_DIR)/$(SO_NAME) && \
+		$(LN) -fs $(LIB) $(XSL_LIB_DIR)/$(SO_NAME)
 endif ## OS390                                
 endif ## OS390BATCH
 
@@ -243,8 +245,10 @@ install: lib XalanExe
 	$(MKINSTALLDIRS) $(DESTDIR)/$(libdir)
 	$(INSTALL_PROGRAM) $(XSL_LIB_DIR)/$(LIB) $(DESTDIR)/$(libdir)
 ifneq ($(PLATFORM), OS390)
-	$(LN) -fs $(LIB) $(DESTDIR)/$(libdir)/$(LINK_NAME)
-	$(LN) -fs $(LIB) $(DESTDIR)/$(libdir)/$(SO_NAME)
+	rm -f $(DESTDIR)/$(libdir)/$(LINK_NAME) && \
+		$(LN) -fs $(LIB) $(DESTDIR)/$(libdir)/$(LINK_NAME)
+	rm -f $(DESTDIR)/$(libdir)/$(SO_NAME) && \
+		$(LN) -fs $(LIB) $(DESTDIR)/$(libdir)/$(SO_NAME)
 endif ## OS390
 	$(MKINSTALLDIRS) $(DESTDIR)/$(includedir)/xalanc
 	for hdir in $(ALL_HEADERS_DIRS); do \
@@ -257,10 +261,12 @@ ifdef XALAN_USE_ICU
 	$(INSTALL_PROGRAM) $(ICUROOT)/lib/$(ICU_LIBI18N_LIB) \
                            $(DESTDIR)/$(libdir)
   ifneq ($PLATFORM), OS390)
-	$(LN) -fs $(ICU_LIBI18N_LIB) \
-                  $(DESTDIR)/$(libdir)/$(ICU_LIBI18N_LINK_NAME)
-	$(LN) -fs $(ICU_LIBI18N_LIB) \
-                  $(DESTDIR)/$(libdir)/$(ICU_LIBI18N_SO_NAME)
+	rm -f $(DESTIDR)/$(libdir)/$(ICU_LIBI18N_LINK_NAME) && \
+		$(LN) -fs $(ICU_LIBI18N_LIB) \
+			$(DESTDIR)/$(libdir)/$(ICU_LIBI18N_LINK_NAME)
+	rm -f $(DESTDIR)/$(libdir)/$(ICU_LIBI18N_SO_NAME) && \
+		$(LN) -fs $(ICU_LIBI18N_LIB) \
+			$(DESTDIR)/$(libdir)/$(ICU_LIBI18N_SO_NAME)
   endif ## OS390
 endif
 
