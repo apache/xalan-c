@@ -343,6 +343,10 @@ main(
 						theResultTarget,
 						theConstructionContext,
 						theExecutionContext);
+
+			// Call the static terminators...
+			XMLPlatformUtils::Terminate();
+			XSLTEngineImpl::Terminate();
 		}
 		catch(...)
 		{
