@@ -39,7 +39,7 @@
 <q>I have encountered problem executing the &xslt4c; sample applications after rebuilding them under Win32 Environment (Windows NT 4.0, SP3).
  When I tried to execute the sample, I receive the error message "Debug Assertion Failed! ...  Expression: _BLOCK_TYPE_IS_VALID(pHead->nBlockUse)".</q>
 
-<a><p>You may be mixing debug and release versions of executables and libraries. In other words, if you are compiling the sample for debug, then you should link with the debug version of the &xslt4c; and &xml4c; libraries and run with the debug version of the dynamic link libraries.<anchor name="build"/></p></a>
+<a><p>You may be mixing debug and release versions of executables and libraries. In other words, if you are compiling the sample for debug, then you should link with the debug version of the &xslt4c; and &xml4c; libraries and run with the debug version of the dynamic link libraries.</p><anchor name="build"/><p/></a>
 </faq>
 
 <faq title="Building on Windows">
@@ -99,7 +99,7 @@
 
 <a><p>The International Components for Unicode(ICU) is a C and C++ library that provides robust and full-featured Unicode support on a wide variety of platforms. &xslt4c; uses the ICU to extend support for encoding, number formatting, and sorting.</p> 
 <p>The ICU is available for download from <jump href="http://oss.software.ibm.com/developerworks/opensource/icu/project/index.html">http://oss.software.ibm.com/developerworks/opensource/icu/project/index.html</jump>.</p>
-<p>For more details see: <link idref="usagepatterns" anchor="icu">Using the International Components for Unicode (ICU)</link>.<anchor name="gnutar"/></p></a>
+<p>For more details see: <link idref="usagepatterns" anchor="icu">Using the International Components for Unicode (ICU)</link>.</p><anchor name="gnutar"/><p/></a>
 </faq>
 
    <faq title="A tar checksum error on Solaris.">

@@ -59,7 +59,7 @@
 <s1 title="&xslt4c; Basic usage patterns">
 <ul>
 <li><link anchor="intro">Introduction</link></li>
-<li><link anchor="cpp">Basic usage pattern with the XalanTransformer C++ API</link></li>
+<li><link anchor="xalantransformer">Basic usage pattern with the XalanTransformer C++ API</link></li>
 <li><link anchor="stylepi">Using a stylesheet processing instruction</link></li>
 <li><link anchor="params">Setting stylesheet parameters</link></li>
 <li><link anchor="incremental">Processing output incrementally</link></li>
@@ -80,7 +80,7 @@
 <p>The transformation output is represented by an <jump href="apidocs/class_xsltresulttarget.html">XSLTResultTarget</jump>, which you can set up to refer to an output stream, the system ID for a file or URI, or a DOM.</p>
 <p>For detailed API documentation, see <jump href="apidocs/index.html">&xslt4c; API</jump>. For an overview of the
 command-line utility, see <link idref="commandline">Command-Line Utility</link>.</p>
-</s2><anchor name="cpp"/>
+</s2><anchor name="xalantransformer"/>
 <s2 title="Basic usage patten with the XalanTransformer C++ API">
 <p>Using <jump href="apidocs/class_xalantransformer.html">XalanTransformer</jump> and the C++ API, you can perform one or more transformations as described in the following steps.</p>
 <note>For a working sample that illustrates these steps, see the <link idref="samples" anchor="xalantransform">XalanTransform</link> sample.</note>

@@ -110,7 +110,7 @@
      output to foo.out.</p>
     <p>You can run it from the SimpleTransform subdirectory with</p>
     <p><code>SimpleTransform</code></p>
-    <p>See also: <link idref="usagepatterns" anchor="basic">Basic procedures for performing XSL
+    <p>See also: <link idref="usagepatterns" anchor="xalantransformer">Basic procedures for performing XSL
     transformations</link>.</p>
   </s2><anchor name="streamtransform"/>
   <s2 title="StreamTransform">
