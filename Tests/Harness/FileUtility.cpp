@@ -206,7 +206,14 @@ FileUtility::FileUtility() :
 	data(),
 	args()
 {
-	cout << endl << "Using Xerces Version " << gXercesFullVersionStr << endl;
+	cout << endl
+		 << "Using Xalan version "
+		 << XALAN_FULLVERSIONDOT
+		 << endl
+		 << "Using Xerces version "
+		 << XERCES_FULLVERSIONDOT
+		 << endl
+		 << endl;
 }
 
 
