@@ -3192,6 +3192,11 @@ XPath::NodeTester::NodeTester(
 
 
 
+// MSVC generates some really horrible code for some of these very simple functions when they're inlined...
+#if defined(_MSC_VER)
+#pragma auto_inline(off)
+#endif
+
 XPath::eMatchScore
 XPath::NodeTester::testComment(
 			const XalanNode& 		/* context */,
