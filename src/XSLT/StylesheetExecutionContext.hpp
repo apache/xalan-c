@@ -400,6 +400,14 @@ public:
 	virtual int
 	getIndent() const = 0;
 
+	/**
+	 * Set the current number of spaces to indent.
+	 * 
+	 * @param indentAmount The number of spaces to indent.  Use -1 for the default amount.
+	 */
+	virtual void
+	setIndent(int	indentAmount) = 0;
+
 	// $$$ ToDo: Remove this one!!!!
 	/**
 	 * Execute an XPath and return the resulting XObject. The lifetime of this

@@ -97,6 +97,7 @@
 
 #include <XalanSourceTree/FormatterToSourceTree.hpp>
 #include <XalanSourceTree/XalanSourceTreeDocument.hpp>
+#include <XalanSourceTree/XalanSourceTreeDocumentFragment.hpp>
 
 
 
@@ -153,7 +154,8 @@ StylesheetExecutionContextDefault::StylesheetExecutionContextDefault(
 	m_formatterToTextCache(),
 	m_formatterToSourceTreeCache(),
 	m_nodeSorterCache(),
-	m_resultTreeFragCache(eResultTreeFragCacheListSize)
+	m_resultTreeFragCache(*this, eResultTreeFragCacheListSize),
+	m_indentAmount(-1)
 {
 }
 
@@ -187,7 +189,8 @@ StylesheetExecutionContextDefault::StylesheetExecutionContextDefault(
 	m_formatterToTextCache(),
 	m_formatterToSourceTreeCache(),
 	m_nodeSorterCache(),
-	m_resultTreeFragCache(eResultTreeFragCacheListSize)
+	m_resultTreeFragCache(*this, eResultTreeFragCacheListSize),
+	m_indentAmount(-1)
 {
 }
 
@@ -456,9 +459,24 @@ StylesheetExecutionContextDefault::setFormatterListener(FormatterListener*	flist
 int
 StylesheetExecutionContextDefault::getIndent() const
 {
-	assert(m_xsltProcessor != 0);
+	if (m_indentAmount != -1)
+	{
+		return m_indentAmount;
+	}
+	else
+	{
+		assert(m_xsltProcessor != 0);
 
-	return m_xsltProcessor->getXMLParserLiaison().getIndent();
+		return m_xsltProcessor->getXMLParserLiaison().getIndent();
+	}
+}
+
+
+
+void
+StylesheetExecutionContextDefault::setIndent(int	indentAmount)
+{
+	m_indentAmount = indentAmount;
 }
 
 
@@ -911,7 +929,7 @@ StylesheetExecutionContextDefault::createXResultTreeFrag(
 
 	BorrowReturnResultTreeFrag	theResultTreeFrag(*this);
 
-	GetReleaseCachedObject<FormatterToSourceTreeCacheType>	theGuard(m_formatterToSourceTreeCache);
+	GuardCachedObject<FormatterToSourceTreeCacheType>	theGuard(m_formatterToSourceTreeCache);
 
 	FormatterToSourceTree* const	theFormatter = theGuard.get();
 	assert(theFormatter != 0);
@@ -919,7 +937,16 @@ StylesheetExecutionContextDefault::createXResultTreeFrag(
 	XalanSourceTreeDocument* const	theDocument = getSourceTreeFactory();
 
 	theFormatter->setDocument(theDocument);
-	theFormatter->setDocumentFragment(theResultTreeFrag.get());
+
+	XalanSourceTreeDocumentFragment* const	theDocumentFragment =
+#if defined(XALAN_OLD_STYLE_CASTS)
+		((const ResultTreeFrag*)theResultTreeFrag.get())->getDocumentFragment();
+#else
+		static_cast<const ResultTreeFrag*>(theResultTreeFrag.get())->getDocumentFragment();
+#endif
+	assert(theDocumentFragment != 0);
+
+	theFormatter->setDocumentFragment(theDocumentFragment);
 
 	theFormatter->setPrefixResolver(m_xsltProcessor);
 
@@ -1428,11 +1455,16 @@ StylesheetExecutionContextDefault::reset()
 	m_formatterToTextCache.reset();
 	m_formatterToSourceTreeCache.reset();
 	m_nodeSorterCache.reset();
-	m_resultTreeFragCache.reset(),
+	m_resultTreeFragCache.reset();
 
 	// Just in case endDocument() was not called,
 	// clean things up...
 	cleanUpTransients();
+
+	// Destroy the source tree factory, which
+	// will destroy all result tree fragment nodes
+	// that were generated...
+	m_sourceTreeResultTreeFactory.reset();
 
 	// Reset the default execution context...
 	m_xpathExecutionContextDefault.reset();
@@ -2149,6 +2181,8 @@ StylesheetExecutionContextDefault::getParams(
 XalanSourceTreeDocument*
 StylesheetExecutionContextDefault::getSourceTreeFactory() const
 {
+	assert(m_xsltProcessor != 0);
+
 	if(m_sourceTreeResultTreeFactory.get() == 0)
 	{
 #if defined(XALAN_NO_MUTABLE)
@@ -2309,15 +2343,64 @@ StylesheetExecutionContextDefault::cleanUpTransients()
 
 	m_keyTables.clear();
 
-	// Destroy the source tree factory, which
-	// will destroy all result tree fragment nodes
-	// that were generated...
-	m_sourceTreeResultTreeFactory.reset();
-
 	m_countersTable.reset();
 
 	// Clear any cached XPaths...
 	clearXPathCache();
 
 	assert(m_matchPatternCache.size() == 0);
+}
+
+
+
+StylesheetExecutionContextDefault::ResultTreeFragCache::ResultTreeFragCache(
+			StylesheetExecutionContextDefault&	theExecutionContext,
+			unsigned int						initialSize) :
+	m_resultTreeFragCache(initialSize),
+	m_documentFragmentCache(initialSize)
+{
+	m_documentFragmentCache.m_createFunctor.setExecutionContext(&theExecutionContext);
+}
+
+
+
+StylesheetExecutionContextDefault::ResultTreeFragCache::~ResultTreeFragCache()
+{
+}
+
+
+
+ResultTreeFragBase*
+StylesheetExecutionContextDefault::ResultTreeFragCache::get()
+{
+	GuardCachedObject<ResultTreeFragCacheType>		theResultTreeFrag(m_resultTreeFragCache);
+	assert(theResultTreeFrag.get() != 0);
+
+	theResultTreeFrag.get()->setDocumentFragment(m_documentFragmentCache.get());
+	assert(theResultTreeFrag.get()->getDocumentFragment() != 0);
+
+	return theResultTreeFrag.release();
+}
+
+
+
+bool
+StylesheetExecutionContextDefault::ResultTreeFragCache::release(ResultTreeFragBase*		theResultTreeFragBase)
+{
+	assert(theResultTreeFragBase != 0);
+
+	ResultTreeFrag* const	theResultTreeFrag =
+#if defined(XALAN_OLD_STYLE_CASTS)
+		(ResultTreeFrag*)theResultTreeFragBase;
+#else
+		static_cast<ResultTreeFrag*>(theResultTreeFragBase);
+#endif
+
+	XalanSourceTreeDocumentFragment* const	theDocumentFragment =
+			theResultTreeFrag->getDocumentFragment();
+	assert(theDocumentFragment != 0);
+
+	m_documentFragmentCache.release(theDocumentFragment);
+
+	return m_resultTreeFragCache.release(theResultTreeFrag);
 }

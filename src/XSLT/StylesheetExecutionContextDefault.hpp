@@ -78,7 +78,6 @@
 
 
 
-#include <XPath/ResultTreeFrag.hpp>
 #include <XPath/XPathExecutionContextDefault.hpp>
 
 
@@ -91,11 +90,13 @@
 #include <XalanSourceTree/XalanSourceTreeDocument.hpp>
 #endif
 #include <XalanSourceTree/FormatterToSourceTree.hpp>
+#include <XalanSourceTree/XalanSourceTreeDocumentFragment.hpp>
 
 
 
 #include <XSLT/CountersTable.hpp>
 #include <XSLT/NodeSorter.hpp>
+#include <XSLT/ResultTreeFrag.hpp>
 #include <XSLT/Stylesheet.hpp>
 #include <XSLT/VariablesStack.hpp>
 
@@ -337,6 +338,9 @@ public:
 
 	virtual int
 	getIndent() const;
+
+	virtual void
+	setIndent(int	indentAmount);
 
 	// $$$ ToDo: Get rid of this!!!!
 	virtual const XObjectPtr
@@ -950,6 +954,13 @@ public:
 		XSLTEngineImpl&		m_xsltProcessor;
 	};
 
+	/**
+	 * Get a XalanSourceTreeDocument, primarily for creating result 
+	 * tree fragments.
+	 */
+	XalanSourceTreeDocument*
+	getSourceTreeFactory() const;
+
 private:
 
 	/**
@@ -965,13 +976,6 @@ private:
 			const ElemTemplateElement&	xslCallTemplateElement,
 			XalanNode*					sourceNode,
 			ParamsVectorType&			params);
-
-	/**
-	 * Get a XalanSourceTreeDocument, primarily for creating result 
-	 * tree fragments.
-	 */
-	XalanSourceTreeDocument*
-	getSourceTreeFactory() const;
 
 	/**
 	 * Determine if the XPath is one that we have cached.
@@ -1006,6 +1010,105 @@ private:
 	 */
 	void
 	cleanUpTransients();
+
+	/**
+	 *
+	 * A simple class to cache ResultTreeFrag and
+	 * XalanSourceTreeDocumentFragment instances.
+	 *
+	 */
+	class XALAN_XSLT_EXPORT ResultTreeFragCache
+	{
+	public:
+
+		ResultTreeFragCache(
+				StylesheetExecutionContextDefault&	theExecutionContext,
+				unsigned int						initialSize);
+
+		~ResultTreeFragCache();
+
+		ResultTreeFragBase*
+		get();
+
+		bool
+		release(ResultTreeFragBase*		theResultTreeFragBase);
+
+		void
+		reset()
+		{
+			m_resultTreeFragCache.reset();
+
+			m_documentFragmentCache.reset();
+		}
+
+	private:
+
+		/**
+		 *
+		 * A simple functor class to create XalanSourceTreeDocumentFragment
+		 * instances.  This is necessary because the constructor requires
+		 * a XalanSourceTreeDocument instance.
+		 *
+		 */
+		class XALAN_XSLT_EXPORT LocalCreateFunctor
+		{
+		public:
+
+			LocalCreateFunctor() :
+				m_executionContext(0)
+			{
+			}
+
+			void
+			setExecutionContext(StylesheetExecutionContextDefault*	theExecutionContext)
+			{
+				m_executionContext = theExecutionContext;
+			}
+
+			XalanSourceTreeDocumentFragment*
+			operator()() const
+			{
+				assert(m_executionContext != 0);
+
+				return new XalanSourceTreeDocumentFragment(*m_executionContext->getSourceTreeFactory());
+			}
+
+			StylesheetExecutionContextDefault*		m_executionContext;
+		};
+
+		/**
+		 *
+		 * A simple functor class to clear the children from a 
+		 * XalanSourceTreeDocumentFragment so it can be re-used.
+		 *
+		 */
+		class XALAN_XSLT_EXPORT LocalResetFunctor
+		{
+		public:
+
+			void
+			operator()(XalanSourceTreeDocumentFragment*		theInstance) const
+			{
+				theInstance->clearChildren();
+			}
+		};
+
+		typedef XalanObjectCache<
+					ResultTreeFrag,
+					DefaultCacheCreateFunctor<ResultTreeFrag>,
+					DeleteFunctor<ResultTreeFrag>,
+					ClearCacheResetFunctor<ResultTreeFrag> >		ResultTreeFragCacheType;
+
+		typedef XalanObjectCache<
+					XalanSourceTreeDocumentFragment,
+					LocalCreateFunctor,
+					DeleteFunctor<XalanSourceTreeDocumentFragment>,
+					LocalResetFunctor>											DocumentFragmentCacheType;
+
+		ResultTreeFragCacheType			m_resultTreeFragCache;
+
+		DocumentFragmentCacheType		m_documentFragmentCache;
+	};
 
 	XPathExecutionContextDefault	m_xpathExecutionContextDefault;
 
@@ -1064,7 +1167,6 @@ private:
 	typedef XalanObjectCacheDefault<FormatterToText>		FormatterToTextCacheType;
 	typedef XalanObjectCacheDefault<FormatterToSourceTree>	FormatterToSourceTreeCacheType;
 	typedef XalanObjectCacheDefault<NodeSorter>				NodeSorterCacheType;
-	typedef XalanObjectCache<ResultTreeFragBase, DefaultCacheCreateFunctor<ResultTreeFrag>, DeleteFunctor<ResultTreeFragBase>, ClearCacheResetFunctor<ResultTreeFragBase> >		ResultTreeFragCacheType;
 
 	FormatterToTextCacheType			m_formatterToTextCache;
 
@@ -1072,7 +1174,9 @@ private:
 
 	NodeSorterCacheType					m_nodeSorterCache;
 
-	ResultTreeFragCacheType				m_resultTreeFragCache;
+	ResultTreeFragCache					m_resultTreeFragCache;
+
+	int									m_indentAmount;
 
 	static XalanNumberFormatFactory		s_defaultXalanNumberFormatFactory;
 
