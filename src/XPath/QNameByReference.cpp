@@ -61,8 +61,8 @@
 
 QNameByReference::QNameByReference() :
 	QName(),
-	m_namespace(s_emptyString),
-	m_localpart(s_emptyString)
+	m_namespace(&s_emptyString),
+	m_localpart(&s_emptyString)
 {
 }
 
@@ -72,8 +72,17 @@ QNameByReference::QNameByReference(
 			const XalanDOMString&	theNamespace,
 			const XalanDOMString&	theLocalPart) :
 	QName(),
-	m_namespace(theNamespace),
-	m_localpart(theLocalPart)
+	m_namespace(&theNamespace),
+	m_localpart(&theLocalPart)
+{
+}
+
+
+
+QNameByReference::QNameByReference(const QName&		theQName) :
+	QName(),
+	m_namespace(&theQName.getNamespace()),
+	m_localpart(&theQName.getLocalPart())
 {
 }
 
@@ -88,7 +97,9 @@ QNameByReference::~QNameByReference()
 const XalanDOMString&
 QNameByReference::getLocalPart() const
 {
-	return m_localpart;
+	assert(m_localpart != 0);
+
+	return *m_localpart;
 }
 
 
@@ -96,5 +107,7 @@ QNameByReference::getLocalPart() const
 const XalanDOMString&
 QNameByReference::getNamespace() const
 {
-	return m_namespace;
+	assert(m_namespace != 0);
+
+	return *m_namespace;
 }

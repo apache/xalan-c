@@ -83,12 +83,21 @@ public:
 	 * Construct a QNameByReference, with the supplied namespace and local part.
 	 * The instance keeps only a _reference_ to the string, to avoid making a
 	 * copy.
+	 *
 	 * @param theNamespace namespace string
 	 * @param theLocalPart local part string
 	 */
 	QNameByReference(
 			const XalanDOMString&	theNamespace,
 			const XalanDOMString&	theLocalPart);
+
+	/**
+	 * Construct a QNameByReference, from the supplied QName.  The instance
+	 * keeps only a _reference_ to the string, to avoid making a copy.
+	 *
+	 * @param theQName The source QName
+	 */
+	QNameByReference(const QName&	theQName);
 
 	virtual
 	~QNameByReference();
@@ -111,9 +120,11 @@ public:
 
 private:
 
-	const XalanDOMString&	m_namespace;
+	// OK, we said reference, but using pointers
+	// allows for copy and assignment semantics.
+	const XalanDOMString*	m_namespace;
 
-	const XalanDOMString&	m_localpart;
+	const XalanDOMString*	m_localpart;
 };
 
 
