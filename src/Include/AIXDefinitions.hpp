@@ -74,7 +74,7 @@
 
 
 #define XALAN_LSTRSUPPORT
-#if defined(_AIX32)
+#if !defined(XML_BITSTOBUILD_64)
 #define XALAN_USE_WCHAR_CAST_HACK
 #endif
 #define XALAN_POSIX2_AVAILABLE
