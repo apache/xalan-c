@@ -112,7 +112,8 @@ BSC32=bscmake.exe
 LINK32=link.exe
 # ADD BASE LINK32 ..\..\..\..\..\..\xml-xerces\c\Build\Win32\VC6\Release\xerces-c_1.lib /nologo /dll /pdb:none /machine:I386
 # SUBTRACT BASE LINK32 /debug
-# ADD LINK32 ..\..\..\..\..\..\xml-xerces\c\Build\Win32\VC6\Release\xerces-c_1.lib /nologo /dll /pdb:none /debug /machine:I386
+# ADD LINK32 ..\..\..\..\..\..\xml-xerces\c\Build\Win32\VC6\Release\xerces-c_1.lib /nologo /dll /debug /machine:I386
+# SUBTRACT LINK32 /pdb:none
 
 !ENDIF 
 
@@ -339,10 +340,6 @@ SOURCE=..\..\..\..\src\PlatformSupport\Writer.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\PlatformSupport\XalanAllocator.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\src\PlatformSupport\XalanAutoPtr.hpp
 # End Source File
 # Begin Source File
 
