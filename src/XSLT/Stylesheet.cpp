@@ -148,15 +148,10 @@ Stylesheet::Stylesheet(
 {
 	if (length(m_baseIdent) != 0)
 	{
-		typedef StylesheetConstructionContext::URLAutoPtrType	URLAutoPtrType;
-
-		URLAutoPtrType	url(constructionContext.getURLFromString(m_baseIdent));
-
-		if (url.get() != 0)
+		const XalanDOMString urlString = constructionContext.getURLStringFromString(m_baseIdent);
+		if (length(urlString) != 0)
 		{
-			m_includeStack.push_back(url.get());
-
-			url.release();
+			m_includeStack.push_back(urlString);
 		}
 	}
 }
@@ -173,11 +168,6 @@ Stylesheet::~Stylesheet()
 	for_each(m_imports.begin(),
 			 m_imports.end(),
 			 DeleteFunctor<Stylesheet>());
-
-	// Clean up all entries in the include vector.
-	for_each(m_includeStack.begin(),
-			 m_includeStack.end(),
-			 DeleteFunctor<XMLURL>());
 
 	// Clean up the atribute sets vector
 	for_each(m_attributeSets.begin(),
@@ -1175,7 +1165,7 @@ Stylesheet::getCurrentIncludeBaseIdentifier() const
 	}
 	else
 	{
-		return m_includeStack.back()->getURLText();
+		return m_includeStack.back();
 	}
 }
 

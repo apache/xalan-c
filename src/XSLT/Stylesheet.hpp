@@ -138,7 +138,7 @@ typedef XALAN_STD vector<NameSpace> 						NamespaceVectorType;
 typedef XALAN_STD vector<NamespaceVectorType>				NamespacesStackType;
 typedef XALAN_STD vector<QName> 							QNameVectorType;
 typedef XALAN_STD vector<const Stylesheet*>					StylesheetVectorType;
-typedef XALAN_STD vector<const XMLURL*> 					URLStackType;
+typedef XALAN_STD vector<XalanDOMString>					URLStackType;
 typedef XALAN_STD vector<const XPath*>						XPathVectorType;
 typedef XALAN_STD vector<ElemDecimalFormat*>				ElemDecimalFormatVectorType;
 

@@ -667,18 +667,17 @@ XSLTEngineImpl::getSourceTreeFromInput(XSLTInputSource&		inputSource)
 
 XalanDocument*
 XSLTEngineImpl::parseXML(
-			const XMLURL&		url,
-			DocumentHandler*	docHandler,
-			XalanDocument*		docToRegister)
+			const XalanDOMString&	urlString,
+			DocumentHandler*		docHandler,
+			XalanDocument*			docToRegister)
 {
-	const XalanDOMString&	urlString = url.getURLText();
-
+	
 	XalanDocument*			doc =
 			m_xpathEnvSupport.getSourceDocument(urlString);
 
 	if(doc == 0)
 	{
-		XSLTInputSource		inputSource(url.getURLText());
+		XSLTInputSource		inputSource(c_wstr(urlString));
 
 		if(0 != docHandler)
 		{

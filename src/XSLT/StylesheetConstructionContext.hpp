@@ -184,11 +184,32 @@ public:
 	 * Determine the fully qualified URI for a string.
 	 *
 	 * @param urlString string to qualify
+	 * @return string to fully qualified URI
+	 */
+	virtual XalanDOMString
+	getURLStringFromString(const XalanDOMString&	urlString) = 0;
+
+	/**
+	 * Determine the fully qualified URI for a string.
+	 *
+	 * @param urlString string to qualify
 	 * @param base base location for URI
 	 * @return auto pointer to fully qualified URI
 	 */
 	virtual URLAutoPtrType
 	getURLFromString(
+			const XalanDOMString&	urlString,
+			const XalanDOMString&	base) = 0;
+
+	/**
+	 * Determine the fully qualified URI for a string.
+	 *
+	 * @param urlString string to qualify
+	 * @param base base location for URI
+	 * @return string to fully qualified URI
+	 */
+	virtual XalanDOMString
+	getURLStringFromString(
 			const XalanDOMString&	urlString,
 			const XalanDOMString&	base) = 0;
 
@@ -264,7 +285,7 @@ public:
 	 * and register the document in a table.  If the document has already been
 	 * read in, it will not be reparsed.
 	 *
-	 * @param url location of the XML
+	 * @param urlString location of the XML
 	 * @param docHandler pointer to SAX event handler
 	 * @param docToRegister if using a SAX event handler, the object to register in the source docs table. 
 	 * @return document object, which represents the parsed XML
@@ -272,9 +293,9 @@ public:
 	 */
 	virtual XalanDocument*
 	parseXML(
-			const XMLURL&		url,
-			DocumentHandler*	docHandler, 
-			XalanDocument*		docToRegister) = 0;
+			const XalanDOMString&	urlString,
+			DocumentHandler*		docHandler, 
+			XalanDocument*			docToRegister) = 0;
 
 	/**
 	 * Given an XSL tag name, return an integer token that corresponds to

@@ -329,7 +329,7 @@ public:
 	 * and register the document in a table.  If the document has already been
 	 * read in, it will not be reparsed.
 	 *
-	 * @param url location of the XML
+	 * @param urlString location of the XML
 	 * @param docHandler pointer to SAX event handler
 	 * @param docToRegister if using a SAX event handler, the object to register in the source docs table. 
 	 * @return document object, which represents the parsed XML
@@ -337,9 +337,9 @@ public:
 	 */
 	XalanDocument*
 	parseXML(
-			const XMLURL&		url,
-			DocumentHandler*	docHandler, 
-			XalanDocument*		docToRegister);
+			const XalanDOMString&	urlString,
+			DocumentHandler*		docHandler,
+			XalanDocument*			docToRegister);
 
 	/**
 	 * Reset the state of the XSL processor by reading in a new XSL stylesheet

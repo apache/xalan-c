@@ -1094,7 +1094,7 @@ ElemTemplateElement* StylesheetHandler::initWrapperless (const XalanDOMString& n
 static bool 
 stackContains(
 			const Stylesheet::URLStackType&		stack, 
-			const XMLURL&						url)
+			const XalanDOMString&				urlString)
 {
 	const int	n = stack.size();
 
@@ -1102,7 +1102,7 @@ stackContains(
 
 	for(int i = 0; i < n && contains == false; i++)
 	{
-		if(*stack[i] == url)
+		if(equals(stack[i], urlString))
 		{
 			contains = true;
 		}
@@ -1144,39 +1144,30 @@ StylesheetHandler::processImport(
 			Stylesheet::URLStackType& includeStack = m_stylesheet.getIncludeStack();
 			assert(includeStack.size() > 0);
 
-			typedef StylesheetConstructionContext::URLAutoPtrType	URLAutoPtrType;
-
-			URLAutoPtrType	hrefUrl = m_constructionContext.getURLFromString(href, includeStack.back()->getURLText());
-			assert(hrefUrl.get() != 0);
+			const XalanDOMString	hrefUrl = m_constructionContext.getURLStringFromString(href, includeStack.back());
+			assert(length(hrefUrl) != 0);
 
 			Stylesheet::URLStackType&	importStack = m_stylesheet.getStylesheetRoot().getImportStack();
 
-			if(stackContains(importStack, *hrefUrl.get()))
+			if(stackContains(importStack, hrefUrl))
 			{
-				XalanDOMString msg(XalanDOMString(hrefUrl->getURLText()) + " is directly or indirectly importing itself!");
+				XalanDOMString msg(hrefUrl + " is directly or indirectly importing itself!");
 
 				throw SAXException(toCharArray(msg));
 			}
 
-			importStack.push_back(hrefUrl.get());
-
-			// We have to release this right now, since the stylesheet
-			// will delete it during its destructor.  However, once we
-			// pop it off the stack, we'll need to delete it.
-			const XMLURL* const		hrefUrlptr = hrefUrl.release();
-
-			const XalanDOMString	theImportURI(hrefUrlptr->getURLText());
-
+			importStack.push_back(hrefUrl);
+			
 			// This will take care of cleaning up the stylesheet if an exception
 			// is thrown.
 			auto_ptr<Stylesheet>	importedStylesheet( 
 				m_constructionContext.create(
 				m_stylesheet.getStylesheetRoot(), 
-				theImportURI));
+				hrefUrl));
 
 			StylesheetHandler tp(*importedStylesheet.get(), m_constructionContext);
 
-			m_constructionContext.parseXML(*hrefUrlptr, &tp, importedStylesheet.get());
+			m_constructionContext.parseXML(hrefUrl, &tp, importedStylesheet.get());
 
 			// Add it to the front of the imports
 			m_stylesheet.addImport(importedStylesheet.get(), true);
@@ -1185,11 +1176,8 @@ StylesheetHandler::processImport(
 			// release the auto_ptr.
 			importedStylesheet.release();
 
-			assert(importStack.back() == hrefUrlptr);
-			importStack.pop_back();
-
-			// The stylesheet is now done with it, so delete it...
-			delete hrefUrlptr;
+			assert(equals(importStack.back(), hrefUrl));
+			importStack.pop_back();		
 
 			m_stylesheet.setXSLTNamespaceURI(saved_XSLNameSpaceURL);
 		}
@@ -1227,33 +1215,23 @@ StylesheetHandler::processInclude(
 			PushPopIncludeState		theStateHandler(*this);
 
 			const XalanDOMString	href = atts.getValue(i);
-
-			typedef StylesheetConstructionContext::URLAutoPtrType	URLAutoPtrType;
-
+		
 			assert(m_stylesheet.getIncludeStack().back() != 0);
-			URLAutoPtrType	hrefUrl = m_constructionContext.getURLFromString(href, m_stylesheet.getIncludeStack().back()->getURLText());
+			const XalanDOMString	hrefUrl = m_constructionContext.getURLStringFromString(href, m_stylesheet.getIncludeStack().back());
 
-			if(stackContains(m_stylesheet.getIncludeStack(), *hrefUrl.get()))
+			if(stackContains(m_stylesheet.getIncludeStack(), hrefUrl))
 			{
-				XalanDOMString msg(XalanDOMString(hrefUrl->getURLText()) + " is directly or indirectly including itself!");
+				XalanDOMString msg(hrefUrl + " is directly or indirectly including itself!");
 
 				throw SAXException(toCharArray(msg));
 			}
 
-			m_stylesheet.getIncludeStack().push_back(hrefUrl.get());
+			m_stylesheet.getIncludeStack().push_back(hrefUrl);
 
-			// We have to release this right now, since the stylesheet
-			// will delete it during its destructor.  However, once we
-			// pop it off the stack, we'll need to delete it.
-			const XMLURL* const		hrefUrlptr = hrefUrl.release();
+			m_constructionContext.parseXML(hrefUrl, this, &m_stylesheet);
 
-			m_constructionContext.parseXML(*hrefUrlptr, this, &m_stylesheet);
-
-			assert(m_stylesheet.getIncludeStack().back() == hrefUrlptr);
+			assert(equals(m_stylesheet.getIncludeStack().back(), hrefUrl));
 			m_stylesheet.getIncludeStack().pop_back();
-
-			// The stylesheet is now done with it, so delete it...
-			delete hrefUrlptr;
 		}
 		else if(!isAttrOK(aname, atts, i))
 		{

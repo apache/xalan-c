@@ -139,31 +139,11 @@ StylesheetRoot::StylesheetRoot(
 	m_defaultRule(0),
 	m_defaultRootRule(0)
 {
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::auto_ptr;
-#endif
-
-	if (length(baseIdentifier) != 0)
-	{
-		typedef StylesheetConstructionContext::URLAutoPtrType	URLAutoPtrType;
-
-		URLAutoPtrType	url(constructionContext.getURLFromString(m_baseIdent));
-
-		if (url.get() != 0)
+		const XalanDOMString urlString = constructionContext.getURLStringFromString(m_baseIdent);
+		if (length(urlString) != 0)
 		{
-			m_baseIdent = url->getURLText();
-
-			URLAutoPtrType	url2(constructionContext.getURLFromString(m_baseIdent));
-
-			if (url2.get() != 0)
-			{
-				m_importStack.push_back(url2.get());
-
-				// Release the auto_ptr<>...
-				url2.release();
-			}
+			m_importStack.push_back(urlString);
 		}
-	}
 }				
 
 
@@ -173,11 +153,6 @@ StylesheetRoot::~StylesheetRoot()
 #if !defined(XALAN_NO_NAMESPACES)
 	using std::for_each;
 #endif
-
-	// Clean up all entries in the vector.
-	for_each(m_importStack.begin(),
-			 m_importStack.end(),
-			 DeleteFunctor<XMLURL>());
 
 	delete m_defaultRule;
 	delete m_defaultTextRule;

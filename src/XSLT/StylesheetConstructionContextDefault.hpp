@@ -159,8 +159,16 @@ public:
 	virtual URLAutoPtrType
 	getURLFromString(const XalanDOMString&	urlString);
 
+	virtual XalanDOMString
+	getURLStringFromString(const XalanDOMString&	urlString);
+
 	virtual URLAutoPtrType
 	getURLFromString(
+			const XalanDOMString&	urlString,
+			const XalanDOMString&	base);
+
+	virtual XalanDOMString
+	getURLStringFromString(
 			const XalanDOMString&	urlString,
 			const XalanDOMString&	base);
 
@@ -191,9 +199,9 @@ public:
 
 	virtual XalanDocument*
 	parseXML(
-			const XMLURL&		url,
-			DocumentHandler*	docHandler, 
-			XalanDocument*		docToRegister);
+			const XalanDOMString&	urlString,
+			DocumentHandler*		docHandler, 
+			XalanDocument*			docToRegister);
 
 	virtual int
 	getElementToken(const XalanDOMString&	name) const;

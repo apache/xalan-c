@@ -232,12 +232,30 @@ StylesheetConstructionContextDefault::getURLFromString(const XalanDOMString&	url
 
 
 
+XalanDOMString
+StylesheetConstructionContextDefault::getURLStringFromString(const XalanDOMString&	urlString)
+{
+	return URISupport::getURLStringFromString(urlString);
+}
+
+
+
 StylesheetConstructionContextDefault::URLAutoPtrType
 StylesheetConstructionContextDefault::getURLFromString(
 			const XalanDOMString&	urlString,
 			const XalanDOMString&	base)
 {
 	return URISupport::getURLFromString(urlString, base);
+}
+
+
+
+XalanDOMString
+StylesheetConstructionContextDefault::getURLStringFromString(
+			const XalanDOMString&	urlString,
+			const XalanDOMString&	base)
+{
+	return URISupport::getURLStringFromString(urlString, base);
 }
 
 
@@ -318,11 +336,11 @@ StylesheetConstructionContextDefault::getXalanXSLNameSpaceURL() const
 
 XalanDocument*
 StylesheetConstructionContextDefault::parseXML(
-			const XMLURL&		url,
-			DocumentHandler*	docHandler, 
-			XalanDocument*		docToRegister)
+			const XalanDOMString&	urlString,
+			DocumentHandler*		docHandler, 
+			XalanDocument*			docToRegister)
 {
-	return m_processor.parseXML(url, docHandler, docToRegister);
+	return m_processor.parseXML(urlString, docHandler, docToRegister);
 }
 
 
