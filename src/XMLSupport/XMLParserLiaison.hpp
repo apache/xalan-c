@@ -169,7 +169,7 @@ public:
 	 * Get a factory object required to create nodes in the result tree.
 	 *
 	 * The liaison owns the XalanDocument instance, and will delete it when
-	 * when asked (see DestroyDocument()), or when the liaison is reset, or
+	 * when asked (see destroyDocument()), or when the liaison is reset, or
 	 * goes out of scope.
 	 * 
 	 * @return A XalanDocument instance.
