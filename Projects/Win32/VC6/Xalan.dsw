@@ -18,7 +18,7 @@ Package=<4>
 
 ###############################################################################
 
-Project: "ApacheModuleXSLT"="..\..\..\samples\ApacheModuleXSLT\ApacheModuleXSLT.dsp" - Package Owner=<4>
+Project: "ApacheModuleXSLT"=".\ApacheModuleXSLT\ApacheModuleXSLT.dsp" - Package Owner=<4>
 
 Package=<5>
 {{{
@@ -48,7 +48,7 @@ Package=<4>
 
 ###############################################################################
 
-Project: "CompileStylesheet"="..\..\..\samples\CompileStylesheet\CompileStylesheet.dsp" - Package Owner=<4>
+Project: "CompileStylesheet"=".\CompileStylesheet\CompileStylesheet.dsp" - Package Owner=<4>
 
 Package=<5>
 {{{
@@ -63,7 +63,7 @@ Package=<4>
 
 ###############################################################################
 
-Project: "DocumentBuilder"="..\..\..\samples\DocumentBuilder\DocumentBuilder.dsp" - Package Owner=<4>
+Project: "DocumentBuilder"=".\DocumentBuilder\DocumentBuilder.dsp" - Package Owner=<4>
 
 Package=<5>
 {{{
@@ -96,7 +96,7 @@ Package=<4>
 
 ###############################################################################
 
-Project: "ExternalFunction"="..\..\..\samples\ExternalFunction\ExternalFunction.dsp" - Package Owner=<4>
+Project: "ExternalFunction"=".\ExternalFunction\ExternalFunction.dsp" - Package Owner=<4>
 
 Package=<5>
 {{{
@@ -174,7 +174,7 @@ Package=<4>
 
 ###############################################################################
 
-Project: "ParsedSourceWrappers"="..\..\..\samples\ParsedSourceWrappers\ParsedSourceWrappers.dsp" - Package Owner=<4>
+Project: "ParsedSourceWrappers"=".\ParsedSourceWrappers\ParsedSourceWrappers.dsp" - Package Owner=<4>
 
 Package=<5>
 {{{
@@ -207,7 +207,7 @@ Package=<4>
 
 ###############################################################################
 
-Project: "SerializeNodeSet"="..\..\..\samples\SerializeNodeSet\SerializeNodeSet.dsp" - Package Owner=<4>
+Project: "SerializeNodeSet"=".\SerializeNodeSet\SerializeNodeSet.dsp" - Package Owner=<4>
 
 Package=<5>
 {{{
@@ -222,7 +222,7 @@ Package=<4>
 
 ###############################################################################
 
-Project: "SimpleTransform"="..\..\..\samples\SimpleTransform\SimpleTransform.dsp" - Package Owner=<4>
+Project: "SimpleTransform"=".\SimpleTransform\SimpleTransform.dsp" - Package Owner=<4>
 
 Package=<5>
 {{{
@@ -237,7 +237,7 @@ Package=<4>
 
 ###############################################################################
 
-Project: "SimpleXPathAPI"="..\..\..\samples\SimpleXPathAPI\SimpleXPathAPI.dsp" - Package Owner=<4>
+Project: "SimpleXPathAPI"=".\SimpleXPathAPI\SimpleXPathAPI.dsp" - Package Owner=<4>
 
 Package=<5>
 {{{
@@ -252,7 +252,7 @@ Package=<4>
 
 ###############################################################################
 
-Project: "SimpleXPathCAPI"="..\..\..\samples\SimpleXPathCAPI\SimpleXPathCAPI.dsp" - Package Owner=<4>
+Project: "SimpleXPathCAPI"=".\SimpleXPathCAPI\SimpleXPathCAPI.dsp" - Package Owner=<4>
 
 Package=<5>
 {{{
@@ -267,7 +267,7 @@ Package=<4>
 
 ###############################################################################
 
-Project: "StreamTransform"="..\..\..\samples\StreamTransform\StreamTransform.dsp" - Package Owner=<4>
+Project: "StreamTransform"=".\StreamTransform\StreamTransform.dsp" - Package Owner=<4>
 
 Package=<5>
 {{{
@@ -327,7 +327,7 @@ Package=<4>
 
 ###############################################################################
 
-Project: "ThreadSafe"="..\..\..\samples\ThreadSafe\ThreadSafe.dsp" - Package Owner=<4>
+Project: "ThreadSafe"=".\ThreadSafe\ThreadSafe.dsp" - Package Owner=<4>
 
 Package=<5>
 {{{
@@ -357,7 +357,7 @@ Package=<4>
 
 ###############################################################################
 
-Project: "TraceListen"="..\..\..\samples\TraceListen\TraceListen.dsp" - Package Owner=<4>
+Project: "TraceListen"=".\TraceListen\TraceListen.dsp" - Package Owner=<4>
 
 Package=<5>
 {{{
@@ -372,7 +372,7 @@ Package=<4>
 
 ###############################################################################
 
-Project: "TransformToXercesDOM"="..\..\..\samples\TransformToXercesDOM\TransformToXercesDOM.dsp" - Package Owner=<4>
+Project: "TransformToXercesDOM"=".\TransformToXercesDOM\TransformToXercesDOM.dsp" - Package Owner=<4>
 
 Package=<5>
 {{{
@@ -402,7 +402,7 @@ Package=<4>
 
 ###############################################################################
 
-Project: "UseStylesheetParam"="..\..\..\samples\UseStylesheetParam\UseStylesheetParam.dsp" - Package Owner=<4>
+Project: "UseStylesheetParam"=".\UseStylesheetParam\UseStylesheetParam.dsp" - Package Owner=<4>
 
 Package=<5>
 {{{
@@ -432,7 +432,7 @@ Package=<4>
 
 ###############################################################################
 
-Project: "XalanTransform"="..\..\..\samples\XalanTransform\XalanTransform.dsp" - Package Owner=<4>
+Project: "XalanTransform"=".\XalanTransform\XalanTransform.dsp" - Package Owner=<4>
 
 Package=<5>
 {{{
@@ -447,7 +447,7 @@ Package=<4>
 
 ###############################################################################
 
-Project: "XalanTransformerCallback"="..\..\..\samples\XalanTransformerCallback\XalanTransformerCallback.dsp" - Package Owner=<4>
+Project: "XalanTransformerCallback"=".\XalanTransformerCallback\XalanTransformerCallback.dsp" - Package Owner=<4>
 
 Package=<5>
 {{{

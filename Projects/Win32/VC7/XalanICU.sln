@@ -1,15 +1,15 @@
 Microsoft Visual Studio Solution File, Format Version 7.00
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ApacheModuleXSLT", "..\..\..\samples\ApacheModuleXSLT\ApacheModuleXSLT.vcproj", "{59F906AA-E1F0-46C4-9F08-97DFD1466396}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ApacheModuleXSLT", "ApacheModuleXSLT\ApacheModuleXSLT.vcproj", "{59F906AA-E1F0-46C4-9F08-97DFD1466396}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CAPI", "..\..\..\Tests\C-API\CAPI.vcproj", "{8B264040-52CD-43F7-B0E8-CE229FC7C039}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CompileStylesheet", "..\..\..\samples\CompileStylesheet\CompileStylesheet.vcproj", "{2FBC9FC4-AD2F-4DE1-A56E-8D0FF0728E67}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CompileStylesheet", "CompileStylesheet\CompileStylesheet.vcproj", "{2FBC9FC4-AD2F-4DE1-A56E-8D0FF0728E67}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DocumentBuilder", "..\..\..\samples\DocumentBuilder\DocumentBuilder.vcproj", "{047707E4-F71D-439B-9F2B-0A366641F030}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DocumentBuilder", "DocumentBuilder\DocumentBuilder.vcproj", "{047707E4-F71D-439B-9F2B-0A366641F030}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Errortests", "..\..\..\Tests\Errortests\Errortests.vcproj", "{08DA5FC0-EDEE-4E8A-B261-36190F1E2430}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ExternalFunction", "..\..\..\samples\ExternalFunction\ExternalFunction.vcproj", "{3856936D-EECA-4205-BD66-EC311A493A52}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ExternalFunction", "ExternalFunction\ExternalFunction.vcproj", "{3856936D-EECA-4205-BD66-EC311A493A52}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Harness", "..\..\..\Tests\Harness\Harness.vcproj", "{C6548B4E-4BD7-490F-8788-A873E360E506}"
 EndProject
@@ -17,43 +17,43 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Memory", "..\..\..\Tests\Me
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Params", "..\..\..\Tests\Params\Params.vcproj", "{C979C7D2-BA2F-4DAC-A44A-533C19388BDB}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ParsedSourceWrappers", "..\..\..\samples\ParsedSourceWrappers\ParsedSourceWrappers.vcproj", "{776D0F8E-D36E-4994-AD94-B3B45D203164}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ParsedSourceWrappers", "ParsedSourceWrappers\ParsedSourceWrappers.vcproj", "{776D0F8E-D36E-4994-AD94-B3B45D203164}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PerfT", "..\..\..\Tests\PerfT\PerfT.vcproj", "{BAF9FF30-3F20-4E0E-81AC-4A80E5F10A0B}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SerializeNodeSet", "..\..\..\samples\SerializeNodeSet\SerializeNodeSet.vcproj", "{605EB7CF-631D-449C-818F-3C8176106DDB}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SerializeNodeSet", "SerializeNodeSet\SerializeNodeSet.vcproj", "{605EB7CF-631D-449C-818F-3C8176106DDB}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SimpleTransform", "..\..\..\samples\SimpleTransform\SimpleTransform.vcproj", "{0B51B9E9-8AA9-40FD-A0DD-20AEB2F5669D}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SimpleTransform", "SimpleTransform\SimpleTransform.vcproj", "{0B51B9E9-8AA9-40FD-A0DD-20AEB2F5669D}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SimpleXPathAPI", "..\..\..\samples\SimpleXPathAPI\SimpleXPathAPI.vcproj", "{89357672-7E91-4439-BAF4-D76344F4C4C6}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SimpleXPathAPI", "SimpleXPathAPI\SimpleXPathAPI.vcproj", "{89357672-7E91-4439-BAF4-D76344F4C4C6}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SimpleXPathCAPI", "..\..\..\samples\SimpleXPathCAPI\SimpleXPathCAPI.vcproj", "{DC2C7284-3AD4-4775-B18A-FFF04B70FABA}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SimpleXPathCAPI", "SimpleXPathCAPI\SimpleXPathCAPI.vcproj", "{DC2C7284-3AD4-4775-B18A-FFF04B70FABA}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "StreamTransform", "..\..\..\samples\StreamTransform\StreamTransform.vcproj", "{A3460E83-A49E-484D-8178-2870D632577C}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "StreamTransform", "StreamTransform\StreamTransform.vcproj", "{A3460E83-A49E-484D-8178-2870D632577C}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestDriver", "..\..\..\samples\XPathWrapper\TestDriver.vcproj", "{1D581E76-D5CE-467E-AC11-922AA736100C}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestDriver", "XPathWrapper\XPathWrapper.vcproj", "{1D581E76-D5CE-467E-AC11-922AA736100C}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestXPath", "TestXPath\TestXPath.vcproj", "{69739EB0-6BA3-4E79-88CA-3A07A7902233}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestXSLT", "TestXSLT\TestXSLT.vcproj", "{0EC8A701-67D1-4880-83A3-D61B7C51375C}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ThreadSafe", "..\..\..\samples\ThreadSafe\ThreadSafe.vcproj", "{C4BEF966-4FA3-4A3A-B5B1-7E61447E394E}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ThreadSafe", "ThreadSafe\ThreadSafe.vcproj", "{C4BEF966-4FA3-4A3A-B5B1-7E61447E394E}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ThreadTest", "..\..\..\Tests\Threads\ThreadTest.vcproj", "{B85BDF08-468E-40DB-8637-D041A14D774B}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TraceListen", "..\..\..\samples\TraceListen\TraceListen.vcproj", "{081EB3ED-4697-4D3D-B852-22ACF829AA3F}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TraceListen", "TraceListen\TraceListen.vcproj", "{081EB3ED-4697-4D3D-B852-22ACF829AA3F}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TransformToXercesDOM", "..\..\..\samples\TransformToXercesDOM\TransformToXercesDOM.vcproj", "{9EB1847D-29D1-45D2-84EC-3C33D15B2CC8}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TransformToXercesDOM", "TransformToXercesDOM\TransformToXercesDOM.vcproj", "{9EB1847D-29D1-45D2-84EC-3C33D15B2CC8}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Transformer", "..\..\..\Tests\Transformer\Transformer.vcproj", "{B2615090-4E53-43B5-9760-B390D4E20BB8}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UseStylesheetParam", "..\..\..\samples\UseStylesheetParam\UseStylesheetParam.vcproj", "{0614F7BD-4369-40BE-BE71-03E2699699C9}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UseStylesheetParam", "UseStylesheetParam\UseStylesheetParam.vcproj", "{0614F7BD-4369-40BE-BE71-03E2699699C9}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "XalanExe", "XalanExe\XalanExe.vcproj", "{865E1333-C4FD-4F6D-AD22-BD93BFF0EF4B}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "XalanTransform", "..\..\..\samples\XalanTransform\XalanTransform.vcproj", "{A108CFD7-9A5B-4EFF-9BB6-D65A933BC4DF}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "XalanTransform", "XalanTransform\XalanTransform.vcproj", "{A108CFD7-9A5B-4EFF-9BB6-D65A933BC4DF}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "XalanTransformerCallback", "..\..\..\samples\XalanTransformerCallback\XalanTransformerCallback.vcproj", "{B59FB25A-9F01-41EB-B4D9-A3B6F9451E3C}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "XalanTransformerCallback", "XalanTransformerCallback\XalanTransformerCallback.vcproj", "{B59FB25A-9F01-41EB-B4D9-A3B6F9451E3C}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "compare", "..\..\..\Tests\Compare\compare.vcproj", "{31BE8B3F-E6AD-4FAE-8150-E44B93340681}"
 EndProject
