@@ -97,13 +97,15 @@
 -TS (Trace each selection event)
 -TTC (Trace the template children as they are being processed)
 -XML (Use XML formatter and add XML header)
--TEXT (Use simple Text formatter)
--HTML (Use HTML formatter)
 The -XML flag must be set:
 &nbsp;&nbsp;-NH (Don't write XML header)
+-HTML (Use HTML formatter)
+The -HTML flag must be set:
+&nbsp;&nbsp;-NOINDENT (turns off HTML indenting)
 The -XML or -HTML flag must be set:
 &nbsp;&nbsp;-STRIPCDATA (Strip CDATA sections of their brackets, but do not escape)
 &nbsp;&nbsp;-ESCAPECDATA (Strip CDATA sections of their brackets, and escape)
+-TEXT (Use simple Text formatter)
 -DOM (Test for well-formed output --format to DOM then to XML for output)
 -PARAM name expression (Set a stylesheet parameter)</source>
       <p>Use -IN to specify the XML source document.</p> 

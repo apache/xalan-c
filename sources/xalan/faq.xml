@@ -78,7 +78,7 @@
       </tr>
        <tr>
          <td>Red Hat Linux 6.1</td>
-         <td>glib-2.1.2-11</td>
+         <td>egcs-2.91.66 and glibc-2.1.2-11</td>
          <td>No</td>
       </tr>
     </table>
@@ -88,7 +88,7 @@
 <faq title="STLPort">
 <q>What is STLPort and why do I need it?</q>
 
-<a><p>The Standard Template Library, or STL, is a C++ library of container classes, algorithms, and iterators; it provides many of the basic computer science algorithms and data structures. &xslt4c; implementation uses the SLT. STLport ports SGI STL to any platform possible and provides all necessary wrap-upsinstalled. If your compiler does not support the STL or its implementation is out of date, you will need to install the STLPort.</p> 
+<a><p>The Standard Template Library, or STL, is a C++ library of container classes, algorithms, and iterators; it provides many of the basic computer science algorithms and data structures. &xslt4c; implementation uses the SLT. STLport ports SGI STL to any platform possible and provides all necessary wrap-ups installed. If your compiler does not support the STL or its implementation is out of date, you will need to install the STLPort.</p> 
 
 <p>The STLPort is available for download from the site: <jump href="http://www.stlport.org/">http://www.stlport.org/</jump>.</p>
 
