@@ -74,6 +74,8 @@
 
 
 
+#include <xercesc/dom/DOMDocument.hpp>
+#include <xercesc/dom/DOMImplementation.hpp>
 #include <xercesc/sax/SAXException.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
 
@@ -105,6 +107,8 @@
 
 
 
+#include <XercesParserLiaison/FormatterToXercesDOM.hpp>
+#include <XercesParserLiaison/XercesDOMFormatterWalker.hpp>
 #include <XercesParserLiaison/XercesDOMSupport.hpp>
 #include <XercesParserLiaison/XercesParserLiaison.hpp>
 
@@ -323,9 +327,16 @@ runTests(
 				const XalanDOMString  theOutput =  outputRoot + xMan + FileUtility::s_pathSep + files[i]; 
 				const XalanDOMString  theOutputFile = f.generateFileName(theOutput, "out");
 
+				XALAN_USING_XERCES(DOMDocument)
+				XALAN_USING_XERCES(DOMImplementation)
+
 				// Use a Xerces Dom document to create the XSLTResultTarget. 
-				XalanDocument* domOut = parserLiaison.createDocument();
-				const XSLTResultTarget domResultTarget(domOut);
+				const XalanAutoPtr<DOMDocument>		theDocument(DOMImplementation::getImplementation()->createDocument());
+				assert(theDocument.get() != 0);
+
+				FormatterToXercesDOM	theFormatter(theDocument.get(), 0);
+
+				XSLTResultTarget	domResultTarget(theFormatter);
 
 				const XSLTInputSource	xslInputSource(theXSLFile);
 				const XSLTInputSource	xmlInputSource(theXMLFile);
@@ -364,8 +375,8 @@ runTests(
 																		mimeEncoding,
 																		compiledSS->getStylesheetRoot());
 
-						FormatterTreeWalker theTreeWalker(*theFormatter);
-						theTreeWalker.traverse(domOut);
+						XercesDOMFormatterWalker theTreeWalker(*theFormatter);
+						theTreeWalker.traverse(theDocument.get());
 
 						delete theFormatter;
 						logFile.logTestCaseClose("Done","Pass");
