@@ -247,8 +247,8 @@ public:
 	// Delete functor for table cleanup...
 	struct NamespaceFunctionTableDeleteFunctor
 	{
-		typedef XPathEnvSupportDefault::FunctionTableType			FunctionTableType;
-		typedef XPathEnvSupportDefault::NamespaceFunctionTablesType		NamespaceFunctionTablesType;
+		typedef FunctionTableType				FunctionTableInnerType;
+		typedef NamespaceFunctionTablesType		NamespaceFunctionTablesInnerType;
 
 		/**
 		 * Delete the value object in a map value pair.  The value of the pair must
@@ -257,7 +257,7 @@ public:
 		 * @param thePair key-value pair
 		 */
 		void
-		operator()(const NamespaceFunctionTablesType::value_type&	thePair) const;
+		operator()(const NamespaceFunctionTablesInnerType::value_type&	thePair) const;
 	};
 
 protected:

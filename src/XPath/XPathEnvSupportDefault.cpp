@@ -535,10 +535,10 @@ XPathEnvSupportDefault::problem(
 
 
 void
-XPathEnvSupportDefault::NamespaceFunctionTableDeleteFunctor::operator()(const NamespaceFunctionTablesType::value_type&	thePair) const
+XPathEnvSupportDefault::NamespaceFunctionTableDeleteFunctor::operator()(const NamespaceFunctionTablesInnerType::value_type&	thePair) const
 {
 	// Clean up the extension namespaces vector
 	for_each(thePair.second.begin(),
 			 thePair.second.end(),
-			 MapValueDeleteFunctor<FunctionTableType>());
+			 MapValueDeleteFunctor<FunctionTableInnerType>());
 }
