@@ -67,30 +67,11 @@
 
 
 Arg::Arg(
-		const QName&			name,
-		const XalanDOMString&	expr,
-		bool					isParamVar) :
-	StackEntry(eArgument),
-	m_qname(name),
-	m_argType(eExpression),
-	m_isParamVar(isParamVar),
-	m_val(0),
-	m_expression(expr)
-{
-}
-
-
-
-Arg::Arg(
 		const QName&	name,
-		XObject*		val,
-		bool			isParamVar) :
+		XObject*		val) :
 	StackEntry(eArgument),
 	m_qname(name),
-	m_argType(eXObject),
-	m_isParamVar(isParamVar),
-	m_val(val),
-	m_expression()
+	m_val(val)
 {
 }
 
@@ -99,10 +80,7 @@ Arg::Arg(
 Arg::Arg(const Arg&	theSource) :
 	StackEntry(theSource),
 	m_qname(theSource.m_qname),
-	m_argType(theSource.m_argType),
-	m_isParamVar(theSource.m_isParamVar),
-	m_val(theSource.m_val),
-	m_expression(theSource.m_expression)
+	m_val(theSource.m_val)
 {
 }
 
@@ -110,36 +88,4 @@ Arg::Arg(const Arg&	theSource) :
 
 Arg::~Arg()
 {
-}
-
-
-
-bool
-Arg::equals(const StackEntry&	theRHS) const
-{
-	bool	theResult = false;
-
-	if(theRHS.getType() == eArgument)
-	{
-		const Arg&	theArgRHS = static_cast<const Arg&>(theRHS);
-
-		if (getArgType() == theArgRHS.getArgType() &&
-			m_qname.equals(theArgRHS.m_qname) == true)
-		{
-			theResult = true;
-		}
-	}
-
-	return theResult;
-}
-
-
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-StackEntry*
-#else
-Arg*
-#endif
-Arg::clone() const
-{
-	return new Arg(*this);
 }

@@ -78,32 +78,21 @@
  * calls above this marker at the top of the stack can 
  * be reached with getVariable(String name).
  */
-class ContextMarker : public ContextState
+class ContextMarker : public StackEntry
 {
 public:
 
 	/**
-	  * Construct a context marker from a source node and caller node
-	  *
-	  * @param caller     caller node
-	  * @param sourceNode source node
+	  * Construct a context marker.
 	  */
-	ContextMarker(
-			const XalanNode*	caller,
-			const XalanNode*	sourceNode);
+	explicit
+	ContextMarker();
 
 
 	ContextMarker(const ContextMarker&	theSource);
 
 	virtual
 	~ContextMarker();
-
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-	virtual StackEntry*
-#else
-	virtual ContextMarker*
-#endif
-	clone() const;
 };
 
 

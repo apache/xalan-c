@@ -62,19 +62,15 @@
 
 
 
-ContextMarker::ContextMarker(
-		const XalanNode*	caller,
-		const XalanNode*	sourceNode) :
-	ContextState(caller,
-				 sourceNode,
-				 eContextMarker)
+ContextMarker::ContextMarker() :
+	StackEntry(eContextMarker)
 {
 }
 
 
 
 ContextMarker::ContextMarker(const ContextMarker&		theSource) :
-	ContextState(theSource)
+	StackEntry(theSource)
 {
 }
 
@@ -83,19 +79,3 @@ ContextMarker::ContextMarker(const ContextMarker&		theSource) :
 ContextMarker::~ContextMarker()
 {
 }
-
-
-
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-StackEntry*
-#else
-ContextMarker*
-#endif
-ContextMarker::clone() const
-{
-	return new ContextMarker(*this);
-}
-
-/*
- *      $ Log: $
- */
