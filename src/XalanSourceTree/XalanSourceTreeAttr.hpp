@@ -525,7 +525,7 @@ public:
 	}
 
 	void
-	setIndex(unsigned int	theIndex)
+	setIndex(unsigned long	theIndex)
 	{
 		m_index = theIndex;
 	}
@@ -547,13 +547,13 @@ private:
 
 
 	// Data members...
-	const XalanDOMString&				m_name;
+	const XalanDOMString&		m_name;
 
-	const XalanDOMString&				m_value;
+	const XalanDOMString&		m_value;
 
-	XalanSourceTreeElement*				m_ownerElement;
+	XalanSourceTreeElement*		m_ownerElement;
 
-	unsigned int						m_index;
+	unsigned long				m_index;
 };
 
 

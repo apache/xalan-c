@@ -786,19 +786,19 @@ public:
 	appendChildNode(XalanSourceTreeText*	theChild);
 
 	void
-	setIndex(unsigned int	theIndex)
+	setIndex(unsigned long	theIndex)
 	{
 		m_index = theIndex;
 	}
 
-	unsigned int
+	AttributesCountType
 	getAttributeCount() const
 	{
 		return m_attributeCount;
 	}
 
 	XalanSourceTreeAttr*
-	getAttributeByIndex(unsigned int	index) const
+	getAttributeByIndex(AttributesCountType		index) const
 	{
 		return index < m_attributeCount ? m_attributes[index] : 0;
 	}
@@ -880,7 +880,7 @@ private:
 
 	XalanNode*						m_firstChild;
 
-	unsigned int					m_index;
+	unsigned long					m_index;
 
 	XalanSourceTreeAttr* const *	m_attributes;
 

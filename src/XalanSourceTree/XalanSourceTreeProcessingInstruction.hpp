@@ -526,7 +526,7 @@ public:
 	appendSiblingNode(XalanSourceTreeText*	theSibling);
 
 	void
-	setIndex(unsigned int	theIndex)
+	setIndex(unsigned long	theIndex)
 	{
 		m_index = theIndex;
 	}
@@ -560,7 +560,7 @@ private:
 
 	XalanNode*					m_nextSibling;
 
-	unsigned int				m_index;
+	unsigned long				m_index;
 };
 
 
