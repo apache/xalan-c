@@ -63,9 +63,6 @@
 
 
 
-//#include <framework/URLInputSource.hpp>
-//#include <parsers/DOMParser.hpp>
-//#include <parsers/SAXParser.hpp>
 #include <sax2/XMLReaderFactory.hpp>
 
 
@@ -179,9 +176,22 @@ XalanSourceTreeParserLiaison::createDocument()
 
 
 XalanDocument*
-XalanSourceTreeParserLiaison::getDOMFactory()
+XalanSourceTreeParserLiaison::createDOMFactory()
 {
 	return m_xercesParserLiaison.createDocument();
+}
+
+
+
+void
+XalanSourceTreeParserLiaison::destroyDocument(XalanDocument*		theDocument)
+{
+	if (mapDocument(theDocument) != 0)
+	{
+		m_documentMap.erase(theDocument);
+
+		delete theDocument;
+	}
 }
 
 

@@ -118,7 +118,10 @@ public:
 	createDocument();
 
 	virtual XalanDocument*
-	getDOMFactory();
+	createDOMFactory();
+
+	virtual void
+	destroyDocument(XalanDocument*	theDocument);
 
 	virtual void
 	setSpecialCharacters(const XalanDOMString&	str);
