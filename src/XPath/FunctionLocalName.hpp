@@ -121,8 +121,6 @@ public:
 			{
 				executionContext.error("The local-name() function requires a non-null context node!");
 			}
-
-			theData = executionContext.getLocalNameOfNode(*context);
 		}
 		else
 		{
@@ -132,7 +130,19 @@ public:
 
 			if (theNodeList.getLength() > 0)
 			{
-				theData = executionContext.getLocalNameOfNode(*theNodeList.item(0));
+				context = theNodeList.item(0);
+			}
+		}
+
+		if (context != 0)
+		{
+			const XalanNode::NodeType	theType = context->getNodeType();
+
+			if(theType == XalanNode::ATTRIBUTE_NODE ||
+				theType == XalanNode::ELEMENT_NODE ||
+				theType == XalanNode::PROCESSING_INSTRUCTION_NODE)
+			{
+				theData = executionContext.getLocalNameOfNode(*context);
 			}
 		}
 
