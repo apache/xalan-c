@@ -417,22 +417,6 @@ protected:
 	accumContent(const XalanDOMString&	str);
 
 	/**
-	 * Append a vector of wide characters to the buffer.
-	 *
-	 * @param theVector the vector to append
-	 */
-	void
-	accumName(const XalanDOMCharVectorType&		theVector);
-
-	/**
-	 * Append a vector of wide characters to the buffer.
-	 *
-	 * @param theVector the vector to append
-	 */
-	void
-	accumContent(const XalanDOMCharVectorType&	theVector);
-
-	/**
 	 * Escape and accum a character.
 	 */
 	void
@@ -569,6 +553,12 @@ protected:
 			XalanDOMChar	ch,
 			unsigned int	next);
 
+	static bool
+	isUTF16Surrogate(XalanDOMChar	ch)
+	{
+		return (ch & 0xFC00) == 0xD800 ? true : false;
+	}
+
 	enum eDummyTwo { SPECIALSSIZE = 256};
 
 	/**
@@ -676,6 +666,11 @@ protected:
 	 * preserve whitespace.
 	 */
 	BoolStackType	m_preserves;
+
+	// A text buffer.  We use it mostly for converting
+	// to string values.  See uses of UnsignedLongToString()
+	// and UnsignedLongToHexString().
+	XalanDOMString	m_stringBuffer;
 
 private:
 
@@ -889,19 +884,10 @@ private:
 	static const DOMCharBufferType::size_type	s_maxBufferSize;
 
 	/**
-	 * Current level of indent.
-	 */
-	int		m_level;
-
-protected:
-
-	/**
 	 * A stack of Boolean objects that tell if the given element 
 	 * has children.
 	 */
-	BoolStackType		m_elemStack;
-
-private:
+	BoolStackType	m_elemStack;
 
 	/**
 	 * A pointer to the member function that will do the accumulating

@@ -79,6 +79,7 @@
 #include <PlatformSupport/DOMStringHelper.hpp>
 #include <PlatformSupport/Writer.hpp>
 #include <PlatformSupport/XalanUnicode.hpp>
+#include <PlatformSupport/XalanXMLChar.hpp>
 
 
 
@@ -226,7 +227,7 @@ FormatterToHTML::FormatterToHTML(
 			int						indent,
 			const XalanDOMString&	version,
 			const XalanDOMString&	standalone,
-			bool xmlDecl) :
+			bool					xmlDecl) :
 	FormatterToXML(
 			writer,
 			version,
@@ -243,7 +244,8 @@ FormatterToHTML::FormatterToHTML(
 	m_inBlockElem(false),
 	m_isRawStack(),
 	m_isScriptOrStyleElem(false),
-	m_isFirstElem(true)
+	m_escapeURLs(false),
+	m_elementLevel(0)
 {
 	initCharsMap();
 }
@@ -326,6 +328,12 @@ FormatterToHTML::getElemDesc(const XalanDOMChar*	name)
 void
 FormatterToHTML::startDocument()
 {
+	// Clear the buffer, just in case...
+	clear(m_stringBuffer);
+
+	// Reset this, just in case...
+	m_elementLevel = 0;
+
     m_startNewLine = false;
 	m_shouldWriteXMLHeader = false;
 
@@ -375,7 +383,7 @@ FormatterToHTML::startDocument()
 void
 FormatterToHTML::endDocument()
 {
-	m_isFirstElem = true;
+	assert(m_elementLevel == 0);
 
 	FormatterToXML::endDocument();
 }
@@ -404,7 +412,7 @@ FormatterToHTML::startElement(
 		m_ispreserve = false;
 	}
     else if(m_doIndent &&
-			m_isFirstElem == false &&
+			m_elementLevel > 0 &&
 			(m_inBlockElem == false || isBlockElement == true))
     {
 		m_startNewLine = true;
@@ -434,8 +442,6 @@ FormatterToHTML::startElement(
     
     m_isprevtext = false;
 
-	m_isFirstElem = false;
-
 	if (isHeadElement)
     {
       writeParentTagEnd();
@@ -448,6 +454,11 @@ FormatterToHTML::startElement(
       accumContent(XalanUnicode::charQuoteMark);
       accumContent(XalanUnicode::charGreaterThanSign);
     }
+
+	// Increment the level...
+	++m_elementLevel;
+
+	assert(m_elementLevel > 0);
 }
 
 
@@ -523,9 +534,12 @@ FormatterToHTML::endElement(const XMLCh* const	name)
 		}
     }
 
-	m_isFirstElem = false;
-
     m_isprevtext = false;
+
+	// Decrement the level...
+	--m_elementLevel;
+
+	assert(m_elementLevel >= 0);
 }
 
 
@@ -668,10 +682,10 @@ FormatterToHTML::processingInstruction(
 
 		// If outside of an element, then put in a new line.  This whitespace
 		// is not significant.
-//		if (m_elemStack.empty() == true)
-//		{
-//			outputLineSep();
-//		}
+		if (m_elementLevel == 0)
+		{
+			outputLineSep();
+		}
 
 		m_startNewLine = true;
 	}
@@ -811,7 +825,7 @@ FormatterToHTML::writeAttrString(
 		{
 			accumContent(ch); // no escaping in this case, as specified in 15.2
 		}
-		else if (accumDefaultEntity(ch, i, string, strLen, false) == false)
+		else if (accumDefaultEntity(ch, i, string, strLen, true) == false)
 		{
 			if (0xd800 <= ch && ch < 0xdc00) 
 			{
@@ -837,7 +851,10 @@ FormatterToHTML::writeAttrString(
 
 				accumContent(XalanUnicode::charAmpersand);
 				accumContent(XalanUnicode::charNumberSign);
-				accumContent(UnsignedLongToDOMString(next));
+
+				accumContent(UnsignedLongToDOMString(next, m_stringBuffer));
+				clear(m_stringBuffer);
+
 				accumContent(XalanUnicode::charSemicolon);
 			}
 			else if(ch >= 160 && ch <= 255)
@@ -933,21 +950,6 @@ FormatterToHTML::copyEntityIntoBuffer(const XalanDOMString&		s)
 
 
 void
-FormatterToHTML::copyEntityIntoBuffer(const XalanDOMCharVectorType&		s)
-{
-    accumContent(XalanUnicode::charAmpersand);
-
-    for(XalanDOMCharVectorType::const_iterator i = s.begin(); *i != 0; ++i)
-    {
-		accumContent(*i);
-    }
-
-    accumContent(XalanUnicode::charSemicolon);
-}
-
-
-
-void
 FormatterToHTML::processAttribute(
 			const XalanDOMChar*		name,
 			const XalanDOMChar*		value,
@@ -1030,91 +1032,181 @@ FormatterToHTML::writeAttrURI(
 	// causing damage.	If the URL is already properly escaped, in theory, this 
 	// function should not change the string value.
 
-	char[] stringArray = string.toCharArray();
-	int len = stringArray.length;
-		
-	accum('"');
+	const unsigned int	len = length(string);
 
-	for (int i = 0; i < len; i++)
-	{
-		char ch = stringArray[i];
+    for (unsigned int i = 0; i < len; ++i)
+    {
+		const XalanDOMChar	ch = string[i];
 
-		// if first 8 bytes are 0, no need to append them.
-		if ((ch < 9) || (ch > 127)
-			  || /*(ch == '"') || -sb, as per #PDIK4L9LZY */ (ch == ' '))
+		if (ch < 33 || ch > 126)
 		{
-			if (m_specialEscapeURLs)
+			if (m_escapeURLs == true)
 			{
+				// For the gory details of encoding these characters as
+				// UTF-8 hex, see:
+				// 
+				// Unicode, A Primer, by Tony Graham, p. 92.
+				//
 				if(ch <= 0x7F)
 				{
-					accum("%");
-					accum(Integer.toHexString(ch).toUpperCase());		   
+					accumHexNumber(ch);
 				}
 				else if(ch <= 0x7FF)
 				{
-					int high = (int) ((((int) ch) & 0xFFC0) >> 6) | 0xC0; // Clear high bytes?
-					int low = (int) (((int) ch) & 0x3F) | 0x80; // First 6 bits, + high bit
-					accum("%");
-					accum(Integer.toHexString(high).toUpperCase());
-					accum("%");
-					accum(Integer.toHexString(low).toUpperCase());
+					const XalanDOMChar	highByte = XalanDOMChar((ch >> 6) | 0xC0);
+					const XalanDOMChar	lowByte = XalanDOMChar((ch & 0x3F) | 0x80);
+
+					accumHexNumber(highByte);
+
+					accumHexNumber(lowByte);
+				}
+				else if(isUTF16Surrogate(ch) == true) // high surrogate
+				{
+					// I'm sure this can be done in 3 instructions, but I choose 
+					// to try and do it exactly like it is done in the book, at least 
+					// until we are sure this is totally clean.  I don't think performance 
+					// is a big issue with this particular function, though I could be 
+					// wrong.  Also, the stuff below clearly does more masking than 
+					// it needs to do.
+            
+					// Clear high 6 bits.
+					const XalanDOMChar	highSurrogate = XalanDOMChar(ch & 0x03FF);
+
+					// Middle 4 bits (wwww) + 1
+					// "Note that the value of wwww from the high surrogate bit pattern
+					// is incremented to make the uuuuu bit pattern in the scalar value 
+					// so the surrogate pair don't address the BMP."
+					const XalanDOMChar	wwww = XalanDOMChar((highSurrogate & 0x03C0) >> 6);
+					const XalanDOMChar	uuuuu = XalanDOMChar(wwww + 1);  
+
+					// next 4 bits
+					const XalanDOMChar	zzzz = XalanDOMChar((highSurrogate & 0x003C) >> 2);
+            
+					// low 2 bits
+					const XalanDOMChar	temp = XalanDOMChar(((highSurrogate & 0x0003) << 4) & 0x30);
+            
+					// Get low surrogate character.
+					const XalanDOMChar	nextChar = string[++i];
+            
+					// Clear high 6 bits.
+					const XalanDOMChar	lowSurrogate = XalanDOMChar(nextChar & 0x03FF);
+            
+					// put the middle 4 bits into the bottom of yyyyyy (byte 3)
+					const XalanDOMChar	yyyyyy = XalanDOMChar(temp | ((lowSurrogate & 0x03C0) >> 6));
+            
+					// bottom 6 bits.
+					const XalanDOMChar	xxxxxx = XalanDOMChar(lowSurrogate & 0x003F);
+            
+					const XalanDOMChar	byte1 = XalanDOMChar(0xF0 | (uuuuu >> 2)); // top 3 bits of uuuuu
+					const XalanDOMChar	byte2 = XalanDOMChar(0x80 | (((uuuuu & 0x03) << 4) & 0x30) | zzzz);
+					const XalanDOMChar	byte3 = XalanDOMChar(0x80 | yyyyyy);
+					const XalanDOMChar	byte4 = XalanDOMChar(0x80 | xxxxxx);
+            
+					accumHexNumber(byte1);
+
+					accumHexNumber(byte2);
+
+					accumHexNumber(byte3);
+
+					accumHexNumber(byte4);
 				}
 				else
 				{
-					int high = (int) ((((int) ch) & 0xF000) >> 12) | 0xE0; // top 4 bits
-					int middle = (int) ((((int) ch) & 0x0FC0) >> 6) | 0x80; // middle 6 bits
-					int low = (int) (((int) ch) & 0x3F) | 0x80; // First 6 bits, + high bit
-					accum("%");
-					accum(Integer.toHexString(high).toUpperCase());
-					accum("%");
-					accum(Integer.toHexString(middle).toUpperCase());
-					accum("%");
-					accum(Integer.toHexString(low).toUpperCase());
+					const XalanDOMChar	highByte = XalanDOMChar((ch >> 12) | 0xE0);
+					const XalanDOMChar	middleByte = XalanDOMChar(((ch & 0x0FC0) >> 6) | 0x80);
+					const XalanDOMChar	lowByte = XalanDOMChar((ch & 0x3F) | 0x80);
+
+					accumHexNumber(highByte);
+
+					accumHexNumber(middleByte);
+
+					accumHexNumber(lowByte);
 				}
+			}
+			else if (ch == XalanUnicode::charSpace)
+			{
+				accumHexNumber(ch);
 			}
 			else if (ch < m_maxCharacter)
 			{
-				accum(ch);
+				accumContent(ch);
 			}
 			else
 			{
-				accum("&#");
-				accum(Integer.toString(ch));
-				accum(';');
+				accumContent(XalanUnicode::charAmpersand);
+				accumContent(XalanUnicode::charNumberSign);
+    
+				accumContent(UnsignedLongToDOMString(ch, m_stringBuffer));
+				clear(m_stringBuffer);
+
+				accumContent(XalanUnicode::charSemicolon);
 			}
 		}
-		else if('%' == ch)
+		else if(ch == XalanUnicode::charPercentSign)
 		{
 			// If the character is a '%' number number, try to avoid double-escaping.
 			// There is a question if this is legal behavior.
-			if(((i+2) < len) && Character.isDigit(stringArray[i+1])
-			&& Character.isDigit(stringArray[i+2]))
+			if (i + 2 < len &&
+				XalanXMLChar::isDigit(string[i + 1]) == true &&
+				XalanXMLChar::isDigit(string[i + 2]) == true)
 			{
-				accum(ch);
+				accumContent(ch);
 			}
 			else
 			{
-				accum("%");
-				accum(Integer.toHexString(ch).toUpperCase());
+				if (m_escapeURLs == true)
+				{
+					accumHexNumber(ch);
+				}
+				else
+				{
+					accumContent(ch);
+				}
 			}
 		} 
 		// Since http://www.ietf.org/rfc/rfc2396.txt refers to the URI grammar as
 		// not allowing quotes in the URI proper syntax, nor in the fragment 
 		// identifier, we believe that double quotes should be escaped.
-		else if (ch == '"')
+		else if (ch == XalanUnicode::charQuoteMark)
 		{
-			accum('%');
-			accum('2');
-			accum('2');
+			if (m_escapeURLs == true)
+			{
+				accumContent(XalanUnicode::charPercentSign);
+				accumContent(XalanUnicode::charDigit_2);
+				accumContent(XalanUnicode::charDigit_2);
+			}
+			else
+			{
+				accumDefaultEntity(ch, i, string, len, true);
+			}
 		}
 		else
 		{
-			accum(ch);
+			accumContent(ch);
 		}
 	}
-
-	accum('"');
 #endif
+}
+
+
+
+void
+FormatterToHTML::accumHexNumber(const XalanDOMChar	theChar)
+{
+	accumContent(XalanUnicode::charPercentSign);
+
+	assert(length(m_stringBuffer) == 0);
+
+	UnsignedLongToHexDOMString(theChar, m_stringBuffer);
+
+	if (length(m_stringBuffer) == 1)
+	{
+		accumContent(XalanUnicode::charDigit_0);
+	}
+
+	accumContent(m_stringBuffer);
+
+	clear(m_stringBuffer);
 }
 
 

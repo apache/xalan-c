@@ -115,11 +115,11 @@ FormatterToXML::FormatterToXML(
 	m_isUTF8(false),
 	m_doctypeSystem(doctypeSystem),
 	m_doctypePublic(doctypePublic),
-	m_encoding(isEmpty(encoding) == false ? encoding :
-			XalanDOMString(&s_defaultMIMEEncoding[0], s_defaultMIMEEncoding.size() - 1)),
+	m_encoding(isEmpty(encoding) == false ? encoding : XalanDOMString(XalanTranscodingServices::s_utf8String)),
 	m_currentIndent(0),
 	m_indent(indent),
 	m_preserves(),
+	m_stringBuffer(),
 	m_bytesEqualChars(false),
 	m_shouldFlush(true),
 	m_spaceBeforeClose(false),
@@ -132,7 +132,6 @@ FormatterToXML::FormatterToXML(
 	m_charBuf(),
 	m_pos(0),
 	m_byteBuf(),
-	m_level(0),
 	m_elemStack(),
 	m_accumNameFunction(0),
 	m_accumContentFunction(0)
@@ -431,22 +430,6 @@ FormatterToXML::accumContent(const XalanDOMString&	str)
 
 
 void
-FormatterToXML::accumName(const XalanDOMCharVectorType& 	theVector)
-{
-	accumName(c_wstr(theVector), 0, theVector.size() - 1);
-}
-
-
-
-void
-FormatterToXML::accumContent(const XalanDOMCharVectorType& 	theVector)
-{
-	accumContent(c_wstr(theVector), 0, theVector.size() - 1);
-}
-
-
-
-void
 FormatterToXML::throwInvalidUTF16SurrogateException(XalanDOMChar	ch)
 {
 	const XalanDOMString	theMessage(TranscodeFromLocalCodePage("Invalid UTF-16 surrogate detected: ") +
@@ -666,6 +649,9 @@ FormatterToXML::setDocumentLocator(const Locator* const 	/* locator */)
 void
 FormatterToXML::startDocument()
 {
+	// Clear the buffer, just in case...
+	clear(m_stringBuffer);
+
 	if(m_inEntityRef == false)
 	{
 		m_needToOutputDocTypeDecl = true;
@@ -719,6 +705,7 @@ FormatterToXML::endDocument()
 	}
 
 	flush();
+
 	flushWriter();
 }
 
@@ -1127,7 +1114,10 @@ FormatterToXML::writeNumberedEntityReference(unsigned long	theNumber)
 {
 	accumContent(XalanUnicode::charAmpersand);
 	accumContent(XalanUnicode::charNumberSign);
-	accumContent(UnsignedLongToDOMString(theNumber));
+
+	accumContent(UnsignedLongToDOMString(theNumber, m_stringBuffer));
+	clear(m_stringBuffer);
+
 	accumContent(XalanUnicode::charSemicolon);
 }
 

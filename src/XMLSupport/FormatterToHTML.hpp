@@ -374,9 +374,6 @@ private:
 	void
 	copyEntityIntoBuffer(const XalanDOMString&	s);
 
-	void
-	copyEntityIntoBuffer(const XalanDOMCharVectorType&	s);
-
 	/**
 	 * Get an ElemDesc instance for the specified name.
 	 *
@@ -392,7 +389,7 @@ private:
 	 * @return map of element flags.
 	 */
 	static void
-	initializeElementFlagsMap(ElementFlagsMapType&	);
+	initializeElementFlagsMap(ElementFlagsMapType&	theMap);
 
 	/**
 	 * Process an attribute.
@@ -410,13 +407,22 @@ private:
 	 * with <CODE>%HH</CODE>, where HH is the hex of the byte value.
 	 *
 	 * @param   string      String to convert to XML format.
-	 * @param   specials    Chracters, should be represeted in chracter referenfces.
 	 * @param   encoding    CURRENTLY NOT IMPLEMENTED.
 	 */
 	void
 	writeAttrURI(
 			const XalanDOMChar*		string,
 			const XalanDOMString	encoding);
+
+	/**
+	 * Accumulate the specified character by converting its numeric value to
+	 * a hex string, making sure that any string of length 1 are written with
+	 * a '0' before the number.
+	 *
+	 * @param theChar The character to accumulate
+	 */
+	void
+	accumHexNumber(const XalanDOMChar	theChar);
 
 	XalanDOMString	m_currentElementName;
 
@@ -426,7 +432,13 @@ private:
 
 	bool			m_isScriptOrStyleElem;
 
-	bool			m_isFirstElem;
+	bool			m_escapeURLs;
+
+	/**
+	 * A counter so we can tell if we're inside the document element.
+	 */
+	int				m_elementLevel;
+
 };
 
 
