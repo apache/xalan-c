@@ -269,11 +269,13 @@ bool
 getParams(int argc, 
 		  const char*	argv[], 
 		  long& iterCount, 
-		  bool& skip)
+		  bool& skip,
+		  bool& cat,
+		  XalanDOMString& category)
 {
-	if (argc >= 4 )
+	if (argc >= 6 )
 	{
-		cout << "Usage perf {count, -s(kip)} " << endl;
+		cout << "Usage perf {count, -s(kip) -category 'dirname'} " << endl;
 		return false;
 	}
 
@@ -288,9 +290,16 @@ getParams(int argc,
 		else if (argc >= 3 && !stricmp(argv[2], "-s"))
 		{
 			skip = true;
-			return true;
 		}
 	}
+
+	if (argc >= 4 && !stricmp(argv[3], "-category"))
+		{
+			cout << argv[4] << endl;
+			cat = true;
+			assign(category, XalanDOMString(argv[4]));
+		}
+
 	return true;
 }
 
@@ -309,10 +318,14 @@ main(
 	_CrtSetReportFile(_CRT_WARN, _CRTDBG_FILE_STDERR);
 #endif
 
+	Hashtable runAttrs;
 	long iterCount = 5;	// Default number of iterations
 	bool skip = false;	// Default will not skip long tests
+	bool cat = false;   // run tests from single directory
+	XalanDOMString category(XalanDOMString("NA")); // Default perf/dir to test
 
-	if (getParams(argc, argv, iterCount, skip) == true)
+
+	if (getParams(argc, argv, iterCount, skip, cat, category) == true)
 	{
 
 		FileUtility f;
@@ -322,33 +335,46 @@ main(
 
 		const XalanDOMString processorType(XALAN_STATIC_UCODE_STRING("XalanC"));
 
-		// Defined root for performance directory. Based on PD's machine. 
-		const XalanDOMString	perfDir(XALAN_STATIC_UCODE_STRING("d:\\xslt\\xsl-test\\perf\\"));
+		// Defined basic constants for file manipulation 
+		const XalanDOMString  baseDir(XALAN_STATIC_UCODE_STRING("d:\\xslt\\xsl-test\\perf\\"));
+		const XalanDOMString  outputRoot(XALAN_STATIC_UCODE_STRING("d:\\xslt\\cperf-results\\"));
+		const XalanDOMString  resultsRoot(XALAN_STATIC_UCODE_STRING("d:\\xslt\\xsl-test\\perf-dataxml\\"));
+
+		const XalanDOMString  XSLSuffix(XALAN_STATIC_UCODE_STRING(".xsl"));
+		const XalanDOMString  XMLSuffix(XALAN_STATIC_UCODE_STRING(".xml"));
+		const XalanDOMString  resultFilePrefix(XalanDOMString("cpp"));
+		const XalanDOMString  resultsFile(resultsRoot + resultFilePrefix + UniqRunid + XMLSuffix);
+
+		const XalanDOMString  pathSep(XALAN_STATIC_UCODE_STRING("\\"));
 
 		// Get the list of Directories that are below perf
-		const FileNameVectorType dirs = f.getDirectoryNames(perfDir);
+		const FileNameVectorType dirs = f.getDirectoryNames(baseDir);
 
-		XMLFileReporter	logFile("d:\\xslt\\xsl-test\\perf-dataxml\\cpp.xml");
+		XMLFileReporter	logFile(resultsFile);
 		logFile.logTestFileInit("Performance Testing - Reports performance times for single transform, and average for multiple transforms using compiled stylesheet");
 
+		// Create initial entry in results file that has info somewhat equivlent to what XalanJ
+		// reports in the hashtable entries.
+		runAttrs.insert(Hashtable::value_type(XalanDOMString("UniqRunid"), UniqRunid));
+		addMetricToAttrs("Iterations",iterCount, runAttrs);
+		logFile.logElement(10, "perfdata", runAttrs, "xxx");
 
 		try
 		{
 			// Call the static initializers... and define file suffixes
 			XMLPlatformUtils::Initialize();
 			{
-				XSLTInit	theInit;
-			
-				// Define some constants for file suffixes ...
-				const XalanDOMString  XSLSuffix(XALAN_STATIC_UCODE_STRING(".xsl"));
-				const XalanDOMString  XMLSuffix(XALAN_STATIC_UCODE_STRING(".xml"));
-				const XalanDOMString  outputRoot(XALAN_STATIC_UCODE_STRING("d:\\xslt\\cperf-results\\"));
-				const XalanDOMString  pathSep(XALAN_STATIC_UCODE_STRING("\\"));  
+				XSLTInit	theInit;  
 
 				for(FileNameVectorType::size_type	j = 0; j < dirs.size(); j++)
 				{
+					if (cat && !equals(dirs[j], category))
+					{
+						continue;
+					}
+
 					logFile.logTestCaseInit(XalanDOMString("Performance Directory: ") + dirs[j] ); 
-					const FileNameVectorType files = f.getTestFileNames(perfDir, dirs[j]);
+					const FileNameVectorType files = f.getTestFileNames(baseDir, dirs[j], false);
 					for(FileNameVectorType::size_type i = 0; i < files.size(); i++)
 					{
 						// Define  variables used for timing and reporting ...
@@ -366,7 +392,7 @@ main(
 								continue;
 						}
 
-						const XalanDOMString  theXSLFile= perfDir + dirs[j] + pathSep + files[i];
+						const XalanDOMString  theXSLFile= baseDir + dirs[j] + pathSep + files[i];
 						const XalanDOMString  theXMLFile = f.GenerateFileName(theXSLFile,"xml");
 						const XalanDOMString  theOutput =  outputRoot + dirs[j] + pathSep + files[i]; 
 						const XalanDOMString  theOutputFile = f.GenerateFileName(theOutput, "out");
@@ -489,7 +515,7 @@ main(
 						// These are done 3 different ways.
 						// FIRST: Parsed XSL Stylesheet and Parsed XML Source.
 
-						addMetricToAttrs("Iterations",iterCount, attrs);
+						// addMetricToAttrs("Iterations",iterCount, attrs);
 
 						accmTime = 0;
 						for(int j = 0; j < iterCount; ++j)
