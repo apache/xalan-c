@@ -73,6 +73,12 @@ XERCES_LIB = -L$(XERCESCROOT)/lib -lxerces-c
 ICU_LIB = -L$(ICUROOT)/lib -licuuc -L$(ICUI18NROOT)/lib -licui18n
 XALAN_LIB = $(LIBRARY_SEARCH_PATH) $(LIBRARY_LINK_NAME)
 
+# Deprecated Xerces DOM Support handeling
+ifeq (XALAN_BUILD_DEPRECATED_DOM_BRIDGE,$(findstring XALAN_BUILD_DEPRECATED_DOM_BRIDGE,$(CXXFLAGS)))
+ifneq "$(wildcard $(XERCESCROOT)/lib/*xerces-depdom*)" ""
+XERCES_LIB += -lxerces-depdom
+endif
+endif
 
 # Library names
 LIB_NAME = lib$(PROJECT_NAME)
