@@ -16,7 +16,9 @@
 #if !defined(PLATFORMDEFINITIONS_HEADER_GUARD_1357924680)
 #define PLATFORMDEFINITIONS_HEADER_GUARD_1357924680
 
+#if defined(__cplusplus)
 #include "xercesc/util/XercesDefs.hpp"
+#endif
 
 #if defined(_MSC_VER)
 #include "VCPPDefinitions.hpp"
