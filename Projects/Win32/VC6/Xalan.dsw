@@ -213,7 +213,25 @@ Package=<5>
 Package=<4>
 {{{
     Begin Project Dependency
-    Project_Dep_Name AllInOneWithICU
+    Project_Dep_Name DOMSupport
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name PlatformSupport
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name XalanDOM
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name XalanSourceTree
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name XalanTransformer
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name XMLSupport
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name XSLT
     End Project Dependency
 }}}
 
@@ -1029,7 +1047,19 @@ Package=<4>
     Project_Dep_Name Harness
     End Project Dependency
     Begin Project Dependency
-    Project_Dep_Name AllInOneWithICU
+    Project_Dep_Name XalanDOM
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name XalanTransformer
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name XSLT
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name PlatformSupport
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name XercesParserLiaison
     End Project Dependency
 }}}
 
