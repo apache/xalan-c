@@ -163,6 +163,18 @@ public:
 		return m_pointerInfo.second;
 	}
 
+    MemoryManagerType*
+    getMemoryManager()
+    {
+        return m_pointerInfo.first;
+    }
+
+    const MemoryManagerType*
+    getMemoryManager() const
+    {
+        return m_pointerInfo.first;
+    }
+
 	MemMgrAutoPtrData
 	release()
 	{		
@@ -172,7 +184,7 @@ public:
 		
 		return MemMgrAutoPtrData(tmp);
 	}
-	
+
 	Type*
 	releasePtr()
 	{		
@@ -343,6 +355,18 @@ public:
 		return m_pointerInfo.m_size;
 	}
 
+    MemoryManagerType*
+    getMemoryManager()
+    {
+        return m_pointerInfo.m_memoryManager;
+    }
+
+    const MemoryManagerType*
+    getMemoryManager() const
+    {
+        return m_pointerInfo.m_memoryManager;
+    }
+
 	XalanMemMgrAutoPtrArray<Type>&
 	operator++ ()
 	{
@@ -351,6 +375,9 @@ public:
 		return *this;
 	}
 
+    /* Since this class is not reference-counted, I don't see how this
+       could work, since the destruction of the temporary will free
+       the controlled pointer.
 	XalanMemMgrAutoPtrArray<Type>
 	operator++ (int)
 	{
@@ -359,6 +386,7 @@ public:
 
 		return temp;
 	}
+    */
 
 	MemMgrAutoPtrArrayData
 	release()
