@@ -155,7 +155,7 @@ public:
 	typedef size_t	size_type;
 
 	explicit
-	StylesheetExecutionContext();
+	StylesheetExecutionContext(XObjectFactory*	theXObjectFactory = 0);
 
 	virtual
 	~StylesheetExecutionContext();
@@ -1559,9 +1559,6 @@ public:
 
 	virtual void
 	setCurrentNode(XalanNode*	theCurrentNode) = 0;
-
-	virtual XObjectFactory&
-	getXObjectFactory() const = 0;
 
 	virtual XObjectPtr
 	createNodeSet(XalanNode&	theNode) = 0;

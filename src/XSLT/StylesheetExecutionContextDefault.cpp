@@ -127,7 +127,7 @@ StylesheetExecutionContextDefault::StylesheetExecutionContextDefault(
 			XalanNode*				theCurrentNode,
 			const NodeRefListBase*	theContextNodeList,
 			const PrefixResolver*	thePrefixResolver) :
-	StylesheetExecutionContext(),
+	StylesheetExecutionContext(&theXObjectFactory),
 	m_xpathExecutionContextDefault(theXPathEnvSupport,
 								   theDOMSupport,
 								   theXObjectFactory,
@@ -1533,14 +1533,6 @@ void
 StylesheetExecutionContextDefault::setCurrentNode(XalanNode*	theCurrentNode)
 {
 	m_xpathExecutionContextDefault.setCurrentNode(theCurrentNode);
-}
-
-
-
-XObjectFactory&
-StylesheetExecutionContextDefault::getXObjectFactory() const
-{
-	return m_xpathExecutionContextDefault.getXObjectFactory();
 }
 
 

@@ -107,7 +107,6 @@
 
 class XalanSourceTreeDocument;
 class XPathProcessor;
-class XObjectFactory;
 class XSLTEngineImpl;
 
 
@@ -224,17 +223,6 @@ public:
 	}
 
 	/**
-	 * Set the XObjectFactory instance.
-	 *
-	 * @param theFactory a reference to the instance to use.
-	 */
-	void
-	setXObjectFactory(XObjectFactory*	theFactory)
-	{
-		m_xpathExecutionContextDefault.setXObjectFactory(theFactory);
-	}
-
-	/**
 	 * Set the DOMSupport instance.
 	 *
 	 * @param theDOMSupport a reference to the instance to use.
@@ -243,6 +231,19 @@ public:
 	setDOMSupport(DOMSupport*	theDOMSupport)
 	{
 		m_xpathExecutionContextDefault.setDOMSupport(theDOMSupport);
+	}
+
+	/**
+	 * Set the XObjectFactory instance.
+	 *
+	 * @param theFactory a reference to the instance to use.
+	 */
+	void
+	setXObjectFactory(XObjectFactory*	theXObjectFactory)
+	{
+		m_xpathExecutionContextDefault.setXObjectFactory(theXObjectFactory);
+
+		m_xobjectFactory = theXObjectFactory;
 	}
 
 
@@ -753,9 +754,6 @@ public:
 
 	virtual void
 	setCurrentNode(XalanNode*	theCurrentNode);
-
-	virtual XObjectFactory&
-	getXObjectFactory() const;
 
 	virtual XObjectPtr
 	createNodeSet(XalanNode&	theNode);

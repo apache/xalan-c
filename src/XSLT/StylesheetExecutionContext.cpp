@@ -67,8 +67,8 @@
 
 
 
-StylesheetExecutionContext::StylesheetExecutionContext() :
-	XPathExecutionContext()
+StylesheetExecutionContext::StylesheetExecutionContext(XObjectFactory*	theXObjectFactory) :
+	XPathExecutionContext(theXObjectFactory)
 {
 }
 
