@@ -477,7 +477,7 @@ main(
 				// Time the parsing of the input XML and report the results..
 				//
 				startTime = clock();
-					 XalanParsedSource*  parsedSource = xalan.parseSource(xslInputSource);
+					 XalanParsedSource*  parsedSource = xalan.parseSource(xmlInputSource);
 				endTime = clock();
 				//	assert(glbSourceXML != 0);
 
