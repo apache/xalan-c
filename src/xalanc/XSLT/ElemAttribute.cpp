@@ -307,6 +307,28 @@ ElemAttribute::execute(StylesheetExecutionContext&	executionContext) const
 					if (theNamespace != 0)
 					{
 						assign(attrNameSpace, *theNamespace);
+
+					    const XalanDOMString* const     theResultNamespace =
+                            executionContext.getResultNamespaceForPrefix(nsprefix);
+
+                        if (theResultNamespace != 0 &&
+                            *theNamespace != *theResultNamespace)
+                        {
+                            // Oops! There's a conflict between an existing
+                            // result namespace and the attribute's namespace.
+                            // To be safe, because we are generating namespace
+                            // declaration here, rather than somewhere that
+                            // knows more about how that result namespace is
+                            // used, let's change the prefix of the attribute.
+                            nsprefix.clear();
+
+                            executionContext.getUniqueNamespaceValue(nsprefix);
+
+                            // Fix the name by removing the original prefix and
+                            // inserting the new one.
+                            attrName.erase(0, indexOfNSSep);
+                            attrName.insert(attrName.begin(), nsprefix.begin(), nsprefix.end());
+                        }
 					}
 
 					if (isEmpty(attrNameSpace))
