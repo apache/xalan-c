@@ -50,7 +50,7 @@ BEGIN
             VALUE "FileDescription", "Dynamic Link Library for Xalan-C++ Version 1.5.0\0"
             VALUE "FileVersion", "1, 5, 0, 0\0"
             VALUE "InternalName", "DOMSupport_1_5_0.dll\0"
-            VALUE "LegalCopyright", "Copyright © Apache Software Foundation 2003. Subject to licensing terms\0"
+            VALUE "LegalCopyright", "Copyright © Apache Software Foundation 1999-2003. Subject to licensing terms\0"
             VALUE "LegalTrademarks", "\0"
             VALUE "OriginalFilename", "DOMSupport_1_5_0.dll\0"
             VALUE "PrivateBuild", "\0"
