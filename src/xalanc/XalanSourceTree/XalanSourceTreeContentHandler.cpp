@@ -377,9 +377,9 @@ XalanSourceTreeContentHandler::skippedEntity(const XMLCh* const		/* name */)
 
 void
 XalanSourceTreeContentHandler::notationDecl(
-			const XMLCh* const    name,
-			const XMLCh* const    publicId,
-			const XMLCh* const    systemId)
+			const XMLCh* const    /* name */,
+			const XMLCh* const    /* publicId */,
+			const XMLCh* const    /* systemId */)
 {
 }
 
@@ -450,7 +450,7 @@ XalanSourceTreeContentHandler::endDTD()
 
 
 void
-XalanSourceTreeContentHandler::endEntity(const XMLCh* const		name)
+XalanSourceTreeContentHandler::endEntity(const XMLCh* const		/* name */)
 {
 	assert(m_document != 0);
 }
@@ -466,9 +466,9 @@ XalanSourceTreeContentHandler::startCDATA()
 
 void
 XalanSourceTreeContentHandler::startDTD(
-			const XMLCh* const	name,
-			const XMLCh* const	publicId,
-			const XMLCh* const	systemId)
+			const XMLCh* const	/* name */,
+			const XMLCh* const	/* publicId */,
+			const XMLCh* const	/* systemId */)
 {
 	assert(m_inDTD == false);
 	assert(m_document != 0);
@@ -479,7 +479,7 @@ XalanSourceTreeContentHandler::startDTD(
 
 
 void
-XalanSourceTreeContentHandler::startEntity(const XMLCh* const	name)
+XalanSourceTreeContentHandler::startEntity(const XMLCh* const	/* name */)
 {
 	assert(m_document != 0);
 }

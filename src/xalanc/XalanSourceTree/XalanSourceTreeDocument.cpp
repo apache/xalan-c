@@ -1260,9 +1260,9 @@ XalanSourceTreeDocument::createTextIWSNode(
 void
 XalanSourceTreeDocument::unparsedEntityDeclaration(
 			const XalanDOMChar*		name,
-			const XalanDOMChar*		publicId,
+			const XalanDOMChar*		/* publicId */,
 			const XalanDOMChar*		systemId,
-			const XalanDOMChar*		notationName)
+			const XalanDOMChar*		/* notationName */)
 {
 	m_unparsedEntityURIs[XalanDOMString(name)] = XalanDOMString(systemId);
 }
