@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -93,18 +93,18 @@ static const union
 #endif
 
 #if defined(_AIX)
-const double    DoubleSupport::s_NaN = DBL_QNAN;
+const DoubleSupport::NumberUnion	DoubleSupport::s_NaN = { DBL_QNAN };
 #else
-const double	DoubleSupport::s_NaN = sqrt(-2.01);
+const DoubleSupport::NumberUnion	DoubleSupport::s_NaN = { sqrt(-2.01) };
 #endif
 const double	DoubleSupport::s_positiveInfinity = XALAN_POSITIVE_INFINITY;
 
 #else
 
 #if defined(__SGI_STL_PORT)
-const double	DoubleSupport::s_NaN = sqrt(-2.01);
+const DoubleSupport::NumberUnion	DoubleSupport::s_NaN = { sqrt(-2.01) };
 #else
-const double	DoubleSupport::s_NaN = std::numeric_limits<double>::quiet_NaN();
+const DoubleSupport::NumberUnion	DoubleSupport::s_NaN = { std::numeric_limits<double>::quiet_NaN() };
 #endif
 
 const double	DoubleSupport::s_positiveInfinity = std::numeric_limits<double>::infinity();
@@ -112,52 +112,18 @@ const double	DoubleSupport::s_positiveInfinity = std::numeric_limits<double>::in
 #endif
 
 const double	DoubleSupport::s_negativeInfinity = -DoubleSupport::s_positiveInfinity;
-const double	DoubleSupport::s_positiveZero = 0.0;
+
+const DoubleSupport::NumberUnion	DoubleSupport::s_positiveZero = { 0.0 };
 
 #if !defined(_AIX)
-const double	DoubleSupport::s_negativeZero = -DoubleSupport::s_positiveZero;
+const DoubleSupport::NumberUnion	DoubleSupport::s_negativeZero = { -DoubleSupport::s_positiveZero.d };
 #else
 // Some compiler are overly aggressive and think that there is no such thing as -0,
 // so we have to get it in a very sneaky way.
 double	theDummy;
 
-const double	DoubleSupport::s_negativeZero = modf(-7.0, &theDummy);
+const DoubleSupport::NumberUnion	DoubleSupport::s_negativeZero = { modf(-7.0, &theDummy) };
 #endif
-
-
-typedef DoubleSupport::DWORDPointerType				DWORDPointerType;
-typedef DoubleSupport::UnalignedDWORDPointerType	UnalignedDWORDPointerType;
-
-
-const DWORDPointerType				DoubleSupport::s_NaNFirstDWORD =
-#if defined(XALAN_OLD_STYLE_CASTS)
-					(DWORDPointerType)&s_NaN;
-#else
-					reinterpret_cast<DWORDPointerType>(&s_NaN);
-#endif
-
-const UnalignedDWORDPointerType		DoubleSupport::s_NaNSecondDWORD =
-					s_NaNFirstDWORD + 1;
-
-
-const DWORDPointerType				DoubleSupport::s_positiveZeroFirstDWORD =
-#if defined(XALAN_OLD_STYLE_CASTS)
-					(DWORDPointerType)&s_positiveZero;
-#else
-					reinterpret_cast<DWORDPointerType>(&s_positiveZero);
-#endif
-
-const UnalignedDWORDPointerType		DoubleSupport::s_positiveZeroSecondDWORD = s_positiveZeroFirstDWORD + 1;
-
-
-const DWORDPointerType				DoubleSupport::s_negativeZeroFirstDWORD =
-#if defined(XALAN_OLD_STYLE_CASTS)
-					(DWORDPointerType)&s_negativeZero;
-#else
-					reinterpret_cast<DWORDPointerType>(&s_negativeZero);
-#endif
-
-const UnalignedDWORDPointerType		DoubleSupport::s_negativeZeroSecondDWORD = s_negativeZeroFirstDWORD + 1;
 
 
 
@@ -174,16 +140,6 @@ DoubleSupport::equal(
 	{
 		return theLHS == theRHS;
 	}
-}
-
-
-
-bool
-DoubleSupport::notEqual(
-			double	theLHS,
-			double	theRHS)
-{
-	return !equal(theLHS, theRHS);
 }
 
 

@@ -96,19 +96,10 @@ public:
 	static bool
 	isNaN(double	theNumber)
 	{
-		// Compare the two DWORDs of the double as unsigned longs.
-		const DWORDPointerType	theFirstDWORD =
-#if defined(XALAN_OLD_STYLE_CASTS)
-			(DWORDPointerType)&theNumber;
-#else
-			reinterpret_cast<DWORDPointerType>(&theNumber);
-#endif
+		const NumberUnion	temp = { theNumber };
 
-		const UnalignedDWORDPointerType		theSecondDWORD =
-							theFirstDWORD + 1;
-
-		return *theFirstDWORD == *s_NaNFirstDWORD &&
-			   *theSecondDWORD == *s_NaNSecondDWORD;
+		return s_NaN.dwords.dw1 == temp.dwords.dw1 &&
+			   s_NaN.dwords.dw2 == temp.dwords.dw2;
 	}
 
 	/**
@@ -144,19 +135,10 @@ public:
 	static bool
 	isPositiveZero(double	theNumber)
 	{
-		// Compare the two DWORDs of the double as unsigned longs.
-		const DWORDPointerType	theFirstDWORD =
-#if defined(XALAN_OLD_STYLE_CASTS)
-			(DWORDPointerType)&theNumber;
-#else
-			reinterpret_cast<DWORDPointerType>(&theNumber);
-#endif
+		const NumberUnion	temp = { theNumber };
 
-		const UnalignedDWORDPointerType		theSecondDWORD =
-							theFirstDWORD + 1;
-
-		return *theFirstDWORD == *s_positiveZeroFirstDWORD &&
-			   *theSecondDWORD == *s_positiveZeroSecondDWORD;
+		return s_positiveZero.dwords.dw1 == temp.dwords.dw1 &&
+			   s_positiveZero.dwords.dw2 == temp.dwords.dw2;
 	}
 
 	/**
@@ -168,19 +150,10 @@ public:
 	static bool
 	isNegativeZero(double	theNumber)
 	{
-		// Compare the two DWORDs of the double as unsigned longs.
-		const DWORDPointerType	theFirstDWORD =
-#if defined(XALAN_OLD_STYLE_CASTS)
-			(DWORDPointerType)&theNumber;
-#else
-			reinterpret_cast<DWORDPointerType>(&theNumber);
-#endif
+		const NumberUnion	temp = { theNumber };
 
-		const UnalignedDWORDPointerType		theSecondDWORD =
-							theFirstDWORD + 1;
-
-		return *theFirstDWORD == *s_negativeZeroFirstDWORD &&
-			   *theSecondDWORD == *s_negativeZeroSecondDWORD;
+		return s_negativeZero.dwords.dw1 == temp.dwords.dw1 &&
+			   s_negativeZero.dwords.dw2 == temp.dwords.dw2;
 	}
 
 	// These can be used to initialize values, but should not
@@ -196,7 +169,7 @@ public:
 	static double
 	getNaN()
 	{
-		return s_NaN;
+		return s_NaN.d;
 	}
 
 	/**
@@ -245,7 +218,10 @@ public:
 	static bool
 	notEqual(
 			double	theLHS,
-			double	theRHS);
+			double	theRHS)
+	{
+		return !equal(theLHS, theRHS);
+	}
 
 	/**
 	 * Compare two double values, taking into account
@@ -642,25 +618,23 @@ public:
 #endif
 	}
 
-	typedef const unsigned int*						DWORDPointerType;
-	typedef XALAN_UNALIGNED const unsigned int*		UnalignedDWORDPointerType;
+	typedef union
+	{
+		double	d;
+		struct
+		{
+			unsigned int	dw1;
+			unsigned int	dw2;
+		} dwords;
+	} NumberUnion;
 
 private:
 
-	static const double			s_NaN;
+	static const NumberUnion	s_NaN;
 	static const double			s_positiveInfinity;
 	static const double			s_negativeInfinity;
-	static const double			s_positiveZero;
-	static const double			s_negativeZero;
-
-	static const DWORDPointerType			s_NaNFirstDWORD;
-	static const UnalignedDWORDPointerType	s_NaNSecondDWORD;
-
-	static const DWORDPointerType			s_positiveZeroFirstDWORD;
-	static const UnalignedDWORDPointerType	s_positiveZeroSecondDWORD;
-
-	static const DWORDPointerType			s_negativeZeroFirstDWORD;
-	static const UnalignedDWORDPointerType	s_negativeZeroSecondDWORD;
+	static const NumberUnion	s_positiveZero;
+	static const NumberUnion	s_negativeZero;
 };
 
 
