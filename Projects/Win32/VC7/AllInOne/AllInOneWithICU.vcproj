@@ -2067,6 +2067,12 @@
 			<File
 				RelativePath="..\..\..\..\src\xalanc\XSLT\XalanSourceTreeDocumentFragmentAllocator.hpp">
 			</File>
+			<File
+				RelativePath="..\..\..\..\src\xalanc\XSLT\XalanSpaceNodeTester.cpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\src\xalanc\XSLT\XalanSpaceNodeTester.hpp">
+			</File>
 		</Filter>
 		<Filter
 			Name="ICUBridge"
