@@ -742,7 +742,8 @@ ElemTemplateElement::transformChild(
 	bool				doApplyTemplate = true;
 	bool				shouldStrip = false;
 
-	const int			nodeType = child->getNodeType();
+	const const XalanNode::NodeType		nodeType = child->getNodeType();
+
 	const Stylesheet*	stylesheetTree = &stylesheet_tree;
 
 	const bool			isApplyImports = xslToken == Constants::ELEMNAME_APPLY_IMPORTS;

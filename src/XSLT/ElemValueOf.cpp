@@ -210,7 +210,7 @@ ElemValueOf::execute(
 
 		if(0 != value)
 		{
-			const int	type = value->getType();
+			const XObject::eObjectType	type = value->getType();
 
 			if (XObject::eTypeNull != type)
 			{
@@ -219,7 +219,7 @@ ElemValueOf::execute(
 		}
 	}
 
-	const unsigned int		len = length(theValue);
+	const unsigned int	len = length(theValue);
 
 	if(len > 0)
 	{

@@ -192,54 +192,54 @@ StylesheetRoot::process(
 			XSLTResultTarget&				outputTarget,
 			StylesheetExecutionContext&		executionContext) const
 {
-		// Find the root pattern in the XSL.
-		ElemTemplate* rootRule =
+	// Find the root pattern in the XSL.
+	ElemTemplate* rootRule =
 			findTemplate(executionContext, sourceTree, sourceTree);
 
-		if(0 == rootRule)
-		{
-			rootRule = m_defaultRootRule;
-			assert(rootRule);
-		}
+	if(0 == rootRule)
+	{
+		rootRule = m_defaultRootRule;
+		assert(rootRule);
+	}
 
-		executionContext.setStylesheetRoot(this);
+	executionContext.setStylesheetRoot(this);
 
-		FormatterListener* flistener = 0;
+	FormatterListener* flistener = 0;
 
 #if !defined(XALAN_NO_NAMESPACES)
-		using std::auto_ptr;
+	using std::auto_ptr;
 #endif
 
-		Writer* pw = 0;
+	Writer* pw = 0;
 
-		flistener = outputTarget.getFormatterListener();
+	flistener = outputTarget.getFormatterListener();
 
-		if(flistener == 0)
+	if(flistener == 0)
+	{
+		// $$$ ToDo: For right now, XSLTResultTarget::getDocumentHandler()
+		// and XSLTResultTarget::getFormatterListener() both return a
+		// FormatterListener*.  When we have RTTI on all platforms, that
+		// may change...
+		flistener = outputTarget.getDocumentHandler();
+	}
+
+	if (flistener != 0)
+	{
+		// Do encoding stuff here...
+	}
+	/*
+	 * Output target has a character or byte stream or file
+	 */
+	else if((0 != outputTarget.getCharacterStream()) ||
+			(0 != outputTarget.getByteStream()) ||
+			(0 != outputTarget.getFileName().length()))
+	{
+		if(0 != outputTarget.getCharacterStream())
 		{
-			// $$$ ToDo: For right now, XSLTResultTarget::getDocumentHandler()
-			// and XSLTResultTarget::getFormatterListener() both return a
-			// FormatterListener*.  When we have RTTI on all platforms, that
-			// may change...
-			flistener = outputTarget.getDocumentHandler();
+			pw = outputTarget.getCharacterStream();
 		}
-
-		if (flistener != 0)
+		else
 		{
-			// Do encoding stuff here...
-		}
-		/*
-		 * Output target has a character or byte stream or file
-		 */
-		else if((0 != outputTarget.getCharacterStream()) ||
-						(0 != outputTarget.getByteStream()) ||
-						(0 != outputTarget.getFileName().length()))
-		{
-			if(0 != outputTarget.getCharacterStream())
-			{
-				pw = outputTarget.getCharacterStream();
-			}
-			else
-			{
 /*
 				java:
 				XalanDOMString mimeEncoding;
@@ -254,148 +254,145 @@ StylesheetRoot::process(
 				}
 */
 
-				if(0 != outputTarget.getByteStream())
-				{
-					pw = executionContext.createPrintWriter(*outputTarget.getByteStream());
-				}
-				else if(!isEmpty(outputTarget.getFileName()))
-				{
-					pw = executionContext.createPrintWriter(
-								outputTarget.getFileName(),
-								XalanDOMString());
-				}
-				else
-				{
+			if(0 != outputTarget.getByteStream())
+			{
+				pw = executionContext.createPrintWriter(*outputTarget.getByteStream());
+			}
+			else if(!isEmpty(outputTarget.getFileName()))
+			{
+				pw = executionContext.createPrintWriter(
+							outputTarget.getFileName(),
+							XalanDOMString());
+			}
+			else
+			{
 #if !defined(XALAN_NO_NAMESPACES)
-					using std::cout;
+				using std::cout;
 #endif
 
-					pw = executionContext.createPrintWriter(cout);
-				}
+				pw = executionContext.createPrintWriter(cout);
+			}
+		}
+
+		int			indentAmount = executionContext.getIndent();
+		const bool	doIndent = (indentAmount > -1) ? true : m_indentResult;
+			
+		switch(m_outputMethod)
+		{
+		case FormatterListener::OUTPUT_METHOD_HTML:
+			if (doIndent == true && indentAmount < 0)
+			{
+				indentAmount = FormatterToHTML::eDefaultIndentAmount;
 			}
 
-			int			indentAmount = executionContext.getIndent();
-			const bool	doIndent = (indentAmount > -1) ? true : m_indentResult;
-			
-			switch(m_outputMethod)
-			{
-			case FormatterListener::OUTPUT_METHOD_HTML:
-				{
-					if (doIndent == true && indentAmount < 0)
-					{
-						indentAmount = FormatterToHTML::eDefaultIndentAmount;
-					}
-
-					flistener = executionContext.createFormatterToHTML(
+			flistener = executionContext.createFormatterToHTML(
 						*pw, m_encoding, m_mediatype, m_doctypeSystem, m_doctypePublic,
 						doIndent, indentAmount, m_version, m_standalone, !m_omitxmlDecl);
-				}
-				break;
+			break;
 
-			case FormatterListener::OUTPUT_METHOD_TEXT:
-				flistener = executionContext.createFormatterToText(*pw);
-				break;
+		case FormatterListener::OUTPUT_METHOD_TEXT:
+			flistener = executionContext.createFormatterToText(*pw);
+			break;
 
-			case FormatterListener::OUTPUT_METHOD_NONE:
-			case FormatterListener::OUTPUT_METHOD_XML:
-			default:
-				{
-					// Make sure we don't have a negative indent amount if we're
-					// indenting
-					if (doIndent == true && indentAmount < 0)
-					{
-						indentAmount = FormatterToXML::eDefaultIndentAmount;
-					}
+		case FormatterListener::OUTPUT_METHOD_NONE:
+		case FormatterListener::OUTPUT_METHOD_XML:
+		default:
+			// Make sure we don't have a negative indent amount if we're
+			// indenting
+			if (doIndent == true && indentAmount < 0)
+			{
+				indentAmount = FormatterToXML::eDefaultIndentAmount;
+			}
 
-					flistener = executionContext.createFormatterToXML(
+			flistener = executionContext.createFormatterToXML(
 						*pw, m_version, doIndent, indentAmount, m_encoding, m_mediatype,
 						m_doctypeSystem, m_doctypePublic, !m_omitxmlDecl, m_standalone);
-				}
-				break;
-			}
-
-			executionContext.setFormatterListener(flistener);
+			break;
 		}
-		/*
-		 * Output target has a node
-		 */
-		else if(0 != outputTarget.getNode())
-		{
-			switch(outputTarget.getNode()->getNodeType())
-			{
-			case XalanNode::DOCUMENT_NODE:
-				flistener =
-					executionContext.createFormatterToDOM(static_cast<XalanDocument*>(outputTarget.getNode()));
-				break;
 
-			case XalanNode::DOCUMENT_FRAGMENT_NODE:
-				flistener =
+		executionContext.setFormatterListener(flistener);
+	}
+	/*
+	 * Output target has a node
+	 */
+	else if(0 != outputTarget.getNode())
+	{
+		switch(outputTarget.getNode()->getNodeType())
+		{
+		case XalanNode::DOCUMENT_NODE:
+			flistener =
+					executionContext.createFormatterToDOM(static_cast<XalanDocument*>(outputTarget.getNode()));
+			break;
+
+		case XalanNode::DOCUMENT_FRAGMENT_NODE:
+			flistener =
 					executionContext.createFormatterToDOM(executionContext.createDocument(),
 						static_cast<XalanDocumentFragment*>(outputTarget.getNode()));
-				break;
+			break;
 
-			case XalanNode::ELEMENT_NODE:
-				flistener =
+		case XalanNode::ELEMENT_NODE:
+			flistener =
 					executionContext.createFormatterToDOM(executionContext.createDocument(),
 						static_cast<XalanElement*>(outputTarget.getNode()));
-				break;
+			break;
 
-			default:
-				executionContext.error("Can only output to an Element, DocumentFragment, Document, or PrintWriter.");
-			}
+		default:
+			executionContext.error("Can only output to an Element, DocumentFragment, Document, or PrintWriter.");
 		}
-		/*
-		 * Create an empty document and set the output target node to this
-		 */
-		else
-		{
-			outputTarget.setNode(executionContext.createDocument());
-			flistener =
+	}
+	/*
+	 * Create an empty document and set the output target node to this
+	 */
+	else
+	{
+		outputTarget.setNode(executionContext.createDocument());
+
+		flistener =
 				executionContext.createFormatterToDOM(static_cast<XalanDocument*>(outputTarget.getNode()));
-		}
+	}
+
+	executionContext.setFormatterListener(flistener);
+	executionContext.resetCurrentState(sourceTree, sourceTree);
+
+	executionContext.setRootDocument(static_cast<XalanDocument*>(sourceTree));
 		
-		executionContext.setFormatterListener(flistener);
-		executionContext.resetCurrentState(sourceTree, sourceTree);
-
-		executionContext.setRootDocument(static_cast<XalanDocument*>(sourceTree));
+	if(executionContext.doDiagnosticsOutput())
+	{
+		executionContext.diag(XALAN_STATIC_UCODE_STRING("============================="));
+		executionContext.diag(XALAN_STATIC_UCODE_STRING("Transforming..."));
+		executionContext.pushTime(&sourceTree);
+	}
 		
-		if(executionContext.doDiagnosticsOutput())
-		{
-			executionContext.diag(XALAN_STATIC_UCODE_STRING("============================="));
-			executionContext.diag(XALAN_STATIC_UCODE_STRING("Transforming..."));
-			executionContext.pushTime(&sourceTree);
-		}
+	executionContext.pushContextMarker(0, 0);
+
+	try
+	{
+		executionContext.resolveTopLevelParams();
+	}
+	// java: catch(Exception e)
+	catch(...)
+	{
+		throw SAXException("StylesheetRoot.process error");
+	}
+
+	executionContext.startDocument();
+
+	// Output the action of the found root rule.	All processing
+	// occurs from here.	buildResultFromTemplate is highly recursive.
+	// java: rootRule->execute(*m_processor, sourceTree, sourceTree, 0);
+	rootRule->execute(executionContext, sourceTree, sourceTree, QName());
+
+	executionContext.endDocument();
 		
-		executionContext.pushContextMarker(0, 0);
+	// Reset the top-level params for the next round.
+	executionContext.clearTopLevelParams();
 
-		try
-		{
-			executionContext.resolveTopLevelParams();
-		}
-		// java: catch(Exception e)
-		catch(...)
-		{
-			throw SAXException("StylesheetRoot.process error");
-		}
-
-		executionContext.startDocument();
-
-		// Output the action of the found root rule.	All processing
-		// occurs from here.	buildResultFromTemplate is highly recursive.
-		// java: rootRule->execute(*m_processor, sourceTree, sourceTree, 0);
-		rootRule->execute(executionContext, sourceTree, sourceTree, QName());
-
-		executionContext.endDocument();
-		
-		// Reset the top-level params for the next round.
-		executionContext.clearTopLevelParams();
-
-		if(executionContext.doDiagnosticsOutput())
-		{
-			executionContext.diag(XALAN_STATIC_UCODE_STRING(""));
-			executionContext.displayDuration(XALAN_STATIC_UCODE_STRING("transform"), &sourceTree);
-			executionContext.diag(XALAN_STATIC_UCODE_STRING(""));
-		}
+	if(executionContext.doDiagnosticsOutput())
+	{
+		executionContext.diag(XALAN_STATIC_UCODE_STRING(""));
+		executionContext.displayDuration(XALAN_STATIC_UCODE_STRING("transform"), &sourceTree);
+		executionContext.diag(XALAN_STATIC_UCODE_STRING(""));
+	}
 }
 
 
@@ -590,7 +587,7 @@ StylesheetRoot::initDefaultRule(StylesheetConstructionContext&	constructionConte
 	 					   c_wstr(XALAN_STATIC_UCODE_STRING("CDATA")),
 						   c_wstr(XALAN_STATIC_UCODE_STRING("*")));
 
-		m_defaultRule = new ElemTemplate(constructionContext,	// @@ JMD: should be null 
+		m_defaultRule = new ElemTemplate(constructionContext,
 										 *this,
 										 xslPrefix + Constants::ELEMNAME_TEMPLATE_STRING, 
 										 attrs,
@@ -609,9 +606,9 @@ StylesheetRoot::initDefaultRule(StylesheetConstructionContext&	constructionConte
 
 		childrenElement->setDefaultTemplate(true);
 		m_defaultRule->appendChildElem(childrenElement);
-    
+
 		// -----------------------------
-    
+
 		attrs.clear();
 		attrs.addAttribute(c_wstr(Constants::ATTRNAME_MATCH),
 	 					   c_wstr(XALAN_STATIC_UCODE_STRING("CDATA")),
@@ -638,7 +635,7 @@ StylesheetRoot::initDefaultRule(StylesheetConstructionContext&	constructionConte
 							columnNumber);
 
 		m_defaultTextRule->appendChildElem(elemValueOf);
-    
+
 		//--------------------------------
     
 		attrs.clear();

@@ -111,7 +111,7 @@ ElemCopy::execute(
 {
 	assert(sourceNode != 0);
 
-	const int	nodeType = sourceNode->getNodeType();
+	const XalanNode::NodeType	nodeType = sourceNode->getNodeType();
 	
 	if(XalanNode::DOCUMENT_NODE != nodeType)
 	{

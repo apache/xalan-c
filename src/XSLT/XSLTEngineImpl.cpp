@@ -259,6 +259,7 @@ XSLTEngineImpl::reset()
 {
 	m_rootDoc = 0;
 
+	m_topLevelParams.clear();
 	m_durationsTable.clear();
 	m_stylesheetLocatorStack.clear();
 	clear(m_pendingElementName);
@@ -548,7 +549,7 @@ XSLTEngineImpl::processStylesheet(
 	}
 	catch(SAXException& se)
 	{
-		message("processStylesheet not successful!");
+		message("processStylesheet not successfull!");
 
 		throw se;
 	}
@@ -2292,9 +2293,9 @@ XSLTEngineImpl::getPrefixForNamespace(
 			const XalanDOMString&	theNamespace,
 			const XalanElement&	namespaceContext) const
 {
-	int 				type;
-	const XalanNode*	parent = &namespaceContext;
-	XalanDOMString		prefix;
+	XalanNode::NodeType		type;
+	const XalanNode*		parent = &namespaceContext;
+	XalanDOMString			prefix;
 
 	while (0 != parent && 0 == length(prefix)
 		   && ((type = parent->getNodeType()) == XalanNode::ELEMENT_NODE
@@ -3615,7 +3616,7 @@ void
 XSLTEngineImpl::StackGuard::print(PrintWriter&	pw) const
 {
 	// for the moment, these diagnostics are really bad...
-	const int	theType = m_sourceXML->getNodeType();
+	const XalanNode::NodeType	theType = m_sourceXML->getNodeType();
 
 	if(theType == XalanNode::TEXT_NODE)
 	{
