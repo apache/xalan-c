@@ -79,6 +79,208 @@
 
 
 
+template<class VectorType>
+const VectorType::value_type*
+findByPrefix(
+			const VectorType&		theVector,
+			const XalanDOMString&	thePrefix)
+{
+	const VectorType::const_iterator	theEnd(theVector.end());
+	VectorType::const_iterator	theCurrent(theVector.begin());
+
+	while(theCurrent != theEnd)
+	{
+		if ((*theCurrent).getPrefix() == thePrefix)
+		{
+			return &*theCurrent;
+		}
+		else
+		{
+			++theCurrent;
+		}
+	}
+
+	return 0;
+}
+
+
+
+#if defined(_MSC_VER)
+
+template<class VectorType>
+VectorType::value_type*
+findByPrefixNonConst(
+			VectorType&				theVector,
+			const XalanDOMString&	thePrefix)
+{
+	const VectorType::iterator	theEnd(theVector.end());
+	VectorType::iterator		theCurrent(theVector.begin());
+
+	while(theCurrent != theEnd)
+	{
+		if ((*theCurrent).getPrefix() == thePrefix)
+		{
+			return &*theCurrent;
+		}
+		else
+		{
+			++theCurrent;
+		}
+	}
+
+	return 0;
+}
+
+#else
+
+template<class VectorType>
+VectorType::value_type*
+findByPrefix(
+			VectorType&				theVector,
+			const XalanDOMString&	thePrefix)
+{
+	const VectorType::const_iterator	theEnd(theVector.end());
+	VectorType::const_iterator	theCurrent(theVector.begin());
+
+	while(theCurrent != theEnd)
+	{
+		if ((*theCurrent).getPrefix() == thePrefix)
+		{
+			return &*theCurrent;
+		}
+		else
+		{
+			++theCurrent;
+		}
+	}
+
+	return 0;
+}
+
+template<class VectorType>
+VectorType::value_type*
+findByPrefixNonConst(
+			VectorType&				theVector,
+			const XalanDOMString&	thePrefix)
+{
+	return findByPrefix(theVector, thePrefix);
+}
+
+#endif
+
+
+template<class VectorType>
+const VectorType::value_type*
+findByURI(
+			const VectorType&		theVector,
+			const XalanDOMString&	theNamespaceURI)
+{
+	const VectorType::const_iterator	theEnd(theVector.end());
+	VectorType::const_iterator			theCurrent(theVector.begin());
+
+	while(theCurrent != theEnd)
+	{
+		if ((*theCurrent).getURI() == theNamespaceURI)
+		{
+			return &*theCurrent;
+		}
+		else
+		{
+			++theCurrent;
+		}
+	}
+
+	return 0;
+}
+
+
+
+template<class VectorType>
+bool
+addByPrefix(
+			StylesheetConstructionContext&	theConstructionContext,
+			VectorType&						theVector,
+			const XalanDOMString&			thePrefix,
+			const XalanDOMString&			theURI)
+{
+	const VectorType::value_type* const		theEntry =
+		findByPrefix(theVector, thePrefix);
+
+	if (theEntry != 0)
+	{
+		return false;
+	}
+	else
+	{
+		theVector.push_back(
+			VectorType::value_type(
+				theConstructionContext.getPooledString(thePrefix),
+				theConstructionContext.getPooledString(theURI)));
+
+		return true;
+	}
+}
+
+
+
+template<class VectorType>
+bool
+addOrUpdateByPrefix(
+			StylesheetConstructionContext&	theConstructionContext,
+			VectorType&						theVector,
+			const XalanDOMString&			thePrefix,
+			const XalanDOMString&			theURI)
+{
+	VectorType::value_type* const	theEntry =
+		findByPrefixNonConst(theVector, thePrefix);
+
+	if (theEntry == 0)
+	{
+		theVector.push_back(
+			VectorType::value_type(
+				theConstructionContext.getPooledString(thePrefix),
+				theConstructionContext.getPooledString(theURI)));
+
+		return true;
+	}
+	else
+	{
+		if (theEntry->getURI() == theURI)
+		{
+			return false;
+		}
+		else
+		{
+			theEntry->setURI(theConstructionContext.getPooledString(theURI));
+
+			return true;
+		}
+	}
+}
+
+
+
+template<class VectorType>
+const XalanDOMString*
+findNamespace(
+			const VectorType&		theVector,
+			const XalanDOMString&	thePrefix)
+{
+	const VectorType::value_type* const		theEntry =
+		findByPrefix(theVector, thePrefix);
+
+	if (theEntry == 0)
+	{
+		return 0;
+	}
+	else
+	{
+		return &theEntry->getURI();
+	}
+}
+
+
+
 const XalanDOMString		NamespacesHandler::Namespace::s_emptyString;
 
 
@@ -143,22 +345,22 @@ NamespacesHandler::NamespacesHandler(
 					theXSLTNamespaceURI,
 					theURI) == false)
 			{
-				if (m_namespaceDeclarations.count(&thePrefix) == 0)
-				{
-					m_namespaceDeclarations.insert(
-						NamespacesMapType::value_type(
-							&theConstructionContext.getPooledString(thePrefix),
-							Namespace(
-								theConstructionContext.getPooledString(theNamespace.getPrefix()),
-								theConstructionContext.getPooledString(theNamespace.getURI()))));
-				}
+				addByPrefix(
+					theConstructionContext,
+					m_namespaceDeclarations,
+					thePrefix,
+					theURI);
 			}
 			else
 			{
-				m_excludedResultPrefixes.insert(
-					ExcludedResultPrefixesMapType::value_type(
-						&theConstructionContext.getPooledString(thePrefix),
-						&theConstructionContext.getPooledString(theURI)));
+				addByPrefix(
+					theConstructionContext,
+					m_excludedResultPrefixes,
+					thePrefix,
+					theURI);
+
+				assert(findByPrefix(m_excludedResultPrefixes, thePrefix) != 0 &&
+					   findByPrefix(m_excludedResultPrefixes, thePrefix)->getURI() == theURI);
 			}
 		}
 	}
@@ -185,28 +387,16 @@ NamespacesHandler::addExtensionNamespaceURI(
 const XalanDOMString*
 NamespacesHandler::getNamespace(const XalanDOMString&	thePrefix) const
 {
-	// Check the excluded result prefixes first...
-	const ExcludedResultPrefixesMapType::const_iterator		i =
-			m_excludedResultPrefixes.find(&thePrefix);
+	const NamespacesVectorType::value_type*		theNamespace =
+		findByPrefix(m_excludedResultPrefixes, thePrefix);
 
-	if (i != m_excludedResultPrefixes.end())
+	if (theNamespace != 0)
 	{
-		return (*i).second;
+		return &theNamespace->getURI();
 	}
 	else
 	{
-		// Not found, so check the namespace declarations...
-		const NamespacesMapType::const_iterator		i =
-				m_namespaceDeclarations.find(&thePrefix);
-
-		if (i != m_namespaceDeclarations.end())
-		{
-			return &(*i).second.getURI();
-		}
-		else
-		{
-			return 0;
-		}
+		return findNamespace(m_namespaceDeclarations, thePrefix);
 	}
 }
 
@@ -282,16 +472,22 @@ NamespacesHandler::processExcludeResultPrefixes(
 			::clear(thePrefix);
 		}
 
-		const XalanDOMString* const		theNamespace =
+		const XalanDOMString* const		theNamespaceURI =
 			XalanQName::getNamespaceForPrefix(theCurrentNamespaces, thePrefix);
 
-		if(theNamespace == 0)
+		if(theNamespaceURI == 0)
 		{
 			theConstructionContext.error("Undeclared prefix in exclude-result-prefixes");
 		}
 
-		m_excludedResultPrefixes[&theConstructionContext.getPooledString(thePrefix)] =
-			&theConstructionContext.getPooledString(*theNamespace);
+		addOrUpdateByPrefix(
+			theConstructionContext,
+			m_excludedResultPrefixes,
+			thePrefix,
+			*theNamespaceURI);
+
+		assert(findByPrefix(m_excludedResultPrefixes, thePrefix) != 0 &&
+			   findByPrefix(m_excludedResultPrefixes, thePrefix)->getURI() == *theNamespaceURI);
     }
 }
 
@@ -436,17 +632,17 @@ NamespacesHandler::outputResultNamespaces(
 	// Write out the namespace declarations...
 	if (m_namespaceDeclarations.empty() == false)
 	{
-		const NamespacesMapType::const_iterator	theEnd =
+		const NamespaceExtendedVectorType::const_iterator	theEnd =
 				m_namespaceDeclarations.end();
 
-		NamespacesMapType::const_iterator	i =
+		NamespaceExtendedVectorType::const_iterator	i =
 				m_namespaceDeclarations.begin();
 
 		for(; i != theEnd; ++i)
 		{
-			const Namespace&		theNamespace = (*i).second;
+			const NamespaceExtended&	theNamespace = *i;
 
-			const XalanDOMString&	thePrefix = theNamespace.getPrefix();
+			const XalanDOMString&		thePrefix = theNamespace.getPrefix();
 
 			// If we're not supposed to suppress the default namespace, or
 			// there's a prefix (so it's not the default), we can continue
@@ -474,7 +670,7 @@ NamespacesHandler::outputResultNamespaces(
 }
 
 
-
+#if 0
 bool
 NamespacesHandler::shouldExcludeResultNamespaceNode(
 			const XalanDOMString&		theXSLTNamespaceURI,
@@ -492,33 +688,13 @@ NamespacesHandler::shouldExcludeResultNamespaceNode(
 		return stylesheetNamespacesHandler.isExcludedNamespaceURI(theURI);
 	}
 }
-
+#endif
 
 
 bool
 NamespacesHandler::isExcludedNamespaceURI(const XalanDOMString&		theNamespaceURI) const
 {
-	ExcludedResultPrefixesMapType::const_iterator		i =
-			m_excludedResultPrefixes.begin();
-
-	const ExcludedResultPrefixesMapType::const_iterator		theEnd =
-			m_excludedResultPrefixes.end();
-
-	while(i != theEnd)
-	{
-		assert((*i).second != 0);
-
-		if (equals(*(*i).second, theNamespaceURI) == true)
-		{
-			return true;
-		}
-		else
-		{
-			++i;
-		}
-	}
-
-	return false;
+	return findByURI(m_excludedResultPrefixes, theNamespaceURI) != 0 ? true : false; 
 }
 
 
@@ -586,17 +762,17 @@ NamespacesHandler::createResultAttributeNames(StylesheetConstructionContext&	the
 	// This is more efficient if the stylesheet is used multiple times.
 	if (m_namespaceDeclarations.empty() == false)
 	{
-		const NamespacesMapType::iterator	theEnd =
+		const NamespaceExtendedVectorType::iterator	theEnd =
 				m_namespaceDeclarations.end();
 
-		NamespacesMapType::iterator		i =
+		NamespaceExtendedVectorType::iterator		i =
 				m_namespaceDeclarations.begin();
 
 		XalanDOMString	theName;
 
 		for(; i != theEnd; ++i)
 		{
-			Namespace&				theNamespace = (*i).second;
+			NamespaceExtended&		theNamespace = *i;
 
 			const XalanDOMString&	thePrefix = theNamespace.getPrefix();
 
@@ -631,27 +807,13 @@ NamespacesHandler::processExcludeResultPrefixes(
 {
 	if (m_excludedResultPrefixes.empty() == false)
 	{
-#if defined(XALAN_NO_NAMESPACES)
-	typedef vector<NamespacesMapType::iterator> 		IteratorVectorType;
-#else
-	typedef std::vector<NamespacesMapType::iterator> 	IteratorVectorType;
-#endif
-
-		// This vector will hold all of the iterators that we need to erase...
-		IteratorVectorType	theDeadEntries;
-
-		theDeadEntries.reserve(m_excludedResultPrefixes.size());
-
-		const NamespacesMapType::iterator	theEnd =
-				m_namespaceDeclarations.end();
-
-		NamespacesMapType::iterator		i =
+		NamespaceExtendedVectorType::iterator		i =
 				m_namespaceDeclarations.begin();
 
 		// Check for any result prefixes we should exclude...
-		while(i != theEnd)
+		while(i != m_namespaceDeclarations.end())
 		{
-			const Namespace&		theNamespace = (*i).second;
+			const Namespace&		theNamespace = *i;
 
 			const XalanDOMString&	thePrefix = theNamespace.getPrefix();
 			const XalanDOMString&	theURI = theNamespace.getURI();
@@ -663,24 +825,19 @@ NamespacesHandler::processExcludeResultPrefixes(
 				(isExcludedNamespaceURI(theURI) == true ||
 				 isExtensionNamespaceURI(theURI) == true))
 			{
-				// It's excluded, so remove it...
-				theDeadEntries.push_back(i);
-
 				// Add it to the excluded prefixes, in case we need it later...
-				m_excludedResultPrefixes.insert(
-						ExcludedResultPrefixesMapType::value_type(
-							&theConstructionContext.getPooledString(thePrefix),
-							&theConstructionContext.getPooledString(theURI)));
+				m_excludedResultPrefixes.push_back(
+						NamespacesVectorType::value_type(
+							theConstructionContext.getPooledString(thePrefix),
+							theConstructionContext.getPooledString(theURI)));
+
+				// It's excluded, so remove it...
+				i = m_namespaceDeclarations.erase(i);
 			}
-
-			++i;
-		}
-
-		while(theDeadEntries.empty() == false)
-		{
-			m_namespaceDeclarations.erase(theDeadEntries.back());
-
-			theDeadEntries.pop_back();
+			else
+			{
+				++i;
+			}
 		}
 	}
 }
@@ -692,17 +849,17 @@ NamespacesHandler::processNamespaceAliases()
 {
 	if (m_namespaceDeclarations.empty() == false)
 	{
-		const NamespacesMapType::iterator	theEnd =
+		const NamespaceExtendedVectorType::iterator		theEnd =
 				m_namespaceDeclarations.end();
 
-		NamespacesMapType::iterator		i =
+		NamespaceExtendedVectorType::iterator	i =
 				m_namespaceDeclarations.begin();
 
 		// Look at everyone of my namespaces for an alias, and substitute the
 		// alias as appropriate...
 		for(; i != theEnd; ++i)
 		{
-			Namespace&	theNamespace = (*i).second;
+			Namespace&	theNamespace = *i;
 
 			const XalanDOMString&			theURI =
 						theNamespace.getURI();
@@ -788,7 +945,7 @@ NamespacesHandler::copyExtensionNamespaceURIs(const XalanDOMStringPointerVectorT
 
 
 void
-NamespacesHandler::copyExcludeResultPrefixes(const ExcludedResultPrefixesMapType&	theExcludeResultPrefixes)
+NamespacesHandler::copyExcludeResultPrefixes(const NamespacesVectorType&	theExcludeResultPrefixes)
 {
 	if (theExcludeResultPrefixes.empty() == false)
 	{
@@ -798,16 +955,19 @@ NamespacesHandler::copyExcludeResultPrefixes(const ExcludedResultPrefixesMapType
 		}
 		else
 		{
-			const ExcludedResultPrefixesMapType::const_iterator	theEnd =
+			const NamespacesVectorType::const_iterator	theEnd =
 					theExcludeResultPrefixes.end();
 
-			ExcludedResultPrefixesMapType::const_iterator	i =
+			NamespacesVectorType::const_iterator	i =
 					theExcludeResultPrefixes.begin();
 
 			// Add them in...
 			while(i != theEnd)
 			{
-				m_excludedResultPrefixes.insert(*i);
+				if (findByPrefix(m_excludedResultPrefixes, (*i).getPrefix()) == 0)
+				{
+					m_excludedResultPrefixes.push_back(*i);
+				}
 
 				++i;
 			}

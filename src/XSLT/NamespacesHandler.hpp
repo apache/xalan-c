@@ -111,8 +111,7 @@ public:
 
 		Namespace() :
 			m_prefix(&s_emptyString),
-			m_uri(&s_emptyString),
-			m_resultAttributeName(&s_emptyString)
+			m_uri(&s_emptyString)
 		{
 		}
 
@@ -120,8 +119,7 @@ public:
 					const XalanDOMString&	prefix,
 					const XalanDOMString&	uri) :
 			m_prefix(&prefix),
-			m_uri(&uri),
-			m_resultAttributeName(&s_emptyString)
+			m_uri(&uri)
 		{
 		}
 
@@ -173,6 +171,35 @@ public:
 			m_uri = &uri;
 		}
 
+	protected:
+
+		static const XalanDOMString		s_emptyString;
+
+	private:
+
+		const XalanDOMString*	m_prefix;
+
+		const XalanDOMString*	m_uri;
+	};
+
+	class NamespaceExtended : public Namespace
+	{
+	public:
+
+		NamespaceExtended() :
+			Namespace(),
+			m_resultAttributeName(&s_emptyString)
+		{
+		}
+
+		NamespaceExtended(
+					const XalanDOMString&	prefix,
+					const XalanDOMString&	uri) :
+			Namespace(prefix, uri),
+			m_resultAttributeName(&s_emptyString)
+		{
+		}
+
 		/**
 		 * Retrieve the name of the result attribute.
 		 * 
@@ -199,25 +226,23 @@ public:
 
 	private:
 
-		const XalanDOMString*	m_prefix;
-
-		const XalanDOMString*	m_uri;
-
 		const XalanDOMString*	m_resultAttributeName;
-
-		static const XalanDOMString		s_emptyString;
 	};
 
 	typedef XalanQName::NamespaceVectorType				NamespaceVectorType;
 	typedef XalanQName::NamespacesStackType				NamespacesStackType;
 
 #if defined(XALAN_NO_NAMESPACES)
+	typedef vector<Namespace>							NamespacesVectorType;
+
+	typedef vector<NamespaceExtended>					NamespaceExtendedVectorType;
+
 	typedef map<const XalanDOMString*,
 				const XalanDOMString*,
 				DOMStringPointerLessThanFunction>		ExcludedResultPrefixesMapType;
 
 	typedef map<const XalanDOMString*,
-				Namespace,
+				NamespaceExtended,
 				DOMStringPointerLessThanFunction>		NamespacesMapType;
 
 	typedef map<const XalanDOMString*,
@@ -226,12 +251,16 @@ public:
 
 	typedef vector<const XalanDOMString*>				XalanDOMStringPointerVectorType;
 #else
+	typedef std::vector<Namespace>						NamespacesVectorType;
+
+	typedef std::vector<NamespaceExtended>				NamespaceExtendedVectorType;
+
 	typedef std::map<const XalanDOMString*,
 					 const XalanDOMString*,
 					 DOMStringPointerLessThanFunction>	ExcludedResultPrefixesMapType;
 
 	typedef std::map<const XalanDOMString*,
-					 Namespace,
+					 NamespaceExtended,
 					 DOMStringPointerLessThanFunction>	NamespacesMapType;
 
 	typedef std::map<const XalanDOMString*,
@@ -449,12 +478,12 @@ private:
 	copyExtensionNamespaceURIs(const XalanDOMStringPointerVectorType&	theExtensionNamespaceURIs);
 
 	/**
-	 * Copy the contents of the supplied map
+	 * Copy the contents of the supplied vector
 	 *
-	 * @param theExcludeResultPrefixes The map to copy.
+	 * @param theExcludeResultPrefixes The vector to copy.
 	 */
 	void
-	copyExcludeResultPrefixes(const ExcludedResultPrefixesMapType&	theExcludeResultPrefixes);
+	copyExcludeResultPrefixes(const NamespacesVectorType&	theExcludeResultPrefixes);
 
 	/**
 	 * Determine if a given namespace should be excluded.  For use during
@@ -509,10 +538,11 @@ private:
 	bool
 	operator==(const NamespacesHandler&) const;
 
-	// Data members...
-	ExcludedResultPrefixesMapType		m_excludedResultPrefixes;
 
-	NamespacesMapType					m_namespaceDeclarations;
+	// Data members...
+	NamespacesVectorType				m_excludedResultPrefixes;
+
+	NamespaceExtendedVectorType			m_namespaceDeclarations;
 
 	XalanDOMStringPointerVectorType		m_extensionNamespaceURIs;
 
