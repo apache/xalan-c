@@ -90,6 +90,18 @@ public:
 		const XalanDOMString&	theType = XalanDOMString(XALAN_STATIC_UCODE_STRING("XSLTProcessorException")));
 
 	/**
+	 * Constructor
+	 * 
+	 * @param theLocator The locator instance for error reporting.
+	 * @param theMessage message to write when exception thrown
+	 * @param theType type of exception, default is "XSLTProcessorException"
+	 */
+	XSLTProcessorException(
+			const Locator&			theLocator,
+			const XalanDOMString&	theMessage,
+			const XalanDOMString&	theType = XalanDOMString(XALAN_STATIC_UCODE_STRING("XSLTProcessorException")));
+
+	/**
 	 * Construct an XSLT Processor exception object
 	 * 
 	 * @param theMessage message to print when exception thrown

@@ -76,6 +76,16 @@ XSLTProcessorException::XSLTProcessorException(
 
 
 XSLTProcessorException::XSLTProcessorException(
+			const Locator&			theLocator,
+			const XalanDOMString&	theMessage,
+			const XalanDOMString&	theType) :
+	XSLException(theLocator, theMessage, theType)
+{
+}
+
+
+
+XSLTProcessorException::XSLTProcessorException(
 		const XalanDOMString&	theMessage,
 		const XalanDOMString&	theType) :
 	XSLException(theMessage, theType)
