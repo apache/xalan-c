@@ -76,31 +76,30 @@
 
 
 // Base class header file.
-#include <XMLSupport/XMLParserLiaisonDefault.hpp>
+#include <XMLSupport/XMLParserLiaison.hpp>
 
 
 
-class DOM_Document;
+class DOMParser;
 class DOMSupport;
+class EntityResolver;
 class InputSource;
+class SAXParser;
 class XercesDocumentBridge;
 class XSLProcessor;
 
 
 
-class XALAN_XERCESPARSERLIAISON_EXPORT XercesParserLiaison : public XMLParserLiaisonDefault, public ErrorHandler
+class XALAN_XERCESPARSERLIAISON_EXPORT XercesParserLiaison : public XMLParserLiaison, public ErrorHandler
 {
 public:
 
 	/**
 	 * Construct a XercesParserLiaison instance.
 	 *
-	 * @param theSupport           instance of DOMSupport object
-	 * @param fUseValidatingParser true if a validating parser is to be used
+	 * @param theSupport		   instance of DOMSupport object
 	 */
-	XercesParserLiaison(
-			DOMSupport& 	theSupport,
-			bool			fUseValidatingParser = false);
+	XercesParserLiaison(DOMSupport&		theSupport);
 
 	virtual
 	~XercesParserLiaison();
@@ -127,12 +126,208 @@ public:
 	virtual XalanDocument*
 	createDocument();
 
+	virtual XalanDocument*
+	getDOMFactory();
+
+	virtual XalanDOMString
+	getExpandedElementName(const XalanElement&	elem) const;
+
+	virtual XalanDOMString
+	getExpandedAttributeName(const XalanAttr&	attr) const;
+
+	virtual void
+	setSpecialCharacters(const XalanDOMString&	str);
+
+	virtual const XalanDOMString&
+	getSpecialCharacters() const;
+
+	virtual int
+	getIndent() const;
+
+	virtual void
+	setIndent(int	i);
+
+	virtual bool
+	getShouldExpandEntityRefs() const;
+
+	virtual void
+	SetShouldExpandEntityRefs(bool	b);
+
+	virtual bool
+	getUseValidation() const;
+
+	virtual void
+	setUseValidation(bool	b);
+
+	virtual const XalanDOMString&
+	getParserDescription() const;
+
+
 	// These interfaces are new to XercesParserLiaison...
 
-	/** 
+	/** Get the 'include ignorable whitespace' flag.
+	  *
+	  * This method returns the state of the parser's include ignorable
+	  * whitespace flag.
+	  *
+	  * @return 'true' if the include ignorable whitespace flag is set on
+	  * 		the parser, 'false' otherwise.
+	  *
+	  * @see #setIncludeIgnorableWhitespace
+	  */
+	virtual bool
+	getIncludeIgnorableWhitespace() const;
+
+	/** Set the 'include ignorable whitespace' flag
+	  *
+	  * This method allows the user to specify whether a validating parser
+	  * should include ignorable whitespaces as text nodes.  It has no effect
+	  * on non-validating parsers which always include non-markup text.
+	  * <p>When set to true (also the default), ignorable whitespaces will be
+	  * added to the DOM tree as text nodes.  The method
+	  * DOM_Text::isIgnorableWhitespace() will return true for those text
+	  * nodes only.
+	  * <p>When set to false, all ignorable whitespace will be discarded and
+	  * no text node is added to the DOM tree.	Note: applications intended
+	  * to process the "xml:space" attribute should not set this flag to false.
+	  *
+	  * @param include The new state of the include ignorable whitespace
+	  * 			   flag.
+	  *
+	  * @see #getIncludeIgnorableWhitespace
+	  */
+	virtual void
+	setIncludeIgnorableWhitespace(bool	include);
+
+	/**
+	  * This method returns the installed error handler. Suitable
+	  * for 'lvalue' usages.
+	  *
+	  * @return The pointer to the installed error handler object.
+	  */
+	virtual ErrorHandler*
+	getErrorHandler();
+
+	/**
+	  * This method returns the installed error handler. Suitable
+	  * for 'rvalue' usages.
+	  *
+	  * @return A const pointer to the installed error handler object.
+	  */
+	virtual const ErrorHandler*
+	getErrorHandler() const;
+
+	/**
+	  * This method installs the user specified error handler on
+	  * the parser.
+	  *
+	  * @param handler A pointer to the error handler to be called
+	  * 			   when the parser comes across 'error' events
+	  * 			   as per the SAX specification.
+	  *
+	  * @see Parser#setErrorHandler
+	  */
+	virtual void
+	setErrorHandler(ErrorHandler*	handler);
+
+	/**
+	  * This method returns the state of the parser's namespace
+	  * handling capability.
+	  *
+	  * @return true, if the parser is currently configured to
+	  * 		understand namespaces, false otherwise.
+	  *
+	  * @see #setDoNamespaces
+	  */
+	virtual bool
+	getDoNamespaces() const;
+
+	/**
+	  * This method allows users to enable or disable the parser's
+	  * namespace processing. When set to true, parser starts enforcing
+	  * all the constraints / rules specified by the NameSpace
+	  * specification.
+	  *
+	  * <p>The parser's default state is: false.</p>
+	  *
+	  * <p>This flag is ignored by the underlying scanner if the installed
+	  * validator indicates that namespace constraints should be
+	  * enforced.</p>
+	  *
+	  * @param newState The value specifying whether NameSpace rules should
+	  * 				be enforced or not.
+	  *
+	  * @see #getDoNamespaces
+	  */
+	virtual void
+	setDoNamespaces(bool	newState);
+
+	/**
+	  * This method returns the state of the parser's
+	  * exit-on-First-Fatal-Error flag.
+	  *
+	  * @return true, if the parser is currently configured to
+	  * 		exit on the first fatal error, false otherwise.
+	  *
+	  * @see #setExitOnFirstFatalError
+	  */
+	virtual bool
+	getExitOnFirstFatalError() const;
+
+	/**
+	  * This method allows users to set the parser's behaviour when it
+	  * encounters the first fatal error. If set to true, the parser
+	  * will exit at the first fatal error. If false, then it will
+	  * report the error and continue processing.
+	  *
+	  * <p>The default value is 'true' and the parser exits on the
+	  * first fatal error.</p>
+	  *
+	  * @param newState The value specifying whether the parser should
+	  * 				continue or exit when it encounters the first
+	  * 				fatal error.
+	  *
+	  * @see #getExitOnFirstFatalError
+	  */
+	virtual void
+	setExitOnFirstFatalError(bool	newState);
+
+	/**
+	  * This method returns the installed entity resolver. Suitable
+	  * for 'lvalue' usages.
+	  *
+	  * @return The pointer to the installed entity resolver object.
+	  */
+	virtual EntityResolver*
+	getEntityResolver();
+
+	/**
+	  * This method returns the installed entity resolver. Suitable
+	  * for 'rvalue' usages.
+	  *
+	  * @return A const pointer to the installed entity resolver object.
+	  */
+	virtual const EntityResolver*
+	getEntityResolver() const;
+
+	/**
+	  * This method installs the user specified entity resolver on the
+	  * parser. It allows applications to trap and redirect calls to
+	  * external entities.
+	  *
+	  * @param handler A pointer to the entity resolver to be called
+	  * 			   when the parser comes across references to
+	  * 			   entities in the XML file.
+	  *
+	  * @see Parser#setEntityResolver
+	  */
+	virtual void
+	setEntityResolver(EntityResolver*	resolver);
+
+	/**
 	 * Create a XalanDocument proxy for an existing Xerces document.
 	 * The parser liaison owns the instance, and you must not delete
-	 * it.  The liaison will delete it when reset() is called, or the
+	 * it.	The liaison will delete it when reset() is called, or the
 	 * liaison is destroyed.
 	 *
 	 * @param theXercesDocument The Xerces document.
@@ -179,6 +374,14 @@ public:
 	virtual void
 	resetErrors();
 
+protected:
+
+	virtual DOMParser*
+	CreateDOMParser();
+
+	virtual SAXParser*
+	CreateSAXParser();
+
 private:
 
 #if defined(XALAN_NO_NAMESPACES)
@@ -187,9 +390,30 @@ private:
 	typedef std::map<const XalanDocument*, XercesDocumentBridge*>	DocumentMapType;
 #endif
 
-	const bool			m_fUseValidatingParser;
+	// Data members...
+	DOMSupport& 		m_DOMSupport;
 
-	DocumentMapType		m_documentMap;
+	XalanDOMString		m_specialCharacters;
+
+	int 				m_indent;
+
+	bool				m_shouldExpandEntityRefs;
+
+	bool				m_useValidation;
+
+	bool				m_includeIgnorableWhitespace;
+
+	bool				m_doNamespaces;
+
+	bool				m_exitOnFirstFatalError;
+
+	XalanDocument*		m_factory;
+
+	EntityResolver* 	m_entityResolver;
+
+	ErrorHandler*		m_errorHandler;
+
+	DocumentMapType 	m_documentMap;
 };
 
 

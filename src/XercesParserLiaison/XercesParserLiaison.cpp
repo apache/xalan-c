@@ -76,20 +76,31 @@
 
 
 
+#include <DOMSupport/DOMSupport.hpp>
+
+
+
 #include "XercesDocumentBridge.hpp"
 
 
 
 static const XalanDOMString		theParserName(XALAN_STATIC_UCODE_STRING("Xerces"));
+static const XalanDOMString		theDefaultSpecialCharacters(XALAN_STATIC_UCODE_STRING("<>&\"\'\r\n"));
 
 
 
-XercesParserLiaison::XercesParserLiaison(
-			DOMSupport&		theSupport,
-			bool			fUseValidatingParser) :
-	XMLParserLiaisonDefault(theSupport,
-							theParserName),
-	m_fUseValidatingParser(fUseValidatingParser),
+XercesParserLiaison::XercesParserLiaison(DOMSupport&	theSupport) :
+	m_DOMSupport(theSupport),
+	m_specialCharacters(theDefaultSpecialCharacters),
+	m_indent(-1),
+	m_shouldExpandEntityRefs(true),
+	m_useValidation(false),
+	m_includeIgnorableWhitespace(true),
+	m_doNamespaces(false),
+	m_exitOnFirstFatalError(true),
+	m_factory(0),
+	m_entityResolver(0),
+	m_errorHandler(this),
 	m_documentMap()
 {
 }
@@ -116,6 +127,8 @@ XercesParserLiaison::reset()
 			 makeMapValueDeleteFunctor(m_documentMap));
 
 	m_documentMap.clear();
+
+	m_DOMSupport.reset();
 }
 
 
@@ -124,28 +137,6 @@ bool
 XercesParserLiaison::supportsSAX() const
 {
 	return true;
-}
-
-
-
-static inline DOMParser*
-CreateDOMParser(bool	fValidating)
-{
-	DOMParser *parser = new DOMParser;
-	parser->setDoValidation(fValidating);
-
-	return parser;
-}
-
-
-
-static inline SAXParser*
-CreateSAXParser(bool	fValidating)
-{
-	SAXParser *parser = new SAXParser;
-	parser->setDoValidation(fValidating);
-
-	return parser;
 }
 
 
@@ -160,10 +151,9 @@ XercesParserLiaison::parseXMLStream(
 	using std::auto_ptr;
 #endif
 
-	auto_ptr<SAXParser>		theParser(CreateSAXParser(m_fUseValidatingParser));
+	auto_ptr<SAXParser>		theParser(CreateSAXParser());
 
 	theParser->setDocumentHandler(&handler);
-	theParser->setErrorHandler(this);
 
 	theParser->parse(urlInputSource);
 }
@@ -179,9 +169,8 @@ XercesParserLiaison::parseXMLStream(
 	using std::auto_ptr;
 #endif
 
-	auto_ptr<DOMParser>		theParser(CreateDOMParser(m_fUseValidatingParser));
+	auto_ptr<DOMParser>		theParser(CreateDOMParser());
 
-	theParser->setErrorHandler(this);
 	theParser->parse(reader);
 
 	const DOM_Document	theXercesDocument =
@@ -208,6 +197,211 @@ XercesParserLiaison::createDocument()
 		DOM_Document::createDocument();
 
 	return createDocument(theXercesDocument);
+}
+
+
+
+XalanDocument*
+XercesParserLiaison::getDOMFactory()
+{
+	if (m_factory == 0)
+	{
+		m_factory = createDocument();
+	}
+
+	return m_factory;
+}
+
+
+
+/**
+ * Returns the element name with the namespace expanded.
+ */
+XalanDOMString
+XercesParserLiaison::getExpandedElementName(const XalanElement&		elem) const
+{
+	return m_DOMSupport.getExpandedElementName(elem);
+}
+
+
+
+/**
+ * Returns the attribute name with the namespace expanded.
+ */
+XalanDOMString
+XercesParserLiaison::getExpandedAttributeName(const XalanAttr&	attr) const
+{
+	return m_DOMSupport.getExpandedAttributeName(attr);
+}
+
+
+
+void
+XercesParserLiaison::setSpecialCharacters(const XalanDOMString&	str)
+{
+	m_specialCharacters = str;
+}
+
+
+
+const XalanDOMString&
+XercesParserLiaison::getSpecialCharacters() const
+{
+	return m_specialCharacters;
+}
+
+
+
+int
+XercesParserLiaison::getIndent() const
+{
+	return m_indent;
+}
+
+
+
+void
+XercesParserLiaison::setIndent(int	i)
+{
+	m_indent = i;
+}
+
+
+
+bool
+XercesParserLiaison::getShouldExpandEntityRefs() const
+{
+	return m_shouldExpandEntityRefs;
+}
+
+
+
+void
+XercesParserLiaison::SetShouldExpandEntityRefs(bool	b)
+{
+	m_shouldExpandEntityRefs = b;
+}
+
+
+
+bool
+XercesParserLiaison::getUseValidation() const
+{
+	return m_useValidation;
+}
+
+
+
+void
+XercesParserLiaison::setUseValidation(bool	b)
+{
+	m_useValidation = b;
+}
+
+
+
+const XalanDOMString&
+XercesParserLiaison::getParserDescription() const
+{
+	return theParserName;
+}
+
+
+
+bool
+XercesParserLiaison::getIncludeIgnorableWhitespace() const
+{
+	return m_includeIgnorableWhitespace;
+}
+
+
+
+void
+XercesParserLiaison::setIncludeIgnorableWhitespace(bool	include)
+{
+	m_includeIgnorableWhitespace = include;
+}
+
+
+
+ErrorHandler*
+XercesParserLiaison::getErrorHandler()
+{
+	return m_errorHandler;
+}
+
+
+
+const ErrorHandler*
+XercesParserLiaison::getErrorHandler() const
+{
+	return m_errorHandler;
+}
+
+
+
+void
+XercesParserLiaison::setErrorHandler(ErrorHandler*	handler)
+{
+	assert(handler != 0);
+
+	m_errorHandler = handler;
+}
+
+
+
+bool
+XercesParserLiaison::getDoNamespaces() const
+{
+	return m_doNamespaces;
+}
+
+
+
+void
+XercesParserLiaison::setDoNamespaces(bool	newState)
+{
+	m_doNamespaces = newState;
+}
+
+
+
+bool
+XercesParserLiaison::getExitOnFirstFatalError() const
+{
+	return m_exitOnFirstFatalError;
+}
+
+
+
+void
+XercesParserLiaison::setExitOnFirstFatalError(bool	newState)
+{
+	m_exitOnFirstFatalError = newState;
+}
+
+
+
+EntityResolver*
+XercesParserLiaison::getEntityResolver()
+{
+	return m_entityResolver;
+}
+
+
+
+const EntityResolver*
+XercesParserLiaison::getEntityResolver() const
+{
+	return m_entityResolver;
+}
+
+
+
+void
+XercesParserLiaison::setEntityResolver(EntityResolver*	resolver)
+{
+	m_entityResolver = resolver;
 }
 
 
@@ -295,4 +489,54 @@ void XercesParserLiaison::warning(const SAXParseException& e)
 void
 XercesParserLiaison::resetErrors()
 {
+}
+
+
+
+DOMParser*
+XercesParserLiaison::CreateDOMParser()
+{
+	DOMParser* const	theParser = new DOMParser;
+
+	theParser->setExpandEntityReferences(m_shouldExpandEntityRefs);
+
+	theParser->setDoValidation(m_useValidation);
+
+	theParser->setIncludeIgnorableWhitespace(m_includeIgnorableWhitespace);
+
+	theParser->setDoNamespaces(m_doNamespaces);
+
+	theParser->setExitOnFirstFatalError(m_exitOnFirstFatalError);
+
+	if (m_entityResolver != 0)
+	{
+		theParser->setEntityResolver(m_entityResolver);
+	}
+
+	theParser->setErrorHandler(m_errorHandler);
+
+	return theParser;
+}
+
+
+
+SAXParser*
+XercesParserLiaison::CreateSAXParser()
+{
+	SAXParser* const	theParser = new SAXParser;
+
+	theParser->setDoValidation(m_useValidation);
+
+	theParser->setDoNamespaces(m_doNamespaces);
+
+	theParser->setExitOnFirstFatalError(m_exitOnFirstFatalError);
+
+	if (m_entityResolver != 0)
+	{
+		theParser->setEntityResolver(m_entityResolver);
+	}
+
+	theParser->setErrorHandler(m_errorHandler);
+
+	return theParser;
 }
