@@ -145,7 +145,8 @@ protected:
 			const XalanDOMString&				thePattern,
 			const XalanDecimalFormatSymbols*	theDFS,
 			XalanDOMString&						theResult,
-			const Locator*						locator) const;
+			const Locator*						locator,
+			bool								fWarn = true) const;
 
 private:
 
