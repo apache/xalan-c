@@ -2,7 +2,7 @@
 <p>In addition to adding a build for HP-UX 11, our focus for this release has been on bug fixes and performance enhancements. Major updates since version 0.40.0 include:</p>
 <ul>
 <li>Added an HP-UX 11 build<br/><br/></li>
-<li>Added the <link idref="samples" anchor="streamtransform">StreamTransform<link> sample.<br/><br/></li>
+<li>Added the <link idref="samples" anchor="streamtransform">StreamTransform</link> sample.<br/><br/></li>
 <li><br/><br/></li>
 <li><br/><br/></li>
 <li></li>

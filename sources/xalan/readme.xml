@@ -3,7 +3,7 @@
 <!ENTITY done-c SYSTEM "DONE">
 <!ENTITY status-c SYSTEM "STATUS">
 <!ENTITY bugs-c SYSTEM "BUGS">
-<!ENTITY history-c SYSTEM "history.xml">]>]>
+<!ENTITY history-c SYSTEM "history.xml">]>
 
 <!--
  * The Apache Software License, Version 1.1
@@ -190,9 +190,8 @@ where <ref>targ</ref> is <code>Samples</code> (all the samples), <code>CompileSt
  <s2 title="Getting in Touch">
   <p>Your feedback is more than welcome. Offers of help are even more so! Perhaps you would like to contribute to the ongoing development, testing, or documentation of &xslt4c;.</p> 
 <p>Please email your comments, questions, suggestions, bug reports, and offers to help to <human-resource-ref idref="xalandev"/>.</p>
- </s2>
  </s2><anchor name="history"/>
  <s2 title="Cumulative history of software changes">
-   &history-j;
+   &history-c;
  </s2> 
 </s1>
