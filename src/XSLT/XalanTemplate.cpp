@@ -194,8 +194,6 @@ foo(XPathExecutionContext&	theExecutionContext)
 		AttributeListImpl::AttributeVectorType theAttributeVectorEntryVector;
 		AttributesImpl::AttributesVectorType theAttributesVectorEntryVector;
 		allocator<DOMString> theAllocator;
-		FormatterToHTML::ElemDesc theElemDesc;
-		FormatterToHTML::ElementFlagsMapType theElementFlagsMapType;
 		XPathExpression::TokenQueueType theTokenQueueType;
 		set<const XalanNode*,less<const XalanNode*> > theXalanNodeSet;
 		XPathExecutionContext::XObjectArgVectorType theVector;
