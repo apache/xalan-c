@@ -150,7 +150,11 @@ Stylesheet::Stylesheet(
 	m_prefixAliases(),
 	m_namespacesHandler()
 {
-	if (length(m_baseIdent) != 0)
+	if (length(m_baseIdent) == 0)
+	{
+		m_includeStack.push_back(m_baseIdent);
+	}
+	else
 	{
 		const XalanDOMString urlString = constructionContext.getURLStringFromString(m_baseIdent);
 
