@@ -295,14 +295,14 @@ XResultTreeFrag::NodeRefListBaseProxy::~NodeRefListBaseProxy()
 
 
 XalanNode*
-XResultTreeFrag::NodeRefListBaseProxy::item(unsigned int	index) const
+XResultTreeFrag::NodeRefListBaseProxy::item(size_type	index) const
 {
 	return m_xresultTreeFrag.item(index);
 }
 
 
 
-unsigned int
+XResultTreeFrag::NodeRefListBaseProxy::size_type
 XResultTreeFrag::NodeRefListBaseProxy::getLength() const
 {
 	return m_xresultTreeFrag.getLength();
@@ -310,7 +310,7 @@ XResultTreeFrag::NodeRefListBaseProxy::getLength() const
 
 
 
-unsigned int
+XResultTreeFrag::NodeRefListBaseProxy::size_type
 XResultTreeFrag::NodeRefListBaseProxy::indexOf(const XalanNode*	theNode) const
 {
 	return m_xresultTreeFrag.indexOf(theNode);

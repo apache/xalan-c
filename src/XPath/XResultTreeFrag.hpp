@@ -190,12 +190,12 @@ public:
 		~NodeRefListBaseProxy();
 
 		virtual XalanNode*
-		item(unsigned int	index) const;
+		item(size_type	index) const;
 
-		virtual unsigned int
+		virtual size_type
 		getLength() const;
 
-		virtual unsigned int
+		virtual size_type
 		indexOf(const XalanNode*	theNode) const;
 
 	private:
