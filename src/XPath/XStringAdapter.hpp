@@ -100,6 +100,11 @@ public:
 	virtual const XalanDOMString&
 	str() const;
 
+	virtual void
+	str(
+			FormatterListener&	formatterListener,
+			MemberFunctionPtr	function) const;
+
 protected:
 
 	virtual eObjectType

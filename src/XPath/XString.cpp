@@ -120,3 +120,13 @@ XString::str() const
 {
 	return m_value;
 }
+
+
+
+void
+XString::str(
+			FormatterListener&	formatterListener,
+			MemberFunctionPtr	function) const
+{
+	(formatterListener.*function)(c_wstr(m_value), length(m_value));
+}

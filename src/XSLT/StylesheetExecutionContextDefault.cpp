@@ -147,11 +147,11 @@ StylesheetExecutionContextDefault::StylesheetExecutionContextDefault(
 	m_keyTables(),
 	m_keyDeclarationSet(),
 	m_countersTable(),
-	m_useDOMResultTreeFactory(false),
 	m_ignoreHTMLElementNamespaces(false),
 	m_sourceTreeResultTreeFactory(),
 	m_mode(0),
-	m_formatterToTextCache()
+	m_formatterToTextCache(),
+	m_formatterToSourceTreeCache()
 {
 }
 
@@ -179,11 +179,11 @@ StylesheetExecutionContextDefault::StylesheetExecutionContextDefault(
 	m_keyTables(),
 	m_keyDeclarationSet(),
 	m_countersTable(),
-	m_useDOMResultTreeFactory(false),
 	m_ignoreHTMLElementNamespaces(false),
 	m_sourceTreeResultTreeFactory(),
 	m_mode(0),
-	m_formatterToTextCache()
+	m_formatterToTextCache(),
+	m_formatterToSourceTreeCache()
 {
 }
 
@@ -922,43 +922,43 @@ StylesheetExecutionContextDefault::createXResultTreeFrag(
 
 	BorrowReturnResultTreeFrag	theResultTreeFrag(*this);
 
-	if (m_useDOMResultTreeFactory == true)
-	{
-		XalanDocument* const	theDocument = m_xsltProcessor->getDOMFactory();
+#if 1
+	GetReleaseCachedObject<FormatterToSourceTree>	theGuard(m_formatterToSourceTreeCache);
 
-		FormatterToDOM	tempFormatter(
-					theDocument,
-					theResultTreeFrag.get(),
-					0);
+	FormatterToSourceTree* const	theFormatter = theGuard.get();
+	assert(theFormatter != 0);
 
-		tempFormatter.setPrefixResolver(m_xsltProcessor);
+	XalanSourceTreeDocument* const	theDocument = getSourceTreeFactory();
 
-		theResultTreeFrag->setOwnerDocument(theDocument);
+	theFormatter->setDocument(theDocument);
+	theFormatter->setDocumentFragment(theResultTreeFrag.get());
 
-		StylesheetExecutionContext::OutputContextPushPop	theOutputContextPushPop(
+	theFormatter->setPrefixResolver(m_xsltProcessor);
+
+	theResultTreeFrag->setOwnerDocument(theDocument);
+
+	StylesheetExecutionContext::OutputContextPushPop	theOutputContextPushPop(
 				*this,
-				&tempFormatter);
+				theFormatter);
 
-		templateChild.executeChildren(*this, sourceNode);
-	}
-	else
-	{
-		XalanSourceTreeDocument* const	theDocument = getSourceTreeFactory();
+	templateChild.executeChildren(*this, sourceNode);
+#else
+	XalanSourceTreeDocument* const	theDocument = getSourceTreeFactory();
 
-		FormatterToSourceTree	tempFormatter(
+	FormatterToSourceTree	tempFormatter(
 					theDocument,
 					theResultTreeFrag.get());
 
-		tempFormatter.setPrefixResolver(m_xsltProcessor);
+	tempFormatter.setPrefixResolver(m_xsltProcessor);
 
-		theResultTreeFrag->setOwnerDocument(theDocument);
+	theResultTreeFrag->setOwnerDocument(theDocument);
 
-		StylesheetExecutionContext::OutputContextPushPop	theOutputContextPushPop(
+	StylesheetExecutionContext::OutputContextPushPop	theOutputContextPushPop(
 				*this,
 				&tempFormatter);
 
-		templateChild.executeChildren(*this, sourceNode);
-	}
+	templateChild.executeChildren(*this, sourceNode);
+#endif
 
 	return getXObjectFactory().createResultTreeFrag(theResultTreeFrag);
 }
@@ -1102,7 +1102,7 @@ StylesheetExecutionContextDefault::createFormatterToXML(
 			xmlDecl,
 			standalone);
 
-	m_formatterListeners.insert(theFormatter);
+	m_formatterListeners.push_back(theFormatter);
 
 	return theFormatter;
 }
@@ -1143,7 +1143,7 @@ StylesheetExecutionContextDefault::createFormatterToHTML(
 		theFormatter->setPrefixResolver(m_xsltProcessor);
 	}
 
-	m_formatterListeners.insert(theFormatter);
+	m_formatterListeners.push_back(theFormatter);
 
 	return theFormatter;
 }
@@ -1162,7 +1162,7 @@ StylesheetExecutionContextDefault::createFormatterToDOM(
 			docFrag,
 			currentElement);
 
-	m_formatterListeners.insert(theFormatter);
+	m_formatterListeners.push_back(theFormatter);
 
 	theFormatter->setPrefixResolver(m_xsltProcessor);
 
@@ -1181,7 +1181,7 @@ StylesheetExecutionContextDefault::createFormatterToDOM(
 			doc,
 			elem);
 
-	m_formatterListeners.insert(theFormatter);
+	m_formatterListeners.push_back(theFormatter);
 
 	theFormatter->setPrefixResolver(m_xsltProcessor);
 
@@ -1198,7 +1198,7 @@ StylesheetExecutionContextDefault::createFormatterToText(
 	FormatterToText* const	theFormatter =
 		new FormatterToText(writer, encoding);
 
-	m_formatterListeners.insert(theFormatter);
+	m_formatterListeners.push_back(theFormatter);
 
 	return theFormatter;
 }
@@ -1792,7 +1792,7 @@ StylesheetExecutionContextDefault::createPrintWriter(XalanOutputStream*	theTextO
 	PrintWriter* const	thePrintWriter =
 		new XalanOutputStreamPrintWriter(*theTextOutputStream);
 
-	m_printWriters.insert(thePrintWriter);
+	m_printWriters.push_back(thePrintWriter);
 
 	return thePrintWriter;
 }
@@ -1807,7 +1807,7 @@ StylesheetExecutionContextDefault::createPrintWriter(
 	XalanOutputStream* const	theOutputStream =
 		new XalanFileOutputStream(theFileName);
 
-	m_outputStreams.insert(theOutputStream);
+	m_outputStreams.push_back(theOutputStream);
 
 	return createPrintWriter(theOutputStream);
 }
@@ -1827,7 +1827,7 @@ StylesheetExecutionContextDefault::createPrintWriter(std::ostream&	theStream)
 	XalanOutputStream* const		theOutputStream =
 		new XalanStdOutputStream(theStream);
 
-	m_outputStreams.insert(theOutputStream);
+	m_outputStreams.push_back(theOutputStream);
 
 	return createPrintWriter(theOutputStream);
 }
@@ -1838,6 +1838,37 @@ CountersTable&
 StylesheetExecutionContextDefault::getCountersTable()
 {
 	return m_countersTable;
+}
+
+
+
+void
+StylesheetExecutionContextDefault::characters(const XalanNode&	node)
+{
+	m_xsltProcessor->characters(node);
+}
+
+
+void
+StylesheetExecutionContextDefault::characters(const XObjectPtr&		xobject)
+{
+	m_xsltProcessor->characters(xobject);
+}
+
+
+
+void
+StylesheetExecutionContextDefault::charactersRaw(const XalanNode&	node)
+{
+	m_xsltProcessor->charactersRaw(node);
+}
+
+
+
+void
+StylesheetExecutionContextDefault::charactersRaw(const XObjectPtr&	xobject)
+{
+	m_xsltProcessor->charactersRaw(xobject);
 }
 
 

@@ -106,6 +106,16 @@ XStringCached::str() const
 
 
 
+void
+XStringCached::str(
+			FormatterListener&	formatterListener,
+			MemberFunctionPtr	function) const
+{
+	(formatterListener.*function)(c_wstr(m_value.get()), length(m_value.get()));
+}
+
+
+
 XStringCached::eObjectType
 XStringCached::getRealType() const
 {

@@ -82,10 +82,7 @@
 
 
 
-#include <XMLSupport/FormatterListener.hpp>
-
-
-
+class FormatterListener;
 class XalanDocument;
 class XalanDocumentFragment;
 class XalanElement;

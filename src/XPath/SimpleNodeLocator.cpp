@@ -477,34 +477,45 @@ SimpleNodeLocator::stepPattern(
 			argLen =
 					currentExpression.getOpCodeMapValue(opPos + XPathExpression::s__opCodeMapLengthIndex + 1) - 3;
 
-			if(context->getNodeType() != XalanNode::ATTRIBUTE_NODE)
+			XalanNode::NodeType		nodeType = context->getNodeType();
+
+			if(nodeType != XalanNode::ATTRIBUTE_NODE)
 			{
 				opPos += 3;
 
-				while(0 != context)
+				for(;;)
 				{
-					score = nodeTest(xpath, executionContext, context, opPos, argLen, stepType);
+					score = nodeTest(xpath, executionContext, context, nodeType, opPos, argLen, stepType);
 
 					if(xpath.s_MatchScoreNone != score)
 						break;
 
 					context = DOMServices::getParentOfNode(*context);
+
+					if (context == 0)
+						break;
+
+					nodeType = context->getNodeType();
 				}
 			}
 		}
 		break;
 
 	case XPathExpression::eMATCH_IMMEDIATE_ANCESTOR:
-		// $$ ToDO: Can we reduce this to some call on the
-		// XPathExpression interface?
-		argLen =
+		{
+			// $$ ToDO: Can we reduce this to some call on the
+			// XPathExpression interface?
+			argLen =
 				currentExpression.getOpCodeMapValue(opPos + XPathExpression::s__opCodeMapLengthIndex + 1) - 3;
 
-		if(context->getNodeType() != XalanNode::ATTRIBUTE_NODE)
-		{
-			opPos += 3;
+			const XalanNode::NodeType	nodeType = context->getNodeType();
 
-			score = nodeTest(xpath, executionContext, context, opPos, argLen, stepType);
+			if(nodeType != XalanNode::ATTRIBUTE_NODE)
+			{
+				opPos += 3;
+
+				score = nodeTest(xpath, executionContext, context, nodeType, opPos, argLen, stepType);
+			}
 		}
 		break;
 
@@ -886,6 +897,7 @@ SimpleNodeLocator::findAttributes(
 				const double	score = nodeTest(xpath,
 												 executionContext,
 												 theNode,
+												 XalanNode::ATTRIBUTE_NODE,
 												 opPos,
 												 argLen,
 												 stepType);
@@ -1351,7 +1363,7 @@ SimpleNodeLocator::findNamespace(
 				for(unsigned int i = 0; i < nAttrs; ++i)
 				{
 					XalanNode* const	attr = attributeList->item(i);
-					assert(attr != 0);
+					assert(attr != 0 && attr->getNodeType() == XalanNode::ATTRIBUTE_NODE);
 
 					const XalanDOMString&	theNodeName = attr->getNodeName();
 
@@ -1363,6 +1375,7 @@ SimpleNodeLocator::findNamespace(
 						if(nodeTest(xpath,
 									executionContext,
 									attr,
+									XalanNode::ATTRIBUTE_NODE,
 									opPos,
 									argLen,
 									stepType) != xpath.s_MatchScoreNone)
@@ -1410,19 +1423,20 @@ double
 SimpleNodeLocator::nodeTest(
 			const XPath&			xpath,
 			XPathExecutionContext&	executionContext,
-			XalanNode*				context, 
+			XalanNode* 				context,
+			XalanNode::NodeType		nodeType,
 			int 					opPos,
 			int 					argLen,
 			int 					stepType)
 {
+	assert(context->getNodeType() == nodeType);
+
 	const XPathExpression&	currentExpression =
 		xpath.getExpression();
 
 	double score = xpath.s_MatchScoreNone;
 
 	const int	testType = currentExpression.getOpCodeMapValue(opPos);
-
-	const XalanNode::NodeType	nodeType = context->getNodeType();
 
 	switch(testType)
 	{
@@ -1675,6 +1689,22 @@ SimpleNodeLocator::nodeTest(
 	} // end switch(testType)
 
 	return score;
+}
+
+
+
+inline double
+SimpleNodeLocator::nodeTest(
+			const XPath&			xpath,
+			XPathExecutionContext&	executionContext,
+			XalanNode*				context, 
+			int 					opPos,
+			int 					argLen,
+			int 					stepType)
+{
+	assert(context != 0);
+
+	return nodeTest(xpath, executionContext, context, context->getNodeType(), opPos, argLen, stepType);
 }
 
 

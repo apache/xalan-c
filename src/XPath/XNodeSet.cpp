@@ -180,6 +180,26 @@ XNodeSet::str() const
 
 
 
+void
+XNodeSet::str(
+			FormatterListener&	formatterListener,
+			MemberFunctionPtr	function) const
+{
+	if (isEmpty(m_cachedStringValue) == false)
+	{
+		(formatterListener.*function)(c_wstr(m_cachedStringValue), length(m_cachedStringValue));
+	}
+	else if (m_value->getLength() > 0)
+	{
+		const XalanNode* const	theNode = m_value->item(0);
+		assert(theNode != 0);
+
+		DOMServices::getNodeData(*theNode, formatterListener, function);
+	}
+}
+
+
+
 const ResultTreeFragBase&
 XNodeSet::rtree(XPathExecutionContext&	executionContext) const
 {

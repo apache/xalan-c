@@ -113,6 +113,16 @@ XTokenNumberAdapter::str() const
 
 
 
+void
+XTokenNumberAdapter::str(
+			FormatterListener&	formatterListener,
+			MemberFunctionPtr	function) const
+{
+	m_value.str(formatterListener, function);
+}
+
+
+
 XTokenNumberAdapter::eObjectType
 XTokenNumberAdapter::getRealType() const
 {

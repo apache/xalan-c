@@ -123,6 +123,11 @@ public:
 	str() const;
 
 	virtual void
+	str(
+			FormatterListener&	formatterListener,
+			MemberFunctionPtr	function) const;
+
+	virtual void
 	ProcessXObjectTypeCallback(XObjectTypeCallback&		theCallbackObject);
 
 	virtual void

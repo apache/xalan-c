@@ -101,6 +101,16 @@ XStringAdapter::str() const
 
 
 
+void
+XStringAdapter::str(
+			FormatterListener&	formatterListener,
+			MemberFunctionPtr	function) const
+{
+	m_value->str(formatterListener, function);
+}
+
+
+
 XStringAdapter::eObjectType
 XStringAdapter::getRealType() const
 {

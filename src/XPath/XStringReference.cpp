@@ -102,6 +102,16 @@ XStringReference::str() const
 
 
 
+void
+XStringReference::str(
+			FormatterListener&	formatterListener,
+			MemberFunctionPtr	function) const
+{
+	(formatterListener.*function)(c_wstr(m_value), length(m_value));
+}
+
+
+
 XStringReference::eObjectType
 XStringReference::getRealType() const
 {

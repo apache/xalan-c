@@ -1416,6 +1416,40 @@ public:
 	virtual CountersTable&
 	getCountersTable() = 0;
 
+	/**
+	 * Send character data from a node to the result tree.
+	 *
+	 * @param node The node to send.
+	 */
+	virtual void
+	characters(const XalanNode&		node) = 0;
+
+	/**
+	 * Send character data from an XObject to the result tree.
+	 *
+	 * @param node The xobject to send.
+	 */
+	virtual void
+	characters(const XObjectPtr&	xobject) = 0;
+
+	/**
+	 * Send raw character data from a node to the result tree.
+	 *
+	 * @param node The node to send.
+	 * @param length number of characters to read from the array
+	 */
+	virtual void
+	charactersRaw(const XalanNode&	node) = 0;
+
+	/**
+	 * Send raw character data from an XObject to the result tree.
+	 *
+	 * @param node The xobject to send.
+	 */
+	virtual void
+	charactersRaw(const XObjectPtr&		xobject) = 0;
+
+
 	// These interfaces are inherited from XPathExecutionContext...
 
 	virtual void

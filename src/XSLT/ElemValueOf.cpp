@@ -165,23 +165,27 @@ ElemValueOf::getElementName() const
 
 
 void
-ElemValueOf::execute(StylesheetExecutionContext&		executionContext) const
+ElemValueOf::execute(StylesheetExecutionContext&	executionContext) const
 {
 	ElemTemplateElement::execute(executionContext);
 
-	XalanNode* sourceNode = executionContext.getCurrentNode();
+	XalanNode* const	sourceNode = executionContext.getCurrentNode();
+	assert(sourceNode != 0);
 
 	if (m_isDot == true)
 	{
-		StylesheetExecutionContext::GetAndReleaseCachedString	theResult(executionContext);
-
-		DOMServices::getNodeData(*sourceNode, theResult.get());
-	
-		outputValue(executionContext, theResult.get());
+		if (m_disableOutputEscaping == false)
+		{
+			executionContext.characters(*sourceNode);
+		}
+		else
+		{
+			executionContext.charactersRaw(*sourceNode);
+		}
 
 		if(0 != executionContext.getTraceListeners())
 		{
-			fireSelectionEvent(executionContext, sourceNode, theResult.get());
+			fireSelectionEvent(executionContext, sourceNode, DOMServices::getNodeData(*sourceNode));
 		}
 	}
 	else
@@ -199,30 +203,15 @@ ElemValueOf::execute(StylesheetExecutionContext&		executionContext) const
 
 			if (XObject::eTypeNull != type)
 			{
-				outputValue(executionContext, value->str());
+				if (m_disableOutputEscaping == false)
+				{
+					executionContext.characters(value);
+				}
+				else
+				{
+					executionContext.charactersRaw(value);
+				}
 			}
-		}
-	}
-}
-
-
-
-void
-ElemValueOf::outputValue(
-			StylesheetExecutionContext&		executionContext,
-			const XalanDOMString&			theValue) const
-{
-	const unsigned int	len = length(theValue);
-
-	if(len > 0)
-	{
-		if(m_disableOutputEscaping == false)
-		{
-			executionContext.characters(toCharArray(theValue), 0, len);
-		}
-		else
-		{
-			executionContext.charactersRaw(toCharArray(theValue), 0, len);
 		}
 	}
 }

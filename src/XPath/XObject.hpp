@@ -68,6 +68,7 @@
 
 
 
+#include <PlatformSupport/FormatterListener.hpp>
 #include <PlatformSupport/XalanReferenceCountedObject.hpp>
 
 
@@ -165,6 +166,20 @@ public:
 	 */
 	virtual const XalanDOMString&
 	str() const;
+
+	typedef void (FormatterListener::*MemberFunctionPtr)(const XMLCh* const, const unsigned int);
+
+	/**
+	 * Send the string value to a FormatterListener instance.
+	 *
+	 * @param formatterListener The FormatterListener instance
+	 * @param function A pointer to the member function of FormatterListener to call
+	 * 
+	 */
+	virtual void
+	str(
+			FormatterListener&	formatterListener,
+			MemberFunctionPtr	function) const = 0;
 
 	/**
 	 * Cast result object to a result tree fragment.

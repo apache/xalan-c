@@ -100,7 +100,6 @@
 
 
 
-#include <XMLSupport/Formatter.hpp>
 #include <XMLSupport/FormatterToDOM.hpp>
 #include <XMLSupport/FormatterToText.hpp>
 #include <XMLSupport/FormatterToXML.hpp>
@@ -1475,7 +1474,7 @@ XSLTEngineImpl::startDocument()
 
 		if(getTraceListeners() > 0)
 		{
-			GenerateEvent ge(GenerateEvent::EVENTTYPE_STARTDOCUMENT);
+			const GenerateEvent		ge(GenerateEvent::EVENTTYPE_STARTDOCUMENT);
 
 			fireGenerateEvent(ge);
 		}
@@ -1502,7 +1501,7 @@ XSLTEngineImpl::endDocument()
 
 	if(getTraceListeners() > 0)
 	{
-		GenerateEvent ge(GenerateEvent::EVENTTYPE_ENDDOCUMENT);
+		const GenerateEvent		ge(GenerateEvent::EVENTTYPE_ENDDOCUMENT);
 
 		fireGenerateEvent(ge);
 	}
@@ -1669,8 +1668,10 @@ XSLTEngineImpl::flushPending()
 
 		if(getTraceListeners() > 0)
 		{
-			const GenerateEvent	ge(GenerateEvent::EVENTTYPE_STARTELEMENT,
-					thePendingElementName, &thePendingAttributes);
+			const GenerateEvent		ge(
+				GenerateEvent::EVENTTYPE_STARTELEMENT,
+				thePendingElementName,
+				&thePendingAttributes);
 
 			fireGenerateEvent(ge);
 		}
@@ -1746,7 +1747,7 @@ XSLTEngineImpl::endElement(const XMLCh* const 	name)
 
 	if(getTraceListeners() > 0)
 	{
-		GenerateEvent ge(GenerateEvent::EVENTTYPE_ENDELEMENT, name);
+		const GenerateEvent		ge(GenerateEvent::EVENTTYPE_ENDELEMENT, name);
 
 		fireGenerateEvent(ge);
 	}
@@ -1761,6 +1762,7 @@ XSLTEngineImpl::endElement(const XMLCh* const 	name)
 		m_cdataStack.pop_back();
 	}
 }
+
 
 
 void
@@ -1784,21 +1786,15 @@ XSLTEngineImpl::characters(
 	assert(getFormatterListener() != 0);
 	assert(ch != 0);
 
-	setMustFlushPendingStartDocument(true);
+	doFlushPending();
 
-	flushPending();
-
-	const Stylesheet::QNameVectorType&	cdataElems =
-			m_stylesheetRoot->getCDATASectionElems();
-
-	if(0 != cdataElems.size() && 0 != m_cdataStack.size() && m_cdataStack.back() == true)
+	if(generateCDATASection() == true)
 	{
 		getFormatterListener()->cdata(ch + start, length);
 
 		if(getTraceListeners() > 0)
 		{
-			GenerateEvent ge(GenerateEvent::EVENTTYPE_CDATA, ch, start, length);
-			fireGenerateEvent(ge);
+			fireCharacterGenerateEvent(ch, start, length, true);
 		}
 	}
 	else
@@ -1807,34 +1803,117 @@ XSLTEngineImpl::characters(
 
 		if(getTraceListeners() > 0)
 		{
-			GenerateEvent ge(GenerateEvent::EVENTTYPE_CHARACTERS, ch,
-						start, length);
-			fireGenerateEvent(ge);
+			fireCharacterGenerateEvent(ch, start, length, false);
 		}
 	}
 }
 
 
 
+void
+XSLTEngineImpl::characters(const XalanNode&		node)
+{
+	assert(getFormatterListener() != 0);
+
+	doFlushPending();
+
+	if(generateCDATASection() == true)
+	{
+		DOMServices::getNodeData(node, *getFormatterListener(), &FormatterListener::cdata);
+
+		if(getTraceListeners() > 0)
+		{
+			fireCharacterGenerateEvent(node, true);
+		}
+	}
+	else
+	{
+		DOMServices::getNodeData(node, *getFormatterListener(), &FormatterListener::characters);
+
+		if(getTraceListeners() > 0)
+		{
+			fireCharacterGenerateEvent(node, false);
+		}
+	}
+}
+
+
+
+void
+XSLTEngineImpl::characters(const XObjectPtr&	xobject)
+{
+	assert(getFormatterListener() != 0);
+	assert(xobject.null() == false);
+
+	doFlushPending();
+
+	if(generateCDATASection() == true)
+	{
+		xobject->str(*getFormatterListener(), &FormatterListener::cdata);
+
+		if(getTraceListeners() > 0)
+		{
+			fireCharacterGenerateEvent(xobject, true);
+		}
+	}
+	else
+	{
+		xobject->str(*getFormatterListener(), &FormatterListener::characters);
+
+		if(getTraceListeners() > 0)
+		{
+			fireCharacterGenerateEvent(xobject, false);
+		}
+	}
+}
+
+
 
 void 
-XSLTEngineImpl::charactersRaw (
+XSLTEngineImpl::charactersRaw(
 			const XMLCh* const	ch,
-			const unsigned int	/* start */,
+			const unsigned int	start,
 			const unsigned int	length)
 {
-	setMustFlushPendingStartDocument(true);
+	assert(ch != 0);
 
-	flushPending();
+	doFlushPending();
 
 	getFormatterListener()->charactersRaw(ch, length);
 
 	if(getTraceListeners() > 0)
 	{
-		GenerateEvent ge(GenerateEvent::EVENTTYPE_CHARACTERS,
-				ch, 0, length);
+		fireCharacterGenerateEvent(ch, start, length, false);
+	}
+}
 
-		fireGenerateEvent(ge);
+
+
+void
+XSLTEngineImpl::charactersRaw(const XalanNode&	node)
+{
+	doFlushPending();
+
+	DOMServices::getNodeData(node, *getFormatterListener(), &FormatterListener::charactersRaw);
+
+	if(getTraceListeners() > 0)
+	{
+		fireCharacterGenerateEvent(node, false);
+	}
+}
+
+
+
+void
+XSLTEngineImpl::charactersRaw(const XObjectPtr&		xobject)
+{
+	doFlushPending();
+
+	xobject->str(*getFormatterListener(), &FormatterListener::charactersRaw);
+
+	if(getTraceListeners() > 0)
+	{
+		fireCharacterGenerateEvent(xobject, false);
 	}
 }
 
@@ -1860,9 +1939,7 @@ XSLTEngineImpl::ignorableWhitespace(
 	assert(getFormatterListener() != 0);
 	assert(ch != 0);
 
-	setMustFlushPendingStartDocument(true);
-
-	flushPending();
+	doFlushPending();
 
 	getFormatterListener()->ignorableWhitespace(ch, length);
 
@@ -1886,9 +1963,7 @@ XSLTEngineImpl::processingInstruction(
 	assert(target != 0);
 	assert(data != 0);
 
-	setMustFlushPendingStartDocument(true);
-
-	flushPending();
+	doFlushPending();
 
 	getFormatterListener()->processingInstruction(target, data);
 
@@ -1911,9 +1986,7 @@ XSLTEngineImpl::comment(const XMLCh* const	data)
 	assert(getFormatterListener() != 0);
 	assert(data != 0);
 
-	setMustFlushPendingStartDocument(true);
-
-	flushPending();
+	doFlushPending();
 
 	getFormatterListener()->comment(data);
 
@@ -1932,9 +2005,7 @@ XSLTEngineImpl::entityReference(const XMLCh* const	name)
 	assert(getFormatterListener() != 0);
 	assert(name != 0);
 
-	setMustFlushPendingStartDocument(true);
-
-	flushPending();
+	doFlushPending();
 
 	getFormatterListener()->entityReference(name);
 
@@ -2506,39 +2577,12 @@ XSLTEngineImpl::returnXPath(const XPath*	xpath)
 
 
 
-static const XalanDOMChar	theTokenDelimiterCharacters[] =
-{
-		XalanUnicode::charLeftCurlyBracket,
-		XalanUnicode::charRightCurlyBracket,
-		XalanUnicode::charApostrophe,
-		XalanUnicode::charQuoteMark,
-		0
-};
-
-
-
-static const XalanDOMChar	theLeftCurlyBracketString[] =
-{
-		XalanUnicode::charLeftCurlyBracket,
-		0
-};
-
-
-
-static const XalanDOMChar	theRightCurlyBracketString[] =
-{
-		XalanUnicode::charRightCurlyBracket,
-		0
-};
-
-
-
 void
 XSLTEngineImpl::copyAttributeToTarget(
 			const XalanAttr&		attr,
 			XalanNode*				/* contextNode */,
 			const Stylesheet* 		/* stylesheetTree */,
-			AttributeListImpl&		attrList, 
+			AttributeListImpl&		attrList,
 			const XalanElement& 	/* namespaceContext */)
 {
 	const XalanDOMString& 	attrName = attr.getName();
@@ -2548,15 +2592,7 @@ XSLTEngineImpl::copyAttributeToTarget(
 	// TODO: Find out about empty attribute template expression handling.
 	if(0 != length(attrValue))
 	{
-		if((equals(attrName, DOMServices::s_XMLNamespace) || startsWith(attrName, DOMServices::s_XMLNamespaceWithSeparator))
-		   && startsWith(attrValue, XALAN_STATIC_UCODE_STRING("quote:")))
-		{
-			addResultAttribute(attrList, attrName, substring(attrValue, 6));
-		}
-		else
-		{
-			addResultAttribute(attrList, attrName, attrValue);
-		}
+		addResultAttribute(attrList, attrName, attrValue);
 	}
 }
 
@@ -2815,8 +2851,7 @@ XSLTEngineImpl::resolveTopLevelParams(StylesheetExecutionContext&	executionConte
 
 
 void
-XSLTEngineImpl::resetCurrentState(
-			XalanNode*	xmlNode)
+XSLTEngineImpl::resetCurrentState(XalanNode*	xmlNode)
 {
 	if(0 != xmlNode)
 	{
@@ -2937,6 +2972,54 @@ XSLTEngineImpl::setFormatterListener(FormatterListener*		flistener)
 	}
 
 	setFormatterListenerImpl(flistener);
+}
+
+
+
+void
+XSLTEngineImpl::fireCharacterGenerateEvent(
+			const XalanNode&	theNode,
+			bool				isCDATA)
+{
+	fireCharacterGenerateEvent(DOMServices::getNodeData(theNode), isCDATA);
+}
+
+
+
+void
+XSLTEngineImpl::fireCharacterGenerateEvent(
+			const XObjectPtr&	theXObject,
+			bool				isCDATA)
+{
+	fireCharacterGenerateEvent(theXObject->str(), isCDATA);
+}
+
+
+
+void
+XSLTEngineImpl::fireCharacterGenerateEvent(
+			const XalanDOMString&	theString,
+			bool					isCDATA)
+{
+	fireCharacterGenerateEvent(c_wstr(theString), 0, length(theString), isCDATA);
+}
+
+
+
+void
+XSLTEngineImpl::fireCharacterGenerateEvent(
+			const XMLCh*	ch,
+			unsigned int	start,
+			unsigned int	length,
+			bool			isCDATA)
+{
+	const GenerateEvent		ge(
+		isCDATA == true ? GenerateEvent::EVENTTYPE_CDATA : GenerateEvent::EVENTTYPE_CHARACTERS,
+		ch,
+		start,
+		length);
+
+	fireGenerateEvent(ge);
 }
 
 

@@ -89,6 +89,7 @@
 #if defined(XALAN_AUTO_PTR_REQUIRES_DEFINITION)
 #include <XalanSourceTree/XalanSourceTreeDocument.hpp>
 #endif
+#include <XalanSourceTree/FormatterToSourceTree.hpp>
 
 
 
@@ -114,28 +115,23 @@ public:
 
 #if defined(XALAN_NO_NAMESPACES)
 	typedef deque<const ElemTemplateElement*>			ElementRecursionStackType;
-	typedef set<FormatterListener*,
-				less<FormatterListener*> >				FormatterListenerSetType;
-	typedef set<PrintWriter*,
-				less<PrintWriter*> >					PrintWriterSetType;
-	typedef set<XalanOutputStream*,
-				less<XalanOutputStream*> >				OutputStreamSetType;
+	typedef vector<FormatterListener*>					FormatterListenerVectorType;
+	typedef vector<PrintWriter*>						PrintWriterVectorType;
+	typedef vector<XalanOutputStream*>					OutputStreamVectorType;
 	typedef set<const KeyDeclaration*,
 				less<const KeyDeclaration*> >			KeyDeclarationSetType;
 	typedef pair<const XPath*, clock_t>					XPathCacheEntry;
 	typedef map<XalanDOMString,
 				XPathCacheEntry,
 				less<XalanDOMString> >					XPathCacheMapType;
-	typedef vector<FormatterToText*>					FormatterToTextCacheType;
 #else
 	typedef std::deque<const ElemTemplateElement*>		ElementRecursionStackType;
-	typedef std::set<FormatterListener*>				FormatterListenerSetType;
-	typedef std::set<PrintWriter*>						PrintWriterSetType;
-	typedef std::set<XalanOutputStream*>				OutputStreamSetType;
+	typedef std::vector<FormatterListener*>				FormatterListenerVectorType;
+	typedef std::vector<PrintWriter*>					PrintWriterVectorType;
+	typedef std::vector<XalanOutputStream*>				OutputStreamVectorType;
 	typedef std::set<const KeyDeclaration*>				KeyDeclarationSetType;
 	typedef std::pair<const XPath*, clock_t>			XPathCacheEntry;
 	typedef std::map<XalanDOMString, XPathCacheEntry>	XPathCacheMapType;
-	typedef std::vector<FormatterToText*>				FormatterToTextCacheType;
 #endif
 
 	typedef Stylesheet::KeyTablesTableType				KeyTablesTableType;
@@ -180,29 +176,6 @@ public:
 	virtual
 	~StylesheetExecutionContextDefault();
 
-	/**
-	 * Get the value of the flag that controls whether result tree
-	 * fragments are created using a DOM factory, or a XalanSourceTreeDocument.
-	 *
-	 * @return The value
-	 */
-	bool
-	getUseDOMResultTreeFactory() const
-	{
-		return m_useDOMResultTreeFactory;
-	}
-
-	/**
-	 * Set the value of the flag that controls whether result tree
-	 * fragments are created using a DOM factory, or a XalanSourceTreeDocument.
-	 *
-	 * @param theValue The boolean value
-	 */
-	void
-	setUseDOMResultTreeFactory(bool		theValue)
-	{
-		m_useDOMResultTreeFactory = theValue;
-	}
 
 	/**
 	 * Set the value of the flag that controls whether HTML output will
@@ -747,6 +720,19 @@ public:
 	virtual CountersTable&
 	getCountersTable();
 
+	virtual void
+	characters(const XalanNode&		node);
+
+	virtual void
+	characters(const XObjectPtr&	xobject);
+
+	virtual void
+	charactersRaw(const XalanNode&	node);
+
+	virtual void
+	charactersRaw(const XObjectPtr&		xobject);
+
+
 	// These interfaces are inherited from XPathExecutionContext...
 
 	virtual void
@@ -993,9 +979,7 @@ private:
 
 	XalanNode*						m_rootDocument;
 
-	enum { eDefaultVariablesCollectionSize = 10,
-		   eXPathCacheMax = 50,
-		   eDefaultVariablesStackSize = 200,
+	enum { eXPathCacheMax = 50,
 		   eDefaultParamsVectorSize = 10 };
 
 	ElementRecursionStackType			m_elementRecursionStack;
@@ -1004,11 +988,11 @@ private:
 
 	const StylesheetRoot*				m_stylesheetRoot;
 
-	FormatterListenerSetType			m_formatterListeners;
+	FormatterListenerVectorType			m_formatterListeners;
 
-	PrintWriterSetType					m_printWriters;
+	PrintWriterVectorType				m_printWriters;
 
-	OutputStreamSetType					m_outputStreams;
+	OutputStreamVectorType				m_outputStreams;
 
 	CollationCompareFunctor*			m_collationCompareFunctor;
 
@@ -1027,8 +1011,6 @@ private:
 
 	CountersTable						m_countersTable;
 
-	bool								m_useDOMResultTreeFactory;
-
 	// If true, we will not check HTML output for elements with
 	// namespaces.  This is an optimization which can lead to
 	// non-conforming behavior.
@@ -1037,7 +1019,9 @@ private:
 	// Holds the current mode.
 	const QName*	                    m_mode;
 
-	XalanObjectCacheDefault<FormatterToText>	m_formatterToTextCache;
+	XalanObjectCacheDefault<FormatterToText>		m_formatterToTextCache;
+
+	XalanObjectCacheDefault<FormatterToSourceTree>	m_formatterToSourceTreeCache;
 
 	/**
 	 * The factory that will be used to create result tree fragments based on our

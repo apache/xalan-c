@@ -146,6 +146,16 @@ XToken::str() const
 
 
 void
+XToken::str(
+			FormatterListener&	formatterListener,
+			MemberFunctionPtr	function) const
+{
+	(formatterListener.*function)(c_wstr(m_stringValue), length(m_stringValue));
+}
+
+
+
+void
 XToken::ProcessXObjectTypeCallback(XObjectTypeCallback&	theCallbackObject)
 {
 	theCallbackObject.String(*this, m_stringValue);

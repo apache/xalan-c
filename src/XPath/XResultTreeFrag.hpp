@@ -141,6 +141,11 @@ public:
 	virtual const XalanDOMString&
 	str() const;
 
+	virtual void
+	str(
+			FormatterListener&	formatterListener,
+			MemberFunctionPtr	function) const;
+
 	virtual const ResultTreeFragBase&
 	rtree(XPathExecutionContext&	executionContext) const;
 

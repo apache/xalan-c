@@ -128,6 +128,15 @@ XNull::str() const
 
 
 void
+XNull::str(
+			FormatterListener&	/* formatterListener */,
+			MemberFunctionPtr	/* function */) const
+{
+}
+
+
+
+void
 XNull::ProcessXObjectTypeCallback(XObjectTypeCallback&	theCallbackObject)
 {
 	theCallbackObject.Null(*this);

@@ -162,6 +162,16 @@ XObject::str() const
 
 
 
+void
+XObject::str(
+			FormatterListener&	/* formatterListener */,
+			MemberFunctionPtr	/* function */) const
+{
+	throw XObjectInvalidConversionException(getTypeString(), TranscodeFromLocalCodePage("string"));
+}
+
+
+
 const ResultTreeFragBase&
 XObject::rtree(XPathExecutionContext&	/* executionContext */) const
 {

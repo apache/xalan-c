@@ -125,6 +125,18 @@ XNumber::str() const
 
 
 void
+XNumber::str(
+			FormatterListener&	formatterListener,
+			MemberFunctionPtr	function) const
+{
+	const XalanDOMString&	theValue = str();
+
+	(formatterListener.*function)(c_wstr(theValue), length(theValue));
+}
+
+
+
+void
 XNumber::set(double		theValue)
 {
 	m_value = theValue;

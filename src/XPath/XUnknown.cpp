@@ -138,6 +138,16 @@ XUnknown::str() const
 
 
 void
+XUnknown::str(
+			FormatterListener&	formatterListener,
+			MemberFunctionPtr	function) const
+{
+	(formatterListener.*function)(c_wstr(m_value), length(m_value));
+}
+
+
+
+void
 XUnknown::ProcessXObjectTypeCallback(XObjectTypeCallback&	theCallbackObject)
 {
 	theCallbackObject.Unknown(*this,

@@ -149,11 +149,7 @@ ElemCopyOf::execute(StylesheetExecutionContext&		executionContext) const
 	case XObject::eTypeBoolean:
 	case XObject::eTypeNumber:
 	case XObject::eTypeString:
-		{
-			const XalanDOMString&	s = value->str();
-
-			executionContext.characters(toCharArray(s), 0, length(s));
-		}
+		executionContext.characters(value);
 		break;
 
 	case XObject::eTypeNodeSet:
@@ -222,14 +218,7 @@ ElemCopyOf::execute(StylesheetExecutionContext&		executionContext) const
 		break;
 
 	default:
-		{
-			const XalanDOMString&	s = value->str();
-
-			if (!isEmpty(s))
-			{
-				executionContext.characters(toCharArray(s), 0, s.length());
-			}
-		}
+		executionContext.characters(value);
 		break;
 	}
 }

@@ -176,6 +176,23 @@ XResultTreeFrag::str() const
 
 
 
+void
+XResultTreeFrag::str(
+			FormatterListener&	formatterListener,
+			MemberFunctionPtr	function) const
+{
+	if (isEmpty(m_cachedStringValue) == false)
+	{
+		(formatterListener.*function)(c_wstr(m_cachedStringValue), length(m_cachedStringValue));
+	}
+	else
+	{
+		DOMServices::getNodeData(*m_value, formatterListener, function);
+	}
+}
+
+
+
 const ResultTreeFragBase&
 XResultTreeFrag::rtree(XPathExecutionContext&	/* executionContext */) const
 {

@@ -100,7 +100,6 @@
 
 
 
-#include <XMLSupport/Formatter.hpp>
 #include <XMLSupport/FormatterToHTML.hpp>
 #include <XMLSupport/FormatterToText.hpp>
 #include <XMLSupport/FormatterToXML.hpp>
@@ -121,7 +120,7 @@
 
 //#define XALAN_VQ_SPECIAL_TRACE
 #if defined(XALAN_VQ_SPECIAL_TRACE)
-#include "d:/Rational/Quantify/pure.h"
+#include "C:/Program Files/Rational/Quantify/pure.h"
 #endif
 
 

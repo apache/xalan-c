@@ -140,6 +140,23 @@ XBoolean::str() const
 
 
 void
+XBoolean::str(
+			FormatterListener&	formatterListener,
+			MemberFunctionPtr	function) const
+{
+	if (m_value == true)
+	{
+		(formatterListener.*function)(c_wstr(s_trueString), length(s_trueString));
+	}
+	else
+	{
+		(formatterListener.*function)(c_wstr(s_falseString), length(s_falseString));
+	}
+}
+
+
+
+void
 XBoolean::ProcessXObjectTypeCallback(XObjectTypeCallback&	theCallbackObject)
 {
 	theCallbackObject.Boolean(*this,

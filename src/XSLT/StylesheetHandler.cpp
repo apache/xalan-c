@@ -87,10 +87,6 @@
 
 
 
-#include <XMLSupport/Formatter.hpp>
-
-
-
 #include "Constants.hpp"
 #include "ElemApplyImport.hpp"
 #include "ElemApplyTemplates.hpp"

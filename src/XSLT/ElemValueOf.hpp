@@ -108,11 +108,6 @@ public:
 private:
 
 	void
-	outputValue(
-			StylesheetExecutionContext&		executionContext,
-			const XalanDOMString&			theValue) const;
-
-	void
 	fireSelectionEvent(
 			StylesheetExecutionContext&		executionContext,
 			XalanNode*						sourceNode,
@@ -123,6 +118,7 @@ private:
 			StylesheetExecutionContext&		executionContext,
 			XalanNode*						sourceNode,
 			const XObjectPtr				theValue) const;
+
 
 	/**
 	 * The select pattern used to locate the value.

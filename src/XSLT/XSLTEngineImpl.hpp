@@ -468,6 +468,22 @@ public:
 			const unsigned int	length);
 
 	/**
+	 * Send character data from the node to the result tree.
+	 *
+	 * @param node The node to send.
+	 */
+	void
+	characters(const XalanNode&		node);
+
+	/**
+	 * Send character data from an XObject to the result tree.
+	 *
+	 * @param node The xobject to send.
+	 */
+	virtual void
+	characters(const XObjectPtr&	xobject);
+
+	/**
 	 * Receive notification of the beginning of an element with an empty
 	 * attribute list
 	 *
@@ -475,8 +491,7 @@ public:
 	 * @exception SAXException
 	 */
 	virtual void
-	startElement(
-			const XMLCh* const	name);
+	startElement(const XMLCh* const		name);
 
 	/**
 	 * Receive notification of character data. If available, when the
@@ -493,6 +508,22 @@ public:
 			const XMLCh* const	ch,
 			const unsigned int	start,
 			const unsigned int	length);
+
+	/**
+	 * Send raw character data from the node to the result tree.
+	 *
+	 * @param node The node to send.
+	 */
+	virtual void
+	charactersRaw(const XalanNode&	node);
+
+	/**
+	 * Send raw character data from an XObject to the result tree.
+	 *
+	 * @param node The xobject to send.
+	 */
+	virtual void
+	charactersRaw(const XObjectPtr&		xobject);
 
 	/**
 	 * Called when a Comment is to be constructed.
@@ -1638,6 +1669,44 @@ public:
 	}
 
 private:
+
+	bool
+	generateCDATASection() const
+	{
+		return 0 != m_cdataStack.size() &&
+			   m_cdataStack.back() == true;
+	}
+
+	void
+	doFlushPending()
+	{
+		setMustFlushPendingStartDocument(true);
+
+		flushPending();
+	}
+
+	void
+	fireCharacterGenerateEvent(
+			const XalanNode&	theNode,
+			bool				isCDATA);
+
+	void
+	fireCharacterGenerateEvent(
+			const XObjectPtr&	theXObject,
+			bool				isCDATA);
+
+	void
+	fireCharacterGenerateEvent(
+			const XalanDOMString&	theString,
+			bool					isCDATA);
+
+	void
+	fireCharacterGenerateEvent(
+			const XMLCh*	ch,
+			unsigned int	start,
+			unsigned int	length,
+			bool			isCDATA);
+
 
 	XMLParserLiaison&	m_parserLiaison;
 

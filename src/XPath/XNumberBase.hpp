@@ -97,6 +97,11 @@ public:
 	str() const = 0;
 
 	virtual void
+	str(
+			FormatterListener&	formatterListener,
+			MemberFunctionPtr	function) const = 0;
+
+	virtual void
 	ProcessXObjectTypeCallback(XObjectTypeCallback&		theCallbackObject);
 
 	virtual void
