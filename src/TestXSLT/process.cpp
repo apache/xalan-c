@@ -115,6 +115,13 @@
 
 
 
+#include <XalanEXSLT/XalanEXSLTCommon.hpp>
+#include <XalanEXSLT/XalanEXSLTMath.hpp>
+#include <XalanEXSLT/XalanEXSLTSet.hpp>
+#include <XalanEXSLT/XalanEXSLTString.hpp>
+
+
+
 #include <XercesParserLiaison/XercesParserLiaison.hpp>
 #include <XercesParserLiaison/XercesDOMSupport.hpp>
 
@@ -875,6 +882,10 @@ xsltMain(const CmdLineParams&	params)
 	if (params.disableExtensions == false)
 	{
 		XalanExtensionsInstaller::installGlobal();
+		XalanEXSLTCommonFunctionsInstaller::installGlobal();
+		XalanEXSLTMathFunctionsInstaller::installGlobal();
+		XalanEXSLTSetFunctionsInstaller::installGlobal();
+		XalanEXSLTStringFunctionsInstaller::installGlobal();
 	}
 
 	XObjectFactoryDefault	theXObjectFactory;
@@ -1111,6 +1122,15 @@ xsltMain(const CmdLineParams&	params)
 	theDOMSupport.reset();
 
 	xmlParserLiaison.reset();
+
+	if (params.disableExtensions == false)
+	{
+		XalanExtensionsInstaller::uninstallGlobal();
+		XalanEXSLTCommonFunctionsInstaller::uninstallGlobal();
+		XalanEXSLTMathFunctionsInstaller::uninstallGlobal();
+		XalanEXSLTSetFunctionsInstaller::uninstallGlobal();
+		XalanEXSLTStringFunctionsInstaller::uninstallGlobal();
+	}
 
 	return 0;
 }
