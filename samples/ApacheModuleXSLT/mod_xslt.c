@@ -141,6 +141,9 @@ static int xslt_handler(request_rec *r)
 
 	XalanHandle xalan = NULL;
 
+	int i;
+	int dot_point;
+
 	int	error = DECLINED;
 
 	CONTROL_STRUCT	control_struct =
@@ -152,8 +155,27 @@ static int xslt_handler(request_rec *r)
 	control_struct.r = r;
 
 	mimetype = ap_pstrcat(r->pool, r->filename, NULL);
+	
+    /* Find the extension without any assumptions on string.h */
+	
+    dot_point = 0;
+	i = 0;
+	
+    while (mimetype[i] != '\0') {
+        if (mimetype[i] == '.')
+             dot_point = i;
+        ++i;
+    }
 
-	filename = ap_getword_nulls_nc(r->pool, &mimetype,'.');
+    if (dot_point == 0) {
+
+        fprintf(stderr, "Unable to find extension of : %s\n", mimetype);
+        r->uri = mimetype;
+     
+        return DECLINED;
+    }
+
+    filename = ap_pstrndup(r->pool, r->filename,dot_point);
 
 	xmlfilename = ap_pstrcat(r->pool,filename,".xml",NULL); 
 
@@ -165,6 +187,10 @@ static int xslt_handler(request_rec *r)
 
 	if(error)
 	{
+
+	    char *msg = XalanGetLastError(xalan);
+	    fprintf(stderr,"mod_xslt: %s: %s\n", r->filename,msg);
+
 		r->uri = filename;
 
 		return DECLINED;
