@@ -134,24 +134,6 @@ StaticStringToDOMString(const XalanDOMString&	theString)
 
 
 /**
- * Initialize static data.  Must be called before any
- * other functions are called.  See PlatformSupportInit.
- */
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(void)
-DOMStringHelperInitialize();
-
-
-
-/**
- * Destroy static data.  After thus function is called,
- * no other functions can be called.  See PlatformSupportInit.
- */
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(void)
-DOMStringHelperTerminate();
-
-
-
-/**
  * Get the underlying representation of the target XalanDOMString as a
  * null-terminated string
  * 

@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -94,19 +94,6 @@ public:
 
 	// A handy typedef...  Must match DocumentHandler's type for characters(), etc...
 	typedef unsigned int	size_type;
-
-	/**
-	 * Perform static initialization.  See class XMLSupportInit.
-	 */
-	static void
-	initialize();
-
-	/**
-	 * Perform static shut down.  See class XMLSupportInit.
-	 */
-	static void
-	terminate();
-
 
 	enum eFormat
 	{
@@ -251,9 +238,9 @@ public:
 
 	// Used when creating PI to work around limitations of
 	// our interfaces...
-	static const XalanDOMString&	s_xsltNextIsRawString;
+	static const XalanDOMChar	s_piTarget[];
 
-	static const XalanDOMString&	s_formatterListenerString;
+	static const XalanDOMChar	s_piData[];
 
 protected:
 

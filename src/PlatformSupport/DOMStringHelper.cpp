@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -121,47 +121,53 @@ const size_t	MAX_FLOAT_CHARACTERS = 100;
 
 
 
-static XalanDOMString	theNaNString;
-
-static XalanDOMString	theNegativeInfinityString;
-
-static XalanDOMString	thePositiveInfinityString;
-
-static XalanDOMString	theNegativeZeroString;
-
-static XalanDOMString	thePositiveZeroString;
-
-
-
-/**
- * Initialize static data.  Must be called before any
- * other functions are called.  See PlatformSupportInit.
- */
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(void)
-DOMStringHelperInitialize()
+static XalanDOMChar		theNaNString[] =
 {
-	theNaNString = XALAN_STATIC_UCODE_STRING("NaN");
-	theNegativeInfinityString = XALAN_STATIC_UCODE_STRING("-Infinity");
-	thePositiveInfinityString = XALAN_STATIC_UCODE_STRING("Infinity");
-	theNegativeZeroString = XALAN_STATIC_UCODE_STRING("-0");
-	thePositiveZeroString = XALAN_STATIC_UCODE_STRING("0");
-}
+	XalanUnicode::charLetter_N,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_N,
+	0
+};
 
-
-
-/**
- * Destroy static data.  After thus function is called,
- * no other functions can be called.  See PlatformSupportInit.
- */
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(void)
-DOMStringHelperTerminate()
+static const XalanDOMChar	theNegativeInfinityString[] =
 {
-	releaseMemory(theNaNString);
-	releaseMemory(theNegativeInfinityString);
-	releaseMemory(thePositiveInfinityString);
-	releaseMemory(theNegativeZeroString);
-	releaseMemory(thePositiveZeroString);
-}
+	XalanUnicode::charHyphenMinus,
+	XalanUnicode::charLetter_I,
+	XalanUnicode::charLetter_n,
+	XalanUnicode::charLetter_f,
+	XalanUnicode::charLetter_i,
+	XalanUnicode::charLetter_n,
+	XalanUnicode::charLetter_i,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_y,
+	0
+};
+
+static const XalanDOMChar	thePositiveInfinityString[] =
+{
+	XalanUnicode::charLetter_I,
+	XalanUnicode::charLetter_n,
+	XalanUnicode::charLetter_f,
+	XalanUnicode::charLetter_i,
+	XalanUnicode::charLetter_n,
+	XalanUnicode::charLetter_i,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_y,
+	0
+};
+
+static const XalanDOMChar	theNegativeZeroString[] =
+{
+	XalanUnicode::charHyphenMinus,
+	XalanUnicode::charDigit_0,
+	0
+};
+
+static const XalanDOMChar	thePositiveZeroString[] =
+{
+	XalanUnicode::charDigit_0,
+	0
+};
 
 
 
@@ -1460,23 +1466,38 @@ DoubleToDOMString(
 {
 	if (DoubleSupport::isNaN(theDouble) == true)
 	{
-		append(theResult, theNaNString);
+		append(
+			theResult,
+			theNaNString,
+			sizeof(theNaNString) / sizeof(theNaNString[0]) - 1);
 	}
 	else if (DoubleSupport::isPositiveInfinity(theDouble) == true)
 	{
-		append(theResult, thePositiveInfinityString);
+		append(
+			theResult,
+			thePositiveInfinityString,
+			sizeof(thePositiveInfinityString) / sizeof(thePositiveInfinityString[0]) - 1);
 	}
 	else if (DoubleSupport::isNegativeInfinity(theDouble) == true)
 	{
-		append(theResult, theNegativeInfinityString);
+		append(
+			theResult,
+			theNegativeInfinityString,
+			sizeof(theNegativeInfinityString) / sizeof(theNegativeInfinityString[0]) - 1);
 	}
 	else if (DoubleSupport::isPositiveZero(theDouble) == true)
 	{
-		append(theResult, thePositiveZeroString);
+		append(
+			theResult,
+			thePositiveZeroString,
+			sizeof(thePositiveZeroString) / sizeof(thePositiveZeroString[0]) - 1);
 	}
 	else if (DoubleSupport::isNegativeZero(theDouble) == true)
 	{
-		append(theResult, theNegativeZeroString);
+		append(
+			theResult,
+			theNegativeZeroString,
+			sizeof(theNegativeZeroString) / sizeof(theNegativeZeroString[0]) - 1);
 	}
 	else if (long(theDouble) == theDouble)
 	{

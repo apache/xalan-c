@@ -59,8 +59,6 @@
 
 
 
-#include "DOMStringHelper.hpp"
-#include "FormatterListener.hpp"
 #include "XalanTranscodingServices.hpp"
 
 
@@ -97,11 +95,7 @@ PlatformSupportInit::~PlatformSupportInit()
 void
 PlatformSupportInit::initialize()
 {
-	DOMStringHelperInitialize();
-
 	XalanTranscodingServices::initialize();
-
-	FormatterListener::initialize();
 }
 
 
@@ -109,9 +103,5 @@ PlatformSupportInit::initialize()
 void
 PlatformSupportInit::terminate()
 {
-	FormatterListener::terminate();
-
 	XalanTranscodingServices::terminate();
-
-	DOMStringHelperTerminate();
 }

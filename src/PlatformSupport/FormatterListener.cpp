@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -88,32 +88,20 @@ FormatterListener::~FormatterListener()
 
 
 
-static XalanDOMString	s_xsltNextIsRawString;
-
-static XalanDOMString	s_formatterListenerString;
-
-
-
-const XalanDOMString&	FormatterListener::s_xsltNextIsRawString = ::s_xsltNextIsRawString;
-
-const XalanDOMString&	FormatterListener::s_formatterListenerString = ::s_formatterListenerString;
-
-
-
-void
-FormatterListener::initialize()
+const XalanDOMChar	FormatterListener::s_piTarget[] =
 {
-	::s_xsltNextIsRawString = XALAN_STATIC_UCODE_STRING("raw");
+	XalanUnicode::charLetter_X,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_l,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_n,
+	0
+};
 
-	::s_formatterListenerString = XALAN_STATIC_UCODE_STRING("formatter-listener");
-}
-
-
-
-void
-FormatterListener::terminate()
+const XalanDOMChar	FormatterListener::s_piData[] =
 {
-	releaseMemory(::s_xsltNextIsRawString);
-
-	releaseMemory(::s_formatterListenerString);
-}
+	XalanUnicode::charLetter_r,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_w,
+	0
+};
