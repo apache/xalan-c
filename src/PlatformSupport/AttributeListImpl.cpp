@@ -74,6 +74,7 @@ AttributeListImpl::AttributeListImpl() :
 	m_AttributeKeyMap(),
 	m_AttributeVector()
 {
+		m_AttributeVector.reserve(eDefaultVectorSize);
 }
 
 

@@ -160,6 +160,12 @@ protected:
 	typedef std::vector<XMLCh>	XMLChVectorType;
 #endif
 
+	// Default vector allocation size.
+	enum
+	{
+		eDefaultVectorSize = 5
+	};
+
 	// A struct to hold information about each attribute.
 	struct AttributeVectorEntry
 	{
