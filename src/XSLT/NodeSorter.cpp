@@ -67,13 +67,9 @@
 
 
 
-//@@ DEBUGGING
-#include <cstdio>
-
-
 #include <PlatformSupport/DOMStringHelper.hpp>
 #include <PlatformSupport/DoubleSupport.hpp>
-//#include "XSLTProcessor.hpp"
+
 
 
 #include <XPath/XPath.hpp>
@@ -96,9 +92,13 @@ NodeSorter::~NodeSorter()
 
 void
 NodeSorter::sort(
-				DOMNodeVectorType&				v,
+				DOMNodeVectorType&					v,
 				const DOMNodeSortKeyVectorType&		keys)
 {
+#if !defined(XALAN_NO_NAMESPACES)
+	using std::stable_sort;
+#endif
+
 	m_keys = keys;
 
 	NodeSortKeyCompare	theComparer(m_executionContext,
@@ -107,9 +107,9 @@ NodeSorter::sort(
 
 	// Use the stl sort algorithm, which will use our compare functor,
 	// which returns true if first less than second
-	std::stable_sort(v.begin(),
-			  v.end(),
-			  theComparer);
+	stable_sort(v.begin(),
+			    v.end(),
+			    theComparer);
 }
 
 
@@ -119,15 +119,16 @@ NodeSorter::sort(
 			MutableNodeRefList&					theList,
 			const DOMNodeSortKeyVectorType&		keys)
 {
-	const int			theLength = theList.getLength();
+	const unsigned int	theLength = theList.getLength();
 
 	// Copy the nodes to a vector...
 	DOMNodeVectorType	theNodes(theLength);
 
-	for (int i = 0; i < theLength; i++)
+	unsigned int		i = 0;
+
+	for (; i < theLength; ++i)
 	{
-		DOM_Node theNode = theList.item(i);
-		theNodes[i] = theNode;
+		theNodes[i] = theList.item(i);
 	}
 
 	sort(theNodes,
@@ -137,7 +138,7 @@ NodeSorter::sort(
 
 	theList.clear();
 
-	for (i = 0; i < theLength; i++)
+	for (i = 0; i < theLength; ++i)
 	{
 		theList.addNode(theNodes[i]);
 	}
@@ -155,10 +156,11 @@ NodeSorter::NodeSortKeyCompare::operator()(
 {
 	assert(theKeyIndex < UINT_MAX);
 	result_type			theResult = false;
+
 	const NodeSortKey&	theKey = m_nodeSortKeys[theKeyIndex];
-	// @@ JMD: is this right to provide a default NodeRefList instead of 0 ??
-	// @@ execute can't work on a const XPath
-	const XPath& xpath = theKey.getSelectPattern();
+
+	const XPath&		xpath = theKey.getSelectPattern();
+
 	XObject* r1 = xpath.execute(theLHS, theKey.getPrefixResolver(), NodeRefList(), m_executionContext);
 	XObject* r2 = xpath.execute(theRHS, theKey.getPrefixResolver(), NodeRefList(), m_executionContext);
 

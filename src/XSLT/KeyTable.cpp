@@ -104,7 +104,7 @@ KeyTable::KeyTable(
 		{
 			attrs = static_cast<const DOM_Element&>(pos).getAttributes();
 
-			const	nNodes = attrs.getLength();
+			nNodes = attrs.getLength();
         
 			if(0 == nNodes)
 			{

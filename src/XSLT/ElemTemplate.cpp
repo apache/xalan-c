@@ -131,7 +131,7 @@ ElemTemplate::ElemTemplate(
 		}
 	}
 
-	if(0 == m_matchPattern && m_name.isEmpty == 0)
+	if(0 == m_matchPattern && m_name.isEmpty() == true)
 	{
 		constructionContext.error(name + " requires either a name or a match attribute.");
 	}

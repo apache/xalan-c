@@ -693,8 +693,8 @@ ElemTemplateElement::transformChild(
 		{
 			// Find the XSL template that is the best match for the 
 			// element, and call buildResultFromTemplate.
-			Stylesheet* foundStylesheet = 0;
-			
+			const Stylesheet*	foundStylesheet = 0;
+
 			if(!isApplyImports)
 			{
 				
