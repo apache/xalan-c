@@ -70,8 +70,11 @@
 
 
 
+const XalanDOMString	XercesWrapperNavigator::s_emptyString;
+
+
 // I'm using this to distinguish between null nodes, which are valid, and
-// an uninitialized cached node address.  This is probably bogus, and I'll
+// an uninitialized cached node address.  This is pretty bogus, and I'll
 // probably just change this to 0, but this is experimental anyway...
 #if defined(XALAN_OLD_STYLE_CASTS)
 static XalanNode* const		invalidNodeAddress = (XalanNode*)1;
@@ -259,5 +262,12 @@ XercesWrapperNavigator::getOwnerElement(const DOMAttr*	theXercesAttr) const
 const XalanDOMString&
 XercesWrapperNavigator::getPooledString(const XMLCh*	theString) const
 {
-	return m_ownerDocument->getPooledString(theString, XalanDOMString::length(theString));
+	if (theString == 0)
+	{
+		return s_emptyString;
+	}
+	else
+	{
+		return m_ownerDocument->getPooledString(theString, XalanDOMString::length(theString));
+	}
 }

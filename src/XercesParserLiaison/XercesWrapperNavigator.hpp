@@ -245,6 +245,8 @@ private:
 	mutable	XalanNode*			m_lastChild;
 
 	unsigned long				m_index;
+
+	const static XalanDOMString	s_emptyString;
 };
 
 
