@@ -155,7 +155,7 @@ AVT::AVT(
 			}
 			else
 			{
-				t = tokenizer.nextToken();
+				tokenizer.nextToken(t);
 			}
 
 			if(length(t) == 1)
@@ -167,7 +167,8 @@ AVT::AVT(
 					case(XalanUnicode::charLeftCurlyBracket):
 					{
 						// Attribute Value Template start
-						lookahead = tokenizer.nextToken();
+						tokenizer.nextToken(lookahead);
+
 						if(equals(lookahead, theLeftCurlyBracketString))
 						{
 							// Double curlys mean escape to show curly
@@ -203,13 +204,13 @@ AVT::AVT(
 											const XalanDOMString	quote = lookahead;
 
 											// Consume stuff 'till next quote
-											lookahead = tokenizer.nextToken();
+											tokenizer.nextToken(lookahead);
 
 											while(!equals(lookahead, quote))
 											{
 												append(exprBuffer, lookahead);
 
-												lookahead = tokenizer.nextToken();
+												 tokenizer.nextToken(lookahead);
 											}
 
 											append(exprBuffer,lookahead);
@@ -236,7 +237,7 @@ AVT::AVT(
 									append(exprBuffer,lookahead);
 								}
 
-								lookahead = tokenizer.nextToken();
+								tokenizer.nextToken(lookahead);
 							} // end while(!equals(lookahead, "}"))
 							assert(equals(lookahead, theRightCurlyBracketString));
 
@@ -260,7 +261,7 @@ AVT::AVT(
 					}
 					case(XalanUnicode::charRightCurlyBracket):
 					{
-						lookahead = tokenizer.nextToken();
+						tokenizer.nextToken(lookahead);
 
 						if(equals(lookahead, theRightCurlyBracketString))
 						{
