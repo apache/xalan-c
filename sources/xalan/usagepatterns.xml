@@ -147,8 +147,8 @@ int theResult =
 <s2 title="Setting stylesheet parameters">
 <p>An XSL stylesheet can include parameters that are set at run time before a transformation takes place. When we generate the HTML documents that make up the Xalan doc set, for example, we send the stylesheet an id parameter along with each XML source document. The id identifies that document and enables the stylesheet to integrate it into the overall doc set.</p>
 <p>To set a stylesheet parameter, use the <jump href="apidocs/class_xalantransformer.html">XalanTransformer</jump> setStylesheetParam() method. The setStytlesheetParam() method takes two arguments: the parameter name and the expression. For example:</p>
-<source>const XalanDOMString&amp; key="param1";
-const XalanDOMString&amp; expression="'Hello World'";
+<source>const XalanDOMString key("param1");
+const XalanDOMString expression("'Hello World'");
 theXalanTransformer.setStylesheetParam(key, expression);
 // foo.xsl defines a stylesheet parameter named param1.
 theXalanTransformer.transform("foo.xml","foo.xsl","foo-out.xml")</source>
@@ -156,11 +156,11 @@ theXalanTransformer.transform("foo.xml","foo.xsl","foo-out.xml")</source>
 <p>You can include the -param flag with two arguments when you call the <link idref="commandline">command line utility</link>. The first argument is the parameter name or key, and the second argument is the string expression (in single quotes). For example:</p>
 <p><code>Xalan -p param1 'boo' foo.xml foo.xsl</code></p>
 <p>or</p>
-<p><code>TestXSLT -in foo.xml -xsl foo.xsl -param param1 'boo'</code></p>
+<p><code>testXSLT -in foo.xml -xsl foo.xsl -param param1 'boo'</code></p>
 <p>If the string expression includes spaces or other characters that the shell intercepts, first enclose the string in single quotes so &xslt4c; interprets it as a string expression, and then enclose the resulting string in double quotes so the shell interprets it as a single argument. For example:</p>
 <p><code>Xalan -p "'hello there'" foo.xml foo.xsl</code></p>
 <p>or</p>
-<p><code>TestXSLT -in foo.xml -xsl foo.xsl -param param1 "'hello there'"</code></p>
+<p><code>testXSLT -in foo.xml -xsl foo.xsl -param param1 "'hello there'"</code></p>
 <p>The <link idref="samples" anchor="usestylesheetparam">UseStylesheetParam</link> sample application also uses a command-line parameter.</p>
 </s2><anchor name="incremental"/>
 <s2 title="Processing output incrementally">
@@ -168,7 +168,7 @@ theXalanTransformer.transform("foo.xml","foo.xsl","foo-out.xml")</source>
 <source>int
 transform(const XSLTInputSource&amp; xmlIn,
           const XSLTInputSource&amp; xslIn,
-          const void* theOutputHandle,
+          void* theOutputHandle,
           XalanOutputHandlerType theOutputHandler
           XalanFlushHanderType theFlushHandler = 0);</source>
 <p>For an example, see <link idref="samples" anchor="xalantransformercallback">XalanTransformerCallback</link>.</p>
@@ -309,7 +309,7 @@ executing XPath expressions.</p>
       <li><em>Encoding</em>
       <br/> &xml4c; and &xslt4c; use UTF-16 encoding to work with Unicode data.
       If you integrate the ICU with &xml4c;, both &xml4c; and &xslt4c; use ICU support for 
-      UTF-16 encoding.<br/><br/></li>
+      input and output transcoding.<br/><br/></li>
       <li><em>format-number()</em>
       <br/>This XSLT function includes two or three arguments (the third is
       optional): number, format pattern, and decimal-format name. &xslt4c; ignores the format

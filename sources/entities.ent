@@ -20,7 +20,7 @@
 <!ENTITY xml4c-solarislib "[This release does not include a Solaris build]">
 <!ENTITY solarisbuild " [We do not have the resources to include a Solaris build with this release.]">
 <!ENTITY xslt4j "Xalan-Java">
-<!ENTITY icu-used "International Components for Unicode(ICU) 1.8.1 source files">
+<!ENTITY icu-used "International Components for Unicode(ICU) 2.0 source files">
 <!ENTITY icu-windlls "icui18n.dll, icuuc.dll">
 <!ENTITY icubridge-win "ICUBridge.dll">
 <!ENTITY done SYSTEM "xalan/DONE">

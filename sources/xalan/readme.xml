@@ -158,10 +158,10 @@
       <li>Set the XERCESCROOT environment variable to the root of xml-xerces.<br/><br/></li>    
       <li>Set the XALANCROOT environment variable to the complete path to the root of the &xslt4c;
        distribution.<br/><br/></li>
-      <li>AIX and Solaris only &solarisbuild; : Download <resource-ref idref="stlport"/> and set the STLPORTROOT environment
+      <li>Solaris only &solarisbuild; : Download <resource-ref idref="stlport"/> and set the STLPORTROOT environment
        variable to the complete path to the STLPort distribution. <br/>
-       (This step is not required for Linux or HP-UX 11 because The Linux GNU compiler and HP aCC compiler include the STL (Standard Template
-        Library.)<br/><br/></li>
+       (This step is not required for Linux, AIX, or HP-UX 11 because The Linux GNU compiler, AIX xlC compiler, and 
+       HP aCC compiler include the STL (Standard Template Library.)<br/><br/></li>
       <li>(Optional) If you are including the ICUBridge, install the ICU (see <link idref="usagepatterns"
       anchor="icu">Using the ICU</link>) and use the shell to define XALAN_USE_ICU.<br/><br/>
       If you are using Bourne Shell, K Shell, or Bash:
@@ -185,7 +185,7 @@
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<code>make</code><br/>
       or<br/>
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<code>make <ref>targ</ref></code><br/><br/>
-      where <ref>targ</ref> is ommitted or is <code>all</code> (rebuild all), <code>lib</code> (the XSLT libary), <code>Xalan</code> (the Xalan executable), or
+      where <ref>targ</ref> is omitted or is <code>all</code> (rebuild all), <code>lib</code> (the XSLT library), <code>Xalan</code> (the Xalan executable), or
       <code>testXSLT</code> (the testXSLT executable). ICUBridge is included in the build of Xalan and TestXSLT if XALAN_USE_ICU is
       defined.<br/><br/></li>
     </ol>
