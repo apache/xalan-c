@@ -854,11 +854,11 @@ XalanTransformer::removeTraceListener(TraceListener*	theTraceListener)
 
 
 XalanDocumentBuilder*
-XalanTransformer::createDocumentBuilder()
+XalanTransformer::createDocumentBuilder(const XalanDOMString&	theURI)
 {
 	m_parsedSources.reserve(m_parsedSources.size() + 1);
 
-	XalanDocumentBuilder* const 	theNewBuilder = new XalanDefaultDocumentBuilder;
+	XalanDocumentBuilder* const 	theNewBuilder = new XalanDefaultDocumentBuilder(theURI);
 
 	m_parsedSources.push_back(theNewBuilder);
 

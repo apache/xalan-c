@@ -431,10 +431,11 @@ public:
 	 * XalanTransformer instance goes out of scope, or you explicitly call
 	 * destroyDocumentBuilder().  You must not delete the instance yourself.
 	 *
+	 * @param theURI The base URI for the document instance.
 	 * @return	a pointer to a XalanDocumentBuilder instance or 0 for failure.
 	 */
 	XalanDocumentBuilder*
-	createDocumentBuilder();
+	createDocumentBuilder(const XalanDOMString&		theURI = XalanDOMString());
 
 	/**
 	 * Destroy a document builder created by a previous call to createDocumentBuilder().
