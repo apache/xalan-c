@@ -14,7 +14,7 @@
 
   <property name="build.docs" value="${build.dir}/docs"/>
   <property name="build.apidocs" value="${build.docs}/apidocs"/>  
-  <property name="build.site" value="${build.dir}/site"/>
+  <property name="site.dir" value="./site"/>
 
   <target name="prepare">
     <gunzip src="${doc.generator.styletargz}"/>
@@ -32,7 +32,7 @@
   </target>
 
   <target name="apidocs" depends="prepare">
-    <!--copy todir="${build.apidocs}">
+    <copy todir="${build.apidocs}">
       <fileset dir="${xdocs.apidocs}"/>
     </copy-->
     <exec executable="doxygen.exe" dir="${xdocs.dir}">
@@ -42,7 +42,7 @@
     
   <target name="site" depends="prepare">
     <java fork="yes" classname="${doc.generator}" classpath="${java.class.path}">
-      <arg line="targetDirectory=${build.site} ${xdocs.site} ${xdocs.style}"/>    
+      <arg line="targetDirectory=${site.dir} ${xdocs.site} ${xdocs.style}"/>    
     </java>
     <copy todir="${site.dir}/apidocs">
       <fileset dir="${build.apidocs}"/>
@@ -52,6 +52,7 @@
   
   <target name="clean">
     <delete dir="${build.dir}"/>
+    <delete dir="${site.dir}"/>
   </target>   
     
 </project>
