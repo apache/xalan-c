@@ -123,6 +123,7 @@ public:
 						  eTypeStringCached = 10,
 						  eTypeXTokenNumberAdapter = 11,
 						  eTypeXTokenStringAdapter = 12,
+						  eTypeNodeSetNodeProxy = 13,
 						  eUnknown
 						};
 

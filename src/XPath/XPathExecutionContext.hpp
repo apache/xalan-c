@@ -198,16 +198,6 @@ public:
 	}
 
 	/**
-	 * Convenience function for creating a node set with
-	 * the supplied node as the only member.
-	 *
-	 * @param node	The  node queried
-	 * @return a pointer to the XObject instance.
-	 */
-	virtual XObjectPtr
-	createNodeSet(XalanNode&	theNode) = 0;
-
-	/**
 	 * Determine if a node is after another node, in document order.
 	 *
 	 * @param node1 The first node

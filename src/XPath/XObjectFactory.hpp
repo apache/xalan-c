@@ -143,6 +143,15 @@ public:
 	createNodeSet(BorrowReturnMutableNodeRefList& 	theValue) = 0;
 
 	/**
+	 * Create a node set XObject from a node.
+	 * 
+	 * @param theNOde value used to create object.
+	 * @return pointer to new object
+	 */
+	virtual const XObjectPtr
+	createNodeSet(XalanNode* 	theValue) = 0;
+
+	/**
 	 * Create a null XObject.
 	 * 
 	 * @param theValue	value used to create object 

@@ -75,6 +75,7 @@
 
 
 #include <XPath/XNodeSetAllocator.hpp>
+#include <XPath/XNodeSetNodeProxyAllocator.hpp>
 #include <XPath/XNumberAllocator.hpp>
 #include <XPath/XStringAllocator.hpp>
 #include <XPath/XStringAdapterAllocator.hpp>
@@ -119,12 +120,15 @@ public:
 		eDefaultXStringBlockSize = 10,
 		eDefaultXNumberBlockSize = 10,
 		eDefaultXNodeSetBlockSize = 10,
+		eDefaultXNodeSetNodeProxyBlockSize = 5,
 		eXNumberCacheMax = 40,
 		eXNodeSetCacheMax = 40,
 		eXStringCacheMax = 40,
 		eXResultTreeFragCacheMax = 40
 	};
-	
+
+	typedef unsigned long	size_type;
+
 	/**
 	 * Construct a factory for creating XObjects.
 	 * 
@@ -134,9 +138,10 @@ public:
 	 */
 	explicit
 	XObjectFactoryDefault(
-			unsigned int		theXStringBlockSize = eDefaultXStringBlockSize,
-			unsigned int		theXNumberBlockSize = eDefaultXNumberBlockSize,
-			unsigned int		theXNodeSetBlockSize = eDefaultXNodeSetBlockSize); 
+			size_type	theXStringBlockSize = eDefaultXStringBlockSize,
+			size_type	theXNumberBlockSize = eDefaultXNumberBlockSize,
+			size_type	theXNodeSetBlockSize = eDefaultXNodeSetBlockSize,
+			size_type	theXNodeSetNodeProxyBlockSize = eDefaultXNodeSetNodeProxyBlockSize); 
 
 	virtual
 	~XObjectFactoryDefault();
@@ -151,6 +156,9 @@ public:
 
 	virtual const XObjectPtr
 	createNodeSet(BorrowReturnMutableNodeRefList&	theValue);
+
+	virtual const XObjectPtr
+	createNodeSet(XalanNode* 	theValue);
 
 	virtual const XObjectPtr
 	createNull();
@@ -234,6 +242,8 @@ private:
 	XNumberAllocator				m_xnumberAllocator;
 
 	XNodeSetAllocator				m_xnodesetAllocator;
+
+	XNodeSetNodeProxyAllocator		m_xnodesetNodeProxyAllocator;
 
 	XTokenNumberAdapterAllocator	m_xtokenNumberAdapterAllocator;
 

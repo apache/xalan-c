@@ -1715,14 +1715,6 @@ StylesheetExecutionContextDefault::setCurrentNode(XalanNode*	theCurrentNode)
 
 
 
-XObjectPtr
-StylesheetExecutionContextDefault::createNodeSet(XalanNode&	theNode)
-{
-	return m_xpathExecutionContextDefault.createNodeSet(theNode);
-}
-
-
-
 bool
 StylesheetExecutionContextDefault::isNodeAfter(
 			const XalanNode&	node1,

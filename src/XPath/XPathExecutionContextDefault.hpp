@@ -219,9 +219,6 @@ public:
 	virtual void
 	setCurrentNode(XalanNode*		theCurrentNode);
 
-	virtual XObjectPtr
-	createNodeSet(XalanNode&	theNode);
-
 	virtual bool
 	isNodeAfter(
 			const XalanNode&	node1,

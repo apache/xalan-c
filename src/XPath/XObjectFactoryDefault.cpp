@@ -81,9 +81,10 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 XObjectFactoryDefault::XObjectFactoryDefault(
-			unsigned int	theXStringBlockSize,
-			unsigned int	theXNumberBlockSize,
-			unsigned int	theXNodeSetBlockSize) : 
+			size_type	theXStringBlockSize,
+			size_type	theXNumberBlockSize,
+			size_type	theXNodeSetBlockSize,
+			size_type	theXNodeSetNodeProxyBlockSize) : 
 	XObjectFactory(),
 	m_xstringAdapterAllocator(theXStringBlockSize),
 	m_xstringAllocator(theXStringBlockSize),
@@ -91,6 +92,7 @@ XObjectFactoryDefault::XObjectFactoryDefault(
 	m_xstringReferenceAllocator(theXStringBlockSize),
 	m_xnumberAllocator(theXNumberBlockSize),
 	m_xnodesetAllocator(theXNodeSetBlockSize),
+	m_xnodesetNodeProxyAllocator(theXNodeSetNodeProxyBlockSize),
 	m_xtokenNumberAdapterAllocator(theXNumberBlockSize),
 	m_xtokenStringAdapterAllocator(theXStringBlockSize),
 	m_xobjects(),
@@ -264,6 +266,19 @@ XObjectFactoryDefault::doReturnObject(
 		}
 		break;
 
+	case XObject::eTypeNodeSetNodeProxy:
+		{
+			XNodeSetNodeProxy* const	theXNodeSet =
+#if defined(XALAN_OLD_STYLE_CASTS)
+				(XNodeSetNodeProxy*)theXObject;
+#else
+				static_cast<XNodeSetNodeProxy*>(theXObject);
+#endif
+
+			bStatus = m_xnodesetNodeProxyAllocator.destroy(theXNodeSet);
+		}
+		break;
+
 	default:
 		{
 			XALAN_USING_STD(find)
@@ -396,6 +411,19 @@ XObjectFactoryDefault::createNodeSet(BorrowReturnMutableNodeRefList&	theValue)
 
 
 const XObjectPtr
+XObjectFactoryDefault::createNodeSet(XalanNode* 	theValue)
+{
+	XNodeSetNodeProxy* const	theNodeSet =
+		m_xnodesetNodeProxyAllocator.create(theValue);
+
+	theNodeSet->setFactory(this);
+
+	return XObjectPtr(theNodeSet);
+}
+
+
+
+const XObjectPtr
 XObjectFactoryDefault::createString(const XalanDOMString&	theValue)
 {
 	if (m_xstringCache.empty() == false)
@@ -510,6 +538,8 @@ XObjectFactoryDefault::reset()
 	m_xnumberAllocator.reset();
 
 	m_xnodesetAllocator.reset();
+
+	m_xnodesetNodeProxyAllocator.reset();
 
 	m_xtokenNumberAdapterAllocator.reset();
 

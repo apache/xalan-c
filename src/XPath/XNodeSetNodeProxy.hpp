@@ -54,8 +54,8 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-#if !defined(XNODESETBASE_HEADER_GUARD_1357924680)
-#define XNODESETBASE_HEADER_GUARD_1357924680
+#if !defined(XNODESETNODEPROXY_HEADER_GUARD_1357924680)
+#define XNODESETNODEPROXY_HEADER_GUARD_1357924680
 
 
 
@@ -65,11 +65,11 @@
 
 
 // Base class header file.
-#include <XPath/XObject.hpp>
+#include <XPath/XNodeSetBase.hpp>
 
 
 
-#include <XPath/XNodeSetResultTreeFragProxy.hpp>
+#include <XPath/NodeRefListBase.hpp>
 
 
 
@@ -80,94 +80,80 @@ XALAN_CPP_NAMESPACE_BEGIN
 /**
  * Class to hold XPath return types.
  */
-class XALAN_XPATH_EXPORT XNodeSetBase : public XObject
+class XALAN_XPATH_EXPORT XNodeSetNodeProxy : public XNodeSetBase
 {
 public:
 
-	typedef size_t	size_type;
+	/**
+	 * Create an XNodeSetNodeProxy
+	 */
+	XNodeSetNodeProxy(XalanNode*	theNode);
+
+	/**
+	 * Create an XNodeSetNodeProxy from another.
+	 *
+	 * @param source    object to copy
+	 */
+	XNodeSetNodeProxy(const XNodeSetNodeProxy&	source);
 
 	virtual
-	~XNodeSetBase();
+	~XNodeSetNodeProxy();
 
 	// These methods are inherited from XObject ...
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
 	virtual XObject*
 #else
-	virtual XNodeSetBase*
+	virtual XNodeSetNodeProxy*
 #endif
-	clone(void*		theAddress = 0) const = 0;
-
-	virtual XalanDOMString
-	getTypeString() const;
-
-	virtual double
-	num() const;
-
-	virtual bool
-	boolean() const;
-
-	virtual const XalanDOMString&
-	str() const;
-
-	virtual void
-	str(
-			FormatterListener&	formatterListener,
-			MemberFunctionPtr	function) const;
-
-	virtual void
-	str(XalanDOMString&	theBuffer) const;
-
-	virtual double
-	stringLength() const;
-
-	virtual const ResultTreeFragBase&
-	rtree() const;
+	clone(void*		theAddress = 0) const;
 
 	virtual const NodeRefListBase&
-	nodeset() const = 0;
-
-	virtual void
-	ProcessXObjectTypeCallback(XObjectTypeCallback&		theCallbackObject);
-
-	virtual void
-	ProcessXObjectTypeCallback(XObjectTypeCallback&		theCallbackObject) const;
+	nodeset() const;
 
 	virtual XalanNode*
-	item(size_type	index) const = 0;
+	item(size_type	index) const;
 
 	virtual size_type
-	getLength() const = 0;
+	getLength() const;
 
 protected:
 
-	/**
-	 * Create an XNodeSetBase
-	 */
-	XNodeSetBase();
-
-	/**
-	 * Create an XNodeSetBase from another.
-	 *
-	 * @param source    object to copy
-	 */
-	XNodeSetBase(const XNodeSetBase&	source);
-
-	void
-	clearCachedValues();
+	virtual eObjectType
+	getRealType() const;
 
 private:
 
+	// A proxy class to implement NodeRefListBase...
+	class Proxy : public NodeRefListBase
+	{
+	public:
+
+		Proxy(XalanNode*	theNode);
+
+		virtual
+		~Proxy();
+
+		virtual XalanNode*
+		item(size_type	index) const;
+
+		virtual size_type
+		getLength() const;
+
+		virtual size_type
+		indexOf(const XalanNode*	theNode) const;
+
+		XalanNode*	m_node;
+	};
+
+
 	// Not implemented...
-	XNodeSetBase&
-	operator=(const XNodeSetBase&);
+	XNodeSetNodeProxy&
+	operator=(const XNodeSetNodeProxy&);
+
 
 	// Data members...
-	XNodeSetResultTreeFragProxy		m_proxy;
-
-	mutable XalanDOMString			m_cachedStringValue;
-
-	mutable double					m_cachedNumberValue;
+	const Proxy		m_proxy;
 };
 
 
@@ -176,4 +162,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// XNODESETBASE_HEADER_GUARD_1357924680
+#endif	// XNODESETNODEPROXY_HEADER_GUARD_1357924680

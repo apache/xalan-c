@@ -193,21 +193,6 @@ XPathExecutionContextDefault::setCurrentNode(XalanNode*		theCurrentNode)
 
 
 
-XObjectPtr
-XPathExecutionContextDefault::createNodeSet(XalanNode&	theNode)
-{
-	assert(m_xobjectFactory != 0);
-
-	// This list will hold the node...
-	BorrowReturnMutableNodeRefList	theNodeList(*this);
-
-	theNodeList->addNode(&theNode);
-
-	return m_xobjectFactory->createNodeSet(theNodeList);
-}
-
-
-
 bool
 XPathExecutionContextDefault::isNodeAfter(
 			const XalanNode&	node1,

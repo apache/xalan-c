@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2003 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -54,22 +54,9 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-#if !defined(XNODESETBASE_HEADER_GUARD_1357924680)
-#define XNODESETBASE_HEADER_GUARD_1357924680
 
-
-
-// Base include file.  Must be first.
-#include <XPath/XPathDefinitions.hpp>
-
-
-
-// Base class header file.
-#include <XPath/XObject.hpp>
-
-
-
-#include <XPath/XNodeSetResultTreeFragProxy.hpp>
+// Class header file.
+#include "XNodeSetNodeProxyAllocator.hpp"
 
 
 
@@ -77,103 +64,64 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-/**
- * Class to hold XPath return types.
- */
-class XALAN_XPATH_EXPORT XNodeSetBase : public XObject
+XNodeSetNodeProxyAllocator::XNodeSetNodeProxyAllocator(size_type	theBlockCount) :
+	m_allocator(theBlockCount)
 {
-public:
+}
 
-	typedef size_t	size_type;
 
-	virtual
-	~XNodeSetBase();
 
-	// These methods are inherited from XObject ...
+XNodeSetNodeProxyAllocator::~XNodeSetNodeProxyAllocator()
+{
+}
 
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-	virtual XObject*
-#else
-	virtual XNodeSetBase*
-#endif
-	clone(void*		theAddress = 0) const = 0;
 
-	virtual XalanDOMString
-	getTypeString() const;
 
-	virtual double
-	num() const;
 
-	virtual bool
-	boolean() const;
+XNodeSetNodeProxyAllocator::nodeset_type*
+XNodeSetNodeProxyAllocator::create(XalanNode*	value)
+{
+	nodeset_type* const	theBlock = m_allocator.allocateBlock();
+	assert(theBlock != 0);
 
-	virtual const XalanDOMString&
-	str() const;
+	nodeset_type* const	theResult = new(theBlock) nodeset_type(value);
 
-	virtual void
-	str(
-			FormatterListener&	formatterListener,
-			MemberFunctionPtr	function) const;
+	m_allocator.commitAllocation(theBlock);
 
-	virtual void
-	str(XalanDOMString&	theBuffer) const;
+	return theResult;
+}
 
-	virtual double
-	stringLength() const;
 
-	virtual const ResultTreeFragBase&
-	rtree() const;
 
-	virtual const NodeRefListBase&
-	nodeset() const = 0;
+XNodeSetNodeProxyAllocator::nodeset_type*
+XNodeSetNodeProxyAllocator::clone(const nodeset_type&	value)
+{
+	nodeset_type* const		theBlock = m_allocator.allocateBlock();
+	assert(theBlock != 0);
 
-	virtual void
-	ProcessXObjectTypeCallback(XObjectTypeCallback&		theCallbackObject);
+	value.clone(theBlock);
 
-	virtual void
-	ProcessXObjectTypeCallback(XObjectTypeCallback&		theCallbackObject) const;
+	m_allocator.commitAllocation(theBlock);
 
-	virtual XalanNode*
-	item(size_type	index) const = 0;
+	return theBlock;
+}
 
-	virtual size_type
-	getLength() const = 0;
 
-protected:
 
-	/**
-	 * Create an XNodeSetBase
-	 */
-	XNodeSetBase();
+bool
+XNodeSetNodeProxyAllocator::destroy(nodeset_type*	theNodeSet)
+{
+	return m_allocator.destroyObject(theNodeSet);
+}
 
-	/**
-	 * Create an XNodeSetBase from another.
-	 *
-	 * @param source    object to copy
-	 */
-	XNodeSetBase(const XNodeSetBase&	source);
 
-	void
-	clearCachedValues();
 
-private:
-
-	// Not implemented...
-	XNodeSetBase&
-	operator=(const XNodeSetBase&);
-
-	// Data members...
-	XNodeSetResultTreeFragProxy		m_proxy;
-
-	mutable XalanDOMString			m_cachedStringValue;
-
-	mutable double					m_cachedNumberValue;
-};
+void 
+XNodeSetNodeProxyAllocator::reset()
+{
+	m_allocator.reset();
+}
 
 
 
 XALAN_CPP_NAMESPACE_END
-
-
-
-#endif	// XNODESETBASE_HEADER_GUARD_1357924680

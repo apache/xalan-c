@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -54,8 +54,9 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-#if !defined(XNODESETBASE_HEADER_GUARD_1357924680)
-#define XNODESETBASE_HEADER_GUARD_1357924680
+
+#if !defined(XNODESETNODEPROXYALLOCATOR_INCLUDE_GUARD_12455133)
+#define XNODESETNODEPROXYALLOCATOR_INCLUDE_GUARD_12455133
 
 
 
@@ -64,12 +65,11 @@
 
 
 
-// Base class header file.
-#include <XPath/XObject.hpp>
+#include <XPath/XNodeSetNodeProxy.hpp>
 
 
 
-#include <XPath/XNodeSetResultTreeFragProxy.hpp>
+#include <PlatformSupport/ReusableArenaAllocator.hpp>
 
 
 
@@ -77,97 +77,99 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-/**
- * Class to hold XPath return types.
- */
-class XALAN_XPATH_EXPORT XNodeSetBase : public XObject
+class XALAN_XPATH_EXPORT XNodeSetNodeProxyAllocator
 {
 public:
 
-	typedef size_t	size_type;
+	typedef XNodeSetNodeProxy						nodeset_type;
 
-	virtual
-	~XNodeSetBase();
-
-	// These methods are inherited from XObject ...
-
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-	virtual XObject*
-#else
-	virtual XNodeSetBase*
-#endif
-	clone(void*		theAddress = 0) const = 0;
-
-	virtual XalanDOMString
-	getTypeString() const;
-
-	virtual double
-	num() const;
-
-	virtual bool
-	boolean() const;
-
-	virtual const XalanDOMString&
-	str() const;
-
-	virtual void
-	str(
-			FormatterListener&	formatterListener,
-			MemberFunctionPtr	function) const;
-
-	virtual void
-	str(XalanDOMString&	theBuffer) const;
-
-	virtual double
-	stringLength() const;
-
-	virtual const ResultTreeFragBase&
-	rtree() const;
-
-	virtual const NodeRefListBase&
-	nodeset() const = 0;
-
-	virtual void
-	ProcessXObjectTypeCallback(XObjectTypeCallback&		theCallbackObject);
-
-	virtual void
-	ProcessXObjectTypeCallback(XObjectTypeCallback&		theCallbackObject) const;
-
-	virtual XalanNode*
-	item(size_type	index) const = 0;
-
-	virtual size_type
-	getLength() const = 0;
-
-protected:
+	typedef ReusableArenaAllocator<nodeset_type>	ArenaAllocatorType;
+	typedef ArenaAllocatorType::size_type			size_type;
 
 	/**
-	 * Create an XNodeSetBase
-	 */
-	XNodeSetBase();
-
-	/**
-	 * Create an XNodeSetBase from another.
+	 * Construct an instance that will allocate blocks of the specified size.
 	 *
-	 * @param source    object to copy
+	 * @param theBlockSize The block size.
 	 */
-	XNodeSetBase(const XNodeSetBase&	source);
+	XNodeSetNodeProxyAllocator(size_type	theBlockCount);
 
+	~XNodeSetNodeProxyAllocator();
+	
+	/**
+	 * Create an object using the allocator.
+	 * 
+	 * @param value	source node
+	 *
+	 * @return pointer to instance
+	 */
+	nodeset_type*
+	create(XalanNode*	value);
+
+	/**
+	 * Clone an XNodeSet object.
+	 * 
+	 * @param value	source instance
+	 *
+	 * @return pointer to a new instance
+	 */
+	nodeset_type*
+	clone(const XNodeSetNodeProxy&	value);
+
+	/**
+	 * Delete an XNodeSet object from allocator.	 
+	 */
+	bool
+	destroy(nodeset_type*	theNodeSet);
+	
+	/**
+	 * Determine if an object is owned by the allocator...
+	 */
+	bool
+	ownsObject(const nodeset_type*	theObject)
+	{
+		return m_allocator.ownsObject(theObject);
+	}
+
+	/**
+	 * Delete all XNodeSet objects from allocator.	 
+	 */	
 	void
-	clearCachedValues();
+	reset();
+
+	/**
+	 * Get size of an ArenaBlock, that is, the number
+	 * of objects in each block.
+	 *
+	 * @return The size of the block
+	 */
+	size_type
+	getBlockCount() const
+	{
+		return m_allocator.getBlockCount();
+	}
+
+	/**
+	 * Get the number of ArenaBlocks currently allocated.
+	 *
+	 * @return The number of blocks.
+	 */
+	size_type
+	getBlockSize() const
+	{
+		return m_allocator.getBlockSize();
+	}
+
 
 private:
 
 	// Not implemented...
-	XNodeSetBase&
-	operator=(const XNodeSetBase&);
+	XNodeSetNodeProxyAllocator(const XNodeSetNodeProxyAllocator&);
+
+	XNodeSetNodeProxyAllocator&
+	operator=(const XNodeSetNodeProxyAllocator&);
 
 	// Data members...
-	XNodeSetResultTreeFragProxy		m_proxy;
-
-	mutable XalanDOMString			m_cachedStringValue;
-
-	mutable double					m_cachedNumberValue;
+	ArenaAllocatorType	m_allocator;
 };
 
 
@@ -176,4 +178,4 @@ XALAN_CPP_NAMESPACE_END
 
 
 
-#endif	// XNODESETBASE_HEADER_GUARD_1357924680
+#endif	// XNODESETNODEPROXYALLOCATOR_INCLUDE_GUARD_12455133
