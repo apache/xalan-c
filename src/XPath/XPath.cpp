@@ -87,7 +87,8 @@
 
 XPath::XPath(bool	createDefaultLocator) :
 	m_defaultXLocator(createDefaultLocator == false ? 0 : createXLocatorHandler()),
-	m_expression()
+	m_expression(),
+	m_inStylesheet(false)
 {
 }
 
@@ -1087,7 +1088,14 @@ XPath::literal(
 
 	const XToken&	theLiteral = m_expression.m_tokenQueue[m_expression.m_opMap[opPos + 2]];
 
-	return executionContext.getXObjectFactory().createString(theLiteral);
+	if (m_inStylesheet == true)
+	{
+		return executionContext.getXObjectFactory().createString(theLiteral);
+	}
+	else
+	{
+		return executionContext.getXObjectFactory().createString(theLiteral.str());
+	}
 }
 
 
@@ -1148,7 +1156,14 @@ XPath::numberlit(
 
 	const XToken&	theLiteral = m_expression.m_tokenQueue[m_expression.m_opMap[opPos + 2]];
 
-	return executionContext.getXObjectFactory().createNumber(theLiteral);
+	if (m_inStylesheet == true)
+	{
+		return executionContext.getXObjectFactory().createNumber(theLiteral);
+	}
+	else
+	{
+		return executionContext.getXObjectFactory().createNumber(theLiteral.num());
+	}
 }
 
 

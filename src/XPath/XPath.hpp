@@ -423,6 +423,19 @@ public:
 	{
 		s_functions.DestroyTable();
 	}
+
+	bool
+	getInStylesheet() const
+	{
+		return m_inStylesheet;
+	}
+
+	void
+	setInStylesheet(bool	fValue)
+	{
+		m_inStylesheet = fValue;
+	}
+
 protected:
 
 	/**
@@ -847,6 +860,13 @@ private:
 	 *
 	 */
 	XPathExpression						m_expression;
+
+	/**
+	 * If true, the XPath can allocated XObjects in more
+	 * efficient ways, since its lifetime is guaranteed
+	 * to be at least that of the transform.
+	 */
+	bool								m_inStylesheet;
 
 	/**
 	 *
