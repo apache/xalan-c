@@ -1764,6 +1764,27 @@ equals(
 
 
 /**
+ * Compare the contents of two arrays for equality
+ * 
+ * @param theLHS first array to compare
+ * @param theLHSLength the length of the theLHS
+ * @param theRHS second array to compare
+ * @param theRHSLength the length of the theRHS
+ * @return true if the contents of both arrays are identical
+ */
+inline bool
+equals(
+			const XalanDOMChar*			theLHS,
+			XalanDOMString::size_type	theLHSLength,
+			const XalanDOMChar*			theRHS,
+			XalanDOMString::size_type	theRHSLength)
+{
+	return theLHSLength != theRHSLength ? false : equals(theLHS, theRHS, theLHSLength);
+}
+
+
+
+/**
  * Compare the contents of two strings for equality
  * 
  * @param theLHS first string to compare
