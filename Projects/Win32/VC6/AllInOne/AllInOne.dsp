@@ -566,10 +566,6 @@ SOURCE=..\..\..\..\src\PlatformSupport\NamedNodeMapAttributeList.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\DOMSupport\NamespaceResolver.cpp
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\..\..\src\XSLT\NamespacesHandler.cpp
 # End Source File
 # Begin Source File
@@ -1035,6 +1031,10 @@ SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeTextIWS.cpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeTextIWSAllocator.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XalanTransformer\XalanSourceTreeWrapperParsedSource.cpp
 # End Source File
 # Begin Source File
 
@@ -1973,10 +1973,6 @@ SOURCE=..\..\..\..\src\XPath\NameSpace.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\DOMSupport\NamespaceResolver.hpp
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\..\..\src\XSLT\NamespacesHandler.hpp
 # End Source File
 # Begin Source File
@@ -1998,10 +1994,6 @@ SOURCE=..\..\..\..\src\XSLT\NodeSorter.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\XSLT\NodeSortKey.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\src\DOMSupport\NSInfo.hpp
 # End Source File
 # Begin Source File
 
@@ -2538,6 +2530,10 @@ SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeTextIWS.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeTextIWSAllocator.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XalanTransformer\XalanSourceTreeWrapperParsedSource.hpp
 # End Source File
 # Begin Source File
 
