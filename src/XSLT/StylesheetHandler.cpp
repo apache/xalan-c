@@ -1020,7 +1020,8 @@ StylesheetHandler::startElement (const XMLCh* const name, AttributeList& atts)
 		m_exceptionPending = true;
 
 		// Pop anything that's not an empty element...
-		while(m_elemStack.back()->getXSLToken() != Constants::ELEMNAME_UNDEFINED)
+		while(m_elemStack.empty() == false &&
+			  m_elemStack.back()->getXSLToken() != Constants::ELEMNAME_UNDEFINED)
 		{
 			m_elemStack.pop_back();
 		}
@@ -1033,7 +1034,8 @@ StylesheetHandler::startElement (const XMLCh* const name, AttributeList& atts)
 		m_exceptionPending = true;
 
 		// Pop anything that's not an empty element...
-		while(m_elemStack.back()->getXSLToken() != Constants::ELEMNAME_UNDEFINED)
+		while(m_elemStack.empty() == false &&
+			  m_elemStack.back()->getXSLToken() != Constants::ELEMNAME_UNDEFINED)
 		{
 			m_elemStack.pop_back();
 		}
