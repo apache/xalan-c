@@ -103,7 +103,9 @@
 #include <PlatformSupport/PrintWriter.hpp>
 #include <PlatformSupport/XalanOutputStream.hpp>
 #include <PlatformSupport/XalanUnicode.hpp>
-#include <PlatformSupport/XalanTranscodingServices.hpp>	
+#include <PlatformSupport/XalanTranscodingServices.hpp>
+#include <PlatformSupport/XalanDOMStringCache.hpp>	
+
 
 
 
@@ -181,6 +183,7 @@ static set<const XalanNode*,less<const XalanNode*> > theXalanNodeSet;
 static XPathExpression::OpCodeLengthMapType theOpCodeLengthMapType;
 static XPathExpression::OpCodeMapValueType theOpCodeMapValueType;
 static XPathExpression::NodeTestSetType theNodeTestSetType;
+static XPathExecutionContext::XObjectArgVectorType theVector;
 static XPathProcessorImpl::NodeTypesMapType theNodeTypesMapType;
 static Stylesheet::PatternTableListType	thePatternTableList;
 static Stylesheet::PatternTableVectorType thePatternTableVector;
@@ -209,15 +212,6 @@ foo()
 			 XObjectFactoryDefault::DeleteXObjectFunctor(theFactory, true));
 	}
 	
-	{		
-		StylesheetExecutionContextDefault::LiveVariablesStackType 	theStack;
-		XObjectFactoryDefault			theFactory;
-		
-		for_each(theStack.back().begin(),
-			 theStack.back().end(),
-			 XObjectFactoryDefault::DeleteXObjectFunctor(theFactory));
-	}
-	
 	{	
 		XPathFactoryDefault::CollectionType 	theVector;	
 		XPathFactoryDefault			theXPath;		
@@ -233,6 +227,14 @@ foo()
 		for_each(theVector.begin(),
 			 theVector.end(),
 			 XPathFunctionTable::DeleteFunctorType());
+	}
+	
+	{	
+		XalanDOMStringCache::StringListType theVector;	
+				
+		for_each(theVector.begin(),
+			 theVector.end(),
+			 DeleteFunctor<XalanDOMString>());
 	}
 
 	{
