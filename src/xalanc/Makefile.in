@@ -165,17 +165,17 @@ depend:
 compile:	 $(ALL_OBJECTS) 
 
 ifeq (${OS390BATCH},1)
-XalanExe: lib  "//'$(LOADSAMP)(XALAN)'"
+XalanExe: lib  "//'$(LOADSAMP)(IXMXAL17)'"
 
-"//'$(LOADSAMP)(XALAN)'": ${XSL_OBJ_DIR}/XalanExe.o
+"//'$(LOADSAMP)(IXMXAL17)'": ${XSL_OBJ_DIR}/XalanExe.o
 	${LINK} $(XSL_BUILD_OPTIONS) ${PLATFORM_LIB_LINK_OPTIONS}  \
 	${EXTRA_LINK_OPTIONS}  $(XALAN_LIB) $(ALLLIBS) $^ -o $@	
 ${XSL_OBJ_DIR}/XalanExe.o: $(XALANEXE_DIR)/XalanExe.cpp                       
 	$(CC1) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $<
 
-testXSLT: lib  "//'$(LOADSAMP)(TESTXSLT)'"
+testXSLT: lib  "//'$(LOADSAMP)(IXMTST17)'"
 
-"//'$(LOADSAMP)(TESTXSLT)'": ${XSL_OBJ_DIR}/process.o
+"//'$(LOADSAMP)(IXMTST17)'": ${XSL_OBJ_DIR}/process.o
 	${LINK} $(XSL_BUILD_OPTIONS) ${PLATFORM_LIB_LINK_OPTIONS}  \
 	${EXTRA_LINK_OPTIONS} $(XALAN_LIB) $(ALLLIBS) $^ -o $@	
 ${XSL_OBJ_DIR}/process.o: $(TESTXSLT_DIR)/process.cpp                       
