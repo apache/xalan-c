@@ -65,6 +65,7 @@
 //#include <util/PlatformUtils.hpp>
 #include <PlatformSupport/DOMStringHelper.hpp>
 
+#include<map>
 
 /**
  * Reporter that saves output to a simple XML-format file.  
@@ -84,6 +85,13 @@ class HARNESS_API XMLFileReporter
 
 
 public:
+
+#if defined(XALAN_NO_NAMESPACES)
+	typedef map<XalanDOMString, XalanDOMString, less<XalanDOMString> >	Hashtable;
+#else
+	typedef std::map<XalanDOMString, XalanDOMString>	Hashtable;
+#endif
+
 
 	/** Simple constructor, does not perform initialization.  */
 	XMLFileReporter();   
@@ -205,6 +213,24 @@ public:
 	void logStatistic (int level, long lVal, double dVal, const char*	msg)
 	{
 		logStatistic(level, lVal, dVal, XalanDOMString(msg));
+	}
+
+	/**
+    * Logs out a element to results with specified severity.
+    * Uses user-supplied element name and attribute list.  Currently
+    * attribute values and msg are forced .toString().  Also,
+    * 'level' is forced to be the first attribute of the element.
+    * @param level severity of message.
+    * @param element name of enclosing element
+    * @param attrs hash of name=value attributes; note that the
+    * caller must ensure they're legal XML
+	* @param msg comment to log out.
+	*/
+	void logElement(int level, const XalanDOMString& element, Hashtable attrs, const XalanDOMString& msg);
+
+	void logElement(int level,  const char* element, Hashtable attrs, const char* msg)
+	{
+		logElement(level, XalanDOMString(element), attrs, XalanDOMString(msg));
 	}
 
 	/**

@@ -266,6 +266,39 @@ XMLFileReporter::logMessage(int level, const XalanDOMString& msg)
 
 
 void 
+XMLFileReporter::logElement(int level, const XalanDOMString& element, Hashtable attrs,const XalanDOMString& msg)
+{
+	if (isReady()
+        && (element.empty() == 0)
+        && (attrs.empty() == 0)
+       )
+    {
+		char tmp[20];
+		sprintf(tmp, "%d", level);
+
+        printToFile("<" + escapestring(element) + " " + ATTR_LEVEL + "=\""
+                              + tmp + "\"");
+
+		
+		Hashtable::iterator theEnd = attrs.end();	
+    
+       	for(Hashtable::iterator i = attrs.begin(); i != theEnd; ++i)
+        {            
+			
+            printToFile((*i).first + "=\""
+                                  + (*i).second + "\"");
+        }
+
+        printToFile(XalanDOMString(">"));
+        if (msg.empty() != 0)
+            printToFile(escapestring(msg));
+        printToFile("</" + escapestring(element) + ">");
+    }
+}
+
+
+
+void 
 XMLFileReporter::logStatistic (int level, long lVal, double dVal, const XalanDOMString& msg)
 {
  	char tmp[20];
