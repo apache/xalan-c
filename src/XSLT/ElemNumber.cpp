@@ -89,6 +89,8 @@
 
 const XalanDOMString	ElemNumber::s_alphaCountTable(XALAN_STATIC_UCODE_STRING("ZABCDEFGHIJKLMNOPQRSTUVWXY"));
 
+XalanDOMString	s_elalphaCountTable;
+
 
 
 const DecimalToRoman	ElemNumber::s_romanConvertTable[] = 
@@ -172,8 +174,9 @@ ElemNumber::ElemNumber(
 		}
 		else if(equals(aname, Constants::ATTRNAME_LETTERVALUE))
 		{
-			constructionContext.warn(Constants::ATTRNAME_LETTERVALUE + " not supported yet!");
-
+			if (equals("traditional", atts.getValue(i)))
+				constructionContext.warn(Constants::ATTRNAME_LETTERVALUE +
+						" value 'traditional' not supported yet!");
 			m_lettervalue_avt = new AVT(aname, atts.getType(i),
 						atts.getValue(i), *this, constructionContext);
 		} 
@@ -736,9 +739,21 @@ ElemNumber::getFormattedNumber(
 		case 0x0E51:
 		case 0x05D0:
 		case 0x10D0:
-		case 0x03B1:
 		case 0x0430:
 			executionContext.error(LongToDOMString(numberType) + " format not supported yet!");
+			break;
+		// Handle the special case of Greek letters for now
+		case 0x03B1:
+			if (isEmpty(s_elalphaCountTable))
+			{
+				// Start at lower case Greek letters in entity reference table in
+				// FormatterToHTML
+				s_elalphaCountTable += 962;
+				for (int i=1, j=938; i<25; i++, j++)
+					s_elalphaCountTable += j;
+			}
+			formattedNumber += int2alphaCount(listElement, s_elalphaCountTable);
+			break;
 		default: // "1"
 			{
 				const XalanDOMString		numString =
@@ -787,7 +802,7 @@ ElemNumber::int2alphaCount(
 	const int		buflen = 100;
 
 	XalanDOMChar	buf[buflen + 1];
-	memset(buf, 0, buflen + 1);
+	memset(buf, 0, (buflen + 1) * sizeof(XalanDOMChar));
 
 	// next character to set in the buffer
 	int charPos = buflen - 1 ;    // work backward through buf[]
@@ -843,7 +858,7 @@ ElemNumber::int2alphaCount(
 			break;
 
 		// put out the next character of output
-		buf[charPos--] = static_cast<char>(charAt(table, lookupIndex));
+		buf[charPos--] = static_cast<XalanDOMChar>(charAt(table, lookupIndex));
 	}
 	while (val > 0);
 
