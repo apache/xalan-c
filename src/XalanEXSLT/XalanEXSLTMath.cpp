@@ -60,7 +60,7 @@
 
 
 #include <cmath>
-
+#include <ctime>
 
 
 #include <PlatformSupport/DoubleSupport.hpp>
@@ -334,6 +334,45 @@ const XalanDOMString
 XalanEXSLTFunctionAbs::getError() const
 {
 	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The EXSLT function abs() accepts one argument"));
+}
+
+
+
+XObjectPtr
+XalanEXSLTFunctionRandom::execute(
+			XPathExecutionContext&			executionContext,
+			XalanNode*						context,
+			const XObjectArgVectorType&		args,
+			const LocatorType*				locator) const
+{
+	if (args.size() != 0)
+	{
+		executionContext.error(getError(), context, locator);
+	}
+
+#if defined(XALAN_STRICT_ANSI_HEADERS)
+	using std::rand;
+#endif
+
+	const int	value = rand();
+
+	double		result = 0.0;
+
+	if (value != 0)
+	{
+		result = double(value) / RAND_MAX;
+	}
+	assert(result >= 0.0L && result <= 1.0L);
+
+	return executionContext.getXObjectFactory().createNumber(result);
+}
+
+
+
+const XalanDOMString
+XalanEXSLTFunctionRandom::getError() const
+{
+	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The EXSLT function random() accepts no arguments"));
 }
 
 
@@ -1353,7 +1392,16 @@ static const XalanDOMChar	s_tanFunctionName[] =
 	0
 };
 
-
+static const XalanDOMChar	s_randomFunctionName[] =
+{
+	XalanUnicode::charLetter_r,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_n,
+	XalanUnicode::charLetter_d,
+	XalanUnicode::charLetter_o,
+	XalanUnicode::charLetter_m,
+	0
+};
 
 static const XalanEXSLTFunctionAbs			s_absFunction;
 static const XalanEXSLTFunctionAcos			s_acosFunction;
@@ -1372,7 +1420,7 @@ static const XalanEXSLTFunctionPower		s_powFunction;
 static const XalanEXSLTFunctionSin			s_sinFunction;
 static const XalanEXSLTFunctionSqrt			s_sqrtFunction;
 static const XalanEXSLTFunctionTan			s_tanFunction;
-
+static const XalanEXSLTFunctionRandom		s_randomFunction;
 
 
 static const XalanEXSLTMathFunctionsInstaller::FunctionTableEntry	theFunctionTable[] =
@@ -1394,6 +1442,7 @@ static const XalanEXSLTMathFunctionsInstaller::FunctionTableEntry	theFunctionTab
 	{ s_sinFunctionName, &s_sinFunction },
 	{ s_sqrtFunctionName, &s_sqrtFunction },
 	{ s_tanFunctionName, &s_tanFunction },
+	{ s_randomFunctionName, &s_randomFunction },
 	{ 0, 0 }
 };
 
@@ -1411,6 +1460,14 @@ void
 XalanEXSLTMathFunctionsInstaller::installGlobal()
 {
 	doInstallGlobal(s_mathNamespace, theFunctionTable);
+
+	// Sets the starting point for generating a series of pseudorandom integers,
+	// we need it for random() EXSLT function
+#if defined(XALAN_STRICT_ANSI_HEADERS)
+	using std::srand;
+	using std::time;
+#endif
+	srand( (unsigned)time( NULL ) );
 }
 
 

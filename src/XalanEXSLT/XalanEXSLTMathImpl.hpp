@@ -126,6 +126,61 @@ private:
 
 
 
+class XALAN_EXSLT_EXPORT XalanEXSLTFunctionRandom : public Function
+{
+public:
+
+	typedef Function	ParentType;
+
+	XalanEXSLTFunctionRandom()
+	{
+	}
+
+	virtual
+	~XalanEXSLTFunctionRandom()
+	{
+	}
+
+	// These methods are inherited from Function ...
+
+	virtual XObjectPtr
+	execute(
+			XPathExecutionContext&			executionContext,
+			XalanNode*						context,
+			const XObjectArgVectorType&		args,
+			const LocatorType*				locator) const;
+
+#if !defined(XALAN_NO_USING_DECLARATION)
+	using ParentType::execute;
+#endif
+
+#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
+	virtual Function*
+#else
+	virtual XalanEXSLTFunctionRandom*
+#endif
+	clone() const
+	{
+		return new XalanEXSLTFunctionRandom(*this);
+	}
+
+protected:
+
+	const XalanDOMString
+	getError() const;
+
+private:
+
+	// Not implemented...
+	XalanEXSLTFunctionRandom&
+	operator=(const XalanEXSLTFunctionRandom&);
+
+	bool
+	operator==(const XalanEXSLTFunctionRandom&) const;
+};
+
+
+
 class XALAN_EXSLT_EXPORT XalanEXSLTFunctionAcos : public Function
 {
 public:
