@@ -73,10 +73,10 @@
 
 
 class DocumentHandler;
+class EntityResolver;
 class ExecutionContext;
 class FormatterListener;
 class InputSource;
-class URLInputSource;
 class XalanAttr;
 class XalanDocument;
 class XalanElement;
@@ -135,7 +135,7 @@ public:
 	 * you pass in some sort of recognizable name, such as the filename or URI,
 	 * with which the reader can be recognized if the parse fails.
 	 *
-	 * @param urlInputSource input source that should hold valid XML
+	 * @param inputSource input source that should hold valid XML
 	 * @param handler        instance of a DocumentHandler
 	 * @param identifier     used for diagnostic purposes only, some sort of
 	 *                       identification for error reporting, default an
@@ -248,6 +248,26 @@ public:
 	 */
 	virtual const XalanDOMString
 	getParserDescription() const = 0;
+
+	/**
+	  * This method returns the installed entity resolver.
+	  *
+	  * @return The pointer to the installed entity resolver object.
+	  */
+	virtual EntityResolver*
+	getEntityResolver() = 0;
+
+	/**
+	  * This method installs the user specified entity resolver on the
+	  * parser. It allows applications to trap and redirect calls to
+	  * external entities.
+	  *
+	  * @param handler A pointer to the entity resolver to be called
+	  * 			   when the parser comes across references to
+	  * 			   entities in the XML file.
+	  */
+	virtual void
+	setEntityResolver(EntityResolver*	resolver) = 0;
 
 private:
 

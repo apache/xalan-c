@@ -73,7 +73,8 @@ XMLParserLiaisonDefault::XMLParserLiaisonDefault(DOMSupport&	theDOMSupport) :
 	m_SpecialCharacters(),
 	m_Indent(-1),
 	m_fShouldExpandEntityRefs(false),
-	m_fUseValidation(false)
+	m_fUseValidation(false),
+	m_entityResolver(0)
 {
 }
 

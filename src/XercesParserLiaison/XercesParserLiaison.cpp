@@ -410,14 +410,6 @@ XercesParserLiaison::getEntityResolver()
 
 
 
-const EntityResolver*
-XercesParserLiaison::getEntityResolver() const
-{
-	return m_entityResolver;
-}
-
-
-
 void
 XercesParserLiaison::setEntityResolver(EntityResolver*	resolver)
 {

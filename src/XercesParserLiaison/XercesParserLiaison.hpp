@@ -168,6 +168,12 @@ public:
 	virtual const XalanDOMString
 	getParserDescription() const;
 
+	virtual EntityResolver*
+	getEntityResolver();
+
+	virtual void
+	setEntityResolver(EntityResolver*	resolver);
+
 
 	// These interfaces are new to XercesParserLiaison...
 
@@ -297,38 +303,6 @@ public:
 	  */
 	virtual void
 	setExitOnFirstFatalError(bool	newState);
-
-	/**
-	  * This method returns the installed entity resolver. Suitable
-	  * for 'lvalue' usages.
-	  *
-	  * @return The pointer to the installed entity resolver object.
-	  */
-	virtual EntityResolver*
-	getEntityResolver();
-
-	/**
-	  * This method returns the installed entity resolver. Suitable
-	  * for 'rvalue' usages.
-	  *
-	  * @return A const pointer to the installed entity resolver object.
-	  */
-	virtual const EntityResolver*
-	getEntityResolver() const;
-
-	/**
-	  * This method installs the user specified entity resolver on the
-	  * parser. It allows applications to trap and redirect calls to
-	  * external entities.
-	  *
-	  * @param handler A pointer to the entity resolver to be called
-	  * 			   when the parser comes across references to
-	  * 			   entities in the XML file.
-	  *
-	  * @see Parser#setEntityResolver
-	  */
-	virtual void
-	setEntityResolver(EntityResolver*	resolver);
 
 	/**
 	 * Create a XalanDocument proxy for an existing Xerces document.

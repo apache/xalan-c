@@ -154,6 +154,12 @@ public:
 	virtual const XalanDOMString
 	getParserDescription() const;
 
+	virtual EntityResolver*
+	getEntityResolver() { return m_entityResolver; }
+
+	virtual void
+	setEntityResolver(EntityResolver*	resolver) { m_entityResolver = resolver; }
+
 protected:
 
 	// Data members...
@@ -168,12 +174,14 @@ private:
 	operator=(const XMLParserLiaisonDefault&);
 
 	// Data members...
-	XalanDOMString			m_SpecialCharacters;
+	XalanDOMString		m_SpecialCharacters;
 
-	int						m_Indent;
+	int					m_Indent;
 
-	bool					m_fShouldExpandEntityRefs;
-	bool					m_fUseValidation;
+	bool				m_fShouldExpandEntityRefs;
+	bool				m_fUseValidation;
+
+	EntityResolver*		m_entityResolver;
 };
 
 

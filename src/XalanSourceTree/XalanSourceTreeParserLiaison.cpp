@@ -402,14 +402,6 @@ XalanSourceTreeParserLiaison::getEntityResolver()
 
 
 
-const EntityResolver*
-XalanSourceTreeParserLiaison::getEntityResolver() const
-{
-	return m_xercesParserLiaison.getEntityResolver();
-}
-
-
-
 void
 XalanSourceTreeParserLiaison::setEntityResolver(EntityResolver*	resolver)
 {
