@@ -701,9 +701,38 @@ public:
 		return compare(thePosition1, theCount1, XalanDOMString(theString, theCount2));
 	}
 
+	class TranscodingError : public XalanDOMException
+	{
+	public:
+
+		TranscodingError() :
+			XalanDOMException(TRANSCODING_ERR)
+		{
+		}
+
+		virtual
+		~TranscodingError()
+		{
+		}
+	};
+
+	/**
+	 * Transcode the string to the local code page.  If the string
+	 * cannot be properly transcoded, and the transcoder can detect
+	 * the error a TranscodingError exception is thrown.
+	 *
+	 * @return A null-terminated CharVectorType instance.
+	 */
 	CharVectorType
 	transcode() const;
 
+	/**
+	 * Transcode the string to the local code page.  If the string
+	 * cannot be properly transcoded, and the transcoder can detect
+	 * the error a TranscodingError exception is thrown.
+	 *
+	 * @param theResult A CharVectorType instance for the transcoded string.  The string is null-terminated.
+	 */
 	void
 	transcode(CharVectorType&	theResult) const;
 
@@ -773,21 +802,6 @@ public:
 	hash(
 			const XalanDOMChar*		theString,
 			size_type				theLength);
-
-	class TranscodingError : public XalanDOMException
-	{
-	public:
-
-		TranscodingError() :
-			XalanDOMException(TRANSCODING_ERR)
-		{
-		}
-
-		virtual
-		~TranscodingError()
-		{
-		}
-	};
 
 protected:
 
