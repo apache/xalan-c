@@ -137,14 +137,6 @@ XercesWrapperNavigator::mapNode(XalanNode*	theXalanNode) const
 
 
 
-const DOMAttrType*
-XercesWrapperNavigator::mapNode(XalanAttr*	theXalanNode) const
-{
-	return m_ownerDocument->mapNode(theXalanNode);
-}
-
-
-
 XalanNode*
 XercesWrapperNavigator::getParentNode(const DOMNodeType*	theXercesNode) const
 {

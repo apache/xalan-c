@@ -127,9 +127,6 @@ public:
 	const DOMNodeType*
 	mapNode(XalanNode*	theXalanNode) const;
 
-	const DOMAttrType*
-	mapNode(XalanAttr*	theXercesNode) const;
-
 	unsigned long
 	getIndex() const
 	{
