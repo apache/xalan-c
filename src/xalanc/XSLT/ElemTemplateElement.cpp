@@ -232,11 +232,14 @@ ElemTemplateElement::endElement(StylesheetExecutionContext&		/*executionContext*
 
 
 void
-ElemTemplateElement::execute(StylesheetExecutionContext&			executionContext) const
+ElemTemplateElement::execute(StylesheetExecutionContext&    executionContext) const
 {
-	const ElemTemplateElement * invoker = getParentNodeElem();
-	const ElemTemplateElement * currentElement = this;
-	const ElemTemplateElement * nextElement = 0;
+	const ElemTemplateElement* const    invoker =
+            getParentNodeElem();
+
+    const ElemTemplateElement*  currentElement = this;
+
+    const ElemTemplateElement*  nextElement = 0;
 
 	executionContext.pushInvoker(invoker);
 
@@ -251,10 +254,18 @@ ElemTemplateElement::execute(StylesheetExecutionContext&			executionContext) con
 			if (currentElement->getInvoker(executionContext) == invoker)
 			{
 				nextElement = 0;
-				break;
+
+                break;
 			}
-		
-			nextElement = currentElement->getInvoker(executionContext)->getNextChildElemToExecute(executionContext,currentElement);
+
+            const ElemTemplateElement* const    localInvoker =
+                currentElement->getInvoker(executionContext);
+            assert(localInvoker != 0);
+
+            nextElement =
+                localInvoker->getNextChildElemToExecute(
+                        executionContext,
+                        currentElement);
 
 			if (0 == nextElement)
 			{
@@ -263,7 +274,6 @@ ElemTemplateElement::execute(StylesheetExecutionContext&			executionContext) con
 		}
 
 		currentElement = nextElement;
-
 	}
 
 	executionContext.popInvoker();
@@ -293,10 +303,11 @@ ElemTemplateElement::beginExecuteChildren(StylesheetExecutionContext&	executionC
 {
 	if (hasParams() == true || hasVariables() == true)
 	{
+        assert(hasDirectTemplate() == false);
+
 		executionContext.pushElementFrame(this);
 	}
-
-	if (hasDirectTemplate() == true)
+    else if (hasDirectTemplate() == true)
 	{
         executionContext.pushContextMarker();
 		executionContext.pushInvoker(this);
@@ -308,14 +319,13 @@ ElemTemplateElement::beginExecuteChildren(StylesheetExecutionContext&	executionC
 
 
 void 
-ElemTemplateElement::endExecuteChildren(StylesheetExecutionContext&	executionContext) const
+ElemTemplateElement::endExecuteChildren(StylesheetExecutionContext&	    executionContext) const
 {
-	if (hasParams() == true || hasVariables() == true)
+    if (hasParams() == true || hasVariables() == true)
 	{
 		executionContext.popElementFrame();
 	}
-
-	if (hasDirectTemplate() == true)
+	else if (hasDirectTemplate() == true)
 	{
 		executionContext.popInvoker();
         executionContext.popContextMarker();
