@@ -100,11 +100,10 @@ main(
 						theXPathSupport,
 						theXObjectFactory);
 
-			// Our input files...
-			// WARNING!!! You may need to modify these absolute paths depending on where
-			// you've put the Xalan sources.
-			const DOMString		theXMLFileName("file:///xml-xalan/c/Samples/SimpleTransform/foo.xml");
-			const DOMString		theXSLFileName("file:///xml-xalan/c/Samples/SimpleTransform/foo.xsl");
+			// Our input files...The assumption is that the executable will be run
+			// from same directory as the input files.
+			const DOMString		theXMLFileName("foo.xml");
+			const DOMString		theXSLFileName("foo.xsl");
 
 			// Our input sources...
 			XSLTInputSource		theInputSource(c_wstr(theXMLFileName));
