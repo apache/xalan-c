@@ -92,7 +92,7 @@ XercesDOMException::~XercesDOMException()
 XercesDOMException::ExceptionCode
 XercesDOMException::translateErrorCode(DOM_DOMException::ExceptionCode	theCode)
 {
-	ExceptionCode	theXalanCode = UNKNOWN;
+	ExceptionCode	theXalanCode = UNKNOWN_ERR;
 
 	switch(theCode)
 	{

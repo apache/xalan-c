@@ -84,7 +84,7 @@ public:
 	  * @param code The error code which indicates the exception
 	  */
 	explicit
-	XercesDOMException(ExceptionCode 	code = UNKNOWN);
+	XercesDOMException(ExceptionCode 	code = UNKNOWN_ERR);
 
 	/**
 	  * Constructor which takes a Xerces exception and

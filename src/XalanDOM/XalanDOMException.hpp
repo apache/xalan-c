@@ -97,7 +97,7 @@ public:
 
 		// This is the first available number,
 		// according to the spec.
-		UNKNOWN 					= 201
+		UNKNOWN_ERR 				= 201
 	};
 	//@}
 
@@ -110,7 +110,7 @@ public:
 	  * @param code The error code which indicates the exception
 	  */
 	explicit
-	XalanDOMException(ExceptionCode 	code = UNKNOWN);
+	XalanDOMException(ExceptionCode 	code = UNKNOWN_ERR);
 
 	/**
 	  * Copy constructor.
