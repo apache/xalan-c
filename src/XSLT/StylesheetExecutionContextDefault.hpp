@@ -263,9 +263,9 @@ public:
 	 * @param theDOMSupport a reference to the instance to use.
 	 */
 	void
-	setDOMSupport(XSLTEngineImpl&	theProcessor)
+	setXSLTProcessor(XSLTEngineImpl*	theProcessor)
 	{
-		m_xsltProcessor = &theProcessor;
+		m_xsltProcessor = theProcessor;
 	}
 
 
