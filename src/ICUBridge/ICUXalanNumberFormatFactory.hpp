@@ -68,6 +68,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 // Class that implements the XSLT function format-number using the ICU.
 //
 class XALAN_ICUBRIDGE_EXPORT ICUXalanNumberFormatFactory : public StylesheetExecutionContextDefault::XalanNumberFormatFactory
@@ -82,6 +86,10 @@ public:
 	virtual XalanNumberFormat*
 	create();
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

@@ -63,6 +63,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 ICUXalanNumberFormatFactory::ICUXalanNumberFormatFactory() :
 	StylesheetExecutionContextDefault::XalanNumberFormatFactory()
 {
@@ -81,3 +85,7 @@ ICUXalanNumberFormatFactory::create()
 {
 	return new ICUXalanNumberFormatProxy;
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

@@ -64,6 +64,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 ICUBridgeCollationCompareFunctor::ICUBridgeCollationCompareFunctor(bool	fCacheCollators) :
 	m_impl(new ICUBridgeCollationCompareFunctorImpl(fCacheCollators))
 {
@@ -98,3 +102,7 @@ ICUBridgeCollationCompareFunctor::operator()(
 {
 	return (*m_impl)(theLHS, theRHS, theLocale, theCaseOrder);
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

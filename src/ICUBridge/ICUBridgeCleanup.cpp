@@ -66,6 +66,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 void
 ICUBridgeCleanup::cleanup()
 {
@@ -74,3 +78,8 @@ ICUBridgeCleanup::cleanup()
 	u_cleanup();
 #endif
 }
+
+
+
+XALAN_CPP_NAMESPACE_END
+

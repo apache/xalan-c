@@ -78,6 +78,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 #if defined(XALAN_NO_NAMESPACES)
 	typedef vector<UChar>					UCharVectorType;
 #else
@@ -380,3 +384,7 @@ ICUBridge::FormatNumber(
 
 	return theStatus;
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

@@ -78,6 +78,10 @@ U_NAMESPACE_USE
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 ICUXalanNumberFormatProxy::ICUXalanNumberFormatProxy() :
 	XalanNumberFormat(),
 	m_decimalFormat(0)
@@ -266,3 +270,7 @@ ICUXalanNumberFormatProxy::setGroupingSeparator(const XalanDOMString&	s)
 
 	m_decimalFormat->adoptDecimalFormatSymbols(theNewSymbols);
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

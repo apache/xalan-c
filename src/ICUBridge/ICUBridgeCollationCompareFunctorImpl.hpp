@@ -77,6 +77,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 class XALAN_ICUBRIDGE_EXPORT ICUBridgeCollationCompareFunctorImpl : public StylesheetExecutionContextDefault::CollationCompareFunctor
 {
 public:
@@ -240,6 +244,10 @@ private:
 
 	const static StylesheetExecutionContextDefault::DefaultCollationCompareFunctor	s_defaultFunctor;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

@@ -72,6 +72,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 // Class that implements the XSLT function format-number using the ICU.
 //
 class XALAN_ICUBRIDGE_EXPORT ICUXalanNumberFormatProxy : public XalanNumberFormat
@@ -144,6 +148,10 @@ private:
 	U_ICU_NAMESPACE::DecimalFormat*		m_decimalFormat;
 #endif
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

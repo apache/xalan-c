@@ -68,6 +68,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 // Class that implements the XSLT function format-number using the ICU.
 //
 class XALAN_ICUBRIDGE_EXPORT FunctionICUFormatNumber : public FunctionFormatNumber
@@ -107,7 +111,7 @@ protected:
 			const XalanDOMString&				thePattern,
 			const XalanDecimalFormatSymbols*	theDFS,
 			XalanDOMString&						theResult,
-			const Locator*						locator,
+			const LocatorType*					locator,
 			bool								fWarn = true) const;
 
 private:
@@ -119,6 +123,10 @@ private:
 	bool
 	operator==(const FunctionICUFormatNumber&) const;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

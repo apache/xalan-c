@@ -64,6 +64,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 class XALAN_ICUBRIDGE_EXPORT ICUBridgeCleanup
 {
 public:
@@ -71,6 +75,10 @@ public:
 	static void
 	cleanup();
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

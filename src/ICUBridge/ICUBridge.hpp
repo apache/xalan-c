@@ -72,6 +72,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 class Function;
 class XalanDecimalFormatSymbols;
 
@@ -107,6 +111,10 @@ public:
 			const XalanDecimalFormatSymbols*	theXalanDFS,
 			XalanDOMString&						theResult);
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 

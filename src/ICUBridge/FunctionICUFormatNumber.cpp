@@ -72,6 +72,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 FunctionICUFormatNumber::FunctionICUFormatNumberInstaller::FunctionICUFormatNumberInstaller()
 {
 	XPath::installFunction(
@@ -124,7 +128,7 @@ FunctionICUFormatNumber::doFormat(
 			const XalanDOMString&				thePattern,
 			const XalanDecimalFormatSymbols*	theDFS,
 			XalanDOMString&						theResult,
-			const Locator*						locator,
+			const LocatorType*					locator,
 			bool								/* fWarn */) const
 {
 	unsigned long	theResultCode =
@@ -154,3 +158,7 @@ FunctionICUFormatNumber::doFormat(
 						false);
 	}
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

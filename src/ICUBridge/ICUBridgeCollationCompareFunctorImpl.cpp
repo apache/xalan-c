@@ -74,6 +74,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 const StylesheetExecutionContextDefault::DefaultCollationCompareFunctor		ICUBridgeCollationCompareFunctorImpl::s_defaultFunctor;
 
 
@@ -513,3 +517,7 @@ ICUBridgeCollationCompareFunctorImpl::cacheCollator(
 
 	theEntry.m_collator = theCollator;
 }
+
+
+
+XALAN_CPP_NAMESPACE_END

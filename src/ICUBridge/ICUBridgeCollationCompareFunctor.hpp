@@ -68,6 +68,10 @@
 
 
 
+XALAN_CPP_NAMESPACE_BEGIN
+
+
+
 class ICUBridgeCollationCompareFunctorImpl;
 
 
@@ -105,6 +109,10 @@ private:
 
 	ICUBridgeCollationCompareFunctorImpl* const		m_impl;
 };
+
+
+
+XALAN_CPP_NAMESPACE_END
 
 
 
