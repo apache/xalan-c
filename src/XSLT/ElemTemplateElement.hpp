@@ -10,33 +10,33 @@
  * are met:
  *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
+ *	  notice, this list of conditions and the following disclaimer. 
  *
  * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in
- *    the documentation and/or other materials provided with the
- *    distribution.
+ *	  notice, this list of conditions and the following disclaimer in
+ *	  the documentation and/or other materials provided with the
+ *	  distribution.
  *
  * 3. The end-user documentation included with the redistribution,
- *    if any, must include the following acknowledgment:  
- *       "This product includes software developed by the
- *        Apache Software Foundation (http://www.apache.org/)."
- *    Alternately, this acknowledgment may appear in the software itself,
- *    if and wherever such third-party acknowledgments normally appear.
+ *	  if any, must include the following acknowledgment:  
+ *		 "This product includes software developed by the
+ *		  Apache Software Foundation (http://www.apache.org/)."
+ *	  Alternately, this acknowledgment may appear in the software itself,
+ *	  if and wherever such third-party acknowledgments normally appear.
  *
  * 4. The names "Xalan" and "Apache Software Foundation" must
- *    not be used to endorse or promote products derived from this
- *    software without prior written permission. For written 
- *    permission, please contact apache@apache.org.
+ *	  not be used to endorse or promote products derived from this
+ *	  software without prior written permission. For written 
+ *	  permission, please contact apache@apache.org.
  *
  * 5. Products derived from this software may not be called "Apache",
- *    nor may "Apache" appear in their name, without prior written
- *    permission of the Apache Software Foundation.
+ *	  nor may "Apache" appear in their name, without prior written
+ *	  permission of the Apache Software Foundation.
  *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED.  IN NO EVENT SHALL THE APACHE SOFTWARE FOUNDATION OR
+ * DISCLAIMED.	IN NO EVENT SHALL THE APACHE SOFTWARE FOUNDATION OR
  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
@@ -112,18 +112,18 @@ public:
 	 * Construct a template element instance.
 	 * 
 	 * @param constructionContext  context when object constructed
-	 * @param stylesheetTree       owning stylesheet
-	 * @param lineNumber           line in the XSLT file where the element occurs
-	 * @param columnNumber         column index in the XSLT file where the
-	 *                             element occurs
-	 * @param xslToken             an integer representing the type of instance.
+	 * @param stylesheetTree	   owning stylesheet
+	 * @param lineNumber		   line in the XSLT file where the element occurs
+	 * @param columnNumber		   column index in the XSLT file where the
+	 *							   element occurs
+	 * @param xslToken			   an integer representing the type of instance.
 	 */
 	ElemTemplateElement(
 			StylesheetConstructionContext&	constructionContext,
-			Stylesheet&						stylesheetTree,
-			int								lineNumber,
-			int								columnNumber,
-			int								xslToken);
+			Stylesheet& 					stylesheetTree,
+			int 							lineNumber,
+			int 							columnNumber,
+			int 							xslToken);
 
 	virtual
 	~ElemTemplateElement();
@@ -140,83 +140,83 @@ public:
 	* See if this is a xmlns attribute, and, if so, process it.
 	* 
 	* @param attrName qualified name of attribute
-	* @param atts     attribute list where the element comes from (not used at 
-	*                 this time)
-	* @param which    index into the attribute list (not used at this time)
-	* @return         true if this is a namespace name
+	* @param atts	  attribute list where the element comes from (not used at 
+	*				  this time)
+	* @param which	  index into the attribute list (not used at this time)
+	* @return		  true if this is a namespace name
 	*/
 	virtual bool
 	isAttrOK(
-			int						tok,
-			const XalanDOMChar*		attrName,
+			int 					tok,
+			const XalanDOMChar* 	attrName,
 			const AttributeList&	atts,
-			int						which) const;
+			int 					which) const;
 
 	/** 
 	* See if this is a xmlns attribute or in a non-XSLT.
 	* 
 	* @param attrName qualified name of attribute
-	* @param atts     attribute list where the element comes from (not used at 
-	*                 this time)
-	* @param which    index into the attribute list (not used at this time)
+	* @param atts	  attribute list where the element comes from (not used at 
+	*				  this time)
+	* @param which	  index into the attribute list (not used at this time)
 	* @param constructionContext The current construction context
-	* @return         true if this is a namespace name
+	* @return		  true if this is a namespace name
 	*/
 	virtual bool
 	isAttrOK(
-			const XalanDOMChar*				attrName,
+			const XalanDOMChar* 			attrName,
 			const AttributeList&			atts,
-			int								which,
+			int 							which,
 			StylesheetConstructionContext&	constructionContext) const;
 
 	/** 
 	 * Tell whether or not this is a xml:space attribute and, if so, process it.
 	 * 
-	 * @param atts  attribute list that owns the attribute
+	 * @param atts	attribute list that owns the attribute
 	 * @param which index of the attribute into the attribute list
 	 * @param constructionContext The current construction context
-	 * @return      true if this is a xml:space attribute
+	 * @return		true if this is a xml:space attribute
 	 */
 	void
 	processSpaceAttr(
 			const AttributeList&			atts,
-			int								which,
+			int 							which,
 			StylesheetConstructionContext&	constructionContext);
 
 	/** 
 	 * Tell whether or not this is a xml:space attribute and, if so, process it.
 	 * 
 	 * @param aname  name of the attribute in question
-	 * @param atts   attribute list that owns the attribute
+	 * @param atts	 attribute list that owns the attribute
 	 * @param which  index of the attribute into the attribute list
 	 * @param constructionContext The current construction context
-	 * @return       true if this is a xml:space attribute
+	 * @return		 true if this is a xml:space attribute
 	 */
 	bool
 	processSpaceAttr(
-			const XalanDOMChar*				aname,
+			const XalanDOMChar* 			aname,
 			const AttributeList&			atts,
-			int								which,
+			int 							which,
 			StylesheetConstructionContext&	constructionContext);
 
 	/** 
 	 * Validate that the string is an NCName.
 	 * 
 	 * @param s name in question
-	 * @return  true if the string is a valid NCName according to XML rules
+	 * @return	true if the string is a valid NCName according to XML rules
 	 * @see http://www.w3.org/TR/REC-xml-names#NT-NCName
 	 */
 	static bool
-	isValidNCName(const XalanDOMString&		s);
+	isValidNCName(const XalanDOMString& 	s);
 
 	/** 
-	 * Execute the element's primary function.  Subclasses of this function may
+	 * Execute the element's primary function.	Subclasses of this function may
 	 * recursively execute down the element tree.
 	 * 
-	 * @param executionContext  The current execution context
+	 * @param executionContext	The current execution context
 	 */
-	virtual	void
-	execute(StylesheetExecutionContext&		executionContext) const;
+	virtual void
+	execute(StylesheetExecutionContext& 	executionContext) const;
 
 	/** 
 	 * Process the children of a template.
@@ -224,7 +224,7 @@ public:
 	 * @param processor  XSLT processor instance
 	 */
 	void
-	executeChildren(StylesheetExecutionContext&		executionContext) const;
+	executeChildren(StylesheetExecutionContext& 	executionContext) const;
 
 	/** 
 	 * Set the current node and process the children of a template.
@@ -234,67 +234,67 @@ public:
 	 */
 	void
 	executeChildren(
-			StylesheetExecutionContext&		executionContext,
+			StylesheetExecutionContext& 	executionContext,
 			XalanNode*						sourceNode) const;
 
 	/**
 	 * Take the contents of a template element, process it, and
-	 * convert it to a string.  Returns a const reference to
-	 * the resulting string value.  Note that this may _not_ be
+	 * convert it to a string.	Returns a const reference to
+	 * the resulting string value.	Note that this may _not_ be
 	 * the XalanDOMString instance passed in, if an optimization
 	 * is available to return a pre-existing string.
 	 * 
-	 * @param executionContext  The current execution context
+	 * @param executionContext	The current execution context
 	 * @param result result of executing the elements children
 	 * @result a reference to a string containing the result.
 	 */
 	const XalanDOMString&
 	childrenToString(
-			StylesheetExecutionContext&		executionContext,
-			XalanDOMString&					result) const;
+			StylesheetExecutionContext& 	executionContext,
+			XalanDOMString& 				result) const;
 
 	/**
 	 * Take the contents of a template element, process it, and
-	 * convert it to a string.  Then, add an attribute to the
+	 * convert it to a string.	Then, add an attribute to the
 	 * result tree using the provided name and the string value.
 	 * 
-	 * @param executionContext  The current execution context
+	 * @param executionContext	The current execution context
 	 * @param theName The name for the result attribute
 	 */
 	void
 	childrenToResultAttribute(
-			StylesheetExecutionContext&		executionContext,
+			StylesheetExecutionContext& 	executionContext,
 			const XalanDOMString&			theName) const;
 
 	/**
 	 * Take the contents of a template element, process it, and
-	 * convert it to a string.  Then, add a comment to the
+	 * convert it to a string.	Then, add a comment to the
 	 * result tree using the string value.
 	 * 
-	 * @param executionContext  The current execution context
+	 * @param executionContext	The current execution context
 	 */
 	void
-	childrenToResultComment(StylesheetExecutionContext&	executionContext) const;
+	childrenToResultComment(StylesheetExecutionContext& executionContext) const;
 
 	/**
 	 * Take the contents of a template element, process it, and
-	 * convert it to a string.  Then, add a processing instruction
+	 * convert it to a string.	Then, add a processing instruction
 	 * to the result tree using the string value, and the provided
 	 * target.
 	 * 
-	 * @param executionContext  The current execution context
+	 * @param executionContext	The current execution context
 	 * @param theName The name for the result attribute
 	 */
 	void
 	childrenToResultPI(
-			StylesheetExecutionContext&		executionContext,
+			StylesheetExecutionContext& 	executionContext,
 			const XalanDOMString&			theTarget) const;
 
 	/** 
 	 * Get an integer representation of the element type.
 	 * 
 	 * @return integer representation of the element, defined in the Constants
-	 *         class
+	 *		   class
 	 * @see class Constants
 	 */
 	int
@@ -430,7 +430,7 @@ public:
 	 * @return nothing
 	 */
 	virtual void
-	setNextSiblingElem(ElemTemplateElement*		theSibling);
+	setNextSiblingElem(ElemTemplateElement* 	theSibling);
 
 	/**
 	 * Get the previous sibling.
@@ -448,14 +448,14 @@ public:
 	 * @return nothing
 	 */
 	virtual void
-	setPreviousSiblingElem(ElemTemplateElement*		theSibling);
+	setPreviousSiblingElem(ElemTemplateElement* 	theSibling);
 
 	/**
 	 * Get the parent node.
 	 * 
 	 * @return parent node of this node
 	 */
-	virtual	ElemTemplateElement*
+	virtual ElemTemplateElement*
 	getParentNodeElem() const;
 
 	/**
@@ -594,7 +594,7 @@ public:
 	getLocalName() const;
 
 	virtual void
-	setPrefix(const XalanDOMString&	prefix);
+	setPrefix(const XalanDOMString& prefix);
 
 	virtual bool
 	isIndexed() const;
@@ -620,7 +620,7 @@ public:
 			const XalanDOMString&	value);
 
 	virtual XalanAttr*
-	setAttributeNode(XalanAttr*		newAttr);
+	setAttributeNode(XalanAttr* 	newAttr);
 
 	virtual XalanAttr*
 	removeAttributeNode(XalanAttr*	oldAttr);
@@ -731,29 +731,29 @@ protected:
 	 * @return The namespace string.
 	 */
 	const XalanDOMString*
-	getNamespaceForPrefixInternal(const XalanDOMString&		prefix) const;
+	getNamespaceForPrefixInternal(const XalanDOMString& 	prefix) const;
 
 	/**
 	 * Perform a query if needed, and call transformChild for each child.
 	 * 
-	 * @param executionContext  The current execution context
+	 * @param executionContext	The current execution context
 	 * @param xslInstruction The stylesheet element context (deprecated -- I do 
-	 *      not think we need this).
+	 *		not think we need this).
 	 * @param template The owning template context.
 	 * @param sourceNodeContext The current source node context.
 	 * @param selectPattern The XPath with which to perform the selection.
 	 * @param selectStackFrameIndex stack frame context for executing the
-	 *                              select statement
+	 *								select statement
 	 */
 	void
 	transformSelectedChildren(
-			StylesheetExecutionContext&		executionContext,
+			StylesheetExecutionContext& 	executionContext,
 			const ElemTemplateElement&		xslInstruction,
 			const ElemTemplateElement*		theTemplate,
 			XalanNode*						sourceNodeContext,
 			const XPath&					selectPattern,
-			NodeSorter*						sorter,
-			int								selectStackFrameIndex) const;
+			NodeSorter* 					sorter,
+			int 							selectStackFrameIndex) const;
 
 	/**
 	 * Perform a query if needed, and call transformChild for each child.
@@ -766,7 +766,7 @@ protected:
 	 */
 	void
 	transformSelectedChildren(
-			StylesheetExecutionContext&			executionContext,
+			StylesheetExecutionContext& 		executionContext,
 			const ElemTemplateElement&			xslInstruction,
 			const ElemTemplateElement*			theTemplate,
 			const NodeRefListBase&				sourceNodes,
@@ -778,14 +778,14 @@ protected:
 	 * 
 	 * @param executionContext The current execution context
 	 * @param xslInstruction The calling element (deprecated -- I dont think we 
-	 *      need this).
+	 *		need this).
 	 * @param template The template to use if xsl:for-each, or null.
 	 * @param child The source context node.
 	 * @return true if applied a template, false if not.
 	 */
 	bool
 	transformChild(
-			StylesheetExecutionContext&		executionContext,
+			StylesheetExecutionContext& 	executionContext,
 			const ElemTemplateElement&		xslInstruction,
 			const ElemTemplateElement*		theTemplate,
 			XalanNode*						child) const;
@@ -812,7 +812,7 @@ protected:
 	 */
 	NamespacesHandler		m_namespacesHandler;
 
-	static const XalanDOMString		s_emptyString;
+	static const XalanDOMString 	s_emptyString;
 
 private:
 
@@ -820,7 +820,7 @@ private:
 	{
 	public:
 
-		LocatorProxy(const ElemTemplateElement&		theElement);
+		LocatorProxy(const ElemTemplateElement& 	theElement);
 
 		virtual
 		~LocatorProxy();
@@ -839,6 +839,16 @@ private:
 
 	private:
 
+		// Not implemented...
+		LocatorProxy(const LocatorProxy&);
+
+		LocatorProxy&
+		operator=(const LocatorProxy&);
+
+		bool
+		operator==(const LocatorProxy&) const;
+
+		// data members...
 		const ElemTemplateElement&	m_element;
 	};
 
@@ -846,16 +856,16 @@ private:
 	 * Take the contents of a template element, process it, and
 	 * convert it to a string.
 	 * 
-	 * @param executionContext  The current execution context
+	 * @param executionContext	The current execution context
 	 * @param result result of executing the elements children
 	 * @result a reference to a string containing the result.
 	 */
 	XalanDOMString&
 	doChildrenToString(
-			StylesheetExecutionContext&		executionContext, 
-			XalanDOMString&					result) const;
+			StylesheetExecutionContext& 	executionContext, 
+			XalanDOMString& 				result) const;
 
-	Stylesheet&				m_stylesheet;
+	Stylesheet& 			m_stylesheet;
 
 	const int				m_lineNumber;
 	const int				m_columnNumber;
@@ -871,7 +881,7 @@ private:
 	union
 	{
 		ElemTemplateElement*	m_firstChild;
-		const ElemTemplate*		m_directTemplate;
+		const ElemTemplate* 	m_directTemplate;
 	};
 
 	XalanNodeListSurrogate	m_surrogateChildren;
@@ -888,7 +898,16 @@ private:
 
 	LocatorProxy			m_locatorProxy;
 
-	static const XalanEmptyNamedNodeMap		s_fakeAttributes;
+	static const XalanEmptyNamedNodeMap 	s_fakeAttributes;
+
+	// Not implemented...
+	ElemTemplateElement(const ElemTemplateElement&);
+
+	ElemTemplateElement&
+	operator=(const ElemTemplateElement&);
+
+	bool
+	operator==(const ElemTemplateElement&) const;
 };
 
 

@@ -147,6 +147,12 @@ public:
 
 private:
 
+    // Not implemented...
+    XalanDOMException&
+    operator=(const XalanDOMException&);
+
+
+    // Data members...
 	const ExceptionCode		m_code;
 };
 

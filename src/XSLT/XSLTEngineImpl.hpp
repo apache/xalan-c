@@ -1663,6 +1663,15 @@ private:
 	initializeElementKeysTable(ElementKeysMapType&	theElementKeys);
 
 	static const XalanDOMString		s_emptyString;
+
+    // Not implemented...
+    XSLTEngineImpl(const XSLTEngineImpl&);
+
+    XSLTEngineImpl&
+    operator=(const XSLTEngineImpl&);
+
+    bool
+    operator==(const XSLTEngineImpl&) const;
 };
 
 
