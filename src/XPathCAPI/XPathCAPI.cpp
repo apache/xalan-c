@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -97,6 +97,19 @@
 static bool	fInitialized = false;
 static bool	fTerminated = false;
 
+
+//XALAN_USING_XALAN(length)
+//XALAN_USING_XALAN(XalanArrayAutoPtr)
+XALAN_USING_XALAN(XalanDOMChar)
+XALAN_USING_XALAN(XalanDOMString)
+XALAN_USING_XALAN(XalanOutputTranscoder)
+XALAN_USING_XALAN(XPath)
+XALAN_USING_XALAN(XPathEvaluator)
+XALAN_USING_XALAN(XalanSourceTreeInit)
+XALAN_USING_XALAN(XalanTranscodingServices)
+
+
+
 static XalanSourceTreeInit*		theSourceTreeInit = 0;
 
 
@@ -118,6 +131,8 @@ XalanXPathAPIInitialize()
 
 		try
 		{
+			XALAN_USING_XERCES(XMLPlatformUtils)
+
 			XMLPlatformUtils::Initialize();
 
 			try
@@ -174,6 +189,8 @@ XalanXPathAPITerminate()
 
 		try
 		{
+			XALAN_USING_XERCES(XMLPlatformUtils)
+
 			delete theSourceTreeInit;
 
 			theSourceTreeInit = 0;
@@ -327,7 +344,7 @@ transcodeString(
 	}
 	else
 	{
-		assign(theResultString, theChars, theTargetBytesUsed);
+		theResultString.assign(theChars, theTargetBytesUsed);
 
 		return XALAN_XPATH_API_SUCCESS;
 	}
@@ -386,6 +403,8 @@ transcodeString(
 
 			if (theLength >= maxStackArraySize)
 			{
+				XALAN_USING_XALAN(XalanArrayAutoPtr)
+
 				XalanArrayAutoPtr<unsigned char>	theCharsCount(new unsigned char[theLength + 1]);
 				XalanArrayAutoPtr<XalanDOMChar>		theChars(new XalanDOMChar[theLength + 1]);
 
@@ -458,6 +477,8 @@ XalanCreateXPath(
 			if (theResult == XALAN_XPATH_API_SUCCESS)
 			{
 				const XalanDOMChar* const	thePointer = theExpressionString.c_str();
+
+				XALAN_USING_XALAN(length)
 
 				if (length(thePointer) == 0)
 				{
@@ -545,6 +566,8 @@ XalanEvaluateXPathAsBoolean(
 	{
 		int	theError = XALAN_XPATH_API_SUCCESS;
 
+		XALAN_USING_XERCES(SAXException)
+
 		try
 		{
 			XPathEvaluator* const	theEvaluator = getEvaluator(theXalanHandle);
@@ -553,11 +576,17 @@ XalanEvaluateXPathAsBoolean(
 			XPath* const	theXPath = getXPath(theXPathHandle);
 			assert(theXPath != 0);
 
+			XALAN_USING_XALAN(XalanDocument)
+			XALAN_USING_XALAN(XalanSourceTreeDOMSupport)
+			XALAN_USING_XALAN(XalanSourceTreeParserLiaison)
+
 			XalanSourceTreeDOMSupport		theDOMSupport;
 			XalanSourceTreeParserLiaison	theLiaison(theDOMSupport);
 
 			// Hook the two together...
 			theDOMSupport.setParserLiaison(&theLiaison);
+
+			XALAN_USING_XERCES(MemBufInputSource)
 
 			// Create an input source...
 			const MemBufInputSource		theInputSource(
