@@ -106,6 +106,9 @@ public:
 	getURI() const;
 
 private:
+    //Not implemented
+    XercesDOMWrapperParsedSource();
+    XercesDOMWrapperParsedSource(const XercesDOMWrapperParsedSource&);
 
 	XercesParserLiaison&	m_parserLiaison;
 

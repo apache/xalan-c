@@ -82,6 +82,10 @@ public:
 
         void
         reset();
+    private:
+        //Not implemented
+        reportStruct();
+        reportStruct(const reportStruct&);
 
     } data;
 
@@ -122,6 +126,10 @@ public:
         {
             return help;
         }
+    private:
+        //Not implemented
+        cmdParams();
+        cmdParams(const cmdParams&);
 
     } args;
 
@@ -410,6 +418,10 @@ private:
     debugAttributeData(const XalanDOMString&    value) const;
 
 #endif
+private:
+    //Not implemented
+    XalanFileUtility();
+    XalanFileUtility(const XalanFileUtility&);
 
 };        // end of class FileUtility
 

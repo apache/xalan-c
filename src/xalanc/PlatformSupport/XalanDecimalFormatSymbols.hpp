@@ -410,6 +410,9 @@ public:
 	}
 
 private:
+    // not implemented
+    XalanDecimalFormatSymbols();
+    XalanDecimalFormatSymbols(const XalanDecimalFormatSymbols&);
 
 	XalanDOMString	m_currencySymbol;
 

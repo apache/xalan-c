@@ -387,6 +387,10 @@ public:
 	}
 
 private:
+    // not implemented
+    XalanParsedURI();
+    XalanParsedURI(const XalanParsedURI&);
+
 	XalanDOMString	m_scheme;
 	XalanDOMString	m_authority;
 	XalanDOMString	m_path;

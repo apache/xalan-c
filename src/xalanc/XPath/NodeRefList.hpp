@@ -50,7 +50,7 @@ public:
 	 *
 	 * @param theSource source node list
 	 */
-	NodeRefList(const NodeRefList&	theSource, MemoryManagerType& theManager XALAN_DEFAULT_MEMMGR);
+	NodeRefList(const NodeRefList&	theSource, MemoryManagerType& theManager XALAN_DEFAULT_CONSTRACTOR_MEMORY_MGR);
 
     MemoryManagerType&
     getMemoryManager()
@@ -64,7 +64,7 @@ public:
 	 * @param theSource source node list
 	 */
 	explicit
-	NodeRefList(const NodeRefListBase&	theSource, MemoryManagerType& theManager XALAN_DEFAULT_MEMMGR);
+	NodeRefList(const NodeRefListBase&	theSource, MemoryManagerType& theManager XALAN_DEFAULT_CONSTRACTOR_MEMORY_MGR);
 
 	virtual
 	~NodeRefList();

@@ -111,8 +111,8 @@ public:
 	 * 
 	 * @param eventType one of the EVENTTYPE_XXX constants
 	 */
-	GenerateEvent(EventType		eventType,
-                    MemoryManagerType& theManager);
+	GenerateEvent(EventType		        eventType,
+                  MemoryManagerType&    theManager);
 	
 	/** 
 	* Constructor for startElement, endElement events.
@@ -215,6 +215,10 @@ public:
 	 * The current attribute list.
 	 */
 	const AttributeListType*	m_pAtts;
+private:
+    // not imlplemented
+    GenerateEvent();
+    GenerateEvent(const GenerateEvent&);
 };
 
 

@@ -83,6 +83,9 @@ public:
 	set(double	theValue);
 
 private:
+    // not implemented
+    XNumber();
+    XNumber(const XNumber&);
 
 	// Value of the number being represented.
 	double					m_value;

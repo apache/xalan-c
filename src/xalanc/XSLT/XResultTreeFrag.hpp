@@ -150,6 +150,9 @@ protected:
 	dereferenced();
 
 private:
+    //not implemented
+    XResultTreeFrag();
+    XResultTreeFrag(const XResultTreeFrag&);
 
 	// Data members...
 	XalanDocumentFragment*			m_value;	

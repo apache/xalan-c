@@ -76,6 +76,9 @@ public:
 			int							charOffset);
 
 private:
+    //not implemented
+    XalanTransformerProblemListener();
+    XalanTransformerProblemListener(const XalanTransformerProblemListener&);
 
 	ProblemListenerDefault	m_problemListener;
 

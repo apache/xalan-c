@@ -70,6 +70,9 @@ public:
 	getURI() const;
 
 private:
+    //not implemented
+    XalanSourceTreeWrapperParsedSource();
+    XalanSourceTreeWrapperParsedSource(const XalanSourceTreeWrapperParsedSource&);
 
 	XalanSourceTreeParserLiaison&	m_parserLiaison;
 

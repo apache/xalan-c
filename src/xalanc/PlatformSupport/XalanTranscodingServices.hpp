@@ -264,6 +264,8 @@ public:
 		}
 
 	private:
+        // not implemented
+        UnrepresentableCharacterException(const UnrepresentableCharacterException&);
 
 		static const XalanDOMChar	m_type[];
 

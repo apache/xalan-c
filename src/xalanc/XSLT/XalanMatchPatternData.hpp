@@ -157,6 +157,9 @@ public:
     getPriorityOrDefault() const;
 
 private:
+    // not implemented
+    XalanMatchPatternData();
+    XalanMatchPatternData( const XalanMatchPatternData&);
 
     const ElemTemplate*     m_template;
 

@@ -76,7 +76,7 @@ public:
 	 * @param fileName valid system file name
 	 */
 	XSLTResultTarget(const XalanDOMChar*	fileName,
-                    MemoryManagerType& theManager XALAN_DEFAULT_MEMMGR);
+                    MemoryManagerType& theManager XALAN_DEFAULT_CONSTRACTOR_MEMORY_MGR);
 
 	/**
 	 * Create a new output target with a file name.
@@ -84,7 +84,7 @@ public:
 	 * @param fileName valid system file name
 	 */
 	XSLTResultTarget(const char*	fileName,
-                    MemoryManagerType& theManager XALAN_DEFAULT_MEMMGR);
+                    MemoryManagerType& theManager XALAN_DEFAULT_CONSTRACTOR_MEMORY_MGR);
 
 	/**
 	 * Create a new output target with a stream.
@@ -92,7 +92,7 @@ public:
 	 * @param byteStream a pointer to a std ostream for the output
 	 */
 	XSLTResultTarget(StreamType*	theStream,
-                    MemoryManagerType& theManager XALAN_DEFAULT_MEMMGR);
+                    MemoryManagerType& theManager XALAN_DEFAULT_CONSTRACTOR_MEMORY_MGR);
 
 	/**
 	 * Create a new output target with a stream.
@@ -100,7 +100,7 @@ public:
 	 * @param byteStream a reference to a std ostream for the output
 	 */
 	XSLTResultTarget(StreamType&	theStream,
-                    MemoryManagerType& theManager XALAN_DEFAULT_MEMMGR);
+                    MemoryManagerType& theManager XALAN_DEFAULT_CONSTRACTOR_MEMORY_MGR);
 
 	/**
 	 * Create a new output target with a character stream.
@@ -109,7 +109,7 @@ public:
 	 *                        will be written
 	 */ 
 	XSLTResultTarget(Writer*	characterStream,
-                    MemoryManagerType& theManager XALAN_DEFAULT_MEMMGR);
+                    MemoryManagerType& theManager XALAN_DEFAULT_CONSTRACTOR_MEMORY_MGR);
 
 	/**
 	 * Create a new output target with a stream.
@@ -118,7 +118,7 @@ public:
 	 *                        will be written
 	 */ 
 	XSLTResultTarget(FILE*	characterStream,
-                    MemoryManagerType& theManager XALAN_DEFAULT_MEMMGR);
+                    MemoryManagerType& theManager XALAN_DEFAULT_CONSTRACTOR_MEMORY_MGR);
 
 	/**
 	 * Create a new output target with a FormatterListener.
@@ -126,10 +126,10 @@ public:
 	 * @param flistener A FormatterListener instance for result tree events.
 	 */
 	XSLTResultTarget(FormatterListener&		flistener,
-                    MemoryManagerType& theManager XALAN_DEFAULT_MEMMGR);
+                    MemoryManagerType& theManager XALAN_DEFAULT_CONSTRACTOR_MEMORY_MGR);
 
     XSLTResultTarget(const XSLTResultTarget& other,
-                    MemoryManagerType&      theManager XALAN_DEFAULT_MEMMGR);
+                    MemoryManagerType&      theManager XALAN_DEFAULT_CONSTRACTOR_MEMORY_MGR);
 	~XSLTResultTarget();
 
 	/**
