@@ -102,6 +102,9 @@ public:
 	virtual double
 	num() const;
 
+	virtual bool
+	boolean() const;
+
 	virtual const XalanDOMString&
 	str() const;
 
@@ -156,6 +159,8 @@ private:
 	XalanDOMString	m_stringValue;
 
 	double			m_numberValue;
+
+	bool			m_isString;
 };
 
 

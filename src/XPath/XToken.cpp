@@ -74,7 +74,8 @@ XALAN_CPP_NAMESPACE_BEGIN
 XToken::XToken() :
 	XObject(eTypeString),
 	m_stringValue(),
-	m_numberValue(DoubleSupport::getNaN())
+	m_numberValue(DoubleSupport::getNaN()),
+	m_isString(true)
 {
 }
 
@@ -83,7 +84,8 @@ XToken::XToken() :
 XToken::XToken(const XalanDOMString&	theString) :
 	XObject(eTypeString),
 	m_stringValue(theString),
-	m_numberValue(DoubleSupport::toDouble(theString))
+	m_numberValue(DoubleSupport::toDouble(theString)),
+	m_isString(true)
 {
 }
 
@@ -92,7 +94,8 @@ XToken::XToken(const XalanDOMString&	theString) :
 XToken::XToken(double	theNumber) :
 	XObject(eTypeString),
 	m_stringValue(DoubleToDOMString(theNumber)),
-	m_numberValue(theNumber)
+	m_numberValue(theNumber),
+	m_isString(false)
 {
 }
 
@@ -101,7 +104,8 @@ XToken::XToken(double	theNumber) :
 XToken::XToken(const XToken&	theSource) :
 	XObject(theSource),
 	m_stringValue(theSource.m_stringValue),
-	m_numberValue(theSource.m_numberValue)
+	m_numberValue(theSource.m_numberValue),
+	m_isString(theSource.m_isString)
 {
 }
 
@@ -137,6 +141,14 @@ double
 XToken::num() const
 {
 	return m_numberValue;
+}
+
+
+
+bool
+XToken::boolean() const
+{
+	return m_isString == true ? XObject::boolean(m_stringValue) : XObject::boolean(m_numberValue);
 }
 
 
@@ -200,6 +212,8 @@ XToken::operator=(const XalanDOMString&	theString)
 
 	m_numberValue = DoubleSupport::toDouble(theString);
 
+	m_isString = true;
+
 	return *this;
 }
 
@@ -213,6 +227,8 @@ XToken::operator=(double	theNumber)
 	DoubleToDOMString(theNumber, m_stringValue);
 
 	m_numberValue = theNumber;
+
+	m_isString = false;
 
 	return *this;
 }
