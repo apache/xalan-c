@@ -22,6 +22,7 @@
 				Name="VCNMakeTool"
 				BuildCommandLine="nmake    /f &quot;BuildMessages.mak&quot; /NOLOGO CFG=Debug TYPE=inmem LOCALE=en_US"
 				ReBuildCommandLine="nmake    /f &quot;BuildMessages.mak&quot; /NOLOGO CFG=Debug TYPE=inmem LOCALE=en_US /a"
+				CleanCommandLine="nmake    /f &quot;BuildMessages.mak&quot; /NOLOGO CFG=Debug TYPE=inmem LOCALE=en_US CLEAN"
 				Output="Localization"/>
 		</Configuration>
 		<Configuration
@@ -35,6 +36,7 @@
 				Name="VCNMakeTool"
 				BuildCommandLine="nmake /f &quot;BuildMessages.mak&quot;  TYPE=inmem LOCALE=en_US"
 				ReBuildCommandLine="nmake /f &quot;BuildMessages.mak&quot;  TYPE=inmem LOCALE=en_US /a"
+				CleanCommandLine="nmake /f &quot;BuildMessages.mak&quot;  TYPE=inmem LOCALE=en_US CLEAN"
 				Output="Localization"/>
 		</Configuration>
 		<Configuration
@@ -48,6 +50,7 @@
 				Name="VCNMakeTool"
 				BuildCommandLine="nmake /f &quot;BuildMessages.mak&quot;  TYPE=inmem CFG=Release.symbols LOCALE=en_US"
 				ReBuildCommandLine="nmake /f &quot;BuildMessages.mak&quot;  TYPE=inmem CFG=Release.symbols LOCALE=en_US /a"
+				CleanCommandLine="nmake /f &quot;BuildMessages.mak&quot;  TYPE=inmem CFG=Release.symbols LOCALE=en_US CLEAN"
 				Output="Localization"/>
 		</Configuration>
 	</Configurations>
