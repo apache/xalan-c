@@ -64,6 +64,9 @@
 
 
 #include <PlatformSupport/Writer.hpp>
+#if defined(XALAN_NEWLINE_IS_CRLF)
+#include <PlatformSupport/XalanUnicode.hpp>
+#endif
 
 
 
@@ -130,8 +133,25 @@ FormatterToText::characters(
 			const XMLCh* const	chars,
 			const unsigned int	length)
 {
-		m_pw.write(chars, 0, length);
+#if defined(XALAN_NEWLINE_IS_CRLF)
+	for (unsigned int i = 0; i < length; ++i)
+	{
+		// Normalize LF to CR/LF...
+		if (chars[i] == XalanUnicode::charLF &&
+			(i == 0 ||
+			 chars[i - 1] != XalanUnicode::charCR))
+		{
+			m_pw.write(XalanUnicode::charCR);
+		}
+
+		m_pw.write(chars[i]);
+	}
+#else
+	m_pw.write(chars, 0, length);
+#endif
 }
+
+
 
 void
 FormatterToText::charactersRaw(
@@ -191,5 +211,5 @@ FormatterToText::cdata(
 			const XMLCh* const	ch,
 			const unsigned int 	length)
 {
-	m_pw.write(ch, 0, length);
+	characters(ch, length);
 }
