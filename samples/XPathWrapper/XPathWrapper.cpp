@@ -15,6 +15,7 @@
 #include <DOMSupport/DOMSupportDefault.hpp>
 #include <XPath/XObjectFactoryDefault.hpp>
 #include <XPath/XPathEnvSupportDefault.hpp>
+#include <XPath/XPathExecutionContextDefault.hpp>
 #include <XPath/XPathSupportDefault.hpp>
 #include <XPath/XPath.hpp>
 #include <XPath/XPathProcessorImpl.hpp>
@@ -87,13 +88,14 @@ public:
 
 
 		// configure the objects needed for XPath to work with the Xerces DOM
-		XPathEnvSupportDefault	theEnvSupport;
-		DOMSupportDefault		theDOMSupport;
-		XPathSupportDefault		theSupport(theDOMSupport);
-		XObjectFactoryDefault	theXObjectFactory(theEnvSupport, theSupport);
-		XPathFactoryDefault		theXPathFactory(theXObjectFactory, theEnvSupport, theSupport);
-		XPathProcessorImpl		theXPathProcessor(theEnvSupport, theSupport);
-		XercesParserLiaison		theLiaison(theDOMSupport);
+		XPathEnvSupportDefault			theEnvSupport;
+		DOMSupportDefault				theDOMSupport;
+		XPathSupportDefault				theSupport(theDOMSupport);
+		XObjectFactoryDefault			theXObjectFactory(theEnvSupport, theSupport);
+		XPathExecutionContextDefault	theExecutionContext(theEnvSupport, theSupport, theXObjectFactory);
+		XPathFactoryDefault				theXPathFactory;
+		XPathProcessorImpl				theXPathProcessor;
+		XercesParserLiaison				theLiaison(theDOMSupport);
 
 		std::vector<std::string> theResultList;
 
@@ -101,20 +103,33 @@ public:
 		{
 			// first get the context nodeset
 			XPath *contextXPath = theXPathFactory.create();
-			theXPathProcessor.initXPath(*contextXPath, DOMString(context.c_str()), ElementPrefixResolverProxy(rootNode,theSupport));
-			contextXPath->shrink();
+			theXPathProcessor.initXPath(*contextXPath,
+										DOMString(context.c_str()),
+										ElementPrefixResolverProxy(rootNode,theSupport),
+										theXObjectFactory,
+										theEnvSupport);
 
 			MutableNodeRefList contextNodeList;		//default empty context
-	   		XObject* xObj = contextXPath->execute(rootNode, ElementPrefixResolverProxy(rootNode,theSupport), contextNodeList);
+	   		XObject* xObj = contextXPath->execute(rootNode,
+												  ElementPrefixResolverProxy(rootNode,theSupport),
+												  contextNodeList,
+												  theExecutionContext);
+
 			contextNodeList = xObj->mutableNodeset();
 
 
 			// and now get the result of the primary xpath expression
 			XPath *xpath = theXPathFactory.create();
-			theXPathProcessor.initXPath(*xpath, DOMString(expr.c_str()), ElementPrefixResolverProxy(rootNode, theSupport));
-			xpath->shrink();
+			theXPathProcessor.initXPath(*xpath,
+										DOMString(expr.c_str()),
+										ElementPrefixResolverProxy(rootNode, theSupport),
+										theXObjectFactory,
+										theEnvSupport);
 
-			xObj = xpath->execute(rootNode, ElementPrefixResolverProxy(rootNode,theSupport), contextNodeList);
+			xObj = xpath->execute(rootNode,
+								  ElementPrefixResolverProxy(rootNode,theSupport),
+								  contextNodeList,
+								  theExecutionContext);
 
 			// now encode the results.  For all types but nodelist, we'll just convert it to a string
 			// but, for nodelist, we'll convert each node to a string and return a list of them
