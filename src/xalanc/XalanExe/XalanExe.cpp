@@ -90,15 +90,46 @@
 
 
 
-#if defined(_MSC_VER)
-#if (_MSC_VER < 1300) && !defined(_WIN64)
+#if defined(_MSC_VER) && !defined(_WIN64)
 #define XALAN_USE_WINDOWS_TIMING
-#endif
 #endif
 
 #if defined(XALAN_USE_WINDOWS_TIMING)
+
 #include "windows.h"
+#if (_MSC_VER < 1300)
 #include "largeint.h"
+#else
+
+// For whatever reason, these are no longer in the Windows
+// header files, although they still exist.  And no word as
+// to why they disappeared or how to replace them.
+extern "C"
+{
+LARGE_INTEGER
+WINAPI
+LargeIntegerDivide (
+    LARGE_INTEGER Dividend,
+    LARGE_INTEGER Divisor,
+    PLARGE_INTEGER Remainder
+    );
+
+LARGE_INTEGER
+WINAPI
+ExtendedLargeIntegerDivide (
+    LARGE_INTEGER Dividend,
+    ULONG Divisor,
+    PULONG Remainder
+    );
+
+LARGE_INTEGER
+WINAPI
+LargeIntegerSubtract (
+    LARGE_INTEGER Minuend,
+    LARGE_INTEGER Subtrahend
+    );
+};
+#endif
 #else
 #include <ctime>
 #if defined(XALAN_STRICT_ANSI_HEADERS)
