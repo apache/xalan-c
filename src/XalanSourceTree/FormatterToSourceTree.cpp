@@ -101,7 +101,6 @@ FormatterToSourceTree::FormatterToSourceTree(XalanSourceTreeDocument*	theDocumen
 	m_textBuffer(),
 	m_prefixResolver(0)
 {
-	assert(m_document != 0);
 }
 
 

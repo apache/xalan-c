@@ -114,7 +114,8 @@ public:
 	 *
 	 * @param theDocument The document for nodes
 	 */
-	FormatterToSourceTree(XalanSourceTreeDocument*	theDocument);
+	explicit
+	FormatterToSourceTree(XalanSourceTreeDocument*	theDocument = 0);
 
 	/**
 	 * Construct a FormatterToSourceTree instance.  it will add the nodes 
@@ -130,6 +131,42 @@ public:
 	virtual
 	~FormatterToSourceTree();
 
+
+	XalanSourceTreeDocument*
+	getDocument() const
+	{
+		return m_document;
+	}
+
+	void
+	setDocument(XalanSourceTreeDocument*	theDocument)
+	{
+		m_document = theDocument;
+	}
+
+	XalanDocumentFragment*
+	getDocumentFragment() const
+	{
+		return m_documentFragment;
+	}
+
+	void
+	setDocumentFragment(XalanDocumentFragment*	theDocumentFragment)
+	{
+		m_documentFragment = theDocumentFragment;
+	}
+
+	XalanSourceTreeElement*
+	getCurrentElement() const
+	{
+		return m_currentElement;
+	}
+
+	void
+	setCurrentElement(XalanSourceTreeElement*	theElement)
+	{
+		m_currentElement = theElement;
+	}
 
 	const PrefixResolver*
 	getPrefixResolver() const
@@ -195,42 +232,6 @@ public:
 
 	virtual void
 	resetDocument();
-
-	XalanSourceTreeDocument*
-	getDocument() const
-	{
-		return m_document;
-	}
-
-	void
-	setDocument(XalanSourceTreeDocument*	theDocument)
-	{
-		m_document = theDocument;
-	}
-
-	XalanDocumentFragment*
-	getDocumentFragment() const
-	{
-		return m_documentFragment;
-	}
-
-	void
-	setDocumentFragment(XalanDocumentFragment*	theDocumentFragment)
-	{
-		m_documentFragment = theDocumentFragment;
-	}
-
-	XalanSourceTreeElement*
-	getCurrentElement() const
-	{
-		return m_currentElement;
-	}
-
-	void
-	setCurrentElement(XalanSourceTreeElement*	theElement)
-	{
-		m_currentElement = theElement;
-	}
 
 private:
 
