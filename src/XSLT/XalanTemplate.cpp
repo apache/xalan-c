@@ -61,6 +61,8 @@
 // Base include file.  Must be first.
 #include <PlatformSupport/PlatformSupportDefinitions.hpp>
 
+
+
 #if !defined(XALAN_NEEDS_EXPLICIT_TEMPLATE_INSTANTIATION)
 
 	// No-op function to allow file to compile and link.	
@@ -173,7 +175,6 @@
 
 
 
-static numeric_limits<double> theDoubleLimits;
 static string theString;
 static vector<XalanDOMString> theDOMStringVector;
 static vector<char> theCharVector;
@@ -200,6 +201,8 @@ static VariablesStack::ParamsVectorType	theParamsVector;
 static ElemNumber::NumberingResourceBundleMapType theNumberingResourceBundleMapType;
 static XalanTranscodingServices::MaximumCharacterValueMapType theMaximumCharacterValueMapType;
 static set<XalanNode*, less<XalanNode*> >	theInstanceSetType;
+
+
 
 static void
 foo()
