@@ -17,14 +17,14 @@ Please contact us at <human-resource-ref idref="xalandev"/> if you would like to
 <s3 title="&xslt4c; Windows Distribution">
 <p><img src="xalan-c-windist.gif" alt="xalan-cdist.gif"/></p>
 </s3>
-<p>For the Windows32 build, download <resource-ref idref="xslt4c-win32-download"/>.</p>
+<p>For the Windows32 build, download <resource-ref idref="xslt4c-win32-download"/>. This Windows32 distribution was built with MSVC 6.0 SP3 and <jump href="http://www.dinkumware.com/vc_fixes.html">Dinkumware C++ library fixes</jump>.</p>
 <s3 title="&xslt4c; UNIX Distributions">
 <p><img src="xalan-c-unixdist.gif" alt="xalan-cdist.gif"/></p>
 </s3>
-<p>For the Linux build, download <resource-ref idref="xslt4c-linux-download"/>.</p>
-<p>For the AIX build, download <resource-ref idref="xslt4c-aix-download"/>.</p>
-<p>For the HP-UX 11 build, download <resource-ref idref="xslt4c-hp-ux-download"/>.</p>
-<p>For the Solaris build, download <resource-ref idref="xslt4c-solaris-download"/>.</p>
+<p>For the Linux build, download <resource-ref idref="xslt4c-linux-download"/>. This Red Hat Linux 6.1 distribution was built with egcs-2.91.66 and glibc-2.1.2-11.</p>
+<p>For the AIX build, download <resource-ref idref="xslt4c-aix-download"/>. This AIX 4.3 distribution was built with IBM C and C++ for AIX 3.6.6.</p>
+<p>For the HP-UX 11 build, download <resource-ref idref="xslt4c-hp-ux-download"/>. This HP-UX 11 distribution was built with aCC A.03.27.</p>
+<p>For the Solaris build, download <resource-ref idref="xslt4c-solaris-download"/>. This Solaris distribution was built with Workshop 4.2.</p>
 <note>Use GNU tar to untar the Solaris distribution file; see <link idref="faq" anchor="gnutar">A tar checksum error on Solaris</link>.</note>
 <p>Each distribution contains all you need to run the Xalan command-line transformations utility and to build your own applications. 
 If you want to take advantage of the support for number formatting, sorting, and encoding the ICU provides, you should also download and install the <resource-ref idref="icu"/>; see <link idref="usagepatterns" anchor="icu">Using the ICU</link>,</p>
