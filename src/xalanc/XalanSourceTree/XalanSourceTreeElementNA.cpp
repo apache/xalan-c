@@ -105,7 +105,7 @@ XalanSourceTreeElementNA::getPrefix() const
 const XalanDOMString&
 XalanSourceTreeElementNA::getLocalName() const
 {
-	return s_emptyString;
+	return m_tagName;
 }
 
 
