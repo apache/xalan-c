@@ -34,7 +34,11 @@
 
 #include "xalanc/Include/XalanVersion.hpp"
 
+#ifdef WIN32
 #define XALAN_MESSAGES_NAME XalanMessages
+#else
+#define XALAN_MESSAGES_NAME xalanMsg
+#endif
 
 #define XALAN_MESSAGES_NAME_W_UNDERSCORE INVK_CAT2_RAW_NUMERIC(XALAN_MESSAGES_NAME,_)
 
