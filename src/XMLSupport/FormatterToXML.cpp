@@ -944,7 +944,6 @@ void
 FormatterToXML::accumCommentData(const XalanDOMChar*	data)
 {
 	accumName(data);
-//	accumContent(data);
 }
 
 
