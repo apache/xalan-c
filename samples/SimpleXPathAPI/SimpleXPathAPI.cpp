@@ -19,8 +19,7 @@
 
 
 
-#include <XalanDOM/XalanDocument.hpp>
-#include <XalanDOM/XalanElement.hpp>
+#include <DOMSupport/XalanDocumentPrefixResolver.hpp>
 
 
 
@@ -32,44 +31,6 @@
 #include <XalanSourceTree/XalanSourceTreeDOMSupport.hpp>
 #include <XalanSourceTree/XalanSourceTreeInit.hpp>
 #include <XalanSourceTree/XalanSourceTreeParserLiaison.hpp>
-
-
-
-XALAN_USING_XALAN(XalanNode)
-XALAN_USING_XALAN(XalanElement)
-
-
-
-const XalanElement*
-getPrefixResolver(const XalanNode*	node)
-{
-	if (node == 0)
-	{
-		return 0;
-	}
-	else if (node->getNodeType() == XalanNode::ELEMENT_NODE)
-	{
-#if defined(XALAN_OLD_STYLE_CASTS)
-		return (const XalanElement*)node;
-#else
-		return static_cast<const XalanElement*>(node);
-#endif
-	}
-	else if (node->getNodeType() == XalanNode::DOCUMENT_NODE)
-	{
-		XALAN_USING_XALAN(XalanDocument)
-
-#if defined(XALAN_OLD_STYLE_CASTS)
-		return ((const XalanDocument*)node)->getDocumentElement();
-#else
-		return static_cast<const XalanDocument*>(node)->getDocumentElement();
-#endif
-	}
-	else
-	{
-		return getPrefixResolver(node->getParentNode());
-	}
-}
 
 
 
@@ -107,6 +68,7 @@ main(
 				XALAN_USING_XERCES(LocalFileInputSource)
 
 				XALAN_USING_XALAN(XalanDocument)
+				XALAN_USING_XALAN(XalanDocumentPrefixResolver)
 				XALAN_USING_XALAN(XalanDOMString)
 				XALAN_USING_XALAN(XalanNode)
 				XALAN_USING_XALAN(XalanSourceTreeInit)
@@ -134,6 +96,8 @@ main(
 						theLiaison.parseXMLStream(theInputSource);
 				assert(theDocument != 0);
 
+				XalanDocumentPrefixResolver		thePrefixResolver(theDocument);
+
 				XPathEvaluator	theEvaluator;
 
 				// OK, let's find the context node...
@@ -142,7 +106,7 @@ main(
 							theDOMSupport,
 							theDocument,
 							XalanDOMString(argv[2]).c_str(),
-							theDocument->getDocumentElement());
+							thePrefixResolver);
 
 				if (theContextNode == 0)
 				{
@@ -162,7 +126,7 @@ main(
 								theDOMSupport,
 								theContextNode,
 								XalanDOMString(argv[3]).c_str(),
-								getPrefixResolver(theContextNode)));
+								thePrefixResolver));
 
 					assert(theResult.null() == false);
 
