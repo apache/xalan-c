@@ -62,6 +62,10 @@
 
 
 
+#include <DOMSupport/DOMServices.hpp>
+
+
+
 #include <XalanDOM/XalanElement.hpp>
 
 
@@ -69,6 +73,7 @@
 #include <XPath/ElementPrefixResolverProxy.hpp>
 #include <XPath/XObjectFactory.hpp>
 #include <XPath/XPath.hpp>
+#include <XPath/XPathConstructionContextDefault.hpp>
 #include <XPath/XPathProcessorImpl.hpp>
 
 
@@ -81,6 +86,52 @@ FunctionEvaluate::FunctionEvaluate()
 
 FunctionEvaluate::~FunctionEvaluate()
 {
+}
+
+
+
+inline XObjectPtr
+doExecute(
+			XPathExecutionContext&	executionContext,
+			XalanNode*				context,
+			const XalanDOMString&	expression,
+			const PrefixResolver&	resolver)
+{
+	// $$$ ToDo: Consider moving all of this into a member function of
+	// XPathExecutionContext.
+	XPathProcessorImpl					theProcessor;
+
+	XPathConstructionContextDefault		theConstructionContext;
+
+	XPath								theXPath;
+
+	theProcessor.initXPath(
+			theXPath,
+			theConstructionContext,
+			expression,
+			resolver);
+
+	return theXPath.execute(context, resolver, executionContext);
+}
+
+
+
+inline XObjectPtr
+doExecute(
+			XPathExecutionContext&	executionContext,
+			XalanNode*				context,
+			const XalanDOMString&	expression,
+			const XalanNode*		resolver)
+{
+	assert(resolver == 0 || resolver->getNodeType() == XalanNode::ELEMENT_NODE);
+
+#if defined(XALAN_OLD_STYLE_CASTS)
+	ElementPrefixResolverProxy	theProxy((const XalanElement*)resolver);
+#else
+	ElementPrefixResolverProxy	theProxy(static_cast<const XalanElement*>(resolver));
+#endif
+
+	return doExecute(executionContext, context, expression, theProxy);
 }
 
 
@@ -99,57 +150,35 @@ FunctionEvaluate::execute(
 
 	assert(args[0].null() == false);
 
+	const XalanDOMString&	theExpression = args[0]->str();
+
 	const PrefixResolver* const	theResolver =
 		executionContext.getPrefixResolver();
 
-	if (theResolver == 0)
+	if (theResolver != 0)
 	{
-		if (context->getNodeType() != XalanNode::ELEMENT_NODE)
-		{
-			executionContext.warn(
-				"No prefix resolver is available in evaluate().  The expression cannot be evaluated.",
-				context,
-				locator);
-
-			return args[0];
-		}
-		else
-		{
-			executionContext.warn(
-				"No prefix resolver is available in evaluate().  evalute() will use the context node for prefix resolution.",
-				context,
-				locator);
-
-#if defined(XALAN_OLD_STYLE_CASTS)
-			ElementPrefixResolverProxy	theProxy((const XalanElement*)context);
-#else
-			ElementPrefixResolverProxy	theProxy(static_cast<const XalanElement*>(context));
-#endif
-
-			XPathProcessorImpl	theProcessor;
-
-			XPath				theXPath;
-
-			theProcessor.initXPath(
-					theXPath,
-					args[0]->str(),
-					theProxy);
-
-			return theXPath.execute(context, *theResolver, executionContext);
-		}
+		return doExecute(executionContext, context, theExpression, *theResolver);
 	}
 	else
 	{
-		XPathProcessorImpl	theProcessor;
+		const XalanNode*	resolverNode = context;
 
-		XPath				theXPath;
+		if (resolverNode->getNodeType() != XalanNode::ELEMENT_NODE)
+		{
+			resolverNode = DOMServices::getParentOfNode(*resolverNode);
 
-		theProcessor.initXPath(
-				theXPath,
-				args[0]->str(),
-				*theResolver);
+			if (context->getNodeType() != XalanNode::ELEMENT_NODE)
+			{
+				executionContext.warn(
+					"No prefix resolver is available in evaluate().",
+					context,
+					locator);
 
-		return theXPath.execute(context, *theResolver, executionContext);
+				resolverNode = 0;
+			}
+		}
+
+		return doExecute(executionContext, context, theExpression, resolverNode);
 	}
 }
 
