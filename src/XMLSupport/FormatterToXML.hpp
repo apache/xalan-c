@@ -65,7 +65,7 @@
 
 
 
-#include <stack>
+#include <map>
 #include <vector>
 
 
@@ -325,12 +325,27 @@ public:
 		return m_indent;
 	}
 
+#if defined(XALAN_NO_NAMESPACES)
+	typedef vector<bool>				BoolStackType;
+	typedef vector<XalanDOMChar>		DOMCharBufferType;
+	typedef vector<char>				ByteBufferType;
+	typedef map<XalanDOMString,
+				XalanDOMChar,
+				less<XalanDOMString> >	MaximumCharacterValueMapType;
+#else
+	typedef std::vector<bool>			BoolStackType;
+	typedef std::vector<XalanDOMChar>	DOMCharBufferType;
+	typedef std::vector<char>			ByteBufferType;
+	typedef std::map<XalanDOMString,
+					 XalanDOMChar>		MaximumCharacterValueMapType;
+#endif
+
 protected:
 
 	/** 
 	 * The writer where the XML will be written.
 	 */
-	Writer&					m_writer;
+	Writer&		m_writer;
 
 	/**
 	 * Output a line break.
@@ -425,6 +440,12 @@ protected:
 	void
 	flushChars();
 
+	/**
+	 * Flush the byte buffer.
+	 */
+	void
+	flushBytes();
+
 	void
 	flush();
 
@@ -507,6 +528,16 @@ protected:
 	throwInvalidUTF16SurrogateException(
 			XalanDOMChar	ch,
 			unsigned int	next);
+
+	/**
+	 * Get the maximum character value for the encoding.
+	 *
+	 * @param theEncoding The encoding name.
+	 * @return The maximum character value that the
+	 * encoding supports.
+	 */
+	static XalanDOMChar
+	getMaximumCharacterValue(const XalanDOMString&	theEncoding);
 
 	enum eDummyTwo { SPECIALSSIZE = 256};
 
@@ -609,16 +640,6 @@ protected:
 	 * The string "formatter-to-dom".
 	 */
 	static const XalanDOMCharVectorType&	s_formatterToDOMString;
-
-#if defined(XALAN_NO_NAMESPACES)
-	typedef vector<bool>				BoolStackType;
-	typedef vector<XalanDOMChar>		DOMCharBufferType;
-	typedef vector<char>				ByteBufferType;
-#else
-	typedef std::vector<bool>			BoolStackType;
-	typedef std::vector<XalanDOMChar>	DOMCharBufferType;
-	typedef std::vector<char>			ByteBufferType;
-#endif
 
 	/**
 	 * Stack to keep track of whether or not we need to 
@@ -799,7 +820,11 @@ private:
 
 	DOMCharBufferType::size_type	m_pos;
 
+	ByteBufferType					m_byteBuf;
+
 	static const DOMCharBufferType::size_type	s_maxBufferSize;
+
+	static const MaximumCharacterValueMapType&	s_maximumCharacterValues;
 
 	/**
 	 * Current level of indent.
