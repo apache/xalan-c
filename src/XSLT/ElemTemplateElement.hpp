@@ -699,6 +699,42 @@ public:
 		return m_optimizationFlags & eCanGenerateAttributes ? true : false;
 	}
 
+	class LocatorProxy : public XalanLocator
+	{
+	public:
+
+		LocatorProxy(const ElemTemplateElement& 	theElement);
+
+		virtual
+		~LocatorProxy();
+
+		virtual const XMLCh*
+		getPublicId() const;
+
+		virtual const XMLCh*
+		getSystemId() const;
+
+		virtual size_type
+		getLineNumber() const;
+
+		virtual size_type
+		getColumnNumber() const;
+
+	private:
+
+		// Not implemented...
+		LocatorProxy(const LocatorProxy&);
+
+		LocatorProxy&
+		operator=(const LocatorProxy&);
+
+		bool
+		operator==(const LocatorProxy&) const;
+
+		// data members...
+		const ElemTemplateElement&	m_element;
+	};
+
 protected:
 
 	void
@@ -767,42 +803,6 @@ protected:
 	static const XalanDOMString 	s_emptyString;
 
 private:
-
-	class LocatorProxy : public XalanLocator
-	{
-	public:
-
-		LocatorProxy(const ElemTemplateElement& 	theElement);
-
-		virtual
-		~LocatorProxy();
-
-		virtual const XMLCh*
-		getPublicId() const;
-
-		virtual const XMLCh*
-		getSystemId() const;
-
-		virtual size_type
-		getLineNumber() const;
-
-		virtual size_type
-		getColumnNumber() const;
-
-	private:
-
-		// Not implemented...
-		LocatorProxy(const LocatorProxy&);
-
-		LocatorProxy&
-		operator=(const LocatorProxy&);
-
-		bool
-		operator==(const LocatorProxy&) const;
-
-		// data members...
-		const ElemTemplateElement&	m_element;
-	};
 
 	/** 
 	 * Take the contents of a template element, process it, and
