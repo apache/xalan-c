@@ -79,7 +79,7 @@
 
 
 #include <util/PlatformUtils.hpp>
-#include <sax/SAXException.hpp>
+#include <sax/SAXParseException.hpp>
 
 
 
@@ -1231,7 +1231,7 @@ main(
 		{
 			theResult = xsltMain(theParams);
 		}
-		catch (XSLException& e)
+		catch (const XSLException&	e)
 		{
 			cout << "\nXSLException ";
 
@@ -1250,33 +1250,42 @@ main(
 				cout << "Unknown URI";
 			}
 
-			const int	theLineNumber = e.getLineNumber();
-
-			if (theLineNumber != -1)
-			{
-				cout << ", line " << theLineNumber;
-			}
-			else
-			{
-				cout << ", unknown line";
-			}
-
-			const int	theColumnNumber = e.getColumnNumber();
-
-			if (theColumnNumber != -1)
-			{
-				cout << ", column " << theColumnNumber;
-			}
-			else
-			{
-				cout << ", unknown column";
-			}
-
-			cout << ")" << endl;
+			cout << ", line "
+				 << e.getLineNumber()
+				 << ", column "
+				 << e.getColumnNumber()
+				 << ")"
+				 << endl;
 
 			theResult = -1;
 		}
-		catch (SAXException& e)
+		catch (const SAXParseException&	e)
+		{
+			cout << "\nSAXParseException ";
+
+			cout << "Message is: " << e.getMessage() << " (";
+
+			const XMLCh* const	theSystemID = e.getSystemId();
+
+			if (theSystemID != 0)
+			{
+				cout << XalanDOMString(theSystemID);
+			}
+			else
+			{
+				cout << "Unknown system ID";
+			}
+
+			cout << ", line "
+				 << e.getLineNumber()
+				 << ", column "
+				 << e.getColumnNumber()
+				 << ")"
+				 << endl;
+
+			theResult = -2;
+		}
+		catch (const SAXException&	e)
 		{
 			cout << "\nSAXException ";
 
@@ -1284,7 +1293,7 @@ main(
 
 			theResult = -2;
 		}
-		catch (XMLException& e)
+		catch (const XMLException&	e)
 		{
 			cout << "\nXMLException ";
 
