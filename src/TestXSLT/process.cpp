@@ -1021,7 +1021,9 @@ xsltMain(const CmdLineParams&	params)
 			theXObjectFactory);
 
 #if defined(XALAN_USE_ICU)
-	ICUBridgeCollationCompareFunctor	theICUFunctor;
+	// Create a collation function for the ICU, and have it
+	// cache collators...
+	ICUBridgeCollationCompareFunctor	theICUFunctor(true);
 
 	theExecutionContext.installCollationCompareFunctor(&theICUFunctor);
 #endif
@@ -1152,7 +1154,11 @@ main(
 	else if (theParams.versionOnly == true)
 	{
 		cout << endl
-			 << "TestXSLT version 1.3 (Xalan C++ version 1.3)"
+			 << "Xalan version "
+			 << XALAN_FULLVERSIONDOT
+			 << endl
+			 << "Xerces version "
+			 << XERCES_FULLVERSIONDOT
 			 << endl;
 	}
 	else
