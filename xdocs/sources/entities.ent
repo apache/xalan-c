@@ -6,7 +6,7 @@
 <!ENTITY xslt4c-windlls "DOMSupport.dll, PlatformSupport.dll, XalanDOM.dll, XercesParserLiaison.dll, XercesPlatformSupport.dll, XMLSupport.dll, XPath.dll, XSLT.dll">
 <!ENTITY xslt4c-linuxlib "libxalan-c_0_40_0.so">
 <!ENTITY xml4c "Xerces-C++">
-<!ENTITY xml4c-used "Xerces-C++ version 1.2.0">
+<!ENTITY xml4c-used "Xerces-C++ version 1.2.0a">
 <!ENTITY xml4c-windll "xerces-c_1_2.dll">
 <!ENTITY xml4c-winlib "xerces-c_1.lib">
 <!ENTITY xml4c-linuxlib "libxerces-c_1_2.so">

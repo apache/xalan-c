@@ -3,12 +3,15 @@
 <p><em>Important</em> You may experience unpredictable anomalies if your Xalan and Xerces builds are not in synch. If you download an update to Xalan, check the release notes to determine which version of Xerces you should use.</p>
 </s3><anchor name="to-do"/>
 <s3 title="To-do tasks for future &xslt4c; releases">
-  <p>To complete our implementation of the <resource-ref idref="XSLT"/>, we must add support for</p>
+  <p>To complete our implementation of the <resource-ref idref="XSLT"/>, we must do the following:</p>
     <ul>
-       <li>The fallback element<br/><br/></li>
-       <li>The exclude-result-prefixes attribute<br/><br/></li>
-       <li>The output encoding attribute<br/><br/></li>
-       <li>Extension elements<br/><br/></li>
+       <li>Integrate the International Components for Unicode (ICU) for number formatting and output encoding<br/><br/></li>
+       <li>Complete implementation of the format-number() function and support for the decimal-format element<br/><br/></li>
+       <li>Add support for the exclude-result-prefixes attribute<br/><br/></li>
+       <li>Add support for the output encoding attribute<br/><br/></li>
+       <li>Add support for extension elements<br/><br/></li>
+       <li>Fix namespace bugs<br/><br/></li>       
+       <li>Continue to run our suite of conformance tests and fix any conformance bugs we find<br/><br/></li>       
     </ul>
     <p>The XSLT specification makes no such requirement, but we plan to implement a more efficient mechanism for storing and
     navigating DOM trees, along the lines of the &xslt4j; Document Table Model (DTM)</p>
