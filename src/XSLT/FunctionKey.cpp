@@ -155,8 +155,9 @@ FunctionKey::execute(
 
 							const NodeRefListBase* const		nl =
 									executionContext.getNodeSetByKey(docContext, 
-																	 keyname,
-																	 ref);
+											keyname,
+											ref,
+											*executionContext.getPrefixResolver());
 
 							if (nl != 0)
 							{
@@ -173,8 +174,9 @@ FunctionKey::execute(
 
 			const NodeRefListBase* const	nl =
 					executionContext.getNodeSetByKey(docContext,
-													 keyname,
-													 ref);
+											keyname,
+											ref,
+											*executionContext.getPrefixResolver());
 
 			if (nl != 0)
 			{
