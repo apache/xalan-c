@@ -63,7 +63,8 @@
     <li><link anchor="simpletransform">SimpleTransform</link></li>
     <li><link anchor="usestylesheetparam">UseStylesheetParam</link></li>
     <li><link anchor="tracelisten">TraceListen</link></li>        
-    <li><link anchor="compilestylesheet">CompileStylesheet</link></li>    
+    <li><link anchor="compilestylesheet">CompileStylesheet</link></li>
+    <li><link anchor="threadsafe">ThreadSafe</link></li>  
     <li><link anchor="xpathwrapper">XPathWrapper</link></li>
     <li><link anchor="externalfunctions">ExternalFunctions</link></li>
   </ul>
@@ -146,6 +147,17 @@ theProcessor.addTraceListener(theTraceListener.get());
     <p>You can run it from the CompileStylesheet subdirectory with</p>
     <p><code>CompileStylesheet</code></p>
     <p>See also: <link idref="usagepatterns" anchor="compiled">Compiling stylesheets</link>.</p>
+  </s2>  <anchor name="threadsafe"/>
+  <s2 title="ThreadSafe (Windows32 Only)">
+  <p>What it does: multiple threads use a single compiled stylesheet (StylesheetRoot) and DOM source tree (XalanNode) to perform
+  transformations concurrently. The application tracks the progress of the threads in messages to the screen, and each thread
+  writes its own output file. Imagine a server application responding to multiple clients who happen to request the same
+  transformation.</p>
+  <note>This sample uses Windows libraries, but could readily be adapted to run under Linux and in other environments. It could
+  also be adapted to perform a variety of transformations, each with its own XML input.</note>
+  <p>You can run it from the ThreadSafe subdirectory with</p>
+  <p><code>ThreadSafe</code></p>
+  <p>See also: <link idref="usagepatterns" anchor="compiled">Compiling stylesheets</link>.</p>  
   </s2><anchor name="xpathwrapper"/>
   <s2 title="XPathWrapper">
     <p>This sample uses TestDriver, an executable, and two classes: XPathWrapper and XPathWrapperImp. </p>
