@@ -1,6 +1,18 @@
-<s3 title="Bug reporting">
-  <p>Outstanding bugs are recorded in the Apache XML <jump href="http://xml.apache.org/bugs/">Bug Tracking System</jump>. 
-  If you find a bug, please use this system to report it.</p> 
-  <note>If the Apache XML Bug Tracking System is not working, please report the bug to the
-  <human-resource-ref idref="xalandev"/>, and please be sure to note in the subject line that the bug applies to &xslt4c;.</note>
+<s3 title="Bugs">
+<p>Open bugs:</p>
+<ul>
+<li>Problems mapping namespaces from the stylesheet to the source document, and elements do not inherit namespaces correctly<br/><br/></li>
+<li>&lt;xsl:copy-of ...&gt; within an attribute element does not include CRLFs (if any) in the result.<br/><br/></li>
+<li>If you use &lt;xsl:output method="HTML"&gt; to generate HTML with a &lt;HEAD&gt; element, the &lt;HEAD&gt; element fails to include a &lt;META&gt; tag (with the encoding).<br/><br/></li>
+<li>&lt;xsl:number&gt; does not support letter-value="traditional" for "classical" Greek numbering.<br/><br/></li>
+<li>Unable to sort in reverse document order based on position. <br/><br/></li>
+<li>Does not support six or more digits of numerical precision after the decimal.<br/><br/></li>
+<li>&lt;xsl:fallback&gt; within a top-level function is not recognized and does not throw an error.<br/><br/></li>
+<li>The document() function generates a syntax error if called in the following manner: document(<ref>string</ref>,/).<br/><br/></li>
+<li>Problems using key() in match patterns to find descendants. For example, key('mykey','Introduction')//p finds all p elements, not just those that match the criteria.<br/><br/></li>
+<li>The id() function doesn't work in some complex match patterns.<br/><br/></li>
+<li>In some cases, output a single CDATA section in multiple single-character CDATA sections.<br/><br/></li>
+<li>Minor problems outputting whitespace characters.</li>
+</ul>
+  <note>Please report any bugs you find to the <human-resource-ref idref="xalandev"/>, and please note in the subject line that the bug applies to &xslt4c;.</note>
 </s3>    
