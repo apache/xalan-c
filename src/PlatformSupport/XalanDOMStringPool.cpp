@@ -164,7 +164,7 @@ XalanDOMStringPool::get(
 	}
 	else
 	{
-		const unsigned int	theActualLength = theLength == -1 ? length(theString) : theLength;
+		const unsigned int	theActualLength = theLength == unsigned(-1) ? length(theString) : theLength;
 
 		// Find the string...
 		const IndexMapType::const_iterator	i =
