@@ -475,7 +475,8 @@ XalanSourceTreeDocument::getDocumentElement() const
 XalanNodeList*
 XalanSourceTreeDocument::getElementsByTagName(const XalanDOMString&	/* tagname */) const
 {
-	// Not supported...
+	throw XalanDOMException(XalanDOMException::NOT_SUPPORTED_ERR);
+
 	return 0;
 }
 
@@ -554,14 +555,58 @@ XalanSourceTreeDocument::getNumber() const
 
 
 
+static bool
+hasXMLNamespaceAttribute(const AttributeList&	attrs)
+{
+	const unsigned int	theLength = attrs.getLength();
+
+	for (unsigned int i = 0; i < theLength; ++i)
+	{
+		const XalanDOMChar* const	theName =
+			attrs.getName(i);
+		assert(theName != 0);
+
+		if(equals(theName, DOMServices::s_XMLNamespacePrefix) == true)
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+
+
+
+static bool
+hasXMLNamespaceAttribute(const Attributes&	attrs)
+{
+	const unsigned int	theLength = attrs.getLength();
+
+	for (unsigned int i = 0; i < theLength; ++i)
+	{
+		const XalanDOMChar* const	theName =
+			attrs.getQName(i);
+		assert(theName != 0);
+
+		if(equals(theName, DOMServices::s_XMLNamespacePrefix) == true)
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+
+
+
 XalanSourceTreeElement*
 XalanSourceTreeDocument::createElementNode(
-			const XalanDOMChar*			name,
-			const AttributeList&		attrs,
-			XalanNode*					theParentNode,
-			XalanNode*					thePreviousSibling,
-			XalanNode*					theNextSibling,
-			bool						fAddXMLNamespaceAttribute)
+			const XalanDOMChar*		name,
+			const AttributeList&	attrs,
+			XalanNode*				theParentNode,
+			XalanNode*				thePreviousSibling,
+			XalanNode*				theNextSibling,
+			bool					fAddXMLNamespaceAttribute)
 {
 	// We might have typedef'ed this to something smaller than unsigned int.
 	AttributesCountType		theAttributeCount = AttributesCountType(attrs.getLength());
@@ -571,7 +616,14 @@ XalanSourceTreeDocument::createElementNode(
 
 	if (fAddXMLNamespaceAttribute == true)
 	{
-		++theAttributeCount;
+		if (hasXMLNamespaceAttribute(attrs) == true)
+		{
+			fAddXMLNamespaceAttribute = false;
+		}
+		else
+		{
+			++theAttributeCount;
+		}
 	}
 
 	XalanSourceTreeAttr** const		theAttributeVector =
@@ -648,13 +700,13 @@ XalanSourceTreeDocument::createElementNode(
 
 XalanSourceTreeElement*
 XalanSourceTreeDocument::createElementNode(
-			const XalanDOMChar*			tagName,
-			const AttributeList&		attrs,
-			const PrefixResolver&		thePrefixResolver,
-			XalanNode*					theParentNode,
-			XalanNode*					thePreviousSibling,
-			XalanNode*					theNextSibling,
-			bool						fAddXMLNamespaceAttribute)
+			const XalanDOMChar*		tagName,
+			const AttributeList&	attrs,
+			const PrefixResolver&	thePrefixResolver,
+			XalanNode*				theParentNode,
+			XalanNode*				thePreviousSibling,
+			XalanNode*				theNextSibling,
+			bool					fAddXMLNamespaceAttribute)
 {
 	// We might have typedef'ed this to something smaller than unsigned int.
 	AttributesCountType		theAttributeCount = AttributesCountType(attrs.getLength());
@@ -664,7 +716,14 @@ XalanSourceTreeDocument::createElementNode(
 
 	if (fAddXMLNamespaceAttribute == true)
 	{
-		++theAttributeCount;
+		if (hasXMLNamespaceAttribute(attrs) == true)
+		{
+			fAddXMLNamespaceAttribute = false;
+		}
+		else
+		{
+			++theAttributeCount;
+		}
 	}
 
 	XalanSourceTreeAttr** const		theAttributeVector =
@@ -748,11 +807,11 @@ getElementNodePrefix(
 {
 	if(theColonIndex == theLength)
 	{
-		return  theStringPool->get(XalanDOMString()); 
+		return theStringPool->get(XalanDOMString()); 
 	}
 	else
 	{
-		return  theStringPool->get(qname, theColonIndex);
+		return theStringPool->get(qname, theColonIndex);
 	}
 	
 
@@ -762,14 +821,14 @@ getElementNodePrefix(
 
 XalanSourceTreeElement*
 XalanSourceTreeDocument::createElementNode(
-			const XalanDOMChar*			uri,
-			const XalanDOMChar*			localname,
-			const XalanDOMChar*			qname,
-			const Attributes&			attrs,
-			XalanNode*					theParentNode,
-			XalanNode*					thePreviousSibling,
-			XalanNode*					theNextSibling,
-			bool						fAddXMLNamespaceAttribute)
+			const XalanDOMChar*		uri,
+			const XalanDOMChar*		localname,
+			const XalanDOMChar*		qname,
+			const Attributes&		attrs,
+			XalanNode*				theParentNode,
+			XalanNode*				thePreviousSibling,
+			XalanNode*				theNextSibling,
+			bool					fAddXMLNamespaceAttribute)
 {
 
 	// We might have typedef'ed this to something smaller than unsigned int.
@@ -780,7 +839,14 @@ XalanSourceTreeDocument::createElementNode(
 
 	if (fAddXMLNamespaceAttribute == true)
 	{
-		++theAttributeCount;
+		if (hasXMLNamespaceAttribute(attrs) == true)
+		{
+			fAddXMLNamespaceAttribute = false;
+		}
+		else
+		{
+			++theAttributeCount;
+		}
 	}
 
 	XalanSourceTreeAttr** const		theAttributeVector =
@@ -816,12 +882,12 @@ XalanSourceTreeDocument::createElementNode(
 
 XalanSourceTreeElement*
 XalanSourceTreeDocument::createElementNode(
-			const XalanDOMChar*			name,
-			const Attributes&			attrs,
-			XalanNode*					theParentNode,
-			XalanNode*					thePreviousSibling,
-			XalanNode*					theNextSibling,
-			bool						fAddXMLNamespaceAttribute)
+			const XalanDOMChar*		name,
+			const Attributes&		attrs,
+			XalanNode*				theParentNode,
+			XalanNode*				thePreviousSibling,
+			XalanNode*				theNextSibling,
+			bool					fAddXMLNamespaceAttribute)
 {
 	// We might have typedef'ed this to something smaller than unsigned int.
 	AttributesCountType		theAttributeCount = AttributesCountType(attrs.getLength());
@@ -831,7 +897,14 @@ XalanSourceTreeDocument::createElementNode(
 
 	if (fAddXMLNamespaceAttribute == true)
 	{
-		++theAttributeCount;
+		if (hasXMLNamespaceAttribute(attrs) == true)
+		{
+			fAddXMLNamespaceAttribute = false;
+		}
+		else
+		{
+			++theAttributeCount;
+		}
 	}
 
 	XalanSourceTreeAttr** const		theAttributeVector =
