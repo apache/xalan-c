@@ -124,7 +124,6 @@ void generateFiles(const XalanDOMString &fileName,
 				   const char* test)
 {
 	// Set up the input/output files.
-
 	const XalanDOMString testName(h.generateFileName(fileName,"out"));
 
 	xsl = h.args.base + currentDir + pathSep + fileName;
@@ -324,8 +323,18 @@ main(int			argc,
 	setHelp();	
 	if (h.getParams(argc, argv, "EXTENSION-RESULTS") == true)
 	{
+		const XalanDOMString	extDir(h.args.base + currentDir);
+
+		// Check that the base directory is correct.
+		if ( !h.checkDir(extDir) )
+		{
+			cout << "Invalid base directory - " << c_str(TranscodeToLocalCodePage(extDir)) << endl;
+			cout << h.args.help.str();
+			return 0;
+		}
+
 		// Generate Unique Run id. (Only used to name the result logfile.)
-		const XalanDOMString  UniqRunid = h.generateUniqRunid();
+		const XalanDOMString	UniqRunid = h.generateUniqRunid();
 
 		// Defined basic constants for file manipulation 
 		const XalanDOMString drive(h.getDrive());
@@ -350,7 +359,7 @@ main(int			argc,
 		h.checkAndCreateDir(theOutputDir);
 
 		// Get the files found in the "cextension" directory
-		const FileNameVectorType	files = h.getTestFileNames(h.args.base, currentDir, false);
+		const FileNameVectorType	files = h.getTestFileNames(h.args.base, currentDir, true);
 
 		// TestCase1 is used to verify correct functioning of the default extension functions
 		TestCase1(xalan, files[0], logFile);	// Difference function
