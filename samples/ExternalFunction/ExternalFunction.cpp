@@ -60,7 +60,7 @@ public:
 	 * @param args             vector of pointers to XObject arguments
 	 * @return                 pointer to the result XObject
 	 */
-	virtual XObject*
+	virtual XObjectPtr
 	execute(
 			XPathExecutionContext&			executionContext,
 			XalanNode*						context,
@@ -72,7 +72,7 @@ public:
 			executionContext.error("The square-root() function takes one argument!", context);
 		}
 
-		assert(args[0] != 0);
+		assert(args[0].null() == true);
 
 		return executionContext.getXObjectFactory().createNumber(sqrt(args[0]->num()));
 	}
@@ -120,7 +120,7 @@ public:
 	 * @param args             vector of pointers to XObject arguments
 	 * @return                 pointer to the result XObject
 	 */
-	virtual XObject*
+	virtual XObjectPtr
 	execute(
 			XPathExecutionContext&			executionContext,
 			XalanNode*						context,
@@ -132,7 +132,7 @@ public:
 			executionContext.error("The cube() function takes one argument!", context);
 		}
 
-		assert(args[0] != 0);
+		assert(args[0].null() == true);
 
 		return executionContext.getXObjectFactory().createNumber(pow(args[0]->num(), 3));
 	}
@@ -180,7 +180,7 @@ public:
 	 * @param args             vector of pointers to XObject arguments
 	 * @return                 pointer to the result XObject
 	 */
-	virtual XObject*
+	virtual XObjectPtr
 	execute(
 			XPathExecutionContext&			executionContext,
 			XalanNode*						context,
@@ -317,7 +317,7 @@ main(
 				// processor in the executable's process, since there
 				// is one static XPath function table.
 				XPath::installFunction(
-					"asctime",
+					XalanDOMString("asctime"),
 					FunctionAsctime());
 
 				// The namespace for our functions...
@@ -330,7 +330,7 @@ main(
 				// use the function.
 				XSLTProcessorEnvSupportDefault::installExternalFunctionGlobal(
 					theNamespace,
-					"square-root",
+					XalanDOMString("square-root"),
 					FunctionSquareRoot());
 
 				// Install the function in the local space.  It will only
@@ -338,7 +338,7 @@ main(
 				// will know about the function...
 				theXSLTProcessorEnvSupport.installExternalFunctionLocal(
 					theNamespace,
-					"cube",
+					XalanDOMString("cube"),
 					FunctionCube());
 
 				theProcessor.process(
