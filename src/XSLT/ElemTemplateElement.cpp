@@ -793,8 +793,6 @@ ElemTemplateElement::transformChild(
 			
 	if(0 != theTemplate)
 	{
-		executionContext.resetCurrentState(child);
-				
 		if(theTemplate == getStylesheet().getStylesheetRoot().getDefaultTextRule())
 		{
 			switch(nodeType)
@@ -840,8 +838,6 @@ ElemTemplateElement::transformChild(
 			theTemplate->executeChildren(executionContext, 
 										 child);
 		}
-
-		executionContext.resetCurrentState(selectContext);
 	}
 
 	return true;

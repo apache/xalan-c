@@ -159,7 +159,7 @@ ElemApplyTemplates::execute(StylesheetExecutionContext&		executionContext) const
 		// depth-first searching, this gets worse.
 		StylesheetExecutionContext::ParamsPushPop	thePushPop(
 			executionContext,
-			*this,		
+			*this,
 			sourceNode,
 			this);
 
