@@ -124,8 +124,8 @@ NamespacesHandler::NamespacesHandler(
 
 			if(shouldExcludeResultNamespaceNode(
 					theXSLTNamespaceURI,
-					stylesheetNamespacesHandler,
-					theNamespace) == false)
+					thePrefix,
+					theURI) == false)
 			{
 				if (m_namespaceDeclarations.count(thePrefix) == 0)
 				{
@@ -312,7 +312,7 @@ NamespacesHandler::postConstruction(
 	}
 
 	// Figure out the prefix of the owning element, to make sure we
-	// don't exclude it's prefix.
+	// don't exclude its prefix.
 	const unsigned int		indexOfNSSep = indexOf(theElementName, XalanUnicode::charColon);
 
 	const XalanDOMString	thePrefix = indexOfNSSep < length(theElementName) ?
@@ -430,27 +430,8 @@ NamespacesHandler::shouldExcludeResultNamespaceNode(
 	}
 	else
 	{
-		// $$$ ToDo: Ask Scott what this code does...
-#if 0
-		const ElemTemplateElement*	elem = this;
-
-		while(0 != elem)
-		{
-			elem = elem->getParentNodeElem();
-
-			if(0 == elem)
-			{
-				return getStylesheet().shouldExcludeResultNamespace(prefix);
-			}
-		}
-	}
-
-	return false;
-#else
-
 		return stylesheetNamespacesHandler.hasExcludedPrefix(theNamespace.getPrefix());
 	}
-#endif
 }
 
 
@@ -560,8 +541,7 @@ NamespacesHandler::processExcludeResultPrefixes(const XalanDOMString&	theElement
 
 			// We can never exclude the prefix of our owner element, so
 			// check that first...
-			if ((isEmpty(thePrefix) ||
-				 equals(thePrefix, theElementPrefix) == false) &&
+			if (equals(thePrefix, theElementPrefix) == false &&
 				(m_excludedResultPrefixes.find(thePrefix) != m_excludedResultPrefixes.end() ||
 				 m_extensionNamespaceURIs.find(theURI) != m_extensionNamespaceURIs.end()))
 			{
