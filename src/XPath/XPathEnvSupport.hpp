@@ -85,6 +85,7 @@
 
 
 
+class Locator;
 class NodeRefListBase;
 class PrefixResolver;
 class XLocator;
@@ -192,6 +193,7 @@ public:
 	 * @param theNamespace  namespace of function    
 	 * @param functionName extension function name
 	 * @param argVec        vector of arguments to function
+	 * @param locator A Locator instance for error reporting.
 	 * @return pointer to XObject result
 	 */
 	virtual XObjectPtr
@@ -200,7 +202,8 @@ public:
 			const XalanDOMString&			theNamespace,
 			const XalanDOMString&			functionName, 
 			XalanNode*						context,
-			const XObjectArgVectorType&		argVec) const = 0;
+			const XObjectArgVectorType&		argVec,
+			const Locator*					locator) const = 0;
 
 	enum eSource { eXMLParser		= 1,
 				   eXSLTProcessor	= 2,

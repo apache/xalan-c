@@ -84,12 +84,16 @@ FunctionLocalName::~FunctionLocalName()
 
 XObjectPtr
 FunctionLocalName::execute(
-		XPathExecutionContext&			executionContext,
-		XalanNode*						context)
+			XPathExecutionContext&	executionContext,
+			XalanNode*				context,
+			const Locator*			locator) const
 {
 	if (context == 0)
 	{
-		executionContext.error("The local-name() function requires a non-null context node!");
+		executionContext.error(
+				"The local-name() function requires a non-null context node!",
+				context,
+				locator);
 
 		return XObjectPtr();
 	}
@@ -103,9 +107,10 @@ FunctionLocalName::execute(
 
 XObjectPtr
 FunctionLocalName::execute(
-		XPathExecutionContext&	executionContext,
-		XalanNode*				/* context */,			
-		const XObjectPtr		arg1)
+			XPathExecutionContext&	executionContext,
+			XalanNode*				/* context */,
+			const XObjectPtr		arg1,
+			const Locator*			/* locator */) const
 {
 	assert(arg1.null() == false);	
 
@@ -124,49 +129,6 @@ FunctionLocalName::execute(
 
 
 
-XObjectPtr
-FunctionLocalName::execute(
-			XPathExecutionContext&	executionContext,
-			XalanNode*				context,			
-			const XObjectPtr		/* arg1 */,
-			const XObjectPtr		/* arg2 */)
-{
-	executionContext.error(getError(), context);
-
-	return XObjectPtr(0);
-}
-
-
-
-XObjectPtr
-FunctionLocalName::execute(
-			XPathExecutionContext&	executionContext,
-			XalanNode*				context,			
-			const XObjectPtr		/* arg1 */,
-			const XObjectPtr		/* arg2 */,
-			const XObjectPtr		/* arg3 */)
-{
-	executionContext.error(getError(), context);
-
-	return XObjectPtr(0);
-}
-
-
-
-XObjectPtr
-FunctionLocalName::execute(
-			XPathExecutionContext&			executionContext,
-			XalanNode*						context,
-			int								/* opPos */,
-			const XObjectArgVectorType&		/* args */)
-{
-	executionContext.error(getError(), context);
-
-	return XObjectPtr(0);
-}
-
-
-
 static const XalanDOMString		theEmptyString;
 
 
@@ -174,7 +136,7 @@ static const XalanDOMString		theEmptyString;
 XObjectPtr
 FunctionLocalName::getLocalName(
 		XPathExecutionContext&	executionContext,
-		const XalanNode&		node)
+		const XalanNode&		node) const
 {
 	const XalanDOMString*		theResult = &theEmptyString;
 

@@ -80,12 +80,16 @@ FunctionName::~FunctionName()
 
 XObjectPtr
 FunctionName::execute(
-		XPathExecutionContext&	executionContext,
-		XalanNode*				context)
+			XPathExecutionContext&	executionContext,
+			XalanNode*				context,
+			const Locator*			locator) const
 {
 	if (context == 0)
 	{
-		executionContext.error("The name() function requires a non-null context node!");
+		executionContext.error(
+				"The name() function requires a non-null context node!",
+				context,
+				locator);
 
 		// Dummy return value...
 		return XObjectPtr();
@@ -100,9 +104,10 @@ FunctionName::execute(
 
 XObjectPtr
 FunctionName::execute(
-		XPathExecutionContext&	executionContext,
-		XalanNode*				/* context */,
-		const XObjectPtr		arg1)
+			XPathExecutionContext&	executionContext,
+			XalanNode*				/* context */,
+			const XObjectPtr		arg1,
+			const Locator*			/* locator */) const
 {
 	assert(arg1.null() == false);	
 
@@ -124,49 +129,6 @@ FunctionName::execute(
 
 
 
-XObjectPtr
-FunctionName::execute(
-			XPathExecutionContext&	executionContext,
-			XalanNode*				context,	
-			const XObjectPtr		/* arg1 */,
-			const XObjectPtr		/* arg2 */)
-{
-	executionContext.error(getError(), context);
-
-	return XObjectPtr(0);
-}
-
-
-
-XObjectPtr
-FunctionName::execute(
-			XPathExecutionContext&	executionContext,
-			XalanNode*				context,
-			const XObjectPtr		/* arg1 */,
-			const XObjectPtr		/* arg2 */,
-			const XObjectPtr		/* arg3 */)
-{
-	executionContext.error(getError(), context);
-
-	return XObjectPtr(0);
-}
-
-
-
-XObjectPtr
-FunctionName::execute(
-			XPathExecutionContext&			executionContext,
-			XalanNode*						context,
-			int								/* opPos */,
-			const XObjectArgVectorType&		/* args */)
-{
-	executionContext.error(getError(), context);
-
-	return XObjectPtr(0);
-}
-
-
-
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
 Function*
 #else
@@ -182,7 +144,5 @@ FunctionName::clone() const
 const XalanDOMString
 FunctionName::getError() const
 {
-	return XALAN_STATIC_UCODE_STRING(
-		"The name() function takes zero or one arguments!");
+	return XALAN_STATIC_UCODE_STRING("The name() function takes zero or one arguments!");
 }
-

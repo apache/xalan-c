@@ -552,7 +552,7 @@ SimpleNodeLocator::stepPattern(
 		break;
 
 	default:
-		executionContext.error(TranscodeFromLocalCodePage("unknown match operation!"), context);
+		executionContext.error(TranscodeFromLocalCodePage("unknown match operation!"), context, xpath.getLocator());
 		break;
 	}
 
@@ -1532,7 +1532,7 @@ SimpleNodeLocator::findNodesOnUnknownAxis(
 	const int	argLen =
 		currentExpression.getOpCodeMapValue(opPos + XPathExpression::s_opCodeMapLengthIndex + 1) - 3;
 
-	executionContext.error(TranscodeFromLocalCodePage("Unknown axis!"), context);
+	executionContext.error(TranscodeFromLocalCodePage("Unknown axis!"), context, xpath.getLocator());
 
 	return argLen + 3;
 }
@@ -1601,7 +1601,7 @@ SimpleNodeLocator::nodeTest(
 			}
 			else
 			{
-				executionContext.error(TranscodeFromLocalCodePage("Arg length of processing-instruction() node test is incorrect!"));
+				executionContext.error(TranscodeFromLocalCodePage("Arg length of processing-instruction() node test is incorrect!"), context, xpath.getLocator());
 			}
 		}
 
@@ -1939,7 +1939,7 @@ SimpleNodeLocator::NodeTester::NodeTester(
 		}
 		else
 		{
-			executionContext.error(TranscodeFromLocalCodePage("Arg length of processing-instruction() node test is incorrect!"));
+			executionContext.error(TranscodeFromLocalCodePage("Arg length of processing-instruction() node test is incorrect!"), 0, xpath.getLocator());
 		}
 		break;
 

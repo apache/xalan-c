@@ -81,27 +81,18 @@ FunctionID::~FunctionID()
 XObjectPtr
 FunctionID::execute(
 			XPathExecutionContext&	executionContext,
-			XalanNode*				context)
-{
-	executionContext.error(getError(), context);
-
-	return XObjectPtr(0);
-}
-
-
-
-XObjectPtr
-FunctionID::execute(
-		XPathExecutionContext&			executionContext,
-		XalanNode*						context,			
-		const XObjectPtr				arg1)
+			XalanNode*				context,
+			const XObjectPtr		arg1,
+			const Locator*			locator) const
 {
 	assert(arg1.null() == false);	
 
 	if (context == 0)
 	{
-		executionContext.error("The id() function requires a non-null context node!",
-							   context);
+		executionContext.error(
+			"The id() function requires a non-null context node!",
+			context,
+			locator);
 	}	
 
 	// Do the callback to get the data.
@@ -129,8 +120,10 @@ FunctionID::execute(
 	// If there is no context, we cannot continue.
 	if(0 == theDocContext)
 	{
-		executionContext.error("The context node does not have an owner document!",
-							   context);
+		executionContext.error(
+			"The context node does not have an owner document!",
+			context,
+			locator);
     }
 	else if (length(theResultString) > 0)
 	{
@@ -183,49 +176,6 @@ FunctionID::execute(
 
 
 
-XObjectPtr
-FunctionID::execute(
-			XPathExecutionContext&	executionContext,
-			XalanNode*				context,			
-			const XObjectPtr		/* arg1 */,
-			const XObjectPtr		/* arg2 */)
-{
-	executionContext.error(getError(), context);
-
-	return XObjectPtr(0);
-}
-
-
-
-XObjectPtr
-FunctionID::execute(
-			XPathExecutionContext&	executionContext,
-			XalanNode*				context,			
-			const XObjectPtr		/* arg1 */,
-			const XObjectPtr		/* arg2 */,
-			const XObjectPtr		/* arg3 */)
-{
-	executionContext.error(getError(), context);
-
-	return XObjectPtr(0);
-}
-
-
-
-XObjectPtr
-FunctionID::execute(
-			XPathExecutionContext&			executionContext,
-			XalanNode*						context,
-			int								/* opPos */,
-			const XObjectArgVectorType&		/* args */)
-{
-	executionContext.error(getError(), context);
-
-	return XObjectPtr(0);
-}
-
-
-
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
 Function*
 #else
@@ -241,8 +191,7 @@ FunctionID::clone() const
 const XalanDOMString
 FunctionID::getError() const
 {
-	return XALAN_STATIC_UCODE_STRING(
-		"The id() function takes one argument!");
+	return XALAN_STATIC_UCODE_STRING("The id() function takes one argument!");
 }
 
 

@@ -298,11 +298,12 @@ XPathExecutionContextDefault::extFunction(
 			const XalanDOMString&			theNamespace,
 			const XalanDOMString&			functionName, 
 			XalanNode*						context,
-			const XObjectArgVectorType&		argVec)
+			const XObjectArgVectorType&		argVec,
+			const Locator*					locator)
 {
 	assert(m_xpathEnvSupport != 0);
 
-	return m_xpathEnvSupport->extFunction(*this, theNamespace, functionName, context, argVec);
+	return m_xpathEnvSupport->extFunction(*this, theNamespace, functionName, context, argVec, locator);
 }
 
 
@@ -388,7 +389,9 @@ XPathExecutionContextDefault::getNodeSetByKey(
 
 
 const XObjectPtr
-XPathExecutionContextDefault::getVariable(const XalanQName&		name)
+XPathExecutionContextDefault::getVariable(
+			const XalanQName&		name,
+			const Locator*			/* locator */)
 {
 	assert(m_xobjectFactory != 0);
 

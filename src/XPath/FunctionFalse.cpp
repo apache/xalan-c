@@ -76,66 +76,11 @@ FunctionFalse::~FunctionFalse()
 
 XObjectPtr
 FunctionFalse::execute(
-		XPathExecutionContext&			executionContext,
-		XalanNode*						/* context */)
+			XPathExecutionContext&	executionContext,
+			XalanNode*				/* context */,
+			const Locator*			/* locator */) const
 {
 	return executionContext.getXObjectFactory().createBoolean(false);	
-}
-
-
-
-XObjectPtr
-FunctionFalse::execute(
-			XPathExecutionContext&	executionContext,
-			XalanNode*				context,			
-			const XObjectPtr		/* arg1 */)
-{
-	executionContext.error(getError(), context);
-
-	return XObjectPtr(0);
-}
-
-
-
-XObjectPtr
-FunctionFalse::execute(
-			XPathExecutionContext&	executionContext,
-			XalanNode*				context,			
-			const XObjectPtr		/* arg1 */,
-			const XObjectPtr		/* arg2 */)
-{
-	executionContext.error(getError(), context);
-
-	return XObjectPtr(0);
-}
-
-
-
-XObjectPtr
-FunctionFalse::execute(
-			XPathExecutionContext&	executionContext,
-			XalanNode*				context,			
-			const XObjectPtr		/* arg1 */,
-			const XObjectPtr		/* arg2 */,
-			const XObjectPtr		/* arg3 */)
-{
-	executionContext.error(getError(), context);
-
-	return XObjectPtr(0);
-}
-
-
-
-XObjectPtr
-FunctionFalse::execute(
-			XPathExecutionContext&			executionContext,
-			XalanNode*						context,
-			int								/* opPos */,
-			const XObjectArgVectorType&		/* args */)
-{
-	executionContext.error(getError(), context);
-
-	return XObjectPtr(0);
 }
 
 
@@ -155,7 +100,5 @@ FunctionFalse::clone() const
 const XalanDOMString
 FunctionFalse::getError() const
 {
-	return XALAN_STATIC_UCODE_STRING(
-		"The false() function does not accept arguments!");
+	return XALAN_STATIC_UCODE_STRING("The false() function does not accept arguments!");
 }
-

@@ -73,6 +73,7 @@
 
 
 
+class Locator;
 class XalanNode;
 
 
@@ -100,16 +101,16 @@ public:
 	 *
 	 * @param executionContext executing context
 	 * @param context          current context node
-	 * @param opPos            current op position
 	 * @param args             vector of pointers to XObject arguments
+	 * @param locator		   Locator for the XPath expression that contains the function call
 	 * @return                 pointer to the result XObject
 	 */
 	virtual XObjectPtr
 	execute(
 			XPathExecutionContext&			executionContext,
 			XalanNode*						context,
-			int								opPos,
-			const XObjectArgVectorType&		args);
+			const XObjectArgVectorType&		args,
+			const Locator*					locator) const;
 
 	/**
 	 * Execute an XPath function object.  The function must return a valid
@@ -117,12 +118,14 @@ public:
 	 *
 	 * @param executionContext executing context
 	 * @param context          current context node	 
+	 * @param locator		   Locator for the XPath expression that contains the function call
 	 * @return                 pointer to the result XObject
 	 */
 	virtual XObjectPtr
 	execute(
 			XPathExecutionContext&	executionContext,
-			XalanNode*				context);
+			XalanNode*				context,
+			const Locator*			locator) const;
 
 	/**
 	 * Execute an XPath function object.  The function must return a valid
@@ -131,14 +134,15 @@ public:
 	 * @param executionContext executing context
 	 * @param context          current context node
 	 * @param arg              pointer to XObject argument
+	 * @param locator		   Locator for the XPath expression that contains the function call
 	 * @return                 pointer to the result XObject
 	 */
 	virtual XObjectPtr
 	execute(
-
 			XPathExecutionContext&	executionContext,
 			XalanNode*				context,
-			const XObjectPtr		arg);
+			const XObjectPtr		arg,
+			const Locator*			locator) const;
 
 	/**
 	 * Execute an XPath function object.  The function must return a valid
@@ -148,15 +152,16 @@ public:
 	 * @param context          current context node
 	 * @param arg1             pointer to XObject argument
 	 * @param arg2             pointer to XObject argument
+	 * @param locator		   Locator for the XPath expression that contains the function call
 	 * @return                 pointer to the result XObject
 	 */
 	virtual XObjectPtr
 	execute(
-
 			XPathExecutionContext&	executionContext,
-			XalanNode*				context,			
+			XalanNode*				context,
 			const XObjectPtr		arg1,
-			const XObjectPtr		arg2);
+			const XObjectPtr		arg2,
+			const Locator*			locator) const;
 
 	/**
 	 * Execute an XPath function object.  The function must return a valid
@@ -167,15 +172,17 @@ public:
 	 * @param arg1             pointer to XObject arguments
 	 * @param arg2             pointer to XObject argument
 	 * @param arg3             pointer to XObject argument
+	 * @param locator		   Locator for the XPath expression that contains the function call
 	 * @return                 pointer to the result XObject
 	 */
 	virtual XObjectPtr
 	execute(
 			XPathExecutionContext&	executionContext,
-			XalanNode*				context,			
+			XalanNode*				context,
 			const XObjectPtr		arg1,
 			const XObjectPtr		arg2,
-			const XObjectPtr		arg3);
+			const XObjectPtr		arg3,
+			const Locator*			locator) const;
 
 	/**
 	 * Create a copy of the function object.
@@ -193,7 +200,7 @@ protected:
 	 * @return string function name
 	 */
 	virtual const XalanDOMString
-	getError() const;
+	getError() const = 0;
 
 private:
 

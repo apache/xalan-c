@@ -54,7 +54,7 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-#include <XPath/FunctionCeiling.hpp>
+#include "FunctionCeiling.hpp"
 
 
 
@@ -77,67 +77,13 @@ FunctionCeiling::~FunctionCeiling()
 XObjectPtr
 FunctionCeiling::execute(
 			XPathExecutionContext&	executionContext,
-			XalanNode*				context)
-{
-	executionContext.error(getError(), context);
-
-	return XObjectPtr(0);
-}
-
-
-
-XObjectPtr
-FunctionCeiling::execute(
-		XPathExecutionContext&			executionContext,
-		XalanNode*						/* context */,			
-		const XObjectPtr				arg1)
+			XalanNode*				/* context */,			
+			const XObjectPtr		arg1,
+			const Locator*			/* locator */) const
 {
 	assert(arg1.null() == false);
 
 	return executionContext.getXObjectFactory().createNumber(ceil(arg1->num()));
-}
-
-
-
-XObjectPtr
-FunctionCeiling::execute(
-			XPathExecutionContext&	executionContext,
-			XalanNode*				context,			
-			const XObjectPtr		/* arg1 */,
-			const XObjectPtr		/* arg2 */)
-{
-	executionContext.error(getError(), context);
-
-	return XObjectPtr(0);
-}
-
-
-
-XObjectPtr
-FunctionCeiling::execute(
-			XPathExecutionContext&	executionContext,
-			XalanNode*				context,			
-			const XObjectPtr		/* arg1 */,
-			const XObjectPtr		/* arg2 */,
-			const XObjectPtr		/* arg3 */)
-{
-	executionContext.error(getError(), context);
-
-	return XObjectPtr(0);
-}
-
-
-
-XObjectPtr
-FunctionCeiling::execute(
-			XPathExecutionContext&			executionContext,
-			XalanNode*						context,
-			int								/* opPos */,
-			const XObjectArgVectorType&		/* args */)
-{
-	executionContext.error(getError(), context);
-
-	return XObjectPtr(0);
 }
 
 
@@ -157,7 +103,5 @@ FunctionCeiling::clone() const
 const XalanDOMString
 FunctionCeiling::getError() const
 {
-	return XALAN_STATIC_UCODE_STRING(
-		"The ceiling() function takes one argument!");
+	return XALAN_STATIC_UCODE_STRING("The ceiling() function takes one argument!");
 }
-

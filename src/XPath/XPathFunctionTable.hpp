@@ -110,12 +110,12 @@ class XALAN_XPATH_EXPORT XPathFunctionTable
 public:
 
 #if defined(XALAN_NO_NAMESPACES)
-	typedef vector<Function*>				CollectionType;
+	typedef vector<const Function*>			CollectionType;
 	typedef map<XalanDOMString,
 				int,
 				less<XalanDOMString> >		FunctionNameIndexMapType;
 #else
-	typedef std::vector<Function*>			CollectionType;
+	typedef std::vector<const Function*>	CollectionType;
 	typedef std::map<XalanDOMString, int>	FunctionNameIndexMapType;
 #endif
 
@@ -148,7 +148,7 @@ public:
 	 * @param theFunctionName name of function
 	 * @return function named
 	 */
-	Function&
+	const Function&
 	operator[](const XalanDOMString&	theFunctionName) const
 	{
 		FunctionNameIndexMapType::const_iterator	i =
@@ -170,7 +170,7 @@ public:
 	 * @param theFunctionID ID number of the function
 	 * @return function named
 	 */
-	Function&
+	const Function&
 	operator[](int	theFunctionID) const
 	{
 		if (theFunctionID >= 0 &&

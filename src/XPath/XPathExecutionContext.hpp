@@ -287,7 +287,9 @@ public:
 	 * 
 	 * @param theNamespace  namespace of function    
 	 * @param functionName extension function name
-	 * @param argVec        vector of arguments to function
+	 * @param context The context node
+	 * @param argVec vector of arguments to function
+	 * @param locator A Locator instance for error reporting
 	 * @return pointer to XObject result
 	 */
 	virtual const XObjectPtr
@@ -295,7 +297,8 @@ public:
 			const XalanDOMString&			theNamespace,
 			const XalanDOMString&			functionName,
 			XalanNode*						context,
-			const XObjectArgVectorType&		argVec) = 0;
+			const XObjectArgVectorType&		argVec,
+			const Locator*					locator) = 0;
 
 	/**
 	 * Provides support for XML parsing service.
@@ -640,7 +643,9 @@ public:
 	 * @return pointer to an XObject if the variable was found, 0 if it was not
 	 */
 	virtual const XObjectPtr
-	getVariable(const XalanQName&	name) = 0;
+	getVariable(
+			const XalanQName&	name,
+			const Locator*		locator = 0) = 0;
 
 	/**
 	 * Retrieve the resolver for namespaces.

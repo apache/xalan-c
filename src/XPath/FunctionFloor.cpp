@@ -77,67 +77,13 @@ FunctionFloor::~FunctionFloor()
 XObjectPtr
 FunctionFloor::execute(
 			XPathExecutionContext&	executionContext,
-			XalanNode*				context)
-{
-	executionContext.error(getError(), context);
-
-	return XObjectPtr(0);
-}
-
-
-
-XObjectPtr
-FunctionFloor::execute(
-		XPathExecutionContext&			executionContext,
-		XalanNode*						/* context */,			
-		const XObjectPtr				arg1)
+			XalanNode*				/* context */,
+			const XObjectPtr		arg1,
+			const Locator*			/* locator */) const
 {	
 	assert(arg1.null() == false);	
 
 	return executionContext.getXObjectFactory().createNumber(floor(arg1->num()));
-}
-
-
-
-XObjectPtr
-FunctionFloor::execute(
-			XPathExecutionContext&	executionContext,
-			XalanNode*				context,			
-			const XObjectPtr		/* arg1 */,
-			const XObjectPtr		/* arg2 */)
-{
-	executionContext.error(getError(), context);
-
-	return XObjectPtr(0);
-}
-
-
-
-XObjectPtr
-FunctionFloor::execute(
-			XPathExecutionContext&	executionContext,
-			XalanNode*				context,			
-			const XObjectPtr		/* arg1 */,
-			const XObjectPtr		/* arg2 */,
-			const XObjectPtr		/* arg3 */)
-{
-	executionContext.error(getError(), context);
-
-	return XObjectPtr(0);
-}
-
-
-
-XObjectPtr
-FunctionFloor::execute(
-			XPathExecutionContext&			executionContext,
-			XalanNode*						context,
-			int								/* opPos */,
-			const XObjectArgVectorType&		/* args */)
-{
-	executionContext.error(getError(), context);
-
-	return XObjectPtr(0);
 }
 
 
@@ -157,7 +103,5 @@ FunctionFloor::clone() const
 const XalanDOMString
 FunctionFloor::getError() const
 {
-	return XALAN_STATIC_UCODE_STRING(
-		"The floor() function takes one argument!");
+	return XALAN_STATIC_UCODE_STRING("The floor() function takes one argument!");
 }
-

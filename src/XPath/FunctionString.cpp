@@ -80,15 +80,19 @@ FunctionString::~FunctionString()
 
 XObjectPtr
 FunctionString::execute(
-		XPathExecutionContext&	executionContext,
-		XalanNode*				context)
+			XPathExecutionContext&	executionContext,
+			XalanNode*				context,
+			const Locator*			locator) const
 {
 	if (context == 0)
 	{
-		executionContext.error("The string() function requires a non-null context node!");
+		executionContext.error(
+				"The string() function requires a non-null context node!",
+				context,
+				locator);
 
 		// Dummy return value...
-		return XObjectPtr(0);
+		return XObjectPtr();
 	}
 	else
 	{
@@ -113,56 +117,23 @@ FunctionString::execute(
 
 XObjectPtr
 FunctionString::execute(
-		XPathExecutionContext&	executionContext,
-		XalanNode*				/* context */,
-		const XObjectPtr		arg1)
+			XPathExecutionContext&	executionContext,
+			XalanNode*				/* context */,			
+			const XObjectPtr		arg1,
+			const Locator*			/* locator */) const
 {
 	assert(arg1.null() == false);	
-	
-	return executionContext.getXObjectFactory().createStringAdapter(arg1);
-}
 
-
-
-XObjectPtr
-FunctionString::execute(
-			XPathExecutionContext&	executionContext,
-			XalanNode*				context,			
-			const XObjectPtr		/* arg1 */,
-			const XObjectPtr		/* arg2 */)
-{
-	executionContext.error(getError(), context);
-
-	return XObjectPtr(0);
-}
-
-
-
-XObjectPtr
-FunctionString::execute(
-			XPathExecutionContext&	executionContext,
-			XalanNode*				context,			
-			const XObjectPtr		/* arg1 */,
-			const XObjectPtr		/* arg2 */,
-			const XObjectPtr		/* arg3 */)
-{
-	executionContext.error(getError(), context);
-
-	return XObjectPtr(0);
-}
-
-
-
-XObjectPtr
-FunctionString::execute(
-			XPathExecutionContext&			executionContext,
-			XalanNode*						context,
-			int								/* opPos */,
-			const XObjectArgVectorType&		/* args */)
-{
-	executionContext.error(getError(), context);
-
-	return XObjectPtr(0);
+	if (arg1->getType() == XObject::eTypeString)
+	{
+		// Since XObjects are reference counted, just return the
+		// argument.
+		return arg1;
+	}
+	else
+	{
+		return executionContext.getXObjectFactory().createStringAdapter(arg1);
+	}
 }
 
 
@@ -182,5 +153,5 @@ FunctionString::clone() const
 const XalanDOMString
 FunctionString::getError() const
 {
-	return XALAN_STATIC_UCODE_STRING("The string() function takes zero or one argument!");
+	return XALAN_STATIC_UCODE_STRING("The string() function takes zero or one arguments!");
 }

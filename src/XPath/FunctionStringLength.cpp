@@ -80,15 +80,19 @@ FunctionStringLength::~FunctionStringLength()
 
 XObjectPtr
 FunctionStringLength::execute(
-		XPathExecutionContext&	executionContext,
-		XalanNode*				context)
+			XPathExecutionContext&	executionContext,
+			XalanNode*				context,
+			const Locator*			locator) const
 {
 	if (context == 0)
 	{
-		executionContext.error("The string-length() function requires a non-null context node!");
+		executionContext.error(
+				"The string-length() function requires a non-null context node!",
+				context,
+				locator);
 
 		// Dummy return value...
-		return XObjectPtr(0);
+		return XObjectPtr();
 	}
 	else
 	{
@@ -113,56 +117,14 @@ FunctionStringLength::execute(
 
 XObjectPtr
 FunctionStringLength::execute(
-		XPathExecutionContext&	executionContext,
-		XalanNode*				/* context */,			
-		const XObjectPtr		arg1)
-{
-	assert(arg1.null() == false);	
-
-	return executionContext.getXObjectFactory().createNumber(length(arg1->str()));
-}
-
-
-
-XObjectPtr
-FunctionStringLength::execute(
 			XPathExecutionContext&	executionContext,
-			XalanNode*				context,			
-			const XObjectPtr		/* arg1 */,
-			const XObjectPtr		/* arg2 */)
+			XalanNode*				/* context */,			
+			const XObjectPtr		arg,
+			const Locator*			/* locator */) const
 {
-	executionContext.error(getError(), context);
+	assert(arg.null() == false);	
 
-	return XObjectPtr(0);
-}
-
-
-
-XObjectPtr
-FunctionStringLength::execute(
-			XPathExecutionContext&	executionContext,
-			XalanNode*				context,			
-			const XObjectPtr		/* arg1 */,
-			const XObjectPtr		/* arg2 */,
-			const XObjectPtr		/* arg3 */)
-{
-	executionContext.error(getError(), context);
-
-	return XObjectPtr(0);
-}
-
-
-
-XObjectPtr
-FunctionStringLength::execute(
-			XPathExecutionContext&			executionContext,
-			XalanNode*						context,
-			int								/* opPos */,
-			const XObjectArgVectorType&		/* args */)
-{
-	executionContext.error(getError(), context);
-
-	return XObjectPtr(0);
+	return executionContext.getXObjectFactory().createNumber(length(arg->str()));
 }
 
 

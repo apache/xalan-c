@@ -80,24 +80,33 @@ XObjectPtr
 Function::execute(
 			XPathExecutionContext&			executionContext,
 			XalanNode*						context,
-			int								/* opPos */,
-			const XObjectArgVectorType&		/* args */)
+			const XObjectArgVectorType&		args,
+			const Locator*					locator) const
 {
-	executionContext.error(getError(), context);
+	const XObjectArgVectorType::size_type	theArgCount = args.size();
 
-	return XObjectPtr(0);
-}
+	if (theArgCount == 0)
+	{
+		return execute(executionContext, context, locator);
+	}
+	else if (theArgCount == 1)
+	{
+		return execute(executionContext, context, args[0], locator);
+	}
+	else if (theArgCount == 2)
+	{
+		return execute(executionContext, context, args[0], args[1], locator);
+	}
+	else if (theArgCount == 2)
+	{
+		return execute(executionContext, context, args[0], args[1], args[2], locator);
+	}
+	else
+	{
+		executionContext.error(getError(), context, locator);
 
-
-
-XObjectPtr
-Function::execute(
-			XPathExecutionContext&	executionContext,
-			XalanNode*				context)
-{
-	executionContext.error(getError(), context);
-
-	return XObjectPtr(0);
+		return XObjectPtr(0);
+	}
 }
 
 
@@ -106,9 +115,9 @@ XObjectPtr
 Function::execute(
 			XPathExecutionContext&	executionContext,
 			XalanNode*				context,			
-			const XObjectPtr		/* arg1 */)
+			const Locator*			locator) const
 {
-	executionContext.error(getError(), context);
+	executionContext.error(getError(), context, locator);
 
 	return XObjectPtr(0);
 }
@@ -120,9 +129,9 @@ Function::execute(
 			XPathExecutionContext&	executionContext,
 			XalanNode*				context,			
 			const XObjectPtr		/* arg1 */,
-			const XObjectPtr		/* arg2 */)
+			const Locator*			locator) const
 {
-	executionContext.error(getError(), context);
+	executionContext.error(getError(), context, locator);
 
 	return XObjectPtr(0);
 }
@@ -135,17 +144,25 @@ Function::execute(
 			XalanNode*				context,			
 			const XObjectPtr		/* arg1 */,
 			const XObjectPtr		/* arg2 */,
-			const XObjectPtr		/* arg3 */)
+			const Locator*			locator) const
 {
-	executionContext.error(getError(), context);
+	executionContext.error(getError(), context, locator);
 
 	return XObjectPtr(0);
 }
 
 
 
-const XalanDOMString
-Function::getError() const
+XObjectPtr
+Function::execute(
+			XPathExecutionContext&	executionContext,
+			XalanNode*				context,			
+			const XObjectPtr		/* arg1 */,
+			const XObjectPtr		/* arg2 */,
+			const XObjectPtr		/* arg3 */,
+			const Locator*			locator) const
 {
-	return XALAN_STATIC_UCODE_STRING("Invalid number of arguments for function!");
+	executionContext.error(getError(), context, locator);
+
+	return XObjectPtr(0);
 }

@@ -275,8 +275,10 @@ XPath::executeMore(
 		{
 			const XalanDOMString	theOpCode = LongToDOMString(m_expression.m_opMap[opPos]);
 
-			executionContext.error(TranscodeFromLocalCodePage("ERROR! Unknown op code: ") + theOpCode,
-								   context);
+			executionContext.error(
+				TranscodeFromLocalCodePage("ERROR! Unknown op code: ") + theOpCode,
+				context,
+				m_locator);
 		}
 		break;
 	}
@@ -347,8 +349,10 @@ XPath::getMatchScore(
 	}
 	else
 	{
-		executionContext.error(TranscodeFromLocalCodePage("Expected match pattern in getMatchScore!"),
-							   node);
+		executionContext.error(
+			TranscodeFromLocalCodePage("Expected match pattern in getMatchScore!"),
+			node,
+			m_locator);
 	}
 	
 	return score;
@@ -914,7 +918,7 @@ XPath::variable(
 
 	const XObject&	varName = m_expression.m_tokenQueue[m_expression.m_opMap[opPos + 3]];
 
-	return executionContext.getVariable(XalanQNameByReference(ns.str(), varName.str()));
+	return executionContext.getVariable(XalanQNameByReference(ns.str(), varName.str()), m_locator);
 }
 
 
@@ -1032,7 +1036,7 @@ XPath::runFunction(
 	{
 		assert(opPos == endFunc);
 
-		return s_functions[funcID].execute(executionContext, context);
+		return s_functions[funcID].execute(executionContext, context, m_locator);
 	}
 	else if (argCount == 1)
 	{
@@ -1044,7 +1048,7 @@ XPath::runFunction(
 		
 		assert(opPos == endFunc);
 
-		return s_functions[funcID].execute(executionContext, context, theArg);
+		return s_functions[funcID].execute(executionContext, context, theArg, m_locator);
 	}
 	else if (argCount == 2)
 	{
@@ -1062,7 +1066,7 @@ XPath::runFunction(
 		
 		assert(opPos == endFunc);
 
-		return s_functions[funcID].execute(executionContext, context, theArg1, theArg2);
+		return s_functions[funcID].execute(executionContext, context, theArg1, theArg2, m_locator);
 	}
 	else if (argCount == 3)
 	{
@@ -1087,7 +1091,7 @@ XPath::runFunction(
 
 		assert(opPos == endFunc);
 
-		return s_functions[funcID].execute(executionContext, context, theArg1, theArg2, theArg3);
+		return s_functions[funcID].execute(executionContext, context, theArg1, theArg2, theArg3, m_locator);
 	}
 	else
 	{
@@ -1106,7 +1110,7 @@ XPath::runFunction(
 			opPos = nextOpPos;
 		}
 
-		return function(context, opPos, funcID, args, executionContext);
+		return function(context, funcID, args, executionContext);
 	}
 }
 

@@ -81,13 +81,16 @@ FunctionNormalizeSpace::~FunctionNormalizeSpace()
 
 XObjectPtr
 FunctionNormalizeSpace::execute(
-		XPathExecutionContext&	executionContext,
-		XalanNode*				context)
+			XPathExecutionContext&	executionContext,
+			XalanNode*				context,
+			const Locator*			locator) const
 {
 	if (context == 0)
 	{
-		executionContext.error("The normalize-space() function requires a non-null context node!",
-							   context);
+		executionContext.error(
+				"The normalize-space() function requires a non-null context node!",
+				context,
+				locator);
 
 		// Dummy return value...
 		return XObjectPtr(0);
@@ -113,9 +116,10 @@ FunctionNormalizeSpace::execute(
 
 XObjectPtr
 FunctionNormalizeSpace::execute(
-		XPathExecutionContext&	executionContext,
-		XalanNode*				/* context */,			
-		const XObjectPtr		arg1)
+			XPathExecutionContext&	executionContext,
+			XalanNode*				/* context */,
+			const XObjectPtr		arg1,
+			const Locator*			/* locator */) const
 {
 	assert(arg1.null() == false);	
 		
@@ -125,52 +129,9 @@ FunctionNormalizeSpace::execute(
 
 
 XObjectPtr
-FunctionNormalizeSpace::execute(
-			XPathExecutionContext&	executionContext,
-			XalanNode*				context,			
-			const XObjectPtr		/* arg1 */,
-			const XObjectPtr		/* arg2 */)
-{
-	executionContext.error(getError(), context);
-
-	return XObjectPtr(0);
-}
-
-
-
-XObjectPtr
-FunctionNormalizeSpace::execute(
-			XPathExecutionContext&	executionContext,
-			XalanNode*				context,			
-			const XObjectPtr		/* arg1 */,
-			const XObjectPtr		/* arg2 */,
-			const XObjectPtr		/* arg3 */)
-{
-	executionContext.error(getError(), context);
-
-	return XObjectPtr(0);
-}
-
-
-
-XObjectPtr
-FunctionNormalizeSpace::execute(
-			XPathExecutionContext&			executionContext,
-			XalanNode*						context,
-			int								/* opPos */,
-			const XObjectArgVectorType&		/* args */)
-{
-	executionContext.error(getError(), context);
-
-	return XObjectPtr(0);
-}
-
-
-
-XObjectPtr
 FunctionNormalizeSpace::normalize(
-		XPathExecutionContext&	executionContext,
-		const XalanDOMString&	theString) const
+			XPathExecutionContext&	executionContext,
+			const XalanDOMString&	theString) const
 {
 	const unsigned int	theStringLength = length(theString);
 
@@ -240,8 +201,8 @@ FunctionNormalizeSpace::normalize(
 
 XObjectPtr
 FunctionNormalizeSpace::normalize(
-		XPathExecutionContext&	executionContext,
-		const XObjectPtr&		theArg) const
+			XPathExecutionContext&	executionContext,
+			const XObjectPtr&		theArg) const
 {
 	const XalanDOMString&	theString = theArg->str();
 

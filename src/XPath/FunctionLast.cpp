@@ -76,68 +76,13 @@ FunctionLast::~FunctionLast()
 
 XObjectPtr
 FunctionLast::execute(
-		XPathExecutionContext&			executionContext,
-		XalanNode*						/* context */)
+			XPathExecutionContext&	executionContext,
+			XalanNode*				/* context */,
+			const Locator*			/* locator */) const
 {
 	const unsigned int	theValue = executionContext.getContextNodeListLength();
 
 	return executionContext.getXObjectFactory().createNumber(theValue);
-}
-
-
-
-XObjectPtr
-FunctionLast::execute(
-			XPathExecutionContext&	executionContext,
-			XalanNode*				context,			
-			const XObjectPtr		/* arg1 */)
-{
-	executionContext.error(getError(), context);
-
-	return XObjectPtr(0);
-}
-
-
-
-XObjectPtr
-FunctionLast::execute(
-			XPathExecutionContext&	executionContext,
-			XalanNode*				context,			
-			const XObjectPtr		/* arg1 */,
-			const XObjectPtr		/* arg2 */)
-{
-	executionContext.error(getError(), context);
-
-	return XObjectPtr(0);
-}
-
-
-
-XObjectPtr
-FunctionLast::execute(
-			XPathExecutionContext&	executionContext,
-			XalanNode*				context,			
-			const XObjectPtr		/* arg1 */,
-			const XObjectPtr		/* arg2 */,
-			const XObjectPtr		/* arg3 */)
-{
-	executionContext.error(getError(), context);
-
-	return XObjectPtr(0);
-}
-
-
-
-XObjectPtr
-FunctionLast::execute(
-			XPathExecutionContext&			executionContext,
-			XalanNode*						context,
-			int								/* opPos */,
-			const XObjectArgVectorType&		/* args */)
-{
-	executionContext.error(getError(), context);
-
-	return XObjectPtr(0);
 }
 
 
@@ -157,7 +102,5 @@ FunctionLast::clone() const
 const XalanDOMString
 FunctionLast::getError() const
 {
-	return XALAN_STATIC_UCODE_STRING(
-		"The last() function does not accept arguments!");
+	return XALAN_STATIC_UCODE_STRING("The last() function does not accept any arguments!");
 }
-

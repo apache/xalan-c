@@ -104,38 +104,12 @@ public:
 
 	// These methods are inherited from Function ...
 
-	XObjectPtr
-	execute(
-			XPathExecutionContext&		executionContext,
-			XalanNode*					context);
-
 	virtual XObjectPtr
 	execute(
-			XPathExecutionContext&		executionContext,
-			XalanNode*					context,			
-			const XObjectPtr			arg1);
-
-	XObjectPtr
-	execute(
-			XPathExecutionContext&		executionContext,
-			XalanNode*					context,			
-			const XObjectPtr			/* arg1 */,
-			const XObjectPtr			/* arg2 */);
-
-	XObjectPtr
-	execute(
-			XPathExecutionContext&		executionContext,
-			XalanNode*					context,			
-			const XObjectPtr			/* arg1 */,
-			const XObjectPtr			/* arg2 */,
-			const XObjectPtr			/* arg3 */);
-
-	XObjectPtr
-	execute(
-			XPathExecutionContext&		executionContext,
-			XalanNode*					context,
-			int							/* opPos */,
-			const XObjectArgVectorType&	/* args */);
+			XPathExecutionContext&	executionContext,
+			XalanNode*				context,
+			const XObjectPtr		arg1,
+			const Locator*			locator) const;
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
 	virtual Function*
@@ -143,6 +117,11 @@ public:
 	virtual FunctionID*
 #endif
 	clone() const;
+
+protected:
+
+	const XalanDOMString
+	getError() const;
 
 private:
 
@@ -201,9 +180,6 @@ private:
 
 		XPathExecutionContext&	m_executionContext;
 	};
-
-	virtual const XalanDOMString
-	getError() const;
 
 	// Not implemented...
 	FunctionID&

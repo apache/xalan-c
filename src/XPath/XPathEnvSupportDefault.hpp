@@ -84,11 +84,11 @@ public:
 
 #if defined(XALAN_NO_NAMESPACES)
 	typedef map<XalanDOMString, XalanDocument*, less<XalanDOMString> >		SourceDocsTableType;
-	typedef map<XalanDOMString, Function*, less<XalanDOMString> >			FunctionTableType;
+	typedef map<XalanDOMString, const Function*, less<XalanDOMString> >		FunctionTableType;
 	typedef map<XalanDOMString, FunctionTableType, less<XalanDOMString> >	NamespaceFunctionTablesType;
 #else
 	typedef std::map<XalanDOMString, XalanDocument*>	SourceDocsTableType;
-	typedef std::map<XalanDOMString, Function*>			FunctionTableType;
+	typedef std::map<XalanDOMString, const Function*>	FunctionTableType;
 	typedef std::map<XalanDOMString, FunctionTableType>	NamespaceFunctionTablesType;
 #endif
 
@@ -204,7 +204,8 @@ public:
 			const XalanDOMString&			theNamespace,
 			const XalanDOMString&			functionName, 
 			XalanNode*						context,
-			const XObjectArgVectorType&		argVec) const;
+			const XObjectArgVectorType&		argVec,
+			const Locator*					locator) const;
 
 	virtual bool
 	problem(
@@ -258,7 +259,7 @@ protected:
 	 * @param functionName The name of the function.
 	 * @return a pointer to the function if found, or 0 if not found.
 	 */
-	virtual Function*
+	const Function*
 	findFunction(
 			const XalanDOMString&	theNamespace,
 			const XalanDOMString&	functionName) const;
@@ -302,7 +303,7 @@ private:
 	 * @param functionName The name of the function.
 	 * @return a pointer to the function if found, or 0 if not found.
 	 */
-	Function*
+	const Function*
 	findFunction(
 			const NamespaceFunctionTablesType&	theTable,
 			const XalanDOMString&				theNamespace,

@@ -367,13 +367,13 @@ XPathEnvSupportDefault::functionAvailable(
 
 
 
-Function*
+const Function*
 XPathEnvSupportDefault::findFunction(
 			const XalanDOMString&	theNamespace,
 			const XalanDOMString&	functionName) const
 {
 	// First, look locally...
-	Function*	theFunction = findFunction(
+	const Function*		theFunction = findFunction(
 			m_externalFunctions,
 			theNamespace,
 			functionName);
@@ -392,13 +392,13 @@ XPathEnvSupportDefault::findFunction(
 
 
 
-Function*
+const Function*
 XPathEnvSupportDefault::findFunction(
 			const NamespaceFunctionTablesType&	theTable,
 			const XalanDOMString&				theNamespace,
 			const XalanDOMString&				functionName) const
 {
-	Function*	theFunction = 0;
+	const Function*	theFunction = 0;
 
 	// See if there's a table for that namespace...
 	const NamespaceFunctionTablesType::const_iterator	i =
@@ -431,17 +431,18 @@ XPathEnvSupportDefault::extFunction(
 			const XalanDOMString&			theNamespace,
 			const XalanDOMString&			functionName,
 			XalanNode*						context,
-			const XObjectArgVectorType&		argVec) const
+			const XObjectArgVectorType&		argVec,
+			const Locator*					locator) const
 {
-	Function* const		theFunction = findFunction(theNamespace, functionName);
+	const Function* const	theFunction = findFunction(theNamespace, functionName);
 
 	if (theFunction != 0)
 	{
 		return theFunction->execute(
 					executionContext,
 					context,
-					0,
-					argVec);
+					argVec,
+					locator);
 	}
 	else
 	{
@@ -457,6 +458,7 @@ XPathEnvSupportDefault::extFunction(
 
 		throw XPathExceptionFunctionNotAvailable(theFunctionName);
 
+		// dummy return value...
 		return XObjectPtr();
 	}
 }

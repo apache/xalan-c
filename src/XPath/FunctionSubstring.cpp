@@ -66,6 +66,10 @@
 
 
 
+const XObjectPtr		FunctionSubstring::s_nullXObjectPtr;
+
+
+
 FunctionSubstring::FunctionSubstring()
 {
 }
@@ -159,10 +163,13 @@ getTotal(
 
 
 
+static const XalanDOMString		theEmptyString;
+
+
 inline XObjectPtr
 createEmptyString(XPathExecutionContext&	executionContext)
 {
-	return executionContext.getXObjectFactory().createString(XalanDOMString());
+	return executionContext.getXObjectFactory().createString(theEmptyString);
 }
 
 
@@ -170,49 +177,26 @@ createEmptyString(XPathExecutionContext&	executionContext)
 XObjectPtr
 FunctionSubstring::execute(
 			XPathExecutionContext&	executionContext,
-			XalanNode*				context)
-{
-	executionContext.error(getError(), context);
-
-	return XObjectPtr(0);
-}
-
-
-
-XObjectPtr
-FunctionSubstring::execute(
-			XPathExecutionContext&	executionContext,
-			XalanNode*				context,			
-			const XObjectPtr		/* arg1 */)
-{
-	executionContext.error(getError(), context);
-
-	return XObjectPtr(0);
-}
-
-
-
-XObjectPtr
-FunctionSubstring::execute(
-		XPathExecutionContext&	executionContext,
-		XalanNode*				context,			
-		const XObjectPtr		arg1,
-		const XObjectPtr		arg2)
+			XalanNode*				context,
+			const XObjectPtr		arg1,
+			const XObjectPtr		arg2,
+			const Locator*			locator) const
 {
 	assert(arg1.null() == false && arg2.null() == false);
 
-	return execute(executionContext, context, arg1, arg2, XObjectPtr());
+	return execute(executionContext, context, arg1, arg2, s_nullXObjectPtr, locator);
 }
 
 
 
 XObjectPtr
 FunctionSubstring::execute(
-		XPathExecutionContext&	executionContext,
-		XalanNode*				/* context */,			
-		const XObjectPtr		arg1,
-		const XObjectPtr		arg2,
-		const XObjectPtr		arg3)
+			XPathExecutionContext&	executionContext,
+			XalanNode*				/* context */,
+			const XObjectPtr		arg1,
+			const XObjectPtr		arg2,
+			const XObjectPtr		arg3,
+			const Locator*			/* locator */) const
 {
 	assert(arg1.null() == false && arg2.null() == false);	
 
@@ -273,20 +257,6 @@ FunctionSubstring::execute(
 
 
 
-XObjectPtr
-FunctionSubstring::execute(
-			XPathExecutionContext&			executionContext,
-			XalanNode*						context,
-			int								/* opPos */,
-			const XObjectArgVectorType&		/* args */)
-{
-	executionContext.error(getError(), context);
-
-	return XObjectPtr(0);
-}
-
-
-
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
 Function*
 #else
@@ -302,6 +272,5 @@ FunctionSubstring::clone() const
 const XalanDOMString
 FunctionSubstring::getError() const
 {
-	return XALAN_STATIC_UCODE_STRING(
-		"The substring() function takes two or three arguments!");
+	return XALAN_STATIC_UCODE_STRING("The substring() function takes two or three arguments!");
 }

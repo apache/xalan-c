@@ -82,20 +82,9 @@ FunctionLang::~FunctionLang()
 XObjectPtr
 FunctionLang::execute(
 			XPathExecutionContext&	executionContext,
-			XalanNode*				context)
-{
-	executionContext.error(getError(), context);
-
-	return XObjectPtr(0);
-}
-
-
-
-XObjectPtr
-FunctionLang::execute(
-		XPathExecutionContext&			executionContext,
-		XalanNode*						context,			
-		const XObjectPtr				arg1)
+			XalanNode*				context,
+			const XObjectPtr		arg1,
+			const Locator*			/* locator */) const
 {
 	assert(arg1.null() == false);	
 
@@ -144,49 +133,6 @@ FunctionLang::execute(
 
 
 
-XObjectPtr
-FunctionLang::execute(
-			XPathExecutionContext&	executionContext,
-			XalanNode*				context,			
-			const XObjectPtr		/* arg1 */,
-			const XObjectPtr		/* arg2 */)
-{
-	executionContext.error(getError(), context);
-
-	return XObjectPtr(0);
-}
-
-
-
-XObjectPtr
-FunctionLang::execute(
-			XPathExecutionContext&	executionContext,
-			XalanNode*				context,			
-			const XObjectPtr		/* arg1 */,
-			const XObjectPtr		/* arg2 */,
-			const XObjectPtr		/* arg3 */)
-{
-	executionContext.error(getError(), context);
-
-	return XObjectPtr(0);
-}
-
-
-
-XObjectPtr
-FunctionLang::execute(
-			XPathExecutionContext&			executionContext,
-			XalanNode*						context,
-			int								/* opPos */,
-			const XObjectArgVectorType&		/* args */)
-{
-	executionContext.error(getError(), context);
-
-	return XObjectPtr(0);
-}
-
-
-
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
 Function*
 #else
@@ -204,4 +150,3 @@ FunctionLang::getError() const
 {
 	return XALAN_STATIC_UCODE_STRING("The lang() function takes one argument!");
 }
-

@@ -764,7 +764,8 @@ protected:
 		return 	executionContext.extFunction(theNamespace,
 											 functionName,
 											 context,
-											 argVec);
+											 argVec,
+											 m_locator);
 	}
 
 	/**
@@ -782,12 +783,11 @@ protected:
 	const XObjectPtr
 	function(
 			XalanNode*								context,
-			int										opPos,
 			int										funcID,
 			const Function::XObjectArgVectorType&	argVec,
 			XPathExecutionContext&					executionContext) const
 	{
-		return s_functions[funcID].execute(executionContext, context, opPos, argVec);
+		return s_functions[funcID].execute(executionContext, context, argVec, m_locator);
 	}
 
 	double

@@ -80,15 +80,19 @@ FunctionNumber::~FunctionNumber()
 
 XObjectPtr
 FunctionNumber::execute(
-		XPathExecutionContext&	executionContext,
-		XalanNode*				context)
+			XPathExecutionContext&	executionContext,
+			XalanNode*				context,
+			const Locator*			locator) const
 {
 	if (context == 0)
 	{
-		executionContext.error("The number() function requires a non-null context node!");
+		executionContext.error(
+				"The number() function requires a non-null context node!",
+				context,
+				locator);
 
 		// Dummy return value...
-		return XObjectPtr(0);
+		return XObjectPtr();
 	}
 	else
 	{
@@ -113,9 +117,10 @@ FunctionNumber::execute(
 
 XObjectPtr
 FunctionNumber::execute(
-		XPathExecutionContext&	executionContext,
-		XalanNode*				/* context */,			
-		const XObjectPtr		arg1)
+			XPathExecutionContext&	executionContext,
+			XalanNode*				/* context */,			
+			const XObjectPtr		arg1,
+			const Locator*			/* locator */) const
 {
 	assert(arg1.null() == false);	
 
@@ -129,49 +134,6 @@ FunctionNumber::execute(
 	{
 		return executionContext.getXObjectFactory().createNumber(arg1->num());
 	}
-}
-
-
-
-XObjectPtr
-FunctionNumber::execute(
-			XPathExecutionContext&	executionContext,
-			XalanNode*				context,			
-			const XObjectPtr		/* arg1 */,
-			const XObjectPtr		/* arg2 */)
-{
-	executionContext.error(getError(), context);
-
-	return XObjectPtr(0);
-}
-
-
-
-XObjectPtr
-FunctionNumber::execute(
-			XPathExecutionContext&	executionContext,
-			XalanNode*				context,			
-			const XObjectPtr		/* arg1 */,
-			const XObjectPtr		/* arg2 */,
-			const XObjectPtr		/* arg3 */)
-{
-	executionContext.error(getError(), context);
-
-	return XObjectPtr(0);
-}
-
-
-
-XObjectPtr
-FunctionNumber::execute(
-			XPathExecutionContext&			executionContext,
-			XalanNode*						context,
-			int								/* opPos */,
-			const XObjectArgVectorType&		/* args */)
-{
-	executionContext.error(getError(), context);
-
-	return XObjectPtr(0);
 }
 
 
@@ -191,7 +153,5 @@ FunctionNumber::clone() const
 const XalanDOMString
 FunctionNumber::getError() const
 {
-	return XALAN_STATIC_UCODE_STRING(
-		"The number() function takes zero arguments or one argument!");
+	return XALAN_STATIC_UCODE_STRING("The number() function takes zero or one arguments!");
 }
-

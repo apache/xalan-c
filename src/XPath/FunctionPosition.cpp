@@ -76,74 +76,25 @@ FunctionPosition::~FunctionPosition()
 
 XObjectPtr
 FunctionPosition::execute(
-		XPathExecutionContext&			executionContext,
-		XalanNode*						context)
+			XPathExecutionContext&	executionContext,
+			XalanNode*				context,
+			const Locator*			locator) const
 {
 	if (context == 0)
 	{
-		executionContext.error("The position() function requires a non-null context node!",
-							   context);
+		executionContext.error(
+				"The position() function requires a non-null context node!",
+				context,
+				locator);
+
+		return XObjectPtr();
 	}
+	else
+	{
+		const unsigned int	theValue = executionContext.getContextNodeListPosition(*context);
 
-	const unsigned int	theValue = executionContext.getContextNodeListPosition(*context);
-
-	return executionContext.getXObjectFactory().createNumber(theValue);
-}
-
-
-
-XObjectPtr
-FunctionPosition::execute(
-			XPathExecutionContext&	executionContext,
-			XalanNode*				context,			
-			const XObjectPtr		/* arg1 */)
-{
-	executionContext.error(getError(), context);
-
-	return XObjectPtr(0);
-}
-
-
-
-XObjectPtr
-FunctionPosition::execute(
-			XPathExecutionContext&	executionContext,
-			XalanNode*				context,			
-			const XObjectPtr		/* arg1 */,
-			const XObjectPtr		/* arg2 */)
-{
-	executionContext.error(getError(), context);
-
-	return XObjectPtr(0);
-}
-
-
-
-XObjectPtr
-FunctionPosition::execute(
-			XPathExecutionContext&	executionContext,
-			XalanNode*				context,			
-			const XObjectPtr		/* arg1 */,
-			const XObjectPtr		/* arg2 */,
-			const XObjectPtr		/* arg3 */)
-{
-	executionContext.error(getError(), context);
-
-	return XObjectPtr(0);
-}
-
-
-
-XObjectPtr
-FunctionPosition::execute(
-			XPathExecutionContext&			executionContext,
-			XalanNode*						context,
-			int								/* opPos */,
-			const XObjectArgVectorType&		/* args */)
-{
-	executionContext.error(getError(), context);
-
-	return XObjectPtr(0);
+		return executionContext.getXObjectFactory().createNumber(theValue);
+	}
 }
 
 
@@ -163,7 +114,5 @@ FunctionPosition::clone() const
 const XalanDOMString
 FunctionPosition::getError() const
 {
-	return XALAN_STATIC_UCODE_STRING(
-		"The position() function does not accept arguments!");
+	return XALAN_STATIC_UCODE_STRING("The position() function does not accept any arguments!");
 }
-

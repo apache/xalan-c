@@ -77,70 +77,16 @@ FunctionStartsWith::~FunctionStartsWith()
 XObjectPtr
 FunctionStartsWith::execute(
 			XPathExecutionContext&	executionContext,
-			XalanNode*				context)
-{
-	executionContext.error(getError(), context);
-
-	return XObjectPtr(0);
-}
-
-
-
-XObjectPtr
-FunctionStartsWith::execute(
-			XPathExecutionContext&	executionContext,
-			XalanNode*				context,			
-			const XObjectPtr		/* arg1 */)
-{
-	executionContext.error(getError(), context);
-
-	return XObjectPtr(0);
-}
-
-
-
-XObjectPtr
-FunctionStartsWith::execute(
-		XPathExecutionContext&			executionContext,
-		XalanNode*						/* context */,			
-		const XObjectPtr				arg1,
-		const XObjectPtr				arg2)
+			XalanNode*				context,
+			const XObjectPtr		arg1,
+			const XObjectPtr		arg2,
+			const Locator*			/* locator */) const
 {
 	assert(arg1.null() == false && arg2.null() == false);	
 
-	const bool	fStartsWith = startsWith(arg1->str(),
-										 arg2->str());
+	const bool	fStartsWith = startsWith(arg1->str(), arg2->str());
 
 	return executionContext.getXObjectFactory().createBoolean(fStartsWith);
-}
-
-
-
-XObjectPtr
-FunctionStartsWith::execute(
-			XPathExecutionContext&	executionContext,
-			XalanNode*				context,			
-			const XObjectPtr		/* arg1 */,
-			const XObjectPtr		/* arg2 */,
-			const XObjectPtr		/* arg3 */)
-{
-	executionContext.error(getError(), context);
-
-	return XObjectPtr(0);
-}
-
-
-
-XObjectPtr
-FunctionStartsWith::execute(
-			XPathExecutionContext&			executionContext,
-			XalanNode*						context,
-			int								/* opPos */,
-			const XObjectArgVectorType&		/* args */)
-{
-	executionContext.error(getError(), context);
-
-	return XObjectPtr(0);
 }
 
 
@@ -160,7 +106,5 @@ FunctionStartsWith::clone() const
 const XalanDOMString
 FunctionStartsWith::getError() const
 {
-	return XALAN_STATIC_UCODE_STRING(
-		"The starts-with() function takes one argument!");
+	return XALAN_STATIC_UCODE_STRING("The starts-with() function takes two arguments!");
 }
-

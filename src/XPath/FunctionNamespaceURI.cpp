@@ -88,12 +88,16 @@ static const XalanDOMString		theEmptyString;
 
 XObjectPtr
 FunctionNamespaceURI::execute(
-		XPathExecutionContext&	executionContext,
-		XalanNode*				context)
+			XPathExecutionContext&	executionContext,
+			XalanNode*				context,
+			const Locator*			locator) const
 {
 	if (context == 0)
 	{
-		executionContext.error("The namespace-uri() function requires a non-null context node!");
+		executionContext.error(
+				"The namespace-uri() function requires a non-null context node!",
+				context,
+				locator);
 
 		// Dummy return value...
 		return XObjectPtr(0);
@@ -108,9 +112,10 @@ FunctionNamespaceURI::execute(
 
 XObjectPtr
 FunctionNamespaceURI::execute(
-		XPathExecutionContext&	executionContext,
-		XalanNode*				/* context */,			
-		const XObjectPtr		arg1)
+			XPathExecutionContext&	executionContext,
+			XalanNode*				/* context */,
+			const XObjectPtr		arg1,
+			const Locator*			locator) const
 {
 	assert(arg1.null() == false);	
 	
@@ -124,51 +129,8 @@ FunctionNamespaceURI::execute(
 	{
 		assert(theList.item(0) != 0);
 
-		return execute(executionContext, theList.item(0));
+		return execute(executionContext, theList.item(0), locator);
 	}
-}
-
-
-
-XObjectPtr
-FunctionNamespaceURI::execute(
-			XPathExecutionContext&	executionContext,
-			XalanNode*				context,			
-			const XObjectPtr		/* arg1 */,
-			const XObjectPtr		/* arg2 */)
-{
-	executionContext.error(getError(), context);
-
-	return XObjectPtr(0);
-}
-
-
-
-XObjectPtr
-FunctionNamespaceURI::execute(
-			XPathExecutionContext&	executionContext,
-			XalanNode*				context,			
-			const XObjectPtr		/* arg1 */,
-			const XObjectPtr		/* arg2 */,
-			const XObjectPtr		/* arg3 */)
-{
-	executionContext.error(getError(), context);
-
-	return XObjectPtr(0);
-}
-
-
-
-XObjectPtr
-FunctionNamespaceURI::execute(
-			XPathExecutionContext&			executionContext,
-			XalanNode*						context,
-			int								/* opPos */,
-			const XObjectArgVectorType&		/* args */)
-{
-	executionContext.error(getError(), context);
-
-	return XObjectPtr(0);
 }
 
 
