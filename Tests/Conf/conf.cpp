@@ -74,7 +74,7 @@
 #endif
 
 
-#include <xercesc/parsers/DOMParser.hpp>
+#include <parsers/DOMParser.hpp>
 
 
 
