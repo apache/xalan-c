@@ -204,8 +204,6 @@ printArgOptions()
 		 << endl
 		 << " [-ESCAPE (Specifies which characters to escape. {default is <>&\"\'\\r\\n}]"
 		 << endl
-		 << " [-EER (Expand entity references.  By default, they are not expanded.)]"
-		 << endl
 		 << " [-INDENT n (Controls how many spaces to indent. {default is 0})]"
 		 << endl
 		 << " [-VALIDATE (Controls whether validation occurs. Validation is off by default.)]"
@@ -270,7 +268,6 @@ struct CmdLineParams
 	bool escapeCData;
 	bool setQuietConflictWarnings;
 	bool setQuietMode;
-	bool shouldExpandEntityRefs;
 	bool stripCData;
 	bool versionOnly;
 	bool traceTemplates;
@@ -296,7 +293,6 @@ struct CmdLineParams
 		escapeCData(false),
 		setQuietConflictWarnings(false),
 		setQuietMode(false),
-		shouldExpandEntityRefs(false),
 		stripCData(false),
 		versionOnly(false),
 		traceTemplates(false),
@@ -457,10 +453,6 @@ getArgs(
 		else if(!compareNoCase("-VALIDATE", argv[i]))
 		{
 			p.doValidation = true;
-		}
-		else if(!compareNoCase("-EER", argv[i]))
-		{
-			p.shouldExpandEntityRefs = true;
 		}
 		else if (!compareNoCase("-PARAM", argv[i])) 
 		{
@@ -930,7 +922,6 @@ xsltMain(const CmdLineParams&	params)
 		xmlParserLiaison.setSpecialCharacters(TranscodeFromLocalCodePage(c_str(params.specialCharacters)));
 	}
 
-	xmlParserLiaison.SetShouldExpandEntityRefs(params.shouldExpandEntityRefs);
 	xmlParserLiaison.setUseValidation(params.doValidation);
 
 	assert(params.inFileName.size() > 0);
