@@ -383,6 +383,10 @@ SOURCE=..\..\..\..\src\PlatformSupport\XalanAllocator.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\PlatformSupport\XalanArrayAllocator.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\PlatformSupport\XalanBitmap.hpp
 # End Source File
 # Begin Source File
