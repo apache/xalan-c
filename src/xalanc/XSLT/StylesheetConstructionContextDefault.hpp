@@ -74,6 +74,7 @@
 #include <xalanc/XSLT/XalanElemTextLiteralAllocator.hpp>
 #include <xalanc/XSLT/XalanElemValueOfAllocator.hpp>
 #include <xalanc/XSLT/XalanElemVariableAllocator.hpp>
+#include "xalanc/XSLT/XalanMatchPatternDataAllocator.hpp"
 
 
 
@@ -119,7 +120,8 @@ public:
 			eDefaultElemTemplateBlockSize = 10,
 			eDefaultElemTextLiteralBlockSize = 20,
 			eDefaultElemValueOfBlockSize = 10,
-			eDefaultElemVariableBlockSize = 10 };
+			eDefaultElemVariableBlockSize = 10,
+            eDefaultMatchPatternDataBlockSize = 10 };
 
 	/*
 	 * Construct an instance.  If the stylesheet(s) constructed is/are meant to be reused (a.k.a. "compiled"),
@@ -436,6 +438,15 @@ public:
 			ExtensionNSHandler&			handler,
 			const LocatorType*			locator = 0);
 
+    virtual const XalanMatchPatternData*
+    createXalanMatchPatternData(
+            const ElemTemplate&     theTemplate,
+            size_type               thePosition,
+            const XalanDOMString&   theTargetString,
+            const XPath&            theMatchPattern,
+            const XalanDOMString&   thePatternString,
+            XPath::eMatchScore      thePriority);
+
 	static eElementToken
 	getElementNameToken(const XalanDOMString&	name);
 
@@ -534,6 +545,8 @@ private:
 	XalanElemValueOfAllocator				m_elemValueOfAllocator;
 
 	XalanElemVariableAllocator				m_elemVariableAllocator;
+
+    XalanMatchPatternDataAllocator          m_matchPatternDataAllocator;
 
 	const XalanQNameByReference				m_spaceAttrQName;
 

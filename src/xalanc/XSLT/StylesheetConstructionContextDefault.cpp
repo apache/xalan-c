@@ -109,6 +109,7 @@ StylesheetConstructionContextDefault::StylesheetConstructionContextDefault(
 	m_elemTextLiteralAllocator(eDefaultElemTextLiteralBlockSize),
 	m_elemValueOfAllocator(eDefaultElemValueOfBlockSize),
 	m_elemVariableAllocator(eDefaultElemVariableBlockSize),
+    m_matchPatternDataAllocator(eDefaultMatchPatternDataBlockSize),
 	m_spaceAttrQName(DOMServices::s_XMLNamespaceURI, Constants::ATTRNAME_SPACE)
 {
 }
@@ -329,6 +330,8 @@ StylesheetConstructionContextDefault::reset()
 	m_elemValueOfAllocator.reset();
 
 	m_elemVariableAllocator.reset();
+
+    m_matchPatternDataAllocator.reset();
 }
 
 
@@ -1025,6 +1028,26 @@ StylesheetConstructionContextDefault::createElement(
 			length,
 			preserveSpace, 
 			disableOutputEscaping);
+}
+
+
+
+const XalanMatchPatternData*
+StylesheetConstructionContextDefault::createXalanMatchPatternData(
+            const ElemTemplate&     theTemplate,
+            size_type               thePosition,
+            const XalanDOMString&   theTargetString,
+            const XPath&            theMatchPattern,
+            const XalanDOMString&   thePatternString,
+            XPath::eMatchScore      thePriority)
+{
+    return m_matchPatternDataAllocator.create(
+            theTemplate,
+            thePosition,
+            theTargetString,
+            theMatchPattern,
+            thePatternString,
+            thePriority);
 }
 
 

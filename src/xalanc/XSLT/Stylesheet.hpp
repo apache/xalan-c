@@ -24,7 +24,6 @@
 
 
 
-#include <deque>
 #include <map>
 
 
@@ -34,6 +33,7 @@
 
 
 #include <xalanc/XalanDOM/XalanNode.hpp>
+
 
 
 #include <xalanc/PlatformSupport/PrefixResolver.hpp>
@@ -48,6 +48,7 @@
 
 #include <xalanc/XSLT/NamespacesHandler.hpp>
 #include <xalanc/XSLT/KeyDeclaration.hpp>
+#include <xalanc/XSLT/StylesheetConstructionContext.hpp>
 #include <xalanc/XSLT/StylesheetExecutionContext.hpp>
 #include <xalanc/XSLT/XalanSpaceNodeTester.hpp>
 
@@ -68,6 +69,7 @@ class NodeRefListBase;
 class PrefixResolver;
 class StylesheetConstructionContext;
 class StylesheetRoot;
+class XalanMatchPatternData;
 class XalanQName;
 class XObject;
 class StylesheetExecutionContext;
@@ -83,12 +85,7 @@ class XALAN_XSLT_EXPORT Stylesheet : protected PrefixResolver
 
 public:
 
-#if defined(XALAN_STRICT_ANSI_HEADERS)
-	typedef std::size_t		size_type;
-#else
-	typedef size_t			size_type;
-#endif
-
+    typedef StylesheetConstructionContext::size_type        size_type;
 	typedef StylesheetExecutionContext::ParamVectorType		ParamVectorType;
 	typedef XalanQName::NamespaceVectorType					NamespaceVectorType;
 	typedef XalanQName::NamespacesStackType					NamespacesStackType;
@@ -99,16 +96,23 @@ public:
 	typedef XalanVector<XalanDOMString>					URLStackType;
 	typedef XalanVector<ElemDecimalFormat*>				ElemDecimalFormatVectorType;
 	typedef XalanVector<XalanSpaceNodeTester>			WhitespaceElementsVectorType;
+    typedef XalanVector<const XalanMatchPatternData*>	PatternTableVectorType;
 	
 	typedef XALAN_STD_QUALIFIER map<XalanDOMString,
 				ExtensionNSHandler*,
 				XALAN_STD_QUALIFIER less<XalanDOMString> >		ExtensionNamespacesMapType;
-	typedef XALAN_STD_QUALIFIER map<XalanQNameByReference,
+
+    typedef XALAN_STD_QUALIFIER map<XalanQNameByReference,
 				const ElemTemplate*,
 				XALAN_STD_QUALIFIER less<XalanQName> >			ElemTemplateMapType;
-	typedef XALAN_STD_QUALIFIER map<const XalanNode*,
+
+    typedef XALAN_STD_QUALIFIER map<const XalanNode*,
 				KeyTable*,
 				XALAN_STD_QUALIFIER less<const XalanNode*> >	KeyTablesTableType;
+
+	typedef XALAN_STD_QUALIFIER map<XalanDOMString,
+					 PatternTableVectorType,
+                     XALAN_STD_QUALIFIER less<XalanDOMString> > PatternTableMapType;
 
 	/**
 	 * Constructor for a Stylesheet needs a Document.
@@ -559,138 +563,6 @@ public:
 			bool							onlyUseImports) const;
 
 	/**
-	 * A class to contain a match pattern and it's corresponding template.
-	 * This class also defines a node in a match pattern linked list.
-	 */
-	class MatchPattern2
-	{
-	public:
-
-		typedef XPath::eMatchScore	eMatchScore;
-
-		/**
-		 * Construct a match pattern from a pattern and template.
-		 *
-		 * @param theTemplate node that contains the template for this pattern
-		 * @param posInStylesheet position in stylesheet
-		 * @param targetString target string
-		 * @param matchPattern the match pattern
-		 * @param pattern the pattern string
-		 * @param priority the default priority
-		 */
-		MatchPattern2(
-				const ElemTemplate&		theTemplate,
-				size_type 				posInStylesheet,
-				const XalanDOMString&	targetString,
-				const XPath&			matchPattern,
-				const XalanDOMString&	pattern,
-				eMatchScore				priority) :
-			m_template(&theTemplate),
-			m_posInStylesheet(posInStylesheet),
-			m_targetString(targetString),
-			m_matchPattern(&matchPattern),
-			m_pattern(&pattern),
-			m_priority(priority)
-		{
-		}
-
-		MatchPattern2() :
-			m_template(0),
-			m_posInStylesheet(0),
-			m_targetString(),
-			m_matchPattern(0),
-			m_pattern(0),
-			m_priority(XPath::eMatchScoreNone)
-		{
-		}
-
-		~MatchPattern2()
-		{
-		}
-
-		/**
-		 * Retrieve string for target.
-		 * 
-		 * @return target string
-		 */
-		const XalanDOMString&
-		getTargetString() const
-		{
-			return m_targetString;
-		}
-
-		/**
-		 * Retrieve the match pattern associated with pattern.
-		 * 
-		 * @return XPath for pattern
-		 */
-		const XPath*
-		getExpression() const
-		{
-			return m_matchPattern;
-		}
-
-		/**
-		 * Retrieve position of pattern in stylesheet.
-		 * 
-		 * @return position in stylesheet
-		 */
-		size_type
-		getPositionInStylesheet() const
-		{
-			return m_posInStylesheet;
-		}
-
-		/**
-		 * Retrieve pattern string.
-		 * 
-		 * @return string that contains element pattern
-		 */
-		const XalanDOMString*
-		getPattern() const
-		{
-			return m_pattern;
-		}
-
-		/**
-		 * Retrieve node that contains the template for this pattern.
-		 * 
-		 * @return template node
-		 */
-		const ElemTemplate*
-		getTemplate() const
-		{
-			return m_template;
-		}
-
-		eMatchScore
-		getDefaultPriority() const
-		{
-			return m_priority;
-		}
-
-		double
-		getPriorityOrDefault() const;
-
-	private:
-
-		const ElemTemplate*		m_template;
-		size_type				m_posInStylesheet;
-		XalanDOMString			m_targetString;
-		const XPath*			m_matchPattern;
-		const XalanDOMString*	m_pattern;
-		eMatchScore				m_priority;
-	};
-
-	typedef XalanVector<const MatchPattern2*>		PatternTableVectorType;
-
-	typedef XALAN_STD_QUALIFIER map<XalanDOMString,
-			    PatternTableVectorType,
-				XALAN_STD_QUALIFIER less<XalanDOMString> >		PatternTableMapType;
-
-	typedef XALAN_STD_QUALIFIER deque<MatchPattern2>	MatchPattern2Container;
-
-	/**
 	 * Add object to vector of match patterns if not already there.
 	 *
 	 * @param thePattern pattern to add
@@ -698,8 +570,8 @@ public:
 	 */
 	static void
 	addObjectIfNotFound(
-			const MatchPattern2*		thePattern,
-			PatternTableVectorType& 	theVector);
+			const XalanMatchPatternData*    thePattern,
+			PatternTableVectorType& 	    theVector);
 
 	/**
 	 * Add object to array of match patterns if not already there.
@@ -712,9 +584,9 @@ public:
 	 */
 	static void
 	addObjectIfNotFound(
-			const MatchPattern2*	thePattern,
-			const MatchPattern2* 	theArray[],
-			unsigned int&			theArraySize);
+			const XalanMatchPatternData*    thePattern,
+			const XalanMatchPatternData* 	theArray[],
+			unsigned int&			        theArraySize);
 
 	/**
 	 * Given a name, locate the start of a list of 
@@ -724,7 +596,7 @@ public:
 	 * @param theName The name to match
 	 */
 	const PatternTableVectorType*
-	locateElementMatchPatternList2(const XalanDOMString&	theName) const;
+	locateElementMatchPatternDataList(const XalanDOMString&	    theName) const;
 
 	/**
 	 * Given a name, locate the start of a list of 
@@ -734,7 +606,7 @@ public:
 	 * @param theName The name to match
 	 */
 	const PatternTableVectorType*
-	locateAttributeMatchPatternList2(const XalanDOMString&	theName) const;
+	locateAttributeMatchPatternDataList(const XalanDOMString&	theName) const;
 
 	/**
 	 * Given a XalanNode, locate the start of a list of 
@@ -743,7 +615,7 @@ public:
 	 * @param XalanNode The node to match
 	 */
 	const PatternTableVectorType*
-	locateMatchPatternList2(
+	locateMatchPatternDataList(
 			const XalanNode&		theNode,
 			XalanNode::NodeType		targetNodeType) const;
 
@@ -978,16 +850,7 @@ private:
 	 */
 	PatternTableVectorType					m_nodePatternList;
 
-	/**
-	 * This will hold all of the MatchPattern2 instances for the
-	 * stylesheet.
-	 */
-	MatchPattern2Container					m_matchPattern2Container;
-
-	/**
-	 * This caches the number of possible patterns we can match.
-	 */
-	MatchPattern2Container::size_type		m_patternCount;
+	size_type	                            m_patternCount;
 
 	ElemDecimalFormatVectorType				m_elemDecimalFormats;
 

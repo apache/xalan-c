@@ -17,12 +17,8 @@
 #define XALAN_ELEMCOPYOF_HEADER_GUARD 
 
 /**
- * $Id$
- * 
- * 
- * $State$
- * 
- * @author Myriam Midy (Myriam_Midy @lotus.com 
+ * @author David Bertoni (david_n_bertoni@us.ibm.com)
+ * @author Matthew Hoyt (mhoyt@ca.ibm.com)
  */
 
 // Base include file.  Must be first.

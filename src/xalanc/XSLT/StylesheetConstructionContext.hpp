@@ -32,6 +32,7 @@
 
 
 #include <xalanc/XPath/XalanQName.hpp>
+#include <xalanc/XPath/XPath.hpp>
 #include <xalanc/XPath/XPathConstructionContext.hpp>
 
 
@@ -52,14 +53,15 @@ typedef XERCES_CPP_NAMESPACE_QUALIFIER DocumentHandler	DocumentHandlerType;
 
 class AVT;
 class AVTPart;
+class ElemTemplate;
 class ElemTemplateElement;
 class ExtensionNSHandler;
 class PrefixResolver;
 class Stylesheet;
 class StylesheetRoot;
 class XalanDocument;
+class XalanMatchPatternData;
 class XalanNode;
-class XPath;
 class XSLTInputSource;
 
 
@@ -691,6 +693,32 @@ public:
 			const AttributeListType&	atts,
 			ExtensionNSHandler&			handler,
 			const LocatorType*			locator = 0) = 0;
+
+	/**
+	 * Create an instance of XalanMatchPatternData, which describes
+	 * data related to a match pattern and template in stylesheet.
+	 * The instance owns the memory and will delete the element when
+	 * it goes out of scope and the containing stylesheet is
+	 * destroyed.
+     *
+     * @param theTemplate The ElemTemplate node that contains the template for this pattern
+     * @param thePosition The position in the stylesheet
+     * @param theTargetString The target string for match pattern
+     * @param TheMatchPattern The match pattern
+     * @param thePatternString the pattern string
+     * @param thePriority The priority for the match pattern.
+     *
+     * @return A pointer to the new instance.
+	 */
+    virtual const XalanMatchPatternData*
+    createXalanMatchPatternData(
+            const ElemTemplate&     theTemplate,
+            size_type               thePosition,
+            const XalanDOMString&   theTargetString,
+            const XPath&            theMatchPattern,
+            const XalanDOMString&   thePatternString,
+            XPath::eMatchScore      thePriority) = 0;
+
 
 	// These are inherited from XPathConstructionContext...
 
