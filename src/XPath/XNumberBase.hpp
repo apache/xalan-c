@@ -99,10 +99,6 @@ public:
 	virtual bool
 	boolean() const;
 
-#if !defined(XALAN_NO_USING_DECLARATION)
-	using ParentType::str;
-#endif
-
 	virtual const XalanDOMString&
 	str() const = 0;
 
@@ -110,6 +106,10 @@ public:
 	str(
 			FormatterListener&	formatterListener,
 			MemberFunctionPtr	function) const = 0;
+
+#if !defined(XALAN_NO_USING_DECLARATION)
+	using ParentType::str;
+#endif
 
 	virtual double
 	stringLength() const = 0;

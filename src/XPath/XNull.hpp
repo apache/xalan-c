@@ -77,6 +77,8 @@ class XALAN_XPATH_EXPORT XNull : public XObject
 {
 public:
 
+	typedef XObject		ParentType;
+
 	/**
 	 * Create an XNull.
 	 *
@@ -120,6 +122,10 @@ public:
 	str(
 			FormatterListener&	formatterListener,
 			MemberFunctionPtr	function) const;
+
+#if !defined(XALAN_NO_USING_DECLARATION)
+	using ParentType::str;
+#endif
 
 	virtual double
 	stringLength() const;

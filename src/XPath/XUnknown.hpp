@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2003 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -81,6 +81,8 @@ class XALAN_XPATH_EXPORT XUnknown : public XObject
 {
 public:
 
+	typedef XObject		ParentType;
+
 	/**
 	 * Perform static initialization.  See class XPathInit.
 	 */
@@ -130,6 +132,10 @@ public:
 	str(
 			FormatterListener&	formatterListener,
 			MemberFunctionPtr	function) const;
+
+#if !defined(XALAN_NO_USING_DECLARATION)
+	using ParentType::str;
+#endif
 
 	virtual double
 	stringLength() const;

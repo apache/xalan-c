@@ -77,6 +77,8 @@ class XALAN_XPATH_EXPORT XBoolean : public XObject
 {
 public:
 
+	typedef XObject		ParentType;
+
 	/**
 	 * Construct an XBoolean object from a boolean value
 	 * 
@@ -114,6 +116,10 @@ public:
 	str(
 			FormatterListener&	formatterListener,
 			MemberFunctionPtr	function) const;
+
+#if !defined(XALAN_NO_USING_DECLARATION)
+	using ParentType::str;
+#endif
 
 	virtual double
 	stringLength() const;
