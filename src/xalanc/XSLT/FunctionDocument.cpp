@@ -261,7 +261,7 @@ FunctionDocument::execute(
 
 	XalanDOMString	base;
 
-	bool			fNoRelativeURI = false;
+	bool	fNoRelativeURI = false;
 
 	if (context == 0)
 	{
@@ -324,8 +324,6 @@ FunctionDocument::doExecute(
 			const LocatorType*		locator,
 			bool					fNoRelativeURI) const
 {
-	typedef XPathExecutionContext::BorrowReturnMutableNodeRefList	BorrowReturnMutableNodeRefList;
-
 	// This list will hold the nodes...
 	BorrowReturnMutableNodeRefList	mnl(executionContext);
 
@@ -430,6 +428,8 @@ FunctionDocument::doExecute(
 	}
 
 	assert(mnl->checkForDuplicates() == false);
+
+	mnl->setDocumentOrder();
 
 	return executionContext.getXObjectFactory().createNodeSet(mnl);
 }
