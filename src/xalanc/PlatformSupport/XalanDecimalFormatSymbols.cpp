@@ -59,7 +59,7 @@ static XalanDOMChar		theCurrencySymbol[] =
 XalanDecimalFormatSymbols::XalanDecimalFormatSymbols() :
 	m_currencySymbol(theCurrencySymbol),
 	m_decimalSeparator(XalanUnicode::charFullStop),
-	m_digit(0),
+	m_digit(XalanUnicode::charNumberSign),
 	m_groupingSeparator(XalanUnicode::charComma),
 	m_infinity(theInfinityDefault),
 	m_internationalCurrencySymbol(),

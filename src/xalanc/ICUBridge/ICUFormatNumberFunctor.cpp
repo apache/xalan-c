@@ -146,16 +146,20 @@ ICUFormatNumberFunctor::doFormat(
 		XalanDOMString&						theResult,
 		const XalanDecimalFormatSymbols*	theDFS) const
 {
+
 	if (theDFS == 0)
 	{
 		return doICUFormat(theNumber,thePattern,theResult);
 	}
 
+	XalanDOMString	nonLocalPattern = UnlocalizePatternFunctor(*theDFS)(thePattern);
+
+
 	DecimalFormatType*	theFormatter = getCachedDecimalFormat(*theDFS);
 
 	if (theFormatter != 0)
 	{
-		return doICUFormat(theNumber, thePattern, theResult, theFormatter);
+		return doICUFormat(theNumber, nonLocalPattern, theResult, theFormatter);
 	}
 	else
 	{
@@ -170,11 +174,11 @@ ICUFormatNumberFunctor::doFormat(
 			// will be controlled by the cache...
 			DecimalFormatType * theDecimalFormat = theDecimalFormatGuard.release();
 
-			return doICUFormat(theNumber, thePattern, theResult, theDecimalFormat);
+			return doICUFormat(theNumber, nonLocalPattern, theResult, theDecimalFormat);
 		}
 		else
 		{
-			return doICUFormat(theNumber,thePattern,theResult);
+			return doICUFormat(theNumber,nonLocalPattern,theResult);
 		}
 	}
 }
@@ -292,6 +296,74 @@ ICUFormatNumberFunctor::doICUFormat(
 	return U_SUCCESS(theStatus);
 }
 
+XalanDOMString
+ICUFormatNumberFunctor::UnlocalizePatternFunctor::operator()(const XalanDOMString&	thePattern) const
+{
+	XalanDOMString theResult;
 
+	XalanDecimalFormatSymbols defaultDFS;
+
+	XalanDOMString::const_iterator iterator = thePattern.begin();
+
+	while( iterator != thePattern.end())
+	{
+		
+		if( m_DFS.getDecimalSeparator() == *iterator )
+		{
+			theResult.push_back(defaultDFS.getDecimalSeparator());
+		}
+		else if(m_DFS.getDigit() == *iterator)
+		{
+			theResult.push_back(defaultDFS.getDigit());
+		}
+		else if(m_DFS.getGroupingSeparator() == *iterator)
+		{
+			theResult.push_back(defaultDFS.getGroupingSeparator());
+		}
+		else if(m_DFS.getMinusSign() == *iterator)
+		{
+			theResult.push_back(defaultDFS.getMinusSign());
+		}
+		else if(m_DFS.getPatternSeparator() == *iterator)
+		{
+			theResult.push_back(defaultDFS.getPatternSeparator());
+		}
+		else if(m_DFS.getPercent() == *iterator)
+		{
+			theResult.push_back(defaultDFS.getPercent());
+		}
+		else if(m_DFS.getPerMill() == *iterator)
+		{
+			theResult.push_back(defaultDFS.getPerMill());
+		}
+		else if(m_DFS.getZeroDigit() == *iterator)
+		{
+			theResult.push_back(defaultDFS.getZeroDigit());
+		}
+		else
+		{   
+			switch(*iterator)
+			{
+			case XalanUnicode::charFullStop:
+			case XalanUnicode::charNumberSign:
+			case XalanUnicode::charComma:
+			case XalanUnicode::charHyphenMinus:
+			case XalanUnicode::charSemicolon:
+			case XalanUnicode::charPercentSign:
+			case XalanUnicode::charPerMilleSign:
+			case XalanUnicode::charDigit_0:
+				{
+					theResult.push_back(XalanUnicode::charAmpersand);
+					theResult.push_back(*iterator);
+					theResult.push_back(XalanUnicode::charAmpersand);
+				}
+			}
+		}
+
+		iterator++;
+	}
+
+	return theResult;
+}
 
 XALAN_CPP_NAMESPACE_END

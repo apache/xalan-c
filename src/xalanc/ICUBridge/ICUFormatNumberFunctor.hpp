@@ -72,6 +72,22 @@ public:
 #else
 	typedef DecimalFormat					DecimalFormatType;
 #endif
+
+	class UnlocalizePatternFunctor
+	{
+	public:
+		UnlocalizePatternFunctor(const XalanDecimalFormatSymbols&	theDFS):
+			m_DFS(theDFS)
+		{
+		}
+
+		XalanDOMString
+		operator()(const XalanDOMString&	thePattern) const;
+
+	private:
+		const XalanDecimalFormatSymbols& m_DFS;
+	};
+
 	struct DecimalFormatCacheStruct
 	{
 		DecimalFormatCacheStruct(
