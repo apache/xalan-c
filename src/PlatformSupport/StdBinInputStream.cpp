@@ -74,19 +74,18 @@
 #endif
 
 
-
-#if defined(XALAN_NO_NAMESPACES)
-StdBinInputStream::StdBinInputStream(istream&		theStream) :
-#else
-StdBinInputStream::StdBinInputStream(std::istream&	theStream) :
+#if !defined(XALAN_NO_NAMESPACES)
+using std::cin;
+using std::istream;
 #endif
+
+
+StdBinInputStream::StdBinInputStream(
+			istream&	theStream,
+			bool		fBlockingRead) :
 	BinInputStream(),
 	m_stream(theStream),
-#if defined(XALAN_NO_NAMESPACES)
-	m_cin(&m_stream == &cin ? true : false)
-#else
-	m_cin(&m_stream == &std::cin ? true : false)
-#endif
+	m_blockingRead(&m_stream == &cin ? true : fBlockingRead)
 {
 }
 
@@ -117,7 +116,7 @@ StdBinInputStream::readBytes(
 	{
 		return 0;
 	}
-	else if (m_cin == true)
+	else if (m_blockingRead == true)
 	{
 		unsigned int	i = 0;
 

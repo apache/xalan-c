@@ -85,10 +85,14 @@ class XALAN_PLATFORMSUPPORT_EXPORT StdBinInputStream : public BinInputStream
 public:
 
 #if defined(XALAN_NO_NAMESPACES)
-	StdBinInputStream(istream&			theStream);
+	StdBinInputStream(
+			istream&		theStream
 #else
-	StdBinInputStream(std::istream&	theStream);
+	StdBinInputStream(
+			std::istream&	theStream,
 #endif
+			bool			fBlockingRead = false);
+
 
 	virtual
 	~StdBinInputStream();
@@ -120,7 +124,7 @@ private:
 	std::istream&	m_stream;
 #endif
 
-	const bool		m_cin;
+	const bool		m_blockingRead;
 };
 
 
