@@ -69,9 +69,9 @@ XercesDocumentTypeBridge::XercesDocumentTypeBridge(
 	XalanDocumentType(),
 	m_xercesNode(theXercesDOMDocumentType),
 	m_entities(m_xercesNode.getEntities(),
-			   theNavigator.getOwnerDocument()),
+			   theNavigator),
 	m_notations(m_xercesNode.getNotations(),
-			    theNavigator.getOwnerDocument()),
+			    theNavigator),
 	m_navigator(theNavigator)
 {
 }

@@ -122,7 +122,7 @@ XercesDocumentBridge::XercesDocumentBridge(const DOM_Document&	theXercesDocument
 
 	if (theDoctype.isNull() == false)
 	{
-		m_doctype = new XercesDocumentTypeBridge(theDoctype, this);
+		m_doctype = new XercesDocumentTypeBridge(theDoctype, m_navigator);
 
 		// Add it to the node map...
 		m_nodeMap.addAssociation(theDoctype, m_doctype, false);

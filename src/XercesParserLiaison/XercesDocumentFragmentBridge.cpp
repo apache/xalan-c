@@ -73,7 +73,7 @@ XercesDocumentFragmentBridge::XercesDocumentFragmentBridge(
 	XalanDocumentFragment(),
 	m_xercesNode(theXercesDOMDocumentFragment),
 	m_children(theXercesDOMDocumentFragment.getChildNodes(),
-			   theNavigator.getOwnerDocument()),
+			   theNavigator),
 	m_navigator(theNavigator)
 {
 }
