@@ -18,7 +18,7 @@
 #include <PlatformSupport/DOMStringHelper.hpp>
 #include <PlatformSupport/XalanFileOutputStream.hpp>
 #include <PlatformSupport/XalanOutputStreamPrintWriter.hpp>
-#include <DOMSupport/DOMSupportDefault.hpp>
+#include <XercesParserLiaison/XercesDOMSupport.hpp>
 
 #include <XPath/XObjectFactoryDefault.hpp>
 #include <XPath/XPathSupportDefault.hpp>
@@ -59,8 +59,25 @@
 #include <crtdbg.h>
 #endif
 
+const char* const xxslStylesheets[] =
+{
+	"v:\\xsl-test\\perf\\basic\\basic-all_well",
+	"v:\\xsl-test\\perf\\basic\\basic-datetranscode",
+	"v:\\xsl-test\\perf\\basic\\basic-dict2",
+	"v:\\xsl-test\\perf\\basic\\basic-Fischer-Euwe",
+	"v:\\xsl-test\\perf\\basic\\basic-queens", 
+	"v:\\xsl-test\\perf\\large\\large-all_well",
+	//"v:\\xsl-test\\perf\\large\\large-evans_large", 
+	"v:\\xsl-test\\perf\\nodes\\nodes-fancy_xml_tree_viewer_34",
+	"v:\\xsl-test\\perf\\nodes\\nodes-showtree-19991008",
+	"v:\\xsl-test\\perf\\sort\\sort-big",
+	"v:\\xsl-test\\perf\\xpath\\xpath-evans_small",
+	"v:\\xsl-test\\perf\\xpath\\xpath-evans_tiny",
+	0
+};
 
-const char* const	xslStylesheets[] =
+
+const char* const xslStylesheets[] =
 {
 	"v:\\xsl-test\\conf\\attribset\\attribset01",
 	"v:\\xsl-test\\conf\\attribset\\attribset02",
@@ -106,7 +123,6 @@ const char* const	xslStylesheets[] =
 	"v:\\xsl-test\\conf\\attribvaltemplate\\attribvaltemplate04",
 	"v:\\xsl-test\\conf\\attribvaltemplate\\attribvaltemplate05",
 	"v:\\xsl-test\\conf\\attribvaltemplate\\attribvaltemplate07",
-	"v:\\xsl-test\\conf\\attribvaltemplate\\attribvaltemplate08",
 	"v:\\xsl-test\\conf\\axes\\axes01",
 	"v:\\xsl-test\\conf\\axes\\axes02",
 	"v:\\xsl-test\\conf\\axes\\axes03",
@@ -568,7 +584,7 @@ const char* const	xslStylesheets[] =
 	"v:\\xsl-test\\conf\\namedtemplate\\namedtemplate03",
 	"v:\\xsl-test\\conf\\namedtemplate\\namedtemplate04",
 	"v:\\xsl-test\\conf\\namedtemplate\\namedtemplate05",
-//	"v:\\xsl-test\\conf\\namedtemplate\\namedtemplate06",
+	//"v:\\xsl-test\\conf\\namedtemplate\\namedtemplate06",
 	"v:\\xsl-test\\conf\\namedtemplate\\namedtemplate07",
 	"v:\\xsl-test\\conf\\namedtemplate\\namedtemplate08",
 	"v:\\xsl-test\\conf\\namedtemplate\\namedtemplate09",
@@ -1166,7 +1182,26 @@ const char* const	xslStylesheets[] =
 	"v:\\xsl-test\\conf\\variable\\variable21",
 	"v:\\xsl-test\\conf\\variable\\variable23",
 	"v:\\xsl-test\\conf\\variable\\variable24",
-	//"v:\\xsl-test\\conf\\variable\\variable25", 
+	//"v:\\xsl-test\\conf\\variable\\variable25",
+	"v:\\xsl-test\\conf\\variable\\variable26",
+	"v:\\xsl-test\\conf\\variable\\variable27",
+	"v:\\xsl-test\\conf\\variable\\variable28",
+	"v:\\xsl-test\\conf\\variable\\variable29",
+	"v:\\xsl-test\\conf\\variable\\variable30",
+	"v:\\xsl-test\\conf\\variable\\variable31",
+	//"v:\\xsl-test\\conf\\variable\\variable32",
+	//"v:\\xsl-test\\conf\\variable\\variable33",
+	//"v:\\xsl-test\\conf\\variable\\variable34",
+	//"v:\\xsl-test\\conf\\variable\\variable35",
+	"v:\\xsl-test\\conf\\variable\\variable36",
+	"v:\\xsl-test\\conf\\variable\\variable37",
+	"v:\\xsl-test\\conf\\variable\\variable38",
+	"v:\\xsl-test\\conf\\variable\\variable39",
+	"v:\\xsl-test\\conf\\variable\\variable40",
+	"v:\\xsl-test\\conf\\variable\\variable41",
+	"v:\\xsl-test\\conf\\variable\\variable42",
+	"v:\\xsl-test\\conf\\variable\\variable43",
+	//"v:\\xsl-test\\conf\\variable\\variable44",	
 	"v:\\xsl-test\\conf\\ver\\ver01",
 	"v:\\xsl-test\\conf\\ver\\ver02",
 	"v:\\xsl-test\\conf\\ver\\ver03",
@@ -1193,7 +1228,6 @@ const char* const	xslStylesheets[] =
 	"v:\\xsl-test\\conf\\whitespace\\whitespace21",
 	0
 };
-
 
 
 // Used to hold compiled stylesheet, and source document.
@@ -1242,7 +1276,7 @@ main(
 				XSLTInit	theInit;
 
 				// Create the necessary stuff to compile the stylesheet.
-				DOMSupportDefault				csDOMSupport;
+				XercesDOMSupport				csDOMSupport;
 				XercesParserLiaison				csParserLiaison(csDOMSupport);
 				XPathSupportDefault				csXPathSupport(csDOMSupport);
 				XSLTProcessorEnvSupportDefault	csXSLTProcessorEnvSupport;
@@ -1283,6 +1317,7 @@ main(
 					const XalanDOMString  theXMLFilename(XalanDOMString(xslStylesheets[i]) + theXMLSuffix);
 
 					//cout << "Now compiling Stylesheet: " << xslStylesheets[i] << endl;
+					cout << ".";
 
 					//Generate the XML and XSL input objects.
 					XSLTInputSource		csStylesheetSourceXSL(c_wstr(theXSLFilename));
@@ -1309,9 +1344,9 @@ main(
 					for(int ii = 0; xslStylesheets[ii] != 0; ii++)
 					{
 						//cout << "Now running test: " << xslStylesheets[ii] << endl;
-
+						cout << "#";
 						// Create the necessary stuff to run the processor.
-						DOMSupportDefault				psDOMSupport;
+						XercesDOMSupport				psDOMSupport;
 						XercesParserLiaison				psParserLiaison(psDOMSupport);
 						XPathSupportDefault				psXPathSupport(psDOMSupport);
 						XSLTProcessorEnvSupportDefault	psXSLTProcessorEnvSupport;
@@ -1339,11 +1374,11 @@ main(
 								psXPathSupport,
 								psXObjectFactory);
 
-						const XalanDOMString  outputFileName("foo.out");
+						const XalanDOMString  outputFile("foo.out");
 
 						//Generate the XML input and output objects.
 						XSLTInputSource		csDocumentSource(glbSourceDoc[ii]);
-						XSLTResultTarget	theResultTarget(c_wstr(outputFileName));
+						XSLTResultTarget	theResultTarget(outputFile);
 
 						// Set the stylesheet to be the compiled stylesheet. Then do the transform.
 						psProcessor.setStylesheetRoot(glbStylesheetRoot[ii]);
