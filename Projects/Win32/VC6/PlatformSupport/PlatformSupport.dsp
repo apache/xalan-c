@@ -415,6 +415,10 @@ SOURCE=..\..\..\..\src\PlatformSupport\XalanFileOutputStream.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\PlatformSupport\XalanLocator.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\PlatformSupport\XalanNullOutputStream.hpp
 # End Source File
 # Begin Source File
