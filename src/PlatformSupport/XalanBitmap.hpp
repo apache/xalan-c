@@ -72,6 +72,16 @@ class XALAN_PLATFORMSUPPORT_EXPORT XalanBitmap
 {
 public:
 
+	// The basic storage unit for the bitmaps.
+	typedef char	UnitType;
+
+	// Really all we're assuming is that a char is at least
+	// 8 bits.  If it's more, then we'll just waste some
+	// space.  This may need to be adjusted for various
+	// platforms, or perhaps change to using an integral of
+	// a known size, so that we don't waste any space.
+	enum { eBitsPerUnit = 8 };
+
 
 	/**
 	 * Construct an instance with room for the specified number
@@ -136,29 +146,10 @@ public:
 
 private:
 
-	// Really all we're assuming is that a char is at least
-	// 8 bits.  If it's more, then we'll just waste some
-	// space.  This may need to be adjusted for various
-	// platforms, or perhaps change to using an integral of
-	// a known size.
-	enum { eBitsPerChar = 8 };
-
-	/**
-	 * Make a mask to manipulate a bit.
-	 *
-	 * @param The number of the bit
-	 * @return The mask
-	 */
-	static char
-	makeMask(unsigned long	theBit)
-	{
-		return char(1 << (theBit % eBitsPerChar));
-	}
-
 #if defined(XALAN_NO_NAMESPACES)
-	typedef vector<char>		BitmapVectorType;
+	typedef vector<UnitType>		BitmapVectorType;
 #else
-	typedef std::vector<char>	BitmapVectorType;
+	typedef std::vector<UnitType>	BitmapVectorType;
 #endif
 
 	const unsigned long		m_size;

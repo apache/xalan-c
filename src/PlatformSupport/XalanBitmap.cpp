@@ -63,9 +63,15 @@
 
 
 
+// Pre-constructed masks for bit twiddling.  Update these if not using chars for storing the bits.
+static const int	theSetMasks[XalanBitmap::eBitsPerUnit] = { 1, 2, 4, 8, 16, 32, 64, 128 };
+static const int	theClearMasks[XalanBitmap::eBitsPerUnit] = { ~1, ~2, ~4, ~8, ~16, ~32, ~64, ~128 };
+
+
+
 XalanBitmap::XalanBitmap(unsigned long	theSize) :
 	m_size(theSize),
-	m_bitmap((theSize + eBitsPerChar) / eBitsPerChar)
+	m_bitmap((theSize + eBitsPerUnit) / eBitsPerUnit)
 {
 }
 
@@ -86,7 +92,7 @@ XalanBitmap::isSet(unsigned long	theBit) const
 	}
 	else
 	{
-		return m_bitmap[theBit / eBitsPerChar] & makeMask(theBit) ? true : false;
+		return m_bitmap[theBit / eBitsPerUnit] & theSetMasks[theBit % eBitsPerUnit] ? true : false;
 	}
 }
 
@@ -97,7 +103,7 @@ XalanBitmap::set(unsigned long	theBit)
 {
 	if (theBit < m_size)
 	{
-		m_bitmap[theBit / eBitsPerChar] |= makeMask(theBit);
+		m_bitmap[theBit / eBitsPerUnit] |= theSetMasks[theBit % eBitsPerUnit];
 	}
 }
 
@@ -108,7 +114,7 @@ XalanBitmap::clear(unsigned long	theBit)
 {
 	if (theBit < m_size)
 	{
-		m_bitmap[theBit / eBitsPerChar] &= ~makeMask(theBit);
+		m_bitmap[theBit / eBitsPerUnit] &= theClearMasks[theBit % eBitsPerUnit];
 	}
 }
 
@@ -119,7 +125,7 @@ XalanBitmap::toggle(unsigned long	theBit)
 {
 	if (theBit < m_size)
 	{
-		m_bitmap[theBit / eBitsPerChar] ^= makeMask(theBit);
+		m_bitmap[theBit / eBitsPerUnit] ^= theSetMasks[theBit % eBitsPerUnit];
 	}
 }
 
