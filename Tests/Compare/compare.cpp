@@ -265,7 +265,7 @@ main(
 			// Create run entry that contains runid and number of iterations used for averages.
 			runAttrs.insert(Hashtable::value_type(XalanDOMString("UniqRunid"), UniqRunid));
 			runAttrs.insert(Hashtable::value_type(XalanDOMString("Xerces-Version "), futil.getXercesVersion()));
-			logFile.logElement(10, "perfdata", runAttrs, "xxx");
+			logFile.logElementWAttrs(10, "perfdata", runAttrs, "xxx");
 				
 			// Specify the "test" directory for both input and output.
 			const XalanDOMString  xDir("domcomtests");
@@ -280,6 +280,8 @@ main(
 
 					Hashtable attrs;
 					fileName = files[i];
+					futil.data.reset();
+					futil.data.testOrFile = fileName;
 
 					attrs.insert(Hashtable::value_type(XalanDOMString("idref"), fileName));
 					attrs.insert(Hashtable::value_type(XalanDOMString("UniqRunid"),UniqRunid));
@@ -292,7 +294,7 @@ main(
 
 					const XalanDOMString  outbase =  outputRoot + xDir + pathSep + fileName; 
 					const XalanDOMString  theOutputFile = futil.GenerateFileName(outbase, "out");
-					cout << endl << endl << "Processing: " << fileName << endl;
+					//cout << endl << endl << "Processing: " << fileName << endl;
 
 					const XSLTInputSource	xslInputSource(c_wstr(theXSLFile));
 					const XSLTInputSource	xmlInputSource(c_wstr(theXMLFile));
@@ -331,7 +333,7 @@ main(
 
 					if(!transResult)
 					{
-						futil.compareResults(theOutputFile, compiledSS, dom, fileName, goldInputSource);
+						futil.compareDOMResults(theOutputFile, compiledSS, dom, goldInputSource);
 					}
 					else
 					{
