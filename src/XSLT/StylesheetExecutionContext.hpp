@@ -66,14 +66,6 @@
 
 
 
-#if defined(XALAN_OLD_STREAMS)
-#include <iostream.h>
-#else
-#include <iosfwd>
-#endif
-
-
-
 #include <cstddef>
 #include <memory>
 

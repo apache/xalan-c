@@ -64,13 +64,11 @@
 
 
 
-#if defined(XALAN_OLD_STREAMS)
+#if defined(XALAN_CLASSIC_IOSTREAMS)
 #include <iostream.h>
 #else
 #include <iosfwd>
-#if !defined(XALAN_OLD_STREAM_HEADERS)
 #include <ios>
-#endif
 #endif
 
 
@@ -91,7 +89,7 @@ public:
 	typedef std::ostream		StreamType;
 #endif
 
-#if defined(XALAN_OLD_STREAMS)
+#if defined(XALAN_CLASSIC_IOSTREAMS)
 	typedef int					StreamSizeType;
 #else
 #if defined(XALAN_NO_NAMESPACES)
@@ -116,12 +114,10 @@ public:
 	{
 	public:
 
-		XalanStdOutputStreamWriteException(
-			int					theErrorCode);
+		XalanStdOutputStreamWriteException(int	theErrorCode);
 
 		virtual
 		~XalanStdOutputStreamWriteException();
-
 	};
 
 protected:

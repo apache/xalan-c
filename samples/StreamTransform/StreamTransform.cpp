@@ -3,7 +3,7 @@
 
 
 
-#if defined(XALAN_OLD_STREAM_HEADERS)
+#if defined(XALAN_CLASSIC_IOSTREAMS)
 #include <iostream.h>
 #include <strstream.h>
 #include <fstream.h>
@@ -36,7 +36,7 @@ main(
 	using std::ofstream;
 	using std::ostrstream;
 #if defined(XALAN_STRICT_ANSI_HEADERS)
-		using std::strlen;
+	using std::strlen;
 #endif
 #endif
 

@@ -57,7 +57,7 @@
 
 #include <cstdio>
 
-#if defined(XALAN_OLD_STREAM_HEADERS)
+#if defined(XALAN_CLASSIC_IOSTREAMS)
 #include <iostream.h>
 #include <strstream.h>
 #else

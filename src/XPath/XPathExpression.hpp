@@ -66,7 +66,7 @@
 
 #include <vector>
 
-#if defined(XALAN_OLD_STREAMS)
+#if defined(XALAN_CLASSIC_IOSTREAMS)
 #include <iostream.h>
 #else
 #include <iosfwd>

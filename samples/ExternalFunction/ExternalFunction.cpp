@@ -5,7 +5,7 @@
 
 #include <cmath>
 #include <ctime>
-#if defined(XALAN_OLD_STREAM_HEADERS)
+#if defined(XALAN_CLASSIC_IOSTREAMS)
 #include <iostream.h>
 #else
 #include <iostream>

@@ -65,13 +65,10 @@
 
 #include <cassert>
 
-#if !defined(XALAN_OLD_STREAMS)
-#if defined(XALAN_OLD_STREAM_HEADERS)
-#include <iostream.h>
-#else
+#if !defined(XALAN_CLASSIC_IOSTREAMS)
 #include <iostream>
 #endif
-#endif
+
 
 
 #if !defined(XALAN_NO_NAMESPACES)
@@ -117,7 +114,7 @@ StdBinInputStream::readBytes(
 	}
 	else
 	{
-#if !defined(XALAN_OLD_STREAM_HEADERS)
+#if !defined(XALAN_CLASSIC_IOSTREAMS)
 #if defined(XALAN_OLD_STYLE_CASTS)
 		m_stream.read((char*)toFill, maxToRead);
 #else

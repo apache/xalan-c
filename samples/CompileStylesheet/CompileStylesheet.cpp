@@ -7,7 +7,7 @@
 
 
 
-#if defined(XALAN_OLD_STREAM_HEADERS)
+#if defined(XALAN_CLASSIC_IOSTREAMS)
 #include <fstream.h>
 #include <iostream.h>
 #include <strstream.h>

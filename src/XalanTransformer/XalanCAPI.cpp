@@ -63,7 +63,7 @@
 
 
 #include <cassert>
-#if defined(XALAN_OLD_STREAM_HEADERS)
+#if defined(XALAN_CLASSIC_IOSTREAMS)
 #include <strstream.h>
 #else
 #include <strstream>
