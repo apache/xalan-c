@@ -518,9 +518,9 @@ ${ALL_OBJECTS_DIR}/%.o:$(SAMPLES_DIR)/ExternalFunction/%.cpp
 	$(CC1) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $<
 endif
 
-SerializeNodeSet: lib $(BINTARGETDIR)/SerializeNodeSet.cpp
+SerializeNodeSet: lib $(BINTARGETDIR)/SerializeNodeSet
 
-$(BINTARGETDIR)/SerializeNodeSet.cpp: ${ALL_OBJECTS_DIR}/SerializeNodeSet.o
+$(BINTARGETDIR)/SerializeNodeSet: ${ALL_OBJECTS_DIR}/SerializeNodeSet.o
 ifeq ($(PLATFORM), OS390)
 	${LINK} $(XSL_BUILD_OPTIONS) ${PLATFORM_LIB_LINK_OPTIONS} ${LIBRARY_SEARCH_PATHS} \
 	${EXTRA_LINK_OPTIONS} $(LIB_DIR)/lib$(PROJECT_NAME)$(VER).x $(ALLLIBS) $(CXXFLAGS) $^ -o $@	
