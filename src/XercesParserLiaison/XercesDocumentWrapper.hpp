@@ -318,20 +318,57 @@ public:
 	void
 	rebuildWrapper();
 
+	/**
+	 * Map a Xerces node to the corresponding wrapper node.
+	 * If the constructor for the instance was called with
+	 * the threadSafe or buildWrapper parameter equal to
+	 * true, this call will fail.
+	 *
+	 * @param theXercesNode The Xerces instance to map
+	 *
+	 * @return The pointer to the corresponding XalanNode instance, or 0 if the node could not be mapped.
+	 */
 	XalanNode*
 	mapNode(const DOMNodeType* 	theXercesNode) const;
 
+	/**
+	 * Map a Xerces node to the corresponding wrapper node.
+	 * If the constructor for the instance was called with
+	 * the threadSafe or buildWrapper parameter equal to
+	 * true, this call will fail.
+	 *
+	 * @param theXercesNode The Xerces instance to map
+	 *
+	 * @return The pointer to the corresponding XalanNode instance, or 0 if the node could not be mapped.
+	 */
 	XalanAttr*
 	mapNode(const DOMAttrType* 	theXercesNode) const;
 
+	/**
+	 * Map a Xerces node to the corresponding wrapper node.
+	 * If the constructor for the instance was called with
+	 * the threadSafe or buildWrapper parameter equal to
+	 * true, this call will fail.
+	 *
+	 * @param theXercesNode The Xerces instance to map
+	 *
+	 * @return The pointer to the corresponding XalanNode instance, or 0 if the node could not be mapped.
+	 */
 	XalanElement*
 	mapNode(const DOMElementType* 	theXercesNode) const;
 
+	/**
+	 * Map a XalanNode to the corresponding Xerces node.
+	 * If the node not owned by this document, the
+	 * function will throw XalanDOMException with the code
+	 * WRONG_DOCUMENT_ERR.
+	 *
+	 * @param theXalanNode The Xalan instance to map
+	 *
+	 * @return The pointer to the corresponding XalanNode instance, or 0 if the node could not be mapped.
+	 */
 	const DOMNodeType*
 	mapNode(XalanNode* 	theXalanNode) const;
-
-	const DOMAttrType*
-	mapNode(XalanAttr* 	theXalanNode) const;
 
 	/**
 	 *

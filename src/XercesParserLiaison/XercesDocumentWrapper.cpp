@@ -200,43 +200,118 @@ XercesDocumentWrapper::mapNode(const DOMNodeType*	theXercesNode) const
 const DOMNodeType*
 XercesDocumentWrapper::mapNode(XalanNode*	theXalanNode) const
 {
-	const DOMNodeType*	theXercesNode = 0;
-
-	if (theXalanNode != 0)
-	{
-		theXercesNode = m_nodeMap.getNode(theXalanNode);
-
-		if (theXercesNode == 0)
-		{
-			throw XercesDOMWrapperException(XercesDOMWrapperException::WRONG_DOCUMENT_ERR);
-		}
-	}
-
-	return theXercesNode;
-}
-
-
-
-const DOMAttrType*
-XercesDocumentWrapper::mapNode(XalanAttr* 	theXalanNode) const
-{
-	const DOMNodeType*	theXercesNode = 0;
-
-	if (theXalanNode != 0)
-	{
-		theXercesNode = m_nodeMap.getNode(theXalanNode);
-
-		if (theXercesNode == 0)
-		{
-			throw XercesDOMWrapperException(XercesDOMWrapperException::WRONG_DOCUMENT_ERR);
-		}
-	}
-
 #if defined(XALAN_OLD_STYLE_CASTS)
-	return (const DOMAttrType*)theXercesNode;
+	if ((const XalanNode*)this == theXalanNode)
 #else
-	return static_cast<const DOMAttrType*>(theXercesNode);
+	if (static_cast<const XalanNode*>(this) == theXalanNode)
 #endif
+	{
+		return m_xercesDocument;
+	}
+	else if (theXalanNode == 0 ||
+#if defined(XALAN_OLD_STYLE_CASTS)
+		(const XalanDocument*)this != theXalanNode->getOwnerDocument())
+#else
+		static_cast<const XalanDocument*>(this) != theXalanNode->getOwnerDocument())
+#endif
+	{
+		throw XercesDOMWrapperException(XercesDOMWrapperException::WRONG_DOCUMENT_ERR);
+	}
+	else
+	{
+		switch(theXalanNode->getNodeType())
+		{
+		case XalanNode::ATTRIBUTE_NODE:
+#if defined(XALAN_OLD_STYLE_CASTS)
+			return ((const XercesAttrWrapper*)theXalanNode)->getXercesNode();
+#else
+			return static_cast<const XercesAttrWrapper*>(theXalanNode)->getXercesNode();
+#endif
+			break;
+
+		case XalanNode::CDATA_SECTION_NODE:
+#if defined(XALAN_OLD_STYLE_CASTS)
+			return ((const XercesCDATASectionWrapper*)theXalanNode)->getXercesNode();
+#else
+			return static_cast<const XercesCDATASectionWrapper*>(theXalanNode)->getXercesNode();
+#endif
+			break;
+
+		case XalanNode::COMMENT_NODE:
+#if defined(XALAN_OLD_STYLE_CASTS)
+			return ((const XercesCommentWrapper*)theXalanNode)->getXercesNode();
+#else
+			return static_cast<const XercesCommentWrapper*>(theXalanNode)->getXercesNode();
+#endif
+			break;
+
+		case XalanNode::DOCUMENT_FRAGMENT_NODE:
+			throw XercesDOMWrapperException(XercesDOMWrapperException::NOT_SUPPORTED_ERR);
+			break;
+
+		case XalanNode::ELEMENT_NODE:
+#if defined(XALAN_OLD_STYLE_CASTS)
+			return ((const XercesElementWrapper*)theXalanNode)->getXercesNode();
+#else
+			return static_cast<const XercesElementWrapper*>(theXalanNode)->getXercesNode();
+#endif
+			break;
+
+		case XalanNode::ENTITY_NODE:
+#if defined(XALAN_OLD_STYLE_CASTS)
+			return ((const XercesEntityWrapper*)theXalanNode)->getXercesNode();
+#else
+			return static_cast<const XercesEntityWrapper*>(theXalanNode)->getXercesNode();
+#endif
+			break;
+
+		case XalanNode::ENTITY_REFERENCE_NODE:
+#if defined(XALAN_OLD_STYLE_CASTS)
+			return ((const XercesEntityReferenceWrapper*)theXalanNode)->getXercesNode();
+#else
+			return static_cast<const XercesEntityReferenceWrapper*>(theXalanNode)->getXercesNode();
+#endif
+			break;
+
+		case XalanNode::NOTATION_NODE:
+#if defined(XALAN_OLD_STYLE_CASTS)
+			return ((const XercesNotationWrapper*)theXalanNode)->getXercesNode();
+#else
+			return static_cast<const XercesNotationWrapper*>(theXalanNode)->getXercesNode();
+#endif
+			break;
+
+		case XalanNode::PROCESSING_INSTRUCTION_NODE:
+#if defined(XALAN_OLD_STYLE_CASTS)
+			return ((const XercesProcessingInstructionWrapper*)theXalanNode)->getXercesNode();
+#else
+			return static_cast<const XercesProcessingInstructionWrapper*>(theXalanNode)->getXercesNode();
+#endif
+			break;
+
+		case XalanNode::TEXT_NODE:
+#if defined(XALAN_OLD_STYLE_CASTS)
+			return ((const XercesTextWrapper*)theXalanNode)->getXercesNode();
+#else
+			return static_cast<const XercesTextWrapper*>(theXalanNode)->getXercesNode();
+#endif
+			break;
+
+		case XalanNode::DOCUMENT_TYPE_NODE:
+#if defined(XALAN_OLD_STYLE_CASTS)
+			return ((const XercesDocumentTypeWrapper*)theXalanNode)->getXercesNode();
+#else
+			return static_cast<const XercesDocumentTypeWrapper*>(theXalanNode)->getXercesNode();
+#endif
+			break;
+
+		default:
+			assert(false);
+			break;
+		}
+
+		return 0;
+	}
 }
 
 
