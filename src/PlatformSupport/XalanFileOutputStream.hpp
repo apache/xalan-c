@@ -64,7 +64,12 @@
 
 
 
+#if defined(WIN32)
+#include <windows.h>
+#else
 #include <cstdio>
+#endif
+
 #include <vector>
 
 
@@ -78,12 +83,17 @@ class XALAN_PLATFORMSUPPORT_EXPORT XalanFileOutputStream : public XalanOutputStr
 {
 public :
 
+	enum { eDefaultBufferSize = 8192 };
+
 	/**
-	 * Construct an XalanFileOutputStream exception object.
+	 * Construct an XalanFileOutputStream object.
 	 * 
-	 * @param theFileName name of file causing the exception
+	 * @param theFileName name of file
+	 * @param theBufferSize The size of the buffer
 	 */
-    XalanFileOutputStream(const XalanDOMString&		theFileName);
+    XalanFileOutputStream(
+			const XalanDOMString&	theFileName,
+			unsigned int			theBufferSize = eDefaultBufferSize);
 
     virtual
 	~XalanFileOutputStream();
@@ -162,7 +172,11 @@ private:
 	// Data members...
 	const XalanDOMString	m_fileName;
 
+#if defined(WIN32)
+	const HANDLE			m_handle;
+#else
 	FILE*					m_handle;
+#endif
 };
 
 

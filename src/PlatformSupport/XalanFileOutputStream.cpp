@@ -78,12 +78,27 @@
 
 
 
-
-XalanFileOutputStream::XalanFileOutputStream(const XalanDOMString&		theFileName) :
-	XalanOutputStream(),
+XalanFileOutputStream::XalanFileOutputStream(
+			const XalanDOMString&	theFileName,
+			unsigned int			theBufferSize) :
+	XalanOutputStream(theBufferSize),
 	m_fileName(theFileName),
+#if defined(WIN32)
+	m_handle(CreateFileW(
+			c_wstr(theFileName),
+			GENERIC_WRITE,
+			0,
+			0,
+			CREATE_ALWAYS,
+			FILE_ATTRIBUTE_NORMAL,
+			0))
+#else
 	m_handle(0)
+#endif
 {
+#if defined(WIN32)
+    if (m_handle == INVALID_HANDLE_VALUE)
+#else
 	const CharVectorType	theResult(TranscodeToLocalCodePage(theFileName));
 
 	assert(theResult.size() > 0);
@@ -93,6 +108,7 @@ XalanFileOutputStream::XalanFileOutputStream(const XalanDOMString&		theFileName)
 	m_handle = fopen(tmpName, "wb");
 
     if (m_handle == 0)
+#endif
 	{
 		throw XalanFileOutputStreamOpenException(theFileName,
 												errno);
@@ -103,10 +119,17 @@ XalanFileOutputStream::XalanFileOutputStream(const XalanDOMString&		theFileName)
 
 XalanFileOutputStream::~XalanFileOutputStream()
 {
+#if defined(WIN32)
+    if (m_handle != INVALID_HANDLE_VALUE)
+	{
+		CloseHandle(m_handle);
+	}
+#else
     if (m_handle != 0)
 	{
 		fclose(m_handle);
 	}
+#endif
 }
 
 
@@ -114,7 +137,14 @@ XalanFileOutputStream::~XalanFileOutputStream()
 void
 XalanFileOutputStream::doFlush()
 {
-	fflush(m_handle);
+#if !defined(WIN32)
+	if (fflush(m_handle) != 0)
+	{
+		throw XalanFileOutputStreamWriteException(
+			m_fileName,
+			errno);
+	}
+#endif
 }
 
 
@@ -124,17 +154,30 @@ XalanFileOutputStream::writeData(
 			const char*		theBuffer,
 			unsigned long	theBufferLength)
 {
+#if defined(WIN32)
+	DWORD			theBytesWritten;
+
+	if (WriteFile(m_handle, theBuffer, theBufferLength, &theBytesWritten, 0) == false ||
+	    theBytesWritten != theBufferLength)
+	{
+		throw XalanFileOutputStreamWriteException(
+			m_fileName,
+			GetLastError());
+	}
+#else
 	const size_t	theBytesWritten =
 		fwrite(theBuffer,
 			   1,
 			   theBufferLength,
 			   m_handle);
 
-	if(theBytesWritten != theBufferLength)
+	if (theBytesWritten != theBufferLength)
 	{
-		throw XalanFileOutputStreamWriteException(m_fileName,
-												 errno);
+		throw XalanFileOutputStreamWriteException(
+			m_fileName,
+			errno);
 	}
+#endif
 }
 
 
