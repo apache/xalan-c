@@ -854,19 +854,30 @@ XSLTEngineImpl::getStylesheetFromPIURL(
 				fragBase.getOwnerDocument();
 		assert(theOwnerDocument != 0);
 
-		if (length(xmlBaseIdent) == 0)
+		// Catch any XMLExceptions thrown, since we may not
+		// be able to resolve the URL.  In that case, the
+		// parser will throw an error.  We do this because
+		// we don't know what sort of EntityResolvers might
+		// be active, so we never want to error out here.
+		try
 		{
-			localXSLURLString =
-					URISupport::getURLStringFromString(
-						localXSLURLString,
-						m_xpathEnvSupport.findURIFromDoc(theOwnerDocument));
+			if (length(xmlBaseIdent) == 0)
+			{
+				localXSLURLString =
+						URISupport::getURLStringFromString(
+							localXSLURLString,
+							m_xpathEnvSupport.findURIFromDoc(theOwnerDocument));
+			}
+			else
+			{
+				localXSLURLString =
+						URISupport::getURLStringFromString(
+							localXSLURLString,
+							xmlBaseIdent);
+			}
 		}
-		else
+		catch(const XMLException&)
 		{
-			localXSLURLString =
-					URISupport::getURLStringFromString(
-						localXSLURLString,
-						xmlBaseIdent);
 		}
 
 		if(isRoot)
