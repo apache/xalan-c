@@ -69,6 +69,10 @@
 
 
 
+#include <XalanDOM/XalanDocument.hpp>
+
+
+
 #include <PlatformSupport/XalanTranscodingServices.hpp>
 
 
