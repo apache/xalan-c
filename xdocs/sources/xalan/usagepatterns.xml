@@ -92,15 +92,15 @@ command-line utility, see <link idref="commandline">Command-Line Utility</link>.
 #include &lt;XalanTransformer/XalanTransformer.hpp&gt;
 ...</source>
 </s3>
-  <s3 title="2. Initialize Xerces and Xalan">
+  <s3 title="2. Initialize Xerces and Xalan.">
 <p>Use the static initializers to initialize the &xslt4c; and &xml4c; platforms. You must initialize &xml4c; once per process. You may initialize and terminate &xslt4c; multiple times, but this is not recommended: it is inefficient and is not thread safe.</p>  
 <source>XMLPlatformUtils::Initialize();
 XalanTransformer::initialize();</source>
 </s3>
-  <s3 title="3.Create a XalanTransformer">
+  <s3 title="3. Create a XalanTransformer.">
   <source>XalanTransformer theXalanTransformer;</source>
   </s3>
-  <s3 title="4. Perform each transformation">
+  <s3 title="4. Perform each transformation.">
     <p>You can explicitly instantiate <jump href="apidocs/class_xsltinputsource.html">XSLTInputSource</jump> objects for the XML source document and XSL stylesheet, and an <jump href="apidocs/class_xsltresulttarget.html">XSLTResultTarget</jump> object for the output, and then call <jump href="apidocs/class_xalantransformer.html">XalanTransformer</jump> transform() with those objects as parameters. For example:</p>
 <source>XSLTInputSource xmlIn("foo.xml");
 XSLTInputSource xslIn("foo.xsl");
@@ -130,11 +130,16 @@ int theResult =
 </ul>
 <note>Each transform() method returns an integer code, 0 for success. If an error occurs, you can use the getLastError() method to return a pointer to the error message.</note>
 </s3>
-<s3 title="5. Shut down Xalan and (optionally) Xerces">
+<s3 title="5. Shut down Xalan.">
+<p>When you shut down Xalan, you may also want to shut down Xerces and ICU support (if enabled). Keep the following considerations in mind:</p>
+<ul>
+<li>Once you have shut down Xerces, you can no longer make Xalan or Xerces calls in the current process.<br/><br/></li>
+<li>Shut down ICU support if you have enabled it (see <link anchor="icusupport">enabling ICU support</link>) and if the application is exiting or no longer requires the ICU. The <code>XMLPlatformUtils::Terminate()</code> call does nothing if ICU support has not been enabled.</li>
+</ul>
 <p>Use the static terminators.</p>
 <source>XalanTransformer::terminate();
-XMLPlatformUtils::Terminate();</source>
-  <note>Once you have shut down Xerces, you can no longer make Xalan or Xerces calls in the current process.</note>
+XMLPlatformUtils::Terminate();
+XalanTransformer::ICUCleanUp();</source>
 </s3></s2><anchor name="stylepi"/>
 <s2 title="Using a stylesheet processing instruction">
 <p>If you want to use the stylesheet referred to by a stylesheet processing instruction in the XMl document, simply call transform() without the second XSLTInputSource argument. For example:</p>
@@ -328,7 +333,7 @@ executing XPath expressions.</p>
       <br/><em>Important</em> For Windows, be sure to install the ICU on the same drive and at 
       the same level as &xslt4c; and &xml4c;.<br/><br/></li>
       <li>Set the ICU_DATA environment variable as indicated in the readme.html.</li>
-    </ol>
+    </ol><anchor name="icusupport"/>
     <s3 title="Enabling ICU support for encoding">
     <p>If you want to enable ICU support for encoding, you must integrate ICU with
     your &xml4c; build. &xml4c; uses ICU for input encoding. See

@@ -18,7 +18,7 @@
 
 <a><p>For generic questions about XSL stylesheets and transformations, use the <jump href="http://www.mulberrytech.com/xsl/xsl-list/">XSL-List -- Open Forum on XSL</jump> hosted by Mulberry Technologies. There is an archive that can be searched as well. Specific questions about &xslt4c; can be asked on the Xalan-dev list. Please review this document and the archives before posting new questions.</p>
 
-<p>For specific questions on &xslt4c;, see xalan-dev@xml.apache.org on <jump href="http://archive.covalent.net/">http://archive.covalent.net/</jump>.</p>
+<p>For specific questions on &xslt4c;, see xalan-c-users@xml.apache.org and xalan-dev@xml.apache.org on <jump href="http://archive.covalent.net/">http://archive.covalent.net/</jump>. To subscribe to these mailing lists, see <jump href="http://xml.apache.org/mail.html">Mailing Lists</jump>.</p>
 </a>
 </faq>
 
@@ -39,7 +39,16 @@
 <q>I have encountered problem executing the &xslt4c; sample applications after rebuilding them under Win32 Environment (Windows NT 4.0, SP3).
  When I tried to execute the sample, I receive the error message "Debug Assertion Failed! ...  Expression: _BLOCK_TYPE_IS_VALID(pHead->nBlockUse)".</q>
 
-<a><p>You may be mixing debug and release versions of executables and libraries. In other words, if you are compiling the sample for debug, then you should link with the debug version of the &xslt4c; and &xml4c; libraries and run with the debug version of the dynamic link libraries.</p><anchor name="build"/><p/></a>
+<a><p>You may be mixing debug and release versions of executables and libraries. In other words, if you are compiling the sample for debug, then you should link with the debug version of the &xslt4c; and &xml4c; libraries and run with the debug version of the dynamic link libraries.</p>
+<p>You must also make sure your application is linking with the Debug multithreaded DLL run-time library or the Multithreaded DLL run-time library.  To check this setting do the following in Visual C++:</p>
+<ol>
+  <li>Select Settings from the Project menu.<br/><br/></li>
+  <li>Click the C/C++ tab.<br/><br/></li>
+  <li>In the Category drop-down list, select Code Generation.<br/><br/></li>
+  <li>In the Use run-time library drop-down list, select Multithreaded DLL for the Win32 Release configuration, or select Debug Multithreaded DLL for the Win32 Debug configuration.</li>
+</ol>
+<p>Once you have changed this setting, you must rebuild your project.</p>
+<anchor name="build"/><p/></a>
 </faq>
 
 <faq title="Building on Windows">
