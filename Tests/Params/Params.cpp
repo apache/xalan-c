@@ -308,13 +308,21 @@ main(
 
 						if (!theResult)
 						{
-							const XSLTInputSource resultInputSource(c_wstr(theOutputFile));
-							const XSLTInputSource goldInputSource(c_wstr(goldFile));
-							futil.compareSerializedResults(resultInputSource, goldInputSource, fileName, testCase); 
+							//const XSLTInputSource resultInputSource(c_wstr(theOutputFile));
+							//const XSLTInputSource goldInputSource(c_wstr(goldFile));
+							if(futil.compareSerializedResults(theOutputFile, goldFile)) 
+							{
+								cout << "Passed: " << fileName << endl;
+								logFile.logCheckPass(fileName);
+							}
+							else
+							{
+								logFile.logCheckFail(fileName);
+							}
 						}
 						else
 						{
-							cout << endl << "Failed: " << testCase ;
+							cout  << "Failed: " << testCase << endl;
 						}		
 				}
 				

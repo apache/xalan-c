@@ -313,7 +313,7 @@ main(
 			runAttrs.insert(Hashtable::value_type(XalanDOMString("UniqRunid"), UniqRunid));
 			runAttrs.insert(Hashtable::value_type(XalanDOMString("Xerces-Version "), futil.getXercesVersion()));
 			logFile.addMetricToAttrs("Iterations",iterCount, runAttrs);
-			logFile.logElement(10, "perfdata", runAttrs, "xxx");
+			logFile.logElementWAttrs(10, "perfdata", runAttrs, "xxx");
 
 
 			// Get the list of sub-directories below "base" and iterate through them
@@ -499,7 +499,7 @@ main(
 					cout << "   Avg: " << theAverage << " for " << iterCount << " iter's of eToe" << endl;
 					logFile.addMetricToAttrs("avgetoe",theAverage, attrs);
 
-					logFile.logElement(10, "perf", attrs, "xxx");
+					logFile.logElementWAttrs(10, "perf", attrs, "xxx");
 
 					xalan.destroyParsedSource(parsedSource);
 					xalan.destroyStylesheet(compiledSS);

@@ -413,7 +413,7 @@ main(
 		// reports in the hashtable entries.
 		runAttrs.insert(Hashtable::value_type(XalanDOMString("UniqRunid"), UniqRunid));
 		logFile.addMetricToAttrs("Iterations",iterCount, runAttrs);
-		logFile.logElement(10, "perfdata", runAttrs, "xxx");
+		logFile.logElementWAttrs(10, "perfdata", runAttrs, "xxx");
 
 		try
 		{
@@ -654,7 +654,7 @@ main(
 						logFile.addMetricToAttrs("avgetoe",theAverage, attrs);
 
 
-						logFile.logElement(10, "perf", attrs, "xxx");
+						logFile.logElementWAttrs(10, "perf", attrs, "xxx");
 					}//for files
 
 					logFile.logTestCaseClose(XalanDOMString("Performance Directory: ") + dirs[j], XalanDOMString("Done") );
