@@ -488,7 +488,10 @@ XSLTEngineImpl::processStylesheet(
 			}
 			else
 			{
-				xslIdentifier = systemID;
+				if (systemID != 0)
+				{
+					xslIdentifier = systemID;
+				}
 
 				diag(XALAN_STATIC_UCODE_STRING("========= Parsing ") + xslIdentifier + XALAN_STATIC_UCODE_STRING(" =========="));
 				pushTime(&xslIdentifier);
