@@ -135,6 +135,10 @@ FormatterToHTML::FormatterToHTML(
 	m_elementPropertiesStack()
 {
 	initCharsMap();
+
+    // FormatterToXML may have enabled this property, based on
+    // the encoding, so we should force it off.
+    m_shouldWriteXMLHeader = false;
 }
 
 

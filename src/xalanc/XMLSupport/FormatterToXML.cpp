@@ -194,9 +194,20 @@ FormatterToXML::FormatterToXML(
 
 	m_maxCharacter = XalanTranscodingServices::getMaximumCharacterValue(m_encoding);
 
-	m_encodingIsUTF = XalanTranscodingServices::encodingIsUTF8(m_encoding) ||
-					  XalanTranscodingServices::encodingIsUTF16(m_encoding) ||
-					  XalanTranscodingServices::encodingIsUTF32(m_encoding);
+    // We cannot omit the XML declaration if the encoding is not UTF-8 or
+    // UTF-16
+    const bool  canOmitXMLDeclaration =
+        XalanTranscodingServices::encodingIsUTF8(m_encoding) ||
+		XalanTranscodingServices::encodingIsUTF16(m_encoding);
+
+    if (canOmitXMLDeclaration == false && m_shouldWriteXMLHeader == false)
+    {
+        m_shouldWriteXMLHeader = true;
+    }
+
+    //OK, now we can determine if the encoding is UTF*
+	m_encodingIsUTF = canOmitXMLDeclaration || XalanTranscodingServices::encodingIsUTF32(m_encoding);
+
 
 #if 1
 	if (m_encodingIsUTF == true)
