@@ -202,13 +202,21 @@ public:
 				less<const void*> >			DurationsTableMapType;
 	typedef vector<const LocatorType*>		LocatorStack;
 	typedef vector<TraceListener*>			TraceListenerVectorType;
+#if defined(XALAN_USE_DEQUE_FOR_VECTOR_BOOL)
+	typedef deque<bool>						BoolVectorType;
+#else
 	typedef vector<bool>					BoolVectorType;
+#endif
 	typedef vector<const XalanDOMString*>	XalanDOMStringPointerVectorType;
 #else
 	typedef std::map<const void*, ClockType>	DurationsTableMapType;
 	typedef std::vector<const LocatorType*>		LocatorStack;
 	typedef std::vector<TraceListener*>			TraceListenerVectorType;
+#if defined(XALAN_USE_DEQUE_FOR_VECTOR_BOOL)
+	typedef std::deque<bool>					BoolVectorType;
+#else
 	typedef std::vector<bool>					BoolVectorType;
+#endif
 	typedef std::vector<const XalanDOMString*>	XalanDOMStringPointerVectorType;
 #endif
 

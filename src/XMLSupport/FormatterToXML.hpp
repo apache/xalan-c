@@ -306,11 +306,19 @@ public:
 	}
 
 #if defined(XALAN_NO_STD_NAMESPACE)
+#if defined(XALAN_USE_DEQUE_FOR_VECTOR_BOOL)
+	typedef deque<bool>					BoolVectorType;
+#else
 	typedef vector<bool>				BoolStackType;
+#endif
 	typedef vector<XalanDOMChar>		DOMCharBufferType;
 	typedef vector<char>				ByteBufferType;
 #else
+#if defined(XALAN_USE_DEQUE_FOR_VECTOR_BOOL)
+	typedef std::deque<bool>		BoolVectorType;
+#else
 	typedef std::vector<bool>			BoolStackType;
+#endif
 	typedef std::vector<XalanDOMChar>	DOMCharBufferType;
 	typedef std::vector<char>			ByteBufferType;
 #endif

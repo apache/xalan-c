@@ -104,12 +104,20 @@ public:
 				XalanDOMString,
 				less<XalanDOMString> >	StringToStringMapType;
 
+#if defined(XALAN_USE_DEQUE_FOR_VECTOR_BOOL)
+	typedef deque<bool>					BoolVectorType;
+#else
 	typedef vector<bool>				BoolVectorType;
+#endif
 #else
 	typedef std::map<XalanDOMString,
 					 XalanDOMString>	StringToStringMapType;
 
+#if defined(XALAN_USE_DEQUE_FOR_VECTOR_BOOL)
+	typedef std::deque<bool>			BoolVectorType;
+#else
 	typedef std::vector<bool>			BoolVectorType;
+#endif
 #endif
 
 	XPathProcessorImpl();

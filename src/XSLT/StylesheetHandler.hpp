@@ -116,14 +116,22 @@ public:
 #if defined(XALAN_NO_STD_NAMESPACE)
 	typedef vector<ElemTemplateElement*>		ElemTemplateStackType;
 	typedef vector<ElemTemplateElement*>		ElemTextLiteralStackType;
+#if defined(XALAN_USE_DEQUE_FOR_VECTOR_BOOL)
+	typedef deque<bool>							BoolVectorType;
+#else
 	typedef vector<bool>						BoolStackType;
+#endif
 	typedef set<XalanQNameByReference,
 				less<XalanQName> >				QNameSetType;
 	typedef vector<QNameSetType>				QNameSetVectorType;
 #else
 	typedef std::vector<ElemTemplateElement*>	ElemTemplateStackType;
 	typedef std::vector<ElemTemplateElement*>	ElemTextLiteralStackType;
+#if defined(XALAN_USE_DEQUE_FOR_VECTOR_BOOL)
+	typedef std::deque<bool>					BoolVectorType;
+#else
 	typedef std::vector<bool>					BoolStackType;
+#endif
 	typedef std::set<XalanQNameByReference,
 					 std::less<XalanQName> >	QNameSetType;
 	typedef std::vector<QNameSetType>			QNameSetVectorType;
