@@ -48,7 +48,7 @@ XALAN_USING_XALAN(XalanNode)
 XALAN_USING_XALAN(StaticStringToDOMString)
 XALAN_USING_XALAN(XObjectPtr)
 XALAN_USING_XALAN(MemoryManagerType)
-
+XALAN_USING_XALAN(XalanCopyConstruct)
 
 // This class defines a function that will return the square root
 // of its argument.
