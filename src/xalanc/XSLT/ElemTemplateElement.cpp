@@ -309,11 +309,6 @@ ElemTemplateElement::beginExecuteChildren(StylesheetExecutionContext&	executionC
 
 		executionContext.pushElementFrame(this);
 	}
-    else if (hasDirectTemplate() == true)
-	{
-        executionContext.pushContextMarker();
-		executionContext.pushInvoker(this);
-	}
 
 	return getFirstChildElemToExecute(executionContext);
 }
@@ -1291,6 +1286,9 @@ ElemTemplateElement::getFirstChildElemToExecute(StylesheetExecutionContext& exec
 	if (hasDirectTemplate() == true)
 	{
 		assert(m_directTemplate != 0);
+     
+        executionContext.pushContextMarker();
+		executionContext.pushInvoker(this);
 
 		return m_directTemplate;
 	}
