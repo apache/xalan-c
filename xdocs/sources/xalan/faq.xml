@@ -127,21 +127,25 @@
 </faq>
 
     
-  <faq title="Are the XSLTEngineImpl (XSLT processor) and StylesheetRoot (compiled stylesheet) objects thread-safe?">
+  <faq title="Is &xslt4c; thread-safe?">
   
-    <q>Are the XSLTEngineImpl (XSLT processor) and StylesheetRoot (compiled stylesheet) objects thread-safe?</q>
+    <q>Is &xslt4c; thread-safe?</q>
        
     <a>
-    <p>The XSLTEngineImpl stores running state information, so it is not thread-safe. If you want to use the XSLTEngineImpl
-    to perform multiple simultaneous transformations, create a separate instance for each transformation. 
-    If you want to perform multiple serial transformations with a single XSLTEngineImpl object, call the XSLTEngineImpl reset()
-    method after each transformation. You may want to serialize access to this object, so it can't accidentally start another
-    transformation while a transformation is in progress.</p>
-    <p>StylesheetRoot objects, on the other hand, are thread-safe. A single StylesheetRoot object may be called concurrently
-    from multiple threads. Keep in mind, however, that the StylesheetRoot uses an XSLTEgineImpl to store running state
-    information for each transformation, so you must call the XSLTEngineImpl reset() method and the StylesheetExecutionDefault
-    reset() method between each transformation.</p>
-    <p>For more detail, see <link idref="samples" anchor="compilestylesheet">CompileStylesheet</link>.</p></a>
+    <p>In order to support very efficient use in multi-threaded applications, &xslt4c; is designed to avoid synchronization as much as
+     possible. Each thread of execution is required to have its own set of "support" objects that contain the state of the
+     transformation.  Accordingly, no synchronization is required when multiple threads are executing.</p>
+     
+     <p>Parsed ("compiled") stylesheets (see <link idref="usagepatterns" anchor="compiled">Compiling stylesheets</link>) and parsed
+      source documents may be freely shared by multiple threads of execution without worrying
+      about providing synchronized access to them. The ONLY exception to this rule: You use XercesParserLiaison to parse a document after
+      calling XercesParserLiaison::setBuildBridgeNodes(false) or XercesParserLiaison::setThreadSafe(false). In this case, the document
+      CANNOT be shared by multiple threads of execution. For reasons of performance, we do not recommend the use of
+      XercesParserLiaison, so this should not be an issue for most applications.</p>
+      
+     <p>All other objects in &xslt4c; are NOT thread-safe. Each thread must have its own instance of each object.</p>
+     
+     <p>See the <link idref="samples" anchor="threadsafe">ThreadSafe</link> sample program for more information.</p></a>
   </faq>
    
   <faq title="What can I do to speed up transformations?">
