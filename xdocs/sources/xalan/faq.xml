@@ -52,47 +52,32 @@
 <faq title="Building on UNIX">
 <q>What do I need to rebuild &xslt4c; on UNIX?</q>
 
-<a><p>To build &xslt4c; on supported UNIX platforms, you need &xml4c; and a supported C++ compilers (see the table below). If your compiler does not support the STL or its implementation is old, you must install the STLPort.</p>
+<a><p>To build &xslt4c; on supported UNIX platforms, you need &xml4c; and a supported C++ compilers (see the table below).</p>
 <p>For more details see: http://xml.apache.org/xalan-c/readme.html#unix</p>
      <table>
        <tr>
          <th>Platform - Operating System</th>
          <th>Compilers</th>
-         <th>STLPort Required</th>
        </tr>
        <tr>
          <td>AIX 4.3</td>
          <td>IBM C and C++ for AIX 5.02</td>
-         <td>No</td>
       </tr>
        <tr>
          <td>Solaris 2.6</td>
          <td>[Workshop 4.2]</td>
-         <td>Yes</td>
       </tr>
        <tr>
          <td>HP/UX 11.0</td>
          <td>aCC A.03.27</td>
-         <td>No</td>
       </tr>
        <tr>
          <td>Red Hat Linux 6.1</td>
          <td>egcs-2.91.66 and glibc-2.1.2-11</td>
-         <td>No</td>
       </tr>
     </table>
  <p>For more details see: <link idref="readme" anchor="unix">Steps for doing a UNIX build</link>.</p>
 </a></faq>
-
-<faq title="STLPort">
-<q>What is STLPort and why do I need it?</q>
-
-<a><p>The Standard Template Library, or STL, is a C++ library of container classes, algorithms, and iterators; it provides many of the basic computer science algorithms and data structures. &xslt4c; implementation uses the STL. STLport ports SGI STL to any platform possible and provides all necessary wrap-ups installed. If your compiler does not support the STL or its implementation is out of date, you will need to install the STLPort.</p> 
-
-<p>The STLPort version 4.0  for download from the site: <jump href="http://www.stlport.org/">http://www.stlport.org/</jump>.</p>
-
-<p>For more details on the STL, see: <jump href="http://www.sgi.com/tech/stl/stl_introduction.html">http://www.sgi.com/tech/stl/stl_introduction.html</jump>.</p></a>
-</faq>
 
 <faq title="ICU">
 <q>What is ICU and why do I need it?</q>

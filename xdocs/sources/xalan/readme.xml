@@ -64,29 +64,31 @@
 <p>Release notes for &xslt4c-current;</p>
  <ul>
   <li><link anchor="status">Status</link></li>
-  <li><link anchor="build">Build Notes</link></li>
+  <li><link anchor="build">Rebuilding &xslt4c; and the sample applications</link></li> 
   <li><link anchor="contact">Getting in touch</link></li>
   <li><link anchor="history">History of software changes</link></li>  
  </ul>
  <anchor name="status"/>
  <s2 title="Status">
    <ul>
-    <li><link anchor="done">Changes since &xslt4c; version 1.2</link></li>
+    <li><link anchor="done">Changes since &xslt4c; version 1.3</link></li>
     <li><link anchor="bugs">Bug reporting</link></li>    
     <li><link anchor="xml4c">Version of &xml4c; to use</link></li>
     <li><link anchor="to-do">To-do tasks for future &xslt4c; releases</link></li>
    </ul>
      <anchor name="done"/>
    <s3 title="Changes since &xslt4c; version 1.3">
-     <p>Major updates since version 1.3 include [details and links to be added]:</p>
+     <p>Major updates since version 1.3 include:</p>
      <ul>
-       <li>Bug fixes</li>
-       <li>Distribution changes</li>
-       <li>Simplified Windows build procedure</li>       
-       <li>64-bit support for HP-11</li>
-       <li>New Linux platform and compiler: Redhat 7.2 with gcc 3.1</li> 
-       <li>Alpha support for a number of EXSLT functions</li>       
-       <li>New samples</li>
+       <li><resource-ref idref="bugsfixedforthisrelease"/>.</li>
+       <li>The &xslt4c; distributions no longer include the &xml4c; headers and libraries. Accordingly, you must download the appropriate &xml4c; distribution (see <link idref="getstarted" anchor="download">Downloading what you need</link>.</li>
+       <li>64-bit build for HP-11; <link anchor="64">untested 64-bit support</link> for Solaris and AIX.</li>
+       <li>New Linux platform and compiler: Redhat 7.2 with gcc 3.1.</li>
+       <li><resource-ref idref="stlport"/> is no longer required on any of our supported platforms.</li> 
+       <li><link idref="extensionslib" anchor="exslt">Alpha support for a number of EXSLT functions</link>.</li>       
+       <li><link idref="samples" anchor="parsedsourcewrappers">ParsedSourceWrappers</link>, a sample that
+       illustrates how to perform transformations with input in the form of a pre-built
+       XalanDOM or XalanSourceTree.</li>
      </ul>  
    </s3>  
      <anchor name="bugs"/>
@@ -102,7 +104,7 @@
      </s3><anchor name="xml4c"/>     
      &status-c;     
   </s2><anchor name="build"/>
-  <s2 title="Build Notes">
+  <s2 title="Rebuilding &xslt4c;">
 <ul>
 <li><link anchor="jar">Rebuilding &xslt4c;</link></li>
 <li><link anchor="samples">Rebuilding sample applications</link></li>
@@ -110,38 +112,26 @@
 <anchor name="jar"/> 
    <s3 title="Rebuilding &xslt4c;">
    <ul>
-    <li><link anchor="layout">Layout of Xerces-C and ICU</link></li>      
+    <li><link anchor="needed">What you need from the distributions</link></li>   
     <li><link anchor="win32">Steps for doing a Windows build</link></li>
     <li><link anchor="unix">Steps for doing a UNIX build</link></li>       
-   </ul>
-   <p>If you want to rebuild &xslt4c;, you need the following:</p>
-   <ul>
-     <li>The &xslt4c; source files</li>
-     <li>The &xml4c; header and (for Windows) .lib files</li>
-     <li>(Optional) The ICU header and (for Windows) .lib files</li>
-   </ul>
-   <p>The &xslt4c; source files and The required &xml4c; files are in the distribution.</p>
-   <p>For information on using the <resource-ref idref="icu"/>, see  
-   <link idref="usagepatterns" anchor="icu">Using the ICU</link>.</p>
-   <note>If you are not rebuilding with the ICU, you do not need the ICU header or .lib files.</note>
-   <p>To rebuild the Windows32 release, use the Microsoft Visual C++ 6.0 project files. To rebuild
-    the Linux or AIX release, use the make file in the root of the source directory. The builds look
-    for &xml4c; and ICU in directories parallel to the
-    xml-xalan directory.</p>
-    </s3><anchor name="layout"/>
-    <s3 title="Layout">
-   <p><em>Important</em> We have set up the Visual C++ projects and the UNIX make files to look for Xerces in the directory structure replicated in our distribution files (see <link idref="getstarted" anchor="xalandists">&xslt4c; Distributions</link>). This matches the structure that results from downloading xml-xerces/c from the <jump href="http://xml.apache.org/websrc/cvsweb.cgi/">Apache XML CVS repository</jump> and building with the Visual C++ project files or the UNIX make file.</p>
-<p>If you are using a &xml4c; binary distribution that you have obtained independently from this &xslt4c; distribution, you must either modify the &xslt4c; project files or makefile, or rearrange the build directory structure as indicated in the following illustration.</p>
-<p>For UNIX, the XERCESROOT environment variable points to the Xerces-C root directory. For Windows, the Xerces-C root directory must be named xml-xerces, and it must be at the same level as the &xslt4c; root directory. For all environments, the ICU root directory must be named icu, and it must be at the same level as the &xslt4c; root directory.</p>
-<s4 title="ICU layout for &xslt4c; build">
-<p><img src="icu.gif" alt="icu.gif"/></p>
-</s4>
-<note>Keep in mind that at any given point in time the &xslt4c; and &xml4c; source trees in the Apache XML repository may not be consistent. When we release a version of &xslt4c; we certify that it is compatible with a given version of &xml4c;. To be safe, stick with distributions that we certify to be compatible. Reminder: &xslt4c-current; is compatible with the &xml4c; that is included with the distribution..<br/><br/>
-&xslt4c-current; has been tested with &icu-used;. You may be able to use newer ICU releases as they appear.</note>
-  </s3><anchor name="win32"/>
+   </ul></s3><anchor name="needed"/>
+   <s3 title="What you need from the distributions">
+   <p>To rebuild &xslt4c;, you need the &xslt4c; source files, the &xml4c; header files, and
+   for Windows the &xml4c; .lib file. If you want to rebuild with the ICU, you also need the ICU header files, and for Windows the ICU .lib file.</p>
+  <p>The &xslt4c; source tree is in the src subdirectory of the &xslt4c; <link idref="getstarted" anchor="download">binary distributions</link>. The &xml4c; header files are in the include/xercesc tree of the corresponding &xml4c; binary distributions. The Windows Xerces .lib file is in the lib directory of the &xml4c; Windows binary distribution.</p> 
+
+<note>You can also download &xslt4c; source distributions from <resource-ref idref="xslt4c-distdir"/>: &xslt4c-dist;-src.zip and &xslt4c-dist;-src.tar.gz. &xml4c; source distributions are available from <resource-ref idref="xml4c-distdir"/>: 
+&xml4c-dist;-src.zip and &xml4c-dist;-src.tar.gz.</note>
+<p>Keep in mind that at any given point in time the &xslt4c; and &xml4c; source trees in the Apache XML repository may not be consistent. When we release a version of &xslt4c; we certify that it is compatible with a given version of &xml4c;. To be safe, stick with Xeres distributions that we certify to be compatible. Reminder: &xslt4c-current; is compatible with &xml4c-used;.</p>
+   <p>For information on using the <resource-ref idref="icu"/>, see
+   <link idref="usagepatterns" anchor="icu">Using the ICU</link>.
+   &xslt4c-current; has been tested with &icu-used;. You may be able to use newer ICU releases as they appear.</p>
+   </s3><anchor name="win32"/>
   <s3 title="Steps for doing a Windows build">
-  <p>To build &xslt4c; on Windows, you need &xml4c; and MS Visual C++ 6.0 installed with Service Pack 3 for Visual C++ and Visual Studio. You should also apply the bug fixes for the C++ standard library that shipped with Visual C++ 6.0. These fixes are available from the Dinkumware site: <jump href="http://www.dinkumware.com/vc_fixes.html">http://www.dinkumware.com/vc_fixes.html</jump>.</p>
-  <ol>
+  <p>To build &xslt4c; on Windows, you need &xml4c; and MS Visual C++ 6.0 installed with Service Pack 3 for Visual C++ and Visual Studio. You should also apply the bug fixes for the C++ standard library that shipped with Visual C++ 6.0. These fixes are available from the Dinkumware site: <jump href="http://www.dinkumware.com/vc_fixes.html">http://www.dinkumware.com/vc_fixes.html</jump>.</p> 
+<p>Before you do the following, be sure you have <link idref="getstarted" anchor="windowspath">provided Visual C++ the paths to the Xerces headers and libraries</link>.</p>
+  <ol>    
      <li>(Optional) If you are rebuilding the ICUBridge, install the ICU so the icu root directory
       is at the same level as the xml-xerces root directory (see <link 
       idref="usagepatterns" anchor="icu">Using the ICU</link>.<br/><br/>
@@ -152,24 +142,15 @@
     <li>Use Visual C++ to open the Xalan workspace from the xml-xalan\c\Projects\Win32\VC6.
     <br/><br/></li>
     <li>Use Visual C++ to rebuild everything or specific dynamic link libraries and executables of
-    interest.<br/><br/></li>
+    interest.</li>
   </ol>
   </s3><anchor name="unix"/>
 <s3 title="Steps for doing a UNIX build">
     <ol>
-      <li>Set the XERCESCROOT environment variable to the root of xml-xerces.<br/><br/></li>    
-      <li>Set the XALANCROOT environment variable to the complete path to the root of the &xslt4c;
+      <li>Set the XERCESCROOT environment variable to the path to the root of &xml4c;.<br/><br/></li>    
+      <li>Set the XALANCROOT environment variable to the path to the root of the &xslt4c;
        distribution.<br/><br/></li>
-      <li>Solaris only: Download <resource-ref idref="stlport"/> and set the STLPORTROOT environment
-       variable to the complete path to the STLPort distribution. <br/>
-       (This step is not required for Linux, AIX, or HP-UX 11 because the Linux GNU compiler, AIX xlC compiler, and 
-       HP aCC compiler include the STL (Standard Template Library.)<br/><br/></li>
-      <li>(Optional) If you are including the ICUBridge, install the ICU (see <link idref="usagepatterns"
-      anchor="icu">Using the ICU</link>) and use the shell to define XALAN_USE_ICU.<br/><br/>
-      If you are using Bourne Shell, K Shell, or Bash:
-      <br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<code>export XALAN_USE_ICU "1"</code><br/><br/>
-      If you are using C Shell:
-      <br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<code>setenv XALAN_USE_ICU="1"</code><br/><br/></li>
+      <li>(Optional) If you are including the ICUBridge, install the ICU, use the shell to define XALAN_USE_ICU and to set the ICUROOT environment variable to the path to the ICU root. For more information, see (see <link idref="usagepatterns" anchor="icu">Using the ICU</link>)<br/><br/></li>
       <li>Change directory to xml-xalan/c/src in the &xslt4c; distribution.<br/><br/></li>      
       <li>Use the chmod +x command to set the executable flags for conf* and runConfigure.<br/><br/>
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<code>chmod +x runConfigure</code><br/>
@@ -177,7 +158,8 @@
       <li>Run the runConfigure utility with at least the platform flag (Linux) or the platform, C compilier, and C++ compiler flags (AIX) as indicated below.<br/><br/>
       <ref>Linux:</ref>&nbsp;&nbsp;<code>runConfigure -p linux</code><br/>
       <ref>AIX:</ref>&nbsp;&nbsp;&nbsp;&nbsp;<code>runConfigure -p aix -c xlc -x xlC</code><br/><br/>
-      <ref>HP-UX 11:</ref>&nbsp;&nbsp;<code>runConfigure -p hp-11 -c cc -x aCC</code><br/><br/>
+      <ref>HP-UX 11 (32 bit):</ref>&nbsp;&nbsp;<code>runConfigure -p hp-11 -c cc -x aCC</code><br/><br/>
+      <ref>HP-UX 11 (64 bit):</ref>&nbsp;&nbsp;<code>runConfigure -p hp-11 -c cc -x aCC -b 64</code><br/><br/>
       <ref>Solaris:</ref>&nbsp;&nbsp;<code>runConfigure -p Solaris -c cc -x CC</code><br/><br/>            
       To see the other runConfigure flags you may include, use the help flag:<br/><br/>
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<code>runConfigure -h</code><br/><br/></li>
@@ -190,13 +172,8 @@
       where <ref>targ</ref> is omitted or is <code>all</code> (rebuild all), <code>lib</code> (the XSLT library), <code>Xalan</code> (the Xalan executable), or
       <code>testXSLT</code> (the testXSLT executable). ICUBridge is included in the build of Xalan and TestXSLT if XALAN_USE_ICU is
       defined.<br/><br/></li>
-    </ol>
-    <note>The command you use for setting environment variables depends on the shell you are
-     using.<br/>
-     For Bourne Shell, K Shell, or Bash use <em>export</em> ENVAR="val"<br/>
-     For C Shell, use <em>setenv</em> ENVAR "val"<br/>
-     where ENVAR is the environment variable name and val is the environment variable
-     setting. You can check the setting of an environment variable with <em>echo</em> $ENVAR</note>
+    </ol><anchor name="64"/>
+    <note>64-bit builds for AIX and Solaris have not yet been tested. To perform such a build, you must use the corresponding 64-bit Xerces distribution and run the runConfigure script with the -b 64 option (as indicated above for the HP-UX 11 64-bit build).</note>
    </s3><anchor name="samples"/>
    <s3 title="Rebuilding a sample application">
    <p>The Windows32 distribution includes a Visual C++ workspace for the sample applications. This workspace is in the samples directory. If you modify a sample and want to recompile it, you can recompile the .cpp file(s) and rebuild the executable.</p>

@@ -59,6 +59,7 @@
 <s1 title="Extensions library">
 <ul>
 <li><link anchor="intro">Introduction</link></li>
+<li><link anchor="exslt">Alpha support for EXSLT extensions</link></li>
 <li><link anchor="xalanns">Xalan namespace</link></li>
 
 <li><link anchor="nodeset">nodeset</link></li>
@@ -73,7 +74,30 @@
 for extending and simplifying what you can do with an XLST processor like
 Xalan. With input and contributions from the XML open-source developer community, we are working on placing the most useful
 extensions in an extensions library distributed with &xslt4c;. If you have ideas and/or contributions you would like to make, please email us at the <human-resource-ref idref="xalandev"/>.</p>
-</s2><anchor name="xalanns"/>
+</s2><anchor name="exslt"/>
+<s2 title="EXSLT extensions">
+ <p>&xslt4c; supports the <jump href="http://exslt.org/">EXSLT</jump> initiative to provide a set of
+standard extension functions to XSLT users. &xslt4c; 1.4 includes alpha implementations for 
+functions in four of the EXSLT namespaces (some are calls to extension already in the Xalan namespace).</p> 
+<p>The source files for the implementations are in the XalanEXSLT subdirectory of the source tree.
+See</p> 
+<ul>
+<li><jump href="apidocs/XalanEXSLTCommonImpl.hpp.html">XalanEXSLTCommonImpl</jump></li>
+<li><jump href="apidocs/XalanEXSLTMathImpl.hpp.html">XalanEXSLTMathImpl</jump></li>
+<li><jump href="apidocs/XalanEXSLTSetImpl.hpp.html">XalanEXSLTSetImpl</jump></li>
+<li><jump href="apidocs/XalanEXSLTStringImpl.hpp.html">XalanEXSLTStringImpl</jump></li>
+</ul>
+<p>For the function specifications, see:</p>
+<ul>
+<li><jump href="http://www.exslt.org/exsl/exsl.html">EXSLT common functions</jump></li>
+<li><jump href="http://www.exslt.org/math/math.html">EXSLT math functions</jump></li>
+<li><jump href="http://www.exslt.org/set/set.html">EXSLT set functions</jump></li>
+<li><jump href="http://www.exslt.org/str/str.html">EXSLT string functions</jump></li>
+</ul>
+<p>Anyone who would like to participate in the &xslt4c; initiative to support EXSLT by testing these implementations or implementating other EXSLT functions is more than welcome. Please email us 
+at the <human-resource-ref idref="xalandev"/>.</p>
+</s2>
+<anchor name="xalanns"/>
 <s2 title="Xalan namespace">
 <p>We are placing the Xalan extension functions in the XalanExtensions module and we have defined a namespace for this module:</p>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<code>http://xml.apache.org/xalan</code></p>
