@@ -64,11 +64,13 @@
 
 #include <XalanDOM/XalanAttr.hpp>
 #include <XalanDOM/XalanCDATASection.hpp>
+#include <XalanDOM/XalanComment.hpp>
 #include <XalanDOM/XalanDocument.hpp>
 #include <XalanDOM/XalanDocumentFragment.hpp>
 #include <XalanDOM/XalanElement.hpp>
 #include <XalanDOM/XalanNamedNodeMap.hpp>
 #include <XalanDOM/XalanNodeList.hpp>
+#include <XalanDOM/XalanProcessingInstruction.hpp>
 #include <XalanDOM/XalanText.hpp>
 
 
@@ -271,6 +273,30 @@ DOMServices::getNodeData(const XalanNode&	node)
 		}
 		break;
 
+	case XalanNode::COMMENT_NODE:
+		{
+			const XalanComment&		theComment =
+#if defined(XALAN_OLD_STYLE_CASTS)
+				(const XalanComment&)node;
+#else
+				static_cast<const XalanComment&>(node);
+#endif
+			data = getNodeData(theComment);
+		}
+		break;
+
+	case XalanNode::PROCESSING_INSTRUCTION_NODE:
+		{
+			const XalanProcessingInstruction&		thePI =
+#if defined(XALAN_OLD_STYLE_CASTS)
+				(const XalanProcessingInstruction&)node;
+#else
+				static_cast<const XalanProcessingInstruction&>(node);
+#endif
+			data = getNodeData(thePI);
+		}
+		break;
+
 	default:
 		// ignore
 		break;
@@ -290,6 +316,14 @@ DOMServices::getNodeData(const XalanAttr&	attribute)
 
 
 XalanDOMString
+DOMServices::getNodeData(const XalanComment&	comment)
+{
+	return comment.getData();
+}
+
+
+
+XalanDOMString
 DOMServices::getNodeData(const XalanDocument&	document)
 {
 	XalanDOMString	data;
@@ -298,12 +332,19 @@ DOMServices::getNodeData(const XalanDocument&	document)
 
 	while(child != 0)
 	{
-		const XalanDOMString 	nodeData =
-					getNodeData(*child);
+		const XalanNode::NodeType	theType = child->getNodeType();
 
-		if(0 < length(nodeData))
+		if (theType == XalanNode::ELEMENT_NODE ||
+			theType == XalanNode::TEXT_NODE ||
+			theType == XalanNode::CDATA_SECTION_NODE)
 		{
-			data += nodeData;
+			const XalanDOMString 	nodeData =
+						getNodeData(*child);
+
+			if(0 < length(nodeData))
+			{
+				data += nodeData;
+			}
 		}
 
 		child = child->getNextSibling();
@@ -326,14 +367,22 @@ DOMServices::getNodeData(const XalanDocumentFragment&	documentFragment)
 
 	for(unsigned int i = 0; i < n; ++i)
 	{
-		assert(nl->item(i) != 0);
+		const XalanNode* const		child = nl->item(i);
+		assert(child != 0);
 
-		const XalanDOMString 	nodeData =
-					getNodeData(*nl->item(i));
+		const XalanNode::NodeType	theType = child->getNodeType();
 
-		if(0 < length(nodeData))
+		if (theType == XalanNode::ELEMENT_NODE ||
+			theType == XalanNode::TEXT_NODE ||
+			theType == XalanNode::CDATA_SECTION_NODE)
 		{
-			data += nodeData;
+			const XalanDOMString 	nodeData =
+						getNodeData(*child);
+
+			if(0 < length(nodeData))
+			{
+				data += nodeData;
+			}
 		}
 	}
 
@@ -351,18 +400,33 @@ DOMServices::getNodeData(const XalanElement&	element)
 
 	while(child != 0)
 	{
-		const XalanDOMString 	nodeData =
-					getNodeData(*child);
+		const XalanNode::NodeType	theType = child->getNodeType();
 
-		if(0 < length(nodeData))
+		if (theType == XalanNode::ELEMENT_NODE ||
+			theType == XalanNode::TEXT_NODE ||
+			theType == XalanNode::CDATA_SECTION_NODE)
 		{
-			data += nodeData;
+			const XalanDOMString 	nodeData =
+						getNodeData(*child);
+
+			if(0 < length(nodeData))
+			{
+				data += nodeData;
+			}
 		}
 
 		child = child->getNextSibling();
 	}
 
 	return data;
+}
+
+
+
+XalanDOMString
+DOMServices::getNodeData(const XalanProcessingInstruction&	pi)
+{
+	return pi.getData();
 }
 
 

@@ -75,10 +75,12 @@
 
 
 class XalanAttr;
+class XalanComment;
 class XalanDocument;
 class XalanDocumentFragment;
 class XalanElement;
 class XalanNode;
+class XalanProcessingInstruction;
 class XalanText;
 
 
@@ -176,6 +178,15 @@ public:
 	/**
 	 * Retrieves data for node
 	 * 
+	 * @param attribute DOM node whose data is to be returned
+	 * @return a string representation of the node's data
+	 */
+	static XalanDOMString
+	getNodeData(const XalanComment&		comment);
+
+	/**
+	 * Retrieves data for node
+	 * 
 	 * @param document DOM node whose data is to be returned
 	 * @return a string representation of the node's data
 	 */
@@ -199,6 +210,15 @@ public:
 	 */
 	static XalanDOMString
 	getNodeData(const XalanElement&		element);
+
+	/**
+	 * Retrieves data for node
+	 * 
+	 * @param pi DOM node whose data is to be returned
+	 * @return a string representation of the node's data
+	 */
+	static XalanDOMString
+	getNodeData(const XalanProcessingInstruction&	pi);
 
 	/**
 	 * Retrieves data for node
