@@ -150,6 +150,7 @@ const char* const	xalanNodeTypes[] =
 
 
 #if !defined(XALAN_NO_NAMESPACES)
+	using std::cerr;
 	using std::cout;
 	using std::endl;
 #endif
@@ -983,96 +984,142 @@ FileUtility::domCompare(
 					docNodeName,
 					XalanDOMString(xalanNodeTypes[docNodeType]),
 					XalanDOMString(xalanNodeTypes[goldNodeType]));
+
 		return false;
 	}
 
 	switch (goldNodeType)
 	{
-	case XalanNode::ELEMENT_NODE:	// ATTRIBUTE_NODE's are processed with diffElement().
-	{ 
-		if ( ! diffElement(gold, doc) ) 
-		{
-			return false;
-		}
-
-		break;
-	}
-	case XalanNode::TEXT_NODE:	
-	{
-		const XalanDOMString&	docNodeValue  = doc.getNodeValue();
-		const XalanDOMString&	goldNodeValue = gold.getNodeValue();
-		
-		//debugNodeData(docNodeName, docNodeValue);
-		
-		if(goldNodeValue != docNodeValue)
-		{
-			collectData("Text node mismatch. ", 
-						 docNodeName,
-						 goldNodeValue,
-						 docNodeValue);
-			return false;
-		}
-
-		// Need to process textnode siblings.  Note that text nodes do not have child nodes.
-		const XalanNode	*goldNextNode;
-		const XalanNode	*domNextNode;
-		goldNextNode = gold.getNextSibling();
-		domNextNode = doc.getNextSibling();
-
-		if (0 != goldNextNode)
-		{
-			if (0 != domNextNode)
+	case XalanNode::ELEMENT_NODE:	// ATTRIBUTE_NODEs are processed with diffElement().
+		{ 
+			if (diffElement(gold, doc) == false) 
 			{
-				if ( ! domCompare(*goldNextNode, *domNextNode) )
-					return false;
+				return false;
+			}
+		}
+		break;
+
+	case XalanNode::CDATA_SECTION_NODE:
+	case XalanNode::TEXT_NODE:	
+		{
+			const XalanDOMString&	docNodeValue  = doc.getNodeValue();
+			const XalanDOMString&	goldNodeValue = gold.getNodeValue();
+			
+			//debugNodeData(docNodeName, docNodeValue);
+			
+			if(goldNodeValue != docNodeValue)
+			{
+				collectData("Text node mismatch. ", 
+							 docNodeName,
+							 goldNodeValue,
+							 docNodeValue);
+				return false;
+			}
+		}
+		break;
+
+	case XalanNode::PROCESSING_INSTRUCTION_NODE:
+		{
+			const XalanDOMString&  goldNodeName  = gold.getNodeName();
+
+			if (goldNodeName != docNodeName)
+			{
+				collectData("processing-instruction target mismatch. ", 
+							 docNodeName,
+							 goldNodeName,
+							 docNodeName);
+
+				return false;
 			}
 			else
 			{
-				collectData("Element missing SiblingNode. ", 
-						 docNodeName,
-						 goldNextNode->getNodeName(),
-						 goldNextNode->getNodeName());
+				const XalanDOMString&	docNodeValue  = doc.getNodeValue();
+				const XalanDOMString&	goldNodeValue = gold.getNodeValue();
+
+				if (goldNodeValue != docNodeValue)
+				{
+					collectData("processing-instruction data mismatch. ", 
+								 docNodeName,
+								 goldNodeValue,
+								 docNodeValue);
+
+					return false;
+				}
+			}
+		}
+		break;
+
+	case XalanNode::COMMENT_NODE:
+		{
+			const XalanDOMString&	docNodeValue  = doc.getNodeValue();
+			const XalanDOMString&	goldNodeValue = gold.getNodeValue();
+
+			if (goldNodeValue != docNodeValue)
+			{
+				collectData("comment data mismatch. ", 
+							 docNodeName,
+							 goldNodeValue,
+							 docNodeValue);
+
 				return false;
 			}
 		}
-
 		break;
-	}
-	case XalanNode::CDATA_SECTION_NODE:
+
+	case XalanNode::DOCUMENT_NODE:
+		{
+			//debugNodeData(docNodeName);
+
+			const XalanNode	*goldNextNode;
+			const XalanNode	*domNextNode;
+
+			goldNextNode = gold.getFirstChild();
+			domNextNode = doc.getFirstChild();
+
+			if (0 != goldNextNode)
+			{
+				if(domCompare(*goldNextNode,*domNextNode) == false)
+				{
+					return false;
+				}
+			}
+		}
+		break;
+
 	case XalanNode::ENTITY_REFERENCE_NODE:
 	case XalanNode::ENTITY_NODE:
-	case XalanNode::PROCESSING_INSTRUCTION_NODE:
-	case XalanNode::COMMENT_NODE:
-	{
-		break;
-	}
-	case XalanNode::DOCUMENT_NODE:
-	{
-		//debugNodeData(docNodeName);
-
-		const XalanNode	*goldNextNode;
-		const XalanNode	*domNextNode;
-
-		goldNextNode = gold.getFirstChild();
-		domNextNode = doc.getFirstChild();
-
-		if (0 != goldNextNode)
-		{
-			if( ! domCompare(*goldNextNode,*domNextNode) )
-				return false;
-		}
-
-		break;
-	}
-
 	case XalanNode::DOCUMENT_TYPE_NODE:
 	case XalanNode::DOCUMENT_FRAGMENT_NODE:
 	case XalanNode::NOTATION_NODE:
-	{
-		break;
-	}
 	default:
-		cout << "What are you doing? " << endl;
+		cerr << "Unexpected node type: " << goldNodeType << endl;
+
+		return false;
+	}
+
+	// Need to process siblings.  Children are processed in diffElement, since
+	// only they can have children in the XPath data model.
+	const XalanNode* const	goldNextNode = gold.getNextSibling();
+	const XalanNode* const	domNextNode = doc.getNextSibling();
+
+	if (0 != goldNextNode)
+	{
+		if (0 != domNextNode)
+		{
+			if (domCompare(*goldNextNode, *domNextNode) == false)
+			{
+				return false;
+			}
+		}
+		else
+		{
+			collectData("Missing sibling node. ", 
+					 docNodeName,
+					 goldNextNode->getNodeName(),
+					 goldNextNode->getNodeName());
+
+			return false;
+		}
 	}
 
 	return true;
@@ -1223,51 +1270,6 @@ FileUtility::diffElement(
 
 		}
 		return false;
-
-	}
-
-	goldNextNode = gold.getNextSibling();
-	domNextNode = doc.getNextSibling();
-
-	if (0 != goldNextNode)
-	{
-		if (0 != domNextNode)
-		{
-			if ( ! domCompare(*goldNextNode, *domNextNode) )
-				return false;
-		}
-		else
-		{	// domcomtest10 used to fail here,  now it is caught above, with the error
-			// "Transformed Doc has additional Child nodes:"
-			collectData("Element missing SiblingNode. ", 
-						 docNodeName,
-						 XalanDOMString(goldNextNode->getNodeName()),
-						 XalanDOMString("NOTHING"));
-			return false;
-		}
-	}
-	else if ( domNextNode)
-	{	
-			// The result doc has additional siblings. If the additional node is a text node
-			// then gather up the text and print it out.
-			if ( domNextNode->getNodeType() == XalanNode::TEXT_NODE)
-			{
-				collectData("Result has additional sibling node: ", 
-						docNodeName,
-						XalanDOMString("NOTHING"),		 
-						XalanDOMString(domNextNode->getNodeName()) + XalanDOMString("  \"") +
-						XalanDOMString(domNextNode->getNodeValue()) + XalanDOMString("\""));
-			}
-			// Additional node is NOT text, so just print it's Name.
-			else
-			{
-				collectData("Result has additional sibling node: ", 
-						docNodeName,
-						XalanDOMString("NOTHING"),		 
-						XalanDOMString(domNextNode->getNodeName()));
-
-			}
-			return false;
 
 	}
 
