@@ -67,11 +67,7 @@
 #include <crtdbg.h>
 #endif
 
-// XERCES HEADERS...
-//	Are included by HarnessInit.hpp
 
-// XALAN HEADERS...
-//	Are included by FileUtility.hpp
 
 // EXTENSION HEADERS...
 #include <XalanExtensions/FunctionDifference.hpp>
@@ -81,30 +77,34 @@
 #include <XalanExtensions/FunctionIntersection.hpp>
 #include <XalanExtensions/FunctionNodeSet.hpp>
 
+
+
+#include <XalanTransformer/XalanTransformer.hpp>
+
+
+
 // HARNESS HEADERS...
-#include <XMLFileReporter.hpp>
-#include <FileUtility.hpp>
-#include <HarnessInit.hpp>
+#include <Harness/XMLFileReporter.hpp>
+#include <Harness/FileUtility.hpp>
+#include <Harness/HarnessInit.hpp>
+
 
 
 #if !defined(XALAN_NO_NAMESPACES)
-	using std::cerr;
 	using std::cout;
 	using std::endl;
 #endif
 
-// GLOBAL VARIABLES...
-FileUtility				h;
 
-const XalanDOMString	currentDir("library");
-const XalanDOMString	theNamespace("http://xml.apache.org/xalan");
-const char *resultString = "The specified function is not available: http://xml.apache.org/xalan:nodeset";
+
+// GLOBAL VARIABLES...
+const char* const	resultString = "The specified function is not available: http://xml.apache.org/xalan:nodeset";
 
 
 void
-setHelp()
+setHelp(FileUtility&	h)
 {
-	h.args.help << endl
+	h.args.getHelpStream() << endl
 		 << "extensions dirname [-out]"
 		 << endl
 		 << endl
@@ -116,24 +116,28 @@ setHelp()
 
 
 // Generate the various filenames needed for testing.
-void generateFiles(const XalanDOMString &fileName, 
-				   XalanDOMString &xml, 
-				   XalanDOMString &xsl,
-				   XalanDOMString &out,
-				   XalanDOMString &gold,
-				   const char* test)
+void
+generateFiles(
+			const XalanDOMString&	fileName,
+			const XalanDOMString&	currentDir,
+			XalanDOMString&			xml, 
+			XalanDOMString&			xsl,
+			XalanDOMString&			out,
+			XalanDOMString&			gold,
+			const char*				test,
+			FileUtility&			h)
 {
 	// Set up the input/output files.
 	const XalanDOMString testName(h.generateFileName(fileName,"out"));
 
-	xsl = h.args.base + currentDir + pathSep + fileName;
+	xsl = h.args.base + currentDir + FileUtility::s_pathSep + fileName;
 	xml = h.generateFileName(xsl,"xml");
 	h.data.xmlFileURL = xml;
 	h.data.xslFileURL = xsl;
 
-	out =  h.args.output + currentDir + pathSep + XalanDOMString(test) + testName; 
+	out =  h.args.output + currentDir + FileUtility::s_pathSep + XalanDOMString(test) + testName; 
 
-	gold = h.args.gold + currentDir + pathSep + testName;
+	gold = h.args.gold + currentDir + FileUtility::s_pathSep + testName;
 
 }
 
@@ -146,12 +150,18 @@ void generateFiles(const XalanDOMString &fileName,
 //		globally. Currently XalanC supports the following extensions; difference, distinct, evaluate, 
 //		hasSameNodes, intersection and nodeset. 
 //		 
-void TestCase1(XalanTransformer &xalan, const XalanDOMString &fileName, XMLFileReporter &logFile)
+void
+TestCase1(
+			XalanTransformer&		xalan,
+			const XalanDOMString&	fileName,
+			const XalanDOMString&	currentDir,
+			XMLFileReporter&		logFile,
+			FileUtility&			h)
 {
 	
 	XalanDOMString	xml, xsl, theOutputFile, theGoldFile;
 		
-	generateFiles(fileName, xml, xsl, theOutputFile, theGoldFile, "tc1-");
+	generateFiles(fileName, currentDir, xml, xsl, theOutputFile, theGoldFile, "tc1-", h);
 
 	h.data.testOrFile = XalanDOMString("TestCase1: ") + fileName;
 	h.data.xmlFileURL = xml;
@@ -175,12 +185,19 @@ void TestCase1(XalanTransformer &xalan, const XalanDOMString &fileName, XMLFileR
 //		This test verifies that the 'nodeset' function is properly uninstalled via the api.
 //		Output file should NOT contain data. 
 //
-void TestCase2(XalanTransformer &xalan, const XalanDOMString &fileName, XMLFileReporter &logFile)
+void
+TestCase2(
+			XalanTransformer&		xalan,
+			const XalanDOMString&	fileName,
+			const XalanDOMString&	currentDir,
+			const XalanDOMString&	theNamespace,
+			XMLFileReporter&		logFile,
+			FileUtility&			h)
 {	
 
 	XalanDOMString	xml, xsl, theOutputFile, theGoldFile;
 	
-	generateFiles(fileName, xml, xsl, theOutputFile, theGoldFile, "tc2-");
+	generateFiles(fileName, currentDir, xml, xsl, theOutputFile, theGoldFile, "tc2-", h);
 	h.data.testOrFile = XalanDOMString("TestCase2");
 	h.data.xmlFileURL = xml;
 	h.data.xslFileURL = xsl;
@@ -213,12 +230,19 @@ void TestCase2(XalanTransformer &xalan, const XalanDOMString &fileName, XMLFileR
 //		This tests the installExternalFunction method of XalanTransformer using the nodeset function.
 //		Output file should NOT contain data.
 //
-void TestCase3(XalanTransformer &xalan, const XalanDOMString &fileName, XMLFileReporter &logFile)
+void TestCase3(
+			XalanTransformer&		xalan,
+			const XalanDOMString&	fileName,
+			const XalanDOMString&	currentDir,
+			const XalanDOMString&	theNamespace,
+			XMLFileReporter&		logFile,
+			FileUtility&			h)
 {
 	
 	XalanDOMString	xml, xsl, theOutputFile, theGoldFile;
 	
-	generateFiles(fileName, xml, xsl, theOutputFile, theGoldFile, "tc3-");
+	generateFiles(fileName, currentDir, xml, xsl, theOutputFile, theGoldFile, "tc3-", h);
+
 	h.data.testOrFile = XalanDOMString("TestCase3a");
 	h.data.xmlFileURL = xml;
 	h.data.xslFileURL = xsl;
@@ -275,12 +299,18 @@ void TestCase3(XalanTransformer &xalan, const XalanDOMString &fileName, XMLFileR
 //		This tests uses transformer method installExternalFunctionGlobal to add the nodeset function. 
 //		The output file should contain data.
 //
-void TestCase4(XalanTransformer &xalan, const XalanDOMString &fileName, XMLFileReporter &logFile)
+void TestCase4(
+			XalanTransformer&		xalan,
+			const XalanDOMString&	fileName,
+			const XalanDOMString&	currentDir,
+			const XalanDOMString&	theNamespace,
+			XMLFileReporter&		logFile,
+			FileUtility&			h)
 {
 	
 	XalanDOMString	xml, xsl, theOutputFile, theGoldFile;
 
-	generateFiles(fileName, xml, xsl, theOutputFile, theGoldFile, "tc4-");
+	generateFiles(fileName, currentDir, xml, xsl, theOutputFile, theGoldFile, "tc4-", h);
 	h.data.testOrFile = XalanDOMString("TestCase4a");
 	h.data.xmlFileURL = xml;
 	h.data.xslFileURL = xsl;
@@ -308,6 +338,7 @@ void TestCase4(XalanTransformer &xalan, const XalanDOMString &fileName, XMLFileR
 
 }
 
+
 int
 main(int			argc,
 	 const char*	argv [])
@@ -318,18 +349,24 @@ main(int			argc,
 	_CrtSetReportFile(_CRT_WARN, _CRTDBG_FILE_STDERR);
 #endif
 
+	HarnessInit		xmlPlatformUtils;
+
+	FileUtility		h;
+
 	// Set the program help string,  then get the command line parameters.
 	//
-	setHelp();	
+	setHelp(h);	
+
 	if (h.getParams(argc, argv, "EXTENSION-RESULTS") == true)
 	{
+		const XalanDOMString	currentDir("library");
 		const XalanDOMString	extDir(h.args.base + currentDir);
 
 		// Check that the base directory is correct.
 		if ( !h.checkDir(extDir) )
 		{
 			cout << "Invalid base directory - " << c_str(TranscodeToLocalCodePage(extDir)) << endl;
-			cout << h.args.help.str();
+			cout << h.args.getHelpMessage();
 			return 0;
 		}
 
@@ -338,7 +375,7 @@ main(int			argc,
 
 		// Defined basic constants for file manipulation 
 		const XalanDOMString drive(h.getDrive());
-		const XalanDOMString  resultsFile(drive + h.args.output + currentDir + UniqRunid + XMLSuffix);
+		const XalanDOMString  resultsFile(drive + h.args.output + currentDir + UniqRunid + FileUtility::s_xmlSuffix);
 		
 		XMLFileReporter	logFile(resultsFile);
 		logFile.logTestFileInit("C++ Extension Testing. ");
@@ -347,41 +384,46 @@ main(int			argc,
 		cout << "Performing Extension testing ..." << endl;
 
 		// Call the static initializers...
-		HarnessInit xmlPlatformUtils;
 		XalanTransformer::initialize();
 
-		XalanTransformer xalan;				
+		{
+			XalanTransformer	xalan;				
+					
+			// Check that output directory is there.
+			XalanDOMString		fileName;
+					
+			const XalanDOMString	theOutputDir(h.args.output + currentDir);
+
+			h.checkAndCreateDir(theOutputDir);
+
+			// Get the files found in the "cextension" directory
+			const FileNameVectorType	files = h.getTestFileNames(h.args.base, currentDir, true);
+
+			// TestCase1 is used to verify correct functioning of the default extension functions
+			TestCase1(xalan, files[0], currentDir, logFile, h);	// Difference function
+			TestCase1(xalan, files[1], currentDir, logFile, h);	// Distinct 
+			TestCase1(xalan, files[2], currentDir, logFile, h);	// Evaluate 
+			TestCase1(xalan, files[3], currentDir, logFile, h);	// HasSameNodes 
+			TestCase1(xalan, files[4], currentDir, logFile, h);	// Intersection 
+			TestCase1(xalan, files[5], currentDir, logFile, h);	// NodeSet01 - basic testing
+			TestCase1(xalan, files[6], currentDir, logFile, h);	// NodeSet02 - extensive RTF testing. 
+
+			const XalanDOMString	theNamespace("http://xml.apache.org/xalan");
+
+			// These testcases are used to test the Install/Uninstall Function API's of the transformer.
+			TestCase2(xalan, files[5], theNamespace, currentDir, logFile, h);
+			TestCase3(xalan, files[5], theNamespace, currentDir, logFile, h);
+			TestCase4(xalan, files[5], theNamespace, currentDir, logFile, h);
+
+			logFile.logTestCaseClose("Done", "Pass");
+			h.reportPassFail(logFile, UniqRunid);
 				
-		// Check that output directory is there.
-		XalanDOMString		  fileName;
-				
-		const XalanDOMString  theOutputDir = h.args.output + currentDir;
-		h.checkAndCreateDir(theOutputDir);
+			logFile.logTestFileClose("C++ Extension Testing: ", "Done");
+			logFile.close();
 
-		// Get the files found in the "cextension" directory
-		const FileNameVectorType	files = h.getTestFileNames(h.args.base, currentDir, true);
+			h.analyzeResults(xalan, resultsFile);
+		}
 
-		// TestCase1 is used to verify correct functioning of the default extension functions
-		TestCase1(xalan, files[0], logFile);	// Difference function
-		TestCase1(xalan, files[1], logFile);	// Distinct 
-		TestCase1(xalan, files[2], logFile);	// Evaluate 
-		TestCase1(xalan, files[3], logFile);	// HasSameNodes 
-		TestCase1(xalan, files[4], logFile);	// Intersection 
-		TestCase1(xalan, files[5], logFile);	// NodeSet01 - basic testing
-		TestCase1(xalan, files[6], logFile);	// NodeSet02 - extensive RTF testing. 
-
-		// These testcases are used to excerise the Install/Uninstall Function API's of the transformer.
-		TestCase2(xalan, files[5], logFile);
-		TestCase3(xalan, files[5], logFile);
-		TestCase4(xalan, files[5], logFile);
-
-		logFile.logTestCaseClose("Done", "Pass");
-		h.reportPassFail(logFile, UniqRunid);
-			
-		logFile.logTestFileClose("C++ Extension Testing: ", "Done");
-		logFile.close();
-
-		h.analyzeResults(xalan, resultsFile);
 		XalanTransformer::terminate();
 
 	}

@@ -75,9 +75,9 @@
 
 #include <XalanTransformer/XalanTransformer.hpp>
 
-#include <XMLFileReporter.hpp>
-#include <FileUtility.hpp>
-#include <HarnessInit.hpp>
+#include <Harness/XMLFileReporter.hpp>
+#include <Harness/FileUtility.hpp>
+#include <Harness/HarnessInit.hpp>
 
 
 #if !defined(XALAN_NO_NAMESPACES)
@@ -86,12 +86,12 @@
 	using std::endl;
 #endif
 
-FileUtility		h;
+
 
 void
-setHelp()
+setHelp(FileUtility&	h)
 {
-	h.args.help << endl
+	h.args.getHelpStream() << endl
 		 << "params dirname [-out]"
 		 << endl
 		 << endl
@@ -125,160 +125,165 @@ main(int			argc,
 	_CrtSetReportFile(_CRT_WARN, _CRTDBG_FILE_STDERR);
 #endif
 
+	HarnessInit		xmlPlatformUtils;
+
+	FileUtility		h;
+
 	char testCase[15];
 	XalanDOMString fileName, theGoldFile;
 	const XalanDOMString  currentDir("params");
-	
 
-	setHelp();
+	// Set the program help string,  then get the command line parameters.
+	//
+	setHelp(h);
 
 	// Get the command line parameters.
 	//
 	if (h.getParams(argc, argv, "PARAMS-RESULTS") == true)
 	{
-
 		const XalanDOMString	extDir(h.args.base + currentDir);
 
 		// Check that the base directory is correct.
 		if ( !h.checkDir(extDir) )
 		{
 			cout << "Invalid base directory - " << c_str(TranscodeToLocalCodePage(extDir)) << endl;
-			cout << h.args.help.str();
+			cout << h.args.getHelpMessage();
 			return 0;
 		}
 
 		// Call the static initializers...
-		HarnessInit xmlPlatformUtils;
 		XalanTransformer::initialize();
-		XalanTransformer	xalan;
-
-		// Generate Unique Run id. (Only used to name the result logfile.)
-		const XalanDOMString UniqRunid = h.generateUniqRunid();
-
-		// Defined basic constants for file manipulation
-		const XalanDOMString  drive(h.getDrive());
-		const XalanDOMString  resultFilePrefix("params");
-		const XalanDOMString  resultsFile(drive + h.args.output + resultFilePrefix + UniqRunid + XMLSuffix);
-		
-		XMLFileReporter	logFile(resultsFile);
-		logFile.logTestFileInit("Param Testing: Testing ability to pass parameters to stylesheets. ");
-
-		try
 		{
-			bool embedFlag =  false;
-				
-			// Get the files found in the "params" directory
-			const XalanDOMString  theOutputDir = h.args.output + currentDir;
+			XalanTransformer	xalan;
 
-			// Check that output directory is there.
-			h.checkAndCreateDir(theOutputDir);
+			// Generate Unique Run id. (Only used to name the result logfile.)
+			const XalanDOMString UniqRunid = h.generateUniqRunid();
 
-			const FileNameVectorType	files = h.getTestFileNames(h.args.base, currentDir, true);
-			logFile.logTestCaseInit(currentDir);
+			// Defined basic constants for file manipulation
+			const XalanDOMString  drive(h.getDrive());
+			const XalanDOMString  resultFilePrefix("params");
+			const XalanDOMString  resultsFile(drive + h.args.output + resultFilePrefix + UniqRunid + FileUtility::s_xmlSuffix);
+			
+			XMLFileReporter	logFile(resultsFile);
+			logFile.logTestFileInit("Param Testing: Testing ability to pass parameters to stylesheets. ");
 
-			for(FileNameVectorType::size_type i = 0; i < files.size(); ++i)
+			try
 			{
-				fileName = files[i];
-				sprintf(testCase, "%s%d","TestCase",i+1);
-				h.data.testOrFile = testCase;
+				bool embedFlag =  false;
+					
+				// Get the files found in the "params" directory
+				const XalanDOMString  theOutputDir = h.args.output + currentDir;
 
-				// Set up the input/output files.
-				const XalanDOMString  theXSLFile= h.args.base + currentDir + pathSep + fileName;
-				XalanDOMString		  theXMLFile;
-				
-				// Neither testcase 7 nor 8 utilize xml source files. Both use fragment identifiers,
-				// so the generation of xml file is unnecessary.
-				// Testcase 7 tests: <?xml-stylesheet type="text/xsl" href="#style1-23.34.123456789_345"?>
-				// Testcase 8 tests: <?xml-stylesheet type="text/xsl" href="foo.xsl"?>
-				if ( i+1 <= 6 )
+				// Check that output directory is there.
+				h.checkAndCreateDir(theOutputDir);
+
+				const FileNameVectorType	files = h.getTestFileNames(h.args.base, currentDir, true);
+				logFile.logTestCaseInit(currentDir);
+
+				for(FileNameVectorType::size_type i = 0; i < files.size(); ++i)
 				{
-					assign(theXMLFile, h.generateFileName(theXSLFile,"xml"));
-				}
+					fileName = files[i];
+					sprintf(testCase, "%s%d","TestCase",i+1);
+					h.data.testOrFile = testCase;
 
-				h.data.xmlFileURL = theXMLFile;
-				h.data.xslFileURL = theXSLFile;
+					// Set up the input/output files.
+					const XalanDOMString  theXSLFile= h.args.base + currentDir + FileUtility::s_pathSep + fileName;
+					XalanDOMString		  theXMLFile;
+					
+					// Neither testcase 7 nor 8 utilize xml source files. Both use fragment identifiers,
+					// so the generation of xml file is unnecessary.
+					// Testcase 7 tests: <?xml-stylesheet type="text/xsl" href="#style1-23.34.123456789_345"?>
+					// Testcase 8 tests: <?xml-stylesheet type="text/xsl" href="foo.xsl"?>
+					if ( i+1 <= 6 )
+					{
+						assign(theXMLFile, h.generateFileName(theXSLFile,"xml"));
+					}
 
-				const XalanDOMString  theOutput =  h.args.output + currentDir + pathSep + fileName; 
-				const XalanDOMString  theOutputFile = h.generateFileName(theOutput, "out");
-				theGoldFile = h.args.gold + currentDir + pathSep + fileName;
-				theGoldFile = h.generateFileName(theGoldFile, "out");
+					h.data.xmlFileURL = theXMLFile;
+					h.data.xslFileURL = theXSLFile;
 
-				XSLTResultTarget		theResultTarget(theOutputFile);
-				const XSLTInputSource	xslInputSource(c_wstr(theXSLFile));
-				const XSLTInputSource	xmlInputSource(c_wstr(theXMLFile));
-						
-				// Set the desired parameters
-				switch (getTestNumber(fileName))
-				{	
-					case 2:
-						xalan.setStylesheetParam("in1", "'A '");
+					const XalanDOMString  theOutput =  h.args.output + currentDir + FileUtility::s_pathSep + fileName; 
+					const XalanDOMString  theOutputFile = h.generateFileName(theOutput, "out");
+					theGoldFile = h.args.gold + currentDir + FileUtility::s_pathSep + fileName;
+					theGoldFile = h.generateFileName(theGoldFile, "out");
 
-						xalan.setStylesheetParam("in2", "'B '");
-
-						xalan.setStylesheetParam(
-							XalanDOMString("in3"),
-							XalanDOMString("'C '"));
-						xalan.setStylesheetParam(
-							XalanDOMString("in4"),
-							XalanDOMString("'D '"));
-						xalan.setStylesheetParam(
-							XalanDOMString("in5"),
-							XalanDOMString("'E '"));
-						break;
-
-					case 3:
-						xalan.setStylesheetParam(
-							XalanDOMString("'xyz:in1'"),
-							XalanDOMString("'DATA'"));
-						break;
-
-					case 7:
-						{
-							const XSLTInputSource	embed07InputSource(c_wstr(theXSLFile));
-							xalan.transform(embed07InputSource, theResultTarget);
-							append(h.data.testOrFile, " (Embed01)" );
-							embedFlag = true;
-							break;
-						}
-
-					case 8:
-						{
-							const XSLTInputSource	embed08InputSource(c_wstr(theXSLFile));
-							xalan.transform(embed08InputSource, theResultTarget);
-							append(h.data.testOrFile, " (Embed02)" );
-							embedFlag = true;
-							break;
-						}
-					default:
-						xalan.setStylesheetParam(
-							XalanDOMString("input"),
-							XalanDOMString("'testing 1 2 3'"));
-						break;
-				}
-
-				// Do a total end to end transform with no pre parsing of either xsl or xml files.
-				if (!embedFlag)
-				{
-					xalan.transform(xmlInputSource, xslInputSource, theResultTarget);
-				}
-
-				// Check and report the results.
-				h.checkResults(theOutputFile, theGoldFile, logFile);
-			}
+					XSLTResultTarget		theResultTarget(theOutputFile);
+					const XSLTInputSource	xslInputSource(c_wstr(theXSLFile));
+					const XSLTInputSource	xmlInputSource(c_wstr(theXMLFile));
 							
-			logFile.logTestCaseClose("Done", "Pass");
+					// Set the desired parameters
+					switch (getTestNumber(fileName))
+					{	
+						case 2:
+							xalan.setStylesheetParam("in1", "'A '");
+
+							xalan.setStylesheetParam("in2", "'B '");
+
+							xalan.setStylesheetParam(
+								XalanDOMString("in3"),
+								XalanDOMString("'C '"));
+							xalan.setStylesheetParam(
+								XalanDOMString("in4"),
+								XalanDOMString("'D '"));
+							xalan.setStylesheetParam(
+								XalanDOMString("in5"),
+								XalanDOMString("'E '"));
+							break;
+
+						case 3:
+							xalan.setStylesheetParam(
+								XalanDOMString("'xyz:in1'"),
+								XalanDOMString("'DATA'"));
+							break;
+
+						case 7:
+							{
+								const XSLTInputSource	embed07InputSource(c_wstr(theXSLFile));
+								xalan.transform(embed07InputSource, theResultTarget);
+								append(h.data.testOrFile, " (Embed01)" );
+								embedFlag = true;
+								break;
+							}
+
+						case 8:
+							{
+								const XSLTInputSource	embed08InputSource(c_wstr(theXSLFile));
+								xalan.transform(embed08InputSource, theResultTarget);
+								append(h.data.testOrFile, " (Embed02)" );
+								embedFlag = true;
+								break;
+							}
+						default:
+							xalan.setStylesheetParam(
+								XalanDOMString("input"),
+								XalanDOMString("'testing 1 2 3'"));
+							break;
+					}
+
+					// Do a total end to end transform with no pre parsing of either xsl or xml files.
+					if (!embedFlag)
+					{
+						xalan.transform(xmlInputSource, xslInputSource, theResultTarget);
+					}
+
+					// Check and report the results.
+					h.checkResults(theOutputFile, theGoldFile, logFile);
+				}
+								
+				logFile.logTestCaseClose("Done", "Pass");
+			}
+
+			catch(...)
+			{
+				cerr << "Exception caught!!!" << endl << endl;
+			}
+
+			h.reportPassFail(logFile, UniqRunid);
+			logFile.logTestFileClose("Param Testing: ", "Done");
+			logFile.close();
+
+			h.analyzeResults(xalan, resultsFile);
 		}
-
-		catch(...)
-		{
-			cerr << "Exception caught!!!" << endl << endl;
-		}
-
-		h.reportPassFail(logFile, UniqRunid);
-		logFile.logTestFileClose("Param Testing: ", "Done");
-		logFile.close();
-
-		h.analyzeResults(xalan, resultsFile);
 
 		XalanTransformer::terminate();
 	}
