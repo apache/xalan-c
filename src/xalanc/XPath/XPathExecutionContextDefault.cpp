@@ -128,7 +128,10 @@ XPathExecutionContextDefault::reset()
 	}
 
 	m_currentNodeStack.clear();
+	m_currentNodeStack.push_back(0);
+
 	m_contextNodeListStack.clear();
+	m_contextNodeListStack.push_back(&s_dummyList);
 
 	m_prefixResolver = 0;
 
@@ -144,6 +147,8 @@ XPathExecutionContextDefault::reset()
 XalanNode*
 XPathExecutionContextDefault::getCurrentNode() const
 {
+    assert(m_currentNodeStack.empty() == false);
+
 	return m_currentNodeStack.back();
 }
 
@@ -160,6 +165,8 @@ XPathExecutionContextDefault::pushCurrentNode(XalanNode*	theCurrentNode)
 void
 XPathExecutionContextDefault::popCurrentNode()
 {
+    assert(m_currentNodeStack.empty() == false);
+
 	m_currentNodeStack.pop_back();
 }
 
