@@ -85,7 +85,7 @@ XBooleanStatic::~XBooleanStatic()
 
 
 void
-XBooleanStatic::error(const DOMString&		msg) const
+XBooleanStatic::error(const XalanDOMString&		msg) const
 {
 	throw XPathException(msg);
 }

@@ -71,14 +71,17 @@
 
 
 
-#include <dom/DOMString.hpp>
-
 #include <sax/AttributeList.hpp>
+
+
+
+#include <XalanDOM/XalanDOMString.hpp>
+
+
 
 // Base class header file.
 #include <XMLSupport/FormatterListener.hpp>
 
-#include <XPath/QName.hpp>
 
 
 class Writer;
@@ -97,36 +100,35 @@ public:
 #else
 #	define XALAN_STD std::
 #endif
-	typedef XALAN_STD map<DOMString, DOMString> DOMStringMapType;
-	typedef XALAN_STD map<DOMString, int> DOMString2IntMapType;
-	typedef std::vector<QName> QNameVectorType;
-	typedef std::stack<bool>	BoolStackTYpe;
+	typedef XALAN_STD map<XalanDOMString, XalanDOMString>	DOMStringMapType;
+	typedef XALAN_STD map<XalanDOMString, int>				DOMString2IntMapType;
+	typedef std::stack<bool>								BoolStackType;
 #undef XALAN_STD
 
 	/**
 	 * These are characters that will be escaped in the output.
 	 */
-	DOMString					m_attrSpecialChars;
+	XalanDOMString					m_attrSpecialChars;
 
-	static const DOMString DEFAULT_MIME_ENCODING;
+	static const XalanDOMString		DEFAULT_MIME_ENCODING;
 	  
 	/**
 	 * If true, cdata sections are simply stripped of their 
 	 * CDATA brackets, without escaping.
 	 */
-	bool						m_stripCData;
+	bool							m_stripCData;
 
 	/**
 	 * If true, characters in cdata sections are 
 	 * escaped, instead of being writted out as 
 	 * cdata sections.
 	 */
-	bool						m_escapeCData;
+	bool							m_escapeCData;
 
 	/**
 	 * If true, XML header should be written to output.
 	 */
-	bool						m_shouldWriteXMLHeader;
+	bool							m_shouldWriteXMLHeader;
 
 	/**
 	 * Number of spaces to indent, default is 2.
@@ -136,7 +138,7 @@ public:
   /**
    * Tells the XML version, for writing out to the XML decl.
    */
-	DOMString m_version;
+	XalanDOMString m_version;
 
 	/**
 	 * Constructor for customized encoding and doctype.
@@ -155,21 +157,18 @@ public:
 	 *                          declaration
 	 * @param standalone        true if the XSLT processor should output a
 	 *                          standalone document declaration
-	 * @param cdataSectionElems list of the names of elements whose text node
-	 *                          children should be output using CDATA sections
 	 */
 	FormatterToXML(
 			Writer&				writer,
-			const DOMString& version,
+			const XalanDOMString& version,
 			bool doIndent, 
 			int indent,
-			const DOMString& encoding, 
-			const DOMString& mediaType,
-			const DOMString& doctypeSystem,
-			const DOMString& doctypePublic,
+			const XalanDOMString& encoding, 
+			const XalanDOMString& mediaType,
+			const XalanDOMString& doctypeSystem,
+			const XalanDOMString& doctypePublic,
 			bool xmlDecl,
-			const DOMString& standalone, 
-		  const QNameVectorType* const cdataSectionElems);
+			const XalanDOMString& standalone);
 
 	virtual
 	~FormatterToXML();
@@ -183,9 +182,10 @@ public:
 	* @param isCData true if characters are CDATA
    */
 	void writeNormalizedChars(
-			const XMLCh*  const ch,
-			int start, int length,
-			bool isCData);
+			const XalanDOMChar*		ch,
+			int						start,
+			int						length,
+			bool					isCData);
 
 	// These methods are inherited from FormatterListener ...
 
@@ -244,14 +244,18 @@ public:
 protected:
 
 	void FormatterToXML::copyBigCharIntoBuf(
-			const XMLCh* const chars,		// Character string to process
-			int&					i,				// Index into 'chars'
-			int&					pos,			// Index in m_charBuf
-			int					length,		// Length of 'chars' string
-			XMLCh* buf = m_charBuf			// Buffer to write to
+			const XalanDOMChar*	chars,				// Character string to process
+			int&			i,					// Index into 'chars'
+			int&			pos,				// Index in m_charBuf
+			int				length,				// Length of 'chars' string
+			XalanDOMChar*			buf = m_charBuf		// Buffer to write to
 			);
 
-	void writeBigChar(const XMLCh* const ch, int& i, int end);
+	void
+	writeBigChar(
+			const XalanDOMChar*		ch,
+			int&					i,
+			int						end);
 
 	void
 	writeParentTagEnd();
@@ -269,8 +273,8 @@ protected:
 	 */
 	void
 	processAttribute(
-			const DOMString&	name,
-			const DOMString&	value);
+			const XalanDOMString&	name,
+			const XalanDOMString&	value);
 
 	/**
 	 * Returns the specified <var>string</var> after substituting <VAR>specials</VAR>,
@@ -282,11 +286,11 @@ protected:
 	 * @return              XML-formatted string.
 	 * @see #backReference
 	 */
-	static DOMString
+	static XalanDOMString
 	prepAttrString(
-			const DOMString&	string,
-			const DOMString&	specials,
-			const DOMString&	encoding);
+			const XalanDOMString&	string,
+			const XalanDOMString&	specials,
+			const XalanDOMString&	encoding);
 	
 	virtual bool
 	shouldIndent() const;
@@ -328,28 +332,34 @@ protected:
    * @see #reverse
    */
 
-	static const DOMString convertMime2JavaEncoding(const DOMString& mimeCharsetName);
-	static const DOMString convertJava2MimeEncoding(const DOMString& encoding);
-	static void initEncodings();
+	static const XalanDOMString
+	convertMime2JavaEncoding(const XalanDOMString&	mimeCharsetName);
+
+	static const XalanDOMString
+	convertJava2MimeEncoding(const XalanDOMString&	encoding);
+
+	static void
+	initEncodings();
 
 protected:
 
 	enum { MAXCHARBUF = 4096, MAXSAFECHARBUF = MAXCHARBUF - 256 };
 
-	static XMLCh		m_charBuf[MAXCHARBUF];
-	static XMLCh m_lineSep;
-	bool m_needToOutputDocTypeDecl;
-	Writer&				m_writer;
-/**
- * The maximum character value before we have to resort 
- * to escaping.
- */
-	unsigned int	m_maxCharacter;
+	static XalanDOMChar		m_charBuf[MAXCHARBUF];
+	static XalanDOMChar		m_lineSep;
+	bool					m_needToOutputDocTypeDecl;
+	Writer&					m_writer;
+
+	/**
+	 * The maximum character value before we have to resort 
+	 * to escaping.
+	 */
+	unsigned int		m_maxCharacter;
   
 	/**
 	 * The character encoding.  Not currently used.
 	 */
-	DOMString		m_encoding;
+	XalanDOMString		m_encoding;
 
 	/**
 	 * Tell if the next text should be raw.
@@ -360,17 +370,17 @@ protected:
    * A stack of Boolean objects that tell if the given element 
    * has children.
    */
-	BoolStackTYpe	m_elemStack;
+	BoolStackType	m_elemStack;
   
-	bool				m_ispreserve;
-	BoolStackTYpe	m_preserves;
-	bool				m_isprevtext;
-	bool				m_doIndent;
-	int					m_currentIndent;
-	int					m_level;
-	DOMString			m_doctypeSystem;
-	DOMString			m_doctypePublic;
-	bool				m_startNewLine;
+	bool			m_ispreserve;
+	BoolStackType	m_preserves;
+	bool			m_isprevtext;
+	bool			m_doIndent;
+	int				m_currentIndent;
+	int				m_level;
+	XalanDOMString	m_doctypeSystem;
+	XalanDOMString	m_doctypePublic;
+	bool			m_startNewLine;
   /**
    * Assume java encoding names are the same as the ISO encoding names if this is true.
    */
@@ -393,14 +403,14 @@ protected:
   
 
 	int copyEntityIntoBuf(
-			const DOMString&	s,
-			int					pos);
+			const XalanDOMString&	s,
+			int						pos);
 
 	int copyUTF16IntoBuf(
-			const XMLCh* const chars,
+			const XalanDOMChar*		chars,
 			int&					i,				// Index into 'chars'
 			int&					pos,			// Index in m_charBuf
-			int					length		// Length of 'chars' string
+			int						length		// Length of 'chars' string
 		);
 	
 private:

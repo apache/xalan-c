@@ -70,9 +70,7 @@
 
 
 
-#include <dom/DOM_Node.hpp>
-#include <dom/DOM_Element.hpp>
-#include <dom/DOMString.hpp>
+#include <XalanDOM/XalanDOMString.hpp>
 
 
 
@@ -88,6 +86,7 @@
 
 #include <XPath/MutableNodeRefList.hpp>
 #include <XPath/XPathExpression.hpp>
+#include <XPath/Function.hpp>
 #include <XPath/XPathFunctionTable.hpp>
 
 
@@ -98,6 +97,7 @@ class XObject;
 class XObjectFactory;
 class XPathEnvSupport;
 class XPathSupport;
+class XalanNode;
 
 
 
@@ -115,29 +115,26 @@ class XALAN_XPATH_EXPORT XPath : public FactoryObject
 public:
 
 #if defined(XALAN_INLINE_INITIALIZATION)
-	const char* const	PSEUDONAME_ANY = "*";
-	const char* const	PSEUDONAME_ROOT = "/";
-	const char* const	PSEUDONAME_TEXT = "#text";
-	const char* const	PSEUDONAME_COMMENT = "#comment";
-	const char* const	PSEUDONAME_PI = "#pi";
-	const char* const	PSEUDONAME_OTHER = "*";
+	const XalanDOMString			PSEUDONAME_ANY(XALAN_STATIC_UCODE_STRING("*"));
+	const XalanDOMString			PSEUDONAME_ROOT(XALAN_STATIC_UCODE_STRING("/"));
+	const XalanDOMString			PSEUDONAME_TEXT(XALAN_STATIC_UCODE_STRING("#text"));
+	const XalanDOMString			PSEUDONAME_COMMENT(XALAN_STATIC_UCODE_STRING("#comment"));
+	const XalanDOMString			PSEUDONAME_PI(XALAN_STATIC_UCODE_STRING("#pi"));
+	const XalanDOMString			PSEUDONAME_OTHER(XALAN_STATIC_UCODE_STRING("*"));
 #else
-	static const char* const	PSEUDONAME_ANY;
-	static const char* const	PSEUDONAME_ROOT;
-	static const char* const	PSEUDONAME_TEXT;
-	static const char* const	PSEUDONAME_COMMENT;
-	static const char* const	PSEUDONAME_PI;
-	static const char* const	PSEUDONAME_OTHER;
+	static const XalanDOMString		PSEUDONAME_ANY;
+	static const XalanDOMString		PSEUDONAME_ROOT;
+	static const XalanDOMString		PSEUDONAME_TEXT;
+	static const XalanDOMString		PSEUDONAME_COMMENT;
+	static const XalanDOMString		PSEUDONAME_PI;
+	static const XalanDOMString		PSEUDONAME_OTHER;
 #endif
 
 #if defined(XALAN_NO_NAMESPACES)
-#	define XALAN_STD
+	typedef vector<XalanDOMString>			TargetElementStringsVectorType;
 #else
-#	define XALAN_STD std::
+	typedef std::vector<XalanDOMString>		TargetElementStringsVectorType;
 #endif
-	typedef XALAN_STD vector<DOMString>	TargetElementStringsVectorType;
-	typedef XALAN_STD vector<XObject*> XObjectPtrVectorType;
-#undef XALAN_STD
 
 
 	/**
@@ -155,29 +152,7 @@ public:
 	virtual void
 	shrink();
 
-	/**
-	 * Execute the XPath from the provided context.
-	 *
-	 * @param executionContext current execution context
-	 * @exception exception
-	 * @return pointer to result XObject
-	 */
-	virtual XObject*
-	execute(XPathExecutionContext&	executionContext) const;
-
-	/**
-	 * Execute the XPath from the provided context.
-	 *
-	 * @param context          current source tree context node
-	 * @param opPos            current position in the m_opMap array
-	 * @param executionContext current execution context
-	 * @return pointer to union of node-set operands
-	 */
-	virtual XObject*
-	execute(
-			const DOM_Node& 		context,
-			int 					opPos,
-			XPathExecutionContext&	executionContext) const;
+public:
 
 	/**
 	 * Execute the XPath from the provided context.
@@ -189,7 +164,7 @@ public:
 	 */
 	virtual XObject*
 	execute(
-			const DOM_Node&			context,
+			XalanNode*				context,
 			const PrefixResolver&	prefixResolver,
 			XPathExecutionContext&	executionContext) const;
 
@@ -204,9 +179,34 @@ public:
 	 */
 	virtual XObject*
 	execute(
-			const DOM_Node&			context,
+			XalanNode*				context,
 			const PrefixResolver&	prefixResolver,
 			const NodeRefListBase&	contextNodeList,
+			XPathExecutionContext&	executionContext) const;
+
+	/**
+	 * Execute the XPath from the provided context.  The
+	 * prefix resolver must already be set in the
+	 * execution context.
+	 *
+	 * @param executionContext current execution context
+	 * @return pointer to result XObject
+	 */
+	virtual XObject*
+	execute(XPathExecutionContext&	executionContext) const;
+
+	/**
+	 * Execute the XPath from the provided context.
+	 *
+	 * @param context          current source tree context node
+	 * @param opPos            current position in the m_opMap array
+	 * @param executionContext current execution context
+	 * @return pointer to union of node-set operands
+	 */
+	virtual XObject*
+	executeMore(
+			XalanNode* 				context,
+			int 					opPos,
 			XPathExecutionContext&	executionContext) const;
 
 	/**
@@ -219,7 +219,7 @@ public:
 	 */
 	virtual XObject*
 	locationPath(
-			const DOM_Node&			context,
+			XalanNode*				context,
 			int						opPos,
 			XPathExecutionContext&	executionContext) const;
 
@@ -309,8 +309,10 @@ public:
 	 * @return union of node-set operands
 	 */
 	virtual double
-	getMatchScore(const DOM_Node&			context,
-				  XPathExecutionContext&	executionContext) const;
+	getMatchScore(
+			XalanNode*				context,
+			const PrefixResolver&	resolver,
+			XPathExecutionContext&	executionContext) const;
 
 	/**
 	 * Test a node.  This should be implemented by a derived class.
@@ -326,7 +328,7 @@ public:
 	 */
 	virtual double
 	nodeTest(
-			const DOM_Node&			context,
+			XalanNode*				context,
 			int						opPos,
 			int						argLen,
 			int						stepType,
@@ -342,7 +344,7 @@ public:
 	 */
 	virtual XObject*
 	predicate(
-			const DOM_Node&			context,
+			XalanNode*				context,
 			int						opPos,
 			XPathExecutionContext&	executionContext) const;
 
@@ -362,7 +364,7 @@ public:
 	 */
 	static void
 	installFunction(
-			const DOMString&	funcName,
+			const XalanDOMString&	funcName,
 			const Function& 	func);
 
 	/**
@@ -372,7 +374,7 @@ public:
 	 * @return true if the function has been installed
 	 */
 	static bool
-	isInstalledFunction(const DOMString&	theFunctionName)
+	isInstalledFunction(const XalanDOMString&	theFunctionName)
 	{
 		return s_functions.isInstalledFunction(theFunctionName);
 	}
@@ -438,7 +440,7 @@ protected:
 	 */
 	virtual XObject*
 	xpath(
-			const DOM_Node&			context,
+			XalanNode*				context,
 			int						opPos,
 			XPathExecutionContext&	executionContext) const;
 
@@ -450,7 +452,7 @@ protected:
 	 */
 	virtual XObject*
 	matchPattern(
-			const DOM_Node&			context,
+			XalanNode*				context,
 			int						opPos,
 			XPathExecutionContext&	executionContext) const;
 
@@ -464,9 +466,11 @@ protected:
 	 */
 	MutableNodeRefList*
 	step(
-			const DOM_Node&			context,
+			XalanNode*				context,
 			int						opPos,
 			XPathExecutionContext&	executionContext) const;
+
+protected:
 
 	/**
 	 * OR two expressions and return the boolean result.
@@ -476,7 +480,7 @@ protected:
 	 */
 	virtual XObject*
 	or(
-			const DOM_Node&			context,
+			XalanNode*				context,
 			int						opPos,
 			XPathExecutionContext&	executionContext) const;
 
@@ -488,7 +492,7 @@ protected:
 	 */
 	virtual XObject*
 	and(
-			const DOM_Node&			context,
+			XalanNode*				context,
 			int						opPos,
 			XPathExecutionContext&	executionContext) const;
 
@@ -500,7 +504,7 @@ protected:
 	 */
 	virtual XObject*
 	notequals(
-			const DOM_Node&			context,
+			XalanNode*				context,
 			int						opPos,
 			XPathExecutionContext&	executionContext) const;
 
@@ -512,7 +516,7 @@ protected:
 	 */
 	virtual XObject*
 	equals(
-			const DOM_Node&			context,
+			XalanNode*				context,
 			int						opPos,
 			XPathExecutionContext&	executionContext) const;
 
@@ -524,7 +528,7 @@ protected:
 	 */
 	virtual XObject*
 	lte(
-			const DOM_Node&			context,
+			XalanNode*				context,
 			int						opPos,
 			XPathExecutionContext&	executionContext) const;
 
@@ -536,7 +540,7 @@ protected:
 	 */
 	virtual XObject*
 	lt(
-			const DOM_Node&			context,
+			XalanNode*				context,
 			int						opPos,
 			XPathExecutionContext&	executionContext) const;
 
@@ -548,7 +552,7 @@ protected:
 	 */
 	virtual XObject*
 	gte(
-			const DOM_Node&			context,
+			XalanNode*				context,
 			int						opPos,
 			XPathExecutionContext&	executionContext) const;
 
@@ -560,7 +564,7 @@ protected:
 	 */
 	virtual XObject*
 	gt(
-			const DOM_Node&			context,
+			XalanNode*				context,
 			int						opPos,
 			XPathExecutionContext&	executionContext) const;
 
@@ -572,7 +576,7 @@ protected:
 	 */
 	virtual XObject*
 	plus(
-			const DOM_Node&			context,
+			XalanNode*				context,
 			int						opPos,
 			XPathExecutionContext&	executionContext) const;
 
@@ -584,7 +588,7 @@ protected:
 	 */
 	virtual XObject*
 	minus(
-			const DOM_Node&			context,
+			XalanNode*				context,
 			int						opPos,
 			XPathExecutionContext&	executionContext) const;
 
@@ -596,7 +600,7 @@ protected:
 	 */
 	virtual XObject*
 	mult(
-			const DOM_Node&			context,
+			XalanNode*				context,
 			int						opPos,
 			XPathExecutionContext&	executionContext) const;
 
@@ -608,7 +612,7 @@ protected:
 	 */
 	virtual XObject*
 	div(
-			const DOM_Node&			context,
+			XalanNode*				context,
 			int						opPos,
 			XPathExecutionContext&	executionContext) const;
 
@@ -620,7 +624,7 @@ protected:
 	 */
 	virtual XObject*
 	mod(
-			const DOM_Node&			context,
+			XalanNode*				context,
 			int						opPos,
 			XPathExecutionContext&	executionContext) const;
 
@@ -633,7 +637,7 @@ protected:
 	 */
 	virtual XObject*
 	quo(
-			const DOM_Node&			context,
+			XalanNode*				context,
 			int						opPos,
 			XPathExecutionContext&	executionContext) const;
 	
@@ -645,7 +649,7 @@ protected:
 	 */
 	virtual XObject*
 	neg(
-			const DOM_Node&			context,
+			XalanNode*				context,
 			int						opPos,
 			XPathExecutionContext&	executionContext) const;
 
@@ -657,7 +661,7 @@ protected:
 	 */
 	virtual XObject*
 	string(
-			const DOM_Node&			context,
+			XalanNode*				context,
 			int						opPos,
 			XPathExecutionContext&	executionContext) const;
 
@@ -669,7 +673,7 @@ protected:
 	 */
 	virtual XObject*
 	boolean(
-			const DOM_Node&			context,
+			XalanNode*				context,
 			int						opPos,
 			XPathExecutionContext&	executionContext) const;
  
@@ -681,7 +685,7 @@ protected:
 	 */
 	virtual XObject*
 	number(
-			const DOM_Node&			context,
+			XalanNode*				context,
 			int						opPos,
 			XPathExecutionContext&	executionContext) const;
 
@@ -693,7 +697,7 @@ protected:
 	 */
 	virtual XObject*
 	Union(
-			const DOM_Node&			context,
+			XalanNode*				context,
 			int						opPos,
 			XPathExecutionContext&	executionContext) const;
 
@@ -705,7 +709,7 @@ protected:
 	 */
 	virtual XObject*
 	literal(
-			const DOM_Node&			context,
+			XalanNode*				context,
 			int						opPos,
 			XPathExecutionContext&	executionContext) const;
   
@@ -717,7 +721,7 @@ protected:
 	 */
 	virtual XObject*
 	variable(
-			const DOM_Node&			context,
+			XalanNode*				context,
 			int						opPos,
 			XPathExecutionContext&	executionContext) const;
 
@@ -729,7 +733,7 @@ protected:
 	 */
 	virtual XObject*
 	group(
-			const DOM_Node&			context,
+			XalanNode*				context,
 			int						opPos,
 			XPathExecutionContext&	executionContext) const;
 
@@ -741,7 +745,7 @@ protected:
 	 */
 	virtual XObject*
 	numberlit(
-			const DOM_Node&			context,
+			XalanNode*				context,
 			int						opPos,
 			XPathExecutionContext&	executionContext) const;
   
@@ -753,7 +757,7 @@ protected:
 	 */
 	virtual XObject*
 	arg(
-			const DOM_Node&			context,
+			XalanNode*				context,
 			int						opPos,
 			XPathExecutionContext&	executionContext) const;
 
@@ -766,7 +770,7 @@ protected:
 	 */
 	virtual XObject*
 	locationPathPattern(
-			const DOM_Node&			context,
+			XalanNode*				context,
 			int						opPos,
 			XPathExecutionContext&	executionContext) const;
 
@@ -775,7 +779,7 @@ protected:
 	 */
 	virtual XObject*
 	runExtFunction(
-			const DOM_Node&			context,
+			XalanNode*				context,
 			int						opPos,
 			XPathExecutionContext&	executionContext) const;
 
@@ -784,19 +788,19 @@ protected:
 	 */
 	virtual XObject*
 	extfunction(
-			const DOM_Node&					context,
-			int								opPos,
-			const DOMString&				theNamespace,
-			const DOMString&				extensionName, 
-			const XObjectPtrVectorType&	argVec,
-			XPathExecutionContext&			executionContext) const;
+			XalanNode*								context,
+			int										opPos,
+			const XalanDOMString&					theNamespace,
+			const XalanDOMString&					extensionName, 
+			const Function::XObjectArgVectorType&	argVec,
+			XPathExecutionContext&					executionContext) const;
 
 	/**
 	 * Setup for and run a function.
 	 */
 	virtual XObject*
 	runFunction(
-			const DOM_Node&			context,
+			XalanNode*				context,
 			int						opPos,
 			XPathExecutionContext&	executionContext) const;
 
@@ -805,120 +809,11 @@ protected:
 	 */
 	virtual XObject*
 	function(
-			const DOM_Node&					context,
-			int								opPos,
-			int								funcID,
-			const XObjectPtrVectorType&	argVec,
-			XPathExecutionContext&			executionContext) const;
-
-#if 0
-  public Vector getTargetElementStrings()
-  {
-	Vector targetStrings = new Vector();
-
-	int opPos = 2;
-
-	while(m_opMap[opPos] == OP_LOCATIONPATHPATTERN)
-	{
-	  int nextOpPos = getNextOpPos(opPos);
-	  opPos+=2;
-	  
-	  while( m_opMap[opPos] != ENDOP )
-	  {
-		int nextStepPos = getNextOpPos(opPos);
-		int nextOp = m_opMap[nextStepPos];
-		if((nextOp == OP_PREDICATE) || (nextOp == ENDOP))
-		{
-		  int stepType = m_opMap[opPos];
-		  opPos += 3;
-		  switch(stepType)
-		  {
-		  case OP_FUNCTION:
-			targetStrings.addElement(PSEUDONAME_ANY);
-			break;
-		  case FROM_ROOT:
-			targetStrings.addElement(PSEUDONAME_ROOT);
-			break;
-		  case MATCH_ATTRIBUTE:
-		  case MATCH_ANY_ANCESTOR:
-		  case MATCH_IMMEDIATE_ANCESTOR:
-			int tok = m_opMap[opPos];
-			opPos++;
-			switch(tok)
-			{
-			case NODETYPE_COMMENT:
-			  targetStrings.addElement(PSEUDONAME_COMMENT);
-			  break;
-			case NODETYPE_TEXT:
-			  targetStrings.addElement(PSEUDONAME_TEXT);
-			  break;
-			case NODETYPE_NODE:
-			  targetStrings.addElement(PSEUDONAME_ANY);
-			  break;
-			case NODETYPE_ROOT:
-			  targetStrings.addElement(PSEUDONAME_ROOT);
-			  break;
-			case NODETYPE_ANYELEMENT:
-			  targetStrings.addElement(PSEUDONAME_ANY);
-			  break;
-			case NODETYPE_PI:
-			  targetStrings.addElement(PSEUDONAME_ANY);
-			  break;
-			case NODENAME:
-			  // Skip the namespace
-			  int tokenIndex = m_opMap[opPos+1];
-			  if(tokenIndex >= 0)
-			  {
-				String targetName = (String)m_tokenQueue[tokenIndex];
-				if(targetName.equals("*"))
-				{
-				  targetStrings.addElement(PSEUDONAME_ANY);
-				}
-				else
-				{
-				  targetStrings.addElement(targetName);
-				}
-			  }
-			  else
-			  {
-				targetStrings.addElement(PSEUDONAME_ANY);
-			  }
-			  break;
-			default:
-			  targetStrings.addElement(PSEUDONAME_ANY);
-			  break;
-			}
-			break;
-		  }
-		}
-		opPos = nextStepPos;
-	  }
-	  
-	  opPos = nextOpPos;
-	}
-	return targetStrings;
-  }
-  
-  // ============= DIAGNOSTIC & ERROR HANDLINING =================
-  private void ____DIAGNOSTICS_AND_ERRORS____(){}
-  
-  private final void trace(String s)
-  {
-	System.out.println(s);
-  }
-
-  /**
-   * Tell the user of an assertion error, and probably throw an 
-   * exception.
-   */
-  private void assert(boolean b, String msg)
-  {
-	if(!b)
-	  error(null, "Programmer assertion is incorrect! - "+msg);
-  }
-#endif
-
-
+			XalanNode*								context,
+			int										opPos,
+			int										funcID,
+			const Function::XObjectArgVectorType&	argVec,
+			XPathExecutionContext&					executionContext) const;
 
 private:
 

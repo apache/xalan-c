@@ -68,7 +68,7 @@
 
 
 
-class DOM_Node;
+class XalanNode;
 class XObject;
 class XPathExecutionContext;
 
@@ -107,7 +107,7 @@ public:
 	virtual XObject*
 	execute(
 			XPathExecutionContext&			executionContext,
-			const DOM_Node&					context,
+			XalanNode*						context,
 			int								opPos,
 			const XObjectArgVectorType&		args) = 0;
 

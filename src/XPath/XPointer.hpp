@@ -64,7 +64,11 @@
 
 
 
-class DOMString;
+// $$$ ToDo: This is necessary while XalanDOMString is still a typedef...
+#include <XalanDOM/XalanDOMString.hpp>
+
+
+
 class XPath;
 class XSpan;
 
@@ -80,7 +84,7 @@ public:
 	 * @param xpointer XPointer string
 	 */
 	static XSpan*
-	getNode(const DOMString&	xpointer);
+	getNode(const XalanDOMString&	xpointer);
 
 	/**
 	 * Get a span from an XPath (compiled XPointer) object.

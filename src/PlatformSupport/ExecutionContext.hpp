@@ -64,8 +64,12 @@
 
 
 
-#include <dom/DOM_Node.hpp>
-#include <dom/DOM_Document.hpp>
+// $$$ ToDo:  Needed for now, since XalanDOMString is still a typedef...
+#include <XalanDOM/XalanDOMString.hpp>
+
+
+
+class XalanNode;
 
 
 
@@ -91,9 +95,9 @@ public:
 	 */
 	virtual void
 	error(
-			const DOMString&	msg,
-			const DOM_Node& 	sourceNode = DOM_Node(),
-			const DOM_Node&		styleNode = DOM_Node()) const = 0;
+			const XalanDOMString&	msg,
+			const XalanNode* 		sourceNode = 0,
+			const XalanNode* 		styleNode = 0) const = 0;
 
 	/**
 	 * Tell the user of an warning, and probably throw an exception.
@@ -104,9 +108,9 @@ public:
 	 */
 	virtual void
 	warn(
-			const DOMString&	msg,
-			const DOM_Node& 	sourceNode = DOM_Node(),
-			const DOM_Node&		styleNode = DOM_Node()) const = 0;
+			const XalanDOMString&	msg,
+			const XalanNode* 		sourceNode = 0,
+			const XalanNode* 		styleNode = 0) const = 0;
 
 	/**
 	 * Output a message.
@@ -117,9 +121,9 @@ public:
 	 */
 	virtual void
 	message(
-			const DOMString&	msg,
-			const DOM_Node& 	sourceNode = DOM_Node(),
-			const DOM_Node&		styleNode = DOM_Node()) const = 0;
+			const XalanDOMString&	msg,
+			const XalanNode* 		sourceNode = 0,
+			const XalanNode* 		styleNode = 0) const = 0;
 };
 
 

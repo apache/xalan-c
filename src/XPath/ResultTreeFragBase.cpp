@@ -56,112 +56,25 @@
  */
 // Class header file.
 #include "ResultTreeFragBase.hpp"
-#include <Include/DOMHelper.hpp>
 
 
 
-ResultTreeFragBase::ResultTreeFragBase(const DOM_Document&	theOwnerDocument) :
-	Cloneable(),
-#if defined(XALAN_XERCES_RTTI_AVAILABLE)
-	UnimplementedDocumentFragment(dynamic_cast<DocumentImpl*>(XALAN_DOM_NodeHack(theOwnerDocument).getImplementationObject()))
-#else
-	UnimplementedDocumentFragment(static_cast<DocumentImpl*>(XALAN_DOM_NodeHack(theOwnerDocument).getImplementationObject()))
-#endif
+ResultTreeFragBase::ResultTreeFragBase() :
+	XalanDocumentFragment(),
+	Cloneable()
 {
 }
 
 
 
 ResultTreeFragBase::ResultTreeFragBase(const ResultTreeFragBase&	theSource) :
-	Cloneable(theSource),
-	UnimplementedDocumentFragment(theSource)
+	XalanDocumentFragment(theSource),
+	Cloneable(theSource)
 {
 }
 
 
 
 ResultTreeFragBase::~ResultTreeFragBase()
-{
-}
-
-
-
-DOMString
-ResultTreeFragBase::getNodeValue()
-{
-	return DOMString();
-}
-
-
-
-void
-ResultTreeFragBase::setNodeValue(const DOMString&)
-{
-}
-
-
-
-DOMString
-ResultTreeFragBase::getNodeName()
-{
-	return DOMString();
-}
-
-
-
-short
-ResultTreeFragBase::getNodeType() 
-{
-	return DocumentFragmentImpl::getNodeType();
-}
-
-
-
-NodeImpl* 
-ResultTreeFragBase::getParentNode()
-{
-	return 0;
-}
-
-
-
-NodeImpl*
-ResultTreeFragBase::getNextSibling()
-{
-	return 0;
-}
-
-
-
-NodeImpl* 
-ResultTreeFragBase::getPreviousSibling()
-{
-	return 0;
-}
-
-
-
-DOM_ResultTreeFragBase::DOM_ResultTreeFragBase(ResultTreeFragBase*	theFragment) :
-	DOM_UnimplementedDocumentFragment(theFragment)
-{
-}
-
-
-
-DOM_ResultTreeFragBase::DOM_ResultTreeFragBase() :
-	DOM_UnimplementedDocumentFragment()
-{
-}
-
-
-
-DOM_ResultTreeFragBase::DOM_ResultTreeFragBase(const DOM_ResultTreeFragBase&	theDocument) :
-	DOM_UnimplementedDocumentFragment(theDocument)
-{
-}
-
-
-
-DOM_ResultTreeFragBase::~DOM_ResultTreeFragBase()
 {
 }

@@ -64,7 +64,7 @@
 
 
 
-#include <dom/DOMString.hpp>
+#include <XalanDOM/XalanDOMString.hpp>
 
 
 
@@ -87,26 +87,26 @@ public:
 	 */
 	explicit
 	DecimalFormat(
-			const DOMString&				thePatternString = DOMString(),
+			const XalanDOMString&			thePatternString = XalanDOMString(),
 			const DecimalFormatSymbols&		theSymbols = DecimalFormatSymbols());
 
 	virtual
 	~DecimalFormat();
 
 	// From NumberFormat...
-	virtual DOMString
+	virtual XalanDOMString
 	format(double	theValue);
 
-	virtual DOMString
+	virtual XalanDOMString
 	format(int	theValue);
 
-	virtual DOMString
+	virtual XalanDOMString
 	format(unsigned int		theValue);
 
-	virtual DOMString
+	virtual XalanDOMString
 	format(long		theValue);
 
-	virtual DOMString
+	virtual XalanDOMString
 	format(unsigned long	theValue);
 
 
@@ -136,10 +136,16 @@ public:
 		m_decimalFormatSymbols = theDecimalFormatSymbols;
 	}
 
+	void
+	applyPattern(const XalanDOMString&	thePattern);
+
+	void
+	applyLocalizedPattern(const XalanDOMString&		thePattern);
+
 protected:
 
-	DOMString
-	getNormalizedPattern(const DOMString&	thePattern);
+	XalanDOMString
+	getNormalizedPattern(const XalanDOMString&	thePattern);
 
 private:
 
@@ -154,11 +160,11 @@ private:
 
 
 	// Data members...
-	DOMString				m_patternString;
+	XalanDOMString					m_patternString;
 
-	DecimalFormatSymbols	m_decimalFormatSymbols;
+	DecimalFormatSymbols			m_decimalFormatSymbols;
 
-	static const DOMString	s_defaultPatternString;
+	static const XalanDOMString		s_defaultPatternString;
 };
 
 

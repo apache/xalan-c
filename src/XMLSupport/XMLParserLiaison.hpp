@@ -64,10 +64,7 @@
 
 
 
-// Xerces DOM header files
-#include <dom/DOM_Node.hpp>
-#include <dom/DOM_Document.hpp>
-#include <dom/DOMString.hpp>
+#include <XalanDOM/XalanDOMString.hpp>
 
 
 
@@ -79,6 +76,9 @@ class DocumentHandler;
 class FormatterListener;
 class InputSource;
 class URLInputSource;
+class XalanAttr;
+class XalanDocument;
+class XalanElement;
 
 
 
@@ -118,27 +118,10 @@ public:
 	 *                   string
 	 * @return DOM document created
 	 */
-	virtual DOM_Document
+	virtual XalanDocument*
 	parseXMLStream(
-			InputSource&		reader,
-			const DOMString&	identifier = DOMString()) = 0;
-
-	/**
-	 * Parse the text pointed at by the reader as XML, and return a DOM
-	 * Document interface.  It is recommended that you pass in some sort of
-	 * recognizable name, such as the filename or URI, with which the reader
-	 * can be recognized if the parse fails.
-	 *
-	 * @param reader     URL input source that should hold valid XML
-	 * @param identifier used for diagnostic purposes only, some sort of
-	 *                   identification for error reporting, default an empty
-	 *                   string
-	 * @return DOM document created
-	 */
-	virtual DOM_Document
-	parseXMLStream(
-			URLInputSource&		reader,
-			const DOMString&	identifier = DOMString()) = 0;
+			InputSource&			inputSource,
+			const XalanDOMString&	identifier = XalanDOMString()) = 0;
 
 	/**
 	 * Parse the text pointed at by the reader as XML. It is recommended that
@@ -153,26 +136,9 @@ public:
 	 */
 	virtual void
 	parseXMLStream(
-			InputSource&		urlInputSource,
-			DocumentHandler&	handler,
-			const DOMString&	identifier = DOMString()) = 0;
-
-	/**
-	 * Parse the text pointed at by the reader as XML. It is recommended that
-	 * you pass in some sort of recognizable name, such as the filename or URI,
-	 * with which the reader can be recognized if the parse fails.
-	 *
-	 * @param urlInputSource URL input source that should hold valid XML
-	 * @param handler        instance of a DocumentHandler
-	 * @param identifier      used for diagnostic purposes only, some sort of
-	 *                        identification for error reporting, default an
-	 *                        empty string
-	 */
-	virtual void
-	parseXMLStream(
-			URLInputSource&		urlInputSource,
-			DocumentHandler&	handler,
-			const DOMString&	identifier = DOMString()) = 0;
+			InputSource&			inputSource,
+			DocumentHandler&		handler,
+			const XalanDOMString&	identifier = XalanDOMString()) = 0;
 
 	/**
 	 * Create an empty DOM Document.  Mainly used for creating an 
@@ -180,7 +146,7 @@ public:
 	 *
 	 * @return DOM document created
 	 */
-	virtual DOM_Document
+	virtual XalanDocument*
 	createDocument() = 0;
   
   /**
@@ -188,7 +154,7 @@ public:
 	*
 	* @return DOM document factory
 	*/
-	virtual DOM_Document
+	virtual XalanDocument*
 	getDOMFactory() = 0;
 
 	/**
@@ -197,8 +163,8 @@ public:
 	 * @param elem DOM element queried
 	 * @return string for expanded name of element
 	 */
-	virtual DOMString
-	getExpandedElementName(const DOM_Element&	elem) const = 0;
+	virtual XalanDOMString
+	getExpandedElementName(const XalanElement&	elem) const = 0;
 
 	/**
 	 * Returns the attribute name with the namespace expanded.
@@ -206,8 +172,8 @@ public:
 	 * @param attr attribute queried
 	 * @return string for expanded name of attribute
 	 */
-	virtual DOMString
-	getExpandedAttributeName(const DOM_Attr&	attr) const = 0;
+	virtual XalanDOMString
+	getExpandedAttributeName(const XalanAttr&	attr) const = 0;
 
 	/**
 	 * Set special characters for attributes that will be escaped.
@@ -215,14 +181,14 @@ public:
 	 * @param str string containing characters
 	 */
 	virtual void
-	setSpecialCharacters(const DOMString&	str) = 0;
+	setSpecialCharacters(const XalanDOMString&	str) = 0;
 
 	/**
 	 * Get special characters for attributes that will be escaped.
 	 *
 	 * @return string containing characters
 	 */
-	virtual DOMString
+	virtual XalanDOMString
 	getSpecialCharacters() const = 0;
 
 	/**
@@ -282,7 +248,7 @@ public:
 	 *
 	 * @return string describing parser
 	 */
-	virtual const DOMString&
+	virtual const XalanDOMString&
 	getParserDescription() const = 0;
 
 private:

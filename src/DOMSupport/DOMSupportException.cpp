@@ -60,7 +60,7 @@
 
 
 
-DOMSupportException::DOMSupportException(const DOMString&	message) :
+DOMSupportException::DOMSupportException(const XalanDOMString&	message) :
 	XSLException(message)
 {
 }

@@ -68,7 +68,7 @@
 
 
 
-class DOM_Node;
+class XalanNode;
 class XObject;
 class XPath;
 class XPathExecutionContext;
@@ -110,7 +110,7 @@ public:
 	connectToNodes(
 			const XPath&					xpath,
 			XPathExecutionContext&			executionContext,
-			const DOM_Node&					context, 
+			XalanNode&						context, 
             int								opPos,
 			const ConnectArgsVectorType&	connectArgs) = 0;
   
@@ -129,7 +129,7 @@ public:
 	locationPath(
 			const XPath&			xpath,
 			XPathExecutionContext&	executionContext,
-			const DOM_Node&			context, 
+			XalanNode&				context, 
             int						opPos) = 0;
 
 	/**
@@ -145,7 +145,7 @@ public:
 	locationPathPattern(
 			const XPath&			xpath,
 			XPathExecutionContext&	executionContext,
-			const DOM_Node&			context, 
+			XalanNode&				context, 
             int						opPos) = 0;
 };
 

@@ -99,7 +99,7 @@ public:
 	virtual XObject*
 	execute(
 			XPathExecutionContext&			executionContext,
-			const DOM_Node&					context,
+			XalanNode*						context,
 			int								/* opPos */,
 			const XObjectArgVectorType&		args)
 	{
@@ -109,12 +109,12 @@ public:
 								   context);
 		}
 
-		const DOMString		arg1 = args[0]->str();
-		const DOMString		arg2 = args[1]->str();
+		const XalanDOMString	arg1 = args[0]->str();
+		const XalanDOMString	arg2 = args[1]->str();
 
-		const int			theIndex = indexOf(arg1, arg2);
+		const unsigned int		theIndex = indexOf(arg1, arg2);
 
-		return executionContext.getXObjectFactory().createBoolean(theIndex >= 0 ? true : false);
+		return executionContext.getXObjectFactory().createBoolean(theIndex < length(arg1) ? true : false);
 	}
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)

@@ -91,13 +91,17 @@ XObject::~XObject()
 
 
 void
-XObject::error(const DOMString&		msg) const
+XObject::error(const XalanDOMString&	msg) const
 {
 	const bool	shouldThrow =
 		m_envSupport->problem(XPathEnvSupport::eXPATHProcessor,
 							  XPathEnvSupport::eError,
-							  DOM_Node(),
-							  DOM_Node(),
+#if defined(XALAN_OLD_STYLE_CASTS)
+							  (XalanNode*)0,
+#else
+							  static_cast<XalanNode*>(0),
+#endif
+							  0,
 							  msg,
 							  0,
 							  0);

@@ -81,7 +81,6 @@
 // Base class header file.
 #include <XMLSupport/FormatterToXML.hpp>
 
-#include <XPath/QName.hpp>
 
 
 /**
@@ -97,12 +96,11 @@ public:
 #else
 #	define XALAN_STD std::
 #endif
-	typedef XALAN_STD vector<QName> QNameVectorType;
-	typedef XALAN_STD set<DOMString>		EmptiesSetType;
-	typedef XALAN_STD vector<DOMString>	HTMLAttributesVectorType;
-	typedef XALAN_STD vector<DOMString>	HTMLSymbolsVectorType;
-	typedef XALAN_STD set<DOMString>		StringSetType;
-	typedef XALAN_STD map<DOMString, StringSetType> AttributesMapType;
+	typedef XALAN_STD set<XalanDOMString>		EmptiesSetType;
+	typedef XALAN_STD vector<XalanDOMString>	HTMLAttributesVectorType;
+	typedef XALAN_STD vector<XalanDOMString>	HTMLSymbolsVectorType;
+	typedef XALAN_STD set<XalanDOMString>		StringSetType;
+	typedef XALAN_STD map<XalanDOMString, StringSetType> AttributesMapType;
 #undef XALAN_STD
 
 
@@ -114,17 +112,16 @@ public:
 	 * @param indent        Number of spaces to indent at each nesting level.
 	 */
 	FormatterToHTML(
-	  Writer&				writer,
-	  const DOMString& version,
-	  bool doIndent, 
-	  int indent,
-	  const DOMString& encoding, 
-	  const DOMString& mediaType,
-	  const DOMString& doctypeSystem,
-	  const DOMString& doctypePublic,
-	  bool xmlDecl,
-	  const DOMString& standalone, 
-	  const QNameVectorType* const cdataSectionElems);
+			Writer&					writer,
+			const XalanDOMString&	version,
+			bool					doIndent,
+			int						indent,
+			const XalanDOMString&	encoding,
+			const XalanDOMString&	mediaType,
+			const XalanDOMString&	doctypeSystem,
+			const XalanDOMString&	doctypePublic,
+			bool					xmlDecl,
+			const XalanDOMString&	standalone);
 
 	virtual
 	~FormatterToHTML();
@@ -237,8 +234,8 @@ protected:
 	 */
 	virtual void
 	processAttribute(
-			const DOMString&	name,
-			const DOMString&	value);
+			const XalanDOMString&	name,
+			const XalanDOMString&	value);
 
 	/**
 	 * Returns the specified <var>string</var> after substituting non ASCII characters,
@@ -251,10 +248,11 @@ protected:
 	 * @see #backReference
 	 * NOTE: return value destroyed on subsequent calls
 	 */
-	const DOMString prepAttrURI(
-			const DOMString& string,
-			const DOMString& specials,
-			const DOMString& encoding);
+	const XalanDOMString
+	prepAttrURI(
+			const XalanDOMString&	string,
+			const XalanDOMString&	specials,
+			const XalanDOMString&	encoding);
 	// java: throws SAXException
 
 private:
@@ -263,11 +261,11 @@ private:
 	static const EmptiesSetType				s_attrempties;
 	static const HTMLAttributesVectorType	s_HTMLlat1;
 	static const HTMLSymbolsVectorType		s_HTMLsymbol1;
-	static const StringSetType					s_nonblockelems;
+	static const StringSetType				s_nonblockelems;
 	static const AttributesMapType			s_attruris;
-	static const StringSetType					s_escapetb;
+	static const StringSetType				s_escapetb;
 
-	DOMString								m_currentElementName;
+	XalanDOMString							m_currentElementName;
 
 };
 

@@ -99,7 +99,7 @@ public:
 	virtual XObject*
 	execute(
 			XPathExecutionContext&			executionContext,
-			const DOM_Node&					context,
+			XalanNode*						context,
 			int								/* opPos */,
 			const XObjectArgVectorType&		args)
 	{
@@ -109,12 +109,12 @@ public:
 								   context);
 		}
 
-		const DOMString		theFirstString = args[0]->str();
-		const DOMString		theSecondString = args[1]->str();
-		const DOMString		theThirdString = args[2]->str();
+		const XalanDOMString	theFirstString = args[0]->str();
+		const XalanDOMString	theSecondString = args[1]->str();
+		const XalanDOMString	theThirdString = args[2]->str();
 
-		const int			theFirstStringLength = length(theFirstString);
-		const int			theThirdStringLength = length(theThirdString);
+		const unsigned int		theFirstStringLength = length(theFirstString);
+		const unsigned int		theThirdStringLength = length(theThirdString);
 
 #if !defined(XALAN_NO_NAMESPACES)
 		using std::vector;
@@ -122,20 +122,20 @@ public:
 
 		// A vector to contain the new characters.  We'll use it to construct
 		// the result string.
-		vector<XMLCh>	theVector;
+		vector<XalanDOMChar>	theVector;
 
 		// The result string can only be as large as the first string, so
 		// just reserve the space now.  Also reserve space for the
 		// terminating 0.
 		theVector.reserve(theFirstStringLength + 1);
 
-		for (int i = 0; i < theFirstStringLength; i++)
+		for (unsigned int i = 0; i < theFirstStringLength; i++)
 		{
-			const XMLCh		theCurrentChar = charAt(theFirstString, i);
+			const XalanDOMChar		theCurrentChar = charAt(theFirstString, i);
 
-			const int		theIndex = indexOf(theSecondString, theCurrentChar);
+			const unsigned int		theIndex = indexOf(theSecondString, theCurrentChar);
 
-			if (theIndex < 0)
+			if (theIndex >= theFirstStringLength)
 			{
 				// Didn't find the character in the second string, so it
 				// is not translated.
@@ -160,7 +160,7 @@ public:
 		// Push a terminating 0.
 		theVector.push_back(0);
 
-		return executionContext.getXObjectFactory().createString(DOMString(theVector.begin()));
+		return executionContext.getXObjectFactory().createString(XalanDOMString(theVector.begin()));
 	}
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)

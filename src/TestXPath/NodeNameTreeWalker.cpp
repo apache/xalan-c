@@ -54,7 +54,7 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-#include <dom/DOM_Node.hpp>
+#include <XalanDOM/XalanNode.hpp>
 
 
 
@@ -84,23 +84,42 @@ NodeNameTreeWalker::~NodeNameTreeWalker()
 
 void
 NodeNameTreeWalker::findMatchingNodes(
-			const DOMString&	theNodeName,
-			const DOM_Node&		theStartNode)
+			const XalanDOMString&	theNodeName,
+			const XalanNode*		theStartNode)
 {
+	assert(theStartNode != 0);
+
 	m_nodeName = theNodeName;
 
 	m_matchingNodes.clear();
 
-	traverse(theStartNode.getFirstChild(),
+	traverse(theStartNode->getFirstChild(),
 			 theStartNode);
 }
 
 
 
 void
-NodeNameTreeWalker::startNode(const DOM_Node&	node)
+NodeNameTreeWalker::findMatchingNodes(
+			const XalanDOMString&	theNodeName,
+			XalanNode*				theStartNode)
 {
-	const DOMString		theNodeName = node.getNodeName();
+	assert(theStartNode != 0);
+
+	m_nodeName = theNodeName;
+
+	m_matchingNodes.clear();
+
+	traverse(theStartNode->getFirstChild(),
+			 theStartNode);
+}
+
+
+
+void
+NodeNameTreeWalker::startNode(XalanNode*	node)
+{
+	const XalanDOMString		theNodeName = node->getNodeName();
 
 	if (equals(theNodeName, m_nodeName) == true)
 	{
@@ -111,6 +130,20 @@ NodeNameTreeWalker::startNode(const DOM_Node&	node)
 
 
 void
-NodeNameTreeWalker::endNode(const DOM_Node&	/* node */)
+NodeNameTreeWalker::endNode(XalanNode*	/* node */)
+{
+}
+
+
+
+void
+NodeNameTreeWalker::startNode(const XalanNode*	/* node */)
+{
+}
+
+
+
+void
+NodeNameTreeWalker::endNode(const XalanNode*	/* node */)
 {
 }

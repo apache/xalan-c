@@ -65,13 +65,10 @@
 
 
 // Xalan header files.
+#include <PlatformSupport/DOMStringHelper.hpp>
 #include <DOMSupport/DOMSupportDefault.hpp>
 #include <XMLSupport/XMLParserLiaison.hpp>
 #include <XMLSupport/Formatter.hpp>
-
-
-
-class DOM_Text;
 
 
 
@@ -89,8 +86,9 @@ public:
 	 * @param theParserDescription string description of parser
 	 */
 	XMLParserLiaisonDefault(
-			DOMSupport&			theDOMSupport,
-			const DOMString&	theParserDescription = DOMString("(No parser - generic DOM)"));
+			DOMSupport&				theDOMSupport,
+			const XalanDOMString&	theParserDescription =
+					XalanDOMString(XALAN_STATIC_UCODE_STRING("(No parser - generic DOM)")));
 
 	virtual
 	~XMLParserLiaisonDefault();
@@ -105,44 +103,33 @@ public:
 	virtual bool
 	supportsSAX() const;
 
-	virtual DOM_Document
+	virtual XalanDocument*
 	parseXMLStream(
-			InputSource&		reader,
-			const DOMString&	identifier = DOMString());
-
-	virtual DOM_Document
-	parseXMLStream(
-			URLInputSource&		reader,
-			const DOMString&	identifier = DOMString());
+			InputSource&			inputSource,
+			const XalanDOMString&	identifier = XalanDOMString());
 
 	virtual void
 	parseXMLStream(
-			InputSource&		urlInputSource,
-			DocumentHandler&	handler,
-			const DOMString&	identifier = DOMString());
+			InputSource&			inputSource,
+			DocumentHandler&		handler,
+			const XalanDOMString&	identifier = XalanDOMString());
 
-	virtual void
-	parseXMLStream(
-			URLInputSource&		urlInputSource,
-			DocumentHandler&	handler,
-			const DOMString&	identifier = DOMString());
-
-	virtual DOM_Document
+	virtual XalanDocument*
 	createDocument();
   
-	virtual DOM_Document
+	virtual XalanDocument*
 	getDOMFactory();
 
-	virtual DOMString
-	getExpandedElementName(const DOM_Element&	elem) const;
+	virtual XalanDOMString
+	getExpandedElementName(const XalanElement&	elem) const;
 
-	virtual DOMString
-	getExpandedAttributeName(const DOM_Attr&	attr) const;
+	virtual XalanDOMString
+	getExpandedAttributeName(const XalanAttr&	attr) const;
 
 	virtual void
-	setSpecialCharacters(const DOMString&	str) { m_SpecialCharacters = str; }
+	setSpecialCharacters(const XalanDOMString&	str) { m_SpecialCharacters = str; }
 
-	virtual DOMString
+	virtual XalanDOMString
 	getSpecialCharacters() const { return m_SpecialCharacters; }
 
 	virtual int
@@ -163,16 +150,16 @@ public:
 	virtual void
 	setUseValidation(bool b) { m_fUseValidation = b; }
 
-	virtual const DOMString&
+	virtual const XalanDOMString&
 	getParserDescription() const { return m_ParserDescription; }
 
 	// These interfaces are inherited from Formatter...
 
 	virtual void
 	toMarkup(
-			const DOM_Document&		doc,
+			const XalanDocument&	doc,
 			PrintWriter&			pw,
-			const DOMString&		resultns,
+			const XalanDOMString&	resultns,
 			bool					format);
 
 	virtual FormatterListener*
@@ -180,9 +167,9 @@ public:
 
 	virtual void
 	setFormatterListener(
-			PrintWriter&		pw,
-			const DOMString&	resultns,
-			bool				format);
+			PrintWriter&			pw,
+			const XalanDOMString&	resultns,
+			bool					format);
 
 	virtual void
 	setFormatterListener(FormatterListener*		fl);
@@ -201,14 +188,14 @@ private:
 	operator=(const XMLParserLiaisonDefault&);
 
 	// Data members...
-	DOMString				m_SpecialCharacters;
+	XalanDOMString			m_SpecialCharacters;
 
 	int						m_Indent;
 
 	bool					m_fShouldExpandEntityRefs;
 	bool					m_fUseValidation;
 
-	const DOMString			m_ParserDescription;
+	const XalanDOMString	m_ParserDescription;
 
 	FormatterListener*		m_FormatterListener;
 

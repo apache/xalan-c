@@ -68,7 +68,7 @@
 
 
 
-#include <dom/DOMString.hpp>
+#include <XalanDOM/XalanDOMString.hpp>
 
 
 
@@ -117,7 +117,7 @@ public:
 	virtual eObjectType
 	getType() const;
 
-	virtual DOMString
+	virtual XalanDOMString
 	getTypeString() const;
   
 	virtual double
@@ -126,7 +126,7 @@ public:
 	virtual bool
 	boolean() const;
 
-	virtual DOMString
+	virtual XalanDOMString
 	str() const;
 
 	virtual const ResultTreeFragBase&

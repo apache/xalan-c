@@ -99,7 +99,7 @@ public:
 	virtual XObject*
 	execute(
 			XPathExecutionContext&			executionContext,
-			const DOM_Node&					context,
+			XalanNode*						context,
 			int								/* opPos */,
 			const XObjectArgVectorType&		args)
 	{
@@ -112,15 +112,15 @@ public:
 								   context);
 		}
 
-		const DOMString		theSourceString = args[0]->str();
-		const int			theSourceStringLength = length(theSourceString);
+		const XalanDOMString	theSourceString = args[0]->str();
+		const unsigned int		theSourceStringLength = length(theSourceString);
 
 #if !defined(XALAN_NO_NAMESPACES)
 		using std::vector;
 #endif
 
 		// This buffer will hold the output characters.
-		vector<XMLCh>	theBuffer;
+		vector<XalanDOMChar>	theBuffer;
 
 		if (theSourceStringLength > 0)
 		{
@@ -132,17 +132,17 @@ public:
 			// $$$ ToDo: Add support for NaN.
 
 			// Get the value of the second argument...
-			const double		theSecondArgValue = args[1]->num();
+			const double	theSecondArgValue = args[1]->num();
 
 			// Now, total the second and third arguments.  If
 			// the third argument is missing, make the total
 			// DBL_MAX.
-			const double		theTotal =
+			const double	theTotal =
 							theArgCount == 2 ? DBL_MAX :
 											   theSecondArgValue + args[2]->num();
 
 			// Start with 1, since strings are index from 1 in the XPath spec,
-			for (int i = 1; i <= theSourceStringLength; i++)
+			for (unsigned int i = 1; i <= theSourceStringLength; i++)
 			{
 				// Is the index greater than or equal to the second argument?
 				if (i >= theSecondArgValue)
@@ -163,7 +163,7 @@ public:
 			}
 		}
 
-		return executionContext.getXObjectFactory().createString(DOMString(theBuffer.begin(), theBuffer.size()));
+		return executionContext.getXObjectFactory().createString(XalanDOMString(theBuffer.begin(), theBuffer.size()));
 	}
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)

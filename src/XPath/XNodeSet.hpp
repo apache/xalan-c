@@ -73,11 +73,6 @@
 
 
 
-#include <dom/DOM_DocumentFragment.hpp>
-#include <dom/DOMString.hpp>
-
-
-
 #include <XPath/ResultTreeFragBase.hpp>
 #include <XPath/MutableNodeRefList.hpp>
 
@@ -132,7 +127,7 @@ public:
 	XNodeSet(
 			XPathEnvSupport&	envSupport,
 			XPathSupport&		support,
-			const DOM_Node&		value);
+			XalanNode&			value);
 
 	/**
 	 * Create an XNodeSet from another.
@@ -152,7 +147,7 @@ public:
 	virtual	eObjectType
 	getType() const;
 
-	virtual DOMString
+	virtual XalanDOMString
 	getTypeString() const;
 
 	virtual double
@@ -161,7 +156,7 @@ public:
 	virtual bool
 	boolean() const;
 
-	virtual DOMString
+	virtual XalanDOMString
 	str() const;
 
 	virtual const ResultTreeFragBase&
@@ -199,7 +194,11 @@ private:
 
 	MutableNodeRefList							m_value;
 
+#if defined(XALAN_NO_NAMESPACES)
+	std::auto_ptr<ResultTreeFragBase>			m_resultTreeFrag;
+#else
 	mutable std::auto_ptr<ResultTreeFragBase>	m_resultTreeFrag;
+#endif
 };
 
 

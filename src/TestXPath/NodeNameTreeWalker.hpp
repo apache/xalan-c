@@ -62,7 +62,7 @@
 
 
 
-#include <dom/DOMString.hpp>
+#include <XalanDOM/XalanDOMString.hpp>
 
 
 
@@ -76,10 +76,9 @@ class NodeNameTreeWalker : public TreeWalker
 public:
 
 #if defined(XALAN_NO_NAMESPACES)
-#	define XALAN_STD
-	typedef vector<DOM_Node> NodeVectorType;
+	typedef vector<XalanNode*>			NodeVectorType;
 #else
-	typedef std::vector<DOM_Node> NodeVectorType;
+	typedef std::vector<XalanNode*>		NodeVectorType;
 #endif
 
 	NodeNameTreeWalker();
@@ -96,8 +95,13 @@ public:
 	 */
 	virtual void
 	findMatchingNodes(
-			const DOMString&	theNodeName,
-			const DOM_Node&		theStartNode);
+			const XalanDOMString&	theNodeName,
+			const XalanNode*		theStartNode);
+
+	virtual void
+	findMatchingNodes(
+			const XalanDOMString&	theNodeName,
+			XalanNode*				theStartNode);
 
 	/**
 	 * Retrieve the matching nodes from the last search.
@@ -113,14 +117,20 @@ public:
 protected:
 
 	virtual void
-	startNode(const DOM_Node&	node);
+	startNode(XalanNode*	node);
 
 	virtual void
-	endNode(const DOM_Node&	node);
+	endNode(XalanNode*	node);
+
+	virtual void
+	startNode(const XalanNode*	node);
+
+	virtual void
+	endNode(const XalanNode*	node);
 
 private:
 
-	DOMString				m_nodeName;
+	XalanDOMString	m_nodeName;
 	NodeVectorType	m_matchingNodes;
 };
 

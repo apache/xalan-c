@@ -95,7 +95,7 @@ public:
 	virtual XObject*
 	execute(
 			XPathExecutionContext&			executionContext,
-			const DOM_Node&					context,
+			XalanNode*						context,
 			int								/* opPos */,
 			const XObjectArgVectorType&		args)
 	{
@@ -104,8 +104,13 @@ public:
 			executionContext.error("The position() function takes no arguments!",
 								   context);
 		}
+		else if (context == 0)
+		{
+			executionContext.error("The position() function requires a non-null context node!",
+								   context);
+		}
 
-		const int	theValue = executionContext.getContextNodeListPosition(context);
+		const unsigned int	theValue = executionContext.getContextNodeListPosition(*context);
 
 		return executionContext.getXObjectFactory().createNumber(theValue);
 	}

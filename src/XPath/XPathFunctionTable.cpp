@@ -58,6 +58,7 @@
 #include "XPathFunctionTable.hpp"
 
 
+
 #include <PlatformSupport/DOMStringHelper.hpp>
 
 
@@ -108,7 +109,7 @@ XPathFunctionTable::~XPathFunctionTable()
 
 void
 XPathFunctionTable::InstallFunction(
-			const DOMString&	theFunctionName,
+			const XalanDOMString&	theFunctionName,
 			const Function&		theFunction)
 {
 	assert(length(theFunctionName) != 0);
@@ -246,7 +247,7 @@ XPathFunctionTable::DestroyTable()
 
 
 
-XPathFunctionTableException::XPathFunctionTableException(const DOMString&	theMessage) :
+XPathFunctionTableException::XPathFunctionTableException(const XalanDOMString&	theMessage) :
 		XPathException(theMessage)
 {
 }
@@ -259,7 +260,7 @@ XPathFunctionTableException::~XPathFunctionTableException()
 
 
 
-XPathFunctionTableInvalidFunctionException::XPathFunctionTableInvalidFunctionException(const DOMString&		theFunctionName) :
+XPathFunctionTableInvalidFunctionException::XPathFunctionTableInvalidFunctionException(const XalanDOMString&		theFunctionName) :
 	XPathFunctionTableException(FormatMessage(theFunctionName))
 {
 }
@@ -272,11 +273,11 @@ XPathFunctionTableInvalidFunctionException::~XPathFunctionTableInvalidFunctionEx
 
 
 
-DOMString
-XPathFunctionTableInvalidFunctionException::FormatMessage(const DOMString&	theFunctionName)
+XalanDOMString
+XPathFunctionTableInvalidFunctionException::FormatMessage(const XalanDOMString&	theFunctionName)
 {
 	const char*		theMessage =
 				"Invalid function name detected: ";
 
-	return DOMString(theMessage) + theFunctionName;
+	return XalanDOMString(theMessage) + theFunctionName;
 }

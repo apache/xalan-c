@@ -77,8 +77,8 @@ XPathProcessor::~XPathProcessor()
 
 void
 XPathProcessor::installFunction(
-			const DOMString&	theFunctionName,
-			const Function&		theFunction)
+			const XalanDOMString&	theFunctionName,
+			const Function&			theFunction)
 {
 	XPath::installFunction(theFunctionName,
 						   theFunction);

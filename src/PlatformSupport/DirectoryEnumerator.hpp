@@ -80,7 +80,7 @@
 
 
 
-#include <dom/DOMString.hpp>
+#include <XalanDOM/XalanDOMString.hpp>
 
 
 
@@ -109,7 +109,7 @@ public:
 	 *
 	 * @return file name
 	 */
-	const XMLCh*
+	const XalanDOMChar*
 	getName() const
 	{
 		return name;
@@ -250,7 +250,7 @@ EnumerateDirectory(
 
 template<class CollectionType,
 		 class FilterPredicateType = FilesOnlyFilterPredicate,
-		 class StringType = DOMString,
+		 class StringType = XalanDOMString,
 		 class StringConversionFunction = c_wstr_functor>
 #if defined(XALAN_NO_NAMESPACES)
 struct DirectoryEnumeratorFunctor : public unary_function<StringType, CollectionType>

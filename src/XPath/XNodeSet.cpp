@@ -59,6 +59,8 @@
 
 
 
+#include <XalanDOM/XalanNode.hpp>
+
 
 
 #include <PlatformSupport/DOMStringHelper.hpp>
@@ -102,13 +104,13 @@ XNodeSet::XNodeSet(
 XNodeSet::XNodeSet(
 			XPathEnvSupport&	envSupport,
 			XPathSupport&		support,
-			const DOM_Node&		value) :
+			XalanNode&			value) :
 	XObject(&envSupport),
 	m_support(support),
 	m_value(),
 	m_resultTreeFrag()
 {
-	m_value.addNode(value);
+	m_value.addNode(&value);
 }
 
 
@@ -146,10 +148,10 @@ XNodeSet::getType() const
 
 
 
-DOMString
+XalanDOMString
 XNodeSet::getTypeString() const
 {
-	return "#NODESET";
+	return XALAN_STATIC_UCODE_STRING("#NODESET");
 }
 
 
@@ -161,7 +163,7 @@ XNodeSet::num() const
 
 	if(m_value.getLength() > 0)
 	{
-		const DOMString		s = m_support.getNodeData(m_value.item(0));
+		const XalanDOMString	s = m_support.getNodeData(*m_value.item(0));
 
 		if(0 == length(s))
 		{
@@ -186,30 +188,37 @@ XNodeSet::boolean() const
 
 
 
-DOMString
+XalanDOMString
 XNodeSet::str() const
 {
-	DOMString	theResult;
+	XalanDOMString	theResult;
 
 	if (m_value.getLength() > 0)
 	{
-		const DOM_Node	theNode = m_value.item(0);
+		const XalanNode* const	theNode = m_value.item(0);
+		assert(theNode != 0);
 
-		const int		theType = theNode.getNodeType();
+		const XalanNode::NodeType	theType = theNode->getNodeType();
 
-		if (theType == DOM_Node::COMMENT_NODE ||
-			theType == DOM_Node::PROCESSING_INSTRUCTION_NODE)
+		if (theType == XalanNode::COMMENT_NODE ||
+			theType == XalanNode::PROCESSING_INSTRUCTION_NODE)
 		{
-			theResult = theNode.getNodeValue();
+			theResult = theNode->getNodeValue();
 		}
 		else
 		{
-			theResult = m_support.getNodeData(theNode);
+			theResult = m_support.getNodeData(*theNode);
 		}
 	}
 
 	return theResult;
 }
+
+
+
+#if !defined(XALAN_NO_NAMESPACES)
+using std::auto_ptr;
+#endif
 
 
 
@@ -220,12 +229,14 @@ XNodeSet::rtree() const
 
 	if (m_resultTreeFrag.get() == 0)
 	{
+		assert(m_envSupport->getDOMFactory() != 0);
+
 		ResultTreeFrag* const	theFrag =
-			new ResultTreeFrag(m_envSupport->getDOMFactory(),
+			new ResultTreeFrag(*m_envSupport->getDOMFactory(),
 							   m_support);
 
 #if defined(XALAN_OLD_AUTO_PTR)
-		m_resultTreeFrag = std::auto_ptr<ResultTreeFragBase>(theFrag);
+		m_resultTreeFrag = auto_ptr<ResultTreeFragBase>(theFrag);
 #else
 	    m_resultTreeFrag.reset(theFrag);
 #endif
@@ -234,7 +245,7 @@ XNodeSet::rtree() const
 
 		for(int i = 0; i < nNodes; i++)
 		{
-			m_resultTreeFrag->appendChild(m_value.item(i).cloneNode(true));
+			m_resultTreeFrag->appendChild(m_value.item(i)->cloneNode(true));
 		}
 	}
 
@@ -250,12 +261,14 @@ XNodeSet::rtree()
 
 	if (m_resultTreeFrag.get() == 0)
 	{
+		assert(m_envSupport->getDOMFactory() != 0);
+
 		ResultTreeFrag* const	theFrag =
-			new ResultTreeFrag(m_envSupport->getDOMFactory(),
+			new ResultTreeFrag(*m_envSupport->getDOMFactory(),
 							   m_support);
 
 #if defined(XALAN_OLD_AUTO_PTR)
-		m_resultTreeFrag = std::auto_ptr<ResultTreeFragBase>(theFrag);
+		m_resultTreeFrag = auto_ptr<ResultTreeFragBase>(theFrag);
 #else
 	    m_resultTreeFrag.reset(theFrag);
 #endif
@@ -264,7 +277,7 @@ XNodeSet::rtree()
 
 		for(int i = 0; i < nNodes; i++)
 		{
-			m_resultTreeFrag->appendChild(m_value.item(i).cloneNode(true));
+			m_resultTreeFrag->appendChild(m_value.item(i)->cloneNode(true));
 		}
 	}
 
@@ -326,7 +339,8 @@ XNodeSet::equals(const XObject&		theRHS) const
 	if (XObject::eTypeNodeSet == theType)
 	{
 		// See the XPath spec., section 3.4 for an explanation of this lunacy...
-		const int			theLHSLength = m_value.getLength();
+		// $$$ ToDo: This is still not correct.
+		const unsigned int	theLHSLength = m_value.getLength();
 
 		if (theLHSLength > 0)
 		{
@@ -336,14 +350,15 @@ XNodeSet::equals(const XObject&		theRHS) const
 
 			// See if there's at least one pair of nodes in the two nodes sets
 			// whose "string" values are equal...
-			for(int	i = 0; i < theLHSLength && fResult == false; i++)
+			for(unsigned int i = 0; i < theLHSLength && fResult == false; i++)
 			{
-				const DOM_Node	theCurrent(m_value.item(i));
+				const XalanNode* const	theCurrent = m_value.item(i);
+				assert(theCurrent != 0);
 
 				for (int j = 0; j < theRHSLength && fResult == false; j++)
 				{
-					if (::equals(m_support.getNodeData(theCurrent),
-								 m_support.getNodeData(theRHSNodeSet.m_value.item(j))) == true)
+					if (::equals(m_support.getNodeData(*theCurrent),
+								 m_support.getNodeData(*theRHSNodeSet.m_value.item(j))) == true)
 					{
 						fResult = true;
 					}

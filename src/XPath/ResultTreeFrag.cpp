@@ -63,15 +63,11 @@
 
 
 
-#include <Include/DOMHelper.hpp>
-
-
-
 ResultTreeFrag::ResultTreeFrag(
-			const DOM_Document&		theFactory,
-			XPathSupport&			theSupport) :
-	ResultTreeFragBase(theFactory),
-	m_document(theFactory),
+			XalanDocument&	theOwnerDocument,
+			XPathSupport&	theSupport) :
+	ResultTreeFragBase(),
+	m_document(&theOwnerDocument),
 	m_children(&theSupport),
 	m_surrogate(m_children)
 {
@@ -88,11 +84,11 @@ ResultTreeFrag::ResultTreeFrag(const ResultTreeFrag&	theSource,
 {
 	if (deepClone == true)
 	{
-		const int	theLength = theSource.getLength();
+		const int	theLength = theSource.m_children.getLength();
 
 		for (int i = 0; i < theLength; i++)
 		{
-			m_children.addNode(theSource.item(i).cloneNode(true));
+			m_children.addNode(theSource.m_children.item(i)->cloneNode(true));
 		}
 	}
 }
@@ -105,175 +101,90 @@ ResultTreeFrag::~ResultTreeFrag()
 
 
 
-NodeImpl*
-ResultTreeFrag::item(unsigned int	index)
+XalanDOMString
+ResultTreeFrag::getNodeName() const
 {
-	return XALAN_DOM_NodeHack(m_children.item(index)).getImplementationObject();
-};
-
-
-
-unsigned int
-ResultTreeFrag::getLength()
-{
-	return m_children.getLength();
-};
-
-
-
-NodeImpl*
-ResultTreeFrag::appendChild(NodeImpl*	newChild)
-{
-	XALAN_DOM_NodeHack	theHack(newChild);
-
-	theHack = appendChild(theHack);
-
-	return theHack.getImplementationObject();
+	return XalanDOMString();
 }
 
 
 
-void
-ResultTreeFrag::changed()
+XalanDOMString
+ResultTreeFrag::getNodeValue() const
 {
+	return XalanDOMString();
 }
 
 
 
-NodeImpl*
-ResultTreeFrag::cloneNode(bool	deep)
+ResultTreeFrag::NodeType
+ResultTreeFrag::getNodeType() const
 {
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-	return dynamic_cast<ResultTreeFrag*>(clone(deep));
-#else
-	clone(deep);
-#endif
+	return DOCUMENT_FRAGMENT_NODE;
 }
 
 
 
-NamedNodeMapImpl*
-ResultTreeFrag::getAttributes()
+XalanNode*
+ResultTreeFrag::getParentNode() const
 {
 	return 0;
 }
 
 
 
-NodeListImpl*
-ResultTreeFrag::getChildNodes()
+const XalanNodeList*
+ResultTreeFrag::getChildNodes() const
 {
 	return &m_surrogate;
 }
 
 
 
-NodeImpl*
-ResultTreeFrag::getFirstChild()
-{
-	return XALAN_DOM_NodeHack(m_children.item(0)).getImplementationObject();
-}
-
-
-
-NodeImpl*
-ResultTreeFrag::getLastChild()
-{
-	return XALAN_DOM_NodeHack(m_children.item(m_children.getLength() - 1)).getImplementationObject();
-}
-
-
-
-DocumentImpl*
-ResultTreeFrag::getOwnerDocument()
-{
-	XALAN_DOM_NodeHack	theHack(m_document);
-
-	return dynamic_cast<DocumentImpl*>(theHack.getImplementationObject());
-}
-
-
-
-bool
-ResultTreeFrag::hasChildNodes()
-{
-	return const_cast<const ResultTreeFrag*>(this)->hasChildNodes();
-}
-
-
-
-NodeImpl*
-ResultTreeFrag::insertBefore(
-			NodeImpl*	newChild,
-			NodeImpl*	refChild)
-{
-	XALAN_DOM_NodeHack	theHack(insertBefore(XALAN_DOM_NodeHack(newChild),
-											 XALAN_DOM_NodeHack(refChild)));
-
-	return theHack.getImplementationObject();
-}
-
-
-
-NodeImpl*
-ResultTreeFrag::removeChild(NodeImpl*	oldChild)
-{
-	XALAN_DOM_NodeHack	theHack(removeChild(XALAN_DOM_NodeHack(oldChild)));
-
-	return theHack.getImplementationObject();
-}
-
-
-
-NodeImpl*
-ResultTreeFrag::replaceChild(
-			NodeImpl*	newChild,
-			NodeImpl*	oldChild)
-{
-	XALAN_DOM_NodeHack	theHack(replaceChild(XALAN_DOM_NodeHack(newChild),
-											 XALAN_DOM_NodeHack(oldChild)));
-
-	return theHack.getImplementationObject();
-}
-
-
-
-void
-ResultTreeFrag::setReadOnly(
-			bool	/* readOnly */,
-			bool	/* deep */)
-{
-}
-
-
-DOMString
-toString()
-{
-	// $$$ ToTo: Fix this!!!
-	return DOMString();
-}
-
-
-
-DOM_Node
+XalanNode*
 ResultTreeFrag::getFirstChild() const
 {
-	return m_children.getLength() > 0 ? m_children.item(0) : DOM_Node();
+	return m_children.getLength() == 0 ? 0 : m_children.item(0);
 }
 
 
 
-DOM_Node
+XalanNode*
 ResultTreeFrag::getLastChild() const
 {
-	const int	theLength = m_children.getLength();
+	const unsigned int	theLength = m_children.getLength();
+	
 
-	return  theLength > 0 ? m_children.item(theLength - 1) : DOM_Node();
+	return theLength == 0 ? 0 : m_children.item(theLength - 1);
 }
 
 
 
-DOM_Document
+XalanNode*
+ResultTreeFrag::getPreviousSibling() const
+{
+	return 0;
+}
+
+
+
+XalanNode*
+ResultTreeFrag::getNextSibling() const
+{
+	return 0;
+}
+
+
+
+const XalanNamedNodeMap*
+ResultTreeFrag::getAttributes() const
+{
+	return 0;
+}
+
+
+
+XalanDocument*
 ResultTreeFrag::getOwnerDocument() const
 {
 	return m_document;
@@ -281,15 +192,32 @@ ResultTreeFrag::getOwnerDocument() const
 
 
 
-DOM_Node
-ResultTreeFrag::insertBefore(
-			const DOM_Node&		newChild, 
-			const DOM_Node&		refChild)
+#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
+XalanNode*
+#else
+ResultTreeFrag*
+#endif
+ResultTreeFrag::cloneNode(bool	deep) const
 {
-	const int	refIndex = 0 == refChild ? m_children.getLength() :
+#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
+	return new ResultTreeFrag(*this,
+							  deep);
+#else
+	return clone(deep);
+#endif
+}
+
+
+
+XalanNode*
+ResultTreeFrag::insertBefore(
+			XalanNode*	newChild,
+			XalanNode*	refChild)
+{
+	const unsigned int	refIndex = 0 == refChild ? m_children.getLength() :
 										   m_children.indexOf(refChild);
 
-	assert(refIndex >= 0);
+	assert(refIndex != m_children.npos);
 
 	m_children.insertNode(newChild, refIndex);
 
@@ -298,23 +226,23 @@ ResultTreeFrag::insertBefore(
 
 
 
-DOM_Node
+XalanNode*
 ResultTreeFrag::replaceChild(
-			const DOM_Node&		newChild,
-			const DOM_Node&		oldChild)
+			XalanNode*	newChild,
+			XalanNode*	oldChild)
 {
-	const int	refIndex =
-		0 == oldChild ? -1 : m_children.indexOf(oldChild);
+	const unsigned int	refIndex =
+		0 == oldChild ? m_children.npos : m_children.indexOf(oldChild);
 
-	if(refIndex > -1)
+	if(refIndex != m_children.npos)
 	{
-		const int	newChildIndex = m_children.indexOf(newChild);
+		const unsigned int	newChildIndex = m_children.indexOf(newChild);
 
 		// Set the new child first, then erase it from
 		// the old position. if it's there.
 		m_children.setNode(refIndex, newChild);
 
-		if(newChildIndex > -1)
+		if(newChildIndex != m_children.npos)
 		{
 			m_children.removeNode(newChildIndex);
 		}
@@ -325,32 +253,27 @@ ResultTreeFrag::replaceChild(
 
 
 
-DOM_Node
-ResultTreeFrag::removeChild(const DOM_Node&		oldChild)
+XalanNode*
+ResultTreeFrag::appendChild(XalanNode*	newChild)
 {
-	m_children.removeNode(oldChild);
+	assert(newChild != 0);
 
-	return oldChild;
-}
-
-
-
-DOM_Node
-ResultTreeFrag::appendChild(const DOM_Node&		newChild)
-{
 	m_children.addNode(newChild);
+	assert(m_children.item(m_children.getLength() - 1) == newChild);
 
 	return newChild;
 }
 
 
 
-const NodeRefListBase&
-ResultTreeFrag::getChildNodesAsNodeRefList() const
+XalanNode*
+ResultTreeFrag::removeChild(XalanNode*	oldChild)
 {
-	return m_children;
-}
+	m_children.removeNode(oldChild);
+	assert(m_children.indexOf(oldChild) == m_children.npos);
 
+	return oldChild;
+}
 
 
 bool
@@ -361,30 +284,54 @@ ResultTreeFrag::hasChildNodes() const
 
 
 
-unsigned int
-ResultTreeFrag::getLength() const
+void
+ResultTreeFrag::setNodeValue(const XalanDOMString&	/* nodeValue */)
 {
-	return m_children.getLength();
-};
+}
 
 
 
-DOM_Node
-ResultTreeFrag::item(unsigned int	index) const
+void
+ResultTreeFrag::normalize()
 {
-	return m_children.item(index);
-};
+}
 
 
 
-DOM_Node
-ResultTreeFrag::cloneNode(bool	deep) const
+bool
+ResultTreeFrag::supports(
+			const XalanDOMString&	/* feature */,
+			const XalanDOMString&	/* version */) const
 {
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-	return DOM_ResultTreeFragBase(dynamic_cast<ResultTreeFrag*>(clone(deep)));
-#else
-	return DOM_ResultTreeFragBase(clone(deep));
-#endif
+	return false;
+}
+
+
+
+XalanDOMString
+ResultTreeFrag::getNamespaceURI() const
+{
+	return XalanDOMString();
+}
+
+
+XalanDOMString
+ResultTreeFrag::getPrefix() const
+{
+	return XalanDOMString();
+}
+
+
+XalanDOMString
+ResultTreeFrag::getLocalName() const
+{
+	return XalanDOMString();
+}
+
+
+void
+ResultTreeFrag::setPrefix(const XalanDOMString&		/* prefix */)
+{
 }
 
 
@@ -396,14 +343,5 @@ ResultTreeFrag*
 #endif
 ResultTreeFrag::clone(bool	deep) const
 {
-	return new ResultTreeFrag(*this,
-							  deep);
-}
-
-
-
-DOMString
-ResultTreeFrag::toString()
-{
-	return DOMString();
+	return new ResultTreeFrag(*this, deep);
 }

@@ -73,39 +73,38 @@
 
 
 
-static const char* const	FROM_ANCESTORS_STRING = "ancestor";
-static const char* const	FROM_ANCESTORS_OR_SELF_STRING = "ancestor-or-self";
-static const char* const	FROM_ATTRIBUTES_STRING = "attribute";
-static const char* const	FROM_CHILDREN_STRING = "child";
-static const char* const	FROM_DESCENDANTS_STRING = "descendant";
-static const char* const	FROM_DESCENDANTS_OR_SELF_STRING = "descendant-or-self";
-static const char* const	FROM_FOLLOWING_STRING = "following";
-static const char* const	FROM_FOLLOWING_SIBLINGS_STRING = "following-sibling";
-static const char* const	FROM_PARENT_STRING = "parent";
-static const char* const	FROM_PRECEDING_STRING = "preceding";
-static const char* const	FROM_PRECEDING_SIBLINGS_STRING = "preceding-sibling";
-static const char* const	FROM_SELF_STRING = "self";
-static const char* const	FROM_SELF_ABBREVIATED_STRING = ".";
-static const char* const	FROM_NAMESPACE_STRING = "namespace";
+static XalanDOMString	FROM_ANCESTORS_STRING(XALAN_STATIC_UCODE_STRING("ancestor"));
+static XalanDOMString	FROM_ANCESTORS_OR_SELF_STRING(XALAN_STATIC_UCODE_STRING("ancestor-or-self"));
+static XalanDOMString	FROM_ATTRIBUTES_STRING(XALAN_STATIC_UCODE_STRING("attribute"));
+static XalanDOMString	FROM_CHILDREN_STRING(XALAN_STATIC_UCODE_STRING("child"));
+static XalanDOMString	FROM_DESCENDANTS_STRING(XALAN_STATIC_UCODE_STRING("descendant"));
+static XalanDOMString	FROM_DESCENDANTS_OR_SELF_STRING(XALAN_STATIC_UCODE_STRING("descendant-or-self"));
+static XalanDOMString	FROM_FOLLOWING_STRING(XALAN_STATIC_UCODE_STRING("following"));
+static XalanDOMString	FROM_FOLLOWING_SIBLINGS_STRING(XALAN_STATIC_UCODE_STRING("following-sibling"));
+static XalanDOMString	FROM_PARENT_STRING(XALAN_STATIC_UCODE_STRING("parent"));
+static XalanDOMString	FROM_PRECEDING_STRING(XALAN_STATIC_UCODE_STRING("preceding"));
+static XalanDOMString	FROM_PRECEDING_SIBLINGS_STRING(XALAN_STATIC_UCODE_STRING("preceding-sibling"));
+static XalanDOMString	FROM_SELF_STRING(XALAN_STATIC_UCODE_STRING("self"));
+static XalanDOMString	FROM_SELF_ABBREVIATED_STRING(XALAN_STATIC_UCODE_STRING("."));
+static XalanDOMString	FROM_NAMESPACE_STRING(XALAN_STATIC_UCODE_STRING("namespace"));
 
 // This shouldn't really be here, since it duplicates a string that is part
 // of the information that is maintained by the class XPathFunctionTable,
 // but this is a reasonable optimization.
-static const char* const	FUNC_ID_STRING = "id";
+static XalanDOMString	FUNC_ID_STRING(XALAN_STATIC_UCODE_STRING("id"));
 
 
 // These shouldn't really be here, since they are not part of the XPath standard,
 // but rather a part ofthe XSLT standard.
-static const char* const	FUNC_KEY_STRING = "key";
-static const char* const	FUNC_DOC_STRING = "doc";
-static const char* const	FUNC_DOCUMENT_STRING = "document";
+static XalanDOMString	FUNC_KEY_STRING(XALAN_STATIC_UCODE_STRING("key"));
+static XalanDOMString	FUNC_DOC_STRING(XALAN_STATIC_UCODE_STRING("doc"));
+static XalanDOMString	FUNC_DOCUMENT_STRING(XALAN_STATIC_UCODE_STRING("document"));
 
-
-static const char* const	NODETYPE_COMMENT_STRING = "comment";
-static const char* const	NODETYPE_TEXT_STRING = "text";
-static const char* const	NODETYPE_PI_STRING = "processing-instruction";
-static const char* const	NODETYPE_NODE_STRING = "node";
-static const char* const	NODETYPE_ANYELEMENT_STRING = "*";
+static XalanDOMString	NODETYPE_COMMENT_STRING(XALAN_STATIC_UCODE_STRING("comment"));
+static XalanDOMString	NODETYPE_TEXT_STRING(XALAN_STATIC_UCODE_STRING("text"));
+static XalanDOMString	NODETYPE_PI_STRING(XALAN_STATIC_UCODE_STRING("processing-instruction"));
+static XalanDOMString	NODETYPE_NODE_STRING(XALAN_STATIC_UCODE_STRING("node"));
+static XalanDOMString	NODETYPE_ANYELEMENT_STRING(XALAN_STATIC_UCODE_STRING("*"));
 
 
 
@@ -140,7 +139,7 @@ XPathProcessorImpl::~XPathProcessorImpl()
 void
 XPathProcessorImpl::initXPath(
 			XPath&						pathObj,
-			const DOMString&			expression,
+			const XalanDOMString&		expression,
 			const PrefixResolver&		prefixResolver,
 			XObjectFactory&				xobjectFactory,
 			const XPathEnvSupport&		envSupport)
@@ -171,7 +170,7 @@ XPathProcessorImpl::initXPath(
 void
 XPathProcessorImpl::initMatchPattern(
 			XPath&					pathObj,
-			const DOMString&		expression,
+			const XalanDOMString&	expression,
 			const PrefixResolver&	prefixResolver,
 			XObjectFactory&			xobjectFactory,
 			const XPathEnvSupport&	envSupport)
@@ -207,8 +206,8 @@ XPathProcessorImpl::initMatchPattern(
 
 void
 XPathProcessorImpl::tokenize(
-			const DOMString&			pat,
-			std::vector<DOMString>* 	targetStrings)
+			const XalanDOMString&			pat,
+			std::vector<XalanDOMString>* 	targetStrings)
 {
 	m_expression->setCurrentPattern(pat);
 
@@ -228,7 +227,7 @@ XPathProcessorImpl::tokenize(
 	// char[] chars = pat.toCharArray();
 	for(int i = 0; i < nChars; i++)
 	{
-		XMLCh	c = charAt(pat, i);
+		XalanDOMChar	c = charAt(pat, i);
 
 		switch(c)
 		{
@@ -513,7 +512,7 @@ XPathProcessorImpl::mapPatternElemPos(
 
 
 void
-XPathProcessorImpl::recordTokenString(std::vector<DOMString>&	targetStrings)
+XPathProcessorImpl::recordTokenString(std::vector<XalanDOMString>&	targetStrings)
 {
 	assert(m_expression != 0);
 
@@ -580,7 +579,7 @@ XPathProcessorImpl::recordTokenString(std::vector<DOMString>&	targetStrings)
 
 
 void
-XPathProcessorImpl::addToTokenQueue(const DOMString&		s) const
+XPathProcessorImpl::addToTokenQueue(const XalanDOMString&	s) const
 {
 	assert(m_xpath != 0);
 	assert(m_expression != 0);
@@ -593,25 +592,25 @@ XPathProcessorImpl::addToTokenQueue(const DOMString&		s) const
 
 int
 XPathProcessorImpl::mapNSTokens(
-			const DOMString&	pat,
-			int 				startSubstring,
-			int 				posOfNSSep,
-			int 				posOfScan) const
+			const XalanDOMString&	pat,
+			int 					startSubstring,
+			int 					posOfNSSep,
+			int 					posOfScan) const
 {
 	assert(m_prefixResolver != 0);
 
-	const DOMString 	prefix = substring(pat, startSubstring, posOfNSSep);
+	const XalanDOMString 	prefix = substring(pat, startSubstring, posOfNSSep);
 
-	const DOMString 	uName =
+	const XalanDOMString 	uName =
 				m_prefixResolver->getNamespaceForPrefix(prefix);
 
 	if(length(uName) > 0)
 	{
 		addToTokenQueue(uName);
 
-		addToTokenQueue(":");
+		addToTokenQueue(XALAN_STATIC_UCODE_STRING(":"));
 
-		const DOMString 	s = substring(pat, posOfNSSep + 1, posOfScan);
+		const XalanDOMString 	s = substring(pat, posOfNSSep + 1, posOfScan);
 	  
 		if(length(s) > 0)
 		{
@@ -620,12 +619,12 @@ XPathProcessorImpl::mapNSTokens(
 	}
 	else
 	{
-		// error(DOMString("Could not locate namespace for prefix: ") + prefix);
+		// error(XalanDOMString("Could not locate namespace for prefix: ") + prefix);
 		addToTokenQueue(prefix);
 
-		addToTokenQueue(":");
+		addToTokenQueue(XALAN_STATIC_UCODE_STRING(":"));
 
-		const DOMString 	s = substring(pat, posOfNSSep + 1, posOfScan);
+		const XalanDOMString 	s = substring(pat, posOfNSSep + 1, posOfScan);
 
 		if(s.length() > 0)
 		{
@@ -651,7 +650,15 @@ XPathProcessorImpl::getTokenQueuePosFromMap(int 	i) const
 
 
 bool
-XPathProcessorImpl::tokenIs(const char* 	s) const
+XPathProcessorImpl::tokenIs(const XalanDOMString&	s) const
+{
+	return equals(m_token, s);
+}
+
+
+
+bool
+XPathProcessorImpl::tokenIs(const XalanDOMChar*		s) const
 {
 	return equals(m_token, s);
 }
@@ -661,7 +668,7 @@ XPathProcessorImpl::tokenIs(const char* 	s) const
 bool
 XPathProcessorImpl::tokenIs(char	c) const
 {
-	return m_tokenChar == static_cast<XMLCh>(c) ? true : false;
+	return m_tokenChar == c ? true : false;
 }
 
 
@@ -671,7 +678,7 @@ XPathProcessorImpl::lookahead(
 			char	c,
 			int 	n) const
 {
-	const DOMString 	tok =
+	const XalanDOMString 	tok =
 		getTokenRelative(n - 1);
 
 	if (length(tok) == 1 &&
@@ -689,10 +696,25 @@ XPathProcessorImpl::lookahead(
 
 bool
 XPathProcessorImpl::lookahead(
-			const char* 	s,
-			int 			n) const
+			const XalanDOMChar* 	s,
+			int 					n) const
 {
-	const DOMString 	tok =
+	assert(s != 0);
+
+	const XalanDOMString 	tok =
+		getTokenRelative(n - 1);
+
+	return equals(tok, s);
+}
+
+
+
+bool
+XPathProcessorImpl::lookahead(
+			const XalanDOMString&	s,
+			int						n) const
+{
+	const XalanDOMString 	tok =
 		getTokenRelative(n - 1);
 
 	return equals(tok, s);
@@ -705,7 +727,7 @@ XPathProcessorImpl::lookbehind(
 			char	c,
 			int 	n) const
 {
-	const DOMString 	tok =
+	const XalanDOMString 	tok =
 		getTokenRelative(-(n + 1));
 
 	if (length(tok) == 1 &&
@@ -724,10 +746,10 @@ XPathProcessorImpl::lookbehind(
 bool
 XPathProcessorImpl::lookbehindHasToken(int	n) const
 {
-	const DOMString 	tok =
+	const XalanDOMString 	tok =
 		getTokenRelative(-(n + 1));
 
-	const XMLCh 		c0 = length(tok) == 0 ? '|' : charAt(tok, 0);
+	const XalanDOMChar 		c0 = length(tok) == 0 ? '|' : charAt(tok, 0);
 
 	return c0 == '|' ? false : true;
 }
@@ -742,7 +764,7 @@ XPathProcessorImpl::nextToken()
 	const XObject* const	theNextToken =
 			m_expression->getNextToken();
 
-	m_token = theNextToken == 0 ? "" : theNextToken->str();
+	m_token = theNextToken == 0 ? XalanDOMString() : theNextToken->str();
 
 	if(length(m_token) > 0)
 	{
@@ -764,7 +786,7 @@ XPathProcessorImpl::prevToken()
 	const XObject* const	thePreviousToken =
 			m_expression->getPreviousToken();
 
-	m_token = thePreviousToken == 0 ? "" : thePreviousToken->str();
+	m_token = thePreviousToken == 0 ? XalanDOMString() : thePreviousToken->str();
 
 	if(length(m_token) > 0)
 	{
@@ -778,7 +800,7 @@ XPathProcessorImpl::prevToken()
 
 
 
-DOMString
+XalanDOMString
 XPathProcessorImpl::getTokenRelative(int	theOffset) const
 {
 	assert(m_expression != 0);
@@ -786,7 +808,7 @@ XPathProcessorImpl::getTokenRelative(int	theOffset) const
 	const XObject* const	theToken =
 		m_expression->getRelativeToken(theOffset);
 
-	return theToken == 0 ? DOMString() : theToken->str();
+	return theToken == 0 ? XalanDOMString() : theToken->str();
 }
 
 
@@ -810,9 +832,9 @@ XPathProcessorImpl::consumeExpected(const char* 	expected)
 	}
 	else
 	{
-		error(DOMString("Expected ") +
-			  DOMString(expected) +
-			  DOMString(", but found: ") +
+		error(XalanDOMString("Expected ") +
+			  XalanDOMString(expected) +
+			  XalanDOMString(", but found: ") +
 			  m_token);
 	}
 }
@@ -828,7 +850,7 @@ XPathProcessorImpl::consumeExpected(char	expected)
 	}
 	else
 	{
-		DOMString	theMsg("Expected ");
+		XalanDOMString	theMsg("Expected ");
 
 		theMsg += expected;
 		theMsg += ", but found: ";
@@ -842,8 +864,8 @@ XPathProcessorImpl::consumeExpected(char	expected)
 
 void
 XPathProcessorImpl::warn(
-			const DOMString&	msg,
-			const DOM_Node& 	sourceNode) const
+			const XalanDOMString&	msg,
+			XalanNode* 				sourceNode) const
 {
 	assert(m_envSupport != 0);
 
@@ -866,10 +888,10 @@ XPathProcessorImpl::warn(
 
 void
 XPathProcessorImpl::error(
-			const DOMString&	msg,
-			const DOM_Node&		sourceNode) const
+			const XalanDOMString&	msg,
+			XalanNode*				sourceNode) const
 {
-	DOMString	emsg;
+	XalanDOMString	emsg;
 
 	if (m_expression == 0)
 	{
@@ -877,14 +899,14 @@ XPathProcessorImpl::error(
 	}
 	else
 	{
-		const DOMString&	theCurrentPattern =
+		const XalanDOMString&	theCurrentPattern =
 				m_expression->getCurrentPattern();
 
 		DOMStringPrintWriter	thePrintWriter;
 
 		if (length(theCurrentPattern) != 0)
 		{
-			thePrintWriter.print("pattern = '");
+			thePrintWriter.print(XALAN_STATIC_UCODE_STRING("pattern = '"));
 			thePrintWriter.println(theCurrentPattern);
 		}
 
@@ -915,7 +937,7 @@ XPathProcessorImpl::error(
 
   
 int
-XPathProcessorImpl::getKeywordToken(const DOMString&	key) const
+XPathProcessorImpl::getKeywordToken(const XalanDOMString&	key) const
 {
 	KeywordsMapType::const_iterator 	i =
 		s_keywords.find(key);
@@ -933,7 +955,7 @@ XPathProcessorImpl::getKeywordToken(const DOMString&	key) const
 
 
 int
-XPathProcessorImpl::getFunctionToken(const DOMString&	key) const
+XPathProcessorImpl::getFunctionToken(const XalanDOMString&	key) const
 {
 	FunctionNameMapType::const_iterator 	i = s_functions.find(key);
 
@@ -964,7 +986,7 @@ XPathProcessorImpl::OrExpr()
 
 	AndExpr();
 
-	if(tokenIs("or") == true)
+	if(tokenIs(XALAN_STATIC_UCODE_STRING("or")) == true)
 	{
 		nextToken();
 
@@ -987,7 +1009,7 @@ XPathProcessorImpl::AndExpr()
 
 	EqualityExpr();
 
-	if(tokenIs("and") == true)
+	if(tokenIs(XALAN_STATIC_UCODE_STRING("and")) == true)
 	{
 		nextToken();
 
@@ -1236,15 +1258,15 @@ XPathProcessorImpl::MultiplicativeExpr(int	opCodePos)
 		{
 			theOpCode = XPathExpression::eOP_MULT;
 		}
-		else if(tokenIs("div") == true)
+		else if(tokenIs(XALAN_STATIC_UCODE_STRING("div")) == true)
 		{
 			theOpCode = XPathExpression::eOP_DIV;
 		}
-		else if(tokenIs("mod") == true)
+		else if(tokenIs(XALAN_STATIC_UCODE_STRING("mod")) == true)
 		{
 			theOpCode = XPathExpression::eOP_MOD;
 		}
-		else if(tokenIs("quo") == true)
+		else if(tokenIs(XALAN_STATIC_UCODE_STRING("quo")) == true)
 		{
 			theOpCode = XPathExpression::eOP_QUO;
 		}
@@ -1596,9 +1618,9 @@ XPathProcessorImpl::FunctionCall()
 	{
 		if (isValidFunction(m_token) == false)
 		{
-			warn(DOMString("Could not find function: ") +
+			warn(XalanDOMString("Could not find function: ") +
 				 m_token +
-				 DOMString("()"));
+				 XalanDOMString("()"));
 		}
 
 		// $$$ ToDo: I believe that this is XSLT functionality.  We
@@ -1732,7 +1754,7 @@ XPathProcessorImpl::Step()
 {
 	const int	opPos = m_expression->opCodeMapLength();
 
-	if(tokenIs(".") == true)
+	if(tokenIs('.') == true)
 	{
 		nextToken();
 
@@ -1751,7 +1773,7 @@ XPathProcessorImpl::Step()
 
 		m_expression->appendOpCode(XPathExpression::eNODETYPE_NODE);
 	}
-	else if(tokenIs("..") == true)
+	else if(tokenIs(XALAN_STATIC_UCODE_STRING("..")) == true)
 	{
 		nextToken();
 
@@ -1790,7 +1812,7 @@ XPathProcessorImpl::Basis()
 	const int	opPos = m_expression->opCodeMapLength();
 	
 	// The next blocks guarantee that a FROM_XXX will be added.
-	if(lookahead("::", 1) == true)
+	if(lookahead(XALAN_STATIC_UCODE_STRING("::"), 1) == true)
 	{
 		AxisName();
 
@@ -1855,7 +1877,7 @@ XPathProcessorImpl::AxisName()
 
 	if (i == s_axisNames.end())
 	{
-		error(DOMString("illegal axis name: ") +
+		error(XalanDOMString("illegal axis name: ") +
 			  m_token);
 	}
 	else
@@ -1879,7 +1901,7 @@ XPathProcessorImpl::NodeTest()
 
 		if (i == s_nodeTypes.end())
 		{
-			error(DOMString("Unknown nodetype: ") +
+			error(XalanDOMString("Unknown nodetype: ") +
 				  m_token);
 		}
 		else
@@ -2020,8 +2042,8 @@ XPathProcessorImpl::Literal()
 
 	assert(last > 0);
 
-	const XMLCh 	c0 = m_tokenChar;
-	const XMLCh 	cX = charAt(m_token, last);
+	const XalanDOMChar 	c0 = m_tokenChar;
+	const XalanDOMChar 	cX = charAt(m_token, last);
 
 	if((c0 == '\"' && cX == '\"') ||
 	   (c0 == '\'' && cX == '\''))
@@ -2035,9 +2057,9 @@ XPathProcessorImpl::Literal()
 	}
 	else
 	{
-		error(DOMString("Pattern literal (") +
+		error(XalanDOMString("Pattern literal (") +
 			  m_token +
-			  DOMString(") needs to be quoted!"));
+			  XalanDOMString(") needs to be quoted!"));
 	}
 }
   
@@ -2239,7 +2261,7 @@ XPathProcessorImpl::AbbreviatedNodeTestStep()
 
 
 bool
-XPathProcessorImpl::isValidFunction(const DOMString&	key) const
+XPathProcessorImpl::isValidFunction(const XalanDOMString&	key) const
 {
 	bool	fResult = true;
 
@@ -2253,844 +2275,6 @@ XPathProcessorImpl::isValidFunction(const DOMString&	key) const
 
 	return fResult;
 }
-
-
-
-#if 0
-  // ============= GRAMMAR FUNCTIONS =================
-  private void ____DIAGNOSTIC_FUNCTIONS____(){}
-
-  public static void diagnoseXPathString( String str )	  
-  {    
-	XPathSupport callbacks = new XPathSupportDefault();
-	XPathProcessorImpl processor = new XPathProcessorImpl(callbacks);
-	XPath xpath = new XPath(callbacks);
-	processor.initXPath(xpath, str, null);
-	processor.diagnoseXPath(xpath, 0, 0);
-  }
-
-  static int diagnoseXPathBinaryOperation(String op, XPath xpath, int opPos, int indent)
-  {
-	System.out.println(op+" {");
-	opPos+=2;
-	
-	opPos = diagnoseXPath(xpath, opPos, indent+1);
-	
-	opPos = diagnoseXPath(xpath, opPos, indent+1);
-	
-	indent(indent);
-	System.out.println("}");
-	return opPos;
-  }
-
-  static int diagnoseXPathUnaryOperation(String op, XPath xpath, int opPos, int indent)
-  {
-	System.out.println(op+" {");
-	opPos+=2;
-	opPos = diagnoseXPath(xpath, opPos, indent+1);
-	indent(indent);
-	System.out.println("}");
-	return opPos;
-  }
-
-  static int diagnoseXPathMultiOperation(String op, int multiOp, XPath xpath, int opPos, int indent)
-  {
-	System.out.println(op+" {");
-	opPos+=2;
-	while(xpath.m_opMap[opPos] == multiOp)
-	{
-	  indent(indent+1);
-	  System.out.println("{");
-	  opPos = diagnoseXPath(xpath, opPos, indent+2);
-	  indent(indent+1);
-	  System.out.println("}");
-	}
-	indent(indent);
-	System.out.println("}");
-	return opPos;
-  }
-  
-  static int diagnoseToken(XPath xpath, int opPos)
-  {
-	System.out.print("{");
-	System.out.print(xpath.m_tokenQueue[xpath.m_opMap[opPos]]);
-	System.out.print("}");
-	return opPos+1;
-  }
-
-  static int diagnoseXPathSimpleOperation(String op, XPath xpath, int opPos, int indent)
-  {
-	opPos+=2;
-	System.out.print(op);
-	opPos = diagnoseToken(xpath, opPos);
-	System.out.println("");
-	return opPos;
-  }
-
-  static int diagnoseXPathLocationStep(String op, XPath xpath, int opPos, int indent)
-  {
-	// int opLen = xpath.m_opMap[opPos+xpath.MAPINDEX_LENGTH];
-	int stepLen = xpath.m_opMap[opPos+xpath.MAPINDEX_LENGTH+1];
-	opPos+=3;
-	System.out.print(op);
-	if(stepLen > 3)
-	{
-	  opPos = diagnoseXPath(xpath, opPos, 1);
-	}
-	System.out.println("");
-	return opPos;
-  }
-
-  static int diagnoseXPath(XPath xpath, int opPos, int indent)
-  {
-	indent(indent);
-	switch(xpath.m_opMap[opPos])
-	{
-	case xpath.OP_XPATH:
-	  opPos = diagnoseXPathUnaryOperation("OP_XPATH", xpath, opPos, indent);
-	  break;
-	case xpath.EMPTY:
-	  System.out.println("{EMPTY}");
-	  opPos++;
-	  break;
-	case xpath.OP_OR:
-	  opPos = diagnoseXPathBinaryOperation("OP_OR", xpath, opPos, indent);
-	  break;
-	case xpath.OP_AND:
-	  opPos = diagnoseXPathBinaryOperation("OP_AND", xpath, opPos, indent);
-	  break;
-	case xpath.OP_NOTEQUALS:
-	  opPos = diagnoseXPathBinaryOperation("OP_NOTEQUALS", xpath, opPos, indent);
-	  break;
-	case xpath.OP_EQUALS:
-	  opPos = diagnoseXPathBinaryOperation("OP_EQUALS", xpath, opPos, indent);
-	  break;
-	case xpath.OP_LTE:
-	  opPos = diagnoseXPathBinaryOperation("OP_LTE", xpath, opPos, indent);
-	  break;
-	case xpath.OP_LT:
-	  opPos = diagnoseXPathBinaryOperation("OP_LT", xpath, opPos, indent);
-	  break;
-	case xpath.OP_GTE:
-	  opPos = diagnoseXPathBinaryOperation("OP_GTE", xpath, opPos, indent);
-	  break;
-	case xpath.OP_GT:
-	  opPos = diagnoseXPathBinaryOperation("OP_GT", xpath, opPos, indent);
-	  break;
-	case xpath.OP_PLUS:
-	  opPos = diagnoseXPathBinaryOperation("OP_PLUS", xpath, opPos, indent);
-	  break;
-	case xpath.OP_MINUS:
-	  opPos = diagnoseXPathBinaryOperation("OP_MINUS", xpath, opPos, indent);
-	  break;
-	case xpath.OP_MULT:
-	  opPos = diagnoseXPathBinaryOperation("OP_MULT", xpath, opPos, indent);
-	  break;
-	case xpath.OP_DIV:
-	  opPos = diagnoseXPathBinaryOperation("OP_DIV", xpath, opPos, indent);
-	  break;
-	case xpath.OP_MOD:
-	  opPos = diagnoseXPathBinaryOperation("OP_MOD", xpath, opPos, indent);
-	  break;
-	case xpath.OP_QUO:
-	  opPos = diagnoseXPathBinaryOperation("OP_QUO", xpath, opPos, indent);
-	  break;
-	case xpath.OP_NEG:
-	  opPos = diagnoseXPathUnaryOperation("OP_NEG", xpath, opPos, indent);
-	  break;
-	case xpath.OP_STRING:
-	  opPos = diagnoseXPathUnaryOperation("OP_STRING", xpath, opPos, indent);
-	  break;
-	case xpath.OP_BOOL:
-	  opPos = diagnoseXPathUnaryOperation("OP_BOOL", xpath, opPos, indent);
-	  break;
-	case xpath.OP_NUMBER:
-	  opPos = diagnoseXPathUnaryOperation("OP_NUMBER", xpath, opPos, indent);
-	  break;
-	case xpath.OP_UNION:
-	  opPos = diagnoseXPathMultiOperation("OP_UNION", xpath.OP_LOCATIONPATH, xpath, opPos, indent);
-	  break;
-	case xpath.OP_LITERAL:
-	  opPos = diagnoseXPathSimpleOperation("OP_LITERAL", xpath, opPos, indent);
-	  break;
-	case xpath.OP_VARIABLE:
-	  opPos = diagnoseXPathSimpleOperation("OP_VARIABLE", xpath, opPos, indent);
-	  break;
-	case xpath.OP_GROUP:
-	  opPos = diagnoseXPathUnaryOperation("OP_GROUP", xpath, opPos, indent);
-	  break;
-	case xpath.OP_NUMBERLIT:
-	  opPos = diagnoseXPathSimpleOperation("OP_NUMBERLIT", xpath, opPos, indent);
-	  break;
-	case xpath.OP_ARGUMENT:
-	  opPos = diagnoseXPathUnaryOperation("OP_ARGUMENT", xpath, opPos, indent);
-	  break;
-	case xpath.OP_EXTFUNCTION:
-	  {
-		System.out.println("OP_EXTFUNCTION {");
-		int endExtFunc = opPos+xpath.m_opMap[opPos+1]-1;
-		opPos+=2;
-		indent(indent+1);
-		opPos = diagnoseToken(xpath, opPos);
-		System.out.print(":");
-		opPos = diagnoseToken(xpath, opPos);
-		System.out.println("");
-		while(opPos < endExtFunc)
-		{
-		  indent(indent+1);
-		  System.out.println("{");
-		  opPos = diagnoseXPath(xpath, opPos, indent+2);
-		  indent(indent+1);
-		  System.out.println("}");
-		}
-		indent(indent);
-		System.out.println("}");
-		if(xpath.m_opMap[opPos] != xpath.ENDOP)
-		{
-		  System.out.println("ERROR! Could not find ENDOP after OP_LOCATIONPATH");
-		}
-		opPos++;
-	  }
-	  break;
-	case xpath.OP_FUNCTION:
-	  {
-		System.out.println("OP_FUNCTION {");
-		int endFunc = opPos+xpath.m_opMap[opPos+1]-1;
-		opPos+=2;
-		indent(indent+1);
-		int funcID = xpath.m_opMap[opPos];
-		switch(funcID)
-		{
-		case xpath.FUNC_LAST: System.out.print("FUNC_LAST"); break;
-		case xpath.FUNC_POSITION: System.out.print("FUNC_POSITION"); break;
-		case xpath.FUNC_COUNT: System.out.print("FUNC_COUNT"); break;
-		case xpath.FUNC_ID: System.out.print("FUNC_ID"); break;
-		case xpath.FUNC_KEY: System.out.print("FUNC_KEY"); break;
-		case xpath.FUNC_DOC: System.out.print("FUNC_DOC"); break;
-		case xpath.FUNC_LOCAL_PART: System.out.print("FUNC_LOCAL_PART"); break;
-		case xpath.FUNC_NAMESPACE: System.out.print("FUNC_NAMESPACE"); break;
-		case xpath.FUNC_QNAME: System.out.print("FUNC_QNAME"); break;
-		case xpath.FUNC_GENERATE_ID: System.out.print("FUNC_GENERATE_ID"); break;
-		case xpath.FUNC_NOT: System.out.print("FUNC_NOT"); break;
-		case xpath.FUNC_TRUE: System.out.print("FUNC_TRUE"); break;
-		case xpath.FUNC_FALSE: System.out.print("FUNC_FALSE"); break;
-		case xpath.FUNC_BOOLEAN: System.out.print("FUNC_BOOLEAN"); break;
-		case xpath.FUNC_LANG: System.out.print("FUNC_LANG"); break;
-		case xpath.FUNC_NUMBER: System.out.print("FUNC_NUMBER"); break;
-		case xpath.FUNC_FLOOR: System.out.print("FUNC_FLOOR"); break;
-		case xpath.FUNC_CEILING: System.out.print("FUNC_CEILING"); break;
-		case xpath.FUNC_ROUND: System.out.print("FUNC_ROUND"); break;
-		case xpath.FUNC_SUM: System.out.print("FUNC_SUM"); break;
-		case xpath.FUNC_STRING: System.out.print("FUNC_STRING"); break;
-		case xpath.FUNC_STARTS_WITH: System.out.print("FUNC_STARTS_WITH"); break;
-		case xpath.FUNC_CONTAINS: System.out.print("FUNC_CONTAINS"); break;
-		case xpath.FUNC_SUBSTRING_BEFORE: System.out.print("FUNC_SUBSTRING_BEFORE"); break;
-		case xpath.FUNC_SUBSTRING_AFTER: System.out.print("FUNC_SUBSTRING_AFTER"); break;
-		case xpath.FUNC_NORMALIZE: System.out.print("FUNC_NORMALIZE"); break;
-		case xpath.FUNC_TRANSLATE: System.out.print("FUNC_TRANSLATE"); break;
-		case xpath.FUNC_CONCAT: System.out.print("FUNC_CONCAT"); break;
-		case xpath.FUNC_FORMAT_NUMBER: System.out.print("FUNC_FORMAT_NUMBER"); break;
-		case xpath.FUNC_SYSTEM_PROPERTY: System.out.print("FUNC_SYSTEM_PROPERTY"); break;
-		case xpath.FUNC_EXT_FUNCTION_AVAILABLE: System.out.print("FUNC_EXT_FUNCTION_AVAILABLE"); break;
-		case xpath.FUNC_EXT_ELEM_AVAILABLE: System.out.print("FUNC_EXT_ELEM_AVAILABLE"); break;
-		case xpath.FUNC_SUBSTRING: System.out.print("FUNC_SUBSTRING"); break;
-		case xpath.FUNC_STRING_LENGTH: System.out.print("FUNC_STRING_LENGTH"); break;
-		case xpath.FUNC_DOCLOCATION: System.out.print("FUNC_DOCLOCATION"); break;
-		}
-		opPos++;
-		System.out.println("");
-		while(opPos < endFunc)
-		{
-		  indent(indent+1);
-		  System.out.println("{");
-		  opPos = diagnoseXPath(xpath, opPos, indent+2);
-		  indent(indent+1);
-		  System.out.println("}");
-		}
-		indent(indent);
-		System.out.println("}");
-		if(xpath.m_opMap[opPos] != xpath.ENDOP)
-		{
-		  System.out.println("ERROR! Could not find ENDOP after OP_LOCATIONPATH");
-		}
-		opPos++;
-	  }
-	  break;
-	case xpath.OP_LOCATIONPATH:
-	  System.out.println("OP_LOCATIONPATH"+" {");
-	  int endPath = opPos+xpath.m_opMap[opPos+1]-1;
-	  opPos+=2;
-	  while(opPos < endPath)
-	  {
-		opPos = diagnoseXPath(xpath, opPos, indent+1);
-	  }
-	  indent(indent);
-	  System.out.println("}");
-	  if(xpath.m_opMap[opPos] != xpath.ENDOP)
-	  {
-		System.out.println("ERROR! Could not find ENDOP after OP_LOCATIONPATH");
-	  }
-	  opPos++;
-	  break;
-	case xpath.OP_PREDICATE:
-	  opPos = diagnoseXPathUnaryOperation("OP_PREDICATE", xpath, opPos, indent);
-	  if(xpath.m_opMap[opPos] != xpath.ENDOP)
-	  {
-		System.out.println("ERROR! Could not find ENDOP after OP_LOCATIONPATH");
-	  }
-	  opPos++;
-	  break;
-	case xpath.FROM_ANCESTORS:
-	  opPos = diagnoseXPathLocationStep("FROM_ANCESTORS", xpath, opPos, 1);
-	  break;
-	case xpath.FROM_ANCESTORS_OR_SELF:
-	  opPos = diagnoseXPathLocationStep("FROM_ANCESTORS_OR_SELF", xpath, opPos, 1);
-	  break;
-	case xpath.FROM_ATTRIBUTES:
-	  opPos = diagnoseXPathLocationStep("FROM_ATTRIBUTES", xpath, opPos, 1);
-	  break;
-	case xpath.FROM_CHILDREN:
-	  opPos = diagnoseXPathLocationStep("FROM_CHILDREN", xpath, opPos, 1);
-	  break;
-	case xpath.FROM_DESCENDANTS:
-	  opPos = diagnoseXPathLocationStep("FROM_DESCENDANTS", xpath, opPos, 1);
-	  break;
-	case xpath.FROM_DESCENDANTS_OR_SELF:
-	  opPos = diagnoseXPathLocationStep("FROM_DESCENDANTS_OR_SELF", xpath, opPos, 1);
-	  break;
-	case xpath.FROM_FOLLOWING:
-	  opPos = diagnoseXPathLocationStep("FROM_FOLLOWING", xpath, opPos, indent);
-	  break;
-	case xpath.FROM_FOLLOWING_SIBLINGS:
-	  opPos = diagnoseXPathLocationStep("FROM_FOLLOWING_SIBLINGS", xpath, opPos, indent);
-	  break;
-	case xpath.FROM_PARENT:
-	  opPos = diagnoseXPathLocationStep("FROM_PARENT", xpath, opPos, indent);
-	  break;
-	case xpath.FROM_PRECEDING:
-	  opPos = diagnoseXPathLocationStep("FROM_PRECEDING", xpath, opPos, indent);
-	  break;
-	case xpath.FROM_PRECEDING_SIBLINGS:
-	  opPos = diagnoseXPathLocationStep("FROM_PRECEDING_SIBLINGS", xpath, opPos, indent);
-	  break;
-	case xpath.FROM_SELF:
-	  opPos = diagnoseXPathLocationStep("FROM_SELF", xpath, opPos, indent);
-	  break;
-	case xpath.FROM_NAMESPACE:
-	  opPos = diagnoseXPathLocationStep("FROM_NAMESPACE", xpath, opPos, indent);
-	  break;
-	// case xpath.FROM_ATTRIBUTE:
-	//	 opPos = diagnoseXPathLocationStep("FROM_ATTRIBUTE", xpath, opPos, indent);
-	//	break;
-	// case xpath.FROM_DOC:
-	//	opPos = diagnoseXPathLocationStep("FROM_DOC", xpath, opPos, indent);
-	//	break;
-	// case xpath.FROM_DOCREF:
-	//	opPos = diagnoseXPathLocationStep("FROM_DOCREF", xpath, opPos, indent);
-	//	break;
-	// case xpath.FROM_ID:
-	//	opPos = diagnoseXPathLocationStep("FROM_ID", xpath, opPos, indent);
-	//	break;
-	// case xpath.FROM_IDREF:
-	//	opPos = diagnoseXPathLocationStep("FROM_IDREF", xpath, opPos, indent);
-	//	break;
-	case xpath.FROM_ROOT:
-	  opPos = diagnoseXPathLocationStep("FROM_ROOT", xpath, opPos, indent);
-	  break;
-	case xpath.NODETYPE_COMMENT:
-	  System.out.println("{NODETYPE_COMMENT}");
-	  opPos++;
-	  break;
-	case xpath.NODETYPE_TEXT:
-	  System.out.println("{NODETYPE_TEXT}");
-	  opPos++;
-	  break;
-	case xpath.NODETYPE_PI:
-	  int piLen = xpath.m_opMap[opPos-1];
-	  System.out.println("{NODETYPE_PI ");
-	  opPos++;
-	  if(piLen > 3)
-	  {
-		opPos = diagnoseToken(xpath, opPos);
-	  }
-	  break;
-	case xpath.NODETYPE_NODE:
-	  System.out.println("{NODETYPE_NODE}");
-	  opPos++;
-	  break;
-	case xpath.NODETYPE_ROOT:
-	  System.out.println("{NODETYPE_ROOT}");
-	  opPos++;
-	  break;
-	case xpath.NODETYPE_ANYELEMENT:
-	  System.out.println("{NODETYPE_ANYELEMENT}");
-	  opPos++;
-	  break;
-	case xpath.NODENAME:
-	  System.out.print("{NODENAME ");
-	  opPos++;
-	  if(xpath.m_opMap[opPos] < 0)
-	  { 
-		System.out.print("{EMPTY}");
-		opPos++;
-	  }
-	  else
-	  {
-		opPos = diagnoseToken(xpath, opPos);
-	  }
-	  System.out.print(":");
-	  opPos = diagnoseToken(xpath, opPos);
-	  break;
-	default:
-	  System.out.println("ERROR! Unknown op code: "+xpath.m_opMap[opPos]);
-	}
-	return opPos;
-  }
-  
-  static void indent(int amount)
-  {
-	int n = amount * 3;
-	for(int i = 0;	i < n; i ++)
-	{
-	  System.out.print(" ");
-	}
-  }
-  
-  private static String m_opLabel	  = "[";
-  private static String m_lenLabel	  = "[";
-  private static String m_arglenLabel = "[";
-  private static String m_noLabel	  = "[";
-  private static String m_nTestLabel  = "[";
-  private static String m_open = "[";
-  private static String m_close = "]";
-
-  public static void diagnoseXPathString2( String str )    
-  {    
-	XPathSupport callbacks = new XPathSupportDefault();
-	XPathProcessorImpl processor = new XPathProcessorImpl(callbacks);
-	XPath xpath = new XPath(callbacks);
-	processor.initXPath(xpath, str, null);
-	processor.diagnoseXPath2(xpath, 0, 0);
-  }
-
-  public static void diagnoseXPathString3( String str )    
-  {    
-	XPathSupport callbacks = new XPathSupportDefault();
-	XPathProcessorImpl processor = new XPathProcessorImpl(callbacks);
-	XPath xpath = new XPath(callbacks);
-	processor.initXPath(xpath, str, null);
-	int len = xpath.m_opMap[xpath.MAPINDEX_LENGTH];
-	for(int i = 0; i < len; i++)
-	{
-	  System.out.println("["+xpath.m_opMap[i]+"]");
-	}
-  }
-
-  private static void diagnoseNodeTest2(int opPos, String op)
-  {
-	System.out.print(m_nTestLabel+op+m_close);
-  }
-
-  private static void diagnoseOpNoLable2(int opPos, String op)
-  {
-	System.out.println(m_noLabel+op+m_close);
-  }
-
-  private static void diagnoseOpOnly2(int opPos, String op)
-  {
-	System.out.println(m_opLabel+op+m_close);
-  }
-
-  private static void diagnoseOp2(String op, XPath xpath, int opPos)
-  {
-	System.out.print(m_opLabel+op+m_close);
-	int opLen = xpath.m_opMap[opPos+xpath.MAPINDEX_LENGTH];
-	System.out.println(m_open+opLen+m_close);
-  }
-
-  private static void diagnoseOp2SameLine(String op, XPath xpath, int opPos)
-  {
-	System.out.print(m_opLabel+op+m_close);
-	int opLen = xpath.m_opMap[opPos+xpath.MAPINDEX_LENGTH];
-	System.out.print(m_open+opLen+m_close);
-  }
-
-  static int diagnoseXPathBinaryOperation2(String op, XPath xpath, int opPos, int indent)
-  {
-	diagnoseOp2(op, xpath, opPos);
-	opPos+=2;
-	
-	opPos = diagnoseXPath2(xpath, opPos, indent+1);
-	
-	opPos = diagnoseXPath2(xpath, opPos, indent+1);
-	
-	return opPos;
-  }
-
-  static int diagnoseXPathUnaryOperation2(String op, XPath xpath, int opPos, int indent)
-  {
-	diagnoseOp2(op, xpath, opPos);
-	opPos+=2;
-	opPos = diagnoseXPath2(xpath, opPos, indent+1);
-	return opPos;
-  }
-
-  static int diagnoseXPathMultiOperation2(String op, int multiOp, XPath xpath, int opPos, int indent)
-  {
-	diagnoseOp2(op, xpath, opPos);
-	opPos+=2;
-	while(xpath.m_opMap[opPos] == multiOp)
-	{
-	  opPos = diagnoseXPath2(xpath, opPos, indent+2);
-	}
-	return opPos;
-  }
-  
-  static int diagnoseToken2(XPath xpath, int opPos)
-  {
-	int tokenPos = xpath.m_opMap[opPos];
-	String token = (tokenPos >= 0) ? xpath.m_tokenQueue[tokenPos].toString() : 
-									 (tokenPos == xpath.ELEMWILDCARD) ?
-									 "*" : (tokenPos == xpath.EMPTY) ?
-										   "EMPTY" : "UNKNOWN";
-	System.out.println(m_noLabel+token+m_close);
-	return opPos+1;
-  }
-
-  static int diagnoseToken2SameLine(XPath xpath, int opPos)
-  {
-	System.out.print(m_noLabel+xpath.m_tokenQueue[xpath.m_opMap[opPos]]+m_close);
-	return opPos+1;
-  }
-
-  static int diagnoseXPathSimpleOperation2(String op, XPath xpath, int opPos, int indent)
-  {
-	diagnoseOp2SameLine(op, xpath, opPos);
-	opPos+=2;
-	opPos = diagnoseToken2(xpath, opPos);
-	return opPos;
-  }
-
-  static int diagnoseXPathLocationStep2(String op, XPath xpath, int opPos, int indent)
-  {
-	int opLen = xpath.m_opMap[opPos+xpath.MAPINDEX_LENGTH];
-	int stepLen = xpath.m_opMap[opPos+xpath.MAPINDEX_LENGTH+1];
-	System.out.print(m_opLabel+op+m_close);
-	System.out.print(m_open+opLen+m_close);
-	System.out.print(m_open+stepLen+m_close);
-	opPos+=3;
-	if(stepLen > 3)
-	{
-	  opPos = diagnoseXPath2(xpath, opPos, 0);
-	}
-	return opPos;
-  }
-  
-  static int diagnoseXPath2(XPath xpath, int opPos, int indent)
-  {
-	indent(indent);
-	switch(xpath.m_opMap[opPos])
-	{
-	case xpath.OP_XPATH:
-	  opPos = diagnoseXPathUnaryOperation2("OP_XPATH", xpath, opPos, indent);
-	  break;
-	case xpath.EMPTY:
-	  diagnoseOpOnly2(opPos, "EMPTY");
-	  opPos++;
-	  break;
-	case xpath.OP_OR:
-	  opPos = diagnoseXPathBinaryOperation2("OP_OR", xpath, opPos, indent);
-	  break;
-	case xpath.OP_AND:
-	  opPos = diagnoseXPathBinaryOperation2("OP_AND", xpath, opPos, indent);
-	  break;
-	case xpath.OP_NOTEQUALS:
-	  opPos = diagnoseXPathBinaryOperation2("OP_NOTEQUALS", xpath, opPos, indent);
-	  break;
-	case xpath.OP_EQUALS:
-	  opPos = diagnoseXPathBinaryOperation2("OP_EQUALS", xpath, opPos, indent);
-	  break;
-	case xpath.OP_LTE:
-	  opPos = diagnoseXPathBinaryOperation2("OP_LTE", xpath, opPos, indent);
-	  break;
-	case xpath.OP_LT:
-	  opPos = diagnoseXPathBinaryOperation2("OP_LT", xpath, opPos, indent);
-	  break;
-	case xpath.OP_GTE:
-	  opPos = diagnoseXPathBinaryOperation2("OP_GTE", xpath, opPos, indent);
-	  break;
-	case xpath.OP_GT:
-	  opPos = diagnoseXPathBinaryOperation2("OP_GT", xpath, opPos, indent);
-	  break;
-	case xpath.OP_PLUS:
-	  opPos = diagnoseXPathBinaryOperation2("OP_PLUS", xpath, opPos, indent);
-	  break;
-	case xpath.OP_MINUS:
-	  opPos = diagnoseXPathBinaryOperation2("OP_MINUS", xpath, opPos, indent);
-	  break;
-	case xpath.OP_MULT:
-	  opPos = diagnoseXPathBinaryOperation2("OP_MULT", xpath, opPos, indent);
-	  break;
-	case xpath.OP_DIV:
-	  opPos = diagnoseXPathBinaryOperation2("OP_DIV", xpath, opPos, indent);
-	  break;
-	case xpath.OP_MOD:
-	  opPos = diagnoseXPathBinaryOperation2("OP_MOD", xpath, opPos, indent);
-	  break;
-	case xpath.OP_QUO:
-	  opPos = diagnoseXPathBinaryOperation2("OP_QUO", xpath, opPos, indent);
-	  break;
-	case xpath.OP_NEG:
-	  opPos = diagnoseXPathUnaryOperation2("OP_NEG", xpath, opPos, indent);
-	  break;
-	case xpath.OP_STRING:
-	  opPos = diagnoseXPathUnaryOperation2("OP_STRING", xpath, opPos, indent);
-	  break;
-	case xpath.OP_BOOL:
-	  opPos = diagnoseXPathUnaryOperation2("OP_BOOL", xpath, opPos, indent);
-	  break;
-	case xpath.OP_NUMBER:
-	  opPos = diagnoseXPathUnaryOperation2("OP_NUMBER", xpath, opPos, indent);
-	  break;
-	case xpath.OP_UNION:
-	  opPos = diagnoseXPathMultiOperation2("OP_UNION", xpath.OP_LOCATIONPATH, xpath, opPos, indent);
-	  break;
-	case xpath.OP_LITERAL:
-	  opPos = diagnoseXPathSimpleOperation2("OP_LITERAL", xpath, opPos, indent);
-	  break;
-	case xpath.OP_VARIABLE:
-	  opPos = diagnoseXPathSimpleOperation2("OP_VARIABLE", xpath, opPos, indent);
-	  break;
-	case xpath.OP_GROUP:
-	  opPos = diagnoseXPathUnaryOperation2("OP_GROUP", xpath, opPos, indent);
-	  break;
-	case xpath.OP_NUMBERLIT:
-	  opPos = diagnoseXPathSimpleOperation2("OP_NUMBERLIT", xpath, opPos, indent);
-	  break;
-	case xpath.OP_ARGUMENT:
-	  opPos = diagnoseXPathUnaryOperation2("OP_ARGUMENT", xpath, opPos, indent);
-	  break;
-	case xpath.OP_EXTFUNCTION:
-	  {
-		diagnoseOp2SameLine("OP_EXTFUNCTION", xpath, opPos);
-		int endExtFunc = opPos+xpath.m_opMap[opPos+1]-1;
-		opPos+=2;
-		opPos = diagnoseToken2SameLine(xpath, opPos);
-		opPos = diagnoseToken2(xpath, opPos);
-		while(opPos < endExtFunc)
-		{
-		  opPos = diagnoseXPath2(xpath, opPos, indent+2);
-		}
-		if(xpath.m_opMap[opPos] != xpath.ENDOP)
-		{
-		  System.out.println("ERROR! Could not find ENDOP after OP_LOCATIONPATH");
-		}
-		indent(indent+1);
-		diagnoseOpOnly2(opPos, "ENDOP");
-		opPos++;
-	  }
-	  break;
-	case xpath.OP_FUNCTION:
-	  {
-		diagnoseOp2SameLine("OP_FUNCTION", xpath, opPos);
-		int endFunc = opPos+xpath.m_opMap[opPos+1]-1;
-		opPos+=2;
-		int funcID = xpath.m_opMap[opPos];
-		switch(funcID)
-		{
-		case xpath.FUNC_LAST: diagnoseOpNoLable2(opPos, "FUNC_LAST"); break;
-		case xpath.FUNC_POSITION: diagnoseOpNoLable2(opPos, "FUNC_POSITION"); break;
-		case xpath.FUNC_COUNT: diagnoseOpNoLable2(opPos, "FUNC_COUNT"); break;
-		case xpath.FUNC_ID: diagnoseOpNoLable2(opPos, "FUNC_ID"); break;
-		case xpath.FUNC_KEY: diagnoseOpNoLable2(opPos, "FUNC_KEY"); break;
-		case xpath.FUNC_DOC: diagnoseOpNoLable2(opPos, "FUNC_DOC"); break;
-		case xpath.FUNC_LOCAL_PART: diagnoseOpNoLable2(opPos, "FUNC_LOCAL_PART"); break;
-		case xpath.FUNC_NAMESPACE: diagnoseOpNoLable2(opPos, "FUNC_NAMESPACE"); break;
-		case xpath.FUNC_QNAME: diagnoseOpNoLable2(opPos, "FUNC_QNAME"); break;
-		case xpath.FUNC_GENERATE_ID: diagnoseOpNoLable2(opPos, "FUNC_GENERATE_ID"); break;
-		case xpath.FUNC_NOT: diagnoseOpNoLable2(opPos, "FUNC_NOT"); break;
-		case xpath.FUNC_TRUE: diagnoseOpNoLable2(opPos, "FUNC_TRUE"); break;
-		case xpath.FUNC_FALSE: diagnoseOpNoLable2(opPos, "FUNC_FALSE"); break;
-		case xpath.FUNC_BOOLEAN: diagnoseOpNoLable2(opPos, "FUNC_BOOLEAN"); break;
-		case xpath.FUNC_LANG: diagnoseOpNoLable2(opPos, "FUNC_LANG"); break;
-		case xpath.FUNC_NUMBER: diagnoseOpNoLable2(opPos, "FUNC_NUMBER"); break;
-		case xpath.FUNC_FLOOR: diagnoseOpNoLable2(opPos, "FUNC_FLOOR"); break;
-		case xpath.FUNC_CEILING: diagnoseOpNoLable2(opPos, "FUNC_CEILING"); break;
-		case xpath.FUNC_ROUND: diagnoseOpNoLable2(opPos, "FUNC_ROUND"); break;
-		case xpath.FUNC_SUM: diagnoseOpNoLable2(opPos, "FUNC_SUM"); break;
-		case xpath.FUNC_STRING: diagnoseOpNoLable2(opPos, "FUNC_STRING"); break;
-		case xpath.FUNC_STARTS_WITH: diagnoseOpNoLable2(opPos, "FUNC_STARTS_WITH"); break;
-		case xpath.FUNC_CONTAINS: diagnoseOpNoLable2(opPos, "FUNC_CONTAINS"); break;
-		case xpath.FUNC_SUBSTRING_BEFORE: diagnoseOpNoLable2(opPos, "FUNC_SUBSTRING_BEFORE"); break;
-		case xpath.FUNC_SUBSTRING_AFTER: diagnoseOpNoLable2(opPos, "FUNC_SUBSTRING_AFTER"); break;
-		case xpath.FUNC_NORMALIZE: diagnoseOpNoLable2(opPos, "FUNC_NORMALIZE"); break;
-		case xpath.FUNC_TRANSLATE: diagnoseOpNoLable2(opPos, "FUNC_TRANSLATE"); break;
-		case xpath.FUNC_CONCAT: diagnoseOpNoLable2(opPos, "FUNC_CONCAT"); break;
-		case xpath.FUNC_FORMAT_NUMBER: diagnoseOpNoLable2(opPos, "FUNC_FORMAT_NUMBER"); break;
-		case xpath.FUNC_SYSTEM_PROPERTY: diagnoseOpNoLable2(opPos, "FUNC_SYSTEM_PROPERTY"); break;
-		case xpath.FUNC_EXT_FUNCTION_AVAILABLE: diagnoseOpNoLable2(opPos, "FUNC_EXT_FUNCTION_AVAILABLE"); break;
-		case xpath.FUNC_EXT_ELEM_AVAILABLE: diagnoseOpNoLable2(opPos, "FUNC_EXT_ELEM_AVAILABLE"); break;
-		case xpath.FUNC_SUBSTRING: diagnoseOpNoLable2(opPos, "FUNC_SUBSTRING"); break;
-		case xpath.FUNC_STRING_LENGTH: diagnoseOpNoLable2(opPos, "FUNC_STRING_LENGTH"); break;
-		case xpath.FUNC_DOCLOCATION: diagnoseOpNoLable2(opPos, "FUNC_DOCLOCATION"); break;
-		}
-		opPos++;
-		while(opPos < endFunc)
-		{
-		  // indent(indent+1);
-		  opPos = diagnoseXPath2(xpath, opPos, indent+2);
-		}
-		indent(indent);
-		if(xpath.m_opMap[opPos] != xpath.ENDOP)
-		{
-		  System.out.println("ERROR! Could not find ENDOP after OP_LOCATIONPATH");
-		}
-		indent(indent+1);
-		diagnoseOpOnly2(opPos, "ENDOP");
-		opPos++;
-	  }
-	  break;
-	case xpath.OP_LOCATIONPATH:
-	  diagnoseOp2("OP_LOCATIONPATH", xpath, opPos);
-	  int endPath = opPos+xpath.m_opMap[opPos+1]-1;
-	  opPos+=2;
-	  while(opPos < endPath)
-	  {
-		opPos = diagnoseXPath2(xpath, opPos, indent+1);
-	  }
-	  if(xpath.m_opMap[opPos] != xpath.ENDOP)
-	  {
-		System.out.println("ERROR! Could not find ENDOP after OP_LOCATIONPATH");
-	  }
-	  indent(indent+1);
-	  diagnoseOpOnly2(opPos, "ENDOP");
-	  opPos++;
-	  break;
-	case xpath.OP_PREDICATE:
-	  indent(1);
-	  opPos = diagnoseXPathUnaryOperation2("OP_PREDICATE", xpath, opPos, indent+1);
-	  if(xpath.m_opMap[opPos] != xpath.ENDOP)
-	  {
-		System.out.println("ERROR! Could not find ENDOP after OP_LOCATIONPATH");
-	  }
-	  indent(indent+2);
-	  diagnoseOpOnly2(opPos, "ENDOP");
-	  opPos++;
-	  break;
-	case xpath.FROM_ANCESTORS:
-	  opPos = diagnoseXPathLocationStep2("FROM_ANCESTORS", xpath, opPos, 1);
-	  break;
-	case xpath.FROM_ANCESTORS_OR_SELF:
-	  opPos = diagnoseXPathLocationStep2("FROM_ANCESTORS_OR_SELF", xpath, opPos, 1);
-	  break;
-	case xpath.FROM_ATTRIBUTES:
-	  opPos = diagnoseXPathLocationStep2("FROM_ATTRIBUTES", xpath, opPos, 1);
-	  break;
-	case xpath.FROM_CHILDREN:
-	  opPos = diagnoseXPathLocationStep2("FROM_CHILDREN", xpath, opPos, 1);
-	  break;
-	case xpath.FROM_DESCENDANTS:
-	  opPos = diagnoseXPathLocationStep2("FROM_DESCENDANTS", xpath, opPos, 1);
-	  break;
-	case xpath.FROM_DESCENDANTS_OR_SELF:
-	  opPos = diagnoseXPathLocationStep2("FROM_DESCENDANTS_OR_SELF", xpath, opPos, 1);
-	  break;
-	case xpath.FROM_FOLLOWING:
-	  opPos = diagnoseXPathLocationStep2("FROM_FOLLOWING", xpath, opPos, indent);
-	  break;
-	case xpath.FROM_FOLLOWING_SIBLINGS:
-	  opPos = diagnoseXPathLocationStep2("FROM_FOLLOWING_SIBLINGS", xpath, opPos, indent);
-	  break;
-	case xpath.FROM_PARENT:
-	  opPos = diagnoseXPathLocationStep2("FROM_PARENT", xpath, opPos, indent);
-	  break;
-	case xpath.FROM_PRECEDING:
-	  opPos = diagnoseXPathLocationStep2("FROM_PRECEDING", xpath, opPos, indent);
-	  break;
-	case xpath.FROM_PRECEDING_SIBLINGS:
-	  opPos = diagnoseXPathLocationStep2("FROM_PRECEDING_SIBLINGS", xpath, opPos, indent);
-	  break;
-	case xpath.FROM_SELF:
-	  opPos = diagnoseXPathLocationStep2("FROM_SELF", xpath, opPos, indent);
-	  break;
-	case xpath.FROM_NAMESPACE:
-	  opPos = diagnoseXPathLocationStep2("FROM_NAMESPACE", xpath, opPos, indent);
-	  break;
-	// case xpath.FROM_ATTRIBUTE:
-	//	 opPos = diagnoseXPathLocationStep("FROM_ATTRIBUTE", xpath, opPos, indent);
-	//	break;
-	// case xpath.FROM_DOC:
-	//	opPos = diagnoseXPathLocationStep("FROM_DOC", xpath, opPos, indent);
-	//	break;
-	// case xpath.FROM_DOCREF:
-	//	opPos = diagnoseXPathLocationStep("FROM_DOCREF", xpath, opPos, indent);
-	//	break;
-	// case xpath.FROM_ID:
-	//	opPos = diagnoseXPathLocationStep("FROM_ID", xpath, opPos, indent);
-	//	break;
-	// case xpath.FROM_IDREF:
-	//	opPos = diagnoseXPathLocationStep("FROM_IDREF", xpath, opPos, indent);
-	//	break;
-	case xpath.FROM_ROOT:
-	  opPos = diagnoseXPathLocationStep2("FROM_ROOT", xpath, opPos, indent);
-	  // opPos++;
-	  break;
-	case xpath.NODETYPE_COMMENT:
-	  diagnoseNodeTest2(opPos, "NODETYPE_COMMENT");
-	  System.out.println();
-	  opPos++;
-	  break;
-	case xpath.NODETYPE_TEXT:
-	  diagnoseNodeTest2(opPos, "NODETYPE_TEXT");
-	  System.out.println();
-	  opPos++;
-	  break;
-	case xpath.NODETYPE_PI:
-	  int piLen = xpath.m_opMap[opPos-1];
-	  diagnoseNodeTest2(opPos, "NODETYPE_PI");
-	  opPos++;
-	  if(piLen > 3)
-	  {
-		opPos = diagnoseToken(xpath, opPos);
-	  }
-	  break;
-	case xpath.NODETYPE_NODE:
-	  diagnoseNodeTest2(opPos, "NODETYPE_NODE");
-	  System.out.println();
-	  opPos++;
-	  break;
-	case xpath.NODETYPE_ROOT:
-	  diagnoseNodeTest2(opPos, "NODETYPE_ROOT");
-	  System.out.println();
-	  opPos++;
-	  break;
-	case xpath.NODETYPE_ANYELEMENT:
-	  diagnoseNodeTest2(opPos, "NODETYPE_ANYELEMENT");
-	  System.out.println();
-	  opPos++;
-	  break;
-	case xpath.NODENAME:
-	  diagnoseNodeTest2(opPos, "NODENAME");
-	  opPos++;
-	  if(xpath.m_opMap[opPos] < 0)
-	  { 
-		System.out.print(m_noLabel+"EMPTY"+m_close);
-		opPos++;
-	  }
-	  else
-	  {
-		opPos = diagnoseToken2(xpath, opPos);
-	  }
-	  opPos = diagnoseToken2(xpath, opPos);
-	  break;
-	default:
-	  System.out.println("ERROR! Unknown op code: "+xpath.m_opMap[opPos]);
-	}
-	return opPos;
-  }
-
-
-#endif
 
 
 

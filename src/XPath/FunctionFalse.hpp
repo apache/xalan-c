@@ -73,7 +73,6 @@
 
 
 
-#include <XPath/XObject.hpp>
 #include <XPath/XObjectFactory.hpp>
 #include <XPath/XPathExecutionContext.hpp>
 
@@ -95,7 +94,7 @@ public:
 	virtual XObject*
 	execute(
 			XPathExecutionContext&			executionContext,
-			const DOM_Node&					context,
+			XalanNode*						context,
 			int								/* opPos */,
 			const XObjectArgVectorType&		args)
 	{

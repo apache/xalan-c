@@ -59,26 +59,38 @@
 
 
 
+#include <algorithm>
 #include <memory>
 #include <iostream>
 
 
+
+#include <framework/URLInputSource.hpp>
 #include <parsers/DOMParser.hpp>
 #include <parsers/SAXParser.hpp>
-#include <framework/URLInputSource.hpp>
-
 #include <sax/SAXParseException.hpp>
 
 
 
-const char* const	theParserName = "Xerces";
+#include <PlatformSupport/STLHelper.hpp>
+
+
+
+#include "XercesDocumentBridge.hpp"
+
+
+
+static const XalanDOMString		theParserName(XALAN_STATIC_UCODE_STRING("Xerces"));
+
+
 
 XercesParserLiaison::XercesParserLiaison(
 			DOMSupport&		theSupport,
 			bool			fUseValidatingParser) :
 	XMLParserLiaisonDefault(theSupport,
 							theParserName),
-	m_fUseValidatingParser(fUseValidatingParser)
+	m_fUseValidatingParser(fUseValidatingParser),
+	m_documentMap()
 {
 }
 
@@ -86,6 +98,24 @@ XercesParserLiaison::XercesParserLiaison(
 
 XercesParserLiaison::~XercesParserLiaison()
 {
+	reset();
+}
+
+
+
+void
+XercesParserLiaison::reset()
+{
+#if !defined(XALAN_NO_NAMESPACES)
+	using std::for_each;
+#endif
+
+	// Delete any live documents.
+	for_each(m_documentMap.begin(),
+			 m_documentMap.end(),
+			 makeMapValueDeleteFunctor(m_documentMap));
+
+	m_documentMap.clear();
 }
 
 
@@ -120,72 +150,72 @@ CreateSAXParser(bool	fValidating)
 
 
 
-DOM_Document
+void
 XercesParserLiaison::parseXMLStream(
-			InputSource&		reader,
-			const DOMString&	/* identifier */)
+			InputSource&			urlInputSource,
+			DocumentHandler&		handler,
+			const XalanDOMString&	/* identifier */)
+{
+	std::auto_ptr<SAXParser>	theParser(CreateSAXParser(m_fUseValidatingParser));
+
+	theParser->setDocumentHandler(&handler);
+	theParser->setErrorHandler(this);
+
+	theParser->parse(urlInputSource);
+}
+
+
+
+XalanDocument*
+XercesParserLiaison::parseXMLStream(
+			InputSource&			reader,
+			const XalanDOMString&	/* identifier */)
 {
 	std::auto_ptr<DOMParser>	theParser(CreateDOMParser(m_fUseValidatingParser));
 
 	theParser->setErrorHandler(this);
 	theParser->parse(reader);
 
-	return theParser->getDocument();
+	const DOM_Document	theXercesDocument =
+		theParser->getDocument();
+
+	XercesDocumentBridge*	theNewDocument = 0;
+
+	if (theXercesDocument.isNull() == false)
+	{
+		theNewDocument = new XercesDocumentBridge(theXercesDocument);
+
+		m_documentMap[theNewDocument] = theNewDocument;
+	}
+
+	return theNewDocument;
 }
 
 
 
-void
-XercesParserLiaison::parseXMLStream(
-			InputSource&		urlInputSource,
-			DocumentHandler&	handler,
-			const DOMString&	/* identifier */)
-{
-	std::auto_ptr<SAXParser>	theParser(CreateSAXParser(m_fUseValidatingParser));
-
-	theParser->setDocumentHandler(&handler);
-	theParser->setErrorHandler(this);
-
-	theParser->parse(urlInputSource);
-}
-
-
-
-DOM_Document
-XercesParserLiaison::parseXMLStream(
-			URLInputSource&		urlInputSource,
-			const DOMString&	/* identifier */)
-{
-	std::auto_ptr<DOMParser>	theParser(CreateDOMParser(m_fUseValidatingParser));
-
-	theParser->setErrorHandler(this);
-	theParser->parse(urlInputSource);
-
-	return theParser->getDocument();
-}
-
-
-
-void
-XercesParserLiaison::parseXMLStream(
-			URLInputSource&		urlInputSource,
-			DocumentHandler&	handler,
-			const DOMString&	/* identifier */)
-{
-	std::auto_ptr<SAXParser>	theParser(CreateSAXParser(m_fUseValidatingParser));
-	
-	theParser->setErrorHandler(this);
-	theParser->setDocumentHandler(&handler);
-
-	theParser->parse(urlInputSource);
-}
-
-
-
-DOM_Document
+XalanDocument*
 XercesParserLiaison::createDocument()
 {
-	return DOM_Document::createDocument();
+	const DOM_Document	theXercesDocument =
+		DOM_Document::createDocument();
+
+	XercesDocumentBridge* const		theNewDocument =
+		new XercesDocumentBridge(theXercesDocument);
+
+	m_documentMap[theNewDocument] = theNewDocument;
+
+	return theNewDocument;
+}
+
+
+
+XercesDocumentBridge*
+XercesParserLiaison::mapXalanDocument(const XalanDocument*	theDocument) const
+{
+	const DocumentMapType::const_iterator	i =
+		m_documentMap.find(theDocument);
+
+	return i != m_documentMap.end() ? i->second : 0;
 }
 
 

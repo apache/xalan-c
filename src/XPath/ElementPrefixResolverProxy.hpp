@@ -64,11 +64,6 @@
 
 
 
-#include <dom/DOM_Node.hpp>
-#include <dom/DOM_Element.hpp>
-
-
-
 // Base class header file...
 #include <XPath/PrefixResolver.hpp>
 
@@ -76,6 +71,7 @@
 
 class XPathEnvSupport;
 class XPathSupport;
+class XalanElement;
 
 
 
@@ -91,7 +87,7 @@ public:
 	 * @param support          XPath support class instance
 	 */
 	ElementPrefixResolverProxy(
-			const DOM_Element&		namespaceContext,
+			const XalanElement*		namespaceContext,
 			const XPathEnvSupport&	envSupport,
 			const XPathSupport& 	support);
 
@@ -100,17 +96,17 @@ public:
 
 	// These methods are inherited from PrefixResolver ...
 
-	virtual DOMString
-	getNamespaceForPrefix(const DOMString&	prefix) const;
+	virtual XalanDOMString
+	getNamespaceForPrefix(const XalanDOMString&		prefix) const;
 
-	virtual DOMString
+	virtual XalanDOMString
 	getURI() const;
 
 private:
 
-	const DOM_Element		m_namespaceContext;
-	const XPathEnvSupport&	m_envSupport;
-	const XPathSupport&		m_support;
+	const XalanElement* const	m_namespaceContext;
+	const XPathEnvSupport&		m_envSupport;
+	const XPathSupport&			m_support;
 };
 
 

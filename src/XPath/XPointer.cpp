@@ -58,35 +58,24 @@
 
 
 
-#include <iostream>
+#include "XPathException.hpp"
 
 
 
 XSpan*
-XPointer::getNode(const DOMString&	/* xpointer */)
+XPointer::getNode(const XalanDOMString&		/* xpointer */)
 {
-#if !defined(XALAN_NO_NAMESPACES)
-	using namespace std;
-#endif
-
-	cerr << "Error!  XPointer.getNode not yet implemented!"
-		 << endl;
+	throw XPathException("Error!  XPointer::getNode not yet implemented!");
 
 	return 0;
 }
 
-	/**
-	 * Get a span from an XPath (compiled XPointer) object.
-	 */
+
+
 XSpan*
 XPointer::getNode(XPath&	/* xpath */)
 {
-#if !defined(XALAN_NO_NAMESPACES)
-	using namespace std;
-#endif
-
-	cerr << "Error!  XPointer.getNode not yet implemented!"
-		 << endl;
+	throw XPathException("Error!  XPointer::getNode not yet implemented!");
 
 	return 0;
 }

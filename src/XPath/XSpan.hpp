@@ -107,7 +107,7 @@ public:
 	XSpan(
 			XPathEnvSupport&	envSupport,
 			XPathSupport&		support,
-			const DOM_Node&		value);
+			XalanNode&			value);
 
 	XSpan(const XSpan&	source);
 

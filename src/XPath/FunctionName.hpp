@@ -68,13 +68,9 @@
 
 
 
-#include <dom/DOM_Node.hpp>
-#include <dom/DOM_Attr.hpp>
-#include <dom/DOMString.hpp>
-
-
-
-#include <Include/DOMHelper.hpp>
+#include <XalanDOM/XalanNode.hpp>
+#include <XalanDOM/XalanAttr.hpp>
+#include <XalanDOM/XalanDOMString.hpp>
 
 
 
@@ -106,24 +102,32 @@ public:
 	virtual XObject*
 	execute(
 			XPathExecutionContext&			executionContext,
-			const DOM_Node&					context,
+			XalanNode*						context,
 			int								/* opPos */,
 			const XObjectArgVectorType&		args)
 	{
 		const XObjectArgVectorType::size_type	theSize = args.size();
 
-		DOMString								theResult;
+		XalanDOMString							theResult;
 
 		if(theSize == 0)
 		{
-			// Make a temporary XObject from the context node.
-			XObjectFactory&						theFactory =
-						executionContext.getXObjectFactory();
+			if (context == 0)
+			{
+				executionContext.error("The name() function requires a non-null context node!",
+									   context);
+			}
+			else
+			{
+				// Make a temporary XObject from the context node.
+				XObjectFactory&						theFactory =
+							executionContext.getXObjectFactory();
 
-			FactoryObjectAutoPointer<XObject>	theXObject(&theFactory,
-														   theFactory.createNodeSet(context));
+				FactoryObjectAutoPointer<XObject>	theXObject(&theFactory,
+															   theFactory.createNodeSet(*context));
 
-			theResult = getNameFromNodeList(theXObject->nodeset());
+				theResult = getNameFromNodeList(theXObject->nodeset());
+			}
 		}
 		else if (theSize == 1)
 		{
@@ -156,26 +160,26 @@ protected:
 	 * @param theNodeList node list
 	 * @return name string of node, or an empty string if node list is empty
 	 */
-	virtual DOMString
+	virtual XalanDOMString
 	getNameFromNodeList(const NodeRefListBase&	theNodeList) const
 	{
-		DOMString	theResult;
+		XalanDOMString	theResult;
 
 		if (theNodeList.getLength() > 0)
 		{
-			DOM_Node	theNode	= theNodeList.item(0);
+			const XalanNode* const	theNode	= theNodeList.item(0);
 			assert(theNode != 0);
 
-			if (DOM_Node::ATTRIBUTE_NODE == theNode.getNodeType())
+			if (XalanNode::ATTRIBUTE_NODE == theNode->getNodeType())
 			{
-				const DOM_Attr&		theAttributeNode =
-					reinterpret_cast<const DOM_Attr&>(theNode);
+				const XalanAttr* const	theAttributeNode =
+					reinterpret_cast<const XalanAttr*>(theNode);
 
-				theResult = theAttributeNode.getName();
+				theResult = theAttributeNode->getName();
 			}
 			else
 			{
-				theResult = theNode.getNodeName();
+				theResult = theNode->getNodeName();
 			}
 		}
 

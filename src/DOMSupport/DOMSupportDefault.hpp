@@ -64,11 +64,6 @@
 
 
 
-#include <dom/DOM_Node.hpp>
-#include <dom/DOMString.hpp>
-
-
-
 #include <DOMSupport/DOMSupport.hpp>
 #include <DOMSupport/NamespaceResolver.hpp>
 
@@ -89,14 +84,14 @@ public:
 	reset();
 
 	// These interfaces are inherited from DOMSupport...
-	virtual DOMString
-	getNamespaceOfNode(const DOM_Node&	theNode) const;
+	virtual XalanDOMString
+	getNamespaceOfNode(const XalanNode&	theNode) const;
 
-	virtual DOMString
-	getExpandedElementName(const DOM_Element&	elem) const;
+	virtual XalanDOMString
+	getExpandedElementName(const XalanElement&	elem) const;
 
-	virtual DOMString
-	getExpandedAttributeName(const DOM_Attr&	attr) const;
+	virtual XalanDOMString
+	getExpandedAttributeName(const XalanAttr&	attr) const;
 
 private:
 

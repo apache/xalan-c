@@ -67,15 +67,10 @@
 
 
 // Xerces header files
-#include <dom/DOM_Attr.hpp>
-#include <dom/DOM_Document.hpp>
-#include <dom/DOM_Element.hpp>
-#include <dom/DOM_NamedNodeMap.hpp>
-
-
-
-// XSL4C header files
-#include <Include/DOMHelper.hpp>
+#include <XalanDOM/XalanAttr.hpp>
+#include <XalanDOM/XalanDocument.hpp>
+#include <XalanDOM/XalanElement.hpp>
+#include <XalanDOM/XalanNamedNodeMap.hpp>
 
 
 
@@ -91,18 +86,14 @@
 #include "XMLSupportException.hpp"
 
 
-namespace
-{
 
-static const char* const	theDefaultSpecialCharacters = "<>&\"\'\r\n";
-
-}
+static const XalanDOMString		theDefaultSpecialCharacters(XALAN_STATIC_UCODE_STRING("<>&\"\'\r\n"));
 
 
 
 XMLParserLiaisonDefault::XMLParserLiaisonDefault(
-			DOMSupport&			theDOMSupport,
-			const DOMString&	theParserDescription) :
+			DOMSupport&				theDOMSupport,
+			const XalanDOMString&	theParserDescription) :
 	XMLParserLiaison(),
 	Formatter(),
 	m_DOMSupport(theDOMSupport),
@@ -153,63 +144,40 @@ XMLParserLiaisonDefault::supportsSAX() const
 
 
 
-DOM_Document
+XalanDocument*
 XMLParserLiaisonDefault::parseXMLStream(
-			InputSource&		/* reader */,
-			const DOMString&	/* identifier */)
+			InputSource&			/* inputSource */,
+			const XalanDOMString&	/* identifier */)
 {
 	throw XMLSupportException("parseXMLStream() not supported in XMLParserLiaisonDefault!");
 
-	return DOM_Document();
-}
-
-
-
-DOM_Document
-XMLParserLiaisonDefault::parseXMLStream(
-			URLInputSource&		/* reader */,
-			const DOMString&	/* identifier */)
-{
-	throw XMLSupportException("parseXMLStream() not supported in XMLParserLiaisonDefault!");
-
-	return DOM_Document();
+	return 0;
 }
 
 
 
 void
 XMLParserLiaisonDefault::parseXMLStream(
-			InputSource&		/* urlInputSource */,
-			DocumentHandler&	/* handler */,
-			const DOMString&	/* identifier */)
+			InputSource&			/* inputSource */,
+			DocumentHandler&		/* handler */,
+			const XalanDOMString&	/* identifier */)
 {
 	throw XMLSupportException("parseXMLStream() not supported in XMLParserLiaisonDefault!");
 }
 
 
 
-void
-XMLParserLiaisonDefault::parseXMLStream(
-			URLInputSource&		/* urlInputSource */,
-			DocumentHandler&	/* handler */,
-			const DOMString&	/* identifier */)
-{
-	throw XMLSupportException("parseXMLStream() not supported in XMLParserLiaisonDefault!");
-}
-
-
-
-DOM_Document
+XalanDocument*
 XMLParserLiaisonDefault::createDocument()
 {
 	throw XMLSupportException("createDocument() not supported in XMLParserLiaisonDefault!");
 
-	return DOM_Document();
+	return 0;
 }
 
   
 
-DOM_Document
+XalanDocument*
 XMLParserLiaisonDefault::getDOMFactory()
 {
 	return createDocument();
@@ -220,8 +188,8 @@ XMLParserLiaisonDefault::getDOMFactory()
 /**
  * Returns the element name with the namespace expanded.
  */
-DOMString
-XMLParserLiaisonDefault::getExpandedElementName(const DOM_Element&		elem) const
+XalanDOMString
+XMLParserLiaisonDefault::getExpandedElementName(const XalanElement&		elem) const
 {
 	return m_DOMSupport.getExpandedElementName(elem);
 }
@@ -231,8 +199,8 @@ XMLParserLiaisonDefault::getExpandedElementName(const DOM_Element&		elem) const
 /**
  * Returns the attribute name with the namespace expanded.
  */
-DOMString
-XMLParserLiaisonDefault::getExpandedAttributeName(const DOM_Attr&	attr) const
+XalanDOMString
+XMLParserLiaisonDefault::getExpandedAttributeName(const XalanAttr&	attr) const
 {
 	return m_DOMSupport.getExpandedAttributeName(attr);
 }
@@ -241,31 +209,33 @@ XMLParserLiaisonDefault::getExpandedAttributeName(const DOM_Attr&	attr) const
 
 void
 XMLParserLiaisonDefault::toMarkup(
-			const DOM_Document&		doc,
+			const XalanDocument&	doc,
 			PrintWriter&			pw,
-			const DOMString&		resultns,
+			const XalanDOMString&	resultns,
 			bool					format)
 {
+#if !defined(XALAN_NO_NAMESPACES)
 	using std::auto_ptr;
+#endif
 
 	auto_ptr<FormatterListener> 	visitor;
 
-	if(equals(trim(resultns), "http://www.w3.org/TR/REC-html40") == true)
+	if(equals(trim(resultns),
+			XALAN_STATIC_UCODE_STRING("http://www.w3.org/TR/REC-html40")) == true)
 	{
 		FormatterToHTML* const	htmlFormatVisitor =
 				new FormatterToHTML(pw,
-						DOMString(),
+						XalanDOMString(),
 						format,
 						m_Indent,
-						DOMString(),	// encoding
-						DOMString(),	// media type
+						XalanDOMString(),	// encoding
+						XalanDOMString(),	// media type
 						// @@ JMD: ??
 						// was: "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\">\n",
-						DOMString(),	// doctypeSystem
-						DOMString(),	// doctypePublic
+						XalanDOMString(),	// doctypeSystem
+						XalanDOMString(),	// doctypePublic
 						false, // xmlDecl
-						DOMString(),	// standalone,
-						0);
+						XalanDOMString());	// standalone,
 				
 
 #if defined(XALAN_OLD_AUTO_PTR)
@@ -280,16 +250,15 @@ XMLParserLiaisonDefault::toMarkup(
 	{
 		FormatterToXML* const 	fToXML =
 				new FormatterToXML(pw,
-						DOMString(),
+						XalanDOMString(),
 						format,
 						m_Indent,
-						DOMString(),	// encoding
-						DOMString(),	// media type
-						DOMString(),	// doctypeSystem
-						DOMString(),	// doctypePublic
+						XalanDOMString(),	// encoding
+						XalanDOMString(),	// media type
+						XalanDOMString(),	// doctypeSystem
+						XalanDOMString(),	// doctypePublic
 						true,				// xmlDecl
-						DOMString(),	// standalone,
-						0);
+						XalanDOMString());	// standalone,
 
 #if defined(XALAN_OLD_AUTO_PTR)
 		visitor = auto_ptr<FormatterListener>(fToXML);
@@ -304,7 +273,7 @@ XMLParserLiaisonDefault::toMarkup(
 	{
 		FormatterTreeWalker		treeTraversal(*visitor);
 
-		treeTraversal.traverse(doc);
+		treeTraversal.traverse(&doc);
 	}
 } 
 
@@ -312,26 +281,26 @@ XMLParserLiaisonDefault::toMarkup(
 
 void
 XMLParserLiaisonDefault::setFormatterListener(
-			PrintWriter&		pw,
-			const DOMString&	resultns,
-			bool				format)
+			PrintWriter&			pw,
+			const XalanDOMString&	resultns,
+			bool					format)
 {
-	if(equals(trim(resultns), "http://www.w3.org/TR/REC-html40") == true)
+	if(equals(trim(resultns),
+			XALAN_STATIC_UCODE_STRING("http://www.w3.org/TR/REC-html40")) == true)
 	{
 		FormatterToHTML* const	htmlFormatVisitor =
 			new FormatterToHTML(pw,
-						DOMString(),
+						XalanDOMString(),
 						format,
 						m_Indent,
-						DOMString(),	// encoding
-						DOMString(),	// media type
+						XalanDOMString(),	// encoding
+						XalanDOMString(),	// media type
 						// @@ JMD: ??
 						// was: "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\">\n",
-						DOMString(),	// doctypeSystem
-						DOMString(),	// doctypePublic
+						XalanDOMString(),	// doctypeSystem
+						XalanDOMString(),	// doctypePublic
 						false, // xmlDecl
-						DOMString(),	// standalone,
-						0);
+						XalanDOMString());	// standalone
 
 		if (m_fOwnListener == true)
 		{
@@ -347,16 +316,15 @@ XMLParserLiaisonDefault::setFormatterListener(
 	{
 		FormatterToXML* const	fToXML =
 			new FormatterToXML(pw,
-					DOMString(),
+					XalanDOMString(),
 					format,
 					m_Indent,
-					DOMString(),	// encoding
-					DOMString(),	// media type
-					DOMString(),	// doctypeSystem
-					DOMString(),	// doctypePublic
+					XalanDOMString(),	// encoding
+					XalanDOMString(),	// media type
+					XalanDOMString(),	// doctypeSystem
+					XalanDOMString(),	// doctypePublic
 					true,				// xmlDecl
-					DOMString(),	// standalone,
-						0);
+					XalanDOMString());	// standalone
 
 		fToXML->m_attrSpecialChars = m_SpecialCharacters;
 

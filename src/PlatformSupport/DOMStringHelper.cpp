@@ -66,23 +66,26 @@
 
 
 
+#include <algorithm>
 #include <strstream>
 #include <vector>
 
 
 
 #if !defined(XALAN_NO_NAMESPACES)
+using std::back_inserter;
+using std::copy;
 using std::hex;
 using std::ostream;
 using std::ostrstream;
 using std::string;
+using std::transform;
 using std::vector;
 #endif
 
 
 
 // Xerces header files
-#include <util/Janitor.hpp>
 #include <util/TextOutputStream.hpp>
 #include <util/XMLString.hpp>
 
@@ -92,18 +95,27 @@ using std::vector;
 
 
 #include "DoubleSupport.hpp"
+#include "STLHelper.hpp"
 
 
 
-#if !defined(XML_LSTRSUPPORT)
+// The maximum number of digits that sprintf can put in a buffer.
+// 100 for now.  We're using this because we want to avoid transcoding
+// number strings when we don't have to,
+const size_t	MAX_PRINTF_DIGITS = 50;
+
+
+
+#if !defined(XALAN_LSTRSUPPORT)
 
 // This string is defined just to make sure that
 // _something_ trips the initialization code
 // before main() is entered.
-const DOMString		theDummy(XALAN_STATIC_UCODE_STRING("dummy"));
+const XalanDOMString		theDummy(XALAN_STATIC_UCODE_STRING("dummy"));
 
 
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(const DOMString)
+
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(const XalanDOMString)
 initializeAndTranscode(const char*	theString)
 {
 	static bool		fInitialized = false;
@@ -115,70 +127,80 @@ initializeAndTranscode(const char*	theString)
 		fInitialized = true;
 	}
 
-	return DOMString(theString);
+	return XalanDOMString(theString);
 }
 
 #endif
 
 
 
+
+#if !defined(XALAN_FULL_WCHAR_SUPPORT)
+
 // Simulates the java String method indexOf().  Returns the index of theChar
-// in theString, or -1 if the character is not found.
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(int)
-indexOf(const DOMString&	theString,
-		XMLCh				theChar)
+// in theString, or length(theString) if the character is not found.
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(unsigned int)
+indexOf(
+			const XalanDOMChar*		theString,
+			XalanDOMChar			theChar)
 {
 	const unsigned int	theLength = length(theString);
 
 	if (theLength == 0)
 	{
-		return -1;
+		return theLength;
 	}
 	else
 	{
 		unsigned int	theIndex = 0;
 
 		while(theIndex < theLength &&
-			  charAt(theString, theIndex) != theChar)
+			  theString[theIndex] != theChar)
 		{
 			++theIndex;
 		}
 
-		return theIndex == theLength ? -1 : theIndex;
+		return theIndex == theLength ? theLength : theIndex;
 	}
 }
 
+#endif
 
 
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(int)
-indexOf(const DOMString&	theFirstString,
-		const DOMString&	theSecondString)
+
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(unsigned int)
+indexOf(
+			const XalanDOMChar*		theString,
+			const XalanDOMChar*		theSubstring)
 {
-	const unsigned int	theFirstStringLength = length(theFirstString);
-	const unsigned int	theSecondStringLength = length(theSecondString);
+	assert(theString != 0);
+	assert(theSubstring != 0);
+
+	const unsigned int	theStringLength = length(theString);
+	const unsigned int	theSubstringLength = length(theSubstring);
 
 	// If the substring is longer than the string, then
 	// it's not a substring.
-	if (theFirstStringLength < theSecondStringLength)
+	if (theStringLength < theSubstringLength)
 	{
-		return -1;
+		return theStringLength;
 	}
 	else
 	{
 		bool			fMatch = false;
 
-		unsigned int	theFirstStringIndex = 0;
+		unsigned int	theStringIndex = 0;
 
 		// While we haven't matched, and we haven't finished with the
 		// first string, and the number of characters left in the first
 		// string is greater than the length of the second string, try
 		// to match the strings.
 		while(fMatch == false &&
-			  theFirstStringIndex < theFirstStringLength &&
-			  theFirstStringLength - theFirstStringIndex >= theSecondStringLength)
+			  theStringIndex < theStringLength &&
+			  theStringLength - theStringIndex >= theSubstringLength)
 		{
 			// We always start over from the beginning of the second string.
-			unsigned int	theSecondStringIndex = 0;
+			unsigned int	theSubstringIndex = 0;
 
 			// This variable will be incremented to index into the first
 			// string.  That way, we preserve the first string index for
@@ -188,68 +210,96 @@ indexOf(const DOMString&	theFirstString,
 
 			// Compare the characters in the two strings, at the
 			// current indices, until the characters don't match.
-			while(theFirstStringIndex < theFirstStringLength &&
-				  theSecondStringIndex < theSecondStringLength &&
-				  charAt(theFirstString, theFirstStringIndex + theOffset) ==
-						charAt(theSecondString, theSecondStringIndex))
+			while(theStringIndex < theStringLength &&
+				  theSubstringIndex < theSubstringLength &&
+				  theString[theStringIndex + theOffset] ==
+						theSubstring[theSubstringIndex])
 			{
 				theOffset++;
-				theSecondStringIndex++;
+				theSubstringIndex++;
 			}
 
 			// If we've reached the end of the second string,
 			// then we've found a match.
-			if (theSecondStringIndex == theSecondStringLength)
+			if (theSubstringIndex == theSubstringLength)
 			{
 				fMatch = true;
 			}
 			else
 			{
-				theFirstStringIndex++;
+				theStringIndex++;
 			}
 		}
 
-		return fMatch == false ? -1 : theFirstStringIndex;
+		return fMatch == false ? theStringLength : theStringIndex;
 	}
 }
 
 
-// Simulates the java String method lastIndexOf().  Returns the index of theChar
-// in theString, or -1 if the character is not found.
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(int)
-lastIndexOf(const DOMString& theString, XMLCh theChar)
+
+
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(unsigned int)
+indexOf(
+			const XalanDOMString&	theString,
+			const XalanDOMString&	theSubstring)
+{
+	if (isEmpty(theString) == true)
+	{
+		return 0;
+	}
+	else if (isEmpty(theSubstring) == true)
+	{
+		return theString.length();
+	}
+	else
+	{
+		return indexOf(c_wstr(theString), c_wstr(theSubstring));
+	}
+}
+
+
+
+#if !defined(XALAN_FULL_WCHAR_SUPPORT)
+
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(unsigned int)
+lastIndexOf(
+			const XalanDOMChar*		theString,
+			XalanDOMChar			theChar)
 {
 	const unsigned int	theLength = length(theString);
 
 	if (theLength == 0)
 	{
-		return -1;
+		return theLength;
 	}
 	else
 	{
-		int	theIndex = theLength - 1;
+		unsigned int	theIndex = theLength - 1;
 
-		while(theIndex >=0 &&  charAt(theString, theIndex) != theChar)
+		while(theIndex < theLength && theString[theIndex] != theChar)
 		{
 			theIndex--;
 		}
 
-		return theIndex == -1 ? -1 : theIndex;
+		return theIndex > theLength ? theLength : theIndex;
 	}
 }
+
+#endif
 
 
 
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(bool)
-startsWith(const DOMString&		theDOMString,
-		   const DOMString&		theSubString)
+startsWith(
+			const XalanDOMChar*		theString,
+			const XalanDOMChar*		theSubstring)
 {
 	bool		fResult = false;
 
-	const unsigned int	theStringLength = length(theDOMString);
+	const unsigned int	theStringLength = length(theString);
 	assert(theStringLength >= 0);
 
-	const unsigned int	theSubStringLength = length(theSubString);
+	const unsigned int	theSubStringLength = length(theSubstring);
 	assert(theSubStringLength >= 0);
 
 	// If either string is of length 0, or if the substring
@@ -261,7 +311,7 @@ startsWith(const DOMString&		theDOMString,
 		// Compare each character...
 		for (;
 				i < theSubStringLength &&
-						charAt(theDOMString, i) == charAt(theSubString, i);
+						theString[i] == theSubstring[i];
 					i++)
 		{
 			;
@@ -281,15 +331,48 @@ startsWith(const DOMString&		theDOMString,
 
 
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(bool)
-endsWith(
-			const DOMString&	theDOMString,
-			const DOMString&	theSubString)
+startsWith(
+			const XalanDOMString&	theDOMString,
+			const XalanDOMString&	theSubstring)
 {
-	bool		fResult = false;
+	const bool	fStringIsEmpty = isEmpty(theDOMString);
+	const bool	fSubstringIsEmpty = isEmpty(theSubstring);
 
-	const unsigned int	theStringLength = length(theDOMString);
+	// $$$ ToDo: Are these cases with the empty strings
+	// correct?
+	if (fStringIsEmpty == true)
+	{
+		if (fSubstringIsEmpty == false)
+		{
+			return false;
+		}
+		else
+		{
+			return true;
+		}
+	}
+	else if (isEmpty(theSubstring) == true)
+	{
+		return false;
+	}
+	else
+	{
+		return startsWith(c_wstr(theDOMString), c_wstr(theSubstring));
+	}
+}
 
-	const unsigned int	theSubStringLength = length(theSubString);
+
+
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(bool)
+endsWith(
+			const XalanDOMChar*		theString,
+			const XalanDOMChar*		theSubstring)
+{
+	bool				fResult = false;
+
+	const unsigned int	theStringLength = length(theString);
+
+	const unsigned int	theSubStringLength = length(theSubstring);
 
 	// If either string is of length 0, or if the substring
 	// is longer, there's no point in continuing.
@@ -301,7 +384,7 @@ endsWith(
 		// Compare each character...
 		for (;
 				j >= 0 &&
-						charAt(theDOMString, i) == charAt(theSubString, j);
+						theString[i] == theSubstring[j];
 					--j, --i)
 		{
 			;
@@ -322,8 +405,8 @@ endsWith(
 
 
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(void)
-OutputString(TextOutputStream&	theStream,
-			 const DOMString&	theString)
+OutputString(TextOutputStream&		theStream,
+			 const XalanDOMString&	theString)
 {
 	if (isEmpty(theString) == false)
 	{
@@ -335,94 +418,162 @@ OutputString(TextOutputStream&	theStream,
 
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(void)
 OutputString(
-			 ostream&			theStream,
-			 const DOMString&	theString)
+			 ostream&				theStream,
+			 const XalanDOMString&	theString)
 {
 	char* const		theTranscodedString =
 		theString.transcode();
 
-	ArrayJanitor<char>	theJanitor(theTranscodedString);
+	array_auto_ptr<char>	theJanitor(theTranscodedString);
 
 	theStream << theTranscodedString;
 }
 
 
 
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(DOMString)
-toLowerCase(const DOMString&	theString)
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString)
+substring(
+			const XalanDOMChar*		theString,
+			unsigned int			theStartIndex,
+			unsigned int			theEndIndex)
 {
+	assert(theString != 0);
+
 	const unsigned int	theStringLength = length(theString);
 
-	if (theStringLength == 0)
+	// $$$ ToDo: In Java-land, any failing of these
+	// assertions would result in an exception being thrown.
+	assert(theStartIndex <= theStringLength && theStartIndex >= 0);
+
+	if (theStartIndex == theStringLength)
 	{
-		return theString;
+		// This is allowed, and should return an empty string.
+		return XalanDOMString();
 	}
 	else
 	{
-		DOMString	theLowerCaseString(theString.clone());
+		const unsigned int	theLength = theEndIndex == UINT_MAX ? theStringLength - theStartIndex :
+													theEndIndex - theStartIndex;
+		assert(theStartIndex + theLength <= theStringLength);
 
-		XMLCh* const	theBuffer = theLowerCaseString.rawBuffer();
-		assert(theBuffer != 0);
-
-		for(unsigned int i = 0; i < theStringLength; i++)
-		{
-			theBuffer[i] = towlower(theBuffer[i]);
-		}
-
-		return theLowerCaseString;
+		return XalanDOMString(theString + theStartIndex, theLength);
 	}
 }
 
 
 
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(DOMString)
-toUpperCase(const DOMString&	theString)
+
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString)
+substring(
+			const XalanDOMString&	theString,
+			unsigned int			theStartIndex,
+			unsigned int			theEndIndex)
 {
 	const unsigned int	theStringLength = length(theString);
 
-	if (theStringLength == 0)
+	// $$$ ToDo: In Java-land, any failing of these
+	// assertions would result in an exception being thrown.
+	assert(theStartIndex <= theStringLength && theStartIndex >= 0);
+
+	if (theStartIndex == theStringLength)
 	{
-		return theString;
+		// This is allowed, and should return an empty string.
+		return XalanDOMString();
 	}
 	else
 	{
-		DOMString	theLowerCaseString(theString.clone());
+		const unsigned int	theLength = theEndIndex == UINT_MAX ? theStringLength - theStartIndex :
+													theEndIndex - theStartIndex;
+		assert(theStartIndex + theLength <= theStringLength);
 
-		XMLCh* const	theBuffer = theLowerCaseString.rawBuffer();
+		// @@ JMD:
+		// If this is the case, the DOMString class doesn't create a new string,
+		// and in any case, does not null terminate the string, just points to
+		// the beginning, so we have to manually extract 'theLength' characters
+		// and create a new buffer
+		if (0 == theStartIndex)
+		{
+			vector<XalanDOMChar>	theBuffer;
+
+			// Reserve the buffer now.  We don't have to null-terminate,
+			// because the XalanDOMString constructor will take a size
+			// option.
+			theBuffer.reserve(theLength);
+
+			const XalanDOMChar* const	ptr = theString.rawBuffer();
+
+			copy(ptr,
+				 ptr + theLength,
+				 back_inserter(theBuffer));
+
+			return XalanDOMString(theBuffer.begin(), theBuffer.size());
+		}
+		else
+		{
+			return theString.substringData(theStartIndex, theLength);
+		}
+	}
+}
+
+
+
+template <class FunctionType>
+XalanDOMString
+TransformXalanDOMString(
+			const XalanDOMString&	theInputString,
+			FunctionType			theFunction)
+{
+	const unsigned int	theStringLength = length(theInputString);
+
+	if (theStringLength == 0)
+	{
+		return theInputString;
+	}
+	else
+	{
+		vector<XalanDOMChar>	theConvertedString;
+
+		const XalanDOMChar* const	theBuffer = c_wstr(theInputString);
 		assert(theBuffer != 0);
 
-		for(unsigned int i = 0; i < theStringLength; i++)
-		{
-			theBuffer[i] = towupper(theBuffer[i]);
-		}
+		transform(theBuffer,
+				  theBuffer + theStringLength,
+				  back_inserter(theConvertedString),
+				  theFunction);
 
-		return theLowerCaseString;
+		return XalanDOMString(theConvertedString.begin(), theConvertedString.size());
 	}
 }
 
 
 
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(bool)
-equals(const XMLCh*	theLHS,
-	   const XMLCh*	theRHS)
+
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString)
+toLowerCase(const XalanDOMString&	theString)
 {
-	assert(theLHS != 0 && theRHS != 0);
-
-	while(*theLHS != 0 && *theRHS != 0 && *theLHS == *theRHS)
-	{
-		theLHS++;
-		theRHS++;
-	}
-
-	return *theLHS == *theRHS ? true : false;
+	return TransformXalanDOMString(theString, towlower);
 }
 
 
 
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(bool)
-equalsIgnoreCase(const DOMString&	theLHS,
-				 const DOMString&	theRHS)
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString)
+toUpperCase(const XalanDOMString&	theString)
 {
+	return TransformXalanDOMString(theString, towupper);
+}
+
+
+
+#if !defined(_MSC_VER)
+
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(bool)
+equalsIgnoreCase(
+			const XalanDOMChar*		theLHS,
+			const XalanDOMChar*		theRHS)
+{
+	assert(theLHS != 0);
+	assert(theRHS != 0);
+
 	bool				fResult = false;
 
 	const unsigned int	theLength = length(theLHS);
@@ -436,8 +587,8 @@ equalsIgnoreCase(const DOMString&	theLHS,
 
 		for(; i < theLength; i++)
 		{
-			if (towupper(charAt(theLHS, i)) !=
-						towupper(charAt(theRHS, i)))
+			if (towupper(theLHS[i]) !=
+						towupper(theRHS[i]))
 			{
 				break;
 			}
@@ -453,12 +604,46 @@ equalsIgnoreCase(const DOMString&	theLHS,
 	return fResult;
 }
 
+#endif
 
+
+
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(bool)
+equalsIgnoreCase(
+			const XalanDOMString&	theLHS,
+			const XalanDOMString&	theRHS)
+{
+	const bool	fLHSIsEmpty = isEmpty(theLHS);
+	const bool	fRHSIsEmpty = isEmpty(theRHS);
+
+	if (fLHSIsEmpty == true)
+	{
+		// If theRHS is empty, then they're equal, or if the
+		// length of theRHS is 0, they're equal as well.
+		return fRHSIsEmpty == true ? true : length(theRHS) == 0 ? true : false;
+	}
+	else if (fRHSIsEmpty == true)
+	{
+		// It the length of theRHS is 0, they're equal.
+		return length(theLHS) == 0 ? true : false;
+	}
+	else
+	{
+		assert(c_wstr(theLHS) != 0);
+		assert(c_wstr(theRHS) != 0);
+
+		return equalsIgnoreCase(c_wstr(theLHS), c_wstr(theRHS));
+	}
+}
+
+
+
+#if !defined(XALAN_FULL_WCHAR_SUPPORT)
 
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(int)
 compare(
-			const DOMString&	theLHS,
-			const DOMString&	theRHS)
+			const XalanDOMChar*		theLHS,
+			const XalanDOMChar*		theRHS)
 {
 	unsigned const int	theLHSLength = length(theLHS);
 	unsigned const int	theRHSLength = length(theRHS);
@@ -467,15 +652,15 @@ compare(
 
 	if (theLHSLength != 0 || theRHSLength != 0)
 	{
-		XMLCh		theLHSChar = 0;
-		XMLCh		theRHSChar = 0;
+		XalanDOMChar		theLHSChar = 0;
+		XalanDOMChar		theRHSChar = 0;
 
 		unsigned int	i = 0;
 
 		for(; i < theLHSLength && i < theRHSLength; i++)
 		{
-			theLHSChar = charAt(theLHS, i);
-			theRHSChar = charAt(theRHS, i);
+			theLHSChar = theLHS[i];
+			theRHSChar = theRHS[i];
 
 			if (theLHSChar != theRHSChar)
 			{
@@ -513,11 +698,105 @@ compare(
 	return theResult;
 }
 
+#endif
+
+
+
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(int)
+compare(
+			const XalanDOMString&	theLHS,
+			const XalanDOMString&	theRHS)
+{
+	const bool	fLHSIsEmpty = isEmpty(theLHS);
+	const bool	fRHSIsEmpty = isEmpty(theRHS);
+
+	// correct?
+	if (fLHSIsEmpty == true)
+	{
+		if (fRHSIsEmpty == true || length(theRHS) == 0)
+		{
+			return 0;
+		}
+		else
+		{
+			return 1;
+		}
+	}
+	else if (isEmpty(theRHS) == true)
+	{
+		if (length(theLHS) == 0)
+		{
+			return 0;
+		}
+		else
+		{
+			return -1;
+		}
+	}
+	else
+	{
+		assert(c_wstr(theLHS) != 0 && c_wstr(theRHS) != 0);
+
+		return compare(c_wstr(theLHS), c_wstr(theRHS));
+	}
+}
+
+
+
+
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMCharVectorType)
+MakeXalanDOMCharVector(
+			const char*		data,
+			bool			fTranscode)
+{
+	assert(data != 0);
+
+	if (fTranscode == true)
+	{
+		XalanDOMChar*	theTranscodedData = XMLString::transcode(data);
+
+		array_auto_ptr<XalanDOMChar>	theJanitor(theTranscodedData);
+
+		// Create a vector which includes the terminating 0.
+
+		return MakeXalanDOMCharVector(theTranscodedData);
+	}
+	else
+	{
+		// Include the terminating null byte...
+		const unsigned int	theLength = strlen(data) + 1;
+
+		XalanDOMCharVectorType	theResult;
+		
+		theResult.reserve(theLength);
+
+		copy(data,
+			 data + theLength,
+			 back_inserter(theResult));
+
+		return theResult;
+	}
+}
+
+
+
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMCharVectorType)
+MakeXalanDOMCharVector(const XalanDOMChar*	data)
+{
+	assert(data != 0);
+
+	unsigned int	theLength = length(data);
+
+	// Create a vector which includes the terminating 0.
+	return XalanDOMCharVectorType(data, data + theLength);
+}
+
 
 
 static void
-CopyDOMStringToVector(const DOMString&		theString,
-					  vector<char>&			theVector)
+CopyWideStringToVector(
+			const XalanDOMChar*		theString,
+			vector<char>&			theVector)
 {
 	const int	theLength = length(theString);
 
@@ -529,14 +808,14 @@ CopyDOMStringToVector(const DOMString&		theString,
 		{
 #if defined(XALAN_OLD_STYLE_CASTS)
 			// Assert that the truncation will not affect the resulting character.
-			assert(charAt(theString, i) == (char)charAt(theString, i));
+			assert(theString[i] == (char)theString[i]);
 
-			theVector.push_back((char)charAt(theString, i));
+			theVector.push_back((char)theString[i]);
 #else
 			// Assert that the truncation will not affect the resulting character.
-			assert(charAt(theString, i) == static_cast<char>(charAt(theString, i)));
+			assert(theString[i] == static_cast<char>(theString[i]));
 
-			theVector.push_back(static_cast<char>(charAt(theString, i)));
+			theVector.push_back(static_cast<char>(theString[i]));
 #endif
 		}
 
@@ -547,16 +826,15 @@ CopyDOMStringToVector(const DOMString&		theString,
 
 
 
-
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(int)
-DOMStringToInt(const DOMString&	theString)
+WideStringToInt(const XalanDOMChar*		theString)
 {
 	int				theResult = 0;
 
 	vector<char>	theVector;
 
-	CopyDOMStringToVector(theString,
-						  theVector);
+	CopyWideStringToVector(theString,
+						   theVector);
 
 	if (theVector.size() > 0)
 	{
@@ -569,14 +847,14 @@ DOMStringToInt(const DOMString&	theString)
 
 
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(long)
-DOMStringToLong(const DOMString&	theString)
+WideStringToLong(const XalanDOMChar*	theString)
 {
 	long			theResult = 0;
 
 	vector<char>	theVector;
 
-	CopyDOMStringToVector(theString,
-						  theVector);
+	CopyWideStringToVector(theString,
+						   theVector);
 
 	if (theVector.size() > 0)
 	{
@@ -589,18 +867,21 @@ DOMStringToLong(const DOMString&	theString)
 
 
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(double)
-DOMStringToDouble(const DOMString&	theString)
+WideStringToDouble(const XalanDOMChar*	theString)
 {
-	double			theResult = DoubleSupport::getNaN();
+	double	theResult = DoubleSupport::getNaN();
 
-	if (length(theString) > 0)
+	// This extra test is here because of all the difficulties
+	// with Xerces DOMString implementation.  It's just
+	// easier this way...
+	if (theString != 0 && length(theString) > 0)
 	{
 		typedef vector<char>	VectorType;
 
 		VectorType				theVector;
 
-		CopyDOMStringToVector(theString,
-							  theVector);
+		CopyWideStringToVector(theString,
+							   theVector);
 
 		if (theVector.size() > 0)
 		{
@@ -638,8 +919,8 @@ DOMStringToDouble(const DOMString&	theString)
 
 
 
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(DOMString)
-trim(const DOMString&	theString)
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString)
+trim(const XalanDOMString&	theString)
 {
 	if (isEmpty(theString))
 		return theString;
@@ -665,25 +946,23 @@ trim(const DOMString&	theString)
 
 
 
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(DOMString)
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString)
 DoubleToDOMString(double	theDouble)
 {
 	if (DoubleSupport::isNaN(theDouble) == true)
 	{
-		return "NaN";
+		return XALAN_STATIC_UCODE_STRING("NaN");
 	}
 	else if (DoubleSupport::isPositiveInfinity(theDouble) == true)
 	{
-		return "Infinity";
+		return XALAN_STATIC_UCODE_STRING("Infinity");
 	}
 	else if (DoubleSupport::isNegativeInfinity(theDouble) == true)
 	{
-		return "-Infinity";
+		return XALAN_STATIC_UCODE_STRING("-Infinity");
 	}
 	else
 	{
-		ostrstream	theFormatter;
-
 		// $$$ ToDo: this is all temporary, until we get the NumberFormat and DecimalFormat
 		// classes working.
 		// According to the XPath standard, any values without
@@ -692,21 +971,14 @@ DoubleToDOMString(double	theDouble)
 
 		double	fracPart = fabs(modf(theDouble, &intPart));
 
-		string	theResult;
-
 		if (fracPart == 0)
 		{
-#if defined(XALAN_OLD_STYLE_CASTS)
-			theFormatter << (long)theDouble << '\0';
-
-#else
-			theFormatter << static_cast<long>(theDouble) << '\0';
-
-#endif
-			theResult = theFormatter.str();
+			return LongToDOMString(theDouble);
 		}
 		else
 		{
+			ostrstream	theFormatter;
+
 			theFormatter << theDouble << '\0';
 
 			// OK, now we have to clean up the output for
@@ -718,99 +990,126 @@ DoubleToDOMString(double	theDouble)
 			// point, and and least 1 non-zero digit after
 			// the decimal point, since any values with no
 			// fractional part were printed as integers
-			theResult = theFormatter.str();
+			XalanDOMCharVectorType	theResult =
+				MakeXalanDOMCharVector(theFormatter.str(), false);
 
-			string::iterator	thePosition = theResult.end();
+			theFormatter.freeze(false);
 
+			XalanDOMCharVectorType::iterator	thePosition = theResult.end();
+
+			// Move to the terminating null byte...
+			--thePosition;
+
+			// Now, move back while there are zeros.
 			while(*--thePosition == '0')
 			{
 			}
 
-			theResult.erase(++thePosition);
-		}
+			// Move up one, since we need to keep at least one...
+			++thePosition;
 
-		delete(theFormatter.str());
-		return theResult.c_str();
+			// Terminate it...
+			*thePosition = 0;
+
+			return XalanDOMString(theResult.begin());
+		}
 	}
 }
 
 
 
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(DOMString)
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString)
 LongToHexDOMString(long		theLong)
 {
+#if defined(XALAN_FULL_WCHAR_SUPPORT)
+
+	wchar_t		theBuffer[MAX_PRINTF_DIGITS + 1];
+
+	swprintf(theBuffer,
+			 L"%lx",
+			 theLong);
+
+	return XalanDOMString(theBuffer, length(theBuffer));
+
+#else
+
 	ostrstream	theFormatter;
 
 	theFormatter << hex << theLong << '\0';
-	DOMString theString = theFormatter.str();
-	delete theFormatter.str();
+
+	const XalanDOMString	theString = theFormatter.str();
+
+	theFormatter.freeze(false);
+
 	return theString;
+
+#endif
 }
 
 
 
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(DOMString)
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString)
 LongToDOMString(long	theLong)
 {
+#if defined(XALAN_FULL_WCHAR_SUPPORT)
+
+	wchar_t		theBuffer[MAX_PRINTF_DIGITS + 1];
+
+	swprintf(theBuffer,
+			 L"%ld",
+			 theLong);
+
+	return XalanDOMString(theBuffer, length(theBuffer));
+
+#else
+
 	ostrstream	theFormatter;
 
 	theFormatter << theLong << '\0';
-	DOMString theString = theFormatter.str();
-	delete theFormatter.str();
+
+	XalanDOMString	theString = MakeDOMStheFormatter.str();
+
+	theFormatter.freeze(false);
+
 	return theString;
+
+#endif
 }
 
 
 
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(DOMString)
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString)
 UnsignedLongToDOMString(unsigned long	theUnsignedLong)
 {
+#if defined(XALAN_FULL_WCHAR_SUPPORT)
+
+	wchar_t		theBuffer[MAX_PRINTF_DIGITS + 1];
+
+	swprintf(theBuffer,
+			 L"%lu",
+			 theUnsignedLong);
+
+	return XalanDOMString(theBuffer, length(theBuffer));
+
+#else
+
 	ostrstream	theFormatter;
 
 	theFormatter << theUnsignedLong << '\0';
-	DOMString theString = theFormatter.str();
-	delete theFormatter.str();
+
+	XalanDOMString	theString = theFormatter.str();
+
+	theFormatter.freeze(false);
+
 	return theString;
-}
 
-
-
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XMLCharVectorType)
-MakeXMLChVector(const char*		data)
-{
-	assert(data != 0);
-
-	XMLCh*	theTranscodedData = XMLString::transcode(data);
-
-	ArrayJanitor<XMLCh>		theJanitor(theTranscodedData);
-
-	// Create a vector which includes the terminating 0.
-	return MakeXMLChVector(theTranscodedData);
-}
-
-
-
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XMLCharVectorType)
-MakeXMLChVector(const XMLCh*		data)
-{
-	assert(data != 0);
-
-	const XMLCh*	theEnd = data;
-
-	// Find the terminating 0.
-	while(*theEnd)
-	{
-		theEnd++;
-	}
-
-	// Create a vector which includes the terminating 0.
-	return XMLCharVectorType(data, theEnd + 1);
+#endif
 }
 
 
 
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(bool)
-isWhiteSpace(const DOMString& string)
+isWhiteSpace(const XalanDOMString&	string)
 {
 	const unsigned int	theLength = length(string);
 
@@ -827,9 +1126,9 @@ isWhiteSpace(const DOMString& string)
 
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(bool)
 isWhiteSpace(
-			const XMLCh* const	ch,
-			unsigned int		start,
-			unsigned int		length)
+			const XalanDOMChar* const	ch,
+			unsigned int				start,
+			unsigned int				length)
 {
 	const unsigned int	end = start + length;
 
@@ -845,10 +1144,10 @@ isWhiteSpace(
 
 
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(string)
-DOMStringToStdString(const DOMString& domString)
+DOMStringToStdString(const XalanDOMString&	domString)
 {
-	XMLCh* toTranscode = domString.rawBuffer();
-	unsigned int len = domString.length();
+	XalanDOMChar* const		toTranscode = domString.rawBuffer();
+	unsigned int			len = domString.length();
 
 
     // Short circuit if its a null pointer
@@ -857,21 +1156,22 @@ DOMStringToStdString(const DOMString& domString)
         return string();
 	}
 
-    // See if our XMLCh and wchar_t as the same on this platform
-    const bool isSameSize = (sizeof(XMLCh) == sizeof(wchar_t));
+    // See if our XalanDOMChar and wchar_t as the same on this platform
+    const bool isSameSize = (sizeof(XalanDOMChar) == sizeof(wchar_t));
 
     //
     //  Get the actual number of chars. If the passed len is zero, its null
     //  terminated. Else we have to use the len.
     //
     wchar_t realLen = (wchar_t)len;
+
     if (!realLen)
     {
         //
         //  We cannot just assume we can use wcslen() because we don't know
-        //  if our XMLCh is the same as wchar_t on this platform.
+        //  if our XalanDOMChar is the same as wchar_t on this platform.
         //
-        const XMLCh* tmpPtr = toTranscode;
+        const XalanDOMChar* tmpPtr = toTranscode;
         while (*(tmpPtr++))
             realLen++;
     }
@@ -883,7 +1183,7 @@ DOMStringToStdString(const DOMString& domString)
     //
     wchar_t* const	tmpSource = new wchar_t[realLen + 1];
 
-	ArrayJanitor<wchar_t>	tmpSourceJanitor(tmpSource);
+	array_auto_ptr<wchar_t>		tmpSourceJanitor(tmpSource);
 
     if (isSameSize)
     {
@@ -905,14 +1205,15 @@ DOMStringToStdString(const DOMString& domString)
     // Allocate out storage member
     char* const		localForm = new char[targetLen + 1];
 
-	ArrayJanitor<char>	localFormJanitor(localForm);
+	array_auto_ptr<char>	localFormJanitor(localForm);
 
     //
     //  And transcode our temp source buffer to the local buffer. Cap it
     //  off since the converter won't do it (because the null is beyond
     //  where the target will fill up.)
     //
-    ::wcstombs(localForm, tmpSource, targetLen);
+    wcstombs(localForm, tmpSource, targetLen);
+
     localForm[targetLen] = 0;
 
 	return localForm;

@@ -63,8 +63,10 @@
 
 
 XSLException::XSLException(
-		const DOMString&	theMessage,
-		const DOMString&	theType) : m_message(theMessage), m_type(theType)
+		const XalanDOMString&	theMessage,
+		const XalanDOMString&	theType) :
+	m_message(theMessage),
+	m_type(theType)
 {
 }
 
@@ -73,6 +75,3 @@ XSLException::XSLException(
 XSLException::~XSLException()
 {
 }
-
-
-

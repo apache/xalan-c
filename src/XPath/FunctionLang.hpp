@@ -68,7 +68,8 @@
 
 
 
-#include <Include/DOMHelper.hpp>
+#include <XalanDOM/XalanElement.hpp>
+#include <XalanDOM/XalanNode.hpp>
 
 
 
@@ -103,7 +104,7 @@ public:
 	virtual XObject*
 	execute(
 			XPathExecutionContext&			executionContext,
-			const DOM_Node&					context,
+			XalanNode*						context,
 			int								/* opPos */,
 			const XObjectArgVectorType&		args)
 	{
@@ -113,20 +114,21 @@ public:
 								   context);
 		}
 
-		DOM_Node			parent = context;
+		const XalanNode*		parent = context;
 
-		bool				fMatch = false;
+		bool					fMatch = false;
 
-		const DOMString		lang(args[0]->str());
+		const XalanDOMString	lang(args[0]->str());
 
 		while(0 != parent)
 		{
-			if(DOM_Node::ELEMENT_NODE == parent.getNodeType())
+			if(XalanNode::ELEMENT_NODE == parent->getNodeType())
 			{
-				const DOM_Element&	theElementNode =
-					reinterpret_cast<const DOM_Element&>(parent);
+				const XalanElement* const	theElementNode =
+					static_cast<const XalanElement*>(parent);
 
-				const DOMString		langVal = theElementNode.getAttribute("xml:lang");
+				const XalanDOMString		langVal =
+					theElementNode->getAttribute("xml:lang");
 
 				if(0 != length(langVal))
 				{
@@ -145,7 +147,7 @@ public:
 				}
 			}
 
-			parent = executionContext.getParentOfNode(parent);
+			parent = executionContext.getParentOfNode(*parent);
 		}
 
 		return executionContext.getXObjectFactory().createBoolean(fMatch);

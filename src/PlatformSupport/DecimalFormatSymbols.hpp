@@ -64,7 +64,7 @@
 
 
 
-#include <dom/DOMString.hpp>
+#include <XalanDOM/XalanDOMString.hpp>
 
 
 
@@ -90,7 +90,7 @@ public:
 	 * 
 	 * @return string used for local currency
 	 */
-	DOMString
+	const XalanDOMString&
 	getCurrencySymbol() const
 	{
 		return m_currencySymbol;
@@ -101,7 +101,7 @@ public:
 	 * 
 	 * @return character used for decimal sign
 	 */
-	XMLCh
+	XalanDOMChar
 	getDecimalSeparator() const
 	{
 		return m_decimalSeparator;
@@ -112,7 +112,7 @@ public:
 	 * 
 	 * @return character used for a digit in a pattern 
 	 */
-	XMLCh
+	XalanDOMChar
 	getDigit() const
 	{
 		return m_digit;
@@ -123,7 +123,7 @@ public:
 	 * 
 	 * @return character used for thousands separator
 	 */
-	XMLCh
+	XalanDOMChar
 	getGroupingSeparator() const
 	{
 		return m_groupingSeparator;
@@ -134,7 +134,7 @@ public:
 	 * 
 	 * @return string used to represent infinity
 	 */
-	DOMString
+	const XalanDOMString&
 	getInfinity() const
 	{
 		return m_infinity;
@@ -145,7 +145,7 @@ public:
 	 * 
 	 * @return international string denoting the local currency
 	 */
-	DOMString
+	const XalanDOMString&
 	getInternationalCurrencySymbol() const
 	{
 		return m_internationalCurrencySymbol;
@@ -156,7 +156,7 @@ public:
 	 * 
 	 * @return character used to represent minus sign
 	 */
-	XMLCh
+	XalanDOMChar
 	getMinusSign() const
 	{
 		return m_minusSign;
@@ -167,7 +167,7 @@ public:
 	 * 
 	 * @return character used to separate decimal portion of currency
 	 */
-	XMLCh
+	XalanDOMChar
 	getMonetaryDecimalSeparator() const
 	{
 		return m_monetaryDecimalSeparator;
@@ -179,7 +179,7 @@ public:
 	 * 
 	 * @return string representing "not a number" value
 	 */
-	DOMString
+	const XalanDOMString&
 	getNaN() const
 	{
 		return m_NaN;
@@ -191,7 +191,7 @@ public:
 	 * 
 	 * @return character used to separate positive and negative subpatterns
 	 */
-	XMLCh
+	XalanDOMChar
 	getPatternSeparator() const
 	{
 		return m_patternSeparator;
@@ -202,7 +202,7 @@ public:
 	 * 
 	 * @return character used for percent sign
 	 */
-	XMLCh
+	XalanDOMChar
 	getPercent() const
 	{
 		return m_percent;
@@ -213,7 +213,7 @@ public:
 	 * 
 	 * @return character used for per thousand sign
 	 */
-	XMLCh
+	XalanDOMChar
 	getPerMill() const
 	{
 		return m_perMill;
@@ -224,7 +224,7 @@ public:
 	 * 
 	 * @return character used for zero
 	 */
-	XMLCh
+	XalanDOMChar
 	getZeroDigit() const
 	{
 		return m_zeroDigit;
@@ -236,7 +236,7 @@ public:
 	 * @param theCurrencySymbol symbol used for local currency
 	 */
 	void
-	setCurrencySymbol(const DOMString&	theCurrencySymbol)
+	setCurrencySymbol(const XalanDOMString&	theCurrencySymbol)
 	{
 		m_currencySymbol = theCurrencySymbol;
 	}
@@ -247,7 +247,7 @@ public:
 	 * @param theDecimalSeparator character used for decimal sign
 	 */
 	void
-	setDecimalSeparator(XMLCh	theDecimalSeparator)
+	setDecimalSeparator(XalanDOMChar	theDecimalSeparator)
 	{
 		m_decimalSeparator = theDecimalSeparator;
 	}
@@ -258,7 +258,7 @@ public:
 	 * @param theDigit character used for a digit in a pattern 
 	 */
 	void
-	setDigit(XMLCh	theDigit)
+	setDigit(XalanDOMChar	theDigit)
 	{
 		m_digit = theDigit;
 	}
@@ -269,7 +269,7 @@ public:
 	 * @param theGroupingSeparator character used for thousands separator
 	 */
 	void
-	setGroupingSeparator(XMLCh	theGroupingSeparator)
+	setGroupingSeparator(XalanDOMChar	theGroupingSeparator)
 	{
 		m_groupingSeparator = theGroupingSeparator;
 	}
@@ -280,7 +280,7 @@ public:
 	 * @param theInfinity string used to represent infinity
 	 */
 	void
-	setInfinity(const DOMString&	theInfinity)
+	setInfinity(const XalanDOMString&	theInfinity)
 	{
 		m_infinity = theInfinity;
 	}
@@ -292,7 +292,7 @@ public:
 	 *                                       local currency
 	 */
 	void
-	setInternationalCurrencySymbol(const DOMString&		theInternationalCurrencySymbol)
+	setInternationalCurrencySymbol(const XalanDOMString&		theInternationalCurrencySymbol)
 	{
 		m_internationalCurrencySymbol = theInternationalCurrencySymbol;
 	}
@@ -303,7 +303,7 @@ public:
 	 * @param theMinusSign character used to represent minus sign
 	 */
 	void
-	setMinusSign(XMLCh	theMinusSign)
+	setMinusSign(XalanDOMChar	theMinusSign)
 	{
 		m_minusSign = theMinusSign;
 	}
@@ -315,7 +315,7 @@ public:
 	 *                                    portion of currency
 	 */
 	void
-	setMonetaryDecimalSeparator(XMLCh	theMonetaryDecimalSeparator)
+	setMonetaryDecimalSeparator(XalanDOMChar	theMonetaryDecimalSeparator)
 	{
 		m_monetaryDecimalSeparator = theMonetaryDecimalSeparator;
 	}
@@ -327,7 +327,7 @@ public:
 	 * @param theNaN string representing "not a number" value
 	 */
 	void
-	setNaN(const DOMString&		theNaN)
+	setNaN(const XalanDOMString&	theNaN)
 	{
 		m_NaN = theNaN;
 	}
@@ -340,7 +340,7 @@ public:
 	 *                            negative subpatterns
 	 */
 	void
-	setPatternSeparator(XMLCh	thePatternSeparator)
+	setPatternSeparator(XalanDOMChar	thePatternSeparator)
 	{
 		m_patternSeparator = thePatternSeparator;
 	}
@@ -351,7 +351,7 @@ public:
 	 * @param thePercent character used for percent sign
 	 */
 	void
-	setPercent(XMLCh	thePercent)
+	setPercent(XalanDOMChar	thePercent)
 	{
 		m_percent = thePercent;
 	}
@@ -362,7 +362,7 @@ public:
 	 * @param thePerMill character used for per thousand sign
 	 */
 	void
-	setPerMill(XMLCh	thePerMill)
+	setPerMill(XalanDOMChar	thePerMill)
 	{
 		m_perMill = thePerMill;
 	}
@@ -373,7 +373,7 @@ public:
 	 * @param theZeroDigit character used for zero
 	 */
 	void
-	setZeroDigit(XMLCh	theZeroDigit)
+	setZeroDigit(XalanDOMChar	theZeroDigit)
 	{
 		m_zeroDigit = theZeroDigit;
 	}
@@ -384,24 +384,24 @@ private:
 	bool
 	operator==(const DecimalFormatSymbols&);
 
-	DOMString		m_currencySymbol;
+	XalanDOMString	m_currencySymbol;
 
-	XMLCh			m_decimalSeparator;
-	XMLCh			m_digit;
-	XMLCh			m_groupingSeparator;
+	XalanDOMChar	m_decimalSeparator;
+	XalanDOMChar	m_digit;
+	XalanDOMChar	m_groupingSeparator;
 
-	DOMString		m_infinity;
-	DOMString		m_internationalCurrencySymbol;
+	XalanDOMString	m_infinity;
+	XalanDOMString	m_internationalCurrencySymbol;
 
-	XMLCh			m_minusSign;
-	XMLCh			m_monetaryDecimalSeparator;
+	XalanDOMChar	m_minusSign;
+	XalanDOMChar	m_monetaryDecimalSeparator;
 
-	DOMString		m_NaN;
+	XalanDOMString	m_NaN;
 
-	XMLCh			m_patternSeparator;
-	XMLCh			m_percent;
-	XMLCh			m_perMill;
-	XMLCh			m_zeroDigit;
+	XalanDOMChar	m_patternSeparator;
+	XalanDOMChar	m_percent;
+	XalanDOMChar	m_perMill;
+	XalanDOMChar	m_zeroDigit;
 };
 
 

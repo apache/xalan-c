@@ -99,7 +99,7 @@ public:
 	virtual XObject*
 	execute(
 			XPathExecutionContext&			executionContext,
-			const DOM_Node&					context,
+			XalanNode*						context,
 			int								/* opPos */,
 			const XObjectArgVectorType&		args)
 	{
@@ -111,7 +111,7 @@ public:
 								   context);
 		}
 
-		DOMString	theResult;
+		XalanDOMString	theResult;
 
 		for(XObjectArgVectorType::size_type i = 0; i < theArgCount; i++)
 		{

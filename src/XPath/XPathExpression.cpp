@@ -210,9 +210,11 @@ XPathExpression::XPathExpression() :
 	m_lastOpCodeIndex(0),
 	m_tokenQueue(),
 	m_currentPosition(0),
-	m_patternMap(200),
+	m_patternMap(100),
 	m_currentPattern()
 {
+	m_opMap.reserve(100);
+	m_tokenQueue.reserve(100);
 }
 
 
@@ -237,6 +239,7 @@ void
 XPathExpression::shrink()
 {
 	m_opMap = OpCodeMapType(m_opMap);
+	TokenQueueType(m_tokenQueue).swap(m_tokenQueue);
 	m_patternMap = PatternMapType(m_patternMap);
 }
 

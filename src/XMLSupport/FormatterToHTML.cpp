@@ -105,20 +105,26 @@ const FormatterToHTML::AttributesMapType FormatterToHTML::s_attruris =
 
 
 FormatterToHTML::FormatterToHTML(
-	  Writer&				writer,
-	  const DOMString& version,
-	  bool doIndent, 
-	  int indent,
-	  const DOMString& encoding, 
-	  const DOMString& mediaType,
-	  const DOMString& doctypeSystem,
-	  const DOMString& doctypePublic,
-	  bool xmlDecl,
-	  const DOMString& standalone, 
-	  const QNameVectorType* const cdataSectionElems) :
-	FormatterToXML( writer, version, doIndent, indent,
-	  encoding, mediaType, doctypeSystem, doctypePublic,
-	  xmlDecl, standalone, cdataSectionElems),
+			Writer&					writer,
+			const XalanDOMString&	version,
+			bool					doIndent,
+			int						indent,
+			const XalanDOMString&	encoding,
+			const XalanDOMString&	mediaType,
+			const XalanDOMString&	doctypeSystem,
+			const XalanDOMString&	doctypePublic,
+			bool					xmlDecl,
+			const XalanDOMString&	standalone) :
+	FormatterToXML(writer,
+				   version,
+				   doIndent,
+				   indent,
+				   encoding,
+				   mediaType,
+				   doctypeSystem,
+				   doctypePublic,
+				   xmlDecl,
+				   standalone),
 	m_currentElementName()
 {
 }
@@ -187,7 +193,7 @@ FormatterToHTML::startElement(
 			const	XMLCh* const	name,
 			AttributeList&			attrs)
 {
-	DOMString theName(name);
+	XalanDOMString theName(name);
 	if(true == m_needToOutputDocTypeDecl)
 	{
 		try
@@ -330,8 +336,8 @@ FormatterToHTML::characters(
 	}
 
 	if((! isEmpty(m_currentElementName)) &&
-			(equalsIgnoreCase(m_currentElementName, "SCRIPT") ||
-			 equalsIgnoreCase(m_currentElementName, "STYLE")))
+			(equalsIgnoreCase(m_currentElementName, XALAN_STATIC_UCODE_STRING("SCRIPT")) ||
+			 equalsIgnoreCase(m_currentElementName, XALAN_STATIC_UCODE_STRING("STYLE"))))
 	{
 		try
 		{
@@ -339,10 +345,10 @@ FormatterToHTML::characters(
 			m_ispreserve = true;
 			if (shouldIndent())
 				indent(m_writer, m_currentIndent);
-			// m_writer.write("<![CDATA[");
+			// m_writer.write(XALAN_STATIC_UCODE_STRING("<![CDATA["));
 			// m_writer.write(chars, 0, length);
 			writeNormalizedChars(chars, 0, length, false);
-			// m_writer.write("]]>");
+			// m_writer.write(XALAN_STATIC_UCODE_STRING("]]>"));
 			return;
 		}
 		// java: catch(IOException ioe)
@@ -368,15 +374,15 @@ FormatterToHTML::characters(
 			}
 			else if ('<' == ch) 
 			{
-				pos = copyEntityIntoBuf("lt", pos);
+				pos = copyEntityIntoBuf(XALAN_STATIC_UCODE_STRING("lt"), pos);
 			}
 			else if ('>' == ch) 
 			{
-				pos = copyEntityIntoBuf("gt", pos);
+				pos = copyEntityIntoBuf(XALAN_STATIC_UCODE_STRING("gt"), pos);
 			}
 			else if ('&' == ch) 
 			{
-				pos = copyEntityIntoBuf("amp", pos);
+				pos = copyEntityIntoBuf(XALAN_STATIC_UCODE_STRING("amp"), pos);
 			}
 			else if((chNum >= 9) && (chNum <= 126))
 			{
@@ -392,7 +398,7 @@ FormatterToHTML::characters(
 			}
 			else if (402 == ch) 
 			{
-				pos = copyEntityIntoBuf("fnof", pos);
+				pos = copyEntityIntoBuf(XALAN_STATIC_UCODE_STRING("fnof"), pos);
 			}
 			else if (m_isUTF8 && (0xd800 <= chNum && chNum < 0xdc00)) 
 			{
@@ -406,18 +412,21 @@ FormatterToHTML::characters(
 			}
 			else
 			{
-				DOMString ds;
+				XalanDOMString ds;
 				m_charBuf[pos++] = '&';
 				m_charBuf[pos++] = '#';
 				ds = LongToDOMString(chNum);
-				const XMLCh* pb = c_wstr(ds);
-				int nIntStr = ds.length();
+				const XalanDOMChar* const	pb = c_wstr(ds);
+				const int					nIntStr = ds.length();
+
 				for(int k = 0; k < nIntStr; k++)
 				{
 					m_charBuf[pos++] = *(pb+k);
 				}
+
 				m_charBuf[pos++] = ';';
 			}
+
 			// Use 80 as a best guess safe buffer
 			if(pos > MAXSAFECHARBUF)
 			{
@@ -425,6 +434,7 @@ FormatterToHTML::characters(
 				pos = 0;
 			}
 		}
+
 		m_writer.write(m_charBuf, 0, pos);
 		m_isprevtext = true;
 	}
@@ -458,8 +468,8 @@ FormatterToHTML::cdata(
 			const XMLCh* const	ch,
 			const unsigned int 	length)
 {
-	if(equalsIgnoreCase(m_currentElementName, "SCRIPT") ||
-		equalsIgnoreCase(m_currentElementName, "STYLE"))
+	if(equalsIgnoreCase(m_currentElementName, XALAN_STATIC_UCODE_STRING("SCRIPT")) ||
+		equalsIgnoreCase(m_currentElementName, XALAN_STATIC_UCODE_STRING("STYLE")))
 	{
 		try
 		{
@@ -508,16 +518,17 @@ FormatterToHTML::cdata(
 
 void
 FormatterToHTML::processAttribute(
-			const DOMString&	name,
-			const DOMString&	value)
+			const XalanDOMString&	name,
+			const XalanDOMString&	value)
 {
 	try
 	{
-		if(!name.equals("xmlns") && !startsWith(name, "xmlns:"))
+		if(!equals(name, XALAN_STATIC_UCODE_STRING("xmlns")) &&
+			!startsWith(name, XALAN_STATIC_UCODE_STRING("xmlns:")))
 		{
-			DOMString pval;
-			DOMString aname = toLowerCase(name);
-			if (equals(aname, "xml:lang"))  aname = "lang";
+			XalanDOMString pval;
+			XalanDOMString aname = toLowerCase(name);
+			if (equals(aname, XALAN_STATIC_UCODE_STRING("xml:lang")))  aname = XALAN_STATIC_UCODE_STRING("lang");
 			// qualify with an element??
 			AttributesMapType::const_iterator it = 
 				(s_attruris.find(toLowerCase(m_currentElementName)));
@@ -537,7 +548,7 @@ FormatterToHTML::processAttribute(
 			{
 				m_writer.write(' ');
 				m_writer.write(name);
-				m_writer.write("=\"");
+				m_writer.write(XALAN_STATIC_UCODE_STRING("=\""));
 				m_writer.write(pval);
 				m_writer.write('\"');
 			}
@@ -551,7 +562,7 @@ FormatterToHTML::processAttribute(
 				else
 				{
 					m_writer.write(name);
-					m_writer.write("=\"");
+					m_writer.write(XALAN_STATIC_UCODE_STRING("=\""));
 					m_writer.write(pval);
 					m_writer.write('\"');
 				}
@@ -574,20 +585,23 @@ FormatterToHTML::processAttribute(
  * @param   encoding    CURRENTLY NOT IMPLEMENTED.
  * @return              XML-formatted string.
  */
-const DOMString FormatterToHTML::prepAttrURI(
-			const DOMString& string,
-			const DOMString& /* specials */,
-			const DOMString& /* encoding */)
-	// java: throws SAXException
+const XalanDOMString
+FormatterToHTML::prepAttrURI(
+			const XalanDOMString&	string,
+			const XalanDOMString&	/* specials */,
+			const XalanDOMString&	/* encoding */)
 {
-	DOMString sb;
+	XalanDOMString sb;
+
 	const unsigned int	theLength = length(string);
 
 	for (unsigned int i = 0;  i < theLength;  i ++)
 	{
-		const XMLCh ch = charAt(string, i);
-		DOMString sch(&ch, 1);
-		const int ich = ch;
+		const XalanDOMChar	ch = charAt(string, i);
+		XalanDOMString		sch(&ch, 1);
+
+		const int			ich = ch;
+
 		if(((ch > 0x1F) &&   // X'00 - 1F' not valid
 					(ch < 0x7F)) &&   // X'7F' not valid
 				(s_escapetb.find(sch)== s_escapetb.end())  ) // characters in the table
@@ -606,13 +620,15 @@ const DOMString FormatterToHTML::prepAttrURI(
 			// if first 8 bytes are 0, no need to append them.
 			if (b1 != 0)
 			{	 
-				sb += "%";
+				sb += XALAN_STATIC_UCODE_STRING("%");
 				sb += LongToHexDOMString(b1);
-			}	
-			sb += "%";
+			}
+
+			sb += XALAN_STATIC_UCODE_STRING("%");
 			sb += LongToHexDOMString(b2);
 		}
 	}
+
 	return sb;
 }
   
@@ -698,32 +714,32 @@ FormatterToHTML::createAttributesMap()
 	StringSetType URLAttrsCITESingle;
 	URLAttrsCITESingle.insert(XALAN_STATIC_UCODE_STRING("cite"));
 
-	theAtts.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("base")), URLAttrsHREFSingle));
-	theAtts.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("link")), URLAttrsHREFSingle));
-	theAtts.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("area")), URLAttrsHREFSingle));
+	theAtts.insert(std::make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("base")), URLAttrsHREFSingle));
+	theAtts.insert(std::make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("link")), URLAttrsHREFSingle));
+	theAtts.insert(std::make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("area")), URLAttrsHREFSingle));
 	// From the HTML 4.0 spec: Note. The same conversion based on UTF-8 
 	// should be applied to values of the name attribute for the A element. 
 
 	StringSetType URLAttrs_A;
 	URLAttrs_A.insert(XALAN_STATIC_UCODE_STRING("href"));
 	URLAttrs_A.insert(XALAN_STATIC_UCODE_STRING("name"));
-	theAtts.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("a")), URLAttrs_A));
+	theAtts.insert(std::make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("a")), URLAttrs_A));
 
 	StringSetType URLAttrs_INPUT;
 	URLAttrs_A.insert(XALAN_STATIC_UCODE_STRING("src"));
 	URLAttrs_A.insert(XALAN_STATIC_UCODE_STRING("usemap"));
-	theAtts.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("input")), URLAttrs_INPUT));
+	theAtts.insert(std::make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("input")), URLAttrs_INPUT));
 
 	StringSetType URLAttrs_SCRIPT;
 	URLAttrs_A.insert(XALAN_STATIC_UCODE_STRING("src"));
 	URLAttrs_A.insert(XALAN_STATIC_UCODE_STRING("for"));
-	theAtts.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("script")), URLAttrs_SCRIPT));
+	theAtts.insert(std::make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("script")), URLAttrs_SCRIPT));
 
 	StringSetType URLAttrs_IMG;
 	URLAttrs_A.insert(XALAN_STATIC_UCODE_STRING("src"));
 	URLAttrs_A.insert(XALAN_STATIC_UCODE_STRING("longdesc"));
 	URLAttrs_A.insert(XALAN_STATIC_UCODE_STRING("usemap"));
-	theAtts.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("img")), URLAttrs_IMG));
+	theAtts.insert(std::make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("img")), URLAttrs_IMG));
 
 	StringSetType URLAttrs_OBJECT;
 	URLAttrs_A.insert(XALAN_STATIC_UCODE_STRING("classid"));
@@ -731,20 +747,20 @@ FormatterToHTML::createAttributesMap()
 	URLAttrs_A.insert(XALAN_STATIC_UCODE_STRING("data"));
 	URLAttrs_A.insert(XALAN_STATIC_UCODE_STRING("archive"));
 	URLAttrs_A.insert(XALAN_STATIC_UCODE_STRING("usemap"));
-	theAtts.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("object")), URLAttrs_OBJECT));
+	theAtts.insert(std::make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("object")), URLAttrs_OBJECT));
 
-	theAtts.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("q")), URLAttrsCITESingle));
-	theAtts.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("blockquote")), URLAttrsCITESingle));
-	theAtts.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("ins")), URLAttrsCITESingle));
-	theAtts.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("del")), URLAttrsCITESingle));
+	theAtts.insert(std::make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("q")), URLAttrsCITESingle));
+	theAtts.insert(std::make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("blockquote")), URLAttrsCITESingle));
+	theAtts.insert(std::make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("ins")), URLAttrsCITESingle));
+	theAtts.insert(std::make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("del")), URLAttrsCITESingle));
 
 	StringSetType URLAttrs_FORM;
 	URLAttrs_A.insert(XALAN_STATIC_UCODE_STRING("action"));
-	theAtts.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("form")), URLAttrs_FORM));
+	theAtts.insert(std::make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("form")), URLAttrs_FORM));
 
 	StringSetType URLAttrs_HEAD;
 	URLAttrs_A.insert(XALAN_STATIC_UCODE_STRING("profile"));
-	theAtts.insert(std::make_pair(DOMString(XALAN_STATIC_UCODE_STRING("head")), URLAttrs_HEAD));
+	theAtts.insert(std::make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("head")), URLAttrs_HEAD));
 	return theAtts;
 }
 

@@ -68,7 +68,7 @@
 
 
 
-#include <dom/DOMString.hpp>
+#include <XalanDOM/XalanDOMString.hpp>
 
 
 
@@ -76,7 +76,7 @@
 
 
 
-class DOM_Element;
+class XalanElement;
 class NameSpace;
 class PrefixResolver;
 class XPathEnvSupport;
@@ -115,8 +115,8 @@ public:
 	 * @param theLocalPart local part string
 	 */
 	QName(
-			const DOMString&	theNamespace = DOMString(),
-			const DOMString&	theLocalPart = DOMString());
+			const XalanDOMString&	theNamespace = XalanDOMString(),
+			const XalanDOMString&	theLocalPart = XalanDOMString());
 
 	/**
 	 * Construct a QName from a string, resolving the prefix using the given
@@ -126,7 +126,7 @@ public:
 	 * @param namespaces namespace vector stack to use
 	 */
 	QName(
-			const DOMString&				qname,
+			const XalanDOMString&		qname,
 			const NamespacesStackType&	namespaces);
 
 	/**
@@ -139,8 +139,8 @@ public:
 	 * @param support          XPath support class instance
 	 */
 	QName(
-			const DOMString&		qname,
-			const DOM_Element&		namespaceContext,
+			const XalanDOMString&	qname,
+			const XalanElement*		namespaceContext,
 			const XPathEnvSupport&	envSupport,
 			const XPathSupport&		support);
 
@@ -152,7 +152,7 @@ public:
 	 * @param theResolver prefix resolver to use
 	 */
 	QName(
-			const DOMString&		qname,
+			const XalanDOMString&		qname,
 			const PrefixResolver&	theResolver);
 
 	~QName();
@@ -162,7 +162,7 @@ public:
 	 * 
 	 * @return local part string
 	 */
-	const DOMString&
+	const XalanDOMString&
 	getLocalPart() const
 	{
 		return m_localpart;
@@ -173,7 +173,7 @@ public:
 	 * 
 	 * @return namespace string
 	 */
-	const DOMString&
+	const XalanDOMString&
 	getNamespace() const
 	{
 		return m_namespace;
@@ -219,8 +219,8 @@ public:
 	 * @param prefix     namespace prefix to find
 	 * @param reverse    true to search vector from last to first, default true
 	 */
-	static DOMString getNamespaceForPrefix(const NamespaceVectorType& namespaces,
-			const DOMString& prefix, bool reverse=true);
+	static XalanDOMString getNamespaceForPrefix(const NamespaceVectorType& namespaces,
+			const XalanDOMString& prefix, bool reverse=true);
 
 	/**
 	 * Get the namespace from a prefix by searching a stack of namespace
@@ -230,8 +230,8 @@ public:
 	 * @param prefix  namespace prefix to find
 	 * @param reverse true to search vector from last to first, default true
 	 */
-	static DOMString getNamespaceForPrefix(const NamespacesStackType& nsStack,
-			const DOMString& prefix, bool reverse=true);
+	static XalanDOMString getNamespaceForPrefix(const NamespacesStackType& nsStack,
+			const XalanDOMString& prefix, bool reverse=true);
 
 	/**
 	 * Get the prefix for a namespace by searching a vector of namespaces.
@@ -240,8 +240,8 @@ public:
 	 * @param uri        URI string for namespace to find
 	 * @param reverse    true to search vector from last to first, default true
 	 */
-	static DOMString getPrefixForNamespace(const NamespaceVectorType& namespaces,
-			const DOMString& uri, bool reverse=true);
+	static XalanDOMString getPrefixForNamespace(const NamespaceVectorType& namespaces,
+			const XalanDOMString& uri, bool reverse=true);
 
 	/**
 	 * Get the prefix for a namespace by searching a stack of namespace
@@ -251,19 +251,19 @@ public:
 	 * @param uri     URI string for namespace to find
 	 * @param reverse true to search vector from last to first, default true
 	 */
-	static DOMString getPrefixForNamespace(const NamespacesStackType& nsStack,
-			const DOMString& uri, bool reverse=true);
+	static XalanDOMString getPrefixForNamespace(const NamespacesStackType& nsStack,
+			const XalanDOMString& uri, bool reverse=true);
 
 private:
 
 	void
 	resolvePrefix(
-			const DOMString&		qname,
+			const XalanDOMString&		qname,
 			const PrefixResolver&	theResolver);
 
-	DOMString				m_namespace;
+	XalanDOMString	m_namespace;
 
-	DOMString				m_localpart;
+	XalanDOMString	m_localpart;
 };
 
 

@@ -109,21 +109,24 @@ public:
 
 	// These methods are inherited from NodeRefListBase ...
 
-	virtual DOM_Node
+	virtual XalanNode*
 	item(unsigned int	index) const;
 
 	virtual unsigned int
 	getLength() const;
 
 	virtual unsigned int
-	indexOf(const DOM_Node&		theNode) const;
+	indexOf(const XalanNode*	theNode) const;
+
+	virtual XPathSupport*
+	getSupport() const;
 
 protected:
 
 #if defined(XALAN_NO_NAMESPACES)
-	typedef vector<DOM_Node>		NodeListVectorType;
+	typedef vector<XalanNode*>			NodeListVectorType;
 #else
-	typedef std::vector<DOM_Node>	NodeListVectorType;
+	typedef std::vector<XalanNode*>		NodeListVectorType;
 #endif
 
 	NodeListVectorType	m_nodeList;

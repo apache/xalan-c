@@ -68,25 +68,29 @@
 
 
 
-#include <dom/DOMString.hpp>
-#include <dom/DOM_Node.hpp>
-#include <dom/DOM_Element.hpp>
+#include <XalanDOM/XalanDOMString.hpp>
 
 
 
 // Base class header file...
 #include <PlatformSupport/ExecutionContext.hpp>
 
+
+
 #include <XPath/MutableNodeRefList.hpp>
 
 
 
+class DecimalFormatSymbols;
 class PrefixResolver;
 class QName;
 class XLocator;
 class XMLURL;
 class XObject;
 class XObjectFactory;
+class XalanDocument;
+class XalanNode;
+class XalanElement;
 
 
 
@@ -110,7 +114,7 @@ public:
 	 * 
 	 * @return current node
 	 */
-	virtual DOM_Node
+	virtual XalanNode*
 	getCurrentNode() const = 0;
 
 	/**
@@ -119,7 +123,7 @@ public:
 	 * @param theCurrentNode new current node
 	 */
 	virtual void
-	setCurrentNode(const DOM_Node&	theCurrentNode) = 0;
+	setCurrentNode(XalanNode*	theCurrentNode) = 0;
 
 	/**
 	 * Retrieve the factory object for creating XObjects.
@@ -135,8 +139,8 @@ public:
 	 * @param n DOM node queried
 	 * @return namespace string corresponding to 'n'
 	 */
-	virtual DOMString
-	getNamespaceOfNode(const DOM_Node&	n) const = 0;
+	virtual XalanDOMString
+	getNamespaceOfNode(const XalanNode&		n) const = 0;
 
 	/**
 	 * Returns the local name of the given node.
@@ -144,8 +148,8 @@ public:
 	 * @param n node queried
 	 * @return local name string corresponding to 'n'
 	 */
-	virtual DOMString
-	getLocalNameOfNode(const DOM_Node&	n) const = 0;
+	virtual XalanDOMString
+	getLocalNameOfNode(const XalanNode&		n) const = 0;
 
 	/**
 	 * Returns the parent of the given node.
@@ -153,8 +157,8 @@ public:
 	 * @param n DOM node queried
 	 * @return parent node for 'n'
 	 */
-	virtual DOM_Node
-	getParentOfNode(const DOM_Node&	n) const = 0;
+	virtual XalanNode*
+	getParentOfNode(const XalanNode&	n) const = 0;
 
 	/**
 	 * Get node data recursively.
@@ -163,8 +167,8 @@ public:
 	 * @param n DOM node queried
 	 * @return string of data for node 'n'
 	 */
-	virtual DOMString
-	getNodeData(const DOM_Node&	n) const = 0;
+	virtual XalanDOMString
+	getNodeData(const XalanNode&	n) const = 0;
 
 	/**
 	 * Given a valid element id, return the corresponding element.
@@ -173,10 +177,10 @@ public:
 	 * @param doc document to search
 	 * @return element for ID
 	 */
-	virtual DOM_Element
+	virtual XalanElement*
 	getElementByID(
-			const DOMString&		id,
-			const DOM_Document&		doc) const = 0;
+			const XalanDOMString&		id,
+			const XalanDocument&		doc) const = 0;
 
 	/**
 	 * Retrieve node list for current context.
@@ -208,7 +212,7 @@ public:
 	 * @return position in list
 	 */
 	virtual int
-	getContextNodeListPosition(const DOM_Node&	contextNode) const = 0;
+	getContextNodeListPosition(const XalanNode&		contextNode) const = 0;
 
 	/**
 	 * Determine if an external function is available.
@@ -219,8 +223,8 @@ public:
 	 */
 	virtual bool
 	functionAvailable(
-			const DOMString&	theNamespace, 
-			const DOMString&	extensionName) const = 0;
+			const XalanDOMString&	theNamespace, 
+			const XalanDOMString&	extensionName) const = 0;
 
 	/**
 	 * Handle an extension function.
@@ -232,8 +236,8 @@ public:
 	 */
 	virtual XObject*
 	extFunction(
-			const DOMString&				theNamespace,
-			const DOMString&				extensionName, 
+			const XalanDOMString&			theNamespace,
+			const XalanDOMString&			extensionName, 
 			const std::vector<XObject*>&	argVec) = 0;
 
 	/**
@@ -244,7 +248,7 @@ public:
 	 * @return pointer to locator
 	 */
 	virtual XLocator*
-	getXLocatorFromNode(const DOM_Node&		node) const = 0;
+	getXLocatorFromNode(const XalanNode*	node) const = 0;
 
 	/**
 	 * Associate an XLocator provider to a node.  This makes the association
@@ -255,7 +259,7 @@ public:
 	 */
 	virtual void
 	associateXLocatorToNode(
-			const DOM_Node&		node,
+			const XalanNode*	node,
 			XLocator*			xlocator) = 0;
 
 	/**
@@ -265,10 +269,10 @@ public:
 	 * @param base base location for URI
 	 * @return parsed document
 	 */
-	virtual DOM_Document
+	virtual XalanDocument*
 	parseXML(
-			const DOMString&	urlString,
-			const DOMString&	base) const = 0;
+			const XalanDOMString&	urlString,
+			const XalanDOMString&	base) const = 0;
 
 	/**
 	 * Create a MutableNodeRefList with the appropriate context.
@@ -301,10 +305,10 @@ public:
 	 */
 	virtual const NodeRefListBase*
 	getNodeSetByKey(
-			const DOM_Node&		doc,
-			const DOMString&	name,
-			const DOMString&	ref,
-			const DOM_Element&	nscontext) = 0;
+			const XalanNode&		doc,
+			const XalanDOMString&	name,
+			const XalanDOMString&	ref,
+			const XalanElement&		nscontext) = 0;
 
 	/**
 	 * Given a valid element key, return the corresponding node list.
@@ -320,9 +324,9 @@ public:
 	 */
 	virtual const NodeRefListBase*
 	getNodeSetByKey(
-			const DOM_Node&			doc,
-			const DOMString&		name,
-			const DOMString&		ref) = 0;
+			const XalanNode&		doc,
+			const XalanDOMString&	name,
+			const XalanDOMString&	ref) = 0;
 
 	/**
 	 * Given a valid element key, return the corresponding node list.
@@ -339,9 +343,9 @@ public:
 	 */
 	virtual const NodeRefListBase*
 	getNodeSetByKey(
-			const DOM_Node&			doc,
-			const DOMString&		name,
-			const DOMString&		ref,
+			const XalanNode&		doc,
+			const XalanDOMString&	name,
+			const XalanDOMString&	ref,
 			const PrefixResolver&	resolver) = 0;
 
 	/**
@@ -352,8 +356,7 @@ public:
 	 * @return pointer to an XObject if the variable was found, 0 if it was not
 	 */
 	virtual XObject*
-	getVariable(
-			const QName&			name) const = 0;
+	getVariable(const QName&	name) const = 0;
 
 	/**
 	 * Retrieve the resolver for namespaces.
@@ -377,8 +380,8 @@ public:
 	 * @param prefix prefix for a namespace
 	 * @return URI corresponding to namespace
 	 */
-	virtual DOMString
-	getNamespaceForPrefix(const DOMString&	prefix) const = 0;
+	virtual XalanDOMString
+	getNamespaceForPrefix(const XalanDOMString&		prefix) const = 0;
 
 	/**
 	 * Given a DOM Document, tell what URI was used to parse it. Needed for
@@ -387,8 +390,8 @@ public:
 	 * @param owner source document
 	 * @return document URI
 	 */
-	virtual DOMString
-	findURIFromDoc(const DOM_Document&	owner) const = 0;
+	virtual XalanDOMString
+	findURIFromDoc(const XalanDocument*		owner) const = 0;
 
 	/**
 	 * The getUnparsedEntityURI function returns the URI of the unparsed
@@ -400,10 +403,10 @@ public:
 	 * @param theDocument document containing entity
 	 * @return URI for the entity
 	 */
-	virtual DOMString
+	virtual XalanDOMString
 	getUnparsedEntityURI(
-			const DOMString&		theName,
-			const DOM_Document&		theDocument) const = 0;
+			const XalanDOMString&	theName,
+			const XalanDocument&	theDocument) const = 0;
 
 	/**
 	 * Tells, through the combination of the default-space attribute
@@ -416,7 +419,7 @@ public:
 	 * @return true if the text node should be stripped of extra whitespace
 	 */
 	virtual bool
-	shouldStripSourceNode(const DOM_Node&	node) const = 0;
+	shouldStripSourceNode(const XalanNode&	node) const = 0;
 
 	/**
 	 * Tells if FoundIndex should be thrown if index is found. This is an
@@ -444,18 +447,18 @@ public:
 	 * @param thePattern new match pattern
 	 */
 	virtual void
-	setCurrentPattern(const DOMString&	thePattern) = 0;
+	setCurrentPattern(const XalanDOMString&		thePattern) = 0;
 
 	/**
 	 * Retrieve the current match pattern.
 	 *
 	 * @return current match pattern
 	 */
-	virtual DOMString
+	virtual XalanDOMString
 	getCurrentPattern() const = 0;
 
-	virtual DOM_Document
-	getSourceDocument(const DOMString&	theURI) const = 0;
+	virtual XalanDocument*
+	getSourceDocument(const XalanDOMString&		theURI) const = 0;
 
 	/**
 	 * Associate a document with a given URI.
@@ -465,30 +468,39 @@ public:
 	 */
 	virtual void
 	setSourceDocument(
-			const DOMString&		theURI,
-			const DOM_Document&		theDocument) = 0;
+			const XalanDOMString&	theURI,
+			XalanDocument*			theDocument) = 0;
 
+
+	/**
+	 * Retrieve the DecimalFormatSymbols instance associated with
+	 * the name.
+	 *
+	 * @param name the name for the lookup
+	 * @return a pointer to the matching instance, or 0 if none was found
+	 */
+	virtual const DecimalFormatSymbols*
+	getDecimalFormatSymbols(const XalanDOMString&	name) = 0;
 
 	// These interfaces are inherited from ExecutionContext...
 
 	virtual void
 	error(
-			const DOMString&	msg,
-			const DOM_Node& 	sourceNode = DOM_Node(),
-			const DOM_Node&		styleNode = DOM_Node()) const = 0;
+			const XalanDOMString&	msg,
+			const XalanNode* 		sourceNode = 0,
+			const XalanNode*		styleNode = 0) const = 0;
 
 	virtual void
 	warn(
-			const DOMString&	msg,
-			const DOM_Node& 	sourceNode = DOM_Node(),
-			const DOM_Node&		styleNode = DOM_Node()) const = 0;
+			const XalanDOMString&	msg,
+			const XalanNode* 		sourceNode = 0,
+			const XalanNode*		styleNode = 0) const = 0;
 
 	virtual void
 	message(
-			const DOMString&	msg,
-			const DOM_Node& 	sourceNode = DOM_Node(),
-			const DOM_Node&		styleNode = DOM_Node()) const = 0;
-
+			const XalanDOMString&	msg,
+			const XalanNode* 		sourceNode = 0,
+			const XalanNode*		styleNode = 0) const = 0;
 };
 
 

@@ -58,9 +58,8 @@
 #include "NamedNodeMapAttributeList.hpp"
 
 
-#include <dom/DOM_Attr.hpp>
-#include <util/Janitor.hpp>
-#include <util/XMLString.hpp>
+#include <XalanDOM/XalanAttr.hpp>
+#include <XalanDOM/XalanNamedNodeMap.hpp>
 
 
 
@@ -68,7 +67,7 @@
 
 
 
-NamedNodeMapAttributeList::NamedNodeMapAttributeList(DOM_NamedNodeMap&	theMap) :
+NamedNodeMapAttributeList::NamedNodeMapAttributeList(const XalanNamedNodeMap&	theMap) :
 	m_nodeMap(theMap),
 	m_lastIndex(theMap.getLength() - 1),
 	m_cachedData()
@@ -96,13 +95,17 @@ NamedNodeMapAttributeList::getName(const unsigned int index) const
 {
 	// We have to return a pointer to a something, but the Xerces
 	// DOM classes return strings by value, so we have to get
-	// the value from the node and store the DOMString somewhere
-	// safe, so we have a vector of DOMStrings to hold everything.
+	// the value from the node and store the data somewhere
+	// safe, so we have a vector to hold everything.
+	const XalanAttr* const	theAttribute =
 #if defined(XALAN_OLD_STYLE_CASTS)
-	m_cachedData.push_back(((const DOM_Attr&)((DOM_NamedNodeMap&)m_nodeMap).item(m_lastIndex - index)).getName());
+		(const XalanAttr*)m_nodeMap.item(m_lastIndex - index)
 #else
-	m_cachedData.push_back(static_cast<const DOM_Attr&>(const_cast<DOM_NamedNodeMap&>(m_nodeMap).item(m_lastIndex - index)).getName());
+		static_cast<const XalanAttr*>(m_nodeMap.item(m_lastIndex - index));
 #endif
+	assert(theAttribute != 0);
+
+	m_cachedData.push_back(theAttribute->getName());
 
 	return c_wstr(m_cachedData.back());
 }
@@ -110,14 +113,14 @@ NamedNodeMapAttributeList::getName(const unsigned int index) const
 
 
 // This is out here so we don't have to worry about multithreading issues.
-static const DOMString	theType(XALAN_STATIC_UCODE_STRING("CDATA"));
+static const XalanDOMCharVectorType		theType(MakeXalanDOMCharVector(XALAN_STATIC_UCODE_STRING("CDATA")));
 
 
 
 const XMLCh*
 NamedNodeMapAttributeList::getType(const unsigned int /* index */) const
 {
-	return c_wstr(theType);
+	return &theType.front();
 }
 
 
@@ -125,15 +128,15 @@ NamedNodeMapAttributeList::getType(const unsigned int /* index */) const
 const XMLCh*
 NamedNodeMapAttributeList::getValue(const unsigned int index) const
 {
-	// We have to return a pointer to a something, but the Xerces
-	// DOM classes return strings by value, so we have to get
-	// the value from the node and store the DOMString somewhere
-	// safe, so we have a vector of DOMStrings to hold everything.
+	const XalanAttr* const	theAttribute =
 #if defined(XALAN_OLD_STYLE_CASTS)
-	m_cachedData.push_back(((const DOM_Attr&)((DOM_NamedNodeMap&)m_nodeMap).item(m_lastIndex - index)).getValue());
+		(const XalanAttr*)m_nodeMap.item(m_lastIndex - index)
 #else
-	m_cachedData.push_back(static_cast<const DOM_Attr&>(const_cast<DOM_NamedNodeMap&>(m_nodeMap).item(m_lastIndex - index)).getValue());
+		static_cast<const XalanAttr*>(m_nodeMap.item(m_lastIndex - index));
 #endif
+	assert(theAttribute != 0);
+
+	m_cachedData.push_back(theAttribute->getValue());
 
 	return c_wstr(m_cachedData.back());
 }
@@ -143,7 +146,7 @@ NamedNodeMapAttributeList::getValue(const unsigned int index) const
 const XMLCh*
 NamedNodeMapAttributeList::getType(const XMLCh* const /* name */) const
 {
-	return c_wstr(theType);
+	return &theType.front();
 }
 
 
@@ -153,13 +156,9 @@ NamedNodeMapAttributeList::getValue(const XMLCh* const name) const
 {
 	// We have to return a pointer to a something, but the Xerces
 	// DOM classes return strings by value, so we have to get
-	// the value from the node and store the DOMString somewhere
-	// safe, so we have a vector of DOMStrings to hold everything.
-#if defined(XALAN_OLD_STYLE_CASTS)
-	const DOM_Node		theNode = ((DOM_NamedNodeMap&)m_nodeMap).getNamedItem(name);
-#else
-	const DOM_Node		theNode = const_cast<DOM_NamedNodeMap&>(m_nodeMap).getNamedItem(name);
-#endif
+	// the value from the node and store the XalanDOMString somewhere
+	// safe, so we have a vector of XalanDOMStrings to hold everything.
+	const XalanNode*	theNode = m_nodeMap.getNamedItem(name);
 
 	if (theNode == 0)
 	{
@@ -167,11 +166,14 @@ NamedNodeMapAttributeList::getValue(const XMLCh* const name) const
 	}
 	else
 	{
+		const XalanAttr* const	theAttribute =
 #if defined(XALAN_OLD_STYLE_CASTS)
-		m_cachedData.push_back(((const DOM_Attr&)theNode).getValue());
+			(const XalanAttr*)theNode;
 #else
-		m_cachedData.push_back(static_cast<const DOM_Attr&>(theNode).getValue());
+			static_cast<const XalanAttr*>(theNode);
 #endif
+
+		m_cachedData.push_back(theAttribute->getValue());
 
 		return c_wstr(m_cachedData.back());
 	}
@@ -182,10 +184,8 @@ NamedNodeMapAttributeList::getValue(const XMLCh* const name) const
 const XMLCh* 
 NamedNodeMapAttributeList::getValue(const char* const name) const
 {
-	XMLCh* const	theTranscodedName =
-		XMLString::transcode(name);
+	const XalanDOMCharVectorType	theName =
+		MakeXalanDOMCharVector(name);
 
-	ArrayJanitor<XMLCh>	theJanitor(theTranscodedName);
-
-	return getValue(theTranscodedName);
+	return getValue(theName.front());
 }

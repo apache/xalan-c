@@ -64,8 +64,7 @@
 
 
 
-#include <dom/DOMString.hpp>
-#include <util/XMLException.hpp>
+#include <PlatformSupport/DOMStringHelper.hpp>
 
 
 
@@ -80,8 +79,8 @@ public:
 	 * @param theType    type of exception, default is "XSLException"
 	 */
 	XSLException(
-		const DOMString&	theMessage,
-		const DOMString&	theType = DOMString("XSLException"));
+		const XalanDOMString&	theMessage,
+		const XalanDOMString&	theType = XalanDOMString(XALAN_STATIC_UCODE_STRING("XSLException")));
 
 	virtual
 	~XSLException();
@@ -91,7 +90,8 @@ public:
 	 * 
 	 * @return type of exception
 	 */
-	DOMString getType() const
+	const XalanDOMString&
+	getType() const
 	{
 		return m_type;
 	}
@@ -101,15 +101,16 @@ public:
 	 * 
 	 * @return exception message
 	 */
-	DOMString getMessage() const
+	const XalanDOMString&
+	getMessage() const
 	{
 		return m_message;
 	}
 
 private:
 
-	DOMString m_type;
-	DOMString m_message;
+	const XalanDOMString	m_type;
+	const XalanDOMString	m_message;
 };
 
 

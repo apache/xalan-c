@@ -64,7 +64,14 @@
 
 
 
-#include <dom/DOM_Node.hpp>
+#if defined(XALAN_INLINE_INITIALIZATION)
+#include <climits>
+#endif
+
+
+
+class XalanNode;
+class XPathSupport;
 
 
 
@@ -91,7 +98,7 @@ public:
 	 *         <code>NodeList</code>, or <code>null</code> if that is not a
 	 *         valid index
 	 */
-	virtual DOM_Node
+	virtual XalanNode*
 	item(unsigned int	index) const = 0;
 
 	/**
@@ -110,7 +117,16 @@ public:
 	 * @return index of node
 	 */
 	virtual unsigned int
-	indexOf(const DOM_Node&		theNode) const = 0;
+	indexOf(const XalanNode*	theNode) const = 0;
+
+	virtual XPathSupport*
+	getSupport() const = 0;
+
+#if defined(XALAN_INLINE_INITIALIZATION)
+	static const unsigned int	npos = UINT_MAX;
+#else
+	static const unsigned int	npos;
+#endif
 
 protected:
 

@@ -58,12 +58,12 @@
 #include "DOMStringHelper.hpp"
 
 
-const DOMString		DecimalFormat::s_defaultPatternString;
+const XalanDOMString	DecimalFormat::s_defaultPatternString;
 
 
 
 DecimalFormat::DecimalFormat(
-			const DOMString&				thePatternString,
+			const XalanDOMString&			thePatternString,
 			const DecimalFormatSymbols&		theSymbols) :
 	NumberFormat(),
 	m_patternString(length(thePatternString) == 0 ? s_defaultPatternString : thePatternString),
@@ -79,7 +79,7 @@ DecimalFormat::~DecimalFormat()
 
 
 
-DOMString
+XalanDOMString
 DecimalFormat::format(double	theValue)
 {
 	// $$$ ToDo: Fix this!!!
@@ -88,7 +88,7 @@ DecimalFormat::format(double	theValue)
 
 
 
-DOMString
+XalanDOMString
 DecimalFormat::format(int	theValue)
 {
 	// $$$ ToDo: Fix this!!!
@@ -97,7 +97,7 @@ DecimalFormat::format(int	theValue)
 
 
 
-DOMString
+XalanDOMString
 DecimalFormat::format(unsigned int	theValue)
 {
 	// $$$ ToDo: Fix this!!!
@@ -106,7 +106,7 @@ DecimalFormat::format(unsigned int	theValue)
 
 
 
-DOMString
+XalanDOMString
 DecimalFormat::format(long	theValue)
 {
 	// $$$ ToDo: Fix this!!!
@@ -115,7 +115,7 @@ DecimalFormat::format(long	theValue)
 
 
 
-DOMString
+XalanDOMString
 DecimalFormat::format(unsigned long	theValue)
 {
 	// $$$ ToDo: Fix this!!!
@@ -124,22 +124,38 @@ DecimalFormat::format(unsigned long	theValue)
 
 
 
-DOMString
-DecimalFormat::getNormalizedPattern(const DOMString&	thePattern)
+void
+DecimalFormat::applyPattern(const XalanDOMString&	thePattern)
+{
+	// $$$ ToDo: Fix this!!!
+}
+
+
+
+void
+DecimalFormat::applyLocalizedPattern(const XalanDOMString&	thePattern)
+{
+	// $$$ ToDo: Fix this!!!
+}
+
+
+
+XalanDOMString
+DecimalFormat::getNormalizedPattern(const XalanDOMString&	thePattern)
 {
 	// A pattern may not have an explicit specification for
 	// negative numbers.  If there is no pattern separator,
 	// and therefore no explicit specification for negative
 	// numbers, then assume that the pattern for negative
 	// numbers is the same as that for positive numbers.
-	const XMLCh		thePatternSeparatorChar =
+	const XalanDOMChar	thePatternSeparatorChar =
 		m_decimalFormatSymbols.getPatternSeparator();
 
 	// Is the a separator?
-	const int		theSeparatorIndex =
+	const unsigned int	theSeparatorIndex =
 		indexOf(thePattern, thePatternSeparatorChar);
 
-	if (theSeparatorIndex != -1)
+	if (theSeparatorIndex < length(thePattern))
 	{
 		// There is, so the pattern is already normalized.
 		return thePattern;
@@ -147,7 +163,7 @@ DecimalFormat::getNormalizedPattern(const DOMString&	thePattern)
 	else
 	{
 		// There isn't, so 
-		DOMString	theNewPattern(thePattern);
+		XalanDOMString	theNewPattern(thePattern);
 
 		theNewPattern += thePatternSeparatorChar;
 		theNewPattern += m_decimalFormatSymbols.getMinusSign();

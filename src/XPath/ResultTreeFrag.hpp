@@ -64,7 +64,7 @@
 
 
 
-#include <dom/DOM_Document.hpp>
+#include <XalanDOM/XalanDocument.hpp>
 
 
 
@@ -88,12 +88,12 @@ public:
 	/**
 	 * Construct a result tree fragment object from a DOM document.
 	 * 
-	 * @param theFactory document used to construct result tree fragment
-	 * @param theSupport XPath support class instance
+	 * @param theOwnerDocument The document used to construct result tree fragment
+	 * @param theSupport The XPathSupport instance
 	 */
 	ResultTreeFrag(
-			const DOM_Document&		theFactory,
-			XPathSupport&			theSupport);
+			XalanDocument&	theOwnerDocument,
+			XPathSupport&	theSupport);
 
 	/**
 	 * Construct a result tree fragment object from another.
@@ -106,120 +106,6 @@ public:
 
 	virtual
 	~ResultTreeFrag();
-
-	// These interfaces are inherited from Cloneable...
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-	virtual Cloneable*
-#else
-	virtual ResultTreeFrag*
-#endif
-	clone(bool	deep) const;
-
-	// These interfaces are inherited from UnimplementedDocumentFragment...
-
-	// These interfaces are inherited from NodeListImpl...
-
-	virtual NodeImpl*
-	item(unsigned int	index);
-
-	virtual unsigned int
-	getLength();
-
-	// These interfaces are inherited from NodeImpl...
-
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-	virtual NodeImpl*
-#else
-	virtual UnimplementedDocumentFragment*
-#endif
-	cloneNode(bool deep);
-
-	virtual NodeImpl*
-	appendChild(NodeImpl*	newChild);
-
-	virtual void
-	changed();
-
-	virtual NamedNodeMapImpl*
-	getAttributes();
-
-	virtual NodeListImpl*
-	getChildNodes();
-
-	virtual NodeImpl*
-	getFirstChild();
-
-	virtual NodeImpl*
-	getLastChild();
-
-	virtual DocumentImpl*
-	getOwnerDocument();
-
-	virtual bool
-	hasChildNodes();
-
-	virtual NodeImpl*
-	insertBefore(
-			NodeImpl*	newChild,
-			NodeImpl*	refChild);
-
-	virtual NodeImpl*
-	removeChild(NodeImpl*	oldChild);
-
-	virtual NodeImpl*
-	replaceChild(
-			NodeImpl*	newChild,
-			NodeImpl*	oldChild);
-
-	virtual void
-	setReadOnly(
-			bool	readOnly,
-			bool	deep);
-
-	virtual DOMString
-	toString();
-
-	// These interfaces are inherited from ResultTreeFragBase
-
-	virtual const NodeRefListBase&
-	getChildNodesAsNodeRefList() const;
-
-	virtual DOM_Node
-	item(unsigned int	index) const;
-
-	virtual unsigned int
-	getLength() const;
-
-	virtual DOM_Node
-	getFirstChild() const;
-
-	virtual DOM_Node
-	getLastChild() const;
-
-	virtual DOM_Document
-	getOwnerDocument() const;
-
-	virtual DOM_Node
-	insertBefore(
-			const DOM_Node&		newChild, 
-			const DOM_Node&		refChild);
-
-	virtual DOM_Node
-	replaceChild(
-			const DOM_Node&		newChild,
-			const DOM_Node&		oldChild);
-
-	virtual DOM_Node
-	removeChild(const DOM_Node&		oldChild);
-  
-	virtual DOM_Node
-	appendChild(const DOM_Node&		newChild);
-
-	virtual bool
-	hasChildNodes() const;
-
-	virtual DOM_Node
-	cloneNode(bool	deep) const;
 
 	ResultTreeFrag&
 	operator=(const ResultTreeFrag&		theRHS)
@@ -235,6 +121,99 @@ public:
 		return *this;
 	}
 
+
+	// These interfaces are inherited from XalanDocumentFragment...
+	virtual XalanDOMString
+	getNodeName() const;
+
+	virtual XalanDOMString
+	getNodeValue() const;
+
+	virtual NodeType
+	getNodeType() const;
+
+	virtual XalanNode*
+	getParentNode() const;
+
+	virtual const XalanNodeList*
+	getChildNodes() const;
+
+	virtual XalanNode*
+	getFirstChild() const;
+
+	virtual XalanNode*
+	getLastChild() const;
+
+	virtual XalanNode*
+	getPreviousSibling() const;
+
+	virtual XalanNode*
+	getNextSibling() const;
+
+	virtual const XalanNamedNodeMap*
+	getAttributes() const;
+
+	virtual XalanDocument*
+	getOwnerDocument() const;
+
+#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
+	virtual XalanNode*
+#else
+	virtual ResultTreeFrag*
+#endif
+	cloneNode(bool deep) const;
+
+	virtual XalanNode*
+	insertBefore(
+			XalanNode*	newChild,
+			XalanNode*	refChild);
+
+	virtual XalanNode*
+	replaceChild(
+			XalanNode*	newChild,
+			XalanNode*	oldChild);
+
+	virtual XalanNode*
+	removeChild(XalanNode*	oldChild);
+
+	virtual XalanNode*
+	appendChild(XalanNode*	newChild);
+
+	virtual bool
+	hasChildNodes() const;
+
+	virtual void
+	setNodeValue(const XalanDOMString&	nodeValue);
+
+	virtual void
+	normalize();
+
+	virtual bool
+	supports(
+			const XalanDOMString&	feature,
+			const XalanDOMString&	version) const;
+
+	virtual XalanDOMString
+	getNamespaceURI() const;
+
+	virtual XalanDOMString
+	getPrefix() const;
+
+	virtual XalanDOMString
+	getLocalName() const;
+
+	virtual void
+	setPrefix(const XalanDOMString&		prefix);
+
+
+	// These interfaces are inherited from Cloneable...
+#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
+	virtual Cloneable*
+#else
+	virtual ResultTreeFrag*
+#endif
+	clone(bool	deep) const;
+
 private:
 
 	// Not defined
@@ -242,7 +221,7 @@ private:
 	operator==(const ResultTreeFrag&	theRHS) const;
 
 
-	DOM_Document			m_document;
+	XalanDocument*			m_document;
 	MutableNodeRefList		m_children;
 
 	NodeListImplSurrogate	m_surrogate;

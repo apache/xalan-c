@@ -71,7 +71,7 @@
 
 
 
-#include <dom/DOMString.hpp>
+#include <XalanDOM/XalanDOMString.hpp>
 
 
 
@@ -82,12 +82,12 @@ public:
 	// If a string is passed in, a copy will be made, and all
 	// output will be appended to that string.
 	explicit
-	DOMStringPrintWriter(const DOMString&	theBaseString = DOMString());
+	DOMStringPrintWriter(const XalanDOMString&	theBaseString = XalanDOMString());
 
 	virtual
 	~DOMStringPrintWriter();
 
-	const DOMString&
+	const XalanDOMString&
 	getString() const
 	{
 		return m_outputString;
@@ -115,18 +115,18 @@ public:
 
 	// If the length is UINT_MAX, then the array is assumed to be null-terminated.
 	virtual void
-	write(const XMLCh*	s,
-		  unsigned int	theOffset = 0,
-		  unsigned int	theLength = UINT_MAX);
+	write(const XalanDOMChar*	s,
+		  unsigned int			theOffset = 0,
+		  unsigned int			theLength = UINT_MAX);
 
 	virtual void
-	write(XMLCh		c);
+	write(XalanDOMChar	c);
 
 	// If the length is UINT_MAX, then the entire string is printed.
 	virtual void
-	write(const DOMString&	s,
-		  unsigned int		theOffset = 0,
-		  unsigned int		theLength = UINT_MAX);
+	write(const XalanDOMString&		s,
+		  unsigned int				theOffset = 0,
+		  unsigned int				theLength = UINT_MAX);
 
 	virtual void
 	print(bool	b);
@@ -139,8 +139,8 @@ public:
 		  unsigned int	theLength = UINT_MAX);
 
 	virtual void
-	print(const XMLCh*	s,
-		  unsigned int	theLength = UINT_MAX);
+	print(const XalanDOMChar*	s,
+		  unsigned int			theLength = UINT_MAX);
 
 	virtual void
 	print(double	d);
@@ -152,7 +152,7 @@ public:
 	print(long	l);
 
 	virtual void
-	print(const DOMString&	s);
+	print(const XalanDOMString&		s);
 
 	virtual void
 	println();
@@ -168,8 +168,8 @@ public:
 		    unsigned int	theLength = UINT_MAX);
 
 	virtual void
-	println(const XMLCh*	s,
-			unsigned int	theLength = UINT_MAX);
+	println(const XalanDOMChar*		s,
+			unsigned int			theLength = UINT_MAX);
 
 	virtual void
 	println(double	d);
@@ -181,11 +181,11 @@ public:
 	println(long	l);
 
 	virtual void
-	println(const DOMString&	s);
+	println(const XalanDOMString&	s);
 
 protected:
 
-	DOMString	m_outputString;
+	XalanDOMString	m_outputString;
 
 private:
 

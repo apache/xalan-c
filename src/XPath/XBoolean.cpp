@@ -59,6 +59,10 @@
 
 
 
+#include <PlatformSupport/DOMStringHelper.hpp>
+
+
+
 #include "XObjectTypeCallback.hpp"
 
 
@@ -105,10 +109,10 @@ XBoolean::getType() const
 
 
 
-DOMString
+XalanDOMString
 XBoolean::getTypeString() const
 {
-	return "#BOOLEAN";
+	return XALAN_STATIC_UCODE_STRING("#BOOLEAN");
 }
 
 
@@ -129,11 +133,17 @@ XBoolean::boolean() const
 
 
 
-DOMString
+XalanDOMString
 XBoolean::str() const
 {
-	return m_value == true ? "true" : "false";
+	return m_value == true ? XALAN_STATIC_UCODE_STRING("true") :
+							 XALAN_STATIC_UCODE_STRING("false");
 }
+
+
+
+// dummy object for casts after throw statements.
+static int	dummy;
 
 
 
@@ -144,7 +154,7 @@ XBoolean::rtree() const
 
 	// error will throw, so this is just a dummy
 	// value to satisfy the compiler.
-	return *static_cast<ResultTreeFragBase*>(0);
+	return reinterpret_cast<ResultTreeFragBase&>(dummy);
 }
 
 
@@ -156,7 +166,7 @@ XBoolean::rtree()
 
 	// error will throw, so this is just a dummy
 	// value to satisfy the compiler.
-	return *static_cast<ResultTreeFragBase*>(0);
+	return reinterpret_cast<ResultTreeFragBase&>(dummy);
 }
 
 
@@ -168,7 +178,7 @@ XBoolean::nodeset() const
 
 	// error will throw, so this is just a dummy
 	// value to satisfy the compiler.
-	return *static_cast<NodeRefListBase*>(0);
+	return reinterpret_cast<NodeRefListBase&>(dummy);
 }
 
 
@@ -180,7 +190,7 @@ XBoolean::mutableNodeset() const
 
 	// error will throw, so this is just a dummy
 	// value to satisfy the compiler.
-	return *static_cast<MutableNodeRefList*>(0);
+	return reinterpret_cast<MutableNodeRefList&>(dummy);
 }
 
 
@@ -192,7 +202,7 @@ XBoolean::mutableNodeset()
 
 	// error will throw, so this is just a dummy
 	// value to satisfy the compiler.
-	return *static_cast<MutableNodeRefList*>(0);
+	return reinterpret_cast<MutableNodeRefList&>(dummy);
 }
 
 

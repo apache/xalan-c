@@ -64,18 +64,11 @@
 
 
 // Standard Library header files.
-#include <string>
-#include <memory>
+#include <map>
 
 
 
 // Xerces DOM header files
-#include <dom/DOM_Attr.hpp>
-#include <dom/DOM_Element.hpp>
-#include <dom/DOM_Node.hpp>
-#include <dom/DOM_Document.hpp>
-#include <dom/DOMString.hpp>
-
 #include <sax/ErrorHandler.hpp>
 
 
@@ -86,7 +79,7 @@
 
 class DOMSupport;
 class InputSource;
-class URLInputSource;
+class XercesDocumentBridge;
 class XSLProcessor;
 
 
@@ -110,33 +103,28 @@ public:
 
 	// These interfaces are inherited from XMLParserLiaison...
 
+	virtual void
+	reset();
+
 	virtual bool
 	supportsSAX() const;
 
-	virtual DOM_Document
+	virtual XalanDocument*
 	parseXMLStream(
-			InputSource&		reader,
-			const DOMString&	identifier = DOMString());
-
-	virtual DOM_Document
-	parseXMLStream(
-			URLInputSource& 	reader,
-			const DOMString&	identifier = DOMString());
+			InputSource&			reader,
+			const XalanDOMString&	identifier = XalanDOMString());
 
 	virtual void
 	parseXMLStream(
-			InputSource&		urlInputSource,
-			DocumentHandler&	handler,
-			const DOMString&	identifier = DOMString());
+			InputSource&			urlInputSource,
+			DocumentHandler&		handler,
+			const XalanDOMString&	identifier = XalanDOMString());
 
-	virtual void
-	parseXMLStream(
-			URLInputSource& 	urlInputSource,
-			DocumentHandler&	handler,
-			const DOMString&	identifier = DOMString());
-
-	virtual DOM_Document
+	virtual XalanDocument*
 	createDocument();
+
+	XercesDocumentBridge*
+	mapXalanDocument(const XalanDocument*	theDocument) const;
 
 	// Implementations for SAX ErrorHandler
 
@@ -154,7 +142,15 @@ public:
 
 private:
 
-	const bool	m_fUseValidatingParser;
+#if defined(XALAN_NO_NAMESPACES)
+	typedef map<const XalanDocument*, XercesDocumentBridge*>		DocumentMapType;
+#else
+	typedef std::map<const XalanDocument*, XercesDocumentBridge*>	DocumentMapType;
+#endif
+
+	const bool			m_fUseValidatingParser;
+
+	DocumentMapType		m_documentMap;
 };
 
 

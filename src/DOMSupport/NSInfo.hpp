@@ -64,7 +64,7 @@
 
 
 
-#include <dom/DOMString.hpp>
+#include <XalanDOM/XalanDOMString.hpp>
 
 
 
@@ -88,8 +88,9 @@ public:
 	 * @param hasProcessedNS $$$
 	 * @param hasXMLNSAttrs  $$$
 	 */
-	explicit NSInfo(bool hasProcessedNS = false,
-		   bool hasXMLNSAttrs = false) :
+	explicit NSInfo(
+			bool hasProcessedNS = false,
+			bool hasXMLNSAttrs = false) :
 		m_hasProcessedNS(hasProcessedNS),
 		m_hasXMLNSAttrs(hasXMLNSAttrs),
 		m_namespace(),
@@ -105,9 +106,10 @@ public:
 	 * @param hasXMLNSAttrs  $$$
 	 * @param eHasXMLNSAttrs $$$
 	 */
-	NSInfo(bool				hasProcessedNS,
-		   bool				hasXMLNSAttrs,
-		   eHasXMLNSAttrs	ancestorHasXMLNSAttrs) :
+	NSInfo(
+			bool				hasProcessedNS,
+			bool				hasXMLNSAttrs,
+			eHasXMLNSAttrs		ancestorHasXMLNSAttrs) :
 		m_hasProcessedNS(hasProcessedNS),
 		m_hasXMLNSAttrs(hasXMLNSAttrs),
 		m_ancestorHasXMLNSAttrs(ancestorHasXMLNSAttrs),
@@ -121,8 +123,9 @@ public:
 	 * @param theNamespace  namespace
 	 * @param hasXMLNSAttrs $$$
 	 */
-	NSInfo(DOMString	theNamespace,
-		   bool			hasXMLNSAttrs) :
+	NSInfo(
+			const XalanDOMString&	theNamespace,
+			bool					hasXMLNSAttrs) :
 		m_hasProcessedNS(true),
 		m_hasXMLNSAttrs(hasXMLNSAttrs),
 		m_namespace(theNamespace),
@@ -143,9 +146,11 @@ public:
 			   equals(m_ancestorHasXMLNSAttrs, theRHS.m_ancestorHasXMLNSAttrs);
 	}
 
-	DOMString		m_namespace;
+	XalanDOMString	m_namespace;
+
 	bool			m_hasXMLNSAttrs;
 	bool			m_hasProcessedNS;
+
 	eHasXMLNSAttrs	m_ancestorHasXMLNSAttrs;
 };
 

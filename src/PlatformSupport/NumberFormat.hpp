@@ -64,7 +64,7 @@
 
 
 
-#include <dom/DOMString.hpp>
+#include <XalanDOM/XalanDOMString.hpp>
 
 
 
@@ -84,7 +84,7 @@ public:
 	 * @param theValue number to format
 	 * @return string representation of number
 	 */
-	virtual DOMString
+	virtual XalanDOMString
 	format(double	theValue);
 
 	/**
@@ -93,7 +93,7 @@ public:
 	 * @param theValue number to format
 	 * @return string representation of number
 	 */
-	virtual DOMString
+	virtual XalanDOMString
 	format(int	theValue);
 
 	/**
@@ -102,7 +102,7 @@ public:
 	 * @param theValue number to format
 	 * @return string representation of number
 	 */
-	virtual DOMString
+	virtual XalanDOMString
 	format(unsigned int		theValue);
 
 	/**
@@ -111,7 +111,7 @@ public:
 	 * @param theValue number to format
 	 * @return string representation of number
 	 */
-	virtual DOMString
+	virtual XalanDOMString
 	format(long		theValue);
 
 	/**
@@ -120,7 +120,7 @@ public:
 	 * @param theValue number to format
 	 * @return string representation of number
 	 */
-	virtual DOMString
+	virtual XalanDOMString
 	format(unsigned long	theValue);
 
 	/**
@@ -128,21 +128,24 @@ public:
 	 *
 	 * @return true if grouping used
 	 */
-	virtual bool isGroupingUsed() const;
+	virtual bool
+	isGroupingUsed() const;
 	
 	/**
 	 * Change whether groupings are used for numbers, for example, "234,678"
 	 *
 	 * @param bUsed true to use grouping
 	 */
-	virtual void setGroupingUsed(bool bUsed);
+	virtual void
+	setGroupingUsed(bool bUsed);
 	
 	/**
 	 * Change the size of groupings, for example, "234,678" uses a size of "3"
 	 *
 	 * @param s string representation of grouping size
 	 */
-	virtual void setGroupingSize(const DOMString& s);
+	virtual void
+	setGroupingSize(const XalanDOMString&	s);
 	
 	/**
 	 * Change the separator string used for groupings, for example, "234,678"
@@ -150,11 +153,16 @@ public:
 	 *
 	 * @param s grouping separator string
 	 */
-	virtual void setGroupingSeparator(const DOMString& s);
+	virtual void
+	setGroupingSeparator(const XalanDOMString&	s);
 
 private:
 
-	// Not implemented
+	XalanDOMString
+	applyGrouping(const XalanDOMString&		value);
+
+
+	// Not implemented...
 	NumberFormat(const NumberFormat&);
 
 	NumberFormat&
@@ -163,11 +171,12 @@ private:
 	bool
 	operator==(const NumberFormat&);
 
-	bool m_isGroupingUsed;
-	DOMString m_groupingSeparator;
-	int m_groupingSize;
+	// Data members...
+	bool			m_isGroupingUsed;
 
-	DOMString applyGrouping(const DOMString& value);
+	XalanDOMString	m_groupingSeparator;
+
+	int				m_groupingSize;
 };
 
 

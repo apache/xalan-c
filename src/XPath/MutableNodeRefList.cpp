@@ -64,12 +64,9 @@
 
 
 
-#include <dom/DOM_NamedNodeMap.hpp>
-#include <dom/DOM_NodeList.hpp>
-
-
-
-#include <Include/DOMHelper.hpp>
+#include <XalanDOM/XalanNamedNodeMap.hpp>
+#include <XalanDOM/XalanNode.hpp>
+#include <XalanDOM/XalanNodeList.hpp>
 
 
 
@@ -93,10 +90,9 @@ MutableNodeRefList::MutableNodeRefList(const MutableNodeRefList&	theSource) :
 
 
 
-MutableNodeRefList::MutableNodeRefList(const NodeRefListBase&	theSource,
-									   XPathSupport*			theSupport) :
+MutableNodeRefList::MutableNodeRefList(const NodeRefListBase&	theSource) :
 	NodeRefList(theSource),
-	m_support(theSupport)
+	m_support(theSource.getSupport())
 {
 }
 
@@ -151,11 +147,14 @@ MutableNodeRefList::operator=(const NodeRefListBase&	theRHS)
 
 
 MutableNodeRefList&
-MutableNodeRefList::operator=(const DOM_NodeList&	theRHS)
+MutableNodeRefList::operator=(const XalanNodeList*	theRHS)
 {
 	clear();
 
-	addNodes(theRHS);
+	if (theRHS != 0)
+	{
+		addNodes(*theRHS);
+	}
 
 	return *this;
 }
@@ -163,7 +162,7 @@ MutableNodeRefList::operator=(const DOM_NodeList&	theRHS)
 
 
 void
-MutableNodeRefList::addNode(const DOM_Node&		n)
+MutableNodeRefList::addNode(XalanNode*	n)
 {
 	if (n != 0)
 	{
@@ -175,8 +174,8 @@ MutableNodeRefList::addNode(const DOM_Node&		n)
 
 void
 MutableNodeRefList::insertNode(
-			const DOM_Node&		n,
-			unsigned int		pos)
+			XalanNode*		n,
+			unsigned int	pos)
 {
  	assert(getLength() >= pos);
 
@@ -189,12 +188,13 @@ MutableNodeRefList::insertNode(
 
 
 void
-MutableNodeRefList::removeNode(const DOM_Node&	n)
+MutableNodeRefList::removeNode(const XalanNode*		n)
 {
-	using std::vector;
+#if !defined(XALAN_NO_NAMESPACES)
 	using std::find;
+#endif
 
-	std::vector<DOM_Node>::iterator		i =
+	NodeListVectorType::iterator	i =
 		find(m_nodeList.begin(),
 			 m_nodeList.end(),
 			 n);
@@ -227,8 +227,8 @@ MutableNodeRefList::clear()
 
 void
 MutableNodeRefList::setNode(
-			unsigned int		pos,
-			const DOM_Node&		theNode)
+			unsigned int	pos,
+			XalanNode*		theNode)
 {
 	assert(pos < getLength());
 
@@ -241,16 +241,13 @@ MutableNodeRefList::setNode(
 
 
 void
-MutableNodeRefList::addNodes(const DOM_NodeList&	nodelist)
+MutableNodeRefList::addNodes(const XalanNodeList&	nodelist)
 {
-	if (nodelist != 0)
-	{
-		const unsigned int	theLength = nodelist.getLength();
+	const unsigned int	theLength = nodelist.getLength();
 
-		for (unsigned int i = 0; i < theLength; i++)
-		{
-			addNode(nodelist.item(i));
-		}
+	for (unsigned int i = 0; i < theLength; i++)
+	{
+		addNode(nodelist.item(i));
 	}
 }
 
@@ -270,7 +267,7 @@ MutableNodeRefList::addNodes(const NodeRefListBase&		nodelist)
 
 
 void
-MutableNodeRefList::addNodesInDocOrder(const DOM_NodeList&	nodelist)
+MutableNodeRefList::addNodesInDocOrder(const XalanNodeList&		nodelist)
 {
 	const unsigned int	nChildren = nodelist.getLength();
 
@@ -298,12 +295,13 @@ MutableNodeRefList::addNodesInDocOrder(const NodeRefListBase&	nodelist)
 
 void
 MutableNodeRefList::addNodeInDocOrder(
-			const DOM_Node&		node,
-			bool				test)
+			XalanNode*	node,
+			bool		test)
 {
 	if (node != 0)
 	{
 		const unsigned int	size = getLength();
+
 		if (test == false || m_support == 0 || size == 0)
 		{
 			addNode(node);
@@ -311,12 +309,13 @@ MutableNodeRefList::addNodeInDocOrder(
 		else
 		{
 
-			unsigned int		i = size - 1;
+			unsigned int	i = size - 1;
 
 			// When wrap-around happens, i will be > than size...
 			for(; i < size; i--)
 			{
-				const DOM_Node&		child = m_nodeList[i];
+				const XalanNode*	child = m_nodeList[i];
+				assert(child != 0);
 
 				if(child == node)
 				{
@@ -325,7 +324,7 @@ MutableNodeRefList::addNodeInDocOrder(
 
 					break;
 				}
-				else if (isNodeAfter(node, child) == false)
+				else if (m_support->isNodeAfter(*node, *child) == false)
 				{
 					break;
 				}
@@ -341,215 +340,8 @@ MutableNodeRefList::addNodeInDocOrder(
 
 
 
-bool
-MutableNodeRefList::isNodeAfter(
-			const DOM_Node&		node1,
-			const DOM_Node&		node2) const
+XPathSupport*
+MutableNodeRefList::getSupport() const
 {
-	assert(m_support != 0);
-	assert(node1 != 0 && node2 != 0);
-
-	bool		isNodeAfter = false;
-
-	DOM_Node	parent1 = m_support->getParentOfNode(node1);
-	DOM_Node	parent2 = m_support->getParentOfNode(node2);
-
-	// Optimize for most common case
-	if(parent1 == parent2) // then we know they are siblings
-	{
-		isNodeAfter = isNodeAfterSibling(parent1,
-										 node1,
-										 node2);
-	}
-	else
-	{
-		// General strategy: Figure out the lengths of the two 
-		// ancestor chains, and walk up them looking for the 
-		// first common ancestor, at which point we can do a 
-		// sibling compare.  Edge condition where one is the 
-		// ancestor of the other.
-	  
-		// Count parents, so we can see if one of the chains 
-		// needs to be equalized.
-		int nParents1 = 2;
-		int nParents2 = 2; // count node & parent obtained above
-
-		while(parent1 != 0)
-		{
-			nParents1++;
-			parent1 = m_support->getParentOfNode(parent1);
-		}
-
-		while(parent2 != 0)
-		{
-			nParents2++;
-			parent2 = m_support->getParentOfNode(parent2);
-		}
-
-		// adjustable starting points
-		DOM_Node	startNode1 = node1;
-		DOM_Node	startNode2 = node2;
-
-		// Do I have to adjust the start point in one of 
-		// the ancesor chains?
-		if(nParents1 < nParents2)
-		{
-			// adjust startNode2
-			const int	adjust = nParents2 - nParents1;
-
-			for(int i = 0; i < adjust; i++)
-			{
-				startNode2 = m_support->getParentOfNode(startNode2);
-			}
-		}
-		else if(nParents1 > nParents2)
-		{
-			// adjust startNode1
-			const int	adjust = nParents1 - nParents2;
-
-			for(int i = 0; i < adjust; i++)
-			{
-				startNode1 = m_support->getParentOfNode(startNode1);
-			}
-		}
-
-		// so we can "back up"
-		DOM_Node	prevChild1;
-		DOM_Node	prevChild2;
-	  
-		// Loop up the ancestor chain looking for common parent.
-		while(0 != startNode1)
-		{
-			if(startNode1 == startNode2) // common parent?
-			{
-				if(0 == prevChild1) // first time in loop?
-				{
-					// Edge condition: one is the ancestor of the other.
-					isNodeAfter = (nParents1 < nParents2) ? true : false;
-
-					break; // from while loop
-				}
-				else
-				{
-					isNodeAfter = isNodeAfterSibling(startNode1,
-													 prevChild1,
-													 prevChild2);
-
-					break; // from while loop
-				}
-			}
-
-			prevChild1 = startNode1;
-			startNode1 = m_support->getParentOfNode(startNode1);
-			prevChild2 = startNode2;
-			startNode2 = m_support->getParentOfNode(startNode2);
-		}
-	}
-	
-	/* -- please do not remove... very useful for diagnostics --
-	System.out.println("node1 = "+node1.getNodeName()+"("+node1.getNodeType()+")"+
-	", node2 = "+node2.getNodeName()
-	+"("+node2.getNodeType()+")"+
-	", isNodeAfter = "+isNodeAfter); */
-
-	return isNodeAfter;
-}
-
-
-
-bool
-MutableNodeRefList::isNodeAfterSibling(
-			const DOM_Node&		parent,
-			const DOM_Node&		child1,
-			const DOM_Node&		child2)
-{
-	bool	isNodeAfterSibling = false;
-
-	const int	child1type = child1.getNodeType();
-	const int	child2type = child2.getNodeType();
-
-	if(DOM_Node::ATTRIBUTE_NODE != child1type &&
-	   DOM_Node::ATTRIBUTE_NODE == child2type)
-	{
-		// always sort attributes before non-attributes.
-		isNodeAfterSibling = false;
-	}
-	else if(DOM_Node::ATTRIBUTE_NODE == child1type &&
-			DOM_Node::ATTRIBUTE_NODE != child2type)
-	{
-		// always sort attributes before non-attributes.
-		isNodeAfterSibling = true;
-	}
-	else if(DOM_Node::ATTRIBUTE_NODE == child1type)
-	{
-		DOM_NamedNodeMap	children = parent.getAttributes();
-	  
-		const unsigned int	nNodes = children.getLength();
-
-		bool				found1 = false;
-		bool				found2 = false;
-
-		for(unsigned int i = 0; i < nNodes; i++)
-		{
-			const DOM_Node	child = children.item(i);
-
-			if(child1 == child)
-			{
-				if(found2 == true)
-				{
-					isNodeAfterSibling = false;
-					break;
-				}
-		  
-				found1 = true;
-			}
-			else if(child2 == child)
-			{
-				if(found1 == true)
-				{
-					isNodeAfterSibling = true;
-					break;
-				}
-		  
-				found2 = true;
-			}
-		}
-	}
-	else
-	{
-		DOM_NodeList	children = parent.getChildNodes();
-
-		const int		nNodes = children.getLength();
-
-		bool			found1 = false;
-		bool			found2 = false;
-
-		for(int i = 0; i < nNodes; i++)
-		{
-			const DOM_Node	child = children.item(i);
-
-			if(child1 == child)
-			{
-				if(found2 == true)
-				{
-					isNodeAfterSibling = false;
-					break;
-				}
-
-				found1 = true;
-			}
-			else if(child2 == child)
-			{
-				if(found1 == true)
-				{
-					isNodeAfterSibling = true;
-					break;
-				}
-
-				found2 = true;
-			}
-		}
-	}
-
-	return isNodeAfterSibling;
+	return m_support;
 }

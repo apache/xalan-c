@@ -89,7 +89,7 @@ XSpan::XSpan(
 XSpan::XSpan(
 			XPathEnvSupport&	envSupport,
 			XPathSupport&		support,
-			const DOM_Node&		value) :
+			XalanNode&			value) :
 	XNodeSet(envSupport,
 			 support,
 			 value),

@@ -83,8 +83,8 @@ public:
 	 */
 	explicit
 	XPathParserException(
-			const DOMString&	message = DOMString(),
-			const DOM_Node&		styleNode = DOM_Node());
+			const XalanDOMString&	message = XalanDOMString(),
+			const XalanNode*		styleNode = 0);
 
 	virtual
 	~XPathParserException();

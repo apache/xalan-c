@@ -69,15 +69,17 @@
 
 
 
-#include <dom/DOM_Document.hpp>
-#include <dom/DOM_Element.hpp>
-#include <dom/DOM_NodeList.hpp>
-#include <dom/DOMString.hpp>
+// $$$ ToDo: Necessary while XalanDOMString is style a typedef.
+#include <XalanDOM/XalanDOMString.hpp>
 
 
 
 #include <PlatformSupport/DOMStringHelper.hpp>
 #include <PlatformSupport/Resettable.hpp>
+
+
+
+#include <XPath/Function.hpp>
 
 
 
@@ -87,6 +89,9 @@ class XLocator;
 class XObject;
 class XPathExecutionContext;
 class XObjectFactory;
+class XalanDocument;
+class XalanElement;
+class XalanNode;
 class QName;
 
 
@@ -95,32 +100,13 @@ class XALAN_XPATH_EXPORT XPathEnvSupport : public Resettable
 {
 public:
 
+	typedef Function::XObjectArgVectorType	XObjectArgVectorType;
+
 	XPathEnvSupport();
 
 	virtual
 	~XPathEnvSupport();
 
-	/**
-	 * Given a valid element key, return the corresponding node list.
-	 *
-	 * @param doc              source document
-	 * @param name             name of the key, which must match the 'name'
-	 *                         attribute on xsl:key
-	 * @param ref              value that must match the value found by the
-	 *                         'match' attribute on xsl:key
-	 * @param nscontext        context node for namespace resolution
-	 * @param executionContext current execution context
-	 * @return if the name was not declared with xsl:key, this will return
-	 *         null, if the identifier is not found, it will return an empty
-	 *         node set, otherwise it will return a nodeset of nodes.
-	 */
-	virtual const NodeRefListBase*
-	getNodeSetByKey(
-			const DOM_Node&			doc,
-			const DOMString&		name,
-			const DOMString&		ref,
-			const DOM_Element&		nscontext,
-			XPathExecutionContext&	executionContext) const = 0;
 
 	/**
 	 * Given a valid element key, return the corresponding node list.
@@ -138,9 +124,9 @@ public:
 	 */
 	virtual const NodeRefListBase*
 	getNodeSetByKey(
-			const DOM_Node&			doc,
-			const DOMString&		name,
-			const DOMString&		ref,
+			const XalanNode&		doc,
+			const XalanDOMString&	name,
+			const XalanDOMString&	ref,
 			const PrefixResolver&	resolver,
 			XPathExecutionContext&	executionContext) const = 0;
 
@@ -163,10 +149,10 @@ public:
 	 * @param base base location for URI
 	 * @return parsed document
 	 */
-	virtual DOM_Document
+	virtual XalanDocument*
 	parseXML(
-			const DOMString&	urlString,
-			const DOMString&	base) const = 0;
+			const XalanDOMString&	urlString,
+			const XalanDOMString&	base) = 0;
 
 	/**
 	 * Get the source document for the given URI.
@@ -174,8 +160,8 @@ public:
 	 * @param theURI document URI
 	 * @return source document
 	 */
-	virtual DOM_Document
-	getSourceDocument(const DOMString&	theURI) const = 0;
+	virtual XalanDocument*
+	getSourceDocument(const XalanDOMString&		theURI) const = 0;
 
 	/**
 	 * Associate a document with a given URI.
@@ -185,8 +171,8 @@ public:
 	 */
 	virtual void
 	setSourceDocument(
-			const DOMString&		theURI,
-			const DOM_Document&		theDocument) = 0;
+			const XalanDOMString&	theURI,
+			XalanDocument*			theDocument) = 0;
 
 	/**
 	 * Given a DOM Document, tell what URI was used to parse it. Needed for
@@ -195,15 +181,15 @@ public:
 	 * @param owner source document
 	 * @return document URI
 	 */
-	virtual DOMString
-	findURIFromDoc(const DOM_Document&	owner) const = 0;
+	virtual XalanDOMString
+	findURIFromDoc(const XalanDocument*		owner) const = 0;
 
 	/**
 	 * Get a DOM document, primarily for creating result tree fragments.
 	 *
 	 * @return DOM document
 	 */
-	virtual DOM_Document
+	virtual XalanDocument*
 	getDOMFactory() const = 0;
 
 	/**
@@ -215,8 +201,8 @@ public:
 	 */
 	virtual bool
 	functionAvailable(
-			const DOMString&	theNamespace, 
-			const DOMString&	extensionName) const = 0;
+			const XalanDOMString&	theNamespace, 
+			const XalanDOMString&	extensionName) const = 0;
 
 	/**
 	 * Handle an extension function.
@@ -230,9 +216,9 @@ public:
 	virtual XObject*
 	extFunction(
 			XPathExecutionContext&			executionContext,
-			const DOMString&				theNamespace,
-			const DOMString&				extensionName, 
-			const std::vector<XObject*>&	argVec) const = 0;
+			const XalanDOMString&			theNamespace,
+			const XalanDOMString&			extensionName, 
+			const XObjectArgVectorType&		argVec) const = 0;
 
 	/**
 	 * Get an XLocator provider keyed by node.  This gets the association
@@ -242,7 +228,7 @@ public:
 	 * @return pointer to locator
 	 */
 	virtual XLocator*
-	getXLocatorFromNode(const DOM_Node&	node) const = 0;
+	getXLocatorFromNode(const XalanNode*	node) const = 0;
 
 	/**
 	 * Associate an XLocator provider to a node.  This makes the association
@@ -253,8 +239,8 @@ public:
 	 */
 	virtual void
 	associateXLocatorToNode(
-			const DOM_Node&		node,
-			XLocator*			xlocator) const = 0;
+			const XalanNode*	node,
+			XLocator*			xlocator) = 0;
 
 	/**
 	 * Tells, through the combination of the default-space attribute on
@@ -267,7 +253,7 @@ public:
 	 * @return true if the text node should be stripped of extra whitespace
 	 */
 	virtual bool
-	shouldStripSourceNode(const DOM_Node&	node) const = 0;
+	shouldStripSourceNode(const XalanNode&	node) const = 0;
 
 	enum eSource { eXMLParser		= 1,
 				   eXSLTProcessor	= 2,
@@ -322,62 +308,40 @@ public:
    */
 	virtual bool
 	problem(
-			eSource				where,
-			eClassification		classification,
-			const DOM_Node&		styleNode,
-			const DOM_Node&		sourceNode,
-			const DOMString&	msg,
-			int					lineNo,
-			int					charOffset) const = 0;
+			eSource					where,
+			eClassification			classification,
+			const XalanNode*		styleNode,
+			const XalanNode*		sourceNode,
+			const XalanDOMString&	msg,
+			int						lineNo,
+			int						charOffset) const = 0;
 
-  /**
-   * Function that is called when a problem event occurs.
-   * 
-	* @param where 			either eXMLParser, eXSLTProcessor,
-	*			 			      eXPATHParser, eXPATHProcessor, or eDataSource.
-	* @param classification	either eWarning, or eError
-	* @param resolver       resolver for namespace resolution
-	* @param styleNode      style tree node where the problem occurred
-	*                       (may be null)
-	* @param sourceNode     source tree node where the problem occurred
-	*                       (may be null)
-   * @param msg            string message explaining the problem.
-   * @param lineNo         line number where the problem occurred,  
-   *                       if it is known, else zero
-   * @param charOffset     character offset where the problem,  
-   *                       occurred if it is known, else zero
-	* @return true if the return is an ERROR, in which case exception will be
-	*         thrown.  Otherwise the processor will continue to process.
-   */
+	/**
+	 * Function that is called when a problem event occurs.
+	 * 
+	 * @param where 			either eXMLParser, eXSLTProcessor,
+	 *			 			      eXPATHParser, eXPATHProcessor, or eDataSource.
+	 * @param classification	either eWarning, or eError
+	 * @param resolver       resolver for namespace resolution
+	 * @param sourceNode     source tree node where the problem occurred
+	 *                       (may be null)
+	 * @param msg            string message explaining the problem.
+	 * @param lineNo         line number where the problem occurred,  
+	 *                       if it is known, else zero
+	 * @param charOffset     character offset where the problem,  
+	 *                       occurred if it is known, else zero
+	 * @return true if the return is an ERROR, in which case exception will be
+	 *         thrown.  Otherwise the processor will continue to process.
+	 */
 	virtual bool
 	problem(
 			eSource					where,
 			eClassification			classification,
 			const PrefixResolver*	resolver,
-			const DOM_Node&			sourceNode,
-			const DOMString&		msg,
+			const XalanNode*		sourceNode,
+			const XalanDOMString&	msg,
 			int						lineNo,
 			int						charOffset) const = 0;
-
-	/**
-	 * Query the value of the extend support instance.
-	 * 
-	 * @return pointer to the  extended support instance, may be 0
-	 */
-	virtual XPathEnvSupport*
-	GetExtendedEnvSupport() const = 0;
-
-	/**
-	 * This call is intended to allow extending via delegation.
-	 * 
-	 * @param   theExtendedSupport pointer to another XPathEnvSupport
-	 *									    instance to delegate to, may be 0
-	 * 
-	 * @return  pointer to the previous extended instance, may be 0
-	 */
-	virtual XPathEnvSupport*
-	SetExtendedEnvSupport(XPathEnvSupport*	theExtendedSupport) = 0;
-
 
 	// These interfaces are inherited from Resettable...
 

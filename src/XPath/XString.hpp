@@ -69,7 +69,7 @@
 
 
 
-#include <dom/DOMString.hpp>
+#include <XalanDOM/XalanDOMString.hpp>
 
 
 
@@ -95,9 +95,9 @@ public:
 	 * @param value      source string
 	 */
 	XString(
-			XPathEnvSupport&	envSupport,
-			XPathSupport&		support,
-			const DOMString&	val);
+			XPathEnvSupport&		envSupport,
+			XPathSupport&			support,
+			const XalanDOMString&	val);
 
 	XString(const XString&	source);
 
@@ -110,7 +110,7 @@ public:
 	virtual	eObjectType
 	getType() const;
 
-	virtual DOMString
+	virtual XalanDOMString
 	getTypeString() const;
   
 	virtual double
@@ -119,7 +119,7 @@ public:
 	virtual bool
 	boolean() const;
 
-	virtual DOMString
+	virtual XalanDOMString
 	str() const;
   
 	virtual const ResultTreeFragBase&
@@ -150,7 +150,7 @@ private:
 
 	XPathSupport&								m_support;
 
-	const DOMString								m_value;
+	const XalanDOMString						m_value;
 
 	mutable std::auto_ptr<ResultTreeFragBase>	m_resultTreeFrag;
 };

@@ -74,15 +74,17 @@
 #include "XObjectFactory.hpp"
 #include "XPathExecutionContext.hpp"
 
+
+
 #if !defined(XALAN_NO_NAMESPACES)
 	using std::cerr;
 	using std::endl;
 #endif
 		
 
+
 XPathEnvSupportDefault::XPathEnvSupportDefault() :
 	XPathEnvSupport(),
-	m_extendedSupport(0),
 	m_sourceDocs()
 {
 }
@@ -98,58 +100,20 @@ XPathEnvSupportDefault::~XPathEnvSupportDefault()
 void
 XPathEnvSupportDefault::reset()
 {
-	if (m_extendedSupport != 0)
-	{
-		m_extendedSupport->reset();
-	}
+	m_sourceDocs.clear();
 }
 
 
 
 const NodeRefListBase*
 XPathEnvSupportDefault::getNodeSetByKey(
-			const DOM_Node&			doc,
-			const DOMString&		name,
-			const DOMString&		ref,
-			const DOM_Element&		nscontext,
-			XPathExecutionContext&	executionContext) const
+			const XalanNode&		/* doc */,
+			const XalanDOMString&	/* name */,
+			const XalanDOMString&	/* ref */,
+			const PrefixResolver&	/* resolver */,
+			XPathExecutionContext&	/* executionContext */) const
 {
-	if (m_extendedSupport != 0)
-	{
-		return m_extendedSupport->getNodeSetByKey(doc,
-												  name,
-												  ref,
-												  nscontext,
-												  executionContext);
-	}
-	else
-	{
-		return 0;
-	}
-}
-
-
-
-const NodeRefListBase*
-XPathEnvSupportDefault::getNodeSetByKey(
-			const DOM_Node&			doc,
-			const DOMString&		name,
-			const DOMString&		ref,
-			const PrefixResolver&	resolver,
-			XPathExecutionContext&	executionContext) const
-{
-	if (m_extendedSupport != 0)
-	{
-		return m_extendedSupport->getNodeSetByKey(doc,
-												  name,
-												  ref,
-												  resolver,
-												  executionContext);
-	}
-	else
-	{
-		return 0;
-	}
+	return 0;
 }
 
 
@@ -160,49 +124,34 @@ XPathEnvSupportDefault::getVariable(
 			const QName&		name) const
 
 {
-	if (m_extendedSupport != 0)
-	{
-		return m_extendedSupport->getVariable(xobjectFactory,
-											  name);
-	}
-	else
-	{
-		return xobjectFactory.createUnknown(name.getLocalPart());
-	}
+	return xobjectFactory.createUnknown(name.getLocalPart());
 }
 
 
 
-DOM_Document
+XalanDocument*
 XPathEnvSupportDefault::parseXML(
-			const DOMString&	/* urlString */,
-			const DOMString&	/* base */) const
+			const XalanDOMString&	/* urlString */,
+			const XalanDOMString&	/* base */)
 {
-	return DOM_Document();
+	return 0;
 }
 
 
 
-DOM_Document
-XPathEnvSupportDefault::getSourceDocument(const DOMString&	theURI) const
+XalanDocument*
+XPathEnvSupportDefault::getSourceDocument(const XalanDOMString&		theURI) const
 {
-	if (m_extendedSupport != 0)
-	{
-		return m_extendedSupport->getSourceDocument(theURI);
-	}
-	else
-	{
-		const SourceDocsTableType::const_iterator	i =
+	const SourceDocsTableType::const_iterator	i =
 			m_sourceDocs.find(theURI);
 
-		if (i == m_sourceDocs.end())
-		{
-			return DOM_Document();
-		}
-		else
-		{
-			return i->second;
-		}
+	if (i == m_sourceDocs.end())
+	{
+		return 0;
+	}
+	else
+	{
+		return i->second;
 	}
 }
 
@@ -210,82 +159,53 @@ XPathEnvSupportDefault::getSourceDocument(const DOMString&	theURI) const
 
 void
 XPathEnvSupportDefault::setSourceDocument(
-			const DOMString&		theURI,
-			const DOM_Document&		theDocument)
+			const XalanDOMString&	theURI,
+			XalanDocument*			theDocument)
 {
-	if (m_extendedSupport != 0)
-	{
-		m_extendedSupport->setSourceDocument(theURI, theDocument);
-	}
-	else
-	{
-		m_sourceDocs[theURI] = theDocument;
-	}
+	m_sourceDocs[theURI] = theDocument;
 }
 
 
 
-DOMString
-XPathEnvSupportDefault::findURIFromDoc(const DOM_Document&	owner) const
+XalanDOMString
+XPathEnvSupportDefault::findURIFromDoc(const XalanDocument*		owner) const
 {
-	if (m_extendedSupport != 0)
-	{
-		return m_extendedSupport->findURIFromDoc(owner);
-	}
-	else
-	{
-		SourceDocsTableType::const_iterator		i =
+	SourceDocsTableType::const_iterator	i =
 			m_sourceDocs.begin();
 
-		bool	fFound = false;
+	bool	fFound = false;
 
-		while(i != m_sourceDocs.end() && fFound == false)
+	while(i != m_sourceDocs.end() && fFound == false)
+	{
+		if (i->second == owner)
 		{
-			if (i->second == owner)
-			{
-				fFound = true;
-			}
-			else
-			{
-				++i;
-			}
+			fFound = true;
 		}
-
-		return fFound == false ? "Unknown" : i->first;
+		else
+		{
+			++i;
+		}
 	}
+
+	return fFound == false ? XalanDOMString() : i->first;
 }
 
 
 
-DOM_Document
+XalanDocument*
 XPathEnvSupportDefault::getDOMFactory() const
 {
-	if (m_extendedSupport != 0)
-	{
-		return m_extendedSupport->getDOMFactory();
-	}
-	else
-	{
-		return DOM_Document();
-	}
+	return 0;
 }
 
 
 
 bool
 XPathEnvSupportDefault::functionAvailable(
-			const DOMString&	theNamespace,
-			const DOMString&	extensionName) const
+			const XalanDOMString&	/* theNamespace */,
+			const XalanDOMString&	/* extensionName */) const
 {
-	if (m_extendedSupport != 0)
-	{
-		return m_extendedSupport->functionAvailable(theNamespace,
-													extensionName);
-	}
-	else
-	{
-		return false;
-	}
+	return false;
 }
 
 
@@ -293,146 +213,78 @@ XPathEnvSupportDefault::functionAvailable(
 XObject*
 XPathEnvSupportDefault::extFunction(
 			XPathExecutionContext&			executionContext,
-			const DOMString&				theNamespace,
-			const DOMString&				extensionName,
-			const XObjectPtrVectorType&	argVec) const
+			const XalanDOMString&			/* theNamespace */,
+			const XalanDOMString&			/* extensionName */,
+			const XObjectArgVectorType&		/* argVec */) const
 {
-	if (m_extendedSupport != 0)
-	{
-		return m_extendedSupport->extFunction(executionContext,
-											  theNamespace,
-											  extensionName,
-											  argVec);
-	}
-	else
-	{
-		return executionContext.getXObjectFactory().createNull();
-	}
+	return executionContext.getXObjectFactory().createNull();
 }
 
 
 
 XLocator*
-XPathEnvSupportDefault::getXLocatorFromNode(const DOM_Node&	 node) const
+XPathEnvSupportDefault::getXLocatorFromNode(const XalanNode*	/* node */) const
 {
-	if (m_extendedSupport != 0)
-	{
-		return m_extendedSupport->getXLocatorFromNode(node);
-	}
-	else
-	{
-		return SimpleNodeLocator::getDefaultInstance();
-	}
+	return SimpleNodeLocator::getDefaultInstance();
 }
 
 
 
 void
 XPathEnvSupportDefault::associateXLocatorToNode(
-			const DOM_Node&		node,
-			XLocator*			xlocator) const
+			const XalanNode*	/* node */,
+			XLocator*			/* xlocator */)
 {
-	if (m_extendedSupport != 0)
-	{
-		m_extendedSupport->associateXLocatorToNode(node,
-												   xlocator);
-	}
 }
 
 
 
 bool
-XPathEnvSupportDefault::shouldStripSourceNode(const DOM_Node&	node) const
+XPathEnvSupportDefault::shouldStripSourceNode(const XalanNode&	/* node */) const
 {
-	if (m_extendedSupport != 0)
-	{
-		return m_extendedSupport->shouldStripSourceNode(node);
-	}
-	else
-	{
-		return false;
-	}
+	return false;
 }
 
 
 
 bool
 XPathEnvSupportDefault::problem(
-			eSource				where,
-			eClassification		classification,
-			const DOM_Node&		styleNode,
-			const DOM_Node&		sourceNode,
-			const DOMString&	msg,
-			int					lineNo,
-			int					charOffset) const
-{
-	if (m_extendedSupport != 0)
-	{
-		return m_extendedSupport->problem(where,
-										  classification,
-										  styleNode,
-										  sourceNode,
-										  msg,
-										  lineNo,
-										  charOffset);
-	}
-	else
-	{
-		cerr << msg
-				  << ", at line number "
-				  << static_cast<long>(lineNo)
-				  << " at offset "
-				  << static_cast<long>(charOffset)
-				  << endl;
-
-		return classification == XPathEnvSupport::eError ? true : false;
-	}
-}
-
-
-
-bool
-XPathEnvSupportDefault::problem(
-			eSource					where,
+			eSource					/* where */,
 			eClassification			classification,
-			const PrefixResolver*	resolver,
-			const DOM_Node&			sourceNode,
-			const DOMString&		msg,
+			const XalanNode*		/* styleNode */,
+			const XalanNode*		/* sourceNode */,
+			const XalanDOMString&	msg,
 			int						lineNo,
 			int						charOffset) const
 {
-	if (m_extendedSupport != 0)
-	{
-		return m_extendedSupport->problem(where,
-										  classification,
-										  resolver,
-										  sourceNode,
-										  msg,
-										  lineNo,
-										  charOffset);
-	}
-	else
-	{
-		return classification == XPathEnvSupport::eError ? true :false;
-	}
+	cerr << msg
+		 << ", at line number "
+		 << static_cast<long>(lineNo)
+		 << " at offset "
+		 << static_cast<long>(charOffset)
+		 << endl;
+
+	return classification == XPathEnvSupport::eError ? true : false;
 }
 
 
 
-XPathEnvSupport*
-XPathEnvSupportDefault::GetExtendedEnvSupport() const
+bool
+XPathEnvSupportDefault::problem(
+			eSource					/* where */,
+			eClassification			classification,
+			const PrefixResolver*	/* resolver */,
+			const XalanNode*		/* sourceNode */,
+			const XalanDOMString&	msg,
+			int						lineNo,
+			int						charOffset) const
 {
-	return m_extendedSupport;
-}
+	cerr << msg
+		 << ", at line number "
+		 << static_cast<long>(lineNo)
+		 << " at offset "
+		 << static_cast<long>(charOffset)
+		 << endl;
 
-
-
-XPathEnvSupport*
-XPathEnvSupportDefault::SetExtendedEnvSupport(XPathEnvSupport*	theExtendedSupport)
-{
-	XPathEnvSupport* const	theOldSupport = m_extendedSupport;
-
-	m_extendedSupport = theExtendedSupport;
-
-	return theOldSupport;
+	return classification == XPathEnvSupport::eError ? true :false;
 }

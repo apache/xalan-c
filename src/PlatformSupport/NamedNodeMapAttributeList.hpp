@@ -68,10 +68,15 @@
 
 
 
-#include <dom/DOM_Node.hpp>
-#include <dom/DOM_NamedNodeMap.hpp>
-#include <dom/DOMString.hpp>
 #include <sax/AttributeList.hpp>
+
+
+
+#include <XalanDOM/XalanDOMString.hpp>
+
+
+
+class XalanNamedNodeMap;
 
 
 
@@ -80,7 +85,7 @@ class XALAN_PLATFORMSUPPORT_EXPORT NamedNodeMapAttributeList : public AttributeL
 public:
 
 	explicit
-	NamedNodeMapAttributeList(DOM_NamedNodeMap&		theMap);
+	NamedNodeMapAttributeList(const XalanNamedNodeMap&	theMap);
 
 	virtual
 	~NamedNodeMapAttributeList();
@@ -117,14 +122,16 @@ private:
 	operator==(const NamedNodeMapAttributeList&);
 
 	// Data members...
-	const DOM_NamedNodeMap			m_nodeMap;
+	const XalanNamedNodeMap&		m_nodeMap;
 
 	const int						m_lastIndex;
 
 #if defined(XALAN_NO_NAMESPACES)
-	typedef vector<DOMString>		CacheType;
+	typedef XalanDOMString					CacheEntryType;
+	typedef vector<CacheEntryType>			CacheType;
 #else
-	typedef std::vector<DOMString>	CacheType;
+	typedef XalanDOMString					CacheEntryType;
+	typedef std::vector<CacheEntryType>		CacheType;
 #endif
 
 	mutable CacheType				m_cachedData;

@@ -64,7 +64,7 @@
 
 
 
-#include <dom/DOMString.hpp>
+#include <XalanDOM/XalanDOMString.hpp>
 
 
 
@@ -76,7 +76,6 @@ class XALAN_XPATH_EXPORT PrefixResolver
 {
 public:
 
-	explicit
 	PrefixResolver();
 
 	virtual
@@ -90,15 +89,15 @@ public:
 	 * @param prefix Prefix to resolve
 	 * @return namespace that prefix resolves to, or null if prefix is not found
 	 */
-	virtual DOMString
-	getNamespaceForPrefix(const DOMString&	prefix) const = 0;
+	virtual XalanDOMString
+	getNamespaceForPrefix(const XalanDOMString&		prefix) const = 0;
 
 	/**
 	 * Retrieve the base URI for the resolver.
 	 * 
 	 * @return URI string
 	 */
-	virtual DOMString
+	virtual XalanDOMString
 	getURI() const = 0;
 };
 

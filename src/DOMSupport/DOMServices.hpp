@@ -64,8 +64,7 @@
 
 
 
-#include <dom/DOM_Node.hpp>
-#include <dom/DOMString.hpp>
+#include <XalanDOM/XalanDOMString.hpp>
 
 
 
@@ -75,8 +74,9 @@
 
 
 
-class DOM_Element;
-class DOM_Text;
+class XalanNode;
+class XalanElement;
+class XalanText;
 
 
 
@@ -86,11 +86,11 @@ public:
 
 #if defined(XALAN_INLINE_INITIALIZATION)
 
-	static const DOMString	s_XMLNamespaceURI(XALAN_STATIC_UCODE_STRING("http://www.w3.org/XML/1998/namespace"));
+	static const XalanDOMString		s_XMLNamespaceURI(XALAN_STATIC_UCODE_STRING("http://www.w3.org/XML/1998/namespace"));
 
 #else
 
-	static const DOMString	s_XMLNamespaceURI;
+	static const XalanDOMString		s_XMLNamespaceURI;
 
 #endif
 
@@ -111,7 +111,28 @@ public:
 		 * @return true if white space can be ignored
 		 */
 		virtual bool
-		isIgnorableWhitespace(const DOM_Text&	node) const = 0;
+		isIgnorableWhitespace(const XalanText&	node) const = 0;
+	};
+
+	// A default implementation using the values from the XML spec.
+	class XALAN_DOMSUPPORT_EXPORT WhitespaceSupportDefault : public WhitespaceSupport
+	{
+	public:
+
+		WhitespaceSupportDefault();
+
+		virtual
+		~WhitespaceSupportDefault();
+
+		/**
+		 * Tell if the node is ignorable whitespace. This should be in the DOM.
+		 * Return false if the parser doesn't handle this.
+		 * 
+		 * @param node	text node queried
+		 * @return true if white space can be ignored
+		 */
+		virtual bool
+		isIgnorableWhitespace(const XalanText&	node) const;
 	};
 
 	/**
@@ -121,9 +142,9 @@ public:
 	 * @param theResolver prefix resolver to use
 	 * @return a string representation of the node's data
 	 */
-	static DOMString
+	static XalanDOMString
 	getNodeData(
-			const DOM_Node&				node,
+			const XalanNode&			node,
 			const WhitespaceSupport&	theResolver);
 
 	/**
@@ -132,8 +153,8 @@ public:
 	 * @param node	DOM node whose name is returned
 	 * @return name of node without namespace
 	 */
-	static DOMString
-	getLocalNameOfNode(const DOM_Node&		n);
+	static XalanDOMString
+	getLocalNameOfNode(const XalanNode&		n);
 
 	/**
 	 * Retrieve the parent of a node. This function has to be implemented,
@@ -142,8 +163,8 @@ public:
 	 * @param node child node
 	 * @return parent node
 	 */
-	static DOM_Node
-	getParentOfNode(const DOM_Node&		node);
+	static XalanNode*
+	getParentOfNode(const XalanNode&	node);
 
 	/**
 	 * Retrieve the URI corresponding to a namespace prefix
@@ -152,10 +173,36 @@ public:
 	 * @param namespaceContext DOM element representing the context for namespace
 	 * @return URI corresponding to namespace
 	 */
-	static DOMString
+	static XalanDOMString
 	getNamespaceForPrefix(
-			const DOMString&	prefix,
-			const DOM_Element&	namespaceContext);
+			const XalanDOMString&	prefix,
+			const XalanElement&		namespaceContext);
+
+	/**
+	 * Determine if a node is after another node, in document order.
+	 *
+	 * @param node1 The first node
+	 * @param node2 The second node
+	 * @return true if node1 one is after node2, or false if it is not.
+	 */
+	static bool
+	isNodeAfter(
+			const XalanNode&	node1,
+			const XalanNode&	node2);
+
+	/**
+	 * Determine if a node is after another node in the sibling list.
+	 *
+	 * @param parent The parent of the nodes.
+	 * @param node1 The first node
+	 * @param node2 The second node
+	 * @return true if node1 one is after node2, or false if it is not.
+	 */
+	static bool
+	isNodeAfterSibling(
+			const XalanNode&	parent,
+			const XalanNode&	child1,
+			const XalanNode&	child2);
 
 };	// class DOMServices
 

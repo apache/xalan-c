@@ -58,6 +58,8 @@
 #define DOMHELPER_HEADER_GUARD_1357924680
 
 
+#error This file is obsolete!!!!
+
 
 // STL header file for class unary_function.
 #include <functional>

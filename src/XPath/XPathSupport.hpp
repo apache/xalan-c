@@ -64,10 +64,7 @@
 
 
 
-#include <dom/DOMString.hpp>
-#include <dom/DOM_Node.hpp>
-#include <dom/DOM_Document.hpp>
-#include <dom/DOM_Element.hpp>
+#include <XalanDOM/XalanDOMString.hpp>
 
 
 
@@ -77,6 +74,10 @@
 
 class DocumentHandler;
 class XMLURL;
+class XalanDocument;
+class XalanElement;
+class XalanNode;
+class XalanText;
 
 
 
@@ -97,7 +98,7 @@ public:
 	 * @return true if white space can be ignored
 	 */
 	virtual bool
-	isIgnorableWhitespace(const DOM_Text&	node) const = 0;
+	isIgnorableWhitespace(const XalanText&	node) const = 0;
 
 	/**
 	 * Retrieve the URI corresponding to a namespace prefix
@@ -106,10 +107,10 @@ public:
 	 * @param namespaceContext DOM element representing the context for namespace
 	 * @return URI corresponding to namespace
 	 */
-	virtual DOMString
+	virtual XalanDOMString
 	getNamespaceForPrefix(
-			const DOMString&	prefix, 
-			const DOM_Element&	namespaceContext) const = 0;
+			const XalanDOMString&	prefix, 
+			const XalanElement&		namespaceContext) const = 0;
 
 	/**
 	 * Returns the namespace of the given node.
@@ -117,8 +118,8 @@ public:
 	 * @param node	DOM node whose namespace is returned
 	 * @return namespace of node
 	 */
-	virtual DOMString
-	getNamespaceOfNode(const DOM_Node&	n) const = 0;
+	virtual XalanDOMString
+	getNamespaceOfNode(const XalanNode&		n) const = 0;
 
 	/**
 	 * Retrieve local name of node
@@ -126,8 +127,8 @@ public:
 	 * @param node	DOM node whose name is returned
 	 * @return name of node without namespace
 	 */
-	virtual DOMString
-	getLocalNameOfNode(const DOM_Node&	n) const = 0;
+	virtual XalanDOMString
+	getLocalNameOfNode(const XalanNode&		n) const = 0;
 
 	/**
 	 * Retrieves data for node recursively.
@@ -138,8 +139,8 @@ public:
 
 	 * @return a string representation of the node's data
 	 */
-	virtual DOMString
-	getNodeData(const DOM_Node&		n) const = 0;
+	virtual XalanDOMString
+	getNodeData(const XalanNode&	n) const = 0;
 
 	/**
 	 * Retrieve the parent of a node. This function has to be implemented,
@@ -148,8 +149,20 @@ public:
 	 * @param node child node
 	 * @return parent node
 	 */
-	virtual DOM_Node
-	getParentOfNode(const DOM_Node&		n) const = 0;
+	virtual XalanNode*
+	getParentOfNode(const XalanNode&	n) const = 0;
+
+	/**
+	 * Determine if a node is after another node, in document order.
+	 *
+	 * @param node1 The first node
+	 * @param node2 The second node
+	 * @return true if node1 one is after node2, or false if it is not.
+	 */
+	virtual bool
+	isNodeAfter(
+			const XalanNode&	node1,
+			const XalanNode&	node2) const = 0;
 
 	/**
 	 * Given a valid element id, return the corresponding element.
@@ -158,10 +171,10 @@ public:
 	 * @param doc document to search
 	 * @return element for ID
 	 */
-	virtual DOM_Element
+	virtual XalanElement*
 	getElementByID(
-			const DOMString&		id,
-			const DOM_Document&		doc) const = 0;
+			const XalanDOMString&	id,
+			const XalanDocument&	doc) const = 0;
 
 	/**
 	 * Set whether or not the liaison attempts to expand namespaces.	Used 
@@ -194,10 +207,10 @@ public:
 	 // completely expand entities before the structure model is passed to the
 	 // DOM; in this case, there will be no EntityReferences in the DOM tree."
 	 // So I'm not sure how well this is going to work.
-	virtual DOMString
+	virtual XalanDOMString
 	getUnparsedEntityURI(
-			const DOMString&		theName,
-			const DOM_Document&		theDocument) const = 0;
+			const XalanDOMString&	theName,
+			const XalanDocument&	theDocument) const = 0;
 
 
 	// These interfaces are inherited from Resettable...

@@ -64,7 +64,11 @@
 
 
 
-#include <dom/DOMString.hpp>
+#include <XalanDOM/XalanDOMString.hpp>
+
+
+
+#include <PlatformSupport/DOMStringHelper.hpp>
 
 
 
@@ -81,9 +85,23 @@ public:
 	 * @param fReturnTokens if true, delimiter characters are also returned
 	 *                      as tokens, default is false
 	 */
-	StringTokenizer(const DOMString&	theString,
-					const DOMString&	theTokens = DOMString("\t\n\r\f"),
-					bool				fReturnTokens = false);
+	StringTokenizer(const XalanDOMString&	theString,
+					const XalanDOMString&	theTokens = XalanDOMString(XALAN_STATIC_UCODE_STRING("\t\n\r\f")),
+					bool					fReturnTokens = false);
+
+	/**
+	 * Constructs a tokenizer for the target string.  This version constructs
+	 * from null-terminated wide strings, like those we get from SAX-like APIs.
+	 *
+	 * @param theString     string to tokenize
+	 * @param theTokens     string of delimiters used to parse target, default
+	 *                      is "\t\n\r\f"
+	 * @param fReturnTokens if true, delimiter characters are also returned
+	 *                      as tokens, default is false
+	 */
+	StringTokenizer(const XalanDOMChar*		theString,
+					const XalanDOMChar*		theTokens = XALAN_STATIC_UCODE_STRING("\t\n\r\f"),
+					bool					fReturnTokens = false);
 
 	virtual
 	~StringTokenizer();
@@ -102,7 +120,7 @@ public:
 	 * 
 	 * @return next token string
 	 */
-	virtual DOMString
+	virtual XalanDOMString
 	nextToken();
 
 	/**
@@ -110,23 +128,27 @@ public:
 	 * 
 	 * @return number of remaining tokens
 	 */
-	virtual int
+	virtual unsigned int
 	countTokens() const;
 
 protected:
 
-	int
-	FindNextDelimiterIndex(int	theStartIndex) const;
+	unsigned int
+	FindNextDelimiterIndex(unsigned int	theStartIndex) const;
 
 private:
 
-	const DOMString		m_String;
-	const DOMString		m_Tokens;
+	const XalanDOMString	m_String;
 
-	const bool			m_fReturnTokens;
+	const XalanDOMString	m_Tokens;
 
-	int					m_CurrentIndex;
-	const int			m_StringLength;
+	const bool				m_fReturnTokens;
+
+	unsigned int			m_CurrentIndex;
+
+	const unsigned int		m_StringLength;
+
+	const unsigned int		m_tokensLength;
 };
 
 

@@ -96,11 +96,11 @@ public:
 	virtual XObject*
 	execute(
 			XPathExecutionContext&			executionContext,
-			const DOM_Node&					context,
+			XalanNode*						context,
 			int								/* opPos */,
 			const XObjectArgVectorType&		args)
 	{
-		DOMString	theNamespace;
+		XalanDOMString	theNamespace;
 
 		if (args.size() > 1)
 		{
@@ -111,6 +111,11 @@ public:
 		{
 			theNamespace = getNamespaceFromNodeSet(*args[0],
 												   executionContext);
+		}
+		else if (context == 0)
+		{
+			executionContext.error("The namespace-uri() function requires a non-null context node!",
+								   context);
 		}
 		else
 		{
@@ -125,7 +130,7 @@ public:
 
 			// An XObject that contains the context node.
 			FactoryObjectAutoPointer<XObject>		theXObject(&executionContext.getXObjectFactory(),
-															   executionContext.getXObjectFactory().createNodeSet(context));
+															   executionContext.getXObjectFactory().createNodeSet(*context));
 
 
 			theNamespace = getNamespaceFromNodeSet(*theXObject.get(),
@@ -143,17 +148,17 @@ public:
 
 private:
 
-	static DOMString
+	static XalanDOMString
 	getNamespaceFromNodeSet(const XObject&			theXObject,
 							XPathExecutionContext&	theContext)
 	{
-		DOMString				theNamespace;
+		XalanDOMString	theNamespace;
 
 		const NodeRefListBase&	theList = theXObject.nodeset();
 
 		if (theList.getLength() > 0)
 		{
-			theNamespace = theContext.getNamespaceOfNode(theList.item(0));
+			theNamespace = theContext.getNamespaceOfNode(*theList.item(0));
 		}
 
 		return theNamespace;

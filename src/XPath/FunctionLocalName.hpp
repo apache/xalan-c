@@ -100,7 +100,7 @@ public:
 	virtual XObject*
 	execute(
 			XPathExecutionContext&			executionContext,
-			const DOM_Node&					context,
+			XalanNode*						context,
 			int								/* opPos */,
 			const XObjectArgVectorType&		args)
 	{
@@ -112,11 +112,11 @@ public:
 
 		const NodeRefListBase&	theNodeList = args[0]->nodeset();
 
-		DOMString	theData;
+		XalanDOMString	theData;
 
 		if (theNodeList.getLength() > 0)
 		{
-			theData = executionContext.getLocalNameOfNode(theNodeList.item(0));
+			theData = executionContext.getLocalNameOfNode(*theNodeList.item(0));
 		}
 
 		return executionContext.getXObjectFactory().createString(theData);

@@ -64,7 +64,12 @@
 
 
 
-class DOMString;
+// $$$ ToDo: This is necessarh while XalanDOMString is a typedef...
+#include <XalanDOM/XalanDOMString.hpp>
+
+
+
+
 class MutableNodeRefList;
 class NodeRefListBase;
 class ResultTreeFragBase;
@@ -117,7 +122,7 @@ public:
 	 */
 	virtual void
 	String(const XObject&		theXObject,
-		   const DOMString&		theValue) = 0;
+		   const XalanDOMString&		theValue) = 0;
 
 	/**
 	 * Call back the XObject with a result tree fragment value.
@@ -157,7 +162,7 @@ public:
 	 */
 	virtual void
 	Unknown(const XObject&		theObject,
-			const DOMString&	theName) = 0;
+			const XalanDOMString&	theName) = 0;
 
 	/**
 	 * Call back the XObject with a null value.

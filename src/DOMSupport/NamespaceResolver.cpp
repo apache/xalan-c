@@ -62,7 +62,11 @@
 
 
 
-#include <Include/DOMHelper.hpp>
+#include <XalanDOM/XalanNode.hpp>
+#include <XalanDOM/XalanNamedNodeMap.hpp>
+
+
+
 #include "DOMServices.hpp"
 
 
@@ -97,15 +101,15 @@ static NSInfo	theNSInfoNullNoAncestorXMLNS(true, false, NSInfo::ANCESTORNOXMLNS)
 
 
 
-static DOMString	theXMLString(XALAN_STATIC_UCODE_STRING("xml"));
-static DOMString	theXMLNSString(XALAN_STATIC_UCODE_STRING("xmlns"));
-static DOMString	theXMLNSStringWithColon(XALAN_STATIC_UCODE_STRING("xmlns:"));
+static XalanDOMString	theXMLString(XALAN_STATIC_UCODE_STRING("xml"));
+static XalanDOMString	theXMLNSString(XALAN_STATIC_UCODE_STRING("xmlns"));
+static XalanDOMString	theXMLNSStringWithColon(XALAN_STATIC_UCODE_STRING("xmlns:"));
 
 
 
 void
 NamespaceResolver::updateNamespace(
-			const DOM_Node&		theNode,
+			const XalanNode*	theNode,
 			const NSInfo&		theNamespace) const
 {
 #if defined(XALAN_NO_MUTABLE)
@@ -121,8 +125,8 @@ NamespaceResolver::updateNamespace(
 
 
 
-DOMString
-NamespaceResolver::getNamespaceOfNode(const DOM_Node&	theNode) const
+XalanDOMString
+NamespaceResolver::getNamespaceOfNode(const XalanNode&	theNode) const
 {
 #if !defined(XALAN_NO_NAMESPACES)
 	using std::make_pair;
@@ -130,19 +134,19 @@ NamespaceResolver::getNamespaceOfNode(const DOM_Node&	theNode) const
 	using std::vector;
 #endif
 
-	DOM_Node						theLocalNode(theNode);
+	const XalanNode*				theLocalNode = &theNode;
 
 	bool							hasProcessedNS;
     
 	NSInfo							nsInfo;
 
-    const int						ntype = theLocalNode.getNodeType();
+    const int						ntype = theLocalNode->getNodeType();
 
 	NSInfoMapType::const_iterator	theIterator = m_NSInfos.end();
 
-	// Find the node in the map of cached DOM_Nodes, if it's not an
+	// Find the node in the map of cached nodes, if it's not an
 	// attribute node.
-	if(DOM_Node::ATTRIBUTE_NODE != ntype)
+	if(XalanNode::ATTRIBUTE_NODE != ntype)
 	{
 		theIterator = m_NSInfos.find(theLocalNode);
 
@@ -163,7 +167,7 @@ NamespaceResolver::getNamespaceOfNode(const DOM_Node&	theNode) const
 		hasProcessedNS = false;
     }
 
-	DOMString	namespaceOfPrefix;
+	XalanDOMString	namespaceOfPrefix;
 
 	if(hasProcessedNS)
 	{
@@ -171,34 +175,34 @@ NamespaceResolver::getNamespaceOfNode(const DOM_Node&	theNode) const
 	}
 	else
 	{
-		DOMString	nodeName = theLocalNode.getNodeName();
+		XalanDOMString	nodeName = theLocalNode->getNodeName();
 
-		int			indexOfNSSep = indexOf(nodeName, ':');
+		unsigned int	indexOfNSSep = indexOf(nodeName, ':');
 
-		DOMString	prefix;
+		XalanDOMString	prefix;
 
 		// If we have an attribute node without a prefix, then 
 		// we should use the prefix of the element parent.
-		if(DOM_Node::ATTRIBUTE_NODE == ntype)
+		if(XalanNode::ATTRIBUTE_NODE == ntype)
 		{
-			if(indexOfNSSep >= 0)
+			if(indexOfNSSep < length(nodeName))
 			{
 				prefix = substring(nodeName, 0, indexOfNSSep);
 			}
 			else
 			{
-				theLocalNode = DOMServices::getParentOfNode(theLocalNode);
+				theLocalNode = DOMServices::getParentOfNode(*theLocalNode);
 
-				nodeName = theLocalNode.getNodeName();
+				nodeName = theLocalNode->getNodeName();
 
 				indexOfNSSep = indexOf(nodeName, ':');
 
-				prefix = (indexOfNSSep >= 0) ? substring(nodeName, 0, indexOfNSSep) : DOMString();
+				prefix = indexOfNSSep < length(nodeName) ? substring(nodeName, 0, indexOfNSSep) : XalanDOMString();
 			}
 		}
 		else
 		{
-			prefix = (indexOfNSSep >= 0) ? substring(nodeName, 0, indexOfNSSep) : DOMString();
+			prefix = indexOfNSSep < length(nodeName) ? substring(nodeName, 0, indexOfNSSep) : XalanDOMString();
 		}
 
 		bool	ancestorsHaveXMLNS = false;
@@ -210,10 +214,10 @@ NamespaceResolver::getNamespaceOfNode(const DOM_Node&	theNode) const
 		}
 		else
 		{
-			int					parentType = 0;
-			DOM_Node			parent = theLocalNode;
+			XalanNode::NodeType		parentType = XalanNode::UNKNOWN_NODE;
+			const XalanNode*		parent = theLocalNode;
 
-			typedef pair<DOM_Node, NSInfo>					CandidateNoAncestorEntryType;
+			typedef pair<const XalanNode*, NSInfo>			CandidateNoAncestorEntryType;
 			typedef vector<CandidateNoAncestorEntryType>	CandidateNoAncestorVectorType;
 
 			CandidateNoAncestorVectorType	candidateNoAncestorXMLNS;
@@ -226,24 +230,26 @@ NamespaceResolver::getNamespaceOfNode(const DOM_Node&	theNode) const
 					break;
 				}
 
-				parentType = parent.getNodeType();
+				parentType = parent->getNodeType();
 
 				if(theIterator == m_NSInfos.end() ||
 				   nsInfo.m_hasXMLNSAttrs == true)
 				{
 					bool	elementHasXMLNS = false;
 					
-					if (parentType == DOM_Node::ELEMENT_NODE) 
+					if (parentType == XalanNode::ELEMENT_NODE) 
 					{
-						// $$$ TODO: DOM_NamedNodeMap::item() should be const.  When it does,
-						// this can become const as well.
-						DOM_NamedNodeMap	nnm = parent.getAttributes();
+						const XalanNamedNodeMap* const	nnm =
+							parent->getAttributes();
+						assert(nnm != 0);
 
-						for (unsigned int i = 0;  i < nnm.getLength();  i ++) 
+						const unsigned int	theLength = nnm->getLength();
+
+						for (unsigned int i = 0;  i < theLength;  i ++) 
 						{
-							DOM_Node			attr = nnm.item(i);
+							const XalanNode*		attr = nnm->item(i);
 
-							const DOMString		aname = attr.getNodeName();
+							const XalanDOMString	aname = attr->getNodeName();
 
 							if(charAt(aname, 0) == 'x')
 							{
@@ -259,12 +265,12 @@ NamespaceResolver::getNamespaceOfNode(const DOM_Node&	theNode) const
 									elementHasXMLNS = true;
 									ancestorsHaveXMLNS = true;
 
-									const DOMString	p = isPrefix == true ?
-										substring(aname, length(theXMLNSStringWithColon)) : DOMString();
+									const XalanDOMString	p = isPrefix == true ?
+										substring(aname, length(theXMLNSStringWithColon)) : XalanDOMString();
 
 									if (equals(p, prefix) == true) 
 									{
-										namespaceOfPrefix = attr.getNodeValue();
+										namespaceOfPrefix = attr->getNodeValue();
 										break;
 									}
 								}
@@ -272,7 +278,7 @@ NamespaceResolver::getNamespaceOfNode(const DOM_Node&	theNode) const
 						}
 					}
 
-					if((DOM_Node::ATTRIBUTE_NODE != parentType) &&
+					if((XalanNode::ATTRIBUTE_NODE != parentType) &&
 						(theIterator == m_NSInfos.end()) &&
 						(theLocalNode != parent))
 					{
@@ -283,15 +289,15 @@ NamespaceResolver::getNamespaceOfNode(const DOM_Node&	theNode) const
 					}
 				}
 
-				if(DOM_Node::ATTRIBUTE_NODE == parentType)
+				if(XalanNode::ATTRIBUTE_NODE == parentType)
 				{
-					parent = DOMServices::getParentOfNode(parent);
+					parent = DOMServices::getParentOfNode(*parent);
 				}
 				else
 				{
 					candidateNoAncestorXMLNS.push_back(make_pair(parent, nsInfo));
 
-					parent = parent.getParentNode();
+					parent = parent->getParentNode();
 				}
 
 				if(0 != parent)
@@ -327,7 +333,7 @@ NamespaceResolver::getNamespaceOfNode(const DOM_Node&	theNode) const
 			}
 		}
 
-		if(DOM_Node::ATTRIBUTE_NODE != ntype)
+		if(XalanNode::ATTRIBUTE_NODE != ntype)
 		{
 			if(0 == length(namespaceOfPrefix))
 			{

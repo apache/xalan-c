@@ -80,15 +80,6 @@ class XALAN_XPATH_EXPORT XPathEnvSupportDefault : public XPathEnvSupport
 {
 public:
 
-#if defined(XALAN_NO_NAMESPACES)
-	typedef vector<XObject*> XObjectPtrVectorType;
-	typedef map<DOMString, DOM_Document>	SourceDocsTableType;
-#else
-	typedef std::vector<XObject*> XObjectPtrVectorType;
-	typedef std::map<DOMString, DOM_Document>	SourceDocsTableType;
-#endif
-
-
 	XPathEnvSupportDefault();
 
 	virtual
@@ -98,17 +89,9 @@ public:
 
 	virtual const NodeRefListBase*
 	getNodeSetByKey(
-			const DOM_Node&			doc,
-			const DOMString&		name,
-			const DOMString&		ref,
-			const DOM_Element&		nscontext,
-			XPathExecutionContext&	executionContext) const;
-
-	virtual const NodeRefListBase*
-	getNodeSetByKey(
-			const DOM_Node&			doc,
-			const DOMString&		name,
-			const DOMString&		ref,
+			const XalanNode&		doc,
+			const XalanDOMString&	name,
+			const XalanDOMString&	ref,
 			const PrefixResolver&	resolver,
 			XPathExecutionContext&	executionContext) const;
 
@@ -117,74 +100,68 @@ public:
 			XObjectFactory&		factory,
 			const QName&		name) const;
 
-	virtual DOM_Document
+	virtual XalanDocument*
 	parseXML(
-			const DOMString&	urlString,
-			const DOMString&	base) const;
+			const XalanDOMString&	urlString,
+			const XalanDOMString&	base);
 
-	virtual DOM_Document
-	getSourceDocument(const DOMString&	theURI) const;
+	virtual XalanDocument*
+	getSourceDocument(const XalanDOMString&	theURI) const;
 
 	virtual void
 	setSourceDocument(
-			const DOMString&		theURI,
-			const DOM_Document&		theDocument);
+			const XalanDOMString&	theURI,
+			XalanDocument*			theDocument);
 
-	virtual DOMString
-	findURIFromDoc(const DOM_Document&	owner) const;
+	virtual XalanDOMString
+	findURIFromDoc(const XalanDocument*		owner) const;
 
-	virtual DOM_Document
+	virtual XalanDocument*
 	getDOMFactory() const;
 
 	virtual bool
 	functionAvailable(
-			const DOMString&	theNamespace, 
-			const DOMString&	extensionName) const;
+			const XalanDOMString&	theNamespace, 
+			const XalanDOMString&	extensionName) const;
 
 	// $$$ ToDo: How do we implement this?
 	virtual XObject*
 	extFunction(
 			XPathExecutionContext&			executionContext,
-			const DOMString&				theNamespace,
-			const DOMString&				extensionName, 
-			const std::vector<XObject*>&	argVec) const;
+			const XalanDOMString&			theNamespace,
+			const XalanDOMString&			extensionName, 
+			const XObjectArgVectorType&		argVec) const;
 
 	virtual XLocator*
-	getXLocatorFromNode(const DOM_Node&		node) const;
+	getXLocatorFromNode(const XalanNode*	node) const;
 
 	virtual void
 	associateXLocatorToNode(
-			const DOM_Node&		node,
-			XLocator*			xlocator) const;
+			const XalanNode*	node,
+			XLocator*			xlocator);
 
 	virtual bool
-	shouldStripSourceNode(const DOM_Node&	node) const;
+	shouldStripSourceNode(const XalanNode&	node) const;
 
 	virtual bool
 	problem(
-			eSource				where,
-			eClassification		classification,
-			const DOM_Node&		styleNode,
-			const DOM_Node&		sourceNode,
-			const DOMString&	msg,
-			int					lineNo,
-			int					charOffset) const;
+			eSource					where,
+			eClassification			classification,
+			const XalanNode*		styleNode,
+			const XalanNode*		sourceNode,
+			const XalanDOMString&	msg,
+			int						lineNo,
+			int						charOffset) const;
 
 	virtual bool
 	problem(
 			eSource					where,
 			eClassification			classification,
 			const PrefixResolver*	resolver,
-			const DOM_Node&			sourceNode,
-			const DOMString&		msg,
+			const XalanNode*		sourceNode,
+			const XalanDOMString&	msg,
 			int						lineNo,
 			int						charOffset) const;
-
-	virtual XPathEnvSupport*
-	GetExtendedEnvSupport() const;
-
-	virtual XPathEnvSupport*
-	SetExtendedEnvSupport(XPathEnvSupport*	theExtendedSupport);
 
 	// These interfaces are inherited from Resettable...
 
@@ -204,10 +181,15 @@ private:
 
 	// Data members...
 
-	XPathEnvSupport*		m_extendedSupport;
-
 	// Table for storing source tree documents, which are keyed by
 	// URL.
+
+#if defined(XALAN_NO_NAMESPACES)
+	typedef map<XalanDOMString, XalanDocument*>			SourceDocsTableType;
+#else
+	typedef std::map<XalanDOMString, XalanDocument*>	SourceDocsTableType;
+#endif
+
 	SourceDocsTableType		m_sourceDocs;
 };
 

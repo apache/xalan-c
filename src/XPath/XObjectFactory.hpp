@@ -78,8 +78,7 @@
 
 
 
-class DOM_Node;
-class DOMString;
+class XalanNode;
 class MutableNodeRefList;
 class NodeRefListBase;
 class ResultTreeFragBase;
@@ -157,8 +156,8 @@ public:
 	 */
 	virtual XObject*
 	createNodeSet(
-			const DOM_Node&		theValue,
-			bool				fOptimize = true) = 0;
+			XalanNode&	theValue,
+			bool		fOptimize = true) = 0;
 
 	/**
 	 * Create a null XObject.
@@ -192,8 +191,8 @@ public:
 	 */
 	virtual XObject*
 	createString(
-			const DOMString&	theValue,
-			bool				fOptimize = true) = 0;
+			const XalanDOMString&	theValue,
+			bool					fOptimize = true) = 0;
 
 	/**
 	 * Create an "unknown" XObject from a string.
@@ -204,8 +203,8 @@ public:
 	 */
 	virtual XObject*
 	createUnknown(
-			const DOMString&	theValue,
-			bool				fOptimize = true) = 0;
+			const XalanDOMString&	theValue,
+			bool					fOptimize = true) = 0;
 
 	/**
 	 * Create a result tree fragment XObject from a result tree fragment.
@@ -252,8 +251,8 @@ public:
 	 */
 	virtual XObject*
 	createSpan(
-			const DOM_Node&		theValue,
-			bool				fOptimize = true) = 0;
+			XalanNode&	theValue,
+			bool		fOptimize = true) = 0;
 
 protected:
 

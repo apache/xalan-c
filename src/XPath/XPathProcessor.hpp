@@ -64,7 +64,11 @@
 
 
 
-class DOMString;
+// $$$ ToDo: This is necessary while XalanDOMString is still a typedef...
+#include <XalanDOM/XalanDOMString.hpp>
+
+
+
 class Function;
 class PrefixResolver;
 class XObjectFactory;
@@ -96,7 +100,7 @@ public:
 	virtual void
 	initXPath(
 			XPath&					pathObj,
-			const DOMString&		expression,
+			const XalanDOMString&	expression,
 			const PrefixResolver&	resolver,
 			XObjectFactory&			xobjectFactory,
 			const XPathEnvSupport&	envSupport) = 0;
@@ -113,7 +117,7 @@ public:
 	virtual void
 	initMatchPattern(
 			XPath&					pathObj,
-			const DOMString&		expression,
+			const XalanDOMString&	expression,
 			const PrefixResolver&	resolver,
 			XObjectFactory&			xobjectFactory,
 			const XPathEnvSupport&	envSupport) = 0;
@@ -127,8 +131,8 @@ public:
 	 */
 	static void
 	installFunction(
-			const DOMString&	theFunctionName,
-			const Function&		theFunction);
+			const XalanDOMString&	theFunctionName,
+			const Function&			theFunction);
 };
 
 

@@ -64,16 +64,15 @@
 
 
 
-#include <dom/NodeListImpl.hpp>
+#include <XalanDOM/XalanNodeList.hpp>
 
 
 
-class NodeImpl;
 class NodeRefListBase;
 
 
 
-class XALAN_XPATH_EXPORT NodeListImplSurrogate : public NodeListImpl
+class XALAN_XPATH_EXPORT NodeListImplSurrogate : public XalanNodeList
 {
 public:
 
@@ -87,13 +86,13 @@ public:
 	virtual
 	~NodeListImplSurrogate();
 
-	// These interfaces are inherited from NodeListImpl...
+	// These interfaces are inherited from XalanNodeList...
 
-    virtual NodeImpl*
-	item(unsigned int	index);
+    virtual XalanNode*
+	item(unsigned int	index) const;
 
     virtual unsigned int
-	getLength();
+	getLength() const;
 
 private:
 

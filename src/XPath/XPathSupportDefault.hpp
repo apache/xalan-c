@@ -73,7 +73,7 @@ class DOMSupport;
 
 
 
-class XALAN_XPATH_EXPORT XPathSupportDefault : public XPathSupport, public DOMServices::WhitespaceSupport
+class XALAN_XPATH_EXPORT XPathSupportDefault : public XPathSupport
 {
 public:
 
@@ -83,35 +83,37 @@ public:
 	~XPathSupportDefault();
 
 	
-	// These interfaces are inherited from DOMServices::WhitespaceSupport...
-
-	virtual bool
-	isIgnorableWhitespace(const DOM_Text&	node) const;
-
-	
 	// These intefaces are inherited from XPathSupport...
 
-	virtual DOMString
+	virtual bool
+	isIgnorableWhitespace(const XalanText&	node) const;
+
+	virtual XalanDOMString
 	getNamespaceForPrefix(
-			const DOMString&	prefix, 
-			const DOM_Element&	namespaceContext) const;
+			const XalanDOMString&	prefix, 
+			const XalanElement&		namespaceContext) const;
 
-	virtual DOMString
-	getNamespaceOfNode(const DOM_Node&	n) const;
+	virtual XalanDOMString
+	getNamespaceOfNode(const XalanNode&		n) const;
 
-	virtual DOMString
-	getLocalNameOfNode(const DOM_Node&	n) const;
+	virtual XalanDOMString
+	getLocalNameOfNode(const XalanNode&		n) const;
 
-	virtual DOMString
-	getNodeData(const DOM_Node&		n) const;
+	virtual XalanDOMString
+	getNodeData(const XalanNode&		n) const;
 
-	virtual DOM_Node
-	getParentOfNode(const DOM_Node&		node) const;
+	virtual XalanNode*
+	getParentOfNode(const XalanNode&	node) const;
 
-	virtual DOM_Element
+	virtual bool
+	isNodeAfter(
+			const XalanNode&	node1,
+			const XalanNode&	node2) const;
+
+	virtual XalanElement*
 	getElementByID(
-			const DOMString&		id,
-			const DOM_Document&		doc) const;
+			const XalanDOMString&	id,
+			const XalanDocument&	doc) const;
 
 	virtual void
 	setProcessNamespaces(bool	processNamespaces);
@@ -119,10 +121,10 @@ public:
 	virtual bool
 	getProcessNamespaces() const;
 
-	virtual DOMString
+	virtual XalanDOMString
 	getUnparsedEntityURI(
-			const DOMString&		theName,
-			const DOM_Document&		theDocument) const;
+			const XalanDOMString&	theName,
+			const XalanDocument&	theDocument) const;
 
 
 	// These interfaces are inherited from Resettable...
@@ -142,7 +144,10 @@ private:
 	operator==(const XPathSupportDefault&);
 
 	// Data members...
-	DOMSupport&		m_DOMSupport;
+
+	DOMSupport&								m_DOMSupport;
+
+	DOMServices::WhitespaceSupportDefault	m_whitespaceSupport;
 };
 
 

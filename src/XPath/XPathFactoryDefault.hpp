@@ -64,11 +64,7 @@
 
 
 
-#if !defined(XALAN_XTREE_BUG)
 #include <set>
-#else
-#error Need to implement CollectionType as a vector
-#endif
 
 
 
@@ -97,7 +93,27 @@ public:
 	virtual XPath*
 	create(bool		fOptimize = true);
 
-	
+
+#if defined(XALAN_NO_NAMESPACES)
+	typedef set<const FactoryObject*>			CollectionType;
+#else
+	typedef std::set<const FactoryObject*>		CollectionType;
+#endif
+
+	CollectionType::size_type
+	getInstanceCount() const
+	{
+		return m_xpaths.size();
+	}
+
+#if !defined(NDEBUG)
+	unsigned long
+	getTotalInstanceCount() const
+	{
+		return m_totalInstanceCount;
+	}
+#endif
+
 protected:
 
 	// Inherited from Factory...
@@ -109,13 +125,11 @@ protected:
 
 private:
 
-#if defined(XALAN_NO_NAMESPACES)
-	typedef set<const FactoryObject*>		CollectionType;
-#else
-	typedef std::set<const FactoryObject*>		CollectionType;
-#endif
-
 	CollectionType		m_xpaths;
+
+#if !defined(NDEBUG)
+	unsigned long		m_totalInstanceCount;
+#endif
 };
 
 

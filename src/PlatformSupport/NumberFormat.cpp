@@ -61,7 +61,7 @@
 
 NumberFormat::NumberFormat() :
 	m_isGroupingUsed(false),
-	m_groupingSeparator(","),
+	m_groupingSeparator(XALAN_STATIC_UCODE_STRING(",")),
 	m_groupingSize(3)	// Default to US values
 {
 }
@@ -74,7 +74,7 @@ NumberFormat::~NumberFormat()
 
 
 
-DOMString
+XalanDOMString
 NumberFormat::format(double		theValue)
 {
 	// $$$ ToDo: Fix this!
@@ -83,7 +83,7 @@ NumberFormat::format(double		theValue)
 
 
 
-DOMString
+XalanDOMString
 NumberFormat::format(int	theValue)
 {
 	// $$$ ToDo: Fix this!
@@ -92,7 +92,7 @@ NumberFormat::format(int	theValue)
 
 
 
-DOMString
+XalanDOMString
 NumberFormat::format(unsigned int	theValue)
 {
 	// $$$ ToDo: Fix this!
@@ -101,7 +101,7 @@ NumberFormat::format(unsigned int	theValue)
 
 
 
-DOMString
+XalanDOMString
 NumberFormat::format(long	theValue)
 {
 	// $$$ ToDo: Fix this!
@@ -109,38 +109,58 @@ NumberFormat::format(long	theValue)
 }
 
 
-DOMString NumberFormat::applyGrouping(const DOMString& value)
+
+XalanDOMString
+NumberFormat::applyGrouping(const XalanDOMString& value)
 /*
  * Convert a string value using the currently active values for grouping size
  * and separator; returns the converted string
  */
 {
-	if (!m_isGroupingUsed) return value;
-	int len = value.length();
-	if (len == 0) return value;
-	
-	int bufsize = len + len/m_groupingSize + 1;
-	XMLCh* buffer = new XMLCh[bufsize];
-
-	XMLCh* p = buffer + bufsize -1;
-	*p-- = 0;	// null terminate
-	for (int i= 0, ix = len-1; i < len; i++, ix--)
+	if (!m_isGroupingUsed)
 	{
-		const XMLCh		c = charAt(value, ix);
+		return value;
+	}
+
+	const unsigned int	len = length(value);
+
+	if (len == 0)
+	{
+		return value;
+	}
+
+	const unsigned int	bufsize = len + len/m_groupingSize + 1;
+
+	XalanDOMChar* const		buffer = new XalanDOMChar[bufsize];
+
+	XalanDOMChar*			p = buffer + bufsize - 1;
+
+	*p-- = 0;	// null terminate
+
+	for (unsigned int i = 0, ix = len - 1; i < len; i++, ix--)
+	{
+		const XalanDOMChar		c = charAt(value, ix);
+
 		if (i && !(i% m_groupingSize))
 		{
 			// Could be a multiple character separator??
 			for (int j= m_groupingSeparator.length()-1; j>=0; j--)
 				*p-- = charAt(m_groupingSeparator, j);
 		}
+
 		*p-- = c;
 	}
-	DOMString s(++p);
+
+	XalanDOMString s(++p);
+
 	delete [] buffer;
+
 	return s;
 }
 
-DOMString
+
+
+XalanDOMString
 NumberFormat::format(unsigned long	theValue)
 {
 	// $$$ ToDo: Fix this!
@@ -148,23 +168,35 @@ NumberFormat::format(unsigned long	theValue)
 }
 
 
-bool NumberFormat::isGroupingUsed() const
+
+bool
+NumberFormat::isGroupingUsed() const
 {
 	return m_isGroupingUsed;
 }
 
-void NumberFormat::setGroupingUsed(bool bUsed)
+
+
+void
+NumberFormat::setGroupingUsed(bool bUsed)
 {
 	m_isGroupingUsed = bUsed;
 }
 
-void NumberFormat::setGroupingSize(const DOMString& s)
+
+
+void
+NumberFormat::setGroupingSize(const XalanDOMString&		s)
 {
 	m_groupingSize = DOMStringToInt(s);
-	assert(m_groupingSize >= 0);	// Can't be zero
+
+	assert(m_groupingSize > 0);	// Can't be zero
 }
 
-void NumberFormat::setGroupingSeparator(const DOMString& s)
+
+
+void
+NumberFormat::setGroupingSeparator(const XalanDOMString&	s)
 {
 	m_groupingSeparator = s;
 }

@@ -102,7 +102,7 @@ public:
 	virtual XObject*
 	execute(
 			XPathExecutionContext&			executionContext,
-			const DOM_Node&					context,
+			XalanNode*						context,
 			int								opPos,
 			const XObjectArgVectorType&		args) = 0;
 
@@ -113,10 +113,10 @@ public:
 
 protected:
 
-	virtual DOMString
+	virtual XalanDOMString
 	getDefaultStringArgument(
 			XPathExecutionContext&		executionContext,
-			const DOM_Node&				context,
+			XalanNode&					context,
 			int							opPos)
 	{
 		// This is complicated.  The XPath standard says that if there
@@ -144,7 +144,7 @@ protected:
 		// Get the result...
 		FactoryObjectAutoPointer<XObject>		theXString(&executionContext.getXObjectFactory(),
 														   theStringFunctor.execute(executionContext,
-																					context,
+																					&context,
 																					opPos,
 																					theNewArgs));
 

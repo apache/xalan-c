@@ -70,10 +70,11 @@
 
 // Base class header file.
 #include <XPath/XObject.hpp>
+#include <XPath/NodeRefListBase.hpp>
 
 
 
-#include <dom/DOMString.hpp>
+#include <XalanDOM/XalanDOMString.hpp>
 
 
 
@@ -81,7 +82,7 @@ class XPathSupport;
 
 
 
-class XALAN_XPATH_EXPORT XResultTreeFrag : public XObject
+class XALAN_XPATH_EXPORT XResultTreeFrag : public XObject, private NodeRefListBase
 {
 public:
 
@@ -117,7 +118,7 @@ public:
 	virtual eObjectType
 	getType() const;
 
-	virtual DOMString
+	virtual XalanDOMString
 	getTypeString() const;
   
 	virtual double
@@ -126,7 +127,7 @@ public:
 	virtual bool
 	boolean() const;
 
-	virtual DOMString
+	virtual XalanDOMString
 	str() const;
 
 	virtual const ResultTreeFragBase&
@@ -154,6 +155,20 @@ public:
 	equals(const XObject&	theRHS) const;
 
 private:
+
+	// These methods are inherited from NodeRefListBase...
+
+	virtual XalanNode*
+	item(unsigned int	index) const;
+
+	virtual unsigned int
+	getLength() const;
+
+	virtual unsigned int
+	indexOf(const XalanNode*	theNode) const;
+
+	virtual XPathSupport*
+	getSupport() const;
 
 	XPathSupport&						m_support;
 

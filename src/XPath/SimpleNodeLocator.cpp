@@ -10,33 +10,33 @@
  * are met:
  *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
+ *	  notice, this list of conditions and the following disclaimer. 
  *
  * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in
- *    the documentation and/or other materials provided with the
- *    distribution.
+ *	  notice, this list of conditions and the following disclaimer in
+ *	  the documentation and/or other materials provided with the
+ *	  distribution.
  *
  * 3. The end-user documentation included with the redistribution,
- *    if any, must include the following acknowledgment:  
- *       "This product includes software developed by the
- *        Apache Software Foundation (http://www.apache.org/)."
- *    Alternately, this acknowledgment may appear in the software itself,
- *    if and wherever such third-party acknowledgments normally appear.
+ *	  if any, must include the following acknowledgment:  
+ *		 "This product includes software developed by the
+ *		  Apache Software Foundation (http://www.apache.org/)."
+ *	  Alternately, this acknowledgment may appear in the software itself,
+ *	  if and wherever such third-party acknowledgments normally appear.
  *
  * 4. The names "Xalan" and "Apache Software Foundation" must
- *    not be used to endorse or promote products derived from this
- *    software without prior written permission. For written 
- *    permission, please contact apache@apache.org.
+ *	  not be used to endorse or promote products derived from this
+ *	  software without prior written permission. For written 
+ *	  permission, please contact apache@apache.org.
  *
  * 5. Products derived from this software may not be called "Apache",
- *    nor may "Apache" appear in their name, without prior written
- *    permission of the Apache Software Foundation.
+ *	  nor may "Apache" appear in their name, without prior written
+ *	  permission of the Apache Software Foundation.
  *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED.  IN NO EVENT SHALL THE APACHE SOFTWARE FOUNDATION OR
+ * DISCLAIMED.	IN NO EVENT SHALL THE APACHE SOFTWARE FOUNDATION OR
  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
@@ -59,14 +59,14 @@
 
 
 
-#include <Include/DOMHelper.hpp>
 #include <PlatformSupport/DirectoryEnumerator.hpp>
 
 
 
-#include <dom/DOM_Node.hpp>
-#include <dom/DOM_Attr.hpp>
-#include <dom/DOM_Document.hpp>
+#include <XalanDOM/XalanElement.hpp>
+#include <XalanDOM/XalanNamedNodeMap.hpp>
+#include <XalanDOM/XalanNode.hpp>
+#include <XalanDOM/XalanDocument.hpp>
 
 
 
@@ -107,7 +107,7 @@ XObject*
 SimpleNodeLocator::connectToNodes(
 			const XPath&					xpath,
 			XPathExecutionContext&			executionContext,
-			const DOM_Node& 				/* context */, 
+			XalanNode&						/* context */, 
 			int 							opPos,
 			const ConnectArgsVectorType&	connectArgs)
 {
@@ -116,32 +116,35 @@ SimpleNodeLocator::connectToNodes(
 	const XPathExpression&	currentExpression =
 		xpath.getExpression();
 
-	XObjectFactory& 	theFactory = executionContext.getXObjectFactory();
+	XObjectFactory& 		theFactory =
+		executionContext.getXObjectFactory();
 
-	XObjectGuard	results(theFactory,
-							theFactory.createNodeSet(MutableNodeRefList()));
+	XObjectGuard			results(theFactory,
+									theFactory.createNodeSet(MutableNodeRefList()));
 
-	const DOMString 	theFileSpec = connectArgs[0]->str();
+	const XalanDOMString	theFileSpec = connectArgs[0]->str();
 
 
-	const DOMString 	filterSpec = connectArgs.size() > 1 ? connectArgs[0]->str() : "";
-	const int			filterSpecLength = length(filterSpec);
+	const XalanDOMString	filterSpec = connectArgs.size() > 1 ? connectArgs[0]->str() : XalanDOMString();
+	const unsigned int		filterSpecLength = length(filterSpec);
 
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::vector;
+#if defined(XALAN_NO_NAMESPACES)
+	typedef vector<XalanDOMString>			DOMStringVectorType;
+#else
+	typedef std::vector<XalanDOMString>		DOMStringVectorType;
 #endif
 
-	DirectoryEnumeratorFunctor<vector<DOMString> > 	theEnumerator;
+	DirectoryEnumeratorFunctor<DOMStringVectorType> 	theEnumerator;
 
-	const vector<DOMString>		theFiles = theEnumerator(theFileSpec);
+	const DOMStringVectorType							theFiles = theEnumerator(theFileSpec);
 
-	const int					nFiles = theFiles.size();
+	const DOMStringVectorType::size_type				nFiles = theFiles.size();
 
 	if (nFiles > 0)
 	{
 		MutableNodeRefList& 	theNodeList = results->mutableNodeset();
 
-		for(int i = 0; i < nFiles; ++i)
+		for(DOMStringVectorType::size_type i = 0; i < nFiles; ++i)
 		{
 			try
 			{
@@ -150,7 +153,7 @@ SimpleNodeLocator::connectToNodes(
 				if (filterSpecLength == 0 ||
 					endsWith(theFiles[i], filterSpec) == true)
 				{
-					DOM_Document	doc = executionContext.parseXML(theFiles[i], theFileSpec);
+					XalanDocument* const	doc = executionContext.parseXML(theFiles[i], theFileSpec);
 
 					if(0 != doc)
 					{
@@ -179,7 +182,7 @@ SimpleNodeLocator::connectToNodes(
 			}
 			catch(...)
 			{
-				executionContext.warn(DOMString("Couldn't parse XML file: ") + theFiles[i]);
+				executionContext.warn(XalanDOMString("Couldn't parse XML file: ") + theFiles[i]);
 			}
 		}
 	}
@@ -197,12 +200,12 @@ XObject*
 SimpleNodeLocator::locationPath(
 			const XPath&			xpath,
 			XPathExecutionContext&	executionContext,
-			const DOM_Node& 		context, 
+			XalanNode&				context, 
 			int 					opPos)
 {
 	MutableNodeRefList	mnl(executionContext.createMutableNodeRefList());
 
-	step(xpath, executionContext, context, opPos + 2, mnl);
+	step(xpath, executionContext, &context, opPos + 2, mnl);
 
 	return executionContext.getXObjectFactory().createNodeSet(mnl);
 }
@@ -213,12 +216,12 @@ double
 SimpleNodeLocator::locationPathPattern(
 			const XPath&			xpath,
 			XPathExecutionContext&	executionContext,
-			const DOM_Node& 		context,
+			XalanNode&				context, 
 			int 					opPos)
 {
 	double	score = xpath.s_MatchScoreNone;
 
-	stepPattern(xpath, executionContext, context, opPos + 2, score);
+	stepPattern(xpath, executionContext, &context, opPos + 2, score);
 
 	return score;
 }
@@ -229,9 +232,9 @@ void
 SimpleNodeLocator::step(
 			const XPath&			xpath,
 			XPathExecutionContext&	executionContext,
-			const DOM_Node& 		context, 
+			XalanNode*				context, 
 			int 					opPos,
-			MutableNodeRefList&		queryResults)
+			MutableNodeRefList& 	queryResults)
 {
 	const XPathExpression&	currentExpression =
 		xpath.getExpression();
@@ -357,11 +360,11 @@ SimpleNodeLocator::step(
 		if(XPathExpression::eENDOP != nextStepType && continueStepRecursion == true)
 		{
 
-			const int	nContexts = subQueryResults.getLength();
+			const unsigned int	nContexts = subQueryResults.getLength();
 
-			for(int i = 0; i < nContexts; i++)
+			for(unsigned int i = 0; i < nContexts; i++)
 			{
-				const DOM_Node	node = subQueryResults.item(i);
+				XalanNode* const	node = subQueryResults.item(i);
 
 				if(0 != node)
 				{
@@ -407,11 +410,11 @@ SimpleNodeLocator::step(
 
 
 
-DOM_Node
+XalanNode*
 SimpleNodeLocator:: stepPattern(
 			const XPath&			xpath,
 			XPathExecutionContext&	executionContext,
-			const DOM_Node& 		context, 
+			XalanNode*				context, 
 			int 					opPos,
 			double& 				score)
 {
@@ -422,9 +425,9 @@ SimpleNodeLocator:: stepPattern(
 	const int	stepType = currentExpression.getOpCodeMapValue(opPos);
 
 	const int	endStep = currentExpression.getNextOpCodePosition(opPos);
-	int			nextStepType = currentExpression.getOpCodeMapValue(endStep);
+	int 		nextStepType = currentExpression.getOpCodeMapValue(endStep);
 
-	DOM_Node	localContext(context);
+	XalanNode*	localContext = context;
 
 	if(XPathExpression::eENDOP != nextStepType)
 	{
@@ -440,19 +443,21 @@ SimpleNodeLocator:: stepPattern(
 			score = xpath.s_MatchScoreNone;
 
 			// !!!!!!!!!!!!! Big ugly return here !!!!!!!!!!!!!!!!!!!
-			return DOM_Node();
+			return 0;
 		}
 
 		score = xpath.s_MatchScoreOther;
 
-		localContext = executionContext.getParentOfNode(localContext);
+		localContext = executionContext.getParentOfNode(*localContext);
 
 		if(0 == localContext)
 		{
 			// !!!!!!!!!!!!! Big ugly return here !!!!!!!!!!!!!!!!!!!
-			return DOM_Node();
+			return 0;
 		}
 	}
+
+	assert(localContext != 0);
 
 	int argLen = 0;
 
@@ -462,17 +467,17 @@ SimpleNodeLocator:: stepPattern(
 		{
 			argLen = currentExpression.getOpCodeLength(opPos);
 
-			const XObject*	const	obj = xpath.execute(localContext, opPos, executionContext);
+			const XObject*	const	obj = xpath.executeMore(localContext, opPos, executionContext);
 
 			const NodeRefListBase&	nl = obj->nodeset();
 
-			const int				len = nl.getLength();
+			const unsigned int		len = nl.getLength();
 
 			score = xpath.s_MatchScoreNone;
 
-			for(int i = 0; i < len; i++)
+			for(unsigned int i = 0; i < len; i++)
 			{
-				const DOM_Node	n = nl.item(i);
+				XalanNode* const	n = nl.item(i);
 
 				score = n == localContext ?
 					xpath.s_MatchScoreOther : xpath.s_MatchScoreNone;
@@ -496,9 +501,9 @@ SimpleNodeLocator:: stepPattern(
 
 			opPos += 3;
 
-			const DOM_Document	docContext = DOM_Node::DOCUMENT_NODE == localContext.getNodeType() ? 
-								static_cast<const DOM_Document&>(localContext) :
-									localContext.getOwnerDocument();
+			XalanNode* const	docContext =
+				XalanNode::DOCUMENT_NODE == localContext->getNodeType() ? 
+								localContext : localContext->getOwnerDocument();
 
 			score = docContext == localContext ? xpath.s_MatchScoreOther : xpath.s_MatchScoreNone;
 
@@ -546,7 +551,7 @@ SimpleNodeLocator:: stepPattern(
 				if(xpath.s_MatchScoreNone != score)
 					break;
 
-				localContext = executionContext.getParentOfNode(localContext);
+				localContext = executionContext.getParentOfNode(*localContext);
 			}
 		}
 		break;
@@ -626,10 +631,10 @@ SimpleNodeLocator:: stepPattern(
 			// easiest way.
 			executionContext.setThrowFoundIndex(false);
 
-			const DOM_Node		parentContext =
-				executionContext.getParentOfNode(localContext);
+			XalanNode* const	parentContext =
+				executionContext.getParentOfNode(*localContext);
 
-			MutableNodeRefList	mnl(executionContext.createMutableNodeRefList());
+			MutableNodeRefList		mnl(executionContext.createMutableNodeRefList());
 
 			step(xpath, executionContext, parentContext, startOpPos, mnl);
 
@@ -649,7 +654,7 @@ SimpleNodeLocator:: stepPattern(
 		}
 	}
 
-	return score == xpath.s_MatchScoreNone ? DOM_Node() : localContext;
+	return score == xpath.s_MatchScoreNone ? 0 : localContext;
 }
 
 
@@ -658,7 +663,7 @@ int
 SimpleNodeLocator::findNodeSet(
 			const XPath&			xpath,
 			XPathExecutionContext&	executionContext,
-			const DOM_Node& 		context,
+			XalanNode*				context, 
 			int 					opPos,
 			int 					/* stepType */,
 			MutableNodeRefList& 	subQueryResults)
@@ -666,7 +671,7 @@ SimpleNodeLocator::findNodeSet(
 	const XPathExpression&	currentExpression =
 		xpath.getExpression();
 
-	const XObject* const	obj = xpath.execute(context, opPos, executionContext);
+	const XObject* const	obj = xpath.executeMore(context, opPos, executionContext);
 
 	const NodeRefListBase&	nl = obj->nodeset();
 
@@ -686,7 +691,7 @@ int
 SimpleNodeLocator::findRoot(
 			const XPath&			xpath,
 			XPathExecutionContext&	/* executionContext */,
-			const DOM_Node& 		context,
+			XalanNode*				context, 
 			int 					opPos,
 			int 					/* stepType */,
 			MutableNodeRefList& 	subQueryResults)
@@ -699,9 +704,10 @@ SimpleNodeLocator::findRoot(
 	const int	argLen =
 		currentExpression.getOpCodeMapValue(opPos + XPathExpression::s__opCodeMapLengthIndex + 1) - 3;
 
-	DOM_Document	docContext = DOM_Node::DOCUMENT_NODE == context.getNodeType() ?
-									static_cast<const DOM_Document&>(context) :
-										context.getOwnerDocument();
+	XalanNode* const	docContext = XalanNode::DOCUMENT_NODE == context->getNodeType() ?
+									context :
+									context->getOwnerDocument();
+	assert(docContext != 0);
 
 	subQueryResults.addNode(docContext);
 
@@ -714,7 +720,7 @@ int
 SimpleNodeLocator::findParent(
 			const XPath&			xpath,
 			XPathExecutionContext&	executionContext,
-			const DOM_Node& 		context,
+			XalanNode*				context, 
 			int 					opPos,
 			int 					stepType,
 			MutableNodeRefList& 	subQueryResults)
@@ -729,7 +735,7 @@ SimpleNodeLocator::findParent(
 
 	opPos += 3;
 
-	const DOM_Node	theParent = executionContext.getParentOfNode(context);
+	XalanNode* const	theParent = executionContext.getParentOfNode(*context);
 
 	if(0 != theParent)
 	{
@@ -762,7 +768,7 @@ int
 SimpleNodeLocator::findSelf(
 			const XPath&			xpath,
 			XPathExecutionContext&	executionContext,
-			const DOM_Node& 		context,
+			XalanNode*				context, 
 			int 					opPos,
 			int 					stepType,
 			MutableNodeRefList& 	subQueryResults)
@@ -805,7 +811,7 @@ int
 SimpleNodeLocator::findAncestors(
 			const XPath&			xpath,
 			XPathExecutionContext&	executionContext,
-			const DOM_Node& 		context,
+			XalanNode*				context, 
 			int 					opPos,
 			int 					stepType,
 			MutableNodeRefList& 	subQueryResults)
@@ -813,8 +819,8 @@ SimpleNodeLocator::findAncestors(
 	const XPathExpression&	currentExpression =
 		xpath.getExpression();
 
-	DOM_Node	contextNode =
-		executionContext.getParentOfNode(context);
+	XalanNode*				contextNode =
+		executionContext.getParentOfNode(*context);
 
 	// $$ ToDO: Can we reduce this to some call on the
 	// XPathExpression interface?
@@ -837,7 +843,7 @@ SimpleNodeLocator::findAncestors(
 			subQueryResults.addNode(contextNode);
 		}
 
-		contextNode = executionContext.getParentOfNode(contextNode);
+		contextNode = executionContext.getParentOfNode(*contextNode);
 	}
 
 	return argLen + 3;
@@ -849,7 +855,7 @@ int
 SimpleNodeLocator::findAncestorsOrSelf(
 			const XPath&			xpath,
 			XPathExecutionContext&	executionContext,
-			const DOM_Node& 		context,
+			XalanNode*				context, 
 			int 					opPos,
 			int 					stepType,
 			MutableNodeRefList& 	subQueryResults)
@@ -860,7 +866,7 @@ SimpleNodeLocator::findAncestorsOrSelf(
 	const XPathExpression&	currentExpression =
 		xpath.getExpression();
 
-	DOM_Node	contextNode(context);
+	XalanNode*				contextNode = context;
 
 	// $$ ToDO: Can we reduce this to some call on the
 	// XPathExpression interface?
@@ -883,7 +889,7 @@ SimpleNodeLocator::findAncestorsOrSelf(
 			subQueryResults.addNode(contextNode);
 		}
 
-		contextNode = executionContext.getParentOfNode(contextNode);
+		contextNode = executionContext.getParentOfNode(*contextNode);
 	}
 
 	return argLen + 3;
@@ -895,7 +901,7 @@ int
 SimpleNodeLocator::findAttributes(
 			const XPath&			xpath,
 			XPathExecutionContext&	executionContext,
-			const DOM_Node& 		context,
+			XalanNode*				context, 
 			int 					opPos,
 			int 					stepType,
 			MutableNodeRefList& 	subQueryResults)
@@ -908,23 +914,23 @@ SimpleNodeLocator::findAttributes(
 	const int	argLen =
 		currentExpression.getOpCodeMapValue(opPos + XPathExpression::s__opCodeMapLengthIndex + 1) - 3;
 
-	if(0 != context && context.getNodeType() == DOM_Node::ELEMENT_NODE)
+	if(0 != context && context->getNodeType() == XalanNode::ELEMENT_NODE)
 	{
-		const DOM_Element&	e =
-			static_cast<const DOM_Element&>(context);
+		const XalanElement* const		e =
+			static_cast<const XalanElement*>(context);
 
-		DOM_NamedNodeMap	attributeList = e.getAttributes();
+		const XalanNamedNodeMap* const	attributeList = e->getAttributes();
 
 		if(attributeList != 0) 
 		{
 			opPos += 3;
 
-			const int	nAttrs = attributeList.getLength();
+			const unsigned int	nAttrs = attributeList->getLength();
 
-			for(int j = 0; j < nAttrs; j++)
+			for(unsigned int j = 0; j < nAttrs; j++)
 			{
-				const DOM_Node	theNode = attributeList.item(j);
-				assert(theNode.getNodeType() == DOM_Node::ATTRIBUTE_NODE);
+				XalanNode* const	theNode = attributeList->item(j);
+				assert(theNode != 0 && theNode->getNodeType() == XalanNode::ATTRIBUTE_NODE);
 
 				const double	score = nodeTest(xpath,
 												 executionContext,
@@ -950,7 +956,7 @@ int
 SimpleNodeLocator::findChildren(
 			const XPath&			xpath,
 			XPathExecutionContext&	executionContext,
-			const DOM_Node& 		context,
+			XalanNode*				context, 
 			int 					opPos,
 			int 					stepType,
 			MutableNodeRefList& 	subQueryResults)
@@ -965,7 +971,7 @@ SimpleNodeLocator::findChildren(
 
 	opPos += 3;
 
-	DOM_Node	child = context.getFirstChild();
+	XalanNode*	child = context->getFirstChild();
 
 	while(0 != child)
 	{
@@ -981,7 +987,7 @@ SimpleNodeLocator::findChildren(
 			subQueryResults.addNode(child);
 		}
 
-		child = child.getNextSibling();
+		child = child->getNextSibling();
 	}
 
 	return argLen + 3;
@@ -993,7 +999,7 @@ int
 SimpleNodeLocator::findDescendants(
 			const XPath&			xpath,
 			XPathExecutionContext&	executionContext,
-			const DOM_Node& 		context,
+			XalanNode*				context, 
 			int 					opPos,
 			int 					stepType,
 			MutableNodeRefList& 	subQueryResults)
@@ -1020,7 +1026,7 @@ SimpleNodeLocator::findDescendants(
 	|| (Node.ELEMENT_NODE != context.getNodeType()))
 	{
 	*/
-	DOM_Node	pos = context;
+	XalanNode*	pos = context;
 
 	while(0 != pos)
 	{					
@@ -1040,18 +1046,18 @@ SimpleNodeLocator::findDescendants(
 			}
 		}
 
-		DOM_Node	nextNode = pos.getFirstChild();
+		XalanNode*	nextNode = pos->getFirstChild();
 
 		while(0 == nextNode)
 		{
 			if(context == pos)
 				break;
 
-			nextNode = pos.getNextSibling();
+			nextNode = pos->getNextSibling();
 
 			if(0 == nextNode)
 			{
-				pos = pos.getParentNode();
+				pos = pos->getParentNode();
 
 				if(context == pos || pos == 0)
 				{
@@ -1073,7 +1079,7 @@ int
 SimpleNodeLocator::findFollowing(
 			const XPath&			xpath,
 			XPathExecutionContext&	executionContext,
-			const DOM_Node& 		context,
+			XalanNode*				context, 
 			int 					opPos,
 			int 					stepType,
 			MutableNodeRefList& 	subQueryResults)
@@ -1089,13 +1095,13 @@ SimpleNodeLocator::findFollowing(
 	opPos += 3;
 
 	// What fun...
-	const DOM_Document	doc = context.getOwnerDocument();
+	XalanDocument* const	doc = context->getOwnerDocument();
 
-	DOM_Node			pos = context;
+	XalanNode*				pos = context;
 
 	while(0 != pos)
 	{
-		DOM_Node	nextNode;
+		XalanNode*	nextNode = 0;
 
 		if(pos != context)
 		{
@@ -1111,7 +1117,7 @@ SimpleNodeLocator::findFollowing(
 				subQueryResults.addNodeInDocOrder(pos);
 			}
 
-			nextNode = pos.getFirstChild();
+			nextNode = pos->getFirstChild();
 		}
 		else
 		{
@@ -1120,11 +1126,11 @@ SimpleNodeLocator::findFollowing(
 
 		while(0 == nextNode)
 		{
-			nextNode = pos.getNextSibling();
+			nextNode = pos->getNextSibling();
 
 			if(0 == nextNode)
 			{
-				pos = pos.getParentNode();
+				pos = pos->getParentNode();
 
 				if(doc == pos || 0 == pos)
 				{
@@ -1147,7 +1153,7 @@ int
 SimpleNodeLocator::findFollowingSiblings(
 			const XPath&			xpath,
 			XPathExecutionContext&	executionContext,
-			const DOM_Node& 		context,
+			XalanNode*				context, 
 			int 					opPos,
 			int 					stepType,
 			MutableNodeRefList& 	subQueryResults)
@@ -1162,7 +1168,7 @@ SimpleNodeLocator::findFollowingSiblings(
 
 	opPos += 3;
 
-	DOM_Node	pos = context.getNextSibling();
+	XalanNode*	pos = context->getNextSibling();
 
 	while(0 != pos)
 	{
@@ -1178,7 +1184,7 @@ SimpleNodeLocator::findFollowingSiblings(
 			subQueryResults.addNode(pos);
 		}
 
-		pos = pos.getNextSibling();
+		pos = pos->getNextSibling();
 	}
 
 	return argLen + 3;
@@ -1190,7 +1196,7 @@ int
 SimpleNodeLocator::findPreceeding(
 			const XPath&			xpath,
 			XPathExecutionContext&	executionContext,
-			const DOM_Node& 		context,
+			XalanNode*				context, 
 			int 					opPos,
 			int 					stepType,
 			MutableNodeRefList& 	subQueryResults)
@@ -1206,9 +1212,9 @@ SimpleNodeLocator::findPreceeding(
 	opPos += 3;
 
 	// Ugh.  Reverse document order, no parents, I guess.
-	const DOM_Document	doc = context.getOwnerDocument();
+	XalanDocument* const	doc = context->getOwnerDocument();
 
-	DOM_Node			pos = doc;
+	XalanNode*				pos = doc;
 
 	while(0 != pos)
 	{
@@ -1228,7 +1234,7 @@ SimpleNodeLocator::findPreceeding(
 			// sure there's a better way to check for the parent.
 			bool		isParent = false;
 
-			DOM_Node	parent = executionContext.getParentOfNode(context);
+			XalanNode*	parent = executionContext.getParentOfNode(*context);
 
 			while(0 != parent)
 			{
@@ -1238,7 +1244,7 @@ SimpleNodeLocator::findPreceeding(
 					break;
 				}
 
-				parent = executionContext.getParentOfNode(parent);
+				parent = executionContext.getParentOfNode(*parent);
 			}
 
 			if(isParent == false)
@@ -1247,15 +1253,15 @@ SimpleNodeLocator::findPreceeding(
 			}
 		}
 
-		DOM_Node	nextNode = pos.getFirstChild();
+		XalanNode*	nextNode = pos->getFirstChild();
 
 		while(0 == nextNode)
 		{
-			nextNode = pos.getNextSibling();
+			nextNode = pos->getNextSibling();
 
 			if(0 == nextNode)
 			{
-				pos = pos.getParentNode();
+				pos = pos->getParentNode();
 
 				if(doc == pos)
 				{
@@ -1276,7 +1282,7 @@ int
 SimpleNodeLocator::findPreceedingSiblings(
 			const XPath&			xpath,
 			XPathExecutionContext&	executionContext,
-			const DOM_Node& 		context,
+			XalanNode*				context, 
 			int 					opPos,
 			int 					stepType,
 			MutableNodeRefList& 	subQueryResults)
@@ -1291,7 +1297,7 @@ SimpleNodeLocator::findPreceedingSiblings(
 
 	opPos += 3;
 
-	DOM_Node	pos = context.getPreviousSibling();
+	XalanNode*	pos = context->getPreviousSibling();
 
 	while(0 != pos)
 	{
@@ -1307,7 +1313,7 @@ SimpleNodeLocator::findPreceedingSiblings(
 			subQueryResults.addNode(pos);
 		}
 
-		pos = pos.getPreviousSibling();
+		pos = pos->getPreviousSibling();
 	}
 
 	return argLen + 3;
@@ -1319,10 +1325,10 @@ int
 SimpleNodeLocator::findNamespace(
 			const XPath&			xpath,
 			XPathExecutionContext&	executionContext,
-			const DOM_Node& 		context,
+			XalanNode*				context, 
 			int 					opPos,
-			int 					/* stepType */,
-			MutableNodeRefList& 	/* subQueryResults */)
+			int 					stepType,
+			MutableNodeRefList& 	subQueryResults)
 {
 	const XPathExpression&	currentExpression =
 		xpath.getExpression();
@@ -1332,7 +1338,32 @@ SimpleNodeLocator::findNamespace(
 	const int	argLen =
 		currentExpression.getOpCodeMapValue(opPos + XPathExpression::s__opCodeMapLengthIndex + 1) - 3;
 
-	executionContext.error("namespace axis not implemented yet!", context);
+	if(context != 0 && context->getNodeType() == XalanNode::ELEMENT_NODE)
+	{
+		const XalanNamedNodeMap* const	attributeList =
+			context->getAttributes();
+
+		if(attributeList != 0) 
+		{
+			const unsigned int	nAttrs = attributeList->getLength();
+
+			for(unsigned int i = 0; i < nAttrs; ++i)
+			{
+				XalanNode* const	attr = attributeList->item(i);
+
+				if(nodeTest(xpath,
+							executionContext,
+							attr,
+							opPos,
+							argLen,
+							stepType) != xpath.s_MatchScoreNone)
+				{
+					subQueryResults.addNode(attr);
+					// If we have an attribute name here, we can quit.
+				}
+			}
+		}
+	}
 
 	return argLen + 3;
 }
@@ -1343,7 +1374,7 @@ int
 SimpleNodeLocator::findNodesOnUnknownAxis(
 			const XPath&			xpath,
 			XPathExecutionContext&	executionContext,
-			const DOM_Node& 		context,
+			XalanNode*				context, 
 			int 					opPos,
 			int 					stepType,
 			MutableNodeRefList& 	/* subQueryResults */)
@@ -1367,7 +1398,7 @@ double
 SimpleNodeLocator::nodeTest(
 			const XPath&			xpath,
 			XPathExecutionContext&	executionContext,
-			const DOM_Node& 		context,
+			XalanNode*				context, 
 			int 					opPos,
 			int 					argLen,
 			int 					stepType)
@@ -1379,26 +1410,26 @@ SimpleNodeLocator::nodeTest(
 
 	const int	testType = currentExpression.getOpCodeMapValue(opPos);
 
-	const int	nodeType = context.getNodeType();
+	const int	nodeType = context->getNodeType();
 
 	opPos++;
 
 	switch(testType)
 	{
 	case XPathExpression::eNODETYPE_COMMENT:
-		score = DOM_Node::COMMENT_NODE == nodeType
+		score = XalanNode::COMMENT_NODE == nodeType
 			  ? xpath.s_MatchScoreNodeTest : xpath.s_MatchScoreNone;
 		break;
 
 	case XPathExpression::eNODETYPE_TEXT:
-	  score = (DOM_Node::CDATA_SECTION_NODE == nodeType ||
-					DOM_Node::TEXT_NODE == nodeType) &&
-			  executionContext.shouldStripSourceNode(context) == false
+	  score = (XalanNode::CDATA_SECTION_NODE == nodeType ||
+					XalanNode::TEXT_NODE == nodeType) &&
+			  executionContext.shouldStripSourceNode(*context) == false
 			  ? xpath.s_MatchScoreNodeTest : xpath.s_MatchScoreNone;
 	  break;
 
 	case XPathExpression::eNODETYPE_PI:
-		if(DOM_Node::PROCESSING_INSTRUCTION_NODE != nodeType)
+		if(XalanNode::PROCESSING_INSTRUCTION_NODE != nodeType)
 		{
 			score = xpath.s_MatchScoreNone;
 		}
@@ -1417,10 +1448,7 @@ SimpleNodeLocator::nodeTest(
 					currentExpression.getToken(tokenPosition);
 				assert(name != 0);
 
-				const DOM_ProcessingInstruction&	theNode =
-					reinterpret_cast<const DOM_ProcessingInstruction&>(context);
-
-				score = equals(theNode.getNodeName(), name->str())
+				score = equals(context->getNodeName(), name->str())
 						? xpath.s_MatchScoreQName : xpath.s_MatchScoreNone;
 			}
 			else
@@ -1434,10 +1462,10 @@ SimpleNodeLocator::nodeTest(
 		break;
 
 	case XPathExpression::eNODETYPE_NODE:
-		if (nodeType == DOM_Node::CDATA_SECTION_NODE ||
-			nodeType ==	DOM_Node::TEXT_NODE)
+		if (nodeType == XalanNode::CDATA_SECTION_NODE ||
+			nodeType == XalanNode::TEXT_NODE)
 		{
-			if (executionContext.shouldStripSourceNode(context) == false)
+			if (executionContext.shouldStripSourceNode(*context) == false)
 			{
 				score = xpath.s_MatchScoreNodeTest;
 			}
@@ -1453,21 +1481,21 @@ SimpleNodeLocator::nodeTest(
 		break;
 
 	case XPathExpression::eNODETYPE_ROOT:
-		score = DOM_Node::DOCUMENT_FRAGMENT_NODE == nodeType ||
-				DOM_Node::DOCUMENT_NODE == nodeType ?
+		score = XalanNode::DOCUMENT_FRAGMENT_NODE == nodeType ||
+				XalanNode::DOCUMENT_NODE == nodeType ?
 					xpath.s_MatchScoreOther :
 						xpath.s_MatchScoreNone;
 		break;
 
 	case XPathExpression::eNODENAME:
 		{
-			bool				test = false;
+			bool					test = false;
 
-			int 				queueIndex = currentExpression.getOpCodeMapValue(opPos);
+			int 					queueIndex = currentExpression.getOpCodeMapValue(opPos);
 
-			const DOMString 	targetNS = queueIndex >= 0 ?
+			const XalanDOMString	targetNS = queueIndex >= 0 ?
 									currentExpression.getToken(queueIndex)->str() :
-										"";
+										XalanDOMString();
 
 			opPos++;
 
@@ -1493,7 +1521,7 @@ SimpleNodeLocator::nodeTest(
 
 			if(isTotallyWild == false && processNamespaces == true)
 			{
-				const DOMString 	contextNS = executionContext.getNamespaceOfNode(context);
+				const XalanDOMString	contextNS = executionContext.getNamespaceOfNode(*context);
 
 				if(0 != length(targetNS) && 0 != length(contextNS))
 				{
@@ -1514,8 +1542,8 @@ SimpleNodeLocator::nodeTest(
 
 			queueIndex = currentExpression.getOpCodeMapValue(opPos);
 
-			const DOMString 	targetLocalName =
-						queueIndex >= 0 ? currentExpression.getToken(queueIndex)->str() : "";
+			const XalanDOMString	targetLocalName =
+						queueIndex >= 0 ? currentExpression.getToken(queueIndex)->str() : XalanDOMString();
 
 			if(test == false)
 			{
@@ -1525,20 +1553,17 @@ SimpleNodeLocator::nodeTest(
 			{
 				switch(nodeType)
 				{
-				case DOM_Node::ATTRIBUTE_NODE:
+				case XalanNode::ATTRIBUTE_NODE:
 					if(stepType == XPathExpression::eFROM_ATTRIBUTES)
 					{
-						assert(context.getNodeType() == DOM_Node::ATTRIBUTE_NODE);
+						assert(context->getNodeType() == XalanNode::ATTRIBUTE_NODE);
 
 						if(XPathExpression::eELEMWILDCARD == queueIndex)
 						{
 							if(processNamespaces == true)
 							{
-								const DOM_Attr& 	theNode =
-									reinterpret_cast<const DOM_Attr&>(context);
-
-								const DOMString 	attrName =
-									theNode.getNodeName();
+								const XalanDOMString	attrName =
+									context->getNodeName();
 
 								score = !(startsWith(attrName, "xmlns:") ||
 										  equals(attrName, "xmlns"))
@@ -1551,8 +1576,8 @@ SimpleNodeLocator::nodeTest(
 						}
 						else
 						{
-							const DOMString 	localAttrName =
-								executionContext.getLocalNameOfNode(context);
+							const XalanDOMString	localAttrName =
+								executionContext.getLocalNameOfNode(*context);
 
 							score = equals(localAttrName, targetLocalName) ?
 									xpath.s_MatchScoreQName : xpath.s_MatchScoreNone;
@@ -1564,7 +1589,7 @@ SimpleNodeLocator::nodeTest(
 					}
 					break;
 
-				case DOM_Node::ELEMENT_NODE:
+				case XalanNode::ELEMENT_NODE:
 					if(stepType != XPathExpression::eFROM_ATTRIBUTES)
 					{
 						if(XPathExpression::eELEMWILDCARD == queueIndex)
@@ -1574,10 +1599,7 @@ SimpleNodeLocator::nodeTest(
 						}
 						else
 						{
-							const DOM_Element&	theNode =
-								static_cast<const DOM_Element&>(context);
-
-							score = equals(executionContext.getLocalNameOfNode(theNode), targetLocalName) ?
+							score = equals(executionContext.getLocalNameOfNode(*context), targetLocalName) ?
 								xpath.s_MatchScoreQName : xpath.s_MatchScoreNone;
 						}
 					}
@@ -1610,7 +1632,7 @@ void
 SimpleNodeLocator::predicates(
 			const XPath&			xpath,
 			XPathExecutionContext&	executionContext,
-			const DOM_Node& 		/* context */,
+			XalanNode*				/* context */, 
 			int 					opPos,
 			MutableNodeRefList& 	subQueryResults,
 			int&					endPredicatesPos)
@@ -1628,13 +1650,13 @@ SimpleNodeLocator::predicates(
 		const int	theLength = subQueryResults.getLength();
 
 #if defined(XALAN_NO_NAMESPACES)
-		typedef vector<int>			FailedEntriesVectorType;
+		typedef vector<int> 		FailedEntriesVectorType;
 #else
 		typedef std::vector<int>	FailedEntriesVectorType;
 #endif
 		// We'll accumulate the entries that we want to remove
 		// here, then remove them all at once.
-		FailedEntriesVectorType		theFailedEntries;
+		FailedEntriesVectorType 	theFailedEntries;
 
 		// Might as well reserve some space now, although it's
 		// probably bad to reserve the entire size of the
@@ -1643,9 +1665,11 @@ SimpleNodeLocator::predicates(
 
 		while(i < theLength)
 		{
-			const DOM_Node	theNode = subQueryResults.item(i);
+			XalanNode* const	theNode = subQueryResults.item(i);
+			assert(theNode != 0);
 
-			XObject* const	pred = xpath.predicate(theNode, opPos, executionContext);
+			XObject* const		pred = xpath.predicate(theNode, opPos, executionContext);
+			assert(pred != 0);
 
 			// Remove any node that doesn't satisfy the predicate.
 			if(XObject::eTypeNumber == pred->getType() &&

@@ -70,7 +70,7 @@
 
 
 
-#include <dom/DOMString.hpp>
+#include <XalanDOM/XalanDOMString.hpp>
 
 
 
@@ -1217,7 +1217,7 @@ public:
 	 * @param thePattern match pattern to make current
 	 */
 	void
-	setCurrentPattern(const DOMString&	thePattern)
+	setCurrentPattern(const XalanDOMString&		thePattern)
 	{
 		m_currentPattern = thePattern;
 	}
@@ -1227,7 +1227,7 @@ public:
 	 * 
 	 * @return string for current match pattern
 	 */
-	const DOMString&
+	const XalanDOMString&
 	getCurrentPattern() const
 	{
 		return m_currentPattern;
@@ -1272,7 +1272,7 @@ public:
 	/**
 	 * The current pattern string, for diagnostics purposes.
 	 */
-	DOMString				m_currentPattern;
+	XalanDOMString			m_currentPattern;
 
 private:
 

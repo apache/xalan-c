@@ -64,7 +64,7 @@
 
 
 
-class DOM_Node;
+class XalanNode;
 
 
 
@@ -87,7 +87,16 @@ public:
 	 */
 
 	virtual void
-	traverse(const DOM_Node&	pos);
+	traverse(const XalanNode*	pos);
+
+	/**
+	 * Perform a pre-order traversal non-recursive style.
+	 * 
+	 * @param pos starting node $$$
+	 */
+
+	virtual void
+	traverse(XalanNode*		pos);
 
 	/**
 	 * Perform a pre-order traversal non-recursive style.
@@ -97,16 +106,33 @@ public:
 	 */
 	virtual void
 	traverse(
-			const DOM_Node&		pos,
-			const DOM_Node&		parent);
+			const XalanNode*	pos,
+			const XalanNode*	parent);
+
+	/**
+	 * Perform a pre-order traversal non-recursive style.
+	 * 
+	 * @param pos starting node  $$$
+	 * @param parent parent node $$$
+	 */
+	virtual void
+	traverse(
+			XalanNode*	pos,
+			XalanNode*	parent);
 
 protected:
 
 	virtual void
-	startNode(const DOM_Node&	node) = 0;
+	startNode(const XalanNode*	node) = 0;
 
 	virtual void
-	endNode(const DOM_Node&	node) = 0;
+	startNode(XalanNode*	node) = 0;
+
+	virtual void
+	endNode(const XalanNode*	node) = 0;
+
+	virtual void
+	endNode(XalanNode*	node) = 0;
 
 private:
 };

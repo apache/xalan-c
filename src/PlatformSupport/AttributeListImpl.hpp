@@ -117,7 +117,7 @@ public:
     virtual const XMLCh*
 	getValue(const XMLCh* const name) const;
 
-    virtual const XMLCh*
+	virtual const XMLCh*
 	getValue(const char* const name) const;
 
 	// The mutators are new to this class.
@@ -136,9 +136,9 @@ public:
 	 * @param value  attribute value
 	 */
 	virtual bool
-	addAttribute(const XMLCh* const name,
-				 const XMLCh* const type,
-				 const XMLCh* const value);
+	addAttribute(const XMLCh*	name,
+				 const XMLCh*	type,
+				 const XMLCh*	value);
 
 	/**
 	 * Removes an attribute from the attribute list
@@ -146,7 +146,7 @@ public:
 	 * @param  name   attribute name
 	 */
 	virtual bool
-	removeAttribute(const XMLCh* const name);
+	removeAttribute(const XMLCh*	name);
 
 protected:
 
@@ -155,21 +155,27 @@ protected:
 	operator==(const AttributeListImpl&) const;
 
 
+#if defined(XALAN_NO_NAMESPACES)
+	typedef vector<XMLCh>		XMLChVectorType;
+#else
+	typedef std::vector<XMLCh>	XMLChVectorType;
+#endif
+
 	// A struct to hold information about each attribute.
 	struct AttributeVectorEntry
 	{
-		AttributeVectorEntry(const XMLCharVectorType&	theName = XMLCharVectorType(),
-							 const XMLCharVectorType&	theValue = XMLCharVectorType(),
-							 const XMLCharVectorType&	theType = XMLCharVectorType()) :
+		AttributeVectorEntry(const XMLChVectorType&	theName = XMLChVectorType(),
+							 const XMLChVectorType&	theValue = XMLChVectorType(),
+							 const XMLChVectorType&	theType = XMLChVectorType()) :
 			m_Name(theName),
 			m_Value(theValue),
 			m_Type(theType)
 		{
 		}
 
-		const XMLCharVectorType		m_Name;
-		const XMLCharVectorType		m_Value;
-		const XMLCharVectorType		m_Type;
+		const XMLChVectorType	m_Name;
+		const XMLChVectorType	m_Value;
+		const XMLChVectorType	m_Type;
 	};
 
 #if defined(XALAN_NO_NAMESPACES)

@@ -64,7 +64,7 @@
 
 
 
-#include <dom/DOMString.hpp>
+#include <XalanDOM/XalanDOMString.hpp>
 
 
 
@@ -84,7 +84,7 @@ public:
 	 */
 	explicit
 	XMLSupportException(
-			const DOMString&	message = DOMString());
+			const XalanDOMString&	message = XalanDOMString());
 
 	virtual
 	~XMLSupportException();

@@ -68,14 +68,15 @@
 
 
 
-#include <dom/DOM_Node.hpp>
-#include <dom/DOM_Element.hpp>
-#include <dom/DOM_Document.hpp>
-
-
-
 // Base class header file.
 #include <XMLSupport/FormatterListener.hpp>
+
+
+
+class XalanDocument;
+class XalanDocumentFragment;
+class XalanElement;
+class XalanNode;
 
 
 
@@ -96,9 +97,9 @@ public:
 	 * @param currentElement current element for nodes, default none
 	 */
 	FormatterToDOM(
-			const DOM_Document&				doc,
-			const DOM_DocumentFragment&		docFrag = DOM_DocumentFragment(),
-			const DOM_Element&				currentElement = DOM_Element());
+			XalanDocument*			doc,
+			XalanDocumentFragment*	docFrag = 0,
+			XalanElement*			currentElement = 0);
 
 	/**
 	 * Construct a FormatterToDOM instance.  it will add the DOM nodes 
@@ -108,8 +109,8 @@ public:
 	 * @param elem current element for nodes
 	 */
 	FormatterToDOM(
-			const DOM_Document&			doc,
-			const DOM_Element&			elem);
+			XalanDocument*	doc,
+			XalanElement*	elem);
 
 	virtual
 	~FormatterToDOM();
@@ -174,16 +175,23 @@ private:
 	 * Append a node to the current container.
 	 */
 	void
-	append(const DOM_Node& 	newNode);
+	append(XalanNode* 	newNode);
 
 
 	// Data members...
-	DOM_DocumentFragment		m_docFrag;
+	XalanDocument*				m_doc;
 
-	DOM_Document				m_doc;
-	DOM_Element					m_currentElem;
+	XalanDocumentFragment*		m_docFrag;
 
-	std::stack<DOM_Element>		m_elemStack;
+	XalanElement*				m_currentElem;
+
+#if defined(XALAN_NO_NAMESPACES)
+	typedef stack<XalanElement*>		ElementStackType;
+#else
+	typedef std::stack<XalanElement*>	ElementStackType;
+#endif
+
+	ElementStackType			m_elemStack;
 };
 
 

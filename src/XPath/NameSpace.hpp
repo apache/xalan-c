@@ -68,7 +68,7 @@
 
 
 
-#include <dom/DOMString.hpp>
+#include <XalanDOM/XalanDOMString.hpp>
 
 
 
@@ -88,8 +88,8 @@ public:
 	 * @param uri    URI of namespace
 	 */
 	NameSpace(
-			const DOMString&	prefix = DOMString(),
-			const DOMString&	uri = DOMString()) :
+			const XalanDOMString&	prefix = XalanDOMString(),
+			const XalanDOMString&	uri = XalanDOMString()) :
     m_prefix(prefix),
     m_uri(uri),
 	m_resultCandidate(true)
@@ -101,7 +101,7 @@ public:
 	 * 
 	 * @return prefix string
 	 */
-	const DOMString&
+	const XalanDOMString&
 	getPrefix() const
 	{
 		return m_prefix;
@@ -112,7 +112,7 @@ public:
 	 * 
 	 * @return URI string
 	 */
-	const DOMString&
+	const XalanDOMString&
 	getURI() const
 	{
 		return m_uri;
@@ -145,7 +145,8 @@ public:
 	 * 
 	 * @param theRHS namespace to assign
 	 */
-	NameSpace& operator=(const NameSpace& theRHS)
+	NameSpace&
+	operator=(const NameSpace&	theRHS)
 	{
 		if (&theRHS != this)
 		{
@@ -153,14 +154,15 @@ public:
 			m_uri = theRHS.m_uri;
 			m_resultCandidate = theRHS.m_resultCandidate;
 		}
+
 		return *this;
 	}	
 
 private:
 
-	DOMString				m_prefix;
-	DOMString				m_uri; // if length is 0, then Element namespace is empty.
-	bool						m_resultCandidate;
+	XalanDOMString	m_prefix;
+	XalanDOMString	m_uri; // if length is 0, then Element namespace is empty.
+	bool			m_resultCandidate;
 };
 
 

@@ -59,13 +59,11 @@
 
 
 
-// Xerces header files...
-#include <dom/DOM_Node.hpp>
+#include <cassert>
 
 
 
-// XSL4C header files.
-#include <Include/DOMHelper.hpp>
+#include <XalanDOM/XalanNode.hpp>
 
 
 
@@ -82,25 +80,65 @@ TreeWalker::~TreeWalker()
 
 
 void
-TreeWalker::traverse(const DOM_Node&	pos)
+TreeWalker::traverse(const XalanNode*	pos)
 {
-	DOM_Node	thePos(pos);
+	assert(pos != 0);
+
+	const XalanNode*	thePos = pos;
 
 	while(0 != thePos)
 	{
 		startNode(thePos);
 
-		DOM_Node	nextNode = thePos.getFirstChild();
+		const XalanNode*	nextNode = thePos->getFirstChild();
 
 		while(0 == nextNode)
 		{
 			endNode(thePos);
 
-			nextNode = pos.getNextSibling();
+			nextNode = thePos->getNextSibling();
 
 			if(0 == nextNode)
 			{
-				thePos = thePos.getParentNode();
+				thePos = thePos->getParentNode();
+
+				if(0 == thePos)
+				{
+					nextNode = thePos;
+
+					break;
+				}
+			}
+		}
+
+		thePos = nextNode;
+	}
+}
+
+
+
+void
+TreeWalker::traverse(XalanNode*		pos)
+{
+	assert(pos != 0);
+
+	XalanNode*	thePos = pos;
+
+	while(0 != thePos)
+	{
+		startNode(thePos);
+
+		XalanNode*	nextNode = thePos->getFirstChild();
+
+		while(0 == nextNode)
+		{
+			endNode(thePos);
+
+			nextNode = thePos->getNextSibling();
+
+			if(0 == nextNode)
+			{
+				thePos = thePos->getParentNode();
 
 				if(0 == thePos)
 				{
@@ -119,26 +157,70 @@ TreeWalker::traverse(const DOM_Node&	pos)
 
 void
 TreeWalker::traverse(
-			const DOM_Node&		pos,
-			const DOM_Node&		parent)
+			const XalanNode*	pos,
+			const XalanNode*	parent)
 {
-	DOM_Node	thePos(pos);
+	assert(pos != 0);
+	assert(parent != 0);
+
+	const XalanNode*	thePos = pos;
 
 	while(parent != thePos)
 	{	  
 		startNode(thePos);
 	  
-		DOM_Node	nextNode = thePos.getFirstChild();
+		const XalanNode*	nextNode = thePos->getFirstChild();
 
 		while(0 == nextNode)
 		{
 			endNode(thePos);
 
-			nextNode = thePos.getNextSibling();
+			nextNode = thePos->getNextSibling();
 
 			if(0 == nextNode)
 			{
-				thePos = thePos.getParentNode();
+				thePos = thePos->getParentNode();
+
+				if(parent == thePos)
+				{
+					nextNode = thePos;
+
+					break;
+				}
+			}
+		}
+
+		thePos = nextNode;
+	}
+}
+
+
+
+void
+TreeWalker::traverse(
+			XalanNode*	pos,
+			XalanNode*	parent)
+{
+	assert(pos != 0);
+	assert(parent != 0);
+
+	XalanNode*	thePos = pos;
+
+	while(parent != thePos)
+	{	  
+		startNode(thePos);
+	  
+		XalanNode*	nextNode = thePos->getFirstChild();
+
+		while(0 == nextNode)
+		{
+			endNode(thePos);
+
+			nextNode = thePos->getNextSibling();
+
+			if(0 == nextNode)
+			{
+				thePos = thePos->getParentNode();
 
 				if(parent == thePos)
 				{

@@ -100,7 +100,7 @@ public:
 	virtual XObject*
 	execute(
 			XPathExecutionContext&			executionContext,
-			const DOM_Node&					context,
+			XalanNode*						context,
 			int								/* opPos */,
 			const XObjectArgVectorType&		args)
 	{
@@ -118,7 +118,7 @@ public:
 
 		for (unsigned int i = 0; i < count; i++)
 		{
-			sum += DOMStringToDouble(executionContext.getNodeData(nl.item(i)));
+			sum += DOMStringToDouble(executionContext.getNodeData(*nl.item(i)));
 		}
 
 		return executionContext.getXObjectFactory().createNumber(sum);

@@ -76,10 +76,6 @@
 
 
 
-class DOMString;
-
-
-
 /**
  * A SAX-based formatter interface for the XSL processor.  This interface 
  * will be called as result tree elements are constructed.

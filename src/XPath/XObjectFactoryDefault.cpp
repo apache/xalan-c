@@ -64,10 +64,6 @@
 
 
 
-#include <PlatformSupport/STLHelper.hpp>
-
-
-
 #include "XBoolean.hpp"
 #include "XBooleanStatic.hpp"
 #include "XNodeSet.hpp"
@@ -93,8 +89,17 @@ XObjectFactoryDefault::XObjectFactoryDefault(
 	m_envSupport(theEnvSupport),
 	m_support(theSupport),
 	m_xobjects(),
-	m_XNull(this,
-			new XNull(m_envSupport, m_support))
+	m_XNull(new XNull(theEnvSupport, theSupport))
+#if !defined(NDEBUG)
+	, m_totalBooleanInstanceCount(0),
+	m_totalNodeSetInstanceCount(0),
+	m_totalNullInstanceCount(1),
+	m_totalNumberInstanceCount(0),
+	m_totalStringInstanceCount(0),
+	m_totalUnknownInstanceCount(0),
+	m_totalResultTreeFragInstanceCount(0),
+	m_totalSpanInstanceCount(0)
+#endif
 {
 }
 
@@ -103,6 +108,8 @@ XObjectFactoryDefault::XObjectFactoryDefault(
 XObjectFactoryDefault::~XObjectFactoryDefault()
 {
 	reset();
+
+	deleteObject(m_XNull);
 }
 
 
@@ -114,7 +121,7 @@ XObjectFactoryDefault::doReturnObject(
 {
 	if (theFactoryObject == &theTrueBoolean ||
 		theFactoryObject == &theFalseBoolean ||
-		theFactoryObject == m_XNull.get())
+		theFactoryObject == m_XNull)
 	{
 		return true;
 	}
@@ -156,6 +163,9 @@ XObjectFactoryDefault::createBoolean(
 
 		m_xobjects.insert(theBoolean);
 
+#if !defined(NDEBUG)
+		++m_totalBooleanInstanceCount;
+#endif
 		return theBoolean;
 	}
 }
@@ -171,6 +181,10 @@ XObjectFactoryDefault::createNodeSet(
 
 	m_xobjects.insert(theXNodeSet);
 
+#if !defined(NDEBUG)
+	++m_totalNodeSetInstanceCount;
+#endif
+
 	return theXNodeSet;
 }
 
@@ -185,6 +199,10 @@ XObjectFactoryDefault::createNodeSet(
 
 	m_xobjects.insert(theXNodeSet);
 
+#if !defined(NDEBUG)
+	++m_totalNodeSetInstanceCount;
+#endif
+
 	return theXNodeSet;
 }
 
@@ -192,12 +210,16 @@ XObjectFactoryDefault::createNodeSet(
 
 XObject*
 XObjectFactoryDefault::createNodeSet(
-			const DOM_Node&		value,
-			bool				/* fOptimize */)
+			XalanNode&	value,
+			bool		/* fOptimize */)
 {
 	XNodeSet* const		theXNodeSet = new XNodeSet(m_envSupport, m_support, value);
 
 	m_xobjects.insert(theXNodeSet);
+
+#if !defined(NDEBUG)
+	++m_totalNodeSetInstanceCount;
+#endif
 
 	return theXNodeSet;
 }
@@ -209,13 +231,17 @@ XObjectFactoryDefault::createNull(bool		fOptimize)
 {
 	if (fOptimize == true)
 	{
-		return m_XNull.get();
+		return m_XNull;
 	}
 	else
 	{
 		XNull* const	theXNull = new XNull(m_envSupport, m_support);
 
 		m_xobjects.insert(theXNull);
+
+#if !defined(NDEBUG)
+	++m_totalNullInstanceCount;
+#endif
 
 		return theXNull;
 	}
@@ -232,6 +258,10 @@ XObjectFactoryDefault::createNumber(
 
 	m_xobjects.insert(theXNumber);
 
+#if !defined(NDEBUG)
+	++m_totalNumberInstanceCount;
+#endif
+
 	return theXNumber;
 }
 
@@ -239,12 +269,16 @@ XObjectFactoryDefault::createNumber(
 
 XObject*
 XObjectFactoryDefault::createString(
-			const DOMString&	theValue,
-			bool				/* fOptimize */)
+			const XalanDOMString&	theValue,
+			bool					/* fOptimize */)
 {
 	XString* const	theXString = new XString(m_envSupport, m_support, theValue);
 
 	m_xobjects.insert(theXString);
+
+#if !defined(NDEBUG)
+	++m_totalStringInstanceCount;
+#endif
 
 	return theXString;
 }
@@ -253,12 +287,16 @@ XObjectFactoryDefault::createString(
 
 XObject*
 XObjectFactoryDefault::createUnknown(
-			const DOMString&	theValue,
-			bool				/* fOptimize */)
+			const XalanDOMString&	theValue,
+			bool					/* fOptimize */)
 {
 	XUnknown* const	theXUnknown = new XUnknown(m_envSupport, theValue);
 
 	m_xobjects.insert(theXUnknown);
+
+#if !defined(NDEBUG)
+	++m_totalUnknownInstanceCount;
+#endif
 
 	return theXUnknown;
 }
@@ -274,6 +312,10 @@ XObjectFactoryDefault::createResultTreeFrag(
 
 	m_xobjects.insert(theResultTreeFrag);
 
+#if !defined(NDEBUG)
+	++m_totalResultTreeFragInstanceCount;
+#endif
+
 	return theResultTreeFrag;
 }
 
@@ -287,6 +329,10 @@ XObjectFactoryDefault::createSpan(
 	XSpan* const	theXSpan = new XSpan(m_envSupport, m_support, theValue);
 
 	m_xobjects.insert(theXSpan);
+
+#if !defined(NDEBUG)
+	++m_totalSpanInstanceCount;
+#endif
 
 	return theXSpan;
 }
@@ -302,6 +348,10 @@ XObjectFactoryDefault::createSpan(
 
 	m_xobjects.insert(theXSpan);
 
+#if !defined(NDEBUG)
+	++m_totalSpanInstanceCount;
+#endif
+
 	return theXSpan;
 }
 
@@ -309,12 +359,16 @@ XObjectFactoryDefault::createSpan(
 
 XObject*
 XObjectFactoryDefault::createSpan(
-			const DOM_Node&		theValue,
-			bool				/* fOptimize */)
+			XalanNode&		theValue,
+			bool			/* fOptimize */)
 {
 	XSpan* const	theXSpan = new XSpan(m_envSupport, m_support, theValue);
 
 	m_xobjects.insert(theXSpan);
+
+#if !defined(NDEBUG)
+	++m_totalSpanInstanceCount;
+#endif
 
 	return theXSpan;
 }

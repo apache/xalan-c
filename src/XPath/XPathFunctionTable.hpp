@@ -69,7 +69,7 @@
 
 
 
-#include <dom/DOMString.hpp>
+#include <XalanDOM/XalanDOMString.hpp>
 
 
 
@@ -99,7 +99,7 @@ protected:
 	 * 
 	 * @param theMessage string error message
 	 */
-	XPathFunctionTableException(const DOMString&	theMessage);
+	XPathFunctionTableException(const XalanDOMString&	theMessage);
 };
 
 
@@ -116,16 +116,17 @@ public:
 	 * 
 	 * @param theMessage function name string
 	 */
-	XPathFunctionTableInvalidFunctionException(const DOMString&		theFunctionName); 
+	XPathFunctionTableInvalidFunctionException(const XalanDOMString&	theFunctionName); 
 
 	virtual
 	~XPathFunctionTableInvalidFunctionException();
 
 private:
 
-	static DOMString
-	FormatMessage(const DOMString&	theFunctionName);
+	static XalanDOMString
+	FormatMessage(const XalanDOMString&		theFunctionName);
 };
+
 
 
 /**
@@ -136,10 +137,11 @@ class XALAN_XPATH_EXPORT XPathFunctionTable
 public:
 
 #if defined(XALAN_NO_NAMESPACES)
-	typedef map<DOMString, Function*>			CollectionType;
+	typedef map<XalanDOMString, Function*>			CollectionType;
 #else
-	typedef std::map<DOMString, Function*>			CollectionType;
+	typedef std::map<XalanDOMString, Function*>		CollectionType;
 #endif
+
 	typedef MapValueDeleteFunctor<CollectionType>	DeleteFunctorType;
 
 	XPathFunctionTable();
@@ -153,7 +155,7 @@ public:
 	 * @return function named
 	 */
 	Function&
-	operator[](const DOMString&		theFunctionName) const
+	operator[](const XalanDOMString&	theFunctionName) const
 	{
 		CollectionType::const_iterator	i =
 			m_FunctionCollection.find(theFunctionName);
@@ -176,8 +178,8 @@ public:
 	 */
 	void
 	InstallFunction(
-			const DOMString&	theFunctionName,
-			const Function&		theFunction);
+			const XalanDOMString&	theFunctionName,
+			const Function&			theFunction);
 
 
 	/**
@@ -187,7 +189,7 @@ public:
 	 * @return true if function is in table
 	 */
 	bool
-	isInstalledFunction(const DOMString&	theFunctionName) const
+	isInstalledFunction(const XalanDOMString&	theFunctionName) const
 	{
 		if (m_FunctionCollection.find(theFunctionName) != m_FunctionCollection.end())
 		{
@@ -200,7 +202,7 @@ public:
 	}
 
 #if defined(XALAN_NO_MEMBER_TEMPLATES)
-	typedef vector<DOMString>	InstalledFunctionNameVectorType;
+	typedef vector<XalanDOMString>	InstalledFunctionNameVectorType;
 
 	/**
 	 * Add a list of the names of installed functions to a vector of names.

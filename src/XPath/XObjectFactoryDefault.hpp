@@ -64,11 +64,8 @@
 
 
 
-#if !defined(XALAN_XTREE_BUG)
 #include <set>
-#else
-#error Need to implement CollectionType as a vector
-#endif
+
 
 
 // Base class header file...
@@ -127,8 +124,8 @@ public:
 
 	virtual XObject*
 	createNodeSet(
-			const DOM_Node&		value,
-			bool				fOptimize = true);
+			XalanNode&	value,
+			bool		fOptimize = true);
 
 	virtual XObject*
 	createNull(bool	fOptimize = true);
@@ -140,13 +137,13 @@ public:
 
 	virtual XObject*
 	createString(
-			const DOMString&	theValue,
-			bool				fOptimize = true);
+			const XalanDOMString&	theValue,
+			bool					fOptimize = true);
 
 	virtual XObject*
 	createUnknown(
-			const DOMString&	theValue,
-			bool				fOptimize = true);
+			const XalanDOMString&	theValue,
+			bool					fOptimize = true);
 
 	virtual XObject*
 	createResultTreeFrag(
@@ -165,8 +162,8 @@ public:
 
 	virtual XObject*
 	createSpan(
-			const DOM_Node&		value,
-			bool				fOptimize = true);
+			XalanNode&	value,
+			bool		fOptimize = true);
 
 #if defined(XALAN_NO_NAMESPACES)
 	typedef set<const FactoryObject*>		CollectionType;
@@ -184,6 +181,58 @@ public:
 	{
 		return m_xobjects.size();
 	}
+
+#if !defined(NDEBUG)
+
+	unsigned long
+	getTotalBooleanInstanceCount() const
+	{
+		return m_totalBooleanInstanceCount;
+	}
+
+	unsigned long
+	getTotalNodeSetInstanceCount() const
+	{
+		return m_totalNodeSetInstanceCount;
+	}
+
+	unsigned long
+	getTotalNullInstanceCount() const
+	{
+		return m_totalNullInstanceCount;
+	}
+
+	unsigned long
+	getTotalNumberInstanceCount() const
+	{
+		return m_totalNumberInstanceCount;
+	}
+
+	unsigned long
+	getTotalStringInstanceCount() const
+	{
+		return m_totalStringInstanceCount;
+	}
+
+	unsigned long
+	getTotalUnknownInstanceCount() const
+	{
+		return m_totalUnknownInstanceCount;
+	}
+
+	unsigned long
+	getTotalResultTreeFragInstanceCount() const
+	{
+		return m_totalResultTreeFragInstanceCount;
+	}
+
+	unsigned long
+	getTotalSpanInstanceCount() const
+	{
+		return m_totalSpanInstanceCount;
+	}
+
+#endif
 	
 protected:
 
@@ -207,12 +256,32 @@ private:
 
 
 	// Data members...
-	XPathEnvSupport&							m_envSupport;
-	XPathSupport&								m_support;
+	XPathEnvSupport&	m_envSupport;
+	XPathSupport&		m_support;
 
-	CollectionType								m_xobjects;
+	CollectionType		m_xobjects;
 
-	const FactoryObjectAutoPointer<XObject>		m_XNull;
+	XObject* const 		m_XNull;
+
+#if !defined(NDEBUG)
+
+	unsigned long		m_totalBooleanInstanceCount;
+
+	unsigned long		m_totalNodeSetInstanceCount;
+
+	unsigned long		m_totalNullInstanceCount;
+
+	unsigned long		m_totalNumberInstanceCount;
+
+	unsigned long		m_totalStringInstanceCount;
+
+	unsigned long		m_totalUnknownInstanceCount;
+
+	unsigned long		m_totalResultTreeFragInstanceCount;
+
+	unsigned long		m_totalSpanInstanceCount;
+
+#endif
 };
 
 

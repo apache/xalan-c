@@ -96,19 +96,27 @@ public:
 	virtual XObject*
 	execute(
 			XPathExecutionContext&			executionContext,
-			const DOM_Node&					context,
+			XalanNode*						context,
 			int								opPos,
 			const XObjectArgVectorType&		args)
 	{
 		const XObjectArgVectorType::size_type	theSize = args.size();
 
-		DOMString	theResult;
+		XalanDOMString	theResult;
 
 		if(theSize == 0)
 		{
-			theResult = getDefaultStringArgument(executionContext,
-												 context,
-												 opPos);
+			if (context == 0)
+			{
+				executionContext.error("The string-length() function requires a non-null context node!",
+									   context);
+			}
+			else
+			{
+				theResult = getDefaultStringArgument(executionContext,
+													 *context,
+													 opPos);
+			}
 		}
 		else if (theSize == 1)
 		{

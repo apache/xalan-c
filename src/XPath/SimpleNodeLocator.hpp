@@ -102,7 +102,7 @@ public:
 	connectToNodes(
 			const XPath&					xpath,
 			XPathExecutionContext&			executionContext,
-			const DOM_Node& 				context, 
+			XalanNode& 						context, 
 			int 							opPos,
 			const ConnectArgsVectorType&	connectArgs);
   
@@ -110,14 +110,14 @@ public:
 	locationPath(
 			const XPath&			xpath,
 			XPathExecutionContext&	executionContext,
-			const DOM_Node& 		context, 
+			XalanNode& 				context, 
 			int 					opPos);
 
 	virtual double
 	locationPathPattern(
 			const XPath&			xpath,
 			XPathExecutionContext&	executionContext,
-			const DOM_Node& 		context, 
+			XalanNode& 				context, 
 			int 					opPos);
 
 protected:
@@ -126,7 +126,7 @@ protected:
 	step(
 			const XPath&			xpath,
 			XPathExecutionContext&	executionContext,
-			const DOM_Node& 		context, 
+			XalanNode* 				context, 
 			int 					opPos,
 			MutableNodeRefList&		queryResults);
 
@@ -138,11 +138,11 @@ protected:
 	 * @param opPos The current position in the xpath operation map array
 	 * @return the last matched context node
 	 */
-	DOM_Node
+	XalanNode*
 	stepPattern(
 			const XPath&			xpath,
 			XPathExecutionContext&	executionContext,
-			const DOM_Node& 		context, 
+			XalanNode* 				context, 
 			int 					opPos,
 			double& 				score);
 
@@ -150,7 +150,7 @@ protected:
 	findNodeSet(
 			const XPath&			xpath,
 			XPathExecutionContext&	executionContext,
-			const DOM_Node& 		context,
+			XalanNode* 				context, 
 			int 					opPos,
 			int 					stepType,
 			MutableNodeRefList& 	subQueryResults);
@@ -159,7 +159,7 @@ protected:
 	findRoot(
 			const XPath&			xpath,
 			XPathExecutionContext&	executionContext,
-			const DOM_Node& 		context,
+			XalanNode* 				context, 
 			int 					opPos,
 			int 					stepType,
 			MutableNodeRefList& 	subQueryResults);
@@ -168,7 +168,7 @@ protected:
 	findParent(
 			const XPath&			xpath,
 			XPathExecutionContext&	executionContext,
-			const DOM_Node& 		context,
+			XalanNode* 				context, 
 			int 					opPos,
 			int 					stepType,
 			MutableNodeRefList& 	subQueryResults);
@@ -177,7 +177,7 @@ protected:
 	findSelf(
 			const XPath&			xpath,
 			XPathExecutionContext&	executionContext,
-			const DOM_Node& 		context,
+			XalanNode* 				context, 
 			int 					opPos,
 			int 					stepType,
 			MutableNodeRefList& 	subQueryResults);
@@ -186,7 +186,7 @@ protected:
 	findAncestors(
 			const XPath&			xpath,
 			XPathExecutionContext&	executionContext,
-			const DOM_Node& 		context,
+			XalanNode* 				context, 
 			int 					opPos,
 			int 					stepType,
 			MutableNodeRefList& 	subQueryResults);
@@ -195,7 +195,7 @@ protected:
 	findAncestorsOrSelf(
 			const XPath&			xpath,
 			XPathExecutionContext&	executionContext,
-			const DOM_Node& 		context,
+			XalanNode* 				context, 
 			int 					opPos,
 			int 					stepType,
 			MutableNodeRefList& 	subQueryResults);
@@ -204,7 +204,7 @@ protected:
 	findAttributes(
 			const XPath&			xpath,
 			XPathExecutionContext&	executionContext,
-			const DOM_Node& 		context,
+			XalanNode* 				context, 
 			int 					opPos,
 			int 					stepType,
 			MutableNodeRefList& 	subQueryResults);
@@ -213,7 +213,7 @@ protected:
 	findChildren(
 			const XPath&			xpath,
 			XPathExecutionContext&	executionContext,
-			const DOM_Node& 		context,
+			XalanNode* 				context, 
 			int 					opPos,
 			int 					stepType,
 			MutableNodeRefList& 	subQueryResults);
@@ -222,7 +222,7 @@ protected:
 	findDescendants(
 			const XPath&			xpath,
 			XPathExecutionContext&	executionContext,
-			const DOM_Node& 		context,
+			XalanNode* 				context, 
 			int 					opPos,
 			int 					stepType,
 			MutableNodeRefList& 	subQueryResults);
@@ -231,7 +231,7 @@ protected:
 	findFollowing(
 			const XPath&			xpath,
 			XPathExecutionContext&	executionContext,
-			const DOM_Node& 		context,
+			XalanNode* 				context, 
 			int 					opPos,
 			int 					stepType,
 			MutableNodeRefList& 	subQueryResults);
@@ -240,7 +240,7 @@ protected:
 	findFollowingSiblings(
 			const XPath&			xpath,
 			XPathExecutionContext&	executionContext,
-			const DOM_Node& 		context,
+			XalanNode* 				context, 
 			int 					opPos,
 			int 					stepType,
 			MutableNodeRefList& 	subQueryResults);
@@ -249,7 +249,7 @@ protected:
 	findPreceeding(
 			const XPath&			xpath,
 			XPathExecutionContext&	executionContext,
-			const DOM_Node& 		context,
+			XalanNode* 				context, 
 			int 					opPos,
 			int 					stepType,
 			MutableNodeRefList& 	subQueryResults);
@@ -258,7 +258,7 @@ protected:
 	findPreceedingSiblings(
 			const XPath&			xpath,
 			XPathExecutionContext&	executionContext,
-			const DOM_Node& 		context,
+			XalanNode* 				context, 
 			int 					opPos,
 			int 					stepType,
 			MutableNodeRefList& 	subQueryResults);
@@ -267,7 +267,7 @@ protected:
 	findNamespace(
 			const XPath&			xpath,
 			XPathExecutionContext&	executionContext,
-			const DOM_Node& 		context,
+			XalanNode* 				context, 
 			int 					opPos,
 			int 					stepType,
 			MutableNodeRefList& 	subQueryResults);
@@ -276,7 +276,7 @@ protected:
 	findNodesOnUnknownAxis(
 			const XPath&			xpath,
 			XPathExecutionContext&	executionContext,
-			const DOM_Node& 		context,
+			XalanNode* 				context, 
 			int 					opPos,
 			int 					stepType,
 			MutableNodeRefList& 	subQueryResults);
@@ -285,7 +285,7 @@ protected:
 	nodeTest(
 			const XPath&			xpath,
 			XPathExecutionContext&	executionContext,
-			const DOM_Node& 		context,
+			XalanNode* 				context, 
 			int 					opPos,
 			int 					argLen,
 			int 					stepType);
@@ -294,7 +294,7 @@ protected:
 	predicates(
 			const XPath&			xpath,
 			XPathExecutionContext&	executionContext,
-			const DOM_Node& 		context,
+			XalanNode* 				context, 
 			int 					opPos,
 			MutableNodeRefList& 	subQueryResults,
 			int&					endPredicatesPos);

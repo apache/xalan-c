@@ -68,14 +68,30 @@
 
 
 StringTokenizer::StringTokenizer(
-			const DOMString&	theString,
-			const DOMString&	theTokens,
-			bool				fReturnTokens) :
+			const XalanDOMString&	theString,
+			const XalanDOMString&	theTokens,
+			bool					fReturnTokens) :
 	m_String(theString),
 	m_Tokens(theTokens),
 	m_fReturnTokens(fReturnTokens),
 	m_CurrentIndex(0),
-	m_StringLength(theString.length())
+	m_StringLength(length(theString)),
+	m_tokensLength(length(theTokens))
+{
+}
+
+
+
+StringTokenizer::StringTokenizer(
+			const XalanDOMChar*		theString,
+			const XalanDOMChar*		theTokens,
+			bool					fReturnTokens) :
+	m_String(theString),
+	m_Tokens(theTokens),
+	m_fReturnTokens(fReturnTokens),
+	m_CurrentIndex(0),
+	m_StringLength(length(theString)),
+	m_tokensLength(length(theTokens))
 {
 }
 
@@ -95,85 +111,15 @@ StringTokenizer::hasMoreTokens() const
 
 
 
-bool
-FindCharInTokens(XMLCh				theChar,
-				 const DOMString&	theTokens)
-{
-	bool		fFound = false;
-
-	const int	theLength = theTokens.length();
-
-	for(int i = 0; i < theLength; i++)
-	{
-		if (charAt(theTokens, i) == theChar)
-		{
-			fFound = true;
-			break;
-		}
-	}
-
-	return fFound;
-}
-
-
-#if 0
-DOMString
+XalanDOMString
 StringTokenizer::nextToken()
 {
 	assert(m_CurrentIndex < m_StringLength);
 
-	DOMString	theToken;
+	XalanDOMString	theToken;
 
 	// Find the index of the next delimiter.
-	int	theIndex = FindNextDelimiterIndex(m_CurrentIndex);
-
-	if (theIndex == m_CurrentIndex &&
-		m_fReturnTokens == true)
-	{
-		// The next delimiter is at the current index.  If we're
-		// returning delimiters as tokens, then make that the
-		// return value.  Otherwise, return an empty string.
-		theToken = substring(m_String,
-							 theIndex,
-							 theIndex + 1);
-
-		m_CurrentIndex = theIndex + 1;
-	}
-	else
-	{
-		if (theIndex == m_CurrentIndex)
-		{
-			theIndex = FindNextDelimiterIndex(m_CurrentIndex + 1);
-		}
-		assert(theIndex > m_CurrentIndex);
-
-		theToken = substring(m_String,
-							 m_CurrentIndex,
-							 theIndex);
-
-		if (m_fReturnTokens == true)
-		{
-			m_CurrentIndex = theIndex;
-		}
-		else
-		{
-			m_CurrentIndex = theIndex + 1;
-		}
-	}
-
-	return theToken;
-}
-#else
-
-DOMString
-StringTokenizer::nextToken()
-{
-	assert(m_CurrentIndex < m_StringLength);
-
-	DOMString	theToken;
-
-	// Find the index of the next delimiter.
-	int	theIndex = FindNextDelimiterIndex(m_CurrentIndex);
+	unsigned int	theIndex = FindNextDelimiterIndex(m_CurrentIndex);
 
 	if (theIndex == m_CurrentIndex)
 	{
@@ -210,20 +156,20 @@ StringTokenizer::nextToken()
 
 	return theToken;
 }
-#endif
 
 
-int
+
+unsigned int
 StringTokenizer::countTokens() const
 {
-	int		theCount = 0;
-	int		theCurrentIndex = m_CurrentIndex;
+	unsigned int	theCount = 0;
+	unsigned int	theCurrentIndex = m_CurrentIndex;
 
 	if (theCurrentIndex < m_StringLength)
 	{
 		while(theCurrentIndex < m_StringLength)
 		{
-			const int	theNextIndex = FindNextDelimiterIndex(theCurrentIndex);
+			const unsigned int	theNextIndex = FindNextDelimiterIndex(theCurrentIndex);
 
 			if (theNextIndex == theCurrentIndex)
 			{
@@ -248,20 +194,21 @@ StringTokenizer::countTokens() const
 
 
 
-int
-StringTokenizer::FindNextDelimiterIndex(int		theStartIndex) const
+unsigned int
+StringTokenizer::FindNextDelimiterIndex(unsigned int	theStartIndex) const
 {
-	bool		fTokenFound = false;
-	int			theIndex = theStartIndex;
+	bool			fTokenFound = false;
+	unsigned int	theIndex = theStartIndex;
 
 	while(theIndex < m_StringLength &&
 		  fTokenFound == false)
 	{
-		const XMLCh		theCurrentChar = charAt(m_String,
-												theIndex);
+		const XalanDOMChar	theCurrentChar =
+			charAt(m_String,
+				   theIndex);
 
-		if (FindCharInTokens(theCurrentChar,
-							 m_Tokens) == true)
+		if (indexOf(m_Tokens,
+					theCurrentChar) < m_tokensLength)
 		{
 			fTokenFound = true;
 		}

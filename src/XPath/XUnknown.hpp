@@ -64,7 +64,7 @@
 
 
 
-#include <dom/DOMString.hpp>
+#include <XalanDOM/XalanDOMString.hpp>
 
 
 
@@ -84,8 +84,8 @@ public:
 	 * @param name       source string
 	 */
 	XUnknown(
-			XPathEnvSupport&	envSupport,
-			const DOMString&	name);
+			XPathEnvSupport&		envSupport,
+			const XalanDOMString&	name);
 
 	XUnknown(const XUnknown&	source);
 
@@ -97,7 +97,7 @@ public:
 	virtual eObjectType
 	getType() const;
 
-	virtual DOMString
+	virtual XalanDOMString
 	getTypeString() const;
   
 	virtual double
@@ -106,7 +106,7 @@ public:
 	virtual bool
 	boolean() const;
 
-	virtual DOMString
+	virtual XalanDOMString
 	str() const;
 
 	virtual const ResultTreeFragBase&
@@ -135,7 +135,7 @@ public:
 
 private:
 
-	const DOMString		m_name;
+	const XalanDOMString	m_name;
 };
 
 

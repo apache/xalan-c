@@ -68,8 +68,8 @@
 
 
 XUnknown::XUnknown(
-			XPathEnvSupport&	envSupport,
-			const DOMString&	name) :
+			XPathEnvSupport&		envSupport,
+			const XalanDOMString&	name) :
 	XObject(&envSupport),
 	m_name(name)
 {
@@ -99,10 +99,10 @@ XUnknown::getType() const
 
 
 
-DOMString
+XalanDOMString
 XUnknown::getTypeString() const
 {
-	return "#UNKNOWN";
+	return XALAN_STATIC_UCODE_STRING("#UNKNOWN");
 }
 
 
@@ -123,10 +123,10 @@ XUnknown::boolean() const
 
 
 
-DOMString
+XalanDOMString
 XUnknown::str() const
 {
-	return DOMString("Unknown variable: ") + m_name;
+	return XalanDOMString(XALAN_STATIC_UCODE_STRING("Unknown variable: ")) + m_name;
 }
 
 

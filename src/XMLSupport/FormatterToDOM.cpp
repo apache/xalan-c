@@ -59,34 +59,53 @@
 
 
 
-#include <dom/DOMString.hpp>
+#include <cassert>
+
+
+
 #include <sax/AttributeList.hpp>
 
 
 
-#include <Include/DOMHelper.hpp>
+#include <XalanDOM/XalanCDATASection.hpp>
+#include <XalanDOM/XalanComment.hpp>
+#include <XalanDOM/XalanDocument.hpp>
+#include <XalanDOM/XalanDocumentFragment.hpp>
+#include <XalanDOM/XalanElement.hpp>
+#include <XalanDOM/XalanEntityReference.hpp>
+#include <XalanDOM/XalanProcessingInstruction.hpp>
+#include <XalanDOM/XalanText.hpp>
+#include <XalanDOM/XalanDOMString.hpp>
+
+
+
+#include <PlatformSupport/DOMStringHelper.hpp>
 
 
 
 FormatterToDOM::FormatterToDOM(
-			const DOM_Document&				doc,
-			const DOM_DocumentFragment&		docFrag,
-			const DOM_Element&				currentElement) :
-	m_docFrag(docFrag),
+			XalanDocument*			doc,
+			XalanDocumentFragment*	docFrag,
+			XalanElement*			currentElement) :
 	m_doc(doc),
+	m_docFrag(docFrag),
 	m_currentElem(currentElement),
 	m_elemStack()
 {
+	assert(m_doc != 0 && m_docFrag != 0);
 }
 
+
+
 FormatterToDOM::FormatterToDOM(
-			const DOM_Document&			doc,
-			const DOM_Element&			elem) :
-	m_docFrag(),
+			XalanDocument*	doc,
+			XalanElement*	elem) :
 	m_doc(doc),
+	m_docFrag(0),
 	m_currentElem(elem),
 	m_elemStack()
 {
+	assert(m_doc != 0);
 }
 
 
@@ -126,13 +145,13 @@ FormatterToDOM::startElement(
 			const	XMLCh* const	name,
 			AttributeList&			attrs)
 {
-	DOM_Element		elem = m_doc.createElement(name);
+	XalanElement* const		elem = m_doc->createElement(name);
 
-	const int		nAtts = attrs.getLength();
+	const int				nAtts = attrs.getLength();
 
 	for(int i = 0; i < nAtts; i++)
 	{
-		elem.setAttribute(attrs.getName(i), attrs.getValue(i));
+		elem->setAttribute(attrs.getName(i), attrs.getValue(i));
 	}
 
 	append(elem);
@@ -167,17 +186,19 @@ FormatterToDOM::characters(
 			const XMLCh* const	chars,
 			const unsigned int	length)
 {
-	append(m_doc.createTextNode(DOMString(chars, length)));
+	append(m_doc->createTextNode(XalanDOMString(chars, length)));
 }
+
+
 
 void
 FormatterToDOM::charactersRaw(
 		const XMLCh* const	chars,
 		const unsigned int	length)
 {
-	append(m_doc.createProcessingInstruction("xslt-next-is-raw",
-				"formatter-to-dom"));
-	append(m_doc.createTextNode(DOMString(chars, length)));
+	append(m_doc->createProcessingInstruction(XALAN_STATIC_UCODE_STRING("xslt-next-is-raw"),
+				XALAN_STATIC_UCODE_STRING("formatter-to-dom")));
+	append(m_doc->createTextNode(XalanDOMString(chars, length)));
 }		
 
 
@@ -185,7 +206,7 @@ FormatterToDOM::charactersRaw(
 void
 FormatterToDOM::entityReference(const XMLCh* const	name)
 {
-	append(m_doc.createEntityReference(name));
+	append(m_doc->createEntityReference(name));
 }
 
 
@@ -195,7 +216,7 @@ FormatterToDOM::ignorableWhitespace(
 			const XMLCh* const	chars,
 			const unsigned int	length)
 {
-	append(m_doc.createTextNode(DOMString(chars, length)));
+	append(m_doc->createTextNode(XalanDOMString(chars, length)));
 }
 
 
@@ -205,7 +226,7 @@ FormatterToDOM::processingInstruction(
 			const XMLCh* const	target,
 			const XMLCh* const	data)
 {
-	append(m_doc.createProcessingInstruction(DOMString(target), DOMString(data)));
+	append(m_doc->createProcessingInstruction(XalanDOMString(target), XalanDOMString(data)));
 }
 
 
@@ -220,7 +241,7 @@ FormatterToDOM::resetDocument()
 void
 FormatterToDOM::comment(const XMLCh* const	data)
 {
-	append(m_doc.createComment(DOMString(data)));
+	append(m_doc->createComment(XalanDOMString(data)));
 }
 
 
@@ -230,24 +251,26 @@ FormatterToDOM::cdata(
 			const XMLCh* const	ch,
 			const unsigned int 	length)
 {
-	append(m_doc.createCDATASection(DOMString(ch, length)));
+	append(m_doc->createCDATASection(XalanDOMString(ch, length)));
 }
 
 
 
 void
-FormatterToDOM::append(const DOM_Node&	newNode)
+FormatterToDOM::append(XalanNode*	newNode)
 {
+	assert(newNode != 0);
+
 	if(0 != m_currentElem)
 	{
-		m_currentElem.appendChild(newNode);
+		m_currentElem->appendChild(newNode);
 	}
 	else if(0 != m_docFrag)
 	{
-		m_docFrag.appendChild(newNode);
+		m_docFrag->appendChild(newNode);
 	}
 	else
 	{
-		m_doc.appendChild(newNode);
+		m_doc->appendChild(newNode);
 	}
 }

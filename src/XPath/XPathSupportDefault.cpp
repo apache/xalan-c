@@ -62,12 +62,12 @@
 
 
 
-#include <dom/DOM_NamedNodeMap.hpp>
-#include <dom/DOM_Entity.hpp>
+#include <XalanDOM/XalanDocument.hpp>
+#include <XalanDOM/XalanDocumentType.hpp>
+#include <XalanDOM/XalanElement.hpp>
+#include <XalanDOM/XalanEntity.hpp>
+#include <XalanDOM/XalanNamedNodeMap.hpp>
 
-// $$$ ToDo:  Eventually, we shouldn't have to do this, but we need ignorable
-// whitespace support
-#include <internal/XMLReader.hpp>
 
 
 #include <PlatformSupport/DOMStringHelper.hpp>
@@ -80,8 +80,8 @@
 
 XPathSupportDefault::XPathSupportDefault(DOMSupport&	theDOMSupport) :
 	XPathSupport(),
-	DOMServices::WhitespaceSupport(),
-	m_DOMSupport(theDOMSupport)
+	m_DOMSupport(theDOMSupport),
+	m_whitespaceSupport()
 {
 }
 
@@ -101,10 +101,18 @@ XPathSupportDefault::reset()
 
 
 
-DOMString
+bool
+XPathSupportDefault::isIgnorableWhitespace(const XalanText&		node) const
+{
+	return m_whitespaceSupport.isIgnorableWhitespace(node);
+}
+
+
+
+XalanDOMString
 XPathSupportDefault::getNamespaceForPrefix(
-			const DOMString&	prefix, 
-			const DOM_Element&	namespaceContext) const
+			const XalanDOMString&	prefix, 
+			const XalanElement&		namespaceContext) const
 {
 	return DOMServices::getNamespaceForPrefix(prefix,
 											  namespaceContext);
@@ -112,39 +120,33 @@ XPathSupportDefault::getNamespaceForPrefix(
 
 
 
-DOMString
-XPathSupportDefault::getNamespaceOfNode(const DOM_Node&		n) const
+XalanDOMString
+XPathSupportDefault::getNamespaceOfNode(const XalanNode&	n) const
 {
 	return m_DOMSupport.getNamespaceOfNode(n);
 }
 
 
 
-DOMString
-XPathSupportDefault::getLocalNameOfNode(const DOM_Node&		n) const
+XalanDOMString
+XPathSupportDefault::getLocalNameOfNode(const XalanNode&	n) const
 {
 	return DOMServices::getLocalNameOfNode(n);
 }
 
 
 
-DOMString
-XPathSupportDefault::getNodeData(const DOM_Node&	node) const
+XalanDOMString
+XPathSupportDefault::getNodeData(const XalanNode&	node) const
 {
 	return DOMServices::getNodeData(node,
-									*this);
+									m_whitespaceSupport);
 }
 
 
 
-/**
- * I have to write this silly, and expensive function, 
- * because the DOM WG decided that attributes don't 
- * have parents.  If XPath is used with a DOM implementation
- * that reuses attribute nodes, this will not work correctly.
- */
-DOM_Node
-XPathSupportDefault::getParentOfNode(const DOM_Node&	node) const
+XalanNode*
+XPathSupportDefault::getParentOfNode(const XalanNode&	node) const
 {
 	return DOMServices::getParentOfNode(node);
 }
@@ -152,23 +154,21 @@ XPathSupportDefault::getParentOfNode(const DOM_Node&	node) const
 
 
 bool
-XPathSupportDefault::isIgnorableWhitespace(const DOM_Text&	node) const
+XPathSupportDefault::isNodeAfter(
+			const XalanNode&	node1,
+			const XalanNode&	node2) const
 {
-// $$$ ToDo:  Eventually, we shouldn't have to do this, but we need ignorable
-// whitespace support
-	const DOMString		theData(node.getData());
-
-	return XMLReader::isAllSpaces(toCharArray(theData), length(theData));
+	return DOMServices::isNodeAfter(node1, node2);
 }
 
 
 
-DOM_Element
+XalanElement*
 XPathSupportDefault::getElementByID(
-			const DOMString&	/* id */,
-			const DOM_Document&	/* doc */) const
+			const XalanDOMString&	/* id */,
+			const XalanDocument&	/* doc */) const
 {
-	return DOM_Element();
+	return 0;
 }
 
 
@@ -188,29 +188,32 @@ XPathSupportDefault::getProcessNamespaces() const
 
 
 
-DOMString
+XalanDOMString
 XPathSupportDefault::getUnparsedEntityURI(
-			const DOMString&		theName,
-			const DOM_Document&		theDocument) const
+			const XalanDOMString&		theName,
+			const XalanDocument&		theDocument) const
 {
-	DOMString				theURI;
+	XalanDOMString					theURI;
 
-	const DOM_DocumentType	theDoctype = theDocument.getDoctype();
+	const XalanDocumentType* const	theDoctype =
+		theDocument.getDoctype();
 
 	if(theDoctype != 0)
 	{
-		DOM_NamedNodeMap	theEntities = theDoctype.getEntities();
+		const XalanNamedNodeMap* const	theEntities =
+			theDoctype->getEntities();
 
 		if (theEntities != 0)
 		{
-			const DOM_Node		theNode = theEntities.getNamedItem(theName);
+			const XalanNode* const	theNode =
+				theEntities->getNamedItem(theName);
 
-			if (theNode != 0 && theNode.getNodeType() == DOM_Node::ENTITY_NODE)
+			if (theNode != 0 && theNode->getNodeType() == XalanNode::ENTITY_NODE)
 			{
-				const DOM_Entity&	theEntity =
-					static_cast<const DOM_Entity&>(theNode);
+				const XalanEntity*	theEntity =
+					static_cast<const XalanEntity*>(theNode);
 
-				const DOMString		theNotationName = theEntity.getNotationName();
+				const XalanDOMString		theNotationName(theEntity->getNotationName());
 
 				if(isEmpty(theNotationName) == false) // then it's unparsed
 				{
@@ -223,11 +226,11 @@ XPathSupportDefault::getUnparsedEntityURI(
 					// the resource containing the entity declaration as the base
 					// URI [RFC2396]."
 					// So I'm falling a bit short here.
-					theURI = theEntity.getSystemId();
+					theURI = theEntity->getSystemId();
 
 					if(isEmpty(theURI) == true)
 					{
-						theURI = theEntity.getPublicId();
+						theURI = theEntity->getPublicId();
 					}
 					else
 					{

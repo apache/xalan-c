@@ -60,16 +60,15 @@
 
 
 
-#include <dom/DOM_Node.hpp>
-#include <dom/DOM_Document.hpp>
-#include <dom/DOM_Element.hpp>
-#include <dom/DOM_NodeList.hpp>
+#include <XalanDOM/XalanNode.hpp>
+#include <XalanDOM/XalanDocument.hpp>
+#include <XalanDOM/XalanElement.hpp>
+#include <XalanDOM/XalanNodeList.hpp>
 #include <framework/URLInputSource.hpp>
 #include <util/PlatformUtils.hpp>
 
 
 
-#include <Include/DOMHelper.hpp>
 #include <PlatformSupport/DirectoryEnumerator.hpp>
 #include <PlatformSupport/DOMStringHelper.hpp>
 #include <DOMSupport/DOMSupportDefault.hpp>
@@ -97,11 +96,11 @@ const XObject*
 ExecuteXPath(
 			XPathProcessor&			theXPathProcessor,
 			XPath&					theXPath,
-			const DOMString&		theXPathString,
+			const XalanDOMString&	theXPathString,
 			XPathEnvSupport&		theXPathEnvSupport,
 			XPathSupport&			theXPathSupport,
 			XObjectFactory&			theXObjectFactory,
-			const DOM_Node& 		theContextNode,
+			XalanNode* 				theContextNode,
 			const PrefixResolver&	thePrefixResolver,
 			const NodeRefListBase& 	theContextNodeList)
 {
@@ -130,13 +129,13 @@ bool
 TestNumericResult(
 			XPathProcessor&			theXPathProcessor,
 			XPath&					theXPath,
-			const DOMString&		theXPathString,
+			const XalanDOMString&		theXPathString,
 			PrintWriter&			thePrintWriter,
 			double					theExpectedResult,
 			XPathEnvSupport&		theXPathEnvSupport,
 			XPathSupport&			theXPathSupport,
 			XObjectFactory&			theXObjectFactory,
-			const DOM_Node& 		theContextNode,
+			XalanNode* 				theContextNode,
 			const PrefixResolver&	thePrefixResolver,
 			const NodeRefListBase& 	theContextNodeList)
 {
@@ -153,23 +152,23 @@ TestNumericResult(
 					 thePrefixResolver,
 					 theContextNodeList);
 
-	thePrintWriter.print(XMLStrL("Execution of XPath "));
+	thePrintWriter.print(XALAN_STATIC_UCODE_STRING("Execution of XPath "));
 	thePrintWriter.print(theXPathString);
 
 	if (theResult->num() == theExpectedResult)
 	{
-		thePrintWriter.println(XMLStrL(" succeeded."));
-		thePrintWriter.print(XMLStrL("The result was "));
+		thePrintWriter.println(XALAN_STATIC_UCODE_STRING(" succeeded."));
+		thePrintWriter.print(XALAN_STATIC_UCODE_STRING("The result was "));
 		thePrintWriter.println(theResult->num());
 	}
 	else
 	{
 		fError = true;
 
-		thePrintWriter.println(XMLStrL(" failed!"));
-		thePrintWriter.print(XMLStrL("The expected result was "));
+		thePrintWriter.println(XALAN_STATIC_UCODE_STRING(" failed!"));
+		thePrintWriter.print(XALAN_STATIC_UCODE_STRING("The expected result was "));
 		thePrintWriter.println(theExpectedResult);
-		thePrintWriter.print(XMLStrL("The actual result was "));
+		thePrintWriter.print(XALAN_STATIC_UCODE_STRING("The actual result was "));
 		thePrintWriter.println(theResult->num());
 	}
 
@@ -182,13 +181,13 @@ bool
 TestStringResult(
 			XPathProcessor&			theXPathProcessor,
 			XPath&					theXPath,
-			const DOMString&		theXPathString,
+			const XalanDOMString&	theXPathString,
 			PrintWriter&			thePrintWriter,
-			const DOMString&		theExpectedResult,
+			const XalanDOMString&	theExpectedResult,
 			XPathEnvSupport&		theXPathEnvSupport,
 			XPathSupport&			theXPathSupport,
 			XObjectFactory&			theXObjectFactory,
-			const DOM_Node& 		theContextNode,
+			XalanNode* 				theContextNode,
 			const PrefixResolver&	thePrefixResolver,
 			const NodeRefListBase& 	theContextNodeList)
 {
@@ -205,27 +204,27 @@ TestStringResult(
 					 thePrefixResolver,
 					 theContextNodeList);
 
-	thePrintWriter.print(XMLStrL("Execution of XPath "));
+	thePrintWriter.print(XALAN_STATIC_UCODE_STRING("Execution of XPath "));
 	thePrintWriter.print(theXPathString);
 
 	if (equals(theResult->str(), theExpectedResult) == true)
 	{
-		thePrintWriter.println(XMLStrL(" succeeded."));
-		thePrintWriter.print(XMLStrL("The result was \""));
+		thePrintWriter.println(XALAN_STATIC_UCODE_STRING(" succeeded."));
+		thePrintWriter.print(XALAN_STATIC_UCODE_STRING("The result was \""));
 		thePrintWriter.print(theResult->str());
-		thePrintWriter.println(XMLStrL("\"."));
+		thePrintWriter.println(XALAN_STATIC_UCODE_STRING("\"."));
 	}
 	else
 	{
 		fError = true;
 
-		thePrintWriter.println(XMLStrL(" failed!"));
-		thePrintWriter.print(XMLStrL("The expected result was \""));
+		thePrintWriter.println(XALAN_STATIC_UCODE_STRING(" failed!"));
+		thePrintWriter.print(XALAN_STATIC_UCODE_STRING("The expected result was \""));
 		thePrintWriter.print(theExpectedResult);
-		thePrintWriter.println(XMLStrL("\"."));
-		thePrintWriter.print(XMLStrL("The actual result was \""));
+		thePrintWriter.println(XALAN_STATIC_UCODE_STRING("\"."));
+		thePrintWriter.print(XALAN_STATIC_UCODE_STRING("The actual result was \""));
 		thePrintWriter.print(theResult->str());
-		thePrintWriter.println(XMLStrL("\"."));
+		thePrintWriter.println(XALAN_STATIC_UCODE_STRING("\"."));
 	}
 
 	return fError;
@@ -237,13 +236,13 @@ bool
 TestBooleanResult(
 			XPathProcessor&			theXPathProcessor,
 			XPath&					theXPath,
-			const DOMString&		theXPathString,
+			const XalanDOMString&		theXPathString,
 			PrintWriter&			thePrintWriter,
 			bool					theExpectedResult,
 			XPathEnvSupport&		theXPathEnvSupport,
 			XPathSupport&			theXPathSupport,
 			XObjectFactory&			theXObjectFactory,
-			const DOM_Node& 		theContextNode,
+			XalanNode* 		theContextNode,
 			const PrefixResolver&	thePrefixResolver,
 			const NodeRefListBase& 	theContextNodeList)
 {
@@ -273,27 +272,27 @@ TestBooleanResult(
 		thePrintWriter.println();
 	}
 
-	thePrintWriter.print(XMLStrL("Execution of XPath "));
+	thePrintWriter.print(XALAN_STATIC_UCODE_STRING("Execution of XPath "));
 	thePrintWriter.print(theXPathString);
 
 	if (theResult->boolean() == theExpectedResult)
 	{
-		thePrintWriter.println(XMLStrL(" succeeded."));
+		thePrintWriter.println(XALAN_STATIC_UCODE_STRING(" succeeded."));
 		thePrintWriter.print(("The result was "));
 		thePrintWriter.print(theResult->boolean());
-		thePrintWriter.println(XMLStrL("."));
+		thePrintWriter.println(XALAN_STATIC_UCODE_STRING("."));
 	}
 	else
 	{
 		fError = true;
 
-		thePrintWriter.println(XMLStrL(" failed!"));
-		thePrintWriter.print(XMLStrL("The expected result was \""));
+		thePrintWriter.println(XALAN_STATIC_UCODE_STRING(" failed!"));
+		thePrintWriter.print(XALAN_STATIC_UCODE_STRING("The expected result was \""));
 		thePrintWriter.print(theExpectedResult);
-		thePrintWriter.println(XMLStrL("\"."));
-		thePrintWriter.print(XMLStrL("The actual result was \""));
+		thePrintWriter.println(XALAN_STATIC_UCODE_STRING("\"."));
+		thePrintWriter.print(XALAN_STATIC_UCODE_STRING("The actual result was \""));
 		thePrintWriter.print(theResult->boolean());
-		thePrintWriter.println(XMLStrL("\"."));
+		thePrintWriter.println(XALAN_STATIC_UCODE_STRING("\"."));
 	}
 
 	return fError;
@@ -301,10 +300,10 @@ TestBooleanResult(
 
 
 
-DOM_Document
+XalanDocument*
 ParseXML(
 			XMLParserLiaison&	theLiaison,
-			const DOMString&	theFileName)
+			const XalanDOMString&	theFileName)
 {
 	URLInputSource	theURLInputSource(c_wstr(theFileName));
 
@@ -313,31 +312,29 @@ ParseXML(
 
 
 template<class Source, class Target>
-const Target&
+const Target*
 XalanStaticCast(
-	const Source&	theSource,
-	const Target&	/* theTarget */)
+	const Source*	theSource,
+	const Target*	/* theTarget */)
 {
-	return static_cast<const Target&>(theSource);
+	return static_cast<const Target*>(theSource);
 }
 
 
 
-DOMString
+XalanDOMString
 GetAttributeFromNode(
-			const DOM_Node&		theNode,
-			const DOMString&	theAttributeName)
+			XalanNode*				theNode,
+			const XalanDOMString&	theAttributeName)
 {
-	DOMString	theResult;
+	XalanDOMString	theResult;
 
-	if (theNode.getNodeType() == DOM_Node::ELEMENT_NODE)
+	if (theNode->getNodeType() == XalanNode::ELEMENT_NODE)
 	{
-		const DOM_Element&	theElement =
-//					static_cast<const DOM_Element&>(theNode);
-//					XalanDOMDowncast<DOM_Element>()(theNode);
+		const XalanElement*		theElement =
 					XalanStaticCast(theNode, theElement);
 
-		theResult = theElement.getAttribute(theAttributeName);
+		theResult = theElement->getAttribute(theAttributeName);
 
 		if (0 == theElement)
 		{
@@ -349,25 +346,25 @@ GetAttributeFromNode(
 
 
 
-DOMString
+XalanDOMString
 FindNodeAndGetAttributeValue(
-			const DOM_Node&		theStartNode,
-			const DOMString&	theNodeName,
-			const DOMString&	theAttributeName)
+			XalanNode*				theStartNode,
+			const XalanDOMString&	theNodeName,
+			const XalanDOMString&	theAttributeName)
 {
-	DOMString			theResult;
+	XalanDOMString			theResult;
 
 	NodeNameTreeWalker	theTreeWalker;
 
 	theTreeWalker.findMatchingNodes(theNodeName,
 									theStartNode);
 
-	const std::vector<DOM_Node>&	theMatchingNodes =
+	const std::vector<XalanNode*>&	theMatchingNodes =
 			theTreeWalker.getMatchingNodes();
 
 	if (theMatchingNodes.size() == 1)
 	{
-		const DOM_Node&		theMatchingNode = theMatchingNodes[0];
+		XalanNode* const	theMatchingNode = theMatchingNodes[0];
 
 		if (theMatchingNode != 0)
 		{
@@ -383,32 +380,33 @@ FindNodeAndGetAttributeValue(
 
 bool
 GetXSLInput(
-			XMLParserLiaison&	theLiaison,
-			const DOMString&	theXSLFileURL,
-			DOMString&			theContextNodeMatchPattern,
-			DOMString&			theXPathString)
+			XMLParserLiaison&		theLiaison,
+			const XalanDOMString&	theXSLFileURL,
+			XalanDOMString&			theContextNodeMatchPattern,
+			XalanDOMString&			theXPathString)
 {
-	bool	fResult = false;
+	bool					fResult = false;
 
-	const DOM_Document	theDocument = ParseXML(theLiaison,
-											   theXSLFileURL);
+	XalanDocument* const	theDocument =
+		ParseXML(theLiaison,
+				 theXSLFileURL);
 
 	if (theDocument != 0)
 	{
-		static const DOMString	theContextNodeName(XMLStrL("xsl:for-each"));
-		static const DOMString	theAttributeName(XMLStrL("select"));
+		static const XalanDOMString	theContextNodeName(XALAN_STATIC_UCODE_STRING("xsl:for-each"));
+		static const XalanDOMString	theAttributeName(XALAN_STATIC_UCODE_STRING("select"));
 
 		theContextNodeMatchPattern =
-			 FindNodeAndGetAttributeValue(theDocument,
+			 FindNodeAndGetAttributeValue(theDocument->getDocumentElement(),
 										  theContextNodeName,
 										  theAttributeName);
 
 		if (length(theContextNodeMatchPattern) != 0)
 		{
-			static const DOMString	theSelectNodeName(XMLStrL("xsl:apply-templates"));
+			static const XalanDOMString	theSelectNodeName(XALAN_STATIC_UCODE_STRING("xsl:apply-templates"));
 
 			theXPathString =
-				 FindNodeAndGetAttributeValue(theDocument,
+				 FindNodeAndGetAttributeValue(theDocument->getDocumentElement(),
 											  theSelectNodeName,
 											  theAttributeName);
 			if (length(theXPathString) != 0)
@@ -423,23 +421,23 @@ GetXSLInput(
 
 
 
-DOM_Node
+XalanNode*
 FindContextNode(
 			XPathProcessor&			theXPathProcessor,
 			XPathEnvSupport&		theXPathEnvSupport,
 			XPathSupport&			theXPathSupport,
 			XObjectFactory&			theXObjectFactory,
 			XPathFactory&			theXPathFactory,
-			const DOM_Document&		theDocument,
-			const DOMString&		theContextNodeMatchPattern,
+			XalanDocument*			theDocument,
+			const XalanDOMString&	theContextNodeMatchPattern,
 			PrintWriter&			thePrintWriter)
 {
-	DOM_Node							theResult;
+	XalanNode*							theResult = 0;
 
 	FactoryObjectAutoPointer<XPath>		theXPath(&theXPathFactory,
 												 theXPathFactory.create());
 
-	DOM_Element					theNamespaceContext;
+	XalanElement*				theNamespaceContext = 0;
 	ElementPrefixResolverProxy	thePrefixResolver(theNamespaceContext, theXPathEnvSupport, theXPathSupport);
 	NodeRefList					theContextNodeList;
 
@@ -463,17 +461,17 @@ FindContextNode(
 
 		if (theResultList.getLength() == 0)
 		{
-			thePrintWriter.print(XMLStrL("FindContextNode: Unable to find context node using select \""));
+			thePrintWriter.print(XALAN_STATIC_UCODE_STRING("FindContextNode: Unable to find context node using select \""));
 			thePrintWriter.print(theContextNodeMatchPattern);
-			thePrintWriter.println(XMLStrL("\"."));
-			thePrintWriter.println(XMLStrL("FindContextNode: No nodes matched the pattern."));
+			thePrintWriter.println(XALAN_STATIC_UCODE_STRING("\"."));
+			thePrintWriter.println(XALAN_STATIC_UCODE_STRING("FindContextNode: No nodes matched the pattern."));
 		}
 		else if (theResultList.getLength() != 1)
 		{
-			thePrintWriter.print(XMLStrL("FindContextNode: Unable to find context node using select \""));
+			thePrintWriter.print(XALAN_STATIC_UCODE_STRING("FindContextNode: Unable to find context node using select \""));
 			thePrintWriter.print(theContextNodeMatchPattern);
-			thePrintWriter.println(XMLStrL("\"."));
-			thePrintWriter.println(XMLStrL("FindContextNode: More than one node matched the pattern."));
+			thePrintWriter.println(XALAN_STATIC_UCODE_STRING("\"."));
+			thePrintWriter.println(XALAN_STATIC_UCODE_STRING("FindContextNode: More than one node matched the pattern."));
 		}
 		else
 		{
@@ -482,9 +480,9 @@ FindContextNode(
 	}
 	catch(...)
 	{
-		thePrintWriter.print(XMLStrL("FindContextNode: Error executing match pattern \""));
+		thePrintWriter.print(XALAN_STATIC_UCODE_STRING("FindContextNode: Error executing match pattern \""));
 		thePrintWriter.print(theContextNodeMatchPattern);
-		thePrintWriter.println(XMLStrL("\"."));
+		thePrintWriter.println(XALAN_STATIC_UCODE_STRING("\"."));
 	}
 
 	return theResult;
@@ -500,37 +498,38 @@ TestAxisResult(
 			XObjectFactory&			theXObjectFactory,
 			XMLParserLiaison&		theLiaison,
 			XPathFactory&			theXPathFactory,
-			const DOMString&		theXMLFileURL,
-			const DOMString&		theXSLFileURL,
+			const XalanDOMString&		theXMLFileURL,
+			const XalanDOMString&		theXSLFileURL,
 			PrintWriter&			thePrintWriter)
 {
-	bool	fError = false;
+	bool					fError = false;
 
-	const DOM_Document	theXMLDocument = ParseXML(theLiaison,
-												  theXMLFileURL);
+	XalanDocument* const	theXMLDocument = ParseXML(theLiaison,
+													  theXMLFileURL);
 
 	if (theXMLDocument != 0)
 	{
-		DOMString		theContextNodeMatchPattern;
-		DOMString		theXPathString;
+		XalanDOMString		theContextNodeMatchPattern;
+		XalanDOMString		theXPathString;
 
 		if (GetXSLInput(theLiaison,
 						theXSLFileURL,
 						theContextNodeMatchPattern,
 						theXPathString) == true)
 		{
-			DOM_Node		theContextNode = FindContextNode(theXPathProcessor,
-															 theXPathEnvSupport,
-															 theXPathSupport,
-															 theXObjectFactory,
-															 theXPathFactory,
-															 theXMLDocument,
-															 theContextNodeMatchPattern,
-															 thePrintWriter);
+			XalanNode* const	theContextNode =
+				FindContextNode(theXPathProcessor,
+								theXPathEnvSupport,
+								theXPathSupport,
+								theXObjectFactory,
+								theXPathFactory,
+								theXMLDocument,
+								theContextNodeMatchPattern,
+								thePrintWriter);
 
 			if (theContextNode != 0)
 			{
-				DOM_Element						theNamespaceContext;
+				XalanElement* const				theNamespaceContext = 0;
 				ElementPrefixResolverProxy		thePrefixResolver(theNamespaceContext, theXPathEnvSupport, theXPathSupport);
 				NodeRefList						theContextNodeList;
 
@@ -577,26 +576,28 @@ TestAxisResult(
 
 					if (theLength > 0)
 					{
-						thePrintWriter.print(XMLStrL("<out>"));
+						thePrintWriter.print(XALAN_STATIC_UCODE_STRING("<out>"));
 
 						for (unsigned int i = 0; i < theLength; i++)
 						{
-							thePrintWriter.print(theResultList.item(i).getNodeName());
+							thePrintWriter.print(theResultList.item(i)->getNodeName());
 							thePrintWriter.print(L" ");
 						}
 					}
 
-					thePrintWriter.println(XMLStrL("</out>"));
+					thePrintWriter.println(XALAN_STATIC_UCODE_STRING("</out>"));
 				}
 				catch(...)
 				{
-					thePrintWriter.print(XMLStrL("Execution of XPath "));
+					thePrintWriter.print(XALAN_STATIC_UCODE_STRING("Execution of XPath "));
 					thePrintWriter.print(theXPathString);
-					thePrintWriter.println(XMLStrL(" failed!"));
+					thePrintWriter.println(XALAN_STATIC_UCODE_STRING(" failed!"));
 				}
 			}
 		}
 	}
+
+	theLiaison.reset();
 
 	return fError;
 }
@@ -611,37 +612,39 @@ TestPredicateResult(
 			XObjectFactory&			theXObjectFactory,
 			XMLParserLiaison&		theLiaison,
 			XPathFactory&			theXPathFactory,
-			const DOMString&		theXMLFileURL,
-			const DOMString&		theXSLFileURL,
+			const XalanDOMString&	theXMLFileURL,
+			const XalanDOMString&	theXSLFileURL,
 			PrintWriter&			thePrintWriter)
 {
-	bool	fError = false;
+	bool					fError = false;
 
-	const DOM_Document	theXMLDocument = ParseXML(theLiaison,
-												  theXMLFileURL);
+	XalanDocument* const	theXMLDocument =
+				ParseXML(theLiaison,
+						 theXMLFileURL);
 
 	if (theXMLDocument != 0)
 	{
-		DOMString		theContextNodeMatchPattern;
-		DOMString		theXPathString;
+		XalanDOMString		theContextNodeMatchPattern;
+		XalanDOMString		theXPathString;
 
 		if (GetXSLInput(theLiaison,
 						theXSLFileURL,
 						theContextNodeMatchPattern,
 						theXPathString) == true)
 		{
-			DOM_Node		theContextNode = FindContextNode(theXPathProcessor,
-															 theXPathEnvSupport,
-															 theXPathSupport,
-															 theXObjectFactory,
-															 theXPathFactory,
-															 theXMLDocument,
-															 theContextNodeMatchPattern,
-															 thePrintWriter);
+			XalanNode* const	theContextNode =
+				FindContextNode(theXPathProcessor,
+								theXPathEnvSupport,
+								theXPathSupport,
+								theXObjectFactory,
+								theXPathFactory,
+								theXMLDocument,
+								theContextNodeMatchPattern,
+								thePrintWriter);
 
 			if (theContextNode != 0)
 			{
-				DOM_Element						theNamespaceContext;
+				XalanElement* const				theNamespaceContext = 0;
 				ElementPrefixResolverProxy		thePrefixResolver(theNamespaceContext, theXPathEnvSupport, theXPathSupport);
 				NodeRefList						theContextNodeList;
 
@@ -681,11 +684,11 @@ TestPredicateResult(
 					thePrintWriter.println();
 				}
 
-				DOM_Node		theContextNode = theXMLDocument.getFirstChild().getFirstChild();
+				XalanNode*	theContextNode = theXMLDocument->getFirstChild()->getFirstChild();
 
-				for( ; theContextNode != 0; theContextNode = theContextNode.getNextSibling())
+				for( ; theContextNode != 0; theContextNode = theContextNode->getNextSibling())
 				{
-					if (theContextNode.getNodeType() != DOM_Node::ELEMENT_NODE)
+					if (theContextNode->getNodeType() != XalanNode::ELEMENT_NODE)
 					{
 						continue;
 					}
@@ -709,25 +712,25 @@ TestPredicateResult(
 
 						const unsigned int	theLength = theResultList.getLength();
 
-						thePrintWriter.print(XMLStrL("theResult1->str() == \""));
+						thePrintWriter.print(XALAN_STATIC_UCODE_STRING("theResult1->str() == \""));
 						thePrintWriter.print(theResult1->str());
-						thePrintWriter.print(XMLStrL("\""));
+						thePrintWriter.print(XALAN_STATIC_UCODE_STRING("\""));
 						thePrintWriter.println();
 
 						if (theLength > 0)
 						{
 							for (unsigned int i = 0; i < theLength; i++)
 							{
-								thePrintWriter.print(theResultList.item(i).getNodeName());
+								thePrintWriter.print(theResultList.item(i)->getNodeName());
 								thePrintWriter.println();
 							}
 						}
 					}
 					catch(...)
 					{
-						thePrintWriter.print(XMLStrL("Execution of XPath "));
+						thePrintWriter.print(XALAN_STATIC_UCODE_STRING("Execution of XPath "));
 						thePrintWriter.print(theXPathString);
-						thePrintWriter.println(XMLStrL(" failed!"));
+						thePrintWriter.println(XALAN_STATIC_UCODE_STRING(" failed!"));
 					}
 
 					const XObject* const	theResult2 =
@@ -742,36 +745,36 @@ TestPredicateResult(
 
 						const int	theLength = theResultList.getLength();
 
-						thePrintWriter.print(XMLStrL("theResult2->str() == \""));
+						thePrintWriter.print(XALAN_STATIC_UCODE_STRING("theResult2->str() == \""));
 						thePrintWriter.print(theResult2->str());
-						thePrintWriter.print(XMLStrL("\""));
+						thePrintWriter.print(XALAN_STATIC_UCODE_STRING("\""));
 						thePrintWriter.println();
 
 						if (theLength > 0)
 						{
 							for (int i = 0; i < theLength; i++)
 							{
-								thePrintWriter.print(theResultList.item(i).getNodeName());
+								thePrintWriter.print(theResultList.item(i)->getNodeName());
 								thePrintWriter.println();
 							}
 						}
 					}
 					catch(...)
 					{
-						thePrintWriter.print(XMLStrL("Execution of XPath "));
+						thePrintWriter.print(XALAN_STATIC_UCODE_STRING("Execution of XPath "));
 						thePrintWriter.print(theXPathString);
-						thePrintWriter.println(XMLStrL(" failed!"));
+						thePrintWriter.println(XALAN_STATIC_UCODE_STRING(" failed!"));
 					}
 
 					if (theResult1->equals(*theResult2) == true)
 					{
-						thePrintWriter.print(XMLStrL("theResult1 is equal to theResult2"));
+						thePrintWriter.print(XALAN_STATIC_UCODE_STRING("theResult1 is equal to theResult2"));
 						thePrintWriter.println();
-						thePrintWriter.print(XMLStrL("theContextNode.getNodeName() == \""));
-						thePrintWriter.print(theContextNode.getNodeName());
-						thePrintWriter.print(XMLStrL("\"  theContextNode.getNodeValue() == \""));
-						thePrintWriter.print(theContextNode.getNodeValue());
-						thePrintWriter.println(XMLStrL("\""));
+						thePrintWriter.print(XALAN_STATIC_UCODE_STRING("theContextNode->getNodeName() == \""));
+						thePrintWriter.print(theContextNode->getNodeName());
+						thePrintWriter.print(XALAN_STATIC_UCODE_STRING("\"  theContextNode->getNodeValue() == \""));
+						thePrintWriter.print(theContextNode->getNodeValue());
+						thePrintWriter.println(XALAN_STATIC_UCODE_STRING("\""));
 					}
 				}
 			}
@@ -790,6 +793,8 @@ const char* const	theNumericTestInput[] =
 	"0 + 0",
 	"1 div 2",
 	"1 * 0.25",
+	"3 * 3 * 3",
+	"9 div 3 div 3",
 	0
 };
 
@@ -802,6 +807,8 @@ const double	theNumericTestExpectedOutput[] =
 	0,
 	0.5,
 	0.25,
+	27,
+	1,
 	0	// This is a dummy entry and should be last.
 };
 
@@ -832,8 +839,8 @@ TestNumericResults(
 						  theXPathEnvSupport,
 						  theXPathSupport,
 						  theXObjectFactory,
-						  DOM_Node(),
-						  ElementPrefixResolverProxy(DOM_Element(), theXPathEnvSupport, theXPathSupport),
+						  0,
+						  ElementPrefixResolverProxy(0, theXPathEnvSupport, theXPathSupport),
 						  NodeRefList());
 	}
 }
@@ -953,8 +960,8 @@ TestStringResults(
 						 theXPathEnvSupport,
 						 theXPathSupport,
 						 theXObjectFactory,
-						 DOM_Node(),
-						 ElementPrefixResolverProxy(DOM_Element(), theXPathEnvSupport, theXPathSupport),
+						 0,
+						 ElementPrefixResolverProxy(0, theXPathEnvSupport, theXPathSupport),
 						 NodeRefList());
 	}
 }
@@ -994,7 +1001,11 @@ const char* const	theBooleanTestInput[] =
 	"56983 >= 56983",
 	"460983 >= 1500000",
 	"67594876 div 0 >= 576849",
+
 	"1465787676 >= 5 div 0",
+	"-1465787676 >= -5 div 0",
+	"-1679 < -87 div 0",
+
 	"1 = 2 = 0",
 	"1 = 2 != 0",
 
@@ -1036,7 +1047,11 @@ const bool	theBooleanTestExpectedOutput[] =
 	true,
 	false,
 	true,
+
 	false,
+	true,
+	false,
+
 	true,
 	false,
 
@@ -1070,18 +1085,18 @@ TestBooleanResults(
 						  theXPathEnvSupport,
 						  theXPathSupport,
 						  theXObjectFactory,
-						  DOM_Node(),
-						  ElementPrefixResolverProxy(DOM_Element(), theXPathEnvSupport, theXPathSupport),
+						  0,
+						  ElementPrefixResolverProxy(0, theXPathEnvSupport, theXPathSupport),
 						  NodeRefList());
 	}
 }
 
 
 
-DOMString
-GetXSLFileName(const DOMString&		theXMLFileName)
+XalanDOMString
+GetXSLFileName(const XalanDOMString&		theXMLFileName)
 {
-	DOMString	theResult;
+	XalanDOMString	theResult;
 
 	int			thePeriodIndex = -1;
 
@@ -1103,7 +1118,7 @@ GetXSLFileName(const DOMString&		theXMLFileName)
 							  0,
 							  thePeriodIndex + 1);
 
-		theResult += XMLStrL("xsl");
+		theResult += XALAN_STATIC_UCODE_STRING("xsl");
 	}
 
 	return theResult;
@@ -1119,15 +1134,15 @@ TestAxes(
 			XPathEnvSupport&	theXPathEnvSupport,
 			XPathSupport&		theXPathSupport,
 			XMLParserLiaison&	theLiaison,
-			const DOMString&	theDirectory,
+			const XalanDOMString&	theDirectory,
 			PrintWriter&		thePrintWriter)
 {
-	const DOMString		theProtocol(XMLStrL("file://"));
-	const DOMString		theBaseURL = theProtocol + theDirectory;
-	const DOMString		theSearchSpecification(theDirectory);
-	const DOMString		theXMLSuffix(XMLStrL(".xml"));
+	const XalanDOMString		theProtocol(XALAN_STATIC_UCODE_STRING("file://"));
+	const XalanDOMString		theBaseURL = theProtocol + theDirectory;
+	const XalanDOMString		theSearchSpecification(theDirectory);
+	const XalanDOMString		theXMLSuffix(XALAN_STATIC_UCODE_STRING(".xml"));
 
-	typedef std::vector<DOMString>	FileNameVectorType;
+	typedef std::vector<XalanDOMString>	FileNameVectorType;
 
 	DirectoryEnumeratorFunctor<FileNameVectorType>	theEnumerator;
 
@@ -1143,10 +1158,10 @@ TestAxes(
 		if (endsWith(theFiles[i], theXMLSuffix) == true)
 		{
 			// Create a fully qualified URL specification...
-			const DOMString		theXMLFileName = theBaseURL + theFiles[i];
+			const XalanDOMString		theXMLFileName = theBaseURL + theFiles[i];
 
 			// Get the name of the corresponding XSL file...
-			const DOMString		theXSLFileName = GetXSLFileName(theXMLFileName);
+			const XalanDOMString		theXSLFileName = GetXSLFileName(theXMLFileName);
 
 			FactoryObjectAutoPointer<XPath>		theXPath(&theXPathFactory,
 														 theXPathFactory.create());
@@ -1203,7 +1218,7 @@ RunTests(
 		     theXPathEnvSupport,
 			 theXPathSupport,
 			 theLiaison,
-			 XMLStrL("/testsuite/conf/Axes/"),
+			 XALAN_STATIC_UCODE_STRING("/testsuite/conf/Axes/"),
 			 thePrintWriter);
 }
 
@@ -1233,6 +1248,24 @@ main(int			/* argc */,
 		     theXPathSupport,
 			 theLiaison,
 			 thePrintWriter);
+
+	const XalanDOMChar* const	theFirstString =
+		XALAN_STATIC_UCODE_STRING("This is a long string for substrings.");
+
+	const XalanDOMChar* const	theSecondString =
+		XALAN_STATIC_UCODE_STRING("This is an even longer string for substrings.  Boy isn't this fun!");
+
+	const XalanDOMString		theFirstDOMString(substring(theFirstString, 0, length(theFirstString)));
+	const XalanDOMString		theSecondDOMString(substring(theFirstString, 0));
+
+	const XalanDOMString		theThirdDOMString(substring(theFirstString, 5));
+	const XalanDOMString		theFourthDOMString(substring(theFirstString, 1));
+	const XalanDOMString		theFifthDOMString(substring(theFirstString, length(theFirstString)));
+
+	const XalanDOMString		theSixthDOMString(substring(theSecondString, 10, 20));
+
+	const unsigned int			theFirstIndex = indexOf(theFirstString, 'l');
+	const unsigned int			theSecondIndex = lastIndexOf(theSecondString, 'o');
 
 	return 0;
 }

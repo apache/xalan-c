@@ -67,7 +67,7 @@
 
 
 
-#include <dom/DOMString.hpp>
+#include <XalanDOM/XalanDOMString.hpp>
 
 
 
@@ -100,7 +100,7 @@ public:
 			XPathEnvSupport&		theXPathEnvSupport,
 			XPathSupport&			theXPathSupport,
 			XObjectFactory&			theXObjectFactory,
-			const DOM_Node&			theCurrentNode = DOM_Node(),
+			XalanNode*				theCurrentNode = 0,
 			const NodeRefListBase&	theContextNodeList = NodeRefList(),
 			const PrefixResolver*	thePrefixResolver = 0);
 
@@ -110,31 +110,31 @@ public:
 
 	// These interfaces are inherited from XPathExecutionContext...
 
-	virtual DOM_Node
+	virtual XalanNode*
 	getCurrentNode() const;
 
 	virtual void
-	setCurrentNode(const DOM_Node&	theCurrentNode);
+	setCurrentNode(XalanNode*		theCurrentNode);
 
 	virtual XObjectFactory&
 	getXObjectFactory() const;
 
-	virtual DOMString
-	getNamespaceOfNode(const DOM_Node&	n) const;
+	virtual XalanDOMString
+	getNamespaceOfNode(const XalanNode&		n) const;
 
-	virtual DOMString
-	getLocalNameOfNode(const DOM_Node&	n) const;
+	virtual XalanDOMString
+	getLocalNameOfNode(const XalanNode&		n) const;
 
-	virtual DOM_Node
-	getParentOfNode(const DOM_Node&	n) const;
+	virtual XalanNode*
+	getParentOfNode(const XalanNode&	n) const;
 
-	virtual DOMString
-	getNodeData(const DOM_Node&	n) const;
+	virtual XalanDOMString
+	getNodeData(const XalanNode&	n) const;
 
-	virtual DOM_Element
+	virtual XalanElement*
 	getElementByID(
-			const DOMString&		id,
-			const DOM_Document&		doc) const;
+			const XalanDOMString&	id,
+			const XalanDocument&	doc) const;
 
 	virtual const NodeRefListBase&
 	getContextNodeList() const;
@@ -146,31 +146,31 @@ public:
 	getContextNodeListLength() const;
 
 	virtual int
-	getContextNodeListPosition(const DOM_Node&	contextNode) const;
+	getContextNodeListPosition(const XalanNode&		contextNode) const;
 
 	virtual bool
 	functionAvailable(
-			const DOMString&	theNamespace, 
-			const DOMString&	extensionName) const;
+			const XalanDOMString&	theNamespace, 
+			const XalanDOMString&	extensionName) const;
 
 	virtual XObject*
 	extFunction(
-			const DOMString&				theNamespace,
-			const DOMString&				extensionName, 
+			const XalanDOMString&			theNamespace,
+			const XalanDOMString&			extensionName, 
 			const std::vector<XObject*>&	argVec);
 
 	virtual XLocator*
-	getXLocatorFromNode(const DOM_Node&		node) const;
+	getXLocatorFromNode(const XalanNode*	node) const;
 
 	virtual void
 	associateXLocatorToNode(
-			const DOM_Node&		node,
+			const XalanNode*	node,
 			XLocator*			xlocator);
 
-	virtual DOM_Document
+	virtual XalanDocument*
 	parseXML(
-			const DOMString&	urlString,
-			const DOMString&	base) const;
+			const XalanDOMString&	urlString,
+			const XalanDOMString&	base) const;
 
 	virtual MutableNodeRefList
 	createMutableNodeRefList() const;
@@ -180,27 +180,27 @@ public:
 
 	virtual const NodeRefListBase*
 	getNodeSetByKey(
-			const DOM_Node&		doc,
-			const DOMString&	name,
-			const DOMString&	ref,
-			const DOM_Element&	nscontext);
+			const XalanNode&		doc,
+			const XalanDOMString&	name,
+			const XalanDOMString&	ref,
+			const XalanElement&		nscontext);
 
 	virtual const NodeRefListBase*
 	getNodeSetByKey(
-			const DOM_Node&			doc,
-			const DOMString&		name,
-			const DOMString&		ref);
+			const XalanNode&			doc,
+			const XalanDOMString&		name,
+			const XalanDOMString&		ref);
 
 	virtual const NodeRefListBase*
 	getNodeSetByKey(
-			const DOM_Node&			doc,
-			const DOMString&		name,
-			const DOMString&		ref,
+			const XalanNode&		doc,
+			const XalanDOMString&	name,
+			const XalanDOMString&	ref,
 			const PrefixResolver&	resolver);
 
 	virtual XObject*
 	getVariable(
-			const QName&			name) const;
+			const QName&	name) const;
 
 	virtual const PrefixResolver*
 	getPrefixResolver() const;
@@ -208,19 +208,19 @@ public:
 	virtual void
 	setPrefixResolver(const PrefixResolver*		thePrefixResolver);
 
-	virtual DOMString
-	getNamespaceForPrefix(const DOMString&	prefix) const;
+	virtual XalanDOMString
+	getNamespaceForPrefix(const XalanDOMString&		prefix) const;
 
-	virtual DOMString
-	findURIFromDoc(const DOM_Document&	owner) const;
+	virtual XalanDOMString
+	findURIFromDoc(const XalanDocument*		owner) const;
 
-	virtual DOMString
+	virtual XalanDOMString
 	getUnparsedEntityURI(
-			const DOMString&		theName,
-			const DOM_Document&		theDocument) const;
+			const XalanDOMString&		theName,
+			const XalanDocument&		theDocument) const;
 
 	virtual bool
-	shouldStripSourceNode(const DOM_Node&	node) const;
+	shouldStripSourceNode(const XalanNode&	node) const;
 
 	virtual bool
 	getThrowFoundIndex() const;
@@ -229,39 +229,42 @@ public:
 	setThrowFoundIndex(bool 	fThrow);
 
 	virtual void
-	setCurrentPattern(const DOMString&	thePattern);
+	setCurrentPattern(const XalanDOMString&		thePattern);
 
-	virtual DOMString
+	virtual XalanDOMString
 	getCurrentPattern() const;
 
-	virtual DOM_Document
-	getSourceDocument(const DOMString&	theURI) const;
+	virtual XalanDocument*
+	getSourceDocument(const XalanDOMString&		theURI) const;
 
 	virtual void
 	setSourceDocument(
-			const DOMString&		theURI,
-			const DOM_Document&		theDocument);
+			const XalanDOMString&	theURI,
+			XalanDocument*			theDocument);
 
+
+	virtual const DecimalFormatSymbols*
+	getDecimalFormatSymbols(const XalanDOMString&	name);
 
 	// These interfaces are inherited from ExecutionContext...
 
 	virtual void
 	error(
-			const DOMString&	msg,
-			const DOM_Node& 	sourceNode = DOM_Node(),
-			const DOM_Node&		styleNode = DOM_Node()) const;
+			const XalanDOMString&	msg,
+			const XalanNode* 		sourceNode = 0,
+			const XalanNode*		styleNode = 0) const;
 
 	virtual void
 	warn(
-			const DOMString&	msg,
-			const DOM_Node& 	sourceNode = DOM_Node(),
-			const DOM_Node&		styleNode = DOM_Node()) const;
+			const XalanDOMString&	msg,
+			const XalanNode* 		sourceNode = 0,
+			const XalanNode*		styleNode = 0) const;
 
 	virtual void
 	message(
-			const DOMString&	msg,
-			const DOM_Node& 	sourceNode = DOM_Node(),
-			const DOM_Node&		styleNode = DOM_Node()) const;
+			const XalanDOMString&	msg,
+			const XalanNode* 		sourceNode = 0,
+			const XalanNode*		styleNode = 0) const;
 
 private:
 
@@ -271,7 +274,7 @@ private:
 
 	XObjectFactory&			m_xobjectFactory;
 
-	DOM_Node				m_currentNode;
+	XalanNode*				m_currentNode;
 
 	MutableNodeRefList		m_contextNodeList;
 
@@ -279,7 +282,7 @@ private:
 
 	bool					m_throwFoundIndex;
 
-	DOMString				m_currentPattern;
+	XalanDOMString			m_currentPattern;
 };
 
 

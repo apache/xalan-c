@@ -95,7 +95,7 @@ public:
 	virtual XObject*
 	execute(
 			XPathExecutionContext&			executionContext,
-			const DOM_Node&					context,
+			XalanNode*						context,
 			int								/* opPos */,
 			const XObjectArgVectorType&		args)
 	{
@@ -110,6 +110,11 @@ public:
 		{
 			theValue = args[0]->num();
 		}
+		else if (context == 0)
+		{
+			executionContext.error("The number() function requires a non-null context node!",
+								   context);
+		}
 		else
 		{
 			// The XPath standard says that if there are no arguments,
@@ -122,7 +127,7 @@ public:
 
 			// An XObject that contains the context node.
 			FactoryObjectAutoPointer<XObject>		theXObject(&executionContext.getXObjectFactory(),
-															   executionContext.getXObjectFactory().createNodeSet(context));
+															   executionContext.getXObjectFactory().createNodeSet(*context));
 
 			// Get the numeric value of the theXObject...
 			theValue = theXObject->num();

@@ -99,13 +99,13 @@ public:
 	virtual XObject*
 	execute(
 			XPathExecutionContext&			executionContext,
-			const DOM_Node&					context,
+			XalanNode*						context,
 			int								/* opPos */,
 			const XObjectArgVectorType&		args)
 	{
 		if(args.size() != 2)
 		{
-			executionContext.error("The startswith() function takes one argument!",
+			executionContext.error("The starts-with() function takes one argument!",
 								   context);
 		}
 

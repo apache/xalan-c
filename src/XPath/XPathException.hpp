@@ -64,13 +64,16 @@
 
 
 
-#include <dom/DOMString.hpp>
-#include <dom/DOM_Node.hpp>
+#include <XalanDOM/XalanDOMString.hpp>
 
 
 
 // Base class header file.
 #include <PlatformSupport/XSLException.hpp>
+
+
+
+class XalanNode;
 
 
 
@@ -86,15 +89,21 @@ public:
 	 */
 	explicit
 	XPathException(
-			const DOMString&	message = DOMString(),
-			const DOM_Node&		styleNode = DOM_Node());
+			const XalanDOMString&	message = XalanDOMString(),
+			const XalanNode*		styleNode = 0);
 
 	virtual
 	~XPathException();
 
+	const XalanNode*
+	getStyleNode() const
+	{
+		return m_styleNode;
+	}
+
 private:
 
-	const DOM_Node		m_styleNode;
+	const XalanNode*	m_styleNode;
 };
 
 

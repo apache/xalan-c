@@ -64,8 +64,12 @@
 
 
 
-class DOM_Document;
-class DOMString;
+// $$$ ToDo: Necessary while XalanDOMString is a typedef
+#include <XalanDOM/XalanDOMString.hpp>
+
+
+
+class XalanDocument;
 class FormatterListener;
 class PrintWriter;
 
@@ -108,56 +112,54 @@ public:
 	virtual
 	~Formatter();
 
-  /**
-   * Print the result tree.
-	*
-   * @param doc      result tree
-   * @param pw       printWriter to print the contents to
-   * @param resultns value of the result namespace attribute
-   * @param format   true if it should be pretty-printed
-   */
+	/**
+	 * Print the result tree.
+	 *
+	 * @param doc      result tree
+	 * @param pw       printWriter to print the contents to
+	 * @param resultns value of the result namespace attribute
+	 * @param format   true if it should be pretty-printed
+	 */
 	virtual void
 	toMarkup(
-			const DOM_Document&		doc,
+			const XalanDocument&	doc,
 			PrintWriter&			pw,
-			const DOMString&		resultns,
+			const XalanDOMString&	resultns,
 			bool					format) = 0;
 
-  /**
-	* Get the instance of the formatter listener that is associated with this
-	* formatter.
-	*
-   * @return pointer to listener
-   */
+	/**
+	 * Get the instance of the formatter listener that is associated with this
+	 * formatter.
+	 *
+	 * @return pointer to listener
+	 */
 	virtual FormatterListener*
 	getFormatterListener() const = 0;
 
-  /**
-	* Set the instance of the formatter listener that is associated with this
-	* formatter.
-	*
-   * @param pw       printWriter to print the contents to
-   * @param resultns value of the result namespace attribute
-   * @param format   true if it should be pretty-printed
-   */
+	/**
+	 * Set the instance of the formatter listener that is associated with this
+	 * formatter.
+	 *
+	 * @param pw       printWriter to print the contents to
+	 * @param resultns value of the result namespace attribute
+	 * @param format   true if it should be pretty-printed
+	 */
 	virtual void
 	setFormatterListener(
-			PrintWriter&		pw,
-			const DOMString&	resultns,
-			bool				format) = 0;
+			PrintWriter&			pw,
+			const XalanDOMString&	resultns,
+			bool					format) = 0;
 
-  /**
-	* Set the instance of the formatter listener that is associated with this
-	* formatter.
-	*
-   * @param pw       printWriter to print the contents to
-   * @param resultns value of the result namespace attribute
-   * @param format   true if it should be pretty-printed
-   * @param fl       pointer to listener to use
-   */
+	/**
+	 * Set the instance of the formatter listener that is associated with this
+	 * formatter.
+	 *
+	 * @param fl       pointer to listener to use
+	 */
 	virtual void
 	setFormatterListener(FormatterListener*		fl) = 0;
 };
+
 
 
 #endif	// FORMATTER_HEADER_GUARD_1357924680

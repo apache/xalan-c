@@ -90,6 +90,45 @@ struct DeleteFunctor : public std::unary_function<const T*, void>
 };
 
 
+
+template<class T>
+class array_auto_ptr
+{
+public:
+
+	array_auto_ptr(T*	thePointer) :
+		m_pointer(thePointer)
+	{
+	}
+
+	~array_auto_ptr()
+	{
+		delete [] m_pointer;
+	}
+
+	T*
+	get() const
+	{
+		return m_pointer;
+	}
+
+	T*
+	release()
+	{
+		T* const	temp = m_pointer;
+
+		m_pointer = 0;
+
+		return temp;
+	}
+
+private:
+
+	T*	m_pointer;
+};
+
+
+
 #if ! defined(__GNUC__)
 
 /**
@@ -155,7 +194,6 @@ template <class OutputIteratorType, class PairMemberSelectType>
 struct PairIsolatorOutputIterator
 {
 
-// $$$ This doesn't seem to be used anywhere ???
 /*
 #if defined(XALAN_NO_NAMESPACES)
 	typedef output_iterator_tag					iterator_category;
@@ -166,7 +204,6 @@ struct PairIsolatorOutputIterator
 
 	typedef typename PairMemberSelectType::value_type        value_type;
 
-// $$$ This doesn't seem to be used anywhere ???
 /*
 	typedef void								difference_type;
 	typedef void								pointer;
@@ -261,6 +298,46 @@ struct MapValueDeleteFunctor : public std::unary_function<const typename T::valu
 		delete thePair.second;
 	}
 };
+
+
+
+template<class T>
+MapValueDeleteFunctor<T>
+makeMapValueDeleteFunctor(const T&	/* theMap */)
+{
+	return MapValueDeleteFunctor<T>();
+}
+
+
+
+template <class T>
+#if defined(XALAN_NO_NAMESPACES)
+struct MapKeyDeleteFunctor : public unary_function<const T::value_type&, void>
+#else
+struct MapKeyDeleteFunctor : public std::unary_function<const typename T::value_type&, void>
+#endif
+{
+	/**
+	 * Delete the value object in a map value pair.  The value of the pair must
+	 * be of pointer type.
+	 *
+	 * @param thePair key-value pair
+	 */
+	result_type
+	operator()(argument_type	thePair)
+	{
+		delete thePair.first;
+	}
+};
+
+
+
+template<class T>
+MapKeyDeleteFunctor<T>
+makeMapKeyDeleteFunctor(const T&	/* theMap */)
+{
+	return MapKeyDeleteFunctor<T>();
+}
 
 
 

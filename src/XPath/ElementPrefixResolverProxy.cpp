@@ -59,13 +59,17 @@
 
 
 
+#include <XalanDOM/XalanElement.hpp>
+
+
+
 #include "XPathEnvSupport.hpp"
 #include "XPathSupport.hpp"
 
 
 
 ElementPrefixResolverProxy::ElementPrefixResolverProxy(
-			const DOM_Element&		namespaceContext,
+			const XalanElement*		namespaceContext,
 			const XPathEnvSupport&	envSupport,
 			const XPathSupport& 	support) :
 	m_namespaceContext(namespaceContext),
@@ -82,16 +86,30 @@ ElementPrefixResolverProxy::~ElementPrefixResolverProxy()
 
 
 
-DOMString
-ElementPrefixResolverProxy::getNamespaceForPrefix(const DOMString&	prefix) const
+XalanDOMString
+ElementPrefixResolverProxy::getNamespaceForPrefix(const XalanDOMString&		prefix) const
 {
-	return m_support.getNamespaceForPrefix(prefix, m_namespaceContext);
+	if (m_namespaceContext == 0)
+	{
+		return XalanDOMString();
+	}
+	else
+	{
+		return m_support.getNamespaceForPrefix(prefix, *m_namespaceContext);
+	}
 }
 
 
 
-DOMString
+XalanDOMString
 ElementPrefixResolverProxy::getURI() const
 {
-	return m_envSupport.findURIFromDoc(m_namespaceContext.getOwnerDocument());
+	if (m_namespaceContext == 0)
+	{
+		return XalanDOMString();
+	}
+	else
+	{
+		return m_envSupport.findURIFromDoc(m_namespaceContext->getOwnerDocument());
+	}
 }

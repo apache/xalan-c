@@ -64,8 +64,7 @@
 
 
 
-#include <util/Janitor.hpp>
-#include <util/XMLString.hpp>
+#include "DOMStringHelper.hpp"
 
 
 
@@ -258,15 +257,11 @@ AttributeListImpl::getType(const XMLCh* const name) const
 
 
 
+
 const XMLCh*
 AttributeListImpl::getValue(const char* const name) const
 {
-	XMLCh* const	theTranscodedName =
-		XMLString::transcode(name);
-
-	ArrayJanitor<XMLCh>	theJanitor(theTranscodedName);
-
-	return getValue(theTranscodedName);
+	return getValue(MakeXalanDOMCharVector(name).begin());
 }
 
 
@@ -300,10 +295,11 @@ AttributeListImpl::clear()
 #if !defined(XALAN_NO_NAMESPACES)
 	using std::for_each;
 #endif
+
 	// Delete all of the objects in the vector.
-	std::for_each(m_AttributeVector.begin(),
-				  m_AttributeVector.end(),
-				  DeleteFunctor<AttributeVectorEntry>());
+	for_each(m_AttributeVector.begin(),
+			 m_AttributeVector.end(),
+			 DeleteFunctor<AttributeVectorEntry>());
 
 	// Clear everything out.
 	m_AttributeVector.clear();
@@ -312,11 +308,28 @@ AttributeListImpl::clear()
 
 
 
+// A convenience function to find the length of a null-terminated
+// array of XMLChs
+static const XMLCh*
+endArray(const XMLCh*	data)
+{
+	const XMLCh*	theEnd = data;
+
+	while(*theEnd)
+	{
+		++theEnd;
+	}
+
+	return theEnd;
+}
+
+
+
 bool
 AttributeListImpl::addAttribute(
-			const XMLCh* const name,
-			const XMLCh* const type,
-			const XMLCh* const value)
+			const XMLCh*	name,
+			const XMLCh*	type,
+			const XMLCh*	value)
 {
 #if !defined(XALAN_NO_NAMESPACES)
 	using std::make_pair;
@@ -333,9 +346,9 @@ AttributeListImpl::addAttribute(
 	if (m_AttributeKeyMap.find(name) == m_AttributeKeyMap.end())
 	{
 		AttributeVectorEntry*	const	theEntry =
-						new AttributeVectorEntry(MakeXMLChVector(name),
-												 MakeXMLChVector(value),
-												 MakeXMLChVector(type));
+						new AttributeVectorEntry(XMLChVectorType(name, endArray(name) + 1),
+												 XMLChVectorType(value, endArray(value) + 1),
+												 XMLChVectorType(type, endArray(type) + 1));
 
 		// Add the new one.
 		m_AttributeVector.push_back(theEntry);
@@ -381,6 +394,9 @@ AttributeListImpl::removeAttribute(const XMLCh* const name)
 					m_AttributeVector.end(),
 					bind1st(equal_to<const AttributeVectorEntry*>(), (*i).second));
 		assert(j != m_AttributeVector.end());
+
+		// Delete it...
+		delete *j;
 
 		// Erase it from the vector.
 		m_AttributeVector.erase(j);

@@ -100,10 +100,10 @@ XNumber::getType() const
 
 
 
-DOMString
+XalanDOMString
 XNumber::getTypeString() const
 {
-	return "#NUMBER";
+	return XALAN_STATIC_UCODE_STRING("#NUMBER");
 }
 
 
@@ -124,7 +124,7 @@ XNumber::boolean() const
 
 
 
-DOMString
+XalanDOMString
 XNumber::str() const
 {
 	return DoubleToDOMString(m_value);

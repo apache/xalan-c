@@ -68,18 +68,15 @@
 
 
 
-#include <dom/DOM_Node.hpp>
-#include <dom/DOM_Document.hpp>
+#include <XalanDOM/XalanElement.hpp>
+#include <XalanDOM/XalanNode.hpp>
+#include <XalanDOM/XalanDocument.hpp>
 
 
 
 // Base class header files...
 #include <XPath/Function.hpp>
 #include <XPath/XObjectTypeCallback.hpp>
-
-
-
-#include <Include/DOMHelper.hpp>
 
 
 
@@ -119,7 +116,7 @@ public:
 	virtual XObject*
 	execute(
 			XPathExecutionContext&			executionContext,
-			const DOM_Node&					context,
+			XalanNode*						context,
 			int								/* opPos */,
 			const XObjectArgVectorType&		args)
 	{
@@ -128,19 +125,25 @@ public:
 			executionContext.error("The id() function takes one argument!",
 								   context);
 		}
+		else if (context == 0)
+		{
+			executionContext.error("The id() function requires a non-null context node!",
+								   context);
+		}
 
 		// OK, reset the data members...
 		m_executionContext = &executionContext;
 
-		m_resultString = 0;
+		clear(m_resultString);
 
 		// Do the callback to get the data.
 		args[0]->ProcessXObjectTypeCallback(*this);
 
 		// Get the context document, so we can search for nodes.
-		DOM_Document		theDocContext = context.getNodeType() == DOM_Node::DOCUMENT_NODE ?
-									reinterpret_cast<const DOM_Document&>(context) :
-									context.getOwnerDocument();
+		const XalanDocument* const	theDocContext = context->getNodeType() == XalanNode::DOCUMENT_NODE ?
+										reinterpret_cast<const XalanDocument*>(context) :
+										context->getOwnerDocument();
+		assert(theDocContext != 0);
 
 		// This list will hold the nodes we find.
 		MutableNodeRefList	theNodeList(executionContext.createMutableNodeRefList());
@@ -157,7 +160,7 @@ public:
 			using std::set;
 #endif
 
-			typedef set<DOMString>	TokenSetType;
+			typedef set<XalanDOMString>		TokenSetType;
 
 			// This set will hold tokens that we've previously found, so
 			// we can avoid looking more than once.
@@ -168,7 +171,7 @@ public:
 			// Parse the result string...
 			while(theTokenizer.hasMoreTokens() == true)
 			{
-				const DOMString		theToken = theTokenizer.nextToken();
+				const XalanDOMString	theToken = theTokenizer.nextToken();
 
 				if (length(theToken) > 0)
 				{
@@ -180,8 +183,8 @@ public:
 					{
 						thePreviousTokens.insert(theToken);
 
-						const DOM_Node	theNode =
-							executionContext.getElementByID(theToken, theDocContext);
+						XalanNode* const	theNode =
+							executionContext.getElementByID(theToken, *theDocContext);
 
 						if (theNode != 0)
 						{
@@ -223,8 +226,8 @@ public:
 	}
 
 	virtual void
-	String(const XObject&		theXObject,
-		   const DOMString&		/* theValue */)
+	String(const XObject&			theXObject,
+		   const XalanDOMString&	/* theValue */)
 	{
 		m_resultString = theXObject.str();
 	}
@@ -253,15 +256,15 @@ public:
 
 		for (unsigned int i = 0 ; i < theNodeCount; i++)
 		{
-			m_resultString += m_executionContext->getNodeData(theValue.item(i));
+			m_resultString += m_executionContext->getNodeData(*theValue.item(i));
 
 			m_resultString += " ";
 		}
 	}
 
 	virtual void
-	Unknown(const XObject&		/* theObject */,
-			const DOMString&	/* theName */)
+	Unknown(const XObject&			/* theObject */,
+			const XalanDOMString&	/* theName */)
 	{
 	}
 
@@ -281,9 +284,9 @@ private:
 
 
 	// Data members...
-	XPathExecutionContext*		m_executionContext;
+	XPathExecutionContext*	m_executionContext;
 
-	DOMString					m_resultString;
+	XalanDOMString			m_resultString;
 };
 
 

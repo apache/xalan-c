@@ -98,18 +98,18 @@ public:
 
 	// If the length is UINT_MAX, then the array is assumed to be null-terminated.
 	virtual void
-	write(const XMLCh*	s,
+	write(const XalanDOMChar*	s,
 		  unsigned int	theOffset = 0,
 		  unsigned int	theLength = UINT_MAX);
 
 	virtual void
-	write(XMLCh		c);
+	write(XalanDOMChar		c);
 
 	// If the length is UINT_MAX, then the entire string is printed.
 	virtual void
-	write(const DOMString&	s,
-		  unsigned int	theOffset = 0,
-		  unsigned int	theLength = UINT_MAX);
+	write(const XalanDOMString&		s,
+		  unsigned int				theOffset = 0,
+		  unsigned int				theLength = UINT_MAX);
 
 	virtual void
 	print(bool	b);
@@ -122,8 +122,8 @@ public:
 		  unsigned int	theLength = UINT_MAX);
 
 	virtual void
-	print(const XMLCh*	s,
-		  unsigned int	theLength = UINT_MAX);
+	print(const XalanDOMChar*	s,
+		  unsigned int			theLength = UINT_MAX);
 
 	virtual void
 	print(double	d);
@@ -135,7 +135,7 @@ public:
 	print(long	l);
 
 	virtual void
-	print(const DOMString&	s);
+	print(const XalanDOMString&		s);
 
 	virtual void
 	println();
@@ -151,8 +151,8 @@ public:
 			unsigned int	theLength = UINT_MAX);
 
 	virtual void
-	println(const XMLCh*	s,
-			unsigned int	theLength = UINT_MAX);
+	println(const XalanDOMChar*		s,
+			unsigned int			theLength = UINT_MAX);
 
 	virtual void
 	println(double	x);
@@ -164,7 +164,7 @@ public:
 	println(long	x);
 
 	virtual void
-	println(const DOMString&	s);
+	println(const XalanDOMString&	s);
 
 private:
 

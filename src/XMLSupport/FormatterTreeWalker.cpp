@@ -60,18 +60,14 @@
 
 
 // Xerces header files...
-#include <dom/DOM_Node.hpp>
-#include <dom/DOM_Comment.hpp>
-#include <dom/DOM_Document.hpp>
-#include <dom/DOM_DocumentFragment.hpp>
-#include <dom/DOM_NamedNodeMap.hpp>
-#include <dom/DOM_ProcessingInstruction.hpp>
-#include <dom/DOM_Text.hpp>
-
-
-
-// XSL4C header files.
-#include <Include/DOMHelper.hpp>
+#include <XalanDOM/XalanNode.hpp>
+#include <XalanDOM/XalanComment.hpp>
+#include <XalanDOM/XalanDocument.hpp>
+#include <XalanDOM/XalanDocumentFragment.hpp>
+#include <XalanDOM/XalanElement.hpp>
+#include <XalanDOM/XalanNamedNodeMap.hpp>
+#include <XalanDOM/XalanProcessingInstruction.hpp>
+#include <XalanDOM/XalanText.hpp>
 
 
 
@@ -100,76 +96,99 @@ FormatterTreeWalker::~FormatterTreeWalker()
 
 
 void
-FormatterTreeWalker::startNode(const DOM_Node&	node)
+FormatterTreeWalker::startNode(const XalanNode*		node)
 {
-	switch(node.getNodeType())
-	{
-	case DOM_Node::COMMENT_NODE:
-		{
-			const DOM_Comment&	theCommentNode =
-				static_cast<const DOM_Comment&>(node);
+	assert(node != 0);
 
-			m_formatterListener.comment(c_wstr(theCommentNode.getData()));
+	switch(node->getNodeType())
+	{
+	case XalanNode::COMMENT_NODE:
+		{
+			const XalanComment*	theCommentNode =
+#if defined(XALAN_OLD_STYLE_CASTS)
+				(const XalanComment*)node;
+#else
+				static_cast<const XalanComment*>(node);
+#endif
+
+			m_formatterListener.comment(c_wstr(theCommentNode->getData()));
 		}
 		break;
 
-	case DOM_Node::DOCUMENT_FRAGMENT_NODE:
+	case XalanNode::DOCUMENT_FRAGMENT_NODE:
 		// ??
 		break;
 
-	case DOM_Node::DOCUMENT_NODE:
+	case XalanNode::DOCUMENT_NODE:
 		m_formatterListener.startDocument();
 		break;
 
-	case DOM_Node::ELEMENT_NODE:
+	case XalanNode::ELEMENT_NODE:
 		{
-			const DOM_Element&	theElementNode =
-				static_cast<const DOM_Element&>(node);
+			const XalanElement*	theElementNode =
+#if defined(XALAN_OLD_STYLE_CASTS)
+				(const XalanElement*)node;
+#else
+				static_cast<const XalanElement*>(node);
+#endif
 
-			DOM_NamedNodeMap	atts = theElementNode.getAttributes();
+			const XalanNamedNodeMap*	atts = theElementNode->getAttributes();
+			assert(atts != 0);
 
-			NamedNodeMapAttributeList	theAttributeList(atts);
+			NamedNodeMapAttributeList	theAttributeList(*atts);
 
-			m_formatterListener.startElement(c_wstr(theElementNode.getNodeName()),
+			m_formatterListener.startElement(c_wstr(theElementNode->getNodeName()),
 											 theAttributeList);
 		}
 		break;
 
-	case DOM_Node::PROCESSING_INSTRUCTION_NODE:
+	case XalanNode::PROCESSING_INSTRUCTION_NODE:
 		{
-			const DOM_ProcessingInstruction&	thePI =
-				static_cast<const DOM_ProcessingInstruction&>(node);
+			const XalanProcessingInstruction*	thePI =
+#if defined(XALAN_OLD_STYLE_CASTS)
+				(const XalanProcessingInstruction*)node;
+#else
+				static_cast<const XalanProcessingInstruction*>(node);
+#endif
 
-			m_formatterListener.processingInstruction(c_wstr(thePI.getNodeName()),
-													  c_wstr(thePI.getData()));
+			m_formatterListener.processingInstruction(c_wstr(thePI->getNodeName()),
+													  c_wstr(thePI->getData()));
 		}
 		break;
 
-	case DOM_Node::CDATA_SECTION_NODE:
+	case XalanNode::CDATA_SECTION_NODE:
 		{
-			const DOM_Text&	theTextNode =
-				static_cast<const DOM_Text&>(node);
+			const XalanText*	theTextNode =
+#if defined(XALAN_OLD_STYLE_CASTS)
+				(const XalanText*)node;
+#else
+				static_cast<const XalanText*>(node);
+#endif
 
-			const DOMString		data = theTextNode.getData();
+			const XalanDOMString	data = theTextNode->getData();
 
 			m_formatterListener.cdata(c_wstr(data),
 									  length(data));
 		}
 		break;
 
-	case DOM_Node::TEXT_NODE:
+	case XalanNode::TEXT_NODE:
 		{
-			const DOM_Text&	theTextNode =
-				static_cast<const DOM_Text&>(node);
+			const XalanText*	theTextNode =
+#if defined(XALAN_OLD_STYLE_CASTS)
+				(const XalanText*)node;
+#else
+				static_cast<const XalanText*>(node);
+#endif
 
-			const DOMString		data = theTextNode.getData();
+			const XalanDOMString	data = theTextNode->getData();
 
 			m_formatterListener.characters(c_wstr(data), length(data));
 		}
 		break;
 
-	case DOM_Node::ENTITY_REFERENCE_NODE:
-		m_formatterListener.entityReference(c_wstr(node.getNodeName()));
+	case XalanNode::ENTITY_REFERENCE_NODE:
+		m_formatterListener.entityReference(c_wstr(node->getNodeName()));
 		break;
 
 	default:
@@ -181,20 +200,48 @@ FormatterTreeWalker::startNode(const DOM_Node&	node)
 
 
 void
-FormatterTreeWalker::endNode(const DOM_Node&		node)
+FormatterTreeWalker::startNode(XalanNode*	node)
 {
-	switch(node.getNodeType())
+	assert(node != 0);
+
+#if defined(XALAN_OLD_STYLE_CASTS)
+	startNode((const XalanNode*)node);
+#else
+	startNode(const_cast<const XalanNode*>(node));
+#endif
+}
+
+
+
+void
+FormatterTreeWalker::endNode(const XalanNode*	node)
+{
+	assert(node != 0);
+
+	switch(node->getNodeType())
 	{
-	case DOM_Node::DOCUMENT_NODE:
+	case XalanNode::DOCUMENT_NODE:
 		m_formatterListener.endDocument();
 		break;
 
-	case DOM_Node::ELEMENT_NODE:
-		m_formatterListener.endElement(c_wstr(node.getNodeName()));
+	case XalanNode::ELEMENT_NODE:
+		m_formatterListener.endElement(c_wstr(node->getNodeName()));
 		break;
 
 	default:
 		// Do nothing
 		break;
 	}
+}
+
+
+
+void
+FormatterTreeWalker::endNode(XalanNode*		node)
+{
+#if defined(XALAN_OLD_STYLE_CASTS)
+	endNode((const XalanNode*)node);
+#else
+	endNode(const_cast<const XalanNode*>(node));
+#endif
 }

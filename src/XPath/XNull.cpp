@@ -69,7 +69,7 @@ XNull::XNull(
 			XPathEnvSupport&	envSupport,
 			XPathSupport&		support) :
 	XObject(&envSupport),
-	m_resultTreeFrag(new ResultTreeFrag(envSupport.getDOMFactory(),
+	m_resultTreeFrag(new ResultTreeFrag(*envSupport.getDOMFactory(),
 										support))
 {
 }
@@ -81,7 +81,7 @@ XNull::XNull(
 			bool			deepClone) :
 	XObject(source),
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-	m_resultTreeFrag(dynamic_cast<ResultTreeFragBase*>(source.m_resultTreeFrag->clone(deepClone)))
+	m_resultTreeFrag(static_cast<ResultTreeFragBase*>(source.m_resultTreeFrag->cloneNode(deepClone)))
 #else
 	m_resultTreeFrag(source.m_resultTreeFrag->clone(deepClone))
 #endif
@@ -104,10 +104,10 @@ XNull::getType() const
 
 
 
-DOMString
+XalanDOMString
 XNull::getTypeString() const
 {
-	return "#NULL";
+	return XALAN_STATIC_UCODE_STRING("#NULL");
 }
 
 
@@ -128,10 +128,10 @@ XNull::boolean() const
 
 
 
-DOMString
+XalanDOMString
 XNull::str() const
 {
-	return "";
+	return XalanDOMString();
 }
 
 

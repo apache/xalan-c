@@ -68,11 +68,8 @@
 
 
 
-class DOM_NodeList;
-
-
-
 class XPathSupport;
+class XalanNodeList;
 
 
 
@@ -103,11 +100,9 @@ public:
 	 * Construct a mutable node list from another list.
 	 * 
 	 * @param theSource  source list
-	 * @param theSupport XPath support class instance
 	 */
 	explicit
-	MutableNodeRefList(const NodeRefListBase&	theSource,
-					   XPathSupport*			theSupport = 0);
+	MutableNodeRefList(const NodeRefListBase&	theSource);
 
 	virtual
 	~MutableNodeRefList();
@@ -122,7 +117,7 @@ public:
 	operator=(const NodeRefListBase&	theRHS);
 
 	MutableNodeRefList&
-	operator=(const DOM_NodeList&	theRHS);
+	operator=(const XalanNodeList*	theRHS);
 
 	/**
 	 * Add a node at to the list.
@@ -130,7 +125,7 @@ public:
 	 * @param n node to add
 	 */
 	virtual void
-	addNode(const DOM_Node&		n);
+	addNode(XalanNode*	n);
 
 	/**
 	 * Insert a node at a given position.
@@ -140,8 +135,8 @@ public:
 	 */
 	virtual void
 	insertNode(
-			const DOM_Node&		n,
-			unsigned int		pos);
+			XalanNode*		n,
+			unsigned int	pos);
 
 	/**
 	 * Remove a node from the list.
@@ -149,7 +144,7 @@ public:
 	 * @param n   node to insert
 	 */
 	virtual void
-	removeNode(const DOM_Node&	n);
+	removeNode(const XalanNode*		n);
 
 	/**
 	 * Remove a node from the list.
@@ -172,8 +167,8 @@ public:
 	 * @param n   node to insert, default is empty node
 	 */
 	virtual void
-	setNode(unsigned int		pos,
-			const DOM_Node&		n = DOM_Node());
+	setNode(unsigned int	pos,
+			XalanNode*		n = 0);
 
 	/**
 	 * Copy NodeList members into this nodelist, adding in document order.  If
@@ -182,7 +177,7 @@ public:
 	 * @param nodelist node list to add
 	 */
 	virtual void
-	addNodes(const DOM_NodeList&	nodelist);
+	addNodes(const XalanNodeList&	nodelist);
 
 	/**
 	 * Copy NodeList members into this nodelist, adding in document order.  If
@@ -199,7 +194,7 @@ public:
 	 * @param nodelist node list to add
 	 */
 	virtual void
-	addNodesInDocOrder(const DOM_NodeList&	nodelist);
+	addNodesInDocOrder(const XalanNodeList&		nodelist);
   
 	/**
 	 * Copy NodeList members into this nodelist, adding in document order.
@@ -217,27 +212,11 @@ public:
 	 */
 	virtual void
 	addNodeInDocOrder(
-			const DOM_Node&		node,
-			bool				test = false);
+			XalanNode*	node,
+			bool		test = false);
 
-protected:
-
-	virtual bool
-	isNodeAfter(
-			const DOM_Node&		node1,
-			const DOM_Node&		node2) const;
-
-	static bool
-	isNodeAfterSibling(
-			const DOM_Node&		parent,
-			const DOM_Node&		child1,
-			const DOM_Node&		child2);
-
-	XPathSupport*
-	getSupport() const
-	{
-		return m_support;
-	}
+	virtual XPathSupport*
+	getSupport() const;
 
 private:
 

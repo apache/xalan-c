@@ -59,6 +59,10 @@
 
 
 
+#include <XalanDOM/XalanText.hpp>
+
+
+
 #include <PlatformSupport/DOMStringHelper.hpp>
 
 
@@ -71,9 +75,9 @@
 
 
 XString::XString(
-			XPathEnvSupport&	envSupport,
-			XPathSupport&		support,
-			const DOMString&	val) :
+			XPathEnvSupport&		envSupport,
+			XPathSupport&			support,
+			const XalanDOMString&	val) :
 	XObject(&envSupport),
 	m_support(support),
 	m_value(val),
@@ -115,10 +119,10 @@ XString::getType() const
 
 
 
-DOMString
+XalanDOMString
 XString::getTypeString() const
 {
-	return "#STRING";
+	return XALAN_STATIC_UCODE_STRING("#STRING");
 }
 
 
@@ -139,7 +143,7 @@ XString::boolean() const
 
 
 
-DOMString
+XalanDOMString
 XString::str() const
 {
 	return m_value;
@@ -154,8 +158,12 @@ XString::rtree() const
 
 	if (m_resultTreeFrag.get() == 0)
 	{
+		XalanDocument* const	theFactory =
+				m_envSupport->getDOMFactory();
+		assert(theFactory != 0);
+
 		ResultTreeFrag* const	theFrag =
-			new ResultTreeFrag(m_envSupport->getDOMFactory(),
+			new ResultTreeFrag(*theFactory,
 							   m_support);
 
 #if defined(XALAN_OLD_AUTO_PTR)
@@ -164,8 +172,9 @@ XString::rtree() const
 	    m_resultTreeFrag.reset(theFrag);
 #endif
 
-		const DOM_Node	textNode =
-			m_envSupport->getDOMFactory().createTextNode(str());
+		XalanNode* const	textNode =
+			theFactory->createTextNode(str());
+		assert(textNode != 0);
 
 		theFrag->appendChild(textNode);
 	}
@@ -180,8 +189,12 @@ XString::rtree()
 {
 	if (m_resultTreeFrag.get() == 0)
 	{
+		XalanDocument* const	theFactory =
+				m_envSupport->getDOMFactory();
+		assert(theFactory != 0);
+
 		ResultTreeFrag* const	theFrag =
-			new ResultTreeFrag(m_envSupport->getDOMFactory(),
+			new ResultTreeFrag(*theFactory,
 							   m_support);
 
 #if defined(XALAN_OLD_AUTO_PTR)
@@ -190,8 +203,9 @@ XString::rtree()
 	    m_resultTreeFrag.reset(theFrag);
 #endif
 
-		const DOM_Node	textNode =
-			m_envSupport->getDOMFactory().createTextNode(str());
+		XalanNode* const	textNode =
+			theFactory->createTextNode(str());
+		assert(textNode != 0);
 
 		theFrag->appendChild(textNode);
 	}

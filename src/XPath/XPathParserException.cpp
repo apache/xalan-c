@@ -61,8 +61,8 @@
 
 
 XPathParserException::XPathParserException(
-			const DOMString&	message,
-			const DOM_Node&		styleNode) :
+			const XalanDOMString&	message,
+			const XalanNode*		styleNode) :
 	XPathException(message,
 				   styleNode)
 {

@@ -64,7 +64,7 @@
 
 
 
-#include <dom/DOMString.hpp>
+#include <XalanDOM/XalanDOMString.hpp>
 
 
 
@@ -72,10 +72,10 @@
 
 
 
-class DOM_Attr;
-class DOM_Element;
-class DOM_Node;
-class DOM_Text;
+class XalanAttr;
+class XalanElement;
+class XalanNode;
+class XalanText;
 
 
 
@@ -101,8 +101,8 @@ public:
 	 * @param theNode DOM node whose namespace is queried
 	 * @return namespace corresponding to 'theNode'
 	 */
-	virtual DOMString
-	getNamespaceOfNode(const DOM_Node&	theNode) const = 0;
+	virtual XalanDOMString
+	getNamespaceOfNode(const XalanNode&	theNode) const = 0;
 
 	/**
 	 * Retrieves expanded name of a DOM element, including namespace
@@ -110,8 +110,8 @@ public:
 	 * @param elem	DOM element queried
 	 * @return expanded name corresponding to 'elem'
 	 */
-	virtual DOMString
-	getExpandedElementName(const DOM_Element&	elem) const = 0;
+	virtual XalanDOMString
+	getExpandedElementName(const XalanElement&	elem) const = 0;
 
 	/**
 	 * Retrieves expanded name of a DOM attribute, including namespace
@@ -119,8 +119,8 @@ public:
 	 * @param attr DOM attribute queried
 	 * @return expanded name corresponding to 'attr'
 	 */
-	virtual DOMString
-	getExpandedAttributeName(const DOM_Attr&	attr) const = 0;
+	virtual XalanDOMString
+	getExpandedAttributeName(const XalanAttr&	attr) const = 0;
 };
 
 

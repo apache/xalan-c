@@ -64,8 +64,7 @@
 
 
 
-#include <dom/DOM_DocumentFragment.hpp>
-#include <dom/DOMString.hpp>
+#include <XalanDOM/XalanDOMString.hpp>
 
 
 
@@ -104,7 +103,7 @@ public:
 	 *
 	 * @return string for type
 	 */
-	virtual DOMString
+	virtual XalanDOMString
 	getTypeString() const = 0;
 
 	/**
@@ -128,7 +127,7 @@ public:
 	 *
 	 * @return string value
 	 */
-	virtual DOMString
+	virtual XalanDOMString
 	str() const = 0;
 
 	/**
@@ -226,7 +225,7 @@ protected:
 	 * exception.
 	 */
 	virtual void
-	error(const DOMString&	msg) const;
+	error(const XalanDOMString&		msg) const;
 
 	// Data member...
 	XPathEnvSupport* const	m_envSupport;

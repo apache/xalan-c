@@ -58,7 +58,7 @@
 
 
 
-#include <Include/DOMHelper.hpp>
+#include <cassert>
 
 
 
@@ -67,7 +67,7 @@
 
 
 NodeListImplSurrogate::NodeListImplSurrogate(NodeRefListBase&	theNodeRefList) :
-	NodeListImpl(),
+	XalanNodeList(),
 	m_nodeRefList(theNodeRefList)
 {
 }
@@ -80,16 +80,18 @@ NodeListImplSurrogate::~NodeListImplSurrogate()
 
 
 
-NodeImpl*
-NodeListImplSurrogate::item(unsigned int	index)
+XalanNode*
+NodeListImplSurrogate::item(unsigned int	index) const
 {
-	return XALAN_DOM_NodeHack(m_nodeRefList.item(index)).getImplementationObject();
+	assert(index < getLength());
+
+	return m_nodeRefList.item(index);
 }
 
 
 
 unsigned int
-NodeListImplSurrogate::getLength()
+NodeListImplSurrogate::getLength() const
 {
 	return m_nodeRefList.getLength();
 }

@@ -95,7 +95,7 @@ public:
 	virtual XObject*
 	execute(
 			XPathExecutionContext&			executionContext,
-			const DOM_Node&					context,
+			XalanNode*						context,
 			int								/* opPos */,
 			const XObjectArgVectorType&		args)
 	{
@@ -105,7 +105,7 @@ public:
 								   context);
 		}
 
-		const int	theValue = executionContext.getContextNodeListLength();
+		const unsigned int	theValue = executionContext.getContextNodeListLength();
 
 		return executionContext.getXObjectFactory().createNumber(theValue);
 	}

@@ -59,9 +59,8 @@
 
 
 
-#include <dom/DOM_Node.hpp>
-#include <dom/DOM_NodeList.hpp>
-#include <dom/DOM_Text.hpp>
+#include <XalanDOM/XalanNodeList.hpp>
+#include <XalanDOM/XalanText.hpp>
 
 
 
@@ -82,6 +81,7 @@ XResultTreeFrag::XResultTreeFrag(
 			const ResultTreeFragBase&	val,
 			bool						deepClone) :
 	XObject(&envSupport),
+	NodeRefListBase(),
 	m_support(support),
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
 	m_value(dynamic_cast<ResultTreeFragBase*>(val.clone(deepClone)))
@@ -97,6 +97,7 @@ XResultTreeFrag::XResultTreeFrag(
 			const XResultTreeFrag&	source,
 			bool					deepClone) :
 	XObject(source),
+	NodeRefListBase(source),
 	m_support(source.m_support),
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
 	m_value(dynamic_cast<ResultTreeFragBase*>(source.m_value->clone(deepClone)))
@@ -122,10 +123,10 @@ XResultTreeFrag::getType() const
 
 
 
-DOMString
+XalanDOMString
 XResultTreeFrag::getTypeString() const
 {
-	return "#RESULT_TREE_FRAG";
+	return XALAN_STATIC_UCODE_STRING("#RESULT_TREE_FRAG");
 }
 
 
@@ -133,7 +134,7 @@ XResultTreeFrag::getTypeString() const
 double
 XResultTreeFrag::num() const
 {
-	const DOMString		theValue = m_support.getNodeData(DOM_ResultTreeFragBase(m_value.get()));
+	const XalanDOMString	theValue = m_support.getNodeData(*m_value.get());
 
 	return DOMStringToDouble(theValue);
 }
@@ -145,21 +146,17 @@ XResultTreeFrag::boolean() const
 {
     bool					fResult = false;
 
-    const NodeRefListBase&	nl = m_value->getChildNodesAsNodeRefList();
+	const XalanNode*	theCurrentNode = m_value->getFirstChild();
 
-    const int		nChildren = nl.getLength();
-
-    for(int i = 0; i < nChildren; i++)
+    while(theCurrentNode != 0)
     {
-		const DOM_Node	n = nl.item(i);
-
-		if(DOM_Node::TEXT_NODE == n.getNodeType())
+		if(XalanNode::TEXT_NODE == theCurrentNode->getNodeType())
 		{
-			const DOM_Text&		theTextNode =
-				static_cast<const DOM_Text&>(n);
+			const XalanText* const	theTextNode =
+				static_cast<const XalanText*>(theCurrentNode);
 
-			if (m_support.isIgnorableWhitespace(theTextNode) ||
-			    length(trim(theTextNode.getData())) == 0)
+			if (m_support.isIgnorableWhitespace(*theTextNode) ||
+			    length(trim(theTextNode->getData())) == 0)
 			{
 				continue;
 			}
@@ -167,6 +164,8 @@ XResultTreeFrag::boolean() const
 			fResult = true;
 			break;
 		}
+
+		theCurrentNode = theCurrentNode->getNextSibling();
 	}
 
     return fResult;
@@ -174,10 +173,10 @@ XResultTreeFrag::boolean() const
 
 
 
-DOMString
+XalanDOMString
 XResultTreeFrag::str() const
 {
-	return m_support.getNodeData(DOM_ResultTreeFragBase(m_value.get()));
+	return m_support.getNodeData(*m_value.get());
 }
 
 
@@ -201,7 +200,7 @@ XResultTreeFrag::rtree()
 const NodeRefListBase&
 XResultTreeFrag::nodeset() const
 {
-	return m_value->getChildNodesAsNodeRefList();
+	return *this;
 }
 
 
@@ -252,4 +251,75 @@ bool
 XResultTreeFrag::equals(const XObject&	theRHS) const
 {
 	return ::equals(str(), theRHS.str());
+}
+
+
+
+XalanNode*
+XResultTreeFrag::item(unsigned int	index) const
+{
+	assert(m_value.get() != 0);
+
+	XalanNode*	theCurrentChild = m_value->getFirstChild();
+
+	for(unsigned int i = 0; i < index && theCurrentChild != 0; ++i)
+	{
+		theCurrentChild = theCurrentChild->getNextSibling();
+	}
+
+	return theCurrentChild;
+}
+
+
+
+unsigned int
+XResultTreeFrag::getLength() const
+{
+	assert(m_value.get() != 0);
+
+	unsigned int	theLength = 0;
+
+	XalanNode*	theCurrentChild = m_value->getFirstChild();
+
+	while(theCurrentChild != 0)
+	{
+		++theLength;
+		theCurrentChild = theCurrentChild->getNextSibling();
+	}
+
+	return theLength;
+}
+
+
+
+unsigned int
+XResultTreeFrag::indexOf(const XalanNode*	theNode) const
+{
+	unsigned	theIndex = 0;
+	bool		fFound = false;
+
+	XalanNode*	theCurrentChild = m_value->getFirstChild();
+
+	while(theCurrentChild != 0 && fFound == false)
+	{
+		if (theCurrentChild == theNode)
+		{
+			fFound = true;
+		}
+		else
+		{
+			theIndex++;
+			theCurrentChild = theCurrentChild->getNextSibling();
+		}
+	}
+
+	return fFound == true ? theIndex : NodeRefListBase::npos;
+}
+
+
+
+XPathSupport*
+XResultTreeFrag::getSupport() const
+{
+	return &m_support;
 }

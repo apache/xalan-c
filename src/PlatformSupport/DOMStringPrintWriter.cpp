@@ -63,16 +63,11 @@
 
 
 
-#include <util/TextOutputStream.hpp>
-#include <dom/DOMString.hpp>
-
-
-
 #include <PlatformSupport/DOMStringHelper.hpp>
 
 
 
-DOMStringPrintWriter::DOMStringPrintWriter(const DOMString&	theBaseString) :
+DOMStringPrintWriter::DOMStringPrintWriter(const XalanDOMString&	theBaseString) :
 	PrintWriter(true),
 	m_outputString(theBaseString)
 {
@@ -113,16 +108,16 @@ DOMStringPrintWriter::write(
 			unsigned int	theOffset,
 			unsigned int	theLength)
 {
-	write(DOMString(s), theOffset, theLength);
+	write(XalanDOMString(s), theOffset, theLength);
 }
 
 
 
 void
 DOMStringPrintWriter::write(
-			const XMLCh*	s,
-			unsigned int	theOffset,
-			unsigned int	theLength)
+			const XalanDOMChar*		s,
+			unsigned int			theOffset,
+			unsigned int			theLength)
 {
 #if !defined(XALAN_NO_NAMESPACES)
 	using std::vector;
@@ -130,16 +125,15 @@ DOMStringPrintWriter::write(
 #endif
 
 	assert(s != 0);
-	assert(theOffset >= 0);
-	assert(theLength >= 0);
+	assert(theLength == UINT_MAX || length(s) >= theOffset + theLength);
 
-	if (theLength == -1)
+	if (theLength == UINT_MAX)
 	{
 			m_outputString += (s + theOffset);
 	}
 	else
 	{
-		vector<XMLCh>	theBuffer(theLength + 1);
+		vector<XalanDOMChar>	theBuffer(theLength + 1);
 
 		// We'll copy the characters into the vector first.
 		copy(s + theOffset,
@@ -157,7 +151,7 @@ DOMStringPrintWriter::write(
 
 
 void
-DOMStringPrintWriter::write(XMLCh		c)
+DOMStringPrintWriter::write(XalanDOMChar	c)
 {
 	m_outputString += c;
 }
@@ -166,16 +160,14 @@ DOMStringPrintWriter::write(XMLCh		c)
 
 void
 DOMStringPrintWriter::write(
-			const DOMString&	s,
-			unsigned int		theOffset,
-			unsigned int		theLength)
+			const XalanDOMString&	s,
+			unsigned int			theOffset,
+			unsigned int			theLength)
 {
 	assert(s != 0);
-	assert(theOffset >= 0);
-	assert(theLength >= 0 || theLength == -1);
-	assert(length(s) >= theOffset + theLength);
+	assert(theLength == UINT_MAX || length(s) >= theOffset + theLength);
 
-	if (theOffset == 0 && theLength == -1)
+	if (theOffset == 0 && theLength == UINT_MAX)
 	{
 		m_outputString += s;
 	}
@@ -192,11 +184,11 @@ DOMStringPrintWriter::print(bool	b)
 {
 	if (b == true)
 	{
-		print(DOMString("true"));
+		print(XALAN_STATIC_UCODE_STRING("true"));
 	}
 	else
 	{
-		print(DOMString("false"));
+		print(XALAN_STATIC_UCODE_STRING("false"));
 	}
 }
 
@@ -224,8 +216,8 @@ DOMStringPrintWriter::print(
 
 void
 DOMStringPrintWriter::print(
-			const XMLCh*	s,
-			unsigned int	theLength)
+			const XalanDOMChar*		s,
+			unsigned int			theLength)
 {
 	write(s,
 		  0,
@@ -259,7 +251,7 @@ DOMStringPrintWriter::print(long	l)
 
 
 void
-DOMStringPrintWriter::print(const DOMString&	s)
+DOMStringPrintWriter::print(const XalanDOMString&	s)
 {
 	m_outputString += s;
 }
@@ -269,7 +261,7 @@ DOMStringPrintWriter::print(const DOMString&	s)
 void
 DOMStringPrintWriter::println()
 {
-	m_outputString += "\n";
+	m_outputString += XALAN_STATIC_UCODE_STRING("\n");
 }
 
 
@@ -308,8 +300,8 @@ DOMStringPrintWriter::println(
 
 void
 DOMStringPrintWriter::println(
-			const XMLCh*	s,
-			unsigned int	theLength)
+			const XalanDOMChar*		s,
+			unsigned int			theLength)
 {
 	print(s, theLength);
 
@@ -349,7 +341,7 @@ DOMStringPrintWriter::println(long	l)
 
 
 void
-DOMStringPrintWriter::println(const DOMString&	s)
+DOMStringPrintWriter::println(const XalanDOMString&	s)
 {
 	print(s);
 

@@ -69,10 +69,6 @@
 
 
 
-#include <util/XercesDefs.hpp>
-
-
-
 class XALAN_PLATFORMSUPPORT_EXPORT PrintWriter : public Writer
 {
 public:
@@ -115,18 +111,18 @@ public:
 
 	// If the length is UINT_MAX, then the array is assumed to be null-terminated.
 	virtual void
-	write(const XMLCh*	s,
-		  unsigned int	theOffset = 0,
-		  unsigned int	theLength = UINT_MAX) = 0;
+	write(const XalanDOMChar*	s,
+		  unsigned int			theOffset = 0,
+		  unsigned int			theLength = UINT_MAX) = 0;
 
 	virtual void
-	write(XMLCh		c) = 0;
+	write(XalanDOMChar	c) = 0;
 
 	// If the length is UINT_MAX, then the entire string is printed.
 	virtual void
-	write(const DOMString&	s,
-		  unsigned int		theOffset = 0,
-		  unsigned int		theLength = UINT_MAX) = 0;
+	write(const XalanDOMString&		s,
+		  unsigned int				theOffset = 0,
+		  unsigned int				theLength = UINT_MAX) = 0;
 
 	// Output functions which are new...
 
@@ -141,8 +137,8 @@ public:
 		  unsigned int	theLength = UINT_MAX) = 0;
 
 	virtual void
-	print(const XMLCh*	s,
-		  unsigned int	theLength = UINT_MAX) = 0;
+	print(const XalanDOMChar*	s,
+		  unsigned int			theLength = UINT_MAX) = 0;
 
 	virtual void
 	print(double	d) = 0;
@@ -154,7 +150,7 @@ public:
 	print(long	l) = 0;
 
 	virtual void
-	print(const DOMString&	s) = 0;
+	print(const XalanDOMString&		s) = 0;
 
 	virtual void
 	println() = 0;
@@ -170,8 +166,8 @@ public:
 		    unsigned int	theLength = UINT_MAX) = 0;
 
 	virtual void
-	println(const XMLCh*	s,
-			unsigned int	theLength = UINT_MAX) = 0;
+	println(const XalanDOMChar*		s,
+			unsigned int			theLength = UINT_MAX) = 0;
 
 	virtual void
 	println(double	x) = 0;
@@ -183,7 +179,7 @@ public:
 	println(long	x) = 0;
 
 	virtual void
-	println(const DOMString&	s) = 0;
+	println(const XalanDOMString&	s) = 0;
 
 protected:
 

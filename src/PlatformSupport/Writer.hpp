@@ -68,11 +68,8 @@
 
 
 
-#include <util/XercesDefs.hpp>
-
-
-
-class DOMString;
+// $$$ ToDo: Necessary will XalanDOMString is still a typedef.
+#include <XalanDOM/XalanDOMString.hpp>
 
 
 
@@ -124,9 +121,9 @@ public:
 	 *                    null-terminated.  Default is UINT_MAX.
 	 */
 	virtual void
-	write(const XMLCh*	s,
-		  unsigned int	theOffset = 0,
-		  unsigned int	theLength = UINT_MAX) = 0;
+	write(const XalanDOMChar*	s,
+		  unsigned int			theOffset = 0,
+		  unsigned int			theLength = UINT_MAX) = 0;
 
 	/**
 	 * Writes a character
@@ -134,7 +131,7 @@ public:
 	 * @param 	c         character to write
 	 */
 	virtual void
-	write(XMLCh		c) = 0;
+	write(XalanDOMChar	c) = 0;
 
 	/**
 	 * Writes a string
@@ -146,9 +143,9 @@ public:
 	 *                    is UINT_MAX.
 	 */
 	virtual void
-	write(const DOMString&	s,
-		  unsigned int		theOffset = 0,
-		  unsigned int		theLength = UINT_MAX) = 0;
+	write(const XalanDOMString&		s,
+		  unsigned int				theOffset = 0,
+		  unsigned int				theLength = UINT_MAX) = 0;
 
 private:
 

@@ -96,7 +96,7 @@ public:
 	virtual XObject*
 	execute(
 			XPathExecutionContext&			executionContext,
-			const DOM_Node&					context,
+			XalanNode*						context,
 			int								/* opPos */,
 			const XObjectArgVectorType&		args)
 	{
@@ -106,36 +106,34 @@ public:
 								   context);
 		}
 
-		const DOMString		theFirstString = args[0]->str();
-		const DOMString		theSecondString = args[1]->str();
+		const XalanDOMString	theFirstString = args[0]->str();
+		const XalanDOMString	theSecondString = args[1]->str();
 
-		const int			theIndex = indexOf(theFirstString,
-											   theSecondString);
+		const unsigned int		theIndex = indexOf(theFirstString,
+												   theSecondString);
 
 #if !defined(XALAN_NO_NAMESPACES)
 		using std::vector;
 #endif
 
 		// This buffer will hold the output characters.
-		vector<XMLCh>	theBuffer;
+		vector<XalanDOMChar>	theBuffer;
 
-		if (theIndex != -1)
+		if (theIndex < length(theFirstString))
 		{
-			const int	theFirstStringLength = length(theFirstString);
-
 			// The result string can only be as large as the source string, so
 			// just reserve the space now.  Also reserve a space for the
 			// terminating 0.
-			theBuffer.reserve(theFirstStringLength + 1);
+			theBuffer.reserve(theIndex + 2);
 
 			// Stop with the last character before the index.
-			for (int i = 0; i < theIndex; i++)
+			for (unsigned int i = 0; i < theIndex; i++)
 			{
 				theBuffer.push_back(charAt(theFirstString, i));
 			}
 		}
 
-		return executionContext.getXObjectFactory().createString(DOMString(theBuffer.begin(), theBuffer.size()));
+		return executionContext.getXObjectFactory().createString(XalanDOMString(theBuffer.begin(), theBuffer.size()));
 	}
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)

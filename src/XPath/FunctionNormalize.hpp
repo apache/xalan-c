@@ -94,11 +94,11 @@ public:
 	virtual XObject*
 	execute(
 			XPathExecutionContext&			executionContext,
-			const DOM_Node&					context,
+			XalanNode*						context,
 			int								opPos,
 			const XObjectArgVectorType&		args)
 	{
-		DOMString	theSourceString;
+		XalanDOMString	theSourceString;
 
 		if(args.size() > 2)
 		{
@@ -109,16 +109,21 @@ public:
 		{
 			theSourceString = args[0]->str();
 		}
+		else if (context == 0)
+		{
+			executionContext.error("The normalize-space() function requires a non-null context node!",
+								   context);
+		}
 		else
 		{
 			theSourceString = 	getDefaultStringArgument(executionContext,
-														 context,
+														 *context,
 														 opPos);
 		}
 
-		const int			theSourceStringLength = length(theSourceString);
+		const unsigned int		theSourceStringLength = length(theSourceString);
 
-		XMLCh				thePreviousChar = 0;
+		XalanDOMChar			thePreviousChar = 0;
 
 		// A vector to contain the new characters.  We'll use it to construct
 		// the result string.
@@ -126,7 +131,7 @@ public:
 		using std::vector;
 #endif
 
-		vector<XMLCh>	theVector;
+		vector<XalanDOMChar>	theVector;
 
 		// The result string can only be as large as the source string, so
 		// just reserve the space now.  Also reserve a space for the
@@ -134,9 +139,9 @@ public:
 		theVector.reserve(theSourceStringLength + 1);
 
 		// OK, strip out any multiple spaces...
-		for (int i = 0; i < theSourceStringLength; i++)
+		for (unsigned int i = 0; i < theSourceStringLength; i++)
 		{
-			const XMLCh		theCurrentChar = charAt(theSourceString, i);
+			const XalanDOMChar	theCurrentChar = charAt(theSourceString, i);
 
 			if (isSpace(theCurrentChar) == true)
 			{
@@ -145,7 +150,7 @@ public:
 				// space.
 				if (isSpace(thePreviousChar) == false && theVector.size() > 0)
 				{
-					theVector.push_back(XMLCh(' '));
+					theVector.push_back(XalanDOMChar(' '));
 				}
 			}
 			else
@@ -162,7 +167,7 @@ public:
 			theVector.pop_back();
 		}
 
-		return executionContext.getXObjectFactory().createString(DOMString(theVector.begin(), theVector.size()));
+		return executionContext.getXObjectFactory().createString(XalanDOMString(theVector.begin(), theVector.size()));
 	}
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)

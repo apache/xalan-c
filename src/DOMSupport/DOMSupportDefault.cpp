@@ -62,14 +62,13 @@
 
 
 
-#include <dom/DOM_Node.hpp>
-#include <dom/DOM_Attr.hpp>
-#include <dom/DOM_Document.hpp>
-#include <dom/DOM_Element.hpp>
+#include <XalanDOM/XalanNode.hpp>
+#include <XalanDOM/XalanAttr.hpp>
+#include <XalanDOM/XalanDocument.hpp>
+#include <XalanDOM/XalanElement.hpp>
 
 
 
-#include <Include/DOMHelper.hpp>
 #include <PlatformSupport/DOMStringHelper.hpp>
 #include "DOMServices.hpp"
 #include "DOMSupportException.hpp"
@@ -98,30 +97,30 @@ DOMSupportDefault::reset()
 
 
 
-DOMString
-DOMSupportDefault::getNamespaceOfNode(const DOM_Node&	theNode) const
+XalanDOMString
+DOMSupportDefault::getNamespaceOfNode(const XalanNode&	theNode) const
 {
 	return m_resolver.getNamespaceOfNode(theNode);
 }
 
 
 
-DOMString
-DOMSupportDefault::getExpandedElementName(const DOM_Element&	elem) const
+XalanDOMString
+DOMSupportDefault::getExpandedElementName(const XalanElement&	elem) const
 {
-	DOMString	theNamespace = getNamespaceOfNode(elem);
+	const XalanDOMString	theNamespace = getNamespaceOfNode(elem);
 
-	return (0 != length(theNamespace)) ? theNamespace + ":" + DOMServices::getLocalNameOfNode(elem) 
+	return (0 != length(theNamespace)) ? theNamespace + XALAN_STATIC_UCODE_STRING(":") + DOMServices::getLocalNameOfNode(elem) 
 									: DOMServices::getLocalNameOfNode(elem);
 }
 
 
 
-DOMString
-DOMSupportDefault::getExpandedAttributeName(const DOM_Attr&		attr) const
+XalanDOMString
+DOMSupportDefault::getExpandedAttributeName(const XalanAttr&	attr) const
 {
-	DOMString	theNamespace = getNamespaceOfNode(attr);
+	const XalanDOMString	theNamespace = getNamespaceOfNode(attr);
 
-	return (0 != length(theNamespace)) ? theNamespace + ":" + DOMServices::getLocalNameOfNode(attr) 
+	return (0 != length(theNamespace)) ? theNamespace + XALAN_STATIC_UCODE_STRING(":") + DOMServices::getLocalNameOfNode(attr) 
                                  : DOMServices::getLocalNameOfNode(attr);
 }

@@ -59,10 +59,6 @@
 
 
 
-#include <Include/DOMHelper.hpp>
-
-
-
 #include <PlatformSupport/DOMStringHelper.hpp>
 #include <PlatformSupport/STLHelper.hpp>
 #include <PlatformSupport/XSLException.hpp>
@@ -81,8 +77,8 @@
 
 
 QName::QName(
-			const DOMString&	theNamespace,
-			const DOMString&	theLocalPart) :
+			const XalanDOMString&	theNamespace,
+			const XalanDOMString&	theLocalPart) :
 	m_namespace(theNamespace),
 	m_localpart(theLocalPart)
 {
@@ -91,22 +87,22 @@ QName::QName(
 
 
 QName::QName(
-			const DOMString&				qname,
+			const XalanDOMString&		qname,
 			const NamespacesStackType&	namespaces) :
 	m_namespace(),
 	m_localpart()
 {
-	const int	indexOfNSSep = indexOf(qname, ':');
+	const unsigned int	indexOfNSSep = indexOf(qname, ':');
 
-	if(indexOfNSSep > 0)
+	if(indexOfNSSep < length(qname))
 	{
-		const DOMString		prefix = substring(qname, 0, indexOfNSSep);
-		if(prefix.equals("xmlns"))
+		const XalanDOMString		prefix = substring(qname, 0, indexOfNSSep);
+		if(::equals(prefix, XALAN_STATIC_UCODE_STRING("xmlns")))
 			return;
 		m_namespace = getNamespaceForPrefix(namespaces, prefix);
 		if(0 == length(m_namespace))
 		{
-			throw XSLException(DOMString("Prefix must resolve to a namespace: ") + prefix);
+			throw XSLException(XalanDOMString("Prefix must resolve to a namespace: ") + prefix);
 		}
 		m_localpart =  substring(qname, indexOfNSSep + 1);
 	}
@@ -117,8 +113,8 @@ QName::QName(
 
 
 QName::QName(
-			const DOMString&		qname,
-			const DOM_Element&		namespaceContext,
+			const XalanDOMString&	qname,
+			const XalanElement*		namespaceContext,
 			const XPathEnvSupport&	envSupport,
 			const XPathSupport& 	support) :
 	m_namespace(),
@@ -132,7 +128,7 @@ QName::QName(
 
 
 QName::QName(
-			const DOMString&		qname,
+			const XalanDOMString&	qname,
 			const PrefixResolver&	theResolver) :
 	m_namespace(),
 	m_localpart()
@@ -159,24 +155,25 @@ QName::equals(const QName&	theRHS) const
 
 void
 QName::resolvePrefix(
-			const DOMString&		qname,
+			const XalanDOMString&	qname,
 			const PrefixResolver&	theResolver)
 {
-	const int	indexOfNSSep = indexOf(qname, ':');
+	const unsigned int	indexOfNSSep = indexOf(qname, ':');
+	const unsigned int	theLength = length(qname);
 
-	if(indexOfNSSep > 0)
+	if(indexOfNSSep < theLength)
 	{
-		const DOMString		prefix = substring(qname, 0, indexOfNSSep);
+		const XalanDOMString	prefix = substring(qname, 0, indexOfNSSep);
 
-		if(::equals(prefix, "xml"))
+		if(::equals(prefix, XALAN_STATIC_UCODE_STRING("xml")))
 		{
 			m_namespace = DOMServices::s_XMLNamespaceURI;
 		}
 		// The default namespace is not resolved.
-      else if(prefix.equals("xmlns"))
-      {
-        return;
-      }
+		else if(::equals(prefix, XALAN_STATIC_UCODE_STRING("xmlns")))
+		{
+			return;
+		}
 		else
 		{
 			m_namespace = theResolver.getNamespaceForPrefix(prefix);
@@ -184,7 +181,7 @@ QName::resolvePrefix(
 
 		if(0 == length(m_namespace))
 		{
-			throw XSLException(DOMString("Prefix must resolve to a namespace: ") + prefix);
+			throw XSLException(XalanDOMString("Prefix must resolve to a namespace: ") + prefix);
 		}
 	}
 	else
@@ -192,15 +189,23 @@ QName::resolvePrefix(
 		// $$$ ToDo: error or warning...
 	}
 
-	m_localpart = indexOfNSSep < 0 ? qname : substring(qname, indexOfNSSep + 1);
+	m_localpart = indexOfNSSep == theLength ? qname : substring(qname, indexOfNSSep + 1);
 }
 
-DOMString QName::getNamespaceForPrefix(const NamespaceVectorType& namespaces,
-		const DOMString& prefix, bool reverse /* true */)
+
+
+XalanDOMString
+QName::getNamespaceForPrefix(
+			const NamespaceVectorType&	namespaces,
+			const XalanDOMString&		prefix,
+			bool						reverse)
 {
-	DOMString nsURI;
-	if(::equals(prefix, "xml"))
+	XalanDOMString	nsURI;
+
+	if(::equals(prefix, XALAN_STATIC_UCODE_STRING("xml")))
+	{
 		nsURI = DOMServices::s_XMLNamespaceURI;
+	}
 	else
 	{
 		if (reverse)
@@ -208,9 +213,11 @@ DOMString QName::getNamespaceForPrefix(const NamespaceVectorType& namespaces,
 			for(int j = namespaces.size()-1; j >= 0; j--)
 			{
 				const NameSpace& ns = namespaces[j];
-				const DOMString& thisPrefix = ns.getPrefix();
-				if((0 != thisPrefix.length()) && prefix.equals(thisPrefix))
+				const XalanDOMString& thisPrefix = ns.getPrefix();
+				if(::equals(prefix, thisPrefix))
+				{
 					return ns.getURI();
+				}
 			}
 		}
 		else
@@ -218,48 +225,78 @@ DOMString QName::getNamespaceForPrefix(const NamespaceVectorType& namespaces,
 			for(unsigned int j = 0; j < namespaces.size(); j++)
 			{
 				const NameSpace& ns = namespaces[j];
-				const DOMString& thisPrefix = ns.getPrefix();
-				if((0 != thisPrefix.length()) && prefix.equals(thisPrefix))
+				const XalanDOMString& thisPrefix = ns.getPrefix();
+				if(::equals(prefix, thisPrefix))
+				{
 					return ns.getURI();
+				}
 			}
 		}
 	}
 	return nsURI;
 }
-      
-DOMString QName::getNamespaceForPrefix(const NamespacesStackType& nsStack,
-		const DOMString& prefix, bool reverse /* true */)
+
+
+
+XalanDOMString
+QName::getNamespaceForPrefix(
+			const NamespacesStackType&	nsStack,
+			const XalanDOMString&		prefix,
+			bool						reverse)
 {
-	DOMString nsURI;
+	XalanDOMString	nsURI;
+
 	const int depth = nsStack.size();
+
 	for(int i = depth-1; i >= 0; i--)
 	{
 		const NamespaceVectorType& namespaces = nsStack[i];
 		nsURI = QName::getNamespaceForPrefix(namespaces, prefix, reverse);
 		if (! ::isEmpty(nsURI))
-			return nsURI;
+			break;
 	}
+
 	return nsURI;
 }
+
+
       
-DOMString QName::getPrefixForNamespace(const NamespaceVectorType& namespaces,
-		const DOMString& uri, bool /* reverse */ /* true */)
+XalanDOMString
+QName::getPrefixForNamespace(
+			const NamespaceVectorType&	namespaces,
+			const XalanDOMString&		uri,
+			bool						/* reverse */)
 {
+	XalanDOMString	thePrefix;
+
 	for(int j = namespaces.size()-1; j >= 0; j--)
 	{
-		const NameSpace& ns = namespaces[j];
-		const DOMString& thisPrefix = ns.getURI();
-		if((0 != thisPrefix.length()) && uri.equals(thisPrefix))
-			return ns.getPrefix();
+		const NameSpace&		ns = namespaces[j];
+		const XalanDOMString&	thisURI = ns.getURI();
+
+		if(::equals(uri, thisURI))
+		{
+			thePrefix = ns.getPrefix();
+
+			break;
+		}
 	}
-	return DOMString();
+
+	return thePrefix;
 }		
 
-DOMString QName::getPrefixForNamespace(const NamespacesStackType& nsStack,
-		const DOMString& uri, bool reverse /* true */)
+
+
+XalanDOMString
+QName::getPrefixForNamespace(
+			const NamespacesStackType&	nsStack,
+			const XalanDOMString&		uri,
+			bool						reverse)
 {
-	DOMString prefix;
-	const int depth = nsStack.size();
+	XalanDOMString	prefix;
+
+	const int		depth = nsStack.size();
+
 	if (reverse)
 	{
 		for(int i = depth-1; i >= 0; i--)
@@ -267,7 +304,7 @@ DOMString QName::getPrefixForNamespace(const NamespacesStackType& nsStack,
 			const NamespaceVectorType& namespaces = nsStack[i];
 			prefix = QName::getPrefixForNamespace(namespaces, uri, reverse);
 			if (! ::isEmpty(prefix))
-				return prefix;
+				break;
 		}
 	}
 	else
@@ -277,8 +314,9 @@ DOMString QName::getPrefixForNamespace(const NamespacesStackType& nsStack,
 			const NamespaceVectorType& namespaces = nsStack[i];
 			prefix = QName::getPrefixForNamespace(namespaces, uri, reverse);
 			if (! ::isEmpty(prefix))
-				return prefix;
+				break;
 		}
 	}
+
 	return prefix;
 }

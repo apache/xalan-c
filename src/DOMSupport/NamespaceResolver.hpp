@@ -73,8 +73,8 @@
 
 
 
-#include <dom/DOM_Node.hpp>
-#include <dom/DOMString.hpp>
+#include <XalanDOM/XalanNode.hpp>
+#include <XalanDOM/XalanDOMString.hpp>
 
 
 
@@ -104,36 +104,20 @@ public:
 	 * @param theNode DOM node
 	 * @return namespace of 'theNode'
 	 */
-	virtual DOMString
-	getNamespaceOfNode(const DOM_Node&	theNode) const;
+	virtual XalanDOMString
+	getNamespaceOfNode(const XalanNode&	theNode) const;
 
 protected:
 
 #if defined(XALAN_NO_NAMESPACES)
-#	define XALAN_STD
+	typedef map<const XalanNode*, NSInfo>		NSInfoMapType;
 #else
-#	define XALAN_STD std::
+	typedef std::map<const XalanNode*, NSInfo>	NSInfoMapType;
 #endif
-
-#if defined(XALAN_HASH_CONTAINERS_AVAILABLE)
-#if defined(XALAN_NO_NAMESPACES)
-	typedef hash_map<DOM_Node, NSInfo, DOM_NodeHashFunction>		NSInfoMapType;
-#else
-	typedef XALAN_STD hash_map<DOM_Node, NSInfo, DOM_NodeHashFunction>	NSInfoMapType;
-#endif
-#else
-#if defined(XALAN_NO_NAMESPACES)
-	typedef map<DOM_Node, NSInfo>									NSInfoMapType;
-#else
-	typedef XALAN_STD map<DOM_Node, NSInfo>								NSInfoMapType;
-#endif
-#endif
-
-#undef XALAN_STD
 
 	void
 	updateNamespace(
-			const DOM_Node&		theNode,
+			const XalanNode*	theNode,
 			const NSInfo&		theNamespace) const;
 
 	// Cached namespace information...

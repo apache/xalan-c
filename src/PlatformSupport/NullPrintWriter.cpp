@@ -106,16 +106,16 @@ NullPrintWriter::write(
 
 void
 NullPrintWriter::write(
-			const XMLCh*	/* s */,
-			unsigned int	/* theOffset */,
-			unsigned int	/* theLength */)
+			const XalanDOMChar*	/* s */,
+			unsigned int		/* theOffset */,
+			unsigned int		/* theLength */)
 {
 }
 
 
 
 void
-NullPrintWriter::write(XMLCh	/* c */)
+NullPrintWriter::write(XalanDOMChar	/* c */)
 {
 }
 
@@ -123,9 +123,9 @@ NullPrintWriter::write(XMLCh	/* c */)
 
 void
 NullPrintWriter::write(
-			const DOMString&	/* s */,
-			unsigned int		/* theOffset */,
-			unsigned int		/* theLength */)
+			const XalanDOMString&	/* s */,
+			unsigned int			/* theOffset */,
+			unsigned int			/* theLength */)
 {
 }
 
@@ -146,7 +146,7 @@ NullPrintWriter::print(char	/* c */)
 
 void
 NullPrintWriter::print(
-			const char*	/* s */,
+			const char*		/* s */,
 			unsigned int	/* theLength */)
 {
 }
@@ -155,8 +155,8 @@ NullPrintWriter::print(
 
 void
 NullPrintWriter::print(
-			const XMLCh*	/* s */,
-			unsigned int	/* theLength */)
+			const XalanDOMChar*	/* s */,
+			unsigned int		/* theLength */)
 {
 }
 
@@ -184,7 +184,7 @@ NullPrintWriter::print(long	/* l */)
 
 
 void
-NullPrintWriter::print(const DOMString&	/* s */)
+NullPrintWriter::print(const XalanDOMString&	/* s */)
 {
 }
 
@@ -222,8 +222,8 @@ NullPrintWriter::println(
 
 void
 NullPrintWriter::println(
-			const XMLCh*	/* s */,
-			unsigned int	/* theLength */)
+			const XalanDOMChar*		/* s */,
+			unsigned int			/* theLength */)
 {
 }
 
@@ -251,6 +251,6 @@ NullPrintWriter::println(long	/* x */)
 
 
 void
-NullPrintWriter::println(const DOMString&	/* s */)
+NullPrintWriter::println(const XalanDOMString&	/* s */)
 {
 }

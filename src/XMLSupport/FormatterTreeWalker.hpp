@@ -68,7 +68,6 @@
 
 
 
-class DOM_Node;
 class FormatterListener;
 
 
@@ -91,11 +90,16 @@ public:
 protected:
 
 	virtual void
-	startNode(const DOM_Node&	node);
+	startNode(const XalanNode*	node);
 
 	virtual void
-	endNode(const DOM_Node&	node);
+	startNode(XalanNode*	node);
 
+	virtual void
+	endNode(const XalanNode*	node);
+
+	virtual void
+	endNode(XalanNode*	node);
 
 private:
 

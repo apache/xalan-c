@@ -62,15 +62,15 @@
 
 
 
-#include <dom/DOM_Attr.hpp>
-#include <dom/DOM_Document.hpp>
-#include <dom/DOM_Element.hpp>
-#include <dom/DOM_NamedNodeMap.hpp>
-#include <dom/DOM_Text.hpp>
+#include <XalanDOM/XalanAttr.hpp>
+#include <XalanDOM/XalanDocument.hpp>
+#include <XalanDOM/XalanElement.hpp>
+#include <XalanDOM/XalanNamedNodeMap.hpp>
+#include <XalanDOM/XalanText.hpp>
 
 
 
-#include <Include/DOMHelper.hpp>
+//#include <Include/DOMHelper.hpp>
 #include <PlatformSupport/DOMStringHelper.hpp>
 #include "DOMSupportException.hpp"
 
@@ -78,11 +78,11 @@
 
 #if defined(XALAN_INLINE_INITIALIZATION)
 
-const DOMString		DOMServices::s_XMLNamespaceURI;
+const XalanDOMString	DOMServices::s_XMLNamespaceURI;
 
 #else
 
-const DOMString		DOMServices::s_XMLNamespaceURI(XALAN_STATIC_UCODE_STRING("http://www.w3.org/XML/1998/namespace"));
+const XalanDOMString	DOMServices::s_XMLNamespaceURI(XALAN_STATIC_UCODE_STRING("http://www.w3.org/XML/1998/namespace"));
 
 #endif
 
@@ -100,58 +100,89 @@ DOMServices::WhitespaceSupport::~WhitespaceSupport()
 
 
 
-DOMString
+DOMServices::WhitespaceSupportDefault::WhitespaceSupportDefault()
+{
+}
+
+
+
+DOMServices::WhitespaceSupportDefault::~WhitespaceSupportDefault()
+{
+}
+
+
+
+bool
+DOMServices::WhitespaceSupportDefault::isIgnorableWhitespace(const XalanText&	node) const
+{
+	const XalanDOMString	theData(node.getData());
+
+	const unsigned int	theLength = length(theData);
+
+	for (unsigned int i = 0; i < theLength; i++)
+	{
+		const XalanDOMChar	theChar = charAt(theData, i);
+
+		if (!(theChar == 0x20 || theChar == 0xD || theChar == 0xA || theChar == 0x9))
+		{
+			break;
+		}
+	}
+
+	return i == theLength ? true : false;
+}
+
+
+
+XalanDOMString
 DOMServices::getNodeData(
- 			const DOM_Node&				node,
+ 			const XalanNode&			node,
 			const WhitespaceSupport&	theResolver)
 {
-	assert(node != 0);
-
-	DOMString	data;
+	XalanDOMString	data;
 
 	switch(node.getNodeType())
 	{
-	case DOM_Node::DOCUMENT_FRAGMENT_NODE:
-	case DOM_Node::DOCUMENT_NODE:
-	case DOM_Node::ELEMENT_NODE:
+	case XalanNode::DOCUMENT_FRAGMENT_NODE:
+	case XalanNode::DOCUMENT_NODE:
+	case XalanNode::ELEMENT_NODE:
 		{
-			const DOM_NodeList	children = node.getChildNodes();
+			const XalanNode*	child = node.getFirstChild();
 
-			const unsigned int 	nNodes = children.getLength();
-
-			for(unsigned int i = 0; i < nNodes; i++)
+			while(child != 0)
 			{
-				const DOMString 	nodeData =
-					getNodeData(children.item(i),
+				const XalanDOMString 	nodeData =
+					getNodeData(*child,
 								theResolver);
 
 				if(0 < length(nodeData))
 				{
 					data += nodeData;
 				}
+
+				child = child->getNextSibling();
 			}
 		}
 	  break;
 
-	case DOM_Node::TEXT_NODE:
-	case DOM_Node::CDATA_SECTION_NODE:
+	case XalanNode::TEXT_NODE:
+	case XalanNode::CDATA_SECTION_NODE:
 		{
-			const DOM_Text&		theTextNode =
+			const XalanText&	theTextNode =
 #if defined(XALAN_OLD_STYLE_CASTS)
-				(const DOM_Text&)node;
+				(const XalanText&)node;
 #else
-				static_cast<const DOM_Text&>(node);
+				static_cast<const XalanText&>(node);
 #endif
 
 			if(theResolver.isIgnorableWhitespace(theTextNode) == false)
 			{
-				// data = fixWhiteSpace(theTextNode.getData(), false, false, true);
 				data = theTextNode.getData();
 			}
 		}
 		break;
 
-	case DOM_Node::ATTRIBUTE_NODE:
+	case XalanNode::ATTRIBUTE_NODE:
 		data = node.getNodeValue();
 		break;
 
@@ -165,14 +196,14 @@ DOMServices::getNodeData(
 
 
 
-DOMString
-DOMServices::getLocalNameOfNode(const DOM_Node&		n)
+XalanDOMString
+DOMServices::getLocalNameOfNode(const XalanNode&	n)
 {
-	const DOMString		qname = n.getNodeName();
+	const XalanDOMString	qname = n.getNodeName();
 
-	const int			index = indexOf(qname, ':');
+	const unsigned int		index = indexOf(qname, ':');
 
-	return (index < 0) ? qname : substring(qname, index + 1);
+	return index == length(qname) ? qname : substring(qname, index + 1);
 }
 
 
@@ -180,27 +211,30 @@ DOMServices::getLocalNameOfNode(const DOM_Node&		n)
 /**
  * Support for getParentOfNode.
  */
-static DOM_Node
+static XalanNode*
 locateAttrParent(
-			const DOM_Element&	elem,
-			const DOM_Node&		attr)
+			const XalanElement&		elem,
+			const XalanNode&		attr)
 {
 
-    DOM_Node			parent;
+    XalanNode*	parent = 0;
 
-	// $$$ TODO: DOM_NamedNodeMap::item() should be const.  When it does,
-	// this can become const as well.
-	DOM_NamedNodeMap	attrs = elem.getAttributes();
+	const XalanNamedNodeMap* const	attrs = elem.getAttributes();
+	assert(attrs != 0);
 
     if(attrs != 0)
 	{
-		const unsigned int	nAttrs = attrs.getLength();
-		
+		const unsigned int	nAttrs = attrs->getLength();
+
 		for(unsigned int i = 0; i < nAttrs; i++)
 		{
-			if(attrs.item(i) == attr)
+			if(attrs->item(i) == &attr)
 			{
-				parent = elem;
+#if defined(XALAN_OLD_STYLE_CASTS)
+				parent = (XalanElement*)&elem;
+#else
+				parent = const_cast<XalanElement*>(&elem);
+#endif
 				
 				break;
 			}
@@ -209,24 +243,29 @@ locateAttrParent(
 
 	if(parent == 0)
     {
-		DOM_NodeList		children = elem.getChildNodes();
+		bool				fFound = false;
 
-		const unsigned int	nChildren = children.getLength();
+		const XalanNode*	child = elem.getFirstChild();
 
-		for(unsigned int i = 0; i < nChildren; i++)
+		while(child != 0 && fFound == false)
 		{
-			DOM_Node node = children.item(i);
-
-			if(node.getNodeType() == DOM_Node::ELEMENT_NODE)
+			if(child->getNodeType() == XalanNode::ELEMENT_NODE)
 			{
 #if defined(XALAN_OLD_STYLE_CASTS)
-				parent = locateAttrParent((const DOM_Element&)node, attr);
+				parent = locateAttrParent((const XalanElement&)*child, attr);
 #else
-				parent = locateAttrParent(static_cast<DOM_Element&>(node), attr);
+				parent = locateAttrParent(static_cast<const XalanElement&>(*child), attr);
 #endif
 
 				if(parent != 0)
-					break;
+				{
+					fFound = true;
+				}
+			}
+
+			if (fFound == false)
+			{
+				child = child->getNextSibling();
 			}
 		}
     }
@@ -237,15 +276,16 @@ locateAttrParent(
 
 
 
-DOM_Node
-DOMServices::getParentOfNode(const DOM_Node&	node)
+XalanNode*
+DOMServices::getParentOfNode(const XalanNode&	node)
 {
-	DOM_Node		parent;
-	const short		nodeType = node.getNodeType();
+	XalanNode*					parent = 0;
 
-	if(DOM_Node::ATTRIBUTE_NODE == nodeType)
+	const XalanNode::NodeType	nodeType = node.getNodeType();
+
+	if(XalanNode::ATTRIBUTE_NODE == nodeType)
 	{
-		const DOM_Document	doc = node.getOwnerDocument();
+		XalanDocument* const	doc = node.getOwnerDocument();
 
 		if(doc == 0)
 		{
@@ -253,17 +293,17 @@ DOMServices::getParentOfNode(const DOM_Node&	node)
 		}
 		else
 		{
-			const DOM_Element	rootElem = doc.getDocumentElement();
+			XalanElement*	const	rootElem = doc->getDocumentElement();
 			assert(rootElem != 0);
 
-			parent = locateAttrParent(rootElem, node);
+			parent = locateAttrParent(*rootElem, node);
 		}
 	}
 	else
 	{
 		parent = node.getParentNode();
-      
-		if(nodeType != DOM_Node::DOCUMENT_NODE && parent == 0)
+
+		if(nodeType != XalanNode::DOCUMENT_NODE && parent == 0)
 		{
 			throw DOMSupportException("Child does not have parent!");
 		}
@@ -274,12 +314,12 @@ DOMServices::getParentOfNode(const DOM_Node&	node)
 
 
 
-DOMString
+XalanDOMString
 DOMServices::getNamespaceForPrefix(
-			const DOMString&	prefix,
-			const DOM_Element&	namespaceContext)
+			const XalanDOMString&	prefix,
+			const XalanElement&		namespaceContext)
 {
-	DOMString theNamespace;
+	XalanDOMString theNamespace;
 
 	if(equals(prefix, "xml") == true)
 	{
@@ -287,25 +327,26 @@ DOMServices::getNamespaceForPrefix(
 	}
 	else
 	{
-		short		type;
-		DOM_Node	parent = namespaceContext;
+		XalanNode::NodeType		type;
+		const XalanNode*		parent = &namespaceContext;
     
 		while (parent != 0 && length(theNamespace) == 0
-			&& ((type = parent.getNodeType()) == DOM_Node::ELEMENT_NODE
-				|| type == DOM_Node::ENTITY_REFERENCE_NODE)) 
+			&& ((type = parent->getNodeType()) == XalanNode::ELEMENT_NODE
+				|| type == XalanNode::ENTITY_REFERENCE_NODE)) 
 		{
-			if (type == DOM_Node::ELEMENT_NODE) 
+			if (type == XalanNode::ELEMENT_NODE) 
 			{
-				// $$$ TODO: DOM_NamedNodeMap::item() should be const.  When it does,
-				// this can become const as well.
-				DOM_NamedNodeMap	nnm = parent.getAttributes();
+				const XalanNamedNodeMap* const	nnm = parent->getAttributes();
+				assert(nnm != 0);
 
-				const unsigned int	theLength = nnm.getLength();
+				const unsigned int				theLength = nnm->getLength();
 
 				for (unsigned int i = 0;  i < theLength;  i ++) 
 				{
-					DOM_Node	attr = nnm.item(i);
-					DOMString	aname = attr.getNodeName();
+					const XalanNode* const	attr = nnm->item(i);
+					assert(attr != 0);
+
+					const XalanDOMString		aname = attr->getNodeName();
 
 					const char* const	theXMLNS = "xmlns:";
 
@@ -317,17 +358,17 @@ DOMServices::getNamespaceForPrefix(
 
 					if (equals(aname, "xmlns") || isPrefix) 
 					{
-						const int	index = indexOf(aname,
-													':');
+						const unsigned int	index = indexOf(aname,
+															':');
               
-						const DOMString p =
+						const XalanDOMString p =
 							isPrefix ? substring(aname,
 												 index + 1,
-												 length(aname)) : DOMString();
+												 length(aname)) : XalanDOMString();
               
 						if (equals(p, prefix) == true)
 						{
-							theNamespace = attr.getNodeValue();
+							theNamespace = attr->getNodeValue();
 
 							break;
 						}
@@ -335,9 +376,229 @@ DOMServices::getNamespaceForPrefix(
 				}
 			}
 
-			parent = getParentOfNode(parent);
+			parent = getParentOfNode(*parent);
 		}
 	}
 
 	return theNamespace;
 }
+
+
+
+
+
+
+bool
+DOMServices::isNodeAfter(
+			const XalanNode&	node1,
+			const XalanNode&	node2)
+{
+	bool		isNodeAfter = false;
+
+	const XalanNode*	parent1 = getParentOfNode(node1);
+	assert(parent1 != 0);
+
+	const XalanNode*	parent2 = getParentOfNode(node2);
+	assert(parent2 != 0);
+
+	// Optimize for most common case
+	if(parent1 == parent2) // then we know they are siblings
+	{
+		isNodeAfter = isNodeAfterSibling(*parent1,
+										 node1,
+										 node2);
+	}
+	else
+	{
+		// General strategy: Figure out the lengths of the two 
+		// ancestor chains, and walk up them looking for the 
+		// first common ancestor, at which point we can do a 
+		// sibling compare.  Edge condition where one is the 
+		// ancestor of the other.
+	  
+		// Count parents, so we can see if one of the chains 
+		// needs to be equalized.
+		int nParents1 = 2;
+		int nParents2 = 2; // count node & parent obtained above
+
+		while(parent1 != 0)
+		{
+			nParents1++;
+			parent1 = getParentOfNode(*parent1);
+		}
+
+		while(parent2 != 0)
+		{
+			nParents2++;
+			parent2 = getParentOfNode(*parent2);
+		}
+
+		// adjustable starting points
+		const XalanNode*	startNode1 = &node1;
+		const XalanNode*	startNode2 = &node2;
+
+		// Do I have to adjust the start point in one of 
+		// the ancesor chains?
+		if(nParents1 < nParents2)
+		{
+			// adjust startNode2
+			const int	adjust = nParents2 - nParents1;
+
+			for(int i = 0; i < adjust; i++)
+			{
+				startNode2 = getParentOfNode(*startNode2);
+			}
+		}
+		else if(nParents1 > nParents2)
+		{
+			// adjust startNode1
+			const int	adjust = nParents1 - nParents2;
+
+			for(int i = 0; i < adjust; i++)
+			{
+				startNode1 = getParentOfNode(*startNode1);
+			}
+		}
+
+		// so we can "back up"
+		const XalanNode*	prevChild1 = 0;
+		const XalanNode*	prevChild2 = 0;
+	  
+		// Loop up the ancestor chain looking for common parent.
+		while(0 != startNode1)
+		{
+			if(startNode1 == startNode2) // common parent?
+			{
+				if(0 == prevChild1) // first time in loop?
+				{
+					// Edge condition: one is the ancestor of the other.
+					isNodeAfter = (nParents1 < nParents2) ? true : false;
+
+					break; // from while loop
+				}
+				else
+				{
+					isNodeAfter = isNodeAfterSibling(*startNode1,
+													 *prevChild1,
+													 *prevChild2);
+
+					break; // from while loop
+				}
+			}
+
+			prevChild1 = startNode1;
+			assert(prevChild1 != 0);
+
+			startNode1 = getParentOfNode(*startNode1);
+			assert(startNode1 != 0);
+
+			prevChild2 = startNode2;
+			assert(prevChild2 != 0);
+
+			startNode2 = getParentOfNode(*startNode2);
+			assert(startNode2 != 0);
+		}
+	}
+
+	return isNodeAfter;
+}
+
+
+
+bool
+DOMServices::isNodeAfterSibling(
+			const XalanNode&	parent,
+			const XalanNode&	child1,
+			const XalanNode&	child2)
+{
+	bool	isNodeAfterSibling = false;
+
+	const XalanNode::NodeType	child1type = child1.getNodeType();
+	const XalanNode::NodeType	child2type = child2.getNodeType();
+
+	if(XalanNode::ATTRIBUTE_NODE != child1type &&
+	   XalanNode::ATTRIBUTE_NODE == child2type)
+	{
+		// always sort attributes before non-attributes.
+		isNodeAfterSibling = false;
+	}
+	else if(XalanNode::ATTRIBUTE_NODE == child1type &&
+			XalanNode::ATTRIBUTE_NODE != child2type)
+	{
+		// always sort attributes before non-attributes.
+		isNodeAfterSibling = true;
+	}
+	else if(XalanNode::ATTRIBUTE_NODE == child1type)
+	{
+		const XalanNamedNodeMap*	children = parent.getAttributes();
+	  
+		const unsigned int	nNodes = children->getLength();
+
+		bool				found1 = false;
+		bool				found2 = false;
+
+		for(unsigned int i = 0; i < nNodes; i++)
+		{
+			const XalanNode*	child = children->item(i);
+
+			if(&child1 == child)
+			{
+				if(found2 == true)
+				{
+					isNodeAfterSibling = false;
+					break;
+				}
+		  
+				found1 = true;
+			}
+			else if(&child2 == child)
+			{
+				if(found1 == true)
+				{
+					isNodeAfterSibling = true;
+					break;
+				}
+		  
+				found2 = true;
+			}
+		}
+	}
+	else
+	{
+		const XalanNode*	child = parent.getFirstChild();
+
+		bool			found1 = false;
+		bool			found2 = false;
+
+		while(child != 0)
+		{
+			if(&child1 == child)
+			{
+				if(found2 == true)
+				{
+					isNodeAfterSibling = false;
+					break;
+				}
+
+				found1 = true;
+			}
+			else if(&child2 == child)
+			{
+				if(found1 == true)
+				{
+					isNodeAfterSibling = true;
+					break;
+				}
+
+				found2 = true;
+			}
+
+			child = child->getNextSibling();
+		}
+
+		assert(found1 != found2);
+	}
+
+	return isNodeAfterSibling;
+}
+

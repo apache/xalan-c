@@ -69,8 +69,6 @@
 
 
 
-class DOM_Element;
-class DOMString;
 class XPath;
 
 

@@ -102,13 +102,13 @@ NodeRefList::operator=(const NodeRefListBase&	theRHS)
 	{
 		m_nodeList.clear();
 
-		const int	theLength = theRHS.getLength();
+		const unsigned int	theLength = theRHS.getLength();
 
 		m_nodeList.reserve(theLength);
 
-		for(int i = 0; i < theLength; i++)
+		for(unsigned int i = 0; i < theLength; i++)
 		{
-			const DOM_Node	theNode = theRHS.item(i);
+			XalanNode* const	theNode = theRHS.item(i);
 
 			if (theNode != 0)
 			{
@@ -141,7 +141,7 @@ NodeRefList::operator=(const NodeRefList&	theRHS)
 
 
 
-DOM_Node
+XalanNode*
 NodeRefList::item(unsigned int	index) const
 {
 	assert(index < m_nodeList.size());
@@ -160,7 +160,7 @@ NodeRefList::getLength() const
 
 
 unsigned int
-NodeRefList::indexOf(const DOM_Node&	theNode) const
+NodeRefList::indexOf(const XalanNode*	theNode) const
 {
 #if !defined(XALAN_NO_NAMESPACES)
 	using std::find;
@@ -172,7 +172,15 @@ NodeRefList::indexOf(const DOM_Node&	theNode) const
 			 m_nodeList.end(),
 			 theNode);
 
-	// If not found, return -1.  Otherwise, subtract the iterator
+	// If not found, return npos.  Otherwise, subtract the iterator
 	// from the first iterator to get the distance between them.
-	return i == m_nodeList.end() ? -1 : i - m_nodeList.begin();
+	return i == m_nodeList.end() ? npos : i - m_nodeList.begin();
+}
+
+
+
+XPathSupport*
+NodeRefList::getSupport() const
+{
+	return 0;
 }
