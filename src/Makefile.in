@@ -524,7 +524,7 @@ $(BINTARGETDIR)/SerializeNodeSet.cpp: ${ALL_OBJECTS_DIR}/SerializeNodeSet.cpp.o
 ifeq ($(PLATFORM), OS390)                                                       
 	${LINK} $(XSL_BUILD_OPTIONS) ${PLATFORM_LIB_LINK_OPTIONS} ${LIBRARY_SEARCH_PATHS} \
 	${EXTRA_LINK_OPTIONS} $(LIB_DIR)/lib$(PROJECT_NAME)$(VER).x $(ALLLIBS) $(CXXFLAGS) $^ -o $@	
-${ALL_OBJECTS_DIR}/%.o:$(SAMPLES_DIR)/SerializeNodeSet.cpp/%.cpp
+${ALL_OBJECTS_DIR}/%.o:$(SAMPLES_DIR)/SerializeNodeSet/%.cpp
 	$(CC3) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $<
 else
 	${LINK} $(XSL_BUILD_OPTIONS) ${PLATFORM_LIB_LINK_OPTIONS} ${LIBRARY_SEARCH_PATHS} \
