@@ -1967,7 +1967,7 @@ typedef XALAN_STD runtime_error               RuntimeError;
 	const Locator*
 	getLocatorFromStack() const
 	{
-		return m_stylesheetLocatorStack.size == 0 ? 0 : m_stylesheetLocatorStack.back();
+		return m_stylesheetLocatorStack.size() == 0 ? 0 : m_stylesheetLocatorStack.back();
 	}
 
 	/**
@@ -1987,7 +1987,7 @@ typedef XALAN_STD runtime_error               RuntimeError;
 	void
 	popLocatorStack()
 	{
-		if (m_stylesheetLocatorStack.size != 0)
+		if (m_stylesheetLocatorStack.size() != 0)
 		{
 			m_stylesheetLocatorStack.pop_back();
 		}
