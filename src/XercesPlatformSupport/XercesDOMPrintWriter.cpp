@@ -100,6 +100,7 @@ XercesDOMPrintWriter::checkError() const
 void
 XercesDOMPrintWriter::close()
 {
+	flush();
 }
 
 
