@@ -155,7 +155,8 @@ StylesheetHandler::StylesheetHandler(
 	m_LXSLTScriptBody(),
 	m_LXSLTScriptLang(),
 	m_LXSLTScriptSrcURL(),
-	m_pLXSLTExtensionNSH(0)
+	m_pLXSLTExtensionNSH(0),
+	m_locatorsPushed(0)
 {
 }
 
@@ -210,6 +211,8 @@ StylesheetHandler::~StylesheetHandler()
 void StylesheetHandler::setDocumentLocator(const Locator* const		locator)
 {
 	m_constructionContext.pushLocatorOnStack(locator);
+
+	++m_locatorsPushed;
 }
 
 
@@ -224,6 +227,11 @@ void StylesheetHandler::startDocument()
 void StylesheetHandler::endDocument()
 {
 	m_constructionContext.popLocatorStack();
+
+	if (m_locatorsPushed > 0)
+	{
+		--m_locatorsPushed;
+	}
 
 	m_inExtensionElementStack.clear();
 
@@ -1159,36 +1167,25 @@ StylesheetHandler::startElement(
 	// exceptions need to reach the end user.  But the parser eats all exceptions and we lose
 	// the error messages and exit silently.  So, I'll eat the exceptions first, store the message
 	// and then throw the exception during endDocument
-	catch(SAXException& e)
+	catch(SAXException&		e)
 	{
 		m_exceptionPending = true;
 
-		// Pop anything that's not an empty element...
-		while(m_elemStack.empty() == false &&
-			  m_elemStack.back()->getXSLToken() != Constants::ELEMNAME_UNDEFINED)
-		{
-			m_elemStackParentedElements.erase(m_elemStack.back());
-			m_elemStack.pop_back();
-		}
-
 		m_pendingException = e.getMessage();
+
+		doCleanup();
 	}
 	catch(...)
 	{
 		// $$$ ToDo: This probably should't happen, but it does...
 		m_exceptionPending = true;
 
-		// Pop anything that's not an empty element...
-		while(m_elemStack.empty() == false &&
-			  m_elemStack.back()->getXSLToken() != Constants::ELEMNAME_UNDEFINED)
-		{
-			m_elemStackParentedElements.erase(m_elemStack.back());
-			m_elemStack.pop_back();
-		}
+		doCleanup();
 
 		throw;
 	}
 }
+
 
 
 ElemTemplateElement*
@@ -1242,6 +1239,27 @@ StylesheetHandler::initWrapperless(
 	}
 
 	return pElem;
+}
+
+
+
+void
+StylesheetHandler::doCleanup()
+{
+	if (m_locatorsPushed > 0)
+	{
+		m_constructionContext.popLocatorStack();
+
+		--m_locatorsPushed;
+	}
+
+	// Pop anything that's not an empty element...
+	while(m_elemStack.empty() == false &&
+		  m_elemStack.back()->getXSLToken() != Constants::ELEMNAME_UNDEFINED)
+	{
+		m_elemStackParentedElements.erase(m_elemStack.back());
+		m_elemStack.pop_back();
+	}
 }
 
 

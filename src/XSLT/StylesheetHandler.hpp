@@ -421,6 +421,9 @@ protected:
 			int						theLineNumber,
 			int						theColumnNumber) const;
 
+	void
+	doCleanup();
+
 private:
 
 	// not implemented
@@ -523,6 +526,10 @@ private:
 	BoolStackType	m_inExtensionElementStack;
 
 	BoolStackType	m_preserveSpaceStack;
+
+	// Note that this variable must not be saved by
+	// PushPopIncludeState...
+	unsigned long	m_locatorsPushed;
 
 	// BEGIN SANJIVA CODE
 	bool m_inLXSLTScript;
