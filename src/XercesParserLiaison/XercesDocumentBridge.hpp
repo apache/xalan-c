@@ -79,15 +79,12 @@
 
 #if defined(XALAN_AUTO_PTR_REQUIRES_DEFINITION)
 #include <XalanDOM/XalanDOMImplementation.hpp>
+#include <PlatformSupport/XalanDOMStringPool.hpp>
 #endif
 
 
 
 #include <Include/XalanAutoPtr.hpp>
-
-
-
-#include <PlatformSupport/XalanDOMStringPool.hpp>
 
 
 
@@ -105,6 +102,7 @@
 
 
 
+class XalanDOMStringPool;
 class XercesAttrBridge;
 class XercesCommentBridge;
 class XercesCDATASectionBridge;
@@ -136,11 +134,13 @@ public:
 	 * an unbuilt node at the same time.
 	 *
 	 * @param theXercesDocument The Xerces document to bridge
+	 * @param threadSafe If true, the tree can safely be shared amongst multiple threads.  (Also implies buildBridge == true)
 	 * @param buildBridge If true, all of the bridge nodes will be built during construction.
 	 *
 	 */
 	XercesDocumentBridge(
 			const DOM_Document&		theXercesDocument,
+			bool					threadSafe = true,
 			bool					buildBridge = true);
 
 	virtual
@@ -588,7 +588,7 @@ private:
 
 	mutable XercesAttributeBridgeAllocator	m_attributeAllocator;
 
-	mutable	XalanDOMStringPool				m_stringPool;
+	XalanAutoPtr<XalanDOMStringPool>		m_stringPool;
 };
 
 

@@ -124,9 +124,11 @@ public:
 			DocumentHandler&		handler,
 			const XalanDOMString&	identifier = XalanDOMString());
 
+	// Create a non-thread safe document, with no synchronization and no bridge...
 	virtual XalanDocument*
 	createDocument();
 
+	// Create a non-thread safe document, with no synchronization and no bridge...
 	virtual XalanDocument*
 	getDOMFactory();
 
@@ -384,6 +386,72 @@ public:
 					 XercesDocumentBridge*>		DocumentMapType;
 #endif
 
+	/**
+	 * This functions returns the state of the liaison's build-bridge-nodes flag.
+	 *
+	 * @return true, if the bridge nodes are automatically built, false otherwise.
+	 */
+	bool
+	getBuildBridgeNodes() const
+	
+	{
+		return m_buildBridge;
+	}
+
+	/**
+	 * This functions sets the state of the liaison's build-bridge-nodes flag.
+	 * This flag must be set for the document to be thread safe.  It can also be
+	 * set to true to increase performance.  If this flag is set to false, then
+	 * the thread-safe flag will also be set to false.
+	 *
+	 * @param newState The new state for the flag.
+	 *
+	 */
+	void
+	setBuildBridgeNodes(bool	newState)
+	{
+		m_buildBridge = newState;
+
+		if (newState == false)
+		{
+			m_threadSafe = false;
+		}
+	}
+
+	/**
+	 * This functions returns the state of the liaison's thread-safe flag.
+	 * If true, documents created will be safe when data is read.
+	 * Note -- modifications are _never_ synchronized.
+	 *
+	 * @return true, if the new documents will be thread safe, false otherwise.
+	 */
+	bool
+	getThreadSafe() const
+	
+	{
+		return m_threadSafe;
+	}
+
+	/**
+	 * This functions sets the state of the liaison's thread-safe flag.
+	 * This flag must be set for the document to be thread safe.  If this
+	 * flag is set to true, then the build-bridge-nodes flag will also be
+	 * set to true.
+	 *
+	 * @param newState The new state for the flag.
+	 *
+	 */
+	void
+	setThreadSafe(bool	newState)
+	{
+		m_threadSafe = newState;
+
+		if (m_threadSafe == true)
+		{
+			m_buildBridge = true;
+		}
+	}
+
 protected:
 
 	virtual DOMParser*
@@ -396,12 +464,14 @@ protected:
 	 * Create a XalanDocument proxy for an existing Xerces document.
 	 *
 	 * @param theXercesDocument The Xerces document.
+	 * @param threadSafe If true, read access to the tree will be thread-safe (implies buildBridge == true).
 	 * @param buildBridge If true, the entire bridge structure is built.
 	 * @return a pointer to a new XercesDocumentBridge instance.
 	 */
 	virtual XercesDocumentBridge*
 	createDocument(
 			const DOM_Document&		theXercesDocument,
+			bool					threadSafe,
 			bool					buildBridge);
 
 private:
@@ -428,6 +498,10 @@ private:
 	ErrorHandler*		m_errorHandler;
 
 	DocumentMapType 	m_documentMap;
+
+	bool				m_buildBridge;
+
+	bool				m_threadSafe;
 };
 
 

@@ -93,6 +93,7 @@
 #include "XercesElementBridge.hpp"
 #include "XercesEntityBridge.hpp"
 #include "XercesEntityReferenceBridge.hpp"
+#include "XercesLiaisonXalanDOMStringPool.hpp"
 #include "XercesNodeListBridge.hpp"
 #include "XercesNotationBridge.hpp"
 #include "XercesProcessingInstructionBridge.hpp"
@@ -102,6 +103,7 @@
 
 XercesDocumentBridge::XercesDocumentBridge(
 			const DOM_Document&		theXercesDocument,
+			bool					threadSafe,
 			bool					buildBridge) :
 	XalanDocument(),
 	m_xercesDocument(theXercesDocument),
@@ -110,16 +112,16 @@ XercesDocumentBridge::XercesDocumentBridge(
 			   m_navigator),
 	m_nodeMap(),
 	m_domImplementation(new XercesDOMImplementationBridge(theXercesDocument.getImplementation())),
-	m_navigators(1, XercesBridgeNavigator(this, !buildBridge)),
+	m_navigators(1, XercesBridgeNavigator(this, threadSafe == true ? false : !buildBridge)),
 	m_navigator(m_navigators.front()),
 	m_nodes(),
 	m_doctype(0),
-	m_mappingMode(!buildBridge),
+	m_mappingMode(threadSafe == true ? false : !buildBridge),
 	m_indexValid(false),
 	m_elementAllocator(25),
 	m_textAllocator(25),
 	m_attributeAllocator(25),
-	m_stringPool()
+	m_stringPool(threadSafe == true ? new XercesLiaisonXalanDOMStringPool : new XalanDOMStringPool)
 {
 #if !defined(XALAN_NO_NAMESPACES)
 	using std::make_pair;
@@ -1760,21 +1762,13 @@ XercesDocumentBridge::BuildBridgeTreeWalker::endNode(const DOM_Node&	/* node */)
 const XalanDOMString&
 XercesDocumentBridge::getPooledString(const XalanDOMString&		theString) const
 {
-#if defined(XALAN_NO_MUTABLE)
-	return ((XercesDocumentBridge*)this)->m_stringPool.get(theString);
-#else
-	return m_stringPool.get(theString);
-#endif
+	return m_stringPool->get(theString);
 }
 
 
 
 const XalanDOMString&
-XercesDocumentBridge::	getPooledString(const XalanDOMChar*		theString) const
+XercesDocumentBridge::getPooledString(const XalanDOMChar*		theString) const
 {
-#if defined(XALAN_NO_MUTABLE)
-	return ((XercesDocumentBridge*)this)->m_stringPool.get(theString);
-#else
-	return m_stringPool.get(theString);
-#endif
+	return m_stringPool->get(theString);
 }

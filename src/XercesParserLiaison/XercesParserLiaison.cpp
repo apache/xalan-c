@@ -121,7 +121,9 @@ XercesParserLiaison::XercesParserLiaison(XercesDOMSupport&	theSupport) :
 	m_exitOnFirstFatalError(true),
 	m_entityResolver(0),
 	m_errorHandler(this),
-	m_documentMap()
+	m_documentMap(),
+	m_buildBridge(true),
+	m_threadSafe(true)
 {
 }
 
@@ -192,7 +194,7 @@ XercesParserLiaison::parseXMLStream(
 
 	if (theXercesDocument.isNull() == false)
 	{
-		theNewDocument = createDocument(theXercesDocument, true);
+		theNewDocument = createDocument(theXercesDocument, m_threadSafe, m_buildBridge);
 
 		m_documentMap[theNewDocument] = theNewDocument;
 	}
@@ -208,7 +210,7 @@ XercesParserLiaison::createDocument()
 	const DOM_Document	theXercesDocument =
 		DOM_Document::createDocument();
 
-	return createDocument(theXercesDocument, false);
+	return createDocument(theXercesDocument, false, false);
 }
 
 
@@ -416,7 +418,7 @@ XercesParserLiaison::setEntityResolver(EntityResolver*	resolver)
 XalanDocument*
 XercesParserLiaison::createDocument(const DOM_Document&		theXercesDocument)
 {
-	return createDocument(theXercesDocument, false);
+	return createDocument(theXercesDocument, false, false);
 }
 
 
@@ -614,10 +616,11 @@ XercesParserLiaison::CreateSAXParser()
 XercesDocumentBridge*
 XercesParserLiaison::createDocument(
 			const DOM_Document&		theXercesDocument,
+			bool					threadSafe,
 			bool					buildBridge)
 {
 	XercesDocumentBridge* const		theNewDocument =
-		new XercesDocumentBridge(theXercesDocument, buildBridge);
+		new XercesDocumentBridge(theXercesDocument, threadSafe, buildBridge);
 
 	m_documentMap[theNewDocument] = theNewDocument;
 
