@@ -65,16 +65,12 @@
 
 
 
-#include <vector>
-
-
-
 #include <xalanc/XalanDOM/XalanDOMString.hpp>
 
 
 
 // Base class header file.
-#include <xalanc/PlatformSupport/FormatterListener.hpp>
+#include "FormatterToXMLBase.hpp"
 
 
 
@@ -82,14 +78,10 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-class Writer;
-
-
-
 /**
  * FormatterToXML_UTF16 formats SAX-style events into XML.
  */
-class XALAN_XMLSUPPORT_EXPORT FormatterToXML_UTF16 : public FormatterListener 
+class XALAN_XMLSUPPORT_EXPORT FormatterToXML_UTF16 : public FormatterToXMLBase 
 {
 public:
 
@@ -136,26 +128,12 @@ public:
 	// These methods are inherited from FormatterListener ...
 
 	virtual void
-	setDocumentLocator(const LocatorType* const		locator);
-
-	virtual void
-	startDocument();
-
-	virtual void
-	endDocument();
-
-	virtual void
 	startElement(
 			const XMLCh* const	name,
 			AttributeListType&	attrs);
 
     virtual void
 	endElement(const XMLCh* const	name);
-
-    virtual void
-	characters(
-			const XMLCh* const	chars,
-			const unsigned int	length);
 
     virtual void
 	charactersRaw(
@@ -166,86 +144,36 @@ public:
 	entityReference(const XMLCh* const	name);
 
 	virtual void
-	ignorableWhitespace(
-			const XMLCh* const	chars,
-			const unsigned int	length);
-
-	virtual void
-	processingInstruction(
-			const XMLCh* const	target,
-			const XMLCh* const	data);
-
-
-    virtual void
-	resetDocument();
-
-	virtual void
 	comment(const XMLCh* const	data);
-
-	virtual void
-	cdata(
-			const XMLCh* const	ch,
-			const unsigned int 	length);
-
-	virtual Writer*
-	getWriter() const;
-
-	virtual const XalanDOMString&
-	getDoctypeSystem() const;
-
-	virtual const XalanDOMString&
-	getDoctypePublic() const;
 
 	virtual const XalanDOMString&
 	getEncoding() const;
 
-	virtual const XalanDOMString&
-	getMediaType() const;
-
-	const XalanDOMString&
-	getVersion() const
-	{
-		return m_version;
-	}
-
-	const XalanDOMString&
-	getStandalone() const
-	{
-		return m_standalone;
-	}
-
-	bool
-	getShouldWriteXMLHeader() const
-	{
-		return m_shouldWriteXMLHeader;
-	}
-
-	void
-	setShouldWriteXMLHeader(bool	b)
-	{
-		m_shouldWriteXMLHeader = b;
-	}
-
-#if defined(XALAN_NO_STD_NAMESPACE)
-#if defined(XALAN_USE_DEQUE_FOR_VECTOR_BOOL)
-	typedef deque<bool>			BoolStackType;
-#else
-	typedef vector<bool>		BoolStackType;
-#endif
-#else
-#if defined(XALAN_USE_DEQUE_FOR_VECTOR_BOOL)
-	typedef std::deque<bool>	BoolStackType;
-#else
-	typedef std::vector<bool>	BoolStackType;
-#endif
-#endif
-
 protected:
 
-	/** 
-	 * The writer.
-	 */
-	Writer*					m_writer;
+	virtual void
+	writeXMLHeader();
+
+	virtual void
+	flushBuffer();
+
+	virtual void
+	writeDoctypeDecl(const XalanDOMChar*	name);
+
+	virtual void
+	writeProcessingInstruction(
+			const XMLCh*	target,
+			const XMLCh*	data);
+
+	virtual void
+	writeCharacters(
+			const XMLCh*	chars,
+			unsigned int	length);
+
+	virtual void
+	writeCDATA(
+			const XMLCh*	chars,
+			unsigned int	length);
 
 	/**
 	 * Output a line break.
@@ -286,15 +214,6 @@ protected:
 	void
 	writeCommentData(const XalanDOMChar*	data);
 
-	void
-	flushWriter();
-
-	void
-	openElementForChildren();
-
-	bool
-	childNodesWereAdded();
-
 	/**
 	 * Check to see if a parent's ">" has been written, and, if 
 	 * it has not, write it.
@@ -330,52 +249,6 @@ protected:
 	writeAttrString(
 			const XalanDOMChar*			theString,
 			XalanDOMString::size_type	theStringLength);
-
-	/**
-	 * Throw an exception when an invalid
-	 * surrogate is encountered.
-	 * @param ch The first character in the surrogate
-	 */
-	static void
-	throwInvalidUTF16SurrogateException(XalanDOMChar	ch);
-
-	/**
-	 * Throw an exception when an invalid
-	 * surrogate is encountered.
-	 * @param ch The first character in the surrogate
-	 * @param next The next character in the surrogate
-	 */
-	static void
-	throwInvalidUTF16SurrogateException(
-			XalanDOMChar	ch,
-			XalanDOMChar	next);
-
-	/**
-	 * If true, XML header should be written to output.
-	 */
-	bool		m_shouldWriteXMLHeader;
-
-	/**
-	 * Flag to tell that we need to add the doctype decl, 
-	 * which we can't do until the first element is 
-	 * encountered.
-	 */
-	bool		m_needToOutputDocTypeDecl;
-  
-	/**
-	 * Tell if the next text should be raw.
-	 */
-	bool		m_nextIsRaw;
-
-	/**
-	 * The System ID for the doc type.
-	 */
-	const XalanDOMString	m_doctypeSystem;
-
-	/**
-	 * The public ID for the doc type.
-	 */
-	const XalanDOMString	m_doctypePublic;
 
 private:
 
@@ -442,30 +315,7 @@ private:
 			const XalanDOMChar*			theData,
 			XalanDOMString::size_type	theLength);
 
-	void
-	flushBuffer();
-
 	// Data members...
-	/**
-	 * Add space before '/>' for XHTML.
-	 */
-	bool		m_spaceBeforeClose;
-
-	/**
-	 * Tells the XML version, for writing out to the XML decl.
-	 */
-	const XalanDOMString	m_version;
-
-	/**
-	 * Text for standalone part of header.
-	 */
-	const XalanDOMString	m_standalone;
-
-	/**
-	 * The media type.  Not used right now.
-	 */
-	const XalanDOMString	m_mediaType;
-
 
 	/**
 	 * The string "UTF-16".
@@ -584,31 +434,9 @@ private:
 
 	static const XalanDOMString::size_type	s_linefeedNCRStringLength;
 
-	/**
-	 * A stack of Boolean objects that tell if the given element 
-	 * has children.
-	 */
-	BoolStackType	m_elemStack;
-
-	/**
-	 * The string of characters that represents the newline
-	 */
-	const XalanDOMChar*		m_newlineString;
-
-	/**
-	 * The length of the the string of characters that represents the newline
-	 */
-	XalanDOMString::size_type	m_newlineStringLength;
-
-
 	enum
 	{
-			kNotSpecial = 0,
-			kContentSpecial = 1,	// A flag to indicate a value in s_specialChars applies to content
-			kAttributeSpecial = 2,	// A flag to indicate a value in s_specialChars applies to attributes
-			kBothSpecial = 3,		// A flag t0 indicate a value in s_specialChars applies to both content and attributes
-			kSpecialsSize = 0x80,	// The size of s_specialChars
-			kBufferSize = 512		// The size of the buffer
+		kBufferSize = 512		// The size of the buffer
 	};
 
 	static bool
@@ -637,25 +465,12 @@ private:
 		}
 	}
 
-	static bool
-	isUTF16HighSurrogate(XalanDOMChar	theChar)
-	{
-		return 0xD800u <= theChar && theChar <= 0xDBFFu ? true : false;
-	}
-
-	static bool
-	isUTF16LowSurrogate(XalanDOMChar	theChar)
-	{
-		return 0xDC00u <= theChar && theChar <= 0xDFFFu ? true : false;
-	}
 
 	XalanDOMChar				m_buffer[kBufferSize];
 
 	XalanDOMChar*				m_bufferPosition;
 
-	XalanDOMString::size_type					m_bufferRemaining;
-
-	static const XalanDOMChar	s_specialChars[];
+	XalanDOMString::size_type	m_bufferRemaining;
 };
 
 

@@ -62,14 +62,12 @@
 
 
 #include <xercesc/sax/AttributeList.hpp>
-#include <xercesc/sax/SAXException.hpp>
 
 
 
 #include <xalanc/PlatformSupport/DOMStringHelper.hpp>
 #include <xalanc/PlatformSupport/DoubleSupport.hpp>
 #include <xalanc/PlatformSupport/Writer.hpp>
-#include <xalanc/PlatformSupport/XalanOutputStream.hpp>
 #include <xalanc/PlatformSupport/XalanTranscodingServices.hpp>
 #include <xalanc/PlatformSupport/XalanUnicode.hpp>
 
@@ -83,75 +81,6 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-const XalanDOMChar	FormatterToXML_UTF8::s_specialChars[kSpecialsSize] =
-{
-	kNotSpecial,		// 0
-	kNotSpecial,
-	kNotSpecial,
-	kNotSpecial,
-	kNotSpecial,
-	kNotSpecial,
-	kNotSpecial,
-	kNotSpecial,
-	kNotSpecial,
-	kNotSpecial,
-	kBothSpecial,		// 0xA -- linefeed  Special because we normalize as requested.
-	kNotSpecial,
-	kNotSpecial,
-	kNotSpecial,
-	kNotSpecial,
-	kNotSpecial,
-	kNotSpecial,		// 0x10
-	kNotSpecial,
-	kNotSpecial,
-	kNotSpecial,
-	kNotSpecial,
-	kNotSpecial,
-	kNotSpecial,
-	kNotSpecial,
-	kNotSpecial,
-	kNotSpecial,
-	kNotSpecial,
-	kNotSpecial,
-	kNotSpecial,
-	kNotSpecial,
-	kNotSpecial,
-	kNotSpecial,
-	kNotSpecial,		// 0x20
-	kNotSpecial,
-	kAttributeSpecial,	// 0x22 '"'
-	kNotSpecial,
-	kNotSpecial,
-	kNotSpecial,
-	kBothSpecial,		// 0x26 -- '&'
-	kNotSpecial,
-	kNotSpecial,
-	kNotSpecial,
-	kNotSpecial,
-	kNotSpecial,
-	kNotSpecial,
-	kNotSpecial,
-	kNotSpecial,
-	kNotSpecial,
-	kNotSpecial,		// 0x30
-	kNotSpecial,
-	kNotSpecial,
-	kNotSpecial,
-	kNotSpecial,
-	kNotSpecial,
-	kNotSpecial,
-	kNotSpecial,
-	kNotSpecial,
-	kNotSpecial,
-	kNotSpecial,
-	kNotSpecial,
-	kBothSpecial,		// 0x3C '<'
-	kNotSpecial,
-	kBothSpecial		// 0x3E '>'
-};
-
-
-
 FormatterToXML_UTF8::FormatterToXML_UTF8(
 			Writer&					writer,
 			const XalanDOMString&	version,
@@ -160,53 +89,19 @@ FormatterToXML_UTF8::FormatterToXML_UTF8(
 			const XalanDOMString&	doctypePublic,
 			bool					xmlDecl,
 			const XalanDOMString&	standalone) :
-	FormatterListener(OUTPUT_METHOD_XML),
-	m_writer(&writer),
-	m_shouldWriteXMLHeader(xmlDecl),
-	m_needToOutputDocTypeDecl(true),
-	m_nextIsRaw(false),
-	m_doctypeSystem(doctypeSystem),
-	m_doctypePublic(doctypePublic),
-	m_spaceBeforeClose(false),
-	m_version(version),
-	m_standalone(standalone),
-	m_mediaType(mediaType),
-	m_elemStack(),
-	m_newlineString(0),
-	m_newlineStringLength(0),
+	FormatterToXMLBase(
+		writer,
+		version,
+		mediaType,
+		doctypeSystem,
+		doctypePublic,
+		xmlDecl,
+		standalone),
 	m_nameFunction(0),
 	m_buffer(),
 	m_bufferPosition(m_buffer),
 	m_bufferRemaining(kBufferSize)
 {
-	if(isEmpty(m_doctypePublic) == false)
-	{
-		if(startsWith(
-			m_doctypePublic,
-			s_xhtmlDocTypeString,
-			s_xhtmlDocTypeStringLength) == true)
-		{
-			m_spaceBeforeClose = true;
-		}
-	}
-
-	const XalanOutputStream* const	theStream = writer.getStream();
-
-	if (theStream == 0)
-	{
-		m_newlineString = XalanOutputStream::defaultNewlineString();
-	}
-	else
-	{
-		m_newlineString = theStream->getNewlineString();
-	}
-
-	assert(m_newlineString != 0);
-
-	m_newlineStringLength = length(m_newlineString);
-
-	assert(m_newlineString != 0);
-
 	if (m_version.empty() == true ||
 		DoubleSupport::equal(DOMStringToDouble(m_version), 1.0) == true)
 	{
@@ -396,12 +291,7 @@ FormatterToXML_UTF8::write(unsigned int		theChar)
 	}
 	else
 	{
-		XALAN_USING_XERCES(SAXException)
-
-		const XalanDOMString	theMessage(TranscodeFromLocalCodePage("Invalid character detected: ") +
-										   UnsignedLongToHexDOMString(theChar));
-
-		throw SAXException(c_wstr(theMessage));
+		throwInvalidCharacterException(theChar);
 	}
 }
 
@@ -431,23 +321,6 @@ FormatterToXML_UTF8::write(
 	{
 		write(theChars[i]);
 	}
-}
-
-
-
-inline unsigned int
-FormatterToXML_UTF8::decodeUTF16SurrogatePair(
-			XalanDOMChar	theHighSurrogate,
-			XalanDOMChar	theLowSurrogate)
-{
-	assert(isUTF16HighSurrogate(theHighSurrogate) == true);
-
-	if (isUTF16LowSurrogate(theLowSurrogate) == false)
-	{
-		throwInvalidUTF16SurrogateException(theHighSurrogate, theLowSurrogate);
-	}
-
-	return ((theHighSurrogate - 0xD800u) << 10) + theLowSurrogate - 0xDC00u + 0x00010000u;
 }
 
 
@@ -536,7 +409,7 @@ FormatterToXML_UTF8::write(
 
 
 void
-FormatterToXML_UTF8::outputDocTypeDecl(const XalanDOMChar* 	name)
+FormatterToXML_UTF8::writeDoctypeDecl(const XalanDOMChar* 	name)
 {
 	// "<!DOCTYPE "
 	write(s_doctypeHeaderStartString, s_doctypeHeaderStartStringLength);
@@ -563,35 +436,6 @@ FormatterToXML_UTF8::outputDocTypeDecl(const XalanDOMChar* 	name)
 	write(char(XalanUnicode::charGreaterThanSign));
 
 	outputLineSep();
-}
-
-
-
-XALAN_USING_XERCES(SAXException)
-
-void
-FormatterToXML_UTF8::throwInvalidUTF16SurrogateException(XalanDOMChar	ch)
-{
-	const XalanDOMString	theMessage(TranscodeFromLocalCodePage("Invalid UTF-16 surrogate detected: ") +
-									   UnsignedLongToHexDOMString(ch) +
-									   TranscodeFromLocalCodePage(" ?"));
-
-	throw SAXException(c_wstr(theMessage));
-}
-
-
-
-void
-FormatterToXML_UTF8::throwInvalidUTF16SurrogateException(
-			XalanDOMChar	ch,
-			XalanDOMChar	next)
-{
-	const XalanDOMString	theMessage(TranscodeFromLocalCodePage("Invalid UTF-16 surrogate detected: ") +
-									   UnsignedLongToHexDOMString(ch) +
-									   UnsignedLongToHexDOMString(next) +
-									   TranscodeFromLocalCodePage(" ?"));
-
-	throw SAXException(c_wstr(theMessage));
 }
 
 
@@ -684,62 +528,12 @@ FormatterToXML_UTF8::writeDefaultAttributeEscape(
 
 
 void
-FormatterToXML_UTF8::flushWriter()
+FormatterToXML_UTF8::writeParentTagEnd()
 {
-	m_writer->flush();
-}
-
-
-
-void
-FormatterToXML_UTF8::setDocumentLocator(const LocatorType* const 	/* locator */)
-{
-}
-
-
-
-void
-FormatterToXML_UTF8::startDocument()
-{
-	m_needToOutputDocTypeDecl = true;
-
-	if(m_shouldWriteXMLHeader == true)
+	if(markParentForChildren() == true)
 	{
-		// "<?xml version=\""
-		write(s_xmlHeaderStartString, s_xmlHeaderStartStringLength);
-
-		if (length(m_version) != 0)
-		{
-			write(m_version);
-		}
-		else
-		{
-			write(s_defaultVersionString, s_defaultVersionStringLength);
-		}
-
-		// "\" encoding=\""
-		write(s_xmlHeaderEncodingString, s_xmlHeaderEncodingStringLength);
-
-		write(s_utf8String);
-
-		if (length(m_standalone) != 0)
-		{
-			write(s_xmlHeaderStandaloneString, s_xmlHeaderStandaloneStringLength);
-			write(m_standalone);
-		}
-
-		write(s_xmlHeaderEndString, s_xmlHeaderEndStringLength);
-
-		outputLineSep();
+		write(char(XalanUnicode::charGreaterThanSign));
 	}
-}
-
-
-
-void
-FormatterToXML_UTF8::endDocument()
-{
-	flushBuffer();
 }
 
 
@@ -749,13 +543,7 @@ FormatterToXML_UTF8::startElement(
 			const XMLCh* const	name,
 			AttributeListType&	attrs)
 {
-	if(true == m_needToOutputDocTypeDecl &&
-	   isEmpty(m_doctypeSystem) == false)
-	{
-		outputDocTypeDecl(name);
-
-		m_needToOutputDocTypeDecl = false;
-	}
+	generateDoctypeDecl(name);
 
 	writeParentTagEnd();
 
@@ -784,6 +572,7 @@ FormatterToXML_UTF8::endElement(const XMLCh* const	name)
 	{
 		write(char(XalanUnicode::charLessThanSign));
 		write(char(XalanUnicode::charSolidus));
+
 		writeName(name);
 	}
 	else
@@ -802,91 +591,73 @@ FormatterToXML_UTF8::endElement(const XMLCh* const	name)
 
 
 void
-FormatterToXML_UTF8::processingInstruction(
-			const XMLCh* const	target,
-			const XMLCh* const	data)
+FormatterToXML_UTF8::writeProcessingInstruction(
+			const XMLCh*	target,
+			const XMLCh*	data)
 {
-	// Use a fairly nasty hack to tell if the next node is supposed to be 
-	// unescaped text.
-	if(equals(target, length(target), s_piTarget, s_piTargetLength) == true &&
-	   equals(data, length(data), s_piData, s_piDataLength) == true)
+	writeParentTagEnd();
+
+	write(char(XalanUnicode::charLessThanSign));
+	write(char(XalanUnicode::charQuestionMark));
+	writeName(target);
+
+	const XalanDOMString::size_type		len = length(data);
+
+	// We need to make sure there is a least one whitespace character
+	// between the target and the data.
+	if ( len > 0 && !isXMLWhitespace(data[0]))
 	{
-		m_nextIsRaw = true;
+		write(char(XalanUnicode::charSpace));
 	}
-	else	
+
+	writeNormalizedPIData(data, len);
+
+	write(char(XalanUnicode::charQuestionMark));
+	write(char(XalanUnicode::charGreaterThanSign));
+
+	// If outside of an element, then put in a new line.  This whitespace
+	// is not significant.
+	if (outsideDocumentElement() == true)
 	{
-		writeParentTagEnd();
-
-		write(char(XalanUnicode::charLessThanSign));
-		write(char(XalanUnicode::charQuestionMark));
-		writeName(target);
-
-		const XalanDOMString::size_type		len = length(data);
-
-		if ( len > 0 && !isXMLWhitespace(data[0]))
-		{
-			write(char(XalanUnicode::charSpace));
-		}
-
-		writeNormalizedPIData(data, len);
-
-		write(char(XalanUnicode::charQuestionMark));
-		write(char(XalanUnicode::charGreaterThanSign));
-
-		// If outside of an element, then put in a new line.  This whitespace
-		// is not significant.
-		if (m_elemStack.empty() == true)
-		{
-			outputLineSep();
-		}
+		outputLineSep();
 	}
 }
 
 
 
 void
-FormatterToXML_UTF8::characters(
-			const XMLCh* const	chars,
-			const unsigned int	length)
+FormatterToXML_UTF8::writeCharacters(
+			const XMLCh*	chars,
+			unsigned int	length)
 {
-	if(length != 0)
-	{
-		if(m_nextIsRaw)
-		{
-			m_nextIsRaw = false;
+	assert(length != 0);
 
-			charactersRaw(chars, length);
+	writeParentTagEnd();
+
+	unsigned int	i = 0;
+	unsigned int	firstIndex = 0;
+
+	while(i < length) 
+	{
+		const XalanDOMChar	ch = chars[i];
+
+		if (isContentSpecial(ch) == false)
+		{
+			++i;
 		}
 		else
 		{
-			writeParentTagEnd();
-
-			unsigned int	i = 0;
-			unsigned int	firstIndex = 0;
-
-			while(i < length) 
-			{
-				const XalanDOMChar	ch = chars[i];
-
-				if (isContentSpecial(ch) == false)
-				{
-					++i;
-				}
-				else
-				{
-					safeWriteContent(chars + firstIndex, i - firstIndex);
-
-					i = writeDefaultEscape(chars[i], i, chars, length);
-
-					++i;
-
-					firstIndex = i;
-				}
-			}
-
 			safeWriteContent(chars + firstIndex, i - firstIndex);
+
+			i = writeDefaultEscape(chars[i], i, chars, length);
+
+			++i;
+
+			firstIndex = i;
 		}
 	}
+
+	safeWriteContent(chars + firstIndex, i - firstIndex);
 }
 
 
@@ -903,42 +674,10 @@ FormatterToXML_UTF8::charactersRaw(
 
 
 
-Writer*
-FormatterToXML_UTF8::getWriter() const
-{
-	return m_writer;
-}
-
-
-
-const XalanDOMString&
-FormatterToXML_UTF8::getDoctypeSystem() const
-{
-	return m_doctypeSystem;
-}
-
-
-
-const XalanDOMString&
-FormatterToXML_UTF8::getDoctypePublic() const
-{
-	return m_doctypePublic;
-}
-
-
-
 const XalanDOMString&
 FormatterToXML_UTF8::getEncoding() const
 {
 	return s_utf8String;
-}
-
-
-
-const XalanDOMString&
-FormatterToXML_UTF8::getMediaType() const
-{
-	return m_mediaType;
 }
 
 
@@ -1046,34 +785,63 @@ FormatterToXML_UTF8::writeCDATAChars(
 {
 	XalanDOMString::size_type i = 0;
 
+	// enum for a cheezy little state machine.
+	enum eState { eInitialState, eFirstRightSquareBracket, eSecondRightSquareBracket };
+
+	eState	theCurrentState = eInitialState;
+
 	while(i < length)
     {
 		// If "]]>", which would close the CDATA appears in
 		// the content, we have to put the first two characters
 		// in the CDATA section, close the CDATA section, then
 		// open a new one and add the last character.
-		if (i < length - 2 &&
-			XalanUnicode::charRightSquareBracket == ch[i] &&
-            XalanUnicode::charRightSquareBracket == ch[i + 1] &&
-			XalanUnicode::charGreaterThanSign == ch[ i + 2])
-		{
-			// "]]]]><![CDATA[>"
-			write(char(XalanUnicode::charRightSquareBracket));
-			write(char(XalanUnicode::charRightSquareBracket));
 
-			write(s_cdataCloseString, s_cdataCloseStringLength);
-			write(s_cdataOpenString, s_cdataOpenStringLength);
+		const XalanDOMChar	theChar = ch[i];
+
+		if (theChar == XalanUnicode::charRightSquareBracket)
+		{
+			if (theCurrentState == eInitialState)
+			{
+				theCurrentState = eFirstRightSquareBracket;
+			}
+			else if (theCurrentState == eFirstRightSquareBracket)
+			{
+				theCurrentState = eSecondRightSquareBracket;
+			}
+
+			write(char(XalanUnicode::charRightSquareBracket));
+		}
+		else if (theChar == XalanUnicode::charGreaterThanSign)
+		{
+			if (theCurrentState != eInitialState)
+			{
+				if (theCurrentState == eFirstRightSquareBracket)
+				{
+					theCurrentState = eInitialState;
+				}
+				else
+				{
+					theCurrentState = eInitialState;
+
+					write(s_cdataCloseString, s_cdataCloseStringLength);
+					write(s_cdataOpenString, s_cdataOpenStringLength);
+				}
+			}
 
 			write(char(XalanUnicode::charGreaterThanSign));
-
-			i += 3;
 		}
 		else
 		{
-			i = writeNormalizedChar(ch[i], ch, i, length);
+			if (theCurrentState != eInitialState)
+			{
+				theCurrentState = eInitialState;
+			}
 
-			++i;
+			i = writeNormalizedChar(theChar, ch, i, length);
 		}
+
+		++i;
     }
 }
 
@@ -1087,27 +855,6 @@ FormatterToXML_UTF8::entityReference(const XMLCh* const	name)
 	write(char(XalanUnicode::charAmpersand));
 	writeName(name);
 	write(char(XalanUnicode::charSemicolon));
-}
-
-
-
-void
-FormatterToXML_UTF8::ignorableWhitespace(
-			const XMLCh* const	chars,
-			const unsigned int	length)
-{
-	if (length > 0)
-	{
-		characters(chars, length);
-	}
-}
-
-
-
-void
-FormatterToXML_UTF8::resetDocument()
-{
-	// I don't do anything with this yet.
 }
 
 
@@ -1132,71 +879,19 @@ FormatterToXML_UTF8::comment(const XMLCh* const	data)
 
 
 void
-FormatterToXML_UTF8::cdata(
-			const XMLCh* const	ch,
-			const unsigned int	length)
+FormatterToXML_UTF8::writeCDATA(
+			const XMLCh*	ch,
+			unsigned int	length)
 {
-	if(m_nextIsRaw == true)
-	{
-		m_nextIsRaw = false;
+	assert(length != 0);
 
-		charactersRaw(ch, length);
-	}
-	else
-	{
-		writeParentTagEnd();
+	writeParentTagEnd();
 
-		if(length > 0)
-		{
-			write(s_cdataOpenString, s_cdataOpenStringLength);
+	write(s_cdataOpenString, s_cdataOpenStringLength);
 
-			writeCDATAChars(ch, length);
+	writeCDATAChars(ch, length);
 
-			write(s_cdataCloseString, s_cdataCloseStringLength);
-		}
-	}
-}
-
-
-
-void
-FormatterToXML_UTF8::writeParentTagEnd()
-{
-	if(!m_elemStack.empty())
-	{
-		// See if the parent element has already been flagged as having children.
-		if(false == m_elemStack.back())
-		{
-			write(char(XalanUnicode::charGreaterThanSign));
-
-			m_elemStack.back() = true;
-		}
-	}
-}
-
-
-
-void
-FormatterToXML_UTF8::openElementForChildren()
-{
-	m_elemStack.push_back(false);
-}
-
-
-
-bool
-FormatterToXML_UTF8::childNodesWereAdded()
-{
-	bool	fResult = false;
-
-	if (m_elemStack.empty() == false)
-	{
-		fResult = m_elemStack.back();
-
-		m_elemStack.pop_back();
-	}
-
-	return fResult;
+	write(s_cdataCloseString, s_cdataCloseStringLength);
 }
 
 
@@ -1220,6 +915,39 @@ FormatterToXML_UTF8::processAttribute(
 		writeAttrString(value, length(value));
 		write(char(XalanUnicode::charQuoteMark));
 	}
+}
+
+
+
+void
+FormatterToXML_UTF8::writeXMLHeader()
+{
+		// "<?xml version=\""
+	write(s_xmlHeaderStartString, s_xmlHeaderStartStringLength);
+
+	if (length(m_version) != 0)
+	{
+		write(m_version);
+	}
+	else
+	{
+		write(s_defaultVersionString, s_defaultVersionStringLength);
+	}
+
+	// "\" encoding=\""
+	write(s_xmlHeaderEncodingString, s_xmlHeaderEncodingStringLength);
+
+	write(s_utf8String);
+
+	if (length(m_standalone) != 0)
+	{
+		write(s_xmlHeaderStandaloneString, s_xmlHeaderStandaloneStringLength);
+		write(m_standalone);
+	}
+
+	write(s_xmlHeaderEndString, s_xmlHeaderEndStringLength);
+
+	outputLineSep();
 }
 
 
