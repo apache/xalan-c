@@ -167,8 +167,6 @@ XalanDOMString::operator=(const XalanDOMChar*	theRHS)
 
 	append(theRHS, length(theRHS));
 
-	assert(m_data.back() == 0);
-
 	return *this;
 }
 
@@ -193,6 +191,7 @@ XalanDOMString::append(
 			m_data.push_back(0);
 
 			assert(length() == theLength);
+			assert(m_data.back() == 0);
 		}
 		else
 		{
