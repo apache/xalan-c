@@ -742,9 +742,10 @@ MutableNodeRefList::reverseAssign(MutableNodeRefList&	nodelist) const
 	}
 	else
 	{
-#if defined(XALAN_MODERN_STL)
+#if defined(XALAN_STD_VECTOR_HAS_ITERATOR_ASSIGN)
 		nodelist.m_nodeList.assign(m_nodeList.rbegin(), m_nodeList.rend());
 #else
+        nodelist.clear();
 		nodelist.reserve(m_nodeList.size());
 
 		typedef NodeListVectorType::const_reverse_iterator	const_reverse_iterator;
