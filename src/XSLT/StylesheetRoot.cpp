@@ -168,7 +168,7 @@ StylesheetRoot::process(
 			StylesheetExecutionContext&		executionContext) const
 {
 	// Find the root pattern in the XSL.
-	ElemTemplate* rootRule =
+	const ElemTemplate* rootRule =
 			findTemplate(executionContext, sourceTree, sourceTree);
 
 	if(0 == rootRule)

@@ -128,7 +128,7 @@ public:
 
 typedef XALAN_STD map<XalanDOMString, XalanDOMString>		PrefixAliasesMapType;
 typedef XALAN_STD map<XalanDOMString, ExtensionNSHandler*>	ExtensionNamespacesMapType;
-typedef XALAN_STD map<QName, ElemTemplateElement*>			ElemTemplateElementMapType;
+typedef XALAN_STD map<QName, ElemTemplate*>					ElemTemplateMapType;
 typedef XALAN_STD vector<ElemAttributeSet*> 				AttributeSetMapType;
 typedef XALAN_STD vector<ElemVariable*> 					ElemVariableVectorType;
 typedef XALAN_STD vector<KeyDeclaration>					KeyDeclarationVectorType;
@@ -604,7 +604,7 @@ typedef XALAN_STD vector<ElemDecimalFormat*>				ElemDecimalFormatVectorType;
 	 * Thus, for a given key or keyref, look up hashtable by name, 
 	 * look up the nodelist by the given reference.
 	 */
-	virtual void
+	void
 	processKeyElement(
 			ElemTemplateElement*			nsContext,
 			const AttributeList&			atts,
@@ -617,7 +617,7 @@ typedef XALAN_STD vector<ElemDecimalFormat*>				ElemDecimalFormatVectorType;
 	 * @param executionContext	 current execution context
 	 * @return pointer to template found or 0 if none found
 	 */
-	virtual ElemTemplateElement*
+	const ElemTemplate*
 	findNamedTemplate(
 			const XalanDOMString&			name,
 			StylesheetExecutionContext& 	executionContext) const;
@@ -628,7 +628,7 @@ typedef XALAN_STD vector<ElemDecimalFormat*>				ElemDecimalFormatVectorType;
 	 * @param executionContext	 current execution context
 	 * @return pointer to template found or 0 if none found
 	 */
-	virtual ElemTemplateElement*
+	const ElemTemplate*
 	findNamedTemplate(
 			const QName&					qname,
 			StylesheetExecutionContext& 	executionContext) const;
@@ -642,8 +642,7 @@ typedef XALAN_STD vector<ElemDecimalFormat*>				ElemDecimalFormatVectorType;
 	 * @param targetNode	   element that needs a rule
 	 * @return				   pointer to rule that best matches targetNode
 	 */
-	virtual
-	ElemTemplate*
+	const ElemTemplate*
 	findTemplate(
 			StylesheetExecutionContext& 	executionContext,
 			XalanNode*						sourceTree,
@@ -660,8 +659,7 @@ typedef XALAN_STD vector<ElemDecimalFormat*>				ElemDecimalFormatVectorType;
 	 * @param useImports        means that this is an xsl:apply-imports commend
 	 * @return pointer to rule that best matches targetElem
 	 */
-	virtual
-	ElemTemplate*
+	const ElemTemplate*
 	findTemplate(
 			StylesheetExecutionContext& 	executionContext,
 			XalanNode*						sourceTree, 
@@ -691,10 +689,10 @@ typedef XALAN_STD vector<ElemDecimalFormat*>				ElemDecimalFormatVectorType;
 		MatchPattern2(
 				const XalanDOMString&	pat,
 				const XPath*			exp,
-				ElemTemplate*			theTemplate,
+				const ElemTemplate*		theTemplate,
 				int 					posInStylesheet, 
 				const XalanDOMString&	targetString,
-				Stylesheet* 			stylesheet); 
+				const Stylesheet* 		stylesheet); 
 
 		~MatchPattern2();
 
@@ -703,7 +701,7 @@ typedef XALAN_STD vector<ElemDecimalFormat*>				ElemDecimalFormatVectorType;
 		 * 
 		 * @return stylesheet for pattern
 		 */
-		Stylesheet*
+		const Stylesheet*
 		getStylesheet() const
 		{
 			return m_stylesheet;
@@ -758,49 +756,20 @@ typedef XALAN_STD vector<ElemDecimalFormat*>				ElemDecimalFormatVectorType;
 		 * 
 		 * @return template node
 		 */
-		ElemTemplate*
+		const ElemTemplate*
 		getTemplate() const
 		{
 			return m_template;
 		}
 		
-		/**
-		 * Retrieve priority of pattern.
-		 * 
-		 * @return priority of pattern
-		 */
-		double
-		getPriority() const
-		{
-			return m_priority;
-		}
-
-		/**
-		 * Set priority of pattern.
-		 * 
-		 * @param thePriority priority of pattern
-		 */
-		// This is const because m_priority is mutable, which is an artifact of
-		// the design and our Java heritage.
-		void
-		setPriority(double	thePriority) const
-		{ 
-			m_priority = thePriority;
-		}
-
 	private:
 
-		Stylesheet* 			m_stylesheet;
-		const XalanDOMString	m_targetString;
-		const XPath*			m_expression;
-		const int				m_posInStylesheet;
-		const XalanDOMString	m_pattern;
-		ElemTemplate*			m_template; // ref to the corresponding template
-		
-		/**
-		 * Transient... only used to track priority while processing.
-		 */
-		mutable double			m_priority;
+		const Stylesheet* const		m_stylesheet;
+		const XalanDOMString		m_targetString;
+		const XPath* const			m_expression;
+		const int					m_posInStylesheet;
+		const XalanDOMString		m_pattern;
+		const ElemTemplate*	const	m_template; // ref to the corresponding template
 
 		// Not implemented...
 		MatchPattern2();
@@ -1254,7 +1223,7 @@ private:
 	 * in the XSL DOM tree. Initialized in initMacroLookupTable, and used in
 	 * findNamedTemplate.
 	 */
-	ElemTemplateElementMapType	m_namedTemplates;
+	ElemTemplateMapType			m_namedTemplates;
   
 	/**
 	 * Table for defined constants, keyed on the names.

@@ -68,6 +68,7 @@
 
 #include "AVT.hpp"
 #include "Constants.hpp"
+#include "ElemTemplate.hpp"
 #include "Stylesheet.hpp"
 #include "StylesheetConstructionContext.hpp"
 #include "StylesheetExecutionContext.hpp"
@@ -131,7 +132,7 @@ ElemCallTemplate::execute(
 
 	if(!isEmpty(m_templateName.getLocalPart()))
 	{
-		ElemTemplateElement* const	theTemplate =
+		const ElemTemplate* const	theTemplate =
 			getStylesheet().getStylesheetRoot().findNamedTemplate(m_templateName,
 					executionContext);
 
