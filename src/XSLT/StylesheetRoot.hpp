@@ -314,32 +314,32 @@ public:
 	 * The version tells the version of XML to be used for outputting the result tree,
 	 * as specified in xsl:output.
 	 */
-	XalanDOMString m_version;
+	XalanDOMString	m_version;
 
 	/**
 	 * indent-result is by default no, which means an XSL processor must not
 	 * change the whitespace on output.
 	 */
-	bool m_indentResult;
+	bool			m_indentResult;
 
 	/**
 	 * The encoding attribute specifies the preferred encoding to use 
 	 * for outputting the result tree. 
 	 */
-	XalanDOMString m_encoding;
+	XalanDOMString	m_encoding;
 
 	/**
 	 * The media-type attribute is applicable for the xml output method. 
 	 * The default value for the media-type attribute is text/xml.
 	 */
-	XalanDOMString m_mediatype;
+	XalanDOMString	m_mediatype;
 
 	/**
 	 * If the doctype-system-id attribute is specified, the xml output method should 
 	 * output a document type declaration immediately before the first element. 
 	 * The name following <!DOCTYPE should be the name of the first element. 
 	 */
-	XalanDOMString m_doctypeSystem;
+	XalanDOMString	m_doctypeSystem;
 
 	/**
 	 * If doctype-public-id attribute is also specified, then the xml output 
@@ -349,17 +349,17 @@ public:
 	 * doctype-public-id attribute should be ignored unless the doctype-system-id 
 	 * attribute is specified.
 	 */
-	XalanDOMString m_doctypePublic;
+	XalanDOMString	m_doctypePublic;
 
 	/**
 	 * Tells whether or not to output an XML declaration.
 	 */
-	bool m_omitxmlDecl;
+	bool			m_omitxmlDecl;
 
 	/**
 	 * Tells what the xmldecl should specify for the standalone value.
      */
-	XalanDOMString m_standalone;
+	XalanDOMString	m_standalone;
 
 	/**
 	 * Retrieve the stack of imported stylesheets.
@@ -459,40 +459,29 @@ private:
 	QNameVectorType		m_cdataSectionElems;
 
 	/**
-	 * A stack of who's importing who is needed in order to support 
-	 * "It is an error if a stylesheet directly or indirectly imports 
-	 * itself. Apart from this, the case where a stylesheet with a 
-	 * particular URI is imported in multiple places is not treated 
-	 * specially."
+	 * A stack of who's importing whom is needed in order to detect 
+	 * a recursive include or import, which is an error.
 	 */
-	URLStackType m_importStack;
+	URLStackType	m_importStack;
 
 
 	/**
 	 * The default template to use for text nodes if we don't find 
 	 * anything else.  This is initialized in initDefaultRule().
-	 * @serial
 	 */
-	ElemTemplate* m_defaultTextRule;
+	ElemTemplate*	m_defaultTextRule;
 
 	/**
 	 * The default template to use if we don't find anything
 	 * else.  This is initialized in initDefaultRule().
-	 * @serial
 	 */
-	ElemTemplate* m_defaultRule;
+	ElemTemplate*	m_defaultRule;
 
 	/**
 	 * The default template to use for the root if we don't find 
 	 * anything else.  This is initialized in initDefaultRule().
-	 * We kind of need this because the defaultRule isn't good 
-	 * enough because it doesn't supply a document context.
-	 * For now, I default the root document element to "HTML".
-	 * Don't know if this is really a good idea or not.
-	 * I suspect it is not.
-	 * @serial
 	 */
-	ElemTemplate* m_defaultRootRule;
+	ElemTemplate*	m_defaultRootRule;
 
 };
 
