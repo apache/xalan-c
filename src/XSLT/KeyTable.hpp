@@ -62,7 +62,6 @@
  * 
  * $State$
  * 
- * @author Myriam Midy (Myriam_Midy @lotus.com 
  */
 
 
@@ -91,6 +90,7 @@ class NodeRefListBase;
 class PrefixResolver;
 class StylesheetExecutionContext;
 class XalanElement;
+class XalanDocument;
 class XalanNode;
 
 
@@ -130,8 +130,6 @@ public:
 	/**
 	 * Build a keys table.
 	 *
-	 * @param doc              owner document key (normally the same as
-	 *                         startNode)
 	 * @param startNode        node to start iterating from to build the keys
 	 *                         index
 	 * @param nscontext        stylesheet's namespace context
@@ -139,7 +137,6 @@ public:
 	 * @param executionContext current execution context
 	 */
 	KeyTable(
-			XalanNode*							doc,
 			XalanNode*							startNode,
 			const PrefixResolver&				resolver,
 			const KeyDeclarationVectorType&		keyDeclarations,
@@ -164,18 +161,6 @@ public:
 	getNodeSetByKey(
 				  const XalanQName&			qname,
 				  const XalanDOMString&		ref) const;
-
-	/**
-	 * Retrieve the document key.  This table should only be used with contexts
-	 * whose Document root matches this key.
-	 * 
-	 * @return Node for document
-	 */
-	const XalanNode*
-	getDocKey() const
-	{
-		return m_docKey;
-	}
 
 private:
 
@@ -202,7 +187,7 @@ private:
 	 * The document key.  This table should only be used with contexts
 	 * whose Document roots match this key.
 	 */
-	const XalanNode*	m_docKey;
+	const XalanDocument*	m_docKey;
 
 	/**
 	 * Table of element keys.  The table will be built on demand, 

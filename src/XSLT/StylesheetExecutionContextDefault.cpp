@@ -79,7 +79,6 @@
 
 
 
-#include <XPath/XalanQNameByReference.hpp>
 #include <XPath/ResultTreeFragBase.hpp>
 #include <XPath/XObjectFactory.hpp>
 #include <XPath/XPath.hpp>
@@ -170,7 +169,8 @@ StylesheetExecutionContextDefault::StylesheetExecutionContextDefault(
 	m_usePerInstanceDocumentFactory(true),
 	m_cloneTextNodesOnly(false),
 	m_escapeURLs(eEscapeURLsDefault),
-	m_omitMETATag(eOmitMETATagDefault)
+	m_omitMETATag(eOmitMETATagDefault),
+	m_scratchQName()
 {
 }
 
@@ -212,7 +212,8 @@ StylesheetExecutionContextDefault::StylesheetExecutionContextDefault(
 	m_documentAllocator(eDocumentAllocatorBlockSize),
 	m_usePerInstanceDocumentFactory(true),
 	m_cloneTextNodesOnly(false),
-	m_escapeURLs(eEscapeURLsDefault)
+	m_escapeURLs(eEscapeURLsDefault),
+	m_scratchQName()
 {
 }
 
@@ -431,6 +432,18 @@ StylesheetExecutionContextDefault::addResultAttribute(
 
 
 void
+StylesheetExecutionContextDefault::addResultAttribute(
+			const XalanDOMString&	aname,
+			const XalanDOMChar*		value)
+{
+	assert(m_xsltProcessor != 0);
+
+	m_xsltProcessor->addResultAttribute(aname, value);
+}
+
+
+
+void
 StylesheetExecutionContextDefault::copyNamespaceAttributes(const XalanNode&		src)
 {
 	assert(m_xsltProcessor != 0);
@@ -629,7 +642,6 @@ StylesheetExecutionContextDefault::pushTopLevelVariables(const ParamVectorType&	
 
 const XObjectPtr
 StylesheetExecutionContextDefault::createVariable(
-			const ElemTemplateElement*	/* element */,
 			const XPath&				xpath,
 			XalanNode*					contextNode,
 			const PrefixResolver&		resolver)
@@ -641,7 +653,6 @@ StylesheetExecutionContextDefault::createVariable(
 
 const XObjectPtr
 StylesheetExecutionContextDefault::createVariable(
-			const ElemTemplateElement*	/* element */,
 			const ElemTemplateElement&	templateChild,
 			XalanNode*					sourceNode)
 {
@@ -807,11 +818,9 @@ StylesheetExecutionContextDefault::pushParams(
 const XObjectPtr
 StylesheetExecutionContextDefault::getParamVariable(const XalanQName&	theName)
 {
-	bool				fFound;
+	bool	fFound;
 
-	const XObjectPtr	theValue(m_variablesStack.getParamVariable(theName, *this, fFound));
-
-	return theValue;
+	return m_variablesStack.getParamVariable(theName, *this, fFound);
 }
 
 
@@ -1837,15 +1846,49 @@ StylesheetExecutionContextDefault::releaseCachedString(XalanDOMString&	theString
 
 void
 StylesheetExecutionContextDefault::getNodeSetByKey(
-			XalanNode*				doc,
-			const XalanDOMString&	name,
+			XalanDocument*			doc,
+			const XalanQName&		qname,
 			const XalanDOMString&	ref,
-			const PrefixResolver&	resolver,
 			MutableNodeRefList&		nodelist)
 {
 	assert(m_stylesheetRoot != 0);
 
-	m_stylesheetRoot->getNodeSetByKey(doc, name, ref, resolver, nodelist, *this, m_keyTables);
+	m_stylesheetRoot->getNodeSetByKey(
+		doc,
+		qname,
+		ref,
+		*getPrefixResolver(),
+		nodelist,
+		*this,
+		m_keyTables);
+}
+
+
+
+void
+StylesheetExecutionContextDefault::getNodeSetByKey(
+			XalanDocument*			doc,
+			const XalanDOMString&	name,
+			const XalanDOMString&	ref,
+			const Locator*			locator,
+			MutableNodeRefList&		nodelist)
+{
+	assert(m_stylesheetRoot != 0);
+
+	const PrefixResolver* const		resolver =
+				getPrefixResolver();
+	assert(resolver != 0);
+
+	m_scratchQName.set(name, resolver, locator);
+
+	m_stylesheetRoot->getNodeSetByKey(
+		doc,
+		m_scratchQName,
+		ref,
+		*resolver,
+		nodelist,
+		*this,
+		m_keyTables);
 }
 
 
@@ -2342,7 +2385,6 @@ StylesheetExecutionContextDefault::getParams(
 				{
 					theXObject =
 						createVariable(
-							&xslCallTemplateElement,
 							*pxpath,
 							sourceNode,
 							*xslParamElement);
@@ -2351,7 +2393,6 @@ StylesheetExecutionContextDefault::getParams(
 				{
 					theXObject =
 						createVariable(
-							&xslCallTemplateElement,
 							*xslParamElement,
 							sourceNode);
 				}

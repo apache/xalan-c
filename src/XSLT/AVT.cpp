@@ -109,6 +109,10 @@ static const XalanDOMChar	theRightCurlyBracketString[] =
 
 
 
+const XalanDOMString	AVT::s_emptyString;
+
+
+
 /**
  * Construct an AVT by parsing the string, and either 
  * constructing a vector of AVTParts, or simply hold 
@@ -117,16 +121,13 @@ static const XalanDOMChar	theRightCurlyBracketString[] =
 AVT::AVT(
 			const Locator*					locator,
 			const XalanDOMChar*				name,
-			const XalanDOMChar*				type,
 			const XalanDOMChar*				stringedValue,
 			const PrefixResolver&			resolver,
 			StylesheetConstructionContext&	constructionContext) :
 		m_parts(),
-		m_simpleString(),
-		// $$$ ToDo: Explicit XalanDOMString constructor
-		m_name(XalanDOMString(name)),
-		m_prefix(getPrefix(name)),
-		m_pcType(type)
+		m_simpleString(0),
+		m_simpleStringLength(0),
+		m_name(constructionContext.getPooledString(name))
 {
 	StringTokenizer		tokenizer(stringedValue, theTokenDelimiterCharacters, true);
 
@@ -134,7 +135,9 @@ AVT::AVT(
 
 	if(nTokens < 2)
 	{
-		m_simpleString = stringedValue; // then do the simple thing
+		// Do the simple thing
+		m_simpleStringLength = length(stringedValue);
+		m_simpleString = constructionContext.allocateVector(stringedValue, m_simpleStringLength, false);
 	}
 	else
 	{
@@ -183,7 +186,7 @@ AVT::AVT(
 						{
 							if(length(buffer) > 0)
 							{
-								m_parts.push_back(new AVTPartSimple(buffer));
+								m_parts.push_back(new AVTPartSimple(constructionContext, c_wstr(buffer), length(buffer)));
 
 								clear(buffer);
 							}
@@ -310,19 +313,14 @@ AVT::AVT(
 
 		if(length(buffer) > 0)
 		{
-			m_parts.push_back(new AVTPartSimple(buffer));
+			m_parts.push_back(new AVTPartSimple(constructionContext, c_wstr(buffer), length(buffer)));
 
 			clear(buffer);
 		}
 
 	} // end else nTokens > 1
 
-	if(m_parts.empty() && length(m_simpleString) == 0)
-	{
-		// Error?
-		clear(m_simpleString);
-	}
-	else if (m_parts.size() < m_parts.capacity())
+	if (m_parts.size() < m_parts.capacity())
 	{
 		AVTPartPtrVectorType(m_parts).swap(m_parts);
 	}
@@ -346,30 +344,23 @@ AVT::~AVT()
 
 
 void
-AVT::evaluate(
+AVT::doEvaluate(
 			XalanDOMString&			buf,
 			XalanNode*				contextNode,
 			const PrefixResolver&	prefixResolver,
 			XPathExecutionContext&	executionContext) const
 {
-	if(length(m_simpleString) > 0)
-	{
-		buf = m_simpleString;
-	}
-	else
-	{
-		clear(buf);
+	clear(buf);
 
-		if(m_parts.empty() == false)
+	if(m_parts.empty() == false)
+	{
+		const AVTPartPtrVectorType::size_type	n = m_parts.size();
+
+		for(AVTPartPtrVectorType::size_type i = 0; i < n; i++)
 		{
-			const AVTPartPtrVectorType::size_type	n = m_parts.size();
+			assert(m_parts[i] != 0);
 
-			for(AVTPartPtrVectorType::size_type i = 0; i < n; i++)
-			{
-				assert(m_parts[i] != 0);
-
-				m_parts[i]->evaluate(buf, contextNode, prefixResolver, executionContext);
-			}
+			m_parts[i]->evaluate(buf, contextNode, prefixResolver, executionContext);
 		}
 	}
 }
@@ -393,20 +384,5 @@ AVT::nextToken(
 	else
 	{
 		tokenizer.nextToken(token);
-	}
-}
-
-
-
-XalanDOMString
-AVT::getPrefix(const XalanDOMChar*	theName)
-{
-	if (startsWith(theName, DOMServices::s_XMLNamespaceWithSeparator) == true)
-	{
-		return XalanDOMString(theName, DOMServices::s_XMLNamespaceWithSeparatorLength);
-	}
-	else
-	{
-		return XalanDOMString();
 	}
 }

@@ -69,11 +69,7 @@
 
 
 
-// $$$ ToDo: This is necessary while XalanDOMString is still a typedef...
-#include <XalanDOM/XalanDOMString.hpp>
-
-
-
+class XalanDOMString;
 class XalanNode;
 class PrefixResolver;
 class XPathExecutionContext;

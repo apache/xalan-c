@@ -100,12 +100,12 @@ ElemElement::ElemElement(
 
 		if(equals(aname, Constants::ATTRNAME_NAME))
 		{
-			m_nameAVT = new AVT(getLocator(), aname,	atts.getType(i), atts.getValue(i),
+			m_nameAVT = new AVT(getLocator(), aname, atts.getValue(i),
 				*this, constructionContext);
 		}
 		else if(equals(aname, Constants::ATTRNAME_NAMESPACE))
 		{
-			m_namespaceAVT = new AVT(getLocator(), aname, atts.getType(i), atts.getValue(i),
+			m_namespaceAVT = new AVT(getLocator(), aname, atts.getValue(i),
 				*this, constructionContext); 
 		}
 		else if(!(processUseAttributeSets(constructionContext, aname, atts, i) ||

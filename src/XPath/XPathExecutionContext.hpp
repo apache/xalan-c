@@ -85,10 +85,10 @@
 
 
 
+class Locator;
 class XalanDecimalFormatSymbols;
 class PrefixResolver;
 class XalanQName;
-class XLocator;
 class XMLURL;
 class XObject;
 class XObjectPtr;
@@ -500,19 +500,37 @@ public:
 	 * Given a valid element key, return the corresponding node list.
 	 *
 	 * @param doc              source document
-	 * @param name             name of the key, which must match the 'name'
+	 * @param name             qname of the key, which must match the 'name'
 	 *                         attribute on xsl:key
 	 * @param ref              value that must match the value found by the
 	 *                         'match' attribute on xsl:key
-	 * @param resolver         resolver for namespace resolution
 	 * @param nodelist         A node list to contain the nodes found
 	 */
 	virtual void
 	getNodeSetByKey(
-			XalanNode*				doc,
+			XalanDocument*			doc,
+			const XalanQName&		qname,
+			const XalanDOMString&	ref,
+			MutableNodeRefList&		nodelist) = 0;
+
+	/**
+	 * Given a valid element key, return the corresponding node list.
+	 *
+	 * @param doc              source document
+	 * @param name             name of the key, which must match the 'name'
+	 *                         attribute on xsl:key.  Will be resolved to a
+	 *                         qname using the provided resolver.
+	 * @param ref              value that must match the value found by the
+	 *                         'match' attribute on xsl:key
+	 * @param locator          The Locator to use for error reporting.  Can be 0.
+	 * @param nodelist         A node list to contain the nodes found
+	 */
+	virtual void
+	getNodeSetByKey(
+			XalanDocument*			doc,
 			const XalanDOMString&	name,
 			const XalanDOMString&	ref,
-			const PrefixResolver&	resolver,
+			const Locator*			locator,
 			MutableNodeRefList&		nodelist) = 0;
 
 	/**

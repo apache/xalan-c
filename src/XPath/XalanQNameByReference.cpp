@@ -79,6 +79,15 @@ XalanQNameByReference::XalanQNameByReference(
 
 
 
+XalanQNameByReference::XalanQNameByReference(const XalanDOMString&	theLocalPart) :
+	XalanQName(),
+	m_namespace(&s_emptyString),
+	m_localpart(&theLocalPart)
+{
+}
+
+
+
 XalanQNameByReference::XalanQNameByReference(const XalanQName&	theQName) :
 	XalanQName(),
 	m_namespace(&theQName.getNamespace()),

@@ -168,27 +168,27 @@ ElemNumber::ElemNumber(
 		}
 		else if(equals(aname, Constants::ATTRNAME_FORMAT))
 		{
-			m_format_avt = new AVT(getLocator(), aname, atts.getType(i),
+			m_format_avt = new AVT(getLocator(), aname,
 						atts.getValue(i), *this, constructionContext);
 		}
 		else if(equals(aname, Constants::ATTRNAME_LANG))
 		{
-			m_lang_avt = new AVT(getLocator(), aname, atts.getType(i),
+			m_lang_avt = new AVT(getLocator(), aname,
 						atts.getValue(i), *this, constructionContext);
 		}
 		else if(equals(aname, Constants::ATTRNAME_LETTERVALUE))
 		{
-			m_lettervalue_avt = new AVT(getLocator(), aname, atts.getType(i),
+			m_lettervalue_avt = new AVT(getLocator(), aname,
 						atts.getValue(i), *this, constructionContext);
 		}
 		else if(equals(aname,Constants::ATTRNAME_GROUPINGSEPARATOR))
 		{
-			m_groupingSeparator_avt = new AVT(getLocator(), aname, atts.getType(i),
+			m_groupingSeparator_avt = new AVT(getLocator(), aname,
 						atts.getValue(i), *this, constructionContext);
 		}
 		else if(equals(aname,Constants::ATTRNAME_GROUPINGSIZE))
 		{
-			m_groupingSize_avt = new AVT(getLocator(), aname, atts.getType(i),
+			m_groupingSize_avt = new AVT(getLocator(), aname,
 						atts.getValue(i), *this, constructionContext);
 		}
 		else if(!isAttrOK(aname, atts, i, constructionContext))

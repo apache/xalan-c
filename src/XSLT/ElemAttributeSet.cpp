@@ -90,7 +90,7 @@ ElemAttributeSet::ElemAttributeSet(
 
 		if(equals(aname,Constants::ATTRNAME_NAME))
 		{
-			m_QName = XalanQNameByValue(atts.getValue(i), stylesheetTree.getNamespaces());
+			m_QName.set(atts.getValue(i), stylesheetTree.getNamespaces());
 
 			stylesheetTree.addAttributeSet(this);
 		}
@@ -104,10 +104,17 @@ ElemAttributeSet::ElemAttributeSet(
 		}
 	}
 
-	if(isEmpty(m_QName.getLocalPart()))
+	if(m_QName.isEmpty() == true)
 	{
 		constructionContext.error(
 			"xsl:attribute-set must have a 'name' attribute",
+			0,
+			this);
+	}
+	else if (isValidNCName(m_QName.getLocalPart()) == false)
+	{
+		constructionContext.error(
+			"xsl:attribute-set has an invalid 'name' attribute",
 			0,
 			this);
 	}

@@ -150,32 +150,9 @@ private:
 			const XalanDOMChar*				attrValue);
 
 	/**
-	 * Determine if the namespace node should be excluded.
-	 *
-	 * @param theURI The namespace URI.
-	 */
-	bool
-	shouldExcludeResultNamespaceNode(const XalanDOMString&	theURI) const;
-
-	/**
-	 * Add a result attribute, if necessary.
-	 *
-	 * @param executionContext  The current execution context
-	 * @param thePrefix The prefix of the attribute
-	 * @param theName The name of the attribute.
-	 * @param theValue The value of the attribute.
-	 */
-	void
-	doAddResultAttribute(
-			StylesheetExecutionContext&		executionContext,
-			const XalanDOMString&			thePrefix,
-			const XalanDOMString&			theName,
-			const XalanDOMString&			theValue) const;
-
-	/**
 	 * The name of the literal result element.
 	 */
-	const XalanDOMString		m_elementName;
+	const XalanDOMString&		m_elementName;
 
 	/**
 	 * A vector to keep track of the attribute elements.

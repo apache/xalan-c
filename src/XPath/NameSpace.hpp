@@ -147,8 +147,36 @@ public:
 	}
 
 	/**
-	 * Equality operator, necessary because DOMString::==()
-	 * has screwy semantics.
+	 * Set the URI for namespace
+	 * 
+	 * @param uri The new uri value
+	 */
+	void
+	setURI(const XalanDOMChar*	uri)
+	{
+		assert(uri != 0);
+
+		m_uri = uri;
+	}
+
+	/**
+	 * Set the URI for namespace
+	 * 
+	 * @param uri The new uri value
+	 * @param len The length of the uri
+	 */
+	void
+	setURI(
+			const XalanDOMChar*			uri,
+			XalanDOMString::size_type	len)
+	{
+		assert(uri != 0);
+
+		m_uri.assign(uri, len);
+	}
+
+	/**
+	 * Equality operator
 	 *
 	 * @param theRHS namespace to compare
 	 */
@@ -163,7 +191,7 @@ private:
 
 	XalanDOMString	m_prefix;
 
-	XalanDOMString	m_uri; // if length is 0, then Element namespace is empty.
+	XalanDOMString	m_uri;
 };
 
 

@@ -111,7 +111,7 @@ public:
 
 	/**
 	 * Construct a XalanQNameByValue from a string, resolving the prefix using the given
-	 * namespace vector stack. The default namespace is not resolved.
+	 * namespace vector stack.
 	 *
 	 * @param qname       QName string
 	 * @param namespaces  namespace vector stack to use
@@ -126,7 +126,7 @@ public:
 
 	/**
 	 * Construct a XalanQNameByValue from a string, resolving the prefix using the given
-	 * namespace vector stack. The default namespace is not resolved.
+	 * namespace vector stack.
 	 *
 	 * @param qname       QName string
 	 * @param namespaces  namespace vector stack to use
@@ -211,6 +211,69 @@ public:
 	}
 
 	/**
+	 * Set the local part and namespace URI of a XalanQNameByValue from
+	 * a string, resolving the prefix using the given namespace vector
+	 * stack.
+	 *
+	 * @param qname       QName string
+	 * @param namespaces  namespace vector stack to use
+	 * @param locator     The Locator instance for error reporting, if any
+	 * @param fUseDefault If true, then elements with no prefix will have the default namespace URI, if there is one.
+	 */
+	void
+	set(
+			const XalanDOMString&		qname,
+			const NamespacesStackType&	namespaces,
+			const Locator*				locator = 0,
+			bool						fUseDefault = false);
+
+	/**
+	 * Set the local part and namespace URI of a XalanQNameByValue from
+	 * a string, resolving the prefix using the given namespace vector
+	 * stack.
+	 *
+	 * @param qname       QName string
+	 * @param namespaces  namespace vector stack to use
+	 * @param locator     The Locator instance for error reporting, if any
+	 * @param fUseDefault If true, then elements with no prefix will have the default namespace URI, if there is one.
+	 */
+	void
+	set(
+			const XalanDOMChar*			qname,
+			const NamespacesStackType&	namespaces,
+			const Locator*				locator = 0,
+			bool						fUseDefault = false);
+
+	/**
+	 * Set the local part and namespace URI of a XalanQNameByValue from
+	 * a string, resolving the prefix using the resolver provided.  The
+	 * default namespace is not resolved.
+	 *
+	 * @param qname       QName string
+	 * @param theResolver prefix resolver to use
+	 * @param locator     The Locator instance for error reporting, if any
+	 */
+	void
+	set(
+			const XalanDOMString&	qname,
+			const PrefixResolver*	theResolver = 0,
+			const Locator*			locator = 0);
+
+	/**
+	 * Set the local part and namespace URI of a XalanQNameByValue from
+	 * a string, resolving the prefix using the resolver provided.  The
+	 * default namespace is not resolved.
+	 *
+	 * @param qname       QName string
+	 * @param theResolver prefix resolver to use
+	 * @param locator     The Locator instance for error reporting, if any
+	 */
+	void
+	set(
+			const XalanDOMChar*		qname,
+			const PrefixResolver*	theResolver = 0,
+			const Locator*			locator = 0);
+	/**
 	 * Clear the instance.
 	 */
 	void
@@ -243,15 +306,17 @@ private:
 	void
 	initialize(
 			const XalanDOMChar*			qname,
+			XalanDOMString::size_type	len,
 			const NamespacesStackType&	namespaces,
 			const Locator*				locator,
 			bool						fUseDefault);
 
 	void
 	resolvePrefix(
-			const XalanDOMString&	qname,
-			const PrefixResolver*	theResolver,
-			const Locator*			locator);
+			const XalanDOMChar*			qname,
+			XalanDOMString::size_type	theLength,
+			const PrefixResolver*		theResolver,
+			const Locator*				locator);
 
 
 	// Data members...

@@ -97,6 +97,7 @@
 #include "ElemCallTemplate.hpp"
 #include "ElemForEach.hpp"
 #include "ElemTemplate.hpp"
+#include "ElemTextLiteral.hpp"
 #include "NamespacesHandler.hpp"
 #include "NodeSorter.hpp"
 #include "Stylesheet.hpp"
@@ -115,7 +116,7 @@ const XalanEmptyNamedNodeMap	ElemTemplateElement::s_fakeAttributes;
 
 
 ElemTemplateElement::ElemTemplateElement(
-			StylesheetConstructionContext&	/* constructionContext */,
+			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
 			int								lineNumber,
 			int								columnNumber,
@@ -136,7 +137,7 @@ ElemTemplateElement::ElemTemplateElement(
 	m_previousSibling(0),
 	m_firstChild(0),
 	m_surrogateChildren(*this),
-	m_baseIndentifier(stylesheetTree.getCurrentIncludeBaseIdentifier()),
+	m_baseIndentifier(constructionContext.getPooledString(stylesheetTree.getCurrentIncludeBaseIdentifier())),
 	m_optimizationFlags(eCanGenerateAttributes),
 	m_locatorProxy(*this)
 {
@@ -358,16 +359,16 @@ ElemTemplateElement::childrenToString(
 {
 	if (hasSingleTextChild() == true)
 	{
-		assert(m_firstChild != 0);
+		assert(m_textLiteralChild != 0);
 
-		return m_firstChild->getNodeValue();
+		assign(result, m_textLiteralChild->getText(), m_textLiteralChild->getLength());
 	}
 	else
 	{
 		doChildrenToString(executionContext, result);
-
-		return result;
 	}
+
+	return result;
 }
 
 
@@ -379,19 +380,19 @@ ElemTemplateElement::childrenToResultAttribute(
 {
 	if (hasSingleTextChild() == true)
 	{
-		assert(m_firstChild != 0);
-
 		executionContext.addResultAttribute(
-			theName,
-			m_firstChild->getNodeValue());
+				theName,
+				m_textLiteralChild->getText());
 	}
 	else
 	{
 		StylesheetExecutionContext::GetAndReleaseCachedString	theResult(executionContext);
 
+		childrenToString(executionContext, theResult.get());
+
 		executionContext.addResultAttribute(
-			theName,
-			doChildrenToString(executionContext, theResult.get()));
+				theName,
+				theResult.get());
 	}
 }
 
@@ -402,15 +403,15 @@ ElemTemplateElement::childrenToResultComment(StylesheetExecutionContext&	executi
 {
 	if (hasSingleTextChild() == true)
 	{
-		assert(m_firstChild != 0);
-
-		executionContext.comment(c_wstr(m_firstChild->getNodeValue()));
+		executionContext.comment(m_textLiteralChild->getText());
 	}
 	else
 	{
 		StylesheetExecutionContext::GetAndReleaseCachedString	theResult(executionContext);
 
-		executionContext.comment(c_wstr(doChildrenToString(executionContext, theResult.get())));
+		childrenToString(executionContext, theResult.get());
+
+		executionContext.comment(c_wstr(theResult.get()));
 	}
 }
 
@@ -423,19 +424,19 @@ ElemTemplateElement::childrenToResultPI(
 {
 	if (hasSingleTextChild() == true)
 	{
-		assert(m_firstChild != 0);
-
 		executionContext.processingInstruction(
-			c_wstr(theTarget),
-			c_wstr(m_firstChild->getNodeValue()));
+				c_wstr(theTarget),
+				m_textLiteralChild->getText());
 	}
 	else
 	{
 		StylesheetExecutionContext::GetAndReleaseCachedString	theResult(executionContext);
 
+		childrenToString(executionContext, theResult.get());
+
 		executionContext.processingInstruction(
-			c_wstr(theTarget),
-			c_wstr(doChildrenToString(executionContext, theResult.get())));
+				c_wstr(theTarget),
+				c_wstr(theResult.get()));
 	}
 }
 

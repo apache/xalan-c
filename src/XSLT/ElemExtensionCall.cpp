@@ -59,6 +59,7 @@
 
 
 #include "Constants.hpp"
+#include "StylesheetConstructionContext.hpp"
 #include "StylesheetExecutionContext.hpp"
 
 
@@ -79,9 +80,9 @@ ElemExtensionCall::ElemExtensionCall(
 					  lineNumber,
 					  columnNumber,
 					  Constants::ELEMNAME_EXTENSIONCALL),
-	m_name(name),
+	m_name(constructionContext.getPooledString(name)),
 	m_nsh(ns),
-	m_localPart(localpart)	
+	m_localPart(constructionContext.getPooledString(localpart))	
 {
 }
 

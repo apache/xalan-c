@@ -447,6 +447,17 @@ public:
 			const XalanDOMString&	value) = 0;
 
 	/**
+	 * Add a result attribute to the list of pending attributes.
+	 * 
+	 * @param aname name of attribute
+	 * @param value value of attribute
+	 */
+	virtual void
+	addResultAttribute(
+			const XalanDOMString&	aname,
+			const XalanDOMChar*		value) = 0;
+
+	/**
 	 * Add namespace attributes for a node to the list of pending attributes.
 	 * 
 	 * @param src                 source node
@@ -628,7 +639,6 @@ public:
 	 * Execute the supplied XPath and and create a
 	 * variable in the current context.
 	 *
-	 * @param element	  element marker for variable
 	 * @param str         string expression for XPath evaluation
 	 * @param contextNode current node in the source tree
 	 * @param resolver    resolver for namespace resolution
@@ -636,7 +646,6 @@ public:
 	 */
 	virtual const XObjectPtr
 	createVariable(
-			const ElemTemplateElement*	element,
 			const XPath&				xpath,
 			XalanNode*					contextNode,
 			const PrefixResolver&		resolver) = 0;
@@ -645,14 +654,12 @@ public:
 	 * Create an ResultTreeFragment as a variable and push it
 	 * on to the stack with the current context.
 	 *
-	 * @param element element marker for variable
 	 * @param templateChild result tree fragment to use.
 	 * @param sourceNode source node
 	 * @return a pointer to the XObject result
 	 */
 	virtual const XObjectPtr
 	createVariable(
-			const ElemTemplateElement*	element,
 			const ElemTemplateElement&	templateChild,
 			XalanNode*					sourceNode) = 0;
 
@@ -1814,10 +1821,17 @@ public:
 
 	virtual void
 	getNodeSetByKey(
-			XalanNode*				doc,
+			XalanDocument*			doc,
+			const XalanQName&		qname,
+			const XalanDOMString&	ref,
+			MutableNodeRefList&		nodelist) = 0;
+
+	virtual void
+	getNodeSetByKey(
+			XalanDocument*			doc,
 			const XalanDOMString&	name,
 			const XalanDOMString&	ref,
-			const PrefixResolver&	resolver,
+			const Locator*			locator,
 			MutableNodeRefList&		nodelist) = 0;
 
 	virtual const XObjectPtr

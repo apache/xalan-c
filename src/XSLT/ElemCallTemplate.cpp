@@ -98,7 +98,7 @@ ElemCallTemplate::ElemCallTemplate(
 
 		if(equals(aname, Constants::ATTRNAME_NAME))
 		{
-			m_templateName = XalanQNameByValue(atts.getValue(i), getStylesheet().getNamespaces());        
+			m_templateName.set(atts.getValue(i), getStylesheet().getNamespaces());        
 		}
 		else if(!isAttrOK(aname, atts, i, constructionContext))
 		{

@@ -348,6 +348,11 @@ public:
 			const XalanDOMString&	value);
 
 	virtual void
+	addResultAttribute(
+			const XalanDOMString&	aname,
+			const XalanDOMChar*		value);
+
+	virtual void
 	copyNamespaceAttributes(const XalanNode&	src);
 
 	virtual const XalanDOMString*
@@ -397,14 +402,12 @@ public:
 
 	virtual const XObjectPtr
 	createVariable(
-			const ElemTemplateElement*	element,
 			const XPath&				xpath,
 			XalanNode*					contextNode,
 			const PrefixResolver&		resolver);
 
 	virtual const XObjectPtr
 	createVariable(
-			const ElemTemplateElement*	element,
 			const ElemTemplateElement&	templateChild,
 			XalanNode*					sourceNode);
 
@@ -877,11 +880,18 @@ public:
 	releaseCachedString(XalanDOMString&		theString);
 
 	virtual void
+	getNodeSetByKey(
+			XalanDocument*			doc,
+			const XalanQName&		qname,
+			const XalanDOMString&	ref,
+			MutableNodeRefList&		nodelist);
+
+	virtual void
 	getNodeSetByKey(			
-			XalanNode*				doc,
+			XalanDocument*			doc,
 			const XalanDOMString&	name,
 			const XalanDOMString&	ref,
-			const PrefixResolver&	resolver,
+			const Locator*			locator,
 			MutableNodeRefList&		nodelist);
 
 	virtual const XObjectPtr
@@ -1171,6 +1181,8 @@ private:
 
 	// Determines whether or not to override the property in the stylesheet.
 	eOmitMETATag						m_omitMETATag;
+
+	XalanQNameByValue					m_scratchQName;
 
 	static XalanNumberFormatFactory		s_defaultXalanNumberFormatFactory;
 

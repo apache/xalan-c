@@ -76,9 +76,11 @@ ResultNamespacesStack::~ResultNamespacesStack()
 
 void
 ResultNamespacesStack::addDeclaration(
-			const XalanDOMString&	thePrefix,
-			const XalanDOMString&	theNamespaceURI)
+			const XalanDOMString&		thePrefix,
+	        const XalanDOMChar*			theNamespaceURI,
+			XalanDOMString::size_type	theLength)
 {
+	assert(theNamespaceURI != 0);
 	assert(m_createNewContextStack.size() != 0);
 
 	// Check to see if we need to create a new context and do so if necessary...
@@ -91,8 +93,14 @@ ResultNamespacesStack::addDeclaration(
 
 	NamespaceVectorType&	theCurrentNamespaces = m_resultNamespaces.back();
 
-	// Add the namespace at the end of the current namespaces.
-	theCurrentNamespaces.push_back(NameSpace(thePrefix, theNamespaceURI));
+	// Add a new namespace at the end of the current namespaces.
+	theCurrentNamespaces.resize(theCurrentNamespaces.size() + 1);
+
+	NameSpace&	theNewNamespace = theCurrentNamespaces.back();
+
+	theNewNamespace.setPrefix(thePrefix);
+
+	theNewNamespace.setURI(theNamespaceURI, theLength);
 }
 
 
@@ -123,24 +131,6 @@ ResultNamespacesStack::popContext()
 	}
 
 	m_createNewContextStack.pop_back();
-}
-
-
-
-const XalanDOMString*
-ResultNamespacesStack::getNamespaceForPrefix(const XalanDOMString&	thePrefix) const
-{
-	// Search vector from first element back
-	return XalanQName::getNamespaceForPrefix(m_resultNamespaces, thePrefix, true);
-}
-
-
-
-const XalanDOMString*
-ResultNamespacesStack::getPrefixForNamespace(const XalanDOMString&	theNamespaceURI) const
-{
-	// Search vector from first element back
-	return XalanQName::getPrefixForNamespace(m_resultNamespaces, theNamespaceURI, true);
 }
 
 

@@ -425,7 +425,7 @@ public:
 	 * Given a valid element key, return the corresponding node list.
 	 *
 	 * @param doc			   source document
-	 * @param name			   name of the key, which must match the 'name'
+	 * @param name			   qname of the key, which must match the 'name'
 	 *						   attribute on xsl:key
 	 * @param ref			   value that must match the value found by the
 	 *						   'match' attribute on xsl:key
@@ -435,8 +435,8 @@ public:
 	 */
 	void
 	getNodeSetByKey(
-			XalanNode*						doc,
-			const XalanDOMString&			name,
+			XalanDocument*					doc,
+			const XalanQName&				qname,
 			const XalanDOMString&			ref,
 			const PrefixResolver&			resolver,
 			MutableNodeRefList&				nodelist,

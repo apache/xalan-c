@@ -88,6 +88,7 @@
 
 class AttributeList;
 class ElemTemplate;
+class ElemTextLiteral;
 class NamespacesHandler;
 class Stylesheet;
 class StylesheetConstructionContext;
@@ -818,11 +819,12 @@ private:
 	{
 		ElemTemplateElement*	m_firstChild;
 		const ElemTemplate* 	m_directTemplate;
+		const ElemTextLiteral*	m_textLiteralChild;
 	};
 
 	XalanNodeListSurrogate	m_surrogateChildren;
 
-	const XalanDOMString	m_baseIndentifier;
+	const XalanDOMString&	m_baseIndentifier;
 
 	enum { eHasParams = 1,
 		   eHasSingleTextChild = 2,

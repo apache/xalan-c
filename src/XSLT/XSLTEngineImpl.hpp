@@ -436,7 +436,32 @@ public:
 	void
 	addResultNamespaceDecl(
 			const XalanDOMString&	prefix, 
-			const XalanDOMString&	namespaceVal);
+			const XalanDOMString&	namespaceVal)
+	{
+		addResultNamespaceDecl(
+			prefix,
+			namespaceVal.c_str(),
+			namespaceVal.length());
+	}
+
+	/**
+	 * Add a namespace declaration to the namespace stack
+	 *
+	 * @param prefix namespace prefix
+	 * @param namespaceVal value of namespace
+	 * @param len length of namespace
+	 */
+	void
+	addResultNamespaceDecl(
+			const XalanDOMString&		prefix, 
+			const XalanDOMChar*			namespaceVal,
+			XalanDOMString::size_type	len)
+	{
+		m_resultNamespacesStack.addDeclaration(
+			prefix,
+			namespaceVal,
+			len);
+	}
 
 	/**
 	 * Add attribute to attribute list, and if it is a namespace, add it to the
@@ -448,9 +473,49 @@ public:
 	 */
 	void
 	addResultAttribute(
-			AttributeListImpl&	attList,
+			AttributeListImpl&		attList,
 			const XalanDOMString&	aname,
-			const XalanDOMString&	value);
+			const XalanDOMString&	value)
+	{
+		addResultAttribute(
+			attList,
+			aname,
+			value.c_str());
+	}
+
+	/**
+	 * Add attribute to attribute list, and if it is a namespace, add it to the
+	 * namespaces stack.
+	 *
+	 * @param attList attribute list added to
+	 * @param aname name of attribute
+	 * @param value value of attribute
+	 */
+	void
+	addResultAttribute(
+			AttributeListImpl&			attList,
+			const XalanDOMString&		aname,
+			const XalanDOMChar*			value);
+
+	/**
+	 * Add attribute to pending attributes list, and if it is a namespace, add
+	 * it to the namespaces stack.
+	 *
+	 * @param aname name of attribute
+	 * @param value value of attribute
+	 */
+	void
+	addResultAttribute(
+			const XalanDOMString&		aname,
+			const XalanDOMChar*			value)
+	{
+		assert(m_outputContextStack.empty() == false);
+
+		addResultAttribute(
+				getPendingAttributesImpl(),
+				aname,
+				value);
+	}
 
 	/**
 	 * Add attribute to pending attributes list, and if it is a namespace, add
@@ -466,9 +531,10 @@ public:
 	{
 		assert(m_outputContextStack.empty() == false);
 
-		addResultAttribute(getPendingAttributesImpl(),
-						   aname,
-						   value);
+		addResultAttribute(
+				getPendingAttributesImpl(),
+				aname,
+				value);
 	}
 
 	void

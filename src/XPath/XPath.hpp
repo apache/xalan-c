@@ -488,12 +488,6 @@ public:
 protected:
 
 	/**
-	 * createXLocatorHandler.
-	 */
-	XLocator*
-	createXLocatorHandler() const;
-
-	/**
 	 * Computes the union of its operands which must be node-sets.
 	 * @param context The current source tree context node.
 	 * @param opPos The current position in the m_opMap array.

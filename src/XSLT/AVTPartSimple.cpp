@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -62,12 +62,20 @@
 
 
 
+#include "StylesheetConstructionContext.hpp"
+
+ 
+ 
 /**
  * Simple string part of a complex AVT.
  */
-AVTPartSimple::AVTPartSimple(const XalanDOMString&	val) :
+AVTPartSimple::AVTPartSimple(
+			StylesheetConstructionContext&	constructionContext,
+			const XalanDOMChar*				val,
+			XalanDOMString::size_type		len) :
 	AVTPart(),
-	m_val(val)
+	m_val(constructionContext.allocateVector(val, len, false)),
+	m_len(len)
 {
 }
 
@@ -81,5 +89,5 @@ AVTPartSimple::evaluate(
 			XPathExecutionContext&	/* executionContext */) const
 
 {
-	append(buf, m_val);
+	append(buf, m_val, m_len);
 }

@@ -721,8 +721,8 @@ StylesheetRoot::isCDATASectionElementName(const XalanQName&		theQName) const
 
 void
 StylesheetRoot::getNodeSetByKey(
-			XalanNode*						doc,
-			const XalanDOMString&			name,
+			XalanDocument*					doc,
+			const XalanQName&				qname,
 			const XalanDOMString&			ref,
 			const PrefixResolver&			resolver,
 			MutableNodeRefList&				nodelist,
@@ -736,27 +736,24 @@ StylesheetRoot::getNodeSetByKey(
 		const KeyTablesTableType::const_iterator	i =
 			theKeysTable.find(doc);
 
-		const XalanQNameByValue		theQName(name, &resolver);
-
 		if (i != theKeysTable.end())
 		{
-			const NodeRefListBase&	nl = (*i).second->getNodeSetByKey(theQName, ref);
+			const NodeRefListBase&	nl = (*i).second->getNodeSetByKey(qname, ref);
 
 			nodelist.addNodesInDocOrder(nl, executionContext);
 		}
 		else
 		{
 			KeyTable* const kt =
-				new KeyTable(doc,
+				new KeyTable(
 							 doc,
 							 resolver,
 							 m_keyDeclarations,
 							 executionContext);
-			assert(doc == kt->getDocKey());
 
 			theKeysTable[doc] = kt;
 
-			const NodeRefListBase&	nl = kt->getNodeSetByKey(theQName, ref);
+			const NodeRefListBase&	nl = kt->getNodeSetByKey(qname, ref);
 
 			nodelist.addNodesInDocOrder(nl, executionContext);
 		}

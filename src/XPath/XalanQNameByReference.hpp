@@ -92,6 +92,15 @@ public:
 			const XalanDOMString&	theLocalPart);
 
 	/**
+	 * Construct a XalanQNameByReference, with the supplied local part.
+	 * The instance keeps only a _reference_ to the string, to avoid making a
+	 * copy.
+	 *
+	 * @param theLocalPart local part string
+	 */
+	XalanQNameByReference(const XalanDOMString&		theLocalPart);
+
+	/**
 	 * Construct a XalanQNameByReference, from the supplied XalanQName.  The instance
 	 * keeps only a _reference_ to the string, to avoid making a copy.
 	 *

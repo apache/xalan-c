@@ -595,6 +595,10 @@ private:
 	 */
 	bool m_foundNotImport;
 
+	XalanDOMString		m_elementLocalName;
+
+	XalanQNameByValue	m_spaceAttributeQName;
+
 	/**
 	 * Accumulate character buffer to create contiguous character data
 	 * where possible.

@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -77,6 +77,10 @@
 
 
 
+class StylesheetConstructionContext;
+
+
+
 /**
  * Simple string part of a complex AVT.
  */
@@ -87,9 +91,13 @@ public:
 	/**
 	 * Construct a simple Attribute Value Template (AVT) part.
 	 *
+	 * @param constructionContext  context when object constructed
 	 * @param val A pure string section of an AVT
 	 */
-	AVTPartSimple(const XalanDOMString&		val);
+	AVTPartSimple(
+			StylesheetConstructionContext&	constructionContext,
+			const XalanDOMChar*				val,
+			XalanDOMString::size_type		len);
 
 
 	// These methods are inherited from AVTPart ...
@@ -106,7 +114,9 @@ private:
 	/**
 	 * Simple string value;
 	 */
-	const XalanDOMString		m_val;
+	const XalanDOMChar* const			m_val;
+
+	const XalanDOMString::size_type		m_len;
 };
 
 

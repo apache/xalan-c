@@ -88,28 +88,16 @@
 
 
 StylesheetConstructionContextDefault::StylesheetConstructionContextDefault(
-			XSLTEngineImpl&		processor,
-			XPathEnvSupport&	/* xpathEnvSupport */,
-			XPathFactory&		xpathFactory) :
+			XSLTEngineImpl&				processor,
+			XPathFactory&				xpathFactory,
+			VectorAllocatorSizeType		theAllocatorSize) :
 	StylesheetConstructionContext(),
 	m_processor(processor),
 	m_xpathFactory(xpathFactory),
 	m_xpathProcessor(new XPathProcessorImpl),
 	m_stylesheets(),
-	m_tempBuffer()
-{
-}
-
-
-
-StylesheetConstructionContextDefault::StylesheetConstructionContextDefault(
-			XSLTEngineImpl&		processor,
-			XPathFactory&		xpathFactory) :
-	StylesheetConstructionContext(),
-	m_processor(processor),
-	m_xpathFactory(xpathFactory),
-	m_xpathProcessor(new XPathProcessorImpl),
-	m_stylesheets(),
+	m_stringPool(),
+	m_xalanDOMCharVectorAllocator(theAllocatorSize),
 	m_tempBuffer()
 {
 }
@@ -539,4 +527,61 @@ double
 StylesheetConstructionContextDefault::getXSLTVersionSupported() const
 {
 	return XSLTEngineImpl::getXSLTVerSupported();
+}
+
+
+
+const XalanDOMString&
+StylesheetConstructionContextDefault::getPooledString(const XalanDOMString&		theString)
+{
+	return m_stringPool.get(theString);
+}
+
+
+
+const XalanDOMString&
+StylesheetConstructionContextDefault::getPooledString(
+			const XalanDOMChar*			theString,
+			XalanDOMString::size_type	theLength)
+{
+	return m_stringPool.get(theString, theLength);
+}
+
+
+
+XalanDOMChar*
+StylesheetConstructionContextDefault::allocateVector(XalanDOMString::size_type	theLength)
+{
+	return m_xalanDOMCharVectorAllocator.allocate(theLength);
+}
+
+
+
+XalanDOMChar*
+StylesheetConstructionContextDefault::allocateVector(
+			const XalanDOMChar*			theString,
+			XalanDOMString::size_type	theLength,
+			bool						fTerminate)
+{
+	assert(theString != 0);
+
+	const XalanDOMString::size_type		theActualLength =
+		theLength == XalanDOMString::npos ? XalanDOMString::length(theString) : theLength;
+
+	XalanDOMChar* const		theVector =
+		m_xalanDOMCharVectorAllocator.allocate(fTerminate == true ? theActualLength + 1 : theActualLength);
+
+#if !defined(XALAN_NO_NAMESPACES)
+	using std::copy;
+#endif
+
+	XalanDOMChar* const		theEnd =
+		std::copy(theString, theString + theActualLength, theVector);
+
+	if (fTerminate == true)
+	{
+		*theEnd = XalanDOMChar(0);
+	}
+
+	return theVector;
 }

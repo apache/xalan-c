@@ -107,7 +107,8 @@ ElemIf::ElemIf(
 		{
 			processSpaceAttr(atts, i, constructionContext);
 		}
-		else if (!isAttrOK(aname, atts, i, constructionContext))
+		else if (!processSpaceAttr(aname, atts, i, constructionContext) ||
+				 !isAttrOK(aname, atts, i, constructionContext))
 		{
 			constructionContext.error(
 					"xsl:if has an illegal attribute",

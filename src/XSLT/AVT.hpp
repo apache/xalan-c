@@ -101,7 +101,6 @@ public:
 	 *
 	 * @param ownerElement		  the Locator for the AVT.  May be null.
 	 * @param name                name of AVT
-	 * @param type                type of AVT
 	 * @param stringedValue       string value to parse
 	 * @param resolver            resolver for namespace resolution
 	 * @param constructionContext context for construction of AVT
@@ -109,7 +108,6 @@ public:
 	AVT(
 			const Locator*					locator,
 			const XalanDOMChar*				name,
-			const XalanDOMChar*				type,
 			const XalanDOMChar*				stringedValue,
 			const PrefixResolver&			resolver,
 			StylesheetConstructionContext&	constructionContext);
@@ -128,46 +126,22 @@ public:
 		return m_name;
 	}
 
-	/**
-	 * Retrieve the prefix of the name of the Attribute Value Template,
-	 * if any.
-	 * 
-	 * @return The prefix part of the AVT's name
-	 */
-    const XalanDOMString&
-	getPrefix() const
-	{
-		return m_prefix;
-	}
-
-	/**
-	 * Retrieve the type of the Attribute Value Template
-	 * 
-	 * @return type of AVT
-	 */
-	const XalanDOMString&
-	getType() const
-	{
-		return m_pcType;
-	}
-
-	/**
-	 * Retrieve the "simple" value
-	 * 
-	 * @return The "simple" value of the AVT.
-	 */
-	const XalanDOMString&
-	getSimpleValue() const
-	{
-		return m_simpleString;
-	}
-
 	void
 	evaluate(
 			XalanDOMString&			buf,
 			XalanNode*				contextNode,
 			const PrefixResolver&	prefixResolver,
-			XPathExecutionContext&	executionContext) const;
+			XPathExecutionContext&	executionContext) const
+	{
+		if(m_simpleString != 0)
+		{
+			buf.assign(m_simpleString, m_simpleStringLength);
+		}
+		else
+		{
+			doEvaluate(buf, contextNode, prefixResolver, executionContext);
+		}
+	}
 
 #if defined(XALAN_NO_NAMESPACES)
 	typedef vector<const AVTPart*>		AVTPartPtrVectorType;
@@ -178,35 +152,39 @@ public:
 private:
 
 	void
+	doEvaluate(
+			XalanDOMString&			buf,
+			XalanNode*				contextNode,
+			const PrefixResolver&	prefixResolver,
+			XPathExecutionContext&	executionContext) const;
+
+	void
 	nextToken(
 			StylesheetConstructionContext&	constructionContext,
 			const Locator*					locator,
 			StringTokenizer&				tokenizer,
 			XalanDOMString&					token);
 
-	/**
-	 * Get the prefix from theName, if any.
-	 * 
-	 * @param theName name of AVT
-	 *
-	 * @return A string containing the prefix.
-	 */
-	XalanDOMString
-	getPrefix(const XalanDOMChar*	theName);
-
 	// not implemented
-	AVT(const AVT &);
-	AVT& operator=(const AVT &);	
+	AVT(const AVT&);
 
-	AVTPartPtrVectorType	m_parts;
+	AVT&
+	operator=(const AVT&);
 
-	XalanDOMString			m_simpleString;
+	bool
+	operator==(const AVT&) const;
 
-	const XalanDOMString	m_name;	
 
-	const XalanDOMString	m_prefix;
+	// Data members...
+	AVTPartPtrVectorType			m_parts;
 
-	const XalanDOMString	m_pcType;
+	const XalanDOMChar*				m_simpleString;
+
+	XalanDOMString::size_type		m_simpleStringLength;
+
+	const XalanDOMString&			m_name;
+
+	static const XalanDOMString		s_emptyString;
 };
 
 

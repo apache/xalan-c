@@ -112,11 +112,11 @@ public:
 
 private:
 
-	const XalanDOMString	m_name;
+	const XalanDOMString&	m_name;
 
 	ExtensionNSHandler&		m_nsh;
 
-	const XalanDOMString	m_localPart;
+	const XalanDOMString&	m_localPart;
 };
 
 

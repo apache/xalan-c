@@ -1635,21 +1635,13 @@ XSLTEngineImpl::endDocument()
 
 
 void
-XSLTEngineImpl::addResultNamespaceDecl(
-			const XalanDOMString&	prefix, 
-	        const XalanDOMString&	namespaceVal)
-{
-	m_resultNamespacesStack.addDeclaration(prefix, namespaceVal);
-}
-
-
-
-void
 XSLTEngineImpl::addResultAttribute(
-			AttributeListImpl&	attList,
-			const XalanDOMString&	aname,
-			const XalanDOMString&	value)
+			AttributeListImpl&			attList,
+			const XalanDOMString&		aname,
+			const XalanDOMChar*			value)
 {
+	assert(value != 0);
+
 	// Always exclude the implicit XML declaration...
 	if (equals(aname, DOMServices::s_XMLNamespacePrefix) == false) 
 	{
@@ -1665,18 +1657,20 @@ XSLTEngineImpl::addResultAttribute(
 			const XalanDOMString* const		currentDefaultNamespace =
 						getNamespaceForPrefix(s_emptyString);
 
+			const XalanDOMString::size_type		theLength = length(value);
+
 			// Note that we use an empty string for the prefix, instead of "xmlns", since the
 			// prefix really is "".
-			if (length(value) != 0)
+			if (theLength != 0)
 			{
 				if (currentDefaultNamespace != 0 &&
-					equals(*currentDefaultNamespace, value) == true)
+					equals(*currentDefaultNamespace, value, theLength) == true)
 				{
 					fExcludeAttribute = true;
 				}
 				else
 				{
-					addResultNamespaceDecl(s_emptyString, value);
+					addResultNamespaceDecl(s_emptyString, value, theLength);
 				}
 			}
 			else
@@ -1686,7 +1680,7 @@ XSLTEngineImpl::addResultAttribute(
 				// the namespace declaration _and_ don't add the attribute.
 				if (currentDefaultNamespace != 0 && length(*currentDefaultNamespace) != 0)
 				{
-					addResultNamespaceDecl(s_emptyString, value);
+					addResultNamespaceDecl(s_emptyString, value, theLength);
 				}
 				else
 				{
@@ -1706,9 +1700,11 @@ XSLTEngineImpl::addResultAttribute(
 
 			const XalanDOMString* const	theNamespace = getResultNamespaceForPrefix(prefix);
 
-			if (theNamespace == 0 || equals(*theNamespace, value) == false)
+			const XalanDOMString::size_type		theLength = length(value);
+
+			if (theNamespace == 0 || equals(*theNamespace, value, theLength) == false)
 			{
-				addResultNamespaceDecl(prefix, value);
+				addResultNamespaceDecl(prefix, value, theLength);
 			}
 			else
 			{

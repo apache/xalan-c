@@ -66,6 +66,11 @@
 
 
 
+#include <PlatformSupport/XalanArrayAllocator.hpp>
+#include <PlatformSupport/XalanDOMStringPool.hpp>
+
+
+
 #if defined(XALAN_AUTO_PTR_REQUIRES_DEFINITION) || (XALAN_ALLINONE_BUILD_DLL)
 #include <XPath/XPathProcessor.hpp>
 #endif
@@ -103,24 +108,11 @@ class XALAN_XSLT_EXPORT StylesheetConstructionContextDefault : public Stylesheet
 {
 public:
 
-	/*
-	 * Construct an instance.  If the stylesheet(s) constructed is/are meant to be reused (a.k.a. "compiled"),
-	 * the XObjectFactory and XPathFactory instance must exist for the lifetime of the construction context
-	 * and, therefore, for the lifetime of the stylesheet(s).  Otherwise, XObject and XPath instance will be
-	 * destroyed when the corresponding factories are destryed, leaving pointers to destroyed objects in the.
-	 * stylesheet(s).
-	 *
-	 * @deprecated This constructor is deprecated.
-	 *
-	 * @param processor a reference to an XSLTEngineImpl instance.  Used for error reporting.
-	 * @param xpathEnvSupport a reference to an XPathEnvSupport instance.
-	 * @param xpathFactory a reference to an XPathFactory instance.  See comments above for important details.
-	 *
-	 */
-	StylesheetConstructionContextDefault(
-			XSLTEngineImpl&		processor,
-			XPathEnvSupport&	xpathEnvSupport,
-			XPathFactory&		xpathFactory);
+	typedef XalanArrayAllocator<XalanDOMChar>			XalanDOMCharVectorAllocatorType;
+	typedef XalanDOMCharVectorAllocatorType::size_type	VectorAllocatorSizeType;
+
+    // Default size for vector allocation.
+	enum { eDefaultBlockSize = 1024 };
 
 	/*
 	 * Construct an instance.  If the stylesheet(s) constructed is/are meant to be reused (a.k.a. "compiled"),
@@ -131,11 +123,12 @@ public:
 	 *
 	 * @param processor a reference to an XSLTEngineImpl instance.  Used for error reporting.
 	 * @param xpathFactory a reference to an XPathFactory instance.  See comments above for important details.
-	 *
+	 * @param theAllocatorSize The block size to use for allocating vectors of XalanDOMChars
 	 */
 	StylesheetConstructionContextDefault(
-			XSLTEngineImpl&		processor,
-			XPathFactory&		xpathFactory);
+			XSLTEngineImpl&				processor,
+			XPathFactory&				xpathFactory,
+			VectorAllocatorSizeType		theAllocatorSize = eDefaultBlockSize);
 
 	virtual
 	~StylesheetConstructionContextDefault();
@@ -300,6 +293,23 @@ public:
 	virtual double
 	getXSLTVersionSupported() const;
 
+	virtual const XalanDOMString&
+	getPooledString(const XalanDOMString&	theString);
+
+	virtual const XalanDOMString&
+	getPooledString(
+			const XalanDOMChar*			theString,
+			XalanDOMString::size_type	theLength = XalanDOMString::npos);
+
+	virtual XalanDOMChar*
+	allocateVector(XalanDOMString::size_type		theLength);
+
+	virtual XalanDOMChar*
+	allocateVector(
+			const XalanDOMChar*			theString,
+			XalanDOMString::size_type	theLength = XalanDOMString::npos,
+			bool						fTerminate = true);
+
 #if defined(XALAN_NO_NAMESPACES)
 	typedef set<StylesheetRoot*,
 				less<StylesheetRoot*> >		StylesheetSetType;
@@ -318,6 +328,10 @@ private:
 	XPathProcessAutoPtr					m_xpathProcessor;
 
 	StylesheetSetType					m_stylesheets;
+
+	XalanDOMStringPool					m_stringPool;
+
+	XalanDOMCharVectorAllocatorType		m_xalanDOMCharVectorAllocator;
 
 	mutable XalanDOMString				m_tempBuffer;
 };

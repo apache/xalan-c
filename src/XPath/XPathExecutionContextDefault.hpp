@@ -249,10 +249,17 @@ public:
 
 	virtual void
 	getNodeSetByKey(
-			XalanNode*				doc,
+			XalanDocument*			doc,
+			const XalanQName&		qname,
+			const XalanDOMString&	ref,
+			MutableNodeRefList&		nodelist);
+
+	virtual void
+	getNodeSetByKey(
+			XalanDocument*			doc,
 			const XalanDOMString&	name,
 			const XalanDOMString&	ref,
-			const PrefixResolver&	resolver,
+			const Locator*			locator,
 			MutableNodeRefList&		nodelist);
 
 	virtual const XObjectPtr

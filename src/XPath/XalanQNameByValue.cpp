@@ -119,7 +119,12 @@ XalanQNameByValue::XalanQNameByValue(
 	m_namespace(),
 	m_localpart()
 {
-	initialize(c_wstr(qname), namespaces, locator, fUseDefault);
+	initialize(
+		c_wstr(qname),
+		length(qname),
+		namespaces,
+		locator,
+		fUseDefault);
 }
 
 
@@ -134,7 +139,12 @@ XalanQNameByValue::XalanQNameByValue(
 {
 	assert(qname != 0);
 
-	initialize(qname, namespaces, locator, fUseDefault);
+	initialize(
+		qname,
+		length(qname),
+		namespaces,
+		locator,
+		fUseDefault);
 }
 
 
@@ -150,7 +160,11 @@ XalanQNameByValue::XalanQNameByValue(
 {
 	ElementPrefixResolverProxy	theProxy(namespaceContext, envSupport, domSupport);
 
-	resolvePrefix(qname, &theProxy, locator);
+	resolvePrefix(
+		c_wstr(qname),
+		length(qname),
+		&theProxy,
+		locator);
 }
 
 
@@ -162,7 +176,11 @@ XalanQNameByValue::XalanQNameByValue(
 	m_namespace(),
 	m_localpart()
 {
-	resolvePrefix(qname, theResolver, locator);
+	resolvePrefix(
+		c_wstr(qname),
+		length(qname),
+		theResolver,
+		locator);
 }
 
 
@@ -190,6 +208,74 @@ XalanQNameByValue::getNamespace() const
 
 
 void
+XalanQNameByValue::set(
+			const XalanDOMString&		qname,
+			const NamespacesStackType&	namespaces,
+			const Locator*				locator,
+			bool						fUseDefault)
+{
+	initialize(
+		c_wstr(qname),
+		length(qname),
+		namespaces,
+		locator,
+		fUseDefault);
+}
+
+
+
+void
+XalanQNameByValue::set(
+			const XalanDOMChar*			qname,
+			const NamespacesStackType&	namespaces,
+			const Locator*				locator,
+			bool						fUseDefault)
+{
+	assert(qname != 0);
+
+	initialize(
+		qname,
+		length(qname),
+		namespaces,
+		locator,
+		fUseDefault);
+}
+
+
+
+void
+XalanQNameByValue::set(
+			const XalanDOMString&	qname,
+			const PrefixResolver*	theResolver,
+			const Locator*			locator)
+{
+	resolvePrefix(
+		c_wstr(qname),
+		length(qname),
+		theResolver,
+		locator);
+}
+
+
+
+void
+XalanQNameByValue::set(
+			const XalanDOMChar*		qname,
+			const PrefixResolver*	theResolver,
+			const Locator*			locator)
+{
+	assert(qname != 0);
+
+	resolvePrefix(
+		qname,
+		length(qname),
+		theResolver,
+		locator);
+}
+
+
+
+void
 throwException(
 			const XalanDOMString&	theMessage,
 			const Locator*			theLocator)
@@ -210,6 +296,7 @@ throwException(
 void
 XalanQNameByValue::initialize(
 			const XalanDOMChar*			qname,
+			XalanDOMString::size_type	len,
 			const NamespacesStackType&	namespaces,
 			const Locator*				locator,
 			bool						fUseDefault)
@@ -220,19 +307,27 @@ XalanQNameByValue::initialize(
 	{
 		throwException(TranscodeFromLocalCodePage("A prefix of length 0 was detected"), locator);
 	}
-	else if(indexOfNSSep < length(qname))
+	else if(indexOfNSSep < len)
 	{
-		const XalanDOMString	prefix(qname, indexOfNSSep);
+		// Reserve some space for the local part right now, and
+		// use it as a temporary for the prefix.
+		m_localpart.reserve(len);
 
-		if(::equals(prefix, DOMServices::s_XMLNamespace))
+		m_localpart.assign(qname, indexOfNSSep);
+
+		if(::equals(m_localpart, DOMServices::s_XMLNamespace))
+		{
+			::clear(m_localpart);
+
 			return;
+		}
 
 		const XalanDOMString* const		theNamespace = 
-				getNamespaceForPrefix(namespaces, prefix);
+					getNamespaceForPrefix(namespaces, m_localpart);
 
 		if(theNamespace == 0 || 0 == length(*theNamespace))
 		{
-			throwException(TranscodeFromLocalCodePage("Prefix must resolve to a namespace: ") + prefix, locator);
+			throwException(TranscodeFromLocalCodePage("Prefix must resolve to a namespace: ") + m_localpart, locator);
 		}
 		else
 		{
@@ -243,10 +338,14 @@ XalanQNameByValue::initialize(
 	}
 	else
 	{
-		if (fUseDefault == true)
+		if (fUseDefault == false)
+		{
+			m_namespace.clear();
+		}
+		else
 		{
 			const XalanDOMString* const		theNamespace = 
-					getNamespaceForPrefix(namespaces, s_emptyString);
+						getNamespaceForPrefix(namespaces, s_emptyString);
 
 			if(theNamespace != 0 && 0 != length(*theNamespace))
 			{
@@ -262,42 +361,50 @@ XalanQNameByValue::initialize(
 
 void
 XalanQNameByValue::resolvePrefix(
-			const XalanDOMString&	qname,
-			const PrefixResolver*	theResolver,
-			const Locator*			locator)
+			const XalanDOMChar*			qname,
+			XalanDOMString::size_type	theLength,
+			const PrefixResolver*		theResolver,
+			const Locator*				locator)
 {
 	const XalanDOMString::size_type		indexOfNSSep = indexOf(qname, XalanUnicode::charColon);
-	const XalanDOMString::size_type		theLength = length(qname);
 
 	if(indexOfNSSep >= theLength)
 	{
-		m_localpart = qname;
+		m_localpart.assign(qname, theLength);
+
+		::clear(m_namespace);
 	}
 	else
 	{
-		const XalanDOMString	prefix(qname, 0, indexOfNSSep);
+		// Reserve some space for the local part right now, and
+		// use it as a temporary for the prefix.
+		m_localpart.reserve(theLength);
 
-		if(::equals(prefix, DOMServices::s_XMLString))
+		m_localpart.assign(qname, indexOfNSSep);
+
+		if(::equals(m_localpart, DOMServices::s_XMLString))
 		{
 			m_namespace = DOMServices::s_XMLNamespaceURI;
 		}
 		// The default namespace is not resolved.
-		else if(::equals(prefix, DOMServices::s_XMLNamespace))
+		else if(::equals(m_localpart, DOMServices::s_XMLNamespace))
 		{
+			::clear(m_localpart);
+
 			return;
 		}
 		else if (theResolver == 0)
 		{
 			throwException(
 				TranscodeFromLocalCodePage("Unable to resolve prefix '") +
-					prefix +
+					m_localpart +
 					TranscodeFromLocalCodePage("'"),
 				locator);
 		}
 		else
 		{
 			const XalanDOMString* const		theNamespace =
-				theResolver->getNamespaceForPrefix(prefix);
+				theResolver->getNamespaceForPrefix(m_localpart);
 
 			if (theNamespace != 0)
 			{
@@ -309,11 +416,11 @@ XalanQNameByValue::resolvePrefix(
 		{
 			throwException(
 				TranscodeFromLocalCodePage("The prefix '") +
-					prefix +
+					m_localpart +
 					TranscodeFromLocalCodePage("' must resolve to a namespace."),
 				locator);
 		}
 
-		m_localpart.assign(qname, indexOfNSSep + 1, theLength - (indexOfNSSep + 1));
+		m_localpart.assign(qname + indexOfNSSep + 1, theLength - (indexOfNSSep + 1));
 	}
 }

@@ -144,6 +144,7 @@ StylesheetHandler::StylesheetHandler(
 	m_inTemplate(false),
 	m_foundStylesheet(false),
 	m_foundNotImport(false),
+	m_elementLocalName(),
 	m_accumulateText(),
 	m_includeBase(stylesheetTree.getBaseIdentifier()),
 	m_inExtensionElementStack(),
@@ -261,11 +262,9 @@ StylesheetHandler::processSpaceAttr(
 			const Locator*			locator,
 			bool&					fPreserve)
 {
-	const XalanDOMString		theAttributeName(aname);
+	m_spaceAttributeQName.set(aname, m_stylesheet.getNamespaces(), locator, true);
 
-	const XalanQNameByValue		theName(theAttributeName, m_stylesheet.getNamespaces());
-
-	const bool					isSpaceAttr = s_spaceAttrQName.equals(theName);
+	const bool	isSpaceAttr = s_spaceAttrQName.equals(m_spaceAttributeQName);
 
 	if(isSpaceAttr == false)
 	{
@@ -384,11 +383,13 @@ StylesheetHandler::startElement(
 			error("Could not resolve prefix.", locator);
 		}
 
-		XalanDOMString	localName(name, nameLength);
-
 		if (index < nameLength)
 		{
-			localName.erase(0, index + 1);
+			m_elementLocalName.assign(name + index + 1, nameLength - index - 1);
+		}
+		else
+		{
+			m_elementLocalName.assign(name, nameLength);
 		}
 
 		ElemTemplateElement* elem = 0;
@@ -406,11 +407,11 @@ StylesheetHandler::startElement(
 				m_stylesheet.setWrapperless(false);
 			}
 
-			const int	xslToken = m_constructionContext.getElementToken(localName);
+			const int	xslToken = m_constructionContext.getElementToken(m_elementLocalName);
 
 			if(!m_inTemplate)
 			{
-				processTopLevelElement(name, localName, ns, atts, xslToken, locator, fPreserveSpace, fSpaceAttrProcessed);
+				processTopLevelElement(name, m_elementLocalName, ns, atts, xslToken, locator, fPreserveSpace, fSpaceAttrProcessed);
 			}
 			else
 			{
@@ -693,7 +694,7 @@ StylesheetHandler::startElement(
 
 				default:
 					{
-						const XalanDOMString	msg("Unknown XSL element: " + localName);
+						const XalanDOMString	msg("Unknown XSL element: " + m_elementLocalName);
 
 						// If this stylesheet is declared to be of a higher version than the one
 						// supported, don't flag an error.
@@ -713,7 +714,7 @@ StylesheetHandler::startElement(
 		}
 		else if (!m_inTemplate && startsWith(ns, m_constructionContext.getXalanXSLNameSpaceURL()))
 		{
-			processExtensionElement(name, localName, atts, locator);
+			processExtensionElement(name, m_elementLocalName, atts, locator);
 		}
 		else
 		{
@@ -751,7 +752,7 @@ StylesheetHandler::startElement(
 											lineNumber,
 											columnNumber,
 											*nsh,
-											localName);
+											m_elementLocalName);
 
 					assert(m_inExtensionElementStack.empty() == false);
 

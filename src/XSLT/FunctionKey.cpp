@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 2000 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -78,6 +78,7 @@
 
 #include <XPath/MutableNodeRefList.hpp>
 #include <XPath/NodeRefListBase.hpp>
+#include <XPath/XalanQNameByReference.hpp>
 #include <XPath/XObjectFactory.hpp>
 
 
@@ -101,10 +102,44 @@ FunctionKey::~FunctionKey()
 
 
 
+inline void
+getNodeSet(
+			XPathExecutionContext&	executionContext,
+			XalanDocument*			document,
+			const XalanDOMString&	keyname,
+			const XalanDOMString&	ref,
+			const Locator*			locator,
+			MutableNodeRefList&		theNodeRefList)
+{
+	assert(document != 0);
+
+	if (indexOf(keyname, XalanUnicode::charColon) < length(keyname))
+	{
+		executionContext.getNodeSetByKey(
+				document,
+				keyname,
+				ref,
+				locator,
+				theNodeRefList);
+	}
+	else
+	{
+		const XalanQNameByReference		theQName(keyname);
+
+		executionContext.getNodeSetByKey(
+				document,
+				theQName,
+				ref,
+				theNodeRefList);
+	}
+}
+
+
+
 XObjectPtr
 FunctionKey::execute(
 			XPathExecutionContext&	executionContext,
-			XalanNode*				context,			
+			XalanNode*				context,
 			const XObjectPtr		arg1,
 			const XObjectPtr		arg2,
 			const Locator*			locator) const
@@ -131,45 +166,49 @@ FunctionKey::execute(
 #endif
 							context->getOwnerDocument();
 
-		if(0 == docContext)
-		{
-			executionContext.error(
-				"Context does not have an owner document!",
-				context,
-				locator);
-		}
-
+		assert(docContext != 0);
 		assert(executionContext.getPrefixResolver() != 0);
 
 		const XalanDOMString&	keyname = arg1->str();
 
 		assert(arg2.null() == false);
 
-		const bool				argIsNodeSet =
-				XObject::eTypeNodeSet == arg2->getType() ? true : false;
-
 		typedef XPathExecutionContext::BorrowReturnMutableNodeRefList	BorrowReturnMutableNodeRefList;
 
 		// This list will hold the nodes...
 		BorrowReturnMutableNodeRefList	theNodeRefList(executionContext);
 
-		if(argIsNodeSet == true)
+		if(arg2->getType() != XObject::eTypeNodeSet)
+		{
+			getNodeSet(
+				executionContext,
+				docContext,
+				keyname,
+				arg2->str(),
+				locator,
+				*theNodeRefList.get());
+		}
+		else
 		{
 			const NodeRefListBase&	theNodeSet = arg2->nodeset();
 
 			const NodeRefListBase::size_type	nRefs = theNodeSet.getLength();
 
-			if (nRefs > 0)
+			if (nRefs == 1)
 			{
-#if defined(XALAN_NO_NAMESPACES)
-				typedef set<XalanDOMString, less<XalanDOMString> >	StringSetType;
-#else
-				typedef std::set<XalanDOMString>	StringSetType;
-#endif
+				getNodeSet(
+					executionContext,
+					docContext,
+					keyname,
+					arg2->str(),
+					locator,
+					*theNodeRefList.get());
+			}
+			else if (nRefs > 1)
+			{
+				XPathExecutionContext::GetAndReleaseCachedString	theResult(executionContext);
 
-				StringSetType	usedrefs;
-
-				XalanDOMString	ref;
+				XalanDOMString&		ref = theResult.get();
 
 				for(NodeRefListBase::size_type i = 0; i < nRefs; i++)
 				{
@@ -179,33 +218,18 @@ FunctionKey::execute(
 
 					if(0 != length(ref))
 					{
-						// Make sure we haven't already processed it...
-						if(usedrefs.find(ref) == usedrefs.end())
-						{
-							usedrefs.insert(ref);
-
-							executionContext.getNodeSetByKey(
-											docContext, 
-											keyname,
-											ref,
-											*executionContext.getPrefixResolver(),
-											*theNodeRefList.get());
-						}
+						getNodeSet(
+							executionContext,
+							docContext,
+							keyname,
+							ref,
+							locator,
+							*theNodeRefList.get());
 					}
 
 					clear(ref);
 				}
 			}
-		}
-		else
-		{
-			const XalanDOMString&	ref = arg2->str();
-
-					executionContext.getNodeSetByKey(docContext,
-											keyname,
-											ref,
-											*executionContext.getPrefixResolver(),
-											*theNodeRefList.get());
 		}
 
 		return executionContext.getXObjectFactory().createNodeSet(theNodeRefList);

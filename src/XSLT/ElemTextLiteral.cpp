@@ -67,6 +67,7 @@
 
 
 #include "Constants.hpp"
+#include "StylesheetConstructionContext.hpp"
 #include "StylesheetExecutionContext.hpp"
 
 
@@ -91,7 +92,9 @@ ElemTextLiteral::ElemTextLiteral(
 	m_preserveSpace(preserveSpace),	
 	m_disableOutputEscaping(disableOutputEscaping),
 	m_isWhitespace(isXMLWhitespace(ch, start, length)),
-	m_ch(ch + start, length)
+	// Always null-terminate our buffer, since we may need it that way.
+	m_ch(constructionContext.allocateVector(ch + start, length, true)),
+	m_length(length)
 {
 }
 
@@ -99,14 +102,6 @@ ElemTextLiteral::ElemTextLiteral(
 
 ElemTextLiteral::~ElemTextLiteral()
 {
-}
-
-
-
-const XalanDOMString&
-ElemTextLiteral::getNodeValue() const
-{
-	return m_ch;
 }
 
 
@@ -134,10 +129,10 @@ ElemTextLiteral::execute(StylesheetExecutionContext&	executionContext) const
 
     if(!m_disableOutputEscaping)
     {
-		executionContext.characters(toCharArray(m_ch), 0, length(m_ch));
+		executionContext.characters(m_ch, 0, m_length);
     }
     else
     {
-		executionContext.charactersRaw(toCharArray(m_ch), 0, length(m_ch));
+		executionContext.charactersRaw(m_ch, 0, m_length);
     }
 }

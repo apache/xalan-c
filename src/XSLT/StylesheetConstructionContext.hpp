@@ -338,6 +338,55 @@ public:
 	virtual double
 	getXSLTVersionSupported() const = 0;
 
+	/**
+	 * Get a pooled string given the source string.  If
+	 * the string already exists in the pool, no copy
+	 * will be made.  If not, a copy will be made and
+	 * kept for later use.
+	 *
+	 * @param theString The source string
+	 * @return a const reference to a pooled string.
+	 */
+	virtual const XalanDOMString&
+	getPooledString(const XalanDOMString&	theString) = 0;
+
+	/**
+	 * Get a pooled string given the source character
+	 * array.  If the string already exists in the pool,
+	 * no copy will be made.  If not, a copy will be made
+	 * and kept for later use.
+	 *
+	 * @param theString The source character array
+	 * @param theLength The length of the character array
+	 * @return a const reference to a pooled string.
+	 */
+	virtual const XalanDOMString&
+	getPooledString(
+			const XalanDOMChar*			theString,
+			XalanDOMString::size_type	theLength = XalanDOMString::npos) = 0;
+
+	/**
+	 * Allocate a vector of XalanDOMChar of the specified
+	 * size.
+	 *
+	 * @param theLength The length of the character vector
+	 */
+	virtual XalanDOMChar*
+	allocateVector(XalanDOMString::size_type		theLength) = 0;
+
+	/**
+	 * Allocate a vector of XalanDOMChar of the specified
+	 * size.
+	 *
+	 * @param theString The source character array
+	 * @param theLength The length of the character vector
+	 * @param fTerminate If true, terminate the new vector with 0
+	 */
+	virtual XalanDOMChar*
+	allocateVector(
+			const XalanDOMChar*			theString,
+			XalanDOMString::size_type	theLength = XalanDOMString::npos,
+			bool						fTerminate = true) = 0;
 
 	// These interfaces are inherited from ExecutionContext...
 

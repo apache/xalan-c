@@ -116,10 +116,16 @@ public:
 		return m_preserveSpace;
 	}
 
-	const XalanDOMString&
+	const XalanDOMChar*
 	getText() const
 	{
 		return m_ch;
+	}
+
+	const XalanDOMString::size_type
+	getLength() const
+	{
+		return m_length;
 	}
 
 	virtual bool
@@ -127,9 +133,6 @@ public:
 
 	// These methods are inherited from ElemTemplateElement ...
 	
-	virtual const XalanDOMString&
-	getNodeValue() const;
-
 	virtual const XalanDOMString&
 	getElementName() const;
 
@@ -149,7 +152,8 @@ private:
 	const bool				m_disableOutputEscaping;
 	const bool				m_isWhitespace;
 
-	const XalanDOMString	m_ch;
+	const XalanDOMChar* const			m_ch;
+	const XalanDOMString::size_type		m_length;
 };
 
 

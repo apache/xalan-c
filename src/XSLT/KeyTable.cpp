@@ -89,12 +89,10 @@ const MutableNodeRefList	KeyTable::s_dummyList;
 
 
 KeyTable::KeyTable(
-			XalanNode*							doc,
 			XalanNode*							startNode,
 			const PrefixResolver&				resolver,
 			const KeyDeclarationVectorType&		keyDeclarations,
 			StylesheetExecutionContext&			executionContext) :
-	m_docKey(doc),
 	m_keys()
 {
     XalanNode*	pos = startNode;

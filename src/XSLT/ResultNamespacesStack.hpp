@@ -100,7 +100,30 @@ public:
 	void
 	addDeclaration(
 			const XalanDOMString&	thePrefix,
-	        const XalanDOMString&	theNamespaceURI);
+	        const XalanDOMString&	theNamespaceURI)
+	{
+		addDeclaration(
+			thePrefix,
+			theNamespaceURI.c_str(),
+			theNamespaceURI.length());
+	}
+
+	void
+	addDeclaration(
+			const XalanDOMString&	thePrefix,
+	        const XalanDOMChar*		theNamespaceURI)
+	{
+		addDeclaration(
+			thePrefix,
+			theNamespaceURI,
+			length(theNamespaceURI));
+	}
+
+	void
+	addDeclaration(
+			const XalanDOMString&		thePrefix,
+	        const XalanDOMChar*			theNamespaceURI,
+			XalanDOMString::size_type	theLength);
 
 	void
 	pushContext();
@@ -109,10 +132,18 @@ public:
 	popContext();
 
 	const XalanDOMString*
-	getNamespaceForPrefix(const XalanDOMString&		thePrefix) const;
+	getNamespaceForPrefix(const XalanDOMString&		thePrefix) const
+	{
+		// Search vector from first element back
+		return XalanQName::getNamespaceForPrefix(m_resultNamespaces, thePrefix, true);
+	}
 
 	const XalanDOMString*
-	getPrefixForNamespace(const XalanDOMString&		theNamespaceURI) const;
+	getPrefixForNamespace(const XalanDOMString&		theNamespaceURI) const
+	{
+		// Search vector from first element back
+		return XalanQName::getPrefixForNamespace(m_resultNamespaces, theNamespaceURI, true);
+	}
 
 
 	/**

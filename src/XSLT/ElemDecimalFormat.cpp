@@ -102,7 +102,7 @@ ElemDecimalFormat::ElemDecimalFormat(
 		{
 			assert(atts.getValue(i) != 0);
 
-			m_qname = XalanQNameByValue(atts.getValue(i), getStylesheet().getNamespaces());;
+			m_qname.set(atts.getValue(i), getStylesheet().getNamespaces());
 		}
 		else if(equals(aname, Constants::ATTRNAME_DECIMALSEPARATOR))
 		{

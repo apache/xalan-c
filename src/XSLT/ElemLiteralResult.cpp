@@ -99,7 +99,7 @@ ElemLiteralResult::ElemLiteralResult(
 			lineNumber,
 			columnNumber,
 			xslToken),
-	m_elementName(name),
+	m_elementName(constructionContext.getPooledString(name)),
 	m_avts(),
 	m_attrCount(0),
 	m_hasPrefix(indexOf(name, XalanUnicode::charColon) < length(name) ? true : false)
@@ -166,7 +166,7 @@ ElemLiteralResult::ElemLiteralResult(
 			if(! processUseAttributeSets(constructionContext, aname, atts, i) &&
 					isAttrOK(aname, atts, i, constructionContext))
 			{
-				m_avts.push_back(new AVT(getLocator(), aname, atts.getType(i), atts.getValue(i), 	
+				m_avts.push_back(new AVT(getLocator(), aname, atts.getValue(i), 	
 							*this, constructionContext));
 			}
 		}
@@ -267,25 +267,6 @@ ElemLiteralResult::postConstruction(
 
 
 
-inline void
-ElemLiteralResult::doAddResultAttribute(
-			StylesheetExecutionContext&		executionContext,
-			const XalanDOMString&			thePrefix,
-			const XalanDOMString&			theName,
-			const XalanDOMString&			theValue) const
-{
-	if (isEmpty(thePrefix) == true ||
-	    shouldExcludeResultNamespaceNode(
-			theValue) == false)
-	{
-		executionContext.addResultAttribute(
-				theName, 
-				theValue);
-	}
-}
-
-
-
 void
 ElemLiteralResult::execute(StylesheetExecutionContext&	executionContext) const
 {
@@ -333,20 +314,9 @@ ElemLiteralResult::execute(StylesheetExecutionContext&	executionContext) const
 
 			const XalanDOMString&	theName = avt->getName();
 
-			const XalanDOMString&	thePrefix = avt->getPrefix();
+			avt->evaluate(theStringedValue, executionContext.getCurrentNode(), *this, executionContext);
 
-			const XalanDOMString&	theSimpleValue = avt->getSimpleValue();
-
-			if (isEmpty(theSimpleValue) == false)
-			{
-				doAddResultAttribute(executionContext, thePrefix, theName, theSimpleValue);
-			}
-			else
-			{
-				avt->evaluate(theStringedValue, executionContext.getCurrentNode(), *this, executionContext);
-
-				doAddResultAttribute(executionContext, thePrefix, theName, theStringedValue);
-			}
+			executionContext.addResultAttribute(theName, theStringedValue);
 		}
 	}
 
@@ -417,14 +387,4 @@ ElemLiteralResult::processPrefixControl(
 	{
 		return false;
 	}
-}
-
-
-
-bool
-ElemLiteralResult::shouldExcludeResultNamespaceNode(const XalanDOMString&	theURI) const
-{
-	return m_namespacesHandler.shouldExcludeResultNamespaceNode(
-				getStylesheet().getXSLTNamespaceURI(),
-				theURI);
 }
