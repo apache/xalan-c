@@ -58,6 +58,9 @@
 # 
 #
 # $Log$
+# Revision 1.16  2003/01/05 18:29:54  dbertoni
+# Bump optimization level on Linux.
+#
 # Revision 1.15  2002/12/12 20:58:06  dbertoni
 # Changes to build outside of the source tree.  Fixes Bugzilla 4627.
 #
@@ -251,7 +254,11 @@ esac
 
 if test $debug = "off"; then
     echo "Debug is OFF"
-    debugflag="-O -DNDEBUG";
+    if test $platform = "linux"; then
+        debugflag="-O2 -DNDEBUG";
+    else
+        debugflag="-O -DNDEBUG";
+    fi
 else
     echo "Debug is ON"
     debugflag="-g";
