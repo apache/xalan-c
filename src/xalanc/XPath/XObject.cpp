@@ -1160,9 +1160,8 @@ XObject::greaterThanOrEquals(
 
 XObject::XObjectException::XObjectException(
 				const XalanDOMString&	message,
-				const XalanNode*		styleNode,
 				const XalanDOMString&	theType) :
-	XalanXPathException(message, styleNode, theType)
+	XalanXPathException(message, theType)
 {
 }
 
@@ -1179,7 +1178,6 @@ XObject::XObjectInvalidConversionException::XObjectInvalidConversionException(
 				const XalanDOMString&	toType) :
 	XObjectException(
 			formatErrorString(fromType, toType),
-			0,
 			StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("XObjectInvalidConversionException"))),
 	m_fromType(fromType),
 	m_toType(toType)

@@ -72,10 +72,8 @@ XalanXPathException::XalanXPathException(
 			const XalanDOMString&	theURI,
 			int						theLineNumber,
 			int						theColumnNumber,
-			const XalanNode*		styleNode,
 			const XalanDOMString&	theType) :
-	XSLException(message, theURI, theLineNumber, theColumnNumber, theType),
-	m_styleNode(styleNode)
+	XSLException(message, theURI, theLineNumber, theColumnNumber, theType)
 {
 }
 
@@ -83,10 +81,8 @@ XalanXPathException::XalanXPathException(
 
 XalanXPathException::XalanXPathException(
 			const XalanDOMString&	message,
-			const XalanNode*		styleNode,
 			const XalanDOMString&	theType) :
-	XSLException(message, theType),
-	m_styleNode(styleNode)
+	XSLException(message, theType)
 {
 }
 
@@ -95,10 +91,8 @@ XalanXPathException::XalanXPathException(
 XalanXPathException::XalanXPathException(
 			const LocatorType&		theLocator,
 			const XalanDOMString&	theMessage,
-			const XalanNode*		styleNode,
 			const XalanDOMString&	theType) :
-	XSLException(theLocator, theMessage, theType),
-	m_styleNode(styleNode)
+	XSLException(theLocator, theMessage, theType)
 {
 }
 

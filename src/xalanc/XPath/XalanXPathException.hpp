@@ -101,7 +101,6 @@ public:
 			const XalanDOMString&	theURI,
 			int						theLineNumber,
 			int						theColumnNumber,
-			const XalanNode*		styleNode = 0,
 			const XalanDOMString&	theType = XalanDOMString(XALAN_STATIC_UCODE_STRING("XalanXPathException")));
 
 	/**
@@ -115,29 +114,20 @@ public:
 	XalanXPathException(
 			const LocatorType&		theLocator,
 			const XalanDOMString&	theMessage,
-			const XalanNode*		styleNode = 0,
 			const XalanDOMString&	theType = XalanDOMString(XALAN_STATIC_UCODE_STRING("XalanXPathException")));
 
 	/**
 	 * Construct an XPath exeption object.
 	 * 
 	 * @param message message explaining the problem. 
-	 * @param styleNode the node in the stylesheet where the problem occurred
 	 * @param theType type of exception, default is "XalanXPathException"
 	 */
 	XalanXPathException(
 			const XalanDOMString&	message,
-			const XalanNode*		styleNode = 0,
 			const XalanDOMString&	theType = XalanDOMString(XALAN_STATIC_UCODE_STRING("XalanXPathException")));
 
 	virtual
 	~XalanXPathException();
-
-	const XalanNode*
-	getStyleNode() const
-	{
-		return m_styleNode;
-	}
 
 protected:
 

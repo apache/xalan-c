@@ -524,7 +524,6 @@ public:
 		explicit
 		XObjectException(
 				const XalanDOMString&	message = XalanDOMString(),
-				const XalanNode*		styleNode = 0,
 				const XalanDOMString&	theType = XalanDOMString(XALAN_STATIC_UCODE_STRING("XObjectException")));
 
 		virtual
