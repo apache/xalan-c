@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -209,6 +209,24 @@ public:
 	}
 
 	/**
+	 * Transform will apply the stylesheet provided as a PI in the 
+	 * XML of the parsed xml source and write the transformation output to 
+	 * the target. 
+	 *
+	 * @param theParsedXML		the parsed input source
+	 * @param theResultTarget	output source tree
+	 * @return					0 for success
+	 */
+	int
+	transform(
+			const XalanParsedSource&	theParsedXML, 		 		 
+			const XSLTResultTarget&		theResultTarget)
+	{
+
+		return transform(theParsedXML, s_emptyInputSource, theResultTarget);
+	}
+
+	/**
 	 * Transform will apply the stylesheet source to the input source
 	 * and write the transformation output to the target. The input 
 	 * source and result target can be a file name, a stream or a root
@@ -237,8 +255,14 @@ public:
 	 */
 	int
 	transform(
-			const XSLTInputSource&		theInputSource, 		
-			const XSLTResultTarget& 	theResultTarget);
+			const XSLTInputSource&		theInputSource,
+			const XSLTResultTarget& 	theResultTarget)
+	{
+		return transform(
+						theInputSource, 
+						s_emptyInputSource,
+						theResultTarget);
+	}
 
 	/**
 	 * Transform will apply the stylesheet source to the input source
@@ -922,6 +946,8 @@ private:
 
 	// This should always be the latest data member!!!
 	StylesheetExecutionContextDefault*		m_stylesheetExecutionContext;
+
+	static const XSLTInputSource			s_emptyInputSource;
 
 	static const XSLTInit*					s_xsltInit;
 };

@@ -133,8 +133,9 @@
 XALAN_CPP_NAMESPACE_BEGIN
 
 
+const XSLTInputSource	XalanTransformer::s_emptyInputSource;
 
-const XSLTInit*		XalanTransformer::s_xsltInit = 0;
+const XSLTInit*			XalanTransformer::s_xsltInit = 0;
 
 
 
@@ -349,20 +350,6 @@ XalanTransformer::transform(
 
 int
 XalanTransformer::transform(
-			const XSLTInputSource&		theInputSource, 		
-			const XSLTResultTarget& 	theResultTarget)
-{
-	// Do the transformation...
-	return transform(
-					theInputSource, 
-					XSLTInputSource(),
-					theResultTarget);
-}
-
-
-
-int
-XalanTransformer::transform(
 			const XSLTInputSource&	theInputSource, 
 			const XSLTInputSource&	theStylesheetSource,
 			void*					theOutputHandle, 
@@ -426,7 +413,7 @@ XalanTransformer::transform(
 	// Do the transformation...
 	return transform(
 					theInputSource, 
-					XSLTInputSource(),
+					s_emptyInputSource,
 					theResultTarget);
 }
 
