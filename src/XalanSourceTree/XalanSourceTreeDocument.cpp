@@ -828,24 +828,32 @@ const XalanDOMString*
 XalanSourceTreeDocument::getNamespaceForPrefix(
 			const XalanDOMChar*		theName,
 			const PrefixResolver&	thePrefixResolver,
-			XalanDOMString&			thePrefix)
+			XalanDOMString&			thePrefix,
+			bool					fUseDefault)
 {
 	const unsigned int	theLength = length(theName);
 	const unsigned int	theColonIndex = indexOf(theName, XalanUnicode::charColon);
 
-	if (theColonIndex == theLength)
-	{
-		clear(thePrefix);
-
-		return thePrefixResolver.getNamespaceForPrefix(s_emptyString);
-	}
-	else
+	if (theColonIndex != theLength)
 	{
 		// Get the prefix from theName...
 		assign(thePrefix, theName, theColonIndex);
 		assert(length(thePrefix) != 0);
 
 		return thePrefixResolver.getNamespaceForPrefix(thePrefix);
+	}
+	else
+	{
+		clear(thePrefix);
+
+		if (fUseDefault == false)
+		{
+			return 0;
+		}
+		else
+		{
+			return thePrefixResolver.getNamespaceForPrefix(s_emptyString);
+		}
 	}
 }
 
@@ -942,8 +950,17 @@ XalanSourceTreeDocument::createAttribute(
 			XalanSourceTreeElement*		theOwnerElement,
 			const PrefixResolver&		thePrefixResolver)
 {
+	// Get the namespace for the theName.  Since attributes do not use
+	// the default namespace, make sure we don't get it...
 	const XalanDOMString* const		theNamespace =
-		getNamespaceForPrefix(theName, thePrefixResolver, m_stringBuffer);
+		getNamespaceForPrefix(
+				theName,
+				thePrefixResolver,
+				m_stringBuffer,
+				false);
+
+	assert(theNamespace == 0 && length(m_stringBuffer) == 0 ||
+		   theNamespace != 0 && length(m_stringBuffer) != 0);
 
 	if (theNamespace == 0 || length(*theNamespace) == 0)
 	{
@@ -955,6 +972,9 @@ XalanSourceTreeDocument::createAttribute(
 	}
 	else
 	{
+		// There must be a prefix, so we don't have to check to see if
+		// we got one...
+
 		// The constructor parameters for AttrNS are:
 		//
 		// name
@@ -990,7 +1010,11 @@ XalanSourceTreeDocument::createElement(
 			const PrefixResolver&		thePrefixResolver)
 {
 	const XalanDOMString* const		theNamespace =
-		getNamespaceForPrefix(theTagName, thePrefixResolver, m_stringBuffer);
+		getNamespaceForPrefix(
+				theTagName,
+				thePrefixResolver,
+				m_stringBuffer,
+				true);
 
 	if (theNamespace == 0 || length(*theNamespace) == 0)
 	{
@@ -1009,6 +1033,15 @@ XalanSourceTreeDocument::createElement(
 	}
 	else
 	{
+		// We need figure out if there's a prefix on theTagName.  If not,
+		// the local name is the same as the tag name.  Otherwise, we need
+		// to remove the prefix and the ':' that separates them.  If
+		// m_stringBuffer is of length 0, there's no prefix.
+		const unsigned int			thePrefixLength = length(m_stringBuffer);
+
+		const XalanDOMChar* const	theLocalName =
+			thePrefixLength == 0 ? theTagName : theTagName + thePrefixLength + 1;
+
 		// The constructor parameters for ElementNS are:
 		//
 		// tag name
@@ -1025,9 +1058,8 @@ XalanSourceTreeDocument::createElement(
 		//
 		return m_elementNSAllocator.create(
 				m_namesStringPool.get(theTagName),
-				m_namesStringPool.get(theTagName + length(m_stringBuffer) + 1),
+				m_namesStringPool.get(theLocalName),
 				m_namesStringPool.get(*theNamespace),
-				// This is the prefix...
 				m_namesStringPool.get(m_stringBuffer),
 				this,
 				theAttributeVector,

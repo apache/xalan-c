@@ -461,7 +461,8 @@ private:
 	getNamespaceForPrefix(
 			const XalanDOMChar*		theName,
 			const PrefixResolver&	thePrefixResolver,
-			XalanDOMString&			thePrefix);
+			XalanDOMString&			thePrefix,
+			bool					fUseDefault);
 
 	// Not implemented...
 	XalanSourceTreeDocument(const XalanSourceTreeDocument&	theSource);
