@@ -267,7 +267,6 @@ ElemLiteralResult::doAddResultAttribute(
 {
 	if (isEmpty(thePrefix) == true ||
 	    shouldExcludeResultNamespaceNode(
-			thePrefix,
 			theValue) == false)
 	{
 		executionContext.addResultAttribute(
@@ -281,7 +280,9 @@ ElemLiteralResult::doAddResultAttribute(
 void
 ElemLiteralResult::execute(StylesheetExecutionContext&	executionContext) const
 {
-	executionContext.startElement(c_wstr(getElementName()));
+	const XalanDOMString&	theElementName = getElementName();
+
+	executionContext.startElement(c_wstr(theElementName));
 
 	ElemUse::execute(executionContext);
 
@@ -341,19 +342,7 @@ ElemLiteralResult::execute(StylesheetExecutionContext&	executionContext) const
 
 	executeChildren(executionContext);
 
-	executionContext.endElement(c_wstr(getElementName()));
-}
-
-
-
-bool
-ElemLiteralResult::isAttrOK(
-			int						tok,
-			const XalanDOMChar*		attrName,
-			const AttributeList&	atts,
-			int						which) const
-{
-	return ElemUse::isAttrOK(tok, attrName, atts, which);
+	executionContext.endElement(c_wstr(theElementName));
 }
 
 
@@ -390,7 +379,6 @@ ElemLiteralResult::isAttrOK(
 		}
     }
 
-    // TODO: Well, process it...
     return isAttrOK;
 }
 
@@ -424,12 +412,9 @@ ElemLiteralResult::processPrefixControl(
 
 
 bool
-ElemLiteralResult::shouldExcludeResultNamespaceNode(
-			const XalanDOMString&	thePrefix,
-			const XalanDOMString&	theURI) const
+ElemLiteralResult::shouldExcludeResultNamespaceNode(const XalanDOMString&	theURI) const
 {
 	return m_namespacesHandler.shouldExcludeResultNamespaceNode(
 				getStylesheet().getXSLTNamespaceURI(),
-				thePrefix,
 				theURI);
 }

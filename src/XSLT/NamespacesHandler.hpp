@@ -261,28 +261,13 @@ public:
 	 * Determine of a given namespace should be excluded.
 	 *
 	 * @param theXSLTNamespaceURI The namespace URI for XSLT.
-	 * @param thePrefix The namespace prefix.
 	 * @param theURI The namespace URI.
 	 * @return true of the namespace should be excluded, false if not.
 	 */
 	bool
 	shouldExcludeResultNamespaceNode(
 			const XalanDOMString&	theXSLTNamespaceURI,
-			const XalanDOMString&	thePrefix,
 			const XalanDOMString&	theURI) const;
-
-	/**
-	 * Determine if a given prefix is in the list of excluded
-	 * prefixes.
-	 *
-	 * @param thePrefix The namespace prefix.
-	 * @return true of the prefix should be excluded, false if not.
-	 */
-	bool
-	hasExcludedPrefix(const XalanDOMString&		thePrefix) const
-	{
-		return m_excludedResultPrefixes.count(thePrefix) != 0 ? true : false;
-	}
 
 	/**
 	 * Add a URI as an extension namespace prefixes.
@@ -436,7 +421,7 @@ private:
 	copyExcludeResultPrefixes(const ExcludedResultPrefixesMapType&	theExcludeResultPrefixes);
 
 	/**
-	 * Determine of a given namespace should be excluded.  For use during
+	 * Determine if a given namespace should be excluded.  For use during
 	 * stylesheet construction only.
 	 *
 	 * @param theXSLTNamespaceURI The namespace URI for XSLT.
@@ -449,6 +434,16 @@ private:
 			const XalanDOMString&		theXSLTNamespaceURI,
 			const NamespacesHandler&	parentNamespacesHandler,
 			const NameSpace&			theNamespace) const;
+
+	/**
+	 * Determine of a given namespace should be excluded as a result of
+	 * an exclude-result-prefixes declaration.
+	 *
+	 * @param theNamespaceURI The namespace URI to check.
+	 * @return true of the namespace should be excluded, false if not.
+	 */
+	bool
+	isExcludedNamespaceURI(const XalanDOMString&	theNamespaceURI) const;
 
 	// Not implemented...
 	bool

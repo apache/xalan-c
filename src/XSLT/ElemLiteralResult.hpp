@@ -100,7 +100,7 @@ public:
 	~ElemLiteralResult();
 
 	// These methods are inherited from ElemUse ...
-	
+
 	virtual const XalanDOMString&
 	getElementName() const;
 
@@ -108,13 +108,6 @@ public:
 	postConstruction(
 			StylesheetConstructionContext&	constructionContext,
 			const NamespacesHandler&		theParentHandler);
-
-	virtual bool
-	isAttrOK(
-			int						tok,
-			const XalanDOMChar*		attrName,
-			const AttributeList&	atts,
-			int						which) const;
 
 	virtual bool
 	isAttrOK(
@@ -159,14 +152,10 @@ private:
 	/**
 	 * Determine if the namespace node should be excluded.
 	 *
-	 * @param executionContext The current execution context
-	 * @param thePrefix The namespace prefix.
 	 * @param theURI The namespace URI.
 	 */
 	bool
-	shouldExcludeResultNamespaceNode(
-			const XalanDOMString&	thePrefix,
-			const XalanDOMString&	theURI) const;
+	shouldExcludeResultNamespaceNode(const XalanDOMString&	theURI) const;
 
 	/**
 	 * Add a result attribute, if necessary.

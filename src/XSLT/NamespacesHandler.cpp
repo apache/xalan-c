@@ -127,7 +127,6 @@ NamespacesHandler::NamespacesHandler(
 
 			if(shouldExcludeResultNamespaceNode(
 					theXSLTNamespaceURI,
-					thePrefix,
 					theURI) == false)
 			{
 				if (m_namespaceDeclarations.count(thePrefix) == 0)
@@ -237,9 +236,11 @@ NamespacesHandler::processExcludeResultPrefixes(
 					theValue,
 					Constants::DEFAULT_WHITESPACE_SEPARATOR_STRING);
 
+	XalanDOMString	thePrefix;
+
     while(tokenizer.hasMoreTokens() == true)
     {
-		XalanDOMString	thePrefix = tokenizer.nextToken();
+		 tokenizer.nextToken(thePrefix);
 
 		if(equalsIgnoreCaseASCII(thePrefix, Constants::ATTRVAL_DEFAULT_PREFIX) == true)
 		{
@@ -358,7 +359,6 @@ NamespacesHandler::operator=(const NamespacesHandler&	theRHS)
 bool
 NamespacesHandler::shouldExcludeResultNamespaceNode(
 			const XalanDOMString&	theXSLTNamespaceURI,
-			const XalanDOMString&	thePrefix,
 			const XalanDOMString&	theURI) const
 {
 	// These are commone namespaces that are always excluded...
@@ -371,9 +371,9 @@ NamespacesHandler::shouldExcludeResultNamespaceNode(
 	{
 		return true;
 	}
-	else if (m_excludedResultPrefixes.count(thePrefix) != 0)
+	else if (isExcludedNamespaceURI(theURI) == true)
 	{
-		// It was found in the excluded result prefixes...
+		// It was found in the excluded result prefixes URIs...
 		return true;
 	}
 	else
@@ -437,18 +437,42 @@ NamespacesHandler::shouldExcludeResultNamespaceNode(
 			const NamespacesHandler&	stylesheetNamespacesHandler,
 			const NameSpace&			theNamespace) const
 {
-	const XalanDOMString&	thePrefix = theNamespace.getPrefix();
 	const XalanDOMString&	theURI = theNamespace.getURI();
 
-	
-	if(shouldExcludeResultNamespaceNode(theXSLTNamespaceURI, thePrefix, theURI) == true)
+	if(shouldExcludeResultNamespaceNode(theXSLTNamespaceURI, theURI) == true)
 	{
 		return true;
 	}
 	else
 	{
-		return stylesheetNamespacesHandler.hasExcludedPrefix(theNamespace.getPrefix());
+		return stylesheetNamespacesHandler.isExcludedNamespaceURI(theURI);
 	}
+}
+
+
+
+bool
+NamespacesHandler::isExcludedNamespaceURI(const XalanDOMString&		theNamespaceURI) const
+{
+	ExcludedResultPrefixesMapType::const_iterator		i =
+			m_excludedResultPrefixes.begin();
+
+	const ExcludedResultPrefixesMapType::const_iterator		theEnd =
+			m_excludedResultPrefixes.end();
+
+	while(i != theEnd)
+	{
+		if (equals((*i).second, theNamespaceURI) == true)
+		{
+			return true;
+		}
+		else
+		{
+			++i;
+		}
+	}
+
+	return false;
 }
 
 
