@@ -134,11 +134,11 @@ NamespacesHandler::NamespacesHandler(
 					theXSLTNamespaceURI,
 					theURI) == false)
 			{
-				if (m_namespaceDeclarations.count(thePrefix) == 0)
+				if (m_namespaceDeclarations.count(&thePrefix) == 0)
 				{
 					m_namespaceDeclarations.insert(
 						NamespacesMapType::value_type(
-							thePrefix,
+							&theConstructionContext.getPooledString(thePrefix),
 							NamespaceExtended(
 								theConstructionContext.getPooledString(theNamespace.getPrefix()),
 								theConstructionContext.getPooledString(theNamespace.getURI()))));
@@ -148,7 +148,7 @@ NamespacesHandler::NamespacesHandler(
 			{
 				m_excludedResultPrefixes.insert(
 					ExcludedResultPrefixesMapType::value_type(
-						thePrefix,
+						&theConstructionContext.getPooledString(thePrefix),
 						&theConstructionContext.getPooledString(theURI)));
 			}
 		}
@@ -178,7 +178,7 @@ NamespacesHandler::getNamespace(const XalanDOMString&	thePrefix) const
 {
 	// Check the excluded result prefixes first...
 	const ExcludedResultPrefixesMapType::const_iterator		i =
-			m_excludedResultPrefixes.find(thePrefix);
+			m_excludedResultPrefixes.find(&thePrefix);
 
 	if (i != m_excludedResultPrefixes.end())
 	{
@@ -188,7 +188,7 @@ NamespacesHandler::getNamespace(const XalanDOMString&	thePrefix) const
 	{
 		// Not found, so check the namespace declarations...
 		const NamespacesMapType::const_iterator		i =
-				m_namespaceDeclarations.find(thePrefix);
+				m_namespaceDeclarations.find(&thePrefix);
 
 		if (i != m_namespaceDeclarations.end())
 		{
@@ -221,7 +221,7 @@ NamespacesHandler::getNamespaceAlias(const XalanDOMString&		theStylesheetNamespa
 	else
 	{
 		const NamespaceAliasesMapType::const_iterator	i =
-						m_namespaceAliases.find(theStylesheetNamespace);
+						m_namespaceAliases.find(&theStylesheetNamespace);
 
 		if (i != m_namespaceAliases.end())
 		{
@@ -242,7 +242,7 @@ NamespacesHandler::setNamespaceAlias(
 			const XalanDOMString&			theStylesheetNamespace,
 			const XalanDOMString&			theResultNamespace)
 {
-	m_namespaceAliases[theStylesheetNamespace] =
+	m_namespaceAliases[&theConstructionContext.getPooledString(theStylesheetNamespace)] =
 		&theConstructionContext.getPooledString(theResultNamespace);
 }
 
@@ -292,7 +292,7 @@ NamespacesHandler::processExcludeResultPrefixes(
 			theConstructionContext.error(theMessage);
 		}
 
-		m_excludedResultPrefixes[thePrefix] =
+		m_excludedResultPrefixes[&theConstructionContext.getPooledString(thePrefix)] =
 			&theConstructionContext.getPooledString(*theNamespace);
     }
 }
@@ -666,7 +666,7 @@ NamespacesHandler::processExcludeResultPrefixes(
 				// Add it to the excluded prefixes, in case we need it later...
 				m_excludedResultPrefixes.insert(
 						ExcludedResultPrefixesMapType::value_type(
-							thePrefix,
+							&theConstructionContext.getPooledString(thePrefix),
 							&theConstructionContext.getPooledString(theURI)));
 			}
 

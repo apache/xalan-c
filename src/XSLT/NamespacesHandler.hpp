@@ -74,7 +74,7 @@
 
 
 
-#include <XalanDOM/XalanDOMString.hpp>
+#include <PlatformSupport/DOMStringHelper.hpp>
 
 
 
@@ -199,28 +199,31 @@ public:
 	typedef XalanQName::NamespacesStackType				NamespacesStackType;
 
 #if defined(XALAN_NO_NAMESPACES)
-	typedef map<XalanDOMString,
+	typedef map<const XalanDOMString*,
 				const XalanDOMString*,
-				less<XalanDOMString> >					ExcludedResultPrefixesMapType;
+				DOMStringPointerLessThanFunction>		ExcludedResultPrefixesMapType;
 
-	typedef map<XalanDOMString,
+	typedef map<const XalanDOMString*,
 				NamespaceExtended,
-				less<XalanDOMString> >					NamespacesMapType;
+				DOMStringPointerLessThanFunction>		NamespacesMapType;
 
-	typedef map<XalanDOMString,
+	typedef map<const XalanDOMString*,
 				const XalanDOMString*,
-				less<XalanDOMString> >					NamespaceAliasesMapType;
+				DOMStringPointerLessThanFunction>		NamespaceAliasesMapType;
 
 	typedef vector<const XalanDOMString*>				XalanDOMStringPointerVectorType;
 #else
-	typedef std::map<XalanDOMString,
-					 const XalanDOMString*>				ExcludedResultPrefixesMapType;
+	typedef std::map<const XalanDOMString*,
+					 const XalanDOMString*,
+					 DOMStringPointerLessThanFunction>	ExcludedResultPrefixesMapType;
 
-	typedef std::map<XalanDOMString,
-					 NamespaceExtended>					NamespacesMapType;
+	typedef std::map<const XalanDOMString*,
+					 NamespaceExtended,
+					 DOMStringPointerLessThanFunction>	NamespacesMapType;
 
-	typedef std::map<XalanDOMString,
-					 const XalanDOMString*>				NamespaceAliasesMapType;
+	typedef std::map<const XalanDOMString*,
+					 const XalanDOMString*,
+					 DOMStringPointerLessThanFunction>	NamespaceAliasesMapType;
 
 	typedef std::vector<const XalanDOMString*>			XalanDOMStringPointerVectorType;
 #endif
