@@ -86,11 +86,17 @@ public:
 
 #if defined(XALAN_INLINE_INITIALIZATION)
 
+	static const XalanDOMString		s_XMLString(XALAN_STATIC_UCODE_STRING("xml"));
 	static const XalanDOMString		s_XMLNamespaceURI(XALAN_STATIC_UCODE_STRING("http://www.w3.org/XML/1998/namespace"));
+	static const XalanDOMString		s_XMLNamespace(XALAN_STATIC_UCODE_STRING("xmlns"));
+	static const XalanDOMString		s_XMLNamespaceWithSeparator(XALAN_STATIC_UCODE_STRING("xmlns:"));
 
 #else
 
+	static const XalanDOMString		s_XMLString;
 	static const XalanDOMString		s_XMLNamespaceURI;
+	static const XalanDOMString		s_XMLNamespace;
+	static const XalanDOMString		s_XMLNamespaceWithSeparator;
 
 #endif
 

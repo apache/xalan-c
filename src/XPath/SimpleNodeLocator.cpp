@@ -59,14 +59,18 @@
 
 
 
-#include <PlatformSupport/DirectoryEnumerator.hpp>
-
-
-
 #include <XalanDOM/XalanElement.hpp>
 #include <XalanDOM/XalanNamedNodeMap.hpp>
 #include <XalanDOM/XalanNode.hpp>
 #include <XalanDOM/XalanDocument.hpp>
+
+
+
+#include <PlatformSupport/DirectoryEnumerator.hpp>
+
+
+
+#include <DOMSupport/DOMServices.hpp>
 
 
 
@@ -1565,8 +1569,8 @@ SimpleNodeLocator::nodeTest(
 								const XalanDOMString	attrName =
 									context->getNodeName();
 
-								score = !(startsWith(attrName, "xmlns:") ||
-										  equals(attrName, "xmlns"))
+								score = !(startsWith(attrName, DOMServices::s_XMLNamespaceWithSeparator) ||
+										  equals(attrName, DOMServices::s_XMLNamespace))
 										? xpath.s_MatchScoreNodeTest : xpath.s_MatchScoreNone;
 							}
 							else

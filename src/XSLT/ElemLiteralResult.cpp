@@ -63,6 +63,7 @@
 
 
 #include <sax/AttributeList.hpp>
+#include <sax/SAXException.hpp>
 
 
 
@@ -70,7 +71,10 @@
 #include <PlatformSupport/STLHelper.hpp>
 
 
-#include <sax/SAXException.hpp>
+
+#include <DOMSupport/DOMServices.hpp>
+
+
 
 #include "AVT.hpp"
 #include "Constants.hpp"
@@ -114,7 +118,7 @@ ElemLiteralResult::ElemLiteralResult(
 		{
 			prefix = substring(aname, 0, indexOfNSSep);
 
-			if(!equals(prefix, XALAN_STATIC_UCODE_STRING("xmlns")))
+			if(!equals(prefix, DOMServices::s_XMLNamespace))
 			{
 				XalanDOMString	ns = getNamespaceForPrefix(prefix);
 
@@ -218,8 +222,8 @@ void ElemLiteralResult::execute(
 				XalanDOMString	prefix = hasPrefix ? ns.getPrefix() : XalanDOMString();
 				XalanDOMString	desturi = executionContext.getResultNamespaceForPrefix(prefix);
 				XalanDOMString	attrName = hasPrefix ? 
-					(XalanDOMString(XALAN_STATIC_UCODE_STRING("xmlns:")) + prefix) :
-							XalanDOMString(XALAN_STATIC_UCODE_STRING("xmlns"));
+					DOMServices::s_XMLNamespaceWithSeparator + prefix :
+							DOMServices::s_XMLNamespace;
 
 				XalanDOMString srcURI = ns.getURI();
 

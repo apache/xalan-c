@@ -97,7 +97,7 @@ QName::QName(
 	if(indexOfNSSep < length(qname))
 	{
 		const XalanDOMString		prefix = substring(qname, 0, indexOfNSSep);
-		if(::equals(prefix, XALAN_STATIC_UCODE_STRING("xmlns")))
+		if(::equals(prefix, DOMServices::s_XMLNamespace))
 			return;
 		m_namespace = getNamespaceForPrefix(namespaces, prefix);
 		if(0 == length(m_namespace))
@@ -165,12 +165,12 @@ QName::resolvePrefix(
 	{
 		const XalanDOMString	prefix = substring(qname, 0, indexOfNSSep);
 
-		if(::equals(prefix, XALAN_STATIC_UCODE_STRING("xml")))
+		if(::equals(prefix, DOMServices::s_XMLString))
 		{
 			m_namespace = DOMServices::s_XMLNamespaceURI;
 		}
 		// The default namespace is not resolved.
-		else if(::equals(prefix, XALAN_STATIC_UCODE_STRING("xmlns")))
+		else if(::equals(prefix, DOMServices::s_XMLNamespace))
 		{
 			return;
 		}
@@ -202,7 +202,7 @@ QName::getNamespaceForPrefix(
 {
 	XalanDOMString	nsURI;
 
-	if(::equals(prefix, XALAN_STATIC_UCODE_STRING("xml")))
+	if(::equals(prefix, DOMServices::s_XMLString))
 	{
 		nsURI = DOMServices::s_XMLNamespaceURI;
 	}

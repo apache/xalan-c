@@ -101,12 +101,6 @@ static NSInfo	theNSInfoNullNoAncestorXMLNS(true, false, NSInfo::ANCESTORNOXMLNS)
 
 
 
-static XalanDOMString	theXMLString(XALAN_STATIC_UCODE_STRING("xml"));
-static XalanDOMString	theXMLNSString(XALAN_STATIC_UCODE_STRING("xmlns"));
-static XalanDOMString	theXMLNSStringWithColon(XALAN_STATIC_UCODE_STRING("xmlns:"));
-
-
-
 void
 NamespaceResolver::updateNamespace(
 			const XalanNode*	theNode,
@@ -208,7 +202,7 @@ NamespaceResolver::getNamespaceOfNode(const XalanNode&	theNode) const
 		bool	ancestorsHaveXMLNS = false;
 		bool	nHasXMLNS = false;
 
-		if(equals(prefix, theXMLString) == true)
+		if(equals(prefix, DOMServices::s_XMLString) == true)
 		{
 			namespaceOfPrefix = DOMServices::s_XMLNamespaceURI;
 		}
@@ -253,9 +247,9 @@ NamespaceResolver::getNamespaceOfNode(const XalanNode&	theNode) const
 
 							if(charAt(aname, 0) == 'x')
 							{
-								bool isPrefix = startsWith(aname, theXMLNSStringWithColon);
+								bool isPrefix = startsWith(aname, DOMServices::s_XMLNamespaceWithSeparator);
 							  
-								if (equals(aname, theXMLNSString) == true || isPrefix == true) 
+								if (equals(aname, DOMServices::s_XMLNamespace) == true || isPrefix == true) 
 								{
 									if(theLocalNode == parent)
 									{
@@ -266,7 +260,7 @@ NamespaceResolver::getNamespaceOfNode(const XalanNode&	theNode) const
 									ancestorsHaveXMLNS = true;
 
 									const XalanDOMString	p = isPrefix == true ?
-										substring(aname, length(theXMLNSStringWithColon)) : XalanDOMString();
+										substring(aname, length(DOMServices::s_XMLNamespaceWithSeparator)) : XalanDOMString();
 
 									if (equals(p, prefix) == true) 
 									{

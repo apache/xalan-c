@@ -66,6 +66,10 @@
 
 
 
+#include <DOMSupport/DOMServices.hpp>
+
+
+
 #include "AVT.hpp"
 #include "Constants.hpp"
 #include "StylesheetConstructionContext.hpp"
@@ -169,7 +173,7 @@ ElemAttribute::execute(
 				{
 					prefix = executionContext.getUniqueNameSpaceValue();
 
-					XalanDOMString nsDecl = XalanDOMString(XALAN_STATIC_UCODE_STRING("xmlns:")) + prefix;
+					XalanDOMString nsDecl = XalanDOMString(DOMServices::s_XMLNamespaceWithSeparator) + prefix;
 
 					executionContext.addResultAttribute(nsDecl, attrNameSpace);
 				}
@@ -186,7 +190,7 @@ ElemAttribute::execute(
 		}
       // Note we are using original attribute name for these tests. 
 		else if(!isEmpty(executionContext.getPendingElementName())
-				&& !equals(origAttrName, XALAN_STATIC_UCODE_STRING("xmlns")))
+				&& !equals(origAttrName, DOMServices::s_XMLNamespace))
 		{
 			// make sure that if a prefix is specified on the attribute name, it is valid
 			indexOfNSSep = indexOf(origAttrName, ':');

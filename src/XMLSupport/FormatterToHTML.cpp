@@ -82,6 +82,10 @@
 
 
 
+#include <DOMSupport/DOMServices.hpp>
+
+
+
 const FormatterToHTML::EmptiesSetType				FormatterToHTML::s_empties =
 						FormatterToHTML::createEmpties();
 
@@ -565,8 +569,8 @@ FormatterToHTML::processAttribute(
 {
 	try
 	{
-		if(!equals(name, XALAN_STATIC_UCODE_STRING("xmlns")) &&
-			!startsWith(name, XALAN_STATIC_UCODE_STRING("xmlns:")))
+		if(!equals(name, DOMServices::s_XMLNamespace) &&
+			!startsWith(name, DOMServices::s_XMLNamespaceWithSeparator))
 		{
 			XalanDOMString pval;
 			XalanDOMString aname = toLowerCase(name);

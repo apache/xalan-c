@@ -70,7 +70,6 @@
 
 
 
-//#include <Include/DOMHelper.hpp>
 #include <PlatformSupport/DOMStringHelper.hpp>
 #include "DOMSupportException.hpp"
 
@@ -78,11 +77,17 @@
 
 #if defined(XALAN_INLINE_INITIALIZATION)
 
+const XalanDOMString	DOMServices::s_XMLString;
 const XalanDOMString	DOMServices::s_XMLNamespaceURI;
+const XalanDOMString	DOMServices::s_XMLNamespace;
+const XalanDOMString	DOMServices::s_XMLNamespaceWithSeparator;
 
 #else
 
+const XalanDOMString	DOMServices::s_XMLString(XALAN_STATIC_UCODE_STRING("xml"));
 const XalanDOMString	DOMServices::s_XMLNamespaceURI(XALAN_STATIC_UCODE_STRING("http://www.w3.org/XML/1998/namespace"));
+const XalanDOMString	DOMServices::s_XMLNamespace(XALAN_STATIC_UCODE_STRING("xmlns"));
+const XalanDOMString	DOMServices::s_XMLNamespaceWithSeparator(XALAN_STATIC_UCODE_STRING("xmlns:"));
 
 #endif
 
@@ -323,7 +328,7 @@ DOMServices::getNamespaceForPrefix(
 {
 	XalanDOMString theNamespace;
 
-	if(equals(prefix, "xml") == true)
+	if(equals(prefix, s_XMLString) == true)
 	{
 		theNamespace = s_XMLNamespaceURI;
 	}
@@ -350,15 +355,13 @@ DOMServices::getNamespaceForPrefix(
 
 					const XalanDOMString		aname = attr->getNodeName();
 
-					const char* const	theXMLNS = "xmlns:";
-
 					const bool isPrefix =
 							equals(substring(aname,
 											 0,
-											 0 + strlen(theXMLNS)),
-								   theXMLNS);
+											 length(s_XMLNamespaceWithSeparator)),
+								   s_XMLNamespaceWithSeparator);
 
-					if (equals(aname, "xmlns") || isPrefix) 
+					if (equals(aname, s_XMLNamespace) || isPrefix) 
 					{
 						const unsigned int	index = indexOf(aname,
 															':');
@@ -610,4 +613,3 @@ DOMServices::isNodeAfterSibling(
 
 	return isNodeAfterSibling;
 }
-

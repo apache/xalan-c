@@ -286,11 +286,11 @@ Stylesheet::pushNamespaces(const AttributeList& atts)
 		const XalanDOMChar* const	aname = atts.getName(i);
 		const XalanDOMChar* const	value = atts.getValue(i);
 
-		bool isPrefix = startsWith(aname, XALAN_STATIC_UCODE_STRING("xmlns:"));
+		bool isPrefix = startsWith(aname, DOMServices::s_XMLNamespaceWithSeparator);
 
-		if (equals(aname, XALAN_STATIC_UCODE_STRING("xmlns")) || isPrefix) 
+		if (equals(aname, DOMServices::s_XMLNamespace) || isPrefix) 
 		{
-			XalanDOMString p = isPrefix ? substring(aname,6) : XalanDOMString();
+			XalanDOMString p = isPrefix ? substring(aname, 6) : XalanDOMString();
 
 			namespaces.push_back(NameSpace(p, value));
 		}
@@ -317,8 +317,8 @@ Stylesheet::isAttrOK(
 			int 							/* which */,
 			StylesheetConstructionContext&	constructionContext) const
 {
-	bool attrOK = equals(attrName, XALAN_STATIC_UCODE_STRING("xmlns")) ||
-						 startsWith(attrName, XALAN_STATIC_UCODE_STRING("xmlns:"));
+	bool attrOK = equals(attrName, DOMServices::s_XMLNamespace) ||
+						 startsWith(attrName, DOMServices::s_XMLNamespaceWithSeparator);
 
 	if(!attrOK)
 	{

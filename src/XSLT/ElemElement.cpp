@@ -62,6 +62,10 @@
 
 
 
+#include <DOMSupport/DOMServices.hpp>
+
+
+
 #include "AVT.hpp"
 #include "Constants.hpp"
 #include "StylesheetConstructionContext.hpp"
@@ -157,7 +161,7 @@ ElemElement::execute(
 					prefix = executionContext.getUniqueNameSpaceValue();
 
 					const XalanDOMString	nsDecl =
-						XalanDOMString(XALAN_STATIC_UCODE_STRING("xmlns:")) + prefix;
+						DOMServices::s_XMLNamespaceWithSeparator + prefix;
 
 					executionContext.addResultAttribute(nsDecl, elemNameSpace);
 				}
