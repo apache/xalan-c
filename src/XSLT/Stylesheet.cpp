@@ -1225,7 +1225,7 @@ Stylesheet::processNSAliasElement(
 }
 
 
-
+#if 0
 XalanDOMString
 Stylesheet::getAliasNamespaceURI(const XalanDOMChar*	uri) const
 {
@@ -1268,7 +1268,7 @@ Stylesheet::getAliasNamespaceURI(const XalanDOMString&	uri) const
 		return theResult;
 	}
 }
-
+#endif
 
 
 const XalanDecimalFormatSymbols*
@@ -1332,17 +1332,18 @@ Stylesheet::applyAttrSets(
 
 	if(0 != nNames)
 	{
-		assert(m_importsSize == m_imports.size());
-
 		// Process up the import chain...
-		for(StylesheetVectorType::size_type i = 0; i < m_importsSize; i++)
-		{
-			const Stylesheet* const 	stylesheet = m_imports[i];
+		const StylesheetVectorType::const_reverse_iterator	theEnd = m_imports.rend();
+		StylesheetVectorType::const_reverse_iterator		i = m_imports.rbegin();
 
-			stylesheet->applyAttrSets(
+		while(i != theEnd)
+		{
+			(*i)->applyAttrSets(
 				attributeSetsNames, 
 				executionContext,
 				sourceNode);
+
+			++i;
 		}
 
 		for(QNameVectorType::size_type j = 0; j < nNames; j++)
