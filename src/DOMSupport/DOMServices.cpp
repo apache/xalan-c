@@ -948,13 +948,13 @@ DOMServices::isNodeAfterSibling(
 	   XalanNode::ATTRIBUTE_NODE == child2type)
 	{
 		// always sort attributes before non-attributes.
-		isNodeAfterSibling = false;
+		isNodeAfterSibling = true;
 	}
 	else if(XalanNode::ATTRIBUTE_NODE == child1type &&
 			XalanNode::ATTRIBUTE_NODE != child2type)
 	{
 		// always sort attributes before non-attributes.
-		isNodeAfterSibling = true;
+		isNodeAfterSibling = false;
 	}
 	else if(XalanNode::ATTRIBUTE_NODE == child1type)
 	{
