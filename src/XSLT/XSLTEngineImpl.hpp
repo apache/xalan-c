@@ -166,7 +166,6 @@ public:
 	typedef XALAN_STD vector<const Locator*>	  LocatorStack;
 	typedef XALAN_STD vector<NameSpace> 		  NamespaceVectorType;
 	typedef XALAN_STD vector<NamespaceVectorType> NamespacesStackType;
-	typedef XALAN_STD vector<StackEntry*>		  VariableStackStackType;
 	typedef XALAN_STD vector<TraceListener*>	  TraceListenerVectorType;
 	typedef XALAN_STD vector<bool>				  BoolVectorType;
 
@@ -1653,7 +1652,8 @@ public:
 		/**
 		 * Mark the top of the global stack frame.
 		 */
-		void markGlobalStackFrame()
+		void
+		markGlobalStackFrame()
 		{
 			m_globalStackFrameIndex = m_stack.size();
 		}
@@ -1665,7 +1665,8 @@ public:
 		 *
 		 * @param currentStackFrameIndex new value of index
 		 */
-		void setCurrentStackFrameIndex(int currentStackFrameIndex = -1)
+		void
+		setCurrentStackFrameIndex(int	currentStackFrameIndex = -1)
 		{
 			if (currentStackFrameIndex == -1)
 				m_currentStackFrameIndex = m_stack.size();
@@ -1679,26 +1680,29 @@ public:
 		 *
 		 * @return current value of index
 		 */
-		int getCurrentStackFrameIndex() const
+		int
+		getCurrentStackFrameIndex() const
 		{
 			return m_currentStackFrameIndex;
 		}
 
 		/**
-		 * Override the push in order to track the 
-		 * m_currentStackFrameIndex correctly.
+		 * Push an entry onto the stack.
 		 *
 		 * @param stack entry to push
-		 * @param isNew true if object was created on the heap
 		 */
-		void push(StackEntry* theEntry, bool isNew = false)
+		void
+		push(StackEntry*	theEntry)
 		{
-			int type = theEntry->getType();
-			assert(type <4 && type >= 0);
+			assert(theEntry != 0);
+			assert(theEntry->getType() < 4 && theEntry->getType() >= 0);
+
 			if(m_currentStackFrameIndex == m_stack.size())
-				m_currentStackFrameIndex+=1;
+			{
+				++m_currentStackFrameIndex;
+			}
+
 			m_stack.push_back(theEntry);
-			m_isNew.push_back(isNew);
 		}
 
 		/**
@@ -1707,21 +1711,18 @@ public:
 		 *
 		 * @return stack entry popped
 		 */
-		void pop()
+		void
+		pop()
 		{
-			assert (! m_stack.empty());
-			if(m_currentStackFrameIndex == m_stack.size())
-				m_currentStackFrameIndex-=1;
-			StackEntry* theEntry = m_stack.back();
-			m_stack.pop_back();
-			// @@ JMD: This should work, but seems to be causing problems ...
-			/*
-			if (m_isNew.back() == true)
-				delete theEntry;
-			*/
-			m_isNew.pop_back();
-		}
+			assert(m_stack.empty() == false);
 
+			if(m_currentStackFrameIndex == m_stack.size())
+			{
+				--m_currentStackFrameIndex;
+			}
+
+			m_stack.pop_back();
+		}
 
 	private:
 
@@ -1743,19 +1744,28 @@ public:
 		const XalanElement* 			m_caller;
 
 
+#if defined(XALAN_NO_NAMESPACES)
+		typedef vector<StackEntry*>			VariableStackStackType;
+		typedef set<StackEntry*>			StackEntrySetType;
+#else
+		typedef std::vector<StackEntry*>	VariableStackStackType;
+		typedef std::set<StackEntry*>		StackEntrySetType;
+#endif
+
 		VariableStackStackType			m_stack;
-		BoolVectorType	m_isNew;
+
+		StackEntrySetType				m_stackEntries;
 
 		XSLTEngineImpl&					m_processor;
 
-		int m_globalStackFrameIndex;
+		int								m_globalStackFrameIndex;
 
 		/**
 		 * This is the top of the stack frame from where a search 
 		 * for a variable or param should take place.  It may not 
 		 * be the real stack top.
 		 */
-		unsigned int m_currentStackFrameIndex;
+		unsigned int					m_currentStackFrameIndex;
 	
 	}; // end VariableStack
 
@@ -2008,12 +2018,6 @@ protected:
 	
 	// Factory for creating xpaths.
 	XPathFactory&		m_xpathFactory;
-
-	/**
-	 * XPath object to use for short evaluations, so we don't have to 
-	 * create one every time.
-	 */
-	XPath* const		m_xpath;
 
 	// Factory for creating xobjects
 	XObjectFactory& 	m_xobjectFactory;

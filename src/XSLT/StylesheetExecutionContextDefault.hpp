@@ -65,6 +65,7 @@
 
 
 #include <memory>
+#include <set>
 #include <vector>
 
 
@@ -73,6 +74,7 @@
 
 
 
+class TextOutputStream;
 class XPathProcessor;
 class XPathSupport;
 class XObjectFactory;
@@ -100,6 +102,9 @@ public:
 	~StylesheetExecutionContextDefault();
 
 	// These interfaces are inherited from StylesheetExecutionContext...
+
+	virtual void
+	reset();
 
 	virtual XObject*
 	getTopLevelVariable(const XalanDOMString&	theName) const;
@@ -471,6 +476,21 @@ public:
 	virtual const DecimalFormatSymbols*
 	getDecimalFormatSymbols(const XalanDOMString&	name);
 
+	virtual PrintWriter*
+	createPrintWriter(TextOutputStream*		theTextOutputStream);
+
+	virtual PrintWriter*
+	createPrintWriter(
+			const XalanDOMString&		theFileName,
+			const XalanDOMString&		theEncoding);
+
+	virtual PrintWriter*
+#if defined(XALAN_NO_NAMESPACES)
+	createPrintWriter(ostream&			theStream);
+#else
+	createPrintWriter(std::ostream&		theStream);
+#endif
+
 	// These interfaces are inherited from ExecutionContext...
 
 	virtual void
@@ -500,8 +520,12 @@ private:
 
 #if defined(XALAN_NO_NAMESPACES)
 	typedef vector<const ElemTemplateElement*>			ElementRecursionStackType;
+	typedef set<PrintWriter*>							PrintWriterSetType;
+	typedef set<TextOutputStream*>						TextOutputStreamSetType;
 #else
 	typedef std::vector<const ElemTemplateElement*>		ElementRecursionStackType;
+	typedef std::set<PrintWriter*>						PrintWriterSetType;
+	typedef std::set<TextOutputStream*>					TextOutputStreamSetType;
 #endif
 
 	ElementRecursionStackType		m_elementRecursionStack;
@@ -509,6 +533,10 @@ private:
 	const PrefixResolver*			m_prefixResolver;
 
 	StylesheetRoot*					m_stylesheetRoot;
+
+	PrintWriterSetType				m_printWriters;
+
+	TextOutputStreamSetType			m_textOutputStreams;
 };
 
 

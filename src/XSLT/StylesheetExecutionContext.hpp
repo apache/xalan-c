@@ -64,6 +64,11 @@
 
 
 
+// std stream forward declarations.
+#include <iosfwd>
+
+
+
 // Base class header file...
 #include <XPath/XPathExecutionContext.hpp>
 
@@ -83,9 +88,11 @@ class ElemTemplateElement;
 class FormatterListener;
 class PrefixResolver;
 class NodeRefListBase;
+class PrintWriter;
 class QName;
 class Stylesheet;
 class StylesheetRoot;
+class TextOutputStream;
 class XalanElement;
 class XalanNode;
 class XalanDocument;
@@ -108,6 +115,13 @@ public:
 	~StylesheetExecutionContext();
 
 	// These interfaces are new...
+
+	/**
+	 * Reset the instance, and prepare to re-use the
+	 * context.
+	 */
+	virtual void
+	reset() = 0;
 
 	/**
 	 * Retrieve a top level variable corresponding to name.
@@ -1145,6 +1159,46 @@ public:
 	 */
 	virtual const DecimalFormatSymbols*
 	getDecimalFormatSymbols(const XalanDOMString&	name) = 0;
+
+	/**
+	 * Create a PrintWriter to represent the supplied TextOutputStream.
+	 * The StylesheetExecutionContext owns the PrintWriter, and will
+	 * delete it when reset(), or during destruction.
+	 *
+	 * @param theOutputStream the output stream.
+	 * @return the new PrintWriter instance.
+	 */
+	virtual PrintWriter*
+	createPrintWriter(TextOutputStream*		theTextOutputStream) = 0;
+
+	/**
+	 * Create a PrintWriter to represent the supplied std::ostream.
+	 * The StylesheetExecutionContext owns the PrintWriter, and will
+	 * delete it when reset(), or during destruction.
+	 *
+	 * @param theFileName the name of the output file.
+	 * @param theEncoding the encoding to use.
+	 * @return the new PrintWriter instance.
+	 */
+	virtual PrintWriter*
+	createPrintWriter(
+			const XalanDOMString&		theFileName,
+			const XalanDOMString&		theEncoding) = 0;
+
+	/**
+	 * Create a PrintWriter to represent the supplied std::ostream.
+	 * The StylesheetExecutionContext owns the PrintWriter, and will
+	 * delete it when reset(), or during destruction.
+	 *
+	 * @param theStream a reference to an ostream.
+	 * @return the new PrintWriter instance.
+	 */
+	virtual PrintWriter*
+#if defined(XALAN_NO_NAMESPACES)
+	createPrintWriter(ostream&			theStream) = 0;
+#else
+	createPrintWriter(std::ostream&		theStream) = 0;
+#endif
 
 	// These interfaces are inherited from ExecutionContext...
 

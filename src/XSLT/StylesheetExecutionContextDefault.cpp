@@ -64,6 +64,11 @@
 
 
 
+#include <PlatformSupport/STLHelper.hpp>
+#include <PlatformSupport/TextOutputStream.hpp>
+
+
+
 #include <XPath/ElementPrefixResolverProxy.hpp>
 #include <XPath/ResultTreeFragBase.hpp>
 #include <XPath/XPathExecutionContext.hpp>
@@ -72,6 +77,13 @@
 
 
 #include <XMLSupport/XMLParserLiaison.hpp>
+
+
+
+// Yuck, these really shouldn't be here...
+#include <XercesPlatformSupport/XercesDOMPrintWriter.hpp>
+#include <XercesPlatformSupport/XercesStdTextOutputStream.hpp>
+#include <XercesPlatformSupport/TextFileOutputStream.hpp>
 
 
 
@@ -98,7 +110,9 @@ StylesheetExecutionContextDefault::StylesheetExecutionContextDefault(
 	m_xsltProcessor(xsltProcessor),
 	m_elementRecursionStack(),
 	m_prefixResolver(0),
-	m_stylesheetRoot(0)
+	m_stylesheetRoot(0),
+	m_printWriters(),
+	m_textOutputStreams()
 {
 }
 
@@ -106,6 +120,29 @@ StylesheetExecutionContextDefault::StylesheetExecutionContextDefault(
 
 StylesheetExecutionContextDefault::~StylesheetExecutionContextDefault()
 {
+	reset();
+}
+
+
+
+void
+StylesheetExecutionContextDefault::reset()
+{
+#if !defined(XALAN_NO_NAMESPACES)
+	using std::for_each;
+#endif
+
+	for_each(m_printWriters.begin(),
+			 m_printWriters.end(),
+			 DeleteFunctor<PrintWriter>());
+
+	m_printWriters.clear();
+
+	for_each(m_textOutputStreams.begin(),
+			 m_textOutputStreams.end(),
+			 DeleteFunctor<TextOutputStream>());
+
+	m_textOutputStreams.clear();
 }
 
 
@@ -1012,6 +1049,59 @@ StylesheetExecutionContextDefault::getDecimalFormatSymbols(const XalanDOMString&
 	{
 		return m_stylesheetRoot->getDecimalFormatSymbols(name);
 	}
+}
+
+
+
+PrintWriter*
+StylesheetExecutionContextDefault::createPrintWriter(TextOutputStream*	theTextOutputStream)
+{
+	assert(theTextOutputStream != 0);
+
+	PrintWriter* const	thePrintWriter =
+		new XercesDOMPrintWriter(*theTextOutputStream);
+
+	m_printWriters.insert(thePrintWriter);
+
+	return thePrintWriter;
+}
+
+
+
+PrintWriter*
+StylesheetExecutionContextDefault::createPrintWriter(
+			const XalanDOMString&		theFileName,
+			const XalanDOMString&		/* theEncoding */)
+{
+	// $$$ ToDo: We need to either remove these explicit dependencies on the
+	// Xerces classes, or make the Xerces classes more generic. (I prefer the
+	// latter...)
+	TextOutputStream* const		theTextOutputStream =
+		new TextFileOutputStream(theFileName);
+
+	m_textOutputStreams.insert(theTextOutputStream);
+
+	return createPrintWriter(theTextOutputStream);
+}
+
+
+
+PrintWriter*
+#if defined(XALAN_NO_NAMESPACES)
+StylesheetExecutionContextDefault::createPrintWriter(ostream&	theStream)
+#else
+StylesheetExecutionContextDefault::createPrintWriter(std::ostream&	theStream)
+#endif
+{
+	// $$$ ToDo: We need to either remove these explicit dependencies on the
+	// Xerces classes, or make the Xerces classes more generic. (I prefer the
+	// latter...)
+	TextOutputStream* const		theTextOutputStream =
+		new XercesStdTextOutputStream(theStream);
+
+	m_textOutputStreams.insert(theTextOutputStream);
+
+	return createPrintWriter(theTextOutputStream);
 }
 
 

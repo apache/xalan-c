@@ -138,6 +138,7 @@
 #include "ProblemListener.hpp"
 #include "ProblemListenerDefault.hpp"
 #include "Stylesheet.hpp"
+#include "StylesheetConstructionContext.hpp"
 #include "StylesheetExecutionContext.hpp"
 #include "StylesheetHandler.hpp"
 #include "StylesheetRoot.hpp"
@@ -203,7 +204,6 @@ XSLTEngineImpl::XSLTEngineImpl(
 	m_resultNameSpaces(),
 	m_emptyNamespace(),
 	m_xpathFactory(xpathFactory),
-	m_xpath(xpathFactory.create()),
 	m_xobjectFactory(xobjectFactory),
 	m_xpathProcessor(new XPathProcessorImpl),
 	m_cdataStack(),
@@ -264,7 +264,7 @@ XSLTEngineImpl::reset()
 	m_XSLNameSpaceURL = s_DefaultXSLNameSpaceURL;
 	m_durationsTable.clear();
 	m_stylesheetLocatorStack.clear();
-	m_pendingElementName = XalanDOMString();
+	clear(m_pendingElementName);
 	m_pendingAttributes.clear();
 	m_cdataStack.clear();
 	m_resultTreeFactory = 0;
@@ -275,13 +275,9 @@ XSLTEngineImpl::reset()
 
 	m_stackGuard.clear();
 	m_xpathSupport.reset();
-	m_parserLiaison.reset();
 	m_xpathEnvSupport.reset();
 	m_xpathFactory.reset();
 	m_xobjectFactory.reset();
-
-	delete m_stylesheetRoot;
-	m_stylesheetRoot = 0;
 
 	m_stylesheetExecutionContext = 0;
 }
@@ -549,8 +545,6 @@ XSLTEngineImpl::processStylesheet(
   			XSLTInputSource&				stylesheetSource,
 			StylesheetConstructionContext&	constructionContext)
 {
-	delete m_stylesheetRoot;
-
 	const XalanDOMString	ds(XALAN_STATIC_UCODE_STRING("Input XSL"));
 	const XalanDOMString	xslIdentifier(0 == stylesheetSource.getSystemId() ? 
 									 ds : stylesheetSource.getSystemId());
@@ -559,7 +553,7 @@ XSLTEngineImpl::processStylesheet(
 	// try to parse the XML here.
 	try
 	{
-		m_stylesheetRoot = new StylesheetRoot(stylesheetSource.getSystemId(), constructionContext);
+		m_stylesheetRoot = constructionContext.create(stylesheetSource);
 
 		addTraceListenersToStylesheet();
 
@@ -722,7 +716,7 @@ XSLTEngineImpl::getStylesheetFromPIURL(
 	Stylesheet*			stylesheet = 0;
 
 	XalanDOMString			stringHolder;
-	const XalanDOMString		localXSLURLString = clone(trim(xslURLString));
+	const XalanDOMString	localXSLURLString = clone(trim(xslURLString));
 
 	const unsigned int	fragIndex = indexOf(localXSLURLString, '#');
 
@@ -834,7 +828,7 @@ XSLTEngineImpl::getStylesheetFromPIURL(
 
 			if(isRoot)
 			{
-				m_stylesheetRoot = new StylesheetRoot(stringHolder, constructionContext);
+				m_stylesheetRoot = constructionContext.create(stringHolder);
 				stylesheet = m_stylesheetRoot;
 			}
 			else
@@ -871,13 +865,14 @@ XSLTEngineImpl::getStylesheetFromPIURL(
 
 		if(isRoot)
 		{
-			m_stylesheetRoot = new StylesheetRoot(localXSLURLString, constructionContext);
+			m_stylesheetRoot = constructionContext.create(localXSLURLString);
 			stylesheet = m_stylesheetRoot;
 		}
 		else
 		{
 			stylesheet = new Stylesheet(*m_stylesheetRoot, localXSLURLString, constructionContext);
 		}
+
 		addTraceListenersToStylesheet();
 
 		StylesheetHandler stylesheetProcessor(*this, *stylesheet, constructionContext);
@@ -890,11 +885,9 @@ XSLTEngineImpl::getStylesheetFromPIURL(
 
 		XSLTInputSource		inputSource(xslURL->getURLText());
 
-		// java: m_parserLiaison.setDocumentHandler(stylesheetProcessor);
-		//       m_parserLiaison.parse(inputSource);
 		m_parserLiaison.parseXMLStream(inputSource, stylesheetProcessor);
 
-		displayDuration("Parsing and init of "+localXSLURLString, &localXSLURLString);
+		displayDuration("Parsing and init of " + localXSLURLString, &localXSLURLString);
 	}
 
 	return stylesheet;
@@ -1631,17 +1624,26 @@ XSLTEngineImpl::endElement(const XMLCh* const 	name)
 {
 	assert(m_flistener != 0);
 	assert(name != 0);
+
 	flushPending();
-	m_flistener->endElement(c_wstr(name));
+
+	m_flistener->endElement(name);
+
 	if(m_traceListeners.size() > 0)
 	{
 		GenerateEvent ge(this, GenerateEvent::EVENTTYPE_ENDELEMENT, name, 0);
 		fireGenerateEvent(ge);
 	}
+
 	m_resultNameSpaces.pop_back();
-	Stylesheet::QNameVectorType cdataElems = m_stylesheetRoot->getCdataSectionElems();
+
+	const Stylesheet::QNameVectorType&	cdataElems =
+		m_stylesheetRoot->getCdataSectionElems();
+
 	if(0 != cdataElems.size())
-      m_cdataStack.pop_back();
+	{
+		m_cdataStack.pop_back();
+	}
 }
 
 
@@ -1665,28 +1667,15 @@ XSLTEngineImpl::characters(
 {
 	assert(m_flistener != 0);
 	assert(ch != 0);
+
 	flushPending();
-	Stylesheet::QNameVectorType cdataElems = m_stylesheetRoot->getCdataSectionElems();
-	// java:
-	//	if((null != m_stylesheetRoot.m_cdataSectionElems) && 
-	//		!m_cdataStack.isEmpty() && (m_cdataStack.peek() == TRUE))
+
+	const Stylesheet::QNameVectorType&	cdataElems =
+		m_stylesheetRoot->getCdataSectionElems();
 
 	if(0 != cdataElems.size() && 0 != m_cdataStack.size())
 	{
-		//	java:	if(m_flistener instanceof FormatterListener)
-		// @@ JMD: Need to add type member to DocumentHandler, etc ...
-		// future: if (m_flistener.getType == eFormatterListener)
-		if (true)		// @@ JMD: For now
-		{
-			FormatterListener* pfl =
-				static_cast<FormatterListener*>(m_flistener);
-			pfl->cdata(ch+start, length);
-		}
-		else
-		{
-			// Bad but I think it's better than dropping it.
-			m_flistener->characters(ch, length);
-		}
+		m_flistener->cdata(ch + start, length);
 
 		if(m_traceListeners.size() > 0)
 		{
@@ -1696,7 +1685,8 @@ XSLTEngineImpl::characters(
 	}
 	else
 	{
-		m_flistener->characters(ch+start, length);
+		m_flistener->characters(ch + start, length);
+
 		if(m_traceListeners.size() > 0)
 		{
 			GenerateEvent ge(this, GenerateEvent::EVENTTYPE_CHARACTERS, ch,
@@ -2047,7 +2037,7 @@ XSLTEngineImpl::createResultTreeFrag(
 								  pfrag.get());
 
 	const XalanDOMString savedPendingName = m_pendingElementName;
-	m_pendingElementName = XalanDOMString();
+	clear(m_pendingElementName);
 
 	AttributeListImpl savedPendingAttributes(m_pendingAttributes);
 	m_pendingAttributes.clear();
@@ -2385,15 +2375,18 @@ XSLTEngineImpl::evalXPathStr(
 			const XalanDOMString&	str,
 			XPathExecutionContext&	executionContext)
 {
-    m_xpathProcessor->initXPath(*m_xpath,
+	FactoryObjectAutoPointer<XPath>		theXPath(&m_xpathFactory,
+												 m_xpathFactory.create());
+
+    m_xpathProcessor->initXPath(*theXPath.get(),
 								str,
 								*executionContext.getPrefixResolver(),
 								m_xobjectFactory,
 								m_xpathEnvSupport);
 
-    return m_xpath->execute(executionContext.getCurrentNode(),
-							*executionContext.getPrefixResolver(),
-							executionContext);
+    return theXPath->execute(executionContext.getCurrentNode(),
+							 *executionContext.getPrefixResolver(),
+							 executionContext);
 }
 
 
@@ -2405,13 +2398,16 @@ XSLTEngineImpl::evalXPathStr(
 			const PrefixResolver&	prefixResolver,
 			XPathExecutionContext&	executionContext)
 {
-    m_xpathProcessor->initXPath(*m_xpath,
+	FactoryObjectAutoPointer<XPath>		theXPath(&m_xpathFactory,
+												 m_xpathFactory.create());
+
+    m_xpathProcessor->initXPath(*theXPath.get(),
 								str,
 								prefixResolver,
 								m_xobjectFactory,
 								m_xpathEnvSupport);
 
-    return m_xpath->execute(contextNode, prefixResolver, executionContext);
+    return theXPath->execute(contextNode, prefixResolver, executionContext);
 }
 
 
@@ -3993,6 +3989,7 @@ XSLTEngineImpl::StackGuard::pop()
 XSLTEngineImpl::VariableStack::VariableStack(XSLTEngineImpl&	theProcessor) :
 	m_caller(),
 	m_stack(),
+	m_stackEntries(),
 	m_processor(theProcessor),
 	m_globalStackFrameIndex(-1),
 	m_currentStackFrameIndex(0)
@@ -4016,14 +4013,14 @@ XSLTEngineImpl::VariableStack::reset()
 	using std::for_each;
 #endif
 
-	// Delete all entries left on the stack
-	// $$$ ToDo: Commented out because it's causing
-	// problems.  Fix this!!!
-//	for_each(m_stack.begin(),
-//			 m_stack.end(),
-//			 DeleteFunctor<StackEntry>());
-
 	m_stack.clear();
+
+	// Delete all entries that we created...
+	for_each(m_stackEntries.begin(),
+			 m_stackEntries.end(),
+			 DeleteFunctor<StackEntry>());
+
+	m_stackEntries.clear();
 
 	pushContextMarker(0, 0);	
 }
@@ -4033,7 +4030,11 @@ XSLTEngineImpl::VariableStack::reset()
 void
 XSLTEngineImpl::VariableStack::pushElementMarker(const XalanNode*	elem)
 {
-	push(new ElementMarker(elem), true);
+	StackEntry* const	theEntry = new ElementMarker(elem);
+
+	m_stackEntries.insert(theEntry);
+
+	push(theEntry);
 }
 
 
@@ -4095,13 +4096,17 @@ XSLTEngineImpl::VariableStack::elementMarkerAlreadyPushed(const XalanNode*	elem)
 }
 
 
-	
+
 void
 XSLTEngineImpl::VariableStack::pushContextMarker(
 			const XalanNode*	caller,
 			const XalanNode*	sourceNode)
 {
-	push(new ContextMarker(caller, sourceNode), true);
+	StackEntry* const	theEntry = new ContextMarker(caller, sourceNode);
+
+	m_stackEntries.insert(theEntry);
+
+	push(theEntry);
 }
 
 
@@ -4211,6 +4216,8 @@ XSLTEngineImpl::VariableStack::pushParams(
 						}
 						assert(theArg != 0);
 
+						m_stackEntries.insert(theArg);
+
 						tempStack.push_back(theArg);
 					}
 
@@ -4270,7 +4277,11 @@ XSLTEngineImpl::VariableStack::pushVariable(
 		pushElementMarker(e);
 	}
 
-	push(new Arg(name, val, false), true);
+	StackEntry* const	theEntry = new Arg(name, val, false);
+
+	m_stackEntries.insert(theEntry);
+
+	push(theEntry);
 }
 
 

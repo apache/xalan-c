@@ -74,8 +74,10 @@
 
 
 class PrefixResolver;
-class XPath;
+class StylesheetRoot;
 class XMLURL;
+class XPath;
+class XSLTInputSource;
 
 
 
@@ -92,6 +94,46 @@ public:
 
 	virtual
 	~StylesheetConstructionContext();
+
+
+	/**
+	 * Reset the StylesheetConstructionContext instance.  Any existing objects
+	 * created by the instance will be destroyed.
+	 */
+	virtual void
+	reset() = 0;
+
+	/**
+	 * Create a new StylesheetRoot instance.  The StylesheetConstructionContext
+	 * instance owns the StylesheetRoot instance, and will delete it when asked
+	 * or when the StylesheetConstructionContext instance is destroyed.
+	 *
+	 * @param theBaseIdentifier A URI to the stylesheet file.
+	 * @return A pointer to a new StylesheetRoot instance.
+	 */
+	virtual StylesheetRoot*
+	create(const XalanDOMString&	theBaseIdentifier) = 0;
+
+	/**
+	 * Create a new StylesheetRoot instance.  The StylesheetConstructionContext
+	 * instance owns the StylesheetRoot instance, and will delete it when asked
+	 * or when the StylesheetConstructionContext instance is destroyed.
+	 *
+	 * @param theInputSource A reference to the input source.
+	 * @return A pointer to a new StylesheetRoot instance.
+	 */
+	virtual StylesheetRoot*
+	create(XSLTInputSource&		theInputSource) = 0;
+
+	/**
+	 * Destroy a StylesheetRoot instance.  If this StylesheetConstructionContext
+	 * instance does not own the StylesheetRoot, it will not delete the
+	 * StylesheetRoot.
+	 *
+	 * @param theStylesheet A pointer to the StylesheetRoot instance to delete.
+	 */
+	virtual void
+	destroy(StylesheetRoot*		theStylesheetRoot) = 0;
 
 	/**
 	 * Given an XSL tag name, return an integer token that corresponds to

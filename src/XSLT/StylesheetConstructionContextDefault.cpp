@@ -59,6 +59,14 @@
 
 
 
+#include <algorithm>
+
+
+
+#include <PlatformSupport/STLHelper.hpp>
+
+
+
 #include <XPath/XObjectFactory.hpp>
 #include <XPath/XPathEnvSupport.hpp>
 #include <XPath/XPathFactory.hpp>
@@ -66,7 +74,9 @@
 
 
 
+#include "StylesheetRoot.hpp"
 #include "XSLTEngineImpl.hpp"
+#include "XSLTInputSource.hpp"
 
 
 
@@ -80,7 +90,8 @@ StylesheetConstructionContextDefault::StylesheetConstructionContextDefault(
 	m_xpathEnvSupport(xpathEnvSupport),
 	m_xobjectFactory(xobjectFactory),
 	m_xpathFactory(xpathFactory),
-	m_xpathProcessor(new XPathProcessorImpl)
+	m_xpathProcessor(new XPathProcessorImpl),
+	m_stylesheets()
 {
 }
 
@@ -88,6 +99,7 @@ StylesheetConstructionContextDefault::StylesheetConstructionContextDefault(
 
 StylesheetConstructionContextDefault::~StylesheetConstructionContextDefault()
 {
+	reset();
 }
 
 
@@ -121,6 +133,64 @@ StylesheetConstructionContextDefault::message(
 			const XalanNode*		styleNode) const
 {
 	m_processor.message(msg, styleNode, sourceNode);
+}
+
+
+
+void
+StylesheetConstructionContextDefault::reset()
+{
+#if !defined(XALAN_NO_NAMESPACES)
+	using std::for_each;
+#endif
+
+	for_each(m_stylesheets.begin(),
+			 m_stylesheets.end(),
+			 DeleteFunctor<StylesheetRoot>());
+}
+
+
+
+StylesheetRoot*
+StylesheetConstructionContextDefault::create(const XalanDOMString&	theBaseIdentifier)
+{
+	StylesheetRoot* const	theStylesheetRoot =
+		new StylesheetRoot(theBaseIdentifier, *this);
+
+	m_stylesheets.insert(theStylesheetRoot);
+
+	return theStylesheetRoot;
+}
+
+
+
+StylesheetRoot*
+StylesheetConstructionContextDefault::create(XSLTInputSource&	theInputSource)
+{
+	const XMLCh* const	theSystemID =
+				theInputSource.getSystemId();
+
+	const XalanDOMString	theBaseIdentifier =
+				theSystemID == 0 ? XALAN_STATIC_UCODE_STRING("") :
+				theSystemID;
+
+	return create(theBaseIdentifier);
+}
+
+
+
+void
+StylesheetConstructionContextDefault::destroy(StylesheetRoot*	theStylesheetRoot)
+{
+	const StylesheetSetType::iterator	i =
+		m_stylesheets.find(theStylesheetRoot);
+
+	if (i != m_stylesheets.end())
+	{
+		m_stylesheets.erase(i);
+
+		delete theStylesheetRoot;
+	}
 }
 
 

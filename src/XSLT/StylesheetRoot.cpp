@@ -81,8 +81,9 @@
 
 
 
-#include <PlatformSupport/StringTokenizer.hpp>
 #include <PlatformSupport/AttributeListImpl.hpp>
+#include <PlatformSupport/StringTokenizer.hpp>
+#include <PlatformSupport/PrintWriter.hpp>
 
 
 
@@ -96,11 +97,6 @@
 #include <XMLSupport/FormatterToText.hpp>
 #include <XMLSupport/FormatterToXML.hpp>
 #include <XMLSupport/FormatterToDOM.hpp>
-
-
-
-#include <XercesPlatformSupport/XercesDOMPrintWriter.hpp>
-#include <XercesPlatformSupport/XercesStdTextOutputStream.hpp>
 
 
 
@@ -143,27 +139,27 @@ StylesheetRoot::StylesheetRoot(
 	m_defaultRule(0),
 	m_defaultRootRule(0)
 {
-    // For some reason, the imports aren't working right if I 
-    // don't set the baseIdent to full url.  I think this is OK, 
-    // and probably safer and faster in general.
 #if !defined(XALAN_NO_NAMESPACES)
 	using std::auto_ptr;
 #endif
 
-	auto_ptr<XMLURL>	url(constructionContext.getURLFromString(m_baseIdent));
-
-	if (url.get() != 0)
+	if (length(baseIdentifier) != 0)
 	{
-		m_baseIdent = url->getURLText();
+		auto_ptr<XMLURL>	url(constructionContext.getURLFromString(m_baseIdent));
 
-		auto_ptr<XMLURL>	url2(constructionContext.getURLFromString(m_baseIdent));
-
-		if (url2.get() != 0)
+		if (url.get() != 0)
 		{
-			m_importStack.push_back(url2.get());
+			m_baseIdent = url->getURLText();
 
-			// Release the auto_ptr<>...
-			url2.release();
+			auto_ptr<XMLURL>	url2(constructionContext.getURLFromString(m_baseIdent));
+
+			if (url2.get() != 0)
+			{
+				m_importStack.push_back(url2.get());
+
+				// Release the auto_ptr<>...
+				url2.release();
+			}
 		}
 	}
 }				
@@ -207,9 +203,14 @@ StylesheetRoot::process(
 		executionContext.setStylesheetRoot(this);
 
 		FormatterListener* flistener = 0;
-		bool newListener = false;
+
+#if !defined(XALAN_NO_NAMESPACES)
+		using std::auto_ptr;
+#endif
+
+		auto_ptr<FormatterListener>		theListenerGuard;
+
 		Writer* pw = 0;
-		bool newPW = false;
 
 		/*
 		 * Output target has a document handler
@@ -254,30 +255,13 @@ StylesheetRoot::process(
 
 				if(0 != outputTarget.getByteStream())
 				{
-					assert(0);	// @@ JMD: not supported yet ??
-					// java: OutputStreamWriter osw = new OutputStreamWriter(outputTarget.getByteStream(), encoding);
-					// java: pw = new PrintWriter( new BufferedWriter(osw) );
+					pw = executionContext.createPrintWriter(*outputTarget.getByteStream());
 				}
-				else if(! isEmpty(outputTarget.getFileName()))
+				else if(!isEmpty(outputTarget.getFileName()))
 				{
-					assert(0);	// @@ JMD: not supported yet ??
-				/*
-					FileOutputStream fos = new FileOutputStream(outputTarget.getFileName());
-					try
-					{
-						// pw = new PrintWriter( new BufferedWriter(new FileWriter(outputTarget.getFileName())) );
-						OutputStreamWriter osw = new OutputStreamWriter(fos, encoding);
-						pw = new PrintWriter( new BufferedWriter(osw) );
-					}
-					catch(java.io.UnsupportedEncodingException uee)
-					{
-						mimeEncoding = "UTF-8";
-						encoding = FormatterToXML.convertMime2JavaEncoding(mimeEncoding);
-						OutputStreamWriter osw = new OutputStreamWriter(fos, encoding);
-						pw = new PrintWriter( new BufferedWriter(osw) );
-					}
-					m_processor->setOutputFileName(outputTarget.getFileName());
-				*/
+					pw = executionContext.createPrintWriter(
+								outputTarget.getFileName(),
+								XalanDOMString());
 				}
 				else
 				{
@@ -285,9 +269,7 @@ StylesheetRoot::process(
 					using std::cout;
 #endif
 
-					// $$$ ToDo:  THIS IS A MEMORY LEAK!!!
-					pw = new XercesDOMPrintWriter(*new XercesStdTextOutputStream(cout));
-					newPW = true;
+					pw = executionContext.createPrintWriter(cout);
 				}
 			}
 			
@@ -304,20 +286,21 @@ StylesheetRoot::process(
 				flistener = new FormatterToHTML(
 					*pw, m_version, doIndent, indentAmount, m_encoding, m_mediatype,
 					m_doctypeSystem, m_doctypePublic, !m_omitxmlDecl, m_standalone);
-				newListener = true;
 				break;
+
 			case Formatter::OUTPUT_METH_TEXT:
 				flistener = new FormatterToText(*pw);
-				newListener = true;
 				break;
+
 			case Formatter::OUTPUT_METH_XML:
 			default:
 				flistener = new FormatterToXML(
 					*pw, m_version, doIndent, indentAmount, m_encoding, m_mediatype,
 					m_doctypeSystem, m_doctypePublic, !m_omitxmlDecl, m_standalone);
-				newListener = true;
 				break;
 			}
+
+			theListenerGuard = auto_ptr<FormatterListener>(flistener);
 
 			executionContext.setFormatterListener(flistener);
 		}
@@ -331,26 +314,25 @@ StylesheetRoot::process(
 			case XalanNode::DOCUMENT_NODE:
 				flistener = new 
 					FormatterToDOM(static_cast<XalanDocument*>(outputTarget.getNode()));
-				newListener = true;
 				break;
 
 			case XalanNode::DOCUMENT_FRAGMENT_NODE:
 				flistener = new 
 					FormatterToDOM(executionContext.createDocument(),
 						static_cast<XalanDocumentFragment*>(outputTarget.getNode()));
-				newListener = true;
 				break;
 
 			case XalanNode::ELEMENT_NODE:
 				flistener = new 
 					FormatterToDOM(executionContext.createDocument(),
 						static_cast<XalanElement*>(outputTarget.getNode()));
-				newListener = true;
 				break;
 
 			default:
 				executionContext.error("Can only output to an Element, DocumentFragment, Document, or PrintWriter.");
 			}
+
+			theListenerGuard = auto_ptr<FormatterListener>(flistener);
 		}
 		/*
 		 * Create an empty document and set the output target node to this
@@ -360,12 +342,13 @@ StylesheetRoot::process(
 			outputTarget.setNode(executionContext.createDocument());
 			flistener = new
 				FormatterToDOM(static_cast<XalanDocument*>(outputTarget.getNode()));
-			newListener = true;
+
+			theListenerGuard = auto_ptr<FormatterListener>(flistener);
 		}
 		
 		executionContext.setFormatterListener(flistener);
 		executionContext.resetCurrentState(sourceTree, sourceTree);
-		// @@ JMD: Is this OK ??
+
 		executionContext.setRootDocument(static_cast<XalanDocument*>(sourceTree));
 		
 		if(executionContext.doDiagnosticsOutput())
@@ -401,13 +384,10 @@ StylesheetRoot::process(
 
 		if(executionContext.doDiagnosticsOutput())
 		{
+			executionContext.diag(XALAN_STATIC_UCODE_STRING(""));
 			executionContext.displayDuration(XALAN_STATIC_UCODE_STRING("transform"), &sourceTree);
+			executionContext.diag(XALAN_STATIC_UCODE_STRING(""));
 		}
-		if (newListener) delete flistener;		
-		// Can't release this until flistener is gone, since it contains a
-		// reference to it
-		if (newPW != 0) delete pw;
-
 }
 
 

@@ -70,6 +70,7 @@
 
 
 #include <memory>
+#include <set>
 
 
 
@@ -122,6 +123,18 @@ public:
 
 	// These interfaces are inherited from StylesheetConstructionContext...
 
+	virtual void
+	reset();
+
+	virtual StylesheetRoot*
+	create(const XalanDOMString&	theBaseIdentifier);
+
+	virtual StylesheetRoot*
+	create(XSLTInputSource&		theInputSource);
+
+	virtual void
+	destroy(StylesheetRoot*		theStylesheetRoot);
+
 	virtual int
 	getAttrTok(const XalanDOMString&	name) const;
 
@@ -151,17 +164,22 @@ public:
 
 private:
 
-	XSLTEngineImpl&					m_processor;
-	XPathEnvSupport&				m_xpathEnvSupport;
-	XObjectFactory&					m_xobjectFactory;
-	XPathFactory&					m_xpathFactory;
+	XSLTEngineImpl&						m_processor;
+	XPathEnvSupport&					m_xpathEnvSupport;
+	XObjectFactory&						m_xobjectFactory;
+	XPathFactory&						m_xpathFactory;
 
 #if defined(XALAN_NO_NAMESPACES)
-	auto_ptr<XPathProcessor>		m_xpathProcessor;
+	auto_ptr<XPathProcessor>			m_xpathProcessor;
+
+	typedef set<StylesheetRoot*>		StylesheetSetType;
 #else
-	std::auto_ptr<XPathProcessor>	m_xpathProcessor;
+	std::auto_ptr<XPathProcessor>		m_xpathProcessor;
+
+	typedef std::set<StylesheetRoot*>	StylesheetSetType;
 #endif
 
+	StylesheetSetType					m_stylesheets;
 };
 
 

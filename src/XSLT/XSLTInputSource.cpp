@@ -62,16 +62,23 @@
 
 
 
-#include <framework/URLInputSource.hpp>
-
-
-
 #include <cassert>
+
+
+
+#include <framework/URLInputSource.hpp>
+#include <util/BinFileInputStream.hpp>
+
+
+
+#include <PlatformSupport/DOMStringHelper.hpp>
+#include <PlatformSupport/StdBinInputStream.hpp>
 
 
 
 XSLTInputSource::XSLTInputSource() :
 	InputSource(""),
+	m_stream(0),
 	m_node(0)
 {
 }
@@ -81,6 +88,7 @@ XSLTInputSource::XSLTInputSource() :
 
 XSLTInputSource::XSLTInputSource(const XMLCh*	systemId) :
 	InputSource(systemId),
+	m_stream(0),
 	m_node(0)
 {
 }
@@ -91,6 +99,7 @@ XSLTInputSource::XSLTInputSource(
 			const XMLCh*	systemId,
 			const XMLCh*	publicId) :
 	InputSource(systemId, publicId),
+	m_stream(0),
 	m_node(0)
 {
 }
@@ -99,6 +108,7 @@ XSLTInputSource::XSLTInputSource(
 
 XSLTInputSource::XSLTInputSource(const char*	systemId) :
 	InputSource(systemId),
+	m_stream(0),
 	m_node(0)
 {
 }
@@ -110,39 +120,31 @@ XSLTInputSource::XSLTInputSource(
 			const char*		publicId) :
 	InputSource(systemId,
 				publicId),
+	m_stream(0),
 	m_node(0)
 {
 }
 
 
 
-XSLTInputSource::XSLTInputSource(InputStream*	/* byteStream */) :
+XSLTInputSource::XSLTInputSource(XalanNode*		node) :
 	InputSource(""),
-	m_node(0)
+	m_stream(0),
+	m_node(node)
 {
-	// @@ JMD: These are not in the C++ InputSource class
-	assert(0);	// @@ ??
-	// java: setByteStream(byteStream);
 }
 
 
 
-XSLTInputSource::XSLTInputSource (Reader* /* characterStream */) :
+#if defined(XALAN_NO_NAMESPACES)
+XSLTInputSource::XSLTInputSource(istream*		stream) :
+#else
+XSLTInputSource::XSLTInputSource(std::istream*	stream) :
+#endif
 	InputSource(""),
-	m_node(0) 
-{
-	// @@ JMD: These are not in the C++ InputSource class
-	assert(0);	// @@ ??
-	// java: setCharacterStream(characterStream);
-}
-
-
-
-XSLTInputSource::XSLTInputSource (XalanNode*	node) :
-	InputSource(""),
+	m_stream(stream),
 	m_node(0)
 {
-	setNode(node);
 }
 
 
@@ -150,10 +152,45 @@ XSLTInputSource::XSLTInputSource (XalanNode*	node) :
 BinInputStream*
 XSLTInputSource::makeStream() const
 {
-	URLInputSource inputSource(getSystemId());
+	BinInputStream*		theResult = 0;
 
+	if (m_stream != 0)
+	{
+		theResult = new StdBinInputStream(*m_stream);
+	}
+	else if (m_node == 0)
+	{
+		const XMLCh* const	theSystemID =
+			getSystemId();
 
-	return inputSource.makeStream();
+		const unsigned int	theColonIndex = indexOf(theSystemID, ':');
+		const unsigned int	theLength = length(theSystemID);
+
+		if (theColonIndex == theLength)
+		{
+			// No ':', so assume it's a file.
+			theResult = new BinFileInputStream(theSystemID);
+		}
+		else
+		{
+			// It could be a DOS-style file spec...
+			const unsigned int	theBackslashIndex = indexOf(theSystemID, '\\');
+
+			if (theBackslashIndex < theLength && theBackslashIndex == 3)
+			{
+				// OK, another shot at a file...
+				theResult = new BinFileInputStream(theSystemID);
+			}
+			else
+			{
+				URLInputSource inputSource(getSystemId());
+
+				theResult = inputSource.makeStream();
+			}
+		}
+	}
+
+	return theResult;
 }
 
 

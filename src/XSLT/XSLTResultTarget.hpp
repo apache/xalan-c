@@ -66,12 +66,18 @@
 
 
 
+#include <iosfwd>
+
+
+
 #include <XalanDOM/XalanDOMString.hpp>
+
+
+
 #include <XMLSupport/FormatterListener.hpp>
 
 
 
-class OutputStream;
 class XalanNode;
 class Writer;
 
@@ -92,12 +98,15 @@ public:
 	XSLTResultTarget(const XalanDOMString&	fileName);
 
 	/**
-	 * Create a new output target with a byte stream.
+	 * Create a new output target with a stream.
 	 *
-	 * @param byteStream pointer to raw byte stream that will contain the
-	 *                   document
+	 * @param byteStream a pointer to a std ostream for the output
 	 */
-	XSLTResultTarget(OutputStream*		byteStream);
+#if defined(XALAN_NO_NAMESPACES)
+	XSLTResultTarget(ostream*		theStream);
+#else
+	XSLTResultTarget(std::ostream*	theStream);
+#endif
 
 	/**
 	 * Create a new output target with a character stream.
@@ -143,7 +152,11 @@ public:
 	 *                   document
 	 */
 	void
-	setByteStream(OutputStream*		byteStream)
+#if defined(XALAN_NO_NAMESPACES)
+	setByteStream(ostream*			byteStream)
+#else
+	setByteStream(std::ostream*		byteStream)
+#endif
 	{
 		m_byteStream = byteStream;
 	}
@@ -153,7 +166,11 @@ public:
 	 *
 	 * @return pointer to byte stream, or null if none was supplied.
 	 */
-	OutputStream*
+#if defined(XALAN_NO_NAMESPACES)
+	ostream*
+#else
+	std::ostream*
+#endif
 	getByteStream() const
 	{
 		return m_byteStream;
@@ -274,7 +291,11 @@ private:
 
 	XalanDOMString		m_fileName;
 
-	OutputStream*		m_byteStream;
+#if defined(XALAN_NO_NAMESPACES)
+	ostream*			m_byteStream;
+#else
+	std::ostream*		m_byteStream;
+#endif
 
 	XalanDOMString		m_encoding;
 

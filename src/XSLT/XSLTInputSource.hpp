@@ -68,13 +68,15 @@
 
 
 
+#include <iosfwd>
+
+
+
 #include <sax/InputSource.hpp>
 
 
 
 class BinInputStream;
-class InputStream;
-class Reader;
 class XalanNode;
 
 
@@ -138,28 +140,6 @@ public:
 			const XMLCh*	publicId);
 
 	/**
-	 * Create a new input source with a byte stream.
-	 *
-	 * <p>Application writers may use setSystemId to provide a base for
-	 * resolving relative URIs, setPublicId to include a public identifier,
-	 * and/or setEncoding to specify the object's character encoding.</p>
-	 *
-	 * @param byteStream pointer to raw byte stream containing the document
-	 */
-	XSLTInputSource(InputStream*	byteStream);
-
-	/**
-	 * Create a new input source with a character stream.
-	 *
-	 * <p>Application writers may use setSystemId() to provide a base 
-	 * for resolving relative URIs, and setPublicId to include a 
-	 * public identifier.</p>
-	 *
-	 * @param characterStream pointer to character stream containing the document
-	 */
-	XSLTInputSource(Reader*		characterStream);
-
-	/**
 	 * Create a new input source with a DOM node.
 	 *
 	 * <p>Application writers may use setSystemId() to provide a base for
@@ -169,6 +149,21 @@ public:
 	 * @param node DOM node that is root of the document
 	 */
 	XSLTInputSource(XalanNode*	node);
+
+	/**
+	 * Create a new input source with std stream.
+	 *
+	 * <p>Application writers may use setSystemId() to provide a base for
+	 * resolving relative URIs, and setPublicId to include a public
+	 * identifier.</p>
+	 *
+	 * @param stream the input stream...
+	 */
+#if defined(XALAN_NO_NAMESPACES)
+	XSLTInputSource(istream*		stream);
+#else
+	XSLTInputSource(std::istream*	stream);
+#endif
 
 	/**
 	 * Makes the byte stream for this input source.
@@ -201,7 +196,13 @@ public:
 
 private:
 
-	XalanNode*	m_node;
+#if defined(XALAN_NO_NAMESPACES)
+	istream*		m_stream;
+#else
+	std::istream*	m_stream;
+#endif
+
+	XalanNode*		m_node;
 };
 
 

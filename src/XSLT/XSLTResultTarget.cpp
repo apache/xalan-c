@@ -91,15 +91,19 @@ XSLTResultTarget::XSLTResultTarget(const XalanDOMString&	fileName) :
 
 
 
-XSLTResultTarget::XSLTResultTarget(OutputStream*	byteStream) :
+#if defined(XALAN_NO_NAMESPACES)
+XSLTResultTarget::XSLTResultTarget(ostream*		theStream) :
+#else
+XSLTResultTarget::XSLTResultTarget(std::ostream*	theStream) :
+#endif
 	m_fileName(),
-	m_byteStream(byteStream),
+	m_byteStream(theStream),
 	m_encoding(),
 	m_characterStream(0),
 	m_node(),
 	m_formatterListener(0)
 {
-	assert(byteStream != 0);
+	assert(theStream != 0);
 }
 
 
