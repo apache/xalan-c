@@ -135,7 +135,7 @@ bool XalanNLSMessageLoader::loadMsg(XalanMessages::Codes    msgToLoad
     	return bRetValue;
     }
 
-    if ((int)m_catalogHandle) == -1)
+    if ((int)m_catalogHandle == -1)
     {
     	// for transcoding to Unicode
     	const XalanDOMString	errorMsg("Message can't be retrieved: the message catalog is not open.");
