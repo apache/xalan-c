@@ -325,7 +325,7 @@ FileUtility::compareDOMResults(const XalanDOMString& theOutputFile,
 			   XalanSourceTreeDocument* dom,
 			   const XSLTInputSource& goldInputSource)
 {
-	const XalanDOMString mimeEncoding("whatever");
+	const XalanDOMString mimeEncoding("");
 	XalanFileOutputStream myOutput(theOutputFile);
 	XalanOutputStreamPrintWriter myResultWriter(myOutput);
 	FormatterListener* theFormatter = getXMLFormatter(true,true,true,
@@ -410,19 +410,37 @@ FileUtility::fileCompare(const char* goldFile,
 	FILE *result, *gold;			// declare files
 	char rline[132], gline[132];	// declare buffers to hold single line from file
 	char temp[10];					// buffer to hold line number
+	char lineNum = 1;
 
-	//cout << "\nGold: " << goldFile << "\nResult: " << outputFile << endl << endl;
+	// Set fail data incase there are i/o problems with the files to compare.
+	data.expected = XalanDOMString(" ");
+	data.actual = XalanDOMString(" ");
+	data.currentNode = XalanDOMString("Line: 0");
+
 	result = fopen(outputFile, "r");
 	gold   = fopen(goldFile, "r");
 
-	char lineNum = 1;	
-	fgets(gline, sizeof(gline), gold );		// read in a line from each file
-	fgets(rline, sizeof(rline), result );
+	if (!gold || !result)
+	{
+		data.msg = "Failed to open either Gold or Result file";
+		data.nogold += 1;
+		return false;
+	}
 
 	while( !feof(result) && !feof(gold))
 	{
-		int i = 0;
+		fgets(gline, sizeof(gline), gold );
+		fgets(rline, sizeof(rline), result );
+		sprintf(temp,"%d",lineNum);
 
+		if (ferror(gold) || ferror(result))
+		{
+			data.msg = "Read Error on either Gold or Result file";
+			data.currentNode = XalanDOMString("Line: ") + XalanDOMString(temp);
+			return false;
+		}
+
+		int i = 0;
 		while(gline[i] != '\n') 
 		{
 			if (gline[i] == rline[i]) 
@@ -432,7 +450,6 @@ FileUtility::fileCompare(const char* goldFile,
 			}
 			else 
 			{
-				sprintf(temp,"%d",lineNum);
 				data.msg = "Error: Text based comparison failure";
 				data.expected = XalanDOMString("<![CDATA[") + XalanDOMString(gline) + XalanDOMString("]]>");
 				data.actual = XalanDOMString("<![CDATA[") + XalanDOMString(rline) + XalanDOMString("]]>");
@@ -440,16 +457,13 @@ FileUtility::fileCompare(const char* goldFile,
 				data.fail += 1;
 				return false;
 			}
-
 		}
 
 		lineNum += 1;
-		fgets(gline, sizeof(gline), gold );
-		fgets(rline, sizeof(rline), result );
 	}
 
 	return true;
-	}
+}
 
 
 
@@ -704,6 +718,30 @@ FileUtility::diffElement(const XalanNode& gold, const XalanNode& doc)
 			return false;
 		}
 	}
+	else if (domNextNode)
+	{
+		// The result doc has additional Children. If the additional node is a text node
+		// then gather up the text and print it out.
+		if ( domNextNode->getNodeType() == XalanNode::TEXT_NODE)
+		{
+			collectData("Error: Transformed Doc has additional Child nodes: ", 
+					docNodeName,
+					XalanDOMString("NOTHING"),		 
+					XalanDOMString(domNextNode->getNodeName()) + XalanDOMString("  \"") +
+					XalanDOMString(domNextNode->getNodeValue()) + XalanDOMString("\""));
+		}
+		// Additional node is NOT text, so just print it's Name.
+		else
+		{
+			collectData("Error: Transformed Doc has additional Child node: ", 
+						docNodeName,
+						XalanDOMString("NOTHING"),		 
+						XalanDOMString(domNextNode->getNodeName()));
+
+		}
+		return false;
+
+	}
 
 	goldNextNode = gold.getNextSibling();
 	domNextNode = doc.getNextSibling();
@@ -716,7 +754,8 @@ FileUtility::diffElement(const XalanNode& gold, const XalanNode& doc)
 				return false;
 		}
 		else
-		{
+		{	// domcomtest10 used to fail here,  now it is caught above, with the error
+			// "Transformed Doc has additional Child nodes:"
 			collectData("Error: Element missing SiblingNode. ", 
 						 docNodeName,
 						 XalanDOMString(goldNextNode->getNodeName()),
@@ -856,7 +895,8 @@ FileUtility::reportPassFail(XMLFileReporter& logfile)
 
 	logfile.logElementWAttrs(10, "RunResults", runResults, "xxx");	
 
-	cout << "\nPassed " << data.pass << endl;
-	cout << "\nFailed " << data.fail << endl;
+	cout << "\nPassed " << data.pass;
+	cout << "\nFailed " << data.fail;
+	cout << "\nMissing Gold " << data.nogold << endl;
 
 }
