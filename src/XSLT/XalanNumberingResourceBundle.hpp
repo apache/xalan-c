@@ -77,11 +77,13 @@ class XalanNumberingResourceBundle
 {
 public:
 
+	typedef unsigned long							NumberType;
+
 #if defined(XALAN_NO_NAMESPACES)
-	typedef vector<int>								IntVectorType;
-	typedef vector<XalanDOMCharVectorType>			DigitsTableVectorType;
+	typedef vector<NumberType>						NumberTypeVectorType;
+	typedef vector<NumberType>						DigitsTableVectorType;
 #else
-	typedef std::vector<int>						IntVectorType;
+	typedef std::vector<unsigned long>				NumberTypeVectorType;
 	typedef std::vector<XalanDOMCharVectorType>		DigitsTableVectorType;
 #endif
 
@@ -105,13 +107,13 @@ public:
 		eOrientation					theOrientation,
 		eNumberingMethod				theNumberingMethod,
 		eMultiplierOrder				theMultiplierOrder,
-		int								theMaxNumericalValue,
-		const IntVectorType&			theNumberGroups,
-		const IntVectorType&			theMultipliers,
+		NumberType						theMaxNumericalValue,
+		const NumberTypeVectorType&		theNumberGroups,
+		const NumberTypeVectorType&		theMultipliers,
 		const XalanDOMCharVectorType&	theZeroChar,
 		const XalanDOMCharVectorType&	theMultiplierChars,
 		const DigitsTableVectorType&	theDigitsTable,
-		const IntVectorType&			theDigitsTableTable);
+		const NumberTypeVectorType&		theDigitsTableTable);
 
 	explicit
 	XalanNumberingResourceBundle();
@@ -174,19 +176,19 @@ public:
 		return m_multiplierOrder;
 	}
 
-	int
+	NumberType
 	getMaxNumericalValue() const
 	{
 		return m_maxNumericalValue;
 	}
 
-	const IntVectorType&
+	const NumberTypeVectorType&
 	getNumberGroups() const
 	{
 		return m_numberGroups;
 	}
 
-	const IntVectorType&
+	const NumberTypeVectorType&
 	getMultipliers() const
 	{
 		return m_multipliers;
@@ -210,7 +212,7 @@ public:
 		return m_digitsTable;
 	}
 
-	const IntVectorType&
+	const NumberTypeVectorType&
 	getDigitsTableTable() const
 	{
 		return m_digitsTableTable;
@@ -237,11 +239,11 @@ private:
 
 	eMultiplierOrder		m_multiplierOrder;
 
-	int						m_maxNumericalValue;
+	NumberType				m_maxNumericalValue;
 
-	IntVectorType			m_numberGroups;
+	NumberTypeVectorType	m_numberGroups;
 
-	IntVectorType			m_multipliers;
+	NumberTypeVectorType	m_multipliers;
 
 	XalanDOMCharVectorType	m_zeroChar;
 
@@ -249,7 +251,7 @@ private:
 
 	DigitsTableVectorType	m_digitsTable;
 
-	IntVectorType			m_digitsTableTable;
+	NumberTypeVectorType	m_digitsTableTable;
 };
 
 

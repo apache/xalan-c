@@ -90,7 +90,6 @@
 
 #include "AVT.hpp"
 #include "Constants.hpp"
-#include "CountersTable.hpp"
 #include "StylesheetConstructionContext.hpp"
 #include "StylesheetExecutionContext.hpp"
 
@@ -476,7 +475,7 @@ ElemNumber::getCountString(
 			XalanNode*						sourceNode,
 			const MutableNodeRefList&		ancestors,
 			CountersTable&					ctable,
-			int								numberList[],
+			CountType						numberList[],
 			NodeRefListBase::size_type		numberListLength,
 			XalanDOMString&					theResult) const
 {
@@ -516,11 +515,11 @@ ElemNumber::getCountString(
 
 		const double	theValue = countObj->num();
 
-		int	theNumber = 0;
+		CountType	theNumber = 0;
 
 		if (DoubleSupport::isNaN(theValue) == false)
 		{
-			theNumber = int(DoubleSupport::round(theValue));
+			theNumber = CountType(DoubleSupport::round(theValue));
 		}
 
 		formatNumberList(
@@ -536,7 +535,7 @@ ElemNumber::getCountString(
 
 		if(eAny == m_level)
 		{
-			const int	theNumber =
+			const CountType		theNumber =
 				ctable.countNode(executionContext, *this, sourceNode);
 
 			formatNumberList(
@@ -566,7 +565,7 @@ ElemNumber::getCountString(
 
 				if (lastIndex < theStackArrayThreshold)
 				{
-					int		numberList[theStackArrayThreshold];
+					CountType	numberList[theStackArrayThreshold];
 
 					getCountString(
 						executionContext,
@@ -579,7 +578,7 @@ ElemNumber::getCountString(
 				}
 				else
 				{
-					IntArrayType	numberList;
+					CountTypeArrayType	numberList;
 
 					numberList.resize(lastIndex);
 
@@ -854,7 +853,7 @@ ElemNumber::getNumberFormatter(
 void
 ElemNumber::formatNumberList(
 			StylesheetExecutionContext&		executionContext,
-			const int						theList[],
+			const CountType					theList[],
 			NodeRefListBase::size_type		theListLength,
 			XalanNode*						contextNode,
 			XalanDOMString&					theResult) const
@@ -961,7 +960,7 @@ ElemNumber::formatNumberList(
 
 	XalanDOMString&				theIntermediateResult = theGuard2.get();
 
-	for(unsigned int i = 0; i < theListLength; i++)
+	for(NodeRefListBase::size_type i = 0; i < theListLength; i++)
 	{
 		if (it != trailerStrIt)
 		{
@@ -1041,11 +1040,11 @@ ElemNumber::evaluateLetterValueAVT(
 
 void
 ElemNumber::traditionalAlphaCount(
-			int										theValue,
+			CountType								theValue,
 			const XalanNumberingResourceBundle&		theResourceBundle,
 			XalanDOMString&							theResult) const
 {
-	typedef XalanNumberingResourceBundle::IntVectorType			IntVectorType;
+	typedef XalanNumberingResourceBundle::NumberTypeVectorType		NumberTypeVectorType;
 	typedef XalanNumberingResourceBundle::DigitsTableVectorType	DigitsTableVectorType;
 	typedef XalanNumberingResourceBundle::eNumberingMethod		eNumberingMethod;
 	typedef XalanNumberingResourceBundle::eMultiplierOrder		eMultiplierOrder;
@@ -1058,7 +1057,7 @@ ElemNumber::traditionalAlphaCount(
 	XalanDOMCharVectorType	table;
 
 	// index in table of the last character that we stored
-	IntVectorType::size_type	lookupIndex = 1;  // start off with anything other than zero to make correction work
+	NumberTypeVectorType::size_type	lookupIndex = 1;  // start off with anything other than zero to make correction work
 
 	// Create a buffer to hold the result
 	// TODO:  size of the table can be determined by computing
@@ -1070,16 +1069,16 @@ ElemNumber::traditionalAlphaCount(
 	//String orientation = thisBundle.getString(Constants.LANG_ORIENTATION);
 
 	// next character to set in the buffer
-	int charPos = 0;
+	size_t	charPos = 0;
 
 	// array of number groups: ie.1000, 100, 10, 1
-	const IntVectorType&	groups = theResourceBundle.getNumberGroups();
+	const NumberTypeVectorType&	groups = theResourceBundle.getNumberGroups();
 
-	const IntVectorType::size_type	groupsSize = groups.size();
+	const NumberTypeVectorType::size_type	groupsSize = groups.size();
 
 	// array of tables of hundreds, tens, digits. Indexes into the vectors
 	// in the digits table.
-	const IntVectorType&	tables = theResourceBundle.getDigitsTableTable();
+	const NumberTypeVectorType&	tables = theResourceBundle.getDigitsTableTable();
 
 	const DigitsTableVectorType&	digitsTable = theResourceBundle.getDigitsTable();
 
@@ -1094,9 +1093,9 @@ ElemNumber::traditionalAlphaCount(
 	{
 		const eMultiplierOrder	mult_order = theResourceBundle.getMultiplierOrder();
 
-		const IntVectorType&	multiplier = theResourceBundle.getMultipliers();
+		const NumberTypeVectorType&	multiplier = theResourceBundle.getMultipliers();
 
-		const IntVectorType::size_type	multiplierSize = multiplier.size();
+		const NumberTypeVectorType::size_type	multiplierSize = multiplier.size();
 
 		const XalanDOMCharVectorType&	zeroChar = theResourceBundle.getZeroChar();
 
@@ -1104,12 +1103,12 @@ ElemNumber::traditionalAlphaCount(
 
 		const XalanDOMCharVectorType&	multiplierChars = theResourceBundle.getMultiplierChars();
 
-		IntVectorType::size_type	i = 0;
+		CountTypeArrayType::size_type	i = 0;
 
 		// skip to correct multiplier
 		while (i < multiplierSize && theValue < multiplier[i])
 		{
-			i++;
+			++i;
 		}
 
 		do
@@ -1124,7 +1123,7 @@ ElemNumber::traditionalAlphaCount(
 			{
 				if (zeroCharSize == 0)
 				{
-					i++;
+					++i;
 				} 
 				else
 				{
@@ -1133,17 +1132,17 @@ ElemNumber::traditionalAlphaCount(
 						buf[charPos++] = zeroChar[0];
 					}
 
-					i++;
+					++i;
 				}
 			}
 			else if (theValue >= multiplier[i])
 			{
 
-				int mult = theValue / multiplier[i];
+				const CountType		mult = theValue / multiplier[i];
 
 				theValue = theValue % multiplier[i];		 // save this.
 
-				IntVectorType::size_type	k = 0;
+				CountTypeArrayType::size_type	k = 0;
 
 				while (k < groupsSize)
 				{
@@ -1166,7 +1165,7 @@ ElemNumber::traditionalAlphaCount(
 
 						table.resize(THElettersSize + 1);					
 
-						const IntVectorType::size_type	tableSize = table.size();
+						const CountTypeArrayType::size_type	tableSize = table.size();
 
 						XalanDOMCharVectorType::size_type	j = 0;
 
@@ -1231,7 +1230,7 @@ ElemNumber::traditionalAlphaCount(
 	}
 
 	// Now do additive part...
-	IntVectorType::size_type	count = 0;
+	CountTypeArrayType::size_type	count = 0;
 
 	// do this for each table of hundreds, tens, digits...
 	while (count < groupsSize)
@@ -1251,7 +1250,7 @@ ElemNumber::traditionalAlphaCount(
 
 			table.resize(thelettersSize + 1);
 		
-			const IntVectorType::size_type	tableSize = table.size();
+			const CountTypeArrayType::size_type	tableSize = table.size();
 
 			XalanDOMCharVectorType::size_type	j = 0;
 
@@ -1291,7 +1290,7 @@ ElemNumber::traditionalAlphaCount(
 
 	if (fError == true)
 	{
-		theResult = XALAN_STATIC_UCODE_STRING("#error");
+		theResult = s_errorString;
 	}
 	else
 	{
@@ -1311,7 +1310,7 @@ ElemNumber::getFormattedNumber(
 			XalanNode*						contextNode,
 			XalanDOMChar					numberType,
 			XalanDOMString::size_type		numberWidth,
-			int								listElement,
+			CountType						listElement,
 			XalanDOMString&					theResult) const
 {
 	switch(numberType)
@@ -1327,11 +1326,11 @@ ElemNumber::getFormattedNumber(
 			break;
 
 		case XalanUnicode::charLetter_I:
-			long2roman(executionContext, contextNode, listElement, true, theResult);
+			long2roman(listElement, true, theResult);
 			break;
 
 		case XalanUnicode::charLetter_i:
-			long2roman(executionContext, contextNode, listElement, true, theResult);
+			long2roman(listElement, true, theResult);
 
 			theResult = toLowerCaseASCII(theResult);
 			break;
@@ -1355,7 +1354,6 @@ ElemNumber::getFormattedNumber(
 		// Handle the special case of Greek letters for now
 		case elalphaNumberType:
 			{
-				// A string to hold the result.
 				StylesheetExecutionContext::GetAndReleaseCachedString	theGuard(executionContext);
 
 				XalanDOMString&		letterVal = theGuard.get();
@@ -1393,7 +1391,11 @@ ElemNumber::getFormattedNumber(
 				{
 					const XalanDOMString::size_type	nPadding = numberWidth - lengthNumString;
 
-					const XalanDOMString	padString = formatter->format(0);
+					StylesheetExecutionContext::GetAndReleaseCachedString	theGuard(executionContext);
+
+					XalanDOMString&		padString = theGuard.get();
+
+					padString = formatter->format(0);
 
 					reserve(theResult, nPadding * length(padString) + lengthNumString + 1);
 
@@ -1411,20 +1413,18 @@ ElemNumber::getFormattedNumber(
 
 void
 ElemNumber::int2singlealphaCount(
-		int						val, 
+		CountType				val, 
 		const XalanDOMString&	table,
 		XalanDOMString&			theResult)
 {
 	assert(int(length(table)) == length(table));
 
-	const int	radix = int(length(table));
+	const CountType		radix = length(table);
 
 	// TODO:  throw error on out of range input
 	if (val > radix)
 	{
-		theResult = XalanDOMString(XALAN_STATIC_UCODE_STRING("#E(") +
-				LongToDOMString(val) +
-				XALAN_STATIC_UCODE_STRING(")"));
+		theResult = s_errorString;
 	}
 	else
 	{
@@ -1438,19 +1438,19 @@ ElemNumber::int2singlealphaCount(
 
 void
 ElemNumber::int2alphaCount(
-			int							val,
+			CountType					val,
 			const XalanDOMChar			table[],
 			XalanDOMString::size_type	length,
 			XalanDOMString&				theResult)
 {
-	assert(int(length) == length);
+	assert(length != 0);
 
-	const int	radix = int(length);
+	const CountType		radix = length;
 
 	// Create a buffer to hold the result
 	// TODO:  size of the table can be determined by computing
 	// logs of the radix.  For now, we fake it.  
-	const int		buflen = 100;
+	const size_t	buflen = 100;
 
 	XalanDOMChar	buf[buflen + 1];
 
@@ -1461,10 +1461,10 @@ ElemNumber::int2alphaCount(
 #endif
 
 	// next character to set in the buffer
-	int charPos = buflen - 1 ;    // work backward through buf[]
+	size_t	charPos = buflen - 1 ;    // work backward through buf[]
 
 	// index in table of the last character that we stored
-	int lookupIndex = 1;  // start off with anything other than zero to make correction work
+	size_t	lookupIndex = 1;  // start off with anything other than zero to make correction work
 	
 	//						Correction number
 	//
@@ -1491,7 +1491,7 @@ ElemNumber::int2alphaCount(
 	// "radix-1" acts like "-1" when run through the mod operator, but with the 
 	// desireable characteristic that it never produces a negative number.
 
-	int correction = 0;
+	CountType	correction = 0;
 
 	// TODO:  throw error on out of range input
 
@@ -1525,7 +1525,7 @@ ElemNumber::int2alphaCount(
 
 void
 ElemNumber::tradAlphaCount(
-			int					/* val */,
+			CountType			/* val */,
 			XalanDOMString&		/* theResult */)
 {
 //	@@ JMD: We don't do languages yet, so this is just a placeholder
@@ -1536,74 +1536,48 @@ ElemNumber::tradAlphaCount(
 
 void
 ElemNumber::long2roman(
-			StylesheetExecutionContext&		executionContext,
-			XalanNode*						contextNode,
-			long							val,
-			bool							prefixesAreOK,
-			XalanDOMString&					theResult) const
-{
-	if(val < 0)
-	{
-		executionContext.error(
-			"I and i can only format positive numbers",
-			contextNode,
-			getLocator());
-
-	}
-	else
-	{
-		long2roman(val, prefixesAreOK, theResult);
-	}
-}
-
-
-
-void
-ElemNumber::long2roman(
-			long				val,
+			CountType			val,
 			bool				prefixesAreOK,
 			XalanDOMString&		theResult)
 {
-	if(val < 0)
+	if(val == 0)
 	{
-		theResult = XalanDOMString(XALAN_STATIC_UCODE_STRING("#E(") +
-								LongToDOMString(val) +
-								XALAN_STATIC_UCODE_STRING(")"));
+		theResult = XalanUnicode::charDigit_0;;
 	}
-	else if(val == 0)
+	else if (val > 3999)
 	{
-		theResult = XALAN_STATIC_UCODE_STRING("0");
+		theResult = s_errorString;
 	}
-	else if (val <= 3999L)
+	else
 	{
 		clear(theResult);
 
-		int	place = 0;
+		size_t	place = 0;
 
-		do      
+		DecimalToRoman::ValueType	localValue = val;
+
+		do
 		{
-			while (val >= s_romanConvertTable[place].m_postValue)
+			while (localValue >= s_romanConvertTable[place].m_postValue)
 			{
 				theResult += s_romanConvertTable[place].m_postLetter;
-				val -= s_romanConvertTable[place].m_postValue;
+				localValue -= s_romanConvertTable[place].m_postValue;
 			}
 
 			if (prefixesAreOK)
 			{
-				if (val >= s_romanConvertTable[place].m_preValue)
+				if (localValue >= s_romanConvertTable[place].m_preValue)
 				{
 					theResult += s_romanConvertTable[place].m_preLetter;
-					val -= s_romanConvertTable[place].m_preValue;
+					localValue -= s_romanConvertTable[place].m_preValue;
 				}
 			} 
 
-			++place;      
+			++place;
 		}
-		while (val > 0);
-	}
-	else
-	{
-		theResult = XALAN_STATIC_UCODE_STRING("#error");
+		while (localValue > 0);
+
+		assert(localValue == 0);
 	}
 }
 
@@ -1923,57 +1897,73 @@ const XalanDOMChar		ElemNumber::s_traditionalString[] =
 	0
 };
 
+
+
+const XalanDOMChar		ElemNumber::s_errorString[] =
+{
+	XalanUnicode::charNumberSign,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_r,
+	XalanUnicode::charLetter_r,
+	XalanUnicode::charLetter_o,
+	XalanUnicode::charLetter_r,
+	0
+};
+
+
+
 const DecimalToRoman	ElemNumber::s_romanConvertTable[] =
 {
 	{
-		1000L,
+		1000,
 		{ XalanUnicode::charLetter_M, 0 },
-		900L,
+		900,
 		{ XalanUnicode::charLetter_C, XalanUnicode::charLetter_M, 0 }
 	},
 
 	{
-		500L,
+		500,
 		{ XalanUnicode::charLetter_D, 0 },
-		400L,
+		400,
 		{ XalanUnicode::charLetter_C, XalanUnicode::charLetter_D, 0 }
 	},
 
 	{
-		100L,
+		100,
 		{ XalanUnicode::charLetter_C, 0 },
-		90L,
+		90,
 		{ XalanUnicode::charLetter_X, XalanUnicode::charLetter_C, 0 }
 	},
 
 	{
-		50L,
+		50,
 		{ XalanUnicode::charLetter_L, 0 },
-		40L,
+		40,
 		{ XalanUnicode::charLetter_X, XalanUnicode::charLetter_L, 0 }
 	},
 
 	{
-		10L,
+		10,
 		{ XalanUnicode::charLetter_X, 0 },
-		9L,
+		9,
 		{ XalanUnicode::charLetter_I, XalanUnicode::charLetter_X, 0 }
 	},
 
 	{
-		5L,
+		5,
 		{ XalanUnicode::charLetter_V, 0 },
-		4L,
+		4,
 		{ XalanUnicode::charLetter_I, XalanUnicode::charLetter_V, 0 }
 	},
 
 	{
-		1L,
+		1,
 		{ XalanUnicode::charLetter_I, 0 },
-		1L,
+		1,
 		{ XalanUnicode::charLetter_I, 0 }
 	}
 };
+
 
 
 static XalanNumberingResourceBundle		s_elalphaResourceBundle;
@@ -2009,16 +1999,18 @@ initializeTraditionalElalphaBundle(XalanNumberingResourceBundle&	theBundle)
 		XalanUnicode::charLetter_Y, XalanUnicode::charLetter_Z, 0
 	};
 
-	static const int	elalphaNumberGroups[] =
+	typedef XalanNumberingResourceBundle::NumberType	NumberType;
+
+	static const NumberType		elalphaNumberGroups[] =
 	{
 		100, 10, 1
 	};
 
-	const size_t	elalphaNumberGroupsCount = sizeof(elalphaNumberGroups) / sizeof(int);
+	const size_t	elalphaNumberGroupsCount = sizeof(elalphaNumberGroups) / sizeof(elalphaNumberGroups[0]);
 
-	static const int	elalphaMultipliers[] = { 1000 };
+	static const NumberType		elalphaMultipliers[] = { 1000 };
 
-	const size_t	elalphaMultipliersCount = sizeof(elalphaMultipliers) / sizeof(int);
+	const size_t	elalphaMultipliersCount = sizeof(elalphaMultipliers) / sizeof(elalphaMultipliers[0]);
 
 	static const XalanDOMChar	elalphaMultiplierChars[] = { 0x03d9, 0 };
 
@@ -2038,7 +2030,7 @@ initializeTraditionalElalphaBundle(XalanNumberingResourceBundle&	theBundle)
 	};
 
 	typedef XalanNumberingResourceBundle::DigitsTableVectorType		DigitsTableVectorType;
-	typedef XalanNumberingResourceBundle::IntVectorType				IntVectorType;
+	typedef XalanNumberingResourceBundle::NumberTypeVectorType			NumberTypeVectorType;
 
 	// Create the table of characters for the various digit positions...
 	DigitsTableVectorType			theElalphaDigitsTable;
@@ -2053,7 +2045,7 @@ initializeTraditionalElalphaBundle(XalanNumberingResourceBundle&	theBundle)
 
 	// This table will indicate which positions the vectors of digits are in
 	// the table...
-	IntVectorType	theDigitsTableTable;
+	NumberTypeVectorType	theDigitsTableTable;
 
 	theDigitsTableTable.reserve(3);
 
@@ -2074,9 +2066,9 @@ initializeTraditionalElalphaBundle(XalanNumberingResourceBundle&	theBundle)
 		XalanNumberingResourceBundle::eLeftToRight,
 		XalanNumberingResourceBundle::eMultiplicativeAdditive,
 		XalanNumberingResourceBundle::ePrecedes,
-		~0,
-		IntVectorType(elalphaNumberGroups, elalphaNumberGroups + elalphaNumberGroupsCount),
-		IntVectorType(elalphaMultipliers, elalphaMultipliers + elalphaMultipliersCount),
+		~NumberType(0),
+		NumberTypeVectorType(elalphaNumberGroups, elalphaNumberGroups + elalphaNumberGroupsCount),
+		NumberTypeVectorType(elalphaMultipliers, elalphaMultipliers + elalphaMultipliersCount),
 		XalanDOMCharVectorType(),
 		XalanDOMCharVectorType(elalphaMultiplierChars, elalphaMultiplierChars + length(elalphaMultiplierChars)),
 		theElalphaDigitsTable,

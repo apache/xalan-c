@@ -68,13 +68,13 @@ XalanNumberingResourceBundle::XalanNumberingResourceBundle(
 		eOrientation					theOrientation,
 		eNumberingMethod				theNumberingMethod,
 		eMultiplierOrder				theMultiplierOrder,
-		int								theMaxNumericalValue,
-		const IntVectorType&			theNumberGroups,
-		const IntVectorType&			theMultipliers,
+		NumberType						theMaxNumericalValue,
+		const NumberTypeVectorType&		theNumberGroups,
+		const NumberTypeVectorType&		theMultipliers,
 		const XalanDOMCharVectorType&	theZeroChar,
 		const XalanDOMCharVectorType&	theMultiplierChars,
 		const DigitsTableVectorType&	theDigitsTable,
-		const IntVectorType&			theDigitsTableTable) :
+		const NumberTypeVectorType&		theDigitsTableTable) :
 	m_language(theHelpLanguage),
 	m_uiLanguage(theLanguage),
 	m_helpLanguage(theUILanguage),
@@ -166,7 +166,7 @@ XalanNumberingResourceBundle::swap(XalanNumberingResourceBundle&	theOther)
 	}
 
 	{
-		const int	temp = m_maxNumericalValue;
+		const NumberType	temp = m_maxNumericalValue;
 
 		m_maxNumericalValue = theOther.m_maxNumericalValue;
 

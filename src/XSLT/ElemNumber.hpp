@@ -77,13 +77,13 @@
 
 
 
+#include <XSLT/CountersTable.hpp>
 #include <XSLT/DecimalToRoman.hpp>
 #include <XSLT/XalanNumberingResourceBundle.hpp>
 
 
 
 class AVT;
-class CountersTable;
 class MutableNodeRefList;
 class XalanNumberFormat;
 class XPath;
@@ -93,11 +93,9 @@ class XPathExecutionContext;
 
 class ElemNumber: public ElemTemplateElement
 {
-private:
-
-	struct Counter;
-
 public:
+
+	typedef CountersTable::CountType	CountType;
 
 	enum eLevel
 	{
@@ -107,9 +105,9 @@ public:
 	};
 
 #if defined(XALAN_NO_NAMESPACES)
-	typedef vector<int>								IntArrayType;
+	typedef vector<CountType>		CountTypeArrayType;
 #else
-	typedef std::vector<int>						IntArrayType;
+	typedef std::vector<CountType>	CountTypeArrayType;
 #endif
 
 	/**
@@ -146,7 +144,7 @@ public:
 	~ElemNumber();
 
 	// These methods are inherited from ElemTemplateElement ...
-	
+
 	virtual const XalanDOMString&
 	getElementName() const;
 
@@ -234,7 +232,7 @@ protected:
 			XalanNode*						sourceNode,
 			const MutableNodeRefList&		ancestors,
 			CountersTable&					ctable,
-			int								numberList[],
+			CountType						numberList[],
 			NodeRefListBase::size_type		numberListLength,
 			XalanDOMString&					theResult) const;
 
@@ -267,7 +265,7 @@ protected:
 			XalanNode*						contextNode) const;
 
 	/**
-	 * Format an array of integers into a formatted string.
+	 * Format an array of integrals into a formatted string.
 	 *
 	 * @param executionContext The current execution context.
 	 * @param theList Array of one or more integer numbers.
@@ -278,13 +276,13 @@ protected:
 	void
 	formatNumberList(	
 			StylesheetExecutionContext&		executionContext,
-			const int						theList[],
+			const CountType					theList[],
 			NodeRefListBase::size_type		theListLength,
 			XalanNode*						contextNode,
 			XalanDOMString&					formattedNumber) const;
 
 	/**
-	 * Convert a long integer into alphabetic counting, in other words
+	 * Convert an intergral into alphabetic counting, in other words
 	 * count using the sequence A B C ... Z.
 	 * @param val Value to convert -- must be greater than zero.
 	 * @param table a table containing one character for each digit in the radix
@@ -296,12 +294,12 @@ protected:
 	 */
 	static void
 	int2singlealphaCount(
-			int						val,
+			CountType				val,
 			const XalanDOMString&	table,
 			XalanDOMString&			theResult);
 		
 	/**
-	 * Convert a long integer into alphabetic counting, in other words 
+	 * Convert an integral into alphabetic counting, in other words 
 	 * count using the sequence A B C ... Z AA AB AC.... etc.
 	 * @param val Value to convert -- must be greater than zero.
 	 * @param table a table containing one character for each digit in the radix
@@ -314,7 +312,7 @@ protected:
 	 */
 	static void
 	int2alphaCount(
-			int							val,
+			CountType					val,
 			const XalanDOMChar			table[],
 			XalanDOMString::size_type	length,
 			XalanDOMString&				theResult);
@@ -332,11 +330,11 @@ protected:
 	 */
 	static void
 	tradAlphaCount(
-			int					val,
+			CountType			val,
 			XalanDOMString&		theResult);
 
 	/**
-	 * Convert a long integer into roman numerals.
+	 * Convert an integral into roman numerals.
 	 * @param val Value to convert.
 	 * @param prefixesAreOK true to enable prefix notation (e.g. 4 = "IV"), false to disable prefix notation (e.g. 4 = "IIII").
 	 * @param theResult The formatted Roman numeral string.
@@ -345,27 +343,11 @@ protected:
 	 */
 	static void
 	long2roman(
-			long				val,
+			CountType			val,
 			bool				prefixesAreOK,
 			XalanDOMString&		theResult);
 
 private:
-
-	/**
-	 * Convert a long integer into roman numerals.
-	 * @param executionContext The current execution context.
-	 * @param contextNode The current context node.
-	 * @param val Value to convert.
-	 * @param prefixesAreOK true to enable prefix notation (e.g. 4 = "IV"), false to disable prefix notation (e.g. 4 = "IIII").
-	 * @param theResult The formatted Roman numeral string.
-	 */
-	void
-	long2roman(
-			StylesheetExecutionContext&		executionContext,
-			XalanNode*						contextNode,
-			long							val,
-			bool							prefixesAreOK,
-			XalanDOMString&					theResult) const;
 
 	void
 	evaluateLetterValueAVT(
@@ -375,7 +357,7 @@ private:
 
 	void
 	traditionalAlphaCount(
-			int										theValue,
+			CountType								theValue,
 			const XalanNumberingResourceBundle&		theResourceBundle,
 			XalanDOMString&							theResult) const;
 
@@ -388,14 +370,14 @@ private:
 			XalanNode*						contextNode,
 			XalanDOMChar					numberType,
 			XalanDOMString::size_type		numberWidth,
-			int								listElement,
+			CountType						listElement,
 			XalanDOMString&					theResult) const;
 
 	const XPath*	m_countMatchPattern;
 	const XPath*	m_fromMatchPattern;
 	const XPath*	m_valueExpr;
 
-	int				m_level; // = Constants.NUMBERLEVEL_SINGLE;
+	CountType		m_level; // = Constants.NUMBERLEVEL_SINGLE;
 
 	const AVT*		m_format_avt;
 	const AVT*		m_lang_avt;
@@ -459,6 +441,11 @@ private:
  	 * The string "traditional".
  	 */
  	static const XalanDOMChar				s_traditionalString[];
+
+	/**
+ 	 * The string "#error".
+ 	 */
+ 	static const XalanDOMChar				s_errorString[];
 
 	/**
 	* Chars for converting integers into alpha counts.
