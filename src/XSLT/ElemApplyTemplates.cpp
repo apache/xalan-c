@@ -117,9 +117,9 @@ ElemApplyTemplates::ElemApplyTemplates(
 	if(0 == m_pSelectPattern)
 	{
 		m_pSelectPattern = constructionContext.createXPath(XALAN_STATIC_UCODE_STRING("node()"), *this);
-
-		assert(m_pSelectPattern != 0);
 	}
+
+	assert(m_pSelectPattern != 0);
 }
 
 
@@ -141,13 +141,16 @@ ElemApplyTemplates::getElementName() const
 void
 ElemApplyTemplates::execute(StylesheetExecutionContext&		executionContext) const
 {
-	XalanNode* sourceNode = executionContext.getCurrentNode();
+	assert(m_pSelectPattern != 0);
 
 	if(0 != executionContext.getTraceListeners())
 	{
 		executionContext.fireTraceEvent(TracerEvent(
 		  executionContext, *this));
 	}
+
+	XalanNode* const	sourceNode = executionContext.getCurrentNode();
+
 	if (0 != sourceNode)
 	{
 		// Dragons here.  Push the params & stack frame, but then execute the
@@ -161,23 +164,21 @@ ElemApplyTemplates::execute(StylesheetExecutionContext&		executionContext) const
 			sourceNode,
 			this);
 
-		// Initialize the member mode of execution context.
-		if (executionContext.getCurrentMode() == 0)
-			executionContext.setCurrentMode(&m_mode);
+		assert(executionContext.getCurrentMode() != 0);
 
 		if (m_isDefaultTemplate == false &&           
 			!m_mode.equals(*executionContext.getCurrentMode()))
 		{
-			const QName* oldMode = executionContext.getCurrentMode();
+			const QName* const	oldMode = executionContext.getCurrentMode();
+
 			executionContext.setCurrentMode(&m_mode);
 
 			transformSelectedChildren(
 				executionContext,
-				getStylesheet(),
 				*this,
-				0,				
-				sourceNode,				
-				m_pSelectPattern,
+				0,
+				sourceNode,
+				*m_pSelectPattern,
 				Constants::ELEMNAME_APPLY_TEMPLATES,
 				thePushPop.getStackFrameIndex());
 
@@ -187,18 +188,20 @@ ElemApplyTemplates::execute(StylesheetExecutionContext&		executionContext) const
 		{
 			transformSelectedChildren(
 				executionContext,
-				getStylesheet(),
 				*this,
-				0,				
-				sourceNode,				
-				m_pSelectPattern,
+				0,
+				sourceNode,
+				*m_pSelectPattern,
 				Constants::ELEMNAME_APPLY_TEMPLATES,
 				thePushPop.getStackFrameIndex());
 		}
 	}
     else
 	{
-		executionContext.error("sourceNode is null in handleApplyTemplatesInstruction!");
+		executionContext.error(
+			"There is no current node in ElemApplyTemplates::execute()",
+			sourceNode,
+			this);
 	}
 }
 

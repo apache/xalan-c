@@ -123,12 +123,10 @@ ElemApplyImport::execute(StylesheetExecutionContext&		executionContext) const
 	XalanNode* sourceNode = executionContext.getCurrentNode();
 
 	transformChild(executionContext,
-				   getStylesheet(),
-				   0, 
+				   *this, 
 				   0,                    
 				   DOMServices::getParentOfNode(*sourceNode), 
-				   sourceNode, 
-				   getXSLToken());   
+				   sourceNode);   
 }
 
 

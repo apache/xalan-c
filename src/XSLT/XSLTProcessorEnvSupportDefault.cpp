@@ -93,8 +93,7 @@
 XSLTProcessorEnvSupportDefault::XSLTProcessorEnvSupportDefault(XSLTProcessor*	theProcessor) :
 	XSLTProcessorEnvSupport(),
 	m_defaultSupport(),
-	m_processor(theProcessor),
-	m_xlocatorTable()
+	m_processor(theProcessor)
 {
 }
 
@@ -157,8 +156,6 @@ XSLTProcessorEnvSupportDefault::reset()
 #endif
 
 	m_defaultSupport.reset();
-
-	m_xlocatorTable.clear();
 }
 
 
@@ -285,34 +282,6 @@ XSLTProcessorEnvSupportDefault::extFunction(
 										functionName,
 										context,
 										argVec);
-}
-
-
-
-XLocator*
-XSLTProcessorEnvSupportDefault::getXLocatorFromNode(const XalanNode*	node) const
-{
-	const XLocatorTableType::const_iterator		i =
-					m_xlocatorTable.find(node);
-
-	if (i == m_xlocatorTable.end())
-	{
-		return 0;
-	}
-	else
-	{
-		return (*i).second;
-	}
-}
-
-
-
-void
-XSLTProcessorEnvSupportDefault::associateXLocatorToNode(
-			const XalanNode*	node,
-			XLocator*			xlocator)
-{
-	m_xlocatorTable[node] = xlocator;
 }
 
 

@@ -227,6 +227,10 @@ StylesheetRoot::process(
 	// why
 	//executionContext.setCurrentNode(sourceTree);
 
+	const QNameByValue	theDefaultMode;
+
+	executionContext.setCurrentMode(&theDefaultMode);
+
 	XPathExecutionContext::CurrentNodeSetAndRestore theCurrentNodeSetAndRestore(executionContext, sourceTree);
 
 	// Output the action of the found root rule.  All processing

@@ -111,6 +111,14 @@ ElemTextLiteral::getElementName() const
 
 
 
+bool
+ElemTextLiteral::isWhitespace() const
+{
+	return isXMLWhitespace(&*m_ch.begin(), 0, m_ch.size());
+}
+
+
+
 void
 ElemTextLiteral::execute(StylesheetExecutionContext&		executionContext) const
 {

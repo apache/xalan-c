@@ -273,7 +273,7 @@ public:
 	 * @return unique namespace prefix
 	 */
 	virtual const XalanDOMString
-	getUniqueNamespaceValue() const = 0;
+	getUniqueNamespaceValue() = 0;
 
 	/**
 	 * Generate a random namespace prefix guaranteed to be unique.
@@ -281,7 +281,7 @@ public:
 	 * @param theValue A string for returning the new prefix
 	 */
 	virtual void
-	getUniqueNamespaceValue(XalanDOMString&		theValue) const = 0;
+	getUniqueNamespaceValue(XalanDOMString&		theValue) = 0;
 
    /**
 	* Push a top-level stylesheet parameter.  This value can be evaluated via

@@ -66,10 +66,6 @@
 
 
 
-#include <map>
-
-
-
 // Base class header file...
 #include <XSLT/XSLTProcessorEnvSupport.hpp>
 
@@ -193,14 +189,6 @@ public:
 			XalanNode*						context,
 			const XObjectArgVectorType&		argVec) const;
 
-	virtual XLocator*
-	getXLocatorFromNode(const XalanNode*	node) const;
-
-	virtual void
-	associateXLocatorToNode(
-			const XalanNode*	node,
-			XLocator*			xlocator);
-
 	virtual bool
 	shouldStripSourceNode(
 			XPathExecutionContext&	executionContext,
@@ -231,15 +219,6 @@ public:
 	virtual void
 	reset();
 
-#if defined(XALAN_NO_NAMESPACES)
-	typedef map<const XalanNode*,
-				XLocator*,
-				less<const XalanNode*> >			XLocatorTableType;
-#else
-	typedef std::map<const XalanNode*, XLocator*>	XLocatorTableType;
-#endif
-
-private:
 
 	// These are not implemented...
 	XSLTProcessorEnvSupportDefault(const XSLTProcessorEnvSupportDefault&);
@@ -256,8 +235,6 @@ private:
 	XPathEnvSupportDefault		m_defaultSupport;
 
 	XSLTProcessor*				m_processor;
-
-	XLocatorTableType			m_xlocatorTable;
 };
 
 

@@ -1243,6 +1243,21 @@ public:
 
 	/**
 	 * Compare two strings using the collation of the
+	 * supplied locale.
+	 *
+	 * @param theLHS a string to compare
+	 * @param theRHS a string to compare
+	 * @param theLocal a string that specifies the locale
+	 * @return < 0 if theLHS is before theRHS, 0 if they are equal, or > 0 if theLHS is after theRHS
+	 */
+	virtual int
+	collationCompare(
+			const XalanDOMString&	theLHS,
+			const XalanDOMString&	theRHS,
+			const XalanDOMString&	theLocale) = 0;
+
+	/**
+	 * Compare two strings using the collation of the
 	 * current locale.
 	 *
 	 * @param theLHS a string to compare
@@ -1253,6 +1268,21 @@ public:
 	collationCompare(
 			const XalanDOMChar*		theLHS,
 			const XalanDOMChar*		theRHS) = 0;
+
+	/**
+	 * Compare two strings using the collation of the
+	 * current locale.
+	 *
+	 * @param theLHS a string to compare
+	 * @param theRHS a string to compare
+	 * @param theLocal a string that specifies the locale
+	 * @return < 0 if theLHS is before theRHS, 0 if they are equal, or > 0 if theLHS is after theRHS
+	 */
+	virtual int
+	collationCompare(
+			const XalanDOMChar*		theLHS,
+			const XalanDOMChar*		theRHS,
+			const XalanDOMChar*		theLocale) = 0;
 
 	/**
 	 * Determine if a KeyDeclaration is being constructed.
@@ -1373,14 +1403,6 @@ public:
 			const XalanDOMString&			functionName,
 			XalanNode*						context,
 			const XObjectArgVectorType&		argVec) = 0;
-
-	virtual XLocator*
-	getXLocatorFromNode(const XalanNode*	node) const = 0;
-
-	virtual void
-	associateXLocatorToNode(
-			const XalanNode*	node,
-			XLocator*			xlocator) = 0;
 
 	virtual XalanDocument*
 	parseXML(

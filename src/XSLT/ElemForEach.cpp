@@ -157,26 +157,26 @@ ElemForEach::getElementName() const
 void
 ElemForEach::execute(StylesheetExecutionContext&		executionContext) const
 {
-	XalanNode* sourceNode = executionContext.getCurrentNode();
+	assert(m_pSelectPattern != 0);
+
+	XalanNode* const	sourceNode = executionContext.getCurrentNode();
 
 	if (sourceNode != 0)
 	{
-		assert(m_pSelectPattern != 0);
-
 		transformSelectedChildren(
 			executionContext,
-			getStylesheet(),
 			*this,
 			this,
 			sourceNode,
-			m_pSelectPattern,
+			*m_pSelectPattern,
 			Constants::ELEMNAME_FOREACH,
 			executionContext.getCurrentStackFrameIndex());
 	}
     else
     {
-		executionContext.error("sourceNode is null in handleApplyTemplatesInstruction!",
-							   sourceNode, 
-							   this);
+		executionContext.error(
+			"There is no current node in ElemForEach::execute()!",
+			sourceNode, 
+			this);
     }
 }

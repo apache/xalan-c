@@ -151,6 +151,22 @@ public:
 			const NodeRefListBase*	theContextNodeList = 0,
 			const PrefixResolver*	thePrefixResolver = 0);
 
+	/**
+	 * Construct a StylesheetExecutionContextDefault object
+	 *
+	 * @param theXPathEnvSupport XPath environment support class instance
+	 * @param theDOMSupport		 DOMSupport class instance
+	 * @param theXobjectFactory  factory class instance for XObjects
+	 * @param theCurrentNode     current node in the source tree
+	 * @param theContextNodeList node list for current context
+	 * @param thePrefixResolver  pointer to prefix resolver to use
+	 */
+	explicit
+	StylesheetExecutionContextDefault(
+			XalanNode*				theCurrentNode = 0,
+			const NodeRefListBase*	theContextNodeList = 0,
+			const PrefixResolver*	thePrefixResolver = 0);
+
 	virtual
 	~StylesheetExecutionContextDefault();
 
@@ -206,6 +222,52 @@ public:
 	{
 		m_ignoreHTMLElementNamespaces = theValue;
 	}
+
+	/**
+	 * Set the XPathEnvSupport instance.
+	 *
+	 * @param theSupport a reference to the instance to use.
+	 */
+	void
+	setXPathEnvSupport(XPathEnvSupport*		theSupport)
+	{
+		m_xpathExecutionContextDefault.setXPathEnvSupport(theSupport);
+	}
+
+	/**
+	 * Set the XObjectFactory instance.
+	 *
+	 * @param theFactory a reference to the instance to use.
+	 */
+	void
+	setXObjectFactory(XObjectFactory*	theFactory)
+	{
+		m_xpathExecutionContextDefault.setXObjectFactory(theFactory);
+	}
+
+	/**
+	 * Set the DOMSupport instance.
+	 *
+	 * @param theDOMSupport a reference to the instance to use.
+	 */
+	void
+	setDOMSupport(DOMSupport*	theDOMSupport)
+	{
+		m_xpathExecutionContextDefault.setDOMSupport(theDOMSupport);
+	}
+
+
+	/**
+	 * Set the DOMSupport instance.
+	 *
+	 * @param theDOMSupport a reference to the instance to use.
+	 */
+	void
+	setDOMSupport(XSLTEngineImpl&	theProcessor)
+	{
+		m_xsltProcessor = &theProcessor;
+	}
+
 
 	// These interfaces are inherited from StylesheetExecutionContext...
 
@@ -563,8 +625,20 @@ public:
 
 	virtual int
 	collationCompare(
+			const XalanDOMString&	theLHS,
+			const XalanDOMString&	theRHS,
+			const XalanDOMString&	theLocale);
+
+	virtual int
+	collationCompare(
 			const XalanDOMChar*		theLHS,
 			const XalanDOMChar*		theRHS);
+
+	virtual int
+	collationCompare(
+			const XalanDOMChar*		theLHS,
+			const XalanDOMChar*		theRHS,
+			const XalanDOMChar*		theLocale);
 
 	class XALAN_XSLT_EXPORT CollationCompareFunctor
 	{
@@ -588,6 +662,14 @@ public:
 		operator()(
 			const XalanDOMChar*		theLHS,
 			const XalanDOMChar*		theRHS) const = 0;
+
+		// Const version is suitable for use by
+		// multiple threads.
+		virtual int
+		operator()(
+			const XalanDOMChar*		theLHS,
+			const XalanDOMChar*		theRHS,
+			const XalanDOMChar*		theLocale) const = 0;
 	};
 
 	class XALAN_XSLT_EXPORT DefaultCollationCompareFunctor : public CollationCompareFunctor
@@ -608,6 +690,12 @@ public:
 		operator()(
 			const XalanDOMChar*		theLHS,
 			const XalanDOMChar*		theRHS) const;
+
+		virtual int
+		operator()(
+			const XalanDOMChar*		theLHS,
+			const XalanDOMChar*		theRHS,
+			const XalanDOMChar*		theLocale) const;
 	};
 
 	CollationCompareFunctor*
@@ -693,14 +781,6 @@ public:
 			const XalanDOMString&			functionName,
 			XalanNode*						context,
 			const XObjectArgVectorType&		argVec);
-
-	virtual XLocator*
-	getXLocatorFromNode(const XalanNode*	node) const;
-
-	virtual void
-	associateXLocatorToNode(
-			const XalanNode*	node,
-			XLocator*			xlocator);
 
 	virtual XalanDocument*
 	parseXML(
@@ -893,7 +973,7 @@ private:
 	XPathExecutionContextDefault	m_xpathExecutionContextDefault;
 
 	// $$ ToDo: Try to remove this dependency, and rely only on XSLTProcessor...
-	XSLTEngineImpl&					m_xsltProcessor;
+	XSLTEngineImpl*					m_xsltProcessor;
 
 	XalanNode*						m_rootDocument;
 

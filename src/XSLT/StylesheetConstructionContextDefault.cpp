@@ -92,7 +92,8 @@ StylesheetConstructionContextDefault::StylesheetConstructionContextDefault(
 	m_xpathEnvSupport(xpathEnvSupport),
 	m_xpathFactory(xpathFactory),
 	m_xpathProcessor(new XPathProcessorImpl),
-	m_stylesheets()
+	m_stylesheets(),
+	m_tempBuffer()
 {
 }
 
@@ -252,7 +253,7 @@ StylesheetConstructionContextDefault::destroy(StylesheetRoot*	theStylesheetRoot)
 int
 StylesheetConstructionContextDefault::getAttrTok(const XalanDOMString&	name) const
 {
-	return m_processor.getAttrTok(XalanDOMString(name));
+	return m_processor.getAttrTok(name);
 }
 
 
@@ -262,8 +263,14 @@ StylesheetConstructionContextDefault::getAttrTok(const XalanDOMChar*	name) const
 {
 	assert(name != 0);
 
-	// $$$ ToDo: Explicit XalanDOMString constructor
-	return m_processor.getAttrTok(XalanDOMString(name));
+	// $$$ ToDo: Change getAttrTok() to take a const XalanDOMChar*
+#if defined(XALAN_NO_MUTABLE)
+	assign((XalanDOMString&)m_tempBuffer, name);
+#else
+	assign(m_tempBuffer, name);
+#endif
+
+	return m_processor.getAttrTok(m_tempBuffer);
 }
 
 
@@ -338,8 +345,9 @@ StylesheetConstructionContextDefault::createMatchPattern(
 {
 	assert(str != 0);
 
-		// $$$ ToDo: Explicit XalanDOMString constructor
-	return createMatchPattern(XalanDOMString(str), resolver);
+	assign(m_tempBuffer, str);
+
+	return createMatchPattern(m_tempBuffer, resolver);
 }
 
 
@@ -351,7 +359,6 @@ StylesheetConstructionContextDefault::createXPath(
 {
 	XPath* const	xpath = m_xpathFactory.create();
 
-		// $$$ ToDo: Explicit XalanDOMString constructor
 	m_xpathProcessor->initXPath(*xpath,
 								str,
 								resolver,
@@ -371,8 +378,9 @@ StylesheetConstructionContextDefault::createXPath(
 {
 	assert(str != 0);
 
-	// $$$ ToDo: Explicit XalanDOMString constructor
-	return createXPath(XalanDOMString(str), resolver);
+	assign(m_tempBuffer, str);
+
+	return createXPath(m_tempBuffer, resolver);
 }
 
 

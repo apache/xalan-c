@@ -503,7 +503,8 @@ StylesheetHandler::startElement(
 							ElemTemplateElement* const	lastChild = parent->getLastChildElem();
 
 							if(0 == lastChild ||
-								Constants::ELEMNAME_WHEN == lastChild->getXSLToken())
+								Constants::ELEMNAME_WHEN == lastChild->getXSLToken() ||
+								lastChild->isWhitespace() == true)
 							{
 								elem = new ElemWhen(m_constructionContext,
 											m_stylesheet,
@@ -529,8 +530,9 @@ StylesheetHandler::startElement(
 						{
 							ElemTemplateElement* lastChild = parent->getLastChildElem();
 
-							if(0 == lastChild || 
-								Constants::ELEMNAME_WHEN == lastChild->getXSLToken())
+							if(0 == lastChild ||
+								Constants::ELEMNAME_WHEN == lastChild->getXSLToken() ||
+								lastChild->isWhitespace() == true)
 							{
 								elem = new ElemOtherwise(m_constructionContext,
 												 m_stylesheet,
@@ -1716,7 +1718,8 @@ StylesheetHandler::processText(
 			disableOutputEscaping = static_cast<ElemText*>(parent)->getDisableOutputEscaping();
 #endif
 			preserveSpace = true;
-			parent = m_elemStack[m_elemStack.size()-2];
+
+			parent = m_elemStack[m_elemStack.size() - 2];
 		}
 
 		const Locator* const	locator = m_constructionContext.getLocatorFromStack();
@@ -1724,14 +1727,14 @@ StylesheetHandler::processText(
 		const int	lineNumber = (0 != locator) ? locator->getLineNumber() : 0;
 		const int	columnNumber = (0 != locator) ? locator->getColumnNumber() : 0;
 
-		ElemTextLiteral* const	elem = new ElemTextLiteral(m_constructionContext,
+		XalanAutoPtr<ElemTextLiteral>	elem(new ElemTextLiteral(m_constructionContext,
 			m_stylesheet,
 			lineNumber, columnNumber,
 			chars, 0, length,
 			true, preserveSpace, 
-			disableOutputEscaping);
+			disableOutputEscaping));
 
-		const bool	isWhite = isXMLWhitespace(chars, 0, length);
+		const bool	isWhite = elem->isWhitespace();
 
 		if(preserveSpace || (!preserveSpace && !isWhite))
 		{
@@ -1742,7 +1745,9 @@ StylesheetHandler::processText(
 				m_whiteSpaceElems.pop_back();
 			}
 
-			parent->appendChildElem(elem);
+			parent->appendChildElem(elem.get());
+
+			elem.release();
 		}
 		else if(isWhite)
 		{
@@ -1761,14 +1766,20 @@ StylesheetHandler::processText(
 
 				if(isPrevCharData && ! isLastPoppedXSLText)
 				{
-					parent->appendChildElem(elem);
+					parent->appendChildElem(elem.get());
+
+					elem.release();
 
 					shouldPush = false;
 				}
 			}
 
 			if(shouldPush)
-				m_whiteSpaceElems.push_back(elem);
+			{
+				m_whiteSpaceElems.push_back(elem.get());
+
+				elem.release();
+			}
 		}
 	}
 	else if (m_inLXSLTScript)

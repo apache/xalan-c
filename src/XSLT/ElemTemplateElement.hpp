@@ -248,13 +248,21 @@ public:
 	}
 
 	/** 
+	 * Tell if the element will generate text which is XML whitespace.
+	 * 
+	 * @return true if the text is pure whitespace
+	 */
+	virtual bool
+	isWhitespace() const;
+
+	/** 
 	 * Tell if the string is whitespace.
 	 * 
 	 * @param string string in question
 	 * @return true if the string is pure whitespace
 	 */
-	static bool
-	isWhitespace(const XalanDOMString& theString);
+//	static bool
+//	isWhitespace(const XalanDOMString& theString);
 
 	/** 
 	 * Throw a template element runtime error.  
@@ -643,33 +651,51 @@ protected:
 	 * Perform a query if needed, and call transformChild for each child.
 	 * 
 	 * @param executionContext  The current execution context
-	 * @param stylesheetTree The owning stylesheet tree.
 	 * @param xslInstruction The stylesheet element context (deprecated -- I do 
 	 *      not think we need this).
 	 * @param template The owning template context.
 	 * @param sourceNodeContext The current source node context.
 	 * @param selectPattern The XPath with which to perform the selection.
-	 * @param xslToken The current XSLT instruction (deprecated -- I do not     
-	 *     think we want this).
+	 * @param xslToken The current XSLT instruction
 	 * @param selectStackFrameIndex stack frame context for executing the
 	 *                              select statement
 	 */
 	void
 	transformSelectedChildren(
 			StylesheetExecutionContext&		executionContext,
-			const Stylesheet&				stylesheetTree,
 			const ElemTemplateElement&		xslInstruction,
 			const ElemTemplateElement*		theTemplate,
 			XalanNode*						sourceNodeContext,
-			const XPath*					selectPattern,
+			const XPath&					selectPattern,
 			int								xslToken,
 			int								selectStackFrameIndex) const;
 
 	/**
 	 * Perform a query if needed, and call transformChild for each child.
 	 * 
+	 * @param executionContext  The current execution context
+	 * @param xslInstruction The stylesheet element context (deprecated -- I do 
+	 *      not think we need this).
+	 * @param template The owning template context.
+	 * @param sourceNodeContext The current source node context.
+	 * @param selectPattern The XPath with which to perform the selection.
+	 * @param selectStackFrameIndex stack frame context for executing the
+	 *                              select statement
+	 */
+	void
+	doTransformSelectedChildren(
+			StylesheetExecutionContext&					executionContext,
+			const ElemTemplateElement&					xslInstruction,
+			const ElemTemplateElement*					theTemplate,
+			XalanNode*									sourceNodeContext,
+			const XPath&								selectPattern,
+			const NodeSorter::NodeSortKeyVectorType&	keys,
+			int											selectStackFrameIndex) const;
+
+	/**
+	 * Perform a query if needed, and call transformChild for each child.
+	 * 
 	 * @param executionContext The current execution context
-	 * @param stylesheetTree The owning stylesheet tree.
 	 * @param xslInstruction The stylesheet element context (deprecated -- I do 
 	 *      not think we need this).
 	 * @param template The owning template context.
@@ -679,15 +705,15 @@ protected:
 	 *     think we want this).
 	 * @param selectStackFrameIndex stack frame context for executing the
 	 *                              select statement
+	 * @param keys Any sort keys that should be applied
+	 * @param sourceNodesCount The number of source nodes.
 	 */
 	void
 	doTransformSelectedChildren(
 			StylesheetExecutionContext&					executionContext,
-			const Stylesheet&							stylesheetTree,
 			const ElemTemplateElement&					xslInstruction,
 			const ElemTemplateElement*					theTemplate,
 			XalanNode*									sourceNodeContext,
-			int											xslToken,
 			int											selectStackFrameIndex,
 			const NodeSorter::NodeSortKeyVectorType&	keys,
 			const NodeRefListBase&						sourceNodes,
@@ -697,38 +723,19 @@ protected:
 	 * Perform a query if needed, and call transformChild for each child.
 	 * 
 	 * @param executionContext The current execution context
-	 * @param stylesheetTree The owning stylesheet tree.
 	 * @param xslInstruction The stylesheet element context (deprecated -- I do 
 	 *      not think we need this).
-	 * @param template The owning template context.
+	 * @param theTemplate The owning template context.
 	 * @param sourceNodeContext The current source node context.
-	 * @param selectPattern The XPath with which to perform the selection.
-	 * @param xslToken The current XSLT instruction (deprecated -- I do not     
-	 *     think we want this).
-	 * @param selectStackFrameIndex stack frame context for executing the
-	 *                              select statement
+	 * @param sourceNodes The source nodes to transform.
+	 * @param sourceNodesCount The count of source nodes to transform.
 	 */
 	void
 	doTransformSelectedChildren(
-			StylesheetExecutionContext&					executionContext,
-			const Stylesheet&							stylesheetTree,
-			const ElemTemplateElement&					xslInstruction,
-			const ElemTemplateElement*					theTemplate,
-			XalanNode*									sourceNodeContext,
-			int											xslToken,
-			int											selectStackFrameIndex,
-			const NodeSorter::NodeSortKeyVectorType&	keys,
-			const XalanNodeList&						childNodes,
-			unsigned int								childNodeCount) const;
-
-	void
-	doTransformSelectedChildren(
 			StylesheetExecutionContext&			executionContext,
-			const Stylesheet&					stylesheetTree,
 			const ElemTemplateElement&			xslInstruction,
 			const ElemTemplateElement*			theTemplate,
 			XalanNode*							sourceNodeContext,
-			int									xslToken,
 			const NodeRefListBase&				sourceNodes,
 			unsigned int						sourceNodesCount) const;
 
@@ -737,25 +744,20 @@ protected:
 	 * template and process the contents.
 	 * 
 	 * @param executionContext The current execution context
-	 * @param stylesheetTree The current Stylesheet object.
 	 * @param xslInstruction The calling element (deprecated -- I dont think we 
 	 *      need this).
 	 * @param template The template to use if xsl:for-each, or null.
 	 * @param selectContext The selection context.
 	 * @param child The source context node.
-	 * @param xslToken ELEMNAME_APPLY_TEMPLATES, ELEMNAME_APPLY_IMPORTS, or     
-	 *      ELEMNAME_FOREACH.
 	 * @return true if applied a template, false if not.
 	 */
 	bool
 	transformChild(
 			StylesheetExecutionContext&		executionContext,
-			const Stylesheet&				stylesheetTree,
-			const ElemTemplateElement*		xslInstruction,
+			const ElemTemplateElement&		xslInstruction,
 			const ElemTemplateElement*		theTemplate,
 			XalanNode*						selectContext,
-			XalanNode*						child,
-			int								xslToken) const;
+			XalanNode*						child) const;
 
 	/**
 	 * Given an xsl token type, determine whether or not a child
@@ -802,6 +804,8 @@ private:
 	XalanEmptyNamedNodeMap	m_fakeAttributes;
 
 	const XalanDOMString	m_baseIndentifier;
+
+	static const NodeSorter::NodeSortKeyVectorType	s_dummyKeys;
 };
 
 

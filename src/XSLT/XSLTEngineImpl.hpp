@@ -265,10 +265,10 @@ public:
 	getXMLParserLiaison() const;
 
 	virtual const XalanDOMString
-	getUniqueNamespaceValue() const;
+	getUniqueNamespaceValue();
 
 	virtual void
-	getUniqueNamespaceValue(XalanDOMString&		theValue) const;
+	getUniqueNamespaceValue(XalanDOMString&		theValue);
 
 	virtual void
 	setStylesheetParam(	
@@ -1590,30 +1590,8 @@ private:
 	/**
 	 * This is used whenever a unique namespace is needed.
 	 */
-	mutable unsigned long	m_uniqueNSValue;	// 0
+	unsigned long	m_uniqueNSValue;
   
-
-	/**
-	 * Get an XLocator provider keyed by node.	This gets the association
-	 * based on the root of the tree that is the node's parent.
-	 *
-	 * @param node node for locator
-	 * @return pointer to locator
-	 */
-	XLocator*
-	getXLocatorFromNode(const XalanNode* 	node) const;
-
-	/**
-	 * Associate an XLocator provider to a node.  This makes the association
-	 * based on the root of the tree that is the node's parent.
-	 *
-	 * @param node	   node for association
-	 * @param xlocator locator to associate with node
-	 */
-	 void
-	 associateXLocatorToNode(
-			const XalanNode* 	node,
-			XLocator*			xlocator);
 
 	/**
 	 * Control if the xsl:variable is resolved early or 

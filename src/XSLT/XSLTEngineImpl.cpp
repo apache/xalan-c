@@ -242,6 +242,9 @@ XSLTEngineImpl::~XSLTEngineImpl()
 
 
 
+static const XalanDOMChar	s_dummyString = 0;
+
+
 void
 XSLTEngineImpl::process(
 			const XSLTInputSource&			inputSource, 
@@ -360,23 +363,34 @@ XSLTEngineImpl::process(
 
 			bool isRoot = true;
 			Stylesheet* prevStylesheet = 0;
-			while(!hrefs.empty())
+			
+			if (hrefs.empty() == false)
 			{
-				const XalanDOMChar* const		pxch = inputSource.getSystemId();
-				const XalanDOMString	sysid(pxch);
-				const XalanDOMString&	ref =  hrefs.back();
+				const XalanDOMChar* const	pxch = inputSource.getSystemId();
 
-				Stylesheet* stylesheet =
-					getStylesheetFromPIURL(ref, *sourceTree, sysid, isRoot, constructionContext);
+				const XalanDOMString		sysid(pxch == 0 ? &s_dummyString : pxch); 
 
-				if(false == isRoot)
+				do
 				{
-					prevStylesheet->addImport(stylesheet, false);
-				}
+					const XalanDOMString&	ref =  hrefs.back();
 
-				prevStylesheet = stylesheet;
-				isRoot = false;
-				hrefs.pop_back();
+					Stylesheet* stylesheet =
+							getStylesheetFromPIURL(
+								ref,
+								*sourceTree,
+								sysid,
+								isRoot,
+								constructionContext);
+
+					if(false == isRoot)
+					{
+						prevStylesheet->addImport(stylesheet, false);
+					}
+
+					prevStylesheet = stylesheet;
+					isRoot = false;
+					hrefs.pop_back();
+				} while(!hrefs.empty());
 			}
 		}
 
@@ -1970,14 +1984,14 @@ XSLTEngineImpl::cloneToResultTree(
 			bool				overrideStrip,
 			bool				shouldCloneAttributes)
 {
-	bool						stripWhiteSpace = false;
-
 	const XalanNode::NodeType	theType = node.getNodeType();
 
 	switch(theType)
 	{
 	case XalanNode::TEXT_NODE:
 		{
+			bool	stripWhiteSpace = false;
+
 			// If stripWhiteSpace is false, then take this as an override and 
 			// just preserve the space, otherwise use the XSL whitespace rules.
 			if(!overrideStrip)
@@ -2511,20 +2525,22 @@ XSLTEngineImpl::copyAttributeToTarget(
 			AttributeListImpl&		attrList, 
 			const XalanElement& 	/* namespaceContext */)
 {
-	const XalanDOMString 	attrName = trim(attr.getName());
+	const XalanDOMString& 	attrName = attr.getName();
 
-	XalanDOMString			stringedValue = attr.getValue();
+	const XalanDOMString&	attrValue = attr.getValue();
 
 	// TODO: Find out about empty attribute template expression handling.
-	if(0 != length(stringedValue))
+	if(0 != length(attrValue))
 	{
 		if((equals(attrName, DOMServices::s_XMLNamespace) || startsWith(attrName, DOMServices::s_XMLNamespaceWithSeparator))
-		   && startsWith(stringedValue, XALAN_STATIC_UCODE_STRING("quote:")))
+		   && startsWith(attrValue, XALAN_STATIC_UCODE_STRING("quote:")))
 		{
-			stringedValue = substring(stringedValue, 6);
+			addResultAttribute(attrList, attrName, substring(attrValue, 6));
 		}
-
-		addResultAttribute(attrList, attrName, stringedValue);
+		else
+		{
+			addResultAttribute(attrList, attrName, attrValue);
+		}
 	}
 }
 
@@ -2543,29 +2559,32 @@ XSLTEngineImpl::copyAttributesToAttList(
 	const XalanNamedNodeMap* const	attributes =
 		templateChild.getAttributes();
 
-	const unsigned int	nAttributes = (0 != attributes) ? attributes->getLength() : 0;
+	if (attributes != 0)
+	{
+		const unsigned int	nAttributes = attributes->getLength();
 
-	for(unsigned int	i = 0; i < nAttributes; i++)  
-	{	
-		const XalanAttr* const 	attr =
+		for(unsigned int i = 0; i < nAttributes; ++i)  
+		{	
+			const XalanAttr* const 	attr =
 #if defined(XALAN_OLD_STYLE_CASTS)
-			(const XalanAttr*)attributes->item(i);
+				(const XalanAttr*)attributes->item(i);
 #else
-			static_cast<const XalanAttr*>(attributes->item(i));
+				static_cast<const XalanAttr*>(attributes->item(i));
 #endif
-		assert(attr != 0);
+			assert(attr != 0);
 
-		copyAttributeToTarget(
-				*attr,
-				contextNode,
-				stylesheetTree, 
-				attList,
-				templateChild);
+			copyAttributeToTarget(
+					*attr,
+					contextNode,
+					stylesheetTree, 
+					attList,
+					templateChild);
+		}
 	}
 }
 
 
- 
+
 bool
 XSLTEngineImpl::shouldStripSourceNode(
 			XPathExecutionContext&	executionContext,
@@ -2709,7 +2728,7 @@ XSLTEngineImpl::getXMLParserLiaison() const
 
 
 const XalanDOMString
-XSLTEngineImpl::getUniqueNamespaceValue() const
+XSLTEngineImpl::getUniqueNamespaceValue()
 {
 	XalanDOMString	theResult;
 
@@ -2721,19 +2740,11 @@ XSLTEngineImpl::getUniqueNamespaceValue() const
 
 
 void
-XSLTEngineImpl::getUniqueNamespaceValue(XalanDOMString&		theValue) const
+XSLTEngineImpl::getUniqueNamespaceValue(XalanDOMString&		theValue)
 {
-	const unsigned long		temp = m_uniqueNSValue;
-
-#if defined(XALAN_NO_MUTABLE)
-	((XSLTEngineImpl*)this)->m_uniqueNSValue++;
-#else
-	m_uniqueNSValue++;
-#endif
-
 	append(theValue, s_uniqueNamespacePrefix);
 
-	UnsignedLongToDOMString(temp, theValue);
+	UnsignedLongToDOMString(m_uniqueNSValue++, theValue);
 }
 
 
@@ -2751,24 +2762,6 @@ XSLTEngineImpl::getDOMFactory() const
 	}
 
 	return m_domResultTreeFactory;
-}
-
-
-
-XLocator*
-XSLTEngineImpl::getXLocatorFromNode(const XalanNode*	node) const
-{
-	return m_xpathEnvSupport.getXLocatorFromNode(node);
-}
-	
-
-
-void
-XSLTEngineImpl::associateXLocatorToNode(
-			const XalanNode*	node,
-			XLocator*			xlocator)
-{
-	m_xpathEnvSupport.associateXLocatorToNode(node, xlocator);
 }
 
 

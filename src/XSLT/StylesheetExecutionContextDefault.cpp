@@ -131,7 +131,7 @@ StylesheetExecutionContextDefault::StylesheetExecutionContextDefault(
 								   theCurrentNode,
 								   theContextNodeList,
 								   thePrefixResolver),
-	m_xsltProcessor(xsltProcessor),
+	m_xsltProcessor(&xsltProcessor),
 	m_rootDocument(0),
 	m_elementRecursionStack(),
 	m_prefixResolver(0),
@@ -150,7 +150,37 @@ StylesheetExecutionContextDefault::StylesheetExecutionContextDefault(
 	m_sourceTreeResultTreeFactory(),
 	m_mode(0)
 {
-	m_mode = 0;
+}
+
+
+
+StylesheetExecutionContextDefault::StylesheetExecutionContextDefault(
+			XalanNode*				theCurrentNode,
+			const NodeRefListBase*	theContextNodeList,
+			const PrefixResolver*	thePrefixResolver) :
+	StylesheetExecutionContext(),
+	m_xpathExecutionContextDefault(theCurrentNode,
+								   theContextNodeList,
+								   thePrefixResolver),
+	m_xsltProcessor(0),
+	m_rootDocument(0),
+	m_elementRecursionStack(),
+	m_prefixResolver(0),
+	m_stylesheetRoot(0),
+	m_formatterListeners(),
+	m_printWriters(),
+	m_outputStreams(),
+	m_collationCompareFunctor(0),
+	m_variablesStack(),
+	m_matchPatternCache(),
+	m_keyTables(),
+	m_keyDeclarationSet(),
+	m_countersTable(),
+	m_useDOMResultTreeFactory(false),
+	m_ignoreHTMLElementNamespaces(false),
+	m_sourceTreeResultTreeFactory(),
+	m_mode(0)
+{
 }
 
 
@@ -165,7 +195,9 @@ StylesheetExecutionContextDefault::~StylesheetExecutionContextDefault()
 bool
 StylesheetExecutionContextDefault::getQuietConflictWarnings() const
 {
-	return m_xsltProcessor.getQuietConflictWarnings();
+	assert(m_xsltProcessor != 0);
+
+	return m_xsltProcessor->getQuietConflictWarnings();
 }
 
 
@@ -189,7 +221,9 @@ StylesheetExecutionContextDefault::setRootDocument(XalanNode*	theDocument)
 XalanDocument*
 StylesheetExecutionContextDefault::createDocument() const
 {
-	return m_xsltProcessor.getXMLParserLiaison().createDocument();
+	assert(m_xsltProcessor != 0);
+
+	return m_xsltProcessor->getXMLParserLiaison().createDocument();
 }
 
 
@@ -197,19 +231,20 @@ StylesheetExecutionContextDefault::createDocument() const
 void
 StylesheetExecutionContextDefault::setStylesheetRoot(const StylesheetRoot*	theStylesheet)
 {
+	assert(m_xsltProcessor != 0);
 	assert(theStylesheet == 0 || theStylesheet->isRoot() == true);
 
 	m_stylesheetRoot = theStylesheet;
 
-	m_xsltProcessor.setStylesheetRoot(theStylesheet);
+	m_xsltProcessor->setStylesheetRoot(theStylesheet);
 
 	if (theStylesheet == 0)
 	{
-		m_xsltProcessor.setExecutionContext(0);
+		m_xsltProcessor->setExecutionContext(0);
 	}
 	else
 	{
-		m_xsltProcessor.setExecutionContext(this);
+		m_xsltProcessor->setExecutionContext(this);
 	}
 }
 
@@ -235,14 +270,18 @@ void
 StylesheetExecutionContextDefault::resetCurrentState(
 			XalanNode*	xmlNode)
 {
-	m_xsltProcessor.resetCurrentState(xmlNode);
+	assert(m_xsltProcessor != 0);
+
+	m_xsltProcessor->resetCurrentState(xmlNode);
 }
 
 
 bool
 StylesheetExecutionContextDefault::doDiagnosticsOutput() const
 {
-	return m_xsltProcessor.doDiagnosticsOutput();
+	assert(m_xsltProcessor != 0);
+
+	return m_xsltProcessor->doDiagnosticsOutput();
 }
 
 
@@ -250,7 +289,9 @@ StylesheetExecutionContextDefault::doDiagnosticsOutput() const
 void
 StylesheetExecutionContextDefault::diag(const XalanDOMString&	theString)
 {
-	m_xsltProcessor.diag(theString);
+	assert(m_xsltProcessor != 0);
+
+	m_xsltProcessor->diag(theString);
 }
 
 
@@ -258,7 +299,9 @@ StylesheetExecutionContextDefault::diag(const XalanDOMString&	theString)
 void
 StylesheetExecutionContextDefault::pushTime(const void*	theKey)
 {
-	m_xsltProcessor.pushTime(theKey);
+	assert(m_xsltProcessor != 0);
+
+	m_xsltProcessor->pushTime(theKey);
 }
 
 
@@ -268,7 +311,9 @@ StylesheetExecutionContextDefault::displayDuration(
 			const XalanDOMString&	theMessage,
 			const void*				theKey)
 {
-	m_xsltProcessor.displayDuration(theMessage, theKey);
+	assert(m_xsltProcessor != 0);
+
+	m_xsltProcessor->displayDuration(theMessage, theKey);
 }
 
 
@@ -276,7 +321,9 @@ StylesheetExecutionContextDefault::displayDuration(
 bool
 StylesheetExecutionContextDefault::isElementPending() const
 {
-	return m_xsltProcessor.isElementPending();
+	assert(m_xsltProcessor != 0);
+
+	return m_xsltProcessor->isElementPending();
 }
 
 
@@ -287,9 +334,11 @@ StylesheetExecutionContextDefault::replacePendingAttribute(
 			const XalanDOMChar*		theNewType,
 			const XalanDOMChar*		theNewValue)
 {
+	assert(m_xsltProcessor != 0);
+
 	// Remove the old attribute, then add the new one.  AttributeListImpl::addAttribute()
 	// does this for us.
-	m_xsltProcessor.replacePendingAttribute(theName, theNewType, theNewValue);
+	m_xsltProcessor->replacePendingAttribute(theName, theNewType, theNewValue);
 }
 
 
@@ -297,7 +346,9 @@ StylesheetExecutionContextDefault::replacePendingAttribute(
 void
 StylesheetExecutionContextDefault::pushOutputContext(FormatterListener*		flistener)
 {
-	m_xsltProcessor.pushOutputContext(flistener);
+	assert(m_xsltProcessor != 0);
+
+	m_xsltProcessor->pushOutputContext(flistener);
 }
 
 
@@ -305,7 +356,9 @@ StylesheetExecutionContextDefault::pushOutputContext(FormatterListener*		flisten
 void
 StylesheetExecutionContextDefault::popOutputContext()
 {
-	m_xsltProcessor.popOutputContext();
+	assert(m_xsltProcessor != 0);
+
+	m_xsltProcessor->popOutputContext();
 }
 
 
@@ -315,7 +368,9 @@ StylesheetExecutionContextDefault::addResultAttribute(
 			const XalanDOMString&	aname,
 			const XalanDOMString&	value)
 {
-	m_xsltProcessor.addResultAttribute(aname, value);
+	assert(m_xsltProcessor != 0);
+
+	m_xsltProcessor->addResultAttribute(aname, value);
 }
 
 
@@ -323,7 +378,9 @@ StylesheetExecutionContextDefault::addResultAttribute(
 void
 StylesheetExecutionContextDefault::copyNamespaceAttributes(const XalanNode&		src)
 {
-	m_xsltProcessor.copyNamespaceAttributes(src);
+	assert(m_xsltProcessor != 0);
+
+	m_xsltProcessor->copyNamespaceAttributes(src);
 }
 
 
@@ -332,7 +389,9 @@ const XalanDOMString&
 StylesheetExecutionContextDefault::getResultPrefixForNamespace(
 			const XalanDOMString&	theNamespace) const
 {
-	return m_xsltProcessor.getResultPrefixForNamespace(theNamespace);
+	assert(m_xsltProcessor != 0);
+
+	return m_xsltProcessor->getResultPrefixForNamespace(theNamespace);
 }
 
 
@@ -340,7 +399,9 @@ StylesheetExecutionContextDefault::getResultPrefixForNamespace(
 const XalanDOMString&
 StylesheetExecutionContextDefault::getResultNamespaceForPrefix(const XalanDOMString&	thePrefix) const
 {
-	return m_xsltProcessor.getResultNamespaceForPrefix(thePrefix);
+	assert(m_xsltProcessor != 0);
+
+	return m_xsltProcessor->getResultNamespaceForPrefix(thePrefix);
 }
 
 
@@ -348,7 +409,9 @@ StylesheetExecutionContextDefault::getResultNamespaceForPrefix(const XalanDOMStr
 XalanDOMString
 StylesheetExecutionContextDefault::getUniqueNamespaceValue() const
 {
-	return m_xsltProcessor.getUniqueNamespaceValue();
+	assert(m_xsltProcessor != 0);
+
+	return m_xsltProcessor->getUniqueNamespaceValue();
 }
 
 
@@ -356,7 +419,9 @@ StylesheetExecutionContextDefault::getUniqueNamespaceValue() const
 void
 StylesheetExecutionContextDefault::getUniqueNamespaceValue(XalanDOMString&	theValue) const
 {
-	m_xsltProcessor.getUniqueNamespaceValue(theValue);
+	assert(m_xsltProcessor != 0);
+
+	m_xsltProcessor->getUniqueNamespaceValue(theValue);
 }
 
 
@@ -364,7 +429,9 @@ StylesheetExecutionContextDefault::getUniqueNamespaceValue(XalanDOMString&	theVa
 FormatterListener*
 StylesheetExecutionContextDefault::getFormatterListener() const
 {
-	return m_xsltProcessor.getFormatterListener();
+	assert(m_xsltProcessor != 0);
+
+	return m_xsltProcessor->getFormatterListener();
 }
 
 
@@ -372,7 +439,9 @@ StylesheetExecutionContextDefault::getFormatterListener() const
 void
 StylesheetExecutionContextDefault::setFormatterListener(FormatterListener*	flistener)
 {
-	m_xsltProcessor.setFormatterListener(flistener);
+	assert(m_xsltProcessor != 0);
+
+	m_xsltProcessor->setFormatterListener(flistener);
 }
 
 
@@ -380,7 +449,9 @@ StylesheetExecutionContextDefault::setFormatterListener(FormatterListener*	flist
 int
 StylesheetExecutionContextDefault::getIndent() const
 {
-	return m_xsltProcessor.getXMLParserLiaison().getIndent();
+	assert(m_xsltProcessor != 0);
+
+	return m_xsltProcessor->getXMLParserLiaison().getIndent();
 }
 
 
@@ -391,7 +462,9 @@ StylesheetExecutionContextDefault::executeXPath(
 			XalanNode*				contextNode,
 			const XalanElement&		resolver)
 {
-	return m_xsltProcessor.evalXPathStr(str,
+	assert(m_xsltProcessor != 0);
+
+	return m_xsltProcessor->evalXPathStr(str,
 										contextNode,
 										resolver,
 										*this);
@@ -404,6 +477,8 @@ StylesheetExecutionContextDefault::createMatchPattern(
 			const XalanDOMString&	str,
 			const PrefixResolver&	resolver)
 {
+	assert(m_xsltProcessor != 0);
+
 	const XPath*	theResult = 0;
 
 	// We won't cache any xpath that has a namespace, since
@@ -419,7 +494,7 @@ StylesheetExecutionContextDefault::createMatchPattern(
 	// try to cache the XPath...
 	if (index < len - 1 && (charAt(str, index + 1) != XalanUnicode::charColon))
 	{
-		theResult = m_xsltProcessor.createMatchPattern(str, resolver);
+		theResult = m_xsltProcessor->createMatchPattern(str, resolver);
 	}
 	else
 	{
@@ -435,7 +510,7 @@ StylesheetExecutionContextDefault::createMatchPattern(
 		}
 		else
 		{
-			theResult = m_xsltProcessor.createMatchPattern(str, resolver);
+			theResult = m_xsltProcessor->createMatchPattern(str, resolver);
 
 			addToXPathCache(str, theResult);
 		}
@@ -449,9 +524,11 @@ StylesheetExecutionContextDefault::createMatchPattern(
 void
 StylesheetExecutionContextDefault::returnXPath(const XPath*		xpath)
 {
+	assert(m_xsltProcessor != 0);
+
 	if (isCached(xpath) == false)
 	{
-		m_xsltProcessor.returnXPath(xpath);
+		m_xsltProcessor->returnXPath(xpath);
 	}
 }
 
@@ -498,11 +575,13 @@ StylesheetExecutionContextDefault::pushVariable(
 			XalanNode*					contextNode,
 			const PrefixResolver&		resolver)
 {
+	assert(m_xsltProcessor != 0);
+
 	if (length(str) > 0)
 	{
 		m_variablesStack.pushVariable(
 			name,
-			m_xsltProcessor.evalXPathStr(
+			m_xsltProcessor->evalXPathStr(
 							str,
 							contextNode,
 							resolver,
@@ -581,7 +660,9 @@ StylesheetExecutionContextDefault::resolveTopLevelParams()
 {
 	pushContextMarker();
 
-	m_xsltProcessor.resolveTopLevelParams(*this);
+	assert(m_xsltProcessor != 0);
+
+	m_xsltProcessor->resolveTopLevelParams(*this);
 
 	m_variablesStack.markGlobalStackFrame();
 }
@@ -591,7 +672,9 @@ StylesheetExecutionContextDefault::resolveTopLevelParams()
 void
 StylesheetExecutionContextDefault::clearTopLevelParams()
 {
-	m_xsltProcessor.clearTopLevelParams();
+	assert(m_xsltProcessor != 0);
+
+	m_xsltProcessor->clearTopLevelParams();
 }
 
 
@@ -707,7 +790,9 @@ StylesheetExecutionContextDefault::setCurrentStackFrameIndex(int	currentStackFra
 void
 StylesheetExecutionContextDefault::startDocument()
 {
-	m_xsltProcessor.startDocument();
+	assert(m_xsltProcessor != 0);
+
+	m_xsltProcessor->startDocument();
 }
 
 
@@ -715,7 +800,9 @@ StylesheetExecutionContextDefault::startDocument()
 void
 StylesheetExecutionContextDefault::endDocument()
 {
-	m_xsltProcessor.endDocument();
+	assert(m_xsltProcessor != 0);
+
+	m_xsltProcessor->endDocument();
 
 	// This matches the pushContextMarker in
 	// resolveTopLevelParams().
@@ -734,7 +821,9 @@ StylesheetExecutionContextDefault::characters(
 			unsigned int			start,
 			unsigned int			length)
 {
-	m_xsltProcessor.characters(ch, start, length);
+	assert(m_xsltProcessor != 0);
+
+	m_xsltProcessor->characters(ch, start, length);
 }
 
 
@@ -745,7 +834,9 @@ StylesheetExecutionContextDefault::charactersRaw(
 			unsigned int			start,
 			unsigned int			length)
 {
-	m_xsltProcessor.charactersRaw(ch, start, length);
+	assert(m_xsltProcessor != 0);
+
+	m_xsltProcessor->charactersRaw(ch, start, length);
 }
 
 
@@ -753,7 +844,9 @@ StylesheetExecutionContextDefault::charactersRaw(
 void
 StylesheetExecutionContextDefault::comment(const XalanDOMChar*	data)
 {
-	m_xsltProcessor.comment(data);
+	assert(m_xsltProcessor != 0);
+
+	m_xsltProcessor->comment(data);
 }
 
 
@@ -763,7 +856,9 @@ StylesheetExecutionContextDefault::processingInstruction(
 			const XalanDOMChar*		target,
 			const XalanDOMChar*		data)
 {
-	m_xsltProcessor.processingInstruction(target, data);
+	assert(m_xsltProcessor != 0);
+
+	m_xsltProcessor->processingInstruction(target, data);
 }
 
 
@@ -771,7 +866,9 @@ StylesheetExecutionContextDefault::processingInstruction(
 void
 StylesheetExecutionContextDefault::startElement(const XalanDOMChar*		name)
 {
-	m_xsltProcessor.startElement(name);
+	assert(m_xsltProcessor != 0);
+
+	m_xsltProcessor->startElement(name);
 }
 
 
@@ -779,7 +876,9 @@ StylesheetExecutionContextDefault::startElement(const XalanDOMChar*		name)
 void
 StylesheetExecutionContextDefault::endElement(const XalanDOMChar*	name)
 {
-	m_xsltProcessor.endElement(name);
+	assert(m_xsltProcessor != 0);
+
+	m_xsltProcessor->endElement(name);
 }
 
 
@@ -787,7 +886,9 @@ StylesheetExecutionContextDefault::endElement(const XalanDOMChar*	name)
 void
 StylesheetExecutionContextDefault::flushPending()
 {
-	m_xsltProcessor.flushPending();
+	assert(m_xsltProcessor != 0);
+
+	m_xsltProcessor->flushPending();
 }
 
 
@@ -799,7 +900,9 @@ StylesheetExecutionContextDefault::cloneToResultTree(
 			bool		overrideStrip,
 			bool		shouldCloneAttributes)
 {
-	m_xsltProcessor.cloneToResultTree(node,
+	assert(m_xsltProcessor != 0);
+
+	m_xsltProcessor->cloneToResultTree(node,
 									  isLiteral,
 									  overrideStrip,
 									  shouldCloneAttributes);
@@ -812,18 +915,20 @@ StylesheetExecutionContextDefault::createXResultTreeFrag(
 			const ElemTemplateElement&	templateChild,
 			XalanNode*					sourceNode)
 {
+	assert(m_xsltProcessor != 0);
+
 	BorrowReturnResultTreeFrag	theResultTreeFrag(*this);
 
 	if (m_useDOMResultTreeFactory == true)
 	{
-		XalanDocument* const	theDocument = m_xsltProcessor.getDOMFactory();
+		XalanDocument* const	theDocument = m_xsltProcessor->getDOMFactory();
 
 		FormatterToDOM	tempFormatter(
 					theDocument,
 					theResultTreeFrag.get(),
 					0);
 
-		tempFormatter.setPrefixResolver(&m_xsltProcessor);
+		tempFormatter.setPrefixResolver(m_xsltProcessor);
 
 		theResultTreeFrag->setOwnerDocument(theDocument);
 
@@ -841,7 +946,7 @@ StylesheetExecutionContextDefault::createXResultTreeFrag(
 					theDocument,
 					theResultTreeFrag.get());
 
-		tempFormatter.setPrefixResolver(&m_xsltProcessor);
+		tempFormatter.setPrefixResolver(m_xsltProcessor);
 
 		theResultTreeFrag->setOwnerDocument(theDocument);
 
@@ -860,7 +965,9 @@ StylesheetExecutionContextDefault::createXResultTreeFrag(
 void
 StylesheetExecutionContextDefault::outputToResultTree(const XObject&	xobj)
 {
-	m_xsltProcessor.outputToResultTree(*this, xobj);
+	assert(m_xsltProcessor != 0);
+
+	m_xsltProcessor->outputToResultTree(*this, xobj);
 }
 
 
@@ -868,7 +975,9 @@ StylesheetExecutionContextDefault::outputToResultTree(const XObject&	xobj)
 void
 StylesheetExecutionContextDefault::outputResultTreeFragment(const XObject&	theTree)
 {
-	m_xsltProcessor.outputResultTreeFragment(*this, theTree);
+	assert(m_xsltProcessor != 0);
+
+	m_xsltProcessor->outputResultTreeFragment(*this, theTree);
 }
 
 
@@ -876,7 +985,9 @@ StylesheetExecutionContextDefault::outputResultTreeFragment(const XObject&	theTr
 const XalanDOMString&
 StylesheetExecutionContextDefault::getXSLNameSpaceURL() const
 {
-	return m_xsltProcessor.getXSLNameSpaceURL();
+	assert(m_xsltProcessor != 0);
+
+	return m_xsltProcessor->getXSLNameSpaceURL();
 }
 
 
@@ -884,7 +995,9 @@ StylesheetExecutionContextDefault::getXSLNameSpaceURL() const
 const XalanDOMString&
 StylesheetExecutionContextDefault::getXalanXSLNameSpaceURL() const
 {
-	return m_xsltProcessor.getXalanXSLNameSpaceURL();
+	assert(m_xsltProcessor != 0);
+
+	return m_xsltProcessor->getXalanXSLNameSpaceURL();
 }
 
 
@@ -892,7 +1005,9 @@ StylesheetExecutionContextDefault::getXalanXSLNameSpaceURL() const
 bool
 StylesheetExecutionContextDefault::getTraceSelects() const
 {
-	return m_xsltProcessor.getTraceSelects();
+	assert(m_xsltProcessor != 0);
+
+	return m_xsltProcessor->getTraceSelects();
 }
 
 
@@ -902,7 +1017,9 @@ StylesheetExecutionContextDefault::traceSelect(
 			const XalanElement&		theTemplate,
 			const NodeRefListBase&	nl) const
 {
-	m_xsltProcessor.traceSelect(theTemplate, nl);
+	assert(m_xsltProcessor != 0);
+
+	m_xsltProcessor->traceSelect(theTemplate, nl);
 }
 
 
@@ -1020,7 +1137,7 @@ StylesheetExecutionContextDefault::createFormatterToHTML(
 	if (m_ignoreHTMLElementNamespaces == false)
 	{
 		// Nope, so give the formatter a prefix resolver...
-		theFormatter->setPrefixResolver(&m_xsltProcessor);
+		theFormatter->setPrefixResolver(m_xsltProcessor);
 	}
 
 	m_formatterListeners.insert(theFormatter);
@@ -1044,7 +1161,7 @@ StylesheetExecutionContextDefault::createFormatterToDOM(
 
 	m_formatterListeners.insert(theFormatter);
 
-	theFormatter->setPrefixResolver(&m_xsltProcessor);
+	theFormatter->setPrefixResolver(m_xsltProcessor);
 
 	return theFormatter;
 }
@@ -1063,7 +1180,7 @@ StylesheetExecutionContextDefault::createFormatterToDOM(
 
 	m_formatterListeners.insert(theFormatter);
 
-	theFormatter->setPrefixResolver(&m_xsltProcessor);
+	theFormatter->setPrefixResolver(m_xsltProcessor);
 
 	return theFormatter;
 }
@@ -1152,6 +1269,24 @@ StylesheetExecutionContextDefault::collationCompare(
 
 int
 StylesheetExecutionContextDefault::collationCompare(
+			const XalanDOMString&	theLHS,
+			const XalanDOMString&	theRHS,
+			const XalanDOMString&	theLocale)
+{
+	if (m_collationCompareFunctor == 0)
+	{
+		return s_defaultCollationFunctor(c_wstr(theLHS), c_wstr(theRHS), c_wstr(theLocale));
+	}
+	else
+	{
+		return (*m_collationCompareFunctor)(c_wstr(theLHS), c_wstr(theRHS), c_wstr(theLocale));
+	}
+}
+
+
+
+int
+StylesheetExecutionContextDefault::collationCompare(
 			const XalanDOMChar*		theLHS,
 			const XalanDOMChar*		theRHS)
 {
@@ -1164,6 +1299,26 @@ StylesheetExecutionContextDefault::collationCompare(
 	else
 	{
 		return (*m_collationCompareFunctor)(theLHS, theRHS);
+	}
+}
+
+
+
+int
+StylesheetExecutionContextDefault::collationCompare(
+			const XalanDOMChar*		theLHS,
+			const XalanDOMChar*		theRHS,
+			const XalanDOMChar*		theLocale)
+{
+	assert(theLHS != 0 && theRHS != 0);
+
+	if (m_collationCompareFunctor == 0)
+	{
+		return s_defaultCollationFunctor(theLHS, theRHS, theLocale);
+	}
+	else
+	{
+		return (*m_collationCompareFunctor)(theLHS, theRHS, theLocale);
 	}
 }
 
@@ -1213,6 +1368,17 @@ StylesheetExecutionContextDefault::DefaultCollationCompareFunctor::operator()(
 
 
 
+int
+StylesheetExecutionContextDefault::DefaultCollationCompareFunctor::operator()(
+			const XalanDOMChar*		theLHS,
+			const XalanDOMChar*		theRHS,
+			const XalanDOMChar*		/* theLocale */) const
+{
+	return (*this)(theLHS, theRHS);
+}
+
+
+
 StylesheetExecutionContextDefault::CollationCompareFunctor*
 StylesheetExecutionContextDefault::installCollationCompareFunctor(CollationCompareFunctor*	theFunctor)
 {
@@ -1258,7 +1424,10 @@ StylesheetExecutionContextDefault::reset()
 
 	m_variablesStack.reset();
 
-	m_xsltProcessor.reset();
+	if (m_xsltProcessor != 0)
+	{
+		m_xsltProcessor->reset();
+	}
 
 	m_mode = 0;
 
@@ -1383,24 +1552,6 @@ StylesheetExecutionContextDefault::extFunction(
 			const XObjectArgVectorType&		argVec)
 {
 	return m_xpathExecutionContextDefault.extFunction(theNamespace, functionName, context, argVec);
-}
-
-
-
-XLocator*
-StylesheetExecutionContextDefault::getXLocatorFromNode(const XalanNode*		node) const
-{
-	return m_xpathExecutionContextDefault.getXLocatorFromNode(node);
-}
-
-
-
-void
-StylesheetExecutionContextDefault::associateXLocatorToNode(
-			const XalanNode*	node,
-			XLocator*			xlocator)
-{
-	m_xpathExecutionContextDefault.associateXLocatorToNode(node, xlocator);
 }
 
 
@@ -1673,7 +1824,9 @@ StylesheetExecutionContextDefault::getCountersTable()
 unsigned long
 StylesheetExecutionContextDefault::getTraceListeners() const
 {
-	return m_xsltProcessor.getTraceListeners();
+	assert(m_xsltProcessor != 0);
+
+	return m_xsltProcessor->getTraceListeners();
 }
 
 
@@ -1681,7 +1834,9 @@ StylesheetExecutionContextDefault::getTraceListeners() const
 void
 StylesheetExecutionContextDefault::fireGenerateEvent(const GenerateEvent&	ge)
 {
-	m_xsltProcessor.fireGenerateEvent(ge);
+	assert(m_xsltProcessor != 0);
+
+	m_xsltProcessor->fireGenerateEvent(ge);
 }
 
 
@@ -1689,7 +1844,9 @@ StylesheetExecutionContextDefault::fireGenerateEvent(const GenerateEvent&	ge)
 void
 StylesheetExecutionContextDefault::fireTraceEvent(const TracerEvent&	te)
 {
-	m_xsltProcessor.fireTraceEvent(te);
+	assert(m_xsltProcessor != 0);
+
+	m_xsltProcessor->fireTraceEvent(te);
 }
 
 
@@ -1697,7 +1854,9 @@ StylesheetExecutionContextDefault::fireTraceEvent(const TracerEvent&	te)
 void
 StylesheetExecutionContextDefault::fireSelectEvent(const SelectionEvent&	se)
 {
-	m_xsltProcessor.fireSelectEvent(se);
+	assert(m_xsltProcessor != 0);
+
+	m_xsltProcessor->fireSelectEvent(se);
 }
 
 
@@ -1708,7 +1867,9 @@ StylesheetExecutionContextDefault::error(
 			const XalanNode* 		sourceNode,
 			const XalanNode*		styleNode) const
 {
-	m_xsltProcessor.error(msg, sourceNode, styleNode);
+	assert(m_xsltProcessor != 0);
+
+	m_xsltProcessor->error(msg, sourceNode, styleNode);
 }
 
 
@@ -1730,7 +1891,9 @@ StylesheetExecutionContextDefault::warn(
 			const XalanNode* 		sourceNode,
 			const XalanNode*		styleNode) const
 {
-	m_xsltProcessor.warn(msg, sourceNode, styleNode);
+	assert(m_xsltProcessor != 0);
+
+	m_xsltProcessor->warn(msg, sourceNode, styleNode);
 }
 
 
@@ -1752,7 +1915,9 @@ StylesheetExecutionContextDefault::message(
 			const XalanNode* 		sourceNode,
 			const XalanNode*		styleNode) const
 {
-	m_xsltProcessor.message(msg, sourceNode, styleNode);
+	assert(m_xsltProcessor != 0);
+
+	m_xsltProcessor->message(msg, sourceNode, styleNode);
 }
 
 
@@ -1888,9 +2053,14 @@ StylesheetExecutionContextDefault::clearXPathCache()
 	using std::for_each;
 #endif
 
-	for_each(m_matchPatternCache.begin(),
-			 m_matchPatternCache.end(),
-			 XPathCacheReturnFunctor(m_xsltProcessor));
+	assert(m_matchPatternCache.size() == 0 || m_xsltProcessor != 0);
+
+	if (m_xsltProcessor != 0)
+	{
+		for_each(m_matchPatternCache.begin(),
+				 m_matchPatternCache.end(),
+				 XPathCacheReturnFunctor(*m_xsltProcessor));
+	}
 
 	m_matchPatternCache.clear();
 }
@@ -1902,6 +2072,8 @@ StylesheetExecutionContextDefault::addToXPathCache(
 			const XalanDOMString&	pattern,
 			const XPath*			theXPath)
 {
+	assert(m_xsltProcessor != 0);
+
 	clock_t		addClock = clock();
 
 	if (m_matchPatternCache.size() == eXPathCacheMax)
@@ -1941,7 +2113,7 @@ StylesheetExecutionContextDefault::addToXPathCache(
 		assert(earliest != theEnd);
 
 		// Return the XPath and erase it from the cache.
-		m_xsltProcessor.returnXPath((*earliest).second.first);
+		m_xsltProcessor->returnXPath((*earliest).second.first);
 
 		m_matchPatternCache.erase(earliest);
 	}

@@ -267,6 +267,8 @@ private:
 	XPathProcessAutoPtr					m_xpathProcessor;
 
 	StylesheetSetType					m_stylesheets;
+
+	mutable XalanDOMString				m_tempBuffer;
 };
 
 

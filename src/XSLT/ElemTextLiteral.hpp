@@ -128,6 +128,9 @@ public:
 		return m_ch;
 	}
 
+	virtual bool
+	isWhitespace() const;
+
 	// These methods are inherited from ElemTemplateElement ...
 	
 	virtual const XalanDOMString&
