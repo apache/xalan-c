@@ -173,8 +173,6 @@ ICUXalanNumberFormatProxy::setGroupingUsed(bool bUsed)
 void
 ICUXalanNumberFormatProxy::setGroupingSize(unsigned long	size)
 {
-	assert(size > 0);
-
 	m_decimalFormat->setGroupingSize(size);
 }
 
