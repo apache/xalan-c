@@ -139,7 +139,6 @@ FormatterToText::characters(
 	try
 	{
 		m_pw.write(chars, 0, length);
-		m_pw.flush();
 	}
 	catch(...)
 	{
@@ -208,7 +207,6 @@ FormatterToText::cdata(
 	try
 	{
 		m_pw.write(ch, 0, length);
-		m_pw.flush();
 	}
 	catch(...)
 	{
