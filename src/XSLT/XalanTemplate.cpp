@@ -63,7 +63,7 @@
 
 #if !defined(XALAN_NEEDS_EXPLICIT_TEMPLATE_INSTANTIATION)
 
-	// No-op function to allow file to complie and link.	
+	// No-op function to allow file to compile and link.	
 	static void foo(){}
 
 #else
@@ -104,6 +104,7 @@
 #include <PlatformSupport/PrintWriter.hpp>
 #include <PlatformSupport/XalanOutputStream.hpp>
 #include <PlatformSupport/XalanUnicode.hpp>
+#include <PlatformSupport/XalanTranscodingServices.hpp>	
 
 
 
@@ -190,7 +191,7 @@ static ElemNumber::DecimalToRomanVectorType theDecimalToRomanVector;
 static vector<NamespacesHandler::NamespacesMapType::iterator> theNamespacesMapTypeIteratorVector;
 static VariablesStack::ParamsVectorType	theParamsVector;
 static ElemNumber::NumberingResourceBundleMapType theNumberingResourceBundleMapType;
-static FormatterToXML::MaximumCharacterValueMapType theMaximumCharacterValueMapType;
+static XalanTranscodingServices::MaximumCharacterValueMapType theMaximumCharacterValueMapType;
 
 
 static void
