@@ -111,11 +111,18 @@ ICUBridgeCollationCompareFunctor::operator()(
 	else
 	{
 		assert(m_collator != 0);
-
+#if U_SIZEOF_WCHAR_T==2
 		return m_collator->compare(
 					(wchar_t*)theLHS,
 					length(theLHS),
 					(wchar_t*)theRHS,
 					length(theRHS));
+#else
+		return m_collator->compare(
+					theLHS,
+					length(theLHS),
+					theRHS,
+					length(theRHS));
+#endif
 	}
 }
