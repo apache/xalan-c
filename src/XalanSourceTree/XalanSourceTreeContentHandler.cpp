@@ -315,7 +315,14 @@ XalanSourceTreeContentHandler::startElement(
 			const XMLCh* const	qname,
 			const Attributes& 	attrs)
 {
+#if 0
 	assert(m_inDTD == false);
+#else
+	if (m_inDTD == true)
+	{
+		m_inDTD = false;
+	}
+#endif
 
 	processAccumulatedText();
 
