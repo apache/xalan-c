@@ -64,6 +64,48 @@ const XalanDOMString	XalanDOMStringPool::s_emptyString;
 
 
 
+bool
+XalanDOMStringPool::StringKey::operator<(const StringKey&	theRHS) const
+{
+	// Note that we don't really need lexicographical ordering, so this
+	// is much cheaper.
+	if (m_length < theRHS.m_length)
+	{
+		return true;
+	}
+	else if (m_length > theRHS.m_length)
+	{
+		return false;
+	}
+	else
+	{
+		unsigned int	i = 0;
+
+		while(i < m_length)
+		{
+			if (m_string[i] < theRHS.m_string[i])
+			{
+				return true;
+			}
+			else if (m_string[i] > theRHS.m_string[i])
+			{
+				return false;
+			}
+			else
+			{
+				++i;
+			}
+		}
+
+		assert(i == m_length && m_string[i] == 0 && theRHS.m_string[i] == 0);
+
+		// They're equal, so return false...
+		return false;
+	}
+}
+
+
+
 XalanDOMStringPool::XalanDOMStringPool() :
 	m_strings(),
 	m_index()
@@ -103,7 +145,7 @@ XalanDOMStringPool::size() const
 const XalanDOMString&
 XalanDOMStringPool::get(const XalanDOMString&	theString)
 {
-	return get(c_wstr(theString));
+	return get(toCharArray(theString), length(theString));
 }
 
 
@@ -111,7 +153,7 @@ XalanDOMStringPool::get(const XalanDOMString&	theString)
 const XalanDOMString&
 XalanDOMStringPool::get(
 			const XalanDOMChar*		theString,
-			unsigned int			/* theLength */)
+			unsigned int			theLength)
 {
 	assert(m_strings.size() == m_index.size());
 
@@ -121,9 +163,11 @@ XalanDOMStringPool::get(
 	}
 	else
 	{
+		const unsigned int	theActualLength = theLength == -1 ? length(theString) : theLength;
+
 		// Find the string...
 		const IteratorMapType::const_iterator	i =
-			m_index.find(theString);
+			m_index.find(IteratorMapType::key_type(theString, theActualLength));
 
 		if (i != m_index.end())
 		{
@@ -138,10 +182,15 @@ XalanDOMStringPool::get(
 
 			XalanDOMString&		theNewString = *theIterator;
 
-			theNewString = theString;
+			assign(theNewString, theString, theActualLength);
+
+			assert(theActualLength == length(theNewString));
 
 			// Add an index entry...
-			m_index.insert(IteratorMapType::value_type(c_wstr(theNewString), theIterator));
+			m_index.insert(
+				IteratorMapType::value_type(
+					IteratorMapType::key_type(toCharArray(theNewString), theActualLength),
+					theIterator));
 
 			assert(m_strings.size() == m_index.size());
 

@@ -70,7 +70,6 @@
 
 
 #include <PlatformSupport/DOMStringHelper.hpp>
-#include <PlatformSupport/STLHelper.hpp>
 
 
 
@@ -78,20 +77,48 @@ class XALAN_PLATFORMSUPPORT_EXPORT XalanDOMStringPool
 {
 public:
 
+	class StringKey
+	{
+	public:
+
+		explicit
+		StringKey();
+
+		StringKey(
+				const XalanDOMChar*		theString,
+				unsigned int			theLength) :
+			m_string(theString),
+			m_length(theLength)
+		{
+		}
+
+		~StringKey()
+		{
+		}
+
+		bool
+		operator<(const StringKey&	theRHS) const;
+
+	private:
+
+		const XalanDOMChar*		m_string;
+
+		unsigned int			m_length;
+	};
+
 #if defined(XALAN_NO_NAMESPACES)
-	typedef deque<XalanDOMString>									XalanDOMStringCollectionType;
+	typedef deque<XalanDOMString>								XalanDOMStringCollectionType;
 
 	typedef map<
-				const XalanDOMChar*,
+				StringKey,
 				XalanDOMStringCollectionType::const_iterator,
-				less_null_terminated_arrays<const XalanDOMChar> >	IteratorMapType;
+				less<StringKey> >								IteratorMapType;
 #else
-	typedef std::deque<XalanDOMString>								XalanDOMStringCollectionType;
+	typedef std::deque<XalanDOMString>							XalanDOMStringCollectionType;
 
 	typedef std::map<
-				const XalanDOMChar*,
-				XalanDOMStringCollectionType::const_iterator,
-				less_null_terminated_arrays<const XalanDOMChar> >	IteratorMapType;
+				StringKey,
+				XalanDOMStringCollectionType::const_iterator>	IteratorMapType;
 #endif
 
 	typedef XalanDOMStringCollectionType::size_type		size_type;
