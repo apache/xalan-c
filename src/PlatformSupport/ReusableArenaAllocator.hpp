@@ -218,6 +218,14 @@ public:
 		assert(m_lastBlockReferenced->ownsObject(theObject) == true);
 	}
 
+	virtual void
+	reset()
+	{
+		m_lastBlockReferenced = 0;
+
+		BaseClassType::reset();
+	}
+
 	virtual bool
 	ownsObject(const ObjectType*	theObject) const
 	{

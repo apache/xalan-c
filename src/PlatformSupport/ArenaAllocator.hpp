@@ -174,7 +174,7 @@ public:
 		assert(m_blocks.back()->ownsObject(theObject) == true);
 	}
 
-	void
+	virtual void
 	reset()
 	{
 #if !defined(XALAN_NO_NAMESPACES)
