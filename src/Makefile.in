@@ -55,6 +55,9 @@
 # 
 #
 # $Log$
+# Revision 1.4  2000/04/10 20:25:06  dbertoni
+# Changes to remove absolute path to shared library when linking executable.
+#
 # Revision 1.3  2000/02/10 13:08:55  jdonohue
 # Added make for dependencies
 #
@@ -171,9 +174,10 @@ XERCESPLATFORMSUPPORT_DIR = XercesPlatformSupport
 ALL_OBJECTS_DIR = ${XALANCROOT}/obj
 LIB_DIR = ${XALANCROOT}/lib
 
-LIBNAME = libxalan-c
+PROJECT_NAME = xalan-c
+LIBNAME = lib${PROJECT_NAME}
 THISLIB = ${LIB_DIR}/${LIBNAME}
-VER = 1_0
+VER = 0_30_0
 
 PRODUCTNAME=xalan
 PRODUCTVERSION=${VER}
@@ -210,7 +214,7 @@ prepare:
 	-${MKDIR} -p ${LIB_DIR}
 	-${MKDIR} -p $(BINTARGETDIR)
 
-# Create header dependendies file -- this must be run before any objects are
+# Create header dependencies file -- this must be run before any objects are
 # built
 depend:
 	$(MAKE) -f makedepends DEPFILE=$(DEPFILE)
@@ -223,14 +227,14 @@ testXSLT: $(BINTARGETDIR)/testXSLT
 
 testXPath: $(BINTARGETDIR)/testXPath
 
-$(BINTARGETDIR)/testXSLT: $(TESTXSLT_DIR)/process.cpp $(THISLIB)$(VER)$(SHLIBSUFFIX)
+$(BINTARGETDIR)/testXSLT: $(TESTXSLT_DIR)/process.cpp
 	  ${LINK} ${PLATFORM_LIB_LINK_OPTIONS} $^ -o $@ $(XSL_INCL) \
-	  ${LIBRARY_SEARCH_PATHS} ${EXTRA_LINK_OPTIONS} $(ALLLIBS) $(CXXFLAGS)
+	  ${LIBRARY_SEARCH_PATHS} ${EXTRA_LINK_OPTIONS} -L$(LIB_DIR) -l$(PROJECT_NAME)$(VER) $(ALLLIBS) $(CXXFLAGS)
 
 $(BINTARGETDIR)/testXPath: $(TESTXPATH_DIR)/TestXPath.cpp \
-	$(TESTXPATH_DIR)/NodeNameTreeWalker.cpp $(THISLIB)$(VER)$(SHLIBSUFFIX)
+	$(TESTXPATH_DIR)/NodeNameTreeWalker.cpp
 	${LINK} ${PLATFORM_LIB_LINK_OPTIONS} $^ -o $@ $(XSL_INCL) \
-	${LIBRARY_SEARCH_PATHS} ${EXTRA_LINK_OPTIONS} $(ALLLIBS) $(CXXFLAGS)
+	${LIBRARY_SEARCH_PATHS} ${EXTRA_LINK_OPTIONS} -L$(LIB_DIR) -l$(PROJECT_NAME)$(VER) $(ALLLIBS) $(CXXFLAGS)
 
 
 lib:	$(THISLIB)$(VER)$(SHLIBSUFFIX)
@@ -243,3 +247,10 @@ clean:
 	rm $(THISLIB)$(VER)$(SHLIBSUFFIX)
 	rm  $(BINTARGETDIR)/testXSLT
 	rm  $(BINTARGETDIR)/testXPath
+
+
+
+
+
+
+

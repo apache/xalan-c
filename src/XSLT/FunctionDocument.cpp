@@ -93,10 +93,10 @@ getDoc(
 {
 	DOMString		localURI(uri);
 
-    DOM_Document	newDoc = executionContext.getSourceDocument(localURI);
+	DOM_Document	newDoc = executionContext.getSourceDocument(localURI);
 
-    if(newDoc == 0)
-    {
+	if(newDoc == 0)
+	{
 		if(length(localURI) == 0)
 		{
 			assert(executionContext.getPrefixResolver() != 0);
@@ -106,7 +106,7 @@ getDoc(
 
 		try
 		{
-			newDoc = executionContext.parseXML(base, localURI);
+			newDoc = executionContext.parseXML(localURI, base);
 
 		}
 		catch(...)
@@ -187,6 +187,19 @@ FunctionDocument::execute(
 			base = executionContext.getPrefixResolver()->getURI();
 		}
 
+		// Chop off the file name part of the URI, this includes the
+		// trailing separator
+		DOMString newBase;
+		{
+			int indexOfSlash = lastIndexOf(base, '/');
+#if defined(WIN32)				
+			const int indexOfBackSlash = lastIndexOf(base, '\\');
+			if(indexOfBackSlash > indexOfSlash)
+				indexOfSlash = indexOfBackSlash;
+#endif				
+				newBase = substring(base, 0, indexOfSlash+1);
+		}
+
 		MutableNodeRefList		mnl(executionContext.createMutableNodeRefList());
 
 		const int				nRefs = XObject::eTypeNodeSet == arg->getType() ?
@@ -213,15 +226,20 @@ FunctionDocument::execute(
 				// unencoded slashes in their naming schemes.  If they do, absolute URIs
 				// will still work, but confusion may result.
 				const int indexOfColon = indexOf(ref, ':');
-				const int indexOfSlash = indexOf(ref, '/');
+				int indexOfSlash = indexOf(ref, '/');
+#if defined(WIN32)				
+				const int indexOfBackSlash = indexOf(ref, '\\');
+				if(indexOfBackSlash > indexOfSlash)
+					indexOfSlash = indexOfBackSlash;
+#endif				
 
 				if(indexOfColon != -1 && indexOfSlash != -1 && indexOfColon < indexOfSlash)
 				{
 					// The url (or filename, for that matter) is absolute.
-					base = DOMString();
+					newBase = DOMString();
 				}
 
-				const DOM_Document	newDoc = getDoc(executionContext, ref, base);
+				const DOM_Document	newDoc = getDoc(executionContext, ref, newBase);
 
 				if(newDoc != 0)
 				{

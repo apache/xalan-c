@@ -59,18 +59,8 @@
 
 
 
-#include <strstream>
-
-
-
-#if defined(_MSC_VER)
-#include "windows.h"
-#else
-#define INVALID_HANDLE_VALUE 0
-
 #include <cerrno>
-
-#endif
+#include <strstream>
 
 
 
@@ -80,60 +70,22 @@
 
 
 #include <PlatformSupport/DOMStringHelper.hpp>
+#include <PlatformSupport/STLHelper.hpp>
 
 
 
 TextFileOutputStream::TextFileOutputStream(const DOMString&		theFileName) :
 	XercesTextOutputStream(),
 	m_fileName(theFileName),
-#if defined(_MSC_VER)
-	m_handle(INVALID_HANDLE_VALUE)
-#else
 	m_handle(0)
-#endif
 {
-#if defined(_MSC_VER)
-
-	// check the version.  Only NT allows  
-	// wide character file paths
-	OSVERSIONINFO verInfo;
-	verInfo.dwOSVersionInfoSize=sizeof(verInfo);
-	::GetVersionEx(&verInfo);
-
-    if (verInfo.dwPlatformId == VER_PLATFORM_WIN32_NT)
-    {
-        m_handle = ::CreateFileW(toCharArray(theFileName),
-								 GENERIC_WRITE,
-								 FILE_SHARE_WRITE,
-								 0,
-								 CREATE_ALWAYS,
-								 FILE_FLAG_SEQUENTIAL_SCAN,
-								 0);
-    }
-    else
-    {
-        char* const	tmpName = XMLString::transcode(toCharArray(theFileName));
-
-		ArrayJanitor<char> janTmp(tmpName);
-
-        m_handle = ::CreateFileA(tmpName,
-								 GENERIC_WRITE,
-								 FILE_SHARE_WRITE,
-								 0,
-								 CREATE_ALWAYS,
-								 FILE_FLAG_SEQUENTIAL_SCAN,
-								 0);
-    }
-
-#else
 	char* const	tmpName = XMLString::transcode(toCharArray(theFileName));
 
-	ArrayJanitor<char> janTmp(tmpName);
+	ArrayJanitor<char>	janTmp(tmpName);
 
 	m_handle = fopen(tmpName, "wt");
-#endif
 
-    if (m_handle == INVALID_HANDLE_VALUE)
+    if (m_handle == 0)
 	{
 		throw TextFileOutputStreamOpenException(theFileName,
 												errno);
@@ -144,13 +96,9 @@ TextFileOutputStream::TextFileOutputStream(const DOMString&		theFileName) :
 
 TextFileOutputStream::~TextFileOutputStream()
 {
-    if (m_handle != INVALID_HANDLE_VALUE)
+    if (m_handle != 0)
 	{
-#if defined(_MSC_VER)
-		CloseHandle(m_handle);
-#else
 		fclose(m_handle);
-#endif
 	}
 }
 
@@ -159,11 +107,7 @@ TextFileOutputStream::~TextFileOutputStream()
 void
 TextFileOutputStream::doFlush()
 {
-#if defined(_MSC_VER)
-	FlushFileBuffers(m_handle);
-#else
 	fflush(m_handle);
-#endif
 }
 
 
@@ -173,22 +117,11 @@ TextFileOutputStream::writeData(
 			const char*		theBuffer,
 			unsigned long	theBufferLength)
 {
-#if defined(_MSC_VER)
-	DWORD	theBytesWritten;
-
-	WriteFile(m_handle,
-			  theBuffer,
-			  theBufferLength,
-			  &theBytesWritten,
-			  0);
-
-#else
 	const size_t	theBytesWritten =
 		fwrite(theBuffer,
 			   1,
 			   theBufferLength,
 			   m_handle);
-#endif
 
 	if(theBytesWritten != theBufferLength)
 	{

@@ -130,40 +130,6 @@ FormatterToHTML::~FormatterToHTML()
 }
 
 
-void
-FormatterToHTML::startDocument()
-{
-    m_needToOutputDocTypeDecl = true;
-    m_startNewLine = false;
-    
-    if(true == m_needToOutputDocTypeDecl)
-    {
-		// Output the header if either the System or Public attributes are
-		// specified
-		if((! isEmpty(m_doctypeSystem)) || (! isEmpty(m_doctypePublic)))
-		{
-			m_writer.write("<!DOCTYPE HTML");          
-			if(! isEmpty(m_doctypePublic))
-			{
-				m_writer.write(" PUBLIC \"");
-				m_writer.write(m_doctypePublic);
-				m_writer.write("\"");
-			}
-			if(! isEmpty(m_doctypeSystem))
-			{
-				if(isEmpty(m_doctypePublic))
-					m_writer.write(" SYSTEM \"");
-				else
-					m_writer.write(" \"");
-				m_writer.write(m_doctypeSystem);
-				m_writer.write("\"");
-			}
-			m_writer.write(">");
-			m_writer.write(m_lineSep);
-      }              
-    }
-    m_needToOutputDocTypeDecl = false;
-}
 
 void
 FormatterToHTML::endDocument()
@@ -214,6 +180,25 @@ FormatterToHTML::startElement(
 				m_writer.write(">");
 				m_writer.write(m_lineSep);
 			}
+			else
+			{
+				m_writer.write("<!DOCTYPE ");
+				if(equals(theName, "HTML"))
+					m_writer.write("html");  // match Clark
+				else
+					m_writer.write(name);
+				if(! isEmpty(m_version))
+				{
+					// Not totally sure about this.
+					m_writer.write(" PUBLIC \"-//W3C//DTD "+m_version+" //EN\">");
+					m_writer.write(m_lineSep);
+				}
+				else
+				{
+					m_writer.write(" PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\">");
+					m_writer.write(m_lineSep);
+				}
+			}
 		}
 		// java: catch(IOException ioe)
 		catch(...)
@@ -228,9 +213,8 @@ FormatterToHTML::startElement(
 	// element is a non-block element, then do not indent.
 	m_doIndent =
 	((s_nonblockelems.end() != s_nonblockelems.find(toUpperCase(theName))) ||
-	((! isEmpty(m_currentElementName) &&
-		(s_nonblockelems.end() !=
-		 s_nonblockelems.find(toUpperCase(m_currentElementName))))))
+	((! isEmpty(m_currentElementName)) &&
+		(s_nonblockelems.end() != s_nonblockelems.find(toUpperCase(m_currentElementName)))))
 			? false : true;
 
 	m_currentElementName = name;
@@ -275,13 +259,15 @@ FormatterToHTML::endElement(
 {
 	try
 	{
- 		m_currentIndent -= m_indent;
+		m_currentIndent -= m_indent;
 		// name = name.toUpperCase();
 		const bool	hasChildNodes = childNodesWereAdded();
+      bool isWhitespaceSensitive 
+        = (s_nonblockelems.end() != s_nonblockelems.find(toUpperCase(name)));
 
 		if (hasChildNodes == true) 
 		{
-			if (shouldIndent() == true)
+			if (shouldIndent() == true && ! isWhitespaceSensitive)
 				indent(m_writer, m_currentIndent);
 			m_writer.write("</");
 			m_writer.write(name);
@@ -364,6 +350,13 @@ FormatterToHTML::characters(
 			int chNum = ch;
 			if ('\n' == ch) 
 			{
+			/*
+				java:
+				for(int k = 0; k < m_lineSepLen; k++)
+				{
+					m_charBuf[pos++] = m_lineSep.charAt(k);
+				}
+			*/
 				m_charBuf[pos++] = m_lineSep;
 			}
 			else if ('<' == ch) 

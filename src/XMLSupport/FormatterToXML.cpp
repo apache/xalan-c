@@ -359,6 +359,13 @@ FormatterToXML::characters(
 			const int chNum = ch;
 			if ('\n' == ch) 
 			{
+			/*
+				java:
+				for(int k = 0; k < m_lineSepLen; k++)
+				{
+					m_charBuf[pos++] = m_lineSep.charAt(k);
+				}
+			*/
 				m_charBuf[pos++] = m_lineSep;
 			}
 			else if ('<' == ch) 
@@ -595,45 +602,31 @@ FormatterToXML::processingInstruction(
 			const XMLCh* const	target,
 			const XMLCh* const	data)
 {
-// @@ Need to add this --
-//    if(m_inEntityRef)
-//      return;
-
-	// Use a fairly nasty hack to tell if the next node is supposed to be 
-	// unescaped text.
-	if(equals(target, DOMString("xslt-next-is-raw"))
-		&& equals(data, DOMString("formatter-to-dom")))
+	try
 	{
-		m_nextIsRaw = true;
+		writeParentTagEnd();
+
+		if (shouldIndent() == true)  
+		{
+			indent(m_writer, m_currentIndent);
+		}
+
+		m_writer.write("<?");
+		m_writer.write(target);
+
+		if (length(data) > 0 && !isSpace(data[0]))
+		{
+			m_writer.write(" ");
+		}
+
+		m_writer.write(data);
+		m_writer.write("?>");
+
+		m_startNewLine = true;
 	}
-	else	
+	catch(...)
 	{
-		try
-		{
-			writeParentTagEnd();
-
-			if (shouldIndent() == true)  
-			{
-				indent(m_writer, m_currentIndent);
-			}
-
-			m_writer.write("<?");
-			m_writer.write(target);
-
-			if (length(data) > 0 && !isSpace(data[0]))
-			{
-				m_writer.write(" ");
-			}
-
-			m_writer.write(data);
-			m_writer.write("?>");
-
-			m_startNewLine = true;
-		}
-		catch(...)
-		{
-			throw SAXException();
-		}
+	  throw SAXException();
 	}
 }
 

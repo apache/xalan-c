@@ -676,7 +676,7 @@ ElemTemplateElement::transformChild(
 			const Stylesheet&			stylesheet_tree, 
 			const ElemTemplateElement*	xslInstruction, // xsl:apply-templates or xsl:for-each
 			const ElemTemplateElement*	theTemplate, // may be null
-			const DOM_Node&				sourceTree, 
+			const DOM_Node&				/*sourceTree*/, 
 			const DOM_Node&				selectContext,
 			const DOM_Node&				child,
 			const QName&				mode,
@@ -686,6 +686,9 @@ ElemTemplateElement::transformChild(
 	bool shouldStrip = false;
 
 	const int nodeType = child.getNodeType();
+	const DOM_Node	sourceTree = (DOM_Node::DOCUMENT_NODE == nodeType) ? child :
+		 child.getOwnerDocument();
+
 	const Stylesheet* stylesheetTree = &stylesheet_tree;
 
 	bool isApplyImports = xslToken == Constants::ELEMNAME_APPLY_IMPORTS;

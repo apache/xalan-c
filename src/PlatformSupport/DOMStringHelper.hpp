@@ -506,6 +506,22 @@ substring(
 													theEndIndex - theStartIndex;
 		assert(theStartIndex + theLength <= theStringLength);
 
+		// @@ JMD:
+		// If this is the case, the DOMString class doesn't create a new string,
+		// and in any case, does not null terminate the string, just points to
+		// the beginning, so we have to manually extract 'theLength' characters
+		// and create a new buffer
+		if (0 == theStartIndex)
+		{
+			const XMLCh *ptr = theString.rawBuffer();
+			XMLCh *newStr = new XMLCh[theLength+1];
+			for (size_t u = 0; u < theLength; u++)
+				newStr[u] = ptr[u];
+			newStr[u] = 0;
+			DOMString domStr = newStr;
+			delete []newStr;
+			return domStr;
+		}
 		return theString.substringData(theStartIndex, theLength);
 	}
 }
