@@ -72,7 +72,7 @@
 
 
 #include "XalanSourceTreeAttr.hpp"
-#include "XalanSourceTreeElement.hpp"
+#include "XalanSourceTreeElementA.hpp"
 
 
 
@@ -81,7 +81,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XalanSourceTreeNamedNodeMap::XalanSourceTreeNamedNodeMap(const XalanSourceTreeElement*	theElement) :
+XalanSourceTreeNamedNodeMap::XalanSourceTreeNamedNodeMap(const XalanSourceTreeElementA*		theElement) :
 	m_element(theElement)
 {
 	assert(m_element != 0);

@@ -71,7 +71,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-class XalanSourceTreeElement;
+class XalanSourceTreeElementA;
 
 
 
@@ -87,7 +87,7 @@ class XALAN_XALANSOURCETREE_EXPORT XalanSourceTreeNamedNodeMap : public XalanNam
 {
 public:
 
-	XalanSourceTreeNamedNodeMap(const XalanSourceTreeElement*	theElement);
+	XalanSourceTreeNamedNodeMap(const XalanSourceTreeElementA*	theElement);
 
 	XalanSourceTreeNamedNodeMap(const XalanSourceTreeNamedNodeMap&	theSource);
 
@@ -95,7 +95,7 @@ public:
 	~XalanSourceTreeNamedNodeMap();
 
 	XalanSourceTreeNamedNodeMap&
-	operator=(const XalanSourceTreeNamedNodeMap&		theSource);
+	operator=(const XalanSourceTreeNamedNodeMap&	theSource);
 
 	bool
 	operator==(const XalanSourceTreeNamedNodeMap& 	theRHS) const;
@@ -265,7 +265,7 @@ public:
 
 private:
 
-	const XalanSourceTreeElement*	m_element;
+	const XalanSourceTreeElementA*	m_element;
 };
 
 
