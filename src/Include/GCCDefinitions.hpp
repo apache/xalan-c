@@ -74,7 +74,6 @@
 
 #define XALAN_NO_MEMBER_TEMPLATES
 #define XALAN_NO_COVARIANT_RETURN_TYPE
-#define NO_STD_LIMITS
 #define XALAN_RTTI_AVAILABLE
 #define XALAN_OLD_STREAM_HEADERS
 #define XALAN_NO_TYPEINFO
@@ -86,9 +85,9 @@
 
 
 // This will change, depending upon the target platform.
-#if defined(SOLARIS)
+#if defined(SOLARIS) || defined(powerpc) || defined(__sparc__)
 #define XALAN_BIG_ENDIAN
-#elif defined(__i386__)
+#elif defined(__i386__) || defined(__alpha__)
 #define XALAN_LITLE_ENDIAN
 #else
 #error XALAN_BIG_ENDIAN or XALAN_LITTLE_ENDIAN must be defined for this platform!
