@@ -84,9 +84,11 @@
 
 
 #include <DOMSupport/DOMServices.hpp>
+#include <DOMSupport/PrefixResolver.hpp>
 
 
-#include <map>
+
+const XalanDOMString	FormatterToHTML::s_emptyString;
 
 
 
@@ -119,7 +121,9 @@ FormatterToHTML::FormatterToHTML(
 	m_isScriptOrStyleElem(false),
 	m_escapeURLs(true),
 	m_isFirstElement(false),
-	m_elementLevel(0)
+	m_elementLevel(0),
+	m_prefixResolver(0),
+	m_hasNamespaceStack()
 {
 	initCharsMap();
 }
@@ -270,73 +274,81 @@ FormatterToHTML::startElement(
 			const XMLCh* const	name,
 			AttributeList&		attrs)
 {
-	writeParentTagEnd();
-
-	const ElemDesc&		elemDesc =
-			getElemDesc(name);
-
-	const bool	isBlockElement = elemDesc.is(ElemDesc::BLOCK);
-	const bool	isHeadElement = elemDesc.is(ElemDesc::HEADELEM);
-
-	m_isScriptOrStyleElem = 
-			equalsIgnoreCaseASCII(name, c_wstr(s_scriptString)) ||
-			equalsIgnoreCaseASCII(name, c_wstr(s_styleString));
-
-	// Increment the level...
-	++m_elementLevel;
-
-	if(m_ispreserve == true)
+	if (pushHasNamespace(name) == true)
 	{
-		m_ispreserve = false;
+		FormatterToXML::startElement(name, attrs);
 	}
-	else if(m_doIndent &&
-			m_elementLevel > 0 && m_isFirstElement == false &&
-			(m_inBlockElem == false || isBlockElement == true))
+	else
 	{
-		m_startNewLine = true;
 
-		indent(m_currentIndent);
-	}
-
-	m_inBlockElem = !isBlockElement;
-
-	m_isRawStack.push_back(elemDesc.is(ElemDesc::RAW));
-
-	accumContent(XalanUnicode::charLessThanSign);
-
-	accumName(name);
-
-	const unsigned int	nAttrs = attrs.getLength();
-
-	for (unsigned int i = 0;  i < nAttrs ;  i++)
-	{
-		processAttribute(attrs.getName(i), attrs.getValue(i), elemDesc);
-	}
-
-	// Flag the current element as not yet having any children.
-	openElementForChildren();
-
-	m_currentIndent += m_indent;
-    
-	m_isprevtext = false;
-
-	if (isHeadElement)
-	{
 		writeParentTagEnd();
 
-		if (m_doIndent)
+		const ElemDesc&		elemDesc =
+				getElemDesc(name);
+
+		const bool	isBlockElement = elemDesc.is(ElemDesc::BLOCK);
+		const bool	isHeadElement = elemDesc.is(ElemDesc::HEADELEM);
+
+		m_isScriptOrStyleElem = 
+				equalsIgnoreCaseASCII(name, c_wstr(s_scriptString)) ||
+				equalsIgnoreCaseASCII(name, c_wstr(s_styleString));
+
+		// Increment the level...
+		++m_elementLevel;
+
+		if(m_ispreserve == true)
+		{
+			m_ispreserve = false;
+		}
+		else if(m_doIndent &&
+				m_elementLevel > 0 && m_isFirstElement == false &&
+				(m_inBlockElem == false || isBlockElement == true))
+		{
+			m_startNewLine = true;
+
 			indent(m_currentIndent);
+		}
 
-		accumContent(s_metaString);
-		accumContent(getEncoding());      
-		accumContent(XalanUnicode::charQuoteMark);
-		accumContent(XalanUnicode::charGreaterThanSign);
+		m_inBlockElem = !isBlockElement;
+
+		m_isRawStack.push_back(elemDesc.is(ElemDesc::RAW));
+
+		accumContent(XalanUnicode::charLessThanSign);
+
+		accumName(name);
+
+		const unsigned int	nAttrs = attrs.getLength();
+
+		for (unsigned int i = 0;  i < nAttrs ;  i++)
+		{
+			processAttribute(attrs.getName(i), attrs.getValue(i), elemDesc);
+		}
+
+		// Flag the current element as not yet having any children.
+		openElementForChildren();
+
+		m_currentIndent += m_indent;
+    
+		m_isprevtext = false;
+
+		if (isHeadElement)
+		{
+			writeParentTagEnd();
+
+			if (m_doIndent)
+				indent(m_currentIndent);
+
+			accumContent(s_metaString);
+			accumContent(getEncoding());      
+			accumContent(XalanUnicode::charQuoteMark);
+			accumContent(XalanUnicode::charGreaterThanSign);
+		}
+
+		// We've written the first element, so turn off the flag...
+		m_isFirstElement = false;
+
+		assert(m_elementLevel > 0);
 	}
-
-	// We've written the first element, so turn off the flag...
-	m_isFirstElement = false;
-
-	assert(m_elementLevel > 0);
 }
 
 
@@ -344,49 +356,44 @@ FormatterToHTML::startElement(
 void
 FormatterToHTML::endElement(const XMLCh* const	name)
 {
-	m_currentIndent -= m_indent;
-
-	const bool	hasChildNodes = childNodesWereAdded();
-
-	m_isRawStack.pop_back();
-    
-	const ElemDesc&		elemDesc =
-			getElemDesc(name);
-
-	const bool	isBlockElement = elemDesc.is(ElemDesc::BLOCK);
-
-	bool shouldIndent = false;
-
-	if(m_ispreserve == true)
+	if (popHasNamespace() == true)
 	{
-		m_ispreserve = false;
-	}
-	else if(m_doIndent == true && (m_inBlockElem == false || isBlockElement == true))
-	{
-		m_startNewLine = true;
-
-		shouldIndent = true;
-	}
-
-	m_inBlockElem = !isBlockElement;
-
-	if (hasChildNodes) 
-	{
-		if (shouldIndent == true)
-		{
-			indent(m_currentIndent);
-		}
-
-		accumContent(XalanUnicode::charLessThanSign);
-		accumContent(XalanUnicode::charSolidus);
-		accumName(name);
-		accumContent(XalanUnicode::charGreaterThanSign);
+		FormatterToXML::endElement(name);
 	}
 	else
 	{
-		if(elemDesc.is(ElemDesc::EMPTY) == false)
+		m_currentIndent -= m_indent;
+
+		const bool	hasChildNodes = childNodesWereAdded();
+
+		m_isRawStack.pop_back();
+    
+		const ElemDesc&		elemDesc =
+				getElemDesc(name);
+
+		const bool	isBlockElement = elemDesc.is(ElemDesc::BLOCK);
+
+		bool shouldIndent = false;
+
+		if(m_ispreserve == true)
 		{
-			accumContent(XalanUnicode::charGreaterThanSign);
+			m_ispreserve = false;
+		}
+		else if(m_doIndent == true && (m_inBlockElem == false || isBlockElement == true))
+		{
+			m_startNewLine = true;
+
+			shouldIndent = true;
+		}
+
+		m_inBlockElem = !isBlockElement;
+
+		if (hasChildNodes) 
+		{
+			if (shouldIndent == true)
+			{
+				indent(m_currentIndent);
+			}
 
 			accumContent(XalanUnicode::charLessThanSign);
 			accumContent(XalanUnicode::charSolidus);
@@ -395,27 +402,39 @@ FormatterToHTML::endElement(const XMLCh* const	name)
 		}
 		else
 		{
-			accumContent(XalanUnicode::charGreaterThanSign);
+			if(elemDesc.is(ElemDesc::EMPTY) == false)
+			{
+				accumContent(XalanUnicode::charGreaterThanSign);
+
+				accumContent(XalanUnicode::charLessThanSign);
+				accumContent(XalanUnicode::charSolidus);
+				accumName(name);
+				accumContent(XalanUnicode::charGreaterThanSign);
+			}
+			else
+			{
+				accumContent(XalanUnicode::charGreaterThanSign);
+			}
 		}
-	}
 
-	if (elemDesc.is(ElemDesc::WHITESPACESENSITIVE) == true)
-	{
-		m_ispreserve = true;
-	}
-
-	if (hasChildNodes == true)
-	{
-		if (m_preserves.empty() == false)
+		if (elemDesc.is(ElemDesc::WHITESPACESENSITIVE) == true)
 		{
-			m_preserves.pop_back();
+			m_ispreserve = true;
 		}
+
+		if (hasChildNodes == true)
+		{
+			if (m_preserves.empty() == false)
+			{
+				m_preserves.pop_back();
+			}
+		}
+
+		m_isprevtext = false;
+
+		// Decrement the level...
+		--m_elementLevel;
 	}
-
-	m_isprevtext = false;
-
-	// Decrement the level...
-	--m_elementLevel;
 }
 
 
@@ -1001,6 +1020,63 @@ FormatterToHTML::accumHexNumber(const XalanDOMChar	theChar)
 	accumContent(m_stringBuffer);
 
 	clear(m_stringBuffer);
+}
+
+
+
+bool
+FormatterToHTML::popHasNamespace()
+{
+	if (m_hasNamespaceStack.empty() == true)
+	{
+		return false;
+	}
+	else
+	{
+		const bool	theValue = m_hasNamespaceStack.back();
+
+		m_hasNamespaceStack.pop_back();
+			
+		return theValue;
+	}
+}
+
+
+
+bool
+FormatterToHTML::pushHasNamespace(const XalanDOMChar*	theElementName)
+{
+	bool	fHasNamespace = false;
+
+	if (m_prefixResolver != 0)
+	{
+		const unsigned int	theLength = length(theElementName);
+		const unsigned int	theColonIndex = indexOf(theElementName, XalanUnicode::charSemicolon);
+
+		const XalanDOMString*	thePrefix = &s_emptyString;
+
+		if (theColonIndex < theLength)
+		{
+			m_stringBuffer = substring(theElementName, 0, theColonIndex);
+
+			thePrefix = &m_stringBuffer;
+		}
+
+		assert(thePrefix != 0);
+
+		// Check for the namespace...
+		const XalanDOMString&	theNamespace =
+				m_prefixResolver->getNamespaceForPrefix(*thePrefix);
+
+		if (length(theNamespace) != 0)
+		{
+			m_hasNamespaceStack.push_back(true);
+
+			fHasNamespace = true;
+		}
+	}
+
+	return fHasNamespace;
 }
 
 

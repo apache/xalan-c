@@ -91,6 +91,10 @@
 
 
 
+class PrefixResolver;
+
+
+
 /**
  * FormatterToHTML formats SAX-style events into HTML.
  */
@@ -193,6 +197,18 @@ public:
 			const XMLCh* const	target,
 			const XMLCh* const	data);
 
+
+	const PrefixResolver*
+	getPrefixResolver() const
+	{
+		return m_prefixResolver;
+	}
+
+	void
+	setPrefixResolver(const PrefixResolver*		thePrefixResolver)
+	{
+		m_prefixResolver = thePrefixResolver;
+	}
 
 	class ElemDesc
 	{
@@ -434,26 +450,46 @@ private:
 	void
 	accumHexNumber(const XalanDOMChar	theChar);
 
-	XalanDOMString	m_currentElementName;
+	bool
+	popHasNamespace();
 
-	bool			m_inBlockElem;
+	bool
+	pushHasNamespace(const XalanDOMChar*	theElementName);
 
-	BoolStackType	m_isRawStack;
+	// Data members...
+	XalanDOMString			m_currentElementName;
 
-	bool			m_isScriptOrStyleElem;
+	bool					m_inBlockElem;
 
-	bool			m_escapeURLs;
+	BoolStackType			m_isRawStack;
+
+	bool					m_isScriptOrStyleElem;
+
+	bool					m_escapeURLs;
 
 	/**
 	 * A flag so we know whether or not we've put out the first
 	 * element.
 	 */
-	bool			m_isFirstElement;
+	bool					m_isFirstElement;
 
 	/**
 	 * A counter so we can tell if we're inside the document element.
 	 */
-	int				m_elementLevel;
+	int						m_elementLevel;
+
+	/**
+	 * A prefix resolver for elements that have prefixes.
+	 */
+	const PrefixResolver*	m_prefixResolver;
+
+	/**
+	 * A stack to determine if the current element has
+	 * a namespace.
+	 */
+	BoolStackType			m_hasNamespaceStack;
+
+	static const XalanDOMString		s_emptyString;
 };
 
 
