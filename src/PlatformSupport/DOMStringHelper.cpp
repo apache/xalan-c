@@ -1241,7 +1241,7 @@ isWhiteSpace(
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(string)
 DOMStringToStdString(const XalanDOMString&	domString)
 {
-	XalanDOMChar* const		toTranscode = domString.rawBuffer();
+	const XalanDOMChar* const	toTranscode = c_wstr(domString);
 	unsigned int			len = domString.length();
 
 

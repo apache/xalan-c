@@ -96,20 +96,18 @@ UnicodeStringToXalanDOMString(const UnicodeString&	theString)
 	using std::vector;
 #endif
 
-	vector<XalanDOMChar>	theBuffer(theString.length(), ' ');
+	vector<XalanDOMChar>	theBuffer;
 
-	XalanDOMString			theResult(&theBuffer[0], theBuffer.size());
+	const int32_t			theLength = theString.length();
 
-	const unsigned int		theLength = length(theResult);
-
-	XalanDOMChar*			thePointer = toCharArray(theResult);
+	theBuffer.reserve(theLength);
 
 	for (unsigned int i = 0; i < theLength; ++i)
 	{
-		thePointer[i] = theString[i];
+		theBuffer.push_back(theString[i]);
 	}
 
-	return theResult;
+	return XalanDOMString(&theBuffer[0], theBuffer.size());
 }
 
 

@@ -229,9 +229,14 @@ URISupport::NormalizeURIText(XalanDOMString&	uriString)
 
 	if (index != len)
 	{
+		XalanDOMCharVectorType	theVector =
+			MakeXalanDOMCharVector(uriString);
+
 		// Start replacing at the index point, since that's the
 		// first one...
-		replace(toCharArray(uriString) + index, toCharArray(uriString) + len, '\\', '/');
+		replace(theVector.begin(), theVector.end(), '\\', '/');
+
+		uriString = XalanDOMString(&theVector[0]);
 	}
 
 	return uriString;

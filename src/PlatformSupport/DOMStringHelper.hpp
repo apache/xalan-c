@@ -162,14 +162,14 @@ c_wstr(const XalanDOMChar*	theString)
  * @param theString target string
  * @return array of XalanDOMChar
  */
-inline XalanDOMChar*
+inline const XalanDOMChar*
 toCharArray(const XalanDOMString&	theString)
 {
 	return theString.rawBuffer();
 }
 
 
-
+#if 0
 /**
  * Get the underlying representation of the target XalanDOMString as an array of
  * XalanDOMChar, not guaranteed to be null-terminated.
@@ -177,11 +177,12 @@ toCharArray(const XalanDOMString&	theString)
  * @param theString target string
  * @return array of XalanDOMChar
  */
-inline XalanDOMChar*
+inline const XalanDOMChar*
 toCharArray(XalanDOMString&		theString)
 {
 	return theString.rawBuffer();
 }
+#endif
 
 
 
@@ -1186,28 +1187,6 @@ clear(XalanDOMString&	theString)
 #else
 	theString = static_cast<DOM_NullPtr*>(0);
 #endif
-}
-
-
-
-/**
- * Replaces a character at a specified index in a XalanDOMString
- * 
- * @param theString target string
- * @param theIndex  index of character
- * @param theChar target character
- */
-inline void
-setCharAt(
-			XalanDOMString&		theString,
-			unsigned int		theIndex,
-			XalanDOMChar		theChar)
-{
-	assert(theIndex < length(theString));
-
-	XalanDOMChar* const	theBuffer = toCharArray(theString);
-
-	theBuffer[theIndex] = theChar;
 }
 
 
