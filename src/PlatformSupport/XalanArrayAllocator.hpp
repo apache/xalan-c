@@ -137,6 +137,8 @@ public:
 		while(theCurrent != theEnd)
 		{
 			(*theCurrent).first = (*theCurrent).second.size();
+
+			++theCurrent;
 		}
 
 		m_lastEntryFound = &*m_list.begin();
