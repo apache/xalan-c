@@ -138,10 +138,6 @@ SOURCE=..\..\..\..\src\Include\VCPPDefinitions.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\Include\XalanArrayKeyMap.hpp
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\..\..\src\Include\XalanAutoPtr.hpp
 # End Source File
 # Begin Source File
@@ -382,14 +378,6 @@ SOURCE=..\..\..\..\src\PlatformSupport\AttributeVectorEntryExtended.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\Cloneable.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\src\PlatformSupport\Cloneable.hpp
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\..\..\src\PlatformSupport\DirectoryEnumerator.hpp
 # End Source File
 # Begin Source File
@@ -447,14 +435,6 @@ SOURCE=..\..\..\..\src\PlatformSupport\NullPrintWriter.cpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\PlatformSupport\NullPrintWriter.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\src\PlatformSupport\PlatformSupport.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\src\PlatformSupport\PlatformSupport.hpp
 # End Source File
 # Begin Source File
 
@@ -595,14 +575,6 @@ SOURCE=..\..\..\..\src\PlatformSupport\XalanDOMStringPool.cpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\PlatformSupport\XalanDOMStringPool.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\src\PlatformSupport\XalanEncodingPropertyCache.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\src\PlatformSupport\XalanEncodingPropertyCache.hpp
 # End Source File
 # Begin Source File
 
