@@ -1847,7 +1847,7 @@ StylesheetExecutionContextDefault::getSourceTreeFactory() const
 	if(m_sourceTreeResultTreeFactory.get() == 0)
 	{
 #if defined(XALAN_NO_MUTABLE)
-		((XSLTEngineImpl*)this)->m_sourceTreeResultTreeFactory.reset(new XalanSourceTreeDocument);
+		((StylesheetExecutionContextDefault*)this)->m_sourceTreeResultTreeFactory.reset(new XalanSourceTreeDocument);
 #else
 		m_sourceTreeResultTreeFactory.reset(new XalanSourceTreeDocument);
 #endif
