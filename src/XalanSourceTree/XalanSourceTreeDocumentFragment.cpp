@@ -185,7 +185,11 @@ XalanSourceTreeDocumentFragment::getAttributes() const
 
 
 
+#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
 XalanDocument*
+#else
+XalanSourceTreeDocument*
+#endif
 XalanSourceTreeDocumentFragment::getOwnerDocument() const
 {
 	return m_ownerDocument;
