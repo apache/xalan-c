@@ -60,9 +60,11 @@
 
 XalanTransformerOutputStream::XalanTransformerOutputStream(
 	const void*					theOutputHandle, 
-	XalanOutputHandlerType		theOutputHandler):
+	XalanOutputHandlerType		theOutputHandler,
+	XalanFlushHandlerType		theFlushHandler):
 	m_outputHandle(theOutputHandle),
-	m_outputHandler(theOutputHandler)
+	m_outputHandler(theOutputHandler),
+	m_flushHandler(theFlushHandler)
 {
 }
 
@@ -77,7 +79,10 @@ XalanTransformerOutputStream::~XalanTransformerOutputStream()
 void
 XalanTransformerOutputStream::doFlush()
 {
-	// Not implemented
+	if(m_flushHandler != 0)
+	{
+		m_flushHandler(m_outputHandle);
+	}
 }
 
 
@@ -89,9 +94,9 @@ XalanTransformerOutputStream::writeData(
 {
 	const size_t theBytesWritten = m_outputHandler(theBuffer, theBufferLength, m_outputHandle);		
 
-	// We validate that the number of bytes written equals the number of bytes sent to output handler.
-	// Otherwise we will stop processing  and throw and exception thus allow the callback alert us of 
-	// memory allocation issues or buffer overflows, all at the expense of confusing most people.
+	// We validate that the number of bytes written equals the number of bytes sent to
+	// the output handler. Otherwise we will stop processing  and throw and exception. 
+	// Thus the callback can alert us of memory allocation issues or buffer overflows.
 	if(theBytesWritten != theBufferLength)
 	{
 		throw XalanOutputStreamException(

@@ -125,7 +125,7 @@ public:
 
 	/**
 	 * Initialize Xerces and Xalan.
-	 * Should be called only once before creating any
+	 * Should be called only once per process before creating any
 	 * instances of XalanTransformer. See class XSLTInit.
 	 */
 	static void
@@ -133,7 +133,7 @@ public:
 
 	/**
 	 * Terminate Xalan and Xerces.
-	 * Should be called only once after deleting all
+	 * Should be called only once per process after deleting all
 	 * instances of XalanTransformer. See class XSLTInit.
 	 */
 	static void
@@ -143,7 +143,7 @@ public:
 	 * Returns the last error that occured as a 
 	 * result of callaing transform.	
 	 *
-	 * @return	error message int const c string 
+	 * @return	error message const character pointer.
 	 */
 	const char*
 	getLastError() const;
@@ -157,7 +157,7 @@ public:
 	 * @param inputSource		input source
 	 * @param stylesheetSource	stylesheet source
 	 * @param outputTarget		output source tree
-	 * @return	0 for success and 1 for failure 
+	 * @return	0 for success
 	 */
 	int
 	transform(
@@ -173,7 +173,7 @@ public:
 	 * @param theXMLFileName	filename of XML input source
 	 * @param theXSLFileName	filename of stylesheet source
 	 * @param theOutFileName	filename of output source
-	 * @return	0 for success and 1 for failure 
+	 * @return	0 for success
 	 */
 	int
 	transform(
@@ -188,8 +188,8 @@ public:
 	 *
 	 * @param theXMLFileName	filename of XML input source
 	 * @param theXSLFileName	filename of stylesheet source
-	 * @param theOutStream		a pointer to a std ostream for the output
-	 * @return	0 for success and 1 for failure 
+	 * @param theOutStream		a std ostream for the output
+	 * @return	0 for success
 	 */
 	int
 	transform(
@@ -202,10 +202,10 @@ public:
 	 * The processor will process the input stream, the stylesheet input 
 	 * stream, and transform to an output stream.
 	 *
-	 * @param theXMLInStream	a pointer to a std istream for the input
-	 * @param theXSLInStream	a pointer to a std istream for the input
-	 * @param theOutStream		a pointer to a std ostream for the output
-	 * @return	0 for success and 1 for failure 
+	 * @param theXMLInStream	a std istream for the input
+	 * @param theXSLInStream	a std istream for the input
+	 * @param theOutStream		a std ostream for the output
+	 * @return	0 for success
 	 */
 	int
 	transform(
@@ -214,7 +214,7 @@ public:
 			ostream&					theOutStream);
 
 	/**
-	 * Transform the XML source tree to the address of a callback.
+	 * Transform the XML source tree to a callback function.
 	 * The processor will process the input file, the stylesheet file,
 	 * and transform to output to a callback function in allocated 
 	 * blocks. Xalan will release any memory allocated upon 
@@ -225,15 +225,17 @@ public:
 	 * @param theXMLFileName	filename of XML input source
 	 * @param theXSLFileName	filename of stylesheet source	 
 	 * @param theOutputHandle	void pointer passed through to callback.
-	 * @param theOutputHandler	address of a user defined (callback) function.
-	 * @return	0 for success and 1 for failure 
+	 * @param theOutputHandler	a user defined (callback) function.
+	 * @param theFlushHandler	(optional) a user defined (callback) function.
+	 * @return	0 for success 
 	 */
 	int
 	transform(
 			const char*					theXMLFileName, 
 			const char*					theXSLFileName,
 			const void*					theOutputHandle, 
-			XalanOutputHandlerType		theOutputHandler);
+			XalanOutputHandlerType		theOutputHandler,
+			XalanFlushHandlerType		theFlushHandler = 0);
 
 protected:
 
@@ -266,3 +268,6 @@ private:
 
 
 #endif	// XALAN_TRANSFORMER_HEADER_GUARD
+
+
+

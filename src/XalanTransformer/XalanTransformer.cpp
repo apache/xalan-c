@@ -316,7 +316,8 @@ XalanTransformer::transform(
 		const char*				theXMLFileName, 
 		const char*				theXSLFileName,
 		const void*				theOutputHandle, 
-		XalanOutputHandlerType	theOutputHandler)
+		XalanOutputHandlerType	theOutputHandler,
+		XalanFlushHandlerType	theFlushHandler)
 {
 	// Set input sources
 	const XalanDOMString	theDOMStringXMLFileName(theXMLFileName);
@@ -326,7 +327,7 @@ XalanTransformer::transform(
 	const XSLTInputSource	theStylesheetSource(c_wstr(theDOMStringXSLFileName));
 
 	// Set to output target to the callback 
-	XalanTransformerOutputStream	theOutputStream(theOutputHandle, theOutputHandler);
+	XalanTransformerOutputStream	theOutputStream(theOutputHandle, theOutputHandler, theFlushHandler);
 	XalanOutputStreamPrintWriter	thePrintWriter(theOutputStream);
 	XSLTResultTarget				theResultTarget(&thePrintWriter);
 
@@ -336,6 +337,7 @@ XalanTransformer::transform(
 					theStylesheetSource,
 					theResultTarget);
 }
+
 
 
 const char*

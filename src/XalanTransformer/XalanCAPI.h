@@ -82,7 +82,8 @@ extern "C"
 
 	/**
 	 * Callback function passed to XalanTransformToHandler. 
-	 * Caller is responsible for streaming or coping data to a user  
+	 * Used to process transform output in blocks of data.
+	 * Caller is responsible for streaming or copying data to a user  
 	 * allocated buffer. Called should not attempt to write to or  
 	 * free this data. Xalan will reuse the same buffer and free it 
 	 * upon termination.
@@ -99,10 +100,26 @@ extern "C"
 	 * @return number of bytes written
 	 */
 	typedef unsigned long (*XalanOutputHandlerType) (const void*, unsigned long, const void*);
+	
+	/**
+	 * Callback function passed to XalanTransformToHandler. 
+	 * Used to flush the buffer once transform is completed.
+	 *
+	 * static void xalanFlushHandler(const void *handle);
+	 *
+	 * @param handle	handle of XalanTransformer instance.
+	 */
+	typedef void (*XalanFlushHandlerType) (const void*);
+
+	/**
+	 * This is a typedef to workaround limitations with
+	 * the XALAN_TRANSFORMER_EXPORT_FUNCTION macro.
+	 */
+	typedef const char*		XalanCCharPtr;
 
 	/**
 	 * Initialize Xerces and Xalan.
-	 * Should be called only once before creating any
+	 * Should be called only once per process before creating any
 	 * instances of XalanTransformer.
 	 */
 	XALAN_TRANSFORMER_EXPORT_FUNCTION(void)
@@ -110,7 +127,7 @@ extern "C"
 
 	/**
 	 * Terminate Xalan and Xerces.
-	 * Should be called only once after deleting all
+	 * Should be called only once per process after deleting all
 	 * instances of XalanTransformer.
 	 */
 	XALAN_TRANSFORMER_EXPORT_FUNCTION(void)
@@ -141,7 +158,7 @@ extern "C"
 	 * @param theXSLFileName	filename of stylesheet source
 	 * @param theOutFileName	filename of output source
 	 * @param theXalanHandle	handle of XalanTransformer instance.
-	 * @return	0 for success and 1 for failure 
+	 * @return	0 for success 
 	 */
 	XALAN_TRANSFORMER_EXPORT_FUNCTION(int)
 	XalanTransformToFile(
@@ -161,7 +178,7 @@ extern "C"
 	 * @param theXSLFileName	filename of stylesheet source
 	 * @param theOutFileName	filename of output source
 	 * @param theXalanHandle	handle of XalanTransformer instance.
-	 * @return	0 for success and 1 for failure 
+	 * @return	0 for success 
 	 */
 	XALAN_TRANSFORMER_EXPORT_FUNCTION(int) 
 	XalanTransformToData(
@@ -180,19 +197,25 @@ extern "C"
 	XalanFreeData(char*		theStream);
 
 	/**
-	 * Transform the XML source tree to the address of a callback.
+	 * Transform the XML source tree to a callback function.
 	 * The processor will process the input file, the stylesheet file,
-	 * and transform to output to a callback function in allocated 
-	 * blocks. Xalan will release any memory allocated upon 
-	 * termination. Data passed to the callback is not guaranteed to 
-	 * be null terminated. - See XalanOutputHandlerType for more details.
+	 * and transform to output to a callback function in pre-allocated 
+	 * blocks. Once the transform is completed a second callback, to
+	 * flush the buffer, will be called. You can pass in NULL if you 
+	 * do not wish to implement a flush callback. Xalan will release 
+	 * any memory allocated upon termination and data passed to the 
+	 * callback is not guaranteed to be null terminated. 
+	 * 
+	 * - See XalanOutputHandlerType and XalanFlushHandlerType for more 
+	 * details.
 	 * 
 	 * @param theXMLFileName	filename of XML input source
 	 * @param theXSLFileName	filename of stylesheet source
 	 * @param theXalanHandle	handle of XalanTransformer instance.
 	 * @param theOutputHandle	void pointer passed through to callback.
-	 * @param theOutputHandler	address of a user defined (callback) function.
-	 * @return	0 for success and 1 for failure 
+	 * @param theOutputHandler	a user defined (callback) function.
+	 * @param theFlushHandler	(can be NULL) a user defined (callback) function.
+	 * @return	0 for success 
 	 */
 	XALAN_TRANSFORMER_EXPORT_FUNCTION(int) 
 	XalanTransformToHandler(
@@ -200,13 +223,8 @@ extern "C"
 				const char*				theXSLFileName,
 				XalanHandle				theXalanHandle,
 				const void*				theOutputHandle, 
-				XalanOutputHandlerType	theOutputHandler);
-
-	/**
-	 * This is a typedef to workaround limitations with
-	 * the XALAN_TRANSFORMER_EXPORT_FUNCTION macro.
-	 */
-	typedef const char*		XalanCCharPtr;
+				XalanOutputHandlerType	theOutputHandler,
+				XalanFlushHandlerType	theFlushHandler);
 
 	/**
 	 * Returns the last error that occured as a 
@@ -216,7 +234,7 @@ extern "C"
 	 * const char*
 	 * XalanGetLastError(XalanHandle theXalanHandle) const;
 	 *
-	 * @return	error message int cons c string 
+	 * @return	error message const character pointer.
 	 */
 	XALAN_TRANSFORMER_EXPORT_FUNCTION(XalanCCharPtr)
 	XalanGetLastError(XalanHandle theXalanHandle);

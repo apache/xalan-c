@@ -99,13 +99,22 @@ static void xslt_child_exit(server_rec *s, pool *p)
 
 
 
-static unsigned long xalan_handler(const void *data, unsigned long length, const void *handle)
+static unsigned long xalan_output_handler(const void *data, unsigned long length, const void *handle)
 {
 	request_rec *r = (request_rec*)handle;
 
 	char* d = (char *)data;
 
 	return ap_rwrite(d, length, r);
+}
+
+
+
+static void xalan_flush_handler(const void *handle)
+{
+	request_rec *r = (request_rec*)handle;
+
+	ap_rflush(r);
 }
 
 
@@ -133,7 +142,7 @@ static int xslt_handler(request_rec *r)
 	
 	//ap_send_http_header(r);
 
-	error = XalanTransformToHandler(xmlfilename, xslfilename, xalan, r, xalan_handler);
+	error = XalanTransformToHandler(xmlfilename, xslfilename, xalan, r, xalan_output_handler, xalan_flush_handler);
 
 	if(error)
 	{

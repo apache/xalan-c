@@ -164,12 +164,13 @@ XalanTransformToHandler(
 			const char*				theXSLFileName,
 			XalanHandle				theXalanHandle,
 			const void*				theOutputHandle, 
-			XalanOutputHandlerType	theOutputHandler)
+			XalanOutputHandlerType	theOutputHandler,
+			XalanFlushHandlerType	theFlushHandler)
 {
 #if defined(XALAN_OLD_STYLE_CASTS)
-	return ((XalanTransformer*)theXalanHandle)->transform(theXMLFileName, theXSLFileName, theOutputHandle, theOutputHandler);
+	return ((XalanTransformer*)theXalanHandle)->transform(theXMLFileName, theXSLFileName, theOutputHandle, theOutputHandler, theFlushHandler);
 #else
-	return 	static_cast<XalanTransformer*>(theXalanHandle)->transform(theXMLFileName, theXSLFileName, theOutputHandle, theOutputHandler);
+	return 	static_cast<XalanTransformer*>(theXalanHandle)->transform(theXMLFileName, theXSLFileName, theOutputHandle, theOutputHandler, theFlushHandler);
 #endif	
 }
 

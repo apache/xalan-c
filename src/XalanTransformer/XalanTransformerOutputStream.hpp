@@ -73,6 +73,10 @@ typedef unsigned long (*XalanOutputHandlerType) (const void*, unsigned long, con
 
 
 
+typedef void (*XalanFlushHandlerType) (const void*);
+
+
+
 // A class for output to a user define (callback) function.
 class XALAN_TRANSFORMER_EXPORT XalanTransformerOutputStream : public XalanOutputStream
 {
@@ -82,12 +86,14 @@ public:
 	 * Construct a XalanTransformerOutputStream instance for output to a
 	 * user define (callback) function.
 	 *
-	 * @param theOutputHandle	void data passed through to callback
-	 * @param theOutputHandler	address of callback
+	 * @param theOutputHandle	void pointer passed through to callback.
+	 * @param theOutputHandler	a user defined (callback) function.
+	 * @param theFlushHandler	a user defined (callback) function.
 	 */
     XalanTransformerOutputStream(
 		const void*					theOutputHandle, 
-		XalanOutputHandlerType		theOutputHandler);
+		XalanOutputHandlerType		theOutputHandler,
+		XalanFlushHandlerType		theFlushHandler = 0);
 
 
     virtual
@@ -113,8 +119,12 @@ private:
 	const void*				m_outputHandle;
 
 	XalanOutputHandlerType	m_outputHandler;
+
+	XalanFlushHandlerType	m_flushHandler;
 };
 
 
 
 #endif	// XALANTRANSFORMEROUTPUTSTREAM_HEADER_GUARD_1357924680
+
+
