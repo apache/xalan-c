@@ -844,6 +844,14 @@ SOURCE=..\..\..\..\src\XPath\XUnknown.hpp
 # Begin Group "Resource Files"
 
 # PROP Default_Filter "ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe"
+# Begin Source File
+
+SOURCE=..\..\Res\XPath\resource.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Res\XPath\XPath.rc
+# End Source File
 # End Group
 # End Target
 # End Project

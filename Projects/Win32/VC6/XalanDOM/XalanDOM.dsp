@@ -319,6 +319,14 @@ SOURCE=..\..\..\..\src\XalanDOM\XalanText.hpp
 # Begin Group "Resource Files"
 
 # PROP Default_Filter "ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe"
+# Begin Source File
+
+SOURCE=..\..\Res\XalanDOM\resource.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Res\XalanDOM\XalanDOM.rc
+# End Source File
 # End Group
 # End Target
 # End Project

@@ -381,6 +381,14 @@ SOURCE=..\..\..\..\src\XercesParserLiaison\XercesTreeWalker.hpp
 # Begin Group "Resource Files"
 
 # PROP Default_Filter "ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe"
+# Begin Source File
+
+SOURCE=..\..\Res\XercesParserLiaison\resource.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Res\XercesParserLiaison\XercesParserLiaison.rc
+# End Source File
 # End Group
 # End Target
 # End Project

@@ -345,6 +345,14 @@ SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeTextIWSAllocator.hpp
 # Begin Group "Resource Files"
 
 # PROP Default_Filter "ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe"
+# Begin Source File
+
+SOURCE=..\..\Res\XalanSourceTree\resource.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Res\XalanSourceTree\XalanSourceTree.rc
+# End Source File
 # End Group
 # End Target
 # End Project

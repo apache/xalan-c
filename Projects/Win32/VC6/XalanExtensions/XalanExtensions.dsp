@@ -193,6 +193,14 @@ SOURCE=..\..\..\..\src\XalanExtensions\XalanExtensionsDefinitions.hpp
 # Begin Group "Resource Files"
 
 # PROP Default_Filter "ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe"
+# Begin Source File
+
+SOURCE=..\..\Res\XalanExtensions\resource.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Res\XalanExtensions\XalanExtensions.rc
+# End Source File
 # End Group
 # End Target
 # End Project

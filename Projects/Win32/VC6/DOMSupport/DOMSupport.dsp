@@ -185,6 +185,14 @@ SOURCE=..\..\..\..\src\DOMSupport\TreeWalker.hpp
 # Begin Group "Resource Files"
 
 # PROP Default_Filter "ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe"
+# Begin Source File
+
+SOURCE=..\..\Res\DOMSupport\DOMSupport.rc
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Res\DOMSupport\resource.h
+# End Source File
 # End Group
 # End Target
 # End Project

@@ -180,6 +180,14 @@ SOURCE=.\XMLFileReporter.hpp
 # Begin Group "Resource Files"
 
 # PROP Default_Filter "ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe"
+# Begin Source File
+
+SOURCE=.\Harness.rc
+# End Source File
+# Begin Source File
+
+SOURCE=.\resource.h
+# End Source File
 # End Group
 # Begin Source File
 
