@@ -303,13 +303,13 @@ MutableNodeRefList::addNodeInDocOrder(
 {
 	if (node != 0)
 	{
-		if (test == false || m_support == 0)
+		const unsigned int	size = getLength();
+		if (test == false || m_support == 0 || size == 0)
 		{
 			addNode(node);
 		}
 		else
 		{
-			const unsigned int	size = getLength();
 
 			unsigned int		i = size - 1;
 
