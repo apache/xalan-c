@@ -92,6 +92,7 @@
 
 
 #include <XercesParserLiaison/XercesParserLiaison.hpp>
+#include <XercesParserLiaison/XercesDOMSupport.hpp>
 
 
 #include <XMLSupport/FormatterToDOM.hpp>
@@ -666,12 +667,13 @@ xsltMain(const CmdLineParams&	params)
 	XercesStdTextOutputStream				theStdErr(cerr);
 	XercesDOMPrintWriter					diagnosticsWriter(theStdErr);
 
-	DOMSupportDefault theDOMSupport;
-	XercesParserLiaison xmlParserLiaison(theDOMSupport);
+	XercesDOMSupport		theDOMSupport;
+	XercesParserLiaison		xmlParserLiaison(theDOMSupport);
 
-	XPathSupportDefault theXPathSupport(theDOMSupport);
+	XPathSupportDefault				theXPathSupport(theDOMSupport);
 	XSLTProcessorEnvSupportDefault	theXSLProcessorSupport;
-	XObjectFactoryDefault theXObjectFactory(theXSLProcessorSupport, theXPathSupport);
+	XObjectFactoryDefault			theXObjectFactory;
+
 	XPathFactoryDefault theXPathFactory;
 
 	auto_ptr<TraceListener>		theTraceListener(
@@ -693,15 +695,13 @@ xsltMain(const CmdLineParams&	params)
 		processor.addTraceListener(theTraceListener.get());
 	}
 
-	// Use separate factory instances for the stylesheet.  This is really only necessary
+	// Use a separate factory instance for the stylesheet.  This is really only necessary
 	// if you want to use the stylesheet with another processor, or you want to use
 	// it multiple times.
-	XObjectFactoryDefault	theStylesheetXObjectFactory(theXSLProcessorSupport, theXPathSupport);
 	XPathFactoryDefault		theStylesheetXPathFactory;
 
 	StylesheetConstructionContextDefault	theConstructionContext(processor,
 			theXSLProcessorSupport,
-			theStylesheetXObjectFactory,
 			theStylesheetXPathFactory);
 
 	/*
@@ -906,32 +906,6 @@ xsltMain(const CmdLineParams&	params)
 			 << "Total number of XPath instances created: "
 			 << theXPathFactory.getTotalInstanceCount()
 			 << endl
-			 << endl;
-
-		cerr << endl
-			 << "Stylesheet XObject details:"
-			 << endl
-			 << endl
-			 << "Total number of XBoolean instances created: "
-			 << theStylesheetXObjectFactory.getTotalBooleanInstanceCount()
-			 << endl
-			 << "Total number of XNodeSet instances created: "
-			 << theStylesheetXObjectFactory.getTotalNodeSetInstanceCount()
-			 << endl
-			 << "Total number of XNull instances created: "
-			 << theStylesheetXObjectFactory.getTotalNullInstanceCount()
-			 << endl
-			 << "Total number of XNumber instances created: "
-			 << theStylesheetXObjectFactory.getTotalNumberInstanceCount()
-			 << endl
-			 << "Total number of XResultTreeFrag instances created: "
-			 << theStylesheetXObjectFactory.getTotalResultTreeFragInstanceCount()
-			 << endl
-			 << "Total number of XString instances created: "
-			 << theStylesheetXObjectFactory.getTotalStringInstanceCount()
-			 << endl
-			 << "Total number of XUnknown instances created: "
-			 << theStylesheetXObjectFactory.getTotalUnknownInstanceCount()
 			 << endl
 			 << endl
 			 << "Stylesheet XPath details:"
@@ -948,7 +922,6 @@ xsltMain(const CmdLineParams&	params)
 
 	theConstructionContext.reset();
 	theStylesheetXPathFactory.reset();
-	theStylesheetXObjectFactory.reset();
 
 	processor.reset();
 
