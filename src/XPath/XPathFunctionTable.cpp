@@ -128,85 +128,85 @@ XPathFunctionTable::CreateTable()
 {
 	try
 	{
-		InstallFunction("last",
+		InstallFunction(XALAN_STATIC_UCODE_STRING("last"),
 						FunctionLast());
 
-		InstallFunction("position",
+		InstallFunction(XALAN_STATIC_UCODE_STRING("position"),
 						FunctionPosition());
 
-		InstallFunction("count",
+		InstallFunction(XALAN_STATIC_UCODE_STRING("count"),
 						FunctionCount());
 
-		InstallFunction("id",
+		InstallFunction(XALAN_STATIC_UCODE_STRING("id"),
 						FunctionID());
 
-		InstallFunction("local-name",
+		InstallFunction(XALAN_STATIC_UCODE_STRING("local-name"),
 						FunctionLocalName());
 
-		InstallFunction("namespace-uri",
+		InstallFunction(XALAN_STATIC_UCODE_STRING("namespace-uri"),
 						FunctionNamespaceURI());
 
-		InstallFunction("name",
+		InstallFunction(XALAN_STATIC_UCODE_STRING("name"),
 						FunctionName());
 
-		InstallFunction("string",
+		InstallFunction(XALAN_STATIC_UCODE_STRING("string"),
 						FunctionString());
 
-		InstallFunction("concat",
+		InstallFunction(XALAN_STATIC_UCODE_STRING("concat"),
 						FunctionConcat());
 
-		InstallFunction("starts-with",
+		InstallFunction(XALAN_STATIC_UCODE_STRING("starts-with"),
 						FunctionStartsWith());
 
-		InstallFunction("contains",
+		InstallFunction(XALAN_STATIC_UCODE_STRING("contains"),
 						FunctionContains());
 
-		InstallFunction("substring-before",
+		InstallFunction(XALAN_STATIC_UCODE_STRING("substring-before"),
 						FunctionSubstringBefore());
 
-		InstallFunction("substring-after",
+		InstallFunction(XALAN_STATIC_UCODE_STRING("substring-after"),
 						FunctionSubstringAfter());
 
-		InstallFunction("substring",
+		InstallFunction(XALAN_STATIC_UCODE_STRING("substring"),
 						FunctionSubstring());
 
-		InstallFunction("string-length",
+		InstallFunction(XALAN_STATIC_UCODE_STRING("string-length"),
 						FunctionStringLength());
 
-		InstallFunction("normalize-space",
+		InstallFunction(XALAN_STATIC_UCODE_STRING("normalize-space"),
 						FunctionNormalizeSpace());
 
-		InstallFunction("translate",
+		InstallFunction(XALAN_STATIC_UCODE_STRING("translate"),
 						FunctionTranslate());
 
-		InstallFunction("boolean",
+		InstallFunction(XALAN_STATIC_UCODE_STRING("boolean"),
 						FunctionBoolean());
 
-		InstallFunction("not",
+		InstallFunction(XALAN_STATIC_UCODE_STRING("not"),
 						FunctionNot());
 
-		InstallFunction("true",
+		InstallFunction(XALAN_STATIC_UCODE_STRING("true"),
 						FunctionTrue());
 
-		InstallFunction("false",
+		InstallFunction(XALAN_STATIC_UCODE_STRING("false"),
 						FunctionFalse());
 
-		InstallFunction("lang",
+		InstallFunction(XALAN_STATIC_UCODE_STRING("lang"),
 						FunctionLang());
 
-		InstallFunction("number",
+		InstallFunction(XALAN_STATIC_UCODE_STRING("number"),
 						FunctionNumber());
 
-		InstallFunction("sum",
+		InstallFunction(XALAN_STATIC_UCODE_STRING("sum"),
 						FunctionSum());
 
-		InstallFunction("floor",
+		InstallFunction(XALAN_STATIC_UCODE_STRING("floor"),
 						FunctionFloor());
 
-		InstallFunction("ceiling",
+		InstallFunction(XALAN_STATIC_UCODE_STRING("ceiling"),
 						FunctionCeiling());
 
-		InstallFunction("round",
+		InstallFunction(XALAN_STATIC_UCODE_STRING("round"),
 						FunctionRound());
 
 	}
