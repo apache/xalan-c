@@ -131,7 +131,6 @@ class StylesheetRoot;
 class XalanAttr;
 class XalanSourceTreeDocument;
 class XalanText;
-class XLocator;
 class XMLParserLiaison;
 class XMLURL;
 class XObject;

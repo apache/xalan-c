@@ -87,7 +87,6 @@
 #include "FoundIndex.hpp"
 #include "MutableNodeRefList.hpp"
 #include "XalanQNameByReference.hpp"
-#include "XLocator.hpp"
 #include "XObject.hpp"
 #include "XObjectFactory.hpp"
 #include "XPathEnvSupport.hpp"

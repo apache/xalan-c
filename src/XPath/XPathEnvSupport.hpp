@@ -88,7 +88,6 @@
 class Locator;
 class NodeRefListBase;
 class PrefixResolver;
-class XLocator;
 class XObject;
 class XPathExecutionContext;
 class XObjectFactory;
