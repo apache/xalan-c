@@ -65,8 +65,9 @@
      document types.</p>
     <p>&xslt4c-current; is a robust implementation of the W3C Recommendations 
     for XSL Transformations (XSLT) and the XML Path Language (XPath). It includes a custom release of the 
-    &xml4c; XML parser: &xml4c-used;. In addition to adding a build for HP-UX 11, the focus for this release 
-    is on bug fixes and performance enhancements. For the details, see the <link idref="readme">Release Notes</link>.</p>
+    &xml4c; XML parser: &xml4c-used;. In addition to adding a build for Solaris, the focus for this release 
+    is on bug fixes, performance enhancements, and packaging a simpler C++ and C API for performing standard transformations. 
+    For the details, see the <link idref="readme">Release Notes</link>.</p>
 	</s2>
   
   <s2 title="How do I get it?">
@@ -93,6 +94,10 @@
       <tr>
         <td>HP-UX 11</td>
         <td><resource-ref idref="xslt4c-hp-ux-download"/></td>
+      </tr>
+      <tr>
+        <td>Solaris</td>
+        <td><resource-ref idref="xslt4c-solaris-download"/></td>
       </tr>      
      </table>
   <p>Volunteers are more than welcome to help develop builds for other platforms!</p>
@@ -100,7 +105,7 @@
   
   <s2 title="Where do I get Xerces?">
     <p>Right here! The distributions include everything you need to build and run applications that use Xalan and Xerces. Each distribution file includes the Xerces source tree along with the appropriate Xerces runtime environment for Xalan: &xml4c-windll; for
-     Windows, &xml4c-linuxlib; for Linux, &xml4c-aixlib; for AIX, and &xml4c-hplib; for HP-UX 11.</p>
+     Windows, &xml4c-linuxlib; for Linux, &xml4c-aixlib; for AIX, &xml4c-hplib; for HP-UX 11, and &xml4c-solarislib; for Solaris.</p>
   </s2>
   <s2 title="How about support for internationalization?">
     <p>To extend Unicode support for encoding, number formatting, and sorting, you can download,

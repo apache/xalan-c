@@ -60,6 +60,7 @@
 <s1 title="&xslt4c; Samples">
   <ul>
     <li><link anchor="getstarted">Samples to help you get started</link></li>
+    <li><link anchor="xalantransform">XalanTransform</link></li>
     <li><link anchor="simpletransform">SimpleTransform</link></li>
     <li><link anchor="streamtransform">StreamTransform</link></li>    
     <li><link anchor="usestylesheetparam">UseStylesheetParam</link></li>
@@ -68,6 +69,7 @@
     <li><link anchor="threadsafe">ThreadSafe</link></li>  
     <li><link anchor="xpathwrapper">XPathWrapper</link></li>
     <li><link anchor="externalfunctions">ExternalFunctions</link></li>
+    <li><link anchor="apachemodulexslt">ApacheModuleXSLT</link></li>
   </ul>
 
   <anchor name="getstarted"/>
@@ -89,6 +91,9 @@
      files. For the UNIX builds, the application executable is also in the samples subdirectory. For the Windows32 build, however, the
      application executable is in the build subdirectory (xml-xalan\c\Build\Win32\VC6\ Debug and Release). To run a sample, be sure the
      executable is on the path, and run it from the samples subdirectory that contains the input files.</note>
+  </s2><anchor name="xalantransform"/>
+  <s2 title="XalanTransform">
+  
   </s2><anchor name="simpletransform"/>
   <s2 title="SimpleTransform">
     <p>What it does: The SimpleTransform class uses the foo.xsl stylesheet to transform foo.xml, and writes the
@@ -214,5 +219,8 @@ theProcessor.addTraceListener(&amp;theTraceListener);
     <p>Run this sample from the ExternalFunctions subdirectory with</p> 
     <p><code>ExternalFunctions</code></p>
     <p>See also: <link idref="extensions">Extension Functions</link>.</p>
+  </s2><anchor name="apachemodulexslt"/>
+  <s2 title="ApacheModuleXSLT">
+  
   </s2>
 </s1>

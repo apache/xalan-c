@@ -11,7 +11,7 @@
 </ul>
 <anchor name="download"/>
 <s2 title="Downloading what you need">
-<p>For &xslt4c-current;, we are distributing a Windows32 Visual C++ build and three UNIX builds with a makefile: a Red Hat Linux GNU build, an AIX xlC_r build, and an HP-UX 11 aCC build. 
+<p>For &xslt4c-current;, we are distributing a Windows32 Visual C++ build and four UNIX builds with a makefile: a Red Hat Linux GNU build, an AIX xlC_r build, an HP-UX 11 aCC build, and a Solaris build. 
 Please contact us at <human-resource-ref idref="xalandev"/> if you would like to help provide builds for other platforms.</p>
 <anchor name="xalandists"/>
 <s3 title="&xslt4c; Windows Distribution">
@@ -24,6 +24,7 @@ Please contact us at <human-resource-ref idref="xalandev"/> if you would like to
 <p>For the Linux build, download <resource-ref idref="xslt4c-linux-download"/></p>
 <p>For the AIX build, download <resource-ref idref="xslt4c-aix-download"/></p>
 <p>For the HP-UX 11 build, download <resource-ref idref="xslt4c-hp-ux-download"/></p>
+<p>For the Solaris build, download <resource-ref idref="xslt4c-solaris-download"/></p>
 <p>Each distribution contains all you need to run the Xalan command-line transformations utility and to build your own applications. 
 If you want to take advantage of the support for number formatting, sorting, and encoding the ICU provides, you should also download and install the <resource-ref idref="icu"/>; see <link idref="usagepatterns" anchor="icu">Using the ICU</link>,</p>
 <s3 title="What you need to run the Xalan command-line utility">
@@ -52,6 +53,12 @@ If you want to take advantage of the support for number formatting, sorting, and
   <li>The executable: TestXSLT</li>
   <li>The Xalan-C++ shared library: &xslt4c-hplib;</li>
   <li>The Xerces-C++ shared library: &xml4c-hplib;</li>
+</ul>
+<p><em>Solaris</em></p>
+<ul>
+  <li>The executable: TestXSLT</li>
+  <li>The Xalan-C++ XXX library: &xslt4c-solarislib;</li>
+  <li>The Xerces-C++ XXX library: &xml4c-solarislib;</li>
 </ul>
 <p>If you want to enable ICU support for the command-line utility, you must build the ICU and rebuild the Xalan-C++ shared/load library (Linux/AIX/HP-UX 11) and TestXSLT (all platforms) with the ICUBridge. See <link idref="usagepatterns" anchor="icu">Using the ICU</link> and <link idref="commandline" anchor="icu">Enabling ICU support for TestXSLT</link>.</p>
 <p>For information about using the command-line utility, see <link idref="commandline">Command-Line Utility</link>.</p>
