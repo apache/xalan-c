@@ -1268,13 +1268,13 @@ trim(const XalanDOMString&	theString)
 			break;
 
 	// index of last non-whitespace character
-	XalanDOMString::size_type	trailingSpace = strLen - 1;
+	XalanDOMString::size_type	trailingSpace = strLen -1;
 
 	for (; trailingSpace > 0; --trailingSpace)
-		if (!isXMLWhitespace(charAt(theString, trailingSpace - 1)))
+		if (!isXMLWhitespace(charAt(theString, trailingSpace)))
 			break;
 
-	return substring(theString, leadingSpace, trailingSpace);
+	return substring(theString, leadingSpace, trailingSpace +1);
 }
 
 
