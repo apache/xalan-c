@@ -646,10 +646,6 @@ SOURCE=..\..\..\..\src\XSLT\SelectionEvent.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\SimpleNodeLocator.cpp
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\..\..\src\XSLT\StackEntry.cpp
 # End Source File
 # Begin Source File
@@ -2070,10 +2066,6 @@ SOURCE=..\..\..\..\src\PlatformSupport\ReusableArenaBlock.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\XSLT\SelectionEvent.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\src\XPath\SimpleNodeLocator.hpp
 # End Source File
 # Begin Source File
 
