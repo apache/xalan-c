@@ -75,6 +75,7 @@
 #include "SimpleNodeLocator.hpp"
 #include "XObject.hpp"
 #include "XObjectFactory.hpp"
+#include "XPath.hpp"
 #include "XPathExecutionContext.hpp"
 
 
@@ -109,7 +110,7 @@ void
 XPathEnvSupportDefault::updateFunctionTable(
 			NamespaceFunctionTablesType&	theTable,
 			const XalanDOMString&			theNamespace,
-			const XalanDOMString&			extensionName,
+			const XalanDOMString&			functionName,
 			const Function*					function)
 {
 	// See if there's a table for that namespace...
@@ -122,7 +123,7 @@ XPathEnvSupportDefault::updateFunctionTable(
 		// 0, then add a clone of the function.
 		if (function != 0)
 		{
-			theTable[theNamespace][extensionName] =
+			theTable[theNamespace][functionName] =
 				function->clone();
 		}
 	}
@@ -131,7 +132,7 @@ XPathEnvSupportDefault::updateFunctionTable(
 		// There is already a table for the namespace,
 		// so look for the function...
 		const FunctionTableType::iterator	j =
-			i->second.find(extensionName);
+			i->second.find(functionName);
 
 		if (j == i->second.end())
 		{
@@ -139,13 +140,12 @@ XPathEnvSupportDefault::updateFunctionTable(
 			// 0, then add a clone of the function.
 			if (function != 0)
 			{
-				i->second[extensionName] = function->clone();
+				i->second[functionName] = function->clone();
 			}
 		}
 		else
 		{
 			// Found it, so delete the function...
-
 			delete j->second;
 
 			// If function is not 0, then we update
@@ -169,10 +169,10 @@ XPathEnvSupportDefault::updateFunctionTable(
 void
 XPathEnvSupportDefault::installExternalFunctionGlobal(
 			const XalanDOMString&	theNamespace,
-			const XalanDOMString&	extensionName,
+			const XalanDOMString&	functionName,
 			const Function&			function)
 {
-	updateFunctionTable(s_externalFunctions, theNamespace, extensionName, &function);
+	updateFunctionTable(s_externalFunctions, theNamespace, functionName, &function);
 }
 
 
@@ -180,9 +180,9 @@ XPathEnvSupportDefault::installExternalFunctionGlobal(
 void
 XPathEnvSupportDefault::uninstallExternalFunctionGlobal(
 			const XalanDOMString&	theNamespace,
-			const XalanDOMString&	extensionName)
+			const XalanDOMString&	functionName)
 {
-	updateFunctionTable(s_externalFunctions, theNamespace, extensionName, 0);
+	updateFunctionTable(s_externalFunctions, theNamespace, functionName, 0);
 }
 
 
@@ -190,10 +190,10 @@ XPathEnvSupportDefault::uninstallExternalFunctionGlobal(
 void
 XPathEnvSupportDefault::installExternalFunctionLocal(
 			const XalanDOMString&	theNamespace,
-			const XalanDOMString&	extensionName,
+			const XalanDOMString&	functionName,
 			const Function&			function)
 {
-	updateFunctionTable(m_externalFunctions, theNamespace, extensionName, &function);
+	updateFunctionTable(m_externalFunctions, theNamespace, functionName, &function);
 }
 
 
@@ -201,9 +201,9 @@ XPathEnvSupportDefault::installExternalFunctionLocal(
 void
 XPathEnvSupportDefault::uninstallExternalFunctionLocal(
 			const XalanDOMString&	theNamespace,
-			const XalanDOMString&	extensionName)
+			const XalanDOMString&	functionName)
 {
-	updateFunctionTable(m_externalFunctions, theNamespace, extensionName, 0);
+	updateFunctionTable(m_externalFunctions, theNamespace, functionName, 0);
 }
 
 
@@ -314,7 +314,7 @@ XPathEnvSupportDefault::getDOMFactory() const
 bool
 XPathEnvSupportDefault::elementAvailable(
 			const XalanDOMString&	/* theNamespace */,
-			const XalanDOMString&	/* extensionName */) const
+			const XalanDOMString&	/* elementName */) const
 {
 	return false;
 }
@@ -324,24 +324,33 @@ XPathEnvSupportDefault::elementAvailable(
 bool
 XPathEnvSupportDefault::functionAvailable(
 			const XalanDOMString&	theNamespace,
-			const XalanDOMString&	extensionName) const
+			const XalanDOMString&	functionName) const
 {
 	bool	theResult = false;
 
-	// See if there's a table for that namespace...
-	const NamespaceFunctionTablesType::const_iterator	i =
-		m_externalFunctions.find(theNamespace);
-
-	if (i != m_externalFunctions.end())
+	// Any function without a namespace prefix is considered
+	// to be an intrinsic function.
+	if (isEmpty(theNamespace) == true)
 	{
-		// There is a table for the namespace,
-		// so look for the function...
-		const FunctionTableType::const_iterator		j =
-			i->second.find(extensionName);
+		theResult = XPath::isInstalledFunction(functionName);
+	}
+	else
+	{
+		// See if there's a table for that namespace...
+		const NamespaceFunctionTablesType::const_iterator	i =
+			m_externalFunctions.find(theNamespace);
 
-		if (j != i->second.end())
+		if (i != m_externalFunctions.end())
 		{
-			theResult = true;
+			// There is a table for the namespace,
+			// so look for the function...
+			const FunctionTableType::const_iterator		j =
+				i->second.find(functionName);
+
+			if (j != i->second.end())
+			{
+				theResult = true;
+			}
 		}
 	}
 
@@ -353,13 +362,13 @@ XPathEnvSupportDefault::functionAvailable(
 Function*
 XPathEnvSupportDefault::findFunction(
 			const XalanDOMString&	theNamespace,
-			const XalanDOMString&	extensionName) const
+			const XalanDOMString&	functionName) const
 {
 	// First, look locally...
 	Function*	theFunction = findFunction(
 			m_externalFunctions,
 			theNamespace,
-			extensionName);
+			functionName);
 
 	if (theFunction == 0)
 	{
@@ -367,7 +376,7 @@ XPathEnvSupportDefault::findFunction(
 		theFunction = findFunction(
 			s_externalFunctions,
 			theNamespace,
-			extensionName);
+			functionName);
 	}
 
 	return theFunction;
@@ -379,7 +388,7 @@ Function*
 XPathEnvSupportDefault::findFunction(
 			const NamespaceFunctionTablesType&	theTable,
 			const XalanDOMString&				theNamespace,
-			const XalanDOMString&				extensionName) const
+			const XalanDOMString&				functionName) const
 {
 	Function*	theFunction = 0;
 
@@ -392,7 +401,7 @@ XPathEnvSupportDefault::findFunction(
 		// There is a table for the namespace,
 		// so look for the function...
 		const FunctionTableType::const_iterator		j =
-			i->second.find(extensionName);
+			i->second.find(functionName);
 
 		if (j != i->second.end())
 		{
@@ -412,13 +421,13 @@ XObject*
 XPathEnvSupportDefault::extFunction(
 			XPathExecutionContext&			executionContext,
 			const XalanDOMString&			theNamespace,
-			const XalanDOMString&			extensionName,
+			const XalanDOMString&			functionName,
 			XalanNode*						context,
 			const XObjectArgVectorType&		argVec) const
 {
 	XObject*	theResult = 0;
 
-	Function* const		theFunction = findFunction(theNamespace, extensionName);
+	Function* const		theFunction = findFunction(theNamespace, functionName);
 
 	if (theFunction != 0)
 	{

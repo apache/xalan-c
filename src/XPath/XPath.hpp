@@ -379,7 +379,6 @@ public:
 		return s_functions.isInstalledFunction(theFunctionName);
 	}
 
-	// $$$ What's this typedef for?
 	typedef XPathFunctionTable	FunctionTableType;
 
 	/**
@@ -791,7 +790,7 @@ protected:
 			XalanNode*								context,
 			int										opPos,
 			const XalanDOMString&					theNamespace,
-			const XalanDOMString&					extensionName, 
+			const XalanDOMString&					functionName, 
 			const Function::XObjectArgVectorType&	argVec,
 			XPathExecutionContext&					executionContext) const;
 

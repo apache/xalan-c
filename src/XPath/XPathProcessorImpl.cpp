@@ -1423,13 +1423,17 @@ XPathProcessorImpl::UnionExpr()
 			}
 
 			nextToken();
-	  }
-	  else
-	  {
-			break;
-	  }
+		}
+		else
+		{
+			if (foundUnion == true)
+			{
+				// Terminate for safety.
+				m_expression->appendOpCode(XPathExpression::eENDOP);
+			}
 
-	  // this.m_testForDocOrder = true;
+			break;
+		}
 	}
 	while(continueOrLoop == true);
 
@@ -2122,7 +2126,7 @@ XPathProcessorImpl::Number()
 
 void
 XPathProcessorImpl::Pattern()
-{	 
+{
 	while(true)
 	{
 		LocationPathPattern();

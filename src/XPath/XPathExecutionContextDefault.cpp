@@ -231,9 +231,9 @@ XPathExecutionContextDefault::getContextNodeListPosition(const XalanNode&	contex
 bool
 XPathExecutionContextDefault::elementAvailable(
 			const XalanDOMString&	theNamespace, 
-			const XalanDOMString&	extensionName) const
+			const XalanDOMString&	elementName) const
 {
-	return m_xpathEnvSupport.elementAvailable(theNamespace, extensionName);
+	return m_xpathEnvSupport.elementAvailable(theNamespace, elementName);
 }
 
 
@@ -241,9 +241,9 @@ XPathExecutionContextDefault::elementAvailable(
 bool
 XPathExecutionContextDefault::functionAvailable(
 			const XalanDOMString&	theNamespace, 
-			const XalanDOMString&	extensionName) const
+			const XalanDOMString&	functionName) const
 {
-	return m_xpathEnvSupport.functionAvailable(theNamespace, extensionName);
+	return m_xpathEnvSupport.functionAvailable(theNamespace, functionName);
 }
 
 
@@ -251,11 +251,11 @@ XPathExecutionContextDefault::functionAvailable(
 XObject*
 XPathExecutionContextDefault::extFunction(
 			const XalanDOMString&			theNamespace,
-			const XalanDOMString&			extensionName, 
+			const XalanDOMString&			functionName, 
 			XalanNode*						context,
 			const XObjectArgVectorType&		argVec)
 {
-	return m_xpathEnvSupport.extFunction(*this, theNamespace, extensionName, context, argVec);
+	return m_xpathEnvSupport.extFunction(*this, theNamespace, functionName, context, argVec);
 }
 
 

@@ -198,32 +198,34 @@ public:
 	 * Determine if an external element is available.
 	 *
 	 * @param theNamespace  namespace for the element
-	 * @param extensionName name of extension element
-	 * @return whether the given element is available or not
+	 * @param elementName name of extension element
+	 * @return whether the element is available or not
 	 */
 	virtual bool
 	elementAvailable(
 			const XalanDOMString&	theNamespace, 
-			const XalanDOMString&	extensionName) const = 0;
+			const XalanDOMString&	elementName) const = 0;
 
 	/**
-	 * Determine if an external function is available.
+	 * Determine if a function is available.  For standard
+	 * function availability, theNamespace should be an
+	 * empty string.
 	 *
-	 * @param theNamespace  namespace for th function
-	 * @param extensionName name of extension function
-	 * @return whether the given function is available or not
+	 * @param theNamespace  namespace for the function
+	 * @param functionName name of the function
+	 * @return whether the function is available or not
 	 */
 	virtual bool
 	functionAvailable(
 			const XalanDOMString&	theNamespace, 
-			const XalanDOMString&	extensionName) const = 0;
+			const XalanDOMString&	functionName) const = 0;
 
 	/**
 	 * Handle an extension function.
 	 * 
 	 * @param executionContext  current execution context
 	 * @param theNamespace  namespace of function    
-	 * @param extensionName extension function name
+	 * @param functionName extension function name
 	 * @param argVec        vector of arguments to function
 	 * @return pointer to XObject result
 	 */
@@ -231,7 +233,7 @@ public:
 	extFunction(
 			XPathExecutionContext&			executionContext,
 			const XalanDOMString&			theNamespace,
-			const XalanDOMString&			extensionName, 
+			const XalanDOMString&			functionName, 
 			XalanNode*						context,
 			const XObjectArgVectorType&		argVec) const = 0;
 

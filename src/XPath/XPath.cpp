@@ -1045,7 +1045,7 @@ XPath::Union(
 
 	XObject*	resultNodeSet = 0;
 
-	while(m_expression.m_opMap[opPos] == XPathExpression::eOP_LOCATIONPATH)
+	while(m_expression.m_opMap[opPos] != XPathExpression::eENDOP)
 	{
 		const int	nextOpPos = m_expression.getNextOpCodePosition(opPos);
 
@@ -1291,12 +1291,12 @@ XPath::extfunction(
 			XalanNode*								context,
 			int										/* opPos */,
 			const XalanDOMString&					theNamespace,
-			const XalanDOMString&					extensionName, 
+			const XalanDOMString&					functionName, 
 			const Function::XObjectArgVectorType&	argVec,
 			XPathExecutionContext&					executionContext) const
 {
 	return 	executionContext.extFunction(theNamespace,
-										 extensionName,
+										 functionName,
 										 context,
 										 argVec);
 }

@@ -155,27 +155,20 @@ public:
 	virtual int
 	getContextNodeListPosition(const XalanNode&		contextNode) const;
 
-	/**
-	 * Determine if an external element is available.
-	 *
-	 * @param theNamespace  namespace for the element
-	 * @param extensionName name of extension element
-	 * @return whether the given element is available or not
-	 */
 	virtual bool
 	elementAvailable(
 			const XalanDOMString&	theNamespace, 
-			const XalanDOMString&	extensionName) const;
+			const XalanDOMString&	elementName) const;
 
 	virtual bool
 	functionAvailable(
 			const XalanDOMString&	theNamespace, 
-			const XalanDOMString&	extensionName) const;
+			const XalanDOMString&	functionName) const;
 
 	virtual XObject*
 	extFunction(
 			const XalanDOMString&			theNamespace,
-			const XalanDOMString&			extensionName,
+			const XalanDOMString&			functionName,
 			XalanNode*						context,
 			const XObjectArgVectorType&		argVec);
 
@@ -262,9 +255,9 @@ public:
 			const XalanDOMString&	theURI,
 			XalanDocument*			theDocument);
 
-
 	virtual const XalanDecimalFormatSymbols*
 	getDecimalFormatSymbols(const XalanDOMString&	name);
+
 
 	// These interfaces are inherited from ExecutionContext...
 
