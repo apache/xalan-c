@@ -183,10 +183,7 @@ NamedNodeMapAttributeList::getValue(const XMLCh* const name) const
 const XMLCh* 
 NamedNodeMapAttributeList::getValue(const char* const name) const
 {
-	const XalanDOMCharVectorType	theName =
-		MakeXalanDOMCharVector(name);
-
-	return getValue(theName.front());
+	return getValue(c_wstr(TranscodeFromLocalCodePage(name)));
 }
 
 
