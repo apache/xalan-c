@@ -838,6 +838,10 @@ SOURCE=..\..\..\..\src\XPath\FunctionNamespaceURI.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\XPath\FunctionNamespaceURI.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\XPath\FunctionNormalizeSpace.cpp
 # End Source File
 # Begin Source File
