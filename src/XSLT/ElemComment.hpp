@@ -81,6 +81,16 @@ class ElemComment: public ElemTemplateElement
 {
 public:
 
+	/**
+	 * Construct an object corresponding to an "xsl:comment" element
+	 * 
+	 * @param constructionContext context for construction of object
+	 * @param stylesheetTree      stylesheet containing element
+	 * @param name                name of element
+	 * @param atts                list of attributes for element
+	 * @param lineNumber				line number in document
+	 * @param columnNumber			column number in document
+	 */
 	ElemComment(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
@@ -92,6 +102,8 @@ public:
 	virtual
 	~ElemComment();
 
+	// These methods are inherited from ElemTemplateElement ...
+	
 	virtual int
 	getXSLToken() const; 
 
@@ -102,10 +114,6 @@ public:
 			const DOM_Node&					sourceNode,
 			const QName&					mode) const;
 
-	/**
-	 * Add a child to the child list.
-	 * <!ELEMENT xsl:apply-imports EMPTY>
-	 */
 	virtual NodeImpl*
 	appendChild(NodeImpl* newChild);
 };

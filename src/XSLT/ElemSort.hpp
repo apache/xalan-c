@@ -87,6 +87,16 @@ class ElemSort: public ElemTemplateElement
 {
 public:
 
+	/**
+	 * Construct an object corresponding to an "xsl:sort" element
+	 * 
+	 * @param constructionContext context for construction of object
+	 * @param stylesheetTree      stylesheet containing element
+	 * @param name                name of element
+	 * @param atts                list of attributes for element
+	 * @param lineNumber				line number in document
+	 * @param columnNumber			column number in document
+	 */
 	ElemSort(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
@@ -95,45 +105,58 @@ public:
 			int								lineNumber,
 			int								columnNumber);
 
-	virtual int
-	getXSLToken() const; 
-
 	/**
-	 * Add a child to the child list.
-	 * <!ELEMENT xsl:attribute-set (xsl:attribute)*>
-	 * <!ATTLIST xsl:attribute-set
-	 *   name %qname; #REQUIRED
-	 *   use-attribute-sets %qnames; #IMPLIED
-	 * >
+	 * Retrieve the language attribute value template(AVT) 
+	 * 
+	 * @return string corresponding the language AVT
 	 */
-	virtual NodeImpl*
-	appendChild(NodeImpl*	newChild);
-
-	
 	const DOMString&
 	getLangAVT() const
 	{
 		return m_langAVT;
 	}
 
+	/**
+	 * Retrieve the order attribute value template(AVT) 
+	 * 
+	 * @return string corresponding the order AVT
+	 */
 	const DOMString&
 	getOrderAVT() const
 	{
 		return m_orderAVT;
 	}
 
+	/**
+	 * Retrieve the data type attribute value template(AVT) 
+	 * 
+	 * @return string corresponding the data type AVT
+	 */
 	const DOMString&
 	getDataTypeAVT() const
 	{
 		return m_dataTypeAVT;
 	}
 
+	/**
+	 * Retrieve the select pattern
+	 * 
+	 * @return XPath corresponding to the select pattern
+	 */
 	const XPath*
 	getSelectPattern() const
 	{
 		return m_selectPattern;
 	}
 
+	// These methods are inherited from ElemTemplateElement ...
+	
+	virtual int
+	getXSLToken() const; 
+
+	virtual NodeImpl*
+	appendChild(NodeImpl*	newChild);
+	
 private:
 
 	const XPath*	m_selectPattern;

@@ -89,6 +89,16 @@ class ElemTemplate : public ElemTemplateElement
 {
 public:
 
+	/**
+	 * Construct an object corresponding to an "xsl:template" element
+	 * 
+	 * @param constructionContext context for construction of object
+	 * @param stylesheetTree      stylesheet containing element
+	 * @param name                name of element
+	 * @param atts                list of attributes for element
+	 * @param lineNumber				line number in document
+	 * @param columnNumber			column number in document
+	 */
 	ElemTemplate(
 		StylesheetConstructionContext&	constructionContext,
 		Stylesheet&						stylesheetTree,
@@ -100,6 +110,52 @@ public:
 	virtual
 	~ElemTemplate();
 	
+	/**
+	 * Retrieve the qualified name of element
+	 * 
+	 * @return QName for element
+	 */
+	const QName&
+	getName() const
+	{
+		return m_name;
+	}
+
+	/**
+	 * Retrieve the mode of element
+	 * 
+	 * @return QName for mode
+	 */
+	const QName&
+	getMode() const
+	{
+		return m_mode;
+	}
+
+	/**
+	 * Retrieve the match pattern
+	 * 
+	 * @return XPath corresponding to the match pattern
+	 */
+	const XPath*
+	getMatchPattern() const
+	{
+		return m_matchPattern;
+	}
+
+	/**
+	 * Retrieve the priority of element
+	 * 
+	 * @return priority value
+	 */
+	double
+	getPriority() const
+	{
+		return m_priority;
+	}
+
+	// These methods are inherited from ElemTemplateElement ...
+	
 	virtual int
 	getXSLToken() const; 
 
@@ -108,30 +164,6 @@ public:
 			const DOM_Node&					sourceTree, 
 			const DOM_Node&					sourceNode,
 			const QName&					mode) const;
-
-	const QName&
-	getName() const
-	{
-		return m_name;
-	}
-
-	const QName&
-	getMode() const
-	{
-		return m_mode;
-	}
-
-	const XPath*
-	getMatchPattern() const
-	{
-		return m_matchPattern;
-	}
-
-	double
-	getPriority() const
-	{
-		return m_priority;
-	}
 
 private:
 

@@ -82,6 +82,16 @@ class ElemWhen : public ElemTemplateElement
 {
 public:
 
+	/**
+	 * Construct an object corresponding to an "xsl:when" element
+	 * 
+	 * @param constructionContext context for construction of object
+	 * @param stylesheetTree      stylesheet containing element
+	 * @param name                name of element
+	 * @param atts                list of attributes for element
+	 * @param lineNumber				line number in document
+	 * @param columnNumber			column number in document
+	 */
 	ElemWhen (
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
@@ -90,14 +100,21 @@ public:
 			int								lineNumber,
 			int								columnNumber);
 
-	virtual int
-	getXSLToken() const;
-
+	/**
+	 * Retrieve the XPath corresponding to the "test" attribute
+	 * 
+	 * @return XPath object
+	 */
 	const XPath*
 	getXPath() const
 	{
 		return m_pTest;
 	}
+
+	// These methods are inherited from ElemTemplateElement ...
+	
+	virtual int
+	getXSLToken() const;
 
 private:
 

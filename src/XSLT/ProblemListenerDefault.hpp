@@ -80,8 +80,7 @@ class DOMString;
 
 
 /**
- * The implementation of the default error handling for 
- * Xalan.
+ * The implementation of the default error handling for Xalan.
  */
 class XALAN_XSLT_EXPORT ProblemListenerDefault : public ProblemListener
 {
@@ -92,12 +91,11 @@ public:
 	virtual
 	~ProblemListenerDefault();
 
+	// These methods are inherited from ProblemListener ...
+	
 	virtual void
 	setPrintWriter(PrintWriter*		pw);
 
-  /**
-   * The default problem listener.
-   */
 	virtual bool
 	problem(
 			eProblemSource		where,

@@ -98,10 +98,11 @@ public:
 
 	/**
 	 * Write the value into the buffer.
-	 * @param buf Buffer to write into.
-	 * @param contextNode the current context node.
-	 * @param prefixResolver the prefix resolver to use.
-	 * @param executionContext The execution context.
+	 *
+	 * @param buf              buffer to write into
+	 * @param contextNode      current context node
+	 * @param prefixResolver   prefix resolver to use
+	 * @param executionContext execution context
 	 */
 	virtual void
 	evaluate(

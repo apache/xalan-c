@@ -82,6 +82,17 @@
 class ElemApplyTemplates : public ElemForEach
 {
 public:
+
+	/**
+	 * Construct an object corresponding to an "xsl:apply-template" element
+	 * 
+	 * @param constructionContext context for construction of object
+	 * @param stylesheetTree      stylesheet containing element
+	 * @param name                name of element
+	 * @param atts                list of attributes for element
+	 * @param lineNumber				line number in document
+	 * @param columnNumber			column number in document
+	 */
 	ElemApplyTemplates(
 		StylesheetConstructionContext&	constructionContext,
 		Stylesheet& stylesheetTree,
@@ -90,17 +101,29 @@ public:
 		int lineNumber, 
 		int columnNumber);
 
-	virtual int getXSLToken() const; 
-
+	/**
+	 * Determines whether this is the default template
+	 *
+	 * @return true if the template is the default
+	 */
 	bool isDefaultTemplate() const
 	{
 		return m_isDefaultTemplate;
 	}
 
+	/**
+	 * Sets a flag indicating this is the default template
+	 *
+	 * @param def value of flag to set
+	 */
 	void setDefaultTemplate(bool def)
 	{
 		m_isDefaultTemplate = def;
 	}
+
+	// These methods are inherited from ElemTemplateElement ...
+	
+	virtual int getXSLToken() const; 
 
 	virtual	void
 	execute(
@@ -109,14 +132,6 @@ public:
 			const DOM_Node&					sourceNode,
 			const QName&					mode) const;
 
-	/**
-	 * Add a child to the child list.
-	 * <!ELEMENT xsl:apply-templates (xsl:sort|xsl:with-param)*>
-	 * <!ATTLIST xsl:apply-templates
-	 *  select %expr; "node()"
-	 *   mode %qname; #IMPLIED
-	 * >
-	 */
 	virtual NodeImpl* appendChild(NodeImpl* newChild);
 
 private:

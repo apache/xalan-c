@@ -93,11 +93,17 @@ class AVT: public AVTPart
 {
 public:
 
-/**
- * Construct an AVT by parsing the string, and either 
- * constructing a vector of AVTParts, or simply hold 
- * on to the string if the AVT is simple.
- */
+	/**
+	 * Construct an Attribute Value Template(AVT) by parsing the string, and
+	 * either constructing a vector of AVTParts, or simply hold on to the
+	 * string if the AVT is simple.
+	 * 
+	 * @param name                name of AVT
+	 * @param type                type of AVT
+	 * @param stringedValue       string value to parse
+	 * @param resolver            resolver for namespace resolution
+	 * @param constructionContext context for construction of AVT
+	 */
 	AVT(
 			const DOMString&				name,
 			const XMLCh*					type,
@@ -109,30 +115,35 @@ public:
 	~AVT();
 
 	/**
-	 * Write the value into the buffer.
-	 * @param buf Buffer to write into.
-	 * @param contextNode the current context node.
-	 * @param prefixResolver the prefix resolver to use.
-	 * @param executionContext The execution context.
+	 * Retrieve the name of the Attribute Value Template
+	 * 
+	 * @return name of AVT
 	 */
-	virtual void
-	evaluate(
-			DOMString&				buf,
-			const DOM_Node&			contextNode,
-			const PrefixResolver&	prefixResolver,
-			XPathExecutionContext&	executionContext) const;
-
     const DOMString&
 	getName() const
 	{
 		return m_name;
 	}
 
+	/**
+	 * Retrieve the type of the Attribute Value Template
+	 * 
+	 * @return type of AVT
+	 */
 	const XMLCh*
 	getType() const
 	{
 		return m_pcType;
 	}
+
+   // These methods are inherited from AVTPart ...
+
+	virtual void
+	evaluate(
+			DOMString&				buf,
+			const DOM_Node&			contextNode,
+			const PrefixResolver&	prefixResolver,
+			XPathExecutionContext&	executionContext) const;
 
 private:
 

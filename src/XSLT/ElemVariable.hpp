@@ -86,6 +86,16 @@ class ElemVariable : public ElemTemplateElement
 {
 public:
 
+	/**
+	 * Construct an object corresponding to an "xsl:variable" element
+	 * 
+	 * @param constructionContext context for construction of object
+	 * @param stylesheetTree      stylesheet containing element
+	 * @param name                name of element
+	 * @param atts                list of attributes for element
+	 * @param lineNumber				line number in document
+	 * @param columnNumber			column number in document
+	 */
 	ElemVariable(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
@@ -97,6 +107,54 @@ public:
 	virtual
 	~ElemVariable();
 
+	/**
+	 * Get the XObject representation of the variable.
+	 * 
+	 * @param executionContext current execution context
+	 * @param sourceTree       input source tree
+	 * @param sourceNode       current context node
+	 */
+	XObject*
+	getValue(
+			StylesheetExecutionContext&		executionContext,
+			const DOM_Node&					sourceTree, 
+			const DOM_Node&					sourceNode) const;
+
+	/**
+	 * Determines if this is a top level variable.
+	 * 
+	 * @return true if it is a top level variable
+	 */
+	bool
+	isTopLevel() const
+	{
+		return m_isTopLevel;
+	}
+
+	/**
+	 * Sets whether this is a top level variable.
+	 * 
+	 * @param bTopLevel value of flag to set
+	 */
+	void
+	setTopLevel(bool bTopLevel)
+	{
+		m_isTopLevel = bTopLevel;
+	}
+
+	/**
+	 * Retrieve the object name.
+	 * 
+	 * @return qualified name of object
+	 */
+	const QName&
+	getName() const
+	{ 
+		return m_qname;
+	}
+
+	// These methods are inherited from ElemTemplateElement ...
+	
 	virtual int
 	getXSLToken() const;
 
@@ -106,33 +164,6 @@ public:
 			const DOM_Node&					sourceTree, 
 			const DOM_Node&					sourceNode,
 			const QName&					mode) const;
-
-	/**
-	 * Get the XObject representation of the variable.
-	 */
-	XObject*
-	getValue(
-			StylesheetExecutionContext&		executionContext,
-			const DOM_Node&					sourceTree, 
-			const DOM_Node&					sourceNode) const;
-
-	bool
-	isTopLevel() const
-	{
-		return m_isTopLevel;
-	}
-
-	void
-	setTopLevel(bool bTopLevel)
-	{
-		m_isTopLevel = bTopLevel;
-	}
-
-	const QName&
-	getName() const
-	{ 
-		return m_qname;
-	}
 
 protected:
 

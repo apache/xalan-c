@@ -86,23 +86,7 @@ class XObject;
 class XALAN_XSLT_EXPORT ExtensionFunctionHandler 
 {
 
-protected:
-
-	DOMString m_namespaceUri;  // uri of the extension namespace
-	DOMString m_scriptLang;    // scripting language of implementation
-	DOMString m_scriptSrc;     // script source to run (if any)
-	DOMString m_scriptSrcURL;  // URL of source of script (if any)
-	// @@
-	void* m_javaObject;		    // object for javaclass engine
-	typedef std::set<DOMString> StringSetType;
-	StringSetType m_functions; // functions of namespace
-	//  BSFManager mgr = new BSFManager (); // mgr used to run scripts
-	bool m_componentStarted; // true when the scripts in a
-	// component description (if any) have been run
-
-	/////////////////////////////////////////////////////////////////////////
-	// Constructors
-	/////////////////////////////////////////////////////////////////////////
+public:
 
 	/**
 	 * Construct a new extension namespace handler for a given extension NS.
@@ -110,11 +94,7 @@ protected:
 	 * 
 	 * @param namespaceUri the extension namespace URI that I'm implementing
 	 */
-public:
-
 	ExtensionFunctionHandler (const DOMString& namespaceUri);
-
-	/////////////////////////////////////////////////////////////////////////
 
 	/**
 	 * Construct a new extension namespace handler given all the information
@@ -132,25 +112,19 @@ public:
 										const DOMString& funcNames,
 										const DOMString& lang,
 										const DOMString& srcURL,
-										const DOMString& src);
+										const DOMString& scriptSrc);
 
 
 	virtual ~ExtensionFunctionHandler();
-
-	/////////////////////////////////////////////////////////////////////////
-	// Main API
-	/////////////////////////////////////////////////////////////////////////
 
 	/**
 	 * Set function local parts of extension NS.
 	 *
 	 * @param functions whitespace separated list of function names defined
-	 *        by this extension namespace.
+	 *                  by this extension namespace.
 	 */
 	virtual void setFunctions (const DOMString& funcNames);
 	
-	/////////////////////////////////////////////////////////////////////////
-
 	/**
 	 * Set the script data for this extension NS. If srcURL is !null then
 	 * the script body is read from that URL. If not the scriptSrc is used
@@ -168,18 +142,17 @@ public:
 								const DOMString& srcURL,
 								const DOMString& scriptSrc);
 
-	/////////////////////////////////////////////////////////////////////////
-
 	/**
 	 * Tests whether a certain function name is known within this namespace.
 	 *
 	 * @param function name of the function being tested
-	 *
 	 * @return true if its known, false if not.
 	 */
 	virtual bool isFunctionAvailable (const DOMString& function);
 
-	/////////////////////////////////////////////////////////////////////////
+
+	/// Vector of pointers to function arguments
+	typedef std::vector<void*> ArgVector;
 
 	/**
 	 * Process a call to a function.
@@ -196,14 +169,23 @@ public:
 	 * @exception IOException           if loading trouble
 	 * @exception SAXException          if parsing trouble
 	 */
-	typedef std::vector<void*> ArgVector;
 
 	virtual XObject* callFunction (const DOMString& funcName, const ArgVector& args);
 
-	/////////////////////////////////////////////////////////////////////////
-	// Private/Protected Functions
-	/////////////////////////////////////////////////////////////////////////
-	
+protected:
+
+	DOMString m_namespaceUri;  // uri of the extension namespace
+	DOMString m_scriptLang;    // scripting language of implementation
+	DOMString m_scriptSrc;     // script source to run (if any)
+	DOMString m_scriptSrcURL;  // URL of source of script (if any)
+	// @@
+	void* m_javaObject;		    // object for javaclass engine
+	typedef std::set<DOMString> StringSetType;
+	StringSetType m_functions; // functions of namespace
+	//  BSFManager mgr = new BSFManager (); // mgr used to run scripts
+	bool m_componentStarted; // true when the scripts in a
+	// component description (if any) have been run
+
 	/**
 	 * Start the component up by executing any script that needs to run
 	 * at startup time. This needs to happen before any functions can be
@@ -211,8 +193,6 @@ public:
 	 * 
 	 * @exception XPathProcessorException if something bad happens.
 	 */
-protected:
-
 	virtual void startupComponent();
 };
  

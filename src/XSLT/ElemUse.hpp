@@ -81,6 +81,18 @@ class ElemUse : public ElemTemplateElement
 {
 public:
 
+	/**
+	 * Construct an object corresponding to an "use-attribute-sets" attribute.
+	 * This is a base class for "xsl:element," "xsl:copy" and
+	 * "xsl:attribute-set" elements, which may specify attribute sets to use. 
+	 * 
+	 * @param constructionContext context for construction of object
+	 * @param stylesheetTree      stylesheet containing element
+	 * @param name                name of element
+	 * @param atts                list of attributes for element
+	 * @param lineNumber				line number in document
+	 * @param columnNumber			column number in document
+	 */
 	ElemUse(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
@@ -91,6 +103,24 @@ public:
 	virtual
 	~ElemUse();
 
+	/** 
+	 * See if this is a use-attribute-sets attribute, and, if so, process it.
+	 * 
+	 * @param attrName qualified name of attribute
+	 * @param atts     attribute list where the element comes from (not used at 
+	 *                 this time)
+	 * @param which    index into the attribute list (not used at this time)
+	 * @return true if this is a use-attribute-sets attribute
+	 */
+	bool
+	processUseAttributeSets(
+			StylesheetConstructionContext&	constructionContext,
+			const DOMString&				attrName,
+			const AttributeList&			atts,
+			int								which);
+
+	// These methods are inherited from ElemTemplateElement ...
+	
 	virtual void
 	execute(
 			StylesheetExecutionContext&		executionContext,
@@ -100,22 +130,6 @@ public:
 
 	virtual int
 	getXSLToken() const; 
-
-	/** 
-	 * See if this is a use-attribute-sets attribute, and, if so, process it.
-	 * 
-	 * @param attrName Qualified name of attribute.
-	 * @param atts The attribute list where the element comes from (not used at 
-	 *      this time).
-	 * @param which The index into the attribute list (not used at this time).
-	 * @return True if this is a use-attribute-sets attribute.
-	 */
-	bool
-	processUseAttributeSets(
-			StylesheetConstructionContext&	constructionContext,
-			const DOMString&				attrName,
-			const AttributeList&			atts,
-			int								which);
 
 private:
 

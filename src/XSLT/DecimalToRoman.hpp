@@ -75,6 +75,14 @@ class XALAN_XSLT_EXPORT DecimalToRoman
 {
 public:
 
+	/**
+	 *  Construct a decimal to roman conversion object
+	 *
+	 * @param postValue  quantity corresponding to postLetter
+	 * @param postLetter letter for quantity, for example, "C" represents 100
+	 * @param preValue   quantity corresponding to preLetter                
+	 * @param preLetter  prefix for quantity, for example, "XC" represents 90
+	 */
 	DecimalToRoman(
 			long				postValue = 0L,
 			const DOMString&	postLetter = DOMString(), 

@@ -83,6 +83,17 @@ class AVT;
 class ElemCallTemplate: public ElemTemplateElement
 {
 public:
+
+	/**
+	 * Construct an object corresponding to an "xsl:call-template" element
+	 * 
+	 * @param constructionContext context for construction of object
+	 * @param stylesheetTree      stylesheet containing element
+	 * @param name                name of element
+	 * @param atts                list of attributes for element
+	 * @param lineNumber				line number in document
+	 * @param columnNumber			column number in document
+	 */
 	ElemCallTemplate (
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
@@ -94,6 +105,8 @@ public:
 	virtual
 	~ElemCallTemplate();
 
+	// These methods are inherited from ElemTemplateElement ...
+
 	virtual int
 	getXSLToken() const; 
 
@@ -104,9 +117,6 @@ public:
 			const DOM_Node&					sourceNode,
 			const QName&					mode) const;
 
-	/**
-	 * Add a child to the child list.
-	 */
 	virtual NodeImpl*
 	appendChild(NodeImpl* newChild);
 

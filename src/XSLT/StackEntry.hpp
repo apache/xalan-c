@@ -71,23 +71,49 @@ public:
 	virtual
 	~StackEntry();
 
+	/**
+	 * Enumeration for types of stack entries, one of context state, context
+	 * marker, element marker, or argument.
+	 */
 	enum eStackEntryType { eContextState,
 						   eContextMarker,
 						   eElementMarker,
 						   eArgument };
 
+	/**
+	 * Determine type of stack entry
+	 * 
+	 * @return enumeration value for type
+	 */
 	eStackEntryType
 	getType() const
 	{
 		return m_type;
 	}
 
+	/**
+	 * Create a copy of this stack entry object.
+	 * 
+	 * @return pointer to copy
+	 */
 	virtual StackEntry*
 	clone() const = 0;
 
+	/**
+	 * Compare this stack entry to another
+	 * 
+	 * @param rhs the object for comparison
+	 * @return true if both represent the same value
+	 */
 	virtual bool
 	equals(const StackEntry& rhs) const = 0;
 
+	/**
+	 * Compare this stack entry to another
+	 * 
+	 * @param rhs the object for comparison
+	 * @return true if both represent the same value
+	 */
 	bool
 	operator==(const StackEntry& theRHS) const
 	{

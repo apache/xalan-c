@@ -82,13 +82,22 @@ class XPath;
 
 
 /**
- * Simple data structure class for use by the 
- * NodeSorter class.
+ * Simple data structure class for use by the NodeSorter class.
  */
 class NodeSortKey
 {
 public:
 
+	/**
+	 * Construct a node sort key.
+	 *
+	 * @param executionContext current execution context
+	 * @param selectPat        XPath for selection
+	 * @param treatAsNumbers   treat as numeric values if true
+	 * @param descending       sort in descending order if true
+	 * @param langValue        language
+	 * @param resolver         resolver for namespace resolution
+	 */
 	NodeSortKey(
 			ExecutionContext&		executionContext,
 			const XPath&			selectPat, 
@@ -102,24 +111,44 @@ public:
 	NodeSortKey&
 	operator=(const NodeSortKey&	theRHS);
 
+	/**
+	 * Retrieve the selection XPath
+	 * 
+	 * @return XPath for selection
+	 */
 	const XPath&
 	getSelectPattern() const
 	{
 		return *m_selectPat;
 	}
 
+	/**
+	 * Whether to treat values as numbers
+	 * 
+	 * @return treat as numeric values if true
+	 */
 	bool
 	getTreatAsNumbers() const
 	{
 		return m_treatAsNumbers;
 	}
 
+	/**
+	 * Whether to sort in descending order
+	 * 
+	 * @return sort in descending order if true
+	 */
 	bool
 	getDescending() const
 	{
 		return m_descending;
 	}
 
+	/**
+	 * Retrieve the resolver for namespaces
+	 * 
+	 * @return object for namespace resolution
+	 */
 	const PrefixResolver&
 	getPrefixResolver() const
 	{

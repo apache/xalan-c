@@ -74,14 +74,14 @@ public:
 
   /**
    * Create an event originating at the given node of the style tree.
-   * @param processor The XSLT Processor.
-   * @param sourceTree The input source tree.
-   * @param sourceNode The current context node.
-   * @param mode The current mode.
-   * @param m_styleNode node in the style tree reference for the event.
-   * Should not be null.  That is not enforced.
+	*
+   * @param processor   XSLT Processor.
+   * @param sourceTree  input source tree.
+   * @param sourceNode  current context node.
+   * @param mode        current mode.
+   * @param m_styleNode node in the style tree reference for the event
+   *                    (should not be null, not enforced)
    */
-
 	SelectionEvent(
 			StylesheetExecutionContext&		executionContext, 
 			const DOM_Node&					sourceNode,
@@ -94,6 +94,10 @@ public:
 	~SelectionEvent();
 
 private:
+
+	// Unimplemented...
+	SelectionEvent&
+	operator=(const SelectionEvent&	other);
 
   /**
    * The executionContext instance.
@@ -125,11 +129,6 @@ private:
    */
   const XObject* const					m_selection;
 
-private:
-
-	// Unimplemented...
-	SelectionEvent&
-	operator=(const SelectionEvent&	other);
 };
 
 

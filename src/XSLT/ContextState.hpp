@@ -84,6 +84,12 @@ class ContextState : public StackEntry
 {
 public:
 
+	/**
+	 * Construct a context state from a source node and caller node
+	 *
+	 * @param caller     caller node
+	 * @param sourceNode source node
+	 */
 	ContextState(
 			const DOM_Node&		caller,
 			const DOM_Node&		sourceNode);
@@ -93,12 +99,22 @@ public:
 	virtual
 	~ContextState();
 
+	/**
+	 * Retrieves the caller node
+	 *
+	 * @return caller node
+	 */
 	const DOM_Node&
 	getCaller() const
 	{
 		return m_caller;
 	}
 
+	/**
+	 * Retrieves the source node
+	 *
+	 * @return source node
+	 */
 	const DOM_Node&
 	getSource() const
 	{

@@ -69,24 +69,24 @@ class TraceListener
 public:
 
   /**
-   * Method that is called when a trace event occurs.
-   * The method is blocking.  It must return before processing continues.
+	* Method that is called when a trace event occurs. The method is blocking.
+	* It must return before processing continues.
    *
-   * @param ev the trace event.
+   * @param ev trace event
    */
   virtual void trace(const TracerEvent& ev) = 0;
   
   /**
    * Method that is called just after the formatter listener is called.
    *
-   * @param ev the generate event.
+   * @param ev generate event
    */
   virtual void selected(const SelectionEvent& ev) = 0;
 
   /**
    * Method that is called just after the formatter listener is called.
    *
-   * @param ev the generate event.
+   * @param ev generate event
    */
   virtual void generated(const GenerateEvent& ev) = 0;
 

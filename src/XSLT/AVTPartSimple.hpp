@@ -85,18 +85,15 @@ class AVTPartSimple: public AVTPart
 public:
 
 	/**
-	 * Construct a simple AVT part.
-	 * @param val A pure string section of an AVT.
+	 * Construct a simple Attribute Value Template (AVT) part.
+	 *
+	 * @param val A pure string section of an AVT
 	 */
 	AVTPartSimple(const DOMString&	val);
 
-	/**
-	 * Write the value into the buffer.
-	 * @param buf Buffer to write into.
-	 * @param contextNode the current context node.
-	 * @param prefixResolver the prefix resolver to use.
-	 * @param executionContext The execution context.
-	 */
+
+	// These methods are inherited from AVTPart ...
+
 	virtual void
 	evaluate(
 			DOMString&				buf,

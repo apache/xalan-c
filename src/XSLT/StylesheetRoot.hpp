@@ -95,94 +95,124 @@ class XALAN_XSLT_EXPORT StylesheetRoot : public Stylesheet
 {
 public:
 
+#if defined(XALAN_NO_NAMESPACES)
+	typedef	vector<TraceListener*>	ListenersVectorType;
+#else
+	typedef	std::vector<TraceListener*>	ListenersVectorType;
+#endif
+
 	/**
-	 * Constructor for a Stylesheet needs a Document.
-	 * @exception XSLProcessorException thrown if the active ProblemListener and XMLParserLiaison decide 
-	 * the error condition is severe enough to halt processing.
+	 * Construct a Stylesheet from a Document.
+	 *
+	 * @param baseIdentifier document identifier
+	 * @param constructionContext context for construction of object
 	 */
 	StylesheetRoot(
         const DOMString&				baseIdentifier,
 		StylesheetConstructionContext&	constructionContext);    
-/*
-    throws XSLProcessorException, 
-    MalformedURLException, 
-    FileNotFoundException,
-    IOException,
-    SAXException
- */
 
 	virtual 
 	~StylesheetRoot();
 
-  /**
-   * Transform the source tree to the output in the given 
-   * result tree target.
-   * @param inputSource  The input source tree.
-   * @param outputTarget The output source tree.
-   * @exception XSLProcessorException thrown if the active ProblemListener and XMLParserLiaison decide 
-   * the error condition is severe enough to halt processing.
-   */
+	/**
+	 * Transform the source tree to the output in the given result tree target.
+	 *
+	 * @param inputSource  The input source tree
+	 * @param outputTarget The output source tree
+	 * @param constructionContext context for construction of object
+	 */
 	void
 	process(
 			const DOM_Node&					sourceTree, 
 			XSLTResultTarget&				outputTarget,
 			StylesheetExecutionContext&		executionContext);
-  /*
-    throws XSLProcessorException, 
-           MalformedURLException, 
-           FileNotFoundException,
-           IOException,
-           SAXException
-  */
   
-	/**
-	 * A stack to keep track of URLs.  Used only during import processing, and
-	 * not during transformation!
-	 */
-	typedef	std::vector<const XMLURL*>		ImportStackType;
-
 	/** 
 	 * Return the output method that was specified in the stylesheet. 
 	 * The returned value is one of Formatter.OUTPUT_METH_XML,
 	 * Formatter.OUTPUT_METH_HTML, or Formatter.OUTPUT_METH_TEXT.
+	 *
+	 * @return number of output method
 	 */
 	int 
 	getOutputMethod() const;
 
-	/** Get the version string that was specified in the stylesheet. */
+	/**
+	 * Get the version string that was specified in the stylesheet.
+	 *
+	 * @return version string
+	 */
 	DOMString
 	getOutputVersion() const;
 
-	/** Get the media-type string that was specified in the stylesheet. */
+	/**
+	 * Determine if output indenting was specified in the stylesheet.
+	 *
+	 * @return true to indent
+	 */
 	bool 
 	getOutputIndent() const;
 
-	/** Get the encoding string that was specified in the stylesheet. */
+	/**
+	 * Get the output encoding string that was specified in the stylesheet.
+	 *
+	 * @return encoding string
+	 */
 	DOMString 
 	getOutputEncoding() const;
 
-	/** Get the encoding string that was specified in the stylesheet. */
+	/**
+	 * Get the java output encoding string that was specified in the stylesheet.
+	 *
+	 * @return encoding string
+	 */
 	DOMString 
 	getJavaOutputEncoding() const;
 
-	/** Get the doctype-system-id string that was specified in the stylesheet. */
+	/**
+	 * Get the doctype-system-id string that was specified in the stylesheet.
+	 *
+	 * @return document type string
+	 */
 	DOMString 
 	getOutputDoctypeSystem() const;
 
-	/** Get the media-type string that was specified in the stylesheet. */
+	/**
+	 * Get the media-type string that was specified in the stylesheet.
+	 *
+	 * @return media type string
+	 */
 	DOMString 
 	getOutputMediaType() const;
 	
-	/** Get the doctype-public-id string that was specified in the stylesheet. */
+	/**
+	 * Get the doctype-public-id string that was specified in the stylesheet.
+	 *
+	 * @return document type public id string
+	 */
 	DOMString 
 	getOutputDoctypePublic() const;
 
-	/** Get the XML Declaration that was specified in the stylesheet. */
+	/**
+	 * Determine whether to output XML declarations.
+	 *
+	 * @return true to output declarations
+	 */
 	bool getOutputXMLDecl() { return m_xmlDecl; }
 
-	/** Get the standalone string that was specified in the stylesheet. */
+	/**
+	 * Get the standalone string that was specified in the stylesheet, either
+	 * "yes" or "no."
+	 *
+	 * @return standalone string
+	 */
 	DOMString getOutputStandalone() const { return m_standalone; }
 
+	/**
+	 * Get the template representing the default rule for text.
+	 *
+	 * @return pointer to template rule for text
+	 */
 	ElemTemplate* 
 	getDefaultTextRule() const
 	{
@@ -190,12 +220,22 @@ public:
 	}
 
 	
+	/**
+	 * Get the template representing the default rule.
+	 *
+	 * @return pointer to default template rule
+	 */
 	ElemTemplate* 
 	getDefaultRule() const
 	{
 		return m_defaultRule;
 	}
 
+	/**
+	 * Get the template representing the default root rule.
+	 *
+	 * @return pointer to default root template rule
+	 */
 	ElemTemplate* 
 	getDefaultRootRule() const
 	{
@@ -203,7 +243,11 @@ public:
 	}
 
 	/**
-	 * Process the xsl:output element.
+	 * Process the "xsl:output" element.
+	 *
+	 * @param name                name of element
+	 * @param atts                attribute list for element
+	 * @param constructionContext context for construction of object
 	 */
 	void 
 	processOutputSpec(
@@ -213,38 +257,11 @@ public:
 
 	/**
 	 * Create the default rule if needed.
+	 *
+	 * @param constructionContext context for construction of object
 	 */
 	void 
 	initDefaultRule(StylesheetConstructionContext&	constructionContext);
-
-
-private:
-
-	/**
-	 * The URL that belongs to the result namespace.
-	 * @serial
-	 */
-	DOMString m_resultNameSpaceURL; // = null;
-  
-	/**
-	 * List of listeners who are interested in tracing what's going on.
-	 */
-	//transient 
-	typedef	std::vector<TraceListener*>	ListenersVectorType;
-	ListenersVectorType m_traceListeners; // = null;
-  
-	/**
-	 * String buffer for use by AVTs and the like.
-	 */
-	//java: transient DOMStringBuffer m_stringbuf = new StringBuffer();
-  
-	/**
-	 * The output method as specified in xsl:output.
-	 */
-	int m_outputmethod; // = Formatter.OUTPUT_METH_XML;
-
-// @@ JMD: Need accessors LATER
-public:
 
 	/**
 	 * The version tells the version of XML to be used for outputting the result tree,
@@ -255,7 +272,6 @@ public:
 	/**
 	 * indent-result is by default no, which means an XSL processor must not
 	 * change the whitespace on output.
-	 * @serial
 	 */
 	bool m_indentResult; // = false;
 
@@ -298,7 +314,124 @@ public:
      */
 	DOMString m_standalone; // = null;
 
+	/**
+	 * Retrieve the stack of imported stylesheets.
+	 * 
+	 * @return stack of URIs for stylesheets
+	 */
+	URLStackType& getImportStack()
+	{
+		return m_importStack;
+	}
+
+	/**
+	 * Retrieve the stack of imported stylesheets.
+	 * 
+	 * @return const stack of URIs for stylesheets
+	 */
+	const URLStackType& getImportStack() const
+	{
+		return m_importStack;
+	}
+
+
+	/**
+	 * Change the value of the flag for indenting results.
+	 * 
+	 * @param bIndent true to indent results
+	 */
+	void setIndentResult(bool bIndent)
+	{
+		m_indentResult = bIndent;
+	}
+
+	/**
+	 * Change the value of the output method, one of Formatter.OUTPUT_METH_XML,
+	 * Formatter.OUTPUT_METH_HTML, or Formatter.OUTPUT_METH_TEXT.
+	 * 
+	 * @param meth new method number
+	 */
+	void setOutputMethod(int meth)
+	{
+		m_outputmethod = meth;
+	}
+
+	/**
+	 * Determine the number of trace listeners.
+	 * 
+	 * @return number of listeners
+	 */
+	int
+	getTraceListeners() const;
+
+	/**
+	 * Add a trace listener.
+	 * 
+	 * @param tl pointer to listener to add
+	 */
+	void addTraceListener(TraceListener *tl);
+
+	/**
+	 * Remove a trace listener.
+	 * 
+	 * @param tl pointer to listener to remove
+	 */
+	void removeTraceListener(TraceListener* tl); 
+
+	/**
+	 * Fire a trace event.
+	 * 
+	 * @param te trace event to fire
+	 */
+	void fireTraceEvent(const TracerEvent& te) const;
+	  
+	/**
+	 * Fire a selection event.
+	 * 
+	 * @param se selection event to fire
+	 */
+	void fireSelectedEvent(const SelectionEvent& se) const;
+
+	/**
+	 * Retrieve list of CDATA section elements.
+	 * 
+	 * @return vector of elements
+	 */
+	const QNameVectorType& getCdataSectionElems()
+	{
+		return m_cdataSectionElems;
+	}
+
+	// Read the stylesheet root from a serialization stream.
+	// @@ Not implemented yet
+	// void readObject(ObjectInputStream stream);
+
+	// These methods are inherited from Stylesheet ...
+	
 private:
+
+	/**
+	 * The URL that belongs to the result namespace.
+	 * @serial
+	 */
+	DOMString m_resultNameSpaceURL; // = null;
+  
+	/**
+	 * List of listeners who are interested in tracing what's going on.
+	 */
+	//transient 
+	ListenersVectorType m_traceListeners; // = null;
+  
+	/**
+	 * String buffer for use by AVTs and the like.
+	 */
+	//java: transient DOMStringBuffer m_stringbuf = new StringBuffer();
+  
+	/**
+	 * The output method as specified in xsl:output.
+	 */
+	int m_outputmethod; // = Formatter.OUTPUT_METH_XML;
+
 	/**
 	 * List of qnames that specifies elements that should be formatted 
 	 * as CDATA.
@@ -313,7 +446,7 @@ private:
 	 * specially."
 	 */
 	//transient
-	ImportStackType m_importStack;
+	URLStackType m_importStack;
 
   
 	/**
@@ -341,49 +474,6 @@ private:
 	 * @serial
 	 */
 	ElemTemplate* m_defaultRootRule;
-
-public:
-
-	ImportStackType& getImportStack()
-	{
-		return m_importStack;
-	}
-
-	const ImportStackType& getImportStack() const
-	{
-		return m_importStack;
-	}
-
-
-	void setIndentResult(bool bIndent)
-	{
-		m_indentResult = bIndent;
-	}
-
-	void setOutputMethod(int meth)
-	{
-		m_outputmethod = meth;
-	}
-
-	int
-	getTraceListeners() const;
-
-	void addTraceListener(TraceListener *tl);
-			 // throws TooManyListenersException
-
-	// Remove a trace listener.
-	void removeTraceListener(TraceListener* tl); 
-
-	// Fire a trace event.
-	void fireTraceEvent(const TracerEvent& te) const;
-	  
-	// Fire a selection event.
-	void fireSelectedEvent(const SelectionEvent& se) const;
-
-	const QNameVectorType& getCdataSectionElems() { return m_cdataSectionElems; }
-	// Read the stylesheet root from a serialization stream.
-	// @@ Not implemented yet
-	// void readObject(ObjectInputStream stream);
 
 };
 

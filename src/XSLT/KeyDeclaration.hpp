@@ -72,12 +72,19 @@ class XPath;
 
 
 /**
- * Holds the attribute declarations for the xsl:keys element.
+ * Holds the attribute declarations for the "xsl:key" element.
  */
 class KeyDeclaration
 {
 public:
 
+	/**
+	 * Construct an object containing attributes of an "xsl:key" element
+	 * 
+	 * @param name         name of element
+	 * @param matchPattern XPath for "match" attribute
+	 * @paramuse           XPath for "use" attribute
+	 */
 	KeyDeclaration(
 			const DOMString&	name,
 			XPath&				matchPattern,
@@ -88,18 +95,33 @@ public:
 	{
 	}
 
+	/**
+	 * Retrieves name of element
+	 * 
+	 * @return name string
+	 */
 	const DOMString&
 	getName() const
 	{
 		return m_name;
 	}
 
+	/**
+	 * Retrieves "use" XPath
+	 * 
+	 * @return XPath for "use" attribute
+	 */
 	XPath&
 	getUse() const
 	{
 		return *m_use;
 	}
 
+	/**
+	 * Retrieves "match" XPath
+	 * 
+	 * @return XPath for "match" attribute
+	 */
 	XPath&
 	getMatchPattern() const
 	{

@@ -83,6 +83,20 @@ class ElemTextLiteral : public ElemTemplateElement
 {
 public:
 
+	/**
+	 * Construct an object corresponding to literal text element
+	 * 
+	 * @param constructionContext   context for construction of object
+	 * @param stylesheetTree        stylesheet containing element
+	 * @param lineNumber            line number in document
+	 * @param columnNumber          column number in document
+	 * @param ch                    pointer to character string for element
+	 * @param start                 starting offset of element
+	 * @param length                number of characters in element
+	 * @param isCData               true if a CDATA element
+	 * @param preserveSpace         true is space should be preserved
+	 * @param disableOutputEscaping true if output escaping should be disabled
+	 */
 	ElemTextLiteral(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
@@ -98,6 +112,19 @@ public:
 	virtual
 	~ElemTextLiteral();
 
+	/**
+	 * Determine if whitespace should be preserved within the element
+	 * 
+	 * @return true if whitespace should be preserved
+	 */
+	bool
+	isPreserveSpace() const
+	{
+		return m_preserveSpace;
+	}
+
+	// These methods are inherited from ElemTemplateElement ...
+	
 	virtual int
 	getXSLToken() const;
 
@@ -107,12 +134,6 @@ public:
 			const DOM_Node&					sourceTree, 
 			const DOM_Node&					sourceNode,
 			const QName&					mode) const;
-
-	bool
-	isPreserveSpace() const
-	{
-		return m_preserveSpace;
-	}
 
 private:
 

@@ -120,6 +120,7 @@ public:
 
 	/**
 	 * Build a keys table.
+	 *
 	 * @param doc The owner document key (normally the same as startNode).
 	 * @param startNode The node to start itterating from to build the keys index.
 	 * @param nscontext The stylesheet's namespace context.
@@ -137,18 +138,28 @@ public:
 	~KeyTable();
 
 	/**
-	 * Given a valid element key, return the corresponding node list. 
-	 * @param The name of the key, which must match the 'name' attribute on xsl:key.
-	 * @param ref The value that must match the value found by the 'match' attribute on xsl:key.
-	 * @return If the name was not declared with xsl:key, this will return null, 
-	 * if the identifier is not found, it will return an empty node set, 
-	 * otherwise it will return a nodeset of nodes.
+	 * Given a valid element key, return the corresponding node list. If the
+	 * name was not declared with xsl:key, this will return null, the
+	 * identifier is not found, it will return an empty node set, otherwise it
+	 * will return a nodeset of nodes.
+	 *
+	 * @param name name of the key, which must match the 'name' attribute on
+	 *             xsl:key
+	 * @param ref  value that must match the value found by the 'match'
+	 *             attribute on xsl:key
+	 * @return		pointer to nodeset for key 
 	 */
 	const NodeRefListBase*
 	getNodeSetByKey(
 				  const DOMString&	name, 
 				  const DOMString&	ref) const;
 
+	/**
+	 * Retrieve the document key.  This table should only be used with contexts
+	 * whose Document root matches this key.
+	 * 
+	 * @return Node for document
+	 */
 	DOM_Node
 	getDocKey() const
 	{

@@ -1111,7 +1111,7 @@ void StylesheetHandler::processImport(const DOMString& name, const AttributeList
 			const XMLURL* const		hrefUrl = m_processor.getURLFromString(href, m_stylesheet.getBaseIdentifier());
 			assert(hrefUrl != 0);
 
-			StylesheetRoot::ImportStackType& importStack = m_stylesheet.getStylesheetRoot().getImportStack();
+			StylesheetRoot::URLStackType& importStack = m_stylesheet.getStylesheetRoot().getImportStack();
 
 			if(stackContains(importStack, *hrefUrl))
 			{

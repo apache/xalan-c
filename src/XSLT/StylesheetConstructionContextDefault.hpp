@@ -80,10 +80,12 @@ class XSLTEngineImpl;
 
 
 
-//
-// An default implementation of an abtract class which provides support for
-// constructing the internal representation  of a stylesheet.
-//
+/**
+ *
+ * An default implementation of an abtract class which provides support for
+ * constructing the internal representation  of a stylesheet.
+ *
+ */
 class XALAN_XSLT_EXPORT StylesheetConstructionContextDefault : public StylesheetConstructionContext
 {
 public:
@@ -99,29 +101,18 @@ public:
 
 	// These interfaces are inherited from ExecutionContext...
 
-	/**
-	 * Tell the user of an error, and probably throw an 
-	 * exception.
-	 */
 	virtual void
 	error(
 			const DOMString&	msg,
 			const DOM_Node& 	sourceNode = DOM_Node(),
 			const DOM_Node&		styleNode = DOM_Node()) const;
 
-	/**
-	 * Tell the user of an warning, and probably throw an 
-	 * exception.
-	 */
 	virtual void
 	warn(
 			const DOMString&	msg,
 			const DOM_Node& 	sourceNode = DOM_Node(),
 			const DOM_Node&		styleNode = DOM_Node()) const;
-
-	/**
-	 * Output a message.
-	 */
+	
 	virtual void
 	message(
 			const DOMString&	msg,
@@ -147,21 +138,11 @@ public:
 	virtual const DOMString&
 	getXSLNameSpaceURL() const;
 
-	/**
-	 * Create and initialize an xpath and return it.
-	 * This is to be used by stylesheet elements that need
-	 * an XPath that is guaranteed to persist while it lives.
-	 */
 	virtual XPath*
 	createMatchPattern(
 			const DOMString&		str,
 			const PrefixResolver&	resolver);
 
-	/**
-	 * Create and initialize an xpath and return it.
-	 * This is to be used by stylesheet elements that need
-	 * an XPath that is guaranteed to persist while it lives.
-	 */
 	virtual XPath*
 	createXPath(
 			const DOMString&		str,

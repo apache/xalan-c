@@ -503,14 +503,14 @@ DOMString ElemTemplateElement::childrenToString(StylesheetExecutionContext& exec
  * Perform a query if needed, and call transformChild for each child.
  * 
  * @param stylesheetTree The owning stylesheet tree.
- * @param xslInstruction The stylesheet element context (depricated -- I do 
+ * @param xslInstruction The stylesheet element context (deprecated -- I do 
  *      not think we need this).
  * @param template The owning template context.
  * @param sourceTree The input source tree.
  * @param sourceNodeContext The current source node context.
  * @param mode The current mode.
  * @param selectPattern The XPath with which to perform the selection.
- * @param xslToken The current XSLT instruction (depricated -- I do not     
+ * @param xslToken The current XSLT instruction (deprecated -- I do not     
  *     think we want this).
  */
 void

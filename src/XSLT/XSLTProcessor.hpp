@@ -190,16 +190,17 @@ public:
    */
    virtual void reset() = 0;
   
-  /**
-   * Given an input source, get the source tree.
-   */
+	/**
+	 * Given an input source, get the source tree.
+	 *
+	 * @param inputSource pointer to input source
+	 */
    virtual const DOM_Node getSourceTreeFromInput(XSLTInputSource* inputSource) = 0;
 
    /**
     * Output an object to the result tree by doing the right conversions.
     * This is public for access by extensions.
     *
-    * @param stylesheetTree the target stylesheet tree.
     * @param obj the XObject to output.
     */
 	virtual void
@@ -371,10 +372,11 @@ public:
    */
    virtual void setFormatterListener(FormatterListener* flistener) = 0;  
   
-  /**
-   * Add a trace listener for the purposes of debugging and diagnosis.
-   * @param tl Trace listener to be added.
-   */
+	/**
+	 * Add a trace listener for the purposes of debugging and diagnosis.
+	 *
+	 * @param tl trace listener to be added
+	 */
    virtual void addTraceListener(TraceListener* tl) = 0;
     // throws TooManyListenersException
   
@@ -408,10 +410,11 @@ public:
    */
    virtual void setQuietConflictWarnings(bool b) = 0;
   
-  /**
-   * Remove a trace listener.
-   * @param tl Trace listener to be removed.
-   */
+	/**
+	 * Remove a trace listener.
+	 *
+	 * @param tl Trace listener to be removed.
+	 */
    virtual void removeTraceListener(TraceListener* tl) = 0;
   
 // @@TODO: what to do about output stream ??

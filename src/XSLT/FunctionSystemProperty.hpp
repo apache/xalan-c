@@ -81,15 +81,8 @@ public:
 	virtual
 	~FunctionSystemProperty();
 
-	/**
-	 * Execute an XPath function object.  The function must return 
-	 * a valid object.
-	 * @param executionContext The executing context.
-	 * @param context The current context node.
-	 * @param opPos The current op position.
-	 * @param args A vector of pointers to XObject arguments.
-	 * @return A pointer to the result XObject.
-	 */
+	// These methods are inherited from XPath/Function ...
+	
 	virtual XObject*
 	execute(
 			XPathExecutionContext&			executionContext,
@@ -100,7 +93,7 @@ public:
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
 	virtual Function*
 #else
-	virtual FunctionKey*
+	virtual FunctionSystemProperty*
 #endif
 	clone() const;
 

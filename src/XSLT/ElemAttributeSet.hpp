@@ -87,6 +87,17 @@
 class ElemAttributeSet : public ElemUse
 {
 public:
+
+	/**
+	 * Construct an object corresponding to an "xsl:attribute-set" element
+	 * 
+	 * @param constructionContext context for construction of object
+	 * @param stylesheetTree      stylesheet containing element
+	 * @param name                name of element
+	 * @param atts                list of attributes for element
+	 * @param lineNumber				line number in document
+	 * @param columnNumber			column number in document
+	 */
 	ElemAttributeSet (
 		StylesheetConstructionContext&	constructionContext,
 		Stylesheet& stylesheetTree,
@@ -96,7 +107,16 @@ public:
 		int columnNumber);
 
 	virtual ~ElemAttributeSet();
-
+	
+	/**
+	 * Retrieves qualified name of object
+	 *
+	 * @return qualified name
+	 */
+	const QName& getQName() const { return m_QName; }
+	 
+	// These methods are inherited from ElemUse ...
+	
 	virtual int getXSLToken() const; 
 
 	virtual	void
@@ -106,18 +126,8 @@ public:
 			const DOM_Node&					sourceNode,
 			const QName&					mode) const;
 
-	/**
-   * Add a child to the child list.
-   * <!ELEMENT xsl:attribute-set (xsl:attribute)*>
-   * <!ATTLIST xsl:attribute-set
-   *   name %qname; #REQUIRED
-   *   use-attribute-sets %qnames; #IMPLIED
-   * >
-   */
 	virtual NodeImpl* appendChild(NodeImpl* newChild);
 
-	const QName& getQName() const { return m_QName; }
-	 
 private:
 
 	QName m_QName;

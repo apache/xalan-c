@@ -193,43 +193,9 @@ class XSLTResultTarget;
  * It's the responsibility of the XSLTEngineImpl class, collaborating with the
  * XML parser liaison, the DOM, and the XPath engine, to transform a source
  * tree of nodes into a result tree according to instructions and templates
- * specified by a stylesheet tree.  The methods process(...) are the primary
- * public entry points.  The best way to call the processor classes is to use
- * the
- *   process( XSLTInputSource inputSource, XSLTInputSource stylesheetSource,
- *   XSLTResultTarget outputTarget) 
- * method, but you may use any of process methods that are provided for
- * convenience.
+ * specified by a stylesheet tree.  The process method is the primary
+ * public entry points.
  * 
- * Example:
- * 
- * foo.xml:
- * <?xml version="1.0"?>
- * <doc>Hello</doc>
- * 
- * foo.xsl:
- * <?xml version="1.0"?> 
- * <xsl:stylesheet xmlns:xsl="http://www.w3.org/XSL/Transform/1.0">
- *   <xsl:template match="doc">
- *     <out><xsl:value-of select="."/></out>
- *   </xsl:template>
- * </xsl:stylesheet>
- * 
- * transform.cpp:
- * 
- *  void main()
- *  {
- *      XSLTEngineImpl* processor = new XSLTEngineImpl();
- // @@ FIX THIS
- *      PrintWriter pw = new PrintWriter( new FileWriter("foo.out") );
- *      processor.process("foo.xml", "foo.xsl", pw);
- *  }
- * 
- * foo.out:
- * <out>Hello</out>
- * 
- * Look at the Process class for an advanced example of usage by the main()
- * function.
  * 
  * If you reuse the processor instance, you should call reset() between calls.
  * 
@@ -238,38 +204,82 @@ class XSLTResultTarget;
  * @author David N. Bertoni (david_n_bertoni@lotus.com)
  */
 
-#ifdef _MSC_VER
-#pragma warning(disable:4100)
-#endif
-
 class XALAN_XSLT_EXPORT XSLTEngineImpl : public XSLTProcessor, 
 		private DocumentHandler
 {
-  //==========================================================
-  // SECTION: Constructors
-  //==========================================================
     
 public:
 
-//////////////////////////////////////////////////////////////////////////////
+class StackGuard;
 
+#if defined(XALAN_NO_NAMESPACES)
+#	define XALAN_STD
+#else
+#	define XALAN_STD std::
+#endif
 
-  /**
-   * Construct an XSL processor that uses the XML4J fast DOM liaison
-   * by default.
-   */
-// @@ JMD: how to model classForName ??
-   // XSLTEngineImpl(DOMString parserLiaisonClassName = DOMString("org.apache.xml.xpath4j.xml.xml4j2dom.XML4JLiaison4dom"));
+typedef XALAN_STD auto_ptr<XPathProcessor>    XPathProcessorPtrType;
+typedef XALAN_STD map<DOMString, XObject*>    TopLevelVariablesMapType;
+typedef XALAN_STD map<DOMString, int>         AttributeKeysMapType;
+typedef XALAN_STD map<DOMString, int>         ElementKeysMapType;
+typedef XALAN_STD map<const void*, clock_t>   DurationsTableMapType;
+typedef XALAN_STD set<DOMString>              TranslateCSSSetType;
+typedef XALAN_STD vector<Arg>                 ParamVectorType;
+typedef XALAN_STD vector<ElemAttributeSet*>   AttrStackType;
+typedef XALAN_STD vector<KeyDeclaration>      KeyDeclarationVectorType;
+typedef XALAN_STD vector<Locator*>            LocatorStack;
+typedef XALAN_STD vector<NameSpace>           NamespaceVectorType;
+typedef XALAN_STD vector<NamespaceVectorType> NamespacesStackType;
+typedef XALAN_STD vector<StackEntry*>         VariableStackStackType;
+typedef XALAN_STD vector<StackGuard>          StackGuardStackType;
+typedef XALAN_STD vector<TraceListener*>      TraceListenerVectorType;
+typedef XALAN_STD vector<XObject*>            XObjectPtrVectorType;
+typedef XALAN_STD vector<bool>                BoolVectorType;
+typedef XALAN_STD runtime_error               RuntimeError;
+
+#if defined(XALAN_HASH_CONTAINERS_AVAILABLE)
+	typedef hash_map<DOM_Node, int, DOM_NodeHashFunction>	XSLDirectiveMapType;
+	typedef hash_map<DOMString,
+					 MutableNodeRefList,
+					 DOMStringHashFunction,
+					 DOMStringEqualsFunction>	NodeListMapType;
+	typedef hash_map<DOMString,
+					 NodeListMapType,
+					 DOMStringHashFunction,
+					 DOMStringEqualsFunction>	KeysMapType;
+	typedef hash_map<DOMString,
+					 DOM_Node,
+					 DOMStringHashFunction,
+					 DOMStringEqualsFunction>	NamedTemplatesMapType;
+	typedef hash_map<DOMString,
+					 Stylesheet*,
+					 DOMStringHashFunction,
+					 DOMStringEqualsFunction>		StylesheetMapType;
+#else
+	typedef XALAN_STD map<DOM_Node, int>							XSLDirectiveMapType;
+	typedef XALAN_STD map<DOMString,
+					 MutableNodeRefList>	NodeListMapType;
+	typedef XALAN_STD map<DOMString,
+					 NodeListMapType>		KeysMapType;
+	typedef XALAN_STD map<DOMString,
+					 DOM_Node>	NamedTemplatesMapType;
+	typedef XALAN_STD map<DOMString,
+					 Stylesheet*>		StylesheetMapType;
+#endif
+
+#undef XALAN_STD
 
 	/**
 	 * Construct an XSL processor that can call back to a XML processor, so it
 	 * can handle included files, and the like. You must create a new instance
-	 * of the XSLTEngineImpl class each time you run a transformation.  Fixing
-	 * this is high on my priority list.
-	 * @param XMLParserLiaison A liaison to an object that can help with stuff 
-	 *                         specific to a parser implementation.
-	 * @see org.apache.xml.xslt4j.XMLParserLiaison
-	 * @see org.apache.xml.xslt4j.xml4j.ProcessXSL
+	 * of the XSLTEngineImpl class each time you run a transformation.
+	 *
+	 * @param XMLParserLiaison liaison to an object that can help with a
+	 *                         specific parser implementation
+	 * @param xpathSupport     $$$
+	 * @param xpathEnvSupport  $$$
+	 * @param xobjectFactory   object responsible for XObject objects
+	 * @param xpathFactory     object responsible for XPath objects
 	 */
 	XSLTEngineImpl(
 			XMLParserLiaison&	parserLiaison,
@@ -278,27 +288,7 @@ public:
 			XObjectFactory&		xobjectFactory,
 			XPathFactory&		xpathFactory);
 
-
-//////////////////////////////////////////////////////////////////////////////
-
-
-	
 	virtual ~XSLTEngineImpl();
-
-protected:
-
-	/**
-	 * Reset the state.  This needs to be called after a process() call 
-	 * is invoked, if the processor is to be used again.
-	 */
-	virtual void reset();
-	
-  //==========================================================
-  // SECTION: Main API Functions
-  //==========================================================
-//  private void ____MAIN_API____(){}
-
-public:
 
 	/**
 	 * Perform initialization of statics -- must be called before any
@@ -306,15 +296,8 @@ public:
 	 */
 	static void Initialize();
 
-	/**
-	 * Transform the source tree to the output in the given 
-	 * result tree target.
-	 * @param inputSource  The input source.
-	 * @param stylesheetSource  The stylesheet source.  May be null if source has a xml-stylesheet PI.
-	 * @param outputTarget The output source tree.
-	 * @exception XSLProcessorException thrown if the active ProblemListener and XMLParserLiaison decide 
-	 * the error condition is severe enough to halt processing.
-	 */
+	// These methods are inherited from XSLTProcessor ...
+	
 	virtual void
 	process(
 			XSLTInputSource*				inputSource, 
@@ -323,62 +306,136 @@ public:
 			StylesheetConstructionContext&	constructionContext,
 			StylesheetExecutionContext&		executionContext);
 	
-	/**
-	 * Given a URI to an XSL stylesheet, 
-	 * Compile the stylesheet into an internal representation.
-	 * This calls reset() before processing if the stylesheet root has been set 
-	 * to non-null.
-	 * @param stylesheetSource  The stylesheet source.
-	 * @param xobjectFactory  The XObjectFactory instance to use.  If you want to use a stylesheet with
-	 * more than one processor, or you want to use the stylesheet more than once, you will need to
-	 * use a different XObjectFactory than the one used to construct the XSLTEngineImpl instance.
-	 * @param xpathFactory  The XPathFactory instance to use.  If you want to use a stylesheet with
-	 * more than one processor, or you want to use the stylesheet more than once, you will need to
-	 * use a different XPathFactory than the one used to construct the XSLTEngineImpl instance.
-	 * @return The compiled stylesheet object.
-	 * @exception XSLProcessorException thrown if the active ProblemListener and XMLParserLiaison decide 
-	 * the error condition is severe enough to halt processing.
-	 */
 	virtual StylesheetRoot*
 	processStylesheet(
 			XSLTInputSource&				stylesheetSource,
 			StylesheetConstructionContext&	constructionContext);
 
-	/**
-	 * Given a URI to an XSL stylesheet, 
-	 * Compile the stylesheet into an internal representation.
-	 * This calls reset() before processing if the stylesheet root has been set 
-	 * to non-null.
-	 * @param xsldocURLString  The URL to the input XML document.
-	 * @return The compiled stylesheet object.
-	 * @exception XSLProcessorException thrown if the active ProblemListener and XMLParserLiaison decide 
-	 * the error condition is severe enough to halt processing.
-	 */
 	virtual StylesheetRoot*
 	processStylesheet(
 			const DOMString&				xsldocURLString,
 			StylesheetConstructionContext&	constructionContext);
 
-  //==========================================================
-  // SECTION: XML Parsing Functions
-  //==========================================================
-//  private void ____XML_PARSING_FUNCTIONS____(){}
-
-	/**
-	 * Given an input source, get the source tree.
-	 */
 	virtual const DOM_Node getSourceTreeFromInput(XSLTInputSource *inputSource);
+
+	virtual void
+	outputToResultTree(
+			const XObject&	xobj);
+
+	virtual XObject*
+	getTopLevelVariable(const DOMString&	theName) const;
+
+	virtual void
+	resetCurrentState(
+			const DOM_Node&		sourceTree,
+			const DOM_Node&		xmlNode);
+
+	virtual DOM_Document
+	getRootDoc() const;
+
+	virtual void
+	setRootDoc(const DOM_Document& doc);
+
+	virtual DOMString
+	evaluateAttrVal(
+			const DOM_Node&			contextNode,
+			const DOM_Element&		namespaceContext,
+			const DOMString&		stringedValue,
+			XPathExecutionContext&	executionContext);
+
+	virtual ResultTreeFragBase*
+	createResultTreeFrag(
+			StylesheetExecutionContext&		executionContext,
+			const ElemTemplateElement&		templateChild,
+			const DOM_Node&					sourceTree,
+			const DOM_Node&					sourceNode,
+			const QName&					mode);
+
+	virtual ResultTreeFragBase*
+	createResultTreeFrag() const;
+
+	virtual void
+	resolveTopLevelParams(StylesheetExecutionContext&	executionContext);
+
+	virtual XMLParserLiaison&
+	getXMLParserLiaison() const;
+
+   virtual XObject*
+   createXResultTreeFrag(const ResultTreeFragBase&  r) const;
+
+	virtual XObject*
+	getVariable(const QName& qname) const;
+
+	virtual XObject*
+	getParamVariable(const QName&	theName) const;
+
+	virtual void
+	pushVariable(
+			const QName&		name,
+			XObject*			var,
+			const DOM_Node&		element);
+
+	virtual void setStylesheetParam(	
+					const DOMString& key,
+					const DOMString& expression);
+	
+	virtual void
+	setStylesheetParam(
+			const DOMString&	key,
+			XObject*			value);
+
+   virtual const NodeRefListBase*
+   getNodeSetByKey(
+			const DOM_Node&			doc, 
+			const DOMString&		name, 
+			const DOMString&		ref, 
+			const PrefixResolver&	resolver,
+			XPathExecutionContext&	executionContext) const;
+
+	virtual bool
+	shouldStripSourceNode(const DOM_Node&	textNode) const;
+
+	virtual FormatterListener*
+	getFormatterListener() const;
+
+	virtual void
+	setFormatterListener(FormatterListener*	flistener);
+
+	virtual void addTraceListener(TraceListener* tl);
+	
+	virtual void
+	setTraceTemplates(bool	b);
+
+	bool isTraceSelect() const;
+
+	virtual void
+	setTraceSelect(bool	b);
+  
+	virtual void
+	setTraceTemplateChildren(bool	b);
+
+	virtual void
+	setQuietConflictWarnings(bool	b)
+	{
+		m_quietConflictWarnings = b;
+	}
+
+	virtual void removeTraceListener(TraceListener* tl);
+	
+	virtual void
+	setDiagnosticsOutput(PrintWriter*	pw);
+
 
 	/**
 	 * Read in the XML file, either producing a Document or calling SAX events,
 	 * and register the document in a table.  If the document has already been
 	 * read in, it will not be reparsed.
-	 * @param url The location of the XML. 
-	 * @param docHandler The SAX event handler. 
-	 * @param docToRegister If using a SAX event handler, the object to register in the source docs table. 
-	 * @return lcom.ms.xml.om.Document object, which represents the parsed XML.
-	 * @exception SAXException thrown if the active ProblemListener and XMLParserLiaison decide 
-	 * the error condition is severe enough to halt processing.
+	 *
+	 * @param url location of the XML
+	 * @param docHandler pointer to SAX event handler
+	 * @param docToRegister if using a SAX event handler, the object to register in the source docs table. 
+	 * @return document object, which represents the parsed XML
+	 * @exception SAXException
 	 */
 	DOM_Document
 	parseXML(
@@ -387,10 +444,16 @@ public:
 			const DOM_Document& docToRegister);
 
 	/**
-	 * Reset the state of the XSL processor by reading in a new 
-	 * XSL stylesheet.
-	 * @param xslURLString a valid URI to an XSL stylesheet.
-	 * @param outDiagnostics The print stream to write diagnostics (may be null).
+	 * Reset the state of the XSL processor by reading in a new XSL stylesheet
+	 * from a processing instruction.
+	 *
+	 * @param xslURLString        valid URI to an XSL stylesheet
+	 * @param fragBase            base of tree if URI represents document
+	 *                            fragment
+	 * @param xmlBaseIdent        base identifier for stylesheet URI
+	 * @param isRoot              true if stylesheet is root of tree
+	 * @param constructionContext context for construction of object
+	 * @return pointer to stylesheet
 	 */
 	Stylesheet*
 	getStylesheetFromPIURL(
@@ -400,19 +463,161 @@ public:
 			bool							isRoot,
 			StylesheetConstructionContext&	constructionContext);
 
-  //==========================================================
-  // SECTION: Stylesheet Tables
-  //==========================================================
-private:
+
+	/**
+	 * Flush the pending element.
+	 */
+	void flushPending();
+
+	/**
+	 * Bottleneck addition of result tree attributes, so I can keep 
+	 * track of namespaces.
+	 */
+	void addResultNamespaceDecl(const DOMString& prefix, 
+	                                   const DOMString& namespaceVal);
+
+	/**
+	 * Bottleneck addition of result tree attributes, so I can keep 
+	 * track of namespaces.
+	 */
+	void
+	addResultAttribute(
+			AttributeListImpl&	attList,
+			const DOMString&	aname,
+			const DOMString&	value);
+
+	/**
+	 * Bottleneck addition of result tree attributes, so I can keep 
+	 * track of namespaces.
+	 */
+	void
+	addResultAttribute(
+			const DOMString&	aname,
+			const DOMString&	value)
+	{
+		addResultAttribute(m_pendingAttributes,
+						   aname,
+						   value);
+	}
+
+	virtual void
+	characters(
+			const XMLCh* const	ch,
+			const unsigned int	start,
+			const unsigned int	length);
+
+	virtual void
+	startElement(
+			const XMLCh* const	name);
+
+	virtual void
+	charactersRaw(
+			const XMLCh* const	ch,
+			const unsigned int	start,
+			const unsigned int	length);
+
+	virtual void
+	comment(
+			const XMLCh* const	data);
+
+	virtual void
+	entityReference(
+			const XMLCh* const	name);
+
+	virtual void
+	cdata(
+			const XMLCh* const	ch,
+			const unsigned int 	start,
+			const unsigned int 	length);
+
+	// These methods are inherited from DocumentHandler ...
+	
+	virtual void setDocumentLocator( Locator* const	locator);
+
+	virtual void
+	startDocument();
+
+	virtual void
+	endDocument();
+    
+	virtual void
+	startElement(
+			const XMLCh* const	name,
+			AttributeList&		atts);
+
+	virtual void
+	endElement(
+			const XMLCh* const	name);
+
+    virtual void characters (
+        const   XMLCh* const    chars,
+        const unsigned int    length);
+
+	virtual void
+	ignorableWhitespace(
+			const XMLCh* const	ch,
+			const unsigned int	length);
+
+	virtual void
+	processingInstruction(
+			const XMLCh* const	target,
+			const XMLCh* const	data);
+
+	virtual void resetDocument();
 
   /**
-   * The root of a linked set of stylesheets.
+   * Clone an element with or without children.
+   * TODO: Fix or figure out node clone failure!
+   * @exception XSLProcessorException thrown if the active ProblemListener and XMLParserLiaison decide 
+   * the error condition is severe enough to halt processing.
    */
-	StylesheetRoot*					m_stylesheetRoot;
+	void
+	cloneToResultTree(
+			const DOM_Node&		node, 
+			bool				isLiteral,
+			bool				overrideStrip,
+			bool				shouldCloneAttributes);
 
-	StylesheetExecutionContext*		m_stylesheetExecutionContext;
+  /**
+   * Given a result tree fragment, walk the tree and
+   * output it to the result stream.
+   */
+	void
+	outputResultTreeFragment(const XObject&		theTree);
 
-public:
+
+	/**
+	 * Execute the function-available() function.
+	 * @param context The current source tree context node.
+	 * @param opPos The current position in the m_opMap array.
+	 * @param args The function args.
+	 * @returns whether the given function is available or not.
+	 */
+	bool
+	functionAvailable(
+			DOMString&	theNamespace, 
+			DOMString&	extensionName) const;
+	
+	/**
+	 * Handle an extension function.
+	 */
+	virtual XObject*
+	extFunction(
+			XPathExecutionContext&			executionContext,
+			const DOMString&				theNamespace,
+			const DOMString&				extensionName, 
+			const XObjectPtrVectorType&	argVec) const;
+
+	// This is public for class Stylesheet...
+	/**
+	 * In response to xsl:function, set up a function that can 
+	 * be called from the expression language.
+	 * @exception XSLProcessorException thrown if the active ProblemListener and XMLParserLiaison decide 
+	 * the error condition is severe enough to halt processing.
+	 */
+	void
+	handleFunctionsInstruction(
+			DOM_Element			extensionElem);
 
 	StylesheetRoot*
 	getStylesheetRoot() const
@@ -430,19 +635,7 @@ public:
 	 * Table of stylesheet documents.
 	 * Document objects are keyed by URL string.
 	 */
-#if defined(XALAN_HASH_CONTAINERS_AVAILABLE)
-	typedef hash_map<DOMString,
-					 Stylesheet*,
-					 DOMStringHashFunction,
-					 DOMStringEqualsFunction>		StylesheetMapType;
-#else
-	typedef std::map<DOMString,
-					 Stylesheet*>		StylesheetMapType;
-#endif
-
 	StylesheetMapType	m_stylesheets;
-
-public:
 
   /**
    * Get table of stylesheet documents.
@@ -454,61 +647,10 @@ public:
 		return m_stylesheets;
 	}
 
-
-// @@ JMD: needed by Stylesheet
-// private:
-
-  //==========================================================
-  // SECTION: Source Tree Tables
-  //==========================================================
-
-/**
- * The root document.
- */
+	/**
+	 * The root document.
+	 */
 	DOM_Document			m_rootDoc;
-
-protected:
-
-  //==========================================================
-  // SECTION: Major flow-of-control functions
-  //==========================================================
-  
-  
-  //==========================================================
-  // SECTION: XSL directive handling functions
-  //==========================================================  
-
-private:
-
-/**
- * The full XSLT Namespace URL.  To be replaced by the one actually 
- * found.
- */
-	DOMString					m_XSLNameSpaceURL;	//"http://www.w3.org/1999/XSL/Transform/1.0"
-
-
-
-/**
- * The minimum version of XSLT supported.
- */
-	static const double s_XSLTVerSupported;	// 1.0
-
-/**
- * Out version of XSLT
- */
-	static const DOMString s_DefaultXSLNameSpaceURL;
-/**
- * The namespace that we must match as a minumum for XSLT.
- */
-	static const	DOMString	s_XSLNameSpaceURLPre;	// "http://www.w3.org/1999/XSL/Transform"
-
-/**
- * Special Xalan namespace for built-in extensions.
- */
-	static const DOMString s_XSLT4JNameSpaceURL; // "http://xml.apache.org/xslt"
-
-
-public:
 
 
 	static const DOMString&
@@ -541,40 +683,6 @@ public:
 	getXalanXSLNameSpaceURL();
 
 
-private:
-
-
-/**
- * Hash table that can look up XSLT4J extensions element IDs via name.
- */
-	typedef std::map<DOMString, int>	ElementKeysMapType;
-	static ElementKeysMapType		s_XSLT4JElementKeys;
-
-	/**
-	 * Init the XSLT hashtable.
-	 */
-//	static void
-//	initXSLTKeys();
-
-public:
-
-
-/**
- *  Hash table that can look up xslt element IDs via attribute.
- */
-	typedef std::map<DOMString, int>	AttributeKeysMapType;
-
-private:
-	static AttributeKeysMapType	s_attributeKeys;
-
-  /**
-   *  Hash table that can look up xslt element IDs via name.
-   */
-	static ElementKeysMapType	s_elementKeys;
-
-
-public:
-
 	static const AttributeKeysMapType&
 	getAttributeKeys()
 	{
@@ -587,17 +695,14 @@ public:
 		return s_elementKeys;
 	}
 
-/**
-   * Given an XSL tag name, return an integer token
-   * that corresponds to ELEMNAME_XXX constants defined 
-   * in Constants.java.
-   * Note: I tried to optimize this by caching the node to 
-   * id lookups in a hash table, but it helped not a bit.
-   * I'm not sure that it's spending too much time here anyway.
-   * @param node a probable xsl:xxx element.
-   * @return Constants.ELEMNAME_XXX token, or -1 if in xsl 
-   * or Xalan namespace, -2 if not in known namespace.
-   */
+	/**
+	 * Given an XSL tag name, return an integer token that corresponds to
+	 * ELEMNAME_XXX constants defined in Constants.java.
+	 *
+	 * @param node a probable xsl:xxx element
+	 * @return Constants.ELEMNAME_XXX token, or -1 if in xsl 
+	 * or Xalan namespace, -2 if not in known namespace
+	 */
 	int
 	getAttrTok(const DOMString&	name) const
 	{
@@ -606,24 +711,6 @@ public:
 
 		return iter == s_attributeKeys.end() ? -2 : (*iter).second;
 	}
-
-private:
-
-	/**
-	 * Node to xsl directive table, used so we don't have to keep 
-	 * looking up the directives each time.  This isn't of huge 
-	 * benifit, but is used because of the cost of getExpandedElementName.
-	 */
-	// Create a hash table that can look up xsl element IDs via name.
-#if defined(XALAN_HASH_CONTAINERS_AVAILABLE)
-	typedef hash_map<DOM_Node, int, DOM_NodeHashFunction>	XSLDirectiveMapType;
-#else
-	typedef std::map<DOM_Node, int>							XSLDirectiveMapType;
-#endif
-
-	mutable XSLDirectiveMapType		m_XSLDirectiveLookup;
-
-public:
 
   /**
    * Given an XSL tag name, return an integer token
@@ -654,170 +741,14 @@ public:
 			const DOM_Node&	node,
 			int			tagType) const;
 
-	/**
-	 * Output an object to the result tree by doing the right conversions.
-	 * This is public for access by extensions.
-	 *
-	 * @param obj the XObject to output.
-	 */
-	virtual void
-	outputToResultTree(
-			const XObject&	xobj);
-
-private:
-
-  /**
-   * If the template element is in the xsl:namespace, process the
-   * element.
-   * @return true if the given XSL template child is an XSL directive.
-   * @exception XSLProcessorException thrown if the active ProblemListener and XMLParserLiaison decide 
-   * the error condition is severe enough to halt processing.
-   */
-	bool
-	processXSLTemplateInstruction(
-			const Stylesheet*	stylesheetTree, 
-			DOM_Element			xslInstruction, 
-			DOM_Document		sourceTree, 
-			const DOM_Node&	sourceNode,
-			const DOMString&	mode);
-
-	/**
-	 * In response to 'xsl:import', call transformChild, or, if that 
-	 * fails, transformChildren.
-	 * @exception XSLProcessorException thrown if the active ProblemListener and XMLParserLiaison decide 
-	 * the error condition is severe enough to halt processing.
-	 */
-/*
-	@@ JMD: OBSOLETE ??
-	void
-	handleApplyImportInstruction(
-			Stylesheet*			stylesheetTree,
-			DOM_Element			templateChild,
-			DOM_Document		sourceTree,
-			const DOM_Node&	sourceNode,
-			const DOMString&	mode,
-			int					xslToken);
-*/
-
-
-public:
-
-	/**
-	 * Execute the function-available() function.
-	 * @param context The current source tree context node.
-	 * @param opPos The current position in the m_opMap array.
-	 * @param args The function args.
-	 * @returns whether the given function is available or not.
-	 */
-	bool
-	functionAvailable(
-			DOMString&	theNamespace, 
-			DOMString&	extensionName) const;
-	
-	/**
-	 * Handle an extension function.
-	 */
-	virtual XObject*
-	extFunction(
-			XPathExecutionContext&			executionContext,
-			const DOMString&				theNamespace,
-			const DOMString&				extensionName, 
-			const std::vector<XObject*>&	argVec) const;
-
-	// This is public for class Stylesheet...
-	/**
-	 * In response to xsl:function, set up a function that can 
-	 * be called from the expression language.
-	 * @exception XSLProcessorException thrown if the active ProblemListener and XMLParserLiaison decide 
-	 * the error condition is severe enough to halt processing.
-	 */
-	void
-	handleFunctionsInstruction(
-			DOM_Element			extensionElem);
-
-private:
-
-
-  //==========================================================
-  // SECTION: Diagnostic functions
-  //==========================================================
-
-private:
-
-	/**
-	 * If this is set to true, do not warn about pattern 
-	 * match conflicts.
-	 */
-	bool	m_quietConflictWarnings;
-
-	/*
-	 * If this is true, then the diag function will 
-	 * be called.
-	 */
-	bool	m_traceTemplateChildren;
-  
-	/*
-	 * If this is true, then the simple tracing of templates 
-	 * will be performed.
-	 */
-	bool	m_traceTemplates;
-
-	/*
-	 * If this is true, then diagnostics of each select 
-	 * will be performed.
-	 */
-	bool	m_traceSelects;
-
-	/*
-	 * A stream to print diagnostics to.
-	 */
-	PrintWriter*	m_diagnosticsPrintWriter;
-
-  /* For diagnostics */
-	typedef std::map<const void*, clock_t>	DurationsTableMapType;
-	mutable DurationsTableMapType	m_durationsTable;
-
-	/**
-	 * List of listeners who are interested in tracing what's 
-	 * being generated.
-	 */
-	typedef std::vector<TraceListener*> TraceListenerVectorType;
-	/*transient*/ TraceListenerVectorType m_traceListeners;
-	
-	// Common processing for errors and warnings
-	void problem(const DOM_Node& styleNode,
-					const DOM_Node& sourceNode,
-					const DOMString& msg, 
-					ProblemListener::eClassification		classification) const;
-public:
-
-  // @@ JMD: make this private w/accessor LATER
   /**
    * The top of this stack should contain the currently processed
    * stylesheet SAX locator object.
    */
-	typedef std::vector<Locator*> LocatorStack;
-
 	LocatorStack  m_stylesheetLocatorStack;
 
-	/**
-	 * Add a trace listener for the purposes of debugging and diagnosis.
-	 * @param tl Trace listener to be added.
-	 */
-	virtual void addTraceListener(TraceListener* tl);
-	
-	/**
-	 * Add a trace listener for the purposes of debugging and diagnosis.
-	 * @param tl Trace listener to be added.
-	 */
 	void addTraceListenersToStylesheet();
 
-	/**
-	 * Remove a trace listener.
-	 * @param tl Trace listener to be removed.
-	 */
-	virtual void removeTraceListener(TraceListener* tl);
-	
 	/**
 	 * Fire a generate event.
 	 */
@@ -826,6 +757,7 @@ public:
 	/**
 	 * Warn the user of an problem.
 	 * This is public for access by extensions.
+	 *
 	 * @exception XSLProcessorException thrown if the active ProblemListener and XMLParserLiaison decide 
 	 * the error condition is severe enough to halt processing.
 	 */
@@ -834,6 +766,7 @@ public:
 	/**
 	 * Warn the user of an problem.
 	 * This is public for access by extensions.
+	 *
 	 * @exception XSLProcessorException thrown if the active ProblemListener and XMLParserLiaison decide 
 	 * the error condition is severe enough to halt processing.
 	 */
@@ -888,6 +821,7 @@ public:
 	 * @exception XSLProcessorException thrown if the active ProblemListener and XMLParserLiaison decide 
 	 * the error condition is severe enough to halt processing.
 	 */
+
 //@@ HOLD until we figure out exceptions
 //	void error(DOMString& msg, Exception e);
 
@@ -933,15 +867,6 @@ public:
 	{	return 0 != m_diagnosticsPrintWriter; }
 
 	/**
-	 * If this is set, diagnostics will be 
-	 * written to the m_diagnosticsPrintWriter stream. If 
-	 * the value is null, then diagnostics will be turned 
-	 * off.
-	 */
-	virtual void
-	setDiagnosticsOutput(PrintWriter*	pw);
-
-	/**
 	 * Bottleneck output of diagnostics.
 	 */
 	void
@@ -949,353 +874,11 @@ public:
 			const DOMString&	s) const;
   
 	/**
-	 * If this is set to true, simple traces of 
-	 * template calls are made.
-	 */
-	virtual void
-	setTraceTemplates(bool	b);
-
-	/**
-	 * If this is set to true, simple traces of 
-	 * template calls are made.
-	 */
-	bool isTraceSelect() const;
-
-	virtual void
-	setTraceSelect(bool	b);
-  
-	/**
-	 * If this is set to true, debug diagnostics about 
-	 * template children as they are being constructed 
-	 * will be written to the m_diagnosticsPrintWriter 
-	 * stream.  diagnoseTemplateChildren is false by
-	 * default.
-	 */
-	virtual void
-	setTraceTemplateChildren(bool	b);
-
-  /**
-   * If the quietConflictWarnings property is set to 
-   * true, warnings about pattern conflicts won't be 
-   * printed to the diagnostics stream.
-   * True by default.
-   * @param b true if conflict warnings should be suppressed.
-   */
-	virtual void
-	setQuietConflictWarnings(bool	b)
-	{
-		m_quietConflictWarnings = b;
-	}
-
-	/**
 	 * Print a trace of a selection being made.
 	 */
 	void traceSelect(
 			const DOM_Element&		theTemplate,
 			const NodeRefListBase&	nl) const;
-//@@ WAS:			int				nodeCount) const;
-
-private:
-
-
-	/**
-	 * Print a trace of a template that is being called, either by 
-	 * a match, name, or as part of for-each.
-	 */
-	void
-	traceTemplate(
-			const DOM_Element&		theTemplate) const;
-
-	/**
-	 * Print some diagnostics about the current 
-	 * template child.
-	 */
-	void
-	diagnoseTemplateChildren(
-			const DOM_Node&	templateChild,
-			const DOM_Node&	sourceNode) const;
-
-public:
-
-  //==========================================================
-  // SECTION: Functions that create nodes in the result tree
-  //==========================================================
-	//@@  This all should be copied from FormatterListener.hpp...
-  /**
-   * To fullfill the FormatterListener interface... no action
-   * for the moment.
-   */
-	virtual void setDocumentLocator( Locator* const	locator);
-
-  /**
-   * Bottleneck the startDocument event.
-   */
-	virtual void
-	startDocument();
-
-  /**
-   * Bottleneck the endDocument event.
-   */
-	virtual void
-	endDocument();
-    
-protected:
-
-  /**
-   * The pending element.  We have to delay the call to 
-   * m_flistener.startElement(name, atts) because of the 
-   * xsl:attribute and xsl:copy calls.  In other words, 
-   * the attributes have to be fully collected before you 
-   * can call startElement.
-   */
-
-	DOMString	m_pendingElementName;
-
-	/**
-	 * The pending attributes.  We have to delay the call to 
-     * m_flistener.startElement(name, atts) because of the 
-	 * xsl:attribute and xsl:copy calls.  In other words, 
-	 * the attributes have to be fully collected before you 
-	 * can call startElement.
-	 */
-	AttributeListImpl	m_pendingAttributes;
-
-	/**
-	 * NOTE: This replaces the ResultNameSpace class in java, since it is the
-	 * same as the NameSpace class
-	 */
-
-	/**
-	 * A stack to keep track of the result tree namespaces.
-	 */
-	typedef	std::vector<NameSpace>		NamespaceVectorType;
-	typedef	std::vector<NamespaceVectorType>		NamespacesStackType;
-	NamespacesStackType	m_resultNameSpaces;
-
-	/**
-	 * This is pushed on the m_resultNameSpaces stack until a 
-	 * xmlns attribute is found.  It's special because it has
-	 * and empty prefix and uri field.
-	 */
-	NameSpace			m_emptyNamespace;
-	
-	// Factory for creating xpaths.
-	XPathFactory&		m_xpathFactory;
-
-	/**
-	 * XPath object to use for short evaluations, so we don't have to 
-	 * create one every time.
-	 */
-	XPath* const		m_xpath;
-
-	// Factory for creating xobjects
-	XObjectFactory&		m_xobjectFactory;
-
-	// The query/pattern-matcher object.
-	std::auto_ptr<XPathProcessor>	m_xpathProcessor;
-
-	/**
-	 * Stack of Booleans to keep track of if we should be outputting 
-	 * cdata instead of escaped text.
-	 * ## Optimization: use array stack instead of object stack.
-	 */
-	std::vector<bool>	m_cdataStack;
-
-private:
-
-	/**
-	 * This is for use by multiple output documents, to determine 
-	 * the base directory for the output document.  It needs to 
-	 * be set by the caller.
-	 */
-	DOMString m_outputFileName;
-	
-
-public:
-
-// @@ JMD added: 	Fri Oct  1 10:23:05 EDT 1999
-
-	/**
-	 * Flush the pending element.
-	 */
-	void flushPending();
-
-	/**
-	 * Bottleneck addition of result tree attributes, so I can keep 
-	 * track of namespaces.
-	 */
-	void addResultNamespaceDecl(const DOMString& prefix, 
-	                                   const DOMString& namespaceVal);
-
-	/**
-	 * Bottleneck addition of result tree attributes, so I can keep 
-	 * track of namespaces.
-	 */
-	void
-	addResultAttribute(
-			AttributeListImpl&	attList,
-			const DOMString&	aname,
-			const DOMString&	value);
-
-	/**
-	 * Bottleneck addition of result tree attributes, so I can keep 
-	 * track of namespaces.
-	 */
-	void
-	addResultAttribute(
-			const DOMString&	aname,
-			const DOMString&	value)
-	{
-		addResultAttribute(m_pendingAttributes,
-						   aname,
-						   value);
-	}
-
-	/**
-	 * Bottleneck the startElement event.
-	 */
-	virtual void
-	startElement(
-			const XMLCh* const	name);
-
-	/**
-	 * Bottleneck the startElement event.
-	 */
-	virtual void
-	startElement(
-			const XMLCh* const	name,
-			AttributeList&		atts);
-
-	/**
-	 * Bottleneck the endElement event.
-	 */
-	virtual void
-	endElement(
-			const XMLCh* const	name);
-
-	/**
-	 * Bottleneck the characters event.
-	 */
-	virtual void
-	characters(
-			const XMLCh* const	ch,
-			const unsigned int	start,
-			const unsigned int	length);
-
-	 // @@ JMD: there is a basic mismatch between the characters method in the
-	 // Xerces SAX DocumentHandler and the java version -- this merely bridges
-	 // the gap ??
-    virtual void characters (
-        const   XMLCh* const    chars,
-        const unsigned int    length);
-
-
-	/**
-	 * Bottleneck the characters event.
-	 */
-	virtual void
-	charactersRaw(
-			const XMLCh* const	ch,
-			const unsigned int	start,
-			const unsigned int	length);
-
-	/**
-	 * Bottleneck the ignorableWhitespace event.
-	 */
-	virtual void
-	ignorableWhitespace(
-			const XMLCh* const	ch,
-			const unsigned int	length);
-
-	/**
-	 * Bottleneck the processingInstruction event.
-	 */
-	virtual void
-	processingInstruction(
-			const XMLCh* const	target,
-			const XMLCh* const	data);
-
-	/**
-	 * Bottleneck the comment event.
-	 */
-	virtual void
-	comment(
-			const XMLCh* const	data);
-
-	/**
-	 * Bottleneck the entity reference event.
-	 */
-	virtual void
-	entityReference(
-			const XMLCh* const	name);
-
-	/**
-	 * Bottleneck the cdata event.
-	 */
-	virtual void
-	cdata(
-			const XMLCh* const	ch,
-			const unsigned int 	start,
-			const unsigned int 	length);
-
-	// pure virtual in DocumentHandler
-	virtual void resetDocument();
-
-//@@ ?? private:
-	
-  /**
-   * Clone an element with or without children.
-   * TODO: Fix or figure out node clone failure!
-   * @exception XSLProcessorException thrown if the active ProblemListener and XMLParserLiaison decide 
-   * the error condition is severe enough to halt processing.
-   */
-	void
-	cloneToResultTree(
-			const DOM_Node&		node, 
-			bool				isLiteral,
-			bool				overrideStrip,
-			bool				shouldCloneAttributes);
-
-  /**
-   * Given a result tree fragment, walk the tree and
-   * output it to the result stream.
-   */
-	void
-	outputResultTreeFragment(const XObject&		theTree);
-
-private:
-
-	/**
-	 * Write the children of a stylesheet element to the given listener.
-	 * @exception XSLProcessorException thrown if the active ProblemListener and XMLParserLiaison decide 
-	 * the error condition is severe enough to halt processing.
-	 * @param stylesheetTree The stylesheet object that holds the fragment.
-	 * @param templateParent The template element that holds the fragment.
-	 * @param sourceTree The source tree document context.
-	 * @param sourceNode The current source context node.
-	 * @param mode The mode under which the template is operating.
-	 * @return An object that represents the result tree fragment.
-	 */
-	void
-	writeChildren(
-			FormatterListener*				flistener,
-			StylesheetExecutionContext&		executionContext,
-	        const ElemTemplateElement&		templateParent,
-	        const DOM_Node&					sourceTree,
-	        const DOM_Node&					sourceNode,
-			const QName&					mode);
-
-
-  //==========================================================
-  // SECTION: Function to do with attribute handling
-  //==========================================================
-
-	/**
-	 * This is used whenever a unique namespace is needed.
-	 */
-	mutable int m_uniqueNSValue;	// 0
-  
-public:
 
 	virtual const DOMString
 	getUniqueNSValue() const;
@@ -1326,8 +909,6 @@ public:
 	getResultPrefixForNamespace(
 			const DOMString&	theNamespace) const;
 
-public:
-
 	/**
 	 * Evaluate an xpath string and return the result.
 	 */
@@ -1345,18 +926,6 @@ public:
 			const DOMString&		str,
 			const PrefixResolver&	resolver);
 
-private:
-
-	/**
-	 * This should probably be in the XMLParserLiaison interface.
-	 */
-	DOMString
-	getPrefixForNamespace(
-			const DOMString&	theNamespace,
-			const DOM_Element&	namespaceContext) const;
-
-public:
-
 	/**
 	 * Copy xmlns: attributes in if not already in scope.
 	 */
@@ -1364,8 +933,6 @@ public:
 	copyNamespaceAttributes(
 			const DOM_Node&			src,
 			bool					srcIsStylesheetTree);
-
-public:
 
 	/**
 	 * Evaluate an xpath string and return the result.
@@ -1395,187 +962,6 @@ public:
 			const DOM_Element&		prefixResolver,
 			XPathExecutionContext&	executionContext);
 
-private:
-
-	bool	m_useATVsInSelects;
-
-public:
-
-	/**
-	 * Get an Expression object from a select node.  Does not cache!
-	 */
-	XPath* getExpression(
-					AttributeList& attrs,
-					const DOMString& key,
-					const PrefixResolver& resolver);
-
-	/**
-	 * Given an element, return an attribute value in 
-	 * the form of a string.
-	 * @param el The element from where to get the attribute.
-	 * @param key The name of the attribute.
-	 * @param contextNode The context to evaluate the 
-	 * attribute value template.
-	 * @return Attribute value.
-	 */
-	DOMString
-	getAttrVal(
-			const DOM_Element&	el,
-			const DOMString&	key,
-			const DOM_Node&		contextNode);
-  
-	/**
-	 * Given an element, return an attribute value in 
-	 * the form of a string.
-	 */
-	static DOMString
-	getAttrVal(
-			const DOM_Element&	el,
-			const DOMString&	key);
-
-public:
-
-
-  /**
-   * Evaluates attribute values for attribute templates
-   * (Stuff in curly {} braces that hold expressions).
-   *
-   * @param contextNode the current node in the source tree
-   * @param namespaceContext the current namespace context.
-   * the pattern-by-example structures when parsing expressions.
-   * @param stringedValue the attribute value to be processed.
-   * @param executionContext the current execution context.
-   * @return Processed stringedValue with attribute templates
-   * resolved.
-   * @exception XSLProcessorException thrown if the active ProblemListener and XMLParserLiaison decide 
-   * the error condition is severe enough to halt processing.
-   */
-	virtual DOMString
-	evaluateAttrVal(
-			const DOM_Node&			contextNode,
-			const DOM_Element&		namespaceContext,
-			const DOMString&		stringedValue,
-			XPathExecutionContext&	executionContext);
-
-
-  /**
-   * Copy an attribute to the created output element, executing 
-   * attribute templates as need be, and processing the xsl:use 
-   * attribute.
-   * @exception XSLProcessorException thrown if the active ProblemListener and XMLParserLiaison decide 
-   * the error condition is severe enough to halt processing.
-   */
-	void
-	copyAttributeToTarget(
-			const DOM_Attr&		attr,
-			const DOM_Node&		contextNode,
-			const Stylesheet*	stylesheetTree,
-			AttributeListImpl&	attrList, 
-            const DOM_Element&	namespaceContext);
-  
-protected:
-
-  /**
-   * Copy the attributes from the XSL element to the created 
-   * output element, executing attribute templates and 
-   * processing the xsl:use attribute as need be.
-   * @exception XSLProcessorException thrown if the active ProblemListener and XMLParserLiaison decide 
-   * the error condition is severe enough to halt processing.
-   */
-	void
-	copyAttributesToAttList(
-			const DOM_Node&		contextNode,
-			const Stylesheet*	stylesheetTree,
-			const DOM_Element&	templateChild,
-			AttributeListImpl&	attList);
-
-  /**
-  * Keyed on CSS2 property names, and holding dummy 
-  * values for quickly looking up if a result tree element
-  * attribute is a CSS attribute or not.
-  * @deprecated
-  */
-	typedef std::set<DOMString>		TranslateCSSSetType;
-	TranslateCSSSetType		m_cssKeys;
-
- /*
-  * If this is true, translate CSS attributes on the output to a "style"
-  * attribute.
-  */
-	bool					m_translateCSS;
-
-public:
-
-  /**
-  * Translate CSS attributes on the output to a "style" attribute, for 
-  * old submission support.  You probably shouldn't rely on this, though
-  * I personally like it a lot.
-  * @param b If true, translate CSS attributes on the output to a 
-  * "style" attribute.
-  * @deprecated
-  */
-	bool
-	getTranslateCSS() 
-	{
-		return m_translateCSS;
-	} 
-
-	void
-	setTranslateCSS(bool	b) 
-	{
-		m_translateCSS = b;
-	} 
-
-private:
-
-	/**
-	 * Translate CSS attributes and put them in a style tag.
-	 * @deprecated
-	 */
-	void
-	translateCSSAttrsToStyleAttr(
-			AttributeListImpl&	attList);
-  
-protected:
-	
-  /**
-   * Returns whether or not an attribute key 
-   * is a CSS2 attribute.
-   * @deprecated
-   */
-	bool
-	isCSSAttribute(
-			const DOMString&	name) const;
-
-  /**
-   * Stuff a hash table with CSS2 keys & dummy values
-   * in order to quickly look up if a template child
-   * attribute is a CSS attribute or not.
-   * Note: This has something in it to screw up the
-   * Dev Studio code format command, so that the 
-   * last curly bracket goes all the way to the 
-   * left.
-   * @deprecated
-   */
-	void
-	initCSS2Table();
-
-  //==========================================================
-  // SECTION: Functions for finding elements by Key and ID
-  //==========================================================
-public:
-
-   /**
-	* Given a valid element key, return the corresponding node list.
-	*/
-   virtual const NodeRefListBase*
-   getNodeSetByKey(
-			const DOM_Node&			doc, 
-			const DOMString&		name, 
-			const DOMString&		ref, 
-			const PrefixResolver&	resolver,
-			XPathExecutionContext&	executionContext) const;
-
 	/**
 	 * Create an XPath whose lifetime can end after transforming
 	 * is complete.  Do not use this to create an XPath to be
@@ -1587,19 +973,6 @@ public:
 		XPathExecutionContext&	executionContext,
 		const PrefixResolver&	resolver);
 
-private:
-
-	// $$$ ToDo:  This must go!!!!!!
-	/**
-	 * Evaluate an xpath string and return the result.
-	 */
-	virtual XPath*
-	createXPath(
-		const DOMString&		str,
-		const PrefixResolver&	resolver);
-
-public:
-
   /**
    * Given a valid element id, return the corresponding element.
    */
@@ -1608,26 +981,6 @@ public:
 			const DOMString&		id,
 			const DOM_Document&		doc) const;
 
-
-	/**
-	 * Given a name, locate a variable in the current context, and return 
-	 * the Object.
-	 */
-	virtual XObject*
-	getVariable(const QName& qname) const;
-
-	/**
-	 * Given a name, locate a param variable in the current context, and return 
-	 * the Object.
-	 */
-	virtual XObject*
-	getParamVariable(const QName&	theName) const;
-
-	virtual void
-	pushVariable(
-			const QName&		name,
-			XObject*			var,
-			const DOM_Node&		element);
 
 	/**
 	 * Push a context marker onto the stack to let us know when 
@@ -1667,49 +1020,74 @@ public:
 									targetTemplate);
 	}
 
-private:
+	/**
+	 * Get an Expression object from a select node.  Does not cache!
+	 */
+	XPath* getExpression(
+					AttributeList& attrs,
+					const DOMString& key,
+					const PrefixResolver& resolver);
 
 	/**
-	 * Given a name, locate a variable in the current context, and return 
-	 * the XObject.
-	 * @exception XSLProcessorException thrown if the active ProblemListener and XMLParserLiaison decide 
-	 * the error condition is severe enough to halt processing.
+	 * Given an element, return an attribute value in 
+	 * the form of a string.
+	 * @param el The element from where to get the attribute.
+	 * @param key The name of the attribute.
+	 * @param contextNode The context to evaluate the 
+	 * attribute value template.
+	 * @return Attribute value.
 	 */
-	XObject*
-	getXObjectVariable(const DOMString&	name) const;
-
+	DOMString
+	getAttrVal(
+			const DOM_Element&	el,
+			const DOMString&	key,
+			const DOM_Node&		contextNode);
+  
 	/**
-	 * Get an XLocator provider keyed by node.  This get's
-	 * the association based on the root of the tree that the 
-	 * node is parented by.
+	 * Given an element, return an attribute value in 
+	 * the form of a string.
 	 */
-	XLocator*
-	getXLocatorFromNode(const DOM_Node&		node) const;
+	static DOMString
+	getAttrVal(
+			const DOM_Element&	el,
+			const DOMString&	key);
 
-	/**
-	 * Associate an XLocator provider to a node.  This makes
-	 * the association based on the root of the tree that the 
-	 * node is parented by.
-	 */
-	 void
-	 associateXLocatorToNode(
-			const DOM_Node&		node,
-			XLocator*			xlocator);
 
-private:
-
-  //==========================================================
-  // SECTION: Functions for controlling whitespace
-  //==========================================================
 
   /**
-  * If this is true, the processor will do the best it can to strip 
-  * unwanted white space. This is set in the stylesheet via the default-space 
-  * attribute on xsl:stylesheet.
+   * Copy an attribute to the created output element, executing 
+   * attribute templates as need be, and processing the xsl:use 
+   * attribute.
+   * @exception XSLProcessorException thrown if the active ProblemListener and XMLParserLiaison decide 
+   * the error condition is severe enough to halt processing.
+   */
+	void
+	copyAttributeToTarget(
+			const DOM_Attr&		attr,
+			const DOM_Node&		contextNode,
+			const Stylesheet*	stylesheetTree,
+			AttributeListImpl&	attrList, 
+            const DOM_Element&	namespaceContext);
+  
+  /**
+  * Translate CSS attributes on the output to a "style" attribute, for 
+  * old submission support.  You probably shouldn't rely on this, though
+  * I personally like it a lot.
+  * @param b If true, translate CSS attributes on the output to a 
+  * "style" attribute.
+  * @deprecated
   */
-	bool	m_stripWhiteSpace; // default default-space="preserve"
+	bool
+	getTranslateCSS() 
+	{
+		return m_translateCSS;
+	} 
 
-public:
+	void
+	setTranslateCSS(bool	b) 
+	{
+		m_translateCSS = b;
+	} 
 
 	/**
 	 * This changes the default of the default-space attribute.
@@ -1728,34 +1106,6 @@ public:
 		m_stripWhiteSpace = fStrip;
 	}
 
-private:
-
-//	typedef std::set<DOMString>		WhitespaceLookupTableType;
-
-	/**
-	 * A lookup table of all space preserving elements.
-	 */
-//	WhitespaceLookupTableType	m_whitespacePreservingElements;
-
-	/**
-	 * A lookup table of all space stripping elements.
-	 */
-//	WhitespaceLookupTableType	m_whitespaceStrippingElements;
-
-public:
-/*
-	void
-	addWhitespacePreservingElement(const DOMString&	theElement)
-	{
-		m_whitespacePreservingElements.insert(theElement);
-	}
-
-	void
-	addWhitespaceStrippingElement(const DOMString&	theElement)
-	{
-		m_whitespaceStrippingElements.insert(theElement);
-	}
-*/
   /**
    * indent-result is by default no, which means an XSL processor must not
    * change the whitespace on output.
@@ -1771,18 +1121,6 @@ public:
    * If true, output linefeeds.
    */
 	bool	m_outputLinefeeds;
-
-  /**
-   * Tells, through the combination of the default-space attribute 
-   * on xsl:stylesheet, xsl:strip-space, xsl:preserve-space, and the
-   * xml:space attribute, whether or not extra whitespace should be stripped 
-   * from the node.  Literal elements from template elements should 
-   * <em>not</em> be tested with this function.
-   * @param textNode A text node from the source tree.
-   * @return true if the text node should be stripped of extra whitespace.
-   */
-	virtual bool
-	shouldStripSourceNode(const DOM_Node&	textNode) const;
 
 
   /**
@@ -1847,100 +1185,49 @@ public:
 	* take only the input .xml will use this instead of looking for a
 	* stylesheet PI.
    */
-   StylesheetRoot *getStylesheet() { return m_stylesheetRoot; }
+   StylesheetRoot *getStylesheet()
+	{
+		return m_stylesheetRoot;
+	}
 
   /**
 	* Get the filename of the output document, if it was set. This is for use
 	* by multiple output documents, to determine the base directory for the
 	* output document.  It needs to be set by the caller.
    */
-   DOMString &getOutputFileName() { return m_outputFileName; }
+   DOMString &getOutputFileName()
+	{
+		return m_outputFileName;
+	}
 
   /**
 	* Set the filename of the output document. This is for use by multiple
 	* output documents, to determine the base directory for the output
 	* document.  It needs to be set by the caller.
    */
-   void setOutputFileName(const DOMString&	filename) { m_outputFileName = filename; }
-  
-
-  //==========================================================
-  // SECTION: Support functions in fairly random order
-  //==========================================================
-
-private:
-
-  /**
-   * Control if the xsl:variable is resolved early or 
-   * late. Resolving the xsl:variable
-   * early is a drag because it means that the fragment 
-   * must be created into a DocumentFragment, and then 
-   * cloned each time to the result tree.  If we can resolve 
-   * late, that means we can evaluate directly into the 
-   * result tree.  Right now this must be kept on 'early' 
-   * because you would need to set the call stack back to 
-   * the point of xsl:invoke... which I can't quite work out 
-   * at the moment.  I don't think this is worth fixing 
-   * until NodeList variables are implemented.
-   */
-	static const bool	m_resolveContentsEarly;
-
-public:
-
-	/**
-	 * Get the XML Parser Liaison that this processor uses.
-	 */
-	virtual XMLParserLiaison&
-	getXMLParserLiaison() const;
-
-private:
-	
-	/**
-	 * Set the factory for making XPaths.
-	 */
-//	void setXPathFactory(XPathFactory* factory) { m_xpathFactory = factory; }
-
-	
-	/**
-	 * Get a DOM document, primarily for creating result 
-	 * tree fragments.
-	 */
-	DOM_Document
-	getDOMFactory() const;
-
-	/**
-	 * Set the XPath processor object.
-	 * @param processor A XPathProcessor interface.
-	 */
-//	void setXPathProcessor(XPathProcessor* processor) { m_xpathProcessor = processor; }
-
-	bool
-	getResolveContentsEarly() const
+   void setOutputFileName(const DOMString&	filename)
 	{
-		return m_resolveContentsEarly;
+		m_outputFileName = filename;
 	}
-
-public:
-
-  /**
-   * Convenience function to create an XObject that represents a Result tree fragment.
-   * @param r The result tree fragment to use.
-   * @return An XObject instance.
-   */
-   virtual XObject*
-   createXResultTreeFrag(const ResultTreeFragBase&  r) const;
+  
 
 
 	/**
 	 * Get the factory for making xpaths.
 	 */
-	XPathFactory& getXPathFactory() { return m_xpathFactory; }
+	XPathFactory& getXPathFactory()
+	{
+		return m_xpathFactory;
+	}
 
 	/**
 	 * Get the XPath processor object.
 	 * @return The XPathProcessor interface being used.
 	 */
-	 XPathProcessor& getXPathProcessor() { return *m_xpathProcessor.get(); }
+	 XPathProcessor& getXPathProcessor()
+	 {
+		 return *m_xpathProcessor.get();
+	 }
 
 
 	/**
@@ -1951,74 +1238,6 @@ public:
 	 */
 	 DOMString getStyleSheetURIfromDoc(const DOM_Node&	sourceTree);
 	  
-
-private:
-
-	typedef std::vector<Arg> ParamVectorType;
-	ParamVectorType		m_topLevelParams;
-
-	public:
-
-	/**
-	 * Push a top-level stylesheet parameter.  This value can 
-	 * be evaluated via xsl:param-variable.
-	 * @param key The name of the param.
-	 * @param expression An expression that will be evaluated.
-	 */
-	virtual void setStylesheetParam(	
-					const DOMString& key,
-					const DOMString& expression);
-	
-	/**
-	 * Push a top-level stylesheet parameter.  This value can 
-	 * be evaluated via xsl:param-variable.
-	 * @param key The name of the param.
-	 * @param value An XObject that will be used.
-	 */
-	virtual void
-	setStylesheetParam(
-			const DOMString&	key,
-			XObject*			value);
-
-	/**
-	 * Resolve the params that were pushed by the caller.
-	 */
-	virtual void
-	resolveTopLevelParams(StylesheetExecutionContext&	executionContext);
-
-	/**
-	 * Reset the vector or top level parameters
-	 */
-	void
-	clearTopLevelParams()
-	{
-		m_topLevelParams.clear();
-	}
-
-private:
-
-	/**
-	 * Returns the current input node that is being 
-	 * processed.
-	 */
-	DOM_Node
-	getSourceNode() const
-	{
-		return m_currentNode;
-	}
-
-public:
-
-  /**
-   * Reset the current element state
-   */
-
-	virtual void
-	resetCurrentState(
-			const DOM_Node&		sourceTree,
-			const DOM_Node&		xmlNode);
-
-public:
 
   /**
    * Given a classID and codetype, tr to register a code dispatcher.
@@ -2037,23 +1256,6 @@ public:
 			DispatcherFactory*	factory);
 
 
-protected:
-
-  /**
-   * Given a tag name, an attribute name, and 
-   * an attribute value, do a very crude recursive 
-   * search and locate the first match.
-   */
-	static DOM_Element
-	findElementByAttribute(
-			const DOM_Element&	elem,
-			const DOMString&	targetElementName, 
-			const DOMString&	targetAttributeName,
-			const DOMString&	targetAttributeValue);
-
-
-public:
-
   /**
    * Do everything possible to get a good URL from a string.
    */
@@ -2066,21 +1268,6 @@ public:
 
 	XMLURL*
 	getURLFromString(const DOMString&	urlString, const DOMString& base) const;
-
-private :
-
-  /**
-   * The liason to the XML parser, so the XSL processor 
-   * can handle included files, and the like, and do the 
-   * initial parse of the XSL document.
-   */
-	XMLParserLiaison&	m_parserLiaison;
-
-	XPathSupport&		m_xpathSupport;
-
-	XPathEnvSupport&		m_xpathEnvSupport;
-
-public:
 
 	/**
 	 * The formatter interface, which has the toMarkup 
@@ -2111,42 +1298,12 @@ public:
 	void
 	setFormatter(Formatter*		formatter);
 
-	/**
-	 * Get the current formatter listener.
-	 */
-	virtual FormatterListener*
-	getFormatterListener() const;
-
-	/**
-	 * Set the current formatter listener.
-	 */
-	virtual void
-	setFormatterListener(FormatterListener*	flistener);
-
-private:
-
-	/**
-	 * The listener for formatting events.  This should be 
-	 * supplied by the Formatter object.
-	 */
-
-	// For now, we have to use the FormatterListener class,
-	// since we can't use RTTI to determine what we have.
-#if 1
-	DocumentHandler*	m_flistener;
-#else
-	FormatterListener*	m_flistener;
-#endif
-
-public:
-
   /**
    * The factory that will be used to create result tree fragments.
    */
 	mutable DOM_Document	m_resultTreeFactory;
 
 
-public:
   /**
    * The namespace that the result tree conforms to.  A null value 
    * indicates that result-ns is not used and there is no checking. 
@@ -2160,40 +1317,12 @@ public:
    */
 	DOMString	m_resultNameSpaceURL;
 
-private:
-
-	/**
-	 * This holds the current context node list.  This should arguably be 
-	 * passed by parameter.
-	 */
-	MutableNodeRefList	m_contextNodeList;
-
-public:
-
 	const MutableNodeRefList& getContextNodeList() { return m_contextNodeList; }
 
 	void setContextNodeList(const MutableNodeRefList& ref)
 	{
 		m_contextNodeList = ref;		
 	}
-
-	virtual DOM_Document
-	getRootDoc() const;
-
-	virtual void
-	setRootDoc(const DOM_Document& doc);
-
-private:
-
-	/**
-	 * Table of KeyDeclaration objects, which are set by the 
-	 * xsl:key element.
-	 */
-	typedef std::vector<KeyDeclaration>		KeyDeclarationVectorType;
-
-	KeyDeclarationVectorType	m_keyDeclarations;
-
-public:
 
 	void
 	addKeyDeclaration(const KeyDeclaration&		theDeclaration)
@@ -2225,41 +1354,6 @@ public:
 		return m_keyDeclarations;
 	}
 
-private:
-
-	/**
-	 * Table of element keys.  The table will be built on demand, 
-	 * when a key is requested, or set by the XMLParserLiaison or 
-	 * the caller.  The table is:
-	 * a) keyed by name,
-	 * b) each with a value of a hashtable, keyed by the value returned by 
-	 *    the use attribute,
-	 * c) each with a value that is a nodelist.
-	 * Thus, for a given key or keyref, look up hashtable by name, 
-	 * look up the nodelist by the given reference.
-	 */
-#if defined(XALAN_HASH_CONTAINERS_AVAILABLE)
-	typedef hash_map<DOMString,
-					 MutableNodeRefList,
-					 DOMStringHashFunction,
-					 DOMStringEqualsFunction>	NodeListMapType;
-
-	typedef hash_map<DOMString,
-					 NodeListMapType,
-					 DOMStringHashFunction,
-					 DOMStringEqualsFunction>	KeysMapType;
-#else
-	typedef std::map<DOMString,
-					 MutableNodeRefList>	NodeListMapType;
-
-	typedef std::map<DOMString,
-					 NodeListMapType>		KeysMapType;
-#endif
-
-	KeysMapType		m_keys;
-
-public:
-
 	/**
 	 * Set the table of keys.  This will be used by the 
 	 * key() and keyref() functions for lookup of a nodelist.
@@ -2281,17 +1375,6 @@ public:
 	{
 		return m_keys;
 	}
-
-private:
-
-	/**
-	 * This is set to true if an xsl:id directive is found.
-	 * Mainly for use by the XMLParserLiaison classes for 
-	 * optimized processing of ids.
-	 */
-	bool	m_needToBuildKeysTable;
-
-public:
 
 	/**
 	 * Set needToBuildKeysTable to true if an xsl:key directive is found.
@@ -2315,36 +1398,6 @@ public:
 	{
 		return m_needToBuildKeysTable;
 	}
-
-protected:
-
-	/*
-	 * The current input element that is being processed.
-	 */
-	DOM_Node	m_currentNode;
-
-private:
-
-
-	/**
-	 * Keyed on string macro names, and holding values 
-	 * that are macro elements in the XSL DOM tree.
-	 * Initialized in initMacroLookupTable, and used in
-	 * findNamedTemplate.
-	 */
-#if defined(XALAN_HASH_CONTAINERS_AVAILABLE)
-	typedef hash_map<DOMString,
-					 DOM_Node,
-					 DOMStringHashFunction,
-					 DOMStringEqualsFunction>	NamedTemplatesMapType;
-#else
-	typedef std::map<DOMString,
-					 DOM_Node>	NamedTemplatesMapType;
-#endif
-
-	NamedTemplatesMapType	m_namedTemplates;
-
-public:
 
 	void
 	addNamedTemplate(const DOMString&	theName,
@@ -2371,32 +1424,6 @@ public:
 
 
 
-
-private:
-
-	/**
-	 * Table for defined constants, keyed on the names.
-	 */
-	typedef std::map<DOMString, XObject*>	TopLevelVariablesMapType;
-
-	TopLevelVariablesMapType	m_topLevelVariables;
-
-public:
-
-	virtual XObject*
-	getTopLevelVariable(const DOMString&	theName) const;
-
-private:
-	
-	/**
-	 * The XSL class can have a single listener that can be informed 
-	 * of errors and warnings, and can normally control if an exception
-	 * is thrown or not (or the problem listeners can throw their 
-	 * own RuntimeExceptions).
-	 */
-	ProblemListener*	m_problemListener;
-
-public:
 
 	/**
 	 * Set the problem listener property.
@@ -2425,75 +1452,16 @@ public:
 	}
 
 
-public:
-
 	/**
 	 * An exception for that occurs when a given stylesheet
 	 * goes into an infinite loop.
 	 */
-	class XSLInfiniteLoopException : public std::runtime_error
+	class XSLInfiniteLoopException : public RuntimeError
 	{
 	public:
-		XSLInfiniteLoopException() : std::runtime_error("XSL infinite loop occurred!")
+		XSLInfiniteLoopException() : RuntimeError("XSL infinite loop occurred!")
 		{ }
 	};
-
-private:
-
-	/**
-	 * The StackGuard class guard against infinite loops.
-	 */
-	class StackGuard
-	{
-	public:
-
-		StackGuard(
-				XSLTEngineImpl&		processor,
-				const DOM_Element&	xslTemplate = DOM_Element(),
-				const DOM_Node&		sourceXML = DOM_Node());
-
-		~StackGuard();
-
-		bool operator==(const StackGuard&	theRHS) const
-		{
-			return m_xslRule == theRHS.m_xslRule &&
-				   m_sourceXML == theRHS.m_sourceXML;
-		}
-
-		void print(PrintWriter&	pw) const;
-
-		void push(
-				const DOM_Element&	xslTemplate,
-				const DOM_Node&		sourceXML);
-
-		void pop();
-
-		void clear() { m_stack.clear(); }
-
-		void checkForInfiniteLoop(const StackGuard&	guard) const;
-
-	private:
-
-		XSLTEngineImpl*	m_processor;
-		DOM_Element		m_xslRule;
-		DOM_Node		m_sourceXML;
-
-		typedef std::vector<StackGuard>		StackGuardStackType;
-		StackGuardStackType		m_stack;
-	};
-
-
-	// This is set to true when the "ancestor" attribute of 
-	// the select element is encountered.
-	bool		m_needToCheckForInfiniteLoops;
-
-	/**
-	 * Object to guard agains infinite recursion when 
-	 * doing queries.
-	 */
-	StackGuard	m_stackGuard;
-
-public:
 
 	/**
 	 * Defines a class to keep track of a stack for macro arguments.
@@ -2645,7 +1613,6 @@ public:
 		 */
 		DOM_Element						m_caller;
 
-		typedef std::vector<StackEntry*>	VariableStackStackType;
 
 		VariableStackStackType			m_stack;
 
@@ -2655,16 +1622,6 @@ public:
 	// Give VariableStack access to stuff.
 	friend class VariableStack;
 
-private:
-
-	/**
-	 * The stack of Variable stacks.  A VariableStack will be 
-	 * pushed onto this stack for each template invocation.
-	 */
-	VariableStack	m_variableStacks;
-
-public:
-	
 	VariableStack&
 	getVariableStacks()
 	{
@@ -2680,34 +1637,6 @@ public:
 	
 
 
-public:
-
-
-  /**
-   * Given a stylesheet element, create a result tree fragment from its 
-   * contents.
-   * @exception XSLProcessorException thrown if the active ProblemListener and
-   * XMLParserLiaison decide the error condition is severe enough to halt
-   * processing.
-   * @param templateChild The template element that holds the fragment.
-   * @param sourceTree The source tree document context.
-   * @param sourceNode The current source context node.
-   * @param mode The mode under which the template is operating.
-   * @return An object that represents the result tree fragment.
-   */
-	virtual ResultTreeFragBase*
-	createResultTreeFrag(
-			StylesheetExecutionContext&		executionContext,
-			const ElemTemplateElement&		templateChild,
-			const DOM_Node&					sourceTree,
-			const DOM_Node&					sourceNode,
-			const QName&					mode);
-
-	/**
-	 * Create an empty result tree fragment.  Caller owns the memory.
-	 */
-	virtual ResultTreeFragBase*
-	createResultTreeFrag() const;
 
 /*
 JMD: 
@@ -2717,8 +1646,6 @@ These were inner classes in java:
 	class ElementMarker;
  */
 
-public:
-	XMLParserLiaison& getParserLiaison() const;	
 	AttributeListImpl&  getPendingAttributes();
 	DOMString getPendingElementName() const;
 	void setPendingAttributes(const AttributeList&	pendingAttributes) ;
@@ -2727,7 +1654,6 @@ public:
 	/**
 	 * A stack to keep track of the attribute elements.
 	 */
-	typedef	std::vector<ElemAttributeSet*>	AttrStackType;
 
 	AttrStackType&
 	getAttrSetStack()
@@ -2735,15 +1661,603 @@ public:
 		return m_attrSetStack; 
 	}
 
+protected:
+
+	/*
+	 * The current input element that is being processed.
+	 */
+	DOM_Node	m_currentNode;
+
+  /**
+   * Given a tag name, an attribute name, and 
+   * an attribute value, do a very crude recursive 
+   * search and locate the first match.
+   */
+	static DOM_Element
+	findElementByAttribute(
+			const DOM_Element&	elem,
+			const DOMString&	targetElementName, 
+			const DOMString&	targetAttributeName,
+			const DOMString&	targetAttributeValue);
+
+
+  /**
+   * Returns whether or not an attribute key 
+   * is a CSS2 attribute.
+   * @deprecated
+   */
+	bool
+	isCSSAttribute(
+			const DOMString&	name) const;
+
+  /**
+   * Stuff a hash table with CSS2 keys & dummy values
+   * in order to quickly look up if a template child
+   * attribute is a CSS attribute or not.
+   * Note: This has something in it to screw up the
+   * Dev Studio code format command, so that the 
+   * last curly bracket goes all the way to the 
+   * left.
+   * @deprecated
+   */
+	void
+	initCSS2Table();
+
+  /**
+   * Copy the attributes from the XSL element to the created 
+   * output element, executing attribute templates and 
+   * processing the xsl:use attribute as need be.
+   * @exception XSLProcessorException thrown if the active ProblemListener and XMLParserLiaison decide 
+   * the error condition is severe enough to halt processing.
+   */
+	void
+	copyAttributesToAttList(
+			const DOM_Node&		contextNode,
+			const Stylesheet*	stylesheetTree,
+			const DOM_Element&	templateChild,
+			AttributeListImpl&	attList);
+
+  /**
+  * Keyed on CSS2 property names, and holding dummy 
+  * values for quickly looking up if a result tree element
+  * attribute is a CSS attribute or not.
+  * @deprecated
+  */
+	TranslateCSSSetType		m_cssKeys;
+
+ /*
+  * If this is true, translate CSS attributes on the output to a "style"
+  * attribute.
+  */
+	bool					m_translateCSS;
+
+	/**
+	 * Reset the state.  This needs to be called after a process() call 
+	 * is invoked, if the processor is to be used again.
+	 */
+	virtual void reset();
+	
+  /**
+   * The pending element.  We have to delay the call to 
+   * m_flistener.startElement(name, atts) because of the 
+   * xsl:attribute and xsl:copy calls.  In other words, 
+   * the attributes have to be fully collected before you 
+   * can call startElement.
+   */
+
+	DOMString	m_pendingElementName;
+
+	/**
+	 * The pending attributes.  We have to delay the call to 
+     * m_flistener.startElement(name, atts) because of the 
+	 * xsl:attribute and xsl:copy calls.  In other words, 
+	 * the attributes have to be fully collected before you 
+	 * can call startElement.
+	 */
+	AttributeListImpl	m_pendingAttributes;
+
+	/**
+	 * NOTE: This replaces the ResultNameSpace class in java, since it is the
+	 * same as the NameSpace class
+	 */
+
+	/**
+	 * A stack to keep track of the result tree namespaces.
+	 */
+	NamespacesStackType	m_resultNameSpaces;
+
+	/**
+	 * This is pushed on the m_resultNameSpaces stack until a 
+	 * xmlns attribute is found.  It's special because it has
+	 * and empty prefix and uri field.
+	 */
+	NameSpace			m_emptyNamespace;
+	
+	// Factory for creating xpaths.
+	XPathFactory&		m_xpathFactory;
+
+	/**
+	 * XPath object to use for short evaluations, so we don't have to 
+	 * create one every time.
+	 */
+	XPath* const		m_xpath;
+
+	// Factory for creating xobjects
+	XObjectFactory&		m_xobjectFactory;
+
+	// The query/pattern-matcher object.
+	XPathProcessorPtrType	m_xpathProcessor;
+
+	/**
+	 * Stack of Booleans to keep track of if we should be outputting 
+	 * cdata instead of escaped text.
+	 * ## Optimization: use array stack instead of object stack.
+	 */
+	BoolVectorType	m_cdataStack;
+
 private:
+
+	/**
+	 * The stack of Variable stacks.  A VariableStack will be 
+	 * pushed onto this stack for each template invocation.
+	 */
+	VariableStack	m_variableStacks;
+
+	/**
+	 * The XSL class can have a single listener that can be informed 
+	 * of errors and warnings, and can normally control if an exception
+	 * is thrown or not (or the problem listeners can throw their 
+	 * own RuntimeExceptions).
+	 */
+	ProblemListener*	m_problemListener;
+
+	/**
+	 * This is set to true if an xsl:id directive is found.
+	 * Mainly for use by the XMLParserLiaison classes for 
+	 * optimized processing of ids.
+	 */
+	bool	m_needToBuildKeysTable;
+
+	/**
+	 * Print a trace of a template that is being called, either by 
+	 * a match, name, or as part of for-each.
+	 */
+	void
+	traceTemplate(
+			const DOM_Element&		theTemplate) const;
+
+	/**
+	 * Print some diagnostics about the current 
+	 * template child.
+	 */
+	void
+	diagnoseTemplateChildren(
+			const DOM_Node&	templateChild,
+			const DOM_Node&	sourceNode) const;
+
+  /**
+   * The root of a linked set of stylesheets.
+   */
+	StylesheetRoot*					m_stylesheetRoot;
+
+	StylesheetExecutionContext*		m_stylesheetExecutionContext;
+
+/**
+ * The full XSLT Namespace URL.  To be replaced by the one actually 
+ * found.
+ */
+	DOMString					m_XSLNameSpaceURL;	//"http://www.w3.org/1999/XSL/Transform/1.0"
+
+
+
+/**
+ * The minimum version of XSLT supported.
+ */
+	static const double s_XSLTVerSupported;	// 1.0
+
+/**
+ * Out version of XSLT
+ */
+	static const DOMString s_DefaultXSLNameSpaceURL;
+/**
+ * The namespace that we must match as a minimum for XSLT.
+ */
+	static const	DOMString	s_XSLNameSpaceURLPre;	// "http://www.w3.org/1999/XSL/Transform"
+
+/**
+ * Special Xalan namespace for built-in extensions.
+ */
+	static const DOMString s_XSLT4JNameSpaceURL; // "http://xml.apache.org/xslt"
+
+
+/**
+ * Hash table that can look up XSLT4J extensions element IDs via name.
+ */
+	static ElementKeysMapType		s_XSLT4JElementKeys;
+
+	/**
+	 * Init the XSLT hashtable.
+	 */
+//	static void
+//	initXSLTKeys();
+
+	/**
+	 *  Hash table that can look up xslt element IDs via attribute.
+	 */
+	static AttributeKeysMapType	s_attributeKeys;
+
+  /**
+   *  Hash table that can look up xslt element IDs via name.
+   */
+	static ElementKeysMapType	s_elementKeys;
+
+
+	/**
+	 * Node to xsl directive table, used so we don't have to keep 
+	 * looking up the directives each time.  This isn't of huge 
+	 * benifit, but is used because of the cost of getExpandedElementName.
+	 */
+	// Create a hash table that can look up xsl element IDs via name.
+	mutable XSLDirectiveMapType		m_XSLDirectiveLookup;
+
+  /**
+   * If the template element is in the xsl:namespace, process the
+   * element.
+   * @return true if the given XSL template child is an XSL directive.
+   * @exception XSLProcessorException thrown if the active ProblemListener and XMLParserLiaison decide 
+   * the error condition is severe enough to halt processing.
+   */
+	bool
+	processXSLTemplateInstruction(
+			const Stylesheet*	stylesheetTree, 
+			DOM_Element			xslInstruction, 
+			DOM_Document		sourceTree, 
+			const DOM_Node&	sourceNode,
+			const DOMString&	mode);
+
+	/**
+	 * In response to 'xsl:import', call transformChild, or, if that 
+	 * fails, transformChildren.
+	 * @exception XSLProcessorException thrown if the active ProblemListener and XMLParserLiaison decide 
+	 * the error condition is severe enough to halt processing.
+	 */
+
+	/**
+	 * If this is set to true, do not warn about pattern 
+	 * match conflicts.
+	 */
+	bool	m_quietConflictWarnings;
+
+	/*
+	 * If this is true, then the diag function will 
+	 * be called.
+	 */
+	bool	m_traceTemplateChildren;
+  
+	/*
+	 * If this is true, then the simple tracing of templates 
+	 * will be performed.
+	 */
+	bool	m_traceTemplates;
+
+	/*
+	 * If this is true, then diagnostics of each select 
+	 * will be performed.
+	 */
+	bool	m_traceSelects;
+
+	/*
+	 * A stream to print diagnostics to.
+	 */
+	PrintWriter*	m_diagnosticsPrintWriter;
+
+  /* For diagnostics */
+	mutable DurationsTableMapType	m_durationsTable;
+
+	/**
+	 * List of listeners who are interested in tracing what's 
+	 * being generated.
+	 */
+	/*transient*/ TraceListenerVectorType m_traceListeners;
+	
+	// Common processing for errors and warnings
+	void problem(const DOM_Node& styleNode,
+					const DOM_Node& sourceNode,
+					const DOMString& msg, 
+					ProblemListener::eClassification		classification) const;
+	/**
+	 * This is for use by multiple output documents, to determine 
+	 * the base directory for the output document.  It needs to 
+	 * be set by the caller.
+	 */
+	DOMString m_outputFileName;
+	
+	/**
+	 * Write the children of a stylesheet element to the given listener.
+	 * @exception XSLProcessorException thrown if the active ProblemListener and XMLParserLiaison decide 
+	 * the error condition is severe enough to halt processing.
+	 * @param stylesheetTree The stylesheet object that holds the fragment.
+	 * @param templateParent The template element that holds the fragment.
+	 * @param sourceTree The source tree document context.
+	 * @param sourceNode The current source context node.
+	 * @param mode The mode under which the template is operating.
+	 * @return An object that represents the result tree fragment.
+	 */
+	void
+	writeChildren(
+			FormatterListener*				flistener,
+			StylesheetExecutionContext&		executionContext,
+	        const ElemTemplateElement&		templateParent,
+	        const DOM_Node&					sourceTree,
+	        const DOM_Node&					sourceNode,
+			const QName&					mode);
+
+
+  //==========================================================
+  // SECTION: Function to do with attribute handling
+  //==========================================================
+
+	/**
+	 * This is used whenever a unique namespace is needed.
+	 */
+	mutable int m_uniqueNSValue;	// 0
+  
+	/**
+	 * This should probably be in the XMLParserLiaison interface.
+	 */
+	DOMString
+	getPrefixForNamespace(
+			const DOMString&	theNamespace,
+			const DOM_Element&	namespaceContext) const;
+
+	bool	m_useATVsInSelects;
+
+	/**
+	 * Translate CSS attributes and put them in a style tag.
+	 * @deprecated
+	 */
+	void
+	translateCSSAttrsToStyleAttr(
+			AttributeListImpl&	attList);
+  
+	// $$$ ToDo:  This must go!!!!!!
+	/**
+	 * Evaluate an xpath string and return the result.
+	 */
+	virtual XPath*
+	createXPath(
+		const DOMString&		str,
+		const PrefixResolver&	resolver);
+
+	/**
+	 * Given a name, locate a variable in the current context, and return 
+	 * the XObject.
+	 * @exception XSLProcessorException thrown if the active ProblemListener and XMLParserLiaison decide 
+	 * the error condition is severe enough to halt processing.
+	 */
+	XObject*
+	getXObjectVariable(const DOMString&	name) const;
+
+	/**
+	 * Get an XLocator provider keyed by node.  This get's
+	 * the association based on the root of the tree that the 
+	 * node is parented by.
+	 */
+	XLocator*
+	getXLocatorFromNode(const DOM_Node&		node) const;
+
+	/**
+	 * Associate an XLocator provider to a node.  This makes
+	 * the association based on the root of the tree that the 
+	 * node is parented by.
+	 */
+	 void
+	 associateXLocatorToNode(
+			const DOM_Node&		node,
+			XLocator*			xlocator);
+
+  /**
+  * If this is true, the processor will do the best it can to strip 
+  * unwanted white space. This is set in the stylesheet via the default-space 
+  * attribute on xsl:stylesheet.
+  */
+	bool	m_stripWhiteSpace; // default default-space="preserve"
+
+//	typedef std::set<DOMString>		WhitespaceLookupTableType;
+
+	/**
+	 * A lookup table of all space preserving elements.
+	 */
+//	WhitespaceLookupTableType	m_whitespacePreservingElements;
+
+	/**
+	 * A lookup table of all space stripping elements.
+	 */
+//	WhitespaceLookupTableType	m_whitespaceStrippingElements;
+
+  /**
+   * Control if the xsl:variable is resolved early or 
+   * late. Resolving the xsl:variable
+   * early is a drag because it means that the fragment 
+   * must be created into a DocumentFragment, and then 
+   * cloned each time to the result tree.  If we can resolve 
+   * late, that means we can evaluate directly into the 
+   * result tree.  Right now this must be kept on 'early' 
+   * because you would need to set the call stack back to 
+   * the point of xsl:invoke... which I can't quite work out 
+   * at the moment.  I don't think this is worth fixing 
+   * until NodeList variables are implemented.
+   */
+	static const bool	m_resolveContentsEarly;
+
+	/**
+	 * Set the factory for making XPaths.
+	 */
+//	void setXPathFactory(XPathFactory* factory) { m_xpathFactory = factory; }
+
+	
+	/**
+	 * Get a DOM document, primarily for creating result 
+	 * tree fragments.
+	 */
+	DOM_Document
+	getDOMFactory() const;
+
+	/**
+	 * Set the XPath processor object.
+	 * @param processor A XPathProcessor interface.
+	 */
+//	void setXPathProcessor(XPathProcessor* processor) { m_xpathProcessor = processor; }
+
+	bool
+	getResolveContentsEarly() const
+	{
+		return m_resolveContentsEarly;
+	}
+
+	ParamVectorType		m_topLevelParams;
+
+	public:
+
+	/**
+	 * Reset the vector of top level parameters
+	 */
+	void
+	clearTopLevelParams()
+	{
+		m_topLevelParams.clear();
+	}
+
+	/**
+	 * Returns the current input node that is being 
+	 * processed.
+	 */
+	DOM_Node
+	getSourceNode() const
+	{
+		return m_currentNode;
+	}
+
+  /**
+   * The liason to the XML parser, so the XSL processor 
+   * can handle included files, and the like, and do the 
+   * initial parse of the XSL document.
+   */
+	XMLParserLiaison&	m_parserLiaison;
+
+	XPathSupport&		m_xpathSupport;
+
+	XPathEnvSupport&		m_xpathEnvSupport;
+
+	/**
+	 * The listener for formatting events.  This should be 
+	 * supplied by the Formatter object.
+	 */
+
+	// For now, we have to use the FormatterListener class,
+	// since we can't use RTTI to determine what we have.
+#if 1
+	DocumentHandler*	m_flistener;
+#else
+	FormatterListener*	m_flistener;
+#endif
+
+	/**
+	 * This holds the current context node list.  This should arguably be 
+	 * passed by parameter.
+	 */
+	MutableNodeRefList	m_contextNodeList;
+
+	/**
+	 * Table of KeyDeclaration objects, which are set by the 
+	 * xsl:key element.
+	 */
+	KeyDeclarationVectorType	m_keyDeclarations;
+
+	/**
+	 * Table of element keys.  The table will be built on demand, 
+	 * when a key is requested, or set by the XMLParserLiaison or 
+	 * the caller.  The table is:
+	 * a) keyed by name,
+	 * b) each with a value of a hashtable, keyed by the value returned by 
+	 *    the use attribute,
+	 * c) each with a value that is a nodelist.
+	 * Thus, for a given key or keyref, look up hashtable by name, 
+	 * look up the nodelist by the given reference.
+	 */
+	KeysMapType		m_keys;
+
+
+	/**
+	 * Keyed on string macro names, and holding values 
+	 * that are macro elements in the XSL DOM tree.
+	 * Initialized in initMacroLookupTable, and used in
+	 * findNamedTemplate.
+	 */
+	NamedTemplatesMapType	m_namedTemplates;
+
+	/**
+	 * Table for defined constants, keyed on the names.
+	 */
+	TopLevelVariablesMapType	m_topLevelVariables;
+
+	/**
+	 * The StackGuard class guard against infinite loops.
+	 */
+	class StackGuard
+	{
+	public:
+
+		StackGuard(
+				XSLTEngineImpl&		processor,
+				const DOM_Element&	xslTemplate = DOM_Element(),
+				const DOM_Node&		sourceXML = DOM_Node());
+
+		~StackGuard();
+
+		bool operator==(const StackGuard&	theRHS) const
+		{
+			return m_xslRule == theRHS.m_xslRule &&
+				   m_sourceXML == theRHS.m_sourceXML;
+		}
+
+		void print(PrintWriter&	pw) const;
+
+		void push(
+				const DOM_Element&	xslTemplate,
+				const DOM_Node&		sourceXML);
+
+		void pop();
+
+		void clear() { m_stack.clear(); }
+
+		void checkForInfiniteLoop(const StackGuard&	guard) const;
+
+	private:
+
+		XSLTEngineImpl*	m_processor;
+		DOM_Element		m_xslRule;
+		DOM_Node		m_sourceXML;
+
+		StackGuardStackType		m_stack;
+	};
+
+
+	// This is set to true when the "ancestor" attribute of 
+	// the select element is encountered.
+	bool		m_needToCheckForInfiniteLoops;
+
+	/**
+	 * Object to guard agains infinite recursion when 
+	 * doing queries.
+	 */
+	StackGuard	m_stackGuard;
 
 	/**
 	 * Stack for the purposes of flagging infinite recursion with 
 	 * attribute sets.
 	 */
 	AttrStackType	m_attrSetStack;
-
-private:
 
 	static void
 	InstallFunctions();
@@ -2759,10 +2273,6 @@ private:
 
 
 }; // end XSLTEngineImpl class
-
-#ifdef _MSC_VER
-#pragma warning(default:4100)
-#endif
 
 
 #endif	// XALAN_XSLTENGINEIMPL_HEADER_GUARD

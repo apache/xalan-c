@@ -87,6 +87,16 @@ class ElemLiteralResult: public ElemUse
 {
 public:
 
+	/**
+	 * Construct an object corresponding to a literal result element
+	 * 
+	 * @param constructionContext context for construction of object
+	 * @param stylesheetTree      stylesheet containing element
+	 * @param name                name of element
+	 * @param atts                list of attributes for element
+	 * @param lineNumber				line number in document
+	 * @param columnNumber			column number in document
+	 */
 	ElemLiteralResult(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
@@ -98,6 +108,8 @@ public:
 	virtual
 	~ElemLiteralResult();
 
+	// These methods are inherited from ElemUse ...
+	
 	virtual int
 	getXSLToken() const; 
 

@@ -551,7 +551,7 @@ Stylesheet::findTemplate(
 	const ElemTemplateElement*			bestMatchedRule = 0;
 	const MatchPattern2*				bestMatchedPattern = 0; // Syncs with bestMatchedRule
 
-	std::vector<const MatchPattern2*>	conflicts;
+	PatternTableVectorType conflicts;
 
 	if(useImports == false)
 	{
@@ -784,12 +784,9 @@ Stylesheet::findTemplate(
 	return const_cast<ElemTemplateElement *>(bestMatchedRule);
 }
 	
-/**
- * Add object to vector if not already there.
- */
 void Stylesheet::addObjectIfNotFound(
 			const MatchPattern2*			thePattern,
-			std::vector<const MatchPattern2*>&	theVector)
+			PatternTableVectorType&	theVector)
 {
 	const int	n = theVector.size();
 	bool		addIt = true;

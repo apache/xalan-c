@@ -84,6 +84,12 @@ class ContextMarker : public ContextState
 {
 public:
 
+	/**
+	  * Construct a context marker from a source node and caller node
+	  *
+	  * @param caller     caller node
+	  * @param sourceNode source node
+	  */
 	ContextMarker(
 			const DOM_Node&		caller,
 			const DOM_Node&		sourceNode);

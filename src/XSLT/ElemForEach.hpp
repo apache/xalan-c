@@ -88,6 +88,21 @@ class XPath;
 
 class ElemForEach: public ElemTemplateElement
 {
+
+	/**
+	 * Construct an object corresponding to an "xsl:for-each" element
+	 * 
+	 * @param constructionContext context for construction of object
+	 * @param stylesheetTree      stylesheet containing element
+	 * @param name                name of element
+	 * @param atts                list of attributes for element
+	 * @param lineNumber				line number in document
+	 * @param columnNumber			column number in document
+	 * @param isOnlyForEach       true if this is not called on a subclass for
+	 *                            ElemForEach; this is necessary because of
+	 *                            differences in construction of subclasses
+	 *                            between C++ and Java
+	 */
 public:
 	ElemForEach (
 		StylesheetConstructionContext&	constructionContext,
@@ -96,18 +111,10 @@ public:
 		const AttributeList& atts,
 		int lineNumber, 
 		int columnNumber,
-		bool isOnlyForEach); // true iff this is not called on a subclass for ElemForEach
+		bool isOnlyForEach); // true if this is not called on a subclass for ElemForEach
 
 
 	virtual ~ElemForEach();
-
-	virtual int getXSLToken() const; 
-
-	virtual void execute(
-		StylesheetExecutionContext& executionContext, 
-		const DOM_Node& sourceTree, 
-		const DOM_Node& sourceNode,
-		const QName& mode) const;
 
 	typedef std::vector<ElemSort*> SortElemsVector;
 
@@ -121,11 +128,22 @@ public:
 		return m_sortElems;
 	}
 
-private:
-	SortElemsVector m_sortElems;
+	// These methods are inherited from ElemTemplateElement ...
+	
+	virtual int getXSLToken() const; 
+
+	virtual void execute(
+		StylesheetExecutionContext& executionContext, 
+		const DOM_Node& sourceTree, 
+		const DOM_Node& sourceNode,
+		const QName& mode) const;
 
 protected:
 	const XPath* m_pSelectPattern; // = null;
+
+private:
+	SortElemsVector m_sortElems;
+
 };
 
 #endif	// XALAN_ELEMFOREACH_HEADER_GUARD

@@ -94,58 +94,64 @@ public:
 	virtual
 	~StylesheetConstructionContext();
 
-	// These interfaces are inherited from ExecutionContext...
-
 	/**
-	 * Tell the user of an error, and probably throw an 
-	 * exception.
+	 * Given an XSL tag name, return an integer token that corresponds to
+	 * ELEMNAME_XXX constants defined in Constants.hpp.
+	 *
+	 * @param name a probable xsl:xxx element name
+	 * @return Constants.ELEMNAME_XXX token, or -1 if in xsl or Xalan namespace,
+	 * -2 if not in known namespace
 	 */
-	virtual void
-	error(
-			const DOMString&	msg,
-			const DOM_Node& 	sourceNode = DOM_Node(),
-			const DOM_Node&		styleNode = DOM_Node()) const = 0;
-
-	/**
-	 * Tell the user of an warning, and probably throw an 
-	 * exception.
-	 */
-	virtual void
-	warn(
-			const DOMString&	msg,
-			const DOM_Node& 	sourceNode = DOM_Node(),
-			const DOM_Node&		styleNode = DOM_Node()) const = 0;
-
-	/**
-	 * Output a message.
-	 */
-	virtual void
-	message(
-			const DOMString&	msg,
-			const DOM_Node& 	sourceNode = DOM_Node(),
-			const DOM_Node&		styleNode = DOM_Node()) const = 0;
-
 	virtual int
 	getAttrTok(const DOMString&	name) const = 0;
 
+	/**
+	 * Determine the fully qualified URI for a string.
+	 *
+	 * @param urlString string to qualify
+	 * @return pointer to fully qualified URI
+	 */
 	virtual XMLURL*
 	getURLFromString(const DOMString&	urlString) = 0;
 
+	/**
+	 * Determine the fully qualified URI for a string.
+	 *
+	 * @param urlString string to qualify
+	 * @param base base location for URI
+	 * @return pointer to fully qualified URI
+	 */
 	virtual XMLURL*
 	getURLFromString(
 			const DOMString&	urlString,
 			const DOMString&	base) = 0;
 
+	/**
+	 * Retrieve the prefix for XSL namespace URI's, for example,
+	 * "http://www.w3.org/1999/XSL/Transform" 
+	 * 
+	 * @return prefix string
+	 */
 	virtual const DOMString&
 	getXSLNameSpaceURLPre() const = 0;
 
+	/**
+	 * Retrieve the URI for the current XSL namespace, for example,
+	 * "http://www.w3.org/1999/XSL/Transform/1.0" 
+	 * 
+	 * @return URI string
+	 */
 	virtual const DOMString&
 	getXSLNameSpaceURL() const = 0;
 
 	/**
-	 * Create and initialize an xpath and return it.
-	 * This is to be used by stylesheet elements that need
-	 * an XPath that is guaranteed to persist while it lives.
+	 * Create and initialize an xpath for a match pattern and return it. This
+	 * is to be used by stylesheet elements that need an XPath that is
+	 * guaranteed to persist while it lives.
+	 *
+	 * @param str      string to match
+	 * @param resolver resolver for namespace resolution
+	 * @return XPath for match pattern
 	 */
 	virtual XPath*
 	createMatchPattern(
@@ -153,14 +159,39 @@ public:
 			const PrefixResolver&	resolver) = 0;
 
 	/**
-	 * Create and initialize an xpath and return it.
-	 * This is to be used by stylesheet elements that need
-	 * an XPath that is guaranteed to persist while it lives.
+	 * Create and initialize an xpath and return it. This is to be used by
+	 * stylesheet elements that need an XPath that is guaranteed to persist
+	 * while it lives.
+	 *
+	 * @param str      string to match
+	 * @param resolver resolver for namespace resolution
+	 * @return XPath for string matched
 	 */
 	virtual XPath*
 	createXPath(
 			const DOMString&		str,
 			const PrefixResolver&	resolver) = 0;
+
+	// These interfaces are inherited from ExecutionContext...
+
+	virtual void
+	error(
+			const DOMString&	msg,
+			const DOM_Node& 	sourceNode = DOM_Node(),
+			const DOM_Node&		styleNode = DOM_Node()) const = 0;
+
+	virtual void
+	warn(
+			const DOMString&	msg,
+			const DOM_Node& 	sourceNode = DOM_Node(),
+			const DOM_Node&		styleNode = DOM_Node()) const = 0;
+
+	virtual void
+	message(
+			const DOMString&	msg,
+			const DOM_Node& 	sourceNode = DOM_Node(),
+			const DOM_Node&		styleNode = DOM_Node()) const = 0;
+
 };
 
 

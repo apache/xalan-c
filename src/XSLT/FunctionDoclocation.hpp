@@ -90,15 +90,8 @@ class XALAN_XSLT_EXPORT FunctionDocLocation : public Function
 {
 public:
 
-	/**
-	 * Execute an XPath function object.  The function must return 
-	 * a valid object.
-	 * @param path The executing xpath.
-	 * @param context The current context.
-	 * @param opPos The current op position.
-	 * @param args A list of XObject arguments.
-	 * @return A valid XObject.
-	 */
+	// These methods are inherited from XPath/Function ...
+	
 	virtual XObject*
 	execute(
 			XPathExecutionContext&			executionContext,

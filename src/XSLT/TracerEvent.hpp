@@ -75,6 +75,15 @@ class TracerEvent
 {
 public:
 
+	/**
+	 * Construct a tracer event.
+	 * 
+	 * @param executionContext    XSLT processor instance
+	 * @param sourceTree input    source tree
+	 * @param sourceNode current  context node
+	 * @param mode                current mode
+	 * @param styleNode           node in the style tree where the event occurs
+	 */
 	TracerEvent(
 			const StylesheetExecutionContext&	executionContext,
 			const DOM_Node&						sourceTree,
@@ -85,28 +94,25 @@ public:
 	virtual
 	~TracerEvent();
 
-  /**
-   Returns a string representation of the node.
-   The string returned for elements will contain the element name
-   and any attributes enclosed in angle brackets.
-   The string returned for attributes will be of form, "name=value."
-
-   @param n any DOM node. Must not be null.
-
-   @return a string representation of the given node.
-   */
+	/**
+	 * Returns a string representation of the node. The string returned for
+	 * elements will contain the element name and any attributes enclosed in
+	 * angle brackets. The string returned for attributes will be of form,
+	 * "name=value."
+	 *
+	 * @param n any DOM node, must not be null
+	 * @return string representation of the given node
+	 */
   static DOMString printNode(const DOM_Node& n);
 
   /**
-   Returns a string representation of the node list.
-   The string will contain the list of nodes inside square braces.
-   Elements will contain the element name
-   and any attributes enclosed in angle brackets.
-   Attributes will be of form, "name=value."
-
-   @param l any DOM node list. Must not be null.
-
-   @return a string representation of the given node list.
+	* Returns a string representation of the node list. The string will contain
+	* the list of nodes inside square braces. Elements will contain the element
+	* name and any attributes enclosed in angle brackets. Attributes will be of
+	* form, "name=value."
+	*
+   * @param l any DOM node list, must not be null
+   * @return string representation of the given node list
    */
   static DOMString printNodeList(const DOM_NodeList& l);
 

@@ -96,8 +96,8 @@ NodeSorter::~NodeSorter()
 
 void
 NodeSorter::sort(
-				std::vector<DOM_Node>&				v,
-				const std::vector<NodeSortKey>&		keys)
+				DOMNodeVectorType&				v,
+				const DOMNodeSortKeyVectorType&		keys)
 {
 	m_keys = keys;
 
@@ -117,12 +117,12 @@ NodeSorter::sort(
 void
 NodeSorter::sort(
 			MutableNodeRefList&					theList,
-			const std::vector<NodeSortKey>&		keys)
+			const DOMNodeSortKeyVectorType&		keys)
 {
 	const int			theLength = theList.getLength();
 
 	// Copy the nodes to a vector...
-	std::vector<DOM_Node>	theNodes(theLength);
+	DOMNodeVectorType	theNodes(theLength);
 
 	for (int i = 0; i < theLength; i++)
 	{
@@ -133,7 +133,7 @@ NodeSorter::sort(
 	sort(theNodes,
 		 keys);
 	assert(theNodes.size() ==
-				static_cast<std::vector<DOM_Node>::size_type>(theLength));
+				static_cast<DOMNodeVectorType::size_type>(theLength));
 
 	theList.clear();
 

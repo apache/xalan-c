@@ -93,10 +93,18 @@ class NumeratorFormatter
 {
 public:
 
+#if defined(XALAN_NO_NAMESPACES)
+	typedef vector<int> IntVectorType;
+	typedef vector<DecimalToRoman>	DecimalToRomanVectorType;
+#else
+	typedef std::vector<int> IntVectorType;
+	typedef std::vector<DecimalToRoman>	DecimalToRomanVectorType;
+#endif
+
+
 	/**
-	 * Construct a NumeratorFormatter using an element 
-	 * that contains XSL number conversion attributes - 
-	 * format, letter-value, xml:lang, digit-group-sep, 
+	 * Construct a NumeratorFormatter using an element that contains XSL number
+	 * conversion attributes - format, letter-value, xml:lang, digit-group-sep,
 	 * n-digits-per-group, and sequence-src.
 	 */
 	NumeratorFormatter(
@@ -107,46 +115,133 @@ public:
 	~NumeratorFormatter();
 
 	/**
-	 * Process the attributes of the node with number formatting 
-	 * attributes.  I'd like to 
-	 * do this at construction time, but I have to do it every 
-	 * time because the elements may have attribute templates embedded 
-	 * in them, and so must be processed only when the node is 
-	 * actually called.
+	 * Process the attributes of the node with number formatting attributes.
+	 * I'd like to do this at construction time, but I have to do it every time
+	 * because the elements may have attribute templates embedded in them, and
+	 * so must be processed only when the node is actually called.
 	 * TODO: Can I just do NumeratorFormatter.processAttributes up front now?
+	 *
+	 * @param contextNode current node in the source tree
 	 */
 	virtual void
 	processAttributes(const DOM_Node&	contextNode);
-//		  throws XSLProcessorException, 
-//				 java.net.MalformedURLException, 
-//				 java.io.FileNotFoundException, 
-//				 java.io.IOException
   
 	/**
 	 * Format a vector of numbers into a formatted string.
-	 * @param xslNumberElement Element that takes %conversion-atts; attributes.
-	 * @param list Array of one or more integer numbers.
-	 * @return String that represents list according to 
-	 * %conversion-atts; attributes.
+	 *
 	 * TODO: Optimize formatNumberList so that it caches the last count and
 	 * reuses that info for the next count.
+	 *
+	 * @param xslNumberElement Element that takes %conversion-atts; attributes.
+	 * @param list vector of one or more integer numbers
+	 * @return String that represents list according to "conversion-atts"
+	 *         attributes
 	 */
-	typedef std::vector<int> IntVectorType;
-
 	DOMString
 		formatNumberList(const IntVectorType&		theList);
 
+	/**
+	 * Retrieve the associated stylesheet processor
+	 * 
+	 * @return pointer to XSL processor in use
+	 */
 	XSLTProcessor*
 	getXSLProcessor() const
 	{
 		return m_xslProcessor;
 	}
 
+	/**
+	 * Set the stylesheet processor to use
+	 * 
+	 * @param theProcessor pointer to XSL processor
+	 */
 	void
 	setXSLProcessor(XSLTProcessor*	theProcessor)
 	{
 		m_xslProcessor = theProcessor;
 	}
+
+	/**
+	 * This class returns tokens using non-alphanumberic characters as
+	 * delimiters. 
+	 */
+	class NumberFormatStringTokenizer
+	{
+	public:
+
+		/**
+		 * Construct a NumberFormatStringTokenizer.
+		 *
+		 * @param theStr string to tokenize
+		 */
+		explicit
+		NumberFormatStringTokenizer(const DOMString&	theStr = DOMString());
+
+		/**
+		 * Sets the string to tokenize.
+		 *
+		 * @param theString  new string to tokenize
+		 */
+		void
+		setString(const DOMString&	theString);
+
+		/**
+		 * Reset tokenizer so that nextToken() starts from the beginning.
+		 */
+		void
+		reset()
+		{
+			m_currentPosition = 0;
+		}
+
+		/**
+		 * Retrieve the next token to be parsed; behavior is undefined if there
+		 * are no more tokens
+		 * 
+		 * @return next token string
+		 */
+		DOMString
+		nextToken();
+
+		/**
+		 * Determine if there are tokens remaining
+		 * 
+		 * @return true if there are more tokens
+		 */
+		bool
+		hasMoreTokens() const
+		{
+			return (m_currentPosition >= m_maxPosition) ? false : true;
+		}
+
+		/**
+		 * Count the number of tokens yet to be parsed
+		 * 
+		 * @return number of remaining tokens
+		 */
+		int
+		countTokens() const;
+
+	private:
+
+		int			m_currentPosition;
+		int			m_maxPosition;
+		DOMString	m_str;
+	}; // end NumberFormatStringTokenizer
+
+	NumberFormatStringTokenizer		m_formatTokenizer;
+
+	/**
+	 * Table to help in converting decimals to roman numerals.
+	 */
+	static const DecimalToRomanVectorType	m_romanConvertTable;
+
+	/**
+	 * Chars for converting integers into alpha counts.
+	 */
+	static const XMLCh		m_alphaCountTable[];
+	static const size_t		m_alphaCountTableSize;
 
 protected:
 
@@ -189,88 +284,6 @@ protected:
 //		Locale m_locale;
 //		java.text.NumberFormat m_formatter;
 
-public:
-
-	/**
-	 * This class returns tokens using non-alphanumberic 
-	 * characters as delimiters. 
-	 */
-	class NumberFormatStringTokenizer
-	{
-	public:
-
-		/**
-		 * Construct a NumberFormatStringTokenizer.
-		 */
-		explicit
-		NumberFormatStringTokenizer(const DOMString&	theStr = DOMString());
-
-		void
-		setString(const DOMString&	theString);
-
-		/**
-		 * Reset tokenizer so that nextToken() starts from the beginning.
-		 */
-		void
-		reset()
-		{
-			m_currentPosition = 0;
-		}
-
-		/**
-		 * Returns the next token from this string tokenizer.
-		 *
-		 * @return     the next token from this string tokenizer.
-		 * @exception  NoSuchElementException  if there are no more tokens in this
-		 *               tokenizer's string.
-		 */
-		DOMString
-		nextToken();
-
-		/**
-		 * Tells if <code>nextToken</code> will throw an exception 
-		 * if it is called.
-		 *
-		 * @return true if <code>nextToken</code> can be called 
-		 * without throwing an exception.
-		 */
-		bool
-		hasMoreTokens() const
-		{
-			return (m_currentPosition >= m_maxPosition) ? false : true;
-		}
-
-		/**
-		 * Calculates the number of times that this tokenizer's 
-		 * <code>nextToken</code> method can be called before it generates an 
-		 * exception. 
-		 *
-		 * @return  the number of tokens remaining in the string using the current
-		 *          delimiter set.
-		 * @see     java.util.StringTokenizer#nextToken()
-		 */
-		int
-		countTokens() const;
-
-	private:
-
-		int			m_currentPosition;
-		int			m_maxPosition;
-		DOMString	m_str;
-	}; // end NumberFormatStringTokenizer
-
-	NumberFormatStringTokenizer		m_formatTokenizer;
-
-	/**
-	 * Table to help in converting decimals to roman numerals.
-	 */
-	static const std::vector<DecimalToRoman>	m_romanConvertTable;
-
-	/**
-	 * Chars for converting integers into alpha counts.
-	 */
-	static const XMLCh		m_alphaCountTable[];
-	static const size_t		m_alphaCountTableSize;
 };
 
 

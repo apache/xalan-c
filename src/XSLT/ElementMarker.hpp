@@ -88,14 +88,27 @@ public:
 	virtual
 	~ElementMarker();
 
-	virtual bool
-	equals(const StackEntry& rhs) const;
-
+	/**
+	 * Retrieve the DOM node where stack context begins
+	 *
+	 * @return DOM Node corresponding to marker
+	 */
 	const DOM_Node&
 	getElement() const
 	{
 		return m_elem;
 	}
+
+	bool
+	operator==(const ElementMarker&		theRHS)
+	{
+		return equals(theRHS);
+	}
+
+	// These methods are inherited from StackEntry ...
+	
+	virtual bool
+	equals(const StackEntry& rhs) const;
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
 	virtual StackEntry*
@@ -103,12 +116,6 @@ public:
 	virtual ElementMarker*
 #endif
 	clone() const;
-
-	bool
-	operator==(const ElementMarker&		theRHS)
-	{
-		return equals(theRHS);
-	}
 
 private:
 

@@ -74,6 +74,16 @@ class ElemMessage: public ElemTemplateElement
 {
 public:
 
+	/**
+	 * Construct an object corresponding to an "xsl:message" element
+	 * 
+	 * @param constructionContext context for construction of object
+	 * @param stylesheetTree      stylesheet containing element
+	 * @param name                name of element
+	 * @param atts                list of attributes for element
+	 * @param lineNumber				line number in document
+	 * @param columnNumber			column number in document
+	 */
 	ElemMessage(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
@@ -82,6 +92,8 @@ public:
 			int								lineNumber,
 			int								columnNumber);
 
+	// These methods are inherited from ElemTemplateElement ...
+	
 	virtual int
 	getXSLToken() const; 
 

@@ -91,82 +91,104 @@ class XPathExecutionContext;
 
 /**
  * This class can sort vectors of DOM nodes according to a select pattern.
- * TODO: Optimize this so it can reuse queries for each of the nodes.
  */
+ // TODO: Optimize this so it can reuse queries for each of the nodes.
 class NodeSorter
 {
 public:
 
+#if defined(XALAN_NO_NAMESPACES)
+typedef vector<DOM_Node>		DOMNodeVectorType;
+typedef vector<NodeSortKey>		DOMNodeSortKeyVectorType;
+#else
+typedef std::vector<DOM_Node>		DOMNodeVectorType;
+typedef std::vector<NodeSortKey>		DOMNodeSortKeyVectorType;
+#endif
+
 	/**
-	 * Construct a NodeSorter, passing in the XSL Processor 
-	 * so it can know how to get the node data according to 
-	 * the proper whitespace rules.
+	 * Construct a NodeSorter, passing in the XSL Processor so it can know how
+	 * to get the node data according to the proper whitespace rules.
+	 *
+	 * @param executionContext current execution context
 	 */
 	NodeSorter(XPathExecutionContext&	executionContext);
   
 	~NodeSorter();
 
 	/**
-	 * Given a vector of nodes, sort each node according to 
-	 * the criteria in the keys.
-	 * @param v an vector of Nodes.
-	 * @param keys a vector of NodeSortKeys.
+	 * Given a vector of nodes, sort each node according to the criteria in the
+	 * keys.
+	 *
+	 * @param v    vector of Nodes
+	 * @param keys vector of NodeSortKeys
 	 */
 	void
 	sort(
-			std::vector<DOM_Node>&				v,
-			const std::vector<NodeSortKey>&		keys);
-/*
-     throws XSLProcessorException, 
-           java.net.MalformedURLException, 
-           java.io.FileNotFoundException, 
-           java.io.IOException
-*/
+			DOMNodeVectorType&				v,
+			const DOMNodeSortKeyVectorType&		keys);
 
 	/**
-	 * Given a vector of nodes, sort each node according to 
-	 * the criteria in the keys.
-	 * @param v an vector of Nodes.
-	 * @param keys a vector of NodeSortKeys.
+	 * Given a vector of nodes, sort each node according to the criteria in the
+	 * keys.
+	 *
+	 * @param v    vector of Nodes
+	 * @param keys vector of NodeSortKeys
 	 */
 	void
 	sort(
 			MutableNodeRefList&					theList,
-			const std::vector<NodeSortKey>&		keys);
+			const DOMNodeSortKeyVectorType&		keys);
+
+	/*
+	 * TODO: Optimize compare -- cache the getStringExpr results,
+	 * key by m_selectPat + hash of node.
+	 */
 
 	/**
 	 * Return the results of a compare of two nodes.
-	 * TODO: Optimize compare -- cache the getStringExpr results,
-	 * key by m_selectPat + hash of node.
 	 */
 	struct NodeSortKeyCompare : public std::binary_function<const DOM_Node&, const DOM_Node&, bool>
 	{
 	public:
 
+	/**
+	 * Construct a NodeSortKeyCompare object, to perform the sort
+	 *
+	 * @param executionContext current execution context
+	 * @param theNodes        vector or nodes to be sorted
+	 * @param theNodeSortKeys vector of keys upon which to sort
+	 */
 		NodeSortKeyCompare(XPathExecutionContext&			executionContext,
-						   const std::vector<DOM_Node>&		theNodes,
-						   const std::vector<NodeSortKey>&	theNodeSortKeys) :
+						   const DOMNodeVectorType&		theNodes,
+						   const DOMNodeSortKeyVectorType&	theNodeSortKeys) :
 			m_executionContext(executionContext),
 			m_nodes(theNodes),
 			m_nodeSortKeys(theNodeSortKeys)
 		{
 		}
 
+	/**
+	 * Compare two nodes
+	 *
+	 * @param executionContext current execution context
+	 * @param theNodes        vector or nodes to be sorted
+	 * @param theNodeSortKeys vector of keys upon which to sort
+	 */
 		result_type
 		operator()(first_argument_type		theLHS,
 				   second_argument_type		theRHS,
 				   unsigned int				theKeyIndex = 0) const;
 
 		XPathExecutionContext&				m_executionContext;
-		const std::vector<DOM_Node>&		m_nodes;
-		const std::vector<NodeSortKey>&		m_nodeSortKeys;
+		const DOMNodeVectorType&		m_nodes;
+		const DOMNodeSortKeyVectorType&		m_nodeSortKeys;
 	};
 
 private:
 
 	XPathExecutionContext&		m_executionContext;
 
-	std::vector<NodeSortKey>	m_keys; // vector of NodeSortKeys
+	DOMNodeSortKeyVectorType	m_keys; // vector of NodeSortKeys
   /**
    * @@ TODO: Adjust this for locale.
 	* JMD: java: not used yet, placeholder

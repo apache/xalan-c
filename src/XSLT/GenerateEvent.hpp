@@ -80,144 +80,145 @@ public:
 	enum EventType
 	{
 		/** 
-		* Event type generated when a document begins.
-		* 
-		*/
+		 * Event type generated when a document begins.
+		 * 
+		 */
 		EVENTTYPE_STARTDOCUMENT = 1,
 			
 		/** 
-		* Event type generated when a document ends.
-		*/
+		 * Event type generated when a document ends.
+		 */
 		EVENTTYPE_ENDDOCUMENT = 2,
 		
 		/** 
-		* Event type generated when an element begins (after the attributes have been processed but before the children have been added).
-		*/
+		 * Event type generated when an element begins (after the attributes have been processed but before the children have been added).
+		 */
 		EVENTTYPE_STARTELEMENT = 3,
 		
 		/** 
-		* Event type generated when an element ends, after it's children have been added.
-		*/
+		 * Event type generated when an element ends, after it's children have been added.
+		 */
 		EVENTTYPE_ENDELEMENT = 4,
 		
 		/** 
-		* Event type generated for character data (CDATA and Ignorable Whitespace have their own events).
-		*/
+		 * Event type generated for character data (CDATA and Ignorable Whitespace have their own events).
+		 */
 		EVENTTYPE_CHARACTERS = 5,
 		
 		/** 
-		* Event type generated for ignorable whitespace (I'm not sure how much this is actually called.
-		*/
+		 * Event type generated for ignorable whitespace (I'm not sure how much this is actually called.
+		 */
 		EVENTTYPE_IGNORABLEWHITESPACE = 6,
-		
+
 		/** 
-		* Event type generated for processing instructions.
-		*/
+		 * Event type generated for processing instructions.
+		 */
 		EVENTTYPE_PI = 7,
-		
+
 		/** 
-		* Event type generated after a comment has been added.
-		*/
+		 * Event type generated after a comment has been added.
+		 */
 		EVENTTYPE_COMMENT = 8,
-		
+
 		/** 
-		* Event type generate after an entity ref is created.
-		*/
+		 * Event type generate after an entity ref is created.
+		 */
 		EVENTTYPE_ENTITYREF = 9,
-		
+
 		/** 
-		* Event type generated after CDATA is generated.
-		*/
+		 * Event type generated after CDATA is generated.
+		 */
 		EVENTTYPE_CDATA = 10
 	};
 
-	
+
 	/** 
-	* Constructor for startDocument, endDocument events.
-	* 
-	* @param processor The XSLT Processor instance.
-	* @param eventType One of the EVENTTYPE_XXX constants.
-	*/
-	
+	 * Constructor for startDocument, endDocument events.
+	 * 
+	 * @param processor XSLT Processor instance
+	 * @param eventType one of the EVENTTYPE_XXX constants
+	 */
 	GenerateEvent(XSLTEngineImpl* processor, EventType eventType);
 	
 	/** 
 	* Constructor for startElement, endElement events.
 	* 
-	* @param processor The XSLT Processor Instance.
-	* @param eventType One of the EVENTTYPE_XXX constants.
-	* @param name The name of the element.
-	* @param atts The SAX attribute list.
+	* @param processor XSLT Processor Instance
+	* @param eventType one of the EVENTTYPE_XXX constants
+	* @param name      name of the element
+	* @param atts      SAX attribute list
 	*/
-	GenerateEvent(XSLTEngineImpl* processor, EventType eventType, DOMString name, AttributeList* atts);
+	GenerateEvent(XSLTEngineImpl* processor, EventType eventType,
+		DOMString name, AttributeList* atts);
 	
 	/** 
 	* Constructor for characters, cdate events.
 	* 
-	* @param processor The XSLT Processor instance.
-	* @param eventType One of the EVENTTYPE_XXX constants.
-	* @param ch The char array from the SAX event.
-	* @param start The start offset to be used in the char array.
-	* @param length The end offset to be used in the chara array.
+	* @param processor XSLT Processor instance
+	* @param eventType one of the EVENTTYPE_XXX constants
+	* @param ch        char array from the SAX event
+	* @param start     start offset to be used in the char array
+	* @param length    end offset to be used in the chara array
 	*/
-	GenerateEvent(XSLTEngineImpl* processor, EventType eventType, DOMString ch, int start, int length);
+	GenerateEvent(XSLTEngineImpl* processor, EventType eventType,
+		DOMString ch, int start, int length);
 	
 	/** 
 	* Constructor for processingInstruction events.
 	* 
-	* @param processor The instance of the XSLT processor.
-	* @param eventType One of the EVENTTYPE_XXX constants.
-	* @param name The name of the processing instruction.
-	* @param data The processing instruction data.
+	* @param processor instance of the XSLT processor
+	* @param eventType one of the EVENTTYPE_XXX constants
+	* @param name      name of the processing instruction
+	* @param data      processing instruction data
 	*/
-	GenerateEvent(XSLTEngineImpl* processor, EventType eventType, DOMString name, DOMString data);
+	GenerateEvent(XSLTEngineImpl* processor, EventType eventType,
+		DOMString name, DOMString data);
 	
 	/** 
 	* Constructor for comment and entity ref events.
 	* 
-	* @param processor The XSLT processor instance.
-	* @param eventType One of the EVENTTYPE_XXX constants.
-	* @param data The comment or entity ref data.
+	* @param processor XSLT processor instance
+	* @param eventType one of the EVENTTYPE_XXX constants
+	* @param data      comment or entity ref data
 	*/
-	GenerateEvent(XSLTEngineImpl* processor, EventType eventType, DOMString data);
-	
-	
-	
+	GenerateEvent(XSLTEngineImpl* processor, EventType eventType,
+		DOMString data);
 	
 	/** 
-	* The type of SAX event that was generated, as enumerated in the EVENTTYPE_XXX constants above.
-	*/
+	 * The type of SAX event that was generated, as enumerated in the
+	 * EVENTTYPE_XXX constants above.
+	 */
 	EventType m_eventType;
-	
-	
+
+
 	/** 
-	* Character data from a character or cdata event.
-	*/
+	 * Character data from a character or cdata event.
+	 */
 	DOMString m_characters;
-	
+
 	/** 
-	* The start position of the current data in m_characters.
-	*/
+	 * The start position of the current data in m_characters.
+	 */
 	int m_start;
-	
+
 	/** 
-	* The length of the current data in m_characters.
-	*/
+	 * The length of the current data in m_characters.
+	 */
 	int m_length;
-	
+
 	/** 
-	* The name of the element or PI.
-	*/
+	 * The name of the element or PI.
+	 */
 	DOMString m_name;
-	
+
 	/** 
-	* The string data in the element (comments and PIs).
-	*/
+	 * The string data in the element (comments and PIs).
+	 */
 	DOMString m_data;
-	
+
 	/** 
-	* The current attribute list.
-	*/
+	 * The current attribute list.
+	 */
 	AttributeList* m_pAtts;
 	
 private:

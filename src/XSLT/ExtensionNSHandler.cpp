@@ -392,7 +392,7 @@ void ExtensionNSHandler::loadComponentDescription ()
  * @param elem element whose text and cdata children are to be 
  *				concatenated together.
  *
- * @return string resulting from concatanating the text/cdata child
+ * @return string resulting from concatenating the text/cdata child
  *				 nodes' values.
  */
 DOMString ExtensionNSHandler::getScriptString (const DOM_Element& elem)

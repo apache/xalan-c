@@ -68,10 +68,10 @@
 
 
 
-std::vector<DecimalToRoman>
+NumeratorFormatter::DecimalToRomanVectorType
 InitializeDecimalToRomanTable()
 {
-	std::vector<DecimalToRoman>	theVector(7);
+	NumeratorFormatter::DecimalToRomanVectorType	theVector(7);
 
 	theVector[0] = DecimalToRoman(1000L, XALAN_STATIC_UCODE_STRING("M"), 900L, XALAN_STATIC_UCODE_STRING("CM"));
 	theVector[1] = DecimalToRoman(500L, XALAN_STATIC_UCODE_STRING("D"), 400L, XALAN_STATIC_UCODE_STRING("CD"));
@@ -86,8 +86,8 @@ InitializeDecimalToRomanTable()
 
 
 
-const std::vector<DecimalToRoman>	NumeratorFormatter::m_romanConvertTable =
-							InitializeDecimalToRomanTable();
+const NumeratorFormatter::DecimalToRomanVectorType
+	NumeratorFormatter::m_romanConvertTable = InitializeDecimalToRomanTable();
 
 
 const XMLCh						NumeratorFormatter::m_alphaCountTable[] = 

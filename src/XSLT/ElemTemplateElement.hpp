@@ -97,20 +97,21 @@ class XPath;
  * which is expected to perform the given action on the
  * result tree.
  *
- * @see Stylesheet
+ * @see class Stylesheet
  */
 
 class ElemTemplateElement : public UnimplementedElement, public PrefixResolver
 {
 public:
-	/** Construct a template element instance.
+	/**
+	 * Construct a template element instance.
 	 * 
-	 * @param processor The XSLT Processor.
-	 * @param stylesheetTree The owning stylesheet.
-	 * @param name The name of the element.
-	 * @param atts The element attributes.
-	 * @param lineNumber The line in the XSLT file that the element occurs on.
-	 * @param columnNumber The column index in the XSLT file that the element occurs on.
+	 * @param constructionContext  context when object consructed
+	 * @param stylesheetTree       owning stylesheet
+	 * @param name                 name of the element
+	 * @param lineNumber           line in the XSLT file where the element occurs
+	 * @param columnNumber         column index in the XSLT file where the
+	 *                             element occurs
 	 */
 	ElemTemplateElement (
 		StylesheetConstructionContext&	constructionContext,
@@ -122,29 +123,14 @@ public:
 	virtual
 	~ElemTemplateElement();
 
-
-	// These interfaces are inherited from PrefixResolver...
-
-	/** 
-	 * Given a namespace, get the corresponding prefix.
-	 */
-	virtual DOMString
-	getNamespaceForPrefix(const DOMString& prefix) const;
-
-
-	virtual DOMString
-	getURI() const;
-
-	// These interfaces are new to ElemTemplateElement...
-
 	/** 
 	* See if this is a xmlns attribute, and, if so, process it.
 	* 
-	* @param attrName Qualified name of attribute.
-	* @param atts The attribute list where the element comes from (not used at 
-	*      this time).
-	* @param which The index into the attribute list (not used at this time).
-	* @return True if this is a namespace name.
+	* @param attrName qualified name of attribute
+	* @param atts     attribute list where the element comes from (not used at 
+	*                 this time)
+	* @param which    index into the attribute list (not used at this time)
+	* @return         true if this is a namespace name
 	*/
 	bool isAttrOK(
 			int						tok,
@@ -155,11 +141,11 @@ public:
 	/** 
 	* See if this is a xmlns attribute or in a non-XSLT.
 	* 
-	* @param attrName Qualified name of attribute.
-	* @param atts The attribute list where the element comes from (not used at 
-	*      this time).
-	* @param which The index into the attribute list (not used at this time).
-	* @return True if this attribute should not be flagged as an error.
+	* @param attrName qualified name of attribute
+	* @param atts     attribute list where the element comes from (not used at 
+	*                 this time)
+	* @param which    index into the attribute list (not used at this time)
+	* @return         true if this attribute should not be flagged as an error
 	*/
 	bool
 	isAttrOK(
@@ -171,20 +157,20 @@ public:
 	/** 
 	 * Tell whether or not this is a xml:space attribute and, if so, process it.
 	 * 
-	 * @param aname The name of the attribute in question.
-	 * @param atts The attribute list that owns the attribute.
-	 * @param which The index of the attribute into the attribute list.
-	 * @return True if this is a xml:space attribute.
+	 * @param aname name of the attribute in question
+	 * @param atts  attribute list that owns the attribute
+	 * @param which index of the attribute into the attribute list
+	 * @return      true if this is a xml:space attribute
 	 */
 	void processSpaceAttr(const AttributeList& atts, int which);
 
 	/** 
 	 * Tell whether or not this is a xml:space attribute and, if so, process it.
 	 * 
-	 * @param aname The name of the attribute in question.
-	 * @param atts The attribute list that owns the attribute.
-	 * @param which The index of the attribute into the attribute list.
-	 * @return True if this is a xml:space attribute.
+	 * @param aname  name of the attribute in question
+	 * @param atts   attribute list that owns the attribute
+	 * @param which  index of the attribute into the attribute list
+	 * @return       true if this is a xml:space attribute
 	 */
 	bool processSpaceAttr(const DOMString& aname, 
 		const AttributeList& atts, int which);
@@ -193,20 +179,20 @@ public:
 	/** 
 	 * Validate that the string is an NCName.
 	 * 
-	 * @param s The name in question.
-	 * @return True if the string is a valid NCName according to XML rules.
+	 * @param s name in question
+	 * @return  true if the string is a valid NCName according to XML rules
 	 * @see http://www.w3.org/TR/REC-xml-names#NT-NCName
 	 */
 	static bool isValidNCName(const DOMString& s);
 
-
-	/** Execute the element's primary function.  Subclasses of this
-	 * function may recursivly execute down the element tree.
+	/** 
+	 * Execute the element's primary function.  Subclasses of this function may
+	 * recursively execute down the element tree.
 	 * 
-	 * @param processor The XSLT Processor.
-	 * @param sourceTree The input source tree.
-	 * @param sourceNode The current context node.
-	 * @param mode The current mode.
+	 * @param processor  XSLT Processor
+	 * @param sourceTree input source tree
+	 * @param sourceNode current context node
+	 * @param mode       current mode
 	 */
 	virtual	void
 	execute(
@@ -218,10 +204,10 @@ public:
 	/** 
 	 * Process the children of a template.
 	 * 
-	 * @param processor The XSLT processor instance.
-	 * @param sourceTree The input source tree.
-	 * @param sourceNode The current context node.
-	 * @param mode The current mode.
+	 * @param processor  XSLT processor instance
+	 * @param sourceTree input source tree
+	 * @param sourceNode current context node
+	 * @param mode       current mode
 	 */
 	void
 	executeChildren(
@@ -234,21 +220,23 @@ public:
 	 * Take the contents of a template element, process it, and
 	 * convert it to a string.
 	 * 
-	 * @exception XSLProcessorException Thrown from one of the child execute  
-	 *     methods.
-	 * @exception java.net.MalformedURLException Might be thrown from the       
-	 *      document() function, or from xsl:include or xsl:import.
-	 * @exception java.io.FileNotFoundException Might be thrown from the        
-	 *      document() function, or from xsl:include or xsl:import.
-	 * @exception java.io.IOException Might be thrown from the  document()      
-	 *      function, or from xsl:include or xsl:import.
-	 * @exception SAXException Might be thrown from the  document() function, or
-	 *      from xsl:include or xsl:import.
-	 * @param processor The XSLT processor instance.
-	 * @param sourceTree The primary source tree.
-	 * @param sourceNode The current source node context.
-	 * @param mode The current mode.
-	 * @return The stringized result of executing the elements children.
+	 * @exception XSLProcessorException thrown from one of the child execute  
+	 *                                  methods
+	 * @exception java.net.MalformedURLException might be thrown from the       
+	 *                                  document() function, or from xsl:include or xsl:import
+	 * @exception java.io.FileNotFoundException might be thrown from the        
+	 *                                  document() function, or from
+	 *                                  xsl:include or xsl:import
+	 * @exception java.io.IOException might be thrown from the  document()      
+	 *                                function, or from xsl:include or
+	 *                                xsl:import
+	 * @exception SAXException might be thrown from the  document() function, or
+	 *                         from xsl:include or xsl:import
+	 * @param processor  XSLT processor instance
+	 * @param sourceTree primary source tree
+	 * @param sourceNode current source node context
+	 * @param mode       current mode
+	 * @return stringized result of executing the elements children
 	 */
 	DOMString childrenToString(StylesheetExecutionContext& executionContext, 
 		const DOM_Node&	sourceTree, const DOM_Node& sourceNode,
@@ -258,8 +246,8 @@ public:
 	/** 
 	 * Get an integer representation of the element type.
 	 * 
-	 * @return An integer representation of the element, defined in the 
-	 *     Constants class.
+	 * @return integer representation of the element, defined in the Constants
+	 *         class
 	 * @see class Constants
 	 */
 	virtual int	getXSLToken() const = 0;
@@ -267,8 +255,8 @@ public:
 	/** 
 	 * Tell if the string is whitespace.
 	 * 
-	 * @param string The string in question.
-	 * @return True if the string is pure whitespace.
+	 * @param string string in question
+	 * @return true if the string is pure whitespace
 	 */
 	static bool isWhiteSpace(const DOMString& theString);
 
@@ -276,24 +264,240 @@ public:
 	 * Throw a template element runtime error.  
 	 * (Note: should we throw a SAXException instead?)
 	 * 
-	 * @param msg Description of the error that occured.
-	 **/
+	 * @param msg Description of the error that occurred
+	 */
 	virtual	void error(const DOMString& msg) const;
 
+	/** 
+	 * Get the line number where the element occurs in the xsl file.
+	 * 
+	 * @return line number
+	 */
+	int
+	getLineNumber() const
+	{
+		return m_lineNumber;
+	}
+
+	/** 
+	 * Get the column offset where the element occurs in the xsl file.
+	 * 
+	 * @return column number
+	 */
+	int
+	getColumnNumber() const
+	{
+		return m_columnNumber;
+	}
+
+	typedef	std::vector<NameSpace>		NamespaceVectorType;
+
+	/** 
+	 * Get the list of namespaces for this element.
+	 * 
+	 * @return vector of namespaces
+	 */
+	const NamespaceVectorType&
+	getNameSpace() const
+	{
+		return m_namespaces;
+	}
+
+	/**
+	 * Retrieve the stylesheet from which this element comes
+	 * 
+	 * @return reference to source stylesheet
+	 */
+	const Stylesheet&
+	getStylesheet() const
+	{
+		return m_stylesheet;
+	}
+
+	/** 
+	 * Set a flag indicating construction of the element is completed.
+	 * 
+	 * @param bFinished true if construction completed
+	 */
+	void
+	setFinishedConstruction(bool bFinished)
+	{
+		m_finishedConstruction = bFinished;
+	}
+
+
+	// These interfaces are inherited from PrefixResolver...
+
+	virtual DOMString
+	getNamespaceForPrefix(const DOMString& prefix) const;
+
+
+	virtual DOMString
+	getURI() const;
+
+
+	// These interfaces are inherited from UnimplementedElement ...
+
+	/** 
+	 * Add a child to the child list.
+	 * 
+	 * @exception DOMException 
+	 * @param newChild child node to add
+	 */
+	virtual NodeImpl* appendChild(NodeImpl* newChild);
+
+	/**
+	 *	Remove a node from the child list
+	 * 
+	 * @param oldChild child node to remove
+	 */
+	virtual NodeImpl* removeChild(NodeImpl *oldChild);
+
+	/** 
+	 * Tell if there are child nodes.
+	 * 
+	 * @return true if there are child nodes
+	 */
+	virtual	bool hasChildNodes();
+
+	/**
+	 * Get the type of the node.
+	 * 
+	 * @return integer representation of the element type
+	 */
+	virtual	short getNodeType();
+
+	/**
+	 * Get the parent.
+	 * 
+	 * @return parent of this node
+	 */
+	virtual	NodeImpl* getParentNode();
+
+	/**
+	 * Set the parent.
+	 * 
+	 * @param elem parent of this node
+	 */
+	virtual void setParentNode(NodeImpl* elem);
+
+	/**
+	 * Return the nodelist (same reference).
+	 * 
+	 * @return list of child nodes
+	 */
+	virtual NodeListImpl* getChildNodes();
+
+	/**
+	 * Get the first child
+	 * 
+	 * @return pointer to first child node
+	 */
+	virtual NodeImpl* getFirstChild();
+
+	/**
+	 * Get the last child.
+	 * 
+	 * @return pointer to last child node
+	 */
+	virtual	NodeImpl*getLastChild();
+
+
+	/**
+	 * Get the next sibling or return null.
+	 * 
+	 * @return pointer to next sibling node
+	 */
+	virtual NodeImpl* getNextSibling();
+
+	/**
+	 * Set the next sibling.
+	 */
+	virtual	void setNextSibling(NodeImpl* elem);
+
+	/**
+	 * Count the immediate children of this node.
+	 * 
+	 * @return number of immediate children of this node
+	 */
+	virtual	unsigned int getLength();
+
+#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
+	virtual NodeImpl*
+#else
+	virtual ElemTemplateElement*
+#endif
+	cloneNode(bool deep);
+
+	// Type-safe getters...
+
+	/**
+	 * Get the first child.
+	 * 
+	 * @return first child node of this node
+	 */
+	virtual ElemTemplateElement*
+	getFirstChild() const;
+
+	/**
+	 * Get the next sibling.
+	 * 
+	 * @return next sibling node of this node
+	 */
+	virtual ElemTemplateElement*
+	getNextSibling() const;
+
+	/**
+	 * Get the parent node.
+	 * 
+	 * @return parent node of this node
+	 */
+	virtual	ElemTemplateElement*
+	getParentNode() const;
+
+	/**
+	 * Return the Nth immediate child of this node, or null if the index is out
+	 * of bounds.
+	 * 
+	 * @param i index 
+	 * @return child node corresponding to index i
+	 */
+#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
+	virtual NodeImpl*
+#else
+	virtual ElemTemplateElement*
+#endif
+	item(unsigned int	i);
+
+	/**
+	 * Return the element name.
+	 * 
+	 * @return element name string
+	 */
+	virtual DOMString
+	getTagName();
+
+	/**
+	 * Return the node name.
+	 * 
+	 * @return node name string
+	 */
+	virtual DOMString
+	getNodeName();
 
 protected:
 	/** 
 	 * Perform a query if needed, and call transformChild for each child.
 	 * 
 	 * @param stylesheetTree The owning stylesheet tree.
-	 * @param xslInstruction The stylesheet element context (depricated -- I do 
+	 * @param xslInstruction The stylesheet element context (deprecated -- I do 
 	 *      not think we need this).
 	 * @param template The owning template context.
 	 * @param sourceTree The input source tree.
 	 * @param sourceNodeContext The current source node context.
 	 * @param mode The current mode.
 	 * @param selectPattern The XPath with which to perform the selection.
-	 * @param xslToken The current XSLT instruction (depricated -- I do not     
+	 * @param xslToken The current XSLT instruction (deprecated -- I do not     
 	 *     think we want this).
 	 */
 	void transformSelectedChildren(
@@ -335,143 +539,6 @@ protected:
 
 
   // Implemented DOM Element methods.
-
-public:
-
-	/** 
-	 * Add a child to the child list.
-	 * 
-	 * @exception DOMException 
-	 * @param newChild 
-	 */
-	virtual NodeImpl* appendChild(NodeImpl* newChild);
-
-	/*
-	 *	Remove a node from the child list
-	 */
-	virtual NodeImpl* removeChild(NodeImpl *oldChild);
-
-	/** 
-	 * Tell if there are child nodes.
-	 */
-	virtual	bool hasChildNodes();
-
-	/**
-	 * Get the type of the node.
-	 */
-	virtual	short getNodeType();
-
-	/** Get the parent.
-	*/
-	virtual	NodeImpl* getParentNode();
-
-	virtual void setParentNode(NodeImpl* elem);
-
-	/** Return the nodelist (same reference).
-	*/
-	virtual NodeListImpl* getChildNodes();
-
-	/** Get the first child
-	 */
-	virtual NodeImpl* getFirstChild();
-
-	/** Get the last child.
-	 */
-	virtual	NodeImpl*getLastChild();
-
-
-	/** Get the next sibling or return null.
-	*/
-	virtual NodeImpl* getNextSibling();
-
-	/** Set the next sibling.
-	*/
-	virtual	void setNextSibling(NodeImpl* elem);
-
-	/**
-	 * NodeList method: Count the immediate children of this node
-	 * 
-	 * @return int
-	 */
-	virtual	unsigned int getLength();
-
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-	virtual NodeImpl*
-#else
-	virtual ElemTemplateElement*
-#endif
-	cloneNode(bool deep);
-
-	// Type-safe getters...
-
-	/** Get the first child
-	 */
-	virtual ElemTemplateElement*
-	getFirstChild() const;
-
-	/** Get the next sibling or return null.
-	*/
-	virtual ElemTemplateElement*
-	getNextSibling() const;
-
-	virtual	ElemTemplateElement*
-	getParentNode() const;
-
-	/**
-	 * NodeList method: Return the Nth immediate child of this node, or
-	 * null if the index is out of bounds.
-	 * 
-	 * @param index 
-	 * @return org.w3c.dom.Node
-	 */
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-	virtual NodeImpl*
-#else
-	virtual ElemTemplateElement*
-#endif
-	item(unsigned int	i);
-
-	const Stylesheet&
-	getStylesheet() const
-	{
-		return m_stylesheet;
-	}
-
-	/** Return the element name.
-	*/
-	virtual DOMString
-	getTagName();
-
-	/** Return the node name.
-	*/
-	virtual DOMString
-	getNodeName();
-
-	int
-	getLineNumber() const
-	{
-		return m_lineNumber;
-	}
-
-	int
-	getColumnNumber() const
-	{
-		return m_columnNumber;
-	}
-
-	typedef	std::vector<NameSpace>		NamespaceVectorType;
-
-	const NamespaceVectorType&
-	getNameSpace() const
-	{
-		return m_namespaces;
-	}
-
-	void
-	setFinishedConstruction(bool bFinished)
-	{
-		m_finishedConstruction = bFinished;
-	}
 
 private:
 

@@ -1,5 +1,5 @@
 /*
- * The Apache Software License, Version 1.1
+  The Apache Software License, Version 1.1
  *
  *
  * Copyright (c) 1999 The Apache Software Foundation.  All rights 
@@ -85,6 +85,16 @@ class ElemText : public ElemTemplateElement
 {
 public:
 
+	/**
+	 * Construct an object corresponding to an "xsl:text" element
+	 * 
+	 * @param constructionContext context for construction of object
+	 * @param stylesheetTree      stylesheet containing element
+	 * @param name                name of element
+	 * @param atts                list of attributes for element
+	 * @param lineNumber				line number in document
+	 * @param columnNumber			column number in document
+	 */
 	ElemText(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
@@ -97,19 +107,23 @@ public:
 	~ElemText();
 
 	/**
-	 * Add a child to the child list.
+	 * Determine whether output escaping should be disabled
+	 * 
+	 * @return true if output escaping disabled
 	 */
-	virtual NodeImpl*
-	appendChild(NodeImpl*	newChild);
-
-	virtual int
-	getXSLToken() const;
-
 	bool
 	getDisableOutputEscaping() const
 	{
 		return m_disableOutputEscaping;
 	}
+
+	// These methods are inherited from ElemTemplateElement ...
+	
+	virtual NodeImpl*
+	appendChild(NodeImpl*	newChild);
+
+	virtual int
+	getXSLToken() const;
 
 private:
 

@@ -90,37 +90,6 @@ public:
 	virtual
 	~StylesheetExecutionContextDefault();
 
-	// These interfaces are inherited from ExecutionContext...
-
-	/**
-	 * Tell the user of an error, and probably throw an 
-	 * exception.
-	 */
-	virtual void
-	error(
-			const DOMString&	msg,
-			const DOM_Node& 	sourceNode = DOM_Node(),
-			const DOM_Node&		styleNode = DOM_Node()) const;
-
-	/**
-	 * Tell the user of an warning, and probably throw an 
-	 * exception.
-	 */
-	virtual void
-	warn(
-			const DOMString&	msg,
-			const DOM_Node& 	sourceNode = DOM_Node(),
-			const DOM_Node&		styleNode = DOM_Node()) const;
-
-	/**
-	 * Output a message.
-	 */
-	virtual void
-	message(
-			const DOMString&	msg,
-			const DOM_Node& 	sourceNode = DOM_Node(),
-			const DOM_Node&		styleNode = DOM_Node()) const;
-
 	// These interfaces are inherited from StylesheetExecutionContext...
 
 	virtual const DOM_Node
@@ -211,48 +180,27 @@ public:
 	virtual DOMString
 	getUniqueNameSpaceValue() const;
 
-	/**
-	 * Get the current formatter listener.
-	 */
 	virtual FormatterListener*
 	getFormatterListener() const;
 
-	/**
-	 * Set the current formatter listener.
-	 */
 	virtual void
 	setFormatterListener(FormatterListener*		flistener);
 
 	virtual int
 	getIndent() const;
 
-	/**
-	 * Execute an XPath and return the resulting XObject.
-	 * The lifetime of this XObject is _not_ necessarily that
-	 * of the Stylesheet.
-	 */
 	virtual XObject*
 	executeXPath(
 			const DOMString&		str,
 			const DOM_Node&			contextNode,
 			const PrefixResolver&	resolver);
 
-	/**
-	 * Execute an XPath and return the resulting XObject.
-	 * The lifetime of this XObject is _not_ necessarily that
-	 * of the Stylesheet.
-	 */
 	virtual XObject*
 	executeXPath(
 			const DOMString&	str,
 			const DOM_Node&		contextNode,
 			const DOM_Element&	resolver);
 
-	/**
-	 * Create and initialize an xpath and return it.
-	 * This is to be used to create an XPath that is
-	 * is only used during execution.
-	 */
 	virtual XPath*
 	createMatchPattern(
 			const DOMString&		str,
@@ -387,6 +335,26 @@ public:
 
 	virtual const ElemTemplateElement*
 	popElementRecursionStack();
+
+	// These interfaces are inherited from ExecutionContext...
+
+	virtual void
+	error(
+			const DOMString&	msg,
+			const DOM_Node& 	sourceNode = DOM_Node(),
+			const DOM_Node&		styleNode = DOM_Node()) const;
+
+	virtual void
+	warn(
+			const DOMString&	msg,
+			const DOM_Node& 	sourceNode = DOM_Node(),
+			const DOM_Node&		styleNode = DOM_Node()) const;
+
+	virtual void
+	message(
+			const DOMString&	msg,
+			const DOM_Node& 	sourceNode = DOM_Node(),
+			const DOM_Node&		styleNode = DOM_Node()) const;
 
 private:
 

@@ -82,57 +82,122 @@ public:
 
 	enum eArgumentType { eXObject, eResultTreeFrag, eExpression };
 
+	Arg(const Arg&	theSource);
+
+	/**
+	 * Construct an argument object from an expression
+	 * 
+	 * @param name	name of argument
+	 * @param expr	expression argument represents
+	 * @param isParamVar true if expression is a parameter variable
+	 */
+	Arg(
+		const QName&		name,
+		const DOMString&	expr,
+		bool				isParamVar);
+
+	/**
+	 * Construct an argument object from an XObject
+	 * 
+	 * @param name	name of argument
+	 * @param val XObject argument represents
+	 */
+	Arg(
+		const QName&	name,
+		XObject*		val);
+
 	virtual ~Arg();
 
 	/**
 	 * Override equals and agree that we're equal if the passed object is a
 	 * string and it matches the name of the arg.
+	 * 
+	 * @param theRHS object to compare to
+	 * @return true if names match
 	 */
 	virtual bool
 	equals(const StackEntry&	theRHS) const;
 
+	/**
+	 * Retrieve object name
+	 * 
+	 * @return qualified name of object
+	 */
 	const QName&
 	getName() const
 	{
 		return m_qname;
 	}
 
+	/**
+	 * Retrieve object name
+	 * 
+	 * @return qualified name of object
+	 */
 	bool
 	getIsParamVar() const
 	{
 		return m_isParamVar;
 	}
 
+	/**
+	 * Retrieve object type
+	 * 
+	 * @return type of object, one of eXObject, eResultTreeFrag, eExpression
+	 */
 	eArgumentType
 	getArgType() const
 	{
 		return m_argType;
 	}
 
+	/**
+	 * Retrieve object's XObject pointer
+	 * 
+	 * @return pointer to XObject
+	 */
 	XObject*
 	getXObjectPtr() const
 	{
 		return m_val;
 	}
 	
+	/**
+	 * Set object's XObject pointer
+	 * 
+	 * @param pxobj pointer to XObject
+	 */
 	void
 	setXObjectPtr(XObject* pxobj)
 	{
 		m_val = pxobj;
 	}
 
+	/**
+	 * Retrieve object's expression
+	 * 
+	 * @return string representation of expression
+	 */
 	const DOMString&
 	getExpression() const
 	{
 		return m_expression;
 	};
 	
+	/**
+	 * Set object's expression
+	 * 
+	 * @param pexpr string representation of expression
+	 */
 	void
 	setExpression(const DOMString& pexpr)
 	{
 		m_expression = pexpr;
 	};
 
+	/**
+	 * Clone the instance.
+	 */
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
 	virtual StackEntry*
 #else
@@ -140,19 +205,6 @@ public:
 #endif
 	clone() const;
 
-
-	Arg(const Arg&	theSource);
-
-// java: Arg(QName qname, String expression, boolean isParamVar)
-
-	Arg(
-		const QName&		name,
-		const DOMString&	expr,
-		bool				isParamVar);
-
-	Arg(
-		const QName&	name,
-		XObject*		val);
 
 private:
 

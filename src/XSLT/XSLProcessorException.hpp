@@ -75,6 +75,12 @@ class XALAN_XSLT_EXPORT XSLProcessorException : public XSLException
 {
 public:
 
+	/**
+	 * Construct an XSLProcessorException object.
+	 * 
+	 * @param message   description of the error that occurred
+	 * @param styleNode node in stylesheet where error occurred 
+	 */
 	explicit
 	XSLProcessorException(
 			const DOMString&	message = DOMString(),

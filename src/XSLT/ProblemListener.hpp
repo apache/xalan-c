@@ -81,20 +81,21 @@ class PrintWriter;
 
 
 /**
- * This is the abstract class that the XSL processor uses when it 
- * has a problem of some kind, either an error or a warning.
- * Users should ask the XSLTProcessor class to setProblemListener
- * if they wish an object instance to be called when a problem
- * event occurs.
+ * This is the abstract class that the XSL processor uses when it has a
+ * problem of some kind, that requires a message, an error or a warning. Users
+ * should ask the XSLTProcessor class to setProblemListener if they wish an
+ * object instance to be called when a problem event occurs.
  */
 class XALAN_XSLT_EXPORT ProblemListener
 {
 public:
 
+	/// Sources of problem
 	enum eProblemSource { eXMLPARSER       = 1,
 						  eXSLPROCESSOR    = 2,
 						  eQUERYENGINE     = 3 };
 
+	/// Severity of problem
 	enum eClassification {	eMESSAGE = 0,
 									eWARNING = 1,
 									eERROR   = 2 };
@@ -104,24 +105,28 @@ public:
 	virtual
 	~ProblemListener();
 
+	/** 
+	 * Set the print writer to which the problem is reported.
+	 * 
+	 * @param pw writer to receive messages
+	 */
 	virtual void
 	setPrintWriter(PrintWriter*		pw) = 0;
 
   /**
    * Function that is called when a problem event occurs.
    * 
-   * @param   where             Either and XMLPARSER, XSLPROCESSOR, or QUERYENGINE.
-   * @param   classification    Either ERROR or WARNING.
-   * @param   styleNode         The style tree node where the problem
-   *                            occurred.  May be null.
-   * @param   sourceNode        The source tree node where the problem
-   *                            occurred.  May be null.
-   * @param   msg               A string message explaining the problem.
-   * @param   lineNo            The line number where the problem occurred,  
-   *                            if it is known. May be zero.
-   * @param   charOffset        The character offset where the problem,  
-   *                            occurred if it is known. May be zero.
-   * 
+   * @param   where             either in XMLPARSER, XSLPROCESSOR, or QUERYENGINE
+   * @param   classification    either MESSAGE, ERROR or WARNING
+	* @param   styleNode         style tree node where the problem occurred
+	*                            (may be null)
+	* @param   sourceNode        source tree node where the problem occurred
+	*                            (may be null)
+   * @param   msg               string message explaining the problem.
+   * @param   lineNo            line number where the problem occurred,  
+   *                            if it is known, else zero
+   * @param   charOffset        character offset where the problem,  
+   *                            occurred if it is known, else zero
    * @return  true if the return is an ERROR, in which case
    *          exception will be thrown.  Otherwise the processor will 
    *          continue to process.

@@ -75,7 +75,7 @@ public:
 	/**
 	 * Constructs a tokenizer for the target string
 	 * 
-	 * @param theString     target string to tokenize
+	 * @param theString     string to tokenize
 	 * @param theTokens     string of delimiters used to parse target, default
 	 *                      is "\t\n\r\f"
 	 * @param fReturnTokens if true, delimiter characters are also returned

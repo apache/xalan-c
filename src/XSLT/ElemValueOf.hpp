@@ -83,6 +83,16 @@ class ElemValueOf : public ElemTemplateElement
 {
 public:
 
+	/**
+	 * Construct an object corresponding to an "xsl:value-of" element
+	 * 
+	 * @param constructionContext context for construction of object
+	 * @param stylesheetTree      stylesheet containing element
+	 * @param name                name of element
+	 * @param atts                list of attributes for element
+	 * @param lineNumber				line number in document
+	 * @param columnNumber			column number in document
+	 */
 	ElemValueOf(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
@@ -94,12 +104,11 @@ public:
 	virtual
 	~ElemValueOf();
 
+	// These methods are inherited from ElemTemplateElement ...
+	
 	virtual int
 	getXSLToken() const;
 
-	/**
-	 * Add a child to the child list.
-	 */
 	virtual NodeImpl*
 	appendChild(NodeImpl*	newChild);
 

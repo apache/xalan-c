@@ -82,6 +82,16 @@ class ElemWithParam : public ElemTemplateElement
 {
 public:
 
+	/**
+	 * Construct an object corresponding to an "xsl:with-param" element
+	 * 
+	 * @param constructionContext context for construction of object
+	 * @param stylesheetTree      stylesheet containing element
+	 * @param name                name of element
+	 * @param atts                list of attributes for element
+	 * @param lineNumber				line number in document
+	 * @param columnNumber			column number in document
+	 */
 	ElemWithParam(
 			StylesheetConstructionContext&	constructionContext,
 			Stylesheet&						stylesheetTree,
@@ -93,14 +103,26 @@ public:
 	virtual
 	~ElemWithParam();
 
-	virtual int
-	getXSLToken() const;
-
+	/**
+	 * Retrieves qualified name of object
+	 *
+	 * @return qualified name
+	 */
 	const QName&
 	getQName() const { return m_qname; }
 
+	/**
+	 * Retrieve XPath corresponding to "select" attribute
+	 * 
+	 * @return pointer to XPath for select pattern
+	 */
 	const XPath*
 	getSelectPattern() const { return m_selectPattern; }
+
+	// These methods are inherited from ElemTemplateElement ...
+	
+	virtual int
+	getXSLToken() const;
 
 private:
 	// not implemented

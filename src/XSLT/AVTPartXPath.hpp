@@ -90,14 +90,21 @@ class AVTPartXPath: public AVTPart
 public:
 
 	/**
-	 * Construct an XPath AVT part.
-	 * @param xpath		The XPath to evaluate.
+	 * Construct an XPath Attribute Value Template (AVT) part from an XPath.
+	 *
+	 * @param xpath XPath to evaluate
 	 */
 	AVTPartXPath(const XPath*	xpath);
 
 	/**
-	 * Construct an XPath AVT part.
-	 * @param val A pure string section of an AVT.
+	 * Construct an XPath Attribute Value Template (AVT) part from a string.
+	 *
+	 * @param val             pure string section of an AVT
+	 * @param resolver        prefix resolver to use
+	 * @param xobjectFactory  factory class instance for XObjects
+	 * @param xpathEnvSupport XPath environment support class instance
+	 * @param xpathProcessor  processor class instance for XPaths
+	 * @param xpathFactory    factory class instance for XPaths
 	 */
 	AVTPartXPath(
 			const DOMString&		val,
@@ -107,13 +114,9 @@ public:
 			XPathProcessor&			xpathProcessor, 
 			XPathFactory&			xpathFactory);
 
-	/**
-	 * Write the value into the buffer.
-	 * @param buf Buffer to write into.
-	 * @param contextNode the current context node.
-	 * @param prefixResolver the prefix resolver to use.
-	 * @param executionContext The execution context.
-	 */
+
+	// These methods are inherited from AVTPart ...
+	
 	virtual void
 	evaluate(
 			DOMString&				buf,
