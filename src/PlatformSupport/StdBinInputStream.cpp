@@ -114,24 +114,10 @@ StdBinInputStream::readBytes(
 	}
 	else
 	{
-		unsigned int	i = 0;
-
-		while(i < maxToRead)
-		{
-			const int	ch = m_stream.get();
-
-			if (ch == EOF)
-			{
-				break;
-			}
-			else
-			{
-				toFill[i] = XMLByte(ch);
-
-				++i;
-			}
-		}
-
-		return i;
+#if defined(XALAN_OLD_STYLE_CASTS)
+		return m_stream.readsome((char*)toFill, maxToRead);
+#else
+		return m_stream.readsome(reinterpret_cast<char*>(toFill), maxToRead);
+#endif
 	}
 }
