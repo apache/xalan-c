@@ -161,7 +161,9 @@ public:
 			const XMLCh*	type,
 			const XMLCh*	value)
 	{
-		addAttribute(0, 0, qname, type, value);
+		const XMLCh		theDummy = 0;
+
+		addAttribute(&theDummy, &theDummy, qname, type, value);
 	}
 
 	/**

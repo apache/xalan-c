@@ -521,20 +521,15 @@ AttributesImpl::getNewEntry(
 			const XMLCh*	uri,
 			const XMLCh*	localName)
 {
+	assert(name != 0);
+	assert(type != 0);
+	assert(value != 0);
+	assert(uri != 0);
+	assert(localName != 0);
+
 	if (m_cacheVector.size() == 0)
 	{
-		if (uri == 0)
-		{
-			assert(localName == 0);
-
-			return new AttributeVectorEntryExtended(name, value, type);
-		}
-		else
-		{
-			assert(localName != 0);
-
-			return new AttributeVectorEntryExtended(name, value, type, uri, localName);
-		}
+		return new AttributeVectorEntryExtended(name, value, type, uri, localName);
 	}
 	else
 	{
@@ -550,14 +545,8 @@ AttributesImpl::getNewEntry(
 		theEntry->m_Name.insert(theEntry->m_Name.begin(), name, AttributeVectorEntry::endArray(name) + 1);
 		theEntry->m_Value.insert(theEntry->m_Value.begin(), value, AttributeVectorEntry::endArray(value) + 1);
 		theEntry->m_Type.insert(theEntry->m_Type.begin(), type, AttributeVectorEntry::endArray(type) + 1);
-
-		if (uri != 0)
-		{
-			assert(localName != 0);
-
-			theEntry->m_uri.insert(theEntry->m_uri.begin(), uri, AttributeVectorEntry::endArray(uri) + 1);
-			theEntry->m_localName.insert(theEntry->m_localName.begin(), localName, AttributeVectorEntry::endArray(localName) + 1);
-		}
+		theEntry->m_uri.insert(theEntry->m_uri.begin(), uri, AttributeVectorEntry::endArray(uri) + 1);
+		theEntry->m_localName.insert(theEntry->m_localName.begin(), localName, AttributeVectorEntry::endArray(localName) + 1);
 
 		m_cacheVector.pop_back();
 
