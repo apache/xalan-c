@@ -1034,7 +1034,7 @@ FormatterToHTML::pushHasNamespace(const XalanDOMChar*	theElementName)
 	if (m_prefixResolver != 0)
 	{
 		const unsigned int	theLength = length(theElementName);
-		const unsigned int	theColonIndex = indexOf(theElementName, XalanUnicode::charSemicolon);
+		const unsigned int	theColonIndex = indexOf(theElementName, XalanUnicode::charColon);
 
 		const XalanDOMString*	thePrefix = &s_emptyString;
 
