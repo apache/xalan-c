@@ -588,7 +588,7 @@ private:
 
 	mutable XercesAttributeBridgeAllocator	m_attributeAllocator;
 
-	XalanAutoPtr<XalanDOMStringPool>		m_stringPool;
+	const XalanAutoPtr<XalanDOMStringPool>	m_stringPool;
 };
 
 

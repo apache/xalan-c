@@ -420,7 +420,9 @@ public:
 
 	/**
 	 * This functions returns the state of the liaison's thread-safe flag.
-	 * If true, documents created will be safe when data is read.
+	 * If true, documents created will be safe when data is read.  By default,
+	 * documents are _not_ thread-safe.
+	 *
 	 * Note -- modifications are _never_ synchronized.
 	 *
 	 * @return true, if the new documents will be thread safe, false otherwise.

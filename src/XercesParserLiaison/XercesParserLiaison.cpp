@@ -123,7 +123,7 @@ XercesParserLiaison::XercesParserLiaison(XercesDOMSupport&	theSupport) :
 	m_errorHandler(this),
 	m_documentMap(),
 	m_buildBridge(true),
-	m_threadSafe(true)
+	m_threadSafe(false)
 {
 }
 

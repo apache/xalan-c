@@ -301,6 +301,8 @@ XercesDocumentBridge::destroyBridge()
 	m_indexValid = false;
 
 	m_mappingMode = true;
+
+	m_stringPool->clear();
 }
 
 
