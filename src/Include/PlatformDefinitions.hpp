@@ -77,4 +77,6 @@
 #error Unknown compiler!
 #endif
 
+#include "XalanVersion.hpp"
+
 #endif	// PLATFORMDEFINITIONS_HEADER_GUARD_1357924680
