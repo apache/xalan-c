@@ -676,9 +676,7 @@ StylesheetHandler::startElement(
 					break;
           
 				case Constants::ELEMNAME_TEMPLATE:
-				case Constants::ELEMNAME_LOCALE:
 				case Constants::ELEMNAME_DEFINEATTRIBUTESET:
-				case Constants::ELEMNAME_DEFINESCRIPT:
 				case Constants::ELEMNAME_EXTENSION:
 				case Constants::ELEMNAME_EXTENSIONHANDLER:
 				case Constants::ELEMNAME_KEY:
@@ -995,10 +993,6 @@ StylesheetHandler::processTopLevelElement(
 		}
 	break;
 
-	case Constants::ELEMNAME_LOCALE:
-		m_constructionContext.warn(StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("xsl:locale not yet supported.")));
-		break;
-
 	case Constants::ELEMNAME_PRESERVESPACE:
 	case Constants::ELEMNAME_STRIPSPACE:
 		processPreserveStripSpace(name, atts, locator, xslToken);
@@ -1064,9 +1058,6 @@ StylesheetHandler::processTopLevelElement(
 	case Constants::ELEMNAME_CONTENTS:
 	case Constants::ELEMNAME_COPY:
 	case Constants::ELEMNAME_COPY_OF:
-	case Constants::ELEMNAME_DISPLAYIF:
-	case Constants::ELEMNAME_EVAL:
-	case Constants::ELEMNAME_EXPECTEDCHILDREN:
 	case Constants::ELEMNAME_FOREACH:
 	case Constants::ELEMNAME_IF:
 	case Constants::ELEMNAME_CALLTEMPLATE:
@@ -1074,7 +1065,6 @@ StylesheetHandler::processTopLevelElement(
 	case Constants::ELEMNAME_NUMBER:
 	case Constants::ELEMNAME_OTHERWISE:
 	case Constants::ELEMNAME_PI:
-	case Constants::ELEMNAME_REMOVEATTRIBUTE:
 	case Constants::ELEMNAME_SORT:
 	case Constants::ELEMNAME_TEXT:
 	case Constants::ELEMNAME_VALUEOF:

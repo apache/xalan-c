@@ -78,6 +78,8 @@ FormatterListener::FormatterListener(eFormat	theFormat) :
 	m_prefixResolver(0),
 	m_outputFormat(theFormat)
 {
+	assert(length(s_piTarget) == s_piTargetLength);
+	assert(length(s_piData) == s_piDataLength);
 }
 
 
@@ -105,3 +107,11 @@ const XalanDOMChar	FormatterListener::s_piData[] =
 	XalanUnicode::charLetter_w,
 	0
 };
+
+#if !defined(XALAN_INLINE_INITIALIZATION)
+const XalanDOMString::size_type		FormatterListener::s_piTargetLength = 5;
+const XalanDOMString::size_type		FormatterListener::s_piDataLength = 3;
+#else
+const XalanDOMString::size_type		FormatterListener::s_piTargetLength;
+const XalanDOMString::size_type		FormatterListener::s_piDataLength;
+#endif

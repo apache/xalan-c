@@ -106,8 +106,6 @@ XPathInit::initialize()
 
 	XPath::initialize();
 
-	XPathProcessorImpl::initialize();
-
 	XPathEnvSupportDefault::initialize();
 }
 
@@ -117,8 +115,6 @@ void
 XPathInit::terminate()
 {
 	XPathEnvSupportDefault::terminate();
-
-	XPathProcessorImpl::terminate();
 
 	XPath::terminate();
 

@@ -242,6 +242,14 @@ public:
 
 	static const XalanDOMChar	s_piData[];
 
+#if defined(XALAN_INLINE_INITIALIZATION)
+	static const XalanDOMString::size_type	s_piTargetLength = 5;
+	static const XalanDOMString::size_type	s_piDataLength = 3;
+#else
+	static const XalanDOMString::size_type	s_piTargetLength;
+	static const XalanDOMString::size_type	s_piDataLength;
+#endif
+
 protected:
 
 	// Data membmers...

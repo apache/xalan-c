@@ -665,16 +665,20 @@ Stylesheet::addTemplate(
 
 		if(nTargets != 0)
 		{
+			XalanDOMString	tempString;
+
 			for(TargetDataVectorType::size_type i = 0;
 								i < nTargets; ++i) 
 			{
-				const XalanDOMString& target = data[i].getString();
+				assert(data[i].getString() != 0);
+				
+				tempString = data[i].getString();
 
 				m_matchPattern2Container.push_back(
 					MatchPattern2(
 						*theTemplate,
 						m_matchPattern2Container.size(),
-						target,
+						tempString,
 						*xp,
 						xp->getExpression().getCurrentPattern(),
 						data[i].getDefaultPriority()));
@@ -685,23 +689,23 @@ Stylesheet::addTemplate(
 				// Always put things on the front of the list, so
 				// templates later in the stylesheet are always
 				// selected first.
-				if (equals(target, XPath::PSEUDONAME_TEXT) == true)
+				if (equals(tempString, XPath::PSEUDONAME_TEXT) == true)
 				{
 					addToList(m_textPatternList, newMatchPat);
 				}
-				else if (equals(target, XPath::PSEUDONAME_COMMENT) == true)
+				else if (equals(tempString, XPath::PSEUDONAME_COMMENT) == true)
 				{
 					addToList(m_commentPatternList, newMatchPat);
 				}
-				else if (equals(target, XPath::PSEUDONAME_ROOT) == true)
+				else if (equals(tempString, XPath::PSEUDONAME_ROOT) == true)
 				{
 					addToList(m_rootPatternList, newMatchPat);
 				}
-				else if (equals(target, XPath::PSEUDONAME_PI) == true)
+				else if (equals(tempString, XPath::PSEUDONAME_PI) == true)
 				{
 					addToList(m_piPatternList, newMatchPat);
 				}
-				else if (equals(target, XPath::PSEUDONAME_NODE) == true)
+				else if (equals(tempString, XPath::PSEUDONAME_NODE) == true)
 				{
 					addToList(m_nodePatternList, newMatchPat);
 
@@ -711,7 +715,7 @@ Stylesheet::addTemplate(
 					addToList(m_textPatternList, newMatchPat);
 					addToList(m_piPatternList, newMatchPat);
 				}
-				else if (equals(target, XPath::PSEUDONAME_ANY) == true)
+				else if (equals(tempString, XPath::PSEUDONAME_ANY) == true)
 				{
 					if (data[i].getTargetType() == XPath::TargetData::eElement)
 					{
@@ -731,11 +735,11 @@ Stylesheet::addTemplate(
 				{
 					if (data[i].getTargetType() == XPath::TargetData::eElement)
 					{
-						addToList(m_elementPatternTable[target], newMatchPat);
+						addToList(m_elementPatternTable[tempString], newMatchPat);
 					}
 					else if (data[i].getTargetType() == XPath::TargetData::eAttribute)
 					{
-						addToList(m_attributePatternTable[target], newMatchPat);
+						addToList(m_attributePatternTable[tempString], newMatchPat);
 					}
 				}
 			}

@@ -94,13 +94,13 @@ class XALAN_XPATH_EXPORT XPath
 {
 public:
 
-	static const XalanDOMString&	PSEUDONAME_ANY;
-	static const XalanDOMString&	PSEUDONAME_ROOT;
-	static const XalanDOMString&	PSEUDONAME_TEXT;
-	static const XalanDOMString&	PSEUDONAME_COMMENT;
-	static const XalanDOMString&	PSEUDONAME_PI;
-	static const XalanDOMString&	PSEUDONAME_OTHER;
-	static const XalanDOMString&	PSEUDONAME_NODE;
+	static const XalanDOMChar	PSEUDONAME_ANY[];
+	static const XalanDOMChar	PSEUDONAME_ROOT[];
+	static const XalanDOMChar	PSEUDONAME_TEXT[];
+	static const XalanDOMChar	PSEUDONAME_COMMENT[];
+	static const XalanDOMChar	PSEUDONAME_PI[];
+	static const XalanDOMChar	PSEUDONAME_OTHER[];
+	static const XalanDOMChar	PSEUDONAME_NODE[];
 
 	enum eMatchScore
 	{
@@ -118,14 +118,14 @@ public:
 		enum eTargetType { eAttribute, eElement, eAny, eOther };
 
 		TargetData() :
-			m_string(),
+			m_string(0),
 			m_priority(eMatchScoreNone),
 			m_targetType(eOther)
 		{
 		}
 
 		TargetData(
-				const XalanDOMString&	theString,
+				const XalanDOMChar*		theString,
 				eMatchScore				thePriority,
 				eTargetType				theTargetType) :
 			m_string(theString),
@@ -134,7 +134,7 @@ public:
 		{
 		}
 
-		const XalanDOMString&
+		const XalanDOMChar*
 		getString() const
 		{
 			return m_string;
@@ -154,11 +154,11 @@ public:
 
 	private:
 
-		XalanDOMString	m_string;
+		const XalanDOMChar*		m_string;
 
-		eMatchScore		m_priority;
+		eMatchScore				m_priority;
 
-		eTargetType		m_targetType;
+		eTargetType				m_targetType;
 	};
 
 #if defined(XALAN_NO_NAMESPACES)

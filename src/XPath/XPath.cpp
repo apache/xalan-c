@@ -430,7 +430,7 @@ XPath::getTargetData(TargetDataVectorType&	targetData) const
 			{
 				eMatchScore					score = eMatchScoreNone;
 
-				const XalanDOMString*		targetLocalName = 0;
+				const XalanDOMChar*			targetLocalName = 0;
 
 				TargetData::eTargetType		targetType = TargetData::eOther;
 
@@ -443,13 +443,13 @@ XPath::getTargetData(TargetDataVectorType&	targetData) const
 				switch(stepType)
 				{
 				case XPathExpression::eOP_FUNCTION:
-					targetLocalName = &PSEUDONAME_ANY;
+					targetLocalName = PSEUDONAME_ANY;
 					score = eMatchScoreOther;
 					targetType = TargetData::eAny;
 					break;
 
 				case XPathExpression::eFROM_ROOT:
-					targetLocalName = &PSEUDONAME_ROOT;
+					targetLocalName = PSEUDONAME_ROOT;
 					score = eMatchScoreOther;
 					break;
 
@@ -465,27 +465,27 @@ XPath::getTargetData(TargetDataVectorType&	targetData) const
 						switch(tok)
 						{
 						case XPathExpression::eNODETYPE_COMMENT:
-							targetLocalName = &PSEUDONAME_COMMENT;
+							targetLocalName = PSEUDONAME_COMMENT;
 							score = eMatchScoreNodeTest;
 							break;
 
 						case XPathExpression::eNODETYPE_TEXT:
-							targetLocalName = &PSEUDONAME_TEXT;
+							targetLocalName = PSEUDONAME_TEXT;
 							score = eMatchScoreNodeTest;
 							break;
 
 						case XPathExpression::eNODETYPE_NODE:
-							targetLocalName = &PSEUDONAME_NODE;
+							targetLocalName = PSEUDONAME_NODE;
 							score = eMatchScoreNodeTest;
 							break;
 
 						case XPathExpression::eNODETYPE_ROOT:
-							targetLocalName = &PSEUDONAME_ROOT;
+							targetLocalName = PSEUDONAME_ROOT;
 							score = eMatchScoreNodeTest;
 							break;
 
 						case XPathExpression::eNODETYPE_ANYELEMENT:
-							targetLocalName = &PSEUDONAME_ANY;
+							targetLocalName = PSEUDONAME_ANY;
 							score = eMatchScoreNodeTest;
 							targetType = TargetData::eElement;
 							break;
@@ -495,7 +495,7 @@ XPath::getTargetData(TargetDataVectorType&	targetData) const
 								const int	argLen =
 									m_expression.getOpCodeMapValue(opPos - 3 + XPathExpression::s_opCodeMapLengthIndex + 1) - 3;
 
-								targetLocalName = &PSEUDONAME_PI;
+								targetLocalName = PSEUDONAME_PI;
 
 								if (argLen == 1)
 								{
@@ -513,8 +513,17 @@ XPath::getTargetData(TargetDataVectorType&	targetData) const
 								const XalanDOMString* const		targetNamespace =
 										getStringFromTokenQueue(m_expression, opPos + 1);
 
-								targetLocalName =
-									getStringFromTokenQueue(m_expression, opPos + 2);
+								const XalanDOMString* const		targetLocal =
+										getStringFromTokenQueue(m_expression, opPos + 2);
+
+								if (targetLocal == 0)
+								{
+									targetLocalName = 0;
+								}
+								else
+								{
+									targetLocalName = targetLocal->c_str();
+								}
 
 								targetType = fIsAttribute ?
 									TargetData::eAttribute :
@@ -522,9 +531,9 @@ XPath::getTargetData(TargetDataVectorType&	targetData) const
 
 								if(targetLocalName != 0)
 								{
-									if(::equals(*targetLocalName, PSEUDONAME_ANY) == true)
+									if(::equals(targetLocalName, PSEUDONAME_ANY) == true)
 									{
-										targetLocalName = &PSEUDONAME_ANY;
+										targetLocalName = PSEUDONAME_ANY;
 
 										if (targetNamespace == 0 ||
 											::equals(*targetNamespace, PSEUDONAME_ANY) == true)
@@ -543,7 +552,7 @@ XPath::getTargetData(TargetDataVectorType&	targetData) const
 								}
 								else
 								{
-									targetLocalName = &PSEUDONAME_ANY;
+									targetLocalName = PSEUDONAME_ANY;
 
 									if (targetNamespace == 0 ||
 										::equals(*targetNamespace, PSEUDONAME_ANY) == true)
@@ -560,7 +569,7 @@ XPath::getTargetData(TargetDataVectorType&	targetData) const
 							break;
 
 						default:
-							targetLocalName = &PSEUDONAME_ANY;
+							targetLocalName = PSEUDONAME_ANY;
 							score = eMatchScoreNodeTest;
 							break;
 						}
@@ -578,8 +587,7 @@ XPath::getTargetData(TargetDataVectorType&	targetData) const
 					score = eMatchScoreOther;
 				}
 
-				targetData.push_back(
-					TargetData(*targetLocalName, score, targetType));
+				targetData.push_back(TargetData(targetLocalName, score, targetType));
 			}
 
 			opPos = nextStepPos;
@@ -3668,23 +3676,64 @@ XPath::NodeTester::shouldStripSourceNode(const XalanNode&	context) const
 
 
 
-static XalanDOMString	PSEUDONAME_ANY;
-static XalanDOMString	PSEUDONAME_ROOT;
-static XalanDOMString	PSEUDONAME_TEXT;
-static XalanDOMString	PSEUDONAME_COMMENT;
-static XalanDOMString	PSEUDONAME_PI;
-static XalanDOMString	PSEUDONAME_OTHER;
-static XalanDOMString	PSEUDONAME_NODE;
+const XalanDOMChar	XPath::PSEUDONAME_ANY[] =
+{
+	XalanUnicode::charAsterisk,
+	0
+};
 
+const XalanDOMChar	XPath::PSEUDONAME_ROOT[] =
+{
+	XalanUnicode::charSolidus,
+	0
+};
 
+const XalanDOMChar	XPath::PSEUDONAME_TEXT[] =
+{
+	XalanUnicode::charNumberSign,
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_x,
+	XalanUnicode::charLetter_t,
+	0
+};
 
-const XalanDOMString&	XPath::PSEUDONAME_ANY = ::PSEUDONAME_ANY;
-const XalanDOMString&	XPath::PSEUDONAME_ROOT = ::PSEUDONAME_ROOT;
-const XalanDOMString&	XPath::PSEUDONAME_TEXT = ::PSEUDONAME_TEXT;
-const XalanDOMString&	XPath::PSEUDONAME_COMMENT = ::PSEUDONAME_COMMENT;
-const XalanDOMString&	XPath::PSEUDONAME_PI = ::PSEUDONAME_PI;
-const XalanDOMString&	XPath::PSEUDONAME_OTHER = ::PSEUDONAME_OTHER;
-const XalanDOMString&	XPath::PSEUDONAME_NODE = ::PSEUDONAME_NODE;
+const XalanDOMChar	XPath::PSEUDONAME_COMMENT[] =
+{
+	XalanUnicode::charNumberSign,
+	XalanUnicode::charLetter_c,
+	XalanUnicode::charLetter_o,
+	XalanUnicode::charLetter_m,
+	XalanUnicode::charLetter_m,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charLetter_n,
+	XalanUnicode::charLetter_t,
+	0
+};
+
+const XalanDOMChar	XPath::PSEUDONAME_PI[] =
+{
+	XalanUnicode::charNumberSign,
+	XalanUnicode::charLetter_p,
+	XalanUnicode::charLetter_i,
+	0
+};
+
+const XalanDOMChar	XPath::PSEUDONAME_OTHER[] =
+{
+	XalanUnicode::charAsterisk,
+	0
+};
+
+const XalanDOMChar	XPath::PSEUDONAME_NODE[] =
+{
+	XalanUnicode::charNumberSign,
+	XalanUnicode::charLetter_n,
+	XalanUnicode::charLetter_o,
+	XalanUnicode::charLetter_d,
+	XalanUnicode::charLetter_e,
+	0
+};
 
 
 
@@ -3697,14 +3746,6 @@ void
 XPath::initialize()
 {
 	s_functions.CreateTable();
-
-	::PSEUDONAME_ANY = XALAN_STATIC_UCODE_STRING("*");
-	::PSEUDONAME_ROOT = XALAN_STATIC_UCODE_STRING("/");
-	::PSEUDONAME_TEXT = XALAN_STATIC_UCODE_STRING("#text");
-	::PSEUDONAME_COMMENT = XALAN_STATIC_UCODE_STRING("#comment");
-	::PSEUDONAME_PI = XALAN_STATIC_UCODE_STRING("#pi");
-	::PSEUDONAME_OTHER = XALAN_STATIC_UCODE_STRING("*");
-	::PSEUDONAME_NODE = XALAN_STATIC_UCODE_STRING("#node");
 }
 
 
@@ -3712,13 +3753,5 @@ XPath::initialize()
 void
 XPath::terminate()
 {
-	releaseMemory(::PSEUDONAME_ANY);
-	releaseMemory(::PSEUDONAME_ROOT);
-	releaseMemory(::PSEUDONAME_TEXT);
-	releaseMemory(::PSEUDONAME_COMMENT);
-	releaseMemory(::PSEUDONAME_PI);
-	releaseMemory(::PSEUDONAME_OTHER);
-	releaseMemory(::PSEUDONAME_NODE);
-
 	s_functions.DestroyTable();
 }

@@ -64,7 +64,8 @@
 
 
 
-#include <set>
+#include <cstdlib>
+#include <map>
 #include <vector>
 
 
@@ -96,54 +97,17 @@ public:
 
 #if defined(XALAN_NO_NAMESPACES)
 	typedef map<XalanDOMString,
-				int,
-				less<XalanDOMString> >		KeywordsMapType;
-	typedef map<XalanDOMString,
-				XPathExpression::eOpCodes,
-				less<XalanDOMString> >		FunctionNameMapType;
-	typedef map<XalanDOMString,
-				XPathExpression::eOpCodes,
-				less<XalanDOMString> >		AxisNamesMapType;
-	typedef map<XalanDOMString,
-				XPathExpression::eOpCodes,
-				less<XalanDOMString> >		NodeTypesMapType;
-	typedef map<XalanDOMString,
 				XalanDOMString,
-				less<XalanDOMString> >		StringToStringMapType;
+				less<XalanDOMString> >	StringToStringMapType;
 
-	typedef vector<XalanDOMString>			DOMStringVectorType;
-
-	typedef vector<bool>					BoolVectorType;
+	typedef vector<bool>				BoolVectorType;
 #else
 	typedef std::map<XalanDOMString,
-					 int>							KeywordsMapType;
-	typedef std::map<XalanDOMString,
-					 XPathExpression::eOpCodes>		FunctionNameMapType;
-	typedef std::map<XalanDOMString,
-					 XPathExpression::eOpCodes>		AxisNamesMapType;
-	typedef std::map<XalanDOMString,
-					 XPathExpression::eOpCodes>		NodeTypesMapType;
-	typedef std::map<XalanDOMString,
-					 XalanDOMString>				StringToStringMapType;
+					 XalanDOMString>	StringToStringMapType;
 
-	typedef std::vector<XalanDOMString>				DOMStringVectorType;
-
-	typedef std::vector<bool>						BoolVectorType;
+	typedef std::vector<bool>			BoolVectorType;
 #endif
 
-	/**
-	 * Perform static initialization.  See class XPathInit.
-	 */
-	static void
-	initialize();
-
-	/**
-	 * Perform static shut down.  See class XPathInit.
-	 */
-	static void
-	terminate();
-
-	explicit
 	XPathProcessorImpl();
 
 	virtual
@@ -173,12 +137,9 @@ private:
 	 * top-level elements.
 	 *
 	 * @param pat XSLT Expression.
-	 * @param targetStrings Vector to hold Strings, may be null.
 	 */
 	void
-	tokenize(
-			const XalanDOMString&	pat,
-			DOMStringVectorType*	targetStrings = 0);
+	tokenize(const XalanDOMString&	pat);
   
 	/**
 	 * Record the current position on the token queue as long as this is a
@@ -190,12 +151,6 @@ private:
 			int		nesting,
 			bool	isStart,
 			bool	isAttrName) const;
-
-	/**
-	 * Record the correct token string in the passed vector.
-	 */
-	void
-	recordTokenString(DOMStringVectorType&	targetStrings);
 
 	void
 	addToTokenQueue(const XalanDOMString&	s) const;
@@ -438,14 +393,29 @@ private:
 	/**
 	 * Given a string, return the corresponding token.
 	 */
-	int
-	getKeywordToken(const XalanDOMString&	key) const;
+	static XPathExpression::eOpCodes
+	getFunctionToken(const XalanDOMString&	key)
+	{
+		return searchTable(s_functionTable, s_functionTableSize, key).m_opCode;
+	}
 
 	/**
 	 * Given a string, return the corresponding token.
 	 */
-	int
-	getFunctionToken(const XalanDOMString&	key) const;
+	static XPathExpression::eOpCodes
+	getNodeTypeToken(const XalanDOMString&	key)
+	{
+		return searchTable(s_nodeTypeTable, s_nodeTypeTableSize, key).m_opCode;
+	}
+
+	/**
+	 * Given a string, return the corresponding token.
+	 */
+	static XPathExpression::eOpCodes
+	getAxisToken(const XalanDOMString&	key)
+	{
+		return searchTable(s_axisTable, s_axisTableSize, key).m_opCode;
+	}
 
 	/**
 	 * 
@@ -662,7 +632,7 @@ private:
 	 Basis	::=    AxisName '::' NodeTest	
 	 | AbbreviatedBasis  
 	 */
-	int
+	XPathExpression::eOpCodes
 	AxisName();
   
 	/**
@@ -672,7 +642,7 @@ private:
 	 | 'processing-instruction' '(' Literal ')' 
 	 */
 	int
-	NodeTest(int	axisType);
+	NodeTest(XPathExpression::eOpCodes	axisType);
 
 	/**
 	 * --------------------------------------------------------------------------------
@@ -780,25 +750,32 @@ private:
 	void
 	AbbreviatedNodeTestStep();
 
-	bool
-	isValidFunction(const XalanDOMString&	key) const;
+	static bool
+	isValidFunction(const XalanDOMString&	key);
 
 private:
 
 	int
 	FunctionCallArguments();
 
-	static void
-	initializeKeywordsTable(KeywordsMapType&	theKeywords);
+	struct TableEntry
+	{
+		const XalanDOMChar*			m_string;
 
-	static void
-	initializeFunctionTable(FunctionNameMapType&	theFunctions);
+		XPathExpression::eOpCodes	m_opCode;
+	};
 
-	static void
-	initializeAxisNamesTable(AxisNamesMapType&		theAxisNames);
+#if defined(XALAN_SIZE_T_IN_NAMESPACE_STD)
+	typedef std::size_t				size_type;
+#else
+	typedef size_t					size_type;
+#endif
 
-	static void
-	initializeNodeTypesTable(NodeTypesMapType&		theNodeTypes);
+	static const TableEntry&
+	searchTable(
+		const TableEntry		theTable[],
+		size_type				theTableSize,
+		const XalanDOMString&	theString);
 
 	/**
 	 * The current input token.
@@ -844,46 +821,77 @@ private:
 
 	static const XalanDOMString		s_emptyString;
 
-	// This shouldn't really be here, since it duplicates a string that is part
-	// of the information that is maintained by the class XPathFunctionTable,
-	// but this is a reasonable optimization.
-	static const XalanDOMString&	s_functionIDString;
-
+	static const XalanDOMChar		s_functionIDString[];
 
 	// This shouldn't really be here, since it's not part of the XPath standard,
 	// but rather a part ofthe XSLT standard.
-	static const XalanDOMString&	s_functionKeyString;
+	static const XalanDOMChar		s_functionKeyString[];
 
-	static const XalanDOMString&	s_orString;
+	static const XalanDOMChar		s_orString[];
 
-	static const XalanDOMString&	s_andString;
+	static const XalanDOMChar		s_andString[];
 
-	static const XalanDOMString&	s_divString;
+	static const XalanDOMChar		s_divString[];
 
-	static const XalanDOMString&	s_modString;
+	static const XalanDOMChar		s_modString[];
 
-	static const XalanDOMString&	s_dotString;
+	static const XalanDOMChar		s_dotString[];
 
-	static const XalanDOMString&	s_dotDotString;
+	static const XalanDOMChar		s_dotDotString[];
 
-	static const XalanDOMString&	s_axisString;
+	static const XalanDOMChar		s_axisString[];
 
-	static const XalanDOMString&	s_attributeString;
+	static const XalanDOMChar		s_attributeString[];
 
-	static const XalanDOMString&	s_childString;
+	static const XalanDOMChar		s_childString[];
 
-	static const XalanDOMString&	s_positionString;
+	static const XalanDOMChar		s_positionString[];
 
-	/**
-	 * Map of keyword names to token values.
-	 */
-	static const KeywordsMapType&		s_keywords;
+	static const XalanDOMChar		s_asteriskString[];
 
-	static const FunctionNameMapType&	s_functions;
+	static const XalanDOMChar		s_commentString[];
 
-	static const AxisNamesMapType&		s_axisNames;
+	static const XalanDOMChar		s_piString[];
 
-	static const NodeTypesMapType&		s_nodeTypes;
+	static const XalanDOMChar		s_nodeString[];
+
+	static const XalanDOMChar		s_textString[];
+
+	static const XalanDOMChar		s_ancestorString[];
+
+	static const XalanDOMChar		s_ancestorOrSelfString[];
+
+	static const XalanDOMChar		s_descendantString[];
+
+	static const XalanDOMChar		s_descendantOrSelfString[];
+
+	static const XalanDOMChar		s_followingString[];
+
+	static const XalanDOMChar		s_followingSiblingString[];
+
+	static const XalanDOMChar		s_parentString[];
+
+	static const XalanDOMChar		s_precedingString[];
+
+	static const XalanDOMChar		s_precedingSiblingString[];
+
+	static const XalanDOMChar		s_selfString[];
+
+	static const XalanDOMChar		s_namespaceString[];
+
+	static const TableEntry			s_functionTable[];
+
+	static const size_type			s_functionTableSize;
+
+	static const TableEntry			s_nodeTypeTable[];
+
+	static const size_type			s_nodeTypeTableSize;
+
+	static const TableEntry			s_axisTable[];
+
+	static const size_type			s_axisTableSize;
+
+	static const TableEntry			s_dummyEntry;
 };
 
 

@@ -321,7 +321,7 @@ FormatterToSourceTree::charactersRaw(
 
 	processAccumulatedText();
 
-	doProcessingInstruction(c_wstr(s_xsltNextIsRawString), c_wstr(s_formatterListenerString));
+	doProcessingInstruction(s_piTarget, s_piData);
 
 	characters(chars, length);
 }

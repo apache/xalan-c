@@ -203,9 +203,12 @@ FormatterToDOM::charactersRaw(
 		const XMLCh* const	chars,
 		const unsigned int	length)
 {
+	assign(m_buffer1, s_piTarget, s_piTargetLength);
+	assign(m_buffer2, s_piData, s_piDataLength);
+
 	append(m_doc->createProcessingInstruction(
-				s_xsltNextIsRawString,
-				s_formatterListenerString));
+				m_buffer1,
+				m_buffer2));
 
 	characters(chars, length);
 }		

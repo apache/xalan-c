@@ -3485,7 +3485,6 @@ XSLTEngineImpl::initializeAttributeKeysTable(AttributeKeysMapType&	theAttributeK
 	theAttributeKeys[Constants::ATTRNAME_GROUPINGSIZE] = Constants::TATTRNAME_GROUPINGSIZE;
 	theAttributeKeys[Constants::ATTRNAME_HREF] = Constants::TATTRNAME_HREF;
 	theAttributeKeys[Constants::ATTRNAME_ID] = Constants::TATTRNAME_ID;
-	theAttributeKeys[Constants::ATTRNAME_IMPORTANCE] = Constants::TATTRNAME_IMPORTANCE;
 	theAttributeKeys[Constants::ATTRNAME_INDENTRESULT] = Constants::TATTRNAME_INDENTRESULT;
 	theAttributeKeys[Constants::ATTRNAME_LANG] = Constants::TATTRNAME_LANG;
 	theAttributeKeys[Constants::ATTRNAME_LETTERVALUE] = Constants::TATTRNAME_LETTERVALUE;
@@ -3512,7 +3511,6 @@ XSLTEngineImpl::initializeAttributeKeysTable(AttributeKeysMapType&	theAttributeK
 	theAttributeKeys[Constants::ATTRNAME_REFID] = Constants::TATTRNAME_REFID;
 	theAttributeKeys[Constants::ATTRNAME_RESULTNS] = Constants::TATTRNAME_RESULTNS;
 	theAttributeKeys[Constants::ATTRNAME_SELECT] = Constants::TATTRNAME_SELECT;
-	theAttributeKeys[Constants::ATTRNAME_SEQUENCESRC] = Constants::TATTRNAME_SEQUENCESRC;
 	theAttributeKeys[Constants::ATTRNAME_STYLE] = Constants::TATTRNAME_STYLE;
 	theAttributeKeys[Constants::ATTRNAME_TEST] = Constants::TATTRNAME_TEST;
 	theAttributeKeys[Constants::ATTRNAME_TOSTRING] = Constants::TATTRNAME_TOSTRING;
@@ -3545,7 +3543,6 @@ XSLTEngineImpl::initializeElementKeysTable(ElementKeysMapType&	theElementKeys)
 	theElementKeys[Constants::ELEMNAME_VARIABLE_STRING] = Constants::ELEMNAME_VARIABLE;
 	theElementKeys[Constants::ELEMNAME_PARAMVARIABLE_STRING] = Constants::ELEMNAME_PARAMVARIABLE;
 
-	theElementKeys[Constants::ELEMNAME_DISPLAYIF_STRING] = Constants::ELEMNAME_DISPLAYIF;
 	theElementKeys[Constants::ELEMNAME_EMPTY_STRING] = Constants::ELEMNAME_EMPTY;
 	theElementKeys[Constants::ELEMNAME_CALLTEMPLATE_STRING] = Constants::ELEMNAME_CALLTEMPLATE;
 	theElementKeys[Constants::ELEMNAME_TEMPLATE_STRING] = Constants::ELEMNAME_TEMPLATE;
@@ -3574,7 +3571,6 @@ XSLTEngineImpl::initializeElementKeysTable(ElementKeysMapType&	theElementKeys)
 	
 	theElementKeys[Constants::ELEMNAME_EXTENSION_STRING] = Constants::ELEMNAME_EXTENSION;
 	theElementKeys[Constants::ELEMNAME_MESSAGE_STRING] = Constants::ELEMNAME_MESSAGE;
-	theElementKeys[Constants::ELEMNAME_LOCALE_STRING] = Constants::ELEMNAME_LOCALE;
 	theElementKeys[Constants::ELEMNAME_FALLBACK_STRING] = Constants::ELEMNAME_FALLBACK;
 	theElementKeys[Constants::ELEMNAME_OUTPUT_STRING] = Constants::ELEMNAME_OUTPUT;
 

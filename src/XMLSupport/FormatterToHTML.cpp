@@ -626,8 +626,8 @@ FormatterToHTML::processingInstruction(
 {
 	// Use a fairly nasty hack to tell if the next node is supposed to be 
 	// unescaped text.
-	if(equals(target, s_xsltNextIsRawString) == true &&
-	   equals(data, s_formatterListenerString) == true)
+	if(equals(target, length(target), s_piTarget, s_piTargetLength) == true &&
+	   equals(data, length(data), s_piData, s_piDataLength) == true)
 	{
 		m_nextIsRaw = true;
 	}
