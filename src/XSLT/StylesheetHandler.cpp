@@ -140,9 +140,9 @@ StylesheetHandler::~StylesheetHandler()
 }
 
 
-void StylesheetHandler::setDocumentLocator(Locator* const locator)
+void StylesheetHandler::setDocumentLocator(const Locator* const		locator)
 {
-	m_processor.m_stylesheetLocatorStack.push_back(locator);
+	m_processor.pushLocatorOnStack(locator);
 }
 
 
@@ -156,10 +156,7 @@ void StylesheetHandler::startDocument()
 
 void StylesheetHandler::endDocument()
 {
-	if(!m_processor.m_stylesheetLocatorStack.empty())
-	{
-		m_processor.m_stylesheetLocatorStack.pop_back();
-	}
+	m_processor.popLocatorStack();
 
 	if (!isEmpty(m_pendingException))
 	{
@@ -209,9 +206,8 @@ void StylesheetHandler::startElement (const XMLCh* const name, AttributeList& at
 	{
 		m_whiteSpaceElems.erase(m_whiteSpaceElems.begin(),m_whiteSpaceElems.end());
 
-		Locator* locator = m_processor.m_stylesheetLocatorStack.empty() ? 0 : 
-			(m_processor.m_stylesheetLocatorStack.back());
-		
+		const Locator* const	locator = m_processor.getLocatorFromStack();
+
 		int lineNumber = (0 != locator) ? locator->getLineNumber() : 0;
 		int columnNumber = (0 != locator) ? locator->getColumnNumber() : 0;
 		
@@ -517,9 +513,9 @@ void StylesheetHandler::startElement (const XMLCh* const name, AttributeList& at
 
 					if (fVersionFound == false)
 					{
-						const DOMString		msg("The stylesheet element did not specify a version attribute!");
+//						const DOMString		msg("The stylesheet element did not specify a version attribute!");
 
-						throw SAXException(toCharArray(msg));
+//						throw SAXException(toCharArray(msg));
 					}
 				}
 				break;
@@ -1200,11 +1196,10 @@ void StylesheetHandler::characters (const XMLCh* const chars, const unsigned int
 			preserveSpace = true;
 		}
 
-		Locator* locator = (m_processor.m_stylesheetLocatorStack.size() == 0)
-			? 0 : m_processor.m_stylesheetLocatorStack.back();
+		const Locator* const	locator = m_processor.getLocatorFromStack();
 
-		int lineNumber = (0 != locator) ? locator->getLineNumber() : 0;
-		int columnNumber = (0 != locator) ? locator->getColumnNumber() : 0;
+		const int lineNumber = (0 != locator) ? locator->getLineNumber() : 0;
+		const int columnNumber = (0 != locator) ? locator->getColumnNumber() : 0;
 
 		ElemTextLiteral *elem = new ElemTextLiteral(m_constructionContext,
 			m_stylesheet,
@@ -1213,7 +1208,7 @@ void StylesheetHandler::characters (const XMLCh* const chars, const unsigned int
 			true, preserveSpace, 
 			disableOutputEscaping);
 
-		bool isWhite = isWhiteSpace(chars, 0, length);
+		const bool isWhite = isWhiteSpace(chars, 0, length);
 
 		if(preserveSpace || (!preserveSpace && !isWhite))
 		{
@@ -1282,11 +1277,11 @@ void StylesheetHandler::cdata(const XMLCh* const chars, const unsigned int lengt
 			parent = m_elemStack[m_elemStack.size()-2];
 			preserveSpace = true;
 		}
-		Locator* locator = (m_processor.m_stylesheetLocatorStack.size()==0) 
-			? 0 : m_processor.m_stylesheetLocatorStack.back();
 
-		int lineNumber = (0 != locator) ? locator->getLineNumber() : 0;
-		int columnNumber = (0 != locator) ? locator->getColumnNumber() : 0;
+		const Locator* const	locator = m_processor.getLocatorFromStack();
+
+		const int lineNumber = (0 != locator) ? locator->getLineNumber() : 0;
+		const int columnNumber = (0 != locator) ? locator->getColumnNumber() : 0;
 
 		ElemTextLiteral* elem = new ElemTextLiteral(m_constructionContext,
 			m_stylesheet,

@@ -227,7 +227,7 @@ typedef XALAN_STD set<DOMString>              TranslateCSSSetType;
 typedef XALAN_STD vector<Arg>                 ParamVectorType;
 typedef XALAN_STD vector<ElemAttributeSet*>   AttrStackType;
 typedef XALAN_STD vector<KeyDeclaration>      KeyDeclarationVectorType;
-typedef XALAN_STD vector<Locator*>            LocatorStack;
+typedef XALAN_STD vector<const Locator*>      LocatorStack;
 typedef XALAN_STD vector<NameSpace>           NamespaceVectorType;
 typedef XALAN_STD vector<NamespaceVectorType> NamespacesStackType;
 typedef XALAN_STD vector<StackEntry*>         VariableStackStackType;
@@ -276,12 +276,6 @@ typedef XALAN_STD runtime_error               RuntimeError;
 	 * The root document.
 	 */
 	DOM_Document			m_rootDoc;
-
-  /**
-   * The top of this stack should contain the currently processed
-   * stylesheet SAX locator object.
-   */
-	LocatorStack  m_stylesheetLocatorStack;
 
   /**
    * If true, output carriage returns.
@@ -1965,9 +1959,43 @@ typedef XALAN_STD runtime_error               RuntimeError;
 		return m_attrSetStack; 
 	}
 
+	/**
+	 * Get the locator from the top of the locator stack.
+	 *
+	 * @return A pointer to the Locator, or 0 if there is nothing on the stack.
+	 */
+	const Locator*
+	getLocatorFromStack() const
+	{
+		return m_stylesheetLocatorStack.size == 0 ? 0 : m_stylesheetLocatorStack.back();
+	}
+
+	/**
+	 * Push a locator on to the locator stack.
+	 *
+	 * @param A pointer to the Locator to push.
+	 */
+	void
+	pushLocatorOnStack(const Locator*	locator)
+	{
+		m_stylesheetLocatorStack.push_back(locator);
+	}
+
+	/**
+	 * Pop the locator from the top of the locator stack.
+	 */
+	void
+	popLocatorStack()
+	{
+		if (m_stylesheetLocatorStack.size != 0)
+		{
+			m_stylesheetLocatorStack.pop_back();
+		}
+	}
+
 	// These methods are inherited from DocumentHandler ...
 	
-	virtual void setDocumentLocator( Locator* const	locator);
+	virtual void setDocumentLocator(const  Locator* const	locator);
 
 	virtual void
 	startDocument();
@@ -2136,6 +2164,12 @@ protected:
 
 private:
 
+  /**
+   * The top of this stack should contain the currently processed
+   * stylesheet SAX locator object.
+   */
+	LocatorStack  m_stylesheetLocatorStack;
+
 	/**
 	 * The stack of Variable stacks.  A VariableStack will be 
 	 * pushed onto this stack for each template invocation.
@@ -2297,7 +2331,7 @@ private:
 	 * List of listeners who are interested in tracing what's 
 	 * being generated.
 	 */
-	/*transient*/ TraceListenerVectorType m_traceListeners;
+	TraceListenerVectorType		m_traceListeners;
 	
 	// Common processing for errors and warnings
 	void problem(const DOM_Node& styleNode,
@@ -2431,7 +2465,7 @@ private:
    * at the moment.  I don't think this is worth fixing 
    * until NodeList variables are implemented.
    */
-	static const bool	m_resolveContentsEarly;
+	static const bool	s_resolveContentsEarly;
 
 	/**
 	 * Set the factory for making XPaths.
@@ -2455,7 +2489,7 @@ private:
 	bool
 	getResolveContentsEarly() const
 	{
-		return m_resolveContentsEarly;
+		return s_resolveContentsEarly;
 	}
 
 	ParamVectorType		m_topLevelParams;

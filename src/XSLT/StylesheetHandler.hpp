@@ -267,7 +267,7 @@ public:
 	 *                any SAX document event.
 	 * @see org.xml.sax.Locator
 	 */
-	virtual void setDocumentLocator(Locator* const locator);
+	virtual void setDocumentLocator(const Locator* const	locator);
 
 	/**
 	 * Receive notification of the beginning of a document.

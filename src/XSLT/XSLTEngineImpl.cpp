@@ -211,7 +211,7 @@ const DOMString	XSLTEngineImpl::s_XSLT4JNameSpaceURL(XALAN_STATIC_UCODE_STRING("
  * at the moment.  I don't think this is worth fixing 
  * until NodeList variables are implemented.
  */
-const bool								XSLTEngineImpl::m_resolveContentsEarly = true;
+const bool								XSLTEngineImpl::s_resolveContentsEarly = true;
 
 XSLTEngineImpl::AttributeKeysMapType	XSLTEngineImpl::s_attributeKeys;
 
@@ -233,10 +233,32 @@ XSLTEngineImpl::XSLTEngineImpl(
 							XPathFactory&		xpathFactory) :
 	XSLTProcessor(),
 	DocumentHandler(),
+	m_rootDoc(),
+	m_outputCarriageReturns(false),
+	m_outputLinefeeds(false),
+	m_formatter(0),
+	m_resultTreeFactory(),
+	m_resultNameSpacePrefix(),
+	m_resultNameSpaceURL(),
+	m_stylesheets(),
+	m_currentNode(),
+	m_cssKeys(),
+	m_translateCSS(false),
+	m_pendingElementName(),
+	m_pendingAttributes(),
+	m_resultNameSpaces(),
+	m_emptyNamespace(),
+	m_xpathFactory(xpathFactory),
+	m_xpath(xpathFactory.create()),
+	m_xobjectFactory(xobjectFactory),
+	m_xpathProcessor(new XPathProcessorImpl),
+	m_cdataStack(),
+	m_stylesheetLocatorStack(),
+	m_variableStacks(*this),
+	m_problemListener(new ProblemListenerDefault()),
+	m_needToBuildKeysTable(false),
 	m_stylesheetRoot(0),
 	m_stylesheetExecutionContext(0),
-	m_stylesheets(),
-	m_rootDoc(),
 	m_XSLNameSpaceURL(s_DefaultXSLNameSpaceURL),
 	m_XSLDirectiveLookup(),
 	m_quietConflictWarnings(false),
@@ -245,43 +267,24 @@ XSLTEngineImpl::XSLTEngineImpl(
 	m_traceSelects(false),
 	m_diagnosticsPrintWriter(0),
 	m_durationsTable(),
-	m_pendingElementName(),
-	m_pendingAttributes(),
-	m_resultNameSpaces(),
-	m_emptyNamespace(),
+	m_traceListeners(),
+	m_outputFileName(),
 	m_uniqueNSValue(0),
 	m_useATVsInSelects(false),
-	m_cssKeys(),
-	m_translateCSS(false),
 	m_stripWhiteSpace(false),
-	m_outputCarriageReturns(false),
-	m_outputLinefeeds(false),
 	m_topLevelParams(),
 	m_parserLiaison(parserLiaison),
 	m_xpathSupport(xpathSupport),
 	m_xpathEnvSupport(xpathEnvSupport),
-	m_xpathFactory(xpathFactory),
-	m_xpath(xpathFactory.create()),
-	m_xobjectFactory(xobjectFactory),
-	m_xpathProcessor(new XPathProcessorImpl),
-	m_formatter(0),
 	m_flistener(0),
-	m_resultTreeFactory(),
-	m_resultNameSpacePrefix(),
-	m_resultNameSpaceURL(),
 	m_contextNodeList(),
 	m_keyDeclarations(),
 	m_keys(),
-	m_needToBuildKeysTable(false),
-	m_currentNode(),
-
 	m_namedTemplates(),
 	m_topLevelVariables(),
-
-	m_problemListener(new ProblemListenerDefault()),
 	m_needToCheckForInfiniteLoops(false),
 	m_stackGuard(*this),
-	m_variableStacks(*this)
+	m_attrSetStack()
 {
 }
 
@@ -1300,8 +1303,9 @@ void XSLTEngineImpl::problem(const DOM_Node& styleNode,
 				ProblemListener::eClassification		classification) const
 {
 	if (m_problemListener == 0) return;
-	Locator* locator = m_stylesheetLocatorStack.size() == 0 ? 0 : 
-							  m_stylesheetLocatorStack.back();
+
+	const Locator* const	locator = getLocatorFromStack();
+
 	const XMLCh* id = (0 == locator) ?
 						0 : (0 == locator->getPublicId()) ?
 					 locator->getPublicId() : locator->getSystemId();
@@ -1571,8 +1575,7 @@ XSLTEngineImpl::diagnoseTemplateChildren(
   
 
 void
-XSLTEngineImpl::setDocumentLocator(
-			Locator* const	/* locator */)
+XSLTEngineImpl::setDocumentLocator(const Locator* const		/* locator */)
 {
 	// Do nothing for now
 }
@@ -3889,11 +3892,11 @@ XSLTEngineImpl::StackGuard::checkForInfiniteLoop(const StackGuard&	guard) const
 {
 	const int	nRules = m_stack.size();
 
-	int loopCount = 0;
+	int			loopCount = 0;
 
-	for(int i = (nRules - 1); i >= 0; i--)
+	for(int i = (nRules - 1); i >= 0; --i)
 	{
-		if(m_stack[i] == (guard))
+		if(m_stack[i] == guard)
 		{
 			loopCount++;
 		}
@@ -3901,21 +3904,30 @@ XSLTEngineImpl::StackGuard::checkForInfiniteLoop(const StackGuard&	guard) const
 		if(loopCount >= 4)
 		{
 			DOMStringPrintWriter	pw;
+
 			pw.println(DOMString("Infinite loop diagnosed!  Stack trace:"));
-			for(int k = 0; k < nRules; k++)
+
+			int		k = 0;
+
+			for(; k < nRules; k++)
 			{
 				pw.println(DOMString("Source Elem #") +
 								LongToDOMString(k) +
 								DOMString(" "));
-				const StackGuard&	guardOnStack = m_stack[i];
-				guardOnStack.print(pw);
+
+				m_stack[i].print(pw);
 			}
+
 			pw.println(DOMString("Source Elem #") +
 							LongToDOMString(k) +
 							DOMString(" "));
+
 			guard.print(pw);
+
 			pw.println(DOMString("End of infinite loop diagnosis."));
+
 			m_processor->diag(pw.getString());
+
 			throw XSLTEngineImpl::XSLInfiniteLoopException();
 		}
 	}

@@ -524,7 +524,7 @@ ElemTemplateElement* Stylesheet::findTemplate(
 			const DOM_Node&					sourceTree, 
 			const DOM_Node&					targetNode) const
 {
-	Stylesheet*		theDummy;
+	const Stylesheet*	theDummy;
 
 	return findTemplate(executionContext, sourceTree, targetNode, QName(), false, theDummy);
 }
@@ -539,12 +539,6 @@ Stylesheet::findTemplate(
 			const QName&					mode,
 			bool							useImports,
 			const Stylesheet*&				foundStylesheet) const
-/*
-    throws XSLProcessorException, 
-           java.net.MalformedURLException, 
-           java.io.FileNotFoundException, 
-           java.io.IOException
-*/
 {
 	bool usedWildcard = false;
 	if(m_isWrapperless) return m_wrapperlessTemplate;
