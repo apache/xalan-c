@@ -149,7 +149,7 @@ const XalanDOMString&   FunctionLang::s_attributeName = s_localString;
 void
 FunctionLang::initialize(MemoryManagerType&     theManager)
 {
-    XalanDOMString(s_langString, theManager).swap(s_localString);
+    s_localString.reset(theManager, s_langString);
 }
 
 
@@ -157,7 +157,7 @@ FunctionLang::initialize(MemoryManagerType&     theManager)
 void
 FunctionLang::terminate()
 {
-    XalanDOMString(XalanMemMgrs::getDummyMemMgr()).swap(s_localString);
+    releaseMemory(s_localString, XalanMemMgrs::getDummyMemMgr());
 }
 
 
