@@ -1445,7 +1445,7 @@ private:
 	enum
 	{
 		eDefaultOpMapSize = 100,
-		eDefaultTokenQueueSize = 30,
+		eDefaultTokenQueueSize = 30
 	};
 
 	NumberLiteralValueVectorType	m_numberLiteralValues;
