@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -57,24 +57,10 @@
 #if !defined(FORMATTERTOHTML_HEADER_GUARD_1357924680)
 #define FORMATTERTOHTML_HEADER_GUARD_1357924680
 
-/**
- * $Id$
- * 
- * $State$
- * 
- * @author David N. Bertoni <david_n_bertoni@lotus.com>
- */
-
 
 
 // Base include file.  Must be first.
 #include <XMLSupport/XMLSupportDefinitions.hpp>
-
-
-
-#include <set>
-#include <map>
-#include <vector>
 
 
 
@@ -98,15 +84,6 @@ class XALAN_XMLSUPPORT_EXPORT FormatterToHTML : public FormatterToXML
 {  
 
 public:
-
-#if defined(XALAN_NO_NAMESPACES)
-	typedef map<XalanDOMChar,
-				XalanDOMString,
-				less<XalanDOMChar> >	XalanEntityReferenceMapType;
-#else
-	typedef std::map<XalanDOMChar,
-					 XalanDOMString>	XalanEntityReferenceMapType;	
-#endif
 
 	/**
 	 * Perform static initialization.  See class XMLSupportInit.
@@ -307,6 +284,25 @@ public:
 				ElemDesc,
 				less_no_case_ascii_wide_string>		ElementFlagsMapType;
 
+	struct EntityPair
+	{
+		XalanDOMChar				m_char;
+
+#if defined(XALAN_LSTRSUPPORT) && !defined(XALAN_XALANDOMCHAR_USHORT_MISMATCH)
+		const XalanDOMChar*			m_string;
+#else
+		enum { eMaxLength = 8 };
+
+		XalanDOMChar				m_string[eMaxLength + 1];
+
+		EntityPair() :
+			m_char(0),
+			m_string()
+		{
+		}
+#endif
+	};
+
 protected:
 
 	virtual void
@@ -326,10 +322,6 @@ protected:
 private:
 
 	static const ElementFlagsMapType*							s_elementFlags;
-
-	static const XalanEntityReferenceMapType*					s_xalanHTMLEntities;
-
-	static const XalanEntityReferenceMapType::const_iterator&	s_xalanHTMLEntitiesIteratorEnd; 
 
 	/**
 	 * Dummy description for elements not found.
@@ -405,14 +397,6 @@ private:
 	 */
 	static void
 	initializeElementFlagsMap(ElementFlagsMapType&	theMap);
-
-	/**
-	 * Initialize the map of enity references.
-	 *
-	 * @return map of enity references.
-	 */
-	static void
-	initializeXalanEntityReferenceMap(XalanEntityReferenceMapType&	theMap);
 
 	/**
 	 * Process an attribute.
@@ -491,6 +475,10 @@ private:
 	bool					m_omitMetaTag;
 
 	static const XalanDOMString		s_emptyString;
+
+	static EntityPair				s_entities[];
+
+	static const unsigned long		s_entitiesSize;
 };
 
 

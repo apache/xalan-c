@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -129,7 +129,7 @@ FormatterToHTML::FormatterToHTML(
 	m_hasNamespaceStack(),
 	m_omitMetaTag(omitMetaTag)
 {
-	assert(s_elementFlags != 0 && s_dummyDesc != 0 && s_xalanHTMLEntities != 0);
+	assert(s_elementFlags != 0 && s_dummyDesc != 0);
 
 	initCharsMap();
 }
@@ -541,23 +541,41 @@ FormatterToHTML::accumDefaultEntity(
 		XalanDOMString::size_type	len,
 		bool						escLF)
 {
-	assert(s_xalanHTMLEntities != 0);
+	assert(ch != 0 && s_entitiesSize > 0);
 
-	if(FormatterToXML::accumDefaultEntity(ch, i, chars, len, escLF) == false)
-	{	
-		const XalanEntityReferenceMapType::const_iterator	theIterator = s_xalanHTMLEntities->find(ch);
-
-		if (theIterator == s_xalanHTMLEntitiesIteratorEnd)
-		{
-			return false;
-		}
-		else
-		{
-			copyEntityIntoBuffer((*theIterator).second);			
-		}
+	if(FormatterToXML::accumDefaultEntity(ch, i, chars, len, escLF) == true)
+	{
+		return true;
 	}
+	else
+	{
+		// Find the entity, if any...
+		const EntityPair*	theFirst = s_entities;
+		const EntityPair*	theLast = &s_entities[s_entitiesSize - 2];
 
-	return true;
+		while(theFirst <= theLast)
+		{
+			const EntityPair*	theCurrent = theFirst + (theLast - theFirst) / 2;
+			assert(theCurrent->m_char != 0);
+
+			if (ch < theCurrent->m_char)
+			{
+				theLast = theCurrent - 1;
+			}
+			else if (ch > theCurrent->m_char)
+			{
+				theFirst = theCurrent + 1;
+			}
+			else
+			{
+				copyEntityIntoBuffer(theCurrent->m_string);
+
+				return true;
+			}
+		}
+
+		return false;
+	}
 }
 
 
@@ -1710,362 +1728,11 @@ FormatterToHTML::initializeElementFlagsMap(ElementFlagsMapType&		theElementFlags
 }
 
 
-typedef FormatterToHTML::XalanEntityReferenceMapType	XalanEntityReferenceMapType;
-
-
-
-static void
-initializeXalanEntityReferenceMap1(XalanEntityReferenceMapType&	theMap)
-{
-	typedef XalanEntityReferenceMapType::value_type	value_type;
-
-    //#    
-    //# Character markup-significant  
-    //#  
-	// currently handled by FormatterToXML::accumDefaultEntity
-    //theMap[34] = XALAN_STATIC_UCODE_STRING("quot");
-    //theMap[38] = XALAN_STATIC_UCODE_STRING("amp");
-    //theMap[60] = XALAN_STATIC_UCODE_STRING("lt");
-    //theMap[62] = XALAN_STATIC_UCODE_STRING("gt");
-    theMap[160] = XALAN_STATIC_UCODE_STRING("nbsp");
-    //#    
-    //# Character ISO 8859-1 characters
-    //#    
-    theMap[161] = XALAN_STATIC_UCODE_STRING("iexcl");
-    theMap[162] = XALAN_STATIC_UCODE_STRING("cent");
-    theMap[163] = XALAN_STATIC_UCODE_STRING("pound");
-    theMap[164] = XALAN_STATIC_UCODE_STRING("curren");
-    theMap[165] = XALAN_STATIC_UCODE_STRING("yen");
-    theMap[166] = XALAN_STATIC_UCODE_STRING("brvbar");
-    theMap[167] = XALAN_STATIC_UCODE_STRING("sect");
-    theMap[168] = XALAN_STATIC_UCODE_STRING("uml");
-    theMap[169] = XALAN_STATIC_UCODE_STRING("copy");
-    theMap[170] = XALAN_STATIC_UCODE_STRING("ordf");
-    theMap[171] = XALAN_STATIC_UCODE_STRING("laquo");
-    theMap[172] = XALAN_STATIC_UCODE_STRING("not");
-    theMap[173] = XALAN_STATIC_UCODE_STRING("shy");
-    theMap[174] = XALAN_STATIC_UCODE_STRING("reg");
-    theMap[175] = XALAN_STATIC_UCODE_STRING("macr");
-    theMap[176] = XALAN_STATIC_UCODE_STRING("deg");
-    theMap[177] = XALAN_STATIC_UCODE_STRING("plusmn");
-    theMap[178] = XALAN_STATIC_UCODE_STRING("sup2");
-    theMap[179] = XALAN_STATIC_UCODE_STRING("sup3");
-    theMap[180] = XALAN_STATIC_UCODE_STRING("acute");
-    theMap[181] = XALAN_STATIC_UCODE_STRING("micro");
-    theMap[182] = XALAN_STATIC_UCODE_STRING("para");
-    theMap[183] = XALAN_STATIC_UCODE_STRING("middot");
-    theMap[184] = XALAN_STATIC_UCODE_STRING("cedil");
-    theMap[185] = XALAN_STATIC_UCODE_STRING("sup1");
-    theMap[186] = XALAN_STATIC_UCODE_STRING("ordm");
-    theMap[187] = XALAN_STATIC_UCODE_STRING("raquo");
-    theMap[188] = XALAN_STATIC_UCODE_STRING("frac14");
-    theMap[189] = XALAN_STATIC_UCODE_STRING("frac12");
-    theMap[190] = XALAN_STATIC_UCODE_STRING("frac34");
-    theMap[191] = XALAN_STATIC_UCODE_STRING("iquest");
-    theMap[192] = XALAN_STATIC_UCODE_STRING("Agrave");
-    theMap[193] = XALAN_STATIC_UCODE_STRING("Aacute");
-    theMap[194] = XALAN_STATIC_UCODE_STRING("Acirc");
-    theMap[195] = XALAN_STATIC_UCODE_STRING("Atilde");
-    theMap[196] = XALAN_STATIC_UCODE_STRING("Auml");
-    theMap[197] = XALAN_STATIC_UCODE_STRING("Aring");
-    theMap[198] = XALAN_STATIC_UCODE_STRING("AElig");
-    theMap[199] = XALAN_STATIC_UCODE_STRING("Ccedil");
-    theMap[200] = XALAN_STATIC_UCODE_STRING("Egrave");
-    theMap[201] = XALAN_STATIC_UCODE_STRING("Eacute");
-    theMap[202] = XALAN_STATIC_UCODE_STRING("Ecirc");
-    theMap[203] = XALAN_STATIC_UCODE_STRING("Euml");
-    theMap[204] = XALAN_STATIC_UCODE_STRING("Igrave");
-    theMap[205] = XALAN_STATIC_UCODE_STRING("Iacute");
-    theMap[206] = XALAN_STATIC_UCODE_STRING("Icirc");
-    theMap[207] = XALAN_STATIC_UCODE_STRING("Iuml");
-    theMap[208] = XALAN_STATIC_UCODE_STRING("ETH");
-    theMap[209] = XALAN_STATIC_UCODE_STRING("Ntilde");
-    theMap[210] = XALAN_STATIC_UCODE_STRING("Ograve");
-    theMap[211] = XALAN_STATIC_UCODE_STRING("Oacute");
-    theMap[212] = XALAN_STATIC_UCODE_STRING("Ocirc");
-    theMap[213] = XALAN_STATIC_UCODE_STRING("Otilde");
-    theMap[214] = XALAN_STATIC_UCODE_STRING("Ouml");
-    theMap[215] = XALAN_STATIC_UCODE_STRING("times");
-    theMap[216] = XALAN_STATIC_UCODE_STRING("Oslash");
-    theMap[217] = XALAN_STATIC_UCODE_STRING("Ugrave");
-    theMap[218] = XALAN_STATIC_UCODE_STRING("Uacute");
-    theMap[219] = XALAN_STATIC_UCODE_STRING("Ucirc");
-    theMap[220] = XALAN_STATIC_UCODE_STRING("Uuml");
-    theMap[221] = XALAN_STATIC_UCODE_STRING("Yacute");
-    theMap[222] = XALAN_STATIC_UCODE_STRING("THORN");
-    theMap[223] = XALAN_STATIC_UCODE_STRING("szlig");
-    theMap[224] = XALAN_STATIC_UCODE_STRING("agrave");
-    theMap[225] = XALAN_STATIC_UCODE_STRING("aacute");
-    theMap[226] = XALAN_STATIC_UCODE_STRING("acirc");
-    theMap[227] = XALAN_STATIC_UCODE_STRING("atilde");
-    theMap[228] = XALAN_STATIC_UCODE_STRING("auml");
-    theMap[229] = XALAN_STATIC_UCODE_STRING("aring");
-    theMap[230] = XALAN_STATIC_UCODE_STRING("aelig");
-    theMap[231] = XALAN_STATIC_UCODE_STRING("ccedil");
-    theMap[232] = XALAN_STATIC_UCODE_STRING("egrave");
-    theMap[233] = XALAN_STATIC_UCODE_STRING("eacute");
-    theMap[234] = XALAN_STATIC_UCODE_STRING("ecirc");
-    theMap[235] = XALAN_STATIC_UCODE_STRING("euml");
-    theMap[236] = XALAN_STATIC_UCODE_STRING("igrave");
-    theMap[237] = XALAN_STATIC_UCODE_STRING("iacute");
-    theMap[238] = XALAN_STATIC_UCODE_STRING("icirc");
-    theMap[239] = XALAN_STATIC_UCODE_STRING("iuml");
-    theMap[240] = XALAN_STATIC_UCODE_STRING("eth");
-    theMap[241] = XALAN_STATIC_UCODE_STRING("ntilde");
-    theMap[242] = XALAN_STATIC_UCODE_STRING("ograve");
-    theMap[243] = XALAN_STATIC_UCODE_STRING("oacute");
-    theMap[244] = XALAN_STATIC_UCODE_STRING("ocirc");
-    theMap[245] = XALAN_STATIC_UCODE_STRING("otilde");
-    theMap[246] = XALAN_STATIC_UCODE_STRING("ouml");
-    theMap[247] = XALAN_STATIC_UCODE_STRING("divide");
-    theMap[248] = XALAN_STATIC_UCODE_STRING("oslash");
-    theMap[249] = XALAN_STATIC_UCODE_STRING("ugrave");
-    theMap[250] = XALAN_STATIC_UCODE_STRING("uacute");
-    theMap[251] = XALAN_STATIC_UCODE_STRING("ucirc");
-    theMap[252] = XALAN_STATIC_UCODE_STRING("uuml");
-    theMap[253] = XALAN_STATIC_UCODE_STRING("yacute");
-    theMap[254] = XALAN_STATIC_UCODE_STRING("thorn");
-    theMap[255] = XALAN_STATIC_UCODE_STRING("yuml");
-}
-
-
-
-static void
-initializeXalanEntityReferenceMap2(XalanEntityReferenceMapType&	theMap)
-{
-	typedef XalanEntityReferenceMapType::value_type	value_type;
-
-    //#    
-    //# Character symbols, mathematical symbols,
-    //#    
-    //# Latin   
-    theMap[402] = XALAN_STATIC_UCODE_STRING("fnof");
-    //#    
-    //# Greek   
-    theMap[913] = XALAN_STATIC_UCODE_STRING("Alpha");
-    theMap[914] = XALAN_STATIC_UCODE_STRING("Beta");
-    theMap[915] = XALAN_STATIC_UCODE_STRING("Gamma");
-    theMap[916] = XALAN_STATIC_UCODE_STRING("Delta");
-    theMap[917] = XALAN_STATIC_UCODE_STRING("Epsilon");
-    theMap[918] = XALAN_STATIC_UCODE_STRING("Zeta");
-    theMap[919] = XALAN_STATIC_UCODE_STRING("Eta");
-    theMap[920] = XALAN_STATIC_UCODE_STRING("Theta");
-    theMap[921] = XALAN_STATIC_UCODE_STRING("Iota");
-    theMap[922] = XALAN_STATIC_UCODE_STRING("Kappa");
-    theMap[923] = XALAN_STATIC_UCODE_STRING("Lambda");
-    theMap[924] = XALAN_STATIC_UCODE_STRING("Mu");
-    theMap[925] = XALAN_STATIC_UCODE_STRING("Nu");
-    theMap[926] = XALAN_STATIC_UCODE_STRING("Xi");
-    theMap[927] = XALAN_STATIC_UCODE_STRING("Omicron");
-    theMap[928] = XALAN_STATIC_UCODE_STRING("Pi");
-    theMap[929] = XALAN_STATIC_UCODE_STRING("Rho");
-    theMap[931] = XALAN_STATIC_UCODE_STRING("Sigma");
-    theMap[932] = XALAN_STATIC_UCODE_STRING("Tau");
-    theMap[933] = XALAN_STATIC_UCODE_STRING("Upsilon");
-    theMap[934] = XALAN_STATIC_UCODE_STRING("Phi");
-    theMap[935] = XALAN_STATIC_UCODE_STRING("Chi");
-    theMap[936] = XALAN_STATIC_UCODE_STRING("Psi");
-    theMap[937] = XALAN_STATIC_UCODE_STRING("Omega");
-    theMap[945] = XALAN_STATIC_UCODE_STRING("alpha");
-    theMap[946] = XALAN_STATIC_UCODE_STRING("beta");
-    theMap[947] = XALAN_STATIC_UCODE_STRING("gamma");
-    theMap[948] = XALAN_STATIC_UCODE_STRING("delta");
-    theMap[949] = XALAN_STATIC_UCODE_STRING("epsilon");
-    theMap[950] = XALAN_STATIC_UCODE_STRING("zeta");
-    theMap[951] = XALAN_STATIC_UCODE_STRING("eta");
-    theMap[952] = XALAN_STATIC_UCODE_STRING("theta");
-    theMap[953] = XALAN_STATIC_UCODE_STRING("iota");
-    theMap[954] = XALAN_STATIC_UCODE_STRING("kappa");
-    theMap[955] = XALAN_STATIC_UCODE_STRING("lambda");
-    theMap[956] = XALAN_STATIC_UCODE_STRING("mu");
-    theMap[957] = XALAN_STATIC_UCODE_STRING("nu");
-    theMap[958] = XALAN_STATIC_UCODE_STRING("xi");
-    theMap[959] = XALAN_STATIC_UCODE_STRING("omicron");
-    theMap[960] = XALAN_STATIC_UCODE_STRING("pi");
-    theMap[961] = XALAN_STATIC_UCODE_STRING("rho");
-    theMap[962] = XALAN_STATIC_UCODE_STRING("sigmaf");
-    theMap[963] = XALAN_STATIC_UCODE_STRING("sigma");
-    theMap[964] = XALAN_STATIC_UCODE_STRING("tau");
-    theMap[965] = XALAN_STATIC_UCODE_STRING("upsilon");
-    theMap[966] = XALAN_STATIC_UCODE_STRING("phi");
-    theMap[967] = XALAN_STATIC_UCODE_STRING("chi");
-    theMap[968] = XALAN_STATIC_UCODE_STRING("psi");
-    theMap[969] = XALAN_STATIC_UCODE_STRING("omega");
-    theMap[977] = XALAN_STATIC_UCODE_STRING("thetasym");
-    theMap[978] = XALAN_STATIC_UCODE_STRING("upsih");
-    theMap[982] = XALAN_STATIC_UCODE_STRING("piv");
-}
-
-
-
-static void
-initializeXalanEntityReferenceMap3(XalanEntityReferenceMapType&	theMap)
-{
-	typedef XalanEntityReferenceMapType::value_type	value_type;
-
-    //#    
-    //# General   
-    theMap[8226] = XALAN_STATIC_UCODE_STRING("bull");
-    theMap[8230] = XALAN_STATIC_UCODE_STRING("hellip");
-    theMap[8242] = XALAN_STATIC_UCODE_STRING("prime");
-    theMap[8243] = XALAN_STATIC_UCODE_STRING("Prime");
-    theMap[8254] = XALAN_STATIC_UCODE_STRING("oline");
-    theMap[8260] = XALAN_STATIC_UCODE_STRING("frasl");
-    //#    
-    //# Letterlike   
-    theMap[8472] = XALAN_STATIC_UCODE_STRING("weierp");
-    theMap[8465] = XALAN_STATIC_UCODE_STRING("image");
-    theMap[8476] = XALAN_STATIC_UCODE_STRING("real");
-    theMap[8482] = XALAN_STATIC_UCODE_STRING("trade");
-    theMap[8501] = XALAN_STATIC_UCODE_STRING("alefsym");
-    //#    
-    //# Arrows   
-    theMap[8592] = XALAN_STATIC_UCODE_STRING("larr");
-    theMap[8593] = XALAN_STATIC_UCODE_STRING("uarr");
-    theMap[8594] = XALAN_STATIC_UCODE_STRING("rarr");
-    theMap[8595] = XALAN_STATIC_UCODE_STRING("darr");
-    theMap[8596] = XALAN_STATIC_UCODE_STRING("harr");
-    theMap[8629] = XALAN_STATIC_UCODE_STRING("crarr");
-    theMap[8656] = XALAN_STATIC_UCODE_STRING("lArr");
-    theMap[8657] = XALAN_STATIC_UCODE_STRING("uArr");
-    theMap[8658] = XALAN_STATIC_UCODE_STRING("rArr");
-    theMap[8659] = XALAN_STATIC_UCODE_STRING("dArr");
-    theMap[8660] = XALAN_STATIC_UCODE_STRING("hArr");
-    //#    
-    //# Mathematical   
-    theMap[8704] = XALAN_STATIC_UCODE_STRING("forall");
-    theMap[8706] = XALAN_STATIC_UCODE_STRING("part");
-    theMap[8707] = XALAN_STATIC_UCODE_STRING("exist");
-    theMap[8709] = XALAN_STATIC_UCODE_STRING("empty");
-    theMap[8711] = XALAN_STATIC_UCODE_STRING("nabla");
-    theMap[8712] = XALAN_STATIC_UCODE_STRING("isin");
-    theMap[8713] = XALAN_STATIC_UCODE_STRING("notin");
-    theMap[8715] = XALAN_STATIC_UCODE_STRING("ni");
-    theMap[8719] = XALAN_STATIC_UCODE_STRING("prod");
-    theMap[8721] = XALAN_STATIC_UCODE_STRING("sum");
-    theMap[8722] = XALAN_STATIC_UCODE_STRING("minus");
-    theMap[8727] = XALAN_STATIC_UCODE_STRING("lowast");
-    theMap[8730] = XALAN_STATIC_UCODE_STRING("radic");
-    theMap[8733] = XALAN_STATIC_UCODE_STRING("prop");
-    theMap[8734] = XALAN_STATIC_UCODE_STRING("infin");
-    theMap[8736] = XALAN_STATIC_UCODE_STRING("ang");
-    theMap[8743] = XALAN_STATIC_UCODE_STRING("and");
-    theMap[8744] = XALAN_STATIC_UCODE_STRING("or");
-    theMap[8745] = XALAN_STATIC_UCODE_STRING("cap");
-    theMap[8746] = XALAN_STATIC_UCODE_STRING("cup");
-    theMap[8747] = XALAN_STATIC_UCODE_STRING("int");
-    theMap[8756] = XALAN_STATIC_UCODE_STRING("there4");
-    theMap[8764] = XALAN_STATIC_UCODE_STRING("sim");
-    theMap[8773] = XALAN_STATIC_UCODE_STRING("cong");
-    theMap[8776] = XALAN_STATIC_UCODE_STRING("asymp");
-    theMap[8800] = XALAN_STATIC_UCODE_STRING("ne");
-    theMap[8801] = XALAN_STATIC_UCODE_STRING("equiv");
-    theMap[8804] = XALAN_STATIC_UCODE_STRING("le");
-    theMap[8805] = XALAN_STATIC_UCODE_STRING("ge");
-    theMap[8834] = XALAN_STATIC_UCODE_STRING("sub");
-    theMap[8835] = XALAN_STATIC_UCODE_STRING("sup");
-    theMap[8836] = XALAN_STATIC_UCODE_STRING("nsub");
-    theMap[8838] = XALAN_STATIC_UCODE_STRING("sube");
-    theMap[8839] = XALAN_STATIC_UCODE_STRING("supe");
-    theMap[8853] = XALAN_STATIC_UCODE_STRING("oplus");
-    theMap[8855] = XALAN_STATIC_UCODE_STRING("otimes");
-    theMap[8869] = XALAN_STATIC_UCODE_STRING("perp");
-    theMap[8901] = XALAN_STATIC_UCODE_STRING("sdot");
-}
-
-
-
-static void
-initializeXalanEntityReferenceMap4(XalanEntityReferenceMapType&	theMap)
-{
-	typedef XalanEntityReferenceMapType::value_type	value_type;
-
-    //#    
-    //# Miscellaneous   
-    theMap[8968] = XALAN_STATIC_UCODE_STRING("lceil");
-    theMap[8969] = XALAN_STATIC_UCODE_STRING("rceil");
-    theMap[8970] = XALAN_STATIC_UCODE_STRING("lfloor");
-    theMap[8971] = XALAN_STATIC_UCODE_STRING("rfloor");
-    theMap[9001] = XALAN_STATIC_UCODE_STRING("lang");
-    theMap[9002] = XALAN_STATIC_UCODE_STRING("rang");
-    //#    
-    //# Geometric   
-    theMap[9674] = XALAN_STATIC_UCODE_STRING("loz");
-    //#    
-    //# Miscellaneous   
-    theMap[9824] = XALAN_STATIC_UCODE_STRING("spades");
-    theMap[9827] = XALAN_STATIC_UCODE_STRING("clubs");
-    theMap[9829] = XALAN_STATIC_UCODE_STRING("hearts");
-    theMap[9830] = XALAN_STATIC_UCODE_STRING("diams");
-    //#    
-    //# Character internationalization characters 
-    //#    
-    //# Latin   
-    theMap[338] = XALAN_STATIC_UCODE_STRING("OElig");
-    theMap[339] = XALAN_STATIC_UCODE_STRING("oelig");
-    //#    
-    //# May not be supported Comment out???
-    theMap[352] = XALAN_STATIC_UCODE_STRING("Scaron");
-    theMap[353] = XALAN_STATIC_UCODE_STRING("scaron");
-    theMap[376] = XALAN_STATIC_UCODE_STRING("Yuml");
-    //#    
-    //# Spacing   
-    theMap[710] = XALAN_STATIC_UCODE_STRING("circ");
-    theMap[732] = XALAN_STATIC_UCODE_STRING("tilde");
-    //#    
-    //# General   
-    theMap[8194] = XALAN_STATIC_UCODE_STRING("ensp");
-    theMap[8195] = XALAN_STATIC_UCODE_STRING("emsp");
-    theMap[8201] = XALAN_STATIC_UCODE_STRING("thinsp");
-    theMap[8204] = XALAN_STATIC_UCODE_STRING("zwnj");
-    theMap[8205] = XALAN_STATIC_UCODE_STRING("zwj");
-    theMap[8206] = XALAN_STATIC_UCODE_STRING("lrm");
-    theMap[8207] = XALAN_STATIC_UCODE_STRING("rlm");
-    theMap[8211] = XALAN_STATIC_UCODE_STRING("ndash");
-    theMap[8212] = XALAN_STATIC_UCODE_STRING("mdash");
-    theMap[8216] = XALAN_STATIC_UCODE_STRING("lsquo");
-    theMap[8217] = XALAN_STATIC_UCODE_STRING("rsquo");
-    theMap[8218] = XALAN_STATIC_UCODE_STRING("sbquo");
-    theMap[8220] = XALAN_STATIC_UCODE_STRING("ldquo");
-    theMap[8221] = XALAN_STATIC_UCODE_STRING("rdquo");
-    theMap[8222] = XALAN_STATIC_UCODE_STRING("bdquo");
-    theMap[8224] = XALAN_STATIC_UCODE_STRING("dagger");
-    theMap[8225] = XALAN_STATIC_UCODE_STRING("Dagger");
-    theMap[8240] = XALAN_STATIC_UCODE_STRING("permil");
-    theMap[8249] = XALAN_STATIC_UCODE_STRING("lsaquo");
-    theMap[8250] = XALAN_STATIC_UCODE_STRING("rsaquo");
-    theMap[8364] = XALAN_STATIC_UCODE_STRING("euro");
-}
-
-
-
-void
-FormatterToHTML::initializeXalanEntityReferenceMap(XalanEntityReferenceMapType&	theMap)
-{
-	initializeXalanEntityReferenceMap1(theMap);
-	initializeXalanEntityReferenceMap2(theMap);
-	initializeXalanEntityReferenceMap3(theMap);
-	initializeXalanEntityReferenceMap4(theMap);
-}
-
-
 
 static XalanAutoPtr<FormatterToHTML::ElementFlagsMapType>	s_elementFlags;
 
 
 const FormatterToHTML::ElementFlagsMapType*			FormatterToHTML::s_elementFlags = 0;
-
-
-static XalanAutoPtr<FormatterToHTML::XalanEntityReferenceMapType>	s_xalanHTMLEntities;
-
-
-const FormatterToHTML::XalanEntityReferenceMapType*		FormatterToHTML::s_xalanHTMLEntities = 0;
-
-
-static FormatterToHTML::XalanEntityReferenceMapType::const_iterator s_xalanHTMLEntitiesIteratorEnd; 
-
-
-const  FormatterToHTML::XalanEntityReferenceMapType::const_iterator& FormatterToHTML::s_xalanHTMLEntitiesIteratorEnd = ::s_xalanHTMLEntitiesIteratorEnd;
 
 
 static XalanAutoPtr<FormatterToHTML::ElemDesc>	s_dummyDesc;
@@ -2113,23 +1780,351 @@ const XalanDOMString&	FormatterToHTML::s_metaString =
 			::s_metaString;
 
 
+#if defined(XALAN_LSTRSUPPORT) && !defined(XALAN_XALANDOMCHAR_USHORT_MISMATCH)
+
+#define FHTML_LSTR(str) XALAN_STATIC_UCODE_STRING(str)
+
+FormatterToHTML::EntityPair		FormatterToHTML::s_entities[] =
+
+#else
+
+#define FHTML_LSTR(str) str
+
+struct LocalEntityPair
+{
+	XalanDOMChar	m_char;
+
+	const char*		m_string;
+};
+
+static const LocalEntityPair	theLocalEntities[] =
+
+#endif
+{
+	// These must always be in order by the character.
+	// Otherwise, the binary search for them will fail.
+	{ 160, FHTML_LSTR("nbsp") },
+	{ 161, FHTML_LSTR("iexcl") },
+	{ 162, FHTML_LSTR("cent") },
+	{ 163, FHTML_LSTR("pound") },
+	{ 164, FHTML_LSTR("curren") },
+	{ 165, FHTML_LSTR("yen") },
+	{ 166, FHTML_LSTR("brvbar") },
+	{ 167, FHTML_LSTR("sect") },
+	{ 168, FHTML_LSTR("uml") },
+	{ 169, FHTML_LSTR("copy") },
+	{ 170, FHTML_LSTR("ordf") },
+	{ 171, FHTML_LSTR("laquo") },
+	{ 172, FHTML_LSTR("not") },
+	{ 173, FHTML_LSTR("shy") },
+	{ 174, FHTML_LSTR("reg") },
+	{ 175, FHTML_LSTR("macr") },
+	{ 176, FHTML_LSTR("deg") },
+	{ 177, FHTML_LSTR("plusmn") },
+	{ 178, FHTML_LSTR("sup2") },
+	{ 179, FHTML_LSTR("sup3") },
+	{ 180, FHTML_LSTR("acute") },
+	{ 181, FHTML_LSTR("micro") },
+	{ 182, FHTML_LSTR("para") },
+	{ 183, FHTML_LSTR("middot") },
+	{ 184, FHTML_LSTR("cedil") },
+	{ 185, FHTML_LSTR("sup1") },
+	{ 186, FHTML_LSTR("ordm") },
+	{ 187, FHTML_LSTR("raquo") },
+	{ 188, FHTML_LSTR("frac14") },
+	{ 189, FHTML_LSTR("frac12") },
+	{ 190, FHTML_LSTR("frac34") },
+	{ 191, FHTML_LSTR("iquest") },
+	{ 192, FHTML_LSTR("Agrave") },
+	{ 193, FHTML_LSTR("Aacute") },
+	{ 194, FHTML_LSTR("Acirc") },
+	{ 195, FHTML_LSTR("Atilde") },
+	{ 196, FHTML_LSTR("Auml") },
+	{ 197, FHTML_LSTR("Aring") },
+	{ 198, FHTML_LSTR("AElig") },
+	{ 199, FHTML_LSTR("Ccedil") },
+	{ 200, FHTML_LSTR("Egrave") },
+	{ 201, FHTML_LSTR("Eacute") },
+	{ 202, FHTML_LSTR("Ecirc") },
+	{ 203, FHTML_LSTR("Euml") },
+	{ 204, FHTML_LSTR("Igrave") },
+	{ 205, FHTML_LSTR("Iacute") },
+	{ 206, FHTML_LSTR("Icirc") },
+	{ 207, FHTML_LSTR("Iuml") },
+	{ 208, FHTML_LSTR("ETH") },
+	{ 209, FHTML_LSTR("Ntilde") },
+	{ 210, FHTML_LSTR("Ograve") },
+	{ 211, FHTML_LSTR("Oacute") },
+	{ 212, FHTML_LSTR("Ocirc") },
+	{ 213, FHTML_LSTR("Otilde") },
+	{ 214, FHTML_LSTR("Ouml") },
+	{ 215, FHTML_LSTR("times") },
+	{ 216, FHTML_LSTR("Oslash") },
+	{ 217, FHTML_LSTR("Ugrave") },
+	{ 218, FHTML_LSTR("Uacute") },
+	{ 219, FHTML_LSTR("Ucirc") },
+	{ 220, FHTML_LSTR("Uuml") },
+	{ 221, FHTML_LSTR("Yacute") },
+	{ 222, FHTML_LSTR("THORN") },
+	{ 223, FHTML_LSTR("szlig") },
+	{ 224, FHTML_LSTR("agrave") },
+	{ 225, FHTML_LSTR("aacute") },
+	{ 226, FHTML_LSTR("acirc") },
+	{ 227, FHTML_LSTR("atilde") },
+	{ 228, FHTML_LSTR("auml") },
+	{ 229, FHTML_LSTR("aring") },
+	{ 230, FHTML_LSTR("aelig") },
+	{ 231, FHTML_LSTR("ccedil") },
+	{ 232, FHTML_LSTR("egrave") },
+	{ 233, FHTML_LSTR("eacute") },
+	{ 234, FHTML_LSTR("ecirc") },
+	{ 235, FHTML_LSTR("euml") },
+	{ 236, FHTML_LSTR("igrave") },
+	{ 237, FHTML_LSTR("iacute") },
+	{ 238, FHTML_LSTR("icirc") },
+	{ 239, FHTML_LSTR("iuml") },
+	{ 240, FHTML_LSTR("eth") },
+	{ 241, FHTML_LSTR("ntilde") },
+	{ 242, FHTML_LSTR("ograve") },
+	{ 243, FHTML_LSTR("oacute") },
+	{ 244, FHTML_LSTR("ocirc") },
+	{ 245, FHTML_LSTR("otilde") },
+	{ 246, FHTML_LSTR("ouml") },
+	{ 247, FHTML_LSTR("divide") },
+	{ 248, FHTML_LSTR("oslash") },
+	{ 249, FHTML_LSTR("ugrave") },
+	{ 250, FHTML_LSTR("uacute") },
+	{ 251, FHTML_LSTR("ucirc") },
+	{ 252, FHTML_LSTR("uuml") },
+	{ 253, FHTML_LSTR("yacute") },
+	{ 254, FHTML_LSTR("thorn") },
+	{ 255, FHTML_LSTR("yuml") },
+	{ 338, FHTML_LSTR("OElig") },
+	{ 339, FHTML_LSTR("oelig") },
+	{ 352, FHTML_LSTR("Scaron") },
+	{ 353, FHTML_LSTR("scaron") },
+	{ 376, FHTML_LSTR("Yuml") },
+	{ 402, FHTML_LSTR("fnof") },
+	{ 710, FHTML_LSTR("circ") },
+	{ 732, FHTML_LSTR("tilde") },
+	{ 913, FHTML_LSTR("Alpha") },
+	{ 914, FHTML_LSTR("Beta") },
+	{ 915, FHTML_LSTR("Gamma") },
+	{ 916, FHTML_LSTR("Delta") },
+	{ 917, FHTML_LSTR("Epsilon") },
+	{ 918, FHTML_LSTR("Zeta") },
+	{ 919, FHTML_LSTR("Eta") },
+	{ 920, FHTML_LSTR("Theta") },
+	{ 921, FHTML_LSTR("Iota") },
+	{ 922, FHTML_LSTR("Kappa") },
+	{ 923, FHTML_LSTR("Lambda") },
+	{ 924, FHTML_LSTR("Mu") },
+	{ 925, FHTML_LSTR("Nu") },
+	{ 926, FHTML_LSTR("Xi") },
+	{ 927, FHTML_LSTR("Omicron") },
+	{ 928, FHTML_LSTR("Pi") },
+	{ 929, FHTML_LSTR("Rho") },
+	{ 931, FHTML_LSTR("Sigma") },
+	{ 932, FHTML_LSTR("Tau") },
+	{ 933, FHTML_LSTR("Upsilon") },
+	{ 934, FHTML_LSTR("Phi") },
+	{ 935, FHTML_LSTR("Chi") },
+	{ 936, FHTML_LSTR("Psi") },
+	{ 937, FHTML_LSTR("Omega") },
+	{ 945, FHTML_LSTR("alpha") },
+	{ 946, FHTML_LSTR("beta") },
+	{ 947, FHTML_LSTR("gamma") },
+	{ 948, FHTML_LSTR("delta") },
+	{ 949, FHTML_LSTR("epsilon") },
+	{ 950, FHTML_LSTR("zeta") },
+	{ 951, FHTML_LSTR("eta") },
+	{ 952, FHTML_LSTR("theta") },
+	{ 953, FHTML_LSTR("iota") },
+	{ 954, FHTML_LSTR("kappa") },
+	{ 955, FHTML_LSTR("lambda") },
+	{ 956, FHTML_LSTR("mu") },
+	{ 957, FHTML_LSTR("nu") },
+	{ 958, FHTML_LSTR("xi") },
+	{ 959, FHTML_LSTR("omicron") },
+	{ 960, FHTML_LSTR("pi") },
+	{ 961, FHTML_LSTR("rho") },
+	{ 962, FHTML_LSTR("sigmaf") },
+	{ 963, FHTML_LSTR("sigma") },
+	{ 964, FHTML_LSTR("tau") },
+	{ 965, FHTML_LSTR("upsilon") },
+	{ 966, FHTML_LSTR("phi") },
+	{ 967, FHTML_LSTR("chi") },
+	{ 968, FHTML_LSTR("psi") },
+	{ 969, FHTML_LSTR("omega") },
+	{ 977, FHTML_LSTR("thetasym") },
+	{ 978, FHTML_LSTR("upsih") },
+	{ 982, FHTML_LSTR("piv") },
+	{ 8194, FHTML_LSTR("ensp") },
+	{ 8195, FHTML_LSTR("emsp") },
+	{ 8201, FHTML_LSTR("thinsp") },
+	{ 8204, FHTML_LSTR("zwnj") },
+	{ 8205, FHTML_LSTR("zwj") },
+	{ 8206, FHTML_LSTR("lrm") },
+	{ 8207, FHTML_LSTR("rlm") },
+	{ 8211, FHTML_LSTR("ndash") },
+	{ 8212, FHTML_LSTR("mdash") },
+	{ 8216, FHTML_LSTR("lsquo") },
+	{ 8217, FHTML_LSTR("rsquo") },
+	{ 8218, FHTML_LSTR("sbquo") },
+	{ 8220, FHTML_LSTR("ldquo") },
+	{ 8221, FHTML_LSTR("rdquo") },
+	{ 8222, FHTML_LSTR("bdquo") },
+	{ 8224, FHTML_LSTR("dagger") },
+	{ 8225, FHTML_LSTR("Dagger") },
+	{ 8226, FHTML_LSTR("bull") },
+	{ 8230, FHTML_LSTR("hellip") },
+	{ 8240, FHTML_LSTR("permil") },
+	{ 8242, FHTML_LSTR("prime") },
+	{ 8243, FHTML_LSTR("Prime") },
+	{ 8249, FHTML_LSTR("lsaquo") },
+	{ 8250, FHTML_LSTR("rsaquo") },
+	{ 8254, FHTML_LSTR("oline") },
+	{ 8260, FHTML_LSTR("frasl") },
+	{ 8364, FHTML_LSTR("euro") },
+	{ 8465, FHTML_LSTR("image") },
+	{ 8472, FHTML_LSTR("weierp") },
+	{ 8476, FHTML_LSTR("real") },
+	{ 8482, FHTML_LSTR("trade") },
+	{ 8501, FHTML_LSTR("alefsym") },
+	{ 8592, FHTML_LSTR("larr") },
+	{ 8593, FHTML_LSTR("uarr") },
+	{ 8594, FHTML_LSTR("rarr") },
+	{ 8595, FHTML_LSTR("darr") },
+	{ 8596, FHTML_LSTR("harr") },
+	{ 8629, FHTML_LSTR("crarr") },
+	{ 8656, FHTML_LSTR("lArr") },
+	{ 8657, FHTML_LSTR("uArr") },
+	{ 8658, FHTML_LSTR("rArr") },
+	{ 8659, FHTML_LSTR("dArr") },
+	{ 8660, FHTML_LSTR("hArr") },
+	{ 8704, FHTML_LSTR("forall") },
+	{ 8706, FHTML_LSTR("part") },
+	{ 8707, FHTML_LSTR("exist") },
+	{ 8709, FHTML_LSTR("empty") },
+	{ 8711, FHTML_LSTR("nabla") },
+	{ 8712, FHTML_LSTR("isin") },
+	{ 8713, FHTML_LSTR("notin") },
+	{ 8715, FHTML_LSTR("ni") },
+	{ 8719, FHTML_LSTR("prod") },
+	{ 8721, FHTML_LSTR("sum") },
+	{ 8722, FHTML_LSTR("minus") },
+	{ 8727, FHTML_LSTR("lowast") },
+	{ 8730, FHTML_LSTR("radic") },
+	{ 8733, FHTML_LSTR("prop") },
+	{ 8734, FHTML_LSTR("infin") },
+	{ 8736, FHTML_LSTR("ang") },
+	{ 8743, FHTML_LSTR("and") },
+	{ 8744, FHTML_LSTR("or") },
+	{ 8745, FHTML_LSTR("cap") },
+	{ 8746, FHTML_LSTR("cup") },
+	{ 8747, FHTML_LSTR("int") },
+	{ 8756, FHTML_LSTR("there4") },
+	{ 8764, FHTML_LSTR("sim") },
+	{ 8773, FHTML_LSTR("cong") },
+	{ 8776, FHTML_LSTR("asymp") },
+	{ 8800, FHTML_LSTR("ne") },
+	{ 8801, FHTML_LSTR("equiv") },
+	{ 8804, FHTML_LSTR("le") },
+	{ 8805, FHTML_LSTR("ge") },
+	{ 8834, FHTML_LSTR("sub") },
+	{ 8835, FHTML_LSTR("sup") },
+	{ 8836, FHTML_LSTR("nsub") },
+	{ 8838, FHTML_LSTR("sube") },
+	{ 8839, FHTML_LSTR("supe") },
+	{ 8853, FHTML_LSTR("oplus") },
+	{ 8855, FHTML_LSTR("otimes") },
+	{ 8869, FHTML_LSTR("perp") },
+	{ 8901, FHTML_LSTR("sdot") },
+	{ 8968, FHTML_LSTR("lceil") },
+	{ 8969, FHTML_LSTR("rceil") },
+	{ 8970, FHTML_LSTR("lfloor") },
+	{ 8971, FHTML_LSTR("rfloor") },
+	{ 9001, FHTML_LSTR("lang") },
+	{ 9002, FHTML_LSTR("rang") },
+	{ 9674, FHTML_LSTR("loz") },
+	{ 9824, FHTML_LSTR("spades") },
+	{ 9827, FHTML_LSTR("clubs") },
+	{ 9829, FHTML_LSTR("hearts") },
+	{ 9830, FHTML_LSTR("diams") },
+    { 0, 0 }
+};
+
+
+#if defined(XALAN_LSTRSUPPORT) && !defined(XALAN_XALANDOMCHAR_USHORT_MISMATCH)
+#else
+
+FormatterToHTML::EntityPair		FormatterToHTML::s_entities[sizeof(theLocalEntities) / sizeof(theLocalEntities[0])];
+
+void
+initializeEntities(
+			const LocalEntityPair			theLocalEntities[],
+			FormatterToHTML::EntityPair		theEntities[])
+{
+	const LocalEntityPair*			theCurrentLocalEntity = theLocalEntities;
+	FormatterToHTML::EntityPair*	theCurrentEntity = theEntities;
+
+#if defined(XALAN_NON_ASCII_PLATFORM)
+	XalanDOMCharVectorType			theTempVector;
+#endif
+
+	while(theCurrentLocalEntity->m_char != 0)
+	{
+		theCurrentEntity->m_char = theCurrentLocalEntity->m_char;
+
+		const XalanDOMString::size_type		theLength =
+			XalanDOMString::length(theCurrentLocalEntity->m_string);
+
+		assert(theLength <= FormatterToHTML::EntityPair::eMaxLength);
+
+#if defined(XALAN_NON_ASCII_PLATFORM)
+		theTempVector.clear();
+
+		TranscodeFromLocalCodePage(
+				theCurrentLocalEntity->m_string,
+				theTempVector,
+				false);
+		assert(theTempVector.size() == theLength);
+
+		const XalanDOMChar* const	theString = &theTempVector[0];
+#else
+		const char* const	theString = theCurrentLocalEntity->m_string;
+#endif
+
+		for(XalanDOMString::size_type i = 0; i < theLength; ++i)
+		{
+			theCurrentEntity->m_string[i] = theString[i];
+		}
+
+		++theCurrentLocalEntity;
+		++theCurrentEntity;
+	}
+}
+
+#endif
+
+const unsigned long		FormatterToHTML::s_entitiesSize =
+				sizeof(s_entities) / sizeof (s_entities[0]);
+
+
 
 void
 FormatterToHTML::initialize()
 {
 	// Make sure there's nothing there first...
 	::s_elementFlags.reset();
-	::s_xalanHTMLEntities.reset();
 	::s_dummyDesc.reset();
 
 	// New everything in a local so that an exception will clean up everything...
 	XalanAutoPtr<ElementFlagsMapType>			theElementFlags(new ElementFlagsMapType);
-	XalanAutoPtr<XalanEntityReferenceMapType>	theHTMLEntities(new XalanEntityReferenceMapType);
 	XalanAutoPtr<FormatterToHTML::ElemDesc>		theDummyDesc(new FormatterToHTML::ElemDesc(FormatterToHTML::ElemDesc::BLOCK));
 
 	// Do initialization...
 	initializeElementFlagsMap(*theElementFlags.get());
-	initializeXalanEntityReferenceMap(*theHTMLEntities.get());
 
 	::s_doctypeHeaderStartString = XALAN_STATIC_UCODE_STRING("<!DOCTYPE HTML");
 
@@ -2147,14 +2142,16 @@ FormatterToHTML::initialize()
 
 	// Everythings cool, so let the globals own the objects...
 	::s_elementFlags = theElementFlags;
-	::s_xalanHTMLEntities = theHTMLEntities;
 	::s_dummyDesc = theDummyDesc;
 
 	// Update the class members...
 	s_elementFlags = ::s_elementFlags.get();
-	s_xalanHTMLEntities = ::s_xalanHTMLEntities.get();
 	s_dummyDesc = ::s_dummyDesc.get();
-	::s_xalanHTMLEntitiesIteratorEnd = ::s_xalanHTMLEntities->end();
+
+#if defined(XALAN_LSTRSUPPORT) && !defined(XALAN_XALANDOMCHAR_USHORT_MISMATCH)
+#else
+	initializeEntities(theLocalEntities, FormatterToHTML::s_entities);
+#endif
 }
 
 
@@ -2163,11 +2160,9 @@ void
 FormatterToHTML::terminate()
 {
 	s_elementFlags = 0;
-	s_xalanHTMLEntities = 0;
 	s_dummyDesc = 0;
 
 	::s_elementFlags.reset();
-	::s_xalanHTMLEntities.reset();
 	::s_dummyDesc.reset();
 
 	releaseMemory(::s_doctypeHeaderStartString);
