@@ -79,6 +79,7 @@
 
 
 
+#include "NullTreeWalker.hpp"
 #include "XercesAttrBridge.hpp"
 #include "XercesCommentBridge.hpp"
 #include "XercesCDATASectionBridge.hpp"
@@ -97,7 +98,9 @@
 
 
 
-XercesDocumentBridge::XercesDocumentBridge(const DOM_Document&	theXercesDocument) :
+XercesDocumentBridge::XercesDocumentBridge(
+			const DOM_Document&		theXercesDocument,
+			bool					buildBridgeNodes) :
 	XalanDocument(),
 	m_xercesDocument(theXercesDocument),
 	m_navigator(this),
@@ -128,6 +131,32 @@ XercesDocumentBridge::XercesDocumentBridge(const DOM_Document&	theXercesDocument
 		m_nodeMap.addAssociation(theDoctype, m_doctype, false);
 
 		m_nodes.insert(m_doctype);
+	}
+
+	if (buildBridgeNodes == true)
+	{
+		// OK, let's build the nodes.  This makes things
+		// thread-safe, so the document can be shared...
+
+		// First, build any children of the document...
+		const XalanNode*	theChild = getFirstChild();
+
+		while(theChild != 0)
+		{
+			theChild = theChild->getNextSibling();
+		}
+
+		// OK, now walk everything below the document
+		// element...
+		const XalanNode* const	theDocumentElement =
+			getDocumentElement();
+
+		if (theDocumentElement != 0)
+		{
+			NullTreeWalker	theTreeWalker;
+
+			theTreeWalker.traverse(theDocumentElement, this);
+		}
 	}
 }
 

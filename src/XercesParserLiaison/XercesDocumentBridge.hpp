@@ -104,7 +104,23 @@ public:
 
 	friend class XercesBridgeNavigator;
 
-	XercesDocumentBridge(const DOM_Document&	theXercesDocument);
+	/**
+	 *
+	 * Constructor for XercesDocumentBridge.
+	 *
+	 * If the document will be shared amongst multiple threads of execution,
+	 * the parameter buildBridgeNodes must be true.  Otherwise, the bridge
+	 * nodes will be built on demand, a process which is not synchronized.
+	 * This could cause serious problems if multiple threads tried to visit
+	 * an unbuilt node at the same time.
+	 *
+	 * @param theXercesDocument The Xerces document to bridge
+	 * @param buildBridgeNodes If true, all of the bridge nodes will be built during construction.
+	 *
+	 */
+	XercesDocumentBridge(
+			const DOM_Document&		theXercesDocument,
+			bool					buildBridgeNodes = true);
 
 	virtual
 	~XercesDocumentBridge();
