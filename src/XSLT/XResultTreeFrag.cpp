@@ -340,12 +340,9 @@ XResultTreeFrag::set(ResultTreeFragBase*	theValue)
 void
 XResultTreeFrag::dereferenced()
 {
-	if (m_executionContext != 0)
-	{
-		// We're dead after we call this...
-		m_executionContext->returnXResultTreeFrag(this);
-	}
-	else
+	if (m_executionContext == 0 ||
+		// We're dead after we call this, if it returns true;
+		m_executionContext->returnXResultTreeFrag(this) == false)
 	{
 		delete m_value;
 

@@ -110,6 +110,13 @@
 
 
 
+//#define XALAN_VQ_SPECIAL_TRACE
+#if defined(XALAN_VQ_SPECIAL_TRACE)
+#include "C:/Program Files/Rational/Quantify/pure.h"
+#endif
+
+
+
 StylesheetExecutionContextDefault::XalanNumberFormatFactory			StylesheetExecutionContextDefault::s_defaultXalanNumberFormatFactory;
 
 StylesheetExecutionContextDefault::XalanNumberFormatFactory*		StylesheetExecutionContextDefault::s_xalanNumberFormatFactory =
@@ -1127,15 +1134,17 @@ StylesheetExecutionContextDefault::returnXResultTreeFrag(XResultTreeFrag*	theXRe
 {
 	assert(theXResultTreeFrag != 0);
 
-	ResultTreeFragBase* const	theResultTreeFragBase =
-		theXResultTreeFrag->release();
-
-	if (m_xresultTreeFragAllocator.destroy(theXResultTreeFrag) == false)
+	if (m_xresultTreeFragAllocator.ownsObject(theXResultTreeFrag) == false)
 	{
 		return false;
 	}
 	else
 	{
+		ResultTreeFragBase* const	theResultTreeFragBase =
+			theXResultTreeFrag->release();
+
+		m_xresultTreeFragAllocator.destroy(theXResultTreeFrag);
+
 		ResultTreeFrag* const	theResultTreeFrag =
 #if defined(XALAN_OLD_STYLE_CASTS)
 			(ResultTreeFrag*)theResultTreeFragBase;
