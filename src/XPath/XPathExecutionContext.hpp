@@ -197,44 +197,6 @@ public:
 	isIgnorableWhitespace(const XalanText&	node) const = 0;
 
 	/**
-	 * Retrieve namespace corresponding to a DOM node.
-	 * 
-	 * @param n DOM node queried
-	 * @return namespace string corresponding to 'n'
-	 */
-	virtual const XalanDOMString&
-	getNamespaceOfNode(const XalanNode&		n) const = 0;
-
-	/**
-	 * Retrieve the name of the node, taking into
-	 * account the differences between the DOM and
-	 * XSLT data models.
-	 * 
-	 * @param node	DOM node whose name is returned
-	 * @return name of the node
-	 */
-	virtual const XalanDOMString&
-	getNameOfNode(const XalanNode&	n) const = 0;
-
-	/**
-	 * Returns the local name of the given node.
-	 * 
-	 * @param n node queried
-	 * @return local name string corresponding to 'n'
-	 */
-	virtual const XalanDOMString&
-	getLocalNameOfNode(const XalanNode&		n) const = 0;
-
-	/**
-	 * Returns the parent of the given node.
-	 * 
-	 * @param n DOM node queried
-	 * @return parent node for 'n'
-	 */
-	virtual XalanNode*
-	getParentOfNode(const XalanNode&	n) const = 0;
-
-	/**
 	 * Determine if a node is after another node, in document order.
 	 *
 	 * @param node1 The first node
@@ -247,27 +209,13 @@ public:
 			const XalanNode&	node2) const = 0;
 
 	/**
-	 * Get node data recursively.
+	 * Retrieve namespace corresponding to a DOM node
 	 * 
-	 * @param n DOM node queried
-	 * @param s string to which the node's data will be appended.
+	 * @param theNode DOM node whose namespace is queried
+	 * @return namespace corresponding to 'theNode'
 	 */
-	virtual void
-	getNodeData(
-			const XalanNode&	n,
-			XalanDOMString&		s) const = 0;
-
-	/**
-	 * Given a valid element id, return the corresponding element.
-	 *
-	 * @param id  string representing ID
-	 * @param doc document to search
-	 * @return element for ID
-	 */
-	virtual XalanElement*
-	getElementByID(
-			const XalanDOMString&	id,
-			const XalanDocument&	doc) const = 0;
+	virtual const XalanDOMString&
+	getNamespaceOfNode(const XalanNode&	theNode) const = 0;
 
 	/**
 	 * Retrieve node list for current context.

@@ -125,56 +125,12 @@ XPathSupportDefault::getNamespaceOfNode(const XalanNode&	n) const
 
 
 
-const XalanDOMString&
-XPathSupportDefault::getNameOfNode(const XalanNode&		n) const
-{
-	return DOMServices::getNameOfNode(n);
-}
-
-
-
-const XalanDOMString&
-XPathSupportDefault::getLocalNameOfNode(const XalanNode&	n) const
-{
-	return DOMServices::getLocalNameOfNode(n);
-}
-
-
-
-void
-XPathSupportDefault::getNodeData(
-			const XalanNode&	n,
-			XalanDOMString&		s) const
-{
-	DOMServices::getNodeData(n, s);
-}
-
-
-
-XalanNode*
-XPathSupportDefault::getParentOfNode(const XalanNode&	node) const
-{
-	return DOMServices::getParentOfNode(node);
-}
-
-
-
 bool
 XPathSupportDefault::isNodeAfter(
 			const XalanNode&	node1,
 			const XalanNode&	node2) const
 {
 	return DOMServices::isNodeAfter(node1, node2);
-}
-
-
-
-XalanElement*
-XPathSupportDefault::getElementByID(
-			const XalanDOMString&	id,
-			const XalanDocument&	doc) const
-{
-	return doc.getElementById(id);
 }
 
 

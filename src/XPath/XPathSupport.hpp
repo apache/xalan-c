@@ -113,56 +113,6 @@ public:
 			const XalanElement&		namespaceContext) const = 0;
 
 	/**
-	 * Returns the namespace of the given node.
-	 *
-	 * @param node	DOM node whose namespace is returned
-	 * @return namespace of node
-	 */
-	virtual const XalanDOMString&
-	getNamespaceOfNode(const XalanNode&		n) const = 0;
-
-	/**
-	 * Retrieve the name of the node, taking into
-	 * account the differences between the DOM and
-	 * XSLT data models.
-	 * 
-	 * @param node	DOM node whose name is returned
-	 * @return name of the node
-	 */
-	virtual const XalanDOMString&
-	getNameOfNode(const XalanNode&	n) const = 0;
-
-	/**
-	 * Retrieve local name of node
-	 * 
-	 * @param node	DOM node whose name is returned
-	 * @return name of node without namespace
-	 */
-	virtual const XalanDOMString&
-	getLocalNameOfNode(const XalanNode&		n) const = 0;
-
-	/**
-	 * Get node data recursively.
-	 * 
-	 * @param n DOM node queried
-	 * @param s string to which the node's data will be appended.
-	 */
-	virtual void
-	getNodeData(
-			const XalanNode&	n,
-			XalanDOMString&		s) const = 0;
-
-	/**
-	 * Retrieve the parent of a node. This function has to be implemented,
-	 * because the DOM WG decided that attributes don't have parents.
-	 *
-	 * @param node child node
-	 * @return parent node
-	 */
-	virtual XalanNode*
-	getParentOfNode(const XalanNode&	n) const = 0;
-
-	/**
 	 * Determine if a node is after another node, in document order.
 	 *
 	 * @param node1 The first node
@@ -175,16 +125,13 @@ public:
 			const XalanNode&	node2) const = 0;
 
 	/**
-	 * Given a valid element id, return the corresponding element.
-	 *
-	 * @param id  string representing ID
-	 * @param doc document to search
-	 * @return element for ID
+	 * Retrieve namespace corresponding to a DOM node
+	 * 
+	 * @param theNode DOM node whose namespace is queried
+	 * @return namespace corresponding to 'theNode'
 	 */
-	virtual XalanElement*
-	getElementByID(
-			const XalanDOMString&	id,
-			const XalanDocument&	doc) const = 0;
+	virtual const XalanDOMString&
+	getNamespaceOfNode(const XalanNode&	theNode) const = 0;
 
 	/**
 	 * Set whether or not the liaison attempts to expand namespaces.	Used 

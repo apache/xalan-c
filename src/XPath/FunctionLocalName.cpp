@@ -58,6 +58,10 @@
 
 
 
+#include <DOMSupport/DOMServices.hpp>
+
+
+
 #include "XObjectFactory.hpp"
 
 
@@ -95,9 +99,9 @@ FunctionLocalName::execute(
 
 XObjectPtr
 FunctionLocalName::execute(
-		XPathExecutionContext&			executionContext,
-		XalanNode*						context,			
-		const XObjectPtr					arg1)
+		XPathExecutionContext&	executionContext,
+		XalanNode*				/* context */,			
+		const XObjectPtr		arg1)
 {
 	assert(arg1.null() == false);	
 
@@ -170,7 +174,7 @@ FunctionLocalName::getLocalName(
 		theType == XalanNode::ELEMENT_NODE ||
 		theType == XalanNode::PROCESSING_INSTRUCTION_NODE)
 	{
-		return executionContext.getXObjectFactory().createStringReference(executionContext.getLocalNameOfNode(node));
+		return executionContext.getXObjectFactory().createStringReference(DOMServices::getLocalNameOfNode(node));
 	}
 	else
 	{

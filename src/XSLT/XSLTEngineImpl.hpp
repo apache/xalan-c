@@ -963,18 +963,6 @@ public:
 			XPathExecutionContext&	executionContext);
 
 	/**
-	 * Given a valid element id, return the corresponding element.
-	 *
-	 * @param id  string representing ID
-	 * @param doc document to search
-	 * @return element for ID
-	 */
-	XalanElement*
-	getElementByID(
-			const XalanDOMString&	id,
-			const XalanDocument& 	doc) const;
-
-	/**
 	 * Copy an attribute to the created output element, executing attribute
 	 * templates as need be, and processing the 'xsl:use' attribute.
 	 *

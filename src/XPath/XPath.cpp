@@ -733,7 +733,7 @@ XPath::notequals(
 	const XObjectPtr	expr2(executeMore(context, expr2Pos, executionContext));
 	assert(expr2.get() != 0);
 
-	return executionContext.getXObjectFactory().createBoolean(*expr1.get() != *expr2.get());
+	return executionContext.getXObjectFactory().createBoolean(expr1->notEquals(*expr2.get(), executionContext));
 }
 
 
@@ -754,7 +754,7 @@ XPath::equals(
 	const XObjectPtr	expr2(executeMore(context, expr2Pos, executionContext));
 	assert(expr2.get() != 0);
 
-	return executionContext.getXObjectFactory().createBoolean(*expr1.get() == *expr2.get());
+	return executionContext.getXObjectFactory().createBoolean(expr1->equals(*expr2.get(), executionContext));
 }
 
 
@@ -775,7 +775,7 @@ XPath::lte(
 	const XObjectPtr	expr2(executeMore(context, expr2Pos, executionContext));
 	assert(expr2.get() != 0);
 
-	return executionContext.getXObjectFactory().createBoolean(*expr1.get() <= *expr2.get());
+	return executionContext.getXObjectFactory().createBoolean(expr1->lessThanOrEquals(*expr2.get(), executionContext));
 }
 
 
@@ -796,7 +796,7 @@ XPath::lt(
 	const XObjectPtr	expr2(executeMore(context, expr2Pos, executionContext));
 	assert(expr2.get() != 0);
 
-	return executionContext.getXObjectFactory().createBoolean(*expr1.get() < *expr2.get());
+	return executionContext.getXObjectFactory().createBoolean(expr1->lessThan(*expr2.get(), executionContext));
 }
 
 
@@ -817,7 +817,7 @@ XPath::gte(
 	const XObjectPtr	expr2(executeMore(context, expr2Pos, executionContext));
 	assert(expr2.get() != 0);
 
-	return executionContext.getXObjectFactory().createBoolean(*expr1.get() >= *expr2.get());
+	return executionContext.getXObjectFactory().createBoolean(expr1->greaterThanOrEquals(*expr2.get(), executionContext));
 }
 
 
@@ -838,7 +838,7 @@ XPath::gt(
 	const XObjectPtr	expr2(executeMore(context, expr2Pos, executionContext));
 	assert(expr2.get() != 0);
 
-	return executionContext.getXObjectFactory().createBoolean(*expr1.get() > *expr2.get());
+	return executionContext.getXObjectFactory().createBoolean(expr1->greaterThan(*expr2.get(), executionContext));
 }
 
 

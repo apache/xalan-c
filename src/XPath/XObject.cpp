@@ -59,10 +59,6 @@
 
 
 
-//#include <stdexcept>
-
-
-
 #include <XalanDOM/XalanNode.hpp>
 
 
@@ -77,6 +73,7 @@
 
 #include "NodeRefList.hpp"
 #include "XObjectFactory.hpp"
+#include "XPathExecutionContext.hpp"
 
 
 
@@ -209,14 +206,15 @@ getStringFromNode(
 struct
 getStringFromNodeFunction
 {
-	getStringFromNodeFunction()
+	getStringFromNodeFunction(XPathExecutionContext&	executionContext) :
+		m_executionContext(executionContext)
 	{
 	}
 
 	const XalanDOMString
 	operator()(const XalanNode&		theNode) const
 	{
-		XalanDOMString	theString;
+		XPathExecutionContext::GetAndReleaseCachedString	theString(m_executionContext);
 
 		getStringFromNode(theNode, theString);
 
@@ -230,36 +228,19 @@ getStringFromNodeFunction
 	{
 		getStringFromNode(theNode, theString);
 	}
+
+private:
+
+	XPathExecutionContext&	m_executionContext;
 };
-
-
-
-double
-getNumberFromNode(const XalanNode&	theNode)
-{
-	XalanDOMString	theString;
-
-	getStringFromNode(theNode, theString);
-
-	return DoubleSupport::toDouble(theString);
-}
-
-
-
-void
-getNumberFromNode(
-			const XalanNode&	theNode,
-			double&				theNumber)
-{
-	theNumber = getNumberFromNode(theNode);
-}
 
 
 
 struct
 getNumberFromNodeFunction
 {
-	getNumberFromNodeFunction()
+	getNumberFromNodeFunction(XPathExecutionContext&	executionContext) :
+		m_executionContext(executionContext)
 	{
 	}
 
@@ -276,8 +257,29 @@ getNumberFromNodeFunction
 	{
 		getNumberFromNode(theNode, theNumber);
 	}
-};
 
+private:
+
+	double
+	getNumberFromNode(const XalanNode&	theNode) const
+	{
+		XPathExecutionContext::GetAndReleaseCachedString	theString(m_executionContext);
+
+		getStringFromNode(theNode, theString);
+
+		return DoubleSupport::toDouble(theString);
+	}
+
+	void
+	getNumberFromNode(
+			const XalanNode&	theNode,
+			double&				theNumber) const
+	{
+		theNumber = getNumberFromNode(theNode);
+	}
+
+	XPathExecutionContext&	m_executionContext;
+};
 
 
 
@@ -287,7 +289,8 @@ doCompareNodeSets(
 			const NodeRefListBase&	theLHSNodeSet,
 			const NodeRefListBase&	theRHSNodeSet,
 			const TypeFunction&		theTypeFunction,
-			const CompareFunction&	theCompareFunction)
+			const CompareFunction&	theCompareFunction,
+			XPathExecutionContext&	executionContext)
 {
 	// From http://www.w3.org/TR/xpath: 
 	// If both objects to be compared are node-sets, then the comparison 
@@ -311,16 +314,16 @@ doCompareNodeSets(
 		const XalanNode* const	theLHSNode = theLHSNodeSet.item(i);
 		assert(theLHSNode != 0);
 
-		XalanDOMString	s1;
+		XPathExecutionContext::GetAndReleaseCachedString	s1(executionContext);
 
 		theTypeFunction(*theLHSNode, s1);
+
+		XPathExecutionContext::GetAndReleaseCachedString	s2(executionContext);
 
 		for(unsigned int k = 0; k < len2 && theResult == false; k++)
 		{
 			const XalanNode* const	theRHSNode = theRHSNodeSet.item(k);
 			assert(theRHSNode != 0);
-
-			XalanDOMString	s2;
 
 			theTypeFunction(*theRHSNode, s2);
 
@@ -328,6 +331,8 @@ doCompareNodeSets(
 			{
 				theResult = true;
 			}
+
+			clear(s2);
 		}
 	}
 
@@ -336,12 +341,47 @@ doCompareNodeSets(
 
 
 
-template<class CompareFunction, class TypeFunction, class Type>
+template<class CompareFunction, class StringFunction>
 bool
-doCompare(
+doCompareString(
 			const NodeRefListBase&	theLHSNodeSet,
-			const TypeFunction&		theTypeFunction,
-			const Type&				theRHS,
+			const StringFunction&	theStringFunction,
+			const XalanDOMString&	theRHS,
+			const CompareFunction&	theCompareFunction,
+			XPathExecutionContext&	executionContext)
+{
+	bool				theResult = false;
+
+	const unsigned int	len1 = theLHSNodeSet.getLength();
+
+	XPathExecutionContext::GetAndReleaseCachedString	theLHS(executionContext);
+
+	for(unsigned int i = 0; i < len1 && theResult == false; i++)
+	{
+		const XalanNode* const	theLHSNode = theLHSNodeSet.item(i);
+		assert(theLHSNode != 0);
+
+		theStringFunction(*theLHSNode, theLHS);
+
+		if (theCompareFunction(theLHS, theRHS) == true)
+		{
+			theResult = true;
+		}
+
+		clear(theLHS);
+	}
+
+	return theResult;
+}
+
+
+
+template<class CompareFunction, class NumberFunction>
+bool
+doCompareNumber(
+			const NodeRefListBase&	theLHSNodeSet,
+			const NumberFunction&	theNumberFunction,
+			const double			theRHS,
 			const CompareFunction&	theCompareFunction)
 {
 	bool				theResult = false;
@@ -353,9 +393,7 @@ doCompare(
 		const XalanNode* const	theLHSNode = theLHSNodeSet.item(i);
 		assert(theLHSNode != 0);
 
-		Type	theLHS;
-
-		theTypeFunction(*theLHSNode, theLHS);
+		const double	theLHS = theNumberFunction(*theLHSNode);
 
 		if (theCompareFunction(theLHS, theRHS) == true)
 		{
@@ -368,572 +406,219 @@ doCompare(
 
 
 
+template<class StringCompareFunction, class NumberCompareFunction>
 bool
+compareNodeSets(
+			const XObject&					theLHS,
+			const XObject&					theRHS,
+			XObject::eObjectType			theRHSType,
+			const StringCompareFunction&	theStringCompareFunction,
+			const NumberCompareFunction&	theNumberCompareFunction,
+			XPathExecutionContext&			executionContext)
+{
+	bool	theResult = false;
+
+	if(theRHSType == XObject::eTypeNodeSet)
+	{
+		// Compare as node sets...
+		theResult = doCompareNodeSets(
+				theLHS.nodeset(),
+				theRHS.nodeset(),
+				getStringFromNodeFunction(executionContext),
+				theStringCompareFunction,
+				executionContext);
+
+	}
+	else if(theRHSType == XObject::eTypeBoolean)
+	{
+	  // From http://www.w3.org/TR/xpath: 
+	  // If one object to be compared is a node-set and the other is a boolean, 
+	  // then the comparison will be true if and only if the result of 
+	  // performing the comparison on the boolean and on the result of 
+	  // converting the node-set to a boolean using the boolean function 
+	  // is true.
+		const double	num1 = theLHS.boolean() == true ? 1.0 : 0.0;
+
+		theResult = theNumberCompareFunction(num1, theRHS.num());
+	}
+	else if(theRHSType == XObject::eTypeNumber)
+	{
+		// From http://www.w3.org/TR/xpath: 
+		// If one object to be compared is a node-set and the other is a number, 
+		// then the comparison will be true if and only if there is a 
+		// node in the node-set such that the result of performing the 
+		// comparison on the number to be compared and on the result of 
+		// converting the string-value of that node to a number using 
+		// the number function is true. 
+
+		theResult = doCompareNumber(
+				theLHS.nodeset(),
+				getNumberFromNodeFunction(executionContext),
+				theRHS.num(),
+				theNumberCompareFunction);
+	}
+	else if(theRHSType == XObject::eTypeResultTreeFrag)
+	{
+		// hmmm... 
+		const double	theRHSNumber = theRHS.num();
+
+		if(DoubleSupport::isNaN(theRHSNumber) == false)
+		{
+			// Compare as number...
+			theResult = doCompareNumber(
+					theLHS.nodeset(),
+					getNumberFromNodeFunction(executionContext),
+					theRHS.num(),
+					theNumberCompareFunction);
+		}
+		else
+		{
+			// Compare as string...
+			theResult = doCompareString(
+					theLHS.nodeset(),
+					getStringFromNodeFunction(executionContext),
+					theRHS.str(),
+					theStringCompareFunction,
+					executionContext);
+		}
+	}
+	else if(theRHSType == XObject::eTypeString)
+	{
+		// From http://www.w3.org/TR/xpath: 
+		// If one object to be compared is a node-set and the other is a 
+		// string, then the comparison will be true if and only if there 
+		// is a node in the node-set such that the result of performing 
+		// the comparison on the string-value of the node and the other 
+		// string is true. 
+		theResult = doCompareString(
+				theLHS.nodeset(),
+				getStringFromNodeFunction(executionContext),
+				theRHS.str(),
+				theStringCompareFunction,
+				executionContext);
+	}
+	else
+	{
+		assert(false);
+	}
+
+	return theResult;
+}
+
+
+
+inline bool
 equalNodeSet(
 			const XObject&			theLHS,
 			const XObject&			theRHS,
-			XObject::eObjectType	theRHSType)
+			XObject::eObjectType	theRHSType,
+			XPathExecutionContext&	executionContext)
 {
-	bool	theResult = false;
-
-	if(theRHSType == XObject::eTypeNodeSet)
-	{
-		// Compare as node sets...
-		theResult = doCompareNodeSets(
-				theLHS.nodeset(),
-				theRHS.nodeset(),
-				getStringFromNodeFunction(),
-				DOMStringEqualsFunction());
-
-	}
-	else if(theRHSType == XObject::eTypeBoolean)
-	{
-	  // From http://www.w3.org/TR/xpath: 
-	  // If one object to be compared is a node-set and the other is a boolean, 
-	  // then the comparison will be true if and only if the result of 
-	  // performing the comparison on the boolean and on the result of 
-	  // converting the node-set to a boolean using the boolean function 
-	  // is true.
-		const double	num1 = theLHS.boolean() == true ? 1.0 : 0.0;
-
-		theResult = DoubleSupport::equal(num1, theRHS.num());
-	}
-	else if(theRHSType == XObject::eTypeNumber)
-	{
-		// From http://www.w3.org/TR/xpath: 
-		// If one object to be compared is a node-set and the other is a number, 
-		// then the comparison will be true if and only if there is a 
-		// node in the node-set such that the result of performing the 
-		// comparison on the number to be compared and on the result of 
-		// converting the string-value of that node to a number using 
-		// the number function is true. 
-
-		theResult = doCompare(
-				theLHS.nodeset(),
-				getNumberFromNodeFunction(),
-				theRHS.num(),
-				DoubleSupport::equalFunction());
-	}
-	else if(theRHSType == XObject::eTypeResultTreeFrag)
-	{
-		// hmmm... 
-		const double	theRHSNumber = theRHS.num();
-
-		if(DoubleSupport::isNaN(theRHSNumber) == false)
-		{
-			// Compare as number...
-			theResult = doCompare(
-					theLHS.nodeset(),
-					getNumberFromNodeFunction(),
-					theRHS.num(),
-					DoubleSupport::equalFunction());
-		}
-		else
-		{
-			// Compare as string...
-			theResult = doCompare(
-					theLHS.nodeset(),
-					getStringFromNodeFunction(),
-					theRHS.str(),
-					DOMStringEqualsFunction());
-		}
-	}
-	else if(theRHSType == XObject::eTypeString)
-	{
-		// From http://www.w3.org/TR/xpath: 
-		// If one object to be compared is a node-set and the other is a 
-		// string, then the comparison will be true if and only if there 
-		// is a node in the node-set such that the result of performing 
-		// the comparison on the string-value of the node and the other 
-		// string is true. 
-		theResult = doCompare(
-				theLHS.nodeset(),
-				getStringFromNodeFunction(),
-				theRHS.str(),
-				DOMStringEqualsFunction());
-	}
-	else
-	{
-		assert(false);
-	}
-
-	return theResult;
+	return compareNodeSets(
+				theLHS,
+				theRHS,
+				theRHSType,
+				DOMStringEqualsFunction(),
+				DoubleSupport::equalFunction(),
+				executionContext);
 }
 
 
 
-bool
+inline bool
 notEqualNodeSet(
 			const XObject&			theLHS,
 			const XObject&			theRHS,
-			XObject::eObjectType	theRHSType)
+			XObject::eObjectType	theRHSType,
+			XPathExecutionContext&	executionContext)
 {
-	bool	theResult = false;
-
-	if(theRHSType == XObject::eTypeNodeSet)
-	{
-		// Compare as node sets...
-		theResult = doCompareNodeSets(
-				theLHS.nodeset(),
-				theRHS.nodeset(),
-				getStringFromNodeFunction(),
-				DOMStringNotEqualsFunction());
-
-	}
-	else if(theRHSType == XObject::eTypeBoolean)
-	{
-	  // From http://www.w3.org/TR/xpath: 
-	  // If one object to be compared is a node-set and the other is a boolean, 
-	  // then the comparison will be true if and only if the result of 
-	  // performing the comparison on the boolean and on the result of 
-	  // converting the node-set to a boolean using the boolean function 
-	  // is true.
-		const double	num1 = theLHS.boolean() == true ? 1.0 : 0.0;
-
-		theResult = DoubleSupport::notEqual(num1, theRHS.num());
-	}
-	else if(theRHSType == XObject::eTypeNumber)
-	{
-		// From http://www.w3.org/TR/xpath: 
-		// If one object to be compared is a node-set and the other is a number, 
-		// then the comparison will be true if and only if there is a 
-		// node in the node-set such that the result of performing the 
-		// comparison on the number to be compared and on the result of 
-		// converting the string-value of that node to a number using 
-		// the number function is true. 
-
-		theResult = doCompare(
-				theLHS.nodeset(),
-				getNumberFromNodeFunction(),
-				theRHS.num(),
-				DoubleSupport::notEqualFunction());
-	}
-	else if(theRHSType == XObject::eTypeResultTreeFrag)
-	{
-		// hmmm... 
-		const double	theRHSNumber = theRHS.num();
-
-		if(DoubleSupport::isNaN(theRHSNumber) == false)
-		{
-			// Compare as number...
-			theResult = doCompare(
-					theLHS.nodeset(),
-					getNumberFromNodeFunction(),
-					theRHS.num(),
-					DoubleSupport::notEqualFunction());
-		}
-		else
-		{
-			// Compare as string...
-			theResult = doCompare(
-					theLHS.nodeset(),
-					getStringFromNodeFunction(),
-					theRHS.str(),
-					DOMStringNotEqualsFunction());
-		}
-	}
-	else if(theRHSType == XObject::eTypeString)
-	{
-		// From http://www.w3.org/TR/xpath: 
-		// If one object to be compared is a node-set and the other is a 
-		// string, then the comparison will be true if and only if there 
-		// is a node in the node-set such that the result of performing 
-		// the comparison on the string-value of the node and the other 
-		// string is true. 
-		theResult = doCompare(
-				theLHS.nodeset(),
-				getStringFromNodeFunction(),
-				theRHS.str(),
-				DOMStringNotEqualsFunction());
-	}
-	else
-	{
-		assert(false);
-	}
-
-	return theResult;
+	return compareNodeSets(
+				theLHS,
+				theRHS,
+				theRHSType,
+				DOMStringNotEqualsFunction(),
+				DoubleSupport::notEqualFunction(),
+				executionContext);
 }
 
 
 
-bool
+inline bool
 lessThanNodeSet(
 			const XObject&			theLHS,
 			const XObject&			theRHS,
-			XObject::eObjectType	theRHSType)
+			XObject::eObjectType	theRHSType,
+			XPathExecutionContext&	executionContext)
 {
-	bool	theResult = false;
-
-	if(theRHSType == XObject::eTypeNodeSet)
-	{
-		// Compare as node sets...
-		theResult = doCompareNodeSets(
-				theLHS.nodeset(),
-				theRHS.nodeset(),
-				getStringFromNodeFunction(),
-				DOMStringLessThanFunction());
-
-	}
-	else if(theRHSType == XObject::eTypeBoolean)
-	{
-	  // From http://www.w3.org/TR/xpath: 
-	  // If one object to be compared is a node-set and the other is a boolean, 
-	  // then the comparison will be true if and only if the result of 
-	  // performing the comparison on the boolean and on the result of 
-	  // converting the node-set to a boolean using the boolean function 
-	  // is true.
-		const double	num1 = theLHS.boolean() == true ? 1.0 : 0.0;
-
-		theResult = DoubleSupport::lessThan(num1, theRHS.num());
-	}
-	else if(theRHSType == XObject::eTypeNumber)
-	{
-		// From http://www.w3.org/TR/xpath: 
-		// If one object to be compared is a node-set and the other is a number, 
-		// then the comparison will be true if and only if there is a 
-		// node in the node-set such that the result of performing the 
-		// comparison on the number to be compared and on the result of 
-		// converting the string-value of that node to a number using 
-		// the number function is true. 
-
-		theResult = doCompare(
-				theLHS.nodeset(),
-				getNumberFromNodeFunction(),
-				theRHS.num(),
-				DoubleSupport::lessThanFunction());
-	}
-	else if(theRHSType == XObject::eTypeResultTreeFrag)
-	{
-		// hmmm... 
-		const double	theRHSNumber = theRHS.num();
-
-		if(DoubleSupport::isNaN(theRHSNumber) == false)
-		{
-			// Compare as number...
-			theResult = doCompare(
-					theLHS.nodeset(),
-					getNumberFromNodeFunction(),
-					theRHS.num(),
-					DoubleSupport::lessThanFunction());
-		}
-		else
-		{
-			// Compare as string...
-			theResult = doCompare(
-					theLHS.nodeset(),
-					getStringFromNodeFunction(),
-					theRHS.str(),
-					DOMStringLessThanFunction());
-		}
-	}
-	else if(theRHSType == XObject::eTypeString)
-	{
-		// From http://www.w3.org/TR/xpath: 
-		// If one object to be compared is a node-set and the other is a 
-		// string, then the comparison will be true if and only if there 
-		// is a node in the node-set such that the result of performing 
-		// the comparison on the string-value of the node and the other 
-		// string is true. 
-		theResult = doCompare(
-				theLHS.nodeset(),
-				getStringFromNodeFunction(),
-				theRHS.str(),
-				DOMStringLessThanFunction());
-	}
-	else
-	{
-		assert(false);
-	}
-
-	return theResult;
+	return compareNodeSets(
+				theLHS,
+				theRHS,
+				theRHSType,
+				DOMStringLessThanFunction(),
+				DoubleSupport::lessThanFunction(),
+				executionContext);
 }
 
 
 
-bool
+inline bool
 lessThanOrEqualNodeSet(
 			const XObject&			theLHS,
 			const XObject&			theRHS,
-			XObject::eObjectType	theRHSType)
+			XObject::eObjectType	theRHSType,
+			XPathExecutionContext&	executionContext)
 {
-	bool	theResult = false;
-
-	if(theRHSType == XObject::eTypeNodeSet)
-	{
-		// Compare as node sets...
-		theResult = doCompareNodeSets(
-				theLHS.nodeset(),
-				theRHS.nodeset(),
-				getStringFromNodeFunction(),
-				DOMStringLessThanOrEqualFunction());
-
-	}
-	else if(theRHSType == XObject::eTypeBoolean)
-	{
-	  // From http://www.w3.org/TR/xpath: 
-	  // If one object to be compared is a node-set and the other is a boolean, 
-	  // then the comparison will be true if and only if the result of 
-	  // performing the comparison on the boolean and on the result of 
-	  // converting the node-set to a boolean using the boolean function 
-	  // is true.
-		const double	num1 = theLHS.boolean() == true ? 1.0 : 0.0;
-
-		theResult = DoubleSupport::lessThanOrEqual(num1, theRHS.num());
-	}
-	else if(theRHSType == XObject::eTypeNumber)
-	{
-		// From http://www.w3.org/TR/xpath: 
-		// If one object to be compared is a node-set and the other is a number, 
-		// then the comparison will be true if and only if there is a 
-		// node in the node-set such that the result of performing the 
-		// comparison on the number to be compared and on the result of 
-		// converting the string-value of that node to a number using 
-		// the number function is true. 
-
-		theResult = doCompare(
-				theLHS.nodeset(),
-				getNumberFromNodeFunction(),
-				theRHS.num(),
-				DoubleSupport::lessThanOrEqualFunction());
-	}
-	else if(theRHSType == XObject::eTypeResultTreeFrag)
-	{
-		// hmmm... 
-		const double	theRHSNumber = theRHS.num();
-
-		if(DoubleSupport::isNaN(theRHSNumber) == false)
-		{
-			// Compare as number...
-			theResult = doCompare(
-					theLHS.nodeset(),
-					getNumberFromNodeFunction(),
-					theRHS.num(),
-					DoubleSupport::lessThanOrEqualFunction());
-		}
-		else
-		{
-			// Compare as string...
-			theResult = doCompare(
-					theLHS.nodeset(),
-					getStringFromNodeFunction(),
-					theRHS.str(),
-					DOMStringLessThanOrEqualFunction());
-		}
-	}
-	else if(theRHSType == XObject::eTypeString)
-	{
-		// From http://www.w3.org/TR/xpath: 
-		// If one object to be compared is a node-set and the other is a 
-		// string, then the comparison will be true if and only if there 
-		// is a node in the node-set such that the result of performing 
-		// the comparison on the string-value of the node and the other 
-		// string is true. 
-		theResult = doCompare(
-				theLHS.nodeset(),
-				getStringFromNodeFunction(),
-				theRHS.str(),
-				DOMStringLessThanOrEqualFunction());
-	}
-	else
-	{
-		assert(false);
-	}
-
-	return theResult;
+	return compareNodeSets(
+				theLHS,
+				theRHS,
+				theRHSType,
+				DOMStringLessThanOrEqualFunction(),
+				DoubleSupport::lessThanOrEqualFunction(),
+				executionContext);
 }
 
 
 
-bool
+inline bool
 greaterThanNodeSet(
 			const XObject&			theLHS,
 			const XObject&			theRHS,
-			XObject::eObjectType	theRHSType)
+			XObject::eObjectType	theRHSType,
+			XPathExecutionContext&	executionContext)
 {
-	bool	theResult = false;
-
-	if(theRHSType == XObject::eTypeNodeSet)
-	{
-		// Compare as node sets...
-		theResult = doCompareNodeSets(
-				theLHS.nodeset(),
-				theRHS.nodeset(),
-				getStringFromNodeFunction(),
-				DOMStringGreaterThanFunction());
-
-	}
-	else if(theRHSType == XObject::eTypeBoolean)
-	{
-	  // From http://www.w3.org/TR/xpath: 
-	  // If one object to be compared is a node-set and the other is a boolean, 
-	  // then the comparison will be true if and only if the result of 
-	  // performing the comparison on the boolean and on the result of 
-	  // converting the node-set to a boolean using the boolean function 
-	  // is true.
-		const double	num1 = theLHS.boolean() == true ? 1.0 : 0.0;
-
-		theResult = DoubleSupport::greaterThan(num1, theRHS.num());
-	}
-	else if(theRHSType == XObject::eTypeNumber)
-	{
-		// From http://www.w3.org/TR/xpath: 
-		// If one object to be compared is a node-set and the other is a number, 
-		// then the comparison will be true if and only if there is a 
-		// node in the node-set such that the result of performing the 
-		// comparison on the number to be compared and on the result of 
-		// converting the string-value of that node to a number using 
-		// the number function is true. 
-
-		theResult = doCompare(
-				theLHS.nodeset(),
-				getNumberFromNodeFunction(),
-				theRHS.num(),
-				DoubleSupport::greaterThanFunction());
-	}
-	else if(theRHSType == XObject::eTypeResultTreeFrag)
-	{
-		// hmmm... 
-		const double	theRHSNumber = theRHS.num();
-
-		if(DoubleSupport::isNaN(theRHSNumber) == false)
-		{
-			// Compare as number...
-			theResult = doCompare(
-					theLHS.nodeset(),
-					getNumberFromNodeFunction(),
-					theRHS.num(),
-					DoubleSupport::greaterThanFunction());
-		}
-		else
-		{
-			// Compare as string...
-			theResult = doCompare(
-					theLHS.nodeset(),
-					getStringFromNodeFunction(),
-					theRHS.str(),
-					DOMStringGreaterThanFunction());
-		}
-	}
-	else if(theRHSType == XObject::eTypeString)
-	{
-		// From http://www.w3.org/TR/xpath: 
-		// If one object to be compared is a node-set and the other is a 
-		// string, then the comparison will be true if and only if there 
-		// is a node in the node-set such that the result of performing 
-		// the comparison on the string-value of the node and the other 
-		// string is true. 
-		theResult = doCompare(
-				theLHS.nodeset(),
-				getStringFromNodeFunction(),
-				theRHS.str(),
-				DOMStringGreaterThanFunction());
-	}
-	else
-	{
-		assert(false);
-	}
-
-	return theResult;
+	return compareNodeSets(
+				theLHS,
+				theRHS,
+				theRHSType,
+				DOMStringGreaterThanFunction(),
+				DoubleSupport::greaterThanFunction(),
+				executionContext);
 }
 
 
 
-bool
+inline bool
 greaterThanOrEqualNodeSet(
 			const XObject&			theLHS,
 			const XObject&			theRHS,
-			XObject::eObjectType	theRHSType)
+			XObject::eObjectType	theRHSType,
+			XPathExecutionContext&	executionContext)
 {
-	bool	theResult = false;
-
-	if(theRHSType == XObject::eTypeNodeSet)
-	{
-		// Compare as node sets...
-		theResult = doCompareNodeSets(
-				theLHS.nodeset(),
-				theRHS.nodeset(),
-				getStringFromNodeFunction(),
-				DOMStringGreaterThanOrEqualFunction());
-
-	}
-	else if(theRHSType == XObject::eTypeBoolean)
-	{
-	  // From http://www.w3.org/TR/xpath: 
-	  // If one object to be compared is a node-set and the other is a boolean, 
-	  // then the comparison will be true if and only if the result of 
-	  // performing the comparison on the boolean and on the result of 
-	  // converting the node-set to a boolean using the boolean function 
-	  // is true.
-		const double	num1 = theLHS.boolean() == true ? 1.0 : 0.0;
-
-		theResult = DoubleSupport::greaterThanOrEqual(num1, theRHS.num());
-	}
-	else if(theRHSType == XObject::eTypeNumber)
-	{
-		// From http://www.w3.org/TR/xpath: 
-		// If one object to be compared is a node-set and the other is a number, 
-		// then the comparison will be true if and only if there is a 
-		// node in the node-set such that the result of performing the 
-		// comparison on the number to be compared and on the result of 
-		// converting the string-value of that node to a number using 
-		// the number function is true. 
-
-		theResult = doCompare(
-				theLHS.nodeset(),
-				getNumberFromNodeFunction(),
-				theRHS.num(),
-				DoubleSupport::greaterThanOrEqualFunction());
-	}
-	else if(theRHSType == XObject::eTypeResultTreeFrag)
-	{
-		// hmmm... 
-		const double	theRHSNumber = theRHS.num();
-
-		if(DoubleSupport::isNaN(theRHSNumber) == false)
-		{
-			// Compare as number...
-			theResult = doCompare(
-					theLHS.nodeset(),
-					getNumberFromNodeFunction(),
-					theRHS.num(),
-					DoubleSupport::greaterThanOrEqualFunction());
-		}
-		else
-		{
-			// Compare as string...
-			theResult = doCompare(
-					theLHS.nodeset(),
-					getStringFromNodeFunction(),
-					theRHS.str(),
-					DOMStringGreaterThanOrEqualFunction());
-		}
-	}
-	else if(theRHSType == XObject::eTypeString)
-	{
-		// From http://www.w3.org/TR/xpath: 
-		// If one object to be compared is a node-set and the other is a 
-		// string, then the comparison will be true if and only if there 
-		// is a node in the node-set such that the result of performing 
-		// the comparison on the string-value of the node and the other 
-		// string is true. 
-		theResult = doCompare(
-				theLHS.nodeset(),
-				getStringFromNodeFunction(),
-				theRHS.str(),
-				DOMStringGreaterThanOrEqualFunction());
-	}
-	else
-	{
-		assert(false);
-	}
-
-	return theResult;
+	return compareNodeSets(
+				theLHS,
+				theRHS,
+				theRHSType,
+				DOMStringGreaterThanOrEqualFunction(),
+				DoubleSupport::greaterThanOrEqualFunction(),
+				executionContext);
 }
 
 
 
 bool
-XObject::equals(const XObject&	theRHS) const
+XObject::equals(
+			const XObject&			theRHS,
+			XPathExecutionContext&	executionContext) const
 {
 	if (this == &theRHS)
 	{
@@ -953,7 +638,7 @@ XObject::equals(const XObject&	theRHS) const
 		}
 		else if (theLHSType == eTypeNodeSet)
 		{
-			return equalNodeSet(*this, theRHS, theRHS.getType());
+			return equalNodeSet(*this, theRHS, theRHS.getType(), executionContext);
 		}
 		else
 		{
@@ -961,7 +646,7 @@ XObject::equals(const XObject&	theRHS) const
 
 			if (theRHSType == eTypeNodeSet)
 			{
-				return equalNodeSet(theRHS, *this, theLHSType);
+				return equalNodeSet(theRHS, *this, theLHSType, executionContext);
 			}
 			else
 			{
@@ -985,7 +670,9 @@ XObject::equals(const XObject&	theRHS) const
 
 
 bool
-XObject::notEquals(const XObject&	theRHS) const
+XObject::notEquals(
+			const XObject&			theRHS,
+			XPathExecutionContext&	executionContext) const
 {
 	if (this == &theRHS)
 	{
@@ -1005,7 +692,7 @@ XObject::notEquals(const XObject&	theRHS) const
 		}
 		else if (theLHSType == eTypeNodeSet)
 		{
-			return notEqualNodeSet(*this, theRHS, theRHS.getType());
+			return notEqualNodeSet(*this, theRHS, theRHS.getType(), executionContext);
 		}
 		else
 		{
@@ -1013,7 +700,7 @@ XObject::notEquals(const XObject&	theRHS) const
 
 			if (theRHSType == eTypeNodeSet)
 			{
-				return notEqualNodeSet(theRHS, *this, theLHSType);
+				return notEqualNodeSet(theRHS, *this, theLHSType, executionContext);
 			}
 			else
 			{
@@ -1037,7 +724,9 @@ XObject::notEquals(const XObject&	theRHS) const
 
 
 bool
-XObject::lessThan(const XObject&	theRHS) const
+XObject::lessThan(
+			const XObject&			theRHS,
+			XPathExecutionContext&	executionContext) const
 {
 	if (this == &theRHS)
 	{
@@ -1053,11 +742,11 @@ XObject::lessThan(const XObject&	theRHS) const
 		}
 		else if (theLHSType == eTypeNodeSet)
 		{
-			return lessThanNodeSet(*this, theRHS, theRHS.getType());
+			return lessThanNodeSet(*this, theRHS, theRHS.getType(), executionContext);
 		}
 		else if (theRHS.getType() == eTypeNodeSet)
 		{
-			return greaterThanNodeSet(theRHS, *this, theLHSType);
+			return greaterThanNodeSet(theRHS, *this, theLHSType, executionContext);
 		}
 		else
 		{
@@ -1069,7 +758,9 @@ XObject::lessThan(const XObject&	theRHS) const
 
 
 bool
-XObject::lessThanOrEqual(const XObject&		theRHS) const
+XObject::lessThanOrEquals(
+			const XObject&			theRHS,
+			XPathExecutionContext&	executionContext) const
 {
 	if (this == &theRHS)
 	{
@@ -1085,11 +776,11 @@ XObject::lessThanOrEqual(const XObject&		theRHS) const
 		}
 		else if (theLHSType == eTypeNodeSet)
 		{
-			return lessThanOrEqualNodeSet(*this, theRHS, theRHS.getType());
+			return lessThanOrEqualNodeSet(*this, theRHS, theRHS.getType(), executionContext);
 		}
 		else if (theRHS.getType() == eTypeNodeSet)
 		{
-			return greaterThanOrEqualNodeSet(theRHS, *this, theLHSType);
+			return greaterThanOrEqualNodeSet(theRHS, *this, theLHSType, executionContext);
 		}
 		else
 		{
@@ -1101,7 +792,9 @@ XObject::lessThanOrEqual(const XObject&		theRHS) const
 
 
 bool
-XObject::greaterThan(const XObject&		theRHS) const
+XObject::greaterThan(
+			const XObject&			theRHS,
+			XPathExecutionContext&	executionContext) const
 {
 	if (this == &theRHS)
 	{
@@ -1117,11 +810,11 @@ XObject::greaterThan(const XObject&		theRHS) const
 		}
 		else if (theLHSType == eTypeNodeSet)
 		{
-			return greaterThanNodeSet(*this, theRHS, theRHS.getType());
+			return greaterThanNodeSet(*this, theRHS, theRHS.getType(), executionContext);
 		}
 		else if (theRHS.getType() == eTypeNodeSet)
 		{
-			return lessThanNodeSet(theRHS, *this, theLHSType);
+			return lessThanNodeSet(theRHS, *this, theLHSType, executionContext);
 		}
 		else
 		{
@@ -1133,7 +826,9 @@ XObject::greaterThan(const XObject&		theRHS) const
 
 
 bool
-XObject::greaterThanOrEqual(const XObject&	theRHS) const
+XObject::greaterThanOrEquals(
+			const XObject&			theRHS,
+			XPathExecutionContext&	executionContext) const
 {
 	if (this == &theRHS)
 	{
@@ -1149,11 +844,11 @@ XObject::greaterThanOrEqual(const XObject&	theRHS) const
 		}
 		else if (theLHSType == eTypeNodeSet)
 		{
-			return greaterThanOrEqualNodeSet(*this, theRHS, theRHS.getType());
+			return greaterThanOrEqualNodeSet(*this, theRHS, theRHS.getType(), executionContext);
 		}
 		else if (theRHS.getType() == eTypeNodeSet)
 		{
-			return lessThanOrEqualNodeSet(theRHS, *this, theLHSType);
+			return lessThanOrEqualNodeSet(theRHS, *this, theLHSType, executionContext);
 		}
 		else
 		{

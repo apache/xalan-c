@@ -766,7 +766,7 @@ TestPredicateResult(
 						thePrintWriter.println(XALAN_STATIC_UCODE_STRING(" failed!"));
 					}
 
-					if (theResult1->equals(*theResult2) == true)
+					if (theResult1->equals(*theResult2, theExecutionContext) == true)
 					{
 						thePrintWriter.print(XALAN_STATIC_UCODE_STRING("theResult1 is equal to theResult2"));
 						thePrintWriter.println();

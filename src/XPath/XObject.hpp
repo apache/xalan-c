@@ -205,7 +205,9 @@ public:
 	 * @return true if they are equal
 	 */
 	bool
-	equals(const XObject&	theRHS) const;
+	equals(
+			const XObject&			theRHS,
+			XPathExecutionContext&	executionContext) const;
 
 	/**
 	 * Tell if two objects are functionally not equal.
@@ -215,7 +217,9 @@ public:
 	 * @return true if they are equal
 	 */
 	bool
-	notEquals(const XObject&	theRHS) const;
+	notEquals(
+			const XObject&			theRHS,
+			XPathExecutionContext&	executionContext) const;
 
 	/**
 	 * Tell if one object is less than the other.
@@ -224,7 +228,9 @@ public:
 	 * @return true if they are equal
 	 */
 	bool
-	lessThan(const XObject&		theRHS) const;
+	lessThan(
+			const XObject&			theRHS,
+			XPathExecutionContext&	executionContext) const;
 
 	/**
 	 * Tell if one object is less than or equal
@@ -234,7 +240,9 @@ public:
 	 * @return true if they are equal
 	 */
 	bool
-	lessThanOrEqual(const XObject&	theRHS) const;
+	lessThanOrEquals(
+			const XObject&			theRHS,
+			XPathExecutionContext&	executionContext) const;
 
 	/**
 	 * Tell if one object is greater than the other.
@@ -243,7 +251,9 @@ public:
 	 * @return true if they are equal
 	 */
 	bool
-	greaterThan(const XObject&	theRHS) const;
+	greaterThan(
+			const XObject&			theRHS,
+			XPathExecutionContext&	executionContext) const;
 
 	/**
 	 * Tell if one object is greater than or equal
@@ -253,7 +263,9 @@ public:
 	 * @return true if they are equal
 	 */
 	bool
-	greaterThanOrEqual(const XObject&	theRHS) const;
+	greaterThanOrEquals(
+			const XObject&			theRHS,
+			XPathExecutionContext&	executionContext) const;
 
 	/**
 	 * Tell what kind of class this is.
@@ -358,66 +370,6 @@ private:
 
 
 
-inline bool
-operator==(
-			const XObject&	theLHS,
-			const XObject&	theRHS)
-{
-	return theLHS.equals(theRHS);
-}
-
-
-
-inline bool
-operator!=(
-			const XObject&	theLHS,
-			const XObject&	theRHS)
-{
-	return theLHS.notEquals(theRHS);
-}
-
-
-
-inline bool
-operator<(
-			const XObject&	theLHS,
-			const XObject&	theRHS)
-{
-	return theLHS.lessThan(theRHS);
-}
-
-
-
-inline bool
-operator<=(
-			const XObject&	theLHS,
-			const XObject&	theRHS)
-{
-	return theLHS.lessThanOrEqual(theRHS);
-}
-
-
-
-inline bool
-operator>(
-			const XObject&	theLHS,
-			const XObject&	theRHS)
-{
-	return theLHS.greaterThan(theRHS);
-}
-
-
-
-inline bool
-operator>=(
-			const XObject&	theLHS,
-			const XObject&	theRHS)
-{
-	return theLHS.greaterThanOrEqual(theRHS);
-}
-
-
-
 /**
  * Class to hold XObjectPtr return types.
  */
@@ -426,6 +378,7 @@ class XALAN_XPATH_EXPORT XObjectPtr
 public:
 
 	friend bool operator==(const XObjectPtr&, const XObjectPtr&);
+
 	/**
 	 * Create an XObjectPtr.
 	 */

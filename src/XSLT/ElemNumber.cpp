@@ -73,6 +73,10 @@
 
 
 
+#include <DOMSupport/DOMServices.hpp>
+
+
+
 #include <Include/XalanAutoPtr.hpp>
 
 
@@ -256,7 +260,7 @@ ElemNumber::findAncestor(
 			}
 		}
 		
-		contextCopy = executionContext.getParentOfNode(*contextCopy);
+		contextCopy = DOMServices::getParentOfNode(*contextCopy);
 	}
 	return contextCopy;
 }					
@@ -300,7 +304,7 @@ ElemNumber::findPrecedingOrAncestorOrSelf(
 
 		if(prevSibling == 0)
 		{
-			contextCopy = executionContext.getParentOfNode(*contextCopy);
+			contextCopy = DOMServices::getParentOfNode(*contextCopy);
 		}
 		else
 		{
@@ -619,7 +623,7 @@ ElemNumber::getMatchingAncestors(
 			if(stopAtFirstFound)
 				break;
 		}
-		node = executionContext.getParentOfNode(*node);
+		node = DOMServices::getParentOfNode(*node);
 	}
 	return ancestors;
 } // end getMatchingAncestors method
@@ -897,7 +901,7 @@ ElemNumber::traditionalAlphaCount(
 					}
 					else
 					{
-						assert(digitsTable.size() > tables[k]);
+						assert(digitsTable.size() > DigitsTableVectorType::size_type(tables[k]));
 
 						// get the table
 						const XalanDOMCharVectorType&	THEletters =

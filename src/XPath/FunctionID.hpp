@@ -150,82 +150,50 @@ private:
 	{
 	public:
 
-		FunctionIDXObjectTypeCallback(XPathExecutionContext&	theExecutionContext) :
-			XObjectTypeCallback(),
-			m_resultString(),
-			m_executionContext(theExecutionContext)			
-		{
-		}
+		FunctionIDXObjectTypeCallback(XPathExecutionContext&	theExecutionContext);
 
 		const XalanDOMString&
-		processCallback(const XObject&	theXObject)
-		{
-			theXObject.ProcessXObjectTypeCallback(*this);
-
-			return m_resultString;
-		}
+		processCallback(const XObject&	theXObject);
 
 		// These methods are inherited from XObjectTypeCallback ...
 
 		virtual void
-		Number(const XObject&	theXObject,
-			   double			/* theValue */)
-		{
-			m_resultString = theXObject.str();
-		}
+		Number(
+			const XObject&	theXObject,
+			double			/* theValue */);
 
 		virtual void
-		Boolean(const XObject&	theXObject,
-				bool			/* theValue */)
-		{
-			m_resultString = theXObject.str();
-		}
+		Boolean(
+			const XObject&	theXObject,
+			bool			/* theValue */);
 
 		virtual void
-		String(const XObject&			theXObject,
-			   const XalanDOMString&	/* theValue */)
-		{
-			m_resultString = theXObject.str();
-		}
+		String(
+			const XObject&			theXObject,
+			const XalanDOMString&	/* theValue */);
 
 		virtual void
-		ResultTreeFragment(const XObject&				theXObject,
-						   const ResultTreeFragBase&	/* theValue */)
-		{
-			m_resultString = theXObject.str();
-		}
+		ResultTreeFragment(
+			const XObject&				theXObject,
+			const ResultTreeFragBase&	/* theValue */);
 
 		virtual void
-		ResultTreeFragment(const XObject&		theXObject,
-						   ResultTreeFragBase&	/* theValue */)
-		{
-			m_resultString = theXObject.str();
-		}
+		ResultTreeFragment(
+			const XObject&			theXObject,
+			ResultTreeFragBase&		/* theValue */);
 
 		virtual void
-		NodeSet(const XObject&			/* theXObject */,
-				const NodeRefListBase&	theValue)
-		{
-			const unsigned int	theNodeCount = theValue.getLength();
-
-			for (unsigned int i = 0 ; i < theNodeCount; i++)
-			{
-				m_executionContext.getNodeData(*theValue.item(i), m_resultString);
-
-				append(m_resultString, XalanDOMChar(XalanUnicode::charSpace));			
-			}
-		}
+		NodeSet(
+			const XObject&			/* theXObject */,
+			const NodeRefListBase&	theValue);
 
 		virtual void
-		Unknown(const XObject&			/* theObject */,
-				const XalanDOMString&	/* theName */)
-		{
-		}
+		Unknown(
+			const XObject&			/* theObject */,
+			const XalanDOMString&	/* theName */);
 
 		virtual void
-		Null(const XObject&		/* theObject */)
-		{
-		}
+		Null(const XObject&		/* theObject */);
 
 	private:
 

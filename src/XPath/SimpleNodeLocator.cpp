@@ -352,7 +352,7 @@ SimpleNodeLocator::stepPattern(
 
 		scoreHolder = xpath.s_MatchScoreOther;
 
-		localContext = executionContext.getParentOfNode(*localContext);
+		localContext = DOMServices::getParentOfNode(*localContext);
 
 		if(0 == localContext)
 		{
@@ -457,7 +457,7 @@ SimpleNodeLocator::stepPattern(
 					if(xpath.s_MatchScoreNone != score)
 						break;
 
-					localContext = executionContext.getParentOfNode(*localContext);
+					localContext = DOMServices::getParentOfNode(*localContext);
 				}
 			}
 		}
@@ -569,7 +569,7 @@ SimpleNodeLocator::handleFoundIndex(
 	executionContext.setThrowFoundIndex(false);
 
 	XalanNode* const	parentContext =
-				executionContext.getParentOfNode(*localContext);
+				DOMServices::getParentOfNode(*localContext);
 
 	typedef XPathExecutionContext::BorrowReturnMutableNodeRefList	BorrowReturnMutableNodeRefList;
 
@@ -662,7 +662,7 @@ SimpleNodeLocator::findParent(
 
 	opPos += 3;
 
-	XalanNode* const	theParent = executionContext.getParentOfNode(*context);
+	XalanNode* const	theParent = DOMServices::getParentOfNode(*context);
 
 	if(0 != theParent)
 	{
@@ -747,7 +747,7 @@ SimpleNodeLocator::findAncestors(
 		xpath.getExpression();
 
 	XalanNode*				contextNode =
-		executionContext.getParentOfNode(*context);
+		DOMServices::getParentOfNode(*context);
 
 	// $$ ToDO: Can we reduce this to some call on the
 	// XPathExpression interface?
@@ -770,7 +770,7 @@ SimpleNodeLocator::findAncestors(
 			subQueryResults.addNode(contextNode);
 		}
 
-		contextNode = executionContext.getParentOfNode(*contextNode);
+		contextNode = DOMServices::getParentOfNode(*contextNode);
 	}
 
 	return argLen + 3;
@@ -816,7 +816,7 @@ SimpleNodeLocator::findAncestorsOrSelf(
 			subQueryResults.addNode(contextNode);
 		}
 
-		contextNode = executionContext.getParentOfNode(*contextNode);
+		contextNode = DOMServices::getParentOfNode(*contextNode);
 	}
 
 	return argLen + 3;
@@ -988,7 +988,7 @@ SimpleNodeLocator::findDescendants(
 
 			if(0 == nextNode)
 			{
-				pos = executionContext.getParentOfNode(*pos);
+				pos = DOMServices::getParentOfNode(*pos);
 
 				if(context == pos || pos == 0)
 				{
@@ -1066,9 +1066,9 @@ SimpleNodeLocator::findFollowing(
 			// following axis.
 			if (pos->getNodeType() == XalanNode::ATTRIBUTE_NODE)
 			{
-				assert(executionContext.getParentOfNode(*pos) != 0);
+				assert(DOMServices::getParentOfNode(*pos) != 0);
 
-				nextNode = executionContext.getParentOfNode(*pos)->getFirstChild();
+				nextNode = DOMServices::getParentOfNode(*pos)->getFirstChild();
 			}
 			else
 			{
@@ -1077,7 +1077,7 @@ SimpleNodeLocator::findFollowing(
 
 			if(0 == nextNode)
 			{
-				pos = executionContext.getParentOfNode(*pos);
+				pos = DOMServices::getParentOfNode(*pos);
 
 				if(doc == pos || 0 == pos)
 				{
@@ -1170,7 +1170,7 @@ SimpleNodeLocator::findPreceeding(
 			context->getNodeType() == XalanNode::ATTRIBUTE_NODE ? true : false;
 
 	const XalanNode* const	theAttributeContextParent =
-		contextIsAttribute == true ? executionContext.getParentOfNode(*context) : 0;
+		contextIsAttribute == true ? DOMServices::getParentOfNode(*context) : 0;
 
 	while(0 != pos)
 	{
@@ -1192,7 +1192,7 @@ SimpleNodeLocator::findPreceeding(
 			// sure there's a better way to check for the parent.
 			bool		isParent = false;
 
-			XalanNode*	parent = executionContext.getParentOfNode(*context);
+			XalanNode*	parent = DOMServices::getParentOfNode(*context);
 
 			while(0 != parent)
 			{
@@ -1202,7 +1202,7 @@ SimpleNodeLocator::findPreceeding(
 					break;
 				}
 
-				parent = executionContext.getParentOfNode(*parent);
+				parent = DOMServices::getParentOfNode(*parent);
 			}
 
 			if(isParent == false)
@@ -1231,7 +1231,7 @@ SimpleNodeLocator::findPreceeding(
 
 			if(0 == nextNode)
 			{
-				pos = executionContext.getParentOfNode(*pos);
+				pos = DOMServices::getParentOfNode(*pos);
 
 				if(doc == pos)
 				{
@@ -1557,7 +1557,7 @@ SimpleNodeLocator::nodeTest(
 									if (isNamespace == false)
 									{
 										const XalanDOMString&	localAttrName =
-											executionContext.getLocalNameOfNode(*context);
+											DOMServices::getLocalNameOfNode(*context);
 
 										if (equals(localAttrName, targetLocalName) == true)
 										{
@@ -1600,7 +1600,7 @@ SimpleNodeLocator::nodeTest(
 							}
 							else
 							{
-								if (equals(executionContext.getLocalNameOfNode(*context),
+								if (equals(DOMServices::getLocalNameOfNode(*context),
 										   targetLocalName) == true)
 								{
 									score = xpath.s_MatchScoreQName;

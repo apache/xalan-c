@@ -185,38 +185,6 @@ XPathExecutionContextDefault::isIgnorableWhitespace(const XalanText&	node) const
 
 
 
-const XalanDOMString&
-XPathExecutionContextDefault::getNamespaceOfNode(const XalanNode&	n) const
-{
-	return m_xpathSupport.getNamespaceOfNode(n);
-}
-
-
-
-const XalanDOMString&
-XPathExecutionContextDefault::getNameOfNode(const XalanNode&	n) const
-{
-	return m_xpathSupport.getNameOfNode(n);
-}
-
-
-
-const XalanDOMString&
-XPathExecutionContextDefault::getLocalNameOfNode(const XalanNode&	n) const
-{
-	return m_xpathSupport.getLocalNameOfNode(n);
-}
-
-
-
-XalanNode*
-XPathExecutionContextDefault::getParentOfNode(const XalanNode&	n) const
-{
-	return m_xpathSupport.getParentOfNode(n);
-}
-
-
-
 bool
 XPathExecutionContextDefault::isNodeAfter(
 			const XalanNode&	node1,
@@ -227,25 +195,13 @@ XPathExecutionContextDefault::isNodeAfter(
 
 
 
-void
-XPathExecutionContextDefault::getNodeData(
-			const XalanNode&	n,
-			XalanDOMString&		s) const
+const XalanDOMString&
+XPathExecutionContextDefault::getNamespaceOfNode(const XalanNode&	theNode) const
 {
-	m_xpathSupport.getNodeData(n, s);
+	return m_xpathSupport.getNamespaceOfNode(theNode);
 }
-
-
-
-XalanElement*
-XPathExecutionContextDefault::getElementByID(
-			const XalanDOMString&	id,
-			const XalanDocument&	doc) const
-{
-	return m_xpathSupport.getElementByID(id, doc);
-}
-
-
+	
+	
 
 const NodeRefListBase&
 XPathExecutionContextDefault::getContextNodeList() const

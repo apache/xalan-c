@@ -58,6 +58,10 @@
 
 
 
+#include <DOMSupport/DOMServices.hpp>
+
+
+
 #include "XObjectFactory.hpp"
 
 
@@ -88,9 +92,9 @@ FunctionSum::execute(
 
 XObjectPtr
 FunctionSum::execute(
-		XPathExecutionContext&			executionContext,
-		XalanNode*						/* context */,			
-		const XObjectPtr				arg1)
+		XPathExecutionContext&	executionContext,
+		XalanNode*				/* context */,			
+		const XObjectPtr		arg1)
 {
 	assert(arg1.null() == false);
 
@@ -100,13 +104,15 @@ FunctionSum::execute(
 
 	const unsigned int		count = nl.getLength();
 
+	XPathExecutionContext::GetAndReleaseCachedString	theData(executionContext);
+
 	for (unsigned int i = 0; i < count; i++)
 	{
-		XalanDOMString	theData;
-
-		executionContext.getNodeData(*nl.item(i), theData);
+		DOMServices::getNodeData(*nl.item(i), theData);
 
 		sum += DoubleSupport::toDouble(theData);
+
+		clear(theData);
 	}
 
 	return executionContext.getXObjectFactory().createNumber(sum);
@@ -172,7 +178,5 @@ FunctionSum::clone() const
 const XalanDOMString
 FunctionSum::getError() const
 {
-	return XALAN_STATIC_UCODE_STRING(
-		"The sum() function takes one argument!");
+	return XALAN_STATIC_UCODE_STRING("The sum() function takes one argument!");
 }
-

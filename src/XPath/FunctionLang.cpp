@@ -58,6 +58,10 @@
 
 
 
+#include <DOMSupport/DOMServices.hpp>
+
+
+
 #include "XObjectFactory.hpp"
 
 
@@ -132,7 +136,7 @@ FunctionLang::execute(
 			}
 		}
 
-		parent = executionContext.getParentOfNode(*parent);
+		parent = DOMServices::getParentOfNode(*parent);
 	}
 
 	return executionContext.getXObjectFactory().createBoolean(fMatch);

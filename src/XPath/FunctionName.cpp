@@ -58,6 +58,10 @@
 
 
 
+#include <DOMSupport/DOMServices.hpp>
+
+
+
 #include "XObjectFactory.hpp"
 
 
@@ -88,7 +92,7 @@ FunctionName::execute(
 	}
 	else
 	{
-	    return executionContext.getXObjectFactory().createStringReference(executionContext.getNameOfNode(*context));
+		return executionContext.getXObjectFactory().createStringReference(DOMServices::getNameOfNode(*context));
 	}
 }
 
@@ -112,7 +116,7 @@ FunctionName::execute(
 	{
 		assert(theNodeList.item(0) != 0);
 
-        const XalanDOMString&   theData = executionContext.getNameOfNode(*theNodeList.item(0));
+        const XalanDOMString&   theData = DOMServices::getNameOfNode(*theNodeList.item(0));
 
 	    return executionContext.getXObjectFactory().createStringReference(theData);
 	}

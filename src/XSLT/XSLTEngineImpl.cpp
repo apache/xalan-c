@@ -535,18 +535,14 @@ XSLTEngineImpl::processStylesheet(
 XalanNode*
 XSLTEngineImpl::getSourceTreeFromInput(const XSLTInputSource&	inputSource)
 {
-	XalanNode*		sourceTree = 0;
+	XalanNode*		sourceTree = inputSource.getNode();
 
-	XalanDOMString	xmlIdentifier = 0 != inputSource.getSystemId() ?
-											XalanDOMString(inputSource.getSystemId()) :
-											StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("Input XML"));
+	if(0 == sourceTree)
+	{
+		const XalanDOMString	xmlIdentifier = 0 != inputSource.getSystemId() ?
+												XalanDOMString(inputSource.getSystemId()) :
+												StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("Input XML"));
 
-	if(0 != inputSource.getNode())
-	{
-		sourceTree = inputSource.getNode();
-	}
-	else
-	{
 		// In case we have a fragment identifier, go ahead and 
 		// try to parse the XML here.
 		try
@@ -878,7 +874,7 @@ XSLTEngineImpl::getXSLToken(const XalanNode&	node) const
 	if(equals(ns, s_XSLNameSpaceURL))
 	{
 		const XalanDOMString& 	localName =
-			m_xpathSupport.getLocalNameOfNode(node);
+			DOMServices::getLocalNameOfNode(node);
 
 		const ElementKeysMapType::const_iterator		j =
 						s_elementKeys.find(localName);
@@ -891,7 +887,7 @@ XSLTEngineImpl::getXSLToken(const XalanNode&	node) const
 	else if(equals(ns, s_XSLT4JNameSpaceURL))
 	{
 		const XalanDOMString&	localName =
-			m_xpathSupport.getLocalNameOfNode(node);
+			DOMServices::getLocalNameOfNode(node);
 
 		const ElementKeysMapType::const_iterator		j =
 						s_XSLT4JElementKeys.find(localName);
@@ -1988,7 +1984,7 @@ XSLTEngineImpl::cloneToResultTree(
 										false);
 			}
 
-			startElement(c_wstr(m_executionContext->getNameOfNode(node)));
+			startElement(c_wstr(DOMServices::getNameOfNode(node)));
 		}
 		break;
 
@@ -2016,7 +2012,7 @@ XSLTEngineImpl::cloneToResultTree(
 				static_cast<const XalanAttr&>(node);
 #endif
 			addResultAttribute(getPendingAttributesImpl(),
-							   m_executionContext->getNameOfNode(attr),
+							   DOMServices::getNameOfNode(attr),
 							   attr.getValue());
 		}
 		break;
@@ -2713,16 +2709,6 @@ XSLTEngineImpl::copyAttributesToAttList(
 
 
  
-XalanElement*
-XSLTEngineImpl::getElementByID(
-			const XalanDOMString&	id,
-			const XalanDocument&	doc) const
-{
-	return m_xpathSupport.getElementByID(id, doc);
-}
-
-
-
 bool
 XSLTEngineImpl::shouldStripSourceNode(
 			XPathExecutionContext&	executionContext,
@@ -2748,19 +2734,17 @@ XSLTEngineImpl::shouldStripSourceNode(
 
 			if(!theTextNode.isIgnorableWhitespace())
 			{
-				const XalanDOMString&	data = theTextNode.getData();
-
-				if(0 == length(data))
+				if(0 == length(theTextNode.getData()))
 				{
 					return true;
 				}
-				else if(!isXMLWhitespace(data))
+				else
 				{
 					return false;
 				}
 			}
 
-			XalanNode*	parent = m_xpathSupport.getParentOfNode(textNode);
+			XalanNode*	parent = DOMServices::getParentOfNode(textNode);
 
 			while(0 != parent)
 			{

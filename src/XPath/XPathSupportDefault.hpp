@@ -96,32 +96,13 @@ public:
 			const XalanDOMString&	prefix, 
 			const XalanElement&		namespaceContext) const;
 
-	virtual const XalanDOMString&
-	getNamespaceOfNode(const XalanNode&		n) const;
-
-	virtual const XalanDOMString&
-	getNameOfNode(const XalanNode&	n) const;
-
-	virtual const XalanDOMString&
-	getLocalNameOfNode(const XalanNode&		n) const;
-
-	virtual void
-	getNodeData(
-			const XalanNode&	n,
-			XalanDOMString&		s) const;
-
-	virtual XalanNode*
-	getParentOfNode(const XalanNode&	node) const;
-
 	virtual bool
 	isNodeAfter(
 			const XalanNode&	node1,
 			const XalanNode&	node2) const;
 
-	virtual XalanElement*
-	getElementByID(
-			const XalanDOMString&	id,
-			const XalanDocument&	doc) const;
+	virtual const XalanDOMString&
+	getNamespaceOfNode(const XalanNode&	theNode) const;
 
 	virtual void
 	setProcessNamespaces(bool	processNamespaces);

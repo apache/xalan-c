@@ -70,6 +70,10 @@
 
 
 
+#include <DOMSupport/DOMServices.hpp>
+
+
+
 #include "Constants.hpp"
 #include "StylesheetConstructionContext.hpp"
 #include "StylesheetExecutionContext.hpp"
@@ -123,7 +127,7 @@ ElemApplyImport::execute(
 				   0, 
 				   0, 
                    sourceTree, 
-                   executionContext.getParentOfNode(*sourceNode), 
+				   DOMServices::getParentOfNode(*sourceNode), 
 				   sourceNode, 
                    mode,
 				   getXSLToken());

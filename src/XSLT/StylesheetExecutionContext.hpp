@@ -1377,32 +1377,13 @@ public:
 	virtual bool
 	isIgnorableWhitespace(const XalanText&	node) const = 0;
 
-	virtual const XalanDOMString&
-	getNamespaceOfNode(const XalanNode&		n) const = 0;
-
-	virtual const XalanDOMString&
-	getNameOfNode(const XalanNode&	n) const = 0;
-
-	virtual const XalanDOMString&
-	getLocalNameOfNode(const XalanNode&		n) const = 0;
-
-	virtual XalanNode*
-	getParentOfNode(const XalanNode&	n) const = 0;
-
 	virtual bool
 	isNodeAfter(
 			const XalanNode&	node1,
 			const XalanNode&	node2) const = 0;
 
-	virtual void
-	getNodeData(
-			const XalanNode&	n,
-			XalanDOMString&		s) const = 0;
-
-	virtual XalanElement*
-	getElementByID(
-			const XalanDOMString&	id,
-			const XalanDocument&	doc) const = 0;
+	virtual const XalanDOMString&
+	getNamespaceOfNode(const XalanNode&	theNode) const = 0;
 
 	virtual const NodeRefListBase&
 	getContextNodeList() const = 0;

@@ -58,6 +58,10 @@
 
 
 
+#include <DOMSupport/DOMServices.hpp>
+
+
+
 #include "XObjectFactory.hpp"
 
 
@@ -157,8 +161,7 @@ FunctionID::execute(
 				{
 					thePreviousTokens.insert(theToken);
 
-					XalanNode* const	theNode =
-						executionContext.getElementByID(theToken, *theDocContext);
+					XalanNode* const	theNode = theDocContext->getElementById(theToken);
 
 					if (theNode != 0)
 					{
@@ -236,3 +239,103 @@ FunctionID::getError() const
 		"The id() function takes one argument!");
 }
 
+
+
+FunctionID::FunctionIDXObjectTypeCallback::FunctionIDXObjectTypeCallback(XPathExecutionContext&	theExecutionContext) :
+	XObjectTypeCallback(),
+	m_resultString(),
+	m_executionContext(theExecutionContext)			
+{
+}
+
+
+
+const XalanDOMString&
+FunctionID::FunctionIDXObjectTypeCallback::processCallback(const XObject&	theXObject)
+{
+	theXObject.ProcessXObjectTypeCallback(*this);
+
+	return m_resultString;
+}
+
+
+
+void
+FunctionID::FunctionIDXObjectTypeCallback::Number(
+			const XObject&	theXObject,
+			double			/* theValue */)
+{
+	m_resultString = theXObject.str();
+}
+
+
+
+void
+FunctionID::FunctionIDXObjectTypeCallback::Boolean(
+			const XObject&	theXObject,
+			bool			/* theValue */)
+{
+	m_resultString = theXObject.str();
+}
+
+
+
+void
+FunctionID::FunctionIDXObjectTypeCallback::String(
+			const XObject&			theXObject,
+			const XalanDOMString&	/* theValue */)
+{
+	m_resultString = theXObject.str();
+}
+
+
+
+void
+FunctionID::FunctionIDXObjectTypeCallback::ResultTreeFragment(
+			const XObject&				theXObject,
+			const ResultTreeFragBase&	/* theValue */)
+{
+	m_resultString = theXObject.str();
+}
+
+
+
+void
+FunctionID::FunctionIDXObjectTypeCallback::ResultTreeFragment(
+			const XObject&			theXObject,
+			ResultTreeFragBase&		/* theValue */)
+{
+	m_resultString = theXObject.str();
+}
+
+
+
+void
+FunctionID::FunctionIDXObjectTypeCallback::NodeSet(
+			const XObject&			/* theXObject */,
+			const NodeRefListBase&	theValue)
+{
+	const unsigned int	theNodeCount = theValue.getLength();
+
+	for (unsigned int i = 0 ; i < theNodeCount; i++)
+	{
+		DOMServices::getNodeData(*theValue.item(i), m_resultString);
+
+		append(m_resultString, XalanDOMChar(XalanUnicode::charSpace));			
+	}
+}
+
+
+
+void
+FunctionID::FunctionIDXObjectTypeCallback::Unknown(
+			const XObject&			/* theObject */,
+			const XalanDOMString&	/* theName */)
+{
+}
+
+
+void
+FunctionID::FunctionIDXObjectTypeCallback::Null(const XObject&		/* theObject */)
+{
+}
