@@ -21,7 +21,7 @@
     <untar src="${doc.generator.styletar}" dest="${xdocs.dir}"/>
 	<delete file="${doc.generator.styletar}"/>
     <mkdir dir="${build.apidocs}"/>
-    <mkdir dir="${site.dir}/apidocs}"/>    
+    <mkdir dir="${site.dir}/apidocs"/>    
     
   </target>
 
@@ -34,7 +34,7 @@
   <target name="apidocs" depends="prepare">
     <copy todir="${build.apidocs}">
       <fileset dir="${xdocs.apidocs}"/>
-    </copy-->
+    </copy>
     <exec executable="doxygen.exe" dir="${xdocs.dir}">
       <arg value="DoxyFileXalan"/>
     </exec>  
