@@ -158,10 +158,16 @@ struct
 ThreadInfo
 {
 	ThreadInfo(
-			unsigned int			theThreadNumber,
-			SynchronizedCounter*	theCounter) :
+			unsigned int			theThreadNumber = 0,
+			SynchronizedCounter*	theCounter = 0) :
 		m_threadNumber(theThreadNumber),
 		m_counter(theCounter)
+	{
+	}
+
+	ThreadInfo(const ThreadInfo&	theSource) :
+		m_threadNumber(theSource.m_threadNumber),
+		m_counter(theSource.m_counter)
 	{
 	}
 
@@ -328,7 +334,11 @@ doThreads(long	theThreadCount)
 			}
 			else
 			{
+#if defined(OS390)
+				pthread_detach(&theThread);
+#else
 				pthread_detach(theThread);
+#endif
 			}
 #else
 #error Unsupported platform!
