@@ -843,7 +843,7 @@ FormatterToXML::prepAttrString(
 
 	vector<XalanDOMChar> vec;
 
-	vec.reserve(theLength*2);
+	vec.reserve(theLength * 2);
 
 	for (unsigned int i = 0;  i < theLength;  i ++) 
 	{
@@ -917,9 +917,16 @@ FormatterToXML::prepAttrString(
 		}
 	}
 
-	vec.push_back('\0');
+	vec.push_back(0);
 
-	return XalanDOMString(vec.begin());
+	if (vec.size() == 1)
+	{
+		// Uh oh, we have to fake out XalanDOMString and
+		// give it an extra null...
+		vec.push_back(0);
+	}
+
+	return XalanDOMString(vec.begin(), vec.size() - 1);
 }
 
 
