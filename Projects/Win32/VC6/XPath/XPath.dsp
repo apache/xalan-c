@@ -414,14 +414,6 @@ SOURCE=..\..\..\..\src\XPath\XPointer.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XResultTreeFrag.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\src\XPath\XResultTreeFragAllocator.cpp
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\..\..\src\XPath\XSpan.cpp
 # End Source File
 # Begin Source File
@@ -795,14 +787,6 @@ SOURCE=..\..\..\..\src\XPath\XPathProcessorImpl.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\XPath\XPointer.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\src\XPath\XResultTreeFrag.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\src\XPath\XResultTreeFragAllocator.hpp
 # End Source File
 # Begin Source File
 
