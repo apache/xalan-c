@@ -576,7 +576,7 @@ StylesheetConstructionContextDefault::allocateVector(
 #endif
 
 	XalanDOMChar* const		theEnd =
-		std::copy(theString, theString + theActualLength, theVector);
+		copy(theString, theString + theActualLength, theVector);
 
 	if (fTerminate == true)
 	{
