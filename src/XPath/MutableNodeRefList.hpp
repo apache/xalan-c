@@ -358,6 +358,18 @@ public:
 		XPathExecutionContext&	m_executionContext;
 	};
 
+	void
+	swap(MutableNodeRefList&	theOther)
+	{
+		NodeRefList::swap(theOther);
+
+		const eOrder	temp = m_order;
+
+		m_order = theOther.m_order;
+
+		theOther.m_order = temp;
+	}
+
 private:
 
 	// An enum to determine what the order of the nodes is...

@@ -139,6 +139,12 @@ public:
 	typedef std::vector<XalanNode*>		NodeListVectorType;
 #endif
 
+	void
+	swap(NodeRefList&	theOther)
+	{
+		m_nodeList.swap(theOther.m_nodeList);
+	}
+
 protected:
 
 	// Default vector allocation size.  It seems high, but
