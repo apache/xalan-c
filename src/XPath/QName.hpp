@@ -222,8 +222,11 @@ public:
 	 * @param prefix     namespace prefix to find
 	 * @param reverse    true to search vector from last to first, default true
 	 */
-	static XalanDOMString getNamespaceForPrefix(const NamespaceVectorType& namespaces,
-			const XalanDOMString& prefix, bool reverse=true);
+	static const XalanDOMString&
+	getNamespaceForPrefix(
+			const NamespaceVectorType&	namespaces,
+			const XalanDOMString&		prefix,
+			bool						reverse = true);
 
 	/**
 	 * Get the namespace from a prefix by searching a stack of namespace
@@ -233,8 +236,11 @@ public:
 	 * @param prefix  namespace prefix to find
 	 * @param reverse true to search vector from last to first, default true
 	 */
-	static XalanDOMString getNamespaceForPrefix(const NamespacesStackType& nsStack,
-			const XalanDOMString& prefix, bool reverse=true);
+	static const XalanDOMString&
+	getNamespaceForPrefix(
+			const NamespacesStackType&	nsStack,
+			const XalanDOMString&		prefix,
+			bool						reverse = true);
 
 	/**
 	 * Get the prefix for a namespace by searching a vector of namespaces.
@@ -243,8 +249,11 @@ public:
 	 * @param uri        URI string for namespace to find
 	 * @param reverse    true to search vector from last to first, default true
 	 */
-	static XalanDOMString getPrefixForNamespace(const NamespaceVectorType& namespaces,
-			const XalanDOMString& uri, bool reverse=true);
+	static const XalanDOMString&
+	getPrefixForNamespace(
+			const NamespaceVectorType&	namespaces,
+			const XalanDOMString&		uri,
+			bool						reverse = true);
 
 	/**
 	 * Get the prefix for a namespace by searching a stack of namespace
@@ -254,8 +263,11 @@ public:
 	 * @param uri     URI string for namespace to find
 	 * @param reverse true to search vector from last to first, default true
 	 */
-	static XalanDOMString getPrefixForNamespace(const NamespacesStackType& nsStack,
-			const XalanDOMString& uri, bool reverse=true);
+	static const XalanDOMString&
+	getPrefixForNamespace(
+			const NamespacesStackType&	nsStack,
+			const XalanDOMString&		uri,
+			bool						reverse = true);
 
 private:
 
@@ -267,6 +279,8 @@ private:
 	XalanDOMString	m_namespace;
 
 	XalanDOMString	m_localpart;
+
+	static const XalanDOMString		s_emptyString;
 };
 
 
