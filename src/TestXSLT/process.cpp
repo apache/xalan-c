@@ -236,6 +236,11 @@ printArgOptions()
 
 
 
+
+#if defined(XALAN_NEEDS_EXPLICIT_TEMPLATE_INSTANTIATION)
+#include<stl/_tree.c>
+#endif
+
 typedef map<CharVectorType, CharVectorType, less<CharVectorType> > String2StringMapType;
 
 
