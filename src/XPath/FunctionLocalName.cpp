@@ -78,18 +78,21 @@ FunctionLocalName::execute(
 {
 	assert(arg1 != 0);	
 
+	XObject*	theResult = 0;
+
 	const NodeRefListBase&	theNodeList = arg1->nodeset();
 
-	if (theNodeList.getLength() > 0)
-	{
-		context = theNodeList.item(0);
+	if (theNodeList.getLength() == 0)
+	{	
+		theResult = executionContext.getXObjectFactory().createString(XalanDOMString());
+		
 	}
 	else
 	{	
-		context = 0;
+		theResult = getLocalName(executionContext, *theNodeList.item(0));	
 	}
 
-	return execute(executionContext, context);
+	return theResult;
 }
 
 
@@ -99,7 +102,7 @@ FunctionLocalName::execute(
 		XPathExecutionContext&			executionContext,
 		XalanNode*						context)
 {
-	XalanDOMString	theData;
+	XObject*	theResult = 0;
 
 	if (context == 0)
 	{
@@ -107,17 +110,31 @@ FunctionLocalName::execute(
 	}
 	else
 	{
-		const XalanNode::NodeType	theType = context->getNodeType();
-
-		if(theType == XalanNode::ATTRIBUTE_NODE ||
-			theType == XalanNode::ELEMENT_NODE ||
-			theType == XalanNode::PROCESSING_INSTRUCTION_NODE)
-		{
-			theData = executionContext.getLocalNameOfNode(*context);
-		}
+		theResult = getLocalName(executionContext, *context);
 	}
 
-	return executionContext.getXObjectFactory().createString(theData);	
+	return theResult;
+}
+
+
+
+XObject*
+FunctionLocalName::getLocalName(
+		XPathExecutionContext&	executionContext,
+		const XalanNode&		node)
+{
+	const XalanNode::NodeType	theType = node.getNodeType();
+
+	if(theType == XalanNode::ATTRIBUTE_NODE ||
+		theType == XalanNode::ELEMENT_NODE ||
+		theType == XalanNode::PROCESSING_INSTRUCTION_NODE)
+	{
+		return executionContext.getXObjectFactory().createString(executionContext.getLocalNameOfNode(node));
+	}
+	else
+	{
+		return executionContext.getXObjectFactory().createString(XalanDOMString());
+	}
 }
 
 

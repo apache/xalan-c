@@ -115,6 +115,11 @@ public:
 
 private:
 
+	XObject*
+	getLocalName(
+		XPathExecutionContext&	executionContext,
+		const XalanNode&		node);
+
 	const XalanDOMString
 	getError() const;
 
