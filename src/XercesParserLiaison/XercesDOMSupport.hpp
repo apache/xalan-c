@@ -85,19 +85,20 @@ public:
 
 	// These interfaces are inherited from DOMSupport...
 
-	/**
-	 * Retrieve namespace corresponding to a DOM node
-	 * 
-	 * @param theNode DOM node whose namespace is queried
-	 * @return namespace corresponding to 'theNode'
-	 */
 	virtual const XalanDOMString&
-	getNamespaceOfNode(const XalanNode&		theNode) const;
+	getNamespaceForPrefix(
+			const XalanDOMString&	prefix, 
+			const XalanElement&		namespaceContext) const;
 
 	virtual const XalanDOMString&
 	getUnparsedEntityURI(
 			const XalanDOMString&	theName,
 			const XalanDocument&	theDocument) const;
+
+	virtual bool
+	isNodeAfter(
+			const XalanNode&	node1,
+			const XalanNode&	node2) const;
 
 private:
 

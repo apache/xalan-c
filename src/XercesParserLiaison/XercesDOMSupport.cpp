@@ -96,9 +96,12 @@ XercesDOMSupport::reset()
 
 
 const XalanDOMString&
-XercesDOMSupport::getNamespaceOfNode(const XalanNode&	theNode) const
+XercesDOMSupport::getNamespaceForPrefix(
+			const XalanDOMString&	prefix, 
+			const XalanElement&		namespaceContext) const
 {
-	return theNode.getNamespaceURI();
+	return DOMServices::getNamespaceForPrefix(prefix,
+											  namespaceContext);
 }
 
 
@@ -109,4 +112,14 @@ XercesDOMSupport::getUnparsedEntityURI(
 			const XalanDocument&	theDocument) const
 {
 	return m_domSupportDefault.getUnparsedEntityURI(theName, theDocument);
+}
+
+
+
+bool
+XercesDOMSupport::isNodeAfter(
+			const XalanNode&	node1,
+			const XalanNode&	node2) const
+{
+	return DOMServices::isNodeAfter(node1, node2);
 }
