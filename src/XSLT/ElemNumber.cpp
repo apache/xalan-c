@@ -77,9 +77,10 @@
 
 
 #include "Constants.hpp"
-#include "NumeratorFormatter.hpp"
 #include "StylesheetConstructionContext.hpp"
 #include "StylesheetExecutionContext.hpp"
+
+
 
 #if !defined(XALAN_NO_NAMESPACES)
 	using std::vector;
