@@ -115,14 +115,14 @@ public:
 	bool
 	destroyObject(ObjectType*	theObject)
 	{
-		bool	fSucess = false;
+		bool	fSuccess = false;
 
 		// Check this, just in case...
 		if (m_lastBlockReferenced != 0 && m_lastBlockReferenced->ownsObject(theObject) == true)
 		{
 			m_lastBlockReferenced->destroyObject(theObject);
 
-			fSucess = true;
+			fSuccess = true;
 		}
 		else
 		{
@@ -139,7 +139,7 @@ public:
 
 					m_lastBlockReferenced->destroyObject(theObject);
 
-					fSucess = true;
+					fSuccess = true;
 
 					break;
 				}
@@ -150,7 +150,7 @@ public:
 			}
 		}
 
-		return fSucess;
+		return fSuccess;
 	}
 
 	/*
