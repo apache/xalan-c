@@ -398,7 +398,7 @@ FormatterToXML_UTF8::writeDoctypeDecl(const XalanDOMChar* 	name)
 	write(char(XalanUnicode::charQuoteMark));
 	write(char(XalanUnicode::charGreaterThanSign));
 
-	outputLineSep();
+	outputNewline();
 }
 
 
@@ -590,7 +590,7 @@ FormatterToXML_UTF8::writeProcessingInstruction(
 	// is not significant.
 	if (outsideDocumentElement() == true)
 	{
-		outputLineSep();
+		outputNewline();
 	}
 }
 
@@ -726,7 +726,7 @@ FormatterToXML_UTF8::writeNormalizedChar(
 {
 	if (XalanUnicode::charLF == ch)
 	{
-		outputLineSep();
+		outputNewline();
 	}
 	else if (isUTF16HighSurrogate(ch) == true)
 	{
@@ -917,14 +917,12 @@ FormatterToXML_UTF8::writeXMLHeader()
 	}
 
 	write(s_xmlHeaderEndString, s_xmlHeaderEndStringLength);
-
-	outputLineSep();
 }
 
 
 
 void
-FormatterToXML_UTF8::outputLineSep()
+FormatterToXML_UTF8::outputNewline()
 {
 	assert(m_newlineString != 0 && length(m_newlineString) == m_newlineStringLength);
 

@@ -211,6 +211,9 @@ protected:
 			const XMLCh*	chars,
 			unsigned int	length) = 0;
 
+	virtual void
+	outputNewline() = 0;
+
 	/**
 	 * Mark the parent element as having a child.  If this
 	 * is the first child, return true, otherwise, return

@@ -241,6 +241,12 @@ FormatterToXMLBase::startDocument()
 	if(m_shouldWriteXMLHeader == true)
 	{
 		writeXMLHeader();
+
+        // Write a newline here, so the DOCTYPE comes out on a separate line
+        if (m_needToOutputDoctypeDecl == true)
+        {
+            outputNewline();
+        }
 	}
 }
 

@@ -137,8 +137,8 @@ protected:
 	/**
 	 * Output a line break.
 	 */
-	void
-	outputLineSep();
+	virtual void
+	outputNewline();
 
 	/**
 	 * Escape and write a character.
