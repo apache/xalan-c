@@ -148,12 +148,12 @@ public:
 	 */
 	virtual XalanDocument*
 	createDocument() = 0;
-  
-  /**
-	* Get the factory object required to create DOM nodes in the result tree.
-	*
-	* @return DOM document factory
-	*/
+
+	/**
+	 * Get the factory object required to create DOM nodes in the result tree.
+	 *
+	 * @return DOM document factory
+	 */
 	virtual XalanDocument*
 	getDOMFactory() = 0;
 
@@ -176,20 +176,20 @@ public:
 	getExpandedAttributeName(const XalanAttr&	attr) const = 0;
 
 	/**
+	 * Get special characters for attributes that will be escaped.
+	 *
+	 * @return string containing characters
+	 */
+	virtual const XalanDOMString&
+	getSpecialCharacters() const = 0;
+
+	/**
 	 * Set special characters for attributes that will be escaped.
 	 *
 	 * @param str string containing characters
 	 */
 	virtual void
 	setSpecialCharacters(const XalanDOMString&	str) = 0;
-
-	/**
-	 * Get special characters for attributes that will be escaped.
-	 *
-	 * @return string containing characters
-	 */
-	virtual XalanDOMString
-	getSpecialCharacters() const = 0;
 
 	/**
 	 * Get the amount to indent when indent-result="yes".

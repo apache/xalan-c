@@ -66,13 +66,15 @@
 
 // Xalan header files.
 #include <PlatformSupport/DOMStringHelper.hpp>
+
+
+
 #include <DOMSupport/DOMSupportDefault.hpp>
 #include <XMLSupport/XMLParserLiaison.hpp>
-#include <XMLSupport/Formatter.hpp>
 
 
 
-class XALAN_XMLSUPPORT_EXPORT XMLParserLiaisonDefault : public XMLParserLiaison, public Formatter
+class XALAN_XMLSUPPORT_EXPORT XMLParserLiaisonDefault : public XMLParserLiaison
 {
 public:
 
@@ -126,11 +128,11 @@ public:
 	virtual XalanDOMString
 	getExpandedAttributeName(const XalanAttr&	attr) const;
 
+	virtual const XalanDOMString&
+	getSpecialCharacters() const { return m_SpecialCharacters; }
+
 	virtual void
 	setSpecialCharacters(const XalanDOMString&	str) { m_SpecialCharacters = str; }
-
-	virtual XalanDOMString
-	getSpecialCharacters() const { return m_SpecialCharacters; }
 
 	virtual int
 	getIndent() const { return m_Indent; }
@@ -152,27 +154,6 @@ public:
 
 	virtual const XalanDOMString&
 	getParserDescription() const { return m_ParserDescription; }
-
-	// These interfaces are inherited from Formatter...
-
-	virtual void
-	toMarkup(
-			const XalanDocument&	doc,
-			PrintWriter&			pw,
-			const XalanDOMString&	resultns,
-			bool					format);
-
-	virtual FormatterListener*
-	getFormatterListener() const;
-
-	virtual void
-	setFormatterListener(
-			PrintWriter&			pw,
-			const XalanDOMString&	resultns,
-			bool					format);
-
-	virtual void
-	setFormatterListener(FormatterListener*		fl);
 
 protected:
 
@@ -196,10 +177,6 @@ private:
 	bool					m_fUseValidation;
 
 	const XalanDOMString	m_ParserDescription;
-
-	FormatterListener*		m_FormatterListener;
-
-	bool					m_fOwnListener;
 };
 
 

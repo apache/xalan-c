@@ -59,35 +59,11 @@
 
 
 
-// Standard header files	
-#include <cassert>
-#include <cstring>
-#include <memory>
+#include <DOMSupport/DOMSupport.hpp>
 
 
 
-// Xerces header files
-#include <XalanDOM/XalanAttr.hpp>
-#include <XalanDOM/XalanDocument.hpp>
-#include <XalanDOM/XalanElement.hpp>
-#include <XalanDOM/XalanNamedNodeMap.hpp>
-
-
-
-#include <PlatformSupport/DOMStringHelper.hpp>
-#include <PlatformSupport/PrintWriter.hpp>
-#include <DOMSupport/DOMServices.hpp>
-
-
-
-#include "FormatterToHTML.hpp"
-#include "FormatterToXML.hpp"
-#include "FormatterTreeWalker.hpp"
 #include "XMLSupportException.hpp"
-
-
-
-static const XalanDOMString		theDefaultSpecialCharacters(XALAN_STATIC_UCODE_STRING("<>&\"\'\r\n"));
 
 
 
@@ -95,15 +71,12 @@ XMLParserLiaisonDefault::XMLParserLiaisonDefault(
 			DOMSupport&				theDOMSupport,
 			const XalanDOMString&	theParserDescription) :
 	XMLParserLiaison(),
-	Formatter(),
 	m_DOMSupport(theDOMSupport),
-	m_SpecialCharacters(theDefaultSpecialCharacters),
+	m_SpecialCharacters(),
 	m_Indent(-1),
 	m_fShouldExpandEntityRefs(false),
 	m_fUseValidation(false),
-	m_ParserDescription(theParserDescription),
-	m_FormatterListener(0),
-	m_fOwnListener(false)
+	m_ParserDescription(theParserDescription)
 {
 }
 
@@ -111,10 +84,6 @@ XMLParserLiaisonDefault::XMLParserLiaisonDefault(
 
 XMLParserLiaisonDefault::~XMLParserLiaisonDefault()
 {
-	if (m_fOwnListener == true)
-	{
-		delete m_FormatterListener;
-	}
 }
 
 
@@ -122,15 +91,6 @@ XMLParserLiaisonDefault::~XMLParserLiaisonDefault()
 void
 XMLParserLiaisonDefault::reset()
 {
-	if (m_fOwnListener == true)
-	{
-		delete m_FormatterListener;
-
-		m_fOwnListener = false;
-	}
-
-	m_FormatterListener = 0;
-
 	m_DOMSupport.reset();
 }
 
@@ -203,144 +163,4 @@ XalanDOMString
 XMLParserLiaisonDefault::getExpandedAttributeName(const XalanAttr&	attr) const
 {
 	return m_DOMSupport.getExpandedAttributeName(attr);
-}
-
-
-
-void
-XMLParserLiaisonDefault::toMarkup(
-			const XalanDocument&	doc,
-			PrintWriter&			pw,
-			const XalanDOMString&	resultns,
-			bool					format)
-{
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::auto_ptr;
-#endif
-
-	auto_ptr<FormatterListener> 	visitor;
-
-	if(equals(trim(resultns),
-			XALAN_STATIC_UCODE_STRING("http://www.w3.org/TR/REC-html40")) == true)
-	{
-		FormatterToHTML* const	htmlFormatVisitor =
-				new FormatterToHTML(
-						pw,
-						XalanDOMString(),	// encoding
-						XalanDOMString(),	// media type
-						XalanDOMString(),	// doctypeSystem
-						XalanDOMString(),	// doctypePublic
-						format,
-						m_Indent,
-						XalanDOMString(),	// version
-						XalanDOMString(),	// standalone
-						false); // xmlDecl
-				
-
-#if defined(XALAN_OLD_AUTO_PTR)
-		visitor = auto_ptr<FormatterListener>(htmlFormatVisitor);
-#else
-		visitor.reset(htmlFormatVisitor);
-#endif
-	}
-	else
-	{
-		FormatterToXML* const 	fToXML =
-				new FormatterToXML(pw,
-						XalanDOMString(),
-						format,
-						m_Indent,
-						XalanDOMString(),	// encoding
-						XalanDOMString(),	// media type
-						XalanDOMString(),	// doctypeSystem
-						XalanDOMString(),	// doctypePublic
-						true,				// xmlDecl
-						XalanDOMString());	// standalone,
-
-#if defined(XALAN_OLD_AUTO_PTR)
-		visitor = auto_ptr<FormatterListener>(fToXML);
-#else
-		visitor.reset(fToXML);
-#endif
-	}
-
-	if(visitor.get() != 0)
-	{
-		FormatterTreeWalker		treeTraversal(*visitor);
-
-		treeTraversal.traverse(&doc);
-	}
-} 
-
-
-
-void
-XMLParserLiaisonDefault::setFormatterListener(
-			PrintWriter&			pw,
-			const XalanDOMString&	resultns,
-			bool					format)
-{
-	if(equals(trim(resultns),
-			XALAN_STATIC_UCODE_STRING("http://www.w3.org/TR/REC-html40")) == true)
-	{
-		FormatterToHTML* const	htmlFormatVisitor =
-			new FormatterToHTML(
-						pw,
-						XalanDOMString(),	// encoding
-						XalanDOMString(),	// media type
-						XalanDOMString(),	// doctypeSystem
-						XalanDOMString(),	// doctypePublic
-						format,
-						m_Indent,
-						XalanDOMString(),	// version
-						XalanDOMString(),	// standalone
-						false); // xmlDecl
-
-		if (m_fOwnListener == true)
-		{
-			delete m_FormatterListener;
-		}
-
-		m_FormatterListener =  htmlFormatVisitor;
-		m_fOwnListener = true;
-	}
-	else if(0 == m_FormatterListener)
-	{
-		FormatterToXML* const	fToXML =
-			new FormatterToXML(pw,
-					XalanDOMString(),
-					format,
-					m_Indent,
-					XalanDOMString(),	// encoding
-					XalanDOMString(),	// media type
-					XalanDOMString(),	// doctypeSystem
-					XalanDOMString(),	// doctypePublic
-					true,				// xmlDecl
-					XalanDOMString());	// standalone
-
-		m_FormatterListener = fToXML;
-		m_fOwnListener = true;
-	}
-}
-
-
-
-void
-XMLParserLiaisonDefault::setFormatterListener(FormatterListener*	fl)
-{
-	if (m_fOwnListener == true)
-	{
-		delete m_FormatterListener;
-	}
-
-	m_fOwnListener = false;
-	m_FormatterListener = fl;
-}
-
-
-
-FormatterListener*
-XMLParserLiaisonDefault::getFormatterListener() const
-{
-	return m_FormatterListener;
 }
