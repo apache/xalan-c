@@ -2464,15 +2464,9 @@ XSLTEngineImpl::outputResultTreeFragment(
 			bool							outputTextNodesOnly,
 			const ElemTemplateElement*		styleNode)
 {
-	const XalanNodeList* const	nl = theTree.getChildNodes();
-	assert(nl != 0);
-
-	const unsigned int			nChildren = nl->getLength();
-
-	for(unsigned int i = 0; i < nChildren; i++)
+	for(XalanNode* child = theTree.getFirstChild(); child != 0; child = child->getNextSibling())
 	{
-		XalanNode*				pos = nl->item(i);
-		assert(pos != 0);
+		XalanNode*	pos = child;
 
 		XalanNode::NodeType		posNodeType = pos->getNodeType();
 
