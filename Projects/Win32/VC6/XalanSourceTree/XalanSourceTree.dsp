@@ -71,7 +71,7 @@ LINK32=link.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MTd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /YX /FD /GZ /c
-# ADD CPP /nologo /MDd /W4 /Gm /GR /GX /Zi /Od /I "..\..\..\..\..\..\xml-xerces\c\src" /I "..\..\..\..\src\\" /D "_DEBUG" /D "_WINDOWS" /D "_USRDLL" /D "XALAN_XALANSOURCETREE_BUILD_DLL" /D "WIN32" /D "_MBCS" /YX /FD /GZ /c
+# ADD CPP /nologo /MDd /W4 /Gm /GR /GX /Zi /Od /I "..\..\..\..\..\..\xml-xerces\c\src" /I "..\..\..\..\src\\" /D "_DEBUG" /D "_WINDOWS" /D "_USRDLL" /D "XALAN_XALANSOURCETREE_BUILD_DLL" /D "WIN32" /D "_MBCS" /YX /FD /GZ/c
 # ADD BASE MTL /nologo /D "_DEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "_DEBUG" /mktyplib203 /win32
 # ADD BASE RSC /l 0x409 /d "_DEBUG"
@@ -175,15 +175,35 @@ SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeElement.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeElementAllocator.cpp
+SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeElementA.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeElementNS.cpp
+SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeElementAAllocator.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeElementNSAllocator.cpp
+SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeElementANS.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeElementANSAllocator.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeElementNA.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeElementNAAllocator.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeElementNANS.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeElementNANSAllocator.cpp
 # End Source File
 # Begin Source File
 
@@ -192,10 +212,6 @@ SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeHelper.cpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeInit.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeNamedNodeMap.cpp
 # End Source File
 # Begin Source File
 
@@ -283,15 +299,35 @@ SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeElement.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeElementAllocator.hpp
+SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeElementA.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeElementNS.hpp
+SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeElementAAllocator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeElementNSAllocator.hpp
+SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeElementANS.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeElementANSAllocator.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeElementNA.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeElementNAAllocator.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeElementNANS.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeElementNANSAllocator.hpp
 # End Source File
 # Begin Source File
 
@@ -300,10 +336,6 @@ SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeHelper.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeInit.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\src\XalanSourceTree\XalanSourceTreeNamedNodeMap.hpp
 # End Source File
 # Begin Source File
 
