@@ -315,7 +315,7 @@ endif
 
   endif
    
-  XERCES_LIB= -L$(XERCESCROOT)/lib -lxerces-c24
+  XERCES_LIB= -L$(XERCESCROOT)/lib -lxerces-c25
   ICU_LIB= -L$(ICUROOT)/lib -licuuc26 -L$(ICUI18NROOT)/lib -licui18n26
 
   LIB = $(LIB_NAME)$(LIB_MAJOR_VER).$(LIB_MINOR_VER)$(SHLIBSUFFIX)
@@ -351,7 +351,7 @@ endif
   MAKE_SHARED = ${CXX} $(CXXFLAGS) -Wl,compat=pm3 -D${PLATFORM} -Wl,dll
   LINK = $(CXX) $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS) -Wl,compat=pm3
 
-  XERCES_LIB=$(XERCESCROOT)/lib/libxerces-c2_4_0.x
+  XERCES_LIB=$(XERCESCROOT)/lib/libxerces-c2_5_0.x
   ICU_LIB=$(XERCESCROOT)/lib/libicuuc26.1.x $(XERCESCROOT)/lib/libicui18n26.1.x
   
   LIB=$(LIB_NAME).$(VER)$(OS390SIDEDECK) 

@@ -50,13 +50,13 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
-				AdditionalDependencies="xerces-c_2.lib XalanMessages_1_7_0S.lib"
-				OutputFile="..\..\..\..\Build\Win32\VC7\Release.symbols/Xalan-C_1_7_0S.dll"
+				AdditionalDependencies="xerces-c_2.lib XalanMessages_1_8_0S.lib"
+				OutputFile="..\..\..\..\Build\Win32\VC7\Release.symbols/Xalan-C_1_8_0S.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
 				AdditionalLibraryDirectories="..\..\..\..\..\..\xml-xerces\c\Build\Win32\VC7\Release,..\..\..\..\Build\Win32\VC7\Release.symbols"
 				GenerateDebugInformation="TRUE"
-				ProgramDatabaseFile=".\..\..\..\..\Build\Win32\VC7\Release.symbols/Xalan-C_1_7_0S.pdb"
+				ProgramDatabaseFile=".\..\..\..\..\Build\Win32\VC7\Release.symbols/Xalan-C_1_8_0S.pdb"
 				ImportLibrary="..\..\..\..\Build\Win32\VC7\Release.symbols/Xalan-C_1S.lib"/>
 			<Tool
 				Name="VCMIDLTool"
@@ -119,8 +119,8 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
-				AdditionalDependencies="xerces-c_2.lib XalanMessages_1_7_0.lib"
-				OutputFile="..\..\..\..\Build\Win32\VC7\Release/Xalan-C_1_7_0.dll"
+				AdditionalDependencies="xerces-c_2.lib XalanMessages_1_8_0.lib"
+				OutputFile="..\..\..\..\Build\Win32\VC7\Release/Xalan-C_1_8_0.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
 				AdditionalLibraryDirectories="..\..\..\..\..\..\xml-xerces\c\Build\Win32\VC7\Release,..\..\..\..\Build\Win32\VC7\Release"
@@ -184,13 +184,13 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
-				AdditionalDependencies="xerces-c_2D.lib XalanMessages_1_7_0D.lib"
-				OutputFile="..\..\..\..\Build\Win32\VC7\Debug/Xalan-C_1_7_0D.dll"
+				AdditionalDependencies="xerces-c_2D.lib XalanMessages_1_8_0D.lib"
+				OutputFile="..\..\..\..\Build\Win32\VC7\Debug/Xalan-C_1_8_0D.dll"
 				LinkIncremental="2"
 				SuppressStartupBanner="TRUE"
 				AdditionalLibraryDirectories="..\..\..\..\..\..\xml-xerces\c\Build\Win32\VC7\Debug,..\..\..\..\Build\Win32\VC7\Debug"
 				GenerateDebugInformation="TRUE"
-				ProgramDatabaseFile=".\..\..\..\..\Build\Win32\VC7\Debug/Xalan-C_1_7_0D.pdb"
+				ProgramDatabaseFile=".\..\..\..\..\Build\Win32\VC7\Debug/Xalan-C_1_8_0D.pdb"
 				ImportLibrary="..\..\..\..\Build\Win32\VC7\Debug/Xalan-C_1D.lib"/>
 			<Tool
 				Name="VCMIDLTool"
