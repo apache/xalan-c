@@ -60,6 +60,7 @@ case "${host}" in
         *-apple-darwin*)       platform=MACOSX ;;
         *-*-os400*)     platform=OS400 ;;
         *-*-OS400*)     platform=OS400 ;;
+        *-*-cygwin*)    platform=CYGWIN ;;
         *)              platform=UNKNOWN ;;
 esac
 

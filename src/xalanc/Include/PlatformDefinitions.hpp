@@ -16,8 +16,12 @@
 #if !defined(PLATFORMDEFINITIONS_HEADER_GUARD_1357924680)
 #define PLATFORMDEFINITIONS_HEADER_GUARD_1357924680
 
+#include "xercesc/util/XercesDefs.hpp"
+
 #if defined(_MSC_VER)
 #include "VCPPDefinitions.hpp"
+#elif defined(CYGWIN)
+#include "CygwinDefinitions.hpp"
 #elif defined(__GNUC__)
 #include "GCCDefinitions.hpp"
 #elif defined(_AIX)
@@ -37,8 +41,6 @@
 #else
 #error Unknown compiler!
 #endif
-
-
 
 #include "XalanVersion.hpp"
 
@@ -89,11 +91,6 @@
 #define XALAN_DECLARE_XALAN_STRUCT(NAME) XALAN_DECLARE_STRUCT(XALAN_CPP_NAMESPACE, NAME)
 #define XALAN_USING_XALAN(NAME) XALAN_USING(XALAN_CPP_NAMESPACE, NAME)
 
-
-
-// Yuck!!!! Have to include this here because there's no way to handle
-// the new namespace macros without it!
-#include "xercesc/util/XercesDefs.hpp"
 
 #if defined(XERCES_HAS_CPP_NAMESPACE)
 	#define XALAN_USING_XERCES(NAME) XALAN_USING(XERCES_CPP_NAMESPACE, NAME)

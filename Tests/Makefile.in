@@ -56,7 +56,7 @@ ThreadTest:  prepare $(XSL_BIN_DIR)/ThreadTest
 
 $(XSL_BIN_DIR)/ThreadTest: ${XSL_OBJ_DIR}/ThreadTest.o 
 	${LINK} $(XSL_BUILD_OPTIONS) ${PLATFORM_LIB_LINK_OPTIONS}  \
-	${EXTRA_LINK_OPTIONS}  $(XALAN_LIB) $(ALLLIBS) $(CXXFLAGS) $^ -o $@	
+	${EXTRA_LINK_OPTIONS}  $(XALAN_LIB) $(ALLLIBS) $(CXXFLAGS) $^ -o $@	 $(OTHER_LINK_PARAMETERS)
 ${XSL_OBJ_DIR}/%.o:$(TESTS_DIR)/Threads/%.cpp
 	$(CC1) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $<
 
@@ -78,7 +78,7 @@ Conf: prepare Harness $(XSL_BIN_DIR)/Conf
 
 $(XSL_BIN_DIR)/Conf: ${XSL_OBJ_DIR}/conf.o ${XSL_OBJ_DIR}/HarnessInit.o ${XSL_OBJ_DIR}/FileUtility.o ${XSL_OBJ_DIR}/XMLFileReporter.o 
 	${LINK} $(XSL_BUILD_OPTIONS) ${PLATFORM_LIB_LINK_OPTIONS}  \
-	${EXTRA_LINK_OPTIONS}  $(XALAN_LIB) $(ALLLIBS) $(CXXFLAGS) $^ -o $@	
+	${EXTRA_LINK_OPTIONS}  $(XALAN_LIB) $(ALLLIBS) $(CXXFLAGS) $^ -o $@	 $(OTHER_LINK_PARAMETERS)
 ${XSL_OBJ_DIR}/%.o:$(TESTS_DIR)/Conf/%.cpp
 	$(CC1) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) -I$(TESTS_DIR) $(EXTRA_COMPILE_OPTIONS) -o $@ $<
 
@@ -88,8 +88,8 @@ prepare:
 
 install: Tests
 	$(MKINSTALLDIRS) $(DESTDIR)/$(bindir)
-	$(INSTALL_PROGRAM) $(XSL_BIN_DIR)/Conf $(DESTDIR)/$(bindir)
-	$(INSTALL_PROGRAM) $(XSL_BIN_DIR)/ThreadTest $(DESTDIR)/$(bindir)
+	$(INSTALL_PROGRAM) $(XSL_BIN_DIR)/Conf$(EXT) $(DESTDIR)/$(bindir)
+	$(INSTALL_PROGRAM) $(XSL_BIN_DIR)/ThreadTest$(EXT) $(DESTDIR)/$(bindir)
 
 install-extras:
 	cp -r $(TESTS_DIR) $(DESTDIR)/$(prefix)
@@ -99,7 +99,7 @@ clean:
 	rm -rf $(OUTDIR)/so_locations
 	rm -rf $(XSL_BIN_DIR)/SunWS_cache
 	rm -rf $(XSL_LIB_DIR)/SunWS_cache
-	rm -f  $(XSL_BIN_DIR)/Conf
-	rm -f  $(XSL_BIN_DIR)/ThreadTest
+	rm -f  $(XSL_BIN_DIR)/Conf$(EXT)
+	rm -f  $(XSL_BIN_DIR)/ThreadTest$(EXT)
 
 

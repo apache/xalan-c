@@ -116,7 +116,7 @@ ALL_HEADERS_DIRS = \
 	XalanTransformer \
 	XPathCAPI
 
-ALL_BINARIES = Xalan
+ALL_BINARIES = Xalan$(EXT)
 
 include $(XALANCROOT)/version.incl
 include ../../Makefile.incl
@@ -191,7 +191,7 @@ XalanExe: lib  $(XSL_BIN_DIR)/Xalan
 
 $(XSL_BIN_DIR)/Xalan: ${XSL_OBJ_DIR}/XalanExe.o
 	${LINK} $(XSL_BUILD_OPTIONS) ${PLATFORM_LIB_LINK_OPTIONS}  \
-	${EXTRA_LINK_OPTIONS} $(XALAN_LIB) $(ALLLIBS) $^ -o $@	
+	${EXTRA_LINK_OPTIONS} $(XALAN_LIB) $(ALLLIBS) $^ -o $@	$(OTHER_LINK_PARAMETERS)
 ${XSL_OBJ_DIR}/XalanExe.o: $(XALANEXE_DIR)/XalanExe.cpp
 	$(CC1) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $<
 endif
@@ -200,7 +200,7 @@ testXSLT: lib  $(XSL_BIN_DIR)/testXSLT
 
 $(XSL_BIN_DIR)/testXSLT: ${XSL_OBJ_DIR}/process.o
 	${LINK} $(XSL_BUILD_OPTIONS) ${PLATFORM_LIB_LINK_OPTIONS}  \
-	${EXTRA_LINK_OPTIONS} $(XALAN_LIB) $(ALLLIBS) $^ -o $@	
+	${EXTRA_LINK_OPTIONS} $(XALAN_LIB) $(ALLLIBS) $^ -o $@	$(OTHER_LINK_PARAMETERS)
 ${XSL_OBJ_DIR}/process.o: $(TESTXSLT_DIR)/process.cpp
 	$(CC1) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $<
 
@@ -208,7 +208,7 @@ testXPath: lib  $(XSL_BIN_DIR)/testXPath
 
 $(XSL_BIN_DIR)/testXPath: ${XSL_OBJ_DIR}/TestXPath.o ${XSL_OBJ_DIR}/NodeNameTreeWalker.o
 	${LINK} $(XSL_BUILD_OPTIONS) ${PLATFORM_LIB_LINK_OPTIONS}  \
-	${EXTRA_LINK_OPTIONS} $(XALAN_LIB) $(ALLLIBS) $(CXXFLAGS) $^ -o $@	
+	${EXTRA_LINK_OPTIONS} $(XALAN_LIB) $(ALLLIBS) $(CXXFLAGS) $^ -o $@	$(OTHER_LINK_PARAMETERS)
 ${XSL_OBJ_DIR}/%.o:$(TESTXPATH_DIR)/%.cpp
 	$(CC1) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $<
 
@@ -228,7 +228,7 @@ locale:
 	$(MAKE) -C Utils $@
 
 $(XSL_LIB_DIR)/$(LIB): $(ALL_OBJECTS)
-	$(MAKE_SHARED) $(PLATFORM_LIBRARIES) $(EXTRA_LINK_OPTIONS) $(LINK_SONAME) $(ALLLIBS) $^ -o $@ 
+	$(MAKE_SHARED) $(PLATFORM_LIBRARIES) $(EXTRA_LINK_OPTIONS) $(LINK_SONAME) $(ALLLIBS) $^ -o $@ $(OTHER_LINK_LIB_PARAMERES)
 ifeq ($(PLATFORM), OS390)
 	cp -p *.x  ${XSL_LIB_DIR}        
 else
@@ -287,8 +287,8 @@ doClean:
 	rm -f $(XSL_LIB_DIR)/$(SO_NAME)
 	rm -f $(XSL_LIB_DIR)/$(LIB).$(OS390SIDEDECK)
 	rm -f $(XSL_LIB_DIR)/$(LIB).map1
-	rm -f $(XSL_BIN_DIR)/testXSLT
-	rm -f $(XSL_BIN_DIR)/testXPath
-	rm -f $(XSL_BIN_DIR)/Xalan
+	rm -f $(XSL_BIN_DIR)/testXSLT$(EXT)
+	rm -f $(XSL_BIN_DIR)/testXPath$(EXT)
+	rm -f $(XSL_BIN_DIR)/Xalan$(EXT)
 
 install-package: install

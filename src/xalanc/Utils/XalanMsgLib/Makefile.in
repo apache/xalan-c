@@ -26,13 +26,13 @@ include $(XALANCROOT)/version.incl
 include ../../../../Makefile.incl
 
 
-LOC_ALLLIBS = $(subst $(LOCAL_LIB), ,$(ALLLIBS))
+
 XALANMSGLIB_SRC=$(XALANCROOT)/src/xalanc/Utils/XalanMsgLib
 
 .PHONY: doClean install
 
 $(MESSAGELIB) : ${XSL_OBJ_DIR}/XalanMsgLib.o 
-	$(MAKE_SHARED_LOC) $(PLATFORM_LIBRARIES) $(EXTRA_LINK_OPTIONS) $(LOC_ALLLIBS) $^ -o $@
+	$(MAKE_SHARED_LOC) $(EXTRA_LOC_LINK_OPTIONS) $^ -o $@
 	rm -f $(XSL_LIB_DIR)/$(LOC_LIBNAME)$(SHLIBSUFFIX) && \
 		$(LN) -fs $(LOC_LIB) $(XSL_LIB_DIR)/$(LOC_LIBNAME)$(SHLIBSUFFIX)
 ifeq ($(PLATFORM), AIX)

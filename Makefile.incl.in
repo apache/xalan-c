@@ -89,7 +89,7 @@ LOC_LIBNAME = lib${LOC_PROJECT_NAME}
 LOC_LIB = ${LOC_LIBNAME}$(SHLIBSUFFIX).${LIB_MAJOR_VER}.${LIB_MINOR_VER}
 LOC_SONAME = ${LOC_LIBNAME}${SHLIBSUFFIX}.${LIB_MAJOR_VER}
 MESSAGELIB = ${XSL_LIB_DIR}/${LOC_LIB}
-
+EXTRA_LOC_LINK_OPTIONS = $(EXTRA_LINK_OPTIONS)
 
 ifeq ($(MESSAGELOADER),NLS)
 LOCAL_LIB =
@@ -105,6 +105,44 @@ XSL_BUILD_OPTIONS += -DXALAN_INMEM_MSG_LOADER
 LOCAL_LIB = -L${XSL_LIB_DIR} -l$(LOC_PROJECT_NAME)
 endif
 
+#=============== CYGWIN SPECIFIC OPTIONS =========================
+
+ifeq ($(PLATFORM), CYGWIN)
+
+  SUPPORTED = TRUE
+  ALLLIBS = $(LIBS)
+  SHLIBSUFFIX = .dll
+  CYG_PREFIX = cyg
+  LINK_SONAME =  
+  EXT=.exe
+    
+  MESSAGELIB = ${XSL_LIB_DIR}/$(CYG_PREFIX)$(LOC_PROJECT_NAME)$(LIB_MAJOR_VER)$(SHLIBSUFFIX)
+  
+  LIB = $(CYG_PREFIX)$(PROJECT_NAME)$(LIB_MAJOR_VER)$(SHLIBSUFFIX)
+
+  PLATFORM_COMPILE_OPTIONS = -Wall -D${PLATFORM} -D_REENTRANT
+              
+  CC1 = $(CXX) $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS)
+  CC4 = $(CC1)
+  LINK = $(CXX) -D${PLATFORM}
+   
+  MAKE_SHARED = $(LINK) $(CXXFLAGS) -shared   -Wl,--warn-once \
+ 											  -Wl,--out-implib \
+ 											  -Wl,$(XSL_LIB_DIR)/$(LIB_NAME)$(SHLIBSUFFIX).$(LIB_MAJOR_VER).$(LIB_MINOR_VER)
+ 											        																            
+  MAKE_SHARED_LOC = $(LINK) $(CXXFLAGS) -shared -Wl,--warn-once \
+												-Wl,--out-implib \
+          										-Wl,$(XSL_LIB_DIR)/$(LOC_LIB)
+
+  LOC_OTHER_LINK_PARAMETERS = $(XERCES_LIB)
+  
+  OTHER_LINK_PARAMETERS = $(XALAN_LIB) $(ALLLIBS)
+  
+  OTHER_LINK_LIB_PARAMERES = $(ALLLIBS)
+   
+  export PATH := $(XERCESCROOT)/lib:$(ICUROOT)/lib:$(PATH)
+ 
+endif
 
 #=============== LINUX SPECIFIC OPTIONS =========================
 

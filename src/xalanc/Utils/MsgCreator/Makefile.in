@@ -26,11 +26,10 @@ MSG_CREATOR_OBJECTS= $(XSL_OBJ_DIR)/MsgFileOutputStream.o $(XSL_OBJ_DIR)/ICUResH
 
 MSG_CREATOR_SRC=$(XALANCROOT)/src/xalanc/Utils/MsgCreator
 
-LOC_ALLLIBS = $(subst $(LOCAL_LIB), ,$(ALLLIBS))
 
 $(XSL_BIN_DIR)/MsgCreator : $(MSG_CREATOR_OBJECTS)
 	${LINK} $(XSL_BUILD_OPTIONS) ${PLATFORM_LIB_LINK_OPTIONS} ${LIBRARY_SEARCH_PATHS} \
-	${EXTRA_LINK_OPTIONS}  $(LOC_ALLLIBS) $^ -o $@
+	${EXTRA_LINK_OPTIONS}  $(XERCES_LIB) $^ -o $@ $(LOC_OTHER_LINK_PARAMETERS)
 	
 $(XSL_OBJ_DIR)/%.o : $(MSG_CREATOR_SRC)/%.cpp    
 	$(CC1) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $<
@@ -44,5 +43,5 @@ prepare:
 install:
 
 doClean:
-	rm -f $(XSL_BIN_DIR)/MsgCreator
+	rm -f $(XSL_BIN_DIR)/MsgCreator$(EXT)
 	rm -f $(MSG_CREATOR_OBJECTS)
