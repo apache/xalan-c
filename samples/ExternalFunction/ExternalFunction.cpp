@@ -183,11 +183,6 @@ public:
 			XPathExecutionContext&			executionContext,
 			XalanNode*						context)
 	{
-		//if (args.size() != 0)
-		//{
-		//	executionContext.error("The asctime() function takes no arguments!", context);
-		//}
-
 		time_t	theTime;
 
 		time(&theTime);
@@ -214,6 +209,12 @@ public:
 	clone() const
 	{
 		return new FunctionAsctime(*this);
+	}
+
+	const XalanDOMString
+	getError() const
+	{
+		return XalanDOMString("The asctime() function takes no arguments!");
 	}
 
 private:
