@@ -370,42 +370,36 @@ public:
 	 * @param theTemplate The current template instance
 	 */
 	virtual	void
-	setCurrentTemplate(const ElemTemplate*	theTemplate) = 0; 
+	pushCurrentTemplate(const ElemTemplate*		theTemplate) = 0;
+
+	virtual	void
+	popCurrentTemplate() = 0;
 
 	/*
-	 * A class to manage setting and restoring the current
+	 * A class to manage pushing and popping the current
 	 * template instance.
 	 */
-	class SetAndRestoreCurrentTemplate
+	class PushAndPopCurrentTemplate
 	{
 	public:
 
-		SetAndRestoreCurrentTemplate(
+		PushAndPopCurrentTemplate(
 			StylesheetExecutionContext&		executionContext,
 			const ElemTemplate*				theTemplate) :
-			m_executionContext(executionContext),
-			m_template(executionContext.getCurrentTemplate())
+			m_executionContext(executionContext)
 		{
-			executionContext.setCurrentTemplate(theTemplate);
+			executionContext.pushCurrentTemplate(theTemplate);
 		}
 
-		~SetAndRestoreCurrentTemplate()
+		~PushAndPopCurrentTemplate()
 		{
-			m_executionContext.setCurrentTemplate(m_template);
+			m_executionContext.popCurrentTemplate();
 		}
 
 	private:
 
-		// Not implemented...
-		SetAndRestoreCurrentTemplate(const SetAndRestoreCurrentTemplate&);
-
-		SetAndRestoreCurrentTemplate&
-		operator=(const SetAndRestoreCurrentTemplate&);
-
 		// Data members...
 		StylesheetExecutionContext&		m_executionContext;
-
-		const ElemTemplate* const		m_template;
 	};
 
 	/**
@@ -835,9 +829,25 @@ public:
 			executionContext.pushContextMarker();
 		}
 
+		PushAndPopContextMarker(
+				StylesheetExecutionContext&		executionContext,
+				int&							currentStackFrameIndex) :
+			m_executionContext(executionContext)
+		{
+			currentStackFrameIndex = executionContext.getCurrentStackFrameIndex();
+
+			executionContext.pushContextMarker();
+		}
+
 		~PushAndPopContextMarker()
 		{
 			m_executionContext.popContextMarker();
+		}
+
+		StylesheetExecutionContext&
+		getExecutionContext() const
+		{
+			return m_executionContext;
 		}
 
 	private:
@@ -882,13 +892,11 @@ public:
 	 * Also, push default arguments on the stack.
 	 *
 	 * @param xslCallTemplateElement "call-template" element
-	 * @param sourceNode             source node
 	 * @param targetTemplate         target template
 	 */
 	virtual	void
 	pushParams(
 			const ElemTemplateElement&	xslCallTemplateElement,
-			XalanNode*					sourceNode,
 			const ElemTemplateElement*	targetTemplate) = 0;
 
 	/**
@@ -915,7 +923,7 @@ public:
 	 * @param elem the element
 	 */
 	virtual void
-	popElementFrame(const ElemTemplateElement*	elem) = 0;
+	popElementFrame() = 0;
 
 	/*
 	 * A class to manage pushing and popping an element's stack
@@ -928,22 +936,19 @@ public:
 		PushAndPopElementFrame(
 			StylesheetExecutionContext&		executionContext,
 			const ElemTemplateElement*		element) :
-			m_executionContext(executionContext),
-			m_element(element)
+			m_executionContext(executionContext)
 		{
 			executionContext.pushElementFrame(element);
 		}
 
 		~PushAndPopElementFrame()
 		{
-			m_executionContext.popElementFrame(m_element);
+			m_executionContext.popElementFrame();
 		}
 
 	private:
 
 		StylesheetExecutionContext&		m_executionContext;
-
-		const ElemTemplateElement*		m_element;
 	};
 
 	/**
@@ -993,12 +998,6 @@ public:
 			m_executionContext.setCurrentStackFrameIndex(m_savedIndex);
 		}
 
-		int
-		getStackFrameIndex() const
-		{
-			return m_savedIndex;
-		}
-
 	private:
 
 		StylesheetExecutionContext&		m_executionContext;
@@ -1009,29 +1008,48 @@ public:
 	/*
 	 * A class to manage stack state during execution.
 	 */
-	class ParamsPushPop
+	class ParamsPushPop : public PushAndPopContextMarker
 	{
 	public:
 
 		ParamsPushPop(
-			StylesheetExecutionContext&		executionContext,
-			const ElemTemplateElement&		xslCallTemplateElement,
-			XalanNode*						sourceNode,
-			const ElemTemplateElement*		targetTemplate);
-
-		~ParamsPushPop();
-
-		int
-		getStackFrameIndex() const
+				StylesheetExecutionContext&		executionContext,
+				const ElemTemplateElement&		xslCallTemplateElement,
+				const ElemTemplateElement*		targetTemplate) :
+			PushAndPopContextMarker(executionContext)
 		{
-			return m_savedStackFrameIndex;
+			doPush(
+				xslCallTemplateElement,
+				targetTemplate);
+		}
+
+		ParamsPushPop(
+				StylesheetExecutionContext&		executionContext,
+				const ElemTemplateElement&		xslCallTemplateElement,
+				const ElemTemplateElement*		targetTemplate,
+				int&							savedStackFrameIndex) :
+			PushAndPopContextMarker(executionContext, savedStackFrameIndex)
+		{
+			doPush(
+				xslCallTemplateElement,
+				targetTemplate,
+				savedStackFrameIndex);
+		}
+
+		~ParamsPushPop()
+		{
 		}
 
 	private:
 
-		StylesheetExecutionContext&		m_executionContext;
-	
-		const int						m_savedStackFrameIndex;
+		doPush(
+			const ElemTemplateElement&		xslCallTemplateElement,
+			const ElemTemplateElement*		targetTemplate,
+			int								stackFrameIndex);
+
+		doPush(
+			const ElemTemplateElement&		xslCallTemplateElement,
+			const ElemTemplateElement*		targetTemplate);
 	};
 
 	/**
@@ -1784,7 +1802,10 @@ public:
 	getCurrentNode() const = 0;
 
 	virtual void
-	setCurrentNode(XalanNode*	theCurrentNode) = 0;
+	pushCurrentNode(XalanNode*	theCurrentNode) = 0;
+
+	virtual void
+	popCurrentNode() = 0;
 
 	virtual bool
 	isNodeAfter(

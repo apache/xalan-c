@@ -252,7 +252,7 @@ StylesheetRoot::process(
 
 	executionContext.setCurrentMode(&s_emptyQName);
 
-	XPathExecutionContext::CurrentNodeSetAndRestore theCurrentNodeSetAndRestore(executionContext, sourceTree);
+	const XPathExecutionContext::CurrentNodePushAndPop	theCurrentNodePushAndPop(executionContext, sourceTree);
 
 	// Output the action of the found root rule.  All processing
 	// occurs from here.

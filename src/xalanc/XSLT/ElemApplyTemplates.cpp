@@ -214,8 +214,7 @@ ElemApplyTemplates::selectAndSortChildren(
 			NodeSorter*						sorter,
 			int								/* selectStackFrameIndex */) const
 {
-	XalanNode* const	sourceNode = executionContext.getCurrentNode();
-	assert(sourceNode != 0);
+	int		savedStackFrameIndex;
 
 	// Push the params & stack frame, but then execute the select
 	// expression inside transformSelectedChildren, which must be
@@ -223,8 +222,8 @@ ElemApplyTemplates::selectAndSortChildren(
 	StylesheetExecutionContext::ParamsPushPop	thePushPop(
 			executionContext,
 			*this,
-			sourceNode,
-			this);
+			this,
+			savedStackFrameIndex);
 
 	const XalanQName* const		currentMode = executionContext.getCurrentMode();
 	assert(currentMode != 0);
@@ -238,7 +237,7 @@ ElemApplyTemplates::selectAndSortChildren(
 				executionContext,
 				theTemplate,
 				sorter,
-				thePushPop.getStackFrameIndex());
+				savedStackFrameIndex);
 
 		executionContext.setCurrentMode(currentMode);
 	}
@@ -248,7 +247,7 @@ ElemApplyTemplates::selectAndSortChildren(
 				executionContext,
 				theTemplate,
 				sorter,
-				thePushPop.getStackFrameIndex());
+				savedStackFrameIndex);
 	}
 }
 

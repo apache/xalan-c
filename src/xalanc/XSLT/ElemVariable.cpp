@@ -304,7 +304,7 @@ ElemVariable::getValue(
 		}
 		else
 		{
-			const XPathExecutionContext::CurrentNodeSetAndRestore	theCurrentNodeSetAndRestore(executionContext, theCurrentNode, sourceNode);
+			const XPathExecutionContext::CurrentNodePushAndPop	theCurrentNodePushAndPop(executionContext, sourceNode);
 
 			theValue = m_selectPattern->execute(*this, executionContext);
 		}

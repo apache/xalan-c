@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 2000 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -80,7 +80,8 @@ VariablesStack::VariablesStack() :
 	m_globalStackFrameIndex(-1),
 	m_globalStackFrameMarked(false),
 	m_currentStackFrameIndex(0),
-	m_guardStack()
+	m_guardStack(),
+	m_elementFrameStack()
 {
 	m_stack.reserve(eDefaultStackSize);
 }
@@ -103,6 +104,7 @@ VariablesStack::reset()
 
 	m_stack.clear();
 	m_guardStack.clear();
+	m_elementFrameStack.clear();
 
 	m_globalStackFrameMarked = false;
 	m_globalStackFrameIndex = -1;
@@ -150,13 +152,22 @@ VariablesStack::popContextMarker()
 {
 	const VariableStackStackType::size_type		nElems = m_stack.size();
 
-	for(VariableStackStackType::size_type i = nElems; i > 0 && m_stack.empty() == false; --i)
+	VariableStackStackType::size_type i = nElems;
+
+	for(; i > 0; --i)
 	{
+		assert(i >= m_stack.size());
+
 		const StackEntry&			theEntry = m_stack[i - 1];
 		assert(theEntry == back());
 
 		const StackEntry::eType		type = theEntry.getType();
 		assert(type < StackEntry::eNextValue && type >= 0);
+
+#if !defined(NDEBUG)
+		const ElemTemplateElement* const	theElement =
+			theEntry.getElement();
+#endif
 
 		pop();
 
@@ -164,7 +175,30 @@ VariablesStack::popContextMarker()
 		{
 			break;
 		}
+#if !defined(NDEBUG)
+		else if (type == StackEntry::eElementFrameMarker)
+		{
+			if (m_elementFrameStack.empty() == true)
+			{
+				throw InvalidStackContextException();
+			}
+
+			const ElemTemplateElement* const	theStackBack =
+				m_elementFrameStack.back();
+
+			m_elementFrameStack.pop_back();
+
+			if (theElement != theStackBack)
+			{
+				throw InvalidStackContextException();
+			}
+		}
+#endif
 	}
+
+	assert(m_stack.size() == i - 1);
+
+	m_currentStackFrameIndex = i - 1;
 }
 
 
@@ -176,8 +210,7 @@ public:
 	CommitPushElementFrame(
 			VariablesStack&								theVariableStack,
 			const ElemTemplateElement*					targetTemplate) :
-		m_variableStack(&theVariableStack),
-		m_targetTemplate(targetTemplate)
+		m_variableStack(&theVariableStack)
 	{
 		theVariableStack.pushElementFrame(targetTemplate);
 	}
@@ -186,7 +219,7 @@ public:
 	{
 		if (m_variableStack != 0)
 		{
-			m_variableStack->popElementFrame(m_targetTemplate);
+			m_variableStack->popElementFrame();
 		}
 	}
 
@@ -199,8 +232,6 @@ public:
 private:
 
 	VariablesStack*						m_variableStack;
-
-	const ElemTemplateElement* const	m_targetTemplate;
 };
 
 
@@ -549,6 +580,10 @@ void
 VariablesStack::pushElementFrame(const ElemTemplateElement*	elem)
 {
 	push(StackEntry(elem));
+
+#if !defined(NDEBUG)
+	m_elementFrameStack.push_back(elem);
+#endif
 }
 
 
@@ -575,7 +610,7 @@ private:
 
 
 void
-VariablesStack::popElementFrame(const ElemTemplateElement*	elem)
+VariablesStack::popElementFrame()
 {
 	const VariableStackStackType::size_type		nElems = m_stack.size();
 	assert(nElems > 0);
@@ -596,13 +631,25 @@ VariablesStack::popElementFrame(const ElemTemplateElement*	elem)
 		}
 		else if (theEntry.getType() == StackEntry::eElementFrameMarker)
 		{
+#if !defined(NDEBUG)
 			const ElemTemplateElement* const	theElement =
 				theEntry.getElement();
 
-			if (theElement != elem)
+			if (m_elementFrameStack.empty() == true)
 			{
 				throw InvalidStackContextException();
 			}
+
+			const ElemTemplateElement* const	theStackBack =
+				m_elementFrameStack.back();
+
+			m_elementFrameStack.pop_back();
+
+			if (theElement != theStackBack)
+			{
+				throw InvalidStackContextException();
+			}
+#endif
 
 			break;
 		}
@@ -674,6 +721,13 @@ VariablesStack::StackEntry::StackEntry(const StackEntry&	theSource) :
 
 VariablesStack::StackEntry::~StackEntry()
 {
+#if !defined(NDEBUG)
+	m_qname = (const XalanQName*) 0xDEADBEEF;
+
+	m_variable = (const ElemVariable*) 0xDEADBEEF;
+
+	m_element = (const ElemTemplateElement*) 0xDEADBEEF;
+#endif
 }
 
 

@@ -153,15 +153,11 @@ ElemCallTemplate::execute(StylesheetExecutionContext&	executionContext) const
 {
 	ElemTemplateElement::execute(executionContext);
 
-	XalanNode* const	sourceNode = executionContext.getCurrentNode();
-	assert(sourceNode != 0);
-
 	assert(m_template != 0);
 
 	StylesheetExecutionContext::ParamsPushPop	thePushPop(
 				executionContext,
 				*this,			
-				sourceNode,
 				m_template);
 
 	m_template->execute(executionContext);

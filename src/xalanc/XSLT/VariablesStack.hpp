@@ -126,7 +126,7 @@ public:
 	 * @param elem the element
 	 */
 	void
-	popElementFrame(const ElemTemplateElement*	elem);
+	popElementFrame();
 
 	/**
 	 * Push a context marker onto the stack to let us know when to stop
@@ -179,11 +179,13 @@ public:
 	};
 
 #if defined(XALAN_NO_STD_NAMESPACE)
-	typedef vector<ParamsVectorEntry>		ParamsVectorType;
-	typedef vector<const ElemVariable*>		RecursionGuardStackType;
+	typedef vector<ParamsVectorEntry>			ParamsVectorType;
+	typedef vector<const ElemVariable*>			RecursionGuardStackType;
+	typedef vector<const ElemTemplateElement*>	ElemTemplateElementStackType;
 #else
-	typedef std::vector<ParamsVectorEntry>		ParamsVectorType;
-	typedef std::vector<const ElemVariable*>	RecursionGuardStackType;
+	typedef std::vector<ParamsVectorEntry>			ParamsVectorType;
+	typedef std::vector<const ElemVariable*>		RecursionGuardStackType;
+	typedef std::vector<const ElemTemplateElement*>	ElemTemplateElementStackType;
 #endif
 
 	/**
@@ -590,7 +592,13 @@ private:
 	 * that are being evaluated dynamically, to protect
 	 * against circular definitions.
 	 */
-	RecursionGuardStackType		m_guardStack;
+	RecursionGuardStackType			m_guardStack;
+
+	/**
+	 * This will be a stack for tracking element frames.
+	 * This is only used in debug builds.
+	 */
+	ElemTemplateElementStackType	m_elementFrameStack;
 };
 
 

@@ -130,7 +130,7 @@ public:
 #endif
 
 #if defined(XALAN_NO_STD_NAMESPACE)
-	typedef deque<const ElemTemplateElement*>			ElementRecursionStackType;
+	typedef deque<const ElemTemplateElement*>			ElementTemplateElementStackType;
 	typedef vector<FormatterListener*>					FormatterListenerVectorType;
 	typedef vector<PrintWriter*>						PrintWriterVectorType;
 	typedef vector<XalanOutputStream*>					OutputStreamVectorType;
@@ -140,14 +140,16 @@ public:
 	typedef map<XalanDOMString,
 				XPathCacheEntry,
 				less<XalanDOMString> >					XPathCacheMapType;
+	typedef deque<const ElemTemplate*>					CurrentTemplateStackType;
 #else
-	typedef std::deque<const ElemTemplateElement*>		ElementRecursionStackType;
+	typedef std::deque<const ElemTemplateElement*>		ElementTemplateElementStackType;
 	typedef std::vector<FormatterListener*>				FormatterListenerVectorType;
 	typedef std::vector<PrintWriter*>					PrintWriterVectorType;
 	typedef std::vector<XalanOutputStream*>				OutputStreamVectorType;
 	typedef std::set<const KeyDeclaration*>				KeyDeclarationSetType;
 	typedef std::pair<const XPath*, ClockType>			XPathCacheEntry;
 	typedef std::map<XalanDOMString, XPathCacheEntry>	XPathCacheMapType;
+	typedef std::deque<const ElemTemplate*>				CurrentTemplateStackType;
 #endif
 
 	typedef Stylesheet::KeyTablesTableType				KeyTablesTableType;
@@ -351,7 +353,10 @@ public:
 	getCurrentTemplate() const;
 
 	virtual	void
-	setCurrentTemplate(const ElemTemplate*	theTemplate); 
+	pushCurrentTemplate(const ElemTemplate*	theTemplate);
+
+	virtual	void
+	popCurrentTemplate();
 
 	virtual bool
 	doDiagnosticsOutput() const;
@@ -494,7 +499,6 @@ public:
 	virtual	void
 	pushParams(
 			const ElemTemplateElement&	xslCallTemplateElement,
-			XalanNode*					sourceNode,
 			const ElemTemplateElement*	targetTemplate);
 
 	virtual const XObjectPtr
@@ -504,7 +508,7 @@ public:
 	pushElementFrame(const ElemTemplateElement*		elem);
 
 	virtual void
-	popElementFrame(const ElemTemplateElement*	elem);
+	popElementFrame();
 
 	virtual int
 	getGlobalStackFrameIndex() const;
@@ -845,7 +849,10 @@ public:
 	getCurrentNode() const;
 
 	virtual void
-	setCurrentNode(XalanNode*	theCurrentNode);
+	pushCurrentNode(XalanNode*	theCurrentNode);
+
+	virtual void
+	popCurrentNode();
 
 	virtual bool
 	isNodeAfter(
@@ -1041,13 +1048,11 @@ private:
 	 * call.
 	 *
 	 * @param xslCallTemplateElement "call-template" element
-	 * @param sourceNode             source node
 	 * @param params The params
 	 */
 	void
 	getParams(
 			const ElemTemplateElement&	xslCallTemplateElement,
-			XalanNode*					sourceNode,
 			ParamsVectorType&			params);
 
 	/**
@@ -1105,7 +1110,7 @@ private:
 		   eDefaultTextAllocatorBlockSize = 20,
 		   eDefaultTextIWSAllocatorBlockSize = 20 };
 
-	ElementRecursionStackType			m_elementRecursionStack;
+	ElementTemplateElementStackType		m_elementRecursionStack;
 
 	const PrefixResolver*				m_prefixResolver;
 
@@ -1148,7 +1153,7 @@ private:
 	// Holds the current mode.
 	const XalanQName*					m_mode;
 
-	const ElemTemplate*					m_currentTemplate;
+	CurrentTemplateStackType			m_currentTemplateStack;
 
 	typedef XalanObjectCacheDefault<FormatterToText>		FormatterToTextCacheType;
 	typedef XalanObjectCacheDefault<FormatterToSourceTree>	FormatterToSourceTreeCacheType;

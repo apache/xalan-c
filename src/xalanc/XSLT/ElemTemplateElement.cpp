@@ -310,7 +310,7 @@ ElemTemplateElement::executeChildren(
 		}
 		else
 		{
-			const XPathExecutionContext::CurrentNodeSetAndRestore	theCurrentNodeSetAndRestore(executionContext, theCurrentNode, sourceNode);
+			const XPathExecutionContext::CurrentNodePushAndPop	theCurrentNodePushAndPop(executionContext, sourceNode);
 
 			executeChildren(executionContext);
 		}

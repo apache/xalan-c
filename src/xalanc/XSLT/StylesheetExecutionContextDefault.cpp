@@ -168,7 +168,7 @@ StylesheetExecutionContextDefault::StylesheetExecutionContextDefault(
 	m_ignoreHTMLElementNamespaces(false),
 	m_sourceTreeResultTreeFactory(),
 	m_mode(0),
-	m_currentTemplate(0),
+	m_currentTemplateStack(),
 	m_formatterToTextCache(),
 	m_formatterToSourceTreeCache(),
 	m_nodeSorterCache(),
@@ -211,7 +211,7 @@ StylesheetExecutionContextDefault::StylesheetExecutionContextDefault(
 	m_ignoreHTMLElementNamespaces(false),
 	m_sourceTreeResultTreeFactory(),
 	m_mode(0),
-	m_currentTemplate(0),
+	m_currentTemplateStack(),
 	m_formatterToTextCache(),
 	m_formatterToSourceTreeCache(),
 	m_nodeSorterCache(),
@@ -329,15 +329,23 @@ StylesheetExecutionContextDefault::setCurrentMode(const XalanQName*		theMode)
 const ElemTemplate*
 StylesheetExecutionContextDefault::getCurrentTemplate() const
 {
-	return m_currentTemplate;
+	return m_currentTemplateStack.back();
 }
 
 
 
 void
-StylesheetExecutionContextDefault::setCurrentTemplate(const ElemTemplate*	theTemplate)
+StylesheetExecutionContextDefault::pushCurrentTemplate(const ElemTemplate*	theTemplate)
 {		
-	m_currentTemplate = theTemplate;
+	m_currentTemplateStack.push_back(theTemplate);
+}
+
+
+
+void
+StylesheetExecutionContextDefault::popCurrentTemplate()
+{		
+	m_currentTemplateStack.pop_back();
 }
 
 
@@ -779,7 +787,6 @@ StylesheetExecutionContextDefault::clearTopLevelParams()
 void
 StylesheetExecutionContextDefault::pushParams(
 			const ElemTemplateElement&	xslCallTemplateElement,
-			XalanNode*					sourceNode,
 			const ElemTemplateElement*	targetTemplate)
 {
 	// We have a params vector that we reuse, but occasionally, a
@@ -798,7 +805,7 @@ StylesheetExecutionContextDefault::pushParams(
 			 m_paramsVector.reserve(eDefaultParamsVectorSize);
 		}
 
-		getParams(xslCallTemplateElement, sourceNode, m_paramsVector);
+		getParams(xslCallTemplateElement, m_paramsVector);
 
 		m_variablesStack.pushParams(
 					m_paramsVector,
@@ -808,7 +815,7 @@ StylesheetExecutionContextDefault::pushParams(
 	{
 		ParamsVectorType	tempParams;
 
-		getParams(xslCallTemplateElement, sourceNode, tempParams);
+		getParams(xslCallTemplateElement, tempParams);
 
 		m_variablesStack.pushParams(
 					tempParams,
@@ -837,9 +844,9 @@ StylesheetExecutionContextDefault::pushElementFrame(const ElemTemplateElement*	e
 
 
 void
-StylesheetExecutionContextDefault::popElementFrame(const ElemTemplateElement*	elem)
+StylesheetExecutionContextDefault::popElementFrame()
 {
-	m_variablesStack.popElementFrame(elem);
+	m_variablesStack.popElementFrame();
 }
 
 
@@ -1134,7 +1141,7 @@ StylesheetExecutionContextDefault::findOnElementRecursionStack(const ElemTemplat
 {
 	XALAN_USING_STD(find)
 
-	const ElementRecursionStackType::const_iterator	i =
+	const ElementTemplateElementStackType::const_iterator	i =
 				find(m_elementRecursionStack.begin(),
 					 m_elementRecursionStack.end(),
 					 theElement);
@@ -1696,7 +1703,8 @@ StylesheetExecutionContextDefault::reset()
 	}
 
 	m_mode = 0;
-	m_currentTemplate = 0;
+
+	m_currentTemplateStack.clear();
 
 	m_formatterToTextCache.reset();
 	m_formatterToSourceTreeCache.reset();
@@ -1732,9 +1740,17 @@ StylesheetExecutionContextDefault::getCurrentNode() const
 
 
 void
-StylesheetExecutionContextDefault::setCurrentNode(XalanNode*	theCurrentNode)
+StylesheetExecutionContextDefault::pushCurrentNode(XalanNode*	theCurrentNode)
 {
-	m_xpathExecutionContextDefault.setCurrentNode(theCurrentNode);
+	m_xpathExecutionContextDefault.pushCurrentNode(theCurrentNode);
+}
+
+
+
+void
+StylesheetExecutionContextDefault::popCurrentNode()
+{
+	m_xpathExecutionContextDefault.popCurrentNode();
 }
 
 
@@ -2438,9 +2454,9 @@ private:
 void
 StylesheetExecutionContextDefault::getParams(
 			const ElemTemplateElement&	xslCallTemplateElement,
-			XalanNode*					sourceNode,
 			ParamsVectorType&			params)
 {
+	assert(getCurrentNode() != 0);
 	assert(params.empty() == true);
 
 	const ElemTemplateElement*	child =
@@ -2473,7 +2489,7 @@ StylesheetExecutionContextDefault::getParams(
 					theXObject =
 						createVariable(
 							*pxpath,
-							sourceNode,
+							getCurrentNode(),
 							*xslParamElement);
 				}
 				else
@@ -2481,7 +2497,7 @@ StylesheetExecutionContextDefault::getParams(
 					theXObject =
 						createVariable(
 							*xslParamElement,
-							sourceNode);
+							getCurrentNode());
 				}
 
 				params.push_back(ParamsVectorType::value_type(&xslParamElement->getQName(), theXObject));

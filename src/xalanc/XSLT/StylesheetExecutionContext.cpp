@@ -84,52 +84,33 @@ StylesheetExecutionContext::~StylesheetExecutionContext()
 
 
 
-StylesheetExecutionContext::ParamsPushPop::ParamsPushPop(
-			StylesheetExecutionContext&		executionContext,
+StylesheetExecutionContext::ParamsPushPop::doPush(
 			const ElemTemplateElement&		xslCallTemplateElement,
-			XalanNode*						sourceNode,
-			const ElemTemplateElement*		targetTemplate) :
-	m_executionContext(executionContext),
-	m_savedStackFrameIndex(executionContext.getCurrentStackFrameIndex())
+			const ElemTemplateElement*		targetTemplate,
+			int								savedStackFrameIndex)
 {
-	// It would be cleaner to replace these two lines with separate
-	// subobjects, but that would means saving two more copies of
-	// the execution context on the stack.  Instead, we're just using
-	// a catch block to make sure that the code in the destructor runs
-	// if there's a problem pushing the params.
-	executionContext.pushContextMarker();
-
-	executionContext.setCurrentStackFrameIndex(m_savedStackFrameIndex);
-
-	try
+	if (xslCallTemplateElement.hasParams() == true)
 	{
-		if (xslCallTemplateElement.hasParams() == true)
-		{
-			executionContext.pushParams(
-						xslCallTemplateElement,
-						sourceNode,
-						targetTemplate);
-		}
+		getExecutionContext().setCurrentStackFrameIndex(savedStackFrameIndex);
 
-		executionContext.setCurrentStackFrameIndex();
-	}
-	catch(...)
-	{
-		m_executionContext.setCurrentStackFrameIndex(m_savedStackFrameIndex);
-
-		m_executionContext.popContextMarker();
-
-		throw;
+		getExecutionContext().pushParams(
+					xslCallTemplateElement,
+					targetTemplate);
 	}
 }
 
 
 
-StylesheetExecutionContext::ParamsPushPop::~ParamsPushPop()
+StylesheetExecutionContext::ParamsPushPop::doPush(
+			const ElemTemplateElement&		xslCallTemplateElement,
+			const ElemTemplateElement*		targetTemplate)
 {
-	m_executionContext.setCurrentStackFrameIndex(m_savedStackFrameIndex);
-
-	m_executionContext.popContextMarker();
+	if (xslCallTemplateElement.hasParams() == true)
+	{
+		getExecutionContext().pushParams(
+					xslCallTemplateElement,
+					targetTemplate);
+	}
 }
 
 

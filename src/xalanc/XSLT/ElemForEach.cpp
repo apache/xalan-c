@@ -217,7 +217,7 @@ ElemForEach::execute(StylesheetExecutionContext&	executionContext) const
 	assert(m_selectPattern != 0);
 	assert(executionContext.getCurrentNode() != 0);
 
-	StylesheetExecutionContext::SetAndRestoreCurrentTemplate	theSetAndRestore(executionContext, 0);
+	StylesheetExecutionContext::PushAndPopCurrentTemplate	thePushAndPop(executionContext, 0);
 
 	if (hasChildren() == true)
 	{

@@ -217,7 +217,7 @@ ElemTemplate::execute(StylesheetExecutionContext&	executionContext) const
 void
 ElemTemplate::executeChildren(StylesheetExecutionContext&	executionContext) const
 {
-	StylesheetExecutionContext::SetAndRestoreCurrentTemplate	theSetAndRestore(executionContext, this);
+	StylesheetExecutionContext::PushAndPopCurrentTemplate	thePushAndPop(executionContext, this);
 
 	ElemTemplateElement::executeChildren(executionContext);
 }
