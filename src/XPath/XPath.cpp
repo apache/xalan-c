@@ -995,20 +995,7 @@ XPath::variable(
 	const QNameByReference	qname(ns.str(),
 								  varName.str());	
 
-	XObjectPtr result;
-
-	try
-	{
-		result = executionContext.getVariable(qname);
-	}
-	catch(...)
-	{
-		executionContext.error(TranscodeFromLocalCodePage("Could not get variable named ") + varName.str());
-
-		throw;
-	}
-
-	return result;
+	return executionContext.getVariable(qname);
 }
 
 
