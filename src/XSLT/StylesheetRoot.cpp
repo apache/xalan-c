@@ -213,7 +213,7 @@ StylesheetRoot::process(
 	{
 		rootRule = m_defaultRootRule;
 	}
-	assert(rootRule);
+	assert(rootRule != 0);
 
 	executionContext.setStylesheetRoot(this);
 
