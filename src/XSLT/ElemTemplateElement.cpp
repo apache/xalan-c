@@ -124,9 +124,11 @@ ElemTemplateElement::ElemTemplateElement(
 	XalanElement(),
 	PrefixResolver(),
 	m_finishedConstruction(false),
-	m_namespacesHandler(stylesheetTree.getNamespacesHandler(),
-						stylesheetTree.getNamespaces(),
-						stylesheetTree.getXSLTNamespaceURI()),
+	m_namespacesHandler(
+			constructionContext,
+			stylesheetTree.getNamespacesHandler(),
+			stylesheetTree.getNamespaces(),
+			stylesheetTree.getXSLTNamespaceURI()),
 	m_stylesheet(stylesheetTree),
 	m_lineNumber(lineNumber),
 	m_columnNumber(columnNumber),
@@ -1055,7 +1057,10 @@ ElemTemplateElement::postConstruction(
 			StylesheetConstructionContext&	constructionContext,
 			const NamespacesHandler&		theParentHandler)
 {
-	m_namespacesHandler.postConstruction(getElementName(), &theParentHandler);
+	m_namespacesHandler.postConstruction(
+			constructionContext,
+			getElementName(),
+			&theParentHandler);
 
 	if (hasChildren() == true)
 	{

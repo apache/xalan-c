@@ -1109,7 +1109,7 @@ StylesheetHandler::processStylesheet(
 
 		if(equals(aname, Constants::ATTRNAME_EXCLUDE_RESULT_PREFIXES))
 		{
-			m_stylesheet.processExcludeResultPrefixes(atts.getValue(i), m_constructionContext);
+			m_stylesheet.processExcludeResultPrefixes(m_constructionContext, atts.getValue(i));
 		}
 		else if(equals(aname, Constants::ATTRNAME_EXTENSIONELEMENTPREFIXES))
 		{
@@ -1126,7 +1126,7 @@ StylesheetHandler::processStylesheet(
 
 				ExtensionNSHandler* const	nsh = new ExtensionNSHandler(extns);
 
-				m_stylesheet.addExtensionNamespace(extns, nsh);
+				m_stylesheet.addExtensionNamespace(m_constructionContext, extns, nsh);
 			}
 		}
  		else if(equals(aname, Constants::ATTRNAME_ID))

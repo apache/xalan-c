@@ -456,7 +456,7 @@ Stylesheet::postConstruction(StylesheetConstructionContext&		constructionContext
 	}
 
 	// Call postConstruction() on our own namespaces handler...
-	m_namespacesHandler.postConstruction();
+	m_namespacesHandler.postConstruction(constructionContext);
 
 
 	{
@@ -1213,12 +1213,13 @@ Stylesheet::findTemplate(
 
 void
 Stylesheet::addExtensionNamespace(
-			const XalanDOMString&	uri,
-			ExtensionNSHandler*		nsh)
+			StylesheetConstructionContext&	theConstructionContext,
+			const XalanDOMString&			uri,
+			ExtensionNSHandler*				nsh)
 {
 	m_extensionNamespaces.insert(ExtensionNamespacesMapType::value_type(uri, nsh));
 
-	m_namespacesHandler.addExtensionNamespaceURI(uri);
+	m_namespacesHandler.addExtensionNamespaceURI(theConstructionContext, uri);
 }
 
 
@@ -1358,7 +1359,10 @@ Stylesheet::processNSAliasElement(
 		// $$$ ToDo: Enable other code.  Perhaps an error?
 		m_prefixAliases[*stylesheetNamespace] = *resultNamespace;
 
-		m_namespacesHandler.setNamespaceAlias(*stylesheetNamespace, *resultNamespace);
+		m_namespacesHandler.setNamespaceAlias(
+				constructionContext,
+				*stylesheetNamespace,
+				*resultNamespace);
 #else
 		const PrefixAliasesMapType::iterator	i =
 			m_prefixAliases.find(*stylesheetNamespace);

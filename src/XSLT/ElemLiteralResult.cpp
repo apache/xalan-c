@@ -248,6 +248,8 @@ ElemLiteralResult::postConstruction(
 	// that will need namespace declarations...
 	m_attrCount = m_avts.size();
 
+	XalanDOMString	thePrefix;
+
 	for(AVTVectorType::size_type i = 0; i < m_attrCount; ++i)
 	{
 		const AVT* const	avt = m_avts[i];
@@ -258,7 +260,9 @@ ElemLiteralResult::postConstruction(
 
 		if (theColonIndex != length(theName))
 		{
-			m_namespacesHandler.addActivePrefix(XalanDOMString(theName, 0, theColonIndex));
+			theName.substr(thePrefix, 0, theColonIndex);
+
+			m_namespacesHandler.addActivePrefix(constructionContext, thePrefix);
 		}
 	}
 
@@ -406,13 +410,19 @@ ElemLiteralResult::processPrefixControl(
 {
 	if(equals(localName, Constants::ATTRNAME_EXTENSIONELEMENTPREFIXES))
 	{
-		m_namespacesHandler.processExtensionElementPrefixes(attrValue, stylesheetTree.getNamespaces(), constructionContext);
+		m_namespacesHandler.processExtensionElementPrefixes(
+				constructionContext,
+				attrValue,
+				stylesheetTree.getNamespaces());
 
 		return true;
 	}
 	else if (equals(localName, Constants::ATTRNAME_EXCLUDE_RESULT_PREFIXES))
 	{
-		m_namespacesHandler.processExcludeResultPrefixes(attrValue, stylesheetTree.getNamespaces(), constructionContext);
+		m_namespacesHandler.processExcludeResultPrefixes(
+				constructionContext,
+				attrValue,
+				stylesheetTree.getNamespaces());
 
 		return true;
 	}

@@ -92,22 +92,72 @@ class XALAN_XSLT_EXPORT NamespacesHandler
 {
 public:
 
-	class NameSpaceExtended : public NameSpace
+	class NamespaceExtended
 	{
 	public:
 
-		NameSpaceExtended(
-					const XalanDOMString&	prefix = XalanDOMString(),
-					const XalanDOMString&	uri = XalanDOMString()) :
-			NameSpace(prefix, uri),
-			m_resultAttributeName()
+		NamespaceExtended() :
+			m_prefix(&s_emptyString),
+			m_uri(&s_emptyString),
+			m_resultAttributeName(&s_emptyString)
 		{
 		}
 
-		NameSpaceExtended(const NameSpace&	theNamespace) :
-			NameSpace(theNamespace),
-			m_resultAttributeName()
+		NamespaceExtended(
+					const XalanDOMString&	prefix,
+					const XalanDOMString&	uri) :
+			m_prefix(&prefix),
+			m_uri(&uri),
+			m_resultAttributeName(&s_emptyString)
 		{
+		}
+
+		/**
+		 * Retrieve the prefix for namespace
+		 * 
+		 * @return prefix string
+		 */
+		const XalanDOMString&
+		getPrefix() const
+		{
+			assert(m_prefix != 0);
+
+			return *m_prefix;
+		}
+
+		/**
+		 * Set the prefix for namespace
+		 * 
+		 * @param prefix The new prefix value
+		 */
+		void
+		setPrefix(const XalanDOMString&		prefix)
+		{
+			m_prefix = &prefix;
+		}
+
+		/**
+		 * Retrieve the URI for namespace
+		 * 
+		 * @return URI string
+		 */
+		const XalanDOMString&
+		getURI() const
+		{
+			assert(m_uri != 0);
+
+			return *m_uri;
+		}
+
+		/**
+		 * Set the URI for namespace
+		 * 
+		 * @param uri The new uri value
+		 */
+		void
+		setURI(const XalanDOMString&	uri)
+		{
+			m_uri = &uri;
 		}
 
 		/**
@@ -118,7 +168,9 @@ public:
 		const XalanDOMString&
 		getResultAttributeName() const
 		{
-			return m_resultAttributeName;
+			assert(m_resultAttributeName != 0);
+
+			return *m_resultAttributeName;
 		}
 
 		/**
@@ -129,12 +181,18 @@ public:
 		void
 		setResultAttributeName(const XalanDOMString&	name)
 		{
-			m_resultAttributeName = name;
+			m_resultAttributeName = &name;
 		}
 
 	private:
 
-		XalanDOMString	m_resultAttributeName;
+		const XalanDOMString*	m_prefix;
+
+		const XalanDOMString*	m_uri;
+
+		const XalanDOMString*	m_resultAttributeName;
+
+		static const XalanDOMString		s_emptyString;
 	};
 
 	typedef XalanQName::NamespaceVectorType				NamespaceVectorType;
@@ -142,33 +200,29 @@ public:
 
 #if defined(XALAN_NO_NAMESPACES)
 	typedef map<XalanDOMString,
-				XalanDOMString,
+				const XalanDOMString*,
 				less<XalanDOMString> >					ExcludedResultPrefixesMapType;
 
 	typedef map<XalanDOMString,
-				NameSpaceExtended,
+				NamespaceExtended,
 				less<XalanDOMString> >					NamespacesMapType;
 
 	typedef map<XalanDOMString,
-				XalanDOMString,
+				const XalanDOMString*,
 				less<XalanDOMString> >					NamespaceAliasesMapType;
 
-	typedef set<XalanDOMString,
-				less<XalanDOMString> >					ExtensionNamespaceURISetType;
-
-	typedef set<XalanDOMString,
-				less<XalanDOMString> >					ActivePrefixesSetType;
+	typedef vector<const XalanDOMString*>				XalanDOMStringPointerVectorType;
 #else
-	typedef std::map<XalanDOMString, XalanDOMString>	ExcludedResultPrefixesMapType;
+	typedef std::map<XalanDOMString,
+					 const XalanDOMString*>				ExcludedResultPrefixesMapType;
 
 	typedef std::map<XalanDOMString,
-					 NameSpaceExtended>					NamespacesMapType;
+					 NamespaceExtended>					NamespacesMapType;
 
-	typedef std::map<XalanDOMString, XalanDOMString>	NamespaceAliasesMapType;
+	typedef std::map<XalanDOMString,
+					 const XalanDOMString*>				NamespaceAliasesMapType;
 
-	typedef std::set<XalanDOMString>					ExtensionNamespaceURISetType;
-
-	typedef std::set<XalanDOMString>					ActivePrefixesSetType;
+	typedef std::vector<const XalanDOMString*>			XalanDOMStringPointerVectorType;
 #endif
 
 	/**
@@ -181,55 +235,57 @@ public:
 	 * Create an instance namespace handler using the
 	 * current namespaces in effect.
 	 *
+	 * @param theConstructionContext The current construction context.
 	 * @param stylesheetNamespacesHandler The stylesheet's handler.
 	 * @param theCurrentNamespaces The stack of active namespace declarations.
 	 * @param theXSLTNamespaceURI The namespace URI for XSLT.
 	 */
 	NamespacesHandler(
-			const NamespacesHandler&	stylesheetNamespacesHandler,
-			const NamespacesStackType&	theCurrentNamespaces,
-			const XalanDOMString&		theXSLTNamespaceURI);
-
-	NamespacesHandler(const NamespacesHandler&	theSource);
+			StylesheetConstructionContext&	theConstructionContext,
+			const NamespacesHandler&		stylesheetNamespacesHandler,
+			const NamespacesStackType&		theCurrentNamespaces,
+			const XalanDOMString&			theXSLTNamespaceURI);
 
 	~NamespacesHandler();
 
 	/**
 	 * Process an exclude-result-prefixes attribute.
 	 *
+	 * @param theConstructionContext The current construction context.
 	 * @param theValue The attribute's value.
 	 * @param theCurrentNamespaces The stack of active namespace declarations.
-	 * @param theConstructionContext The current construction context.
 	 */
 	void
 	processExcludeResultPrefixes(
+			StylesheetConstructionContext&	theConstructionContext,
 			const XalanDOMChar*				theValue,
-			const NamespacesStackType&		theCurrentNamespaces,
-			StylesheetConstructionContext&	theConstructionContext);
+			const NamespacesStackType&		theCurrentNamespaces);
 
 	/**
 	 * Process an extension-element-prefixes attribute.
 	 *
+	 * @param theConstructionContext The current construction context.
 	 * @param theValue The attribute's value.
 	 * @param theCurrentNamespaces The stack of active namespace declarations.
-	 * @param theConstructionContext The current construction context.
 	 */
 	void
 	processExtensionElementPrefixes(
+			StylesheetConstructionContext&	theConstructionContext,
 			const XalanDOMChar*				theValue,
-			const NamespacesStackType&		theCurrentNamespaces,
-			StylesheetConstructionContext&	theConstructionContext);
+			const NamespacesStackType&		theCurrentNamespaces);
 
 	/**
 	 * Notify the instance that the stylesheet is fully constructed.
 	 *
+	 * @param theConstructionContext The current construction context.
 	 * @param theElementName The name of the owning element.
 	 * @param parentNamespacesHandler The parent handler, if any.
 	 */
 	void
 	postConstruction(
-			const XalanDOMString&		theElementName = XalanDOMString(),
-			const NamespacesHandler*	parentNamespacesHandler = 0);
+			StylesheetConstructionContext&	theConstructionContext,
+			const XalanDOMString&			theElementName = XalanDOMString(),
+			const NamespacesHandler*		parentNamespacesHandler = 0);
 
 	NamespacesHandler&
 	operator=(const NamespacesHandler&	theRHS);
@@ -249,13 +305,13 @@ public:
 	/**
 	 * Add a URI as an extension namespace prefixes.
 	 *
+	 * @param theConstructionContext The current construction context.
 	 * @param theURI The namespace URI.
 	 */
 	void
-	addExtensionNamespaceURI(const XalanDOMString&	theURI)
-	{
-		m_extensionNamespaceURIs.insert(theURI);
-	}
+	addExtensionNamespaceURI(
+			StylesheetConstructionContext&	theConstructionContext,
+			const XalanDOMString&	theURI);
 
 	/**
 	 * Get the namespace URI for the given prefix.
@@ -278,27 +334,26 @@ public:
 	/**
 	 * Set the namespace alias URI for the given namespace.
 	 *
+	 * @param theConstructionContext The current construction context.
 	 * @param theStylesheetNamespace The namespace as declared in the stylesheet.
 	 * @param theResultNamespace The namespace as it should appear in the result tree.
 	 */
 	void
 	setNamespaceAlias(
-			const XalanDOMString&	theStylesheetNamespace,
-			const XalanDOMString&	theResultNamespace)
-	{
-		m_namespaceAliases[theStylesheetNamespace] = theResultNamespace;
-	}
+			StylesheetConstructionContext&	theConstructionContext,
+			const XalanDOMString&			theStylesheetNamespace,
+			const XalanDOMString&			theResultNamespace);
 
 	/**
 	 * Add a prefix to the list of active prefixes.
 	 *
+	 * @param theConstructionContext The current construction context.
 	 * @param thePrefix The prefix that is active and requires a namespace declaration.
 	 */
 	void
-	addActivePrefix(const XalanDOMString&	thePrefix)
-	{
-		m_activePrefixes.insert(thePrefix);
-	}
+	addActivePrefix(
+			StylesheetConstructionContext&	theConstructionContext,
+			const XalanDOMString&			thePrefix);
 
 	/**
 	 * Copy the aliases from the given NamespacesHandler.
@@ -355,17 +410,22 @@ private:
 
 	/**
 	 * Create all of the result attribute names.
+	 *
+	 * @param theConstructionContext The current construction context.
 	 */
 	void
-	createResultAttributeNames();
+	createResultAttributeNames(StylesheetConstructionContext&	theConstructionContext);
 
 	/**
 	 * Process the exclude result prefix data.
 	 *
+	 * @param theConstructionContext The current construction context.
 	 * @param theElementPrefix The prefix of the owning element.
 	 */
 	void
-	processExcludeResultPrefixes(const XalanDOMString&	theElementPrefix);
+	processExcludeResultPrefixes(
+			StylesheetConstructionContext&	theConstructionContext,
+			const XalanDOMString&			theElementPrefix);
 
 	/**
 	 * Process the namespace aliases data.
@@ -382,12 +442,12 @@ private:
 	copyNamespaceAliases(const NamespaceAliasesMapType&		theNamespaceAliases);
 
 	/**
-	 * Copy the contents of the supplied set
+	 * Copy the contents of the supplied vector
 	 *
 	 * @param theExtensionNamespaceURIs The set to copy.
 	 */
 	void
-	copyExtensionNamespaceURIs(const ExtensionNamespaceURISetType&	theExtensionNamespaceURIs);
+	copyExtensionNamespaceURIs(const XalanDOMStringPointerVectorType&	theExtensionNamespaceURIs);
 
 	/**
 	 * Copy the contents of the supplied map
@@ -413,32 +473,67 @@ private:
 			const NameSpace&			theNamespace) const;
 
 	/**
-	 * Determine of a given namespace should be excluded as a result of
+	 * Determine if a given namespace should be excluded as a result of
 	 * an exclude-result-prefixes declaration.
 	 *
 	 * @param theNamespaceURI The namespace URI to check.
-	 * @return true of the namespace should be excluded, false if not.
+	 * @return true if the namespace should be excluded, false if not.
 	 */
 	bool
 	isExcludedNamespaceURI(const XalanDOMString&	theNamespaceURI) const;
+
+	/**
+	 * Determine if a given URI is an extension namespace URI
+	 *
+	 * @param theNamespaceURI The namespace URI to check.
+	 * @return true if the namespace uri is an extension namespace URI, false if not.
+	 */
+	bool
+	isExtensionNamespaceURI(const XalanDOMString&	theNamespaceURI) const
+	{
+		return findString(theNamespaceURI, m_extensionNamespaceURIs);
+	}
+
+	/**
+	 * Determine if a given prefix is active.
+	 *
+	 * @param thePrefix The prefix to check.
+	 * @return true if the prefix is active, false if not.
+	 */
+	bool
+	isActivePrefix(const XalanDOMString&	thePrefix) const
+	{
+		return findString(thePrefix, m_activePrefixes);
+	}
+
+	/**
+	 * Determine if a given string is present in the vector
+	 *
+	 * @param theString The string to find.
+	 * @return true if the string is present, false if not.
+	 */
+	static bool
+	findString(
+			const XalanDOMString&					theString,
+			const XalanDOMStringPointerVectorType&	theVector);
 
 	// Not implemented...
 	bool
 	operator==(const NamespacesHandler&) const;
 
 	// Data members...
-	ExcludedResultPrefixesMapType	m_excludedResultPrefixes;
+	ExcludedResultPrefixesMapType		m_excludedResultPrefixes;
 
-	NamespacesMapType				m_namespaceDeclarations;
+	NamespacesMapType					m_namespaceDeclarations;
 
-	ExtensionNamespaceURISetType	m_extensionNamespaceURIs;
+	XalanDOMStringPointerVectorType		m_extensionNamespaceURIs;
 
-	NamespaceAliasesMapType			m_namespaceAliases;
+	NamespaceAliasesMapType				m_namespaceAliases;
 
-	ActivePrefixesSetType			m_activePrefixes;
+	XalanDOMStringPointerVectorType		m_activePrefixes;
 
 	// If true namespace aliases will be processed.  If false, they will not.
-	bool							m_processAliases;
+	bool								m_processAliases;
 };
 
 

@@ -730,6 +730,8 @@ StylesheetRoot::getNodeSetByKey(
 			StylesheetExecutionContext&		executionContext,
 			KeyTablesTableType& 			theKeysTable) const
 {
+	assert(nodelist.empty() == true || nodelist.getDocumentOrder() == true);
+
 	if(m_needToBuildKeysTable == true)
 	{
 		assert(m_keyDeclarations.empty() == false);
@@ -739,9 +741,16 @@ StylesheetRoot::getNodeSetByKey(
 
 		if (i != theKeysTable.end())
 		{
-			const NodeRefListBase&	nl = (*i).second->getNodeSetByKey(qname, ref);
+			const MutableNodeRefList&	nl = (*i).second->getNodeSetByKey(qname, ref);
 
-			nodelist.addNodesInDocOrder(nl, executionContext);
+			if (nodelist.empty() == true)
+			{
+				nodelist = nl;
+			}
+			else
+			{
+				nodelist.addNodesInDocOrder(nl, executionContext);
+			}
 		}
 		else
 		{
@@ -754,9 +763,16 @@ StylesheetRoot::getNodeSetByKey(
 
 			theKeysTable[doc] = kt;
 
-			const NodeRefListBase&	nl = kt->getNodeSetByKey(qname, ref);
+			const MutableNodeRefList&	nl = kt->getNodeSetByKey(qname, ref);
 
-			nodelist.addNodesInDocOrder(nl, executionContext);
+			if (nodelist.empty() == true)
+			{
+				nodelist = nl;
+			}
+			else
+			{
+				nodelist.addNodesInDocOrder(nl, executionContext);
+			}
 		}
 	}
 }

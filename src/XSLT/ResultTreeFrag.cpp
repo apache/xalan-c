@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -70,11 +70,16 @@
 const XalanDOMString	ResultTreeFrag::s_emptyString;
 
 
+static const unsigned int	dummyPos = ~0u;
+
 
 ResultTreeFrag::ResultTreeFrag(XalanSourceTreeDocumentFragment*		theDocumentFragment) :
 	ResultTreeFragBase(),
 	XalanNodeList(),
-	m_documentFragment(theDocumentFragment)
+	m_documentFragment(theDocumentFragment),
+	m_length(dummyPos),
+	m_lastIndex(dummyPos),
+	m_lastNode(0)
 {
 }
 
@@ -404,6 +409,38 @@ ResultTreeFrag::clone(bool	deep) const
 
 
 
+void
+ResultTreeFrag::setDocumentFragment(XalanSourceTreeDocumentFragment*	theDocumentFragment)
+{
+	m_documentFragment = theDocumentFragment;
+	m_length = dummyPos;
+	m_lastIndex = dummyPos;
+	m_lastNode = 0;
+}
+
+
+
+#if !defined(NDEBUG)
+const XalanNode*
+itemDebug(
+			const XalanDocumentFragment*	theDocumentFragment,
+			unsigned int					index)
+{
+	assert(theDocumentFragment != 0);
+
+	const XalanNode*	theCurrentChild = theDocumentFragment->getFirstChild();
+
+	for(unsigned int i = 0; i < index && theCurrentChild != 0; ++i)
+	{
+		theCurrentChild = theCurrentChild->getNextSibling();
+	}
+
+	return theCurrentChild;
+}
+
+#endif
+
+
 XalanNode*
 ResultTreeFrag::item(unsigned int	index) const
 {
@@ -413,6 +450,62 @@ ResultTreeFrag::item(unsigned int	index) const
 	{
 		return 0;
 	}
+	else if (index == m_lastIndex)
+	{
+		assert(itemDebug(m_documentFragment, index) == m_lastNode);
+
+		return m_lastNode;
+	}
+	else if (m_lastIndex != dummyPos && index == m_lastIndex + 1)
+	{
+#if defined(XALAN_NO_MUTABLE)
+		((ResultTreeFrag*)this)->m_lastIndex = index;
+#else
+		m_lastIndex = index;
+#endif
+
+		if (m_lastNode != 0)
+		{
+#if defined(XALAN_NO_MUTABLE)
+			((ResultTreeFrag*)this)->m_lastNode = m_lastNode->getNextSibling()
+#else
+			m_lastNode = m_lastNode->getNextSibling();
+#endif
+		}
+		else
+		{
+#if defined(XALAN_NO_MUTABLE)
+			((ResultTreeFrag*)this)->m_lastNode = 0
+#else
+			m_lastNode = 0;
+#endif
+		}
+
+		assert(itemDebug(m_documentFragment, index) == m_lastNode);
+
+		return m_lastNode;
+	}
+	else if (index > m_lastIndex)
+	{
+		XalanNode*	theCurrentChild = m_lastNode;
+
+		for(unsigned int i = m_lastIndex; i < index && theCurrentChild != 0; ++i)
+		{
+			theCurrentChild = theCurrentChild->getNextSibling();
+		}
+
+#if defined(XALAN_NO_MUTABLE)
+		((ResultTreeFrag*)this)->m_lastIndex = index;
+		((ResultTreeFrag*)this)->m_lastNode = theCurrentChild
+#else
+		m_lastIndex = index;
+		m_lastNode = theCurrentChild;
+#endif
+
+		assert(itemDebug(m_documentFragment, index) == m_lastNode);
+
+		return m_lastNode;
+	}
 	else
 	{
 		XalanNode*	theCurrentChild = m_documentFragment->getFirstChild();
@@ -421,6 +514,14 @@ ResultTreeFrag::item(unsigned int	index) const
 		{
 			theCurrentChild = theCurrentChild->getNextSibling();
 		}
+
+#if defined(XALAN_NO_MUTABLE)
+		((ResultTreeFrag*)this)->m_lastIndex = index;
+		((ResultTreeFrag*)this)->m_lastNode = theCurrentChild
+#else
+		m_lastIndex = index;
+		m_lastNode = theCurrentChild;
+#endif
 
 		return theCurrentChild;
 	}
@@ -435,6 +536,10 @@ ResultTreeFrag::getLength() const
 	{
 		return 0;
 	}
+	else if (m_length != dummyPos)
+	{
+		return m_length;
+	}
 	else
 	{
 		unsigned int	theLength = 0;
@@ -446,6 +551,12 @@ ResultTreeFrag::getLength() const
 			++theLength;
 			theCurrentChild = theCurrentChild->getNextSibling();
 		}
+
+#if defined(XALAN_NO_MUTABLE)
+		((ResultTreeFrag*)this)->m_length = theLength;
+#else
+		m_length = theLength;
+#endif
 
 		return theLength;
 	}

@@ -381,19 +381,19 @@ public:
 	/**
 	 * See if a namespace should be excluded.
 	 * 
-	 * @param theValue the prefix of the namespace.
 	 * @param theConstructionContext the current construction context.
+	 * @param theValue the prefix of the namespace.
 	 * @return
 	 */
 	void
 	processExcludeResultPrefixes(
-		const XalanDOMChar*				theValue,
-		StylesheetConstructionContext&	theConstructionContext)
+		StylesheetConstructionContext&	theConstructionContext,
+		const XalanDOMChar*				theValue)
 	{
 		m_namespacesHandler.processExcludeResultPrefixes(
+				theConstructionContext,
 				theValue,
-				m_namespaces,
-				theConstructionContext);
+				m_namespaces);
 	}
 
 	/**
@@ -879,8 +879,9 @@ public:
 	 */
 	void
 	addExtensionNamespace(
-			const XalanDOMString&	uri,
-			ExtensionNSHandler* 	nsh);
+			StylesheetConstructionContext&	theConstructionContext,
+			const XalanDOMString&			uri,
+			ExtensionNSHandler* 			nsh);
 
 	/**
 	 * Return the handler for a given extension namespace.
