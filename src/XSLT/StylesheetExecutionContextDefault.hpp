@@ -878,14 +878,20 @@ public:
 	getContextNodeListPosition(const XalanNode&		contextNode) const;
 
 	virtual bool
+	elementAvailable(const XalanQName&	theQName) const;
+
+	virtual bool
 	elementAvailable(
-			const XalanDOMString&	theNamespace, 
-			const XalanDOMString&	elementName) const;
+			const XalanDOMString&	theName,
+			const LocatorType*		locator) const;
+
+	virtual bool
+	functionAvailable(const XalanQName&		theQName) const;
 
 	virtual bool
 	functionAvailable(
-			const XalanDOMString&	theNamespace, 
-			const XalanDOMString&	functionName) const;
+			const XalanDOMString&	theName,
+			const LocatorType*		locator) const;
 
 	virtual const XObjectPtr
 	extFunction(
@@ -1181,8 +1187,6 @@ private:
 
 	// Determines whether or not to override the property in the stylesheet.
 	eOmitMETATag						m_omitMETATag;
-
-	XalanQNameByValue					m_scratchQName;
 
 	static XalanNumberFormatFactory		s_defaultXalanNumberFormatFactory;
 

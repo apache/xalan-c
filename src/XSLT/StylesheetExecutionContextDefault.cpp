@@ -174,8 +174,7 @@ StylesheetExecutionContextDefault::StylesheetExecutionContextDefault(
 	m_usePerInstanceDocumentFactory(false),
 	m_cloneTextNodesOnly(false),
 	m_escapeURLs(eEscapeURLsDefault),
-	m_omitMETATag(eOmitMETATagDefault),
-	m_scratchQName()
+	m_omitMETATag(eOmitMETATagDefault)
 {
 }
 
@@ -217,8 +216,7 @@ StylesheetExecutionContextDefault::StylesheetExecutionContextDefault(
 	m_documentAllocator(eDocumentAllocatorBlockSize),
 	m_usePerInstanceDocumentFactory(false),
 	m_cloneTextNodesOnly(false),
-	m_escapeURLs(eEscapeURLsDefault),
-	m_scratchQName()
+	m_escapeURLs(eEscapeURLsDefault)
 {
 }
 
@@ -1758,30 +1756,50 @@ StylesheetExecutionContextDefault::getContextNodeListPosition(const XalanNode&	c
 
 
 bool
-StylesheetExecutionContextDefault::elementAvailable(
-			const XalanDOMString&	theNamespace, 
-			const XalanDOMString&	elementName) const
+StylesheetExecutionContextDefault::elementAvailable(const XalanQName&	theQName) const
 {
-	if (equals(theNamespace, XSLTEngineImpl::getXSLNameSpaceURL()) == true)
+	if (theQName.getNamespace() == XSLTEngineImpl::getXSLNameSpaceURL())
 	{
-		const int	xslToken = StylesheetConstructionContextDefault::getElementNameToken(elementName);
+		const int	xslToken = StylesheetConstructionContextDefault::getElementNameToken(theQName.getLocalPart());
 
 		return xslToken < 0 ? false : true;
 	}
 	else
 	{
-		return m_xpathExecutionContextDefault.elementAvailable(theNamespace, elementName);
+		return m_xpathExecutionContextDefault.elementAvailable(theQName);
 	}
 }
 
 
 
 bool
-StylesheetExecutionContextDefault::functionAvailable(
-			const XalanDOMString&	theNamespace, 
-			const XalanDOMString&	functionName) const
+StylesheetExecutionContextDefault::elementAvailable(
+			const XalanDOMString&	theName, 
+			const LocatorType*		theLocator) const
 {
-	return m_xpathExecutionContextDefault.functionAvailable(theNamespace, functionName);
+	XalanQNameByValue&	theQName = m_xpathExecutionContextDefault.getScratchQName();
+
+	theQName.set(theName, getPrefixResolver(), theLocator);
+
+	return elementAvailable(theQName);
+}
+
+
+
+bool
+StylesheetExecutionContextDefault::functionAvailable(const XalanQName&	theQName) const
+{
+	return m_xpathExecutionContextDefault.functionAvailable(theQName);
+}
+
+
+
+bool
+StylesheetExecutionContextDefault::functionAvailable(
+			const XalanDOMString&	theName, 
+			const LocatorType*		theLocator) const
+{
+	return m_xpathExecutionContextDefault.functionAvailable(theName, theLocator);
 }
 
 
@@ -1884,11 +1902,13 @@ StylesheetExecutionContextDefault::getNodeSetByKey(
 				getPrefixResolver();
 	assert(resolver != 0);
 
-	m_scratchQName.set(name, resolver, locator);
+	XalanQNameByValue	theQName = m_xpathExecutionContextDefault.getScratchQName();
+
+	theQName.set(name, resolver, locator);
 
 	m_stylesheetRoot->getNodeSetByKey(
 		doc,
-		m_scratchQName,
+		theQName,
 		ref,
 		*resolver,
 		nodelist,

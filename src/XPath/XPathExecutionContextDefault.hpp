@@ -91,6 +91,7 @@
 
 
 #include <XPath/MutableNodeRefList.hpp>
+#include <XPath/XalanQNameByValue.hpp>
 
 
 
@@ -181,6 +182,20 @@ public:
 		m_xobjectFactory = theXObjectFactory;
 	}
 
+	/**
+	 * Get a reference to the scratch QNameByValue instance.
+	 *
+	 * @return A reference to a QNameByValue instance.
+	 */
+	XalanQNameByValue&
+	getScratchQName() const
+	{
+#if defined(XALAN_NO_MUTABLE)
+		return ((XPathExecutionContextDefault*)this)->m_scratchQName;
+#else
+		return m_scratchQName;
+#endif
+	}
 
 	// These interfaces are inherited from XPathExecutionContext...
 
@@ -214,14 +229,20 @@ public:
 	getContextNodeListPosition(const XalanNode&		contextNode) const;
 
 	virtual bool
+	elementAvailable(const XalanQName&	theQName) const;
+
+	virtual bool
 	elementAvailable(
-			const XalanDOMString&	theNamespace, 
-			const XalanDOMString&	elementName) const;
+			const XalanDOMString&	theName,
+			const LocatorType*		locator) const;
+
+	virtual bool
+	functionAvailable(const XalanQName&		theQName) const;
 
 	virtual bool
 	functionAvailable(
-			const XalanDOMString&	theNamespace, 
-			const XalanDOMString&	functionName) const;
+			const XalanDOMString&	theName,
+			const LocatorType*		locator) const;
 
 	virtual const XObjectPtr
 	extFunction(
@@ -394,6 +415,8 @@ protected:
 	XalanDOMStringCache						m_stringCache;
 
 	mutable ContextNodeListPositionCache	m_cachedPosition;
+
+	mutable XalanQNameByValue				m_scratchQName;
 
 	static const NodeRefList	s_dummyList;
 };

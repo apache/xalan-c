@@ -70,10 +70,6 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-const XalanDOMString	FunctionFunctionAvailable::s_emptyString;
-
-
-
 FunctionFunctionAvailable::FunctionFunctionAvailable()
 {
 }
@@ -91,42 +87,11 @@ FunctionFunctionAvailable::execute(
 			XPathExecutionContext&	executionContext,
 			XalanNode*				/* context */,
 			const XObjectPtr		arg,
-			const LocatorType*		/* locator */) const
+			const LocatorType*		locator) const
 {
 	assert(arg.null() == false);
 
-	const XalanDOMString&				fullName = arg->str();
-
-	const XalanDOMString::size_type		nameLength = length(fullName);
-	const XalanDOMString::size_type		indexOfNSSep = indexOf(fullName, XalanUnicode::charColon);
-
-	XPathExecutionContext::GetAndReleaseCachedString	guard(executionContext);
-
-	XalanDOMString&		theBuffer = guard.get();
-
-	if (indexOfNSSep < nameLength)
-	{
-		substring(fullName, theBuffer, 0, indexOfNSSep);
-	}
-
-	const XalanDOMString*	theNamespace =
-			executionContext.getNamespaceForPrefix(theBuffer);
-
-	if (theNamespace == 0)
-	{
-		theNamespace = &s_emptyString;
-	}
-
-	if (indexOfNSSep == nameLength)
-	{
-		return executionContext.getXObjectFactory().createBoolean(executionContext.functionAvailable(*theNamespace, fullName));
-	}
-	else
-	{
-		substring(fullName, theBuffer, indexOfNSSep + 1);
-
-		return executionContext.getXObjectFactory().createBoolean(executionContext.functionAvailable(*theNamespace, theBuffer));
-	}
+	return executionContext.getXObjectFactory().createBoolean(executionContext.functionAvailable(arg->str(), locator));
 }
 
 

@@ -114,7 +114,7 @@ ElemExtensionCall::execute(StylesheetExecutionContext&		executionContext) const
 bool
 ElemExtensionCall::elementAvailable(StylesheetExecutionContext&		executionContext) const
 {
-	return executionContext.elementAvailable(m_qname->getNamespace(), m_qname->getLocalPart());
+	return executionContext.elementAvailable(*m_qname);
 }
 
 

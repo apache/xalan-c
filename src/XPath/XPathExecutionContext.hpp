@@ -268,28 +268,49 @@ public:
 	/**
 	 * Determine if an external element is available.
 	 *
-	 * @param theNamespace  namespace for the element
-	 * @param elementName name of extension element
+	 * @param theQName The QName of the element
+	 *
+	 * @return whether the given element is available or not
+	 */
+	virtual bool
+	elementAvailable(const XalanQName&	theQName) const = 0;
+
+	/**
+	 * Determine if an external element is available by resolving
+	 * a string to a QName.
+	 *
+	 * @param theName The name of the element
+	 * @param locator A LocatorType instance for error reporting
+	 *
 	 * @return whether the given element is available or not
 	 */
 	virtual bool
 	elementAvailable(
-			const XalanDOMString&	theNamespace, 
-			const XalanDOMString&	elementName) const = 0;
+			const XalanDOMString&	theName,
+			const LocatorType*		locator) const = 0;
 
 	/**
-	 * Determine if a function is available.  For standard
-	 * function availability, theNamespace should be an
-	 * empty string.
+	 * Determine if a function is available.
 	 *
-	 * @param theNamespace  namespace for the function
-	 * @param functionName name of the function
+	 * @param theQName The QName of the function
+	 *
+	 * @return whether the function is available or not
+	 */
+	virtual bool
+	functionAvailable(const XalanQName&		theQName) const = 0;
+
+	/**
+	 * Determine if a function is available.
+	 *
+	 * @param theName The name of the function
+	 * @param locator A LocatorType instance for error reporting
+	 *
 	 * @return whether the function is available or not
 	 */
 	virtual bool
 	functionAvailable(
-			const XalanDOMString&	theNamespace, 
-			const XalanDOMString&	functionName) const = 0;
+			const XalanDOMString&	theName,
+			const LocatorType*		locator) const = 0;
 
 	/**
 	 * Handle an extension function.

@@ -87,44 +87,11 @@ FunctionElementAvailable::execute(
 			XPathExecutionContext&	executionContext,
 			XalanNode*				/* context */,			
 			const XObjectPtr		arg1,
-			const LocatorType*		/* locator */) const
+			const LocatorType*		locator) const
 {
 	assert(arg1.null() == false);
 
-	const XalanDOMString&				fullName = arg1->str();
-
-	const XalanDOMString::size_type		nameLength = length(fullName);
-	const XalanDOMString::size_type		indexOfNSSep = indexOf(fullName, XalanUnicode::charColon);
-
-	XPathExecutionContext::GetAndReleaseCachedString	guard(executionContext);
-
-	XalanDOMString&		theBuffer = guard.get();
-
-	if (indexOfNSSep < nameLength)
-	{
-		substring(fullName, theBuffer, 0, indexOfNSSep);
-	}
-
-	const XalanDOMString* const		theNamespace =
-		executionContext.getNamespaceForPrefix(theBuffer);
-
-	if (theNamespace == 0 || length(*theNamespace) == 0)
-	{
-		return executionContext.getXObjectFactory().createBoolean(false);
-	}
-	else
-	{
-		if (indexOfNSSep == nameLength)
-		{
-			return executionContext.getXObjectFactory().createBoolean(executionContext.elementAvailable(*theNamespace, fullName));
-		}
-		else
-		{
-			substring(fullName, theBuffer, indexOfNSSep + 1);
-
-			return executionContext.getXObjectFactory().createBoolean(executionContext.elementAvailable(*theNamespace, theBuffer));
-		}
-	}
+	return executionContext.getXObjectFactory().createBoolean(executionContext.elementAvailable(arg1->str(), locator));
 }
 
 

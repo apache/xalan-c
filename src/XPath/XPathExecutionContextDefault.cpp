@@ -110,7 +110,8 @@ XPathExecutionContextDefault::XPathExecutionContextDefault(
 	m_throwFoundIndex(false),
 	m_nodeListCache(eNodeListCacheListSize),
 	m_stringCache(),
-	m_cachedPosition()
+	m_cachedPosition(),
+	m_scratchQName()
 {
 }
 
@@ -128,7 +129,9 @@ XPathExecutionContextDefault::XPathExecutionContextDefault(
 	m_prefixResolver(thePrefixResolver),
 	m_throwFoundIndex(false),
 	m_nodeListCache(eNodeListCacheListSize),
-	m_stringCache()
+	m_stringCache(),
+	m_cachedPosition(),
+	m_scratchQName()
 {
 }
 
@@ -277,8 +280,8 @@ XPathExecutionContextDefault::getContextNodeListPosition(const XalanNode&	contex
 
 		// If not found, it's 0.  Otherwise, it's the index + 1
 #if defined(XALAN_NO_MUTABLE)
-		(XPathExecutionContextDefault*(this))->m_cachedPosition.m_index = theIndex == NodeRefListBase::npos ? 0 : theIndex + 1;
-		(XPathExecutionContextDefault*(this))->m_cachedPosition.m_node = &contextNode;
+		((XPathExecutionContextDefault*)this)->m_cachedPosition.m_index = theIndex == NodeRefListBase::npos ? 0 : theIndex + 1;
+		((XPathExecutionContextDefault*)this)->m_cachedPosition.m_node = &contextNode;
 #else
 		m_cachedPosition.m_index = theIndex == NodeRefListBase::npos ? 0 : theIndex + 1;
 		m_cachedPosition.m_node = &contextNode;
@@ -291,25 +294,53 @@ XPathExecutionContextDefault::getContextNodeListPosition(const XalanNode&	contex
 
 
 bool
-XPathExecutionContextDefault::elementAvailable(
-			const XalanDOMString&	theNamespace, 
-			const XalanDOMString&	elementName) const
+XPathExecutionContextDefault::elementAvailable(const XalanQName&	theQName) const
 {
 	assert(m_xpathEnvSupport != 0);
 
-	return m_xpathEnvSupport->elementAvailable(theNamespace, elementName);
+	return m_xpathEnvSupport->elementAvailable(theQName.getNamespace(), theQName.getLocalPart());
+}
+
+
+
+bool
+XPathExecutionContextDefault::elementAvailable(
+			const XalanDOMString&	theName, 
+			const LocatorType*		theLocator) const
+{
+	assert(m_xpathEnvSupport != 0);
+
+	XalanQNameByValue&	theQName = getScratchQName();
+
+	theQName.set(theName, m_prefixResolver, theLocator);
+
+	return elementAvailable(m_scratchQName);
+}
+
+
+
+bool
+XPathExecutionContextDefault::functionAvailable(const XalanQName&	theQName) const
+{
+	assert(m_xpathEnvSupport != 0);
+
+	return m_xpathEnvSupport->functionAvailable(theQName.getNamespace(), theQName.getLocalPart());
 }
 
 
 
 bool
 XPathExecutionContextDefault::functionAvailable(
-			const XalanDOMString&	theNamespace, 
-			const XalanDOMString&	functionName) const
+			const XalanDOMString&	theName, 
+			const LocatorType*		theLocator) const
 {
 	assert(m_xpathEnvSupport != 0);
 
-	return m_xpathEnvSupport->functionAvailable(theNamespace, functionName);
+	XalanQNameByValue&	theQName = getScratchQName();
+
+	theQName.set(theName, m_prefixResolver, theLocator);
+
+	return functionAvailable(theQName);
 }
 
 
