@@ -562,8 +562,6 @@ private:
 
 	XalanElement*							m_documentElement;
 
-	XercesNodeListBridge					m_children;
-
 	mutable XercesToXalanNodeMap			m_nodeMap;
 
 	XalanAutoPtr<XalanDOMImplementation>	m_domImplementation;
@@ -572,7 +570,9 @@ private:
 
 	// Our navigator will be the first entry in m_navigators,
 	// but we'll cache this so access is faster...
-	XercesBridgeNavigator&					m_navigator;
+	XercesBridgeNavigator*					m_navigator;
+
+	XercesNodeListBridge					m_children;
 
 	mutable NodeVectorType					m_nodes;
 

@@ -108,12 +108,12 @@ XercesDocumentBridge::XercesDocumentBridge(
 	XalanDocument(),
 	m_xercesDocument(theXercesDocument),
 	m_documentElement(0),
-	m_children(theXercesDocument.getChildNodes(),
-			   m_navigator),
 	m_nodeMap(),
 	m_domImplementation(new XercesDOMImplementationBridge(theXercesDocument.getImplementation())),
 	m_navigators(1, XercesBridgeNavigator(this, threadSafe == true ? false : !buildBridge)),
-	m_navigator(m_navigators.front()),
+	m_navigator(&m_navigators.front()),
+	m_children(theXercesDocument.getChildNodes(),
+			   *m_navigator),
 	m_nodes(),
 	m_doctype(0),
 	m_mappingMode(threadSafe == true ? false : !buildBridge),
@@ -130,7 +130,7 @@ XercesDocumentBridge::XercesDocumentBridge(
 	if (m_mappingMode == false)
 	{
 		// The document index is always 1...
-		m_navigator.setIndex(1);
+		m_navigator->setIndex(1);
 
 		// OK, let's build the nodes.  This makes things
 		// thread-safe, so the document can be shared...
@@ -294,6 +294,8 @@ XercesDocumentBridge::destroyBridge()
 
 	// Clear out all of the navigators, except ours...
 	m_navigators.erase(m_navigators.begin() + 1, m_navigators.end());
+
+	m_navigator = &m_navigators.front();
 
 	// Clear the node map...
 	m_nodeMap.clear();
@@ -1000,7 +1002,9 @@ XercesDocumentBridge::getChildNodes() const
 XalanNode*
 XercesDocumentBridge::getFirstChild() const
 {
-	return m_navigator.getFirstChild(m_xercesDocument);
+	assert(m_navigator != 0);
+
+	return m_navigator->getFirstChild(m_xercesDocument);
 }
 
 
@@ -1008,7 +1012,9 @@ XercesDocumentBridge::getFirstChild() const
 XalanNode*
 XercesDocumentBridge::getLastChild() const
 {
-	return m_navigator.getLastChild(m_xercesDocument);
+	assert(m_navigator != 0);
+
+	return m_navigator->getLastChild(m_xercesDocument);
 }
 
 
@@ -1080,7 +1086,9 @@ XercesDocumentBridge::insertBefore(
 			XalanNode*	newChild,
 			XalanNode*	refChild)
 {
-	return m_navigator.insertBefore(m_xercesDocument, newChild, refChild);
+	assert(m_navigator != 0);
+
+	return m_navigator->insertBefore(m_xercesDocument, newChild, refChild);
 }
 
 
@@ -1090,7 +1098,9 @@ XercesDocumentBridge::replaceChild(
 			XalanNode*	newChild,
 			XalanNode*	oldChild)
 {
-	return m_navigator.replaceChild(m_xercesDocument, newChild, oldChild);
+	assert(m_navigator != 0);
+
+	return m_navigator->replaceChild(m_xercesDocument, newChild, oldChild);
 }
 
 
@@ -1098,7 +1108,9 @@ XercesDocumentBridge::replaceChild(
 XalanNode*
 XercesDocumentBridge::removeChild(XalanNode*	 oldChild)
 {
-	return m_navigator.removeChild(m_xercesDocument, oldChild);
+	assert(m_navigator != 0);
+
+	return m_navigator->removeChild(m_xercesDocument, oldChild);
 }
 
 
@@ -1106,7 +1118,9 @@ XercesDocumentBridge::removeChild(XalanNode*	 oldChild)
 XalanNode*
 XercesDocumentBridge::appendChild(XalanNode*	newChild)
 {
-	return m_navigator.appendChild(m_xercesDocument, newChild);
+	assert(m_navigator != 0);
+
+	return m_navigator->appendChild(m_xercesDocument, newChild);
 }
 
 
@@ -1189,9 +1203,10 @@ XercesDocumentBridge::isIndexed() const
 unsigned long
 XercesDocumentBridge::getIndex() const
 {
-	assert(m_navigator.getIndex() == 1);
+	assert(m_navigator != 0);
+	assert(m_navigator->getIndex() == 1);
 
-	return m_navigator.getIndex();
+	return m_navigator->getIndex();
 }
 
 
@@ -1533,8 +1548,11 @@ XercesDocumentBridge::buildBridgeNodes()
 
 	if (theStartChild.isNull() == false)
 	{
-		assert(m_navigators.back().getIndex() == 1);
+		assert(m_navigator != 0);
 		assert(m_navigators.size() == 1);
+
+		m_navigator->setIndex(1);
+		m_navigator->setFirstChild(0);
 
 		BuildBridgeTreeWalker	theTreeWalker(
 				this,
@@ -1546,7 +1564,7 @@ XercesDocumentBridge::buildBridgeNodes()
 	}
 
 	// OK, now set m_documentElement...
-	XalanNode*	theChild = m_navigator.getFirstChild();
+	XalanNode*	theChild = m_navigator->getFirstChild();
 
 	while(theChild != 0 && theChild->getNodeType() != XalanNode::ELEMENT_NODE)
 	{
