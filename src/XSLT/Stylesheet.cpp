@@ -238,7 +238,6 @@ Stylesheet::processKeyElement(
 			ElemTemplateElement*			nsContext,
 			const AttributeList&			atts,
 			StylesheetConstructionContext&	constructionContext)
-// throws XSLProcessorException
 {
 	const XalanDOMChar* 	nameAttr = 0;
 	XPath*					matchAttr = 0;
@@ -503,7 +502,7 @@ Stylesheet::addTemplate(
 						xp, tmpl, pos, target, this);
 
 				// Put it in the map...
-				m_patternTable[target].push_back(newMatchPat);
+				m_patternTable[target].push_front(newMatchPat);
 			}
 		}
 	}
@@ -693,7 +692,8 @@ Stylesheet::findTemplate(
 
 			if (matchPatternList != 0)
 			{
-				XalanDOMString	prevPat;
+				XalanDOMString			prevPat;
+				const MatchPattern2*	prevMatchPat = 0;
 
 				// These are iterators into the current table.
 				// Note that we may re-seat these iterators to
@@ -708,6 +708,7 @@ Stylesheet::findTemplate(
 				while(theCurrentEntry != theTableEnd)
 				{
 					const MatchPattern2*	matchPat = *theCurrentEntry;
+					assert(matchPat != 0);
 
 					ElemTemplate*			rule = matchPat->getTemplate();
 
@@ -728,10 +729,13 @@ Stylesheet::findTemplate(
 					{
 						const XalanDOMString	patterns = matchPat->getPattern();
 
-						if((!isEmpty(patterns)) &&
-							!(!isEmpty(prevPat) && equals(prevPat, patterns)))
+						if(!isEmpty(patterns) &&
+						   !(prevMatchPat != 0 &&
+						     equals(prevPat, patterns) &&
+							 prevMatchPat->getTemplate()->getPriority() == matchPat->getTemplate()->getPriority()))
 						{
 							prevPat = patterns;
+							prevMatchPat = matchPat;
 
 							const XPath* const	xpath = matchPat->getExpression();
 
