@@ -70,6 +70,9 @@
 #include <vector>
 #include <string>
 
+#if defined(__GNUC__)
+#include <wctype.h>
+#endif
 
 
 #include <dom/DOMString.hpp>
