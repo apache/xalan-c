@@ -114,10 +114,16 @@ StdBinInputStream::readBytes(
 	}
 	else
 	{
+#if !defined(XALAN_OLD_STREAM_HEADERS)
 #if defined(XALAN_OLD_STYLE_CASTS)
 		return m_stream.readsome((char*)toFill, maxToRead);
 #else
 		return m_stream.readsome(reinterpret_cast<char*>(toFill), maxToRead);
+#endif
+#else
+		m_stream.read(toFill, maxToRead);
+
+		return m_stream.gcount();
 #endif
 	}
 }
