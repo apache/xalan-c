@@ -68,7 +68,6 @@
 
 
 #include <XalanDOM/XalanDOMString.hpp>
-#include <XalanDOM/XalanNodeListDummy.hpp>
 
 
 
