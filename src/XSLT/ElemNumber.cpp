@@ -1588,10 +1588,12 @@ addTraditionalElalphaBundle(ElemNumber::NumberingResourceBundleMapType&		theBund
 	theDigitsTableTable.push_back(1);
 	theDigitsTableTable.push_back(0);
 
-	XalanNumberingResourceBundle	theElaphaBundle(
-		XalanDOMString(XALAN_STATIC_UCODE_STRING("el")),
-		XalanDOMString(XALAN_STATIC_UCODE_STRING("el")),
-		XalanDOMString(XALAN_STATIC_UCODE_STRING("el")),
+	const XalanDOMString	theLanguageString("el");
+
+	const XalanNumberingResourceBundle	theElaphaBundle(
+		theLanguageString,
+		theLanguageString,
+		theLanguageString,
 		XalanDOMCharVectorType(elalphaAlphabet, elalphaAlphabet + length(elalphaAlphabet)),
 		XalanDOMCharVectorType(elalphaTraditionalAlphabet, elalphaTraditionalAlphabet + length(elalphaTraditionalAlphabet)),
 		XalanNumberingResourceBundle::eLeftToRight,
@@ -1607,7 +1609,7 @@ addTraditionalElalphaBundle(ElemNumber::NumberingResourceBundleMapType&		theBund
 
 	typedef ElemNumber::NumberingResourceBundleMapType::value_type	value_type;
 
-	theBundleMap.insert(value_type(elalphaNumberType, theElaphaBundle));
+	theBundleMap[elalphaNumberType] = theElaphaBundle;
 }
 
 
