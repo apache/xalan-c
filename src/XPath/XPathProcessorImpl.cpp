@@ -255,7 +255,7 @@ XPathProcessorImpl::tokenize(
 
 				startSubstring = i;
 
-				for(i++; i < nChars && (c = charAt(pat, i)) != '\"'; i++);
+				for(++i; i < nChars && (c = charAt(pat, i)) != '\"'; ++i);
 
 				if(c == '\"')
 				{
@@ -289,7 +289,7 @@ XPathProcessorImpl::tokenize(
 
 				startSubstring = i;
 
-				for(i++; i < nChars && (c = charAt(pat, i)) != '\''; i++);
+				for(++i; i < nChars && (c = charAt(pat, i)) != '\''; ++i);
 
 				if(c == '\'')
 				{
@@ -336,7 +336,7 @@ XPathProcessorImpl::tokenize(
 			{
 				if('-' == c)
 				{
-					if(!(isNum || (startSubstring == -1)))
+					if(!(isNum || startSubstring == -1))
 					{
 						break;
 					}
@@ -418,11 +418,14 @@ XPathProcessorImpl::tokenize(
 
 		case ':':
 			{
-				if(posOfNSSep == (i - 1))
+				if(posOfNSSep == i - 1)
 				{ 
 					if(startSubstring != -1)
 					{
-						addToTokenQueue(substring(pat, startSubstring, i - 1));
+						if (startSubstring < i - 1)
+						{
+							addToTokenQueue(substring(pat, startSubstring, i - 1));
+						}
 					}
 
 					isNum = false;
