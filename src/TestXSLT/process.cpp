@@ -55,6 +55,10 @@
  * <http://www.apache.org/>.
  */
 
+#include <Include/PlatformDefinitions.hpp>
+
+
+
 #include <cstdio>
 #include <cstring>
 #include <iostream>
@@ -72,6 +76,7 @@
 
 #include <PlatformSupport/DOMStringHelper.hpp>
 #include <PlatformSupport/DOMStringPrintWriter.hpp>
+#include <PlatformSupport/XalanAutoPtr.hpp>
 
 
 #include <DOMSupport/DOMSupportDefault.hpp>
@@ -121,9 +126,14 @@
 #endif
 
 
+//#define XALAN_USE_BLOCK_XOBJECT_FACTORY
+#if defined(XALAN_USE_BLOCK_XOBJECT_FACTORY)
+#include <XalanHiPerf/XObjectFactoryArena.hpp>
+#endif
+
+
 
 #if !defined (XALAN_NO_NAMESPACES)
-using std::auto_ptr;
 using std::cerr;
 using std::cout;
 using std::endl;
@@ -132,7 +142,6 @@ using std::map;
 using std::string;
 using std::vector;
 #endif
-
 
 
 /**
@@ -187,6 +196,10 @@ printArgOptions()
 		 << endl
 		 << " [-PARAM name expression (Sets a stylesheet parameter.)]"
 		 << endl
+#if defined(XALAN_USE_BLOCK_XOBJECT_FACTORY)
+		 << " [-B (Use block allocation for XObjects.)]"
+		 << endl
+#endif
 #if !defined(NDEBUG)
 		 << " [-S (Display some interesting statistics.)]"
 		 << endl
@@ -209,7 +222,7 @@ printArgOptions()
 
 
 
-typedef map<string, string> String2StringMapType;
+typedef map<string, string, less<string> > String2StringMapType;
 
 
 
@@ -229,6 +242,9 @@ struct CmdLineParams
 	bool traceTemplateChildren;
 	bool shouldWriteXMLHeader;
 	bool doValidation;
+#if defined(XALAN_USE_BLOCK_XOBJECT_FACTORY)
+	bool useBlockXObjectFactory;
+#endif
 #if !defined(NDEBUG)
 	bool showStats;
 #endif
@@ -254,6 +270,9 @@ struct CmdLineParams
 		traceTemplateChildren(false),
 		shouldWriteXMLHeader(true),
 		doValidation(false),
+#if defined(XALAN_USE_BLOCK_XOBJECT_FACTORY)
+		useBlockXObjectFactory(false),
+#endif
 #if !defined(NDEBUG)
 		showStats(false),
 #endif
@@ -409,6 +428,12 @@ getArgs(
 				fSuccess = false;
 			}
 		}
+#if defined(XALAN_USE_BLOCK_XOBJECT_FACTORY)
+		else if(!stricmp("-B", argv[i]))
+		{
+			p.useBlockXObjectFactory = true;
+		}
+#endif
 #if !defined(NDEBUG)
 		else if(!stricmp("-S", argv[i]))
 		{
@@ -643,6 +668,25 @@ createTraceListener(
 
 
 
+#if defined(XALAN_USE_BLOCK_XOBJECT_FACTORY)
+inline XObjectFactory&
+selectXObjectFactory(
+	XObjectFactory&		theDefaultFactory,
+	XObjectFactory&		theBlockFactory,
+	bool				useBlockXObjectFactory)
+{
+	if (useBlockXObjectFactory == true)
+	{
+		return theBlockFactory;
+	}
+	else
+	{
+		return theDefaultFactory;
+	}
+}
+#endif
+
+
 int
 xsltMain(const CmdLineParams&	params)
 {
@@ -672,11 +716,27 @@ xsltMain(const CmdLineParams&	params)
 
 	XPathSupportDefault				theXPathSupport(theDOMSupport);
 	XSLTProcessorEnvSupportDefault	theXSLProcessorSupport;
+
+#if defined(XALAN_USE_BLOCK_XOBJECT_FACTORY)
+	XObjectFactoryArena				theBlockXObjectFactory;
+
+	XObjectFactoryDefault			theXObjectFactoryDefault;
+
+	XObjectFactory&					theXObjectFactory =
+		selectXObjectFactory(
+				theXObjectFactoryDefault,
+				theBlockXObjectFactory,
+				params.useBlockXObjectFactory);
+
+#else
+
 	XObjectFactoryDefault			theXObjectFactory;
+
+#endif
 
 	XPathFactoryDefault theXPathFactory;
 
-	auto_ptr<TraceListener>		theTraceListener(
+	const XalanAutoPtr<TraceListener>		theTraceListener(
 			createTraceListener(
 				params,
 				diagnosticsWriter));
@@ -754,12 +814,12 @@ xsltMain(const CmdLineParams&	params)
 		stylesheet = processor.processStylesheet(xslFileName, theConstructionContext);
 	}
 
-	auto_ptr<TextOutputStream>	outputFileStream(createOutputStream(params));
+	XalanAutoPtr<TextOutputStream>	outputFileStream(createOutputStream(params));
 	assert(outputFileStream.get() != 0);
 
 	XercesDOMPrintWriter	resultWriter(*outputFileStream.get());
 
-	const auto_ptr<FormatterListener>	formatter(
+	const XalanAutoPtr<FormatterListener>	formatter(
 			createFormatter(
 				params.outputType,
 				params.shouldWriteXMLHeader,
@@ -850,7 +910,7 @@ xsltMain(const CmdLineParams&	params)
 		{
 			// Create a FormaterToDOM with the required output
 			// options...
-			const auto_ptr<FormatterListener>	formatter(
+			const XalanAutoPtr<FormatterListener>	formatter(
 					createFormatter(
 						FormatterListener::OUTPUT_METHOD_XML,
 						params.shouldWriteXMLHeader,
@@ -875,6 +935,7 @@ xsltMain(const CmdLineParams&	params)
 	if (params.showStats == true)
 	{
 		cerr << endl
+#if !defined(XALAN_USE_BLOCK_XOBJECT_FACTORY)
 			 << "Execution XObject details:"
 			 << endl
 			 << endl
@@ -900,6 +961,7 @@ xsltMain(const CmdLineParams&	params)
 			 << theXObjectFactory.getTotalUnknownInstanceCount()
 			 << endl
 			 << endl
+#endif
 			 << "Execution XPath details:"
 			 << endl
 			 << endl
