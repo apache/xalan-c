@@ -82,7 +82,7 @@ class URLInputSource;
 
 
 
-class XALAN_XMLSUPPORT_EXPORT XMLParserLiaison : Resettable
+class XALAN_XMLSUPPORT_EXPORT XMLParserLiaison : public Resettable
 {
 public:
 

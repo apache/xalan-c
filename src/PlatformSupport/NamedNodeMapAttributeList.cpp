@@ -113,7 +113,7 @@ namespace
 
 const DOMString	theType("CDATA");
 
-};
+}
 
 const XMLCh*
 NamedNodeMapAttributeList::getType(const unsigned int /* index */) const

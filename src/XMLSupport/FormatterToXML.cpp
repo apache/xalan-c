@@ -75,7 +75,7 @@
 namespace
 {
 const char* const	theDefaultAttrSpecialChars = "<>&\"\'\r\n";
-};
+}
 
 const DOMString FormatterToXML::DEFAULT_MIME_ENCODING = "UTF-8";
 

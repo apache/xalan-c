@@ -96,7 +96,7 @@ namespace
 	NSInfo	theNSInfoNullWithXMLNS(true, true);
 	NSInfo	theNSInfoNullWithoutXMLNS(true, false);
 	NSInfo	theNSInfoNullNoAncestorXMLNS(true, false, NSInfo::ANCESTORNOXMLNS);
-};
+}
 
 
 

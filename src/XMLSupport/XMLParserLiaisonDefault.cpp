@@ -95,7 +95,7 @@ namespace
 
 static const char* const	theDefaultSpecialCharacters = "<>&\"\'\r\n";
 
-};
+}
 
 
 

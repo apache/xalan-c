@@ -1635,7 +1635,7 @@ XSLTEngineImpl::endElement(const XMLCh* const 	name)
 	m_flistener->endElement(c_wstr(name));
 	if(m_traceListeners.size() > 0)
 	{
-		GenerateEvent ge(this, GenerateEvent.EVENTTYPE_ENDELEMENT, name, 0);
+		GenerateEvent ge(this, GenerateEvent::EVENTTYPE_ENDELEMENT, name, 0);
 		fireGenerateEvent(ge);
 	}
 	m_resultNameSpaces.pop_back();

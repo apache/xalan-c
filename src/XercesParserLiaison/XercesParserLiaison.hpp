@@ -91,7 +91,7 @@ class XSLProcessor;
 
 
 
-class XALAN_XERCESPARSERLIAISON_EXPORT XercesParserLiaison : public XMLParserLiaisonDefault, ErrorHandler
+class XALAN_XERCESPARSERLIAISON_EXPORT XercesParserLiaison : public XMLParserLiaisonDefault, public ErrorHandler
 {
 public:
 

@@ -212,7 +212,7 @@ locateAttrParent(
 	return parent;
 }
 
-};	// namespace
+}	// namespace
 
 
 

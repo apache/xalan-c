@@ -64,7 +64,7 @@ namespace
 	XMLCh	theNaNDefault[] = { 0xFFFD, 0 };
 
 	XMLCh	theInfinityDefault[] = { 0x221E, 0 };
-};
+}
 
 
 DecimalFormatSymbols::DecimalFormatSymbols(const std::locale&	/* theLocale */) :

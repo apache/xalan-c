@@ -118,7 +118,7 @@ namespace DOMServices
 			const DOMString&	prefix,
 			const DOM_Element&	namespaceContext);
 
-};	// namespace DOMServices
+}	// namespace DOMServices
 
 
 

@@ -488,7 +488,7 @@ CopyDOMStringToVector(const DOMString&		theString,
 
 
 
-};
+}
 
 
 

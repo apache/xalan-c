@@ -80,7 +80,7 @@
 
 XPathSupportDefault::XPathSupportDefault(DOMSupport&	theDOMSupport) :
 	XPathSupport(),
-	WhitespaceSupport(),
+	DOMServices::WhitespaceSupport(),
 	m_DOMSupport(theDOMSupport)
 {
 }
