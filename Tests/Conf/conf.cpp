@@ -55,8 +55,14 @@
  * <http://www.apache.org/>.
  */
 
+#if defined(XALAN_OLD_STREAM_HEADERS)
+#include <iostream.h>
+#include <strstream.h>
+#else
 #include <iostream>
 #include <strstream>
+#endif
+
 #include <stdio.h>
 
 #if !defined(XALAN_NO_NAMESPACES)
@@ -64,10 +70,7 @@
 	using std::cout;
 	using std::cin;
 	using std::endl;
-	using std::ifstream;
-	using std::ios_base;
 	using std::ostrstream;
-	using std::string;
 #endif
 
 
@@ -142,10 +145,10 @@ getParams(int argc,
 	}
 	else
 	{
-		if (f.checkDir(pathSep + XalanDOMString(argv[1])))
+		if (f.checkDir(XalanDOMString(argv[1])))
 		{
 			assign(baseDir, XalanDOMString(argv[1]));
-			insert(baseDir, 0, pathSep);
+//			insert(baseDir, 0, pathSep);
 		}
 		else
 		{
@@ -164,8 +167,8 @@ getParams(int argc,
 			if(i < argc && argv[i][0] != '-')
 			{
 				assign(outDir, XalanDOMString(argv[i]));
-				insert(outDir, 0, XalanDOMString("\\"));
-				append(outDir, XalanDOMString("\\"));
+//				insert(outDir, 0, XalanDOMString("\\"));
+				append(outDir, pathSep);
 				f.checkAndCreateDir(outDir);
 				fsetOut = false;
 			}
@@ -181,7 +184,7 @@ getParams(int argc,
 			if(i < argc && argv[i][0] != '-')
 			{
 				assign(goldRoot, XalanDOMString(argv[i]));
-				insert(goldRoot, 0, pathSep);
+//				insert(goldRoot, 0, pathSep);
 				fsetGold = false;
 			}
 			else
