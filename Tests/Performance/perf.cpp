@@ -128,7 +128,6 @@ const char* const 	excludeStylesheets[] =
 {
 	//"basic-all_well.xsl",
 	"large-evans_large.xsl",
-	"thruput-flat.xsl",
 	//"sort-cem-big.xsl",
 	//"large-cem10k.xsl",
 	0
@@ -294,8 +293,7 @@ printArgOptions()
 void
 checkAndCreateDir(XalanDOMString directory )
 {
-char buffer[_MAX_PATH]; // buffer2[_MAX_PATH], buffer3[_MAX_PATH];
-const char* buf;
+char buffer[_MAX_PATH];
 
 	_getcwd( buffer, _MAX_PATH );
 
@@ -432,8 +430,7 @@ main(
 	XalanDOMString  category;	// Test all of base dir by default
 	XalanDOMString  baseDir;	//(XALAN_STATIC_UCODE_STRING("\\xslt\\xsl-test\\perf\\"));
 	XalanDOMString  outputRoot;	//(XALAN_STATIC_UCODE_STRING(""));
-	XalanDOMString  resultsRoot(XALAN_STATIC_UCODE_STRING("\\xslt\\xsl-test\\perf-dataxml\\"));
-	//const XalanDOMString  pathSep(XALAN_STATIC_UCODE_STRING("\\"));
+
 
 	if (getParams(argc, argv, baseDir, outputRoot, category, skip, iterCount) == true)
 	{
@@ -450,7 +447,7 @@ main(
 		const XalanDOMString  XSLSuffix(XALAN_STATIC_UCODE_STRING(".xsl"));
 		const XalanDOMString  XMLSuffix(XALAN_STATIC_UCODE_STRING(".xml"));
 		const XalanDOMString  resultFilePrefix(XalanDOMString("cpp"));
-		const XalanDOMString  resultsFile(resultsRoot + resultFilePrefix + UniqRunid + XMLSuffix);
+		const XalanDOMString  resultsFile(outputRoot + resultFilePrefix + UniqRunid + XMLSuffix);
 
 
 
