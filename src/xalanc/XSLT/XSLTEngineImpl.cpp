@@ -2030,12 +2030,11 @@ XSLTEngineImpl::warnCopyTextNodesOnly(
 
 
 
-void
+inline void
 XSLTEngineImpl::cloneToResultTree(
 			const XalanText&	node,
 			bool				overrideStrip)
 {
-#if 1
 	assert(m_executionContext != 0 && m_stylesheetRoot != 0);
 	assert(node.getParentNode() == 0 ||
 		   node.getParentNode()->getNodeType() != XalanNode::DOCUMENT_NODE);
@@ -2048,31 +2047,6 @@ XSLTEngineImpl::cloneToResultTree(
 
 	    characters(toCharArray(data), 0, length(data));
     }
-#else
-	bool	stripWhiteSpace = false;
-
-	const bool	isIgnorableWhitespace = node.isIgnorableWhitespace();
-
-	if(stripWhiteSpace == false || isIgnorableWhitespace == false)
-	{
-		assert(node.getParentNode() == 0 ||
-			   node.getParentNode()->getNodeType() != XalanNode::DOCUMENT_NODE);
-
-		const XalanDOMString&	data = node.getData();
-
-		if(0 != length(data))
-		{
-			if(isIgnorableWhitespace == true)
-			{
-				ignorableWhitespace(toCharArray(data), length(data));
-			}
-			else
-			{
-				characters(toCharArray(data), 0, length(data));
-			}
-		}
-	}
-#endif
 }
 
 
