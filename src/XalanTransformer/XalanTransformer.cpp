@@ -67,7 +67,7 @@
 
 
 
-#include <xercesc/sax/SAXException.hpp>
+#include <sax/SAXException.hpp>
 
 
 
