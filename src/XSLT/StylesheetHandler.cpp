@@ -1709,14 +1709,6 @@ StylesheetHandler::PushPopIncludeState::PushPopIncludeState(StylesheetHandler&	t
 
 StylesheetHandler::PushPopIncludeState::~PushPopIncludeState()
 {
-	// Clean up the element stack vector
-	XALAN_USING_STD(for_each)
-
-	// Clean up the element stack vector
-	for_each(m_handler.m_elemStack.begin(),
-			 m_handler.m_elemStack.end(),
-			 DeleteFunctor<ElemTemplateElement>());
-
 	clear(m_handler.m_accumulateText);
 	m_handler.m_elemStack = m_elemStack;
 	m_handler.m_pTemplate = m_pTemplate;
