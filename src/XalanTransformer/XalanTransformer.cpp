@@ -1060,14 +1060,12 @@ XalanTransformer::doTransform(
 	}
 	catch(const XSLException&	e)
 	{
-		if (length(theErrorMessage) != 0)
+		if (length(theErrorMessage) == 0)
 		{
-			TranscodeToLocalCodePage(theErrorMessage, m_errorMessage, true);
+			e.defaultFormat(theErrorMessage);
 		}
-		else
-		{
-			TranscodeToLocalCodePage(e.getMessage(), m_errorMessage, true);
-		}
+
+		TranscodeToLocalCodePage(theErrorMessage, m_errorMessage, true);
 
 		theResult = -1;
 	}
