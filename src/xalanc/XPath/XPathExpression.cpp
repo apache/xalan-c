@@ -44,7 +44,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-#if defined(XALAN_INLINE_INITIALIZATION)
+#if defined(XALAN_INLINE_INITIALIZATION) && !defined(XALAN_INLINE_INITIALIZATION_IS_DEFINITION_BUG)
 const XPathExpression::TokenQueueSizeType   XPathExpression::s_opCodeMapLengthIndex;
 #endif
 
