@@ -192,7 +192,54 @@ public:
 			size_type				theLineNumber,
 			size_type				theColumnNumber,
 			const XalanDOMString&	theType,
-			XalanDOMString&			theBuffer);
+			XalanDOMString&			theBuffer)
+	{
+		defaultFormat(
+			theMessage.c_str(),
+			theMessage.size(),
+			theURI.c_str(),
+			theURI.size(),
+			theLineNumber,
+			theColumnNumber,
+			theType.c_str(),
+			theType.size(),
+			theBuffer);
+	}
+
+	static void
+	defaultFormat(
+			const XalanDOMChar*					theMessage,
+			const XalanDOMChar*					theURI,
+			size_type							theLineNumber,
+			size_type							theColumnNumber,
+			const XalanDOMChar*					theType,
+			XalanDOMString&						theBuffer)
+	{
+		assert(theMessage != 0 && theURI != 0 && theType != 0);
+
+		defaultFormat(
+			theMessage,
+			XalanDOMString::length(theMessage),
+			theURI,
+			XalanDOMString::length(theURI),
+			theLineNumber,
+			theColumnNumber,
+			theType,
+			XalanDOMString::length(theType),
+			theBuffer);
+	}
+
+	static void
+	defaultFormat(
+			const XalanDOMChar*					theMessage,
+			const XalanDOMString::size_type		theMessageLength,
+			const XalanDOMChar*					theURI,
+			const XalanDOMString::size_type		theURILength,
+			size_type							theLineNumber,
+			size_type							theColumnNumber,
+			const XalanDOMChar*					theType,
+			const XalanDOMString::size_type		theTypeLength,
+			XalanDOMString&						theBuffer);
 
 private:
 	

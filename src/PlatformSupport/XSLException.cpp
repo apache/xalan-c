@@ -181,19 +181,22 @@ XalanDOMChar	columnString[] =
 
 void
 XSLException::defaultFormat(
-			const XalanDOMString&	theMessage,
-			const XalanDOMString&	theURI,
-			size_type				theLineNumber,
-			size_type				theColumnNumber,
-			const XalanDOMString&	theType,
-			XalanDOMString&			theBuffer)
+			const XalanDOMChar*					theMessage,
+			const XalanDOMString::size_type		theMessageLength,
+			const XalanDOMChar*					theURI,
+			const XalanDOMString::size_type		theURILength,
+			size_type							theLineNumber,
+			size_type							theColumnNumber,
+			const XalanDOMChar*					theType,
+			const XalanDOMString::size_type		theTypeLength,
+			XalanDOMString&						theBuffer)
 {
-	theBuffer += theType;
-	theBuffer += colonString;
-	theBuffer += theMessage;
+	theBuffer.append(theType, theTypeLength);
+	theBuffer.append(colonString);
+	theBuffer.append(theMessage, theMessageLength);
 	theBuffer += XalanDOMChar(XalanUnicode::charSpace);
 	theBuffer += XalanDOMChar(XalanUnicode::charLeftParenthesis);
-	theBuffer += theURI;
+	theBuffer.append(theURI, theURILength);
 	theBuffer += lineString;
 	LongToDOMString(theLineNumber, theBuffer);
 	theBuffer += columnString;
