@@ -349,11 +349,35 @@ protected:
 
 	/**
 	 * Append a wide character to the buffer.
+	 * Characters that are not representable
+	 * in the encoding are not written as
+	 * entities.
 	 *
 	 * @ch the character to append.
 	 */
 	void
-	accum(XalanDOMChar	ch);
+	accumName(XalanDOMChar	ch)
+	{
+		assert(m_accumNameFunction != 0);
+
+		(this->*m_accumNameFunction)(ch);
+	}
+
+	/**
+	 * Append a wide character to the buffer.
+	 * Characters that are not representable
+	 * in the encoding are not written as
+	 * entities.
+	 *
+	 * @ch the character to append.
+	 */
+	void
+	accumContent(XalanDOMChar	ch)
+	{
+		assert(m_accumContentFunction != 0);
+
+		(this->*m_accumContentFunction)(ch);
+	}
 
 	/**
 	 * Append a null-terminated array of wide characters to
@@ -362,7 +386,16 @@ protected:
 	 * @chars the array to append
 	 */
 	void
-	accum(const XalanDOMChar*	chars);
+	accumName(const XalanDOMChar*	chars);
+
+	/**
+	 * Append a null-terminated array of wide characters to
+	 * the buffer.
+	 *
+	 * @chars the array to append
+	 */
+	void
+	accumContent(const XalanDOMChar*		chars);
 
 	/**
 	 * Append an array of wide character to the buffer.
@@ -372,7 +405,20 @@ protected:
 	 * @length the number of characters to append
 	 */
 	void
-	accum(
+	accumName(
+			const XalanDOMChar	chars[],
+			unsigned int		start,
+			unsigned int		length);
+
+	/**
+	 * Append an array of wide character to the buffer.
+	 *
+	 * @chars the array to append
+	 * @start the offset into the array to start from
+	 * @length the number of characters to append
+	 */
+	void
+	accumContent(
 			const XalanDOMChar	chars[],
 			unsigned int		start,
 			unsigned int		length);
@@ -383,7 +429,17 @@ protected:
 	 * @param str the string to append
 	 */
 	void
-	accum(const XalanDOMString&		str);
+	accumName(const XalanDOMString&		str);
+
+	typedef void (FormatterToXML::*AccumFunctionType)(XalanDOMChar);
+
+	/**
+	 * Append a string to the buffer.
+	 *
+	 * @param str the string to append
+	 */
+	void
+	accumContent(const XalanDOMString&	str);
 
 	/**
 	 * Append a vector of wide characters to the buffer.
@@ -391,7 +447,15 @@ protected:
 	 * @param theVector the vector to append
 	 */
 	void
-	accum(const XalanDOMCharVectorType&		theVector);
+	accumName(const XalanDOMCharVectorType&		theVector);
+
+	/**
+	 * Append a vector of wide characters to the buffer.
+	 *
+	 * @param theVector the vector to append
+	 */
+	void
+	accumContent(const XalanDOMCharVectorType&	theVector);
 
 	/**
 	 * Escape and accum a character.
@@ -503,13 +567,6 @@ protected:
 	writeAttrString(
 			const XalanDOMChar*		string,
 			const XalanDOMString&	encoding);
-
-	/**
-	 * Write the data of a comment.
-	 * @param data The string to write.
-	 */
-	virtual void
-	commentData(const XalanDOMChar*		data);
 
 	/**
 	 * Throw an exception when an invalid
@@ -654,6 +711,46 @@ private:
 	 */
 	static void
 	initEncodings();
+
+	/**
+	 * Append a wide character to the buffer.
+	 * Characters that are not representable
+	 * in the encoding are not written as
+	 * entities.
+	 *
+	 * @ch the character to append.
+	 */
+	void
+	accumNameAsByte(XalanDOMChar	ch);
+
+	/**
+	 * Append a wide character to the buffer.
+	 * Characters that are not representable
+	 * in the encoding are written as entities.
+	 *
+	 * @ch the character to append.
+	 */
+	void
+	accumContentAsByte(XalanDOMChar		ch);
+
+	/**
+	 * Append a wide character to the buffer.
+	 * Characters that are not representable
+	 * in the encoding are not written as
+	 * entities.
+	 *
+	 * @ch the character to append.
+	 */
+	void
+	accumNameAsChar(XalanDOMChar	ch);
+
+	/**
+	 * Append a wide character to the buffer.
+	 *
+	 * @ch the character to append.
+	 */
+	void
+	accumContentAsChar(XalanDOMChar		ch);
 
 	/**
 	 * Output the doc type declaration.
@@ -818,7 +915,19 @@ private:
 	 * A stack of Boolean objects that tell if the given element 
 	 * has children.
 	 */
-	BoolStackType	m_elemStack;
+	BoolStackType		m_elemStack;
+
+	/**
+	 * A pointer to the member function that will do the accumulating
+	 * for names.
+	 */
+	AccumFunctionType	m_accumNameFunction;
+
+	/**
+	 * A pointer to the member function that will do the accumulating
+	 * for content.
+	 */
+	AccumFunctionType	m_accumContentFunction;
 };
 
 

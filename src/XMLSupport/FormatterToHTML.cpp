@@ -339,30 +339,30 @@ FormatterToHTML::startDocument()
 	// specified
 	if(isEmptySystem == false || isEmptyPublic == false)
 	{
-		accum(s_doctypeHeaderStartString);
+		accumContent(s_doctypeHeaderStartString);
 
 		if(isEmptyPublic == false)
 		{
-			accum(s_doctypeHeaderPublicString);
-			accum(m_doctypePublic);
-			accum(XalanUnicode::charQuoteMark);
+			accumContent(s_doctypeHeaderPublicString);
+			accumContent(m_doctypePublic);
+			accumContent(XalanUnicode::charQuoteMark);
 		}
 
 		if(isEmptySystem == false)
 		{
 			if(isEmptyPublic == true)
 			{
-				accum(s_doctypeHeaderSystemString);
+				accumContent(s_doctypeHeaderSystemString);
 			}
 
-			accum(XalanUnicode::charSpace);
-			accum(XalanUnicode::charQuoteMark);
+			accumContent(XalanUnicode::charSpace);
+			accumContent(XalanUnicode::charQuoteMark);
 
-			accum(m_doctypeSystem);
-			accum(XalanUnicode::charQuoteMark);
+			accumContent(m_doctypeSystem);
+			accumContent(XalanUnicode::charQuoteMark);
 		}
 
-		accum(XalanUnicode::charGreaterThanSign);
+		accumContent(XalanUnicode::charGreaterThanSign);
 
 		outputLineSep();
 	}
@@ -415,9 +415,9 @@ FormatterToHTML::startElement(
 
 	m_isRawStack.push_back(elemDesc.is(ElemDesc::RAW));
 
-	accum(XalanUnicode::charLessThanSign);
+	accumContent(XalanUnicode::charLessThanSign);
 
-	writeCharacters(name);
+	accumName(name);
 
 	const unsigned int	nAttrs = attrs.getLength();
 
@@ -474,25 +474,25 @@ FormatterToHTML::endElement(const XMLCh* const	name)
 			indent(m_currentIndent);
 		}
 
-		accum(XalanUnicode::charLessThanSign);
-		accum(XalanUnicode::charSolidus);
-		writeCharacters(name);
-		accum(XalanUnicode::charGreaterThanSign);
+		accumContent(XalanUnicode::charLessThanSign);
+		accumContent(XalanUnicode::charSolidus);
+		accumName(name);
+		accumContent(XalanUnicode::charGreaterThanSign);
 	}
     else
     {
 		if(elemDesc.is(ElemDesc::EMPTY) == false)
 		{
-			accum(XalanUnicode::charGreaterThanSign);
+			accumContent(XalanUnicode::charGreaterThanSign);
 
-			accum(XalanUnicode::charLessThanSign);
-			accum(XalanUnicode::charSolidus);
-			writeCharacters(name);
-			accum(XalanUnicode::charGreaterThanSign);
+			accumContent(XalanUnicode::charLessThanSign);
+			accumContent(XalanUnicode::charSolidus);
+			accumName(name);
+			accumContent(XalanUnicode::charGreaterThanSign);
 		}
 		else
 		{
-			accum(XalanUnicode::charGreaterThanSign);
+			accumContent(XalanUnicode::charGreaterThanSign);
 		}
     }
 
@@ -566,11 +566,11 @@ FormatterToHTML::characters(
 
 
 void
-FormatterToHTML::entityReference(const XMLCh* const	name)
+FormatterToHTML::entityReference(const XMLCh* const		name)
 {
-	accum(XalanUnicode::charAmpersand);
-	accum(name);
-	accum(XalanUnicode::charSemicolon);
+	accumContent(XalanUnicode::charAmpersand);
+	accumName(name);
+	accumContent(XalanUnicode::charSemicolon);
 }
 
 
@@ -604,7 +604,7 @@ FormatterToHTML::cdata(
 			indent(m_currentIndent);
 		}
 
-		accum(ch, 0, length);
+		accumContent(ch, 0, length);
 	}
 	else
 	{
@@ -636,21 +636,21 @@ FormatterToHTML::processingInstruction(
 			indent(m_currentIndent);
 		}
 
-		accum(XalanUnicode::charLessThanSign);
-		accum(XalanUnicode::charQuestionMark);
-		writeCharacters(target);
+		accumContent(XalanUnicode::charLessThanSign);
+		accumContent(XalanUnicode::charQuestionMark);
+		accumName(target);
 
 		if (length(data) > 0)
 		{
 			if(isXMLWhitespace(data[0]) == false)
 			{
-				accum(XalanUnicode::charSpace);
+				accumContent(XalanUnicode::charSpace);
 			}
 
-			writeCharacters(data);
+			accumName(data);
 		}
 
-		accum(XalanUnicode::charGreaterThanSign); // different from XML
+		accumContent(XalanUnicode::charGreaterThanSign); // different from XML
 
 		m_startNewLine = true;
 	}
@@ -684,7 +684,7 @@ FormatterToHTML::writeCharacters(
 
 		if(ch < SPECIALSSIZE && m_charsMap[ch] != 'S')
 		{
-			accum(ch);
+			accumContent(ch);
 		}
 		else if (XalanUnicode::charLF == ch) 
 		{
@@ -758,7 +758,7 @@ FormatterToHTML::writeCharacters(
 		else if(ch >= 0x007Fu && ch <= m_maxCharacter)
 		{
 			// Hope this is right...
-			accum(ch);
+			accumContent(ch);
 		}
 		else
 		{
@@ -782,13 +782,13 @@ FormatterToHTML::writeAttrString(
 
 		if(ch < SPECIALSSIZE && m_attrCharsMap[ch] != 'S')
 		{
-			accum(ch);
+			accumContent(ch);
 		}
 		else if(XalanUnicode::charAmpersand == ch &&
 				i + 1 < strLen &&
 				XalanUnicode::charLeftCurlyBracket == string[i + 1])
 		{
-			accum(ch); // no escaping in this case, as specified in 15.2
+			accumContent(ch); // no escaping in this case, as specified in 15.2
 		}
 		else if (accumDefaultEntity(ch, i, string, strLen, false) == false)
 		{
@@ -814,42 +814,42 @@ FormatterToHTML::writeAttrString(
 					next = ((ch - 0xd800) << 10) + next -0xdc00 + 0x00010000;
 				}
 
-				accum(XalanUnicode::charAmpersand);
-				accum(XalanUnicode::charNumberSign);
-				accum(UnsignedLongToDOMString(next));
-				accum(XalanUnicode::charSemicolon);
+				accumContent(XalanUnicode::charAmpersand);
+				accumContent(XalanUnicode::charNumberSign);
+				accumContent(UnsignedLongToDOMString(next));
+				accumContent(XalanUnicode::charSemicolon);
 			}
 			else if(ch >= 160 && ch <= 255)
 			{
-				accum(XalanUnicode::charAmpersand);
-				accum(theHTMLLatin1Symbols[ch - 160]);
-				accum(XalanUnicode::charSemicolon);
+				accumContent(XalanUnicode::charAmpersand);
+				accumContent(theHTMLLatin1Symbols[ch - 160]);
+				accumContent(XalanUnicode::charSemicolon);
 			}
 			else if(ch >= 913 && ch <= 937 && ch != 930)
 			{
-				accum(XalanUnicode::charAmpersand);
-				accum(theHTMLSymbols1[ch - 913]);
-				accum(XalanUnicode::charSemicolon);
+				accumContent(XalanUnicode::charAmpersand);
+				accumContent(theHTMLSymbols1[ch - 913]);
+				accumContent(XalanUnicode::charSemicolon);
 			}
 			else if(ch >= 945 && ch <= 969)
 			{
-				accum(XalanUnicode::charAmpersand);
-				accum(theHTMLSymbols2[ch - 945]);
-				accum(XalanUnicode::charSemicolon);
+				accumContent(XalanUnicode::charAmpersand);
+				accumContent(theHTMLSymbols2[ch - 945]);
+				accumContent(XalanUnicode::charSemicolon);
 			}
 			else if(ch >= 977 && ch <= 978)
 			{
-				accum(XalanUnicode::charAmpersand);
-				// substracting the number of unused characters
-				accum(theHTMLSymbols2[ch - 945 - 7]);
-				accum(XalanUnicode::charSemicolon);
+				accumContent(XalanUnicode::charAmpersand);
+				// subtracting the number of unused characters
+				accumContent(theHTMLSymbols2[ch - 945 - 7]);
+				accumContent(XalanUnicode::charSemicolon);
 			}
 			else if(ch == 982)
 			{
-				accum(XalanUnicode::charAmpersand);
-				// substracting the number of unused characters
-				accum(theHTMLSymbols2[ch - 945 - 10]);
-				accum(XalanUnicode::charSemicolon);
+				accumContent(XalanUnicode::charAmpersand);
+				// subtracting the number of unused characters
+				accumContent(theHTMLSymbols2[ch - 945 - 10]);
+				accumContent(XalanUnicode::charSemicolon);
 			}
 			else if (338 == ch)
 			{
@@ -870,26 +870,18 @@ FormatterToHTML::writeAttrString(
 
 
 void
-FormatterToHTML::commentData(const XalanDOMChar*		data)
-{
-	writeCharacters(data);
-}
-
-
-
-void
 FormatterToHTML::copyEntityIntoBuffer(const XalanDOMChar*	s)
 {
 	const unsigned int	len = length(s);
 
-    accum(XalanUnicode::charAmpersand);
+    accumContent(XalanUnicode::charAmpersand);
 
     for(unsigned int i = 0; i < len; ++i)
     {
-		accum(s[i]);
+		accumContent(s[i]);
     }
 
-    accum(XalanUnicode::charSemicolon);
+    accumContent(XalanUnicode::charSemicolon);
 }
 
 
@@ -899,14 +891,14 @@ FormatterToHTML::copyEntityIntoBuffer(const XalanDOMString&		s)
 {
 	const unsigned int	len = length(s);
 
-    accum(XalanUnicode::charAmpersand);
+    accumContent(XalanUnicode::charAmpersand);
 
     for(unsigned int i = 0; i < len; ++i)
     {
-		accum(charAt(s, i));
+		accumContent(charAt(s, i));
     }
 
-    accum(XalanUnicode::charSemicolon);
+    accumContent(XalanUnicode::charSemicolon);
 }
 
 
@@ -914,14 +906,14 @@ FormatterToHTML::copyEntityIntoBuffer(const XalanDOMString&		s)
 void
 FormatterToHTML::copyEntityIntoBuffer(const XalanDOMCharVectorType&		s)
 {
-    accum(XalanUnicode::charAmpersand);
+    accumContent(XalanUnicode::charAmpersand);
 
     for(XalanDOMCharVectorType::const_iterator i = s.begin(); *i != 0; ++i)
     {
-		accum(*i);
+		accumContent(*i);
     }
 
-    accum(XalanUnicode::charSemicolon);
+    accumContent(XalanUnicode::charSemicolon);
 }
 
 
@@ -932,18 +924,18 @@ FormatterToHTML::processAttribute(
 			const XalanDOMChar*		value,
 			const ElemDesc&			elemDesc)
 {
-    accum(XalanUnicode::charSpace);
+    accumContent(XalanUnicode::charSpace);
 
     if(elemDesc.isAttrFlagSet(name, ElemDesc::ATTREMPTY) == true &&
        (length(value) == 0) || equalsIgnoreCaseASCII(value, name) == true)
     {
-		writeCharacters(name);
+		accumName(name);
     }
     else
     {
-		writeCharacters(name);
-		accum(XalanUnicode::charEqualsSign);
-		accum(XalanUnicode::charQuoteMark);
+		accumName(name);
+		accumContent(XalanUnicode::charEqualsSign);
+		accumContent(XalanUnicode::charQuoteMark);
 
 		if(elemDesc.isAttrFlagSet(name, ElemDesc::ATTRURL) == true)
 		{
@@ -954,7 +946,7 @@ FormatterToHTML::processAttribute(
 			writeAttrString(value, m_encoding);
 		}
 
-		accum(XalanUnicode::charQuoteMark);
+		accumContent(XalanUnicode::charQuoteMark);
     }
 }
 
@@ -979,17 +971,17 @@ FormatterToHTML::writeAttrURI(
 
 			if(b1 != 0)
 			{
-				accum(XalanUnicode::charPercentSign);
+				accumContent(XalanUnicode::charPercentSign);
 
-				accum(UnsignedLongToHexDOMString(b1));
+				accumContent(UnsignedLongToHexDOMString(b1));
 			}
 
-			accum(XalanUnicode::charPercentSign);
-			accum(UnsignedLongToHexDOMString(b2));		
+			accumContent(XalanUnicode::charPercentSign);
+			accumContent(UnsignedLongToHexDOMString(b2));		
 		}	
 		else
 		{
-			accum(ch);
+			accumContent(ch);
 		}
 	}
 }

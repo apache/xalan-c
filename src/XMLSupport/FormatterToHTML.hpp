@@ -286,9 +286,6 @@ protected:
 			const XalanDOMChar*		string,
 			const XalanDOMString&	encoding);
 
-	virtual void
-	commentData(const XalanDOMChar*		data);
-
 	void
 	writeCharacters(const XalanDOMString&	theString);
 
