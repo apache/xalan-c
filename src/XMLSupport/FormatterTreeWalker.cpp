@@ -60,14 +60,8 @@
 
 
 // Xerces header files...
-#include <XalanDOM/XalanNode.hpp>
-#include <XalanDOM/XalanComment.hpp>
-#include <XalanDOM/XalanDocument.hpp>
-#include <XalanDOM/XalanDocumentFragment.hpp>
 #include <XalanDOM/XalanElement.hpp>
 #include <XalanDOM/XalanNamedNodeMap.hpp>
-#include <XalanDOM/XalanProcessingInstruction.hpp>
-#include <XalanDOM/XalanText.hpp>
 
 
 
@@ -105,14 +99,7 @@ FormatterTreeWalker::startNode(const XalanNode*		node)
 	{
 	case XalanNode::COMMENT_NODE:
 		{
-			const XalanComment*	theCommentNode =
-#if defined(XALAN_OLD_STYLE_CASTS)
-				(const XalanComment*)node;
-#else
-				static_cast<const XalanComment*>(node);
-#endif
-
-			m_formatterListener.comment(c_wstr(theCommentNode->getData()));
+			m_formatterListener.comment(c_wstr(node->getNodeValue()));
 		}
 		break;
 
@@ -145,28 +132,15 @@ FormatterTreeWalker::startNode(const XalanNode*		node)
 
 	case XalanNode::PROCESSING_INSTRUCTION_NODE:
 		{
-			const XalanProcessingInstruction*	thePI =
-#if defined(XALAN_OLD_STYLE_CASTS)
-				(const XalanProcessingInstruction*)node;
-#else
-				static_cast<const XalanProcessingInstruction*>(node);
-#endif
-
-			m_formatterListener.processingInstruction(c_wstr(thePI->getNodeName()),
-													  c_wstr(thePI->getData()));
+			m_formatterListener.processingInstruction(
+				c_wstr(node->getNodeName()),
+				c_wstr(node->getNodeValue()));
 		}
 		break;
 
 	case XalanNode::CDATA_SECTION_NODE:
 		{
-			const XalanText*	theTextNode =
-#if defined(XALAN_OLD_STYLE_CASTS)
-				(const XalanText*)node;
-#else
-				static_cast<const XalanText*>(node);
-#endif
-
-			const XalanDOMString&	data = theTextNode->getData();
+			const XalanDOMString&	data = node->getNodeValue();
 
 			assert(length(data) == FormatterListener::size_type(length(data)));
 
@@ -176,14 +150,7 @@ FormatterTreeWalker::startNode(const XalanNode*		node)
 
 	case XalanNode::TEXT_NODE:
 		{
-			const XalanText*	theTextNode =
-#if defined(XALAN_OLD_STYLE_CASTS)
-				(const XalanText*)node;
-#else
-				static_cast<const XalanText*>(node);
-#endif
-
-			const XalanDOMString&	data = theTextNode->getData();
+			const XalanDOMString&	data = node->getNodeValue();
 
 			assert(length(data) == FormatterListener::size_type(length(data)));
 
