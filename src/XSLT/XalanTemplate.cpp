@@ -346,16 +346,8 @@ foo(XPathExecutionContext&	theExecutionContext)
 	}
 
 	{
-		StylesheetHandler::ElemTextLiteralStackType	theVector;
-
-		for_each(theVector.begin(),
-			 theVector.end(),
-			 DeleteFunctor<ElemTextLiteral>());
-	}
-
-	{
 		const VariablesStack::ParamsVectorType	theVector;
-		VariablesStack 				theVariablesStack;
+		VariablesStack 							theVariablesStack;
 		
 		for_each(theVector.begin(),
 			 theVector.end(),
