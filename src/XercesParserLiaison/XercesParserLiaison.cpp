@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -111,8 +111,10 @@ static const XalanDOMChar	theDefaultSpecialCharacters[] =
 
 
 
-XercesParserLiaison::XercesParserLiaison(XercesDOMSupport&	/* theSupport */) :
-	m_documentNumber(0),
+XercesParserLiaison::XercesParserLiaison(
+			XercesDOMSupport&	/* theSupport */,
+			DocumentNumberType	theStartingNumber) :
+	m_documentNumber(theStartingNumber),
 	m_indent(-1),
 	m_useValidation(false),
 	m_includeIgnorableWhitespace(true),
@@ -129,8 +131,8 @@ XercesParserLiaison::XercesParserLiaison(XercesDOMSupport&	/* theSupport */) :
 
 
 
-XercesParserLiaison::XercesParserLiaison() :
-	m_documentNumber(0),
+XercesParserLiaison::XercesParserLiaison(DocumentNumberType		theStartingNumber) :
+	m_documentNumber(theStartingNumber),
 	m_indent(-1),
 	m_useValidation(false),
 	m_includeIgnorableWhitespace(true),
@@ -264,8 +266,8 @@ XercesParserLiaison::destroyDocument(XalanDocument*		theDocument)
 
 
 
-unsigned long
-XercesParserLiaison::getDocumentNumber()
+XercesParserLiaison::DocumentNumberType
+XercesParserLiaison::getNextDocumentNumber()
 {
 	return m_documentNumber++;
 }
@@ -597,7 +599,7 @@ XercesParserLiaison::doCreateDocument(
 			bool					buildBridge)
 {
 	XercesDocumentBridge* const		theNewDocument =
-		new XercesDocumentBridge(theXercesDocument, m_documentNumber++, threadSafe, buildBridge);
+		new XercesDocumentBridge(theXercesDocument, getNextDocumentNumber(), threadSafe, buildBridge);
 
 	m_documentMap[theNewDocument] = theNewDocument;
 

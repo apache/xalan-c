@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -99,15 +99,20 @@ public:
 	 * Construct a XercesParserLiaison instance.
 	 *
 	 * @param theSupport instance of DOMSupport object
+	 * @param theStartingNumber the starting number for documents
 	 *
-	 * @deprecated This constructor is deprecated.  Use the default constructor instead.
+	 * @deprecated This constructor is deprecated.  Use the next constructor instead.
 	 */
-	XercesParserLiaison(XercesDOMSupport&	theSupport);
+	XercesParserLiaison(
+			XercesDOMSupport&	theSupport,
+			DocumentNumberType	theStartingNumber);
 
 	/**
 	 * Construct a XercesParserLiaison instance.
+	 *
+	 * @param theStartingNumber the starting number for documents
 	 */
-	XercesParserLiaison();
+	XercesParserLiaison(DocumentNumberType	theStartingNumber = 0);
 
 	virtual
 	~XercesParserLiaison();
@@ -145,8 +150,8 @@ public:
 	virtual void
 	destroyDocument(XalanDocument*	theDocument);
 
-	virtual unsigned long
-	getDocumentNumber();
+	virtual DocumentNumberType
+	getNextDocumentNumber();
 
 	virtual int
 	getIndent() const;
@@ -417,6 +422,12 @@ public:
 		{
 			m_buildBridge = true;
 		}
+	}
+
+	DocumentNumberType
+	getDocumentNumber() const
+	{
+		return m_documentNumber;
 	}
 
 protected:

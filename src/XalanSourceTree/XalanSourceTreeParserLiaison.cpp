@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -127,8 +127,10 @@ const XalanDOMChar	XalanSourceTreeParserLiaison::validationString[] = {
 
 
 
-XalanSourceTreeParserLiaison::XalanSourceTreeParserLiaison(XalanSourceTreeDOMSupport&	/* theSupport */) :
-	m_documentNumber(0),
+XalanSourceTreeParserLiaison::XalanSourceTreeParserLiaison(
+			XalanSourceTreeDOMSupport&	/* theSupport */,
+			DocumentNumberType			theStartingNumber) :
+	m_documentNumber(theStartingNumber),
 	m_xercesParserLiaison(),
 	m_documentMap(),
 	m_persistentDocumentMap(),
@@ -138,8 +140,8 @@ XalanSourceTreeParserLiaison::XalanSourceTreeParserLiaison(XalanSourceTreeDOMSup
 
 
 
-XalanSourceTreeParserLiaison::XalanSourceTreeParserLiaison() :
-	m_documentNumber(0),
+XalanSourceTreeParserLiaison::XalanSourceTreeParserLiaison(DocumentNumberType	theStartingNumber) :
+	m_documentNumber(theStartingNumber),
 	m_xercesParserLiaison(),
 	m_documentMap(),
 	m_persistentDocumentMap(),
@@ -281,8 +283,8 @@ XalanSourceTreeParserLiaison::destroyDocument(XalanDocument*		theDocument)
 
 
 
-unsigned long
-XalanSourceTreeParserLiaison::getDocumentNumber()
+XalanSourceTreeParserLiaison::DocumentNumberType
+XalanSourceTreeParserLiaison::getNextDocumentNumber()
 {
 	return m_documentNumber++;
 }
@@ -483,7 +485,7 @@ XalanSourceTreeDocument*
 XalanSourceTreeParserLiaison::createXalanSourceTreeDocument()
 {
 	XalanSourceTreeDocument* const	theNewDocument =
-		new XalanSourceTreeDocument(m_documentNumber++, m_poolAllText);
+		new XalanSourceTreeDocument(getNextDocumentNumber(), m_poolAllText);
 
 	m_documentMap[theNewDocument] = theNewDocument;
 

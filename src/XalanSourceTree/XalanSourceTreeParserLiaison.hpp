@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -89,15 +89,20 @@ public:
 	 * Construct a XalanSourceTreeParserLiaison instance.
 	 *
 	 * @param theSupport instance of DOMSupport object
+	 * @param theStartingNumber the starting number for documents
 	 *
-	 * @deprecated This constructor is deprecated.  Use the default constructor instead.
+	 * @deprecated This constructor is deprecated.  Use the next constructor instead.
 	 */
-	XalanSourceTreeParserLiaison(XalanSourceTreeDOMSupport&		theSupport);
+	XalanSourceTreeParserLiaison(
+			XalanSourceTreeDOMSupport&	theSupport,
+			DocumentNumberType			theStartingNumber = 0);
 
 	/**
 	 * Construct a XalanSourceTreeParserLiaison instance.
+	 *
+	 * @param theStartingNumber the starting number for documents
 	 */
-	XalanSourceTreeParserLiaison();
+	XalanSourceTreeParserLiaison(DocumentNumberType		theStartingNumber = 0);
 
 	virtual
 	~XalanSourceTreeParserLiaison();
@@ -157,8 +162,8 @@ public:
 	virtual void
 	destroyDocument(XalanDocument*	theDocument);
 
-	virtual unsigned long
-	getDocumentNumber();
+	virtual DocumentNumberType
+	getNextDocumentNumber();
 
 	virtual int
 	getIndent() const;
@@ -353,11 +358,17 @@ public:
 					 XalanSourceTreeDocument*>	DocumentMapType;
 #endif
 
+	DocumentNumberType
+	getDocumentNumber() const
+	{
+		return m_documentNumber;
+	}
+
 private:
 
 	// Data members...
 
-	unsigned long				m_documentNumber;
+	DocumentNumberType			m_documentNumber;
 
 	XercesParserLiaison			m_xercesParserLiaison;
 
