@@ -286,6 +286,19 @@ AttributesImpl::getValue(const unsigned int		index) const
 
 
 
+#if defined(XALAN_NEEDS_EXPLICIT_TEMPLATE_INSTANTIATION)
+bool
+AttributesImpl::NameCompareFunctor::operator()(const AttributeVectorEntryExtended*	theEntry) const
+{
+	return equals(&*theEntry->m_Name.begin(), m_qname);
+}
+
+bool
+AttributesImpl::URIAndLocalNameCompareFunctor::operator()(const AttributeVectorEntryExtended*	theEntry) const
+{
+	return equals(&*theEntry->m_uri.begin(), m_uri) && equals(&*theEntry->m_localName.begin(), m_localName) ;
+}
+#else
 struct NameCompareFunctor
 {
 	NameCompareFunctor(const XMLCh*		theQName) :
@@ -306,13 +319,6 @@ private:
 
 
 
-#if defined(XALAN_NEEDS_EXPLICIT_TEMPLATE_INSTANTIATION)
-bool
-AttributesImpl::URIAndLocalNameCompareFunctor::operator()(const AttributeVectorEntryExtended*	theEntry) const
-{
-	return equals(&*theEntry->m_uri.begin(), m_uri) && equals(&*theEntry->m_localName.begin(), m_localName) ;
-}
-#else
 struct URIAndLocalNameCompareFunctor
 {
 	URIAndLocalNameCompareFunctor(

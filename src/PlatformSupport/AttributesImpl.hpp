@@ -225,6 +225,21 @@ public:
 #endif
 
 #if defined(XALAN_NEEDS_EXPLICIT_TEMPLATE_INSTANTIATION)
+	struct NameCompareFunctor
+	{
+		NameCompareFunctor(const XMLCh*		theQName) :
+			m_qname(theQName)
+		{
+		}
+
+		bool
+		operator()(const AttributeVectorEntryExtended*	theEntry) const;
+
+	private:
+
+		const XMLCh* const	m_qname;
+	};
+
 	struct URIAndLocalNameCompareFunctor
 	{
 		URIAndLocalNameCompareFunctor(
