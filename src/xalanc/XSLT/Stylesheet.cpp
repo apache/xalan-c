@@ -800,8 +800,6 @@ Stylesheet::addTemplate(
 const ElemTemplate*
 Stylesheet::findNamedTemplate(const XalanQName&		qname) const
 {
-	assert(m_importsSize == m_imports.size());
-
 	const ElemTemplateMapType::const_iterator	it = m_namedTemplates.find(qname);
 
 	if(it != m_namedTemplates.end())
@@ -813,7 +811,9 @@ Stylesheet::findNamedTemplate(const XalanQName&		qname) const
 		const ElemTemplate*		namedTemplate = 0;
 
 		// Look for the template in the imports
-		for(StylesheetVectorType::size_type i = 0; i < m_importsSize; ++i)
+		const StylesheetVectorType::size_type	importsCount = m_imports.size();
+
+		for(StylesheetVectorType::size_type i = 0; i < importsCount; ++i)
 		{
 			const Stylesheet* const stylesheet = m_imports[i];
 
