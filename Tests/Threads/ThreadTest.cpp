@@ -254,6 +254,7 @@ theThreadRoutine(void*		param)
 	}
 	catch(...)
 	{
+		cerr << "Exception caught in thread " << theInfo->m_threadNumber;
 	}
 
 	// Decrement the counter because we're done...
