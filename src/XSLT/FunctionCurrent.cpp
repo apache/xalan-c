@@ -84,6 +84,8 @@ FunctionCurrent::execute(
 			int								/* opPos */,
 			const XObjectArgVectorType&		args)
 {
+	assert(executionContext.getCurrentNode() != 0);
+
 	if (args.size() != 0)
 	{
 		executionContext.error("The current() function does not take any arguments!",
@@ -100,7 +102,7 @@ FunctionCurrent::execute(
 	}
 	else
 	{
-		return executionContext.getXObjectFactory().createNodeSet(*context);
+		return executionContext.getXObjectFactory().createNodeSet(*executionContext.getCurrentNode());
 	}
 }
 
