@@ -351,7 +351,14 @@ public:
 	}
 
 	void 
-	splice(iterator pos, ThisType& list, iterator toInsert)
+	splice(
+            iterator    pos,
+#if defined(NDEBUG)
+            ThisType&   /* list */,
+#else
+            ThisType&   list,
+#endif
+            iterator    toInsert)
 	{
 		assert(m_memoryManager == list.m_memoryManager);
 
@@ -372,7 +379,15 @@ public:
 	}
 
 	void
-	splice(iterator pos, ThisType& list, iterator toInsertFirst, iterator toInsertLast)
+	splice(
+            iterator    pos,
+#if defined(NDEBUG)
+            ThisType&   /* list */,
+#else
+            ThisType&   list,
+#endif
+            iterator    toInsertFirst,
+            iterator    toInsertLast)
 	{
 		assert(m_memoryManager == list.m_memoryManager);
 
