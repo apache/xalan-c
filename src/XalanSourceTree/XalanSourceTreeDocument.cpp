@@ -87,11 +87,11 @@ XalanSourceTreeDocument::XalanSourceTreeDocument(bool	fPoolAllText) :
 	XalanDocument(),
 	m_firstChild(0),
 	m_documentElement(0),
-	m_attributeAllocator(100),
+	m_attributeAllocator(200),
 	m_attributeNSAllocator(50),
 	m_commentAllocator(20),
-	m_elementAllocator(100),
-	m_elementNSAllocator(100),
+	m_elementAllocator(200),
+	m_elementNSAllocator(200),
 	m_piAllocator(25),
 	m_textAllocator(100),
 	m_textIWSAllocator(100),
@@ -942,9 +942,6 @@ XalanSourceTreeDocument::createAttribute(
 
 	if (length(theNamespace) == 0)
 	{
-		// the prefix was returned by getNamespaceForPrefix()...
-		assert(length(m_stringBuffer) == 0);
-
 		return m_attributeAllocator.create(
 				m_stringPool.get(theName),
 				m_stringPool.get(theValue),
