@@ -1084,7 +1084,7 @@ FormatterToHTML::pushHasNamespace(const XalanDOMChar*	theElementName)
 
 		if (theColonIndex < theLength)
 		{
-			m_stringBuffer = substring(theElementName, 0, theColonIndex);
+			substring(theElementName, m_stringBuffer, 0, theColonIndex);
 
 			thePrefix = &m_stringBuffer;
 		}
