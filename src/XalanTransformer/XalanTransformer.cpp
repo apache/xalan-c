@@ -103,7 +103,7 @@
 
 
 
-XSLTInit*	XalanTransformer::m_xsltInit = 0;
+XSLTInit*	XalanTransformer::s_xsltInit = 0;
 
 
 
@@ -139,9 +139,9 @@ XalanTransformer::~XalanTransformer()
 	for (FunctionParamPairVectorType::size_type i = 0; i < m_functionPairs.size(); ++i)
 	{			
 		delete m_functionPairs[i].second;
-		m_functionPairs.erase(m_functionPairs.begin() + i);			
-	}	
+	}
 
+	m_functionPairs.clear();
 }
 
 
@@ -150,7 +150,7 @@ void
 XalanTransformer::initialize()
 {
 	// Initialize Xalan. 
-	m_xsltInit = new XSLTInit;
+	s_xsltInit = new XSLTInit;
 }
 
 
@@ -159,7 +159,9 @@ void
 XalanTransformer::terminate()
 {
 	// Terminate Xalan and release memory.
-	delete m_xsltInit;
+	delete s_xsltInit;
+
+	s_xsltInit = 0;
 }
 
 
@@ -373,7 +375,9 @@ XalanTransformer::transform(
 
 		theProcessor.setProblemListener(&theProblemListener);
 
-		// Hack used to cast away const.
+		// Since the result target is not const in our
+		// internal intefaces, we'll pass in a local copy
+		// of the one provided...
 		XSLTResultTarget	tempResultTarget(theResultTarget);
 
 		// Set up the stylesheet execution context.
@@ -483,7 +487,12 @@ XalanTransformer::transform(
 	const XSLTResultTarget&		theResultTarget)
 {
 	// Parse the source document.
-	XalanParsedSource* theParsedXML = parseSource(theInputSource);
+	XalanParsedSource* const	theParsedXML =
+		parseSource(theInputSource);
+
+	// Make sure the parsed source is destroyed when
+	// the transformation is finished...
+	EnsureDestroyParsedSource	theGuard(*this, theParsedXML);
 
 	// Do the transformation...
 	return transform(
@@ -501,7 +510,12 @@ XalanTransformer::transform(
 			const XSLTResultTarget&			theResultTarget)
 {
 	// Parse the source document.
-	XalanParsedSource* theParsedXML = parseSource(theInputSource);
+	XalanParsedSource* const	theParsedXML =
+		parseSource(theInputSource);
+
+	// Make sure the parsed source is destroyed when
+	// the transformation is finished...
+	EnsureDestroyParsedSource	theGuard(*this, theParsedXML);
 
 	// Do the transformation...
 	return transform(
@@ -528,11 +542,11 @@ XalanTransformer::transform(
 
 int
 XalanTransformer::transform(
-			const XSLTInputSource&			theInputSource, 
-			const XSLTInputSource&			theStylesheetSource,
-			const void*						theOutputHandle, 
-			XalanOutputHandlerType			theOutputHandler,
-			XalanFlushHandlerType			theFlushHandler)
+			const XSLTInputSource&	theInputSource, 
+			const XSLTInputSource&	theStylesheetSource,
+			const void*				theOutputHandle, 
+			XalanOutputHandlerType	theOutputHandler,
+			XalanFlushHandlerType	theFlushHandler)
 {
 	// Set to output target to the callback 
 	XalanTransformerOutputStream	theOutputStream(theOutputHandle, theOutputHandler, theFlushHandler);
@@ -609,8 +623,7 @@ XalanTransformer::compileStylesheet(const XSLTInputSource&		theStylesheetSource)
 	XalanDOMString	theErrorMessage;
 
 	try
-	{	
-
+	{
 		// Create some support objects that are necessary for running the processor...
 		XalanSourceTreeDOMSupport		theDOMSupport;
 
@@ -634,6 +647,13 @@ XalanTransformer::compileStylesheet(const XSLTInputSource&		theStylesheetSource)
 				theXObjectFactory,
 				theXPathFactory);
 
+		// Create a problem listener and send output to a XalanDOMString.
+		DOMStringPrintWriter	thePrintWriter(theErrorMessage);
+		
+		ProblemListenerDefault	theProblemListener(&thePrintWriter);
+
+		theProcessor.setProblemListener(&theProblemListener);
+
 		// Create a new XalanCompiledStylesheet.
 		XalanCompiledStylesheet* const theCompiledStylesheet =
 			new XalanCompiledStylesheet(
@@ -656,7 +676,6 @@ XalanTransformer::compileStylesheet(const XSLTInputSource&		theStylesheetSource)
 		{
 			TranscodeToLocalCodePage(e.getMessage(), m_errorMessage, true);
 		}
-		
 	}
 	catch (SAXException& e)
 	{
@@ -667,8 +686,7 @@ XalanTransformer::compileStylesheet(const XSLTInputSource&		theStylesheetSource)
 		else
 		{
 			TranscodeToLocalCodePage(e.getMessage(), m_errorMessage, true);
-		}
-		
+		}		
 	}
 	catch (XMLException& e)
 	{
@@ -680,7 +698,6 @@ XalanTransformer::compileStylesheet(const XSLTInputSource&		theStylesheetSource)
 		{
 			TranscodeToLocalCodePage(e.getMessage(), m_errorMessage, true);
 		}
-		
 	}
 	catch(const XalanDOMException&	e)
 	{
@@ -737,9 +754,6 @@ XalanTransformer::parseSource(
 	m_errorMessage.clear();
 	m_errorMessage.push_back(0);
 
-	// Store error messages from problem listener.
-	XalanDOMString	theErrorMessage;
-
 	try
 	{	
 		XalanParsedSource* theParsedDocument = 0;
@@ -760,56 +774,25 @@ XalanTransformer::parseSource(
 	}	
 	catch (XSLException& e)
 	{
-		if (length(theErrorMessage) != 0)
-		{
-			TranscodeToLocalCodePage(theErrorMessage, m_errorMessage, true);
-		}
-		else
-		{
-			TranscodeToLocalCodePage(e.getMessage(), m_errorMessage, true);
-		}
-		
+		TranscodeToLocalCodePage(e.getMessage(), m_errorMessage, true);
 	}
 	catch (SAXException& e)
 	{
-		if (length(theErrorMessage) != 0)
-		{
-			TranscodeToLocalCodePage(theErrorMessage, m_errorMessage, true);
-		}
-		else
-		{
-			TranscodeToLocalCodePage(e.getMessage(), m_errorMessage, true);
-		}
-		
+		TranscodeToLocalCodePage(e.getMessage(), m_errorMessage, true);
 	}
 	catch (XMLException& e)
 	{
-		if (length(theErrorMessage) != 0)
-		{
-			TranscodeToLocalCodePage(theErrorMessage, m_errorMessage, true);
-		}
-		else
-		{
-			TranscodeToLocalCodePage(e.getMessage(), m_errorMessage, true);
-		}
-		
+		TranscodeToLocalCodePage(e.getMessage(), m_errorMessage, true);
 	}
 	catch(const XalanDOMException&	e)
 	{
-		if (length(theErrorMessage) != 0)
-		{
-			TranscodeToLocalCodePage(theErrorMessage, m_errorMessage, true);
-		}
-		else
-		{
-			XalanDOMString theMessage("XalanDOMException caught.  The code is ");
+		XalanDOMString theMessage("XalanDOMException caught.  The code is ");
 			
-			append(theMessage,  LongToDOMString(long(e.getExceptionCode())));
+		append(theMessage,  LongToDOMString(long(e.getExceptionCode())));
 
-			append(theMessage,  XalanDOMString("."));						 
+		append(theMessage,  XalanDOMString("."));						 
 
-			TranscodeToLocalCodePage(theMessage, m_errorMessage, true);
-		}
+		TranscodeToLocalCodePage(theMessage, m_errorMessage, true);
 	}
 
 	return 0;

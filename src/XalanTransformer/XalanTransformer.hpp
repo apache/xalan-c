@@ -457,6 +457,74 @@ public:
 	typedef std::vector<FunctionPairType>		        FunctionParamPairVectorType;
 #endif
 
+	class EnsureDestroyParsedSource
+	{
+	public:
+
+		EnsureDestroyParsedSource(
+				XalanTransformer&	theTransformer,
+				XalanParsedSource*	theParsedSource) :
+			m_transformer(theTransformer),
+			m_parsedSource(theParsedSource)
+		{
+		}
+
+		~EnsureDestroyParsedSource()
+		{
+			m_transformer.destroyParsedSource(m_parsedSource);
+		}
+
+	private:
+
+		XalanTransformer&			m_transformer;
+
+		XalanParsedSource* const	m_parsedSource;
+	};
+
+	struct EnsureDestroyCompiledStylesheet
+	{
+		EnsureDestroyCompiledStylesheet(
+				XalanTransformer&			theTransformer,
+				XalanCompiledStylesheet*	theCompiledStylesheet) :
+			m_transformer(theTransformer),
+			m_compiledStylesheet(theCompiledStylesheet)
+		{
+		}
+
+		~EnsureDestroyCompiledStylesheet()
+		{
+			m_transformer.destroyStylesheet(m_compiledStylesheet);
+		}
+
+	private:
+
+		XalanTransformer&				m_transformer;
+
+		XalanCompiledStylesheet* const	m_compiledStylesheet;
+	};
+
+	struct EnsureDestroyDocumentBuilder
+	{
+		EnsureDestroyDocumentBuilder(
+				XalanTransformer&		theTransformer,
+				XalanDocumentBuilder*	theDocumentBuilder) :
+			m_transformer(theTransformer),
+			m_documentBuilder(theDocumentBuilder)
+		{
+		}
+
+		~EnsureDestroyDocumentBuilder()
+		{
+			m_transformer.destroyDocumentBuilder(m_documentBuilder);
+		}
+
+	private:
+
+		XalanTransformer&			m_transformer;
+
+		XalanDocumentBuilder* const	m_documentBuilder;
+	};
+
 protected:
 
 private:
@@ -494,7 +562,7 @@ private:
 
 	CharVectorType							m_errorMessage;
 
-	static XSLTInit*						m_xsltInit;
+	static XSLTInit*						s_xsltInit;
 };
 
 #endif	// XALANTRANSFORMER_HEADER_GUARD
