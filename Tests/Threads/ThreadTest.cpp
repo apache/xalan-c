@@ -118,7 +118,7 @@ SynchronizedCounter::increment()
 {
 	XMLMutexLock	theLock(&m_mutex);
 
-	if (m_counter < ULONG_MAX)
+	if (m_counter < LONG_MAX)
 	{
 		++m_counter;
 	}
