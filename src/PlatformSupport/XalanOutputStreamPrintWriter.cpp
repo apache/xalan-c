@@ -280,7 +280,7 @@ XalanOutputStreamPrintWriter::print(long	l)
 void
 XalanOutputStreamPrintWriter::print(const XalanDOMString&	s)
 {
-	m_OutputStream.write(c_wstr(s));
+	m_OutputStream.write(c_wstr(s), length(s));
 }
 
 
