@@ -378,7 +378,7 @@ foo(XPathExecutionContext&	theExecutionContext)
 	}
 
 	{
-		XALAN_UISNG_STD(sort)
+		XALAN_USING_STD(sort)
 
 		StylesheetRoot::XalanQNameVectorType	theVector;
 
@@ -511,8 +511,8 @@ foo(XPathExecutionContext&	theExecutionContext)
 	}
 
 	{
-		XALAN_UISNG_STD(back_inserter)
-		XALAN_UISNG_STD(copy)
+		XALAN_USING_STD(back_inserter)
+		XALAN_USING_STD(copy)
 
 		typedef MutableNodeRefList::addNodeInDocOrderFunctor	addNodeInDocOrderFunctor;
 
