@@ -179,6 +179,10 @@ SOURCE=..\..\..\..\src\XalanExtensions\FunctionNodeSet.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\XalanExtensions\XalanExtensions.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\XalanExtensions\XalanExtensionsDefinitions.hpp
 # End Source File
 # End Group
