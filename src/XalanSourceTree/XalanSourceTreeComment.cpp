@@ -229,9 +229,12 @@ XalanNode*
 #else
 XalanSourceTreeComment*
 #endif
-XalanSourceTreeComment::cloneNode(bool	deep) const
+XalanSourceTreeComment::cloneNode(bool	/* deep */) const
 {
-	return new XalanSourceTreeComment(*this, deep);
+	throw XalanDOMException(XalanDOMException::NOT_SUPPORTED_ERR);
+
+	// Dummy return value...
+	return 0;
 }
 
 

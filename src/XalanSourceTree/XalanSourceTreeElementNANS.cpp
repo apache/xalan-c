@@ -110,9 +110,12 @@ XalanNode*
 #else
 XalanSourceTreeElementNANS*
 #endif
-XalanSourceTreeElementNANS::cloneNode(bool	deep) const
+XalanSourceTreeElementNANS::cloneNode(bool	/* deep */) const
 {
-	return clone(deep);
+	throw XalanDOMException(XalanDOMException::NOT_SUPPORTED_ERR);
+
+	// Dummy return value...
+	return 0;
 }
 
 

@@ -230,9 +230,12 @@ XalanNode*
 #else
 XalanSourceTreeProcessingInstruction*
 #endif
-XalanSourceTreeProcessingInstruction::cloneNode(bool	deep) const
+XalanSourceTreeProcessingInstruction::cloneNode(bool	/* deep */) const
 {
-	return new XalanSourceTreeProcessingInstruction(*this, deep);
+	throw XalanDOMException(XalanDOMException::NOT_SUPPORTED_ERR);
+
+	// Dummy return value...
+	return 0;
 }
 
 
