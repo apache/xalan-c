@@ -143,10 +143,6 @@ public:
 	 */
 	bool isDirectory() const
 	{
-#if defined(OS390) || defined(OS400) || defined(TRU64)
-		return false;
-
-#elif defined(AIX) || defined(SOLARIS) || defined(LINUX) || defined(HPUX) || defined(CYGWIN)
 
 	struct	stat stat_Info;
 	int	retCode = stat (d_name, &stat_Info);
@@ -157,34 +153,13 @@ public:
 		throw	XalanStatDirectoryException( XalanDOMString(d_name), errno );
 	}
 
-	if ( S_ISDIR(stat_Info.st_mode) == 1 )
-	{   
-		return true;
-	}
-	else 
-	{   
-		return false;
-	}
-
-
-#else		
-		if (d_type == DT_DIR || d_type == DT_UNKNOWN)
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
-#endif		
+	return S_ISDIR(stat_Info.st_mode);
+		
 	}
 
 	bool
 	isSelfOrParent() const
-	{
-#if defined(OS390) || defined(OS400) || defined(TRU64)
-		return false;
-#else		
+	{		
 		if (isDirectory() == false)
 		{
 			return false;
@@ -209,7 +184,6 @@ public:
 		{
 			return false;
 		}
-#endif
 	}
 };
 
@@ -304,7 +278,7 @@ EnumerateDirectory(
 	}
 
 
-#elif defined(AIX) || defined(SOLARIS) || defined(LINUX) || defined(HPUX) || defined(CYGWIN)	
+#else	
 
 	CharVectorType	theTargetVector;
 
@@ -409,9 +383,7 @@ EnumerateDirectory(
 			closedir(theDirectory);
 		}
 	}
-#else
-	// Do nothing for now...
-	// Unsupported platform!!!
+
 #endif
 }
 
