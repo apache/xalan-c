@@ -146,7 +146,7 @@ URISupport::getURLStringFromString(const XalanDOMChar*	urlString)
 	{
 		const XalanDOMString::size_type		index = indexOf(theNormalizedURI, XalanUnicode::charColon);
 
-		bool				protocolPresent = false;
+		bool	protocolPresent = false;
 
 		if (index != len)
 		{
@@ -167,7 +167,7 @@ URISupport::getURLStringFromString(const XalanDOMChar*	urlString)
 		else
 		{
 			// Assume it's a file specification...
-			XalanArrayAutoPtr<XalanDOMChar>		theFullPath(XMLPlatformUtils::getFullPath(c_wstr(urlString)));
+			const XalanArrayAutoPtr<XalanDOMChar>	theFullPath(XMLPlatformUtils::getFullPath(c_wstr(urlString)));
 			assert(theFullPath.get() != 0);
 
 			theNormalizedURI = theFullPath.get();
@@ -279,23 +279,37 @@ URISupport::getURLStringFromString(
 		else
 		{
 			// It's a protocol...
-			if (startsWith(context, theProtocolString) == true)
-			{
-				// They share the same protocol...
-
-				// Strip off file name from context...
-				if (indexOfSlash < theContextLength)
-				{
-					context = substring(context, 0, indexOfSlash + 1);
-				}
-
-				// OK, everything looks good, so strip off the protocol and colon...
-				context += substring(urlString, theColonIndex + 1, theURLStringLength);
-			}
-			else
+			if (startsWith(context, theProtocolString) == false)
 			{
 				// OK, not the same protocol, so what can we do???
 				context = urlString;
+			}
+			else
+			{
+				// They share the same protocol...
+
+				// Check if this is an absolute URI (starts with a leading '//')
+				const XalanDOMString::size_type		protoLength = length(theProtocolString);
+
+				if (protoLength + 3 <= theURLStringLength &&
+					urlString[protoLength + 1] == XalanUnicode::charSolidus &&
+					urlString[protoLength + 2] == XalanUnicode::charSolidus)
+				{
+					// It's an absolute URI -- use it in full...
+					context = urlString;
+				}
+				else
+				{
+					// Strip off file name from context...
+					if (indexOfSlash < theContextLength)
+					{
+						context = substring(context, 0, indexOfSlash + 1);
+					}
+
+					// OK, everything looks good, so strip off the protocol 
+					// and colon...
+					context += substring(urlString, theColonIndex + 1, theURLStringLength);
+				}
 			}
 		}
 	}
