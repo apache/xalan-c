@@ -285,9 +285,22 @@ LINK = ${CXX} $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS)
 
 endif
 
+#============ MacOSX SPECIFIC OPTIONS ============================
+ifeq ($(PLATFORM), MACOSX)
+
+SUPPORTED = TRUE
+PLATFORM_COMPILE_OPTIONS = -Wall -D${PLATFORM} -D_REENTRANT -DXALAN_USE_XERCES_LOCAL_CODEPAGE_TRANSCODERS
+ALLLIBS = ${LIBS} -L/usr/lib -L/usr/local/lib
+SHLIBSUFFIX=.dylib
+CC1 = ${CXX} $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS)
+MAKE_SHARED = ${CXX} $(CXXFLAGS) -D${PLATFORM} -dynamiclib
+LINK = ${CXX} $(CXXFLAGS) ${PLATFORM_COMPILE_OPTIONS}
+
+endif
+
 ifndef SUPPORTED
 nogood:
-	@echo Linux, Solaris, AIX, Compaq Tru64, OS/390, and HP-UX are the only platforms supported.
+	@echo Linux, Solaris, AIX, Compaq Tru64, OS/390, MacOSX, and HP-UX are the only platforms supported.
 endif
 
 # We need the Xerces library
