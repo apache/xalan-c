@@ -78,7 +78,9 @@ public:
 	enum eStackEntryType { eContextState,
 						   eContextMarker,
 						   eElementMarker,
-						   eArgument };
+						   eArgument,
+						   eElementFrameMarker,
+						   eNextValue };
 
 	/**
 	 * Determine type of stack entry
