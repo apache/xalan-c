@@ -105,7 +105,7 @@ void
 setHelp(FileUtility&	h)
 {
 	h.args.getHelpStream() << endl
-		 << "conf dir [-category -out -gold -source (XST | XPL | DOM)]"
+		 << "conf dir [-sub -out -gold -source (XST | XPL | DOM)]"
 		 << endl
 		 << endl
 		 << "dir		(base directory for testcases)"
