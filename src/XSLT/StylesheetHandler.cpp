@@ -144,8 +144,6 @@ StylesheetHandler::~StylesheetHandler()
 	std::for_each(m_elemStack.begin(),
 			m_elemStack.end(),
 			DeleteFunctor<ElemTemplateElement>());
-	delete m_pTemplate;
-
 }
 
 
