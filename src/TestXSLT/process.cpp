@@ -584,8 +584,6 @@ xsltMain(const CmdLineParams&	params)
 	if (!isEmpty(xslFileName))
 	{
 		stylesheet = processor.processStylesheet(xslFileName, theConstructionContext);
-
-		theExecutionContext.setStylesheetRoot(stylesheet);
 	}
 
 	auto_ptr<TextOutputStream>	outputFileStream(createOutputStream(params));
@@ -601,8 +599,6 @@ xsltMain(const CmdLineParams&	params)
 				mimeEncoding,
 				stylesheet));
 
-	XSLTInputSource		theInputSource(params.inFileName.c_str());
-
 	XSLTResultTarget	rTreeTarget;
 
 	if(formatter.get() == 0)
@@ -616,11 +612,34 @@ xsltMain(const CmdLineParams&	params)
 		xmlParserLiaison.setFormatterListener(formatter.get());
 	}
 
+
 	// Do the transformation...
-	processor.process(
-			theInputSource,
-			rTreeTarget,
-			theExecutionContext);
+	XSLTInputSource		theInputSource(params.inFileName.c_str());
+
+	if (stylesheet == 0)
+	{
+		// No stylesheet, so the only hope is that the xml file has
+		// PI with the stylesheet...
+
+		// Dummy input source...
+		XSLTInputSource		theStylesheetSource;
+
+		processor.process(
+				theInputSource,
+				theStylesheetSource,
+				rTreeTarget,
+				theConstructionContext,
+				theExecutionContext);
+	}
+	else
+	{
+		theExecutionContext.setStylesheetRoot(stylesheet);
+
+		processor.process(
+				theInputSource,
+				rTreeTarget,
+				theExecutionContext);
+	}
 
 	return 0;
 }
