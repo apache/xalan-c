@@ -144,15 +144,16 @@ bool FileUtility::checkDir(const XalanDOMString&	directory )
 
 	getcwd(buffer, PATH_MAX);
 
-	if ( chdir(c_str(TranscodeToLocalCodePage(directory))) )
+	bool	fResult = false;
+
+	if ( !chdir(c_str(TranscodeToLocalCodePage(directory))) )
 	{
-		chdir(buffer);
-		return false;
+		fResult = true;
 	}
-	else
-	{
-		return true;
-	}
+
+	chdir(buffer);
+
+	return fResult;
 }
 
 
