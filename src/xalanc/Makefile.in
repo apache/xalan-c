@@ -373,7 +373,7 @@ ifeq ($(PLATFORM), OS390)
   ALLLIBS += $(XERCESCROOT)/lib/libxerces-c2_2_0.x
 else
   ifeq ($(PLATFORM), AIX)
-    ALLLIBS += -L$(XERCESCROOT)/lib -lxerces-c22
+    ALLLIBS += -L$(XERCESCROOT)/lib -lxerces-c23
   else
     ALLLIBS += -L$(XERCESCROOT)/lib -lxerces-c
   endif
