@@ -59,8 +59,8 @@
 
 
 
-#include <XalanDom/XalanDOMDefinitions.hpp>
-#include <XalanDom/XalanDOMString.hpp>
+#include <XalanDOM/XalanDOMDefinitions.hpp>
+#include <XalanDOM/XalanDOMString.hpp>
 
 
 

@@ -59,7 +59,7 @@
 
 
 
-#include <XalanDom/XalanDOMDefinitions.hpp>
+#include <XalanDOM/XalanDOMDefinitions.hpp>
 
 
 

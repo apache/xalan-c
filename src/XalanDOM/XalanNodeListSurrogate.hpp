@@ -59,11 +59,11 @@
 
 
 
-#include <XalanDom/XalanDOMDefinitions.hpp>
+#include <XalanDOM/XalanDOMDefinitions.hpp>
 
 
 
-#include <XalanDom/XalanNodeList.hpp>
+#include <XalanDOM/XalanNodeList.hpp>
 
 
 
