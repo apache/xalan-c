@@ -771,112 +771,121 @@ DOMServices::isNodeAfter(
 	assert(node1.getNodeType() != XalanNode::DOCUMENT_NODE &&
 			node2.getNodeType() != XalanNode::DOCUMENT_NODE);
 
-	bool	isNodeAfter = false;
-
-	const XalanNode*	parent1 = getParentOfNode(node1);
-
-	const XalanNode*	parent2 = getParentOfNode(node2);
-
-	// Optimize for most common case
-	if(parent1 == parent2) // then we know they are siblings
+	if (node1.isIndexed() == true)
 	{
-		isNodeAfter = isNodeAfterSibling(*parent1,
-										 node1,
-										 node2);
+		assert(node2.isIndexed() == true);
+
+		return node1.getIndex() > node2.getIndex() ? true : false;
 	}
 	else
 	{
-		// General strategy: Figure out the lengths of the two 
-		// ancestor chains, and walk up them looking for the 
-		// first common ancestor, at which point we can do a 
-		// sibling compare.  Edge condition where one is the 
-		// ancestor of the other.
+		bool	isNodeAfter = false;
 
-		// Count parents, so we can see if one of the chains 
-		// needs to be equalized.
-		int nParents1 = 2;
-		int nParents2 = 2; // count node & parent obtained above
+		const XalanNode*	parent1 = getParentOfNode(node1);
 
-		while(parent1 != 0)
+		const XalanNode*	parent2 = getParentOfNode(node2);
+
+		// Optimize for most common case
+		if(parent1 == parent2) // then we know they are siblings
 		{
-			nParents1++;
-			parent1 = getParentOfNode(*parent1);
+			isNodeAfter = isNodeAfterSibling(*parent1,
+											 node1,
+											 node2);
 		}
-
-		while(parent2 != 0)
+		else
 		{
-			nParents2++;
-			parent2 = getParentOfNode(*parent2);
-		}
+			// General strategy: Figure out the lengths of the two 
+			// ancestor chains, and walk up them looking for the 
+			// first common ancestor, at which point we can do a 
+			// sibling compare.  Edge condition where one is the 
+			// ancestor of the other.
 
-		// adjustable starting points
-		const XalanNode*	startNode1 = &node1;
-		const XalanNode*	startNode2 = &node2;
+			// Count parents, so we can see if one of the chains 
+			// needs to be equalized.
+			int nParents1 = 2;
+			int nParents2 = 2; // count node & parent obtained above
 
-		// Do I have to adjust the start point in one of 
-		// the ancesor chains?
-		if(nParents1 < nParents2)
-		{
-			// adjust startNode2
-			const int	adjust = nParents2 - nParents1;
-
-			for(int i = 0; i < adjust; i++)
+			while(parent1 != 0)
 			{
-				startNode2 = getParentOfNode(*startNode2);
+				nParents1++;
+				parent1 = getParentOfNode(*parent1);
 			}
-		}
-		else if(nParents1 > nParents2)
-		{
-			// adjust startNode1
-			const int	adjust = nParents1 - nParents2;
 
-			for(int i = 0; i < adjust; i++)
+			while(parent2 != 0)
 			{
+				nParents2++;
+				parent2 = getParentOfNode(*parent2);
+			}
+
+			// adjustable starting points
+			const XalanNode*	startNode1 = &node1;
+			const XalanNode*	startNode2 = &node2;
+
+			// Do I have to adjust the start point in one of 
+			// the ancesor chains?
+			if(nParents1 < nParents2)
+			{
+				// adjust startNode2
+				const int	adjust = nParents2 - nParents1;
+
+				for(int i = 0; i < adjust; i++)
+				{
+					startNode2 = getParentOfNode(*startNode2);
+				}
+			}
+			else if(nParents1 > nParents2)
+			{
+				// adjust startNode1
+				const int	adjust = nParents1 - nParents2;
+
+				for(int i = 0; i < adjust; i++)
+				{
+					startNode1 = getParentOfNode(*startNode1);
+				}
+			}
+
+			// so we can "back up"
+			const XalanNode*	prevChild1 = 0;
+			const XalanNode*	prevChild2 = 0;
+			  
+			// Loop up the ancestor chain looking for common parent.
+			while(0 != startNode1)
+			{
+				if(startNode1 == startNode2) // common parent?
+				{
+					if(0 == prevChild1) // first time in loop?
+					{
+						// Edge condition: one is the ancestor of the other.
+						isNodeAfter = (nParents1 < nParents2) ? true : false;
+
+						break; // from while loop
+					}
+					else
+					{
+						isNodeAfter = isNodeAfterSibling(*startNode1,
+														 *prevChild1,
+														 *prevChild2);
+
+						break; // from while loop
+					}
+				}
+
+				prevChild1 = startNode1;
+				assert(prevChild1 != 0);
+
 				startNode1 = getParentOfNode(*startNode1);
+				assert(startNode1 != 0);
+
+				prevChild2 = startNode2;
+				assert(prevChild2 != 0);
+
+				startNode2 = getParentOfNode(*startNode2);
+				assert(startNode2 != 0);
 			}
 		}
 
-		// so we can "back up"
-		const XalanNode*	prevChild1 = 0;
-		const XalanNode*	prevChild2 = 0;
-		  
-		// Loop up the ancestor chain looking for common parent.
-		while(0 != startNode1)
-		{
-			if(startNode1 == startNode2) // common parent?
-			{
-				if(0 == prevChild1) // first time in loop?
-				{
-					// Edge condition: one is the ancestor of the other.
-					isNodeAfter = (nParents1 < nParents2) ? true : false;
-
-					break; // from while loop
-				}
-				else
-				{
-					isNodeAfter = isNodeAfterSibling(*startNode1,
-													 *prevChild1,
-													 *prevChild2);
-
-					break; // from while loop
-				}
-			}
-
-			prevChild1 = startNode1;
-			assert(prevChild1 != 0);
-
-			startNode1 = getParentOfNode(*startNode1);
-			assert(startNode1 != 0);
-
-			prevChild2 = startNode2;
-			assert(prevChild2 != 0);
-
-			startNode2 = getParentOfNode(*startNode2);
-			assert(startNode2 != 0);
-		}
+		return isNodeAfter;
 	}
-
-	return isNodeAfter;
 }
 
 
