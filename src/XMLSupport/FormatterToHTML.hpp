@@ -154,9 +154,6 @@ public:
 	virtual bool
 	accumDefaultEntity(
 			XalanDOMChar				ch,
-			XalanDOMString::size_type	i,
-			const XalanDOMChar			chars[],
-			XalanDOMString::size_type	len,
 			bool						escLF);
 
 	// These methods are inherited from FormatterListener ...
@@ -214,7 +211,7 @@ protected:
 	void
 	writeCharacters(
 			const XalanDOMChar*			theString,
-			XalanDOMString::size_type	theLength = XalanDOMString::npos);
+			XalanDOMString::size_type	theLength);
 
 private:
 
@@ -240,20 +237,6 @@ private:
 	static const XalanDOMChar	s_doctypeHeaderSystemString[];
 
 	static const size_type		s_doctypeHeaderSystemStringLength;
-
-	/**
-	 * The string "SCRIPT".
-	 */
-	static const XalanDOMChar	s_scriptString[];
-
-	static const size_type		s_scriptStringLength;
-
-	/**
-	 * The string "STYLE".
-	 */
-	static const XalanDOMChar	s_styleString[];
-
-	static const size_type		s_styleStringLength;
 
 	/**
 	 * The string "<META http-equiv=\"Content-Type\" content=\"text/html; charset=".

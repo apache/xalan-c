@@ -297,7 +297,7 @@ FormatterToHTML::startElement(
 
 		const bool	isBlockElement = elemProperties.is(XalanHTMLElementsProperties::BLOCK);
 
-		if (equalsIgnoreCaseASCII(name, length(name), s_scriptString, s_scriptStringLength) == true)
+		if (elemProperties.is(XalanHTMLElementsProperties::SCRIPTELEM) == true)
 		{
 			m_isScriptOrStyleElem = true;
 
@@ -305,7 +305,7 @@ FormatterToHTML::startElement(
 		}
 		else
 		{
-			if (equalsIgnoreCaseASCII(name, length(name), s_styleString, s_styleStringLength) == true)
+			if (elemProperties.is(XalanHTMLElementsProperties::STYLEELEM) == true)
 			{
 				m_isScriptOrStyleElem = true;
 			}
@@ -531,14 +531,11 @@ FormatterToHTML::characters(
 bool
 FormatterToHTML::accumDefaultEntity(
 		XalanDOMChar				ch,
-		XalanDOMString::size_type	i,
-		const XalanDOMChar			chars[],
-		XalanDOMString::size_type	len,
 		bool						escLF)
 {
 	assert(ch != 0);
 
-	if(FormatterToXML::accumDefaultEntity(ch, i, chars, len, escLF) == true)
+	if(FormatterToXML::accumDefaultEntity(ch, escLF) == true)
 	{
 		return true;
 	}
@@ -632,10 +629,12 @@ FormatterToHTML::processingInstruction(
 		const XMLCh* const	data)
 
 {
+	const XalanDOMString::size_type		dataLength = length(data);
+
 	// Use a fairly nasty hack to tell if the next node is supposed to be 
 	// unescaped text.
 	if(equals(target, length(target), s_piTarget, s_piTargetLength) == true &&
-	   equals(data, length(data), s_piData, s_piDataLength) == true)
+	   equals(data, dataLength, s_piData, s_piDataLength) == true)
 	{
 		m_nextIsRaw = true;
 	}
@@ -659,7 +658,7 @@ FormatterToHTML::processingInstruction(
 				accumContent(XalanUnicode::charSpace);
 			}
 
-			writeCharacters(data);
+			writeCharacters(data, dataLength);
 		}
 
 		accumContent(XalanUnicode::charGreaterThanSign); // different from XML
@@ -692,59 +691,74 @@ FormatterToHTML::writeCharacters(
 {
 	assert(theString != 0);
 
-	if (theLength == XalanDOMString::npos)
-	{
-		theLength = length(theString);
-	}
+	XalanDOMString::size_type	i = 0;
+	XalanDOMString::size_type	firstIndex = 0;
 
-	for (XalanDOMString::size_type i = 0; i < theLength; ++i) 
+    while(i < theLength)
 	{
 		const XalanDOMChar	ch = theString[i];
 
 		if(ch < SPECIALSSIZE && m_charsMap[ch] != 'S')
 		{
-			accumContent(ch);
+			++i;
 		}
 		else if (XalanUnicode::charLF == ch) // sta this can be removed?
 		{
-			outputLineSep();
-		}	
-		else if (accumDefaultEntity(ch, i, theString, theLength, true) == false)
-		{
-			if (m_isUTF8 == true && 0xd800 <= ch && ch < 0xdc00)
-			{
-				// UTF-16 surrogate
-				XalanDOMChar	next = 0;
+			accumContent(theString, firstIndex, i - firstIndex);
 
-				if (i + 1 >= theLength) 
+			outputLineSep();
+
+			++i;
+
+			firstIndex = i;
+		}	
+		else
+		{
+			accumContent(theString, firstIndex, i - firstIndex);
+
+			if (accumDefaultEntity(ch, true) == false)
+			{
+				if (m_isUTF8 == true && 0xd800 <= ch && ch < 0xdc00)
 				{
-					throwInvalidUTF16SurrogateException(ch);
+					// UTF-16 surrogate
+					XalanDOMChar	next = 0;
+
+					if (i + 1 >= theLength) 
+					{
+						throwInvalidUTF16SurrogateException(ch);
+					}
+					else
+					{
+						next = theString[++i];
+
+						if (!(0xdc00 <= next && next < 0xe000))
+						{
+							throwInvalidUTF16SurrogateException(ch, next);
+						}
+
+						next = XalanDOMChar(((ch - 0xd800) << 10) + next - 0xdc00 + 0x00010000);
+					}
+
+					writeNumberedEntityReference(next);
+				}
+				else if(ch >= 0x007Fu && ch <= m_maxCharacter)
+				{
+					// Hope this is right...
+					accumContent(ch);
 				}
 				else
 				{
-					next = theString[++i];
-
-					if (!(0xdc00 <= next && next < 0xe000))
-					{
-						throwInvalidUTF16SurrogateException(ch, next);
-					}
-
-					next = XalanDOMChar(((ch - 0xd800) << 10) + next - 0xdc00 + 0x00010000);
+					writeNumberedEntityReference(ch);
 				}
+			}
 
-				writeNumberedEntityReference(next);
-			}
-			else if(ch >= 0x007Fu && ch <= m_maxCharacter)
-			{
-				// Hope this is right...
-				accumContent(ch);
-			}
-			else
-			{
-				writeNumberedEntityReference(ch);
-			}
+			++i;
+
+			firstIndex = i;
 		}
 	}
+
+	accumContent(theString, firstIndex, theLength - firstIndex);
 }
 
 
@@ -756,58 +770,72 @@ FormatterToHTML::writeAttrString(
 {
 	assert(theString != 0);
 
-    for (XalanDOMString::size_type i = 0;  i < theStringLength;  i ++)
+	XalanDOMString::size_type	i = 0;
+	XalanDOMString::size_type	firstIndex = 0;
+
+    while(i < theStringLength)
     {
 		const XalanDOMChar	ch = theString[i];
 
 		if(ch < SPECIALSSIZE && m_attrCharsMap[ch] != 'S')
 		{
-			accumContent(ch);
+			++i;
 		}
 		else if(XalanUnicode::charAmpersand == ch &&
 				i + 1 < theStringLength &&
 				XalanUnicode::charLeftCurlyBracket == theString[i + 1])
 		{
-			accumContent(ch); // no escaping in this case, as specified in 15.2
+			++i;
 		}
-		else if (accumDefaultEntity(ch, i, theString, theStringLength, true) == false)
+		else
 		{
-			if (0xd800 <= ch && ch < 0xdc00) 
+			accumContent(theString, firstIndex, i - firstIndex);
+
+			if (accumDefaultEntity(ch, true) == false)
 			{
-				// UTF-16 surrogate
-
-				XalanDOMChar	next = 0;
-
-				if (i + 1 >= theStringLength) 
+				if (0xd800 <= ch && ch < 0xdc00) 
 				{
-					throwInvalidUTF16SurrogateException(ch);
-				}
-				else 
-				{
-					next = theString[++i];
+					// UTF-16 surrogate
 
-					if (!(0xdc00 <= next && next < 0xe000))
+					XalanDOMChar	next = 0;
+
+					if (i + 1 >= theStringLength) 
 					{
-						throwInvalidUTF16SurrogateException(ch, next);
+						throwInvalidUTF16SurrogateException(ch);
+					}
+					else 
+					{
+						next = theString[++i];
+
+						if (!(0xdc00 <= next && next < 0xe000))
+						{
+							throwInvalidUTF16SurrogateException(ch, next);
+						}
+
+						next = XalanDOMChar(((ch - 0xd800) << 10) + next -0xdc00 + 0x00010000);
 					}
 
-					next = XalanDOMChar(((ch - 0xd800) << 10) + next -0xdc00 + 0x00010000);
+					accumContent(XalanUnicode::charAmpersand);
+					accumContent(XalanUnicode::charNumberSign);
+
+					accumContent(UnsignedLongToDOMString(next, m_stringBuffer));
+					clear(m_stringBuffer);
+
+					accumContent(XalanUnicode::charSemicolon);
 				}
-
-				accumContent(XalanUnicode::charAmpersand);
-				accumContent(XalanUnicode::charNumberSign);
-
-				accumContent(UnsignedLongToDOMString(next, m_stringBuffer));
-				clear(m_stringBuffer);
-
-				accumContent(XalanUnicode::charSemicolon);
+				else
+				{
+					writeNumberedEntityReference(ch);
+				}
 			}
-			else
-			{
-				writeNumberedEntityReference(ch);
-			}
+
+			++i;
+
+			firstIndex = i;
 		}
     }
+
+	accumContent(theString, firstIndex, theStringLength - firstIndex);
 }
 
 
@@ -1037,12 +1065,12 @@ FormatterToHTML::writeAttrURI(
 			}
 			else
 			{
-				accumDefaultEntity(ch, i, theString, theStringLength, true);
+				accumDefaultEntity(ch, true);
 			}
 		}
 		else if (ch == XalanUnicode::charAmpersand)
 		{
-			accumDefaultEntity(ch, i, theString, theStringLength, true);
+			accumDefaultEntity(ch, true);
 		}
 		else
 		{
@@ -1450,33 +1478,6 @@ const XalanDOMChar						FormatterToHTML::s_doctypeHeaderSystemString[] =
 
 const FormatterToHTML::size_type		FormatterToHTML::s_doctypeHeaderSystemStringLength =
 		FHTML_SIZE(s_doctypeHeaderSystemString);
-
-const XalanDOMChar						FormatterToHTML::s_scriptString[] =
-{
-	XalanUnicode::charLetter_S,
-	XalanUnicode::charLetter_C,
-	XalanUnicode::charLetter_R,
-	XalanUnicode::charLetter_I,
-	XalanUnicode::charLetter_P,
-	XalanUnicode::charLetter_T,
-	0
-};
-
-const FormatterToHTML::size_type		FormatterToHTML::s_scriptStringLength =
-		FHTML_SIZE(s_scriptString);
-
-const XalanDOMChar						FormatterToHTML::s_styleString[] =
-{
-	XalanUnicode::charLetter_S,
-	XalanUnicode::charLetter_T,
-	XalanUnicode::charLetter_Y,
-	XalanUnicode::charLetter_L,
-	XalanUnicode::charLetter_E,
-	0
-};
-
-const FormatterToHTML::size_type		FormatterToHTML::s_styleStringLength =
-		FHTML_SIZE(s_styleString);
 
 const XalanDOMChar						FormatterToHTML::s_metaString[] =
 {
