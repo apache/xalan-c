@@ -79,18 +79,19 @@
 
 
 
-template<class VectorType>
+template<class VectorType, class MemberFunctionType>
 const typename VectorType::value_type*
-findByPrefix(
+find(
 			const VectorType&		theVector,
-			const XalanDOMString&	thePrefix)
+			const XalanDOMString&	theString,
+			MemberFunctionType		theMemberFunction)
 {
 	const typename VectorType::const_iterator	theEnd(theVector.end());
 	typename VectorType::const_iterator			theCurrent(theVector.begin());
 
 	while(theCurrent != theEnd)
 	{
-		if ((*theCurrent).getPrefix() == thePrefix)
+		if (((*theCurrent).*theMemberFunction)() == theString)
 		{
 			return &*theCurrent;
 		}
@@ -101,6 +102,46 @@ findByPrefix(
 	}
 
 	return 0;
+}
+
+
+
+template<class VectorType, class MemberFunctionType>
+typename VectorType::value_type*
+findNonConst(
+			VectorType&				theVector,
+			const XalanDOMString&	theString,
+			MemberFunctionType		theMemberFunction)
+{
+	const typename VectorType::iterator		theEnd(theVector.end());
+	typename VectorType::iterator			theCurrent(theVector.begin());
+
+	while(theCurrent != theEnd)
+	{
+		if (((*theCurrent).*theMemberFunction)() == theString)
+		{
+			return &*theCurrent;
+		}
+		else
+		{
+			++theCurrent;
+		}
+	}
+
+	return 0;
+}
+
+
+
+template<class VectorType>
+const typename VectorType::value_type*
+findByPrefix(
+			const VectorType&		theVector,
+			const XalanDOMString&	thePrefix)
+{
+	typedef typename VectorType::value_type		value_type;
+
+	return find(theVector, thePrefix, &value_type::getPrefix);
 }
 
 
@@ -111,22 +152,9 @@ findByPrefixNonConst(
 			VectorType&				theVector,
 			const XalanDOMString&	thePrefix)
 {
-	const typename VectorType::iterator		theEnd(theVector.end());
-	typename VectorType::iterator			theCurrent(theVector.begin());
+	typedef typename VectorType::value_type		value_type;
 
-	while(theCurrent != theEnd)
-	{
-		if ((*theCurrent).getPrefix() == thePrefix)
-		{
-			return &*theCurrent;
-		}
-		else
-		{
-			++theCurrent;
-		}
-	}
-
-	return 0;
+	return findNonConst(theVector, thePrefix, &value_type::getPrefix);
 }
 
 
@@ -137,22 +165,9 @@ findByURI(
 			const VectorType&		theVector,
 			const XalanDOMString&	theNamespaceURI)
 {
-	const typename VectorType::const_iterator	theEnd(theVector.end());
-	typename VectorType::const_iterator			theCurrent(theVector.begin());
+	typedef typename VectorType::value_type		value_type;
 
-	while(theCurrent != theEnd)
-	{
-		if ((*theCurrent).getURI() == theNamespaceURI)
-		{
-			return &*theCurrent;
-		}
-		else
-		{
-			++theCurrent;
-		}
-	}
-
-	return 0;
+	return find(theVector, theNamespaceURI, &value_type::getURI);
 }
 
 
@@ -165,7 +180,9 @@ addByPrefix(
 			const XalanDOMString&			thePrefix,
 			const XalanDOMString&			theURI)
 {
-	const typename VectorType::value_type* const		theEntry =
+	typedef typename VectorType::value_type		value_type;
+
+	const value_type* const		theEntry =
 		findByPrefix(theVector, thePrefix);
 
 	if (theEntry != 0)
@@ -175,7 +192,7 @@ addByPrefix(
 	else
 	{
 		theVector.push_back(
-			VectorType::value_type(
+			value_type(
 				theConstructionContext.getPooledString(thePrefix),
 				theConstructionContext.getPooledString(theURI)));
 
@@ -193,7 +210,9 @@ addOrUpdateByPrefix(
 			const XalanDOMString&			thePrefix,
 			const XalanDOMString&			theURI)
 {
-	typename VectorType::value_type* const	theEntry =
+	typedef typename VectorType::value_type		value_type;
+
+	value_type* const	theEntry =
 		findByPrefixNonConst(theVector, thePrefix);
 
 	if (theEntry == 0)
