@@ -383,7 +383,7 @@ public:
 	{
 	public:
 
-		typedef NavigatorBridgeVectorType	NavigatorBridgeVectorType;
+		typedef XercesDocumentBridge::NavigatorBridgeVectorType	NavigatorBridgeVectorType;
 
 		BuildBridgeTreeWalker(
 				XercesDocumentBridge*		theDocument,
