@@ -109,7 +109,7 @@ public:
 		isActive(const XalanDOMString&	thePrefix) const = 0;
 	};
 
-	class Namespace
+	class XALAN_XSLT_EXPORT Namespace
 	{
 	public:
 
@@ -186,7 +186,7 @@ public:
 		const XalanDOMString*	m_uri;
 	};
 
-	class NamespaceExtended : public Namespace
+	class XALAN_XSLT_EXPORT NamespaceExtended : public Namespace
 	{
 	public:
 
