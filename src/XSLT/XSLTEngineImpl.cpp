@@ -78,6 +78,7 @@
 
 
 #include <sax/DocumentHandler.hpp>
+#include <sax/EntityResolver.hpp>
 #include <sax/Locator.hpp>
 #include <sax/SAXException.hpp>
 #include <util/PlatformUtils.hpp>
@@ -647,17 +648,30 @@ XSLTEngineImpl::parseXML(
 
 	if(doc == 0)
 	{
-		XSLTInputSource		inputSource(c_wstr(urlString));
+		EntityResolver* const	theResolver = 
+			m_parserLiaison.getEntityResolver();
 
-		if(0 != docHandler)
+		if (theResolver == 0)
 		{
-			m_parserLiaison.parseXMLStream(inputSource, *docHandler);
+			XSLTInputSource		inputSource(c_wstr(urlString));
 
-			doc = docToRegister;
+			doc = parseXML(inputSource, docHandler, docToRegister);
 		}
 		else
 		{
-			doc = m_parserLiaison.parseXMLStream(inputSource);
+			InputSource* const	resolverInputSource =
+				theResolver->resolveEntity(0, c_wstr(urlString));
+
+			if (resolverInputSource != 0)
+			{
+				doc = parseXML(*resolverInputSource, docHandler, docToRegister);
+			}
+			else
+			{
+				XSLTInputSource		inputSource(c_wstr(urlString));
+
+				doc = parseXML(inputSource, docHandler, docToRegister);
+			}
 		}
 
 		if (doc != 0)
@@ -667,6 +681,26 @@ XSLTEngineImpl::parseXML(
 	}
 
 	return doc;
+}
+
+
+
+XalanDocument*
+XSLTEngineImpl::parseXML(
+			const InputSource&	inputSource,
+			DocumentHandler*	docHandler,
+			XalanDocument*		docToRegister)
+{
+	if(0 != docHandler)
+	{
+		m_parserLiaison.parseXMLStream(inputSource, *docHandler);
+
+		return docToRegister;
+	}
+	else
+	{
+		return m_parserLiaison.parseXMLStream(inputSource);
+	}
 }
 
 
