@@ -64,6 +64,7 @@
 
 
 
+#include <cassert>
 #include <vector>
 
 
@@ -81,6 +82,7 @@ class EntityResolver;
 class ErrorHandler;
 class Function;
 class StylesheetExecutionContextDefault;
+class ProblemListener;
 class TraceListener;
 class XSLTInit;
 class XalanDocumentBuilder;
@@ -134,7 +136,10 @@ public:
 	transform(
 			const XalanParsedSource&	theParsedXML, 
 			const XSLTInputSource&		theStylesheetSource,
-			const XSLTResultTarget& 	theResultTarget);
+			const XSLTResultTarget& 	theResultTarget)
+	{
+		return doTransform(theParsedXML, 0, &theStylesheetSource, theResultTarget);
+	}
 
 	/**
 	 * Transform will apply the compiled stylesheet to the parsed xml source
@@ -147,9 +152,14 @@ public:
 	 */
 	int
 	transform(
-			const XalanParsedSource&		theParsedXML, 
+			const XalanParsedSource&		theParsedXML,
 			const XalanCompiledStylesheet*	theCompiledStylesheet,
-			const XSLTResultTarget& 		theResultTarget);
+			const XSLTResultTarget& 		theResultTarget)
+	{
+		assert(theCompiledStylesheet != 0);
+
+		return doTransform(theParsedXML, theCompiledStylesheet, 0, theResultTarget);
+	}
 
 	/**
 	 * Transform will apply the stylesheet source to the input source
@@ -164,7 +174,7 @@ public:
 	 */
 	int
 	transform(
-			const XSLTInputSource&		theInputSource, 
+			const XSLTInputSource&		theInputSource,
 			const XSLTInputSource&		theStylesheetSource,
 			const XSLTResultTarget& 	theResultTarget);
 
@@ -529,6 +539,28 @@ public:
 	}
 
 	/**
+	 * This method returns the installed ProblemListener instance.
+	 *
+	 * @return The pointer to the installed ProblemListener instance.
+	 */
+	ProblemListener*
+	getProblemListener() const
+	{
+		return 	m_problemListener;
+	}
+
+	/**
+	 * This method installs the user-specified ProblemListener instance.
+	 *
+	 * @param handler A pointer to the ProblemListener to be called when a problem occurs.
+	 */
+	void
+	setProblemListener(ProblemListener*		theProblemListener)
+	{
+		m_problemListener = theProblemListener;
+	}
+
+	/**
 	 * Returns the last error that occurred as a 
 	 * result of calling transform. 
 	 *
@@ -664,6 +696,15 @@ private:
 
 	friend class EnsureReset;
 
+	int
+	doTransform(
+			const XalanParsedSource&		theParsedXML, 
+			const XalanCompiledStylesheet*	theCompiledStylesheet,
+			const XSLTInputSource*			theStylesheetSource,
+			const XSLTResultTarget&			theResultTarget);
+
+
+	// Data members...
 	CompiledStylesheetPtrVectorType 		m_compiledStylesheets;
 
 	ParsedSourcePtrVectorType				m_parsedSources;
@@ -681,6 +722,8 @@ private:
 	EntityResolver*							m_entityResolver;
 
 	ErrorHandler*							m_errorHandler;
+
+	ProblemListener*						m_problemListener;
 
 	// This should always be the latest data member!!!
 	StylesheetExecutionContextDefault*		m_stylesheetExecutionContext;

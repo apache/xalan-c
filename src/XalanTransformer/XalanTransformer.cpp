@@ -134,6 +134,7 @@ XalanTransformer::XalanTransformer():
 	m_useValidation(false),
 	m_entityResolver(0),
 	m_errorHandler(0),
+	m_problemListener(0),
 	m_stylesheetExecutionContext(new StylesheetExecutionContextDefault)
 {
 #if defined(XALAN_USE_ICU)
@@ -262,361 +263,6 @@ addTraceListeners(
 
 		theEngine.setTraceSelects(true);
 	}
-}
-
-
-
-int
-XalanTransformer::transform(
-	const XalanParsedSource&	theParsedXML, 
-	const XSLTInputSource&		theStylesheetSource,
-	const XSLTResultTarget& 	theResultTarget)
-{
-	int 	theResult = 0;
-
-	// Clear the error message.
-	m_errorMessage.resize(1, '\0');
-
-	// Store error messages from problem listener.
-	XalanDOMString	theErrorMessage;
-
-	try
-	{
-		XalanDocument* const	theSourceDocument = theParsedXML.getDocument();
-		assert(theSourceDocument != 0);
-
-		// Create the helper object that is necessary for running the processor...
-		XalanAutoPtr<XalanParsedSourceHelper>	theHelper(theParsedXML.createHelper());
-		assert(theHelper.get() != 0);
-
-		DOMSupport& 		theDOMSupport = theHelper->getDOMSupport();
-
-		XMLParserLiaison&	theParserLiaison = theHelper->getParserLiaison();
-
-		theParserLiaison.setUseValidation(m_useValidation);
-
-		// Create some more support objects...
-		XSLTProcessorEnvSupportDefault	theXSLTProcessorEnvSupport;
-
-		XObjectFactoryDefault			theXObjectFactory;
-
-		XPathFactoryDefault 			theXPathFactory;
-
-		// Create a processor...
-		XSLTEngineImpl	theProcessor(
-				theParserLiaison,
-				theXSLTProcessorEnvSupport,
-				theDOMSupport,
-				theXObjectFactory,
-				theXPathFactory);
-
-		addTraceListeners(m_traceListeners, theProcessor);
-
-		theXSLTProcessorEnvSupport.setProcessor(&theProcessor);
-
-		const XalanDOMString&	theSourceURI = theParsedXML.getURI();
-
-		if (length(theSourceURI) > 0)
-		{
-			theXSLTProcessorEnvSupport.setSourceDocument(theSourceURI, theSourceDocument);
-		}
-
-		// Create a problem listener and send output to a XalanDOMString.
-		DOMStringPrintWriter	thePrintWriter(theErrorMessage);
-
-		ProblemListenerDefault	theProblemListener(&thePrintWriter);
-
-		theProcessor.setProblemListener(&theProblemListener);
-
-		theParserLiaison.setExecutionContext(*m_stylesheetExecutionContext);
-
-		// Create a stylesheet construction context, 
-		// using the stylesheet's factory support objects.
-		StylesheetConstructionContextDefault	theStylesheetConstructionContext(
-					theProcessor,
-					theXSLTProcessorEnvSupport,
-					theXPathFactory);
-
-		// Hack used to cast away const.
-		XSLTResultTarget	tempResultTarget(theResultTarget);
-
-		const EnsureReset	theReset(*this);
-
-		// Set up the stylesheet execution context.
-		m_stylesheetExecutionContext->setXPathEnvSupport(&theXSLTProcessorEnvSupport);
-
-		m_stylesheetExecutionContext->setDOMSupport(&theDOMSupport);
-
-		m_stylesheetExecutionContext->setXObjectFactory(&theXObjectFactory);
-
-		m_stylesheetExecutionContext->setXSLTProcessor(&theProcessor);
-
-		// Set the parameters if any.
-		for (ParamPairVectorType::size_type i = 0; i < m_paramPairs.size(); ++i)
-		{
-			theProcessor.setStylesheetParam(
-					m_paramPairs[i].first,
-					m_paramPairs[i].second);
-		}
-
-		// Set the functions if any.
-		for (FunctionParamPairVectorType::size_type f = 0; f < m_functionPairs.size(); ++f)
-		{
-			theXSLTProcessorEnvSupport.installExternalFunctionLocal(
-					m_functionPairs[f].first.getNamespace(),
-					m_functionPairs[f].first.getLocalPart(),
-					*(m_functionPairs[f].second));
-		}
-
-		// Create an input source for the source document...
-		XSLTInputSource		theDocumentInputSource(theSourceDocument);
-
-		// Set the system ID, so relative URIs are resolved properly...
-		theDocumentInputSource.setSystemId(c_wstr(theSourceURI));
-
-		// Do the transformation...
-		theProcessor.process(
-					theDocumentInputSource,
-					theStylesheetSource,
-					tempResultTarget,
-					theStylesheetConstructionContext,
-					*m_stylesheetExecutionContext);
-	}
-	catch(const XSLException&	e)
-	{
-		if (length(theErrorMessage) != 0)
-		{
-			TranscodeToLocalCodePage(theErrorMessage, m_errorMessage, true);
-		}
-		else
-		{
-			TranscodeToLocalCodePage(e.getMessage(), m_errorMessage, true);
-		}
-
-		theResult = -1;
-	}
-	catch(const SAXException&	e)
-	{
-		if (length(theErrorMessage) != 0)
-		{
-			TranscodeToLocalCodePage(theErrorMessage, m_errorMessage, true);
-		}
-		else
-		{
-			TranscodeToLocalCodePage(e.getMessage(), m_errorMessage, true);
-		}
-
-		theResult = -2;
-	}
-	catch(const XMLException&	e)
-	{
-		if (length(theErrorMessage) != 0)
-		{
-			TranscodeToLocalCodePage(theErrorMessage, m_errorMessage, true);
-		}
-		else
-		{
-			TranscodeToLocalCodePage(e.getMessage(), m_errorMessage, true);
-		}
-
-		theResult = -3;
-	}
-	catch(const XalanDOMException&	e)
-	{
-		if (length(theErrorMessage) != 0)
-		{
-			TranscodeToLocalCodePage(theErrorMessage, m_errorMessage, true);
-		}
-		else
-		{
-			XalanDOMString theMessage("XalanDOMException caught.  The code is ");
-			
-			append(theMessage, LongToDOMString(long(e.getExceptionCode())));
-
-			append(theMessage, XalanDOMChar(XalanUnicode::charFullStop));
-
-			TranscodeToLocalCodePage(theMessage, m_errorMessage, true);
-		}
-
-		theResult = -4;
-	}
-
-	return theResult;
-}
-
-
-
-int
-XalanTransformer::transform(
-			const XalanParsedSource&		theParsedXML, 
-			const XalanCompiledStylesheet*	theCompiledStylesheet,
-			const XSLTResultTarget& 		theResultTarget)
-{
-	assert(theCompiledStylesheet != 0);
-
-	int 	theResult = 0;
-
-	// Clear the error message.
-	m_errorMessage.resize(1, '\0');
-
-	// Store error messages from problem listener.
-	XalanDOMString	theErrorMessage;
-
-	try
-	{
-		XalanDocument* const	theSourceDocument = theParsedXML.getDocument();
-		assert(theSourceDocument != 0);
-
-		// Create the helper object that is necessary for running the processor...
-		XalanAutoPtr<XalanParsedSourceHelper>	theHelper(theParsedXML.createHelper());
-		assert(theHelper.get() != 0);
-
-		DOMSupport& 		theDOMSupport = theHelper->getDOMSupport();
-
-		XMLParserLiaison&	theParserLiaison = theHelper->getParserLiaison();
-
-		theParserLiaison.setUseValidation(m_useValidation);
-
-		// Create some more support objects...
-		XSLTProcessorEnvSupportDefault	theXSLTProcessorEnvSupport;
-
-		XObjectFactoryDefault			theXObjectFactory;
-
-		XPathFactoryDefault 			theXPathFactory;
-
-		// Create a processor...
-		XSLTEngineImpl	theProcessor(
-				theParserLiaison,
-				theXSLTProcessorEnvSupport,
-				theDOMSupport,
-				theXObjectFactory,
-				theXPathFactory);
-
-		addTraceListeners(m_traceListeners, theProcessor);
-
-		theXSLTProcessorEnvSupport.setProcessor(&theProcessor);
-
-		const XalanDOMString&	theSourceURI = theParsedXML.getURI();
-
-		if (length(theSourceURI) > 0)
-		{
-			theXSLTProcessorEnvSupport.setSourceDocument(theSourceURI, theSourceDocument);
-		}
-
-		// Create a problem listener and send output to a XalanDOMString.
-		DOMStringPrintWriter	thePrintWriter(theErrorMessage);
-		
-		ProblemListenerDefault	theProblemListener(&thePrintWriter);
-
-		theProcessor.setProblemListener(&theProblemListener);
-
-		// Since the result target is not const in our
-		// internal intefaces, we'll pass in a local copy
-		// of the one provided...
-		XSLTResultTarget	tempResultTarget(theResultTarget);
-
-		const EnsureReset	theReset(*this);
-
-		// Set up the stylesheet execution context.
-		m_stylesheetExecutionContext->setXPathEnvSupport(&theXSLTProcessorEnvSupport);
-
-		m_stylesheetExecutionContext->setDOMSupport(&theDOMSupport);
-
-		m_stylesheetExecutionContext->setXObjectFactory(&theXObjectFactory);
-
-		m_stylesheetExecutionContext->setXSLTProcessor(&theProcessor);
-		
-		// Set the compiled stylesheet.
-		m_stylesheetExecutionContext->setStylesheetRoot(theCompiledStylesheet->getStylesheetRoot());
-
-		// Set the parameters if any.
-		for (ParamPairVectorType::size_type i = 0; i < m_paramPairs.size(); ++i)
-		{
-			theProcessor.setStylesheetParam(
-					m_paramPairs[i].first,
-					m_paramPairs[i].second);
-		}
-
-		// Set the functions if any.
-		for (FunctionParamPairVectorType::size_type f = 0; f < m_functionPairs.size(); ++f)
-		{
-			theXSLTProcessorEnvSupport.installExternalFunctionLocal(
-					m_functionPairs[f].first.getNamespace(),
-					m_functionPairs[f].first.getLocalPart(),
-					*(m_functionPairs[f].second));
-		}
-
-		// Create an input source for the source document...
-		XSLTInputSource		theDocumentInputSource(theSourceDocument);
-
-		// Set the system ID, so relative URIs are resolved properly...
-		theDocumentInputSource.setSystemId(c_wstr(theSourceURI));
-
-		// Do the transformation...
-		theProcessor.process(
-					theDocumentInputSource,
-					tempResultTarget,					
-					*m_stylesheetExecutionContext);
-	}
-	catch(const XSLException&	e)
-	{
-		if (length(theErrorMessage) != 0)
-		{
-			TranscodeToLocalCodePage(theErrorMessage, m_errorMessage, true);
-		}
-		else
-		{
-			TranscodeToLocalCodePage(e.getMessage(), m_errorMessage, true);
-		}
-
-		theResult = -1;
-	}
-	catch(const SAXException&	e)
-	{
-		if (length(theErrorMessage) != 0)
-		{
-			TranscodeToLocalCodePage(theErrorMessage, m_errorMessage, true);
-		}
-		else
-		{
-			TranscodeToLocalCodePage(e.getMessage(), m_errorMessage, true);
-		}
-
-		theResult = -2;
-	}
-	catch(const XMLException&	e)
-	{
-		if (length(theErrorMessage) != 0)
-		{
-			TranscodeToLocalCodePage(theErrorMessage, m_errorMessage, true);
-		}
-		else
-		{
-			TranscodeToLocalCodePage(e.getMessage(), m_errorMessage, true);
-		}
-
-		theResult = -3;
-	}
-	catch(const XalanDOMException&	e)
-	{
-		if (length(theErrorMessage) != 0)
-		{
-			TranscodeToLocalCodePage(theErrorMessage, m_errorMessage, true);
-		}
-		else
-		{
-			XalanDOMString theMessage("XalanDOMException caught.  The code is ");
-			
-			append(theMessage, LongToDOMString(long(e.getExceptionCode())));
-			append(theMessage, XalanDOMChar(XalanUnicode::charFullStop));
-
-			TranscodeToLocalCodePage(theMessage, m_errorMessage, true);
-		}
-
-		theResult = -4;
-	}
-
-	return theResult;
 }
 
 
@@ -782,7 +428,7 @@ XalanTransformer::compileStylesheet(
 	// Store error messages from problem listener.
 	XalanDOMString	theErrorMessage;
 
-	int 			theResult = 0;
+	int 	theResult = 0;
 
 	try
 	{
@@ -814,7 +460,14 @@ XalanTransformer::compileStylesheet(
 
 		ProblemListenerDefault	theProblemListener(&thePrintWriter);
 
-		theProcessor.setProblemListener(&theProblemListener);
+		if (m_problemListener == 0)
+		{
+			theProcessor.setProblemListener(&theProblemListener);
+		}
+		else
+		{
+			theProcessor.setProblemListener(m_problemListener);
+		}
 
 		// Allocate the memory now, to avoid leaking if push_back() fails.
 		m_compiledStylesheets.reserve(m_compiledStylesheets.size() + 1);
@@ -1230,10 +883,221 @@ XalanTransformer::reset()
 
 
 
-
 XalanTransformer::EnsureReset::~EnsureReset()
 {
 	m_transformer.m_stylesheetExecutionContext->reset();
 
 	m_transformer.reset();
+}
+
+
+
+int
+XalanTransformer::doTransform(
+			const XalanParsedSource&		theParsedXML,
+			const XalanCompiledStylesheet*	theCompiledStylesheet,
+			const XSLTInputSource*			theStylesheetSource,
+			const XSLTResultTarget&			theResultTarget)
+{
+	int 	theResult = 0;
+
+	// Clear the error message.
+	m_errorMessage.resize(1, '\0');
+
+	// Store error messages from problem listener.
+	XalanDOMString	theErrorMessage;
+
+	try
+	{
+		XalanDocument* const	theSourceDocument = theParsedXML.getDocument();
+		assert(theSourceDocument != 0);
+
+		// Create the helper object that is necessary for running the processor...
+		XalanAutoPtr<XalanParsedSourceHelper>	theHelper(theParsedXML.createHelper());
+		assert(theHelper.get() != 0);
+
+		DOMSupport& 		theDOMSupport = theHelper->getDOMSupport();
+
+		XMLParserLiaison&	theParserLiaison = theHelper->getParserLiaison();
+
+		theParserLiaison.setExecutionContext(*m_stylesheetExecutionContext);
+
+		theParserLiaison.setUseValidation(m_useValidation);
+
+		// Create some more support objects...
+		XSLTProcessorEnvSupportDefault	theXSLTProcessorEnvSupport;
+
+		const XalanDOMString&	theSourceURI = theParsedXML.getURI();
+
+		if (length(theSourceURI) > 0)
+		{
+			theXSLTProcessorEnvSupport.setSourceDocument(theSourceURI, theSourceDocument);
+		}
+
+		// Set the functions if any.
+		{
+			for (FunctionParamPairVectorType::size_type i = 0; i < m_functionPairs.size(); ++i)
+			{
+				theXSLTProcessorEnvSupport.installExternalFunctionLocal(
+						m_functionPairs[i].first.getNamespace(),
+						m_functionPairs[i].first.getLocalPart(),
+						*m_functionPairs[i].second);
+			}
+		}
+
+		XObjectFactoryDefault	theXObjectFactory;
+
+		XPathFactoryDefault 	theXPathFactory;
+
+		// Create a processor...
+		XSLTEngineImpl	theProcessor(
+					theParserLiaison,
+					theXSLTProcessorEnvSupport,
+					theDOMSupport,
+					theXObjectFactory,
+					theXPathFactory);
+
+		theXSLTProcessorEnvSupport.setProcessor(&theProcessor);
+
+		const EnsureReset	theReset(*this);
+
+		// Set up the stylesheet execution context.
+		m_stylesheetExecutionContext->setXPathEnvSupport(&theXSLTProcessorEnvSupport);
+
+		m_stylesheetExecutionContext->setDOMSupport(&theDOMSupport);
+
+		m_stylesheetExecutionContext->setXObjectFactory(&theXObjectFactory);
+
+		m_stylesheetExecutionContext->setXSLTProcessor(&theProcessor);
+
+		// Create a problem listener and send output to a XalanDOMString.  Do this before
+		// pushing params, since there could be a problem resolving a QName.
+		DOMStringPrintWriter	thePrintWriter(theErrorMessage);
+
+		ProblemListenerDefault	theProblemListener(&thePrintWriter);
+
+		if (m_problemListener == 0)
+		{
+			theProcessor.setProblemListener(&theProblemListener);
+		}
+		else
+		{
+			theProcessor.setProblemListener(m_problemListener);
+		}
+
+		{
+			// Set the parameters if any.
+			for (ParamPairVectorType::size_type i = 0; i < m_paramPairs.size(); ++i)
+			{
+				theProcessor.setStylesheetParam(
+						m_paramPairs[i].first,
+						m_paramPairs[i].second);
+			}
+		}
+
+		// Create an input source for the source document...
+		XSLTInputSource		theDocumentInputSource(theSourceDocument);
+
+		// Set the system ID, so relative URIs are resolved properly...
+		theDocumentInputSource.setSystemId(c_wstr(theSourceURI));
+
+		addTraceListeners(m_traceListeners, theProcessor);
+
+		// Since the result target is not const in our
+		// internal intefaces, we'll pass in a local copy
+		// of the one provided...
+		XSLTResultTarget	tempResultTarget(theResultTarget);
+
+		if (theCompiledStylesheet != 0)
+		{
+			assert(theStylesheetSource == 0 &&
+				   theCompiledStylesheet->getStylesheetRoot() != 0);
+
+			m_stylesheetExecutionContext->setStylesheetRoot(theCompiledStylesheet->getStylesheetRoot());
+
+			// Do the transformation...
+			theProcessor.process(
+						theDocumentInputSource,
+						tempResultTarget,
+						*m_stylesheetExecutionContext);
+		}
+		else
+		{
+			assert(theStylesheetSource != 0);
+
+			// Create a stylesheet construction context, 
+			// using the stylesheet's factory support objects.
+			StylesheetConstructionContextDefault	theStylesheetConstructionContext(
+							theProcessor,
+							theXSLTProcessorEnvSupport,
+							theXPathFactory);
+
+			// Do the transformation...
+			theProcessor.process(
+							theDocumentInputSource,
+							*theStylesheetSource,
+							tempResultTarget,
+							theStylesheetConstructionContext,
+							*m_stylesheetExecutionContext);
+		}
+	}
+	catch(const XSLException&	e)
+	{
+		if (length(theErrorMessage) != 0)
+		{
+			TranscodeToLocalCodePage(theErrorMessage, m_errorMessage, true);
+		}
+		else
+		{
+			TranscodeToLocalCodePage(e.getMessage(), m_errorMessage, true);
+		}
+
+		theResult = -1;
+	}
+	catch(const SAXException&	e)
+	{
+		if (length(theErrorMessage) != 0)
+		{
+			TranscodeToLocalCodePage(theErrorMessage, m_errorMessage, true);
+		}
+		else
+		{
+			TranscodeToLocalCodePage(e.getMessage(), m_errorMessage, true);
+		}
+
+		theResult = -2;
+	}
+	catch(const XMLException&	e)
+	{
+		if (length(theErrorMessage) != 0)
+		{
+			TranscodeToLocalCodePage(theErrorMessage, m_errorMessage, true);
+		}
+		else
+		{
+			TranscodeToLocalCodePage(e.getMessage(), m_errorMessage, true);
+		}
+
+		theResult = -3;
+	}
+	catch(const XalanDOMException&	e)
+	{
+		if (length(theErrorMessage) != 0)
+		{
+			TranscodeToLocalCodePage(theErrorMessage, m_errorMessage, true);
+		}
+		else
+		{
+			XalanDOMString theMessage("XalanDOMException caught.  The code is ");
+			
+			append(theMessage, LongToDOMString(long(e.getExceptionCode())));
+			append(theMessage, XalanDOMChar(XalanUnicode::charFullStop));
+
+			TranscodeToLocalCodePage(theMessage, m_errorMessage, true);
+		}
+
+		theResult = -4;
+	}
+
+	return theResult;
 }
