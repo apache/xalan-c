@@ -131,7 +131,10 @@ public:
 
 	struct reportStruct
 	{
+		XalanDOMString  theDrive;
 		XalanDOMString	testOrFile;
+		XalanDOMString  xmlFileURL;
+		XalanDOMString  xslFileURL;
 		char* msg;
 		XalanDOMString	currentNode;
 		XalanDOMString	actual;
@@ -160,6 +163,10 @@ public:
 	* Utility method used to get test files from a specific directory.
 	* @returns a vector containing test files.
 	*/
+
+	XalanDOMString FileUtility::getDrive();
+
+
 	FileNameVectorType FileUtility::getTestFileNames(XalanDOMString baseDir, XalanDOMString relDir, bool useDirPrefix);
 	//FileNameVectorType getTestFileNames (char* theDirectory);
 
@@ -292,6 +299,10 @@ public:
 
 	void
 	FileUtility::reportPassFail(XMLFileReporter& logfile, const XalanDOMString& runid);
+
+	void
+	FileUtility::analyzeResults(XalanTransformer& xalan, const XalanDOMString& resultsFile);
+//	FileUtility::analyzeResults(const XalanDOMString& resultsFile);
 
 private:
 

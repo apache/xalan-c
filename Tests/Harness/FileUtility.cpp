@@ -32,13 +32,13 @@
 
 // XERCES HEADERS...
 //	Are included by HarnessInit.hpp
+#include <HarnessInit.hpp>
 #include <sax/SAXException.hpp>
 
 // XALAN HEADERS...
 //	Are included by FileUtility.hpp
-
-#include "FileUtility.hpp"
-#include "XMLFileReporter.hpp"
+#include <FileUtility.hpp>
+#include <XMLFileReporter.hpp>
 
 char *xalanNodeTypes[]=
 	{"UNKNOWN_NODE",
@@ -54,6 +54,22 @@ char *xalanNodeTypes[]=
 	"DOCUMENT_TYPE_NODE",
 	"DOCUMENT_FRAGMENT_NODE",
 	"NOTATION_NODE"};
+
+
+XalanDOMString FileUtility::getDrive()
+{
+	char temp[2];
+	
+	// This query of the base drive is Window's specific. At some point it'll need to be IFDEF'ed for 
+	// other platforms.  It is needed to set up the base-URL for the stylesheet that processes the results
+	// of the conformance tests cconf.xsl found in \\xml-xalan\\c\\Tests\\cconf.xsl
+
+	int drv = _getdrive();
+	sprintf( temp, "%c:", drv + 'A' - 1 );
+
+	return(XalanDOMString(temp));
+
+}
 
 /*	This routine retrieves test file names from specified directories.
 //	Inputs: baseDir:	typically "conf" or "perf"
@@ -101,6 +117,7 @@ FileNameVectorType FileUtility::getDirectoryNames(XalanDOMString rootDirectory)
 
 	return theFiles;
 }
+
 
 bool FileUtility::checkDir(XalanDOMString directory )
 {
@@ -299,6 +316,11 @@ FileUtility::checkResults(const XalanDOMString& outputFile,
 		attrs.insert(Hashtable::value_type(XalanDOMString("atNode"), data.currentNode));
 		actexp.insert(Hashtable::value_type(XalanDOMString("exp"), data.expected));
 		actexp.insert(Hashtable::value_type(XalanDOMString("act"), data.actual));
+
+		actexp.insert(Hashtable::value_type(XalanDOMString("xsl"), data.xslFileURL));
+		actexp.insert(Hashtable::value_type(XalanDOMString("xml"), data.xmlFileURL));
+		actexp.insert(Hashtable::value_type(XalanDOMString("result"), outputFile));
+		actexp.insert(Hashtable::value_type(XalanDOMString("gold"), goldFile));
 
 		if (ambgFlag < data.nogold)
 		{
@@ -934,9 +956,7 @@ FileUtility::reportError()
 //		currentnode:	Node in the dom tree where the mismatch occured
 //		expdata:		Expected data based on the Gold file.
 //		actdata:		Actual data returned in the result file.
-//	Returns: 
-//		Void
-//						
+//	Returns: Void						
 */
 void 
 FileUtility::collectData(char* errmsg, XalanDOMString currentnode, XalanDOMString expdata, XalanDOMString actdata)
@@ -949,30 +969,12 @@ FileUtility::collectData(char* errmsg, XalanDOMString currentnode, XalanDOMStrin
 	data.fail += 1;
 }
 
-void
-FileUtility::reportPassFail(XMLFileReporter& logfile)
-{
-	Hashtable runResults;
-	char temp[5];
-
-	// Create entrys that contain numbers for Pass and Fail.
-	sprintf(temp, "%d", data.pass);
-	runResults.insert(Hashtable::value_type(XalanDOMString("Passed"), XalanDOMString(temp)));
-	
-	sprintf(temp, "%d", data.fail);
-	runResults.insert(Hashtable::value_type(XalanDOMString("Failed"), XalanDOMString(temp)));
-
-	sprintf(temp, "%d", data.nogold);
-	runResults.insert(Hashtable::value_type(XalanDOMString("No_Gold_Files"), XalanDOMString(temp)));
-
-	logfile.logElementWAttrs(10, "RunResults", runResults, "xxx");	
-
-	cout << "\nPassed " << data.pass;
-	cout << "\nFailed " << data.fail;
-	cout << "\nMissing Gold " << data.nogold << endl;
-
-}
-
+/*	Routine prints the result to the console, as well as adds summary info into the logfile. 
+//	Inputs: 
+//		logfile:	Current log file
+//		runid:		Unique runid
+//	Returns: Void						
+*/
 void
 FileUtility::reportPassFail(XMLFileReporter& logfile, const XalanDOMString& runid)
 {
@@ -984,6 +986,7 @@ FileUtility::reportPassFail(XMLFileReporter& logfile, const XalanDOMString& runi
 	runResults.insert(Hashtable::value_type(XalanDOMString("UniqRunid"), runid));
 	runResults.insert(Hashtable::value_type(XalanDOMString("Xerces-Version "), getXercesVersion()));
 	runResults.insert(Hashtable::value_type(XalanDOMString("ICU-Enabled "), XalanDOMString("No")));
+	runResults.insert(Hashtable::value_type(XalanDOMString("BaseDrive "), XalanDOMString(getDrive())));
 
 #if defined(XALAN_USE_ICU)
 	// At some point in time I want to be able to programatically check it the ICU is enabled.
@@ -1006,4 +1009,35 @@ FileUtility::reportPassFail(XMLFileReporter& logfile, const XalanDOMString& runi
 	cout << "\nFailed " << data.fail;
 	cout << "\nMissing Gold " << data.nogold << endl;
 
+}
+
+/*	Routine runs a stylesheet on the log file and displays the results in HTML. 
+//	Inputs: 
+//		xalan:			An instance of the transformer
+//		resultsFile:	logfile 
+//	Returns: Void						
+*/
+void
+FileUtility::analyzeResults(XalanTransformer& xalan, const XalanDOMString& resultsFile)
+{
+	XalanDOMString paramValue;
+
+	assign(paramValue, XalanDOMString("'"));
+	append(paramValue, resultsFile);
+	append(paramValue, XalanDOMString("'"));
+
+	xalan.setStylesheetParam(XalanDOMString("testfile"), paramValue);
+
+	int result = xalan.transform("\\xml-xalan\\c\\Tests\\cconf.xml", 
+								"\\xml-xalan\\c\\Tests\\cconf.xsl",
+								"\\xml-xalan\\c\\Tests\\cconf.html");
+	if (!result)
+	{
+		system("\\xml-xalan\\c\\Tests\\cconf.html");
+	}
+	else 
+	{
+		const char* msg = xalan.getLastError();
+		cout << "Analysis failed due to following error: " << msg << endl;
+	}	
 }
