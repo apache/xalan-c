@@ -66,10 +66,8 @@
 
 #if defined(XALAN_OLD_STREAM_HEADERS)
 #include <iostream.h>
-#include <strstream.h>
 #else
 #include <ostream>
-#include <strstream>
 #endif
 
 
@@ -224,20 +222,13 @@ XPathExpression::InvalidOpCodeException::~InvalidOpCodeException()
 XalanDOMString
 XPathExpression::InvalidOpCodeException::FormatErrorMessage(int		theOpCode)
 {
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::ostrstream;
-#endif
+	XalanDOMString	theResult("An invalid op code ");
 
-	char	theBuffer[50];
+	LongToDOMString(theOpCode, theResult);
 
-	ostrstream	theFormatter(theBuffer, sizeof(theBuffer));
+	append(theResult, " was detected.");
 
-	theFormatter << "Invalid op code "
-				 << theOpCode
-				 << " was detected."
-				 << '\0';
-
-	return TranscodeFromLocalCodePage(theFormatter.str());
+	return theResult;
 }
 
 
@@ -264,25 +255,21 @@ XPathExpression::InvalidArgumentCountException::FormatErrorMessage(
 			int		theExpectedCount,
 			int		theSuppliedCount)
 {
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::ostrstream;
-#endif
+	XalanDOMString	theResult("An invalid number of arguments for op code ");
 
-	char	theBuffer[200];
+	LongToDOMString(theOpCode, theResult);
 
-	ostrstream	theFormatter(theBuffer, sizeof(theBuffer));
+	append(theResult, " was detected.  The required number of arguments is ");
 
-	theFormatter << "An invalid number of arguments for op code "
-				 << theOpCode
-				 << " was detected.  "
-				 << "The required number of arguments is "
-				 << theExpectedCount
-				 << ", but "
-				 << theSuppliedCount
-				 << " arguments(s) were supplied."
-				 << '\0';
+	LongToDOMString(theExpectedCount, theResult);
 
-	return TranscodeFromLocalCodePage(theFormatter.str());
+	append(theResult, ", but ");
+
+	LongToDOMString(theSuppliedCount, theResult);
+
+	append(theResult, " arguments(s) were supplied.");
+
+	return theResult;
 }
 
 
@@ -307,22 +294,17 @@ XPathExpression::InvalidArgumentException::FormatErrorMessage(
 				int		theOpCode,
 				int		theValue)
 {
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::ostrstream;
-#endif
+	XalanDOMString	theResult("An invalid argument of ");
 
-	char	theBuffer[100];
+	LongToDOMString(theValue, theResult);
 
-	ostrstream	theFormatter(theBuffer, sizeof(theBuffer));
+	append(theResult, " was supplied for op code ");
 
-	theFormatter << "An invalid argument of "
-				 << theValue
-				 << " was supplied for op code "
-				 << theOpCode
-				 << "."
-				 << '\0';
+	LongToDOMString(theOpCode, theResult);
 
-	return TranscodeFromLocalCodePage(theFormatter.str());
+	append(theResult, ".");
+
+	return theResult;
 }
 
 
@@ -343,21 +325,13 @@ XPathExpression::InvalidRelativeTokenPosition::~InvalidRelativeTokenPosition()
 XalanDOMString
 XPathExpression::InvalidRelativeTokenPosition::FormatErrorMessage(int	theOffset)
 {
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::ostrstream;
-#endif
+	XalanDOMString	theResult("An invalid offset of ");
 
-	char	theBuffer[100];
+	LongToDOMString(theOffset, theResult);
 
-	ostrstream	theFormatter(theBuffer, sizeof(theBuffer));
+	append(theResult, " was supplied as a relative token position.");
 
-	theFormatter << "An invalid offset of "
-				 << theOffset
-				 << " was supplied as a relative token position."
-				 << "."
-				 << '\0';
-
-	return TranscodeFromLocalCodePage(theFormatter.str());
+	return theResult;
 }
 
 
