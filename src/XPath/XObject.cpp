@@ -72,7 +72,6 @@
 
 
 #include "NodeRefListBase.hpp"
-#include "XObjectCompare.hpp"
 #include "XPathEnvSupport.hpp"
 #include "XPathException.hpp"
 #include "XPathSupport.hpp"
