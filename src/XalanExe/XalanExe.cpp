@@ -450,10 +450,19 @@ transform(
 		theTarget.setByteStream(&cout);
 	}
 
-	return theTransformer.transform(
+	if (theParams.m_useStylesheetPI == true)
+	{
+		return theTransformer.transform(
+					theSource,
+					theTarget);
+	}
+	else
+	{
+		return theTransformer.transform(
 				theSource,
 				theStylesheetSource,
 				theTarget);
+	}
 }
 
 
@@ -464,10 +473,11 @@ transform(
 			const Params&			theParams,
 			const XSLTInputSource&	theSource)
 {
-	assert(theParams.m_xslFileName != 0);
+	assert(theParams.m_useStylesheetPI == true || theParams.m_xslFileName != 0);
 
-	if (theParams.m_xslFileName[0] == '-' &&
-		theParams.m_xslFileName[1] == '\0')
+	if (theParams.m_useStylesheetPI == true ||
+	    (theParams.m_xslFileName[0] == '-' &&
+	     theParams.m_xslFileName[1] == '\0'))
 	{
 		return transform(
 				theTransformer,

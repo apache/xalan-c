@@ -99,7 +99,7 @@ XercesTreeWalker::traverse(const DOM_NodeType&	pos)
 		{
 			endNode(thePos);
 
-			nextNode = pos.getNextSibling();
+			nextNode = thePos.getNextSibling();
 
 			if(nextNode == 0)
 			{
