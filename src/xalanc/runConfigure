@@ -58,6 +58,9 @@
 # 
 #
 # $Log$
+# Revision 1.2  2003/07/22 10:59:40  blautenb
+# FreeBSD and Install patch from Bjoern Zeeb - Bugzilla 13238
+#
 # Revision 1.1  2003/06/29 03:57:53  blautenb
 # Moved source for sane includes
 #
@@ -140,10 +143,12 @@ usage()
     echo "runConfigure: Helper script to run \"configure\" for one of the supported platforms"
     echo "Usage: runConfigure \"options\""
     echo "       where options may be any of the following:"
-    echo "       -p <platform> (accepts 'aix', 'linux', 'solaris', 'hp-10', 'hp-11', 'irix', 'tru64', 'macosx' )"
+    echo "       -p <platform> (accepts 'aix', 'linux', 'freebsd', 'netbsd', 'solaris',
+            'hp-10', 'hp-11', 'irix', 'tru64', 'macosx')"
     echo "       -c <C compiler name> (e.g. gcc, cc, xlc)"
     echo "       -x <C++ compiler name> (e.g. g++, CC, xlC)"
     echo "       -d (specifies that you want to build debug version)"
+    echo "       -t <transcoder> can be 'icu' (everything else means default)"
     echo "       -r <thread option> can be 'pthread' or 'dce' (only used on HP-11)"
     echo "       -b <bitsToBuild> (accepts '64', '32')"
     echo "       -l <extra linker options>"
@@ -190,6 +195,7 @@ fi
 # Set up the default values for each parameter
 debug=off                # by default debug is off
 bitsToBuild=32           # by default 32 bit build assumed
+transcoder=default       # by default use default transcoder
 
 while [ $# -gt 0 ]
    do
@@ -205,6 +211,9 @@ while [ $# -gt 0 ]
 
    -d) 
         debug=on; shift;;
+
+   -t)
+        transcoder=$2; shift 2;;
 
    -r) 
         thread=$2; shift 2;;
@@ -241,6 +250,7 @@ echo "C Compiler: $ccompiler"
 echo "C++ Compiler: $cppcompiler"
 echo "Extra compile options: $compileroptions"
 echo "Extra link options: $linkeroptions"
+echo "Transcoder: $transcoder"
 echo "Thread option: $thread"
 echo "bitsToBuild option: $bitsToBuild"
 echo "Extra configure options: $configureoptions"
@@ -251,7 +261,7 @@ echo "Extra configure options: $configureoptions"
 #
 
 case $platform in
-   aix | linux | solaris | hp-10 | hp-11 | irix | tru64 | macosx)
+   aix | linux | freebsd | netbsd | solaris | hp-10 | hp-11 | irix | tru64 | macosx)
        # platform has been recognized
        ;;
    *)
@@ -288,7 +298,7 @@ fi
 
 #
 #  aix | linux | hp-11 | solaris |
-#  hp-10 | freebsd | irix | openserver | unixware | os400 | ptx | tru64 | macosx
+#  hp-10 | freebsd | netbsd | irix | openserver | unixware | os400 | ptx | tru64 | macosx
 #
 if test $bitsToBuild = 64; then
     bitstobuildDefines=" -DXML_BITSTOBUILD_64 "
@@ -339,7 +349,33 @@ BITSTOBUILD=$bitsToBuild
 export BITSTOBUILD
 
 #
-# Check for the threading option only for hp-11
+# Now check whether to use 'icu' as transcoder
+#
+TRANSCODER=
+if test $transcoder; then
+    case $transcoder in
+        icu)
+	    if test ${ICUROOT}o = "o"; then
+		    echo '***Error*** ICUROOT environment variable not defined. Exiting...';
+		    exit ${ERROR_EXIT_CODE};
+            fi
+	    transcodingDefines="-I${ICUROOT}/include";
+	    transcodingLibs="-L${ICUROOT} -L${ICUROOT}/lib -L${ICUROOT}/data";
+	    TRANSCODER=ICU;;
+
+	default)
+	    ;;
+	*)
+	    echo "Unknown transcoder '$transcoder'. Using default."
+	    ;;
+    esac
+fi
+
+export TRANSCODER
+
+
+#
+# Check for the threading option
 #
 
 threadingLibs="-lpthread"
@@ -360,6 +396,10 @@ if test $platform = "hp-11"; then
     fi
 elif test $platform = "aix"; then
     threadingLibs="-lpthreads"
+elif test $platform = "freebsd"; then
+    threadingLibs="-pthread -lc_r"
+elif test $platform = "netbsd"; then
+    threadingLibs="-pthread -lpthread"
 elif test $platform = "hp-10"; then
     threadingLibs="-lcma"
     threadingDefines="-DXML_USE_DCE"

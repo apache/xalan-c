@@ -10,7 +10,7 @@ AC_CHECK_PROG(AUTOCONF, autoconf, autoconf, true)
 dnl Checks for libraries
 AC_CHECK_LIB(m, floor)
 
-# Check for gcc problems
+dnl  Check for gcc problems
 
 if test "$CXX" = "g++" -o "$CXX" = "c++"; then
 
@@ -46,6 +46,8 @@ dnl Platform-specific Makefile setup
 case "${host}" in
         *-*-solaris*)   platform=SOLARIS ;;
         *-*-linux*)     platform=LINUX ;;
+        *-*-freebsd*)   platform=FREEBSD ;;
+        *-*-netbsd*)    platform=NETBSD ;;
         *-*-irix*)      platform=IRIX ;;
         *-*-aix*)       platform=AIX ;;
         *-*-hp*)        platform=HPUX ;
@@ -59,6 +61,36 @@ case "${host}" in
         *-apple-darwin*)       platform=MACOSX ;;
         *)              platform=UNKNOWN ;;
 esac
+
+dnl check if mbstowcs is available and can correctly count only
+AC_HEADER_STDC
+AC_CHECK_FUNCS([mbstowcs],,,)
+if test x"$ac_cv_func_mbstowcs" = x"no"; then
+	WCSTOMBS="-DXALAN_USE_XERCES_LOCAL_CODEPAGE_TRANSCODERS"
+else
+AC_MSG_CHECKING(if mbstowcs can count only)
+AC_TRY_RUN([
+#if STDC_HEADERS
+#include <stdlib.h>
+#endif
+
+int main(int argc, char *argv[])
+{
+	wchar_t in[5] = { 0x74, 0x65, 0x73, 0x74, 0x00 };
+
+	if (wcstombs(0, in, 0) == -1) {
+		exit(1);
+	}
+
+	exit(0);
+}], [AC_MSG_RESULT(yes)],
+	[WCSTOMBS="-DXALAN_USE_XERCES_LOCAL_CODEPAGE_TRANSCODERS";
+	 AC_MSG_RESULT(no)],
+	[WCSTOMBS="-DXALAN_USE_XERCES_LOCAL_CODEPAGE_TRANSCODERS";
+	 AC_MSG_RESULT(cross-compiling default)])
+fi
+
+
 AC_SUBST(platform)
 
 cxx=${CXX}
@@ -68,11 +100,13 @@ cc=${CC}
 AC_SUBST(cc)
 
 AC_SUBST(prefix)
+dnl  Not used:
 AC_SUBST(osver)
 
 cxxflags=${CXXFLAGS}
 AC_SUBST(cxxflags)
 
+dnl  Not used:
 cppflags=${CPPFLAGS}
 AC_SUBST(cppflags)
 
@@ -88,6 +122,10 @@ AC_SUBST(libs)
 transcoder=${TRANSCODER}
 AC_SUBST(transcoder)
 
+wcstombs=${WCSTOMBS}
+AC_SUBST(wcstombs)
+
+dnl  Not used:
 threads=${THREADS}
 AC_SUBST(threads)
 
