@@ -81,6 +81,7 @@
      <p>Major updates since version 1.4 include:</p>
      <ul>
 		<li><resource-ref idref="bugsfixedforthisrelease"/>.</li>
+		<li>For Windows, Xalan-C++ is now packaged as a single DLL.  The project files to build separate DLLs are now deprecated and will not be maintained.</li>
 		<li>Support for &xml4c; DOMNode classes.</li>
 		<li>New sample <em>TransformToXercesDOM</em> that illustrates how
 		  to perform a transform resulting in a &xml4c; DOMDocument</li>

@@ -62,10 +62,9 @@ Please contact us at <human-resource-ref idref="xalandev"/> if you would like to
 		<td>HP-UX 11.0 (64 bit)</td>
     </tr>    
   </table>
-  <p>The Windows32 distribution was built with MSVC 6.0 SP3 and <jump href="http://www.dinkumware.com/vc_fixes.html">Dinkumware C++ library fixes</jump>. The Red Hat Linux 7.2 32-bit distribution was built with Intel C++ Compiler version 6.0.1. The AIX 5.1 32-bit distribution was built with IBM C and C++ for AIX 5.02. The Solaris 2.6 32-bit and 64-bit distributions were built with Sun Workshop 6 update 2. 
+  <p>The Windows32 distribution was built with MSVC 6.0 SP3 and <jump href="http://www.dinkumware.com/vc_fixes.html">Dinkumware C++ library fixes</jump>. The Red Hat Linux 7.2 32-bit distribution was built with Intel C++ Compiler version 6.0.1. The AIX 5.1 32-bit distribution was built with IBM C and C++ for AIX 5.02. The Solaris 2.8 32-bit and 64-bit distributions were built with Sun Workshop 6 update 2. 
 The HP-UX 11 32-bit and 64-bit distributions were built with aCC A.03.37.</p>
 <note>Use GNU tar to untar the Solaris distribution file; see <link idref="faq" anchor="gnutar">A tar checksum error on Solaris </link>.</note>
-<p>This release also includes alpha support for building 64-bit Solaris and AIX binaries. See <link idref="readme" anchor="64bit">building 64-bit binaries</link>.</p>
 <anchor name="xalandists"/>
 
 <p>If you want to take advantage of the support for number formatting, sorting, and encoding the ICU provides, you should also download and install the <resource-ref idref="icu"/>; see <link idref="usagepatterns" anchor="icu">Using the ICU</link>,</p>

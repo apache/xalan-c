@@ -105,11 +105,11 @@ Xalan wrappers.</p></a>
       </tr>
        <tr>
          <td>HP/UX 11.0</td>
-         <td>aCC A.03.33</td>
+         <td>aCC A.03.37</td>
       </tr>
        <tr>
-         <td>Red Hat Linux 7.2</td>
-         <td>Intel C++ Compiler, version 6</td>
+         <td>RedHat Linux 7.2</td>
+         <td>Intel C++ Compiler, version 6.0.1</td>
       </tr>
     </table>
  <p>For more details see: <link idref="readme" anchor="unix">Steps for doing a UNIX build</link>.</p>
@@ -126,7 +126,7 @@ Xalan wrappers.</p></a>
 
 <a><p>The International Components for Unicode(ICU) is a C and C++ library that provides robust and full-featured Unicode support on a wide variety of platforms. &xslt4c; uses the ICU to extend support for encoding, number formatting, and sorting.</p> 
 <p>The ICU is available for download from <jump href="http://oss.software.ibm.com/icu/index.html">http://oss.software.ibm.com/icu/index.html</jump>.</p>
-<p>This release of Xalan was tested with ICU 2.2.</p>
+<p>This release of Xalan was tested with ICU 2.4.</p>
 <p>For more details see: <link idref="usagepatterns" anchor="icu">Using the International Components for Unicode (ICU)</link>.</p><!--icuNote--><anchor name="gnutar"/><p/></a>
 </faq>
 
@@ -236,17 +236,18 @@ Xalan wrappers.</p></a>
 <faq title="Transformation Output Methods">
 	<q>How do I output a transformation to [a DOM, a file, an in-memory string, as input to another transformation]?</q>
 	<a>
+		<p>The output parameter of XalanTransformer::transform() is an XSLTResultTarget which has many constructors.</p>
 		<p>Output to a file:</p>
 		<ul>
-			<li> See this <jump href="http://marc.theaimsgroup.com/?l=xalan-c-users&amp;m=104791991207944&amp;w=2">mailing list post</jump>. The short answer: use LocalFileFormatTarget or a DOMWriter (gotten from DOMImplementation). Note that these are actually &xml4c; classes, so you will find more extensive API documentation at the <jump href="http://xml.apache.org/xerces-c/index.html">&xml4c; website</jump>.</li>
+			<li>The easiest way is to use a null-terminated string containing the file name to create an XSLTResultTarget.  Or, use an instance of std::ofstream or std::ostringstream to create an XSLTResultTarget.</li>
 		</ul>
-		<p>Output to an in-memory string:</p>
+		<p>Output to an in-memory buffer:</p>
 		<ul>
-			<li>Same as to a file, only you use MemBufFormatTarget.</li>
+			<li>Use an instance of std::ostrstream or std::ostringstream to create an XSLTResultTarget.  See the StreamTransform sample for more information.</li>
 		</ul>
 		<p>Input to another tranformation:</p>
 		<ul>
-			<li>The output parameter of XalanTransformer::transform is an XSLTResultTarget which can be constructed with: a string, a file name, an output stream, or a FormatterListener. Any of these could be used as the input to another transformation, but the FormatterToSourceTree is probably the best for efficiency reasons.</li>
+			<li>Any of the previous output targets could be used as the input to another transformation, but the FormatterToSourceTree is probably the best for efficiency reasons.  See the source code for the TestXSLT command line program for more information.</li>
 		</ul>
 	</a>
 </faq>
@@ -271,7 +272,7 @@ Xalan wrappers.</p></a>
 <faq title="Changing Where Error Output is Sent">
 	<q>XalanTransformer outputs errors to the console. How do I, for example, output error to a file?</q>
 	<a>
-		<p>By default, XalanTransformer creates a XalanTransformerProblemListener (subclass of ProblemListener) that outputs erros to std::cerr. To change this you can:</p>
+		<p>By default, XalanTransformer creates a XalanTransformerProblemListener (a subclass of ProblemListener) that writes output to std::cerr. To change this you can:</p>
 		<ul>
 			<li>Redirect cerr somewhere else</li>
 			<li>Call XalanTranformer::setWarningStream with a different std::ostream before calling XalanTransformer::transform.</li>
@@ -305,7 +306,7 @@ Xalan wrappers.</p></a>
 </faq>
 
 <faq title="Extension Functions">
-	<q>The xalan extension functions (xalan:execute, etc.) don't work for me. Help!</q>
+	<q>The Xalan extension functions (xalan:node-set, etc.) don't work for me. Help!</q>
 	<a>
 		<p>Did you declare the namespace on the xsl:stylesheet or xsl:transform element? It should look like this: </p>
 		<p>&lt;xsl:stylesheet version="1.0" xmlns:xalan="http://xml.apache.org/xalan"&gt; ...rest of stylesheet</p>
@@ -322,7 +323,7 @@ Xalan wrappers.</p></a>
 </faq>
 
 <faq title="format-number and ICU">
-	<q>Why does Xalan emit an error message when using the XPath function format-number with more than one parameter?</q>
+	<q>Why does Xalan emit a warning when using the XSLT function format-number()?</q>
 	<a>
 		<p>Did you build with ICU support? See <link idref="usagepatterns" anchor="icu">Using the International Components for Unicode (ICU)</link>.</p>
 	</a>
