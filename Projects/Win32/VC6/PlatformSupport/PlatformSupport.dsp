@@ -122,6 +122,10 @@ SOURCE=..\..\..\..\src\PlatformSupport\DoubleSupport.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\PlatformSupport\ExecutionContext.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\PlatformSupport\Factory.cpp
 # End Source File
 # Begin Source File
@@ -199,6 +203,10 @@ SOURCE=..\..\..\..\src\PlatformSupport\DOMStringPrintWriter.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\PlatformSupport\DoubleSupport.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\PlatformSupport\ExecutionContext.hpp
 # End Source File
 # Begin Source File
 
