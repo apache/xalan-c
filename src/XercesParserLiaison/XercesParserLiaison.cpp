@@ -428,7 +428,7 @@ XercesParserLiaison::setEntityResolver(EntityResolver*	resolver)
 const XalanDOMChar*
 XercesParserLiaison::getExternalSchemaLocation() const
 {
-	return c_wstr(m_externalSchemaLocation);
+	return m_externalSchemaLocation.length() == 0 ? 0 : m_externalSchemaLocation.c_str();
 }
 
 
@@ -436,9 +436,14 @@ XercesParserLiaison::getExternalSchemaLocation() const
 void
 XercesParserLiaison::setExternalSchemaLocation(const XalanDOMChar*	location)
 {
-	assert(location != 0);
-
-	m_externalSchemaLocation = location;
+	if (location == 0)
+	{
+		m_externalSchemaLocation.clear();
+	}
+	else
+	{
+		m_externalSchemaLocation = location;
+	}
 }
 
 
@@ -446,7 +451,7 @@ XercesParserLiaison::setExternalSchemaLocation(const XalanDOMChar*	location)
 const XalanDOMChar*
 XercesParserLiaison::getExternalNoNamespaceSchemaLocation() const
 {
-	return c_wstr(m_externalNoNamespaceSchemaLocation);
+	return m_externalNoNamespaceSchemaLocation.length() == 0 ? 0 : m_externalNoNamespaceSchemaLocation.c_str();
 }
 
 
@@ -454,9 +459,14 @@ XercesParserLiaison::getExternalNoNamespaceSchemaLocation() const
 void
 XercesParserLiaison::setExternalNoNamespaceSchemaLocation(const XalanDOMChar*	location)
 {
-	assert(location != 0);
-
-	m_externalNoNamespaceSchemaLocation = location;
+	if (location == 0)
+	{
+		m_externalNoNamespaceSchemaLocation.clear();
+	}
+	else
+	{
+		m_externalNoNamespaceSchemaLocation= location;
+	}
 }
 
 
