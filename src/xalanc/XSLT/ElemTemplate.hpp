@@ -42,6 +42,8 @@ class ElemTemplate : public ElemTemplateElement
 {
 public:
 
+    typedef ElemTemplateElement ParentType;
+
 	/**
 	 * Construct an object corresponding to an "xsl:template" element
 	 * 
@@ -121,6 +123,12 @@ public:
 
 	virtual	const XPath*
 	getXPath(unsigned int	index = 0) const;
+
+    void
+    executeAsNamed(StylesheetExecutionContext&  executionContext) const
+    {
+	    ParentType::executeChildren(executionContext);
+    }
 
 private:
 

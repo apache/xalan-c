@@ -614,9 +614,10 @@ ElemTemplateElement::transformChild(
 		// element...
 		const bool			isApplyImports = xslInstruction.getXSLToken() ==
 			StylesheetConstructionContext::ELEMNAME_APPLY_IMPORTS;
+        assert(isApplyImports == false || executionContext.getCurrentTemplate() != 0);
 
-		const Stylesheet*	stylesheetTree = isApplyImports ?
-								&xslInstruction.getStylesheet() :
+		const Stylesheet*	stylesheetTree = isApplyImports == true ?
+								&executionContext.getCurrentTemplate()->getStylesheet() :
 								&getStylesheet().getStylesheetRoot();
 
 		theTemplate = stylesheetTree->findTemplate(

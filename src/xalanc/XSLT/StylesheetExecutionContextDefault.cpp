@@ -139,6 +139,7 @@ StylesheetExecutionContextDefault::StylesheetExecutionContextDefault(
 	m_escapeURLs(eEscapeURLsDefault),
 	m_omitMETATag(eOmitMETATagDefault)
 {
+    m_currentTemplateStack.push_back(0);
 }
 
 
@@ -179,6 +180,7 @@ StylesheetExecutionContextDefault::StylesheetExecutionContextDefault(
 	m_cloneTextNodesOnly(false),
 	m_escapeURLs(eEscapeURLsDefault)
 {
+    m_currentTemplateStack.push_back(0);
 }
 
 
@@ -1614,15 +1616,16 @@ StylesheetExecutionContextDefault::formatNumber(
 
 void 
 StylesheetExecutionContextDefault::formatNumber(
-			double								number,
-			const XalanDOMString&				pattern,
-			const XalanDOMString&				dfsName,
-			XalanDOMString&						theResult,
-			const XalanNode*					context,
-			const LocatorType*					locator)
+			double					number,
+			const XalanDOMString&	pattern,
+			const XalanDOMString&	dfsName,
+			XalanDOMString&			theResult,
+			const XalanNode*		context,
+			const LocatorType*		locator)
 {
 	XalanQNameByValue&	theDFSQName = m_xpathExecutionContextDefault.getScratchQName();
-	theDFSQName.set(dfsName, getPrefixResolver(), locator);
+
+    theDFSQName.set(dfsName, getPrefixResolver(), locator);
 
 	const XalanDecimalFormatSymbols*	theDFS = getDecimalFormatSymbols(theDFSQName);
 
@@ -1664,7 +1667,8 @@ StylesheetExecutionContextDefault::installFormatNumberFunctor(FormatNumberFuncto
 
 
 StylesheetExecutionContextDefault::FormatNumberFunctor*
-StylesheetExecutionContextDefault::uninstallFormatNumberFunctor() {
+StylesheetExecutionContextDefault::uninstallFormatNumberFunctor()
+{
 	if (m_formatNumberFunctor == 0)
 	{
 		return 0;
@@ -1722,6 +1726,7 @@ StylesheetExecutionContextDefault::reset()
 	m_mode = 0;
 
 	m_currentTemplateStack.clear();
+    m_currentTemplateStack.push_back(0);
 
 	m_formatterToTextCache.reset();
 	m_formatterToSourceTreeCache.reset();

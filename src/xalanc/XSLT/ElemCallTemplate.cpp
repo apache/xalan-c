@@ -129,7 +129,7 @@ ElemCallTemplate::execute(StylesheetExecutionContext&	executionContext) const
 				executionContext,
 				*this);
 
-	m_template->execute(executionContext);
+	m_template->executeAsNamed(executionContext);
 }
 
 

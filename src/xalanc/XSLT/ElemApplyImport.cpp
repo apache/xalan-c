@@ -105,7 +105,7 @@ ElemApplyImport::execute(StylesheetExecutionContext&	executionContext) const
 			executionContext,
 			*this,
 			0,
-			sourceNode);   
+			sourceNode);
 }
 
 

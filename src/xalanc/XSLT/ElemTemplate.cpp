@@ -181,7 +181,7 @@ ElemTemplate::getElementName() const
 void
 ElemTemplate::execute(StylesheetExecutionContext&	executionContext) const
 {
-	ElemTemplateElement::execute(executionContext);
+	ParentType::execute(executionContext);
 
 	executeChildren(executionContext);
 }
@@ -201,7 +201,7 @@ ElemTemplate::executeChildren(StylesheetExecutionContext&	executionContext) cons
 {
 	StylesheetExecutionContext::PushAndPopCurrentTemplate	thePushAndPop(executionContext, this);
 
-	ElemTemplateElement::executeChildren(executionContext);
+	ParentType::executeChildren(executionContext);
 }
 
 
@@ -211,7 +211,7 @@ ElemTemplate::executeChildren(
 		StylesheetExecutionContext&		executionContext,
 		XalanNode*						sourceNode) const
 {
-	ElemTemplateElement::executeChildren(executionContext, sourceNode);
+	ParentType::executeChildren(executionContext, sourceNode);
 }
 
 
