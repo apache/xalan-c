@@ -97,6 +97,61 @@
 
 
 
+class FunctionNotImplemented : public Function
+{
+public:
+
+	FunctionNotImplemented(const XalanDOMChar*	theName) :
+		m_name(theName)
+	{
+	}
+
+	/**
+	 * Create a copy of the function object.
+	 *
+	 * @return pointer to the new object
+	 */
+	virtual Function*
+	clone() const
+	{
+		return new FunctionNotImplemented(m_name);
+	}
+
+protected:
+
+	/**
+	 * Get the error message to report when
+	 * the function is called with the wrong
+	 * number of arguments.
+	 *
+	 * @return function error message
+	 */
+	virtual const XalanDOMString
+	getError() const
+	{
+		XalanDOMString	theError;
+
+		theError.append("The function '");
+		theError.append(m_name);
+		theError.append("' is not implemented.");
+
+		return theError;
+	}
+
+private:
+
+	// Not implemented...
+	Function&
+	operator=(const Function&);
+
+	bool
+	operator==(const Function&) const;
+
+	const XalanDOMChar* const	m_name;
+};
+
+
+
 XPathFunctionTable::XPathFunctionTable(bool		fCreateTable) :
 	m_functionTable(),
 	m_functionTableEnd(m_functionTable + (sizeof(m_functionTable) / sizeof(m_functionTable[0])) - 1)
@@ -275,60 +330,116 @@ XPathFunctionTable::CreateTable()
 	try
 	{
 		InstallFunction(
-				s_substringBefore,
-				FunctionSubstringBefore());
+				s_id,
+				FunctionID());
+
+		InstallFunction(
+				s_key,
+				FunctionNotImplemented(s_key));
+
+		InstallFunction(
+				s_not,
+				FunctionNot());
+
+		InstallFunction(
+				s_sum,
+				FunctionSum());
+
+		InstallFunction(
+				s_lang,
+				FunctionLang());
 
 		InstallFunction(
 				s_last,
 				FunctionLast());
 
 		InstallFunction(
-				s_position,
-				FunctionPosition());
+				s_name,
+				FunctionName());
+
+		InstallFunction(
+				s_true,
+				FunctionTrue());
 
 		InstallFunction(
 				s_count,
 				FunctionCount());
 
 		InstallFunction(
-				s_id,
-				FunctionID());
+				s_false,
+				FunctionFalse());
 
 		InstallFunction(
-				s_localName,
-				FunctionLocalName());
+				s_floor,
+				FunctionFloor());
 
 		InstallFunction(
-				s_namespaceUri,
-				FunctionNamespaceURI());
-
-		InstallFunction(
-				s_name,
-				FunctionName());
-
-		InstallFunction(
-				s_string,
-				FunctionString());
+				s_round,
+				FunctionRound());
 
 		InstallFunction(
 				s_concat,
 				FunctionConcat());
 
 		InstallFunction(
-				s_startsWith,
-				FunctionStartsWith());
+				s_number,
+				FunctionNumber());
+
+		InstallFunction(
+				s_string,
+				FunctionString());
+
+		InstallFunction(
+				s_boolean,
+				FunctionBoolean());
+
+		InstallFunction(
+				s_ceiling,
+				FunctionCeiling());
+
+		InstallFunction(
+				s_current,
+				FunctionNotImplemented(s_current));
 
 		InstallFunction(
 				s_contains,
 				FunctionContains());
 
 		InstallFunction(
-				s_substringAfter,
-				FunctionSubstringAfter());
+				s_document,
+				FunctionNotImplemented(s_document));
+
+		InstallFunction(
+				s_position,
+				FunctionPosition());
 
 		InstallFunction(
 				s_substring,
 				FunctionSubstring());
+
+		InstallFunction(
+				s_translate,
+				FunctionTranslate());
+
+		InstallFunction(
+				s_localName,
+				FunctionLocalName());
+
+		InstallFunction(
+				s_generateId,
+				FunctionNotImplemented(s_generateId));
+
+		InstallFunction(
+				s_startsWith,
+				FunctionStartsWith());
+
+		InstallFunction(
+				s_formatNumber,
+				FunctionNotImplemented(s_formatNumber));
+
+		InstallFunction(
+				s_namespaceUri,
+				FunctionNamespaceURI());
 
 		InstallFunction(
 				s_stringLength,
@@ -339,48 +450,32 @@ XPathFunctionTable::CreateTable()
 				FunctionNormalizeSpace());
 
 		InstallFunction(
-				s_translate,
-				FunctionTranslate());
+				s_substringAfter,
+				FunctionSubstringAfter());
 
 		InstallFunction(
-				s_boolean,
-				FunctionBoolean());
+				s_systemProperty,
+				FunctionNotImplemented(s_systemProperty));
 
 		InstallFunction(
-				s_not,
-				FunctionNot());
+				s_substringBefore,
+				FunctionSubstringBefore());
 
 		InstallFunction(
-				s_true,
-				FunctionTrue());
+				s_elementAvailable,
+				FunctionNotImplemented(s_elementAvailable));
 
 		InstallFunction(
-				s_false,
-				FunctionFalse());
+				s_elementAvailable,
+				FunctionNotImplemented(s_elementAvailable));
 
 		InstallFunction(
-				s_lang,
-				FunctionLang());
+				s_functionAvailable,
+				FunctionNotImplemented(s_functionAvailable));
 
 		InstallFunction(
-				s_number,
-				FunctionNumber());
-
-		InstallFunction(
-				s_sum,
-				FunctionSum());
-
-		InstallFunction(
-				s_floor,
-				FunctionFloor());
-
-		InstallFunction(
-				s_ceiling,
-				FunctionCeiling());
-
-		InstallFunction(
-				s_round,
-				FunctionRound());
+				s_unparsedEntityUri,
+				FunctionNotImplemented(s_unparsedEntityUri));
 
 #if 0
 		std::ofstream	theSourceStream("\\foo.cpp");
