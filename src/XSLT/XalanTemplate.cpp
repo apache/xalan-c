@@ -75,6 +75,7 @@
 #include <algorithm>
 #include <stl/_algo.c>
 #include <stl/_algobase.c>
+#include <stl/_heap.c>
 
 #include <list>
 #include <stl/_list.c>
@@ -450,6 +451,20 @@ foo()
 	}
 
 	{
+#if !defined(XALAN_NO_NAMESPACES)
+		using std::sort;
+		using std::less;
+#endif
+
+		StylesheetRoot::QNameVectorType		theVector;
+
+		sort(
+				theVector.begin(),
+				theVector.end(),
+				less<QName>());
+	}
+
+	{
 		StylesheetExecutionContextDefault::FormatterListenerVectorType	theVector;
 		
 		for_each(
@@ -562,13 +577,13 @@ foo()
 	{
 		NodeSorter::NodeVectorType			theVector;
 		NodeSorter::NodeSortKeyCompare*		theComparer;
-		
+
 		stable_sort(	
 			theVector.begin(),
 			theVector.end(),
 			*theComparer);
 	}
-	
+
 	{
 		XalanTransformer::CompiledStylesheetPtrVectorType	theVector;
 		
@@ -579,7 +594,7 @@ foo()
 
 	{
 		XalanTransformer::ParsedSourcePtrVectorType		theVector;
-		
+
 		for_each(theVector.begin(),
 				 theVector.end(),
 				 DeleteFunctor<XalanParsedSource>());
