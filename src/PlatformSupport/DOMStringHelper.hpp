@@ -1183,7 +1183,7 @@ inline void
 clear(XalanDOMString&	theString)
 {
 #if defined(XALAN_OLD_STYLE_CASTS)
-	theString = (DOM_NullPtr)0;
+	theString = (DOM_NullPtr*)0;
 #else
 	theString = static_cast<DOM_NullPtr*>(0);
 #endif
