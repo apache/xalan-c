@@ -41,9 +41,9 @@
 	using std::string;
 #endif
 
-// Used to hold compiled stylesheet, and XML source document.
+// Used to hold compiled stylesheet and XML source document.
 StylesheetRoot* glbStylesheetRoot;
-XSLTInputSource* glbSourceDoc;
+XalanNode* glbDocSource;
 
 // Print messages tracking the progress of each thread, and the
 // beginning and end of the entire operation.
@@ -60,7 +60,7 @@ void outputMessage(DWORD id, char msg[])
 THREADFUNCTIONRETURN theThread(LPVOID	param)
 {
 // This routine uses a compiled stylesheet (glbStylesheetRoot), 
-// and a binary input source (glbSourceDoc) to perform the 
+// and a binary source tree (glbSourceDoc) to perform the 
 // transformation.
    
 	const int	number = reinterpret_cast<int>(param);
@@ -75,7 +75,7 @@ THREADFUNCTIONRETURN theThread(LPVOID	param)
 													  theXPathSupport);
 	XPathFactoryDefault				theXPathFactory;
 
-	// Create a processor...and output start message.
+	// Create a processor...and output the start message.
 	XSLTEngineImpl	theProcessor(
 					theParserLiaison,
 					theXPathSupport,
@@ -96,6 +96,9 @@ THREADFUNCTIONRETURN theThread(LPVOID	param)
 						theXPathSupport,
 						theXObjectFactory);
 
+  // Set the XSLTInputSource...
+  XSLTInputSource xslIn(glbDocSource);
+
 	// Generate the output file name for this thread.
     ostrstream theFormatterOut;
     theFormatterOut << "birds" << number << ".out" << '\0';
@@ -108,16 +111,17 @@ THREADFUNCTIONRETURN theThread(LPVOID	param)
 
 	// Set the processor to use the compiled stylesheet. Then do the transform
   // with the process() method that uses the compiled stylesheet.
-	// Report both the start of the transformation and the termination of the thread.
+	// Report the start of the transformation and the termination of the thread.
 	theProcessor.setStylesheetRoot(glbStylesheetRoot);
 	outputMessage(theThreadID,"Transforming");
-  theProcessor.process(*glbSourceDoc,theResultTarget,ssExecutionContext);
+  theProcessor.process(xslIn,theResultTarget,ssExecutionContext);
 	outputMessage(theThreadID,"Finishing");
 	return (0);
 }
 
 // Create and run the threads...
-// Print messages tracking the progress of each thread...
+// Print messages tracking the progress of each thread and of the 
+// overall operation...
 void doThreads(int x)
 {
 	DWORD dwStackSize = 4096;              	// initial thread stack size
@@ -190,7 +194,7 @@ int main(int argc, const char*	/* argv */[])
 			XPathFactoryDefault				      ssXPathFactory;
 
 			// Create a processor...
-      // This processor is used to compile the stylesheet. 
+      // This processor is used to compile the stylesheet and the source document. 
       // Each thread uses its own processor to perform a transformation.
 
 			XSLTEngineImpl	ssProcessor(
@@ -219,26 +223,26 @@ int main(int argc, const char*	/* argv */[])
 			const XalanDOMString  theXSLFileName("birds.xsl");
 			const XalanDOMString  theXMLFileName("birds.xml");
 
-			// Our stylesheet input source...
-			XSLTInputSource		ssStylesheetSourceXSL(c_wstr(theXSLFileName));
+			// Our stylesheet XML input document and XSL stylesheet
+      XSLTInputSource   xmlDocSource(c_wstr(theXMLFileName));
+			XSLTInputSource		xslStylesheetSource(c_wstr(theXSLFileName));
 
 			// Use the processor to create a StylesheetRoot for the specified
 			// input XSL.  This is the compiled stylesheet.  We don't have to
 			// delete it, since it is owned by the StylesheetConstructionContext
 			// instance.
-			glbStylesheetRoot = ssProcessor.processStylesheet(ssStylesheetSourceXSL,
+			glbStylesheetRoot = ssProcessor.processStylesheet(xslStylesheetSource,
 													   ssConstructionContext);
 			assert(glbStylesheetRoot != 0);
 			
 			// Compile the XML source document as well. All threads will use
       // this binary representation of the source tree.
-			glbSourceDoc = new XSLTInputSource(c_wstr(theXMLFileName));
+			glbDocSource = ssProcessor.getSourceTreeFromInput(xmlDocSource);
       assert(glbSourceDoc != 0);
 
-
       // Create and run the threads...
-      // Every thread uses the same XML input object
-      // XSL stylesheet object to perform a transformation.
+      // Each thread uses the same XalanNode and 
+      // StylesheetRoot to perform a transformation.
 			doThreads(10);
 		}
 		catch(...)
