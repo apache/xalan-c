@@ -584,19 +584,26 @@ SimpleNodeLocator::handleFoundIndex(
 	XalanNode* const	parentContext =
 				DOMServices::getParentOfNode(*localContext);
 
-	typedef XPathExecutionContext::BorrowReturnMutableNodeRefList	BorrowReturnMutableNodeRefList;
-
-	BorrowReturnMutableNodeRefList	mnl(executionContext);
-
-	step(xpath, executionContext, parentContext, startOpPos, *mnl);
-
-	if (mnl->indexOf(localContext) == MutableNodeRefList::npos)
+	if (parentContext == 0)
 	{
 		return XPath::s_MatchScoreNone;
 	}
 	else
 	{
-		return XPath::s_MatchScoreOther;
+		typedef XPathExecutionContext::BorrowReturnMutableNodeRefList	BorrowReturnMutableNodeRefList;
+
+		BorrowReturnMutableNodeRefList	mnl(executionContext);
+
+		step(xpath, executionContext, parentContext, startOpPos, *mnl);
+
+		if (mnl->indexOf(localContext) == MutableNodeRefList::npos)
+		{
+			return XPath::s_MatchScoreNone;
+		}
+		else
+		{
+			return XPath::s_MatchScoreOther;
+		}
 	}
 }
 
