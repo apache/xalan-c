@@ -91,14 +91,33 @@ struct DeleteFunctor : public std::unary_function<const T*, void>
 
 
 
+// A class similar to auto_ptr, but for arrays.
 template<class T>
 class array_auto_ptr
 {
 public:
 
-	array_auto_ptr(T*	thePointer) :
+	array_auto_ptr(T*	thePointer = 0) :
 		m_pointer(thePointer)
 	{
+	}
+
+	array_auto_ptr(array_auto_ptr&	theSource) :
+		m_pointer(theSource.release())
+	{
+	}
+
+	array_auto_ptr&
+	operator=(array_auto_ptr&	theRHS)
+	{
+		if (this != &theRHS)
+		{
+			delete m_pointer;
+
+			m_pointer = theRHS.release();
+		}
+
+		return *this;
 	}
 
 	~array_auto_ptr()
