@@ -547,7 +547,7 @@ XalanEXSLTFunctionDecodeURI::execute(
 											    theString[i+1],theString[i+2]);
 			i+=2;
 
-			if (byte2 & 0x80 == 0) 
+			if ((byte2 & 0x80) == 0) 
 			{
 				// invalid byte, bypass rest of this sequence
 				i+= (numOctets - 2) * s_octetSize;
@@ -564,7 +564,7 @@ XalanEXSLTFunctionDecodeURI::execute(
 											    theString[i+1],theString[i+2]);
 			i+=2;
 			
-			if (byte2 & 0x80 == 0 || byte3 & 0x80 == 0)
+			if ((byte2 & 0x80) == 0 || (byte3 & 0x80) == 0)
 			{
 				// invalid byte, bypass rest of this sequence
 				i+= (numOctets - 3) * s_octetSize;
@@ -584,7 +584,7 @@ XalanEXSLTFunctionDecodeURI::execute(
 											    theString[i+1],theString[i+2]);
 			i+=2;
 	
-			if (byte2 & 0x80 == 0 || byte3 & 0x80 == 0 || byte4 & 0x80 == 0)
+			if ((byte2 & 0x80) == 0 || (byte3 & 0x80) == 0 || (byte4 & 0x80) == 0)
 			{
 				// invalid byte, bypass rest of this sequence
 				i+= (numOctets - 4) * s_octetSize;
@@ -616,17 +616,17 @@ XalanEXSLTFunctionDecodeURI::hexCharsToByte(
 	XalanDOMChar curChar = lowHexChar;
 	for (int place = 0; place < 2; ++place)
 	{
-		if (  curChar >= XalanUnicode::charDigit_0 
+		if (curChar >= XalanUnicode::charDigit_0 
 			&& curChar <= XalanUnicode::charDigit_9) // Digit 
 		{
 			byte += XalanDOMChar((curChar - XalanUnicode::charDigit_0) << (place * 4));
 		}
-		else if (   curChar >= XalanUnicode::charLetter_A 
+		else if (curChar >= XalanUnicode::charLetter_A 
 			  	 && curChar <= XalanUnicode::charLetter_F) // Uppercase
 		{
 			byte += XalanDOMChar((curChar - XalanUnicode::charLetter_A + 10) << (place * 4));
 		}
-		else if (   curChar >= XalanUnicode::charLetter_a
+		else if (curChar >= XalanUnicode::charLetter_a
 				 && curChar <= XalanUnicode::charLetter_f)  // Lowercase
 		{
 			byte += XalanDOMChar((curChar - XalanUnicode::charLetter_a + 10) << place);
