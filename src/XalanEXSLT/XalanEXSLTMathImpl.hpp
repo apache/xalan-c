@@ -362,13 +362,13 @@ private:
 	static const XalanDOMChar	s_sqrt1_2String[];
 	static const XalanDOMChar	s_sqrt2String[];
 
-	static const char	s_eValueString[];
-	static const char	s_ln10ValueString[];
-	static const char	s_ln2ValueString[];
-	static const char	s_log2EValueString[];
-	static const char	s_piValueString[];
-	static const char	s_sqrt1_2ValueString[];
-	static const char	s_sqrt2ValueString[];
+	static const double		s_eValues[];
+	static const double		s_ln10Values[];
+	static const double		s_ln2Values[];
+	static const double		s_log2EValues[];
+	static const double		s_piValues[];
+	static const double		s_sqrt1_2Values[];
+	static const double		s_sqrt2Values[];
 
 
 	// Not implemented...
