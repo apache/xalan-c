@@ -397,11 +397,17 @@ DOMServices::isNodeAfter(
 {
 	bool		isNodeAfter = false;
 
+	// Doesn't matter in this case ...
+	if (XalanNode::DOCUMENT_NODE == node1.getNodeType()
+			&& XalanNode::DOCUMENT_NODE == node2.getNodeType()) return false;
+	
 	const XalanNode*	parent1 = getParentOfNode(node1);
-	assert(parent1 != 0);
+// @@ Could be document node
+//	assert(parent1 != 0);
 
 	const XalanNode*	parent2 = getParentOfNode(node2);
-	assert(parent2 != 0);
+// @@ Could be document node
+//	assert(parent2 != 0);
 
 	// Optimize for most common case
 	if(parent1 == parent2) // then we know they are siblings
@@ -489,16 +495,17 @@ DOMServices::isNodeAfter(
 			}
 
 			prevChild1 = startNode1;
-			assert(prevChild1 != 0);
+// @@ Could be document node
+//			assert(prevChild1 != 0);
 
 			startNode1 = getParentOfNode(*startNode1);
-			assert(startNode1 != 0);
+//			assert(startNode1 != 0);
 
 			prevChild2 = startNode2;
-			assert(prevChild2 != 0);
+//			assert(prevChild2 != 0);
 
 			startNode2 = getParentOfNode(*startNode2);
-			assert(startNode2 != 0);
+//			assert(startNode2 != 0);
 		}
 	}
 
