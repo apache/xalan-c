@@ -150,8 +150,8 @@
     <ol>
       <li>The Xalan build files are written for GNU make, and will not work with other make utilities.<br/><br/></li>    
       <li>Set the XERCESCROOT environment variable to the path to the root of &xml4c;.<br/><br/></li>    
-      <li>Set the XALANCROOT environment variable to the path to the root of the &xslt4c;
-       distribution.<br/><br/></li>
+      <li>Set the XALANCROOT environment variable to the path to the c directory in the root of the &xslt4c;
+       distribution.  For example, if the distribution is located in "/home/xalan", you would set the XALANCROOT to "/home/xalan/xml-xalan/c". <br/><br/></li>
       <li>(Optional) If you are including the ICUBridge, install the ICU, use the shell to define XALAN_USE_ICU and to set the ICUROOT environment variable to the path to the ICU root. For more information, see (see <link idref="usagepatterns" anchor="icu">Using the ICU</link>)<br/><br/></li>
       <li>Change directory to xml-xalan/c/src in the &xslt4c; distribution.<br/><br/></li>      
       <li>Run the runConfigure utility with at least the platform flag (Linux) or the platform, C compilier, and C++ compiler flags (AIX) as indicated below.<br/><br/>
