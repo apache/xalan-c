@@ -58,6 +58,9 @@
 # 
 #
 # $Log$
+# Revision 1.19  2003/04/05 05:21:56  blautenb
+# Fix for bug 18675
+#
 # Revision 1.18  2003/03/20 16:38:32  dbertoni
 # Updates for Intel compiler on Linux.
 #
@@ -169,7 +172,7 @@ if test $1 = "-h"; then
 fi
 
 # Get the command line parameters
-if test -x /usr/bin/getopt; then
+if test -x /bin/getopt -o -x /usr/bin/getopt; then
 set -- `getopt C:p:c:x:dm:n:t:r:b:l:z:h $*`
 else
 set -- `getopts C:p:c:x:dm:n:t:r:b:l:z:h $*`
