@@ -2375,6 +2375,3 @@ StylesheetExecutionContextDefault::cleanUpTransients()
 
 	assert(m_matchPatternCache.size() == 0);
 }
-
-
-

@@ -287,16 +287,6 @@ public:
 		m_namespaceDecls = ns;
 	}
 
-	/*
-	 * Get the top entry on the namespace stack, or 0, if
-	 * there is nothing on the stack.
-	 */
-	const NamespaceVectorType&
-	getCurrentNamespace() const
-	{
-		return m_namespaces.size() > 0 ? m_namespaces.back() : s_emptyNamespace;
-	}
-
 	/** 
 	 * Push the namespace declarations from the current attribute 
 	 * list onto the namespace stack.
@@ -1185,12 +1175,6 @@ private:
 	 * for mapping from prefix to namespace URI.
 	 */
 	NamespaceVectorType 					m_namespaceDecls;
-
-	/**
-	 * This is pushed on the m_resultNameSpaces stack 'till a xmlns attribute is
-	 * found.
-	 */
-	static const NamespaceVectorType		s_emptyNamespace;
 
 	/**
 	 * Tells if the stylesheet is without an xsl:stylesheet and xsl:template

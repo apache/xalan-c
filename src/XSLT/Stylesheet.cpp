@@ -107,10 +107,6 @@
 
 
 
-const Stylesheet::NamespaceVectorType	Stylesheet::s_emptyNamespace;
-
-
-
 const XalanDOMString			Stylesheet::s_emptyString;
 
 const XalanQNameByReference		Stylesheet::s_emptyQName;
