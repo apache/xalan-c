@@ -118,14 +118,6 @@ SOURCE=..\..\..\..\src\PlatformSupport\ExecutionContext.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\PlatformSupport\Factory.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\src\PlatformSupport\FactoryObject.cpp
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\..\..\src\PlatformSupport\NamedNodeMapAttributeList.cpp
 # End Source File
 # Begin Source File
@@ -219,14 +211,6 @@ SOURCE=..\..\..\..\src\PlatformSupport\DoubleSupport.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\PlatformSupport\ExecutionContext.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\src\PlatformSupport\Factory.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\src\PlatformSupport\FactoryObject.hpp
 # End Source File
 # Begin Source File
 
