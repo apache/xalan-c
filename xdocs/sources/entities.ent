@@ -76,6 +76,7 @@
 <!ENTITY xslt4c-winnt-dist "&xslt4c-dist;&winnt-dist;&win_ext;">
 <!ENTITY xslt4c-win2k-dist "&xslt4c-dist;&win2k-dist;&win_ext;">
 <!ENTITY xslt4c-winxp-dist "&xslt4c-dist;&winxp-dist;&win_ext;">
+<!ENTITY xslt4c-win32-dist "&xslt4c-dist;&win32-dist;&win_ext;">
 <!ENTITY xslt4c-win2003l_64-dist "&xslt4c-dist;&win2003l_64-dist;&win_ext;">
 <!ENTITY xslt4c-src_dist_zip "&xslt4c-dist;-src&win_ext;">
 <!ENTITY xslt4c-src_dist_targz "&xslt4c-dist;-src&unix_ext;">
