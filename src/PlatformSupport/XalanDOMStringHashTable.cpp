@@ -111,6 +111,20 @@ XalanDOMStringHashTable::getBucketCounts(BucketCountsType&	theVector) const
 
 
 
+#if defined(XALAN_NEEDS_EXPLICIT_TEMPLATE_INSTANTIATION)
+bool
+XalanDOMStringHashTable::equalsXalanDOMString::operator()(const XalanDOMString*		theString) const
+{
+	if (m_length != length(*theString))
+	{
+		return false;
+	}
+	else
+	{
+		return equals(m_string, c_wstr(*theString), m_length);
+	}
+}
+#else
 struct
 equalsXalanDOMString
 {
@@ -141,6 +155,7 @@ private:
 
 	const XalanDOMString::size_type		m_length;
 };
+#endif
 
 
 

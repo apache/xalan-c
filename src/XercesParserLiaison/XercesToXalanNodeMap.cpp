@@ -95,21 +95,6 @@ XercesToXalanNodeMap::addAssociation(
 	NodeImpl* const		theImpl = XercesDOM_NodeHack::getImpl(theXercesNode);
 
 	m_xercesMap.insert(XercesNodeMapType::value_type(theImpl, theXalanNode));
-
-	// Keeping two-way indexes is very memory consumptive, and we don't
-	// need it now...
-#if defined(XERCES_PARSER_LIASON_FAST_TWO_WAY_MAPPING)
-	try
-	{
-		m_xalanMap.insert(XalanNodeMapType::value_type(theXalanNode, theImpl));
-	}
-	catch(...)
-	{
-		m_xercesMap.erase(m_xercesMap.find(theImpl));
-
-		throw;
-	}
-#endif
 }
 
 
@@ -120,33 +105,6 @@ XercesToXalanNodeMap::clear()
 	m_xalanMap.clear();
 	m_xercesMap.clear();
 }
-
-
-
-#if !defined(XERCES_PARSER_LIASON_FAST_TWO_WAY_MAPPING)
-
-// I should be able to make this out of a
-// bunch of compose<> and select2nd<> adapters...
-
-class NameMapEqualsFunctor
-{
-public:
-
-	NameMapEqualsFunctor(const XalanNode*	theXalanNode) :
-		m_value(theXalanNode)
-	{
-	}
-
-	bool
-	operator()(const XercesToXalanNodeMap::XercesNodeMapType::value_type&	thePair) const
-	{
-		return m_value == thePair.second;
-	}
-
-private:
-
-	const XalanNode*	m_value;
-};
 
 
 
@@ -171,5 +129,3 @@ XercesToXalanNodeMap::getNodeImpl(const XalanNode*	theXalanNode) const
 		return 0;
 	}
 }
-
-#endif

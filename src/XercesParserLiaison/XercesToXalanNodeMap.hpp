@@ -84,6 +84,16 @@ class XALAN_XERCESPARSERLIAISON_EXPORT XercesToXalanNodeMap
 {
 public:
 
+#if defined(XALAN_NO_NAMESPACES)
+	typedef map<XalanNode*, NodeImpl*, less<XalanNode*> >	XalanNodeMapType;
+
+	typedef map<NodeImpl*, XalanNode*, less<NodeImpl*> >	XercesNodeMapType;
+#else
+	typedef std::map<XalanNode*, NodeImpl*>	XalanNodeMapType;
+
+	typedef std::map<NodeImpl*, XalanNode*>	XercesNodeMapType;
+#endif
+
 	XercesToXalanNodeMap();
 
 	~XercesToXalanNodeMap();
@@ -124,30 +134,28 @@ public:
 		return XercesDOM_NodeHack(getNodeImpl(theXalanNode));
 	}
 
-#if defined(XERCES_PARSER_LIASON_FAST_TWO_WAY_MAPPING)
-
-	NodeImpl*
-	getNodeImpl(const XalanNode*	theXalanNode) const
-	{
-		const XalanNodeMapType::const_iterator	i =
-				m_xalanMap.find(theXalanNode);
-
-		if (i == m_xalanMap.end())
-		{
-			return 0;
-		}
-		else
-		{
-			return (*i).second;
-		}
-	}
-
-#else
-
 	NodeImpl*
 	getNodeImpl(const XalanNode*	theXalanNode) const;
 
-#endif
+	class NameMapEqualsFunctor
+	{
+	public:
+
+		NameMapEqualsFunctor(const XalanNode*	theXalanNode) :
+			m_value(theXalanNode)
+		{
+		}
+
+		bool
+		operator()(const XercesNodeMapType::value_type&		thePair) const
+		{
+			return m_value == thePair.second;
+		}
+
+	private:
+
+		const XalanNode*	m_value;
+	};
 
 	NodeImpl*
 	getNodeImpl(const DOM_Node&		theXercesNode) const
@@ -155,19 +163,10 @@ public:
 		return XercesDOM_NodeHack::getImpl(theXercesNode);
 	}
 
-#if defined(XALAN_NO_NAMESPACES)
-	typedef map<XalanNode*, NodeImpl*, less<XalanNode*> >	XalanNodeMapType;
-
-	typedef map<NodeImpl*, XalanNode*, less<NodeImpl*> >	XercesNodeMapType;
-#else
-	typedef std::map<XalanNode*, NodeImpl*>	XalanNodeMapType;
-
-	typedef std::map<NodeImpl*, XalanNode*>	XercesNodeMapType;
-#endif
-
 private:
 
 	XalanNodeMapType	m_xalanMap;
+
 	XercesNodeMapType	m_xercesMap;
 };
 

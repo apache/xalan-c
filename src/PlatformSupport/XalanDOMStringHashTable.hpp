@@ -220,6 +220,29 @@ public:
 			const XalanDOMString&	theString,
 			size_t					theBucketIndex);
 
+#if defined(XALAN_NEEDS_EXPLICIT_TEMPLATE_INSTANTIATION)
+	struct
+	equalsXalanDOMString
+	{
+		equalsXalanDOMString(
+				const XalanDOMChar*			theString,
+				XalanDOMString::size_type	theLength) :
+			m_string(theString),
+			m_length(theLength)
+		{
+		}
+
+		bool
+		operator()(const XalanDOMString*	theString) const;
+
+	private:
+
+		const XalanDOMChar* const			m_string;
+
+		const XalanDOMString::size_type		m_length;
+	};
+#endif
+
 private:
 
 	// Not implemented, for now...
