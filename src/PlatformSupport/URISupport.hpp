@@ -103,6 +103,16 @@ public:
 	 * Determine the fully qualified URI for a string.
 	 *
 	 * @param urlString string to qualify
+	 * @return string to fully qualified URI
+	 */
+	static XalanDOMString
+	getURLStringFromString(
+			const XalanDOMString&	urlString);
+
+	/**
+	 * Determine the fully qualified URI for a string.
+	 *
+	 * @param urlString string to qualify
 	 * @param base base location for URI
 	 * @return auto pointer to fully qualified URI
 	 */
@@ -111,6 +121,17 @@ public:
 			const XalanDOMString&	urlString,
 			const XalanDOMString&	base);
 
+	/**
+	 * Determine the fully qualified URI for a string.
+	 *
+	 * @param urlString string to qualify
+	 * @param base base location for URI
+	 * @return string to fully qualified URI
+	 */
+	static XalanDOMString
+	getURLStringFromString(
+			const XalanDOMString&	urlString,
+			const XalanDOMString&	base);
 
 	/**
 	 * Normalizes the string passed in, replacing
