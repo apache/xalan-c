@@ -326,9 +326,22 @@ XercesBridgeNavigator::appendChild(
 
 
 XalanElement*
-XercesBridgeNavigator::getOwnerElement(const DOM_Attr&		theXercesAttr) const
+XercesBridgeNavigator::getOwnerElement(const DOM_Attr&	theXercesAttr) const
 {
-	return m_ownerDocument->mapNode(theXercesAttr.getOwnerElement());
+	if (m_parentNode != 0)
+	{
+		assert(m_parentNode->getNodeType() == XalanNode::ELEMENT_NODE);
+
+#if defined(XALAN_OLD_STYLE_CASTS)
+		return (XalanElement*)m_parentNode;
+#else
+		return static_cast<XalanElement*>(m_parentNode);
+#endif
+	}
+	else
+	{
+		return m_ownerDocument->mapNode(theXercesAttr.getOwnerElement());
+	}
 }
 
 
