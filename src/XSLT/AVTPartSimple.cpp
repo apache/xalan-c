@@ -74,7 +74,7 @@ AVTPartSimple::AVTPartSimple(
 			const XalanDOMChar*				val,
 			XalanDOMString::size_type		len) :
 	AVTPart(),
-	m_val(constructionContext.allocateVector(val, len, false)),
+	m_val(constructionContext.allocateXalanDOMCharVector(val, len, false)),
 	m_len(len)
 {
 }

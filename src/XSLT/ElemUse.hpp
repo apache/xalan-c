@@ -81,10 +81,10 @@ class ElemUse : public ElemTemplateElement
 {
 public:
 
-#if defined(XALAN_NO_NAMESPACES)
-	typedef vector<XalanQNameByValue>		QNameVectorType;
+#if defined(XALAN_SIZE_T_IN_NAMESPACE_STD)
+	typedef std::size_t		size_type;
 #else
-	typedef std::vector<XalanQNameByValue>	QNameVectorType;
+	typedef size_t			size_type;
 #endif
 
 	/**
@@ -155,7 +155,9 @@ protected:
 
 private:
 
-	QNameVectorType		m_attributeSetsNames;
+	const XalanQName**	m_attributeSetsNames;
+
+	size_type			m_attributeSetsNamesCount;
 };
 
 

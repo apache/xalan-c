@@ -118,17 +118,19 @@ public:
 
 	virtual void
 	initXPath(
-			XPath&					pathObj,
-			const XalanDOMString&	expression,
-			const PrefixResolver&	prefixResolver,
-			const Locator*			locator = 0);
+			XPath&						pathObj,
+			XPathConstructionContext&	constructionContext,
+			const XalanDOMString&		expression,
+			const PrefixResolver&		resolver,
+			const Locator*				locator = 0);
 
 	virtual void
 	initMatchPattern(
-			XPath&					pathObj,
-			const XalanDOMString&	expression,
-			const PrefixResolver&	prefixResolver,
-			const Locator*			locator = 0);
+			XPath&						pathObj,
+			XPathConstructionContext&	constructionContext,
+			const XalanDOMString&		expression,
+			const PrefixResolver&		resolver,
+			const Locator*				locator = 0);
 
 private:
 
@@ -237,15 +239,7 @@ private:
 	 * if s is also null).
 	 */
 	bool
-	tokenIs(const char*		s) const;
-
-	/**
-	 * Check if m_token==s. If m_token is null, this won't throw
-	 * an exception, instead it just returns false (or true
-	 * if s is also null).
-	 */
-	bool
-	tokenIs(char	c) const;
+	tokenIs(XalanDOMChar	c) const;
 
 	/**
 	 * Lookahead of the current token in order to 
@@ -344,14 +338,7 @@ private:
 	 * isn't there.
 	 */
 	void
-	consumeExpected(const char*		expected);
-
-	/**
-	 * Consume an expected token, throwing an exception if it 
-	 * isn't there.
-	 */
-	void
-	consumeExpected(char	expected);
+	consumeExpected(XalanDOMChar	expected);
 
 	bool
 	isCurrentLiteral() const;
@@ -793,6 +780,11 @@ private:
 	 * A pointer to the current XPath.
 	 */
 	XPath*							m_xpath;
+
+	/**
+	 * A pointer to the current XPathConstructionContext.
+	 */
+	XPathConstructionContext*		m_constructionContext;
 
 	/**
 	 * A pointer to the current XPath's expression.

@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -54,87 +54,35 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-#if !defined(XPATHPROCESSOR_HEADER_GUARD_1357924680)
-#define XPATHPROCESSOR_HEADER_GUARD_1357924680
+
+// Class header file.
+#include "XalanAVTPartXPathAllocator.hpp"
 
 
 
-// Base include file.  Must be first.
-#include <XPath/XPathDefinitions.hpp>
-
-
-
-// $$$ ToDo: This is necessary while XalanDOMString is still a typedef...
-#include <XalanDOM/XalanDOMString.hpp>
-
-
-
-class Function;
-class Locator;
-class PrefixResolver;
-class XPath;
-class XPathConstructionContext;
-
-
-
-class XALAN_XPATH_EXPORT XPathProcessor
+XalanAVTPartXPathAllocator::XalanAVTPartXPathAllocator(size_type	theBlockCount) :
+	m_allocator(theBlockCount)
 {
-public:
-
-	explicit
-	XPathProcessor();
-
-	virtual
-	~XPathProcessor();
-
-	/**
-	 * Given a string, make an XPath object, in order that a parse doesn't 
-	 * have to be done each time the expression is executed.
-	 *
-	 * @param pathObj        XPath object to be initialized
-	 * @param constructionContext The construction context
-	 * @param expression     expression that will be evaluated
-	 * @param resolver       prefix resolver to use
-	 * @param locator		 the Locator to use for error report. May be null
-	 */
-	virtual void
-	initXPath(
-			XPath&						pathObj,
-			XPathConstructionContext&	constructionContext,
-			const XalanDOMString&		expression,
-			const PrefixResolver&		resolver,
-			const Locator*				locator = 0) = 0;
-
-	/**
-	 * Given a string, create an XSLT Match Pattern object.
-	 *
-	 * @param pathObj        XPath object to be initialized
-	 * @param constructionContext The construction context
-	 * @param expression     expression that will be evaluated
-	 * @param resolver       prefix resolver to use
-	 * @param locator		 the Locator to use for error report. May be null
-	 */
-	virtual void
-	initMatchPattern(
-			XPath&						pathObj,
-			XPathConstructionContext&	constructionContext,
-			const XalanDOMString&		expression,
-			const PrefixResolver&		resolver,
-			const Locator*				locator = 0) = 0;
-
-	/**
-	 * Given a string, and a reference to a function object, install the
-	 * function with the given name.
-	 *
-	 * @param theFunctionName name of function
-	 * @param theFunction     function object corresponding to name
-	 */
-	static void
-	installFunction(
-			const XalanDOMString&	theFunctionName,
-			const Function&			theFunction);
-};
+}
 
 
 
-#endif	// XPATHPROCESSOR_HEADER_GUARD_1357924680
+XalanAVTPartXPathAllocator::~XalanAVTPartXPathAllocator()
+{
+}
+
+
+
+XalanAVTPartXPathAllocator::data_type*
+XalanAVTPartXPathAllocator::create(const XPath*	xpath)
+{
+	data_type* const	theBlock = m_allocator.allocateBlock();
+	assert(theBlock != 0);
+
+	data_type* const	theResult =
+		new(theBlock) data_type(xpath);
+
+	m_allocator.commitAllocation(theBlock);
+
+	return theResult;
+}

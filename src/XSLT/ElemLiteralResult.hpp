@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -118,12 +118,6 @@ public:
 	virtual void
 	execute(StylesheetExecutionContext&		executionContext) const;
 
-#if defined(XALAN_NO_NAMESPACES)
-	typedef vector<const AVT*>				AVTVectorType;
-#else
-	typedef std::vector<const AVT*>			AVTVectorType;
-#endif
-
 protected:
 
 	/**
@@ -186,22 +180,22 @@ private:
 	/**
 	 * The name of the literal result element.
 	 */
-	const XalanDOMString&		m_elementName;
+	const XalanDOMString&	m_elementName;
 
 	/**
 	 * A vector to keep track of the attribute elements.
 	 */
-	AVTVectorType				m_avts;
+	const AVT**				m_avts;
 
 	/**
 	 * The size of m_avts, once the stylesheet is compiled...
 	 */
-	AVTVectorType::size_type	m_attrCount;
+	unsigned int			m_avtsCount;
 
 	/**
 	 * If true, the literal result element has a namespace prefix...
 	 */
-	const bool					m_hasPrefix;
+	const bool				m_hasPrefix;
 };
 
 

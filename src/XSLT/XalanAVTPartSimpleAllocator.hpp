@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -54,87 +54,118 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-#if !defined(XPATHPROCESSOR_HEADER_GUARD_1357924680)
-#define XPATHPROCESSOR_HEADER_GUARD_1357924680
+
+#if !defined(XALANAVTPARTSIMPLEALLOCATOR_INCLUDE_GUARD_12455133)
+#define XALANAVTPARTSIMPLEALLOCATOR_INCLUDE_GUARD_12455133
 
 
 
 // Base include file.  Must be first.
-#include <XPath/XPathDefinitions.hpp>
+#include <XSLT/XSLTDefinitions.hpp>
 
 
 
-// $$$ ToDo: This is necessary while XalanDOMString is still a typedef...
-#include <XalanDOM/XalanDOMString.hpp>
+#include <XSLT/AVTPartSimple.hpp>
 
 
 
-class Function;
-class Locator;
-class PrefixResolver;
-class XPath;
-class XPathConstructionContext;
+#include <PlatformSupport/ArenaAllocator.hpp>
 
 
 
-class XALAN_XPATH_EXPORT XPathProcessor
+class XALAN_XSLT_EXPORT XalanAVTPartSimpleAllocator
 {
 public:
 
-	explicit
-	XPathProcessor();
+	typedef AVTPartSimple						data_type;
 
-	virtual
-	~XPathProcessor();
+#if defined(XALAN_NO_DEFAULT_TEMPLATE_ARGUMENTS)
+	typedef ArenaBlock<data_type>				ArenaBlockType;
+	typedef ArenaAllocator<data_type,
+						   ArenaBlockType>		ArenaAllocatorType;
+#else
+	typedef ArenaAllocator<data_type>			ArenaAllocatorType;
+#endif
 
-	/**
-	 * Given a string, make an XPath object, in order that a parse doesn't 
-	 * have to be done each time the expression is executed.
-	 *
-	 * @param pathObj        XPath object to be initialized
-	 * @param constructionContext The construction context
-	 * @param expression     expression that will be evaluated
-	 * @param resolver       prefix resolver to use
-	 * @param locator		 the Locator to use for error report. May be null
-	 */
-	virtual void
-	initXPath(
-			XPath&						pathObj,
-			XPathConstructionContext&	constructionContext,
-			const XalanDOMString&		expression,
-			const PrefixResolver&		resolver,
-			const Locator*				locator = 0) = 0;
+	typedef ArenaAllocatorType::size_type		size_type;
 
 	/**
-	 * Given a string, create an XSLT Match Pattern object.
+	 * Construct an instance that will allocate blocks of the specified size.
 	 *
-	 * @param pathObj        XPath object to be initialized
-	 * @param constructionContext The construction context
-	 * @param expression     expression that will be evaluated
-	 * @param resolver       prefix resolver to use
-	 * @param locator		 the Locator to use for error report. May be null
+	 * @param theBlockSize The block size.
 	 */
-	virtual void
-	initMatchPattern(
-			XPath&						pathObj,
-			XPathConstructionContext&	constructionContext,
-			const XalanDOMString&		expression,
-			const PrefixResolver&		resolver,
-			const Locator*				locator = 0) = 0;
+	XalanAVTPartSimpleAllocator(size_type		theBlockCount);
+
+	~XalanAVTPartSimpleAllocator();
+	
+	/**
+	 * Create an instance.
+	 *
+	 * @param constructionContext  context when object constructed
+	 * @param val A pure string section of an AVT
+	 * @param len The length of val
+	 *
+	 * @return A pointer to the new instance.
+	 */
+	data_type*
+	create(
+			StylesheetConstructionContext&	constructionContext,
+			const XalanDOMChar*				val,
+			XalanDOMString::size_type		len);
 
 	/**
-	 * Given a string, and a reference to a function object, install the
-	 * function with the given name.
-	 *
-	 * @param theFunctionName name of function
-	 * @param theFunction     function object corresponding to name
+	 * Determine if an object is owned by the allocator...
 	 */
-	static void
-	installFunction(
-			const XalanDOMString&	theFunctionName,
-			const Function&			theFunction);
+	bool
+	ownsObject(const data_type*		theObject)
+	{
+		return m_allocator.ownsObject(theObject);
+	}
+
+	/**
+	 * Delete all objects from the allocator.	 
+	 */	
+	void
+	reset()
+	{
+		m_allocator.reset();
+	}
+
+	/**
+	 * Get the number of ArenaBlocks currently allocated.
+	 *
+	 * @return The number of blocks.
+	 */
+	size_type
+	getBlockCount() const
+	{
+		return m_allocator.getBlockCount();
+	}
+
+	/**
+	 * Get size of an ArenaBlock, that is, the number
+	 * of objects in each block.
+	 *
+	 * @return The size of the block
+	 */
+	size_type
+	getBlockSize() const
+	{
+		return m_allocator.getBlockSize();
+	}
+
+private:
+
+	// Not implemented...
+	XalanAVTPartSimpleAllocator(const XalanAVTPartSimpleAllocator&);
+
+	XalanAVTPartSimpleAllocator&
+	operator=(const XalanAVTPartSimpleAllocator&);
+
+	// Data members...
+	ArenaAllocatorType	m_allocator;
 };
 
 
 
-#endif	// XPATHPROCESSOR_HEADER_GUARD_1357924680
+#endif	// XALANAVTPARTSIMPLEALLOCATOR_INCLUDE_GUARD_12455133

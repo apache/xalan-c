@@ -158,7 +158,6 @@ Stylesheet::Stylesheet(
 	m_attributeSetsSize(0),
 	m_surrogateChildren(*this),
 	m_elemDecimalFormats(),
-	m_prefixAliases(),
 	m_namespacesHandler()
 {
 	if (length(m_baseIdent) == 0)
@@ -1355,28 +1354,10 @@ Stylesheet::processNSAliasElement(
 	}
 	else
 	{
-#if 1
-		// $$$ ToDo: Enable other code.  Perhaps an error?
-		m_prefixAliases[*stylesheetNamespace] = *resultNamespace;
-
 		m_namespacesHandler.setNamespaceAlias(
 				constructionContext,
 				*stylesheetNamespace,
 				*resultNamespace);
-#else
-		const PrefixAliasesMapType::iterator	i =
-			m_prefixAliases.find(*stylesheetNamespace);
-
-		if (i != m_prefixAliases.end())
-		{
-			// $$$ ToDo: This could also be an error?
-			(*i).second = *resultNamespace;
-		}
-		else
-		{
-			m_prefixAliases.insert(PrefixAliasesMapType::value_type(*stylesheetNamespace, *resultNamespace));
-		}
-#endif
 	}
 }
 
@@ -1435,13 +1416,12 @@ Stylesheet::getDecimalFormatSymbols(const XalanQName&	theQName) const
 
 void
 Stylesheet::applyAttrSets(
-			const QNameVectorType&			attributeSetsNames,
+			const XalanQName**				attributeSetsNames,
+			size_type						attributeSetsNamesCount,
 			StylesheetExecutionContext& 	executionContext,			
 			XalanNode*						sourceNode) const
 {
-	const QNameVectorType::size_type	nNames = attributeSetsNames.size();
-
-	if(0 != nNames)
+	if(0 != attributeSetsNamesCount)
 	{
 		// Process up the import chain...
 		const StylesheetVectorType::const_reverse_iterator	theEnd = m_imports.rend();
@@ -1450,16 +1430,18 @@ Stylesheet::applyAttrSets(
 		while(i != theEnd)
 		{
 			(*i)->applyAttrSets(
-				attributeSetsNames, 
+				attributeSetsNames,
+				attributeSetsNamesCount,
 				executionContext,
 				sourceNode);
 
 			++i;
 		}
 
-		for(QNameVectorType::size_type j = 0; j < nNames; j++)
+		for(QNameVectorType::size_type j = 0; j < attributeSetsNamesCount; j++)
 		{
-			const XalanQName&	qname = attributeSetsNames[j];
+			const XalanQName* const		qname = attributeSetsNames[j];
+			assert(qname != 0);
 
 			assert(m_attributeSetsSize == m_attributeSets.size());
 
@@ -1468,7 +1450,7 @@ Stylesheet::applyAttrSets(
 				const ElemAttributeSet* const	attrSet = m_attributeSets[k];
 				assert(attrSet != 0);
 
-				if(qname.equals(attrSet->getQName()))
+				if(qname->equals(attrSet->getQName()))
 				{
 					attrSet->execute(executionContext);
 				}

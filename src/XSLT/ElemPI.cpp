@@ -93,8 +93,8 @@ ElemPI::ElemPI(
 
 		if(equals(aname, Constants::ATTRNAME_NAME))
 		{			
-			m_nameAVT = new AVT(getLocator(), aname, atts.getValue(i),
-				*this, constructionContext);
+			m_nameAVT =
+					constructionContext.createAVT(getLocator(), aname, atts.getValue(i), *this);
 		}
 		else if(isAttrOK(aname, atts, i, constructionContext) == false ||
 				processSpaceAttr(aname, atts, i, constructionContext))
@@ -119,11 +119,6 @@ ElemPI::ElemPI(
 
 ElemPI::~ElemPI()
 {
-#if defined(XALAN_CANNOT_DELETE_CONST)
-	delete (AVT*)m_nameAVT;
-#else
-	delete m_nameAVT;
-#endif
 }
 
 

@@ -93,6 +93,7 @@ public:
 	 *
 	 * @param constructionContext  context when object constructed
 	 * @param val A pure string section of an AVT
+	 * @param len The length of val
 	 */
 	AVTPartSimple(
 			StylesheetConstructionContext&	constructionContext,

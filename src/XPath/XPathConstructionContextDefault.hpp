@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -53,9 +53,11 @@
  * Business Machines, Inc., http://www.ibm.com.  For more
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
+ *
+ * @author <a href="mailto:david_n_bertoni@lotus.com">David N. Bertoni</a>
  */
-#if !defined(XPATHPROCESSOR_HEADER_GUARD_1357924680)
-#define XPATHPROCESSOR_HEADER_GUARD_1357924680
+#if !defined(XPATHCONSTRUCTIONCONTEXTDEFAULT_HEADER_GUARD_1357924680)
+#define XPATHCONSTRUCTIONCONTEXTDEFAULT_HEADER_GUARD_1357924680
 
 
 
@@ -64,77 +66,58 @@
 
 
 
-// $$$ ToDo: This is necessary while XalanDOMString is still a typedef...
-#include <XalanDOM/XalanDOMString.hpp>
+#include <PlatformSupport/XalanDOMStringCache.hpp>
+#include <PlatformSupport/XalanDOMStringPool.hpp>
 
 
 
-class Function;
-class Locator;
-class PrefixResolver;
-class XPath;
-class XPathConstructionContext;
+// Base class header file...
+#include <XPath/XPathConstructionContext.hpp>
 
 
 
-class XALAN_XPATH_EXPORT XPathProcessor
+/**
+ *
+ * An default implementation of an abtract class which provides support for
+ * constructing the internal representation  of an XPath.
+ *
+ */
+class XALAN_XPATH_EXPORT XPathConstructionContextDefault : public XPathConstructionContext
 {
 public:
 
-	explicit
-	XPathProcessor();
+	/*
+	 * Construct an instance.
+	 */
+	XPathConstructionContextDefault();
 
 	virtual
-	~XPathProcessor();
+	~XPathConstructionContextDefault();
 
-	/**
-	 * Given a string, make an XPath object, in order that a parse doesn't 
-	 * have to be done each time the expression is executed.
-	 *
-	 * @param pathObj        XPath object to be initialized
-	 * @param constructionContext The construction context
-	 * @param expression     expression that will be evaluated
-	 * @param resolver       prefix resolver to use
-	 * @param locator		 the Locator to use for error report. May be null
-	 */
 	virtual void
-	initXPath(
-			XPath&						pathObj,
-			XPathConstructionContext&	constructionContext,
-			const XalanDOMString&		expression,
-			const PrefixResolver&		resolver,
-			const Locator*				locator = 0) = 0;
+	reset();
 
-	/**
-	 * Given a string, create an XSLT Match Pattern object.
-	 *
-	 * @param pathObj        XPath object to be initialized
-	 * @param constructionContext The construction context
-	 * @param expression     expression that will be evaluated
-	 * @param resolver       prefix resolver to use
-	 * @param locator		 the Locator to use for error report. May be null
-	 */
-	virtual void
-	initMatchPattern(
-			XPath&						pathObj,
-			XPathConstructionContext&	constructionContext,
-			const XalanDOMString&		expression,
-			const PrefixResolver&		resolver,
-			const Locator*				locator = 0) = 0;
+	virtual const XalanDOMString&
+	getPooledString(const XalanDOMString&	theString);
 
-	/**
-	 * Given a string, and a reference to a function object, install the
-	 * function with the given name.
-	 *
-	 * @param theFunctionName name of function
-	 * @param theFunction     function object corresponding to name
-	 */
-	static void
-	installFunction(
-			const XalanDOMString&	theFunctionName,
-			const Function&			theFunction);
+	virtual const XalanDOMString&
+	getPooledString(
+			const XalanDOMChar*			theString,
+			XalanDOMString::size_type	theLength = XalanDOMString::npos);
+
+	virtual XalanDOMString&
+	getCachedString();
+
+	virtual bool
+	releaseCachedString(XalanDOMString&		theString);
+
+private:
+
+	XalanDOMStringPool		m_stringPool;
+
+	XalanDOMStringCache		m_stringCache;
 };
 
 
 
-#endif	// XPATHPROCESSOR_HEADER_GUARD_1357924680
+#endif	// XPATHCONSTRUCTIONCONTEXTDEFAULT_HEADER_GUARD_1357924680

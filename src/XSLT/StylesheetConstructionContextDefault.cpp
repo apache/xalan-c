@@ -69,6 +69,7 @@
 
 
 
+#include <PlatformSupport/StringTokenizer.hpp>
 #include <PlatformSupport/URISupport.hpp>
 
 
@@ -93,17 +94,35 @@
 
 
 StylesheetConstructionContextDefault::StylesheetConstructionContextDefault(
-			XSLTEngineImpl&				processor,
-			XPathFactory&				xpathFactory,
-			VectorAllocatorSizeType		theAllocatorSize) :
+			XSLTEngineImpl&							processor,
+			XPathFactory&							xpathFactory,
+			VectorAllocatorSizeType					theXalanDOMCharVectorAllocatorBlockSize,
+			XalanAVTAllocator::size_type			theAVTAllocatorBlockSize,
+			XalanAVTPartSimpleAllocator::size_type	theAVTPartSimpleAllocatorBlockSize,
+			XalanAVTPartXPathAllocator::size_type	theAVTPartXPathAllocatorBlockSize,
+			VectorAllocatorSizeType					theAVTPointerVectorAllocatorBlockSize,
+			VectorAllocatorSizeType					theAVTPartPointerVectorAllocatorBlockSize,
+			XalanQNameByValueAllocator::size_type	theXalanQNameByValueAllocatorBlockSize,
+			VectorAllocatorSizeType					theXalanQNamePointerVectorAllocatorBlockSize) :
 	StylesheetConstructionContext(),
 	m_processor(processor),
 	m_xpathFactory(xpathFactory),
 	m_xpathProcessor(new XPathProcessorImpl),
 	m_stylesheets(),
 	m_stringPool(),
-	m_xalanDOMCharVectorAllocator(theAllocatorSize),
-	m_tempBuffer()
+	m_xalanDOMCharVectorAllocator(theXalanDOMCharVectorAllocatorBlockSize),
+	m_tempBuffer(),
+	m_scratchQName(),
+	m_stringCache(),
+	m_avtAllocator(theAVTAllocatorBlockSize),
+	m_avtPartSimpleAllocator(theAVTPartSimpleAllocatorBlockSize),
+	m_avtPartXPathAllocator(theAVTPartXPathAllocatorBlockSize),
+	m_avtPointerVectorAllocator(theAVTPointerVectorAllocatorBlockSize),
+	m_avtPartPointerVectorAllocator(theAVTPartPointerVectorAllocatorBlockSize),
+	m_xalanQNameByValueAllocator(theXalanQNameByValueAllocatorBlockSize),
+	m_xalanQNameVectorAllocator(theXalanQNamePointerVectorAllocatorBlockSize),
+	m_useAttributeSetsQName(XSLTEngineImpl::getXSLNameSpaceURL(), Constants::ATTRNAME_USEATTRIBUTESETS),
+	m_pointerVectorAllocator(512)
 {
 }
 
@@ -284,6 +303,8 @@ StylesheetConstructionContextDefault::reset()
 	m_stylesheets.clear();
 
 	m_xpathFactory.reset();
+
+	m_stringCache.reset();
 }
 
 
@@ -416,6 +437,7 @@ StylesheetConstructionContextDefault::createMatchPattern(
 	// will be used at run-time.
 	m_xpathProcessor->initMatchPattern(
 			*xpath,
+			*this,
 			str,
 			resolver,
 			getLocatorFromStack());
@@ -459,6 +481,7 @@ StylesheetConstructionContextDefault::createXPath(
 	// will be used at run-time.
 	m_xpathProcessor->initXPath(
 			*xpath,
+			*this,
 			str,
 			resolver,
 			getLocatorFromStack());
@@ -481,6 +504,22 @@ StylesheetConstructionContextDefault::createXPath(
 	assert(str != 0);
 
 	assign(m_tempBuffer, str);
+
+	return createXPath(locator, m_tempBuffer, resolver);
+}
+
+
+
+XPath*
+StylesheetConstructionContextDefault::createXPath(
+			const Locator*				locator,
+			const XalanDOMChar*			str,
+			XalanDOMString::size_type	len,
+			const PrefixResolver&		resolver)
+{
+	assert(str != 0);
+
+	assign(m_tempBuffer, str, len);
 
 	return createXPath(locator, m_tempBuffer, resolver);
 }
@@ -538,9 +577,24 @@ StylesheetConstructionContextDefault::isXMLSpaceAttribute(
 {
 	assert(theAttributeName != 0);
 
-	m_spaceAttributeQName.set(theAttributeName, theStylesheet.getNamespaces(), theLocator, true);
+	m_scratchQName.set(theAttributeName, theStylesheet.getNamespaces(), theLocator, true);
 
-	return s_spaceAttrQName.equals(m_spaceAttributeQName);
+	return s_spaceAttrQName.equals(m_scratchQName);
+}
+
+
+
+bool
+StylesheetConstructionContextDefault::isXSLUseAttributeSetsAttribute(
+			const XalanDOMChar*		theAttributeName,
+			const Stylesheet&		theStylesheet,
+			const Locator*			theLocator)
+{
+	assert(theAttributeName != 0);
+
+	m_scratchQName.set(theAttributeName, theStylesheet.getNamespaces(), theLocator, true);
+
+	return m_useAttributeSetsQName.equals(m_scratchQName);
 }
 
 
@@ -612,8 +666,24 @@ StylesheetConstructionContextDefault::getPooledString(
 
 
 
+XalanDOMString&
+StylesheetConstructionContextDefault::getCachedString()
+{
+	return m_stringCache.get();
+}
+
+
+
+bool
+StylesheetConstructionContextDefault::releaseCachedString(XalanDOMString&	theString)
+{
+	return m_stringCache.release(theString);
+}
+
+
+
 XalanDOMChar*
-StylesheetConstructionContextDefault::allocateVector(XalanDOMString::size_type	theLength)
+StylesheetConstructionContextDefault::allocateXalanDOMCharVector(XalanDOMString::size_type	theLength)
 {
 	return m_xalanDOMCharVectorAllocator.allocate(theLength);
 }
@@ -621,7 +691,7 @@ StylesheetConstructionContextDefault::allocateVector(XalanDOMString::size_type	t
 
 
 XalanDOMChar*
-StylesheetConstructionContextDefault::allocateVector(
+StylesheetConstructionContextDefault::allocateXalanDOMCharVector(
 			const XalanDOMChar*			theString,
 			XalanDOMString::size_type	theLength,
 			bool						fTerminate)
@@ -643,6 +713,148 @@ StylesheetConstructionContextDefault::allocateVector(
 	}
 
 	return theVector;
+}
+
+
+
+const AVT*
+StylesheetConstructionContextDefault::createAVT(
+			const Locator*					locator,
+			const XalanDOMChar*				name,
+			const XalanDOMChar*				stringedValue,
+			const PrefixResolver&			resolver)
+{
+	return m_avtAllocator.create(*this, locator, name, stringedValue, resolver);
+}
+
+
+
+const AVTPart*
+StylesheetConstructionContextDefault::createAVTPart(
+			const XalanDOMChar*			theString,
+			XalanDOMString::size_type	theLength)
+{
+	return m_avtPartSimpleAllocator.create(*this, theString, theLength);
+}
+
+
+
+const AVTPart*
+StylesheetConstructionContextDefault::createAVTPart(
+			const Locator*				locator,
+			const XalanDOMChar*			str,
+			XalanDOMString::size_type	len,
+			const PrefixResolver&		resolver)
+{
+	const XPath* const	xpath =
+		createXPath(
+			locator,
+			str,
+			len,
+			resolver);
+
+	assert(xpath != 0);
+
+	return m_avtPartXPathAllocator.create(xpath);
+}
+
+
+
+template<class Type>
+Type
+allocate(
+			StylesheetConstructionContextDefault::XalanVoidPointerVectorAllocatorType&	theAllocator,
+			StylesheetConstructionContextDefault::size_type								theSize,
+			Type																		theDummy)
+{
+#if defined(XALAN_OLD_STYLE_CASTS)
+	return (Type)theAllocator.allocate(theSize);
+#else
+	return reinterpret_cast<Type>(theAllocator.allocate(theSize));
+#endif
+}
+
+
+
+const AVT**
+StylesheetConstructionContextDefault::allocateAVTPointerVector(size_type	theLength)
+{
+	const AVT**	theDummy;
+
+	return allocate(m_pointerVectorAllocator, theLength, theDummy);
+}
+
+
+
+const AVTPart**
+StylesheetConstructionContextDefault::allocateAVTPartPointerVector(size_type	theLength)
+{
+	const AVTPart**	theDummy;
+
+	return allocate(m_pointerVectorAllocator, theLength, theDummy);
+}
+
+
+
+const XalanQName*
+StylesheetConstructionContextDefault::createXalanQNameByValue(
+			const XalanDOMString&		qname,
+			const NamespacesStackType&	namespaces,
+			const Locator*				locator,
+			bool						fUseDefault)
+{
+	return 	m_xalanQNameByValueAllocator.create(qname, namespaces, locator, fUseDefault);
+
+}
+
+
+
+const XalanQName**
+StylesheetConstructionContextDefault::tokenizeQNames(
+			size_type&					count,
+			const XalanDOMChar*			qnameTokens,
+			const NamespacesStackType&	namespaces,
+			const Locator*				locator,
+			bool						fUseDefault)
+{
+	assert(qnameTokens != 0);
+
+	StringTokenizer		tokenizer(qnameTokens);
+
+	count = tokenizer.countTokens();
+
+	if (count == 0)
+	{
+		return 0;
+	}
+	else
+	{
+		const XalanQName**	theResult = allocate(m_pointerVectorAllocator, count, theResult);
+		assert(theResult != 0);
+
+		const GetAndReleaseCachedString		theGuard(*this);
+
+		XalanDOMString&		qname = theGuard.get();
+
+		size_type	theCurrentIndex = 0;
+
+		while(tokenizer.hasMoreTokens())
+		{
+			tokenizer.nextToken(qname);
+			assert(length(qname) != 0);
+
+			theResult[theCurrentIndex++] =
+					m_xalanQNameByValueAllocator.create(
+						qname,
+						namespaces,
+						locator,
+						fUseDefault);
+		}
+
+		assert(theCurrentIndex == count);
+
+		return theResult;
+	}
 }
 
 

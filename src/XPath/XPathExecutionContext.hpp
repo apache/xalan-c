@@ -429,9 +429,21 @@ public:
 		MutableNodeRefList*		m_mutableNodeRefList;
 	};
 
+	/**
+	 * Get a cached string for temporary use.
+	 *
+	 * @return A reference to the string
+	 */
 	virtual XalanDOMString&
 	getCachedString() = 0;
 
+	/**
+	 * Return a cached string.
+	 *
+	 * @param theString The string to release.
+	 *
+	 * @return true if the string was released successfully.
+	 */
 	virtual bool
 	releaseCachedString(XalanDOMString&		theString) = 0;
 

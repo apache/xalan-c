@@ -58,14 +58,6 @@
 
 
 
-#include <algorithm>
-
-
-
-#include <Include/STLHelper.hpp>
-
-
-
 #include <PlatformSupport/DOMStringHelper.hpp>
 #include <PlatformSupport/StringTokenizer.hpp>
 #include <PlatformSupport/XalanUnicode.hpp>
@@ -119,12 +111,13 @@ const XalanDOMString	AVT::s_emptyString;
  * on to the string if the AVT is simple.
  */
 AVT::AVT(
+			StylesheetConstructionContext&	constructionContext,
 			const Locator*					locator,
 			const XalanDOMChar*				name,
 			const XalanDOMChar*				stringedValue,
-			const PrefixResolver&			resolver,
-			StylesheetConstructionContext&	constructionContext) :
-		m_parts(),
+			const PrefixResolver&			resolver) :
+		m_parts(0),
+		m_partsSize(0),
 		m_simpleString(0),
 		m_simpleStringLength(0),
 		m_name(constructionContext.getPooledString(name))
@@ -137,17 +130,20 @@ AVT::AVT(
 	{
 		// Do the simple thing
 		m_simpleStringLength = length(stringedValue);
-		m_simpleString = constructionContext.allocateVector(stringedValue, m_simpleStringLength, false);
+
+		m_simpleString = constructionContext.allocateXalanDOMCharVector(stringedValue, m_simpleStringLength, false);
 	}
 	else
 	{
-		m_parts.reserve(nTokens + 1);
+		// This over-allocates, but we probably won't waste that much space.  If necessary,
+		// we could tokenize twice, just counting the numbers of AVTPart instances we
+		// will need the first time.
+		m_parts = constructionContext.allocateAVTPartPointerVector(nTokens + 1);
 
 		XalanDOMString	buffer;
 		XalanDOMString	exprBuffer;
 		XalanDOMString	t; // base token
 		XalanDOMString	lookahead; // next token
-		XalanDOMString	error; // if non-null, break from loop
 
 		while(tokenizer.hasMoreTokens())
 		{
@@ -175,7 +171,7 @@ AVT::AVT(
 
 						if(equals(lookahead, theLeftCurlyBracketString))
 						{
-							// Double curlys mean escape to show curly
+							// Double braces mean escape to show brace
 							append(buffer, lookahead);
 
 							clear(lookahead);
@@ -186,7 +182,12 @@ AVT::AVT(
 						{
 							if(length(buffer) > 0)
 							{
-								m_parts.push_back(new AVTPartSimple(constructionContext, c_wstr(buffer), length(buffer)));
+								assert(m_partsSize + 1 < nTokens);
+
+								m_parts[m_partsSize++] =
+									constructionContext.createAVTPart(
+										c_wstr(buffer),
+										length(buffer));
 
 								clear(buffer);
 							}
@@ -205,7 +206,11 @@ AVT::AVT(
 											// String start
 											append(exprBuffer, lookahead);
 
-											const XalanDOMString	quote = lookahead;
+											const XalanDOMChar	quote[2] =
+											{
+												lookahead[0],
+												0
+											};
 
 											// Consume stuff 'till next quote
 											nextToken(constructionContext, locator, tokenizer, lookahead);
@@ -214,25 +219,25 @@ AVT::AVT(
 											{
 												append(exprBuffer, lookahead);
 
-												 nextToken(constructionContext, locator, tokenizer, lookahead);
+												nextToken(constructionContext, locator, tokenizer, lookahead);
 											}
 
 											append(exprBuffer,lookahead);
 
 											break;
 										}
+
 										case XalanUnicode::charLeftCurlyBracket:
-										{
-											// What's another curly doing here?
-											error = TranscodeFromLocalCodePage("Error: Can not have \"{\" within expression.");
+											// What's another brace doing here?
+											constructionContext.error("\"{\" cannot appear within an expression.");
 
 											break;
-										}
+
 										default:
-										{
 											// part of the template stuff, just add it.
 											append(exprBuffer, lookahead);
-										}
+											break;
+
 									} // end inner switch
 								} // end if lookahead length == 1
 								else
@@ -256,14 +261,16 @@ AVT::AVT(
 											resolver);
 							assert(xpath != 0);
 
-							m_parts.push_back(new AVTPartXPath(xpath));
+							assert(m_partsSize + 1 < nTokens);
+
+							m_parts[m_partsSize++] =
+								constructionContext.createAVTPart(
+									locator,
+									c_wstr(exprBuffer),
+									length(exprBuffer),
+									resolver);
 
 							clear(lookahead); // breaks out of inner while loop
-
-							if(length(error) > 0)
-							{
-								break; // from inner while loop
-							}
 						}
 						break;
 					}
@@ -273,18 +280,14 @@ AVT::AVT(
 
 						if(equals(lookahead, theRightCurlyBracketString))
 						{
-							// Double curlys mean escape to show curly
+							// Double brace mean escape to show brace
 							append(buffer, lookahead);
 
 							clear(lookahead); // swallow
 						}
 						else
 						{
-							// Illegal, I think...
-							constructionContext.warn("Found \"}\" but no attribute template open!");
-
-							append(buffer, theRightCurlyBracketString);
-							// leave the lookahead to be processed by the next round.
+							constructionContext.error("An unmatched \"}\" was found!");
 						}
 						break;
 					}
@@ -302,43 +305,23 @@ AVT::AVT(
 				// Anything else just add to string.
 				append(buffer,t);
 			}
-
-			if(length(error) > 0)
-			{
-				constructionContext.warn("Attr Template, " + error);
-
-				break;
-			}
 		} // end while(tokenizer.hasMoreTokens())
 
 		if(length(buffer) > 0)
 		{
-			m_parts.push_back(new AVTPartSimple(constructionContext, c_wstr(buffer), length(buffer)));
+			assert(m_partsSize + 1 < nTokens);
+
+			m_parts[m_partsSize++] = constructionContext.createAVTPart(c_wstr(buffer), length(buffer));
 
 			clear(buffer);
 		}
-
 	} // end else nTokens > 1
-
-	if (m_parts.size() < m_parts.capacity())
-	{
-		AVTPartPtrVectorType(m_parts).swap(m_parts);
-	}
-
 }
 
 
 
 AVT::~AVT()
 {
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::for_each;
-#endif
-
-	// Clean up all entries in the vector.
-	for_each(m_parts.begin(),
-			 m_parts.end(),
-			 DeleteFunctor<AVTPart>());
 }
 
 
@@ -352,11 +335,9 @@ AVT::doEvaluate(
 {
 	clear(buf);
 
-	if(m_parts.empty() == false)
+	if(m_partsSize != 0)
 	{
-		const AVTPartPtrVectorType::size_type	n = m_parts.size();
-
-		for(AVTPartPtrVectorType::size_type i = 0; i < n; i++)
+		for(size_type i = 0; i < m_partsSize; i++)
 		{
 			assert(m_parts[i] != 0);
 

@@ -101,23 +101,23 @@ ElemSort::ElemSort(
 		}
 		else if(equals(aname, Constants::ATTRNAME_LANG))
 		{			
-			m_langAVT = new AVT(getLocator(), aname, atts.getValue(i),
-				*this, constructionContext);
+			m_langAVT =
+					constructionContext.createAVT(getLocator(), aname, atts.getValue(i), *this);
 		}
 		else if(equals(aname, Constants::ATTRNAME_DATATYPE))
 		{
-			m_dataTypeAVT = new AVT(getLocator(), aname, atts.getValue(i),
-				*this, constructionContext);
+			m_dataTypeAVT =
+					constructionContext.createAVT(getLocator(), aname, atts.getValue(i), *this);
 		}
 		else if(equals(aname, Constants::ATTRNAME_ORDER))
 		{
-			m_orderAVT = new AVT(getLocator(), aname, atts.getValue(i),
-				*this, constructionContext);
+			m_orderAVT =
+					constructionContext.createAVT(getLocator(), aname, atts.getValue(i), *this);
 		}
 		else if(equals(aname, Constants::ATTRNAME_CASEORDER))
 		{
-			m_caseOrderAVT = new AVT(getLocator(), aname, atts.getValue(i),
-				*this, constructionContext);
+			m_caseOrderAVT =
+					constructionContext.createAVT(getLocator(), aname, atts.getValue(i), *this);
 		}
 		else if(!isAttrOK(aname, atts, i, constructionContext))
 		{
@@ -130,14 +130,22 @@ ElemSort::ElemSort(
 
 	if(0 == m_dataTypeAVT)
 	{
-		m_dataTypeAVT = new AVT(getLocator(), c_wstr(Constants::ATTRNAME_DATATYPE), c_wstr(Constants::ATTRVAL_DATATYPE_TEXT), 
-			*this, constructionContext);
+		m_dataTypeAVT =
+			constructionContext.createAVT(
+				getLocator(),
+				c_wstr(Constants::ATTRNAME_DATATYPE),
+				c_wstr(Constants::ATTRVAL_DATATYPE_TEXT),
+				*this);
 	}
 
 	if(0 == m_orderAVT)
 	{
-		m_orderAVT = new AVT(getLocator(), c_wstr(Constants::ATTRNAME_ORDER), c_wstr(Constants::ATTRVAL_ORDER_ASCENDING),
-			*this, constructionContext);
+		m_orderAVT =
+			constructionContext.createAVT(
+				getLocator(),
+				c_wstr(Constants::ATTRNAME_ORDER),
+				c_wstr(Constants::ATTRVAL_ORDER_ASCENDING),
+				*this);
 	}
 
 	if(0 == m_selectPattern)
@@ -149,23 +157,6 @@ ElemSort::ElemSort(
 
 ElemSort::~ElemSort()
 {
-#if defined(XALAN_CANNOT_DELETE_CONST)
-	delete (AVT*)m_langAVT;
-
-	delete (AVT*)m_dataTypeAVT;
-
-	delete (AVT*)m_orderAVT;
-
-	delete (AVT*)m_caseOrderAVT;
-#else
-	delete m_langAVT;
-
-	delete m_dataTypeAVT;
-
-	delete m_orderAVT;
-
-	delete m_caseOrderAVT;
-#endif
 }
 
 

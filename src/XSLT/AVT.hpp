@@ -69,10 +69,6 @@
 
 
 
-#include <vector>
-
-
-
 #include <XalanDOM/XalanDOMString.hpp>
 
 
@@ -90,27 +86,33 @@ class StylesheetConstructionContext;
 /**
  * Class to hold an Attribute Value Template.
  */
-class AVT //: public AVTPart
+class AVT
 {
 public:
+
+#if defined(XALAN_SIZE_T_IN_NAMESPACE_STD)
+	typedef std::size_t		size_type;
+#else
+	typedef size_t			size_type;
+#endif
 
 	/**
 	 * Construct an Attribute Value Template(AVT) by parsing the string, and
 	 * either constructing a vector of AVTParts, or simply hold on to the
 	 * string if the AVT is simple.
 	 *
-	 * @param ownerElement		  the Locator for the AVT.  May be null.
+	 * @param constructionContext context for construction of AVT
+	 * @param locator		  the Locator for the AVT.  May be null.
 	 * @param name                name of AVT
 	 * @param stringedValue       string value to parse
 	 * @param resolver            resolver for namespace resolution
-	 * @param constructionContext context for construction of AVT
 	 */
 	AVT(
+			StylesheetConstructionContext&	constructionContext,
 			const Locator*					locator,
 			const XalanDOMChar*				name,
 			const XalanDOMChar*				stringedValue,
-			const PrefixResolver&			resolver,
-			StylesheetConstructionContext&	constructionContext);
+			const PrefixResolver&			resolver);
 
 	virtual
 	~AVT();
@@ -143,12 +145,6 @@ public:
 		}
 	}
 
-#if defined(XALAN_NO_NAMESPACES)
-	typedef vector<const AVTPart*>		AVTPartPtrVectorType;
-#else
-	typedef std::vector<const AVTPart*>	AVTPartPtrVectorType;
-#endif
-
 private:
 
 	void
@@ -176,7 +172,9 @@ private:
 
 
 	// Data members...
-	AVTPartPtrVectorType			m_parts;
+	const AVTPart**					m_parts;
+
+	size_type						m_partsSize;
 
 	const XalanDOMChar*				m_simpleString;
 

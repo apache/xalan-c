@@ -100,13 +100,13 @@ ElemAttribute::ElemAttribute(
 
 		if(equals(aname, Constants::ATTRNAME_NAME))
 		{
-			m_pNameAVT = new AVT(getLocator(), aname, atts.getValue(i),
-				*this, constructionContext);
+			m_pNameAVT =
+				constructionContext.createAVT(getLocator(), aname, atts.getValue(i), *this);
 		}
 		else if(equals(aname, Constants::ATTRNAME_NAMESPACE))
 		{
-			m_pNamespaceAVT = new AVT(getLocator(), aname, atts.getValue(i),
-				*this, constructionContext);
+			m_pNamespaceAVT =
+				constructionContext.createAVT(getLocator(), aname, atts.getValue(i), *this);
 		}
 		else if(!(isAttrOK(aname, atts, i, constructionContext) || 
 				 processSpaceAttr(aname, atts, i, constructionContext)))
@@ -120,33 +120,17 @@ ElemAttribute::ElemAttribute(
 
 	if(0 == m_pNameAVT)
 	{
-#if defined(XALAN_CANNOT_DELETE_CONST)
-		delete (AVT*)m_pNamespaceAVT;
-#else
-		delete m_pNamespaceAVT;
-#endif
-
 		constructionContext.error(
 			"xsl:attribute must have a 'name' attribute",
 			0,
 			this);
 	} 
-	
 }
 
 
 
 ElemAttribute::~ElemAttribute()
 {
-#if defined(XALAN_CANNOT_DELETE_CONST)
-	delete (AVT*)m_pNameAVT;
-
-	delete (AVT*)m_pNamespaceAVT;
-#else
-	delete m_pNameAVT;
-
-	delete m_pNamespaceAVT;
-#endif
 }
 
 

@@ -108,6 +108,7 @@ class NodeRefListBase;
 class PrefixResolver;
 class StylesheetConstructionContext;
 class StylesheetRoot;
+class XalanQName;
 class XMLURL;
 class XObject;
 class StylesheetExecutionContext;
@@ -123,19 +124,22 @@ class XALAN_XSLT_EXPORT Stylesheet : public XalanDocument, protected PrefixResol
 
 public:
 
+#if defined(XALAN_SIZE_T_IN_NAMESPACE_STD)
+	typedef std::size_t		size_type;
+#else
+	typedef size_t			size_type;
+#endif
+
 	typedef StylesheetExecutionContext::ParamVectorType		ParamVectorType;
 	typedef XalanQName::NamespaceVectorType					NamespaceVectorType;
 	typedef XalanQName::NamespacesStackType					NamespacesStackType;
 
 #if defined(XALAN_NO_NAMESPACES)
 	typedef map<XalanDOMString,
-				XalanDOMString,
-				less<XalanDOMString> >				StringToStringMapType;
-	typedef map<XalanDOMString,
 				ExtensionNSHandler*,
 				less<XalanDOMString> >				ExtensionNamespacesMapType;
 	typedef map<XalanQNameByReference,
-				ElemTemplate*,
+				const ElemTemplate*,
 				less<XalanQName> >					ElemTemplateMapType;
 	typedef vector<ElemAttributeSet*> 				AttributeSetVectorType;
 	typedef vector<ElemVariable*> 					ElemVariableVectorType;
@@ -143,24 +147,24 @@ public:
 	typedef map<const XalanNode*,
 				KeyTable*,
 				less<const XalanNode*> >			KeyTablesTableType;
-	typedef vector<XalanQNameByValue> 				QNameVectorType;
 	typedef vector<Stylesheet*>						StylesheetVectorType;
 	typedef vector<XalanDOMString>					URLStackType;
 	typedef vector<const XPath*>					XPathVectorType;
 	typedef vector<ElemDecimalFormat*>				ElemDecimalFormatVectorType;
 #else
-	typedef std::map<XalanDOMString, XalanDOMString>		StringToStringMapType;
 	typedef std::map<XalanDOMString, ExtensionNSHandler*>	ExtensionNamespacesMapType;
-	typedef std::map<XalanQNameByReference, ElemTemplate*>	ElemTemplateMapType;
+	typedef std::map<XalanQNameByReference,
+					 const ElemTemplate*,
+					 std::less<XalanQName> >				ElemTemplateMapType;
 	typedef std::vector<ElemAttributeSet*> 					AttributeSetVectorType;
 	typedef std::vector<ElemVariable*> 						ElemVariableVectorType;
 	typedef std::vector<KeyDeclaration>						KeyDeclarationVectorType;
 	typedef std::map<const XalanNode*, KeyTable*>			KeyTablesTableType;
-	typedef std::vector<XalanQNameByValue> 					QNameVectorType;
 	typedef std::vector<Stylesheet*>						StylesheetVectorType;
 	typedef std::vector<XalanDOMString>						URLStackType;
 	typedef std::vector<const XPath*>						XPathVectorType;
 	typedef std::vector<ElemDecimalFormat*>					ElemDecimalFormatVectorType;
+	typedef std::vector<XalanQNameByValue>					QNameVectorType;
 #endif
 
 	/**
@@ -521,13 +525,15 @@ public:
 	 * Apply the set of named attributes to a node in a given context with a
 	 * given mode
 	 *
-	 * @param attributeSetsNames list of attribute set names
-	 * @param executionContext	 current execution context
-	 * @param sourceNode		 source node
+	 * @param attributeSetsNames The vector of attribute set names
+	 * @param attributeSetsNamesCount The size of the vector
+	 * @param executionContext	 The current execution context
+	 * @param sourceNode		 The source node
 	 */
 	void
 	applyAttrSets(
-			const QNameVectorType&			attributeSetsNames,
+			const XalanQName**				attributeSetsNames,
+			size_type						attributeSetsNamesCount,
 			StylesheetExecutionContext& 	executionContext,
 			XalanNode*						sourceNode) const;
 
@@ -1297,13 +1303,14 @@ private:
 
 	AttributeSetVectorType 					m_attributeSets;
 
+	/**
+	 * This caches the number of attribute sets.
+	 */
 	AttributeSetVectorType::size_type		m_attributeSetsSize;
 
 	XalanNodeListSurrogate					m_surrogateChildren;
 
 	ElemDecimalFormatVectorType				m_elemDecimalFormats;
-
-	StringToStringMapType					m_prefixAliases;
 
 	NamespacesHandler						m_namespacesHandler;
 

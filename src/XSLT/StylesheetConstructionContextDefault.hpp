@@ -66,6 +66,11 @@
 
 
 
+#include <vector>
+
+
+
+#include <PlatformSupport/ArenaAllocator.hpp>
 #include <PlatformSupport/XalanArrayAllocator.hpp>
 #include <PlatformSupport/XalanDOMStringPool.hpp>
 
@@ -81,8 +86,13 @@
 
 
 
+#include <PlatformSupport/XalanDOMStringCache.hpp>
+
+
+
 #include <XPath/XalanQNameByReference.hpp>
 #include <XPath/XalanQNameByValue.hpp>
+#include <XPath/XalanQNameByValueAllocator.hpp>
 
 
 
@@ -91,7 +101,12 @@
 
 
 
-#include <vector>
+#include <XSLT/AVT.hpp>
+#include <XSLT/XalanAVTAllocator.hpp>
+#include <XSLT/AVTPartSimple.hpp>
+#include <XSLT/XalanAVTPartSimpleAllocator.hpp>
+#include <XSLT/AVTPartXPath.hpp>
+#include <XSLT/XalanAVTPartXPathAllocator.hpp>
 
 
 
@@ -113,10 +128,22 @@ class XALAN_XSLT_EXPORT StylesheetConstructionContextDefault : public Stylesheet
 public:
 
 	typedef XalanArrayAllocator<XalanDOMChar>			XalanDOMCharVectorAllocatorType;
+	typedef XalanArrayAllocator<const AVT*>				XalanAVTPointerVectorAllocatorType;
+	typedef XalanArrayAllocator<const AVTPart*>			XalanAVTPartPointerVectorAllocatorType;
+	typedef XalanArrayAllocator<const XalanQName*>		XalanQNameVectorAllocatorType;
+	typedef XalanArrayAllocator<const void*>			XalanVoidPointerVectorAllocatorType;
 	typedef XalanDOMCharVectorAllocatorType::size_type	VectorAllocatorSizeType;
 
     // Default size for vector allocation.
-	enum { eDefaultBlockSize = 1024 };
+	enum {
+			eDefaultXalanDOMCharVectorBlockSize = 1024,
+			eDefaultAVTBlockSize = 128,
+			eDefaultAVTPartSimpleBlockSize = 128,
+			eDefaultAVTPartXPathBlockSize = 128,
+			eDefaultAVTPointerVectorBlockSize = 512,
+			eDefaultAVTPartPointerVectorBlockSize = 512,
+			eDefaultXalanQNameByValueBlockSize = 32,
+			eDefaultXalanQNamePointerVectorBlockSize = 512 };
 
 	/*
 	 * Construct an instance.  If the stylesheet(s) constructed is/are meant to be reused (a.k.a. "compiled"),
@@ -127,17 +154,29 @@ public:
 	 *
 	 * @param processor a reference to an XSLTEngineImpl instance.  Used for error reporting.
 	 * @param xpathFactory a reference to an XPathFactory instance.  See comments above for important details.
-	 * @param theAllocatorSize The block size to use for allocating vectors of XalanDOMChars
+	 * @param theXalanDOMCharVectorAllocatorBlockSize The block size to use for allocating vectors of XalanDOMChars
+	 * @param theAVTAllocatorBlockSize The block size to use for allocating AVT instances.
+	 * @param theAVTPartSimpleAllocatorBlockSize The block size to use for allocating AVTPartSimple instances.
+	 * @param theAVTPartXPathAllocatorBlockSize The block size to use for allocating AVTPartXPath instances.
+	 * @param theAVTPartPointerVectorAllocatorBlockSize The block size to use for allocating vectors of AVTPart pointers.
+	 * @param theXalanQNameByValueAllocatorBlockSize The block size to use for allocating XalanQNameByValue instances.
+	 * @param theAVTPartPointerVectorAllocatorBlockSize The block size to use for allocating vectors of AVTPart pointers.
 	 */
 	StylesheetConstructionContextDefault(
-			XSLTEngineImpl&				processor,
-			XPathFactory&				xpathFactory,
-			VectorAllocatorSizeType		theAllocatorSize = eDefaultBlockSize);
+			XSLTEngineImpl&							processor,
+			XPathFactory&							xpathFactory,
+			VectorAllocatorSizeType					theXalanDOMCharVectorAllocatorBlockSize = eDefaultXalanDOMCharVectorBlockSize,
+			XalanAVTAllocator::size_type			theAVTAllocatorBlockSize = eDefaultAVTBlockSize,
+			XalanAVTPartSimpleAllocator::size_type	theAVTPartSimpleAllocatorBlockSize = eDefaultAVTPartSimpleBlockSize,
+			XalanAVTPartXPathAllocator::size_type	theAVTPartXPathAllocatorBlockSize = eDefaultAVTPartXPathBlockSize,
+			VectorAllocatorSizeType					theAVTPointerVectorAllocatorBlockSize = eDefaultAVTPointerVectorBlockSize,
+			VectorAllocatorSizeType					theAVTPartPointerVectorAllocatorBlockSize = eDefaultAVTPartPointerVectorBlockSize,
+			XalanQNameByValueAllocator::size_type	theXalanQNameByValueAllocatorBlockSize = eDefaultXalanQNameByValueBlockSize,
+			VectorAllocatorSizeType					theXalanQNamePointerVectorAllocatorBlockSize = eDefaultAVTPartPointerVectorBlockSize);
 
 	virtual
 	~StylesheetConstructionContextDefault();
 
-	// These interfaces are inherited from ExecutionContext...
 
 	virtual void
 	error(
@@ -269,6 +308,13 @@ public:
 
 	virtual XPath*
 	createXPath(
+			const Locator*				locator,
+			const XalanDOMChar*			str,
+			XalanDOMString::size_type	len,
+			const PrefixResolver&		resolver);
+
+	virtual XPath*
+	createXPath(
 			const Locator*			locator,
 			const XalanDOMChar*		str,
 			const PrefixResolver&	resolver);
@@ -297,6 +343,12 @@ public:
 			const Stylesheet&		theStylesheet,
 			const Locator*			theLocator);
 
+	virtual bool
+	isXSLUseAttributeSetsAttribute(
+			const XalanDOMChar*		theAttributeName,
+			const Stylesheet&		theStylesheet,
+			const Locator*			theLocator);
+
 	virtual int
 	getElementToken(const XalanDOMString&	name) const;
 
@@ -311,14 +363,60 @@ public:
 			const XalanDOMChar*			theString,
 			XalanDOMString::size_type	theLength = XalanDOMString::npos);
 
-	virtual XalanDOMChar*
-	allocateVector(XalanDOMString::size_type		theLength);
+	virtual XalanDOMString&
+	getCachedString();
+
+	virtual bool
+	releaseCachedString(XalanDOMString&		theString);
 
 	virtual XalanDOMChar*
-	allocateVector(
+	allocateXalanDOMCharVector(XalanDOMString::size_type	theLength);
+
+	virtual XalanDOMChar*
+	allocateXalanDOMCharVector(
 			const XalanDOMChar*			theString,
 			XalanDOMString::size_type	theLength = XalanDOMString::npos,
 			bool						fTerminate = true);
+
+	virtual const AVT*
+	createAVT(
+			const Locator*					locator,
+			const XalanDOMChar*				name,
+			const XalanDOMChar*				stringedValue,
+			const PrefixResolver&			resolver);
+
+	virtual const AVTPart*
+	createAVTPart(
+			const XalanDOMChar*			theString,
+			XalanDOMString::size_type	theLength = XalanDOMString::npos);
+
+	virtual const AVTPart*
+	createAVTPart(
+			const Locator*				locator,
+			const XalanDOMChar*			str,
+			XalanDOMString::size_type	len,
+			const PrefixResolver&		resolver);
+
+	virtual const AVT**
+	allocateAVTPointerVector(size_type	theLength);
+
+	virtual const AVTPart**
+	allocateAVTPartPointerVector(size_type	theLength);
+
+	virtual const XalanQName*
+	createXalanQNameByValue(
+			const XalanDOMString&		qname,
+			const NamespacesStackType&	namespaces,
+			const Locator*				locator = 0,
+			bool						fUseDefault = false);
+
+	virtual const XalanQName**
+	tokenizeQNames(
+			size_type&					count,
+			const XalanDOMChar*			qnameTokens,
+			const NamespacesStackType&	namespaces,
+			const Locator*				locator = 0,
+			bool						fUseDefault = false);
 
 	static int
 	getElementNameToken(const XalanDOMString&	name);
@@ -331,23 +429,43 @@ public:
 
 private:
 
-	XSLTEngineImpl&						m_processor;
+	XSLTEngineImpl&							m_processor;
 
-	XPathFactory&						m_xpathFactory;
+	XPathFactory&							m_xpathFactory;
 
 	typedef XalanAutoPtr<XPathProcessor>	XPathProcessAutoPtr;
 
-	XPathProcessAutoPtr					m_xpathProcessor;
+	XPathProcessAutoPtr						m_xpathProcessor;
 
-	StylesheetVectorType				m_stylesheets;
+	StylesheetVectorType					m_stylesheets;
 
-	XalanDOMStringPool					m_stringPool;
+	XalanDOMStringPool						m_stringPool;
 
-	XalanDOMCharVectorAllocatorType		m_xalanDOMCharVectorAllocator;
+	XalanDOMCharVectorAllocatorType			m_xalanDOMCharVectorAllocator;
 
-	mutable XalanDOMString				m_tempBuffer;
+	mutable XalanDOMString					m_tempBuffer;
 
-	XalanQNameByValue					m_spaceAttributeQName;
+	XalanQNameByValue						m_scratchQName;
+
+	XalanDOMStringCache						m_stringCache;
+
+	XalanAVTAllocator						m_avtAllocator;
+
+	XalanAVTPartSimpleAllocator				m_avtPartSimpleAllocator;
+
+	XalanAVTPartXPathAllocator				m_avtPartXPathAllocator;
+
+	XalanAVTPointerVectorAllocatorType		m_avtPointerVectorAllocator;
+
+	XalanAVTPartPointerVectorAllocatorType	m_avtPartPointerVectorAllocator;
+
+	XalanQNameByValueAllocator				m_xalanQNameByValueAllocator;
+
+	XalanQNameVectorAllocatorType			m_xalanQNameVectorAllocator;
+
+	const XalanQNameByReference				m_useAttributeSetsQName;
+
+	XalanVoidPointerVectorAllocatorType		m_pointerVectorAllocator;
 
 	static const XalanQNameByReference	s_spaceAttrQName;
 

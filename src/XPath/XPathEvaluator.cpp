@@ -63,13 +63,14 @@
 
 
 
-#include <XPath/ElementPrefixResolverProxy.hpp>
-#include <XPath/XObjectFactoryDefault.hpp>
-#include <XPath/XPathEnvSupportDefault.hpp>
-#include <XPath/XPathExecutionContextDefault.hpp>
-#include <XPath/XPathFactoryDefault.hpp>
-#include <XPath/XPathProcessorImpl.hpp>
-#include <XPath/XPathInit.hpp>
+#include "ElementPrefixResolverProxy.hpp"
+#include "XObjectFactoryDefault.hpp"
+#include "XPathEnvSupportDefault.hpp"
+#include "XPathConstructionContextDefault.hpp"
+#include "XPathExecutionContextDefault.hpp"
+#include "XPathFactoryDefault.hpp"
+#include "XPathProcessorImpl.hpp"
+#include "XPathInit.hpp"
 
 
 
@@ -98,6 +99,7 @@ XPathEvaluator::terminate()
 XPathEvaluator::XPathEvaluator() :
 	m_xobjectFactory(new XObjectFactoryDefault),
 	m_xpathFactory(new XPathFactoryDefault),
+	m_constructionContext(new XPathConstructionContextDefault),
 	m_executionContext(new XPathExecutionContextDefault)
 
 {
@@ -390,6 +392,7 @@ XPathEvaluator::createXPath(
 
     theProcessor.initXPath(
 			*theXPath,
+			*m_constructionContext.get(),
 			XalanDOMString(xpathString),
 			prefixResolver);
 
@@ -403,7 +406,14 @@ XPathEvaluator::destroyXPath(XPath*		theXPath)
 {
 	assert(theXPath != 0);
 
-	return m_xpathFactory->returnObject(theXPath);
+	const bool	theResult = m_xpathFactory->returnObject(theXPath);
+
+	if (m_xpathFactory->getInstanceCount() == 0)
+	{
+		m_constructionContext->reset();
+	}
+
+	return theResult;
 }
 
 
@@ -427,6 +437,7 @@ XPathEvaluator::evaluate(
 
     theProcessor.initXPath(
 			theXPath,
+			*m_constructionContext.get(),
 			XalanDOMString(xpathString),
 			prefixResolver);
 

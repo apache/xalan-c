@@ -1190,19 +1190,17 @@ StylesheetHandler::checkForOrAddVariableName(
 			const XalanQName&	theVariableName,
 			const Locator*		theLocator)
 {
-	XalanQNameByValue	theLocalVariableName(theVariableName);
-
 	if (m_inTemplate == false)
 	{
 		assert(m_inScopeVariableNamesStack.empty() == true);
 
-		if (m_globalVariableNames.find(theLocalVariableName) != m_globalVariableNames.end())
+		if (m_globalVariableNames.find(theVariableName) != m_globalVariableNames.end())
 		{
 			error("A global variable with this name has already been declared", theLocator);
 		}
 		else
 		{
-			m_globalVariableNames.insert(theLocalVariableName);
+			m_globalVariableNames.insert(theVariableName);
 		}
 	}
 	else
@@ -1216,7 +1214,7 @@ StylesheetHandler::checkForOrAddVariableName(
 		{
 			QNameSetVectorType::value_type	theLocalScope = *theCurrent;
 
-			if (theLocalScope.find(theLocalVariableName) != theLocalScope.end())
+			if (theLocalScope.find(theVariableName) != theLocalScope.end())
 			{
 				error("A variable with this name has already been declared in this template", theLocator);
 			}
@@ -1226,7 +1224,7 @@ StylesheetHandler::checkForOrAddVariableName(
 
 		assert(theCurrent == theEnd);
 
-		m_inScopeVariableNamesStack.back().insert(theLocalVariableName);
+		m_inScopeVariableNamesStack.back().insert(theVariableName);
 	}
 }
 

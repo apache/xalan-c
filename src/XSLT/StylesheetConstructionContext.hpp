@@ -74,6 +74,13 @@
 
 
 
+#include <XPath/XalanQName.hpp>
+#include <XPath/XPathConstructionContext.hpp>
+
+
+
+class AVT;
+class AVTPart;
 class DocumentHandler;
 class ElemTemplateElement;
 class Locator;
@@ -92,9 +99,17 @@ class XSLTInputSource;
 // An abstract class which provides support for constructing the internal
 // representation  of a stylesheet.
 //
-class XALAN_XSLT_EXPORT StylesheetConstructionContext
+class XALAN_XSLT_EXPORT StylesheetConstructionContext : public XPathConstructionContext
 {
 public:
+
+	typedef XalanQName::NamespacesStackType		NamespacesStackType;
+
+#if defined(XALAN_SIZE_T_IN_NAMESPACE_STD)
+	typedef std::size_t		size_type;
+#else
+	typedef size_t			size_type;
+#endif
 
 	/**
 	 * IDs for XSL element types. These are the values
@@ -336,6 +351,23 @@ public:
 			const PrefixResolver&	resolver) = 0;
 
 	/**
+	 * Create and initialize an xpath and return it. This is to be used by
+	 * stylesheet elements that need an XPath that is guaranteed to persist
+	 * while it lives.
+	 *
+	 * @param locator the locator for the XPath. May be null.
+	 * @param str string to match
+	 * @param resolver resolver for namespace resolution
+	 * @return XPath for string matched
+	 */
+	virtual XPath*
+	createXPath(
+			const Locator*				locator,
+			const XalanDOMChar*			str,
+			XalanDOMString::size_type	len,
+			const PrefixResolver&		resolver) = 0;
+
+	/**
 	 * Get the locator from the top of the locator stack.
 	 *
 	 * @return A pointer to the Locator, or 0 if there is nothing on the stack.
@@ -395,6 +427,18 @@ public:
 			const Locator*			theLocator) = 0;
 
 	/**
+	 * Given an name, determine if it is the xsl:use-attribute-sets attribute
+	 *
+	 * @param name a name
+	 * @return true if the string is the xsl:use-attribute-sets attribute name
+	 */
+	virtual bool
+	isXSLUseAttributeSetsAttribute(
+			const XalanDOMChar*		theAttributeName,
+			const Stylesheet&		theStylesheet,
+			const Locator*			theLocator) = 0;
+
+	/**
 	 * Given an XSL tag name, return an integer token that corresponds to
 	 * the enums defined above.
 	 *
@@ -412,41 +456,29 @@ public:
 	virtual double
 	getXSLTVersionSupported() const = 0;
 
-	/**
-	 * Get a pooled string given the source string.  If
-	 * the string already exists in the pool, no copy
-	 * will be made.  If not, a copy will be made and
-	 * kept for later use.
-	 *
-	 * @param theString The source string
-	 * @return a const reference to a pooled string.
-	 */
 	virtual const XalanDOMString&
 	getPooledString(const XalanDOMString&	theString) = 0;
 
-	/**
-	 * Get a pooled string given the source character
-	 * array.  If the string already exists in the pool,
-	 * no copy will be made.  If not, a copy will be made
-	 * and kept for later use.
-	 *
-	 * @param theString The source character array
-	 * @param theLength The length of the character array
-	 * @return a const reference to a pooled string.
-	 */
 	virtual const XalanDOMString&
 	getPooledString(
 			const XalanDOMChar*			theString,
 			XalanDOMString::size_type	theLength = XalanDOMString::npos) = 0;
+
+	virtual XalanDOMString&
+	getCachedString() = 0;
+
+	virtual bool
+	releaseCachedString(XalanDOMString&		theString) = 0;
 
 	/**
 	 * Allocate a vector of XalanDOMChar of the specified
 	 * size.
 	 *
 	 * @param theLength The length of the character vector
+	 * @return A pointer to the vector.
 	 */
 	virtual XalanDOMChar*
-	allocateVector(XalanDOMString::size_type		theLength) = 0;
+	allocateXalanDOMCharVector(XalanDOMString::size_type	theLength) = 0;
 
 	/**
 	 * Allocate a vector of XalanDOMChar of the specified
@@ -455,14 +487,113 @@ public:
 	 * @param theString The source character array
 	 * @param theLength The length of the character vector
 	 * @param fTerminate If true, terminate the new vector with 0
+	 * @return A pointer to the array.
 	 */
 	virtual XalanDOMChar*
-	allocateVector(
+	allocateXalanDOMCharVector(
 			const XalanDOMChar*			theString,
 			XalanDOMString::size_type	theLength = XalanDOMString::npos,
 			bool						fTerminate = true) = 0;
 
-	// These interfaces are inherited from ExecutionContext...
+	/**
+	 * Create an AVT instance.
+	 *
+	 * @param locator the Locator for the instance.  May be null.
+	 * @param name name of AVT
+	 * @param stringedValue string value to parse
+	 * @param resolver resolver for namespace resolution
+	 * @return A pointer to the instance.
+	 */
+	virtual const AVT*
+	createAVT(
+			const Locator*					locator,
+			const XalanDOMChar*				name,
+			const XalanDOMChar*				stringedValue,
+			const PrefixResolver&			resolver) = 0;
+
+	/**
+	 * Create an AVTPart instance.
+	 *
+	 * @param theString The source character array
+	 * @param theLength The length of the character vector
+	 * @param fTerminate If true, terminate the new vector with 0
+	 * @return A pointer to the instance.
+	 */
+	virtual const AVTPart*
+	createAVTPart(
+			const XalanDOMChar*			theString,
+			XalanDOMString::size_type	theLength = XalanDOMString::npos) = 0;
+
+	/**
+	 * Create an AVTPart instance.
+	 *
+	 * @param locator the Locator for the instance.  May be null.
+	 * @param str The XPath expression for the instance
+	 * @param len The length of the expression
+	 * @param resolver resolver for namespace resolution
+	 * @return A pointer to the instance.
+	 */
+	virtual const AVTPart*
+	createAVTPart(
+			const Locator*				locator,
+			const XalanDOMChar*			str,
+			XalanDOMString::size_type	len,
+			const PrefixResolver&		resolver) = 0;
+
+	/**
+	 * Allocate a vector of const AVT* of the specified
+	 * length.
+	 *
+	 * @param theLength The length of the vector
+	 * @return A pointer to the vector.
+	 */
+	virtual const AVT**
+	allocateAVTPointerVector(size_type	theLength) = 0;
+
+	/**
+	 * Allocate a vector of const AVTPart* of the specified
+	 * length.
+	 *
+	 * @param theLength The length of the vector
+	 * @return A pointer to the vector.
+	 */
+	virtual const AVTPart**
+	allocateAVTPartPointerVector(size_type	theLength) = 0;
+
+	/**
+	 * Create a XalanQName-derived instance.
+	 *
+	 * @param qname The qname string
+	 * @param namespaces The stack of namespaces
+	 * @param Locator The current Locator, if any
+	 * @param fUseDefault If true, a qname without a prefix will use the default namespace
+	 * @return A pointer to the new instance
+	 */
+	virtual const XalanQName*
+	createXalanQNameByValue(
+			const XalanDOMString&		qname,
+			const NamespacesStackType&	namespaces,
+			const Locator*				locator = 0,
+			bool						fUseDefault = false) = 0;
+
+	/**
+	 * Tokenize a string and return the QNames corresponding to
+	 * those tokens.
+	 *
+	 * @param count The number of namespaces in the vector returned
+	 * @param qnameTokens The string to tokenize
+	 * @param namespaces The stack of namespaces
+	 * @param Locator The current Locator, if any
+	 * @param fUseDefault If true, qnames without prefixes will use the default namespace
+	 * @return The resulting vector of XalanQName instances.
+	 */
+	virtual const XalanQName**
+	tokenizeQNames(
+			size_type&					count,
+			const XalanDOMChar*			qnameTokens,
+			const NamespacesStackType&	namespaces,
+			const Locator*				locator = 0,
+			bool						fUseDefault = false) = 0;
 
 	virtual void
 	error(

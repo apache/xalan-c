@@ -59,7 +59,8 @@
 
 
 
-StylesheetConstructionContext::StylesheetConstructionContext()
+StylesheetConstructionContext::StylesheetConstructionContext() :
+	XPathConstructionContext()
 {
 }
 

@@ -90,6 +90,12 @@ class XALAN_XSLT_EXPORT StylesheetRoot : public Stylesheet
 {
 public:
 
+#if defined(XALAN_NO_NAMESPACES)
+	typedef vector<const XalanQName*> 		XalanQNameVectorType;
+#else
+	typedef std::vector<const XalanQName*>	XalanQNameVectorType;
+#endif
+
 	/**
 	 * Construct a Stylesheet from a Document.
 	 *
@@ -405,10 +411,10 @@ public:
 	bool
 	hasCDATASectionElements() const
 	{
-		assert(m_hasCdataSectionElems == false && m_cdataSectionElems.empty() == true ||
-			   m_hasCdataSectionElems == true && m_cdataSectionElems.empty() == false);
+		assert(m_hasCDATASectionElems == false && m_cdataSectionElems.size() == 0 ||
+			   m_hasCDATASectionElems == true && m_cdataSectionElems.size() != 0);
 
-		return m_hasCdataSectionElems;
+		return m_hasCDATASectionElems;
 	}
 
 	/**
@@ -469,12 +475,12 @@ private:
 	FormatterListener::eFormat	m_outputMethod;
 
 	/**
-	 * List of qnames that specifies elements that should be formatted 
+	 * Vector of qnames that specifies elements that should be formatted 
 	 * as CDATA.
 	 */
-	QNameVectorType				m_cdataSectionElems;
+	XalanQNameVectorType		m_cdataSectionElems;
 
-	bool						m_hasCdataSectionElems;
+	bool						m_hasCDATASectionElems;
 
 	/**
 	 * A stack of who's importing whom is needed in order to detect 

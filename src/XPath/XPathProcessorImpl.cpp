@@ -81,6 +81,7 @@
 
 #include "XalanQName.hpp"
 #include "XPathEnvSupport.hpp"
+#include "XPathConstructionContext.hpp"
 #include "XPathExecutionContext.hpp"
 #include "XPathParserException.hpp"
 
@@ -90,6 +91,7 @@ XPathProcessorImpl::XPathProcessorImpl() :
 	m_token(),
 	m_tokenChar(0),
 	m_xpath(0),
+	m_constructionContext(0),
 	m_expression(0),
 	m_prefixResolver(0),
 	m_requireLiterals(false),
@@ -109,18 +111,21 @@ XPathProcessorImpl::~XPathProcessorImpl()
 
 void
 XPathProcessorImpl::initXPath(
-			XPath&					pathObj,
-			const XalanDOMString&	expression,
-			const PrefixResolver&	prefixResolver,
-			const Locator*			locator)
+			XPath&						pathObj,
+			XPathConstructionContext&	constructionContext,
+			const XalanDOMString&		expression,
+			const PrefixResolver&		resolver,
+			const Locator*				locator)
 {
 	m_requireLiterals = false;
 
 	m_xpath = &pathObj;
 
+	m_constructionContext = &constructionContext;
+
 	m_expression = &m_xpath->getExpression();
 
-	m_prefixResolver = &prefixResolver;
+	m_prefixResolver = &resolver;
 
 	m_locator = locator;
 
@@ -140,6 +145,7 @@ XPathProcessorImpl::initXPath(
 	}
 
 	m_xpath = 0;
+	m_constructionContext = 0;
 	m_expression = 0;
 	m_prefixResolver = 0;
 	m_locator = 0;
@@ -151,18 +157,21 @@ XPathProcessorImpl::initXPath(
 
 void
 XPathProcessorImpl::initMatchPattern(
-			XPath&					pathObj,
-			const XalanDOMString&	expression,
-			const PrefixResolver&	prefixResolver,
-			const Locator*			locator)
+			XPath&						pathObj,
+			XPathConstructionContext&	constructionContext,
+			const XalanDOMString&		expression,
+			const PrefixResolver&		resolver,
+			const Locator*				locator)
 {
 	m_isMatchPattern = true;
 
 	m_xpath = &pathObj;
 
+	m_constructionContext = &constructionContext;
+
 	m_expression = &m_xpath->getExpression();
 
-	m_prefixResolver = &prefixResolver;
+	m_prefixResolver = &resolver;
 
 	m_locator = locator;
 
@@ -187,6 +196,7 @@ XPathProcessorImpl::initMatchPattern(
 	m_expression->shrink();
 
 	m_xpath = 0;
+	m_constructionContext = 0;
 	m_expression = 0;
 	m_prefixResolver = 0;
 	m_locator = 0;
@@ -199,6 +209,10 @@ XPathProcessorImpl::initMatchPattern(
 void
 XPathProcessorImpl::tokenize(const XalanDOMString&	pat)
 {
+	assert(m_xpath != 0);
+	assert(m_expression != 0);
+	assert(m_constructionContext != 0);
+
 	m_expression->setCurrentPattern(pat);
 
 	const int	nChars = length(pat);
@@ -213,7 +227,9 @@ XPathProcessorImpl::tokenize(const XalanDOMString&	pat)
 	// counted inside the m_patternMap.
 	int nesting = 0;
 
-	XalanDOMString	theToken;
+	const XPathConstructionContext::GetAndReleaseCachedString	theGuard(*m_constructionContext);
+
+	XalanDOMString&		theToken = theGuard.get();
 
 	for(int i = 0; i < nChars; i++)
 	{
@@ -580,35 +596,40 @@ XPathProcessorImpl::mapNSTokens(
 {
 	assert(m_prefixResolver != 0);
 
-	const XalanDOMString 	prefix(pat, startSubstring, posOfNSSep - startSubstring);
+	const XPathConstructionContext::GetAndReleaseCachedString	theGuard(*m_constructionContext);
 
-	if (XalanQName::isValidNCName(prefix) == false)
+	XalanDOMString& 	scratchString = theGuard.get();
+
+	// Get the prefix of the QName...
+	scratchString.assign(pat, startSubstring, posOfNSSep - startSubstring);
+
+	if (XalanQName::isValidNCName(scratchString) == false)
 	{
-		error(XalanDOMString("'") + prefix + XalanDOMString("' is not a valid NCName"));
+		error(XalanDOMString("'") + scratchString + XalanDOMString("' is not a valid NCName"));
 	}
 
 	const XalanDOMString* const		uName =
-				m_prefixResolver->getNamespaceForPrefix(prefix);
+				m_prefixResolver->getNamespaceForPrefix(scratchString);
 
 	if(uName == 0)
 	{
 		error(
 			TranscodeFromLocalCodePage("Unable to resolve prefix '") +
-			prefix +
+			scratchString +
 			TranscodeFromLocalCodePage("'."));
 	}
 	else if (length(*uName) == 0)
 	{
 		error(
 			TranscodeFromLocalCodePage("The prefix '") +
-			prefix +
+			scratchString +
 			TranscodeFromLocalCodePage("' is bound to a zero-length URI."));
 	}
 	else
 	{
-		m_namespaces[prefix] = *uName;
+		m_namespaces[scratchString] = *uName;
 
-		addToTokenQueue(prefix);
+		addToTokenQueue(scratchString);
 
 		addToTokenQueue(DOMServices::s_XMLNamespaceSeparatorString);
 
@@ -619,17 +640,17 @@ XPathProcessorImpl::mapNSTokens(
 		// here...
 		if(posOfNSSep + 1 < posOfScan)
 		{
-			const XalanDOMString 	s(pat, posOfNSSep + 1, posOfScan - (posOfNSSep + 1));
+			scratchString.assign(pat, posOfNSSep + 1, posOfScan - (posOfNSSep + 1));
 
-			assert(length(s) > 0);
+			assert(length(scratchString) > 0);
 
-			if (XalanQName::isValidNCName(s) == false)
+			if (XalanQName::isValidNCName(scratchString) == false)
 			{
-				error(XalanDOMString("'") + s + XalanDOMString("' is not a valid NCName"));
+				error(XalanDOMString("'") + scratchString + XalanDOMString("' is not a valid NCName"));
 			}
 			else
 			{
-				addToTokenQueue(s);
+				addToTokenQueue(scratchString);
 			}
 		}
 	}
@@ -668,40 +689,7 @@ XPathProcessorImpl::tokenIs(const XalanDOMChar*		s) const
 
 
 bool
-XPathProcessorImpl::tokenIs(const char*		s) const
-{
-	const unsigned int	theTokenLength = length(m_token);
-
-	const unsigned int	theStringLength = XalanDOMString::length(s);
-
-	if (theTokenLength != theStringLength)
-	{
-		return false;
-	}
-	else
-	{
-		unsigned int	i = 0;
-
-		while(i < theStringLength)
-		{
-			if (charAt(m_token, i ) != s[i])
-			{
-				break;
-			}
-			else
-			{
-				++i;
-			}
-		}
-
-		return i == theStringLength ? true : false;
-	}
-}
-
-
-
-bool
-XPathProcessorImpl::tokenIs(char	c) const
+XPathProcessorImpl::tokenIs(XalanDOMChar	c) const
 {
 	return m_tokenChar == c ? true : false;
 }
@@ -828,7 +816,7 @@ XPathProcessorImpl::prevToken()
 	const XObject* const	thePreviousToken =
 			m_expression->getPreviousToken();
 
-	m_token = thePreviousToken == 0 ? XalanDOMString() : thePreviousToken->str();
+	m_token = thePreviousToken == 0 ? s_emptyString : thePreviousToken->str();
 
 	if(length(m_token) > 0)
 	{
@@ -866,7 +854,7 @@ XPathProcessorImpl::resetTokenMark(int	mark)
 
 
 void
-XPathProcessorImpl::consumeExpected(const char* 	expected)
+XPathProcessorImpl::consumeExpected(XalanDOMChar	expected)
 {
 	if(tokenIs(expected) == true)
 	{
@@ -874,26 +862,11 @@ XPathProcessorImpl::consumeExpected(const char* 	expected)
 	}
 	else
 	{
-		error(TranscodeFromLocalCodePage("Expected ") +
-			  TranscodeFromLocalCodePage(expected) +
-			  TranscodeFromLocalCodePage(", but found: ") +
-			  m_token);
-	}
-}
+		const XPathConstructionContext::GetAndReleaseCachedString	theGuard(*m_constructionContext);
 
+		XalanDOMString	theMsg = theGuard.get();
 
-
-void
-XPathProcessorImpl::consumeExpected(char	expected)
-{
-	if(tokenIs(expected) == true)
-	{
-		nextToken();
-	}
-	else
-	{
-		XalanDOMString	theMsg(TranscodeFromLocalCodePage("Expected "));
-
+		append(theMsg, "Expected ");
 		append(theMsg, expected);
 		append(theMsg, ", but found: ");
 		append(theMsg, m_token);
@@ -909,7 +882,9 @@ XPathProcessorImpl::error(
 			const XalanDOMString&	msg,
 			XalanNode*				/* sourceNode */) const
 {
-	XalanDOMString	emsg;
+	const XPathConstructionContext::GetAndReleaseCachedString	theGuard(*m_constructionContext);
+
+	XalanDOMString& 	emsg = theGuard.get();
 
 	if (m_expression == 0)
 	{
@@ -1009,64 +984,6 @@ XPathProcessorImpl::error(
 	error(TranscodeFromLocalCodePage(msg), sourceNode);
 }
 
-
-#if 0
-int
-XPathProcessorImpl::getFunctionToken(const XalanDOMString&	key) const
-{
-	if (equals(key, s_commentString) == true)
-	{
-		return XPathExpression::eNODETYPE_COMMENT;
-	}
-	else if (equals(key, s_piString) == true)
-	{
-		return XPathExpression::eNODETYPE_PI;
-	}
-	else if (equals(key, s_nodeString) == true)
-	{
-		return XPathExpression::eNODETYPE_NODE;
-	}
-	else if (equals(key, s_textString) == true)
-	{
-		return XPathExpression::eNODETYPE_TEXT;
-	}
-	else
-	{
-		return -1;
-	}
-}
-
-
-
-XPathExpression::eOpCodes
-XPathProcessorImpl::getNodeTypeToken(const XalanDOMString&	key) const
-{
-	if (equals(key, s_asteriskString) == true)
-	{
-		return XPathExpression::eNODETYPE_ANYELEMENT;
-	}
-	else if (equals(key, s_commentString) == true)
-	{
-		return XPathExpression::eNODETYPE_COMMENT;
-	}
-	else if (equals(key, s_piString) == true)
-	{
-		return XPathExpression::eNODETYPE_PI;
-	}
-	else if (equals(key, s_nodeString) == true)
-	{
-		return XPathExpression::eNODETYPE_NODE;
-	}
-	else if (equals(key, s_textString) == true)
-	{
-		return XPathExpression::eNODETYPE_TEXT;
-	}
-	else
-	{
-		return XPathExpression::eENDOP;
-	}
-}
-#endif
 
 
 void
@@ -2143,7 +2060,7 @@ XPathProcessorImpl::QName()
 	// If there is no prefix, we have to fake things out...
 	if (lookahead(XalanUnicode::charColon, 1) == false)
 	{
-		m_expression->insertToken(XalanDOMString());
+		m_expression->insertToken(s_emptyString);
 
 		m_expression->pushCurrentTokenOnOpCodeMap();
 
@@ -2189,7 +2106,11 @@ XPathProcessorImpl::Literal()
 
 	if(isCurrentLiteral() == true)
 	{
-		const XalanDOMString	theArgument(m_token, 1, length(m_token) - 2);
+		const XPathConstructionContext::GetAndReleaseCachedString	theGuard(*m_constructionContext);
+
+		XalanDOMString& 	theArgument = theGuard.get();
+
+		theArgument.assign(m_token, 1, length(m_token) - 2);
 
 		m_expression->pushArgumentOnOpCodeMap(theArgument);
 

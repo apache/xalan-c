@@ -113,15 +113,16 @@ public:
 	typedef set<ElemTemplateElement*,
 				less<ElemTemplateElement*> >	ElemTemplateSetType;
 	typedef vector<bool>						BoolStackType;
-	typedef set<XalanQNameByValue,
-				less<XalanQNameByValue> >		QNameSetType;
+	typedef set<XalanQNameByReference,
+				less<XalanQName> >				QNameSetType;
 	typedef vector<QNameSetType>				QNameSetVectorType;
 #else
 	typedef std::vector<ElemTemplateElement*>	ElemTemplateStackType;
 	typedef std::vector<ElemTextLiteral*>		ElemTextLiteralStackType;
 	typedef std::set<ElemTemplateElement*>		ElemTemplateSetType;
 	typedef std::vector<bool>					BoolStackType;
-	typedef std::set<XalanQNameByValue>			QNameSetType;
+	typedef std::set<XalanQNameByReference,
+					 std::less<XalanQName> >	QNameSetType;
 	typedef std::vector<QNameSetType>			QNameSetVectorType;
 #endif
 
@@ -620,7 +621,7 @@ private:
 	// PushPopIncludeState...
 	unsigned long	m_locatorsPushed;
 
-	QNameSetType		m_globalVariableNames;
+	QNameSetType	m_globalVariableNames;
 
 	enum { eVariablesStackDefault = 20 };
 

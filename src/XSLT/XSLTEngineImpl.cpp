@@ -196,7 +196,8 @@ XSLTEngineImpl::XSLTEngineImpl(
 	m_scratchString(),
 	m_attributeNamesVisited(),
 	m_hasStripOrPreserveSpace(false),
-	m_hasCDATASectionElements(false)
+	m_hasCDATASectionElements(false),
+	m_xpathConstructionContext()
 {
 	m_outputContextStack.pushContext();
 }
@@ -228,6 +229,8 @@ XSLTEngineImpl::reset()
 
 	m_hasStripOrPreserveSpace = false;
 	m_hasCDATASectionElements = false;
+
+	m_xpathConstructionContext.reset();
 }
 
 
@@ -2970,19 +2973,21 @@ XSLTEngineImpl::evalXPathStr(
 {
 	assert(executionContext.getPrefixResolver() != 0);
 
-	XPath* const	theXPath = m_xpathFactory.create();
+	XPath* const		theXPath = m_xpathFactory.create();
 
-	XPathGuard	theGuard(m_xpathFactory,
-						 theXPath);
+	const XPathGuard	theGuard(m_xpathFactory, theXPath);
 
-    m_xpathProcessor->initXPath(*theXPath,
-								str,
-								*executionContext.getPrefixResolver(),
-								getLocatorFromStack());
+    m_xpathProcessor->initXPath(
+			*theXPath,
+			m_xpathConstructionContext,
+			str,
+			*executionContext.getPrefixResolver(),
+			getLocatorFromStack());
 
-    return theXPath->execute(executionContext.getCurrentNode(),
-							 *executionContext.getPrefixResolver(),
-							 executionContext);
+    return theXPath->execute(
+			executionContext.getCurrentNode(),
+			*executionContext.getPrefixResolver(),
+			executionContext);
 }
 
 
@@ -2994,15 +2999,16 @@ XSLTEngineImpl::evalXPathStr(
 			const PrefixResolver&	prefixResolver,
 			XPathExecutionContext&	executionContext)
 {
-	XPath* const	theXPath = m_xpathFactory.create();
+	XPath* const		theXPath = m_xpathFactory.create();
 
-	XPathGuard	theGuard(m_xpathFactory,
-						 theXPath);
+	const XPathGuard	theGuard(m_xpathFactory, theXPath);
 
-    m_xpathProcessor->initXPath(*theXPath,
-								str,
-								prefixResolver,
-								getLocatorFromStack());
+    m_xpathProcessor->initXPath(
+			*theXPath,
+			m_xpathConstructionContext,
+			str,
+			prefixResolver,
+			getLocatorFromStack());
 
     return theXPath->execute(contextNode, prefixResolver, executionContext);
 }
@@ -3036,7 +3042,12 @@ XSLTEngineImpl::createMatchPattern(
 {
 	XPath* const	xpath = m_xpathFactory.create();
 
-	m_xpathProcessor->initMatchPattern(*xpath, str, resolver, getLocatorFromStack());
+	m_xpathProcessor->initMatchPattern(
+			*xpath,
+			m_xpathConstructionContext,
+			str,
+			resolver,
+			getLocatorFromStack());
 
 	return xpath;
 }

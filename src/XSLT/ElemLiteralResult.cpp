@@ -58,15 +58,7 @@
 
 
 
-#include <algorithm>
-
-
-
 #include <xercesc/sax/AttributeList.hpp>
-
-
-
-#include <Include/STLHelper.hpp>
 
 
 
@@ -99,8 +91,8 @@ ElemLiteralResult::ElemLiteralResult(
 			columnNumber,
 			StylesheetConstructionContext::ELEMNAME_LITERAL_RESULT),
 	m_elementName(constructionContext.getPooledString(name)),
-	m_avts(),
-	m_attrCount(0),
+	m_avts(0),
+	m_avtsCount(0),
 	m_hasPrefix(indexOf(name, XalanUnicode::charColon) < length(name) ? true : false)
 {
 	init(constructionContext, stylesheetTree, atts);
@@ -122,8 +114,8 @@ ElemLiteralResult::ElemLiteralResult(
 			columnNumber,
 			xslToken),
 	m_elementName(constructionContext.getPooledString(name)),
-	m_avts(),
-	m_attrCount(0),
+	m_avts(0),
+	m_avtsCount(0),
 	m_hasPrefix(indexOf(name, XalanUnicode::charColon) < length(name) ? true : false)
 {
 	init(constructionContext, stylesheetTree, atts);
@@ -139,9 +131,13 @@ ElemLiteralResult::init(
 {
 	const unsigned int	nAttrs = atts.getLength();
 
-	m_avts.reserve(nAttrs);
+	// This over-allocates, but we probably won't waste that much space.
+	m_avts = constructionContext.allocateAVTPointerVector(nAttrs);
+	assert(m_avts != 0);
 
-	XalanDOMString	theBuffer;
+	const StylesheetConstructionContext::GetAndReleaseCachedString	theGuard(constructionContext);
+
+	XalanDOMString&		theBuffer = theGuard.get();
 
 	for(unsigned int i = 0; i < nAttrs; i++)
 	{
@@ -199,18 +195,10 @@ ElemLiteralResult::init(
 			if(! processUseAttributeSets(constructionContext, aname, atts, i) &&
 					isAttrOK(aname, atts, i, constructionContext))
 			{
-				m_avts.push_back(new AVT(getLocator(), aname, atts.getValue(i), 	
-							*this, constructionContext));
+				m_avts[m_avtsCount++] =
+					constructionContext.createAVT(getLocator(), aname, atts.getValue(i), *this);
 			}
 		}
-	}
-
-	// Shrink the vector of AVTS, if necessary...
-	if (m_avts.capacity() > m_avts.size())
-	{
-		// Make a copy that's the exact size, and
-		// swap the two...
-		AVTVectorType(m_avts).swap(m_avts);
 	}
 }
 
@@ -218,14 +206,6 @@ ElemLiteralResult::init(
 
 ElemLiteralResult::~ElemLiteralResult()
 {
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::for_each;
-#endif
-
-	// Clean up all entries in the vector.
-	for_each(m_avts.begin(),
-			 m_avts.end(),
-			 DeleteFunctor<AVT>());
 }
 
 
@@ -246,11 +226,11 @@ ElemLiteralResult::postConstruction(
 	// OK, now check all attribute AVTs to make sure
 	// our NamespacesHandler knows about any prefixes
 	// that will need namespace declarations...
-	m_attrCount = m_avts.size();
+	const StylesheetConstructionContext::GetAndReleaseCachedString	theGuard(constructionContext);
 
-	XalanDOMString	thePrefix;
+	XalanDOMString&		thePrefix = theGuard.get();
 
-	for(AVTVectorType::size_type i = 0; i < m_attrCount; ++i)
+	for(unsigned int i = 0; i < m_avtsCount; ++i)
 	{
 		const AVT* const	avt = m_avts[i];
 
@@ -266,7 +246,7 @@ ElemLiteralResult::postConstruction(
 		}
 	}
 
-	if (m_attrCount != 0 ||
+	if (m_avtsCount != 0 ||
 		m_namespacesHandler.getNamespaceDeclarationsCount() != 0)
 	{
 		canGenerateAttributes(true);
@@ -339,13 +319,13 @@ ElemLiteralResult::execute(StylesheetExecutionContext&	executionContext) const
 		}
 	}
 
-	if(m_attrCount > 0)
+	if(m_avtsCount > 0)
 	{
 		StylesheetExecutionContext::GetAndReleaseCachedString	theGuard(executionContext);
 
 		XalanDOMString&		theStringedValue = theGuard.get();
 
-		for(AVTVectorType::size_type i = 0; i < m_attrCount; ++i)
+		for(unsigned int i = 0; i < m_avtsCount; ++i)
 		{
 			const AVT* const	avt = m_avts[i];
 
@@ -376,18 +356,23 @@ ElemLiteralResult::isAttrOK(
 
     if(isAttrOK == false)
     {
+		const XalanDOMString::size_type		len = length(attrName);
 		const XalanDOMString::size_type		indexOfNSSep = indexOf(attrName, XalanUnicode::charColon);
 
-		if(indexOfNSSep >= length(attrName))
+		if(indexOfNSSep >= len)
 		{
 			// An empty namespace is OK.
 			isAttrOK = true;
 		}
 		else
 		{
-			const XalanDOMString	prefix(attrName, indexOfNSSep);
+			const StylesheetConstructionContext::GetAndReleaseCachedString	theGuard(constructionContext);
 
-			const XalanDOMString* const		ns = getStylesheet().getNamespaceForPrefixFromStack(prefix);
+			XalanDOMString&		thePrefix = theGuard.get();
+
+			thePrefix.assign(attrName, indexOfNSSep);
+
+			const XalanDOMString* const		ns = getStylesheet().getNamespaceForPrefixFromStack(thePrefix);
 
 			if (ns != 0 && equals(*ns, constructionContext.getXSLTNamespaceURI()) == false)
 			{

@@ -134,7 +134,7 @@ StylesheetRoot::StylesheetRoot(
 	m_resultNameSpaceURL(),
 	m_outputMethod(FormatterListener::OUTPUT_METHOD_NONE),
 	m_cdataSectionElems(),
-	m_hasCdataSectionElems(false),
+	m_hasCDATASectionElems(false),
 	m_importStack(),
 	m_defaultTextRule(0),
 	m_defaultRule(0),
@@ -176,19 +176,18 @@ StylesheetRoot::postConstruction(StylesheetConstructionContext&		constructionCon
 		m_needToBuildKeysTable = true;
 	}
 
+	if (m_cdataSectionElems.size() > 0)
+	{
 #if !defined(XALAN_NO_NAMESPACES)
-	using std::sort;
-	using std::less;
+		using std::sort;
 #endif
 
-	sort(
+		sort(
 			m_cdataSectionElems.begin(),
 			m_cdataSectionElems.end(),
-			less<XalanQName>());
+			pointer_less<XalanQName>());
 
-	if (m_cdataSectionElems.empty() == false)
-	{
-		m_hasCdataSectionElems = true;
+		m_hasCDATASectionElems = true;
 	}
 }
 
@@ -542,7 +541,7 @@ StylesheetRoot::processOutputSpec(
 			StringTokenizer::size_type	theTokenCount =
 				theTokenizer.countTokens();
 
-			m_cdataSectionElems.reserve(theTokenCount);
+			m_cdataSectionElems.reserve(m_cdataSectionElems.size() + theTokenCount);
 
 			XalanDOMString	theToken;
 
@@ -553,7 +552,7 @@ StylesheetRoot::processOutputSpec(
 				--theTokenCount;
 
 				m_cdataSectionElems.push_back(
-					XalanQNameByValue(theToken, getNamespaces(), theLocator, true));
+					constructionContext.createXalanQNameByValue(theToken, getNamespaces(), theLocator, true));
 			}
 
 			assert(theTokenizer.hasMoreTokens() == false);
@@ -709,13 +708,13 @@ bool
 StylesheetRoot::isCDATASectionElementName(const XalanQName&		theQName) const
 {
 #if !defined(XALAN_NO_NAMESPACES)
-	using std::find;
+	using std::find_if;
 #endif
 
-	return find(
+	return find_if(
 			m_cdataSectionElems.begin(),
 			m_cdataSectionElems.end(),
-			theQName) != m_cdataSectionElems.end() ? true : false;
+			pointer_equals_predicate<XalanQName>(&theQName)) != m_cdataSectionElems.end() ? true : false;
 }
 
 

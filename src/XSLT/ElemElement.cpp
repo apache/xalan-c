@@ -100,13 +100,13 @@ ElemElement::ElemElement(
 
 		if(equals(aname, Constants::ATTRNAME_NAME))
 		{
-			m_nameAVT = new AVT(getLocator(), aname, atts.getValue(i),
-				*this, constructionContext);
+			m_nameAVT =
+				constructionContext.createAVT(getLocator(), aname, atts.getValue(i), *this);
 		}
 		else if(equals(aname, Constants::ATTRNAME_NAMESPACE))
 		{
-			m_namespaceAVT = new AVT(getLocator(), aname, atts.getValue(i),
-				*this, constructionContext); 
+			m_namespaceAVT =
+				constructionContext.createAVT(getLocator(), aname, atts.getValue(i), *this); 
 		}
 		else if(!(processUseAttributeSets(constructionContext, aname, atts, i) ||
 			    processSpaceAttr(aname, atts, i, constructionContext) ||
@@ -126,22 +126,12 @@ ElemElement::ElemElement(
 			0,
 			this);
 	}
-	
 }
 
 
 
 ElemElement::~ElemElement()
 {
-#if defined(XALAN_CANNOT_DELETE_CONST)
-	delete (AVT*)m_nameAVT;
-
-	delete (AVT*)m_namespaceAVT;
-#else
-	delete m_nameAVT;
-
-	delete m_namespaceAVT;
-#endif
 }
 
 

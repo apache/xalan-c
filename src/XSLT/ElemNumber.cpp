@@ -170,28 +170,28 @@ ElemNumber::ElemNumber(
 		}
 		else if(equals(aname, Constants::ATTRNAME_FORMAT))
 		{
-			m_format_avt = new AVT(getLocator(), aname,
-						atts.getValue(i), *this, constructionContext);
+			m_format_avt =
+				constructionContext.createAVT(getLocator(), aname, atts.getValue(i), *this);
 		}
 		else if(equals(aname, Constants::ATTRNAME_LANG))
 		{
-			m_lang_avt = new AVT(getLocator(), aname,
-						atts.getValue(i), *this, constructionContext);
+			m_lang_avt =
+				constructionContext.createAVT(getLocator(), aname, atts.getValue(i), *this);
 		}
 		else if(equals(aname, Constants::ATTRNAME_LETTERVALUE))
 		{
-			m_lettervalue_avt = new AVT(getLocator(), aname,
-						atts.getValue(i), *this, constructionContext);
+			m_lettervalue_avt =
+				constructionContext.createAVT(getLocator(), aname, atts.getValue(i), *this);
 		}
 		else if(equals(aname,Constants::ATTRNAME_GROUPINGSEPARATOR))
 		{
-			m_groupingSeparator_avt = new AVT(getLocator(), aname,
-						atts.getValue(i), *this, constructionContext);
+			m_groupingSeparator_avt =
+				constructionContext.createAVT(getLocator(), aname, atts.getValue(i), *this);
 		}
 		else if(equals(aname,Constants::ATTRNAME_GROUPINGSIZE))
 		{
-			m_groupingSize_avt = new AVT(getLocator(), aname,
-						atts.getValue(i), *this, constructionContext);
+			m_groupingSize_avt =
+				constructionContext.createAVT(getLocator(), aname, atts.getValue(i), *this);
 		}
 		else if(!isAttrOK(aname, atts, i, constructionContext))
 		{
@@ -206,19 +206,6 @@ ElemNumber::ElemNumber(
 	
 ElemNumber::~ElemNumber()
 {
-#if defined(XALAN_CANNOT_DELETE_CONST)
-	delete	(AVT*)m_format_avt;
-	delete	(AVT*)m_lang_avt;
-	delete	(AVT*)m_lettervalue_avt;
-	delete	(AVT*)m_groupingSeparator_avt;
-	delete	(AVT*)m_groupingSize_avt;
-#else
-	delete	m_format_avt;
-	delete	m_lang_avt;
-	delete	m_lettervalue_avt;
-	delete	m_groupingSeparator_avt;
-	delete	m_groupingSize_avt;
-#endif
 }
 
 

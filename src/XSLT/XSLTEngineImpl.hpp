@@ -106,6 +106,10 @@
 
 
 
+#include <XPath/XPathConstructionContextDefault.hpp>
+
+
+
 #include "KeyDeclaration.hpp"
 #include "OutputContextStack.hpp"
 #include "ProblemListenerDefault.hpp"
@@ -1738,6 +1742,8 @@ private:
 	bool								m_hasStripOrPreserveSpace;
 
 	bool								m_hasCDATASectionElements;
+
+	XPathConstructionContextDefault		m_xpathConstructionContext;
 
 	static void
 	installFunctions();

@@ -91,7 +91,8 @@ ElemUse::ElemUse(
 						lineNumber,
 						columnNumber,
 						xslToken),
-	m_attributeSetsNames()
+	m_attributeSetsNames(0),
+	m_attributeSetsNamesCount(0)
 {
 }
 
@@ -116,7 +117,7 @@ ElemUse::postConstruction(
 			StylesheetConstructionContext&	constructionContext,
 			const NamespacesHandler&		theParentHandler)
 {
-	if (m_attributeSetsNames.empty() == false)
+	if (m_attributeSetsNamesCount > 0)
 	{
 		canGenerateAttributes(true);
 	}
@@ -140,14 +141,17 @@ ElemUse::doExecute(
 			StylesheetExecutionContext&		executionContext,
 			bool							applyAttributeSets) const
 {
+	assert(m_attributeSetsNamesCount == 0 || m_attributeSetsNames != 0);
+
 	ElemTemplateElement::execute(executionContext);
 
-	if(applyAttributeSets == true && m_attributeSetsNames.empty() == false)
+	if(applyAttributeSets == true && m_attributeSetsNamesCount > 0)
 	{
 		assert(canGenerateAttributes() == true);
 
 		getStylesheet().getStylesheetRoot().applyAttrSets(
 				m_attributeSetsNames, 
+				m_attributeSetsNamesCount,
 				executionContext,
 				executionContext.getCurrentNode());
 	}
@@ -166,11 +170,10 @@ ElemUse::processUseAttributeSets(
 
 	if(StylesheetConstructionContext::ELEMNAME_LITERAL_RESULT == getXSLToken())
 	{
-		const XalanQNameByValue	qname(attrName, getStylesheet().getNamespaces());
-
-		isUAS = ((equals(qname.getNamespace(),
-			constructionContext.getXSLTNamespaceURI())) &&
-			(equals(qname.getLocalPart(), Constants::ATTRNAME_USEATTRIBUTESETS)));
+		isUAS = constructionContext.isXSLUseAttributeSetsAttribute(
+			attrName,
+			getStylesheet(),
+			getLocator());
 	}
 	else
 	{
@@ -179,26 +182,46 @@ ElemUse::processUseAttributeSets(
 
 	if(isUAS == true)
 	{
+#if 1
+		m_attributeSetsNames =
+			constructionContext.tokenizeQNames(
+				m_attributeSetsNamesCount,
+				atts.getValue(which),
+				getStylesheet().getNamespaces(),
+				getLocator());
+		assert(m_attributeSetsNamesCount == 0 || m_attributeSetsNames != 0);
+#else
 		const XalanDOMChar* const	qnames = atts.getValue(which);
 
-		StringTokenizer				tokenizer(qnames,
-											  c_wstr(XALAN_STATIC_UCODE_STRING(" \t\n\r")),
-											  false);
+		StringTokenizer		tokenizer(qnames);
 
-		m_attributeSetsNames.reserve(tokenizer.countTokens());
+		m_attributeSetsNamesCount = tokenizer.countTokens();
 
-		XalanDOMString	qname;
-
-		while(tokenizer.hasMoreTokens())
+		if (m_attributeSetsNamesCount > 0)
 		{
-			tokenizer.nextToken(qname);
-			assert(length(qname) != 0);
+			m_attributeSetsNames = constructionContext.allocateQNamePointerVector(m_attributeSetsNamesCount);
 
-			m_attributeSetsNames.push_back(
-				QNameVectorType::value_type(
-					qname,
-					getStylesheet().getNamespaces()));
+			const StylesheetConstructionContext::GetAndReleaseCachedString	theGuard(constructionContext);
+
+			XalanDOMString&		qname = theGuard.get();
+
+			size_type	theCurrentIndex = 0;
+
+			while(tokenizer.hasMoreTokens())
+			{
+				tokenizer.nextToken(qname);
+				assert(length(qname) != 0);
+
+				m_attributeSetsNames[theCurrentIndex++] =
+					constructionContext.createQNameByValue(
+						qname,
+						getStylesheet().getNamespaces(),
+						getLocator());
+			}
+
+			assert(theCurrentIndex == m_attributeSetsNamesCount); 
 		}
+#endif
 	}
 
 	return isUAS;

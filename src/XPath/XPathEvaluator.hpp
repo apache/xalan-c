@@ -65,7 +65,8 @@
 
 #if defined(XALAN_AUTO_PTR_REQUIRES_DEFINITION)
 #include <XPath/XObjectFactory.hpp>
-#include <XPath/XPathFactory.hpp>
+#include <XPath/XPathFactoryDefault.hpp>
+#include <XPath/XPathConstructionContextDefault.hpp>
 #include <XPath/XPathExecutionContextDefault.hpp>
 #endif
 
@@ -81,7 +82,8 @@
 
 #if !defined(XALAN_AUTO_PTR_REQUIRES_DEFINITION)
 class XObjectFactory;
-class XPathFactory;
+class XPathFactoryDefault;
+class XPathConstructionContextDefault;
 class XPathExecutionContextDefault;
 #endif
 
@@ -445,7 +447,9 @@ private:
 	// Data members...
 	const XalanAutoPtr<XObjectFactory>					m_xobjectFactory;
 
-	const XalanAutoPtr<XPathFactory>					m_xpathFactory;
+	const XalanAutoPtr<XPathFactoryDefault>				m_xpathFactory;
+
+	const XalanAutoPtr<XPathConstructionContextDefault>	m_constructionContext;
 
 	const XalanAutoPtr<XPathExecutionContextDefault>	m_executionContext;
 };

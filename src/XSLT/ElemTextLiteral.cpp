@@ -93,7 +93,7 @@ ElemTextLiteral::ElemTextLiteral(
 	m_disableOutputEscaping(disableOutputEscaping),
 	m_isWhitespace(isXMLWhitespace(ch, start, length)),
 	// Always null-terminate our buffer, since we may need it that way.
-	m_ch(constructionContext.allocateVector(ch + start, length, true)),
+	m_ch(constructionContext.allocateXalanDOMCharVector(ch + start, length, true)),
 	m_length(length)
 {
 }
