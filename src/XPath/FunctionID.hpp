@@ -224,8 +224,8 @@ private:
 
 		FunctionIDXObjectTypeCallback(XPathExecutionContext&	theExecutionContext) :
 			XObjectTypeCallback(),
-			m_executionContext(theExecutionContext),
-			m_resultString()
+			m_resultString(),
+			m_executionContext(theExecutionContext)			
 		{
 		}
 
