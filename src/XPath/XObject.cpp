@@ -250,11 +250,11 @@ doCompareNodeSets(
 
 		for(unsigned int k = 0; k < len2 && theResult == false; k++)
 		{
-			const XalanNode* const	theRHSNode = theLHSNodeSet.item(i);
+			const XalanNode* const	theRHSNode = theRHSNodeSet.item(k);
 			assert(theRHSNode != 0);
 
 			const XalanDOMString	s2 =
-					theTypeFunction(*theLHSNode);
+					theTypeFunction(*theRHSNode);
 
 			if(theCompareFunction(s1, s2) == true)
 			{
