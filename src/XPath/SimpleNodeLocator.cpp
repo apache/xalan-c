@@ -1554,11 +1554,11 @@ SimpleNodeLocator::nodeTest(
 
 				queueIndex = currentExpression.getOpCodeMapValue(opPos);
 
-				const XalanDOMString	targetLocalName =
-							queueIndex >= 0 ? currentExpression.getToken(queueIndex)->str() : XalanDOMString();
-
 				if(test == true)
 				{
+					const XalanDOMString	targetLocalName =
+								queueIndex >= 0 ? currentExpression.getToken(queueIndex)->str() : XalanDOMString();
+
 					switch(nodeType)
 					{
 					case XalanNode::ATTRIBUTE_NODE:
@@ -1681,14 +1681,14 @@ SimpleNodeLocator::predicates(
 
 	while(XPathExpression::eOP_PREDICATE == nextStepType)
 	{
-		int 		i = 0;
+		unsigned int 		i = 0;
 
-		const int	theLength = subQueryResults.getLength();
+		const unsigned int	theLength = subQueryResults.getLength();
 
 #if defined(XALAN_NO_NAMESPACES)
-		typedef vector<int> 		FailedEntriesVectorType;
+		typedef vector<unsigned int> 		FailedEntriesVectorType;
 #else
-		typedef std::vector<int>	FailedEntriesVectorType;
+		typedef std::vector<unsigned int>	FailedEntriesVectorType;
 #endif
 		// We'll accumulate the entries that we want to remove
 		// here, then remove them all at once.
