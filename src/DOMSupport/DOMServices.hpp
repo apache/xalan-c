@@ -75,6 +75,7 @@
 
 
 #include <PlatformSupport/DOMStringHelper.hpp>
+#include <PlatformSupport/FormatterListener.hpp>
 
 
 
@@ -209,7 +210,7 @@ public:
 	/**
 	 * Retrieves data for node
 	 * 
-	 * @param attribute DOM node whose data is to be returned
+	 * @param comment DOM node whose data is to be returned
 	 * @return a string representation of the node's data
 	 */
 	static XalanDOMString
@@ -221,7 +222,7 @@ public:
 	/**
 	 * Retrieves data for node
 	 * 
-	 * @param attribute DOM node whose data is to be returned
+	 * @param comment DOM node whose data is to be returned
 	 * @param data a string to which the node's data will be appended
 	 */
 	static void
@@ -342,6 +343,124 @@ public:
 			XalanDOMString&		data)
 	{
 		append(data, text.getData());
+	}
+
+	typedef void (FormatterListener::*MemberFunctionPtr)(const XMLCh* const, const unsigned int);
+
+	/**
+	 * Sends the data for a node to a FormatterListener
+	 * 
+	 * @param node DOM node whose data is to be returned
+	 * @param formatterListener the FormatterListener instance to receive the data
+	 * @param function A pointer to the member function of FormatterListener to call
+	 */
+	static void
+	getNodeData(
+			const XalanNode&	node,
+			FormatterListener&	formatterListener,
+			MemberFunctionPtr	function);
+
+	/**
+	 * Sends the data for a node to a FormatterListener
+	 * 
+	 * @param attribute DOM node whose data is to be returned
+	 * @param formatterListener the FormatterListener instance to receive the data
+	 * @param fRaw Whether or not the data should be sent raw.
+	 */
+	static void
+	getNodeData(
+			const XalanAttr&	attribute,
+			FormatterListener&	formatterListener,
+			MemberFunctionPtr	function)
+	{
+		sendData(formatterListener, function, attribute.getNodeValue());
+	}
+
+	/**
+	 * Sends the data for a node to a FormatterListener
+	 * 
+	 * @param comment DOM node whose data is to be returned
+	 * @param formatterListener the FormatterListener instance to receive the data
+	 * @param fRaw Whether or not the data should be sent raw.
+	 */
+	static void
+	getNodeData(
+			const XalanComment&		comment,
+			FormatterListener&		formatterListener,
+			MemberFunctionPtr		function)
+	{
+		sendData(formatterListener, function, comment.getData());
+	}
+
+	/**
+	 * Sends the data for a node to a FormatterListener
+	 * 
+	 * @param document DOM node whose data is to be returned
+	 * @param formatterListener the FormatterListener instance to receive the data
+	 * @param fRaw Whether or not the data should be sent raw.
+	 */
+	static void
+	getNodeData(
+			const XalanDocument&	document,
+			FormatterListener&		formatterListener,
+			MemberFunctionPtr		function);
+
+	/**
+	 * Sends the data for a node to a FormatterListener
+	 * 
+	 * @param documentFragment DOM node whose data is to be sent
+	 * @param formatterListener the FormatterListener instance to receive the data
+	 * @param fRaw Whether or not the data should be sent raw.
+	 */
+	static void
+	getNodeData(
+			const XalanDocumentFragment&	documentFragment,
+			FormatterListener&				formatterListener,
+			MemberFunctionPtr				function);
+
+	/**
+	 * Sends the data for a node to a FormatterListener
+	 * 
+	 * @param element DOM node whose data is to be returned
+	 * @param formatterListener the FormatterListener instance to receive the data
+	 * @param fRaw Whether or not the data should be sent raw.
+	 */
+	static void
+	getNodeData(
+			const XalanElement&		element,
+			FormatterListener&		formatterListener,
+			MemberFunctionPtr		function);
+
+	/**
+	 * Sends the data for a node to a FormatterListener
+	 * 
+	 * @param pi DOM node whose data is to be returned
+	 * @param formatterListener the FormatterListener instance to receive the data
+	 * @param fRaw Whether or not the data should be sent raw.
+	 */
+	static void
+	getNodeData(
+			const XalanProcessingInstruction&	pi,
+			FormatterListener&					formatterListener,
+			MemberFunctionPtr					function)
+	{
+		sendData(formatterListener, function, pi.getData());
+	}
+
+	/**
+	 * Sends the data for a node to a FormatterListener
+	 * 
+	 * @param node DOM node whose data is to be returned
+	 * @param formatterListener the FormatterListener instance to receive the data
+	 * @param fRaw Whether or not the data should be sent raw.
+	 */
+	static void
+	getNodeData(
+			const XalanText&	text,
+			FormatterListener&	formatterListener,
+			MemberFunctionPtr	function)
+	{
+		sendData(formatterListener, function, text.getData());
 	}
 
 	/**
@@ -492,6 +611,21 @@ private:
 			const XalanNode&	attr,
 			XalanNode&			element);
 
+	/**
+	 * Utility function to send data to a FormatterListener
+	 *
+	 * @param formatterListener The FormatterListener instance.
+	 * @param fRaw Whether or not the data should be sent raw.
+	 * @param data The data to send.
+	 */
+	static void
+	sendData(
+			FormatterListener&		formatterListener,
+			MemberFunctionPtr		function,
+			const XalanDOMString&	data)
+	{
+		(formatterListener.*function)(c_wstr(data), length(data));
+	}
 };
 
 
