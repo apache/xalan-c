@@ -197,14 +197,6 @@ public:
 	reset() = 0;
   
 	/**
-	 * Get a factory for creating new target nodes.
-	 *
-	 * @return The factory
-	 */
-	virtual XalanDocument*
-	getDOMFactory() const = 0;
-
-	/**
 	 * Given an input source, get the source tree.
 	 *
 	 * @param inputSource pointer to input source

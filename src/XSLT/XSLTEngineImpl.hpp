@@ -1093,13 +1093,6 @@ public:
 	reset();
 
 	/**
-	 * Get a DOM document, primarily for creating result 
-	 * tree fragments.
-	 */
-	virtual XalanDocument*
-	getDOMFactory() const;
-
-	/**
 	 * Retrieve the XPath environment support object
 	 *
 	 * @return XPath environment support object
@@ -1438,16 +1431,6 @@ protected:
 	{
 		m_outputContextStack.getFormatterListener() = flistener;
 	}
-
-	/**
-	 * If true, build DOM-based result tree fragments.
-	 */
-	bool					m_useDOMResultTreeFactory;
-
-	/**
-	 * The factory that will be used to create DOM-based result tree fragments.
-	 */
-	mutable XalanDocument*	m_domResultTreeFactory;
 
 	/**
 	 * The namespace that the result tree conforms to.  A null value 

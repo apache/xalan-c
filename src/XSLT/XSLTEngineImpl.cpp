@@ -169,8 +169,6 @@ XSLTEngineImpl::XSLTEngineImpl(
 			XPathFactory&		xpathFactory) :
 	XSLTProcessor(),
 	PrefixResolver(),
-	m_useDOMResultTreeFactory(false),
-	m_domResultTreeFactory(0),
 	m_resultNameSpacePrefix(),
 	m_resultNameSpaceURL(),
 	m_xpathFactory(xpathFactory),
@@ -213,12 +211,6 @@ XSLTEngineImpl::reset()
 	m_durationsTable.clear();
 	m_stylesheetLocatorStack.clear();
 	m_cdataStack.clear();
-
-	if (m_domResultTreeFactory != 0)
-	{
-		m_parserLiaison.destroyDocument(m_domResultTreeFactory);
-		m_domResultTreeFactory = 0;
-	}
 
 	m_stylesheetRoot = 0;
 
@@ -678,8 +670,6 @@ XSLTEngineImpl::getStylesheetFromPIURL(
 
 	if(fragIndex == 0)
 	{
-		diag("Locating stylesheet from fragment identifier...");
-
 		const XalanDOMString	fragID(localXSLURLString, 1);
 
 		const XalanElement*		nsNode = 0;
@@ -841,6 +831,7 @@ XSLTEngineImpl::getStylesheetFromPIURL(
 		else
 		{
 			stylesheetDoc = 0;
+
 			error("Node pointed to by fragment identifier was not an element: " + fragID);
 		}
 	}
@@ -1741,12 +1732,12 @@ XSLTEngineImpl::flushPending()
 		}
 	}
 
-	XalanDOMString&		thePendingElementName = getPendingElementNameImpl();
-
 	if(getHasPendingStartDocument() == true && getMustFlushPendingStartDocument() == true)
 	{
 		startDocument();
 	}
+
+	XalanDOMString&		thePendingElementName = getPendingElementNameImpl();
 
 	if(0 != length(thePendingElementName) && getMustFlushPendingStartDocument() == true)
 	{
@@ -3249,23 +3240,6 @@ XSLTEngineImpl::getUniqueNamespaceValue(XalanDOMString&		theValue)
 	} while(getResultNamespaceForPrefix(m_scratchString) != 0);
 
 	append(theValue, m_scratchString);
-}
-
-
-
-XalanDocument*
-XSLTEngineImpl::getDOMFactory() const
-{
-	if(m_domResultTreeFactory == 0)
-	{
-#if defined(XALAN_NO_MUTABLE)
-		((XSLTEngineImpl*)this)->m_domResultTreeFactory = m_parserLiaison.createDOMFactory();
-#else
-		m_domResultTreeFactory = m_parserLiaison.createDOMFactory();
-#endif
-	}
-
-	return m_domResultTreeFactory;
 }
 
 
