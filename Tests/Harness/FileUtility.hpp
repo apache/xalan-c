@@ -125,8 +125,6 @@ const XalanDOMString	pathSep(XALAN_STATIC_UCODE_STRING("\\"));
 // This class is exported from the Harness.dll
 class HARNESS_API FileUtility 
 {
-
-
 public:
 
 	struct reportStruct
@@ -137,7 +135,7 @@ public:
 		XalanDOMString  xslFileURL;
 		XalanDOMString  testBase;
 		XalanDOMString  xmlFormat;
-		char* msg;
+		const char*		msg;
 		XalanDOMString	currentNode;
 		XalanDOMString	actual;
 		XalanDOMString	expected;
@@ -153,7 +151,7 @@ public:
 			clear(actual);
 			clear(expected);
 		}
-	} data ;
+	} data;
 
 	/** Simple constructor, does not perform initialization.  */
 	FileUtility()
@@ -166,80 +164,97 @@ public:
 	* @returns a vector containing test files.
 	*/
 
-	XalanDOMString FileUtility::getDrive();
+	XalanDOMString
+	getDrive();
 
 
-	FileNameVectorType FileUtility::getTestFileNames(XalanDOMString baseDir, XalanDOMString relDir, bool useDirPrefix);
-	//FileNameVectorType getTestFileNames (char* theDirectory);
+	FileNameVectorType
+	getTestFileNames(
+			const XalanDOMString&	baseDir,
+			const XalanDOMString&	relDir,
+			bool					useDirPrefix);
 
 	/** 
 	* Utility method used to get subdirectories from a specific directory.
 	* @returns a vector containing directory files.
 	*/	
-	FileNameVectorType FileUtility::getDirectoryNames(XalanDOMString rootDirectory);
+	FileNameVectorType
+	getDirectoryNames(const XalanDOMString&		rootDirectory);
 
 	/** 
 	* Utility method used to create default directories when neccessary
 	*/
-    void FileUtility::checkAndCreateDir(XalanDOMString directory );
+    void
+	checkAndCreateDir(const XalanDOMString&		directory);
 
 	/** 
 	* Utility method determines if directory exists.
 	*/
-	bool FileUtility::checkDir(XalanDOMString directory );
+	bool
+	checkDir(const XalanDOMString&	directory);
 
 	/** 
 	* Utility method used to get XSL file based on XML file.
 	* @returns a XalanDOMString.
 	*/
-	XalanDOMString FileUtility::getXSLFileName(const XalanDOMString&	theXMLFileName);
+	XalanDOMString
+	getXSLFileName(const XalanDOMString&	theXMLFileName);
 
 	/** 
 	* Utility method used to get OUT file based on XML file.
 	* @returns a XalanDOMString.
 	*/
-	XalanDOMString FileUtility::generateFileName(const XalanDOMString&  theXMLFileName, char* suffix);
+	XalanDOMString
+	generateFileName(
+			const XalanDOMString&  theXMLFileName,
+			const char*				suffix);
 
 	/** 
 	* Utility method used to generate UniqRunid.
 	* @returns a XalanDOMString.
 	*/
-	XalanDOMString FileUtility::generateUniqRunid();
+	XalanDOMString
+	generateUniqRunid();
 
 	/** 
 	* Utility methods used to get Xerces Version number.
 	* @returns a XalanDOMString.
 	*/
-	XalanDOMString FileUtility::getXercesVersion();
+	XalanDOMString
+	getXercesVersion();
 
 
 	void
-	FileUtility::checkResults(const XalanDOMString& outputFile, 
-							  const XalanDOMString& goldFile, 
-							  XMLFileReporter& logfile);
+	checkResults(
+			const XalanDOMString&	outputFile, 
+			const XalanDOMString&	goldFile, 
+			XMLFileReporter&		logfile);
 
 	void
-	FileUtility::checkAPIResults(const XalanDOMString& actual, 
-								 const XalanDOMString& expected,
-								 char* msg,
-								 XMLFileReporter& logfile,
-								 const XalanDOMString& outputFile,
-								 const XalanDOMString& goldFile);
+	checkAPIResults(
+			const XalanDOMString&	actual, 
+			const XalanDOMString&	expected,
+			const char*				msg,
+			XMLFileReporter&		logfile,
+			const XalanDOMString&	outputFile,
+			const XalanDOMString&	goldFile);
 
 	void
-	FileUtility::checkAPIResults(const char* actual, 
-								 const char* expected,
-								 char* msg,
-								 XMLFileReporter& logfile,
-								 const XalanDOMString& outputFile,
-								 const XalanDOMString& goldFile								 )
+	checkAPIResults(
+			const char*				actual,
+			const char*				expected,
+			const char*				msg,
+			XMLFileReporter&		logfile,
+			const XalanDOMString&	outputFile,
+			const XalanDOMString&	goldFile)
 	{
-		FileUtility::checkAPIResults(XalanDOMString(actual), 
-									 XalanDOMString(expected),
-									 msg,
-									 logfile,
-									 outputFile,
-									 goldFile);
+		checkAPIResults(
+			XalanDOMString(actual), 
+			XalanDOMString(expected),
+			msg,
+			logfile,
+			outputFile,
+			goldFile);
 	}
 
 	/**
@@ -248,69 +263,71 @@ public:
 	* @returns Void.
 	*/
 	void
-	FileUtility::checkDOMResults(const XalanDOMString& theOutputFile, 
-								const XalanCompiledStylesheet* compiledSS, 
-								XalanSourceTreeDocument* dom,
-								const XSLTInputSource& goldInputSource,
-								XMLFileReporter& logfile);
+	checkDOMResults(
+			const XalanDOMString&			theOutputFile, 
+			const XalanCompiledStylesheet*	compiledSS,
+			const XalanSourceTreeDocument*	dom,
+			const XSLTInputSource&			goldInputSource,
+			XMLFileReporter&				logfile);
 
 	bool
-	FileUtility::compareSerializedResults(const XalanDOMString& transformResult,
-								const XalanDOMString& goldInputSource);
+	compareSerializedResults(
+			const XalanDOMString&	transformResult,
+			const XalanDOMString&	goldInputSource);
 	/**
 	* Utility method used to create a FormatterToXML FormatterListener.
 	* This is required to DOM comparisions. 
 	* @returns a pointer to a FormatterListener.
 	*/
 	FormatterListener* 
-	FileUtility::getXMLFormatter(bool	shouldWriteXMLHeader,
-				bool					stripCData,
-				bool					escapeCData,
-				PrintWriter&			resultWriter,
-				int						indentAmount,
-				const XalanDOMString&	mimeEncoding,
-				const StylesheetRoot*	stylesheet);
+	getXMLFormatter(
+			bool					shouldWriteXMLHeader,
+			bool					stripCData,
+			bool					escapeCData,
+			PrintWriter&			resultWriter,
+			int						indentAmount,
+			const XalanDOMString&	mimeEncoding,
+			const StylesheetRoot*	stylesheet);
 
 
 	bool
-	FileUtility::fileCompare(const char* goldFile,
-						const char* outputFile);
-
+	fileCompare(
+			const char*		goldFile,
+			const char*		outputFile);
 
 	/** 
 	* Utility methods used to perform a DOM Compare
 	* @returns boolean
 	*/
 	bool 
-	FileUtility::domCompare(const XalanNode& gold, const XalanNode& doc);
+	domCompare(const XalanNode& gold, const XalanNode& doc);
 
 	/** 
 	* Utility methods used to diff two Element nodes.
 	* @returns boolean.
 	*/
 	bool 
-	FileUtility::diffElement(const XalanNode& gold, const XalanNode& doc);
+	diffElement(const XalanNode& gold, const XalanNode& doc);
 
 	/** 
 	* Utility methods used to diff two attribute nodes.
 	* @returns boolean.
 	*/
 	bool 
-	FileUtility::diffAttr(const XalanNode* gAttr, const XalanNode* dAttr);
+	diffAttr(const XalanNode* gAttr, const XalanNode* dAttr);
 
 	/** 
 	* Utility methods used to report Pass/Fail numbers.
 	* @returns void.
 	*/
 	void
-	FileUtility::reportPassFail(XMLFileReporter& logfile);
+	reportPassFail(XMLFileReporter& logfile);
 
 	void
-	FileUtility::reportPassFail(XMLFileReporter& logfile, const XalanDOMString& runid);
+	reportPassFail(XMLFileReporter& logfile, const XalanDOMString& runid);
 
 	void
-	FileUtility::analyzeResults(XalanTransformer& xalan, const XalanDOMString& resultsFile);
-//	FileUtility::analyzeResults(const XalanDOMString& resultsFile);
+	analyzeResults(XalanTransformer& xalan, const XalanDOMString& resultsFile);
 
 private:
 
@@ -319,28 +336,31 @@ private:
 	* @returns void.
 	*/
 	void 
-	FileUtility::collectData(char* errmsg, 
-						 XalanDOMString currentnode, 
-						 XalanDOMString actdata, 
-						 XalanDOMString expdata);
+	collectData(
+			const char*				errmsg,
+			const XalanDOMString&	currentnode,
+			const XalanDOMString&	actdata,
+			const XalanDOMString&	expdata);
 
 	/** 
 	* Utility methods used to report DOM compare errors.
 	* @returns void.
 	*/
 	void
-	FileUtility::reportError();
-	
-	inline void
-	FileUtility::debugNodeData(const XalanDOMString& value)
+	reportError();
+
+	void
+	debugNodeData(const XalanDOMString& value)
 	{
 #if !defined(NDEBUG) && defined(_MSC_VER)
 		cout << "Node is: " << c_str(TranscodeToLocalCodePage(value)) << endl;
 #endif
 	}
 
-	inline void
-	FileUtility::debugNodeData(const XalanDOMString& node, const XalanDOMString& value)
+	void
+	debugNodeData(
+			const XalanDOMString&	node,
+			const XalanDOMString&	value)
 	{
 #if !defined(NDEBUG) && defined(_MSC_VER)
 		cout << "Node is: " << c_str(TranscodeToLocalCodePage(node)) << "	"
@@ -348,13 +368,16 @@ private:
 #endif
 	}
 
-	inline void
-	FileUtility::debugAttributeData(const XalanDOMString& value)
+	void
+	debugAttributeData(const XalanDOMString&	value)
 	{
 #if !defined(NDEBUG) && defined(_MSC_VER)
 		cout << "Attribute is: " << c_str(TranscodeToLocalCodePage(value)) << endl;
 #endif
 	}
 };        // end of class FileUtility
+
+
+
 #endif
 
