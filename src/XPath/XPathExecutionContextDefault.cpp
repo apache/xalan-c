@@ -96,10 +96,9 @@ XPathExecutionContextDefault::XPathExecutionContextDefault(
 			XalanNode*				theCurrentNode,
 			const NodeRefListBase*	theContextNodeList,
 			const PrefixResolver*	thePrefixResolver) :
-	XPathExecutionContext(),
+	XPathExecutionContext(&theXObjectFactory),
 	m_xpathEnvSupport(&theXPathEnvSupport),
 	m_domSupport(&theDOMSupport),
-	m_xobjectFactory(&theXObjectFactory),
 	m_currentNode(theCurrentNode),
 	m_contextNodeList(theContextNodeList == 0 ? &s_dummyList : theContextNodeList),
 	m_prefixResolver(thePrefixResolver),
@@ -118,7 +117,6 @@ XPathExecutionContextDefault::XPathExecutionContextDefault(
 	XPathExecutionContext(),
 	m_xpathEnvSupport(0),
 	m_domSupport(0),
-	m_xobjectFactory(0),
 	m_currentNode(theCurrentNode),
 	m_contextNodeList(theContextNodeList == 0 ? &s_dummyList : theContextNodeList),
 	m_prefixResolver(thePrefixResolver),
@@ -180,16 +178,6 @@ void
 XPathExecutionContextDefault::setCurrentNode(XalanNode*		theCurrentNode)
 {
 	m_currentNode = theCurrentNode;
-}
-
-
-
-XObjectFactory&
-XPathExecutionContextDefault::getXObjectFactory() const
-{
-	assert(m_xobjectFactory != 0);
-
-	return *m_xobjectFactory;
 }
 
 

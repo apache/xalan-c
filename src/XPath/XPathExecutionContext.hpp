@@ -118,7 +118,7 @@ public:
 	typedef NodeRefListBase::size_type	size_type;
 
 	explicit
-	XPathExecutionContext();
+	XPathExecutionContext(XObjectFactory*	theXObjectFactory = 0);
 
 	virtual
 	~XPathExecutionContext();
@@ -175,8 +175,13 @@ public:
 	 * 
 	 * @return factory object instance
 	 */
-	virtual XObjectFactory&
-	getXObjectFactory() const = 0;
+	XObjectFactory&
+	getXObjectFactory() const
+	{
+		assert(m_xobjectFactory != 0);
+
+		return *m_xobjectFactory;
+	}
 
 	/**
 	 * Convenience function for creating a node set with
@@ -737,6 +742,10 @@ public:
 			const char*			msg,
 			const XalanNode* 	sourceNode,
 			const Locator* 		locator) const = 0;
+
+protected:
+
+	XObjectFactory*		m_xobjectFactory;
 };
 
 

@@ -59,7 +59,8 @@
 
 
 
-XPathExecutionContext::XPathExecutionContext()
+XPathExecutionContext::XPathExecutionContext(XObjectFactory*	theXObjectFactory) :
+	m_xobjectFactory(theXObjectFactory)
 {
 }
 
