@@ -72,7 +72,12 @@
 #include "StylesheetConstructionContext.hpp"
 #include "StylesheetExecutionContext.hpp"
 
+#if !defined(XALAN_NO_NAMESPACES)
+	using std::vector;
+#endif
 
+typedef vector<DOMString> StringVectorType;
+typedef StringVectorType::iterator StringVectorTypeIterator;
 
 const DOMString			ElemNumber::s_alphaCountTable(XALAN_STATIC_UCODE_STRING("ZABCDEFGHIJKLMNOPQRSTUVWXY"));
 
@@ -711,12 +716,12 @@ ElemNumber::formatNumberList(
 			const DOM_Node&					contextNode) const
 {
 	const int	nNumbers = theList.size();
-	XMLCh		numberType = '1';
+	XMLCh	numberType('1');
 	int			numberWidth = 1;
 
 	DOMString	formattedNumber;
 	DOMString	formatToken;
-	DOMString	sepString;
+	DOMString	sepString(".");
 	DOMString	lastSepString;
 
 	DOMString	formatValue = !isEmpty(m_format_avt)
@@ -733,75 +738,56 @@ ElemNumber::formatNumberList(
 #if ! defined(__GNUC__)
 	std::locale		loc = getLocale(executionContext, contextNode);
 #endif
+	// Construct an array of tokens.  We need to be able to check if the last
+	// token in non-alphabetic, in which case the penultimate non-alphabetic is
+	// the repeating separator
+	StringVectorType tokenVector;
+	while(formatTokenizer.hasMoreTokens())
+		tokenVector.push_back(formatTokenizer.nextToken());
 
+	// Get rid of the leading and trailing non-alphabetics, save for later
+	DOMString leaderStr;
+	DOMString trailerStr;
+	StringVectorTypeIterator it;
+	it = tokenVector.begin();
+	if(! isLetterOrDigit(charAt((*it), 0)))
+	{
+		leaderStr = *it;
+		tokenVector.erase(it);
+	}
+	it += tokenVector.size()-1;
+	if(! isLetterOrDigit(charAt((*it), 0)))
+	{
+		trailerStr = *it;
+		tokenVector.erase(it);
+	}
+
+	// Now we're left with a sequence of alpha,non-alpha tokens, format them
+	// with the corresponding entry in the format string, or the last one if no
+	// more matching ones
+	formattedNumber = leaderStr;
+	it = tokenVector.begin();
 	for(int i = 0; i < nNumbers; i++)
 	{
-		while(formatTokenizer.hasMoreTokens())
+		if (it != tokenVector.end())
 		{
-			formatToken = formatTokenizer.nextToken();
-
-			if(isLetterOrDigit(charAt(formatToken, length(formatToken) - 1)))
-			{
-				numberWidth = length(formatToken);
-
-				numberType = charAt(formatToken, numberWidth - 1);
-				break; // from while(tokenizer.hasMoreTokens())
-			}
-			else
-			{
-				sepString = formatToken;
-
-				formattedNumber += sepString;
-
-				if(formatTokenizer.hasMoreTokens())
-				{
-					while(formatTokenizer.hasMoreTokens())
-					{
-						formatToken = formatTokenizer.nextToken();
-
-						if(!isLetterOrDigit(charAt(formatToken, 0)))
-						{
-							lastSepString = sepString + formatToken; // possibly the last separator 				                			
-						}
-						else			
-						{
-							numberWidth = length(formatToken);
-							numberType = charAt(formatToken, numberWidth - 1);
-							break; // from inner while loop
-						}
-					}
-					break; // from while(tokenizer.hasMoreTokens())
-				}
-			}
-
-		} // end while
-
+			assert(isLetterOrDigit(charAt((*it), 0)));
+			formatToken = *it++;
+			numberWidth = length(formatToken);
+			numberType = charAt(formatToken, numberWidth - 1);
+		}
+		if (it != tokenVector.end())
+		{
+			assert(!isLetterOrDigit(charAt((*it), 0)));
+			sepString = *it++;
+		}			
 		formattedNumber += getFormattedNumber(executionContext, contextNode,
 				numberType, numberWidth, theList[i]);
+		// All but the last one
+		if (i < nNumbers-1)
+			formattedNumber += sepString;
 	}
-
-	// Check to see if we finished up the format string...
-	if(isEmpty(lastSepString))
-		lastSepString = DOMString();
-
-	while(formatTokenizer.hasMoreTokens())
-	{
-		formatToken = formatTokenizer.nextToken();
-
-		if(!isLetterOrDigit(charAt(formatToken, 0)))
-		{
-			lastSepString += formatToken;
-		}
-		else
-		{
-			lastSepString = DOMString();
-		}
-	}
-
-	if(!isEmpty(lastSepString))
-	{
-		formattedNumber += lastSepString;
-	}
+	formattedNumber += trailerStr;
 
 	return formattedNumber;  
 }
