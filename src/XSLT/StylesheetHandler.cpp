@@ -252,7 +252,9 @@ StylesheetHandler::processSpaceAttr(
 			const Locator*			locator,
 			bool&					fPreserve)
 {
-	const XalanQNameByValue		theName(XalanDOMString(aname), m_stylesheet.getNamespaces());
+	const XalanDOMString		theAttributeName(aname);
+
+	const XalanQNameByValue		theName(theAttributeName, m_stylesheet.getNamespaces());
 
 	const bool					isSpaceAttr = s_spaceAttrQName.equals(theName);
 
