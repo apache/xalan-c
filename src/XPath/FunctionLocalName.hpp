@@ -110,6 +110,8 @@ public:
 								   context);
 		}
 
+		assert(args[0] != 0);
+
 		const NodeRefListBase&	theNodeList = args[0]->nodeset();
 
 		XalanDOMString	theData;
