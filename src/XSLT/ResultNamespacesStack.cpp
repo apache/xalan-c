@@ -86,29 +86,13 @@ ResultNamespacesStack::addDeclaration(
 	{
 		m_resultNamespaces.resize(m_resultNamespaces.size() + 1);
 
-		m_resultNamespaces.back().resize(1);
-
 		m_createNewContextStack.back() = false;
 	}
 
 	NamespaceVectorType&	theCurrentNamespaces = m_resultNamespaces.back();
 
-	NameSpace&				theCurrentNamespace = theCurrentNamespaces.front();
-
-	// If the last vector contains only an empty namespace, replace it with a
-	// new vector containing only this namespace
-	if(length(theCurrentNamespace.getURI()) == 0 &&
-	   length(theCurrentNamespace.getPrefix()) == 0)
-	{
-		theCurrentNamespace.setPrefix(thePrefix);
-
-		theCurrentNamespace.setURI(theNamespaceURI);
-	}
-	else
-	{
-		// Otherwise, add the namespace at the end of the current namespaces.
-		theCurrentNamespaces.push_back(NameSpace(thePrefix, theNamespaceURI));
-	}
+	// Add the namespace at the end of the current namespaces.
+	theCurrentNamespaces.push_back(NameSpace(thePrefix, theNamespaceURI));
 }
 
 
@@ -116,7 +100,7 @@ ResultNamespacesStack::addDeclaration(
 void
 ResultNamespacesStack::pushContext()
 {
-	if (m_createNewContextStack.size() == 0)
+	if (m_createNewContextStack.empty() == true)
 	{
 		m_createNewContextStack.reserve(eDefaultCreateNewContextStackSize);
 	}
@@ -129,11 +113,11 @@ ResultNamespacesStack::pushContext()
 void
 ResultNamespacesStack::popContext()
 {
-	assert(m_createNewContextStack.size() != 0);
+	assert(m_createNewContextStack.empty() == false);
 
 	if (m_createNewContextStack.back() == false)
 	{
-		assert(m_resultNamespaces.size() != 0);
+		assert(m_resultNamespaces.empty() == false);
 
 		m_resultNamespaces.pop_back();
 	}
