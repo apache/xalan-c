@@ -101,8 +101,14 @@ public:
 #endif
 	clone(void*		theAddress = 0) const
 	{
-		return theAddress == 0 ? new ResultTreeFragBaseXNodeSetBaseProxy(*this) :
-				new (theAddress) ResultTreeFragBaseXNodeSetBaseProxy(*this);
+		if (theAddress == 0)
+		{
+			return new ResultTreeFragBaseXNodeSetBaseProxy(*this);
+		}
+		else
+		{
+			return new (theAddress) ResultTreeFragBaseXNodeSetBaseProxy(*this);
+		}
 	}
 
 	virtual const NodeRefListBase&
