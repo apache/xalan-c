@@ -114,8 +114,9 @@ FormatterStringLengthCounter::endElement(
 void
 FormatterStringLengthCounter::characters(
 			const XMLCh* const	/* chars */,
-			const unsigned int	/* length */)
+			const unsigned int	length)
 {
+	m_count += length;
 }
 
 
