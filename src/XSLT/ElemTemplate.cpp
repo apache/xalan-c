@@ -91,7 +91,7 @@ ElemTemplate::ElemTemplate(
 	m_matchPattern(0),
 	m_name(),
 	m_mode(),
-	m_priority(XPath::s_MatchScoreNone)
+	m_priority(XPath::getMatchScoreValue(XPath::eMatchScoreNone))
 {
 	const unsigned int	nAttrs = atts.getLength();
 

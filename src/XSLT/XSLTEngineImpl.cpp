@@ -2850,8 +2850,8 @@ XSLTEngineImpl::shouldStripSourceNode(
 							static_cast<const XalanElement*>(parent);
 #endif
 
-						double	highPreserveScore = XPath::s_MatchScoreNone;
-						double	highStripScore = XPath::s_MatchScoreNone;
+						XPath::eMatchScore	highPreserveScore = XPath::eMatchScoreNone;
+						XPath::eMatchScore	highStripScore = XPath::eMatchScoreNone;
 
 						ElementPrefixResolverProxy	theProxy(parentElem, m_xpathEnvSupport, m_domSupport);
 
@@ -2871,7 +2871,7 @@ XSLTEngineImpl::shouldStripSourceNode(
 								const XPath* const	matchPat = theElements[i];
 								assert(matchPat != 0);
 
-								const double	score = matchPat->getMatchScore(parent, theProxy, executionContext);
+								const XPath::eMatchScore	score = matchPat->getMatchScore(parent, theProxy, executionContext);
 
 								if(score > highPreserveScore)
 									highPreserveScore = score;
@@ -2893,15 +2893,15 @@ XSLTEngineImpl::shouldStripSourceNode(
 									theElements[i];
 								assert(matchPat != 0);
 
-								const double	score = matchPat->getMatchScore(parent, theProxy, executionContext);
+								const XPath::eMatchScore	score = matchPat->getMatchScore(parent, theProxy, executionContext);
 
 								if(score > highStripScore)
 									highStripScore = score;
 							}
 						}
 
-						if(highPreserveScore > XPath::s_MatchScoreNone ||
-						   highStripScore > XPath::s_MatchScoreNone)
+						if(highPreserveScore > XPath::eMatchScoreNone ||
+						   highStripScore > XPath::eMatchScoreNone)
 						{
 							if(highPreserveScore > highStripScore)
 							{

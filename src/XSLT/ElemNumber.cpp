@@ -249,7 +249,7 @@ ElemNumber::findAncestor(
 		{
 			if(fromMatchPattern->getMatchScore(contextCopy, *this,
 						executionContext) !=
-							XPath::s_MatchScoreNone)
+							XPath::eMatchScoreNone)
 			{
 				break;
 			}
@@ -259,7 +259,7 @@ ElemNumber::findAncestor(
 		{
 			if(countMatchPattern->getMatchScore(contextCopy, *this,
 						executionContext) !=
-							XPath::s_MatchScoreNone)
+							XPath::eMatchScoreNone)
 			{
 				break;
 			}
@@ -289,7 +289,7 @@ ElemNumber::findPrecedingOrAncestorOrSelf(
 		{
 			if(fromMatchPattern->getMatchScore(contextCopy, *this,
 						executionContext) !=
-							XPath::s_MatchScoreNone)
+							XPath::eMatchScoreNone)
 			{
 				contextCopy = 0;
 				break;
@@ -300,7 +300,7 @@ ElemNumber::findPrecedingOrAncestorOrSelf(
 		{
 			if(countMatchPattern->getMatchScore(contextCopy, *this,
 						executionContext) !=
-							XPath::s_MatchScoreNone)
+							XPath::eMatchScoreNone)
 			{
 				break;
 			}
@@ -551,7 +551,7 @@ ElemNumber::getPreviousNode(
 						fromMatchPattern->getMatchScore(
 							next,
 							*this,
-							executionContext) != XPath::s_MatchScoreNone))
+							executionContext) != XPath::eMatchScoreNone))
 				{
 					pos = 0; // return 0 from function.
 
@@ -579,7 +579,7 @@ ElemNumber::getPreviousNode(
 				countMatchPattern->getMatchScore(
 						pos,
 						*this,
-						executionContext) != XPath::s_MatchScoreNone))
+						executionContext) != XPath::eMatchScoreNone))
 			{
 				break;
 			}
@@ -596,7 +596,7 @@ ElemNumber::getPreviousNode(
 				countMatchPattern->getMatchScore(
 						pos,
 						*this,
-						executionContext) != XPath::s_MatchScoreNone))
+						executionContext) != XPath::eMatchScoreNone))
 			{
 				break;
 			}
@@ -680,7 +680,7 @@ ElemNumber::getMatchingAncestors(
 	{
 		if((0 != m_fromMatchPattern) &&
 				(m_fromMatchPattern->getMatchScore(node, *this, executionContext) !=
-				 XPath::s_MatchScoreNone))
+				 XPath::eMatchScoreNone))
 		{
 			// The following if statement gives level="single" different 
 			// behavior from level="multiple", which seems incorrect according 
@@ -696,7 +696,7 @@ ElemNumber::getMatchingAncestors(
 			error(TranscodeFromLocalCodePage("Programmer error! countMatchPattern should never be 0!"));
 
 		if(countMatchPattern->getMatchScore(node, *this, executionContext) !=
-				XPath::s_MatchScoreNone)
+				XPath::eMatchScoreNone)
 		{
 			ancestors.addNode(node);
 

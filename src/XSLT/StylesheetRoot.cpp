@@ -161,10 +161,6 @@ StylesheetRoot::StylesheetRoot(
 
 StylesheetRoot::~StylesheetRoot()
 {
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::for_each;
-#endif
-
 	delete m_defaultRule;
 	delete m_defaultTextRule;
 	delete m_defaultRootRule;

@@ -243,7 +243,15 @@ TraceListenerDefault::selected(const SelectionEvent&	ev)
 		m_printWriter.print(ev.m_xpath.getExpression().getCurrentPattern());
 		m_printWriter.print(XALAN_STATIC_UCODE_STRING("\": "));
 
-		if(ev.m_selection->getType() == XObject::eTypeNodeSet)
+		if (ev.m_selection.null() == true)
+		{
+			assert(ev.m_sourceNode != 0);
+			m_printWriter.println();
+
+			m_printWriter.print(XALAN_STATIC_UCODE_STRING("     "));
+			m_printWriter.println(DOMServices::getNodeData(*ev.m_sourceNode));
+		}
+		else if(ev.m_selection->getType() == XObject::eTypeNodeSet)
 		{
 			m_printWriter.println();
 

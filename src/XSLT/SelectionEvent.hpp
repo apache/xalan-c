@@ -129,7 +129,8 @@ public:
 	const XPath&						m_xpath;
   
 	/**
-	 * The result of the selection.
+	 * The result of the selection.  If it's null, m_sourceNode
+	 * was selected.
 	 */
 	const XObjectPtr					m_selection;
 

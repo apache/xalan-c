@@ -895,7 +895,11 @@ Stylesheet::findTemplate(
 
 		const ElemTemplate*		bestMatchedRule = 0;
 		const MatchPattern2*	bestMatchedPattern = 0; // Syncs with bestMatchedRule
-		double					bestMatchPatPriority = XPath::s_MatchScoreNone;
+		const double			matchScoreNoneValue = 
+			XPath::getMatchScoreValue(XPath::eMatchScoreNone);
+
+		double					bestMatchPatPriority = matchScoreNoneValue;
+			
 
 		unsigned int			nConflicts = 0;
 
@@ -924,12 +928,12 @@ Stylesheet::findTemplate(
 			{
 				const XalanDOMString*	prevPat = 0;
 				const MatchPattern2*	prevMatchPat = 0;
-				double					prevMatchPatPriority = XPath::s_MatchScoreNone;
+				double					prevMatchPatPriority = matchScoreNoneValue;
 
 				do
 				{
 					const MatchPattern2*	matchPat = *theCurrentEntry;
-					double					matchPatPriority = XPath::s_MatchScoreNone;
+					double					matchPatPriority = matchScoreNoneValue;
 					assert(matchPat != 0);
 
 					const ElemTemplate*	const	rule = matchPat->getTemplate();
@@ -960,25 +964,25 @@ Stylesheet::findTemplate(
 							prevPat = patterns;
 							prevMatchPat = matchPat;
 							prevMatchPatPriority = matchPatPriority;
-							matchPatPriority = XPath::s_MatchScoreNone;
+							matchPatPriority = matchScoreNoneValue;
 
 							const XPath* const	xpath = matchPat->getExpression();
 
-							double score =
+							XPath::eMatchScore	score =
 									xpath->getMatchScore(targetNode, *this, executionContext);
 
-							if(XPath::s_MatchScoreNone != score)
+							if(XPath::eMatchScoreNone != score)
 							{
 								const double priorityVal = rule->getPriority();
 								const double priorityOfRule 
-										  = (XPath::s_MatchScoreNone != priorityVal) 
-																  ? priorityVal : score;
+										  = (matchScoreNoneValue != priorityVal) 
+										  ? priorityVal : XPath::getMatchScoreValue(score);
 
 								matchPatPriority = priorityOfRule;
 								const double priorityOfBestMatched =
 											(0 != bestMatchedPattern) ?
 													bestMatchPatPriority : 
-													XPath::s_MatchScoreNone;
+													matchScoreNoneValue;
 
 								if(priorityOfRule > priorityOfBestMatched)
 								{

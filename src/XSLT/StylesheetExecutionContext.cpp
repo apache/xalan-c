@@ -86,37 +86,30 @@ StylesheetExecutionContext::ParamsPushPop::ParamsPushPop(
 			XalanNode*						sourceNode,
 			const ElemTemplateElement*		targetTemplate) :
 	m_executionContext(executionContext),
-	m_savedStackFrameIndex(executionContext.getCurrentStackFrameIndex()),
-	m_pushContextMarker(xslCallTemplateElement.hasVariables() || xslCallTemplateElement.hasParams())
+	m_savedStackFrameIndex(executionContext.getCurrentStackFrameIndex())
 {
-	if (m_pushContextMarker == true)
+	executionContext.pushContextMarker();
+
+	executionContext.setCurrentStackFrameIndex(m_savedStackFrameIndex);
+
+	if (xslCallTemplateElement.hasParams() == true)
 	{
-		executionContext.pushContextMarker();
-
-		executionContext.setCurrentStackFrameIndex(m_savedStackFrameIndex);
-
-		if (xslCallTemplateElement.hasParams() == true)
-		{
-			executionContext.pushParams(
+		executionContext.pushParams(
 					xslCallTemplateElement,
 					sourceNode,
 					targetTemplate);
-		}
-
-		executionContext.setCurrentStackFrameIndex();
 	}
+
+	executionContext.setCurrentStackFrameIndex();
 }
 
 
 
 StylesheetExecutionContext::ParamsPushPop::~ParamsPushPop()
 {
-	if (m_pushContextMarker == true)
-	{
-		m_executionContext.popContextMarker();
+	m_executionContext.popContextMarker();
 
-		m_executionContext.setCurrentStackFrameIndex(m_savedStackFrameIndex);
-	}
+	m_executionContext.setCurrentStackFrameIndex(m_savedStackFrameIndex);
 }
 
 

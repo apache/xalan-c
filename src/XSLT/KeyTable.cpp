@@ -152,12 +152,12 @@ KeyTable::KeyTable(
 					// the match attribute on xsl:key.
 					assert(kd.getMatchPattern() != 0);
 
-					const double	score =
+					const XPath::eMatchScore	score =
 							kd.getMatchPattern()->getMatchScore(testNode,
 																resolver,
 																executionContext);
 
-					if(score != XPath::s_MatchScoreNone)
+					if(score != XPath::eMatchScoreNone)
 					{
 						processKeyDeclaration(
 							m_keys,

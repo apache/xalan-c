@@ -476,7 +476,9 @@ VariablesStack::findEntry(
 		{
 			StackEntry&		theEntry = m_stack[i];
 
-			if(theEntry.getType() == StackEntry::eVariable)
+			const StackEntry::eType		theType = theEntry.getType();
+
+			if(theType == StackEntry::eVariable)
 			{
 				assert(theEntry.getName() != 0);
 
@@ -487,7 +489,7 @@ VariablesStack::findEntry(
 					break;
 				}
 			}
-			else if(theEntry.getType() == StackEntry::eContextMarker)
+			else if(theType == StackEntry::eContextMarker)
 			{
 				break;
 			}

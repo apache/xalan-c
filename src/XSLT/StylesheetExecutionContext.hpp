@@ -827,8 +827,6 @@ public:
 		StylesheetExecutionContext&		m_executionContext;
 	
 		const int						m_savedStackFrameIndex;
-
-		const bool						m_pushContextMarker;
 	};
 
 	/**
