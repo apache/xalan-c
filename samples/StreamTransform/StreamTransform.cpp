@@ -126,6 +126,13 @@ main(
 				XSLTInputSource		theInputSource(&theInputDocumentStream);
 				XSLTInputSource		theStylesheetSource(&theStylesheetStream);
 
+				// A fake system ID for the input sources...
+				const XalanDOMString	theSystemID("Memory buffer");
+
+				// Set the system IDs...
+				theInputSource.setSystemId(c_wstr(theSystemID));
+				theStylesheetSource.setSystemId(c_wstr(theSystemID));
+
 				// Our output target.  By default, we'll use an ostrstream that will allocate
 				// memory dynamically, although we could also use a static buffer since we 
 				// know the size of the output.
