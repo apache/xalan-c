@@ -77,15 +77,6 @@
 #endif
 #include <vector>
 
-#if defined(XALAN_LSTRSUPPORT)
-#include <cwchar>
-#endif
-
-#if defined(AIX) || defined(OS390)
-#include <wchar.h>
-#elif defined(__GNUC__)
-#include <wctype.h>
-#endif
 
 
 #include <XalanDOM/XalanDOMString.hpp>
