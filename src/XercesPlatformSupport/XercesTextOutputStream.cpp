@@ -209,7 +209,7 @@ XercesTextOutputStream::doWrite(const XalanDOMChar*		theBuffer)
 
 		assert(&theTranscodedData[0] != 0);
 
-		writeData(reinterpret_cast<const char*>(&theTranscodedData[0]),
+		writeData(&theTranscodedData[0],
 				  theTranscodedData.size());
 	}
 	catch(const TextOutputStreamException&)
