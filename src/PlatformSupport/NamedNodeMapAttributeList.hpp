@@ -84,21 +84,6 @@ class XALAN_PLATFORMSUPPORT_EXPORT NamedNodeMapAttributeList : public AttributeL
 {
 public:
 
-	/**
-	 * Initialize static data.  Must be called before any
-	 * other functions are called.  See PlatformSupportInit.
-	 */
-	static void
-	initialize();
-
-	/**
-	 * Destroy static data.  After thus function is called,
-	 * no other functions can be called.  See PlatformSupportInit.
-	 */
-	static void
-	terminate();
-
-
 	explicit
 	NamedNodeMapAttributeList(const XalanNamedNodeMap&	theMap);
 
@@ -109,22 +94,22 @@ public:
     virtual unsigned int
 	getLength() const;
 
-    virtual const XMLCh*
+    virtual const XalanDOMChar*
 	getName(const unsigned int index) const;
 
-    virtual const XMLCh*
+    virtual const XalanDOMChar*
 	getType(const unsigned int index) const;
 
-    virtual const XMLCh*
+    virtual const XalanDOMChar*
 	getValue(const unsigned int index) const;
 
-    virtual const XMLCh*
-	getType(const XMLCh* const name) const;
+    virtual const XalanDOMChar*
+	getType(const XalanDOMChar* const name) const;
 
-    virtual const XMLCh*
-	getValue(const XMLCh* const name) const;
+    virtual const XalanDOMChar*
+	getValue(const XalanDOMChar* const name) const;
 
-	virtual const XMLCh* 
+	virtual const XalanDOMChar* 
 	getValue(const char* const name) const;
 
 private:
@@ -137,11 +122,11 @@ private:
 	operator==(const NamedNodeMapAttributeList&);
 
 	// Data members...
-	const XalanNamedNodeMap&		m_nodeMap;
+	const XalanNamedNodeMap&	m_nodeMap;
 
-	const unsigned int				m_lastIndex;
+	const unsigned int			m_lastIndex;
 
-	static const XalanDOMString&	s_typeString;
+	static const XalanDOMChar	s_typeString[];
 };
 
 

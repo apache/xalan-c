@@ -64,6 +64,19 @@
 
 
 #include "DOMStringHelper.hpp"
+#include "XalanUnicode.hpp"
+
+
+
+const XalanDOMChar	NamedNodeMapAttributeList::s_typeString[] = 
+{
+	XalanUnicode::charLetter_C,
+	XalanUnicode::charLetter_D,
+	XalanUnicode::charLetter_A,
+	XalanUnicode::charLetter_T,
+	XalanUnicode::charLetter_A,
+	0
+};
 
 
 
@@ -114,7 +127,7 @@ NamedNodeMapAttributeList::getType(const unsigned int /* index */) const
 {
 	assert(length(s_typeString) > 0);
 
-	return c_wstr(s_typeString);
+	return s_typeString;
 }
 
 
@@ -177,28 +190,4 @@ const XMLCh*
 NamedNodeMapAttributeList::getValue(const char* const name) const
 {
 	return getValue(c_wstr(TranscodeFromLocalCodePage(name)));
-}
-
-
-
-static XalanDOMString	s_typeString;
-
-
-
-const XalanDOMString&	NamedNodeMapAttributeList::s_typeString = ::s_typeString;
-
-
-
-void
-NamedNodeMapAttributeList::initialize()
-{
-	::s_typeString = XALAN_STATIC_UCODE_STRING("CDATA");
-}
-
-
-
-void
-NamedNodeMapAttributeList::terminate()
-{
-	clear(::s_typeString);
 }

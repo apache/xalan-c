@@ -72,6 +72,35 @@
 
 
 
+const XalanDOMChar	URISupport::s_fileProtocolString1[] =
+{
+	XalanUnicode::charLetter_f,
+	XalanUnicode::charLetter_i,
+	XalanUnicode::charLetter_l,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charColon,
+	XalanUnicode::charSolidus,
+	XalanUnicode::charSolidus,
+	0
+};
+
+
+
+const XalanDOMChar	URISupport::s_fileProtocolString2[] =
+{
+	XalanUnicode::charLetter_f,
+	XalanUnicode::charLetter_i,
+	XalanUnicode::charLetter_l,
+	XalanUnicode::charLetter_e,
+	XalanUnicode::charColon,
+	XalanUnicode::charSolidus,
+	XalanUnicode::charSolidus,
+	XalanUnicode::charSolidus,
+	0
+};
+
+
+
 URISupport::URLAutoPtrType
 URISupport::getURLFromString(const XalanDOMString&	urlString)
 {
@@ -135,7 +164,7 @@ URISupport::getURLStringFromString(const XalanDOMChar*	urlString)
 		else
 		{
 			// Assume it's a file specification...
-			XalanArrayAutoPtr<XMLCh>	theFullPath(XMLPlatformUtils::getFullPath(c_wstr(urlString)));
+			XalanArrayAutoPtr<XalanDOMChar>		theFullPath(XMLPlatformUtils::getFullPath(c_wstr(urlString)));
 			assert(theFullPath.get() != 0);
 
 			theNormalizedURI = theFullPath.get();
@@ -143,12 +172,14 @@ URISupport::getURLStringFromString(const XalanDOMChar*	urlString)
 
 			NormalizeURIText(theNormalizedURI);
 
-			const XalanDOMString	theFilePrefix(
-						indexOf(theNormalizedURI, XalanUnicode::charSolidus) == 0 ?
-						s_fileProtocolString1 :
-						s_fileProtocolString2);
-
-			theNormalizedURI = theFilePrefix + theNormalizedURI;
+			if (indexOf(theNormalizedURI, XalanUnicode::charSolidus) == 0)
+			{
+				insert(theNormalizedURI, 0, &s_fileProtocolString1[0]);
+			}
+			else
+			{
+				insert(theNormalizedURI, 0, &s_fileProtocolString2[0]);
+			}
 		}
 	}
 
@@ -313,36 +344,4 @@ URISupport::InvalidURIException::InvalidURIException(const XalanDOMString&	theMe
 
 URISupport::InvalidURIException::~InvalidURIException()
 {
-}
-
-
-
-static XalanDOMString	s_fileProtocolString1;
-
-static XalanDOMString	s_fileProtocolString2;
-
-
-
-const XalanDOMString&	URISupport::s_fileProtocolString1 = ::s_fileProtocolString1;
-
-const XalanDOMString&	URISupport::s_fileProtocolString2 = ::s_fileProtocolString2;
-
-
-
-void
-URISupport::initialize()
-{
-	::s_fileProtocolString1 = XALAN_STATIC_UCODE_STRING("file://");
-
-	::s_fileProtocolString2 = XALAN_STATIC_UCODE_STRING("file:///");
-}
-
-
-
-void
-URISupport::terminate()
-{
-	clear(::s_fileProtocolString1);
-
-	clear(::s_fileProtocolString2);
 }

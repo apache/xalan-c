@@ -60,6 +60,36 @@
 
 
 #include "DOMStringHelper.hpp"
+#include "XalanUnicode.hpp"
+
+
+
+const XalanDOMChar	PrintWriter::s_trueString[] =
+{
+	XalanUnicode::charLetter_t,
+	XalanUnicode::charLetter_r,
+	XalanUnicode::charLetter_u,
+	XalanUnicode::charLetter_e,
+	0
+};
+
+
+const XalanDOMChar	PrintWriter::s_falseString[] =
+{
+	XalanUnicode::charLetter_f,
+	XalanUnicode::charLetter_a,
+	XalanUnicode::charLetter_l,
+	XalanUnicode::charLetter_s,
+	XalanUnicode::charLetter_e,
+	0
+};
+
+
+const XalanDOMChar	PrintWriter::s_newlineString[] =
+{
+	XalanUnicode::charLF,
+	0
+};
 
 
 
@@ -73,44 +103,4 @@ PrintWriter::PrintWriter(bool	fAutoFlush) :
 
 PrintWriter::~PrintWriter()
 {
-}
-
-
-
-static XalanDOMString	s_trueString;
-
-static XalanDOMString	s_falseString;
-
-static XalanDOMString	s_newlineString;
-
-
-const XalanDOMString&	PrintWriter::s_trueString = ::s_trueString;
-
-const XalanDOMString&	PrintWriter::s_falseString = ::s_falseString;
-
-const XalanDOMString&	PrintWriter::s_newlineString = ::s_newlineString;
-
-
-
-void
-PrintWriter::initialize()
-{
-	::s_trueString = XALAN_STATIC_UCODE_STRING("true");
-
-	::s_falseString = XALAN_STATIC_UCODE_STRING("false");
-
-	// $$$ ToDo: Does this need to be \r\n for some platforms?
-	::s_newlineString = XALAN_STATIC_UCODE_STRING("\n");
-}
-
-
-
-void
-PrintWriter::terminate()
-{
-	clear(::s_trueString);
-
-	clear(::s_falseString);
-
-	clear(::s_newlineString);
 }

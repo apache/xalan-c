@@ -185,11 +185,11 @@ DOMStringHelperInitialize()
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(void)
 DOMStringHelperTerminate()
 {
-	clear(theNaNString);
-	clear(theNegativeInfinityString);
-	clear(thePositiveInfinityString);
-	clear(theNegativeZeroString);
-	clear(thePositiveZeroString);
+	releaseMemory(theNaNString);
+	releaseMemory(theNegativeInfinityString);
+	releaseMemory(thePositiveInfinityString);
+	releaseMemory(theNegativeZeroString);
+	releaseMemory(thePositiveZeroString);
 }
 
 
@@ -597,44 +597,7 @@ substring(
 		{
 			assert(theStartIndex + theLength <= theStringLength);
 
-#if defined(XALAN_USE_CUSTOM_STRING) || defined(XALAN_USE_STD_STRING)
 			return theString.substr(theStartIndex, theLength);
-#else
-			// @@ JMD:
-			// If this is the case, the DOMString class doesn't create a new string,
-			// and in any case, does not null terminate the string, just points to
-			// the beginning, so we have to manually extract 'theLength' characters
-			// and create a new buffer
-			if (0 == theStartIndex)
-			{
-				const XalanDOMChar* const	ptr = toCharArray(theString);
-
-				vector<XalanDOMChar>	theBuffer;
-
-				// Reserve the buffer now.  We don't have to null-terminate,
-				// because the XalanDOMString constructor will take a size
-				// parameter.
-				theBuffer.reserve(theLength);
-
-#if defined(XALAN_NO_ALGORITHMS_WITH_BUILTINS)
-				XalanCopy(
-					ptr,
-					ptr + theLength,
-					back_inserter(theBuffer));
-#else
-				copy(
-					ptr,
-					ptr + theLength,
-					back_inserter(theBuffer));
-#endif
-
-				return XalanDOMString(&*theBuffer.begin(), theBuffer.size());
-			}
-			else
-			{
-				return theString.substringData(theStartIndex, theLength);
-			}
-#endif	// defined(XALAN_USE_CUSTOM_STRING) || defined(XALAN_USE_STD_STRING)
 		}
 	}
 }
@@ -675,17 +638,6 @@ TransformString(
 {
 	assert(theInputString != 0);
 
-#if defined(XALAN_USE_STD_STRING) && defined(XALAN_OLD_STD_STRING)
-	vector<XalanDOMChar>	theConvertedString;
-
-	TransformString(
-			theInputString,
-			theInputString + theInputStringLength,
-			back_inserter(theConvertedString),
-			theFunction);
-
-	return XalanDOMString(&*theConvertedString.begin(), theConvertedString.size());
-#else
 	XalanDOMString	theConvertedString;
 
 	TransformString(
@@ -695,7 +647,6 @@ TransformString(
 			theFunction);
 
 	return theConvertedString;
-#endif
 }
 
 
@@ -1574,23 +1525,12 @@ DoubleToDOMString(
 			++theCharsWritten;
 		}
 
-#if defined(XALAN_USE_STD_STRING) && defined(XALAN_OLD_STD_STRING)
-		XalanDOMChar	theTemp[sizeof(theBuffer)];
-
-		TranscodeNumber(
-				theBuffer,
-				theBuffer + theCharsWritten,
-				theTemp);
-
-		theResult = XalanDOMString(theTemp, theCharsWritten);
-#else
 		reserve(theResult, theCharsWritten + 1);
 
 		TranscodeNumber(
 				theBuffer,
 				theBuffer + theCharsWritten,
 				back_inserter(theResult));
-#endif
 	}
 
 	return theResult;

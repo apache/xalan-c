@@ -60,10 +60,6 @@
 
 
 #include "DOMStringHelper.hpp"
-#include "NamedNodeMapAttributeList.hpp"
-#include "PrintWriter.hpp"
-#include "URISupport.hpp"
-#include "XalanNumberFormat.hpp"
 #include "XalanTranscodingServices.hpp"
 
 
@@ -103,14 +99,6 @@ PlatformSupportInit::initialize()
 	DOMStringHelperInitialize();
 
 	XalanTranscodingServices::initialize();
-
-	PrintWriter::initialize();
-
-	NamedNodeMapAttributeList::initialize();
-
-	XalanNumberFormat::initialize();
-
-	URISupport::initialize();
 }
 
 
@@ -118,14 +106,6 @@ PlatformSupportInit::initialize()
 void
 PlatformSupportInit::terminate()
 {
-	URISupport::terminate();
-
-	XalanNumberFormat::terminate();
-
-	NamedNodeMapAttributeList::terminate();
-
-	PrintWriter::terminate();
-
 	XalanTranscodingServices::terminate();
 
 	DOMStringHelperTerminate();

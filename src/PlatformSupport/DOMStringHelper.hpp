@@ -546,11 +546,7 @@ startsWith(
 {
 	return startsWith(
 			theString,
-#if defined(XALAN_USE_STD_STRING)
-			TranscodeFromLocalCodePage(theSubstring));
-#else
 			XalanDOMString(theSubstring));
-#endif
 }
 
 
@@ -1821,14 +1817,7 @@ equals(
 			const XalanDOMString&	theLHS,
 			const XalanDOMString&	theRHS)
 {
-#if defined(XALAN_USE_STD_STRING)
-	const unsigned int	theLHSLength = length(theLHS);
-
-	return theLHSLength != length(theRHS) ? false :
-		equals(toCharArray(theLHS), toCharArray(theRHS), theLHSLength);
-#else
 	return theLHS == theRHS;
-#endif
 }
 
 
@@ -1847,12 +1836,8 @@ equals(
 {
 	assert(theLHS != 0);
 
-#if defined(XALAN_USE_STD_STRING)
-	return equals(theLHS, c_wstr(theRHS));
-#else
 	// Swap them...
 	return theRHS == theLHS;
-#endif
 }
 
 
@@ -1894,11 +1879,7 @@ equals(const XalanDOMString&	theLHS,
 	}
 	else
 	{
-#if defined(XALAN_USE_STD_STRING)
-		return theLHS == TranscodeFromLocalCodePage(theRHS);
-#else
 		return theLHS == XalanDOMString(theRHS, theRHSLength);
-#endif
 	}
 }
 
@@ -1942,11 +1923,7 @@ equals(const XalanDOMChar*	theLHS,
 	}
 	else
 	{
-#if defined(XALAN_USE_STD_STRING)
-		return equals(TranscodeFromLocalCodePage(theRHS), theLHS);
-#else
 		return equals(XalanDOMString(theRHS, theRHSLength), theLHS);
-#endif
 	}
 }
 
@@ -2195,49 +2172,6 @@ operator<(
 
 
 
-#if defined(XALAN_USE_STD_STRING)
-
-inline const XalanDOMString
-operator+(
-			const char*				theLHS,
-			const XalanDOMString&	theRHS)
-{
-	return TranscodeFromLocalCodePage(theLHS) + theRHS;
-}
-
-
-
-inline const XalanDOMString
-operator+(
-			const XalanDOMString&	theLHS,
-			const char*				theRHS)
-{
-	return theLHS + TranscodeFromLocalCodePage(theRHS);
-}
-
-
-
-inline const XalanDOMString
-operator+(
-			const XalanDOMChar*		theLHS,
-			const XalanDOMString&	theRHS)
-{
-	return XalanDOMString(theLHS) + theRHS;
-}
-
-
-
-inline const XalanDOMString
-operator+(
-			const XalanDOMString&	theLHS,
-			const XalanDOMChar*		theRHS)
-{
-	return theLHS + XalanDOMString(theRHS);
-}
-#endif
-
-
-
 /**
  * Assign one string to another
  * 
@@ -2395,11 +2329,40 @@ append(
 
 
 
+/**
+ * Insert a string into another string.
+ * 
+ * @param theString target string
+ * @param thePosition The position in the target string to insert
+ * @param theStringToInsert The string to insert
+ * @return A reference to the target string
+ */
 inline XalanDOMString&
 insert(
 			XalanDOMString&			theString,
 			unsigned int			thePosition,
 			const XalanDOMString&	theStringToInsert)
+{
+	theString.insert(thePosition, theStringToInsert);
+
+	return theString;
+}
+
+
+
+/**
+ * Insert a string into another string.
+ * 
+ * @param theString target string
+ * @param thePosition The position in the target string to insert
+ * @param theStringToInsert The string to insert
+ * @return A reference to the target string
+ */
+inline XalanDOMString&
+insert(
+			XalanDOMString&			theString,
+			unsigned int			thePosition,
+			const XalanDOMChar*		theStringToInsert)
 {
 	theString.insert(thePosition, theStringToInsert);
 
@@ -2427,7 +2390,34 @@ trim(const XalanDOMString&	theString);
 inline void
 clear(XalanDOMString&	theString)
 {
+	theString.clear();
+}
+
+
+
+/**
+ * Remove all elements from target string
+ * 
+ * @param theString target string
+ */
+inline void
+erase(XalanDOMString&	theString)
+{
 	theString.erase();
+}
+
+
+
+/**
+ * Remove all elements from target string
+ * and frees all allocated memory.
+ * 
+ * @param theString target string
+ */
+inline void
+releaseMemory(XalanDOMString&	theString)
+{
+	XalanDOMString().swap(theString);
 }
 
 

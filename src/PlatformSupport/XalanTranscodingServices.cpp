@@ -143,6 +143,39 @@ const XalanDOMChar 	XalanTranscodingServices::s_windows1250String[] =
 
 
 
+const XalanTranscodingServices::XalanXMLByte	XalanTranscodingServices::s_dummyByteOrderMark[] =
+{
+	XalanXMLByte(0)
+};
+
+
+
+const XalanTranscodingServices::XalanXMLByte	XalanTranscodingServices::s_UTF8ByteOrderMark[] =
+{
+	XalanXMLByte(0xEF),
+	XalanXMLByte(0xBB),
+	XalanXMLByte(0xBF),
+	XalanXMLByte(0)
+};
+
+
+
+const XalanTranscodingServices::XalanXMLByte	XalanTranscodingServices::s_UTF16ByteOrderMark[] =
+{
+#if defined(XALAN_LITLE_ENDIAN)
+	XalanXMLByte(0xFF),
+	XalanXMLByte(0xFE),
+#elif defined(XALAN_BIG_ENDIAN)
+	XalanXMLByte(0xFE),
+	XalanXMLByte(0xFF),
+#else
+#error The platform must define the byte order!
+#endif
+	XalanXMLByte(0)
+};
+
+
+
 static XalanTranscodingServices::eCode
 translateCode(XMLTransService::Codes	theCode)
 {
@@ -247,31 +280,23 @@ XalanTranscodingServices::encodingIsUTF16(const XalanDOMString&		theEncodingName
 
 
 
-// Some vectors for containing byte-order marks, or other leading bytes
-// that would indicate the encoding.
-static const XalanTranscodingServices::XalanXMLByteVectorType	s_dummyVector;
-static XalanTranscodingServices::XalanXMLByteVectorType			s_UTF8Vector;
-static XalanTranscodingServices::XalanXMLByteVectorType			s_UTF16Vector;
-
-
-
-const XalanTranscodingServices::XalanXMLByteVectorType&
+const XalanTranscodingServices::XalanXMLByte*
 XalanTranscodingServices::getStreamProlog(const XalanDOMString&		theEncodingName)
 {
 	if (compareIgnoreCase(c_wstr(theEncodingName), s_utf16String) == 0)
 	{
-		return s_UTF16Vector;
+		return s_UTF16ByteOrderMark;
 	}
 #if 0
 	// We won't do this for now...
 	else if (compareIgnoreCase(c_wstr(theEncodingName), s_utf8String) == 0)
 	{
-		return s_UTF8Vector;
+		return s_UTF8ByteOrderMark;
 	}
 #endif
 	else
 	{
-		return s_dummyVector;
+		return s_dummyByteOrderMark;
 	}
 }
 
@@ -406,28 +431,6 @@ initMaximumCharacterValueMap(XalanTranscodingServices::MaximumCharacterValueMapT
 void
 XalanTranscodingServices::initialize()
 {
-	s_UTF8Vector.reserve(3);
-
-	// These are the characters that comprise the
-	// UTF-8 byte-order mark.
-	s_UTF8Vector.push_back(0xEF);
-	s_UTF8Vector.push_back(0xBB);
-	s_UTF8Vector.push_back(0xBF);
-
-	s_UTF16Vector.reserve(2);
-
-	// The byte order mark varies, since we're writing
-	// UTF-16 out in the platform's endian-ness.
-#if defined(XALAN_LITLE_ENDIAN)
-	s_UTF16Vector.push_back(0xFF);
-	s_UTF16Vector.push_back(0xFE);
-#elif defined(XALAN_BIG_ENDIAN)
-	s_UTF16Vector.push_back(0xFE);
-	s_UTF16Vector.push_back(0xFF);
-#else
-#error The platform must define the byte order!
-#endif
-
 	initMaximumCharacterValueMap(::s_maximumCharacterValues);
 }
 
@@ -436,8 +439,5 @@ XalanTranscodingServices::initialize()
 void
 XalanTranscodingServices::terminate()
 {
-	XalanXMLByteVectorType().swap(s_UTF16Vector);
-	XalanXMLByteVectorType().swap(s_UTF8Vector);
-
 	MaximumCharacterValueMapType().swap(::s_maximumCharacterValues);
 }

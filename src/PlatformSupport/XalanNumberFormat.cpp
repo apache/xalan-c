@@ -64,6 +64,15 @@
 
 #include "DOMStringHelper.hpp"
 #include "STLHelper.hpp"
+#include "XalanUnicode.hpp"
+
+
+
+const XalanDOMChar	XalanNumberFormat::s_defaultGroupingSeparator[] = 
+{
+	XalanUnicode::charComma,
+	0
+};
 
 
 
@@ -198,28 +207,4 @@ void
 XalanNumberFormat::setGroupingSeparator(const XalanDOMString&	s)
 {
 	m_groupingSeparator = s;
-}
-
-
-
-static XalanDOMString	s_defaultGroupingSeparator;
-
-
-
-const XalanDOMString&	XalanNumberFormat::s_defaultGroupingSeparator = ::s_defaultGroupingSeparator;
-
-
-
-void
-XalanNumberFormat::initialize()
-{
-	::s_defaultGroupingSeparator = XALAN_STATIC_UCODE_STRING(",");
-}
-
-
-
-void
-XalanNumberFormat::terminate()
-{
-	clear(::s_defaultGroupingSeparator);
 }

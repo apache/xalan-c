@@ -112,7 +112,19 @@ XalanOutputStream::write(char	theChar)
 void
 XalanOutputStream::write(XalanDOMChar	theChar)
 {
-	write(&theChar, 1);
+	if (m_bufferSize == 0)
+	{
+		doWrite(&theChar, 1);
+	}
+	else
+	{
+		if (m_buffer.size() == m_bufferSize)
+		{
+			flushBuffer();
+		}
+
+		m_buffer.push_back(theChar);
+	}
 }
 
 
@@ -364,17 +376,17 @@ XalanOutputStream::setOutputEncoding(const XalanDOMString&	theEncoding)
 
 	typedef XalanTranscodingServices::XalanXMLByteVectorType	XalanXMLByteVectorType;
 
-	const XalanXMLByteVectorType&	theProlog =
+	const XalanTranscodingServices::XalanXMLByte*	theProlog =
 		XalanTranscodingServices::getStreamProlog(theEncoding);
 
-	const XalanXMLByteVectorType::size_type		theSize = theProlog.size();
+	const unsigned int	theSize = XalanTranscodingServices::length(theProlog);
 
 	if (theSize > 0)
 	{
 #if defined(XALAN_OLD_STYLE_CASTS)
-		write((const char*)&theProlog[0], theProlog.size());
+		write((const char*)theProlog, theSize);
 #else
-		write(reinterpret_cast<const char*>(&theProlog[0]), theProlog.size());
+		write(reinterpret_cast<const char*>(theProlog), theSize);
 #endif
 	}
 }

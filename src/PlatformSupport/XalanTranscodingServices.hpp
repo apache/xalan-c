@@ -64,6 +64,7 @@
 
 
 
+#include <cassert>
 #include <map>
 #include <vector>
 
@@ -85,7 +86,34 @@ class XALAN_PLATFORMSUPPORT_EXPORT XalanTranscodingServices
 {
 public:
 
+	/**
+	 * Perform static initialization.  See class PlatformSupportInit.
+	 */
+	static void
+	initialize();
+ 
+	/**
+	 * Perform static shut down.  See class PlatformSupportInit.
+	 */
+	static void
+	terminate();
+
 	typedef unsigned char	XalanXMLByte;
+
+	static unsigned int
+	length(const XalanXMLByte*	theBytes)
+	{
+		assert(theBytes != 0);
+
+		const XalanXMLByte*		theCurrentByte = theBytes;
+
+		while(*theCurrentByte != 0)
+		{
+			++theCurrentByte;
+		}
+
+		return theCurrentByte - theBytes;
+	}
 
 #if defined(XALAN_NO_NAMESPACES)
 	typedef map<XalanDOMString,
@@ -97,18 +125,6 @@ public:
 					 XalanDOMChar>		MaximumCharacterValueMapType;
 	typedef std::vector<XalanXMLByte>	XalanXMLByteVectorType;
 #endif
-
-	/**
-	 * Perform static initialization.  See class PlatformSupportInit.
-	 */
-	static void
-	initialize();
-
-	/**
-	 * Perform static shut down.  See class PlatformSupportInit.
-	 */
-	static void
-	terminate();
 
     enum eCode
     {
@@ -179,17 +195,17 @@ public:
 	encodingIsUTF16(const XalanDOMString&	theEncodingName);
 
 	/**
-	 * Get a vector that contains any leading bytes that should be
+	 * Get an array that contains any leading bytes that should be
 	 * written to an XML stream for the specified encoding.  For example,
 	 * if the encoding is UTF-16, the vector will contain the appropriate
 	 * byte order mark for the current platform.  If there is no
 	 * prolog for the encoding, or the encoding is unknown, an empty
-	 * vector is returned.
+	 * array is returned.
 	 * 
 	 * @param theEncodingName The name of the desired output encoding.
-	 * @return A reference to a vector containing the appropriate bytes.
+	 * @return An array containing the appropriate bytes.
 	 */
-	static const XalanXMLByteVectorType&
+	static const XalanXMLByte*
 	getStreamProlog(const XalanDOMString&	theEncodingName);
 
 	/**
@@ -260,6 +276,10 @@ public:
 	};
 
 private:
+
+	static const XalanXMLByte	s_dummyByteOrderMark[];
+	static const XalanXMLByte	s_UTF8ByteOrderMark[];
+	static const XalanXMLByte	s_UTF16ByteOrderMark[];
 
 	static const MaximumCharacterValueMapType&	s_maximumCharacterValues;
 };

@@ -74,21 +74,6 @@ class XALAN_PLATFORMSUPPORT_EXPORT PrintWriter : public Writer
 public:
 
 	/**
-	 * Initialize static data.  Must be called before any
-	 * other functions are called.  See PlatformSupportInit.
-	 */
-	static void
-	initialize();
-
-	/**
-	 * Destroy static data.  After thus function is called,
-	 * no other functions can be called.  See PlatformSupportInit.
-	 */
-	static void
-	terminate();
-
-
-	/**
 	 * Constructor
 	 * 
 	 * @param fAutoFlush if true, the output will not be buffered
@@ -98,7 +83,6 @@ public:
 	virtual
 	~PrintWriter();
 
-	
 	/**
 	 * Flush the stream, then check the error status.
 	 * 
@@ -205,11 +189,11 @@ protected:
 	const bool						m_fAutoFlush;
 
 	// Some static strings to help derived classes...
-	static const XalanDOMString&	s_trueString;
+	static const XalanDOMChar	s_trueString[];
 
-	static const XalanDOMString&	s_falseString;
+	static const XalanDOMChar	s_falseString[];
 
-	static const XalanDOMString&	s_newlineString;
+	static const XalanDOMChar	s_newlineString[];
 
 private:
 
