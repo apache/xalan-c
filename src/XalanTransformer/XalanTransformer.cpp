@@ -195,6 +195,8 @@ XalanTransformer::initialize()
 	// Initialize Xalan. 
 	s_xsltInit = new XSLTInit;
 
+	XalanExtensionsInstaller::installGlobal();
+
 #if defined(XALAN_USE_ICU)
 	theICUFunctor = new ICUBridgeCollationCompareFunctor;
 
@@ -219,6 +221,8 @@ XalanTransformer::terminate()
 
 	s_xsltInit = 0;
 
+	XalanExtensionsInstaller::uninstallGlobal();
+
 #if defined(XALAN_USE_ICU)
 	XPath::uninstallFunction(
 			StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("format-number")));
@@ -230,8 +234,6 @@ XalanTransformer::terminate()
 #endif
 
 	theICUFunctor = 0;
-
-	ICUBridgeCleanup::cleanup();
 #endif
 }
 
