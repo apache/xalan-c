@@ -1,13 +1,13 @@
 <?xml version="1.0"?>
 <doc>
-  <name first="David" last="Marston"/>
-  <name first="David" last="Bertoni"/>
-  <name first="Donald" last="Leslie"/>
-  <name first="Emily" last="Farmer"/>
-  <name first="Myriam" last="Midy"/>
-  <name first="Paul" last="Dick"/>
-  <name first="Scott" last="Boag"/>
-  <name first="Shane" last="Curcuru"/>
-  <name first="Joseph" last="Kesselman"/>
-  <name first="Stephen" last="Auriemma"/>
+  <name first="David" last="Marston">Mr. Marston</name>
+  <name first="David" last="Bertoni">Mr. Bertoni</name>
+  <name first="Donald" last="Leslie">Mr. Leslie</name>
+  <name first="Emily" last="Farmer">Ms. Farmer</name>
+  <name first="Myriam" last="Midy">Ms. Midy</name>
+  <name first="Paul" last="Dick">Mr. Dick</name>
+  <name first="Scott" last="Boag">Mr. Boag</name>
+  <name first="Shane" last="Curcuru">Mr. Curcuru</name>
+  <name first="Joseph" last="Kesselman">Mr. Kesselman</name>
+  <name first="Stephen" last="Auriemma">Mr. Auriemma</name>
 </doc>
