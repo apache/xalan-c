@@ -140,7 +140,7 @@ dnl output the Makefiles
 if test ! -d src; then
   mkdir src
 fi
-+AC_OUTPUT([Makefile.incl \
+AC_OUTPUT([Makefile.incl \
 	    Makefile \
             src/xalanc/Makefile \
             src/xalanc/Utils/Makefile \
