@@ -91,7 +91,8 @@ public:
 	explicit
 	XPathException(
 			const XalanDOMString&	message = XalanDOMString(),
-			const XalanNode*		styleNode = 0);
+			const XalanNode*		styleNode = 0,
+			const XalanDOMString&	theType = XalanDOMString(XALAN_STATIC_UCODE_STRING("XPathException")));
 
 	virtual
 	~XPathException();

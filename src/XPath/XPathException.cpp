@@ -61,8 +61,9 @@
 
 XPathException::XPathException(
 			const XalanDOMString&	message,
-			const XalanNode*		styleNode) :
-	XSLException(message),
+			const XalanNode*		styleNode,
+			const XalanDOMString&	theType) :
+	XSLException(message, theType),
 	m_styleNode(styleNode)
 {
 }
