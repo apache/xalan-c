@@ -91,7 +91,14 @@ public:
 	{
 		if (this != &theRHS)
 		{
-			delete m_pointer;
+			// This test ought not to be necessary, but
+			// MSVC 6.0 calls delete, which checks for 0.
+			// The problem with that is the locking is
+			// extremely expensive.
+			if (m_pointer != 0)
+			{
+				delete m_pointer;
+			}
 
 			m_pointer = theRHS.release();
 		}
@@ -101,7 +108,11 @@ public:
 
 	~XalanAutoPtr()
 	{
-		delete m_pointer;
+		// See note in operator=() about this...
+		if (m_pointer != 0)
+		{
+			delete m_pointer;
+		}
 	}
 
 	Type&
@@ -135,7 +146,11 @@ public:
 	void
 	reset(Type*		thePointer = 0)
 	{
-		delete m_pointer;
+		// See note in operator=() about this...
+		if (m_pointer != 0)
+		{
+			delete m_pointer;
+		}
 
 		m_pointer = thePointer;
 	}
@@ -168,7 +183,14 @@ public:
 	{
 		if (this != &theRHS)
 		{
-			delete [] m_pointer;
+			// This test ought not to be necessary, but
+			// MSVC 6.0 calls delete, which checks for 0.
+			// The problem with that is the locking is
+			// extremely expensive.
+			if (m_pointer != 0)
+			{
+				delete [] m_pointer;
+			}
 
 			m_pointer = theRHS.release();
 		}
@@ -178,7 +200,11 @@ public:
 
 	~XalanArrayAutoPtr()
 	{
-		delete [] m_pointer;
+		// See note in operator=() about this...
+		if (m_pointer != 0)
+		{
+			delete [] m_pointer;
+		}
 	}
 
 	Type&
@@ -188,7 +214,7 @@ public:
 	}
 
 	Type&
-	operator[] (size_t	index) const
+	operator[](size_t	index) const
 	{
 		return m_pointer[index];
 	}
@@ -212,7 +238,11 @@ public:
 	void
 	reset(Type*		thePointer = 0)
 	{
-		delete [] m_pointer;
+		// See note in operator=() about this...
+		if (m_pointer != 0)
+		{
+			delete [] m_pointer;
+		}
 
 		m_pointer = thePointer;
 	}
