@@ -102,7 +102,7 @@ public:
 	create(XalanSourceTreeDocumentFragment*		theValue);
 
 	/**
-	 * Create an ResultTreeFrag object.
+	 * Create a ResultTreeFrag object.
 	 * 
 	 * @param theSource	source instance
 	 *
@@ -112,7 +112,7 @@ public:
 	create(const data_type&	theSource);
 
 	/**
-	 * Delete an ResultTreeFrag object from allocator.	 
+	 * Delete a ResultTreeFrag object from allocator.	 
 	 */
 	bool
 	destroy(data_type*	theObject);
@@ -133,10 +133,9 @@ public:
 	reset();
 
 	/**
-	 * Get size of an ArenaBlock, that is, the number
-	 * of objects in each block.
+	 * Get the number of ArenaBlocks currently allocated.
 	 *
-	 * @return The size of the block
+	 * @return The number of blocks.
 	 */
 	size_type
 	getBlockCount() const
@@ -145,9 +144,10 @@ public:
 	}
 
 	/**
-	 * Get the number of ArenaBlocks currently allocated.
+	 * Get size of an ArenaBlock, that is, the number
+	 * of objects in each block.
 	 *
-	 * @return The number of blocks.
+	 * @return The size of the block
 	 */
 	size_type
 	getBlockSize() const
