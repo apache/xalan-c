@@ -115,7 +115,7 @@ public:
 
 	typedef map<XalanQNameByReference,
 				NodeListMapType,
-				less<XalanDOMString> >		KeysMapType;
+				less<XalanQNameByReference> >	KeysMapType;
 #else
 	typedef std::vector<KeyDeclaration>		KeyDeclarationVectorType;
 
