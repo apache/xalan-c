@@ -60,7 +60,8 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  -->
-<s1 title="Xalan-C Release Notes">
+<s1 title="Xalan-C++ Release Notes">
+<p>Release notes for &xslt4c-current;</p>
  <ul>
   <li><link anchor="status">Status</link></li>
   <li><link anchor="build">Build Notes</link></li>
