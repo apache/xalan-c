@@ -23,7 +23,7 @@
   <property name="year" value="2004"/>
   
   <property name="version.VERSION" value="1"/>
-  <property name="version.RELEASE" value="8"/>
+  <property name="version.RELEASE" value="9"/>
   <property name="version.MINOR"   value="0"/>
 
   <property name="xdocs.dir" value="./xdocs"/>
