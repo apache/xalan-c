@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -97,6 +97,7 @@
 
 
 #include "XercesDocumentBridge.hpp"
+#include "XercesDocumentWrapper.hpp"
 #include "XercesDOMSupport.hpp"
 
 
@@ -153,10 +154,13 @@ XercesParserLiaison::reset()
 	using std::for_each;
 #endif
 
-	// Delete any live documents.
-	for_each(m_documentMap.begin(),
-			 m_documentMap.end(),
-			 makeMapValueDeleteFunctor(m_documentMap));
+	// Delete any live documents...
+	for(DocumentMapType::iterator i = m_documentMap.begin();
+		i != m_documentMap.end();
+		++i)
+	{
+		delete (*i).first;
+	}
 
 	m_documentMap.clear();
 
@@ -441,13 +445,35 @@ XercesParserLiaison::createDocument(
 
 
 
+XalanDocument*
+XercesParserLiaison::createDocument(
+			const DOMDocument*	theXercesDocument,
+			bool				threadSafe,
+			bool				buildWrapper)
+{
+	return doCreateDocument(theXercesDocument, threadSafe, buildWrapper);
+}
+
+
+
 XercesDocumentBridge*
 XercesParserLiaison::mapDocument(const XalanDocument*	theDocument) const
 {
 	const DocumentMapType::const_iterator	i =
 		m_documentMap.find(theDocument);
 
-	return i != m_documentMap.end() ? (*i).second : 0;
+	return i != m_documentMap.end() ? (*i).second.m_isDeprecated == true ? (*i).second.m_bridge : 0 : 0;
+}
+
+
+
+XercesDocumentWrapper*
+XercesParserLiaison::mapDocumentToWrapper(const XalanDocument*	theDocument) const
+{
+	const DocumentMapType::const_iterator	i =
+		m_documentMap.find(theDocument);
+
+	return i != m_documentMap.end() ? (*i).second.m_isDeprecated == false ? (*i).second.m_wrapper : 0 : 0;
 }
 
 
@@ -458,7 +484,18 @@ XercesParserLiaison::mapXercesDocument(const XalanDocument*		theDocument) const
 	const DocumentMapType::const_iterator	i =
 		m_documentMap.find(theDocument);
 
-	return i != m_documentMap.end() ? (*i).second->getXercesDocument() : DOM_Document();
+	return i != m_documentMap.end() ? (*i).second.m_isDeprecated == true ? (*i).second.m_bridge->getXercesDocument() : DOM_Document() : DOM_Document();
+}
+
+
+
+const DOMDocument*
+XercesParserLiaison::mapToXercesDocument(const XalanDocument*	theDocument) const
+{
+	const DocumentMapType::const_iterator	i =
+		m_documentMap.find(theDocument);
+
+	return i != m_documentMap.end() ? (*i).second.m_isDeprecated == false ? (*i).second.m_wrapper->getXercesDocument() : 0 : 0;
 }
 
 
@@ -651,6 +688,22 @@ XercesParserLiaison::doCreateDocument(
 {
 	XercesDocumentBridge* const		theNewDocument =
 		new XercesDocumentBridge(theXercesDocument, threadSafe, buildBridge);
+
+	m_documentMap[theNewDocument] = theNewDocument;
+
+	return theNewDocument;
+}
+
+
+
+XercesDocumentWrapper*
+XercesParserLiaison::doCreateDocument(
+			const DOMDocument*	theXercesDocument,
+			bool				threadSafe,
+			bool				buildWrapper)
+{
+	XercesDocumentWrapper* const		theNewDocument =
+		new XercesDocumentWrapper(theXercesDocument, threadSafe, buildWrapper);
 
 	m_documentMap[theNewDocument] = theNewDocument;
 

@@ -79,6 +79,7 @@
 
 
 class DOM_Document;
+class DOMDocument;
 class DOMParser;
 class DOMSupport;
 class EntityResolver;
@@ -86,6 +87,7 @@ class InputSource;
 class SAXParser;
 class XercesDOMSupport;
 class XercesDocumentBridge;
+class XercesDocumentWrapper;
 class XSLProcessor;
 
 
@@ -320,6 +322,26 @@ public:
 	setExternalNoNamespaceSchemaLocation(const XalanDOMChar*	location);
 
 	/**
+	 * This API is deprecated.
+	 *
+	 * Create a XalanDocument proxy for an existing Xerces document.
+	 * The parser liaison owns the instance, and you must not delete
+	 * it.	The liaison will delete it when reset() is called, or the
+	 * liaison is destroyed.
+	 *
+	 * @deprecated This API is deprecated.
+	 * @param theXercesDocument The Xerces document.
+	 * @param threadSafe If true, read access to the tree will be thread-safe (implies buildBridge == true).
+	 * @param buildBridge If true, the entire bridge structure is built.
+	 * @return a pointer to a new XalanDocument-derived instance.
+	 */
+	XalanDocument*
+	createDocument(
+			const DOM_Document&		theXercesDocument,
+			bool					threadSafe = false,
+			bool					buildBridge = false);
+
+	/**
 	 * Create a XalanDocument proxy for an existing Xerces document.
 	 * The parser liaison owns the instance, and you must not delete
 	 * it.	The liaison will delete it when reset() is called, or the
@@ -327,26 +349,56 @@ public:
 	 *
 	 * @param theXercesDocument The Xerces document.
 	 * @param threadSafe If true, read access to the tree will be thread-safe (implies buildBridge == true).
-	 * @param buildBridge If true, the entire bridge structure is built.
+	 * @param buildWrapper If true, the entire wrapper structure is built.
 	 * @return a pointer to a new XalanDocument-derived instance.
 	 */
-	virtual XalanDocument*
+	XalanDocument*
 	createDocument(
-			const DOM_Document&		theXercesDocument,
-			bool					threadSafe = false,
-			bool					buildBridge = false);
+			const DOMDocument*	theXercesDocument,
+			bool				threadSafe = false,
+			bool				buildWrapper = false);
 
-	/** 
+	/**
+	 * This API is deprecated.
+	 *
+	 * Map a pointer to a XalanDocument instance to its implementation
+	 * class pointer.  Normally, you should have no reason for doing
+	 * this.  The liaison will return a null pointer if it did not
+	 * create the instance passed.
+	 *
+	 * @deprecated This API is deprecated.
+	 * @param theDocument A pointer to a XalanDocument instance.
+	 * @return A pointer to the XercesDocumentBridge instance.
+	 */
+	XercesDocumentBridge*
+	mapDocument(const XalanDocument*	theDocument) const;
+
+	/**
 	 * Map a pointer to a XalanDocument instance to its implementation
 	 * class pointer.  Normally, you should have no reason for doing
 	 * this.  The liaison will return a null pointer if it did not
 	 * create the instance passed.
 	 *
 	 * @param theDocument A pointer to a XalanDocument instance.
+	 * @return A pointer to the XercesDocumentWrapper instance.
+	 */
+	XercesDocumentWrapper*
+	mapDocumentToWrapper(const XalanDocument*	theDocument) const;
+
+	/** 
+	 * This API is deprecated.
+	 *
+	 * Map a pointer to a XalanDocument instance to its corresponding
+	 * class pointer.  Normally, you should have no reason for doing
+	 * this.  The liaison will return a null pointer if it did not
+	 * create the instance passed.
+	 *
+	 * @deprecated This API is deprecated.
+	 * @param theDocument A pointer to a XalanDocument instance.
 	 * @return A pointer to the XercesDocumentBridge instance.
 	 */
-	XercesDocumentBridge*
-	mapDocument(const XalanDocument*	theDocument) const;
+	DOM_Document
+	mapXercesDocument(const XalanDocument*	theDocument) const;
 
 	/** 
 	 * Map a pointer to a XalanDocument instance to its corresponding
@@ -357,8 +409,8 @@ public:
 	 * @param theDocument A pointer to a XalanDocument instance.
 	 * @return A pointer to the XercesDocumentBridge instance.
 	 */
-	DOM_Document
-	mapXercesDocument(const XalanDocument*	theDocument) const;
+	const DOMDocument*
+	mapToXercesDocument(const XalanDocument*	theDocument) const;
 
 	// Implementations for SAX ErrorHandler
 
@@ -374,13 +426,44 @@ public:
 	virtual void
 	resetErrors();
 
+	struct DocumentEntry
+	{
+		bool	m_isDeprecated;
+
+		union
+		{
+			XercesDocumentBridge*	m_bridge;
+			XercesDocumentWrapper*	m_wrapper;
+		};
+
+		DocumentEntry&
+		operator=(XercesDocumentBridge*		theBridge)
+		{
+			m_isDeprecated = true;
+
+			m_bridge = theBridge;
+
+			return *this;
+		}
+
+		DocumentEntry&
+		operator=(XercesDocumentWrapper*	theWrapper)
+		{
+			m_isDeprecated = false;
+
+			m_wrapper = theWrapper;
+
+			return *this;
+		}
+	};
+
 #if defined(XALAN_NO_NAMESPACES)
 	typedef map<const XalanDocument*,
-				XercesDocumentBridge*,
+				DocumentEntry,
 				less<const XalanDocument*> >	DocumentMapType;
 #else
 	typedef std::map<const XalanDocument*,
-					 XercesDocumentBridge*>		DocumentMapType;
+					 DocumentEntry>				DocumentMapType;
 #endif
 
 	/**
@@ -472,11 +555,25 @@ protected:
 	 * @param buildBridge If true, the entire bridge structure is built.
 	 * @return a pointer to a new XercesDocumentBridge instance.
 	 */
-	virtual XercesDocumentBridge*
+	XercesDocumentBridge*
 	doCreateDocument(
 			const DOM_Document&		theXercesDocument,
 			bool					threadSafe,
 			bool					buildBridge);
+
+	/**
+	 * Create a XalanDocument proxy for an existing Xerces document.
+	 *
+	 * @param theXercesDocument The Xerces document.
+	 * @param threadSafe If true, read access to the tree will be thread-safe (implies buildBridge == true).
+	 * @param buildWrapper If true, the entire bridge structure is built.
+	 * @return a pointer to a new XercesDocumentWrapper instance.
+	 */
+	XercesDocumentWrapper*
+	doCreateDocument(
+			const DOMDocument*	theXercesDocument,
+			bool				threadSafe,
+			bool				buildWrapper);
 
 private:
 
