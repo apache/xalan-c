@@ -76,6 +76,38 @@ const XalanDOMString	XalanQName::s_emptyString;
 
 
 
+XalanQName::PrefixResolverProxy::PrefixResolverProxy(
+			const NamespacesStackType&	theStack,
+			const XalanDOMString&		theURI) :
+	m_stack(theStack),
+	m_uri(theURI)
+{
+}
+
+
+
+XalanQName::PrefixResolverProxy::~PrefixResolverProxy()
+{
+}
+
+
+
+const XalanDOMString*
+XalanQName::PrefixResolverProxy::getNamespaceForPrefix(const XalanDOMString&	prefix) const
+{
+	return XalanQName::getNamespaceForPrefix(m_stack, prefix);
+}
+
+
+
+const XalanDOMString&
+XalanQName::PrefixResolverProxy::getURI() const
+{
+	return m_uri;
+}
+
+
+
 const XalanDOMString*
 XalanQName::getNamespaceForPrefix(
 			const NamespaceVectorType&	namespaces,
@@ -120,23 +152,7 @@ XalanQName::getNamespaceForPrefix(
 			const NamespacesStackType&	nsStack,
 			const XalanDOMString&		prefix)
 {
-#if 1
 	return getNamespaceForPrefix(nsStack.begin(), nsStack.end(), prefix);
-#else
-	const XalanDOMString*	nsURI = 0;
-
-	for(NamespacesStackType::size_type i = nsStack.size(); i > 0; --i)
-	{
-		const NamespaceVectorType&	namespaces = nsStack[i - 1];
-
-		nsURI = getNamespaceForPrefix(namespaces, prefix);
-
-		if (nsURI != 0)
-			break;
-	}
-
-	return nsURI;
-#endif
 }
 
 

@@ -73,6 +73,7 @@
 
 
 #include <PlatformSupport/DOMStringHelper.hpp>
+#include <PlatformSupport/PrefixResolver.hpp>
 
 
 
@@ -81,7 +82,6 @@
 
 
 class XalanElement;
-class PrefixResolver;
 class XPathEnvSupport;
 
 
@@ -177,6 +177,38 @@ public:
 		return ::equals(getLocalPart(), theRHS.getLocalPart()) &&
 			   ::equals(getNamespace(), theRHS.getNamespace());
 	}
+
+	class XALAN_XPATH_EXPORT PrefixResolverProxy : public PrefixResolver
+	{
+	public:
+
+		/**
+		 * Construct a PrefixResolver from a NamespacesStackType
+		 * instance.
+		 *
+		 * @param theStack The stack to use for prefix resolution
+		 * @param theURI The namespace URI of the resolver, if any.  Only a reference is kept, so this cannot be a temporary
+		 * @return pointer to the string value if found, otherwise 0.
+		 */
+		PrefixResolverProxy(
+				const NamespacesStackType&	theStack,
+				const XalanDOMString&		theURI);
+
+		virtual
+		~PrefixResolverProxy();
+
+		virtual const XalanDOMString*
+		getNamespaceForPrefix(const XalanDOMString&		prefix) const;
+
+		virtual const XalanDOMString&
+		getURI() const;
+
+	private:
+
+		const NamespacesStackType&	m_stack;
+
+		const XalanDOMString&		m_uri;
+	};
 
 	/**
 	 * Get the namespace for a prefix by searching a vector of namespaces.
