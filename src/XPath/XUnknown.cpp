@@ -101,7 +101,7 @@ XUnknown*
 XUnknown::clone(void*	theAddress) const
 {
 	return theAddress == 0 ? new XUnknown(*this) : new (theAddress) XUnknown(*this);
-};
+}
 
 
 

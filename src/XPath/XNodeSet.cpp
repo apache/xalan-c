@@ -113,7 +113,7 @@ XNodeSet*
 XNodeSet::clone(void*	theAddress) const
 {
 	return theAddress == 0 ? new XNodeSet(*this) : new (theAddress) XNodeSet(*this);
-};
+}
 
 
 

@@ -91,7 +91,7 @@ XNull*
 XNull::clone(void*	theAddress) const
 {
 	return theAddress == 0 ? new XNull(*this) : new (theAddress) XNull(*this);
-};
+}
 
 
 

@@ -93,7 +93,7 @@ XTokenNumberAdapter*
 XTokenNumberAdapter::clone(void*	theAddress) const
 {
 	return theAddress == 0 ? new XTokenNumberAdapter(*this) : new (theAddress) XTokenNumberAdapter(*this);
-};
+}
 
 
 

@@ -95,7 +95,7 @@ XNumber*
 XNumber::clone(void*	theAddress) const
 {
 	return theAddress == 0 ? new XNumber(*this) : new (theAddress) XNumber(*this);
-};
+}
 
 
 

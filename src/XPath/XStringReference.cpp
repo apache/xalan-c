@@ -90,7 +90,7 @@ XStringReference*
 XStringReference::clone(void*	theAddress) const
 {
 	return theAddress == 0 ? new XStringReference(*this) : new (theAddress) XStringReference(*this);
-};
+}
 
 
 

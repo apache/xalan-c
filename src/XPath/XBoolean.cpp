@@ -103,7 +103,7 @@ XBoolean*
 XBoolean::clone(void*	theAddress) const
 {
 	return theAddress == 0 ? new XBoolean(*this) : new (theAddress) XBoolean(*this);
-};
+}
 
 
 

@@ -90,7 +90,7 @@ XSpan*
 XSpan::clone(void*	theAddress) const
 {
 	return theAddress == 0 ? new XSpan(*this) : new (theAddress) XSpan(*this);
-};
+}
 
 
 
