@@ -131,15 +131,7 @@ XercesParserLiaison::reset()
 		if ((*i).second.isDeprecated() == false &&
 			(*i).second.isOwned() == true)
 		{
-			DOMDocument_Type* docToDelete =  const_cast<DOMDocument_Type*>((*i).second.m_wrapper->getXercesDocument());
-
-            if(docToDelete != 0 )
-            {
-                docToDelete->~DOMDocument_Type();
-
-                getMemoryManager().deallocate((void*)docToDelete);
-            }
-
+            delete (*i).second.m_wrapper->getXercesDocument();
 		}
 
         XalanDocument* docToDelete = const_cast<XalanDocument*>((*i).first);
