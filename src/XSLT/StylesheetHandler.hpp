@@ -527,17 +527,16 @@ private:
 
 	BoolStackType	m_preserveSpaceStack;
 
+	bool					m_inLXSLTScript;
+
+	XalanDOMString			m_LXSLTScriptBody;
+	XalanDOMString			m_LXSLTScriptLang;
+	XalanDOMString			m_LXSLTScriptSrcURL;
+	ExtensionNSHandler*		m_pLXSLTExtensionNSH;
+
 	// Note that this variable must not be saved by
 	// PushPopIncludeState...
 	unsigned long	m_locatorsPushed;
-
-	// BEGIN SANJIVA CODE
-	bool m_inLXSLTScript;
-	XalanDOMString m_LXSLTScriptBody;
-	XalanDOMString m_LXSLTScriptLang;
-	XalanDOMString m_LXSLTScriptSrcURL;
-	ExtensionNSHandler* m_pLXSLTExtensionNSH;
-	// END SANJIVA CODE
 
 	/**
 	 * Init the wrapperless template
