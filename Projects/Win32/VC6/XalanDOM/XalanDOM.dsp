@@ -132,6 +132,10 @@ SOURCE=..\..\..\..\src\XalanDOM\XalanDOMInit.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\XalanDOM\XalanDOMString.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\XalanDOM\XalanElement.cpp
 # End Source File
 # Begin Source File

@@ -102,6 +102,10 @@ SOURCE=..\..\..\..\src\XercesParserLiaison\XercesAttributeBridgeAllocator.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesBridgeHelper.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\XercesParserLiaison\XercesBridgeNavigator.cpp
 # End Source File
 # Begin Source File
@@ -219,6 +223,10 @@ SOURCE=..\..\..\..\src\XercesParserLiaison\XercesAttributeBridgeAllocator.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\XercesParserLiaison\XercesBridgeCommon.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XercesParserLiaison\XercesBridgeHelper.hpp
 # End Source File
 # Begin Source File
 

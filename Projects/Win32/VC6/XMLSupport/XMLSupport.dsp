@@ -110,6 +110,10 @@ SOURCE=..\..\..\..\src\XMLSupport\FormatterToHTML.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\XMLSupport\FormatterToNull.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\XMLSupport\FormatterToText.cpp
 # End Source File
 # Begin Source File
@@ -155,6 +159,10 @@ SOURCE=..\..\..\..\src\XMLSupport\FormatterToDOM.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\XMLSupport\FormatterToHTML.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XMLSupport\FormatterToNull.hpp
 # End Source File
 # Begin Source File
 
