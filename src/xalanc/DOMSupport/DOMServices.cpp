@@ -77,6 +77,7 @@
 
 
 #include <xalanc/PlatformSupport/DOMStringHelper.hpp>
+#include <xalanc/PlatformSupport/PrefixResolver.hpp>
 #include <xalanc/PlatformSupport/XalanUnicode.hpp>
 
 
@@ -780,6 +781,43 @@ DOMServices::getNamespaceForPrefix(
 	}
 
 	return theNamespace;
+}
+
+
+
+const XalanDOMString*
+DOMServices::getNamespaceForPrefix(
+			const XalanDOMChar*		theName,
+			const PrefixResolver&	thePrefixResolver,
+			bool					isAttribute,
+			XalanDOMString&			thePrefix)
+{
+	const XalanDOMString::size_type		theLength = length(theName);
+
+	// Check for special default namespace value...
+	if (isAttribute == true && equals(s_XMLNamespace, theName, theLength) == true)
+	{
+		return &s_XMLNamespacePrefixURI;
+	}
+	else
+	{
+		const XalanDOMString::size_type		theColonIndex = indexOf(theName, XalanUnicode::charColon);
+
+		if (theColonIndex == theLength)
+		{
+			clear(thePrefix);
+
+			return thePrefixResolver.getNamespaceForPrefix(s_emptyString);
+		}
+		else
+		{
+			// Get the prefix from theName...
+			assign(thePrefix, theName, theColonIndex);
+			assert(length(thePrefix) != 0);
+
+			return thePrefixResolver.getNamespaceForPrefix(thePrefix);
+		}
+	}
 }
 
 

@@ -571,6 +571,23 @@ public:
 			const XalanElement&		namespaceContext);
 
 	/**
+	 * Retrieve the URI corresponding to a namespace prefix, using the supplied
+	 * name, and PrefixResolver.  The routine also returns the prefix.
+	 * 
+	 * @param theName           The name that contains the prefix
+	 * @param thePrefixResolver The PrefixResolver to use
+	 * @param isAttribute       If true, special rules for attributes are used
+	 * @param thePrefix         The prefix
+	 * @return URI corresponding to namespace
+	 */
+	static const XalanDOMString*
+	getNamespaceForPrefix(
+			const XalanDOMChar*		theName,
+			const PrefixResolver&	thePrefixResolver,
+			bool					isAttribute,
+			XalanDOMString&			thePrefix);
+
+	/**
 	 * Determine if a node is after another node, in document order.
 	 *
 	 * @param node1 The first node
