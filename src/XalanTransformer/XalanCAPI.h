@@ -65,10 +65,11 @@
 
 /**
  * This is a simple C interface for the class XalanTransformer. It's 
- * the user's responsibility to call initialize and terminate 
- * before creating and after deleting any XalanTransformer instances 
- * respectively. After calling XalanTransformToData, the user should   
- * call XalanFreeData to release the memory allocated by that operation.
+ * the user's responsibility to call initialize and terminate before
+ * creating and after deleting any XalanTransformer instances respectively.
+ * After calling XalanTransformToData or XalanTransformToDataCSS, the user   
+ * should call XalanFreeData to release the memory allocated by that 
+ * operation.
  */
 #if defined(__cplusplus)
 extern "C"
@@ -76,9 +77,14 @@ extern "C"
 #endif
 
 	/**
-	 * Handle use to store the address of XalanTransformer instance.
+	 * Handle used to store the address of XalanTransformer instance.
 	 */
 	typedef void* XalanHandle;
+
+	/**
+	 * Handle used to store the address of Compiled Stylesheet instance.
+	 */
+	typedef void* XalanCSSHandle;
 
 	/**
 	 * Callback function passed to XalanTransformToHandler. 
@@ -136,7 +142,7 @@ extern "C"
 	/**
 	 * Create a XalanTransformer instance.
 	 *
-	 * @return pointer to current handler
+	 * @return  the XalanTransformer handle
 	 */
 	XALAN_TRANSFORMER_EXPORT_FUNCTION(XalanHandle)
 	CreateXalanTransformer();
@@ -168,6 +174,24 @@ extern "C"
 				XalanHandle				theXalanHandle);
 
 	/**
+	 * Transform the XML source tree to the given result file.
+	 * The processor will apply the compiled stylesheet to the input
+	 * file and write the transformation result to a new output file.
+	 *
+	 * @param theXMLFileName	filename of XML input source
+	 * @param theCSSHandle		handle of compiled stylesheet 
+	 * @param theOutFileName	filename of output source
+	 * @param theXalanHandle	handle of XalanTransformer instance.
+	 * @return	0 for success 
+	 */
+	XALAN_TRANSFORMER_EXPORT_FUNCTION(int)
+	XalanTransformToFileCSS(
+				const char*				theXMLFileName, 
+				XalanCSSHandle			theCSSHandle,
+				const char*				theOutFileName,
+				XalanHandle				theXalanHandle);
+
+	/**
 	 * Transform the XML source tree to a dynamically allocated buffer.
 	 * The processor will apply the stylesheet file to the input file
 	 * and assign the address of the dynamically allocated result to a 
@@ -184,6 +208,26 @@ extern "C"
 	XalanTransformToData(
 				const char*				theXMLFileName, 
 				const char*				theXSLFileName,
+				char**					theOutput,
+				XalanHandle				theXalanHandle);
+
+	/**
+	 * Transform the XML source tree to a dynamically allocated buffer.
+	 * The processor will apply the compiled stylesheet to the input file
+	 * and assign the address of the dynamically allocated result to a 
+	 * user defined pointer. The user must call XalanFreeData with the  
+	 * address of this pointer.
+	 *
+	 * @param theXMLFileName	filename of XML input source
+	 * @param theCSSHandle		handle of compiled stylesheet 
+	 * @param theOutFileName	filename of output source
+	 * @param theXalanHandle	handle of XalanTransformer instance.
+	 * @return	0 for success 
+	 */
+	XALAN_TRANSFORMER_EXPORT_FUNCTION(int) 
+	XalanTransformToDataCSS(
+				const char*				theXMLFileName, 
+				XalanCSSHandle			theCSSHandle,
 				char**					theOutput,
 				XalanHandle				theXalanHandle);
 
@@ -225,6 +269,61 @@ extern "C"
 				const void*				theOutputHandle, 
 				XalanOutputHandlerType	theOutputHandler,
 				XalanFlushHandlerType	theFlushHandler);
+
+	/**
+	 * Transform the XML source tree to a callback function.
+	 * The processor will apply the compiled stylesheet to the input file
+	 * and allocate the transformation result to a callback function  
+	 * in pre-allocated blocks. Once the transformation is complete,
+	 * a second callback, to flush the buffer, is called. You can pass
+	 * in NULL if you do not wish to implement a flush callback. Xalan 
+	 * will release any memory allocated upon termination, and data passed 
+	 * to the callback is not guaranteed to be null terminated. 
+	 * 
+	 * - See XalanOutputHandlerType and XalanFlushHandlerType for more 
+	 * details.
+	 * 
+	 * @param theXMLFileName	filename of XML input source
+	 * @param theCSSHandle		handle of compiled stylesheet 
+	 * @param theXalanHandle	handle of XalanTransformer instance.
+	 * @param theOutputHandle	void pointer passed through to callback.
+	 * @param theOutputHandler	a user defined (callback) function.
+	 * @param theFlushHandler	(can be NULL) a user defined (callback) function.
+	 * @return	0 for success 
+	 */
+	XALAN_TRANSFORMER_EXPORT_FUNCTION(int) 
+	XalanTransformToHandlerCSS(
+				const char*				theXMLFileName, 
+				XalanCSSHandle			theCSSHandle,
+				XalanHandle				theXalanHandle,
+				const void*				theOutputHandle, 
+				XalanOutputHandlerType	theOutputHandler,
+				XalanFlushHandlerType	theFlushHandler);
+
+	/**
+	 * Creates a complied stylesheet.  The input source can be 
+	 * a file name, a stream or a root node.
+	 *
+	 * @param theXSLFileName	filename of stylesheet source
+	 * @return	a CSSHandle or 0 for failure.
+	 */
+	XALAN_TRANSFORMER_EXPORT_FUNCTION(XalanCSSHandle)
+	XalanCompileStylesheet(
+				const char*				theXSLFileName,
+				XalanHandle				theXalanHandle);
+
+	/**
+	 * Set a top-level stylesheet parameter.  This value can be evaluated via
+	 * xsl:param-variable.
+	 *
+	 * @param key name of the param
+	 * @param expression expression that will be evaluated
+	 */
+	XALAN_TRANSFORMER_EXPORT_FUNCTION(void)
+	XalanSetStylesheetParam(
+				const char*				key,
+				const char*				expression,
+				XalanHandle				theXalanHandle);
 
 	/**
 	 * Returns the last error that occurred as a 

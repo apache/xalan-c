@@ -145,15 +145,6 @@ public:
 	terminate();
 
 	/**
-	 * Returns the last error that occurred as a 
-	 * result of calling transform.	
-	 *
-	 * @return	error message const character pointer.
-	 */
-	const char*
-	getLastError() const;
-
-	/**
 	 * Transform will apply the stylesheet source to the input source
 	 * and write the transformation output to the target. The input 
 	 * source and result target can be a file name, a stream or a root
@@ -303,6 +294,16 @@ public:
 	setStylesheetParam(
 			const char*				key,
 			const char*				expression);
+
+	/**
+	 * Returns the last error that occurred as a 
+	 * result of calling transform.	
+	 *
+	 * @return	error message const character pointer.
+	 */
+	const char*
+	getLastError() const;
+
 
 #if defined(XALAN_NO_NAMESPACES)
 	typedef vector<const XalanCompiledStylesheet*>		CompiledStylesheetPtrVectorType;

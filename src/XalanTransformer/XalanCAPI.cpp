@@ -124,11 +124,40 @@ XalanTransformToFile(
 			const char*		theOutFileName,
 			XalanHandle		theXalanHandle)
 {
+	if(0 == theXSLFileName)
+	{
+	// Do the transformation...
+#if defined(XALAN_OLD_STYLE_CASTS)
+	return ((XalanTransformer*)theXalanHandle)->transform(theXMLFileName, theOutFileName);
+#else
+	return 	static_cast<XalanTransformer*>(theXalanHandle)->transform(theXMLFileName, theOutFileName);
+#endif
+	}
+	else
+	{
 	// Do the transformation...
 #if defined(XALAN_OLD_STYLE_CASTS)
 	return ((XalanTransformer*)theXalanHandle)->transform(theXMLFileName, theXSLFileName, theOutFileName);
 #else
 	return 	static_cast<XalanTransformer*>(theXalanHandle)->transform(theXMLFileName, theXSLFileName, theOutFileName);
+#endif
+	}
+}
+
+
+
+XALAN_TRANSFORMER_EXPORT_FUNCTION(int)
+XalanTransformToFileCSS(
+			const char*		theXMLFileName, 
+			XalanCSSHandle	theCSSHandle,
+			const char*		theOutFileName,
+			XalanHandle		theXalanHandle)
+{
+	// Do the transformation...
+#if defined(XALAN_OLD_STYLE_CASTS)
+	return ((XalanTransformer*)theXalanHandle)->transform(theXMLFileName, (XalanCompiledStylesheet*)theCSSHandle, theOutFileName);
+#else
+	return 	static_cast<XalanTransformer*>(theXalanHandle)->transform(theXMLFileName, static_cast<XalanCompiledStylesheet*>(theCSSHandle), theOutFileName);
 #endif	
 }
 
@@ -148,12 +177,53 @@ XalanTransformToData(
 	int status = true;		
 
 	ostrstream	theOutputStream;	
+	if(0 == theXSLFileName)
+	{
+	// Do the transformation...
+#if defined(XALAN_OLD_STYLE_CASTS)
+		status = ((XalanTransformer*)theXalanHandle)->transform(theXMLFileName, theOutputStream);
+#else
+		status = static_cast<XalanTransformer*>(theXalanHandle)->transform(theXMLFileName, theOutputStream);
+#endif
+	}
+	else
+	{
+#if defined(XALAN_OLD_STYLE_CASTS)
+		status = ((XalanTransformer*)theXalanHandle)->transform(theXMLFileName, theXSLFileName, theOutputStream);
+#else
+		status = static_cast<XalanTransformer*>(theXalanHandle)->transform(theXMLFileName, theXSLFileName, theOutputStream);
+#endif
+	}
+	// Null-terminate the data.
+	theOutputStream << '\0';
+
+	*theOutput = theOutputStream.str();
+	
+	return status;
+}
+
+
+
+XALAN_TRANSFORMER_EXPORT_FUNCTION(int)
+XalanTransformToDataCSS(
+			const char*		theXMLFileName, 
+			XalanCSSHandle	theCSSHandle,
+			char**			theOutput,
+			XalanHandle		theXalanHandle)
+{
+#if !defined(XALAN_NO_NAMESPACES)
+	using std::ostrstream;
+#endif
+
+	int status = true;		
+
+	ostrstream	theOutputStream;	
 
 	// Do the transformation...
 #if defined(XALAN_OLD_STYLE_CASTS)
-	status = ((XalanTransformer*)theXalanHandle)->transform(theXMLFileName, theXSLFileName, theOutputStream);
+	status = ((XalanTransformer*)theXalanHandle)->transform(theXMLFileName, (XalanCompiledStylesheet*)theCSSHandle, theOutputStream);
 #else
-	status = static_cast<XalanTransformer*>(theXalanHandle)->transform(theXMLFileName, theXSLFileName, theOutputStream);
+	status = static_cast<XalanTransformer*>(theXalanHandle)->transform(theXMLFileName, static_cast<XalanCompiledStylesheet*>(theCSSHandle), theOutputStream);
 #endif
 	// Null-terminate the data.
 	theOutputStream << '\0';
@@ -188,6 +258,54 @@ XalanTransformToHandler(
 	return ((XalanTransformer*)theXalanHandle)->transform(theXMLFileName, theXSLFileName, theOutputHandle, theOutputHandler, theFlushHandler);
 #else
 	return 	static_cast<XalanTransformer*>(theXalanHandle)->transform(theXMLFileName, theXSLFileName, theOutputHandle, theOutputHandler, theFlushHandler);
+#endif	
+}
+
+
+
+XALAN_TRANSFORMER_EXPORT_FUNCTION(int) 
+XalanTransformToHandlerCSS(
+			const char*				theXMLFileName, 
+			XalanCSSHandle			theCSSHandle,
+			XalanHandle				theXalanHandle,
+			const void*				theOutputHandle, 
+			XalanOutputHandlerType	theOutputHandler,
+			XalanFlushHandlerType	theFlushHandler)
+{
+	// Do the transformation...
+#if defined(XALAN_OLD_STYLE_CASTS)
+	return ((XalanTransformer*)theXalanHandle)->transform(theXMLFileName, (XalanCompiledStylesheet*)theCSSHandletheCSSHandle, theOutputHandle, theOutputHandler, theFlushHandler);
+#else
+	return 	static_cast<XalanTransformer*>(theXalanHandle)->transform(theXMLFileName, static_cast<XalanCompiledStylesheet*>(theCSSHandle), theOutputHandle, theOutputHandler, theFlushHandler);
+#endif	
+}
+
+
+
+XALAN_TRANSFORMER_EXPORT_FUNCTION(XalanCSSHandle)
+XalanCompileStylesheet(
+			const char*				theXSLFileName,
+			XalanHandle				theXalanHandle)
+{
+#if defined(XALAN_OLD_STYLE_CASTS)
+	return ((XalanTransformer*)theXalanHandle)->compileStylesheet(theXSLFileName);
+#else
+	return 	static_cast<XalanTransformer*>(theXalanHandle)->compileStylesheet(theXSLFileName);
+#endif	
+}
+
+
+
+XALAN_TRANSFORMER_EXPORT_FUNCTION(void)
+XalanSetStylesheetParam(
+			const char*				key,
+			const char*				expression,
+			XalanHandle				theXalanHandle)
+{
+#if defined(XALAN_OLD_STYLE_CASTS)
+	((XalanTransformer*)theXalanHandle)->setStylesheetParam(key, expression);
+#else
+	static_cast<XalanTransformer*>(theXalanHandle)->setStylesheetParam(key, expression);
 #endif	
 }
 
