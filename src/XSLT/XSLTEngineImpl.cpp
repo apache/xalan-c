@@ -2455,6 +2455,157 @@ XSLTEngineImpl::getResultPrefixForNamespace(const XalanDOMString&	theNamespace) 
 
 
 
+inline bool
+isPrefixUsed(
+			const XalanDOMString&	thePrefix,
+			unsigned int			thePrefixLength,
+			const XalanDOMChar*		theName,
+			unsigned int			theNameLength)
+{
+	assert(thePrefixLength != 0);
+
+	// The name must be greater than the length of the prefix + 1, since
+	// there must be a ':' to separate the prefix from the local part...
+	if (theNameLength <= thePrefixLength + 1)
+	{
+		return false;
+	}
+	else
+	{
+		assert(theName != 0);
+
+		const unsigned int	theIndex = indexOf(
+			theName,
+			XalanUnicode::charColon);
+
+		// OK, if the index of the ':' is the same as the length of the prefix,
+		// and theElementName starts with thePrefix, then the prefix is in use.
+		if (theIndex == thePrefixLength &&
+			startsWith(theName, thePrefix) == true)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+}
+
+
+
+inline bool
+isPrefixUsed(
+			const XalanDOMString&	thePrefix,
+			unsigned int			thePrefixLength,
+			const XalanDOMString&	theName)
+{
+	return isPrefixUsed(thePrefix, thePrefixLength, c_wstr(theName), length(theName));
+}
+
+
+
+inline bool
+isPrefixUsedOrDeclared(
+			const XalanDOMString&	thePrefix,
+			unsigned int			thePrefixLength,
+			const XalanDOMChar*		theName,
+			unsigned int			theNameLength)
+{
+	if (isPrefixUsed(thePrefix, thePrefixLength, theName, theNameLength) == true)
+	{
+		return true;
+	}
+	else
+	{
+		const unsigned int	theDeclarationLength =
+			thePrefixLength + DOMServices::s_XMLNamespaceWithSeparatorLength;
+
+		// If this is a namespace declaration for this prefix, then all of
+		// these conditions must be true...
+		if (theDeclarationLength == theNameLength &&
+			startsWith(theName, DOMServices::s_XMLNamespaceWithSeparator) == true &&
+			endsWith(theName, c_wstr(thePrefix)) == true)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+}
+
+
+
+inline bool
+isPendingAttributePrefix(
+			const AttributeList&		thePendingAttributes,
+			const XalanDOMString&		thePrefix,
+			unsigned int				thePrefixLength)
+{
+	const unsigned int	thePendingAttributesCount =
+				thePendingAttributes.getLength();
+
+	if (thePendingAttributesCount == 0)
+	{
+		// No attributes, no problem...
+		return false;
+	}
+	else
+	{
+		bool	fResult = false;
+
+		// Check each attribute...
+		for (unsigned int i = 0; i < thePendingAttributesCount; ++i)
+		{
+			const XalanDOMChar* const	thePendingAttributeName =
+							thePendingAttributes.getName(i);
+			assert(thePendingAttributeName != 0);
+
+			if (isPrefixUsedOrDeclared(
+					thePrefix,
+					thePrefixLength,
+					thePendingAttributeName,
+					length(thePendingAttributeName)) == true)
+			{
+				fResult = true;
+
+				break;
+			}
+		}
+
+		return fResult;
+	}
+}
+
+
+
+bool
+XSLTEngineImpl::isPendingResultPrefix(const XalanDOMString&		thePrefix) const
+{
+	const unsigned int	thePrefixLength = length(thePrefix);
+	assert(thePrefixLength > 0);
+
+	// The element name must be greater than the length of the prefix + 1, since
+	// there must be a ':' to separate the prefix from the local part...
+	if (isPrefixUsed(thePrefix, thePrefixLength, getPendingElementName()) == true)
+	{
+		return true;
+	}
+	else
+	{
+		// The element is not using the prefix, so check the
+		// pending attributes...
+		return isPendingAttributePrefix(
+						getPendingAttributes(),
+						thePrefix,
+						thePrefixLength);
+	}
+}
+
+
+
 void
 XSLTEngineImpl::addResultNamespace(
 			const XalanNode&	theNode,

@@ -242,12 +242,14 @@ ElemAttribute::execute(StylesheetExecutionContext&		executionContext) const
 						newPrefix = substring(origAttrName, 0, indexOfNSSep);
 
 						// OK, make sure that the prefix provided maps to
-						// the same namespace as the one the user requested...
+						// the same namespace as the one the user requested,
+						// and see if it's in use...
 						const XalanDOMString* const	theNamespace =
 							executionContext.getResultNamespaceForPrefix(newPrefix);
 
 						if (theNamespace != 0 &&
-							equals(*theNamespace, attrNameSpace) == false)
+							equals(*theNamespace, attrNameSpace) == false &&
+							executionContext.isPendingResultPrefix(newPrefix) == true)
 						{
 							// It doesn't, so we'll need to manufacture a
 							// prefix.

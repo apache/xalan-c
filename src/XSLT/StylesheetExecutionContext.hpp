@@ -350,6 +350,8 @@ public:
 	 * Retrieve the result prefix corresponding to a namespace.
 	 * 
 	 * @param theNamespace namespace for prefix
+	 *
+	 * @return A pointer to a string containing the prefix, or 0 if the namespace is not mapped.
 	 */
 	virtual const XalanDOMString*
 	getResultPrefixForNamespace(const XalanDOMString&	theNamespace) const = 0;
@@ -358,9 +360,22 @@ public:
 	 * Retrieve the result namespace corresponding to a prefix.
 	 * 
 	 * @param thePrefix prefix for namespace
+	 *
+	 * @return A pointer to a string containing the namespace, or 0 if the prefix is not mapped.
 	 */
 	virtual const XalanDOMString*
 	getResultNamespaceForPrefix(const XalanDOMString&	thePrefix) const = 0;
+
+	/**
+	 * Determine whether or not a prefix is in use on the pending element or
+	 * the pending attributes.
+	 * 
+	 * @param thePrefix prefix for namespace
+	 *
+	 * @return true if the prefix is in use, false if not.
+	 */
+	virtual bool
+	isPendingResultPrefix(const XalanDOMString&	thePrefix) = 0;
 
 	/**
 	 * Generate a random namespace prefix guaranteed to be unique.

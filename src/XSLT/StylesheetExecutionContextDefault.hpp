@@ -319,6 +319,9 @@ public:
 	virtual const XalanDOMString*
 	getResultNamespaceForPrefix(const XalanDOMString&	thePrefix) const;
 
+	virtual bool
+	isPendingResultPrefix(const XalanDOMString&	thePrefix);
+
 	virtual XalanDOMString
 	getUniqueNamespaceValue() const;
 

@@ -401,6 +401,16 @@ StylesheetExecutionContextDefault::getResultNamespaceForPrefix(const XalanDOMStr
 
 
 
+bool
+StylesheetExecutionContextDefault::isPendingResultPrefix(const XalanDOMString&	thePrefix)
+{
+	assert(m_xsltProcessor != 0);
+
+	return m_xsltProcessor->isPendingResultPrefix(thePrefix);
+}
+
+
+
 XalanDOMString
 StylesheetExecutionContextDefault::getUniqueNamespaceValue() const
 {

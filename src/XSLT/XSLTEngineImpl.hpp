@@ -924,6 +924,17 @@ public:
 	getResultPrefixForNamespace(const XalanDOMString&	theNamespace) const;
 
 	/**
+	 * Determine whether or not a prefix is in use on the pending element or
+	 * the pending attributes.
+	 * 
+	 * @param thePrefix prefix for namespace
+	 *
+	 * @return true if the prefix is in use, false if not.
+	 */
+	bool
+	isPendingResultPrefix(const XalanDOMString&		thePrefix) const;
+
+	/**
 	 * Evaluate an xpath string and return the result as a numberic score.
 	 *
 	 * @param str			   string to evaluate
