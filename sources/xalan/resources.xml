@@ -74,13 +74,13 @@
   <resource id="xslt4c-current" title="&xslt4c-current;" location="http://xml.apache.org/xalan"/>
   <resource id="xml4c-used" title="&xml4c-used;" location="http://xml.apache.org/xerces-c/index.html"/>   
 
-  <resource id="xslt4c-distdir" title="Xalan-C downloads" location="http://xml.apache.org/dist/xalan-c"/>
-  <resource id="xml4c-distdir" title="Xerces-C downloads" location="http://xml.apache.org/dist/xerces-c/"/>
-  <resource id="xslt4c-win32-download" title="&xslt4c-dist;-win32.zip" location="http://xml.apache.org/dist/xalan-c/&xslt4c-dist;-win32.zip"/>
-  <resource id="xslt4c-linux-download" title="&xslt4c-dist;-linux.tar.gz" location="http://xml.apache.org/dist/xalan-c/&xslt4c-dist;-linux.tar.gz"/>
-<resource id="xslt4c-aix-download" title="&xslt4c-dist;-aix.tar.gz" location="http://xml.apache.org/dist/xalan-c/&xslt4c-dist;-aix.tar.gz"/>
-<resource id="xslt4c-hp-ux-download" title="&xslt4c-dist;-hp-ux.tar.gz" location="http://xml.apache.org/dist/xalan-c/&xslt4c-dist;-hp-ux.tar.gz"/>
-<resource id="xslt4c-Solaris-download" title="&xslt4c-dist;-solaris.tar.gz" location="http://xml.apache.org/dist/xalan-c/&xslt4c-dist;-solaris.tar.gz"/>
+  <resource id="xslt4c-distdir" title="Xalan-C downloads" location="http://www.apache.org/dyn/closer.cgi/xml/xalan-c"/>
+  <resource id="xml4c-distdir" title="Xerces-C downloads" location="http://www.apache.org/dyn/closer.cgi/xml/xerces-c/"/>
+  <resource id="xslt4c-win32-download" title="&xslt4c-dist;-win32.zip" location="http://www.apache.org/dyn/closer.cgi/xml/xalan-c/binaries/&xslt4c-dist;-win32.zip"/>
+  <resource id="xslt4c-linux-download" title="&xslt4c-dist;-linux.tar.gz" location="http://www.apache.org/dyn/closer.cgi/xml/xalan-c/binaries/&xslt4c-dist;-linux.tar.gz"/>
+<resource id="xslt4c-aix-download" title="&xslt4c-dist;-aix.tar.gz" location="http://www.apache.org/dyn/closer.cgi/xml/xalan-c/binaries/&xslt4c-dist;-aix.tar.gz"/>
+<resource id="xslt4c-hp-ux-download" title="&xslt4c-dist;-hp-ux.tar.gz" location="http://www.apache.org/dyn/closer.cgi/xml/xalan-c/binaries/&xslt4c-dist;-hp-ux.tar.gz"/>
+<resource id="xslt4c-Solaris-download" title="&xslt4c-dist;-solaris.tar.gz" location="http://www.apache.org/dyn/closer.cgi/xml/xalan-c/binaries/&xslt4c-dist;-solaris.tar.gz"/>
   
   <resource id="icu" title="International Components for Unicode (ICU)" location="http://oss.software.ibm.com/icu/index.html"/>
 <resource id="icu-download" title="&icu-used;" location="http://oss.software.ibm.com/icu/download/index.html"/>
