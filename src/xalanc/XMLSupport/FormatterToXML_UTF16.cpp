@@ -181,7 +181,8 @@ FormatterToXML_UTF16::FormatterToXML_UTF16(
 	{
 		if(startsWith(
 			m_doctypePublic,
-			s_xhtmlDocTypeString) == true)
+			s_xhtmlDocTypeString,
+			s_xhtmlDocTypeStringLength) == true)
 		{
 			m_spaceBeforeClose = true;
 		}
