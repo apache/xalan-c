@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2003 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -82,11 +82,9 @@ class XalanSourceTreeText;
 
 
 
-class XALAN_XALANSOURCETREE_EXPORT XalanSourceTreeElement : public XalanElement, private XalanNamedNodeMap
+class XALAN_XALANSOURCETREE_EXPORT XalanSourceTreeElement : public XalanElement
 {
 public:
-
-	typedef unsigned long	AttributesCountType;
 
 	/**
 	 * Constructor.
@@ -103,8 +101,6 @@ public:
 	XalanSourceTreeElement(
 			const XalanDOMString&		theTagName,
 			XalanSourceTreeDocument*	theOwnerDocument,
-			XalanSourceTreeAttr**		theAttributes,
-			AttributesCountType			theAttributeCount,
 			XalanNode*					theParentNode = 0,
 			XalanNode*					thePreviousSibling = 0,
 			XalanNode*					theNextSibling = 0,
@@ -112,7 +108,6 @@ public:
 
 	virtual
 	~XalanSourceTreeElement();
-
 
 	/**
 	 * Gets the name of this node.
@@ -197,7 +192,7 @@ public:
 	 * is an <code>Element</code>) or <code>null</code> otherwise.
 	 */
 	virtual const XalanNamedNodeMap*
-	getAttributes() const;
+	getAttributes() const = 0;
 
 	/**
 	 * Gets the <code>DOM_Document</code> object associated with this node.
@@ -238,7 +233,7 @@ public:
 #else
 	virtual XalanSourceTreeElement*
 #endif
-	cloneNode(bool deep) const;
+	cloneNode(bool deep) const = 0;
 
 	//@}
 	/** @name Functions to modify the DOM Node. */
@@ -398,14 +393,14 @@ public:
 	 * interface, this is always <CODE>null</CODE>.
 	 */
 	virtual const XalanDOMString&
-	getNamespaceURI() const;
+	getNamespaceURI() const = 0;
 
 	/**
 	 * Get the <em>namespace prefix</em>
 	 * of this node, or <code>null</code> if it is unspecified.
 	 */
 	virtual const XalanDOMString&
-	getPrefix() const;
+	getPrefix() const = 0;
 
 	/**
 	 * Returns the local part of the <em>qualified name</em> of this node.
@@ -415,7 +410,7 @@ public:
 	 * it is null.
 	 */
 	virtual const XalanDOMString&
-	getLocalName() const;
+	getLocalName() const = 0;
 
 	/**
 	 * Set the <em>namespace prefix</em> of this node.
@@ -478,7 +473,7 @@ public:
 	 *   that attribute does not have a specified or default value.
 	 */
 	virtual const XalanDOMString&
-	getAttribute(const XalanDOMString&		name) const;
+	getAttribute(const XalanDOMString&		name) const = 0;
 
 	/**
 	 * Retrieves an <code>DOM_Attr</code> node by name.
@@ -488,7 +483,7 @@ public:
 	 *   <code>null</code> if there is no such attribute.
 	 */
 	virtual XalanAttr*
-	getAttributeNode(const XalanDOMString&		name) const;
+	getAttributeNode(const XalanDOMString&		name) const = 0;
 
 	/**
 	 * Returns a <code>NodeList</code> of all descendant elements with a given 
@@ -609,7 +604,7 @@ public:
 	virtual const XalanDOMString&
 	getAttributeNS(
 			const XalanDOMString&	namespaceURI,
-			const XalanDOMString&	localName) const;
+			const XalanDOMString&	localName) const = 0;
 
 	/**
 	 * Adds a new attribute. If the given 
@@ -689,7 +684,7 @@ public:
 	virtual XalanAttr*
 	getAttributeNodeNS(
 			const XalanDOMString&	namespaceURI,
-			const XalanDOMString&	localName) const;
+			const XalanDOMString&	localName) const = 0;
 
 	/**
 	  * Adds a new attribute. 
@@ -795,18 +790,6 @@ public:
 		m_index = theIndex;
 	}
 
-	AttributesCountType
-	getAttributeCount() const
-	{
-		return m_attributeCount;
-	}
-
-	XalanSourceTreeAttr*
-	getAttributeByIndex(AttributesCountType		index) const
-	{
-		return index < m_attributeCount ? m_attributes[index] : 0;
-	}
-
 	/**
 	  * Removes all of the children.  Since the owner document controls the
 	  * lifetime of all nodes in the document, this just sets the first child
@@ -818,50 +801,15 @@ public:
 		m_firstChild = 0;
 	}
 
-	XalanSourceTreeElement*
-	clone(bool	deep) const
-	{
-		return new XalanSourceTreeElement(*this, deep);
-	}
-
 protected:
 
 	XalanSourceTreeElement(
 			const XalanSourceTreeElement&	theSource,
 			bool							deep = false);
 
+	static const XalanDOMString		s_emptyString;
+
 private:
-
-	// These are from XalanNamedNodeMap...
-
-	virtual XalanNode*
-	setNamedItem(XalanNode* 	arg);
-
-	virtual XalanNode*
-	item(unsigned int	index) const;
-
-	virtual XalanNode*
-	getNamedItem(const XalanDOMString& 	name) const;
-
-	virtual unsigned int
-	getLength() const;
-
-	virtual XalanNode*
-	removeNamedItem(const XalanDOMString&	name);
-
-	virtual XalanNode*
-	getNamedItemNS(
-			const XalanDOMString&	namespaceURI,
-			const XalanDOMString&	localName) const;
-
-	virtual XalanNode*
-	setNamedItemNS(XalanNode*	arg);
-
-	virtual XalanNode*
-	removeNamedItemNS(
-			const XalanDOMString&	namespaceURI,
-			const XalanDOMString&	localName);
-
 
 	// Not implemented...
 	XalanSourceTreeElement&
@@ -885,10 +833,6 @@ private:
 	XalanNode*						m_firstChild;
 
 	unsigned long					m_index;
-
-	XalanSourceTreeAttr* const *	m_attributes;
-
-	const AttributesCountType		m_attributeCount;
 };
 
 

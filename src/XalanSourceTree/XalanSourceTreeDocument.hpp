@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2003 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -84,8 +84,10 @@
 #include <XalanSourceTree/XalanSourceTreeAttributeAllocator.hpp>
 #include <XalanSourceTree/XalanSourceTreeAttributeNSAllocator.hpp>
 #include <XalanSourceTree/XalanSourceTreeCommentAllocator.hpp>
-#include <XalanSourceTree/XalanSourceTreeElementAllocator.hpp>
-#include <XalanSourceTree/XalanSourceTreeElementNSAllocator.hpp>
+#include <XalanSourceTree/XalanSourceTreeElementAAllocator.hpp>
+#include <XalanSourceTree/XalanSourceTreeElementANSAllocator.hpp>
+#include <XalanSourceTree/XalanSourceTreeElementNAAllocator.hpp>
+#include <XalanSourceTree/XalanSourceTreeElementNANSAllocator.hpp>
 #include <XalanSourceTree/XalanSourceTreeProcessingInstructionAllocator.hpp>
 #include <XalanSourceTree/XalanSourceTreeTextAllocator.hpp>
 #include <XalanSourceTree/XalanSourceTreeTextIWSAllocator.hpp>
@@ -115,7 +117,7 @@ class XALAN_XALANSOURCETREE_EXPORT XalanSourceTreeDocument : public XalanDocumen
 {
 public:
 
-	typedef XalanSourceTreeElement::AttributesCountType		AttributesCountType;
+	typedef XalanSourceTreeElementA::AttributesCountType	AttributesCountType;
 	typedef XalanArrayAllocator<XalanSourceTreeAttr*>		AttributesArrayAllocatorType;
 
 #if defined(XALAN_NO_STD_NAMESPACE)
@@ -554,9 +556,13 @@ private:
 
 	XalanSourceTreeCommentAllocator					m_commentAllocator;
 
-	XalanSourceTreeElementAllocator					m_elementAllocator;
+	XalanSourceTreeElementAAllocator				m_elementAAllocator;
 
-	XalanSourceTreeElementNSAllocator				m_elementNSAllocator;
+	XalanSourceTreeElementANSAllocator				m_elementANSAllocator;
+
+	XalanSourceTreeElementNAAllocator				m_elementNAAllocator;
+
+	XalanSourceTreeElementNANSAllocator				m_elementNANSAllocator;
 
 	XalanSourceTreeProcessingInstructionAllocator	m_piAllocator;
 

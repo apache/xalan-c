@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2003 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -80,15 +80,13 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-static const XalanDOMString		s_emptyString;
+const XalanDOMString		XalanSourceTreeElement::s_emptyString;
 
 
 
 XalanSourceTreeElement::XalanSourceTreeElement(
 			const XalanDOMString&		theTagName,
 			XalanSourceTreeDocument*	theOwnerDocument,
-			XalanSourceTreeAttr**		theAttributes,
-			AttributesCountType			theAttributeCount,
 			XalanNode*					theParentNode,
 			XalanNode*					thePreviousSibling,
 			XalanNode*					theNextSibling,
@@ -100,9 +98,7 @@ XalanSourceTreeElement::XalanSourceTreeElement(
 	m_previousSibling(thePreviousSibling),
 	m_nextSibling(theNextSibling),
 	m_firstChild(0),
-	m_index(theIndex),
-	m_attributes(theAttributes),
-	m_attributeCount(theAttributeCount)
+	m_index(theIndex)
 {
 }
 
@@ -116,7 +112,7 @@ XalanSourceTreeElement::~XalanSourceTreeElement()
 
 XalanSourceTreeElement::XalanSourceTreeElement(
 			const XalanSourceTreeElement&	theSource,
-			bool							deep) :
+			bool								deep) :
 	XalanElement(theSource),
 	m_tagName(theSource.m_tagName),
 	m_ownerDocument(theSource.m_ownerDocument),
@@ -124,9 +120,7 @@ XalanSourceTreeElement::XalanSourceTreeElement(
 	m_previousSibling(0),
 	m_nextSibling(0),
 	m_firstChild(theSource.m_firstChild == 0 ? 0 : theSource.m_firstChild->cloneNode(deep)),
-	m_index(0),
-	m_attributes(theSource.m_attributes),
-	m_attributeCount(theSource.m_attributeCount)
+	m_index(0)
 {
 }
 
@@ -214,30 +208,10 @@ XalanSourceTreeElement::getNextSibling() const
 
 
 
-const XalanNamedNodeMap*
-XalanSourceTreeElement::getAttributes() const
-{
-	return this;
-}
-
-
-
 XalanDocument*
 XalanSourceTreeElement::getOwnerDocument() const
 {
 	return m_ownerDocument;
-}
-
-
-
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-XalanNode*
-#else
-XalanSourceTreeElement*
-#endif
-XalanSourceTreeElement::cloneNode(bool	deep) const
-{
-	return clone(deep);
 }
 
 
@@ -324,30 +298,6 @@ XalanSourceTreeElement::isSupported(
 
 
 
-const XalanDOMString&
-XalanSourceTreeElement::getNamespaceURI() const
-{
-	return s_emptyString;
-}
-
-
-
-const XalanDOMString&
-XalanSourceTreeElement::getPrefix() const
-{
-	return s_emptyString;
-}
-
-
-
-const XalanDOMString&
-XalanSourceTreeElement::getLocalName() const
-{
-	return s_emptyString;
-}
-
-
-
 void
 XalanSourceTreeElement::setPrefix(const XalanDOMString&	/* prefix */)
 {
@@ -376,34 +326,6 @@ const XalanDOMString&
 XalanSourceTreeElement::getTagName() const
 {
 	return m_tagName;
-}
-
-
-
-const XalanDOMString&
-XalanSourceTreeElement::getAttribute(const XalanDOMString&		name) const
-{
-	XalanAttr* const	theAttr = getAttributeNode(name);
-
-	return theAttr == 0 ? s_emptyString : theAttr->getValue();
-}
-
-
-
-XalanAttr*
-XalanSourceTreeElement::getAttributeNode(const XalanDOMString&		name) const
-{
-	for(unsigned int i = 0; i < m_attributeCount; ++i)
-	{
-		assert(m_attributes[i] != 0);
-
-		if (equals(m_attributes[i]->getNodeName(), name) == true)
-		{
-			return m_attributes[i];
-		}
-	}
-
-	return 0;
 }
 
 
@@ -456,18 +378,6 @@ XalanSourceTreeElement::removeAttribute(const XalanDOMString&	/* name */)
 
 
 
-const XalanDOMString&
-XalanSourceTreeElement::getAttributeNS(
-			const XalanDOMString&	namespaceURI,
-			const XalanDOMString&	localName) const
-{
-	XalanAttr* const	theAttr = getAttributeNodeNS(namespaceURI, localName);
-
-	return theAttr == 0 ? s_emptyString : theAttr->getValue();
-}
-
-
-
 void
 XalanSourceTreeElement::setAttributeNS(
 			const XalanDOMString&	/* namespaceURI */,
@@ -485,27 +395,6 @@ XalanSourceTreeElement::removeAttributeNS(
 			const XalanDOMString&	/* localName */)
 {
 	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
-}
-
-
-
-XalanAttr*
-XalanSourceTreeElement::getAttributeNodeNS(
-			const XalanDOMString&	namespaceURI,
-			const XalanDOMString&	localName) const
-{
-	for(unsigned int i = 0; i < m_attributeCount; ++i)
-	{
-		assert(m_attributes[i] != 0);
-
-		if (equals(m_attributes[i]->getLocalName(), localName) == true &&
-			equals(m_attributes[i]->getNamespaceURI(), namespaceURI) == true)
-		{
-			return m_attributes[i];
-		}
-	}
-
-	return 0;
 }
 
 
@@ -631,86 +520,6 @@ void
 XalanSourceTreeElement::appendChildNode(XalanSourceTreeText*	theChild)
 {
 	XalanSourceTreeHelper::appendSiblingToChild(this, m_firstChild, theChild);
-}
-
-
-
-XalanNode*
-XalanSourceTreeElement::setNamedItem(XalanNode* 	/* arg */)
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
-
-	// Dummy return value...
-	return 0;
-}
-
-
-
-XalanNode*
-XalanSourceTreeElement::item(unsigned int	index) const
-{
-	return index < m_attributeCount ? m_attributes[index] : 0;
-}
-
-
-
-XalanNode*
-XalanSourceTreeElement::getNamedItem(const XalanDOMString& 	name) const
-{
-	return getAttributeNode(name);
-}
-
-
-
-unsigned int
-XalanSourceTreeElement::getLength() const
-{
-	return m_attributeCount;
-}
-
-
-
-XalanNode*
-XalanSourceTreeElement::removeNamedItem(const XalanDOMString&	/* name */)
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
-
-	// Dummy return value...
-	return 0;
-}
-
-
-
-XalanNode*
-XalanSourceTreeElement::getNamedItemNS(
-			const XalanDOMString&	namespaceURI,
-			const XalanDOMString&	localName) const
-{
-	return getAttributeNodeNS(namespaceURI, localName);
-}
-
-
-
-XalanNode*
-XalanSourceTreeElement::setNamedItemNS(XalanNode*	/* arg */)
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
-
-	// Dummy return value...
-	return 0;
-}
-
-
-
-XalanNode*
-XalanSourceTreeElement::removeNamedItemNS(
-			const XalanDOMString&	/* namespaceURI */,
-			const XalanDOMString&	/* localName */)
-{
-	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
-
-	// Dummy return value...
-	return 0;
 }
 
 

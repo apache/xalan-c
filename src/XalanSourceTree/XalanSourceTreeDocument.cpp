@@ -102,8 +102,10 @@ XalanSourceTreeDocument::XalanSourceTreeDocument(
 	m_attributeAllocator(eDefaultAttributeAllocatorBlockSize),
 	m_attributeNSAllocator(eDefaultAttributeNSAllocatorBlockSize),
 	m_commentAllocator(eDefaultCommentAllocatorBlockSize),
-	m_elementAllocator(eDefaultElementAllocatorBlockSize),
-	m_elementNSAllocator(eDefaultElementNSAllocatorBlockSize),
+	m_elementAAllocator(eDefaultElementAllocatorBlockSize),
+	m_elementANSAllocator(eDefaultElementNSAllocatorBlockSize),
+	m_elementNAAllocator(eDefaultElementAllocatorBlockSize),
+	m_elementNANSAllocator(eDefaultElementNSAllocatorBlockSize),
 	m_piAllocator(eDefaultPIAllocatorBlockSize),
 	m_textAllocator(eDefaultTextAllocatorBlockSize),
 	m_textIWSAllocator(eDefaultTextIWSAllocatorBlockSize),
@@ -137,8 +139,10 @@ XalanSourceTreeDocument::XalanSourceTreeDocument(
 	m_attributeAllocator(theAttributeBlockSize),
 	m_attributeNSAllocator(theAttributeNSBlockSize),
 	m_commentAllocator(theCommentBlockSize),
-	m_elementAllocator(theElementBlockSize),
-	m_elementNSAllocator(theElementNSBlockSize),
+	m_elementAAllocator(theElementBlockSize),
+	m_elementANSAllocator(theElementNSBlockSize),
+	m_elementNAAllocator(theElementBlockSize),
+	m_elementNANSAllocator(theElementNSBlockSize),
 	m_piAllocator(thePIBlockSize),
 	m_textAllocator(theTextBlockSize),
 	m_textIWSAllocator(theTextIWSBlockSize),
@@ -700,11 +704,24 @@ XalanSourceTreeDocument::createElementNode(
 		}
 	}
 
-	XalanSourceTreeAttr** const		theAttributeVector =
-		theAttributeCount == 0 ? 0 : m_attributesVector.allocate(theAttributeCount);
+	XalanSourceTreeAttr**		theAttributeVector = 0;
+	XalanSourceTreeElement*		theNewElement = 0;
 
-	XalanSourceTreeElement* const	theNewElement =
-			m_elementAllocator.create(
+	if (theAttributeCount == 0)
+	{
+		theNewElement = m_elementNAAllocator.create(
+				m_namesStringPool.get(name),
+				this,
+				theParentNode,
+				thePreviousSibling,
+				theNextSibling,
+				m_nextIndexValue++);
+	}
+	else
+	{
+		theAttributeVector = m_attributesVector.allocate(theAttributeCount);
+
+		theNewElement = m_elementAAllocator.create(
 				m_namesStringPool.get(name),
 				this,
 				theAttributeVector,
@@ -713,6 +730,7 @@ XalanSourceTreeDocument::createElementNode(
 				thePreviousSibling,
 				theNextSibling,
 				m_nextIndexValue++);
+	}
 	assert(theNewElement != 0);
 
 	size_t	theIndex = 0;
@@ -873,8 +891,6 @@ getElementNodePrefix(
 	{
 		return theStringPool->get(qname, theColonIndex);
 	}
-	
-
 }
 
 
@@ -909,14 +925,32 @@ XalanSourceTreeDocument::createElementNode(
 		}
 	}
 
-	XalanSourceTreeAttr** const		theAttributeVector =
-		theAttributeCount == 0 ? 0 : m_attributesVector.allocate(theAttributeCount);
+	XalanSourceTreeAttr**		theAttributeVector = 0;
+	XalanSourceTreeElement*		theNewElement = 0;
 
 	const XalanDOMString::size_type		theColonIndex = indexOf(qname, XalanUnicode::charColon);
 	const XalanDOMString::size_type		theLength = length(qname);
 
-	XalanSourceTreeElement* const	theNewElement =
-		m_elementNSAllocator.create(
+	if (theAttributeCount == 0)
+	{
+
+		theNewElement = m_elementNANSAllocator.create(
+				m_namesStringPool.get(qname),
+				m_namesStringPool.get(localname),
+				m_namesStringPool.get(uri),
+				// This is the prefix...
+				getElementNodePrefix(qname, &m_namesStringPool, theLength, theColonIndex),
+				this,
+				theParentNode,
+				thePreviousSibling,
+				theNextSibling,
+				m_nextIndexValue++);
+	}
+	else
+	{
+		theAttributeVector = m_attributesVector.allocate(theAttributeCount);
+
+		theNewElement = m_elementANSAllocator.create(
 				m_namesStringPool.get(qname),
 				m_namesStringPool.get(localname),
 				m_namesStringPool.get(uri),
@@ -930,8 +964,6 @@ XalanSourceTreeDocument::createElementNode(
 				theNextSibling,
 				m_nextIndexValue++);
 
-	if (theAttributeCount != 0)
-	{
 		createAttributes(attrs, theAttributeVector, theNewElement, fAddXMLNamespaceAttribute);
 	}
 
@@ -949,6 +981,8 @@ XalanSourceTreeDocument::createElementNode(
 			XalanNode*				theNextSibling,
 			bool					fAddXMLNamespaceAttribute)
 {
+	assert(indexOf(name, XalanUnicode::charColon) == length(name));
+
 	// We might have typedef'ed this to something smaller than unsigned int.
 	AttributesCountType		theAttributeCount = AttributesCountType(attrs.getLength());
 
@@ -967,13 +1001,24 @@ XalanSourceTreeDocument::createElementNode(
 		}
 	}
 
-	XalanSourceTreeAttr** const		theAttributeVector =
-		theAttributeCount == 0 ? 0 : m_attributesVector.allocate(theAttributeCount);
+	XalanSourceTreeAttr**		theAttributeVector = 0;
+	XalanSourceTreeElement*		theNewElement = 0;
 
-	assert(indexOf(name, XalanUnicode::charColon) == length(name));
+	if (theAttributeCount == 0)
+	{
+		theNewElement = m_elementNAAllocator.create(
+				m_namesStringPool.get(name),
+				this,
+				theParentNode,
+				thePreviousSibling,
+				theNextSibling,
+				m_nextIndexValue++);
+	}
+	else
+	{
+		theAttributeVector = m_attributesVector.allocate(theAttributeCount);
 
-	XalanSourceTreeElement* const	theNewElement =
-		m_elementAllocator.create(
+		theNewElement = m_elementAAllocator.create(
 				m_namesStringPool.get(name),
 				this,
 				theAttributeVector,
@@ -983,8 +1028,6 @@ XalanSourceTreeDocument::createElementNode(
 				theNextSibling,
 				m_nextIndexValue++);
 
-	if (theAttributeCount != 0)
-	{
 		createAttributes(attrs, theAttributeVector, theNewElement, fAddXMLNamespaceAttribute);
 	}
 
@@ -1258,15 +1301,28 @@ XalanSourceTreeDocument::createElementNode(
 		// the prefix was returned by getNamespaceForPrefix()...
 		assert(length(m_stringBuffer) == 0);
 
-		return m_elementAllocator.create(
-				m_namesStringPool.get(theTagName),
-				this,
-				theAttributeVector,
-				theAttributeCount,
-				theParentNode,
-				thePreviousSibling,
-				theNextSibling,
-				m_nextIndexValue++);
+		if (theAttributeCount == 0)
+		{
+			return m_elementNAAllocator.create(
+					m_namesStringPool.get(theTagName),
+					this,
+					theParentNode,
+					thePreviousSibling,
+					theNextSibling,
+					m_nextIndexValue++);
+		}
+		else
+		{
+			return m_elementAAllocator.create(
+					m_namesStringPool.get(theTagName),
+					this,
+					theAttributeVector,
+					theAttributeCount,
+					theParentNode,
+					thePreviousSibling,
+					theNextSibling,
+					m_nextIndexValue++);
+		}
 	}
 	else
 	{
@@ -1293,18 +1349,34 @@ XalanSourceTreeDocument::createElementNode(
 		// next sibling
 		// index
 		//
-		return m_elementNSAllocator.create(
-				m_namesStringPool.get(theTagName),
-				m_namesStringPool.get(theLocalName),
-				m_namesStringPool.get(*theNamespace),
-				m_namesStringPool.get(m_stringBuffer),
-				this,
-				theAttributeVector,
-				theAttributeCount,
-				theParentNode,
-				thePreviousSibling,
-				theNextSibling,
-				m_nextIndexValue++);
+		if (theAttributeCount == 0)
+		{
+			return m_elementNANSAllocator.create(
+					m_namesStringPool.get(theTagName),
+					m_namesStringPool.get(theLocalName),
+					m_namesStringPool.get(*theNamespace),
+					m_namesStringPool.get(m_stringBuffer),
+					this,
+					theParentNode,
+					thePreviousSibling,
+					theNextSibling,
+					m_nextIndexValue++);
+		}
+		else
+		{
+			return m_elementANSAllocator.create(
+					m_namesStringPool.get(theTagName),
+					m_namesStringPool.get(theLocalName),
+					m_namesStringPool.get(*theNamespace),
+					m_namesStringPool.get(m_stringBuffer),
+					this,
+					theAttributeVector,
+					theAttributeCount,
+					theParentNode,
+					thePreviousSibling,
+					theNextSibling,
+					m_nextIndexValue++);
+		}
 	}
 }
 
