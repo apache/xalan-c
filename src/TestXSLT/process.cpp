@@ -72,15 +72,12 @@
 #include <cstdio>
 #include <cstring>
 #include <iostream>
-//#include <map>
-//#include <memory>
 
 #include <sys/types.h>
 #include <sys/stat.h>
 
 #include <string>
 #include <strstream>
-//#include <vector>
 
 
 
@@ -132,7 +129,6 @@
 #if !defined (XALAN_NO_NAMESPACES)
 using std::auto_ptr;
 using std::cerr;
-using std::cin;
 using std::cout;
 using std::endl;
 using std::hex;
@@ -428,7 +424,7 @@ void xsltMultiThreadedMain(CmdLineParams& params) throw(XMLException)
 
 
 
-static inline bool exists(string &filename)
+static inline bool exists(const string&		filename)
 {
 	struct stat statBuffer;
 	return (0 == stat(filename.c_str(), &statBuffer));
@@ -505,7 +501,7 @@ THREADFUNCTIONRETURN xsltMain(void *vptr) throw(XMLException)
 	if (params.paramsMap.size())	
 	{
 		String2StringMapType::const_iterator it = params.paramsMap.begin();
-		for ( ; it != params.paramsMap.end(); it++)
+		for ( ; it != params.paramsMap.end(); ++it)
 			processor.setStylesheetParam((*it).first.c_str(),
 					(*it).second.c_str());
 	}
@@ -684,7 +680,7 @@ THREADFUNCTIONRETURN xsltMain(void *vptr) throw(XMLException)
 	}
 
 	return 0;
-}	
+}
 
 int main(int argc, const char* argv[]) throw()
 {
@@ -815,14 +811,6 @@ int main(int argc, const char* argv[]) throw()
 						 << endl;
 				}
 			}
-
-#if defined(XALAN_DEBUG_INTERACTIVE)
-			cout << "Hit <Enter> to continue..."
-				 << endl
-				 << endl;
-
-			cin.get();
-#endif
 		}
 #endif
 
