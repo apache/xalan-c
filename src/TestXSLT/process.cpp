@@ -932,7 +932,7 @@ xsltMain(const CmdLineParams&	params)
 
 
 	XercesDOMSupport		theXercesDOMSupport;
-	XercesParserLiaison		theXercesParserLiaison(theXercesDOMSupport);
+	XercesParserLiaison		theXercesParserLiaison;
 
 	DOMSupport&				theDOMSupport = getDOMSupport(
 		theXalanSourceTreeDOMSupport,
