@@ -129,7 +129,7 @@ XSLTInputSource::XSLTInputSource(
 
 
 XSLTInputSource::XSLTInputSource(XalanNode*		node) :
-	InputSource(""),
+	InputSource(),
 	m_stream(0),
 	m_node(node)
 {
@@ -142,7 +142,7 @@ XSLTInputSource::XSLTInputSource(istream*		stream) :
 #else
 XSLTInputSource::XSLTInputSource(std::istream*	stream) :
 #endif
-	InputSource(""),
+	InputSource(),
 	m_stream(stream),
 	m_node(0)
 {
@@ -167,20 +167,4 @@ XSLTInputSource::makeStream() const
 	}
 
 	return theResult;
-}
-
-
-
-void
-XSLTInputSource::setNode(XalanNode*		node)
-{
-	m_node = node;
-}
-
-
-
-XalanNode*
-XSLTInputSource::getNode() const
-{
-	return m_node;
 }

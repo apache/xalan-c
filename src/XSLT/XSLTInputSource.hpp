@@ -188,7 +188,10 @@ public:
 	 * @param node DOM node that is root of the document
 	 */
 	void
-	setNode(XalanNode*	node);
+	setNode(XalanNode*	node)
+	{
+		m_node = node;
+	}
 
 	/**
 	 * Retrieve the DOM node for this input source.
@@ -196,7 +199,30 @@ public:
 	 * @return DOM node that is root of the document
 	 */
 	XalanNode*
-	getNode() const;
+	getNode() const
+	{
+		return m_node;
+	}
+
+#if defined(XALAN_NO_NAMESPACES)
+	istream*
+#else
+	std::istream*
+#endif
+	getStream() const
+	{
+		return m_stream;
+	}
+
+	void
+#if defined(XALAN_NO_NAMESPACES)
+	setStream(istream*	stream)
+#else
+	setStream(std::istream*	stream)
+#endif
+	{
+		m_stream = stream;
+	}
 
 private:
 

@@ -543,7 +543,7 @@ XSLTEngineImpl::processStylesheet(
 	const XalanDOMChar* const	systemID = stylesheetSource.getSystemId();
 	XalanNode* const			stylesheetNode = stylesheetSource.getNode();
 
-	if (systemID != 0 || stylesheetNode != 0)
+	if (systemID != 0 || stylesheetNode != 0 || stylesheetSource.getStream() != 0)
 	{
 		XalanDOMString	xslIdentifier;
 
@@ -563,8 +563,6 @@ XSLTEngineImpl::processStylesheet(
 			}
 			else
 			{
-				assert(systemID != 0);
-
 				xslIdentifier = systemID;
 
 				diag(XALAN_STATIC_UCODE_STRING("========= Parsing ") + xslIdentifier + XALAN_STATIC_UCODE_STRING(" =========="));
