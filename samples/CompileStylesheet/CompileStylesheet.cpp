@@ -55,7 +55,6 @@ main(
 	using std::endl;
 	using std::ifstream;
 	using std::ostrstream;
-	using std::string;
 #endif
 
 	if (argc != 1)
