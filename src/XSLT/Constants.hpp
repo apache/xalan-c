@@ -100,8 +100,6 @@ public:
 		ELEMNAME_UNDEFINED = -1,
 		ELEMNAME_WITHPARAM = 2,
 		ELEMNAME_ADDATTRIBUTE = 4,
-		ELEMNAME_ANCHOR = 22,
-		// ELEMNAME_ANCHOR_PATTERN = 23,
 		ELEMNAME_APPLY_TEMPLATES = 50,
 		ELEMNAME_USE = 34,
 		ELEMNAME_CHILDREN = 6,
@@ -145,26 +143,13 @@ public:
 		ELEMNAME_ROOT = 44,
 		ELEMNAME_ANY = 45,
 		ELEMNAME_ELEMENT = 46,
-		ELEMNAME_TARGETELEMENT = 47,
 		ELEMNAME_ATTRIBUTE = 48,
-		ELEMNAME_TARGETATTRIBUTE = 49,
 		ELEMNAME_URL = 52, // my own
 
 		ELEMNAME_CALL = 55, // my own
 		ELEMNAME_PARAM = 56,
 		ELEMNAME_FALLBACK = 57, // my own
 
-		ELEMNAME_TARGETPI = 60, // my own
-		ELEMNAME_TARGETCOMMENT = 61, // my own
-		ELEMNAME_TARGETTEXT = 62, // my own
-
-		ELEMNAME_CSSSTYLECONVERSION = 65, // my own
-
-		ELEMNAME_COUNTER = 66,
-		ELEMNAME_COUNTERS = 67,
-		ELEMNAME_COUNTERINCREMENT = 68,
-		ELEMNAME_COUNTERRESET = 69,
-		ELEMNAME_COUNTERSCOPE = 71,
 		ELEMNAME_APPLY_IMPORTS = 72,
 
 		ELEMNAME_VARIABLE = 73,
@@ -191,18 +176,15 @@ public:
 	 */
 
 	// Result tree counting
-	static const XalanDOMString&	ELEMNAME_ANCHOR_STRING;
 	static const XalanDOMString&	ELEMNAME_ANY_STRING;
 	static const XalanDOMString&	ELEMNAME_APPLY_IMPORTS_STRING;
 	static const XalanDOMString&	ELEMNAME_APPLY_IMPORTS_WITH_PREFIX_STRING;
 	static const XalanDOMString&	ELEMNAME_APPLY_TEMPLATES_STRING;
 	static const XalanDOMString&	ELEMNAME_APPLY_TEMPLATES_WITH_PREFIX_STRING;
-	static const XalanDOMString&	ELEMNAME_ARG_STRING;
 	static const XalanDOMString&	ELEMNAME_ATTRIBUTESET_STRING;
 	static const XalanDOMString&	ELEMNAME_ATTRIBUTESET_WITH_PREFIX_STRING;
 	static const XalanDOMString&	ELEMNAME_ATTRIBUTE_STRING;
 	static const XalanDOMString&	ELEMNAME_ATTRIBUTE_WITH_PREFIX_STRING;
-	static const XalanDOMString&	ELEMNAME_CALLTEMPLATEARG_STRING;
 	static const XalanDOMString&	ELEMNAME_CALLTEMPLATE_STRING;
 	static const XalanDOMString&	ELEMNAME_CALLTEMPLATE_WITH_PREFIX_STRING;
 	static const XalanDOMString&	ELEMNAME_CALL_STRING;
@@ -217,19 +199,12 @@ public:
 	static const XalanDOMString&	ELEMNAME_COPY_OF_WITH_PREFIX_STRING;
 	static const XalanDOMString&	ELEMNAME_COPY_STRING;
 	static const XalanDOMString&	ELEMNAME_COPY_WITH_PREFIX_STRING;
-	static const XalanDOMString&	ELEMNAME_COUNTERINCREMENT_STRING;
-	static const XalanDOMString&	ELEMNAME_COUNTERRESET_STRING;
-	static const XalanDOMString&	ELEMNAME_COUNTERSCOPE_STRING;
-	static const XalanDOMString&	ELEMNAME_COUNTERS_STRING;
-	static const XalanDOMString&	ELEMNAME_COUNTER_STRING;
 	static const XalanDOMString&	ELEMNAME_DECIMALFORMAT_STRING;
 	static const XalanDOMString&	ELEMNAME_DECIMALFORMAT_WITH_PREFIX_STRING;
 	static const XalanDOMString&	ELEMNAME_DISPLAYIF_STRING;
 	static const XalanDOMString&	ELEMNAME_ELEMENT_STRING;
 	static const XalanDOMString&	ELEMNAME_ELEMENT_WITH_PREFIX_STRING;
 	static const XalanDOMString&	ELEMNAME_EMPTY_STRING;
-	static const XalanDOMString&	ELEMNAME_EVAL_STRING;
-	static const XalanDOMString&	ELEMNAME_EXPECTEDCHILDREN_STRING;
 	static const XalanDOMString&	ELEMNAME_EXTENSIONHANDLER_STRING;
 	static const XalanDOMString&	ELEMNAME_EXTENSION_STRING;
 	static const XalanDOMString&	ELEMNAME_FALLBACK_STRING;
@@ -256,11 +231,6 @@ public:
 	static const XalanDOMString&	ELEMNAME_SORT_WITH_PREFIX_STRING;
 	static const XalanDOMString&	ELEMNAME_STRIPSPACE_STRING;
 	static const XalanDOMString&	ELEMNAME_STYLESHEET_STRING;
-	static const XalanDOMString&	ELEMNAME_TARGETATTRIBUTE_STRING;
-	static const XalanDOMString&	ELEMNAME_TARGETCOMMENT_STRING;
-	static const XalanDOMString&	ELEMNAME_TARGETELEMENT_STRING;
-	static const XalanDOMString&	ELEMNAME_TARGETPI_STRING;
-	static const XalanDOMString&	ELEMNAME_TARGETTEXT_STRING;
 	static const XalanDOMString&	ELEMNAME_TEMPLATE_STRING;
 	static const XalanDOMString&	ELEMNAME_TEMPLATE_WITH_PREFIX_STRING;
 	static const XalanDOMString&	ELEMNAME_TEXT_STRING;
@@ -425,9 +395,6 @@ public:
 	static const XalanDOMString&	ATTRVAL_NAN;
 
 	static const XalanDOMString&	ATTRVAL_SIMPLE;
-
-	// Name of default for xsl:decimal-format element
-	static const XalanDOMString&	DEFAULT_DECIMAL_FORMAT;
 
 	// Default whitespace separator string for StringTokenizer.
 	static const XalanDOMString&	DEFAULT_WHITESPACE_SEPARATOR_STRING;
