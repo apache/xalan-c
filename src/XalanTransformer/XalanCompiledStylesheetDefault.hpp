@@ -81,6 +81,11 @@
 
 
 
+class EntityResolver;
+class ErrorHandler;
+
+
+
 class XALAN_TRANSFORMER_EXPORT XalanCompiledStylesheetDefault : public XalanCompiledStylesheet
 {
 public:
@@ -88,7 +93,9 @@ public:
 	XalanCompiledStylesheetDefault(
 			const XSLTInputSource&				theStylesheetSource,
 			XSLTProcessorEnvSupportDefault&		theXSLTProcessorEnvSupport,
-			XSLTEngineImpl&						theProcessor);
+			XSLTEngineImpl&						theProcessor,
+			ErrorHandler*						theErrorHandler = 0,
+			EntityResolver*						theEntityResolver = 0);
 
 	virtual
 	~XalanCompiledStylesheetDefault();
@@ -102,7 +109,7 @@ private:
 
 	StylesheetConstructionContextDefault	m_stylesheetConstructionContext;
 
-	const StylesheetRoot*					m_stylesheetRoot;
+	const StylesheetRoot* const				m_stylesheetRoot;
 };
 
 

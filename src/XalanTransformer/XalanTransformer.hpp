@@ -77,6 +77,8 @@
 
 
 
+class EntityResolver;
+class ErrorHandler;
 class Function;
 class StylesheetExecutionContextDefault;
 class XSLTInit;
@@ -447,6 +449,54 @@ public:
 	}
 
 	/**
+	 * This method returns the installed entity resolver.
+	 *
+	 * @return The pointer to the installed entity resolver object.
+	 */
+	EntityResolver*
+	getEntityResolver() const
+	{
+		return m_entityResolver;
+	}
+
+	/**
+	 * This method installs the user-specified entity resolver.
+	 * It allows applications to trap and redirect calls to
+	 * external entities.
+	 *
+	 * @param handler A pointer to the entity resolver to be called
+	 * 			   when the parser comes across references to
+	 * 			   entities in the XML file.
+	 */
+	void
+	setEntityResolver(EntityResolver*	theResolver)
+	{
+		m_entityResolver = theResolver;
+	}
+
+	/**
+	 * This method returns the installed error handler.
+	 *
+	 * @return The pointer to the installed error handler object.
+	 */
+	ErrorHandler*
+	getErrorHandler() const
+	{
+		return m_errorHandler;
+	}
+
+	/**
+	 * This method installs the user-specified error handler.
+	 *
+	 * @param handler A pointer to the error handler to be called upon error.
+	 */
+	void
+	setErrorHandler(ErrorHandler*	theErrorHandler)
+	{
+		m_errorHandler = theErrorHandler;
+	}
+
+	/**
 	 * Returns the last error that occurred as a 
 	 * result of calling transform. 
 	 *
@@ -591,6 +641,10 @@ private:
 	CharVectorType							m_errorMessage;
 
 	bool									m_useValidation;
+
+	EntityResolver*							m_entityResolver;
+
+	ErrorHandler*							m_errorHandler;
 
 	// This should always be the latest data member!!!
 	StylesheetExecutionContextDefault*		m_stylesheetExecutionContext;

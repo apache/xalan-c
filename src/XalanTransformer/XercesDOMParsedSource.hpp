@@ -77,6 +77,11 @@
 
 
 
+class EntityResolver;
+class ErrorHandler;
+
+
+
 /**
  * This is designed to allow a XalanTranfomer object to reuse a parsed
  * document. 
@@ -87,7 +92,9 @@ public:
 	
 	XercesDOMParsedSource(
 			const XSLTInputSource&	theInputSource,
-			bool					fValidate = false);
+			bool					fValidate = false,
+			ErrorHandler*			theErrorHandler = 0,
+			EntityResolver*			theEntityResolver = 0);
 
 	virtual
 	~XercesDOMParsedSource();

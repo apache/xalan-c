@@ -77,6 +77,8 @@
 
 
 
+class EntityResolver;
+class ErrorHandler;
 class XalanSourceTreeDocument;
 
 
@@ -148,7 +150,9 @@ public:
 
 	XalanDefaultParsedSource(
 			const XSLTInputSource&	theInputSource,
-			bool					fValidate = false);
+			bool					fValidate = false,
+			ErrorHandler*			theErrorHandler = 0,
+			EntityResolver*			theEntityResolver = 0);
 
 	virtual
 	~XalanDefaultParsedSource();

@@ -167,13 +167,17 @@ XalanDefaultParsedSourceHelper::getParserLiaison()
 
 XalanDefaultParsedSource::XalanDefaultParsedSource(
 			const XSLTInputSource&	theInputSource,
-			bool					fValidate) :
+			bool					fValidate,
+			ErrorHandler*			theErrorHandler,
+			EntityResolver*			theEntityResolver) :
 	XalanParsedSource(),
 	m_domSupport(),
 	m_parserLiaison(m_domSupport),
 	m_parsedSource(0)
 {
 	m_parserLiaison.setUseValidation(fValidate);
+	m_parserLiaison.setEntityResolver(theEntityResolver);
+	m_parserLiaison.setErrorHandler(theErrorHandler);
 
 	m_parsedSource = m_parserLiaison.mapDocument(m_parserLiaison.parseXMLStream(theInputSource));
 	assert(m_parsedSource != 0);

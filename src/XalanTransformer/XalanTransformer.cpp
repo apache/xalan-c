@@ -132,6 +132,8 @@ XalanTransformer::XalanTransformer():
 	m_functionPairs(),
 	m_errorMessage(1, '\0'),
 	m_useValidation(false),
+	m_entityResolver(0),
+	m_errorHandler(0),
 	m_stylesheetExecutionContext(new StylesheetExecutionContextDefault)
 {
 #if defined(XALAN_USE_ICU)
@@ -935,11 +937,21 @@ XalanTransformer::parseSource(
 
 		if(useXercesDOM == true)
 		{
-			theParsedSource = new XercesDOMParsedSource(theInputSource, m_useValidation);
+			theParsedSource =
+				new XercesDOMParsedSource(
+						theInputSource,
+						m_useValidation,
+						m_errorHandler,
+						m_entityResolver);
 		}
 		else
 		{
-			theParsedSource = new XalanDefaultParsedSource(theInputSource, m_useValidation);
+			theParsedSource =
+				new XalanDefaultParsedSource(
+						theInputSource,
+						m_useValidation,
+						m_errorHandler,
+						m_entityResolver);
 		}
 
 		// Store it in a vector.

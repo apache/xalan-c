@@ -58,20 +58,82 @@
 
 
 
+#include <XMLSupport/XMLParserLiaison.hpp>
+
+
+
+class SetAndRestoreHandlers
+{
+public:
+
+	SetAndRestoreHandlers(
+			XMLParserLiaison&	theParserLiaison,
+			ErrorHandler*		theErrorHandler,
+			EntityResolver*		theEntityResolver) :
+		m_parserLiaison(theParserLiaison),
+		m_errorHandler(theParserLiaison.getErrorHandler()),
+		m_entityResolver(theParserLiaison.getEntityResolver())
+	{
+		theParserLiaison.setErrorHandler(theErrorHandler);
+
+		theParserLiaison.setEntityResolver(theEntityResolver);
+	}
+
+	~SetAndRestoreHandlers()
+	{
+		m_parserLiaison.setEntityResolver(m_entityResolver);
+
+		m_parserLiaison.setErrorHandler(m_errorHandler);
+	}
+
+private:
+
+	XMLParserLiaison&		m_parserLiaison;
+
+	ErrorHandler* const		m_errorHandler;
+
+	EntityResolver*	const	m_entityResolver;
+};
+
+
+
+
+inline const StylesheetRoot*
+compileStylesheet(
+			const XSLTInputSource&					theStylesheetSource,
+			XSLTEngineImpl&							theProcessor,
+			StylesheetConstructionContextDefault&	theConstructionContext,
+			ErrorHandler*							theErrorHandler,
+			EntityResolver*							theEntityResolver)
+{
+	const SetAndRestoreHandlers		theSetAndRestore(
+			theProcessor.getXMLParserLiaison(),
+			theErrorHandler,
+			theEntityResolver);
+
+	return theProcessor.processStylesheet(theStylesheetSource, theConstructionContext);
+}
+
+
+
 XalanCompiledStylesheetDefault::XalanCompiledStylesheetDefault(
 			const XSLTInputSource&				theStylesheetSource,
 			XSLTProcessorEnvSupportDefault&		theXSLTProcessorEnvSupport,
-			XSLTEngineImpl&						theProcessor):
+			XSLTEngineImpl&						theProcessor,
+			ErrorHandler*						theErrorHandler,
+			EntityResolver*						theEntityResolver):
 	XalanCompiledStylesheet(),
 	m_stylesheetXPathFactory(),
 	m_stylesheetConstructionContext(
 				theProcessor,
 				theXSLTProcessorEnvSupport,
 				m_stylesheetXPathFactory),
-	m_stylesheetRoot(
-				theProcessor.processStylesheet(
+	m_stylesheetRoot(compileStylesheet(
 				theStylesheetSource,
-				m_stylesheetConstructionContext))
+				theProcessor,
+				m_stylesheetConstructionContext,
+				theErrorHandler,
+				theEntityResolver))
 {
 }
 
