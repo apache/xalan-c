@@ -90,7 +90,7 @@
 #elif defined(SOLARIS) || defined(powerpc) || defined(__sparc__) || defined(AIX)
 #define XALAN_BIG_ENDIAN
 #elif defined(__i386__) || defined(__alpha__)
-#define XALAN_LITLE_ENDIAN
+#define XALAN_LITTLE_ENDIAN
 #else
 #error XALAN_BIG_ENDIAN or XALAN_LITTLE_ENDIAN must be defined for this platform!
 #endif
