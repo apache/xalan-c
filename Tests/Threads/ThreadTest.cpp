@@ -9,11 +9,10 @@
 #include <PlatformSupport/XalanFileOutputStream.hpp>
 #include <PlatformSupport/XalanOutputStreamPrintWriter.hpp>
 
-#include <XercesParserLiaison/XercesDOMSupport.hpp>
-#include <XercesParserLiaison/XercesParserLiaison.hpp>
+#include <XalanSourceTree/XalanSourceTreeDOMSupport.hpp>
+#include <XalanSourceTree/XalanSourceTreeParserLiaison.hpp>
 
 #include <XPath/XObjectFactoryDefault.hpp>
-#include <XPath/XPathSupportDefault.hpp>
 #include <XPath/XPathFactoryDefault.hpp>
 
 #include <XSLT/StylesheetConstructionContextDefault.hpp>
@@ -61,14 +60,14 @@ THREADFUNCTIONRETURN theThread(LPVOID	param)
 	const DWORD		theThreadID = GetCurrentThreadId();
 
 	// Create the support objects that are necessary for running the processor...
-	XercesDOMSupport				theDOMSupport;
-	XercesParserLiaison				theParserLiaison(theDOMSupport);
+	XalanSourceTreeDOMSupport		theDOMSupport;
+	XalanSourceTreeParserLiaison	theParserLiaison(theDOMSupport);
 
+	theDOMSupport.setParserLiaison(&theParserLiaison);
 	// The default is that documents are not thread-safe.  Set this to
 	// true so they are.
-	theParserLiaison.setThreadSafe(true);
+	//theParserLiaison.setThreadSafe(true);
 
-	XPathSupportDefault				theXPathSupport(theDOMSupport);
 	XSLTProcessorEnvSupportDefault	theXSLTProcessorEnvSupport;
 	XObjectFactoryDefault			theXObjectFactory;
 	XPathFactoryDefault				theXPathFactory;
@@ -76,7 +75,6 @@ THREADFUNCTIONRETURN theThread(LPVOID	param)
 	// Create a processor...and output start message.
 	XSLTEngineImpl	theProcessor(
 					theParserLiaison,
-					theXPathSupport,
 					theXSLTProcessorEnvSupport,
 					theDOMSupport,
 					theXObjectFactory,
@@ -91,7 +89,7 @@ THREADFUNCTIONRETURN theThread(LPVOID	param)
 	StylesheetExecutionContextDefault	ssExecutionContext(
 						theProcessor,
 						theXSLTProcessorEnvSupport,
-						theXPathSupport,
+						theDOMSupport,
 						theXObjectFactory);
 
 	// Our input files.  The assumption is that the executable will be run
@@ -198,7 +196,6 @@ main(
 			// Create the necessary stuff of compile the stylesheet.
 			XercesDOMSupport				ssDOMSupport;
 			XercesParserLiaison				ssParserLiaison(ssDOMSupport);
-			XPathSupportDefault				ssXPathSupport(ssDOMSupport);
 			XSLTProcessorEnvSupportDefault	ssXSLTProcessorEnvSupport;
 			XObjectFactoryDefault			ssXObjectFactory;
 			XPathFactoryDefault				ssXPathFactory;
@@ -206,7 +203,6 @@ main(
 			// Create a processor to compile the stylesheet...
 			XSLTEngineImpl	ssProcessor(
 					ssParserLiaison,
-					ssXPathSupport,
 					ssXSLTProcessorEnvSupport,
 					ssDOMSupport,
 					ssXObjectFactory,
