@@ -923,11 +923,11 @@ XObject::equals(const XObject&	theRHS) const
 		{
 			const eObjectType	theRHSType = theRHS.getType();
 
-			if (theLHSType == eTypeBoolean || theLHSType == eTypeBoolean)
+			if (theLHSType == eTypeBoolean || theRHSType == eTypeBoolean)
 			{
 				return boolean() == theRHS.boolean();
 			}
-			else if (theLHSType == eTypeNumber || theLHSType == eTypeNumber)
+			else if (theLHSType == eTypeNumber || theRHSType == eTypeNumber)
 			{
 				return DoubleSupport::equal(num(), theRHS.num());
 			}
@@ -972,11 +972,11 @@ XObject::notEquals(const XObject&	theRHS) const
 		{
 			const eObjectType	theRHSType = theRHS.getType();
 
-			if (theLHSType == eTypeBoolean || theLHSType == eTypeBoolean)
+			if (theLHSType == eTypeBoolean || theRHSType == eTypeBoolean)
 			{
 				return boolean() != theRHS.boolean();
 			}
-			else if (theLHSType == eTypeNumber || theLHSType == eTypeNumber)
+			else if (theLHSType == eTypeNumber || theRHSType == eTypeNumber)
 			{
 				return DoubleSupport::notEqual(num(), theRHS.num());
 			}
@@ -1011,7 +1011,7 @@ XObject::lessThan(const XObject&	theRHS) const
 		}
 		else if (theRHS.getType() == eTypeNodeSet)
 		{
-			return greaterThanOrEqualNodeSet(theRHS, *this, theLHSType, theRHS.getSupport());
+			return greaterThanNodeSet(theRHS, *this, theLHSType, theRHS.getSupport());
 		}
 		else
 		{
@@ -1043,7 +1043,7 @@ XObject::lessThanOrEqual(const XObject&	theRHS) const
 		}
 		else if (theRHS.getType() == eTypeNodeSet)
 		{
-			return greaterThanNodeSet(theRHS, *this, theLHSType, theRHS.getSupport());
+			return greaterThanOrEqualNodeSet(theRHS, *this, theLHSType, theRHS.getSupport());
 		}
 		else
 		{
@@ -1075,7 +1075,7 @@ XObject::greaterThan(const XObject&	theRHS) const
 		}
 		else if (theRHS.getType() == eTypeNodeSet)
 		{
-			return lessThanOrEqualNodeSet(theRHS, *this, theLHSType, theRHS.getSupport());
+			return lessThanNodeSet(theRHS, *this, theLHSType, theRHS.getSupport());
 		}
 		else
 		{
@@ -1107,7 +1107,7 @@ XObject::greaterThanOrEqual(const XObject&	theRHS) const
 		}
 		else if (theRHS.getType() == eTypeNodeSet)
 		{
-			return lessThanNodeSet(theRHS, *this, theLHSType, theRHS.getSupport());
+			return lessThanOrEqualNodeSet(theRHS, *this, theLHSType, theRHS.getSupport());
 		}
 		else
 		{
