@@ -218,6 +218,7 @@ XSLTEngineImpl::reset()
 	}
 
 	m_currentNode = 0;
+	m_stylesheetRoot = 0;
 
 	m_outputContextStack.reset();
 
