@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -84,8 +84,7 @@ StdBinInputStream::StdBinInputStream(
 			istream&	theStream,
 			bool		fBlockingRead) :
 	BinInputStream(),
-	m_stream(theStream),
-	m_blockingRead(&m_stream == &cin ? true : fBlockingRead)
+	m_stream(theStream)
 {
 }
 
@@ -116,30 +115,6 @@ StdBinInputStream::readBytes(
 	{
 		return 0;
 	}
-#if 0
-	else if (m_blockingRead == true)
-	{
-		unsigned int	i = 0;
-
- 		while(i < maxToRead)
- 		{
- 			const int	ch = m_stream.get();
- 
- 			if (ch == EOF)
- 			{
- 				break;
- 			}
- 			else
- 			{
- 				toFill[i] = XMLByte(ch);
- 
- 				++i;
- 			}
- 		}
- 
- 		return i;
-	}
-#endif
 	else
 	{
 #if !defined(XALAN_OLD_STREAM_HEADERS)
@@ -148,12 +123,10 @@ StdBinInputStream::readBytes(
 #else
 		m_stream.read(reinterpret_cast<char*>(toFill), maxToRead);
 #endif
-
-		return m_stream.gcount();
 #else
 		m_stream.read(toFill, maxToRead);
+#endif
 
 		return m_stream.gcount();
-#endif
 	}
 }
