@@ -318,23 +318,25 @@ XalanQNameByValue::initialize(
 		if(::equals(m_localpart, DOMServices::s_XMLNamespace))
 		{
 			::clear(m_localpart);
-
-			return;
-		}
-
-		const XalanDOMString* const		theNamespace = 
-					getNamespaceForPrefix(namespaces, m_localpart);
-
-		if(theNamespace == 0 || 0 == length(*theNamespace))
-		{
-			throwException(TranscodeFromLocalCodePage("Prefix must resolve to a namespace: ") + m_localpart, locator);
 		}
 		else
 		{
-			m_namespace = *theNamespace;
-		}
+			const XalanDOMString* const		theNamespace = 
+						getNamespaceForPrefix(namespaces, m_localpart);
 
-		m_localpart.assign(qname + indexOfNSSep + 1);
+			if(theNamespace == 0 || 0 == length(*theNamespace))
+			{
+				throwException(
+					TranscodeFromLocalCodePage("Prefix must resolve to a namespace: ") + m_localpart,
+					locator);
+			}
+			else
+			{
+				m_namespace = *theNamespace;
+			}
+
+			m_localpart.assign(qname + indexOfNSSep + 1);
+		}
 	}
 	else
 	{
