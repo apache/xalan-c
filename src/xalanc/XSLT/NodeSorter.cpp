@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2003 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -107,8 +107,8 @@ NodeSorter::sort(StylesheetExecutionContext&	executionContext)
 	assert(m_scratchVector.empty() == false);
 
 	// Make sure the caches are cleared when we're done...
-	CollectionClearGuard<NumberResultsCacheType>	guard1(m_numberResultsCache);
-	CollectionClearGuard<StringResultsCacheType>	guard2(m_stringResultsCache);
+	const CollectionClearGuard<NumberResultsCacheType>	guard1(m_numberResultsCache);
+	const CollectionClearGuard<StringResultsCacheType>	guard2(m_stringResultsCache);
 
 	NodeSortKeyCompare	theComparer(
 					executionContext,
@@ -239,12 +239,12 @@ NodeSorter::NodeSortKeyCompare::compare(
 	// Compare as numbers
 	if(theKey.getTreatAsNumbers() == false)
 	{
-		// Compare as strings
+		// Compare as strings...
 		const XalanDOMString&	theLHSString =
-			getStringResult(theKey, theKeyIndex, theLHS)->str();
+			getStringResult(theKey, theKeyIndex, theLHS);
 
 		const XalanDOMString&	theRHSString =
-			getStringResult(theKey, theKeyIndex, theRHS)->str();
+			getStringResult(theKey, theKeyIndex, theRHS);
 
 		theResult = doCollationCompare(
 				m_executionContext,
@@ -255,8 +255,8 @@ NodeSorter::NodeSortKeyCompare::compare(
 	}
 	else
 	{
-		double	n1Num = getNumberResult(theKey, theKeyIndex, theLHS);
-		double	n2Num = getNumberResult(theKey, theKeyIndex, theRHS);
+		const double	n1Num = getNumberResult(theKey, theKeyIndex, theLHS);
+		const double	n2Num = getNumberResult(theKey, theKeyIndex, theRHS);
 
 		// Always order NaN before anything else...
 		if (DoubleSupport::isNaN(n1Num) == true)
@@ -300,6 +300,41 @@ NodeSorter::NodeSortKeyCompare::compare(
 
 
 
+inline double
+getResult(
+			const XPath*			theXPath,
+			XalanNode*				theNode,
+			const PrefixResolver&	thePrefixResolver,
+			XPathExecutionContext&	theExecutionContext)
+{
+	typedef StylesheetExecutionContext::GetAndReleaseCachedString	GetAndReleaseCachedString;
+
+	if (theXPath == 0)
+	{
+		assert(theNode != 0);
+
+		const GetAndReleaseCachedString		temp(theExecutionContext);
+
+		DOMServices::getNodeData(*theNode, temp.get());
+
+		return DoubleSupport::toDouble(temp.get());
+	}
+	else
+	{
+		double	theResult;
+
+		theXPath->execute(
+				theNode,
+				thePrefixResolver,
+				theExecutionContext,
+				theResult);
+
+		return theResult;
+	}
+}
+
+
+
 double
 NodeSorter::NodeSortKeyCompare::getNumberResult(
 				const NodeSortKey&		theKey,
@@ -309,7 +344,6 @@ NodeSorter::NodeSortKeyCompare::getNumberResult(
 	assert(theKey.getPrefixResolver() != 0);
 
 	const XPath* const	xpath = theKey.getSelectPattern();
-	assert(xpath != 0);
 
 	typedef	NodeSorter::NumberResultsCacheType	NumberResultsCacheType;
 
@@ -332,14 +366,13 @@ NodeSorter::NodeSortKeyCompare::getNumberResult(
 	{
 		if (DoubleSupport::equal(theCache[theKeyIndex][theEntry.m_position], theDummyValue) == true)
 		{
-			xpath->execute(
-				theEntry.m_node,
-				*theKey.getPrefixResolver(),
-				m_executionContext,
-				theCache[theKeyIndex][theEntry.m_position]);
+			theCache[theKeyIndex][theEntry.m_position] =
+				getResult(
+					xpath,
+					theEntry.m_node,
+					*theKey.getPrefixResolver(),
+					m_executionContext);
 		}
-
-		return theCache[theKeyIndex][theEntry.m_position];
 	}
 	else
 	{
@@ -353,17 +386,113 @@ NodeSorter::NodeSortKeyCompare::getNumberResult(
 			theCache[theKeyIndex].end(),
 			theDummyValue);
 
-		double&		theResult = theCache[theKeyIndex][theEntry.m_position];
-
-		xpath->execute(theEntry.m_node, *theKey.getPrefixResolver(), m_executionContext, theResult);
-
-		return theResult;
+		theCache[theKeyIndex][theEntry.m_position] =
+			getResult(
+				xpath,
+				theEntry.m_node,
+				*theKey.getPrefixResolver(),
+				m_executionContext);
 	}
+
+	return theCache[theKeyIndex][theEntry.m_position];
 }
 
 
 
-const XObjectPtr&
+#if defined(XALAN_NODESORTER_CACHE_XOBJECTS)
+
+inline void
+getResult(
+			const XPath*			theXPath,
+			XalanNode*				theNode,
+			const PrefixResolver&	thePrefixResolver,
+			XPathExecutionContext&	theExecutionContext,
+			XObjectPtr&				theResult)
+{
+	if (theXPath == 0)
+	{
+		assert(theNode != 0);
+
+		theResult = theExecutionContext.getXObjectFactory().createNodeSet(theNode);		
+	}
+	else
+	{
+		theResult = theXPath->execute(
+				theNode,
+				thePrefixResolver,
+				theExecutionContext);
+	}
+}
+
+inline bool
+notCached(const XObjectPtr&		theEntry)
+{
+	return theEntry.null();
+}
+
+inline bool
+isCached(const XObjectPtr&	theEntry)
+{
+	return !theEntry.null();
+}
+
+inline const XalanDOMString&
+cacheValue(const XObjectPtr&	theEntry)
+{
+	return theEntry->str();
+}
+
+#else
+
+inline void
+getResult(
+			const XPath*			theXPath,
+			XalanNode*				theNode,
+			const PrefixResolver&	thePrefixResolver,
+			XPathExecutionContext&	theExecutionContext,
+			XalanDOMString&			theResult)
+{
+	if (theXPath == 0)
+	{
+		assert(theNode != 0);
+
+		DOMServices::getNodeData(
+				*theNode,
+				theResult);
+	}
+	else
+	{
+		theXPath->execute(
+				theNode,
+				thePrefixResolver,
+				theExecutionContext,
+				theResult);
+	}
+}
+
+inline bool
+notCached(const XalanDOMString&		theEntry)
+{
+	return theEntry.empty();
+}
+
+inline bool
+isCached(const XalanDOMString&	/* theEntry */)
+{
+	return true;
+}
+
+inline const XalanDOMString&
+cacheValue(const XalanDOMString&	theEntry)
+{
+	return theEntry;
+}
+
+#endif
+
+
+
+const XalanDOMString&
 NodeSorter::NodeSortKeyCompare::getStringResult(
 				const NodeSortKey&		theKey,
 				unsigned int			theKeyIndex,
@@ -372,7 +501,6 @@ NodeSorter::NodeSortKeyCompare::getStringResult(
 	assert(theKey.getPrefixResolver() != 0);
 
 	const XPath* const	xpath = theKey.getSelectPattern();
-	assert(xpath != 0);
 
 	typedef	NodeSorter::StringResultsCacheType	StringResultsCacheType;
 
@@ -386,27 +514,31 @@ NodeSorter::NodeSortKeyCompare::getStringResult(
 
 	if (theCache[theKeyIndex].empty() == false)
 	{
-		if (theCache[theKeyIndex][theEntry.m_position].null() == true)
+		if (notCached(theCache[theKeyIndex][theEntry.m_position]) == true)
 		{
-			theCache[theKeyIndex][theEntry.m_position] =
-				xpath->execute(theEntry.m_node, *theKey.getPrefixResolver(), m_executionContext);
+			getResult(
+				xpath,
+				theEntry.m_node,
+				*theKey.getPrefixResolver(),
+				m_executionContext,
+				theCache[theKeyIndex][theEntry.m_position]);
 		}
-
-		assert(theCache[theKeyIndex][theEntry.m_position].null() == false);
-
-		return theCache[theKeyIndex][theEntry.m_position];
 	}
 	else
 	{
 		theCache[theKeyIndex].resize(m_nodes.size());
 
-		theCache[theKeyIndex][theEntry.m_position] =
-			xpath->execute(theEntry.m_node, *theKey.getPrefixResolver(), m_executionContext);
-
-		assert(theCache[theKeyIndex][theEntry.m_position].null() == false);
-
-		return theCache[theKeyIndex][theEntry.m_position];
+		getResult(
+			xpath,
+			theEntry.m_node,
+			*theKey.getPrefixResolver(),
+			m_executionContext,
+			theCache[theKeyIndex][theEntry.m_position]);
 	}
+
+	assert(isCached(theCache[theKeyIndex][theEntry.m_position]) == true);
+
+	return cacheValue(theCache[theKeyIndex][theEntry.m_position]);
 }
 
 

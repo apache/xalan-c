@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2003 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -76,14 +76,14 @@ static const XalanDOMString		s_emptyString;
 
 NodeSortKey::NodeSortKey(
 			ExecutionContext&		executionContext,
-			const XPath&			selectPat,
+			const XPath*			selectPat,
 			bool					treatAsNumbers,
 			bool					descending,
 			eCaseOrder				caseOrder,
 			const XalanDOMString&	langValue,
 			const PrefixResolver&	resolver) :
 	m_executionContext(&executionContext),
-	m_selectPat(&selectPat),
+	m_selectPat(selectPat),
 	m_treatAsNumbers(treatAsNumbers),
 	m_descending(descending),
 	m_caseOrder(caseOrder),

@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2003 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -58,7 +58,6 @@
 #define XALAN_NODESORTER_HEADER_GUARD
 
 /**
- * @author Scott Boag (scott_boag@lotus.com)
  * @author David N. Bertoni (david_n_bertoni@lotus.com)
  */
 
@@ -91,7 +90,7 @@ class StylesheetExecutionContext;
 class XalanNode;
 class XPath;
 
-
+#define XALAN_NODESORTER_CACHE_XOBJECTS
 
 /**
  * This class can sort vectors of nodes according to a select pattern.
@@ -217,7 +216,7 @@ public:
 				unsigned int			theKeyIndex,
 				first_argument_type		theEntry) const;
 
-		const XObjectPtr&
+		const XalanDOMString&
 		getStringResult(
 				const NodeSortKey&		theKey,
 				unsigned int			theKeyIndex,
@@ -234,18 +233,29 @@ public:
 	friend struct NodeSortKeyCompare;
 
 #if defined(XALAN_NO_STD_NAMESPACE)
-	typedef	vector<double>		NumberResultsCacheVectorType;
+	typedef	vector<double>			NumberVectorType;
+	typedef	vector<XObjectPtr>		XObjectVectorType;
+	typedef	vector<XalanDOMString>	StringVectorType;
 
-	typedef	vector<XObjectPtr>	StringResultsCacheVectorType;
-
-	typedef vector<NumberResultsCacheVectorType>	NumberResultsCacheType;
-	typedef vector<StringResultsCacheVectorType>	StringResultsCacheType;
+	typedef vector<NumberVectorType>	NumberCacheType;
+	typedef vector<XObjectVectorType>	XObjectCacheType;
+	typedef vector<StringVectorType>	StringCacheType;
 #else
-	typedef	std::vector<double>			NumberResultsCacheVectorType;
-	typedef	std::vector<XObjectPtr>		StringResultsCacheVectorType;
+	typedef	std::vector<double>			NumberVectorType;
+	typedef	std::vector<XObjectPtr>		XObjectVectorType;
+	typedef	std::vector<XalanDOMString>	StringVectorType;
 
-	typedef std::vector<NumberResultsCacheVectorType>	NumberResultsCacheType;
-	typedef std::vector<StringResultsCacheVectorType>	StringResultsCacheType;
+	typedef std::vector<NumberVectorType>	NumberCacheType;
+	typedef std::vector<XObjectVectorType>	XObjectCacheType;
+	typedef std::vector<StringVectorType>	StringCacheType;
+#endif
+
+	typedef NumberCacheType		NumberResultsCacheType;
+
+#if defined(XALAN_NODESORTER_CACHE_XOBJECTS)
+	typedef XObjectCacheType	StringResultsCacheType;
+#else
+	typedef StringCacheType		StringResultsCacheType;
 #endif
 
 private:
