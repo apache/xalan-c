@@ -74,8 +74,15 @@
 #endif
 
 
-#include <xercesc/parsers/DOMParser.hpp>
+#include <xercesc/util/XercesDefs.hpp>
 
+
+
+#if XERCES_VERSION_MAJOR >= 2
+#include <xercesc/dom/deprecated/DOMParser.hpp>
+#else
+#include <xercesc/parsers/DOMParser.hpp>
+#endif
 
 
 #include <XercesParserLiaison/XercesParserLiaison.hpp>
