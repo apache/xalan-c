@@ -79,6 +79,15 @@ struct DeleteFunctor : public unary_function<const T*, void>
 struct DeleteFunctor : public std::unary_function<const T*, void>
 #endif
 {
+#if defined(XALAN_NO_NAMESPACES)
+	typedef unary_function<const T*, void>	BaseClassType;
+#else
+	typedef std::unary_function<const T*, void>	BaseClassType;
+#endif
+
+	typedef typename BaseClassType::result_type		result_type;
+	typedef typename BaseClassType::argument_type	argument_type;
+
 	/**
 	 * Delete the object pointed to by argument.
 	 *
@@ -110,7 +119,16 @@ struct select1st : public unary_function<PairType, PairType::first_type>
 struct select1st : public std::unary_function<PairType, PairType::first_type>
 #endif
 {
-	typedef typename PairType	value_type;
+#if defined(XALAN_NO_NAMESPACES)
+	typedef unary_function<PairType, PairType::first_type>	BaseClassType;
+#else
+	typedef std::unary_function<PairType, PairType::first_type>	BaseClassType;
+#endif
+
+	typedef typename BaseClassType::result_type		result_type;
+	typedef typename BaseClassType::argument_type	argument_type;
+
+	typedef typename PairType						value_type;
 
 	/**
 	 * Retrieve the key of a key-value pair.
@@ -138,7 +156,16 @@ struct select2nd : public unary_function<PairType, PairType::second_type>
 struct select2nd : public std::unary_function<PairType, PairType::second_type>
 #endif
 {
-	typedef typename PairType	value_type;
+#if defined(XALAN_NO_NAMESPACES)
+	typedef unary_function<PairType, PairType::second_type>	BaseClassType;
+#else
+	typedef std::unary_function<PairType, PairType::second_type>	BaseClassType;
+#endif
+
+	typedef typename BaseClassType::result_type		result_type;
+	typedef typename BaseClassType::argument_type	argument_type;
+
+	typedef typename PairType						value_type;
 
 	/**
 	 * Retrieve the value of a key-value pair.
@@ -162,11 +189,20 @@ struct select2nd : public std::unary_function<PairType, PairType::second_type>
  */
 template <class T>
 #if defined(XALAN_NO_NAMESPACES)
-struct MapValueDeleteFunctor : public unary_function<const T::value_type&, void>
+struct MapValueDeleteFunctor : public unary_function<const typename T::value_type&, void>
 #else
 struct MapValueDeleteFunctor : public std::unary_function<const typename T::value_type&, void>
 #endif
 {
+#if defined(XALAN_NO_NAMESPACES)
+	typedef unary_function<const typename T::value_type&, void>		BaseClassType;
+#else
+	typedef std::unary_function<const typename T::value_type&, void>	BaseClassType;
+#endif
+
+	typedef typename BaseClassType::result_type		result_type;
+	typedef typename BaseClassType::argument_type	argument_type;
+
 	/**
 	 * Delete the value object in a map value pair.  The value of the pair must
 	 * be of pointer type.
@@ -193,11 +229,20 @@ makeMapValueDeleteFunctor(const T&	/* theMap */)
 
 template <class T>
 #if defined(XALAN_NO_NAMESPACES)
-struct MapKeyDeleteFunctor : public unary_function<const T::value_type&, void>
+struct MapKeyDeleteFunctor : public unary_function<const typename T::value_type&, void>
 #else
 struct MapKeyDeleteFunctor : public std::unary_function<const typename T::value_type&, void>
 #endif
 {
+#if defined(XALAN_NO_NAMESPACES)
+	typedef unary_function<const typename T::value_type&, void>		BaseClassType;
+#else
+	typedef std::unary_function<const typename T::value_type&, void>	BaseClassType;
+#endif
+
+	typedef typename BaseClassType::result_type		result_type;
+	typedef typename BaseClassType::argument_type	argument_type;
+
 	/**
 	 * Delete the value object in a map value pair.  The value of the pair must
 	 * be of pointer type.
@@ -238,6 +283,16 @@ struct less_null_terminated_arrays : public binary_function<const T*, const T*, 
 struct less_null_terminated_arrays : public std::binary_function<const T*, const T*, bool>
 #endif
 {
+#if defined(XALAN_NO_NAMESPACES)
+	typedef binary_function<const T*, const T*, bool>			BaseClassType;
+#else
+	typedef std::binary_function<const T*, const T*, bool>		BaseClassType;
+#endif
+
+	typedef typename BaseClassType::result_type				result_type;
+	typedef typename BaseClassType::first_argument_type		first_argument_type;
+	typedef typename BaseClassType::second_argument_type	second_argument_type;
+
 	/**
 	 * Compare the values of two objects.
 	 *
