@@ -63,7 +63,7 @@
 
 #include "NLSData.h"
 
-#include <stdio.h>
+#include <cstdio>
 
 // -----------------------------------------------------------------------
 //  Constructors

@@ -60,12 +60,12 @@
 //  Includes
 // ---------------------------------------------------------------------------
 #include "InMemHandler.hpp"
+#include <cstdio>
+#include <cassert>
 #include <xercesc/util/XMLUniDefs.hpp>
 #include <xercesc/sax2/Attributes.hpp>
 #include "MsgCreator.h"
 #include "InMemData.hpp"
-#include <stdio.h>
-#include <assert.h>
 
 
 // -----------------------------------------------------------------------

@@ -59,10 +59,15 @@
 
 
 
+#include <cstdio>
+#include <direct.h>
+#if defined(XALAN_CLASSIC_IOSTREAMS)
+#include <iostream.h>
+#include <strstream.h>
+#else
 #include <iostream>
 #include <strstream>
-#include <stdio.h>
-#include <direct.h>
+#endif
 #include <vector>
 
 

@@ -60,11 +60,11 @@
 //  Includes
 // ---------------------------------------------------------------------------
 #include "ICUResHandler.hpp"
+#include <cstdio>
+#include <cassert>
 #include <xercesc/util/XMLUniDefs.hpp>
 #include <xercesc/sax2/Attributes.hpp>
 #include "ICUResData.hpp"
-#include <stdio.h>
-#include <assert.h>
 
 
 // -----------------------------------------------------------------------

@@ -61,6 +61,7 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
+#include <cassert>
 #include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/util/TransService.hpp>
 #include <xercesc/sax2/SAX2XMLReader.hpp>
@@ -69,7 +70,6 @@
 #include "InMemHandler.hpp"
 #include "ICUResHandler.hpp"
 #include "NLSHandler.hpp"
-#include <cassert>
 
 #if !defined(NDEBUG) && defined(_MSC_VER)
 #include <crtdbg.h>

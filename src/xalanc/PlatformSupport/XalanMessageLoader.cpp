@@ -85,6 +85,8 @@
 XALAN_CPP_NAMESPACE_BEGIN
 
 
+#define MAX_MESSAGE_LEN 1024
+
 
 XalanMessageLoader*		XalanMessageLoader::s_msgLoader = 0;
 
@@ -134,7 +136,7 @@ XalanMessageLoader::getMessage(
 
 	XalanDOMChar	sBuffer[MAX_MESSAGE_LEN];
 
-	s_msgLoader->loadMsg
+	s_msgLoader->load
 		(
 		msgToLoad
 		, sBuffer
@@ -155,7 +157,7 @@ XalanMessageLoader::getMessage(XalanMessages::Codes		msgToLoad
 
 	XalanDOMChar	sBuffer[MAX_MESSAGE_LEN];
 
-	s_msgLoader->loadMsg
+	s_msgLoader->load
 		(
 		msgToLoad
 		, sBuffer
@@ -178,7 +180,7 @@ XalanMessageLoader::getMessage(
 
 	XalanDOMChar	sBuffer[MAX_MESSAGE_LEN];
 
-	s_msgLoader->loadMsg
+	s_msgLoader->load
 		(
 		msgToLoad
 		, sBuffer
@@ -210,7 +212,7 @@ XalanMessageLoader::getMessage(XalanMessages::Codes		msgToLoad)
 }
 
 bool
-XalanMessageLoader::loadMsg(
+XalanMessageLoader::load(
 				XalanMessages::Codes	msgToLoad
 				, XalanDOMChar*			toFill
 				, unsigned int			maxChars
@@ -243,7 +245,7 @@ XalanMessageLoader::getMessage(XalanMessages::Codes		msgToLoad
 	
 	createLoader();
 
-	s_msgLoader->loadMsg(
+	s_msgLoader->load(
 					msgToLoad
 					, sBuffer
 					, MAX_MESSAGE_LEN
@@ -266,7 +268,7 @@ XalanMessageLoader::getMessage(XalanMessages::Codes		msgToLoad
 	
 	createLoader();
 
-	s_msgLoader->loadMsg(
+	s_msgLoader->load(
 					msgToLoad
 					, sBuffer
 					, MAX_MESSAGE_LEN
@@ -278,7 +280,7 @@ XalanMessageLoader::getMessage(XalanMessages::Codes		msgToLoad
 
 
 bool 
-XalanMessageLoader::loadMsg(
+XalanMessageLoader::load(
 				XalanMessages::Codes	msgToLoad
 				, XalanDOMChar*			toFill
 				, unsigned int			maxChars
@@ -311,7 +313,7 @@ XalanMessageLoader::loadMsg(
 		theForthParam.assign(repText4);
 	}
 
-    return loadMsg(msgToLoad, toFill, maxChars, theFirstParam.c_str(), theSecParam.c_str(), 
+    return load(msgToLoad, toFill, maxChars, theFirstParam.c_str(), theSecParam.c_str(), 
 							theThirdParam.c_str(), theForthParam.c_str());
 }
 

@@ -66,9 +66,9 @@
 
 #include <xalanc/PlatformSupport/DOMStringHelper.hpp>
 
-#include <string.h>
+#include <cstring>
 
-#include <errno.h>
+#include <cerrno>
 
 XALAN_CPP_NAMESPACE_BEGIN
 

@@ -70,7 +70,6 @@
 XALAN_CPP_NAMESPACE_BEGIN
 
 
-#define MAX_MESSAGE_LEN 1024
 
 // class for calling fom outside of the module 
 class  XALAN_PLATFORMSUPPORT_EXPORT XalanMessageLoader {
@@ -135,7 +134,9 @@ protected:
 		, unsigned int				maxChars
 		) =0;
 
-	virtual bool loadMsg
+private:
+
+	bool load
 		(
 		XalanMessages::Codes		msgToLoad
 		, XalanDOMChar*				toFill
@@ -146,7 +147,7 @@ protected:
 		, const XalanDOMChar* 		repText4 = 0
 		);
 	
-	virtual bool loadMsg
+	bool load
 		(
 		XalanMessages::Codes		msgToLoad
 		, XalanDOMChar*				toFill
@@ -156,8 +157,6 @@ protected:
 		, const char* 				repText3 = 0
 		, const char* 				repText4 = 0
 		);
-
-private:
 
 	XalanMessageLoader(const XalanMessageLoader&);
 
