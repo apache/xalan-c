@@ -274,9 +274,6 @@ main(
 			// Connect the processor to the support object...
 			theXSLTProcessorEnvSupport.setProcessor(&theProcessor);
 
-			// Use the parser liaison as the formatter...
-			theProcessor.setFormatter(&theParserLiaison);
-
 			// Create a stylesheet construction context, and a stylesheet
 			// execution context...
 			StylesheetConstructionContextDefault	theConstructionContext(
@@ -342,7 +339,7 @@ main(
 
 			theProcessor.process(
 						theInputSource,
-						&theStylesheetSource,
+						theStylesheetSource,
 						theResultTarget,
 						theConstructionContext,
 						theExecutionContext);
