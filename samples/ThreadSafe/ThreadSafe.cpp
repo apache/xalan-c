@@ -43,19 +43,28 @@ XalanCompiledStylesheet*	glbCompiledStylesheet = 0;
 XalanParsedSource*			glbParsedSource = 0;
 int							glbError = 0;	 
 
+
+
 // Print messages tracking the progress of each thread, and the
 // beginning and end of the entire operation.
-void outputMessage(DWORD id, char msg[])
+void
+outputMessage(
+			DWORD		id,
+			const char	msg[])
 {
-		ostrstream threadMsg;
+	ostrstream threadMsg;
 	
-		threadMsg << "\n" << msg << " Thread: " << id << '\0';
-		cout << threadMsg.str();
-		threadMsg.freeze(false);
+	threadMsg << "\n" << msg << " Thread: " << id << '\0';
+
+	cout << threadMsg.str();
+
+	threadMsg.freeze(false);
 }
 
 
-THREADFUNCTIONRETURN theThread(LPVOID	param)
+
+THREADFUNCTIONRETURN
+theThread(LPVOID	param)
 {
 // This routine uses a compiled stylesheet (glbCompiledStylesheet), 
 // and a binary source tree (glbParsedSource) to perform the 
@@ -67,7 +76,7 @@ THREADFUNCTIONRETURN theThread(LPVOID	param)
 
 	const DWORD		theThreadID = GetCurrentThreadId();
 
-	outputMessage(theThreadID,"Starting ");
+	outputMessage(theThreadID, "Starting ");
 
 	// Create a XalanTransformer.
 	XalanTransformer theXalanTransformer;
@@ -82,7 +91,7 @@ THREADFUNCTIONRETURN theThread(LPVOID	param)
 	// Unfreeze the ostrstream, so memory is returned...
 	theFormatterOut.freeze(false);
 
-	outputMessage(theThreadID,"Transforming");
+	outputMessage(theThreadID, "Transforming");
 
  	// Do the transform.
 	theResult = theXalanTransformer.transform(*glbParsedSource, glbCompiledStylesheet, theResultTarget);
@@ -96,28 +105,37 @@ THREADFUNCTIONRETURN theThread(LPVOID	param)
 		glbError = theResult;
 	}
 
-	outputMessage(theThreadID,"Finishing");
+	outputMessage(theThreadID, "Finishing");
 
 	return (theResult);
 }
 
+
+
 // Create and run the threads...
 // Print messages tracking the progress of each thread and of the 
 // overall operation...
-void doThreads(int x)
+void
+doThreads(int	x)
 {
 	DWORD dwStackSize = 4096;              	// initial thread stack size
 	LPTHREAD_START_ROUTINE lpStartAddress = (LPTHREAD_START_ROUTINE)theThread;
 	DWORD dwCreationFlags = 0;             	// creation flags
  	int nThreads = x;
 
-	std::vector<HANDLE> hThreads;
+#if !defined(XALAN_NO_NAMESPACES)
+	using std::vector;
+#endif
+
+	vector<HANDLE>	hThreads;
+
 	hThreads.reserve(nThreads);
- 	int i = 0;	
+
+	int		i = 0;	
 
 	cout << endl << "Clock before starting threads: " << clock() << endl;
 
-	for (i=0; i< nThreads; i++)
+	for (i = 0; i < nThreads; ++i)
 	{
 		HANDLE hThread;
 		DWORD  threadID;
@@ -146,7 +164,11 @@ void doThreads(int x)
 }
 
 
-int main(int argc, const char*	/* argv */[])
+
+int
+main(
+			int				argc,
+			const char*		/* argv */[])
 {
 	if (argc != 1)
 	{
@@ -162,28 +184,30 @@ int main(int argc, const char*	/* argv */[])
 		// Initialize Xalan.
 		XalanTransformer::initialize();
 
-		// Create a XalanTransformer.
-		XalanTransformer theXalanTransformer;
+		{
+			// Create a XalanTransformer.  We won't actually use this to transform --
+			// it's just acting likely a factory for the compiled stylesheet and
+			// pre-parsed source.
+			XalanTransformer	theXalanTransformer;
 
-		// Our input files...The assumption is that the executable will be run
-		// from same directory as the input files.
-		const char*		theXSLFileName = "birds.xsl";
-		const char*		theXMLFileName = "birds.xml";
-		
-		glbCompiledStylesheet =	theXalanTransformer.compileStylesheet(theXSLFileName);
+			// Our input files...The assumption is that the executable will be run
+			// from same directory as the input files.
+			const char* const	theXSLFileName = "birds.xsl";
+			const char*	const	theXMLFileName = "birds.xml";
 
-		assert(glbCompiledStylesheet != 0);
+			glbCompiledStylesheet =	theXalanTransformer.compileStylesheet(theXSLFileName);
+			assert(glbCompiledStylesheet != 0);
 
-		// Compile the XML source document as well. All threads will use
-		// this binary representation of the source tree.
-		glbParsedSource =theXalanTransformer.parseSource(theXMLFileName);
-		
-		assert(glbParsedSource != 0);
+			// Compile the XML source document as well. All threads will use
+			// this binary representation of the source tree.
+			glbParsedSource = theXalanTransformer.parseSource(theXMLFileName);
+			assert(glbParsedSource != 0);
 
-		// Create and run the threads...
-		// Each thread uses the same XalanNode and 
-		// StylesheetRoot to perform a transformation.
-		doThreads(10);
+			// Create and run the threads...
+			// Each thread uses the same XalanNode and 
+			// StylesheetRoot to perform a transformation.
+			doThreads(10);
+		}
 
 		// Terminate Xalan.
 		XalanTransformer::terminate();
