@@ -3,6 +3,21 @@ Microsoft Developer Studio Workspace File, Format Version 6.00
 
 ###############################################################################
 
+Project: "Errortests"=".\Errortests\Errortests.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name Harness
+    End Project Dependency
+}}}
+
+###############################################################################
+
 Project: "Harness"=".\Harness\Harness.dsp" - Package Owner=<4>
 
 Package=<5>
@@ -99,6 +114,21 @@ Package=<4>
 
 ###############################################################################
 
+Project: "conf"=".\Conf\conf.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name Harness
+    End Project Dependency
+}}}
+
+###############################################################################
+
 Project: "dom2dom"=".\Dom2Dom\Dom2Dom.dsp" - Package Owner=<4>
 
 Package=<5>
@@ -142,6 +172,21 @@ Package=<4>
 ###############################################################################
 
 Project: "perf"=".\Performance\perf.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name Harness
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "sourcetree"=".\Sourcetree\sourcetree.dsp" - Package Owner=<4>
 
 Package=<5>
 {{{
