@@ -83,8 +83,8 @@ FunctionName::execute(
 	{
 		executionContext.error("The name() function requires a non-null context node!");
 
-        // Dummy return value...
-        return 0;
+		// Dummy return value...
+		return XObjectPtr();
 	}
 	else
 	{
