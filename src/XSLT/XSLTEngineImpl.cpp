@@ -836,9 +836,7 @@ XSLTEngineImpl::getStylesheetFromPIURL(
 		}
 	}
 	else
-	{ 
-		// hmmm.. for now I'll rely on the XML parser to handle 
-		// fragment URLs.
+	{
 		diag(XalanDOMString(XALAN_STATIC_UCODE_STRING("========= Parsing and preparing ")) +
 				localXSLURLString +
 				XALAN_STATIC_UCODE_STRING(" =========="));
@@ -846,9 +844,7 @@ XSLTEngineImpl::getStylesheetFromPIURL(
 
 		XalanAutoPtr<Stylesheet>	theGuard;
 
-		if(isRoot)
-		{
-			const XalanDocument* const	theOwnerDocument =
+		const XalanDocument* const	theOwnerDocument =
 				fragBase.getNodeType() == XalanNode::DOCUMENT_NODE ?
 #if defined(XALAN_OLD_STYLE_CASTS)
 				(const XalanDocument*)&fragBase :
@@ -856,13 +852,25 @@ XSLTEngineImpl::getStylesheetFromPIURL(
 				static_cast<const XalanDocument*>(&fragBase) :
 #endif
 				fragBase.getOwnerDocument();
-			assert(theOwnerDocument != 0);
+		assert(theOwnerDocument != 0);
 
+		if (length(xmlBaseIdent) == 0)
+		{
 			localXSLURLString =
-				URISupport::getURLStringFromString(
-					localXSLURLString,
-					m_xpathEnvSupport.findURIFromDoc(theOwnerDocument));
+					URISupport::getURLStringFromString(
+						localXSLURLString,
+						m_xpathEnvSupport.findURIFromDoc(theOwnerDocument));
+		}
+		else
+		{
+			localXSLURLString =
+					URISupport::getURLStringFromString(
+						localXSLURLString,
+						xmlBaseIdent);
+		}
 
+		if(isRoot)
+		{
 			StylesheetRoot* const	theLocalRoot =
 					constructionContext.create(localXSLURLString);
 
@@ -885,7 +893,7 @@ XSLTEngineImpl::getStylesheetFromPIURL(
 
 		typedef StylesheetConstructionContext::URLAutoPtrType	URLAutoPtrType;
 
-		URLAutoPtrType	xslURL(constructionContext.getURLFromString(localXSLURLString, xmlBaseIdent));
+		URLAutoPtrType	xslURL(constructionContext.getURLFromString(localXSLURLString));
 
 		XSLTInputSource		inputSource(xslURL->getURLText());
 
