@@ -299,9 +299,9 @@ endif
 
 # We need the ICU library if we are using the ICUBridge
 ifdef XALAN_USE_ICU
-ifeq ($(PLATFORM), OS390)                                             
-ALLLIBS += ${ICUROOT}/lib/libicu-uc.x ${ICUROOT}/lib/libicu-i18n.x    
-else                                                                  
+ifeq ($(PLATFORM), OS390)
+ALLLIBS += ${ICUROOT}/lib/libicuuc.x ${ICUROOT}/lib/libicui18n.x
+else
 ALLLIBS += -L/usr/local/lib -licuuc
 ALLLIBS += -L/usr/local/lib -licui18n
 endif
