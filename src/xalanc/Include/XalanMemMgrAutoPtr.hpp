@@ -23,14 +23,13 @@
 
 
 
-#include <xercesc/framework/MemoryManager.hpp>
-
-
-
+#include <xalanc/Include/XalanMemoryManagement.hpp>
 
 #include <cstddef>
 
 #include <cassert>
+
+#include <utility>
 
 
 
@@ -41,12 +40,12 @@ XALAN_CPP_NAMESPACE_BEGIN
 // We're using our own auto_ptr-like class due to wide
 // variations amongst the varous platforms we have to
 // support
-template<class Type>
+template<	class	Type, 
+			bool	toCallDestructor >
 class XalanMemMgrAutoPtr
 {
 public:
 
-    typedef XERCES_CPP_NAMESPACE_QUALIFIER MemoryManager		MemoryManagerType;
 	typedef XALAN_STD_QUALIFIER pair<MemoryManagerType*, Type*> AutoPtrPairType;
 
 	class MemMgrAutoPtrData : public AutoPtrPairType
@@ -78,22 +77,25 @@ public:
 			invariants();
 
 			if ( isInitilized() )
-			{			
-				second->~Type();
+			{		
+				if ( toCallDestructor ) 
+				{
+					second->~Type();
+				}
 
 				first->deallocate(second);
 			}
 		}
 		
 		void 
-		reset(	MemoryManagerType* _m_memoryManager ,
-				Type*	_m_dataPointer )
+		reset(	MemoryManagerType* m_memoryManager ,
+				Type*	m_dataPointer )
 		{	
 			invariants();
 
-			first = _m_memoryManager;
+			first = m_memoryManager;
 			
-			second = _m_dataPointer;
+			second = m_dataPointer;
 
 			invariants();
 		}	
@@ -120,14 +122,13 @@ public:
 	{
 	}
 	
-	XalanMemMgrAutoPtr(const XalanMemMgrAutoPtr<Type>&	theSource) :
+	XalanMemMgrAutoPtr(const XalanMemMgrAutoPtr<Type,toCallDestructor>&	theSource) :
 		m_pointerInfo(((XalanMemMgrAutoPtr<Type>&)theSource).release())
 	{
 	}
 
-
-	XalanMemMgrAutoPtr<Type>&
-	operator=(XalanMemMgrAutoPtr<Type>&	theRHS)
+	XalanMemMgrAutoPtr<Type,toCallDestructor>&
+	operator=(XalanMemMgrAutoPtr<Type,toCallDestructor>&	theRHS)
 	{		
 		if (this != &theRHS)
 		{
@@ -186,6 +187,208 @@ private:
 
 // data member
 	MemMgrAutoPtrData m_pointerInfo;
+};
+
+
+
+
+template<	class Type>
+class XalanMemMgrAutoPtrArray
+{
+public:
+
+	typedef unsigned int size_type;
+
+	class MemMgrAutoPtrArrayData 
+	{
+	public:
+		MemMgrAutoPtrArrayData():
+			m_memoryManager(0),
+			m_dataArray(0),
+			m_size(0)
+		{
+		}
+
+		MemMgrAutoPtrArrayData(	
+				MemoryManagerType*	memoryManager,
+				Type*				dataPointer,
+				size_type				size): 
+			m_memoryManager(memoryManager),
+			m_dataArray(dataPointer),
+			m_size(size)
+		{
+			invariants();
+		}
+		
+	
+		bool
+		isInitilized()const
+		{
+			return ( (m_memoryManager != 0) && (m_dataArray != 0)  && (m_size != 0) )? true : false;
+		}
+	
+		void
+		deallocate()
+		{
+			invariants();
+
+			if ( isInitilized() )
+			{			
+				assert ( m_dataArray != 0 );
+
+				Type* runPtr = m_dataArray;
+
+				for ( size_type i = 0; i < m_size ; ++i )
+				{
+					runPtr->~Type();
+				}
+				XalanMemoryManagement::deallocate ( m_dataArray, m_memoryManager );
+			}
+		}
+		
+		void 
+		reset(	MemoryManagerType*	memoryManager ,
+				Type*				dataPointer,
+				size_type				size)
+		{	
+			invariants();
+
+			m_memoryManager = memoryManager;
+			
+			m_dataArray =	dataPointer;
+
+			m_size = size;
+
+			invariants();
+		}	
+
+
+		MemoryManagerType*		m_memoryManager;
+		Type*					m_dataArray;
+		size_type					m_size;
+
+	private:
+		void
+		invariants()const
+		{
+			assert( isInitilized() ||
+					( (m_memoryManager == 0) && (m_dataArray ==0) && (m_size == 0)) );
+		}
+
+
+
+		
+	};
+	
+	XalanMemMgrAutoPtrArray(
+			MemoryManagerType*  theManager, 
+			Type*				ptr,
+			size_type			size) : 
+		m_pointerInfo(theManager, ptr, size)
+	{
+	}	
+
+	XalanMemMgrAutoPtrArray() :
+		m_pointerInfo()
+	{
+	}
+	
+	XalanMemMgrAutoPtrArray(const XalanMemMgrAutoPtrArray<Type>&	theSource) :
+		m_pointerInfo(((XalanMemMgrAutoPtr<Type>&)theSource).release())
+	{
+	}
+
+
+	XalanMemMgrAutoPtrArray<Type>&
+	operator=(XalanMemMgrAutoPtrArray<Type>&	theRHS)
+	{		
+		if (this != &theRHS)
+		{
+			m_pointerInfo.deallocate();
+
+			m_pointerInfo = theRHS.release();
+		}
+
+		return *this;
+	}
+
+	~XalanMemMgrAutoPtrArray()
+	{
+		m_pointerInfo.deallocate();
+	}
+
+	Type&
+	operator*() const
+	{
+		return *m_pointerInfo.m_dataArray;
+	}
+
+	Type*
+	operator->() const
+	{
+		return m_pointerInfo.m_dataArray;
+	}
+
+	Type*
+	get() const
+	{
+		return m_pointerInfo.m_dataArray;
+	}
+
+	size_type
+	getSize()const
+	{
+		return m_pointerInfo.m_size;
+	}
+
+	XalanMemMgrAutoPtrArray<Type>&
+	operator++ ()
+	{
+		++m_pointerInfo.m_size;
+
+		return *this;
+	}
+
+	XalanMemMgrAutoPtrArray<Type>
+	operator++ (int)
+	{
+		XalanMemMgrAutoPtrArray<Type> temp = *this;
+		++*this;
+
+		return temp;
+	}
+
+	MemMgrAutoPtrArrayData
+	release()
+	{		
+		MemMgrAutoPtrArrayData tmp = m_pointerInfo;
+	
+		m_pointerInfo.reset( 0 , 0 , 0); 
+		
+		return MemMgrAutoPtrArrayData(tmp);
+	}
+	
+	void
+	reset(	MemoryManagerType*  theManager = 0,
+			Type*				thePointer = 0 ,
+			size_type				size = 0)
+	{		
+		m_pointerInfo.deallocate();
+
+		m_pointerInfo.reset ( theManager , thePointer , size );
+	}
+	
+	Type&
+	operator[](size_type	index) const
+	{
+		return m_pointerInfo.m_dataArray[index];
+	}
+	
+private:
+
+
+	// data member
+	MemMgrAutoPtrArrayData m_pointerInfo;
 };
 
 
