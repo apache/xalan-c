@@ -753,7 +753,8 @@ FormatterToHTML::writeAttrString(
 void
 FormatterToHTML::accumCommentData(const XalanDOMChar*	data)
 {
-	writeCharacters(data);
+	accumName(data);
+//	writeCharacters(data);
 }
 
 
