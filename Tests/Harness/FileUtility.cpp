@@ -14,6 +14,11 @@
 #include <string.h>
 #include <time.h>
 
+// Added for directory creation 
+#include <strstream>
+#include <stdio.h>
+#include <direct.h>
+
 
 #if defined(XALAN_OLD_STREAM_HEADERS)
 #include <iostream.h>
@@ -95,6 +100,43 @@ FileNameVectorType FileUtility::getDirectoryNames(XalanDOMString rootDirectory)
 	theEnumerator(XalanDOMString(rootDirectory), XalanDOMString(dirSpec), theFiles);
 
 	return theFiles;
+}
+
+bool FileUtility::checkDir(XalanDOMString directory )
+{
+char buffer[_MAX_PATH];
+
+	_getcwd( buffer, _MAX_PATH );
+
+	if ( _chdir(c_str(TranscodeToLocalCodePage(directory))) )
+	{
+		_chdir(buffer);
+		return false;
+	}
+	else
+	{
+		return true;
+	}
+}
+
+
+void FileUtility::checkAndCreateDir(XalanDOMString directory )
+{
+char buffer[_MAX_PATH];
+
+	_getcwd( buffer, _MAX_PATH );
+
+
+	if ( (_chdir(c_str(TranscodeToLocalCodePage(directory)))) )
+	{
+		//cout << "Couldn't change to " << directory << ", will create it." << endl;
+		if ( !(_mkdir(c_str(TranscodeToLocalCodePage(directory)))))
+		{
+			cout << directory << " created." << endl;
+		}
+	}
+
+	_chdir(buffer);
 }
 
 /*	This routine generates file names based on the provide suffix

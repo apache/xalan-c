@@ -104,20 +104,30 @@ public:
 	* Utility method used to get test files from a specific directory.
 	* @returns a vector containing test files.
 	*/
-	FileNameVectorType getTestFileNames(XalanDOMString baseDir, XalanDOMString relDir, bool useDirPrefix);
+	FileNameVectorType FileUtility::getTestFileNames(XalanDOMString baseDir, XalanDOMString relDir, bool useDirPrefix);
 	//FileNameVectorType getTestFileNames (char* theDirectory);
 
 	/** 
 	* Utility method used to get subdirectories from a specific directory.
 	* @returns a vector containing directory files.
 	*/	
-	FileNameVectorType getDirectoryNames(XalanDOMString rootDirectory);
+	FileNameVectorType FileUtility::getDirectoryNames(XalanDOMString rootDirectory);
+
+	/** 
+	* Utility method used to create default directories when neccessary
+	*/
+    void FileUtility::checkAndCreateDir(XalanDOMString directory );
+
+	/** 
+	* Utility method determines if directory exists.
+	*/
+	bool FileUtility::checkDir(XalanDOMString directory );
+
 	/** 
 	* Utility method used to get XSL file based on XML file.
 	* @returns a XalanDOMString.
 	*/
-
-	XalanDOMString GetXSLFileName(const XalanDOMString&	theXMLFileName);
+	XalanDOMString FileUtility::GetXSLFileName(const XalanDOMString&	theXMLFileName);
 
 	/** 
 	* Utility method used to get OUT file based on XML file.
