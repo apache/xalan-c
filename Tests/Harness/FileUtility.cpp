@@ -71,7 +71,10 @@
 #define getcwd _getcwd
 #define mkdir _mkdir
 #else
+#define DIR_MODE_BITS 509
+#include <dirent.h>
 #include <unistd.h>
+extern "C" int mkdir(const char*, mode_t mode);
 #endif
 
 
@@ -130,7 +133,7 @@ FileUtility::getDrive()
 	int drv = _getdrive();
 	sprintf( temp, "%c:", drv + 'A' - 1 );
 
-	return(XalanDOMString(temp));
+	return XalanDOMString(temp);
 
 }
 #endif
@@ -398,7 +401,11 @@ void FileUtility::checkAndCreateDir(const XalanDOMString&	directory)
 	if ( (chdir(c_str(TranscodeToLocalCodePage(directory)))) )
 	{
 		//cout << "Couldn't change to " << directory << ", will create it." << endl;
-		if ( !(mkdir(c_str(TranscodeToLocalCodePage(directory)))))
+#if defined(WIN32)
+		if ( !mkdir(c_str(TranscodeToLocalCodePage(directory))))
+#else
+		if ( !mkdir(c_str(TranscodeToLocalCodePage(directory)), DIR_MODE_BITS))
+#endif
 		{
 			cout << directory << " created." << endl;
 		}
@@ -489,7 +496,7 @@ FileUtility::generateUniqRunid()
 
 	strftime( tmpbuf, 10,"%m%d%H%M",newtime );
 
-	return(XalanDOMString(tmpbuf));
+	return XalanDOMString(tmpbuf);
 }
 
 
@@ -502,7 +509,7 @@ XalanDOMString
 FileUtility::getXercesVersion()
 {
 
-	return(XalanDOMString(gXercesFullVersionStr));
+	return XalanDOMString(gXercesFullVersionStr);
 }
 
 /*	This routine creates a FormatterToXML FormatterListener. This is used to format
