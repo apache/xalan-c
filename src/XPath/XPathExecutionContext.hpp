@@ -658,11 +658,11 @@ public:
 	 * Retrieve the XalanDecimalFormatSymbols instance associated with
 	 * the name.
 	 *
-	 * @param name the name for the lookup
+	 * @param qname the QName for the lookup
 	 * @return a pointer to the matching instance, or 0 if none was found
 	 */
 	virtual const XalanDecimalFormatSymbols*
-	getDecimalFormatSymbols(const XalanDOMString&	name) = 0;
+	getDecimalFormatSymbols(const XalanQName&	qname) = 0;
 
 	// These interfaces are inherited from ExecutionContext...
 

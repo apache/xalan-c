@@ -96,6 +96,7 @@
 
 class DOMSupport;
 class XPathEnvSupport;
+class XalanQName;
 
 
 
@@ -297,7 +298,7 @@ public:
 			XalanDocument*			theDocument);
 
 	virtual const XalanDecimalFormatSymbols*
-	getDecimalFormatSymbols(const XalanDOMString&	name);
+	getDecimalFormatSymbols(const XalanQName&	qname);
 
 
 	// These interfaces are inherited from ExecutionContext...

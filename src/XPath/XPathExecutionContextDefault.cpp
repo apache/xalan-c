@@ -768,7 +768,7 @@ XPathExecutionContextDefault::setSourceDocument(
 
 
 const XalanDecimalFormatSymbols*
-XPathExecutionContextDefault::getDecimalFormatSymbols(const XalanDOMString&		/* name */)
+XPathExecutionContextDefault::getDecimalFormatSymbols(const XalanQName&		/* qname */)
 {
 	return 0;
 }
