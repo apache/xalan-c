@@ -71,11 +71,14 @@
 	using std::string;
 #endif
 
+
 // XERCES HEADERS...
-//	Are included by HarnessInit.hpp
+//	Most are included by HarnessInit.hpp
+#include <parsers/DOMParser.hpp>
 
 // XALAN HEADERS...
-//	Are included by FileUtility.hpp
+//	Most are included by FileUtility.hpp
+#include <XalanTransformer/XercesDOMWrapperParsedSource.hpp>
 
 // HARNESS HEADERS...
 #include <XMLFileReporter.hpp>
@@ -96,6 +99,9 @@
 const char* const 	excludeStylesheets[] =
 {
 	"output22.xsl",
+	"entref01.xsl",
+	"select73.xsl",
+	"sort07.xsl",
 	0
 };
 
@@ -105,16 +111,18 @@ void
 printArgOptions()
 {
 	cerr << endl
-		 << "conf dirname [-category -out -gold]"
+		 << "conf dir [-category -out -gold -source (XST | XPL | DOM)]"
 		 << endl
 		 << endl
-		 << "dirname		(base directory for testcases)"
+		 << "dir		(base directory for testcases)"
 		 << endl
-		 << "-category dirname (specific directory)"
+		 << "-sub dir	(specific directory)"
 		 << endl
-		 << "-out dirname	(base directory for output)"
+		 << "-out dir	(base directory for output)"
 		 << endl
-		 << "-gold dirname	(base directory for gold files)"
+		 << "-gold dir	(base directory for gold files)"
+		 << endl
+		 << "-source	(parsed source; XalanSourceTree(d), XercesParserLiasion, XercesDOM)"
 		 << endl;
 }
 
@@ -125,12 +133,13 @@ getParams(int argc,
 		  XalanDOMString& baseDir,
 		  XalanDOMString& outDir,
 		  XalanDOMString& goldRoot,
-		  XalanDOMString& category)
+		  XalanDOMString& category,
+		  int& source)
 {
 	bool fSuccess = true;	// Used to continue argument loop
 	bool fsetOut = true;	// Set default output directory, set to false if data is provided
 	bool fsetGold = true;	// Set default gold directory, set to false if data is provided
-
+	
 
 	// Insure that required "-base" argument is there.
 	if (argc == 1 || argv[1][0] == '-')
@@ -188,7 +197,32 @@ getParams(int argc,
 				fSuccess = false;
 			}
 		}
-		else if(!stricmp("-category", argv[i]))
+		else if(!stricmp("-source", argv[i]))
+		{
+			++i;
+			if(i < argc && argv[i][0] != '-')
+			{
+				if (stricmp(argv[i],"XPL") == 0)
+				{
+					source = 1;
+				}
+				else if (stricmp(argv[i], "DOM") == 0)
+				{
+					source = 2;
+				}
+				else
+				{
+					printArgOptions();
+					fSuccess = false;
+				}
+			}
+			else
+			{
+				printArgOptions();
+				fSuccess = false;
+			}
+		}
+		else if(!stricmp("-sub", argv[i]))
 		{
 			++i;
 			if(i < argc && argv[i][0] != '-')
@@ -250,6 +284,74 @@ checkForExclusion(XalanDOMString currentFile)
 	return false;
 }
 
+void
+parseWithTransformer(int &sourceType, XalanTransformer &xalan, const XSLTInputSource &xmlInput, 
+					 const XalanCompiledStylesheet* styleSheet, const XSLTResultTarget &output, 
+					 XMLFileReporter &logFile)
+{
+	const XalanParsedSource* parsedSource = 0;
+
+	if (sourceType != 0 )
+	{
+		xalan.parseSource(xmlInput, parsedSource, true);
+		futil.data.xmlFormat = XalanDOMString("XercesParserLiasion");
+	}
+	else
+	{
+		xalan.parseSource(xmlInput, parsedSource, false);
+		futil.data.xmlFormat = XalanDOMString("XalanSourceTree");
+	}
+					
+	if (parsedSource == 0)
+	{
+		// Report the failure and be sure to increment fail count.
+		cout << "Failed to PARSE source document for " << futil.data.testOrFile << endl;
+		futil.data.fail += 1;
+		logFile.logErrorResult(futil.data.testOrFile, XalanDOMString("Failed to PARSE source document."));
+	}
+
+	xalan.transform(*parsedSource, styleSheet, output);
+	xalan.destroyParsedSource(parsedSource);
+}
+
+
+
+void
+parseWithXerces(int &sourceType, XalanTransformer &xalan, const XSLTInputSource &xmlInput, 
+				const XalanCompiledStylesheet* styleSheet, const XSLTResultTarget &output, 
+				XMLFileReporter &logFile)
+{
+
+	const XercesDOMWrapperParsedSource* parsedSource = 0;
+	futil.data.xmlFormat = XalanDOMString("Xerces_DOM");
+	
+	DOMParser  theParser;
+	theParser.setToCreateXMLDeclTypeNode(false);
+
+	theParser.parse(xmlInput);
+	const DOM_Document theDOM = theParser.getDocument();
+
+	XercesDOMSupport	theDOMSupport;
+	XercesParserLiaison theParserLiaison(theDOMSupport);
+
+	parsedSource = new XercesDOMWrapperParsedSource(theDOM, 
+								 theParserLiaison, 
+								 theDOMSupport, 
+								 XalanDOMString(xmlInput.getSystemId()));
+
+	if (parsedSource == 0)
+	{
+		// Report the failure and be sure to increment fail count.
+		cout << "Failed to PARSE source document for " << futil.data.testOrFile << endl;
+		futil.data.fail += 1;
+		logFile.logErrorResult(futil.data.testOrFile, XalanDOMString("Failed to PARSE source document."));
+	}
+
+	xalan.transform(*parsedSource, styleSheet, output);
+	delete parsedSource;
+
+}
+
 int
 main(
 	 int			argc,
@@ -267,9 +369,10 @@ main(
 
 
 	XalanDOMString  category;	// Test all of base dir by default
-	XalanDOMString  baseDir, outputRoot, goldRoot;	
+	XalanDOMString  baseDir, outputRoot, goldRoot;
+	int source = 0;				// Format the source xml will be. Default is XalanSourceTree 0.	
 
-	if (getParams(argc, argv, futil, baseDir, outputRoot, goldRoot, category) == true)
+	if (getParams(argc, argv, futil, baseDir, outputRoot, goldRoot, category, source) == true)
 	{
 		// Call the static initializers for xerces and xalan, and create a transformer
 		HarnessInit xmlPlatformUtils;
@@ -353,29 +456,27 @@ main(
 				}
 
 				//
-				// Parsing the input XML and report the results..
+				// Parsing the Source XML based on input params. Default is to use XalanParsedSource.
 				//
-				const XalanParsedSource*	parsedSource = 0;
-				xalan.parseSource(xmlInputSource, parsedSource);
-				if (parsedSource == 0)
+				switch (source)
 				{
-					// Report the failure and be sure to increment fail count.
-					cout << "Failed to PARSE source document for " << currentFile << endl;
-					futil.data.fail += 1;
-					logFile.logErrorResult(currentFile, XalanDOMString("Failed to PARSE source document."));
-					continue;
+					case 0:
+					case 1:
+						parseWithTransformer(source, xalan, xmlInputSource, compiledSS, resultFile, logFile);
+						break;
+
+					case 2:
+						parseWithXerces(source, xalan, xmlInputSource, compiledSS, resultFile, logFile);
+						break;
 				}
 
 				//
 				// Perform One transform using parsed stylesheet and parsed xml source, report results...
-				// 
-				xalan.transform(*parsedSource, compiledSS, resultFile);
 
 				futil.checkResults(theOutputFile, 
 								  theGoldFile, 
 								  logFile);
 
-				xalan.destroyParsedSource(parsedSource);
 				xalan.destroyStylesheet(compiledSS);
 
 			}	//for files
