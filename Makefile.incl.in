@@ -155,41 +155,86 @@ endif
 
 ifeq ($(PLATFORM), LINUX)
 
-  SUPPORTED = TRUE
-  ALLLIBS = ${LIBS}
-  SHLIBSUFFIX=.so
-  PIC_OPTION=
+	SUPPORTED = TRUE
+	
+  ifeq (${CXX}, xlC_r)
 
-  ifeq (${CXX}, icpc)
-
-    PIC_OPTION=-KPIC
-    PLATFORM_COMPILE_OPTIONS = -ansi
-
-  else
-
-    PIC_OPTION=-fPIC
-    PLATFORM_COMPILE_OPTIONS = -Wall
-
-  endif
-
-  PLATFORM_COMPILE_OPTIONS += ${PIC_OPTION} -D${PLATFORM} -D_REENTRANT
-
-  # We need the ICU library if we are using the ICUBridge
-  ifdef XALAN_USE_ICU
-    LD_RPATH_PRE= -Wl,-rpath,
-    PLATFORM_LIB_LINK_OPTIONS=$(LD_RPATH_PRE)${ICUROOT}/lib
-  endif
-
-  EXTRA_LINK_OPTIONS= ${LDFLAGS}
-  CC1 = $(CXX) $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS)
-  CC4 = $(CC) $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS)
-  MAKE_SHARED = ${CXX} $(CXXFLAGS) -D${PLATFORM} -shared ${PIC_OPTION}
-  LINK_SONAME = -Wl,-soname,$(SO_NAME)
-  LINK = $(CXX) -D${PLATFORM} ${PIC_OPTION}
-  
-  export LD_LIBRARY_PATH := $(XERCESCROOT)/lib:$(ICULIB_LOC):$(LD_LIBRARY_PATH)
-  MAKE_SHARED_LOC = ${CXX} $(CXXFLAGS) -Wl,-soname,$(LOC_SONAME) -D${PLATFORM} -shared ${PIC_OPTION}
-
+			PLATFORM_COMPILE_OPTIONS = -qpic -D_AIX -D_THREAD_SAFE
+			ALLLIBS = ${LIBS} -L/usr/lib 
+			
+			CC2 = $(CXX) $(PLATFORM_COMPILE_OPTIONS)
+			
+			CC1 = $(CC2) $(CXXFLAGS) 
+		
+		  CC4 = $(CC) $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS)
+		
+			MAKE_SHARED = $(CXX) -qmkshrobj   ${bitstobuildLink}
+		
+			LINK = $(CC1)  ${bitstobuildLink}
+		
+		ifeq (${BITSTOBUILD}, 64)
+			MAKE_SHARED += -q64
+			CC2 += -q64
+			CC4 += -q64
+			LINK += -q64
+		endif
+		
+			SHLIBSUFFIX=.so
+		
+		   
+		  XERCES_LIB= -L$(XERCESCROOT)/lib -lxerces-c
+		  ICU_LIB= -L$(ICUROOT)/lib -licuuc32 -L$(ICUI18NROOT)/lib -licui18n32
+		
+		  LIB = $(LIB_NAME)$(LIB_MAJOR_VER).$(LIB_MINOR_VER)$(SHLIBSUFFIX)
+		  SO_NAME = $(LIB_NAME)$(LIB_MAJOR_VER)$(SHLIBSUFFIX)
+		
+		  LIBRARY_LINK_NAME=-l$(PROJECT_NAME)$(LIB_MAJOR_VER)
+		  
+		  export LD_LIBRARY_PATH := $(XERCESCROOT)/lib:$(ICULIB_LOC):$(LD_LIBRARY_PATH)
+		  MAKE_SHARED_LOC=$(MAKE_SHARED)
+		  LOC_LIB = ${LOC_LIBNAME}${LIB_MAJOR_VER}.${LIB_MINOR_VER}${SHLIBSUFFIX}
+		  LOC_LIBKEYNAME=${LOC_PROJECT_NAME}${LIB_MAJOR_VER}
+		        
+  else  
+    ## 	Other compilers ...
+    
+		  
+		  ALLLIBS = ${LIBS}
+		  SHLIBSUFFIX=.so
+		  PIC_OPTION=
+		
+		  ifeq (${CXX}, icpc)
+		
+		    PIC_OPTION=-KPIC
+		    PLATFORM_COMPILE_OPTIONS = -ansi
+		
+		  else
+		
+		    PIC_OPTION=-fPIC
+		    PLATFORM_COMPILE_OPTIONS = -Wall
+		
+		  endif
+		
+		  PLATFORM_COMPILE_OPTIONS += ${PIC_OPTION} -D${PLATFORM} -D_REENTRANT
+		
+		  # We need the ICU library if we are using the ICUBridge
+		  ifdef XALAN_USE_ICU
+		    LD_RPATH_PRE= -Wl,-rpath,
+		    PLATFORM_LIB_LINK_OPTIONS=$(LD_RPATH_PRE)${ICUROOT}/lib
+		  endif
+		
+		  EXTRA_LINK_OPTIONS= ${LDFLAGS}
+		  CC1 = $(CXX) $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS)
+		  CC4 = $(CC) $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS)
+		  MAKE_SHARED = ${CXX} $(CXXFLAGS) -D${PLATFORM} -shared ${PIC_OPTION}
+		  LINK_SONAME = -Wl,-soname,$(SO_NAME)
+		  LINK = $(CXX) -D${PLATFORM} ${PIC_OPTION}
+		  
+		  export LD_LIBRARY_PATH := $(XERCESCROOT)/lib:$(ICULIB_LOC):$(LD_LIBRARY_PATH)
+		  MAKE_SHARED_LOC = ${CXX} $(CXXFLAGS) -Wl,-soname,$(LOC_SONAME) -D${PLATFORM} -shared ${PIC_OPTION}
+	
+	 ## End of other compilers
+	endif
 endif
 #=============== FREEBSD SPECIFIC OPTIONS ======================
 

@@ -31,7 +31,7 @@
 #include <sys/stat.h>
 #include <errno.h>
 
-extern int 	errno;
+
 
 #endif
 
