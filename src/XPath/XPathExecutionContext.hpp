@@ -494,14 +494,25 @@ public:
 	public:
 
 		GetAndReleaseCachedString(XPathExecutionContext&	theExecutionContext) :
-			m_executionContext(theExecutionContext),
-			m_string(&m_executionContext.getCachedString())
+			m_executionContext(&theExecutionContext),
+			m_string(&theExecutionContext.getCachedString())
 		{
+		}
+
+		// Note non-const copy semantics...
+		GetAndReleaseCachedString(GetAndReleaseCachedString&	theSource) :
+			m_executionContext(theSource.m_executionContext),
+			m_string(theSource.m_string)
+		{
+			theSource.m_string = 0;
 		}
 
 		~GetAndReleaseCachedString()
 		{
-			m_executionContext.releaseCachedString(*m_string);
+			if (m_string != 0)
+			{
+				m_executionContext->releaseCachedString(*m_string);
+			}
 		}
 
 		XalanDOMString&
@@ -519,18 +530,23 @@ public:
 			return *m_string;
 		}
 
+		XPathExecutionContext&
+		getExecutionContext() const
+		{
+			return *m_executionContext;
+		}
+
 	private:
 
 		// Not implemented...
 		GetAndReleaseCachedString&
 		operator=(const GetAndReleaseCachedString&);
 
-		GetAndReleaseCachedString(const GetAndReleaseCachedString&);
 
+		// Data members...
+		XPathExecutionContext*	m_executionContext;
 
-		XPathExecutionContext&	m_executionContext;
-
-		XalanDOMString* const	m_string;
+		XalanDOMString*			m_string;
 	};
 
 	/**
