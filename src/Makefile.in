@@ -323,9 +323,9 @@ endif
 
 # We need the Xerces library
 ifeq ($(PLATFORM), OS390)
-  ALLLIBS += $(XERCESCROOT)/lib/libxerces-c1_5_1.x
+  ALLLIBS += $(XERCESCROOT)/lib/libxerces-c1_6_0.x
 else
-  ALLLIBS += -L$(XERCESCROOT)/lib -lxerces-c1_5_1
+  ALLLIBS += -L$(XERCESCROOT)/lib -lxerces-c1_6_0
 endif
 
 # We need the ICU library if we are using the ICUBridge
