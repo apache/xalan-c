@@ -191,7 +191,11 @@ theThreadRoutine(void*		param)
 // theProcessor.setStylesheetRoot method. The transform is done using the theProcessor's
 // process() method.
 
-	const ThreadInfo*	theInfo = reinterpret_cast<const ThreadInfo*>(param);
+#if defined(XALAN_OLD_STYLE_CASTS)
+	const ThreadInfo* const		theInfo = (const ThreadInfo*)param;
+#else
+	const ThreadInfo* const		theInfo = reinterpret_cast<const ThreadInfo*>(param);
+#endif
 
 	assert(theInfo != 0);
 
