@@ -174,6 +174,8 @@ Stylesheet::Stylesheet(
 			if (length(urlString) != 0)
 			{
 				m_includeStack.push_back(urlString);
+
+				m_baseIdent = urlString;
 			}
 		}
 		catch(const XMLException&)
