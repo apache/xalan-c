@@ -69,12 +69,16 @@
 #include "InMemHandler.hpp"
 #include "ICUResHandler.hpp"
 #include "NLSHandler.hpp"
-#include <assert.h>
+#include <cassert>
 
 #if !defined(NDEBUG) && defined(_MSC_VER)
 #include <crtdbg.h>
 #endif
 
+
+XALAN_USING_STD(cerr)
+XALAN_USING_STD(cout)
+XALAN_USING_STD(endl)
 
 
 // ---------------------------------------------------------------------------

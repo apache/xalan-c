@@ -58,13 +58,20 @@
 #if !defined(MSG_CREATOR_1357924680)
 #define MSG_CREATOR_1357924680
 
+#include <xalanc/Include/PlatformDefinitions.hpp>
 
 // ---------------------------------------------------------------------------
 //  Includes for all the program files to see
 // ---------------------------------------------------------------------------
-#include <string.h>
+#include <cstring>
+#include <cstdlib>
+
+#if defined(XALAN_CLASSIC_IOSTREAMS)
 #include <iostream.h>
-#include <stdlib.h>
+#else
+#include <iostream>
+#endif
+
 #include "SAX2Handler.hpp"
 
 // ---------------------------------------------------------------------------
@@ -106,7 +113,11 @@ private :
     char*   fLocalForm;
 };
 
+#if defined(XALAN_CLASSIC_IOSTREAMS)
 inline ostream& operator<<(ostream& target, const StrX& toDump)
+#else
+inline XALAN_STD_QUALIFIER ostream& operator<<(XALAN_STD_QUALIFIER ostream& target, const StrX& toDump)
+#endif
 {
     target << toDump.localForm();
     return target;

@@ -59,12 +59,21 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
+#include <cassert>
+#include <cstdio>
+
+
+
 #include <xercesc/util/XMLUniDefs.hpp>
 #include <xercesc/sax2/Attributes.hpp>
+
+
+
 #include "MsgCreator.h"
 #include "IndexFileData.hpp"
-#include <assert.h>
-#include <stdio.h>
+
+
+
 // ---------------------------------------------------------------------------
 //  Local const data
 //
@@ -237,6 +246,11 @@ void SAX2Handler::startElement(const   XMLCh* const    uri,
 		
 	}
 }
+
+
+XALAN_USING_STD(cerr)
+XALAN_USING_STD(endl)
+
 
 // ---------------------------------------------------------------------------
 //  

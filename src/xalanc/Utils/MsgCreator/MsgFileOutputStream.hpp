@@ -86,9 +86,13 @@ class  XalanFileOutputStream
 public :
 
 #if defined(WIN32)
-	typedef HANDLE	HandleType;
+	typedef HANDLE		HandleType;
 #else
-	typedef FILE*	HandleType;
+#if defined(XALAN_STRICT_ANSI_HEADERS)
+	typedef std::FILE*	HandleType;
+#else
+	typedef FILE*		HandleType;
+#endif
 #endif
 
 	/**
