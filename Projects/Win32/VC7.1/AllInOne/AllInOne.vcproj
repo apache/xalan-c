@@ -269,7 +269,19 @@
 				RelativePath="..\..\..\..\src\xalanc\Include\XalanMap.hpp">
 			</File>
 			<File
+				RelativePath="..\..\..\..\src\xalanc\Include\XalanMemMgrAutoPtr.hpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\src\xalanc\Include\XalanMemMngArrayAllocate.hpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\src\xalanc\Include\XalanMemoryManagement.hpp">
+			</File>
+			<File
 				RelativePath="..\..\..\..\src\xalanc\Include\XalanObjectCache.hpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\src\xalanc\Include\XalanObjectStackCache.hpp">
 			</File>
 			<File
 				RelativePath="..\..\..\..\src\xalanc\Include\XalanSet.hpp">
