@@ -86,7 +86,7 @@
 
 
 
-#if defined(_MSC_VER)
+#if defined(_MSC_VER) && !defined(_WIN64)
 #define XALAN_USE_WINDOWS_TIMING
 #endif
 
