@@ -274,7 +274,7 @@ XalanTransformToHandlerCSS(
 {
 	// Do the transformation...
 #if defined(XALAN_OLD_STYLE_CASTS)
-	return ((XalanTransformer*)theXalanHandle)->transform(theXMLFileName, (XalanCompiledStylesheet*)theCSSHandletheCSSHandle, theOutputHandle, theOutputHandler, theFlushHandler);
+	return ((XalanTransformer*)theXalanHandle)->transform(theXMLFileName, (XalanCompiledStylesheet*)theCSSHandle, theOutputHandle, theOutputHandler, theFlushHandler);
 #else
 	return 	static_cast<XalanTransformer*>(theXalanHandle)->transform(theXMLFileName, static_cast<XalanCompiledStylesheet*>(theCSSHandle), theOutputHandle, theOutputHandler, theFlushHandler);
 #endif	
