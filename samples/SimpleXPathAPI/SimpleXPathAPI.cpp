@@ -20,16 +20,13 @@
 
 
 #include <XPath/XObject.hpp>
+#include <XPath/XPathEvaluator.hpp>
 
 
 
 #include <XalanSourceTree/XalanSourceTreeDOMSupport.hpp>
 #include <XalanSourceTree/XalanSourceTreeInit.hpp>
 #include <XalanSourceTree/XalanSourceTreeParserLiaison.hpp>
-
-
-
-#include <XPathAPI/XPathEvaluator.hpp>
 
 
 
