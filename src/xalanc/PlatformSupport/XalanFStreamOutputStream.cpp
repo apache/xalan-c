@@ -84,7 +84,6 @@ XalanFStreamOutputStream::XalanFStreamOutputStream(
 
 XalanFStreamOutputStream::~XalanFStreamOutputStream()
 {
-	fclose(m_handle);
 }
 
 
@@ -92,10 +91,6 @@ XalanFStreamOutputStream::~XalanFStreamOutputStream()
 void
 XalanFStreamOutputStream::doFlush()
 {
-	if (fflush(m_handle) != 0)
-	{
-		throw XalanFStreamOutputStreamWriteException(errno);
-	}
 }
 
 
@@ -141,7 +136,7 @@ XalanFStreamOutputStream::XalanFStreamOutputStreamWriteException::XalanFStreamOu
 	XalanOutputStreamException(FormatMessageLocal(
 				"Error writing file",
 				theErrorCode),
-			TranscodeFromLocalCodePage("XalanFileOutputStreamWriteException"))
+			TranscodeFromLocalCodePage("XalanFStreamOutputStreamWriteException"))
 {
 }
 
