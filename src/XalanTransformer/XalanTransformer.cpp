@@ -132,10 +132,6 @@
 
 const XSLTInit*		XalanTransformer::s_xsltInit = 0;
 
-#if defined(XALAN_USE_ICU)
-static const ICUBridgeCollationCompareFunctor*	theICUFunctor = 0;
-#endif
-
 
 
 XalanTransformer::XalanTransformer():
@@ -157,7 +153,13 @@ XalanTransformer::XalanTransformer():
 	m_stylesheetExecutionContext(new StylesheetExecutionContextDefault)
 {
 #if defined(XALAN_USE_ICU)
-	m_stylesheetExecutionContext->installCollationCompareFunctor(theICUFunctor);
+	// Create a collation function for the ICU, and have it
+	// cache collators...
+	XalanAutoPtr<ICUBridgeCollationCompareFunctor>	theICUFunctor(new ICUBridgeCollationCompareFunctor(true));
+
+	m_stylesheetExecutionContext->installCollationCompareFunctor(theICUFunctor.get());
+
+	theICUFunctor.release();
 #endif
 }
 
@@ -184,6 +186,11 @@ XalanTransformer::~XalanTransformer()
 		delete m_functionPairs[i].second;
 	}
 
+#if defined(XALAN_USE_ICU)
+	// Uninstall the ICU collation compare functor, and destroy it...
+	delete m_stylesheetExecutionContext->uninstallCollationCompareFunctor();
+#endif
+
 	delete m_stylesheetExecutionContext;
 }
 
@@ -202,8 +209,6 @@ XalanTransformer::initialize()
 	XalanEXSLTStringFunctionsInstaller::installGlobal();
 
 #if defined(XALAN_USE_ICU)
-	theICUFunctor = new ICUBridgeCollationCompareFunctor;
-
 	// Install the ICU version of format-number...
 	XPath::installFunction(
 			StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("format-number")),
@@ -234,14 +239,6 @@ XalanTransformer::terminate()
 #if defined(XALAN_USE_ICU)
 	XPath::uninstallFunction(
 			StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("format-number")));
-
-#if defined(XALAN_CANNOT_DELETE_CONST)
-	delete (ICUBridgeCollationCompareFunctor*)theICUFunctor;
-#else
-	delete theICUFunctor;
-#endif
-
-	theICUFunctor = 0;
 
 	ICUBridgeCleanup::cleanup();
 #endif
