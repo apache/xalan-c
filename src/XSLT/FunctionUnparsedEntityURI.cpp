@@ -118,7 +118,7 @@ FunctionUnparsedEntityURI::execute(
 				context->getOwnerDocument();
 	assert(doc != 0);
 
-	const XalanDOMString	uri = executionContext.getUnparsedEntityURI(name, *doc);
+	const XalanDOMString&	uri = executionContext.getUnparsedEntityURI(name, *doc);
 
 	return executionContext.getXObjectFactory().createString(uri);
 }

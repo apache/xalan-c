@@ -97,6 +97,11 @@ public:
 	virtual const XalanDOMString&
 	getExpandedAttributeName(const XalanAttr&	attr) const;
 
+	virtual const XalanDOMString&
+	getUnparsedEntityURI(
+			const XalanDOMString&	theName,
+			const XalanDocument&	theDocument) const;
+
 private:
 
 	const XalanDOMString&

@@ -116,3 +116,13 @@ XercesDOMSupport::getExpandedAttributeName(const XalanAttr&		attr) const
 {
 	return m_domSupportDefault.getExpandedAttributeName(attr);
 }
+
+
+
+const XalanDOMString&
+XercesDOMSupport::getUnparsedEntityURI(
+			const XalanDOMString&	theName,
+			const XalanDocument&	theDocument) const
+{
+	return m_domSupportDefault.getUnparsedEntityURI(theName, theDocument);
+}

@@ -63,10 +63,6 @@
 
 
 #include <XalanDOM/XalanDocument.hpp>
-#include <XalanDOM/XalanDocumentType.hpp>
-#include <XalanDOM/XalanElement.hpp>
-#include <XalanDOM/XalanEntity.hpp>
-#include <XalanDOM/XalanNamedNodeMap.hpp>
 
 
 
@@ -199,63 +195,10 @@ XPathSupportDefault::getProcessNamespaces() const
 
 
 
-XalanDOMString
+const XalanDOMString&
 XPathSupportDefault::getUnparsedEntityURI(
-			const XalanDOMString&		theName,
-			const XalanDocument&		theDocument) const
+			const XalanDOMString&	theName,
+			const XalanDocument&	theDocument) const
 {
-	XalanDOMString					theURI;
-
-	const XalanDocumentType* const	theDoctype =
-		theDocument.getDoctype();
-
-	if(theDoctype != 0)
-	{
-		const XalanNamedNodeMap* const	theEntities =
-			theDoctype->getEntities();
-
-		if (theEntities != 0)
-		{
-			const XalanNode* const	theNode =
-				theEntities->getNamedItem(theName);
-
-			if (theNode != 0 && theNode->getNodeType() == XalanNode::ENTITY_NODE)
-			{
-				const XalanEntity*	theEntity =
-#if defined(XALAN_OLD_STYLE_CASTS)
-					(const XalanEntity*)theNode;
-#else
-					static_cast<const XalanEntity*>(theNode);
-#endif
-
-				const XalanDOMString		theNotationName(theEntity->getNotationName());
-
-				if(isEmpty(theNotationName) == false) // then it's unparsed
-				{
-					// The draft says: "The XSLT processor may use the public
-					// identifier to generate a URI for the entity instead of the URI
-					// specified in the system identifier. If the XSLT processor does
-					// not use the public identifier to generate the URI, it must use
-					// the system identifier; if the system identifier is a relative
-					// URI, it must be resolved into an absolute URI using the URI of
-					// the resource containing the entity declaration as the base
-					// URI [RFC2396]."
-					// So I'm falling a bit short here.
-					theURI = theEntity->getSystemId();
-
-					if(isEmpty(theURI) == true)
-					{
-						theURI = theEntity->getPublicId();
-					}
-					else
-					{
-						// This should be resolved to an absolute URL, but that's hard
-						// to do from here.
-					}
-				}
-			}
-		}
-	}
-
-	return theURI;
+	return m_DOMSupport.getUnparsedEntityURI(theName, theDocument);
 }

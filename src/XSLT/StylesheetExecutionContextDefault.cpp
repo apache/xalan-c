@@ -1618,7 +1618,7 @@ StylesheetExecutionContextDefault::findURIFromDoc(const XalanDocument*	owner) co
 
 
 
-XalanDOMString
+const XalanDOMString&
 StylesheetExecutionContextDefault::getUnparsedEntityURI(
 			const XalanDOMString&	theName,
 			const XalanDocument&	theDocument) const

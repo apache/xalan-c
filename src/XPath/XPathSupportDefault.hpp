@@ -129,7 +129,7 @@ public:
 	virtual bool
 	getProcessNamespaces() const;
 
-	virtual XalanDOMString
+	virtual const XalanDOMString&
 	getUnparsedEntityURI(
 			const XalanDOMString&	theName,
 			const XalanDocument&	theDocument) const;

@@ -129,6 +129,12 @@
 
 
 
+#include <XalanSourceTree/XalanSourceTreeDOMSupport.hpp>
+#include <XalanSourceTree/XalanSourceTreeInit.hpp>
+#include <XalanSourceTree/XalanSourceTreeParserLiaison.hpp>
+
+
+
 #include <XSLT/XSLTEngineImpl.hpp>
 #include <XSLT/XSLTInit.hpp>
 #include <XSLT/XSLTInputSource.hpp>
@@ -215,6 +221,8 @@ printArgOptions()
 		 << endl
 		 << " [-PARAM name expression (Sets a stylesheet parameter.)]"
 		 << endl
+		 << " [-XST Use XSLT source tree instead of Xerces DOM]"
+		 << endl
 		 << endl
 		 << "The following options are valid only with -HTML or -XML."
 		 << endl
@@ -235,7 +243,6 @@ printArgOptions()
 		 << " [-NH (Don't write XML header.)]"
 		 << endl;
 }
-
 
 
 
@@ -265,6 +272,7 @@ struct CmdLineParams
 	bool doValidation;
 	bool noIndent;
 	bool formatToNull;
+	bool useXST;
 	int indentAmount;
 	int outputType;
 	CharVectorType outFileName;
@@ -289,6 +297,7 @@ struct CmdLineParams
 		doValidation(false),
 		noIndent(false),
 		formatToNull(false),
+		useXST(false),
 		indentAmount(-1),
 		outputType(-1),
 		outFileName(),
@@ -529,6 +538,10 @@ getArgs(
 		{
 			p.traceTemplateChildren = true;
 		}
+		else if (!stricmp("-XST", argv[i]))
+		{
+			p.useXST = true;
+		}
 		else
 		{
 			cerr << endl << "Warning: Ignoring unknown option \"" << argv[i] << "\"." << endl << endl;
@@ -692,9 +705,50 @@ createTraceListener(
 
 
 
+DOMSupport&
+getDOMSupport(
+		XalanSourceTreeDOMSupport&	theXalanSourceTreeDOMSupport,
+		XercesDOMSupport&			theXercesDOMSupport,
+		const CmdLineParams&		params)
+{
+	if (params.useXST == true)
+	{
+		return theXalanSourceTreeDOMSupport;
+	}
+	else
+	{
+		return theXercesDOMSupport;
+	}
+}
+
+
+
+XMLParserLiaison&
+getParserLiaison(
+		XalanSourceTreeParserLiaison&	theXalanSourceTreeParserLiaison,
+		XercesParserLiaison&			theXercesParserLiaison,
+		const CmdLineParams&			params)
+{
+	if (params.useXST == true)
+	{
+		return theXalanSourceTreeParserLiaison;
+	}
+	else
+	{
+		return theXercesParserLiaison;
+	}
+}
+
+
+
 int
 xsltMain(const CmdLineParams&	params)
 {
+	// Initialize the XSLT subsystem.  This must stay in scope until
+	// we're done with the subsystem, since its destructor shuts down
+	// the subsystem.
+	XSLTInit	theInit;
+
 #if defined(XALAN_USE_ICU)
 	// Create an installer to install the substitue format-number() function.
 	FunctionICUFormatNumber::FunctionICUFormatNumberInstaller	theInstaller;
@@ -716,8 +770,30 @@ xsltMain(const CmdLineParams&	params)
 	XalanStdOutputStream				theStdErr(cerr);
 	XalanOutputStreamPrintWriter		diagnosticsWriter(theStdErr);
 
-	XercesDOMSupport		theDOMSupport;
-	XercesParserLiaison		xmlParserLiaison(theDOMSupport);
+	// Initialize the XalanSourceTree subsystem.  This must stay in scope until
+	// we're done with the subsystem, since its destructor shuts down the
+	// subsystem.
+	XalanSourceTreeInit				theXalanSourceTreeInit;
+
+	XalanSourceTreeDOMSupport		theXalanSourceTreeDOMSupport;
+	XalanSourceTreeParserLiaison	theXalanSourceTreeParserLiaison(theXalanSourceTreeDOMSupport);
+
+	// Hookup the parser liaison instance to the support instance.
+	theXalanSourceTreeDOMSupport.setParserLiaison(&theXalanSourceTreeParserLiaison);
+
+
+	XercesDOMSupport		theXercesDOMSupport;
+	XercesParserLiaison		theXercesParserLiaison(theXercesDOMSupport);
+
+	DOMSupport&				theDOMSupport = getDOMSupport(
+		theXalanSourceTreeDOMSupport,
+		theXercesDOMSupport,
+		params);
+
+	XMLParserLiaison&		xmlParserLiaison = getParserLiaison(
+		theXalanSourceTreeParserLiaison,
+		theXercesParserLiaison,
+		params);
 
 	XPathSupportDefault				theXPathSupport(theDOMSupport);
 	XSLTProcessorEnvSupportDefault	theXSLProcessorSupport;
@@ -1009,10 +1085,7 @@ main(
 		{
 			try
 			{
-				XSLTInit	theInit;
-
 				theResult = xsltMain(theParams);
-
 			}
 			catch (XSLException& e)
 			{

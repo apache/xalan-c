@@ -55,6 +55,9 @@
 # 
 #
 # $Log$
+# Revision 1.22  2000/12/15 23:29:08  dbertoni
+# Changes to integrate new Xalan source tree.
+#
 # Revision 1.21  2000/11/29 17:55:11  auriemma
 # HP port based on work from Trevor Smigiel .
 #
@@ -296,6 +299,7 @@ DOMSUPPORT_DIR = DOMSupport
 INCLUDE_DIR = Include
 ICUBRIDGE_DIR = ICUBridge
 PLATFORMSUPPORT_DIR = PlatformSupport
+XALANSOURCETREE_DIR = XalanSourceTree
 TESTXPATH_DIR = TestXPath
 TESTXSLT_DIR = TestXSLT
 XMLSUPPORT_DIR = XMLSupport
@@ -317,7 +321,7 @@ PRODUCTVERSION=${VER}
 BINTARGETDIR=${XALANCROOT}/bin
 
 ALL_VPATH_CPP = \
-$(XALANDOM_DIR):$(DOMSUPPORT_DIR):$(PLATFORMSUPPORT_DIR):$(TESTXPATH_DIR):$(TESTXSLT_DIR):\
+$(XALANDOM_DIR):$(DOMSUPPORT_DIR):$(PLATFORMSUPPORT_DIR):$(XALANSOURCETREE_DIR):$(TESTXPATH_DIR):$(TESTXSLT_DIR):\
 $(XMLSUPPORT_DIR):$(XPATH_DIR):$(XSLT_DIR):$(XERCESINIT_DIR):\
 $(XERCESPARSERLIAISON_DIR)
 
@@ -341,6 +345,7 @@ ALLSOURCE = \
 	$(wildcard $(XALANDOM_DIR)/*.cpp) \
 	$(wildcard $(DOMSUPPORT_DIR)/*.cpp) \
 	$(wildcard $(PLATFORMSUPPORT_DIR)/*.cpp) \
+	$(wildcard $(XALANSOURCETREE_DIR)/*.cpp) \
 	$(wildcard $(XMLSUPPORT_DIR)/*.cpp) \
 	$(wildcard $(XPATH_DIR)/*.cpp) \
 	$(wildcard $(XSLT_DIR)/*.cpp) \

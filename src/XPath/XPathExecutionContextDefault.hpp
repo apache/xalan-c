@@ -256,7 +256,7 @@ public:
 	virtual XalanDOMString
 	findURIFromDoc(const XalanDocument*		owner) const;
 
-	virtual XalanDOMString
+	virtual const XalanDOMString&
 	getUnparsedEntityURI(
 			const XalanDOMString&		theName,
 			const XalanDocument&		theDocument) const;

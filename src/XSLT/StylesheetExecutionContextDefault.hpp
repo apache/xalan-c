@@ -701,7 +701,7 @@ public:
 	virtual XalanDocument*
 	getDOMFactory() const;
 
-	virtual XalanDOMString
+	virtual const XalanDOMString&
 	getUnparsedEntityURI(
 			const XalanDOMString&	theName,
 			const XalanDocument&	theDocument) const;

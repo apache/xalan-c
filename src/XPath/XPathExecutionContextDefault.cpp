@@ -497,7 +497,7 @@ XPathExecutionContextDefault::findURIFromDoc(const XalanDocument*	owner) const
 
 
 
-XalanDOMString
+const XalanDOMString&
 XPathExecutionContextDefault::getUnparsedEntityURI(
 			const XalanDOMString&	theName,
 			const XalanDocument&	theDocument) const

@@ -217,7 +217,7 @@ public:
 	 // completely expand entities before the structure model is passed to the
 	 // DOM; in this case, there will be no EntityReferences in the DOM tree."
 	 // So I'm not sure how well this is going to work.
-	virtual XalanDOMString
+	virtual const XalanDOMString&
 	getUnparsedEntityURI(
 			const XalanDOMString&	theName,
 			const XalanDocument&	theDocument) const = 0;

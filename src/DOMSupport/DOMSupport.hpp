@@ -73,6 +73,7 @@
 
 
 class XalanAttr;
+class XalanDocument;
 class XalanElement;
 class XalanNode;
 class XalanText;
@@ -121,6 +122,19 @@ public:
 	 */
 	virtual const XalanDOMString&
 	getExpandedAttributeName(const XalanAttr&	attr) const = 0;
+
+	/**
+	 * Retrieves the URI of the named unparsed entity
+	 * from the supplied document.
+	 * 
+	 * @param theName The name of the entity
+	 * @param theDocument The document that contains the entity
+	 * @return The URI of the entity
+	 */
+	virtual const XalanDOMString&
+	getUnparsedEntityURI(
+			const XalanDOMString&	theName,
+			const XalanDocument&	theDocument) const = 0;
 };
 
 
