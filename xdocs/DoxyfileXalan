@@ -204,7 +204,7 @@ ENABLED_SECTIONS     =
 # directories like "/usr/src/myproject". Separate the files or directories 
 # with spaces.
 
-INPUT  = ../src/xalanc/DOMSupport ../src/xalanc/ICUBridge ../src/xalanc/Include ../src/xalanc/PlatformSupport ../src/xalanc/TestXSLT  ../src/xalanc/XalanDOM  ../src/xalanc/XalanSourceTree  ../src/xalanc/XalanTransformer  ../src/xalanc/XercesParserLiaison  ../src/xalanc/XercesParserLiaison/Deprecated ../src/xalanc/XMLSupport  ../src/xalanc/XPath  ../src/xalanc/XSLT ../src/xalanc/XalanExtensions ../src/xalanc/XalanExe ../src/xalanc/XPathCAPI ../src/xalanc/XalanEXSLT
+INPUT  = ../src/xalanc/DOMSupport ../src/xalanc/Harness ../src/xalanc/ICUBridge ../src/xalanc/Include ../src/xalanc/PlatformSupport ../src/xalanc/TestXPath ../src/xalanc/TestXSLT ../src/xalanc/Utils/ ../src/xalanc/XalanDOM ../src/xalanc/XalanExe ../src/xalanc/XalanEXSLT ../src/xalanc/XalanExtensions ../src/xalanc/XalanSourceTree ../src/xalanc/XalanTransformer ../src/xalanc/XercesParserLiaison ../src/xalanc/XercesParserLiaison/Deprecated ../src/xalanc/XMLSupport ../src/xalanc/XPath ../src/xalanc/XPathCAPI ../src/xalanc/XSLT
 
 # If the value of the INPUT tag contains directories, you can use the 
 # FILE_PATTERNS tag to specify one or more wildcard pattern (like *.cpp 
@@ -272,7 +272,7 @@ GENERATE_HTML        = YES
 # If a relative path is entered the value of OUTPUT_DIRECTORY will be
 # put in front of it. If left blank `html' will be used as the default path.
 
-HTML_OUTPUT          = apidocs
+HTML_OUTPUT          = apiDocs
 
 # The HTML_HEADER tag can be used to specify a personal HTML header for 
 # each generated HTML page. If it is left blank doxygen will generate a 
