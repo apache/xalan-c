@@ -273,8 +273,8 @@ protected:
 	 */
 	void
 	processAttribute(
-			const XalanDOMString&	name,
-			const XalanDOMString&	value);
+			const XalanDOMChar*		name,
+			const XalanDOMChar*		value);
 
 	/**
 	 * Returns the specified <var>string</var> after substituting <VAR>specials</VAR>,
@@ -288,7 +288,7 @@ protected:
 	 */
 	static XalanDOMString
 	prepAttrString(
-			const XalanDOMString&	string,
+			const XalanDOMChar*		string,
 			const XalanDOMString&	specials,
 			const XalanDOMString&	encoding);
 	
@@ -360,6 +360,11 @@ protected:
 	 * The character encoding.  Not currently used.
 	 */
 	XalanDOMString		m_encoding;
+
+	/**
+	 * Test for standalone part of header.
+	 */
+	const XalanDOMString	m_standalone;
 
 	/**
 	 * Tell if the next text should be raw.

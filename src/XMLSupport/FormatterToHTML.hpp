@@ -240,8 +240,8 @@ protected:
 	 */
 	virtual void
 	processAttribute(
-			const XalanDOMString&	name,
-			const XalanDOMString&	value);
+			const XalanDOMChar*		name,
+			const XalanDOMChar*		value);
 
 	/**
 	 * Returns the specified <var>string</var> after substituting non ASCII characters,

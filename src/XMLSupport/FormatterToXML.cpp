@@ -75,7 +75,7 @@
 
 
 
-static XalanDOMString		theDefaultAttrSpecialChars(XALAN_STATIC_UCODE_STRING("<>&\"\'\r\n"));
+static XalanDOMString		theDefaultAttrSpecialChars(XALAN_STATIC_UCODE_STRING("<>&\"\r\n"));
 
 
 const XalanDOMString		FormatterToXML::DEFAULT_MIME_ENCODING = XALAN_STATIC_UCODE_STRING("UTF-8");
@@ -99,7 +99,7 @@ FormatterToXML::FormatterToXML(
 			const XalanDOMString& doctypeSystem,
 			const XalanDOMString& doctypePublic,
 			bool xmlDecl,
-			const XalanDOMString& /* standalone */) :
+			const XalanDOMString& standalone) :
 	FormatterListener(),
 	m_attrSpecialChars(theDefaultAttrSpecialChars),
 	m_currentIndent(0),
@@ -108,6 +108,7 @@ FormatterToXML::FormatterToXML(
 	m_doIndent(doIndent),
 	m_elemStack(),
 	m_encoding(encoding),
+	m_standalone(standalone),
 	m_escapeCData(false),
 	m_indent(indent),
 	m_ispreserve(false),
@@ -211,6 +212,13 @@ FormatterToXML::startDocument()
 			m_writer.write(version);
 			m_writer.write(XALAN_STATIC_UCODE_STRING("\" encoding=\""));
 			m_writer.write(encoding);
+
+			if (length(m_standalone) != 0)
+			{
+				m_writer.write(XALAN_STATIC_UCODE_STRING("\" standalone=\""));
+				m_writer.write(m_standalone);
+			}
+
 			m_writer.write(XALAN_STATIC_UCODE_STRING("\"?>"));
 			m_writer.write(m_lineSep);
 		}      
@@ -803,8 +811,8 @@ FormatterToXML::childNodesWereAdded()
 
 void
 FormatterToXML::processAttribute(
-			const XalanDOMString&	name,
-			const XalanDOMString&	value)
+			const XalanDOMChar*		name,
+			const XalanDOMChar*		value)
 {
 	try
 	{
@@ -824,11 +832,12 @@ FormatterToXML::processAttribute(
 
 XalanDOMString
 FormatterToXML::prepAttrString(
-			const XalanDOMString& 	string,
+			const XalanDOMChar* 	string,
 			const XalanDOMString& 	specials,
 			const XalanDOMString& 	/* encoding */)
 {
 	const unsigned int	theLength = length(string);
+	const unsigned int	theSpecialsLength = length(specials);
 
 	// we'll do the work into a buffer pre-allocated to
 	// twice the size of the original string, giving some
@@ -849,17 +858,18 @@ FormatterToXML::prepAttrString(
 	{
 		const XalanDOMChar		ch = charAt(string, i);
 
-		const int				chNum = static_cast<int>(ch);
+		const int				chNum = ch;
 
 		const unsigned int		index = indexOf(specials, ch);
 
-		if (index < length(specials)) 
+		if (index < theSpecialsLength)
 		{
 			vec.push_back('&');
 			vec.push_back('#');
 			const DOMString ds = LongToDOMString(ch);
+			const unsigned int dsLen = length(ds);
 			const XMLCh* pb = c_wstr(ds);
-			for(int k = 0; k < length(ds); k++)
+			for(unsigned int k = 0; k < dsLen; k++)
 				vec.push_back(*pb++);
 			vec.push_back(';');
 		}
@@ -897,8 +907,9 @@ FormatterToXML::prepAttrString(
 			vec.push_back('x');
 
 			const XalanDOMString num = LongToHexDOMString(next);
+			const unsigned int	numLength = length(num);
 
-			for (unsigned int k=0; k < length(num); k++)
+			for (unsigned int k=0; k < numLength; k++)
 				vec.push_back(charAt(num, k));
 
 			vec.push_back(';');
@@ -986,9 +997,9 @@ int FormatterToXML::copyEntityIntoBuf(
 			const XalanDOMString&	s,
 			int						pos)
 {
-	const int	l = length(s);
+	const unsigned int	l = length(s);
 	m_charBuf[pos++] = '&';
-	for(int i = 0; i < l; i++)
+	for(unsigned int i = 0; i < l; i++)
 	{
 		m_charBuf[pos++] = charAt(s, i);
 	}

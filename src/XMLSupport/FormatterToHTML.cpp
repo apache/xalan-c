@@ -564,8 +564,8 @@ void FormatterToHTML::processingInstruction(
 
 void
 FormatterToHTML::processAttribute(
-			const XalanDOMString&	name,
-			const XalanDOMString&	value)
+			const XalanDOMChar*		name,
+			const XalanDOMChar*		value)
 {
 	try
 	{
