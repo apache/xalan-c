@@ -324,6 +324,8 @@ StylesheetConstructionContextDefault::createMatchPattern(
 									   resolver,
 									   m_xpathEnvSupport);
 
+	xpath->setInStylesheet(true);
+
 	return xpath;
 }
 
@@ -354,6 +356,8 @@ StylesheetConstructionContextDefault::createXPath(
 								str,
 								resolver,
 								m_xpathEnvSupport);
+
+	xpath->setInStylesheet(true);
 
 	return xpath;
 }
