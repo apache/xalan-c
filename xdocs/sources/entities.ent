@@ -59,10 +59,10 @@
 <!ENTITY xslt4c "Xalan-C++">
 <!ENTITY xslt4c-dist "Xalan-C_1_8_0">
 <!ENTITY xslt4c-current "Xalan-C++ version 1.8">
-<!ENTITY xslt4c-windll "Xalan-C_1_8_0.dll">
-<!ENTITY xslt4c-linuxlib "libxalan-c1_8.so">
-<!ENTITY xslt4c-aixlib "libxalan-c1_8.so">
-<!ENTITY xslt4c-hplib "libxalan-c1_8.sl">
+<!ENTITY xslt4c-windll "Xalan-C_1_8.dll">
+<!ENTITY xslt4c-linuxlib "libxalan-c.so.18">
+<!ENTITY xslt4c-aixlib "libxalan-c18.so">
+<!ENTITY xslt4c-hplib "libxalan-c.sl.18.0">
 <!ENTITY xslt4c-solarislib "libxalan-c1_8.so">
 <!ENTITY xslt4c-win_root "xml-xalan\c">
 <!ENTITY xslt4c-unix_root "xml-xalan/c">
@@ -120,10 +120,10 @@
 <!ENTITY xml4c-dist "xerces-c2_5_0">
 <!ENTITY xml4c-windll "xerces-c_2_5_0.dll">
 <!ENTITY xml4c-winlib "xerces-c_2.lib">
-<!ENTITY xml4c-linuxlib "libxerces-c2_5_0.so">
-<!ENTITY xml4c-aixlib "libxerces-c2_5_0.a">
-<!ENTITY xml4c-hplib "libxerces-c2_5_0.sl">
-<!ENTITY xml4c-solarislib "libxerces-c2_5_0.so">
+<!ENTITY xml4c-linuxlib "libxerces-c.so.25.0">
+<!ENTITY xml4c-aixlib "libxerces-c25.0.a">
+<!ENTITY xml4c-hplib "libxerces-c.sl.25.0">
+<!ENTITY xml4c-solarislib "libxerces-c.so.25.0">
 
 <!ENTITY xml4c-aix43v5-dist "&xml4c-dist;&aix43v5-dist;&unix_ext;">
 <!ENTITY xml4c-aix51v5-dist "&xml4c-dist;&aix51v5-dist;&unix_ext;">
