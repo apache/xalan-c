@@ -306,6 +306,13 @@ private:
 
 
 
+#if defined(XALAN_NEEDS_EXPLICIT_TEMPLATE_INSTANTIATION)
+bool
+AttributesImpl::URIAndLocalNameCompareFunctor::operator()(const AttributeVectorEntryExtended*	theEntry) const
+{
+	return equals(&*theEntry->m_uri.begin(), m_uri) && equals(&*theEntry->m_localName.begin(), m_localName) ;
+}
+#else
 struct URIAndLocalNameCompareFunctor
 {
 	URIAndLocalNameCompareFunctor(
@@ -327,6 +334,7 @@ private:
 	const XMLCh* const	m_uri;
 	const XMLCh* const	m_localName;
 };
+#endif
 
 
 

@@ -265,6 +265,13 @@ AttributeListImpl::getValue(const unsigned int index) const
 
 
 
+#if defined(XALAN_NEEDS_EXPLICIT_TEMPLATE_INSTANTIATION)
+bool
+AttributeListImpl::NameCompareFunctor::operator()(const AttributeVectorEntry*	theEntry) const
+{
+	return equals(&*theEntry->m_Name.begin(), m_name);
+}
+#else
 struct NameCompareFunctor
 {
 	NameCompareFunctor(const XMLCh*		theName) :
@@ -282,6 +289,7 @@ private:
 
 	const XMLCh* const	m_name;
 };
+#endif
 
 
 

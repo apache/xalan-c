@@ -179,6 +179,23 @@ public:
 	typedef std::vector<AttributeVectorEntry*>		AttributeVectorType;
 #endif
 
+#if defined(XALAN_NEEDS_EXPLICIT_TEMPLATE_INSTANTIATION)
+	struct NameCompareFunctor
+	{
+		NameCompareFunctor(const XMLCh*		theName) :
+			m_name(theName)
+		{
+		}
+
+		bool
+		operator()(const AttributeVectorEntry*	theEntry) const;
+
+	private:
+
+		const XMLCh* const	m_name;
+	};
+#endif
+
 private:
 
 	// This is not implemented.
