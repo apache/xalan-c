@@ -5,6 +5,11 @@
 
 #include <cmath>
 #include <ctime>
+#if defined(XALAN_OLD_STREAM_HEADERS)
+#include <iostream.h>
+#else
+#include <iostream>
+#endif
 
 
 
@@ -16,6 +21,7 @@
 
 
 
+#include <XPath/Function.hpp>
 #include <XPath/XObjectFactory.hpp>
 
 

@@ -3,6 +3,14 @@
 
 
 
+#if defined(XALAN_OLD_STREAM_HEADERS)
+#include <iostream.h>
+#else
+#include <iostream>
+#endif
+
+
+
 #include <sax2/ContentHandler.hpp>
 #include <util/PlatformUtils.hpp>
 
@@ -12,6 +20,7 @@
 
 
 
+#include <XalanTransformer/XalanDocumentBuilder.hpp>
 #include <XalanTransformer/XalanTransformer.hpp>
 
 
