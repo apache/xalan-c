@@ -2230,8 +2230,11 @@ bool XSLTEngineImpl::qnameEqualsResultElemName(const QName& qname, const XalanDO
 			error(XalanDOMString("Prefix must resolve to a namespace: ") + prefix);
 		 // throw new RuntimeException(+prefix);
 		}
+		elemLocalName =  substring(elementName, indexOfNSSep+1);
 	}
-	elemLocalName = (indexOfNSSep < 0) ? elementName : substring(elementName, indexOfNSSep+1);
+	else
+		elemLocalName = elementName;
+
 	return qname.equals(QName(elemNS, elemLocalName));
 }
 
