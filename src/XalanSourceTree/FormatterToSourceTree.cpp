@@ -349,19 +349,19 @@ FormatterToSourceTree::ignorableWhitespace(
 
 		processAccumulatedText();
 
-		XalanSourceTreeText* const	theNewTextNode =
-			m_document->createTextIWSNode(chars, length, m_currentElement);
-
-		doAppendChildNode(m_currentElement, m_lastChild, theNewTextNode);
+		doAppendChildNode(
+			m_currentElement,
+			m_lastChild,
+			m_document->createTextIWSNode(chars, length, m_currentElement));
 	}
 	else if(m_documentFragment != 0)
 	{
 		processAccumulatedText();
 
-		XalanSourceTreeText* const	theNewTextNode =
-			m_document->createTextIWSNode(chars, length, m_currentElement);
-
-		doAppendChildNode(m_currentElement, m_lastChild, theNewTextNode);
+		doAppendChildNode(
+			m_documentFragment,
+			m_lastChild,
+			m_document->createTextIWSNode(chars, length, m_currentElement));
 	}
 }
 
