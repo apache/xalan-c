@@ -108,15 +108,10 @@ public:
 	{
 	}
 
+	virtual
 	~ArenaAllocator()
 	{
-#if !defined(XALAN_NO_NAMESPACES)
-		using std::for_each;
-#endif
-
-		for_each(m_blocks.begin(),
-				 m_blocks.end(),
-				 ArenaDeleteFunctor<ArenaBlockType>());
+		reset();
 	}
 
 	/*
@@ -175,6 +170,20 @@ public:
 
 		m_blocks.back()->commitAllocation(theObject);
 		assert(m_blocks.back()->ownsObject(theObject) == true);
+	}
+
+	void
+	reset()
+	{
+#if !defined(XALAN_NO_NAMESPACES)
+		using std::for_each;
+#endif
+
+		for_each(m_blocks.begin(),
+				 m_blocks.end(),
+				 ArenaDeleteFunctor<ArenaBlockType>());
+
+		m_blocks.clear();
 	}
 
 protected:

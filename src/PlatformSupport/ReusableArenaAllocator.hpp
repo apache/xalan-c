@@ -105,6 +105,7 @@ public:
 	{
 	}
 
+	virtual
 	~ReusableArenaAllocator()
 	{
 	}
