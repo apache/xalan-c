@@ -58,8 +58,9 @@
 
 
 
-#include <xalanc/PlatformSupport/XalanDecimalFormatSymbols.hpp>
 #include <xalanc/PlatformSupport/DOMStringHelper.hpp>
+#include <xalanc/PlatformSupport/XalanDecimalFormatSymbols.hpp>
+#include <xalanc/PlatformSupport/XalanMessageLoader.hpp>
 
 
 
