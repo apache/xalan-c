@@ -83,7 +83,9 @@ class XALAN_XERCESPARSERLIAISON_EXPORT XercesBridgeNavigator
 public:
 
 	explicit
-	XercesBridgeNavigator(XercesDocumentBridge*		theOwnerDocument);
+	XercesBridgeNavigator(
+			XercesDocumentBridge*	theOwnerDocument,
+			bool					mappingMode);
 
 	XercesBridgeNavigator(const XercesBridgeNavigator&	theSource);
 
@@ -91,71 +93,145 @@ public:
 	~XercesBridgeNavigator();
 
 
-	void
-	clearCachedNodes();
+	XercesDocumentBridge*
+	getOwnerDocument() const
+	{
+		return m_ownerDocument;
+	}
 
-	virtual XercesDocumentBridge*
-	getOwnerDocument() const;
-
-	virtual XalanNode*
+	XalanNode*
 	mapNode(const DOM_Node&		theXercesNode) const;
 
-	virtual XalanAttr*
+	XalanAttr*
 	mapNode(const DOM_Attr&		theXercesNode) const;
 
-	virtual DOM_Node
+	DOM_Node
 	mapNode(const XalanNode*	theXalanNode) const;
 
-	virtual DOM_Attr
+	DOM_Attr
 	mapNode(const XalanAttr*	theXercesNode) const;
 
-	virtual XalanNode*
+public:
+
+	unsigned long
+	getIndex() const
+	{
+		return m_index;
+	}
+
+	void
+	setIndex(unsigned long	theIndex)
+	{
+		m_index = theIndex;
+	}
+
+	XalanNode*
 	getParentNode(const DOM_Node&	theXercesNode) const;
 
-	virtual XalanNode*
+	XalanNode*
+	getParentNode() const
+	{
+		return m_parentNode;
+	}
+
+	void
+	setParentNode(XalanNode*	theParent)
+	{
+		m_parentNode = theParent;
+	}
+
+	XalanNode*
 	getPreviousSibling(const DOM_Node&	theXercesNode) const;
 
-	virtual XalanNode*
+	XalanNode*
+	getPreviousSibling() const
+	{
+		return m_previousSibling;
+	}
+
+	void
+	setPreviousSibling(XalanNode*	thePreviousSibling)
+	{
+		m_previousSibling = thePreviousSibling;
+	}
+
+	XalanNode*
 	getNextSibling(const DOM_Node&	theXercesNode) const;
 
-	virtual XalanNode*
+	XalanNode*
+	getNextSibling() const
+	{
+		return m_nextSibling;
+	}
+
+	void
+	setNextSibling(XalanNode*	theNextSibling)
+	{
+		m_nextSibling = theNextSibling;
+	}
+
+	XalanNode*
 	getFirstChild(const DOM_Node&	theXercesNode) const;
 
-	virtual XalanNode*
+	XalanNode*
+	getFirstChild() const
+	{
+		return m_firstChild;
+	}
+
+	void
+	setFirstChild(XalanNode*	theFirstChild)
+	{
+		m_firstChild = theFirstChild;
+	}
+
+	XalanNode*
 	getLastChild(const DOM_Node&	theXercesNode) const;
 
-	virtual XalanNode*
+	XalanNode*
+	getLastChild() const
+	{
+		return m_lastChild;
+	}
+
+	void
+	setLastChild(XalanNode*	theLastChild)
+	{
+		m_lastChild = theLastChild;
+	}
+
+	XalanNode*
 	insertBefore(
 			DOM_Node&	theXercesParent,
 			XalanNode*	newChild,
 			XalanNode*	refChild) const;
 
-	virtual XalanNode*
+	XalanNode*
 	replaceChild(
 			DOM_Node&	theXercesParent,
 			XalanNode*	newChild,
 			XalanNode*	oldChild) const;
 
-	virtual XalanNode*
+	XalanNode*
 	removeChild(
 			DOM_Node&	theXercesParent,
 			XalanNode*	oldChild) const;
 
-	virtual XalanNode*
+	XalanNode*
 	appendChild(
 			DOM_Node&	theXercesParent,
 			XalanNode*	newChild) const;
 
-	virtual XalanElement*
+	XalanElement*
 	getOwnerElement(const DOM_Attr&		theXercesAttr) const;
 
-	virtual XalanNode*
+	XalanNode*
 	cloneNode(
 			const XalanNode*	theXalanNode,
 			const DOM_Node&		theXercesNode,
 			bool				deep) const;
 
-	virtual XalanText*
+	XalanText*
 	splitText(
 			DOM_Text&		theXercesText,
 			unsigned int	offset) const;
@@ -163,9 +239,6 @@ public:
 private:
 
 	// Not implemented...
-//	XercesBridgeNavigator&
-//	operator=(const XercesBridgeNavigator&	theRHS);
-
 	bool
 	operator==(const XercesBridgeNavigator&	theRHS) const;
 
@@ -181,6 +254,8 @@ private:
 	mutable	XalanNode*		m_firstChild;
 
 	mutable	XalanNode*		m_lastChild;
+
+	unsigned long			m_index;
 };
 
 

@@ -62,6 +62,10 @@
 
 
 
+#include <DOMSupport/DOMServices.hpp>
+
+
+
 #include "XercesDOMException.hpp"
 #include "XercesDocumentBridge.hpp"
 
@@ -311,4 +315,34 @@ XercesDocumentFragmentBridge::setPrefix(const XalanDOMString&	prefix)
 	{
 		throw XercesDOMException(theException);
 	}
+}
+
+
+
+bool
+XercesDocumentFragmentBridge::isIndexed() const
+{
+	// $$$ ToDo: Are document fragments ever indexed?
+	// I don't think so...
+	return false;
+
+//	return m_navigator.getOwnerDocument()->isIndexed();
+}
+
+
+
+unsigned long
+XercesDocumentFragmentBridge::getIndex() const
+{
+	return 0;
+
+//	return m_navigator.getIndex();
+}
+
+
+
+XalanDOMString
+XercesDocumentFragmentBridge::getXSLTData() const
+{
+	return DOMServices::getNodeData(*this);
 }

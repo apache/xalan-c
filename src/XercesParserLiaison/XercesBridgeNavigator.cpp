@@ -76,13 +76,16 @@ XalanNode* const	invalidNodeAddress = reinterpret_cast<XalanNode*>(1);
 
 
 
-XercesBridgeNavigator::XercesBridgeNavigator(XercesDocumentBridge*	theOwnerDocument) :
+XercesBridgeNavigator::XercesBridgeNavigator(
+			XercesDocumentBridge*	theOwnerDocument,
+			bool					mappingMode) :
 	m_ownerDocument(theOwnerDocument),
-	m_parentNode(invalidNodeAddress),
-	m_previousSibling(invalidNodeAddress),
-	m_nextSibling(invalidNodeAddress),
-	m_firstChild(invalidNodeAddress),
-	m_lastChild(invalidNodeAddress)
+	m_parentNode(mappingMode == true ? invalidNodeAddress : 0),
+	m_previousSibling(mappingMode == true ? invalidNodeAddress : 0),
+	m_nextSibling(mappingMode == true ? invalidNodeAddress : 0),
+	m_firstChild(mappingMode == true ? invalidNodeAddress : 0),
+	m_lastChild(mappingMode == true ? invalidNodeAddress : 0),
+	m_index(UINT_MAX)
 {
 }
 
@@ -94,7 +97,8 @@ XercesBridgeNavigator::XercesBridgeNavigator(const XercesBridgeNavigator&	theSou
 	m_previousSibling(theSource.m_previousSibling),
 	m_nextSibling(theSource.m_nextSibling),
 	m_firstChild(theSource.m_firstChild),
-	m_lastChild(theSource.m_lastChild)
+	m_lastChild(theSource.m_lastChild),
+	m_index(theSource.m_index)
 {
 }
 
@@ -102,26 +106,6 @@ XercesBridgeNavigator::XercesBridgeNavigator(const XercesBridgeNavigator&	theSou
 
 XercesBridgeNavigator::~XercesBridgeNavigator()
 {
-}
-
-
-
-void
-XercesBridgeNavigator::clearCachedNodes()
-{
-	m_parentNode = invalidNodeAddress;
-	m_previousSibling = invalidNodeAddress;
-	m_nextSibling = invalidNodeAddress;
-	m_firstChild = invalidNodeAddress;
-	m_lastChild = invalidNodeAddress;
-}
-
-
-
-XercesDocumentBridge*
-XercesBridgeNavigator::getOwnerDocument() const
-{
-	return m_ownerDocument;
 }
 
 
@@ -368,7 +352,7 @@ XercesBridgeNavigator::splitText(
 		DOM_Text	theNewXercesText = theXercesText.splitText(offset);
 		assert(theXercesText.isNull() == false);
 
-		theXalanText = m_ownerDocument->createBridgeNode(theNewXercesText);
+		theXalanText = m_ownerDocument->createBridgeNode(theNewXercesText, 0, true);
 	}
 	catch(const DOM_DOMException&	theException)
 	{

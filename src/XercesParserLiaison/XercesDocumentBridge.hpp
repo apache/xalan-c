@@ -66,6 +66,7 @@
 #include <deque>
 #include <memory>
 #include <set>
+#include <vector>
 
 
 
@@ -77,10 +78,22 @@
 
 
 
+#include <DOMSupport/TreeWalker.hpp>
+
+
+
 #include <XercesParserLiaison/XercesToXalanNodeMap.hpp>
 #include <XercesParserLiaison/XercesBridgeNavigator.hpp>
 #include <XercesParserLiaison/XercesDocumentNamedNodeListCache.hpp>
 #include <XercesParserLiaison/XercesNodeListBridge.hpp>
+
+//#define XALAN_USE_BLOCK_ALLOCATORS
+
+#if defined(XALAN_USE_BLOCK_ALLOCATORS)
+#include <XercesParserLiaison/XercesElementBridgeAllocator.hpp>
+#include <XercesParserLiaison/XercesTextBridgeAllocator.hpp>
+#include <XercesParserLiaison/XercesAttributeBridgeAllocator.hpp>
+#endif
 
 
 
@@ -210,6 +223,15 @@ public:
 	virtual void
 	setPrefix(const XalanDOMString& prefix);
 
+	virtual bool
+	isIndexed() const;
+
+	virtual unsigned long
+	getIndex() const;
+
+	virtual XalanDOMString
+	getXSLTData() const;
+
 	virtual XalanElement*
 	createElement(const XalanDOMString& tagName);
 
@@ -271,6 +293,7 @@ public:
 	virtual XalanElement*
 	getElementById(const XalanDOMString&	elementId) const;
 
+	
 	// These are some special interfaces to manage relationships between
 	// our nodes and Xerces nodes.
 
@@ -293,34 +316,23 @@ public:
 	void
 	rebuildBridge();
 
-	/**
-	 * Clears any node relationships that may have been
-	 * cached.  This should be done if the document is
-	 * modified in any way.
-	 */
-	void
-	clearCachedNodes();
-
 	XalanNode*
 	mapNode(const DOM_Node& 	theXercesNode) const;
-
-	DOM_Node
-	mapNode(const XalanNode* 	theXalanNode) const;
-
-	XalanNode*
-	mapNode(NodeImpl* 	theXercesNodeImpl) const;
-
-	DOM_Attr
-	mapNode(const XalanAttr* 	theXalanNode) const;
-
-	NodeImpl*
-	mapNodeToImpl(const XalanNode* 	theXalanNode) const;
 
 	XalanAttr*
 	mapNode(const DOM_Attr& 	theXercesNode) const;
 
 	XalanElement*
 	mapNode(const DOM_Element& 	theXercesNode) const;
+
+	DOM_Node
+	mapNode(const XalanNode* 	theXalanNode) const;
+
+	DOM_Attr
+	mapNode(const XalanAttr* 	theXalanNode) const;
+
+	NodeImpl*
+	mapNodeToImpl(const XalanNode* 	theXalanNode) const;
 
 	/**
 	 *
@@ -348,6 +360,9 @@ public:
 
 private:
 
+	XalanNode*
+	mapNode(NodeImpl* 	theXercesNodeImpl) const;
+
 	// Destruction API...
 	void
 	destroyBridgeNode(XalanNode*	theNode);
@@ -372,52 +387,90 @@ private:
 			const DOM_Node&		theXercesNode,
 			bool				deep);
 
-	// Convenience function to build the Doctype node...
-	XercesDocumentTypeBridge*
-	buildDocumentTypeBridge() const;
-
 	// Factory methods for our implementation nodes...
 	XalanNode*
-	createBridgeNode(const DOM_Node&	theXercesNode) const;
+	createBridgeNode(
+			const DOM_Node&	theXercesNode,
+			unsigned long	theIndex,
+			bool			mapNode) const;
+
+	XercesDocumentTypeBridge*
+	createBridgeNode(
+			const DOM_DocumentType&		theDoctype,
+			unsigned long				theIndex,
+			bool						mapNode) const;
 
 	XercesElementBridge*
-	createBridgeNode(const DOM_Element& 	theXercesNode) const;
+	createBridgeNode(
+			const DOM_Element& 	theXercesNode,
+			unsigned long		theIndex,
+			bool				mapNode) const;
 
 	XercesDocumentFragmentBridge*
-	createBridgeNode(const DOM_DocumentFragment&	theXercesNode) const;
+	createBridgeNode(
+			const DOM_DocumentFragment&		theXercesNode,
+			unsigned long					theIndex,
+			bool							mapNode) const;
 
 	XercesTextBridge*
-	createBridgeNode(const DOM_Text&	theXercesNode) const;
+	createBridgeNode(
+			const DOM_Text&		theXercesNode,
+			unsigned long		theIndex,
+			bool				mapNode) const;
 
 	XercesCommentBridge*
-	createBridgeNode(const DOM_Comment&		theXercesNode) const;
+	createBridgeNode(
+			const DOM_Comment&	theXercesNode,
+			unsigned long		theIndex,
+			bool				mapNode) const;
 
 	XercesCDATASectionBridge*
-	createBridgeNode(const DOM_CDATASection&	theXercesNode) const;
+	createBridgeNode(
+			const DOM_CDATASection&		theXercesNode,
+			unsigned long				theIndex,
+			bool						mapNode) const;
 
 	XercesProcessingInstructionBridge*
-	createBridgeNode(const DOM_ProcessingInstruction&	theXercesNode) const;
+	createBridgeNode(
+			const DOM_ProcessingInstruction&	theXercesNode,
+			unsigned long						theIndex,
+			bool								mapNode) const;
 
 	XercesAttrBridge*
-	createBridgeNode(const DOM_Attr&	theXercesNode) const;
+	createBridgeNode(
+			const DOM_Attr&		theXercesNode,
+			unsigned long		theIndex,
+			bool				mapNode) const;
 
 	XercesEntityBridge*
-	createBridgeNode(const DOM_Entity&	theXercesNode) const;
+	createBridgeNode(
+			const DOM_Entity&	theXercesNode,
+			unsigned long		theIndex,
+			bool				mapNode) const;
 
 	XercesEntityReferenceBridge*
-	createBridgeNode(const DOM_EntityReference&		theXercesNode) const;
+	createBridgeNode(
+			const DOM_EntityReference&	theXercesNode,
+			unsigned long				theIndex,
+			bool						mapNode) const;
 
 	XercesNotationBridge*
-	createBridgeNode(const DOM_Notation&	theXercesNode) const;
+	createBridgeNode(
+			const DOM_Notation&		theXercesNode,
+			unsigned long			theIndex,
+			bool					mapNode) const;
 
-	const XercesBridgeNavigator&
-	pushNavigator() const;
+	XercesBridgeNavigator&
+	pushNavigator(bool	mappingMode) const;
+
+	// This is a private helper class for building the tree...
+	friend class BuildBridgeTreeWalker;
 
 	// $$$ ToDo: This is because DOM_Document::getElementById() is not
 	// const...
 	mutable DOM_Document					m_xercesDocument;
 
-	XercesBridgeNavigator					m_navigator;
+	XalanElement*							m_documentElement;
 
 	XercesNodeListBridge					m_children;
 
@@ -430,20 +483,36 @@ private:
 
 	typedef deque<XercesBridgeNavigator>	NavigatorBridgeVectorType;
 
-	typedef set<XalanNode*>					NodeSetType;
+	typedef deque<XalanNode*>				NodeVectorType;
 #else
 	std::auto_ptr<XalanDOMImplementation>	m_domImplementation;
 
 	typedef std::deque<XercesBridgeNavigator>	NavigatorBridgeVectorType;
 
-	typedef std::set<XalanNode*>			NodeSetType;
+	typedef std::deque<XalanNode*>				NodeVectorType;
 #endif
 
 	mutable NavigatorBridgeVectorType		m_navigators;
 
-	mutable NodeSetType						m_nodes;
+	// Our navigator will be the first entry in m_navigators,
+	// but we'll cache this so access is faster...
+	XercesBridgeNavigator&					m_navigator;
+
+	mutable NodeVectorType					m_nodes;
 
 	mutable XercesDocumentTypeBridge* 		m_doctype;
+
+	bool									m_mappingMode;
+
+	bool									m_indexValid;
+
+#if defined(XALAN_USE_BLOCK_ALLOCATORS)
+	mutable XercesElementBridgeAllocator	m_elementAllocator;
+
+	mutable XercesTextBridgeAllocator		m_textAllocator;
+
+	mutable XercesAttributeBridgeAllocator	m_attributeAllocator;
+#endif
 };
 
 

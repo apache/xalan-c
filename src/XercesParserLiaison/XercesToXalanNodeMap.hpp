@@ -91,8 +91,7 @@ public:
 	void
 	addAssociation(
 			const DOM_Node&		theXercesNode,
-			XalanNode*			theXalanNode,
-			bool				fAssignIndex);
+			XalanNode*			theXalanNode);
 
 	void
 	clear();
@@ -104,7 +103,7 @@ public:
 	}
 
 	XalanNode*
-	getNode(const NodeImpl*		theXercesNodeImpl) const
+	getNode(NodeImpl*	theXercesNodeImpl) const
 	{
 		const XercesNodeMapType::const_iterator		i =
 				m_xercesMap.find(theXercesNodeImpl);
@@ -115,7 +114,7 @@ public:
 		}
 		else
 		{
-			return i->second;
+			return (*i).second;
 		}
 	}
 
@@ -124,6 +123,8 @@ public:
 	{
 		return XercesDOM_NodeHack(getNodeImpl(theXalanNode));
 	}
+
+#if defined(XERCES_PARSER_LIASON_FAST_TWO_WAY_MAPPING)
 
 	NodeImpl*
 	getNodeImpl(const XalanNode*	theXalanNode) const
@@ -137,9 +138,16 @@ public:
 		}
 		else
 		{
-			return i->second.m_xercesNode;
+			return (*i).second;
 		}
 	}
+
+#else
+
+	NodeImpl*
+	getNodeImpl(const XalanNode*	theXalanNode) const;
+
+#endif
 
 	NodeImpl*
 	getNodeImpl(const DOM_Node&		theXercesNode) const
@@ -147,41 +155,20 @@ public:
 		return XercesDOM_NodeHack::getImpl(theXercesNode);
 	}
 
-	bool
-	isNodeAfter(
-			const XalanNode*	theFirstXercesNode,
-			const XalanNode*	theSecondXercesNode) const;
+#if defined(XALAN_NO_NAMESPACES)
+	typedef map<XalanNode*, NodeImpl*, less<XalanNode*> >	XalanNodeMapType;
+
+	typedef map<NodeImpl*, XalanNode*, less<NodeImpl*> >	XercesNodeMapType;
+#else
+	typedef std::map<XalanNode*, NodeImpl*>	XalanNodeMapType;
+
+	typedef std::map<NodeImpl*, XalanNode*>	XercesNodeMapType;
+#endif
 
 private:
 
-	struct XalanNodeMapEntryType
-	{
-		XalanNodeMapEntryType(
-			NodeImpl*		theXercesNode = 0,
-			unsigned long	theIndex = 0) :
-			m_xercesNode(theXercesNode),
-			m_index(theIndex)
-		{
-		}
-
-		NodeImpl*		m_xercesNode;
-		unsigned long	m_index;
-	};
-
-#if defined(XALAN_NO_NAMESPACES)
-	typedef map<const XalanNode*, XalanNodeMapEntryType>		XalanNodeMapType;
-
-	typedef map<const NodeImpl*, XalanNode*>					XercesNodeMapType;
-#else
-	typedef std::map<const XalanNode*, XalanNodeMapEntryType>	XalanNodeMapType;
-
-	typedef std::map<const NodeImpl*, XalanNode*>				XercesNodeMapType;
-#endif
-
 	XalanNodeMapType	m_xalanMap;
 	XercesNodeMapType	m_xercesMap;
-
-	unsigned long		m_counter;
 };
 
 

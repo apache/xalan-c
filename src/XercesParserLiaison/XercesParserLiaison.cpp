@@ -96,7 +96,7 @@ XercesParserLiaison::XercesParserLiaison(DOMSupport&	theSupport) :
 	m_shouldExpandEntityRefs(false),
 	m_useValidation(false),
 	m_includeIgnorableWhitespace(true),
-	m_doNamespaces(false),
+	m_doNamespaces(true),
 	m_exitOnFirstFatalError(true),
 	m_entityResolver(0),
 	m_errorHandler(this),
@@ -414,7 +414,7 @@ XercesParserLiaison::mapDocument(const XalanDocument*	theDocument) const
 	const DocumentMapType::const_iterator	i =
 		m_documentMap.find(theDocument);
 
-	return i != m_documentMap.end() ? i->second : 0;
+	return i != m_documentMap.end() ? (*i).second : 0;
 }
 
 
@@ -425,7 +425,7 @@ XercesParserLiaison::mapXercesDocument(const XalanDocument*		theDocument) const
 	const DocumentMapType::const_iterator	i =
 		m_documentMap.find(theDocument);
 
-	return i != m_documentMap.end() ? i->second->getXercesDocument() : DOM_Document();
+	return i != m_documentMap.end() ? (*i).second->getXercesDocument() : DOM_Document();
 }
 
 
@@ -516,7 +516,9 @@ XercesParserLiaison::CreateSAXParser()
 
 	theParser->setDoValidation(m_useValidation);
 
-	theParser->setDoNamespaces(m_doNamespaces);
+	// $$$ ToDo: For the time being, we cannot process namespaces
+	// with SAX due to the age of Xerces' SAX interfaces.
+//	theParser->setDoNamespaces(m_doNamespaces);
 
 	theParser->setExitOnFirstFatalError(m_exitOnFirstFatalError);
 

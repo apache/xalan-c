@@ -58,6 +58,10 @@
 
 
 
+#include <DOMSupport/DOMServices.hpp>
+
+
+
 #include "XercesDOMException.hpp"
 #include "XercesDocumentBridge.hpp"
 
@@ -313,6 +317,30 @@ XercesProcessingInstructionBridge::setPrefix(const XalanDOMString&	prefix)
 	{
 		throw XercesDOMException(theException);
 	}
+}
+
+
+
+bool
+XercesProcessingInstructionBridge::isIndexed() const
+{
+	return m_navigator.getOwnerDocument()->isIndexed();
+}
+
+
+
+unsigned long
+XercesProcessingInstructionBridge::getIndex() const
+{
+	return m_navigator.getIndex();
+}
+
+
+
+XalanDOMString
+XercesProcessingInstructionBridge::getXSLTData() const
+{
+	return DOMServices::getNodeData(*this);
 }
 
 

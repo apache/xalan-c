@@ -425,6 +425,15 @@ public:
 	virtual void
 	setPrefix(const XalanDOMString&	prefix);
 
+	virtual bool
+	isIndexed() const;
+
+	virtual unsigned long
+	getIndex() const;
+
+	virtual XalanDOMString
+	getXSLTData() const;
+
 	//@}
 
 	// These interfaces are inherited from XalanProcessingInstruction...

@@ -62,6 +62,10 @@
 
 
 
+#include <DOMSupport/DOMServices.hpp>
+
+
+
 #include "XercesDOMException.hpp"
 #include "XercesDocumentBridge.hpp"
 
@@ -323,6 +327,30 @@ XercesCDATASectionBridge::setPrefix(const XalanDOMString&	prefix)
 
 
 
+bool
+XercesCDATASectionBridge::isIndexed() const
+{
+	return m_navigator.getOwnerDocument()->isIndexed();
+}
+
+
+
+unsigned long
+XercesCDATASectionBridge::getIndex() const
+{
+	return m_navigator.getIndex();
+}
+
+
+
+XalanDOMString
+XercesCDATASectionBridge::getXSLTData() const
+{
+	return DOMServices::getNodeData(*this);
+}
+
+
+
 XalanDOMString
 XercesCDATASectionBridge::getData() const
 {
@@ -427,4 +455,12 @@ XalanText*
 XercesCDATASectionBridge::splitText(unsigned int	offset)
 {
 	return m_navigator.splitText(m_xercesNode, offset);
+}
+
+
+
+bool
+XercesCDATASectionBridge::isIgnorableWhitespace() const
+{
+	return isWhiteSpace(m_xercesNode.getData());
 }

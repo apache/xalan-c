@@ -60,6 +60,7 @@
 
 #include <algorithm>
 #include <cassert>
+#include <functional>
 
 
 
@@ -74,8 +75,7 @@
 
 XercesToXalanNodeMap::XercesToXalanNodeMap() :
 	m_xalanMap(),
-	m_xercesMap(),
-	m_counter(0)
+	m_xercesMap()
 {
 }
 
@@ -90,40 +90,18 @@ XercesToXalanNodeMap::~XercesToXalanNodeMap()
 void
 XercesToXalanNodeMap::addAssociation(
 			const DOM_Node&		theXercesNode,
-			XalanNode*			theXalanNode,
-			bool				fAssignIndex)
+			XalanNode*			theXalanNode)
 {
-	// Space the indices, just in case nodes are
-	// added.  With any luck, we may not need to
-	// reindex the nodes.
-	const unsigned long		theIncrement = 5;
-
 	NodeImpl* const		theImpl = XercesDOM_NodeHack::getImpl(theXercesNode);
 
 	m_xercesMap.insert(XercesNodeMapType::value_type(theImpl, theXalanNode));
 
+	// Keeping two-way indexes is very memory consumptive, and we don't
+	// need it now...
+#if defined(XERCES_PARSER_LIASON_FAST_TWO_WAY_MAPPING)
 	try
 	{
-		// Unindexed nodes are assigned an index of 0.
-		unsigned long	theIndex = 0;
-
-		// Have we been told to assign an index?
-		if (fAssignIndex == true)
-		{
-			// Never index attribute nodes or their childern...
-			if (theXalanNode->getNodeType() != XalanNode::ATTRIBUTE_NODE)
-			{
-				const XalanNode* const	theParent =
-					theXalanNode->getParentNode();
-
-				if (theParent == 0 || theParent->getNodeType() != XalanNode::ATTRIBUTE_NODE)
-				{
-					theIndex = m_counter += theIncrement;
-				}
-			}
-		}
-
-		m_xalanMap.insert(XalanNodeMapType::value_type(theXalanNode, XalanNodeMapEntryType(theImpl, theIndex)));
+		m_xalanMap.insert(XalanNodeMapType::value_type(theXalanNode, theImpl));
 	}
 	catch(...)
 	{
@@ -131,6 +109,7 @@ XercesToXalanNodeMap::addAssociation(
 
 		throw;
 	}
+#endif
 }
 
 
@@ -140,47 +119,55 @@ XercesToXalanNodeMap::clear()
 {
 	m_xalanMap.clear();
 	m_xercesMap.clear();
-
-	m_counter = 0;
 }
 
 
 
-bool
-XercesToXalanNodeMap::isNodeAfter(
-			const XalanNode*	theFirstXalanNode,
-			const XalanNode*	theSecondXalanNode) const
+#if !defined(XERCES_PARSER_LIASON_FAST_TWO_WAY_MAPPING)
+
+// I should be able to make this out of a
+// bunch of compose<> and select2nd<> adapters...
+
+class NameMapEqualsFunctor
 {
-	assert(theFirstXalanNode != 0);
-	assert(theSecondXalanNode != 0);
-	assert(theFirstXalanNode->getOwnerDocument() == theSecondXalanNode->getOwnerDocument());
+public:
 
-	bool fResult = false;
-
-	const XalanNodeMapType::const_iterator	i =
-			m_xalanMap.find(theFirstXalanNode);
-
-	if (i == m_xalanMap.end())
+	NameMapEqualsFunctor(const XalanNode*	theXalanNode) :
+		m_value(theXalanNode)
 	{
-		throw XalanDOMException(XalanDOMException::HIERARCHY_REQUEST_ERR);
+	}
+
+	bool
+	operator()(const XercesToXalanNodeMap::XercesNodeMapType::value_type&	thePair) const
+	{
+		return m_value == thePair.second;
+	}
+
+private:
+
+	const XalanNode*	m_value;
+};
+
+
+
+NodeImpl*
+XercesToXalanNodeMap::getNodeImpl(const XalanNode*	theXalanNode) const
+{
+	using std::find_if;
+
+	const XercesNodeMapType::const_iterator		i =
+		find_if(m_xercesMap.begin(),
+				m_xercesMap.end(),
+				NameMapEqualsFunctor(theXalanNode));
+
+	if (i != m_xercesMap.end())
+	{
+		return (*i).first;
 	}
 	else
 	{
-		const XalanNodeMapType::const_iterator	j =
-			m_xalanMap.find(theSecondXalanNode);
-
-		if (i == m_xalanMap.end())
-		{
-			throw XalanDOMException(XalanDOMException::HIERARCHY_REQUEST_ERR);
-		}
-		else
-		{
-			if (i->second.m_index > j->second.m_index)
-			{
-				fResult = true;
-			}
-		}
+		return 0;
 	}
-
-	return fResult;
 }
+
+#endif
