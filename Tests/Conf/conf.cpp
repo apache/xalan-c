@@ -96,16 +96,10 @@
 #include <crtdbg.h>
 #endif
 
-const char* const 	excludeStylesheets[] =
-{
-	"output22.xsl",
-	"entref01.xsl",
-	"select73.xsl",
-	"sort07.xsl",
-	0
-};
 
 FileUtility		futil;
+
+
 
 void
 printArgOptions()
@@ -270,12 +264,25 @@ getParams(int argc,
 }
 
 
-inline bool
-checkForExclusion(XalanDOMString currentFile)
+
+static const char* const 	excludeStylesheets[] =
 {
-	for (int i=0; excludeStylesheets[i] != 0; i++)
+	"output22.xsl",
+	"entref01.xsl",
+	"select73.xsl",
+	"sort07.xsl",
+	0
+};
+
+
+
+
+inline bool
+checkForExclusion(const XalanDOMString&		currentFile)
+{
+	for (size_t i = 0; excludeStylesheets[i] != 0; ++i)
 	{	
-		if (equals(currentFile, XalanDOMString(excludeStylesheets[i])))
+		if (equals(currentFile, excludeStylesheets[i]))
 		{
 			return true;
 		}
@@ -284,8 +291,10 @@ checkForExclusion(XalanDOMString currentFile)
 	return false;
 }
 
+
+
 void
-parseWithTransformer(int &sourceType, XalanTransformer &xalan, const XSLTInputSource &xmlInput, 
+parseWithTransformer(int sourceType, XalanTransformer &xalan, const XSLTInputSource &xmlInput, 
 					 const XalanCompiledStylesheet* styleSheet, const XSLTResultTarget &output, 
 					 XMLFileReporter &logFile)
 {
@@ -306,7 +315,7 @@ parseWithTransformer(int &sourceType, XalanTransformer &xalan, const XSLTInputSo
 	{
 		// Report the failure and be sure to increment fail count.
 		cout << "Failed to PARSE source document for " << futil.data.testOrFile << endl;
-		futil.data.fail += 1;
+		++futil.data.fail;
 		logFile.logErrorResult(futil.data.testOrFile, XalanDOMString("Failed to PARSE source document."));
 	}
 
@@ -317,39 +326,43 @@ parseWithTransformer(int &sourceType, XalanTransformer &xalan, const XSLTInputSo
 
 
 void
-parseWithXerces(int &sourceType, XalanTransformer &xalan, const XSLTInputSource &xmlInput, 
+parseWithXerces(int sourceType, XalanTransformer &xalan, const XSLTInputSource &xmlInput, 
 				const XalanCompiledStylesheet* styleSheet, const XSLTResultTarget &output, 
 				XMLFileReporter &logFile)
 {
 
-	const XercesDOMWrapperParsedSource* parsedSource = 0;
 	futil.data.xmlFormat = XalanDOMString("Xerces_DOM");
-	
+
 	DOMParser  theParser;
 	theParser.setToCreateXMLDeclTypeNode(false);
+	theParser.setDoValidation(true);
+	theParser.setDoNamespaces(true);
 
 	theParser.parse(xmlInput);
-	const DOM_Document theDOM = theParser.getDocument();
+	DOM_Document theDOM = theParser.getDocument();
+
+	theDOM.normalize();
 
 	XercesDOMSupport	theDOMSupport;
 	XercesParserLiaison theParserLiaison(theDOMSupport);
 
-	parsedSource = new XercesDOMWrapperParsedSource(theDOM, 
-								 theParserLiaison, 
-								 theDOMSupport, 
-								 XalanDOMString(xmlInput.getSystemId()));
+	try
+	{
+		 const XercesDOMWrapperParsedSource		parsedSource(
+					theDOM, 
+					theParserLiaison, 
+					theDOMSupport, 
+					XalanDOMString(xmlInput.getSystemId()));
 
-	if (parsedSource == 0)
+		xalan.transform(parsedSource, styleSheet, output);
+	}
+	catch(...)
 	{
 		// Report the failure and be sure to increment fail count.
 		cout << "Failed to PARSE source document for " << futil.data.testOrFile << endl;
-		futil.data.fail += 1;
+		++futil.data.fail;
 		logFile.logErrorResult(futil.data.testOrFile, XalanDOMString("Failed to PARSE source document."));
 	}
-
-	xalan.transform(*parsedSource, styleSheet, output);
-	delete parsedSource;
-
 }
 
 int
@@ -380,8 +393,7 @@ main(
 		XalanTransformer xalan;
 
 		// Generate Unique Run id and processor info
-		const XalanDOMString& UniqRunid = futil.generateUniqRunid();
-
+		const XalanDOMString	UniqRunid = futil.generateUniqRunid();
 
 		// Defined basic constants for file manipulation and open results file
 		const XalanDOMString  drive(futil.getDrive());
