@@ -236,7 +236,6 @@ public:
 	static const XalanDOMString	ELEMNAME_VARIABLE_STRING;
 	static const XalanDOMString	ELEMNAME_WHEN_STRING;
 	static const XalanDOMString	ELEMNAME_COMPONENT_STRING;
-	static const XalanDOMString	ELEMNAME_CSSSTYLECONVERSION_STRING;
 	static const XalanDOMString	ELEMNAME_OUTPUT_STRING;
 	static const XalanDOMString	ELEMNAME_PARAMVARIABLE_STRING;
 	static const XalanDOMString	ELEMNAME_PI_OLD_STRING;
