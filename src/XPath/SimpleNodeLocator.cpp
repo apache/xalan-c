@@ -129,17 +129,17 @@ SimpleNodeLocator::step(
 		xpath.getExpression();
 
 	// int endStep = xpath.getNextOpPos(opPos);
-	const int			stepType =
+	const int	stepType =
 		currentExpression.getOpCodeMapValue(opPos);
 
-	int 				argLen = 0;
+	int 		argLen = 0;
 
 	typedef XPathExecutionContext::BorrowReturnMutableNodeRefList	BorrowReturnMutableNodeRefList;
 
 	BorrowReturnMutableNodeRefList	subQueryResults(executionContext);
 
-	bool				shouldReorder = false;
-	bool				continueStepRecursion = true;
+	bool	shouldReorder = false;
+	bool	continueStepRecursion = true;
 
 	switch(stepType)
 	{
@@ -431,16 +431,18 @@ SimpleNodeLocator::stepPattern(
 				    (prevStepType == XPathExpression::eMATCH_ANY_ANCESTOR ||
 					 prevStepType == XPathExpression::eMATCH_ANY_ANCESTOR_WITH_PREDICATE))
 				{
+					const NodeTester	theTester(
+									xpath,
+									executionContext,
+									opPos,
+									argLen,
+									stepType);
+
 					while(0 != context)
 					{
-						score = nodeTest(
-							xpath,
-							executionContext,
-							context,
-							context->getNodeType(),
-							opPos,
-							argLen,
-							stepType);
+						score =
+							theTester(*context, context->getNodeType());
+							assert(score == nodeTest(xpath, executionContext, context, context->getNodeType(), opPos, argLen, stepType));
 
 						if(XPath::eMatchScoreNone != score)
 							break;
@@ -461,13 +463,20 @@ SimpleNodeLocator::stepPattern(
 
 			opPos += 3;
 
-			score = nodeTest(xpath,
+			score = NodeTester(
+							xpath,
+							executionContext,
+							opPos,
+							argLen,
+							XPathExpression::eFROM_ATTRIBUTES)(*context, context->getNodeType());
+
+			assert(score == nodeTest(xpath,
 							 executionContext,
 							 context,
 							 context->getNodeType(),
 							 opPos,
 							 argLen,
-							 XPathExpression::eFROM_ATTRIBUTES);
+							 XPathExpression::eFROM_ATTRIBUTES));
 		}
 		break;
 
@@ -485,9 +494,17 @@ SimpleNodeLocator::stepPattern(
 			{
 				opPos += 3;
 
+				const NodeTester	theTester(
+									xpath,
+									executionContext,
+									opPos,
+									argLen,
+									stepType);
+
 				for(;;)
 				{
-					score = nodeTest(xpath, executionContext, context, nodeType, opPos, argLen, stepType);
+					score = theTester(*context, nodeType);
+					assert(score == nodeTest(xpath, executionContext, context, nodeType, opPos, argLen, stepType));
 
 					if(XPath::eMatchScoreNone != score)
 						break;
@@ -516,7 +533,20 @@ SimpleNodeLocator::stepPattern(
 			{
 				opPos += 3;
 
-				score = nodeTest(xpath, executionContext, context, nodeType, opPos, argLen, stepType);
+				score = NodeTester(
+								xpath,
+								executionContext,
+								opPos,
+								argLen,
+								XPathExpression::eMATCH_IMMEDIATE_ANCESTOR)(*context, nodeType);
+
+				assert(score == nodeTest(xpath,
+								 executionContext,
+								 context,
+								 nodeType,
+								 opPos,
+								 argLen,
+								 XPathExpression::eMATCH_IMMEDIATE_ANCESTOR));
 			}
 		}
 		break;
@@ -684,15 +714,15 @@ SimpleNodeLocator::findParent(
 			int 					stepType,
 			MutableNodeRefList& 	subQueryResults)
 {
+	assert(context != 0);
+
 	const XPathExpression&	currentExpression =
-		xpath.getExpression();
+			xpath.getExpression();
 
 	// $$ ToDO: Can we reduce this to some call on the
 	// XPathExpression interface?
 	const int	argLen =
-		currentExpression.getOpCodeMapValue(opPos + XPathExpression::s_opCodeMapLengthIndex + 1) - 3;
-
-	opPos += 3;
+			currentExpression.getOpCodeMapValue(opPos + XPathExpression::s_opCodeMapLengthIndex + 1) - 3;
 
 	XalanNode* const	theParent = DOMServices::getParentOfNode(*context);
 
@@ -700,13 +730,17 @@ SimpleNodeLocator::findParent(
 	{
 		if(argLen > 0)
 		{
-			const XPath::eMatchScore	score = nodeTest(xpath,
-											 executionContext,
-											 theParent,
-											 theParent->getNodeType(),
-											 opPos,
-											 argLen,
-											 stepType);
+			opPos += 3;
+
+			const NodeTester	theTester(
+							xpath,
+							executionContext,
+							opPos,
+							argLen,
+							stepType);
+
+			const XPath::eMatchScore	score = theTester(*theParent, theParent->getNodeType());
+			assert(score == nodeTest(xpath, executionContext, theParent, theParent->getNodeType(), opPos, argLen, stepType));
 
 			if(XPath::eMatchScoreNone != score)
 			{
@@ -735,6 +769,8 @@ SimpleNodeLocator::findSelf(
 			int 					stepType,
 			MutableNodeRefList& 	subQueryResults)
 {
+	assert(context != 0);
+
 	const XPathExpression&	currentExpression =
 		xpath.getExpression();
 
@@ -743,26 +779,29 @@ SimpleNodeLocator::findSelf(
 	const int	argLen =
 		currentExpression.getOpCodeMapValue(opPos + XPathExpression::s_opCodeMapLengthIndex + 1) - 3;
 
-	opPos += 3;
-
-	if(argLen > 0)
+	if(argLen == 0)
 	{
-		const XPath::eMatchScore	score = nodeTest(xpath,
-										 executionContext,
-										 context,
-			 							 context->getNodeType(),
-										 opPos,
-										 argLen,
-										 stepType);
+		subQueryResults.addNode(context);
+	}
+	else
+	{
+		opPos += 3;
+
+		const NodeTester	theTester(
+						xpath,
+						executionContext,
+						opPos,
+						argLen,
+						stepType);
+
+		const XPath::eMatchScore	score =
+			theTester(*context, context->getNodeType());
+			assert(score == nodeTest(xpath, executionContext, context, context->getNodeType(), opPos, argLen, stepType));
 
 		if(XPath::eMatchScoreNone != score)
 		{
 			subQueryResults.addNode(context);
 		}
-	}
-	else
-	{
-		subQueryResults.addNode(context);
 	}
 
 	subQueryResults.setDocumentOrder();
@@ -781,38 +820,45 @@ SimpleNodeLocator::findAncestors(
 			int 					stepType,
 			MutableNodeRefList& 	subQueryResults)
 {
-	const XPathExpression&	currentExpression =
-		xpath.getExpression();
+	assert(context != 0);
 
-	XalanNode*				contextNode =
-		DOMServices::getParentOfNode(*context);
+	context = DOMServices::getParentOfNode(*context);
+
+	const XPathExpression&	currentExpression =
+			xpath.getExpression();
 
 	// $$ ToDO: Can we reduce this to some call on the
 	// XPathExpression interface?
 	const int	argLen =
-		currentExpression.getOpCodeMapValue(opPos + XPathExpression::s_opCodeMapLengthIndex + 1) - 3;
+			currentExpression.getOpCodeMapValue(opPos + XPathExpression::s_opCodeMapLengthIndex + 1) - 3;
 
-	opPos += 3;
-
-	while(0 != contextNode)
+	if (context != 0)
 	{
-		const XPath::eMatchScore	score = nodeTest(xpath,
-										 executionContext,
-										 contextNode,
-										 contextNode->getNodeType(),
-										 opPos,
-										 argLen,
-										 stepType);
+		opPos += 3;
 
-		if(XPath::eMatchScoreNone != score)
+		const NodeTester	theTester(
+						xpath,
+						executionContext,
+						opPos,
+						argLen,
+						stepType);
+
+		do
 		{
-			subQueryResults.addNode(contextNode);
-		}
+			const XPath::eMatchScore	score =
+				theTester(*context, context->getNodeType());
+				assert(score == nodeTest(xpath, executionContext, context, context->getNodeType(), opPos, argLen, stepType));
 
-		contextNode = DOMServices::getParentOfNode(*contextNode);
+			if(XPath::eMatchScoreNone != score)
+			{
+				subQueryResults.addNode(context);
+			}
+
+			context = DOMServices::getParentOfNode(*context);
+		} while(0 != context);
+
+		subQueryResults.setReverseDocumentOrder();
 	}
-
-	subQueryResults.setReverseDocumentOrder();
 
 	return argLen + 3;
 }
@@ -828,13 +874,11 @@ SimpleNodeLocator::findAncestorsOrSelf(
 			int 					stepType,
 			MutableNodeRefList& 	subQueryResults)
 {
-	// $$ ToDO: Can this function be reduced to calling
-	// findSelf() and findAncestors()?	I would think so...
+	assert(context != 0);
 
 	const XPathExpression&	currentExpression =
 		xpath.getExpression();
 
-	XalanNode*				contextNode = context;
 
 	// $$ ToDO: Can we reduce this to some call on the
 	// XPathExpression interface?
@@ -843,23 +887,26 @@ SimpleNodeLocator::findAncestorsOrSelf(
 
 	opPos += 3;
 
-	while(0 != contextNode)
+	const NodeTester	theTester(
+					xpath,
+					executionContext,
+					opPos,
+					argLen,
+					stepType);
+
+	do
 	{
-		const XPath::eMatchScore	score = nodeTest(xpath,
-										 executionContext,
-										 contextNode,
-										 contextNode->getNodeType(),
-										 opPos,
-										 argLen,
-										 stepType);
+		const XPath::eMatchScore	score =
+				theTester(*context, context->getNodeType());
+				assert(score == nodeTest(xpath, executionContext, context, context->getNodeType(), opPos, argLen, stepType));
 
 		if(XPath::eMatchScoreNone != score)
 		{
-			subQueryResults.addNode(contextNode);
+			subQueryResults.addNode(context);
 		}
 
-		contextNode = DOMServices::getParentOfNode(*contextNode);
-	}
+		context = DOMServices::getParentOfNode(*context);
+	} while(0 != context);
 
 	subQueryResults.setReverseDocumentOrder();
 
@@ -877,24 +924,19 @@ SimpleNodeLocator::findAttributes(
 			int 					stepType,
 			MutableNodeRefList& 	subQueryResults)
 {
+	assert(context != 0);
+
 	const XPathExpression&	currentExpression =
-		xpath.getExpression();
+				xpath.getExpression();
 
 	// $$ ToDO: Can we reduce this to some call on the
 	// XPathExpression interface?
 	const int	argLen =
-		currentExpression.getOpCodeMapValue(opPos + XPathExpression::s_opCodeMapLengthIndex + 1) - 3;
+				currentExpression.getOpCodeMapValue(opPos + XPathExpression::s_opCodeMapLengthIndex + 1) - 3;
 
-	if(0 != context && context->getNodeType() == XalanNode::ELEMENT_NODE)
+	if(context->getNodeType() == XalanNode::ELEMENT_NODE)
 	{
-		const XalanElement* const		e =
-#if defined(XALAN_OLD_STYLE_CASTS)
-					(const XalanElement*)context;
-#else
-					static_cast<const XalanElement*>(context);
-#endif
-
-		const XalanNamedNodeMap* const	attributeList = e->getAttributes();
+		const XalanNamedNodeMap* const	attributeList = context->getAttributes();
 
 		if(attributeList != 0) 
 		{
@@ -902,22 +944,28 @@ SimpleNodeLocator::findAttributes(
 
 			const unsigned int	nAttrs = attributeList->getLength();
 
-			for(unsigned int j = 0; j < nAttrs; j++)
+			if (nAttrs != 0)
 			{
-				XalanNode* const	theNode = attributeList->item(j);
-				assert(theNode != 0 && theNode->getNodeType() == XalanNode::ATTRIBUTE_NODE);
+				const NodeTester	theTester(
+								xpath,
+								executionContext,
+								opPos,
+								argLen,
+								stepType);
 
-				const XPath::eMatchScore	score = nodeTest(xpath,
-												 executionContext,
-												 theNode,
-												 XalanNode::ATTRIBUTE_NODE,
-												 opPos,
-												 argLen,
-												 stepType);
-
-				if(XPath::eMatchScoreNone != score)
+				for(unsigned int j = 0; j < nAttrs; j++)
 				{
-					subQueryResults.addNode(theNode);
+					XalanNode* const	theNode = attributeList->item(j);
+					assert(theNode != 0 && theNode->getNodeType() == XalanNode::ATTRIBUTE_NODE);
+
+					const XPath::eMatchScore	score =
+						theTester(*theNode, XalanNode::ATTRIBUTE_NODE);
+						assert(score == nodeTest(xpath, executionContext, theNode, XalanNode::ATTRIBUTE_NODE, opPos, argLen, stepType));
+
+					if(XPath::eMatchScoreNone != score)
+					{
+						subQueryResults.addNode(theNode);
+					}
 				}
 			}
 		}
@@ -937,6 +985,10 @@ SimpleNodeLocator::findChildren(
 			int 					stepType,
 			MutableNodeRefList& 	subQueryResults)
 {
+	assert(context != 0);
+
+	XalanNode*	child = context->getFirstChild();
+
 	const XPathExpression&	currentExpression =
 		xpath.getExpression();
 
@@ -945,29 +997,33 @@ SimpleNodeLocator::findChildren(
 	const int	argLen =
 		currentExpression.getOpCodeMapValue(opPos + XPathExpression::s_opCodeMapLengthIndex + 1) - 3;
 
-	opPos += 3;
-
-	XalanNode*	child = context->getFirstChild();
-
-	while(0 != child)
+	if (child != 0)
 	{
-		const XPath::eMatchScore	score = nodeTest(xpath,
-										 executionContext,
-										 child,
-										 child->getNodeType(),
-										 opPos,
-										 argLen,
-										 stepType);
+		opPos += 3;
 
-		if(XPath::eMatchScoreNone != score)
+		const NodeTester	theTester(
+						xpath,
+						executionContext,
+						opPos,
+						argLen,
+						stepType);
+
+		do
 		{
-			subQueryResults.addNode(child);
-		}
+			const XPath::eMatchScore	score =
+					theTester(*child, child->getNodeType());
+					assert(score == nodeTest(xpath, executionContext, child, child->getNodeType(), opPos, argLen, stepType));
 
-		child = child->getNextSibling();
+			if(XPath::eMatchScoreNone != score)
+			{
+				subQueryResults.addNode(child);
+			}
+
+			child = child->getNextSibling();
+		} while(0 != child);
+
+		subQueryResults.setDocumentOrder();
 	}
-
-	subQueryResults.setDocumentOrder();
 
 	return argLen + 3;
 }
@@ -983,6 +1039,8 @@ SimpleNodeLocator::findDescendants(
 			int 					stepType,
 			MutableNodeRefList& 	subQueryResults)
 {
+	assert(context != 0);
+
 	const XPathExpression&	currentExpression =
 		xpath.getExpression();
 
@@ -991,24 +1049,28 @@ SimpleNodeLocator::findDescendants(
 	const int	argLen =
 		currentExpression.getOpCodeMapValue(opPos + XPathExpression::s_opCodeMapLengthIndex + 1) - 3;
 
-	opPos += 3;
-
 	// Perform a pre-order traversal of descendents...
 	XalanNode*	pos = context;
 
-	while(0 != pos)
+	opPos += 3;
+
+	const NodeTester	theTester(
+						xpath,
+						executionContext,
+						opPos,
+						argLen,
+						stepType);
+
+	do
 	{					
 		if(stepType == XPathExpression::eFROM_DESCENDANTS_OR_SELF ||
 		   context != pos)
 		{
-			if(XPath::eMatchScoreNone != nodeTest(
-						xpath,
-						executionContext,
-						pos,
-						pos->getNodeType(),
-						opPos,
-						argLen,
-						stepType))
+			const XPath::eMatchScore	score =
+				theTester(*pos, pos->getNodeType());
+				assert(score == nodeTest(xpath, executionContext, pos, pos->getNodeType(), opPos, argLen, stepType));
+
+			if(score != XPath::eMatchScoreNone)
 			{
 				subQueryResults.addNode(pos);
 			}
@@ -1036,7 +1098,7 @@ SimpleNodeLocator::findDescendants(
 		}
 
 		pos = nextNode;
-	}
+	} while(0 != pos);
 
 	subQueryResults.setDocumentOrder();
 
@@ -1054,6 +1116,8 @@ SimpleNodeLocator::findFollowing(
 			int 					stepType,
 			MutableNodeRefList& 	subQueryResults)
 {
+	assert(context != 0);
+
 	const XPathExpression&	currentExpression =
 		xpath.getExpression();
 
@@ -1069,19 +1133,22 @@ SimpleNodeLocator::findFollowing(
 
 	XalanNode*				pos = context;
 
+	const NodeTester	theTester(
+					xpath,
+					executionContext,
+					opPos,
+					argLen,
+					stepType);
+
 	while(0 != pos)
 	{
 		XalanNode*	nextNode = 0;
 
 		if(pos != context)
 		{
-			const XPath::eMatchScore	score = nodeTest(xpath,
-											 executionContext,
-											 pos,
-											 pos->getNodeType(),
-											 opPos,
-											 argLen,
-											 stepType);
+			const XPath::eMatchScore	score =
+				theTester(*pos, pos->getNodeType());
+				assert(score == nodeTest(xpath, executionContext, pos, pos->getNodeType(), opPos, argLen, stepType));
 
 			if(XPath::eMatchScoreNone != score)
 			{
@@ -1147,6 +1214,8 @@ SimpleNodeLocator::findFollowingSiblings(
 			int 					stepType,
 			MutableNodeRefList& 	subQueryResults)
 {
+	assert(context != 0);
+
 	const XPathExpression&	currentExpression =
 		xpath.getExpression();
 
@@ -1155,29 +1224,35 @@ SimpleNodeLocator::findFollowingSiblings(
 	const int	argLen =
 		currentExpression.getOpCodeMapValue(opPos + XPathExpression::s_opCodeMapLengthIndex + 1) - 3;
 
-	opPos += 3;
-
 	XalanNode*	pos = context->getNextSibling();
 
-	while(0 != pos)
+	if (pos != 0)
 	{
-		const XPath::eMatchScore	score = nodeTest(xpath,
-										 executionContext,
-										 pos,
-										 pos->getNodeType(),
-										 opPos,
-										 argLen,
-										 stepType);
+		opPos += 3;
 
-		if(XPath::eMatchScoreNone != score)
+		const NodeTester	theTester(
+						xpath,
+						executionContext,
+						opPos,
+						argLen,
+						stepType);
+
+		do
 		{
-			subQueryResults.addNode(pos);
-		}
+			const XPath::eMatchScore	score =
+					theTester(*pos, pos->getNodeType());
+					assert(score == nodeTest(xpath, executionContext, pos, pos->getNodeType(), opPos, argLen, stepType));
 
-		pos = pos->getNextSibling();
+			if(XPath::eMatchScoreNone != score)
+			{
+				subQueryResults.addNode(pos);
+			}
+
+			pos = pos->getNextSibling();
+		} while(0 != pos);
+
+		subQueryResults.setDocumentOrder();
 	}
-
-	subQueryResults.setDocumentOrder();
 
 	return argLen + 3;
 }
@@ -1193,6 +1268,8 @@ SimpleNodeLocator::findPreceeding(
 			int 					stepType,
 			MutableNodeRefList& 	subQueryResults)
 {
+	assert(context != 0);
+
 	const XPathExpression&	currentExpression =
 		xpath.getExpression();
 
@@ -1217,6 +1294,13 @@ SimpleNodeLocator::findPreceeding(
 	const XalanNode* const	theAttributeContextParent =
 		contextIsAttribute == true ? DOMServices::getParentOfNode(*context) : 0;
 
+	const NodeTester	theTester(
+						xpath,
+						executionContext,
+						opPos,
+						argLen,
+						stepType);
+
 	while(0 != pos)
 	{
 		if(context == pos)
@@ -1224,13 +1308,9 @@ SimpleNodeLocator::findPreceeding(
 			break;
 		}
 
-		const double	score = nodeTest(xpath,
-										 executionContext,
-										 pos,
-										 pos->getNodeType(),
-										 opPos,
-										 argLen,
-										 stepType);
+		const XPath::eMatchScore	score =
+				theTester(*pos, pos->getNodeType());
+				assert(score == nodeTest(xpath, executionContext, pos, pos->getNodeType(), opPos, argLen, stepType));
 
 		if(XPath::eMatchScoreNone != score)
 		{
@@ -1311,6 +1391,8 @@ SimpleNodeLocator::findPreceedingSiblings(
 			int 					stepType,
 			MutableNodeRefList& 	subQueryResults)
 {
+	assert(context != 0);
+
 	const XPathExpression&	currentExpression =
 		xpath.getExpression();
 
@@ -1319,29 +1401,35 @@ SimpleNodeLocator::findPreceedingSiblings(
 	const int	argLen =
 		currentExpression.getOpCodeMapValue(opPos + XPathExpression::s_opCodeMapLengthIndex + 1) - 3;
 
-	opPos += 3;
-
 	XalanNode*	pos = context->getPreviousSibling();
 
-	while(0 != pos)
+	if (pos != 0)
 	{
-		const double	score = nodeTest(xpath,
-										 executionContext,
-										 pos,
-										 pos->getNodeType(),
-										 opPos,
-										 argLen,
-										 stepType);
+		opPos += 3;
 
-		if(XPath::eMatchScoreNone != score)
+		const NodeTester	theTester(
+						xpath,
+						executionContext,
+						opPos,
+						argLen,
+						stepType);
+
+		do
 		{
-			subQueryResults.addNode(pos);
-		}
+			const XPath::eMatchScore	score = 
+				theTester(*pos, pos->getNodeType());
+				assert(score == nodeTest(xpath, executionContext, pos, pos->getNodeType(), opPos, argLen, stepType));
 
-		pos = pos->getPreviousSibling();
+			if(XPath::eMatchScoreNone != score)
+			{
+				subQueryResults.addNode(pos);
+			}
+
+			pos = pos->getPreviousSibling();
+		} while(0 != pos);
+
+		subQueryResults.setReverseDocumentOrder();
 	}
-
-	subQueryResults.setReverseDocumentOrder();
 
 	return argLen + 3;
 }
@@ -1357,6 +1445,8 @@ SimpleNodeLocator::findNamespace(
 			int 					stepType,
 			MutableNodeRefList& 	subQueryResults)
 {
+	assert(context != 0);
+
 	const XPathExpression&	currentExpression =
 		xpath.getExpression();
 
@@ -1365,16 +1455,23 @@ SimpleNodeLocator::findNamespace(
 	const int	argLen =
 		currentExpression.getOpCodeMapValue(opPos + XPathExpression::s_opCodeMapLengthIndex + 1) - 3;
 
-	opPos += 3;
-
-	if(context != 0 && context->getNodeType() == XalanNode::ELEMENT_NODE)
+	if(context->getNodeType() == XalanNode::ELEMENT_NODE)
 	{
+		opPos += 3;
+
 		// Look up the element chain until we hit the document, so that we
 		// get all of the attribute/namespace nodes.
 		const XalanNode* const	theOwnerDocument = context->getOwnerDocument();
 		assert(theOwnerDocument != 0);
 
 		const XalanNode*		theCurrentNode = context;
+
+		const NodeTester	theTester(
+						xpath,
+						executionContext,
+						opPos,
+						argLen,
+						stepType);
 
 		do
 		{
@@ -1397,13 +1494,11 @@ SimpleNodeLocator::findNamespace(
 					if (startsWith(theNodeName, DOMServices::s_XMLNamespaceWithSeparator) == true ||
 						equals(theNodeName, DOMServices::s_XMLNamespace) == true)
 					{
-						if(nodeTest(xpath,
-									executionContext,
-									attr,
-									XalanNode::ATTRIBUTE_NODE,
-									opPos,
-									argLen,
-									stepType) != XPath::eMatchScoreNone)
+						const XPath::eMatchScore	score =
+							theTester(*attr, XalanNode::ATTRIBUTE_NODE);
+							assert(score == nodeTest(xpath, executionContext, attr, XalanNode::ATTRIBUTE_NODE, opPos, argLen, stepType));
+
+						if(score != XPath::eMatchScoreNone)
 						{
 							subQueryResults.addNode(attr);
 						}
@@ -1484,14 +1579,14 @@ SimpleNodeLocator::nodeTest(
 	case XPathExpression::eNODETYPE_PI:
 		if(XalanNode::PROCESSING_INSTRUCTION_NODE == nodeType)
 		{
-			opPos++;
-
 			if(argLen == 1)
 			{
 				score = XPath::eMatchScoreNodeTest;
 			}
 			else if(argLen == 2)
 			{
+				opPos++;
+
 				const int				tokenPosition =
 					currentExpression.getOpCodeMapValue(opPos);
 
@@ -1778,4 +1873,562 @@ SimpleNodeLocator::predicates(
 	}
 
 	endPredicatesPos = opPos;
+}
+
+
+
+inline const XalanDOMString*
+getStringFromTokenQueue(
+			const XPathExpression&	expression,
+			int						opPos)
+{
+	const int	tokenPosition =
+				expression.getOpCodeMapValue(opPos);
+
+	if (tokenPosition < 0)
+	{
+		return 0;
+	}
+	else
+	{
+		const XObject* const	token =
+					expression.getToken(tokenPosition);
+		assert(token != 0);
+
+		return &token->str();
+	}
+}
+
+
+
+SimpleNodeLocator::NodeTester::NodeTester(
+			const XPath&			xpath,
+			XPathExecutionContext&	executionContext,
+			int 					opPos,
+			int 					argLen,
+			int 					stepType) :
+	m_executionContext(executionContext),
+	m_targetNamespace(0),
+	m_targetLocalName(0),
+	m_testFunction(0)
+{
+	const XPathExpression&	theExpression = xpath.getExpression();
+
+	switch(theExpression.getOpCodeMapValue(opPos))
+	{
+	case XPathExpression::eNODETYPE_COMMENT:
+		m_testFunction = NodeTester::testComment;
+		break;
+
+	case XPathExpression::eNODETYPE_TEXT:
+		m_testFunction = NodeTester::testText;
+		break;
+
+	case XPathExpression::eNODETYPE_PI:
+		if (argLen == 1)
+		{
+			m_testFunction = NodeTester::testPI;
+		}
+		else if(argLen == 2)
+		{
+			m_testFunction = NodeTester::testPIName;
+
+			m_targetLocalName = getStringFromTokenQueue(
+				theExpression,
+				opPos + 1);
+		}
+		else
+		{
+			executionContext.error(TranscodeFromLocalCodePage("Arg length of processing-instruction() node test is incorrect!"));
+		}
+		break;
+
+	case XPathExpression::eNODETYPE_NODE:
+		m_testFunction = NodeTester::testNode;
+		break;
+
+	case XPathExpression::eNODETYPE_ROOT:
+		m_testFunction = NodeTester::testRoot;
+		break;
+
+	case XPathExpression::eNODENAME:
+		{
+			bool	isTotallyWild = false;
+
+			m_targetNamespace = getStringFromTokenQueue(
+					theExpression,
+					opPos + 1);
+
+			if (m_targetNamespace == 0 &&
+				theExpression.getOpCodeMapValue(opPos + 2) == XPathExpression::eELEMWILDCARD)
+			{
+				isTotallyWild = true;
+			}
+			else
+			{
+				m_targetLocalName = getStringFromTokenQueue(
+					theExpression,
+					opPos + 2);
+			}
+
+			if(stepType == XPathExpression::eFROM_ATTRIBUTES)
+			{
+				if (isTotallyWild == true)
+				{
+					m_testFunction = NodeTester::testAttributeTotallyWild;
+				}
+				else if (m_targetNamespace == 0)
+				{
+					assert(m_targetLocalName != 0);
+
+					m_testFunction = NodeTester::testAttributeNCName;
+				}
+				else if (m_targetLocalName == 0)
+				{
+					assert(m_targetNamespace != 0);
+
+					m_testFunction = NodeTester::testAttributeNamespaceOnly;
+				}
+				else
+				{
+					assert(m_targetNamespace != 0 && m_targetLocalName != 0);
+
+
+					m_testFunction = NodeTester::testAttributeQName;
+				}
+			}
+			else if (stepType == XPathExpression::eFROM_NAMESPACE)
+			{
+				if (isTotallyWild == true)
+				{
+					m_testFunction = NodeTester::testNamespaceTotallyWild;
+				}
+				else
+				{
+					m_testFunction = NodeTester::testNamespaceNCName;
+				}
+			}
+			else
+			{
+				if (isTotallyWild == true)
+				{
+					m_testFunction = NodeTester::testElementTotallyWild;
+				}
+				else if (m_targetNamespace == 0)
+				{
+					m_testFunction = NodeTester::testElementNCName;
+				}
+				else if (m_targetLocalName == 0)
+				{
+					assert(m_targetNamespace != 0);
+
+					m_testFunction = NodeTester::testElementNamespaceOnly;
+				}
+				else
+				{
+					assert(m_targetNamespace != 0 && m_targetLocalName != 0);
+
+					m_testFunction = NodeTester::testElementQName;
+				}
+			}
+		}
+		break;
+
+	default:
+		m_testFunction = NodeTester::testDefault;
+		break;
+	}
+
+	assert(m_testFunction != 0);
+}
+
+
+
+XPath::eMatchScore
+SimpleNodeLocator::NodeTester::testComment(
+			const XalanNode& 		/* context */,
+			XalanNode::NodeType		nodeType) const
+{
+	if (XalanNode::COMMENT_NODE == nodeType)
+	{
+		return XPath::eMatchScoreNodeTest;
+	}
+	else
+	{
+		return XPath::eMatchScoreNone;
+	}
+}
+
+
+
+XPath::eMatchScore
+SimpleNodeLocator::NodeTester::testText(
+			const XalanNode& 		context,
+			XalanNode::NodeType		nodeType) const
+{
+	if ((XalanNode::CDATA_SECTION_NODE == nodeType ||
+		 XalanNode::TEXT_NODE == nodeType) &&
+			m_executionContext.shouldStripSourceNode(context) == false)
+	{
+		return XPath::eMatchScoreNodeTest;
+	}
+	else
+	{
+		return XPath::eMatchScoreNone;
+	}
+}
+
+
+
+XPath::eMatchScore
+SimpleNodeLocator::NodeTester::testPI(
+			const XalanNode& 		/* context */,
+			XalanNode::NodeType		nodeType) const
+{
+	if (XalanNode::PROCESSING_INSTRUCTION_NODE == nodeType)
+	{
+		return XPath::eMatchScoreNodeTest;
+	}
+	else
+	{
+		return XPath::eMatchScoreNone;
+	}
+}
+
+
+
+XPath::eMatchScore
+SimpleNodeLocator::NodeTester::testPIName(
+			const XalanNode& 		context,
+			XalanNode::NodeType		nodeType) const
+{
+	assert(m_targetLocalName != 0);
+
+	if (XalanNode::PROCESSING_INSTRUCTION_NODE == nodeType &&
+		equals(context.getNodeName(), *m_targetLocalName) == true)
+	{
+		return XPath::eMatchScoreQName;
+	}
+	else
+	{
+		return XPath::eMatchScoreNone;
+	}
+}
+
+
+
+XPath::eMatchScore
+SimpleNodeLocator::NodeTester::testNode(
+			const XalanNode& 		context,
+			XalanNode::NodeType		nodeType) const
+{
+	if (nodeType != XalanNode::CDATA_SECTION_NODE &&
+		nodeType != XalanNode::TEXT_NODE)
+	{
+		return XPath::eMatchScoreNodeTest;
+	}
+	else if (shouldStripSourceNode(context) == false)
+	{
+		return XPath::eMatchScoreNodeTest;
+	}
+	else
+	{
+		return XPath::eMatchScoreNone;
+	}
+}
+
+
+
+XPath::eMatchScore
+SimpleNodeLocator::NodeTester::testRoot(
+			const XalanNode& 		/* context */,
+			XalanNode::NodeType		nodeType) const
+{
+	if (XalanNode::DOCUMENT_FRAGMENT_NODE == nodeType ||
+		XalanNode::DOCUMENT_NODE == nodeType)
+	{
+		return XPath::eMatchScoreOther;
+	}
+	else
+	{
+		return XPath::eMatchScoreNone;
+	}
+}
+
+
+
+inline bool
+isNamespaceDeclaration(const XalanNode&		theAttributeNode)
+{
+	assert(theAttributeNode.getNodeType() == XalanNode::ATTRIBUTE_NODE);
+
+#if defined(XALAN_OLD_STYLE_CASTS)
+	return DOMServices::isNamespaceDeclaration((const XalanAttr&)theAttributeNode);
+#else
+	return DOMServices::isNamespaceDeclaration(static_cast<const XalanAttr&>(theAttributeNode));
+#endif
+}
+
+
+
+XPath::eMatchScore
+SimpleNodeLocator::NodeTester::testAttributeNCName(
+			const XalanNode& 		context,
+			XalanNode::NodeType		nodeType) const
+{
+	assert(m_targetNamespace == 0 && m_targetLocalName != 0);
+
+	if (XalanNode::ATTRIBUTE_NODE != nodeType ||
+		isNamespaceDeclaration(context) == true ||
+		matchLocalName(context) == false)
+	{
+		return XPath::eMatchScoreNone;
+	}
+	else
+	{
+		return XPath::eMatchScoreQName;
+	}
+}
+
+
+
+XPath::eMatchScore
+SimpleNodeLocator::NodeTester::testAttributeQName(
+			const XalanNode& 		context,
+			XalanNode::NodeType		nodeType) const
+{
+	assert(m_targetNamespace != 0 && m_targetLocalName != 0);
+
+	if (XalanNode::ATTRIBUTE_NODE != nodeType ||
+		isNamespaceDeclaration(context) == true ||
+		matchLocalNameAndNamespaceURI(context) == false)
+	{
+		return XPath::eMatchScoreNone;
+	}
+	else
+	{
+		return XPath::eMatchScoreQName;
+	}
+}
+
+
+
+XPath::eMatchScore
+SimpleNodeLocator::NodeTester::testAttributeNamespaceOnly(
+			const XalanNode& 		context,
+			XalanNode::NodeType		nodeType) const
+{
+	assert(m_targetNamespace != 0 && m_targetLocalName == 0);
+
+	if (XalanNode::ATTRIBUTE_NODE != nodeType ||
+		isNamespaceDeclaration(context) == true ||
+		matchNamespaceURI(context) == false)
+	{
+		return XPath::eMatchScoreNone;
+	}
+	else
+	{
+		return XPath::eMatchScoreNodeTest;
+	}
+}
+
+
+
+XPath::eMatchScore
+SimpleNodeLocator::NodeTester::testAttributeTotallyWild(
+			const XalanNode& 		context,
+			XalanNode::NodeType		nodeType) const
+{
+	if (XalanNode::ATTRIBUTE_NODE != nodeType ||
+		isNamespaceDeclaration(context) == true)
+	{
+		return XPath::eMatchScoreNone;
+	}
+	else
+	{
+		return XPath::eMatchScoreNodeTest;
+	}
+}
+
+
+
+XPath::eMatchScore
+SimpleNodeLocator::NodeTester::testElementNCName(
+			const XalanNode& 		context,
+			XalanNode::NodeType		nodeType) const
+{
+	assert(m_targetNamespace == 0 && m_targetLocalName != 0);
+
+	if (XalanNode::ELEMENT_NODE != nodeType ||
+		matchLocalName(context) == false)
+	{
+		return XPath::eMatchScoreNone;
+	}
+	else
+	{
+		return XPath::eMatchScoreQName;
+	}
+}
+
+
+
+XPath::eMatchScore
+SimpleNodeLocator::NodeTester::testElementQName(
+			const XalanNode& 		context,
+			XalanNode::NodeType		nodeType) const
+{
+	assert(m_targetNamespace != 0 && m_targetLocalName != 0);
+
+	if (XalanNode::ELEMENT_NODE != nodeType ||
+		matchLocalNameAndNamespaceURI(context) == false)
+	{
+		return XPath::eMatchScoreNone;
+	}
+	else
+	{
+		return XPath::eMatchScoreQName;
+	}
+}
+
+
+
+XPath::eMatchScore
+SimpleNodeLocator::NodeTester::testElementNamespaceOnly(
+			const XalanNode& 		context,
+			XalanNode::NodeType		nodeType) const
+{
+	assert(m_targetNamespace != 0 && m_targetLocalName == 0);
+
+	if (XalanNode::ELEMENT_NODE != nodeType ||
+		matchNamespaceURI(context) == false)
+	{
+		return XPath::eMatchScoreNone;
+	}
+	else
+	{
+		return XPath::eMatchScoreNSWild;
+	}
+}
+
+
+
+XPath::eMatchScore
+SimpleNodeLocator::NodeTester::testElementTotallyWild(
+			const XalanNode& 		/* context */,
+			XalanNode::NodeType		nodeType) const
+{
+	assert(m_targetNamespace == 0 && m_targetLocalName == 0);
+
+	if (XalanNode::ELEMENT_NODE != nodeType)
+	{
+		return XPath::eMatchScoreNone;
+	}
+	else
+	{
+		return XPath::eMatchScoreNodeTest;
+	}
+}
+
+
+
+XPath::eMatchScore
+SimpleNodeLocator::NodeTester::testNamespaceNCName(
+			const XalanNode& 		context,
+			XalanNode::NodeType		nodeType) const
+{
+	assert(m_targetNamespace == 0 && m_targetLocalName != 0);
+
+	if (XalanNode::ATTRIBUTE_NODE != nodeType ||
+		isNamespaceDeclaration(context) == false ||
+		matchNamespace(context) == false)
+	{
+		return XPath::eMatchScoreNone;
+	}
+	else
+	{
+		return XPath::eMatchScoreQName;
+	}
+}
+
+
+
+XPath::eMatchScore
+SimpleNodeLocator::NodeTester::testNamespaceTotallyWild(
+			const XalanNode& 		context,
+			XalanNode::NodeType		nodeType) const
+{
+	assert(m_targetNamespace == 0 && m_targetLocalName == 0);
+
+	if (XalanNode::ATTRIBUTE_NODE != nodeType ||
+		isNamespaceDeclaration(context) == false)
+	{
+		return XPath::eMatchScoreNone;
+	}
+	else
+	{
+		return XPath::eMatchScoreNodeTest;
+	}
+}
+
+
+
+XPath::eMatchScore
+SimpleNodeLocator::NodeTester::testDefault(
+			const XalanNode& 		/* context */,
+			XalanNode::NodeType		/* nodeType */) const
+{
+	return XPath::eMatchScoreNone;
+}
+
+
+
+bool
+SimpleNodeLocator::NodeTester::matchLocalName(const XalanNode&	context) const
+{
+	assert(m_targetLocalName != 0);
+
+	return length(context.getNamespaceURI()) == 0 &&
+		   equals(DOMServices::getLocalNameOfNode(context), *m_targetLocalName);
+}
+
+
+
+bool
+SimpleNodeLocator::NodeTester::matchNamespaceURI(const XalanNode&	context) const
+{
+	assert(m_targetNamespace != 0);
+
+	return equals(context.getNamespaceURI(), *m_targetNamespace);
+}
+
+
+
+bool
+SimpleNodeLocator::NodeTester::matchLocalNameAndNamespaceURI(const XalanNode&	context) const
+{
+	assert(m_targetNamespace != 0 && m_targetLocalName != 0);
+
+	return equals(DOMServices::getLocalNameOfNode(context), *m_targetLocalName) == true &&
+		   equals(context.getNamespaceURI(), *m_targetNamespace) == true;
+}
+
+
+
+bool
+SimpleNodeLocator::NodeTester::matchNamespace(const XalanNode&	context) const
+{
+	assert(m_targetLocalName != 0);
+
+	return equals(context.getNodeValue(), *m_targetLocalName);
+}
+
+
+
+bool
+SimpleNodeLocator::NodeTester::shouldStripSourceNode(const XalanNode&	context) const
+{
+	assert(context.getNodeType() == XalanNode::CDATA_SECTION_NODE ||
+		   context.getNodeType() == XalanNode::TEXT_NODE);
+
+	return m_executionContext.shouldStripSourceNode(context);
 }
