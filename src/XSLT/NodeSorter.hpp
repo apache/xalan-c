@@ -82,6 +82,7 @@
 class MutableNodeRefList;
 class StylesheetExecutionContext;
 class XalanNode;
+class XObjectPtr;
 class XPath;
 
 
@@ -156,9 +157,12 @@ public:
 			m_executionContext(executionContext),
 			m_list(theList),
 			m_nodes(theNodes),
-			m_nodeSortKeys(theNodeSortKeys),
+			m_nodeSortKeys(theNodeSortKeys)
+#if defined(XALAN_SORT_CACHE_RESULTS)
+			,
 			m_numberResultsCache(),
 			m_stringResultsCache()
+#endif
 		{
 		}
 
@@ -186,7 +190,11 @@ public:
 				const NodeSortKey&	theKey,
 				XalanNode*			node) const;
 
+#if !defined(XALAN_SORT_CACHE_RESULTS)
+		const XObjectPtr
+#else
 		const XalanDOMString&
+#endif
 		getStringResult(
 				const NodeSortKey&	theKey,
 				XalanNode*			node) const;
@@ -222,8 +230,10 @@ public:
 		typedef	std::map<const XPath*, StringResultsNodeCacheMapType>	StringResultsCacheMapType;
 #endif
 
+#if defined(XALAN_SORT_CACHE_RESULTS)
 		mutable NumberResultsCacheMapType	m_numberResultsCache;
 		mutable StringResultsCacheMapType	m_stringResultsCache;
+#endif
 	};
 
 private:
@@ -243,12 +253,6 @@ private:
 			const MutableNodeRefList&		theList,
 			NodeVectorType&					v,
 			const NodeSortKeyVectorType&	keys) const;
-
-	/**
-	 * @@ TODO: Adjust this for locale.
-	 * JMD: java: not used yet, placeholder
-     */
-  // NumberFormat m_formatter = NumberFormat.getNumberInstance();  
 };
 
 

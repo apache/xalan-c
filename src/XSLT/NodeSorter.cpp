@@ -236,8 +236,13 @@ NodeSorter::NodeSortKeyCompare::operator()(
 
 		const int	theCompareResult = doCollationCompare(
 				m_executionContext,
+#if defined(XALAN_SORT_CACHE_RESULTS)
 				getStringResult(theKey, theLHS),
 				getStringResult(theKey, theRHS),
+#else
+				getStringResult(theKey, theLHS)->str(),
+				getStringResult(theKey, theRHS)->str(),
+#endif
 				theKey.getLanguageString());
 
 		if(0 == theCompareResult)
@@ -309,6 +314,9 @@ NodeSorter::NodeSortKeyCompare::getNumberResult(
 	const XPath* const	xpath = theKey.getSelectPattern();
 	assert(xpath != 0);
 
+#if !defined(XALAN_SORT_CACHE_RESULTS)
+	return xpath->execute(node, *theKey.getPrefixResolver(), m_executionContext)->num();
+#else
 	const NumberResultsCacheMapType::const_iterator		i =
 		m_numberResultsCache.find(xpath);
 
@@ -336,11 +344,16 @@ NodeSorter::NodeSortKeyCompare::getNumberResult(
 #endif
 
 	return theResult;
+#endif
 }
 
 
 
+#if !defined(XALAN_SORT_CACHE_RESULTS)
+const XObjectPtr
+#else
 const XalanDOMString&
+#endif
 NodeSorter::NodeSortKeyCompare::getStringResult(
 				const NodeSortKey&	theKey,
 				XalanNode*			node) const
@@ -350,6 +363,9 @@ NodeSorter::NodeSortKeyCompare::getStringResult(
 	const XPath* const	xpath = theKey.getSelectPattern();
 	assert(xpath != 0);
 
+#if !defined(XALAN_SORT_CACHE_RESULTS)
+	return xpath->execute(node, *theKey.getPrefixResolver(), m_executionContext);
+#else
 	const StringResultsCacheMapType::const_iterator		i =
 		m_stringResultsCache.find(xpath);
 
@@ -380,4 +396,5 @@ NodeSorter::NodeSortKeyCompare::getStringResult(
 	assign(theString, theResult);
 
 	return theString;
+#endif
 }
