@@ -354,11 +354,11 @@ public:
 		m_data.swap(theOther.m_data);
 
 #if defined(XALAN_DOMSTRING_CACHE_SIZE)
-#if !defined(XALAN_NO_NAMESPACES)
-		using std::swap;
-#endif
-
+#if defined(XALAN_NO_NAMESPACES)
 		::swap(m_size, theOther.m_size);
+#else
+		std::swap(m_size, theOther.m_size);
+#endif
 #endif
 	}
 
