@@ -60,7 +60,7 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  -->
-<s1 title="Release Notes">
+<s1 title="Xalan-C Release Notes">
  <ul>
   <li><link anchor="status">Status</link></li>
   <li><link anchor="build">Build Notes</link></li>
@@ -87,7 +87,8 @@
    <s3 title="Rebuilding &xslt4c;">
    <p>To rebuild the Windows32 release, use the Microsoft Visual C++ 6.0 project files. To rebuild the Linux release, use the make file in the root of the source directory.</p>
    <p><em>Important</em> We have set up the Visual C++ projects and the Linux make file to look for Xerces in a the directory structure that results from downloading xml-xerces/c from the Apache XML repository and building with the Visual C++ project files or the Linux make file. This structure parallels the Xalan-C source tree and build structure.<br/><br/>
-If you are using a Xerces-C binary distribution, you must either modify the Xalan-C project files or Makefile, or rearrange the build directory structure, and you must also get the header files from the Xerces-C source distribution, since Xalan-C uses a header file that is not included in the Xerces-C binary distribution.</p>
+If you are using a Xerces-C binary distribution, you must either modify the Xalan-C project files or makefile, or rearrange the build directory structure, and you must also get the header files from the Xerces-C source distribution, since Xalan-C uses a header file that is not included in the Xerces-C binary distribution.</p>
+<note>Keep in mind that at any given point in time the Xalan-C and Xerces-C source trees in the Apache XML repository may not be consistent. When we release a version of Xerces-C we certify that it is compabible with a given release of Xalan-C. To be safe, stick with distributions that we certify to be compatible. Reminder: Xalan-C 1.0.0 is compatible with Xerces-C 1.1.0.</note>
    </s3><anchor name="samples"/>
    <s3 title="Rebuilding a sample application">
    <p>The Windows32 distribution includes Visual C++ project files for each of the sample applications. The project files are in the samples subdirectories along with the source files. If you modify a sample and want to recompile it, you can recompile the .cpp file(s) and rebuild the executable.</p>

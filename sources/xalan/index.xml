@@ -61,28 +61,44 @@
 <s1 title="Xalan-C Version 1.0.0">
       
   <s2 title="What is it?">
-    <p>Xalan is an XSL processor for transforming XML documents into HTML, text, or other XML document types. Xalan-C version
-    1.0.0 represents a complete and a robust C++ reference implementation of the W3C Recommendations for XSL Transformations
-    (XSLT) and the XML Path Language (XPath).</p>
+    <p>Xalan is an XSL processor for transforming XML documents into HTML, text, or other XML document types. Xalan-C
+     version 1.0.0 represents a complete and a robust C++ reference implementation of the W3C Recommendations for XSL
+     Transformations (XSLT) and the XML Path Language (XPath).</p>
     <p>Xalan-C uses the Xerces-C XML parser.</p>
 	</s2>
   
   <s2 title="How do I get it?">
-    <p>Download and unzip either of the following:</p>
-    <ul>
-      <li><jump href="http://xml.apache.org/dist/xalan-j/xalan-j_1_0_1.zip">xalan-j_1_0_0.zip</jump></li>
-      <li><jump href="http://xml.apache.org/dist/xalan-j/xalan-j_1_0_1.tar.gz">xalan-j_1_0_0.tar.gz</jump></li>
-    </ul> 
+    <p>Download and unzip the distribution file for your platform. In addition to the platform-specific binaries,
+    documentation, and sample applications, both distributions also include the complete Xalan-C source tree.</p>
+     <table>
+       <tr>
+         <td><em>Platform</em></td>
+         <td><em>Download</em></td>
+       </tr>
+       <tr>
+         <td>Windows32</td>
+        <td><jump href="http://xml.apache.org/dist/xalan-j/xalan-j_1_0_1.zip">xalan-c_1_0_0.zip</jump></td>
+      </tr>
+      <tr>
+        <td>Linux</td>
+        <td><jump href="http://xml.apache.org/dist/xalan-j/xalan-j_1_0_1.tar.gz">xalan-c_1_0_0.tar.gz</jump></td>
+  </tr>
+  </table>
+  <p>We plan to add builds for other platforms as soon as possible. Volunteers are more than welcome!</p>
   </s2>
   
   <s2 title="Where do I get Xerces?">
-    <p>The Xalan-C dowload includes xerces-c_1_1.dll from Xerces-C 1.0.3. This provides the Xerces runtime environment for
-     Xalan.To build applications with Xalan and the Xerces XML parser, you also need the Xerces-C source tree, which you can
-     obtain by downloading the Xerces-C Source distribution from the <resource-ref idref="Xeces-c-dist"/>.</p>
+    <p>Both distributions include the Xerces runtime environment for Xalan -- xerces-c_1_1.dll for Windows,
+     and libxerces-c_1_1.so for Linux. To build applications with Xalan and Xerces, you also need the Xerces-C binary
+     binary distribution for your platform, which you can download from the  
+     <resource-ref idref="Xerces-c-dist"/>.</p>
+     <note>Be sure you are using a compatible Xerces-C build. For information about the build with which this release
+     of Xalan-C was tested, see <link idref="readme" anchor="status">Version of Xerces to use</link>.</note>
   </s2>  
     <s2 title="For more information...">
-    <p>For more information, go to <link idref="overview">Xalan Overview</link> and <link idref="getstarted">Getting
-    Started</link>. All of the Xalan documentation on this website is included in the Xalan download, as are a number of samples
-    to help you start using Xalan to transform XML documents.</p>
+    <p>For more information, go to the <link idref="overview">Xalan-C Overview</link> and 
+    <link idref="getstarted">Getting Started with Xalan-C</link>. All of the Xalan documentation on this website is
+    included in the Xalan downloads, as are a number of samples to help you start using Xalan to transform XML
+    documents.</p>
   </s2>   
 </s1>

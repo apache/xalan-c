@@ -32,7 +32,7 @@
     <p>StylesheetRoot objects, on the other hand, are thread-safe. A single StylesheetRoot object may be called concurrently
     from multiple threads. Keep in mind, however, that the StylesheetRoot uses an XSLTEgineImpl to store running state information
     for each transformation, so you must call the XSLTEngineImpl reset() method between each transformation.</p>
-    <p>For more detail, see <link idref="samples" anchor="compilestylesheet"></link>.</p></a>
+    <p>For more detail, see <link idref="samples" anchor="compilestylesheet">CompileStylesheet</link>.</p></a>
   </faq>
    
   <faq title="What can I do to speed up transformations?">
