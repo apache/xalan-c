@@ -614,7 +614,7 @@ private:
 	static bool
 	isContentSpecial(XalanDOMChar	theChar)
 	{
-		if ((theChar < kSpecialsSize) || (s_specialChars[theChar] & kContentSpecial))
+		if ((theChar < kSpecialsSize) && (s_specialChars[theChar] & kContentSpecial))
 		{
 			return true;
 		}
