@@ -126,6 +126,14 @@
 
 
 
+#if defined(XALAN_USE_ICU)
+#include <ICUBridge/ICUBridge.hpp>
+#include <ICUBridge/FunctionICUFormatNumber.hpp>
+#include <ICUBridge/ICUXalanNumberFormatFactory.hpp>
+#endif
+
+
+
 #if !defined (XALAN_NO_NAMESPACES)
 using std::auto_ptr;
 using std::cerr;
@@ -443,6 +451,18 @@ THREADFUNCTIONRETURN xsltMain(void *vptr) throw(XMLException)
 	// Runtime.getRuntime().traceMethodCalls(false);	
 	// Runtime.getRuntime().traceInstructions(false);
 
+
+#if defined(XALAN_USE_ICU)
+	// Create an installer to install the substitue format-number() function.
+	FunctionICUFormatNumber::FunctionICUFormatNumberInstaller	theInstaller;
+
+	// Create a factory for creating XalanNumberFormat instances using
+	// the ICU as implementation...
+	ICUXalanNumberFormatFactory		theXalanNumberFormatFactory;
+
+	// Install the ICU-based factory...
+	StylesheetExecutionContextDefault::installXalanNumberFormatFactory(&theXalanNumberFormatFactory);
+#endif
 
 	/**
 	 * The default diagnostic writer...
@@ -802,11 +822,11 @@ int main(int argc, const char* argv[]) throw()
 						 << "\"  Node value: \""
 						 << theInstance->getNodeValue()
 						 << "\""
-	#if defined(XALAN_RTTI_AVAILABLE) && !defined(XALAN_NO_TYPEINFO)
+#if defined(XALAN_RTTI_AVAILABLE) && !defined(XALAN_NO_TYPEINFO)
 						 << "  Type: \""
 						 << typeid(*theInstance).name()
 						 << "\""
-	#endif
+#endif
 						 << endl
 						 << endl;
 				}
