@@ -107,7 +107,7 @@ THREADFUNCTIONRETURN theThread(LPVOID	param)
     theFormatterOut << "birds" << number << ".out" << '\0';
 
 	//Generate the XML output object.
-	XSLTResultTarget	theResultTarget(theFormatterOut.str());
+	XSLTResultTarget	theResultTarget(XalanDOMString(theFormatterOut.str()));
 
 	// Unfreeze the ostrstream, so memory is returned...
 	theFormatterOut.freeze(false);
