@@ -86,7 +86,7 @@ public:
 	 *                      as tokens, default is false
 	 */
 	StringTokenizer(const XalanDOMString&	theString,
-					const XalanDOMString&	theTokens = XalanDOMString(XALAN_STATIC_UCODE_STRING("\t\n\r\f")),
+					const XalanDOMString&	theTokens = XalanDOMString(XALAN_STATIC_UCODE_STRING(" \t\n\r\f")),
 					bool					fReturnTokens = false);
 
 #if defined(XALAN_LSTRSUPPORT)
@@ -101,7 +101,7 @@ public:
 	 *                      as tokens, default is false
 	 */
 	StringTokenizer(const XalanDOMChar*		theString,
-					const XalanDOMChar*		theTokens = XALAN_STATIC_UCODE_STRING("\t\n\r\f"),
+					const XalanDOMChar*		theTokens = XALAN_STATIC_UCODE_STRING(" \t\n\r\f"),
 					bool					fReturnTokens = false);
 #endif
 
