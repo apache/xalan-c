@@ -4,6 +4,7 @@
 
 
 #include <cassert>
+#include <ctime>
 #include <fstream>
 #include <iostream>
 #include <strstream>
