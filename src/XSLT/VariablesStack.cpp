@@ -78,7 +78,7 @@ VariablesStack::VariablesStack() :
 	m_currentStackFrameIndex(0),
 	m_guardStack()
 {
-//	m_stack.reserve(eDefaultStackSize);
+	m_stack.reserve(eDefaultStackSize);
 }
 
 
