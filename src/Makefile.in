@@ -55,6 +55,9 @@
 # 
 #
 # $Log$
+# Revision 1.12  2000/09/20 18:21:21  auriemma
+# Fixed problem on Linux.
+#
 # Revision 1.11  2000/09/20 14:11:54  auriemma
 # Reduced the size of library and executables on AIX by explicitly instantiating templates.
 #
@@ -307,10 +310,12 @@ depend:
 
 compile:	 $(ALL_OBJECTS) 
 
+ifeq ($(PLATFORM), AIX)
 templates: ${ALL_OBJECTS_DIR}/XalanTemplate.o
 
 ${ALL_OBJECTS_DIR}/XalanTemplate.o:$(XSLT_DIR)/XalanTemplate.cpp
 	$(CC2) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) -o $@ $<
+endif
 
 testXSLT: lib  $(BINTARGETDIR)/testXSLT
 
@@ -381,7 +386,7 @@ ${ALL_OBJECTS_DIR}/%.o:$(SAMPLES_DIR)/XPathWrapper/%.cpp
 ifeq ($(PLATFORM), AIX)
 lib:	prepare templates compile $(THISLIB)$(VER)$(SHLIBSUFFIX)
 else
-#lib:	prepare compile $(THISLIB)$(VER)$(SHLIBSUFFIX)
+lib:	prepare compile $(THISLIB)$(VER)$(SHLIBSUFFIX)
 endif
 
 $(THISLIB)$(VER)$(SHLIBSUFFIX): $(ALL_OBJECTS)
