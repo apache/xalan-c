@@ -102,8 +102,6 @@ public:
 
 	typedef XalanMap<Key, Value, Hash, Comparator>		ThisType;
 
-	typedef size_t	size_type;
-
 	struct Entry : public value_type
 	{
 		typedef value_type Parent;
