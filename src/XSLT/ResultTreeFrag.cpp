@@ -286,6 +286,9 @@ XalanNode*
 ResultTreeFrag::appendChild(XalanNode*	/* newChild */)
 {
 	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
+
+	// Dummy return value...
+	return 0;
 }
 
 
@@ -294,6 +297,9 @@ XalanNode*
 ResultTreeFrag::removeChild(XalanNode*	/* oldChild */)
 {
 	throw XalanDOMException(XalanDOMException::NO_MODIFICATION_ALLOWED_ERR);
+
+	// Dummy return value...
+	return 0;
 }
 
 
