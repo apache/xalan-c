@@ -84,12 +84,16 @@ XSLException::XSLException(
 
 
 
+static const XalanDOMChar	s_dummy = 0;
+
+
+
 XSLException::XSLException(
 			const LocatorType&		theLocator,
 			const XalanDOMString&	theMessage,
 			const XalanDOMString&	theType) :
 	m_message(theMessage),
-	m_uri(theLocator.getSystemId()),
+	m_uri(theLocator.getSystemId() == 0 ? &s_dummy : theLocator.getSystemId()),
 	m_lineNumber(theLocator.getLineNumber()),
 	m_columnNumber(theLocator.getColumnNumber()),
 	m_type(theType)
