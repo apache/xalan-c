@@ -829,7 +829,7 @@ FormatterToHTML::processAttribute(
 void
 FormatterToHTML::writeAttrURI(
 			const XalanDOMChar*		string,
-			const XalanDOMString	encoding)
+			const XalanDOMString&	encoding)
 {
 	// http://www.ietf.org/rfc/rfc2396.txt says:
 	// A URI is always in an "escaped" form, since escaping or unescaping a

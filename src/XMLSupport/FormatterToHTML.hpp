@@ -438,7 +438,7 @@ private:
 	void
 	writeAttrURI(
 			const XalanDOMChar*		string,
-			const XalanDOMString	encoding);
+			const XalanDOMString&	encoding);
 
 	/**
 	 * Accumulate the specified character by converting its numeric value to
