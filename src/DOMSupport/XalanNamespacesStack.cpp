@@ -121,6 +121,8 @@ XalanNamespacesStack::XalanNamespacesStackEntry::addDeclaration(
 				const XalanDOMChar*			theURI,
 				XalanDOMString::size_type	theLength)
 {
+	// If we're at the end, we need to allocate something
+	// new, then update m_position.
 	if (m_position == m_namespaces.end())
 	{
 		m_namespaces.resize(m_namespaces.size() + 1);
@@ -128,8 +130,9 @@ XalanNamespacesStack::XalanNamespacesStackEntry::addDeclaration(
 		m_position = m_namespaces.end() - 1;
 	}
 
-	XalanNamespace&		theNamespace = *m_position;
+	value_type&		theNamespace = *m_position;
 
+	// Set the appropriate values...
 	theNamespace.setPrefix(thePrefix);
 
 	theNamespace.setURI(theURI, theLength);
@@ -140,7 +143,10 @@ XalanNamespacesStack::XalanNamespacesStackEntry::addDeclaration(
 
 
 const XalanDOMString*
-XalanNamespacesStack::XalanNamespacesStackEntry::getNamespaceForPrefix(const XalanDOMString&	thePrefix) const
+XalanNamespacesStack::XalanNamespacesStackEntry::findEntry(
+			const XalanDOMString&	theKey,
+			MemberFunctionType		theKeyFunction,
+			MemberFunctionType		theValueFunction) const
 {
 	if (m_namespaces.empty() == false)
 	{
@@ -148,51 +154,23 @@ XalanNamespacesStack::XalanNamespacesStackEntry::getNamespaceForPrefix(const Xal
 
 		do
 		{
+			// m_position is always pointed past the end, so
+			// decrement first.
 			--i;
 
-			const XalanNamespace&	ns = (*i);
+			const value_type&	ns = (*i);
 
-			const XalanDOMString&	thisPrefix = ns.getPrefix();
+			const XalanDOMString&	thisKey = (ns.*theKeyFunction)();
 
-			if(equals(thePrefix, thisPrefix))
+			if(equals(theKey, thisKey))
 			{
-				return &ns.getURI();
+				return &(ns.*theValueFunction)();
 			}
 		} while (i != m_namespaces.begin());
 	}
 
 	return 0;
 }
-
-
-
-const XalanDOMString*
-XalanNamespacesStack::XalanNamespacesStackEntry::getPrefixForNamespace(const XalanDOMString&	theURI) const
-{
-	if (m_namespaces.empty() == false)
-	{
-		const_iterator	i(m_position);
-
-		do
-		{
-			--i;
-
-			const XalanNamespace&	ns = (*i);
-
-			const XalanDOMString&	thisURI = ns.getURI();
-
-			if(equals(theURI, thisURI))
-			{
-				return &ns.getPrefix();
-			}
-		} while (i != m_namespaces.begin());
-	}
-
-	return 0;
-}
-
-
-
 void
 XalanNamespacesStack::XalanNamespacesStackEntry::clear()
 {
@@ -248,7 +226,7 @@ XalanNamespacesStack::addDeclaration(
 		m_createNewContextStack.back() = false;
 	}
 
-	XalanNamespacesStackEntry&	theCurrentEntry = *m_stackPosition;
+	value_type&	theCurrentEntry = *m_stackPosition;
 
 	// Add a new namespace declaration...
 	theCurrentEntry.addDeclaration(thePrefix, theURI, theLength);
@@ -290,48 +268,9 @@ XalanNamespacesStack::popContext()
 
 
 const XalanDOMString*
-XalanNamespacesStack::getNamespaceForPrefix(const XalanDOMString&	thePrefix) const
-{
-	if(::equals(thePrefix, DOMServices::s_XMLString))
-	{
-		return &DOMServices::s_XMLNamespaceURI;
-	}
-	else if (::equals(thePrefix, DOMServices::s_XMLNamespace))
-	{
-		return &DOMServices::s_XMLNamespacePrefixURI;
-	}
-	else if (m_stackPosition == m_stackBegin)
-	{
-		return 0;
-	}
-	else
-	{
-		NamespacesStackType::const_iterator		theBegin(m_stackBegin);
-		NamespacesStackType::const_iterator		theEnd(m_stackPosition + 1);
-
-		const XalanDOMString*	nsURI = 0;
-
-		if (theBegin != theEnd)
-		{
-			do
-			{
-				nsURI = (*(--theEnd)).getNamespaceForPrefix(thePrefix);
-
-				if (nsURI != 0)
-				{
-					break;
-				}
-			} while(theBegin != theEnd);
-		}
-
-		return nsURI;
-	}
-}
-
-
-
-const XalanDOMString*
-XalanNamespacesStack::getPrefixForNamespace(const XalanDOMString&	theURI) const
+XalanNamespacesStack::findEntry(
+			const XalanDOMString&	theKey,
+			MemberFunctionType		theFunction) const
 {
 	if (m_stackPosition == m_stackBegin)
 	{
@@ -342,22 +281,38 @@ XalanNamespacesStack::getPrefixForNamespace(const XalanDOMString&	theURI) const
 		NamespacesStackType::const_iterator		theBegin(m_stackBegin);
 		NamespacesStackType::const_iterator		theEnd(m_stackPosition + 1);
 
-		const XalanDOMString*	prefix = 0;
+		const XalanDOMString*	theValue = 0;
 
-		if (theBegin != theEnd)
+		do
 		{
-			do
+			theValue = ((*(--theEnd)).*theFunction)(theKey);
+
+			if (theValue != 0)
 			{
-				prefix = (*(--theEnd)).getPrefixForNamespace(theURI);
+				break;
+			}
+		} while(theBegin != theEnd);
 
-				if (prefix != 0)
-				{
-					break;
-				}
-			} while(theBegin != theEnd);
-		}
+		return theValue;
+	}
+}
 
-		return prefix;
+
+
+const XalanDOMString*
+XalanNamespacesStack::getNamespaceForPrefix(const XalanDOMString&	thePrefix) const
+{
+	if(::equals(thePrefix, DOMServices::s_XMLString))
+	{
+		return &DOMServices::s_XMLNamespaceURI;
+	}
+	else if (::equals(thePrefix, DOMServices::s_XMLNamespace))
+	{
+		return &DOMServices::s_XMLNamespacePrefixURI;
+	}
+	else
+	{
+		return findEntry(thePrefix, &value_type::getNamespaceForPrefix);
 	}
 }
 
@@ -374,10 +329,7 @@ XalanNamespacesStack::prefixIsPresentLocal(const XalanDOMString&	thePrefix)
 	}
 	else
 	{
-		const XalanNamespacesStackEntry&	theNamespaces =
-			*m_stackPosition;
-
-		return theNamespaces.isPrefixPresent(thePrefix);
+		return (*m_stackPosition).isPrefixPresent(thePrefix);
 	}
 }
 
@@ -395,30 +347,4 @@ XalanNamespacesStack::clear()
 	m_stackPosition = m_stackBegin;
 
 	m_createNewContextStack.clear();
-}
-
-
-
-const XalanDOMString*
-XalanNamespacesStack::getNamespaceForPrefix(
-			NamespacesStackType::const_iterator		theBegin,
-			NamespacesStackType::const_iterator		theEnd,
-			const XalanDOMString&					prefix)
-{
-	const XalanDOMString*	nsURI = 0;
-
-	if (theBegin != theEnd)
-	{
-		do
-		{
-			nsURI = (*(--theEnd)).getNamespaceForPrefix(prefix);
-
-			if (nsURI != 0)
-			{
-				break;
-			}
-		} while(theBegin != theEnd);
-	}
-
-	return nsURI;
 }

@@ -85,11 +85,15 @@ public:
 	{
 	public:
 
+		typedef XalanNamespace	value_type;
+
 #if defined(XALAN_NO_NAMESPACES)
-		typedef	deque<XalanNamespace>		NamespaceCollectionType;
+		typedef	deque<value_type>		NamespaceCollectionType;
 #else
-		typedef	std::deque<XalanNamespace>	NamespaceCollectionType;
+		typedef	std::deque<value_type>	NamespaceCollectionType;
 #endif
+
+		typedef const XalanDOMString& (value_type::*MemberFunctionType)() const;
 
 		typedef NamespaceCollectionType::iterator					iterator;
 		typedef NamespaceCollectionType::reverse_iterator			reverse_iterator;
@@ -118,7 +122,10 @@ public:
 		 * @return pointer to the string value if found, otherwise 0.
 		 */
 		const XalanDOMString*
-		getNamespaceForPrefix(const XalanDOMString&		thePrefix) const;
+		getNamespaceForPrefix(const XalanDOMString&		thePrefix) const
+		{
+			return findEntry(thePrefix, &XalanNamespace::getPrefix, &XalanNamespace::getURI);
+		}
 
 		/**
 		 * Get the prefix for a namespace.
@@ -127,7 +134,10 @@ public:
 		 * @return pointer to the string value if found, otherwise 0.
 		 */
 		const XalanDOMString*
-		getPrefixForNamespace(const XalanDOMString&		theURI) const;
+		getPrefixForNamespace(const XalanDOMString&		theURI) const
+		{
+			return findEntry(theURI, XalanNamespace::getURI, XalanNamespace::getPrefix);
+		}
 
 		bool
 		isPrefixPresent(const XalanDOMString&	thePrefix) const
@@ -197,17 +207,26 @@ public:
 
 	private:
 
+		const XalanDOMString*
+		findEntry(
+			const XalanDOMString&	theKey,
+			MemberFunctionType		theKeyFunction,
+			MemberFunctionType		theValueFunction) const;
+
 		NamespaceCollectionType		m_namespaces;
 
 		iterator					m_position;
 	};
 
+
+	typedef XalanNamespacesStackEntry	value_type;
+
 #if defined(XALAN_NO_NAMESPACES)
-	typedef	deque<XalanNamespacesStackEntry>	NamespacesStackType;
-	typedef vector<bool>						BoolVectorType;
+	typedef	deque<value_type>		NamespacesStackType;
+	typedef vector<bool>			BoolVectorType;
 #else
-	typedef	std::deque<XalanNamespacesStackEntry>	NamespacesStackType;
-	typedef std::vector<bool>						BoolVectorType;
+	typedef	std::deque<value_type>	NamespacesStackType;
+	typedef std::vector<bool>		BoolVectorType;
 #endif
 
 	typedef NamespacesStackType::iterator					iterator;
@@ -215,7 +234,9 @@ public:
 	typedef NamespacesStackType::const_iterator				const_iterator;
 	typedef NamespacesStackType::const_reverse_iterator		const_reverse_iterator;
 
-	typedef NamespacesStackType::size_type		size_type;
+	typedef NamespacesStackType::size_type	size_type;
+
+	typedef const XalanDOMString* (value_type::*MemberFunctionType)(const XalanDOMString&) const;
 
 
 	explicit
@@ -261,7 +282,10 @@ public:
 	getNamespaceForPrefix(const XalanDOMString&		thePrefix) const;
 
 	const XalanDOMString*
-	getPrefixForNamespace(const XalanDOMString&		theURI) const;
+	getPrefixForNamespace(const XalanDOMString&		theURI) const
+	{
+		return findEntry(theURI, &value_type::getPrefixForNamespace);
+	}
 
 	/**
 	 * See if the prefix has been mapped to a namespace in the current
@@ -335,38 +359,6 @@ public:
 
 private:
 
-	/**
-	 * Get the namespace for a prefix by searching a range of iterators.
-	 * The search is done in reverse, from the end of the range to the
-	 * beginning.
-	 *
-	 * @param theBegin The beginning iterator for the range
-	 * @param theBegin The ending iterator for the range
-	 * @param prefix  namespace prefix to find
-	 * @return pointer to the string value if found, otherwise null.
-	 */
-	static const XalanDOMString*
-	getNamespaceForPrefix(
-			NamespacesStackType::const_iterator		theBegin,
-			NamespacesStackType::const_iterator		theEnd,
-			const XalanDOMString&					prefix);
-
-	/**
-	 * Get the prefix for a namespace by searching a range of iterators.
-	 * The search is done in reverse, from the end of the range to the
-	 * beginning.
-	 *
-	 * @param theBegin The beginning iterator for the range to search
-	 * @param theBegin The ending iterator for the range to search
-	 * @param uri     URI string for namespace to find
-	 * @return pointer to the string value if found, otherwise null.
-	 */
-	static const XalanDOMString*
-	getPrefixForNamespace(
-			NamespacesStackType::const_iterator		theBegin,
-			NamespacesStackType::const_iterator		theEnd,
-			const XalanDOMString&					uri);
-
 	// not implemented
 	XalanNamespacesStack(const XalanNamespacesStack&);
 
@@ -377,6 +369,11 @@ private:
 	operator=(const XalanNamespacesStack&);
 
 	enum { eDefaultCreateNewContextStackSize = 25 };
+
+	const XalanDOMString*
+	findEntry(
+			const XalanDOMString&	theKey,
+			MemberFunctionType		theFunction) const;
 
 	/**
 	 * A stack to keep track of the result tree namespaces.
