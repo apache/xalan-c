@@ -268,7 +268,7 @@ main(
 		const FileNameVectorType	dirs = f.getDirectoryNames(baseDir);
 
 		// Generate Unique Run id. (Only used to name the result logfile.)
-		const XalanDOMString UniqRunid = f.GenerateUniqRunid();
+		const XalanDOMString UniqRunid = f.generateUniqRunid();
 
 		// Defined basic constants for file manipulation 
 
@@ -306,9 +306,9 @@ main(
 
 					// Set up the input/output files.
 					const XalanDOMString  theXSLFile= baseDir + xMan + pathSep + files[i];
-					const XalanDOMString  theXMLFile = f.GenerateFileName(theXSLFile,"xml");
+					const XalanDOMString  theXMLFile = f.generateFileName(theXSLFile,"xml");
 					const XalanDOMString  theOutput =  outputRoot + xMan + pathSep + files[i]; 
-					const XalanDOMString  theOutputFile = f.GenerateFileName(theOutput, "out");
+					const XalanDOMString  theOutputFile = f.generateFileName(theOutput, "out");
 
 					// Use a Xerces Dom document to create the XSLTResultTarget. 
 					XalanDocument* domOut = parserLiaison.createDocument();
