@@ -96,10 +96,11 @@ FunctionEvaluate::~FunctionEvaluate()
 
 inline XObjectPtr
 doExecute(
-			XPathExecutionContext&	executionContext,
-			XalanNode*				context,
-			const XalanDOMString&	expression,
-			const PrefixResolver&	resolver)
+			XPathExecutionContext&			executionContext,
+			XalanNode*						context,
+			const XalanDOMString&			expression,
+			const PrefixResolver&			resolver,
+			const Function::LocatorType*	locator)
 {
 	// $$$ ToDo: Consider moving all of this into a member function of
 	// XPathExecutionContext.
@@ -107,13 +108,14 @@ doExecute(
 
 	XPathConstructionContextDefault		theConstructionContext;
 
-	XPath								theXPath;
+	XPath								theXPath(locator);
 
 	theProcessor.initXPath(
 			theXPath,
 			theConstructionContext,
 			expression,
-			resolver);
+			resolver,
+			locator);
 
 	return theXPath.execute(context, resolver, executionContext);
 }
@@ -122,10 +124,11 @@ doExecute(
 
 inline XObjectPtr
 doExecute(
-			XPathExecutionContext&	executionContext,
-			XalanNode*				context,
-			const XalanDOMString&	expression,
-			const XalanNode*		resolver)
+			XPathExecutionContext&			executionContext,
+			XalanNode*						context,
+			const XalanDOMString&			expression,
+			const XalanNode*				resolver,
+			const Function::LocatorType*	locator)
 {
 	assert(resolver == 0 || resolver->getNodeType() == XalanNode::ELEMENT_NODE);
 
@@ -135,7 +138,7 @@ doExecute(
 	ElementPrefixResolverProxy	theProxy(static_cast<const XalanElement*>(resolver));
 #endif
 
-	return doExecute(executionContext, context, expression, theProxy);
+	return doExecute(executionContext, context, expression, theProxy, locator);
 }
 
 
@@ -161,7 +164,7 @@ FunctionEvaluate::execute(
 
 	if (theResolver != 0)
 	{
-		return doExecute(executionContext, context, theExpression, *theResolver);
+		return doExecute(executionContext, context, theExpression, *theResolver, locator);
 	}
 	else
 	{
@@ -182,7 +185,7 @@ FunctionEvaluate::execute(
 			}
 		}
 
-		return doExecute(executionContext, context, theExpression, resolverNode);
+		return doExecute(executionContext, context, theExpression, resolverNode, locator);
 	}
 }
 
