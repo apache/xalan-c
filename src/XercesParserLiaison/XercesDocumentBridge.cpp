@@ -1530,7 +1530,7 @@ XercesDocumentBridge::getElementById(const XalanDOMString&	elementId) const
 	// $$$ ToDo: This is because DOM_Document::getElementById() is not
 	// const...
 #if defined(XALAN_NO_MUTABLE)
-	const DOM_NodeType	theXercesNode(((DOM_DocumentType&)m_xercesDocument).getElementById(c_wstr(elementId)));
+	const DOM_NodeType	theXercesNode(((DOM_Document_Type&)m_xercesDocument).getElementById(c_wstr(elementId)));
 #else
 	const DOM_NodeType	theXercesNode(m_xercesDocument.getElementById(c_wstr(elementId)));
 #endif
