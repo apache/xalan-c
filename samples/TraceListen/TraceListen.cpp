@@ -39,6 +39,9 @@ main(
 #if !defined(XALAN_NO_NAMESPACES)
 	using std::cerr;
 	using std::endl;
+#if defined(XALAN_STRICT_ANSI_HEADERS)
+	using std::strcmp;
+#endif
 #endif
 
 	// TraceListener flags...

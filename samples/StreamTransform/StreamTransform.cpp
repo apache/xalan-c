@@ -35,6 +35,9 @@ main(
 	using std::istrstream;
 	using std::ofstream;
 	using std::ostrstream;
+#if defined(XALAN_STRICT_ANSI_HEADERS)
+		using std::strlen;
+#endif
 #endif
 
 	int	theResult = 0;

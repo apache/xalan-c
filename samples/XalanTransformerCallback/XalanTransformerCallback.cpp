@@ -83,7 +83,7 @@ flushCallback(void*	theHandle)
 #endif
 }
 
-};
+}
 
 
 

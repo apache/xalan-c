@@ -186,7 +186,7 @@ public:
 		using std::time;
 		using std::time_t;
 		using std::localtime;
-		using std::ascitime;
+		using std::asctime;
 		using std::strlen;
 #endif
 
