@@ -91,6 +91,7 @@ public:
 	 *
 	 * @param theSource The source of the copy.
 	 */
+	explicit
 	QNameByValue(const QName&	theSource);
 
 	/**
