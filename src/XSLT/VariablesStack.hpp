@@ -212,8 +212,10 @@ public:
 	}
 
 	/**
-	 * Given a name, find the corresponding XObject.  Since the variable may
-	 * not yet have been evaluated, this may return a null XObjectPtr.
+	 * Given a name, find the corresponding XObject.  If the variable
+	 * exists, but has not yet been evaluated, the variable will be
+	 * evaluated and the result returned.  This may return a null XObjectPtr,
+	 * if the variable was not found.
 	 *
 	 * @param qname name of variable
 	 * @param exeuctionContext the current execution context
@@ -381,7 +383,7 @@ private:
 	friend class PushParamFunctor;
 	friend class SetAndRestoreForceGlobalSearch;
 
-	class StackEntry
+	class XALAN_XSLT_EXPORT StackEntry
 	{
 	public:
 
