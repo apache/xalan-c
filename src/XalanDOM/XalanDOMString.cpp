@@ -280,11 +280,30 @@ XalanDOMString::assign(
 {
 	invariants();
 
+#if __SGI_STL_PORT <= 0x400
+	XalanDOMString  temp;
+
+	temp.reserve(theLastPosition - theFirstPosition + 1);
+
+	while(theFirstPosition != theLastPosition)
+	{
+		temp.push_back(*theFirstPosition);
+
+		++theFirstPosition;
+	}
+
+	temp.m_data.push_back(XalanDOMChar(0));
+
+	temp.m_size = temp.m_data.size() - 1;
+
+	swap(temp);
+#else
 	m_data.assign(theFirstPosition, theLastPosition);
 
 	m_data.push_back(XalanDOMChar(0));
 
 	m_size = m_data.size() - 1;
+#endif
 
 	invariants();
 
