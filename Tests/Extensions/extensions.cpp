@@ -219,17 +219,17 @@ void generateFiles(const XalanDOMString &fileName,
 				   const char* test)
 {
 	// Set up the input/output files.
-	const XalanDOMString testName(test + XalanDOMString(".out"));
+	const XalanDOMString testName(futil.generateFileName(fileName,"out"));
 
 	xsl = baseDir + currentDir + pathSep + fileName;
 	xml = futil.generateFileName(xsl,"xml");
 	futil.data.xmlFileURL = xml;
 	futil.data.xslFileURL = xsl;
 
-	out =  outputRoot + currentDir + pathSep + testName; 
+	out =  outputRoot + currentDir + pathSep + XalanDOMString(test) + testName; 
 
-	gold = goldRoot +currentDir + pathSep + fileName;
-	gold = futil.generateFileName(gold, "out");
+	gold = goldRoot +currentDir + pathSep + testName;
+	//gold = futil.generateFileName(gold, "out");
 
 }
 
@@ -247,7 +247,7 @@ void TestCase1(XalanTransformer &xalan, const XalanDOMString &fileName, XMLFileR
 	
 	XalanDOMString	xml, xsl, theOutputFile, theGoldFile;
 		
-	generateFiles(fileName, xml, xsl, theOutputFile, theGoldFile, "TestCase1");
+	generateFiles(fileName, xml, xsl, theOutputFile, theGoldFile, "tc1-");
 
 	futil.data.testOrFile = XalanDOMString("TestCase1: ") + fileName;
 	futil.data.xmlFileURL = xml;
@@ -276,7 +276,7 @@ void TestCase2(XalanTransformer &xalan, const XalanDOMString &fileName, XMLFileR
 
 	XalanDOMString	xml, xsl, theOutputFile, theGoldFile;
 	
-	generateFiles(fileName, xml, xsl, theOutputFile, theGoldFile, "TestCase2");
+	generateFiles(fileName, xml, xsl, theOutputFile, theGoldFile, "tc2-");
 	futil.data.testOrFile = XalanDOMString("TestCase2");
 	futil.data.xmlFileURL = xml;
 	futil.data.xslFileURL = xsl;
@@ -316,7 +316,7 @@ void TestCase3(XalanTransformer &xalan, const XalanDOMString &fileName, XMLFileR
 	
 	XalanDOMString	xml, xsl, theOutputFile, theGoldFile;
 	
-	generateFiles(fileName, xml, xsl, theOutputFile, theGoldFile, "TestCase3");
+	generateFiles(fileName, xml, xsl, theOutputFile, theGoldFile, "tc3-");
 	futil.data.testOrFile = XalanDOMString("TestCase3a");
 	futil.data.xmlFileURL = xml;
 	futil.data.xslFileURL = xsl;
@@ -336,8 +336,8 @@ void TestCase3(XalanTransformer &xalan, const XalanDOMString &fileName, XMLFileR
 
 	futil.checkResults(theOutputFile, theGoldFile, logFile);
 
-	// Because we install the function locally, this second instance of the transformer should not run the
-	// test successfully.
+	// Because we install the function locally, this second instance of the transformer 
+	// should _NOT_ run the test successfully.
 	XalanTransformer newEngine;
 	futil.data.testOrFile = XalanDOMString("TestCase3b");
 
@@ -350,7 +350,8 @@ void TestCase3(XalanTransformer &xalan, const XalanDOMString &fileName, XMLFileR
 							   theOutputFile,
 							   theGoldFile);
 
-	// Now unInstall the external function "nodeset"
+	// Now unInstall the external function "nodeset". Once again the transform should
+	// _NOT_ run the test successfully
 	futil.data.testOrFile = XalanDOMString("TestCase3c");
 	xalan.uninstallExternalFunction(theNamespace, XalanDOMString("nodeset"));
 
@@ -377,7 +378,7 @@ void TestCase4(XalanTransformer &xalan, const XalanDOMString &fileName, XMLFileR
 	
 	XalanDOMString	xml, xsl, theOutputFile, theGoldFile;
 
-	generateFiles(fileName, xml, xsl, theOutputFile, theGoldFile, "TestCase5");
+	generateFiles(fileName, xml, xsl, theOutputFile, theGoldFile, "tc4-");
 	futil.data.testOrFile = XalanDOMString("TestCase4a");
 	futil.data.xmlFileURL = xml;
 	futil.data.xslFileURL = xsl;
@@ -455,8 +456,8 @@ main(
 		TestCase1(xalan, files[2], logFile);	// Evaluate 
 		TestCase1(xalan, files[3], logFile);	// HasSameNodes 
 		TestCase1(xalan, files[4], logFile);	// Intersection 
-		TestCase1(xalan, files[5], logFile);	// NodeSet - basic testing
-		TestCase1(xalan, files[6], logFile);	// NodeSet - extensive RTF testing. 
+		TestCase1(xalan, files[5], logFile);	// NodeSet01 - basic testing
+		TestCase1(xalan, files[6], logFile);	// NodeSet02 - extensive RTF testing. 
 
 		// These testcases are used to excerise the Install/Uninstall Function API's of the transformer.
 		TestCase2(xalan, files[5], logFile);
@@ -469,7 +470,7 @@ main(
 		logFile.logTestFileClose("C++ Extension Testing: ", "Done");
 		logFile.close();
 
-		futil.analyzeResults(xalan, baseDir, resultsFile);
+		futil.analyzeResults(xalan, resultsFile);
 		XalanTransformer::terminate();
 
 	}
