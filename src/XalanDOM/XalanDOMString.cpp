@@ -73,7 +73,7 @@
 
 const XalanDOMChar	XalanDOMString::s_empty = 0;
 
-#if __INTEL_COMPILER >= 600
+#if defined(XALAN_INLINE_INITIALIZATION)
 const XalanDOMString::size_type     XalanDOMString::npos;
 #endif
  
