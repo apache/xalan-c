@@ -59,7 +59,7 @@
 
 
 
-#include <xercesc/util/TransService.hpp>
+#include <util/TransService.hpp>
 
 
 
