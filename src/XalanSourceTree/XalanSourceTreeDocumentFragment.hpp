@@ -67,6 +67,12 @@
 
 
 
+#if !defined(XALAN_NO_COVARIANT_RETURN_TYPE)
+#include <XalanSourceTree/XalanSourceTreeDocument.hpp>
+#endif
+
+
+
 class XalanSourceTreeComment;
 class XalanSourceTreeDocument;
 class XalanSourceTreeElement;
