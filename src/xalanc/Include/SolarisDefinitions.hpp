@@ -64,7 +64,6 @@
 // I don't know if this is their bug, or ours...
 #define XALAN_NO_STD_ALLOCATORS
 
-#define XALAN_NO_STD_NUMERIC_LIMITS
 #define XALAN_XALANDOMCHAR_USHORT_MISMATCH
 #define XALAN_POSIX2_AVAILABLE
 
