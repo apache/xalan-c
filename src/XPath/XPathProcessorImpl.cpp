@@ -2306,9 +2306,16 @@ XPathProcessorImpl::LocationPathPattern()
 		nextToken();
 	}
 
-	if(!tokenIs(XalanUnicode::charVerticalLine) == true && length(m_token) != 0)
+	if(length(m_token) != 0)
 	{
-		RelativePathPattern();
+		if (!tokenIs(XalanUnicode::charVerticalLine) == true)
+		{
+			RelativePathPattern();
+		}
+		else if (lookahead(XalanUnicode::charVerticalLine, -1) == true)
+		{
+			error("Unexpected token '|' found in match pattern");
+		}
 	}
 
 	// Terminate for safety.
