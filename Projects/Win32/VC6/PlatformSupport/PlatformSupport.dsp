@@ -190,6 +190,10 @@ SOURCE=..\..\..\..\src\PlatformSupport\XalanOutputStreamPrintWriter.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\PlatformSupport\XalanReferenceCountedObject.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\PlatformSupport\XalanStdOutputStream.cpp
 # End Source File
 # Begin Source File
@@ -343,6 +347,10 @@ SOURCE=..\..\..\..\src\PlatformSupport\XalanOutputStream.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\PlatformSupport\XalanOutputStreamPrintWriter.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\PlatformSupport\XalanReferenceCountedObject.hpp
 # End Source File
 # Begin Source File
 
