@@ -448,8 +448,8 @@ XercesParserLiaison::fatalError(const SAXParseException&	e)
 		 << e.getLineNumber()
 		 << ", char"
 		 << e.getColumnNumber()
-         	 << "): ";
-        OutputString(cerr, e.getMessage());		 
+         << "): ";
+	OutputString(cerr, e.getMessage());		 
 	cerr <<  endl;
 #else
 	cerr << endl
@@ -459,7 +459,7 @@ XercesParserLiaison::fatalError(const SAXParseException&	e)
 		 << e.getLineNumber()
 		 << ", char"
 		 << e.getColumnNumber()
-         	 << "): "
+         << "): "
 		 << e.getMessage()
 		 << endl;
 #endif			 
@@ -485,8 +485,8 @@ XercesParserLiaison::error(const SAXParseException&		e)
 		 << e.getLineNumber()
 		 << ", char"
 		 << e.getColumnNumber()
-         	 << "): ";
-        OutputString(cerr, e.getMessage());		 
+         << "): ";
+    OutputString(cerr, e.getMessage());		 
 	cerr <<  endl;
 #else
 	cerr << endl
@@ -496,7 +496,7 @@ XercesParserLiaison::error(const SAXParseException&		e)
 		 << e.getLineNumber()
 		 << ", char"
 		 << e.getColumnNumber()
-         	 << "): "
+         << "): "
 		 << e.getMessage()
 		 << endl;
 #endif
@@ -521,8 +521,8 @@ XercesParserLiaison::warning(const SAXParseException&	e)
 		 << e.getLineNumber()
 		 << ", char"
 		 << e.getColumnNumber()
-         	 << "): ";
-        OutputString(cerr, e.getMessage());		 
+         << "): ";
+    OutputString(cerr, e.getMessage());		 
 	cerr <<  endl;
 #else
 	cerr << endl
@@ -532,7 +532,7 @@ XercesParserLiaison::warning(const SAXParseException&	e)
 		 << e.getLineNumber()
 		 << ", char"
 		 << e.getColumnNumber()
-         	 << "): "
+         << "): "
 		 << e.getMessage()
 		 << endl;
 #endif
