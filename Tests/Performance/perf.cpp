@@ -67,6 +67,7 @@
 #include <cstdio>
 #include <ctime>
 #include <string>
+#include <string.h>
 #include <vector>
 
 #include <util/PlatformUtils.hpp>
@@ -90,6 +91,8 @@
 #include <XSLT/XSLTResultTarget.hpp>
 
 #include <XercesParserLiaison/XercesParserLiaison.hpp>
+
+#include <XMLFileReporter.hpp>
 
 
 //This is here for the threads.
@@ -116,13 +119,13 @@
 #endif
 
 
-const char* const	xslStylesheets[] =
+const char* 	xslStylesheets[] =
 {
 	"v:\\xsl-test\\perf\\basic\\basic-all_well",
 	"v:\\xsl-test\\perf\\basic\\basic-datetranscode",
 	"v:\\xsl-test\\perf\\basic\\basic-dict2",
 	"v:\\xsl-test\\perf\\basic\\basic-Fischer-Euwe",
-	"v:\\xsl-test\\perf\\basic\\basic-queens", 
+	//"v:\\xsl-test\\perf\\basic\\basic-queens", 
 	"v:\\xsl-test\\perf\\large\\large-all_well",
 	//"v:\\xsl-test\\perf\\large\\large-evans_large", 
 	"v:\\xsl-test\\perf\\nodes\\nodes-fancy_xml_tree_viewer_34",
@@ -132,7 +135,7 @@ const char* const	xslStylesheets[] =
 	"v:\\xsl-test\\perf\\xpath\\xpath-evans_tiny",
 	0
 };
-
+const char* 	outputDir = "d:\\xslt-results\\perf\\test\\";
 
 
 // Used to hold compiled stylesheet, and source document.
@@ -146,6 +149,14 @@ void outputMessage(int iter)
 
 int main( int argc,	const char* argv [])
 {
+	XMLFileReporter theXMLFileReporter;
+
+	theXMLFileReporter.setFileName("testfile.txt");
+	theXMLFileReporter.initialize();
+	theXMLFileReporter.logTestFileInit("CConformanceTest - Iterates over all conf test dirs and validates outputs USING Xalan-C");
+	theXMLFileReporter.logTestFileClose("xxx", "pass");		
+	theXMLFileReporter.close();
+
 	assert(sizeof(glbStylesheetRoot) == sizeof(glbSourceXML));
 
 #if !defined(NDEBUG) && defined(_MSC_VER)
@@ -223,8 +234,17 @@ int main( int argc,	const char* argv [])
 					// Ask the processor to create a compiled stylesheet (StylesheetRoot) for the 
 					// specified input XSL. We don't have to delete it, since it is owned by the 
 					// StylesheetConstructionContext instance.
+
+					{const double startTime = clock();
+					//cout << "Clock before Compliation: " << startTime << endl;
+
 					glbStylesheetRoot[i] = csProcessor.processStylesheet(csStylesheetSourceXSL,
 														   csConstructionContext);
+					const double endTime = clock();
+					//cout << "Clock after Compliation: " << endTime << endl;
+					cout << "Compliation took: " << endTime - startTime << endl;
+					}
+
 					assert(glbStylesheetRoot[i] != 0);
 
 					// Have the processor create a compiled SourceDocument for the specified
@@ -235,7 +255,7 @@ int main( int argc,	const char* argv [])
 
 				for(int ii = 0; xslStylesheets[ii] != 0; ii++)
 				{
-					cout << endl << "Now running test: " << xslStylesheets[ii] << endl;
+					cout << endl << "Testing: " << xslStylesheets[ii] << endl;
 
 					// The execution context uses the same factory support objects as
 					// the processor, since those objects have the same lifetime as
@@ -246,15 +266,28 @@ int main( int argc,	const char* argv [])
 							csXPathSupport,
 							csXObjectFactory);
 
-					const XalanDOMString  outputfile(XalanDOMString(xslStylesheets[ii]) + outputSuffix);
+					const XalanDOMString  outputfile(//XalanDOMString(outputDir) +
+						                             XalanDOMString(xslStylesheets[ii]) + 
+													                outputSuffix);
 
 					//Generate the XML input and output objects.
 					XSLTInputSource		csSourceXML(glbSourceXML[ii]);
 					XSLTResultTarget	theResultTarget(outputfile);
 
 					// Set the stylesheet to be the compiled stylesheet. Then do the transform.
+					const double singleStart = clock();
+					//cout << "Clock before single transform: " << singleStart << endl;
+						csProcessor.setStylesheetRoot(glbStylesheetRoot[ii]);
+						csProcessor.process(csSourceXML, theResultTarget,psExecutionContext);
+						psExecutionContext.reset();
+					const double singleEnd = clock();
+					//cout << "Clock after single transform: " << singleEnd << endl;
+					cout << "Single Transform time: " << singleEnd - singleStart << endl;
+
+
+
 					const double startTime = clock();
-					cout << "Clock before transforms: " << startTime << endl;
+					//cout << endl << "Clock before transforms: " << startTime << endl;
 					for(int j = 0; j < iterCount; ++j)
 					{	
 						csProcessor.setStylesheetRoot(glbStylesheetRoot[ii]);
@@ -262,11 +295,11 @@ int main( int argc,	const char* argv [])
 						psExecutionContext.reset();
 					}
 					const double endTime = clock();
-					cout << "Clock after transforms: " << endTime << endl;
-					cout << "Total clock ticks: " << endTime - startTime << endl;
+					//cout << "Clock after transforms: " << endTime << endl;
+					//cout << "Total clock ticks: " << endTime - startTime << endl;
 					const double	millis = ((endTime - startTime) / CLOCKS_PER_SEC) * 1000.0;
-					cout << "Milliseconds: " << millis << endl;
-					cout << "Averaged: " << millis / iterCount << " per iteration" << endl;
+					//cout << "Milliseconds: " << millis << endl;
+					cout << "Averaged: " << millis / iterCount << " for " << iterCount << " iterations" << endl;
 				}
 				
 			}
