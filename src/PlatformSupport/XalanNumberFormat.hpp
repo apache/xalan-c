@@ -234,7 +234,7 @@ private:
 
 	XalanDOMString				m_groupingSeparator;
 
-	int							m_groupingSize;
+	unsigned long				m_groupingSize;
 
 	static const XalanDOMChar	s_defaultGroupingSeparator[];
 };
