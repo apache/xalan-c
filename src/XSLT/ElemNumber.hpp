@@ -108,13 +108,8 @@ public:
 
 #if defined(XALAN_NO_NAMESPACES)
 	typedef vector<int>								IntArrayType;
-	typedef map<XalanDOMChar,
-				XalanNumberingResourceBundle,
-				less<XalanDOMChar> >				NumberingResourceBundleMapType;
 #else
 	typedef std::vector<int>						IntArrayType;
-	typedef std::map<XalanDOMChar,
-					 XalanNumberingResourceBundle>	NumberingResourceBundleMapType;
 #endif
 
 	/**

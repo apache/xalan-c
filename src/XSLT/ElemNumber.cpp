@@ -1825,9 +1825,6 @@ static XalanDOMString								s_slashString;
 
 
 
-static ElemNumber::NumberingResourceBundleMapType	s_resourceBundles;
-
-
 const XalanDOMChar		ElemNumber::s_atString[] =
 {
 	XalanUnicode::charAmpersand,
