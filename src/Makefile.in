@@ -55,6 +55,9 @@
 # 
 #
 # $Log$
+# Revision 1.11  2000/09/20 14:11:54  auriemma
+# Reduced the size of library and executables on AIX by explicitly instantiating templates.
+#
 # Revision 1.10  2000/08/31 19:41:49  dbertoni
 # Updated Xerces library version number.
 #
@@ -158,12 +161,14 @@ nostlportroot:
 endif
 
 SUPPORTED = TRUE
-PLATFORM_COMPILE_OPTIONS = -qnotempinc -D${PLATFORM} -D_THREAD_SAFE -I ${STLPORTROOT}/stlport
+PLATFORM_COMPILE_OPTIONS = -D${PLATFORM} -D_THREAD_SAFE -I ${STLPORTROOT}/stlport
 ALLLIBS = ${LIBS} -L/usr/lib 
 SHLIBSUFFIX=.a
 CC1 = $(CXX) $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS)
+CC2 = $(CXX) $(PLATFORM_COMPILE_OPTIONS)
 MAKE_SHARED = makeC++SharedLib_r -p 5000 
-LINK = $(CXX) $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS)
+LINK = $(CXX) -qnotempinc $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS)
+
 
 endif
 
@@ -184,7 +189,7 @@ endif
 
 # We have to use the includes from the source distribution, since we use
 # headers that others normally wouldn't
-XSL_INCL = -I . -I $(XERCESCROOT)/src/
+XSL_INCL = -I . -I $(XERCESCROOT)/src/ 
 
 # We need the ICU library if we are using the ICUBridge
 ifdef XALAN_USE_ICU
@@ -254,14 +259,16 @@ ifdef XALAN_USE_ICU
 ALL_VPATH_CPP+=:$(ICUBRIDGE_DIR) 
 endif
 
+
 vpath %.cpp \
 $(ALL_VPATH_CPP)
-
 ${ALL_OBJECTS_DIR}/%.o:%.cpp
 	$(CC1) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $<
-
+	
 ${ALL_OBJECTS_DIR}/%.o:%.hpp
 	$(CC1) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $(patsubst .hpp,.cpp,$<)
+	
+
 
 ALLSOURCE = \
 	$(wildcard $(XALANDOM_DIR)/*.cpp) \
@@ -272,7 +279,8 @@ ALLSOURCE = \
 	$(wildcard $(XSLT_DIR)/*.cpp) \
 	$(wildcard $(XERCESINIT_DIR)/*.cpp) \
 	$(wildcard $(XERCESPARSERLIAISON_DIR)/*.cpp) \
-	$(wildcard $(XERCESPLATFORMSUPPORT_DIR)/*.cpp)
+	$(wildcard $(XERCESPLATFORMSUPPORT_DIR)/*.cpp) \
+	
 
 # Using ICUBridge
 ifdef XALAN_USE_ICU
@@ -297,66 +305,84 @@ depend:
 
 -include $(DEPFILE)	
 
-compile:	 $(ALL_OBJECTS)
+compile:	 $(ALL_OBJECTS) 
+
+templates: ${ALL_OBJECTS_DIR}/XalanTemplate.o
+
+${ALL_OBJECTS_DIR}/XalanTemplate.o:$(XSLT_DIR)/XalanTemplate.cpp
+	$(CC2) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) -o $@ $<
 
 testXSLT: lib  $(BINTARGETDIR)/testXSLT
 
-$(BINTARGETDIR)/testXSLT: $(TESTXSLT_DIR)/process.cpp
-	${LINK} $(XSL_BUILD_OPTIONS) ${PLATFORM_LIB_LINK_OPTIONS} $(XSL_INCL) ${LIBRARY_SEARCH_PATHS} \
-	${EXTRA_LINK_OPTIONS} -L$(LIB_DIR) -l$(PROJECT_NAME)$(VER) $(ALLLIBS) $(CXXFLAGS) $^ -o $@
+$(BINTARGETDIR)/testXSLT: ${ALL_OBJECTS_DIR}/process.o
+	${LINK} $(XSL_BUILD_OPTIONS) ${PLATFORM_LIB_LINK_OPTIONS} ${LIBRARY_SEARCH_PATHS} \
+	${EXTRA_LINK_OPTIONS} -L$(LIB_DIR) -l$(PROJECT_NAME)$(VER) $(ALLLIBS) $^ -o $@	
+${ALL_OBJECTS_DIR}/process.o: $(TESTXSLT_DIR)/process.cpp
+	$(CC1) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $<
 
 testXPath: lib  $(BINTARGETDIR)/testXPath
-
-$(BINTARGETDIR)/testXPath: $(TESTXPATH_DIR)/TestXPath.cpp \
-	$(TESTXPATH_DIR)/NodeNameTreeWalker.cpp
-	${LINK} $(XSL_BUILD_OPTIONS) ${PLATFORM_LIB_LINK_OPTIONS} $(XSL_INCL) ${LIBRARY_SEARCH_PATHS} \
-	${EXTRA_LINK_OPTIONS} -L$(LIB_DIR) -l$(PROJECT_NAME)$(VER) $(ALLLIBS) $(CXXFLAGS) $^ -o $@
+ 
+$(BINTARGETDIR)/testXPath: ${ALL_OBJECTS_DIR}/TestXPath.o ${ALL_OBJECTS_DIR}/NodeNameTreeWalker.o
+	${LINK} $(XSL_BUILD_OPTIONS) ${PLATFORM_LIB_LINK_OPTIONS} ${LIBRARY_SEARCH_PATHS} \
+	${EXTRA_LINK_OPTIONS} -L$(LIB_DIR) -l$(PROJECT_NAME)$(VER) $(ALLLIBS) $(CXXFLAGS) $^ -o $@	
+${ALL_OBJECTS_DIR}/%.o:$(TESTXPATH_DIR)/%.cpp
+	$(CC1) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $<
 
 Samples: lib  CompileStylesheet  ExternalFunction  SimpleTransform  TraceListen  UseStylesheetParam  XPathWrapper #  ThreadSafe
 
 CompileStylesheet: lib $(SAMPLES_DIR)/CompileStylesheet/CompileStylesheet 
 
-$(SAMPLES_DIR)/CompileStylesheet/CompileStylesheet: $(SAMPLES_DIR)/CompileStylesheet/CompileStylesheet.cpp \
-	$(SAMPLES_DIR)/CompileStylesheet/CompileStylesheet.cpp
-	${LINK} $(XSL_BUILD_OPTIONS) ${PLATFORM_LIB_LINK_OPTIONS} $(XSL_INCL) ${LIBRARY_SEARCH_PATHS} \
-	${EXTRA_LINK_OPTIONS} -L$(LIB_DIR) -l$(PROJECT_NAME)$(VER) $(ALLLIBS) $(CXXFLAGS) $^ -o $@
+$(SAMPLES_DIR)/CompileStylesheet/CompileStylesheet: ${ALL_OBJECTS_DIR}/CompileStylesheet.o
+	${LINK} $(XSL_BUILD_OPTIONS) ${PLATFORM_LIB_LINK_OPTIONS} ${LIBRARY_SEARCH_PATHS} \
+	${EXTRA_LINK_OPTIONS} -L$(LIB_DIR) -l$(PROJECT_NAME)$(VER) $(ALLLIBS) $(CXXFLAGS) $^ -o $@	
+${ALL_OBJECTS_DIR}/%.o:$(SAMPLES_DIR)/CompileStylesheet/%.cpp
+	$(CC1) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $<
 
 ExternalFunction: lib $(SAMPLES_DIR)/ExternalFunction/ExternalFunction 
 
-$(SAMPLES_DIR)/ExternalFunction/ExternalFunction: $(SAMPLES_DIR)/ExternalFunction/ExternalFunction.cpp \
-	$(SAMPLES_DIR)/ExternalFunction/ExternalFunction.cpp
-	${LINK} $(XSL_BUILD_OPTIONS) ${PLATFORM_LIB_LINK_OPTIONS} $(XSL_INCL) ${LIBRARY_SEARCH_PATHS} \
-	${EXTRA_LINK_OPTIONS} -L$(LIB_DIR) -l$(PROJECT_NAME)$(VER) $(ALLLIBS) $(CXXFLAGS) $^ -o $@
+$(SAMPLES_DIR)/ExternalFunction/ExternalFunction: ${ALL_OBJECTS_DIR}/ExternalFunction.o
+	${LINK} $(XSL_BUILD_OPTIONS) ${PLATFORM_LIB_LINK_OPTIONS} ${LIBRARY_SEARCH_PATHS} \
+	${EXTRA_LINK_OPTIONS} -L$(LIB_DIR) -l$(PROJECT_NAME)$(VER) $(ALLLIBS) $(CXXFLAGS) $^ -o $@	
+${ALL_OBJECTS_DIR}/%.o:$(SAMPLES_DIR)/ExternalFunction/%.cpp
+	$(CC1) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $<
 
 SimpleTransform: lib $(SAMPLES_DIR)/SimpleTransform/SimpleTransform 
 
-$(SAMPLES_DIR)/SimpleTransform/SimpleTransform: $(SAMPLES_DIR)/SimpleTransform/SimpleTransform.cpp \
-	$(SAMPLES_DIR)/SimpleTransform/SimpleTransform.cpp
-	${LINK} $(XSL_BUILD_OPTIONS) ${PLATFORM_LIB_LINK_OPTIONS} $(XSL_INCL) ${LIBRARY_SEARCH_PATHS} \
-	${EXTRA_LINK_OPTIONS} -L$(LIB_DIR) -l$(PROJECT_NAME)$(VER) $(ALLLIBS) $(CXXFLAGS) $^ -o $@
+$(SAMPLES_DIR)/SimpleTransform/SimpleTransform: ${ALL_OBJECTS_DIR}/SimpleTransform.o
+	${LINK} $(XSL_BUILD_OPTIONS) ${PLATFORM_LIB_LINK_OPTIONS} ${LIBRARY_SEARCH_PATHS} \
+	${EXTRA_LINK_OPTIONS} -L$(LIB_DIR) -l$(PROJECT_NAME)$(VER) $(ALLLIBS) $(CXXFLAGS) $^ -o $@	
+${ALL_OBJECTS_DIR}/%.o:$(SAMPLES_DIR)/SimpleTransform/%.cpp
+	$(CC1) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $<	
 
 TraceListen: lib $(SAMPLES_DIR)/TraceListen/TraceListen 
-
-$(SAMPLES_DIR)/TraceListen/TraceListen: $(SAMPLES_DIR)/TraceListen/TraceListen.cpp \
-	$(SAMPLES_DIR)/TraceListen/TraceListen.cpp
-	${LINK} $(XSL_BUILD_OPTIONS) ${PLATFORM_LIB_LINK_OPTIONS} $(XSL_INCL) ${LIBRARY_SEARCH_PATHS} \
-	${EXTRA_LINK_OPTIONS} -L$(LIB_DIR) -l$(PROJECT_NAME)$(VER) $(ALLLIBS) $(CXXFLAGS) $^ -o $@
+	
+$(SAMPLES_DIR)/TraceListen/TraceListen: ${ALL_OBJECTS_DIR}/TraceListen.o
+	${LINK} $(XSL_BUILD_OPTIONS) ${PLATFORM_LIB_LINK_OPTIONS} ${LIBRARY_SEARCH_PATHS} \
+	${EXTRA_LINK_OPTIONS} -L$(LIB_DIR) -l$(PROJECT_NAME)$(VER) $(ALLLIBS) $(CXXFLAGS) $^ -o $@	
+${ALL_OBJECTS_DIR}/%.o:$(SAMPLES_DIR)/TraceListen/%.cpp
+	$(CC1) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $<		
 
 UseStylesheetParam: lib $(SAMPLES_DIR)/UseStylesheetParam/UseStylesheetParam 
 
-$(SAMPLES_DIR)/UseStylesheetParam/UseStylesheetParam: $(SAMPLES_DIR)/UseStylesheetParam/UseStylesheetParam.cpp \
-	$(SAMPLES_DIR)/UseStylesheetParam/UseStylesheetParam.cpp
-	${LINK} $(XSL_BUILD_OPTIONS) ${PLATFORM_LIB_LINK_OPTIONS} $(XSL_INCL) ${LIBRARY_SEARCH_PATHS} \
-	${EXTRA_LINK_OPTIONS} -L$(LIB_DIR) -l$(PROJECT_NAME)$(VER) $(ALLLIBS) $(CXXFLAGS) $^ -o $@
-
+$(SAMPLES_DIR)/UseStylesheetParam/UseStylesheetParam: ${ALL_OBJECTS_DIR}/UseStylesheetParam.o
+	${LINK} $(XSL_BUILD_OPTIONS) ${PLATFORM_LIB_LINK_OPTIONS} ${LIBRARY_SEARCH_PATHS} \
+	${EXTRA_LINK_OPTIONS} -L$(LIB_DIR) -l$(PROJECT_NAME)$(VER) $(ALLLIBS) $(CXXFLAGS) $^ -o $@	
+${ALL_OBJECTS_DIR}/%.o:$(SAMPLES_DIR)/UseStylesheetParam/%.cpp
+	$(CC1) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $<	
+	
 XPathWrapper: lib $(SAMPLES_DIR)/XPathWrapper/XPathWrapper 
 
-$(SAMPLES_DIR)/XPathWrapper/XPathWrapper: $(SAMPLES_DIR)/XPathWrapper/TestDriver.cpp \
-	$(SAMPLES_DIR)/XPathWrapper/TestDriver.cpp $(SAMPLES_DIR)/XPathWrapper/XPathWrapper.cpp 
-	${LINK} $(XSL_BUILD_OPTIONS) ${PLATFORM_LIB_LINK_OPTIONS} $(XSL_INCL) ${LIBRARY_SEARCH_PATHS} \
-	${EXTRA_LINK_OPTIONS} -L$(LIB_DIR) -l$(PROJECT_NAME)$(VER) $(ALLLIBS) $(CXXFLAGS) $^ -o $@
+$(SAMPLES_DIR)/XPathWrapper/XPathWrapper: ${ALL_OBJECTS_DIR}/XPathWrapper.o ${ALL_OBJECTS_DIR}/TestDriver.o
+	${LINK} $(XSL_BUILD_OPTIONS) ${PLATFORM_LIB_LINK_OPTIONS} ${LIBRARY_SEARCH_PATHS} \
+	${EXTRA_LINK_OPTIONS} -L$(LIB_DIR) -l$(PROJECT_NAME)$(VER) $(ALLLIBS) $(CXXFLAGS) $^ -o $@	
+${ALL_OBJECTS_DIR}/%.o:$(SAMPLES_DIR)/XPathWrapper/%.cpp
+	$(CC1) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $<	
 
-lib:	prepare compile $(THISLIB)$(VER)$(SHLIBSUFFIX)
+ifeq ($(PLATFORM), AIX)
+lib:	prepare templates compile $(THISLIB)$(VER)$(SHLIBSUFFIX)
+else
+#lib:	prepare compile $(THISLIB)$(VER)$(SHLIBSUFFIX)
+endif
 
 $(THISLIB)$(VER)$(SHLIBSUFFIX): $(ALL_OBJECTS)
 	$(MAKE_SHARED) $(PLATFORM_LIBRARIES) $(EXTRA_LINK_OPTIONS) $(ALLLIBS) $^ -o $@ 
