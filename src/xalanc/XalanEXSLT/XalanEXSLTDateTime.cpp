@@ -18,7 +18,10 @@
 #include "XalanEXSLTDateTimeImpl.hpp"
 
 
-#include <time.h>
+
+#include <cstdio>
+#include <ctime>
+
 
 
 #include <xalanc/PlatformSupport/XalanMessageLoader.hpp>
@@ -26,6 +29,7 @@
 
 
 #include <xalanc/XPath/XObjectFactory.hpp>
+
 
 
 XALAN_CPP_NAMESPACE_BEGIN
@@ -95,9 +99,20 @@ static const XalanDOMChar	s_dateTimeNamespace[] =
 
 
 
+#if defined(XALAN_STRICT_ANSI_HEADERS)
+using std::gmtime;
+using std::localtime;
+using std::sprintf;
+using std::time;
+using std::time_t;
+using std::tm;
+#endif
+
+
+
 #if defined(WIN32) || defined(__DECCXX)
 
-static struct tm *
+static struct tm*
 localtime_r(const time_t *clock, struct tm *res)
 {
 	assert( res != 0 );
@@ -213,9 +228,13 @@ XalanEXSLTFunctionDateTime::execute(
 				}
 
 				if(offset == 100)
-					sprintf(timeZone , "%s", "z");
+                {
+					sprintf(timeZone, "%s", "z");
+                }
 				else
-					sprintf(timeZone , "%2.2d:00",offset);
+                {
+					sprintf(timeZone, "%2.2d:00", offset);
+                }
 
 				theResult.append(timeZone);
 			}
