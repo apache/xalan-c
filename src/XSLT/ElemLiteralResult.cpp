@@ -171,7 +171,7 @@ void ElemLiteralResult::execute(
 	{
 		const int	nAttrs = m_avts.size();
 
-		for(int i = (nAttrs-1); i >= 0; i--)
+		for(int i = 0; i < nAttrs; i++)
 		{
 			const AVT* const	avt = m_avts[i];
 
@@ -198,10 +198,7 @@ void ElemLiteralResult::execute(
 	{
 		NameSpace ns;
 
-		// Traverse the vector of namespaces, which in java is a linked list
-		// starting with last namespace; our vector pushes elements on the back,
-		// so we have to iterate from there down
-		for (int i = nsVector->size()-1; i>=0; i--)
+		for (int i = 0; i < nsVector->size(); i++)
 		{
 			ns = (*nsVector)[i];
 
