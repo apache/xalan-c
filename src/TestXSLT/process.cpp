@@ -127,30 +127,58 @@
 /**
  * Print argument options.
  */ 
-void printArgOptions(XercesDOMPrintWriter&		writer)
+void
+printArgOptions()
 {
-	writer.println("xslproc options: ");
-	writer.println("		-IN inputXMLURL");
-	writer.println("	 [-XSL XSLTransformationURL]");
-	writer.println("	 [-OUT outputFileName]");
-	writer.println("	 [-E (Do not expand entity refs)]");
-	writer.println("	 [-V (Version info)]");
-	writer.println("	 [-QC (Quiet Pattern Conflicts Warnings)]");
-	writer.println("	 [-Q	(Quiet Mode)]");
-	writer.println("	 [-ESCAPE (Which characters to escape {default is <>&\"\'\\r\\n}]");
-	writer.println("	 [-INDENT n(Control how many spaces to indent {default is 0})]");
-	writer.println("	 [-TT (Trace the templates as they are being called.)]");
-	writer.println("	 [-TG (Trace each generation event.)]");
-	writer.println("	 [-TS (Trace each selection event.)]");
-	writer.println("	 [-TTC (Trace the template children as they are being processed.)]");
-	writer.println("	 [-TCLASS (TraceListener class for trace extensions.)]");
-	writer.println("	 [-VALIDATE (Set whether validation occurs.	Validation is off by default.)]");
-	writer.println("	 [-XML (Use XML formatter and add XML header.)]");
-	writer.println("	 [-TEXT (Use simple Text formatter.)]");
-	writer.println("	 [-HTML (Use HTML formatter.)]");
-	writer.println("	 [-PARAM name expression (Set a stylesheet parameter)]");
-	writer.println("	 [-MT n(Set number of threads to 'n' {default is 1})]");
+#if !defined (XALAN_NO_NAMESPACES)
+	using std::cerr;
+	using std::endl;
+#endif
+
+	cerr << "TestXSLT options: "
+		 << endl
+		 << "		-IN inputXMLURL"
+		 << endl
+		 << "	 [-XSL XSLTransformationURL]"
+		 << endl
+		 << "	 [-OUT outputFileName]"
+		 << endl
+		 << "	 [-E (Do not expand entity refs)]"
+		 << endl
+		 << "	 [-V (Version info)]"
+		 << endl
+		 << "	 [-QC (Quiet Pattern Conflicts Warnings)]"
+		 << endl
+		 << "	 [-Q	(Quiet Mode)]"
+		 << endl
+		 << "	 [-ESCAPE (Which characters to escape {default is <>&\"\'\\r\\n}]"
+		 << endl
+		 << "	 [-INDENT n(Control how many spaces to indent {default is 0})]"
+		 << endl
+		 << "	 [-TT (Trace the templates as they are being called.)]"
+		 << endl
+		 << "	 [-TG (Trace each generation event.)]"
+		 << endl
+		 << "	 [-TS (Trace each selection event.)]"
+		 << endl
+		 << "	 [-TTC (Trace the template children as they are being processed.)]"
+		 << endl
+		 << "	 [-TCLASS (TraceListener class for trace extensions.)]"
+		 << endl
+		 << "	 [-VALIDATE (Set whether validation occurs.	Validation is off by default.)]"
+		 << endl
+		 << "	 [-XML (Use XML formatter and add XML header.)]"
+		 << endl
+		 << "	 [-TEXT (Use simple Text formatter.)]"
+		 << endl
+		 << "	 [-HTML (Use HTML formatter.)]"
+		 << endl
+		 << "	 [-PARAM name expression (Set a stylesheet parameter)]"
+		 << endl
+		 << "	 [-MT n(Set number of threads to 'n' {default is 1})]"
+		 << endl;
 }
+
 
 typedef std::map<std::string, std::string> String2StringMapType;
 
@@ -300,6 +328,11 @@ THREADFUNCTIONRETURN xsltMain(void *vptr) throw(XMLException);
 
 void xsltMultiThreadedMain(CmdLineParams& params) throw(XMLException)
 {
+#if !defined (XALAN_NO_NAMESPACES)
+	using std::cout;
+	using std::endl;
+#endif
+
 	DWORD dwStackSize = 4096;              	// initial thread stack size
 	LPTHREAD_START_ROUTINE lpStartAddress = (LPTHREAD_START_ROUTINE)xsltMain;
 	DWORD dwCreationFlags = 0;             	// creation flags
@@ -341,8 +374,8 @@ void xsltMultiThreadedMain(CmdLineParams& params) throw(XMLException)
 		DWORD exitCode = STILL_ACTIVE;
 		while (exitCode == STILL_ACTIVE)
 			GetExitCodeThread(hThreads[i], &exitCode);
-		std::cout << "Process " << hThreads[i] << " finished with exit code " <<
-		exitCode << std::endl;
+		cout << "Process " << hThreads[i] << " finished with exit code " <<
+		exitCode << endl;
 	}
  	for (i=0; i< nThreads; i++)
 		CloseHandle(hThreads[i]);
@@ -350,13 +383,16 @@ void xsltMultiThreadedMain(CmdLineParams& params) throw(XMLException)
 	delete []hThreads;
 }
 
-#else		
-
-#if defined(__GNUC__)
+#elif defined(__GNUC__)
 
 void xsltMultiThreadedMain(CmdLineParams& params) throw(XMLException)
 {
- 	int nThreads = params.nThreads;
+#if !defined (XALAN_NO_NAMESPACES)
+	using std::cout;
+	using std::endl;
+#endif
+
+	const int nThreads = params.nThreads;
 	pthread_t *threads = new pthread_t[nThreads];   // array to receive thread IDs
  	for (int i=0; i< nThreads; i++)
 	{
@@ -364,10 +400,10 @@ void xsltMultiThreadedMain(CmdLineParams& params) throw(XMLException)
 		int retVal = pthread_create(&thread, 0,
 		       (void * (*)(void *))xsltMain, (void *) &params);
 		if (retVal)
-			std::cout << "Thread creation failed." << std::endl;
+			cout << "Thread creation failed." << endl;
 		else	
 		{
-			std::cout << "Created thread: " << thread << std::endl;
+			cout << "Created thread: " << thread << endl;
 			threads[i] = thread;
 		}
 	}
@@ -380,10 +416,13 @@ void xsltMultiThreadedMain(CmdLineParams& params) throw(XMLException)
 
 void xsltMultiThreadedMain(CmdLineParams& params) throw(XMLException)
 {
-	std::cout << "xsltMultiThreadedMain: Not valid on this platform" << std::endl;
-}
-
+#if !defined (XALAN_NO_NAMESPACES)
+	using std::cerr;
+	using std::endl;
 #endif
+
+	cerr << "xsltMultiThreadedMain: Not valid on this platform" << endl;
+}
 
 #endif
 
@@ -399,8 +438,16 @@ static	CmdLineParams theParams;
 	
 THREADFUNCTIONRETURN xsltMain(void *vptr) throw(XMLException)
 {
- 	const CmdLineParams& params = *((CmdLineParams *)vptr);
-   const std::string outputFileNameBase = theParams.outFileName;
+#if !defined (XALAN_NO_NAMESPACES)
+	using std::cerr;
+	using std::cout;
+	using std::endl;
+	using std::auto_ptr;
+	using std::string;
+#endif
+
+ 	const CmdLineParams&	params = *((CmdLineParams *)vptr);
+	const std::string		outputFileNameBase = theParams.outFileName;
 
 	// @@ This should become a command line switch
 	bool shouldWriteXMLHeader = false;
@@ -412,13 +459,13 @@ THREADFUNCTIONRETURN xsltMain(void *vptr) throw(XMLException)
 	/**
 	 * The default diagnostic writer...
 	 */
-	XercesStdTextOutputStream				theStdOut(std::cout);
-	XercesStdTextOutputStream				theStdErr(std::cerr);
+	XercesStdTextOutputStream				theStdOut(cout);
+	XercesStdTextOutputStream				theStdErr(cerr);
 	NullTextOutputStream					theNullStream;
 	XercesDOMPrintWriter					diagnosticsWriter(theStdErr);
 
-	std::auto_ptr<TextFileOutputStream>	outputFileStream;
-	TextOutputStream*					outputStream = &theStdOut;
+	auto_ptr<TextFileOutputStream>	outputFileStream;
+	TextOutputStream*				outputStream = &theStdOut;
 
 	DOMSupportDefault theDOMSupport;
 	XercesParserLiaison xmlParserLiaison(theDOMSupport);
@@ -516,8 +563,8 @@ THREADFUNCTIONRETURN xsltMain(void *vptr) throw(XMLException)
 	for (int i=0; i< nInputFiles; i++)
 	{
 
-		std::string theInputFileName = params.inFileNames[i];
-		std::string outputFileName;
+		string theInputFileName = params.inFileNames[i];
+		string outputFileName;
 		XSLTInputSource theInputSource(theInputFileName.c_str());
 		DOM_Node sourceTree = processor.getSourceTreeFromInput(&theInputSource);
 
@@ -536,7 +583,7 @@ THREADFUNCTIONRETURN xsltMain(void *vptr) throw(XMLException)
 				outputFileName += ".out";
 				//	Strip off protocol, if its a file protocol for local machine,
 				//	otherwise we're out of luck
-				std::string LOCALFILE = "file:///";
+				string LOCALFILE = "file:///";
 				if (0 == outputFileName.find(LOCALFILE))
 					outputFileName = outputFileName.substr(LOCALFILE.size());
 			}
@@ -579,7 +626,7 @@ THREADFUNCTIONRETURN xsltMain(void *vptr) throw(XMLException)
 		if (! outputFileName.empty())	
 		{
 			outputFileStream = 
-				std::auto_ptr<TextFileOutputStream>(new TextFileOutputStream(
+				auto_ptr<TextFileOutputStream>(new TextFileOutputStream(
 							outputFileName.c_str()));
 			outputStream = outputFileStream.get();
 		}
@@ -664,67 +711,75 @@ int main(int argc, const char* argv[]) throw()
 	XMLPlatformUtils::Initialize();
 	XSLTEngineImpl::Initialize();
 
+	int	theResult = 0;
+
 	/*
 	 *		Get command line arguments
 	 */
-	getArgs(argc, argv, theParams);
-	
-	try
+	if (argc == 1)
 	{
-		if (theParams.nThreads > 1)
-			xsltMultiThreadedMain(theParams);
-		else		
-			xsltMain(&theParams);
+		printArgOptions();
+	}
+	else
+	{
+#if !defined (XALAN_NO_NAMESPACES)
+		using std::cout;
+		using std::endl;
+		using std::string;
+#endif
+		getArgs(argc, argv, theParams);
+
+		try
+		{
+			if (theParams.nThreads > 1)
+				xsltMultiThreadedMain(theParams);
+			else		
+				xsltMain(&theParams);
+		}
+		catch (XSLException& e)
+		{
+			cout << "\nXSLException ";
+
+			const string	type = DOMStringToStdString(e.getType());
+
+			if (!type.empty())
+				cout << "Type is : " << type << endl;
+
+			const string	msg = DOMStringToStdString(e.getMessage());
+
+			if (!msg.empty())
+				cout << "Message is : " << msg << endl;
+
+			theResult = -1;
+		}
+		catch (SAXException& e)
+		{
+			cout << "\nSAXException ";
+
+			const string	msg = DOMStringToStdString(e.getMessage());
+
+			if (!msg.empty())
+				cout << "Message is : " << msg << endl;
+
+			theResult = -1;
+		}
+		catch (XMLException& e)
+		{
+			cout << "\nXMLException ";
+
+			const string	type = DOMStringToStdString(e.getType());
+
+			if (!type.empty())
+				cout << "Type is : " << type << endl;
+
+			const string	msg = DOMStringToStdString(e.getMessage());
+
+			if (!msg.empty())
+				cout << "Message is : " << msg << endl;
+
+			theResult = -1;
+		}
 	}
 
-	catch (XSLException& e)
-	{
-		std::cout << "\nXSLException ";
-
-		std::string type = DOMStringToStdString(e.getType());
-
-		if (!type.empty())
-			std::cout << "Type is : " << type << std::endl;
-
-		std::string msg = DOMStringToStdString(e.getMessage());
-
-		if (!msg.empty())
-			std::cout << "Message is : " << msg << std::endl;
-
-		return -1;
-	}
-
-	catch (SAXException& e)
-	{
-		std::cout << "\nSAXException ";
-
-		std::string msg = DOMStringToStdString(e.getMessage());
-
-		if (!msg.empty())
-			std::cout << "Message is : " << msg << std::endl;
-
-		return -1;
-	}
-
-
-
-	catch (XMLException& e)
-	{
-		std::cout << "\nXMLException ";
-
-		std::string type = DOMStringToStdString(e.getType());
-
-		if (!type.empty())
-			std::cout << "Type is : " << type << std::endl;
-
-		std::string msg = DOMStringToStdString(e.getMessage());
-
-		if (!msg.empty())
-			std::cout << "Message is : " << msg << std::endl;
-
-		return -1;
-	}
-
-	return 0;
+	return theResult;
 }
-
