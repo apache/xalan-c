@@ -144,7 +144,7 @@ getTotal(
 			double						theSecondArgValue,
 			const XObjectPtr&			arg3)
 {
-	// Total the second and third arguments.  Ithe third argument is
+	// Total the second and third arguments.  If the third argument is
 	// missing, make it the length of the string + 1 (for XPath
 	// indexing style).
 	if (arg3.null() == true)
@@ -154,7 +154,7 @@ getTotal(
 	else
 	{
 		const double	theRoundedValue =
-			DoubleSupport::round(theSecondArgValue + arg3->num());
+			DoubleSupport::round(DoubleSupport::add(theSecondArgValue, arg3->num()));
 
 		// If there's overflow, then we should return the length of the string + 1.
 		if (DoubleSupport::isPositiveInfinity(theRoundedValue) == true)
@@ -216,9 +216,19 @@ FunctionSubstring::execute(
 	}
 	else
 	{
+		volatile double		foo = 0.0;
+
+		fprintf(stderr, "arg2->num() = '%f'\n", arg2->num());
+		fprintf(stderr, "0 / 0 = '%f'\n", 0.0 / foo);
+		fprintf(stderr, "-1 / 0 = '%f'\n", 1.0 / foo);
+		fprintf(stderr, "1 / 0 = '%f'\n", 1.0 / foo);
+		fprintf(stderr, "sqrt(-2.01) = '%f'\n", sqrt(-2.01));
+
 		// Get the value of the second argument...
 		const double	theSecondArgValue =
 			DoubleSupport::round(arg2->num());
+
+		fprintf(stderr, "theSecondArgValue = '%f'\n", theSecondArgValue);
 
 		// XPath indexes from 1, so this is the first XPath index....
 		const XalanDOMString::size_type		theStartIndex = getStartIndex(theSecondArgValue, theSourceStringLength);

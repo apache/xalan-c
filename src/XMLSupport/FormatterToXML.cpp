@@ -322,7 +322,11 @@ FormatterToXML::~FormatterToXML()
 void
 FormatterToXML::initAttrCharsMap()
 {
+#if defined(XALAN_STRICT_ANSI_HEADERS)
+	std::memset(m_attrCharsMap, 0, sizeof(m_attrCharsMap));
+#else
 	memset(m_attrCharsMap, 0, sizeof(m_attrCharsMap));
+#endif
 
 	const XalanDOMString::size_type		nSpecials = length(m_attrSpecialChars);
 
@@ -344,14 +348,22 @@ FormatterToXML::initCharsMap()
 {
 	initAttrCharsMap();
 
+#if defined(XALAN_STRICT_ANSI_HEADERS)
+	std::memset(m_charsMap, 0, sizeof(m_charsMap));
+#else
 	memset(m_charsMap, 0, sizeof(m_charsMap));
+#endif
 
 	m_charsMap[XalanUnicode::charLF] = 'S';
 	m_charsMap[XalanUnicode::charLessThanSign] = 'S';
 	m_charsMap[XalanUnicode::charGreaterThanSign] = 'S';
 	m_charsMap[XalanUnicode::charAmpersand] = 'S';
 
+#if defined(XALAN_STRICT_ANSI_HEADERS)
+	std::memset(m_charsMap, 'S', 20);
+#else
 	memset(m_charsMap, 'S', 20);
+#endif
 
 	// $$$ ToDo: I believe these are redundant...
 	m_charsMap[0x0A] = 'S';

@@ -612,7 +612,11 @@ XalanTransformer::destroyStylesheet(const XalanCompiledStylesheet*	theStylesheet
 
 		m_errorMessage.resize(theLength + 1, '\0');
 
+#if defined(XALAN_STRICT_ANSI_HEADERS)
+		std::strncpy(&*m_errorMessage.begin(), theStylesheetErrorMessage, theLength);
+#else
 		strncpy(&*m_errorMessage.begin(), theStylesheetErrorMessage, theLength);
+#endif
 
 		return -1;
 	}
@@ -730,7 +734,11 @@ XalanTransformer::destroyParsedSource(const XalanParsedSource*	theParsedSource)
 
 		m_errorMessage.resize(theLength + 1, '\0');
 
+#if defined(XALAN_STRICT_ANSI_HEADERS)
+		std::strncpy(&*m_errorMessage.begin(), theParsedSourceErrorMessage, theLength);
+#else
 		strncpy(&*m_errorMessage.begin(), theParsedSourceErrorMessage, theLength);
+#endif
 
 		return -1;
 	}

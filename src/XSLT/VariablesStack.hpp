@@ -356,52 +356,6 @@ public:
 		VariablesStack&		m_variablesStack;
 	};
 
-private:
-
-	class StackEntry;
-
-	/**
-	 * Check to see if an element frame for the particular element has already
-	 * been pushed.
-	 * 
-	 * @param elem element in question
-	 * @return true if it has been pushed already
-	 */
-	bool
-	elementFrameAlreadyPushed(const ElemTemplateElement*	elem) const;
-
-	/**
-	 * Push an entry onto the stack.
-	 *
-	 * @param stack entry to push
-	 */
-	void
-	push(const StackEntry&	theEntry);
-
-	/**
-	 * Pop an entry from the top of the stack.
-	 */
-	void
-	pop();
-
-	/**
-	 * Get a reference to the entry at the back (top) of the stack.
-	 *
-	 * @return a reference to the back of the stack.
-	 */
-	const StackEntry&
-	back() const
-	{
-		assert(m_stack.empty() == false);
-
-		return m_stack.back();
-	}
-
-	friend class CommitPushElementFrame;
-	friend class EnsurePop;
-	friend class PushParamFunctor;
-	friend class SetAndRestoreForceGlobalSearch;
-
 	class XALAN_XSLT_EXPORT StackEntry
 	{
 	public:
@@ -555,6 +509,49 @@ private:
 
 	enum { eDefaultStackSize = 100 };
 
+private:
+
+	/**
+	 * Check to see if an element frame for the particular element has already
+	 * been pushed.
+	 * 
+	 * @param elem element in question
+	 * @return true if it has been pushed already
+	 */
+	bool
+	elementFrameAlreadyPushed(const ElemTemplateElement*	elem) const;
+
+	/**
+	 * Push an entry onto the stack.
+	 *
+	 * @param stack entry to push
+	 */
+	void
+	push(const StackEntry&	theEntry);
+
+	/**
+	 * Pop an entry from the top of the stack.
+	 */
+	void
+	pop();
+
+	/**
+	 * Get a reference to the entry at the back (top) of the stack.
+	 *
+	 * @return a reference to the back of the stack.
+	 */
+	const StackEntry&
+	back() const
+	{
+		assert(m_stack.empty() == false);
+
+		return m_stack.back();
+	}
+
+	friend class CommitPushElementFrame;
+	friend class EnsurePop;
+	friend class PushParamFunctor;
+	friend class SetAndRestoreForceGlobalSearch;
 
 	const XObjectPtr
 	findXObject(

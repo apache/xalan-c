@@ -260,7 +260,11 @@ XalanDOMString::assign(
 		else
 		{
 			// Yuck.  We have to move data...
+#if defined(XALAN_STRICT_ANSI_HEADERS)
+			std::memmove(&*begin(), &*begin() + thePosition, theCount * sizeof(XalanDOMChar));
+#else
 			memmove(&*begin(), &*begin() + thePosition, theCount * sizeof(XalanDOMChar));
+#endif
 
 			resize(theCount);
 		}
@@ -723,9 +727,16 @@ XalanDOMString::length(const char*	theString)
 {
 	assert(theString != 0);
 
+#if defined(XALAN_STRICT_ANSI_HEADERS)
+	assert(std::strlen(theString) < size_type(npos));
+
+	return size_type(std::strlen(theString));
+#else
 	assert(strlen(theString) < size_type(npos));
 
 	return size_type(strlen(theString));
+#endif
+
 }
 
 
@@ -838,6 +849,10 @@ doTranscodeToLocalCodePage(
 			CharVectorType&				theTargetVector,
 			bool						terminate)
 {
+#if defined(XALAN_STRICT_ANSI_HEADERS)
+	using std::wcstombs;
+#endif
+
     // Short circuit if it's a null pointer, or of length 0.
     if (!theSourceString || (!theSourceString[0]))
     {
@@ -900,7 +915,7 @@ doTranscodeToLocalCodePage(
 	}
 
     // See how many chars we need to transcode.
-    const size_t	targetLen = ::wcstombs(0, theTempSource, 0);
+    const size_t	targetLen = wcstombs(0, theTempSource, 0);
 
 	if (targetLen == size_t(-1))
 	{
@@ -965,6 +980,10 @@ doTranscodeFromLocalCodePage(
 			XalanDOMCharVectorType&		theTargetVector,
 			bool						terminate)
 {
+#if defined(XALAN_STRICT_ANSI_HEADERS)
+	using std::mbstowcs;
+#endif
+
 	typedef XalanDOMString::size_type	size_type;
 
     // Short circuit if it's a null pointer, or of length 0.
@@ -992,22 +1011,24 @@ doTranscodeFromLocalCodePage(
 					theSourceStringIsNullTerminated,
 					theTargetVector,
 					terminate,
-					strlen);
+					XalanDOMString::length(strlen));
 	}
 #else
 	XalanArrayAutoPtr<char>		tempString;
 
 	if (theSourceStringIsNullTerminated == true)
 	{
-		assert(strlen(theSourceString) < XalanDOMString::npos);
-
-		theSourceStringLength = size_type(strlen(theSourceString));
+		theSourceStringLength = XalanDOMString::length(theSourceString);
 	}
 	else
 	{
 		tempString.reset(new char[theSourceStringLength + 1]);
 
+#if defined(XALAN_STRICT_ANSI_HEADERS)
+		std::strncpy(tempString.get(), theSourceString, theSourceStringLength);
+#else
 		strncpy(tempString.get(), theSourceString, theSourceStringLength);
+#endif
 
 		tempString[theSourceStringLength] = '\0';
 
@@ -1016,7 +1037,7 @@ doTranscodeFromLocalCodePage(
 
     // See how many chars we need to transcode.
 	const size_t	theTargetLength =
-			::mbstowcs(0, theSourceString, size_t(theSourceStringLength));
+			mbstowcs(0, theSourceString, size_t(theSourceStringLength));
 
 	if (theTargetLength == size_t(-1))
 	{

@@ -325,7 +325,7 @@ length(const char*	theString)
 {
 	assert(theString != 0);
 
-	return XalanDOMString::size_type(strlen(theString));
+	return XalanDOMString::length(theString);
 }
 
 

@@ -357,8 +357,10 @@ private:
 	XalanUnicode&
 	operator=(const XalanUnicode&);
 
-#endif
 };
+#else
+}
+#endif
 
 
 

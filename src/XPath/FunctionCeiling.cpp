@@ -83,7 +83,11 @@ FunctionCeiling::execute(
 {
 	assert(arg1.null() == false);
 
+#if defined(XALAN_STRICT_ANSI_HEADERS)
+	return executionContext.getXObjectFactory().createNumber(std::ceil(arg1->num()));
+#else
 	return executionContext.getXObjectFactory().createNumber(ceil(arg1->num()));
+#endif
 }
 
 

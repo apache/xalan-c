@@ -1089,7 +1089,7 @@ MakeXalanDOMCharVector(
 	else
 	{
 		// Include the terminating null byte...
-		const size_t	theLength = strlen(data) + 1;
+		const XalanDOMString::size_type		theLength = XalanDOMString::length(data) + 1;
 
 		theResult.reserve(theLength);
 
@@ -1158,7 +1158,7 @@ CopyStringToVector(
 	theVector.insert(
 		theVector.end(),
 		theString,
-		theString + strlen(theString) + 1);
+		theString + XalanDOMString::length(theString) + 1);
 }
 
 

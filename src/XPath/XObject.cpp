@@ -180,6 +180,8 @@ XObject::str(XalanDOMString&	theBuffer) const
 
 
 
+static int foo = 0;
+
 const ResultTreeFragBase&
 XObject::rtree() const
 {
@@ -187,9 +189,9 @@ XObject::rtree() const
 
 	// This is just a dummy value to satisfy the compiler.
 #if defined(XALAN_OLD_STYLE_CASTS)
-	return *((ResultTreeFragBase*)0);
+	return (const ResultTreeFragBase&)foo;
 #else
-	return *reinterpret_cast<ResultTreeFragBase*>(0);
+	return reinterpret_cast<const ResultTreeFragBase&>(foo);
 #endif
 }
 

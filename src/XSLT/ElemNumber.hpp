@@ -452,6 +452,8 @@ private:
 	static const NumberingResourceBundleMapType&	s_resourceBundles;
 
 
+public:
+
 	/**
 	 * This class returns tokens using non-alphanumberic characters as
 	 * delimiters. 
@@ -530,6 +532,8 @@ private:
 
 		const XalanDOMString*	m_string;
 	};
+	
+private:
 };
 
 

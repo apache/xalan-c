@@ -725,7 +725,7 @@ XPathProcessorImpl::tokenIs(const char*		s) const
 {
 	const unsigned int	theTokenLength = length(m_token);
 
-	const unsigned int	theStringLength = strlen(s);
+	const unsigned int	theStringLength = XalanDOMString::length(s);
 
 	if (theTokenLength != theStringLength)
 	{

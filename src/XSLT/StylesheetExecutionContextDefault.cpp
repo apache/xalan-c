@@ -533,7 +533,11 @@ StylesheetExecutionContextDefault::createMatchPattern(
 		if (i != m_matchPatternCache.end())
 		{
 			// Update hit time...
+#if defined(XALAN_STRICT_ANSI_HEADERS)
+			(*i).second.second = std::clock();
+#else
 			(*i).second.second = clock();
+#endif
 
 			theResult = (*i).second.first;
 		}
@@ -2286,7 +2290,11 @@ StylesheetExecutionContextDefault::addToXPathCache(
 {
 	assert(m_xsltProcessor != 0);
 
-	clock_t		addClock = clock();
+#if defined(XALAN_STRICT_ANSI_HEADERS)
+	ClockType	addClock = std::clock();
+#else
+	ClockType	addClock = clock();
+#endif
 
 	if (m_matchPatternCache.size() == eXPathCacheMax)
 	{
@@ -2294,7 +2302,7 @@ StylesheetExecutionContextDefault::addToXPathCache(
 
 		// Initialize the lowest clock time found so far
 		// with the current clock...
-		clock_t		lowest = addClock;
+		ClockType	lowest = addClock;
 
 		// Get some iterators ready to search the cache...
 		XPathCacheMapType::iterator		i =
@@ -2307,7 +2315,7 @@ StylesheetExecutionContextDefault::addToXPathCache(
 
 		while(i != theEnd)
 		{
-			const clock_t	current = (*i).second.second;
+			const ClockType		current = (*i).second.second;
 
 			if (current < lowest)
 			{

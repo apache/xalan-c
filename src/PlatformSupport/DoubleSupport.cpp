@@ -91,7 +91,7 @@ const double	DoubleSupport::s_positiveInfinity = XALAN_POSITIVE_INFINITY;
 
 #else
 
-const double	DoubleSupport::s_NaN = std::numeric_limits<double>::signaling_NaN();
+const double	DoubleSupport::s_NaN = std::numeric_limits<double>::quiet_NaN();
 const double	DoubleSupport::s_positiveInfinity = std::numeric_limits<double>::infinity();
 
 #endif
@@ -367,7 +367,11 @@ DoubleSupport::modulus(
 
 		double	theResult = divide(theLHS, theRHS);
 
+#if defined(XALAN_STRICT_ANSI_HEADERS)
+		return std::modf(theResult, &theDummy) * theRHS;
+#else
 		return modf(theResult, &theDummy) * theRHS;
+#endif
 	}
 }
 
@@ -660,7 +664,12 @@ convertHelper(
 
 			theBuffer[theLength] = '\0';
 #endif
+
+#if defined(XALAN_STRICT_ANSI_HEADERS)
+			return std::atof(theBuffer);
+#else
 			return atof(theBuffer);
+#endif
 		}
 		else
 		{
@@ -675,7 +684,12 @@ convertHelper(
 
 			translateWideString(theString, &*theVector.begin(), theLength);
 #endif
+
+#if defined(XALAN_STRICT_ANSI_HEADERS)
+			return std::atof(&*theVector.begin());
+#else
 			return atof(&*theVector.begin());
+#endif
 		}
 	}
 }
@@ -785,13 +799,7 @@ doConvert(const XalanDOMChar*	theString)
 	}
 	else
 	{
-#if defined(XALAN_FULL_WCHAR_SUPPORT) && defined(XALAN_USE_WCHAR_SUPPORT)
-		XalanDOMChar*	theDummy;
-
-		return wcstod(theString, &theDummy);
-#else
 		return convertHelper(theString, fGotDecimalPoint);
-#endif
 	}
 #else
 	bool	fGotDecimalPoint = false;
@@ -802,13 +810,7 @@ doConvert(const XalanDOMChar*	theString)
 	}
 	else
 	{
-#if defined(XALAN_FULL_WCHAR_SUPPORT) && defined(XALAN_USE_WCHAR_SUPPORT)
-		XalanDOMChar*	theDummy;
-
-		return wcstod(theString, &theDummy);
-#else
 		return convertHelper(theString, fGotDecimalPoint);
-#endif
 	}
 #endif
 }
@@ -1055,7 +1057,11 @@ DoubleSupport::round(double		theValue)
 		// round up (toward 0), rather than down.
 		double			intPart = 0;
 
+#if defined(XALAN_STRICT_ANSI_HEADERS)
+		const double	fracPart = std::modf(theValue, &intPart);
+#else
 		const double	fracPart = modf(theValue, &intPart);
+#endif
 
 		if (fracPart == -0.5)
 		{

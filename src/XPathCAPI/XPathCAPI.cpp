@@ -342,7 +342,7 @@ transcodeString(
 
 	int		theResult = XALAN_XPATH_API_SUCCESS;
 
-	if (theStringEncoding == 0 || strlen(theStringEncoding) == 0)
+	if (theStringEncoding == 0 || XalanDOMString::length(theStringEncoding) == 0)
 	{
 		theResultString = theString;
 	}
@@ -375,11 +375,11 @@ transcodeString(
 			// surrogate pairs, but those are for private use
 			// only right now, so we don't really need to
 			// worry about them.
-			const size_t	theLength = strlen(theString);
+			const XalanDOMString::size_type		theLength = XalanDOMString::length(theString);
 
 			// Only use a dynamically-allocated array for very long
 			// XPath expressions.
-			const size_t	maxStackArraySize = 100;
+			const XalanDOMString::size_type		maxStackArraySize = 100;
 
 			if (theLength >= maxStackArraySize)
 			{
@@ -432,7 +432,7 @@ XalanCreateXPath(
 	{
 		return XALAN_XPATH_API_ERROR_ALREADY_TERMINATED;
 	}
-	else if (theXalanHandle == 0 || theXPathHandle == 0 || theXPathExpression == 0 || strlen(theXPathExpression) == 0)
+	else if (theXalanHandle == 0 || theXPathHandle == 0 || theXPathExpression == 0 || XalanDOMString::length(theXPathExpression) == 0)
 	{
 		return XALAN_XPATH_API_ERROR_INVALID_PARAMETER;
 	}
@@ -563,7 +563,7 @@ XalanEvaluateXPathAsBoolean(
 #else
 											reinterpret_cast<const XMLByte*>(theXML),
 #endif
-											strlen(theXML),
+											XalanDOMString::length(theXML),
 											"SourceXML",
 											false);
 

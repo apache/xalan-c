@@ -101,7 +101,7 @@ FunctionSum::execute(
 	{
 		DOMServices::getNodeData(*nl.item(i), theString);
 
-		sum += DoubleSupport::toDouble(theString);
+		sum = DoubleSupport::add(sum, DoubleSupport::toDouble(theString));
 
 		clear(theString);
 	}

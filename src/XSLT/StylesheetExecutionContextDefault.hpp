@@ -118,6 +118,12 @@ class XALAN_XSLT_EXPORT StylesheetExecutionContextDefault : public StylesheetExe
 {
 public:
 
+#if defined(XALAN_STRICT_ANSI_HEADERS)
+	typedef std::clock_t	ClockType;
+#else
+	typedef clock_t			ClockType;
+#endif
+
 #if defined(XALAN_NO_NAMESPACES)
 	typedef deque<const ElemTemplateElement*>			ElementRecursionStackType;
 	typedef vector<FormatterListener*>					FormatterListenerVectorType;
@@ -125,7 +131,7 @@ public:
 	typedef vector<XalanOutputStream*>					OutputStreamVectorType;
 	typedef set<const KeyDeclaration*,
 				less<const KeyDeclaration*> >			KeyDeclarationSetType;
-	typedef pair<const XPath*, clock_t>					XPathCacheEntry;
+	typedef pair<const XPath*, ClockType>				XPathCacheEntry;
 	typedef map<XalanDOMString,
 				XPathCacheEntry,
 				less<XalanDOMString> >					XPathCacheMapType;
@@ -135,7 +141,7 @@ public:
 	typedef std::vector<PrintWriter*>					PrintWriterVectorType;
 	typedef std::vector<XalanOutputStream*>				OutputStreamVectorType;
 	typedef std::set<const KeyDeclaration*>				KeyDeclarationSetType;
-	typedef std::pair<const XPath*, clock_t>			XPathCacheEntry;
+	typedef std::pair<const XPath*, ClockType>			XPathCacheEntry;
 	typedef std::map<XalanDOMString, XPathCacheEntry>	XPathCacheMapType;
 #endif
 
@@ -1088,7 +1094,7 @@ private:
 
 	static XalanNumberFormatFactory*	s_xalanNumberFormatFactory;
 
-	const static DefaultCollationCompareFunctor		s_defaultCollationFunctor;
+	static const DefaultCollationCompareFunctor		s_defaultCollationFunctor;
 };
 
 

@@ -166,14 +166,22 @@ FormatterToHTML::initCharsMap()
 {
 	initAttrCharsMap();
 
+#if defined(XALAN_STRICT_ANSI_HEADERS)
+	std::memset(m_charsMap, 0, sizeof(m_charsMap));
+#else
 	memset(m_charsMap, 0, sizeof(m_charsMap));
+#endif
 
 	m_charsMap[XalanUnicode::charLF] = 'S';
 	m_charsMap[XalanUnicode::charLessThanSign] = 'S';
 	m_charsMap[XalanUnicode::charGreaterThanSign] = 'S';
 	m_charsMap[XalanUnicode::charAmpersand] = 'S';
 
+#if defined(XALAN_STRICT_ANSI_HEADERS)
+	std::memset(m_charsMap, 'S', 10);
+#else
 	memset(m_charsMap, 'S', 10);
+#endif
 
 	m_charsMap[0x0A] = 'S';
 	m_charsMap[0x0D] = 'S';

@@ -1499,16 +1499,20 @@ XSLTEngineImpl::pushTime(const void*	key)
 {
 	if(0 != key)
 	{
+#if defined(XALAN_STRICT_ANSI_HEADERS)
+		m_durationsTable[key] = std::clock();
+#else
 		m_durationsTable[key] = clock();
+#endif
 	}
 }
 
 
 
-clock_t
+XSLTEngineImpl::ClockType
 XSLTEngineImpl::popDuration(const void*		key)
 {
-	clock_t 	clockTicksDuration = 0;
+	ClockType 	clockTicksDuration = 0;
 
 	if(0 != key)
 	{
@@ -1517,7 +1521,11 @@ XSLTEngineImpl::popDuration(const void*		key)
 
 		if (i != m_durationsTable.end())
 		{
+#if defined(XALAN_STRICT_ANSI_HEADERS)
+			clockTicksDuration = std::clock() - (*i).second;
+#else
 			clockTicksDuration = clock() - (*i).second;
+#endif
 
 			m_durationsTable.erase(i);
 		}
@@ -1535,7 +1543,7 @@ XSLTEngineImpl::displayDuration(
 {
 	if(0 != key)
 	{
-		const clock_t	theDuration = popDuration(key);
+		const ClockType	theDuration = popDuration(key);
 
 		if(0 != m_diagnosticsPrintWriter)
 		{

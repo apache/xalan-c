@@ -122,7 +122,7 @@ XResultTreeFrag*
 XResultTreeFrag::clone(void*	theAddress) const
 {
 	return theAddress == 0 ? new XResultTreeFrag(*this) : new (theAddress) XResultTreeFrag(*this);
-};
+}
 
 
 

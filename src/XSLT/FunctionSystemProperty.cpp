@@ -151,7 +151,11 @@ FunctionSystemProperty::execute(
 	else
 	{
 		const char* const	theEnvString =
+#if defined(XALAN_STRICT_ANSI_HEADERS)
+			std::getenv(c_str(TranscodeToLocalCodePage(fullName)));
+#else
 			getenv(c_str(TranscodeToLocalCodePage(fullName)));
+#endif
 
 		if (theEnvString == 0)
 		{

@@ -152,6 +152,12 @@ class XALAN_XSLT_EXPORT XSLTEngineImpl : public XSLTProcessor, public PrefixReso
 {
 public:
 
+#if defined(XALAN_STRICT_ANSI_HEADERS)
+	typedef std::clock_t	ClockType;
+#else
+	typedef clock_t			ClockType;
+#endif
+
 #if defined(XALAN_NO_NAMESPACES)
 	typedef map<XalanDOMString,
 				int,
@@ -160,7 +166,7 @@ public:
 				int,
 				less<XalanDOMString> >		ElementKeysMapType;
 	typedef map<const void*,
-				clock_t,
+				ClockType,
 				less<const void*> >			DurationsTableMapType;
 	typedef vector<const Locator*>			LocatorStack;
 	typedef vector<TraceListener*>			TraceListenerVectorType;
@@ -168,7 +174,7 @@ public:
 #else
 	typedef std::map<XalanDOMString, int>		AttributeKeysMapType;
 	typedef std::map<XalanDOMString, int>		ElementKeysMapType;
-	typedef std::map<const void*, clock_t>		DurationsTableMapType;
+	typedef std::map<const void*, ClockType>	DurationsTableMapType;
 	typedef std::vector<const Locator*>			LocatorStack;
 	typedef std::vector<TraceListener*>			TraceListenerVectorType;
 	typedef std::vector<bool>					BoolVectorType;
@@ -826,7 +832,7 @@ public:
 	 *
 	 * @param key pointer to element involved
 	 */
-	clock_t
+	ClockType
 	popDuration(const void* 	key);
 
 	/**
