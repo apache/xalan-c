@@ -65,15 +65,14 @@
 <li><link anchor="use">Using an extension function</link></li>
 </ul><anchor name="intro"/>
   <s2 title="Introduction">
-<p>For those situations where you would like to augment the functionality of XSLT with calls to C++ functions that you provide, &xslt4c; supports the creation and use of extension functions.</p>
-<note>&xslt4c; does not yet support extension elements. Support for extension elements will be added in the near future.</note>
-
+<p>At times, you may want to call your own custom C++ functions from a stylesheet. For these situations, &xslt4c; supports the creation and use of extension functions.</p>
 <p>You can think of extension functions as extending the core library of functions that XPath provides. Like the
 XPath functions, an extension function returns an XObject, which may contain a value of any of the five XSLT
 data types: node-set, result-tree-fragment, string, boolean, or number.</p> 
 <p>You can send arguments to an extension function in the form of XPath expressions, literals (for string, boolean, and number), the values returned by other functions, and XSL variables or parameters set to any of the preceding.</p>
 <p>For an example that implements, installs, and uses three extension functions, see the 
 <link idref="samples" anchor="externalfunc">External Functions</link> sample.</p>
+<note>&xslt4c; does not yet support extension elements. Support for extension elements will be added in the near future.</note>
 </s2><anchor name="implement"/>
 <s2 title="Implementing an extension function">
   <p>Like the standard XPath functions, the functions you create derive from the Function base class. Set up your 
@@ -81,7 +80,7 @@ data types: node-set, result-tree-fragment, string, boolean, or number.</p>
   <ol>
   <li>The body of a function is the execute() method. Use the appropriate XObjectFactory method -- createNumber()
   in the example below -- to create an XObject corresponding to the XSLT data type the function returns.<br/><br/></li>
-  <li>Implement a clone method() to enable Xalan to create and maintain a copy of the extension
+  <li>Implement a clone() method to enable Xalan to create and maintain a copy of the extension
   function.<br/><br/></li> 
   <li>(Optional) As is the practice for the XPath functions, you may want to prevent the compiler from generating 
   an assignment or equality operator for this function.</li>
@@ -132,6 +131,8 @@ public:
    *
    * @return pointer to the new object
    */
+// For compilers that do not support covariant return types,
+// clone() must be declared to return the base type.
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
   virtual Function*
 #else
@@ -155,15 +156,14 @@ private:
 methods for installing (and uninstalling) extension functions:</p>
 <ul>
   <li>installExternalFunctionGlobal() is a static method for making a function available globally</li>
-  <li>installExternalFunctionLocal() makes the function available to the current instance of the XSLT processor.</li>
+  <li>installExternalFunctionLocal() makes the function available to the XSLTProcessorEnvSupport instance in which the function is
+  installed.</li>
 </ul>
 <p>These methods include arguments for the namespace, the function name, and the function implementation.</p>
 <note>These XSLTProcessorEnvSupportDefault methods call XPathEnvSupportDefault methods of the same name which provide 
 the actual implementation.</note>
 <p>When you install an extension function, the function inhabits the namespace you designate. For information about XML namespaces, see <jump href="http://www.w3.org/TR/REC-xml-names/">Namespaces in XML</jump>.</p>
-<p>We do not recommend this, but you can also install a function directly into the XPath function table, in which
-case it is not really an extension function. The XPath parser treats it like any other XPath function, and no namespace declaration or prefix is involved.</p>
-<p>The following code fragment installs the square root function defined above as a global function.</p>
+<p>The following code fragment installs the square root function defined above as a global function, and binds it to the extension-function name "square-root" in the namespace "http://ExternalFunction.xalan-c++.xml.apache.org" so it can be accessed from stylesheets. Keep in mind that the function name does not need to be the same as the name of the function class, and that a function name may be used more than once provided that each function with that name is installed in a different namespace.</p>
 <source>// You have created a header file for FunctionSquareRoot.
 #include &lt;MyFunctions/FunctionSquareRoot.hpp&gt;
 // The namespace...
@@ -175,6 +175,8 @@ XSLTProcessorEnvSupportDefault::installExternalFunctionGlobal(
     theNamespace,
     "square-root",
     FunctionSquareRoot());</source>
+<note>We do not recommend this, but you can also install a function directly into the XPath function table, in which
+case it is not really an extension function. The XPath parser treats it like any other XPath function, and no namespace declaration or prefix is involved.</note>
 <p>For an example that installs a global extension function, a local extension function, and adds a function to the
  XPath function table, see the <link idref="samples" anchor="externalfunc">External Functions</link> sample.</p>
 </s2><anchor name="use"/>
@@ -191,7 +193,7 @@ use<br/><br/>
 in the stylesheet element or<br/><br/>
 <code>xsl:exclude-result-prefixes="<ref>prefix-1 prefix-2 ...</ref>"</code><br/><br/>
 in a literal result element or extension element.<br/><br/></li>
-<li>Call the extension function in the same manner you would call an XPath function.<br/><br/>
+<li>Call the extension function in the same manner you would call an XPath function. The function name you use in the stylesheet is a Qualified Name (QName) made up of the prefix you delcared in step 1 and the function name you specified when you installed the function.<br/><br/>
 You can use XPath expressions, literals (for string, boolean, and number), and values returned by other functions to
 specify function arguments.</li></ol>
 <p>Suppose, for example, you are working with XML documents containing area elements like
@@ -225,13 +227,11 @@ see the <link idref="samples" anchor="externalfunc">External Functions</link> sa
 <p>Please keep in mind that <em>all</em> LocationPath expressions return a node-set, even if the expression only 
 returns a single attribute or a text node (node-sets with one member). You can use the XSLT string() function 
 to convert a node-set value to string, and the number() function to convert a node-set value to number (a double).</p>
-<p>If you want to pass a node-set to an extension function, set up the function to accept a NodeRefListBase
-(or a MutableNodeRefList if you want to modify the nodes).</p>
+<p>If you want to pass a node-set to an extension function, set up the function to accept a <jump href="apidocs/class_nodereflistbase.html">NodeRefListBase</jump>.</p>
 <p>Suppose, for example, you have a ProcessNodes function class that uses<br/><br/> 
-<code>const NodeRefListBase&amp;	theNodeList = args[0]->nodeset();</code><br/><br/>
+<code>const NodeRefListBase&amp; theNodeList = args[0]->nodeset();</code><br/><br/>
 in the execute() method to get a reference to the node-set.</p>
-<p>Assuming you use the node-ext prefix in a stylesheet to refer to this function, any of the following function calls 
-are syntactically possible:</p>
+<p>Assuming you install the function as "ProcessNodes" and use the "node-ext" prefix in a stylesheet to refer to the ProcessNodes function namespace, any of the following function calls are syntactically possible:</p>
 <p><code>&lt;!--Process the current node--&gt;</code><br/>
 <code>&lt;xsl:variable name="success" select="node-ext:ProcessNodes(.)"/&gt;</code></p>
 <p><code>&lt;!--Process all nodes in current context--></code><br/>

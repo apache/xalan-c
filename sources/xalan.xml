@@ -58,7 +58,7 @@
  * <http://www.apache.org/>.
  -->
 
-<book title="Xalan-C XSL Transformer User's Guide" copyright="2000 The Apache Software Foundation">
+<book title="Xalan-C++ XSLT User's Guide" copyright="2000 The Apache Software Foundation">
 
   <resources source="sbk:/sources/xalan/resources.xml"/>
     
@@ -67,7 +67,7 @@
   <separator/>
   
   <document id="index"
-            label="Xalan-C 1.0.0"
+            label="Xalan-C++ 0.30.0"
             source="xalan/index.xml"/>
             
  <separator/>            
@@ -76,7 +76,7 @@
   
   <document id="overview" 
             label="Overview" 
-            source="xalan/overview.xml"/>
+            source="xalan/overview.xml"/>   
                         
   <separator/>                      
 
@@ -106,7 +106,7 @@
 
   <separator/>
   
-  <external href="apidocs/index.html"  label="C++ API"/>
+  <external href="http://xml.apache.org/xalan/c-apidocs/index.html"  label="C++ API"/>
    
   <separator/>        
             

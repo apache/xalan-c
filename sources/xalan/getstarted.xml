@@ -1,7 +1,7 @@
 <?xml version="1.0" standalone="no"?>  
 <!DOCTYPE s1 SYSTEM "sbk:/style/dtd/document.dtd">
 
-<s1 title="Getting Started with Xalan-C">
+<s1 title="Getting Started with Xalan-C++">
 <ul>
 <li><link anchor="download">Downloading what you need</link></li>
 <li><link anchor="path">Setting up the system path</link></li>
@@ -11,61 +11,66 @@
 </ul>
 <anchor name="download"/>
 <s2 title="Downloading what you need">
-<p>For Xalan-C 1.0.0, we are distributing a Windows32 Visual C++ build and a Linux build. In the future, we intend to add builds for other platforms.</p>
-<s3 title="Xalan-C Distributions">
+<p>For &xslt4c-current;, we are distributing a Windows32 Visual C++ build and a Linux build. In the future, we intend to add builds for other platforms.</p>
+<s3 title="&xslt4c; Distributions">
 <p><img src="xalan-cdist.gif" alt="xalan-cdist.gif"/></p>
 </s3>
-<p>For the Windows32 build, download <jump href="http://xml.apache.org/dist/xalan-c/xalan-c_1_0_0.zip">xalan-c_1_0_1.zip</jump>.</p>
-<p>For the Linux build, download <jump href="http://xml.apache.org/dist/xalan-j/xalan-c_1_0_0.tar.gz">xalan-c_1_0_0.tar.gz</jump>.</p> 
-<p>Each distribution contains all you need to run the Xalan command-line utility for performing transformations. To build your own applications, you also need a compatible Xerces-C distribution.</p>
+<p>For the Windows32 build, download <jump href="http://xml.apache.org/dist/Xalan-C_0_30_0-win32.zip">Xalan-C_0_30_0-win32.zip</jump>.</p>
+<p>For the Linux build, download <jump href="http://xml.apache.org/dist/Xalan-C_0_30_0-linux.tar.gz">Xalan-C_0_30_0-linux.tar.gz</jump>.</p> 
+<p>Each distribution contains all you need to run the Xalan command-line utility for performing transformations. To build your own applications, you also need a compatible Xerces-C distribution and the <resource-ref idref="icu"/>.</p>
 <s3 title="What you need to run the Xalan command-line utility">
 <p>To run the Xalan executable for performing transformations, you need the following:</p>
 <p><em>Windows32</em></p>
 <ul>
 <li>The executable: TestXSLT.exe</li>
-<li>The 8 Xalan-C dynamic link libraries: DOMSupport.dll, PlatformSupport.dll, XalanDOM.dll, XercesParserLiaison.dll,
+<li>The Xalan-C dynamic link libraries: DOMSupport.dll, PlatformSupport.dll, XalanDOM.dll, XercesParserLiaison.dll,
     XercesPlatformSupport.dll, XMLSupport.dll, XPath.dll, XSLT.dll</li>
 <li>The Xerces-C dynamic link library: xerces-c_1_1.dll</li>
+<li>The International Components for Unicode (ICU) dynamic link libraries: icui18n.dll, icuuc.dll</li>
+<li>The ICU locale data files</li>
 </ul>
 
 <p><em>Linux</em></p>
 <ul>
-  <li>The utility: Test.XSLT</li>
-  <li>The Xalan-C shared library: libxalan-c_0_1_1.so</li>
-  <li>The Xerces-C shared library: libxerces-c1_1.so</li>
+  <li>The utility: TestXSLT</li>
+  <li>The Xalan-C shared library: libxalan-C_0_30_0.so</li>
+  <li>The Xerces-C shared library: libxerces-c1_0.so</li>
+  <li>The International Components for Unicode (ICU) shared library: libicu-1-4-1-2.so</li>
+  <li>The ICU locale data files</li>
 </ul>
+<p><em>Important</em> ICU requires you to set the ICU_DATA environment variable to point to the directory containing the ICU locale data files. In the Windows32 distribution, this is xml-xalan\c\Build\Win32\VC6\Release\Data. In the Linux distribution, it is xml-xalan/c/lib/data.</p>
 <p>For information about using the command-line utility, see <link idref="commandline">Command-Line Utility</link>.</p>
 </s3>
 <s3 title="What you need to build applications">
 <p>To build your own applications with Xalan and Xerces, you also need need the
 Xalan-C and Xerces-C header (.hpp) files and (for Windows) the Xerces-C libraries (.lib files).</p>
-<p>The Xalan-C header files are in the source tree in both distributions.</p> 
+<p>The Xalan-C header files are in the src directory tree in both distributions.</p> 
 <p>In the Windows32 distribution (built with Microsoft&reg; Visual C++&reg; 6.0), the dlls and libraries are in the Build - Win32 -V6 - Release subdirectory.</p> 
-<p>In the Linux distribution (built with a make file), the shared object library is in the lib subdirectory.</p>
-<p>To get the Xerces-C header and (for Windows) .lib files, download and expand the Xerces-C 1.1.0 Binary distribution for your platform from the <resource-ref idref="Xerces-c-dist"/>. For information about which Xerces-C distribution has been tested with this Xalan-C release, see <link idref="readme" anchor="status">Version of Xerces to use</link>.</p>
-<note>If you want to rebuild Xalan, you will also need the Xerces-C source distribution (Xalan uses a header file that is not included in the Xerces-C binary distributions). For more information, see <link idref="readme" anchor="build"></link>Build Notes.</note>
+<p>In the Linux distribution (built with a make file and Red Hat Linux 6.1), the shared object library is in the lib subdirectory.</p>
+<p>To get the Xerces-C header and (for Windows) .lib files, download and expand the Xerces-C 1.1.0 Binary distribution for your platform from the <resource-ref idref="xerces-c-dist"/>. For information about which Xerces-C distribution has been tested with this Xalan-C release, see <link idref="readme" anchor="status">Version of Xerces to use</link>.</p>
+<p>For information about rebuilding &xslt4c;, see the <link idref="readme" anchor="build">Build notes</link>.</p>
 </s3>
 </s2><anchor name="path"/>
-<s2 title="Setting up the system path">
-<p>For the Xalan-C Windows32 distribution, place xml-xalan\c\Build\Win32\VC6\Release on the system path.</p>
-<p>For the Xalan-C Linux distribution, place xml-xalan/c/bin and xml-xalan/c/lib on the system path. </p>
-<p>If you do your own Xalan and Xerces builds, be sure to include the directories that contain the libraries and the TextXSLT executable on your system path.</p>
+<s2 title="Setting up the path">
+<p>For the Xalan-C Windows32 distribution, place xml-xalan\c\Build\Win32\VC6\Release on the path.</p>
+<p>For the Xalan-C Linux distribution, place xml-xalan/c/bin and xml-xalan/c/lib on the shared library path (LD_LIBRARY_PATH for Red Hat Linux 6.1).</p>
+<p>If you do your own Xalan, ICU, and Xerces builds, be sure to include the directories that contain the libraries and the TextXSLT executable on your path.</p>
 </s2><anchor name="samples"/>
 <s2 title="Trying out the samples">
-<p>The &xslt4c; Windows32 distribution includes a number of basic sample applications. These samples are easy to run,
- and you can review the source files -- all of which are brief -- to see just how they work.</p>
- <note>The Linux distribution includes the sample application source files in the samples subdirectories. You can use these source files to build the executables. </note>
+<p>The &xslt4c; distribution includes a number of basic sample applications. These samples are easy to compile and run,
+ and you can review the source files -- all of which are brief -- to see just how they work. In the Windows32 distribution, we have precompiled these samples for you so they are ready to run. In the Linux distribution, you need to build them first.</p>
 <p>To run the samples, do the following:</p>
 <ol>
+<li>(Linux only) Compile the sample sources and build an executable for each sample application.</li>
 <li>Set up your path (see above). In the Windows32 distribution, the sample executables are in
-xml-xalan\c\Build\Win32\VC6\Release.</li>
+xml-xalan\c\Build\Win32\VC6\Release. For Linux, we suggest you build the executables in xml-xalan/c/bin.</li>
 <li>Go to the samples subdirectory containing the sample (use the DOS shell in Windows).</li>
 <li>Run the sample from the command line.</li>
 <li>Examine the application source files.</li>
 </ol>
 <p>For example, go to the SimpleTransform subdirectory and issue the following command:</p>
 <p><code>SimpleTransform</code></p>
-<p>The sample uses the foo.xsl stylesheet to transform foo.xml, and writes the transformation result to foo.out. To see how the example works, examine the source files: foo.xml, foo.xsl, foo.out, and SimpleTransform.cpp.</p>
+<p>SimpleTransform uses the foo.xsl stylesheet to transform foo.xml, and writes the transformation result to foo.out. To see how the example works, examine the source files: foo.xml, foo.xsl, foo.out, and SimpleTransform.cpp.</p>
 <p>For more information about the samples, see <link idref="samples">&xslt4c; Samples</link>.</p>
 </s2><anchor name="commandline"/>
 <s2 title="Performing your own transformations from the command line">
@@ -73,12 +78,10 @@ xml-xalan\c\Build\Win32\VC6\Release.</li>
 most standard transformations is as follows:</p>
 <p><code>TestXSLT -in <ref>xmlSource</ref> -xsl <ref>stylesheet</ref> -out <ref>outputfile</ref></code></p>
 <p>where <ref>xmlSource</ref> is the XML source file name, <ref>stylesheet</ref> is the XSL stylesheet file name, and <ref>outputfile</ref> is the output file name.</p>
-<p>If you want the output to be displayed on the screen, simply omit the -out flag and argument.</p>
+<p>If you want the output to be displayed on the screen, simply omit the -out flag and outputfile.</p>
 <p>You can use this utility to try out XSL stylesheets you have written, to make sure they do what you expect with the XML source files they are designed to transform. The utility provides useful messages if the source file or stylesheet is not well formed. If you include a DOCTYPE statement in your XML source files and include the -validate flag on the command line, the utility will also let you know whether the XML document is valid (conforms to that DOCTYPE). For more information, see <link idref="commandline">Command-Line Utility</link>.</p>
 </s2><anchor name="apps"/>
-<s2 title="Setting up your own C++ applications">
-<p>You can start by using your own XML source files and XSL stylesheets with the sample applications, which illustrate a number of the <link idref="usagepatterns">basic usage patterns</link>.</p>
-<p>If you modify a C++ source file, be sure to rebuild the application executable and place it on the system path.</p>
-<p>For more information on setting up applications, see <link idref="usagepatterns">Basic Usage Patterns</link>.</p>
+<s2 title="Setting up your own XSLT applications">
+<p>You can start by using your own XML source files and XSL stylesheets with the sample applications, which illustrate a number of usage patterns. For more information on setting up applications, see <link idref="usagepatterns">Basic Usage Patterns</link>.</p>
 </s2>
 </s1>

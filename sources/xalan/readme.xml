@@ -85,11 +85,29 @@
 </ul>
 <anchor name="jar"/> 
    <s3 title="Rebuilding &xslt4c;">
-   <p>To rebuild the Windows32 release, use the Microsoft Visual C++ 6.0 project files. To rebuild the Linux release, use the make file in the root of the source directory.</p>
-   <p><em>Important</em> We have set up the Visual C++ projects and the Linux make file to look for Xerces in a the directory structure that results from downloading xml-xerces/c from the Apache XML repository and building with the Visual C++ project files or the Linux make file. This structure parallels the Xalan-C source tree and build structure.<br/><br/>
+   <p>If you want to rebuild &xslt4c; (to produce a debug build, for example), you need the following:</p>
+   <ul>
+     <li>The &xslt4c; source files</li>
+     <li>The &xml4c; header and (for Windows) .lib files</li>
+     <li>The ICU header and (for Windows) .lib files</li>
+   </ul>
+   <p>The &xslt4c; source files are in the distribution.</p>
+   <p>The required &xml4c; files are in the &xml4c; binary distributions, with the exception of a header file that is only in the
+   &xml4c; source distributions. Accordingly, you need the binary and the source distributions.</p>
+   <p>To get the ICU, download and unzip the <resource-ref idref="icu-download"/> from the IBM developerWorks open source zone,
+   and do a build -- see the Windows NT or Unix build instructions in the readme.html that accompanies the download.</p>
+   <note> If you are not rebuilding ICUBridge, you do not need the ICU header or .lib files.</note>
+   <p>To rebuild the Windows32 release, use the Microsoft Visual C++ 6.0 project files. To rebuild the Linux release, use the make
+    file in the root of the source directory. Both builds look for &xml4c; and ICU in directories parallel to the xml-xalan
+    directory</p>
+   <p><em>Important</em> We have set up the Visual C++ projects and the Linux make file to look for Xerces in a directory structure that results from downloading xml-xerces/c from the <jump href="http://xml.apache.org/websrc/cvsweb.cgi/">Apache XML CVS repository</jump> and building with the Visual C++ project files or the Linux make file. This structure parallels the Xalan-C source tree and build structure.<br/><br/>
 If you are using a Xerces-C binary distribution, you must either modify the Xalan-C project files or makefile, or rearrange the build directory structure, and you must also get the header files from the Xerces-C source distribution, since Xalan-C uses a header file that is not included in the Xerces-C binary distribution.</p>
-<note>Keep in mind that at any given point in time the Xalan-C and Xerces-C source trees in the Apache XML repository may not be consistent. When we release a version of Xerces-C we certify that it is compabible with a given release of Xalan-C. To be safe, stick with distributions that we certify to be compatible. Reminder: Xalan-C 1.0.0 is compatible with Xerces-C 1.1.0.</note>
-   </s3><anchor name="samples"/>
+<s4 title="&xml4c; and ICU layout for &xslt4c; build">
+<p><img src="xerces-icu.gif" alt="xerces-icu.gif"/></p>
+</s4>
+<note>Keep in mind that at any given point in time the Xalan-C and Xerces-C source trees in the Apache XML repository may not be consistent. When we release a version of Xerces-C we certify that it is compabible with a given release of Xalan-C. To be safe, stick with distributions that we certify to be compatible. Reminder: &xslt4c-current; is compatible with &xml4c-used;.<br/><br/>
+&xslt4c-current; was built with the &icu-used;. You can probably use newer ICU releases as they appear.</note>
+</s3><anchor name="samples"/>
    <s3 title="Rebuilding a sample application">
    <p>The Windows32 distribution includes Visual C++ project files for each of the sample applications. The project files are in the samples subdirectories along with the source files. If you modify a sample and want to recompile it, you can recompile the .cpp file(s) and rebuild the executable.</p>
 <p>The Linux distribution does not yet include make files for the sample applications, so you must construct your own Linux make files and build the sample executables.</p>
