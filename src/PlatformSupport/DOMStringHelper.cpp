@@ -735,6 +735,7 @@ struct WideStringCollationCompare
 
 
 template<class CompareFunctionType>
+int
 DOMStringCompare(
 			CompareFunctionType		theCompareFunction,
 			const XalanDOMString&	theLHS,
