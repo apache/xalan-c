@@ -74,9 +74,7 @@
 
 
 
-#include <xalanc/XalanDOM/XalanDocument.hpp>
-#include <xalanc/XalanDOM/XalanEmptyNamedNodeMap.hpp>
-#include <xalanc/XalanDOM/XalanNodeListSurrogate.hpp>
+#include <xalanc/XalanDOM/XalanNode.hpp>
 
 
 #include <xalanc/PlatformSupport/PrefixResolver.hpp>
@@ -121,7 +119,7 @@ class StylesheetExecutionContext;
  * This class represents the base stylesheet or an "import" stylesheet.
  * "include" stylesheets are combined with the including stylesheet.
  */
-class XALAN_XSLT_EXPORT Stylesheet : public XalanDocument, protected PrefixResolver
+class XALAN_XSLT_EXPORT Stylesheet : protected PrefixResolver
 {	
 
 public:
@@ -423,17 +421,6 @@ public:
 			const XalanDOMChar*				aname,
 			const XalanDOMChar*				val,
 			StylesheetConstructionContext&	constructionContext) const;
-
-	/**
-	 * Tell if this is the root of the stylesheet tree.
-	 * 
-	 * @return true if it is the root
-	 */
-	bool
-	isRoot() const
-	{
-		return m_isRoot;
-	}
 
 	/**
 	 * Retrieve the base identifier with which this stylesheet is associated.
@@ -888,156 +875,6 @@ public:
 			StylesheetExecutionContext& 	executionContext,
 			const ParamVectorType&			topLevelParams) const;
 
-	// These interfaces are inherited from XalanDocument...
-
-	virtual const XalanDOMString&
-	getNodeName() const;
-
-	virtual const XalanDOMString&
-	getNodeValue() const;
-
-	virtual NodeType
-	getNodeType() const;
-
-	virtual XalanNode*
-	getParentNode() const;
-
-	virtual const XalanNodeList*
-	getChildNodes() const;
-
-	virtual XalanNode*
-	getFirstChild() const;
-
-	virtual XalanNode*
-	getLastChild() const;
-
-	virtual XalanNode*
-	getPreviousSibling() const;
-
-	virtual XalanNode*
-	getNextSibling() const;
-
-	virtual const XalanNamedNodeMap*
-	getAttributes() const;
-
-	virtual XalanDocument*
-	getOwnerDocument() const;
-
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-	virtual XalanNode*
-#else
-	virtual Stylesheet*
-#endif
-	cloneNode(bool deep) const;
-
-	virtual XalanNode*
-	insertBefore(
-			XalanNode*	newChild,
-			XalanNode*	refChild);
-
-	virtual XalanNode*
-	replaceChild(
-			XalanNode*	newChild,
-			XalanNode*	oldChild);
-
-	virtual XalanNode*
-	removeChild(XalanNode*	oldChild);
-
-	virtual XalanNode*
-	appendChild(XalanNode*	newChild);
-
-	virtual bool
-	hasChildNodes() const;
-
-	virtual void
-	setNodeValue(const XalanDOMString&		nodeValue);
-
-	virtual void
-	normalize();
-
-	virtual bool
-	isSupported(
-			const XalanDOMString&	feature,
-			const XalanDOMString&	version) const;
-
-	virtual const XalanDOMString&
-	getNamespaceURI() const;
-
-	virtual const XalanDOMString&
-	getPrefix() const;
-
-	virtual const XalanDOMString&
-	getLocalName() const;
-
-	virtual void
-	setPrefix(const XalanDOMString& prefix);
-
-	virtual IndexType
-	getIndex() const;
-
-	virtual XalanElement*
-	createElement(const XalanDOMString& tagName);
-
-	virtual XalanDocumentFragment*
-	createDocumentFragment();
-
-	virtual XalanText*
-	createTextNode(const XalanDOMString&	data);
-
-	virtual XalanComment*
-	createComment(const XalanDOMString& data);
-
-	virtual XalanCDATASection*
-	createCDATASection(const XalanDOMString&	data);
-
-	virtual XalanProcessingInstruction*
-	createProcessingInstruction(
-			const XalanDOMString&	target,
-			const XalanDOMString&	data);
-
-	virtual XalanAttr*
-	createAttribute(const XalanDOMString&	name);
-
-	virtual XalanEntityReference*
-	createEntityReference(const XalanDOMString &name);
-
-	virtual XalanDocumentType*
-	getDoctype() const;
-
-	virtual XalanDOMImplementation*
-	getImplementation() const;
-
-	virtual XalanElement*
-	getDocumentElement() const;
-
-	virtual XalanNodeList*
-	getElementsByTagName(const XalanDOMString&		tagname) const;
-
-	virtual XalanNode*
-	importNode(
-			XalanNode*	importedNode,
-			bool		deep);
-
-	virtual XalanElement*
-	createElementNS(
-			const XalanDOMString&	namespaceURI,
-			const XalanDOMString&	qualifiedName);
-
-	virtual XalanAttr*
-	createAttributeNS(
-			const XalanDOMString& namespaceURI,
-			const XalanDOMString& qualifiedName);
-
-	virtual XalanNodeList*
-	getElementsByTagNameNS(
-			const XalanDOMString&	namespaceURI,
-			const XalanDOMString&	localName) const;
-
-	virtual XalanElement*
-	getElementById(const XalanDOMString&	elementId) const;
-
-	virtual bool
-	isIndexed() const;
 
 	// These interfaces are inherited from PrefixResolver...
 
@@ -1171,8 +1008,6 @@ private:
 	 */
 	double									m_XSLTVerDeclared;
 
-	const bool								m_isRoot;
-
 	/**
 	 * This table is keyed on the target elements of patterns, and contains linked
 	 * lists of the actual patterns that match the target element to some degree
@@ -1229,15 +1064,11 @@ private:
 	 */
 	AttributeSetVectorType::size_type		m_attributeSetsSize;
 
-	XalanNodeListSurrogate					m_surrogateChildren;
-
 	ElemDecimalFormatVectorType				m_elemDecimalFormats;
 
 	NamespacesHandler						m_namespacesHandler;
 
 	static const XalanDOMString				s_emptyString;
-
-	static const XalanEmptyNamedNodeMap		s_fakeAttributes;
 };
 
 
