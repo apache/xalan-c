@@ -205,7 +205,7 @@ parseWithXerces(XalanTransformer &xalan, const XSLTInputSource &xmlInput,
 	theDOM.normalize();
 
 	XercesDOMSupport	theDOMSupport;
-	XercesParserLiaison theParserLiaison(theDOMSupport);
+	XercesParserLiaison theParserLiaison;
 
 	try
 	{
