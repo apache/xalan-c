@@ -150,10 +150,6 @@ SOURCE=..\..\..\..\src\XSLT\CountersTable.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XSLT\DecimalToRoman.cpp
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\..\..\src\XSLT\ElemApplyImport.cpp
 # End Source File
 # Begin Source File
