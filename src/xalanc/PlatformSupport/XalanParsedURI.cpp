@@ -318,22 +318,22 @@ void XalanParsedURI::resolve(
 									m_path[index+1] == XalanUnicode::charFullStop && 
 									m_path[index+2] == XalanUnicode::charSolidus) // ../
 						{ 
-							int end = index+2;
+							const XalanDOMString::size_type		end = index + 2;
 							if (index > 0) --index;
 							for ( ; index > 0 && m_path[index-1] != XalanUnicode::charSolidus; index--) 
 								;
 							if (index > 0) --index;
-							m_path.erase(index,end-index);
+							m_path.erase(index, end - index);
 							continue;
 						} 
 						else if (index == m_path.length()-2 && 
 									m_path[index+1] == XalanUnicode::charFullStop) // trailing /..
 						{
-							int end = index+2;
+							const XalanDOMString::size_type		end = index + 2;
 							if (index > 0) --index;
 							for ( ; index > 0 && m_path[index-1] != XalanUnicode::charSolidus; index--) 
 								;
-							m_path.erase(index,end-index);
+							m_path.erase(index, end - index);
 							continue;
 						}
 					}
