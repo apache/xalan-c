@@ -514,7 +514,7 @@ StylesheetHandler::startElement(
 					}
 				}
 
-				m_inScopeVariableNamesStack.push_back(QNameSetVectorType::value_type());
+				m_inScopeVariableNamesStack.resize(m_inScopeVariableNamesStack.size() + 1);
 			}
 		}
 		else if (!m_inTemplate && startsWith(*ns, m_constructionContext.getXalanXSLNameSpaceURL()))
@@ -541,7 +541,7 @@ StylesheetHandler::startElement(
 			}
 			else
 			{
-				m_inScopeVariableNamesStack.push_back(QNameSetVectorType::value_type());
+				m_inScopeVariableNamesStack.resize(m_inScopeVariableNamesStack.size() + 1);
 
 				// BEGIN SANJIVA CODE
 				// is this an extension element call?
@@ -634,7 +634,7 @@ StylesheetHandler::initWrapperless(
 	m_pTemplate->appendChildElem(pElem);
 	m_inTemplate = true;
 
-	m_inScopeVariableNamesStack.push_back(QNameSetVectorType::value_type());
+	m_inScopeVariableNamesStack.resize(m_inScopeVariableNamesStack.size() + 1);
 
 	m_foundStylesheet = true;
 
@@ -700,7 +700,7 @@ StylesheetHandler::processTopLevelElement(
 	
 		m_elemStack.push_back(m_pTemplate);
 		m_inTemplate = true;
-		m_inScopeVariableNamesStack.push_back(QNameSetVectorType::value_type());
+		m_inScopeVariableNamesStack.resize(m_inScopeVariableNamesStack.size() + 1);
 		break;
 
 	case StylesheetConstructionContext::ELEMNAME_VARIABLE:
@@ -717,7 +717,7 @@ StylesheetHandler::processTopLevelElement(
 
 			m_elemStack.push_back(elem);
 			m_inTemplate = true; // fake it out
-			m_inScopeVariableNamesStack.push_back(QNameSetVectorType::value_type());
+			m_inScopeVariableNamesStack.resize(m_inScopeVariableNamesStack.size() + 1);
 			elem->addToStylesheet(m_constructionContext, m_stylesheet);
 		}
 	break;
@@ -740,7 +740,7 @@ StylesheetHandler::processTopLevelElement(
 	case StylesheetConstructionContext::ELEMNAME_ATTRIBUTE_SET:
 		{
 			m_inTemplate = true; // fake it out
-			m_inScopeVariableNamesStack.push_back(QNameSetVectorType::value_type());
+			m_inScopeVariableNamesStack.resize(m_inScopeVariableNamesStack.size() + 1);
 
 			m_elemStack.push_back(
 				m_constructionContext.createElement(
