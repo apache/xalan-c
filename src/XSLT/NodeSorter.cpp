@@ -167,26 +167,11 @@ NodeSorter::NodeSortKeyCompare::operator()(
 
 	const NodeSortKey&	theKey = m_nodeSortKeys[theKeyIndex];
 
-	const XPath&		xpath = theKey.getSelectPattern();
-
-	const XObjectGuard	r1(
-		m_executionContext.getXObjectFactory(),
-		xpath.execute(theLHS, theKey.getPrefixResolver(), NodeRefList(), m_executionContext));
-	assert(r1.get() != 0);
-
-	const XObjectGuard	r2(
-		m_executionContext.getXObjectFactory(),
-		xpath.execute(theRHS, theKey.getPrefixResolver(), NodeRefList(), m_executionContext));
-	assert(r2.get() != 0);
-
 	// Compare as numbers
 	if(theKey.getTreatAsNumbers() == true)
 	{
-		double	n1Num = r1->num();
-		double	n2Num = r2->num();
-
-		const XalanDOMString	r1str(r1->str());
-		const XalanDOMString	r2str(r2->str());
+		double	n1Num = getNumberResult(theKey, theLHS);
+		double	n2Num = getNumberResult(theKey, theRHS);
 
 		if (DoubleSupport::isNaN(n1Num))
 			n1Num = 0.0;
@@ -222,7 +207,9 @@ NodeSorter::NodeSortKeyCompare::operator()(
 	// Compare as strings
 	else
 	{
-		const int	theCompareResult = collationCompare(r1->str(), r2->str());
+		const int	theCompareResult = collationCompare(
+				getStringResult(theKey, theLHS),
+				getStringResult(theKey, theRHS));
 
 		if(0 == theCompareResult)
 		{
@@ -279,6 +266,90 @@ NodeSorter::NodeSortKeyCompare::isNodeBefore(
 			break;
 		}
 	}
+
+	return theResult;
+}
+
+
+
+static const NodeRefList	dummy;
+
+
+
+double
+NodeSorter::NodeSortKeyCompare::getNumberResult(
+				const NodeSortKey&	theKey,
+				XalanNode*			node) const
+{
+	const XPath&		xpath = theKey.getSelectPattern();
+
+	const NumberResultsCacheMapType::const_iterator		i =
+		m_numberResultsCache.find(&xpath);
+
+	if (i != m_numberResultsCache.end())
+	{
+		const NumberResultsNodeCacheMapType::const_iterator	j =
+			i->second.find(node);
+
+		if (j != i->second.end())
+		{
+			// Yuck!!!!  Big ugly return here!!!
+			return j->second;
+		}
+	}
+
+	const XObjectGuard	result(
+		m_executionContext.getXObjectFactory(),
+		xpath.execute(node, theKey.getPrefixResolver(), dummy, m_executionContext));
+	assert(result.get() != 0);
+
+	const double	theResult = result->num();
+
+#if defined(XALAN_NO_MUTABLE)
+	((NodeSortKeyCompare*)this)->m_numberResultsCache[&xpath][node] = theResult;
+#else
+	m_numberResultsCache[&xpath][node] = theResult;
+#endif
+
+	return theResult;
+}
+
+
+
+const XalanDOMString
+NodeSorter::NodeSortKeyCompare::getStringResult(
+				const NodeSortKey&	theKey,
+				XalanNode*			node) const
+{
+	const XPath&		xpath = theKey.getSelectPattern();
+
+	const StringResultsCacheMapType::const_iterator		i =
+		m_stringResultsCache.find(&xpath);
+
+	if (i != m_stringResultsCache.end())
+	{
+		const StringResultsNodeCacheMapType::const_iterator	j =
+			i->second.find(node);
+
+		if (j != i->second.end())
+		{
+			// Yuck!!!!  Big ugly return here!!!
+			return j->second;
+		}
+	}
+
+	const XObjectGuard	result(
+		m_executionContext.getXObjectFactory(),
+		xpath.execute(node, theKey.getPrefixResolver(), dummy, m_executionContext));
+	assert(result.get() != 0);
+
+	const XalanDOMString	theResult = result->str();
+
+#if defined(XALAN_NO_MUTABLE)
+	((NodeSortKeyCompare*)this)->m_stringResultsCache[&xpath][node] = theResult;
+#else
+	m_stringResultsCache[&xpath][node] = theResult;
+#endif
 
 	return theResult;
 }

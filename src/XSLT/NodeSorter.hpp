@@ -70,6 +70,7 @@
 
 
 #include <functional>
+#include <map>
 #include <vector>
 
 
@@ -154,7 +155,9 @@ public:
 			m_executionContext(executionContext),
 			m_list(theList),
 			m_nodes(theNodes),
-			m_nodeSortKeys(theNodeSortKeys)
+			m_nodeSortKeys(theNodeSortKeys),
+			m_numberResultsCache(),
+			m_stringResultsCache()
 		{
 		}
 
@@ -170,15 +173,46 @@ public:
 				   second_argument_type		theRHS,
 				   unsigned int				theKeyIndex = 0) const;
 
-		XPathExecutionContext&			m_executionContext;
-		const MutableNodeRefList&		m_list;
-		const NodeVectorType&			m_nodes;
-		const NodeSortKeyVectorType&	m_nodeSortKeys;
+	protected:
 
 		bool
 		isNodeBefore(
 				const XalanNode*	node1,
 				const XalanNode*	node2) const;
+
+		double
+		getNumberResult(
+				const NodeSortKey&	theKey,
+				XalanNode*			node) const;
+
+		const XalanDOMString
+		getStringResult(
+				const NodeSortKey&	theKey,
+				XalanNode*			node) const;
+
+	private:
+
+		XPathExecutionContext&			m_executionContext;
+		const MutableNodeRefList&		m_list;
+		const NodeVectorType&			m_nodes;
+		const NodeSortKeyVectorType&	m_nodeSortKeys;
+
+#if defined(XALAN_NO_NAMESPACES)
+		typedef	map<const XalanNode*, double>			NumberResultsNodeCacheMapType;
+		typedef	map<const XalanNode*, XalanDOMString>	StringResultsNodeCacheMapType;
+
+		typedef	map<const XPath*, NumberResultsNodeCacheMapType>	NumberResultsCacheMapType;
+		typedef	map<const XPath*, StringResultsNodeCacheMapType>	StringResultsCacheMapType;
+#else
+		typedef	std::map<const XalanNode*, double>			NumberResultsNodeCacheMapType;
+		typedef	std::map<const XalanNode*, XalanDOMString>	StringResultsNodeCacheMapType;
+
+		typedef	std::map<const XPath*, NumberResultsNodeCacheMapType>	NumberResultsCacheMapType;
+		typedef	std::map<const XPath*, StringResultsNodeCacheMapType>	StringResultsCacheMapType;
+#endif
+
+		mutable NumberResultsCacheMapType	m_numberResultsCache;
+		mutable StringResultsCacheMapType	m_stringResultsCache;
 	};
 
 private:
