@@ -218,6 +218,15 @@ public:
 	virtual XPathSupport*
 	getSupport() const;
 
+protected:
+
+	// Default vector allocation size.  It seems high, but
+	// it's really worth it...
+	enum
+	{
+		eDefaultVectorSize = 1000
+	};
+
 private:
 
 	XPathSupport*	m_support;

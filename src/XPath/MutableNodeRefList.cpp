@@ -78,6 +78,7 @@ MutableNodeRefList::MutableNodeRefList(XPathSupport*	theSupport) :
 	NodeRefList(),
 	m_support(theSupport)
 {
+	m_nodeList.reserve(eDefaultVectorSize);
 }
 
 
@@ -244,6 +245,12 @@ void
 MutableNodeRefList::addNodes(const XalanNodeList&	nodelist)
 {
 	const unsigned int	theLength = nodelist.getLength();
+
+	// Reserve the space at the start.  We may end up reserving
+	// more space than necessary, but it's a small price to
+	// pay for the increased speed.  We can always shrink by
+	// swapping if we have way to much space.
+	m_nodeList.reserve(getLength() + theLength);
 
 	for (unsigned int i = 0; i < theLength; i++)
 	{

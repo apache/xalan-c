@@ -82,7 +82,7 @@ XPathExecutionContextDefault::XPathExecutionContextDefault(
 	m_xpathSupport(theXPathSupport),
 	m_xobjectFactory(theXObjectFactory),
 	m_currentNode(theCurrentNode),
-	m_contextNodeList(theContextNodeList),
+	m_contextNodeList(&theContextNodeList),
 	m_prefixResolver(thePrefixResolver),
 	m_throwFoundIndex(false)
 {
@@ -183,7 +183,7 @@ XPathExecutionContextDefault::getElementByID(
 const NodeRefListBase&
 XPathExecutionContextDefault::getContextNodeList() const
 {
-	return m_contextNodeList;
+	return *m_contextNodeList;
 }
 
 
@@ -191,7 +191,7 @@ XPathExecutionContextDefault::getContextNodeList() const
 void	
 XPathExecutionContextDefault::setContextNodeList(const NodeRefListBase&	theList)
 {
-	m_contextNodeList = theList;
+	m_contextNodeList = &theList;
 }
 
 
@@ -204,7 +204,7 @@ XPathExecutionContextDefault::getContextNodeListLength() const
 		throw FoundIndex();
 	}
 
-	return m_contextNodeList.getLength();
+	return m_contextNodeList->getLength();
 }
 
 
@@ -219,11 +219,11 @@ XPathExecutionContextDefault::getContextNodeListPosition(const XalanNode&	contex
 
 	int pos = 0;
 
-	const int	nNodes = m_contextNodeList.getLength();
+	const unsigned int	nNodes = m_contextNodeList->getLength();
 
-	for(int i = 0; i < nNodes; i++)
+	for(unsigned int i = 0; i < nNodes; i++)
 	{
-		if(m_contextNodeList.item(i) == &contextNode)
+		if(m_contextNodeList->item(i) == &contextNode)
 		{
 			pos = i + 1; // for 1-based XSL count.
 

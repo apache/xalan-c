@@ -270,8 +270,8 @@ public:
 
 	private:
 
-		XPathExecutionContext&		m_executionContext;
-		const MutableNodeRefList	m_savedNodeList;
+		XPathExecutionContext&	m_executionContext;
+		const NodeRefListBase&	m_savedNodeList;
 	};
 
 	/*

@@ -103,6 +103,18 @@ XBoolean::~XBoolean()
 
 
 
+#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
+XObject*
+#else
+XBoolean*
+#endif
+XBoolean::clone() const
+{
+	return new XBoolean(*this);
+};
+
+
+
 XBoolean::eObjectType
 XBoolean::getType() const
 {

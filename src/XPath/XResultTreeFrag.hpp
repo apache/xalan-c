@@ -115,6 +115,13 @@ public:
 	
 	// These methods are inherited from XObject ...
 
+#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
+	virtual XObject*
+#else
+	virtual XResultTreeFrag*
+#endif
+	clone() const;
+
 	virtual eObjectType
 	getType() const;
 

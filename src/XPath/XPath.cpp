@@ -509,6 +509,8 @@ XPath::getTargetElementStrings(TargetElementStringsVectorType&	targetStrings) co
 {
 	int opPos = 2;
 
+	targetStrings.reserve(eDefaultTargetStringsSize);
+
 	while(m_expression.m_opMap[opPos] == XPathExpression::eOP_LOCATIONPATHPATTERN)
 	{
 		const int	nextOpPos = m_expression.getNextOpCodePosition(opPos);
@@ -637,18 +639,28 @@ XPath::matchPattern(
 {
 	XObject*	score = 0;
 
+	XObjectFactory&		theFactory = executionContext.getXObjectFactory();
+
 	while(m_expression.m_opMap[opPos] == XPathExpression::eOP_LOCATIONPATHPATTERN)
 	{
 		const int	nextOpPos = m_expression.getNextOpCodePosition(opPos);
 
 		score = executeMore(context, opPos, executionContext);
+		assert(score != 0);
 
 		if(score->num() != s_MatchScoreNone)
 		{
 			break;
 		}
+		else
+		{
+			// We're done with this object, so return it...
+			theFactory.returnObject(score);
 
-		opPos = nextOpPos;
+			score = 0;
+
+			opPos = nextOpPos;
+		}
 	}
 
 	if(0 == score)
@@ -683,8 +695,10 @@ XPath::Or(
 {
 	opPos += 2;
 
-	XObject* const	expr1 = executeMore(context, opPos, executionContext);
-	assert(expr1 != 0);
+	XObjectFactory&		theFactory = executionContext.getXObjectFactory();
+
+	const XObjectGuard	expr1(theFactory, executeMore(context, opPos, executionContext));
+	assert(expr1.get() != 0);
 
 	bool	fResult = expr1->boolean();
 
@@ -692,13 +706,13 @@ XPath::Or(
 	{
 		const int		expr2Pos = m_expression.getNextOpCodePosition(opPos);
 
-		XObject* const	expr2 = executeMore(context, expr2Pos, executionContext);
-		assert(expr2 != 0);
+		const XObjectGuard	expr2(theFactory, executeMore(context, expr2Pos, executionContext));
+		assert(expr2.get() != 0);
 
 		fResult = expr2->boolean();
 	}
 
-	return executionContext.getXObjectFactory().createBoolean(fResult);
+	return theFactory.createBoolean(fResult);
 }
 
 
@@ -713,15 +727,17 @@ XPath::And(
 
 	opPos += 2;
 
-	XObject* const	expr1 = executeMore(context, opPos, executionContext);
-	assert(expr1 != 0);
+	XObjectFactory&		theFactory = executionContext.getXObjectFactory();
+
+	const XObjectGuard	expr1(theFactory, executeMore(context, opPos, executionContext));
+	assert(expr1.get() != 0);
 
 	if (expr1->boolean() == true)
 	{
 		const int		expr2Pos = m_expression.getNextOpCodePosition(opPos);
 
-		XObject* const	expr2 = executeMore(context, expr2Pos, executionContext);
-		assert(expr2 != 0);
+		const XObjectGuard	expr2(theFactory, executeMore(context, expr2Pos, executionContext));
+		assert(expr2.get() != 0);
 
 		if (expr2->boolean() == true)
 		{
@@ -729,7 +745,7 @@ XPath::And(
 		}
 	}
 
-	return executionContext.getXObjectFactory().createBoolean(fResult);
+	return theFactory.createBoolean(fResult);
 }
 
 
@@ -742,15 +758,17 @@ XPath::notequals(
 {
 	opPos += 2;
 
-	XObject* const	expr1 = executeMore(context, opPos, executionContext);
-	assert(expr1 != 0);
+	XObjectFactory&		theFactory = executionContext.getXObjectFactory();
+
+	const XObjectGuard	expr1(theFactory, executeMore(context, opPos, executionContext));
+	assert(expr1.get() != 0);
 
 	const int		expr2Pos = m_expression.getNextOpCodePosition(opPos);
 
-	XObject* const	expr2 = executeMore(context, expr2Pos, executionContext);
-	assert(expr2 != 0);
+	const XObjectGuard	expr2(theFactory, executeMore(context, expr2Pos, executionContext));
+	assert(expr2.get() != 0);
 
-	return executionContext.getXObjectFactory().createBoolean(*expr1 != *expr2);
+	return theFactory.createBoolean(*expr1.get() != *expr2.get());
 }
 
 
@@ -763,15 +781,17 @@ XPath::equals(
 {
 	opPos += 2;
 
-	XObject* const	expr1 = executeMore(context, opPos, executionContext);
-	assert(expr1 != 0);
+	XObjectFactory&		theFactory = executionContext.getXObjectFactory();
+
+	const XObjectGuard	expr1(theFactory, executeMore(context, opPos, executionContext));
+	assert(expr1.get() != 0);
 
 	const int		expr2Pos = m_expression.getNextOpCodePosition(opPos);
 
-	XObject* const	expr2 = executeMore(context, expr2Pos, executionContext);
-	assert(expr2 != 0);
+	const XObjectGuard	expr2(theFactory, executeMore(context, expr2Pos, executionContext));
+	assert(expr2.get() != 0);
 
-	return executionContext.getXObjectFactory().createBoolean(*expr1 == *expr2);
+	return theFactory.createBoolean(*expr1.get() == *expr2.get());
 }
 
 
@@ -784,15 +804,17 @@ XPath::lte(
 {
 	opPos += 2;
 
-	XObject* const	expr1 = executeMore(context, opPos, executionContext);
-	assert(expr1 != 0);
+	XObjectFactory&		theFactory = executionContext.getXObjectFactory();
+
+	const XObjectGuard	expr1(theFactory, executeMore(context, opPos, executionContext));
+	assert(expr1.get() != 0);
 
 	const int		expr2Pos = m_expression.getNextOpCodePosition(opPos);
 
-	XObject* const	expr2 = executeMore(context, expr2Pos, executionContext);
-	assert(expr2 != 0);
+	const XObjectGuard	expr2(theFactory, executeMore(context, expr2Pos, executionContext));
+	assert(expr2.get() != 0);
 
-	return executionContext.getXObjectFactory().createBoolean(*expr1 <= *expr2);
+	return theFactory.createBoolean(*expr1.get() <= *expr2.get());
 }
 
 
@@ -805,15 +827,17 @@ XPath::lt(
 {
 	opPos += 2;
 
-	XObject* const	expr1 = executeMore(context, opPos, executionContext);
-	assert(expr1 != 0);
+	XObjectFactory&		theFactory = executionContext.getXObjectFactory();
+
+	const XObjectGuard	expr1(theFactory, executeMore(context, opPos, executionContext));
+	assert(expr1.get() != 0);
 
 	const int		expr2Pos = m_expression.getNextOpCodePosition(opPos);
 
-	XObject* const	expr2 = executeMore(context, expr2Pos, executionContext);
-	assert(expr2 != 0);
+	const XObjectGuard	expr2(theFactory, executeMore(context, expr2Pos, executionContext));
+	assert(expr2.get() != 0);
 
-	return executionContext.getXObjectFactory().createBoolean(*expr1 < *expr2);
+	return theFactory.createBoolean(*expr1.get() < *expr2.get());
 }
 
 
@@ -826,15 +850,17 @@ XPath::gte(
 {
 	opPos += 2;
 
-	XObject* const	expr1 = executeMore(context, opPos, executionContext);
-	assert(expr1 != 0);
+	XObjectFactory&		theFactory = executionContext.getXObjectFactory();
+
+	const XObjectGuard	expr1(theFactory, executeMore(context, opPos, executionContext));
+	assert(expr1.get() != 0);
 
 	const int		expr2Pos = m_expression.getNextOpCodePosition(opPos);
 
-	XObject* const	expr2 = executeMore(context, expr2Pos, executionContext);
-	assert(expr2 != 0);
+	const XObjectGuard	expr2(theFactory, executeMore(context, expr2Pos, executionContext));
+	assert(expr2.get() != 0);
 
-	return executionContext.getXObjectFactory().createBoolean(*expr1 >= *expr2);
+	return theFactory.createBoolean(*expr1.get() >= *expr2.get());
 }
 
 
@@ -847,15 +873,17 @@ XPath::gt(
 {
 	opPos += 2;
 
-	XObject* const	expr1 = executeMore(context, opPos, executionContext);
-	assert(expr1 != 0);
+	XObjectFactory&		theFactory = executionContext.getXObjectFactory();
+
+	const XObjectGuard	expr1(theFactory, executeMore(context, opPos, executionContext));
+	assert(expr1.get() != 0);
 
 	const int		expr2Pos = m_expression.getNextOpCodePosition(opPos);
 
-	XObject* const	expr2 = executeMore(context, expr2Pos, executionContext);
-	assert(expr2 != 0);
+	const XObjectGuard	expr2(theFactory, executeMore(context, expr2Pos, executionContext));
+	assert(expr2.get() != 0);
 
-	return executionContext.getXObjectFactory().createBoolean(*expr1 > *expr2);
+	return theFactory.createBoolean(*expr1.get() > *expr2.get());
 }
 
 
@@ -868,15 +896,17 @@ XPath::plus(
 {
 	opPos += 2;
 
-	XObject* const	expr1 = executeMore(context, opPos, executionContext);
-	assert(expr1 != 0);
+	XObjectFactory&		theFactory = executionContext.getXObjectFactory();
+
+	const XObjectGuard	expr1(theFactory, executeMore(context, opPos, executionContext));
+	assert(expr1.get() != 0);
 
 	const int		expr2Pos = m_expression.getNextOpCodePosition(opPos);
 
-	XObject* const	expr2 = executeMore(context, expr2Pos, executionContext);
-	assert(expr2 != 0);
+	const XObjectGuard	expr2(theFactory, executeMore(context, expr2Pos, executionContext));
+	assert(expr2.get() != 0);
 
-	return executionContext.getXObjectFactory().createNumber(DoubleSupport::add(expr1->num(), expr2->num()));
+	return theFactory.createNumber(DoubleSupport::add(expr1->num(), expr2->num()));
 }
 
 
@@ -889,15 +919,17 @@ XPath::minus(
 {
 	opPos += 2;
 
-	XObject* const	expr1 = executeMore(context, opPos, executionContext);
-	assert(expr1 != 0);
+	XObjectFactory&		theFactory = executionContext.getXObjectFactory();
+
+	const XObjectGuard	expr1(theFactory, executeMore(context, opPos, executionContext));
+	assert(expr1.get() != 0);
 
 	const int		expr2Pos = m_expression.getNextOpCodePosition(opPos);
 
-	XObject* const	expr2 = executeMore(context, expr2Pos, executionContext);
-	assert(expr2 != 0);
+	const XObjectGuard	expr2(theFactory, executeMore(context, expr2Pos, executionContext));
+	assert(expr2.get() != 0);
 
-	return executionContext.getXObjectFactory().createNumber(DoubleSupport::subtract(expr1->num(), expr2->num()));
+	return theFactory.createNumber(DoubleSupport::subtract(expr1->num(), expr2->num()));
 }
 
 
@@ -910,15 +942,17 @@ XPath::mult(
 {
 	opPos += 2;
 
-	XObject* const	expr1 = executeMore(context, opPos, executionContext);
-	assert(expr1 != 0);
+	XObjectFactory&		theFactory = executionContext.getXObjectFactory();
+
+	const XObjectGuard	expr1(theFactory, executeMore(context, opPos, executionContext));
+	assert(expr1.get() != 0);
 
 	const int		expr2Pos = m_expression.getNextOpCodePosition(opPos);
 
-	XObject* const	expr2 = executeMore(context, expr2Pos, executionContext);
-	assert(expr2 != 0);
+	const XObjectGuard	expr2(theFactory, executeMore(context, expr2Pos, executionContext));
+	assert(expr2.get() != 0);
 
-	return executionContext.getXObjectFactory().createNumber(DoubleSupport::multiply(expr1->num(), expr2->num()));
+	return theFactory.createNumber(DoubleSupport::multiply(expr1->num(), expr2->num()));
 }
 
 
@@ -931,15 +965,17 @@ XPath::div(
 {
 	opPos += 2;
 
-	XObject* const	expr1 = executeMore(context, opPos, executionContext);
-	assert(expr1 != 0);
+	XObjectFactory&		theFactory = executionContext.getXObjectFactory();
+
+	const XObjectGuard	expr1(theFactory, executeMore(context, opPos, executionContext));
+	assert(expr1.get() != 0);
 
 	const int		expr2Pos = m_expression.getNextOpCodePosition(opPos);
 
-	XObject* const	expr2 = executeMore(context, expr2Pos, executionContext);
-	assert(expr2 != 0);
+	const XObjectGuard	expr2(theFactory, executeMore(context, expr2Pos, executionContext));
+	assert(expr2.get() != 0);
 
-	return executionContext.getXObjectFactory().createNumber(DoubleSupport::divide(expr1->num(), expr2->num()));
+	return theFactory.createNumber(DoubleSupport::divide(expr1->num(), expr2->num()));
 }
 
 
@@ -952,15 +988,17 @@ XPath::mod(
 {
 	opPos += 2;
 
-	XObject* const	expr1 = executeMore(context, opPos, executionContext);
-	assert(expr1 != 0);
+	XObjectFactory&		theFactory = executionContext.getXObjectFactory();
+
+	const XObjectGuard	expr1(theFactory, executeMore(context, opPos, executionContext));
+	assert(expr1.get() != 0);
 
 	const int		expr2Pos = m_expression.getNextOpCodePosition(opPos);
 
-	XObject* const	expr2 = executeMore(context, expr2Pos, executionContext);
-	assert(expr2 != 0);
+	const XObjectGuard	expr2(theFactory, executeMore(context, expr2Pos, executionContext));
+	assert(expr2.get() != 0);
 
-	return executionContext.getXObjectFactory().createNumber(DoubleSupport::modulus(expr1->num(), expr2->num()));
+	return theFactory.createNumber(DoubleSupport::modulus(expr1->num(), expr2->num()));
 }
 
 
@@ -985,10 +1023,12 @@ XPath::neg(
 			int						opPos,
 			XPathExecutionContext&	executionContext) const
 {
-	XObject* const	expr1 = executeMore(context, opPos + 2, executionContext);
-	assert(expr1 != 0);
+	XObjectFactory&		theFactory = executionContext.getXObjectFactory();
 
-	return executionContext.getXObjectFactory().createNumber(DoubleSupport::negative(expr1->num()));
+	const XObjectGuard	expr1(theFactory, executeMore(context, opPos + 2, executionContext));
+	assert(expr1.get() != 0);
+
+	return theFactory.createNumber(DoubleSupport::negative(expr1->num()));
 }
 
 
@@ -999,10 +1039,21 @@ XPath::string(
 			int						opPos,
 			XPathExecutionContext&	executionContext) const
 {
-	XObject* const	expr1 = executeMore(context, opPos + 2, executionContext);
-	assert(expr1 != 0);
+	XObjectFactory&		theFactory = executionContext.getXObjectFactory();
 
-	return executionContext.getXObjectFactory().createString(expr1->str());
+	XObjectGuard	expr1(theFactory, executeMore(context, opPos + 2, executionContext));
+	assert(expr1.get() != 0);
+
+	// Try to optimize when the result of the execution is
+	// already a string.
+	if (expr1->getType() == XObject::eTypeString)
+	{
+		return expr1.release();
+	}
+	else
+	{
+		return theFactory.createString(expr1->str());
+	}
 }
 
 
@@ -1013,10 +1064,21 @@ XPath::boolean(
 			int						opPos,
 			XPathExecutionContext&	executionContext) const
 {
-	XObject* const	expr1 = executeMore(context, opPos + 2, executionContext);
-	assert(expr1 != 0);
+	XObjectFactory&		theFactory = executionContext.getXObjectFactory();
 
-	return executionContext.getXObjectFactory().createBoolean(expr1->boolean());
+	XObjectGuard	expr1(theFactory, executeMore(context, opPos + 2, executionContext));
+	assert(expr1.get() != 0);
+
+	// Try to optimize when the result of the execution is
+	// already a string.
+	if (expr1->getType() == XObject::eTypeBoolean)
+	{
+		return expr1.release();
+	}
+	else
+	{
+		return theFactory.createBoolean(expr1->boolean());
+	}
 }
 
 
@@ -1027,10 +1089,21 @@ XPath::number(
 			int						opPos,
 			XPathExecutionContext&	executionContext) const
 {
-	XObject* const	expr1 = executeMore(context, opPos + 2, executionContext);
-	assert(expr1 != 0);
+	XObjectFactory&		theFactory = executionContext.getXObjectFactory();
 
-	return executionContext.getXObjectFactory().createNumber(expr1->num());
+	XObjectGuard	expr1(theFactory, executeMore(context, opPos + 2, executionContext));
+	assert(expr1.get() != 0);
+
+	// Try to optimize when the result of the execution is
+	// already a string.
+	if (expr1->getType() == XObject::eTypeNumber)
+	{
+		return expr1.release();
+	}
+	else
+	{
+		return theFactory.createNumber(expr1->num());
+	}
 }
 
 
@@ -1044,6 +1117,8 @@ XPath::Union(
 	opPos += 2;
 
 	XObject*	resultNodeSet = 0;
+
+	XObjectFactory&		theFactory = executionContext.getXObjectFactory();
 
 	while(m_expression.m_opMap[opPos] != XPathExpression::eENDOP)
 	{
@@ -1061,6 +1136,8 @@ XPath::Union(
 				resultNodeSet->mutableNodeset();
 
 			nl.addNodesInDocOrder(expr->nodeset());
+
+			theFactory.returnObject(expr);
 		}
 
 		opPos = nextOpPos;
@@ -1118,6 +1195,12 @@ XPath::variable(
 								XalanDOMString("of context or without definition!  Name = ") +
 							    varName->str(),
 							  context);
+	}
+	else
+	{
+		// Always clone the result of getting a variable, since it doesn't
+		// necessarily belong to our context.
+		result = executionContext.getXObjectFactory().clone(*result);
 	}
 
 	return result;
@@ -1272,6 +1355,8 @@ XPath::runExtFunction(
 
 	Function::XObjectArgVectorType	args;
 
+	args.reserve(eDefaultArgVectorSize);
+
 	while(opPos < endExtFunc)
 	{
 		const int	nextOpPos = m_expression.getNextOpCodePosition(opPos);
@@ -1281,7 +1366,20 @@ XPath::runExtFunction(
 		opPos = nextOpPos;
 	}
 
-	return extfunction(context, opPos, ns->str(), funcName->str(), args, executionContext);
+	XObject* const		theResult =
+		extfunction(context, opPos, ns->str(), funcName->str(), args, executionContext);
+
+	XObjectFactory&		theFactory = executionContext.getXObjectFactory();
+
+	// Return the args...
+	while(args.size() > 0)
+	{
+		theFactory.returnObject(args.back());
+
+		args.pop_back();
+	}
+
+	return theResult;
 }
 
 
@@ -1321,6 +1419,8 @@ XPath::runFunction(
 
 	Function::XObjectArgVectorType	args;
 
+	args.reserve(eDefaultArgVectorSize);
+
 	while(opPos < endFunc)
 	{
 		const int	nextOpPos = m_expression.getNextOpCodePosition(opPos);
@@ -1330,7 +1430,20 @@ XPath::runFunction(
 		opPos = nextOpPos;
 	}
 
-	return function(context, opPos, funcID, args, executionContext);
+	XObject* const		theResult =
+		function(context, opPos, funcID, args, executionContext);
+
+	XObjectFactory&		theFactory = executionContext.getXObjectFactory();
+
+	// Return the args...
+	while(args.size() > 0)
+	{
+		theFactory.returnObject(args.back());
+
+		args.pop_back();
+	}
+
+	return theResult;
 }
 
 

@@ -103,6 +103,18 @@ XString::~XString()
 
 
 
+#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
+XObject*
+#else
+XString*
+#endif
+XString::clone() const
+{
+	return new XString(*this);
+};
+
+
+
 XString::eObjectType
 XString::getType() const
 {

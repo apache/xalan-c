@@ -85,6 +85,7 @@
 
 
 class XObject;
+class XObjectFactory;
 
 
 
@@ -743,6 +744,9 @@ public:
 #endif
 
 	typedef XALAN_STD vector<int>				OpCodeMapType;
+
+	// $$$ ToDo: I really think that the queue should just contain strings, not
+	// XObjects, since they're always used as strings...
 	typedef XALAN_STD vector<XObject*>			TokenQueueType;
 	typedef XALAN_STD vector<int>				PatternMapType;
 	typedef XALAN_STD map<int, int>				OpCodeLengthMapType;
@@ -887,9 +891,9 @@ public:
 	 */
 	void
 	setOpCodeArgs(
-			eOpCodes								theOpCode,
-			OpCodeMapSizeType						theIndex,
-			const OpCodeMapValueVectorType&	theArgs);
+			eOpCodes							theOpCode,
+			OpCodeMapSizeType					theIndex,
+			const OpCodeMapValueVectorType&		theArgs);
 
 	/**
 	 * Add an operation code to the list.
@@ -906,8 +910,8 @@ public:
 	 * @param theArgs   vector or arguments to supply
 	 */
 	void
-	appendOpCode(eOpCodes									theOpCode,
-				 const OpCodeMapValueVectorType&		theArgs)
+	appendOpCode(eOpCodes							theOpCode,
+				 const OpCodeMapValueVectorType&	theArgs)
 	{
 		appendOpCode(theOpCode);
 
@@ -1325,7 +1329,35 @@ public:
 	 */
 	XalanDOMString			m_currentPattern;
 
+	XObjectFactory*
+	getXObjectFactory() const
+	{
+		return m_xobjectFactory;
+	}
+
+	void
+	setXObjectFactory(XObjectFactory*	theFactory)
+	{
+		m_xobjectFactory = theFactory;
+	}
+
 private:
+
+	// Default vector allocation sizes.
+	enum
+	{
+		eDefaultTokenQueueSize = 100,
+		eDefaultOpMapSize = 100,
+		eDefaultPatternMapSize = 100
+	};
+
+	/**
+	 *
+	 * This is the factory that was used to create any internal XObjects.
+	 *
+	 */
+
+	XObjectFactory*						m_xobjectFactory;
 
 	// A map of Op codes to op code lengths.
 	const static OpCodeLengthMapType	s_opCodeLengths;

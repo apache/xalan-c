@@ -106,7 +106,10 @@ public:
 	reset();
 
 	// These methods are inherited from XObjectFactory ...
-	
+
+	virtual XObject*
+	clone(const XObject&	theXObject);
+
 	virtual XObject*
 	createBoolean(
 			bool	theValue,

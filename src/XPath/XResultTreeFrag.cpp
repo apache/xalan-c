@@ -105,6 +105,18 @@ XResultTreeFrag::~XResultTreeFrag()
 
 
 
+#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
+XObject*
+#else
+XResultTreeFrag*
+#endif
+XResultTreeFrag::clone() const
+{
+	return new XResultTreeFrag(*this, false);
+};
+
+
+
 XResultTreeFrag::eObjectType
 XResultTreeFrag::getType() const
 {

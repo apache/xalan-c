@@ -59,6 +59,14 @@
 
 
 
+#include <algorithm>
+
+
+
+#include "XObjectFactory.hpp"
+
+
+
 #include <cstdio>
 #include <strstream>
 
@@ -246,16 +254,18 @@ XPathExpression::XPathExpression() :
 	m_tokenQueue(),
 	m_currentPosition(0),
 	m_patternMap(100),
-	m_currentPattern()
+	m_currentPattern(),
+	m_xobjectFactory(0)
 {
-	m_opMap.reserve(100);
-	m_tokenQueue.reserve(100);
+	m_opMap.reserve(eDefaultOpMapSize);
+	m_tokenQueue.reserve(eDefaultTokenQueueSize);
 }
 
 
 
 XPathExpression::~XPathExpression()
 {
+	reset();
 }
 
 
@@ -263,9 +273,23 @@ XPathExpression::~XPathExpression()
 void
 XPathExpression::reset()
 {
+#if !defined(XALAN_NO_NAMESPACES)
+		using std::fill;
+		using std::for_each;
+#endif
+
+	if (m_xobjectFactory != 0)
+	{
+		for_each(
+			m_tokenQueue.begin(),
+			m_tokenQueue.end(),
+			DeleteFactoryObjectFunctor(*m_xobjectFactory));
+	}
+
 	m_opMap.clear();
 	m_tokenQueue.clear();
-	m_patternMap.clear();
+
+	fill(m_patternMap.begin(), m_patternMap.end(), 0);
 }
 
 
@@ -273,9 +297,20 @@ XPathExpression::reset()
 void
 XPathExpression::shrink()
 {
-	OpCodeMapType(m_opMap).swap(m_opMap);
-	TokenQueueType(m_tokenQueue).swap(m_tokenQueue);
-	PatternMapType(m_patternMap).swap(m_patternMap);
+	if (m_opMap.capacity() > m_opMap.size())
+	{
+		OpCodeMapType(m_opMap).swap(m_opMap);
+	}
+
+	if (m_tokenQueue.capacity() > m_tokenQueue.size())
+	{
+		TokenQueueType(m_tokenQueue).swap(m_tokenQueue);
+	}
+
+	if (m_patternMap.capacity() > m_patternMap.size())
+	{
+		PatternMapType(m_patternMap).swap(m_patternMap);
+	}
 }
 
 

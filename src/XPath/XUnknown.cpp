@@ -92,6 +92,18 @@ XUnknown::~XUnknown()
 
 
 
+#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
+XObject*
+#else
+XUnknown*
+#endif
+XUnknown::clone() const
+{
+	return new XUnknown(*this);
+};
+
+
+
 XUnknown::eObjectType
 XUnknown::getType() const
 {

@@ -167,9 +167,11 @@ SimpleNodeLocator::connectToNodes(
 
 						if(XPathExpression::eOP_LOCATIONPATH == value)
 						{
-							XObject* const	xnl = xpath.locationPath(doc, opPos, executionContext);
+							const XObjectGuard		xnl(
+										executionContext.getXObjectFactory(),
+										xpath.locationPath(doc, opPos, executionContext));
 
-							if(0 != xnl)
+							if(0 != xnl.get())
 							{
 								theNodeList.addNodes(xnl->nodeset());
 
@@ -462,7 +464,10 @@ SimpleNodeLocator::stepPattern(
 		{
 			argLen = currentExpression.getOpCodeLength(opPos);
 
-			const XObject*	const	obj = xpath.executeMore(localContext, opPos, executionContext);
+			const XObjectGuard		obj(
+										executionContext.getXObjectFactory(),
+										xpath.executeMore(localContext, opPos, executionContext));
+			assert(obj.get() != 0);
 
 			const NodeRefListBase&	nl = obj->nodeset();
 
@@ -607,8 +612,10 @@ SimpleNodeLocator::stepPattern(
 
 			while(XPathExpression::eOP_PREDICATE == nextStepType)
 			{
-				const XObject* const	pred =
-					xpath.predicate(localContext, opPos, executionContext);
+				const XObjectGuard		pred(
+										executionContext.getXObjectFactory(),
+										xpath.predicate(localContext, opPos, executionContext));
+				assert(pred.get() != 0);
 
 				if(XObject::eTypeNumber == pred->getType())
 				{
@@ -682,7 +689,10 @@ SimpleNodeLocator::findNodeSet(
 	const XPathExpression&	currentExpression =
 		xpath.getExpression();
 
-	const XObject* const	obj = xpath.executeMore(context, opPos, executionContext);
+
+	const XObjectGuard		obj(
+				executionContext.getXObjectFactory(),
+				xpath.executeMore(context, opPos, executionContext));
 
 	const NodeRefListBase&	nl = obj->nodeset();
 
@@ -1704,8 +1714,10 @@ SimpleNodeLocator::predicates(
 			XalanNode* const	theNode = subQueryResults.item(i);
 			assert(theNode != 0);
 
-			XObject* const		pred = xpath.predicate(theNode, opPos, executionContext);
-			assert(pred != 0);
+			const XObjectGuard		pred(
+						executionContext.getXObjectFactory(),
+						xpath.predicate(theNode, opPos, executionContext));
+			assert(pred.get() != 0);
 
 			// Remove any node that doesn't satisfy the predicate.
 			if(XObject::eTypeNumber == pred->getType() &&

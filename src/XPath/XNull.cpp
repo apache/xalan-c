@@ -96,6 +96,18 @@ XNull::~XNull()
 
 
 
+#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
+XObject*
+#else
+XNull*
+#endif
+XNull::clone() const
+{
+	return new XNull(*this, false);
+};
+
+
+
 XNull::eObjectType
 XNull::getType() const
 {

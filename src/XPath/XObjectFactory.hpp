@@ -111,6 +111,15 @@ public:
 	// These interfaces are new to XObjectFactory...
 
 	/**
+	 * Clone an XObject instance, and hold in the factory.
+	 *
+	 * @param theXObject the instance to clone
+	 * @return a clone of the instance.
+	 */
+	virtual XObject*
+	clone(const XObject&	theXObject) = 0;
+
+	/**
 	 * Create a boolean XObject from a boolean value.
 	 * 
 	 * @param theValue  value used to create object

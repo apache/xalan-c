@@ -101,6 +101,14 @@ public:
 	XObject(const XObject&	source);
 
 	/**
+	 * Clone the instance
+	 *
+	 * @return a clone of the instance.
+	 */
+	virtual XObject*
+	clone() const = 0;
+
+	/**
 	 * Given a request type, return the equivalent string. 
 	 * For diagnostic purposes.
 	 *

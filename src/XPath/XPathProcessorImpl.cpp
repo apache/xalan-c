@@ -149,6 +149,9 @@ XPathProcessorImpl::initXPath(
 {
 	m_xpath = &pathObj;
 	m_expression = &m_xpath->getExpression();
+
+	m_expression->setXObjectFactory(&xobjectFactory);
+
 	m_prefixResolver = &prefixResolver;
 	m_xobjectFactory = &xobjectFactory;
 	m_envSupport = &envSupport;
@@ -180,6 +183,9 @@ XPathProcessorImpl::initMatchPattern(
 {
 	m_xpath = &pathObj;
 	m_expression = &m_xpath->getExpression();
+
+	m_expression->setXObjectFactory(&xobjectFactory);
+
 	m_prefixResolver = &prefixResolver;
 	m_xobjectFactory = &xobjectFactory;
 	m_envSupport = &envSupport;

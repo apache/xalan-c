@@ -95,7 +95,6 @@
 class PrefixResolver;
 class XLocator;
 class XObject;
-class XObjectFactory;
 class XPathEnvSupport;
 class XPathSupport;
 class XalanNode;
@@ -823,6 +822,13 @@ private:
 
 	bool
 	operator==(const XPath&) const;
+
+	// Default vector allocation sizes.
+	enum
+	{
+		eDefaultTargetStringsSize = 5,
+		eDefaultArgVectorSize = 5	// for function call parameters
+	};
 
 	// Data members...
 

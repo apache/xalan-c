@@ -115,6 +115,18 @@ XSpan::~XSpan()
 
 
 
+#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
+XObject*
+#else
+XSpan*
+#endif
+XSpan::clone() const
+{
+	return new XSpan(*this);
+};
+
+
+
 int
 XSpan::getStart() const
 {

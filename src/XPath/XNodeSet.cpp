@@ -130,6 +130,18 @@ XNodeSet::~XNodeSet()
 
 
 
+#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
+XObject*
+#else
+XNodeSet*
+#endif
+XNodeSet::clone() const
+{
+	return new XNodeSet(*this, false);
+};
+
+
+
 XNodeSet::eObjectType
 XNodeSet::getType() const
 {

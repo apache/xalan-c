@@ -93,6 +93,18 @@ XNumber::~XNumber()
 
 
 
+#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
+XObject*
+#else
+XNumber*
+#endif
+XNumber::clone() const
+{
+	return new XNumber(*this);
+};
+
+
+
 XNumber::eObjectType
 XNumber::getType() const
 {

@@ -149,6 +149,33 @@ XObjectFactoryDefault::doReturnObject(
 
 
 XObject*
+XObjectFactoryDefault::clone(const XObject&		theXObject)
+{
+	if (&theXObject == &theTrueBoolean)
+	{
+		return &theTrueBoolean;
+	}
+	else if (&theXObject == &theFalseBoolean)
+	{
+		return &theFalseBoolean;
+	}
+	else if (&theXObject == m_XNull)
+	{
+		return m_XNull;
+	}
+	else
+	{
+		XObject* const	theClone = theXObject.clone();
+
+		m_xobjects.insert(theClone);
+
+		return theClone;
+	}
+}
+
+
+
+XObject*
 XObjectFactoryDefault::createBoolean(
 			bool	theValue,
 			bool	fOptimize)
@@ -384,7 +411,7 @@ XObjectFactoryDefault::reset()
 
 	for_each(m_xobjects.begin(),
 			 m_xobjects.end(),
-			 DeleteFactoryObjectFunctor(*this, true));
+			 ProtectedDeleteFactoryObjectFunctor(*this, true));
 
 	m_xobjects.clear();
 }

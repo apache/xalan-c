@@ -77,7 +77,9 @@
 #include <XPath/XPathExecutionContext.hpp>
 
 
+
 class XPathEnvSupport;
+
 
 
 /**
@@ -292,7 +294,7 @@ protected:
 
 	XalanNode*						m_currentNode;
 
-	MutableNodeRefList				m_contextNodeList;
+	const NodeRefListBase*			m_contextNodeList;
 
 	const PrefixResolver*			m_prefixResolver;
 
