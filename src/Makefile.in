@@ -144,6 +144,7 @@ CXX = @cxx@
 CXXFLAGS = @cxxflags@
 PREFIX = @prefix@
 LDFLAGS = @ldflags@
+BITSTOBUILD = @bitstobuild@
 
 #=============== LINUX SPECIFIC OPTIONS =========================
 
@@ -274,7 +275,14 @@ endif
 
 	LINK = $(CXX) -qnotempinc $(CXXFLAGS)  -brtl $(PLATFORM_COMPILE_OPTIONS) ${bitstobuildLink}
 
-    SHLIBSUFFIX=.so
+ifeq (${BITSTOBUILD}, 64)
+	MAKE_SHARED += -X64
+	LINK += -X64
+	CC2 += -q64
+	CC4 += -q64
+endif
+
+	SHLIBSUFFIX=.so
 
   endif
 
