@@ -1743,7 +1743,7 @@ XSLTEngineImpl::endElement(const XalanDOMChar*	name)
 
 	if(getTraceListeners() > 0)
 	{
-		const GenerateEvent		ge(GenerateEvent::EVENTTYPE_ENDELEMENT, name);
+		const GenerateEvent		ge(GenerateEvent::EVENTTYPE_ENDELEMENT, name, &getPendingAttributesImpl());
 
 		fireGenerateEvent(ge);
 	}
