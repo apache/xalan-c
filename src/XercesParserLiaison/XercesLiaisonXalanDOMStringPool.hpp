@@ -91,7 +91,7 @@ public:
 	virtual void
 	clear();
 
-	virtual size_type
+	virtual unsigned int
 	size() const;
 
 	virtual const XalanDOMString&
