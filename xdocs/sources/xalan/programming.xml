@@ -78,6 +78,8 @@ void* allocate(size_t size);
 // Method for deallocating memory
 void deallocate(void *p);
 </source>
+<p>For an example of how to use this feature, please see the <link idref="samples" anchor="simpletransform">
+SimpleTransform</link> sample that has been provided in the binary distributions.</p>
 </s3>
 </s2>
 

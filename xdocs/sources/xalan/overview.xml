@@ -164,7 +164,7 @@
        <item>The part of a template that defines the kind(s) of nodes to which the template applies.<br/><br/></item>
 
 </gloss>
-<p>For more definitions of XSLT terminology, see Dave Pawson's <jump href="http://www.dpawson.co.uk/xsl/vocab.html">XSLT 
+<p>For more definitions of XSLT terminology, see Dave Pawson's <jump href="http://www.dpawson.co.uk/xsl/xslvocab.html">XSLT 
    Terminology Clarification</jump> and the Glossary in Michael Kay's 
    <jump href="http://www.wrox.com/Consumer/Store/Details.asp?ISBN=1861003129">XSLT Programmer's Reference</jump>.</p>
 </s2>

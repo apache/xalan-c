@@ -114,6 +114,6 @@
 
 <resource id="bugsfixedforthisrelease"
           title="XalanC bugs fixed for this release"
-          location="http://nagoya.apache.org/bugzilla/buglist.cgi?resolution=FIXED&amp;bugidtype=include&amp;bug_id=&amp;changedin=&amp;chfield=resolution&amp;chfieldfrom=07%2F20%2F2003&amp;chfieldto=12%2F31%2F2003&amp;chfieldvalue=FIXED&amp;product=XalanC&amp;short_desc=&amp;short_desc_type=allwordssubstr"/>
+          location="http://nagoya.apache.org/jira/secure/IssueNavigator.jspa?reset=true&amp;pid=10582&amp;statusIds=1"/>
 
 </resources>
