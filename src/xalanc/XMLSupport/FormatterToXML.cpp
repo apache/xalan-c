@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2003 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -1217,6 +1217,53 @@ FormatterToXML::charactersRaw(
 
 		accumContent(chars, 0, length);
 	}
+}
+
+
+
+Writer*
+FormatterToXML::getWriter() const
+{
+	return m_writer;
+}
+
+
+
+const XalanDOMString&
+FormatterToXML::getDoctypeSystem() const
+{
+	return m_doctypeSystem;
+}
+
+
+
+const XalanDOMString&
+FormatterToXML::getDoctypePublic() const
+{
+	return m_doctypePublic;
+}
+
+
+
+const XalanDOMString&
+FormatterToXML::getEncoding() const
+{
+	return m_encoding;
+}
+
+
+
+const XalanDOMString&
+FormatterToXML::getMediaType() const
+{
+	return m_mediaType;
+}
+
+
+int
+FormatterToXML::getIndent() const
+{
+	return m_indent;
 }
 
 

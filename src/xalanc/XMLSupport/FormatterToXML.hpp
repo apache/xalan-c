@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2003 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -197,41 +197,23 @@ public:
 			const XMLCh* const	ch,
 			const unsigned int 	length);
 
-	const Writer*
-	getWriter() const
-	{
-		return m_writer;
-	}
+	virtual Writer*
+	getWriter() const;
 
-	Writer*
-	getWriter()
-	{
-		return m_writer;
-	}
+	virtual const XalanDOMString&
+	getDoctypeSystem() const;
 
-	const XalanDOMString&
-	getDoctypeSystem() const
-	{
-		return m_doctypeSystem;
-	}
+	virtual const XalanDOMString&
+	getDoctypePublic() const;
 
-	const XalanDOMString&
-	getDoctypePublic() const
-	{
-		return m_doctypePublic;
-	}
+	virtual const XalanDOMString&
+	getEncoding() const;
 
-	const XalanDOMString&
-	getEncoding() const
-	{
-		return m_encoding;
-	}
+	virtual const XalanDOMString&
+	getMediaType() const;
 
-	const XalanDOMString&
-	getMediaType() const
-	{
-		return m_mediaType;
-	}
+	virtual int
+	getIndent() const;
 
 	const XalanDOMString&
 	getVersion() const
@@ -291,12 +273,6 @@ public:
 	setDoIndent(bool	value)
 	{
 		m_doIndent = value;
-	}
-
-	int
-	getIndent() const
-	{
-		return m_indent;
 	}
 
 	void
