@@ -349,10 +349,6 @@ public:
 	{
 		invariants();
 
-		// $$$ ToDo: Do we really want to do this?
-		// for convenience, we will return a pointer to
-		// a default empty string so that c_str() never
-		// returns a null pointer...
 		return m_data.empty() == true ? &s_empty : &m_data[0];
 	}
 
@@ -693,6 +689,9 @@ public:
 
 	CharVectorType
 	transcode() const;
+
+	void
+	transcode(CharVectorType&	theResult) const;
 
 	size_type
 	hash() const

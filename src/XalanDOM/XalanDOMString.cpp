@@ -636,12 +636,22 @@ XalanDOMString::transcode() const
 
 	CharVectorType	theResult;
 
+	transcode(theResult);
+
+	return theResult;
+}
+
+
+
+void
+XalanDOMString::transcode(CharVectorType&	theResult) const
+{
+	invariants();
+
 	if (TranscodeToLocalCodePage(c_str(), length(), theResult, true) == false)
 	{
 		throw TranscodingError();
 	}
-
-	return theResult;
 }
 
 
