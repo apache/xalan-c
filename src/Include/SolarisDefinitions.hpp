@@ -71,30 +71,20 @@
 #define XALAN_PLATFORM_IMPORT_FUNCTION(T) T XALAN_PLATFORM_IMPORT
 
 
-
-// Sun Workshop 4.2 _does_ support new cast syntax, but it's
-// broken with extra cv-qualifiers, so we'll use old-style casts.
-#define XALAN_OLD_STYLE_CASTS
-
-
-
-// Standard allocators don't seem to work correctly with STLport.
-// I don't know if this is their bug, or ours...
-#define XALAN_NO_STD_ALLOCATORS
-
-
-
 #if __SUNPRO_CC_COMPAT >= 5
 
 #define XALAN_SIZE_T_IN_NAMESPACE_STD
 #define XALAN_SIGNAL_IN_STD
 
-// A copy constructor should not need to be accessible to allow
-// implicit construction from a conversion constructor.  However,
-// later versions of the Sun compiler do not agree...
-#define XALAN_IMPLICIT_CONSTRUCTION_REQUIRES_COPY_CONSTRUCTOR
-
 #else
+
+// Sun Workshop 4.2 _does_ support new cast syntax, but it's
+// broken with extra cv-qualifiers, so we'll use old-style casts.
+#define XALAN_OLD_STYLE_CASTS
+
+// Standard allocators don't seem to work correctly with STLport.
+// I don't know if this is their bug, or ours...
+#define XALAN_NO_STD_ALLOCATORS
 
 #define XALAN_STLPORT_STL
 #define XALAN_NO_DEFAULT_BUILTIN_ARRAY_INITIALIZATION
