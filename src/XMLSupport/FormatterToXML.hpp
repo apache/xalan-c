@@ -203,31 +203,6 @@ public:
 			const XMLCh* const	ch,
 			const unsigned int 	length);
 
-#if 0
-  /**
-   * Convert a MIME charset name, also known as an XML encoding name, to a Java encoding name.
-   * @param   mimeCharsetName Case insensitive MIME charset name: <code>UTF-8, US-ASCII, ISO-8859-1,
-   *                          ISO-8859-2, ISO-8859-3, ISO-8859-4, ISO-8859-5, ISO-8859-6,
-   *                          ISO-8859-7, ISO-8859-8, ISO-8859-9, ISO-2022-JP, Shift_JIS, 
-   *                          EUC-JP, GB2312, Big5, EUC-KR, ISO-2022-KR, KOI8-R,
-   *                          EBCDIC-CP-US, EBCDIC-CP-CA, EBCDIC-CP-NL, EBCDIC-CP-DK,
-   *                          EBCDIC-CP-NO, EBCDIC-CP-FI, EBCDIC-CP-SE, EBCDIC-CP-IT,
-   *                          EBCDIC-CP-ES, EBCDIC-CP-GB, EBCDIC-CP-FR, EBCDIC-CP-AR1,
-   *                          EBCDIC-CP-HE, EBCDIC-CP-CH, EBCDIC-CP-ROECE, EBCDIC-CP-YU,
-   *                          EBCDIC-CP-IS and EBCDIC-CP-AR2</code>.
-   * @return                  Java encoding name, or <var>null</var> if <var>mimeCharsetName</var>
-   *                          is unknown.
-   * @see #reverse
-   */
-
-	static const XalanDOMString
-	convertMime2JavaEncoding(const XalanDOMString&	mimeCharsetName);
-
-	static const XalanDOMString
-	convertJava2MimeEncoding(const XalanDOMString&	encoding);
-
-#endif
-
 	const Writer&
 	getWriter() const
 	{
@@ -567,6 +542,13 @@ protected:
 	writeAttrString(
 			const XalanDOMChar*		string,
 			const XalanDOMString&	encoding);
+
+	/**
+	 * Write the data for a comment
+	 * @param data The comment's data.
+	 */
+	virtual void
+	accumCommentData(const XalanDOMChar*	data);
 
 	/**
 	 * Throw an exception when an invalid
@@ -911,11 +893,15 @@ private:
 	 */
 	int		m_level;
 
+protected:
+
 	/**
 	 * A stack of Boolean objects that tell if the given element 
 	 * has children.
 	 */
 	BoolStackType		m_elemStack;
+
+private:
 
 	/**
 	 * A pointer to the member function that will do the accumulating

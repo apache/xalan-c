@@ -860,6 +860,13 @@ FormatterToXML::processingInstruction(
 			accumName(XalanUnicode::charQuestionMark);
 			accumName(XalanUnicode::charGreaterThanSign);
 
+			// If outside of an element, then put in a new line.  This whitespace
+			// is not significant.
+			if (m_elemStack.empty() == true)
+			{
+				outputLineSep();
+			}
+
 			m_startNewLine = true;
 		}
 	}
@@ -955,6 +962,14 @@ FormatterToXML::writeAttrString(
 			accumName(ch);
 		}
     }
+}
+
+
+
+void
+FormatterToXML::accumCommentData(const XalanDOMChar*	data)
+{
+	accumContent(data);
 }
 
 
@@ -1173,7 +1188,7 @@ FormatterToXML::comment(const XMLCh* const	data)
 		accumName(XalanUnicode::charHyphenMinus);
 		accumName(XalanUnicode::charHyphenMinus);
 
-		accumName(data);
+		accumCommentData(data);
 
 		accumName(XalanUnicode::charHyphenMinus);
 		accumName(XalanUnicode::charHyphenMinus);
@@ -1373,270 +1388,11 @@ FormatterToXML::accumNormalizedPIData(
 		}
 		else
 		{
-			accumName(theChar);
+			accumContent(theChar);
 		}
 	}
 }
 
-
-
-#if 0
-
-
-
-FormatterToXML::DOMStringMapType  FormatterToXML::s_enchash;
-FormatterToXML::DOMStringMapType FormatterToXML::s_revhash;
-FormatterToXML::DOMString2IntMapType FormatterToXML::s_revsize;
-
-const XalanDOMString FormatterToXML::convertMime2JavaEncoding(
-		const XalanDOMString& mimeCharsetName)
-{
-	if (m_javaEncodingIsISO) return mimeCharsetName;
-	DOMStringMapType::const_iterator it =
-		s_enchash.find(toUpperCase(mimeCharsetName));
-	return (*it).second;
-}		
-
-const XalanDOMString FormatterToXML::convertJava2MimeEncoding(
-		const XalanDOMString& encoding)
-{
-	if (m_javaEncodingIsISO) return encoding;
-	DOMStringMapType::const_iterator it =
-		s_revhash.find(toUpperCase(encoding));
-	return (*it).second;
-}
-
-
-
-void FormatterToXML::initEncodings() 
-{
-	if(0 != s_enchash.size())
-		return;
-
-	bool useISOPrefix = false;
-/*
-	java:
-	try 
-	{
-		java.io.ByteArrayOutputStream os = new java.io.ByteArrayOutputStream();
-		os.write(32);
-		String s = os.toString("ISO8859_1");
-		// Just in case it doesn't throw an exception...
-		if(null == s)
-			useISOPrefix = false;
-		else
-			useISOPrefix = true;
-	}
-	catch (java.io.UnsupportedEncodingException e) 
-	{
-		useISOPrefix = false;
-	}
-*/
-
-	// A bit of a hack for the blackdown VMs (and probably some others).
-/*
-	java:
-	try
-	{
-		String encoding = System.getProperty("file.encoding");
-
-		unsigned int dashindex = (encoding != null ? encoding.indexOf(XalanUnicode::charHyphenMinus) : -1);
-		if(3 == dashindex)
-		{
-			String ISOprefix =	new String(encoding.toCharArray(), 0, 3);
-			if (ISOprefix.equals("ISO") == true)
-				javaEncodingIsISO = true;
-		}
-	}
-	catch(SecurityException se)
-	{
-	}
-*/
-
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::make_pair;
-#endif
-
-	// Make a table to maximum character sizes before we 
-	// need to resort to escaping in the XML.
-	// TODO: To tell the truth, I'm guessing a bit here. 
-	// s_revsize.insert(make_pair("CP1252", 		 0xFF)); // Windows Latin-1 
-	s_revsize.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("WINDOWS-1250")),	 0xFF)); // Windows 1250 Peter Smolik
-	s_revsize.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("UTF-8")),			 0xFFFF)); // Universal Transformation Format 8
-	s_revsize.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("US-ASCII")),		 0x7F));
-	s_revsize.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("ISO-8859-1")), 	 0xFF));
-	s_revsize.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("ISO-8859-2")), 	 0xFF));
-	s_revsize.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("ISO-8859-3")), 	 0xFF));
-	s_revsize.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("ISO-8859-4")), 	 0xFF));
-	s_revsize.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("ISO-8859-5")), 	 0xFF));
-	s_revsize.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("ISO-8859-6")), 	 0xFF));
-	s_revsize.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("ISO-8859-7")), 	 0xFF));
-	s_revsize.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("ISO-8859-8")), 	 0xFF));
-	s_revsize.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("ISO-8859-9")), 	 0xFF));
-	s_revsize.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("ISO-2022-JP")),	 0xFFFF));
-	s_revsize.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("SHIFT_JIS")),		 0xFFFF));
-	s_revsize.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("EUC-JP")), 		 0xFFFF));
-	s_revsize.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("GB2312")), 		 0xFFFF));
-	s_revsize.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("BIG5")),			 0xFFFF));
-	s_revsize.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("EUC-KR")), 		 0xFFFF));
-	s_revsize.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("ISO-2022-KR")),	 0xFFFF));
-	s_revsize.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("KOI8-R")), 		 0xFFFF));
-	s_revsize.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-US")),	 0xFF));
-	s_revsize.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-CA")),	 0xFF));
-	s_revsize.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-NL")),	 0xFF));
-	s_revsize.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-DK")),	 0xFF));
-	s_revsize.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-NO")),	 0xFF));
-	s_revsize.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-FI")),	 0xFF));
-	s_revsize.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-SE")),	 0xFF));
-	s_revsize.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-IT")),	 0xFF));
-	s_revsize.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-ES")),	 0xFF));
-	s_revsize.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-GB")),	 0xFF));
-	s_revsize.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-FR")),	 0xFF));
-	s_revsize.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-AR1")),	 0xFF));
-	s_revsize.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-HE")),	 0xFF));
-	s_revsize.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-CH")),	 0xFF));
-	s_revsize.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-ROECE")), 0xFF));
-	s_revsize.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-YU")),	 0xFF));
-	s_revsize.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-IS")),	 0xFF));
-	s_revsize.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-AR2")),	 0xFF));
-
-	//	  <preferred MIME name>, <Java encoding name>
-	// s_enchash.insert(make_pair("ISO 8859-1", "CP1252")); // Close enough, I guess
-	s_enchash.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("WINDOWS-1250")), XalanDOMString(XALAN_STATIC_UCODE_STRING("CP1250")))); // Peter Smolik
-	s_enchash.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("UTF-8")), XalanDOMString(XALAN_STATIC_UCODE_STRING("UTF8"))));
-	if(useISOPrefix)
-	{
-		s_enchash.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("US-ASCII")),
-		XalanDOMString(XALAN_STATIC_UCODE_STRING("ISO8859_1"))));	 // ?
-		s_enchash.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("ISO-8859-1")),
-		XalanDOMString(XALAN_STATIC_UCODE_STRING("ISO8859_1"))));
-		s_enchash.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("ISO-8859-2")),
-		XalanDOMString(XALAN_STATIC_UCODE_STRING("ISO8859_2"))));
-		s_enchash.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("ISO-8859-3")),
-		XalanDOMString(XALAN_STATIC_UCODE_STRING("ISO8859_3"))));
-		s_enchash.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("ISO-8859-4")),
-		XalanDOMString(XALAN_STATIC_UCODE_STRING("ISO8859_4"))));
-		s_enchash.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("ISO-8859-5")),
-		XalanDOMString(XALAN_STATIC_UCODE_STRING("ISO8859_5"))));
-		s_enchash.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("ISO-8859-6")),
-		XalanDOMString(XALAN_STATIC_UCODE_STRING("ISO8859_6"))));
-		s_enchash.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("ISO-8859-7")),
-		XalanDOMString(XALAN_STATIC_UCODE_STRING("ISO8859_7"))));
-		s_enchash.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("ISO-8859-8")),
-		XalanDOMString(XALAN_STATIC_UCODE_STRING("ISO8859_8"))));
-		s_enchash.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("ISO-8859-9")),
-		XalanDOMString(XALAN_STATIC_UCODE_STRING("ISO8859_9"))));
-	}
-	else
-	{
-		s_enchash.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("US-ASCII")),
-		XalanDOMString(XALAN_STATIC_UCODE_STRING("8859_1"))));	  // ?
-		s_enchash.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("ISO-8859-1")),
-		XalanDOMString(XALAN_STATIC_UCODE_STRING("8859_1"))));
-		s_enchash.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("ISO-8859-2")),
-		XalanDOMString(XALAN_STATIC_UCODE_STRING("8859_2"))));
-		s_enchash.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("ISO-8859-3")),
-		XalanDOMString(XALAN_STATIC_UCODE_STRING("8859_3"))));
-		s_enchash.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("ISO-8859-4")),
-		XalanDOMString(XALAN_STATIC_UCODE_STRING("8859_4"))));
-		s_enchash.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("ISO-8859-5")),
-		XalanDOMString(XALAN_STATIC_UCODE_STRING("8859_5"))));
-		s_enchash.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("ISO-8859-6")),
-		XalanDOMString(XALAN_STATIC_UCODE_STRING("8859_6"))));
-		s_enchash.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("ISO-8859-7")),
-		XalanDOMString(XALAN_STATIC_UCODE_STRING("8859_7"))));
-		s_enchash.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("ISO-8859-8")),
-		XalanDOMString(XALAN_STATIC_UCODE_STRING("8859_8"))));
-		s_enchash.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("ISO-8859-9")),
-		XalanDOMString(XALAN_STATIC_UCODE_STRING("8859_9"))));
-	}
-	s_enchash.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("ISO-2022-JP")),	 XalanDOMString(XALAN_STATIC_UCODE_STRING("JIS"))));
-	s_enchash.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("SHIFT_JIS")),		 XalanDOMString(XALAN_STATIC_UCODE_STRING("SJIS"))));
-	s_enchash.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("EUC-JP")), 		 XalanDOMString(XALAN_STATIC_UCODE_STRING("EUCJIS"))));
-	s_enchash.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("GB2312")), 		 XalanDOMString(XALAN_STATIC_UCODE_STRING("GB2312"))));
-	s_enchash.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("BIG5")),			 XalanDOMString(XALAN_STATIC_UCODE_STRING("Big5"))));
-	s_enchash.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("EUC-KR")), 		 XalanDOMString(XALAN_STATIC_UCODE_STRING("KSC5601"))));
-	s_enchash.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("ISO-2022-KR")),	 XalanDOMString(XALAN_STATIC_UCODE_STRING("ISO2022KR"))));
-	s_enchash.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("KOI8-R")), 		 XalanDOMString(XALAN_STATIC_UCODE_STRING("KOI8_R"))));
-	s_enchash.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-US")),	 XalanDOMString(XALAN_STATIC_UCODE_STRING("CP037"))));
-	s_enchash.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-CA")),	 XalanDOMString(XALAN_STATIC_UCODE_STRING("CP037"))));
-	s_enchash.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-NL")),	 XalanDOMString(XALAN_STATIC_UCODE_STRING("CP037"))));
-	s_enchash.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-DK")),	 XalanDOMString(XALAN_STATIC_UCODE_STRING("CP277"))));
-	s_enchash.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-NO")),	 XalanDOMString(XALAN_STATIC_UCODE_STRING("CP277"))));
-	s_enchash.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-FI")),	 XalanDOMString(XALAN_STATIC_UCODE_STRING("CP278"))));
-	s_enchash.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-SE")),	 XalanDOMString(XALAN_STATIC_UCODE_STRING("CP278"))));
-	s_enchash.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-IT")),	 XalanDOMString(XALAN_STATIC_UCODE_STRING("CP280"))));
-	s_enchash.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-ES")),	 XalanDOMString(XALAN_STATIC_UCODE_STRING("CP284"))));
-	s_enchash.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-GB")),	 XalanDOMString(XALAN_STATIC_UCODE_STRING("CP285"))));
-	s_enchash.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-FR")),	 XalanDOMString(XALAN_STATIC_UCODE_STRING("CP297"))));
-	s_enchash.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-AR1")),	 XalanDOMString(XALAN_STATIC_UCODE_STRING("CP420"))));
-	s_enchash.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-HE")),	 XalanDOMString(XALAN_STATIC_UCODE_STRING("CP424"))));
-	s_enchash.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-CH")),	 XalanDOMString(XALAN_STATIC_UCODE_STRING("CP500"))));
-	s_enchash.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-ROECE")), XalanDOMString(XALAN_STATIC_UCODE_STRING("CP870"))));
-	s_enchash.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-YU")),	 XalanDOMString(XALAN_STATIC_UCODE_STRING("CP870"))));
-	s_enchash.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-IS")),	 XalanDOMString(XALAN_STATIC_UCODE_STRING("CP871"))));
-	s_enchash.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-AR2")),	 XalanDOMString(XALAN_STATIC_UCODE_STRING("CP918"))));
-
-	// j:CNS11643 -> EUC-TW?
-	// ISO-2022-CN? ISO-2022-CN-EXT?
-
-	//	  <Java encoding name>, <preferred MIME name>
-	s_revhash.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("CP1252")), XalanDOMString(XALAN_STATIC_UCODE_STRING("ISO-8859-1")))); // Close enough, I guess
-	s_revhash.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("CP1250")), XalanDOMString(XALAN_STATIC_UCODE_STRING("windows-1250")))); // Peter Smolik
-	s_revhash.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("UTF8")), XalanDOMString(XALAN_STATIC_UCODE_STRING("UTF-8"))));
-	//s_revhash.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("ISO8859_1")), XalanDOMString(XALAN_STATIC_UCODE_STRING("US-ASCII"))));	 // ?
-	if(useISOPrefix)
-	{
-		s_revhash.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("ISO8859_1")), XalanDOMString(XALAN_STATIC_UCODE_STRING("ISO-8859-1"))));
-		s_revhash.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("ISO8859_2")), XalanDOMString(XALAN_STATIC_UCODE_STRING("ISO-8859-2"))));
-		s_revhash.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("ISO8859_3")), XalanDOMString(XALAN_STATIC_UCODE_STRING("ISO-8859-3"))));
-		s_revhash.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("ISO8859_4")), XalanDOMString(XALAN_STATIC_UCODE_STRING("ISO-8859-4"))));
-		s_revhash.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("ISO8859_5")), XalanDOMString(XALAN_STATIC_UCODE_STRING("ISO-8859-5"))));
-		s_revhash.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("ISO8859_6")), XalanDOMString(XALAN_STATIC_UCODE_STRING("ISO-8859-6"))));
-		s_revhash.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("ISO8859_7")), XalanDOMString(XALAN_STATIC_UCODE_STRING("ISO-8859-7"))));
-		s_revhash.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("ISO8859_8")), XalanDOMString(XALAN_STATIC_UCODE_STRING("ISO-8859-8"))));
-		s_revhash.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("ISO8859_9")), XalanDOMString(XALAN_STATIC_UCODE_STRING("ISO-8859-9"))));
-	}
-	else
-	{
-		s_revhash.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("8859_1")), XalanDOMString(XALAN_STATIC_UCODE_STRING("ISO-8859-1"))));
-		s_revhash.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("8859_2")), XalanDOMString(XALAN_STATIC_UCODE_STRING("ISO-8859-2"))));
-		s_revhash.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("8859_3")), XalanDOMString(XALAN_STATIC_UCODE_STRING("ISO-8859-3"))));
-		s_revhash.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("8859_4")), XalanDOMString(XALAN_STATIC_UCODE_STRING("ISO-8859-4"))));
-		s_revhash.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("8859_5")), XalanDOMString(XALAN_STATIC_UCODE_STRING("ISO-8859-5"))));
-		s_revhash.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("8859_6")), XalanDOMString(XALAN_STATIC_UCODE_STRING("ISO-8859-6"))));
-		s_revhash.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("8859_7")), XalanDOMString(XALAN_STATIC_UCODE_STRING("ISO-8859-7"))));
-		s_revhash.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("8859_8")), XalanDOMString(XALAN_STATIC_UCODE_STRING("ISO-8859-8"))));
-		s_revhash.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("8859_9")), XalanDOMString(XALAN_STATIC_UCODE_STRING("ISO-8859-9"))));
-	}
-	s_revhash.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("JIS")), XalanDOMString(XALAN_STATIC_UCODE_STRING("ISO-2022-JP"))));
-	s_revhash.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("SJIS")), XalanDOMString(XALAN_STATIC_UCODE_STRING("Shift_JIS"))));
-	s_revhash.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("EUCJIS")), XalanDOMString(XALAN_STATIC_UCODE_STRING("EUC-JP"))));
-	s_revhash.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("GB2312")), XalanDOMString(XALAN_STATIC_UCODE_STRING("GB2312"))));
-	s_revhash.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("BIG5")), XalanDOMString(XALAN_STATIC_UCODE_STRING("Big5"))));
-	s_revhash.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("KSC5601")), XalanDOMString(XALAN_STATIC_UCODE_STRING("EUC-KR"))));
-	s_revhash.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("ISO2022KR")), XalanDOMString(XALAN_STATIC_UCODE_STRING("ISO-2022-KR"))));
-	s_revhash.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("KOI8_R")), XalanDOMString(XALAN_STATIC_UCODE_STRING("KOI8-R"))));
-	s_revhash.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("CP037")), XalanDOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-US"))));
-	s_revhash.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("CP037")), XalanDOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-CA"))));
-	s_revhash.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("CP037")), XalanDOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-NL"))));
-	s_revhash.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("CP277")), XalanDOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-DK"))));
-	s_revhash.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("CP277")), XalanDOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-NO"))));
-	s_revhash.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("CP278")), XalanDOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-FI"))));
-	s_revhash.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("CP278")), XalanDOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-SE"))));
-	s_revhash.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("CP280")), XalanDOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-IT"))));
-	s_revhash.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("CP284")), XalanDOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-ES"))));
-	s_revhash.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("CP285")), XalanDOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-GB"))));
-	s_revhash.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("CP297")), XalanDOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-FR"))));
-	s_revhash.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("CP420")), XalanDOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-AR1"))));
-	s_revhash.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("CP424")), XalanDOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-HE"))));
-	s_revhash.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("CP500")), XalanDOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-CH"))));
-	s_revhash.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("CP870")), XalanDOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-ROECE"))));
-	s_revhash.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("CP870")), XalanDOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-YU"))));
-	s_revhash.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("CP871")), XalanDOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-IS"))));
-	s_revhash.insert(make_pair(XalanDOMString(XALAN_STATIC_UCODE_STRING("CP918")), XalanDOMString(XALAN_STATIC_UCODE_STRING("EBCDIC-CP-AR2"))));
-}
-#endif
 
 
 static XalanDOMCharVectorType	s_xsltNextIsRawString;

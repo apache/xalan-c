@@ -276,16 +276,13 @@ public:
 
 protected:
 
-	// These methods are new ...
-	/**
-	 * Write an attribute string.
-	 * @param string The string to write.
-	 * @param encoding The current encoding.
-	 */
 	virtual void
 	writeAttrString(
 			const XalanDOMChar*		string,
 			const XalanDOMString&	encoding);
+
+	virtual void
+	accumCommentData(const XalanDOMChar*	data);
 
 	void
 	writeCharacters(const XalanDOMString&	theString);

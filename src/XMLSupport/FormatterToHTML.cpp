@@ -661,10 +661,17 @@ FormatterToHTML::processingInstruction(
 				accumContent(XalanUnicode::charSpace);
 			}
 
-			accumName(data);
+			writeCharacters(data);
 		}
 
 		accumContent(XalanUnicode::charGreaterThanSign); // different from XML
+
+		// If outside of an element, then put in a new line.  This whitespace
+		// is not significant.
+//		if (m_elemStack.empty() == true)
+//		{
+//			outputLineSep();
+//		}
 
 		m_startNewLine = true;
 	}
@@ -879,6 +886,14 @@ FormatterToHTML::writeAttrString(
 			}
 		}
     }
+}
+
+
+
+void
+FormatterToHTML::accumCommentData(const XalanDOMChar*	data)
+{
+	writeCharacters(data);
 }
 
 
