@@ -217,7 +217,7 @@ XalanTransformer::initialize()
 #if defined(XALAN_USE_ICU)
 	// Install the ICU version of format-number...
 	XPath::installFunction(
-			StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("format-number")),
+			XPathFunctionTable::s_formatNumber,
 			FunctionICUFormatNumber());
 #endif
 
@@ -249,8 +249,7 @@ XalanTransformer::terminate()
 	XalanEXSLTStringFunctionsInstaller::uninstallGlobal();
 
 #if defined(XALAN_USE_ICU)
-	XPath::uninstallFunction(
-			StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("format-number")));
+	XPath::uninstallFunction(XPathFunctionTable::s_formatNumber);
 
 	ICUBridgeCleanup::cleanup();
 #endif
