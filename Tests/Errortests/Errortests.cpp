@@ -95,7 +95,6 @@
 
 const char* const 	excludeStylesheets[] =
 {
-	"sorterr06.xsl",
 	0
 };
 
