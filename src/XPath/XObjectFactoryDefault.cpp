@@ -118,6 +118,8 @@ XObjectFactoryDefault::doReturnObject(
 			const XObject*	theXObject,
 			bool			fInReset)
 {
+	assert(theXObject != 0);
+
 	if (theXObject == &theTrueBoolean ||
 		theXObject == &theFalseBoolean ||
 		theXObject == m_XNull.get())
