@@ -53,6 +53,8 @@
  * Business Machines, Inc., http://www.ibm.com.  For more
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
+ *
+ * @author <a href="mailto:david_n_bertoni@lotus.com">David N. Bertoni</a>
  */
 #include "XSLTProcessorEnvSupportDefault.hpp"
 
@@ -101,6 +103,48 @@ XSLTProcessorEnvSupportDefault::XSLTProcessorEnvSupportDefault(XSLTProcessor*	th
 XSLTProcessorEnvSupportDefault::~XSLTProcessorEnvSupportDefault()
 {
 	reset();
+}
+
+
+
+void
+XSLTProcessorEnvSupportDefault::installExternalFunctionGlobal(
+			const XalanDOMString&	theNamespace,
+			const XalanDOMString&	extensionName,
+			const Function&			function)
+{
+	XPathEnvSupportDefault::installExternalFunctionGlobal(theNamespace, extensionName, function);
+}
+
+
+
+void
+XSLTProcessorEnvSupportDefault::uninstallExternalFunctionGlobal(
+			const XalanDOMString&	theNamespace,
+			const XalanDOMString&	extensionName)
+{
+	XPathEnvSupportDefault::uninstallExternalFunctionGlobal(theNamespace, extensionName);
+}
+
+
+
+void
+XSLTProcessorEnvSupportDefault::installExternalFunctionLocal(
+			const XalanDOMString&	theNamespace,
+			const XalanDOMString&	extensionName,
+			const Function&			function)
+{
+	m_defaultSupport.installExternalFunctionLocal(theNamespace, extensionName, function);
+}
+
+
+
+void
+XSLTProcessorEnvSupportDefault::uninstallExternalFunctionLocal(
+			const XalanDOMString&	theNamespace,
+			const XalanDOMString&	extensionName)
+{
+	m_defaultSupport.uninstallExternalFunctionLocal(theNamespace, extensionName);
 }
 
 
@@ -320,11 +364,13 @@ XSLTProcessorEnvSupportDefault::extFunction(
 			XPathExecutionContext&			executionContext,
 			const XalanDOMString&			theNamespace,
 			const XalanDOMString&			extensionName,
+			XalanNode*						context,
 			const XObjectArgVectorType&		argVec) const
 {
 	return m_defaultSupport.extFunction(executionContext,
 										theNamespace,
 										extensionName,
+										context,
 										argVec);
 }
 

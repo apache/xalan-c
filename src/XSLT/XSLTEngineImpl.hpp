@@ -621,7 +621,8 @@ public:
 	extFunction(
 			XPathExecutionContext&			executionContext,
 			const XalanDOMString&			theNamespace,
-			const XalanDOMString&			extensionName, 
+			const XalanDOMString&			extensionName,
+			XalanNode*						context,
 			const XObjectArgVectorType&		argVec) const;
 
 	// This is public for class Stylesheet...
@@ -670,27 +671,15 @@ public:
 	}
 
 	/**
-	 * Retrieve the prefix for XSL namespace URI's, for example,
-	 * "http://www.w3.org/1999/XSL/Transform" 
-	 * 
-	 * @return prefix string
-	 */
-	static const XalanDOMString&
-	getXSLNameSpaceURLPre()
-	{
-		return s_XSLNameSpaceURLPre;
-	}
-
-	/**
 	 * Retrieve the URI for the current XSL namespace, for example,
-	 * "http://www.w3.org/1999/XSL/Transform/1.0" 
+	 * "http://www.w3.org/1999/XSL/Transform"
 	 * 
 	 * @return URI string
 	 */
-	const XalanDOMString&
-	getXSLNameSpaceURL() const
+	static const XalanDOMString&
+	getXSLNameSpaceURL()
 	{
-		return m_XSLNameSpaceURL;
+		return s_XSLNameSpaceURL;
 	}
 
 	/**
@@ -702,17 +691,6 @@ public:
 	getXalanXSLNameSpaceURL()
 	{
 		return s_XSLT4JNameSpaceURL;
-	}
-
-	/**
-	 * Set the full XSLT Namespace URI.
-	 *
-	 * @param theXSLNameSpaceURL XSLT namespace URI
-	 */
-	void
-	setXSLNameSpaceURL(const XalanDOMString&		theXSLNameSpaceURL)
-	{
-		m_XSLNameSpaceURL = theXSLNameSpaceURL;
 	}
 
 	/**
@@ -2031,26 +2009,15 @@ private:
 	StylesheetExecutionContext* 	m_stylesheetExecutionContext;
 
 /**
- * The full XSLT Namespace URL.  To be replaced by the one actually 
- * found.
+ * The namespace that we must match as a minimum for XSLT.
  */
-	XalanDOMString					m_XSLNameSpaceURL;	//"http://www.w3.org/1999/XSL/Transform/1.0"
-
+	static const XalanDOMString		s_XSLNameSpaceURL;	//"http://www.w3.org/1999/XSL/Transform"
 
 
 /**
  * The minimum version of XSLT supported.
  */
 	static const double s_XSLTVerSupported; // 1.0
-
-/**
- * Out version of XSLT
- */
-	static const XalanDOMString s_DefaultXSLNameSpaceURL;
-/**
- * The namespace that we must match as a minimum for XSLT.
- */
-	static const	XalanDOMString	s_XSLNameSpaceURLPre;	// "http://www.w3.org/1999/XSL/Transform"
 
 /**
  * Special Xalan namespace for built-in extensions.
@@ -2062,12 +2029,6 @@ private:
  * Hash table that can look up XSLT4J extensions element IDs via name.
  */
 	static ElementKeysMapType		s_XSLT4JElementKeys;
-
-	/**
-	 * Init the XSLT hashtable.
-	 */
-//	static void
-//	initXSLTKeys();
 
 	/**
 	 * Hash table of XSLT IDs for attribute names.

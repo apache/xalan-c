@@ -149,8 +149,7 @@
 
 
 const double			XSLTEngineImpl::s_XSLTVerSupported(1.0);
-const XalanDOMString	XSLTEngineImpl::s_DefaultXSLNameSpaceURL(XALAN_STATIC_UCODE_STRING("http://www.w3.org/1999/XSL/Transform/1.0"));
-const XalanDOMString	XSLTEngineImpl::s_XSLNameSpaceURLPre(XALAN_STATIC_UCODE_STRING("http://www.w3.org/1999/XSL/Transform"));
+const XalanDOMString	XSLTEngineImpl::s_XSLNameSpaceURL(XALAN_STATIC_UCODE_STRING("http://www.w3.org/1999/XSL/Transform"));
 const XalanDOMString	XSLTEngineImpl::s_XSLT4JNameSpaceURL(XALAN_STATIC_UCODE_STRING("http://xml.apache.org/xslt"));
 
 /**
@@ -210,7 +209,6 @@ XSLTEngineImpl::XSLTEngineImpl(
 	m_problemListener(new ProblemListenerDefault()),
 	m_stylesheetRoot(0),
 	m_stylesheetExecutionContext(0),
-	m_XSLNameSpaceURL(s_DefaultXSLNameSpaceURL),
 	m_XSLDirectiveLookup(),
 	m_quietConflictWarnings(false),
 	m_traceTemplateChildren(false),
@@ -259,7 +257,7 @@ void
 XSLTEngineImpl::reset()
 {
 	m_rootDoc = 0;
-	m_XSLNameSpaceURL = s_DefaultXSLNameSpaceURL;
+
 	m_durationsTable.clear();
 	m_stylesheetLocatorStack.clear();
 	clear(m_pendingElementName);
@@ -918,8 +916,7 @@ XSLTEngineImpl::getXSLToken(const XalanNode&	node) const
 	const XalanDOMString 	ns =
 			m_xpathSupport.getNamespaceOfNode(node);
 
-	// was: toLowerCase
-	if(equals(ns, m_XSLNameSpaceURL))
+	if(equals(ns, s_XSLNameSpaceURL))
 	{
 		const XalanDOMString 	localName =
 			m_xpathSupport.getLocalNameOfNode(node);
@@ -1068,13 +1065,18 @@ XSLTEngineImpl::functionAvailable(
  */
 XObject*
 XSLTEngineImpl::extFunction(
-		XPathExecutionContext&			executionContext,
-		const XalanDOMString&			theNamespace,
-		const XalanDOMString&			extensionName, 
-		const XObjectArgVectorType&		argVec) const
+			XPathExecutionContext&			executionContext,
+			const XalanDOMString&			theNamespace,
+			const XalanDOMString&			extensionName,
+			XalanNode*						context,
+			const XObjectArgVectorType&		argVec) const
 {
-	return m_xpathEnvSupport.extFunction( executionContext,
-		theNamespace, extensionName, argVec);
+	return m_xpathEnvSupport.extFunction(
+			executionContext,
+			theNamespace,
+			extensionName,
+			context,
+			argVec);
 }
 
 
@@ -2384,7 +2386,7 @@ XSLTEngineImpl::copyNamespaceAttributes(
 					/*
 					@@ JMD: Not used anymore in java ...
 					const bool			isXSLNS =
-						srcIsStylesheetTree && equalsIgnoreCase(srcURI, m_XSLNameSpaceURL)
+						srcIsStylesheetTree && equalsIgnoreCase(srcURI, s_XSLNameSpaceURL)
 						|| 0 != m_stylesheetRoot->lookupExtensionNSHandler(srcURI)
 						|| srcIsStylesheetTree && equalsIgnoreCase(srcURI, s_XSLT4JNameSpaceURL);
 
@@ -2823,7 +2825,7 @@ XSLTEngineImpl::copyAttributesToAttList(
 			static_cast<const XalanAttr*>(attributes->item(i));
 		assert(attr != 0);
 
-		const XalanDOMString	theTemp(m_XSLNameSpaceURL + ":use");
+		const XalanDOMString	theTemp(s_XSLNameSpaceURL + ":use");
 
 		if(equalsIgnoreCase(m_parserLiaison.getExpandedAttributeName(*attr), theTemp))
 		{

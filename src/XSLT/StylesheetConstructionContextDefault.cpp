@@ -53,6 +53,8 @@
  * Business Machines, Inc., http://www.ibm.com.  For more
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
+ *
+ * @author <a href="mailto:david_n_bertoni@lotus.com">David N. Bertoni</a>
  */
 
 #include "StylesheetConstructionContextDefault.hpp"
@@ -222,17 +224,9 @@ StylesheetConstructionContextDefault::getURLFromString(
 
 
 const XalanDOMString&
-StylesheetConstructionContextDefault::getXSLNameSpaceURLPre() const
+StylesheetConstructionContextDefault::getXSLTNamespaceURI() const
 {
-	return m_processor.getXSLNameSpaceURLPre();
-}
-
-
-
-const XalanDOMString&
-StylesheetConstructionContextDefault::getXSLNameSpaceURL() const
-{
-	return m_processor.getXSLNameSpaceURL();
+	return XSLTEngineImpl::getXSLNameSpaceURL();
 }
 
 

@@ -53,6 +53,8 @@
  * Business Machines, Inc., http://www.ibm.com.  For more
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
+ *
+ * @author <a href="mailto:david_n_bertoni@lotus.com">David N. Bertoni</a>
  */
 #if !defined(STYLESHEETEXECUTIONCONTEXT_HEADER_GUARD_1357924680)
 #define STYLESHEETEXECUTIONCONTEXT_HEADER_GUARD_1357924680
@@ -914,212 +916,85 @@ public:
 
 	// These interfaces are inherited from XPathExecutionContext...
 
-	/**
-	 * Retrieve the node currently being executed.
-	 * 
-	 * @return current node
-	 */
 	virtual XalanNode*
 	getCurrentNode() const = 0;
 
-	/**
-	 * Change the node currently being executed.
-	 * 
-	 * @param theCurrentNode new current node
-	 */
 	virtual void
 	setCurrentNode(XalanNode*	theCurrentNode) = 0;
 
-	/**
-	 * Retrieve the factory object for creating XObjects.
-	 * 
-	 * @return factory object instance
-	 */
 	virtual XObjectFactory&
 	getXObjectFactory() const = 0;
 
-	/**
-	 * Retrieve namespace corresponding to a DOM node.
-	 * 
-	 * @param n DOM node queried
-	 * @return namespace string corresponding to 'n'
-	 */
 	virtual XalanDOMString
 	getNamespaceOfNode(const XalanNode&		n) const = 0;
 
-	/**
-	 * Returns the local name of the given node.
-	 * 
-	 * @param n node queried
-	 * @return local name string corresponding to 'n'
-	 */
 	virtual XalanDOMString
 	getLocalNameOfNode(const XalanNode&		n) const = 0;
 
-	/**
-	 * Returns the parent of the given node.
-	 * 
-	 * @param n DOM node queried
-	 * @return parent node for 'n'
-	 */
 	virtual XalanNode*
 	getParentOfNode(const XalanNode&	n) const = 0;
 
-	/**
-	 * Get node data recursively.
-	 * (Note whitespace issues.)
-	 * 
-	 * @param n DOM node queried
-	 * @return string of data for node 'n'
-	 */
+	virtual bool
+	isNodeAfter(
+			const XalanNode&	node1,
+			const XalanNode&	node2) const = 0;
+
 	virtual XalanDOMString
 	getNodeData(const XalanNode&	n) const = 0;
 
-	/**
-	 * Given a valid element id, return the corresponding element.
-	 *
-	 * @param id  string representing ID
-	 * @param doc document to search
-	 * @return element for ID
-	 */
 	virtual XalanElement*
 	getElementByID(
 			const XalanDOMString&		id,
 			const XalanDocument&		doc) const = 0;
 
-	/**
-	 * Retrieve node list for current context.
-	 * 
-	 * @return node list
-	 */
 	virtual const NodeRefListBase&
 	getContextNodeList() const = 0;
 
-	/**
-	 * Set node list for current context.
-	 * 
-	 * @param theList new node list
-	 */
 	virtual void	
 	setContextNodeList(const NodeRefListBase&	theList) = 0;
 
-	/*
-	 * Get the count of nodes in the current context node list.
-	 *
-	 * @return length of list
-	 */
 	virtual int
 	getContextNodeListLength() const = 0;
 
-	/*
-	 * Get the position of the node in the current context node list.
-	 *
-	 * @return position in list
-	 */
 	virtual int
 	getContextNodeListPosition(const XalanNode&		contextNode) const = 0;
 
-	/**
-	 * Determine if an external element is available.
-	 *
-	 * @param theNamespace  namespace for the element
-	 * @param extensionName name of extension element
-	 * @return whether the given element is available or not
-	 */
 	virtual bool
 	elementAvailable(
 			const XalanDOMString&	theNamespace, 
 			const XalanDOMString&	extensionName) const = 0;
 
-	/**
-	 * Determine if an external function is available.
-	 *
-	 * @param theNamespace  namespace for the function
-	 * @param extensionName name of extension function
-	 * @return whether the given function is available or not
-	 */
 	virtual bool
 	functionAvailable(
 			const XalanDOMString&	theNamespace, 
 			const XalanDOMString&	extensionName) const = 0;
 
-	/**
-	 * Handle an extension function.
-	 * 
-	 * @param theNamespace  namespace of function    
-	 * @param extensionName extension function name
-	 * @param argVec        vector of arguments to function
-	 * @return pointer to XObject result
-	 */
 	virtual XObject*
 	extFunction(
 			const XalanDOMString&			theNamespace,
-			const XalanDOMString&			extensionName, 
+			const XalanDOMString&			extensionName,
+			XalanNode*						context,
 			const XObjectArgVectorType&		argVec) = 0;
 
-	/**
-	 * Get an XLocator provider keyed by node.  This gets the association
-	 * based on the root of the tree that is the node's parent.
-	 *
-	 * @param node node for locator
-	 * @return pointer to locator
-	 */
 	virtual XLocator*
 	getXLocatorFromNode(const XalanNode*	node) const = 0;
 
-	/**
-	 * Associate an XLocator provider to a node.  This makes the association
-	 * based on the root of the tree that is the node's parent.
-	 *
-	 * @param node     node for association
-	 * @param xlocator locator to associate with node
-	 */
 	virtual void
 	associateXLocatorToNode(
 			const XalanNode*	node,
 			XLocator*			xlocator) = 0;
 
-	/**
-	 * Provides support for XML parsing service.
-	 *
-	 * @param urlString location of the XML
-	 * @param base base location for URI
-	 * @return parsed document
-	 */
 	virtual XalanDocument*
 	parseXML(
 			const XalanDOMString&	urlString,
 			const XalanDOMString&	base) const = 0;
 
-	/**
-	 * Create a MutableNodeRefList with the appropriate context.
-	 *
-	 * @return node list created
-	 */
 	virtual MutableNodeRefList
 	createMutableNodeRefList() const = 0;
 
-	/**
-	 * Tells if namespaces should be supported.  For optimization purposes.
-	 *
-	 * @return true if namespaces supported
-	 */
 	virtual bool
 	getProcessNamespaces() const = 0;
 
-	/**
-	 * Given a valid element key, return the corresponding node list.
-	 *
-	 * @param doc              source document
-	 * @param name             name of the key, which must match the 'name'
-	 *                         attribute on xsl:key
-	 * @param ref              value that must match the value found by the
-	 *                         'match' attribute on xsl:key
-	 * @param nscontext        context node for namespace resolution
-	 * @return if the name was not declared with xsl:key, this will return
-	 *         null, if the identifier is not found, it will return an empty
-	 *         node set, otherwise it will return a nodeset of nodes.
-	 */
 	virtual const NodeRefListBase*
 	getNodeSetByKey(
 			const XalanNode&		doc,
@@ -1127,37 +1002,12 @@ public:
 			const XalanDOMString&	ref,
 			const XalanElement&		nscontext) = 0;
 
-	/**
-	 * Given a valid element key, return the corresponding node list.
-	 *
-	 * @param doc              source document
-	 * @param name             name of the key, which must match the 'name'
-	 *                         attribute on xsl:key
-	 * @param ref              value that must match the value found by the
-	 *                         'match' attribute on xsl:key
-	 * @return if the name was not declared with xsl:key, this will return
-	 *         null, if the identifier is not found, it will return an empty
-	 *         node set, otherwise it will return a nodeset of nodes.
-	 */
 	virtual const NodeRefListBase*
 	getNodeSetByKey(
 			const XalanNode&		doc,
 			const XalanDOMString&	name,
 			const XalanDOMString&	ref) = 0;
 
-	/**
-	 * Given a valid element key, return the corresponding node list.
-	 *
-	 * @param doc              source document
-	 * @param name             name of the key, which must match the 'name'
-	 *                         attribute on xsl:key
-	 * @param ref              value that must match the value found by the
-	 *                         'match' attribute on xsl:key
-	 * @param resolver         resolver for namespace resolution
-	 * @return if the name was not declared with xsl:key, this will return
-	 *         null, if the identifier is not found, it will return an empty
-	 *         node set, otherwise it will return a nodeset of nodes.
-	 */
 	virtual const NodeRefListBase*
 	getNodeSetByKey(
 			const XalanNode&		doc,
@@ -1165,173 +1015,61 @@ public:
 			const XalanDOMString&	ref,
 			const PrefixResolver&	resolver) = 0;
 
-	/**
-	 * Given a name, locate a variable in the current context, and return 
-	 * a pointer to the object.
-	 *
-	 * @param theName name of variable
-	 * @return pointer to an XObject if the variable was found, 0 if it was not
-	 */
 	virtual XObject*
 	getVariable(const QName&	name) const = 0;
 
-	/**
-	 * Retrieve the resolver for namespaces.
-	 * 
-	 * @return object for namespace resolution
-	 */
 	virtual const PrefixResolver*
 	getPrefixResolver() const = 0;
 
-	/**
-	 * Change the resolver for namespaces.
-	 * 
-	 * @param thePrefixResolver new object for namespace resolution
-	 */
 	virtual void
 	setPrefixResolver(const PrefixResolver*		thePrefixResolver) = 0;
 
-	/**
-	 * Retrieve the URI corresponding to a namespace prefix
-	 * 
-	 * @param prefix prefix for a namespace
-	 * @return URI corresponding to namespace
-	 */
 	virtual XalanDOMString
 	getNamespaceForPrefix(const XalanDOMString&		prefix) const = 0;
 
-	/**
-	 * Given a DOM Document, tell what URI was used to parse it. Needed for
-	 * relative resolution.
-	 *
-	 * @param owner source document
-	 * @return document URI
-	 */
 	virtual XalanDOMString
 	findURIFromDoc(const XalanDocument*		owner) const = 0;
 
-	/**
-	 * The getUnparsedEntityURI function returns the URI of the unparsed
-	 * entity with the specified name in the same document as the context
-	 * node (see [3.3 Unparsed Entities]). It returns the empty string if
-	 * there is no such entity.
-	 *
-	 * @param theName     name of entity
-	 * @param theDocument document containing entity
-	 * @return URI for the entity
-	 */
 	virtual XalanDOMString
 	getUnparsedEntityURI(
 			const XalanDOMString&	theName,
 			const XalanDocument&	theDocument) const = 0;
 
-	/**
-	 * Tells, through the combination of the default-space attribute
-	 * on xsl:stylesheet, xsl:strip-space, xsl:preserve-space, and the
-	 * xml:space attribute, whether or not extra whitespace should be stripped
-	 * from the node.  Literal elements from template elements should
-	 * <em>not</em> be tested with this function.
-	 *
-	 * @param textNode text node from the source tree
-	 * @return true if the text node should be stripped of extra whitespace
-	 */
 	virtual bool
 	shouldStripSourceNode(const XalanNode&	node) const = 0;
 
-	/**
-	 * Tells if FoundIndex should be thrown if index is found. This is an
-	 * optimization for match patterns, and is used internally by the XPath
-	 * engine.
-	 *
-	 * @return true to throw FoundIndex
-	 */
 	virtual bool
 	getThrowFoundIndex() const = 0;
 
-	/**
-	 * Changes whether FoundIndex should be thrown if index is found. This is an
-	 * optimization for match patterns, and is used internally by the XPath
-	 * engine.
-	 *
-	 * @param fThrow true to throw FoundIndex
-	 */
 	virtual void
 	setThrowFoundIndex(bool 	fThrow) = 0;
 
-	/**
-	 * Sets the current match pattern.
-	 *
-	 * @param thePattern new match pattern
-	 */
 	virtual void
 	setCurrentPattern(const XalanDOMString&		thePattern) = 0;
 
-	/**
-	 * Retrieve the current match pattern.
-	 *
-	 * @return current match pattern
-	 */
 	virtual XalanDOMString
 	getCurrentPattern() const = 0;
 
 	virtual XalanDocument*
 	getSourceDocument(const XalanDOMString&		theURI) const = 0;
 
-	/**
-	 * Associate a document with a given URI.
-	 *
-	 * @param theURI      document URI
-	 * @param theDocument source document
-	 */
 	virtual void
 	setSourceDocument(
 			const XalanDOMString&	theURI,
 			XalanDocument*			theDocument) = 0;
 
 
-	/**
-	 * Retrieve the DecimalFormatSymbols instance associated with
-	 * the name.
-	 *
-	 * @param name the name for the lookup
-	 * @return a pointer to the matching instance, or 0 if none was found
-	 */
 	virtual const DecimalFormatSymbols*
 	getDecimalFormatSymbols(const XalanDOMString&	name) = 0;
 
-	/**
-	 * Create a PrintWriter to represent the supplied TextOutputStream.
-	 * The StylesheetExecutionContext owns the PrintWriter, and will
-	 * delete it when reset(), or during destruction.
-	 *
-	 * @param theOutputStream the output stream.
-	 * @return the new PrintWriter instance.
-	 */
 	virtual PrintWriter*
 	createPrintWriter(TextOutputStream*		theTextOutputStream) = 0;
 
-	/**
-	 * Create a PrintWriter to represent the supplied std::ostream.
-	 * The StylesheetExecutionContext owns the PrintWriter, and will
-	 * delete it when reset(), or during destruction.
-	 *
-	 * @param theFileName the name of the output file.
-	 * @param theEncoding the encoding to use.
-	 * @return the new PrintWriter instance.
-	 */
 	virtual PrintWriter*
 	createPrintWriter(
 			const XalanDOMString&		theFileName,
 			const XalanDOMString&		theEncoding) = 0;
 
-	/**
-	 * Create a PrintWriter to represent the supplied std::ostream.
-	 * The StylesheetExecutionContext owns the PrintWriter, and will
-	 * delete it when reset(), or during destruction.
-	 *
-	 * @param theStream a reference to an ostream.
-	 * @return the new PrintWriter instance.
-	 */
 	virtual PrintWriter*
 #if defined(XALAN_NO_NAMESPACES)
 	createPrintWriter(ostream&			theStream) = 0;

@@ -53,6 +53,8 @@
  * Business Machines, Inc., http://www.ibm.com.  For more
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
+ *
+ * @author <a href="mailto:david_n_bertoni@lotus.com">David N. Bertoni</a>
  */
 #if !defined(STYLESHEETEXECUTIONCONTEXTDEFAULT_HEADER_GUARD_1357924680)
 #define STYLESHEETEXECUTIONCONTEXTDEFAULT_HEADER_GUARD_1357924680
@@ -354,6 +356,11 @@ public:
 	virtual XalanNode*
 	getParentOfNode(const XalanNode&	n) const;
 
+	virtual bool
+	isNodeAfter(
+			const XalanNode&	node1,
+			const XalanNode&	node2) const;
+
 	virtual XalanDOMString
 	getNodeData(const XalanNode&	n) const;
 
@@ -387,7 +394,8 @@ public:
 	virtual XObject*
 	extFunction(
 			const XalanDOMString&			theNamespace,
-			const XalanDOMString&			extensionName, 
+			const XalanDOMString&			extensionName,
+			XalanNode*						context,
 			const XObjectArgVectorType&		argVec);
 
 	virtual XLocator*

@@ -53,6 +53,8 @@
  * Business Machines, Inc., http://www.ibm.com.  For more
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
+ *
+ * @author <a href="mailto:david_n_bertoni@lotus.com">David N. Bertoni</a>
  */
 
 #include "Constants.hpp"
@@ -138,6 +140,7 @@ const XalanDOMString		Constants::ATTRNAME_TYPE(XALAN_STATIC_UCODE_STRING("type")
 const XalanDOMString		Constants::ATTRNAME_USE(XALAN_STATIC_UCODE_STRING("use"));
 const XalanDOMString		Constants::ATTRNAME_USEATTRIBUTESETS(XALAN_STATIC_UCODE_STRING("use-attribute-sets"));
 const XalanDOMString		Constants::ATTRNAME_VALUE(XALAN_STATIC_UCODE_STRING("value"));
+const XalanDOMString		Constants::ATTRNAME_VERSION(XALAN_STATIC_UCODE_STRING("version"));
 const XalanDOMString		Constants::ATTRNAME_XMLNS(XALAN_STATIC_UCODE_STRING("xmlns:"));
 const XalanDOMString		Constants::ATTRNAME_XMLNSDEF(XALAN_STATIC_UCODE_STRING("xmlns"));
 const XalanDOMString		Constants::ATTRNAME_XMLSPACE(XALAN_STATIC_UCODE_STRING("xml:space"));

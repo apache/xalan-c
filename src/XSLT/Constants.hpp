@@ -53,6 +53,8 @@
  * Business Machines, Inc., http://www.ibm.com.  For more
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
+ *
+ * @author <a href="mailto:david_n_bertoni@lotus.com">David N. Bertoni</a>
  */
 #if !defined(XALAN_CONSTANTS_HEADER_GUARD)
 #define XALAN_CONSTANTS_HEADER_GUARD
@@ -304,11 +306,12 @@ public:
 	static const XalanDOMString	ATTRNAME_USE;
 	static const XalanDOMString	ATTRNAME_USEATTRIBUTESETS;
 	static const XalanDOMString	ATTRNAME_VALUE;
+	static const XalanDOMString	ATTRNAME_VERSION;
 	static const XalanDOMString	ATTRNAME_XMLNS;
 	static const XalanDOMString	ATTRNAME_XMLNSDEF;
 	static const XalanDOMString	ATTRNAME_XMLSPACE;
 	static const XalanDOMString	ATTRNAME_ZERODIGIT;
-   static const XalanDOMString	ATTRNAME_STYLESHEET_PREFIX;
+	static const XalanDOMString	ATTRNAME_STYLESHEET_PREFIX;
  
 	  // Atributes on the functions element
 	static const XalanDOMString	ATTRNAME_NS;

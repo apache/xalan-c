@@ -278,10 +278,10 @@ StylesheetHandler::startElement (const XMLCh* const name, AttributeList& atts)
 
 		const unsigned	origStackSize = m_elemStack.size();
 
-		if(startsWith(ns,m_processor.getXSLNameSpaceURLPre()))
+		if(equals(ns, m_constructionContext.getXSLTNamespaceURI()))
 		{
-			if(!isEmpty(m_processor.getXSLNameSpaceURL()))
-				m_processor.setXSLNameSpaceURL(ns);
+			if(!isEmpty(m_stylesheet.getXSLTNamespaceURI()))
+				m_stylesheet.setXSLTNamespaceURI(ns);
 
 			if(false == m_foundStylesheet)
 			{
@@ -1102,7 +1102,7 @@ StylesheetHandler::processImport(
 				throw SAXException("Imports can only occur as the first elements in the stylesheet!");
 			}
 			
-			const XalanDOMString	saved_XSLNameSpaceURL = m_processor.getXSLNameSpaceURL();
+			const XalanDOMString	saved_XSLNameSpaceURL = m_stylesheet.getXSLTNamespaceURI();
 
 			const XalanDOMString	href = atts.getValue(i);
 
@@ -1138,7 +1138,7 @@ StylesheetHandler::processImport(
 
 			importStack.pop_back();
 			
-			m_processor.setXSLNameSpaceURL(saved_XSLNameSpaceURL);
+			m_stylesheet.setXSLTNamespaceURI(saved_XSLNameSpaceURL);
 		}
 		else if(!isAttrOK(aname, atts, i))
 		{
@@ -1518,7 +1518,7 @@ StylesheetHandler::PushPopIncludeState::PushPopIncludeState(StylesheetHandler&	t
 	m_lastPopped(theHandler.m_lastPopped),
 	m_inTemplate(theHandler.m_inTemplate),
 	m_foundStylesheet(theHandler.m_foundStylesheet),
-	m_XSLNameSpaceURL(theHandler.m_processor.getXSLNameSpaceURL()),
+	m_XSLNameSpaceURL(theHandler.m_stylesheet.getXSLTNamespaceURI()),
 	m_foundNotImport(theHandler.m_foundNotImport)
 {
 	m_handler.m_elemStack.clear();
@@ -1548,6 +1548,6 @@ StylesheetHandler::PushPopIncludeState::~PushPopIncludeState()
 	m_handler.m_lastPopped = m_lastPopped;
 	m_handler.m_inTemplate = m_inTemplate;
 	m_handler.m_foundStylesheet = m_foundStylesheet;
-	m_handler.m_processor.setXSLNameSpaceURL(m_XSLNameSpaceURL);
+	m_handler.m_stylesheet.setXSLTNamespaceURI(m_XSLNameSpaceURL);
 	m_handler.m_foundNotImport = m_foundNotImport;
 }

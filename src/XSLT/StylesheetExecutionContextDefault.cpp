@@ -53,6 +53,8 @@
  * Business Machines, Inc., http://www.ibm.com.  For more
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
+ *
+ * @author <a href="mailto:david_n_bertoni@lotus.com">David N. Bertoni</a>
  */
 
 #include "StylesheetExecutionContextDefault.hpp"
@@ -770,6 +772,16 @@ StylesheetExecutionContextDefault::getParentOfNode(const XalanNode&		theNode) co
 
 
 
+bool
+StylesheetExecutionContextDefault::isNodeAfter(
+			const XalanNode&	node1,
+			const XalanNode&	node2) const
+{
+	return m_xpathExecutionContextDefault.isNodeAfter(node1, node2);
+}
+
+
+
 XalanDOMString
 StylesheetExecutionContextDefault::getNodeData(const XalanNode&		n) const
 {
@@ -843,10 +855,11 @@ StylesheetExecutionContextDefault::functionAvailable(
 XObject*
 StylesheetExecutionContextDefault::extFunction(
 			const XalanDOMString&			theNamespace,
-			const XalanDOMString&			extensionName, 
+			const XalanDOMString&			extensionName,
+			XalanNode*						context,
 			const XObjectArgVectorType&		argVec)
 {
-	return m_xpathExecutionContextDefault.extFunction(theNamespace, extensionName, argVec);
+	return m_xpathExecutionContextDefault.extFunction(theNamespace, extensionName, context, argVec);
 }
 
 

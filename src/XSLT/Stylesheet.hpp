@@ -1047,6 +1047,18 @@ typedef XALAN_STD vector<ElemDecimalFormat*>			ElemDecimalFormatVectorType;
 	virtual XalanDOMString
 	getURI() const;
 
+	const XalanDOMString&
+	getXSLTNamespaceURI() const
+	{
+		return m_XSLTNamespaceURI;
+	}
+
+	void
+	setXSLTNamespaceURI(const XalanDOMString&	theURI)
+	{
+		m_XSLTNamespaceURI = theURI;
+	}
+
 protected:
 
   /**
@@ -1067,6 +1079,12 @@ protected:
 	XalanDOMString						m_baseIdent;
 
 private:	
+
+	/**
+	 * The full XSLT Namespace URI.  To be replaced by the one actually
+	 * found.
+	 */
+	XalanDOMString						m_XSLTNamespaceURI;
 
 	/**
 	 * A lookup table of all space preserving elements.
@@ -1175,7 +1193,7 @@ private:
 	 * in the XSL DOM tree. Initialized in initMacroLookupTable, and used in
 	 * findNamedTemplate.
 	 */
-  ElemTemplateElementMapType	m_namedTemplates;
+	ElemTemplateElementMapType	m_namedTemplates;
   
 	/**
 	 * Table for defined constants, keyed on the names.

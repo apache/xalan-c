@@ -53,6 +53,8 @@
  * Business Machines, Inc., http://www.ibm.com.  For more
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
+ *
+ * @author <a href="mailto:david_n_bertoni@lotus.com">David N. Bertoni</a>
  */
 #if !defined(STYLESHEETCONSTRUCTIONCONTEXTDEFAULT_HEADER_GUARD_1357924680)
 #define STYLESHEETCONSTRUCTIONCONTEXTDEFAULT_HEADER_GUARD_1357924680
@@ -147,10 +149,7 @@ public:
 			const XalanDOMString&	base);
 
 	virtual const XalanDOMString&
-	getXSLNameSpaceURLPre() const;
-
-	virtual const XalanDOMString&
-	getXSLNameSpaceURL() const;
+	getXSLTNamespaceURI() const;
 
 	virtual XPath*
 	createMatchPattern(

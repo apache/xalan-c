@@ -53,6 +53,8 @@
  * Business Machines, Inc., http://www.ibm.com.  For more
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
+ *
+ * @author <a href="mailto:david_n_bertoni@lotus.com">David N. Bertoni</a>
  */
 #if !defined(XSLTPROCESSORENVSUPPORTDEFAULT_HEADER_GUARD_1357924680)
 #define XSLTPROCESSORENVSUPPORTDEFAULT_HEADER_GUARD_1357924680
@@ -102,6 +104,57 @@ public:
 	{
 		m_processor = theProcessor;
 	}
+
+
+	/**
+	 * Install an external function in the global space.
+	 *
+	 * @param theNamespace The namespace for the functionl
+	 * @param extensionName The name of the function.
+	 * @param function The function to install.
+	 */
+	static void
+	installExternalFunctionGlobal(
+			const XalanDOMString&	theNamespace,
+			const XalanDOMString&	extensionName,
+			const Function&			function);
+
+	/**
+	 * Uninstall an external function from the global space.
+	 *
+	 * @param theNamespace The namespace for the functionl
+	 * @param extensionName The name of the function.
+	 */
+	static void
+	uninstallExternalFunctionGlobal(
+			const XalanDOMString&	theNamespace,
+			const XalanDOMString&	extensionName);
+
+	// Interfaces to install and uninstall external functions in this instance.
+
+	/**
+	 * Install an external function in the local space.
+	 *
+	 * @param theNamespace The namespace for the functionl
+	 * @param extensionName The name of the function.
+	 * @param function The function to install.
+	 */
+	virtual void
+	installExternalFunctionLocal(
+			const XalanDOMString&	theNamespace,
+			const XalanDOMString&	extensionName,
+			const Function&			function);
+
+	/**
+	 * Uninstall an external function from the local space.
+	 *
+	 * @param theNamespace The namespace for the functionl
+	 * @param extensionName The name of the function.
+	 */
+	virtual void
+	uninstallExternalFunctionLocal(
+			const XalanDOMString&	theNamespace,
+			const XalanDOMString&	extensionName);
 
 
 	// These interfaces are inherited from XSLTProcessorEnvSupport...
@@ -162,7 +215,8 @@ public:
 	extFunction(
 			XPathExecutionContext&			executionContext,
 			const XalanDOMString&			theNamespace,
-			const XalanDOMString&			extensionName, 
+			const XalanDOMString&			extensionName,
+			XalanNode*						context,
 			const XObjectArgVectorType&		argVec) const;
 
 	virtual XLocator*

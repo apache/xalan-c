@@ -53,6 +53,8 @@
  * Business Machines, Inc., http://www.ibm.com.  For more
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
+ *
+ * @author <a href="mailto:david_n_bertoni@lotus.com">David N. Bertoni</a>
  */
 #if !defined(STYLESHEETCONSTRUCTIONCONTEXT_HEADER_GUARD_1357924680)
 #define STYLESHEETCONSTRUCTIONCONTEXT_HEADER_GUARD_1357924680
@@ -168,22 +170,13 @@ public:
 			const XalanDOMString&	base) = 0;
 
 	/**
-	 * Retrieve the prefix for XSL namespace URI's, for example,
+	 * Retrieve the URI for the current XSLT namespace, for example,
 	 * "http://www.w3.org/1999/XSL/Transform" 
-	 * 
-	 * @return prefix string
-	 */
-	virtual const XalanDOMString&
-	getXSLNameSpaceURLPre() const = 0;
-
-	/**
-	 * Retrieve the URI for the current XSL namespace, for example,
-	 * "http://www.w3.org/1999/XSL/Transform/1.0" 
 	 * 
 	 * @return URI string
 	 */
 	virtual const XalanDOMString&
-	getXSLNameSpaceURL() const = 0;
+	getXSLTNamespaceURI() const = 0;
 
 	/**
 	 * Create and initialize an xpath for a match pattern and return it. This

@@ -122,12 +122,22 @@ ElemLiteralResult::ElemLiteralResult(
 			{
 				XalanDOMString	ns = getNamespaceForPrefix(prefix);
 
-				if(startsWith(ns, constructionContext.getXSLNameSpaceURLPre()))
+				if(equals(ns, stylesheetTree.getXSLTNamespaceURI()))
 				{
 					const XalanDOMString localName = substring(aname,indexOfNSSep + 1);
-            	processPrefixControl(localName, atts.getValue(i));
+
+					processPrefixControl(localName, atts.getValue(i));
+
 					if(0 != m_excludeResultPrefixes.size())
+					{
 						needToProcess = false;
+					}
+					else if (equals(localName, Constants::ATTRNAME_VERSION) == true)
+					{
+						const XalanDOMChar*	const	value = atts.getValue(i);
+
+						stylesheetTree.setXSLTVerDeclared(DOMStringToDouble(value));
+					}
 				}
 			}
 			else

@@ -135,8 +135,8 @@ ElemUse::processUseAttributeSets(
 		const QName		qname(attrName, getStylesheet().getNamespaces());
 
 		isUAS = ((equals(qname.getNamespace(),
-			constructionContext.getXSLNameSpaceURL())) &&
-			(equals(qname.getLocalPart(),Constants::ATTRNAME_USEATTRIBUTESETS)));
+			constructionContext.getXSLTNamespaceURI())) &&
+			(equals(qname.getLocalPart(), Constants::ATTRNAME_USEATTRIBUTESETS)));
 	}
 	else
 	{

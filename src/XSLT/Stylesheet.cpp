@@ -133,6 +133,7 @@ Stylesheet::Stylesheet(
 	m_firstTemplate(0),
 	m_includeStack(),
 	m_defaultSpace(true),
+	m_XSLTNamespaceURI(constructionContext.getXSLTNamespaceURI()),
 	m_whitespacePreservingElements(),
 	m_whitespaceStrippingElements(),
 	m_namedTemplates(),
@@ -332,7 +333,7 @@ Stylesheet::isAttrOK(
 			const XalanDOMString	prefix = substring(attrName, 0, indexOfNSSep);
 			const XalanDOMString	ns = getNamespaceForPrefixFromStack(prefix);
 
-			attrOK = indexOf(ns, constructionContext.getXSLNameSpaceURLPre()) < length(ns);
+			attrOK = indexOf(ns, constructionContext.getXSLTNamespaceURI()) < length(ns);
 		}
 		else
 			attrOK = true;

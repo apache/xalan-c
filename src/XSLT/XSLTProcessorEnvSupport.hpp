@@ -53,6 +53,8 @@
  * Business Machines, Inc., http://www.ibm.com.  For more
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
+ *
+ * @author <a href="mailto:david_n_bertoni@lotus.com">David N. Bertoni</a>
  */
 #if !defined(XSLTPROCESSORENVSUPPORT_HEADER_GUARD_1357924680)
 #define XSLTPROCESSORENVSUPPORT_HEADER_GUARD_1357924680
@@ -142,7 +144,8 @@ public:
 	extFunction(
 			XPathExecutionContext&			executionContext,
 			const XalanDOMString&			theNamespace,
-			const XalanDOMString&			extensionName, 
+			const XalanDOMString&			extensionName,
+			XalanNode*						context,
 			const XObjectArgVectorType&		argVec) const = 0;
 
 	virtual XLocator*
