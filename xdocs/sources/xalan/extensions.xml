@@ -65,7 +65,7 @@
 <li><link anchor="use">Using an extension function</link></li>
 </ul><anchor name="intro"/>
   <s2 title="Introduction">
-<p>At times, you may want to call your own custom C functions from a stylesheet. For these situations, &xslt4c; supports the creation and use of extension functions.</p>
+<p>At times, you may want to call your own custom C functions from a stylesheet. For these situations, &xslt4c; supports the creation and use of extension functions &xslt4c; also provides a <link idref="extensionslib">library of extension elements</link> for your use.</p>
 <p>You can think of extension functions as extending the core library of functions that XPath provides. Like the
 XPath functions, an extension function returns an XObject, which may contain a value of any of the five XSLT
 data types: node-set, result-tree-fragment, string, boolean, or number.</p> 

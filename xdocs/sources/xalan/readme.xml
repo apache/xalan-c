@@ -78,9 +78,9 @@
    </ul>
      <anchor name="done"/>
   <s3 title="Changes since &xslt4c; version 1.1">
-     <p>TO BE ADDED</p>
+    <p>Major updates since version 1.1 include:</p>
      <ul>
-      <li><link idref="extensionslib">Set of extension functions</link></li>
+      <li><link idref="extensionslib">Introduction of a library of extension functions</link></li>
       <li></li>      
       <li></li>
       <li></li>
