@@ -595,31 +595,45 @@ FormatterToXML::processingInstruction(
 			const XMLCh* const	target,
 			const XMLCh* const	data)
 {
-	try
+// @@ Need to add this --
+//    if(m_inEntityRef)
+//      return;
+
+	// Use a fairly nasty hack to tell if the next node is supposed to be 
+	// unescaped text.
+	if(equals(target, DOMString("xslt-next-is-raw"))
+		&& equals(data, DOMString("formatter-to-dom")))
 	{
-		writeParentTagEnd();
-
-		if (shouldIndent() == true)  
-		{
-			indent(m_writer, m_currentIndent);
-		}
-
-		m_writer.write("<?");
-		m_writer.write(target);
-
-		if (length(data) > 0 && !isSpace(data[0]))
-		{
-			m_writer.write(" ");
-		}
-
-		m_writer.write(data);
-		m_writer.write("?>");
-
-		m_startNewLine = true;
+		m_nextIsRaw = true;
 	}
-	catch(...)
+	else	
 	{
-	  throw SAXException();
+		try
+		{
+			writeParentTagEnd();
+
+			if (shouldIndent() == true)  
+			{
+				indent(m_writer, m_currentIndent);
+			}
+
+			m_writer.write("<?");
+			m_writer.write(target);
+
+			if (length(data) > 0 && !isSpace(data[0]))
+			{
+				m_writer.write(" ");
+			}
+
+			m_writer.write(data);
+			m_writer.write("?>");
+
+			m_startNewLine = true;
+		}
+		catch(...)
+		{
+			throw SAXException();
+		}
 	}
 }
 
