@@ -1124,7 +1124,16 @@ FormatterToXML::cdata(
 				if(length >= 1 &&
 				   ch[0] <= m_maxCharacter)
 				{
-					accum(XALAN_STATIC_UCODE_STRING("<![CDATA["));
+					// "<![CDATA["
+					accum(XalanUnicode::charLessThanSign);
+					accum(XalanUnicode::charExclamationMark);
+					accum(XalanUnicode::charLeftSquareBracket);
+					accum(XalanUnicode::charLetter_C);
+					accum(XalanUnicode::charLetter_D);
+					accum(XalanUnicode::charLetter_A);
+					accum(XalanUnicode::charLetter_T);
+					accum(XalanUnicode::charLetter_A);
+					accum(XalanUnicode::charLeftSquareBracket);
 				}
 			}
 
