@@ -119,7 +119,9 @@ DOMServices::WhitespaceSupportDefault::isIgnorableWhitespace(const XalanText&	no
 
 	const unsigned int	theLength = length(theData);
 
-	for (unsigned int i = 0; i < theLength; i++)
+	unsigned int i = 0;
+
+	for (; i < theLength; i++)
 	{
 		const XalanDOMChar	theChar = charAt(theData, i);
 
