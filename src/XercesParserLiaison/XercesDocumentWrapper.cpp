@@ -320,9 +320,9 @@ XalanAttr*
 XercesDocumentWrapper::mapNode(const DOMAttrType* 	theXercesNode) const
 {
 #if defined(XALAN_OLD_STYLE_CASTS)
-	return (XercesAttrWrapper*)mapNode(theXercesNode);
+	return (XalanAttr*)mapNode((const DOMNodeType*)theXercesNode);
 #else
-	return static_cast<XercesAttrWrapper*>(mapNode(theXercesNode));
+	return static_cast<XalanAttr*>(mapNode(static_cast<const DOMNodeType*>(theXercesNode)));
 #endif
 }
 
