@@ -1830,10 +1830,21 @@ Stylesheet::getElementById(const XalanDOMString&	/* elementId */) const
 bool
 Stylesheet::isIndexed() const
 {
-	//should not be called
+	// This member functionshould not be called
 	assert(false);	
 
 	return false;
+}
+
+
+
+unsigned long
+Stylesheet::getNumber() const
+{
+	// This member functionshould not be called
+	assert(false);	
+
+	return 0;
 }
 
 

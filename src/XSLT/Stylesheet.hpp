@@ -1095,6 +1095,9 @@ public:
 	virtual XalanElement*
 	getElementById(const XalanDOMString&	elementId) const;
 
+	virtual unsigned long
+	getNumber() const;
+
 	virtual bool
 	isIndexed() const;
 
