@@ -177,7 +177,7 @@ XalanDOMStringPool::get(
 			m_index.insert(
 				IndexMapType::value_type(
 					IndexMapType::key_type(theString, theActualLength),
-					0));
+					(const XalanDOMString*)0));
 
 		// Was it added?
 		if (i.second == false)
