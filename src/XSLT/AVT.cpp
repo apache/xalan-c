@@ -66,7 +66,6 @@
 #include "StylesheetConstructionContext.hpp"
 
 
-
 /**
  * Construct an AVT by parsing the string, and either 
  * constructing a vector of AVTParts, or simply hold 
@@ -131,14 +130,6 @@ AVT::AVT(
 							lookahead = DOMString();
 							break; // from switch
 						}
-						/*
-						else if(lookahead.equals("\"") || lookahead.equals("\'"))
-						{
-							// Error. Expressions can not begin with quotes.
-							error = "Expressions can not begin with quotes.";
-							break; // from switch
-						}
-						*/
 						else
 						{
 							if(length(buffer) > 0)
@@ -148,10 +139,8 @@ AVT::AVT(
 							}
 									
 							exprBuffer = DOMString();
-							append(exprBuffer,lookahead);
 							while(length(lookahead) > 0 && !equals(lookahead, "}"))
 							{
-								lookahead = tokenizer.nextToken();
 								if(length(lookahead) == 1)
 								{
 									switch(lookahead.charAt(0))
@@ -178,21 +167,6 @@ AVT::AVT(
 											error = "Error: Can not have \"{\" within expression.";
 											break;
 										}
-										case '}':
-										{
-											// Proper close of attribute template.
-											// Evaluate the expression.
-											// XObject xobj = evalXPathStr(expression, contextNode, namespaceContext);
-											// buffer.append(xobj.str());
-											buffer = DOMString();
-
-											XPath *xpath = constructionContext.createXPath(exprBuffer, resolver);
-
-											m_parts.push_back(new AVTPartXPath(xpath));
-														
-											lookahead = DOMString(); // breaks out of inner while loop
-											break;
-										}
 										default:
 										{
 											// part of the template stuff, just add it.
@@ -205,7 +179,16 @@ AVT::AVT(
 									// part of the template stuff, just add it.
 									append(exprBuffer,lookahead);
 								}
+								lookahead = tokenizer.nextToken();
 							} // end while(!lookahead.equals("}"))
+							assert(equals(lookahead, "}"));
+							
+							// Proper close of attribute template. Evaluate the
+							// expression.
+							buffer = DOMString();
+							XPath *xpath = constructionContext.createXPath(exprBuffer, resolver);
+							m_parts.push_back(new AVTPartXPath(xpath));
+							lookahead = DOMString(); // breaks out of inner while loop
 							if(length(error) > 0)
 							{
 								break; // from inner while loop
