@@ -174,7 +174,14 @@ ElemAttribute::execute(StylesheetExecutionContext&		executionContext) const
 
 	m_pNameAVT->evaluate(attrName, sourceNode, *this, executionContext);
 
-	if(!isEmpty(attrName))
+	if(XalanQName::isValidQName(attrName) == false)
+	{
+		executionContext.warn(
+			"The attribute name is invalid",
+			sourceNode,
+			getLocator());
+	}
+	else
 	{
 		// save original attribute name
 		StylesheetExecutionContext::GetAndReleaseCachedString	origAttrNameGuard(executionContext);
@@ -353,7 +360,10 @@ ElemAttribute::execute(StylesheetExecutionContext&		executionContext) const
 					if (isEmpty(attrNameSpace))
 					{
 						// Could not resolve prefix
-						executionContext.warn("Warning: Could not resolve prefix " + nsprefix, sourceNode, this);
+						executionContext.warn(
+							"Warning: Could not resolve prefix",
+							sourceNode,
+							getLocator());
 					}
 					else
 					{
@@ -383,7 +393,10 @@ ElemAttribute::execute(StylesheetExecutionContext&		executionContext) const
 		}
 		else
 		{
-			executionContext.warn("Warning: Trying to add attribute after element child has been added, ignoring...", sourceNode, this);
+			executionContext.warn(
+				"Attributes cannot be added after a child has been added.  The attribute(s) will not be added",
+				sourceNode,
+				getLocator());
 		}
 
 		// If there was no namespace, or the namespace was resolved, process

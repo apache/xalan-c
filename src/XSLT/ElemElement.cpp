@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -165,171 +165,180 @@ ElemElement::execute(StylesheetExecutionContext&		executionContext) const
 
 	m_nameAVT->evaluate(elemName, sourceNode, *this, executionContext);
 
-	StylesheetExecutionContext::GetAndReleaseCachedString	elemNameSpaceGuard(executionContext);
-
-	XalanDOMString&		elemNameSpace = elemNameSpaceGuard.get();
-
-	if (m_namespaceAVT != 0)
-	{
-		m_namespaceAVT->evaluate(elemNameSpace, sourceNode, *this, executionContext);
-	}
-
-	XalanDOMString::size_type	namespaceLen = length(elemNameSpace);
-
-	bool	isIllegalElement = false;
-
-	bool	hasUnresolvedPrefix = false;
-
-	bool	foundResultNamespaceForPrefix = false;
-
-	XalanDOMString::size_type			len = length(elemName);
-
-	const XalanDOMString::size_type		indexOfNSSep = indexOf(elemName, XalanUnicode::charColon);
-
-	const bool	haveNamespace = indexOfNSSep == len ? false : true;
-
-	StylesheetExecutionContext::GetAndReleaseCachedString	prefixGuard(executionContext);
-
-	XalanDOMString&		prefix = prefixGuard.get();
-
-	if(haveNamespace == true)
-	{
-		if (indexOfNSSep + 1 == len ||
-			isValidNCName(substring(elemName, indexOfNSSep + 1)) == false)
-		{
-			isIllegalElement = true;
-		}
-	}
-	else if(len == 0 || isValidNCName(elemName) == false)
-	{
-		isIllegalElement = true;
-	}
+	bool	isIllegalElement = !XalanQName::isValidQName(elemName);
 
 	if (isIllegalElement == true)
 	{
-		executionContext.warn("Illegal element name: \"" + elemName + "\"", this, sourceNode);
+		executionContext.warn(
+			"Illegal element name",
+			sourceNode,
+			getLocator());
 
-		clear(elemName);
+		ElemUse::doExecute(executionContext, false);
+
+		doExecuteChildren(executionContext, true);
 	}
-	else if (haveNamespace == true)
+	else
 	{
-		prefix = substring(elemName, 0, indexOfNSSep);
+		StylesheetExecutionContext::GetAndReleaseCachedString	elemNameSpaceGuard(executionContext);
 
-		const XalanDOMString* const		theNamespace =
-			executionContext.getResultNamespaceForPrefix(prefix);
+		XalanDOMString&		elemNameSpace = elemNameSpaceGuard.get();
 
-		if (theNamespace != 0)
+		if (m_namespaceAVT != 0)
 		{
-			foundResultNamespaceForPrefix = true;
+			m_namespaceAVT->evaluate(elemNameSpace, sourceNode, *this, executionContext);
 		}
-		else
+
+		XalanDOMString::size_type	namespaceLen = length(elemNameSpace);
+
+		bool	hasUnresolvedPrefix = false;
+
+		bool	foundResultNamespaceForPrefix = false;
+
+		XalanDOMString::size_type			len = length(elemName);
+
+		const XalanDOMString::size_type		indexOfNSSep = indexOf(elemName, XalanUnicode::charColon);
+
+		const bool	haveNamespace = indexOfNSSep == len ? false : true;
+
+		StylesheetExecutionContext::GetAndReleaseCachedString	prefixGuard(executionContext);
+
+		XalanDOMString&		prefix = prefixGuard.get();
+
+		if (haveNamespace == true)
 		{
+			prefix = substring(elemName, 0, indexOfNSSep);
+
 			const XalanDOMString* const		theNamespace =
-				m_namespacesHandler.getNamespace(prefix);
+				executionContext.getResultNamespaceForPrefix(prefix);
 
-			if(theNamespace == 0 && namespaceLen == 0)
+			if (theNamespace != 0)
 			{
-				executionContext.warn("Could not resolve prefix: " + prefix, this, sourceNode);
-
-				if (m_namespaceAVT != 0)
-				{
-					hasUnresolvedPrefix = true;
-
-					elemName = substring(elemName, indexOfNSSep + 1);
-				}
-				else
-				{
-					isIllegalElement = true;
-				}
-			}
-			else if (theNamespace != 0 &&
-					 namespaceLen == 0 &&
-					 equals(prefix, DOMServices::s_XMLNamespace) == false)
-			{
-				elemNameSpace = *theNamespace;
-			}
-		}
-	}
-
-	if (isIllegalElement == false)
-	{
-		executionContext.startElement(c_wstr(elemName));   
-
-		if(0 == m_namespaceAVT &&
-		   (haveNamespace == false || foundResultNamespaceForPrefix == true))
-		{
-			outputResultNamespaces(executionContext, hasUnresolvedPrefix);
-		}
-		else
-		{
-			if(namespaceLen == 0 && hasUnresolvedPrefix == true)
-			{
-				outputResultNamespaces(
-					executionContext,
-					hasUnresolvedPrefix,
-					length(getParentDefaultNamespace()) == 0 ? true : false);
+				foundResultNamespaceForPrefix = true;
 			}
 			else
 			{
-				if(haveNamespace == false)
-				{
-					if (namespaceLen > 0)
-					{
-						outputResultNamespaces(executionContext, hasUnresolvedPrefix);
+				const XalanDOMString* const		theNamespace =
+					m_namespacesHandler.getNamespace(prefix);
 
-						executionContext.addResultAttribute(DOMServices::s_XMLNamespace, elemNameSpace);
+				if(theNamespace == 0 && namespaceLen == 0)
+				{
+					executionContext.warn(
+						"Could not resolve prefix",
+						sourceNode,
+						getLocator());
+
+					if (m_namespaceAVT != 0)
+					{
+						hasUnresolvedPrefix = true;
+
+						elemName = substring(elemName, indexOfNSSep + 1);
 					}
 					else
 					{
-						// OK, the namespace we're generating is the default namespace,
-						// so let's make sure that we really need it.  If we don't,
-						// we end up with another xmlns="" on the element we're
-						// generating.  Although this isn't really an error, it's
-						// a bit unsightly, so let's suppress it...
-						const XalanDOMString&	theParentDefaultNamespace =
-							getParentDefaultNamespace();
+						isIllegalElement = true;
 
-						if (length(theParentDefaultNamespace) == 0)
-						{
-							// There's not default namespace in effect, so suppress any
-							// default namespace in the statically-generated namespaces,
-							// and don't put out the one we've dynamically generated...
-							outputResultNamespaces(executionContext, hasUnresolvedPrefix, true);
-						}
-						else
-						{
-							outputResultNamespaces(executionContext, hasUnresolvedPrefix, false);
-
-							executionContext.addResultAttribute(DOMServices::s_XMLNamespace, elemNameSpace);
-						}
+						executionContext.warn(
+							"Illegal element name",
+							sourceNode,
+							getLocator());
 					}
+				}
+				else if (theNamespace != 0 &&
+						 namespaceLen == 0 &&
+						 equals(prefix, DOMServices::s_XMLNamespace) == false)
+				{
+					elemNameSpace = *theNamespace;
+				}
+			}
+		}
+
+		if (isIllegalElement == false)
+		{
+			executionContext.startElement(c_wstr(elemName));   
+
+			if(0 == m_namespaceAVT &&
+			   (haveNamespace == false || foundResultNamespaceForPrefix == true))
+			{
+				outputResultNamespaces(executionContext, hasUnresolvedPrefix);
+			}
+			else
+			{
+				if(namespaceLen == 0 && hasUnresolvedPrefix == true)
+				{
+					outputResultNamespaces(
+						executionContext,
+						hasUnresolvedPrefix,
+						length(getParentDefaultNamespace()) == 0 ? true : false);
 				}
 				else
 				{
-					outputResultNamespaces(executionContext, hasUnresolvedPrefix);
-
-					const XalanDOMString* const		theNamespace =
-						executionContext.getResultNamespaceForPrefix(prefix);
-
-					if (theNamespace == 0 ||
-						equals(*theNamespace, elemNameSpace) == false)
+					if(haveNamespace == false)
 					{
-						insert(prefix, 0, DOMServices::s_XMLNamespaceWithSeparator);
+						if (namespaceLen > 0)
+						{
+							outputResultNamespaces(executionContext, hasUnresolvedPrefix);
 
-						executionContext.addResultAttribute(prefix, elemNameSpace);
+							executionContext.addResultAttribute(DOMServices::s_XMLNamespace, elemNameSpace);
+						}
+						else
+						{
+							// OK, the namespace we're generating is the default namespace,
+							// so let's make sure that we really need it.  If we don't,
+							// we end up with another xmlns="" on the element we're
+							// generating.  Although this isn't really an error, it's
+							// a bit unsightly, so let's suppress it...
+							const XalanDOMString&	theParentDefaultNamespace =
+								getParentDefaultNamespace();
+
+							if (length(theParentDefaultNamespace) == 0)
+							{
+								// There's not default namespace in effect, so suppress any
+								// default namespace in the statically-generated namespaces,
+								// and don't put out the one we've dynamically generated...
+								outputResultNamespaces(executionContext, hasUnresolvedPrefix, true);
+							}
+							else
+							{
+								outputResultNamespaces(executionContext, hasUnresolvedPrefix, false);
+
+								executionContext.addResultAttribute(DOMServices::s_XMLNamespace, elemNameSpace);
+							}
+						}
+					}
+					else
+					{
+						outputResultNamespaces(executionContext, hasUnresolvedPrefix);
+
+						const XalanDOMString* const		theNamespace =
+							executionContext.getResultNamespaceForPrefix(prefix);
+
+						if (theNamespace == 0 ||
+							equals(*theNamespace, elemNameSpace) == false)
+						{
+							insert(prefix, 0, DOMServices::s_XMLNamespaceWithSeparator);
+
+							executionContext.addResultAttribute(prefix, elemNameSpace);
+						}
 					}
 				}
 			}
 		}
-	}
 
-	ElemUse::execute(executionContext);
+		if (isIllegalElement == true)
+		{
+			ElemUse::doExecute(executionContext, false);
 
-	doExecuteChildren(executionContext, isIllegalElement);
+			doExecuteChildren(executionContext, true);
+		}
+		else
+		{
+			ElemUse::doExecute(executionContext, true);
 
-	if (isIllegalElement == false)
-	{
-		executionContext.endElement(c_wstr(elemName));
+			doExecuteChildren(executionContext, false);
+
+			executionContext.endElement(c_wstr(elemName));
+		}
 	}
 }
 
