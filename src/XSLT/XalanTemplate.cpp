@@ -99,6 +99,8 @@
 
 #include <PlatformSupport/AttributeListImpl.hpp>
 #include <PlatformSupport/AttributeVectorEntry.hpp>
+#include <PlatformSupport/AttributesImpl.hpp>
+#include <PlatformSupport/AttributeVectorEntryExtended.hpp>
 #include <PlatformSupport/DOMStringHelper.hpp>
 #include <PlatformSupport/PrintWriter.hpp>
 #include <PlatformSupport/XalanOutputStream.hpp>
@@ -118,6 +120,7 @@
 #include <XMLSupport/FormatterToHTML.hpp>
 #include <XMLSupport/FormatterToXML.hpp>
 #include <XMLSupport/FormatterToDOM.hpp>
+#include <XMLSupport/FormatterToText.hpp>
 
 
 
@@ -176,12 +179,19 @@
 
 
 
+#include <XalanTransformer/XalanTransformer.hpp>
+#include <XalanTransformer/XalanCompiledStylesheet.hpp>
+#include <XalanTransformer/XalanParsedSource.hpp>
+
+
+
 static string theString;
 static vector<XalanDOMString> theDOMStringVector;
 static vector<char> theCharVector;
 static vector<wchar_t> theWCharVector;
 static vector<unsigned char> theUnsignedCharVector;
 static AttributeListImpl::AttributeVectorType theAttributeVectorEntryVector;
+static AttributesImpl::AttributesVectorType theAttributesVectorEntryVector;
 static allocator<DOMString> theAllocator;
 static vector<pair<const XalanNode*,NSInfo> > theXalanNodeVector;
 static FormatterToHTML::ElemDesc theElemDesc;
@@ -202,6 +212,9 @@ static VariablesStack::ParamsVectorType	theParamsVector;
 static ElemNumber::NumberingResourceBundleMapType theNumberingResourceBundleMapType;
 static XalanTranscodingServices::MaximumCharacterValueMapType theMaximumCharacterValueMapType;
 static set<XalanNode*, less<XalanNode*> >	theInstanceSetType;
+static XalanTransformer::CompiledStylesheetPtrVectorType	theCompiledStylesheetVector;
+static XalanTransformer::ParsedSourcePtrVectorType			theParsedSourceVector;
+static XalanTransformer::ParamPairVectorType				theParamsVector;
 
 
 
@@ -251,8 +264,16 @@ foo()
 		AttributeListImpl::AttributeVectorType	theVector;
 		
 		for_each(theVector.begin(),
-			 theVector.end(),
-			 DeleteFunctor<AttributeVectorEntry>());
+				 theVector.end(),
+				 DeleteFunctor<AttributeVectorEntry>());
+	}	
+
+	{
+		AttributesImpl::AttributesVectorType	theVector;
+		
+		for_each(theVector.begin(),
+				 theVector.end(),
+				 DeleteFunctor<AttributeVectorEntryExtended>());
 	}	
 
 	{
@@ -328,6 +349,14 @@ foo()
 		for_each(theTable.begin(),
 			 theTable.end(),
 			 MapValueDeleteFunctor<StylesheetExecutionContextDefault::KeyTablesTableType>());
+	}
+
+	{
+		StylesheetExecutionContextDefault::FormatterToTextCacheType		theCache;
+
+		for_each(theCache.begin(),
+				 theCache.end(),
+				 MapValueDeleteFunctor<FormatterToText>());
 	}
 
 	{
@@ -560,6 +589,22 @@ foo()
 			*theComparer);
 	}
 	
+	{
+		XalanTransformer::CompiledStylesheetPtrVectorType	theVector;
+		
+		for_each(theVector.begin(),
+				 theVector.end(),
+				 DeleteFunctor<XalanCompiledStylesheet>());
+	}	
+
+	{
+		XalanTransformer::ParsedSourcePtrVectorType		theVector;
+		
+		for_each(theVector.begin(),
+				 theVector.end(),
+				 DeleteFunctor<XalanParsedSource>());
+	}	
+
 	{
 		ostream* const	theStream = 0;
 		const string	theString;
