@@ -129,7 +129,8 @@ XalanHTMLElementsProperties::InternalElementProperties::findProperties(const Xal
 
 
 
-const XalanHTMLElementsProperties::InternalAttributeProperties	XalanHTMLElementsProperties::InternalElementProperties::s_dummyProperties;
+const XalanHTMLElementsProperties::InternalAttributeProperties	XalanHTMLElementsProperties::InternalElementProperties::s_dummyProperties =
+				 { { 0 }, 0 };
 
 
 
