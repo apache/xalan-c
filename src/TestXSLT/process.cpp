@@ -63,6 +63,7 @@
 #include <dom/DOM_Node.hpp>
 #include <dom/DOM_Element.hpp>
 #include <dom/DOM_NodeList.hpp>
+#include <util/PlatformUtils.hpp>
 #include <sax/SAXException.hpp>
 
 
@@ -172,6 +173,8 @@ void xsltMain(int argc, const char* argv[] ) throw(XMLException)
  *		-out outputFileName
  *		-F (Format output pretty-printed)
  */
+	XMLPlatformUtils::Initialize();
+
 	bool doStackDumpOnError = false;
 	bool setQuietMode = false;
 	
