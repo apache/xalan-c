@@ -115,7 +115,7 @@ public:
 			Writer&					writer,
 			const XalanDOMString&	encoding,
 			bool					normalizeLinefeed = true,
-			bool					handleIgnorableWhitespace = false);
+			bool					handleIgnorableWhitespace = true);
 
 	virtual
 	~FormatterToText();
