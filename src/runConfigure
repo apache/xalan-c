@@ -58,6 +58,9 @@
 # 
 #
 # $Log$
+# Revision 1.17  2003/02/08 01:39:33  dbertoni
+# Don't add bitstobuildLink on AIX.
+#
 # Revision 1.16  2003/01/05 18:29:54  dbertoni
 # Bump optimization level on Linux.
 #
@@ -283,8 +286,7 @@ if test $bitsToBuild = 64; then
               bitstobuildDefines=" $bitstobuildDefines -xarch=v9 "
               bitstobuildLink=" -xarch=v9 " ;;
            aix)
-              bitstobuildDefines=" $bitstobuildDefines -q64 -qwarn64 "
-              bitstobuildLink=" -X64 " ;;
+              bitstobuildDefines=" $bitstobuildDefines -q64 -qwarn64 " ;;
            hp-11)
               bitstobuildDefines=" $bitstobuildDefines +DA2.0W "
               bitstobuildLink=" +DA2.0W " ;;
