@@ -262,18 +262,6 @@ SOURCE=..\..\..\..\src\XPath\NodeRefListResultTreeFragProxy.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\QName.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\src\XPath\QNameByReference.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\src\XPath\QNameByValue.cpp
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\..\..\src\XPath\ResultTreeFrag.cpp
 # End Source File
 # Begin Source File
@@ -296,6 +284,18 @@ SOURCE=..\..\..\..\src\XPath\SimpleNodeLocator.cpp
 
 !ENDIF 
 
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XPath\XalanQName.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XPath\XalanQNameByReference.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XPath\XalanQNameByValue.cpp
 # End Source File
 # Begin Source File
 
@@ -668,6 +668,18 @@ SOURCE=..\..\..\..\src\XPath\ResultTreeFragBase.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\XPath\SimpleNodeLocator.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XPath\XalanQName.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XPath\XalanQNameByReference.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XPath\XalanQNameByValue.hpp
 # End Source File
 # Begin Source File
 
