@@ -776,7 +776,8 @@ ElemTemplateElement::transformSelectedChildren(
 	{
 		executionContext.traceSelect(
 			xslInstruction,
-			sourceNodes);
+			sourceNodes,
+			0);
 	}
 
 	// Create an object to set and restore the context node list...
@@ -1457,7 +1458,7 @@ ElemTemplateElement::LocatorProxy::~LocatorProxy()
 
 
 
-int
+ElemTemplateElement::LocatorProxy::size_type
 ElemTemplateElement::LocatorProxy::getLineNumber() const
 {
 	return m_element.getLineNumber();
@@ -1465,7 +1466,7 @@ ElemTemplateElement::LocatorProxy::getLineNumber() const
 
 
 
-int
+ElemTemplateElement::LocatorProxy::size_type
 ElemTemplateElement::LocatorProxy::getColumnNumber() const
 {
 	return m_element.getColumnNumber();

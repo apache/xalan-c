@@ -69,10 +69,6 @@
 
 
 
-#include <xercesc/sax/Locator.hpp>
-
-
-
 #include <XalanDOM/XalanDOMString.hpp>
 #include <XalanDOM/XalanElement.hpp>
 #include <XalanDOM/XalanEmptyNamedNodeMap.hpp>
@@ -82,6 +78,7 @@
 
 #include <PlatformSupport/DOMStringHelper.hpp>
 #include <PlatformSupport/PrefixResolver.hpp>
+#include <PlatformSupport/XalanLocator.hpp>
 
 
 
@@ -816,7 +813,7 @@ protected:
 
 private:
 
-	class LocatorProxy : public Locator
+	class LocatorProxy : public XalanLocator
 	{
 	public:
 
@@ -831,10 +828,10 @@ private:
 		virtual const XMLCh*
 		getSystemId() const;
 
-		virtual int
+		virtual size_type
 		getLineNumber() const;
 
-		virtual int
+		virtual size_type
 		getColumnNumber() const;
 
 	private:
