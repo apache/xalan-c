@@ -287,7 +287,6 @@ FormatterToHTML::startElement(
 				getElemDesc(name);
 
 		const bool	isBlockElement = elemDesc.is(ElemDesc::BLOCK);
-		const bool	isHeadElement = elemDesc.is(ElemDesc::HEADELEM);
 
 		m_isScriptOrStyleElem = 
 				equalsIgnoreCaseASCII(name, c_wstr(s_scriptString)) ||
@@ -331,7 +330,7 @@ FormatterToHTML::startElement(
     
 		m_isprevtext = false;
 
-		if (isHeadElement)
+		if (elemDesc.is(ElemDesc::HEADELEM) == true)
 		{
 			writeParentTagEnd();
 
@@ -345,7 +344,10 @@ FormatterToHTML::startElement(
 		}
 
 		// We've written the first element, so turn off the flag...
-		m_isFirstElement = false;
+		if (m_isFirstElement == true)
+		{
+			m_isFirstElement = false;
+		}
 
 		assert(m_elementLevel > 0);
 	}
@@ -754,7 +756,6 @@ void
 FormatterToHTML::accumCommentData(const XalanDOMChar*	data)
 {
 	accumName(data);
-//	writeCharacters(data);
 }
 
 
@@ -801,8 +802,8 @@ FormatterToHTML::processAttribute(
 {
     accumContent(XalanUnicode::charSpace);
 
-    if(elemDesc.isAttrFlagSet(name, ElemDesc::ATTREMPTY) == true &&
-       (length(value) == 0) || equalsIgnoreCaseASCII(value, name) == true)
+    if((length(value) == 0 || equalsIgnoreCase(name, value)) &&
+	   elemDesc.isAttrFlagSet(name, ElemDesc::ATTREMPTY) == true)
     {
 		accumName(name);
     }
@@ -1267,10 +1268,14 @@ initializeElementFlagsMap2(ElementFlagsMapType&		theElementFlags)
 			c_wstr(XALAN_STATIC_UCODE_STRING("MAP")),
 			ElemDesc(0|ElemDesc::SPECIAL|ElemDesc::ASPECIAL|ElemDesc::BLOCK)));
 
+	theResult =
 	theElementFlags.insert(
 		ElementFlagsMapType::value_type(
 			c_wstr(XALAN_STATIC_UCODE_STRING("AREA")),
 			ElemDesc(0|ElemDesc::EMPTY|ElemDesc::BLOCK)));
+
+	(*theResult.first).second.setAttr(c_wstr(XALAN_STATIC_UCODE_STRING("HREF")), ElemDesc::ATTRURL);
+	(*theResult.first).second.setAttr(c_wstr(XALAN_STATIC_UCODE_STRING("NOHREF")), ElemDesc::ATTREMPTY);
 
 	theElementFlags.insert(
 		ElementFlagsMapType::value_type(
@@ -1286,6 +1291,7 @@ initializeElementFlagsMap2(ElementFlagsMapType&		theElementFlags)
 	(*theResult.first).second.setAttr(c_wstr(XALAN_STATIC_UCODE_STRING("SRC")), ElemDesc::ATTRURL);
 	(*theResult.first).second.setAttr(c_wstr(XALAN_STATIC_UCODE_STRING("LONGDESC")), ElemDesc::ATTRURL);
 	(*theResult.first).second.setAttr(c_wstr(XALAN_STATIC_UCODE_STRING("USEMAP")), ElemDesc::ATTRURL);
+	(*theResult.first).second.setAttr(c_wstr(XALAN_STATIC_UCODE_STRING("ISMAP")), ElemDesc::ATTREMPTY);
 
 	theResult =
 	theElementFlags.insert(
@@ -1298,6 +1304,7 @@ initializeElementFlagsMap2(ElementFlagsMapType&		theElementFlags)
 	(*theResult.first).second.setAttr(c_wstr(XALAN_STATIC_UCODE_STRING("DATA")), ElemDesc::ATTRURL);
 	(*theResult.first).second.setAttr(c_wstr(XALAN_STATIC_UCODE_STRING("ARCHIVE")), ElemDesc::ATTRURL);
 	(*theResult.first).second.setAttr(c_wstr(XALAN_STATIC_UCODE_STRING("USEMAP")), ElemDesc::ATTRURL);
+	(*theResult.first).second.setAttr(c_wstr(XALAN_STATIC_UCODE_STRING("DECLARE")), ElemDesc::ATTREMPTY);
 
 	theElementFlags.insert(
 		ElementFlagsMapType::value_type(
@@ -1447,6 +1454,7 @@ initializeElementFlagsMap3(ElementFlagsMapType&		theElementFlags)
 	(*theResult.first).second.setAttr(c_wstr(XALAN_STATIC_UCODE_STRING("USEMAP")), ElemDesc::ATTRURL);
 	(*theResult.first).second.setAttr(c_wstr(XALAN_STATIC_UCODE_STRING("CHECKED")), ElemDesc::ATTREMPTY);
 	(*theResult.first).second.setAttr(c_wstr(XALAN_STATIC_UCODE_STRING("DISABLED")), ElemDesc::ATTREMPTY);
+	(*theResult.first).second.setAttr(c_wstr(XALAN_STATIC_UCODE_STRING("ISMAP")), ElemDesc::ATTREMPTY);
 	(*theResult.first).second.setAttr(c_wstr(XALAN_STATIC_UCODE_STRING("READONLY")), ElemDesc::ATTREMPTY);
 
 	theResult =
@@ -1455,7 +1463,7 @@ initializeElementFlagsMap3(ElementFlagsMapType&		theElementFlags)
 			c_wstr(XALAN_STATIC_UCODE_STRING("SELECT")),
 			ElemDesc(0|ElemDesc::FORMCTRL|ElemDesc::INLINELABEL)));
 
-	(*theResult.first).second.setAttr(c_wstr(XALAN_STATIC_UCODE_STRING("READONLY")), ElemDesc::ATTREMPTY);
+	(*theResult.first).second.setAttr(c_wstr(XALAN_STATIC_UCODE_STRING("DISABLED")), ElemDesc::ATTREMPTY);
 	(*theResult.first).second.setAttr(c_wstr(XALAN_STATIC_UCODE_STRING("MULTIPLE")), ElemDesc::ATTREMPTY);
 
 	theResult =
@@ -1603,6 +1611,7 @@ initializeElementFlagsMap4(ElementFlagsMapType&		theElementFlags)
 
 	(*theResult.first).second.setAttr(c_wstr(XALAN_STATIC_UCODE_STRING("SRC")), ElemDesc::ATTRURL);
 	(*theResult.first).second.setAttr(c_wstr(XALAN_STATIC_UCODE_STRING("FOR")), ElemDesc::ATTRURL);
+	(*theResult.first).second.setAttr(c_wstr(XALAN_STATIC_UCODE_STRING("DEFER")), ElemDesc::ATTREMPTY);
 
 	theElementFlags.insert(
 		ElementFlagsMapType::value_type(
