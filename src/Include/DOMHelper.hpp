@@ -76,178 +76,122 @@ class NodeImpl;
 
 
 
-#if 0
-template<class T>
-inline int
-operator==(void*		theAddress,
-		   const T&		theProxy)
+inline bool
+operator==(
+			int					/* theAddress */,
+			const DOM_Node&		theObject)
 {
-	return theProxy.operator==(reinterpret_cast<const DOM_NullPtr*>(theAddress));
-}
-#else
-
-inline int
-operator==(void*			theAddress,
-		   const DOM_Node&	theProxy)
-{
-	return theProxy.operator==(reinterpret_cast<const DOM_NullPtr*>(theAddress));
-}
-
-inline int
-operator==(void*					theAddress,
-		   const DOM_NamedNodeMap&	theProxy)
-{
-	return theProxy.operator==(reinterpret_cast<const DOM_NullPtr*>(theAddress));
-}
-
-inline int
-operator==(void*				theAddress,
-		   const DOM_NodeList&	theProxy)
-{
-	return theProxy.operator==(reinterpret_cast<const DOM_NullPtr*>(theAddress));
-}
-
-#endif
-
-#if  defined(__GNUC__)
-
-
-// Doesn't recognize 0 as a possible void *
-// If this was a template, then it tries to do all sorts of nasty conversions
-// that we don't want
-
-inline int
-operator!=(const DOM_Node&		theProxy,
-		   int		theAddress)
-{
-	void *p = reinterpret_cast<void*>(theAddress);
-	return !(p == theProxy);
-}
-
-inline int
-operator!=(const DOM_NamedNodeMap&		theProxy,
-		   int		theAddress)
-{
-	void *p = reinterpret_cast<void*>(theAddress);
-	return !(p == theProxy);
-}
-
-inline int
-operator!=(const DOM_NodeList&		theProxy,
-		   int		theAddress)
-{
-	void *p = reinterpret_cast<void*>(theAddress);
-	return !(p == theProxy);
-}
-
-inline int
-operator!=(int		theAddress,
-		   const DOM_Node&		theProxy)
-{
-	void *p = reinterpret_cast<void*>(theAddress);
-	return !(p == theProxy);
-}
-
-inline int
-operator!=(int		theAddress,
-		   const DOM_NamedNodeMap&		theProxy)
-{
-	void *p = reinterpret_cast<void*>(theAddress);
-	return !(p == theProxy);
-}
-
-inline int
-operator!=(int		theAddress,
-		   const DOM_NodeList&		theProxy)
-{
-	void *p = reinterpret_cast<void*>(theAddress);
-	return !(p == theProxy);
+	return theObject == static_cast<const DOM_NullPtr*>(0);
 }
 
 
-#else
 
-template<class T>
-inline int
-operator!=(void*		theAddress,
-		   const T&		theProxy)
+inline bool
+operator==(
+			int					/* theAddress */,
+			const DOM_NamedNodeMap&		theObject)
 {
-	return !(theAddress == theProxy);
+	return theObject == static_cast<const DOM_NullPtr*>(0);
 }
 
-template<class T>
-inline int
-operator!=(const T&		theProxy,
-		   void*		theAddress)
+
+inline bool
+operator==(
+			int					/* theAddress */,
+			const DOM_NodeList&		theObject)
 {
-	return !(theAddress == theProxy);
+	return theObject == static_cast<const DOM_NullPtr*>(0);
 }
 
-#endif
 
-template<class T, class U>
-class DOM_ConstSurrogate
+
+inline bool
+operator==(
+			const DOM_Node&		theObject,
+			int					/* theAddress */)
 {
-public:
-
-	DOM_ConstSurrogate(const T&		theInstance) :
-		m_instance(theInstance)
-	{
-	}
-
-	const U&
-	operator&() const
-	{
-		return reinterpret_cast<const U&>(m_instance);
-	}
-
-	const U&
-	operator*() const
-	{
-		return reinterpret_cast<const U&>(m_instance);
-	}
-
-	const U*
-	operator->() const
-	{
-		return reinterpret_cast<const U*>(&m_instance);
-	}
-
-protected:
-
-	T	m_instance;
-};
+	return theObject == static_cast<const DOM_NullPtr*>(0);
+}
 
 
 
-template<class T, class U>
-class DOM_Surrogate : public DOM_ConstSurrogate<T, U>
+inline bool
+operator==(
+			const DOM_NamedNodeMap&		theObject,
+			int							/* theAddress */)
 {
-public:
+	return theObject == static_cast<const DOM_NullPtr*>(0);
+}
 
-	DOM_Surrogate(const T&	theInstance) :
-		DOM_ConstSurrogate(theInstance)
-	{
-	}
 
-	U&
-	operator&()
-	{
-		return reinterpret_cast<U&>(m_instance);
-	}
 
-	U&
-	operator*()
-	{
-		return reinterpret_cast<U&>(m_instance);
-	}
+inline bool
+operator==(
+			const DOM_NodeList&		theObject,
+			int						/* theAddress */)
+{
+	return theObject == static_cast<const DOM_NullPtr*>(0);
+}
 
-	U*
-	operator->()
-	{
-		return reinterpret_cast<U*>(&m_instance);
-	}
-};
+
+
+inline bool
+operator!=(
+			int					/* theAddress */,
+			const DOM_Node&		theObject)
+{
+	return theObject != static_cast<const DOM_NullPtr*>(0);
+}
+
+
+
+inline bool
+operator!=(
+			int							/* theAddress */,
+			const DOM_NamedNodeMap&		theObject)
+{
+	return theObject != static_cast<const DOM_NullPtr*>(0);
+}
+
+
+
+inline bool
+operator!=(
+			int						/* theAddress */,
+			const DOM_NodeList&		theObject)
+{
+	return theObject != static_cast<const DOM_NullPtr*>(0);
+}
+
+
+
+inline bool
+operator!=(
+			const DOM_Node&		theObject,
+			int					/* theAddress */)
+{
+	return theObject != static_cast<const DOM_NullPtr*>(0);
+}
+
+
+
+inline bool
+operator!=(
+			const DOM_NamedNodeMap&		theObject,
+			int							/* theAddress */)
+{
+	return theObject != static_cast<const DOM_NullPtr*>(0);
+}
+
+
+
+inline bool
+operator!=(
+			const DOM_NodeList&		theObject,
+			int						/* theAddress */)
+{
+	return theObject != static_cast<const DOM_NullPtr*>(0);
+}
 
 
 
@@ -299,7 +243,11 @@ operator<(
 
 
 // Functor for hashing DOM_Nodes.
+#if defined(XALAN_NO_NAMESPACES)
+struct DOM_NodeHashFunction : public unary_function<DOM_Node, size_t>
+#else
 struct DOM_NodeHashFunction : public std::unary_function<DOM_Node, size_t>
+#endif
 {
 	result_type
 	operator() (const argument_type&	theKey) const
@@ -311,7 +259,11 @@ struct DOM_NodeHashFunction : public std::unary_function<DOM_Node, size_t>
 
 
 // Functor for hashing DOM_Elements.
+#if defined(XALAN_NO_NAMESPACES)
+struct DOM_ElementHashFunction : public unary_function<DOM_Element, size_t>
+#else
 struct DOM_ElementHashFunction : public std::unary_function<DOM_Element, size_t>
+#endif
 {
 	result_type
 	operator() (const argument_type&	theKey) const

@@ -57,28 +57,10 @@
 #if !defined(PLATFORMDEFINITIONS_HEADER_GUARD_1357924680)
 #define PLATFORMDEFINITIONS_HEADER_GUARD_1357924680
 
-#if defined(_DEBUG)
-#define XML_DEBUG
-#endif
-
 #if defined(_MSC_VER)
-#	include "VCPPDefinitions.hpp"
-#else
-#	if defined(__GNUC__)
-#		define XALAN_PLATFORM_EXPORT    
-#		define XALAN_PLATFORM_IMPORT   
-#		define XALAN_PLATFORM_EXPORT_FUNCTION(T) T 
-#		define XALAN_PLATFORM_IMPORT_FUNCTION(T) T 
-#		define XALAN_NO_MEMBER_TEMPLATES
-#		define XALAN_OLD_AUTO_PTR
-#		define XALAN_NO_COVARIANT_RETURN_TYPE
-#		define XALAN_XTREE_BUG
-#		define XALAN_WIDE_STRING_UCODE_PROBLEM
-//#		define XALAN_NEED_SPECIAL_NAN_SUPPORT
-//#		define XALAN_HASH_CONTAINERS_AVAILABLE
-#	else
-#		error Unsupported platform!
-#	endif
+#include "VCPPDefinitions.hpp"
+#elif defined(__GNUC__)
+#include "GCCDefinitions.hpp"
 #endif
 
 
