@@ -51,6 +51,10 @@ public:
 	{
 		assert(arg.null() == false);	
 
+#if defined(XALAN_STRICT_ANSI_HEADERS)
+		using std::sqrt;
+#endif
+
 		return executionContext.getXObjectFactory().createNumber(sqrt(arg->num()));
 	}
 
@@ -114,6 +118,10 @@ public:
 	{
 		assert(arg.null() == false);
 
+#if defined(XALAN_STRICT_ANSI_HEADERS)
+		using std::pow;
+#endif
+
 		return executionContext.getXObjectFactory().createNumber(pow(arg->num(), 3));
 	}
 
@@ -174,6 +182,14 @@ public:
 			XalanNode*				/* context */,
 			const Locator*			/* locator */) const
 	{
+#if defined(XALAN_STRICT_ANSI_HEADERS)
+		using std::time;
+		using std::time_t;
+		using std::localtime;
+		using std::ascitime;
+		using std::strlen;
+#endif
+
 		time_t	theTime;
 
 		time(&theTime);
