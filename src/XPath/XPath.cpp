@@ -158,11 +158,6 @@ XPath::execute(
 									executionContext,
 									&prefixResolver);
 
-	// Push and pop the current node...
-	XPathExecutionContext::CurrentNodeSetAndRestore		theNodeSetAndRestore(
-									executionContext,
-									context);
-
 	return execute(executionContext);
 }
 
