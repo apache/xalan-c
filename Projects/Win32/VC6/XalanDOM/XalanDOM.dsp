@@ -132,6 +132,10 @@ SOURCE=..\..\..\..\src\XalanDOM\XalanElement.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\XalanDOM\XalanEmptyNamedNodeMap.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\XalanDOM\XalanEntity.cpp
 # End Source File
 # Begin Source File
@@ -217,6 +221,10 @@ SOURCE=..\..\..\..\src\XalanDOM\XalanDOMString.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\XalanDOM\XalanElement.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XalanDOM\XalanEmptyNamedNodeMap.hpp
 # End Source File
 # Begin Source File
 
