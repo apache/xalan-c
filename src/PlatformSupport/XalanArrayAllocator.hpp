@@ -133,17 +133,24 @@ public:
 	void
 	reset()
 	{
-		const ListIteratorType	theEnd = m_list.end();
-		ListIteratorType		theCurrent = m_list.begin();
-
-		while(theCurrent != theEnd)
+		if (m_list.empty() == true)
 		{
-			(*theCurrent).first = (*theCurrent).second.size();
-
-			++theCurrent;
+			m_lastEntryFound = 0;
 		}
+		else
+		{
+			const ListIteratorType	theEnd = m_list.end();
+			ListIteratorType		theCurrent = m_list.begin();
 
-		m_lastEntryFound = &*m_list.begin();
+			do
+			{
+				(*theCurrent).first = (*theCurrent).second.size();
+
+				++theCurrent;
+			} while(theCurrent != theEnd);
+
+			m_lastEntryFound = &*m_list.begin();
+		}
 	}
 
 	/**
