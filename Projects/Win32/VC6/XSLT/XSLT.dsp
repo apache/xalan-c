@@ -322,6 +322,22 @@ SOURCE=..\..\..\..\src\XSLT\Stylesheet.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\XSLT\StylesheetConstructionContext.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XSLT\StylesheetConstructionContextDefault.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XSLT\StylesheetExecutionContext.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XSLT\StylesheetExecutionContextDefault.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\XSLT\StylesheetHandler.cpp
 # End Source File
 # Begin Source File
@@ -592,6 +608,22 @@ SOURCE=..\..\..\..\src\XSLT\StackEntry.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\XSLT\Stylesheet.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XSLT\StylesheetConstructionContext.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XSLT\StylesheetConstructionContextDefault.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XSLT\StylesheetExecutionContext.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XSLT\StylesheetExecutionContextDefault.hpp
 # End Source File
 # Begin Source File
 

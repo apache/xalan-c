@@ -108,6 +108,14 @@ SOURCE=..\..\..\..\src\XercesPlatformSupport\XercesDOMPrintWriter.cpp
 
 SOURCE=..\..\..\..\src\XercesPlatformSupport\XercesPlatformSupportException.cpp
 # End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XercesPlatformSupport\XercesStdTextOutputStream.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XercesPlatformSupport\XercesTextOutputStream.cpp
+# End Source File
 # End Group
 # Begin Group "Header Files"
 
@@ -131,6 +139,14 @@ SOURCE=..\..\..\..\src\XercesPlatformSupport\XercesPlatformSupportDefinitions.hp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\XercesPlatformSupport\XercesPlatformSupportException.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XercesPlatformSupport\XercesStdTextOutputStream.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XercesPlatformSupport\XercesTextOutputStream.hpp
 # End Source File
 # End Group
 # Begin Group "Resource Files"
