@@ -47,13 +47,15 @@ class XalanSourceTreeParserLiaison;
  */
 class XALAN_TRANSFORMER_EXPORT XalanSourceTreeWrapperParsedSource : public XalanParsedSource
 {
+    
 public:
 
 	XalanSourceTreeWrapperParsedSource(
+            MemoryManagerType&              theManager,
 			XalanSourceTreeDocument*		theDocument,
 			XalanSourceTreeParserLiaison&	theParserLiaison,
 			XalanSourceTreeDOMSupport&		theDOMSupport,
-			const XalanDOMString&			theURI = XalanDOMString());
+			const XalanDOMString&			theURI = XalanDOMString(XalanMemMgrs::getDummyMemMgr()));
 
 	virtual
 	~XalanSourceTreeWrapperParsedSource();
@@ -62,7 +64,7 @@ public:
 	getDocument() const;
 
 	virtual XalanParsedSourceHelper*
-	createHelper() const;
+	createHelper(MemoryManagerType& theManager) const;
 
 	virtual const XalanDOMString&
 	getURI() const;

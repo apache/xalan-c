@@ -51,7 +51,10 @@ FunctionDifference::execute(
 {
 	if (args.size() != 2)
 	{
-		executionContext.error(getError(), context, locator);
+        XPathExecutionContext::GetAndReleaseCachedString theGuard(executionContext);
+        XalanDOMString& theBuffer = theGuard.get();
+
+		executionContext.error(getError(theBuffer), context, locator);
 	}
 
 	assert(args[0].null() == false && args[1].null() == false);
@@ -91,17 +94,19 @@ Function*
 #else
 FunctionDifference*
 #endif
-FunctionDifference::clone() const
+FunctionDifference::clone(MemoryManagerType& theManager) const
 {
-	return new FunctionDifference(*this);
+	return  cloneFunction_0<FunctionDifference>()(theManager);;
 }
 
 
 
-const XalanDOMString
-FunctionDifference::getError() const
+const XalanDOMString&
+FunctionDifference::getError(XalanDOMString& theResult) const
 {
-	return XalanMessageLoader::getMessage(XalanMessages::FunctionAcceptsTwoArguments_1Param,"difference()");
+    XalanMessageLoader::getMessage(XalanMessages::FunctionAcceptsTwoArguments_1Param,theResult , "difference()");
+
+    return theResult;
 }
 
 

@@ -56,6 +56,7 @@ class XercesDOMSupport;
  */
 class XALAN_TRANSFORMER_EXPORT XercesDOMWrapperParsedSource : public XalanParsedSource
 {
+    
 public:
 
 #if defined(XALAN_BUILD_DEPRECATED_DOM_BRIDGE)
@@ -70,10 +71,11 @@ public:
 	 * @deprecated This constructor is deprecated.
 	 */
 	XercesDOMWrapperParsedSource(
+            MemoryManagerType&          theManager,
 			const DOM_Document_Type&	theDocument,
 			XercesParserLiaison&		theParserLiaison,
 			XercesDOMSupport&			theDOMSupport,
-			const XalanDOMString&		theURI = XalanDOMString());
+			const XalanDOMString&		theURI = XalanDOMString(XalanMemMgrs::getDummyMemMgr()));
 #endif
 
 	/**
@@ -85,10 +87,11 @@ public:
 	 * @param theURI The URI of the document, if any.
 	 */
 	XercesDOMWrapperParsedSource(
+            MemoryManagerType&          theManager,
 			const DOMDocument_Type*		theDocument,
 			XercesParserLiaison&		theParserLiaison,
 			XercesDOMSupport&			theDOMSupport,
-			const XalanDOMString&		theURI = XalanDOMString());
+			const XalanDOMString&		theURI = XalanDOMString(XalanMemMgrs::getDummyMemMgr()));
 
 	virtual
 	~XercesDOMWrapperParsedSource();
@@ -97,7 +100,7 @@ public:
 	getDocument() const;
 
 	virtual XalanParsedSourceHelper*
-	createHelper() const;
+	createHelper(MemoryManagerType& theManager) const;
 
 	virtual const XalanDOMString&
 	getURI() const;

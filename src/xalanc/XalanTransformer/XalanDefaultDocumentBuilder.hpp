@@ -43,6 +43,7 @@ XALAN_CPP_NAMESPACE_BEGIN
  */
 class XALAN_TRANSFORMER_EXPORT XalanDefaultDocumentBuilder : public XalanDocumentBuilder
 {
+    
 public:
 
 	/**
@@ -50,7 +51,10 @@ public:
 	 *
 	 * @param theURI An optional string to identify the document.
 	 */
-	XalanDefaultDocumentBuilder(const XalanDOMString&	theURI = XalanDOMString());
+	XalanDefaultDocumentBuilder(MemoryManagerType& theManager, const XalanDOMString&	theURI);
+
+    static XalanDefaultDocumentBuilder*
+    create(MemoryManagerType& theManager, const XalanDOMString&	theURI);
 
 	virtual
 	~XalanDefaultDocumentBuilder();
@@ -59,7 +63,7 @@ public:
 	getDocument() const;
 
 	virtual XalanParsedSourceHelper*
-	createHelper() const;
+	createHelper(MemoryManagerType& theManager) const;
 
 	virtual const XalanDOMString&
 	getURI() const;

@@ -21,6 +21,8 @@
 #include <xalanc/XalanSourceTree/XalanSourceTreeDefinitions.hpp>
 
 
+#include <xalanc/Include/XalanMemMgrAutoPtr.hpp>
+
 
 #include <xalanc/XalanDOM/XalanDocumentFragment.hpp>
 
@@ -48,9 +50,11 @@ class XALAN_XALANSOURCETREE_EXPORT XalanSourceTreeDocumentFragment : public Xala
 {
 public:
 
-	XalanSourceTreeDocumentFragment(XalanSourceTreeDocument&	theOwnerDocument);
+	XalanSourceTreeDocumentFragment(MemoryManagerType&  theManager,
+                            XalanSourceTreeDocument&	theOwnerDocument);
 
 	XalanSourceTreeDocumentFragment(
+            MemoryManagerType&                      theManager,
 			const XalanSourceTreeDocumentFragment&	theSource,
 			bool									deep = false);
 
@@ -169,10 +173,8 @@ public:
 	clearChildren();
 
 	XalanSourceTreeDocumentFragment*
-	clone(bool	deep) const
-	{
-		return new XalanSourceTreeDocumentFragment(*this, deep);
-	}
+	clone(bool	deep) const;
+
 
 protected:
 
@@ -183,6 +185,7 @@ protected:
 	operator==(const XalanSourceTreeDocumentFragment&		theRHS) const;
 
 private:
+    mutable MemoryManagerType&      m_manager;
 
 	XalanSourceTreeDocument* const	m_ownerDocument;
 

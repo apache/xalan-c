@@ -30,16 +30,31 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XalanDefaultDocumentBuilder::XalanDefaultDocumentBuilder(const XalanDOMString&	theURI) :
+XalanDefaultDocumentBuilder::XalanDefaultDocumentBuilder(MemoryManagerType&     theManager,
+                                                         const XalanDOMString&	theURI) :
 	m_domSupport(),
-	m_parserLiaison(),
-	m_contentHandler(m_parserLiaison.createXalanSourceTreeDocument()),
-	m_uri(theURI)
+	m_parserLiaison(theManager),
+	m_contentHandler(theManager, m_parserLiaison.createXalanSourceTreeDocument()),
+	m_uri(theURI,theManager)
 {
 	m_domSupport.setParserLiaison(&m_parserLiaison);
 }
 
+XalanDefaultDocumentBuilder*
+XalanDefaultDocumentBuilder::create(MemoryManagerType& theManager, const XalanDOMString&	theURI)
+{
+        typedef XalanDefaultDocumentBuilder ThisType;
+        
+        XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
 
+        ThisType* theResult = theGuard.get();
+
+        new (theResult) ThisType(theManager, theURI);
+
+         theGuard.release();
+
+        return theResult;
+}
 
 XalanDefaultDocumentBuilder::~XalanDefaultDocumentBuilder()
 {
@@ -56,9 +71,9 @@ XalanDefaultDocumentBuilder::getDocument() const
 
 
 XalanParsedSourceHelper*
-XalanDefaultDocumentBuilder::createHelper() const
+XalanDefaultDocumentBuilder::createHelper(MemoryManagerType& theManager) const
 {
-	return new XalanDefaultParsedSourceHelper(m_domSupport);
+	return XalanDefaultParsedSourceHelper::create(m_domSupport, theManager);
 }
 
 

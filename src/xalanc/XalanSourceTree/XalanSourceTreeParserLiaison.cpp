@@ -453,18 +453,19 @@ const XalanDOMChar	XalanSourceTreeParserLiaison::s_externalNoNamespaceSchemaLoca
 
 
 XalanSourceTreeParserLiaison::XalanSourceTreeParserLiaison(
+            MemoryManagerType&          theManager,
 			XalanSourceTreeDOMSupport&	/* theSupport */) :
-	m_xercesParserLiaison(),
-	m_documentMap(),
+	m_xercesParserLiaison(theManager),
+	m_documentMap(theManager),
 	m_poolAllText(true)
 {
 }
 
 
 
-XalanSourceTreeParserLiaison::XalanSourceTreeParserLiaison() :
-	m_xercesParserLiaison(),
-	m_documentMap(),
+XalanSourceTreeParserLiaison::XalanSourceTreeParserLiaison(MemoryManagerType& theManager) :
+	m_xercesParserLiaison(theManager),
+	m_documentMap(theManager),
 	m_poolAllText(true)
 {
 }
@@ -483,13 +484,23 @@ XalanSourceTreeParserLiaison::reset()
 {
 	XALAN_USING_STD(for_each)
 
-	// Delete any documents.
-	for_each(
-			m_documentMap.begin(),
-			m_documentMap.end(),
-			makeMapValueDeleteFunctor(m_documentMap));
+    typedef XalanSourceTreeParserLiaison::DocumentMapType::iterator Iterator;
 
-	m_documentMap.clear();
+    MemoryManagerType& theManager = getMemoryManager();
+
+    for ( Iterator i = m_documentMap.begin(); i != m_documentMap.end(); ++i)
+    {
+        assert( (*i).second != 0);
+
+        (*i).second->~XalanSourceTreeDocument();
+
+        theManager.deallocate((void*)(*i).second);
+
+        (*i).second = 0;
+
+    }
+
+    m_documentMap.clear();
 
 	m_xercesParserLiaison.reset();
 }
@@ -528,7 +539,7 @@ XalanSourceTreeParserLiaison::parseXMLStream(
 			const InputSourceType&	inputSource,
 			const XalanDOMString&	/* identifier */)
 {
-	XalanSourceTreeContentHandler	theContentHandler(createXalanSourceTreeDocument());
+	XalanSourceTreeContentHandler	theContentHandler( getMemoryManager(), createXalanSourceTreeDocument());
 
 	XalanAutoPtr<SAX2XMLReaderType>	theReader(createReader());
 
@@ -552,7 +563,16 @@ XalanSourceTreeParserLiaison::destroyDocument(XalanDocument*	theDocument)
 	{
 		m_documentMap.erase(theDocument);
 
-		delete theDocument;
+        if( theDocument!= 0 )
+        {
+            theDocument->~XalanDocument();
+            
+            MemoryManagerType& theManager = m_documentMap.getMemoryManager();
+
+            theManager.deallocate(theDocument);
+
+        }
+		
 	}
 	else
 	{
@@ -594,10 +614,12 @@ XalanSourceTreeParserLiaison::setUseValidation(bool		b)
 
 
 
-const XalanDOMString
-XalanSourceTreeParserLiaison::getParserDescription() const
+const XalanDOMString&
+XalanSourceTreeParserLiaison::getParserDescription(XalanDOMString& theResult) const
 {
-	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("XalanSourceTree"));
+    theResult.assign("XalanSourceTree");
+    
+    return theResult;
 }
 
 
@@ -606,9 +628,9 @@ void
 XalanSourceTreeParserLiaison::parseXMLStream(
 			const InputSourceType&	theInputSource,
 			ContentHandlerType&		theContentHandler,
+            const XalanDOMString&	/* theIdentifier */,
 			DTDHandlerType*			theDTDHandler,
-			LexicalHandlerType*		theLexicalHandler,
-			const XalanDOMString&	/* theIdentifier */)
+			LexicalHandlerType*		theLexicalHandler)
 {
 	XalanAutoPtr<SAX2XMLReaderType>		theReader(createReader());
 
@@ -766,7 +788,7 @@ XalanSourceTreeDocument*
 XalanSourceTreeParserLiaison::createXalanSourceTreeDocument()
 {
 	XalanSourceTreeDocument* const	theNewDocument =
-		new XalanSourceTreeDocument(m_poolAllText);
+        XalanSourceTreeDocument::create( getMemoryManager(), m_poolAllText);
 
 	m_documentMap[theNewDocument] = theNewDocument;
 
@@ -778,7 +800,7 @@ XalanSourceTreeParserLiaison::createXalanSourceTreeDocument()
 SAX2XMLReaderType*
 XalanSourceTreeParserLiaison::createReader()
 {
-	XalanAutoPtr<SAX2XMLReaderType>		theReader(XERCES_CPP_NAMESPACE_QUALIFIER XMLReaderFactory::createXMLReader());
+	XalanAutoPtr<SAX2XMLReaderType>		theReader(XERCES_CPP_NAMESPACE_QUALIFIER XMLReaderFactory::createXMLReader( &(getMemoryManager())));
 
 	const bool	fValidate = m_xercesParserLiaison.getUseValidation();
 

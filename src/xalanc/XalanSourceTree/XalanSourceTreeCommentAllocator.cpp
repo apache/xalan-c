@@ -23,8 +23,8 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XalanSourceTreeCommentAllocator::XalanSourceTreeCommentAllocator(size_type	theBlockCount) :
-	m_allocator(theBlockCount)
+XalanSourceTreeCommentAllocator::XalanSourceTreeCommentAllocator(MemoryManagerType&  theManager, size_type	theBlockCount) :
+	m_allocator(theManager, theBlockCount)
 {
 }
 

@@ -58,7 +58,7 @@ public:
 	 * Perform static initialization.  See class XalanSourceTreeInit.
 	 */
 	static void
-	initialize();
+	initialize(MemoryManagerType& theManager);
 
 	/**
 	 * Perform static shut down.  See class XalanSourceTreeInit.
@@ -479,10 +479,11 @@ public:
 	 *	 <br>DOMSTRING_SIZE_ERR: Raised if the specified range of text does not 
 	 *	 fit into a <code>DOMString</code>.
 	 */
-	virtual XalanDOMString
+	virtual XalanDOMString&
 	substringData(
 			unsigned int	offset, 
-			unsigned int	count) const;
+			unsigned int	count,
+            XalanDOMString& theBuffer) const;
 
 	//@}
 	/** @name Functions that set or change data. */

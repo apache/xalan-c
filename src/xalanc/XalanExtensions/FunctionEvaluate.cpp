@@ -64,11 +64,11 @@ doExecute(
 {
 	// $$$ ToDo: Consider moving all of this into a member function of
 	// XPathExecutionContext.
-	XPathProcessorImpl					theProcessor;
+    XPathProcessorImpl					theProcessor(executionContext.getMemoryManager());
 
-	XPathConstructionContextDefault		theConstructionContext;
+	XPathConstructionContextDefault		theConstructionContext(executionContext.getMemoryManager());
 
-	XPath								theXPath(locator);
+	XPath								theXPath(executionContext.getMemoryManager(), locator);
 
 	theProcessor.initXPath(
 			theXPath,
@@ -93,9 +93,11 @@ doExecute(
 	assert(resolver == 0 || resolver->getNodeType() == XalanNode::ELEMENT_NODE);
 
 #if defined(XALAN_OLD_STYLE_CASTS)
-	ElementPrefixResolverProxy	theProxy((const XalanElement*)resolver);
+	ElementPrefixResolverProxy	theProxy(executionContext.getMemoryManager(), 
+                                            (const XalanElement*)resolver);
 #else
-	ElementPrefixResolverProxy	theProxy(static_cast<const XalanElement*>(resolver));
+	ElementPrefixResolverProxy	theProxy(executionContext.getMemoryManager(), 
+                                            static_cast<const XalanElement*>(resolver));
 #endif
 
 	return doExecute(executionContext, context, expression, theProxy, locator);
@@ -112,7 +114,9 @@ FunctionEvaluate::execute(
 {
 	if (args.size() != 1)
 	{
-		executionContext.error(getError(), context, locator);
+        XPathExecutionContext::GetAndReleaseCachedString theString(executionContext);
+
+		executionContext.error(getError(theString.get()), context, locator);
 	}
 
 	assert(args[0].null() == false);
@@ -136,8 +140,10 @@ FunctionEvaluate::execute(
 
 			if (context->getNodeType() != XalanNode::ELEMENT_NODE)
 			{
+                XPathExecutionContext::GetAndReleaseCachedString theString(executionContext);
+
 				executionContext.warn(
-					XalanMessageLoader::getMessage(XalanMessages::NoPrefixResolverAvailable),
+					XalanMessageLoader::getMessage(XalanMessages::NoPrefixResolverAvailable, theString.get()),
 					context,
 					locator);
 
@@ -156,17 +162,19 @@ Function*
 #else
 FunctionEvaluate*
 #endif
-FunctionEvaluate::clone() const
+FunctionEvaluate::clone(MemoryManagerType& theManager) const
 {
-	return new FunctionEvaluate(*this);
+	return cloneFunction_1<FunctionEvaluate>()( *this, theManager);
 }
 
 
 
-const XalanDOMString
-FunctionEvaluate::getError() const
+const XalanDOMString&
+FunctionEvaluate::getError(XalanDOMString& theResult) const
 {
-	return XalanMessageLoader::getMessage(XalanMessages::FunctionAcceptsOneArgument_1Param,"evaluate()");
+	XalanMessageLoader::getMessage(XalanMessages::FunctionAcceptsOneArgument_1Param,theResult , "evaluate()");
+
+    return theResult;
 }
 
 

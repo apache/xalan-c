@@ -58,6 +58,7 @@ public:
 	 * @param theIndex The document-order index of the node.
 	 */
 	XalanSourceTreeElement(
+            MemoryManagerType&          theManager,
 			const XalanDOMString&		theTagName,
 			XalanSourceTreeDocument*	theOwnerDocument,
 			XalanNode*					theParentNode = 0,
@@ -68,6 +69,11 @@ public:
 	virtual
 	~XalanSourceTreeElement();
 
+    MemoryManagerType& 
+    getMemoryManager()
+    {
+        return m_memoryManager;
+    }
 	/**
 	 * Gets the name of this node.
 	 */
@@ -763,6 +769,7 @@ public:
 protected:
 
 	XalanSourceTreeElement(
+            MemoryManagerType&              theManager,
 			const XalanSourceTreeElement&	theSource,
 			bool							deep = false);
 
@@ -782,6 +789,8 @@ private:
 
 
 	// Data members...
+    MemoryManagerType&          m_memoryManager;
+
 	XalanSourceTreeDocument*	m_ownerDocument;
 
 	XalanNode*					m_parentNode;

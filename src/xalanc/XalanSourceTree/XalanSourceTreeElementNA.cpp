@@ -16,6 +16,8 @@
 #include "XalanSourceTreeElementNA.hpp"
 
 
+#include <xalanc/Include/XalanMemMgrAutoPtr.hpp>
+
 
 #include <xalanc/XalanDOM/XalanDOMException.hpp>
 
@@ -30,6 +32,7 @@ const XalanEmptyNamedNodeMap	XalanSourceTreeElementNA::s_emptyAttributes;
 
 
 XalanSourceTreeElementNA::XalanSourceTreeElementNA(
+            MemoryManagerType&          theManager,
 			const XalanDOMString&		theTagName,
 			XalanSourceTreeDocument*	theOwnerDocument,
 			XalanNode*					theParentNode,
@@ -37,6 +40,7 @@ XalanSourceTreeElementNA::XalanSourceTreeElementNA(
 			XalanNode*					theNextSibling,
 			IndexType					theIndex) :
 	XalanSourceTreeElement(
+        theManager,
 		theTagName,
 		theOwnerDocument,
 		theParentNode,
@@ -55,13 +59,33 @@ XalanSourceTreeElementNA::~XalanSourceTreeElementNA()
 
 
 XalanSourceTreeElementNA::XalanSourceTreeElementNA(
+            MemoryManagerType&                  theManager,
 			const XalanSourceTreeElementNA&		theSource,
 			bool								deep) :
-	XalanSourceTreeElement(theSource, deep)
+	XalanSourceTreeElement(theManager, theSource, deep)
 {
 }
 
+XalanSourceTreeElementNA*
+XalanSourceTreeElementNA::create(
+            MemoryManagerType&                  theManager,
+			const XalanSourceTreeElementNA&		theSource,
+			bool								deep)
+{
+    typedef XalanSourceTreeElementNA ThisType;
 
+    XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
+
+    ThisType* theResult = theGuard.get();
+
+    new (theResult) ThisType(theManager,
+                            theSource,
+                            deep);
+
+   theGuard.release();
+
+    return theResult;
+}
 
 const XalanNamedNodeMap*
 XalanSourceTreeElementNA::getAttributes() const

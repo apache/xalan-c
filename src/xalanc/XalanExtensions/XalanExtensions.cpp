@@ -212,9 +212,9 @@ XalanExtensionsInstaller::installLocal(XPathEnvSupportDefault&	theSupport)
 
 
 void
-XalanExtensionsInstaller::installGlobal()
+XalanExtensionsInstaller::installGlobal(MemoryManagerType& theManager)
 {
-	doInstallGlobal(s_extensionsNamespace, theFunctionTable);
+	doInstallGlobal( theManager, s_extensionsNamespace, theFunctionTable);
 }
 
 
@@ -228,9 +228,9 @@ XalanExtensionsInstaller::uninstallLocal(XPathEnvSupportDefault&	theSupport)
 
 
 void
-XalanExtensionsInstaller::uninstallGlobal()
+XalanExtensionsInstaller::uninstallGlobal(MemoryManagerType& theManager)
 {
-	doUninstallGlobal(s_extensionsNamespace, theFunctionTable);
+	doUninstallGlobal(theManager, s_extensionsNamespace, theFunctionTable);
 }
 
 
@@ -243,8 +243,8 @@ XalanExtensionsInstaller::doInstallLocal(
 {
 	assert(theNamespace != 0);
 
-	const XalanDOMString	theNamespaceString(theNamespace);
-	XalanDOMString			theFunctionName;
+	const XalanDOMString	theNamespaceString(theNamespace, theSupport.getMemoryManager());
+	XalanDOMString			theFunctionName( theSupport.getMemoryManager());
 
 	for(const FunctionTableEntry* theEntry = theFunctionTable; theEntry->theFunctionName != 0; ++theEntry)
 	{
@@ -260,13 +260,14 @@ XalanExtensionsInstaller::doInstallLocal(
 
 void
 XalanExtensionsInstaller::doInstallGlobal(
+            MemoryManagerType&          theManager,
 			const XalanDOMChar*			theNamespace,
 			const FunctionTableEntry	theFunctionTable[])
 {
 	assert(theNamespace != 0);
 
-	const XalanDOMString	theNamespaceString(theNamespace);
-	XalanDOMString			theFunctionName;
+	const XalanDOMString	theNamespaceString(theNamespace, theManager);
+	XalanDOMString			theFunctionName(theManager);
 
 	for(const FunctionTableEntry* theEntry = theFunctionTable; theEntry->theFunctionName != 0; ++theEntry)
 	{
@@ -288,8 +289,8 @@ XalanExtensionsInstaller::doUninstallLocal(
 {
 	assert(theNamespace != 0);
 
-	const XalanDOMString	theNamespaceString(theNamespace);
-	XalanDOMString			theFunctionName;
+	const XalanDOMString	theNamespaceString(theNamespace, theSupport.getMemoryManager());
+	XalanDOMString			theFunctionName(theSupport.getMemoryManager());
 
 	for(const FunctionTableEntry* theEntry = theFunctionTable; theEntry->theFunctionName != 0; ++theEntry)
 	{
@@ -303,13 +304,14 @@ XalanExtensionsInstaller::doUninstallLocal(
 
 void
 XalanExtensionsInstaller::doUninstallGlobal(
+            MemoryManagerType&          theManager,
 			const XalanDOMChar*			theNamespace,
 			const FunctionTableEntry	theFunctionTable[])
 {
 	assert(theNamespace != 0);
 
-	const XalanDOMString	theNamespaceString(theNamespace);
-	XalanDOMString			theFunctionName;
+	const XalanDOMString	theNamespaceString(theNamespace, theManager);
+	XalanDOMString			theFunctionName(theManager);
 
 	for(const FunctionTableEntry* theEntry = theFunctionTable; theEntry->theFunctionName != 0; ++theEntry)
 	{

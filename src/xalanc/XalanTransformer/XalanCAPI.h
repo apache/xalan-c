@@ -108,11 +108,8 @@ extern "C"
 	 * @return  the XalanTransformer handle
 	 */
 	XALAN_TRANSFORMER_EXPORT_FUNCTION(XalanHandle)
-#if defined(__cplusplus)
 	CreateXalanTransformer();
-#else
-	CreateXalanTransformer(void);
-#endif
+
 
 	/**
 	 * Delete a XalanTransformer instance.

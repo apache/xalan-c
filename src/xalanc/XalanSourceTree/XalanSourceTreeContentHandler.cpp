@@ -37,6 +37,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 XalanSourceTreeContentHandler::XalanSourceTreeContentHandler(
+            MemoryManagerType&          theManager,
 			XalanSourceTreeDocument*	theDocument,
 			bool						fAccumulateText) :
 	ContentHandler(),
@@ -44,11 +45,11 @@ XalanSourceTreeContentHandler::XalanSourceTreeContentHandler(
 	LexicalHandler(),
 	m_document(theDocument),
 	m_currentElement(0),
-	m_elementStack(),
+	m_elementStack(theManager),
 	m_lastChild(0),
-	m_lastChildStack(),
+	m_lastChildStack(theManager),
 	m_accumulateText(fAccumulateText),
-	m_textBuffer(),
+	m_textBuffer(theManager),
 	m_inDTD(false)
 {
 }

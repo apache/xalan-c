@@ -51,7 +51,9 @@ FunctionIntersection::execute(
 {
 	if (args.size() != 2)
 	{
-		executionContext.error(getError(), context, locator);
+        XalanDOMString theResult(executionContext.getMemoryManager());
+
+		executionContext.error(getError(theResult), context, locator);
 	}
 
 	assert(args[0].null() == false && args[1].null() == false);
@@ -88,17 +90,19 @@ Function*
 #else
 FunctionIntersection*
 #endif
-FunctionIntersection::clone() const
+FunctionIntersection::clone(MemoryManagerType& theManager) const
 {
-	return new FunctionIntersection(*this);
+	return cloneFunction_1<FunctionIntersection>()( *this, theManager);
 }
 
 
 
-const XalanDOMString
-FunctionIntersection::getError() const
+const XalanDOMString&
+FunctionIntersection::getError(XalanDOMString& theResult) const
 {
-	return XalanMessageLoader::getMessage(XalanMessages::FunctionAcceptsTwoArguments_1Param,"intersection()");
+	XalanMessageLoader::getMessage(XalanMessages::FunctionAcceptsTwoArguments_1Param,theResult, "intersection()");
+
+    return theResult;
 }
 
 

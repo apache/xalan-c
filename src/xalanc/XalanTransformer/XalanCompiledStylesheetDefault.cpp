@@ -86,13 +86,15 @@ compileStylesheet(
 
 
 XalanCompiledStylesheetDefault::XalanCompiledStylesheetDefault(
+            MemoryManagerType&      theManager,
 			const XSLTInputSource&	theStylesheetSource,
 			XSLTEngineImpl&			theProcessor,
 			ErrorHandlerType*		theErrorHandler,
 			EntityResolverType*		theEntityResolver):
 	XalanCompiledStylesheet(),
-	m_stylesheetXPathFactory(),
+	m_stylesheetXPathFactory(theManager),
 	m_stylesheetConstructionContext(
+                theManager,
 				theProcessor,
 				m_stylesheetXPathFactory),
 	m_stylesheetRoot(compileStylesheet(
@@ -104,7 +106,31 @@ XalanCompiledStylesheetDefault::XalanCompiledStylesheetDefault(
 {
 }
 
+XalanCompiledStylesheetDefault*
+XalanCompiledStylesheetDefault::create(
+            MemoryManagerType&      theManager,
+			const XSLTInputSource&	theStylesheetSource,
+			XSLTEngineImpl&			theProcessor,
+			ErrorHandlerType*		theErrorHandler,
+			EntityResolverType*		theEntityResolver)
+{
+    typedef XalanCompiledStylesheetDefault ThisType;
 
+    XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
+
+    ThisType* theResult = theGuard.get();
+
+    new (theResult) ThisType(
+            theManager,
+			theStylesheetSource,
+			theProcessor,
+			theErrorHandler,
+			theEntityResolver);
+
+     theGuard.release();
+
+    return theResult;
+}
 
 XalanCompiledStylesheetDefault::~XalanCompiledStylesheetDefault()
 {

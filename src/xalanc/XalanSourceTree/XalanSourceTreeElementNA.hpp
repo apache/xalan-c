@@ -49,6 +49,7 @@ public:
 	 * @param theIndex The document-order index of the node.
 	 */
 	XalanSourceTreeElementNA(
+            MemoryManagerType&          theManager,
 			const XalanDOMString&		theTagName,
 			XalanSourceTreeDocument*	theOwnerDocument,
 			XalanNode*					theParentNode = 0,
@@ -101,12 +102,21 @@ public:
 	XalanSourceTreeElementNA*
 	clone(bool	deep) const
 	{
-		return new XalanSourceTreeElementNA(*this, deep);
+        MemoryManagerType& theManager = const_cast<XalanSourceTreeElementNA*>(this)->getMemoryManager();
+
+        return XalanSourceTreeElementNA::create(theManager, *this, deep);
 	}
 
 protected:
 
 	XalanSourceTreeElementNA(
+            MemoryManagerType&                  theManager,
+			const XalanSourceTreeElementNA&		theSource,
+			bool								deep = false);
+
+	static XalanSourceTreeElementNA*
+    create(
+            MemoryManagerType&                  theManager,
 			const XalanSourceTreeElementNA&		theSource,
 			bool								deep = false);
 

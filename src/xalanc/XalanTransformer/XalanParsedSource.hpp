@@ -22,6 +22,8 @@
 #include <xalanc/XalanTransformer/XalanTransformerDefinitions.hpp>
 
 
+#include <xalanc/Include/XalanMemoryManagement.hpp>
+
 
 // We're bringing in XalanDocument so that its derivation from XalanNode
 // is known...
@@ -97,7 +99,7 @@ public:
 	 * @return A pointer to a XalanParsedSourceHelper instance.
 	 */
 	virtual XalanParsedSourceHelper*
-	createHelper() const = 0;
+	createHelper(MemoryManagerType& theManager) const = 0;
 
 	/**
 	 * Get the URI for the parsed source, if any.

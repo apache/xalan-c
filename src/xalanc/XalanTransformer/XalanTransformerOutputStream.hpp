@@ -46,6 +46,7 @@ public:
 	 * @param theFlushHandler	a user defined (callback) function.
 	 */
     XalanTransformerOutputStream(
+        MemoryManagerType&          theManager,
 		void*						theOutputHandle, 
 		XalanOutputHandlerType		theOutputHandler,
 		XalanFlushHandlerType		theFlushHandler = 0);
@@ -58,8 +59,8 @@ protected:
 
 	virtual void
 	writeData(
-			const char*		theBuffer,
-			size_type		theBufferLength);
+			const char*		    theBuffer,
+			size_type		    theBufferLength);
 
 	virtual void
 	doFlush();

@@ -16,12 +16,15 @@
 #include "XalanSourceTreeElementNANS.hpp"
 
 
+#include <xalanc/Include/XalanMemMgrAutoPtr.hpp>
+
 
 XALAN_CPP_NAMESPACE_BEGIN
 
 
 
 XalanSourceTreeElementNANS::XalanSourceTreeElementNANS(
+            MemoryManagerType&          theManager,
 			const XalanDOMString&		theTagName,
 			const XalanDOMString&		theLocalName,
 			const XalanDOMString&		theNamespaceURI,
@@ -32,6 +35,7 @@ XalanSourceTreeElementNANS::XalanSourceTreeElementNANS(
 			XalanNode*					theNextSibling,
 			IndexType					theIndex) :
 	XalanSourceTreeElementNA(
+        theManager,
 		theTagName,
 		theOwnerDocument,
 		theParentNode,
@@ -53,13 +57,35 @@ XalanSourceTreeElementNANS::~XalanSourceTreeElementNANS()
 
 
 XalanSourceTreeElementNANS::XalanSourceTreeElementNANS(
+            MemoryManagerType&                  theManager,
 			const XalanSourceTreeElementNANS&	theSource,
 			bool								deep) :
-	XalanSourceTreeElementNA(theSource, deep),
+	XalanSourceTreeElementNA(theManager, theSource, deep),
 	m_localName(theSource.m_localName),
 	m_prefix(theSource.m_prefix),
 	m_namespaceURI(theSource.m_namespaceURI)
 {
+}
+
+XalanSourceTreeElementNANS*
+XalanSourceTreeElementNANS::create(
+            MemoryManagerType&                  theManager,
+			const XalanSourceTreeElementNANS&	theSource,
+			bool								deep) 
+{
+    typedef XalanSourceTreeElementNANS ThisType;
+
+    XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
+
+    ThisType* theResult = theGuard.get();
+
+    new (theResult) ThisType(theManager,
+                            theSource,
+                            deep);
+
+    theGuard.release();
+
+    return theResult;
 }
 
 

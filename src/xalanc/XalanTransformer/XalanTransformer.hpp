@@ -80,6 +80,7 @@ class XalanTransformerOutputStream;
 */
 class XALAN_TRANSFORMER_EXPORT XalanTransformer
 {
+
 public:
 	
 #if defined(XALAN_NO_STD_NAMESPACE)
@@ -88,10 +89,14 @@ public:
 	typedef std::ostream	StreamType;
 #endif
 
-	XalanTransformer();
+	XalanTransformer(MemoryManagerType& theManager = XalanMemMgrs::getDefaultXercesMemMgr());
 
 	virtual
 	~XalanTransformer();
+
+    MemoryManagerType& 
+    getMemoryManager();
+
 
 	/**
 	 * Initialize Xalan.
@@ -102,7 +107,7 @@ public:
 	 * initialization state, so you do not call it more than once.
 	 */
 	static void
-	initialize();
+	initialize(MemoryManagerType&  theManager = XalanMemMgrs::getDefaultXercesMemMgr());
 
 	/**
 	 * Terminate Xalan.
@@ -140,6 +145,9 @@ public:
 	static void
 	ICUCleanUp();
 
+
+	static void
+	ICUStartUp(MemoryManagerType&  theManager = XalanMemMgrs::getDefaultXercesMemMgr());
 
 	/**
 	 * Transform will apply the stylesheet source to the parsed xml source
@@ -397,7 +405,7 @@ public:
 	 * @return	a pointer to a XalanDocumentBuilder instance or 0 for failure.
 	 */
 	XalanDocumentBuilder*
-	createDocumentBuilder(const XalanDOMString&		theURI = XalanDOMString());
+	createDocumentBuilder(const XalanDOMString&		theURI = XalanDOMString(XalanMemMgrs::getDummyMemMgr()));
 
 	/**
 	 * Destroy a document builder created by a previous call to createDocumentBuilder().
@@ -828,9 +836,9 @@ public:
 
 	typedef XalanVector<const XalanCompiledStylesheet*>	CompiledStylesheetPtrVectorType;
 	typedef XalanVector<const XalanParsedSource*>		ParsedSourcePtrVectorType;
-	typedef XALAN_STD_QUALIFIER pair<XalanDOMString, XalanDOMString>		ParamPairType;
+	typedef XALAN_STD_QUALIFIER pair<XalanDOMString*, XalanDOMString*>		ParamPairType;
 	typedef XalanVector<ParamPairType>					ParamPairVectorType;
-	typedef XALAN_STD_QUALIFIER pair<XalanQNameByValue, Function*>			FunctionPairType;
+	typedef XALAN_STD_QUALIFIER pair<XalanQNameByValue*, Function*>			FunctionPairType;
 	typedef XalanVector<FunctionPairType>				FunctionParamPairVectorType;
 	typedef XalanVector<TraceListener*>					TraceListenerVectorType;
 
@@ -838,14 +846,15 @@ public:
 	{
 	public:
 		
-		EnsureFunctionsInstallation() : 
+		EnsureFunctionsInstallation(MemoryManagerType& theManager) : 
+          m_memoryManagement(theManager),
 		  m_release(false)
-		{	  
+		{	 
 		}
 
 		~EnsureFunctionsInstallation();
 
-		static void
+		void
 		install();
 
 		void
@@ -855,6 +864,7 @@ public:
 		}
 
 	private:
+        MemoryManagerType& m_memoryManagement;
 
 		bool m_release;
 	};
@@ -926,7 +936,65 @@ public:
 
 		XalanDocumentBuilder* const m_documentBuilder;
 	};
+    template <class T>
+#if defined(XALAN_NO_STD_NAMESPACE)
+    struct DeleteParamPairFunctor : public unary_function<const T&, void>
+#else
+    struct DeleteParamPairFunctor : public std::unary_function<const T&, void>
+#endif
+    {
+#if defined(XALAN_NO_STD_NAMESPACE)
+        typedef unary_function<const T&, void>	BaseClassType;
+#else
+        typedef std::unary_function<const T&, void>	BaseClassType;
+#endif
 
+        typedef typename BaseClassType::result_type		result_type;
+        typedef typename BaseClassType::argument_type	argument_type;
+
+        DeleteParamPairFunctor(MemoryManagerType&      theManager) :
+        m_memoryManager(theManager)
+        {
+        }
+
+        template<class T>
+        deletePtr(T* ptr)const
+        {
+            ptr->~T();
+        }
+
+        /**
+        * Delete the object pointed to by argument.
+        *
+        * @param thePointer pointer to object to be deleted
+        */
+        result_type
+            operator()(argument_type	thePair) const
+        {
+            T&  tmpPair = const_cast<T&>(thePair);
+
+            if (tmpPair.first != 0)
+            {
+                deletePtr(tmpPair.first);
+                
+                m_memoryManager.deallocate((void*)tmpPair.first);
+            }
+
+            if (tmpPair.second != 0)
+            {
+                deletePtr(tmpPair.second);
+                
+                m_memoryManager.deallocate((void*)tmpPair.second);
+            }            
+
+            
+        }
+
+    private:
+
+        MemoryManagerType& m_memoryManager;
+
+    };
 protected:
 
 private:
@@ -961,6 +1029,8 @@ private:
 
 
 	// Data members...
+    MemoryManagerType&                      m_memoryManager;
+
 	CompiledStylesheetPtrVectorType 		m_compiledStylesheets;
 
 	ParsedSourcePtrVectorType				m_parsedSources;

@@ -54,7 +54,8 @@ public:
 	virtual const XalanDOMString&
 	getUnparsedEntityURI(
 			const XalanDOMString&	theName,
-			const XalanDocument&	theDocument) const;
+			const XalanDocument&	theDocument,
+            XalanDOMString&         theResult) const;
 
 	virtual bool
 	isNodeAfter(

@@ -50,6 +50,7 @@ public:
 	 * @param theIndex The document-order index of the node.
 	 */
 	XalanSourceTreeElementANS(
+            MemoryManagerType&          theManager,
 			const XalanDOMString&		theTagName,
 			const XalanDOMString&		theLocalName,
 			const XalanDOMString&		theNamespaceURI,
@@ -85,10 +86,12 @@ public:
 protected:
 
 	XalanSourceTreeElementANS(
+            MemoryManagerType&                  theManager,
 			const XalanSourceTreeElementANS&	theSource,
 			bool								deep);
 
 	XalanSourceTreeElementANS(
+            MemoryManagerType&              theManager,
 			const XalanSourceTreeElementA&	theSource,
 			bool							deep);
 

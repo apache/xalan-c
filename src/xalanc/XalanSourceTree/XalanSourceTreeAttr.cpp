@@ -33,7 +33,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-static const XalanDOMString		s_emptyString;
+static const XalanDOMString		s_emptyString(XalanMemMgrs::getDummyMemMgr());
 
 
 

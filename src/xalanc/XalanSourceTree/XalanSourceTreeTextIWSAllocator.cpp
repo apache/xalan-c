@@ -23,8 +23,8 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XalanSourceTreeTextIWSAllocator::XalanSourceTreeTextIWSAllocator(size_type	theBlockCount) :
-	m_allocator(theBlockCount)
+XalanSourceTreeTextIWSAllocator::XalanSourceTreeTextIWSAllocator(MemoryManagerType&  theManager, size_type	theBlockCount) :
+	m_allocator(theManager, theBlockCount)
 {
 }
 

@@ -56,6 +56,7 @@ typedef XERCES_CPP_NAMESPACE_QUALIFIER SAX2XMLReader		SAX2XMLReaderType;
 
 class XALAN_XALANSOURCETREE_EXPORT  XalanSourceTreeParserLiaison : public XMLParserLiaison
 {
+    
 public:
 
 	/**
@@ -65,13 +66,19 @@ public:
 	 *
 	 * @deprecated This constructor is deprecated.  Use the next constructor instead.
 	 */
-	XalanSourceTreeParserLiaison(XalanSourceTreeDOMSupport&		theSupport);
+	XalanSourceTreeParserLiaison(MemoryManagerType&             theManager,
+                                XalanSourceTreeDOMSupport&		theSupport);
 
 	/**
 	 * Construct a XalanSourceTreeParserLiaison instance.
 	 */
-	XalanSourceTreeParserLiaison();
+	XalanSourceTreeParserLiaison(MemoryManagerType& theManager);
 
+    MemoryManagerType&
+    getMemoryManager()
+    {
+        return m_documentMap.getMemoryManager();
+    }
 	virtual
 	~XalanSourceTreeParserLiaison();
 
@@ -113,13 +120,13 @@ public:
 	virtual XalanDocument*
 	parseXMLStream(
 			const InputSourceType&	reader,
-			const XalanDOMString&	identifier = XalanDOMString());
+			const XalanDOMString&	identifier = XalanDOMString(XalanMemMgrs::getDummyMemMgr()));
 
 	virtual void
 	parseXMLStream(
 			const InputSourceType&	inputSource,
 			DocumentHandlerType&	handler,
-			const XalanDOMString&	identifier = XalanDOMString());
+			const XalanDOMString&	identifier = XalanDOMString(XalanMemMgrs::getDummyMemMgr()));
 
 	virtual void
 	destroyDocument(XalanDocument*	theDocument);
@@ -136,8 +143,8 @@ public:
 	virtual void
 	setUseValidation(bool	b);
 
-	virtual const XalanDOMString
-	getParserDescription() const;
+	virtual const XalanDOMString&
+	getParserDescription(XalanDOMString& theResult) const;
 
 	virtual EntityResolverType*
 	getEntityResolver() const;
@@ -161,9 +168,10 @@ public:
 	parseXMLStream(
 			const InputSourceType&	theInputSource,
 			ContentHandlerType&		theContentHandler,
+            const XalanDOMString&	theIdentifier,
 			DTDHandlerType*			theDTDHandler = 0,
-			LexicalHandlerType*		theLexicalHandler = 0,
-			const XalanDOMString&	theIdentifier = XalanDOMString());
+			LexicalHandlerType*		theLexicalHandler = 0
+			);
 
 	virtual DOMDocument_Type*
 	createDOMFactory();

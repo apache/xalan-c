@@ -29,6 +29,8 @@
 #include <xercesc/sax/SAXParseException.hpp>
 
 
+#include <xalanc/Include/XalanMemMgrHelper.hpp>
+
 
 #include <xalanc/XalanDOM/XalanDOMException.hpp>
 
@@ -99,44 +101,50 @@ const XSLTInputSource*	XalanTransformer::s_emptyInputSource = 0;
 const XSLTInit*			XalanTransformer::s_xsltInit = 0;
 
 
+static MemoryManagerType* s_initMemoryManager = 0;
 
-XalanTransformer::XalanTransformer():
-	m_compiledStylesheets(),
-	m_parsedSources(),
-	m_paramPairs(),
-	m_functionPairs(),
-	m_traceListeners(),
-	m_errorMessage(1, '\0'),
+XalanTransformer::XalanTransformer(MemoryManagerType& theManager):
+    m_memoryManager(theManager),
+	m_compiledStylesheets(m_memoryManager),
+	m_parsedSources(m_memoryManager),
+	m_paramPairs(m_memoryManager),
+	m_functionPairs(m_memoryManager),
+	m_traceListeners(m_memoryManager),
+	m_errorMessage(1, '\0', m_memoryManager),
 	m_useValidation(false),
 	m_entityResolver(0),
 	m_errorHandler(0),
-	m_externalSchemaLocation(),
-	m_externalNoNamespaceSchemaLocation(),
+	m_externalSchemaLocation(m_memoryManager),
+	m_externalNoNamespaceSchemaLocation(m_memoryManager),
 	m_problemListener(0),
 #if defined(XALAN_NO_STD_NAMESPACE)
 	m_warningStream(&cerr),
 #else
 	m_warningStream(&std::cerr),
 #endif
-	m_outputEncoding(),
-    m_poolAllTextNodes(XalanSourceTreeDocument::getPoolAllTextNodes()),
-	m_stylesheetExecutionContext(new StylesheetExecutionContextDefault)
+	m_outputEncoding(m_memoryManager),
+	m_stylesheetExecutionContext(StylesheetExecutionContextDefault::create(m_memoryManager))
 {
 #if defined(XALAN_USE_ICU)
 	// Create a collation function for the ICU, and have it
 	// cache collators...
-	XalanAutoPtr<ICUBridgeCollationCompareFunctor>	theICUFunctor(new ICUBridgeCollationCompareFunctor(true));
+	XalanMemMgrAutoPtr<ICUBridgeCollationCompareFunctor, true>	theICUFunctor(m_memoryManager, ICUBridgeCollationCompareFunctor::create(m_memoryManager, true));
 
 	m_stylesheetExecutionContext->installCollationCompareFunctor(theICUFunctor.get());
 
-	XalanAutoPtr<ICUFormatNumberFunctor>  theFormatNumberFunctor(new ICUFormatNumberFunctor());
+	XalanMemMgrAutoPtr<ICUFormatNumberFunctor, true>  theFormatNumberFunctor(m_memoryManager, ICUFormatNumberFunctor::create(m_memoryManager));
 	m_stylesheetExecutionContext->installFormatNumberFunctor(theFormatNumberFunctor.get());
 	theICUFunctor.release();
 	theFormatNumberFunctor.release();
+
 #endif
 }
 
-
+MemoryManagerType& 
+XalanTransformer::getMemoryManager()
+{
+    return m_memoryManager;
+}
 
 XalanTransformer::~XalanTransformer()
 {
@@ -145,41 +153,60 @@ XalanTransformer::~XalanTransformer()
 	// Clean up all entries in the compliledStylesheets vector.
 	for_each(m_compiledStylesheets.begin(),
 			 m_compiledStylesheets.end(),
-			 DeleteFunctor<XalanCompiledStylesheet>());
+			 DeleteFunctor<XalanCompiledStylesheet>(m_memoryManager));
 
 	// Clean up all entries in the compliledStylesheets vector.
 	for_each(m_parsedSources.begin(),
 			 m_parsedSources.end(),
-			 DeleteFunctor<XalanParsedSource>());
+			 DeleteFunctor<XalanParsedSource>(m_memoryManager));
 
 	for (FunctionParamPairVectorType::size_type i = 0; i < m_functionPairs.size(); ++i)
 	{
-		delete m_functionPairs[i].second;
+        if(m_functionPairs[i].second!= 0)
+		{
+			m_functionPairs[i].second->~Function();
+
+        	m_memoryManager.deallocate(m_functionPairs[i].second);
+		}
+	}
+
+    typedef ParamPairVectorType::iterator iterator;
+
+	for (iterator j = m_paramPairs.begin(); j != m_paramPairs.end(); ++j)
+	{
+
+        destroyObjWithMemMgr((*j).first, m_memoryManager);
+        destroyObjWithMemMgr((*j).second, m_memoryManager);
 	}
 
 #if defined(XALAN_USE_ICU)
 	// Uninstall the ICU collation compare functor, and destroy it...
-	delete m_stylesheetExecutionContext->uninstallCollationCompareFunctor();
-	delete m_stylesheetExecutionContext->uninstallFormatNumberFunctor();
+
+    destroyObjWithMemMgr( m_stylesheetExecutionContext->uninstallCollationCompareFunctor(), m_memoryManager);
+	destroyObjWithMemMgr( m_stylesheetExecutionContext->uninstallFormatNumberFunctor(), m_memoryManager);
 #endif
 
-	delete m_stylesheetExecutionContext;
+	m_stylesheetExecutionContext->~StylesheetExecutionContextDefault();
+
+    m_memoryManager.deallocate(m_stylesheetExecutionContext);
 }
 
 
-
 void
-XalanTransformer::initialize()
+XalanTransformer::initialize(MemoryManagerType&  theManager)
 {
 	// Initialize Xalan. 
-	XalanAutoPtr<XSLTInit>			initGuard(new XSLTInit);
-	XalanAutoPtr<XSLTInputSource>	inputSourceGuard(new XSLTInputSource);
-	EnsureFunctionsInstallation		installGuard; 
-	installGuard.install();
+    XalanMemMgrAutoPtr<XSLTInit, true>			initGuard(theManager, XSLTInit::create(theManager));
+	XalanAutoPtr<XSLTInputSource>	inputSourceGuard(new (&theManager) XSLTInputSource);
+	EnsureFunctionsInstallation		instalGuard(theManager); 
 
-	installGuard.release();
-	s_xsltInit = initGuard.release();
+	instalGuard.install();
+
+	instalGuard.release();
+	s_xsltInit = initGuard.releasePtr();
 	s_emptyInputSource = inputSourceGuard.release();
+
+    s_initMemoryManager = &theManager;
 }
 
 
@@ -187,20 +214,19 @@ XalanTransformer::initialize()
 void
 XalanTransformer::terminate()
 {
+    assert( s_initMemoryManager!= 0 );
+
 	{
-		EnsureFunctionsInstallation		uninstalGuard;
+		EnsureFunctionsInstallation		uninstalGuard(*s_initMemoryManager);
 	}
 
-#if defined(XALAN_CANNOT_DELETE_CONST)
-	delete (XSLTInputSource*) s_emptyInputSource;
-	delete (XSLTInit*) s_xsltInit;
-#else
 	delete s_emptyInputSource;
-	delete s_xsltInit;
-#endif
+
+    destroyObjWithMemMgr(s_xsltInit, *s_initMemoryManager);
 
 	s_emptyInputSource = 0;
 	s_xsltInit = 0;
+    s_initMemoryManager = 0;
 
 #if defined(XALAN_USE_ICU)
 	ICUBridgeCleanup::cleanup();
@@ -217,6 +243,17 @@ XalanTransformer::ICUCleanUp()
 #endif
 }
 
+#if defined(XALAN_USE_ICU)
+void
+ICUStartUp(MemoryManagerType&  theManager)
+{
+    ICUBridgeCleanup::startup(theManager);
+}
+#else
+ICUStartUp(MemoryManagerType&  /*theManager*/)
+{
+}
+#endif
 
 
 static void
@@ -315,11 +352,11 @@ XalanTransformer::transform(
 			XalanFlushHandlerType	theFlushHandler)
 {
 	// Set to output target to the callback 
-	XalanTransformerOutputStream	theOutputStream(theOutputHandle, theOutputHandler, theFlushHandler);
+	XalanTransformerOutputStream	theOutputStream(m_memoryManager, theOutputHandle, theOutputHandler, theFlushHandler);
 
 	XalanOutputStreamPrintWriter	thePrintWriter(theOutputStream);
 
-	XSLTResultTarget				theResultTarget(&thePrintWriter);
+	XSLTResultTarget				theResultTarget(&thePrintWriter, m_memoryManager);
 
 	// Do the transformation...
 	return transform(
@@ -339,11 +376,11 @@ XalanTransformer::transform(
 			XalanFlushHandlerType			theFlushHandler)
 {
 	// Set to output target to the callback 
-	XalanTransformerOutputStream	theOutputStream(theOutputHandle, theOutputHandler, theFlushHandler);
+	XalanTransformerOutputStream	theOutputStream(m_memoryManager, theOutputHandle, theOutputHandler, theFlushHandler);
 
 	XalanOutputStreamPrintWriter	thePrintWriter(theOutputStream);
 
-	XSLTResultTarget				theResultTarget(&thePrintWriter);
+	XSLTResultTarget				theResultTarget(&thePrintWriter, m_memoryManager);
 
 	// Do the transformation...
 	return transform(
@@ -364,11 +401,11 @@ XalanTransformer::transform(
 	assert(s_emptyInputSource != 0);
 
 	// Set to output target to the callback 
-	XalanTransformerOutputStream	theOutputStream(theOutputHandle, theOutputHandler, theFlushHandler);
+	XalanTransformerOutputStream	theOutputStream(m_memoryManager, theOutputHandle, theOutputHandler, theFlushHandler);
 
 	XalanOutputStreamPrintWriter	thePrintWriter(theOutputStream);
 
-	XSLTResultTarget				theResultTarget(&thePrintWriter);
+	XSLTResultTarget				theResultTarget(&thePrintWriter, m_memoryManager);
 
 	// Do the transformation...
 	return transform(
@@ -412,7 +449,7 @@ FormatSAXParseException(
 			const SAXParseException&	theException,
 			CharVectorType&				theErrorMessage)
 {
-	XalanDOMString	theBuffer;
+    XalanDOMString	theBuffer(theErrorMessage.getMemoryManager());
 
 	FormatSAXParseException(
 				theException,
@@ -428,12 +465,16 @@ FormatXalanDOMException(
 			const XalanDOMException&	theException,
 			CharVectorType&				theErrorMessage)
 {
-	XalanDOMString	theBuffer;
+    XalanDOMString	theBuffer(theErrorMessage.getMemoryManager()), theResult(theErrorMessage.getMemoryManager());
 
-	append(theBuffer, LongToDOMString(long(theException.getExceptionCode())));
+    LongToDOMString(long(theException.getExceptionCode()), theResult);
+	append(theBuffer, theResult);
 
 	append(theBuffer, XalanDOMChar(XalanUnicode::charFullStop));
-	XalanDOMString	theMessage = XalanMessageLoader::getMessage(XalanMessages::XalanDOMExceptionCaught_1Param,theBuffer);
+
+	XalanDOMString	theMessage (theErrorMessage.getMemoryManager());
+    
+    XalanMessageLoader::getMessage(XalanMessages::XalanDOMExceptionCaught_1Param, theMessage, theBuffer);
 
 	TranscodeToLocalCodePage(theMessage, theErrorMessage, true);
 }
@@ -449,7 +490,7 @@ XalanTransformer::compileStylesheet(
 	m_errorMessage.resize(1, '\0');
 
 	// Store error messages from problem listener.
-	XalanDOMString	theErrorMessage;
+	XalanDOMString	theErrorMessage(m_memoryManager);
 
 	int 	theResult = 0;
 
@@ -458,7 +499,7 @@ XalanTransformer::compileStylesheet(
 		// Create some support objects that are necessary for running the processor...
 		XalanSourceTreeDOMSupport		theDOMSupport;
 
-		XalanSourceTreeParserLiaison	theParserLiaison(theDOMSupport);
+		XalanSourceTreeParserLiaison	theParserLiaison(m_memoryManager, theDOMSupport);
 
 		theParserLiaison.setEntityResolver(m_entityResolver);
 		theParserLiaison.setErrorHandler(m_errorHandler);
@@ -467,14 +508,15 @@ XalanTransformer::compileStylesheet(
 		theDOMSupport.setParserLiaison(&theParserLiaison);
 
 		// Create some more support objects...
-		XSLTProcessorEnvSupportDefault	theXSLTProcessorEnvSupport;
+		XSLTProcessorEnvSupportDefault	theXSLTProcessorEnvSupport(m_memoryManager);
 
-		XObjectFactoryDefault	theXObjectFactory;
+		XObjectFactoryDefault	theXObjectFactory(m_memoryManager);
 
-		XPathFactoryBlock 		theXPathFactory;
+		XPathFactoryBlock 		theXPathFactory(m_memoryManager);
 
 		// Create a processor...
 		XSLTEngineImpl	theProcessor(
+                m_memoryManager,
 				theParserLiaison,
 				theXSLTProcessorEnvSupport,
 				theDOMSupport,
@@ -484,7 +526,7 @@ XalanTransformer::compileStylesheet(
 		// Create a problem listener and send output to a XalanDOMString.
 		DOMStringPrintWriter	thePrintWriter(theErrorMessage);
 
-		XalanTransformerProblemListener		theProblemListener(m_warningStream, &thePrintWriter);
+		XalanTransformerProblemListener		theProblemListener( m_memoryManager, m_warningStream, &thePrintWriter);
 
 		if (m_problemListener == 0)
 		{
@@ -500,7 +542,8 @@ XalanTransformer::compileStylesheet(
 
 		// Create a new XalanCompiledStylesheet.
 		theCompiledStylesheet =
-			new XalanCompiledStylesheetDefault(
+			XalanCompiledStylesheetDefault::create(
+                        m_memoryManager,
 						theStylesheetSource,
 						theProcessor,
 						m_errorHandler,
@@ -569,12 +612,17 @@ XalanTransformer::compileStylesheet(
 		}
 		else
 		{
-			XalanDOMString	theBuffer;
-			append(theBuffer, LongToDOMString(long(e.getExceptionCode())));
+			XalanDOMString	theBuffer(m_memoryManager), longStr(m_memoryManager);
+
+            LongToDOMString(long(e.getExceptionCode()), longStr);
+
+			append(theBuffer, longStr);
 
 			append(theBuffer, XalanDOMChar(XalanUnicode::charFullStop));
 
-			XalanDOMString theMessage = XalanMessageLoader::getMessage(XalanMessages::XalanDOMExceptionCaught_1Param,theBuffer);
+			XalanDOMString theMessage(m_memoryManager);
+             
+            XalanMessageLoader::getMessage(XalanMessages::XalanDOMExceptionCaught_1Param, theMessage, theBuffer);
 
 			TranscodeToLocalCodePage(theMessage, m_errorMessage, true);
 		}
@@ -600,11 +648,13 @@ XalanTransformer::destroyStylesheet(const XalanCompiledStylesheet*	theStylesheet
 
 	if (i == m_compiledStylesheets.end())
 	{
-		XalanDOMString theStylesheetErrorMessage = XalanMessageLoader::getMessage(XalanMessages::InvalidCompiledStylesheetProvided);
+		XalanDOMString theStylesheetErrorMessage(m_memoryManager);
+            
+        XalanMessageLoader::getMessage(XalanMessages::InvalidCompiledStylesheetProvided, theStylesheetErrorMessage);
 
 		try
 		{
-			m_errorMessage = theStylesheetErrorMessage.transcode();
+            theStylesheetErrorMessage.transcode(m_errorMessage);
 		}
 		catch(...)
 		{
@@ -629,12 +679,9 @@ XalanTransformer::destroyStylesheet(const XalanCompiledStylesheet*	theStylesheet
 	{
 		m_compiledStylesheets.erase(i);
 
-#if defined(XALAN_CANNOT_DELETE_CONST)
-		delete (XalanCompiledStylesheet*) theStylesheet;
-#else
-		delete theStylesheet;
-#endif
+		theStylesheet ->~XalanCompiledStylesheet() ;
 
+        m_memoryManager.deallocate((void*) theStylesheet);
 		return 0;
 	}
 }
@@ -661,7 +708,8 @@ XalanTransformer::parseSource(
 		if(useXercesDOM == true)
 		{
 			theParsedSource =
-				new XercesDOMParsedSource(
+				XercesDOMParsedSource::create(
+                        m_memoryManager,
 						theInputSource,
 						m_useValidation,
 						m_errorHandler,
@@ -672,14 +720,14 @@ XalanTransformer::parseSource(
 		else
 		{
 			theParsedSource =
-				new XalanDefaultParsedSource(
+				XalanDefaultParsedSource::create(
+                        m_memoryManager,
 						theInputSource,
 						m_useValidation,
 						m_errorHandler,
 						m_entityResolver,
 						getExternalSchemaLocation(),
-						getExternalNoNamespaceSchemaLocation(),
-                        m_poolAllTextNodes);
+						getExternalNoNamespaceSchemaLocation());
 		}
 
 		// Store it in a vector.
@@ -687,7 +735,11 @@ XalanTransformer::parseSource(
 	}
 	catch(const XSLException&	e)
 	{
-		TranscodeToLocalCodePage(e.defaultFormat(), m_errorMessage, true);
+        XalanDOMString theBuffer(m_memoryManager);
+
+        e.defaultFormat(theBuffer);
+
+		TranscodeToLocalCodePage(theBuffer, m_errorMessage, true);
 
 		theResult = -1;
 	}
@@ -734,11 +786,13 @@ XalanTransformer::destroyParsedSource(const XalanParsedSource*	theParsedSource)
 
 	if (i == m_parsedSources.end())
 	{
-		XalanDOMString theParserErrorMessage = XalanMessageLoader::getMessage(XalanMessages::InvalidParsedSourceProvided);
+		XalanDOMString theParserErrorMessage(m_memoryManager);
+        
+        XalanMessageLoader::getMessage(XalanMessages::InvalidParsedSourceProvided, theParserErrorMessage);
 
 		try
 		{
-			m_errorMessage = theParserErrorMessage.transcode();
+			 theParserErrorMessage.transcode(m_errorMessage);
 		}
 		catch(...)
 		{
@@ -762,12 +816,14 @@ XalanTransformer::destroyParsedSource(const XalanParsedSource*	theParsedSource)
 	{
 		m_parsedSources.erase(i);
 
-#if defined(XALAN_CANNOT_DELETE_CONST)
-		delete (XalanParsedSource*) theParsedSource;
-#else
-		delete theParsedSource;
-#endif
+        XalanParsedSource* sourceToDelete = const_cast<XalanParsedSource*>(theParsedSource);
 
+        if(sourceToDelete != 0)
+        {
+            sourceToDelete->~XalanParsedSource();
+
+            getMemoryManager().deallocate((void*)sourceToDelete);
+        }
 		return 0;
 	}
 }
@@ -780,7 +836,9 @@ XalanTransformer::setStylesheetParam(
 			const XalanDOMString&	expression)
 {
 	// Store the stylesheet parameter in a vector.
-	m_paramPairs.push_back(ParamPairType(key,  expression));
+
+	m_paramPairs.push_back(ParamPairType(cloneObjWithMemMgr(key,m_memoryManager),
+                                         cloneObjWithMemMgr (expression, m_memoryManager)));
 }
 
 
@@ -790,7 +848,8 @@ XalanTransformer::setStylesheetParam(
 			const char*		key,
 			const char*		expression)
 {
-	setStylesheetParam(XalanDOMString(key), XalanDOMString(expression));
+
+	setStylesheetParam(XalanDOMString(key, m_memoryManager), XalanDOMString(expression, m_memoryManager));
 }
 
 
@@ -823,9 +882,10 @@ XalanTransformer::removeTraceListener(TraceListener*	theTraceListener)
 XalanDocumentBuilder*
 XalanTransformer::createDocumentBuilder(const XalanDOMString&	theURI)
 {
+
 	m_parsedSources.reserve(m_parsedSources.size() + 1);
 
-	XalanDocumentBuilder* const 	theNewBuilder = new XalanDefaultDocumentBuilder(theURI);
+    XalanDocumentBuilder* const 	theNewBuilder = XalanDefaultDocumentBuilder::create( m_memoryManager, theURI);
 
 	m_parsedSources.push_back(theNewBuilder);
 
@@ -848,7 +908,8 @@ XalanTransformer::installExternalFunction(
 			const XalanDOMString&	functionName,
 			const Function& 		function)
 {
-	m_functionPairs.push_back(FunctionPairType(XalanQNameByValue(theNamespace, functionName), function.clone()));
+    m_functionPairs.push_back(FunctionPairType(XalanQNameByValue::create(theNamespace, functionName, m_memoryManager), 
+                                                function.clone(m_memoryManager)));
 }
 
 
@@ -874,9 +935,12 @@ XalanTransformer::uninstallExternalFunction(
 {
 	for (FunctionParamPairVectorType::size_type i = 0; i < m_functionPairs.size(); ++i)
 	{
-		if(XalanQNameByReference(theNamespace, functionName).equals(m_functionPairs[i].first))
+		if(m_functionPairs[i].first != 0 &&
+            XalanQNameByReference(theNamespace, functionName).equals(* (m_functionPairs[i].first)))
 		{
-			delete m_functionPairs[i].second;
+            destroyObjWithMemMgr( m_functionPairs[i].first, m_memoryManager);
+
+			destroyObjWithMemMgr( m_functionPairs[i].second, m_memoryManager);
 
 			m_functionPairs.erase(m_functionPairs.begin() + i); 	
 		}
@@ -1044,6 +1108,21 @@ XalanTransformer::reset()
 		m_stylesheetExecutionContext->reset();
 
 		// Clear the ParamPairVectorType.
+        XALAN_USING_STD(for_each)
+
+/*        for_each(m_paramPairs.begin(),
+                m_paramPairs.end(),
+                DeleteParamPairFunctor<ParamPairType>(m_memoryManager));
+*/
+        typedef ParamPairVectorType::iterator iterator;
+
+        for (iterator j = m_paramPairs.begin(); j != m_paramPairs.end(); ++j)
+        {
+    
+            destroyObjWithMemMgr((*j).first, m_memoryManager);
+            destroyObjWithMemMgr((*j).second, m_memoryManager);
+        }     
+
 		m_paramPairs.clear();
 	}
 	catch(...)
@@ -1075,7 +1154,7 @@ XalanTransformer::doTransform(
 	m_errorMessage.resize(1, '\0');
 
 	// Store error messages from problem listener.
-	XalanDOMString	theErrorMessage;
+	XalanDOMString	theErrorMessage(m_memoryManager);
 
 	try
 	{
@@ -1083,7 +1162,8 @@ XalanTransformer::doTransform(
 		assert(theSourceDocument != 0);
 
 		// Create the helper object that is necessary for running the processor...
-		XalanAutoPtr<XalanParsedSourceHelper>	theHelper(theParsedXML.createHelper());
+		XalanMemMgrAutoPtr<XalanParsedSourceHelper, true>	theHelper(m_memoryManager, theParsedXML.createHelper(m_memoryManager));
+
 		assert(theHelper.get() != 0);
 
 		DOMSupport& 		theDOMSupport = theHelper->getDOMSupport();
@@ -1097,7 +1177,7 @@ XalanTransformer::doTransform(
 		theParserLiaison.setUseValidation(m_useValidation);
 
 		// Create some more support objects...
-		XSLTProcessorEnvSupportDefault	theXSLTProcessorEnvSupport;
+		XSLTProcessorEnvSupportDefault	theXSLTProcessorEnvSupport(m_memoryManager);
 
 		const XalanDOMString&	theSourceURI = theParsedXML.getURI();
 
@@ -1110,19 +1190,23 @@ XalanTransformer::doTransform(
 		{
 			for (FunctionParamPairVectorType::size_type i = 0; i < m_functionPairs.size(); ++i)
 			{
+                assert( m_functionPairs[i].first != 0);
+                assert( m_functionPairs[i].second != 0);
+
 				theXSLTProcessorEnvSupport.installExternalFunctionLocal(
-						m_functionPairs[i].first.getNamespace(),
-						m_functionPairs[i].first.getLocalPart(),
+						m_functionPairs[i].first->getNamespace(),
+						m_functionPairs[i].first->getLocalPart(),
 						*m_functionPairs[i].second);
 			}
 		}
 
-		XObjectFactoryDefault	theXObjectFactory;
+		XObjectFactoryDefault	theXObjectFactory(m_memoryManager);
 
-		XPathFactoryBlock 		theXPathFactory;
+		XPathFactoryBlock 		theXPathFactory(m_memoryManager);
 
 		// Create a processor...
 		XSLTEngineImpl	theProcessor(
+                    m_memoryManager,
 					theParserLiaison,
 					theXSLTProcessorEnvSupport,
 					theDOMSupport,
@@ -1146,7 +1230,7 @@ XalanTransformer::doTransform(
 		// pushing params, since there could be a problem resolving a QName.
 		DOMStringPrintWriter	thePrintWriter(theErrorMessage);
 
-		XalanTransformerProblemListener		theProblemListener(m_warningStream, &thePrintWriter);
+		XalanTransformerProblemListener		theProblemListener(m_memoryManager, m_warningStream, &thePrintWriter);
 
 		if (m_problemListener == 0)
 		{
@@ -1161,9 +1245,12 @@ XalanTransformer::doTransform(
 			// Set the parameters if any.
 			for (ParamPairVectorType::size_type i = 0; i < m_paramPairs.size(); ++i)
 			{
+                assert ( m_paramPairs[i].first != 0);
+                assert ( m_paramPairs[i].second != 0);
+
 				theProcessor.setStylesheetParam(
-						m_paramPairs[i].first,
-						m_paramPairs[i].second);
+						* (m_paramPairs[i].first),
+						* (m_paramPairs[i].second));
 			}
 		}
 
@@ -1177,7 +1264,7 @@ XalanTransformer::doTransform(
 
 		// We may need to change the output encoding, so
 		// we make a copy of the result target.
-		XSLTResultTarget	tempResultTarget(theResultTarget);
+		XSLTResultTarget	tempResultTarget(theResultTarget, m_memoryManager);
 
 		if (tempResultTarget.getEncoding().length() == 0 && m_outputEncoding.length() != 0)
 		{
@@ -1204,6 +1291,7 @@ XalanTransformer::doTransform(
 			// Create a stylesheet construction context, 
 			// using the stylesheet's factory support objects.
 			StylesheetConstructionContextDefault	theStylesheetConstructionContext(
+                            m_memoryManager,
 							theProcessor,
 							theXPathFactory);
 
@@ -1286,27 +1374,26 @@ XalanTransformer::doTransform(
 void
 XalanTransformer::EnsureFunctionsInstallation::install()
 {
-
-	XalanExtensionsInstaller::installGlobal();
-	XalanEXSLTCommonFunctionsInstaller::installGlobal();
-	XalanEXSLTDynamicFunctionsInstaller::installGlobal();
-	XalanEXSLTMathFunctionsInstaller::installGlobal();
-	XalanEXSLTSetFunctionsInstaller::installGlobal();
-	XalanEXSLTStringFunctionsInstaller::installGlobal();
-	XalanEXSLTDateTimeFunctionsInstaller::installGlobal();
+	XalanExtensionsInstaller::installGlobal(m_memoryManagement);
+	XalanEXSLTCommonFunctionsInstaller::installGlobal(m_memoryManagement);
+	XalanEXSLTDynamicFunctionsInstaller::installGlobal(m_memoryManagement);
+	XalanEXSLTMathFunctionsInstaller::installGlobal(m_memoryManagement);
+	XalanEXSLTSetFunctionsInstaller::installGlobal(m_memoryManagement);
+	XalanEXSLTStringFunctionsInstaller::installGlobal(m_memoryManagement);
+	XalanEXSLTDateTimeFunctionsInstaller::installGlobal(m_memoryManagement);
 }
 
 XalanTransformer::EnsureFunctionsInstallation::~EnsureFunctionsInstallation()
 {
-	if ( !m_release )
+	if ( !m_release)
 	{
-		XalanExtensionsInstaller::uninstallGlobal();
-		XalanEXSLTCommonFunctionsInstaller::uninstallGlobal();
-		XalanEXSLTDynamicFunctionsInstaller::uninstallGlobal();
-		XalanEXSLTMathFunctionsInstaller::uninstallGlobal();
-		XalanEXSLTSetFunctionsInstaller::uninstallGlobal();
-		XalanEXSLTStringFunctionsInstaller::uninstallGlobal();
-		XalanEXSLTDateTimeFunctionsInstaller::uninstallGlobal();
+		XalanExtensionsInstaller::uninstallGlobal(m_memoryManagement);
+		XalanEXSLTCommonFunctionsInstaller::uninstallGlobal(m_memoryManagement);
+		XalanEXSLTDynamicFunctionsInstaller::uninstallGlobal(m_memoryManagement);
+		XalanEXSLTMathFunctionsInstaller::uninstallGlobal(m_memoryManagement);
+		XalanEXSLTSetFunctionsInstaller::uninstallGlobal(m_memoryManagement);
+		XalanEXSLTStringFunctionsInstaller::uninstallGlobal(m_memoryManagement);
+		XalanEXSLTDateTimeFunctionsInstaller::uninstallGlobal(m_memoryManagement);
 
 #if defined(XALAN_USE_ICU)
 		XPath::uninstallFunction(XPathFunctionTable::s_formatNumber);

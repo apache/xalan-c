@@ -40,9 +40,12 @@ class XALAN_TRANSFORMER_EXPORT XercesDOMParsedSourceHelper : public XalanParsedS
 {
 public:
 
-	XercesDOMParsedSourceHelper();
+	XercesDOMParsedSourceHelper(MemoryManagerType& theManager);
 
 	~XercesDOMParsedSourceHelper();
+
+    static XercesDOMParsedSourceHelper*
+    create(MemoryManagerType& theManager);
 
 	virtual DOMSupport&
 	getDOMSupport();
@@ -68,6 +71,17 @@ class XALAN_TRANSFORMER_EXPORT XercesDOMParsedSource : public XalanParsedSource
 public:
 	
 	XercesDOMParsedSource(
+            MemoryManagerType&      theManager,
+			const InputSourceType&	theInputSource,
+			bool					fValidate = false,
+			ErrorHandlerType*		theErrorHandler = 0,
+			EntityResolverType*		theEntityResolver = 0,
+			const XalanDOMChar*		theExternalSchemaLocation = 0,
+			const XalanDOMChar*		theExternalNoNamespaceSchemaLocation = 0);
+
+	static XercesDOMParsedSource*
+    create(
+            MemoryManagerType&      theManager,
 			const InputSourceType&	theInputSource,
 			bool					fValidate = false,
 			ErrorHandlerType*		theErrorHandler = 0,
@@ -82,7 +96,7 @@ public:
 	getDocument() const;
 
 	virtual XalanParsedSourceHelper*
-	createHelper() const;
+	createHelper(MemoryManagerType& theManager) const;
 
 	virtual const XalanDOMString&
 	getURI() const;

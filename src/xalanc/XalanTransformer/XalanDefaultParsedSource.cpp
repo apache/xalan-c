@@ -66,49 +66,68 @@ XalanDefaultParsedSourceDOMSupport::reset()
 
 const XalanDOMString&
 XalanDefaultParsedSourceDOMSupport::getUnparsedEntityURI(
-            const XalanDOMString&   theName,
-            const XalanDocument&    theDocument) const
+			const XalanDOMString&	theName,
+			const XalanDocument&	theDocument,
+            XalanDOMString&         theResult ) const
 {
-    // Check the wrapped XalanSourceTreeDOMSupport instance...
-    const XalanDOMString&   theURI =
-            m_domSupport.getUnparsedEntityURI(
-                    theName,
-                    theDocument);
+	// Check the wrapped XalanSourceTreeDOMSupport instance...
+	const XalanDOMString&	theURI =
+			m_domSupport.getUnparsedEntityURI(
+					theName,
+					theDocument,
+                    theResult);
 
-    if (length(theURI) != 0)
-    {
-        return theURI;
-    }
-    else
-    {
-        // Chain up to our parent...
-        return XalanSourceTreeDOMSupport::getUnparsedEntityURI(
-                    theName,
-                    theDocument);
-    }
+	if (length(theURI) != 0)
+	{
+		return theURI;
+	}
+	else
+	{
+		// Chain up to our parent...
+		return XalanSourceTreeDOMSupport::getUnparsedEntityURI(
+					theName,
+					theDocument,
+                    theResult);
+	}
 }
 
 
 
 bool
 XalanDefaultParsedSourceDOMSupport::isNodeAfter(
-            const XalanNode&    node1,
-            const XalanNode&    node2) const
+			const XalanNode&	node1,
+			const XalanNode&	node2) const
 {
-    return m_domSupport.isNodeAfter(
-                    node1, 
-                    node2);
+	return m_domSupport.isNodeAfter(
+					node1, 
+					node2);
 }
 
 
 
-XalanDefaultParsedSourceHelper::XalanDefaultParsedSourceHelper(const XalanSourceTreeDOMSupport&     theSourceDOMSupport) :
-    m_parserLiaison(),
-    m_domSupport(m_parserLiaison, theSourceDOMSupport)
+XalanDefaultParsedSourceHelper::XalanDefaultParsedSourceHelper(const XalanSourceTreeDOMSupport&		theSourceDOMSupport,
+                                                               MemoryManagerType&                   theManager) :
+	m_parserLiaison(theManager),
+	m_domSupport(m_parserLiaison, theSourceDOMSupport)
 {
 }
 
+XalanDefaultParsedSourceHelper*
+XalanDefaultParsedSourceHelper::create(const XalanSourceTreeDOMSupport&		theSourceDOMSupport,
+                                       MemoryManagerType&                   theManager)
+{
+    typedef XalanDefaultParsedSourceHelper ThisType;
 
+    XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
+
+    ThisType* theResult = theGuard.get();
+
+    new (theResult) ThisType(theSourceDOMSupport, theManager);
+                             
+    theGuard.release();
+
+    return theResult;
+}
 
 XalanDefaultParsedSourceHelper::~XalanDefaultParsedSourceHelper()
 {
@@ -119,7 +138,7 @@ XalanDefaultParsedSourceHelper::~XalanDefaultParsedSourceHelper()
 DOMSupport&
 XalanDefaultParsedSourceHelper::getDOMSupport()
 {
-    return m_domSupport;
+	return m_domSupport;
 }
 
 
@@ -127,56 +146,88 @@ XalanDefaultParsedSourceHelper::getDOMSupport()
 XMLParserLiaison&
 XalanDefaultParsedSourceHelper::getParserLiaison()
 {
-    return m_parserLiaison;
+	return m_parserLiaison;
 }
 
 
 
 XalanDefaultParsedSource::XalanDefaultParsedSource(
-            const InputSourceType&  theInputSource,
-            bool                    fValidate,
-            ErrorHandlerType*       theErrorHandler,
-            EntityResolverType*     theEntityResolver,
-            const XalanDOMChar*     theExternalSchemaLocation,
-            const XalanDOMChar*     theExternalNoNamespaceSchemaLocation,
+			const InputSourceType&	theInputSource,
+            MemoryManagerType&      theManager,
+			bool					fValidate,
+			ErrorHandlerType*		theErrorHandler,
+			EntityResolverType*		theEntityResolver,
+			const XalanDOMChar*		theExternalSchemaLocation,
+			const XalanDOMChar*		theExternalNoNamespaceSchemaLocation,
             bool                    fPoolAllTextNodes) :
-    XalanParsedSource(),
-    m_parserLiaison(),
-    m_domSupport(m_parserLiaison),
-    m_parsedSource(0)
+	XalanParsedSource(),
+	m_parserLiaison(theManager),
+	m_domSupport(m_parserLiaison),
+	m_parsedSource(0),
+    m_uri(theManager)
 {
-    m_parserLiaison.setUseValidation(fValidate);
-    m_parserLiaison.setEntityResolver(theEntityResolver);
-    m_parserLiaison.setErrorHandler(theErrorHandler);
-    m_parserLiaison.setExternalSchemaLocation(theExternalSchemaLocation);
-    m_parserLiaison.setExternalNoNamespaceSchemaLocation(theExternalNoNamespaceSchemaLocation);
+	m_parserLiaison.setUseValidation(fValidate);
+	m_parserLiaison.setEntityResolver(theEntityResolver);
+	m_parserLiaison.setErrorHandler(theErrorHandler);
+	m_parserLiaison.setExternalSchemaLocation(theExternalSchemaLocation);
+	m_parserLiaison.setExternalNoNamespaceSchemaLocation(theExternalNoNamespaceSchemaLocation);
     m_parserLiaison.setPoolAllText(fPoolAllTextNodes);
 
-    m_parsedSource = m_parserLiaison.mapDocument(m_parserLiaison.parseXMLStream(theInputSource));
-    assert(m_parsedSource != 0);
+	m_parsedSource = m_parserLiaison.mapDocument(m_parserLiaison.parseXMLStream(theInputSource));
+	assert(m_parsedSource != 0);
 
-    m_domSupport.setParserLiaison(&m_parserLiaison);
+	m_domSupport.setParserLiaison(&m_parserLiaison);
 
-    const XalanDOMChar* const   theSystemID = theInputSource.getSystemId();
+	const XalanDOMChar* const	theSystemID = theInputSource.getSystemId();
 
-    if (theSystemID != 0)
-    {
-        try
-        {
-            m_uri = URISupport::getURLStringFromString(theSystemID);
-        }
-        catch(const XERCES_CPP_NAMESPACE_QUALIFIER XMLException&)
-        {
-            // Assume that any exception here relates to get the url from
-            // the system ID.  We'll assume that it's just a fake base identifier
-            // since the parser would have thrown an error if the system ID
-            // wasn't resolved.
-            m_uri = theSystemID;
-        }
-    }
+	if (theSystemID != 0)
+	{
+		try
+		{
+			URISupport::getURLStringFromString(theSystemID, m_uri);
+		}
+		catch(const XERCES_CPP_NAMESPACE_QUALIFIER XMLException&)
+		{
+			// Assume that any exception here relates to get the url from
+			// the system ID.  We'll assume that it's just a fake base identifier
+			// since the parser would have thrown an error if the system ID
+			// wasn't resolved.
+			m_uri = theSystemID;
+		}
+	}
 }
 
+XalanDefaultParsedSource*
+XalanDefaultParsedSource::create(
+            MemoryManagerType&      theManager,
+			const InputSourceType&	theInputSource,
+			bool					fValidate,
+			ErrorHandlerType*		theErrorHandler,
+			EntityResolverType*		theEntityResolver,
+			const XalanDOMChar*		theExternalSchemaLocation,
+			const XalanDOMChar*		theExternalNoNamespaceSchemaLocation,
+            bool                    fPoolAllTextNodes)
+{
+    typedef XalanDefaultParsedSource ThisType;
 
+    XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
+
+    ThisType* theResult = theGuard.get();
+
+    new (theResult) ThisType(
+			                theInputSource,
+                            theManager,
+			                fValidate,
+			                theErrorHandler,
+			                theEntityResolver,
+			                theExternalSchemaLocation,
+			                theExternalNoNamespaceSchemaLocation,
+                            fPoolAllTextNodes);
+
+    theGuard.release();
+
+    return theResult;
+}
 
 XalanDefaultParsedSource::~XalanDefaultParsedSource()
 {
@@ -184,18 +235,18 @@ XalanDefaultParsedSource::~XalanDefaultParsedSource()
 
 
 
-XalanDocument*  
+XalanDocument*	
 XalanDefaultParsedSource::getDocument() const
 {
-    return m_parsedSource;
+	return m_parsedSource;
 }
 
 
 
 XalanParsedSourceHelper*
-XalanDefaultParsedSource::createHelper() const
+XalanDefaultParsedSource::createHelper(MemoryManagerType& theManager) const
 {
-    return new XalanDefaultParsedSourceHelper(m_domSupport);
+    return XalanDefaultParsedSourceHelper::create(m_domSupport, theManager);
 }
 
 
@@ -203,7 +254,7 @@ XalanDefaultParsedSource::createHelper() const
 const XalanDOMString&
 XalanDefaultParsedSource::getURI() const
 {
-    return m_uri;
+	return m_uri;
 }
 
 

@@ -19,6 +19,7 @@
 
 #include <xalanc/Include/XalanSet.hpp>
 
+#include <xalanc/Include/XalanMemMgrHelper.hpp>
 
 
 #include <xalanc/XalanDOM/XalanDOMString.hpp>
@@ -36,7 +37,6 @@
 
 #include <xalanc/XPath/XPathExecutionContext.hpp>
 #include <xalanc/XPath/XObjectFactory.hpp>
-
 
 
 XALAN_CPP_NAMESPACE_BEGIN
@@ -64,7 +64,9 @@ FunctionDistinct::execute(
 {
 	if (args.size() != 1)
 	{
-		executionContext.error(getError(), context, locator);
+        XPathExecutionContext::GetAndReleaseCachedString	theGuard(executionContext);
+
+		executionContext.error(getError(theGuard.get()), context, locator);
 	}
 
 	assert(args[0].null() == false);
@@ -92,7 +94,7 @@ FunctionDistinct::execute(
 
 		typedef XalanSet<XalanDOMString>					SetType;
 
-		SetType		theStrings;
+        SetType		theStrings(executionContext.getMemoryManager());
 
 		// Check to make sure each node has a unique
 		// string value.
@@ -110,6 +112,7 @@ FunctionDistinct::execute(
 				theStrings.insert(theCachedString);
 			}
 
+
 			clear(theCachedString);
 		}
 	}
@@ -126,18 +129,20 @@ Function*
 #else
 FunctionDistinct*
 #endif
-FunctionDistinct::clone() const
+FunctionDistinct::clone(MemoryManagerType& theManager) const
 {
-	return new FunctionDistinct(*this);
+	return cloneFunction_1<FunctionDistinct>()(*this, theManager);
 }
 
 
 
-const XalanDOMString
-FunctionDistinct::getError() const
+const XalanDOMString&
+FunctionDistinct::getError(XalanDOMString& theResult) const
 {
 
-	return XalanMessageLoader::getMessage(XalanMessages::FunctionAcceptsOneArgument_1Param,"distinct()");
+	XalanMessageLoader::getMessage(XalanMessages::FunctionAcceptsOneArgument_1Param, theResult, "distinct()");
+
+    return theResult;
 
 }
 

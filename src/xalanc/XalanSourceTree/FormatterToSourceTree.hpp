@@ -65,7 +65,7 @@ public:
 	 * Perform static initialization.  See class XalanSourceTreeInit.
 	 */
 	static void
-	initialize();
+	initialize(MemoryManagerType& theManager);
 
 	/**
 	 * Perform static shut down.  See class XalanSourceTreeInit.
@@ -81,7 +81,8 @@ public:
 	 * @param theDocument The document for nodes
 	 */
 	explicit
-	FormatterToSourceTree(XalanSourceTreeDocument*	theDocument = 0);
+	FormatterToSourceTree(MemoryManagerType& theManager,
+                            XalanSourceTreeDocument*	theDocument = 0);
 
 	/**
 	 * Construct a FormatterToSourceTree instance.  it will add the nodes 
@@ -91,6 +92,7 @@ public:
 	 * @param theDocumentFragment The document fragment for nodes
 	 */
 	FormatterToSourceTree(
+            MemoryManagerType&                  theManager,
 			XalanSourceTreeDocument*			theDocument,
 			XalanSourceTreeDocumentFragment*	theDocumentFragment);
 

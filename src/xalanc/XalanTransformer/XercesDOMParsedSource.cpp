@@ -33,13 +33,27 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XercesDOMParsedSourceHelper::XercesDOMParsedSourceHelper() :
-	m_domSupport(),
-	m_parserLiaison()
+XercesDOMParsedSourceHelper::XercesDOMParsedSourceHelper(MemoryManagerType& theManager) :
+	m_domSupport(theManager),
+	m_parserLiaison(theManager)
 {
 }
 
+XercesDOMParsedSourceHelper*
+XercesDOMParsedSourceHelper::create(MemoryManagerType& theManager)
+{
+        typedef XercesDOMParsedSourceHelper ThisType;
+        
+        XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
 
+        ThisType* theResult = theGuard.get();
+
+        new (theResult) ThisType(theManager);
+
+         theGuard.release();
+
+        return theResult;
+}
 
 XercesDOMParsedSourceHelper::~XercesDOMParsedSourceHelper()
 {
@@ -64,6 +78,7 @@ XercesDOMParsedSourceHelper::getParserLiaison()
 
 
 XercesDOMParsedSource::XercesDOMParsedSource(
+            MemoryManagerType&      theManager,
 			const InputSourceType&	theInputSource,
 			bool					fValidate,
 			ErrorHandlerType*		theErrorHandler,
@@ -71,8 +86,9 @@ XercesDOMParsedSource::XercesDOMParsedSource(
 			const XalanDOMChar*		theExternalSchemaLocation,
 			const XalanDOMChar*		theExternalNoNamespaceSchemaLocation) :
 	XalanParsedSource(),
-	m_parserLiaison(),
-	m_parsedSource(0)
+	m_parserLiaison(theManager),
+	m_parsedSource(0),
+    m_uri(theManager)
 {
 	m_parserLiaison.setUseValidation(fValidate);
 	m_parserLiaison.setEntityResolver(theEntityResolver);
@@ -89,7 +105,7 @@ XercesDOMParsedSource::XercesDOMParsedSource(
 	{
 		try
 		{
-			m_uri = URISupport::getURLStringFromString(theSystemID);
+			URISupport::getURLStringFromString(theSystemID, m_uri);
 		}
 		catch(const XERCES_CPP_NAMESPACE_QUALIFIER XMLException&)
 		{
@@ -102,6 +118,36 @@ XercesDOMParsedSource::XercesDOMParsedSource(
 	}
 }
 
+XercesDOMParsedSource*
+XercesDOMParsedSource::create(
+            MemoryManagerType&      theManager,
+			const InputSourceType&	theInputSource,
+			bool					fValidate,
+			ErrorHandlerType*		theErrorHandler,
+			EntityResolverType*		theEntityResolver,
+			const XalanDOMChar*		theExternalSchemaLocation,
+			const XalanDOMChar*		theExternalNoNamespaceSchemaLocation)
+{
+    typedef XercesDOMParsedSource ThisType;
+
+    XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
+
+    ThisType* theResult = theGuard.get();
+
+    new (theResult) ThisType(            
+                            theManager,
+                            theInputSource,
+                            fValidate,
+                            theErrorHandler,
+                            theEntityResolver,
+                            theExternalSchemaLocation,
+                            theExternalNoNamespaceSchemaLocation);
+
+
+     theGuard.release();
+
+    return theResult;
+}
 
 
 XercesDOMParsedSource::~XercesDOMParsedSource()
@@ -119,9 +165,9 @@ XercesDOMParsedSource::getDocument() const
 
 
 XalanParsedSourceHelper*
-XercesDOMParsedSource::createHelper() const
+XercesDOMParsedSource::createHelper(MemoryManagerType& theManager) const
 {
-	return new XercesDOMParsedSourceHelper;
+    return XercesDOMParsedSourceHelper::create(theManager);
 }
 
 

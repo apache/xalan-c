@@ -73,15 +73,15 @@ public:
 #else
 	virtual FunctionNodeSet*
 #endif
-	clone() const;
+	clone(MemoryManagerType& theManager) const;
 
 protected:
 
-	virtual const XalanDOMString
-	getError() const;
+	virtual const XalanDOMString&
+	getError(XalanDOMString& theResult) const;
 
-	virtual const XalanDOMString
-	getInvalidArgumentTypeError() const;
+	virtual const XalanDOMString&
+	getInvalidArgumentTypeError(XalanDOMString& theResult) const;
 
 private:
 

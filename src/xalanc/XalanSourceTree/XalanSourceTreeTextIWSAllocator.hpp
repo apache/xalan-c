@@ -59,7 +59,7 @@ public:
 	 *
 	 * @param theBlockSize The block size.
 	 */
-	XalanSourceTreeTextIWSAllocator(size_type	theBlockCount);
+	XalanSourceTreeTextIWSAllocator(MemoryManagerType&  theManager, size_type	theBlockCount);
 
 	~XalanSourceTreeTextIWSAllocator();
 

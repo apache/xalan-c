@@ -52,8 +52,9 @@ public:
 #endif
 
 	XalanTransformerProblemListener(
-			StreamType*		theStream,
-			PrintWriter*	thePrintWriter);
+            MemoryManagerType&  theManager,
+			StreamType*		    theStream,
+			PrintWriter*	    thePrintWriter);
 
 	virtual
 	~XalanTransformerProblemListener();
@@ -79,6 +80,8 @@ private:
 	ProblemListenerDefault	m_problemListener;
 
 	StreamType*		m_warningStream;
+
+    XalanDOMString	m_warningString;
 };
 
 

@@ -22,6 +22,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 XalanSourceTreeElementANS::XalanSourceTreeElementANS(
+            MemoryManagerType&          theManager,
 			const XalanDOMString&		theTagName,
 			const XalanDOMString&		theLocalName,
 			const XalanDOMString&		theNamespaceURI,
@@ -34,6 +35,7 @@ XalanSourceTreeElementANS::XalanSourceTreeElementANS(
 			XalanNode*					theNextSibling,
 			IndexType					theIndex) :
 	XalanSourceTreeElementA(
+        theManager,
 		theTagName,
 		theOwnerDocument,
 		theAttributes,
@@ -57,9 +59,10 @@ XalanSourceTreeElementANS::~XalanSourceTreeElementANS()
 
 
 XalanSourceTreeElementANS::XalanSourceTreeElementANS(
+            MemoryManagerType&                  theManager,
 			const XalanSourceTreeElementANS&	theSource,
 			bool								deep) :
-	XalanSourceTreeElementA(theSource, deep),
+	XalanSourceTreeElementA(theManager, theSource, deep),
 	m_localName(theSource.m_localName),
 	m_prefix(theSource.m_prefix),
 	m_namespaceURI(theSource.m_namespaceURI)
@@ -69,9 +72,10 @@ XalanSourceTreeElementANS::XalanSourceTreeElementANS(
 
 
 XalanSourceTreeElementANS::XalanSourceTreeElementANS(
+            MemoryManagerType&              theManager,
 			const XalanSourceTreeElementA&	theSource,
 			bool							deep) :
-	XalanSourceTreeElementA(theSource, deep),
+	XalanSourceTreeElementA(theManager, theSource, deep),
 	m_localName(theSource.getLocalName()),
 	m_prefix(theSource.getPrefix()),
 	m_namespaceURI(theSource.getNamespaceURI())

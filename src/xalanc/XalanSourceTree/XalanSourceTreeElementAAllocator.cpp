@@ -23,8 +23,8 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-XalanSourceTreeElementAAllocator::XalanSourceTreeElementAAllocator(size_type	theBlockCount) :
-	m_allocator(theBlockCount)
+XalanSourceTreeElementAAllocator::XalanSourceTreeElementAAllocator(MemoryManagerType&  theManager, size_type	theBlockCount) :
+	m_allocator(theManager, theBlockCount)
 {
 }
 
@@ -51,6 +51,7 @@ XalanSourceTreeElementAAllocator::create(
 	assert(theBlock != 0);
 
 	new(theBlock) ObjectType(
+                        m_allocator.getMemoryManager(),
 						theTagName,
 						theOwnerDocument,
 						theAttributes,

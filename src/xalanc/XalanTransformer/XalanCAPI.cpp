@@ -33,6 +33,7 @@
 #include "XalanCAPI.h"
 #include "XalanTransformer.hpp"
 
+#include <xalanc/Include/XalanMemMgrAutoPtr.hpp>
 
 
 XALAN_USING_STD(istrstream)
@@ -42,8 +43,11 @@ XALAN_USING_XALAN(XalanDOMString)
 XALAN_USING_XALAN(XalanParsedSource)
 XALAN_USING_XALAN(XalanTransformer)
 XALAN_USING_XERCES(XMLPlatformUtils)
+XALAN_USING_XALAN(MemoryManagerType)
 
-
+XALAN_USING_XALAN(XalanMemMgrAutoPtr)
+XALAN_USING_XALAN(XalanMemMgrs)
+XALAN_USING_XALAN(XSLTResultTarget)
 
 static bool	fInitialized = false;
 
@@ -58,7 +62,7 @@ XalanInitialize()
 		XMLPlatformUtils::Initialize();
 
 		// Initialize Xalan.
-		XalanTransformer::initialize();
+		XalanTransformer::initialize(XalanMemMgrs::getDefaultXercesMemMgr());
 
 		fInitialized = true;
 	}
@@ -93,8 +97,20 @@ XalanTerminate(int	fCleanUpICU)
 XALAN_TRANSFORMER_EXPORT_FUNCTION(XalanHandle)
 CreateXalanTransformer()
 {	
+    MemoryManagerType& theManager = XalanMemMgrs::getDefaultXercesMemMgr();
 	// Create a XalanTransformer object.
-	return new XalanTransformer();
+    typedef XalanTransformer ThisType;
+
+    XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
+
+    ThisType* theResult = theGuard.get();
+
+    new (theResult) ThisType(theManager);
+
+     theGuard.release();
+
+    return (XalanHandle)theResult;
+
 }
 
 
@@ -145,7 +161,14 @@ XALAN_TRANSFORMER_EXPORT_FUNCTION(void)
 DeleteXalanTransformer(XalanHandle theXalanHandle)
 {
 	// Delete a XalanTransformer object.
-	delete getTransformer(theXalanHandle);
+    
+    XalanTransformer* transformer = getTransformer(theXalanHandle);
+
+	transformer->~XalanTransformer();
+
+    XalanMemMgrs::getDefaultXercesMemMgr().deallocate(transformer);
+
+
 }
 
 
@@ -161,14 +184,14 @@ XalanTransformToFile(
 	{
 		return getTransformer(theXalanHandle)->transform(
 			theXMLFileName,
-			theOutFileName);
+			XSLTResultTarget(theOutFileName, XalanMemMgrs::getDefaultXercesMemMgr()));
 	}
 	else
 	{
 		return getTransformer(theXalanHandle)->transform(
 			theXMLFileName,
 			theXSLFileName,
-			theOutFileName);
+			XSLTResultTarget(theOutFileName, XalanMemMgrs::getDefaultXercesMemMgr()));
 	}
 }
 
@@ -185,7 +208,7 @@ XalanTransformToFilePrebuilt(
 	return getTransformer(theXalanHandle)->transform(
 				*getParsedSource(theParsedSource),
 				getStylesheet(theCSSHandle),
-				theOutFileName);
+				XSLTResultTarget(theOutFileName, XalanMemMgrs::getDefaultXercesMemMgr()));
 }
 
 
@@ -207,14 +230,14 @@ XalanTransformToData(
 	{
 		status = getTransformer(theXalanHandle)->transform(
 			theXMLFileName,
-			theOutputStream);
+			XSLTResultTarget(theOutputStream, XalanMemMgrs::getDefaultXercesMemMgr()));
 	}
 	else
 	{
 		status = getTransformer(theXalanHandle)->transform(
 			theXMLFileName,
 			theXSLFileName,
-			theOutputStream);
+			XSLTResultTarget(theOutputStream, XalanMemMgrs::getDefaultXercesMemMgr()));
 	}
 
 	if (status == 0)
@@ -246,7 +269,7 @@ XalanTransformToDataPrebuilt(
 		getTransformer(theXalanHandle)->transform(
 			*getParsedSource(theParsedSource),
 			getStylesheet(theCSSHandle),
-			theOutputStream);
+			XSLTResultTarget(theOutputStream, XalanMemMgrs::getDefaultXercesMemMgr()));
 
 	if (status == 0)
 	{
@@ -448,8 +471,8 @@ XalanSetStylesheetParamUTF(
 				XalanHandle				theXalanHandle)
 {
 	getTransformer(theXalanHandle)->setStylesheetParam(
-		XalanDOMString(key),
-		XalanDOMString(expression));
+		XalanDOMString(key, XalanMemMgrs::getDefaultXercesMemMgr()),
+		XalanDOMString(expression, XalanMemMgrs::getDefaultXercesMemMgr()));
 }
 
 

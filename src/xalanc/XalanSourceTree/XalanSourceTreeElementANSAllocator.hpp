@@ -61,7 +61,7 @@ public:
 	 *
 	 * @param theBlockSize The block size.
 	 */
-	XalanSourceTreeElementANSAllocator(size_type	theBlockCount);
+	XalanSourceTreeElementANSAllocator(MemoryManagerType&  theManager, size_type	theBlockCount);
 
 	~XalanSourceTreeElementANSAllocator();
 

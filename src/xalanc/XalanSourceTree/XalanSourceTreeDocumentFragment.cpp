@@ -36,12 +36,14 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-static const XalanDOMString		s_emptyString;
+static const XalanDOMString		s_emptyString(XalanMemMgrs::getDummyMemMgr());
 
 
 
-XalanSourceTreeDocumentFragment::XalanSourceTreeDocumentFragment(XalanSourceTreeDocument&	theOwnerDocument) :
+XalanSourceTreeDocumentFragment::XalanSourceTreeDocumentFragment(MemoryManagerType&         theManager, 
+                                                                 XalanSourceTreeDocument&	theOwnerDocument) :
 	XalanDocumentFragment(),
+    m_manager(theManager),
 	m_ownerDocument(&theOwnerDocument),
 	m_firstChild(0)
 {
@@ -50,8 +52,11 @@ XalanSourceTreeDocumentFragment::XalanSourceTreeDocumentFragment(XalanSourceTree
 
 
 XalanSourceTreeDocumentFragment::XalanSourceTreeDocumentFragment(
+            MemoryManagerType&                      theManager,
 			const XalanSourceTreeDocumentFragment&	theSource,
 			bool									deep) :
+	XalanDocumentFragment(),
+    m_manager(theManager),
 	m_ownerDocument(theSource.m_ownerDocument),
 	m_firstChild(theSource.m_firstChild == 0 ? 0 : theSource.m_firstChild->cloneNode(deep))
 {
@@ -343,6 +348,20 @@ XalanSourceTreeDocumentFragment::clearChildren()
 	m_firstChild = 0;
 }
 
-
+XalanSourceTreeDocumentFragment*
+XalanSourceTreeDocumentFragment::clone(bool	deep) const
+{
+	typedef XalanSourceTreeDocumentFragment Type;
+	
+	XalanMemMgrAutoPtr<Type, false> theGuard( m_manager , (Type*)m_manager.allocate(sizeof(Type)));
+	
+	Type* theResult = theGuard.get();
+	
+	new (theResult) Type(m_manager, *this, deep);
+	
+	theGuard.release();
+	
+	return theResult;
+}
 
 XALAN_CPP_NAMESPACE_END

@@ -39,11 +39,12 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-const XalanDOMString		XalanSourceTreeElement::s_emptyString;
+const XalanDOMString		XalanSourceTreeElement::s_emptyString(XalanMemMgrs::getDummyMemMgr());
 
 
 
 XalanSourceTreeElement::XalanSourceTreeElement(
+            MemoryManagerType&          theManager,
 			const XalanDOMString&		theTagName,
 			XalanSourceTreeDocument*	theOwnerDocument,
 			XalanNode*					theParentNode,
@@ -51,6 +52,7 @@ XalanSourceTreeElement::XalanSourceTreeElement(
 			XalanNode*					theNextSibling,
 			IndexType					theIndex) :
 	XalanElement(),
+    m_memoryManager(theManager),
 	m_tagName(theTagName),
 	m_ownerDocument(theOwnerDocument),
 	m_parentNode(theParentNode),
@@ -70,9 +72,11 @@ XalanSourceTreeElement::~XalanSourceTreeElement()
 
 
 XalanSourceTreeElement::XalanSourceTreeElement(
+            MemoryManagerType&              theManager,
 			const XalanSourceTreeElement&	theSource,
 			bool								deep) :
 	XalanElement(theSource),
+    m_memoryManager(theManager),
 	m_tagName(theSource.m_tagName),
 	m_ownerDocument(theSource.m_ownerDocument),
 	m_parentNode(0),

@@ -37,7 +37,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-static const XalanDOMString		s_emptyString;
+static const XalanDOMString		s_emptyString(XalanMemMgrs::getDummyMemMgr());
 
 
 
@@ -334,12 +334,13 @@ XalanSourceTreeText::getLength() const
 
 
 
-XalanDOMString
+XalanDOMString&
 XalanSourceTreeText::substringData(
-			unsigned int	offset,
-			unsigned int	count) const
+			unsigned int	offset, 
+			unsigned int	count,
+            XalanDOMString& theResult) const
 {
-	return m_data.substr(offset, count);
+	return m_data.substr(theResult, offset, count);
 }
 
 
@@ -480,7 +481,7 @@ XalanSourceTreeText::appendSiblingNode(XalanSourceTreeText*		theSibling)
 
 
 
-static XalanDOMString	s_staticNameString;
+static XalanDOMString	s_staticNameString(XalanMemMgrs::getDummyMemMgr());
 
 
 
@@ -501,9 +502,11 @@ const XalanDOMChar	s_text[] =
 
 
 void
-XalanSourceTreeText::initialize()
+XalanSourceTreeText::initialize(MemoryManagerType& theManager)
 {
-	s_staticNameString = s_text;
+    XalanDOMString theBuffer(s_text, theManager);
+
+    s_staticNameString.swap(theBuffer);
 }
 
 
@@ -511,7 +514,7 @@ XalanSourceTreeText::initialize()
 void
 XalanSourceTreeText::terminate()
 {
-	releaseMemory(s_staticNameString);
+	releaseMemory(s_staticNameString, XalanMemMgrs::getDummyMemMgr());
 }
 
 

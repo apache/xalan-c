@@ -26,9 +26,11 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 XalanTransformerOutputStream::XalanTransformerOutputStream(
+    MemoryManagerType&          theManager,
 	void*						theOutputHandle, 
 	XalanOutputHandlerType		theOutputHandler,
 	XalanFlushHandlerType		theFlushHandler):
+    XalanOutputStream(theManager),
 	m_outputHandle(theOutputHandle),
 	m_outputHandler(theOutputHandler),
 	m_flushHandler(theFlushHandler)
@@ -66,8 +68,11 @@ XalanTransformerOutputStream::writeData(
 	// Thus the callback can alert us of memory allocation issues or buffer overflows.
 	if(theBytesWritten != theBufferLength)
 	{
+
+        XalanDOMString theBuffer(getMemoryManager());
+
 		throw XalanOutputStreamException(
-			XalanMessageLoader::getMessage(XalanMessages::NumberBytesWrittenDoesNotEqual));
+			XalanMessageLoader::getMessage(XalanMessages::NumberBytesWrittenDoesNotEqual, theBuffer), getMemoryManager());
 	}
 }
 

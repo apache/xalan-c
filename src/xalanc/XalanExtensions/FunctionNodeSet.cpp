@@ -35,15 +35,31 @@ class XalanDocumentFragmentXNodeSetBaseProxy : public XNodeSetBase
 {
 public:
 
-	XalanDocumentFragmentXNodeSetBaseProxy(const XObjectPtr&	theXObject) :
-		XNodeSetBase(),
+	XalanDocumentFragmentXNodeSetBaseProxy(MemoryManagerType& theManager, const XObjectPtr&	theXObject) :
+		XNodeSetBase(theManager),
 		m_xobject(theXObject),
 		m_proxy(theXObject->rtree())
 	{
 	}
 
-	XalanDocumentFragmentXNodeSetBaseProxy(const XalanDocumentFragmentXNodeSetBaseProxy&	theSource) :
-		XNodeSetBase(theSource),
+    static XalanDocumentFragmentXNodeSetBaseProxy*
+    create(MemoryManagerType& theManager, const XObjectPtr&	theXObject)
+    {
+        typedef XalanDocumentFragmentXNodeSetBaseProxy ThisType;
+        
+        XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
+
+        ThisType* theResult = theGuard.get();
+
+        new (theResult) ThisType(theManager, theXObject );
+
+        theGuard.release();
+
+        return theResult;
+    }
+
+	XalanDocumentFragmentXNodeSetBaseProxy(MemoryManagerType& theManager, const XalanDocumentFragmentXNodeSetBaseProxy&	theSource) :
+		XNodeSetBase(theSource, theManager),
 		m_xobject(theSource.m_xobject),
 		m_proxy(theSource.m_proxy)
 	{
@@ -54,23 +70,6 @@ public:
 	{
 	}
 
-	// These methods are inherited from XNodeSetBase...
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-	virtual XObject*
-#else
-	virtual XalanDocumentFragmentXNodeSetBaseProxy*
-#endif
-	clone(void*		theAddress = 0) const
-	{
-		if (theAddress == 0)
-		{
-			return new XalanDocumentFragmentXNodeSetBaseProxy(*this);
-		}
-		else
-		{
-			return new (theAddress) XalanDocumentFragmentXNodeSetBaseProxy(*this);
-		}
-	}
 
 	virtual const NodeRefListBase&
 	nodeset() const
@@ -127,7 +126,9 @@ FunctionNodeSet::execute(
 {
 	if (args.size() != 1)
 	{
-		executionContext.error(getError(), context, locator);
+        XalanDOMString theResult(executionContext.getMemoryManager());
+
+		executionContext.error(getError(theResult), context, locator);
 	}
 
 	assert(args[0].null() == false);
@@ -137,12 +138,14 @@ FunctionNodeSet::execute(
 	if (theType == XObject::eTypeResultTreeFrag ||
 		(theType == XObject::eTypeString && m_convertString == true))
 	{
-		return XObjectPtr(new XalanDocumentFragmentXNodeSetBaseProxy(args[0]));
+        return XObjectPtr(XalanDocumentFragmentXNodeSetBaseProxy::create(executionContext.getMemoryManager(), args[0]));
 	}
 	else
-	{
+	{        
+        XalanDOMString theResult(executionContext.getMemoryManager());
+
 		executionContext.warn(
-			getInvalidArgumentTypeError(),
+			getInvalidArgumentTypeError(theResult),
 			context,
 			locator);
 
@@ -157,26 +160,29 @@ Function*
 #else
 FunctionNodeSet*
 #endif
-FunctionNodeSet::clone() const
+FunctionNodeSet::clone(MemoryManagerType& theManager) const
 {
-	return new FunctionNodeSet(*this);
+	return cloneFunction_1<FunctionNodeSet>()( *this, theManager);
 }
 
 
 
-const XalanDOMString
-FunctionNodeSet::getError() const
+const XalanDOMString&
+FunctionNodeSet::getError(XalanDOMString& theResult) const
 {
+    XalanMessageLoader::getMessage(XalanMessages::FunctionAcceptsOneArgument_1Param, theResult ,"nodeset()");
 
-	return XalanMessageLoader::getMessage(XalanMessages::FunctionAcceptsOneArgument_1Param,"nodeset()");
+	return theResult;
 }
 
 
 
-const XalanDOMString
-FunctionNodeSet::getInvalidArgumentTypeError() const
+const XalanDOMString&
+FunctionNodeSet::getInvalidArgumentTypeError(XalanDOMString& theResult) const
 {
-	return XalanMessageLoader::getMessage(XalanMessages::InvalidArgumentTypeFunction_1Param,"nodeset()");
+	XalanMessageLoader::getMessage(XalanMessages::InvalidArgumentTypeFunction_1Param, theResult, "nodeset()");
+
+    return theResult;
 }
 
 

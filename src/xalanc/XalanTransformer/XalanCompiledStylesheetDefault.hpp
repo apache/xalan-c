@@ -59,6 +59,16 @@ class XALAN_TRANSFORMER_EXPORT XalanCompiledStylesheetDefault : public XalanComp
 public:
 	
 	XalanCompiledStylesheetDefault(
+            MemoryManagerType&      theManager,
+			const XSLTInputSource&	theStylesheetSource,
+			XSLTEngineImpl&			theProcessor,
+			ErrorHandlerType*		theErrorHandler = 0,
+			EntityResolverType*		theEntityResolver = 0);
+
+	
+	static XalanCompiledStylesheetDefault*
+    create(
+            MemoryManagerType&      theManager,
 			const XSLTInputSource&	theStylesheetSource,
 			XSLTEngineImpl&			theProcessor,
 			ErrorHandlerType*		theErrorHandler = 0,

@@ -51,7 +51,9 @@ FunctionHasSameNodes::execute(
 {
 	if (args.size() != 2)
 	{
-		executionContext.error(getError(), context, locator);
+        XPathExecutionContext::GetAndReleaseCachedString	theGuard(executionContext);
+
+		executionContext.error(getError(theGuard.get()), context, locator);
 	}
 
 	assert(args[0].null() == false && args[1].null() == false);
@@ -91,17 +93,17 @@ Function*
 #else
 FunctionHasSameNodes*
 #endif
-FunctionHasSameNodes::clone() const
+FunctionHasSameNodes::clone(MemoryManagerType& theManager) const
 {
-	return new FunctionHasSameNodes(*this);
+	return cloneFunction_1<FunctionHasSameNodes>()(*this, theManager);
 }
 
 
 
-const XalanDOMString
-FunctionHasSameNodes::getError() const
+const XalanDOMString&
+FunctionHasSameNodes::getError(XalanDOMString& theResult) const
 {
-	return XalanMessageLoader::getMessage(XalanMessages::FunctionAcceptsTwoArguments_1Param,"has-same-nodes()");
+	return XalanMessageLoader::getMessage(XalanMessages::FunctionAcceptsTwoArguments_1Param, theResult, "has-same-nodes()");
 
 }
 

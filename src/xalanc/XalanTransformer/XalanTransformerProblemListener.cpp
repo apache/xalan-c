@@ -43,11 +43,13 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 XalanTransformerProblemListener::XalanTransformerProblemListener(
+            MemoryManagerType& theManager,
 			StreamType*		theWarningStream,
 			PrintWriter*	thePrintWriter) :
 	ProblemListener(),
-	m_problemListener(thePrintWriter),
-	m_warningStream(theWarningStream)
+	m_problemListener(theManager, thePrintWriter),
+	m_warningStream(theWarningStream),
+    m_warningString(theManager)
 {
 }
 
@@ -92,9 +94,9 @@ XalanTransformerProblemListener::problem(
 	}
 	else if (m_warningStream != 0)
 	{
-		XalanDOMString	theWarning;
+        m_warningString.erase();
 
-		DOMStringPrintWriter	thePrintWriter(theWarning);
+		DOMStringPrintWriter	thePrintWriter(m_warningString);
 
 		ProblemListenerDefault::problem(
 			thePrintWriter,
@@ -107,7 +109,7 @@ XalanTransformerProblemListener::problem(
 			lineNo,
 			charOffset);
 
-		*m_warningStream << theWarning;
+		*m_warningStream << m_warningString;
 	}
 }
 

@@ -23,6 +23,8 @@
 #include <xalanc/XalanSourceTree/XalanSourceTreeDefinitions.hpp>
 
 
+#include <xalanc/Include/XalanMemoryManagement.hpp>
+
 
 #include <xalanc/PlatformSupport/PlatformSupportInit.hpp>
 
@@ -49,7 +51,7 @@ class XALAN_XALANSOURCETREE_EXPORT XalanSourceTreeInit
 public:
 
 	explicit
-	XalanSourceTreeInit();
+	XalanSourceTreeInit(MemoryManagerType& theManager);
 
 	~XalanSourceTreeInit();
 
@@ -63,7 +65,7 @@ private:
 
 	
 	static void
-	initialize();
+	initialize(MemoryManagerType& theManager);
 
 	static void
 	terminate();

@@ -59,7 +59,7 @@ public:
 	 *
 	 * @param theBlockSize The block size.
 	 */
-	XalanSourceTreeCommentAllocator(size_type	theBlockCount);
+	XalanSourceTreeCommentAllocator(MemoryManagerType&  theManager, size_type	theBlockCount);
 
 	~XalanSourceTreeCommentAllocator();
 

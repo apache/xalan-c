@@ -16,6 +16,8 @@
 #include "XalanSourceTreeElementA.hpp"
 
 
+#include <xalanc/Include/XalanMemMgrAutoPtr.hpp>
+
 
 #include <xalanc/XalanDOM/XalanDOMException.hpp>
 
@@ -29,11 +31,12 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-static const XalanDOMString		s_emptyString;
+static const XalanDOMString		s_emptyString(XalanMemMgrs::getDummyMemMgr());
 
 
 
 XalanSourceTreeElementA::XalanSourceTreeElementA(
+            MemoryManagerType&          theManager,
 			const XalanDOMString&		theTagName,
 			XalanSourceTreeDocument*	theOwnerDocument,
 			XalanSourceTreeAttr**		theAttributes,
@@ -43,6 +46,7 @@ XalanSourceTreeElementA::XalanSourceTreeElementA(
 			XalanNode*					theNextSibling,
 			IndexType					theIndex) :
 	XalanSourceTreeElement(
+        theManager,
 		theTagName,
 		theOwnerDocument,
 		theParentNode,
@@ -63,14 +67,35 @@ XalanSourceTreeElementA::~XalanSourceTreeElementA()
 
 
 XalanSourceTreeElementA::XalanSourceTreeElementA(
+            MemoryManagerType&              theManager,
 			const XalanSourceTreeElementA&	theSource,
 			bool							deep) :
-	XalanSourceTreeElement(theSource, deep),
+	XalanSourceTreeElement(theManager, theSource, deep),
 	m_attributes(theSource.m_attributes),
 	m_attributeCount(theSource.m_attributeCount)
 {
 }
 
+XalanSourceTreeElementA*
+XalanSourceTreeElementA::create(
+                                MemoryManagerType&              theManager,
+                                const XalanSourceTreeElementA&	theSource,
+                                bool							deep )
+{
+    typedef XalanSourceTreeElementA ThisType;
+
+    XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
+
+    ThisType* theResult = theGuard.get();
+
+    new (theResult) ThisType(theManager,
+        theSource,
+        deep);
+
+    theGuard.release();
+
+    return theResult;
+}
 
 
 const XalanNamedNodeMap*

@@ -36,6 +36,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 XalanSourceTreeWrapperParsedSource::XalanSourceTreeWrapperParsedSource(
+            MemoryManagerType&              theManager,
 			XalanSourceTreeDocument*		theDocument,
 			XalanSourceTreeParserLiaison&	theParserLiaison,
 			XalanSourceTreeDOMSupport&		theDOMSupport,
@@ -44,8 +45,12 @@ XalanSourceTreeWrapperParsedSource::XalanSourceTreeWrapperParsedSource(
 	m_parserLiaison(theParserLiaison),
 	m_domSupport(theDOMSupport),
 	m_parsedSource(theDocument),
-	m_uri(URISupport::NormalizeURIText(theURI))
+	m_uri(theURI, theManager)
 {
+    XalanDOMString& refURI = const_cast<XalanDOMString&>(m_uri);
+
+    URISupport::NormalizeURIText(refURI);
+
 	assert(m_parsedSource != 0);
 }
 
@@ -66,9 +71,9 @@ XalanSourceTreeWrapperParsedSource::getDocument() const
 
 
 XalanParsedSourceHelper*
-XalanSourceTreeWrapperParsedSource::createHelper() const
+XalanSourceTreeWrapperParsedSource::createHelper(MemoryManagerType& theManager) const
 {
-	return new XalanDefaultParsedSourceHelper(m_domSupport);
+	return XalanDefaultParsedSourceHelper::create(m_domSupport, theManager);
 }
 
 

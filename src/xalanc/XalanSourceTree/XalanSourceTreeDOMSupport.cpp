@@ -41,7 +41,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-static const XalanDOMString		s_emptyString;
+static const XalanDOMString		s_emptyString(XalanMemMgrs::getDummyMemMgr());
 
 
 
@@ -77,7 +77,8 @@ XalanSourceTreeDOMSupport::reset()
 const XalanDOMString&
 XalanSourceTreeDOMSupport::getUnparsedEntityURI(
 			const XalanDOMString&	theName,
-			const XalanDocument&	theDocument) const
+			const XalanDocument&	theDocument,
+            XalanDOMString&         /*theResult*/) const
 {
 	if (m_parserLiaison != 0)
 	{

@@ -32,17 +32,17 @@ unsigned long	XalanSourceTreeInit::s_initCounter = 0;
 
 
 
-XalanSourceTreeInit::XalanSourceTreeInit() :
-	m_platformSupportInit(),
-	m_domSupportInit(),
-	m_xmlSupportInit()
+XalanSourceTreeInit::XalanSourceTreeInit(MemoryManagerType& theManager) :
+	m_platformSupportInit(theManager),
+	m_domSupportInit(theManager),
+	m_xmlSupportInit(theManager)
 {
 	++s_initCounter;
 
 	if (s_initCounter == 1)
 	{
-		initialize();
-	}
+		initialize(theManager);
+    }
 }
 
 
@@ -60,13 +60,13 @@ XalanSourceTreeInit::~XalanSourceTreeInit()
 
 
 void
-XalanSourceTreeInit::initialize()
+XalanSourceTreeInit::initialize(MemoryManagerType& theManager)
 {
-	XalanSourceTreeDocument::initialize();
+	XalanSourceTreeDocument::initialize(theManager);
 
-	XalanSourceTreeComment::initialize();
+	XalanSourceTreeComment::initialize(theManager);
 
-	XalanSourceTreeText::initialize();
+	XalanSourceTreeText::initialize(theManager);
 }
 
 

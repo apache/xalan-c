@@ -82,6 +82,7 @@ public:
 	// Constructor
 	explicit
 	XalanSourceTreeContentHandler(
+            MemoryManagerType&          theManager,
 			XalanSourceTreeDocument*	theDocument = 0,
 			bool						fAccumulateText = true);
 
