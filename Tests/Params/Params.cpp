@@ -78,6 +78,10 @@
 
 
 
+#include <PlatformSupport/XalanUnicode.hpp>
+
+
+
 #include <XSLT/XSLTInputSource.hpp>
 #include <XSLT/XSLTResultTarget.hpp>
 
@@ -99,6 +103,11 @@ XALAN_USING_STD(endl)
 
 
 
+XALAN_USING_XALAN(FileUtility)
+XALAN_USING_XALAN(XalanDOMString)
+
+
+
 void
 setHelp(FileUtility&	h)
 {
@@ -112,17 +121,19 @@ setHelp(FileUtility&	h)
 		 << endl;
 }
 
+
+
 //	This function returns the testcase number.  All of these tests are called
 //	params0X, and there are only 6 of them,  so we can pick off the
 //	second X to determine what test number we're dealing with.  We need to
 //	know which test because each test gets different parameters. This code will
 //  need modification if the number of tests changes.
-unsigned short
-getTestNumber(const XalanDOMString& theFile)
+int
+getTestNumber(const XalanDOMString&		theFile)
 {
-	assert(8 < length(theFile));
+	assert(8 < theFile.length());
 
-	return charAt(theFile, 7) - XalanUnicode::charDigit_0;
+	return theFile[7] - XALAN_CPP_NAMESPACE_QUALIFIER XalanUnicode::charDigit_0;
 }
 
 
@@ -133,6 +144,8 @@ runTests(
 			const char*		argv[])
 {
 	int				theResult = 0;
+
+	XALAN_USING_XALAN(HarnessInit)
 
 	HarnessInit		xmlPlatformUtils;
 
@@ -155,13 +168,16 @@ runTests(
 		// Check that the base directory is correct.
 		if ( !h.checkDir(extDir) )
 		{
-			cout << "Invalid base directory - " << c_str(TranscodeToLocalCodePage(extDir)) << endl;
+			cout << "Invalid base directory - " << extDir << endl;
 			cout << h.args.getHelpMessage();
 
 			theResult = -1;
 		}
 		else
 		{
+			XALAN_USING_XALAN(XalanTransformer)
+			XALAN_USING_XALAN(XMLFileReporter)
+
 			XalanTransformer	xalan;
 
 			// Generate Unique Run id. (Only used to name the result logfile.)
@@ -172,7 +188,7 @@ runTests(
 			const XalanDOMString	resultFilePrefix("params");
 			const XalanDOMString	resultsFile(drive + h.args.output + resultFilePrefix + UniqRunid + FileUtility::s_xmlSuffix);
 			
-			XMLFileReporter	logFile(resultsFile);
+			XMLFileReporter		logFile(resultsFile);
 
 			logFile.logTestFileInit("Param Testing: Testing ability to pass parameters to stylesheets. ");
 
@@ -185,6 +201,8 @@ runTests(
 
 				// Check that output directory is there.
 				h.checkAndCreateDir(theOutputDir);
+
+				typedef FileUtility::FileNameVectorType		FileNameVectorType;
 
 				const FileNameVectorType	files = h.getTestFileNames(h.args.base, currentDir, true);
 				logFile.logTestCaseInit(currentDir);
@@ -205,7 +223,7 @@ runTests(
 					// Testcase 8 tests: <?xml-stylesheet type="text/xsl" href="foo.xsl"?>
 					if ( i+1 <= 6 )
 					{
-						assign(theXMLFile, h.generateFileName(theXSLFile,"xml"));
+						theXMLFile = h.generateFileName(theXSLFile, "xml");
 					}
 
 					h.data.xmlFileURL = theXMLFile;
@@ -215,6 +233,9 @@ runTests(
 					const XalanDOMString  theOutputFile = h.generateFileName(theOutput, "out");
 					theGoldFile = h.args.gold + currentDir + FileUtility::s_pathSep + fileName;
 					theGoldFile = h.generateFileName(theGoldFile, "out");
+
+					XALAN_USING_XALAN(XSLTResultTarget);
+					XALAN_USING_XALAN(XSLTInputSource);
 
 					const XSLTResultTarget	theResultTarget(theOutputFile);
 					const XSLTInputSource	xslInputSource(theXSLFile);
@@ -249,7 +270,7 @@ runTests(
 							{
 								const XSLTInputSource	embed07InputSource(theXSLFile);
 								xalan.transform(embed07InputSource, theResultTarget);
-								append(h.data.testOrFile, " (Embed01)" );
+								h.data.testOrFile += XALAN_STATIC_UCODE_STRING(" (Embed01)");
 								embedFlag = true;
 								break;
 							}
@@ -258,7 +279,7 @@ runTests(
 							{
 								const XSLTInputSource	embed08InputSource(theXSLFile);
 								xalan.transform(embed08InputSource, theResultTarget);
-								append(h.data.testOrFile, " (Embed02)" );
+								h.data.testOrFile += XALAN_STATIC_UCODE_STRING(" (Embed02)");
 								embedFlag = true;
 								break;
 							}
@@ -316,6 +337,10 @@ main(
 
 	try
 	{
+		XALAN_USING_XERCES(XMLPlatformUtils)
+
+		XALAN_USING_XALAN(XalanTransformer)
+
 		// Call the static initializers for xerces and xalan, and create a transformer
 		//
 		XMLPlatformUtils::Initialize();

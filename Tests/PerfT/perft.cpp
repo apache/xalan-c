@@ -54,18 +54,21 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
+// Base header file.  Must be first.
+#include <Include/PlatformDefinitions.hpp>
 
+
+
+#include <cstdio>
 #include <ctime>
-#include <iostream>
-#include <strstream>
-#include <stdio.h>
-#include <direct.h>
 
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::cerr;
-	using std::cout;
-	using std::endl;
+#if defined(XALAN_CLASSIC_IOSTREAMS)
+#include <iostream.h>
+#else
+#include <iostream>
 #endif
+
+
 
 #include <xercesc/util/PlatformUtils.hpp>
 
@@ -77,16 +80,17 @@
 #include <Harness/FileUtility.hpp>
 #include <Harness/HarnessInit.hpp>
 
-#if defined(XALAN_NO_NAMESPACES)
-	typedef map<XalanDOMString, XalanDOMString, less<XalanDOMString> >	Hashtable;
-#else
-	typedef std::map<XalanDOMString, XalanDOMString>  Hashtable;
-#endif
 
 // This is here for memory leak testing.
 #if !defined(NDEBUG) && defined(_MSC_VER)
 #include <crtdbg.h>
 #endif
+
+
+
+XALAN_USING_STD(cerr)
+XALAN_USING_STD(cout)
+XALAN_USING_STD(endl)
 
 
 
@@ -97,12 +101,14 @@ const char* const 	excludeStylesheets[] =
 };
 
 
+
+
 inline bool
-checkForExclusion(XalanDOMString currentFile)
+checkForExclusion(const XALAN_CPP_NAMESPACE_QUALIFIER XalanDOMString&	currentFile)
 {
 	for (int i=0; excludeStylesheets[i] != 0; i++)
 	{	
-		if (equals(currentFile, XalanDOMString(excludeStylesheets[i])))
+		if (currentFile == XALAN_CPP_NAMESPACE_QUALIFIER XalanDOMString(excludeStylesheets[i]))
 		{
 			return true;
 		}
@@ -130,8 +136,9 @@ calculateAvgTime(
 }
 
 
+
 void
-setHelp(FileUtility&	h)
+setHelp(XALAN_CPP_NAMESPACE_QUALIFIER FileUtility&	h)
 {
 	h.args.getHelpStream() << endl
 		 << "Perft dir [-out -sub -i -iter]"
@@ -156,6 +163,10 @@ runTests(
 			int				argc,
 			const char*		argv[])
 {
+	// Just hoist everything...
+	XALAN_CPP_NAMESPACE_USE
+
+
 	HarnessInit		xmlPlatformUtils;
 
 	FileUtility		h;
@@ -167,7 +178,6 @@ runTests(
 	bool setGold = false;
 
 	const XalanDOMString	processorType(XALAN_STATIC_UCODE_STRING("XalanC"));
-	bool skip = true;		// Default will skip long tests
 
 	if (h.getParams(argc, argv, "PERFT-RESULTS", setGold) == true)
 	{
@@ -187,6 +197,9 @@ runTests(
 
 		// Get the list of sub-directories below "base" and iterate through them
 		bool foundDir = false;		// Flag indicates directory found. Used in conjunction with -sub cmd-line arg.
+
+		typedef FileUtility::FileNameVectorType		FileNameVectorType;
+
 		const FileNameVectorType dirs = h.getDirectoryNames(h.args.base);
 
 		for(FileNameVectorType::size_type	j = 0; j < dirs.size(); j++)
@@ -217,6 +230,9 @@ runTests(
 				clock_t startTime, endTime, accmTime, avgEtoe;
 				double timeinMilliseconds = 0, theAverage =0;
 				int transformResult = 0;
+
+				typedef XMLFileReporter::Hashtable	Hashtable;
+
 				Hashtable attrs;
 
 				attrs.insert(Hashtable::value_type(XalanDOMString("idref"), files[i]));
@@ -406,6 +422,9 @@ main(
 
 	try
 	{
+		XALAN_USING_XERCES(XMLPlatformUtils)
+		XALAN_USING_XALAN(XalanTransformer)
+
 		// Call the static initializers for xerces and xalan, and create a transformer
 		//
 		XMLPlatformUtils::Initialize();

@@ -55,6 +55,11 @@
  * <http://www.apache.org/>.
  */
 
+// Base header file.  Must be first.
+#include <Include/PlatformDefinitions.hpp>
+
+
+
 #include <cstdio>
 
 #if defined(XALAN_CLASSIC_IOSTREAMS)
@@ -107,6 +112,11 @@ const char* const 	excludeStylesheets[] =
 	"large-evans_large.xsl",
 	0
 };
+
+
+
+// Just hoist everything...
+XALAN_CPP_NAMESPACE_USE
 
 
 
@@ -187,11 +197,12 @@ calculateAverageElapsedTime(
 
 
 inline clock_t
-transformWUnparsedSource(const XalanDOMString&	theFileName,
-				 XSLTProcessor&			theProcessor,
-				 const StylesheetRoot*	theStylesheetRoot,
-				 XSLTResultTarget&	theResults,
-				 StylesheetExecutionContextDefault&  theExecutionContext)
+transformWUnparsedSource(
+			const XalanDOMString&				theFileName,
+			XSLTProcessor&						theProcessor,
+			const StylesheetRoot*				theStylesheetRoot,
+			XSLTResultTarget&					theResults,
+			StylesheetExecutionContextDefault&  theExecutionContext)
 {
 	const XSLTInputSource	csSourceXML(c_wstr(theFileName));
 
@@ -231,7 +242,8 @@ transformWParsedSource(
 
 
 inline long
-eTOeTransform(const XSLTInputSource&		inputSource, 
+eTOeTransform(
+			const XSLTInputSource&			inputSource,
 	        const XSLTInputSource&			stylesheetSource,
 	        XSLTResultTarget&				outputTarget,
 			StylesheetConstructionContext&	constructionContext,
@@ -239,11 +251,14 @@ eTOeTransform(const XSLTInputSource&		inputSource,
 			XSLTProcessor&					theProcessor)
 {
 	const clock_t startTime=clock();
-	theProcessor.process(inputSource, 
-			        	stylesheetSource,
-				    	outputTarget,
-						constructionContext,
-						executionContext);
+
+	theProcessor.process(
+				inputSource, 
+			    stylesheetSource,
+				outputTarget,
+				constructionContext,
+				executionContext);
+
 	const clock_t endTime=clock();
 
 	return endTime - startTime;
@@ -315,6 +330,8 @@ main(int			argc,
 			{
 				XSLTInit	theInit;  
 		
+				typedef FileUtility::FileNameVectorType		FileNameVectorType;
+
 				// Get the list of Directories that are below perf and iterate through them
 				const FileNameVectorType dirs = h.getDirectoryNames(h.args.base);
 
@@ -343,6 +360,9 @@ main(int			argc,
 						// Define  variables used for timing and reporting ...
 						clock_t startTime, endTime, accmTime, avgEtoe;
 						double timeinMilliseconds, theAverage;
+
+						typedef XMLFileReporter::Hashtable	Hashtable;
+
 						Hashtable attrs;
 					
 						if (skip && checkForExclusion(files[i]))
@@ -432,7 +452,7 @@ main(int			argc,
 						// the processor, since those objects have the same lifetime as
 						// other objects created as a result of the execution.
 
-						const XSLTResultTarget	theResultTarget(theOutputFile);
+						XSLTResultTarget		theResultTarget(theOutputFile);
 						const XSLTInputSource	xslInputSource(theXSLFile);
 						const XSLTInputSource	xmlInputSource(theXMLFile);
 
