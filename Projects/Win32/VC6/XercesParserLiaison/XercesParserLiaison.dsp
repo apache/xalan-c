@@ -246,10 +246,6 @@ SOURCE=..\..\..\..\src\XercesParserLiaison\XercesCommentBridge.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XercesParserLiaison\XercesCommon.hpp
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\..\..\src\XercesParserLiaison\XercesDocumentBridge.hpp
 # End Source File
 # Begin Source File
