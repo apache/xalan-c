@@ -289,6 +289,28 @@ ElemAttribute::execute(
 					// Could not resolve prefix
 					executionContext.warn("Warning: Could not resolve prefix " + nsprefix, sourceNode, this);
 				}
+				else
+				{
+					// Check to see if there's already a namespace declaration in scope...
+					const XalanDOMString&	prefix = executionContext.getResultPrefixForNamespace(attrNameSpace);
+
+					if (length(prefix) == 0)
+					{
+						// We need to generate a namespace declaration...
+						StylesheetExecutionContext::GetAndReleaseCachedString	nsDeclGuard(executionContext);
+
+						XalanDOMString&		nsDecl = nsDeclGuard.get();
+
+						reserve(nsDecl, DOMServices::s_XMLNamespaceWithSeparatorLength + length(nsprefix) + 1);
+
+						assign(nsDecl, DOMServices::s_XMLNamespaceWithSeparator);
+
+						append(nsDecl, nsprefix);
+
+						// Add the namespace declaration...
+						executionContext.addResultAttribute(nsDecl, attrNameSpace);
+					}
+				}
 			}
 		}
 		else
