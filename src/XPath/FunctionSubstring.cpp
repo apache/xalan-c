@@ -86,14 +86,21 @@ FunctionSubstring::~FunctionSubstring()
  * Get the value for the start index (C-style, not XPath).
  */
 inline XalanDOMString::size_type
-getStartIndex(double	theSecondArgValue)
+getStartIndex(
+			double						theSecondArgValue,
+			XalanDOMString::size_type	theStringLength)
 {
 	// We always subtract 1 for C-style index, since XPath indexes from 1.
 	
 	// Anything less than, or equal to 1 is 0.
-	if (theSecondArgValue <= 1)
+	if (theSecondArgValue <= 1 ||
+		DoubleSupport::isNaN(theSecondArgValue) == true)
 	{
 		return 0;
+	}
+	else if (DoubleSupport::isPositiveInfinity(theSecondArgValue) == true)
+	{
+		return theStringLength;
 	}
 	else
 	{
@@ -214,7 +221,7 @@ FunctionSubstring::execute(
 			DoubleSupport::round(arg2->num());
 
 		// XPath indexes from 1, so this is the first XPath index....
-		const XalanDOMString::size_type		theStartIndex = getStartIndex(theSecondArgValue);
+		const XalanDOMString::size_type		theStartIndex = getStartIndex(theSecondArgValue, theSourceStringLength);
 
 		if (theStartIndex >= theSourceStringLength)
 		{
