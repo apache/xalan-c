@@ -43,7 +43,7 @@ RSC=rc.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MT /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "DLL_EXPORTS" /YX /FD /c
-# ADD CPP /nologo /MD /W4 /GR /GX /O2 /Ob2 /I "..\..\..\..\xml-xerces\c\src" /I "..\..\..\..\..\..\xml4c4_0_1-win32\include" /I "..\..\src" /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "DLL_EXPORTS" /D "_XPathWrapper" /FD /c
+# ADD CPP /nologo /MD /W4 /GR /GX /O2 /Ob2 /I "..\..\..\..\xml-xerces\c\src" /I "..\..\..\..\xml4c4_0_1-win32\include" /I "..\..\src" /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "DLL_EXPORTS" /D "_XPathWrapper" /FD /c
 # SUBTRACT CPP /YX
 # ADD BASE MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "NDEBUG" /mktyplib203 /win32
@@ -54,7 +54,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /dll /machine:I386
-# ADD LINK32 ..\..\..\..\..\..\xml4c4_0_1-win32\lib\xerces-c_1.lib /nologo /dll /machine:I386 /out:"..\..\Build\Win32\VC6\Release/XPathWrapper.dll"
+# ADD LINK32 ..\..\..\..\xml4c4_0_1-win32\lib\xerces-c_1.lib /nologo /dll /machine:I386 /out:"..\..\Build\Win32\VC6\Release/XPathWrapper.dll"
 
 !ELSEIF  "$(CFG)" == "DLL - Win32 Debug"
 
@@ -70,7 +70,7 @@ LINK32=link.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MTd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "DLL_EXPORTS" /YX /FD /GZ /c
-# ADD CPP /nologo /MDd /W4 /Gm /GR /GX /Zi /Od /I "..\..\..\..\xml-xerces\c\src" /I "..\..\..\..\..\..\xml4c4_0_1-win32\include" /I "..\..\src" /D "_WINDOWS" /D "_USRDLL" /D "DLL_EXPORTS" /D "_XPathWrapper" /D "WIN32" /D "_DEBUG" /D "_MBCS" /YX /FD /GZ /c
+# ADD CPP /nologo /MDd /W4 /Gm /GR /GX /Zi /Od /I "..\..\..\..\xml-xerces\c\src" /I "..\..\..\..\xml4c4_0_1-win32\include" /I "..\..\src" /D "_WINDOWS" /D "_USRDLL" /D "DLL_EXPORTS" /D "_XPathWrapper" /D "WIN32" /D "_DEBUG" /D "_MBCS" /YX /FD /GZ /c
 # SUBTRACT CPP /Fr
 # ADD BASE MTL /nologo /D "_DEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "_DEBUG" /mktyplib203 /win32
@@ -81,7 +81,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /dll /debug /machine:I386 /pdbtype:sept
-# ADD LINK32 ..\..\..\..\..\..\xml4c4_0_1-win32\lib\xerces-c_1D.lib /nologo /dll /map /debug /machine:I386 /out:"..\..\Build\Win32\VC6\Debug/XPathWrapper.dll" /pdbtype:sept
+# ADD LINK32 ..\..\..\..\xml4c4_0_1-win32\lib\xerces-c_1D.lib /nologo /dll /map /debug /machine:I386 /out:"..\..\Build\Win32\VC6\Debug/XPathWrapper.dll" /pdbtype:sept
 
 !ENDIF 
 
