@@ -85,10 +85,11 @@
 
 
 
-// These four XalanDOMString instances will hold the actual
+// These XalanDOMString instances will hold the actual
 // data.  This way, the DOMSupport references can be const,
 // but we can initialize the data when we want to.
 static XalanDOMString	s_XMLString;
+static XalanDOMString	s_XMLStringWithSeparator;
 static XalanDOMString	s_XMLNamespaceURI;
 static XalanDOMString	s_XMLNamespace;
 static XalanDOMString	s_XMLNamespaceWithSeparator;
@@ -97,6 +98,7 @@ static XalanDOMString	s_XMLNamespaceSeparatorString;
 
 
 const XalanDOMString&	DOMServices::s_XMLString = ::s_XMLString;
+const XalanDOMString&	DOMServices::s_XMLStringWithSeparator = ::s_XMLStringWithSeparator;
 const XalanDOMString&	DOMServices::s_XMLNamespaceURI = ::s_XMLNamespaceURI;
 const XalanDOMString&	DOMServices::s_XMLNamespace = ::s_XMLNamespace;
 const XalanDOMString&	DOMServices::s_XMLNamespaceWithSeparator = ::s_XMLNamespaceWithSeparator;
@@ -109,6 +111,7 @@ const XalanDOMString	DOMServices::s_emptyString;
 // data.  This way, the DOMSupport references can be const,
 // but we can initialize the data when we want to.
 static unsigned int		s_XMLStringLength = 0;
+static unsigned int		s_XMLStringWithSeparatorLength = 0;
 static unsigned int		s_XMLNamespaceURILength = 0;
 static unsigned int		s_XMLNamespaceLength = 0;
 static unsigned int		s_XMLNamespaceWithSeparatorLength = 0;
@@ -117,6 +120,7 @@ static unsigned int		s_XMLNamespaceSeparatorStringLength = 0;
 
 
 const unsigned int&		DOMServices::s_XMLStringLength = ::s_XMLStringLength;
+const unsigned int&		DOMServices::s_XMLStringWithSeparatorLength = ::s_XMLStringWithSeparatorLength;
 const unsigned int&		DOMServices::s_XMLNamespaceURILength = ::s_XMLNamespaceURILength;
 const unsigned int&		DOMServices::s_XMLNamespaceLength = ::s_XMLNamespaceLength;
 const unsigned int&		DOMServices::s_XMLNamespaceWithSeparatorLength = ::s_XMLNamespaceWithSeparatorLength;
@@ -176,12 +180,14 @@ void
 DOMServices::initialize()
 {
 	::s_XMLString = XALAN_STATIC_UCODE_STRING("xml");
+	::s_XMLStringWithSeparator = XALAN_STATIC_UCODE_STRING("xml:");
 	::s_XMLNamespaceURI = XALAN_STATIC_UCODE_STRING("http://www.w3.org/XML/1998/namespace");
 	::s_XMLNamespace = XALAN_STATIC_UCODE_STRING("xmlns");
 	::s_XMLNamespaceWithSeparator = XALAN_STATIC_UCODE_STRING("xmlns:");
 	::s_XMLNamespaceSeparatorString = XALAN_STATIC_UCODE_STRING(":");
 
 	::s_XMLStringLength = length(DOMServices::s_XMLString);
+	::s_XMLStringWithSeparatorLength = length(DOMServices::s_XMLStringWithSeparator);
 	::s_XMLNamespaceURILength = length(DOMServices::s_XMLNamespaceURI);
 	::s_XMLNamespaceLength = length(DOMServices::s_XMLNamespace);
 	::s_XMLNamespaceWithSeparatorLength = length(DOMServices::s_XMLNamespaceWithSeparator);
