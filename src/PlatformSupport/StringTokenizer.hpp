@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -85,7 +85,7 @@ public:
 	 * 
 	 * @param theString     string to tokenize
 	 * @param theTokens     string of delimiters used to parse target, default
-	 *                      is "\t\n\r\f"
+	 *                      is "\t\n\r"
 	 * @param fReturnTokens if true, delimiter characters are also returned
 	 *                      as tokens, default is false
 	 */
@@ -98,7 +98,7 @@ public:
 	 * 
 	 * @param theString     string to tokenize
 	 * @param theTokens     string of delimiters used to parse target, default
-	 *                      is "\t\n\r\f"
+	 *                      is "\t\n\r"
 	 * @param fReturnTokens if true, delimiter characters are also returned
 	 *                      as tokens, default is false
 	 */
@@ -168,6 +168,12 @@ public:
 	size_type
 	countTokens() const;
 
+	void
+	reset()
+	{
+		m_currentIndex = 0;
+	}
+
 protected:
 
 	XalanDOMString::size_type
@@ -175,15 +181,15 @@ protected:
 
 private:
 
-	const XalanDOMString				m_String;
+	const XalanDOMString				m_string;
 
-	const XalanDOMString				m_Tokens;
+	const XalanDOMString				m_tokens;
 
-	const bool							m_fReturnTokens;
+	const bool							m_returnTokens;
 
-	XalanDOMString::size_type			m_CurrentIndex;
+	XalanDOMString::size_type			m_currentIndex;
 
-	const XalanDOMString::size_type		m_StringLength;
+	const XalanDOMString::size_type		m_stringLength;
 
 	const XalanDOMString::size_type		m_tokensLength;
 };

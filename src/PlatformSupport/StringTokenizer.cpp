@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -74,7 +74,6 @@ const XalanDOMChar	StringTokenizer::s_defaultTokens[] =
 	XalanUnicode::charHTab,
 	XalanUnicode::charLF,
 	XalanUnicode::charCR,
-	XalanUnicode::charFF,
 	0,
 };
 
@@ -84,11 +83,11 @@ StringTokenizer::StringTokenizer(
 			const XalanDOMString&	theString,
 			const XalanDOMString&	theTokens,
 			bool					fReturnTokens) :
-	m_String(theString),
-	m_Tokens(theTokens),
-	m_fReturnTokens(fReturnTokens),
-	m_CurrentIndex(0),
-	m_StringLength(length(theString)),
+	m_string(theString),
+	m_tokens(theTokens),
+	m_returnTokens(fReturnTokens),
+	m_currentIndex(0),
+	m_stringLength(length(theString)),
 	m_tokensLength(length(theTokens))
 {
 }
@@ -99,11 +98,11 @@ StringTokenizer::StringTokenizer(
 			const XalanDOMString&	theString,
 			const XalanDOMChar*		theTokens,
 			bool					fReturnTokens) :
-	m_String(theString),
-	m_Tokens(XalanDOMString(theTokens)),
-	m_fReturnTokens(fReturnTokens),
-	m_CurrentIndex(0),
-	m_StringLength(length(theString)),
+	m_string(theString),
+	m_tokens(XalanDOMString(theTokens)),
+	m_returnTokens(fReturnTokens),
+	m_currentIndex(0),
+	m_stringLength(length(theString)),
 	m_tokensLength(length(theTokens))
 {
 }
@@ -114,11 +113,11 @@ StringTokenizer::StringTokenizer(
 			const XalanDOMChar*		theString,
 			const XalanDOMChar*		theTokens,
 			bool					fReturnTokens) :
-	m_String(XalanDOMString(theString)),
-	m_Tokens(XalanDOMString(theTokens)),
-	m_fReturnTokens(fReturnTokens),
-	m_CurrentIndex(0),
-	m_StringLength(length(theString)),
+	m_string(XalanDOMString(theString)),
+	m_tokens(XalanDOMString(theTokens)),
+	m_returnTokens(fReturnTokens),
+	m_currentIndex(0),
+	m_stringLength(length(theString)),
 	m_tokensLength(length(theTokens))
 {
 }
@@ -129,11 +128,11 @@ StringTokenizer::StringTokenizer(
 			const XalanDOMChar*		theString,
 			const XalanDOMString&	theTokens,
 			bool					fReturnTokens) :
-	m_String(XalanDOMString(theString)),
-	m_Tokens(theTokens),
-	m_fReturnTokens(fReturnTokens),
-	m_CurrentIndex(0),
-	m_StringLength(length(theString)),
+	m_string(XalanDOMString(theString)),
+	m_tokens(theTokens),
+	m_returnTokens(fReturnTokens),
+	m_currentIndex(0),
+	m_stringLength(length(theString)),
 	m_tokensLength(length(theTokens))
 {
 }
@@ -157,48 +156,48 @@ StringTokenizer::hasMoreTokens() const
 XalanDOMString
 StringTokenizer::nextToken()
 {
-	assert(m_CurrentIndex < m_StringLength);
+	assert(m_currentIndex < m_stringLength);
 
 	XalanDOMString	theToken;
 
 	// Find the index of the next delimiter.
-	XalanDOMString::size_type	theIndex = FindNextDelimiterIndex(m_CurrentIndex);
+	XalanDOMString::size_type	theIndex = FindNextDelimiterIndex(m_currentIndex);
 
-	if (theIndex == m_CurrentIndex)
+	if (theIndex == m_currentIndex)
 	{
-		m_CurrentIndex = theIndex + 1;
+		m_currentIndex = theIndex + 1;
 
-		if (m_fReturnTokens == true)
+		if (m_returnTokens == true)
 		{
 			// The next delimiter is at the current index.  If we're
 			// returning delimiters as tokens, then make that the
 			// return value.  Otherwise, return an empty string.
 			substring(
-				m_String,
+				m_string,
 				theToken,
 				theIndex,
 				theIndex + 1);
 		}
-		else if (m_CurrentIndex < m_StringLength)
+		else if (m_currentIndex < m_stringLength)
 		{
 			theToken = nextToken();
 		}
 	}
 	else
 	{
-		if (theIndex == m_CurrentIndex)
+		if (theIndex == m_currentIndex)
 		{
-			theIndex = FindNextDelimiterIndex(m_CurrentIndex + 1);
+			theIndex = FindNextDelimiterIndex(m_currentIndex + 1);
 		}
-		assert(theIndex > m_CurrentIndex);
+		assert(theIndex > m_currentIndex);
 
 		substring(
-			m_String,
+			m_string,
 			theToken,
-			m_CurrentIndex,
+			m_currentIndex,
 			theIndex);
 
-		m_CurrentIndex = theIndex;
+		m_currentIndex = theIndex;
 	}
 
 	return theToken;
@@ -209,46 +208,46 @@ StringTokenizer::nextToken()
 void
 StringTokenizer::nextToken(XalanDOMString&	theToken)
 {
-	assert(m_CurrentIndex < m_StringLength);
+	assert(m_currentIndex < m_stringLength);
 
 	// Find the index of the next delimiter.
-	XalanDOMString::size_type	theIndex = FindNextDelimiterIndex(m_CurrentIndex);
+	XalanDOMString::size_type	theIndex = FindNextDelimiterIndex(m_currentIndex);
 
-	if (theIndex == m_CurrentIndex)
+	if (theIndex == m_currentIndex)
 	{
-		m_CurrentIndex = theIndex + 1;
+		m_currentIndex = theIndex + 1;
 
-		if (m_fReturnTokens == true)
+		if (m_returnTokens == true)
 		{
 			// The next delimiter is at the current index.  If we're
 			// returning delimiters as tokens, then make that the
 			// return value.  Otherwise, return an empty string.
 			substring(
-				m_String,
+				m_string,
 				theToken,
 				theIndex,
 				theIndex + 1);
 		}
-		else if (m_CurrentIndex < m_StringLength)
+		else if (m_currentIndex < m_stringLength)
 		{
 			theToken = nextToken();
 		}
 	}
 	else
 	{
-		if (theIndex == m_CurrentIndex)
+		if (theIndex == m_currentIndex)
 		{
-			theIndex = FindNextDelimiterIndex(m_CurrentIndex + 1);
+			theIndex = FindNextDelimiterIndex(m_currentIndex + 1);
 		}
-		assert(theIndex > m_CurrentIndex);
+		assert(theIndex > m_currentIndex);
 
 		substring(
-				m_String,
+				m_string,
 				theToken,
-				m_CurrentIndex,
+				m_currentIndex,
 				theIndex);
 
-		m_CurrentIndex = theIndex;
+		m_currentIndex = theIndex;
 	}
 }
 
@@ -259,11 +258,11 @@ StringTokenizer::countTokens() const
 {
 	size_t						theCount = 0;
 
-	XalanDOMString::size_type	theCurrentIndex = m_CurrentIndex;
+	XalanDOMString::size_type	theCurrentIndex = m_currentIndex;
 
-	if (theCurrentIndex < m_StringLength)
+	if (theCurrentIndex < m_stringLength)
 	{
-		while(theCurrentIndex < m_StringLength)
+		while(theCurrentIndex < m_stringLength)
 		{
 			const XalanDOMString::size_type		theNextIndex =
 				FindNextDelimiterIndex(theCurrentIndex);
@@ -272,7 +271,7 @@ StringTokenizer::countTokens() const
 			{
 				theCurrentIndex = theNextIndex + 1;
 
-				if (m_fReturnTokens == true)
+				if (m_returnTokens == true)
 				{
 					theCount++;
 				}
@@ -298,14 +297,14 @@ StringTokenizer::FindNextDelimiterIndex(XalanDOMString::size_type	theStartIndex)
 
 	XalanDOMString::size_type	theIndex = theStartIndex;
 
-	while(theIndex < m_StringLength &&
+	while(theIndex < m_stringLength &&
 		  fTokenFound == false)
 	{
 		const XalanDOMChar	theCurrentChar =
-			charAt(m_String,
+			charAt(m_string,
 				   theIndex);
 
-		if (indexOf(m_Tokens,
+		if (indexOf(m_tokens,
 					theCurrentChar) < m_tokensLength)
 		{
 			fTokenFound = true;
