@@ -114,6 +114,7 @@
 #include <ICUBridge/ICUBridge.hpp>
 #include <ICUBridge/FunctionICUFormatNumber.hpp>
 #include <ICUBridge/ICUXalanNumberFormatFactory.hpp>
+#include <ICUBridge/ICUBridgeCollationCompareFunctor.hpp>
 #endif
 
 
@@ -750,6 +751,12 @@ xsltMain(const CmdLineParams&	params)
 			theXSLProcessorSupport,
 			theXPathSupport,
 			theXObjectFactory);
+
+#if defined(XALAN_USE_ICU)
+	ICUBridgeCollationCompareFunctor	theICUFunctor;
+
+	theExecutionContext.installCollationCompareFunctor(&theICUFunctor);
+#endif
 
 	if (stylesheet == 0)
 	{

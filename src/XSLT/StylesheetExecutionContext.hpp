@@ -1353,6 +1353,32 @@ public:
 			const XalanElement&		theTemplate,
 			const NodeRefListBase&	nl) const = 0;
 
+	/**
+	 * Compare two strings using the collation of the
+	 * current locale.
+	 *
+	 * @param theLHS a string to compare
+	 * @param theRHS a string to compare
+	 * @return < 0 if theLHS is before theRHS, 0 if they are equal, or > 0 if theLHS is after theRHS
+	 */
+	virtual int
+	collationCompare(
+			const XalanDOMString&	theLHS,
+			const XalanDOMString&	theRHS) const = 0;
+
+	/**
+	 * Compare two strings using the collation of the
+	 * current locale.
+	 *
+	 * @param theLHS a string to compare
+	 * @param theRHS a string to compare
+	 * @return < 0 if theLHS is before theRHS, 0 if they are equal, or > 0 if theLHS is after theRHS
+	 */
+	virtual int
+	collationCompare(
+			const XalanDOMChar*		theLHS,
+			const XalanDOMChar*		theRHS) const = 0;
+
 
 	// These interfaces are inherited from XPathExecutionContext...
 

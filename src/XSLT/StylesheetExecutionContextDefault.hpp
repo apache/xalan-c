@@ -442,6 +442,48 @@ public:
 			const XalanElement&		theTemplate,
 			const NodeRefListBase&	nl) const;
 
+	virtual int
+	collationCompare(
+			const XalanDOMString&	theLHS,
+			const XalanDOMString&	theRHS) const;
+
+	virtual int
+	collationCompare(
+			const XalanDOMChar*		theLHS,
+			const XalanDOMChar*		theRHS) const;
+
+	class XALAN_XSLT_EXPORT CollationCompareFunctor
+	{
+	public:
+
+		CollationCompareFunctor();
+
+		virtual
+		~CollationCompareFunctor();
+
+		virtual int
+		operator()(
+			const XalanDOMChar*		theLHS,
+			const XalanDOMChar*		theRHS) const = 0;
+	};
+
+	class XALAN_XSLT_EXPORT DefaultCollationCompareFunctor : public CollationCompareFunctor
+	{
+	public:
+
+		DefaultCollationCompareFunctor();
+
+		virtual
+		~DefaultCollationCompareFunctor();
+
+		virtual int
+		operator()(
+			const XalanDOMChar*		theLHS,
+			const XalanDOMChar*		theRHS) const;
+	};
+
+	const CollationCompareFunctor*
+	installCollationCompareFunctor(const CollationCompareFunctor*	theFunctor);
 
 	// These interfaces are inherited from XPathExecutionContext...
 
@@ -660,9 +702,13 @@ private:
 
 	TextOutputStreamSetType				m_textOutputStreams;
 
+	const CollationCompareFunctor*		m_collationCompareFunctor;
+
 	static XalanNumberFormatFactory		s_defaultXalanNumberFormatFactory;
 
 	static XalanNumberFormatFactory*	s_xalanNumberFormatFactory;
+
+	const static DefaultCollationCompareFunctor		s_defaultFunctor;
 };
 
 

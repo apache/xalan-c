@@ -79,10 +79,10 @@
 
 
 
-class XalanNode;
 class MutableNodeRefList;
+class StylesheetExecutionContext;
+class XalanNode;
 class XPath;
-class XPathExecutionContext;
 
 
 
@@ -108,7 +108,7 @@ public:
 	 *
 	 * @param executionContext current execution context
 	 */
-	NodeSorter(XPathExecutionContext&	executionContext);
+	NodeSorter(StylesheetExecutionContext&	executionContext);
   
 	~NodeSorter();
 
@@ -148,7 +148,7 @@ public:
 	 * @param theNodeSortKeys vector of keys upon which to sort
 	 */
 		NodeSortKeyCompare(
-				XPathExecutionContext&			executionContext,
+				StylesheetExecutionContext&		executionContext,
 				const MutableNodeRefList&		theList,
 				const NodeVectorType&			theNodes,
 				const NodeSortKeyVectorType&	theNodeSortKeys) :
@@ -192,7 +192,7 @@ public:
 
 	private:
 
-		XPathExecutionContext&			m_executionContext;
+		StylesheetExecutionContext&		m_executionContext;
 		const MutableNodeRefList&		m_list;
 		const NodeVectorType&			m_nodes;
 		const NodeSortKeyVectorType&	m_nodeSortKeys;
@@ -231,9 +231,9 @@ private:
 			NodeVectorType&					v,
 			const NodeSortKeyVectorType&	keys);
 
-	XPathExecutionContext&	m_executionContext;
+	StylesheetExecutionContext&		m_executionContext;
 
-	NodeSortKeyVectorType	m_keys; // vector of NodeSortKeys
+	NodeSortKeyVectorType			m_keys;
 
 	/**
 	 * @@ TODO: Adjust this for locale.

@@ -77,7 +77,11 @@
 
 
 
-NodeSorter::NodeSorter(XPathExecutionContext&	executionContext) :
+#include "StylesheetExecutionContext.hpp"
+
+
+
+NodeSorter::NodeSorter(StylesheetExecutionContext&		executionContext) :
 	m_executionContext(executionContext),
 	m_keys()
 {
@@ -207,7 +211,7 @@ NodeSorter::NodeSortKeyCompare::operator()(
 	// Compare as strings
 	else
 	{
-		const int	theCompareResult = collationCompare(
+		const int	theCompareResult = m_executionContext.collationCompare(
 				getStringResult(theKey, theLHS),
 				getStringResult(theKey, theRHS));
 
