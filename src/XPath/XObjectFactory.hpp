@@ -393,6 +393,13 @@ public:
 	{
 	}
 
+	explicit
+	XObjectGuard() :
+		m_factory(0),
+		m_object(0)
+	{
+	}
+
 	// Note that copy construction transfers ownership, just
 	// as std::auto_ptr.
 	XObjectGuard(XObjectGuard&	theRHS)
@@ -413,6 +420,29 @@ public:
 	~XObjectGuard()
 	{
 		reset();
+	}
+
+	// Note that assignment transfers ownership, just
+	// as std::auto_ptr.
+	XObjectGuard&
+	operator=(XObjectGuard&		theRHS)
+	{
+		if (&theRHS != this)
+		{
+			// Release the current object...
+			release();
+
+			// Copy the factory and object pointers...
+			m_factory = theRHS.m_factory;
+			m_object = theRHS.m_object;
+
+			// The source object no longer points to
+			// the object...
+			theRHS.m_factory = 0;
+			theRHS.m_object = 0;
+		}
+
+		return *this;
 	}
 
 	/**
@@ -440,7 +470,7 @@ public:
 	}
 
 	/**
-	 * Return the referenced object to the factory and set pointers to null.
+	 * Return the referenced object to the factory and set the pointers to null.
 	 */
 	void
 	reset()
@@ -455,6 +485,26 @@ public:
 		}
 
 		m_factory = 0;
+	}
+
+	/**
+	 * Return the referenced object to the factory, if there is one,
+	 * and set the pointers to the new object and factory.
+	 */
+	void
+	reset(
+			XObjectFactory&		theFactory,
+			XObject*			theXObject)
+	{
+		if (m_object != 0)
+		{
+			assert(m_factory != 0);
+
+			m_factory->returnObject(m_object);
+		}
+
+		m_object = theXObject;
+		m_factory = &theFactory;
 	}
 
 	/**
@@ -473,9 +523,6 @@ public:
 	}
 
 private:
-
-	XObjectGuard&
-	operator=(const XObjectGuard&);
 
 	bool
 	operator==(const XObjectGuard&) const;
