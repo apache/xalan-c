@@ -92,7 +92,7 @@ FunctionString::execute(
 	{
 		executionContext.error("The string() function requires a non-null context node!");
 
-		return 0;
+		return XObjectPtr();
 	}
 	else
 	{
@@ -101,11 +101,7 @@ FunctionString::execute(
 		// as the only member.
 		// So we have to create an XNodeList with the context node as
 		// the only member and call the str() function on it.  
-
-		// An XObject that contains the context node.
-		XObjectPtr	theXObject(executionContext.createNodeSet(*context));
-
-		return executionContext.getXObjectFactory().createString(theXObject->str());
+		return executionContext.getXObjectFactory().createString(executionContext.createNodeSet(*context)->str());
 	}
 }
 

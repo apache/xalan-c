@@ -93,7 +93,7 @@ FunctionNormalizeSpace::execute(
 		executionContext.error("The normalize-space() function requires a non-null context node!",
 							   context);
 
-		return 0;
+		return XObjectPtr();
 	}
 	else
 	{
@@ -102,11 +102,7 @@ FunctionNormalizeSpace::execute(
 		// into a string-value, which really means using FunctionString,
 		// but we don't need to do that, since our XObject classes
 		// do the real work in turning themselves into strings.
-
-		// A node set that contains the context node.
-		XObjectPtr	theXObject(executionContext.createNodeSet(*context));
-
-		return normalize(executionContext, theXObject->str());
+		return normalize(executionContext, executionContext.createNodeSet(*context)->str());
 	}
 }
 
