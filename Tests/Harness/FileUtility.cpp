@@ -82,7 +82,7 @@ extern "C" int mkdir(const char*, mode_t mode);
 
 #if defined(XALAN_CLASSIC_IOSTREAMS)
 #include <iostream.h>
-#include <strstrea.h>
+#include <strstream.h>
 #else
 #include <iostream>
 #include <strstream>
