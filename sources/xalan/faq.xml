@@ -25,14 +25,14 @@
 <faq title="What is &xml4c;?">
 <q>What is &xml4c; and why do I need it?</q>
 
-<a><p>&xml4c; is a validating XML parser written in a portable subset of C++. &xml4c; makes it easy to give your application the ability to read and write XML data. Like &xslt4c;, &xml4c; is available from the Apache XML site:  http://xml.apache.org/xerces-c/index.html</p></a>
+<a><p>&xml4c; is a validating XML parser written in a portable subset of C++. &xml4c; makes it easy to give your application the ability to read and write XML data. Like &xslt4c;, &xml4c; is available from the Apache XML site:  http://xml.apache.org/xerces-c/index.html</p><!--xml4cNote--></a>
 </faq>
   
 
   <faq title="Which version of Xerces should I be using?">  
     <q>Which version of Xerces should I be using?</q>
     
-    <a><p>The &xslt4c; release notes includes information about the &xml4c; release with which the &xslt4c; release has been coordinated and tested. See <link idref="readme" anchor="status">Status</link></p></a>
+    <a><p>The &xslt4c; release notes includes information about the &xml4c; release with which the &xslt4c; release has been coordinated and tested. See <link idref="readme" anchor="status">Status</link></p><!--xml4cNote--></a>
   </faq>
   
 <faq title="Problems with samples in Windows">
@@ -99,7 +99,7 @@
 
 <a><p>The International Components for Unicode(ICU) is a C and C++ library that provides robust and full-featured Unicode support on a wide variety of platforms. &xslt4c; uses the ICU to extend support for encoding, number formatting, and sorting.</p> 
 <p>The ICU is available for download from <jump href="http://oss.software.ibm.com/developerworks/opensource/icu/project/index.html">http://oss.software.ibm.com/developerworks/opensource/icu/project/index.html</jump>.</p>
-<p>For more details see: <link idref="usagepatterns" anchor="icu">Using the International Components for Unicode (ICU)</link>.</p><anchor name="gnutar"/><p/></a>
+<p>For more details see: <link idref="usagepatterns" anchor="icu">Using the International Components for Unicode (ICU)</link>.</p><!--icuNote--><anchor name="gnutar"/><p/></a>
 </faq>
 
    <faq title="A tar checksum error on Solaris.">
