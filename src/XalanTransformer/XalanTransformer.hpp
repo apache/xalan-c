@@ -93,7 +93,11 @@
 
 
 
+#if defined(XALAN_OLD_STREAM_HEADERS)
+#include <iostream.h>
+#else
 #include <iostream>
+#endif
 
 
 
@@ -195,7 +199,7 @@ public:
 	 * @return	0 for success and 1 for failure 
 	 */
 	int
-	XalanTransformer::transform(
+	transform(
 			istream*					theXMLInStream, 
 			istream*					theXSLInStream,
 			ostream*					theOutStream);
@@ -216,7 +220,7 @@ public:
 	 * @return	0 for success and 1 for failure 
 	 */
 	int
-	XalanTransformer::transform(
+	transform(
 			const char*					theXMLFileName, 
 			const char*					theXSLFileName,
 			const void*					theOutputHandle, 
@@ -227,12 +231,19 @@ protected:
 private:
 
 	XalanSourceTreeDOMSupport				m_domSupport;
+
 	XalanSourceTreeParserLiaison			m_parserLiaison;
+	
 	XSLTProcessorEnvSupportDefault			m_xsltprocessorEnvSupport;
+	
 	XObjectFactoryDefault					m_xobjectFactory;
+	
 	XPathFactoryDefault						m_xpathFactory;
+	
 	XSLTEngineImpl							m_processor;
+	
 	StylesheetConstructionContextDefault	m_stylesheetConstructionContext;
+	
 	StylesheetExecutionContextDefault		m_stylesheetExecutionContext;
 
 	static XSLTInit*	m_xsltInit;

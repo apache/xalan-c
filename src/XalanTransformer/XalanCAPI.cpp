@@ -59,7 +59,11 @@
 
 
 
+#if defined(XALAN_OLD_STREAM_HEADERS)
+#include <strstream.h>
+#else
 #include <strstream>
+#endif
 
 
 
@@ -89,12 +93,13 @@ CreateXalanTransformer()
 
 
 XALAN_TRANSFORMER_EXPORT_FUNCTION(void)
-DeleteXalanTransformer(XalanHandle* theXalanTransformer)
+DeleteXalanTransformer(XalanHandle* theXalanHandle)
 {
-	if(theXalanTransformer != NULL)
+	if(*theXalanHandle != NULL)
 	{
-		delete	*theXalanTransformer;
-		*theXalanTransformer = NULL;
+		XalanTransformer* theXalanTransformer = (XalanTransformer*) *theXalanHandle;
+		delete	theXalanTransformer;
+		*theXalanHandle = NULL;
 	}
 }
 
@@ -158,7 +163,7 @@ XalanTransformToData(
 XALAN_TRANSFORMER_EXPORT_FUNCTION(void)
 XalanFreeData(char**	theStream)
 {
-	if(theStream != NULL)
+	if(*theStream != NULL)
 	{
 		delete[] *theStream;
 		*theStream = NULL;
@@ -187,6 +192,3 @@ XalanTransformToHandler(
 
 	return status;
 }
-
-
-
