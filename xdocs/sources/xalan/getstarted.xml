@@ -4,7 +4,7 @@
 <s1 title="Getting Started with Xalan-C++">
 <ul>
 <li><link anchor="download">Downloading what you need</link></li>
-<li><link anchor="path">Setting up the system path</link></li>
+<li><link anchor="path">Setting up the path/library path</link></li>
 <li><link anchor="samples">Trying out the samples</link></li>
 <li><link anchor="commandline">Performing your own transformations from the command line</link></li>
 <li><link anchor="apps">Setting up your own XSLT applications</link></li>
@@ -79,12 +79,12 @@ Xalan-C++ and Xerces-C++ header (.hpp) files and (for Windows) the &xslt4c; and 
 <p>For the requirements for rebuilding &xslt4c;, see the <link idref="readme" anchor="build">Build notes</link>.</p>
 </s3>
 </s2><anchor name="path"/>
-<s2 title="Setting up the path">
+<s2 title="Setting up the path/library path">
 <p>For the Xalan-C++ Windows32 distribution, place xml-xalan\c\Build\Win32\VC6\Release on the path.</p>
-<p>For the Xalan-C++ Linux distribution, place xml-xalan/c/bin and xml-xalan/c/lib on the shared library path (LD_LIBRARY_PATH for Red Hat Linux 6.1), or copy &xslt4c-linuxlib; to /usr/lib.</p>
-<p>For the Xalan-C++ AIX distribution, place xml-xalan/c/bin and xml-xalan/c/lib on the load library path (LIBPATH), or copy &xslt4c-aixlib; to /usr/lib.</p>
-<p>For the Xalan-C++ HP-UX 11 distribution, place xml-xalan/c/bin and xml-xalan/c/lib on the shared library path (SHLIB_PATH), or copy &xslt4c-aixlib; to /usr/lib.</p>
-<p>For the Xalan-C++ Solaris distribution, place xml-xalan/c/bin and xml-xalan/c/lib on the shared library path (LD_LIBRARY_PATH), or copy &xslt4c-solarislib; to /usr/lib.</p>
+<p>For the Xalan-C++ Linux distribution, place xml-xalan/c/bin on the path (PATH) and xml-xalan/c/lib on the shared library path (LD_LIBRARY_PATH for Red Hat Linux 6.1), or copy &xslt4c-linuxlib; to /usr/lib.</p>
+<p>For the Xalan-C++ AIX distribution, place xml-xalan/c/bin on the path (PATH) and xml-xalan/c/lib on the load library path (LIBPATH), or copy &xslt4c-aixlib; to /usr/lib.</p>
+<p>For the Xalan-C++ HP-UX 11 distribution, place xml-xalan/c/bin on the path (PATH) and xml-xalan/c/lib on the shared library path (SHLIB_PATH), or copy &xslt4c-aixlib; to /usr/lib.</p>
+<p>For the Xalan-C++ Solaris distribution, place xml-xalan/c/bin on the path (PATH) and xml-xalan/c/lib on the shared library path (LD_LIBRARY_PATH), or copy &xslt4c-solarislib; to /usr/lib.</p>
 <p>If you do your own Xalan, ICU, and Xerces builds, be sure to include the directories that contain the libraries and the TextXSLT executable on your path.</p>
 </s2><anchor name="samples"/>
 <s2 title="Trying out the samples">

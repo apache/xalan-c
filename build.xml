@@ -1,5 +1,9 @@
 <project name="XalanC" default="docs" basedir=".">
 
+  <property name="name" value="xalan"/>
+  <property name="Name" value="Xalan-C++"/>
+  <property name="year" value="2001"/>
+
   <property name="xdocs.dir" value="./xdocs"/>
   <property name="xdocs.book" value="${xdocs.dir}/sources/xalanLocal.xml"/>
   <property name="xdocs.site" value="${xdocs.dir}/sources/xalan.xml"/>  
