@@ -167,6 +167,12 @@
 
 
 
+#if defined(XALAN_USE_ICU)
+#include <ICUBridge/ICUBridgeCollationCompareFunctorImpl.hpp>
+#endif
+
+
+
 static void
 foo(XPathExecutionContext&	theExecutionContext)
 {
@@ -569,6 +575,22 @@ foo(XPathExecutionContext&	theExecutionContext)
 				 theVector.end(),
 				 DeleteFunctor<XalanParsedSource>());
 	}
+
+#if defined(XALAN_USE_ICU)
+	{
+		ICUBridgeCollationCompareFunctorImpl::CollatorCacheListType  theCache;
+
+		for_each(
+			theCache.begin(),
+			theCache.end(),
+			ICUBridgeCollationCompareFunctorImpl::CollationCacheStruct::CollatorDeleteFunctor());
+
+		find_if(
+			theCache.begin(),
+			theCache.end(),
+			ICUBridgeCollationCompareFunctorImpl::CollationCacheStruct::CollatorFindFunctor(0));
+	}
+#endif
 
 #if __SGI_STL_PORT >= 452
 
