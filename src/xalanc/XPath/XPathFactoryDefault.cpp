@@ -105,15 +105,15 @@ XPathFactoryDefault::doReturnObject(
 			const XPath*	theXPath,
 			bool			fInReset)
 {
-	const CollectionType::iterator	i =
-		m_xpaths.find(theXPath);
+    const CollectionType::size_type     theCount =
+        fInReset == true ? m_xpaths.count(theXPath) : m_xpaths.erase(theXPath);
 
-	if (i != m_xpaths.end())
-	{
-		if (fInReset == false)
-		{
-			m_xpaths.erase(i);
-		}
+    if (theCount == 0)
+    {
+        return false;
+    }
+    else
+    {
 
 #if defined(XALAN_CANNOT_DELETE_CONST)
 		delete (XPath*)theXPath;
@@ -122,10 +122,6 @@ XPathFactoryDefault::doReturnObject(
 #endif
 
 		return true;
-	}
-	else
-	{
-		return false;
 	}
 }
 
