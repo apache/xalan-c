@@ -113,9 +113,9 @@ ICUBridgeCollationCompareFunctor::operator()(
 		assert(m_collator != 0);
 
 		return m_collator->compare(
-					theLHS,
+					(wchar_t*)theLHS,
 					length(theLHS),
-					theRHS,
+					(wchar_t*)theRHS,
 					length(theRHS));
 	}
 }
