@@ -133,7 +133,15 @@ VariablesStack::popContextMarker()
 		}
 	}
 
-	m_currentStackFrameIndex = size_type(m_stack.size());
+    // This introduced a regression into 1.7, because of all the
+    // external fiddling with the stack frame index.  We need to
+    // re-write that code so no external meddling is necessary,
+    // so we can track the stack frame index properly.  In particular,
+    // this is an issue with xsl:apply-templates, because a context
+    // marker is pushed before its select attribute is evaluated, even
+    // though the select expression really should be evaluated in
+    // the previous stack context.
+//	m_currentStackFrameIndex = size_type(m_stack.size());
 }
 
 
