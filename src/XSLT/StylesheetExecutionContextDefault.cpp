@@ -1151,7 +1151,7 @@ StylesheetExecutionContextDefault::setContextNodeList(const NodeRefListBase&	the
 
 
 
-int
+unsigned int
 StylesheetExecutionContextDefault::getContextNodeListLength() const
 {
 	return m_xpathExecutionContextDefault.getContextNodeListLength();
@@ -1159,7 +1159,7 @@ StylesheetExecutionContextDefault::getContextNodeListLength() const
 
 
 
-int
+unsigned int
 StylesheetExecutionContextDefault::getContextNodeListPosition(const XalanNode&	contextNode) const
 {
 	return m_xpathExecutionContextDefault.getContextNodeListPosition(contextNode);
