@@ -190,9 +190,9 @@ parseWithTransformer(
 	{
 		// Report the failure and be sure to increment fail count.
 		//
-		cout << "ParseWTransformer - Failed to PARSE source document for " << h.data.testOrFile << endl;
+		cout << "ParseWTransformer - Failed to parse source document for " << h.data.testOrFile << endl;
 		++h.data.fail;
-		logFile.logErrorResult(h.data.testOrFile, XalanDOMString("Failed to PARSE source document."));
+		logFile.logErrorResult(h.data.testOrFile, XalanDOMString("Failed to parse source document.  ") + xalan.getLastError());
 	}
 	else 
 	{
@@ -243,9 +243,9 @@ parseWithXerces(
 	{
 		// Report the failure and be sure to increment fail count.
 		//
-		cout << "parseWXerces - Failed to PARSE source document for " << h.data.testOrFile << endl;
+		cout << "parseWXerces - Failed to parse source document for " << h.data.testOrFile << endl;
 		++h.data.fail;
-		logFile.logErrorResult(h.data.testOrFile, XalanDOMString("Failed to PARSE source document."));
+		logFile.logErrorResult(h.data.testOrFile, XalanDOMString("Failed to parse source document.  ") + xalan.getLastError());
 	}
 }
 
@@ -343,7 +343,7 @@ main(int			argc,
 
 						h.data.xmlFileURL = theXMLFile;
 						h.data.xslFileURL = theXSLFile;
-						
+
 
 						XalanDOMString  theGoldFile = h.args.gold + currentDir + FileUtility::s_pathSep + currentFile;
 						theGoldFile = h.generateFileName(theGoldFile, "out");
@@ -363,9 +363,9 @@ main(int			argc,
 						{
 							// Report the failure and be sure to increment fail count.
 							//
-							cout << "Failed to PARSE stylesheet for " << currentFile << endl;
+							cout << "Failed to parse stylesheet for " << currentFile << endl;
 							h.data.fail += 1;
-							logFile.logErrorResult(currentFile, XalanDOMString("Failed to PARSE stylesheet."));
+							logFile.logErrorResult(currentFile, XalanDOMString("Failed to parse stylesheet.  ")  + xalan.getLastError());
 							continue;
 						}
 
