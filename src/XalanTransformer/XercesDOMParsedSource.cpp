@@ -91,11 +91,18 @@ private:
 
 
 
-XercesDOMParsedSource::XercesDOMParsedSource(const XSLTInputSource&		theInputSource):
+XercesDOMParsedSource::XercesDOMParsedSource(
+			const XSLTInputSource&	theInputSource,
+			bool					fValidate):
 	XalanParsedSource(),
 	m_parserLiaison(),
-	m_parsedSource(m_parserLiaison.parseXMLStream(theInputSource))
+	m_parsedSource(0)
 {
+	m_parserLiaison.setUseValidation(fValidate);
+
+	m_parsedSource = m_parserLiaison.parseXMLStream(theInputSource);
+	assert(m_parsedSource != 0);
+
 	const XalanDOMChar* const	theSystemID = theInputSource.getSystemId();
 
 	if (theSystemID != 0)

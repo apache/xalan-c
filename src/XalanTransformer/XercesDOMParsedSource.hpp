@@ -85,7 +85,9 @@ class XALAN_TRANSFORMER_EXPORT XercesDOMParsedSource : public XalanParsedSource
 {
 public:
 	
-	XercesDOMParsedSource(const XSLTInputSource&		theInputSource);
+	XercesDOMParsedSource(
+			const XSLTInputSource&	theInputSource,
+			bool					fValidate = false);
 
 	virtual
 	~XercesDOMParsedSource();
@@ -103,7 +105,7 @@ private:
 
 	XercesParserLiaison		m_parserLiaison;
 
-	XalanDocument* const	m_parsedSource;
+	XalanDocument*			m_parsedSource;
 
 	XalanDOMString			m_uri;
 };

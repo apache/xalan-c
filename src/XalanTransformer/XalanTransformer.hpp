@@ -423,6 +423,30 @@ public:
 			const char*		expression);
 
 	/**
+	 * Set a flag to indicate whether or not the source file(s) for the
+	 * transformation will be validated.
+	 *
+	 * @param fValue the new value for the flag.
+	 */
+	bool
+	getUseValidation() const
+	{
+		return m_useValidation;
+	}
+
+	/**
+	 * Set a flag to indicate whether or not the source file(s) for the
+	 * transformation will be validated.
+	 *
+	 * @param fValue the new value for the flag.
+	 */
+	void
+	setUseValidation(bool	fValue)
+	{
+		m_useValidation = fValue;
+	}
+
+	/**
 	 * Returns the last error that occurred as a 
 	 * result of calling transform. 
 	 *
@@ -551,6 +575,9 @@ private:
 
 	CharVectorType							m_errorMessage;
 
+	bool									m_useValidation;
+
+	// This should always be the latest data member!!!
 	StylesheetExecutionContextDefault*		m_stylesheetExecutionContext;
 
 	static const XSLTInit*					s_xsltInit;

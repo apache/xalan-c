@@ -131,6 +131,7 @@ XalanTransformer::XalanTransformer():
 	m_paramPairs(),
 	m_functionPairs(),
 	m_errorMessage(1, '\0'),
+	m_useValidation(false),
 	m_stylesheetExecutionContext(new StylesheetExecutionContextDefault)
 {
 #if defined(XALAN_USE_ICU)
@@ -273,6 +274,8 @@ XalanTransformer::transform(
 		DOMSupport& 					theDOMSupport = theHelper->getDOMSupport();
 
 		XMLParserLiaison&				theParserLiaison = theHelper->getParserLiaison();
+
+		theParserLiaison.setUseValidation(m_useValidation);
 
 		// Create some more support objects...
 		XSLTProcessorEnvSupportDefault	theXSLTProcessorEnvSupport;
@@ -452,6 +455,8 @@ XalanTransformer::transform(
 		DOMSupport& 					theDOMSupport = theHelper->getDOMSupport();
 
 		XMLParserLiaison&				theParserLiaison = theHelper->getParserLiaison();
+
+		theParserLiaison.setUseValidation(m_useValidation);
 
 		// Create some more support objects...
 		XSLTProcessorEnvSupportDefault	theXSLTProcessorEnvSupport;
@@ -921,11 +926,11 @@ XalanTransformer::parseSource(
 	{
 		if(useXercesDOM == true)
 		{
-			theParsedSource = new XercesDOMParsedSource(theInputSource);
+			theParsedSource = new XercesDOMParsedSource(theInputSource, m_useValidation);
 		}
 		else
 		{
-			theParsedSource = new XalanDefaultParsedSource(theInputSource);
+			theParsedSource = new XalanDefaultParsedSource(theInputSource, m_useValidation);
 		}
 
 		// Store it in a vector.

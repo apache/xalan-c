@@ -146,7 +146,9 @@ class XALAN_TRANSFORMER_EXPORT XalanDefaultParsedSource : public XalanParsedSour
 {
 public:
 
-	XalanDefaultParsedSource(const XSLTInputSource&		theInputSource);
+	XalanDefaultParsedSource(
+			const XSLTInputSource&	theInputSource,
+			bool					fValidate = false);
 
 	virtual
 	~XalanDefaultParsedSource();
@@ -166,7 +168,7 @@ private:
 
 	XalanSourceTreeParserLiaison	m_parserLiaison;
 
-	XalanSourceTreeDocument* const	m_parsedSource;
+	XalanSourceTreeDocument*		m_parsedSource;
 
 	XalanDOMString					m_uri;
 };
