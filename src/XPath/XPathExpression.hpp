@@ -565,21 +565,6 @@ public:
 	};	// enum eOpCodes
 
 	/**
-	 * The length is always the opcode position + 1. Length is always expressed
-	 * as the opcode+length bytes, so it is always 2 or greater.  This is the
-	 * offset from the op code where the length is stored.  It will always
-	 * remain one.
-	 */
-#if defined(XALAN_INLINE_INITIALIZATION)
-	static const int	s_opCodeMapLengthIndex = 1;
-#else
-	enum eDummy
-	{
-		s_opCodeMapLengthIndex = 1
-	};
-#endif
-
-	/**
 	 * Exception class thrown when an invalid XPath expression is encountered
 	 */
 	class XALAN_XPATH_EXPORT XPathExpressionException : public XPathException
@@ -734,6 +719,21 @@ public:
 	typedef TokenQueueType::size_type		TokenQueueSizeType;
 	typedef PatternMapType::value_type		PatternMapValueType;
 	typedef PatternMapType::size_type		PatternMapSizeType;
+
+	/**
+	 * The length is always the opcode position + 1. Length is always expressed
+	 * as the opcode+length bytes, so it is always 2 or greater.  This is the
+	 * offset from the op code where the length is stored.  It will always
+	 * remain one.
+	 */
+#if defined(XALAN_INLINE_INITIALIZATION)
+	static const TokenQueueSizeType		s_opCodeMapLengthIndex = 1;
+#else
+	enum eDummy
+	{
+		s_opCodeMapLengthIndex = 1
+	};
+#endif
 
 	explicit
 	XPathExpression();
