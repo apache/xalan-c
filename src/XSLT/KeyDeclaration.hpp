@@ -64,7 +64,7 @@
 
 
 
-#include <XalanDOM/XalanDOMString.hpp>
+#include <XPath/XalanQNameByValue.hpp>
 
 
 
@@ -82,15 +82,15 @@ public:
 	/**
 	 * Construct an object containing attributes of an "xsl:key" element
 	 * 
-	 * @param name         name of element
+	 * @param qname        name of element
 	 * @param matchPattern XPath for "match" attribute
 	 * @paramuse           XPath for "use" attribute
 	 */
 	KeyDeclaration(
-			const XalanDOMString&	name,
-			const XPath&			matchPattern,
-			const XPath&			use) :
-		m_name(name),
+			const XalanQName&	qname,
+			const XPath&		matchPattern,
+			const XPath&		use) :
+		m_qname(qname),
 		m_match(&matchPattern),
 		m_use(&use)
 	{
@@ -98,14 +98,14 @@ public:
 
 	explicit
 	KeyDeclaration() :
-		m_name(),
+		m_qname(),
 		m_match(0),
 		m_use(0)
 	{
 	}
 
 	KeyDeclaration(const KeyDeclaration&	theSource) :
-		m_name(theSource.m_name),
+		m_qname(theSource.m_qname),
 		m_match(theSource.m_match),
 		m_use(theSource.m_use)
 	{
@@ -120,10 +120,10 @@ public:
 	 * 
 	 * @return name string
 	 */
-	const XalanDOMString&
-	getName() const
+	const XalanQName&
+	getQName() const
 	{
-		return m_name;
+		return m_qname;
 	}
 
 	/**
@@ -150,11 +150,11 @@ public:
 
 private:
 
-	XalanDOMString	m_name;
+	XalanQNameByValue	m_qname;
 
-	const XPath*	m_match;
+	const XPath*		m_match;
 
-	const XPath*	m_use;
+	const XPath*		m_use;
 
 };
 

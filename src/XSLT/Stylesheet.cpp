@@ -272,15 +272,28 @@ Stylesheet::processKeyElement(
 	}
 
 	if(0 == nameAttr)
+	{
 		constructionContext.error("xsl:key requires a 'name' attribute");
+	}
 
 	if(0 == matchAttr)
+	{
 		constructionContext.error("xsl:key requires a 'match' attribute");
+	}
 
 	if(0 == useAttr)
+	{
 		constructionContext.error("xsl:key requires a 'use' attribute");
+	}
 
-	m_keyDeclarations.push_back(KeyDeclaration(XalanDOMString(nameAttr), *matchAttr, *useAttr));
+	const XalanQNameByValue		theQName(nameAttr, m_namespaces, constructionContext.getLocatorFromStack());
+
+	if (theQName.isValid() == false)
+	{
+		constructionContext.error("xsl:key has an invalid 'name' attribute");
+	}
+
+	m_keyDeclarations.push_back(KeyDeclaration(theQName, *matchAttr, *useAttr));
 }
 
 

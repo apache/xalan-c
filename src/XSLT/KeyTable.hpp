@@ -82,6 +82,7 @@
 
 
 #include <XPath/MutableNodeRefList.hpp>
+#include <XPath/XalanQNameByReference.hpp>
 
 
 
@@ -112,7 +113,7 @@ public:
 				MutableNodeRefList,
 				less<XalanDOMString> >		NodeListMapType;
 
-	typedef map<XalanDOMString,
+	typedef map<XalanQNameByReference,
 				NodeListMapType,
 				less<XalanDOMString> >		KeysMapType;
 #else
@@ -121,7 +122,7 @@ public:
 	typedef std::map<XalanDOMString,
 					 MutableNodeRefList>	NodeListMapType;
 
-	typedef std::map<XalanDOMString,
+	typedef std::map<XalanQNameByReference,
 					 NodeListMapType>		KeysMapType;
 #endif
 
@@ -161,7 +162,7 @@ public:
 	 */
 	const NodeRefListBase&
 	getNodeSetByKey(
-				  const XalanDOMString&		name,
+				  const XalanQName&			qname,
 				  const XalanDOMString&		ref) const;
 
 	/**

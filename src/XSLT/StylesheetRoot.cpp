@@ -639,9 +639,11 @@ StylesheetRoot::getNodeSetByKey(
 		const KeyTablesTableType::const_iterator	i =
 			theKeysTable.find(doc);
 
+		const XalanQNameByValue		theQName(name, &resolver);
+
 		if (i != theKeysTable.end())
 		{
-			const NodeRefListBase&	nl = (*i).second->getNodeSetByKey(name, ref);
+			const NodeRefListBase&	nl = (*i).second->getNodeSetByKey(theQName, ref);
 
 			nodelist.addNodesInDocOrder(nl, executionContext);
 		}
@@ -657,7 +659,7 @@ StylesheetRoot::getNodeSetByKey(
 
 			theKeysTable[doc] = kt;
 
-			const NodeRefListBase&	nl = kt->getNodeSetByKey(name, ref);
+			const NodeRefListBase&	nl = kt->getNodeSetByKey(theQName, ref);
 
 			nodelist.addNodesInDocOrder(nl, executionContext);
 		}

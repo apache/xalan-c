@@ -217,10 +217,10 @@ KeyTable::~KeyTable()
 
 const NodeRefListBase&
 KeyTable::getNodeSetByKey(
-					  const XalanDOMString&		name, 
+					  const XalanQName&			qname, 
 					  const XalanDOMString&		ref) const
 {
-	const KeysMapType::const_iterator	i = m_keys.find(name);
+	const KeysMapType::const_iterator	i = m_keys.find(qname);
 
 	if (i != m_keys.end())
 	{
@@ -272,7 +272,7 @@ KeyTable::processKeyDeclaration(
 	if(xuse->getType() != XObject::eTypeNodeSet)
 	{
 		addIfNotFound(
-			theKeys[kd.getName()][xuse->str()],
+			theKeys[kd.getQName()][xuse->str()],
 			testNode);
 	}
 	else
@@ -298,7 +298,7 @@ KeyTable::processKeyDeclaration(
 			DOMServices::getNodeData(*nl.item(i), nodeData);
 
 			addIfNotFound(
-				theKeys[kd.getName()][nodeData],
+				theKeys[kd.getQName()][nodeData],
 				testNode);
 
 			clear(nodeData);
