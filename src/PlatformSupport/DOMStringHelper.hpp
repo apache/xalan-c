@@ -294,7 +294,14 @@ indexOf(
 			const XalanDOMString&	theString,
 			XalanDOMChar			theChar)
 {
-	return indexOf(c_wstr(theString), theChar);
+	if (theString.length() == 0)
+	{
+		return 0;
+	}
+	else
+	{
+		return indexOf(c_wstr(theString), theChar);
+	}
 }
 
 
