@@ -104,7 +104,11 @@
 #include <PlatformSupport/PrintWriter.hpp>
 #include <PlatformSupport/XalanOutputStream.hpp>
 #include <PlatformSupport/XalanUnicode.hpp>
-#include <PlatformSupport/XalanDOMStringCache.hpp>	
+#include <PlatformSupport/XalanDOMStringCache.hpp>
+
+
+
+#include <DOMSupport/XalanDocumentPrefixResolver.hpp>
 
 
 
