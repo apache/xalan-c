@@ -77,17 +77,15 @@
     <li><link anchor="to-do">To-do tasks for future &xslt4c; releases</link></li>
    </ul>
      <anchor name="done"/>
-  <s3 title="Changes since &xslt4c; version 1.1">
-    <p>Major updates since version 1.1 include:</p>
+  <s3 title="Changes since &xslt4c; version 1.2">
+    <p>Major updates since version 1.2 include:</p>
      <ul>
-      <li><link idref="extensionslib">Introduction of a library of extension functions</link></li>
-      <li>Support for pre-parsed source documents and pre-compiled stylesheets in 
-      <jump href="apidocs/class_xalantransformer.html">XalanTransformer</jump> and the C API.</li>
-      <li>Support for stylesheet params in <jump href="apidocs/class_xalantransformer.html">XalanTransformer</jump> 
-      and the C API</li>
-      <li>Support for extension functions in <jump href="apidocs/class_xalantransformer.html">XalanTransformer</jump></li>
-      <li>Performance enhancements</li>
+       <li>A new and simplified command-line utility: <link idref="commandline" anchor="xalanexe">the Xalan executable</link></li>
+       <li>New XPath samples exploiting the XPathEvaluator C API and illustrating serialization of an XPath result set: <link idref="samples" anchor="simplexpathcapi">SimpleXPathCAPI</link> and <link idref="samples" anchor="serializenodeset">SerializeNodeSet</link></li>
+       <li>A new <link idref="usagepatterns" anchor="xercesdomwrapperparsedsource">wrapper class</link> that lets you pass in a Xerces DOM as input for a transformation</li>
+<li>Bug fixes.</li>
       </ul>
+      <note>&solarisbuild;</note>
    </s3>  
      <anchor name="bugs"/>
    <s3 title="Bug reporting">
@@ -160,7 +158,7 @@
       <li>Set the XERCESCROOT environment variable to the root of xml-xerces.<br/><br/></li>    
       <li>Set the XALANCROOT environment variable to the complete path to the root of the &xslt4c;
        distribution.<br/><br/></li>
-      <li>AIX and Solaris only: Download <resource-ref idref="stlport"/> and set the STLPORTROOT environment
+      <li>AIX and Solaris only &solarisbuild; : Download <resource-ref idref="stlport"/> and set the STLPORTROOT environment
        variable to the complete path to the STLPort distribution. <br/>
        (This step is not required for Linux or HP-UX 11 because The Linux GNU compiler and HP aCC compiler include the STL (Standard Template
         Library.)<br/><br/></li>
@@ -178,7 +176,7 @@
       <ref>Linux:</ref>&nbsp;&nbsp;<code>runConfigure -p linux</code><br/>
       <ref>AIX:</ref>&nbsp;&nbsp;&nbsp;&nbsp;<code>runConfigure -p aix -c xlc -x xlC</code><br/><br/>
       <ref>HP-UX 11:</ref>&nbsp;&nbsp;<code>runConfigure -p hp-11 -c cc -x aCC</code><br/><br/>
-      <ref>Solaris:</ref>&nbsp;&nbsp;<code>runConfigure -p solaris -c cc -x CC</code><br/><br/>            
+      <ref>Solaris &solarisbuild;:</ref>&nbsp;&nbsp;<code>runConfigure -p Solaris -c cc -x CC</code><br/><br/>            
       To see the other runConfigure flags you may include, use the help flag:<br/><br/>
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<code>runConfigure -h</code><br/><br/></li>
       <li>Purge the previous build:<br/><br/>

@@ -65,6 +65,7 @@
 <li><link anchor="incremental">Processing output incrementally</link></li>
 <li><link anchor="compiled">Performing a series of transformations</link></li>
 <li><link anchor="dom">Working with DOM input and output</link></li>
+<li><link anchor="xercesdomwrapperparsedsource">Using a Xerces DOM as the source for a Xalan transformation</link></li>
 <li><link anchor="xpath">Working with XPath expressions</link></li>
 <li><link anchor="tracelistener">Using the TraceListener</link></li>
 <li><link anchor="icu">Using the International Components for Unicode (ICU)</link></li>
@@ -224,11 +225,50 @@ XSLTResultTarget theDOMResultTarget(docOut);
 // the output.
 // You can also convert the XalanDocument to a Xerces DOM_Document.
 DOM_Document domOut = theParserLiaison.mapXercesDocument(docOut)</source>
+<p>If you want to use a Xerces DOM object as input for a transformation without wrapping the DOM in
+a XercesParserLiaison, see <link anchor="xercesdomwrapperparsedsource">passing in a Xerces DOM</link>.</p>
 <s3 title="Limitations">
 <p>Performance is much better when &xslt4c; uses native source tree handling rather than interacting with the Xerces DOMParser.</p>
 <p>By default, the Xerces DOMParser creates a DOM_XMLDecNode in the DOM tree to represent the XML declaration. The
 Xalan bridge for the Xerces DOM does not support this non-standard node type. Accordingly, you must call DOMParser::setToCreateXMLDeclTypeNode(false) <em>before</em> you parse the XML file. If not, the behavior is undefined, and 
 your application may crash.</p>
+</s3><anchor name="xercesdomwrapperparsedsource"/>
+<s3 title="Passing in a Xerces DOM to a transformation">
+<p>You may want to use a Xerces DOM that was created without using the XalanTransformer class. As the following code snippet illustrates, you can use XercesDOMWrapperParsedSource to pass in a Xerces DOM as the source for an XSL transformation.</p>
+<source>#include &lt;parsers/DOMParser.hpp&gt;
+#include &lt;XalanTransformer/XercesDOMWrapperParsedSource.hpp&gt;
+
+void parseWithXerces(XalanTransformer &amp;xalan, 
+                     const XSLTInputSource &amp;xmlInput,
+                     const XalanCompiledStylesheet* styleSheer,
+                     const XSLTResultTarget &amp;output,
+                     XMLFileReporter &amp;logFile)
+{
+  DOMParser the Parser;
+  theParser.setToCreateXMLDeclTypeNode(false);
+  theParser.setDoValidation(true);
+  theParser.setDoNamespaces(true);
+  
+  theParser.parse(xmlInput);
+  DOM_Document theDOM = theParser.getDocument();
+  theDOM.normalize();
+  XercesDOMSupport theDOMSupport;
+  XercdesParserLiaison theParserLiaison(theDOMSupport);
+  try
+  {
+    const XercesDOMWrapperParsedSource parsedSource(
+                                   theDOM,
+                                   theParserLiaison,
+                                   theDOMSupport,
+                                   XalanDOMString(xmlInput.getSystemId()));
+    xalan.transform(parsedSource, stylesheet, output);
+  }
+  catch (....)
+  {
+    ...
+  }
+}  
+                     </source>
 </s3>
 </s2><anchor name="xpath"/>
 <s2 title="Working with XPath expressions">
@@ -308,7 +348,7 @@ executing XPath expressions.</p>
     path (LIBPATH) or copy it to /usr/lib.</p>
     <p>For HP-UX 11, rebuild &xslt4c-hplib; with XALAN_USE_ICU defined, and place it on the shared library
     path (SHLIB_PATH) or copy it to /usr/lib.</p>
-    <p>For Solaris, rebuild &xslt4c-solarislib; with XALAN_USE_ICU defined, and place it on the shared library
+    <p>For Solaris &solarisbuild;, rebuild &xslt4c-solarislib; with XALAN_USE_ICU defined, and place it on the shared library
     path (LD_LIBRARY_PATH) or copy it to /usr/lib.</p>
     
     <p><em>Number formatting</em></p>

@@ -1,3 +1,15 @@
+  <s3 title="Changes for &xslt4c; version 1.2">
+    <p>Major updates since version 1.1 include:</p>
+     <ul>
+      <li><link idref="extensionslib">Introduction of a library of extension functions</link></li>
+      <li>Support for pre-parsed source documents and pre-compiled stylesheets in 
+      <jump href="apidocs/class_xalantransformer.html">XalanTransformer</jump> and the C API.</li>
+      <li>Support for stylesheet params in <jump href="apidocs/class_xalantransformer.html">XalanTransformer</jump> 
+      and the C API</li>
+      <li>Support for extension functions in <jump href="apidocs/class_xalantransformer.html">XalanTransformer</jump></li>
+      <li>Performance enhancements</li>
+      </ul>
+   </s3>  
 <s3 title="Changes for &xslt4c; version 1.1">
 <p>In addition to adding to the list of platforms on which &xslt4c; builds, our focus for this release has been on bug fixes, performance enhancements, 
 and providing a simplified C++ and C API for performing standard transformations. Major updates since version 1.0 include:</p>

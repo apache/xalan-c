@@ -65,8 +65,8 @@
      document types.</p>
     <p>&xslt4c-current; is a robust implementation of the W3C Recommendations 
     for XSL Transformations (XSLT) and the XML Path Language (XPath). It includes a compatible release of the 
-    &xml4c; XML parser: &xml4c-used;. The focus for this release is on bug fixes, performance enhancements, new
-    samples, and a preliminary set of extension functions. For the details, see the <link idref="readme">Release Notes</link>.</p>
+    &xml4c; XML parser: &xml4c-used;. The focus for this release is on bug fixes, along with a new and simpler command-line executable, 
+    two new samples and additional support for using a Xerces DOM as input for a transformation. For the details, see the <link idref="readme">Release Notes</link>.</p>
 	</s2>
   
   <s2 title="How do I get it?">
@@ -101,7 +101,7 @@
       </tr>
       <tr>
         <td>Solaris 2.6</td>
-        <td><resource-ref idref="xslt4c-solaris-download"/>*<br/>
+        <td><resource-ref idref="xslt4c-Solaris-download"/>*<br/>
         *Use GNU tar to untar; see <link idref="faq" anchor="gnutar">FAQs</link></td>
         <td>Workshop 4.2</td>
       </tr>      
