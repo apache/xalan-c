@@ -1,15 +1,11 @@
 <s3 title="Changes since &xslt4c; version 0.30.0">
-<p>We continue to work towards the functional completion our implementation of the XSLT and XPath specs. Major updates since version 0.30.0 include:</p>
+<p>Major updates since version 0.40.0 include:</p>
 <ul>
-<li>Permitting OS file names (as well as URLs) as command-line arguments with TestXSLT<br/><br/></li>
-<li>Stricter compliance for HTML and XML output<br/><br/></li>
-<li>Improved handling of relative URI's<br/><br/></li>
-<li>Improved handling of Import and Include<br/><br/></li>
-<li>Better namespace handling (although there are still problems here)<br/><br/></li>
-<li>Support for Document() function<br/><br/></li>
-<li>Support for XPath predicates<br/><br/></li>
-<li>Better handling of parameters to stylesheet and templates<br/><br/></li>
-<li>Full implementation of axes ( with the exception of namespace:: )<br/><br/></li>
+<li>Full support for namespace handling<br/><br/></li>
+<li>Full implementation of the format-number() function and support for the decimal-format element<br/><br/></li>
+<li>Integration with the <resource-ref idref="icu"/>for number formatting, sorting, and output encoding<br/><br/></li>
+<li>Support for the exclude-result-prefixes attribute<br/><br/></li>
+<li>Add support for the output encoding attribute</li>
 </ul>
 </s3>
 	
