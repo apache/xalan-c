@@ -118,7 +118,29 @@ XercesDOMPrintWriter::write(
 			unsigned int	theOffset,
 			unsigned int	theLength)
 {
-	write(DOMString(s), theOffset, theLength);
+	assert(s != 0);
+	assert(length(s) == 0 || theOffset < length(s));
+
+	if (theLength == -1)
+	{
+		if (theOffset == 0)
+		{
+			m_OutputStream.write(s);
+		}
+		else
+		{
+			m_OutputStream.write(s + theOffset);
+		}
+	}
+	else
+	{
+		const long	theStopIndex = theOffset + theLength;
+
+		for (long i = theOffset; i < theStopIndex; i++)
+		{
+			m_OutputStream.write(s[i]);
+		}
+	}
 }
 
 
