@@ -137,12 +137,8 @@ XalanTransformerProblemListener::problem(
 
 		DOMStringPrintWriter	thePrintWriter(theWarning);
 
-		PrintWriter* const	theSavedPrintWriter =
-					m_problemListener.getPrintWriter();
-
-		m_problemListener.setPrintWriter(&thePrintWriter);
-
-		m_problemListener.problem(
+		ProblemListenerDefault::problem(
+			thePrintWriter,
 			where,
 			classification,
 			sourceNode,
@@ -151,8 +147,6 @@ XalanTransformerProblemListener::problem(
 			uri,
 			lineNo,
 			charOffset);
-
-		m_problemListener.setPrintWriter(theSavedPrintWriter);
 
 		*m_warningStream << theWarning;
 	}
