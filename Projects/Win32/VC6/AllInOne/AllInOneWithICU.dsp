@@ -3286,6 +3286,18 @@ SOURCE=..\..\..\..\src\xalanc\XalanEXSLT\XalanEXSLTDefinitions.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\xalanc\XalanEXSLT\XalanEXSLTDynamic.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\xalanc\XalanEXSLT\XalanEXSLTDynamic.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\xalanc\XalanEXSLT\XalanEXSLTDynamicImpl.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\xalanc\XalanEXSLT\XalanEXSLTMath.cpp
 # End Source File
 # Begin Source File
