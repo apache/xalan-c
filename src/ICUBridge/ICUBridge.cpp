@@ -133,14 +133,14 @@ ICUBridge::XalanDOMCharStringToUnicodeString(const XalanDOMChar*	theString)
 			doCopyData(theString, theLength, theBuffer);
 
 #if U_SIZEOF_WCHAR_T==2
-			return ICUUnicodeString((wchar_t*)&theBuffer[0], theLength);
+			return UnicodeString((wchar_t*)&theBuffer[0], theLength);
 #else
-			return ICUUnicodeString(&theBuffer[0], theLength);
+			return UnicodeString(&theBuffer[0], theLength);
 #endif
 		}
 		else
 		{
-			// Create a buffer to copy out the ICUUnicodeString data...
+			// Create a buffer to copy out the UnicodeString data...
 			UCharVectorType		theBuffer;
 
 			// Resize the buffer appropriately...
@@ -154,7 +154,7 @@ ICUBridge::XalanDOMCharStringToUnicodeString(const XalanDOMChar*	theString)
 
 			assert(theLength == theBuffer.size());
 
-			return ICUUnicodeString(&theBuffer[0], theLength);
+			return UnicodeString(&theBuffer[0], theLength);
 		}
 #else
 		return UnicodeString(theString, length(theString));
@@ -208,7 +208,7 @@ ICUBridge::UnicodeStringToXalanDOMString(const UnicodeString&	theString)
 	}
 	else
 	{
-		// Create a buffer to copy out the ICUUnicodeString data...
+		// Create a buffer to copy out the UnicodeString data...
 		UCharVectorType		theBuffer;
 
 		// Resize the buffer appropriately...
@@ -260,7 +260,7 @@ ICUBridge::UnicodeStringToXalanDOMString(
 		typedef std::vector<UChar>	UCharVectorType;
 #endif
 
-		// Create a buffer to copy out the ICUUnicodeString data...
+		// Create a buffer to copy out the UnicodeString data...
 		UCharVectorType		theBuffer;
 
 		// Resize the buffer appropriately...
