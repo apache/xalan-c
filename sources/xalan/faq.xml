@@ -138,12 +138,12 @@
      
      <p>Parsed ("compiled") stylesheets (see <link idref="usagepatterns" anchor="compiled">Compiling stylesheets</link>) and parsed
       source documents may be freely shared by multiple threads of execution without worrying
-      about providing synchronized access to them. The ONLY exception to this rule: You use XercesParserLiaison to parse a document after
-      calling XercesParserLiaison::setBuildBridgeNodes(false) or XercesParserLiaison::setThreadSafe(false). In this case, the document
-      CANNOT be shared by multiple threads of execution. For reasons of performance, we do not recommend the use of
+      about providing synchronized access to them. The <em>only</em> exception to this rule: You use XercesParserLiaison to parse a
+      document after calling XercesParserLiaison::setBuildBridgeNodes(false) or XercesParserLiaison::setThreadSafe(false). In this case,
+      the document <em>cannot</em> be shared by multiple threads of execution. For reasons of performance, we do not recommend the use of
       XercesParserLiaison, so this should not be an issue for most applications.</p>
       
-     <p>All other objects in &xslt4c; are NOT thread-safe. Each thread must have its own instance of each object.</p>
+     <p>All other objects in &xslt4c; are <em>not</em> thread-safe. Each thread must have its own instance of each object.</p>
      
      <p>See the <link idref="samples" anchor="threadsafe">ThreadSafe</link> sample program for more information.</p></a>
   </faq>
