@@ -97,12 +97,12 @@ KeyTable::KeyTable(
 
 	bool		fDone = false;
 
-    // Do a non-recursive pre-walk over the tree.
-    while(0 != pos && fDone == false)
-    {     
-		const KeyDeclarationVectorType::size_type	nDeclarations =
+	const KeyDeclarationVectorType::size_type	nDeclarations =
 			keyDeclarations.size();
 
+    // Do a non-recursive pre-walk over the tree.
+    while(0 != pos && fDone == false)
+    {
 		// We're going to have to walk the attribute list 
 		// if it's an element, so get the attributes.
 		const XalanNamedNodeMap*	attrs = 0;
@@ -149,7 +149,7 @@ KeyTable::KeyTable(
 																				   resolver,
 																				   executionContext);
 
-						if(score == kd.getMatchPattern().s_MatchScoreNone)
+						if(score == XPath::s_MatchScoreNone)
 						{
 							kd.endConstruction();
 						}
