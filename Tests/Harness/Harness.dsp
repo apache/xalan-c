@@ -56,7 +56,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /dll /machine:I386
-# ADD LINK32 xerces-c_2.lib /nologo /dll /pdb:none /machine:I386 /out:"..\..\Build\Win32\VC6\Release/Harness_1_6_0.dll" /implib:"..\..\Build\Win32\VC6\Release/Harness_1.lib" /libpath:"..\..\..\..\xml-xerces\c\Build\Win32\VC6\Release"
+# ADD LINK32 xerces-c_2.lib /nologo /dll /pdb:none /machine:I386 /out:"..\..\Build\Win32\VC6\Release/Harness_1_7_0.dll" /implib:"..\..\Build\Win32\VC6\Release/Harness_1.lib" /libpath:"..\..\..\..\xml-xerces\c\Build\Win32\VC6\Release"
 
 !ELSEIF  "$(CFG)" == "Harness - Win32 Debug"
 
@@ -82,7 +82,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /dll /debug /machine:I386 /pdbtype:sept
-# ADD LINK32 xerces-c_2D.lib /nologo /dll /debug /machine:I386 /out:"..\..\Build\Win32\VC6\Debug/Harness_1_6_0D.dll" /implib:"..\..\Build\Win32\VC6\Debug/Harness_1D.lib" /pdbtype:sept /libpath:"..\..\..\..\xml-xerces\c\Build\Win32\VC6\Debug"
+# ADD LINK32 xerces-c_2D.lib /nologo /dll /debug /machine:I386 /out:"..\..\Build\Win32\VC6\Debug/Harness_1_7_0D.dll" /implib:"..\..\Build\Win32\VC6\Debug/Harness_1D.lib" /pdbtype:sept /libpath:"..\..\..\..\xml-xerces\c\Build\Win32\VC6\Debug"
 # SUBTRACT LINK32 /pdb:none
 
 !ELSEIF  "$(CFG)" == "Harness - Win32 Release with symbols"
@@ -111,7 +111,7 @@ BSC32=bscmake.exe
 LINK32=link.exe
 # ADD BASE LINK32 ..\..\..\..\xml-xerces\c\Build\Win32\VC6\Release\xerces-c_1.lib ..\..\Build\Win32\VC6\Release\PlatformSupport.lib ..\..\Build\Win32\VC6\Release\XalanDOM.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /dll /incremental:yes /machine:I386
 # SUBTRACT BASE LINK32 /debug
-# ADD LINK32 xerces-c_2.lib /nologo /dll /debug /machine:I386 /out:"..\..\Build\Win32\VC6\Release.symbols/Harness_1_6_0S.dll" /implib:"..\..\Build\Win32\VC6\Release.symbols/Harness_1S.lib" /libpath:"..\..\..\..\xml-xerces\c\Build\Win32\VC6\Release"
+# ADD LINK32 xerces-c_2.lib /nologo /dll /debug /machine:I386 /out:"..\..\Build\Win32\VC6\Release.symbols/Harness_1_7_0S.dll" /implib:"..\..\Build\Win32\VC6\Release.symbols/Harness_1S.lib" /libpath:"..\..\..\..\xml-xerces\c\Build\Win32\VC6\Release"
 # SUBTRACT LINK32 /pdb:none
 
 !ELSEIF  "$(CFG)" == "Harness - Win64 Release"
@@ -128,7 +128,7 @@ LINK32=link.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MT /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "HARNESS_EXPORTS" /Yu"stdafx.h" /FD /c
-# ADD CPP /D "WIN64" /nologo /MD /W4 /GR /GX /O2 /Ob2 /I "..\..\..\..\xml-xerces\c\src" /I "..\..\src\\" /I ".." /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "HARNESS_EXPORTS" /FD /c
+# ADD CPP /nologo /MD /W4 /GR /GX /O2 /Ob2 /I "..\..\..\..\xml-xerces\c\src" /I "..\..\src\\" /I ".." /D "WIN64" /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "HARNESS_EXPORTS" /FD /c
 # ADD BASE MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD BASE RSC /l 0x409 /d "NDEBUG"
@@ -138,7 +138,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /dll /machine:I386
-# ADD LINK32 xerces-c_2.lib /nologo /dll /pdb:none /machine:IA64 /out:"..\..\Build\Win64\VC6\Release/Harness_1_6_0.dll" /implib:"..\..\Build\Win64\VC6\Release/Harness_1.lib" /libpath:"..\..\..\..\xml-xerces\c\Build\Win64\VC6\Release"
+# ADD LINK32 xerces-c_2.lib /nologo /dll /pdb:none /machine:IX86 /out:"..\..\Build\Win64\VC6\Release/Harness_1_7_0.dll" /implib:"..\..\Build\Win64\VC6\Release/Harness_1.lib" /libpath:"..\..\..\..\xml-xerces\c\Build\Win64\VC6\Release" /machine:IA64
 
 !ELSEIF  "$(CFG)" == "Harness - Win64 Debug"
 
@@ -154,7 +154,7 @@ LINK32=link.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MTd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "HARNESS_EXPORTS" /Yu"stdafx.h" /FD /GZ /c
-# ADD CPP /D "WIN64" /nologo /MDd /W4 /Gm /GR /GX /Zi /Od /Gf /Gy /I "..\..\..\..\xml-xerces\c\src" /I "..\..\src\\" /I ".." /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "HARNESS_EXPORTS" /Yc /FD /GZ /c
+# ADD CPP /nologo /MDd /W4 /Gm /GR /GX /Zi /Od /Gf /Gy /I "..\..\..\..\xml-xerces\c\src" /I "..\..\src\\" /I ".." /D "WIN64" /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "HARNESS_EXPORTS" /Yc /FD /GZ /c
 # ADD BASE MTL /nologo /D "_DEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "_DEBUG" /mktyplib203 /win32
 # ADD BASE RSC /l 0x409 /d "_DEBUG"
@@ -164,7 +164,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /dll /debug /machine:I386 /pdbtype:sept
-# ADD LINK32 xerces-c_2D.lib /nologo /dll /debug /machine:IA64 /out:"..\..\Build\Win64\VC6\Debug/Harness_1_6_0D.dll" /implib:"..\..\Build\Win64\VC6\Debug/Harness_1D.lib" /pdbtype:sept /libpath:"..\..\..\..\xml-xerces\c\Build\Win64\VC6\Debug"
+# ADD LINK32 xerces-c_2D.lib /nologo /dll /debug /machine:IX86 /out:"..\..\Build\Win64\VC6\Debug/Harness_1_7_0D.dll" /implib:"..\..\Build\Win64\VC6\Debug/Harness_1D.lib" /pdbtype:sept /libpath:"..\..\..\..\xml-xerces\c\Build\Win64\VC6\Debug" /machine:IA64
 # SUBTRACT LINK32 /pdb:none
 
 !ENDIF 
@@ -191,6 +191,10 @@ SOURCE=.\FileUtility.cpp
 
 !ELSEIF  "$(CFG)" == "Harness - Win32 Release with symbols"
 
+!ELSEIF  "$(CFG)" == "Harness - Win64 Release"
+
+!ELSEIF  "$(CFG)" == "Harness - Win64 Debug"
+
 !ENDIF 
 
 # End Source File
@@ -209,6 +213,10 @@ SOURCE=.\XMLFileReporter.cpp
 # ADD CPP /YX
 
 !ELSEIF  "$(CFG)" == "Harness - Win32 Release with symbols"
+
+!ELSEIF  "$(CFG)" == "Harness - Win64 Release"
+
+!ELSEIF  "$(CFG)" == "Harness - Win64 Debug"
 
 !ENDIF 
 

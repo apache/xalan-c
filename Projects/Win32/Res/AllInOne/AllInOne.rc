@@ -47,15 +47,15 @@ BEGIN
         BEGIN
             VALUE "Comments", "Dynamic linked library for Xalan-C++\0"
             VALUE "CompanyName", "Apache Software Foundation\0"
-            VALUE "FileDescription", "Dynamic Link Library for Xalan-C++ Version 1.6.0\0"
-            VALUE "FileVersion", "1, 6, 0, 0\0"
-            VALUE "InternalName", "Xalan-C_1_6_0.dll\0"
+            VALUE "FileDescription", "Dynamic Link Library for Xalan-C++ Version 1.7.0\0"
+            VALUE "FileVersion", "1, 7, 0, 0\0"
+            VALUE "InternalName", "Xalan-C_1_7_0.dll\0"
             VALUE "LegalCopyright", "Copyright © Apache Software Foundation 1999-2003. Subject to licensing terms\0"
             VALUE "LegalTrademarks", "\0"
-            VALUE "OriginalFilename", "Xalan-C_1_6_0.dll\0"
+            VALUE "OriginalFilename", "Xalan-C_1_7_0.dll\0"
             VALUE "PrivateBuild", "\0"
-            VALUE "ProductName", "Xalan-C++ Version 1.6.0\0"
-            VALUE "ProductVersion", "1, 6, 0, 0\0"
+            VALUE "ProductName", "Xalan-C++ Version 1.7.0\0"
+            VALUE "ProductVersion", "1, 7, 0, 0\0"
             VALUE "SpecialBuild", "\0"
         END
     END

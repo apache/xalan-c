@@ -74,8 +74,8 @@
 #include <xercesc/util/XMLString.hpp>
 
 #ifdef WIN32
-extern "C" const char U_IMPORT  xalanMsg_1_6_dat []; 
-static const char* const	sPackageName="xalanMsg_1_6";
+extern "C" const char U_IMPORT  xalanMsg_1_7_dat []; 
+static const char* const	sPackageName="xalanMsg_1_7";
 #else
 extern "C" const char U_IMPORT  xalanMsg_dat [];
 static const char* const	sPackageName="xalanMsg";
@@ -116,7 +116,7 @@ XalanICUMessageLoader::XalanICUMessageLoader():
  	UErrorCode err = U_ZERO_ERROR;
 
 #ifdef WIN32
-	udata_setAppData(sPackageName, &xalanMsg_1_6_dat, &err);
+	udata_setAppData(sPackageName, &xalanMsg_1_7_dat, &err);
 #else
 	udata_setAppData(sPackageName, &xalanMsg_dat, &err);
 #endif

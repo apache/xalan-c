@@ -56,7 +56,7 @@
 ###################################################################
 
 PROJECT_NAME = xalan-c
-LIB_MAJOR_VER = 16
+LIB_MAJOR_VER = 17
 LIB_MINOR_VER = 0
-VER = 1_6_0
+VER = 1_7_0
 
