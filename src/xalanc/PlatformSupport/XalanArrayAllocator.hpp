@@ -23,12 +23,12 @@
 
 
 #include <cassert>
-#include <list>
 #include <utility>
 
 
 
 #include <xalanc/Include/XalanVector.hpp>
+#include <xalanc/Include/XalanList.hpp>
 
 
 
@@ -45,7 +45,7 @@ public:
 	typedef typename VectorType::size_type	size_type;
 
 	typedef XALAN_STD_QUALIFIER pair<size_type, VectorType>		ListEntryType;
-	typedef XALAN_STD_QUALIFIER list<ListEntryType>				ListType;
+	typedef XalanList<ListEntryType>							ListType;
 
 	typedef Type							value_type;
 

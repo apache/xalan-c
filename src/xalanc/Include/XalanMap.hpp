@@ -24,7 +24,6 @@
 
 
 #include <cstddef>
-#include <list>
 #include <algorithm>
 #include <functional>
 #include <utility>
@@ -36,6 +35,7 @@
 
 
 #include <xalanc/Include/XalanVector.hpp>
+#include <xalanc/Include/XalanList.hpp>
 
 
 
@@ -120,7 +120,7 @@ public:
 		}
 	};
 
-	typedef XALAN_STD_QUALIFIER list<Entry>					EntryListType;
+	typedef XalanList<Entry>									EntryListType;
 	typedef typename EntryListType::iterator				EntryListIterator;
 	typedef typename EntryListType::const_iterator			EntryListConstIterator;
 
@@ -202,12 +202,14 @@ public:
 
 	XalanMap(
 			float loadFactor = 0.75,
+			size_type minBuckets = 10,
 			MemoryManagerType* theMemoryManager = 0) :
 		m_memoryManager(theMemoryManager),
 		m_loadFactor(loadFactor),
+		m_minBuckets(minBuckets),
 		m_size(0),
 		m_entries(/* m_memoryManager */),
-		m_buckets(10, m_entries.end(), m_memoryManager),
+		m_buckets(m_memoryManager),
 		m_freeList()
 	{
 	}
@@ -215,6 +217,7 @@ public:
 	XalanMap(const XalanMap &theRhs) :
 		m_memoryManager(theRhs.m_memoryManager),
 		m_loadFactor(theRhs.m_loadFactor),
+		m_minBuckets(10),
 		m_size(0),
 		m_entries(/* m_memoryManager */),
 		m_buckets(size_type(m_loadFactor * theRhs.size())+ 1, m_entries.end(), m_memoryManager),
@@ -273,18 +276,21 @@ public:
 
 	iterator find(const key_type& key)
 	{
-		size_type index = doHash(key);
-
-		EntryListIterator bucketPos = m_buckets[index];
-
-		while (bucketPos != m_entries.end() &&
-			   bucketPos->bucketIndex == index)
+		if (!m_buckets.empty())
 		{
-			if (m_equals(key,bucketPos->first))
+			size_type index = doHash(key);
+
+			EntryListIterator bucketPos = m_buckets[index];
+
+			while (bucketPos != m_entries.end() &&
+				bucketPos->bucketIndex == index)
 			{
-				return iterator(*this,bucketPos);
+				if (m_equals(key,bucketPos->first))
+				{
+					return iterator(*this,bucketPos);
+				}
+				++bucketPos;
 			}
-			++bucketPos;
 		}
 
 		return end();
@@ -292,21 +298,7 @@ public:
 
 	const_iterator find(const key_type& key) const 
 	{
-		size_type index = doHash(key);
-
-		EntryListConstIterator bucketPos = m_buckets[index];
-
-		while (bucketPos != m_entries.end() &&
-			   bucketPos->bucketIndex == index)
-		{
-			if (m_equals(key,bucketPos->first))
-			{
-				return const_iterator(*this,bucketPos);
-			}
-			++bucketPos;
-		}
-
-		return end();
+		return const_cast<ThisType *>(this)->find(key);
 	}
 
 	data_type & operator[](const key_type& key)
@@ -386,6 +378,11 @@ public:
 
 	iterator doCreateEntry(const key_type & key, const data_type&  data)
 	{
+		if (m_buckets.empty())
+		{
+			m_buckets.insert(m_buckets.begin(), m_minBuckets, m_entries.end());
+		}
+
 		if (size_type(m_loadFactor * size()) > m_buckets.size())
 		{
 			rehash();
@@ -421,16 +418,16 @@ public:
 		return iterator(*this, bucketStartPos);
 	}
 
-	void doRemoveEntry(const EntryListIterator & toRemoveIter)
+	void doRemoveEntry(const EntryListIterator & toRemovePos)
 	{
-		size_type index = toRemoveIter->bucketIndex;
-		EntryListIterator nextPosition = ++(EntryListIterator(toRemoveIter));
+		size_type index = toRemovePos->bucketIndex;
+		EntryListIterator nextPos = ++(EntryListIterator(toRemovePos));
 
-		if (m_buckets[index] == toRemoveIter)
+		if (m_buckets[index] == toRemovePos)
 		{
-			if (nextPosition->bucketIndex == index)
+			if (nextPos->bucketIndex == index)
 			{
-				m_buckets[index] = nextPosition;
+				m_buckets[index] = nextPos;
 			}
 			else
 			{
@@ -438,7 +435,7 @@ public:
 			}
 		}
 
-		m_freeList.splice(m_freeList.begin(), m_entries, toRemoveIter, nextPosition);
+		m_freeList.splice(m_freeList.begin(), m_entries, toRemovePos, nextPos);
 		--m_size;
 	}
 
@@ -451,11 +448,7 @@ public:
 	{
 		EntryPosVectorType temp(size_type(1.6 * size()), m_entries.end(), m_memoryManager);
 		m_buckets.swap(temp);
-		doRehashEntries();
-	}
-
-	void doRehashEntries()
-	{
+	
 		EntryListType tempEntryList;
 		tempEntryList.splice(tempEntryList.begin(),m_entries, m_entries.begin(), m_entries.end());
 
@@ -479,7 +472,6 @@ public:
 			}
 		}
 	}
-	
 
 	// Data members...
 	Hash				m_hash;
@@ -489,6 +481,8 @@ public:
     MemoryManagerType*  m_memoryManager;
 
 	float				m_loadFactor;
+
+	size_type			m_minBuckets;
 
 	size_type			m_size;
 

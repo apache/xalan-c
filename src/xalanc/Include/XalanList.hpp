@@ -180,52 +180,55 @@ public:
     XalanList(
             MemoryManagerType*  theManager = 0) :
         m_memoryManager(theManager),
-        m_listHead(createFirstNode()),
+        m_listHead(0),
 		m_freeListHeadPtr(0)
     {
     }
 
     ~XalanList()
     {
-		iterator pos = begin();
-		while (pos != end())
+		if (m_listHead != 0)
 		{
-			destroyNode(pos++.node());
-		}
+			iterator pos = begin();
+			while (pos != end())
+			{
+				destroyNode(pos++.node());
+			}
 
-		Node * freeNode = m_freeListHeadPtr;
-		while (freeNode != 0)
-		{
-			Node * nextNode = freeNode->next;
-			deallocate(freeNode);
-			freeNode = nextNode;
-		}
+			Node * freeNode = m_freeListHeadPtr;
+			while (freeNode != 0)
+			{
+				Node * nextNode = freeNode->next;
+				deallocate(freeNode);
+				freeNode = nextNode;
+			}
 
-		deallocate(m_listHead);
+			deallocate(m_listHead);
+		}
     }
 
 	iterator
 	begin()
 	{
-		return iterator(*m_listHead->next);
+		return iterator(*(getListHead().next));
 	}
 
 	const_iterator
 	begin() const
 	{
-		return const_iterator(*m_listHead->next);
+		return const_iterator(*(getListHead().next));
 	}
 
 	iterator
 	end()
 	{
-		return iterator(*m_listHead);
+		return iterator(getListHead());
 	}
 
 	const_iterator
 	end() const
 	{
-		return const_iterator(*m_listHead);
+		return const_iterator(getListHead());
 	}
 
 	reverse_iterator
@@ -417,12 +420,21 @@ protected:
 		deallocate(&node);
 	}
 
-	Node* createFirstNode()
+	Node& getListHead()
 	{
-		Node* newNode = allocate(1);
-		newNode->next = newNode;
-		newNode->prev = newNode;
-		return newNode;
+		if (0 == m_listHead)
+		{
+			m_listHead = allocate(1);
+			m_listHead->next = m_listHead;
+			m_listHead->prev = m_listHead;
+		}
+
+		return *m_listHead;
+	}
+
+	Node& getListHead() const
+	{
+		return const_cast<XalanList*>(this)->getListHead();
 	}
 
 	Node*

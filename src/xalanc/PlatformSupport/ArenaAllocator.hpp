@@ -20,7 +20,10 @@
 
 
 #include <algorithm>
-#include <list>
+
+
+
+#include <xalanc/Include/XalanList.hpp>
 
 
 
@@ -195,11 +198,7 @@ public:
 protected:
 
 	// data members...
-#if defined(XALAN_NO_STD_NAMESPACE)
-	typedef list<ArenaBlockType*>			ArenaBlockListType;
-#else
-	typedef std::list<ArenaBlockType*>	ArenaBlockListType;
-#endif
+	typedef XalanList<ArenaBlockType*>	ArenaBlockListType;
 
 	size_type			m_blockSize;
 

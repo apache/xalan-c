@@ -20,7 +20,6 @@
 
 
 #include <algorithm>
-#include <list>
 
 
 
@@ -46,12 +45,7 @@ public:
 	typedef ArenaAllocator<ObjectType,
 						   ReusableArenaBlockType>		BaseClassType;
 
-#if defined (XALAN_NO_STD_NAMESPACE)
-	typedef	list<ReusableArenaBlockType*>				ArenaBlockListType;
-
-#else
-	typedef	std::list<ReusableArenaBlockType*>			ArenaBlockListType;
-#endif
+	typedef	XalanList<ReusableArenaBlockType*>			ArenaBlockListType;
 
 	typedef	typename ArenaBlockListType::iterator				iterator;
 	typedef	typename ArenaBlockListType::const_iterator			const_iterator;
