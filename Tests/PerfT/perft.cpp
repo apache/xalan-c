@@ -84,7 +84,7 @@
 #if defined(XALAN_NO_NAMESPACES)
 	typedef map<XalanDOMString, XalanDOMString, less<XalanDOMString> >	Hashtable;
 #else
-	typedef std::map<XalanDOMString, XalanDOMString>	Hashtable;
+	typedef std::map<XalanDOMString, XalanDOMString>  Hashtable;
 #endif
 
 // This is here for memory leak testing.
@@ -95,10 +95,7 @@
 
 const char* const 	excludeStylesheets[] =
 {
-	//"basic-all_well.xsl",
 	"large-evans_large.xsl",
-	//"sort-cem-big.xsl",
-	//"large-cem10k.xsl",
 	0
 };
 
@@ -117,31 +114,6 @@ checkForExclusion(XalanDOMString currentFile)
 		return false;
 }
 
-inline StylesheetRoot*
-processStylesheet(
-			const XalanDOMString&			theFileName,
-			XSLTProcessor&					theProcessor,
-			StylesheetConstructionContext&	theConstructionContext)
-{
-	const XSLTInputSource	theInputSource(c_wstr(theFileName));
-
-	return theProcessor.processStylesheet(theInputSource, theConstructionContext);
-}
-
-
-
-inline XalanNode*
-parseSourceDocument(
-			const XalanDOMString&	theFileName,
-			XSLTProcessor&			theProcessor)
-{
-	const XSLTInputSource	theInputSource(c_wstr(theFileName));
-
-	return theProcessor.getSourceTreeFromInput(theInputSource);
-}
-
-
-
 inline double
 calculateElapsedTime(
 			clock_t		theStartTime,
@@ -156,76 +128,9 @@ calculateAvgTime(
 			clock_t		accTime,
 			long		theIterationCount)
 {
-	assert(theIterationCount > 0);
+	assert(theIterationCount > 1);
 
 	return double(accTime) / theIterationCount;
-}
-
-inline double
-calculateAverageElapsedTime(
-			clock_t			theStartTime,
-			clock_t			theEndTime,
-			long			theIterationCount)
-{
-	assert(theIterationCount > 0);
-
-	return calculateElapsedTime(theStartTime, theEndTime) / theIterationCount;
-}
-
-inline clock_t
-transformWUnparsedSource(const XalanDOMString&	theFileName,
-				 XSLTProcessor&			theProcessor,
-				 const StylesheetRoot*	theStylesheetRoot,
-				 XSLTResultTarget&	theResults,
-				 StylesheetExecutionContextDefault&  theExecutionContext)
-{
-	const XSLTInputSource	csSourceXML(c_wstr(theFileName));	// Creates source document
-	theProcessor.setStylesheetRoot(theStylesheetRoot);
-
-	const clock_t startTime = clock();
-	theProcessor.process(csSourceXML, theResults, theExecutionContext);
-	const clock_t endTime = clock();
-
-	return endTime - startTime;
-
-}
-
-inline clock_t
-transformWParsedSource(XalanNode*		theParsedSource,
-				 XSLTProcessor&			theProcessor,
-				 const StylesheetRoot*	theStylesheetRoot,
-				 XSLTResultTarget&		theResults,
-				 StylesheetExecutionContextDefault&  theExecutionContext)
-{
-	// Put the parsed document into an XSLTInputSource, 
-	// and set stylesheet root in the processor
-	const XSLTInputSource	csSourceDocument(theParsedSource);
-	theProcessor.setStylesheetRoot(theStylesheetRoot);
-
-	const clock_t startTime = clock();
-	theProcessor.process(csSourceDocument, theResults, theExecutionContext);
-	const clock_t endTime = clock();
-	
-	return endTime - startTime;
-
-}
-inline long
-eTOeTransform(const XSLTInputSource&		inputSource, 
-	        const XSLTInputSource&			stylesheetSource,
-	        XSLTResultTarget&				outputTarget,
-			StylesheetConstructionContext&	constructionContext,
-			StylesheetExecutionContext&		executionContext,
-			XSLTProcessor&					theProcessor)
-{
-	const clock_t startTime=clock();
-	theProcessor.process(inputSource, 
-			        	stylesheetSource,
-				    	outputTarget,
-						constructionContext,
-						executionContext);
-	const clock_t endTime=clock();
-
-	return endTime - startTime;
 }
 
 
@@ -370,222 +275,234 @@ main(
 	_CrtSetReportFile(_CRT_WARN, _CRTDBG_FILE_STDERR);
 #endif
 
-	Hashtable runAttrs;		// Attribute list for perfdata element
-	long iterCount = 5;		// Default number of iterations
-	bool skip = true;		// Default will skip long tests
+	HarnessInit xmlPlatformUtils;
+	XalanTransformer::initialize();
 
-	XalanDOMString  category;	// Test all of base dir by default
-	XalanDOMString  baseDir;	
-	XalanDOMString  outputRoot;	
-
-	FileUtility futil;
-
-	if (getParams(argc, argv, futil, baseDir, outputRoot, category, skip, iterCount) == true)
 	{
-		//
-		// Call the static initializers for xerces and xalan, and create a transformer
-		//
-		HarnessInit xmlPlatformUtils;
-		XalanTransformer::initialize();
-		XalanTransformer xalan;
+		Hashtable runAttrs;		// Attribute list for perfdata element
+		long iterCount = 5;		// Default number of iterations
+		bool skip = true;		// Default will skip long tests
 
-		// Generate Unique Run id and processor info
-		const XalanDOMString UniqRunid = futil.GenerateUniqRunid();
+		XalanDOMString  category;	// Test all of base dir by default
+		XalanDOMString  baseDir;	
+		XalanDOMString  outputRoot;	
 
+		FileUtility futil;
 
-		// Defined basic constants for file manipulation and open results file
-		const XalanDOMString  resultFilePrefix(XalanDOMString("cpp"));
-		const XalanDOMString  resultsFile(outputRoot + resultFilePrefix + UniqRunid + XMLSuffix);
-
-
-		XMLFileReporter	logFile(resultsFile);
-		logFile.logTestFileInit("Performance Testing - Reports various performance metrics using the Transformer");
-
-
-		// Create run entry that contains runid and number of iterations used for averages.
-		runAttrs.insert(Hashtable::value_type(XalanDOMString("UniqRunid"), UniqRunid));
-		logFile.addMetricToAttrs("Iterations",iterCount, runAttrs);
-		logFile.logElement(10, "perfdata", runAttrs, "xxx");
-
-
-		// Get the list of sub-directories below "base" and iterate through them
-		const FileNameVectorType dirs = futil.getDirectoryNames(baseDir);
-
-		for(FileNameVectorType::size_type	j = 0; j < dirs.size(); j++)
+		if (getParams(argc, argv, futil, baseDir, outputRoot, category, skip, iterCount) == true)
 		{
-			// Run specific category of files from given directory
-			if (length(category) > 0 && !equals(dirs[j], category))
+			//
+			// Call the static initializers for xerces and xalan, and create a transformer
+			//
+			XalanTransformer xalan;
+
+			// Generate Unique Run id and processor info
+			const XalanDOMString UniqRunid = futil.GenerateUniqRunid();
+
+
+			// Defined basic constants for file manipulation and open results file
+			const XalanDOMString  resultFilePrefix(XalanDOMString("cpp"));
+			const XalanDOMString  resultsFile(outputRoot + resultFilePrefix + UniqRunid + XMLSuffix);
+
+
+			XMLFileReporter	logFile(resultsFile);
+			logFile.logTestFileInit("Performance Testing - Reports various performance metrics using the Transformer");
+
+
+			// Create run entry that contains runid and number of iterations used for averages.
+			runAttrs.insert(Hashtable::value_type(XalanDOMString("UniqRunid"), UniqRunid));
+			logFile.addMetricToAttrs("Iterations",iterCount, runAttrs);
+			logFile.logElement(10, "perfdata", runAttrs, "xxx");
+
+
+			// Get the list of sub-directories below "base" and iterate through them
+			const FileNameVectorType dirs = futil.getDirectoryNames(baseDir);
+
+			for(FileNameVectorType::size_type	j = 0; j < dirs.size(); j++)
 			{
-				continue;
-			}
-
-			cout << "Processing files in Directory: " << dirs[j] << endl;
-
-			// Check that output directory is there.
-			const XalanDOMString  theOutputDir = outputRoot + dirs[j];
-			futil.checkAndCreateDir(theOutputDir);
-
-			logFile.logTestCaseInit(XalanDOMString("Performance Directory: ") + dirs[j] ); 
-			const FileNameVectorType files = futil.getTestFileNames(baseDir, dirs[j], false);
-
-			for(FileNameVectorType::size_type i = 0; i < files.size(); i++)
-			{
-				// Define  variables used for timing and reporting ...
-				clock_t startTime, endTime, accmTime, avgEtoe;
-				double timeinMilliseconds, theAverage;
-				int transformResult;
-				Hashtable attrs;
-
-				attrs.insert(Hashtable::value_type(XalanDOMString("idref"), files[i]));
-				attrs.insert(Hashtable::value_type(XalanDOMString("UniqRunid"),UniqRunid));
-				attrs.insert(Hashtable::value_type(XalanDOMString("processor"),processorType));
-				logFile.addMetricToAttrs("Iterations",iterCount, attrs);
-						
-				if (skip)
+				// Run specific category of files from given directory
+				if (length(category) > 0 && !equals(dirs[j], category))
 				{
-					if (checkForExclusion(files[i]))
-						continue;
+					continue;
 				}
 
-				const XalanDOMString  theXSLFile= baseDir + dirs[j] + pathSep + files[i];
-				const XalanDOMString  theXMLFile = futil.GenerateFileName(theXSLFile,"xml");
+				cout << "Processing files in Directory: " << dirs[j] << endl;
 
-				const XalanDOMString  outbase =  outputRoot + dirs[j] + pathSep + files[i]; 
-				const XalanDOMString  theOutputFile = futil.GenerateFileName(outbase, "out");
+				// Check that output directory is there.
+				const XalanDOMString  theOutputDir = outputRoot + dirs[j];
+				futil.checkAndCreateDir(theOutputDir);
 
-				const XSLTInputSource	xslInputSource(c_wstr(theXSLFile));
-				const XSLTInputSource	xmlInputSource(c_wstr(theXMLFile));
-				const XSLTResultTarget	theResultTarget(theOutputFile);
+				logFile.logTestCaseInit(XalanDOMString("Performance Directory: ") + dirs[j] ); 
+				const FileNameVectorType files = futil.getTestFileNames(baseDir, dirs[j], false);
 
-				attrs.insert(Hashtable::value_type(XalanDOMString("href"), theXSLFile));
-
-				cout << endl << files[i] << endl;
-
-				//
-				// Time the parsing(compile) of the stylesheet and report the results..
-				//
-				startTime = clock();
-					const XalanCompiledStylesheet* const compiledSS = xalan.compileStylesheet(xslInputSource);
-				endTime = clock();
-				//	assert(glbStylesheetRoot != 0);
-
-				timeinMilliseconds = calculateElapsedTime(startTime, endTime);
-				cout << "   XSL parse: " << timeinMilliseconds << " milliseconds." << endl;
-				logFile.addMetricToAttrs("parsexsl",timeinMilliseconds, attrs);	
-
-				//
-				// Time the parsing of the input XML and report the results..
-				//
-				startTime = clock();
-					 XalanParsedSource*  parsedSource = xalan.parseSource(xmlInputSource);
-				endTime = clock();
-				//	assert(glbSourceXML != 0);
-
-				timeinMilliseconds = calculateElapsedTime(startTime, endTime);
-				cout << "   XML parse: " << timeinMilliseconds << " milliseconds." << endl;
-				logFile.addMetricToAttrs("parsexml",timeinMilliseconds, attrs);
-/*
-				//
-				// Do a total END to END transform with no pre parsing of either xsl or xml files.
-				// And output metrics to console and result log
-				//
-				startTime = clock();
-					transformResult = xalan.transform(xmlInputSource, xslInputSource, theResultTarget);
-				endTime = clock();
-				if(!transformResult)
+				for(FileNameVectorType::size_type i = 0; i < files.size(); i++)
 				{
-					timeinMilliseconds = calculateElapsedTime(startTime, endTime);
-					cout << "   Single eTOe: " << timeinMilliseconds << " milliseconds." << endl;
-					logFile.addMetricToAttrs("etoe", timeinMilliseconds, attrs);	
-				}
-				else
-				{
-					cout << xalan.getLastError();
-					return 0;
-				}
+					// Define  variables used for timing and reporting ...
+					clock_t startTime, endTime, accmTime, avgEtoe;
+					double timeinMilliseconds = 0, theAverage =0;
+					int transformResult = 0;
+					Hashtable attrs;
 
-				//
-				// Perform a single transform using parsed stylesheet and unparsed xml source, report results...
-				// 
-				startTime = clock();
-					transformResult = xalan.transform(xmlInputSource, compiledSS, theResultTarget);
-				endTime = clock();
-				if(!transformResult)
-				{
-					timeinMilliseconds = calculateElapsedTime(startTime, endTime);
-					cout << "   Single w/parsed XSL: " << timeinMilliseconds << " milliseconds." << endl;
-					logFile.addMetricToAttrs("single", timeinMilliseconds, attrs);	
-				}
-				else
-				{
-					cout << xalan.getLastError();
-					return 0;
-				}
+					attrs.insert(Hashtable::value_type(XalanDOMString("idref"), files[i]));
+					attrs.insert(Hashtable::value_type(XalanDOMString("UniqRunid"),UniqRunid));
+					attrs.insert(Hashtable::value_type(XalanDOMString("processor"),processorType));
+					logFile.addMetricToAttrs("Iterations",iterCount, attrs);
+							
+					if (skip)
+					{
+						if (checkForExclusion(files[i]))
+							continue;
+					}
 
-*/				//
-				// Perform multiple transforms and calculate the average time ..
-				// These are done 3 different ways.
-				//
-				// FIRST: Parsed XSL Stylesheet and Parsed XML Source.
-				//
-				accmTime = 0;
-				for(int j = 0; j < iterCount; ++j)
-				{	
+					const XalanDOMString  theXSLFile= baseDir + dirs[j] + pathSep + files[i];
+					const XalanDOMString  theXMLFile = futil.GenerateFileName(theXSLFile,"xml");
+
+					const XalanDOMString  outbase =  outputRoot + dirs[j] + pathSep + files[i]; 
+					const XalanDOMString  theOutputFile = futil.GenerateFileName(outbase, "out");
+
+					const XSLTInputSource	xslInputSource(c_wstr(theXSLFile));
+					const XSLTInputSource	xmlInputSource(c_wstr(theXMLFile));
+					const XSLTResultTarget	theResultTarget(theOutputFile);
+
+					attrs.insert(Hashtable::value_type(XalanDOMString("href"), theXSLFile));
+
+					cout << endl << files[i] << endl;
+
+					//
+					// Time the parsing(compile) of the XSL stylesheet and report the results..
+					//
 					startTime = clock();
-						transformResult = xalan.transform(*parsedSource, compiledSS, theResultTarget);
+						XalanCompiledStylesheet* const compiledSS = xalan.compileStylesheet(xslInputSource);
 					endTime = clock();
+					//	assert(glbStylesheetRoot != 0);
+
+					timeinMilliseconds = calculateElapsedTime(startTime, endTime);
+					cout << "   XSL: " << timeinMilliseconds << " milliseconds, Parse" << endl;
+					logFile.addMetricToAttrs("parsexsl",timeinMilliseconds, attrs);	
+
+					//
+					// Time the parsing of the input XML and report the results..
+					//
+					startTime = clock();
+						 XalanParsedSource*  parsedSource = xalan.parseSource(xmlInputSource);
+					endTime = clock();
+					//	assert(glbSourceXML != 0);
+
+					timeinMilliseconds = calculateElapsedTime(startTime, endTime);
+					cout << "   XML: " << timeinMilliseconds << " milliseconds, Parse" <<endl;
+					logFile.addMetricToAttrs("parsexml",timeinMilliseconds, attrs);
+
+					//
+					// Perform One transform using parsed stylesheet and unparsed xml source, report results...
+					// 
+					startTime = clock();
+						transformResult = xalan.transform(xmlInputSource, compiledSS, theResultTarget);
+					endTime = clock();
+					if(!transformResult)
+					{
+						timeinMilliseconds = calculateElapsedTime(startTime, endTime);
+						cout << endl << "   One: " << timeinMilliseconds << " w/Parsed XSL." << endl;
+						logFile.addMetricToAttrs("single", timeinMilliseconds, attrs);	
+					}
+					else
+					{
+						cout << xalan.getLastError();
+						return 0;
+					}
+
+					//
+					// Do One eTOe transform with no pre parsing of either xsl or xml files.
+					// And output metrics to console and result log
+					//
+					startTime = clock();
+						transformResult = xalan.transform(xmlInputSource, xslInputSource, theResultTarget);
+					endTime = clock();
+					if(!transformResult)
+					{
+						timeinMilliseconds = calculateElapsedTime(startTime, endTime);
+						cout << "   One: " << timeinMilliseconds << " eTOe." << endl;
+						logFile.addMetricToAttrs("etoe", timeinMilliseconds, attrs);	
+					}
+					else
+					{
+						cout << xalan.getLastError();
+						return 0;
+					}
+
+					//
+					// Perform multiple transforms and calculate the average time ..
+					// These are done 3 different ways.
+					//
+					// FIRST: Parsed XSL Stylesheet and Parsed XML Source.
+					//
+					accmTime = 0;
+					for(int j = 0; j < iterCount; ++j)
+					{	
+						startTime = clock();
+							transformResult = xalan.transform(*parsedSource, compiledSS, theResultTarget);
+						endTime = clock();
+				
+						accmTime += endTime - startTime;
+					}
+
+					theAverage = calculateAvgTime(accmTime, iterCount); 
+					cout << endl << "   Avg: " << theAverage << " for " << iterCount << " iter's w/Parsed files" << endl;
+					logFile.addMetricToAttrs("avgparsedxml",theAverage, attrs);
 			
-					accmTime += endTime - startTime;
-				}
+					//
+					// SECOND: Parsed Stylesheet and UnParsed XML Source.
+					// This is currently how the XalanJ 2.0 is performing transforms,
+					// i.e. with the unparsed XML Source.
+						
+					accmTime = 0;
+					for(int k = 0; k < iterCount; ++k)
+					{
+						startTime = clock();
+							transformResult = xalan.transform(xmlInputSource, compiledSS, theResultTarget);
+						endTime = clock();
+				
+						accmTime += endTime - startTime;						
+					}
+					theAverage = calculateAvgTime(accmTime, iterCount);
+					cout << "   Avg: " << theAverage << " for " << iterCount << " iter's w/UnParsed XML" << endl;
+					logFile.addMetricToAttrs("avgunparsedxml",theAverage, attrs);
 
-				theAverage = calculateAvgTime(accmTime, iterCount); 
+					//
+					// THIRD: Neither Stylesheet nor XML Source are parsed.
+					// Perform multiple etoe transforms and calculate the average ...
+			
+					avgEtoe = 0;
+					for(int jj = 0; jj < iterCount; ++jj)
+					{	
+						startTime = clock();
+							transformResult = xalan.transform(xmlInputSource, xslInputSource, theResultTarget);
+						endTime = clock();
+				
+						avgEtoe += endTime - startTime;						
+					}
+					theAverage = calculateAvgTime(avgEtoe,iterCount);
 
-				// Output average transform time to console and result log
-				cout << "   Avg: " << theAverage << " for " << iterCount << " iter's w/Parsed files" << endl;
-				logFile.addMetricToAttrs("avgparsedxml",theAverage, attrs);
+					// Output average transform time to console and result log
+					cout << "   Avg: " << theAverage << " for " << iterCount << " iter's of eToe" << endl;
+					logFile.addMetricToAttrs("avgetoe",theAverage, attrs);
 
-				// SECOND: Parsed Stylesheet and UnParsed XML Source.
-				// This is currently how the XalanJ 2.0 is performing transforms,
-				// i.e. with the unparsed XML Source.
-					
-				accmTime = 0;
-				for(int k = 0; k < iterCount; ++k)
-				{
-//
-				}
+					logFile.logElement(10, "perf", attrs, "xxx");
 
-				theAverage = calculateAvgTime(accmTime, iterCount);
-				cout << "   Avg: " << theAverage << " for " << iterCount << " iter's w/UnParsed XML" << endl;
+					xalan.destroyParsedSource(parsedSource);
+					xalan.destroyStylesheet(compiledSS);
 
-				logFile.addMetricToAttrs("avgunparsedxml",theAverage, attrs);
+				}//for files
 
-				// THIRD: Neither Stylesheet nor XML Source are parsed.
-				// Perform multiple etoe transforms and calculate the average ...
-		
-				avgEtoe = 0;
-				for(int jj = 0; jj < iterCount; ++jj)
-				{	
-//						
-				}
+			logFile.logTestCaseClose(XalanDOMString("Performance Directory: ") + dirs[j], XalanDOMString("Done") );
+			}//for dirs
 
-				theAverage = calculateAvgTime(avgEtoe,iterCount);
+		logFile.logTestFileClose("Performance", "Done");
+		logFile.close();
 
-				// Output average transform time to console and result log
-				cout << "   Avg: " << theAverage << " for " << iterCount << " iter's of eToe" << endl;
+		} //if getParams
+	}
 
-				logFile.addMetricToAttrs("avgetoe",theAverage, attrs);
-
-
-				logFile.logElement(10, "perf", attrs, "xxx");
-			}//for files
-
-		logFile.logTestCaseClose(XalanDOMString("Performance Directory: ") + dirs[j], XalanDOMString("Done") );
-		}//for dirs
-
-	logFile.logTestFileClose("Performance", "Done");
-	logFile.close();
-
-	} //if getParams
+	XalanTransformer::terminate();
 
 	return 0;
 }
