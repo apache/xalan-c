@@ -83,7 +83,7 @@
       modify a .cpp file, you must rebuild the executable and place it on the path before you can run the
       modified application.</li>
      </ol>
-     <Note> Each sample application looks for input files in the current directory, the directory from
+     <note> Each sample application looks for input files in the current directory, the directory from
      which you run the application. The input files are in the samples subdirectory along with the sample source
      files. The application executable, on the other hand, is in the build subdirectory. To run a sample, be sure the
      executable is on the path, and run it from the samples subdirectory that contains the input files.</note>
