@@ -112,16 +112,6 @@ public:
 		return theCurrentByte - theBytes;
 	}
 
-#if defined(XALAN_NO_NAMESPACES)
-	typedef map<XalanDOMString,
-				XalanDOMChar,
-				DOMStringLessThanIgnoreCaseASCIIFunction>	MaximumCharacterValueMapType;
-#else
-	typedef std::map<XalanDOMString,
-					 XalanDOMChar,
-					 DOMStringLessThanIgnoreCaseASCIIFunction>	MaximumCharacterValueMapType;
-#endif
-
     enum eCode
     {
 		OK,
@@ -262,6 +252,10 @@ public:
 
 	static const XalanDOMChar 	s_utf16String[];
 
+	static const XalanDOMChar 	s_utf16LEString[];
+
+	static const XalanDOMChar 	s_utf16BEString[];
+
 	static const XalanDOMChar 	s_utf32String[];
 
 	static const XalanDOMChar 	s_asciiString[];
@@ -269,6 +263,11 @@ public:
 	static const XalanDOMChar 	s_usASCIIString[];
 
 	static const XalanDOMChar 	s_windows1250String[];
+
+	static const XalanDOMChar 	s_iso88591String[];
+
+	static const XalanDOMChar	s_shiftJISString[];
+
 
 	class XALAN_PLATFORMSUPPORT_EXPORT UnrepresentableCharacterException : public XSLException
 	{
@@ -305,8 +304,6 @@ private:
 	static const XalanXMLByte	s_dummyByteOrderMark[];
 	static const XalanXMLByte	s_UTF8ByteOrderMark[];
 	static const XalanDOMChar	s_UTF16ByteOrderMark[];
-
-	static const MaximumCharacterValueMapType&	s_maximumCharacterValues;
 };
 
 
