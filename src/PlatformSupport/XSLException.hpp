@@ -108,9 +108,9 @@ public:
 	}
 
 private:
-
-	const XalanDOMString	m_type;
+	
 	const XalanDOMString	m_message;
+	const XalanDOMString	m_type;
 };
 
 
