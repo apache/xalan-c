@@ -168,7 +168,7 @@ public:
 		const_reverse_iterator
 		rbegin() const
 		{
-			return const_iterator(end());
+			return const_reverse_iterator(end());
 		}
 
 		reverse_iterator
@@ -306,7 +306,7 @@ public:
 	const_reverse_iterator
 	rbegin() const
 	{
-		return const_iterator(end());
+		return const_reverse_iterator(end());
 	}
 
 	reverse_iterator
