@@ -82,8 +82,8 @@ struct DeleteFunctor : public std::unary_function<const T*, void>
 	 *
 	 * @param thePointer pointer to object to be deleted
 	 */
-	typename result_type
-	operator()(typename argument_type	thePointer) const
+	result_type
+	operator()(argument_type	thePointer) const
 	{
 		delete thePointer;
 	}
@@ -129,7 +129,7 @@ private:
 
 
 
-#if ! defined(__GNUC__)
+#if !defined(XALAN_SGI_BASED_STL)
 
 /**
  * Functor to retrieve the key of a key-value pair in a map, used in STL
@@ -179,7 +179,7 @@ struct select2nd : public std::unary_function<PairType, PairType::second_type>
 	 * @return value
 	 */
 	typename result_type
-	operator()(const typename argument_type&	thePair)
+	operator()(const typename argument_type&	thePair) const
 	{
 		return thePair.second;
 	}
@@ -205,8 +205,8 @@ struct MapValueDeleteFunctor : public std::unary_function<const typename T::valu
 	 *
 	 * @param thePair key-value pair
 	 */
-	typename result_type
-	operator()(typename argument_type	thePair)
+	result_type
+	operator()(argument_type	thePair) const
 	{
 		delete thePair.second;
 	}
@@ -236,8 +236,8 @@ struct MapKeyDeleteFunctor : public std::unary_function<const typename T::value_
 	 *
 	 * @param thePair key-value pair
 	 */
-	typename result_type
-	operator()(typename argument_type	thePair)
+	result_type
+	operator()(argument_type	thePair)
 	{
 		delete thePair.first;
 	}
@@ -251,49 +251,6 @@ makeMapKeyDeleteFunctor(const T&	/* theMap */)
 {
 	return MapKeyDeleteFunctor<T>();
 }
-
-
-
-/**
- * Template allows nested execution of for_each algorithm by defining a unary
- * functor that takes a container object as an argument, allowing iteration
- * through the container.
- */
-template<class T, class Functor>
-#if defined(XALAN_NO_NAMESPACES)
-struct nested_for_each_functor : public unary_function<const T::value_type&, Functor>
-#else
-struct nested_for_each_functor : public std::unary_function<const typename T::value_type&, Functor>
-#endif
-{
-	/**
-	 * Construct a nested_for_each_functor instance.
-	 *
-	 * @param theFunctor functor to use as return type
-	 */
-	nested_for_each_functor(Functor		theFunctor) :
-		m_functor(theFunctor)
-	{
-	}
-
-	/**
-	 * Execute the () operator, with the side effect of calling for_each on
-	 * each element in the container argument with the functor member.
-	 *
-	 * @param theContainer container object
-	 */
- 	typename T::result_type
-	operator()(typename argument_type	theContainer)
-	{
-		return for_each(theContainer.begin(),
-						theContainer.end(),
-						m_functor);
-	}
-
-private:
-
-	Functor		m_functor;
-};
 
 
 
@@ -321,9 +278,10 @@ struct less_null_terminated_arrays : public std::binary_function<const T*, const
 	 * @param theRHS second object to compare
 	 * @return true if objects are the same
 	 */
-	typename result_type
-	operator()(typename first_argument_type		theLHS,
-			   typename second_argument_type	theRHS) const
+	result_type
+	operator()(
+			first_argument_type		theLHS,
+			second_argument_type	theRHS) const
 	{
 		while(*theLHS && *theRHS)
 		{
@@ -341,7 +299,6 @@ struct less_null_terminated_arrays : public std::binary_function<const T*, const
 		return *theLHS < *theRHS ? true : false;
 	}
 };
-
 
 
 
