@@ -209,7 +209,7 @@ case it is not really an extension function. The XPath parser treats it like any
 The <ref>prefix</ref> identifies the namespace, and <ref>URI</ref> matches the namespace specified when the function
 is installed.<br/><br/>
 By default, namespace declarations are included in the transformation output. To exclude namespaces from the output, 
-use (<em>NOT YET IMPLEMENTED</em>)<br/><br/>
+use<br/><br/>
 <code>exclude-result-prefixes="<ref>prefix-1 prefix-2 ...</ref>"</code><br/><br/>
 in the stylesheet element or<br/><br/>
 <code>xsl:exclude-result-prefixes="<ref>prefix-1 prefix-2 ...</ref>"</code><br/><br/>

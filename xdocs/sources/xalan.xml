@@ -106,7 +106,7 @@
 
   <separator/>
   
-  <external href="http://xml.apache.org/xalan/c-apidocs/index.html"  
+  <external href="apidocs/index.html"  
             label="C++ API"/>
    
   <separator/>        

@@ -71,7 +71,7 @@
 </ul><anchor name="intro"/>
 
   <s2 title="Introduction">  
-<p>&xslt4c; takes as primary input an XML source document and an XSL stylesheet, both represented by instances of <jump href="apidocs/class_XSLTInputSource.html">XSLTInputSource</jump>. These input objects may each take the form of a file or URL, a stream, or a DOM tree. The stylesheet may also take the form of a compiled stylesheet (an instance of <jump href="apidocs/class_stylesheetroot.html">StylesheetRoot</jump>.</p>
+<p>&xslt4c; takes as primary input an XML source document and an XSL stylesheet, both represented by instances of <jump href="apidocs/class_XSLTInputSource.html">XSLTInputSource</jump>. These input objects may each take the form of a file or URL, a stream, or a DOM tree. The stylesheet may also take the form of a compiled stylesheet (an instance of <jump href="apidocs/class_stylesheetroot.html">StylesheetRoot</jump>).</p>
 <note>If the XML source document contains a stylesheet Processing Instruction (PI), &xslt4c; uses the stylesheet this PI points to and a separate stylesheet object is not required. </note>
 <p>&xslt4c; uses &xml4c; to parse text input, performs the transformation, and sends the output to an instance of <jump href="apidocs/class_xsltresulttarget.html">XSLTResultTarget</jump>, which may be configured to write to a file, a stream, or a DOM tree.</p>
 <p>For detailed API documentation, see <jump href="apidocs/index.html">&xslt4c; API</jump>. For an overview of the
@@ -195,12 +195,12 @@ DOM_Document domOut = theParserLiaison.mapXercesDocument(docOut)</source>
 <note>If the expression is a string and you are using XalanDOMString for the input parameter, enclose it in single quotes to make it a string expression.</note>
 <p>You can include the -param flag with two arguments when you call the <link idref="commandline">command line utility</link>. The first argument is the parameter name or key, and the second argument is the string expression (in single quotes). For example:</p>
 <p><code>TestXSLT -in foo.xml -xsl foo.xsl -param param1 'boo'</code></p>
-<p>If the string expression includes spaces, first enclose the string in single quotes so it is interpreted as a string expression, and then enclose the resulting string in double quotes so it is interpreted as a single argument. For example:</p>
+<p>If the string expression includes spaces or other characters that the shell intercepts, first enclose the string in single quotes so &xslt4c; interprets it as a string expression, and then enclose the resulting string in double quotes so the shell interprets it as a single argument. For example:</p>
 <p><code>TestXSLT -in foo.xml -xsl foo.xsl -param param1 "'hello there'"</code></p>
 <p>The <link idref="samples" anchor="usestylesheetparam">UseStylesheetParam</link> sample application also uses a command-line parameter.</p>
 </s2><anchor name="compiled"/>
 <s2 title="Compiling stylesheets">
-<p>When &xslt4c; performs a transformation with the <link anchor="process">XSLTEngineImpl process() method used above</link>, it starts by compiling the stylesheet into a binary representation. If you intend to use the same stylesheet to perform multiple transformations, you can enhance efficiency by explicitly compiling the stylesheet and using another XSLTEngimeImpl process() method for each transformation. A compiled stylesheet (a <jump href="apidocs/class_stylesheetroot.html">StylesheetRoot</jump> object) thread safe, so it even supports concurrent access by multiple clients. If, for example, you are setting up a server application to perform transformations, you can improve performance by compiling any stylesheets the application repeatedly uses.</p>
+<p>When &xslt4c; performs a transformation with the <link anchor="process">XSLTEngineImpl process() method used above</link>, it starts by compiling the stylesheet into a binary representation. If you intend to use the same stylesheet to perform multiple transformations, you can enhance efficiency by explicitly compiling the stylesheet and using another XSLTEngimeImpl process() method for each transformation. A compiled stylesheet (a <jump href="apidocs/class_stylesheetroot.html">StylesheetRoot</jump> object) is thread safe, so it even supports concurrent access by multiple clients. If, for example, you are setting up a server application to perform transformations, you can improve performance by compiling any stylesheets the application repeatedly uses.</p>
 <p>A compiled stylesheet requires its own XPath and XObject factory support objects, independent of the support objects for an XSLT processor. So after you have set up the XSLT processor with its support objects, set up other
 factory support objects and use them to create a construction context for the stylesheet:</p>
 <source>// Set up the XSLT processor with its support objects
@@ -333,8 +333,9 @@ theExecutionContext.setStylesheetRoot(theStylesheetRoot);
     integrate the ICU with &xslt4c;, but you must do the following in the application where you
     want to enable ICU support:</p>
     <ol>
-      <li>Include the ICUBridge headers</li>
-      <li>Substitue ICU support for format-number(), xsl:number, and xsl:sort</li>
+      <li>Include the ICUBridge headers.</li>
+      <li>Substitue ICU support for format-number(), xsl:number, and/or xsl:sort.</li>
+      <li>Provide your application access to the ICUBridge library.</li>
       </ol>
       <p><em>ICUBridge</em></p>
      <p>All &xslt4c; references to ICU are centralized in the ICUBridge module, which supplies the
@@ -343,6 +344,9 @@ theExecutionContext.setStylesheetRoot(theStylesheetRoot);
 #include &lt;ICUBridge/FunctionICUFormatNumber.hpp&gt;
 #include &lt;ICUBridge/ICUXalanNumberFormatFactory.hpp&gt;
 #include &lt;ICUBridge/ICUBridgeCollationCompareFunctor.hpp&gt;</source>
+    <p>Put the ICUBridge library on the library path. For Windows, put &icubridge-win; on the path. For Linux, put 
+       &icubridge-linux; on the shared library path (LD_LIBRARY_PATH for Red Hat Linux 6.1) or copy it to /usr/lib. 
+       For AIX, put &icubridge-aix; on the load library path (LIB_PATH) or copy it to /usr/lib.</p>
     <p><em>Number formatting</em></p>
     <p>To enable ICU support for the xsl:number element and the XSLT format-number() function, do
      the following:</p>
