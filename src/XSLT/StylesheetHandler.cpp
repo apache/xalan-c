@@ -1168,9 +1168,8 @@ StylesheetHandler::processInclude(
 		{
 			foundIt = true;
 			
-// ??			PushPopIncludeState		theStateHandler(*this);
+			PushPopIncludeState		theStateHandler(*this);
 
-			ElemTemplateElement* saved_pLastPopped = m_lastPopped;
 			m_lastPopped = 0;
 			const XalanDOMString	href = atts.getValue(i);
 
@@ -1190,7 +1189,6 @@ StylesheetHandler::processInclude(
 			
 			m_stylesheet.getIncludeStack().pop_back();
 
-			m_lastPopped = saved_pLastPopped;
 		}
 		else if(!isAttrOK(aname, atts, i))
 		{
