@@ -63,7 +63,7 @@
 
 
 
-#include <xercesc/sax2/XMLReaderFactory.hpp>
+#include <sax2/XMLReaderFactory.hpp>
 
 
 
