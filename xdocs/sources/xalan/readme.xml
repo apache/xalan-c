@@ -71,24 +71,21 @@
  <anchor name="status"/>
  <s2 title="Status">
    <ul>
-    <li><link anchor="done">Changes since &xslt4c; version 1.3</link></li>
+    <li><link anchor="done">Changes since &xslt4c; version 1.4</link></li>
     <li><link anchor="bugs">Bug reporting</link></li>    
     <li><link anchor="xml4c">Version of &xml4c; to use</link></li>
     <li><link anchor="to-do">To-do tasks for future &xslt4c; releases</link></li>
    </ul>
      <anchor name="done"/>
-   <s3 title="Changes since &xslt4c; version 1.3">
-     <p>Major updates since version 1.3 include:</p>
+   <s3 title="Changes since &xslt4c; version 1.4">
+     <p>Major updates since version 1.4 include:</p>
      <ul>
-       <li><resource-ref idref="bugsfixedforthisrelease"/>.</li>
-       <li>The &xslt4c; distributions no longer include the &xml4c; headers and libraries. Accordingly, you must download the appropriate &xml4c; distribution (see <link idref="getstarted" anchor="download">Downloading what you need</link>.</li>
-       <li>64-bit build for HP-11; <link anchor="64">untested 64-bit support</link> for Solaris and AIX.</li>
-       <li>New Linux platform and compiler: Redhat 7.2 with gcc 3.1.</li>
-       <li><resource-ref idref="stlport"/> is no longer required on any of our supported platforms.</li> 
-       <li><link idref="extensionslib" anchor="exslt">Alpha support for a number of EXSLT functions</link>.</li>       
-       <li><link idref="samples" anchor="parsedsourcewrappers">ParsedSourceWrappers</link>, a sample that
-       illustrates how to perform transformations with input in the form of a pre-built
-       XalanDOM or XalanSourceTree.</li>
+		<li><resource-ref idref="bugsfixedforthisrelease"/>.</li>
+		<li>Support for &xml4c; DOMNode classes.</li>
+		<li>New sample <em>TransformToXercesDOM</em> that illustrates how
+		  to perform a transform resulting in a &xml4c; DOMDocument</li>
+		<li>Usage of the &xml4c; C++ namespace and creation of &xslt4c;
+		  namespace.</li>
      </ul>  
    </s3>  
      <anchor name="bugs"/>

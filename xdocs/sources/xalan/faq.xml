@@ -327,5 +327,11 @@ Xalan wrappers.</p></a>
 		<p>Did you build with ICU support? See <link idref="usagepatterns" anchor="icu">Using the International Components for Unicode (ICU)</link>.</p>
 	</a>
 </faq>
+
+<faq title="Perl wrapper">
+	<q>Is there a Perl wrapper for &xslt4c;?</q>
+	<a><p>There is no Apache Perl wrapper, however Edwin Pratomo has written a
+	  wrapper for &xslt4c; version 1.4 that can be found on CPAN</p></a>
+</faq>
     
 </faqs>
