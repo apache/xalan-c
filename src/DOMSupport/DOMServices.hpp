@@ -90,6 +90,7 @@ public:
 
 	static const XalanDOMString&	s_XMLString;
 	static const XalanDOMString&	s_XMLStringWithSeparator;
+	static const XalanDOMString&	s_XMLNamespacePrefix;
 	static const XalanDOMString&	s_XMLNamespaceURI;
 	static const XalanDOMString&	s_XMLNamespace;
 	static const XalanDOMString&	s_XMLNamespaceWithSeparator;
@@ -98,6 +99,7 @@ public:
 
 	static const XalanDOMString::size_type&		s_XMLStringLength;
 	static const XalanDOMString::size_type&		s_XMLStringWithSeparatorLength;
+	static const XalanDOMString::size_type&		s_XMLNamespacePrefixLength;
 	static const XalanDOMString::size_type&		s_XMLNamespaceURILength;
 	static const XalanDOMString::size_type&		s_XMLNamespaceLength;
 	static const XalanDOMString::size_type&		s_XMLNamespaceWithSeparatorLength;
