@@ -21,12 +21,12 @@
 
 int
 main(
-		  int				     argc,
-		  const char*		 argv [])
+		  int			argc,
+		  const char*	argv[])
 {
 #if !defined(XALAN_NO_NAMESPACES)
-  using std::cerr;
-  using std::endl;
+	using std::cerr;
+	using std::endl;
 #endif
 
 	int	theResult = 0;
@@ -58,7 +58,7 @@ main(
 			// Our input files...The assumption is that the executable will be run
 			// from same directory as the input files.
 			theResult = theXalanTransformer.transform("foo.xml", "foo.xsl", "foo.out");
-    
+
 			if(theResult != 0)
 			{
 				cerr << "UseStylesheetParam Error: \n" << theXalanTransformer.getLastError()

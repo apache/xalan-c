@@ -371,14 +371,14 @@ main(
 
 				const char* const	theXSLFileName = "birds.xsl";
 
-				glbCompiledStylesheet =	theXalanTransformer.compileStylesheet(theXSLFileName);
+				theXalanTransformer.compileStylesheet(theXSLFileName, glbCompiledStylesheet);
 				assert(glbCompiledStylesheet != 0);
 
 				// Compile the XML source document as well. All threads will use
 				// this binary representation of the source tree.
 				const char* const	theXMLFileName = "birds.xml";
 
-				glbParsedSource = theXalanTransformer.parseSource(theXMLFileName);
+				theXalanTransformer.parseSource(theXMLFileName, glbParsedSource);
 				assert(glbParsedSource != 0);
 
 				doThreads(threadCount);

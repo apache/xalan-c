@@ -260,28 +260,39 @@ main(
 						// Set the desired parameters
 						switch (getTestNumber(files[i]))
 						{	case 1:
-								transformEngine.setStylesheetParam(XalanDOMString("input"), 
-																   XalanDOMString("'testing 1 2 3'"));
+								transformEngine.setStylesheetParam(
+									XalanDOMString("input"),
+									XalanDOMString("'testing 1 2 3'"));
 								break;
+
 							case 2:
-								transformEngine.setStylesheetParam(XalanDOMString("in1"), 
-																   XalanDOMString("'A '"));
-								transformEngine.setStylesheetParam(XalanDOMString("in2"), 
-																   XalanDOMString("'B '"));
-								transformEngine.setStylesheetParam(XalanDOMString("in3"),
-																   XalanDOMString("'C '"));
-								transformEngine.setStylesheetParam(XalanDOMString("in4"),
-																   XalanDOMString("'D '"));
-								transformEngine.setStylesheetParam(XalanDOMString("in5"),
-																   XalanDOMString("'E '"));
+								transformEngine.setStylesheetParam(
+									XalanDOMString("in1"),
+									XalanDOMString("'A '"));
+								transformEngine.setStylesheetParam(
+									XalanDOMString("in2"), 
+									XalanDOMString("'B '"));
+								transformEngine.setStylesheetParam(
+									XalanDOMString("in3"),
+									XalanDOMString("'C '"));
+								transformEngine.setStylesheetParam(
+									XalanDOMString("in4"),
+									XalanDOMString("'D '"));
+								transformEngine.setStylesheetParam(
+									XalanDOMString("in5"),
+									XalanDOMString("'E '"));
 								break;
+
 							case 3:
-								transformEngine.setStylesheetParam(XalanDOMString("'xyz:in1'"),
-															       XalanDOMString("'DATA'"));
+								transformEngine.setStylesheetParam(
+									XalanDOMString("'xyz:in1'"),
+									XalanDOMString("'DATA'"));
 								break;
+
 							default:
-								transformEngine.setStylesheetParam(XalanDOMString("input"),
-																   XalanDOMString("'testing 1 2 3'"));
+								transformEngine.setStylesheetParam(
+									XalanDOMString("input"),
+									XalanDOMString("'testing 1 2 3'"));
 								break;
 						}
 

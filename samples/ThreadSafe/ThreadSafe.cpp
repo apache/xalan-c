@@ -184,9 +184,9 @@ main(
 			// pre-parsed source.
 			XalanTransformer	theXalanTransformer;
 
-			glbCompiledStylesheet =	theXalanTransformer.compileStylesheet("birds.xsl");
+			glbError = theXalanTransformer.compileStylesheet("birds.xsl", glbCompiledStylesheet);
 
-			if (glbCompiledStylesheet == 0)
+			if (glbError != 0)
 			{
 				cerr << "ThreadSafe Error: \n" << theXalanTransformer.getLastError()
 					 << endl
@@ -194,11 +194,13 @@ main(
 			}
 			else
 			{
+				assert(glbCompiledStylesheet != 0);
+
 				// Compile the XML source document as well. All threads will use
 				// this binary representation of the source tree.
-				glbParsedSource = theXalanTransformer.parseSource("birds.xml");
+				glbError = theXalanTransformer.parseSource("birds.xml", glbParsedSource);
 
-				if (glbParsedSource == 0)
+				if (glbError != 0)
 				{
 					cerr << "ThreadSafe Error: \n" << theXalanTransformer.getLastError()
 						 << endl
@@ -206,6 +208,8 @@ main(
 				}
 				else
 				{
+					assert(glbParsedSource != 0);
+
 					// Create and run the threads...
 					// Each thread uses the same document and 
 					// stylesheet to perform a transformation.

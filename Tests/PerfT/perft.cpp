@@ -373,9 +373,14 @@ main(
 					// Time the parsing(compile) of the XSL stylesheet and report the results..
 					//
 					startTime = clock();
-					const XalanCompiledStylesheet* const	compiledSS = xalan.compileStylesheet(xslInputSource);
+					const XalanCompiledStylesheet*	compiledSS = 0;
+					xalan.compileStylesheet(xslInputSource, compiledSS);
 					endTime = clock();
-					//	assert(glbStylesheetRoot != 0);
+
+					if (compiledSS == 0)
+					{
+						continue;
+					}
 
 					timeinMilliseconds = calculateElapsedTime(startTime, endTime);
 					cout << "   XSL: " << timeinMilliseconds << " milliseconds, Parse" << endl;
@@ -385,9 +390,16 @@ main(
 					// Time the parsing of the input XML and report the results..
 					//
 					startTime = clock();
-					const XalanParsedSource* const	parsedSource = xalan.parseSource(xmlInputSource);
+					const XalanParsedSource*	parsedSource = 0;
+
+					xalan.parseSource(xmlInputSource, parsedSource);
+
 					endTime = clock();
-					//	assert(glbSourceXML != 0);
+
+					if (parsedSource == 0)
+					{
+						continue;
+					}
 
 					timeinMilliseconds = calculateElapsedTime(startTime, endTime);
 					cout << "   XML: " << timeinMilliseconds << " milliseconds, Parse" <<endl;

@@ -55,38 +55,44 @@ main(
 		// Initialize Xalan.
 		XalanTransformer::initialize();
 
-		// Create a XalanTransformer.
-		XalanTransformer theXalanTransformer;
+		{
+			// Create a XalanTransformer.
+			XalanTransformer theXalanTransformer;
 
-		// Our input files...The assumption is that the executable will be run
-		// from same directory as the input files.
-		const char*		theXSLFileName = "foo.xsl";
-		
-		// Compile the stylesheet.
-		const XalanCompiledStylesheet* const	theCompiledStylesheet = 
-			theXalanTransformer.compileStylesheet(theXSLFileName);
+			// Our input files...The assumption is that the executable will be run
+			// from same directory as the input files.
+			const char*		theXSLFileName = "foo.xsl";
+			
+			// Compile the stylesheet.
+			const XalanCompiledStylesheet*	theCompiledStylesheet = 0;
 
-		assert(theCompiledStylesheet != 0);
+			theResult =	theXalanTransformer.compileStylesheet(theXSLFileName, theCompiledStylesheet);
 
-		for (unsigned int i = 0; i < 10; i++)
-		{		
-			// Buffers passed in to ostrstream.
-			char		inBuffer[10];
-			char		outBuffer[10];	
+			if (theResult == 0)
+			{
+				assert(theCompiledStylesheet != 0);
 
-			// Generate the input and output file names.
-			ostrstream	theFormatterIn(inBuffer, sizeof(inBuffer));
-			ostrstream	theFormatterOut(outBuffer, sizeof(outBuffer));
+				for (unsigned int i = 0; i < 10; ++i)
+				{		
+					// Buffers passed in to ostrstream.
+					char	inBuffer[10];
+					char	outBuffer[10];	
 
-			theFormatterIn << "foo" << i + 1 << ".xml" << '\0';
-			theFormatterOut << "foo" << i + 1 << ".out" << '\0';
+					// Generate the input and output file names.
+					ostrstream	theFormatterIn(inBuffer, sizeof(inBuffer));
+					ostrstream	theFormatterOut(outBuffer, sizeof(outBuffer));
 
-			char*		theXMLFileName = theFormatterIn.str();
-			char*		theOutputFileName = theFormatterOut.str();
+					theFormatterIn << "foo" << i + 1 << ".xml" << '\0';
+					theFormatterOut << "foo" << i + 1 << ".out" << '\0';
 
-			// Do the transform.
-			theResult = theXalanTransformer.transform(theXMLFileName, theCompiledStylesheet, theOutputFileName);
-    
+					// Do the transform.
+					theResult = theXalanTransformer.transform(
+							inBuffer,
+							theCompiledStylesheet,
+							outBuffer);
+				}
+			}
+   
 			if(theResult != 0)
 			{
 				cerr << "CompileStylesheet Error: \n" << theXalanTransformer.getLastError()
