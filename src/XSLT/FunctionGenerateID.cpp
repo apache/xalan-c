@@ -58,7 +58,7 @@
 
 
 
-#include <XalanDOM/XalanNode.hpp>
+#include <XalanDOM/XalanDocument.hpp>
 
 
 
@@ -96,7 +96,18 @@ getSuffix(
 		const XalanNode*	theNode,
 		XalanDOMString&		theResult)
 {
+	assert(theNode != 0);
+	assert(theNode->getOwnerDocument() != 0);
+
 	const unsigned long		theIndex = theNode->getIndex();
+	const unsigned long		theNumber = theNode->getOwnerDocument()->getNumber();
+
+	if (theNumber != 0)
+	{
+		UnsignedLongToHexDOMString(theNumber, theResult);
+
+		append(theResult, XalanDOMChar(XalanUnicode::charFullStop));
+	}
 
 	if (theIndex == 0)
 	{
