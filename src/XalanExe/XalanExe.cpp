@@ -74,7 +74,6 @@
 
 
 #include <xercesc/util/PlatformUtils.hpp>
-#include <xercesc/sax/SAXException.hpp>
 
 
 
