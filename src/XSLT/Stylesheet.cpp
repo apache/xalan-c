@@ -169,10 +169,15 @@ Stylesheet::~Stylesheet()
 	using std::for_each;
 #endif
 
-	// Clean up all entries in the vector.
+	// Clean up all entries in the imports vector.
 	for_each(m_imports.begin(),
 			 m_imports.end(),
 			 DeleteFunctor<Stylesheet>());
+
+	// Clean up all entries in the include vector.
+	for_each(m_includeStack.begin(),
+			 m_includeStack.end(),
+			 DeleteFunctor<XMLURL>());
 
 	// Clean up the atribute sets vector
 	for_each(m_attributeSets.begin(),

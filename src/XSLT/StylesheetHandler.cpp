@@ -1149,7 +1149,7 @@ StylesheetHandler::processImport(
 			URLAutoPtrType	hrefUrl = m_constructionContext.getURLFromString(href, includeStack.back()->getURLText());
 			assert(hrefUrl.get() != 0);
 
-			Stylesheet::URLStackType& importStack = m_stylesheet.getStylesheetRoot().getImportStack();
+			Stylesheet::URLStackType&	importStack = m_stylesheet.getStylesheetRoot().getImportStack();
 
 			if(stackContains(importStack, *hrefUrl.get()))
 			{
@@ -1160,6 +1160,9 @@ StylesheetHandler::processImport(
 
 			importStack.push_back(hrefUrl.get());
 
+			// We have to release this right now, since the stylesheet
+			// will delete it during its destructor.  However, once we
+			// pop it off the stack, we'll need to delete it.
 			const XMLURL* const		hrefUrlptr = hrefUrl.release();
 
 			const XalanDOMString	theImportURI(hrefUrlptr->getURLText());
@@ -1182,8 +1185,12 @@ StylesheetHandler::processImport(
 			// release the auto_ptr.
 			importedStylesheet.release();
 
+			assert(importStack.back() == hrefUrlptr);
 			importStack.pop_back();
-			
+
+			// The stylesheet is now done with it, so delete it...
+			delete hrefUrlptr;
+
 			m_stylesheet.setXSLTNamespaceURI(saved_XSLNameSpaceURL);
 		}
 		else if(!isAttrOK(aname, atts, i))
@@ -1235,11 +1242,18 @@ StylesheetHandler::processInclude(
 
 			m_stylesheet.getIncludeStack().push_back(hrefUrl.get());
 
+			// We have to release this right now, since the stylesheet
+			// will delete it during its destructor.  However, once we
+			// pop it off the stack, we'll need to delete it.
 			const XMLURL* const		hrefUrlptr = hrefUrl.release();
 
 			m_constructionContext.parseXML(*hrefUrlptr, this, &m_stylesheet);
 
+			assert(m_stylesheet.getIncludeStack().back() == hrefUrlptr);
 			m_stylesheet.getIncludeStack().pop_back();
+
+			// The stylesheet is now done with it, so delete it...
+			delete hrefUrlptr;
 		}
 		else if(!isAttrOK(aname, atts, i))
 		{
