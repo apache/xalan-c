@@ -119,6 +119,9 @@ ElemTemplateElement::ElemTemplateElement(
 	XalanElement(),
 	PrefixResolver(),
 	m_finishedConstruction(false),
+	m_namespacesHandler(stylesheetTree.getNamespacesHandler(),
+						stylesheetTree.getNamespaces(),
+						stylesheetTree.getXSLTNamespaceURI()),
 	m_stylesheet(stylesheetTree),
 	m_lineNumber(lineNumber),
 	m_columnNumber(columnNumber),
@@ -141,21 +144,6 @@ ElemTemplateElement::~ElemTemplateElement()
 	delete m_nextSibling;
 
 	delete m_firstChild;
-}
-
-
-
-const NamespacesHandler&
-ElemTemplateElement::getNamespacesHandler() const
-{
-	if (m_parentNode != 0)
-	{
-		return m_parentNode->getNamespacesHandler();
-	}
-	else
-	{
-		return m_stylesheet.getNamespacesHandler();
-	}
 }
 
 
@@ -1335,9 +1323,11 @@ ElemTemplateElement::getAttributeNode(const XalanDOMString&		/* name */) const
 void
 ElemTemplateElement::postConstruction(const NamespacesHandler&	theParentHandler)
 {
+	m_namespacesHandler.postConstruction(getElementName(), &theParentHandler);
+
     for (ElemTemplateElement* node = m_firstChild; node != 0; node = node->m_nextSibling) 
     {
-		node->postConstruction(theParentHandler);
+		node->postConstruction(m_namespacesHandler);
 	}
 }
 

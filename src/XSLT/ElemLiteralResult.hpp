@@ -69,10 +69,6 @@
 
 
 
-#include <XSLT/NamespacesHandler.hpp>
-
-
-
 class AVT;
 
 
@@ -107,12 +103,6 @@ public:
 	
 	virtual const XalanDOMString&
 	getElementName() const;
-
-	virtual const NamespacesHandler&
-	getNamespacesHandler() const;
-
-	virtual void
-	postConstruction(const NamespacesHandler&	theParentHandler);
 
 	virtual bool
 	isAttrOK(
@@ -186,11 +176,6 @@ private:
 	 * A vector to keep track of the attribute elements.
 	 */
 	AVTVectorType		m_avts;
-
-	/*
-	 * This object handles all result tree namespace processing.
-	 */
-	NamespacesHandler		m_namespacesHandler;
 };
 
 

@@ -99,10 +99,7 @@ ElemLiteralResult::ElemLiteralResult(
 			columnNumber,
 			xslToken),
 	m_elementName(name),
-	m_avts(),
-	m_namespacesHandler(stylesheetTree.getNamespacesHandler(),
-						stylesheetTree.getNamespaces(),
-						stylesheetTree.getXSLTNamespaceURI())
+	m_avts()
 {
 	const unsigned int	nAttrs = atts.getLength();
 
@@ -184,24 +181,6 @@ ElemLiteralResult::~ElemLiteralResult()
 	for_each(m_avts.begin(),
 			 m_avts.end(),
 			 DeleteFunctor<AVT>());
-}
-
-
-
-const NamespacesHandler&
-ElemLiteralResult::getNamespacesHandler() const
-{
-	return m_namespacesHandler;
-}
-
-
-
-void
-ElemLiteralResult::postConstruction(const NamespacesHandler&	theParentHandler)
-{
-	m_namespacesHandler.postConstruction(getElementName(), &theParentHandler);
-
-	ElemUse::postConstruction(m_namespacesHandler);
 }
 
 

@@ -86,10 +86,7 @@ ElemElement::ElemElement(
 			columnNumber,
 			Constants::ELEMNAME_ELEMENT),
 	m_nameAVT(0),
-	m_namespaceAVT(0),
-	m_namespacesHandler(stylesheetTree.getNamespacesHandler(),
-						stylesheetTree.getNamespaces(),
-						stylesheetTree.getXSLTNamespaceURI())	
+	m_namespaceAVT(0)
 {
 	// Namespace aliases are not used for xsl:element, so
 	// turn them off...
@@ -146,24 +143,6 @@ const XalanDOMString&
 ElemElement::getElementName() const
 {
 	return Constants::ELEMNAME_ELEMENT_WITH_PREFIX_STRING;
-}
-
-
-
-void
-ElemElement::postConstruction(const NamespacesHandler&	theParentHandler)
-{
-	m_namespacesHandler.postConstruction(getElementName(), &theParentHandler);
-
-	ElemUse::postConstruction(m_namespacesHandler);
-}
-
-
-
-const NamespacesHandler&
-ElemElement::getNamespacesHandler() const
-{
-	return m_namespacesHandler;
 }
 
 

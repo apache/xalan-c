@@ -84,6 +84,7 @@
 
 
 
+#include <XSLT/NamespacesHandler.hpp>
 #include <XSLT/NodeSorter.hpp>
 
 
@@ -321,8 +322,11 @@ public:
 	 * 
 	 * @return The element's NamespacesHandler instance.
 	 */
-	virtual const NamespacesHandler&
-	getNamespacesHandler() const;
+	const NamespacesHandler&
+	getNamespacesHandler() const
+	{
+		return m_namespacesHandler;
+	}
 
 	/**
 	 * Retrieve the stylesheet from which this element comes
@@ -798,6 +802,11 @@ protected:
 protected:
 
 	bool					m_finishedConstruction;
+
+	/*
+	 * This object handles all result tree namespace processing.
+	 */
+	NamespacesHandler		m_namespacesHandler;
 
 	static const XalanDOMString		s_emptyString;
 
