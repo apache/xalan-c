@@ -92,8 +92,8 @@
 
 
 
-#include "XercesDOMSupport.hpp"
 #include "XercesDocumentBridge.hpp"
+#include "XercesDOMSupport.hpp"
 
 
 
