@@ -211,13 +211,19 @@ NodeSorter::NodeSortKeyCompare::compare(
 		double	n1Num = getNumberResult(theKey, theKeyIndex, theLHS);
 		double	n2Num = getNumberResult(theKey, theKeyIndex, theRHS);
 
-		if (DoubleSupport::isNaN(n1Num))
-			n1Num = 0.0;
-
-		if (DoubleSupport::isNaN(n2Num))
-			n2Num = 0.0;
-
-		if (DoubleSupport::lessThan(n1Num, n2Num) == true)
+		// Always order NaN before anything else...
+		if (DoubleSupport::isNaN(n1Num) == true)
+		{
+			if (DoubleSupport::isNaN(n2Num) == false)
+			{
+				theResult = -1;
+			}
+		}
+		else if (DoubleSupport::isNaN(n2Num) == true)
+		{
+			theResult = 1;
+		}
+		else if (DoubleSupport::lessThan(n1Num, n2Num) == true)
 		{
 			theResult = -1;
 		}
