@@ -236,8 +236,8 @@ FunctionID::FunctionIDXObjectTypeCallback::String(
 
 void
 FunctionID::FunctionIDXObjectTypeCallback::ResultTreeFragment(
-			const XObject&				theXObject,
-			const ResultTreeFragBase&	/* theValue */)
+			const XObject&					theXObject,
+			const XalanDocumentFragment&	/* theValue */)
 {
 	m_resultString = theXObject.str();
 }
@@ -247,7 +247,7 @@ FunctionID::FunctionIDXObjectTypeCallback::ResultTreeFragment(
 void
 FunctionID::FunctionIDXObjectTypeCallback::ResultTreeFragment(
 			const XObject&			theXObject,
-			ResultTreeFragBase&		/* theValue */)
+			XalanDocumentFragment&	/* theValue */)
 {
 	m_resultString = theXObject.str();
 }

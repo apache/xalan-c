@@ -135,7 +135,7 @@ XStringBase::boolean() const
 
 
 
-const ResultTreeFragBase&
+const XalanDocumentFragment&
 XStringBase::rtree() const
 {
 	return m_resultTreeFrag;

@@ -121,41 +121,21 @@ XNodeSetResultTreeFragProxy::cloneNode(bool	/* deep */) const
 bool
 XNodeSetResultTreeFragProxy::hasChildNodes() const
 {
-	return getLength() > 0 ? true : false;
+	return m_value.getLength() > 0 ? true : false;
 }
 
 
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-ResultTreeFragBase*
+XalanDocumentFragment*
 #else
 XNodeSetResultTreeFragProxy*
 #endif
 XNodeSetResultTreeFragProxy::clone(bool	/* deep */) const
 {
-	assert(false);
+	throw XalanDOMException(XalanDOMException::NOT_SUPPORTED_ERR);
 
 	return 0;
-}
-
-
-
-XalanNode*
-XNodeSetResultTreeFragProxy::item(unsigned int	index) const
-{
-	assert(index < getLength());
-
-	return m_value.nodeset().item(index);
-}
-
-
-
-unsigned int
-XNodeSetResultTreeFragProxy::getLength() const
-{
-	assert(unsigned(m_value.getLength()) == m_value.getLength());
-
-	return unsigned(m_value.getLength());
 }
 
 

@@ -130,44 +130,15 @@ XObjectResultTreeFragProxy::hasChildNodes() const
 
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-ResultTreeFragBase*
+XalanDocumentFragment*
 #else
 XObjectResultTreeFragProxy*
 #endif
 XObjectResultTreeFragProxy::clone(bool	/* deep */) const
 {
-	assert(false);
+	throw XalanDOMException(XalanDOMException::NOT_SUPPORTED_ERR);
 
 	return 0;
-}
-
-
-
-XalanNode*
-XObjectResultTreeFragProxy::item(unsigned int	index) const
-{
-	if (index == 0)
-	{
-#if defined(XALAN_NO_MUTABLE)
-		return (XalanNode*)&m_proxy;
-#else
-		return &m_proxy;
-#endif
-	}
-	else
-	{
-		assert(false);
-
-		return 0;
-	}
-}
-
-
-
-unsigned int
-XObjectResultTreeFragProxy::getLength() const
-{
-	return 1;
 }
 
 

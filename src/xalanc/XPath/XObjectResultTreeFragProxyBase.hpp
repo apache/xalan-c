@@ -65,10 +65,10 @@
 
 
 #include <xalanc/XalanDOM/XalanNodeList.hpp>
+#include <xalanc/XalanDOM/XalanDocumentFragment.hpp>
 
 
 
-#include <xalanc/XPath/ResultTreeFragBase.hpp>
 #include <xalanc/XPath/XObjectResultTreeFragProxyText.hpp>
 
 
@@ -78,7 +78,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-class XALAN_XPATH_EXPORT XObjectResultTreeFragProxyBase : public ResultTreeFragBase, private XalanNodeList
+class XALAN_XPATH_EXPORT XObjectResultTreeFragProxyBase : public XalanDocumentFragment
 {
 public:
 
@@ -88,7 +88,7 @@ public:
 	~XObjectResultTreeFragProxyBase();
 
 
-	// These interfaces are inherited from ResultTreeFragBase...
+	// These interfaces are inherited from XalanDocumentFragment...
 
 	virtual const XalanDOMString&
 	getNodeName() const;
@@ -179,7 +179,7 @@ public:
 	getIndex() const;
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-	virtual ResultTreeFragBase*
+	virtual XalanDocumentFragment*
 #else
 	virtual XObjectResultTreeFragProxyBase*
 #endif
@@ -197,15 +197,6 @@ private:
 
 	bool
 	operator==(const XObjectResultTreeFragProxyBase&	theRHS);
-
-
-	// These methods are inherited from XalanNodeList...
-
-	virtual XalanNode*
-	item(unsigned int	index) const = 0;
-
-	virtual unsigned int
-	getLength() const = 0;
 
 
 	// Data members...

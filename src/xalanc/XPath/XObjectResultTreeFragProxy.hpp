@@ -83,7 +83,8 @@ public:
 	virtual
 	~XObjectResultTreeFragProxy();
 
-	// These interfaces are inherited from ResultTreeFragBase...
+
+	// These interfaces are inherited from XalanDocumentFragment...
 
 	virtual XalanNode*
 	getFirstChild() const;
@@ -102,7 +103,7 @@ public:
 	hasChildNodes() const;
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-	virtual ResultTreeFragBase*
+	virtual XalanDocumentFragment*
 #else
 	virtual XObjectResultTreeFragProxy*
 #endif
@@ -118,15 +119,6 @@ private:
 
 	bool
 	operator==(const XObjectResultTreeFragProxy&	theRHS);
-
-
-	// These methods are inherited from XalanNodeList...
-
-	virtual XalanNode*
-	item(unsigned int	index) const;
-
-	virtual unsigned int
-	getLength() const;
 
 
 	// Data members...

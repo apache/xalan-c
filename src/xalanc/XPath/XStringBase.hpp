@@ -129,7 +129,7 @@ public:
 	virtual double
 	stringLength() const = 0;
 
-	virtual const ResultTreeFragBase&
+	virtual const XalanDocumentFragment&
 	rtree() const;
 
 	virtual void

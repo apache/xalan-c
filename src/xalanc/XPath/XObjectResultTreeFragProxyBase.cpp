@@ -77,8 +77,7 @@ const XalanDOMString	XObjectResultTreeFragProxyBase::s_emptyString;
 
 
 XObjectResultTreeFragProxyBase::XObjectResultTreeFragProxyBase() :
-	ResultTreeFragBase(),
-	XalanNodeList()
+	XalanDocumentFragment()
 {
 }
 
@@ -131,7 +130,9 @@ XObjectResultTreeFragProxyBase::getParentNode() const
 const XalanNodeList*
 XObjectResultTreeFragProxyBase::getChildNodes() const
 {
-	return this;
+	throw XalanDOMException(XalanDOMException::NOT_SUPPORTED_ERR);
+
+	return 0;
 }
 
 
@@ -304,7 +305,7 @@ XObjectResultTreeFragProxyBase::getIndex() const
 
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-ResultTreeFragBase*
+XalanDocumentFragment*
 #else
 XObjectResultTreeFragProxyBase*
 #endif

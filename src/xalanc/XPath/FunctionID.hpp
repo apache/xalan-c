@@ -165,13 +165,13 @@ private:
 
 		virtual void
 		ResultTreeFragment(
-			const XObject&				theXObject,
-			const ResultTreeFragBase&	/* theValue */);
+			const XObject&					theXObject,
+			const XalanDocumentFragment&	/* theValue */);
 
 		virtual void
 		ResultTreeFragment(
 			const XObject&			theXObject,
-			ResultTreeFragBase&		/* theValue */);
+			XalanDocumentFragment&	/* theValue */);
 
 		virtual void
 		NodeSet(

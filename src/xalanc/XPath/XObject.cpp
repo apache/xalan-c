@@ -243,16 +243,16 @@ XObject::str(XalanDOMString&	theBuffer) const
 
 static int foo = 0;
 
-const ResultTreeFragBase&
+const XalanDocumentFragment&
 XObject::rtree() const
 {
 	throw XObjectInvalidConversionException(getTypeString(), TranscodeFromLocalCodePage("result tree fragment"));
 
 	// This is just a dummy value to satisfy the compiler.
 #if defined(XALAN_OLD_STYLE_CASTS)
-	return (const ResultTreeFragBase&)foo;
+	return (const XalanDocumentFragment&)foo;
 #else
-	return reinterpret_cast<const ResultTreeFragBase&>(foo);
+	return reinterpret_cast<const XalanDocumentFragment&>(foo);
 #endif
 }
 

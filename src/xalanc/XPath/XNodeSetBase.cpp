@@ -232,7 +232,7 @@ XNodeSetBase::stringLength() const
 
 
 
-const ResultTreeFragBase&
+const XalanDocumentFragment&
 XNodeSetBase::rtree() const
 {
 	return m_proxy;

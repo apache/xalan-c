@@ -54,13 +54,13 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-#if !defined(RESULTTREEFRAGBASE_HEADER_GUARD_1357924680)
-#define RESULTTREEFRAGBASE_HEADER_GUARD_1357924680
+
+
+#include "XalanDocumentFragmentNodeRefListBaseProxy.hpp"
 
 
 
-// Base include file.  Must be first.
-#include <xalanc/XPath/XPathDefinitions.hpp>
+#include <cassert>
 
 
 
@@ -72,148 +72,60 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-class NodeRefListBase;
-class XMLParserLiaison;
-class XalanDocument;
-
-
-
-/**
- * The holder of result tree fragments.
- */
-class XALAN_XPATH_EXPORT ResultTreeFragBase : public XalanDocumentFragment
+XalanDocumentFragmentNodeRefListBaseProxy::XalanDocumentFragmentNodeRefListBaseProxy(const XalanDocumentFragment&	value) :
+	NodeRefListBase(),
+	m_value(value)
 {
-public:
-
-	/**
-	 * Construct a result tree fragment object.
-	 */
-	ResultTreeFragBase();
-
-	/**
-	 * Construct a result tree fragment object from another.
-	 * 
-	 * @param theSource source to copy
-	 */
-	ResultTreeFragBase(const ResultTreeFragBase&	theSource);
-
-	virtual
-	~ResultTreeFragBase();
+}
 
 
-	// These interfaces are inherited from XalanDocumentFragment...
-	virtual const XalanDOMString&
-	getNodeName() const = 0;
 
-	virtual const XalanDOMString&
-	getNodeValue() const = 0;
+XalanDocumentFragmentNodeRefListBaseProxy::XalanDocumentFragmentNodeRefListBaseProxy(const XalanDocumentFragmentNodeRefListBaseProxy&	source) :
+	NodeRefListBase(),
+	m_value(source.m_value)
+{
+}
 
-	virtual NodeType
-	getNodeType() const = 0;
 
-	virtual XalanNode*
-	getParentNode() const = 0;
 
-	virtual const XalanNodeList*
-	getChildNodes() const = 0;
+XalanDocumentFragmentNodeRefListBaseProxy::~XalanDocumentFragmentNodeRefListBaseProxy()
+{
+}
 
-	virtual XalanNode*
-	getFirstChild() const = 0;
 
-	virtual XalanNode*
-	getLastChild() const = 0;
 
-	virtual XalanNode*
-	getPreviousSibling() const = 0;
-
-	virtual XalanNode*
-	getNextSibling() const = 0;
-
-	virtual const XalanNamedNodeMap*
-	getAttributes() const = 0;
-
-	virtual XalanDocument*
-	getOwnerDocument() const = 0;
-
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-	virtual XalanNode*
+XalanNode*
+#if defined(NDEBUG)
+XalanDocumentFragmentNodeRefListBaseProxy::item(size_type) const
 #else
-	virtual ResultTreeFragBase*
+XalanDocumentFragmentNodeRefListBaseProxy::item(size_type	index) const
 #endif
-	cloneNode(bool deep) const = 0;
+{
+	assert(index == 0);
 
-	virtual XalanNode*
-	insertBefore(
-			XalanNode*	newChild,
-			XalanNode*	refChild) = 0;
+#if defined(XALAN_OLD_STYLE_CASTS)
+	return (XalanDocumentFragment*)&m_value;
+#else
+	return const_cast<XalanDocumentFragment*>(&m_value);
+#endif
+}
 
-	virtual XalanNode*
-	replaceChild(
-			XalanNode*	newChild,
-			XalanNode*	oldChild) = 0;
 
-	virtual XalanNode*
-	removeChild(XalanNode*	oldChild) = 0;
 
-	virtual XalanNode*
-	appendChild(XalanNode*	newChild) = 0;
+XalanDocumentFragmentNodeRefListBaseProxy::size_type
+XalanDocumentFragmentNodeRefListBaseProxy::getLength() const
+{
+	return 1;
+}
 
-	virtual bool
-	hasChildNodes() const = 0;
 
-	virtual void
-	setNodeValue(const XalanDOMString&	nodeValue) = 0;
 
-	virtual void
-	normalize() = 0;
-
-	virtual bool
-	isSupported(
-			const XalanDOMString&	feature,
-			const XalanDOMString&	version) const = 0;
-
-	virtual const XalanDOMString&
-	getNamespaceURI() const = 0;
-
-	virtual const XalanDOMString&
-	getPrefix() const = 0;
-
-	virtual const XalanDOMString&
-	getLocalName() const = 0;
-
-	virtual void
-	setPrefix(const XalanDOMString&		prefix) = 0;
-
-	virtual bool
-	isIndexed() const = 0;
-
-	virtual IndexType
-	getIndex() const = 0;
-
-	virtual ResultTreeFragBase*
-	clone(bool	deep) const = 0;
-
-protected:
-
-	ResultTreeFragBase&
-	operator=(const ResultTreeFragBase&		theRHS)
-	{
-		XalanDocumentFragment::operator=(theRHS);
-
-		return *this;
-	}
-
-	bool
-	operator==(const ResultTreeFragBase&) const
-	{
-		return true;
-	}
-};
+XalanDocumentFragmentNodeRefListBaseProxy::size_type
+XalanDocumentFragmentNodeRefListBaseProxy::indexOf(const XalanNode*		theNode) const
+{
+	return theNode == &m_value ? 0 : npos;
+}
 
 
 
 XALAN_CPP_NAMESPACE_END
-
-
-
-#endif	// RESULTTREEFRAGBASE_HEADER_GUARD

@@ -89,7 +89,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 class MutableNodeRefList;
 class NodeRefListBase;
-class ResultTreeFragBase;
+class XalanDocumentFragment;
 class XObjectFactory;
 class XObjectTypeCallback;
 class XPathExecutionContext;
@@ -225,7 +225,7 @@ public:
 	 *
 	 * @return result tree fragment
 	 */
-	virtual const ResultTreeFragBase&
+	virtual const XalanDocumentFragment&
 	rtree() const;
 
 	/**

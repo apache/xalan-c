@@ -81,7 +81,6 @@
 
 
 #include <xalanc/XPath/MutableNodeRefList.hpp>
-#include <xalanc/XPath/ResultTreeFragBase.hpp>
 
 
 

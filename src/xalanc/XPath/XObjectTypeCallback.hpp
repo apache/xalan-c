@@ -76,7 +76,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 class MutableNodeRefList;
 class NodeRefListBase;
-class ResultTreeFragBase;
+class XalanDocumentFragment;
 class XObject;
 
 
@@ -136,7 +136,7 @@ public:
 	 */
 	virtual void
 	ResultTreeFragment(const XObject&				theXObject,
-					   const ResultTreeFragBase&	theValue) = 0;
+					   const XalanDocumentFragment&	theValue) = 0;
 
 	/**
 	 * Call back the XObject with a result tree fragment value.
@@ -145,8 +145,8 @@ public:
 	 * @param theValue
 	 */
 	virtual void
-	ResultTreeFragment(const XObject&		theXObject,
-					   ResultTreeFragBase&	theValue) = 0;
+	ResultTreeFragment(const XObject&			theXObject,
+					   XalanDocumentFragment&	theValue) = 0;
 
 	/**
 	 * Call back the XObject with a node set value.
@@ -165,7 +165,7 @@ public:
 	 * @param theValue
 	 */
 	virtual void
-	Unknown(const XObject&		theObject,
+	Unknown(const XObject&			theObject,
 			const XalanDOMString&	theName) = 0;
 
 	/**

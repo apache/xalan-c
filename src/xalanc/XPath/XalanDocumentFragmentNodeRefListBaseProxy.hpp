@@ -54,8 +54,18 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-// Class header file.
-#include "ResultTreeFragBase.hpp"
+#if !defined(XALANDOCUMENTFRAGMENTNODEREFLISTBASEPROXY_HEADER_GUARD_1357924680)
+#define XALANDOCUMENTFRAGMENTNODEREFLISTBASEPROXY_HEADER_GUARD_1357924680
+
+
+
+// Base header file.  Must be first.
+#include <xalanc/XPath/XPathDefinitions.hpp>
+
+
+
+// Base class header file.
+#include <xalanc/XPath/NodeRefListBase.hpp>
 
 
 
@@ -63,24 +73,53 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-ResultTreeFragBase::ResultTreeFragBase() :
-	XalanDocumentFragment()
+class XalanDocumentFragment;
+
+
+
+class XALAN_XPATH_EXPORT XalanDocumentFragmentNodeRefListBaseProxy : public NodeRefListBase
 {
-}
+public:
 
 
+	/**
+	 * Construct an instance from a document fragment
+	 * 
+	 * @param value source document fragment.
+	 */
+	XalanDocumentFragmentNodeRefListBaseProxy(const XalanDocumentFragment&	value);
 
-ResultTreeFragBase::ResultTreeFragBase(const ResultTreeFragBase&	theSource) :
-	XalanDocumentFragment(theSource)
-{
-}
+	/**
+	 * Copy constructor
+	 * 
+	 * @param source source instance
+	 */
+	XalanDocumentFragmentNodeRefListBaseProxy(const XalanDocumentFragmentNodeRefListBaseProxy&	source);
+
+	virtual
+	~XalanDocumentFragmentNodeRefListBaseProxy();
 
 
+	// These methods are inherited from NodeRefListBase...
+	XalanNode*
+	item(size_type	index) const;
 
-ResultTreeFragBase::~ResultTreeFragBase()
-{
-}
+	size_type
+	getLength() const;
+
+	size_type
+	indexOf(const XalanNode*	theNode) const;
+
+private:
+
+	// Data members...
+	const XalanDocumentFragment&	m_value;	
+};
 
 
 
 XALAN_CPP_NAMESPACE_END
+
+
+
+#endif	// XALANDOCUMENTFRAGMENTNODEREFLISTBASEPROXY_HEADER_GUARD_1357924680

@@ -104,7 +104,7 @@ public:
 	hasChildNodes() const;
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-	virtual ResultTreeFragBase*
+	virtual XalanDocumentFragment*
 #else
 	virtual XNodeSetResultTreeFragProxy*
 #endif
@@ -121,14 +121,6 @@ private:
 	bool
 	operator==(const XNodeSetResultTreeFragProxy&	theRHS);
 
-
-	// These methods are inherited from XalanNodeList...
-
-	virtual XalanNode*
-	item(unsigned int	index) const;
-
-	virtual unsigned int
-	getLength() const;
 
 	// Data members...
 	const XNodeSetBase&		m_value;
