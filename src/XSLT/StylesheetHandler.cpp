@@ -193,6 +193,8 @@ StylesheetHandler::~StylesheetHandler()
 		++i;
 	}
 
+	doCleanup();
+
 	// Clean up the whitespace elements.
 	for_each(m_whiteSpaceElems.begin(),
 			 m_whiteSpaceElems.end(),
