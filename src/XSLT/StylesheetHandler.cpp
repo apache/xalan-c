@@ -70,6 +70,7 @@
 
 
 
+#include <PlatformSupport/AttributeListImpl.hpp>
 #include <PlatformSupport/DOMStringHelper.hpp>
 #include <PlatformSupport/StringTokenizer.hpp>
 
@@ -110,19 +111,16 @@
 #include "Stylesheet.hpp"
 #include "StylesheetConstructionContext.hpp"
 #include "StylesheetRoot.hpp"
-#include "XSLTEngineImpl.hpp"
 
 
 
 StylesheetHandler::StylesheetHandler(
-			XSLTEngineImpl&					processor,
 			Stylesheet&						stylesheetTree,
 			StylesheetConstructionContext&	constructionContext) :
 	FormatterListener(OUTPUT_METHOD_OTHER),
 	m_includeBase(stylesheetTree.getBaseIdentifier()),
 	m_pendingException(),
 	m_exceptionPending(false),
-	m_processor(processor),
 	m_stylesheet(stylesheetTree),
 	m_constructionContext(constructionContext),
 	m_elemStack(),
@@ -169,7 +167,7 @@ StylesheetHandler::~StylesheetHandler()
 
 void StylesheetHandler::setDocumentLocator(const Locator* const		locator)
 {
-	m_processor.pushLocatorOnStack(locator);
+	m_constructionContext.pushLocatorOnStack(locator);
 }
 
 
@@ -183,7 +181,7 @@ void StylesheetHandler::startDocument()
 
 void StylesheetHandler::endDocument()
 {
-	m_processor.popLocatorStack();
+	m_constructionContext.popLocatorStack();
 
 	if (m_exceptionPending == true)
 	{
@@ -254,7 +252,7 @@ StylesheetHandler::startElement (const XMLCh* const name, AttributeList& atts)
 
 		m_whiteSpaceElems.clear();
 
-		const Locator* const	locator = m_processor.getLocatorFromStack();
+		const Locator* const	locator = m_constructionContext.getLocatorFromStack();
 
 		const int	lineNumber = 0 != locator ? locator->getLineNumber() : 0;
 		const int	columnNumber = 0 != locator ? locator->getColumnNumber() : 0;
@@ -290,10 +288,7 @@ StylesheetHandler::startElement (const XMLCh* const name, AttributeList& atts)
 				m_stylesheet.setWrapperless(false);
 			}
 
-			XSLTEngineImpl::AttributeKeysMapType::const_iterator iter=
-				XSLTEngineImpl::getElementKeys().find(localName);
-
-			int xslToken = iter!= XSLTEngineImpl::getElementKeys().end() ? (*iter).second : -2;
+			const int xslToken = m_constructionContext.getElementToken(localName);
 
 			if(!m_inTemplate)
 			{
@@ -314,9 +309,9 @@ StylesheetHandler::startElement (const XMLCh* const name, AttributeList& atts)
 					break;
 
 				case Constants::ELEMNAME_EXTENSION:
-					if(!equalsIgnoreCase(ns, m_processor.getXalanXSLNameSpaceURL()))
+					if(!equalsIgnoreCase(ns, m_constructionContext.getXalanXSLNameSpaceURL()))
 					{
-						m_constructionContext.warn("Old syntax: the functions instruction should use a url of " + m_processor.getXalanXSLNameSpaceURL());
+						m_constructionContext.warn("Old syntax: the functions instruction should use a url of " + m_constructionContext.getXalanXSLNameSpaceURL());
 					}
 					// m_constructionContext.handleFunctionsInstruction((Element)child);
 				break;
@@ -342,7 +337,7 @@ StylesheetHandler::startElement (const XMLCh* const name, AttributeList& atts)
 				break;
 
 				case Constants::ELEMNAME_LOCALE:
-					m_processor.warn(XALAN_STATIC_UCODE_STRING("xsl:locale not yet supported!"));
+					m_constructionContext.warn(XALAN_STATIC_UCODE_STRING("xsl:locale not yet supported!"));
 					break;
 
 				case Constants::ELEMNAME_PRESERVESPACE:
@@ -550,7 +545,7 @@ StylesheetHandler::startElement (const XMLCh* const name, AttributeList& atts)
 
 								const XalanDOMString extns = m_stylesheet.getNamespaceForPrefixFromStack(prefix);
 
-								ExtensionNSHandler* const	nsh = new ExtensionNSHandler(m_processor, extns);
+								ExtensionNSHandler* const	nsh = new ExtensionNSHandler(extns);
 								m_stylesheet.addExtensionNamespace(extns, nsh);
 							}
 						}
@@ -835,7 +830,7 @@ StylesheetHandler::startElement (const XMLCh* const name, AttributeList& atts)
 
 					// If this stylesheet is declared to be of a higher version than the one
 					// supported, don't flag an error.
-					if(XSLTEngineImpl::getXSLTVerSupported() < m_stylesheet.getXSLTVerDeclared())
+					if(m_constructionContext.getXSLTVersionSupported() < m_stylesheet.getXSLTVerDeclared())
 					{
 						m_constructionContext.warn(msg);
 					}
@@ -848,7 +843,7 @@ StylesheetHandler::startElement (const XMLCh* const name, AttributeList& atts)
 		  }
 		}
 		// BEGIN SANJIVA CODE
-		else if (!m_inTemplate && startsWith(ns,m_processor.getXalanXSLNameSpaceURL()))
+		else if (!m_inTemplate && startsWith(ns, m_constructionContext.getXalanXSLNameSpaceURL()))
 		{
 			if (equals(localName, XALAN_STATIC_UCODE_STRING("component")))
 			{
@@ -894,7 +889,7 @@ StylesheetHandler::startElement (const XMLCh* const name, AttributeList& atts)
 				if (nsh == 0) 
 				{
 					// The extension namespace might not yet be known...
-					nsh = new ExtensionNSHandler(m_processor, extns);
+					nsh = new ExtensionNSHandler(extns);
 
 					m_stylesheet.addExtensionNamespace(extns, nsh);
 				}
@@ -1004,8 +999,12 @@ StylesheetHandler::startElement (const XMLCh* const name, AttributeList& atts)
 			m_elemStack.push_back(new ElemEmpty(m_constructionContext,
 									 m_stylesheet,
 									 name, lineNumber, columnNumber));
-		}
 
+			if (elem != 0)
+			{
+				delete elem;
+			}
+		}
 	} // end try
 
 	// Here's the story.  startElement throws exceptions for certain malformed constructs.  These
@@ -1151,11 +1150,9 @@ StylesheetHandler::processImport(
 				theImportURI,
 				m_constructionContext);
 
-			StylesheetHandler tp(m_processor, *pImportedStylesheet, m_constructionContext);
+			StylesheetHandler tp(*pImportedStylesheet, m_constructionContext);
 
-//			pImportedStylesheet->setBaseIdentifier();
-
-			m_processor.parseXML(*hrefUrl, &tp, pImportedStylesheet);
+			m_constructionContext.parseXML(*hrefUrl, &tp, pImportedStylesheet);
 
 			// I'm going to insert the elements in backwards order, 
 			// so I can walk them 0 to n.
@@ -1196,7 +1193,7 @@ StylesheetHandler::processInclude(
 		if(equals(aname, Constants::ATTRNAME_HREF))
 		{
 			foundIt = true;
-			
+
 			PushPopIncludeState		theStateHandler(*this);
 
 			const XalanDOMString	href = atts.getValue(i);
@@ -1216,7 +1213,7 @@ StylesheetHandler::processInclude(
 			m_stylesheet.getIncludeStack().push_back(hrefUrl.get());
 			hrefUrl.release();
 
-			m_processor.parseXML(*hrefUrl, this, &m_stylesheet);
+			m_constructionContext.parseXML(*hrefUrl, this, &m_stylesheet);
 
 			m_stylesheet.getIncludeStack().pop_back();
 		}
@@ -1326,7 +1323,7 @@ void StylesheetHandler::characters (const XMLCh* const chars, const unsigned int
 			preserveSpace = true;
 		}
 
-		const Locator* const	locator = m_processor.getLocatorFromStack();
+		const Locator* const	locator = m_constructionContext.getLocatorFromStack();
 
 		const int				lineNumber = (0 != locator) ? locator->getLineNumber() : 0;
 		const int				columnNumber = (0 != locator) ? locator->getColumnNumber() : 0;
@@ -1413,7 +1410,7 @@ void StylesheetHandler::cdata(const XMLCh* const chars, const unsigned int lengt
 			preserveSpace = true;
 		}
 
-		const Locator* const	locator = m_processor.getLocatorFromStack();
+		const Locator* const	locator = m_constructionContext.getLocatorFromStack();
 
 		const int lineNumber = (0 != locator) ? locator->getLineNumber() : 0;
 		const int columnNumber = (0 != locator) ? locator->getColumnNumber() : 0;
@@ -1531,7 +1528,7 @@ void StylesheetHandler::resetDocument()
 void
 StylesheetHandler::charactersRaw(const XMLCh* const /* chars */, const unsigned int	/* length */)
 {
-	// if we have apending exception, we don't want to even try to process this
+	// if we have a pending exception, we don't want to even try to process this
 	if (m_exceptionPending == true)
 		return;
 

@@ -150,6 +150,8 @@ StylesheetConstructionContextDefault::reset()
 	for_each(m_stylesheets.begin(),
 			 m_stylesheets.end(),
 			 DeleteFunctor<StylesheetRoot>());
+
+	m_stylesheets.clear();
 }
 
 
@@ -264,4 +266,63 @@ StylesheetConstructionContextDefault::createXPath(
 								m_xpathEnvSupport);
 
 	return xpath;
+}
+
+
+
+const Locator*
+StylesheetConstructionContextDefault::getLocatorFromStack() const
+{
+	return m_processor.getLocatorFromStack();
+}
+
+
+
+void
+StylesheetConstructionContextDefault::pushLocatorOnStack(const Locator*		locator)
+{
+	m_processor.pushLocatorOnStack(locator);
+}
+
+
+
+void
+StylesheetConstructionContextDefault::popLocatorStack()
+{
+	m_processor.popLocatorStack();
+}
+
+
+
+const XalanDOMString&
+StylesheetConstructionContextDefault::getXalanXSLNameSpaceURL() const
+{
+	return XSLTEngineImpl::getXalanXSLNameSpaceURL();
+}
+
+
+
+XalanDocument*
+StylesheetConstructionContextDefault::parseXML(
+			const XMLURL&		url,
+			DocumentHandler*	docHandler, 
+			XalanDocument*		docToRegister)
+{
+	return m_processor.parseXML(url, docHandler, docToRegister);
+}
+
+
+
+int
+StylesheetConstructionContextDefault::getElementToken(const XalanDOMString&	name) const
+{
+	return m_processor.getElementToken(name);
+}
+
+
+
+double
+StylesheetConstructionContextDefault::getXSLTVersionSupported() const
+{
+	return XSLTEngineImpl::getXSLTVerSupported();
 }

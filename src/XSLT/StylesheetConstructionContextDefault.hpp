@@ -73,6 +73,7 @@
 
 #include <memory>
 #include <set>
+#include <vector>
 
 
 
@@ -160,6 +161,30 @@ public:
 	createXPath(
 			const XalanDOMString&	str,
 			const PrefixResolver&	resolver);
+
+	virtual const Locator*
+	getLocatorFromStack() const;
+
+	virtual void
+	pushLocatorOnStack(const Locator*	locator);
+
+	virtual void
+	popLocatorStack();
+
+	virtual const XalanDOMString&
+	getXalanXSLNameSpaceURL() const;
+
+	virtual XalanDocument*
+	parseXML(
+			const XMLURL&		url,
+			DocumentHandler*	docHandler, 
+			XalanDocument*		docToRegister);
+
+	virtual int
+	getElementToken(const XalanDOMString&	name) const;
+
+	virtual double
+	getXSLTVersionSupported() const;
 
 private:
 

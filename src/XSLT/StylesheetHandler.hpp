@@ -84,7 +84,6 @@ class ElemTextLiteral;
 class ExtensionNSHandler;
 class Stylesheet;
 class StylesheetConstructionContext;
-class XSLTEngineImpl;
 
 
 
@@ -109,7 +108,6 @@ public:
 	 * to the document fragment.
 	 */
 	StylesheetHandler(
-			XSLTEngineImpl&					processor,
 			Stylesheet&						stylesheetTree,
 			StylesheetConstructionContext&	constructionContext);
 
@@ -402,11 +400,6 @@ private:
 	typedef std::vector<ElemTextLiteral*>		ElemTextLiteralStackType;
 #endif
 
-	/**
-	 * The XSLT Processor for needed services.
-	 */
-	XSLTEngineImpl& m_processor;
-	
 	/**
 	 * The owning stylesheet.
 	 */

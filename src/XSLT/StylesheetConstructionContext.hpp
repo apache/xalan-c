@@ -79,9 +79,13 @@
 
 
 
+class DocumentHandler;
+class Locator;
 class PrefixResolver;
 class StylesheetRoot;
+class XalanDocument;
 class XPath;
+class XMLURL;
 class XSLTInputSource;
 
 
@@ -210,6 +214,73 @@ public:
 	createXPath(
 			const XalanDOMString&	str,
 			const PrefixResolver&	resolver) = 0;
+
+	/**
+	 * Get the locator from the top of the locator stack.
+	 *
+	 * @return A pointer to the Locator, or 0 if there is nothing on the stack.
+	 */
+	virtual const Locator*
+	getLocatorFromStack() const = 0;
+
+	/**
+	 * Push a locator on to the locator stack.
+	 *
+	 * @param A pointer to the Locator to push.
+	 */
+	virtual void
+	pushLocatorOnStack(const Locator*	locator) = 0;
+
+	/**
+	 * Pop the locator from the top of the locator stack.
+	 */
+	virtual void
+	popLocatorStack() = 0;
+
+	/**
+	 * Get the Xalan namespace for built-in extensions.
+	 *
+	 * @return Xalan namespace for extensions
+	 */
+	virtual const XalanDOMString&
+	getXalanXSLNameSpaceURL() const = 0;
+
+	/**
+	 * Read in the XML file, either producing a Document or calling SAX events,
+	 * and register the document in a table.  If the document has already been
+	 * read in, it will not be reparsed.
+	 *
+	 * @param url location of the XML
+	 * @param docHandler pointer to SAX event handler
+	 * @param docToRegister if using a SAX event handler, the object to register in the source docs table. 
+	 * @return document object, which represents the parsed XML
+	 * @exception SAXException
+	 */
+	virtual XalanDocument*
+	parseXML(
+			const XMLURL&		url,
+			DocumentHandler*	docHandler, 
+			XalanDocument*		docToRegister) = 0;
+
+	/**
+	 * Given an XSL tag name, return an integer token that corresponds to
+	 * ELEMNAME_XXX constants defined in Constants.hpp
+	 *
+	 * @param name a probable xsl:xxx element
+	 * @return Constants.ELEMNAME_XXX token, -1 if in XSL or Xalan namespace,
+	 *		   or -2 if not in known namespace
+	 */
+	virtual int
+	getElementToken(const XalanDOMString&	name) const = 0;
+
+	/**
+	 * Get the latest XSLT version currently supported.
+	 *
+	 * @return XSLT version number
+	 */
+	virtual double
+	getXSLTVersionSupported() const = 0;
+
 
 	// These interfaces are inherited from ExecutionContext...
 
