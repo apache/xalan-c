@@ -88,7 +88,7 @@
      </ol>
      <note> Each sample application looks for input files in the current directory, the directory from
      which you run the application. The input files are in the samples subdirectory along with the sample source
-     files. For the UNIX builds, the application executable is also in the samples subdirectory. For the Windows32 build, however, the
+     files. For the UNIX builds, application executables are in the bin subdirectory. For the Windows32 build, the
      application executable is in the build subdirectory (xml-xalan\c\Build\Win32\VC6\ Debug and Release). To run a sample, be sure the
      executable is on the path, and run it from the samples subdirectory that contains the input files.</note>
   </s2><anchor name="xalantransform"/>
@@ -99,7 +99,7 @@
     the third argument, XalanTransform writes the transformation output to a stream that is sent to standard out (the screen).</p>
     <p>You can run XalanTransform from the XalanTransform subdirectory with</p>
     <p><code>XalanTransform foo.xml foo.xsl foo.out</code></p>
-    <p>Omit the third argument to write the transformation result to a stream. See also: <link idref="usagepatterns" 
+    <p>Omit the third argument to write the transformation result to the screen. See also: <link idref="usagepatterns" 
     anchor="xalantransformer">Using the XalanTransformer class.</link>.</p>
   </s2><anchor name="simpletransform"/>
   <s2 title="SimpleTransform">
@@ -111,8 +111,8 @@
     transformations</link>.</p>
   </s2><anchor name="streamtransform"/>
   <s2 title="StreamTransform">
-  <p>What it does: The StreamTransform class processes character array input streams containing a stylesheet and an XML document, and
-   writes the transformation output to a character array output stream. This sample illustrates the process for working with stylesheets and documents that you assemble in memory.</p>
+  <p>What it does: The StreamTransform class processes character input streams containing a stylesheet and an XML document, and
+   writes the transformation output to a character output stream. This sample illustrates the process for working with stylesheets and documents that you assemble in memory.</p>
       <p>You can run it from the SimpleTransform subdirectory with</p>
     <p><code>StreamTransform</code></p>
   </s2><anchor name="usestylesheetparam"/>    
@@ -231,7 +231,7 @@ theProcessor.addTraceListener(&amp;theTraceListener);
   <p>What it does: runs as an Apache module on an Apache Web server; performs transformations and returns the output to a Web
   browser. You configure Apache to respond to a given URL request for an output file (html or txt file in the configuration below)
   by applying an xsl stylesheet file to an xml document file (both with the specified name in a given location) and returning
-  the transformation outupt to the client.</p> 
+  the transformation output to the client.</p> 
   <p>This sample also illustrates use of the XalanTransformer class and the C API defined in src/XalanTransformer/XalanCAPI.h. It returns 
   transformation output in blocks to a callback function, which enables the browser to start displaying the result before the transformation
   has been completed.</p>

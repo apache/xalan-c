@@ -72,7 +72,7 @@ data types: node-set, result-tree-fragment, string, boolean, or number.</p>
 <p>You can send arguments to an extension function in the form of XPath expressions, literals (for string, boolean, and number), the values returned by other functions, and XSL variables or parameters set to any of the preceding.</p>
 <p>For an example that implements, installs, and uses three extension functions, see the 
 <link idref="samples" anchor="externalfunctions">External Functions</link> sample.</p>
-<note>&xslt4c; does not yet support extension elements. Support for extension elements will be added soon.</note>
+<note>&xslt4c; does not support extension elements.</note>
 </s2><anchor name="implement"/>
 <s2 title="Implementing an extension function">
   <p>Like the standard XPath functions, the functions you create derive from the Function base class. Set up your 

@@ -13,6 +13,7 @@ anchor="xalantransformer">XalanTransformer</link> class and associated header fi
 <li>Added sample illustrating use of XalanTransformer, the new C API, and how to run &xslt4c; and perform transformations on an 
     Apache Web server: <link idref="samples" anchor="apachemodulexslt">ApacheModuleXSLT</link>.<br/><br/></li>
 <li>Added the <link idref="samples" anchor="streamtransform">StreamTransform</link> sample.<br/><br/></li>
+<li>Eliminated dependencies on non-public Xerces headers; accordingly can now build with the Xerces distribution.<br/><br/></li>
 <li>Fixed namespace mapping and inheritance problems.<br/><br/></li>
 <li>Fixed failure of &lt;copy-of ...&gt; to include CRLFs (if any) in the result.<br/><br/></li>
 <li>Fixed bug sorting in reverse document order based on position. <br/><br/></li>
@@ -24,7 +25,9 @@ anchor="xalantransformer">XalanTransformer</link> class and associated header fi
 <li>Fixed problem outputting multiple single-character CDATA sections.<br/><br/></li>
 <li>Fixed problem outputting whitespace characters.<br/><br/></li>
 <li>Fixed problem transforming from a stream on UNIX platforms.<br/><br/></li>
-<li>Fixed named templates bug accepting global parameter when called with a parameter that the named template does not recognize.</li>
+<li>Fixed a bug with the document() function, which was generating a syntax error if called in the following manner: document(<ref>string</ref>,/).<br/><br/></li>
+<li>Fixed named templates bug accepting global parameter when called with a parameter of the same name that the named template does not 
+    recognize.</li>
 </ul>
 </s3>
 	

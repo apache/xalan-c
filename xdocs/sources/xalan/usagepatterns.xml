@@ -103,7 +103,7 @@ how to take advantage of the API it provides.</note>
   <code>const char* xmlOut = "foo.out";</code><br/>
   <code>int theResult = 0;</code><br/>
   <code>theResult = theXalanTransformer(xmlIn,xslSheet,xmlOut);</code><br/><br/></li>
-  <li>Shut down Xalan and Xerces.<br/>
+  <li>Shut down Xalan.<br/>
   <code>XalanTransformer::terminate();</code></li>
 </ol>
 </s3><anchor name="cppvar"/>
@@ -134,8 +134,9 @@ transform(istream&amp; xmlInStream,
 
 <p>Transform from files to an output handler that receives the output in blocks. </p>          
 <source>int
-transform(const char* xmlInFile
+transform(const char* xmlInFile,
           const char* xslFile,
+          const void* theOutputHandle,
           XalanOutputHandlerType theOutputHandler
           XalanFlushHanderType theFlushHandler = 0);</source>
 <p>The transform() method that the other transform() methods all call:</p>
@@ -152,9 +153,9 @@ The <link idref="samples" anchor="apachemodulexslt">ApacheModuleXSLT</link> samp
 <ol>
   <li>Include the XalanTransformer C API header.<br/>
   <code>#include &lt;XalanTransformer/XalanCAPI.h&gt;</code><br/><br/></li>
-  <li>Initialize Xalan and Xerces<br/>
+  <li>Initialize Xalan and Xerces.<br/>
   <code>XalanInitialize();</code><br/><br/></li>  
-  <li>Create a Xalan transformer<br/>
+  <li>Create a Xalan transformer.<br/>
   <code>XalanHandle xalan = NULL;</code><br/>
   <code>xalan = CreateXalanTransformer();</code><br/><br/></li>
   <li>Perform each transformation. For example:<br/>
@@ -166,7 +167,7 @@ The <link idref="samples" anchor="apachemodulexslt">ApacheModuleXSLT</link> samp
   <code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;xslfilename,</code><br/>
   <code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;outfilename,</code><br/>
   <code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;xalan);</code><br/><br/></li>
-  <li>Shut down Xalan and Xerces<br/>
+  <li>Shut down Xalan.<br/>
   <code>XalanTerminate();</code></li>
 </ol>
 <p>If the XML input file contains a stylesheet processing instruction that you want to use, include an empty string ("") for the xslfilename argument.</p>
@@ -199,7 +200,8 @@ XalanTransformToHandler(const char*  xmlInFile,
 <p>Always start with Include/PlatformDefinitions.hpp, the &xslt4c; base header file. Along with any additional &xslt4c; and other header files that are required for the particular application, be sure to include utils/PlatformUtils.hpp from the &xml4c; distribution.</p>
 </s3>
 <s3 title="2. Initialize Xalan and Xerces">
-<p>Use the static initializers to initialize the &xslt4c; and &xml4c; platforms. You only need to do this once per session.</p>
+<p>Use the static initializers to initialize the &xslt4c; and &xml4c; platforms. You must initialize &xml4c; once per process. You may
+initialize and terminate &xslt4c; multiple times, but this is not recommended: it is inefficient and is not thread safe.</p>
 <source>XMLPlatformUtils::Initialize();
 XSLTInit  theInit;</source>
 </s3><anchor name="step3"/>
@@ -267,11 +269,11 @@ theProcessor.process(
                theConstructionContext,
                theExecutionContext);</source>
 <p>The XSLTResultTarget object receives the transformation output.</p>
-<p>XSLTEngineImpl stores running state information, so it is not thread-safe. To perform multiple transformations, create a new instance for each transformation, or call the XSLTProcessor reset() method between each transformation.</p> 
+<p>The support objects store running state information, so they are not thread safe. To perform multiple transformations, create a new instance for each transformation, or call the StylesheetExecutionContext reset() method between each transformation.</p> 
 <p>If you are using the same stylesheet to perform multiple transformations, for efficiency you should compile the stylesheet and use the appropriate XSLTEngineImpl process() method. Compiled stylesheet (StylesheetRoot) objects are also thread-safe. A single StylesheetRoot object may be called concurrently from multiple threads. For more information, see <link anchor="compiled">Compiling stylesheets</link>.</p>
 </s3>
 <s3 title="7. Shut down Xerces.">
-<p>When you are done performing transformations, shut down Xerces.</p>
+<p>When you are done performing transformations, shut down Xerces. Once you have shut down Xerces, you can no longer make Xalan or Xerces call in that process.</p>
 <source>// Call the static terminator for Xerces.
 XMLPlatformUtils::Terminate();
 </source>
@@ -279,7 +281,7 @@ XMLPlatformUtils::Terminate();
 </s3>
 </s2><anchor name="dom"/>
 <s2 title="Working with DOM input and output">
-<p>You can set up an XSLTResultTarget to produce a DOM when you perform a transformation. You can also use a DOM as input for a transformation, either the DOM output of another transformation, or a DOM produced by the Xerces DOMParser.</p>
+<p>You can set up an XSLTResultTarget to produce a DOM when you perform a transformation. You can also use a DOM as input for a transformation.</p>
 <p>The following code fragments illustrate the procedures for working with DOM input and output:</p>
 <source>
 
@@ -422,17 +424,13 @@ theExecutionContext.setStylesheetRoot(theStylesheetRoot);
       <br/> &xml4c; and &xslt4c; use UTF-16 encoding to work with Unicode data.
       If you integrate the ICU with &xml4c;, both &xml4c; and &xslt4c; use ICU support for 
       UTF-16 encoding.<br/><br/></li>
-      <li><em>xsl:number element</em>
-      <br/>Both &xslt4c; and the ICU provide a complete implementation for
-      xsl:number.<br/><br/></li>
       <li><em>format-number()</em>
       <br/>This XSLT function includes two or three arguments (the third is
       optional): number, format pattern, and decimal-format name. &xslt4c; ignores the format
       pattern and optional decimal-format name. If you install ICU support for format-number(), 
       this function is fully supported with all its arguments.<br/><br/></li>
       <li><em>xsl:sort</em>
-      <br/>If you install ICU support for xml:sort, &xslt4c; applies the Unicode sorting
-      algorithm.</li>
+      <br/>If you install ICU support for xml:sort, &xslt4c; implements Unicode-style collation.</li>
      </ul>
 
     <p>To get the ICU:</p> 
@@ -480,15 +478,10 @@ theExecutionContext.setStylesheetRoot(theStylesheetRoot);
     path (LD_LIBRARY_PATH) or copy it to /usr/lib.</p>
     
     <p><em>Number formatting</em></p>
-    <p>To enable ICU support for the xsl:number element and the XSLT format-number() function, do
+    <p>To enable ICU support for the XSLT format-number() function, do
      the following:</p>
 <source>// Install ICU support for the format-number() function.
-FunctionICUFormatNumber::FunctionICUFormatNumberInstaller theInstaller;
-
-// Create and install a factory for using the ICU for xsl:number.
-ICUXalanNumberFormatFactory		theXalanNumberFormatFactory;
-StylesheetExecutionContextDefault::installXalanNumberFormatFactory
-                                   (&amp;theXalanNumberFormatFactory);</source>
+FunctionICUFormatNumber::FunctionICUFormatNumberInstaller theInstaller;</source>
   <p><em>Sorting</em></p> 
   <p>To enable ICU support for xsl:sort, do the following:</p>
   <source>// Set up a StylesheetExecutionContextDefault	object
