@@ -194,8 +194,6 @@ public :
 	{
 		assert(theBuffer != 0);
 
-		XALAN_USING_XALAN(length)
-
 		write(theBuffer, length(theBuffer));
 	}
 
@@ -208,8 +206,6 @@ public :
 	void
 	write(const XalanDOMChar*	theBuffer)
 	{
-		XALAN_USING_XALAN(length)
-
 		write(theBuffer, length(theBuffer));
 	}
 
