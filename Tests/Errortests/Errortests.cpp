@@ -115,7 +115,12 @@ runTests(
 			int		argc,
 			char*	argv[])
 {
-	XalanFileUtility	h;
+    XALAN_USING_XALAN(MemoryManagerType)
+    XALAN_USING_XALAN(XalanMemMgrs)
+
+    MemoryManagerType& theManager = XalanMemMgrs::getDefaultXercesMemMgr();
+
+	XalanFileUtility	h(theManager);
 
 	// Set the program help string,  then get the command line parameters.
 	//
@@ -138,13 +143,17 @@ runTests(
 		domSupport.setParserLiaison(&parserLiaison);
 
 		// Generate Unique Run id and processor info
-		const XalanDOMString UniqRunid = h.generateUniqRunid();
+		XalanDOMString UniqRunid(theManager);
+        h.generateUniqRunid(UniqRunid);
 
 		// Defined basic constants for file manipulation and open results file
-		const XalanDOMString  resultFilePrefix("cpperr");
-		const XalanDOMString  resultsFile(h.args.output + resultFilePrefix + UniqRunid + XalanFileUtility::s_xmlSuffix);
+		const XalanDOMString  resultFilePrefix("cpperr", theManager);
+		XalanDOMString  resultsFile(h.args.output, theManager);
+        resultsFile += resultFilePrefix;
+        resultsFile += UniqRunid;
+        resultsFile += XalanFileUtility::s_xmlSuffix;
 
-		XalanXMLFileReporter    logFile(resultsFile);
+		XalanXMLFileReporter    logFile(theManager, resultsFile);
 
 		logFile.logTestFileInit("Error Testing:");
 
@@ -153,12 +162,14 @@ runTests(
 
 		typedef XalanFileUtility::FileNameVectorType    FileNameVectorType;
 
-		const FileNameVectorType	dirs = h.getDirectoryNames(h.args.base);
+		FileNameVectorType	dirs(theManager); 
+        h.getDirectoryNames(h.args.base, dirs);
 
 		for(FileNameVectorType::size_type	j = 0; j < dirs.size(); ++j)
 		{
 			// If conformance directory structure does not exist, it needs to be created.
-			const XalanDOMString  confSubdir = h.args.output + dirs[j];
+			XalanDOMString  confSubdir(h.args.output, theManager);
+            confSubdir += dirs[j];
 			h.checkAndCreateDir(confSubdir);
 
 				// Set up to get files from the associated error directories
@@ -168,7 +179,8 @@ runTests(
 				if (h.args.sub.empty() == true || currentDir == h.args.sub)
 				{
 					// Check that output directory is there.
-					const XalanDOMString  theOutputDir = h.args.output + currentDir;
+					XalanDOMString  theOutputDir( h.args.output , theManager);
+                    theOutputDir += currentDir;
 					h.checkAndCreateDir(theOutputDir);
 
 					
@@ -176,7 +188,8 @@ runTests(
 					foundDir = true;
 					logFile.logTestCaseInit(currentDir);
 
-					const FileNameVectorType files = h.getTestFileNames(h.args.base, currentDir, false);
+					FileNameVectorType files(theManager); 
+                    h.getTestFileNames(h.args.base, currentDir, false, files);
 
 					for(FileNameVectorType::size_type i = 0; i < files.size(); i++)
 					{
@@ -185,21 +198,34 @@ runTests(
 						XALAN_USING_XALAN(XalanCompiledStylesheet)
 						XALAN_USING_XALAN(XalanParsedSource)
 
-						XalanXMLFileReporter::Hashtable     attrs;
+						XalanXMLFileReporter::Hashtable     attrs(theManager);
 
-						const XalanDOMString currentFile(files[i]);
+						const XalanDOMString currentFile(files[i], theManager);
 						h.data.testOrFile = currentFile;
 
 						if (checkForExclusion(currentFile))
 							continue;
 
-						const XalanDOMString  theXSLFile= h.args.base + currentDir + XalanFileUtility::s_pathSep + currentFile;
-						const XalanDOMString  theXMLFile = h.generateFileName(theXSLFile,"xml");
-						XalanDOMString  theGoldFile = h.args.gold + currentDir + XalanFileUtility::s_pathSep + currentFile;
-						theGoldFile = h.generateFileName(theGoldFile, "out");
+						XalanDOMString  theXSLFile( h.args.base, theManager);
+                        theXSLFile += currentDir;
+                        theXSLFile += XalanFileUtility::s_pathSep;
+                        theXSLFile += currentFile;
+						XalanDOMString  theXMLFile(theManager);
+                        h.generateFileName(theXSLFile,"xml", theXMLFile);
+						XalanDOMString  theGoldFile( h.args.gold, theManager);
+                        theGoldFile += currentDir;
+                        theGoldFile +=  XalanFileUtility::s_pathSep;
+                        theGoldFile += currentFile;
 
-						const XalanDOMString  outbase =  h.args.output + currentDir + XalanFileUtility::s_pathSep + currentFile; 
-						const XalanDOMString  theOutputFile = h.generateFileName(outbase, "out");
+
+                        h.generateFileName(theGoldFile, "out", theGoldFile);
+
+						XalanDOMString  outbase(h.args.output, theManager);
+                        outbase += currentDir;
+                        outbase += XalanFileUtility::s_pathSep;
+                        outbase +=  currentFile; 
+						XalanDOMString  theOutputFile(theManager);
+                        h.generateFileName(outbase, "out", theOutputFile);
 
 						const XSLTInputSource	xslInputSource(theXSLFile);
 						const XSLTInputSource	xmlInputSource(theXMLFile);

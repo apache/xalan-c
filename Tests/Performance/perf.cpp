@@ -254,24 +254,26 @@ main(
 	_CrtSetReportFile(_CRT_WARN, _CRTDBG_FILE_STDERR);
 #endif
 
+    MemoryManagerType& theManager = XalanMemMgrs::getDefaultXercesMemMgr();
 
-	const XalanDOMString	processorType(XALAN_STATIC_UCODE_STRING("XalanC"));
+	const XalanDOMString	processorType(XALAN_STATIC_UCODE_STRING("XalanC"), theManager);
 	bool skip = true;		// Default will skip long tests
 	bool setGold = false;
 
-	XalanFileUtility	h;
+	XalanFileUtility	h(theManager);
 
 	// Set the program help string,  then get the command line parameters.
 	//
-	setHelp(h);
+	setHelp(h, theManager);
 
 	if (h.getParams(argc, argv, "PERF-RESULTS", setGold) == true)
 	{
 
 		// Generate Unique Run id and processor info
-		const XalanDOMString	UniqRunid = h.generateUniqRunid();
-		const XalanDOMString	resultFilePrefix(XalanDOMString("cpp"));
-		const XalanDOMString	resultsFile(h.args.output + resultFilePrefix + UniqRunid + XalanFileUtility::s_xmlSuffix);
+		XalanDOMString	UniqRunid(theManager);
+        h.generateUniqRunid(theManager);
+		const XalanDOMString	resultFilePrefix(XalanDOMString("cpp"), theManager);
+		const XalanDOMString	resultsFile(h.args.output,  + resultFilePrefix + UniqRunid + XalanFileUtility::s_xmlSuffix);
 
 		XalanXMLFileReporter	logFile(resultsFile);
 
