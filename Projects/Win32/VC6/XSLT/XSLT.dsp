@@ -370,6 +370,10 @@ SOURCE=..\..\..\..\src\XSLT\VariablesStack.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\XSLT\XalanNumberingResourceBundle.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\XSLT\XSLTEngineImpl.cpp
 
 !IF  "$(CFG)" == "XSLT - Win32 Release"
@@ -696,6 +700,10 @@ SOURCE=..\..\..\..\src\XSLT\TracerEvent.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\XSLT\VariablesStack.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XSLT\XalanNumberingResourceBundle.hpp
 # End Source File
 # Begin Source File
 

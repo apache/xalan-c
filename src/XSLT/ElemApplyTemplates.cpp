@@ -118,13 +118,9 @@ ElemApplyTemplates::ElemApplyTemplates(
 
 	if(0 == m_pSelectPattern)
 	{
-		if(0 == stylesheetTree.getDefaultATXpath())
-		{
-			stylesheetTree.setDefaultATXpath(
-				constructionContext.createXPath(XALAN_STATIC_UCODE_STRING("node()"), *this));
-		}
+		m_pSelectPattern = constructionContext.createXPath(XALAN_STATIC_UCODE_STRING("node()"), *this);
 
-		m_pSelectPattern = stylesheetTree.getDefaultATXpath();
+		assert(m_pSelectPattern != 0);
 	}
 }
 

@@ -592,3 +592,47 @@ StylesheetRoot::initDefaultRule(StylesheetConstructionContext&	constructionConte
 	assert(m_defaultTextRule != 0);
 	assert(m_defaultRootRule != 0);
 }
+
+
+
+void
+StylesheetRoot::getNodeSetByKey(
+			XalanNode*						doc,
+			const XalanDOMString&			name,
+			const XalanDOMString&			ref,
+			const PrefixResolver&			resolver,
+			MutableNodeRefList&				nodelist,
+			StylesheetExecutionContext&		executionContext,
+			KeyTablesTableType& 			theKeysTable) const
+{
+	if(m_needToBuildKeysTable == true)
+	{
+		assert(0 != m_keyDeclarations.size());
+
+		const KeyTablesTableType::const_iterator	i =
+			theKeysTable.find(doc);
+
+		if (i != theKeysTable.end())
+		{
+			const NodeRefListBase&	nl = (*i).second->getNodeSetByKey(name, ref);
+
+			nodelist.addNodesInDocOrder(nl, executionContext);
+		}
+		else
+		{
+			KeyTable* const kt =
+				new KeyTable(doc,
+							 doc,
+							 resolver,
+							 m_keyDeclarations,
+							 executionContext);
+			assert(doc == kt->getDocKey());
+
+			theKeysTable[doc] = kt;
+
+			const NodeRefListBase&	nl = kt->getNodeSetByKey(name, ref);
+
+			nodelist.addNodesInDocOrder(nl, executionContext);
+		}
+	}
+}

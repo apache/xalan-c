@@ -66,12 +66,12 @@
  */
 
 // Base include file.  Must be first.
-#include "XSLTDefinitions.hpp"
+#include <XSLT/XSLTDefinitions.hpp>
 
 
 
 // Base class header file.
-#include "ElemTemplateElement.hpp"
+#include <XSLT/ElemTemplateElement.hpp>
 
 
 
@@ -79,7 +79,8 @@
 
 
 
-#include "DecimalToRoman.hpp"
+#include <XSLT/DecimalToRoman.hpp>
+#include <XSLT/XalanNumberingResourceBundle.hpp>
 
 
 
@@ -100,18 +101,23 @@ struct Counter;
 public:
 
 #if defined(XALAN_NO_NAMESPACES)
-	typedef vector<DecimalToRoman>			DecimalToRomanVectorType;
-	typedef vector<int>						IntArrayType;
-	typedef vector<Counter>					CounterVectorType;
+	typedef vector<DecimalToRoman>					DecimalToRomanVectorType;
+	typedef vector<int>								IntArrayType;
+	typedef vector<Counter>							CounterVectorType;
 	typedef map<const ElemNumber*,
 				CounterVectorType,
-				less<const ElemNumber*> >	ElemToCounterVectorMapType;
+				less<const ElemNumber*> >			ElemToCounterVectorMapType;
+	typedef map<XalanDOMChar,
+				XalanNumberingResourceBundle,
+				less<XalanDOMChar>					NumberingResourceBundleMapType;
 #else
-	typedef std::vector<DecimalToRoman>		DecimalToRomanVectorType;
-	typedef std::vector<int>				IntArrayType;
-	typedef std::vector<Counter>			CounterVectorType;
+	typedef std::vector<DecimalToRoman>				DecimalToRomanVectorType;
+	typedef std::vector<int>						IntArrayType;
+	typedef std::vector<Counter>					CounterVectorType;
 	typedef std::map<const ElemNumber*,
-					 CounterVectorType>		ElemToCounterVectorMapType;
+					 CounterVectorType>				ElemToCounterVectorMapType;
+	typedef std::map<XalanDOMChar,
+					 XalanNumberingResourceBundle>	NumberingResourceBundleMapType;
 #endif
 
 	/**
@@ -325,6 +331,17 @@ protected:
 
 private:
 
+	bool
+	evaluateLetterValueAVT(
+			StylesheetExecutionContext&		executionContext,
+			XalanNode* 						contextNode,
+			const XalanDOMString&			compareValue) const;
+
+	XalanDOMString
+	traditionalAlphaCount(
+			int										theValue,
+			const XalanNumberingResourceBundle&		theResourceBundle) const;
+
 	/*
 	 * Get Formatted number
 	 */
@@ -363,9 +380,10 @@ private:
 	 */
 	static const DecimalToRomanVectorType&	s_romanConvertTable;
 
-
-
-// Inner classes
+	/**
+	 * A map of supported numbering resource bundles.
+	 */
+	static const NumberingResourceBundleMapType&	s_resourceBundles;
 
 
 	/**

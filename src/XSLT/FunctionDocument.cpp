@@ -168,8 +168,10 @@ FunctionDocument::execute(
 #endif
 											context->getOwnerDocument();
 
-		const XObject* const	arg = args[0];
+		const XObject* const		arg = args[0];
 		assert(arg != 0);
+
+		const XObject::eObjectType	theType = arg->getType();
 
 		XalanDOMString				base;
 
@@ -225,16 +227,16 @@ FunctionDocument::execute(
 		// This list will hold the nodes...
 		BorrowReturnMutableNodeRefList	mnl(executionContext);
 
-		const unsigned int		nRefs = XObject::eTypeNodeSet == arg->getType() ?
+		const unsigned int		nRefs = XObject::eTypeNodeSet == theType ?
 													arg->nodeset().getLength()
 													: 1;
 
 		for(unsigned int i = 0; i < nRefs; i++)
 		{
-			assert(XObject::eTypeNodeSet != arg->getType() ||
+			assert(XObject::eTypeNodeSet != theType ||
 								arg->nodeset().item(i) != 0);
 
-			XalanDOMString	ref = XObject::eTypeNodeSet == arg->getType() ?
+			XalanDOMString	ref = XObject::eTypeNodeSet == theType ?
 													arg->nodeset().item(i)->getXSLTData() :
 													arg->str();
 

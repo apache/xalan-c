@@ -76,6 +76,8 @@
 
 #include "KeyDeclaration.hpp"
 #include "StylesheetExecutionContext.hpp"
+#include "XSLTProcessorException.hpp"
+
 
 
 const MutableNodeRefList	KeyTable::s_dummyList;
@@ -86,7 +88,6 @@ KeyTable::KeyTable(
 			XalanNode*							doc,
 			XalanNode*							startNode,
 			const PrefixResolver&				resolver,
-			const XalanDOMString&				name,
 			const KeyDeclarationVectorType&		keyDeclarations,
 			StylesheetExecutionContext&			executionContext) :
 	m_docKey(doc),
@@ -94,13 +95,11 @@ KeyTable::KeyTable(
 {
     XalanNode*	pos = startNode;
 
-	bool		fDone = false;
-
 	const KeyDeclarationVectorType::size_type	nDeclarations =
 			keyDeclarations.size();
 
     // Do a non-recursive pre-walk over the tree.
-    while(0 != pos && fDone == false)
+    while(0 != pos)
     {
 		// We're going to have to walk the attribute list 
 		// if it's an element, so get the attributes.
@@ -128,18 +127,20 @@ KeyTable::KeyTable(
 		// execute once, then execute for each of the attributes.
 		XalanNode*	testNode = pos;
 
-		for(int nodeIndex = -1; nodeIndex < nNodes && fDone == false;)
+		for(int nodeIndex = -1; nodeIndex < nNodes;)
 		{
 			// Walk through each of the declarations made with xsl:key
-			for(unsigned int i = 0; i < nDeclarations && fDone == false; i++)
+			for(unsigned int i = 0; i < nDeclarations; ++i)
 			{
 				const KeyDeclaration&	kd = keyDeclarations[i];
 
-				if (equals(kd.getName(), name))
+//				if (equals(kd.getName(), name))
 				{
 					if (executionContext.getInConstruction(kd) == true)			
 					{
-						fDone = true;
+						throw XSLTProcessorException(
+							"The use of the key() function in the \"match\" or \"use\" attribute of xsl:key is illegal!",
+							"XSLTKeyIllegalKeyFunctionException");
 					}
 					else
 					{
@@ -186,7 +187,6 @@ KeyTable::KeyTable(
 							// able to use to look up the given node.
 							for(unsigned int k = 0; k < nUseValues; k++)
 							{
-
 								// Use getExpr to get the string value of the given node. I hope 
 								// the string assumption is the right thing... I can't see how 
 								// it could work any other way.
@@ -229,49 +229,42 @@ KeyTable::KeyTable(
 				} // if (equals(kd.getName(), name)
 			} // end for(int i = 0; i < nDeclarations; i++)
 
-			if (fDone == false)
-			{
-				nodeIndex++;
+			nodeIndex++;
 
-				if(0 != attrs)
-				{
-					testNode = attrs->item(nodeIndex);
-				}
+			if(0 != attrs)
+			{
+				testNode = attrs->item(nodeIndex);
 			}
 		} // for(int nodeIndex = -1; nodeIndex < nNodes;)
 
-		if (fDone == false)
+		// The rest of this is getting the next prewalk position in 
+		// the tree.
+		XalanNode*	nextNode = pos->getFirstChild();
+
+		while(0 == nextNode)
 		{
-			// The rest of this is getting the next prewalk position in 
-			// the tree.
-
-			XalanNode*	nextNode = pos->getFirstChild();
-
-			while(0 == nextNode)
+			if(startNode == pos)
 			{
-				if(startNode == pos)
-				{
-					break;
-				}
-				else
-				{
-					nextNode = pos->getNextSibling();
+				break;
+			}
+			else
+			{
+				nextNode = pos->getNextSibling();
 
-					if(0 == nextNode)
+				if(0 == nextNode)
+				{
+					pos = pos->getParentNode();
+
+					if((startNode == pos) || (0 == pos))
 					{
-						pos = pos->getParentNode();
-
-						if((startNode == pos) || (0 == pos))
-						{
-							nextNode = 0;
-							break;
-						}
+						nextNode = 0;
+						break;
 					}
 				}
 			}
+		}
 
-			pos = nextNode;
-		} // if (fDone == false)
+		pos = nextNode;
     } // while(0 != pos)
 } // end buildKeysTable method
 
@@ -283,16 +276,11 @@ KeyTable::~KeyTable()
 
 
 
-const NodeRefListBase*
+const NodeRefListBase&
 KeyTable::getNodeSetByKey(
 					  const XalanDOMString&		name, 
 					  const XalanDOMString&		ref) const
 {
-	// It makes things much easier if we always return
-	// a list of nodes.  So this is just an empty one
-	// to return when the ref is not found.
-    const MutableNodeRefList*			nl = &s_dummyList;
-
 	const KeysMapType::const_iterator	i = m_keys.find(name);
 
 	if (i != m_keys.end())
@@ -303,10 +291,12 @@ KeyTable::getNodeSetByKey(
 
 		if (j != theMap.end())
 		{
-			nl = &(*j).second;
+			return (*j).second;
 		}
 	}
 
-	return nl;
+	// It makes things much easier if we always return
+	// a list of nodes.  So this is just an empty one
+	// to return when the ref is not found.
+	return s_dummyList;
 }
-

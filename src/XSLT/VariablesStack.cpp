@@ -246,49 +246,13 @@ VariablesStack::pop()
 
 
 
-class PushFunctor
+const void
+VariablesStack::PushParamFunctor::operator()(const VariablesStack::ParamsVectorType::value_type&	theEntry)
 {
-public:
+	assert(theEntry.first != 0);
 
-	PushFunctor(VariablesStack&		theVariablesStack) :
-		m_variablesStack(theVariablesStack)
-	{
-	}
-
-	const void
-	operator()(const VariablesStack::VariableStackStackType::value_type&	theEntry)
-	{
-		m_variablesStack.push(theEntry);
-	}
-
-private:
-
-	VariablesStack&						m_variablesStack;
-};
-
-
-
-class PushParamFunctor
-{
-public:
-
-	PushParamFunctor(VariablesStack&		theVariablesStack) :
-		m_variablesStack(theVariablesStack)
-	{
-	}
-
-	const void
-	operator()(const VariablesStack::ParamsVectorType::value_type&	theEntry)
-	{
-		assert(theEntry.first != 0);
-
-		m_variablesStack.push(VariablesStack::StackEntry(theEntry.first, theEntry.second));
-	}
-
-private:
-
-	VariablesStack&						m_variablesStack;
-};
+	m_variablesStack.push(VariablesStack::StackEntry(theEntry.first, theEntry.second));
+}
 
 
 

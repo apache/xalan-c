@@ -94,7 +94,7 @@ FunctionFunctionAvailable::execute(
 							   context);
 	}
 
-	const XalanDOMString	fullName = args[0]->str();
+	const XalanDOMString&	fullName = args[0]->str();
 
 	const unsigned int		nameLength = length(fullName);
 	const unsigned int		indexOfNSSep = indexOf(fullName, XalanUnicode::charColon);

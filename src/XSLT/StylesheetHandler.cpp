@@ -181,7 +181,7 @@ StylesheetHandler::~StylesheetHandler()
 	// Clean up the whitespace elements.
 	for_each(m_whiteSpaceElems.begin(),
 			 m_whiteSpaceElems.end(),
-			 DeleteFunctor<ElemTemplateElement>());
+			 DeleteFunctor<ElemTextLiteral>());
 
 	// Clean up the stray elements.
 	for_each(m_strayElements.begin(),
@@ -276,7 +276,7 @@ StylesheetHandler::startElement (const XMLCh* const name, AttributeList& atts)
 		// Clean up the whitespace elements.
 		for_each(m_whiteSpaceElems.begin(),
 				 m_whiteSpaceElems.end(),
-				 DeleteFunctor<ElemTemplateElement>());
+				 DeleteFunctor<ElemTextLiteral>());
 
 		m_whiteSpaceElems.clear();
 
@@ -1188,8 +1188,6 @@ StylesheetHandler::processImport(
 			StylesheetHandler tp(*importedStylesheet.get(), m_constructionContext);
 
 			m_constructionContext.parseXML(hrefUrl, &tp, 0);
-
-			importedStylesheet->postConstruction();
 
 			// Add it to the front of the imports, releasing the XalanAutoPtr...
 			m_stylesheet.addImport(importedStylesheet.release(), true);

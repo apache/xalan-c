@@ -1514,6 +1514,41 @@ public:
 	virtual	void
 	endConstruction(const KeyDeclaration& keyDeclaration) = 0;
 
+	/**
+	 * Create a PrintWriter for the provided stream.
+	 * 
+	 * @param theTextOutputStream The output stream for the PrintWriter.
+	 * @return The new instance.
+	 */
+	virtual PrintWriter*
+	createPrintWriter(TextOutputStream*		theTextOutputStream) = 0;
+
+	/**
+	 * Create a PrintWriter.  Create an appropriate output stream
+	 * using the provided file name and encoding.
+	 * 
+	 * @param theFileName The file name for the output stream
+	 * @param theEncoding The encoding for the output stream
+	 * @return The new instance.
+	 */
+	virtual PrintWriter*
+	createPrintWriter(
+			const XalanDOMString&		theFileName,
+			const XalanDOMString&		theEncoding) = 0;
+
+	/**
+	 * Create a PrintWriter using the provided ostream instance.
+	 * 
+	 * @param ostream The output stream for the PrintWriter.
+	 * @return The new instance.
+	 */
+	virtual PrintWriter*
+#if defined(XALAN_NO_NAMESPACES)
+	createPrintWriter(ostream&			theStream) = 0;
+#else
+	createPrintWriter(std::ostream&		theStream) = 0;
+#endif
+
 	// These interfaces are inherited from XPathExecutionContext...
 
 	virtual void
@@ -1619,12 +1654,13 @@ public:
 	virtual bool
 	getProcessNamespaces() const = 0;
 
-	virtual const NodeRefListBase*
+	virtual void
 	getNodeSetByKey(
 			XalanNode*				doc,
 			const XalanDOMString&	name,
 			const XalanDOMString&	ref,
-			const PrefixResolver&	resolver) = 0;
+			const PrefixResolver&	resolver,
+			MutableNodeRefList&		nodelist) = 0;
 
 	virtual const XObject*
 	getVariable(const QName&	name) const = 0;
@@ -1676,20 +1712,6 @@ public:
 	virtual const XalanDecimalFormatSymbols*
 	getDecimalFormatSymbols(const XalanDOMString&	name) = 0;
 
-	virtual PrintWriter*
-	createPrintWriter(TextOutputStream*		theTextOutputStream) = 0;
-
-	virtual PrintWriter*
-	createPrintWriter(
-			const XalanDOMString&		theFileName,
-			const XalanDOMString&		theEncoding) = 0;
-
-	virtual PrintWriter*
-#if defined(XALAN_NO_NAMESPACES)
-	createPrintWriter(ostream&			theStream) = 0;
-#else
-	createPrintWriter(std::ostream&		theStream) = 0;
-#endif
 
 	// These interfaces are inherited from ExecutionContext...
 
@@ -1710,14 +1732,6 @@ public:
 			const XalanDOMString&	msg,
 			const XalanNode* 		sourceNode = 0,
 			const XalanNode*		styleNode = 0) const = 0;
-	
-	virtual KeyTable*
-	getKeyTable(const XalanNode*	doc) const = 0;
-
-	virtual void
-	setKeyTable(
-			KeyTable*			keytable,
-			const XalanNode*	doc) = 0;
 };
 
 

@@ -62,7 +62,6 @@
 #include <cstdio>
 #include <cstring>
 #include <iostream>
-#include <string>
 #include <strstream>
 
 
@@ -157,7 +156,6 @@ using std::endl;
 using std::hex;
 using std::less;
 using std::map;
-using std::string;
 using std::vector;
 #endif
 
@@ -241,7 +239,7 @@ printArgOptions()
 
 
 
-typedef map<string, string, less<string> > String2StringMapType;
+typedef map<CharVectorType, CharVectorType, less<CharVectorType> > String2StringMapType;
 
 
 
@@ -269,10 +267,10 @@ struct CmdLineParams
 #endif
 	int indentAmount;
 	int outputType;
-	string outFileName;
-	string specialCharacters;
-	string xslFileName;
-	string inFileName;
+	CharVectorType outFileName;
+	CharVectorType specialCharacters;
+	CharVectorType xslFileName;
+	CharVectorType inFileName;
 
 	CmdLineParams() :
 		paramsMap(),
@@ -352,7 +350,7 @@ getArgs(
 
 			if(i < argc && argv[i][0] != '-')
 			{
-				p.inFileName = argv[i];
+				CopyStringToVector(argv[i], p.inFileName);
 			}
 			else
 			{
@@ -365,7 +363,7 @@ getArgs(
 
 			if(i < argc && argv[i][0] != '-')
 			{
-				p.xslFileName = argv[i];
+				CopyStringToVector(argv[i], p.xslFileName);
 			}
 			else
 			{
@@ -378,7 +376,7 @@ getArgs(
 
 			if(i < argc && argv[i][0] != '-')
 			{
-				p.outFileName = argv[i];
+				CopyStringToVector(argv[i], p.outFileName);
 			}
 			else
 			{
@@ -391,7 +389,7 @@ getArgs(
 
 			if(i < argc && argv[i][0] != '-')
 			{
-				p.specialCharacters = argv[i];
+				CopyStringToVector(argv[i], p.specialCharacters);
 			}
 			else
 			{
@@ -425,7 +423,9 @@ getArgs(
 
 			if(i < argc && argv[i][0] != '-')
 			{
-				const string	name = argv[i];
+				CharVectorType	name;
+
+				CopyStringToVector(argv[i], name);
 
 				++i;
 
@@ -433,7 +433,9 @@ getArgs(
 				// be a valid character in a parameter value.
 				if(i < argc)
 				{
-					const string	expression = argv[i];
+					CharVectorType	expression;
+
+					CopyStringToVector(argv[i], expression);
 
 					p.paramsMap[name] = expression;
 				}
@@ -655,7 +657,7 @@ createOutputStream(const CmdLineParams&		params)
 	}
 	else
 	{
-		return new TextFileOutputStream(params.outFileName.c_str());
+		return new TextFileOutputStream(c_str(params.outFileName));
 	}
 }
 
@@ -795,8 +797,8 @@ xsltMain(const CmdLineParams&	params)
 		for ( ; it != params.paramsMap.end(); ++it)
 		{
 			processor.setStylesheetParam(
-					(*it).first.c_str(),
-					(*it).second.c_str());
+					c_str((*it).first),
+					c_str((*it).second));
 		}
 	}
 
@@ -808,7 +810,7 @@ xsltMain(const CmdLineParams&	params)
 		xmlParserLiaison.setIndent(params.indentAmount);
 	}
 
-	xmlParserLiaison.setSpecialCharacters(params.specialCharacters.c_str());
+	xmlParserLiaison.setSpecialCharacters(c_str(params.specialCharacters));
 	xmlParserLiaison.SetShouldExpandEntityRefs(params.shouldExpandEntityRefs);
 	xmlParserLiaison.setUseValidation(params.doValidation);
 
@@ -823,7 +825,7 @@ xsltMain(const CmdLineParams&	params)
 
 	if(0 != params.xslFileName.size())
 	{
-		xslFileName = params.xslFileName.c_str();
+		xslFileName = c_str(params.xslFileName);
 	}
 
 	const StylesheetRoot*	stylesheet = 0;
@@ -863,9 +865,9 @@ xsltMain(const CmdLineParams&	params)
 
 
 	// Do the transformation...
-	XSLTInputSource		theInputSource(params.inFileName.c_str());
+	XSLTInputSource		theInputSource(c_str(params.inFileName));
 
-	StylesheetExecutionContextDefault		theExecutionContext(processor,
+	StylesheetExecutionContextDefault	theExecutionContext(processor,
 			theXSLProcessorSupport,
 			theXPathSupport,
 			theXObjectFactory);
@@ -1082,15 +1084,9 @@ main(
 			{
 				cout << "\nXSLException ";
 
-				const string	type = DOMStringToStdString(e.getType());
+				cout << "Type is : " << e.getType() << endl;
 
-				if (!type.empty())
-					cout << "Type is : " << type << endl;
-
-				const string	msg = DOMStringToStdString(e.getMessage());
-
-				if (!msg.empty())
-					cout << "Message is : " << msg << endl;
+				cout << "Message is : " << e.getMessage() << endl;
 
 				theResult = -1;
 			}
@@ -1098,10 +1094,7 @@ main(
 			{
 				cout << "\nSAXException ";
 
-				const string	msg = DOMStringToStdString(e.getMessage());
-
-				if (!msg.empty())
-					cout << "Message is : " << msg << endl;
+				cout << "Message is : " << e.getMessage() << endl;
 
 				theResult = -2;
 			}
@@ -1109,15 +1102,9 @@ main(
 			{
 				cout << "\nXMLException ";
 
-				const string	type = DOMStringToStdString(e.getType());
+				cout << "Type is : " << e.getType() << endl;
 
-				if (!type.empty())
-					cout << "Type is : " << type << endl;
-
-				const string	msg = DOMStringToStdString(e.getMessage());
-
-				if (!msg.empty())
-					cout << "Message is : " << msg << endl;
+				cout << "Message is : " << e.getMessage() << endl;
 
 				theResult = -3;
 			}

@@ -349,7 +349,7 @@ NodeSorter::NodeSortKeyCompare::getStringResult(
 		xpath->execute(node, *theKey.getPrefixResolver(), dummy, m_executionContext));
 	assert(result.get() != 0);
 
-	const XalanDOMString	theResult = result->str();
+	const XalanDOMString&	theResult = result->str();
 
 #if defined(XALAN_NO_MUTABLE)
 	((NodeSortKeyCompare*)this)->m_stringResultsCache[xpath][node] = theResult;

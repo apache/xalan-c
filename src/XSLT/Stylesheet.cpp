@@ -122,7 +122,6 @@ Stylesheet::Stylesheet(
 	m_keyDeclarations(),
 	m_needToBuildKeysTable(false),
 	m_imports(),
-	m_defaultATXpath(0),
 	m_namespaces(),
 	m_namespaceDecls(),
 	m_tablesAreInvalid(true),
@@ -326,31 +325,45 @@ Stylesheet::popNamespaces()
 void
 Stylesheet::postConstruction()
 {
-	// Get any aliases from the imported stylesheets, in reverse order, to
-	// preserve import precedence.
+	// Call postConstruction() on any imported stylesheets, the get any aliases
+	// in reverse order, to preserve import precedence. Also, get any key declarations.
 	const StylesheetVectorType::reverse_iterator	theEnd = m_imports.rend();
 	StylesheetVectorType::reverse_iterator	i = m_imports.rbegin();
 
 	while(i != theEnd)
 	{
+		(*i)->postConstruction();
+
 		m_namespacesHandler.copyNamespaceAliases((*i)->getNamespacesHandler());
+
+		// $$ ToDo: Should we clear the imported stylesheet's key
+		// declarations after we copy them?
+		m_keyDeclarations.insert(
+			m_keyDeclarations.end(),
+			(*i)->m_keyDeclarations.begin(),
+			(*i)->m_keyDeclarations.end());
 
 		++i;
 	}
 
-	// Call postConstruction() on our own handler...
+	// We may need to build keys, since we may have inherited them from
+	// our imports.
+	if (m_needToBuildKeysTable == false && m_keyDeclarations.size() > 0)
+	{
+		m_needToBuildKeysTable = true;
+	}
+
+	// Call postConstruction() on our own namespaces handler...
 	m_namespacesHandler.postConstruction();
 
 	ElemTemplateElement* node = m_firstTemplate;
 
-    for (; node != 0; node = node->getNextSiblingElem()) 
+    for (; node != 0; node = node->getNextSiblingElem())
     {
 		node->postConstruction(m_namespacesHandler);
 	}
 
-	node = m_wrapperlessTemplate;
-
-    for (; node != 0; node = node->getNextSiblingElem())
+    for (node = m_wrapperlessTemplate; node != 0; node = node->getNextSiblingElem())
     {
 		node->postConstruction(m_namespacesHandler);
 	}
@@ -653,10 +666,11 @@ Stylesheet::findTemplate(
 			case XalanNode::ELEMENT_NODE:
 				{
 					const XalanDOMString	targetName = DOMServices::getLocalNameOfNode(*targetNode);
+
 					matchPatternList = locateMatchPatternList2(targetName, true);
 				}
 				break;
-				
+
 			case XalanNode::PROCESSING_INSTRUCTION_NODE:
 			case XalanNode::ATTRIBUTE_NODE:
 				matchPatternList = locateMatchPatternList2(targetNode->getNodeName(), true);
@@ -664,11 +678,11 @@ Stylesheet::findTemplate(
 
 			case XalanNode::CDATA_SECTION_NODE:
 			case XalanNode::TEXT_NODE:
-				matchPatternList = locateMatchPatternList2(XPath::PSEUDONAME_TEXT, false);
+				matchPatternList = locateMatchPatternList2(XPath::PSEUDONAME_TEXT, true);
 				break;
 
 			case XalanNode::COMMENT_NODE:
-				matchPatternList = locateMatchPatternList2(XPath::PSEUDONAME_COMMENT, false);
+				matchPatternList = locateMatchPatternList2(XPath::PSEUDONAME_COMMENT, true);
 				break;
 
 			case XalanNode::DOCUMENT_NODE:
@@ -678,10 +692,10 @@ Stylesheet::findTemplate(
 			case XalanNode::DOCUMENT_FRAGMENT_NODE:
 				matchPatternList = locateMatchPatternList2(XPath::PSEUDONAME_ANY, false);
 				break;
-				
+
 			default:
 				{
-					matchPatternList = locateMatchPatternList2(targetNode->getNodeName(), false);
+					matchPatternList = locateMatchPatternList2(targetNode->getNodeName(), true);
 				}
 			}
 
@@ -779,9 +793,9 @@ Stylesheet::findTemplate(
 					if(theCurrentEntry == theTableEnd &&
 					   equals(matchPat->getTargetString(),
 							  Constants::PSEUDONAME_ANY) == false
-						&& (XalanNode::ELEMENT_NODE == targetNodeType || 
-							XalanNode::ATTRIBUTE_NODE == targetNodeType ||
-							XalanNode::PROCESSING_INSTRUCTION_NODE == targetNodeType)
+//						&& (XalanNode::ELEMENT_NODE == targetNodeType || 
+//							XalanNode::ATTRIBUTE_NODE == targetNodeType ||
+//							XalanNode::PROCESSING_INSTRUCTION_NODE == targetNodeType)
 						)
 					{
 						{
@@ -1000,77 +1014,6 @@ Stylesheet::locateMatchPatternList2(
 
 
 
-const NodeRefListBase*
-Stylesheet::getNodeSetByKey(
-			XalanNode*					doc,
-			const XalanDOMString&		name,
-			const XalanDOMString&		ref,
-			const PrefixResolver&		resolver,
-			StylesheetExecutionContext&	executionContext,
-			KeyTablesTableType& 		theKeysTable) const
-{
-	const NodeRefListBase *nl = 0;
-
-	if(0 != m_keyDeclarations.size())
-	{
-		bool	foundDoc = false;
-
-		const KeyTablesTableType::const_iterator	i =
-			theKeysTable.find(doc);
-
-		if (i != theKeysTable.end())
-		{
-			nl = (*i).second->getNodeSetByKey(name, ref);
-
-			if (nl->getLength() > 0)
-			{
-				foundDoc = true;
-			}
-		}
-
-		if((0 == nl || nl->getLength() == 0) && !foundDoc && m_needToBuildKeysTable)
-		{
-			KeyTable* const kt =
-				new KeyTable(doc,
-							 doc,
-							 resolver,
-							 name,
-							 m_keyDeclarations,
-							 executionContext);
-			assert(doc == kt->getDocKey());
-
-			theKeysTable[doc] = kt;
-
-			foundDoc = true;
-
-			nl = kt->getNodeSetByKey(name, ref);
-		}
-	}
-	
-	// If the nodelist is null at this point, it should 
-	// mean there wasn't an xsl:key declared with the 
-	// given name.	So go up the import hierarchy and 
-	// see if one of the imported stylesheets declared it.
-	if(0 == nl)
-	{
-		const int	nImports = m_imports.size();
-
-		for(int i = 0; i < nImports; i++)
-		{
-			const Stylesheet*	const	stylesheet = m_imports[i];
-
-			nl = stylesheet->getNodeSetByKey(doc, name, ref, resolver, executionContext, theKeysTable);
-
-			if(0 != nl)
-				break;
-		}
-	}
-
-	return nl;
-}
-
-
-
 /**
  * Construct a match pattern from a pattern and template.
  * @param pat For now a Nodelist that contains old-style element patterns.
@@ -1227,7 +1170,6 @@ Stylesheet::processNSAliasElement(
 
 	for(unsigned int i = 0; i < nAttrs; i++)
 	{
-
 		const XalanDOMChar* const	aname = atts.getName(i);
 
 		if(equals(aname, Constants::ATTRNAME_STYLESHEET_PREFIX) == true)

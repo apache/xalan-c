@@ -110,6 +110,17 @@ public:
 private:
 
 	/**
+	 * Construct an object corresponding to an "xsl:value-of" element
+	 * 
+	 * @param executionContext The current execution context
+	 * @param theValue The value to output
+	 */
+	void
+	outputValue(
+			StylesheetExecutionContext&		executionContext,
+			const XalanDOMString&			theValue) const;
+
+	/**
 	 * The select pattern used to locate the value.
 	 */
 	const XPath*	m_selectPattern;

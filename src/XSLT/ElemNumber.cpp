@@ -730,6 +730,280 @@ ElemNumber::formatNumberList(
 
 
 
+bool
+ElemNumber::evaluateLetterValueAVT(
+			StylesheetExecutionContext&		executionContext,
+			XalanNode* 						contextNode,
+			const XalanDOMString&			compareValue) const
+{
+	if (m_lettervalue_avt == 0)
+	{
+		return false;
+	}
+	else
+	{
+		XalanDOMString letterVal;
+
+		m_lettervalue_avt->evaluate(
+				letterVal,
+				contextNode,
+				*this,
+				executionContext);
+
+		return equals(compareValue, letterVal);
+	}
+}
+
+
+
+XalanDOMString
+ElemNumber::traditionalAlphaCount(
+			int										theValue,
+			const XalanNumberingResourceBundle&		theResourceBundle) const
+{
+	typedef XalanNumberingResourceBundle::IntVectorType			IntVectorType;
+	typedef XalanNumberingResourceBundle::DigitsTableVectorType	DigitsTableVectorType;
+	typedef XalanNumberingResourceBundle::eNumberingMethod		eNumberingMethod;
+	typedef XalanNumberingResourceBundle::eMultiplierOrder		eMultiplierOrder;
+
+	// if this number is larger than the largest number we can represent, error!
+	//if (val > theResourceBundle.getMaxNumericalValue())
+	//return XSLTErrorResources.ERROR_STRING;
+	XalanDOMCharVectorType	table;
+
+	// index in table of the last character that we stored
+	IntVectorType::size_type	lookupIndex = 1;  // start off with anything other than zero to make correction work
+
+	// Create a buffer to hold the result
+	// TODO:  size of the table can be detereined by computing
+	// logs of the radix.  For now, we fake it.
+	XalanDOMChar	buf[100];
+
+	//some languages go left to right(ie. english), right to left (ie. Hebrew),
+	//top to bottom (ie.Japanese), etc... Handle them differently
+	//String orientation = thisBundle.getString(Constants.LANG_ORIENTATION);
+
+	// next character to set in the buffer
+	int charPos = 0;
+
+	// array of number groups: ie.1000, 100, 10, 1
+	const IntVectorType&	groups = theResourceBundle.getNumberGroups();
+
+	const IntVectorType::size_type	groupsSize = groups.size();
+
+	// array of tables of hundreds, tens, digits. Indexes into the vector
+	// returned by 
+	const IntVectorType&	tables = theResourceBundle.getDigitsTableTable();
+
+	const DigitsTableVectorType&	digitsTable = theResourceBundle.getDigitsTable();
+
+	// some languages have additive alphabetical notation,
+	// some multiplicative-additive, etc... Handle them differently.
+	const eNumberingMethod	numbering = theResourceBundle.getNumberingMethod();
+
+	// do multiplicative part first
+	if (numbering == XalanNumberingResourceBundle::eMultiplicativeAdditive)
+	{
+		const eMultiplierOrder	mult_order = theResourceBundle.getMultiplierOrder();
+
+		const IntVectorType&	multiplier = theResourceBundle.getMultipliers();
+
+		const IntVectorType::size_type	multiplierSize = multiplier.size();
+
+		const XalanDOMCharVectorType&	zeroChar = theResourceBundle.getZeroChar();
+
+		const XalanDOMCharVectorType::size_type		zeroCharSize = zeroChar.size();
+
+		const XalanDOMCharVectorType&	multiplierChars = theResourceBundle.getMultiplierChars();
+
+		IntVectorType::size_type	i = 0;
+
+		// skip to correct multiplier
+		while (i < multiplierSize && theValue < multiplier[i])
+		{
+			i++;
+		}
+
+		do
+		{
+			if (i >= multiplierSize)
+				break;			  //number is smaller than multipliers
+
+			// some languages (ie chinese) put a zero character (and only one) when
+			// the multiplier is multiplied by zero. (ie, 1001 is 1X1000 + 0X100 + 0X10 + 1)
+			// 0X100 is replaced by the zero character, we don't need one for 0X10
+			if (theValue < multiplier[i])
+			{
+				if (zeroCharSize == 0)
+				{
+					i++;
+				} 
+				else
+				{
+					if (buf[charPos - 1] != zeroChar[0])
+					{
+						buf[charPos++] = zeroChar[0];
+					}
+
+					i++;
+				}
+			}
+			else if (theValue >= multiplier[i])
+			{
+
+				int mult = theValue / multiplier[i];
+
+				theValue = theValue % multiplier[i];		 // save this.
+
+				IntVectorType::size_type	k = 0;
+
+				while (k < groupsSize)
+				{
+					lookupIndex = 1;				 // initialize for each table
+			
+					if (mult / groups[k] <= 0) 		 // look for right table
+					{
+						k++;
+					}
+					else
+					{
+						assert(digitsTable.size() > tables[k]);
+
+						// get the table
+						const XalanDOMCharVectorType&	THEletters =
+								digitsTable[tables[k]];
+
+						const XalanDOMCharVectorType::size_type		THElettersSize =
+							THEletters.size();
+
+						table.resize(THElettersSize + 1);					
+
+						const IntVectorType::size_type	tableSize = table.size();
+
+						XalanDOMCharVectorType::size_type	j = 0;
+
+						for (; j < THElettersSize; j++)
+						{
+							table[j + 1] = THEletters[j];
+						}
+
+						table[0] = THEletters[j - 1];	 // don't need this
+
+						// index in "table" of the next char to emit
+						lookupIndex  = mult / groups[k];
+
+						//this should not happen
+						if (lookupIndex == 0 && mult == 0)
+						{
+							break;
+						}
+
+						assert(i < multiplierChars.size());
+
+						const XalanDOMChar	multiplierChar = multiplierChars[i];
+
+						// put out the next character of output	
+						if (lookupIndex < tableSize)
+						{
+							if(mult_order == XalanNumberingResourceBundle::ePrecedes)
+							{
+								buf[charPos++] = multiplierChar;
+								buf[charPos++] = table[lookupIndex];
+							}
+							else
+							{
+								// don't put out 1 (ie 1X10 is just 10)
+								if (lookupIndex == 1 && i == multiplierSize - 1)
+								{
+								}
+								else
+								{
+									buf[charPos++] =  table[lookupIndex];
+								}
+
+								buf[charPos++] =	multiplierChar ;
+							}
+
+							break;		 // all done!
+						}
+						else
+						{
+							return XALAN_STATIC_UCODE_STRING("#error");
+						}
+					} //end else
+				} // end while	
+
+				i++;
+
+			} // end else if
+		} // end do while
+		while ( i < multiplierSize);		
+	}
+
+	// Now do additive part...
+
+	IntVectorType::size_type	count = 0;
+
+	// do this for each table of hundreds, tens, digits...
+	while (count < groupsSize)
+	{
+		if (theValue / groups[count] <= 0)
+		{
+			// look for correct table
+			count++;
+		}
+		else
+		{
+			const XalanDOMCharVectorType&	theletters =
+								digitsTable[tables[count]];
+
+			const XalanDOMCharVectorType::size_type		thelettersSize =
+							theletters.size();
+
+			table.resize(thelettersSize + 1);
+		
+			const IntVectorType::size_type	tableSize = table.size();
+
+			XalanDOMCharVectorType::size_type	j = 0;
+
+			// need to start filling the table up at index 1
+			for (0; j < thelettersSize; j++)
+			{
+				table[j + 1] = theletters[j];
+			}
+
+			table[0] = theletters[j - 1];  // don't need this
+
+			// index in "table" of the next char to emit
+			lookupIndex  = theValue / groups[count];
+
+			// shift input by one "column"
+			theValue = theValue % groups[count];
+
+			// this should not happen
+			if (lookupIndex == 0 && theValue == 0)
+				break;					
+
+			if (lookupIndex < tableSize)
+			{
+				// put out the next character of output	
+				buf[charPos++] = table[lookupIndex];	// left to right or top to bottom					
+			}
+			else
+			{
+				return XALAN_STATIC_UCODE_STRING("#error");
+			}
+
+			count++;
+		}
+	} // end while
+
+	// String s = new String(buf, 0, charPos);
+	return XalanDOMString(buf, charPos);
+}
+
+
+
 XalanDOMString
 ElemNumber::getFormattedNumber(
 			StylesheetExecutionContext&		executionContext,
@@ -738,16 +1012,6 @@ ElemNumber::getFormattedNumber(
 			int								numberWidth,
 			int								listElement) const
 {
-
-	StylesheetExecutionContext::XalanNumberFormatAutoPtr	formatter(
-			getNumberFormatter(executionContext, contextNode));
-
-	XalanDOMString	padString = formatter->format(0);
-	XalanDOMString letterVal;
-	if (m_lettervalue_avt != 0)
-		m_lettervalue_avt->evaluate(letterVal, contextNode, *this,
-				executionContext);
-
 	XalanDOMString	formattedNumber;
 
 	switch(numberType)
@@ -788,6 +1052,11 @@ ElemNumber::getFormattedNumber(
 
 		default: // "1"
 			{
+				StylesheetExecutionContext::XalanNumberFormatAutoPtr	formatter(
+						getNumberFormatter(executionContext, contextNode));
+
+				XalanDOMString	padString = formatter->format(0);
+
 				const XalanDOMString		numString =
 					formatter->format(listElement);
 
@@ -1255,13 +1524,13 @@ static const XalanDOMChar	elalphaCountTable[] =
 
 
 
-static XalanDOMString							s_elalphaCountTable;
+static XalanDOMString								s_elalphaCountTable;
 
-static XalanDOMString							s_alphaCountTable;
+static XalanDOMString								s_alphaCountTable;
 
-static ElemNumber::DecimalToRomanVectorType		s_romanConvertTable;
+static ElemNumber::DecimalToRomanVectorType			s_romanConvertTable;
 
-
+static ElemNumber::NumberingResourceBundleMapType	s_resourceBundles;
 
 const XalanDOMString&	ElemNumber::s_elalphaCountTable = ::s_elalphaCountTable;
 
@@ -1270,7 +1539,8 @@ const XalanDOMString&	ElemNumber::s_alphaCountTable = ::s_alphaCountTable;
 const ElemNumber::DecimalToRomanVectorType&		ElemNumber::s_romanConvertTable =
 				::s_romanConvertTable;
 
-
+const ElemNumber::NumberingResourceBundleMapType&	ElemNumber::s_resourceBundles =
+				::s_resourceBundles;
 
 void
 ElemNumber::initialize()
@@ -1299,4 +1569,6 @@ ElemNumber::terminate()
 	clear(::s_elalphaCountTable);;
 
 	DecimalToRomanVectorType().swap(::s_romanConvertTable);
+
+	NumberingResourceBundleMapType().swap(::s_resourceBundles);
 }

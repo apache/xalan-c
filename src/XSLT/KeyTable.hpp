@@ -107,9 +107,24 @@ public:
 
 #if defined(XALAN_NO_NAMESPACES)
 	typedef vector<KeyDeclaration>			KeyDeclarationVectorType;
+
+	typedef map<XalanDOMString,
+				MutableNodeRefList,
+				less<XalanDOMString> >		NodeListMapType;
+
+	typedef map<XalanDOMString,
+				NodeListMapType,
+				less<XalanDOMString> >		KeysMapType;
 #else
 	typedef std::vector<KeyDeclaration>		KeyDeclarationVectorType;
+
+	typedef std::map<XalanDOMString,
+					 MutableNodeRefList>	NodeListMapType;
+
+	typedef std::map<XalanDOMString,
+					 NodeListMapType>		KeysMapType;
 #endif
+
 
 	/**
 	 * Build a keys table.
@@ -126,7 +141,6 @@ public:
 			XalanNode*							doc,
 			XalanNode*							startNode,
 			const PrefixResolver&				resolver,
-			const XalanDOMString&				name,
 			const KeyDeclarationVectorType&		keyDeclarations,
 			StylesheetExecutionContext&			executionContext);
 
@@ -145,7 +159,7 @@ public:
 	 *             attribute on xsl:key
 	 * @return		pointer to nodeset for key 
 	 */
-	const NodeRefListBase*
+	const NodeRefListBase&
 	getNodeSetByKey(
 				  const XalanDOMString&		name,
 				  const XalanDOMString&		ref) const;
@@ -181,22 +195,6 @@ private:
 	 * Thus, for a given key or keyref, look up hashtable by name, 
 	 * look up the nodelist by the given reference.
 	 */
-
-#if defined(XALAN_NO_NAMESPACES)
-	typedef map<XalanDOMString,
-				MutableNodeRefList,
-				less<XalanDOMString> >		NodeListMapType;
-
-	typedef map<XalanDOMString,
-				NodeListMapType,
-				less<XalanDOMString> >		KeysMapType;
-#else
-	typedef std::map<XalanDOMString,
-					 MutableNodeRefList>	NodeListMapType;
-
-	typedef std::map<XalanDOMString,
-					 NodeListMapType>		KeysMapType;
-#endif
 
 	KeysMapType							m_keys;
 

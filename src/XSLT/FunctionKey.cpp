@@ -180,14 +180,12 @@ FunctionKey::execute(
 						{
 							usedrefs.insert(ref);
 
-							const NodeRefListBase* const		nl =
-									executionContext.getNodeSetByKey(docContext, 
+							executionContext.getNodeSetByKey(
+											docContext, 
 											keyname,
 											ref,
-											*executionContext.getPrefixResolver());
-							assert(nl != 0);
-
-							theNodeRefList->addNodesInDocOrder(*nl, executionContext);
+											*executionContext.getPrefixResolver(),
+											*theNodeRefList.get());
 						}
 					}
 				}
@@ -197,16 +195,11 @@ FunctionKey::execute(
 		{
 			const XalanDOMString			ref = arg->str();
 
-			const NodeRefListBase* const	nl =
 					executionContext.getNodeSetByKey(docContext,
 											keyname,
 											ref,
-											*executionContext.getPrefixResolver());
-
-			if (nl != 0)
-			{
-				theNodeRefList->addNodesInDocOrder(*nl, executionContext);
-			}
+											*executionContext.getPrefixResolver(),
+											*theNodeRefList.get());
 		}
 
 		return executionContext.getXObjectFactory().createNodeSet(theNodeRefList);

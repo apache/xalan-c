@@ -417,6 +417,28 @@ public:
 		return m_cdataSectionElems;
 	}
 
+	/**
+	 * Given a valid element key, return the corresponding node list.
+	 *
+	 * @param doc			   source document
+	 * @param name			   name of the key, which must match the 'name'
+	 *						   attribute on xsl:key
+	 * @param ref			   value that must match the value found by the
+	 *						   'match' attribute on xsl:key
+	 * @param resolver		   resolver for namespace resolution
+	 * @param nodelist         A node list to contain the nodes found
+	 * @param executionContext current execution context
+	 */
+	void
+	getNodeSetByKey(
+			XalanNode*						doc,
+			const XalanDOMString&			name,
+			const XalanDOMString&			ref,
+			const PrefixResolver&			resolver,
+			MutableNodeRefList&				nodelist,
+			StylesheetExecutionContext&		executionContext,
+			KeyTablesTableType&				theKeysTable) const;
+
 private:
 
 	/**

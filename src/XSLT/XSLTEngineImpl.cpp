@@ -676,7 +676,9 @@ XSLTEngineImpl::getStylesheetFromPIURL(
 
 		const XalanElement*		nsNode = 0;
 
-		if (fragBase.getNodeType() == XalanNode::DOCUMENT_NODE)
+		const XalanNode::NodeType	theType = fragBase.getNodeType();
+
+		if (theType == XalanNode::DOCUMENT_NODE)
 		{
 			const XalanDocument&	doc =
 #if defined(XALAN_OLD_STYLE_CASTS)
@@ -687,7 +689,7 @@ XSLTEngineImpl::getStylesheetFromPIURL(
 
 			nsNode = doc.getDocumentElement(); 
 		}
-		else if	(fragBase.getNodeType() == XalanNode::ELEMENT_NODE)
+		else if	(theType == XalanNode::ELEMENT_NODE)
 		{
 #if defined(XALAN_OLD_STYLE_CASTS)
 			nsNode = (const XalanElement*)&fragBase;
@@ -954,20 +956,24 @@ XSLTEngineImpl::outputToResultTree(
 {
 	const XObject::eObjectType	type = value.getType();
 
-	XalanDOMString s;
-
 	switch(type)
 	{
 	case XObject::eTypeBoolean:
 	case XObject::eTypeNumber:
 	case XObject::eTypeString:
-		s = value.str();
-		characters(toCharArray(s), 0, length(s));
+		{
+			const XalanDOMString&	s = value.str();
+
+			characters(toCharArray(s), 0, length(s));
+		}
 		break;				
 
 	case XObject::eTypeNodeSet:
 		{
+			XalanDOMString			s;
+
 			const NodeRefListBase&	nl = value.nodeset();
+
 			const unsigned int		nChildren = nl.getLength();
 
 			for(unsigned int i = 0; i < nChildren; i++)
@@ -1909,9 +1915,11 @@ XSLTEngineImpl::cloneToResultTree(
 			bool				overrideStrip,
 			bool				shouldCloneAttributes)
 {
-	bool	stripWhiteSpace = false;
+	bool						stripWhiteSpace = false;
 
-	switch(node.getNodeType())
+	const XalanNode::NodeType	theType = node.getNodeType();
+
+	switch(theType)
 	{
 	case XalanNode::TEXT_NODE:
 		{
@@ -2078,10 +2086,11 @@ XSLTEngineImpl::cloneToResultTree(
 	// Can't really do this, but we won't throw an error so that copy-of will
 	// work
 	case XalanNode::DOCUMENT_NODE:
+	case XalanNode::DOCUMENT_TYPE_NODE:
 	break;
 
 	default:
-		error("Can not create item in result tree: " + node.getNodeName());
+		error("Cannot create item in result tree: " + node.getNodeName());
 	break;
 
 	}

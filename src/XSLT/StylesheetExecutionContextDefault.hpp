@@ -98,6 +98,37 @@ class XALAN_XSLT_EXPORT StylesheetExecutionContextDefault : public StylesheetExe
 {
 public:
 
+#if defined(XALAN_NO_NAMESPACES)
+	typedef deque<const ElemTemplateElement*>			ElementRecursionStackType;
+	typedef set<FormatterListener*,
+				less<FormatterListener*> >				FormatterListenerSetType;
+	typedef set<PrintWriter*,
+				less<PrintWriter*> >					PrintWriterSetType;
+	typedef set<TextOutputStream*,
+				less<TextOutputStream*> >				TextOutputStreamSetType;
+	typedef set<const KeyDeclaration*,
+				less<const KeyDeclaration*> >			KeyDeclarationSetType;
+	typedef vector<const XObject*>						VariablesCollectionType;
+	typedef vector<VariablesCollectionType>				LiveVariablesStackType;
+	typedef pair<const XPath*, clock_t>					XPathCacheEntry;
+	typedef map<XalanDOMString,
+				XPathCacheEntry,
+				less<XalanDOMString> >					XPathCacheMapType;
+#else
+	typedef std::deque<const ElemTemplateElement*>		ElementRecursionStackType;
+	typedef std::set<FormatterListener*>				FormatterListenerSetType;
+	typedef std::set<PrintWriter*>						PrintWriterSetType;
+	typedef std::set<TextOutputStream*>					TextOutputStreamSetType;
+	typedef std::set<const KeyDeclaration*>				KeyDeclarationSetType;
+	typedef std::vector<const XObject*>					VariablesCollectionType;
+	typedef std::vector<VariablesCollectionType>		LiveVariablesStackType;
+	typedef std::pair<const XPath*, clock_t>			XPathCacheEntry;
+	typedef std::map<XalanDOMString, XPathCacheEntry>	XPathCacheMapType;
+#endif
+
+	typedef Stylesheet::KeyTablesTableType				KeyTablesTableType;
+
+
 	StylesheetExecutionContextDefault(
 			XSLTEngineImpl&			xsltProcessor,
 			XPathEnvSupport&		theXPathEnvSupport,
@@ -535,6 +566,24 @@ public:
 	virtual	void
 	endConstruction(const KeyDeclaration& keyDeclaration);
 
+	virtual const XalanDecimalFormatSymbols*
+	getDecimalFormatSymbols(const XalanDOMString&	name);
+
+	virtual PrintWriter*
+	createPrintWriter(TextOutputStream*		theTextOutputStream);
+
+	virtual PrintWriter*
+	createPrintWriter(
+			const XalanDOMString&		theFileName,
+			const XalanDOMString&		theEncoding);
+
+	virtual PrintWriter*
+#if defined(XALAN_NO_NAMESPACES)
+	createPrintWriter(ostream&			theStream);
+#else
+	createPrintWriter(std::ostream&		theStream);
+#endif
+
 	// These interfaces are inherited from XPathExecutionContext...
 
 	virtual void
@@ -640,12 +689,13 @@ public:
 	virtual bool
 	getProcessNamespaces() const;
 
-	virtual const NodeRefListBase*
+	virtual void
 	getNodeSetByKey(			
 			XalanNode*				doc,
 			const XalanDOMString&	name,
 			const XalanDOMString&	ref,
-			const PrefixResolver&	resolver);
+			const PrefixResolver&	resolver,
+			MutableNodeRefList&		nodelist);
 
 	virtual const XObject*
 	getVariable(const QName&	name) const;
@@ -694,35 +744,6 @@ public:
 			XalanDocument*			theDocument);
 
 
-	virtual const XalanDecimalFormatSymbols*
-	getDecimalFormatSymbols(const XalanDOMString&	name);
-
-	virtual PrintWriter*
-	createPrintWriter(TextOutputStream*		theTextOutputStream);
-
-	virtual PrintWriter*
-	createPrintWriter(
-			const XalanDOMString&		theFileName,
-			const XalanDOMString&		theEncoding);
-
-	virtual PrintWriter*
-#if defined(XALAN_NO_NAMESPACES)
-	createPrintWriter(ostream&			theStream);
-#else
-	createPrintWriter(std::ostream&		theStream);
-#endif
-
-	// These interfaces are inherited from StylesheetExecutionContext...
-
-	virtual KeyTable*
-	getKeyTable(const XalanNode*	doc) const;
-
-	virtual void
-	setKeyTable(
-			KeyTable*			keytable,
-			const XalanNode*	doc);
-
-
 	// These interfaces are inherited from ExecutionContext...
 
 	virtual void
@@ -742,6 +763,24 @@ public:
 			const XalanDOMString&	msg,
 			const XalanNode* 		sourceNode = 0,
 			const XalanNode*		styleNode = 0) const;
+
+
+	class XPathCacheReturnFunctor
+	{
+	public:
+
+		XPathCacheReturnFunctor(XSLTEngineImpl&		xsltProcessor) :
+			m_xsltProcessor(xsltProcessor)
+		{
+		}
+
+		void
+		operator()(const XPathCacheMapType::value_type&		theCacheEntry);
+
+	private:
+
+		XSLTEngineImpl&		m_xsltProcessor;
+	};
 
 private:
 
@@ -791,35 +830,6 @@ private:
 	XSLTEngineImpl&					m_xsltProcessor;
 
 	XalanNode*						m_rootDocument;
-
-#if defined(XALAN_NO_NAMESPACES)
-	typedef deque<const ElemTemplateElement*>			ElementRecursionStackType;
-	typedef set<FormatterListener*,
-				less<FormatterListener*> >				FormatterListenerSetType;
-	typedef set<PrintWriter*,
-				less<PrintWriter*> >					PrintWriterSetType;
-	typedef set<TextOutputStream*,
-				less<TextOutputStream*> >				TextOutputStreamSetType;
-	typedef set<const KeyDeclaration*,
-				less<const KeyDeclaration*> >			KeyDeclarationSetType;
-	typedef vector<const XObject*>						VariablesCollectionType;
-	typedef vector<VariablesCollectionType>				LiveVariablesStackType;
-	typedef pair<const XPath*, clock_t>					XPathCacheEntry;
-	typedef map<XalanDOMString,
-				XPathCacheEntry,
-				less<XalanDOMString> >					XPathCacheMapType;
-#else
-	typedef std::deque<const ElemTemplateElement*>		ElementRecursionStackType;
-	typedef std::set<FormatterListener*>				FormatterListenerSetType;
-	typedef std::set<PrintWriter*>						PrintWriterSetType;
-	typedef std::set<TextOutputStream*>					TextOutputStreamSetType;
-	typedef std::set<const KeyDeclaration*>				KeyDeclarationSetType;
-	typedef std::vector<const XObject*>					VariablesCollectionType;
-	typedef std::vector<VariablesCollectionType>		LiveVariablesStackType;
-	typedef std::pair<const XPath*, clock_t>			XPathCacheEntry;
-	typedef std::map<XalanDOMString, XPathCacheEntry>	XPathCacheMapType;
-#endif
-	typedef Stylesheet::KeyTablesTableType				KeyTablesTableType;
 
 	enum { eDefaultVariablesCollectionSize = 10,
 		   eXPathCacheMax = 50,

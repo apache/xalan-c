@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2000 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -33,7 +33,7 @@
  *    nor may "Apache" appear in their name, without prior written
  *    permission of the Apache Software Foundation.
  *
- * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
+  THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
  * DISCLAIMED.  IN NO EVENT SHALL THE APACHE SOFTWARE FOUNDATION OR
@@ -54,75 +54,74 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-#include "FunctionUnparsedEntityURI.hpp"
+
+#include "XalanNumberingResourceBundle.hpp"
 
 
 
-#include <XalanDOM/XalanNode.hpp>
-#include <XalanDOM/XalanDocument.hpp>
-
-
-
-#include <XPath/XObject.hpp>
-#include <XPath/XObjectFactory.hpp>
-#include <XPath/XPathExecutionContext.hpp>
-
-
-
-FunctionUnparsedEntityURI::FunctionUnparsedEntityURI()
+XalanNumberingResourceBundle::XalanNumberingResourceBundle(
+		const XalanDOMString&			theLanguage,
+		const XalanDOMString&			theUILanguage,
+		const XalanDOMString&			theHelpLanguage,
+		const XalanDOMCharVectorType&	theAlphabet,
+		const XalanDOMCharVectorType&	theTraditionalAlphabet,
+		eOrientation					theOrientation,
+		eNumberingMethod				theNumberingMethod,
+		eMultiplierOrder				theMultiplierOrder,
+		int								theMaxNumericalValue,
+		const IntVectorType&			theNumberGroups,
+		const IntVectorType&			theMultipliers,
+		const XalanDOMCharVectorType&	theZeroChar,
+		const XalanDOMCharVectorType&	theMultiplierChars,
+		const DigitsTableVectorType&	theDigitsTable,
+		const IntVectorType&			theDigitsTableTable) :
+	m_language(theHelpLanguage),
+	m_uiLanguage(theLanguage),
+	m_helpLanguage(theUILanguage),
+	m_alphabet(theAlphabet),
+	m_traditionalAlphabet(theTraditionalAlphabet),
+	m_orientation(theOrientation),
+	m_numberingMethod(theNumberingMethod),
+	m_multiplierOrder(theMultiplierOrder),
+	m_maxNumericalValue(theMaxNumericalValue),
+	m_numberGroups(theNumberGroups),
+	m_multipliers(theMultipliers),
+	m_zeroChar(theZeroChar),
+	m_multiplierChars(theMultiplierChars),
+	m_digitsTable(theDigitsTable),
+	m_digitsTableTable(theDigitsTableTable)
 {
 }
 
 
 
-FunctionUnparsedEntityURI::~FunctionUnparsedEntityURI()
+XalanNumberingResourceBundle::XalanNumberingResourceBundle()
 {
 }
 
 
 
+XalanNumberingResourceBundle::XalanNumberingResourceBundle(const XalanNumberingResourceBundle&	theSource) :
+	m_language(theSource.m_language),
+	m_uiLanguage(theSource.m_uiLanguage),
+	m_helpLanguage(theSource.m_helpLanguage),
+	m_alphabet(theSource.m_alphabet),
+	m_traditionalAlphabet(theSource.m_traditionalAlphabet),
+	m_orientation(theSource.m_orientation),
+	m_numberingMethod(theSource.m_numberingMethod),
+	m_multiplierOrder(theSource.m_multiplierOrder),
+	m_maxNumericalValue(theSource.m_maxNumericalValue),
+	m_numberGroups(theSource.m_numberGroups),
+	m_multipliers(theSource.m_multipliers),
+	m_zeroChar(theSource.m_zeroChar),
+	m_multiplierChars(theSource.m_multiplierChars),
+	m_digitsTable(theSource.m_digitsTable),
+	m_digitsTableTable(theSource.m_digitsTableTable)
+{
+}
 
-/**
- * Execute an XPath function object.  The function must return 
- * a valid object.
- * @param path The executing xpath.
- * @param context The current context.
- * @param opPos The current op position.
- * @param args A list of XObject arguments.
- * @return A valid XObject.
- */
-XObject*
-FunctionUnparsedEntityURI::execute(
-			XPathExecutionContext&			executionContext,
-			XalanNode*						context,
-			int								/* opPos */,
-			const XObjectArgVectorType&		args)
-{    
-	if(args.size() != 1)
-	{
-		executionContext.error("The unparsed-entity-uri function should take one argument!");
-	}
-	else if (context == 0)
-	{
-		executionContext.error("The unparser-entity-URI() function requires a non-null context node!",
-							   context);
 
-		return 0;
-	}
 
-	const XalanDOMString&	name = (args[0])->str();
-
-	XalanDocument* const	doc =
-			XalanNode::DOCUMENT_NODE == context->getNodeType() ?
-#if defined(XALAN_OLD_STYLE_CASTS)
-				(XalanDocument*)context :
-#else
-				static_cast<XalanDocument*>(context) :
-#endif
-				context->getOwnerDocument();
-	assert(doc != 0);
-
-	const XalanDOMString	uri = executionContext.getUnparsedEntityURI(name, *doc);
-
-	return executionContext.getXObjectFactory().createString(uri);
+XalanNumberingResourceBundle::~XalanNumberingResourceBundle()
+{
 }

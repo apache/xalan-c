@@ -250,6 +250,23 @@ public:
 
 	};
 
+	class PushParamFunctor
+	{
+	public:
+
+		PushParamFunctor(VariablesStack&	theVariablesStack) :
+			m_variablesStack(theVariablesStack)
+		{
+		}
+
+		const void
+		operator()(const ParamsVectorType::value_type&	theEntry);
+
+	private:
+
+		VariablesStack&						m_variablesStack;
+	};
+
 private:
 
 	class StackEntry;

@@ -162,9 +162,11 @@ public:
 
 	/// Vector of pointers to function arguments
 #if defined(XALAN_NO_NAMESPACES)
-	typedef vector<void*>		ArgVectorType;
+	typedef vector<void*>								ArgVectorType;
+	typedef set<XalanDOMString, less<XalanDOMString> >	StringSetType;
 #else
-	typedef std::vector<void*>	ArgVectorType;
+	typedef std::vector<void*>			ArgVectorType;
+	typedef std::set<XalanDOMString>	StringSetType;
 #endif
 
 	/**
@@ -196,12 +198,6 @@ protected:
 	XalanDOMString	m_scriptSrcURL;  // URL of source of script (if any)
 
 	void* m_javaObject;		    // object for javaclass engine
-
-#if defined(XALAN_NO_NAMESPACES)
-	typedef set<XalanDOMString, less<XalanDOMString> > StringSetType;
-#else
-	typedef std::set<XalanDOMString> StringSetType;
-#endif
 
 	StringSetType	m_functions; // functions of namespace
 

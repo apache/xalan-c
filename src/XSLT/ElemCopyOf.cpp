@@ -137,19 +137,22 @@ ElemCopyOf::execute(
 
 	const XObject::eObjectType	type = value->getType();
 
-	XalanDOMString s;
-
 	switch(type)
 	{
 	case XObject::eTypeBoolean:
 	case XObject::eTypeNumber:
 	case XObject::eTypeString:
-		s = value->str();
-		executionContext.characters(toCharArray(s), 0, length(s));
-			break;
+		{
+			const XalanDOMString&	s = value->str();
+
+			executionContext.characters(toCharArray(s), 0, length(s));
+		}
+		break;
 
 	case XObject::eTypeNodeSet:
 	{
+		XalanDOMString			s;
+
 		const NodeRefListBase&	nl = value->nodeset();
 
 		unsigned int			nChildren = nl.getLength();
@@ -215,13 +218,14 @@ ElemCopyOf::execute(
 		break;
 
 	default:
-		s = value->str();
-
-		if (!isEmpty(s))
 		{
-			executionContext.characters(toCharArray(s), 0, s.length());
-		}
+			const XalanDOMString&	s = value->str();
 
+			if (!isEmpty(s))
+			{
+				executionContext.characters(toCharArray(s), 0, s.length());
+			}
+		}
 		break;
 	}
 }

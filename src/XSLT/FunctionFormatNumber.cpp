@@ -58,9 +58,10 @@
 
 
 
+#include <PlatformSupport/DoubleSupport.hpp>
+#include <PlatformSupport/DOMStringHelper.hpp>
 #include <PlatformSupport/XalanDecimalFormat.hpp>
 #include <PlatformSupport/XalanDecimalFormatSymbols.hpp>
-#include <PlatformSupport/DOMStringHelper.hpp>
 
 
 
@@ -110,13 +111,13 @@ FunctionFormatNumber::execute(
 		assert(theSize == 2 || args[2] != 0);
 
 		const double						theNumber = args[0]->num();
-		const XalanDOMString				thePattern = args[1]->str();
+		const XalanDOMString&				thePattern = args[1]->str();
 
 		const XalanDecimalFormatSymbols*	theDFS = 0;
 
 		if (theSize == 3)
 		{
-			const XalanDOMString				theDecimalFormatName = args[2]->str();
+			const XalanDOMString&				theDecimalFormatName = args[2]->str();
 			assert(length(theDecimalFormatName) != 0);
 
 			theDFS = executionContext.getDecimalFormatSymbols(theDecimalFormatName);
@@ -166,14 +167,23 @@ FunctionFormatNumber::doFormat(
 			const XalanDOMString&				thePattern,
 			const XalanDecimalFormatSymbols*	theDFS)
 {
-	executionContext.warn(XALAN_STATIC_UCODE_STRING("format-number() is not fully implemented!"),
-						  context);
+	if (DoubleSupport::isNaN(theNumber) == true ||
+		DoubleSupport::isNegativeInfinity(theNumber) == true ||
+		DoubleSupport::isPositiveInfinity(theNumber) == true )
+	{
+		return DoubleToDOMString(theNumber);
+	}
+	else
+	{
+		executionContext.warn(XALAN_STATIC_UCODE_STRING("format-number() is not fully implemented!"),
+							  context);
 
-	XalanDecimalFormat	theFormatter;
+		XalanDecimalFormat	theFormatter;
 
-	theFormatter.setDecimalFormatSymbols(theDFS != 0 ? *theDFS : XalanDecimalFormatSymbols());
+		theFormatter.setDecimalFormatSymbols(theDFS != 0 ? *theDFS : XalanDecimalFormatSymbols());
 
-	theFormatter.applyLocalizedPattern(thePattern);
+		theFormatter.applyLocalizedPattern(thePattern);
 
-	return theFormatter.format(theNumber);
+		return theFormatter.format(theNumber);
+	}
 }

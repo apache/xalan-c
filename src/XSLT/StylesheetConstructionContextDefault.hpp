@@ -218,6 +218,13 @@ public:
 	virtual double
 	getXSLTVersionSupported() const;
 
+#if defined(XALAN_NO_NAMESPACES)
+	typedef set<StylesheetRoot*,
+				less<StylesheetRoot*> >		StylesheetSetType;
+#else
+	typedef std::set<StylesheetRoot*>		StylesheetSetType;
+#endif
+
 private:
 
 	XSLTEngineImpl&						m_processor;
@@ -225,13 +232,6 @@ private:
 	XPathFactory&						m_xpathFactory;
 
 	typedef XalanAutoPtr<XPathProcessor>	XPathProcessAutoPtr;
-
-#if defined(XALAN_NO_NAMESPACES)
-	typedef set<StylesheetRoot*,
-				less<StylesheetRoot*> >		StylesheetSetType;
-#else
-	typedef std::set<StylesheetRoot*>		StylesheetSetType;
-#endif
 
 	XPathProcessAutoPtr					m_xpathProcessor;
 

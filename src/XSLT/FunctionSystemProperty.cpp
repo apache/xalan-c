@@ -95,6 +95,10 @@ FunctionSystemProperty::execute(
 			int								/* opPos */,
 			const XObjectArgVectorType&		args)
 {
+#if !defined(XALAN_NO_NAMESPACES)
+	using std::string;
+#endif
+
 	if (args.size() != 1)
 	{
 		executionContext.error("The system-property() function takes a single argument!", context);
@@ -102,7 +106,7 @@ FunctionSystemProperty::execute(
 		return 0;
 	}
 
-	const XalanDOMString	fullName = args[0]->str();
+	const XalanDOMString&	fullName = args[0]->str();
 	const unsigned int		fullNameLength = length(fullName);
 	const unsigned int		indexOfNSSep = indexOf(fullName, XalanUnicode::charColon);
 
@@ -145,12 +149,12 @@ FunctionSystemProperty::execute(
 		{
 			executionContext.warn("Don't currently do anything with namespace " + nspace + " in property: " + fullName);
 
-			result = ::getenv(DOMStringToStdString(propName).c_str());
+			result = ::getenv(c_str(TranscodeToLocalCodePage(propName)));
 		}
 	}
 	else
 	{
-		result = ::getenv(DOMStringToStdString(fullName).c_str());
+		result = ::getenv(c_str(TranscodeToLocalCodePage(fullName)));
 	}
 
 	if (fNumberResult == true)

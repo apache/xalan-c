@@ -163,10 +163,10 @@ ElemValueOf::execute(
 {
 	ElemTemplateElement::execute(executionContext, sourceTree, sourceNode, mode);
 
-	XalanDOMString	theValue;
-
 	if (m_isDot == true)
 	{
+		XalanDOMString	theValue;
+
 		const XalanNode::NodeType	type = sourceNode->getNodeType();
 
 		if(type == XalanNode::COMMENT_NODE ||
@@ -189,6 +189,8 @@ ElemValueOf::execute(
 							   *m_selectPattern,
 							   executionContext.getXObjectFactory().createString(theValue)));       
 		}
+
+		outputValue(executionContext, theValue);
 	}
 	else
 	{
@@ -213,11 +215,19 @@ ElemValueOf::execute(
 
 			if (XObject::eTypeNull != type)
 			{
-				theValue = value->str();
+				outputValue(executionContext, value->str());
 			}
 		}
 	}
+}
 
+
+
+void
+ElemValueOf::outputValue(
+			StylesheetExecutionContext&		executionContext,
+			const XalanDOMString&			theValue) const
+{
 	const unsigned int	len = length(theValue);
 
 	if(len > 0)

@@ -283,15 +283,9 @@ StylesheetExecutionContextDefault::replacePendingAttribute(
 			const XalanDOMChar*		theNewType,
 			const XalanDOMChar*		theNewValue)
 {
-	// Make a copy of the attribute list, and modify it, to be more exception-safe.
-	AttributeListImpl	thePendingAttributes(m_xsltProcessor.getPendingAttributes());
-
-	// Remove the old attribute, then add the new one...
-	// thePendingAttributes.removeAttribute(theName);
-	thePendingAttributes.addAttribute(theName, theNewType, theNewValue);
-
-	// Set the new pending attributes...
-	m_xsltProcessor.setPendingAttributes(thePendingAttributes);
+	// Remove the old attribute, then add the new one.  AttributeListImpl::addAttribute()
+	// does this for us.
+	m_xsltProcessor.getPendingAttributes().addAttribute(theName, theNewType, theNewValue);
 }
 
 
@@ -1331,6 +1325,10 @@ StylesheetExecutionContextDefault::endConstruction(const KeyDeclaration&	keyDecl
 void
 StylesheetExecutionContextDefault::reset()
 {
+#if !defined(XALAN_NO_NAMESPACES)
+	using std::for_each;
+#endif
+
 	assert(m_elementRecursionStack.size() == 0);
 
 	// Reset the support objects...
@@ -1338,10 +1336,6 @@ StylesheetExecutionContextDefault::reset()
 
 	m_xsltProcessor.reset();
 
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::for_each;
-#endif
-	
 	for_each(m_formatterListeners.begin(),
 			 m_formatterListeners.end(),
 			 DeleteFunctor<FormatterListener>());
@@ -1625,16 +1619,17 @@ StylesheetExecutionContextDefault::getProcessNamespaces() const
 
 
 
-const NodeRefListBase*
+void
 StylesheetExecutionContextDefault::getNodeSetByKey(
 			XalanNode*				doc,
 			const XalanDOMString&	name,
 			const XalanDOMString&	ref,
-			const PrefixResolver&	resolver)
+			const PrefixResolver&	resolver,
+			MutableNodeRefList&		nodelist)
 {
 	assert(m_stylesheetRoot != 0);
 
-	return m_stylesheetRoot->getNodeSetByKey(doc, name, ref, resolver, *this, m_keyTables);
+	m_stylesheetRoot->getNodeSetByKey(doc, name, ref, resolver, nodelist, *this, m_keyTables);
 }
 
 
@@ -1950,28 +1945,12 @@ StylesheetExecutionContextDefault::isCached(const XPath*	theXPath)
 
 
 
-// I should be able to make this out of a
-// bunch of compose<> and select2nd<> adapters...
-template<class Type>
-class XPathCacheReturnFunctor
+void
+StylesheetExecutionContextDefault::XPathCacheReturnFunctor::operator()(const XPathCacheMapType::value_type&		theCacheEntry)
 {
-public:
+	m_xsltProcessor.returnXPath(theCacheEntry.second.first);
+}
 
-	XPathCacheReturnFunctor(XSLTEngineImpl&		xsltProcessor) :
-		m_xsltProcessor(xsltProcessor)
-	{
-	}
-
-	void
-	operator()(const Type&	theCacheEntry)
-	{
-		m_xsltProcessor.returnXPath(theCacheEntry.second.first);
-	}
-
-private:
-
-	XSLTEngineImpl&		m_xsltProcessor;
-};
 
 
 
@@ -1984,38 +1963,10 @@ StylesheetExecutionContextDefault::clearXPathCache()
 
 	for_each(m_matchPatternCache.begin(),
 			 m_matchPatternCache.end(),
-			 XPathCacheReturnFunctor<XPathCacheMapType::value_type>(m_xsltProcessor));
+			 XPathCacheReturnFunctor(m_xsltProcessor));
 
 	m_matchPatternCache.clear();
 }
-
-
-
-// I should be able to make this out of a
-// bunch of compose<> and select2nd<> adapters...
-template<class Type>
-class XPathCacheEarliestPredicate
-{
-public:
-
-	XPathCacheEarliestPredicate(XSLTEngineImpl&		xsltProcessor) :
-		m_xsltProcessor(xsltProcessor)
-	{
-	}
-
-	void
-	operator()(const Type&	theCacheEntry)
-	{
-		m_xsltProcessor.returnXPath(theCacheEntry.second.first);
-	}
-
-private:
-
-	XSLTEngineImpl&		m_xsltProcessor;
-};
-
-
-
 
 
 
@@ -2071,37 +2022,3 @@ StylesheetExecutionContextDefault::addToXPathCache(
 	// Add the XPath with the current clock
 	m_matchPatternCache.insert(XPathCacheMapType::value_type(pattern, XPathCacheEntry(theXPath, addClock)));
 }
-
-
-
-
-KeyTable*
-StylesheetExecutionContextDefault::getKeyTable(const XalanNode*	doc) const
-{
-	const KeyTablesTableType::const_iterator		i =
-					m_keyTables.find(doc);
-
-	if (i == m_keyTables.end())
-	{
-		return 0;
-	}
-	else
-	{
-		return (*i).second;
-	}
-}
-
-
-
-void
-StylesheetExecutionContextDefault::setKeyTable(
-			KeyTable*			keytable,
-			const XalanNode*	doc)
-{
-	// Get rid of any existing keytable
-	delete m_keyTables[doc];
-
-	m_keyTables[doc] = keytable;
-}
-
-

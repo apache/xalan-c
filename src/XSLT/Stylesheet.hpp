@@ -138,12 +138,14 @@ public:
 	typedef vector<ElemAttributeSet*> 				AttributeSetMapType;
 	typedef vector<ElemVariable*> 					ElemVariableVectorType;
 	typedef vector<KeyDeclaration>					KeyDeclarationVectorType;
-	typedef vector<KeyTable*> 						KeyTableVectorType;
+//	typedef map<XalanDOMString,
+//				KeyTable*,
+//				less<XalanDOMString> >				KeysMapType;
 	typedef map<const XalanNode*,
 				KeyTable*,
 				less<const XalanNode*> >			KeyTablesTableType;
 	typedef vector<QName> 							QNameVectorType;
-	typedef vector<const Stylesheet*>				StylesheetVectorType;
+	typedef vector<Stylesheet*>						StylesheetVectorType;
 	typedef vector<XalanDOMString>					URLStackType;
 	typedef vector<const XPath*>					XPathVectorType;
 	typedef vector<ElemDecimalFormat*>				ElemDecimalFormatVectorType;
@@ -154,10 +156,10 @@ public:
 	typedef std::vector<ElemAttributeSet*> 					AttributeSetMapType;
 	typedef std::vector<ElemVariable*> 						ElemVariableVectorType;
 	typedef std::vector<KeyDeclaration>						KeyDeclarationVectorType;
-	typedef std::vector<KeyTable*> 							KeyTableVectorType;
+//	typedef std::map<XalanDOMString, KeyTable*>				KeysMapType;
 	typedef std::map<const XalanNode*, KeyTable*>			KeyTablesTableType;
 	typedef std::vector<QName> 								QNameVectorType;
-	typedef std::vector<const Stylesheet*>					StylesheetVectorType;
+	typedef std::vector<Stylesheet*>						StylesheetVectorType;
 	typedef std::vector<XalanDOMString>						URLStackType;
 	typedef std::vector<const XPath*>						XPathVectorType;
 	typedef std::vector<ElemDecimalFormat*>					ElemDecimalFormatVectorType;
@@ -219,29 +221,6 @@ public:
 	{
 		return m_stylesheetRoot;
 	}
-
-	/**
-	 * Retrieve the default XPath for apply-template
-	 * 
-	 * @return pointer to default XPath
-	 */
-	const XPath*
-	getDefaultATXpath() const
-	{
-		return m_defaultATXpath;
-	}
-
-	/**
-	 * Set the default XPath for apply-template
-	 * 
-	 * @param defaultATXpath pointer to new default XPath
-	 */
-	void
-	setDefaultATXpath(XPath* defaultATXpath) 
-	{
-		m_defaultATXpath = defaultATXpath;
-	}
-
 
 	/**
 	 * Retrieve the stack of namespace lists
@@ -570,8 +549,8 @@ public:
 	 */
 	void
 	addImport(
-			const Stylesheet*	theStylesheet,
-			bool				fFront)
+			Stylesheet*		theStylesheet,
+			bool			fFront)
 	{
 		m_imports.insert(fFront ? m_imports.begin() : m_imports.end(), theStylesheet);
 	}
@@ -873,29 +852,6 @@ public:
 			bool					tryWildCard = false) const;
 
 	/**
-	 * Given a valid element key, return the corresponding node list.
-	 *
-	 * @param doc			   source document
-	 * @param name			   name of the key, which must match the 'name'
-	 *						   attribute on xsl:key
-	 * @param ref			   value that must match the value found by the
-	 *						   'match' attribute on xsl:key
-	 * @param resolver		   resolver for namespace resolution
-	 * @param executionContext current execution context
-	 * @return if the name was not declared with xsl:key, this will return
-	 * null, if the identifier is not found, it will return an empty node set,
-	 * otherwise it will return a nodeset of nodes.
-	 */
-	const NodeRefListBase*
-	getNodeSetByKey(
-			XalanNode*					doc,
-			const XalanDOMString&		name,
-			const XalanDOMString&		ref,
-			const PrefixResolver&		resolver,
-			StylesheetExecutionContext&	executionContext,
-			KeyTablesTableType&			theKeysTable) const;
-
-	/**
 	 * Add an extension namespace handler. This provides methods for calling
 	 * an element extension as well as for function calls (which is passed
 	 * on to XPath).
@@ -1148,22 +1104,26 @@ public:
 
 protected:
 
-  /**
-	* The root of the stylesheet, where all the tables common to all
-	* stylesheets are kept.
-   */
+	/**
+	 * The root of the stylesheet tree.
+	 */
 	StylesheetRoot& 					m_stylesheetRoot;
 
-  /**
-   * Reference back to the owning XSLTProcessor object.
-	* JMD: This has to be a pointer,not a reference because of setXSLProcessor
-   */
-//	XSLTEngineImpl* m_processor;
+	/**
+	 * This is set to true if an xsl:key directive is found.
+	 */
+	bool								m_needToBuildKeysTable;
 
 	/**
 	 * The base URL of the XSL document.
 	 */
 	XalanDOMString						m_baseIdent;
+
+	/**
+	 * Table of KeyDeclaration objects, which are set by the 
+	 * xsl:key element.
+	 */
+	KeyDeclarationVectorType			m_keyDeclarations;
 
 private:	
 
@@ -1180,155 +1140,123 @@ private:
 	 * The full XSLT Namespace URI.  To be replaced by the one actually
 	 * found.
 	 */
-	XalanDOMString						m_XSLTNamespaceURI;
+	XalanDOMString							m_XSLTNamespaceURI;
 
 	/**
 	 * A lookup table of all space preserving elements.
 	 */
-	XPathVectorType 					m_whitespacePreservingElements;
+	XPathVectorType 						m_whitespacePreservingElements;
   
 	/**
 	 * A lookup table of all space stripping elements.
 	 */
-	XPathVectorType 					m_whitespaceStrippingElements;
-
-	/**
-	 * Table of KeyDeclaration objects, which are set by the 
-	 * xsl:key element.
-	 */
-	KeyDeclarationVectorType			m_keyDeclarations;
-
-	/**
-	 * This is set to true if an xsl:key directive is found.
-	 * Mainly for use by the XMLParserLiaison classes for 
-	 * optimized processing of ids.
-	 * @serial
-	 */
-	bool								m_needToBuildKeysTable;
+	XPathVectorType 						m_whitespaceStrippingElements;
 
 	/**
 	 * A vector of the -imported- XSL Stylesheets.
 	 */
-	StylesheetVectorType				m_imports;
-
-	/**
-	 * The default template to use for xsl:apply-templates when 
-	 * a select attribute is not found.
-	 */
-	const XPath*						m_defaultATXpath;
+	StylesheetVectorType					m_imports;
 
 	/**
 	 * A stack to keep track of the result tree namespaces.
 	 */
-	NamespacesStackType 				m_namespaces;
+	NamespacesStackType 					m_namespaces;
 
 	/** 
 	 * A list of namespace declarations,
 	 * for mapping from prefix to namespace URI.
 	 */
-	NamespaceVectorType 				m_namespaceDecls;
+	NamespaceVectorType 					m_namespaceDecls;
 
 	/**
 	 * This is pushed on the m_resultNameSpaces stack 'till a xmlns attribute is
 	 * found.
 	 */
-	static const NamespaceVectorType	s_emptyNamespace;
+	static const NamespaceVectorType		s_emptyNamespace;
 
 	/**
 	 * Tells if the stylesheet tables need to be rebuilt.
 	 */
-	bool								m_tablesAreInvalid;
+	bool									m_tablesAreInvalid;
 
 	/**
 	 * Tells if the stylesheet is without an xsl:stylesheet and xsl:template
 	 * wrapper.
 	 */
-	bool						m_isWrapperless;
+	bool									m_isWrapperless;
 
 	/**
 	 * The manufactured template if there is no wrapper.
 	 */
-	ElemTemplate*				m_wrapperlessTemplate;
+	ElemTemplate*							m_wrapperlessTemplate;
   
 	/**
 	 * The table of extension namespaces.
 	 */
-	ExtensionNamespacesMapType	m_extensionNamespaces;
+	ExtensionNamespacesMapType				m_extensionNamespaces;
 
   
 	/**
 	 * The first template of the template children.
 	 */
-	ElemTemplateElement*		m_firstTemplate;
+	ElemTemplateElement*					m_firstTemplate;
   
 	/**
 	 * A stack of who's including who is needed in order to support "It is an
 	 * error if a stylesheet directly or indirectly includes itself."
 	 */
-	URLStackType				m_includeStack;
+	URLStackType							m_includeStack;
 
 	/** 
 	 * Tell if this stylesheet has the default space handling
 	 * turned off or on according to the xml:space attribute.
 	 * @serial
 	 */
-	bool						m_defaultSpace;
+	bool									m_defaultSpace;
   
 	/**
 	 * Keyed on string macro names, and holding values that are macro elements
 	 * in the XSL DOM tree. Initialized in initMacroLookupTable, and used in
 	 * findNamedTemplate.
 	 */
-	ElemTemplateMapType			m_namedTemplates;
+	ElemTemplateMapType						m_namedTemplates;
   
 	/**
 	 * Table for defined constants, keyed on the names.
 	 */
-	ElemVariableVectorType		m_topLevelVariables;
+	ElemVariableVectorType					m_topLevelVariables;
 
 
 	/**
 	 * The version of XSL that was declared.
 	 */
-	double						m_XSLTVerDeclared;
+	double									m_XSLTVerDeclared;
 
-	const bool	m_isRoot;
-
-	/**
-	 * This table is keyed on the target elements 
-	 * of patterns, and contains linked lists of
-	 * the actual patterns that match the target element
-	 * to some degree of specifity.
-	 */
+	const bool								m_isRoot;
 
 	/**
 	 * This table is keyed on the target elements of patterns, and contains linked
 	 * lists of the actual patterns that match the target element to some degree
 	 * of specifity.
 	 */
-	PatternTableMapType 	m_patternTable;
+	PatternTableMapType 					m_patternTable;
 
 	/**
 	 * Table of attribute sets, keyed by set name.
 	 */
-	AttributeSetMapType 	m_attributeSets;
+	AttributeSetMapType 					m_attributeSets;
 
-	XalanNodeListSurrogate	m_surrogateChildren;
+	XalanNodeListSurrogate					m_surrogateChildren;
 
-	XalanEmptyNamedNodeMap	m_fakeAttributes;
+	XalanEmptyNamedNodeMap					m_fakeAttributes;
 
-	ElemDecimalFormatVectorType		m_elemDecimalFormats;
+	ElemDecimalFormatVectorType				m_elemDecimalFormats;
 
-	StringToStringMapType			m_prefixAliases;
+	StringToStringMapType					m_prefixAliases;
 
-	NamespacesHandler		m_namespacesHandler;
+	NamespacesHandler						m_namespacesHandler;
 };
 
 
 
 #endif	// XALAN_STYLESHEET_HEADER_GUARD
-
-
-/*
- *	$ Log: $
- */

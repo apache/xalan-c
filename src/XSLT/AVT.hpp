@@ -145,17 +145,17 @@ public:
 			const PrefixResolver&	prefixResolver,
 			XPathExecutionContext&	executionContext) const;
 
-private:
-
-	// not implemented
-	AVT(const AVT &);
-	AVT& operator=(const AVT &);
-
 #if defined(XALAN_NO_NAMESPACES)
 	typedef vector<const AVTPart*>		AVTPartPtrVectorType;
 #else
 	typedef std::vector<const AVTPart*>	AVTPartPtrVectorType;
 #endif
+
+private:
+
+	// not implemented
+	AVT(const AVT &);
+	AVT& operator=(const AVT &);
 
 	XalanDOMString			m_simpleString;
 

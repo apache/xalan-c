@@ -129,7 +129,7 @@ ElemForEach::~ElemForEach()
 
 	for_each(m_sortElems.begin(),
 			 m_sortElems.end(),
-			 DeleteFunctor<ElemTemplateElement>());
+			 DeleteFunctor<ElemSort>());
 }
 
 

@@ -132,6 +132,12 @@ public:
 			XalanNode*						sourceNode,
 			const QName&					mode) const;
 
+#if defined(XALAN_NO_NAMESPACES)
+	typedef vector<const AVT*>				AVTVectorType;
+#else
+	typedef std::vector<const AVT*>			AVTVectorType;
+#endif
+
 private:
 
 	// not implemented
@@ -167,12 +173,6 @@ private:
 	shouldExcludeResultNamespaceNode(
 			const XalanDOMString&	thePrefix,
 			const XalanDOMString&	theURI) const;
-
-#if defined(XALAN_NO_NAMESPACES)
-	typedef vector<const AVT*>				AVTVectorType;
-#else
-	typedef std::vector<const AVT*>			AVTVectorType;
-#endif
 
 	/**
 	 * A vector to keep track of the attribute elements.
