@@ -851,11 +851,6 @@ XPathExpression::IntializeOpCodeLengthMap()
 	theMap[eFROM_PRECEDING_SIBLINGS] = 2 + s__opCodeMapLengthIndex;
 	theMap[eFROM_SELF] = 2 + s__opCodeMapLengthIndex;
 	theMap[eFROM_NAMESPACE] = 2 + s__opCodeMapLengthIndex;
-//	theMap[eFROM_ATTRIBUTE] = -1;
-//	theMap[eFROM_DOC] = -1;
-//	theMap[eFROM_DOCREF] = -1;
-//	theMap[eFROM_ID] = -1;
-//	theMap[eFROM_IDREF] = -1;
 	theMap[eFROM_ROOT] = 2 + s__opCodeMapLengthIndex;
 	theMap[eOP_MATCHPATTERN] = 1 + s__opCodeMapLengthIndex;
 	theMap[eOP_LOCATIONPATHPATTERN] = 1 + s__opCodeMapLengthIndex;
@@ -863,6 +858,7 @@ XPathExpression::IntializeOpCodeLengthMap()
 	theMap[eMATCH_ANY_ANCESTOR] = 1 + s__opCodeMapLengthIndex;
 	theMap[eMATCH_IMMEDIATE_ANCESTOR] = 1 + s__opCodeMapLengthIndex;
 	theMap[eMATCH_ANY_ANCESTOR_WITH_PREDICATE] = 2 + s__opCodeMapLengthIndex;
+	theMap[eMATCH_ANY_ANCESTOR_WITH_FUNCTION_CALL] = 2 + s__opCodeMapLengthIndex;
 
 	return theMap;
 }
@@ -893,11 +889,6 @@ XPathExpression::InitializeNodeTestSet()
 	theSet.insert(eFROM_PRECEDING_SIBLINGS);
 	theSet.insert(eFROM_SELF);
 	theSet.insert(eFROM_NAMESPACE);
-	// theSet.insert(eFROM_ATTRIBUTE);
-	// theSet.insert(eFROM_DOC);
-	// theSet.insert(eFROM_DOCREF);
-	// theSet.insert(eFROM_ID);
-	// theSet.insert(eFROM_IDREF);
 	theSet.insert(eFROM_ROOT);
 	theSet.insert(eOP_OR);
 

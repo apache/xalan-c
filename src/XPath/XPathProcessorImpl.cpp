@@ -2246,10 +2246,8 @@ XPathProcessorImpl::LocationPathPattern()
 			// Tell how long the step is without the predicate
 			const XPathExpression::OpCodeMapValueVectorType		theArgs(1, 4);
 
-			m_expression->appendOpCode(XPathExpression::eMATCH_ANY_ANCESTOR_WITH_PREDICATE,
+			m_expression->appendOpCode(XPathExpression::eMATCH_ANY_ANCESTOR_WITH_FUNCTION_CALL,
 									   theArgs);
-
-			m_expression->appendOpCode(XPathExpression::eNODETYPE_ROOT);
 
 			m_expression->updateOpCodeLength(newOpPos);
 

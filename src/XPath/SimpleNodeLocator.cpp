@@ -352,7 +352,10 @@ SimpleNodeLocator::stepPattern(
 
 		scoreHolder = xpath.s_MatchScoreOther;
 
-		localContext = DOMServices::getParentOfNode(*localContext);
+		if (nextStepType != XPathExpression::eMATCH_ANY_ANCESTOR_WITH_FUNCTION_CALL)
+		{
+			localContext = DOMServices::getParentOfNode(*localContext);
+		}
 
 		if(0 == localContext)
 		{
@@ -369,6 +372,10 @@ SimpleNodeLocator::stepPattern(
 
 	switch(stepType)
 	{
+	case XPathExpression::eMATCH_ANY_ANCESTOR_WITH_FUNCTION_CALL:
+		score = scoreHolder;
+		break;
+
 	case XPathExpression::eOP_FUNCTION:
 		{
 			argLen = currentExpression.getOpCodeLength(opPos);
@@ -382,18 +389,45 @@ SimpleNodeLocator::stepPattern(
 
 			score = xpath.s_MatchScoreNone;
 
-			for(unsigned int i = 0; i < len; i++)
+			if (nextStepType == XPathExpression::eMATCH_ANY_ANCESTOR_WITH_FUNCTION_CALL)
 			{
-				XalanNode* const	n = nl.item(i);
+				bool	fFound = false;
 
-				score = n == localContext ?
-					xpath.s_MatchScoreOther : xpath.s_MatchScoreNone;
-
-				if(score == xpath.s_MatchScoreOther)
+				while(localContext != 0 && fFound == false)
 				{
-					localContext = n;
+					for(unsigned int i = 0; i < len; i++)
+					{
+						XalanNode* const	n = nl.item(i);
 
-					break;
+						if(n == localContext)
+						{
+							score = xpath.s_MatchScoreOther;
+
+							localContext = n;
+
+							fFound = true;
+
+							break;
+						}
+					}
+
+					localContext = DOMServices::getParentOfNode(*localContext);
+				}
+			}
+			else
+			{
+				for(unsigned int i = 0; i < len; i++)
+				{
+					XalanNode* const	n = nl.item(i);
+
+					if(n == localContext)
+					{
+						score = xpath.s_MatchScoreOther;
+
+						localContext = n;
+
+						break;
+					}
 				}
 			}
 		}

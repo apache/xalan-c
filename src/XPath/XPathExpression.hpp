@@ -596,6 +596,7 @@ public:
 		eMATCH_ANY_ANCESTOR = 95,
 		eMATCH_IMMEDIATE_ANCESTOR = 96,
 		eMATCH_ANY_ANCESTOR_WITH_PREDICATE = 97,
+		eMATCH_ANY_ANCESTOR_WITH_FUNCTION_CALL = 98,
 
 		// Always add _before_ this one.
 		eOpCodeNextAvailable
