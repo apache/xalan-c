@@ -960,26 +960,24 @@ int FormatterToXML::copyUTF16IntoBuf(
  * Method consumes two characters from the input buffer 
  */
 {
-	std::basic_string<XMLCh> msg(L"Invalid UTF-16 surrogate detected: ");
-	XMLCh buffer[32];	// Should be big enough
+	DOMString msg(L"Invalid UTF-16 surrogate detected: ");
 	// UTF-16 surrogate
 	int next;
 	int ch = chars[i];
 	if (i+1 >= length) 
 	{
-		msg += _itow(ch, buffer, 16);
-		msg += L" ?";
-		throw SAXException(msg.c_str());
+		msg = append(msg, LongToHexDOMString(ch));
+		throw SAXException(c_wstr(msg));
 	}
 	else 
 	{
 		next = chars[++i];
 		if (!(0xdc00 <= next && next < 0xe000))
 		{
-			msg += _itow(ch, buffer, 16);
-			msg += L" ";
-			msg += _itow( next, buffer, 16);
-			throw SAXException(msg.c_str());
+			msg = append(msg, LongToHexDOMString(ch));
+			msg = append(msg, " ");
+			msg = append(msg, LongToHexDOMString(next));
+		throw SAXException(c_wstr(msg));
 		}
 		next = ((ch-0xd800)<<10)+next-0xdc00+0x00010000;
 	}

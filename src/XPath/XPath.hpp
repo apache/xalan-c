@@ -224,7 +224,7 @@ public:
 	/**
 	 * The match score if no match is made.
 	 */
-	const double					s_MatchScoreNone = -9999999999999;
+	const double					s_MatchScoreNone = -9999999999999.0;
 
 	/**
 	 * The match score if the pattern has the form 

@@ -64,7 +64,7 @@
 
 
 
-#include <include/DOMHelper.hpp>
+#include <Include/DOMHelper.hpp>
 #include <PlatformSupport/DoubleSupport.hpp>
 #include <PlatformSupport/STLHelper.hpp>
 
@@ -92,7 +92,7 @@ const char* const				XPath::PSEUDONAME_COMMENT = "#comment";
 const char* const				XPath::PSEUDONAME_PI = "#pi";
 const char* const				XPath::PSEUDONAME_OTHER = "*";
 
-const double					XPath::s_MatchScoreNone = -9999999999999;
+const double					XPath::s_MatchScoreNone = -9999999999999.0;
 const double					XPath::s_MatchScoreQName = 0.0;
 const double					XPath::s_MatchScoreNSWild = -0.25;
 const double					XPath::s_MatchScoreNodeTest = -0.5;

@@ -74,7 +74,7 @@
 
 
 // XSL4C header files
-#include <include/DOMHelper.hpp>
+#include <Include/DOMHelper.hpp>
 
 
 

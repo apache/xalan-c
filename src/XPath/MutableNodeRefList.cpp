@@ -64,12 +64,12 @@
 
 
 
-#include <dom\DOM_NamedNodeMap.hpp>
-#include <dom\DOM_NodeList.hpp>
+#include <dom/DOM_NamedNodeMap.hpp>
+#include <dom/DOM_NodeList.hpp>
 
 
 
-#include <include/DOMHelper.hpp>
+#include <Include/DOMHelper.hpp>
 
 
 
