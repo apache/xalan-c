@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 2000 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -70,34 +70,33 @@
 
 
 
-class XALAN_TRANSFORMER_EXPORT XercesDOMParsedSourceHelper : public XalanParsedSourceHelper
+XercesDOMParsedSourceHelper::XercesDOMParsedSourceHelper() :
+	m_domSupport(),
+	m_parserLiaison()
 {
-public:
+}
 
-	XercesDOMParsedSourceHelper(const XercesParserLiaison&	theXercesParserLiaison) :
-		m_domSupport(),
-		m_parserLiaison()
-	{
-	}
 
-	virtual DOMSupport&
-	getDOMSupport()
-	{
-		return m_domSupport;
-	}
 
-	virtual XMLParserLiaison&
-	getParserLiaison()
-	{
-		return m_parserLiaison;
-	}
+XercesDOMParsedSourceHelper::~XercesDOMParsedSourceHelper()
+{
+}
 
-private:
 
-	XercesDOMSupport		m_domSupport;
 
-	XercesParserLiaison		m_parserLiaison;
-};
+DOMSupport&
+XercesDOMParsedSourceHelper::getDOMSupport()
+{
+	return m_domSupport;
+}
+
+
+
+XMLParserLiaison&
+XercesDOMParsedSourceHelper::getParserLiaison()
+{
+	return m_parserLiaison;
+}
 
 
 
@@ -155,7 +154,7 @@ XercesDOMParsedSource::getDocument() const
 XalanParsedSourceHelper*
 XercesDOMParsedSource::createHelper() const
 {
-	return new XercesDOMParsedSourceHelper(m_parserLiaison);
+	return new XercesDOMParsedSourceHelper;
 }
 
 

@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -54,8 +54,8 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-#if !defined(XERCESDOMWRAPPERPARSEDSOURCE_HEADER_GUARD)
-#define XERCESDOMWRAPPERPARSEDSOURCE_HEADER_GUARD
+#if !defined(XALANSOURCETREEWRAPPERPARSEDSOURCE_HEADER_GUARD)
+#define XALANSOURCETREEWRAPPERPARSEDSOURCE_HEADER_GUARD
 
 
 
@@ -68,9 +68,9 @@
 
 
 
-class DOM_Document;
-class XercesParserLiaison;
-class XercesDOMSupport;
+class XalanSourceTreeDOMSupport;
+class XalanSourceTreeDocument;
+class XalanSourceTreeParserLiaison;
 
 
 
@@ -78,18 +78,18 @@ class XercesDOMSupport;
  * This is designed to allow a XalanTranfomer object to wrap a parsed
  * Xerces document. 
  */
-class XALAN_TRANSFORMER_EXPORT XercesDOMWrapperParsedSource : public XalanParsedSource
+class XALAN_TRANSFORMER_EXPORT XalanSourceTreeWrapperParsedSource : public XalanParsedSource
 {
 public:
 
-	XercesDOMWrapperParsedSource(
-			const DOM_Document&		theDocument,
-			XercesParserLiaison&	theParserLiaison,
-			XercesDOMSupport&		theDOMSupport,
-			const XalanDOMString&	theURI = XalanDOMString());
+	XalanSourceTreeWrapperParsedSource(
+			XalanSourceTreeDocument*		theDocument,
+			XalanSourceTreeParserLiaison&	theParserLiaison,
+			XalanSourceTreeDOMSupport&		theDOMSupport,
+			const XalanDOMString&			theURI = XalanDOMString());
 
 	virtual
-	~XercesDOMWrapperParsedSource();
+	~XalanSourceTreeWrapperParsedSource();
 
 	virtual XalanDocument*
 	getDocument() const;
@@ -102,15 +102,15 @@ public:
 
 private:
 
-	XercesParserLiaison&	m_parserLiaison;
+	XalanSourceTreeParserLiaison&	m_parserLiaison;
 
-	XercesDOMSupport&		m_domSupport;
+	XalanSourceTreeDOMSupport&		m_domSupport;
 
-	XalanDocument* const	m_parsedSource;
+	XalanSourceTreeDocument* const	m_parsedSource;
 
-	const XalanDOMString	m_uri;
+	const XalanDOMString			m_uri;
 };
 
 
 
-#endif	// XERCESDOMWRAPPERPARSEDSOURCE_HEADER_GUARD
+#endif	// XALANSOURCETREEWRAPPERPARSEDSOURCE_HEADER_GUARD

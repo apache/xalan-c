@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 2000 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -64,8 +64,8 @@
 
 
 
-#include <XalanSourceTree/XalanSourceTreeParserLiaison.hpp>
-#include <XalanSourceTree/XalanSourceTreeDOMSupport.hpp>
+#include <XercesParserLiaison/XercesParserLiaison.hpp>
+#include <XercesParserLiaison/XercesDOMSupport.hpp>
 
 
 
@@ -76,6 +76,29 @@
 class EntityResolver;
 class ErrorHandler;
 class InputSource;
+
+
+
+class XALAN_TRANSFORMER_EXPORT XercesDOMParsedSourceHelper : public XalanParsedSourceHelper
+{
+public:
+
+	XercesDOMParsedSourceHelper();
+
+	~XercesDOMParsedSourceHelper();
+
+	virtual DOMSupport&
+	getDOMSupport();
+
+	virtual XMLParserLiaison&
+	getParserLiaison();
+
+private:
+
+	XercesDOMSupport		m_domSupport;
+
+	XercesParserLiaison		m_parserLiaison;
+};
 
 
 

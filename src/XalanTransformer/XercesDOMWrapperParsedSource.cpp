@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 2000 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -62,40 +62,17 @@
 
 
 
+#include <PlatformSupport/URISupport.hpp>
+
+
+
+#include <XercesParserLiaison/XercesParserLiaison.hpp>
+#include <XercesParserLiaison/XercesDOMSupport.hpp>
 #include <XercesParserLiaison/XercesDocumentBridge.hpp>
 
 
 
-class XALAN_TRANSFORMER_EXPORT XercesDOMWrapperParsedSourceHelper : public XalanParsedSourceHelper
-{
-public:
-
-	XercesDOMWrapperParsedSourceHelper(
-			XercesDOMSupport&		theDOMSupport,
-			XercesParserLiaison&	theParserLiaison) :
-		m_domSupport(theDOMSupport),
-		m_parserLiaison(theParserLiaison)
-	{
-	}
-
-	virtual DOMSupport&
-	getDOMSupport()
-	{
-		return m_domSupport;
-	}
-
-	virtual XMLParserLiaison&
-	getParserLiaison()
-	{
-		return m_parserLiaison;
-	}
-
-private:
-
-	XercesDOMSupport&		m_domSupport;
-
-	XercesParserLiaison&	m_parserLiaison;
-};
+#include "XercesDOMParsedSource.hpp"
 
 
 
@@ -108,7 +85,7 @@ XercesDOMWrapperParsedSource::XercesDOMWrapperParsedSource(
 	m_parserLiaison(theParserLiaison),
 	m_domSupport(theDOMSupport),
 	m_parsedSource(theParserLiaison.createDocument(theDocument, true, true)),
-	m_uri(theURI)
+	m_uri(URISupport::NormalizeURIText(theURI))
 {
 	assert(m_parsedSource != 0);
 }
@@ -133,7 +110,7 @@ XercesDOMWrapperParsedSource::getDocument() const
 XalanParsedSourceHelper*
 XercesDOMWrapperParsedSource::createHelper() const
 {
-	return new XercesDOMWrapperParsedSourceHelper(m_domSupport, m_parserLiaison);
+	return new XercesDOMParsedSourceHelper;
 }
 
 

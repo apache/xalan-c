@@ -64,8 +64,8 @@
 
 
 
-#include <XalanSourceTree/XalanSourceTreeParserLiaison.hpp>
 #include <XalanSourceTree/XalanSourceTreeDOMSupport.hpp>
+#include <XalanSourceTree/XalanSourceTreeParserLiaison.hpp>
 
 
 
@@ -94,11 +94,6 @@ public:
 
 	// These interfaces are inherited from DOMSupport...
 
-	virtual const XalanDOMString*
-	getNamespaceForPrefix(
-			const XalanDOMString&	prefix, 
-			const XalanElement&		namespaceContext) const;
-
 	virtual const XalanDOMString&
 	getUnparsedEntityURI(
 			const XalanDOMString&	theName,
@@ -111,6 +106,14 @@ public:
 
 private:
 
+	// Not implemented...
+	XalanDefaultParsedSourceDOMSupport(const XalanDefaultParsedSourceDOMSupport&);
+
+	XalanDefaultParsedSourceDOMSupport&
+	operator=(const XalanDefaultParsedSourceDOMSupport&);
+
+
+	// Data members...
 	const XalanSourceTreeDOMSupport&	m_domSupport;
 };
 
@@ -123,6 +126,8 @@ public:
 	XalanDefaultParsedSourceHelper(
 			const XalanSourceTreeDOMSupport&		theSourceDOMSupport,
 			const XalanSourceTreeParserLiaison&		theSourceParserLiaison);
+
+	~XalanDefaultParsedSourceHelper();
 
 	virtual DOMSupport&
 	getDOMSupport();

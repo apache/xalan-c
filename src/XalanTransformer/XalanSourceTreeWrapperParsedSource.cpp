@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -54,63 +54,64 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-#if !defined(XERCESDOMWRAPPERPARSEDSOURCE_HEADER_GUARD)
-#define XERCESDOMWRAPPERPARSEDSOURCE_HEADER_GUARD
+#include "XalanSourceTreeWrapperParsedSource.hpp"
 
 
 
-// Base include file.  Must be first.
-#include <XalanTransformer/XalanTransformerDefinitions.hpp>
+#include <PlatformSupport/URISupport.hpp>
 
 
 
-#include <XalanTransformer/XalanParsedSource.hpp>
+#include <XalanSourceTree/XalanSourceTreeParserLiaison.hpp>
+#include <XalanSourceTree/XalanSourceTreeDOMSupport.hpp>
+#include <XalanSourceTree/XalanSourceTreeDocument.hpp>
 
 
 
-class DOM_Document;
-class XercesParserLiaison;
-class XercesDOMSupport;
+#include "XalanDefaultParsedSource.hpp"
 
 
 
-/**
- * This is designed to allow a XalanTranfomer object to wrap a parsed
- * Xerces document. 
- */
-class XALAN_TRANSFORMER_EXPORT XercesDOMWrapperParsedSource : public XalanParsedSource
+XalanSourceTreeWrapperParsedSource::XalanSourceTreeWrapperParsedSource(
+			XalanSourceTreeDocument*		theDocument,
+			XalanSourceTreeParserLiaison&	theParserLiaison,
+			XalanSourceTreeDOMSupport&		theDOMSupport,
+			const XalanDOMString&			theURI) :
+	XalanParsedSource(),
+	m_parserLiaison(theParserLiaison),
+	m_domSupport(theDOMSupport),
+	m_parsedSource(theDocument),
+	m_uri(URISupport::NormalizeURIText(theURI))
 {
-public:
-
-	XercesDOMWrapperParsedSource(
-			const DOM_Document&		theDocument,
-			XercesParserLiaison&	theParserLiaison,
-			XercesDOMSupport&		theDOMSupport,
-			const XalanDOMString&	theURI = XalanDOMString());
-
-	virtual
-	~XercesDOMWrapperParsedSource();
-
-	virtual XalanDocument*
-	getDocument() const;
-
-	virtual XalanParsedSourceHelper*
-	createHelper() const;
-
-	virtual const XalanDOMString&
-	getURI() const;
-
-private:
-
-	XercesParserLiaison&	m_parserLiaison;
-
-	XercesDOMSupport&		m_domSupport;
-
-	XalanDocument* const	m_parsedSource;
-
-	const XalanDOMString	m_uri;
-};
+	assert(m_parsedSource != 0);
+}
 
 
 
-#endif	// XERCESDOMWRAPPERPARSEDSOURCE_HEADER_GUARD
+XalanSourceTreeWrapperParsedSource::~XalanSourceTreeWrapperParsedSource()
+{
+}
+
+
+
+XalanDocument*
+XalanSourceTreeWrapperParsedSource::getDocument() const
+{
+	return m_parsedSource;
+}
+
+
+
+XalanParsedSourceHelper*
+XalanSourceTreeWrapperParsedSource::createHelper() const
+{
+	return new XalanDefaultParsedSourceHelper(m_domSupport, m_parserLiaison);
+}
+
+
+
+const XalanDOMString&
+XalanSourceTreeWrapperParsedSource::getURI() const
+{
+	return m_uri;
+}

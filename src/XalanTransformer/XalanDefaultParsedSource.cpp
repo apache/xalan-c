@@ -75,7 +75,6 @@
 
 
 #include <XalanSourceTree/XalanSourceTreeDocument.hpp>
-#include <XalanSourceTree/XalanSourceTreeDOMSupport.hpp>
 
 
 
@@ -100,23 +99,12 @@ XalanDefaultParsedSourceDOMSupport::reset()
 
 
 
-const XalanDOMString*
-XalanDefaultParsedSourceDOMSupport::getNamespaceForPrefix(
-			const XalanDOMString&	prefix, 
-			const XalanElement&		namespaceContext) const
-{
-	return DOMServices::getNamespaceForPrefix(
-					prefix, 
-					namespaceContext);
-}
-
-
-
 const XalanDOMString&
 XalanDefaultParsedSourceDOMSupport::getUnparsedEntityURI(
 			const XalanDOMString&	theName,
 			const XalanDocument&	theDocument) const
 {
+	// Check the wrapped XalanSourceTreeDOMSupport instance...
 	const XalanDOMString&	theURI =
 			m_domSupport.getUnparsedEntityURI(
 					theName,
@@ -128,6 +116,7 @@ XalanDefaultParsedSourceDOMSupport::getUnparsedEntityURI(
 	}
 	else
 	{
+		// Chain up to our parent...
 		return XalanSourceTreeDOMSupport::getUnparsedEntityURI(
 					theName,
 					theDocument);
@@ -155,6 +144,12 @@ XalanDefaultParsedSourceHelper::XalanDefaultParsedSourceHelper(
 	m_parserLiaison()
 {
 	m_domSupport.setParserLiaison(&m_parserLiaison);
+}
+
+
+
+XalanDefaultParsedSourceHelper::~XalanDefaultParsedSourceHelper()
+{
 }
 
 
