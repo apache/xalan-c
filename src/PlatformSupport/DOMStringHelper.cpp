@@ -948,57 +948,7 @@ WideStringToUnsignedLong(const XalanDOMChar*	theString)
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(double)
 WideStringToDouble(const XalanDOMChar*	theString)
 {
-#if 1
 	return DoubleSupport::toDouble(theString);
-#else
-	double	theResult = DoubleSupport::getNaN();
-
-	// This extra test is here because of all the difficulties
-	// with Xerces DOMString implementation.  It's just
-	// easier this way...
-	if (theString != 0 && length(theString) > 0)
-	{
-		typedef vector<char>	VectorType;
-
-		VectorType				theVector;
-
-		CopyWideStringToVector(c_wstr(trim(theString)),
-							   theVector);
-
-		if (theVector.size() > 0)
-		{
-			// $$$ ToDo: We really need better validation here.  And better
-			// localization as well.
-			bool	fError = false;
-
-			VectorType::const_iterator	begin = theVector.begin();
-			VectorType::const_iterator	i = begin;
-			VectorType::const_iterator	j = theVector.end();
-
-			j--;
-
-			do
-			{
-				if ((*i < '0' || *i > '9') && !(*i == '.' || *i == 'e' || *i == 'E' || *i == 'f' || *i == 'F' || (*i == '-' && i == begin)))
-				{
-					fError = true;
-				}
-				else
-				{
-					i++;
-				}
-			}
-			while(i != j && fError == false);
-
-			if (fError == false)
-			{
-				theResult = atof(theVector.begin());
-			}
-		}
-	}
-
-	return theResult;
-#endif
 }
 
 
@@ -1009,7 +959,7 @@ trim(const XalanDOMString&	theString)
 	if (isEmpty(theString))
 		return theString;
 
-	const int	strLen = theString.length();
+	const int	strLen = length(theString);
 	
 	// index of first non-whitespace character
 	int leadingSpace = 0;
