@@ -706,8 +706,35 @@ compare(
 
 
 
-XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(int)
-compare(
+struct WideStringLexicalCompare
+{
+	int
+	operator()(
+			const XalanDOMChar*		theLHS,
+			const XalanDOMChar*		theRHS) const
+	{
+		return compare(theLHS, theRHS);
+	}
+};
+
+
+
+struct WideStringCollationCompare
+{
+	int
+	operator()(
+			const XalanDOMChar*		theLHS,
+			const XalanDOMChar*		theRHS) const
+	{
+		return collationCompare(theLHS, theRHS);
+	}
+};
+
+
+
+template<class CompareFunctionType>
+DOMStringCompare(
+			CompareFunctionType		theCompareFunction,
 			const XalanDOMString&	theLHS,
 			const XalanDOMString&	theRHS)
 {
@@ -741,10 +768,33 @@ compare(
 	{
 		assert(c_wstr(theLHS) != 0 && c_wstr(theRHS) != 0);
 
-		return compare(c_wstr(theLHS), c_wstr(theRHS));
+		return theCompareFunction(c_wstr(theLHS), c_wstr(theRHS));
 	}
 }
 
+
+
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(int)
+compare(
+			const XalanDOMString&	theLHS,
+			const XalanDOMString&	theRHS)
+{
+	return DOMStringCompare(WideStringLexicalCompare(),
+							theLHS,
+							theRHS);
+}
+
+
+
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(int)
+collationCompare(
+			const XalanDOMString&	theLHS,
+			const XalanDOMString&	theRHS)
+{
+	return DOMStringCompare(WideStringCollationCompare(),
+							theLHS,
+							theRHS);
+}
 
 
 

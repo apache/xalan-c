@@ -810,18 +810,18 @@ operator!=(
 
 
 
+#if defined(XALAN_FULL_WCHAR_SUPPORT)
+
 /**
- * Compare the contents of two strings for equality
+ * Compare the contents of two strings.
  * 
  * @param theLHS first string to compare
  * @param theRHS second string to compare
- * @return Returns 0 for equal strings, less than 0 if theLHS is lexically
- * less than theRHS, or greater than 0 if theRHS is lexically greater than
- * theLHS.
+ * @return Returns 0 for equal strings, less than 0 if theLHS is less
+ * than theRHS, or greater than 0 if theRHS is greater than theLHS.
  * @see operator<
+ * @see collationCompare
  */
-#if defined(XALAN_FULL_WCHAR_SUPPORT)
-
 inline int
 compare(
 			const XalanDOMChar*		theLHS,
@@ -841,18 +841,71 @@ compare(
 
 
 
+#if defined(XALAN_FULL_WCHAR_SUPPORT)
+
 /**
- * Compare the contents of two strings for equality
+ * Compare the contents of two strings using the
+ * the collation settings of the current code page.
  * 
  * @param theLHS first string to compare
  * @param theRHS second string to compare
- * @return Returns 0 for equal strings, less than 0 if theLHS is lexically
- * less than theRHS, or greater than 0 if theRHS is lexically greater than
- * theLHS.
- * @see operator<
+ * @return Returns 0 for equal strings, less than 0 if theLHS is less
+ * than theRHS, or greater than 0 if theRHS is greater than theLHS.
+ * @see operator<()
+ * @see compare()
+ */
+inline int
+collationCompare(
+			const XalanDOMChar*		theLHS,
+			const XalanDOMChar*		theRHS)
+{
+	return wcscoll(theLHS, theRHS);
+}
+
+#else
+
+// Can't really do it, so just call compare...
+inline int
+collationCompare(
+			const XalanDOMChar*		theLHS,
+			const XalanDOMChar*		theRHS)
+{
+	return compare(theLHS, theRHS);
+}
+
+#endif
+
+
+
+/**
+ * Compare the contents of two strings.
+ * 
+ * @param theLHS first string to compare
+ * @param theRHS second string to compare
+ * @return Returns 0 for equal strings, less than 0 if theLHS is less
+ * than theRHS, or greater than 0 if theRHS is greater than theLHS.
+ * @see operator<()
+ * @see collationCompare()
  */
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(int)
 compare(
+			const XalanDOMString&	theLHS,
+			const XalanDOMString&	theRHS);
+
+
+/**
+ * Compare the contents of two strings using the
+ * the collation settings of the current code page.
+ * 
+ * @param theLHS first string to compare
+ * @param theRHS second string to compare
+ * @return Returns 0 for equal strings, less than 0 if theLHS is less
+ * than theRHS, or greater than 0 if theRHS is greater than theLHS.
+ * @see operator<()
+ * @see compare()
+ */
+XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(int)
+collationCompare(
 			const XalanDOMString&	theLHS,
 			const XalanDOMString&	theRHS);
 
