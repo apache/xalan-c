@@ -98,10 +98,10 @@
      <ul>
       <li><link idref="extensionslib">Introduction of a library of extension functions</link></li>
       <li>Support for pre-parsed source documents and pre-compiled stylesheets in 
-      <jump href="apiDocs/class_xalantransformer.html">XalanTransformer</jump> and the C API.</li>
-      <li>Support for stylesheet params in <jump href="apiDocs/class_xalantransformer.html">XalanTransformer</jump> 
+      <jump href="apidocs/classXalanTransformer.html">XalanTransformer</jump> and the C API.</li>
+      <li>Support for stylesheet params in <jump href="apidocs/classXalanTransformer.html">XalanTransformer</jump> 
       and the C API</li>
-      <li>Support for extension functions in <jump href="apiDocs/class_xalantransformer.html">XalanTransformer</jump></li>
+      <li>Support for extension functions in <jump href="apidocs/classXalanTransformer.html">XalanTransformer</jump></li>
       <li>Performance enhancements</li>
       </ul>
    </s3>  
