@@ -1009,13 +1009,12 @@ XPath::Union(
 	typedef XPathExecutionContext::BorrowReturnMutableNodeRefList	BorrowReturnMutableNodeRefList;
 
 	BorrowReturnMutableNodeRefList	resultNodeList(executionContext);
-	
 
 	while(m_expression.m_opMap[opPos] != XPathExpression::eENDOP)
 	{
 		const int	nextOpPos = m_expression.getNextOpCodePosition(opPos);
 
-		const XObjectPtr	expr = executeMore(context, opPos, executionContext);
+		const XObjectPtr	expr(executeMore(context, opPos, executionContext));
 
 		const NodeRefListBase&	nl =
 				expr->nodeset();
@@ -1065,7 +1064,6 @@ XPath::variable(
 
 	const XObject&	varName = m_expression.m_tokenQueue[m_expression.m_opMap[opPos + 3]];
 
-	// $$$ ToDo: I don't this will be parsed right in the first place...
 	const QNameByReference	qname(ns.str(),
 								  varName.str());	
 

@@ -118,7 +118,8 @@ public:
 		eDefaultXNodeSetBlockSize = 10,
 		eDefaultXResultTreeFragBlockSize = 10,
 		eXNumberCacheMax = 40,
-		eXNodeSetCacheMax = 40
+		eXNodeSetCacheMax = 40,
+		eXResultTreeFragCacheMax = 40
 	};
 	
 	/**
@@ -192,13 +193,15 @@ public:
 	createSpan(BorrowReturnMutableNodeRefList&	theValue);
 
 #if defined(XALAN_NO_NAMESPACES)
-	typedef vector<XObject*>		XObjectCollectionType;
-	typedef vector<XNumber*>		XNumberCacheType;
-	typedef vector<XNodeSet*>		XNodeSetCacheType;
+	typedef vector<XObject*>			XObjectCollectionType;
+	typedef vector<XNumber*>			XNumberCacheType;
+	typedef vector<XNodeSet*>			XNodeSetCacheType;
+	typedef vector<XResultTreeFrag*>	XResultTreeFragCacheType;
 #else
-	typedef std::vector<XObject*>	XObjectCollectionType;
-	typedef std::vector<XNumber*>	XNumberCacheType;
-	typedef std::vector<XNodeSet*>	XNodeSetCacheType;
+	typedef std::vector<XObject*>			XObjectCollectionType;
+	typedef std::vector<XNumber*>			XNumberCacheType;
+	typedef std::vector<XNodeSet*>			XNodeSetCacheType;
+	typedef std::vector<XResultTreeFrag*>	XResultTreeFragCacheType;
 #endif
 
 protected:
@@ -247,6 +250,8 @@ private:
 	XNumberCacheType				m_xnumberCache;
 
 	XNodeSetCacheType				m_xnodesetCache;
+
+	XResultTreeFragCacheType		m_xresultTreeFragCache;
 
 	const XalanAutoPtr<XNull>		m_XNull;
 

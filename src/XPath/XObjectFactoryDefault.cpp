@@ -96,6 +96,7 @@ XObjectFactoryDefault::XObjectFactoryDefault(
 	m_xobjects(),
 	m_xnumberCache(),
 	m_xnodesetCache(),
+	m_xresultTreeFragCache(),
 	m_XNull(new XNull),
 	m_xbooleanFalse(new XBoolean(false)),
 	m_xbooleanTrue(new XBoolean(true))
@@ -263,7 +264,16 @@ XObjectFactoryDefault::doReturnObject(
 				static_cast<XResultTreeFrag*>(theXObject);
 #endif
 
-			bStatus = m_xresultTreeFragAllocator.destroy(theXResultTreeFrag);
+			if (m_xresultTreeFragCache.size() < eXResultTreeFragCacheMax)
+			{
+				m_xresultTreeFragCache.push_back(theXResultTreeFrag);
+
+				bStatus = true;
+			}
+			else
+			{
+				bStatus = m_xresultTreeFragAllocator.destroy(theXResultTreeFrag);
+			}
 		}
 		break;
 
@@ -503,11 +513,26 @@ XObjectFactoryDefault::createString(GetAndReleaseCachedString&	theValue)
 const XObjectPtr
 XObjectFactoryDefault::createResultTreeFrag(BorrowReturnResultTreeFrag&		theValue)
 {
-	XResultTreeFrag* const	theResultTreeFrag =  m_xresultTreeFragAllocator.create(theValue);
+	if (m_xresultTreeFragCache.size() > 0)
+	{
+		XResultTreeFrag* const	theResultTreeFrag = m_xresultTreeFragCache.back();
 
-	theResultTreeFrag->setFactory(this);
+		m_xresultTreeFragCache.pop_back();
 
-	return XObjectPtr(theResultTreeFrag);
+		theResultTreeFrag->set(theValue);
+
+		return XObjectPtr(theResultTreeFrag);
+	}
+	else
+	{
+		m_xresultTreeFragCache.reserve(eXResultTreeFragCacheMax);
+
+		XResultTreeFrag* const	theResultTreeFrag =  m_xresultTreeFragAllocator.create(theValue);
+
+		theResultTreeFrag->setFactory(this);
+
+		return XObjectPtr(theResultTreeFrag);
+	}
 }
 
 

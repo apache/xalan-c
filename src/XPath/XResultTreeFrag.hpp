@@ -171,6 +171,20 @@ public:
 	unsigned int
 	indexOf(const XalanNode*	theNode) const;
 
+	/**
+	 * Release the ResultTreeFrag held by the instance.
+	 */
+	void
+	release();
+
+	/**
+	 * Change the value of an XResultTreeFrag
+	 *
+	 * @param theValue The new value.
+	 */
+	void
+	set(BorrowReturnResultTreeFrag&	theValue);
+
 private:
 
 	class  NodeRefListBaseProxy : public NodeRefListBase

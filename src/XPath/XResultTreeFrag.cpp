@@ -339,3 +339,25 @@ XResultTreeFrag::NodeRefListBaseProxy::indexOf(const XalanNode*	theNode) const
 {
 	return m_xresultTreeFrag.indexOf(theNode);
 }
+
+
+
+void
+XResultTreeFrag::release()
+{
+	m_value.release();
+
+	clear(m_cachedStringValue);
+
+	m_cachedNumberValue = 0.0;
+}
+
+
+
+void
+XResultTreeFrag::set(BorrowReturnResultTreeFrag&	theValue)
+{
+	release();
+
+	m_value = theValue;
+}

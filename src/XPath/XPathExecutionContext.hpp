@@ -501,7 +501,7 @@ public:
 	public:
 
 		BorrowReturnResultTreeFrag(XPathExecutionContext&	executionContext) :
-			m_xpathExecutionContext(executionContext),
+			m_xpathExecutionContext(&executionContext),
 			m_resultTreeFrag(executionContext.borrowResultTreeFrag())
 		{
 			assert(m_resultTreeFrag != 0);
@@ -521,11 +521,26 @@ public:
 		{
 			if (m_resultTreeFrag != 0)
 			{
-				if (m_xpathExecutionContext.returnResultTreeFrag(m_resultTreeFrag) == false)
+				if (m_xpathExecutionContext->returnResultTreeFrag(m_resultTreeFrag) == false)
 				{
 					delete m_resultTreeFrag;
 				}
 			}
+		}
+
+		// N.B. Non-const assignment operator semantics.
+		BorrowReturnResultTreeFrag&
+		operator=(BorrowReturnResultTreeFrag&	theRHS)
+		{
+			release();
+
+			m_xpathExecutionContext = theRHS.m_xpathExecutionContext;
+
+			m_resultTreeFrag = theRHS.m_resultTreeFrag;
+
+			theRHS.m_resultTreeFrag = 0;
+
+			return *this;
 		}
 
 		ResultTreeFragBase&
@@ -546,11 +561,26 @@ public:
 			return get();
 		}
 
+		void
+		release()
+		{
+			assert(m_xpathExecutionContext != 0);
+
+			if (m_resultTreeFrag != 0)
+			{
+				m_xpathExecutionContext->returnResultTreeFrag(m_resultTreeFrag);
+
+				m_resultTreeFrag = 0;
+			}
+		}
+
 		BorrowReturnResultTreeFrag
 		clone(bool	deep = false) const
 		{
+			assert(m_xpathExecutionContext != 0);
+
 			BorrowReturnResultTreeFrag	theResult(
-						m_xpathExecutionContext,
+						*m_xpathExecutionContext,
 						m_resultTreeFrag->clone(deep));
 
 			return theResult;
@@ -561,14 +591,14 @@ public:
 		BorrowReturnResultTreeFrag(
 				XPathExecutionContext&	executionContext,
 				ResultTreeFragBase*		resultTreeFrag) :
-			m_xpathExecutionContext(executionContext),
+			m_xpathExecutionContext(&executionContext),
 			m_resultTreeFrag(resultTreeFrag)
 		{
 			assert(m_resultTreeFrag != 0);
 		}
 
 		// Data members...
-		XPathExecutionContext&	m_xpathExecutionContext;
+		XPathExecutionContext*	m_xpathExecutionContext;
 
 		ResultTreeFragBase*		m_resultTreeFrag;
 	};
