@@ -12,7 +12,7 @@ Package=<5>
 Package=<4>
 {{{
     Begin Project Dependency
-    Project_Dep_Name Localization
+    Project_Dep_Name LocalizationWithICU
     End Project Dependency
 }}}
 
@@ -27,7 +27,7 @@ Package=<5>
 Package=<4>
 {{{
     Begin Project Dependency
-    Project_Dep_Name AllInOne
+    Project_Dep_Name AllInOneWithICU
     End Project Dependency
 }}}
 
@@ -42,7 +42,7 @@ Package=<5>
 Package=<4>
 {{{
     Begin Project Dependency
-    Project_Dep_Name AllInOne
+    Project_Dep_Name AllInOneWithICU
     End Project Dependency
 }}}
 
@@ -57,7 +57,7 @@ Package=<5>
 Package=<4>
 {{{
     Begin Project Dependency
-    Project_Dep_Name AllInOne
+    Project_Dep_Name AllInOneWithICU
     End Project Dependency
 }}}
 
@@ -72,7 +72,7 @@ Package=<5>
 Package=<4>
 {{{
     Begin Project Dependency
-    Project_Dep_Name AllInOne
+    Project_Dep_Name AllInOneWithICU
     End Project Dependency
 }}}
 
@@ -90,7 +90,7 @@ Package=<4>
     Project_Dep_Name Harness
     End Project Dependency
     Begin Project Dependency
-    Project_Dep_Name AllInOne
+    Project_Dep_Name AllInOneWithICU
     End Project Dependency
 }}}
 
@@ -105,7 +105,7 @@ Package=<5>
 Package=<4>
 {{{
     Begin Project Dependency
-    Project_Dep_Name AllInOne
+    Project_Dep_Name AllInOneWithICU
     End Project Dependency
 }}}
 
@@ -120,13 +120,13 @@ Package=<5>
 Package=<4>
 {{{
     Begin Project Dependency
-    Project_Dep_Name AllInOne
+    Project_Dep_Name AllInOneWithICU
     End Project Dependency
 }}}
 
 ###############################################################################
 
-Project: "Localization"=".\UTILS\Localization\Localization.dsp" - Package Owner=<4>
+Project: "LocalizationWithICU"=".\UTILS\Localization\LocalizationWithICU.dsp" - Package Owner=<4>
 
 Package=<5>
 {{{
@@ -150,7 +150,7 @@ Package=<4>
     Project_Dep_Name Harness
     End Project Dependency
     Begin Project Dependency
-    Project_Dep_Name AllInOne
+    Project_Dep_Name AllInOneWithICU
     End Project Dependency
 }}}
 
@@ -168,7 +168,7 @@ Package=<4>
     Project_Dep_Name Harness
     End Project Dependency
     Begin Project Dependency
-    Project_Dep_Name AllInOne
+    Project_Dep_Name AllInOneWithICU
     End Project Dependency
 }}}
 
@@ -183,7 +183,7 @@ Package=<5>
 Package=<4>
 {{{
     Begin Project Dependency
-    Project_Dep_Name AllInOne
+    Project_Dep_Name AllInOneWithICU
     End Project Dependency
 }}}
 
@@ -201,7 +201,7 @@ Package=<4>
     Project_Dep_Name Harness
     End Project Dependency
     Begin Project Dependency
-    Project_Dep_Name AllInOne
+    Project_Dep_Name AllInOneWithICU
     End Project Dependency
 }}}
 
@@ -216,7 +216,7 @@ Package=<5>
 Package=<4>
 {{{
     Begin Project Dependency
-    Project_Dep_Name AllInOne
+    Project_Dep_Name AllInOneWithICU
     End Project Dependency
 }}}
 
@@ -231,7 +231,7 @@ Package=<5>
 Package=<4>
 {{{
     Begin Project Dependency
-    Project_Dep_Name AllInOne
+    Project_Dep_Name AllInOneWithICU
     End Project Dependency
 }}}
 
@@ -246,7 +246,7 @@ Package=<5>
 Package=<4>
 {{{
     Begin Project Dependency
-    Project_Dep_Name AllInOne
+    Project_Dep_Name AllInOneWithICU
     End Project Dependency
 }}}
 
@@ -261,7 +261,7 @@ Package=<5>
 Package=<4>
 {{{
     Begin Project Dependency
-    Project_Dep_Name AllInOne
+    Project_Dep_Name AllInOneWithICU
     End Project Dependency
 }}}
 
@@ -276,7 +276,7 @@ Package=<5>
 Package=<4>
 {{{
     Begin Project Dependency
-    Project_Dep_Name AllInOne
+    Project_Dep_Name AllInOneWithICU
     End Project Dependency
 }}}
 
@@ -291,7 +291,7 @@ Package=<5>
 Package=<4>
 {{{
     Begin Project Dependency
-    Project_Dep_Name AllInOne
+    Project_Dep_Name AllInOneWithICU
     End Project Dependency
 }}}
 
@@ -306,7 +306,7 @@ Package=<5>
 Package=<4>
 {{{
     Begin Project Dependency
-    Project_Dep_Name AllInOne
+    Project_Dep_Name AllInOneWithICU
     End Project Dependency
 }}}
 
@@ -321,7 +321,7 @@ Package=<5>
 Package=<4>
 {{{
     Begin Project Dependency
-    Project_Dep_Name AllInOne
+    Project_Dep_Name AllInOneWithICU
     End Project Dependency
 }}}
 
@@ -336,7 +336,7 @@ Package=<5>
 Package=<4>
 {{{
     Begin Project Dependency
-    Project_Dep_Name AllInOne
+    Project_Dep_Name AllInOneWithICU
     End Project Dependency
 }}}
 
@@ -351,7 +351,7 @@ Package=<5>
 Package=<4>
 {{{
     Begin Project Dependency
-    Project_Dep_Name AllInOne
+    Project_Dep_Name AllInOneWithICU
     End Project Dependency
 }}}
 
@@ -366,7 +366,7 @@ Package=<5>
 Package=<4>
 {{{
     Begin Project Dependency
-    Project_Dep_Name AllInOne
+    Project_Dep_Name AllInOneWithICU
     End Project Dependency
 }}}
 
@@ -381,7 +381,7 @@ Package=<5>
 Package=<4>
 {{{
     Begin Project Dependency
-    Project_Dep_Name AllInOne
+    Project_Dep_Name AllInOneWithICU
     End Project Dependency
 }}}
 
@@ -396,7 +396,7 @@ Package=<5>
 Package=<4>
 {{{
     Begin Project Dependency
-    Project_Dep_Name AllInOne
+    Project_Dep_Name AllInOneWithICU
     End Project Dependency
 }}}
 
@@ -411,7 +411,7 @@ Package=<5>
 Package=<4>
 {{{
     Begin Project Dependency
-    Project_Dep_Name AllInOne
+    Project_Dep_Name AllInOneWithICU
     End Project Dependency
 }}}
 
@@ -426,7 +426,7 @@ Package=<5>
 Package=<4>
 {{{
     Begin Project Dependency
-    Project_Dep_Name AllInOne
+    Project_Dep_Name AllInOneWithICU
     End Project Dependency
 }}}
 
@@ -441,7 +441,7 @@ Package=<5>
 Package=<4>
 {{{
     Begin Project Dependency
-    Project_Dep_Name AllInOne
+    Project_Dep_Name AllInOneWithICU
     End Project Dependency
 }}}
 
@@ -456,7 +456,7 @@ Package=<5>
 Package=<4>
 {{{
     Begin Project Dependency
-    Project_Dep_Name AllInOne
+    Project_Dep_Name AllInOneWithICU
     End Project Dependency
 }}}
 
@@ -474,7 +474,7 @@ Package=<4>
     Project_Dep_Name Harness
     End Project Dependency
     Begin Project Dependency
-    Project_Dep_Name AllInOne
+    Project_Dep_Name AllInOneWithICU
     End Project Dependency
 }}}
 
@@ -492,7 +492,7 @@ Package=<4>
     Project_Dep_Name Harness
     End Project Dependency
     Begin Project Dependency
-    Project_Dep_Name AllInOne
+    Project_Dep_Name AllInOneWithICU
     End Project Dependency
 }}}
 
@@ -510,7 +510,7 @@ Package=<4>
     Project_Dep_Name Harness
     End Project Dependency
     Begin Project Dependency
-    Project_Dep_Name AllInOne
+    Project_Dep_Name AllInOneWithICU
     End Project Dependency
 }}}
 
@@ -528,7 +528,7 @@ Package=<4>
     Project_Dep_Name Harness
     End Project Dependency
     Begin Project Dependency
-    Project_Dep_Name AllInOne
+    Project_Dep_Name AllInOneWithICU
     End Project Dependency
 }}}
 
@@ -546,7 +546,7 @@ Package=<4>
     Project_Dep_Name Harness
     End Project Dependency
     Begin Project Dependency
-    Project_Dep_Name AllInOne
+    Project_Dep_Name AllInOneWithICU
     End Project Dependency
 }}}
 
@@ -564,7 +564,7 @@ Package=<4>
     Project_Dep_Name Harness
     End Project Dependency
     Begin Project Dependency
-    Project_Dep_Name AllInOne
+    Project_Dep_Name AllInOneWithICU
     End Project Dependency
 }}}
 
