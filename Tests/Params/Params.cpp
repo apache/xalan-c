@@ -340,7 +340,7 @@ main(
 		logFile.logTestFileClose("Param Testing: ", "Done");
 		logFile.close();
 
-		futil.analyzeResults(xalan, resultsFile);
+		futil.analyzeResults(xalan, baseDir, resultsFile);
 
 		XalanTransformer::terminate();
 	}
