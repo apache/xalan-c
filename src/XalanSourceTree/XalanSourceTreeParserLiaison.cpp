@@ -271,13 +271,17 @@ XalanSourceTreeParserLiaison::createDOMFactory()
 
 
 void
-XalanSourceTreeParserLiaison::destroyDocument(XalanDocument*		theDocument)
+XalanSourceTreeParserLiaison::destroyDocument(XalanDocument*	theDocument)
 {
 	if (mapDocument(theDocument) != 0)
 	{
 		m_documentMap.erase(theDocument);
 
 		delete theDocument;
+	}
+	else
+	{
+		m_xercesParserLiaison.destroyDocument(theDocument);
 	}
 }
 
