@@ -1456,11 +1456,11 @@ DoubleToDOMString(
 {
 	if (DoubleSupport::isNaN(theDouble) == true)
 	{
-		theResult = theNaNString;
+		append(theResult, theNaNString);
 	}
 	else if (DoubleSupport::isPositiveInfinity(theDouble) == true)
 	{
-		theResult = thePositiveInfinityString;
+		append(theResult, thePositiveInfinityString);
 	}
 	else if (DoubleSupport::isNegativeInfinity(theDouble) == true)
 	{
@@ -1468,11 +1468,11 @@ DoubleToDOMString(
 	}
 	else if (DoubleSupport::isPositiveZero(theDouble) == true)
 	{
-		theResult = thePositiveZeroString;
+		append(theResult, thePositiveZeroString);
 	}
 	else if (DoubleSupport::isNegativeZero(theDouble) == true)
 	{
-		theResult = theNegativeZeroString;
+		append(theResult, theNegativeZeroString);
 	}
 	else if (long(theDouble) == theDouble)
 	{
@@ -1507,7 +1507,7 @@ DoubleToDOMString(
 			++theCharsWritten;
 		}
 
-		reserve(theResult, theCharsWritten + 1);
+		reserve(theResult, length(theResult) + theCharsWritten);
 
 		TranscodeNumber(
 				theBuffer,
