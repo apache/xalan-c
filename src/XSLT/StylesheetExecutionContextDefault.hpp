@@ -748,7 +748,10 @@ public:
 	};
 
 	const CollationCompareFunctor*
-	installCollationCompareFunctor(const CollationCompareFunctor*	theFunctor);
+	installCollationCompareFunctor(CollationCompareFunctor*		theFunctor);
+
+	CollationCompareFunctor*
+	uninstallCollationCompareFunctor();
 
 	virtual	bool
 	getInConstruction(const KeyDeclaration&		keyDeclaration) const;
@@ -1092,7 +1095,7 @@ private:
 
 	OutputStreamVectorType				m_outputStreams;
 
-	const CollationCompareFunctor*		m_collationCompareFunctor;
+	CollationCompareFunctor*			m_collationCompareFunctor;
 
 	/**
 	 * Holds all information about variables during execution.

@@ -1548,7 +1548,7 @@ StylesheetExecutionContextDefault::DefaultCollationCompareFunctor::operator()(
 
 
 const StylesheetExecutionContextDefault::CollationCompareFunctor*
-StylesheetExecutionContextDefault::installCollationCompareFunctor(const CollationCompareFunctor*	theFunctor)
+StylesheetExecutionContextDefault::installCollationCompareFunctor(CollationCompareFunctor*	theFunctor)
 {
 	assert(theFunctor != 0);
 
@@ -1557,6 +1557,25 @@ StylesheetExecutionContextDefault::installCollationCompareFunctor(const Collatio
 	m_collationCompareFunctor = theFunctor;
 
 	return temp;
+}
+
+
+
+StylesheetExecutionContextDefault::CollationCompareFunctor*
+StylesheetExecutionContextDefault::uninstallCollationCompareFunctor()
+{
+	if (m_collationCompareFunctor == 0)
+	{
+		return 0;
+	}
+	else
+	{
+		CollationCompareFunctor* const	temp = m_collationCompareFunctor;
+
+		m_collationCompareFunctor = 0;
+
+		return temp;
+	}
 }
 
 
