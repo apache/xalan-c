@@ -78,7 +78,6 @@
 #include <xercesc/util/PlatformUtils.hpp>
 
 
-
 #include <xalanc/XalanTransformer/XalanTransformer.hpp>
 
 
@@ -103,63 +102,79 @@ main(
 	else
 	{
 		XALAN_USING_XERCES(XMLPlatformUtils)
+		XALAN_USING_XERCES(XMLException)
 
 		XALAN_USING_XALAN(XalanTransformer)
 		XALAN_USING_XALAN(XalanCompiledStylesheet)
 
 		// Call the static initializer for Xerces.
-		XMLPlatformUtils::Initialize();
-
-		// Initialize Xalan.
-		XalanTransformer::initialize();
-
+		try
 		{
-			// Create a XalanTransformer.
-			XalanTransformer theXalanTransformer;
+			 XMLPlatformUtils::Initialize();
+		}
 
-			// Our input files...The assumption is that the executable will be run
-			// from same directory as the input files.
-			const char*		theXSLFileName = "foo.xsl";
+		catch (const XMLException& toCatch)
+		{
+			 cerr << "Error during Xerces initialization! "<< endl;
+				
+			 theResult = -1;
+		}
+
+		if ( theResult == 0)
+		{
 			
-			// Compile the stylesheet.
-			const XalanCompiledStylesheet*	theCompiledStylesheet = 0;
-
-			theResult =	theXalanTransformer.compileStylesheet(theXSLFileName, theCompiledStylesheet);
-
-			if (theResult == 0)
+			// Initialize Xalan.
+			XalanTransformer::initialize();
+			
 			{
-				assert(theCompiledStylesheet != 0);
-
-				for (unsigned int i = 0; i < 10; ++i)
-				{		
-					// Buffers passed in to ostrstream.
-					char	inBuffer[10];
-					char	outBuffer[10];	
-
-					// Generate the input and output file names.
-					ostrstream	theFormatterIn(inBuffer, sizeof(inBuffer));
-					ostrstream	theFormatterOut(outBuffer, sizeof(outBuffer));
-
-					theFormatterIn << "foo" << i + 1 << ".xml" << '\0';
-					theFormatterOut << "foo" << i + 1 << ".out" << '\0';
-
-					// Do the transform.
-					theResult = theXalanTransformer.transform(
+				// Create a XalanTransformer.
+				XalanTransformer theXalanTransformer;
+				
+				// Our input files...The assumption is that the executable will be run
+				// from same directory as the input files.
+				const char*		theXSLFileName = "foo.xsl";
+				
+				// Compile the stylesheet.
+				const XalanCompiledStylesheet*	theCompiledStylesheet = 0;
+				
+				theResult =	theXalanTransformer.compileStylesheet(theXSLFileName, theCompiledStylesheet);
+				
+				if (theResult == 0)
+				{
+					assert(theCompiledStylesheet != 0);
+					
+					for (unsigned int i = 0; i < 10; ++i)
+					{		
+						// Buffers passed in to ostrstream.
+						char	inBuffer[10];
+						char	outBuffer[10];	
+						
+						// Generate the input and output file names.
+						ostrstream	theFormatterIn(inBuffer, sizeof(inBuffer));
+						ostrstream	theFormatterOut(outBuffer, sizeof(outBuffer));
+						
+						theFormatterIn << "foo" << i + 1 << ".xml" << '\0';
+						theFormatterOut << "foo" << i + 1 << ".out" << '\0';
+						
+						// Do the transform.
+						theResult = theXalanTransformer.transform(
 							inBuffer,
 							theCompiledStylesheet,
 							outBuffer);
+					}
+					
+					// I don't have to do this, since the transformer will
+					// clean this up when it's destroyed, but why not...
+					theResult = theXalanTransformer.destroyStylesheet(theCompiledStylesheet);
 				}
-
-				// I don't have to do this, since the transformer will
-				// clean this up when it's destroyed, but why not...
-				theResult = theXalanTransformer.destroyStylesheet(theCompiledStylesheet);
-			}
-   
-			if(theResult != 0)
-			{
-				cerr << "CompileStylesheet Error: " << theXalanTransformer.getLastError()
-					 << endl
-					 << endl;
+				
+				if(theResult != 0)
+				{
+					cerr << "CompileStylesheet Error: " << theXalanTransformer.getLastError()
+						<< endl
+						<< endl;
+				}
+				
 			}
 		}
 
