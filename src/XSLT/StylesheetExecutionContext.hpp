@@ -96,6 +96,10 @@
 
 class ElemTemplateElement;
 class FormatterListener;
+class FormatterToDOM;
+class FormatterToHTML;
+class FormatterToText;
+class FormatterToXML;
 class PrefixResolver;
 class NodeRefListBase;
 class PrintWriter;
@@ -103,7 +107,9 @@ class QName;
 class Stylesheet;
 class StylesheetRoot;
 class TextOutputStream;
+class Writer;
 class XalanDocument;
+class XalanDocumentFragment;
 class XalanElement;
 class XalanNode;
 class XalanNumberFormat;
@@ -944,6 +950,108 @@ public:
 
 		StylesheetExecutionContext&			m_executionContext;
 	};
+
+
+	/**
+	 * Create a new FormatterToXML instance.  The execution context
+	 * owns the instance and will delete it when reset.
+	 *
+	 * @param writer            character output stream to use
+	 * @param version           version of the output method
+	 * @param doIndent          true if output is to be indented
+	 * @param indent            number of spaces to indent at each nesting level
+	 * @param encoding          character encoding in use by <VAR>writer</VAR>
+	 * @param mediaType         media type (MIME content type) of the data
+	 * @param doctypeSystem     system identifier to be used in the document
+	 *                          type declaration
+	 * @param doctypePublic     public identifier to be used in the document
+	 *                          type declaration
+	 * @param xmlDecl           true if the XSLT processor should output an XML
+	 *                          declaration
+	 * @param standalone        true if the XSLT processor should output a
+	 *                          standalone document declaration
+	 * @return a pointer to the new instance.
+	 */
+	virtual FormatterToXML*
+	createFormatterToXML(
+			Writer&					writer,
+			const XalanDOMString&	version = XalanDOMString(),
+			bool					doIndent = false,
+			int						indent = 0,
+			const XalanDOMString&	encoding = XalanDOMString(),
+			const XalanDOMString&	mediaType = XalanDOMString(),
+			const XalanDOMString&	doctypeSystem = XalanDOMString(),
+			const XalanDOMString&	doctypePublic = XalanDOMString(),
+			bool					xmlDecl = true,
+			const XalanDOMString&	standalone = XalanDOMString()) = 0;
+
+	/**
+	 * Create a new FormatterToHTML instance.  The execution context
+	 * owns the instance and will delete it when reset.
+	 *
+	 * @param writer            character output stream to use
+	 * @param encoding          character encoding in use by <VAR>writer</VAR>
+	 * @param mediaType         media type (MIME content type) of the data
+	 * @param doctypeSystem     system identifier to be used in the document
+	 *                          type declaration
+	 * @param doctypePublic     public identifier to be used in the document
+	 *                          type declaration
+	 * @param doIndent          true if output is to be indented
+	 * @param indent            number of spaces to indent at each nesting level
+	 * @param version           version of the output method
+	 * @param standalone        true if the XSLT processor should output a
+	 *                          standalone document declaration
+	 * @param xmlDecl           true if the XSLT processor should output an XML
+	 *                          declaration
+	 * @return a pointer to the new instance.
+	 */
+	virtual FormatterToHTML*
+	createFormatterToHTML(
+			Writer&					writer,
+			const XalanDOMString&	encoding = XalanDOMString(),
+			const XalanDOMString&	mediaType = XalanDOMString(),
+			const XalanDOMString&	doctypeSystem = XalanDOMString(),
+			const XalanDOMString&	doctypePublic = XalanDOMString(),
+			bool					doIndent = true,
+			int						indent = 4,
+			const XalanDOMString&	version = XalanDOMString(),
+			const XalanDOMString&	standalone = XalanDOMString(),
+			bool					xmlDecl = false) = 0;
+
+	/**
+	 * Construct a FormatterToDOM instance.  it will add the DOM nodes 
+	 * to the document fragment.
+	 *
+	 * @param doc            document for nodes
+	 * @param docFrag        document fragment for nodes, default none
+	 * @param currentElement current element for nodes, default none
+	 */
+	virtual FormatterToDOM*
+	createFormatterToDOM(
+			XalanDocument*			doc,
+			XalanDocumentFragment*	docFrag = 0,
+			XalanElement*			currentElement = 0) = 0;
+
+	/**
+	 * Construct a FormatterToDOM instance.  it will add the DOM nodes 
+	 * to the document fragment.
+	 *
+	 * @param doc            document for nodes
+	 * @param docFrag        document fragment for nodes, default none
+	 * @param currentElement current element for nodes, default none
+	 */
+	virtual FormatterToDOM*
+	createFormatterToDOM(
+			XalanDocument*	doc,
+			XalanElement*	elem) = 0;
+
+	/**
+	 * FormatterToText instance constructor.
+	 *
+	 * @param pw print writer for output
+	 */
+	virtual FormatterToText*
+	createFormatterToText(Writer&	writer) = 0;
 
 
 #if defined(XALAN_NO_NAMESPACES)

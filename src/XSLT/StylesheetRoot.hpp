@@ -72,6 +72,10 @@
 
 
 
+#include <XMLSupport/FormatterListener.hpp>
+
+
+
 class SelectionEvent;
 class StylesheetConstructionContext;
 class TraceListener;
@@ -121,16 +125,21 @@ public:
 			XalanNode*						sourceTree, 
 			XSLTResultTarget&				outputTarget,
 			StylesheetExecutionContext&		executionContext);
-  
+
 	/** 
 	 * Return the output method that was specified in the stylesheet. 
-	 * The returned value is one of Formatter.OUTPUT_METH_XML,
-	 * Formatter.OUTPUT_METH_HTML, or Formatter.OUTPUT_METH_TEXT.
+	 * The returned value is one of FormatterLister::eFormat values.
 	 *
-	 * @return number of output method
+	 * @return value of output method
 	 */
-	int 
+	FormatterListener::eFormat
 	getOutputMethod() const;
+
+	bool
+	isOutputMethodSet() const
+	{
+		return getOutputMethod() == FormatterListener::OUTPUT_METHOD_NONE ? false : true;
+	}
 
 	/**
 	 * Get the output version string that was specified in the
@@ -359,15 +368,15 @@ public:
 	}
 
 	/**
-	 * Change the value of the output method, one of Formatter.OUTPUT_METH_XML,
-	 * Formatter.OUTPUT_METH_HTML, or Formatter.OUTPUT_METH_TEXT.
+	 * Change the value of the output method, one of the
+	 * FormatterListener::eFormat values.
 	 * 
 	 * @param meth new method number
 	 */
 	void
-	setOutputMethod(int meth)
+	setOutputMethod(FormatterListener::eFormat	meth)
 	{
-		m_outputmethod = meth;
+		m_outputMethod = meth;
 	}
 
 	/**
@@ -433,13 +442,13 @@ private:
 	 * The URL that belongs to the result namespace.
 	 * @serial
 	 */
-	XalanDOMString m_resultNameSpaceURL; // = null;
+	XalanDOMString	m_resultNameSpaceURL;
   
 	/**
 	 * List of listeners who are interested in tracing what's going on.
 	 */
 	//transient 
-	ListenersVectorType m_traceListeners; // = null;
+	ListenersVectorType		m_traceListeners;
   
 	/**
 	 * String buffer for use by AVTs and the like.
@@ -449,13 +458,13 @@ private:
 	/**
 	 * The output method as specified in xsl:output.
 	 */
-	int m_outputmethod; // = Formatter.OUTPUT_METH_XML;
+	FormatterListener::eFormat	m_outputMethod;
 
 	/**
 	 * List of qnames that specifies elements that should be formatted 
 	 * as CDATA.
 	 */
-	QNameVectorType m_cdataSectionElems; // = null;
+	QNameVectorType		m_cdataSectionElems;
 
 	/**
 	 * A stack of who's importing who is needed in order to support 

@@ -79,6 +79,10 @@
 
 
 
+#include <XMLSupport/FormatterToDOM.hpp>
+#include <XMLSupport/FormatterToXML.hpp>
+#include <XMLSupport/FormatterToHTML.hpp>
+#include <XMLSupport/FormatterToText.hpp>
 #include <XMLSupport/XMLParserLiaison.hpp>
 
 
@@ -121,6 +125,7 @@ StylesheetExecutionContextDefault::StylesheetExecutionContextDefault(
 	m_elementRecursionStack(),
 	m_prefixResolver(0),
 	m_stylesheetRoot(0),
+	m_formatterListeners(),
 	m_printWriters(),
 	m_textOutputStreams()
 {
@@ -141,6 +146,12 @@ StylesheetExecutionContextDefault::reset()
 #if !defined(XALAN_NO_NAMESPACES)
 	using std::for_each;
 #endif
+
+	for_each(m_formatterListeners.begin(),
+			 m_formatterListeners.end(),
+			 DeleteFunctor<FormatterListener>());
+
+	m_formatterListeners.clear();
 
 	for_each(m_printWriters.begin(),
 			 m_printWriters.end(),
@@ -203,6 +214,17 @@ StylesheetExecutionContextDefault::setStylesheetRoot(StylesheetRoot*	theStyleshe
 	assert(theStylesheet->isRoot() == true);
 
 	m_stylesheetRoot = theStylesheet;
+
+	m_xsltProcessor.setStylesheetRoot(theStylesheet);
+
+	if (theStylesheet == 0)
+	{
+		m_xsltProcessor.setExecutionContext(0);
+	}
+	else
+	{
+		m_xsltProcessor.setExecutionContext(this);
+	}
 }
 
 
@@ -365,7 +387,7 @@ StylesheetExecutionContextDefault::setFormatterListener(FormatterListener*	flist
 int
 StylesheetExecutionContextDefault::getIndent() const
 {
-		return m_xsltProcessor.getXMLParserLiaison().getIndent();
+	return m_xsltProcessor.getXMLParserLiaison().getIndent();
 }
 
 
@@ -720,6 +742,121 @@ StylesheetExecutionContextDefault::popElementRecursionStack()
 	m_elementRecursionStack.pop_back();
 
 	return theTemp;
+}
+
+
+
+FormatterToXML*
+StylesheetExecutionContextDefault::createFormatterToXML(
+			Writer&					writer,
+			const XalanDOMString&	version,
+			bool					doIndent,
+			int						indent,
+			const XalanDOMString&	encoding,
+			const XalanDOMString&	mediaType,
+			const XalanDOMString&	doctypeSystem,
+			const XalanDOMString&	doctypePublic,
+			bool					xmlDecl,
+			const XalanDOMString&	standalone)
+{
+	FormatterToXML* const	theFormatter =
+		new FormatterToXML(
+			writer,
+			version,
+			doIndent,
+			indent,
+			encoding,
+			mediaType,
+			doctypeSystem,
+			doctypePublic,
+			xmlDecl,
+			standalone);
+
+	m_formatterListeners.insert(theFormatter);
+
+	return theFormatter;
+}
+
+
+
+FormatterToHTML*
+StylesheetExecutionContextDefault::createFormatterToHTML(
+			Writer&					writer,
+			const XalanDOMString&	encoding,
+			const XalanDOMString&	mediaType,
+			const XalanDOMString&	doctypeSystem,
+			const XalanDOMString&	doctypePublic,
+			bool					doIndent,
+			int						indent,
+			const XalanDOMString&	version,
+			const XalanDOMString&	standalone,
+			bool					xmlDecl)
+{
+	FormatterToHTML* const	theFormatter =
+		new FormatterToHTML(
+			writer,
+			encoding,
+			mediaType,
+			doctypeSystem,
+			doctypePublic,
+			doIndent,
+			indent,
+			version,
+			standalone,
+			xmlDecl);
+
+	m_formatterListeners.insert(theFormatter);
+
+	return theFormatter;
+}
+
+
+
+FormatterToDOM*
+StylesheetExecutionContextDefault::createFormatterToDOM(
+			XalanDocument*			doc,
+			XalanDocumentFragment*	docFrag,
+			XalanElement*			currentElement)
+{
+	FormatterToDOM* const	theFormatter =
+		new FormatterToDOM(
+			doc,
+			docFrag,
+			currentElement);
+
+	m_formatterListeners.insert(theFormatter);
+
+	return theFormatter;
+}
+
+
+
+FormatterToDOM*
+StylesheetExecutionContextDefault::createFormatterToDOM(
+			XalanDocument*	doc,
+			XalanElement*	elem)
+{
+	FormatterToDOM* const	theFormatter =
+		new FormatterToDOM(
+			doc,
+			elem);
+
+	m_formatterListeners.insert(theFormatter);
+
+	return theFormatter;
+}
+
+
+
+FormatterToText*
+StylesheetExecutionContextDefault::createFormatterToText(Writer&	writer)
+{
+	FormatterToText* const	theFormatter =
+		new FormatterToText(writer);
+
+	m_formatterListeners.insert(theFormatter);
+
+	return theFormatter;
 }
 
 

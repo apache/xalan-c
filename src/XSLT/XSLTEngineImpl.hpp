@@ -417,7 +417,8 @@ public:
 	/**
 	 * Flush the pending element.
 	 */
-	void flushPending();
+	void
+	flushPending();
 
 	/**
 	 * Add a namespace declaration to the namespace stack
@@ -425,8 +426,10 @@ public:
 	 * @param prefix	   namespace prefix
 	 * @param namespaceVal value of namespace
 	 */
-	void addResultNamespaceDecl(const XalanDOMString& prefix, 
-									   const XalanDOMString& namespaceVal);
+	void
+	addResultNamespaceDecl(
+			const XalanDOMString&	prefix, 
+			const XalanDOMString&	namespaceVal);
 
 	/**
 	 * Add attribute to attribute list, and if it is a namespace, add it to the
@@ -644,6 +647,14 @@ public:
 	 */
 	virtual void
 	setStylesheetRoot(StylesheetRoot*	theStylesheet);
+
+	/**
+	 * Set the execution context.
+	 * 
+	 * @param theExecutionContext pointer to new execution context.
+	 */
+	virtual void
+	setExecutionContext(StylesheetExecutionContext*		theExecutionContext);
 
 	/**
 	 * Table of stylesheet documents. Document objects are keyed by URL string.
@@ -1939,6 +1950,14 @@ protected:
 
 private:
 
+
+	/**
+	 * Determine if any pending attributes is a default
+	 * namespace.
+	 */
+	bool
+	pendingAttributesHasDefaultNS() const; 
+
   /**
    * The top of this stack should contain the currently processed
    * stylesheet SAX locator object.
@@ -2289,6 +2308,8 @@ private:
 	 * Table for defined constants, keyed on the names.
 	 */
 	TopLevelVariablesMapType	m_topLevelVariables;
+
+	StylesheetExecutionContext*		m_executionContext;
 
 	/**
 	 * The StackGuard class guard against infinite loops.

@@ -99,6 +99,8 @@
 #include <XMLSupport/Formatter.hpp>
 #include <XMLSupport/FormatterToDOM.hpp>
 #include <XMLSupport/FormatterToText.hpp>
+#include <XMLSupport/FormatterToXML.hpp>
+#include <XMLSupport/FormatterToHTML.hpp>
 #include <XMLSupport/FormatterTreeWalker.hpp>
 #include <XMLSupport/XMLParserLiaison.hpp>
 #include <XMLSupport/FormatterTreeWalker.hpp>
@@ -228,6 +230,7 @@ XSLTEngineImpl::XSLTEngineImpl(
 	m_contextNodeList(&xpathSupport),
 	m_namedTemplates(),
 	m_topLevelVariables(),
+	m_executionContext(0),
 	m_needToCheckForInfiniteLoops(false),
 	m_stackGuard(*this),
 	m_attrSetStack()
@@ -466,6 +469,8 @@ XSLTEngineImpl::process(
 
 		if(0 != sourceTree)
 		{
+			executionContext.setStylesheetRoot(m_stylesheetRoot);
+
 			m_stylesheetRoot->process(sourceTree, outputTarget, executionContext);
 
 			if(0 != m_diagnosticsPrintWriter)
@@ -1087,6 +1092,14 @@ XSLTEngineImpl::setStylesheetRoot(StylesheetRoot*	theStylesheet)
 
 
 
+void
+XSLTEngineImpl::setExecutionContext(StylesheetExecutionContext*		theExecutionContext)
+{
+	m_executionContext = theExecutionContext;
+}
+
+
+
 //==========================================================
 // SECTION: Diagnostic functions
 //==========================================================
@@ -1481,6 +1494,8 @@ void
 XSLTEngineImpl::endDocument()
 {
 	assert(m_flistener != 0);
+	assert(m_executionContext != 0);
+
 	flushPending();
 	m_flistener->endDocument();
 	if(m_traceListeners.size() > 0)
@@ -1552,12 +1567,59 @@ XSLTEngineImpl::addResultAttribute(
 
 
 
+bool
+XSLTEngineImpl::pendingAttributesHasDefaultNS() const
+{
+	const unsigned int	n = m_pendingAttributes.getLength();
+
+	for(unsigned int i = 0; i < n; i++)
+	{
+		if(equals(m_pendingAttributes.getName(i),
+				  DOMServices::s_XMLNamespace) == true)
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+
+
+
 void
 XSLTEngineImpl::flushPending()
 {
 	if(0 != length(m_pendingElementName))
 	{
 		assert(m_flistener != 0);
+		assert(m_executionContext != 0);
+
+		if (m_stylesheetRoot->isOutputMethodSet() == false)
+		{
+			if (equalsIgnoreCase(m_pendingElementName,
+								 XALAN_STATIC_UCODE_STRING("html")) == true &&
+				pendingAttributesHasDefaultNS() == false)
+			{
+				if (m_flistener->getOutputFormat() == FormatterListener::OUTPUT_METHOD_XML)
+				{
+					// Yuck!!! Ugly hack to switch to HTML on-the-fly.  You can
+					// blame this ridiculous crap on James Clark (jjc@jclark.com)
+					FormatterToXML* const	theFormatter =
+						static_cast<FormatterToXML*>(m_flistener);
+
+					m_flistener =
+						m_executionContext->createFormatterToHTML(
+							theFormatter->getWriter(),
+							theFormatter->getEncoding(),
+							theFormatter->getMediaType(),
+							theFormatter->getDoctypeSystem(),
+							theFormatter->getDoctypePublic(),
+							true,	// indent
+							theFormatter->getIndent() > 0 ? theFormatter->getIndent() : 4);
+				}
+			}
+		}
+
 		m_cdataStack.push_back(isCDataResultElem(m_pendingElementName)? true : false);
 		m_flistener->startElement(c_wstr(m_pendingElementName), m_pendingAttributes);
 		if(m_traceListeners.size() > 0)

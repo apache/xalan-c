@@ -117,7 +117,7 @@ StylesheetHandler::StylesheetHandler(
 			XSLTEngineImpl&					processor,
 			Stylesheet&						stylesheetTree,
 			StylesheetConstructionContext&	constructionContext) :
-	FormatterListener(),
+	FormatterListener(OUTPUT_METHOD_OTHER),
 	m_includeBase(stylesheetTree.getBaseIdentifier()),
 	m_pendingException(),
 	m_exceptionPending(false),
@@ -1059,7 +1059,7 @@ ElemTemplateElement* StylesheetHandler::initWrapperless (const XalanDOMString& n
 	if(equals(name, XALAN_STATIC_UCODE_STRING("HTML")))
 	{
 		m_stylesheet.getStylesheetRoot().setIndentResult(true);
-		m_stylesheet.getStylesheetRoot().setOutputMethod(Formatter::OUTPUT_METH_HTML);
+		m_stylesheet.getStylesheetRoot().setOutputMethod(OUTPUT_METHOD_HTML);
 	}
 
 	return pElem;

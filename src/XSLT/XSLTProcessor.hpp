@@ -259,6 +259,15 @@ public:
 	setStylesheetRoot(StylesheetRoot*	theStylesheet) = 0;
 
 	/**
+	 * Set the execution context. Must be set if after calling
+	 * setStylesheetRoot.
+	 * 
+	 * @param theExecutionContext pointer to new execution context.
+	 */
+	virtual void
+	setExecutionContext(StylesheetExecutionContext*		theExecutionContext) = 0;
+
+	/**
 	 * Evaluates attribute values for attribute templates (Stuff in curly {}
 	 * braces that hold expressions).
 	 *

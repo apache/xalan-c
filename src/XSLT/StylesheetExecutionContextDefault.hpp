@@ -332,9 +332,49 @@ public:
 	virtual const ElemTemplateElement*
 	popElementRecursionStack();
 
+	virtual FormatterToXML*
+	createFormatterToXML(
+			Writer&					writer,
+			const XalanDOMString&	version = XalanDOMString(),
+			bool					doIndent = false,
+			int						indent = 0,
+			const XalanDOMString&	encoding = XalanDOMString(),
+			const XalanDOMString&	mediaType = XalanDOMString(),
+			const XalanDOMString&	doctypeSystem = XalanDOMString(),
+			const XalanDOMString&	doctypePublic = XalanDOMString(),
+			bool					xmlDecl = true,
+			const XalanDOMString&	standalone = XalanDOMString());
+
+	virtual FormatterToHTML*
+	createFormatterToHTML(
+			Writer&					writer,
+			const XalanDOMString&	encoding = XalanDOMString(),
+			const XalanDOMString&	mediaType = XalanDOMString(),
+			const XalanDOMString&	doctypeSystem = XalanDOMString(),
+			const XalanDOMString&	doctypePublic = XalanDOMString(),
+			bool					doIndent = true,
+			int						indent = 4,
+			const XalanDOMString&	version = XalanDOMString(),
+			const XalanDOMString&	standalone = XalanDOMString(),
+			bool					xmlDecl = false);
+
+	virtual FormatterToDOM*
+	createFormatterToDOM(
+			XalanDocument*			doc,
+			XalanDocumentFragment*	docFrag = 0,
+			XalanElement*			currentElement = 0);
+
+	virtual FormatterToDOM*
+	createFormatterToDOM(
+			XalanDocument*	doc,
+			XalanElement*	elem);
+
+	virtual FormatterToText*
+	createFormatterToText(Writer&	writer);
+
+
 	virtual XalanNumberFormatAutoPtr
 	createXalanNumberFormat();
-
 
 	// A basic class to create XalanNumberFormat instances...
 	class XALAN_XSLT_EXPORT XalanNumberFormatFactory
@@ -560,10 +600,12 @@ private:
 
 #if defined(XALAN_NO_NAMESPACES)
 	typedef vector<const ElemTemplateElement*>			ElementRecursionStackType;
+	typedef set<FormatterListener*>						FormatterListenerSetType;
 	typedef set<PrintWriter*>							PrintWriterSetType;
 	typedef set<TextOutputStream*>						TextOutputStreamSetType;
 #else
 	typedef std::vector<const ElemTemplateElement*>		ElementRecursionStackType;
+	typedef std::set<FormatterListener*>				FormatterListenerSetType;
 	typedef std::set<PrintWriter*>						PrintWriterSetType;
 	typedef std::set<TextOutputStream*>					TextOutputStreamSetType;
 #endif
@@ -573,6 +615,8 @@ private:
 	const PrefixResolver*				m_prefixResolver;
 
 	StylesheetRoot*						m_stylesheetRoot;
+
+	FormatterListenerSetType			m_formatterListeners;
 
 	PrintWriterSetType					m_printWriters;
 

@@ -118,14 +118,14 @@
  *            halt processing.
  */
 StylesheetRoot::StylesheetRoot(
-        const XalanDOMString&				baseIdentifier,
+        const XalanDOMString&			baseIdentifier,
 		StylesheetConstructionContext&	constructionContext) :
 	Stylesheet(*this,
 			   baseIdentifier,
 			   constructionContext),
 	m_importStack(),
 	m_resultNameSpaceURL(),
-	m_outputmethod(Formatter::OUTPUT_METH_XML),
+	m_outputMethod(FormatterListener::OUTPUT_METHOD_NONE),
 	m_version(),
 	m_indentResult(false),
 	m_encoding(),
@@ -210,8 +210,6 @@ StylesheetRoot::process(
 		using std::auto_ptr;
 #endif
 
-		auto_ptr<FormatterListener>		theListenerGuard;
-
 		Writer* pw = 0;
 
 		flistener = outputTarget.getFormatterListener();
@@ -278,32 +276,43 @@ StylesheetRoot::process(
 
 			int			indentAmount = executionContext.getIndent();
 			const bool	doIndent = (indentAmount > -1) ? true : m_indentResult;
-			// Make sure we don't have a negative indent amount if we're
-			// indenting
-			if (m_indentResult && indentAmount < 0)
-				indentAmount = 0;
 			
-			switch(m_outputmethod)
+			switch(m_outputMethod)
 			{
-			case Formatter::OUTPUT_METH_HTML:
-				flistener = new FormatterToHTML(
-					*pw, m_version, doIndent, indentAmount, m_encoding, m_mediatype,
-					m_doctypeSystem, m_doctypePublic, !m_omitxmlDecl, m_standalone);
+			case FormatterListener::OUTPUT_METHOD_HTML:
+				{
+					if (doIndent == true && indentAmount < 0)
+					{
+						indentAmount = 4;
+					}
+
+					flistener = executionContext.createFormatterToHTML(
+						*pw, m_encoding, m_mediatype, m_doctypeSystem, m_doctypePublic,
+						doIndent, indentAmount, m_version, m_standalone, !m_omitxmlDecl);
+				}
 				break;
 
-			case Formatter::OUTPUT_METH_TEXT:
-				flistener = new FormatterToText(*pw);
+			case FormatterListener::OUTPUT_METHOD_TEXT:
+				flistener = executionContext.createFormatterToText(*pw);
 				break;
 
-			case Formatter::OUTPUT_METH_XML:
+			case FormatterListener::OUTPUT_METHOD_NONE:
+			case FormatterListener::OUTPUT_METHOD_XML:
 			default:
-				flistener = new FormatterToXML(
-					*pw, m_version, doIndent, indentAmount, m_encoding, m_mediatype,
-					m_doctypeSystem, m_doctypePublic, !m_omitxmlDecl, m_standalone);
+				{
+					// Make sure we don't have a negative indent amount if we're
+					// indenting
+					if (doIndent == true && indentAmount < 0)
+					{
+						indentAmount = 0;
+					}
+
+					flistener = executionContext.createFormatterToXML(
+						*pw, m_version, doIndent, indentAmount, m_encoding, m_mediatype,
+						m_doctypeSystem, m_doctypePublic, !m_omitxmlDecl, m_standalone);
+				}
 				break;
 			}
-
-			theListenerGuard = auto_ptr<FormatterListener>(flistener);
 
 			executionContext.setFormatterListener(flistener);
 		}
@@ -315,27 +324,25 @@ StylesheetRoot::process(
 			switch(outputTarget.getNode()->getNodeType())
 			{
 			case XalanNode::DOCUMENT_NODE:
-				flistener = new 
-					FormatterToDOM(static_cast<XalanDocument*>(outputTarget.getNode()));
+				flistener =
+					executionContext.createFormatterToDOM(static_cast<XalanDocument*>(outputTarget.getNode()));
 				break;
 
 			case XalanNode::DOCUMENT_FRAGMENT_NODE:
-				flistener = new 
-					FormatterToDOM(executionContext.createDocument(),
+				flistener =
+					executionContext.createFormatterToDOM(executionContext.createDocument(),
 						static_cast<XalanDocumentFragment*>(outputTarget.getNode()));
 				break;
 
 			case XalanNode::ELEMENT_NODE:
-				flistener = new 
-					FormatterToDOM(executionContext.createDocument(),
+				flistener =
+					executionContext.createFormatterToDOM(executionContext.createDocument(),
 						static_cast<XalanElement*>(outputTarget.getNode()));
 				break;
 
 			default:
 				executionContext.error("Can only output to an Element, DocumentFragment, Document, or PrintWriter.");
 			}
-
-			theListenerGuard = auto_ptr<FormatterListener>(flistener);
 		}
 		/*
 		 * Create an empty document and set the output target node to this
@@ -343,10 +350,8 @@ StylesheetRoot::process(
 		else
 		{
 			outputTarget.setNode(executionContext.createDocument());
-			flistener = new
-				FormatterToDOM(static_cast<XalanDocument*>(outputTarget.getNode()));
-
-			theListenerGuard = auto_ptr<FormatterListener>(flistener);
+			flistener =
+				executionContext.createFormatterToDOM(static_cast<XalanDocument*>(outputTarget.getNode()));
 		}
 		
 		executionContext.setFormatterListener(flistener);
@@ -400,10 +405,10 @@ StylesheetRoot::process(
  * The returned value is one of Formatter.OUTPUT_METH_XML,
  * Formatter.OUTPUT_METH_HTML, or Formatter.OUTPUT_METH_TEXT.
  */
-int 
+FormatterListener::eFormat
 StylesheetRoot::getOutputMethod() const
 { 
-	return m_outputmethod; 
+	return m_outputMethod; 
 }
 
 
@@ -499,11 +504,11 @@ StylesheetRoot::processOutputSpec(
 			const XalanDOMChar*	const	method = atts.getValue(i);
 
 			if(equals(method, Constants::ATTRVAL_OUTPUT_METHOD_HTML))
-				m_outputmethod = Formatter::OUTPUT_METH_HTML;
+				m_outputMethod = FormatterListener::OUTPUT_METHOD_HTML;
 			else if(equals(method, Constants::ATTRVAL_OUTPUT_METHOD_XML))
-				m_outputmethod = Formatter::OUTPUT_METH_XML;
+				m_outputMethod = FormatterListener::OUTPUT_METHOD_XML;
 			else if(equals(method, Constants::ATTRVAL_OUTPUT_METHOD_TEXT))
-				m_outputmethod = Formatter::OUTPUT_METH_TEXT;
+				m_outputMethod = FormatterListener::OUTPUT_METHOD_TEXT;
 		}
 		else if(equals(aname, Constants::ATTRNAME_OUTPUT_VERSION))
 		{
@@ -557,7 +562,7 @@ StylesheetRoot::processOutputSpec(
 		}
 	}
 
-	if((Formatter::OUTPUT_METH_HTML == m_outputmethod) &&
+	if((FormatterListener::OUTPUT_METHOD_HTML == m_outputMethod) &&
 		 (false == didSpecifyIndent))
 	{
 		m_indentResult = true;

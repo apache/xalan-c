@@ -88,7 +88,15 @@
 
 const XalanDOMString	ElemNumber::s_alphaCountTable(XALAN_STATIC_UCODE_STRING("ZABCDEFGHIJKLMNOPQRSTUVWXY"));
 
-XalanDOMString	s_elalphaCountTable;
+const XalanDOMChar	elalphaCountTable[] =
+{
+	0x03c9, 0x03b1,0x03b2,0x03b3,0x03b4,0x03b5,0x03b6,0x03b7,0x03b8,0x03b9,0x03ba,
+	0x03bb,0x03bc,0x03bd,0x03be,0x03bf,0x03c0,0x03c1,0x03c2,0x03c3,0x03c4,
+	0x03c5,0x03c6,0x03c7,0x03c8,0
+};
+
+
+const XalanDOMString	s_elalphaCountTable = elalphaCountTable;
 
 
 
@@ -750,18 +758,12 @@ ElemNumber::getFormattedNumber(
 		case 0x0430:
 			executionContext.error(LongToDOMString(numberType) + " format not supported yet!");
 			break;
+
 		// Handle the special case of Greek letters for now
 		case 0x03B1:
-			if (isEmpty(s_elalphaCountTable))
-			{
-				// Start at lower case Greek letters in entity reference table in
-				// FormatterToHTML
-				s_elalphaCountTable += 962;
-				for (unsigned short i = 1, j=938; i < 25; i++, j++)
-					s_elalphaCountTable += j;
-			}
 			formattedNumber += int2alphaCount(listElement, s_elalphaCountTable);
 			break;
+
 		default: // "1"
 			{
 				const XalanDOMString		numString =
