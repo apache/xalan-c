@@ -100,32 +100,7 @@ FunctionNamespaceURI::execute(
 	}
 	else
 	{
-		const XalanDOMString*		theResult = &theEmptyString;
-
-		const XalanNode::NodeType	theType = context->getNodeType();
-
-		if (theType == XalanNode::ELEMENT_NODE)
-		{
-			theResult = &context->getNamespaceURI();
-		}
-		else if (theType == XalanNode::ATTRIBUTE_NODE)
-		{
-			const XalanDOMString&	theNodeName = context->getNodeName();
-
-			if (equals(theNodeName, DOMServices::s_XMLNamespace) == false &&
-				startsWith(theNodeName, DOMServices::s_XMLNamespaceWithSeparator) == false)
-			{
-				theResult = &context->getNamespaceURI();
-			}
-		}
-		else
-		{
-			theResult = &context->getNamespaceURI();
-		}
-
-		assert(theResult != 0);
-
-		return executionContext.getXObjectFactory().createStringReference(*theResult);
+		return executionContext.getXObjectFactory().createStringReference(DOMServices::getNamespaceOfNode(*context));
 	}
 }
 
