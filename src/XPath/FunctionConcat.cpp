@@ -117,13 +117,30 @@ FunctionConcat::execute(
 		int								/* opPos */,
 		const XObjectArgVectorType&		args)
 {
-	const XObjectArgVectorType::size_type	theArgCount = args.size();
+	unsigned int	theCombinedLength = 0;
+
+	const XObjectArgVectorType::const_iterator	theEnd = args.end();
+
+	{
+		XObjectArgVectorType::const_iterator	i = args.begin();
+
+		for(; i != theEnd; ++i)
+		{
+			theCombinedLength += length((*i)->str());
+		}
+	}
 
 	XalanDOMString	theResult;
 
-	for(XObjectArgVectorType::size_type i = 0; i < theArgCount; i++)
+	reserve(theResult, theCombinedLength + 1);
+
 	{
-		theResult += args[i]->str();
+		XObjectArgVectorType::const_iterator	i = args.begin();
+
+		for(; i != theEnd; ++i)
+		{
+			theResult += (*i)->str();
+		}
 	}
 
 	return executionContext.getXObjectFactory().createString(theResult);
