@@ -250,6 +250,8 @@ ifeq ($(PLATFORM), AIX)
 
 	ALLLIBS = ${LIBS} -L/usr/lib -L/usr/local/lib -lc
 
+    SHLIBSUFFIX=.a
+
   else
 
 	PLATFORM_COMPILE_OPTIONS = -D${PLATFORM} -D_THREAD_SAFE
@@ -266,9 +268,9 @@ endif
 
 	LINK = $(CXX) -qnotempinc $(CXXFLAGS)  -brtl $(PLATFORM_COMPILE_OPTIONS) ${bitstobuildLink}
 
-  endif
+    SHLIBSUFFIX=.so
 
-  SHLIBSUFFIX=.a
+  endif
 
 endif
 
