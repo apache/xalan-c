@@ -156,6 +156,7 @@ XalanTransformer::XalanTransformer():
 #else
 	m_warningStream(&std::cerr),
 #endif
+	m_outputEncoding(),
 	m_stylesheetExecutionContext(new StylesheetExecutionContextDefault)
 {
 #if defined(XALAN_USE_ICU)
@@ -1199,10 +1200,14 @@ XalanTransformer::doTransform(
 
 		addTraceListeners(m_traceListeners, theProcessor);
 
-		// Since the result target is not const in our
-		// internal intefaces, we'll pass in a local copy
-		// of the one provided...
+		// We may need to change the output encoding, so
+		// we make a copy of the result target.
 		XSLTResultTarget	tempResultTarget(theResultTarget);
+
+		if (tempResultTarget.getEncoding().length() == 0 && m_outputEncoding.length() != 0)
+		{
+			tempResultTarget.setEncoding(m_outputEncoding);
+		}
 
 		if (theCompiledStylesheet != 0)
 		{

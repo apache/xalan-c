@@ -710,6 +710,32 @@ public:
 	}
 
 	/**
+	 * Get the current output encoding, if any.  Note this is not the output encoding
+	 * specified in a stylesheet.  Rather, it can override that encoding, if the
+	 *
+	 * @return A string containing the current encoding
+	 */
+	const XalanDOMString&
+	getOutputEncoding() const
+	{
+		return m_outputEncoding;
+	}
+
+	/**
+	 * Set the current output encoding.  Note this will override the encoding
+	 * specified in the stylesheet, if the encoding is available.  However,
+	 * it will not override any encoding specified by an XSLTResultTarget
+	 * parameter to one of the transform() member functions.
+	 *
+	 * @param theEncoding The encoding to use.
+	 */
+	void
+	setOutputEncoding(const XalanDOMString&		theEncoding)
+	{
+		m_outputEncoding = theEncoding;
+	}
+
+	/**
 	 * Get the current number of spaces to indent.
 	 * 
 	 * @return number of spaces
@@ -956,6 +982,8 @@ private:
 	ProblemListener*						m_problemListener;
 
 	StreamType*								m_warningStream;
+
+	XalanDOMString							m_outputEncoding;
 
 	// This should always be the latest data member!!!
 	StylesheetExecutionContextDefault*		m_stylesheetExecutionContext;
