@@ -67,33 +67,35 @@ main(
 
 	if (argc < 2 || argc > 5)
 	{
-		cerr << "Usage: TraceListen [+ 1 or more of following] -TT -TG -TS -TTC" << endl;
+		cerr << "Usage: TraceListen [+ 1 or more of following] -tt -tg -ts -ttc" << endl;
+
 		return -1;
 	}
 
 	// Set the TraceListener flags...
 	for (int i = 1;	i < argc;	i ++)
 	{
-		if(!stricmp("-TT", argv[i]))
+		if(!strcmp("-tt", argv[i]))
 		{
 			traceTemplates = true;
 		}
-		else if(!stricmp("-TG", argv[i]))
+		else if(!strcmp("-tg", argv[i]))
 		{
 			traceGenerationEvent = true;
 		}
-		else if(!stricmp("-TS", argv[i]))
+		else if(!strcmp("-ts", argv[i]))
 		{
 			traceSelectionEvent = true;
 		}
-		else if(!stricmp("-TTC", argv[i]))
+		else if(!strcmp("-ttc", argv[i]))
 		{
 			traceTemplateChildren = true;
 		}
 		else
 		{
-  			cerr << "Usage: TraceListen [+ 1 or more of following] -TT -TG -TS -TTC" << endl;
-	  		return -1;
+  			cerr << "Usage: TraceListen [+ 1 or more of following] -tt -tg -ts -ttc" << endl;
+
+			return -1;
 		}
 	} 
  
@@ -144,12 +146,12 @@ main(
 
 			// Our input files...The assumption is that the executable will be run
 			// from same directory as the input files.
-			const XalanDOMString		theXMLFileName("birds.xml");
-			const XalanDOMString		theXSLFileName("birds.xsl");
+			const XalanDOMString	theXMLFileName("birds.xml");
+			const XalanDOMString	theXSLFileName("birds.xsl");
 
 			// Our input sources...
-			XSLTInputSource		theInputSource(c_wstr(theXMLFileName));
-			XSLTInputSource		theStylesheetSource(c_wstr(theXSLFileName));
+			const XSLTInputSource	theInputSource(c_wstr(theXMLFileName));
+			const XSLTInputSource	theStylesheetSource(c_wstr(theXSLFileName));
 
 			// Our output target...
 			const XalanDOMString	theOutputFile("birds.out");
@@ -158,6 +160,13 @@ main(
 			// Set up a diagnostic writer to be used by the TraceListener...
 			XalanStdOutputStream			theStdErr(cerr);
 			XalanOutputStreamPrintWriter	diagnosticsWriter(theStdErr);
+
+			// Make sure that error reporting, which includes any TraceListener output
+			// does not throw exceptions when transcoding, since that could result in
+			// an exception being thrown will another exception is active.  In particular,
+			// characters that the TraceListener writes might not be representable in the
+			// local code page.
+			theStdErr.setThrowTranscodeException(false);
 
 			// Set up the TraceListener... 
 			TraceListenerDefault		theTraceListener(				
