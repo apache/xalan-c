@@ -235,6 +235,7 @@ FunctionSubstring::execute(
 			if (DoubleSupport::isNaN(theSecondArgValue) == true ||
 				DoubleSupport::isNaN(theTotal) == true ||
 				DoubleSupport::isNegativeInfinity(theTotal) == true ||
+				theTotal == 0.0 ||
 				theTotal < double(theStartIndex))
 			{
 				return createEmptyString(executionContext);
