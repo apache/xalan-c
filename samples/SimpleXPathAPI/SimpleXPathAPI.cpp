@@ -75,6 +75,10 @@
 
 
 
+#include <xalanc/PlatformSupport/XSLException.hpp>
+
+
+
 #include <xalanc/DOMSupport/XalanDocumentPrefixResolver.hpp>
 
 
@@ -109,7 +113,9 @@ main(
 	}
 	else
 	{
-		try
+        XALAN_USING_XALAN(XSLException)
+
+        try
 		{
 			XALAN_USING_XERCES(XMLPlatformUtils)
 
@@ -198,9 +204,17 @@ main(
 
 			XMLPlatformUtils::Terminate();
 		}
+        catch(const XSLException&   theException)
+        {
+			cerr << "XSL exception: "
+                 << theException.getMessage()
+                 << endl;
+
+			theResult = -1;
+        }
 		catch(...)
 		{
-			cerr << "Exception caught!" << endl;
+			cerr << "Generic exception caught!" << endl;
 
 			theResult = -1;
 		}
