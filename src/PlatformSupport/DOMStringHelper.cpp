@@ -591,12 +591,12 @@ TransformString(
 
 
 
-template <class SizeType, class FunctionType>
+template <class FunctionType>
 XalanDOMString
 TransformString(
-			const XalanDOMChar*		theInputString,
-			SizeType				theInputStringLength,
-			FunctionType			theFunction)
+			const XalanDOMChar*			theInputString,
+			XalanDOMString::size_type	theInputStringLength,
+			FunctionType				theFunction)
 {
 	assert(theInputString != 0);
 
@@ -888,7 +888,6 @@ doEquals(
 {
 	assert(theLHS != 0 && theRHS != 0);
 
-#if 1
 	if (theLength == 0)
 	{
 		return true;
@@ -913,20 +912,6 @@ doEquals(
 
 		return false;
 	}
-#else
-	for(SizeType i = 0; i < theLength; ++i)
-	{
-		const Type	theLHSChar = theTransformFunction(theLHS[i]);
-		const Type	theRHSChar = theTransformFunction(theRHS[i]);
-
-		if (theLHSChar != theRHSChar)
-		{
-			return false;
-		}
-	}
-
-	return true;
-#endif
 }
 
 
@@ -1367,6 +1352,11 @@ TranscodeNumber(
 
 static const char* const	thePrintfStrings[] =
 {
+	"%.10f",
+	"%.11f",
+	"%.12f",
+	"%.13f",
+	"%.14f",
 	"%.15f",
 	"%.16f",
 	"%.17f",
@@ -1475,7 +1465,7 @@ DoubleToDOMString(
 
 		const char* const *		thePrintfString = thePrintfStrings;
 
-		unsigned int	theCharsWritten = 0;
+		int		theCharsWritten = 0;
 
 		do
 		{
@@ -1499,13 +1489,36 @@ DoubleToDOMString(
 		{
 		}
 
+		int		theCurrentIndex = theCharsWritten;
+
 		// If a decimal point stopped the loop, then
 		// we don't want to preserve it.  Otherwise,
 		// another digit stopped the loop, so we must
 		// preserve it.
-		if(theBuffer[theCharsWritten] != '.')
+		if(isdigit(theBuffer[theCharsWritten]))
 		{
 			++theCharsWritten;
+		}
+
+		// Some other character other than '.' can be the
+		// separator.  This can happen if the locale is
+		// not the "C" locale, etc.  If that's the case,
+		// replace it with '.'.
+		while(theCurrentIndex > 0)
+		{
+			if (isdigit(theBuffer[theCurrentIndex]))
+			{
+				--theCurrentIndex;
+			}
+			else
+			{
+				if (theBuffer[theCurrentIndex] != '.')
+				{
+					theBuffer[theCurrentIndex] = '.';
+				}
+
+				break;
+			}
 		}
 
 		reserve(theResult, length(theResult) + theCharsWritten);
