@@ -154,6 +154,8 @@ private:
 
 	const XalanDOMString						m_value;
 
+	mutable double								m_cachedNumberValue;
+
 #if defined(XALAN_NO_NAMESPACES)
 #if defined(XALAN_NO_MUTABLE)
 	auto_ptr<ResultTreeFragBase>				m_resultTreeFrag;

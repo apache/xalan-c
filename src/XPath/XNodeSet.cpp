@@ -81,6 +81,8 @@ XNodeSet::XNodeSet(
 			const NodeRefListBase&	value) :
 	XObject(&envSupport, &support),
 	m_value(value),
+	m_cachedStringValue(),
+	m_cachedNumberValue(0.0),
 	m_resultTreeFrag()
 {
 }
@@ -93,6 +95,8 @@ XNodeSet::XNodeSet(
 			const MutableNodeRefList&	value) :
 	XObject(&envSupport, &support),
 	m_value(value),
+	m_cachedStringValue(),
+	m_cachedNumberValue(0.0),
 	m_resultTreeFrag()
 {
 }
@@ -105,6 +109,8 @@ XNodeSet::XNodeSet(
 			XalanNode&			value) :
 	XObject(&envSupport, &support),
 	m_value(),
+	m_cachedStringValue(),
+	m_cachedNumberValue(0.0),
 	m_resultTreeFrag()
 {
 	m_value.addNode(&value);
@@ -116,6 +122,8 @@ XNodeSet::XNodeSet(const XNodeSet&	source,
 				   bool				deepClone) :
 	XObject(source),
 	m_value(source.m_value),
+	m_cachedStringValue(source.m_cachedStringValue),
+	m_cachedNumberValue(source.m_cachedNumberValue),
 	m_resultTreeFrag(source.m_resultTreeFrag.get() == 0 ?
 						0 :
 						source.m_resultTreeFrag->clone(deepClone))
@@ -161,7 +169,16 @@ XNodeSet::getTypeString() const
 double
 XNodeSet::num() const
 {
-	return DOMStringToDouble(str());
+	if (m_cachedNumberValue == 0.0)
+	{
+#if defined(XALAN_NO_MUTABLE)
+		((XString*)this)->m_cachedNumberValue = DOMStringToDouble(str());
+#else
+		m_cachedNumberValue = DOMStringToDouble(str());
+#endif
+	}
+
+	return m_cachedNumberValue;
 }
 
 
@@ -179,9 +196,8 @@ XNodeSet::str() const
 {
 	assert(m_support != 0);
 
-	XalanDOMString	theResult;
-
-	if (m_value.getLength() > 0)
+	if (isEmpty(m_cachedStringValue) == true &&
+		m_value.getLength() > 0)
 	{
 		const XalanNode* const	theNode = m_value.item(0);
 		assert(theNode != 0);
@@ -191,15 +207,23 @@ XNodeSet::str() const
 		if (theType == XalanNode::COMMENT_NODE ||
 			theType == XalanNode::PROCESSING_INSTRUCTION_NODE)
 		{
-			theResult = theNode->getNodeValue();
+#if defined(XALAN_NO_MUTABLE)
+			((XNodeSet*)this)->m_cachedStringValue = theNode->getNodeValue();
+#else
+			m_cachedStringValue = theNode->getNodeValue();
+#endif
 		}
 		else
 		{
-			theResult = m_support->getNodeData(*theNode);
+#if defined(XALAN_NO_MUTABLE)
+			((XNodeSet*)this)->m_cachedStringValue = m_support->getNodeData(*theNode);
+#else
+			m_cachedStringValue = m_support->getNodeData(*theNode);
+#endif
 		}
 	}
 
-	return theResult;
+	return m_cachedStringValue;
 }
 
 

@@ -141,7 +141,9 @@ public:
 private:
 
 	// Value of the number being represented.
-	double	m_value;
+	double					m_value;
+
+	mutable XalanDOMString	m_cachedStringValue;
 };
 
 

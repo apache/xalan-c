@@ -73,7 +73,8 @@ XNumber::XNumber(
 			XPathSupport&		support,
 			double				val) :
 	XObject(&envSupport, &support),
-	m_value(val)
+	m_value(val),
+	m_cachedStringValue()
 {
 }
 
@@ -81,7 +82,8 @@ XNumber::XNumber(
 
 XNumber::XNumber(const XNumber&		source) :
 	XObject(source),
-	m_value(source.m_value)
+	m_value(source.m_value),
+	m_cachedStringValue(source.m_cachedStringValue)
 {
 }
 
@@ -140,7 +142,16 @@ XNumber::boolean() const
 XalanDOMString
 XNumber::str() const
 {
-	return DoubleToDOMString(m_value);
+	if (isEmpty(m_cachedStringValue) == true)
+	{
+#if defined(XALAN_NO_MUTABLE)
+		((XNumber*)this)->m_cachedStringValue = DoubleToDOMString(m_value);
+#else
+		m_cachedStringValue = DoubleToDOMString(m_value);
+#endif
+	}
+
+	return m_cachedStringValue;
 }
 
 

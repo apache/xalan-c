@@ -80,6 +80,7 @@ XString::XString(
 			const XalanDOMString&	val) :
 	XObject(&envSupport, &support),
 	m_value(val),
+	m_cachedNumberValue(0.0),
 	m_resultTreeFrag(0)
 {
 }
@@ -134,7 +135,16 @@ XString::getTypeString() const
 double
 XString::num() const
 {
-	return DOMStringToDouble(m_value);
+	if (m_cachedNumberValue == 0.0)
+	{
+#if defined(XALAN_NO_MUTABLE)
+		((XString*)this)->m_cachedNumberValue = DOMStringToDouble(m_value);
+#else
+		m_cachedNumberValue = DOMStringToDouble(m_value);
+#endif
+	}
+
+	return m_cachedNumberValue;
 }
 
 
