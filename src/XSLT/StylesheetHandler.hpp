@@ -105,7 +105,8 @@ public:
 #if defined(XALAN_NO_NAMESPACES)
 	typedef vector<ElemTemplateElement*>		ElemTemplateStackType;
 	typedef vector<ElemTextLiteral*>			ElemTextLiteralStackType;
-	typedef set<ElemTemplateElement*>			ElemTemplateSetType;
+	typedef set<ElemTemplateElement*,
+				less<ElemTemplateElement*> >	ElemTemplateSetType;
 #else
 	typedef std::vector<ElemTemplateElement*>	ElemTemplateStackType;
 	typedef std::vector<ElemTextLiteral*>		ElemTextLiteralStackType;
