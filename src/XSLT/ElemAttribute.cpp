@@ -208,10 +208,8 @@ ElemAttribute::execute(StylesheetExecutionContext&		executionContext) const
 				const XalanDOMString*  const	prefix =
 					executionContext.getResultPrefixForNamespace(attrNameSpace);
 
-				if(prefix != 0)
+				if(prefix != 0 && length(*prefix) != 0)
 				{
-					assert(length(*prefix) != 0);
-
 					if(indexOfNSSep < origAttrNameLength)
 					{
 						reserve(
