@@ -90,8 +90,8 @@ ElemVariable::ElemVariable(
 						lineNumber,
 						columnNumber,
 						xslToken),
-	m_selectPattern(0), 
 	m_qname(),
+	m_selectPattern(0),
 	m_isTopLevel(false),
 	m_value(0),
 	m_varContext(0)

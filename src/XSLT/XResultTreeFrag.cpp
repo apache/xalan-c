@@ -86,9 +86,9 @@
 XResultTreeFrag::XResultTreeFrag(ResultTreeFragBase&	value) :
 	XObject(eTypeResultTreeFrag),
 	m_value(&value),
+	m_executionContext(0),
 	m_cachedStringValue(),
-	m_cachedNumberValue(0.0),
-	m_executionContext(0)
+	m_cachedNumberValue(0.0)
 {
 }
 
@@ -99,9 +99,9 @@ XResultTreeFrag::XResultTreeFrag(
 			bool					/* deepClone */) :
 	XObject(source),
 	m_value(source.m_value),
+	m_executionContext(0),
 	m_cachedStringValue(source.m_cachedStringValue),
-	m_cachedNumberValue(source.m_cachedNumberValue),
-	m_executionContext(0)
+	m_cachedNumberValue(source.m_cachedNumberValue)
 {
 	assert(m_value != 0);
 }
