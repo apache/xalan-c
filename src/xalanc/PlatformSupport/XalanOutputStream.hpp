@@ -185,7 +185,8 @@ public :
 
 	/**
 	 * Write a null-terminated string to the output file.  The character
-	 * will not be transcoded.
+	 * will not be transcoded.  The caller is responsible for making sure the
+	 * buffer is flushed before calling this member function.
 	 *
 	 * @param theBuffer 	  character buffer to write
 	 */
@@ -193,6 +194,7 @@ public :
 	write(const char*	theBuffer)
 	{
 		assert(theBuffer != 0);
+		assert(m_buffer.empty() == true);
 
 		write(theBuffer, length(theBuffer));
 	}
@@ -211,7 +213,8 @@ public :
 
 	/**
 	 * Write a specified number of characters to the output stream.  The string
-	 * will not be transcoded.
+	 * will not be transcoded.  The caller is responsible for making sure the
+	 * buffer is flushed before calling this member function.
 	 *
 	 * @param theBuffer 	  character buffer to write
 	 * @param theBufferLength number of characters to write
@@ -222,8 +225,7 @@ public :
 			size_type		theBufferLength)
 	{
 		assert(theBuffer != 0);
-
-		flushBuffer();
+		assert(m_buffer.empty() == true);
 
 		writeData(theBuffer,
 				  theBufferLength);
