@@ -86,7 +86,11 @@ static const union
 
 #endif
 
+#if defined(_AIX)
+const double    DoubleSupport::s_NaN = DBL_QNAN;
+#else
 const double	DoubleSupport::s_NaN = sqrt(-2.01);
+#endif
 const double	DoubleSupport::s_positiveInfinity = XALAN_POSITIVE_INFINITY;
 
 #else
