@@ -101,7 +101,7 @@ public:
 	/**
 	 * Create a XercesAttrBridge instance.
 	 * 
-	 * @param theXercesText The Xerces attribute node
+	 * @param theXercesAttr The Xerces attribute node
 	 * @param theNavigator The navigator for this instance.
 	 *
 	 * @return pointer to the instance
