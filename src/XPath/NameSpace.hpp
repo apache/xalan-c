@@ -64,7 +64,7 @@
 
 
 
-#include <XalanDOM/XalanDOMString.hpp>
+#include <PlatformSupport/DOMStringHelper.hpp>
 
 
 
@@ -87,8 +87,7 @@ public:
 			const XalanDOMString&	prefix = XalanDOMString(),
 			const XalanDOMString&	uri = XalanDOMString()) :
     m_prefix(prefix),
-    m_uri(uri),
-	m_resultCandidate(true)
+    m_uri(uri)
 	{
 	}
 
@@ -104,6 +103,17 @@ public:
 	}
 
 	/**
+	 * Set the prefix for namespace
+	 * 
+	 * @param prefix The new prefix value
+	 */
+	void
+	setPrefix(const XalanDOMString&		prefix)
+	{
+		m_prefix = prefix;
+	}
+
+	/**
 	 * Retrieve the URI for namespace
 	 * 
 	 * @return URI string
@@ -115,50 +125,34 @@ public:
 	}
 
 	/**
-	 * Whether the namespace is a candidate for result namespace.
+	 * Set the URI for namespace
 	 * 
-	 * @return true if it is a candidate
-	 */
-	bool
-	getResultCandidate() const
-	{
-		return m_resultCandidate;
-	}
-
-	/**
-	 * Set whether the namespace is a candidate for result namespace.
-	 * 
-	 * @param fResultCandidate true to set namespace as candidate
+	 * @param uri The new uri value
 	 */
 	void
-	setResultCandidate(bool		fResultCandidate)
+	setURI(const XalanDOMString&	uri)
 	{
-		m_resultCandidate = fResultCandidate;
+		m_uri = uri;
 	}
 
 	/**
-	 * Assignment operator, required for STL vector.
-	 * 
-	 * @param theRHS namespace to assign
+	 * Equality operator, necessary because DOMString::==()
+	 * has screwy semantics.
+	 *
+	 * @param theRHS namespace to compare
 	 */
-	NameSpace&
-	operator=(const NameSpace&	theRHS)
+	bool
+	operator==(const NameSpace&		theRHS) const
 	{
-		if (&theRHS != this)
-		{
-			m_prefix = theRHS.m_prefix;
-			m_uri = theRHS.m_uri;
-			m_resultCandidate = theRHS.m_resultCandidate;
-		}
-
-		return *this;
+		return equals(m_prefix, theRHS.m_prefix) &&
+			   equals(m_uri, theRHS.m_uri);
 	}	
 
 private:
 
 	XalanDOMString	m_prefix;
+
 	XalanDOMString	m_uri; // if length is 0, then Element namespace is empty.
-	bool			m_resultCandidate;
 };
 
 
