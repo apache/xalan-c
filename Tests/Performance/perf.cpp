@@ -57,6 +57,10 @@
 
 #include <iostream>
 #include <strstream>
+#include <stdio.h>
+#include <direct.h>
+//#include <stdlib.h>
+
 
 #if !defined(NDEBUG) && defined(_MSC_VER)
 #include <crtdbg.h>
@@ -87,6 +91,7 @@
 
 #include <XMLFileReporter.hpp>
 #include <FileUtility.hpp>
+#include <HarnessInit.hpp>
 
 #if !defined(XALAN_NO_NAMESPACES)
 	using std::cerr;
@@ -128,6 +133,8 @@ const char* const 	excludeStylesheets[] =
 	//"large-cem10k.xsl",
 	0
 };
+const XalanDOMString	pathSep(XalanDOMString("\\"));
+
 
 inline bool
 checkForExclusion(XalanDOMString currentFile)
@@ -269,144 +276,141 @@ void
 printArgOptions()
 {
 	cerr << endl
-		 << "Perf options (options are not case-sensitive)"
+		 << "Perf dirname [-out -category -i -iter]"
 		 << endl
 		 << endl
-		 << "-base dirname      (base directory for testcases)"
+		 << "dirname		(base directory for testcases)"
 		 << endl
+		 << "-out dirname	(base directory for output)"
 		 << endl
-		 << "[-out dirname      (base directory for output) ]"
+		 << "-category dirname (run files only from a specific directory)"
 		 << endl
-		 << "[-category dirname (run files only from a specific directory) ]"
+		 << "-i                (include all testcases)"
 		 << endl
-		 << "[-i                (include all testcases) ]"
-		 << endl
-		 << "[-iter n           (specifies number of iterations; must be > 0)  ]"
+		 << "-iter n           (specifies number of iterations; must be > 0)"
 		 << endl;
 }
 
+void
+checkAndCreateDir(XalanDOMString directory )
+{
+char buffer[_MAX_PATH]; // buffer2[_MAX_PATH], buffer3[_MAX_PATH];
+const char* buf;
+
+	_getcwd( buffer, _MAX_PATH );
+
+
+	if ( (_chdir(c_str(TranscodeToLocalCodePage(directory)))) )
+	{
+		//cout << "Couldn't change to " << directory << ", will create it." << endl;
+		if ( !(_mkdir(c_str(TranscodeToLocalCodePage(directory)))))
+		{
+			cout << directory << " created." << endl;
+		}
+	}
+
+	_chdir(buffer);
+}
+
+
 bool
 getParams(int argc, 
-		  const char*	argv[], 
-		  long& iterCount, 
-		  bool& skip,
-		  bool& cat,
+		  const char*	argv[],
+		  XalanDOMString& basedir,
+		  XalanDOMString& outdir,
 		  XalanDOMString& category,
-		  XalanDOMString& basedir)
+		  bool& skip,
+		  long& iterCount)
 {
-	if (argc = 1 )
+bool fSuccess = true;	// Used to continue argument loop
+bool fSetOut = true;	// Set default output directory
+
+
+	// Insure that required "-base" argument is there.
+	if (argc == 1 || argv[1][0] == '-')
 	{
 		printArgOptions(); 
 		return false;
 	}
-
-	if (argc >= 2)
+	else
 	{
-		iterCount = atol(argv[1]);
-		if (iterCount <= 0)
+		assign(basedir, XalanDOMString(argv[1]));
+		insert(basedir, 0, pathSep);
+	}
+
+	// Get the rest of the arguments in any order.
+	for (int i = 2; i < argc && fSuccess == true; ++i)
+	{
+		if(!stricmp("-out", argv[i]))
 		{
-			cerr << "Usage: perf <count, -i(nclude)>" << endl  << endl;
-			return false;
+			++i;
+			if(i < argc && argv[i][0] != '-')
+			{
+				assign(outdir, XalanDOMString(argv[i]));
+				insert(outdir, 0, XalanDOMString("\\"));
+				append(outdir, XalanDOMString("\\"));
+				checkAndCreateDir(outdir);
+				fSetOut = false;
+			}
+			else
+			{
+				printArgOptions();
+				fSuccess = false;
+			}
 		}
-		else if (argc >= 3 && !stricmp(argv[2], "-i"))
+		else if(!stricmp("-category", argv[i]))
+		{
+			++i;
+			if(i < argc && argv[i][0] != '-')
+			{
+				assign(category, XalanDOMString(argv[i]));
+			}
+			else
+			{
+				printArgOptions();
+				fSuccess = false;
+			}
+		}
+		else if(!stricmp("-i", argv[i]))
 		{
 			skip = false;
 		}
-	}
-
-	if (argc >= 4 && !stricmp(argv[3], "-category"))
+		else if(!stricmp("-iter", argv[i]))
 		{
-			cout << argv[4] << endl;
-			cat = true;
-			assign(category, XalanDOMString(argv[4]));
-		}
-
-	if (argc >= 5 && !stricmp(argv[5], "-basedir"))
-		{
-			cout << argv[6] << endl;
-			assign(basedir, XalanDOMString(argv[6]));
-		}
-
-	return true;
-}
-
-bool
-getParamsNEW(int argc, 
-		  const char*	argv[], 
-		  long& iterCount, 
-		  bool& skip,
-		  XalanDOMString& category,
-		  XalanDOMString& basedir,
-		  XalanDOMString& outdir)
-{
-	bool fSuccess = true;
-
-	if (argc == 1 )
-	{
-		printArgOptions(); 
-		return false;
-	}
-	for (int i = 1; i < argc && fSuccess == true; ++i)
-	{
-
-	if(!stricmp("-base", argv[i]))
-	{
-		++i;
-		if(i < argc && argv[i][0] != '-')
-		{
-			assign(basedir, XalanDOMString(argv[i]));
+			++i;
+			
+			// Make sure number is there and is greater then zero
+			if(i < argc && atol(argv[i]) > 0)
+			{
+				iterCount = atol(argv[i]);
+			}
+			else
+			{
+				printArgOptions();
+				fSuccess = false;
+			}
 		}
 		else
-		{
-			fSuccess = false;
-		}
-	}
-	else if(!stricmp("-out", argv[i]))
-	{
-		++i;
-		if(i < argc && argv[i][0] != '-')
-		{
-			assign(outdir, XalanDOMString(argv[i]));
-		}
-		else
-		{
-			fSuccess = false;
-		}
-	}
-	else if(!stricmp("-category", argv[i]))
-	{
-		++i;
-		if(i < argc && argv[i][0] != '-')
-		{
-			assign(category, XalanDOMString(argv[i]));
-		}
-		else
-		{
-			fSuccess = false;
-		}
-	}
-	else if(!stricmp("-i", argv[i]))
-	{
-		skip = false;
-	}
-	else if(!stricmp("-iter", argv[i]))
-	{
-		++i;
-		iterCount = atol(argv[i]);
-		if (iterCount <= 0)
 		{
 			printArgOptions();
 			fSuccess = false;
 		}
-	}
 
 	} // End of for-loop
+
+	// Do we need to set the default output directory??
+	if (fSetOut)
+	{
+		unsigned int ii = lastIndexOf(basedir,charAt(pathSep,0));
+		outdir = substring(basedir, 0, ii+1);
+		append(outdir,XalanDOMString("PERF-RESULTS\\"));
+		checkAndCreateDir(outdir);
+	}
+	
+	// Add the path seperator to the end of the base directory
+	append(basedir,pathSep);
 	return fSuccess;
 }
-
-
-
-
 
 
 int
@@ -424,15 +428,14 @@ main(
 	Hashtable runAttrs;
 	long iterCount = 5;	// Default number of iterations
 	bool skip = true;	// Default will skip long tests
-	bool cat = false;   // run tests from single directory
 
-	XalanDOMString  category(XalanDOMString("")); // Default perf/dir to test
-	XalanDOMString  baseDir(XALAN_STATIC_UCODE_STRING("d:\\xslt\\xsl-test\\perf\\"));
-	XalanDOMString  outputRoot(XALAN_STATIC_UCODE_STRING("d:\\xslt\\cperf-results\\"));
-	XalanDOMString  resultsRoot(XALAN_STATIC_UCODE_STRING("d:\\xslt\\xsl-test\\perf-dataxml\\"));
+	XalanDOMString  category;	// Test all of base dir by default
+	XalanDOMString  baseDir;	//(XALAN_STATIC_UCODE_STRING("\\xslt\\xsl-test\\perf\\"));
+	XalanDOMString  outputRoot;	//(XALAN_STATIC_UCODE_STRING(""));
+	XalanDOMString  resultsRoot(XALAN_STATIC_UCODE_STRING("\\xslt\\xsl-test\\perf-dataxml\\"));
+	//const XalanDOMString  pathSep(XALAN_STATIC_UCODE_STRING("\\"));
 
-
-	if (getParamsNEW(argc, argv, iterCount, skip, category, baseDir, outputRoot) == true)
+	if (getParams(argc, argv, baseDir, outputRoot, category, skip, iterCount) == true)
 	{
 
 		FileUtility f;
@@ -449,7 +452,7 @@ main(
 		const XalanDOMString  resultFilePrefix(XalanDOMString("cpp"));
 		const XalanDOMString  resultsFile(resultsRoot + resultFilePrefix + UniqRunid + XMLSuffix);
 
-		const XalanDOMString  pathSep(XALAN_STATIC_UCODE_STRING("\\"));
+
 
 		// Get the list of Directories that are below perf
 		const FileNameVectorType dirs = f.getDirectoryNames(baseDir);
@@ -466,16 +469,27 @@ main(
 		try
 		{
 			// Call the static initializers... and define file suffixes
-			XMLPlatformUtils::Initialize();
+			// Having xmlplatformutils in it's own class like this means that if there are
+			// exceptions then terminate() is sure to run because it will automatically get
+			// cleaned up when this instance goes out of scope.
+			HarnessInit xmlPlatformUtils;
+
 			{
 				XSLTInit	theInit;  
 
 				for(FileNameVectorType::size_type	j = 0; j < dirs.size(); j++)
 				{
+					// Run specific category of files from given directory
 					if (length(category) > 0 && !equals(dirs[j], category))
 					{
 						continue;
 					}
+
+					cout << "Processing files in Directory: " << dirs[j] << endl;
+
+					// Check that output directory is there.
+					const XalanDOMString  theOutputDir = outputRoot + dirs[j];
+					checkAndCreateDir(theOutputDir);
 
 					logFile.logTestCaseInit(XalanDOMString("Performance Directory: ") + dirs[j] ); 
 					const FileNameVectorType files = f.getTestFileNames(baseDir, dirs[j], false);
@@ -498,6 +512,7 @@ main(
 
 						const XalanDOMString  theXSLFile= baseDir + dirs[j] + pathSep + files[i];
 						const XalanDOMString  theXMLFile = f.GenerateFileName(theXSLFile,"xml");
+
 						const XalanDOMString  theOutput =  outputRoot + dirs[j] + pathSep + files[i]; 
 						const XalanDOMString  theOutputFile = f.GenerateFileName(theOutput, "out");
 
@@ -692,23 +707,24 @@ main(
 
 			}//xsltinit
 
-
-			logFile.logTestFileClose("Performance", "Done");
-			logFile.close();
-
-			XMLPlatformUtils::Terminate();
+		logFile.logTestFileClose("Performance", "Done");
+		logFile.close();
 
 		}//try
 
-		catch(const XalanFileOutputStream::XalanFileOutputStreamOpenException&)
+		catch(const XalanFileOutputStream::XalanFileOutputStreamOpenException& ex)
 		{
-			cerr << "Could not open output file" << endl << endl;
+			cerr << ex.getMessage() << endl << endl;
 		}
 
 		catch(...)
 		{
 			cerr << "Exception caught!!!" << endl  << endl;
 		}
+		
+
+
+		//XMLPlatformUtils::Terminate();
 
 	} //if getParams
 
