@@ -1116,19 +1116,22 @@ StylesheetHandler::processImport(
 			Stylesheet::URLStackType& includeStack = m_stylesheet.getIncludeStack();
 			assert(includeStack.size() > 0);
 
-			const XMLURL* const		hrefUrl = m_processor.getURLFromString(href, includeStack.back()->getURLText());
-			assert(hrefUrl != 0);
+			typedef StylesheetConstructionContext::URLAutoPtrType	URLAutoPtrType;
+
+			URLAutoPtrType	hrefUrl = m_constructionContext.getURLFromString(href, includeStack.back()->getURLText());
+			assert(hrefUrl.get() != 0);
 
 			Stylesheet::URLStackType& importStack = m_stylesheet.getStylesheetRoot().getImportStack();
 
-			if(stackContains(importStack, *hrefUrl))
+			if(stackContains(importStack, *hrefUrl.get()))
 			{
 				XalanDOMString msg(XalanDOMString(hrefUrl->getURLText()) + " is directly or indirectly importing itself!");
 
 				throw SAXException(toCharArray(msg));
 			}
 
-			importStack.push_back(hrefUrl);
+			importStack.push_back(hrefUrl.get());
+			hrefUrl.release();
 
 			const XalanDOMString	theImportURI(hrefUrl->getURLText());
 
@@ -1187,17 +1190,20 @@ StylesheetHandler::processInclude(
 
 			const XalanDOMString	href = atts.getValue(i);
 
-			assert(m_stylesheet.getIncludeStack().back() != 0);
-			const XMLURL* const		hrefUrl = m_processor.getURLFromString(href, m_stylesheet.getIncludeStack().back()->getURLText());
+			typedef StylesheetConstructionContext::URLAutoPtrType	URLAutoPtrType;
 
-			if(stackContains(m_stylesheet.getIncludeStack(), *hrefUrl))
+			assert(m_stylesheet.getIncludeStack().back() != 0);
+			URLAutoPtrType	hrefUrl = m_constructionContext.getURLFromString(href, m_stylesheet.getIncludeStack().back()->getURLText());
+
+			if(stackContains(m_stylesheet.getIncludeStack(), *hrefUrl.get()))
 			{
 				XalanDOMString msg(XalanDOMString(hrefUrl->getURLText()) + " is directly or indirectly including itself!");
 
 				throw SAXException(toCharArray(msg));
 			}
 
-			m_stylesheet.getIncludeStack().push_back(hrefUrl);
+			m_stylesheet.getIncludeStack().push_back(hrefUrl.get());
+			hrefUrl.release();
 
 			m_processor.parseXML(*hrefUrl, this, &m_stylesheet);
 

@@ -66,6 +66,7 @@
 
 
 #include <PlatformSupport/STLHelper.hpp>
+#include <PlatformSupport/URISupport.hpp>
 
 
 
@@ -205,20 +206,20 @@ StylesheetConstructionContextDefault::getAttrTok(const XalanDOMString&	name) con
 
 
 
-XMLURL*
+StylesheetConstructionContextDefault::URLAutoPtrType
 StylesheetConstructionContextDefault::getURLFromString(const XalanDOMString&	urlString)
 {
-	return m_processor.getURLFromString(urlString);
+	return URISupport::getURLFromString(urlString);
 }
 
 
 
-XMLURL*
+StylesheetConstructionContextDefault::URLAutoPtrType
 StylesheetConstructionContextDefault::getURLFromString(
 			const XalanDOMString&	urlString,
 			const XalanDOMString&	base)
 {
-	return m_processor.getURLFromString(urlString, base);
+	return URISupport::getURLFromString(urlString, base);
 }
 
 

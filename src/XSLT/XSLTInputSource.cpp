@@ -73,6 +73,7 @@
 
 #include <PlatformSupport/DOMStringHelper.hpp>
 #include <PlatformSupport/StdBinInputStream.hpp>
+#include <PlatformSupport/URISupport.hpp>
 
 
 
@@ -160,6 +161,11 @@ XSLTInputSource::makeStream() const
 	}
 	else if (m_node == 0)
 	{
+#if 1
+		URISupport::URLAutoPtrType	theURL = URISupport::getURLFromString(getSystemId());
+
+		theResult = theURL->makeNewStream();
+#else
 		const XMLCh* const	theSystemID =
 			getSystemId();
 
@@ -188,6 +194,7 @@ XSLTInputSource::makeStream() const
 				theResult = inputSource.makeStream();
 			}
 		}
+#endif
 	}
 
 	return theResult;

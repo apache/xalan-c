@@ -70,6 +70,7 @@
 
 #include <PlatformSupport/DOMStringHelper.hpp>
 #include <PlatformSupport/STLHelper.hpp>
+#include <PlatformSupport/URISupport.hpp>
 
 
 
@@ -280,28 +281,14 @@ XSLTProcessorEnvSupportDefault::parseXML(
 		XMLParserLiaison&	parserLiaison =
 			m_processor->getXMLParserLiaison();
 
+		typedef URISupport::URLAutoPtrType	URLAutoPtrType;
+
 		// $$$ ToDo: we should re-work this code to only use
 		// XMLRUL when necessary.
-		XMLURL	xslURL;
+		URLAutoPtrType	xslURL =
+			URISupport::getURLFromString(urlString, base);
 
-		// This is a work-around for what I believe is a bug in the
-		// Xerces URL code.  If a base identifier ends in a slash,
-		// they chop of characters back to the _previous_ slash.
-		// So, for instance, a base of "/foo/foo/foo/" and a
-		// urlString of file.xml would become /foo/foo/file.xml,
-		// instead of /foo/foo/foo/file.xml.
-		const unsigned int	indexOfSlash = lastIndexOf(base, '/');
-
-		if (indexOfSlash == length(base) - 1)
-		{
-			xslURL.setURL(c_wstr(base + urlString));
-		}
-		else
-		{
-			xslURL.setURL(c_wstr(base), c_wstr(urlString));
-		}
-
-		const XMLCh* const	urlText = xslURL.getURLText();
+		const XMLCh* const	urlText = xslURL->getURLText();
 
 		XSLTInputSource		inputSource(urlText);
 

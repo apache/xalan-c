@@ -147,11 +147,15 @@ Stylesheet::Stylesheet(
 {
 	if (length(m_baseIdent) != 0)
 	{
-		const XMLURL* const url = constructionContext.getURLFromString(m_baseIdent);
+		typedef StylesheetConstructionContext::URLAutoPtrType	URLAutoPtrType;
 
-		if (url != 0)
+		URLAutoPtrType	url = constructionContext.getURLFromString(m_baseIdent);
+
+		if (url.get() != 0)
 		{
-			m_includeStack.push_back(url);
+			m_includeStack.push_back(url.get());
+
+			url.release();
 		}
 	}
 }

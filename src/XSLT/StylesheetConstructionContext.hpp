@@ -71,13 +71,16 @@
 
 
 
+#include <PlatformSupport/URISupport.hpp>
+
+
+
 #include <XalanDOM/XalanDOMString.hpp>
 
 
 
 class PrefixResolver;
 class StylesheetRoot;
-class XMLURL;
 class XPath;
 class XSLTInputSource;
 
@@ -90,6 +93,8 @@ class XSLTInputSource;
 class XALAN_XSLT_EXPORT StylesheetConstructionContext : public ExecutionContext
 {
 public:
+
+	typedef URISupport::URLAutoPtrType	URLAutoPtrType;
 
 	explicit
 	StylesheetConstructionContext();
@@ -152,9 +157,9 @@ public:
 	 * Determine the fully qualified URI for a string.
 	 *
 	 * @param urlString string to qualify
-	 * @return pointer to fully qualified URI
+	 * @return auto pointer to fully qualified URI
 	 */
-	virtual XMLURL*
+	virtual URLAutoPtrType
 	getURLFromString(const XalanDOMString&	urlString) = 0;
 
 	/**
@@ -162,9 +167,9 @@ public:
 	 *
 	 * @param urlString string to qualify
 	 * @param base base location for URI
-	 * @return pointer to fully qualified URI
+	 * @return auto pointer to fully qualified URI
 	 */
-	virtual XMLURL*
+	virtual URLAutoPtrType
 	getURLFromString(
 			const XalanDOMString&	urlString,
 			const XalanDOMString&	base) = 0;

@@ -1329,26 +1329,7 @@ public:
 			const XalanDOMString&	mimeType,
 			DispatcherFactory*		factory);
 
-	/**
-	 * Determine the fully qualified URI for a string.
-	 *
-	 * @param urlString string to qualify
-	 * @return pointer to fully qualified URI
-	 */
-	XMLURL*
-	getURLFromString(const XalanDOMString&	urlString) const;
-
-	/**
-	 * Determine the fully qualified URI for a string.
-	 *
-	 * @param urlString string to qualify
-	 * @param base base location for URI
-	 * @return pointer to fully qualified URI
-	 */
-	XMLURL*
-	getURLFromString(
-			const XalanDOMString&	urlString,
-			const XalanDOMString&	base) const;
+public:
 
 	/**
 	 * Retrieve the XPath support object

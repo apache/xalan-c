@@ -517,17 +517,8 @@ XSLTEngineImpl::processStylesheet(
 {
 	try
 	{
-#if !defined(XALAN_NO_NAMESPACES)
-		using std::auto_ptr;
-#endif
-#if 0
-		auto_ptr<XMLURL> url(getURLFromString(xsldocURLString));
-		assert(url.get() != 0);
-
-		XSLTInputSource		input(url->getURLText(), 0);
-#else
 		XSLTInputSource		input(c_wstr(xsldocURLString));
-#endif
+
 		return processStylesheet(input, constructionContext);
 	}
 	catch(SAXException& se)
@@ -878,11 +869,9 @@ XSLTEngineImpl::getStylesheetFromPIURL(
 
 		StylesheetHandler stylesheetProcessor(*this, *stylesheet, constructionContext);
 
-#if !defined(XALAN_NO_NAMESPACES)
-		using std::auto_ptr;
-#endif
+		typedef StylesheetConstructionContext::URLAutoPtrType	URLAutoPtrType;
 
-		auto_ptr<XMLURL>	xslURL(getURLFromString(localXSLURLString, xmlBaseIdent));
+		URLAutoPtrType	xslURL(constructionContext.getURLFromString(localXSLURLString, xmlBaseIdent));
 
 		XSLTInputSource		inputSource(xslURL->getURLText());
 
@@ -3571,161 +3560,6 @@ XSLTEngineImpl::findElementByAttribute(
 
 	return theFoundElement;
 }
-
-
-
-#if !defined(WIN32)
-inline constXalanDOMString&
-NormalizeURI(const XalanDOMString&	uriString)
-{
-	return uriString;
-}
-#else
-XalanDOMString
-NormalizeURI(const XalanDOMString&	uriString)
-{
-	using std::vector;
-
-	XalanDOMString	theResult;
-
-	// OK, look for a quick, cheap exit...
-	const unsigned int	len = length(uriString);
-	const unsigned int	index = indexOf(uriString, '\\');
-
-	if (index == len)
-	{
-		// Nothing to normalize, so we're done...
-		theResult = uriString;
-	}
-	else
-	{
-		vector<XalanDOMChar>	theBuffer(c_wstr(uriString), c_wstr(uriString) + len);
-
-		std::replace(theBuffer.begin(), theBuffer.end(), '\\', '/');
-
-		theResult = XalanDOMString(&theBuffer[0], theBuffer.size());
-	}
-
-	return theResult;
-}
-#endif
-
-
-
-XMLURL*
-XSLTEngineImpl::getURLFromString(const XalanDOMString&	urlString) const
-{
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::auto_ptr;
-#endif
-
-	auto_ptr<XMLURL>	url(new XMLURL);
-
-	try 
-	{
-		XalanDOMString	theNormalizedURI;
-
-		// Let's see what sort of URI we have...
-		const unsigned int	len = length(urlString);
-		const unsigned int	index = indexOf(urlString, ':');
-
-#if !defined(WIN32)
-		const bool			protocolPresent = index != len;
-#else
-		// This test will fail if someone uses the form v:/foo/foo.xsl,
-		// so I hope they don't do that...
-		const bool			protocolPresent = index != len &&
-									!(index == 1 && charAt(urlString, index + 1) == '\\');
-#endif
-
-		if (protocolPresent == true)
-		{
-			theNormalizedURI = NormalizeURI(urlString);
-		}
-		else
-		{
-			// Assume it's a file specification...
-			array_auto_ptr<XMLCh>	theFullPath(XMLPlatformUtils::getFullPath(c_wstr(urlString)));
-			assert(theFullPath.get() != 0);
-
-			theNormalizedURI =
-#if defined(WIN32)
-				XALAN_STATIC_UCODE_STRING("file:///")
-#else
-				XALAN_STATIC_UCODE_STRING("file://")
-#endif
-					+ NormalizeURI(theFullPath.get());
-		}
-
-		url->setURL(c_wstr(theNormalizedURI));
-	}
-	catch (...)
-	{
-		diag("Error! Cannot create url for: " + urlString);
-
-		throw;
-	}
-
-	return url.release();
-}
-
-
-
-XMLURL* XSLTEngineImpl::getURLFromString(const XalanDOMString&	urlString, const XalanDOMString& base) const
-{
-	XalanDOMString	context(NormalizeURI(base));
-
-	if (isEmpty(context) == false)
-	{
-		const unsigned int	theLength = length(base);
-
-		const unsigned int	index = lastIndexOf(base,'/');
-
-		if (index < theLength)
-		{
-			context = substring(context, 0, index + 1);
-		}
-	}
-
-	// OK, now let's look at the urlString...
-
-	// Is there a colon, indicating some sort of drive spec, or protocol?
-	const unsigned int	theLength = length(urlString);
-	const unsigned int	theColonIndex = indexOf(urlString, ':');
-
-	if (theColonIndex == theLength)
-	{
-		// No colon, so just use the urlString as is...
-		context += urlString;
-	}
-#if defined(WIN32)
-	else if (theColonIndex == 1 && charAt(urlString, theColonIndex + 1) == '\\')
-	{
-		// Ahh, it's a drive letter, so ignore the context...
-		// $$$ ToDo: This is not quite right. Perhaps a
-		// protocol can be one character?
-		context = urlString;
-	}
-#endif
-	else
-	{
-		// Assume it's a protocol...
-		const XalanDOMString	theProtocol(substring(urlString, 0, theColonIndex));
-
-		if (startsWith(context, theProtocol) == true)
-		{
-			// OK, everything looks good, so strip off the protocol and colon...
-			context += substring(urlString, theColonIndex + 1, theLength);
-		}
-		else
-		{
-			// OK, not the same protocol, so what can we do???
-			context = urlString;
-		}
-	}
-
-	return getURLFromString(context);
-}	
 
 
 

@@ -140,10 +140,10 @@ public:
 	virtual int
 	getAttrTok(const XalanDOMString&	name) const;
 
-	virtual XMLURL*
+	virtual URLAutoPtrType
 	getURLFromString(const XalanDOMString&	urlString);
 
-	virtual XMLURL*
+	virtual URLAutoPtrType
 	getURLFromString(
 			const XalanDOMString&	urlString,
 			const XalanDOMString&	base);

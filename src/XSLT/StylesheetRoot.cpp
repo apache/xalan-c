@@ -145,13 +145,15 @@ StylesheetRoot::StylesheetRoot(
 
 	if (length(baseIdentifier) != 0)
 	{
-		auto_ptr<XMLURL>	url(constructionContext.getURLFromString(m_baseIdent));
+		typedef StylesheetConstructionContext::URLAutoPtrType	URLAutoPtrType;
+
+		URLAutoPtrType	url(constructionContext.getURLFromString(m_baseIdent));
 
 		if (url.get() != 0)
 		{
 			m_baseIdent = url->getURLText();
 
-			auto_ptr<XMLURL>	url2(constructionContext.getURLFromString(m_baseIdent));
+			URLAutoPtrType	url2(constructionContext.getURLFromString(m_baseIdent));
 
 			if (url2.get() != 0)
 			{
