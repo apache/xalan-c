@@ -90,7 +90,7 @@ TESTXSLT_DIR = TestXSLT
 XMLSUPPORT_DIR = XMLSupport
 XPATH_DIR = XPath
 XSLT_DIR = XSLT
-XERCESINIT_DIR = XercesInit
+XALANEXTENSIONS_DIR = XalanExtensions
 XERCESPARSERLIAISON_DIR = XercesParserLiaison
 XALANTRANSFORMER_DIR = XalanTransformer
 ALL_OBJECTS_DIR = ${XALANCROOT}/obj
@@ -109,7 +109,7 @@ BINTARGETDIR=${XALANCROOT}/bin
 
 ALL_VPATH_CPP = \
 $(XALANDOM_DIR):$(DOMSUPPORT_DIR):$(PLATFORMSUPPORT_DIR):$(XALANSOURCETREE_DIR):$(TESTXPATH_DIR):$(TESTXSLT_DIR):\
-$(XMLSUPPORT_DIR):$(XPATH_DIR):$(XSLT_DIR):$(XERCESINIT_DIR):$(XALANTRANSFORMER_DIR):$(XERCESPARSERLIAISON_DIR)
+$(XMLSUPPORT_DIR):$(XPATH_DIR):$(XSLT_DIR):$(XALANEXTENSIONS_DIR):$(XALANTRANSFORMER_DIR):$(XERCESPARSERLIAISON_DIR)
 
 # Using ICUBridge
 ifdef XALAN_USE_ICU
@@ -282,8 +282,8 @@ ifdef XALAN_USE_ICU
 ifeq ($(PLATFORM), OS390)                                             
 ALLLIBS += ${ICUROOT}/lib/libicu-uc.x ${ICUROOT}/lib/libicu-i18n.x    
 else                                                                  
-ALLLIBS += -L/usr/local/lib -licu-uc
-ALLLIBS += -L/usr/local/lib -licu-i18n
+ALLLIBS += -L/usr/local/lib -licuuc
+ALLLIBS += -L/usr/local/lib -licui18n
 endif
 endif
 
