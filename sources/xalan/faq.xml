@@ -103,18 +103,12 @@
 <p>For more details see: <link idref="usagepatterns" anchor="icu">Using the International Components for Unicode (ICU)</link>.<anchor name="gnutar"/></p></a>
 </faq>
 
-   <faq title="I am getting a tar checksum error on Solaris. What's the problem?">
+   <faq title="A tar checksum error on Solaris.">
       <q>I am getting a tar checksum error on Solaris. What's the problem?</q>
       <a>
-         <p>The problem is caused by a limitation in the original tar spec, which
-            prevented it from archiving files with long pathnames.  Unfortunately,
-            various current versions of tar use different extensions for eliminating
-            this restriction which are incompatible with each other (or they do not
-            remove the restriction at all).  Rather than altering the pathnames for
-            the xerces-c package, which would make them compatible with the original
-            tar spec but make it more difficult to know what was where, it was
-            decided to use GNU tar (gtar), which handles arbitrarily long pathnames
-            and is freely available on every platform on which xerces-c is
+         <p>The Solaris tar utility you are using does not properly handle files with long pathnames.
+         You must use GNU tar (gtar), which handles arbitrarily long pathnames
+            and is freely available on every platform on which &xslt4c; is
             supported.  If you don't already have GNU tar installed on your system,
             you can obtain it from the Free Software Foundation
             <jump href="http://www.gnu.org/software/tar/tar.html">
