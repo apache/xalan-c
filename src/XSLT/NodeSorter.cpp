@@ -81,9 +81,7 @@
 
 
 
-NodeSorter::NodeSorter(StylesheetExecutionContext&		executionContext) :
-	m_executionContext(executionContext),
-	m_keys()
+NodeSorter::NodeSorter()
 {
 }
 
@@ -97,17 +95,16 @@ NodeSorter::~NodeSorter()
 
 void
 NodeSorter::sort(
-				const MutableNodeRefList&		theList,
-				NodeVectorType&					v,
-				const NodeSortKeyVectorType&	keys)
+			StylesheetExecutionContext&		executionContext,
+			const MutableNodeRefList&		theList,
+			NodeVectorType&					v,
+			const NodeSortKeyVectorType&	keys) const
 {
 #if !defined(XALAN_NO_NAMESPACES)
 	using std::stable_sort;
 #endif
 
-	m_keys = keys;
-
-	NodeSortKeyCompare	theComparer(m_executionContext,
+	NodeSortKeyCompare	theComparer(executionContext,
 									theList,
 									v,
 									keys);
@@ -123,8 +120,9 @@ NodeSorter::sort(
 
 void
 NodeSorter::sort(
+			StylesheetExecutionContext&		executionContext,
 			MutableNodeRefList&				theList,
-			const NodeSortKeyVectorType&	keys)
+			const NodeSortKeyVectorType&	keys) const
 {
 	const unsigned int	theLength = theList.getLength();
 
@@ -142,6 +140,7 @@ NodeSorter::sort(
 
 	// Do the sort...
 	sort(
+			executionContext,
 			theList, 
 			theNodes,
 			keys);

@@ -105,10 +105,9 @@ public:
 	/**
 	 * Construct a NodeSorter, passing in the XSL Processor so it can know how
 	 * to get the node data according to the proper whitespace rules.
-	 *
-	 * @param executionContext current execution context
 	 */
-	NodeSorter(StylesheetExecutionContext&	executionContext);
+	explicit
+	NodeSorter();
   
 	~NodeSorter();
 
@@ -116,13 +115,15 @@ public:
 	 * Given a list of nodes, sort each node according to the criteria in the
 	 * keys.  The list is assumed to be in document order.
 	 *
+	 * @param executionContext current execution context
 	 * @param v    list of Nodes
 	 * @param keys vector of NodeSortKeys
 	 */
 	void
 	sort(
+			StylesheetExecutionContext&		executionContext,
 			MutableNodeRefList&				theList,
-			const NodeSortKeyVectorType&	keys);
+			const NodeSortKeyVectorType&	keys) const;
 
 	/*
 	 * TODO: Optimize compare -- cache the getStringExpr results,
@@ -221,19 +222,17 @@ private:
 	 * Given a vector of nodes, sort each node according to the criteria in the
 	 * keys.
 	 *
+	 * @param executionContext current execution context
 	 * @param theList the original node list.
 	 * @param v    vector of Nodes
 	 * @param keys vector of NodeSortKeys
 	 */
 	void
 	sort(
+			StylesheetExecutionContext&		executionContext,
 			const MutableNodeRefList&		theList,
 			NodeVectorType&					v,
-			const NodeSortKeyVectorType&	keys);
-
-	StylesheetExecutionContext&		m_executionContext;
-
-	NodeSortKeyVectorType			m_keys;
+			const NodeSortKeyVectorType&	keys) const;
 
 	/**
 	 * @@ TODO: Adjust this for locale.
