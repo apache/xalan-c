@@ -396,7 +396,6 @@ main(int			argc,
 						// stylesheet's factory support objects.
 						StylesheetConstructionContextDefault	csConstructionContext(
 														csProcessor,
-														csXSLTProcessorEnvSupport,
 														ssXPathFactory);
 						cout << endl << files[i] << endl;
 

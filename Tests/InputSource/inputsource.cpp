@@ -235,7 +235,6 @@ void testCase3(
 	// Create a stylesheet construction context, using the
 	// stylesheet's factory support objects.
 	StylesheetConstructionContextDefault constContext(	theProcessor,
-														envSupport,
 														ssXPathFactory);
 
 	StylesheetExecutionContextDefault	execuContext(

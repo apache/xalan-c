@@ -1174,7 +1174,6 @@ XalanTransformer::doTransform(
 			// using the stylesheet's factory support objects.
 			StylesheetConstructionContextDefault	theStylesheetConstructionContext(
 							theProcessor,
-							theXSLTProcessorEnvSupport,
 							theXPathFactory);
 
 			// Do the transformation...
