@@ -76,9 +76,9 @@
      includes the complete &xslt4c; source tree.</p>
      <table>
        <tr>
-         <th>Platform</th>
-         <th>Download</th>
-         <th>Built with</th>         
+         <td><ref>Platform</ref></td>
+         <td><ref>Download</ref></td>
+         <td><ref>Built with</ref></td>         
        </tr>
        <tr>
          <td>Windows32</td>
