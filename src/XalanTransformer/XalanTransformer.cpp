@@ -696,7 +696,7 @@ XalanTransformer::destroyParsedSource(const XalanParsedSource*	theParsedSource)
 		m_parsedSources.erase(i);
 
 #if defined(XALAN_CANNOT_DELETE_CONST)
-		delete (XalanCompiledStylesheet*) theParsedSource;
+		delete (XalanParsedSource*) theParsedSource;
 #else
 		delete theParsedSource;
 #endif

@@ -230,7 +230,7 @@ public:
 			}
 
 			// Shut down Xerces...
-			XMLPlatformUtils::Initialize();
+			XMLPlatformUtils::Terminate();
 		}
 
 		return theResultList;
