@@ -243,14 +243,44 @@ ElemValueOf::fireSelectionEvent(
 			XalanNode*						sourceNode,
 			const XObjectPtr				theValue) const
 {
+	if (m_selectPattern != 0)
+	{
+		fireSelectionEvent(
+			executionContext,
+			sourceNode,
+			theValue,
+			m_selectPattern->getExpression().getCurrentPattern());
+	}
+	else
+	{
+		const StylesheetExecutionContext::GetAndReleaseCachedString		thePattern(executionContext);
+
+		thePattern.get() = XALAN_STATIC_UCODE_STRING(".");
+
+		fireSelectionEvent(
+			executionContext,
+			sourceNode,
+			theValue,
+			thePattern.get());
+	}
+
+}
+
+
+
+void
+ElemValueOf::fireSelectionEvent(
+			StylesheetExecutionContext&		executionContext,
+			XalanNode*						sourceNode,
+			const XObjectPtr				theValue,
+			const XalanDOMString&			thePattern) const
+{
 	executionContext.fireSelectEvent(
 		SelectionEvent(
 			executionContext,
 			sourceNode,
 			*this,
 			StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("select")),
-			m_selectPattern == 0 ?
-				StaticStringToDOMString(XALAN_STATIC_UCODE_STRING(".")) :
-				m_selectPattern->getExpression().getCurrentPattern(),
+			thePattern,
 			theValue));
 }

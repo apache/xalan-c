@@ -119,6 +119,13 @@ private:
 			XalanNode*						sourceNode,
 			const XObjectPtr				theValue) const;
 
+	void
+	fireSelectionEvent(
+			StylesheetExecutionContext&		executionContext,
+			XalanNode*						sourceNode,
+			const XObjectPtr				theValue,
+			const XalanDOMString&			thePattern) const;
+
 
 	/**
 	 * The select pattern used to locate the value.
