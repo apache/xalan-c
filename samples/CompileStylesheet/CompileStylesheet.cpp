@@ -76,9 +76,9 @@ main(
 			// Connect the processor to the support object...
 			theXSLTProcessorEnvSupport.setProcessor(&theProcessor);
 
-			// Create separate factory support objects so the stylesheet's
-			// factory-created XPath instances are independent from the
-			// processor's.
+			// Create a separate XPath factory support object so the
+			// stylesheet's factory-created XPath instances are independent
+			// from the processor's.
 			XPathFactoryDefault				theStylesheetXPathFactory;
 
 			// Create a stylesheet construction context, using the
