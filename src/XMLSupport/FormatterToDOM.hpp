@@ -96,6 +96,12 @@ class XALAN_XMLSUPPORT_EXPORT FormatterToDOM : public FormatterListener
 {
 public:
 
+#if defined(XALAN_NO_STD_NAMESPACE)
+	typedef vector<XalanElement*>		ElementStackType;
+#else
+	typedef std::vector<XalanElement*>	ElementStackType;
+#endif
+
 	/**
 	 * Construct a FormatterToDOM instance.  it will add the DOM nodes 
 	 * to the document fragment.
@@ -251,12 +257,6 @@ private:
 	XalanDocumentFragment*			m_docFrag;
 
 	XalanElement*					m_currentElem;
-
-#if defined(XALAN_NO_STD_NAMESPACE)
-	typedef vector<XalanElement*>		ElementStackType;
-#else
-	typedef std::vector<XalanElement*>	ElementStackType;
-#endif
 
 	ElementStackType				m_elemStack;
 
