@@ -81,7 +81,7 @@ main(
 
 			// Create separate factory support objects so the stylesheet's
 			// factory-created XObject and XPath instances are independent 
-      // from processor's.
+			// from processor's.
 			XObjectFactoryDefault			theStylesheetXObjectFactory(
 						theXSLTProcessorEnvSupport,
 						theXPathSupport);
@@ -122,36 +122,33 @@ main(
 							theConstructionContext);
 			assert(theStylesheetRoot != 0);
 
-      theProcessor.setStylesheet(theStylesheetRoot);
-
 			for (unsigned int i = 0; i < 10; i++)
 			{
-        // Generate the input and output file names.
-        ostrstream theFormatterIn, theFormatterOut;
-        theFormatterIn << "foo" << i + 1 << ".xml" << '\0';
+				theExecutionContext.setStylesheetRoot(theStylesheetRoot);
+
+				// Generate the input and output file names.
+				ostrstream theFormatterIn, theFormatterOut;
+				theFormatterIn << "foo" << i + 1 << ".xml" << '\0';
 				theFormatterOut << "foo" << i + 1 << ".out" << '\0';
 
-        //Generate the XML input and output objects.
-        XSLTInputSource   theInputSource(theFormatterIn.str());
+				//Generate the XML input and output objects.
+				XSLTInputSource		theInputSource(theFormatterIn.str());
 				XSLTResultTarget	theResultTarget(theFormatterOut.str());
 
 				// Unfreeze the ostrstreams, so the memory is returned...
-        theFormatterIn.freeze(false);
+				theFormatterIn.freeze(false);
 				theFormatterOut.freeze(false);
 
 				// Do the tranformation...
-        theProcessor.process(
-             theInputSource,
-             0,     //Use the StylesheetRoot
-             theResultTarget,
-             theConstructionContext,
-             theExecutionContext);
+				theProcessor.process(
+					 theInputSource,
+					 theResultTarget,
+					 theExecutionContext);
 
-        // Reset the processor and the execution context
-        // so we can perform the next transformation.
-        theProcessor.reset();
-        theProcessor.setStylesheet(theStylesheetRoot);
-        theExecutionContext.reset();
+				// Reset the processor and the execution context
+				// so we can perform the next transformation.
+				theProcessor.reset();
+				theExecutionContext.reset();
 			}
 		}
 		catch(...)

@@ -41,42 +41,43 @@ main(
 		cerr << "Usage: UseStylesheetParam key expression" << endl;
 
 		return -1;
-	}	
+	}
+
 	try
-		{
-			// Call the static initializers...
-			XMLPlatformUtils::Initialize();
-			XSLTEngineImpl::Initialize();
+	{
+		// Call the static initializers...
+		XMLPlatformUtils::Initialize();
+		XSLTEngineImpl::Initialize();
 			
-			// Get the stylesheet parameter key (name) and
-      // expression (a string expression).
-			const DOMString		paramKey(argv[1]);
-			const DOMString		paramExpression(argv[2]);
+		// Get the stylesheet parameter key (name) and
+		// expression (a string expression).
+		const DOMString		paramKey(argv[1]);
+		const DOMString		paramExpression(argv[2]);
 
-			// Set up input and output objects for the transformation.
-			// Assumption: the executable is run from the directory
-			// containing the input files. 
-			const DOMString		theXMLFileName("foo.xml");
-			const DOMString		theXSLFileName("foo.xsl");
-			XSLTInputSource		theInputSource(c_wstr(theXMLFileName));
-			XSLTInputSource		theStylesheetSource(c_wstr(theXSLFileName));
+		// Set up input and output objects for the transformation.
+		// Assumption: the executable is run from the directory
+		// containing the input files. 
+		const DOMString		theXMLFileName("foo.xml");
+		const DOMString		theXSLFileName("foo.xsl");
+		XSLTInputSource		theInputSource(c_wstr(theXMLFileName));
+		XSLTInputSource		theStylesheetSource(c_wstr(theXSLFileName));
  
-			// The output target...
-			TextFileOutputStream	theOutputStream("foo.out");
-			XercesDOMPrintWriter	theResultWriter(theOutputStream);
-			XSLTResultTarget		  theResultTarget(&theResultWriter);
+		// The output target...
+		TextFileOutputStream	theOutputStream("foo.out");
+		XercesDOMPrintWriter	theResultWriter(theOutputStream);
+		XSLTResultTarget		theResultTarget(&theResultWriter);
 
-		  			// Create the support objects that are necessary for running the processor...
-			DOMSupportDefault				  theDOMSupport;
-			XercesParserLiaison				theParserLiaison(theDOMSupport);
-			XPathSupportDefault				theXPathSupport(theDOMSupport);
-			XSLTProcessorEnvSupportDefault	theXSLTProcessorEnvSupport;
-			XObjectFactoryDefault			theXObjectFactory(theXSLTProcessorEnvSupport, 
-				                                              theXPathSupport);
-			XPathFactoryDefault				theXPathFactory;
+		// Create the support objects that are necessary for running the processor...
+		DOMSupportDefault				theDOMSupport;
+		XercesParserLiaison				theParserLiaison(theDOMSupport);
+		XPathSupportDefault				theXPathSupport(theDOMSupport);
+		XSLTProcessorEnvSupportDefault	theXSLTProcessorEnvSupport;
+		XObjectFactoryDefault			theXObjectFactory(theXSLTProcessorEnvSupport, 
+				                                          theXPathSupport);
+		XPathFactoryDefault				theXPathFactory;
 
-			// Create a processor...
-			XSLTEngineImpl	theProcessor(
+		// Create a processor...
+		XSLTEngineImpl	theProcessor(
 					theParserLiaison,
 					theXPathSupport,
 					theXSLTProcessorEnvSupport,
@@ -84,39 +85,43 @@ main(
 					theXPathFactory);
 
  
-			// Connect the processor to the support object...
-			theXSLTProcessorEnvSupport.setProcessor(&theProcessor);
-			// Use the parser liaison as the formatter...
-			theProcessor.setFormatter(&theParserLiaison);
-			// Create a stylesheet construction context, and a stylesheet
-			// execution context...
-			StylesheetConstructionContextDefault	theConstructionContext(
+		// Connect the processor to the support object...
+		theXSLTProcessorEnvSupport.setProcessor(&theProcessor);
+
+		// Use the parser liaison as the formatter...
+		theProcessor.setFormatter(&theParserLiaison);
+
+		// Create a stylesheet construction context, and a stylesheet
+		// execution context...
+		StylesheetConstructionContextDefault	theConstructionContext(
 						theProcessor,
 						theXSLTProcessorEnvSupport,
 						theXObjectFactory,
 						theXPathFactory);
-			StylesheetExecutionContextDefault		theExecutionContext(
+
+		StylesheetExecutionContextDefault		theExecutionContext(
 						theProcessor,
 						theXSLTProcessorEnvSupport,
 						theXPathSupport,
 						theXObjectFactory);
 
-			// Set the stylesheet parameter.
-			theProcessor.setStylesheetParam(paramKey,  paramExpression);
+		// Set the stylesheet parameter.
+		theProcessor.setStylesheetParam(paramKey,  paramExpression);
  
-			// Perform the transformation...
-			theProcessor.process(
+		// Perform the transformation...
+		theProcessor.process(
 						theInputSource,
-						&theStylesheetSource,
+						theStylesheetSource,
 						theResultTarget,
 						theConstructionContext,
 						theExecutionContext);
-		}
-		catch(...)
-		{
-			cerr << "UseStylesheetParam Exception caught!!!"
-				 << endl
-				 << endl;
-		}
-	  return 0;
+	}
+	catch(...)
+	{
+		cerr << "UseStylesheetParam Exception caught!!!"
+			 << endl
+			 << endl;
+	}
+
+	return 0;
 }

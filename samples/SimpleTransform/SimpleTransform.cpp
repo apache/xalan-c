@@ -116,7 +116,7 @@ main(
 
 			theProcessor.process(
 						theInputSource,
-						&theStylesheetSource,
+						theStylesheetSource,
 						theResultTarget,
 						theConstructionContext,
 						theExecutionContext);
