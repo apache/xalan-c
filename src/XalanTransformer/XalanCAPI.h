@@ -169,12 +169,12 @@ extern "C"
 	 * Transform the XML source tree to a dynamically allocated buffer.
 	 * The processor will apply the stylesheet file to the input file
 	 * and assign the address of the dynamically allocated result to a 
-	 * user defined pointer. The user must call XalanFreeData with the  
-	 * address of this pointer.
+	 * user supplied pointer. The user must call XalanFreeData with the  
+	 * this pointer.
 	 *
 	 * @param theXMLFileName	filename of XML input source
 	 * @param theXSLFileName	filename of stylesheet source
-	 * @param theOutFileName	filename of output source
+	 * @param theOutput			a pointer to a char* 
 	 * @param theXalanHandle	handle of XalanTransformer instance.
 	 * @return	0 for success 
 	 */
@@ -189,12 +189,12 @@ extern "C"
 	 * Transform the XML source tree to a dynamically allocated buffer.
 	 * The processor will apply the compiled stylesheet to the input file
 	 * and assign the address of the dynamically allocated result to a 
-	 * user defined pointer. The user must call XalanFreeData with the  
-	 * address of this pointer.
+	 * user supplied pointer. The user must call XalanFreeData with the  
+	 * this pointer.
 	 *
 	 * @param theXMLFileName	filename of XML input source
 	 * @param theCSSHandle		handle of compiled stylesheet 
-	 * @param theOutFileName	filename of output source
+	 * @param theOutput			a pointer to a char* 
 	 * @param theXalanHandle	handle of XalanTransformer instance.
 	 * @return	0 for success 
 	 */
