@@ -84,9 +84,10 @@ public:
 	{
 		STATIC_CHECK(sizeof(ObjectType) >= sizeof(NextBlock));
 		
-		for( size_type i = 0; i < m_blockSize ; ++i )
+		for( size_type i = 0; i < this->
+		m_blockSize ; ++i )
 		{
-			new ( reinterpret_cast<NextBlock*>(&m_objectBlock[i]) ) NextBlock( (size_type)(i + 1) );
+			new ( reinterpret_cast<NextBlock*>(&(this->m_objectBlock[i])) ) NextBlock( (size_type)(i + 1) );
 		}
 	}
 
@@ -96,13 +97,13 @@ public:
 
 		NextBlock* pStruct = 0;
 
-		for ( size_type i = 0 ; i < m_blockSize && (removedObjects < m_objectCount) ; ++i )
+		for ( size_type i = 0 ; i < this->m_blockSize && (removedObjects < this->m_objectCount) ; ++i )
 		{
-			pStruct = reinterpret_cast<NextBlock*>(&m_objectBlock[i]);
+			pStruct = reinterpret_cast<NextBlock*>(&(this->m_objectBlock[i]));
 
 			if ( isOccupiedBlock(pStruct) )
 			{
-				m_objectBlock[i].~ObjectType();
+				this->m_objectBlock[i].~ObjectType();
 
 				++removedObjects;
 			}
@@ -120,39 +121,39 @@ public:
 	allocateBlock()
 	{
 		
-		if ( m_objectCount == m_blockSize )
+		if ( this->m_objectCount == this->m_blockSize )
 		{
-			assert ( m_firstFreeBlock == (m_blockSize + 1) );
+			assert ( this->m_firstFreeBlock == (m_blockSize + 1) );
 
 			return 0;
 		}
 		else
 		{
-			assert( m_objectCount < m_blockSize );
+			assert( this->m_objectCount < this->m_blockSize );
 
 			ObjectType*		theResult = 0;
 
-			assert ( m_firstFreeBlock <= m_blockSize );
-			assert ( m_nextFreeBlock <= m_blockSize );
+			assert ( this->m_firstFreeBlock <= this->m_blockSize );
+			assert ( this->m_nextFreeBlock <= this->m_blockSize );
 
 			// check if any part was allocated but not commited
-			if( m_firstFreeBlock != m_nextFreeBlock)
+			if( this->m_firstFreeBlock != this->m_nextFreeBlock)
 			{
 				// return then againg the previouse allocated block and wait for commitment
-				theResult = m_objectBlock + m_firstFreeBlock;
+				theResult = this->m_objectBlock + this->m_firstFreeBlock;
 			}
 			else
 			{
-				theResult = m_objectBlock + m_firstFreeBlock;
+				theResult = this->m_objectBlock + this->m_firstFreeBlock;
 
-				assert(size_type( theResult - m_objectBlock ) < m_blockSize);
+				assert(size_type( theResult - this->m_objectBlock ) < this->m_blockSize);
 
-				m_nextFreeBlock = (reinterpret_cast<NextBlock*>(theResult))->next;
+				this->m_nextFreeBlock = (reinterpret_cast<NextBlock*>(theResult))->next;
 
-				assert ( ( reinterpret_cast<NextBlock*>(theResult ))->isValidFor( m_blockSize ) );
-				assert ( m_nextFreeBlock <= m_blockSize );
+				assert ( ( reinterpret_cast<NextBlock*>(theResult ))->isValidFor( this->m_blockSize ) );
+				assert ( this->m_nextFreeBlock <= m_blockSize );
 
-				++m_objectCount;
+				++this->m_objectCount;
 			}
 
 			return theResult;
@@ -169,9 +170,9 @@ public:
 	void
 	commitAllocation(ObjectType* /*	theBlock */)
 	{
-		m_firstFreeBlock = m_nextFreeBlock;
+		this->m_firstFreeBlock = this->m_nextFreeBlock;
 
-		assert ( m_objectCount <= m_blockSize );
+		assert ( this->m_objectCount <= this->m_blockSize );
 	}
 
 	/*
@@ -185,14 +186,14 @@ public:
 	destroyObject(ObjectType*	theObject)
 	{
 		// check if any uncommited block is there, add it to the list
-		if ( m_firstFreeBlock != m_nextFreeBlock )
+		if ( this->m_firstFreeBlock != this->m_nextFreeBlock )
 		{
 			// return it to pull of the free blocks
-			NextBlock* p = reinterpret_cast<NextBlock*>( m_objectBlock + m_firstFreeBlock );
+			NextBlock* p = reinterpret_cast<NextBlock*>( this->m_objectBlock + this->m_firstFreeBlock );
 
-			p = new (p) NextBlock(m_nextFreeBlock);
+			p = new (p) NextBlock(this->m_nextFreeBlock);
 
-			m_nextFreeBlock = m_firstFreeBlock;
+			this->m_nextFreeBlock = this->m_firstFreeBlock;
 		}
 
 		assert(ownsObject(theObject) == true);
@@ -202,13 +203,13 @@ public:
 
 		NextBlock* newFreeBlock = reinterpret_cast<NextBlock*>(theObject);
 
-		newFreeBlock = new (newFreeBlock) NextBlock(m_firstFreeBlock);
+		newFreeBlock = new (newFreeBlock) NextBlock(this->m_firstFreeBlock);
 
-		m_firstFreeBlock = m_nextFreeBlock = size_type(theObject - m_objectBlock);
+		m_firstFreeBlock = this->m_nextFreeBlock = size_type(theObject - this->m_objectBlock);
 
-		assert (m_firstFreeBlock <= m_blockSize);
+		assert (this->m_firstFreeBlock <= this->m_blockSize);
 
-		--m_objectCount;
+		--this->m_objectCount;
 
 	}
 
@@ -243,7 +244,7 @@ protected:
 	bool
 	shouldDestroyBlock(const ObjectType*	theObject) const
 	{
-		assert( size_type(theObject - m_objectBlock) < m_blockSize);
+		assert( size_type(theObject - this->m_objectBlock) < this->m_blockSize);
 		return !isOnFreeList(theObject);
 	}
 
@@ -252,7 +253,7 @@ protected:
 	{
 		assert( block !=0 );
 
-		return !( ownsBlock(reinterpret_cast<const ObjectType*>(block)) && block->isValidFor(m_blockSize) );
+		return !( ownsBlock(reinterpret_cast<const ObjectType*>(block)) && block->isValidFor(this->m_blockSize) );
 	}
 private:
 
@@ -277,15 +278,15 @@ private:
 	bool
 	isOnFreeList(const ObjectType*	theObject) const
 	{
-		if ( m_objectCount == 0 )
+		if ( this->m_objectCount == 0 )
 		{
 			return false;
 		}
 		else
 		{
-			ObjectType* pRunPtr = m_objectBlock + m_firstFreeBlock;
+			ObjectType* pRunPtr = this->m_objectBlock + this->m_firstFreeBlock;
 
-			for ( int i = 0; i < (m_blockSize - m_objectCount); i++)
+			for ( int i = 0; i < (this->m_blockSize - this->m_objectCount); i++)
 			{
 				assert ( ownsBlock( pRunPtr ) );
 
@@ -297,9 +298,9 @@ private:
 				{
 					NextBlock* p = reinterpret_cast<NextBlock*>(pRunPtr);
 
-					assert( p->isValidFor( m_blockSize ) );
+					assert( p->isValidFor( this->m_blockSize ) );
 
-					pRunPtr = m_objectBlock + p->next ;
+					pRunPtr = this->m_objectBlock + p->next ;
 				}
 			}
 

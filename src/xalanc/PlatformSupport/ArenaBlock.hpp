@@ -53,12 +53,12 @@ public:
 	 
 	~ArenaBlock()
 	{	
-		assert( m_objectCount <= m_blockSize );
+		assert( this->m_objectCount <= this->m_blockSize );
 
 		
-		for ( size_type i = 0; i < m_objectCount  ; ++i )
+		for ( size_type i = 0; i < this->m_objectCount  ; ++i )
 		{
-			m_objectBlock[i].~ObjectType();
+			this->m_objectBlock[i].~ObjectType();
 		}
 
 	}
@@ -73,15 +73,15 @@ public:
 	allocateBlock()
 	{
 		// Any space left?
-		if (m_objectCount == m_blockSize)
+		if (this->m_objectCount == this->m_blockSize)
 		{
 			return 0;
 		}
 		else
 		{
-			assert(m_objectBlock != 0);
+			assert(this->m_objectBlock != 0);
 
-			return m_objectBlock + m_objectCount;
+			return this->m_objectBlock + this->m_objectCount;
 		}
 	}
 
@@ -97,10 +97,10 @@ public:
 	commitAllocation(ObjectType*	theBlock)
 #endif
 	{
-		assert(theBlock == m_objectBlock + m_objectCount);
-		assert(m_objectCount < m_blockSize);
+		assert(theBlock == this->m_objectBlock + this->m_objectCount);
+		assert(this->m_objectCount < this->m_blockSize);
 
-		m_objectCount++;
+		this->m_objectCount++;
 	}
 
 	/*
@@ -115,7 +115,7 @@ public:
 	bool
 	ownsObject(const ObjectType*	theObject) const
 	{
-		return isInBorders(theObject, m_objectCount);
+		return isInBorders(theObject, this->m_objectCount);
 	}
 private:
 
