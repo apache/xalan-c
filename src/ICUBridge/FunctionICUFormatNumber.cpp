@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 2000 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -124,7 +124,8 @@ FunctionICUFormatNumber::doFormat(
 			const XalanDOMString&				thePattern,
 			const XalanDecimalFormatSymbols*	theDFS,
 			XalanDOMString&						theResult,
-			const Locator*						locator) const
+			const Locator*						locator,
+			bool								/* fWarn */) const
 {
 	unsigned long	theResultCode =
 		ICUBridge::FormatNumber(
@@ -149,6 +150,7 @@ FunctionICUFormatNumber::doFormat(
 						thePattern,
 						theDFS,
 						theResult,
-						locator);
+						locator,
+						false);
 	}
 }

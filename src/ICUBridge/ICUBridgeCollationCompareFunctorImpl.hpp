@@ -64,6 +64,10 @@
 
 
 
+#include <deque>
+
+
+
 #include <XSLT/StylesheetExecutionContextDefault.hpp>
 
 
@@ -80,7 +84,12 @@ public:
 	typedef StylesheetExecutionContextDefault::eCaseOrder	eCaseOrder;
 
 
-	ICUBridgeCollationCompareFunctorImpl();
+	/**
+	 * Constructor.
+	 * 
+	 * @param fCacheCollators If true, the instance will cache collators.  This is not thread-safe, so each thread must have its own instance.
+	 */
+	ICUBridgeCollationCompareFunctorImpl(bool	fCacheCollators = false);
 
 	~ICUBridgeCollationCompareFunctorImpl();
 
@@ -103,23 +112,133 @@ public:
 		return m_isValid;
 	}
 
+#if defined(XALAN_NO_NAMESPACES)
+	typedef Collator	CollatorType;
+#else
+	typedef icu_2_0::Collator	CollatorType;
+#endif
+
+	struct CollationCacheStruct
+	{
+		CollationCacheStruct(
+				const XalanDOMString&	theLocale,
+				CollatorType*			theCollator) :
+			m_locale(theLocale),
+			m_collator(theCollator)
+		{
+		}
+
+		CollationCacheStruct() :
+			m_locale(),
+			m_collator(0)
+		{
+		}
+
+		void
+		swap(CollationCacheStruct&	theOther)
+		{
+			m_locale.swap(theOther.m_locale);
+
+			CollatorType* const		theTemp = m_collator;
+
+			m_collator = theOther.m_collator;
+
+			theOther.m_collator = theTemp;
+		}
+
+		XalanDOMString	m_locale;
+
+		CollatorType*	m_collator;
+
+		struct CollatorDeleteFunctor
+		{
+			void
+			operator()(CollationCacheStruct&	theStruct) const
+			{
+				delete theStruct.m_collator;
+			}
+		};
+
+		struct CollatorFindFunctor
+		{
+			CollatorFindFunctor(const XalanDOMChar*	theLocale) :
+				m_locale(theLocale)
+			{
+			}
+
+			bool
+			operator()(CollationCacheStruct&	theStruct) const
+			{
+				return XalanDOMString::equals(theStruct.m_locale ,m_locale);
+			}
+
+			const XalanDOMChar* const	m_locale;
+		};
+	};
+
+#if defined(XALAN_NO_NAMESPACES)
+	typedef deque<CollationCacheStruct>			CollatorCacheDequeType;
+#else
+	typedef std::deque<CollationCacheStruct>	CollatorCacheDequeType;
+#endif
+
+	enum { eCacheMax = 10 };
+
 private:
 
 	int
 	doDefaultCompare(
 			const XalanDOMChar*		theLHS,
+			const XalanDOMChar*		theRHS) const;
+
+	int
+	doCompare(
+			const XalanDOMChar*		theLHS,
+			const XalanDOMChar*		theRHS,
+			const XalanDOMChar*		theLocale,
+			eCaseOrder				theCaseOrder) const;
+
+	int
+	doCompareCached(
+			const XalanDOMChar*		theLHS,
+			const XalanDOMChar*		theRHS,
+			const XalanDOMChar*		theLocale,
+			eCaseOrder				theCaseOrder) const;
+
+	int
+	doCompare(
+			const CollatorType&		theCollator,
+			const XalanDOMChar*		theLHS,
+			const XalanDOMChar*		theRHS) const;
+
+	int
+	doCompare(
+			CollatorType&			theCollator,
+			const XalanDOMChar*		theLHS,
 			const XalanDOMChar*		theRHS,
 			eCaseOrder				theCaseOrder) const;
 
-	bool	m_isValid;
+	CollatorType*
+	getCachedCollator(const XalanDOMChar*	theLocale) const;
 
-#if defined(XALAN_NO_NAMESPACES)
-	Collator*			m_defaultCollator;
-#else
-	icu_2_0::Collator*	m_defaultCollator;
-#endif
+	void
+	cacheCollator(
+			CollatorType*			theCollator,
+			const XalanDOMChar*		theLocale) const;
 
-	const static StylesheetExecutionContextDefault::DefaultCollationCompareFunctor		s_defaultFunctor;
+
+	// Data members...
+	bool							m_isValid;
+
+	CollatorType*					m_defaultCollator;
+
+	XalanDOMString					m_defaultCollatorLocaleName;
+
+	bool							m_cacheCollators;
+
+	mutable CollatorCacheDequeType	m_collatorCache;
+
+	const static StylesheetExecutionContextDefault::DefaultCollationCompareFunctor	s_defaultFunctor;
 };
 
 

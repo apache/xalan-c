@@ -60,16 +60,17 @@
 
 
 
+#include <algorithm>
+#include <cstdlib>
+
+
+
 #include <Include/XalanAutoPtr.hpp>
 
 
 
 #include <PlatformSupport/DOMStringHelper.hpp>
-
-
-
-// this is the ICU's macro for using namespace ...
-U_NAMESPACE_USE
+#include <PlatformSupport/XalanUnicode.hpp>
 
 
 
@@ -77,28 +78,72 @@ const StylesheetExecutionContextDefault::DefaultCollationCompareFunctor		ICUBrid
 
 
 
-inline Collator*
-createCollator(UErrorCode&	theStatus)
+inline ICUBridgeCollationCompareFunctorImpl::CollatorType*
+createCollator(
+			UErrorCode&			theStatus,
+			const Locale&		theLocale,
+			XalanDOMString*		theLocaleName = 0)
 {
-#if defined(XALAN_ICU_DEFAULT_LOCALE_PROBLEM)
-	return Collator::createInstance(Locale::US, theStatus);
-#else
-	return Collator::createInstance(theStatus);
-#endif
+	typedef ICUBridgeCollationCompareFunctorImpl::CollatorType	CollatorType;
+
+	if (theLocaleName != 0)
+	{
+		*theLocaleName = theLocale.getName();
+
+		// Replace _ with -, since that's what xml:lang specifies...
+		XalanDOMString::size_type	theIndex;
+
+		while((theIndex = indexOf(*theLocaleName, XalanUnicode::charLowLine)) != theLocaleName->length())
+		{
+			(*theLocaleName)[theIndex] = XalanUnicode::charHyphenMinus;
+		}
+	}
+
+	return CollatorType::createInstance(theLocale, theStatus);
 }
 
 
 
-ICUBridgeCollationCompareFunctorImpl::ICUBridgeCollationCompareFunctorImpl() :
+inline ICUBridgeCollationCompareFunctorImpl::CollatorType*
+createCollator(
+			UErrorCode&			theStatus,
+			XalanDOMString*		theLocaleName = 0)
+{
+	const char*		theLang =
+#if defined(XALAN_STRICT_ANSI_HEADERS)
+			std::getenv("LANG");
+#else
+			getenv("LANG");
+#endif
+
+	if (theLang == 0)
+	{
+#if defined(XALAN_ICU_DEFAULT_LOCALE_PROBLEM)
+		return createCollator(theStatus, Locale::US, theLocaleName);
+#else
+		return createCollator(theStatus, Locale::getDefault(), theLocaleName);
+#endif
+	}
+	else
+	{
+		return createCollator(theStatus, Locale(theLang), theLocaleName);
+	}
+}
+
+
+
+ICUBridgeCollationCompareFunctorImpl::ICUBridgeCollationCompareFunctorImpl(bool		fCacheCollators) :
 	m_isValid(false),
-	m_defaultCollator(0)
+	m_defaultCollator(0),
+	m_defaultCollatorLocaleName(),
+	m_cacheCollators(fCacheCollators),
+	m_collatorCache()
 {
 	UErrorCode	theStatus = U_ZERO_ERROR;
 
-	m_defaultCollator = createCollator(theStatus);
+	m_defaultCollator = createCollator(theStatus, &m_defaultCollatorLocaleName);
 
-	if (theStatus == U_ZERO_ERROR ||
-	    (theStatus >= U_ERROR_INFO_START && theStatus < U_ERROR_INFO_LIMIT))
+	if (U_SUCCESS(theStatus))
 	{
 		m_isValid = true;
 	}
@@ -108,16 +153,25 @@ ICUBridgeCollationCompareFunctorImpl::ICUBridgeCollationCompareFunctorImpl() :
 
 ICUBridgeCollationCompareFunctorImpl::~ICUBridgeCollationCompareFunctorImpl()
 {
+#if !defined(XALAN_NO_NAMESPACES)
+	using std::for_each;
+#endif
+
 	delete m_defaultCollator;
+
+	for_each(
+			m_collatorCache.begin(),
+			m_collatorCache.end(),
+			CollationCacheStruct::CollatorDeleteFunctor());
 }
 
 
 
-inline int
-doCompare(
-			const Collator&			theCollator,
+int
+ICUBridgeCollationCompareFunctorImpl::doCompare(
+			const CollatorType&		theCollator,
 			const XalanDOMChar*		theLHS,
-			const XalanDOMChar*		theRHS)
+			const XalanDOMChar*		theRHS) const
 {
 #if defined(XALAN_USE_WCHAR_CAST_HACK)
 	return theCollator.compare(
@@ -165,60 +219,29 @@ caseOrderConvert(ICUBridgeCollationCompareFunctorImpl::eCaseOrder	theCaseOrder)
 int
 ICUBridgeCollationCompareFunctorImpl::doDefaultCompare(
 			const XalanDOMChar*		theLHS,
-			const XalanDOMChar*		theRHS,
-			eCaseOrder				theCaseOrder) const
+			const XalanDOMChar*		theRHS) const
 {
 	if (isValid() == false)
 	{
-		return s_defaultFunctor(theLHS, theRHS, theCaseOrder);
+		return s_defaultFunctor(theLHS, theRHS, StylesheetExecutionContext::eDefault);
 	}
-	else if (theCaseOrder == StylesheetExecutionContext::eDefault)
+	else
 	{
 		assert(m_defaultCollator != 0);
 
 		return doCompare(*m_defaultCollator, theLHS, theRHS);
 	}
-	else
-	{
-		UErrorCode	theStatus = U_ZERO_ERROR;
-
-		XalanAutoPtr<Collator>	theCollator(createCollator(theStatus));
-
-		if (theStatus == U_ZERO_ERROR ||
-			(theStatus >= U_ERROR_INFO_START && theStatus < U_ERROR_INFO_LIMIT))
-		{
-			theCollator->setAttribute(
-					UCOL_CASE_FIRST,
-					caseOrderConvert(theCaseOrder),
-					theStatus);
-
-			return doCompare(*theCollator.get(), theLHS, theRHS);
-		}
-		else
-		{
-			return s_defaultFunctor(theLHS, theRHS, theCaseOrder);
-		}
-	}
 }
 
 
 
-int
-ICUBridgeCollationCompareFunctorImpl::operator()(
-			const XalanDOMChar*		theLHS,
-			const XalanDOMChar*		theRHS,
-			eCaseOrder				theCaseOrder) const
-{
-	return doDefaultCompare(theLHS, theRHS, theCaseOrder);
-}
-
-
-
-inline Collator*
-getCollator(
+inline ICUBridgeCollationCompareFunctorImpl::CollatorType*
+createCollator(
 			const XalanDOMChar*		theLocale,
 			UErrorCode&				theStatus)
 {
+	assert(theLocale != 0);
+
 	const XalanDOMString::size_type		theLength = length(theLocale);
 
 	if (theLength >= ULOC_FULLNAME_CAPACITY)
@@ -245,9 +268,136 @@ getCollator(
 			theBuffer[i] = char(theLocale[i]);
 		}
 #endif
-		return Collator::createInstance(
+		return ICUBridgeCollationCompareFunctorImpl::CollatorType::createInstance(
 					Locale::createFromName(theBuffer),
 					theStatus);
+	}
+}
+
+
+
+int
+ICUBridgeCollationCompareFunctorImpl::doCompare(
+			const XalanDOMChar*		theLHS,
+			const XalanDOMChar*		theRHS,
+			const XalanDOMChar*		theLocale,
+			eCaseOrder				theCaseOrder) const
+{
+	UErrorCode	theStatus = U_ZERO_ERROR;
+
+	XalanAutoPtr<CollatorType>	theCollator(createCollator(theLocale, theStatus));
+
+	if (U_SUCCESS(theStatus))
+	{
+		assert(theCollator.get() != 0);
+
+		return doCompare(
+				*theCollator.get(),
+				theLHS,
+				theRHS,
+				theCaseOrder);
+	}
+	else
+	{
+		return s_defaultFunctor(theLHS, theRHS, theCaseOrder);
+	}
+}
+
+
+
+int
+ICUBridgeCollationCompareFunctorImpl::doCompareCached(
+			const XalanDOMChar*		theLHS,
+			const XalanDOMChar*		theRHS,
+			const XalanDOMChar*		theLocale,
+			eCaseOrder				theCaseOrder) const
+{
+	CollatorType*	theCollator = getCachedCollator(theLocale);
+
+	if (theCollator != 0)
+	{
+		return doCompare(*theCollator, theLHS, theRHS, theCaseOrder);
+	}
+	else
+	{
+		UErrorCode	theStatus = U_ZERO_ERROR;
+
+		XalanAutoPtr<CollatorType>	theCollatorGuard(createCollator(theLocale, theStatus));
+
+		if (U_SUCCESS(theStatus))
+		{
+			assert(theCollatorGuard.get() != 0);
+
+			// OK, there was no error, so cache the instance...
+			cacheCollator(theCollatorGuard.get(), theLocale);
+
+			// Release the collator, since it's in the cache and
+			// will be controlled by the cache...
+			theCollator = theCollatorGuard.release();
+
+			return doCompare(
+					*theCollator,
+					theLHS,
+					theRHS,
+					theCaseOrder);
+		}
+		else
+		{
+			return s_defaultFunctor(theLHS, theRHS, theCaseOrder);
+		}
+	}
+}
+
+
+
+int
+ICUBridgeCollationCompareFunctorImpl::doCompare(
+			CollatorType&			theCollator,
+			const XalanDOMChar*		theLHS,
+			const XalanDOMChar*		theRHS,
+			eCaseOrder				theCaseOrder) const
+{
+	UErrorCode	theStatus = U_ZERO_ERROR;
+
+	theCollator.setAttribute(
+				UCOL_CASE_FIRST,
+				caseOrderConvert(theCaseOrder),
+				theStatus);
+
+#if defined(XALAN_USE_WCHAR_CAST_HACK)
+	return theCollator.compare(
+					(const wchar_t*)theLHS,
+					length(theLHS),
+					(const wchar_t*)theRHS,
+					length(theRHS));
+#else
+	return theCollator.compare(
+					theLHS,
+					length(theLHS),
+					theRHS,
+					length(theRHS));
+#endif
+}
+
+
+
+int
+ICUBridgeCollationCompareFunctorImpl::operator()(
+			const XalanDOMChar*		theLHS,
+			const XalanDOMChar*		theRHS,
+			eCaseOrder				theCaseOrder) const
+{
+	if (theCaseOrder == StylesheetExecutionContext::eDefault)
+	{
+		return doDefaultCompare(theLHS, theRHS);
+	}
+	else
+	{
+		return doCompare(
+				theLHS,
+				theRHS,
+				c_wstr(m_defaultCollatorLocaleName),
+				theCaseOrder);
 	}
 }
 
@@ -260,36 +410,125 @@ ICUBridgeCollationCompareFunctorImpl::operator()(
 			const XalanDOMChar*		theLocale,
 			eCaseOrder				theCaseOrder) const
 {
-	UErrorCode	theStatus = U_ZERO_ERROR;
-
-	XalanAutoPtr<Collator>	theCollator(getCollator(theLocale, theStatus));
-
-	if (theStatus == U_ZERO_ERROR ||
-	    (theStatus >= U_ERROR_INFO_START && theStatus < U_ERROR_INFO_LIMIT))
+	if (theCaseOrder == StylesheetExecutionContext::eDefault &&
+		XalanDOMString::equals(m_defaultCollatorLocaleName, theLocale) == true)
 	{
-		assert(theCollator.get() != 0);
-
-		theCollator->setAttribute(
-				UCOL_CASE_FIRST,
-				caseOrderConvert(theCaseOrder),
-				theStatus);
-
-#if defined(XALAN_USE_WCHAR_CAST_HACK)
-		return theCollator->compare(
-					(const wchar_t*)theLHS,
-					length(theLHS),
-					(const wchar_t*)theRHS,
-					length(theRHS));
-#else
-		return theCollator->compare(
-					theLHS,
-					length(theLHS),
-					theRHS,
-					length(theRHS));
-#endif
+		return doDefaultCompare(theLHS, theRHS);
+	}
+	else if (m_cacheCollators == true)
+	{
+		return doCompareCached(theLHS, theRHS, theLocale, theCaseOrder);
 	}
 	else
 	{
-		return s_defaultFunctor(theLHS, theRHS, theCaseOrder);
+		return doCompare(theLHS, theRHS, theLocale, theCaseOrder);
+	};
+}
+
+
+
+ICUBridgeCollationCompareFunctorImpl::CollatorType*
+ICUBridgeCollationCompareFunctorImpl::getCachedCollator(const XalanDOMChar*		theLocale) const
+{
+#if !defined(XALAN_NO_NAMESPACES)
+	using std::find_if;
+#endif
+
+	CollatorCacheDequeType&		theNonConstCache =
+#if defined(XALAN_NO_MUTABLE)
+		(CollatorCacheDequeType*)m_collatorCache;
+#else
+		m_collatorCache;
+#endif
+
+	CollatorCacheDequeType::iterator	i =
+		find_if(
+			theNonConstCache.begin(),
+			theNonConstCache.end(),
+			CollationCacheStruct::CollatorFindFunctor(theLocale));
+
+	if (i == theNonConstCache.end())
+	{
+		return 0;
 	}
+	else
+	{
+		// Let's do a quick check to see if we found the first entry.
+		// If so, we don't have to update the cache, so just return the
+		// appropriate value...
+		const CollatorCacheDequeType::iterator	theBegin =
+			theNonConstCache.begin();
+
+		if (i == theBegin)
+		{
+			return (*i).m_collator;
+		}
+		else
+		{
+			// Make a new instance for the cache, then swap it with
+			// the one we found.
+			CollatorCacheDequeType::value_type	theEntry;
+
+			theEntry.swap(*i);
+
+			// Protect the collator instance, since what we're doing
+			// might throw an exception...
+			XalanAutoPtr<CollatorType>	theCollator(theEntry.m_collator);
+
+			// OK, now swap everything from i down to begin()...
+			
+			CollatorCacheDequeType::iterator	theOther(i);
+
+			do
+			{
+				--theOther;
+
+				(*i).swap(*theOther);
+
+				--i;
+			}
+			while(i != theBegin);
+
+			// Now, swap the latest one into the front...
+			theEntry.swap(*theBegin);
+			
+			// Everything's OK, so release to return the value...
+			return theCollator.release();
+		}
+	}
+}
+
+
+
+void
+ICUBridgeCollationCompareFunctorImpl::cacheCollator(
+			CollatorType*			theCollator,
+			const XalanDOMChar*		theLocale) const
+{
+	assert(theCollator != 0);
+	assert(theLocale != 0);
+
+	CollatorCacheDequeType&		theNonConstCache =
+#if defined(XALAN_NO_MUTABLE)
+		(CollatorCacheDequeType*)m_collatorCache;
+#else
+		m_collatorCache;
+#endif
+
+	if (theNonConstCache.size() == eCacheMax)
+	{
+		delete theNonConstCache.back().m_collator;
+
+		theNonConstCache.pop_back();
+	}
+
+	theNonConstCache.push_front(CollatorCacheDequeType::value_type());
+
+	CollatorCacheDequeType::value_type&		theEntry = 
+		theNonConstCache.front();
+
+	// Set the locale first, since that might throw an exception...
+	theEntry.m_locale = theLocale;
+
+	theEntry.m_collator = theCollator;
 }

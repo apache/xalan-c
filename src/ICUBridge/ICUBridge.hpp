@@ -85,6 +85,11 @@ public:
 	XalanDOMCharStringToUnicodeString(const XalanDOMChar*	theString);
 
 	static const UnicodeString
+	XalanDOMCharStringToUnicodeString(
+			const XalanDOMChar*			theString,
+			XalanDOMString::size_type	theLHSLength);
+
+	static const UnicodeString
 	XalanDOMStringToUnicodeString(const XalanDOMString&		theString);
 
 	static const XalanDOMString
@@ -101,16 +106,6 @@ public:
 			double								theNumber,
 			const XalanDecimalFormatSymbols*	theXalanDFS,
 			XalanDOMString&						theResult);
-
-	static int
-	collationCompare(
-			const XalanDOMString&	theLHS,
-			const XalanDOMString&	theRHS);
-
-	static int
-	collationCompare(
-			const XalanDOMChar*		theLHS,
-			const XalanDOMChar*		theRHS);
 };
 
 

@@ -122,9 +122,26 @@ ICUBridge::XalanDOMCharStringToUnicodeString(const XalanDOMChar*	theString)
 	}
 	else
 	{
-#if defined(XALAN_XALANDOMCHAR_USHORT_MISMATCH)
+		return XalanDOMCharStringToUnicodeString(theString, length(theString));
+	}
+}
 
-		const unsigned int	theLength = length(theString);
+
+
+const UnicodeString
+ICUBridge::XalanDOMCharStringToUnicodeString(
+			const XalanDOMChar*			theString,
+			XalanDOMString::size_type	theLength)
+{
+	assert(theString != 0);
+
+	if (theLength == 0)
+	{
+		return UnicodeString();
+	}
+	else
+	{
+#if defined(XALAN_XALANDOMCHAR_USHORT_MISMATCH)
 
 		if (theStackBufferSize > theLength)
 		{
@@ -168,7 +185,7 @@ const UnicodeString
 ICUBridge::XalanDOMStringToUnicodeString(const XalanDOMString&	theString)
 {
 	// Just call up to the XalanDOMChar* version...
-	return XalanDOMCharStringToUnicodeString(c_wstr(theString));
+	return XalanDOMCharStringToUnicodeString(c_wstr(theString), length(theString));
 }
 
 
@@ -313,8 +330,7 @@ doFormatNumber(
 		// DecimalFormat will adopt the DecimalFormatSymbols instance.
 		DecimalFormat	theFormatter(ICUBridge::XalanDOMStringToUnicodeString(thePattern), theDFS.release(), theStatus);
 
-		if (theStatus == U_ZERO_ERROR ||
-		    (theStatus >= U_ERROR_INFO_START && theStatus < U_ERROR_INFO_LIMIT))
+		if (U_SUCCESS(theStatus))
 		{
 			// Do the format...
 			theFormatter.format(theNumber, theUnicodeResult);
@@ -359,48 +375,4 @@ ICUBridge::FormatNumber(
 	}
 
 	return theStatus;
-}
-
-
-
-int
-ICUBridge::collationCompare(
-			const XalanDOMString&	theLHS,
-			const XalanDOMString&	theRHS)
-{
-	// Just call to the XalanDOMChar* version...
-	return collationCompare(c_wstr(theLHS), c_wstr(theRHS));
-}
-
-
-
-int
-ICUBridge::collationCompare(
-			const XalanDOMChar*		theLHS,
-			const XalanDOMChar*		theRHS)
-{
-	UErrorCode				theStatus = U_ZERO_ERROR;
-
-	// Create a collator, and keep it in an XalanAutoPtr...
-	const XalanAutoPtr<Collator>	theCollator(Collator::createInstance(theStatus));
-
-	if (theStatus == U_ZERO_ERROR || theStatus == U_USING_DEFAULT_ERROR)
-	{
-		// OK, do the compare...
-		return theCollator->compare(
-#if defined(XALAN_XALANDOMCHAR_USHORT_MISMATCH)
-					ICUBridge::XalanDOMCharStringToUnicodeString(theLHS),
-					ICUBridge::XalanDOMCharStringToUnicodeString(theRHS));
-#else
-					theLHS,
-					length(theLHS),
-					theRHS,
-					length(theRHS));
-#endif
-	}
-	else
-	{
-		// If creating the ICU Collator failed, fall back to the default...
-		return collationCompare(theLHS, theRHS);
-	}
 }

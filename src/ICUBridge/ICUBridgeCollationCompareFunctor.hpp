@@ -79,7 +79,12 @@ public:
 	typedef StylesheetExecutionContextDefault::eCaseOrder	eCaseOrder;
 
 
-	ICUBridgeCollationCompareFunctor();
+	/**
+	 * Constructor.
+	 * 
+	 * @param fCacheCollators If true, the instance will cache collators.  This is not thread-safe, so each thread must have its own instance.
+	 */
+	ICUBridgeCollationCompareFunctor(bool	fCacheCollators = false);
 
 	virtual
 	~ICUBridgeCollationCompareFunctor();

@@ -64,8 +64,8 @@
 
 
 
-ICUBridgeCollationCompareFunctor::ICUBridgeCollationCompareFunctor() :
-	m_impl(new ICUBridgeCollationCompareFunctorImpl)
+ICUBridgeCollationCompareFunctor::ICUBridgeCollationCompareFunctor(bool	fCacheCollators) :
+	m_impl(new ICUBridgeCollationCompareFunctorImpl(fCacheCollators))
 {
 }
 
