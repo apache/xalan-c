@@ -92,6 +92,7 @@ XPathProcessorImpl::XPathProcessorImpl() :
 	m_expression(0),
 	m_prefixResolver(0),
 	m_requireLiterals(false),
+	m_isMatchPattern(false),
 	m_positionPredicateStack()
 {
 }
@@ -152,6 +153,8 @@ XPathProcessorImpl::initMatchPattern(
 			const PrefixResolver&	prefixResolver,
 			const Locator*			locator)
 {
+	m_isMatchPattern = true;
+
 	m_xpath = &pathObj;
 
 	m_expression = &m_xpath->getExpression();
@@ -1005,7 +1008,15 @@ XPathProcessorImpl::error(
 
 		if (length(theCurrentPattern) != 0)
 		{
-			thePrintWriter.print(XALAN_STATIC_UCODE_STRING("pattern = '"));
+			if (m_isMatchPattern == true)
+			{
+				thePrintWriter.print(XALAN_STATIC_UCODE_STRING("pattern = '"));
+			}
+			else
+			{
+				thePrintWriter.print(XALAN_STATIC_UCODE_STRING("expression = '"));
+			}
+
 			thePrintWriter.print(theCurrentPattern);
 
 			thePrintWriter.print("'");
@@ -2415,34 +2426,34 @@ XPathProcessorImpl::AbbreviatedNodeTestStep()
 
 	const int	opPos = m_expression->opCodeMapLength();
 
-	int			axisType = 0;
-
 	int			matchTypePos = -1;
+
+	XPathExpression::eOpCodes	axisType = XPathExpression::eENDOP;
 
 	// The next blocks guarantee that a MATCH_XXX will be added.
 	if(tokenIs(XalanUnicode::charCommercialAt) == true)
 	{
 		axisType = XPathExpression::eMATCH_ATTRIBUTE;
 
-		m_expression->appendOpCode(XPathExpression::eMATCH_ATTRIBUTE);
+		m_expression->appendOpCode(axisType);
 
 		nextToken();
 	}
 	else if(lookahead(s_axisString, 1) == true)
 	{
-		// $$$ To Do: Perhaps these strings should be in the
-		// axis table?
+		matchTypePos = m_expression->opCodeMapLength();
+
 		if(tokenIs(s_attributeString) == true)
 		{
 			axisType = XPathExpression::eMATCH_ATTRIBUTE;
 
-			m_expression->appendOpCode(XPathExpression::eMATCH_ATTRIBUTE);
+			m_expression->appendOpCode(axisType);
 		}
 		else if(tokenIs(s_childString) == true)
 		{
 			axisType = XPathExpression::eMATCH_IMMEDIATE_ANCESTOR;
 
-			m_expression->appendOpCode(XPathExpression::eMATCH_IMMEDIATE_ANCESTOR);
+			m_expression->appendOpCode(axisType);
 		}
 		else
 		{
@@ -2454,9 +2465,36 @@ XPathProcessorImpl::AbbreviatedNodeTestStep()
 	}
 	else if(tokenIs(XalanUnicode::charSolidus) == true)
 	{
-		axisType = XPathExpression::eMATCH_ANY_ANCESTOR;
+		if(lookahead(s_axisString, 2) == false)
+		{
+			axisType = XPathExpression::eMATCH_ANY_ANCESTOR;
 
-		m_expression->appendOpCode(XPathExpression::eMATCH_ANY_ANCESTOR);
+			m_expression->appendOpCode(axisType);
+		}
+		else
+		{
+			nextToken();
+
+			if(tokenIs(s_attributeString) == true)
+			{
+				axisType = XPathExpression::eMATCH_ATTRIBUTE;
+
+				m_expression->appendOpCode(axisType);
+			}
+			else if(tokenIs(s_childString) == true)
+			{
+				axisType = XPathExpression::eMATCH_ANY_ANCESTOR;
+
+				m_expression->appendOpCode(axisType);
+			}
+			else
+			{
+				error("Only child:: and attribute:: axes are allowed in match patterns!");
+			}
+
+			nextToken();
+
+		}
 
 		nextToken();
 	}
@@ -2471,7 +2509,7 @@ XPathProcessorImpl::AbbreviatedNodeTestStep()
 
 		axisType = XPathExpression::eMATCH_IMMEDIATE_ANCESTOR;
 
-		m_expression->appendOpCode(XPathExpression::eMATCH_IMMEDIATE_ANCESTOR);
+		m_expression->appendOpCode(axisType);
 	}
 
     // Make room for telling how long the step is without the predicate.
