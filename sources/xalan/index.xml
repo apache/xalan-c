@@ -58,11 +58,11 @@
 
 <!DOCTYPE s1 SYSTEM "sbk:/style/dtd/document.dtd">
 
-<s1 title="Xalan-C++ Version 0.30.0">
+<s1 title="&xslt4c-current;">
       
   <s2 title="What is it?">
-    <p>Xalan is an XSL processor for transforming XML documents into HTML, text, or other XML document types. Xalan-C++
-     version 0.30.0 represents an almost complete and a robust C++ reference implementation of the W3C Recommendations for XSL
+    <p>Xalan is an XSL processor for transforming XML documents into HTML, text, or other XML document types. &xslt4c-current;
+     represents an almost complete and a robust C++ reference implementation of the W3C Recommendations for XSL
      Transformations (XSLT) and the XML Path Language (XPath).</p>
     <p>Xalan-C uses the Xerces-C XML parser.</p>
 	</s2>
@@ -77,11 +77,11 @@
        </tr>
        <tr>
          <td>Windows32</td>
-        <td><jump href="http://xml.apache.org/dist/Xalan-C_0_30_0-win32.zip">Xalan-C_0_30_0-win32.zip</jump></td>
+        <td><resource-ref idref="xalan-c-win32-download"/></td>
       </tr>
       <tr>
         <td>Linux</td>
-        <td><jump href="http://xml.apache.org/dist/Xalan-C_0_30_0-linux.tar.gz">Xalan-C_0_30_0-linux.tar.gz</jump></td>
+        <td><resource-ref idref="xalan-c-linux-download"/></td>
   </tr>
   </table>
   <p>We plan to add builds for other platforms as soon as possible. Volunteers are more than welcome!</p>

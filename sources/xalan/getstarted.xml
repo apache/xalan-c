@@ -15,8 +15,8 @@
 <s3 title="&xslt4c; Distributions">
 <p><img src="xalan-cdist.gif" alt="xalan-cdist.gif"/></p>
 </s3>
-<p>For the Windows32 build, download <jump href="http://xml.apache.org/dist/Xalan-C_0_30_0-win32.zip">Xalan-C_0_30_0-win32.zip</jump>.</p>
-<p>For the Linux build, download <jump href="http://xml.apache.org/dist/Xalan-C_0_30_0-linux.tar.gz">Xalan-C_0_30_0-linux.tar.gz</jump>.</p> 
+<p>For the Windows32 build, download <resource-ref idref="xalan-c-win32-download"/>.</p>
+<p>For the Linux build, download <resource-ref idref="xalan-c-linux-download"/></p> 
 <p>Each distribution contains all you need to run the Xalan command-line utility for performing transformations. To build your own applications, you also need a compatible Xerces-C distribution and the <resource-ref idref="icu"/>.</p>
 <s3 title="What you need to run the Xalan command-line utility">
 <p>To run the Xalan executable for performing transformations, you need the following:</p>
@@ -33,9 +33,9 @@
 <p><em>Linux</em></p>
 <ul>
   <li>The utility: TestXSLT</li>
-  <li>The Xalan-C shared library: libxalan-C_0_30_0.so</li>
+  <li>The Xalan-C shared library: libxalan-C_0_40_0.so</li>
   <li>The Xerces-C shared library: libxerces-c1_0.so</li>
-  <li>The International Components for Unicode (ICU) shared library: libicu-1-4-1-2.so</li>
+  <li>The International Components for Unicode (ICU) shared library: libicu-1_4_1_2.so</li>
   <li>The ICU locale data files</li>
 </ul>
 <p><em>Important</em> ICU requires you to set the ICU_DATA environment variable to point to the directory containing the ICU locale data files. In the Windows32 distribution, this is xml-xalan\c\Build\Win32\VC6\Release\Data. In the Linux distribution, it is xml-xalan/c/lib/data.</p>

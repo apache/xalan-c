@@ -67,7 +67,7 @@
   <separator/>
   
   <document id="index"
-            label="Xalan-C++ 0.30.0"
+            label="Xalan-C++ 0.40.0"
             source="xalan/index.xml"/>
             
  <separator/>            
