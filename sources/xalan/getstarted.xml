@@ -147,6 +147,7 @@ will be provided in a separate distribution.</p>
 <anchor name="xalandists"/>
 
 <p>If you want to take advantage of the support for number formatting, sorting, and encoding the ICU provides, you should also download and install the <resource-ref idref="icu"/>; see <link idref="usagepatterns" anchor="icu">Using the ICU</link>,</p>
+<note>To access previous releases of &xslt4c;, visit the <jump href="http://archive.apache.org/dist/xml/xalan-c/">Xalan-C archive directory</jump>.</note>
 </s2><anchor name="path"/>
 <s2 title="Setting up the path/library path">
 <ul>
@@ -200,7 +201,7 @@ or copy the shared libraries to /usr/lib.</li>
 <p>To run the samples, do the following:</p>
 <ol>
 <li>Set up your path (see above). In the Windows32 distribution, the sample executables are in
-&xslt4c-win_root;\Build\Win32\VC6\Release. In the UNIX distributions, the executables are in &xslt4c-win_root;/bin.</li>
+&xslt4c-win_root;\Build\Win32\VC6\Release. In the UNIX distributions, the executables are in &xslt4c-unix_root;/bin.</li>
 <li>Go to the samples subdirectory containing the sample.</li>
 <li>Run the sample from the command line (in Windows, use the DOS shell).</li>
 <li>Examine the application source files.</li>

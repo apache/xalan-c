@@ -218,7 +218,7 @@
    </ul>
    <p>Regardless of which method you choose, a message file containing translated messages in the 
    language of your choice must be provided. The standard message file provided in the &xslt4c; 
-   version 1.7 beta source package is in XML Localization Interchange File Format (XLIFF) format 
+   version 1.7 source package is in XML Localization Interchange File Format (XLIFF) format 
    and conforms to the XLIFF 1.1 standard (please see 
    <jump href="http://www.oasis-open.org/committees/xliff/documents/xliff-specification.htm">
    http://www.oasis-open.org/committees/xliff/documents/xliff-specification.htm</jump> for more 
@@ -231,7 +231,7 @@
    <ol>
    <li>Open the Xalan.dsw workspace using Microsoft Visual C++. The "inmem" localization method should be configured by default.</li>
    <li>Select the Localization project, and go to Settings and click on the "General" tab.Verify 
-   the build command line to use "nmake /f Localization.mak TYPE=inmem LOCAL=en_US"</li>
+   the build command line to use "nmake /f BuildMessages.mak TYPE=inmem LOCAL=en_US"</li>
    <li>Add the Xerces-C bin directory to the PATH </li>
    <li>Add the Xerces-C lib directory to the library directory list </li>
    <li>Add the Xerces-C include directory to the include directory list. </li>
@@ -243,7 +243,7 @@
    <li>Select the AllInOneWithICU project, and ensure that the project depends on the LocalizationWithICU 
    project. </li>
    <li>Select the LocalizationWithICU project, and go to Settings and click on the "General" tab. Modify 
-   the build command line to use "nmake /f Localization.mak TYPE=icu LOCAL=en_US"</li>
+   the build command line to use "nmake /f BuildMessages.mak TYPE=icu LOCAL=en_US"</li>
    <li>Add the Xerces-C bin directory and ICU bin directory to the PATH </li>
    <li>Add the Xerces-C lib directory and ICU lib directory to the library directory list </li>
    <li>Add the Xerces-C include directory and ICU include directory to the include directory list </li>
