@@ -1690,20 +1690,6 @@ SimpleNodeLocator::predicates(
 
 		const unsigned int	theLength = subQueryResults.getLength();
 
-#if defined(XALAN_NO_NAMESPACES)
-		typedef vector<unsigned int> 		FailedEntriesVectorType;
-#else
-		typedef std::vector<unsigned int>	FailedEntriesVectorType;
-#endif
-		// We'll accumulate the entries that we want to remove
-		// here, then remove them all at once.
-		FailedEntriesVectorType 	theFailedEntries;
-
-		// Might as well reserve some space now, although it's
-		// probably bad to reserve the entire size of the
-		// list results.
-		theFailedEntries.reserve(theLength / 2);
-
 		while(i < theLength)
 		{
 			XalanNode* const	theNode = subQueryResults.item(i);
@@ -1719,24 +1705,16 @@ SimpleNodeLocator::predicates(
 					i + 1 != pred->num() ||
 			   pred->boolean() == false)
 			{
-				theFailedEntries.push_back(i);
+				// Set the node to null.  Later on,
+				// we'll clear it out.
+				subQueryResults.setNode(i, 0);
 			}
 
 			++i;
 		}
 
-		// Erase from the back to the front, to preserve the validity
-		// of the indexing, and so that we don't end up moving entries
-		// that we would already be erasing...
-		FailedEntriesVectorType::reverse_iterator	theIterator =
-			theFailedEntries.rbegin();
-
-		while(theIterator != theFailedEntries.rend())
-		{
-			subQueryResults.removeNode(*theIterator);
-
-			theIterator++;
-		}
+		// Clear out any null entries...
+		subQueryResults.clearNulls();
 
 		opPos = currentExpression.getNextOpCodePosition(opPos);
 

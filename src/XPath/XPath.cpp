@@ -1456,10 +1456,5 @@ XPath::function(
 			XPathExecutionContext&					executionContext) const
  
 {
-	assert(m_expression.getToken(funcID) != 0);
-
-	const XalanDOMString		theFunctionName(m_expression.getToken(funcID)->str());
-	assert(isEmpty(theFunctionName) == false);
-
-	return s_functions[theFunctionName].execute(executionContext, context, opPos, argVec);
+	return s_functions[funcID].execute(executionContext, context, opPos, argVec);
 }

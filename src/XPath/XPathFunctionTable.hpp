@@ -90,6 +90,10 @@ class XALAN_XPATH_EXPORT XPathExceptionFunctionNotAvailable : public XPathExcept
 public:
 
 	XPathExceptionFunctionNotAvailable(
+		int					theFunctionName,
+		const XalanNode*	styleNode = 0);
+
+	XPathExceptionFunctionNotAvailable(
 		const XalanDOMString&	theFunctionName,
 		const XalanNode*		styleNode = 0);
 
@@ -106,12 +110,14 @@ class XALAN_XPATH_EXPORT XPathFunctionTable
 public:
 
 #if defined(XALAN_NO_NAMESPACES)
-	typedef map<XalanDOMString, Function*>			CollectionType;
+	typedef vector<Function*>				CollectionType;
+	typedef map<XalanDOMString, int>		FunctionNameIndexMapType;
 #else
-	typedef std::map<XalanDOMString, Function*>		CollectionType;
+	typedef std::vector<Function*>			CollectionType;
+	typedef std::map<XalanDOMString, int>	FunctionNameIndexMapType;
 #endif
 
-	typedef MapValueDeleteFunctor<CollectionType>	DeleteFunctorType;
+	typedef DeleteFunctor<Function>		DeleteFunctorType;
 
 	XPathFunctionTable();
 
@@ -126,16 +132,91 @@ public:
 	Function&
 	operator[](const XalanDOMString&	theFunctionName) const
 	{
-		CollectionType::const_iterator	i =
-			m_FunctionCollection.find(theFunctionName);
+		FunctionNameIndexMapType::const_iterator	i =
+			m_FunctionNameIndex.find(theFunctionName);
 
-		if (i != m_FunctionCollection.end())
+		if (i != m_FunctionNameIndex.end())
 		{
-			return *(*i).second;
+			return *m_FunctionCollection[i->second];
 		}
 		else
 		{
 			throw XPathExceptionFunctionNotAvailable(theFunctionName);
+		}
+	}
+
+	/**
+	 * Retrieve the function object for a specified function ID number.
+	 * 
+	 * @param theFunctionID ID number of the function
+	 * @return function named
+	 */
+	Function&
+	operator[](int	theFunctionID) const
+	{
+		if (theFunctionID >= 0 &&
+			CollectionType::size_type(theFunctionID) < m_FunctionCollection.size())
+		{
+			return *m_FunctionCollection[theFunctionID];
+		}
+		else
+		{
+			throw XPathExceptionFunctionNotAvailable(theFunctionID);
+		}
+	}
+
+	enum { InvalidFunctionNumberID = -1 };
+
+	/**
+	 * Map a function ID to the corresponding name.
+	 * 
+	 * @param theFunctionID The ID number of the function
+	 * @return The name of the function, or an empty string if the function doesn't exist.
+	 */
+	const XalanDOMString
+	idToName(int	theFunctionID) const
+	{
+		XalanDOMString	theName;
+
+		if (theFunctionID >= 0 &&
+			CollectionType::size_type(theFunctionID) < m_FunctionCollection.size())
+		{
+			FunctionNameIndexMapType::const_iterator	i =
+				m_FunctionNameIndex.begin();
+
+			while (i != m_FunctionNameIndex.end())
+			{
+				if (i->second == theFunctionID)
+				{
+					theName = i->first;
+
+					break;
+				}
+			}
+		}
+
+		return theName;
+	}
+
+	/**
+	 * Map a function name to the corresponding ID number.
+	 * 
+	 * @param theName name of function
+	 * @return The ID number of function, or InvalidFunctionNumberID if the function doesn't exist.
+	 */
+	int
+	nameToID(const XalanDOMString&	theName) const
+	{
+		const FunctionNameIndexMapType::const_iterator	i =
+			m_FunctionNameIndex.find(theName);
+
+		if (i != m_FunctionNameIndex.end())
+		{
+			return i->second;
+		}
+		else
+		{
+			return InvalidFunctionNumberID;
 		}
 	}
 
@@ -160,7 +241,7 @@ public:
 	bool
 	isInstalledFunction(const XalanDOMString&	theFunctionName) const
 	{
-		if (m_FunctionCollection.find(theFunctionName) != m_FunctionCollection.end())
+		if (m_FunctionNameIndex.find(theFunctionName) != m_FunctionNameIndex.end())
 		{
 			return true;
 		}
@@ -181,10 +262,10 @@ public:
 	void
 	getInstalledFunctionNames(InstalledFunctionNameVectorType&	theVector) const
 	{
-		CollectionType::const_iterator	i =
-			m_FunctionCollection.begin();
+		FunctionNameIndexMapType::const_iterator	i =
+			m_FunctionNameIndex.begin();
 
-		while(i != m_FunctionCollection.end())
+		while(i != m_FunctionNameIndex.end())
 		{
 			theVector.push_back((*i).first);
 
@@ -201,10 +282,10 @@ public:
 	void
 	getInstalledFunctionNames(OutputIteratorType	theIterator) const
 	{
-		CollectionType::const_iterator	i =
-			m_FunctionCollection.begin();
+		FunctionNameIndexMapType::const_iterator	i =
+			m_FunctionNameIndex.begin();
 
-		while(i != m_FunctionCollection.end())
+		while(i != m_FunctionNameIndex.end())
 		{
 			*theIterator = (*i).first;
 
@@ -224,7 +305,9 @@ protected:
 
 private:
 
-	CollectionType						m_FunctionCollection;
+	CollectionType				m_FunctionCollection;
+
+	FunctionNameIndexMapType	m_FunctionNameIndex;
 };
 
 

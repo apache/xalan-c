@@ -231,6 +231,8 @@ ResultTreeFrag::replaceChild(
 			XalanNode*	newChild,
 			XalanNode*	oldChild)
 {
+	assert(newChild != 0);
+
 	const unsigned int	refIndex =
 		0 == oldChild ? m_children.npos : m_children.indexOf(oldChild);
 

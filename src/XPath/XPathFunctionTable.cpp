@@ -94,7 +94,8 @@
 
 
 XPathFunctionTable::XPathFunctionTable() :
-	m_FunctionCollection()
+	m_FunctionCollection(),
+	m_FunctionNameIndex()
 {
 	CreateTable();
 }
@@ -110,25 +111,30 @@ XPathFunctionTable::~XPathFunctionTable()
 void
 XPathFunctionTable::InstallFunction(
 			const XalanDOMString&	theFunctionName,
-			const Function&		theFunction)
+			const Function&			theFunction)
 {
 	assert(length(theFunctionName) != 0);
 
 	// See if a function of that name is already installed...
-	const CollectionType::iterator	i =
-		m_FunctionCollection.find(theFunctionName);
+	const FunctionNameIndexMapType::iterator	i =
+		m_FunctionNameIndex.find(theFunctionName);
 
-	if (i != m_FunctionCollection.end())
+	if (i != m_FunctionNameIndex.end())
 	{
-		// It is, so delete the old one, and add the new one...
-		delete i->second;
+		assert(CollectionType::size_type(i->second) < m_FunctionCollection.size());
 
-		i->second = theFunction.clone();
+		// It is, so delete the old one, and add the new one...
+		delete m_FunctionCollection[i->second];
+
+		m_FunctionCollection[i->second] = theFunction.clone();
 	}
 	else
 	{
-		// It's not, so clone the function and add it to the collection.
-		m_FunctionCollection[theFunctionName] = theFunction.clone();
+		const int	theIndex = m_FunctionCollection.size();
+
+		m_FunctionCollection.push_back(theFunction.clone());
+
+		m_FunctionNameIndex[theFunctionName] = theIndex;
 	}
 }
 
@@ -243,10 +249,23 @@ XPathFunctionTable::DestroyTable()
 		for_each(m_FunctionCollection.begin(),
 				 m_FunctionCollection.end(),
 				 DeleteFunctorType());
+
+		m_FunctionCollection.clear();
+		m_FunctionNameIndex.clear();
 	}
 	catch(...)
 	{
 	}
+}
+
+
+
+XPathExceptionFunctionNotAvailable::XPathExceptionFunctionNotAvailable(
+		int					theFunctionNumber,
+		const XalanNode*	styleNode) :
+	XPathException(XALAN_STATIC_UCODE_STRING("The specified function ID is not available: ") + LongToDOMString(theFunctionNumber),
+				   styleNode)
+{
 }
 
 

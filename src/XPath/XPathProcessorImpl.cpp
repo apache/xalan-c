@@ -1661,13 +1661,10 @@ XPathProcessorImpl::FunctionCall()
 				// we've looked at a token.
 				assert(m_expression->getTokenPosition() > 0);
 
-				XPathExpression::OpCodeMapValueType 	thePosition =
-					static_cast<XPathExpression::OpCodeMapValueType>(m_expression->getTokenPosition()) - 1;
+				int		theFunctionID =
+					XPath::getFunctionTable().nameToID(m_token);
 
-				assert(m_expression->getToken(thePosition) != 0 &&
-					   equals(m_expression->getToken(thePosition)->str(), m_token));
-
-				XPathExpression::OpCodeMapValueVectorType	theArgs(1, thePosition);
+				XPathExpression::OpCodeMapValueVectorType	theArgs(1, theFunctionID);
 
 				m_expression->appendOpCode(XPathExpression::eOP_FUNCTION,
 										   theArgs);
