@@ -81,6 +81,7 @@
 
 static const char* const	errorHeader = "error: ";
 static const char* const	warningHeader = "warning: ";
+static const char* const	messageHeader = "message: ";
 
 static const char* const	xslHeader = "XSLT ";
 static const char* const	xmlHeader = "XML ";
@@ -166,9 +167,13 @@ ProblemListenerDefault::problem(
 	{
 		pw.print(errorHeader);
 	}
-	else
+	else if (eWARNING == classification)
 	{
 		pw.print(warningHeader);
+	}
+	else
+	{
+		pw.print(messageHeader);
 	}
 
 	pw.print(msg);
