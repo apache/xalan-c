@@ -864,17 +864,17 @@ XSLTEngineImpl::getStylesheetFromPIURL(
 		{
 			if (length(xmlBaseIdent) == 0)
 			{
-				localXSLURLString =
-						URISupport::getURLStringFromString(
+				URISupport::getURLStringFromString(
 							localXSLURLString,
-							m_xpathEnvSupport.findURIFromDoc(theOwnerDocument));
+							m_xpathEnvSupport.findURIFromDoc(theOwnerDocument),
+							localXSLURLString);
 			}
 			else
 			{
-				localXSLURLString =
-						URISupport::getURLStringFromString(
+				URISupport::getURLStringFromString(
 							localXSLURLString,
-							xmlBaseIdent);
+							xmlBaseIdent,
+							localXSLURLString);
 			}
 		}
 		catch(const XMLException&)

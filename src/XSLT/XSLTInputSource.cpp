@@ -196,9 +196,11 @@ XSLTInputSource::makeStream() const
 
 		if (theSystemId != 0)
 		{
-			const URISupport::URLAutoPtrType	theURL(URISupport::getURLFromString(theSystemId));
+			XMLURL	theURL;
 
-			theResult = theURL->makeNewStream();
+			URISupport::getURLFromString(theSystemId, theURL);
+
+			theResult = theURL.makeNewStream();
 		}
 	}
 
