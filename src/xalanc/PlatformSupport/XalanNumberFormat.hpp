@@ -39,7 +39,15 @@ public:
 	XalanNumberFormat(MemoryManagerType&      theManager);
 
     static XalanNumberFormat*
-    create(MemoryManagerType&      theManager);
+    create(MemoryManagerType&      theManager)
+    {
+        XalanNumberFormat*  theInstance;
+
+        return XalanConstruct(
+                    theManager,
+                    theInstance,
+                    theManager);
+    }
 
 	virtual
 	~XalanNumberFormat();

@@ -435,24 +435,28 @@ XalanEXSLTFunctionEncodeURI::execute(
 
 }
 
+
+
 const XalanDOMString&
-XalanEXSLTFunctionEncodeURI::escapedOctet(const XalanDOMChar	theChar,
-                                          XalanDOMString&       theResult) const
+XalanEXSLTFunctionEncodeURI::escapedOctet(
+            XalanDOMChar	    theChar,
+            XalanDOMString&     theResult) const
 {
 	theResult = XalanUnicode::charPercentSign;
 
-    XalanDOMString stringBuffer(theResult.getMemoryManager());
-
-	UnsignedLongToHexDOMString(theChar, stringBuffer);
-	if (stringBuffer.length() == 1) 
+    if (theChar < XalanDOMChar(16))
 	{
-		theResult += XalanUnicode::charDigit_0;
+		theResult += XalanDOMChar(XalanUnicode::charDigit_0);
 	}
-	theResult += stringBuffer;
-	return theResult;
+
+    return UnsignedLongToHexDOMString(theChar, theResult);
 }
 
+
+
 const XalanDOMString::size_type XalanEXSLTFunctionDecodeURI::s_octetSize = 3;
+
+
 
 XObjectPtr
 XalanEXSLTFunctionDecodeURI::execute(

@@ -113,21 +113,20 @@ Function*
 #else
 FunctionSubstringBefore*
 #endif
-FunctionSubstringBefore::clone(MemoryManagerType& theManager) const
+FunctionSubstringBefore::clone(MemoryManagerType&   theManager) const
 {
-	return cloneFunction_1<FunctionSubstringBefore>()(*this, theManager);
+	return XalanCopyConstruct(theManager, *this);
 }
 
 
 
 const XalanDOMString&
-FunctionSubstringBefore::getError(XalanDOMString& theResult) const
+FunctionSubstringBefore::getError(XalanDOMString&   theResult) const
 {
-
-	XalanMessageLoader::getMessage(XalanMessages::FunctionTakesTwoArguments_1Param, theResult, "substring-before()");
-
-    return theResult;
-
+	return XalanMessageLoader::getMessage(
+                XalanMessages::FunctionTakesTwoArguments_1Param,
+                theResult,
+                "substring-before()");
 }
 
 

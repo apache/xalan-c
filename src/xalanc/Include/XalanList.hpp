@@ -249,6 +249,14 @@ public:
         return *m_memoryManager;
     }
     
+    const MemoryManagerType&
+    getMemoryManager() const
+    {
+    	assert(m_memoryManager != 0 );
+    	
+        return *m_memoryManager;
+    }
+
 	iterator
 	begin()
 	{

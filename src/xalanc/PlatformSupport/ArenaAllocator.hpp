@@ -23,6 +23,7 @@
 
 
 
+#include <xalanc/Include/STLHelper.hpp>
 #include <xalanc/Include/XalanList.hpp>
 
 
@@ -32,33 +33,6 @@
 
 
 XALAN_CPP_NAMESPACE_BEGIN
-
-
-
-template<class Type>
-class ArenaDeleteFunctor
-{
-public:
-    ArenaDeleteFunctor(MemoryManagerType&          theManager):
-      m_memoryManager(theManager)
-      {
-      }
-
-	void
-	operator()(const Type*	theType) const
-	{
-        if( theType == 0 )
-            return;
-        else
-        {
-            theType->~Type();
-            
-            m_memoryManager.deallocate((void*)theType);
-        }
-	}
-private:
-    MemoryManagerType&  m_memoryManager;
-};
 
 
 
@@ -72,6 +46,10 @@ class ArenaAllocator
 {
 public:
 
+    typedef ArenaAllocator<ObjectType, ArenaBlockType>  ThisType;
+
+	typedef XalanList<ArenaBlockType*>	        ArenaBlockListType;
+
 	typedef typename ArenaBlockType::size_type	size_type;
 
 	/*
@@ -79,8 +57,9 @@ public:
 	 *
 	 * @param theBlockSize The block size.
 	 */
-	ArenaAllocator(MemoryManagerType&       theManager,
-                    size_type	            theBlockSize) :
+	ArenaAllocator(
+                MemoryManagerType&  theManager,
+                size_type	        theBlockSize) :
 		m_blockSize(theBlockSize),
 		m_blocks(theManager)
 	{
@@ -97,7 +76,14 @@ public:
     {
         return m_blocks.getMemoryManager();
     }
-	/*
+
+    const MemoryManagerType&
+    getMemoryManager() const
+    {
+        return m_blocks.getMemoryManager();
+    }
+
+    /*
 	 * Get size of an ArenaBlock, that is, the number
 	 * of objects in each block.
 	 *
@@ -146,9 +132,15 @@ public:
 		if (m_blocks.empty() == true ||
 			m_blocks.back()->blockAvailable() == false)
 		{
-            m_blocks.push_back(ArenaBlockType::create(getMemoryManager(), m_blockSize));
+            m_blocks.push_back(
+                ArenaBlockType::create(
+                    getMemoryManager(),
+                    m_blockSize));
 		}
-		assert(m_blocks.empty() == false && m_blocks.back() != 0 && m_blocks.back()->blockAvailable() == true);
+		assert(
+            m_blocks.empty() == false &&
+            m_blocks.back() != 0 &&
+            m_blocks.back()->blockAvailable() == true);
 
 		return m_blocks.back()->allocateBlock();
 	}
@@ -162,10 +154,13 @@ public:
 	virtual void
 	commitAllocation(ObjectType*	theObject)
 	{
-		assert(m_blocks.empty() == false && m_blocks.back()->ownsBlock(theObject) == true);
+		assert(
+            m_blocks.empty() == false &&
+            m_blocks.back()->ownsBlock(theObject) == true);
 
 		m_blocks.back()->commitAllocation(theObject);
-		assert(m_blocks.back()->ownsObject(theObject) == true);
+
+        assert(m_blocks.back()->ownsObject(theObject) == true);
 	}
 
 	virtual bool
@@ -173,11 +168,12 @@ public:
 	{
 		bool	fResult = false;
 
-		// Search back for a block that may have allocated the object...
-		// Note that this-> is required by template lookup rules.
-		const typename ArenaBlockListType::const_reverse_iterator	theEnd = this->m_blocks.rend();
+        typedef typename ArenaBlockListType::const_reverse_iterator     const_reverse_iterator;
 
-		typename ArenaBlockListType::const_reverse_iterator	i = this->m_blocks.rbegin();
+		// Search back for a block that may have allocated the object...
+		const const_reverse_iterator    theEnd = this->m_blocks.rend();
+
+		const_reverse_iterator  i = this->m_blocks.rbegin();
 
 		while(i != theEnd)
 		{
@@ -201,11 +197,10 @@ public:
 	virtual void
 	reset()
 	{
-		
 		XALAN_STD_QUALIFIER for_each(
 			m_blocks.begin(),
 			m_blocks.end(),
-            ArenaDeleteFunctor<ArenaBlockType>(m_blocks.getMemoryManager()));
+            DeleteFunctor<ArenaBlockType>(m_blocks.getMemoryManager()));
 
 		m_blocks.clear();
 	}
@@ -213,8 +208,6 @@ public:
 protected:
 
 	// data members...
-	typedef XalanList<ArenaBlockType*>	ArenaBlockListType;
-
 	size_type			m_blockSize;
 
 	ArenaBlockListType	m_blocks;
@@ -226,6 +219,9 @@ private:
 
 	ArenaAllocator<ObjectType, ArenaBlockType>&
 	operator=(const ArenaAllocator<ObjectType, ArenaBlockType>&);
+
+	bool
+	operator==(const ArenaAllocator<ObjectType, ArenaBlockType>&) const;
 };
 
 

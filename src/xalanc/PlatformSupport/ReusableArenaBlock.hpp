@@ -37,19 +37,20 @@ template<> struct CompileTimeError<true>{};
 
 template <class ObjectType,
 #if defined(XALAN_NO_DEFAULT_TEMPLATE_ARGUMENTS)
-		 class size_Type>
+		 class SizeType>
 #else
-		 class size_Type  = unsigned short >
+		 class SizeType = unsigned short>
 #endif
-
-class ReusableArenaBlock : public ArenaBlockBase<ObjectType, size_Type>
+class ReusableArenaBlock : public ArenaBlockBase<ObjectType, SizeType>
 {
 
 public:
 
-	typedef ArenaBlockBase<ObjectType, size_Type>	BaseClassType;
+	typedef ArenaBlockBase<ObjectType, SizeType>	    BaseClassType;
 
-	typedef typename BaseClassType::size_type		size_type;
+	typedef typename BaseClassType::size_type		    size_type;
+
+	typedef ReusableArenaBlock<ObjectType, SizeType>	ThisType;
 
 	struct NextBlock
 	{
@@ -70,17 +71,30 @@ public:
 			return ( ( verificationStamp == int(VALID_OBJECT_STAMP)) &&
 				( next <= rightBorder ) ) ? true : false ;
 		}
+
+        static NextBlock*
+        cast(void*  thePointer)
+        {
+            return reinterpret_cast<NextBlock*>(thePointer);
+        }
+
+        static const NextBlock*
+        cast(const void*    thePointer)
+        {
+            return reinterpret_cast<const NextBlock*>(thePointer);
+        }
 	};
-
-
 
 	/*
 	 * Construct an ArenaBlock of the specified size
 	 * of objects.
 	 *
-	 * @param theBlockSize The size of the block (the number of objects it can contain).
+	 * @param theBlockSize The size of the block (the
+     * number of objects it can contain).
 	 */
-	ReusableArenaBlock(MemoryManagerType&      theManager, size_type	theBlockSize) :
+	ReusableArenaBlock(
+                MemoryManagerType&  theManager,
+                size_type	        theBlockSize) :
 		BaseClassType(theManager, theBlockSize),
 		m_firstFreeBlock(0),
 		m_nextFreeBlock(0)
@@ -90,7 +104,7 @@ public:
 		
 		for( size_type i = 0; i < this->m_blockSize; ++i )
 		{
-			new ( reinterpret_cast<NextBlock*>(&(this->m_objectBlock[i])) ) NextBlock( (size_type)(i + 1) );
+			new (&this->m_objectBlock[i]) NextBlock(size_type(i + 1));
 		}
 	}
 
@@ -98,11 +112,13 @@ public:
 	{
 		size_type removedObjects = 0;
 
-		NextBlock* pStruct = 0;
-
-		for ( size_type i = 0 ; i < this->m_blockSize && (removedObjects < this->m_objectCount) ; ++i )
+		for (size_type i = 0;
+                i < this->m_blockSize &&
+                removedObjects < this->m_objectCount;
+                    ++i)
 		{
-			pStruct = reinterpret_cast<NextBlock*>(&(this->m_objectBlock[i]));
+            NextBlock* const    pStruct =
+                NextBlock::cast(&this->m_objectBlock[i]);
 
 			if ( isOccupiedBlock(pStruct) )
 			{
@@ -113,21 +129,18 @@ public:
 		}
 	}
 
-    static ReusableArenaBlock<ObjectType,size_Type>*
-    create( MemoryManagerType&       theManager,
-             size_type	             theBlockSize)
+    static ThisType*
+    create(
+                MemoryManagerType&  theManager,
+                size_type	        theBlockSize)
     {
-        typedef ReusableArenaBlock<ObjectType,size_Type> ThisType;
-        
-        XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
+        ThisType* theInstance;
 
-        ThisType* theResult = theGuard.get();
-
-        new (theResult) ThisType(theManager, theBlockSize);
-
-        theGuard.release();
-
-        return theResult;
+        return XalanConstruct(
+                    theManager,
+                    theInstance,
+                    theManager,
+                    theBlockSize);
     }
 
 	/*
@@ -155,21 +168,21 @@ public:
 			assert ( this->m_nextFreeBlock <= this->m_blockSize );
 
 			// check if any part was allocated but not commited
-			if( this->m_firstFreeBlock != this->m_nextFreeBlock)
+			if(this->m_firstFreeBlock != this->m_nextFreeBlock)
 			{
-				// return then againg the previouse allocated block and wait for commitment
+				// return the previously allocated block and wait for a commit
 				theResult = this->m_objectBlock + this->m_firstFreeBlock;
 			}
 			else
 			{
 				theResult = this->m_objectBlock + this->m_firstFreeBlock;
 
-				assert(size_type( theResult - this->m_objectBlock ) < this->m_blockSize);
+				assert(size_type(theResult - this->m_objectBlock) < this->m_blockSize);
 
-				this->m_nextFreeBlock = (reinterpret_cast<NextBlock*>(theResult))->next;
+				this->m_nextFreeBlock = NextBlock::cast(theResult)->next;
 
-				assert ( ( reinterpret_cast<NextBlock*>(theResult ))->isValidFor( this->m_blockSize ) );
-				assert ( this->m_nextFreeBlock <= this->m_blockSize );
+				assert(NextBlock::cast(theResult)->isValidFor(this->m_blockSize));
+				assert(this->m_nextFreeBlock <= this->m_blockSize);
 
 				++this->m_objectCount;
 			}
@@ -186,9 +199,9 @@ public:
 	void
 	commitAllocation(ObjectType* /*	theBlock */)
 	{
-		this->m_firstFreeBlock = this->m_nextFreeBlock;
-
 		assert ( this->m_objectCount <= this->m_blockSize );
+
+        this->m_firstFreeBlock = this->m_nextFreeBlock;
 	}
 
 	/*
@@ -201,10 +214,12 @@ public:
 	void
 	destroyObject(ObjectType*	theObject)
 	{
+        assert(theObject != 0);
+
 		// check if any uncommited block is there, add it to the list
 		if ( this->m_firstFreeBlock != this->m_nextFreeBlock )
 		{
-			// return it to pull of the free blocks
+			// Return it to the pool of free blocks
 			void* const     p = this->m_objectBlock + this->m_firstFreeBlock;
 
 			new (p) NextBlock(this->m_nextFreeBlock);
@@ -215,11 +230,13 @@ public:
 		assert(ownsObject(theObject) == true);
 		assert(shouldDestroyBlock(theObject));
 
-		theObject->~ObjectType();
+		XalanDestroy(*theObject);
 
 		new (theObject) NextBlock(this->m_firstFreeBlock);
 
-		m_firstFreeBlock = this->m_nextFreeBlock = size_type(theObject - this->m_objectBlock);
+		m_firstFreeBlock =
+            this->m_nextFreeBlock =
+            size_type(theObject - this->m_objectBlock);
 
 		assert (this->m_firstFreeBlock <= this->m_blockSize);
 
@@ -240,7 +257,7 @@ public:
 	{
 		assert ( theObject != 0 );
 
-		return isOccupiedBlock( reinterpret_cast<const NextBlock*>(theObject) );
+		return isOccupiedBlock(NextBlock::cast(theObject));
 	}
 
 protected:
@@ -257,29 +274,30 @@ protected:
 	bool
 	shouldDestroyBlock(const ObjectType*	theObject) const
 	{
-		assert( size_type(theObject - this->m_objectBlock) < this->m_blockSize);
+		assert(size_type(theObject - this->m_objectBlock) < this->m_blockSize);
 
         return !isOnFreeList(theObject);
 	}
 
 	bool
-	isOccupiedBlock(const NextBlock*    block)const
+	isOccupiedBlock(const NextBlock*    block) const
 	{
 		assert( block !=0 );
 
-		return !( this->ownsBlock(reinterpret_cast<const ObjectType*>(block)) && block->isValidFor(this->m_blockSize) );
+		return !(this->ownsBlock(reinterpret_cast<const ObjectType*>(block)) &&
+                 block->isValidFor(this->m_blockSize));
 	}
 
 private:
 
 	// Not implemented...
-	ReusableArenaBlock(const ReusableArenaBlock<ObjectType>&);
+	ReusableArenaBlock(const ReusableArenaBlock<ObjectType, SizeType>&);
 
-	ReusableArenaBlock<ObjectType>&
-	operator=(const ReusableArenaBlock<ObjectType>&);
+	ReusableArenaBlock<ObjectType, SizeType>&
+	operator=(const ReusableArenaBlock<ObjectType, SizeType>&);
 
 	bool
-	operator==(const ReusableArenaBlock<ObjectType>&) const;
+	operator==(const ReusableArenaBlock<ObjectType, SizeType>&) const;
 
 
 	/*

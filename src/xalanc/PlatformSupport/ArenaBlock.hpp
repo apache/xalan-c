@@ -18,68 +18,70 @@
 #define ARENABLOCK_INCLUDE_GUARD_1357924680
 
 
+
 #include <xalanc/PlatformSupport/ArenaBlockBase.hpp>
 
-#include <xalanc/Include/XalanMemMgrAutoPtr.hpp>
+
+
 
 XALAN_CPP_NAMESPACE_BEGIN
 
 
 template<class ObjectType,
 #if defined(XALAN_NO_DEFAULT_TEMPLATE_ARGUMENTS)
-		 class size_Type>
+		 class SizeType>
 #else
-		 class size_Type  = size_t >
+		 class SizeType = size_t>
 #endif
-class ArenaBlock : public ArenaBlockBase<ObjectType,size_Type>
+class ArenaBlock : public ArenaBlockBase<ObjectType, SizeType>
 {
 public:
-	typedef ArenaBlockBase<ObjectType,size_Type>		BaseClassType;
-	
-	typedef typename BaseClassType::size_type		size_type;
 
+	typedef ArenaBlockBase<ObjectType, SizeType>	BaseClassType;
+
+    typedef ArenaBlock<ObjectType, SizeType>        ThisType;
+
+	typedef typename BaseClassType::size_type		size_type;
 
 	/*
 	 * Construct an ArenaBlock of the specified size
 	 * of objects.
 	 *
+	 * @param theManager The memory manager instance for the block.
 	 * @param theBlockSize The size of the block (the number of objects it can contain).
 	 */
-	ArenaBlock(MemoryManagerType&       theManager,
-                        size_type	    theBlockSize) :	
-	BaseClassType(theManager, theBlockSize)
+	ArenaBlock(
+                MemoryManagerType&  theManager,
+                size_type	        theBlockSize) :	
+	    BaseClassType(theManager, theBlockSize)
 	{
 	}
 
-	 
 	~ArenaBlock()
 	{	
 		assert( this->m_objectCount <= this->m_blockSize );
-
 		
 		for ( size_type i = 0; i < this->m_objectCount  ; ++i )
 		{
-			this->m_objectBlock[i].~ObjectType();
+			XalanDestroy(this->m_objectBlock[i]);
 		}
-
 	}
-    static ArenaBlock<ObjectType,size_Type>*
-    create( MemoryManagerType&       theManager,
-             size_type	             theBlockSize)
+
+    static ThisType*
+    create(
+                MemoryManagerType&  theManager,
+                size_type	        theBlockSize)
     {
-        typedef ArenaBlock<ObjectType,size_Type> ThisType;
-        
-        XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
+        ThisType* theInstance;
 
-        ThisType* theResult = theGuard.get();
-
-        new (theResult) ThisType(theManager, theBlockSize);
-
-        theGuard.release();
-
-        return theResult;
+        return XalanConstruct(
+                    theManager,
+                    theInstance,
+                    theManager,
+                    theBlockSize);
     }
-	/*
+
+    /*
 	 * Allocate a block.  Once the object is constructed, you must call
 	 * commitAllocation().
 	 *
@@ -116,7 +118,7 @@ public:
 		assert(theBlock == this->m_objectBlock + this->m_objectCount);
 		assert(this->m_objectCount < this->m_blockSize);
 
-		this->m_objectCount++;
+		++this->m_objectCount;
 	}
 
 	/*
@@ -133,17 +135,17 @@ public:
 	{
 		return this->isInBorders(theObject, this->m_objectCount);
 	}
+
 private:
 
 	// Not implemented...
-	ArenaBlock(const ArenaBlock<ObjectType>&);
+	ArenaBlock(const ArenaBlock<ObjectType, SizeType>&);
 
-	ArenaBlock<ObjectType>&
-	operator=(const ArenaBlock<ObjectType>&);
+	ArenaBlock<ObjectType, SizeType>&
+	operator=(const ArenaBlock<ObjectType, SizeType>&);
 
 	bool
-	operator==(const ArenaBlock<ObjectType>&) const;
-
+	operator==(const ArenaBlock<ObjectType, SizeType>&) const;
 };
 
 

@@ -37,7 +37,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-DOMSupportDefault::DOMSupportDefault(MemoryManagerType& theManager) :
+DOMSupportDefault::DOMSupportDefault(MemoryManagerType&     theManager) :
 	DOMSupport(),
 	m_pool(theManager)
 {
@@ -63,10 +63,20 @@ DOMSupportDefault::getUnparsedEntityURI(
 			const XalanDOMString&	theName,
 			const XalanDocument&	theDocument) const
 {
-    XalanDOMString theURI(m_pool.getMemoryManager());
-
 	const XalanDocumentType* const	theDoctype =
 		theDocument.getDoctype();
+
+    XalanDOMStringPool&     theNonConstPool =
+#if defined(XALAN_NO_MUTABLE)
+	    ((DOMSupportDefault*)this)->m_pool;
+#else
+	    m_pool;
+#endif
+
+    MemoryManagerType&  theMemoryManager =
+        theNonConstPool.getMemoryManager();
+
+    XalanDOMString  theURI(theMemoryManager);
 
 	if(theDoctype != 0)
 	{
@@ -87,7 +97,9 @@ DOMSupportDefault::getUnparsedEntityURI(
 					static_cast<const XalanEntity*>(theNode);
 #endif
 
-                const XalanDOMString		theNotationName(theEntity->getNotationName(),theURI.getMemoryManager());
+                const XalanDOMString    theNotationName(
+                                            theEntity->getNotationName(),
+                                            theMemoryManager);
 
 				if(isEmpty(theNotationName) == false) // then it's unparsed
 				{
@@ -106,21 +118,12 @@ DOMSupportDefault::getUnparsedEntityURI(
 					{
 						theURI = theEntity->getPublicId();
 					}
-					else
-					{
-						// This should be resolved to an absolute URL, but that's hard
-						// to do from here.
-					}
 				}
 			}
 		}
 	}
 
-#if defined(XALAN_NO_MUTABLE)
-	return ((DOMSupportDefault*)this)->m_pool.get(theURI);
-#else
-	return m_pool.get(theURI);
-#endif
+	return theNonConstPool.get(theURI);
 }
 
 

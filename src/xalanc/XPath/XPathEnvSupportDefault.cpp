@@ -13,6 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+/**
+ * @author <a href="mailto:david_n_bertoni@us.ibm.com">David N. Bertoni</a>
+ */
 
 #include "XPathEnvSupportDefault.hpp"
 
@@ -61,6 +64,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 XPathEnvSupportDefault::NamespaceFunctionTablesType		XPathEnvSupportDefault::s_externalFunctions(XalanMemMgrs::getDummyMemMgr());
 
+const XalanDOMString                                    XPathEnvSupportDefault::s_emptyString(XalanMemMgrs::getDummyMemMgr());
 
 void
 XPathEnvSupportDefault::initialize(MemoryManagerType&  theManager)
@@ -265,9 +269,8 @@ XPathEnvSupportDefault::setSourceDocument(
 
 
 
-XalanDOMString&
-XPathEnvSupportDefault::findURIFromDoc(const XalanDocument*		owner,
-                                       XalanDOMString&          theResult) const
+const XalanDOMString&
+XPathEnvSupportDefault::findURIFromDoc(const XalanDocument*		owner) const
 {
 	SourceDocsTableType::const_iterator	i =
 			m_sourceDocs.begin();
@@ -285,16 +288,8 @@ XPathEnvSupportDefault::findURIFromDoc(const XalanDocument*		owner,
 			++i;
 		}
 	}
-    if(fFound == false)
-    {
-        theResult.erase();
-    }
-    else
-    {
-        theResult = (*i).first;
-    }
 
-	return theResult;
+    return fFound == false ? s_emptyString : (*i).first;
 }
 
 
@@ -450,9 +445,6 @@ XPathEnvSupportDefault::extFunction(
 bool
 XPathEnvSupportDefault::problem(
 			eSource					/* where */,
-/**
- * @author <a href="mailto:david_n_bertoni@lotus.com">David N. Bertoni</a>
- */
 			eClassification			classification,
 			const PrefixResolver*	/* resolver */,
 			const XalanNode*		/* sourceNode */,
@@ -477,15 +469,18 @@ XPathEnvSupportDefault::problem(
 	return classification == XPathEnvSupport::eError ? true : false;
 }
 
+
+
 XPathEnvSupportDefault::NamespaceFunctionTableDeleteFunctor::NamespaceFunctionTableDeleteFunctor(MemoryManagerType& theManager) :
 m_memMgr(theManager)
 {
 }
 
+
+
 void
 XPathEnvSupportDefault::NamespaceFunctionTableDeleteFunctor::operator()(const NamespaceFunctionTablesInnerType::value_type&	thePair) const
 {
-
 	FunctionTableInnerType::const_iterator	i = thePair.second.begin();
 
 	while(i != thePair.second.end())
@@ -496,7 +491,6 @@ XPathEnvSupportDefault::NamespaceFunctionTableDeleteFunctor::operator()(const Na
 
         ++i;
 	}
-
 }
 
 

@@ -125,21 +125,20 @@ Function*
 #else
 FunctionSubstringAfter*
 #endif
-FunctionSubstringAfter::clone(MemoryManagerType& theManager) const
+FunctionSubstringAfter::clone(MemoryManagerType&    theManager) const
 {
-	return cloneFunction_1<FunctionSubstringAfter>()(*this, theManager);
+	return XalanCopyConstruct(theManager, *this);
 }
 
 
 
 const XalanDOMString&
-FunctionSubstringAfter::getError(XalanDOMString& theResult) const
+FunctionSubstringAfter::getError(XalanDOMString&    theResult) const
 {
-
-	XalanMessageLoader::getMessage(XalanMessages::FunctionTakesTwoArguments_1Param, theResult, "substring-after()");
-
-    return theResult;
-
+	return XalanMessageLoader::getMessage(
+                XalanMessages::FunctionTakesTwoArguments_1Param,
+                theResult,
+                "substring-after()");
 }
 
 

@@ -133,17 +133,20 @@ Function*
 #else
 FunctionGenerateID*
 #endif
-FunctionGenerateID::clone(MemoryManagerType& theManager) const
+FunctionGenerateID::clone(MemoryManagerType&    theManager) const
 {
-	return cloneFunction_1<FunctionGenerateID>()(*this, theManager);
+	return XalanCopyConstruct(theManager, *this);
 }
 
 
 
 const XalanDOMString&
-FunctionGenerateID::getError(XalanDOMString& theResult) const
+FunctionGenerateID::getError(XalanDOMString&    theResult) const
 {
-	return XalanMessageLoader::getMessage(XalanMessages::FunctionTakesZeroOrOneArg_1Param, theResult,"generate-id");
+	return XalanMessageLoader::getMessage(
+                XalanMessages::FunctionTakesZeroOrOneArg_1Param,
+                theResult,
+                "generate-id");
 }
 
 

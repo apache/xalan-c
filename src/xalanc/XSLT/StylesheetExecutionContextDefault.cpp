@@ -2289,13 +2289,10 @@ StylesheetExecutionContextDefault::getNamespaceForPrefix(const XalanDOMString&	p
 
 
 
-XalanDOMString&
-StylesheetExecutionContextDefault::findURIFromDoc(const XalanDocument*	owner,
-                                                  XalanDOMString&       theResult) const
+const XalanDOMString&
+StylesheetExecutionContextDefault::findURIFromDoc(const XalanDocument*	owner) const
 {
-    m_xpathExecutionContextDefault.findURIFromDoc(owner, theResult);
-
-	return theResult;
+    return m_xpathExecutionContextDefault.findURIFromDoc(owner);
 }
 
 

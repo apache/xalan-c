@@ -142,9 +142,8 @@ public:
 			const XalanDOMString&	theURI,
 			XalanDocument*			theDocument);
 
-	virtual XalanDOMString&
-	findURIFromDoc(const XalanDocument*		owner,
-                    XalanDOMString& theResult) const;
+	virtual const XalanDOMString&
+	findURIFromDoc(const XalanDocument*		owner) const;
 
 	virtual bool
 	elementAvailable(

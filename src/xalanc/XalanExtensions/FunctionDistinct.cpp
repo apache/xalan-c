@@ -129,21 +129,21 @@ Function*
 #else
 FunctionDistinct*
 #endif
-FunctionDistinct::clone(MemoryManagerType& theManager) const
+FunctionDistinct::clone(MemoryManagerType&  theManager) const
 {
-	return cloneFunction_1<FunctionDistinct>()(*this, theManager);
+    return XalanCopyConstruct(theManager, *this);
 }
 
 
 
 const XalanDOMString&
-FunctionDistinct::getError(XalanDOMString& theResult) const
+FunctionDistinct::getError(XalanDOMString&  theResult) const
 {
 
-	XalanMessageLoader::getMessage(XalanMessages::FunctionAcceptsOneArgument_1Param, theResult, "distinct()");
-
-    return theResult;
-
+	return XalanMessageLoader::getMessage(
+                XalanMessages::FunctionAcceptsOneArgument_1Param,
+                theResult,
+                "distinct");
 }
 
 

@@ -59,17 +59,20 @@ Function*
 #else
 FunctionCurrent*
 #endif
-FunctionCurrent::clone(MemoryManagerType& theManager) const
+FunctionCurrent::clone(MemoryManagerType&   theManager) const
 {
-	return cloneFunction_1<FunctionCurrent>()(*this, theManager);
+	return XalanCopyConstruct(theManager, *this);
 }
 
 
 
 const XalanDOMString&
-FunctionCurrent::getError(XalanDOMString& theResult) const
+FunctionCurrent::getError(XalanDOMString&   theResult) const
 {
-	return XalanMessageLoader::getMessage(XalanMessages::FunctionDoesNotAcceptAnyArguments_1Param, theResult, "current()");
+	return XalanMessageLoader::getMessage(
+                XalanMessages::FunctionDoesNotAcceptAnyArguments_1Param,
+                theResult,
+                "current()");
 }
 
 

@@ -591,6 +591,35 @@ StylesheetConstructionContextDefault::isValidQName(
 
 
 
+template <class Type>
+class CreateElementFunctor
+{
+public:
+
+    Type*
+    operator()(			
+		MemoryManagerType&              theManager,
+		StylesheetConstructionContext&	constructionContext,
+		Stylesheet& 					stylesheetTree,
+		const AttributeListType&		atts,
+		int								lineNumber,
+		int								columnNumber)
+	{
+        Type*   theResult;
+
+        return XalanConstruct(
+                    theManager,
+                    theResult,
+                    constructionContext,
+                    stylesheetTree,
+                    atts,
+                    lineNumber,
+                    columnNumber);
+	}
+};
+
+
+
 ElemTemplateElement*
 StylesheetConstructionContextDefault::createElement(
 			int							token,
@@ -692,9 +721,8 @@ StylesheetConstructionContextDefault::createElement(
 	case ELEMNAME_COPY_OF:
 		m_allocatedElements.push_back(0);
 
-//		theElement = ElemCopyOf::create(
         theElement = CreateElementFunctor<ElemCopyOf>()(
-             getMemoryManager(),
+            getMemoryManager(),
 			*this,
 			stylesheetTree,
 			atts,
@@ -706,7 +734,7 @@ StylesheetConstructionContextDefault::createElement(
 		m_allocatedElements.push_back(0);
 
         theElement = CreateElementFunctor<ElemDecimalFormat>()(
-             getMemoryManager(),
+            getMemoryManager(),
 			*this,
 			stylesheetTree,
 			atts,
@@ -885,11 +913,18 @@ StylesheetConstructionContextDefault::createElement(
 
 	default:
         {
-            GetAndReleaseCachedString theGuard(*this);
-            GetAndReleaseCachedString theGuard1(*this);
+            const GetAndReleaseCachedString     theGuard1(*this);
+            const GetAndReleaseCachedString     theGuard2(*this);
 
-		    error(XalanMessageLoader::getMessage(XalanMessages::UnknownXSLTToken_1Param, theGuard.get(),
-                            LongToDOMString(token, theGuard1.get())), 0, locator);
+		    error(
+                XalanMessageLoader::getMessage(
+                    XalanMessages::UnknownXSLTToken_1Param,
+                    theGuard1.get(),
+                    LongToDOMString(
+                        token,
+                        theGuard2.get())),
+                0,
+                locator);
         }
 		break;
 	};

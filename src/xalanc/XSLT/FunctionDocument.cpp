@@ -180,12 +180,10 @@ getDoc(
 #endif
 			resolver->getOwnerDocument();
 
-    XPathExecutionContext::GetAndReleaseCachedString theGuard(executionContext);
-
 	getDoc(
 		executionContext,
 		uri,
-		executionContext.findURIFromDoc(ownerDocument, theGuard.get()),
+		executionContext.findURIFromDoc(ownerDocument),
 		mnl,
 		resolver,
 		locator);
@@ -241,7 +239,10 @@ FunctionDocument::execute(
         XPathExecutionContext::GetAndReleaseCachedString theGuard1(executionContext);
 
 		executionContext.error(
-            XalanMessageLoader::getMessage(XalanMessages::FunctionRequiresNonNullContextNode_1Param, theGuard1.get(), "document()"),
+            XalanMessageLoader::getMessage(
+                XalanMessages::FunctionRequiresNonNullContextNode_1Param,
+                theGuard1.get(),
+                "document"),
 			context,
 			locator);
 
@@ -254,7 +255,10 @@ FunctionDocument::execute(
             XPathExecutionContext::GetAndReleaseCachedString theGuard1(executionContext);
 
 			executionContext.error(
-				XalanMessageLoader::getMessage(XalanMessages::SecondArgumentToFunctionMustBeNode_set_1Param, theGuard1.get(), "document()"),
+				XalanMessageLoader::getMessage(
+                    XalanMessages::SecondArgumentToFunctionMustBeNode_set_1Param,
+                    theGuard1.get(),
+                    "document"),
 				context,
 				locator);
 		}
@@ -281,9 +285,7 @@ FunctionDocument::execute(
 #endif
 					baseNode->getOwnerDocument();
 
-                XPathExecutionContext::GetAndReleaseCachedString theGuard(executionContext);
-
-				base = executionContext.findURIFromDoc(baseDoc, theGuard.get());
+				base = executionContext.findURIFromDoc(baseDoc);
 			}
 		}
 	}
@@ -424,17 +426,20 @@ Function*
 #else
 FunctionDocument*
 #endif
-FunctionDocument::clone(MemoryManagerType& theManager) const
+FunctionDocument::clone(MemoryManagerType&  theManager) const
 {
-	return cloneFunction_1<FunctionDocument>()(*this, theManager);
+	return XalanCopyConstruct(theManager, *this);
 }
 
 
 
 const XalanDOMString&
-FunctionDocument::getError(XalanDOMString& theResult) const
+FunctionDocument::getError(XalanDOMString&  theResult) const
 {
-	return XalanMessageLoader::getMessage(XalanMessages::FunctionAcceptsOneTwoArguments_1Param, theResult, "document()");
+	return XalanMessageLoader::getMessage(
+                XalanMessages::FunctionAcceptsOneTwoArguments_1Param,
+                theResult,
+                "document()");
 }
 
 

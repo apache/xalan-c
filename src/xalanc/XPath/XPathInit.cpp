@@ -18,6 +18,7 @@
 
 
 
+#include "FunctionLang.hpp"
 #include "XObject.hpp"
 #include "XUnknown.hpp"
 #include "XPath.hpp"
@@ -46,21 +47,17 @@ XPathInit::XPathInit(MemoryManagerType& theManager) :
 	}
 }
 
+
+
 XPathInit*
-XPathInit::create(MemoryManagerType& theManager)
+XPathInit::create(MemoryManagerType&    theManager)
 {
-    typedef XPathInit ThisType;
+    XPathInit*  theResult;
 
-    XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
-
-    ThisType* theResult = theGuard.get();
-
-    new (theResult) ThisType(theManager);
-
-    theGuard.release();
-
-    return theResult;
+    return XalanConstruct(theManager, theResult, theManager);
 }
+
+
 
 XPathInit::~XPathInit()
 {
@@ -77,7 +74,9 @@ XPathInit::~XPathInit()
 void
 XPathInit::initialize(MemoryManagerType& theManager)
 {
-	XObject::initialize(theManager);
+    FunctionLang::initialize(theManager);
+
+    XObject::initialize(theManager);
 
 	XUnknown::initialize(theManager);
 
@@ -98,6 +97,8 @@ XPathInit::terminate()
 	XUnknown::terminate();
 
 	XObject::terminate();
+
+    FunctionLang::terminate();
 }
 
 

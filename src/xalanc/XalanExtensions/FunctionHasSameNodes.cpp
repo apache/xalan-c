@@ -93,17 +93,20 @@ Function*
 #else
 FunctionHasSameNodes*
 #endif
-FunctionHasSameNodes::clone(MemoryManagerType& theManager) const
+FunctionHasSameNodes::clone(MemoryManagerType&  theManager) const
 {
-	return cloneFunction_1<FunctionHasSameNodes>()(*this, theManager);
+    return XalanCopyConstruct(theManager, *this);
 }
 
 
 
 const XalanDOMString&
-FunctionHasSameNodes::getError(XalanDOMString& theResult) const
+FunctionHasSameNodes::getError(XalanDOMString&  theResult) const
 {
-	return XalanMessageLoader::getMessage(XalanMessages::FunctionAcceptsTwoArguments_1Param, theResult, "has-same-nodes()");
+	return XalanMessageLoader::getMessage(
+                XalanMessages::FunctionAcceptsTwoArguments_1Param,
+                theResult,
+                "has-same-nodes");
 
 }
 

@@ -114,20 +114,20 @@ Function*
 #else
 FunctionString*
 #endif
-FunctionString::clone(MemoryManagerType& theManager) const
+FunctionString::clone(MemoryManagerType&    theManager) const
 {
-	return cloneFunction_1<FunctionString>()(*this, theManager);
+	return XalanCopyConstruct(theManager, *this);
 }
 
 
 
 const XalanDOMString&
-FunctionString::getError(XalanDOMString& theResult) const
+FunctionString::getError(XalanDOMString&    theResult) const
 {
-
-	XalanMessageLoader::getMessage(XalanMessages::FunctionTakesZeroOrOneArg_1Param, theResult, "string()");
-
-    return theResult;
+	return XalanMessageLoader::getMessage(
+                XalanMessages::FunctionTakesZeroOrOneArg_1Param,
+                theResult,
+                "string()");
 }
 
 

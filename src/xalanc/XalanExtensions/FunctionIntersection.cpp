@@ -90,19 +90,20 @@ Function*
 #else
 FunctionIntersection*
 #endif
-FunctionIntersection::clone(MemoryManagerType& theManager) const
+FunctionIntersection::clone(MemoryManagerType&  theManager) const
 {
-	return cloneFunction_1<FunctionIntersection>()( *this, theManager);
+    return XalanCopyConstruct(theManager, *this);
 }
 
 
 
 const XalanDOMString&
-FunctionIntersection::getError(XalanDOMString& theResult) const
+FunctionIntersection::getError(XalanDOMString&  theResult) const
 {
-	XalanMessageLoader::getMessage(XalanMessages::FunctionAcceptsTwoArguments_1Param,theResult, "intersection()");
-
-    return theResult;
+	return XalanMessageLoader::getMessage(
+                XalanMessages::FunctionAcceptsTwoArguments_1Param,
+                theResult,
+                "intersection");
 }
 
 

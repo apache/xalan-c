@@ -457,16 +457,18 @@ XalanSourceTreeParserLiaison::XalanSourceTreeParserLiaison(
             MemoryManagerType&          theManager) :
 	m_xercesParserLiaison(theManager),
 	m_documentMap(theManager),
-	m_poolAllText(true)
+	m_poolAllText(true),
+	m_xmlReader(0)
 {
 }
 
 
 
-XalanSourceTreeParserLiaison::XalanSourceTreeParserLiaison(MemoryManagerType& theManager) :
+XalanSourceTreeParserLiaison::XalanSourceTreeParserLiaison(MemoryManagerType&   theManager) :
 	m_xercesParserLiaison(theManager),
 	m_documentMap(theManager),
-	m_poolAllText(true)
+	m_poolAllText(true),
+	m_xmlReader(0)
 {
 }
 
@@ -475,6 +477,8 @@ XalanSourceTreeParserLiaison::XalanSourceTreeParserLiaison(MemoryManagerType& th
 XalanSourceTreeParserLiaison::~XalanSourceTreeParserLiaison()
 {
 	reset();
+
+	delete m_xmlReader;
 }
 
 
@@ -494,7 +498,7 @@ XalanSourceTreeParserLiaison::reset()
 
         (*i).second->~XalanSourceTreeDocument();
 
-        theManager.deallocate((void*)(*i).second);
+        theManager.deallocate((*i).second);
 
         (*i).second = 0;
 
@@ -534,22 +538,98 @@ XalanSourceTreeParserLiaison::parseXMLStream(
 
 
 
+void
+XalanSourceTreeParserLiaison::ensureReader()
+{
+	if (m_xmlReader == 0)
+	{
+		m_xmlReader = createReader();
+	}
+
+	const bool	fValidate = m_xercesParserLiaison.getUseValidation();
+
+	if (fValidate == false)
+	{
+		m_xmlReader->setFeature(
+			s_validationString,
+			false);
+
+		m_xmlReader->setFeature(
+			s_schemaString,
+			false);
+	}
+	else
+	{
+		m_xmlReader->setFeature(
+			s_dynamicValidationString,
+			true);
+
+		m_xmlReader->setFeature(
+			s_schemaString,
+			true);
+	}
+
+	ErrorHandlerType* const		theHandler = getErrorHandler();
+
+	if (theHandler == 0)
+	{
+		m_xmlReader->setErrorHandler(&m_xercesParserLiaison);
+	}
+	else
+	{
+		m_xmlReader->setErrorHandler(theHandler);
+	}
+
+	m_xmlReader->setEntityResolver(getEntityResolver());
+
+	{
+		const XalanDOMChar* const	theLocation =
+			getExternalSchemaLocation();
+
+		if (theLocation != 0)
+		{
+			m_xmlReader->setProperty(
+				s_externalSchemaLocationString,
+#if defined(XALAN_OLD_STYLE_CASTS)
+				(void*)theLocation);
+#else
+				const_cast<XalanDOMChar*>(theLocation));
+#endif
+		}
+	}
+
+	{
+		const XalanDOMChar* const	theLocation =
+			getExternalNoNamespaceSchemaLocation();
+
+		if (theLocation != 0)
+		{
+			m_xmlReader->setProperty(
+				s_externalNoNamespaceSchemaLocationString,
+#if defined(XALAN_OLD_STYLE_CASTS)
+				(void*)theLocation);
+#else
+				const_cast<XalanDOMChar*>(theLocation));
+#endif
+		}
+	}
+}
+
+
+
 XalanDocument*
 XalanSourceTreeParserLiaison::parseXMLStream(
 			const InputSourceType&	inputSource,
-			const XalanDOMString&	/* identifier */)
+			const XalanDOMString&	identifier)
 {
 	XalanSourceTreeContentHandler	theContentHandler( getMemoryManager(), createXalanSourceTreeDocument());
 
-	XalanAutoPtr<SAX2XMLReaderType>	theReader(createReader());
-
-	theReader->setContentHandler(&theContentHandler);
-
-	theReader->setDTDHandler(&theContentHandler);
-
-	theReader->setLexicalHandler(&theContentHandler);
-
-	theReader->parse(inputSource);
+	parseXMLStream(
+		inputSource,
+		theContentHandler,
+		identifier,
+		&theContentHandler,
+		&theContentHandler);
 
 	return theContentHandler.getDocument();
 }
@@ -632,15 +712,17 @@ XalanSourceTreeParserLiaison::parseXMLStream(
 			DTDHandlerType*			theDTDHandler,
 			LexicalHandlerType*		theLexicalHandler)
 {
-	XalanAutoPtr<SAX2XMLReaderType>		theReader(createReader());
+	ensureReader();
 
-	theReader->setContentHandler(&theContentHandler);
+	assert(m_xmlReader != 0);
 
-	theReader->setDTDHandler(theDTDHandler);
+	m_xmlReader->setContentHandler(&theContentHandler);
 
-	theReader->setLexicalHandler(theLexicalHandler);
+	m_xmlReader->setDTDHandler(theDTDHandler);
 
-	theReader->parse(theInputSource);
+	m_xmlReader->setLexicalHandler(theLexicalHandler);
+
+	m_xmlReader->parse(theInputSource);
 }
 
 
@@ -802,29 +884,6 @@ XalanSourceTreeParserLiaison::createReader()
 {
 	XalanAutoPtr<SAX2XMLReaderType>		theReader(XERCES_CPP_NAMESPACE_QUALIFIER XMLReaderFactory::createXMLReader( &(getMemoryManager())));
 
-	const bool	fValidate = m_xercesParserLiaison.getUseValidation();
-
-	if (fValidate == false)
-	{
-		theReader->setFeature(
-			s_validationString,
-			false);
-
-		theReader->setFeature(
-			s_schemaString,
-			false);
-	}
-	else
-	{
-		theReader->setFeature(
-			s_dynamicValidationString,
-			true);
-
-		theReader->setFeature(
-			s_schemaString,
-			true);
-	}
-
 	theReader->setFeature(
 		s_namespacesString,
 		true);
@@ -832,51 +891,6 @@ XalanSourceTreeParserLiaison::createReader()
 	theReader->setFeature(
 		s_namespacePrefixesString,
 		true);
-
-	ErrorHandlerType* const		theHandler = getErrorHandler();
-
-	if (theHandler == 0)
-	{
-		theReader->setErrorHandler(&m_xercesParserLiaison);
-	}
-	else
-	{
-		theReader->setErrorHandler(theHandler);
-	}
-
-	theReader->setEntityResolver(getEntityResolver());
-
-	{
-		const XalanDOMChar* const	theLocation =
-			getExternalSchemaLocation();
-
-		if (theLocation != 0)
-		{
-			theReader->setProperty(
-				s_externalSchemaLocationString,
-#if defined(XALAN_OLD_STYLE_CASTS)
-				(void*)theLocation);
-#else
-				const_cast<XalanDOMChar*>(theLocation));
-#endif
-		}
-	}
-
-	{
-		const XalanDOMChar* const	theLocation =
-			getExternalNoNamespaceSchemaLocation();
-
-		if (theLocation != 0)
-		{
-			theReader->setProperty(
-				s_externalNoNamespaceSchemaLocationString,
-#if defined(XALAN_OLD_STYLE_CASTS)
-				(void*)theLocation);
-#else
-				const_cast<XalanDOMChar*>(theLocation));
-#endif
-		}
-	}
 
 	return theReader.release();
 }

@@ -65,12 +65,10 @@ public:
 #endif
 	clone(MemoryManagerType& theManager) const
 	{
-		return cloneFunction_0<XalanEXSLTFunctionDateTime>()(theManager);
+	    return XalanCopyConstruct(theManager, *this);
 	}
 
 protected:
-
-
 
 	virtual const XalanDOMString&
 	getError(XalanDOMString& theResult) const;
@@ -83,9 +81,6 @@ private:
 
 	bool
 	operator==(const XalanEXSLTFunctionDateTime&) const;
-
-
-
 };
 
 

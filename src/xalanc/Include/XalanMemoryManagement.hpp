@@ -18,10 +18,12 @@
 
 
 // Base include file.  Must be first.
-#include <new>
-
-
 #include <xalanc/Include/PlatformDefinitions.hpp>
+
+
+
+#include <cstddef>
+#include <new>
 
 
 
@@ -32,7 +34,307 @@
 
 XALAN_CPP_NAMESPACE_BEGIN
 
+
+
 typedef XERCES_CPP_NAMESPACE_QUALIFIER MemoryManager		MemoryManagerType;
+
+
+
+class XalanAllocationGuard
+{
+public:
+
+#if defined(XALAN_STRICT_ANSI_HEADERS)
+    typedef std::size_t     size_type;
+#else
+    typedef size_t          size_type;
+#endif
+
+    XalanAllocationGuard(
+                MemoryManagerType&  theMemoryManager,
+                void*               thePointer) :
+        m_memoryManager(theMemoryManager),
+        m_pointer(thePointer)
+    {
+    }
+
+    XalanAllocationGuard(
+                MemoryManagerType&  theMemoryManager,
+                size_type           theSize) :
+        m_memoryManager(theMemoryManager),
+        m_pointer(theMemoryManager.allocate(theSize))
+    {
+    }
+
+    ~XalanAllocationGuard()
+    {
+        if (m_pointer != 0)
+        {
+            m_memoryManager.deallocate(m_pointer);
+        }
+    }
+
+    void*
+    get() const
+    {
+        return m_pointer;
+    }
+
+    void
+    release()
+    {
+        m_pointer = 0;
+    }
+
+private:
+
+    // Data members...
+    MemoryManagerType&  m_memoryManager;
+
+    void*               m_pointer;
+};
+
+
+
+template<class Type>
+void
+XalanDestroy(Type&  theArg)
+{
+    theArg.~Type();
+}
+
+
+
+template<class Type>
+void
+XalanDestroy(Type*  theArg)
+{
+    if (theArg != 0)
+    {
+        theArg->~Type();
+    }
+}
+
+
+
+template<class Type>
+void
+XalanDestroy(
+            MemoryManagerType&  theMemoryManager,
+            Type*               theArg)
+{
+    if (theArg != 0)
+    {
+        XalanDestroy(*theArg);
+
+        theMemoryManager.deallocate(theArg);
+    }
+}
+
+
+
+template<class Type>
+void
+XalanDestroy(
+            MemoryManagerType&  theMemoryManager,
+            Type&               theArg)
+{
+    XalanDestroy(theArg);
+
+    theMemoryManager.deallocate(&theArg);
+}
+
+
+
+template<class Type>
+Type*
+XalanConstruct(
+            MemoryManagerType&  theMemoryManager,
+            Type*&              theInstance)
+{
+    XalanAllocationGuard    theGuard(
+                                theManager,
+                                sizeof(Type));
+
+    theInstance =
+        new (theGuard.get()) Type;
+
+    theGuard.release();
+
+    return theInstance;
+}
+
+
+
+template<
+    class Type,
+    class Param1Type>
+Type*
+XalanConstruct(
+            MemoryManagerType&  theMemoryManager,
+            Type*&              theInstance,
+            const Param1Type&   theParam1)
+{
+    XalanAllocationGuard    theGuard(
+                                theMemoryManager,
+                                sizeof(Type));
+
+    theInstance =
+        new (theGuard.get()) Type(theParam1);
+
+    theGuard.release();
+
+    return theInstance;
+}
+
+
+
+template<
+    class Type,
+    class Param1Type>
+Type*
+XalanConstruct(
+            MemoryManagerType&  theMemoryManager,
+            Type*&              theInstance,
+            Param1Type&         theParam1)
+{
+    XalanAllocationGuard    theGuard(
+                                theMemoryManager,
+                                sizeof(Type));
+
+    theInstance =
+        new (theGuard.get()) Type(theParam1);
+
+    theGuard.release();
+
+    return theInstance;
+}
+
+
+
+template<
+    class Type,
+    class Param1Type,
+    class Param2Type>
+Type*
+XalanConstruct(
+            MemoryManagerType&  theMemoryManager,
+            Type*&              theInstance,
+            Param1Type&         theParam1,
+            const Param2Type&   theParam2)
+{
+    XalanAllocationGuard    theGuard(
+                                theMemoryManager,
+                                sizeof(Type));
+
+    theInstance =
+        new (theGuard.get()) Type(theParam1, theParam2);
+
+    theGuard.release();
+
+    return theInstance;
+}
+
+
+
+template<
+    class Type,
+    class Param1Type,
+    class Param2Type,
+    class Param3Type>
+Type*
+XalanConstruct(
+            MemoryManagerType&  theMemoryManager,
+            Type*&              theInstance,
+            Param1Type&         theParam1,
+            const Param2Type&   theParam2,
+            Param3Type&         theParam3)
+{
+    XalanAllocationGuard    theGuard(
+                                theMemoryManager,
+                                sizeof(Type));
+
+    theInstance =
+        new (theGuard.get()) Type(theParam1, theParam2, theParam3);
+
+    theGuard.release();
+
+    return theInstance;
+}
+
+
+
+template<
+    class Type,
+    class Param1Type,
+    class Param2Type,
+    class Param3Type,
+    class Param4Type,
+    class Param5Type>
+Type*
+XalanConstruct(
+            MemoryManagerType&  theMemoryManager,
+            Type*&              theInstance,
+            Param1Type&         theParam1,
+            Param2Type&         theParam2,
+            const Param3Type&   theParam3,
+            const Param4Type&   theParam4,
+            const Param5Type&   theParam5)
+{
+    XalanAllocationGuard    theGuard(
+                                theMemoryManager,
+                                sizeof(Type));
+
+    theInstance =
+        new (theGuard.get()) Type(theParam1, theParam2, theParam3, theParam4, theParam5);
+
+    theGuard.release();
+
+    return theInstance;
+}
+
+
+
+template<class Type>
+Type*
+XalanCopyConstruct(
+            MemoryManagerType&  theMemoryManager,
+            const Type&         theSource)
+{
+    XalanAllocationGuard    theGuard(
+                                theMemoryManager,
+                                sizeof(Type));
+
+    Type* const     theInstance =
+        new (theGuard.get()) Type(theSource);
+
+    theGuard.release();
+
+    return theInstance;
+}
+
+
+
+template<
+    class Type,
+    class Param1Type>
+Type*
+XalanCopyConstruct(
+            MemoryManagerType&  theMemoryManager,
+            const Type&         theSource,
+            Param1Type&         theParam1)
+{
+    XalanAllocationGuard    theGuard(
+                                theMemoryManager,
+                                sizeof(Type));
+
+    Type* const     theInstance =
+        new (theGuard.get()) Type(theSource, theParam1);
+
+    theGuard.release();
+
+    return theInstance;
+}
 
 
 

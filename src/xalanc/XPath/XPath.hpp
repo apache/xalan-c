@@ -65,9 +65,13 @@ public:
 
 	typedef XERCES_CPP_NAMESPACE_QUALIFIER Locator	LocatorType;
 
-    typedef XPathExpression::OpCodeMapPositionType      OpCodeMapPositionType;
-    typedef XPathExpression::OpCodeMapValueType         OpCodeMapValueType;
-    typedef XPathExpression::TokenQueuePositionType     TokenQueuePositionType;
+    typedef XPathExpression::OpCodeMapPositionType              OpCodeMapPositionType;
+    typedef XPathExpression::OpCodeMapValueType                 OpCodeMapValueType;
+    typedef XPathExpression::TokenQueuePositionType             TokenQueuePositionType;
+    typedef XPathExecutionContext::GetAndReleaseCachedString    GetCachedString;
+    typedef XPathExecutionContext::PrefixResolverSetAndRestore  PrefixResolverSetAndRestore;
+    typedef XPathExecutionContext::CurrentNodePushAndPop        CurrentNodePushAndPop;
+
 
 	static const XalanDOMChar	PSEUDONAME_ANY[];
 	static const XalanDOMChar	PSEUDONAME_ROOT[];
@@ -619,9 +623,9 @@ public:
 		assert(executionContext.getCurrentNode() != 0);
 
 		// Push and pop the PrefixResolver...
-		const XPathExecutionContext::PrefixResolverSetAndRestore	theResolverSetAndRestore(
-										executionContext,
-										&prefixResolver);
+		const PrefixResolverSetAndRestore	theResolverSetAndRestore(
+										        executionContext,
+										        &prefixResolver);
 
 		return executeMore(
                 executionContext.getCurrentNode(),
@@ -648,9 +652,9 @@ public:
 		assert(executionContext.getCurrentNode() != 0);
 
 		// Push and pop the PrefixResolver...
-		const XPathExecutionContext::PrefixResolverSetAndRestore	theResolverSetAndRestore(
-										executionContext,
-										&prefixResolver);
+		const PrefixResolverSetAndRestore	theResolverSetAndRestore(
+										        executionContext,
+										        &prefixResolver);
 
 		executeMore(
                 executionContext.getCurrentNode(),
@@ -678,9 +682,9 @@ public:
 		assert(executionContext.getCurrentNode() != 0);
 
 		// Push and pop the PrefixResolver...
-		const XPathExecutionContext::PrefixResolverSetAndRestore	theResolverSetAndRestore(
-										executionContext,
-										&prefixResolver);
+		const PrefixResolverSetAndRestore	theResolverSetAndRestore(
+										        executionContext,
+										        &prefixResolver);
 
 		executeMore(
                 executionContext.getCurrentNode(),
@@ -709,9 +713,9 @@ public:
 		assert(executionContext.getCurrentNode() != 0);
 
 		// Push and pop the PrefixResolver...
-		const XPathExecutionContext::PrefixResolverSetAndRestore	theResolverSetAndRestore(
-										executionContext,
-										&prefixResolver);
+		const PrefixResolverSetAndRestore	theResolverSetAndRestore(
+										        executionContext,
+										        &prefixResolver);
 
 		executeMore(
                 executionContext.getCurrentNode(),
@@ -738,9 +742,9 @@ public:
 		assert(executionContext.getCurrentNode() != 0);
 
 		// Push and pop the PrefixResolver...
-		const XPathExecutionContext::PrefixResolverSetAndRestore	theResolverSetAndRestore(
-										executionContext,
-										&prefixResolver);
+		const PrefixResolverSetAndRestore	theResolverSetAndRestore(
+										        executionContext,
+										        &prefixResolver);
 
 		executeMore(
                 executionContext.getCurrentNode(),
@@ -780,9 +784,9 @@ public:
 		assert(executionContext.getCurrentNode() != 0);
 
 		// Push and pop the PrefixResolver...
-		const XPathExecutionContext::PrefixResolverSetAndRestore	theResolverSetAndRestore(
-										executionContext,
-										&prefixResolver);
+		const PrefixResolverSetAndRestore	theResolverSetAndRestore(
+										        executionContext,
+										        &prefixResolver);
 
 		return executeMore(
                 executionContext.getCurrentNode(),

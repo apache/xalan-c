@@ -95,7 +95,7 @@ ElementPrefixResolverProxy::getURI() const
 #else
 		m_uri =
 #endif
-				m_envSupport->findURIFromDoc(m_namespaceContext->getOwnerDocument(),m_uri);
+				m_envSupport->findURIFromDoc(m_namespaceContext->getOwnerDocument());
 	}
 
 	return m_uri;

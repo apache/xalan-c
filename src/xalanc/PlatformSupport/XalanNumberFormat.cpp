@@ -41,28 +41,13 @@ const XalanDOMChar	XalanNumberFormat::s_defaultGroupingSeparator[] =
 
 
 
-XalanNumberFormat::XalanNumberFormat(MemoryManagerType&      theManager) :
+XalanNumberFormat::XalanNumberFormat(MemoryManagerType&     theManager) :
 	m_isGroupingUsed(false),
 	m_groupingSeparator(s_defaultGroupingSeparator, theManager),
 	m_groupingSize(3)	// Default to US values
 {
 }
 
-XalanNumberFormat*
-XalanNumberFormat::create(MemoryManagerType&      theManager)
-{
-    typedef XalanNumberFormat ThisType;
-
-    XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
-
-    ThisType* theResult = theGuard.get();
-
-    new (theResult) ThisType(theManager);
-
-    theGuard.release();
-
-    return theResult;
-}
 
 
 XalanNumberFormat::~XalanNumberFormat()

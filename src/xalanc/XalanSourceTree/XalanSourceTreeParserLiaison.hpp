@@ -66,8 +66,9 @@ public:
 	 *
 	 * @deprecated This constructor is deprecated.  Use the next constructor instead.
 	 */
-	XalanSourceTreeParserLiaison( XalanSourceTreeDOMSupport&	theSupport, 
-                                  MemoryManagerType&            theManager XALAN_DEFAULT_MEMMGR);
+	XalanSourceTreeParserLiaison(
+                XalanSourceTreeDOMSupport&  theSupport, 
+                MemoryManagerType&          theManager XALAN_DEFAULT_MEMMGR);
 
 	/**
 	 * Construct a XalanSourceTreeParserLiaison instance.
@@ -79,6 +80,7 @@ public:
     {
         return m_documentMap.getMemoryManager();
     }
+
 	virtual
 	~XalanSourceTreeParserLiaison();
 
@@ -363,6 +365,10 @@ protected:
 
 private:
 
+	void
+	ensureReader();
+
+
 	// Not implemented...
 	XalanSourceTreeParserLiaison(const XalanSourceTreeParserLiaison&);
 
@@ -376,6 +382,8 @@ private:
 	DocumentMapType 			m_documentMap;
 
 	bool						m_poolAllText;
+
+	SAX2XMLReaderType*			m_xmlReader;
 
 	static const XalanDOMChar	s_validationString[];
 

@@ -38,7 +38,7 @@ XALAN_USES_MEMORY_MANAGER(FunctionTableTypeDefinition)
 /**
  * Dummy class in order to make the XPath object happy 
  * for diagnostic purposes.
- * @author <a href="mailto:david_n_bertoni@lotus.com">David N. Bertoni</a>
+ * @author <a href="mailto:david_n_bertoni@us.ibm.com">David N. Bertoni</a>
  */
 class XALAN_XPATH_EXPORT XPathEnvSupportDefault : public XPathEnvSupport
 {
@@ -144,9 +144,8 @@ public:
 			const XalanDOMString&	theURI,
 			XalanDocument*			theDocument);
 
-	virtual XalanDOMString&
-    findURIFromDoc(const XalanDocument*		owner,
-                   XalanDOMString&          theResult) const;
+	virtual const XalanDOMString&
+    findURIFromDoc(const XalanDocument*     owner) const;
 
 	virtual bool
 	elementAvailable(
@@ -267,7 +266,9 @@ private:
 
 	NamespaceFunctionTablesType				m_externalFunctions;
 
-	static 	NamespaceFunctionTablesType		s_externalFunctions;
+	static NamespaceFunctionTablesType		s_externalFunctions;
+
+    static const XalanDOMString             s_emptyString;
 };
 
 XALAN_CPP_NAMESPACE_END

@@ -47,50 +47,69 @@ FunctionUnparsedEntityURI::~FunctionUnparsedEntityURI()
 
 XObjectPtr
 FunctionUnparsedEntityURI::execute(
-			XPathExecutionContext&	executionContext,
-			XalanNode*				context,			
-			const XObjectPtr		arg,
-			const LocatorType*		locator) const
+            XPathExecutionContext&  executionContext,
+            XalanNode*              context,            
+            const XObjectPtr        arg,
+            const LocatorType*      locator) const
 {
-	assert(arg.null() == false);
+    assert(arg.null() == false);
 
-	if (context == 0)
-	{
+    if (context == 0)
+    {
         XPathExecutionContext::GetAndReleaseCachedString theGuard(executionContext);
 
-		executionContext.error(
-			XalanMessageLoader::getMessage(XalanMessages::FunctionRequiresNonNullContextNode_1Param,theGuard.get(),"unparsed-entity-uri()"),
-			context,
-			locator);
+        executionContext.error(
+            XalanMessageLoader::getMessage(
+                XalanMessages::FunctionRequiresNonNullContextNode_1Param,
+                theGuard.get(),
+                "unparsed-entity-uri"),
+            context,
+            locator);
 
-		return XObjectPtr();
-	}
-	else
-	{
-		const XalanDOMString&	name = arg->str();
+        return XObjectPtr();
+    }
+    else
+    {
+        const XalanDOMString&   name = arg->str();
 
-		XalanDocument* const	doc =
-				XalanNode::DOCUMENT_NODE == context->getNodeType() ?
+        XalanDocument* const    doc =
+                XalanNode::DOCUMENT_NODE == context->getNodeType() ?
 #if defined(XALAN_OLD_STYLE_CASTS)
-					(XalanDocument*)context :
+                    (XalanDocument*)context :
 #else
-					static_cast<XalanDocument*>(context) :
+                    static_cast<XalanDocument*>(context) :
 #endif
-					context->getOwnerDocument();
-		assert(doc != 0);
+                    context->getOwnerDocument();
+        assert(doc != 0);
 
-        const XalanDOMString& uri = executionContext.getUnparsedEntityURI(name, *doc);
+        const XalanDOMString&   theURI =
+            executionContext.getUnparsedEntityURI(name, *doc);
 
-		return executionContext.getXObjectFactory().createStringReference(uri);
-	}
+        return executionContext.getXObjectFactory().createStringReference(theURI);
+    }
+}
+
+
+
+#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
+Function*
+#else
+FunctionUnparsedEntityURI*
+#endif
+FunctionUnparsedEntityURI::clone(MemoryManagerType&     theManager) const
+{
+   return XalanCopyConstruct(theManager, *this);
 }
 
 
 
 const XalanDOMString&
-FunctionUnparsedEntityURI::getError(XalanDOMString& theResult) const
+FunctionUnparsedEntityURI::getError(XalanDOMString&     theResult) const
 {
-	return XalanMessageLoader::getMessage(XalanMessages::FunctionAcceptsOneArgument_1Param,theResult,"unparsed-entity-uri");
+    return XalanMessageLoader::getMessage(
+                XalanMessages::FunctionAcceptsOneArgument_1Param,
+                theResult,
+                "unparsed-entity-uri");
 }
 
 

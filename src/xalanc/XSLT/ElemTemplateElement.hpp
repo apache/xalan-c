@@ -66,40 +66,10 @@ class XPath;
 
 
 
-template <class Type>
-class CreateElementFunctor
-{
-public:
-	Type*
-    operator()(			
-		MemoryManagerType&              theManager,
-		StylesheetConstructionContext&	constructionContext,
-		Stylesheet& 					stylesheetTree,
-		const AttributeListType&		atts,
-		int								lineNumber,
-		int								columnNumber)
-	{
-		XalanMemMgrAutoPtr<Type, false> theGuard( theManager , (Type*)theManager.allocate(sizeof(Type)));
-		
-		Type* theResult = theGuard.get();
-		
-		new (theResult) Type(constructionContext,
-			stylesheetTree,
-			atts,
-			lineNumber, 
-			columnNumber);
-		
-		theGuard.release();
-		
-		return theResult;
-	}
-};
-
 class XALAN_XSLT_EXPORT ElemTemplateElement : public PrefixResolver
 {
      
 public:
-
 
 	/**
 	 * Construct a template element instance.
@@ -220,7 +190,7 @@ public:
 	 * @param execute	context to execute this element
 	 */
 	virtual void
-	execute(StylesheetExecutionContext&			executionContext) const;
+	execute(StylesheetExecutionContext&     executionContext) const;
 
 	/** 
 	 * Execute the children of this element.
@@ -235,12 +205,10 @@ public:
 	 * @returns element that invoked this element.
      */
 	virtual const ElemTemplateElement*
-	getInvoker(StylesheetExecutionContext& executionContext) const;
-#endif
+	getInvoker(StylesheetExecutionContext&  executionContext) const;
 
+#else
 
-
-#if defined(XALAN_RECURSIVE_STYLESHEET_EXECUTION)
 	/** 
 	 * Execute the element's primary function.	Subclasses of this function may
 	 * recursively execute down the element tree.

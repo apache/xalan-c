@@ -168,13 +168,13 @@ static const XalanDOMChar   s_true[] =
 void
 XObject::initialize(MemoryManagerType& theManager)
 {
-    s_localBooleanString .reset( theManager, s_boolean);
-    s_localFalseString .reset( theManager,  s_false);
-    s_localNodesetString .reset( theManager, s_nodeset);
-    s_localNumberString .reset( theManager, s_number);
-    s_localResultTreeFragmentString .reset( theManager, s_resultTreeFragment);
-    s_localStringString .reset( theManager, s_string);
-    s_localTrueString .reset( theManager, s_true);
+    s_localBooleanString.reset(theManager, s_boolean);
+    s_localFalseString.reset(theManager,  s_false);
+    s_localNodesetString.reset(theManager, s_nodeset);
+    s_localNumberString.reset(theManager, s_number);
+    s_localResultTreeFragmentString.reset(theManager, s_resultTreeFragment);
+    s_localStringString.reset(theManager, s_string);
+    s_localTrueString.reset(theManager, s_true);
 }
 
 

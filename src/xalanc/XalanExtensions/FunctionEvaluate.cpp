@@ -162,19 +162,20 @@ Function*
 #else
 FunctionEvaluate*
 #endif
-FunctionEvaluate::clone(MemoryManagerType& theManager) const
+FunctionEvaluate::clone(MemoryManagerType&  theManager) const
 {
-	return cloneFunction_1<FunctionEvaluate>()( *this, theManager);
+    return XalanCopyConstruct(theManager, *this);
 }
 
 
 
 const XalanDOMString&
-FunctionEvaluate::getError(XalanDOMString& theResult) const
+FunctionEvaluate::getError(XalanDOMString&  theResult) const
 {
-	XalanMessageLoader::getMessage(XalanMessages::FunctionAcceptsOneArgument_1Param,theResult , "evaluate()");
-
-    return theResult;
+	return XalanMessageLoader::getMessage(
+                XalanMessages::FunctionAcceptsOneArgument_1Param,
+                theResult,
+                "evaluate");
 }
 
 

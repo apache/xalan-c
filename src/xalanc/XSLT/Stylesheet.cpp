@@ -124,7 +124,7 @@ Stylesheet::Stylesheet(
 	{
 		try
 		{
-            StylesheetConstructionContext::GetAndReleaseCachedString theGuard(constructionContext);
+            const GetAndReleaseCachedString     theGuard(constructionContext);
 
             XalanDOMString& urlString = theGuard.get();
 
@@ -147,24 +147,26 @@ Stylesheet::Stylesheet(
 		}
 	}
 }
+
+    
+    
 Stylesheet*
-Stylesheet::create(MemoryManagerType& theManager,
+Stylesheet::create(
+            MemoryManagerType&              theManager,
             StylesheetRoot& 				root,
 			const XalanDOMString&			baseIdentifier,
 			StylesheetConstructionContext&	constructionContext)
 {
-      typedef Stylesheet ThisType;
-        
-        XalanMemMgrAutoPtr<ThisType, false> theGuard( theManager , (ThisType*)theManager.allocate(sizeof(ThisType)));
+    Stylesheet* theInstance;
 
-        ThisType* theResult = theGuard.get();
-
-        new (theResult) ThisType(root, baseIdentifier, constructionContext);
-
-        theGuard.release();
-
-        return theResult;
+    return XalanConstruct(
+            theManager,
+            theInstance,
+            root,
+            baseIdentifier,
+            constructionContext);
 }
+
 
 
 Stylesheet::~Stylesheet()
@@ -174,19 +176,22 @@ Stylesheet::~Stylesheet()
 #endif
 
 	// Clean up all entries in the imports vector.
-	for_each(m_imports.begin(),
-			 m_imports.end(),
-			 DeleteFunctor<Stylesheet>(m_imports.getMemoryManager()));
+	for_each(
+        m_imports.begin(),
+		m_imports.end(),
+		DeleteFunctor<Stylesheet>(m_imports.getMemoryManager()));
 
 	// Clean up the decimal formats vector
-	for_each(m_elemDecimalFormats.begin(),
-			 m_elemDecimalFormats.end(),
-			 DeleteFunctor<ElemDecimalFormat>(m_elemDecimalFormats.getMemoryManager()));
+	for_each(
+        m_elemDecimalFormats.begin(),
+		m_elemDecimalFormats.end(),
+		DeleteFunctor<ElemDecimalFormat>(m_elemDecimalFormats.getMemoryManager()));
 
 
-	for_each(m_extensionNamespaces.begin(),
-			 m_extensionNamespaces.end(),
-			 makeMapValueDeleteFunctor(m_extensionNamespaces));
+	for_each(
+        m_extensionNamespaces.begin(),
+		m_extensionNamespaces.end(),
+		makeMapValueDeleteFunctor(m_extensionNamespaces));
 
 }
 
@@ -199,9 +204,11 @@ Stylesheet::initWrapperless(
 {
 	if (m_isWrapperless == true)
 	{
-        const StylesheetConstructionContext::GetAndReleaseCachedString theGuard(constructionContext);
+        const GetAndReleaseCachedString     theGuard(constructionContext);
+
 		constructionContext.error(
-			XalanMessageLoader::getMessage(XalanMessages::StylesheetHasWrapperlessTemplate,theGuard.get()),
+			XalanMessageLoader::getMessage(
+                XalanMessages::StylesheetHasWrapperlessTemplate, theGuard.get()),
 			0,
 			locator);
 	}
@@ -256,7 +263,7 @@ Stylesheet::processKeyElement(
 
 			if (theQName->isValid() == false)
 			{
-                StylesheetConstructionContext::GetAndReleaseCachedString theGuard(constructionContext);
+                const GetAndReleaseCachedString     theGuard(constructionContext);
 
 				constructionContext.error(
 						XalanMessageLoader::getMessage(
@@ -270,7 +277,7 @@ Stylesheet::processKeyElement(
 		}
 		else if(equals(aname, Constants::ATTRNAME_MATCH))
 		{
-            StylesheetConstructionContext::GetAndReleaseCachedString theGuard(constructionContext);
+            const GetAndReleaseCachedString     theGuard(constructionContext);
 
             XalanDOMString& theBuffer = theGuard.get();
 
@@ -292,7 +299,7 @@ Stylesheet::processKeyElement(
 		}
 		else if (isAttrOK(aname, atts, i, constructionContext) == false)
 		{
-            StylesheetConstructionContext::GetAndReleaseCachedString theGuard(constructionContext);
+            const GetAndReleaseCachedString     theGuard(constructionContext);
 
 			constructionContext.error(
 				XalanMessageLoader::getMessage(
@@ -307,7 +314,7 @@ Stylesheet::processKeyElement(
 
 	if(0 == theQName)
 	{
-        StylesheetConstructionContext::GetAndReleaseCachedString theGuard(constructionContext);
+        const GetAndReleaseCachedString     theGuard(constructionContext);
 
 		constructionContext.error(
 			XalanMessageLoader::getMessage(
@@ -321,7 +328,7 @@ Stylesheet::processKeyElement(
 
 	if(0 == matchAttr)
 	{
-        StylesheetConstructionContext::GetAndReleaseCachedString theGuard(constructionContext);
+        const GetAndReleaseCachedString     theGuard(constructionContext);
 
 		constructionContext.error(
 			XalanMessageLoader::getMessage(
@@ -335,7 +342,7 @@ Stylesheet::processKeyElement(
 
 	if(0 == useAttr)
 	{
-        StylesheetConstructionContext::GetAndReleaseCachedString theGuard(constructionContext);
+        const GetAndReleaseCachedString     theGuard(constructionContext);
 
 		constructionContext.error(
 			XalanMessageLoader::getMessage(
@@ -616,8 +623,11 @@ Stylesheet::isAttrOK(
 			StylesheetConstructionContext&	constructionContext) const
 {
 	// Namespace declarations are OK by definition
-	bool attrOK = equals(attrName, DOMServices::s_XMLNamespace) ||
-						 startsWith(attrName, DOMServices::s_XMLNamespaceWithSeparator);
+	bool attrOK =
+        equals(
+            attrName,
+            DOMServices::s_XMLNamespace) ||
+		startsWith(attrName, DOMServices::s_XMLNamespaceWithSeparator);
 
 	if(!attrOK)
 	{
@@ -627,8 +637,9 @@ Stylesheet::isAttrOK(
 
 		if(indexOfNSSep < length(attrName))
 		{
-            StylesheetConstructionContext::GetAndReleaseCachedString theGuard(constructionContext);
-            XalanDOMString&	prefix = theGuard.get();
+            const GetAndReleaseCachedString     theGuard(constructionContext);
+
+            XalanDOMString&     prefix = theGuard.get();
 
             prefix.assign(attrName, indexOfNSSep);
 
@@ -678,9 +689,13 @@ Stylesheet::getNamespaceForPrefix(
 
 	if (theURI == 0)
 	{
-        StylesheetConstructionContext::GetAndReleaseCachedString theGuard(constructionContext);
+        const GetAndReleaseCachedString     theGuard(constructionContext);
 
-		constructionContext.error(XalanMessageLoader::getMessage(XalanMessages::UndeclaredNamespacePrefix_1Param, theGuard.get(), prefix));
+		constructionContext.error(
+            XalanMessageLoader::getMessage(
+                XalanMessages::UndeclaredNamespacePrefix_1Param,
+                theGuard.get(),
+                prefix));
 	}
 
 	return theURI;
@@ -693,7 +708,7 @@ Stylesheet::getNamespaceForPrefix(
 			const XalanDOMChar*				prefix,
 			StylesheetConstructionContext&	constructionContext) const
 {
-	StylesheetConstructionContext::GetAndReleaseCachedString	theGuard(constructionContext);
+	const GetAndReleaseCachedString     theGuard(constructionContext);
 
 	XalanDOMString&		theTemp = theGuard.get();
 
@@ -720,10 +735,14 @@ Stylesheet::getYesOrNo(
 	}
 	else
 	{
-        StylesheetConstructionContext::GetAndReleaseCachedString theGuard(constructionContext);
+        const GetAndReleaseCachedString     theGuard(constructionContext);
 
-		constructionContext.error(XalanMessageLoader::getMessage(XalanMessages::AttributeMustBe_2Params, theGuard.get(), 
-            Constants::ATTRVAL_YES,Constants::ATTRVAL_NO));
+		constructionContext.error(
+            XalanMessageLoader::getMessage(
+                XalanMessages::AttributeMustBe_2Params,
+                theGuard.get(), 
+                Constants::ATTRVAL_YES,
+                Constants::ATTRVAL_NO));
 
 		return false;
 	}
@@ -742,10 +761,12 @@ Stylesheet::addTemplate(
 	{
 		if (m_firstTemplate != 0)
 		{
-            StylesheetConstructionContext::GetAndReleaseCachedString theGuard(constructionContext);
+            const GetAndReleaseCachedString     theGuard(constructionContext);
 
 			constructionContext.error(
-				XalanMessageLoader::getMessage(XalanMessages::StylesheetHasWrapperlessTemplate, theGuard.get()),
+				XalanMessageLoader::getMessage(
+                    XalanMessages::StylesheetHasWrapperlessTemplate,
+                    theGuard.get()),
 				0,
 				theTemplate);
 		}
@@ -789,11 +810,13 @@ Stylesheet::addTemplate(
 		}
 		else
 		{
-            StylesheetConstructionContext::GetAndReleaseCachedString theGuard(constructionContext);
+            const GetAndReleaseCachedString     theGuard(constructionContext);
 
 			// This is an error...
 			constructionContext.error(
-				XalanMessageLoader::getMessage(XalanMessages::StylesheetHasDuplicateNamedTemplate, theGuard.get()),
+				XalanMessageLoader::getMessage(
+                    XalanMessages::StylesheetHasDuplicateNamedTemplate,
+                    theGuard.get()),
 				0,
 				theTemplate);
 		}
@@ -821,7 +844,7 @@ Stylesheet::addTemplate(
 
 		if(nTargets != 0)
 		{
-			StylesheetConstructionContext::GetAndReleaseCachedString	theGuard(constructionContext);
+			const GetAndReleaseCachedString     theGuard(constructionContext);
 
 			XalanDOMString&	tempString = theGuard.get();
 
@@ -1337,47 +1360,20 @@ Stylesheet::findTemplate(
 				{
 					assert(conflicts != 0 && nConflicts <= m_patternCount);
 
-                    StylesheetExecutionContext::GetAndReleaseCachedString theGuard(executionContext);
+                    const XPathExecutionContext::GetAndReleaseCachedString  theGuard(executionContext);
 
-					XalanDOMString&	conflictsString = theGuard.get();
+					XalanDOMString&     conflictsString = theGuard.get();
 
-                    XalanMessageLoader::getMessage(XalanMessages::ConflictsFound, conflictsString);
+                    XalanMessageLoader::getMessage(
+                        XalanMessages::ConflictsFound,
+                        conflictsString);
 					
-					for(unsigned int i = 0; i < nConflicts; i++)
-					{
-						const XalanMatchPatternData* const	conflictPat = conflicts[i];
-
-						if(0 != i)
-						{
-							conflictsString += XalanDOMString(XALAN_STATIC_UCODE_STRING(", "), executionContext.getMemoryManager());
-
-							// Find the furthest one towards the bottom of the document.
-							if(conflictPat->getPosition() >
-								bestMatchedPattern->getPosition())
-							{
-								bestMatchedPattern = conflictPat;
-							}
-						}
-						else
-						{
-							bestMatchedPattern = conflictPat;
-						}
-
-						conflictsString += XalanDOMString(XALAN_STATIC_UCODE_STRING("\""), executionContext.getMemoryManager());
-                        conflictsString += *conflictPat->getPattern();
-												
-						conflictsString +=	XalanDOMString(XALAN_STATIC_UCODE_STRING("\""),executionContext.getMemoryManager());
-					}
-
 					bestMatchedRule = bestMatchedPattern->getTemplate();
 
-					conflictsString += XalanDOMString(XALAN_STATIC_UCODE_STRING(" "), executionContext.getMemoryManager());
-
-                    StylesheetExecutionContext::GetAndReleaseCachedString theGuard1(executionContext);
-
-					conflictsString += XalanMessageLoader::getMessage(XalanMessages::ConflictsFound, theGuard1.get());
-
-					executionContext.warn(conflictsString, targetNode, bestMatchedRule->getLocator());
+					executionContext.warn(
+                        conflictsString,
+                        targetNode,
+                        bestMatchedRule->getLocator());
 				}
 			}
 
@@ -1527,7 +1523,7 @@ Stylesheet::processNSAliasElement(
 		}
 		else if(!isAttrOK(aname, atts, i, constructionContext))
 		{
-            StylesheetConstructionContext::GetAndReleaseCachedString theGuard(constructionContext);
+            const GetAndReleaseCachedString     theGuard(constructionContext);
 
 			constructionContext.error(
 				XalanMessageLoader::getMessage(
@@ -1542,7 +1538,7 @@ Stylesheet::processNSAliasElement(
 	// value is the result uri
 	if (stylesheetNamespace == 0)
 	{
-        StylesheetConstructionContext::GetAndReleaseCachedString theGuard(constructionContext);
+        const GetAndReleaseCachedString     theGuard(constructionContext);
 
 		constructionContext.error(
 			XalanMessageLoader::getMessage(
@@ -1553,7 +1549,7 @@ Stylesheet::processNSAliasElement(
 	}
 	else if (resultNamespace == 0)
 	{
-        StylesheetConstructionContext::GetAndReleaseCachedString theGuard(constructionContext);
+        const GetAndReleaseCachedString     theGuard(constructionContext);
 
 		constructionContext.error(
 			XalanMessageLoader::getMessage(
@@ -1581,19 +1577,26 @@ Stylesheet::processDecimalFormatElement(
 			const AttributeListType&		atts,
 			const LocatorType*				locator)
 {
-	const int	lineNumber = XalanLocator::getLineNumber(locator);
-	const int	columnNumber = XalanLocator::getColumnNumber(locator);
+	const XalanLocator::size_type   lineNumber =
+        XalanLocator::getLineNumber(locator);
+
+    const XalanLocator::size_type   columnNumber =
+        XalanLocator::getColumnNumber(locator);
 
 	m_elemDecimalFormats.reserve(m_elemDecimalFormats.size() + 1);
 
-	m_elemDecimalFormats.push_back(
-					CreateElementFunctor<ElemDecimalFormat>()(
-                            constructionContext.getMemoryManager(),
-							constructionContext,
-							*this,
-							atts,
-							lineNumber,
-							columnNumber));
+    ElemDecimalFormat*  theInstance;
+
+    XalanConstruct(
+        constructionContext.getMemoryManager(),
+        theInstance,
+        constructionContext,
+		*this,
+		atts,
+		lineNumber,
+		columnNumber);
+
+    m_elemDecimalFormats.push_back(theInstance);
 }
 
 

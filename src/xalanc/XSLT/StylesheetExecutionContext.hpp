@@ -2070,9 +2070,8 @@ public:
 	virtual const XalanDOMString*
 	getNamespaceForPrefix(const XalanDOMString&		prefix) const = 0;
 
-	virtual XalanDOMString&
-	findURIFromDoc(const XalanDocument*		owner,
-                    XalanDOMString& theResult) const = 0;
+	virtual const XalanDOMString&
+	findURIFromDoc(const XalanDocument*		owner) const = 0;
 
 	virtual const XalanDOMString&
 	getUnparsedEntityURI(

@@ -96,16 +96,25 @@ XPath::unknownOpCodeError(
 			XPathExecutionContext&	executionContext,
 			OpCodeMapPositionType	opPos) const
 {
-	XalanDOMString	theOpCode(executionContext.getMemoryManager());
-			
-	LongToDOMString(m_expression.getOpCodeMapValue(opPos), theOpCode);
+    const GetCachedString   theGuard1(executionContext);
 
-    XalanDOMString theBuffer(executionContext.getMemoryManager());
+	XalanDOMString&		theOpCode = theGuard1.get();
+
+	LongToDOMString(
+        m_expression.getOpCodeMapValue(opPos),
+        theOpCode);
+
+    const GetCachedString   theGuard2(executionContext);
+
+	XalanDOMString&		theBuffer = theGuard2.get();
 
 	executionContext.error(
-			XalanMessageLoader::getMessage(XalanMessages::UnknownOpCode_1Param, theBuffer, theOpCode),
-			context,
-			m_locator);
+	    XalanMessageLoader::getMessage(
+            XalanMessages::UnknownOpCode_1Param,
+            theBuffer,
+            theOpCode),
+		context,
+		m_locator);
 }
 
 
@@ -115,10 +124,14 @@ XPath::notNodeSetError(
 			XalanNode*				context,
 			XPathExecutionContext&	executionContext) const
 {
-    XalanDOMString  theBuffer(executionContext.getMemoryManager());
+    GetCachedString     theGuard(executionContext);
+
+	XalanDOMString&		theBuffer = theGuard.get();
 
 	executionContext.error(
-		XalanMessageLoader::getMessage(XalanMessages::ExpressionDoesNotEvaluateToNodeSet, theBuffer),
+		XalanMessageLoader::getMessage(
+            XalanMessages::ExpressionDoesNotEvaluateToNodeSet,
+            theBuffer),
 		context,
 		m_locator);
 }
@@ -132,12 +145,12 @@ XPath::execute(
 			XPathExecutionContext&	executionContext) const
 {
 	// Push and pop the PrefixResolver...
-	const XPathExecutionContext::PrefixResolverSetAndRestore	theResolverSetAndRestore(
+	const PrefixResolverSetAndRestore   theResolverSetAndRestore(
 									executionContext,
 									&prefixResolver);
 
 	// Push and pop the current node...
-	const XPathExecutionContext::CurrentNodePushAndPop	theNodePushAndPop(
+	const CurrentNodePushAndPop	    theNodePushAndPop(
 									executionContext,
 									context);
 
@@ -159,12 +172,12 @@ XPath::execute(
 	assert(context != 0);
 
 	// Push and pop the PrefixResolver...
-	const XPathExecutionContext::PrefixResolverSetAndRestore	theResolverSetAndRestore(
+	const PrefixResolverSetAndRestore	theResolverSetAndRestore(
 									executionContext,
 									&prefixResolver);
 
 	// Push and pop the current node...
-	const XPathExecutionContext::CurrentNodePushAndPop	theNodePushAndPop(
+	const CurrentNodePushAndPop	theNodePushAndPop(
 									executionContext,
 									context);
 
@@ -187,12 +200,12 @@ XPath::execute(
 	assert(context != 0);
 
 	// Push and pop the PrefixResolver...
-	const XPathExecutionContext::PrefixResolverSetAndRestore	theResolverSetAndRestore(
+	const PrefixResolverSetAndRestore	theResolverSetAndRestore(
 									executionContext,
 									&prefixResolver);
 
 	// Push and pop the current node...
-	const XPathExecutionContext::CurrentNodePushAndPop	theNodePushAndPop(
+	const CurrentNodePushAndPop	theNodePushAndPop(
 									executionContext,
 									context);
 
@@ -215,12 +228,12 @@ XPath::execute(
 	assert(context != 0);
 
 	// Push and pop the PrefixResolver...
-	const XPathExecutionContext::PrefixResolverSetAndRestore	theResolverSetAndRestore(
+	const PrefixResolverSetAndRestore	theResolverSetAndRestore(
 									executionContext,
 									&prefixResolver);
 
 	// Push and pop the current node...
-	const XPathExecutionContext::CurrentNodePushAndPop	theNodePushAndPop(
+	const CurrentNodePushAndPop	theNodePushAndPop(
 									executionContext,
 									context);
 
@@ -244,12 +257,12 @@ XPath::execute(
 	assert(context != 0);
 
 	// Push and pop the PrefixResolver...
-	const XPathExecutionContext::PrefixResolverSetAndRestore	theResolverSetAndRestore(
+	const PrefixResolverSetAndRestore	theResolverSetAndRestore(
 									executionContext,
 									&prefixResolver);
 
 	// Push and pop the current node...
-	const XPathExecutionContext::CurrentNodePushAndPop	theNodePushAndPop(
+	const CurrentNodePushAndPop	theNodePushAndPop(
 									executionContext,
 									context);
 
@@ -274,14 +287,14 @@ XPath::execute(
 	assert(result.empty() == true);
 
 	// Push and pop the PrefixResolver...
-	XPathExecutionContext::PrefixResolverSetAndRestore	theResolverSetAndRestore(
-									executionContext,
-									&prefixResolver);
+	const PrefixResolverSetAndRestore	theResolverSetAndRestore(
+									        executionContext,
+									        &prefixResolver);
 
 	// Push and pop the current node...
-	XPathExecutionContext::CurrentNodePushAndPop	theNodePushAndPop(
-									executionContext,
-									context);
+	const CurrentNodePushAndPop	    theNodePushAndPop(
+									    executionContext,
+									    context);
 
 	return executeMore(
             context,
@@ -1412,10 +1425,10 @@ XPath::getMatchScore(
 	else
 	{
 		// Push and pop the PrefixResolver...
-		XPathExecutionContext::PrefixResolverSetAndRestore	theSetAndRestore(
-									executionContext,
-									theCurrentResolver,
-									&resolver);
+		const PrefixResolverSetAndRestore	theSetAndRestore(
+									            executionContext,
+									            theCurrentResolver,
+									            &resolver);
 
 		return getMatchScore(node, executionContext);
 	}
@@ -2777,7 +2790,7 @@ XPath::functionSum(
 	{
 		assert(theNodeList->item(0) != 0);
 
-		XPathExecutionContext::GetAndReleaseCachedString	theData(executionContext);
+		const XPathExecutionContext::GetAndReleaseCachedString  theData(executionContext);
 
 		XalanDOMString&		theString = theData.get();
 
@@ -2909,17 +2922,18 @@ XPath::step(
 	OpCodeMapValueType  nextStepType = currentExpression.getOpCodeMapValue(opPos);
 
 	// Push and pop the context node list...
-		XPathExecutionContext::ContextNodeListPushAndPop	thePushAndPop(
+	XPathExecutionContext::ContextNodeListPushAndPop    thePushAndPop(
 										executionContext,
 										*subQueryResults);
 
 	if(XPathExpression::eOP_PREDICATE == nextStepType ||
 	   XPathExpression::eOP_PREDICATE_WITH_POSITION == nextStepType)
 	{
-		opPos = predicates(
-			executionContext,
-		   opPos, 
-		   *subQueryResults);
+		opPos =
+            predicates(
+			    executionContext,
+		        opPos, 
+		        *subQueryResults);
 
 		nextStepType = currentExpression.getOpCodeMapValue(opPos);
 	}
@@ -5043,7 +5057,7 @@ XPath::NodeTester::initialize(
         }
         else
         {
-            XPathConstructionContext::GetAndReleaseCachedString		scratchGuard(theConstructionContext);
+            const XPathConstructionContext::GetAndReleaseCachedString   scratchGuard(theConstructionContext);
 
 	        XalanDOMString&		theScratchString = scratchGuard.get();
 
@@ -5158,8 +5172,22 @@ XPath::NodeTester::initialize(
 
 
 
+inline bool
+isNamespaceDeclaration(const XalanNode&		theAttributeNode)
+{
+	assert(theAttributeNode.getNodeType() == XalanNode::ATTRIBUTE_NODE);
+
+#if defined(XALAN_OLD_STYLE_CASTS)
+	return DOMServices::isNamespaceDeclaration((const XalanAttr&)theAttributeNode);
+#else
+	return DOMServices::isNamespaceDeclaration(static_cast<const XalanAttr&>(theAttributeNode));
+#endif
+}
+
+
+
 // MSVC generates some really horrible code for some of these very simple functions when they're inlined...
-#if defined(_MSC_VER)
+#if defined(_MSC_VER) && _MSC_VER <= 1300
 #pragma auto_inline(off)
 #endif
 
@@ -5275,20 +5303,6 @@ XPath::NodeTester::testRoot(
 	{
 		return eMatchScoreNone;
 	}
-}
-
-
-
-inline bool
-isNamespaceDeclaration(const XalanNode&		theAttributeNode)
-{
-	assert(theAttributeNode.getNodeType() == XalanNode::ATTRIBUTE_NODE);
-
-#if defined(XALAN_OLD_STYLE_CASTS)
-	return DOMServices::isNamespaceDeclaration((const XalanAttr&)theAttributeNode);
-#else
-	return DOMServices::isNamespaceDeclaration(static_cast<const XalanAttr&>(theAttributeNode));
-#endif
 }
 
 
@@ -5602,7 +5616,7 @@ XPath::NodeTester::matchNamespaceURI(const XalanNode&	context) const
 
 
 
-bool
+inline bool
 XPath::NodeTester::matchLocalNameAndNamespaceURI(const XalanNode&	context) const
 {
 	assert(m_targetNamespace != 0 && m_targetLocalName != 0);

@@ -33,15 +33,11 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-FunctionLang::FunctionLang(MemoryManagerType& theManager) :
-	m_attributeName("lang", theManager)
+FunctionLang::FunctionLang()
 {
 }
 
-FunctionLang::FunctionLang(const FunctionLang& other, MemoryManagerType& theManager) :
-    m_attributeName(other.m_attributeName,theManager)
-{
-}
+
 
 FunctionLang::~FunctionLang()
 {
@@ -76,7 +72,9 @@ FunctionLang::execute(
 #endif
 
 			const XalanDOMString&		langVal =
-				theElementNode->getAttributeNS(DOMServices::s_XMLNamespaceURI, m_attributeName);
+				theElementNode->getAttributeNS(
+                    DOMServices::s_XMLNamespaceURI,
+                    s_attributeName);
 
 			if(0 != length(langVal))
 			{
@@ -111,18 +109,55 @@ Function*
 #else
 FunctionLang*
 #endif
-FunctionLang::clone(MemoryManagerType& theManager) const
+FunctionLang::clone(MemoryManagerType&  theManager) const
 {
-	return cloneFunction<FunctionLang>()(*this, theManager);
+	return XalanCopyConstruct(theManager, *this);
 }
 
 
 
 const XalanDOMString&
-FunctionLang::getError(XalanDOMString& theResult) const
+FunctionLang::getError(XalanDOMString&  theResult) const
 {
-	return XalanMessageLoader::getMessage(XalanMessages::FunctionAcceptsOneArgument_1Param, theResult, "lang()");
+	return XalanMessageLoader::getMessage(
+                XalanMessages::FunctionAcceptsOneArgument_1Param,
+                theResult,
+                "lang()");
+}
 
+
+
+static XalanDOMChar     s_langString[] =
+{
+    XalanUnicode::charLetter_l,
+    XalanUnicode::charLetter_a,
+    XalanUnicode::charLetter_n,
+    XalanUnicode::charLetter_g,
+    0
+};
+
+
+
+static XalanDOMString   s_localString(XalanMemMgrs::getDummyMemMgr());
+
+
+
+const XalanDOMString&   FunctionLang::s_attributeName = s_localString;
+
+
+
+void
+FunctionLang::initialize(MemoryManagerType&     theManager)
+{
+    XalanDOMString(s_langString, theManager).swap(s_localString);
+}
+
+
+
+void
+FunctionLang::terminate()
+{
+    XalanDOMString(XalanMemMgrs::getDummyMemMgr()).swap(s_localString);
 }
 
 

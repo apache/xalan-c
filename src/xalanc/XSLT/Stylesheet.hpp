@@ -108,6 +108,8 @@ public:
 
 	typedef XalanMap<XalanDOMString, PatternTableVectorType> PatternTableMapType;
 
+    typedef StylesheetConstructionContext::GetAndReleaseCachedString    GetAndReleaseCachedString;
+
 	/**
 	 * Constructor for a Stylesheet needs a Document.
 	 * @exception XSLProcessorException thrown if the active ProblemListener and XMLParserLiaison decide 

@@ -68,17 +68,20 @@ public:
 #else
 	virtual XalanEXSLTFunctionAlign*
 #endif
-	clone(MemoryManagerType&  theManager) const
+	clone(MemoryManagerType&    theManager) const
 	{
-		return cloneFunction_0<XalanEXSLTFunctionAlign>()(theManager);
+	    return XalanCopyConstruct(theManager, *this);
 	}
 
 protected:
 
 	const XalanDOMString&
-	getError(XalanDOMString& theBuffer) const
+	getError(XalanDOMString&    theBuffer) const
 	{
-		return XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsTwoOrThreeArguments_1Param,theBuffer, "align()");
+		return XalanMessageLoader::getMessage(
+                    XalanMessages::EXSLTFunctionAcceptsTwoOrThreeArguments_1Param,
+                    theBuffer,
+                    "align()");
 	}
 
 private:
@@ -132,17 +135,20 @@ public:
 #else
 	virtual XalanEXSLTFunctionConcat*
 #endif
-	clone(MemoryManagerType&  theManager) const
+	clone(MemoryManagerType&    theManager) const
 	{
-		return cloneFunction_0<XalanEXSLTFunctionConcat>()(theManager);
+	    return XalanCopyConstruct(theManager, *this);
 	}
 
 protected:
 
 	const XalanDOMString&
-	getError(XalanDOMString& theBuffer) const
+	getError(XalanDOMString&    theBuffer) const
 	{
-		return XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsOneArgument_1Param,theBuffer,"concat()");
+		return XalanMessageLoader::getMessage(
+                    XalanMessages::EXSLTFunctionAcceptsOneArgument_1Param,
+                    theBuffer,
+                    "concat()");
 	}
 
 private:
@@ -165,7 +171,7 @@ public:
 
 	XalanEXSLTFunctionPadding(MemoryManagerType&  theManager) :
 		Function(),
-		m_space(s_spaceString,theManager)
+		m_space(s_spaceString, theManager)
 	{
 	}
 
@@ -178,7 +184,7 @@ public:
 
 	XalanEXSLTFunctionPadding(const XalanEXSLTFunctionPadding& other, MemoryManagerType&  theManager) :
 		Function(other),
-		m_space(other.m_space, theManager)
+		m_space(s_spaceString, theManager)
 	{
 	}
 
@@ -187,16 +193,6 @@ public:
 	{
 	}
 
-    void
-    swap(XalanEXSLTFunctionPadding& other)
-    {
-//#pragma message ("Break costness here!")
-        XalanDOMString* thisString = const_cast<XalanDOMString*>(&m_space);
-
-        XalanDOMString* otherString = const_cast<XalanDOMString*>(&(other.m_space));
-
-        thisString->swap(*otherString);
-    }
 	// These methods are inherited from Function ...
 
 	virtual XObjectPtr
@@ -215,17 +211,20 @@ public:
 #else
 	virtual XalanEXSLTFunctionPadding*
 #endif
-	clone(MemoryManagerType&  theManager) const
+	clone(MemoryManagerType&    theManager) const
 	{
-		return cloneFunction<XalanEXSLTFunctionPadding>()(*this, theManager);
+	    return XalanCopyConstruct(theManager, *this, theManager);
 	}
 
 protected:
 
 	const XalanDOMString&
-	getError(XalanDOMString& theBuffer) const
+	getError(XalanDOMString&    theBuffer) const
 	{
-		return XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAccepts1Or2Argument_1Param,theBuffer,"padding()");
+		return XalanMessageLoader::getMessage(
+                    XalanMessages::EXSLTFunctionAccepts1Or2Argument_1Param,
+                    theBuffer,
+                    "padding()");
 	}
 
 private:
@@ -281,34 +280,36 @@ public:
 #else
 	virtual XalanEXSLTFunctionEncodeURI*
 #endif
-	clone(MemoryManagerType&  theManager) const
+	clone(MemoryManagerType&    theManager) const
 	{
-		return cloneFunction_0<XalanEXSLTFunctionEncodeURI>()(theManager);
+	    return XalanCopyConstruct(theManager, *this);
 	}
 
 protected:
 
 	const XalanDOMString&
-	getError(XalanDOMString& theBuffer) const
+	getError(XalanDOMString&    theBuffer) const
 	{
-		return XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsTwoOrThreeArguments_1Param,theBuffer, "encode-uri()");
+		return XalanMessageLoader::getMessage(
+                    XalanMessages::EXSLTFunctionAcceptsTwoOrThreeArguments_1Param,
+                    theBuffer,
+                    "encode-uri()");
 	}
 
 	const XalanDOMString&
-	escapedOctet(const XalanDOMChar theChar,
-                    XalanDOMString& theBuffer) const;
+	escapedOctet(
+                XalanDOMChar        theChar,
+                XalanDOMString&     theBuffer) const;
 
-	static const XalanDOMChar	s_reservedChars[];
-	static const XalanDOMString::size_type s_reservedCharsSize;
+	static const XalanDOMChar	            s_reservedChars[];
+	static const XalanDOMString::size_type  s_reservedCharsSize;
 
-	static const XalanDOMChar   s_excludedChars[];
-	static const XalanDOMString::size_type s_excludedCharsSize;
+	static const XalanDOMChar               s_excludedChars[];
+	static const XalanDOMString::size_type  s_excludedCharsSize;
 
 private:
 
 	// Not implemented...
-	XalanEXSLTFunctionEncodeURI(const XalanEXSLTFunctionEncodeURI&);
-
 	XalanEXSLTFunctionEncodeURI&
 	operator=(const XalanEXSLTFunctionEncodeURI&);
 
@@ -352,17 +353,20 @@ public:
 #else
 	virtual XalanEXSLTFunctionDecodeURI*
 #endif
-	clone(MemoryManagerType&  theManager) const
+	clone(MemoryManagerType&    theManager) const
 	{
-		return cloneFunction_0<XalanEXSLTFunctionDecodeURI>()(theManager);
+	    return XalanCopyConstruct(theManager, *this);
 	}
 
 protected:
 
 	const XalanDOMString&
-	getError(XalanDOMString& theBuffer) const
+	getError(XalanDOMString&    theBuffer) const
 	{
-		return XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAccepts1Or2Argument_1Param,theBuffer,"decode-uri()");
+		return XalanMessageLoader::getMessage(
+                    XalanMessages::EXSLTFunctionAccepts1Or2Argument_1Param,
+                    theBuffer,
+                    "decode-uri()");
 
 	}
 
@@ -379,8 +383,6 @@ protected:
 private:
 
 	// Not implemented...
-	XalanEXSLTFunctionDecodeURI(const XalanEXSLTFunctionDecodeURI&);
-
 	XalanEXSLTFunctionDecodeURI&
 	operator=(const XalanEXSLTFunctionDecodeURI&);
 

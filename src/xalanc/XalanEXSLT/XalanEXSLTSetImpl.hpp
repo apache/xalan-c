@@ -59,9 +59,9 @@ public:
 #else
 	virtual XalanEXSLTFunctionDifference*
 #endif
-	clone(MemoryManagerType& theManager) const
+	clone(MemoryManagerType&    theManager) const
 	{
-		return cloneFunction_0<XalanEXSLTFunctionDifference>()(theManager);
+	    return XalanCopyConstruct(theManager, *this);
 	}
 
 protected:
@@ -69,8 +69,10 @@ protected:
 	virtual const XalanDOMString&
 	getError(XalanDOMString& theBuffer) const
 	{
-        XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsTwoArguments_1Param,theBuffer , "difference()");
-		return theBuffer;
+        return XalanMessageLoader::getMessage(
+                    XalanMessages::EXSLTFunctionAcceptsTwoArguments_1Param,
+                    theBuffer ,
+                    "difference()");
 	}
 
 private:
@@ -104,18 +106,20 @@ public:
 #else
 	virtual XalanEXSLTFunctionDistinct*
 #endif
-	clone(MemoryManagerType& theManager) const
+	clone(MemoryManagerType&    theManager) const
 	{
-		return cloneFunction_0<XalanEXSLTFunctionDistinct>()(theManager);
+	    return XalanCopyConstruct(theManager, *this);
 	}
 
 protected:
 
 	virtual const XalanDOMString&
-	getError(XalanDOMString& theBuffer) const
+	getError(XalanDOMString&    theBuffer) const
 	{
-        XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsOneArgument_1Param, theBuffer , "distinct()");
-		return theBuffer;
+        return XalanMessageLoader::getMessage(
+                    XalanMessages::EXSLTFunctionAcceptsOneArgument_1Param,
+                    theBuffer ,
+                    "distinct()");
 	}
 
 
@@ -165,18 +169,20 @@ public:
 #else
 	virtual XalanEXSLTFunctionHasSameNode*
 #endif
-	clone(MemoryManagerType& theManager) const
+	clone(MemoryManagerType&    theManager) const
 	{
-		return cloneFunction_0<XalanEXSLTFunctionHasSameNode>()(theManager);
+	    return XalanCopyConstruct(theManager, *this);
 	}
 
 protected:
 
 	virtual const XalanDOMString&
-	getError(XalanDOMString& theBuffer) const
+	getError(XalanDOMString&    theBuffer) const
 	{
-        XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsTwoArguments_1Param, theBuffer, "has-same-node()");
-		return theBuffer;
+        return XalanMessageLoader::getMessage(
+                    XalanMessages::EXSLTFunctionAcceptsTwoArguments_1Param,
+                    theBuffer,
+                    "has-same-node()");
 	}
 
 
@@ -212,21 +218,23 @@ public:
 #else
 	virtual XalanEXSLTFunctionIntersection*
 #endif
-	clone(MemoryManagerType& theManager) const
+	clone(MemoryManagerType&    theManager) const
 	{
-		return cloneFunction_0<XalanEXSLTFunctionIntersection>()(theManager);
+	    return XalanCopyConstruct(theManager, *this);
 	}
 
 protected:
 
 	virtual const XalanDOMString&
-	getError(XalanDOMString& theBuffer) const
+	getError(XalanDOMString&    theBuffer) const
 	{
-        XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsTwoArguments_1Param, theBuffer, "distinct()");
+        return XalanMessageLoader::getMessage(
+                    XalanMessages::EXSLTFunctionAcceptsTwoArguments_1Param,
+                    theBuffer,
+                    "distinct()");
 
 		return theBuffer;
 	}
-
 
 private:
 
@@ -274,17 +282,20 @@ public:
 #else
 	virtual XalanEXSLTFunctionLeading*
 #endif
-	clone(MemoryManagerType& theManager) const
+	clone(MemoryManagerType&    theManager) const
 	{
-		return cloneFunction_0<XalanEXSLTFunctionLeading>()(theManager);
+	    return XalanCopyConstruct(theManager, *this);
 	}
 
 protected:
 
 	virtual const XalanDOMString&
-	getError(XalanDOMString& theBuffer) const
+	getError(XalanDOMString&    theBuffer) const
 	{
-        XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsTwoArguments_1Param,  theBuffer, "leading()");
+        return XalanMessageLoader::getMessage(
+                    XalanMessages::EXSLTFunctionAcceptsTwoArguments_1Param,
+                    theBuffer,
+                    "leading()");
 
 		return theBuffer;
 	}
@@ -335,19 +346,20 @@ public:
 #else
 	virtual XalanEXSLTFunctionTrailing*
 #endif
-	clone(MemoryManagerType& theManager) const
+	clone(MemoryManagerType&    theManager) const
 	{
-		return cloneFunction_0<XalanEXSLTFunctionTrailing>()(theManager);
+	    return XalanCopyConstruct(theManager, *this);
 	}
 
 protected:
 
 	virtual const XalanDOMString&
-	getError(XalanDOMString& theBuffer) const
+	getError(XalanDOMString&    theBuffer) const
 	{
-        XalanMessageLoader::getMessage(XalanMessages::EXSLTFunctionAcceptsTwoArguments_1Param, theBuffer ,"trailing()");
-
-		return theBuffer;
+        return XalanMessageLoader::getMessage(
+                    XalanMessages::EXSLTFunctionAcceptsTwoArguments_1Param,
+                    theBuffer,
+                    "trailing()");
 	}
 
 private:

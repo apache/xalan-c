@@ -48,11 +48,10 @@ public:
 	typedef const Type&		const_reference;
 	typedef Type			value_type;
 
-    ArenaBlockAllocator(MemoryManagerType&      theManager) :
+    ArenaBlockAllocator(MemoryManagerType&  theManager) :
         m_memoryManager(theManager)
 	{
 	}
-
 
 	~ArenaBlockAllocator()
 	{
@@ -77,74 +76,51 @@ public:
 				pointer		p,
 				size_type	/* n */)
 	{
-        if( p == 0 )
+        if(p != 0)
         {
-            return;
+            m_memoryManager.deallocate(p);
         }
-
-        m_memoryManager.deallocate(p);
-
 	}
 
 private:
+
     // not defined
 	ArenaBlockAllocator(const ArenaBlockAllocator<Type>&);
 
     ArenaBlockAllocator<Type>&
     operator=(const ArenaBlockAllocator<Type>&);
 
-    MemoryManagerType&      m_memoryManager;
+    MemoryManagerType&  m_memoryManager;
 };
 #endif
 
 
+
 template<class ObjectType,
 #if defined(XALAN_NO_DEFAULT_TEMPLATE_ARGUMENTS)
-		 class size_Type>
+		 class SizeType>
 #else
-		 class size_Type  = size_t >
+		 class SizeType = size_t>
 #endif
 class ArenaBlockBase
 {
 public:
 
+	typedef ArenaBlockBase<ObjectType, SizeType>    ThisType;
+
 #if defined(XALAN_NO_SELECTIVE_TEMPLATE_INSTANTIATION)
-	typedef ArenaBlockAllocator<ObjectType>		AllocatorType;
+	typedef ArenaBlockAllocator<ObjectType>     AllocatorType;
 #else
 	typedef XalanAllocator<ObjectType>			AllocatorType;
 #endif
 
-	typedef size_Type							size_type;
-
-	ArenaBlockBase(MemoryManagerType&       theManager,
-                    size_type	            theBlockSize) :	
-		m_allocator(theManager),
-		m_objectCount(0),
-		m_blockSize(theBlockSize),
-#if defined(XALAN_NEW_STD_ALLOCATOR)
-		m_objectBlock(m_allocator.allocate(m_blockSize))
-#else
-		m_objectBlock(m_allocator.allocate(m_blockSize, 0))
-#endif
-	{
-		assert(theBlockSize > 0);
-
-		assert(m_objectBlock != 0);
-	}
-
-	~ArenaBlockBase()
-	{
-		// Release the memory...
-		m_allocator.deallocate(m_objectBlock, m_blockSize);
-
-	}
+	typedef SizeType							size_type;
 
     MemoryManagerType&
     getMemoryManager()
     {
         return m_allocator.getMemoryManager();
     }
-
 
 	/*
 	 * Find out if there is a block available.
@@ -156,7 +132,6 @@ public:
 	{
 		return m_objectCount < m_blockSize ? true : false;
 	}
-
 
 	/*
 	 * Find out if there are any block is allocated
@@ -193,7 +168,6 @@ public:
 		return m_blockSize;
 	}
 
-
 	/*
 	 * Determine if this block owns the specified object block.
 	 * Note that, unlike ownsObject(), there does not need to
@@ -209,6 +183,31 @@ public:
 	}
 
 protected:
+
+	ArenaBlockBase(
+                MemoryManagerType&  theManager,
+                size_type	        theBlockSize) :	
+		m_allocator(theManager),
+		m_objectCount(0),
+		m_blockSize(theBlockSize),
+#if defined(XALAN_NEW_STD_ALLOCATOR)
+		m_objectBlock(m_allocator.allocate(m_blockSize))
+#else
+		m_objectBlock(m_allocator.allocate(m_blockSize, 0))
+#endif
+	{
+		assert(theBlockSize > 0);
+
+		assert(m_objectBlock != 0);
+	}
+
+	~ArenaBlockBase()
+	{
+		// Release the memory...
+		m_allocator.deallocate(m_objectBlock, m_blockSize);
+
+	}
+
 	/*
 	 * Determine if this block is located between beginning of the array
 	 * and the "rightBorder" array member (not included)
@@ -217,13 +216,16 @@ protected:
 	 * @return true if we own the object block, false if not.
 	 */
 	bool
-	isInBorders( const ObjectType*	theObject, size_type rightBoundary) const
+	isInBorders(
+            const ObjectType*	theObject,
+            size_type           rightBoundary) const
 	{
 		if ( rightBoundary > m_blockSize )
 		{
 			rightBoundary = m_blockSize;
 		}
-		// Use less<>, since it's guaranteed to do pointer
+
+        // Use less<>, since it's guaranteed to do pointer
 		// comparisons correctly...
 		XALAN_STD_QUALIFIER less<const ObjectType*>		functor;
 
@@ -280,20 +282,16 @@ protected:
 
 	ObjectType*			m_objectBlock;
 
-
-
 private:
 
 	// Not implemented...
-	ArenaBlockBase(const ArenaBlockBase<ObjectType>&);
+	ArenaBlockBase(const ThisType&);
 
-	ArenaBlockBase<ObjectType>&
-	operator=(const ArenaBlockBase<ObjectType>&);
+	ThisType&
+	operator=(const ThisType&);
 
 	bool
-	operator==(const ArenaBlockBase<ObjectType>&) const;
-
-
+	operator==(const ThisType&) const;
 };
 
 XALAN_CPP_NAMESPACE_END

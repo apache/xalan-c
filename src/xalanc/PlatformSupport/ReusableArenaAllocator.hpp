@@ -45,12 +45,14 @@ public:
 	typedef ArenaAllocator<ObjectType,
 						   ReusableArenaBlockType>		BaseClassType;
 
+	typedef ReusableArenaAllocator<ObjectType>          ThisType;
+
 	typedef	XalanList<ReusableArenaBlockType*>			ArenaBlockListType;
 
 	typedef	typename ArenaBlockListType::iterator				iterator;
 	typedef	typename ArenaBlockListType::const_iterator			const_iterator;
 	typedef	typename ArenaBlockListType::reverse_iterator		reverse_iterator;
-	typedef	typename ArenaBlockListType::const_reverse_iterator  const_reverse_iterator;
+	typedef	typename ArenaBlockListType::const_reverse_iterator const_reverse_iterator;
 
 
 	/*
@@ -58,9 +60,10 @@ public:
 	 *
 	 * @param theBlockSize The block size.
 	 */
-	ReusableArenaAllocator(MemoryManagerType&       theManager,
-                                    size_type	    theBlockSize, 
-                                    bool            destroyBlocks = false) :
+	ReusableArenaAllocator(
+                MemoryManagerType&  theManager,
+                size_type	        theBlockSize, 
+                bool                destroyBlocks = false) :
 		BaseClassType(theManager, theBlockSize),
 		m_destroyBlocks(destroyBlocks)
 	{
@@ -187,11 +190,13 @@ public:
 	virtual ObjectType*
 	allocateBlock()
 	{
-
 		if( this->m_blocks.empty() 
 			|| !this->m_blocks.front()->blockAvailable() )
 		{
-            this->m_blocks.push_front(ReusableArenaBlockType::create(this->getMemoryManager(), this->m_blockSize));
+            this->m_blocks.push_front(
+                ReusableArenaBlockType::create(
+                    this->getMemoryManager(),
+                    this->m_blockSize));
 			
 			assert( this->m_blocks.front() != 0 );
 		}
@@ -200,7 +205,6 @@ public:
 		assert( this->m_blocks.front()->blockAvailable() );
 
 		return this->m_blocks.front()->allocateBlock();
-
 	}
 
 	/*
@@ -276,46 +280,38 @@ public:
 
 		return false;
 	}
+
 protected:
+
 	/*
 	 * The method destroys an empty block from the head of the list.
-	 * For eleminating multiple create/destroy operation , the block is destroyed 
-	 * only if the second one is not full
-	 *
-	 * @return  true if destroyed , fasle elsewhere
+	 * For eliminating multiple create/destroy operation, the block
+     * is destroyed only if the second one is not full.
 	 */
-	bool
+	void
 	destroyBlock()
 	{
-		bool bResult = false;
+        assert(m_destroyBlocks == true);
 
-		if ( this->m_blocks.empty() )
+		if ( this->m_blocks.empty() == false)
 		{
-			return bResult;
-		}
+		    const_iterator iTerator = this->m_blocks.begin();
 
-		const_iterator iTerator = this->m_blocks.begin();
+		    if ( (*iTerator)->isEmpty() )
+		    {
+			    ++iTerator;
 
-		if ( (*iTerator)->isEmpty() )
-		{
-			++iTerator;
-
-			if (iTerator == this->m_blocks.end() ||
-				(*iTerator)->blockAvailable() )
-			{
-				this->m_blocks.pop_front();
-				
-				bResult = true;
-			}
-
-		}
-
-		return bResult;
+			    if (iTerator == this->m_blocks.end() ||
+				    (*iTerator)->blockAvailable() )
+			    {
+				    this->m_blocks.pop_front();
+			    }
+		    }
+        }
 	}
 
 	// data members
-
-	bool m_destroyBlocks;
+	const bool  m_destroyBlocks;
 
 private:
 
@@ -325,6 +321,8 @@ private:
 	ReusableArenaAllocator<ObjectType>&
 	operator=(const ReusableArenaAllocator<ObjectType>&);
 
+	bool
+	operator==(const ReusableArenaAllocator<ObjectType>&) const;
 };
 
 

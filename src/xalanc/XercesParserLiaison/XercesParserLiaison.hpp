@@ -690,12 +690,6 @@ protected:
 			const SAXParseExceptionType&	e,
 			XalanDOMString& 				theMessage);
 
-	DOMParserType*
-	CreateDOMParser();
-
-	virtual SAXParserType*
-	CreateSAXParser();
-
 #if defined(XALAN_BUILD_DEPRECATED_DOM_BRIDGE)
 	/**
 	 * Create a XalanDocument proxy for an existing Xerces document.
@@ -733,6 +727,20 @@ protected:
 
 private:
 
+	void
+	ensureSAXParser();
+
+	void
+	ensureDOMParser();
+
+	DOMParserType*
+	createDOMParser();
+
+	SAXParserType*
+	createSAXParser();
+
+
+
 	// Data members...
 	int 				m_indent;
 
@@ -763,6 +771,10 @@ private:
 	bool				m_buildMaps;
 
 	ExecutionContext*	m_executionContext;
+
+	SAXParserType*		m_saxParser;
+
+	DOMParserType*		m_domParser;
 };
 
 

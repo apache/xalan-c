@@ -63,10 +63,7 @@ public:
 #else
 	virtual FunctionUnparsedEntityURI*
 #endif
-	clone(MemoryManagerType& theManager) const
-	{
-		return cloneFunction_1<FunctionUnparsedEntityURI>()(*this, theManager);
-	}
+	clone(MemoryManagerType& theManager) const;
 
 protected:
 

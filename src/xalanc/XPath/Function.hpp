@@ -51,63 +51,6 @@ class XalanNode;
 // needed by the XPath class.
 class XALAN_XPATH_EXPORT Function
 {
-protected:
-    template <class Type>
-    class cloneFunction
-    {
-    public:
-        Type*
-        operator()( const Type& other, MemoryManagerType&  theManager)
-        {
-            XalanMemMgrAutoPtr<Type, false> theGuard( theManager , (Type*)theManager.allocate(sizeof(Type)));
-
-            Type* theResult = theGuard.get();
-
-            new (theResult) Type(other, theManager);
-
-           theGuard.release();
-
-            return theResult;
-        }
-    };
-
-    template <class Type>
-    class cloneFunction_0 // zero arguments to constractor
-    {
-    public:
-        Type*
-        operator()(MemoryManagerType&  theManager)
-        {
-            XalanMemMgrAutoPtr<Type, false> theGuard( theManager , (Type*)theManager.allocate(sizeof(Type)));
-
-            Type* theResult = theGuard.get();
-
-            new (theResult) Type;
-
-            theGuard.release();
-
-            return theResult;
-        }
-    };
-
-    template <class Type>
-    class cloneFunction_1 // one arguments to copy constractor
-    {
-    public:
-        Type*
-        operator()(const Type& other, MemoryManagerType&  theManager )
-        {
-            XalanMemMgrAutoPtr<Type, false> theGuard( theManager , (Type*)theManager.allocate(sizeof(Type)));
-
-            Type* theResult = theGuard.get();
-
-            new (theResult) Type(other);
-
-            theGuard.release();
-
-            return theResult;
-        }
-    };
 public:
 
 	typedef XERCES_CPP_NAMESPACE_QUALIFIER Locator	LocatorType;

@@ -112,9 +112,8 @@ public:
 	 * @param owner source document
 	 * @return document URI
 	 */
-	virtual XalanDOMString&
-	findURIFromDoc(const XalanDocument*		owner,
-                    XalanDOMString& theResult) const = 0;
+	virtual const XalanDOMString&
+	findURIFromDoc(const XalanDocument*     owner) const = 0;
 
 	/**
 	 * Determine if an external element is available.

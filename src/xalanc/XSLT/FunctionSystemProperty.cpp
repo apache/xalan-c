@@ -42,7 +42,7 @@ static const XalanDOMString		s_emptyString(XalanMemMgrs::getDummyMemMgr());
 
 
 
-FunctionSystemProperty::FunctionSystemProperty(MemoryManagerType& theManager) :
+FunctionSystemProperty::FunctionSystemProperty(MemoryManagerType&   theManager) :
 	Function(),
 	m_xsltNamespaceURI("http://www.w3.org/1999/XSL/Transform", theManager),
 	m_versionPropertyString("version", theManager),
@@ -53,8 +53,11 @@ FunctionSystemProperty::FunctionSystemProperty(MemoryManagerType& theManager) :
 {
 }
 
-FunctionSystemProperty::FunctionSystemProperty( const FunctionSystemProperty& other, 
-                                               MemoryManagerType& theManager) :
+
+
+FunctionSystemProperty::FunctionSystemProperty(
+            const FunctionSystemProperty&   other, 
+            MemoryManagerType&              theManager) :
 	Function(other),
 	m_xsltNamespaceURI(other.m_xsltNamespaceURI, theManager),
 	m_versionPropertyString(other.m_versionPropertyString, theManager),
@@ -64,6 +67,7 @@ FunctionSystemProperty::FunctionSystemProperty( const FunctionSystemProperty& ot
 	m_vendorURLString(other.m_vendorURLString, theManager)
 {
 }
+
 
 
 FunctionSystemProperty::~FunctionSystemProperty()
@@ -190,17 +194,20 @@ Function*
 #else
 FunctionSystemProperty*
 #endif
-FunctionSystemProperty::clone(MemoryManagerType& theManager) const
+FunctionSystemProperty::clone(MemoryManagerType&    theManager) const
 {
-	return cloneFunction<FunctionSystemProperty>()(*this, theManager);
+	return XalanCopyConstruct(theManager, *this, theManager);
 }
 
 
 
 const XalanDOMString&
-FunctionSystemProperty::getError(XalanDOMString& theResult) const
+FunctionSystemProperty::getError(XalanDOMString&    theResult) const
 {
-	return XalanMessageLoader::getMessage(XalanMessages::FunctionAcceptsOneArgument_1Param, theResult, "system-property()");
+	return XalanMessageLoader::getMessage(
+                XalanMessages::FunctionAcceptsOneArgument_1Param,
+                theResult,
+                "system-property()");
 }
 
 

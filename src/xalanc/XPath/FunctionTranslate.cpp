@@ -113,19 +113,20 @@ Function*
 #else
 FunctionTranslate*
 #endif
-FunctionTranslate::clone(MemoryManagerType& theManager) const
+FunctionTranslate::clone(MemoryManagerType&     theManager) const
 {
-	return cloneFunction_1<FunctionTranslate>()(*this, theManager);
+	return XalanCopyConstruct(theManager, *this);
 }
 
 
 
 const XalanDOMString&
-FunctionTranslate::getError(XalanDOMString& theResult) const
+FunctionTranslate::getError(XalanDOMString&     theResult) const
 {
-	XalanMessageLoader::getMessage(XalanMessages::FunctionTakesThreeArguments_1Param, theResult , "translate()");
-
-    return theResult;
+	return XalanMessageLoader::getMessage(
+                XalanMessages::FunctionTakesThreeArguments_1Param,
+                theResult,
+                "translate()");
 }
 
 

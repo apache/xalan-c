@@ -64,7 +64,7 @@ FunctionElementAvailable*
 #endif
 FunctionElementAvailable::clone(MemoryManagerType& theManager) const
 {
-	return cloneFunction_1<FunctionElementAvailable>()(*this, theManager);
+	return XalanCopyConstruct(theManager, *this);
 }
 
 
@@ -72,7 +72,10 @@ FunctionElementAvailable::clone(MemoryManagerType& theManager) const
 const XalanDOMString&
 FunctionElementAvailable::getError(XalanDOMString& theResult) const
 {
-	return XalanMessageLoader::getMessage(XalanMessages::FunctionAcceptsOneArgument_1Param, theResult, "function-available()");
+	return XalanMessageLoader::getMessage(
+                XalanMessages::FunctionAcceptsOneArgument_1Param,
+                theResult,
+                "function-available()");
 }
 
 

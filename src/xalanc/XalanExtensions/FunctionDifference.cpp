@@ -94,19 +94,20 @@ Function*
 #else
 FunctionDifference*
 #endif
-FunctionDifference::clone(MemoryManagerType& theManager) const
+FunctionDifference::clone(MemoryManagerType&    theManager) const
 {
-	return  cloneFunction_0<FunctionDifference>()(theManager);;
+    return XalanCopyConstruct(theManager, *this);
 }
 
 
 
 const XalanDOMString&
-FunctionDifference::getError(XalanDOMString& theResult) const
+FunctionDifference::getError(XalanDOMString&    theResult) const
 {
-    XalanMessageLoader::getMessage(XalanMessages::FunctionAcceptsTwoArguments_1Param,theResult , "difference()");
-
-    return theResult;
+    return XalanMessageLoader::getMessage(
+                XalanMessages::FunctionAcceptsTwoArguments_1Param,
+                theResult,
+                "difference");
 }
 
 

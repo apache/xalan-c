@@ -456,13 +456,12 @@ XPathExecutionContextDefault::getNamespaceForPrefix(const XalanDOMString&	prefix
 
 
 
-XalanDOMString&
-XPathExecutionContextDefault::findURIFromDoc(const XalanDocument*	owner,
-                                             XalanDOMString&        theResult) const
+const XalanDOMString&
+XPathExecutionContextDefault::findURIFromDoc(const XalanDocument*   owner) const
 {
 	assert(m_xpathEnvSupport != 0);
 
-	return m_xpathEnvSupport->findURIFromDoc(owner, theResult);
+	return m_xpathEnvSupport->findURIFromDoc(owner);
 }
 
 

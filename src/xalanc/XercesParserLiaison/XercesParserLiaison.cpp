@@ -78,7 +78,9 @@ XercesParserLiaison::XercesParserLiaison(MemoryManagerType& theManager, XercesDO
 	m_buildBridge(true),
 	m_threadSafe(false),
 	m_buildMaps(false),
-	m_executionContext(0)
+	m_executionContext(0),
+	m_saxParser(0),
+	m_domParser(0)
 {
 }
 
@@ -99,7 +101,9 @@ XercesParserLiaison::XercesParserLiaison(MemoryManagerType& theManager) :
 	m_buildBridge(true),
 	m_threadSafe(false),
 	m_buildMaps(false),
-	m_executionContext(0)
+	m_executionContext(0),
+	m_saxParser(0),
+	m_domParser(0)
 {
 }
 
@@ -108,6 +112,10 @@ XercesParserLiaison::XercesParserLiaison(MemoryManagerType& theManager) :
 XercesParserLiaison::~XercesParserLiaison()
 {
 	reset();
+
+	delete m_saxParser;
+
+	delete m_domParser;
 }
 
 
@@ -169,12 +177,68 @@ XercesParserLiaison::setExecutionContext(ExecutionContext&	theContext)
 
 
 void
+XercesParserLiaison::ensureSAXParser()
+{
+	if (m_saxParser == 0)
+	{
+		m_saxParser = createSAXParser();
+	}
+
+	m_saxParser->setExitOnFirstFatalError(m_exitOnFirstFatalError);
+
+	if (m_entityResolver != 0)
+	{
+		m_saxParser->setEntityResolver(m_entityResolver);
+	}
+
+	m_saxParser->setErrorHandler(m_errorHandler);
+}
+
+
+
+void
+XercesParserLiaison::ensureDOMParser()
+{
+	if (m_domParser == 0)
+	{
+		m_domParser = createDOMParser();
+	}
+
+	m_domParser->setValidationScheme(m_useValidation == true ? DOMParserType::Val_Auto : DOMParserType::Val_Never);
+
+	m_domParser->setIncludeIgnorableWhitespace(m_includeIgnorableWhitespace);
+
+	m_domParser->setDoNamespaces(m_doNamespaces);
+
+	m_domParser->setExitOnFirstFatalError(m_exitOnFirstFatalError);
+
+	if (m_entityResolver != 0)
+	{
+		m_domParser->setEntityResolver(m_entityResolver);
+	}
+
+	m_domParser->setErrorHandler(m_errorHandler);
+
+	if (m_externalSchemaLocation.length() > 0)
+	{
+		m_domParser->setExternalSchemaLocation(c_wstr(m_externalSchemaLocation));
+	}
+
+	if (m_externalNoNamespaceSchemaLocation.length() > 0)
+	{
+		m_domParser->setExternalNoNamespaceSchemaLocation(c_wstr(m_externalNoNamespaceSchemaLocation));
+	}
+}
+
+
+
+void
 XercesParserLiaison::parseXMLStream(
 			const InputSourceType&	urlInputSource,
 			DocumentHandlerType&	handler,
 			const XalanDOMString&	/* identifier */)
 {
-	XalanAutoPtr<SAXParserType> 	theParser(CreateSAXParser());
+	XalanAutoPtr<SAXParserType> 	theParser(createSAXParser());
 
 	theParser->setDocumentHandler(&handler);
 
@@ -197,7 +261,7 @@ XercesParserLiaison::parseXMLStream(
 			const InputSourceType&	reader,
 			const XalanDOMString&	/* identifier */)
 {
-	XalanAutoPtr<DOMParserType> 		theParser(CreateDOMParser());
+	XalanAutoPtr<DOMParserType> 		theParser(createDOMParser());
 
 	if (m_errorHandler == 0)
 	{
@@ -649,6 +713,7 @@ XercesParserLiaison::formatErrorMessage(
 			theColumnNumb));
 	}
 
+    append(theMessage, XalanDOMChar(XalanUnicode::charSpace));
 	append(theMessage, e.getMessage());
 }
 
@@ -662,36 +727,11 @@ XercesParserLiaison::resetErrors()
 
 
 XercesParserLiaison::DOMParserType*
-XercesParserLiaison::CreateDOMParser()
+XercesParserLiaison::createDOMParser()
 {
 	DOMParserType* const	theParser = new DOMParserType(0,&(getMemoryManager()));
 
 	theParser->setExpandEntityReferences(true);
-
-	theParser->setValidationScheme(m_useValidation == true ? DOMParserType::Val_Auto : DOMParserType::Val_Never);
-
-	theParser->setIncludeIgnorableWhitespace(m_includeIgnorableWhitespace);
-
-	theParser->setDoNamespaces(m_doNamespaces);
-
-	theParser->setExitOnFirstFatalError(m_exitOnFirstFatalError);
-
-	if (m_entityResolver != 0)
-	{
-		theParser->setEntityResolver(m_entityResolver);
-	}
-
-	theParser->setErrorHandler(m_errorHandler);
-
-	if (m_externalSchemaLocation.length() > 0)
-	{
-		theParser->setExternalSchemaLocation(c_wstr(m_externalSchemaLocation));
-	}
-
-	if (m_externalNoNamespaceSchemaLocation.length() > 0)
-	{
-		theParser->setExternalNoNamespaceSchemaLocation(c_wstr(m_externalNoNamespaceSchemaLocation));
-	}
 
 #if XERCES_VERSION_MAJOR < 2
 	// Xerces has a non-standard node type to represent the XML decl.
@@ -705,22 +745,13 @@ XercesParserLiaison::CreateDOMParser()
 
 
 XercesParserLiaison::SAXParserType*
-XercesParserLiaison::CreateSAXParser()
+XercesParserLiaison::createSAXParser()
 {
 	SAXParserType* const	theParser = new SAXParserType(0,&(getMemoryManager()));
 
 	theParser->setDoValidation(false);
 
 	theParser->setDoNamespaces(false);
-
-	theParser->setExitOnFirstFatalError(m_exitOnFirstFatalError);
-
-	if (m_entityResolver != 0)
-	{
-		theParser->setEntityResolver(m_entityResolver);
-	}
-
-	theParser->setErrorHandler(m_errorHandler);
 
 	return theParser;
 }

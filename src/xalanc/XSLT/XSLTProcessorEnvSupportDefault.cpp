@@ -216,11 +216,10 @@ XSLTProcessorEnvSupportDefault::setSourceDocument(
 
 
 
-XalanDOMString&
-XSLTProcessorEnvSupportDefault::findURIFromDoc(const XalanDocument*		owner,
-                                               XalanDOMString&          theResult) const
+const XalanDOMString&
+XSLTProcessorEnvSupportDefault::findURIFromDoc(const XalanDocument*		owner) const
 {
-	return m_defaultSupport.findURIFromDoc(owner, theResult);
+	return m_defaultSupport.findURIFromDoc(owner);
 }
 
 

@@ -41,9 +41,20 @@ public:
 
 	typedef Function	ParentType;
 
-	FunctionLang(MemoryManagerType& theManager);
+	/**
+	 * Perform static initialization.  See class XPathInit.
+	 */
+	static void
+	initialize(MemoryManagerType&   theManager);
 
-	FunctionLang(const FunctionLang& other, MemoryManagerType& theManager);
+	/**
+	 * Perform static shut down.  See class XPathInit.
+	 */
+	static void
+	terminate();
+
+
+    FunctionLang();
 
 	virtual
 	~FunctionLang();
@@ -66,25 +77,23 @@ public:
 #else
 	virtual FunctionLang*
 #endif
-	clone(MemoryManagerType& theManager) const;
+	clone(MemoryManagerType&    theManager) const;
 
 protected:
 
 	virtual const XalanDOMString&
-	getError(XalanDOMString& theResult) const;
+	getError(XalanDOMString&    theResult) const;
 
 private:
 
 	// Not implemented...
-    FunctionLang();
-    FunctionLang(const FunctionLang&);
 	FunctionLang&
 	operator=(const FunctionLang&);
 
 	bool
 	operator==(const FunctionLang&) const;
 
-	const XalanDOMString	m_attributeName;
+	static const XalanDOMString&    s_attributeName;
 };
 
 

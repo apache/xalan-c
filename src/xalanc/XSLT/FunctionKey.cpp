@@ -200,7 +200,7 @@ FunctionKey*
 #endif
 FunctionKey::clone(MemoryManagerType& theManager) const
 {
-	return cloneFunction_1<FunctionKey>()(*this, theManager);
+	return XalanCopyConstruct(theManager, *this);
 }
 
 
@@ -208,7 +208,10 @@ FunctionKey::clone(MemoryManagerType& theManager) const
 const XalanDOMString&
 FunctionKey::getError(XalanDOMString& theResult) const
 {
-	return XalanMessageLoader::getMessage(XalanMessages::FunctionTakesTwoArguments_1Param, theResult, "key()");
+	return XalanMessageLoader::getMessage(
+                XalanMessages::FunctionTakesTwoArguments_1Param,
+                theResult,
+                "key");
 }
 
 

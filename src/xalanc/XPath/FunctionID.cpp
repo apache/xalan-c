@@ -133,9 +133,9 @@ Function*
 #else
 FunctionID*
 #endif
-FunctionID::clone(MemoryManagerType& theManager) const
+FunctionID::clone(MemoryManagerType&    theManager) const
 {
-	return cloneFunction_1<FunctionID>()(*this, theManager);
+	return XalanCopyConstruct(theManager, *this);
 }
 
 
@@ -144,7 +144,10 @@ const XalanDOMString&
 FunctionID::getError(XalanDOMString& theResult) const
 {
 
-	XalanMessageLoader::getMessage(XalanMessages::FunctionAcceptsOneArgument_1Param, theResult, "id()");
+	XalanMessageLoader::getMessage(
+        XalanMessages::FunctionAcceptsOneArgument_1Param,
+        theResult,
+        "id()");
 
     return theResult;
 }

@@ -604,9 +604,8 @@ public:
 	 * @param owner source document
 	 * @return document URI
 	 */
-	virtual XalanDOMString&
-	findURIFromDoc(const XalanDocument*		owner,
-                    XalanDOMString& theResult) const = 0;
+	virtual const XalanDOMString&
+	findURIFromDoc(const XalanDocument*     owner) const = 0;
 
 	/**
 	 * The getUnparsedEntityURI function returns the URI of the unparsed

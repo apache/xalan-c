@@ -202,7 +202,7 @@ FunctionNormalizeSpace*
 #endif
 FunctionNormalizeSpace::clone(MemoryManagerType& theManager) const
 {
-	return cloneFunction_1<FunctionNormalizeSpace>()(*this, theManager);
+	return XalanCopyConstruct(theManager, *this);
 }
 
 
@@ -211,7 +211,10 @@ const XalanDOMString&
 FunctionNormalizeSpace::getError(XalanDOMString& theResult) const
 {
 	
-	XalanMessageLoader::getMessage(XalanMessages::FunctionTakesZeroOrOneArg_1Param, theResult, "normalize-space()");
+	XalanMessageLoader::getMessage(
+        XalanMessages::FunctionTakesZeroOrOneArg_1Param,
+        theResult,
+        "normalize-space()");
 
     return theResult;
 

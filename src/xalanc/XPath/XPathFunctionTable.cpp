@@ -305,7 +305,7 @@ XPathFunctionTable::CreateTable()
 
 		InstallFunction(
 				s_lang,
-				FunctionLang(*m_memoryManager));
+				FunctionLang());
 
 		InstallFunction(
 				s_last,

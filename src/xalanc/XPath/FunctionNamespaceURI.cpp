@@ -108,9 +108,9 @@ Function*
 #else
 FunctionNamespaceURI*
 #endif
-FunctionNamespaceURI::clone(MemoryManagerType& theManager) const
+FunctionNamespaceURI::clone(MemoryManagerType&  theManager) const
 {
-	return cloneFunction_1<FunctionNamespaceURI>()(*this, theManager);
+	return XalanCopyConstruct(theManager, *this);
 }
 
 
@@ -118,7 +118,10 @@ FunctionNamespaceURI::clone(MemoryManagerType& theManager) const
 const XalanDOMString&
 FunctionNamespaceURI::getError(XalanDOMString& theResult) const
 {
-	XalanMessageLoader::getMessage(XalanMessages::FunctionTakesZeroOrOneArg_1Param, theResult, "namespace-uri()");
+	XalanMessageLoader::getMessage(
+        XalanMessages::FunctionTakesZeroOrOneArg_1Param,
+        theResult,
+        "namespace-uri()");
 
     return theResult;
 }

@@ -174,6 +174,30 @@ public:
 		return m_allocator.getBlockSize();
 	}
 
+	/**
+	 * Get a reference to the MemoryManagerType instance
+	 * for this instance.
+	 *
+	 * @return A reference to the MemoryManagerType instance.
+	 */
+    MemoryManagerType&
+    getMemoryManager()
+    {
+        return m_allocator.getMemoryManager();
+    }
+
+	/**
+	 * Get a reference to the MemoryManagerType instance
+	 * for this instance.
+	 *
+	 * @return A reference to the MemoryManagerType instance.
+	 */
+    const MemoryManagerType&
+    getMemoryManager() const
+    {
+        return m_allocator.getMemoryManager();
+    }
+
 private:
 
 	// Not implemented...

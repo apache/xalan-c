@@ -66,7 +66,7 @@ FunctionStartsWith*
 #endif
 FunctionStartsWith::clone(MemoryManagerType& theManager) const
 {
-	return cloneFunction_1<FunctionStartsWith>()(*this, theManager);
+	return XalanCopyConstruct(theManager, *this);
 }
 
 
@@ -74,9 +74,10 @@ FunctionStartsWith::clone(MemoryManagerType& theManager) const
 const XalanDOMString&
 FunctionStartsWith::getError(XalanDOMString& theResult) const
 {
-
-	return XalanMessageLoader::getMessage(XalanMessages::FunctionTakesTwoArguments_1Param, theResult, "starts-with()");
-
+	return XalanMessageLoader::getMessage(
+                XalanMessages::FunctionTakesTwoArguments_1Param,
+                theResult,
+                "starts-with()");
 }
 
 

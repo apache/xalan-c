@@ -95,7 +95,6 @@ class DOMSupport;
 class GenerateEvent;
 class PrintWriter;
 class StylesheetConstructionContext;
-class StylesheetExecutionContext;
 class StylesheetRoot;
 class XalanAttr;
 class XalanSourceTreeDocument;
@@ -184,6 +183,8 @@ public:
 	typedef XalanMemMgrAutoPtr<XPathProcessor, true>				XPathProcessorPtrType;
 	typedef Function::XObjectArgVectorType				XObjectArgVectorType;
 	typedef StylesheetExecutionContext::ParamVectorType	ParamVectorType;
+    typedef XPathConstructionContext::GetAndReleaseCachedString     CCGetAndReleaseCachedString;
+    typedef XPathExecutionContext::GetAndReleaseCachedString        ECGetAndReleaseCachedString;
 
 	// Public members
 	//---------------------------------------------------------------------
