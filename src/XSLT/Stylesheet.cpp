@@ -267,21 +267,18 @@ Stylesheet::processKeyElement(
 		}
 		else if (isAttrOK(aname, atts, i, constructionContext) == false)
 		{
-			constructionContext.error(
-				TranscodeFromLocalCodePage("xsl:key, unrecognized keyword '") +
-					aname +
-					TranscodeFromLocalCodePage("'!"));
+			constructionContext.error("xsl:key has an illegal attribute");
 		}
 	}
 
 	if(0 == nameAttr)
-		constructionContext.error(TranscodeFromLocalCodePage("xsl:key requires a ") + Constants::ATTRNAME_NAME + " attribute!");
+		constructionContext.error("xsl:key requires a 'name' attribute");
 
 	if(0 == matchAttr)
-		constructionContext.error(TranscodeFromLocalCodePage("xsl:key requires a ") + Constants::ATTRNAME_MATCH + " attribute!");
+		constructionContext.error("xsl:key requires a 'match' attribute");
 
 	if(0 == useAttr)
-		constructionContext.error(TranscodeFromLocalCodePage("xsl:key requires a ") + Constants::ATTRNAME_USE + " attribute!");
+		constructionContext.error("xsl:key requires a 'use' attribute");
 
 	m_keyDeclarations.push_back(KeyDeclaration(XalanDOMString(nameAttr), *matchAttr, *useAttr));
 }
@@ -509,7 +506,7 @@ Stylesheet::getNamespaceFromStack(const XalanDOMChar* 	nodeName) const
 
 bool
 Stylesheet::getYesOrNo(
-			const XalanDOMChar* 			aname,
+			const XalanDOMChar* 			/* aname */,
 			const XalanDOMChar* 			val,
 			StylesheetConstructionContext&	constructionContext) const
 {
@@ -523,7 +520,7 @@ Stylesheet::getYesOrNo(
 	}
 	else
 	{
-		constructionContext.error(XalanDOMString(val) + " is unknown value for " + aname);
+		constructionContext.error("The attribute value must be 'yes' or 'no'");
 
 		return false;
 	}
@@ -578,19 +575,10 @@ Stylesheet::addTemplate(
 		else
 		{
 			// This is an error...
-			XalanDOMString	theMessage(TranscodeFromLocalCodePage("The stylesheet already has a template with the name "));
-
-			const XalanDOMString&	theNamespace = theName.getNamespace();
-
-			if (length(theNamespace) != 0)
-			{
-				theMessage += theNamespace;
-				theMessage += DOMServices::s_XMLNamespaceSeparatorString;
-			}
-
-			theMessage += theName.getLocalPart();
-
-			constructionContext.error(theMessage, 0, theTemplate);
+			constructionContext.error(
+				"The stylesheet already has a template with this name",
+				0,
+				theTemplate);
 		}
 	}
 
@@ -1159,7 +1147,7 @@ Stylesheet::pushTopLevelVariables(
 
 void
 Stylesheet::processNSAliasElement(
-			const XalanDOMChar*				name,
+			const XalanDOMChar*				/* name */,
 			const AttributeList&			atts,
 			StylesheetConstructionContext&	constructionContext)
 {
@@ -1201,7 +1189,7 @@ Stylesheet::processNSAliasElement(
 		}
 		else if(!isAttrOK(aname, atts, i, constructionContext))
 		{
-			constructionContext.error(XalanDOMString(name) + " has an illegal attribute: " + aname);
+			constructionContext.error("xsl:namespace-alias has an illegal attribute");
 		}
 	}
 
@@ -1284,7 +1272,7 @@ Stylesheet::getAliasNamespaceURI(const XalanDOMString&	uri) const
 
 
 const XalanDecimalFormatSymbols*
-Stylesheet::getDecimalFormatSymbols(const XalanDOMString&	name) const
+Stylesheet::getDecimalFormatSymbols(const XalanQName&	theQName) const
 {
 	const XalanDecimalFormatSymbols* 				dfs = 0;
 
@@ -1302,7 +1290,7 @@ Stylesheet::getDecimalFormatSymbols(const XalanDOMString&	name) const
 				m_elemDecimalFormats[i - 1];
 			assert(theCurrent != 0);
 
-			if (equals(theCurrent->getName(), name) == true)
+			if (theCurrent->getQName().equals(theQName) == true)
 			{
 				dfs = &theCurrent->getDecimalFormatSymbols();
 
@@ -1320,7 +1308,7 @@ Stylesheet::getDecimalFormatSymbols(const XalanDOMString&	name) const
 	{
 		for(StylesheetVectorType::size_type i = 0; i < m_importsSize; ++i)
 		{
-			dfs = m_imports[i]->getDecimalFormatSymbols(name);
+			dfs = m_imports[i]->getDecimalFormatSymbols(theQName);
 
 			if(dfs != 0)
 			{

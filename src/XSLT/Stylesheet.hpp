@@ -524,13 +524,13 @@ public:
 
 	/**
 	 * Retrieve the XalanDecimalFormatSymbols instance associated with
-	 * the name.
+	 * the QName.
 	 *
-	 * @param name the name for the lookup
+	 * @param theQName the QName for the lookup
 	 * @return a pointer to the matching instance, or 0 if none was found
 	 */
 	const XalanDecimalFormatSymbols*
-	getDecimalFormatSymbols(const XalanDOMString&	name) const;
+	getDecimalFormatSymbols(const XalanQName&	theQName) const;
 
 	/**
 	 * Add an attribute set to the list.
