@@ -2690,7 +2690,7 @@ fi
 
 
 
-if test "$CXX" = "g++" -o "$CXX" = "c++"; then
+if test "$CXX" = "g++" -o "$CXX" = "c++" -o "$CXX" = "g++3"; then
 
   echo "$as_me:$LINENO: checking whether -fno-elide-constructors works correctly" >&5
 echo $ECHO_N "checking whether -fno-elide-constructors works correctly... $ECHO_C" >&6

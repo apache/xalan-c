@@ -172,7 +172,7 @@ ifeq ($(PLATFORM), LINUX)
 
   endif
 
-  PLATFORM_COMPILE_OPTIONS += ${PIC_OPTION} -D${PLATFORM} -D_REENTRANT -fno-elide-constructors
+  PLATFORM_COMPILE_OPTIONS += ${PIC_OPTION} -D${PLATFORM} -D_REENTRANT
 
   # We need the ICU library if we are using the ICUBridge
   ifdef XALAN_USE_ICU
