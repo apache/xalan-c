@@ -497,6 +497,10 @@ public:
 			// Special case for namespace nodes...
 			return attr.getLocalName();
 		}
+		else if (equals(theName, s_XMLNamespace) == true)
+		{
+			return s_emptyString;
+		}
 		else
 		{
 			return theName;
