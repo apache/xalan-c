@@ -146,17 +146,17 @@ const XalanDOMChar 	XalanTranscodingServices::s_windows1250String[] =
 
 const XalanTranscodingServices::XalanXMLByte	XalanTranscodingServices::s_dummyByteOrderMark[] =
 {
-	XalanXMLByte(0)
+	XalanTranscodingServices::XalanXMLByte(0)
 };
 
 
 
 const XalanTranscodingServices::XalanXMLByte	XalanTranscodingServices::s_UTF8ByteOrderMark[] =
 {
-	XalanXMLByte(0xEF),
-	XalanXMLByte(0xBB),
-	XalanXMLByte(0xBF),
-	XalanXMLByte(0)
+	XalanTranscodingServices::XalanXMLByte(0xEF),
+	XalanTranscodingServices::XalanXMLByte(0xBB),
+	XalanTranscodingServices::XalanXMLByte(0xBF),
+	XalanTranscodingServices::XalanXMLByte(0)
 };
 
 
@@ -164,15 +164,15 @@ const XalanTranscodingServices::XalanXMLByte	XalanTranscodingServices::s_UTF8Byt
 const XalanTranscodingServices::XalanXMLByte	XalanTranscodingServices::s_UTF16ByteOrderMark[] =
 {
 #if defined(XALAN_LITLE_ENDIAN)
-	XalanXMLByte(0xFF),
-	XalanXMLByte(0xFE),
+	XalanTranscodingServices::XalanXMLByte(0xFF),
+	XalanTranscodingServices::XalanXMLByte(0xFE),
 #elif defined(XALAN_BIG_ENDIAN)
-	XalanXMLByte(0xFE),
-	XalanXMLByte(0xFF),
+	XalanTranscodingServices::XalanXMLByte(0xFE),
+	XalanTranscodingServices::XalanXMLByte(0xFF),
 #else
 #error The platform must define the byte order!
 #endif
-	XalanXMLByte(0)
+	XalanTranscodingServices::XalanXMLByte(0)
 };
 
 
