@@ -1122,11 +1122,9 @@ XPath::Union(
 {
 	opPos += 2;
 
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::auto_ptr;
-#endif
+	typedef XPathExecutionContext::BorrowReturnMutableNodeRefList	BorrowReturnMutableNodeRefList;
 
-	auto_ptr<MutableNodeRefList>	resultNodeList(executionContext.createMutableNodeRefList());
+	BorrowReturnMutableNodeRefList	resultNodeList(executionContext);
 
 	XObjectFactory&		theFactory = executionContext.getXObjectFactory();
 
@@ -1146,7 +1144,7 @@ XPath::Union(
 		opPos = nextOpPos;
 	}
 
-	return theFactory.createNodeSet(resultNodeList.release());
+	return theFactory.createNodeSet(resultNodeList);
 }
 
 

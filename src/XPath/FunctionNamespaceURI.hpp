@@ -130,7 +130,7 @@ public:
 
 			// An XObject that contains the context node.
 			XObjectGuard	theXObject(executionContext.getXObjectFactory(),
-									   executionContext.getXObjectFactory().createNodeSet(*context));
+									   executionContext.createNodeSet(*context));
 
 
 			theNamespace = getNamespaceFromNodeSet(*theXObject.get(),

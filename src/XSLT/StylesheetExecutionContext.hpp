@@ -1500,6 +1500,9 @@ public:
 	virtual XObjectFactory&
 	getXObjectFactory() const = 0;
 
+	virtual XObject*
+	createNodeSet(XalanNode&	theNode) = 0;
+
 	virtual bool
 	isIgnorableWhitespace(const XalanText&	node) const = 0;
 

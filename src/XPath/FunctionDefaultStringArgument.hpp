@@ -125,7 +125,7 @@ protected:
 
 		// A node set that contains the context node.
 		XObjectGuard	theArg(executionContext.getXObjectFactory(),
-							   executionContext.getXObjectFactory().createNodeSet(context));
+							   executionContext.createNodeSet(context));
 
 		// Now, get the string from the XObject.
 		return theArg->str();

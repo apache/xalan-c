@@ -73,6 +73,10 @@
 
 
 
+#include <XPath/XPathExecutionContext.hpp>
+
+
+
 class XalanNode;
 
 
@@ -84,19 +88,14 @@ class XALAN_XPATH_EXPORT XNodeSet : public XObject
 {
 public:
 
+	typedef XPathExecutionContext::BorrowReturnMutableNodeRefList	BorrowReturnMutableNodeRefList;
+
 	/**
 	 * Create an XNodeSet from a node list.
 	 *
 	 * @param value Pointer to source node list.  The XNodeSet will adopt the pointer.
 	 */
-	XNodeSet(NodeRefListBase*	value);
-
-	/**
-	 * Create an XNodeSet from a node.
-	 *
-	 * @param value source node
-	 */
-	XNodeSet(XalanNode&		value);
+	XNodeSet(BorrowReturnMutableNodeRefList&	value);
 
 	/**
 	 * Create an XNodeSet from another.
@@ -155,13 +154,12 @@ private:
 
 	// Data members...
 
-#if defined(XALAN_NO_NAMESPACES)
-	auto_ptr<NodeRefListBase>					m_value;
 
+	const BorrowReturnMutableNodeRefList		m_value;
+
+#if defined(XALAN_NO_NAMESPACES)
 	mutable auto_ptr<ResultTreeFragBase>		m_resultTreeFrag;
 #else
-	std::auto_ptr<NodeRefListBase>				m_value;
-
 	mutable std::auto_ptr<ResultTreeFragBase>	m_resultTreeFrag;
 #endif
 

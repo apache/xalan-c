@@ -415,6 +415,11 @@ public:
 	}
 #endif
 
+	static void
+	destroyTable()
+	{
+		s_functions.DestroyTable();
+	}
 protected:
 
 	/**

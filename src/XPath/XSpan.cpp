@@ -58,16 +58,7 @@
 
 
 
-XSpan::XSpan(NodeRefListBase*	value) :
-	XNodeSet(value),
-	m_start(-1),
-	m_end(-1)
-{
-}
-
-
-
-XSpan::XSpan(XalanNode&		value) :
+XSpan::XSpan(BorrowReturnMutableNodeRefList&	value) :
 	XNodeSet(value),
 	m_start(-1),
 	m_end(-1)

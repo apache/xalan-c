@@ -78,14 +78,7 @@ public:
 	 * 
 	 * @param value      source node list.  The instance will adopt the value instance.
 	 */
-	XSpan(NodeRefListBase*	value);
-
-	/**
-	 * Construct an XSpan object from a DOM node.
-	 * 
-	 * @param value      source node
-	 */
-	XSpan(XalanNode&	value);
+	XSpan(BorrowReturnMutableNodeRefList&	value);
 
 	XSpan(const XSpan&	source);
 

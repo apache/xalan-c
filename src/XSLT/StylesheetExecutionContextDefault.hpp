@@ -539,6 +539,9 @@ public:
 	virtual XObjectFactory&
 	getXObjectFactory() const;
 
+	virtual XObject*
+	createNodeSet(XalanNode&	theNode);
+
 	virtual bool
 	isIgnorableWhitespace(const XalanText&	node) const;
 

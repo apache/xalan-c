@@ -110,13 +110,8 @@ public:
 
 	virtual XObject*
 	createNodeSet(
-			NodeRefListBase*	value,
-			bool				fOptimize = true);
-
-	virtual XObject*
-	createNodeSet(
-			XalanNode&	value,
-			bool		fOptimize = true);
+			BorrowReturnMutableNodeRefList&		theValue,
+			bool								fOptimize = true);
 
 	virtual XObject*
 	createNull(bool	fOptimize = true);
@@ -143,13 +138,8 @@ public:
 
 	virtual XObject*
 	createSpan(
-			NodeRefListBase*	value,
-			bool				fOptimize = true);
-
-	virtual XObject*
-	createSpan(
-			XalanNode&	value,
-			bool		fOptimize = true);
+			BorrowReturnMutableNodeRefList&		theValue,
+			bool								fOptimize = true);
 
 #if defined(XALAN_NO_NAMESPACES)
 	typedef set<const XObject*>		CollectionType;

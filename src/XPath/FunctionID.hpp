@@ -145,12 +145,11 @@ public:
 										context->getOwnerDocument();
 		assert(theDocContext != 0);
 
-		// This list will hold the nodes we find.
-#if !defined(XALAN_NO_NAMESPACES)
-		using std::auto_ptr;
-#endif
+		typedef XPathExecutionContext::BorrowReturnMutableNodeRefList	BorrowReturnMutableNodeRefList;
 
-		auto_ptr<MutableNodeRefList>	theNodeList(executionContext.createMutableNodeRefList());
+		// This list will hold the nodes we find.
+
+		BorrowReturnMutableNodeRefList	theNodeList(executionContext);
 
 		// If there is no context, we cannot continue.
 		if(0 == theDocContext)
@@ -199,7 +198,7 @@ public:
 			}
 		}
 
-		return executionContext.getXObjectFactory().createNodeSet(theNodeList.release());
+		return executionContext.getXObjectFactory().createNodeSet(theNodeList);
 	}
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)

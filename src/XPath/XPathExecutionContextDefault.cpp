@@ -153,6 +153,19 @@ XPathExecutionContextDefault::getXObjectFactory() const
 
 
 
+XObject*
+XPathExecutionContextDefault::createNodeSet(XalanNode&	theNode)
+{
+	// This list will hold the node...
+	BorrowReturnMutableNodeRefList	theNodeList(*this);
+
+	theNodeList->addNode(&theNode);
+
+	return m_xobjectFactory.createNodeSet(theNodeList);
+}
+
+
+
 bool
 XPathExecutionContextDefault::isIgnorableWhitespace(const XalanText&	node) const
 {

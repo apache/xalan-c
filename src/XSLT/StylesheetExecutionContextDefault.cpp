@@ -1340,6 +1340,14 @@ StylesheetExecutionContextDefault::getXObjectFactory() const
 
 
 
+XObject*
+StylesheetExecutionContextDefault::createNodeSet(XalanNode&	theNode)
+{
+	return m_xpathExecutionContextDefault.createNodeSet(theNode);
+}
+
+
+
 bool
 StylesheetExecutionContextDefault::isIgnorableWhitespace(const XalanText&	node) const
 {

@@ -198,11 +198,10 @@ FunctionDocument::execute(
 			base = executionContext.getPrefixResolver()->getURI();
 		}
 
-#if !defined(XALAN_NO_NAMESPACES)
-		using std::auto_ptr;
-#endif
+		typedef XPathExecutionContext::BorrowReturnMutableNodeRefList	BorrowReturnMutableNodeRefList;
 
-		auto_ptr<MutableNodeRefList>	mnl(executionContext.createMutableNodeRefList());
+		// This list will hold the nodes...
+		BorrowReturnMutableNodeRefList	mnl(executionContext);
 
 		const unsigned int		nRefs = XObject::eTypeNodeSet == arg->getType() ?
 													arg->nodeset().getLength()
@@ -268,7 +267,7 @@ FunctionDocument::execute(
 
 		assert(mnl->checkForDuplicates() == false);
 
-		return executionContext.getXObjectFactory().createNodeSet(mnl.release());
+		return executionContext.getXObjectFactory().createNodeSet(mnl);
 	}
 }
 

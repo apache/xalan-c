@@ -305,13 +305,13 @@ public:
 	}
 #endif
 
+	void
+	DestroyTable();
+
 protected:
 
 	void
 	CreateTable();
-
-	void
-	DestroyTable();
 
 private:
 

@@ -102,7 +102,7 @@ FunctionCurrent::execute(
 	}
 	else
 	{
-		return executionContext.getXObjectFactory().createNodeSet(*executionContext.getCurrentNode());
+		return executionContext.createNodeSet(*executionContext.getCurrentNode());
 	}
 }
 

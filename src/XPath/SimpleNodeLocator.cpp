@@ -116,6 +116,7 @@ SimpleNodeLocator::connectToNodes(
 			int 							/* opPos */,
 			const ConnectArgsVectorType&	connectArgs)
 {
+#if 0
 	assert(connectArgs.size() > 0 && connectArgs.size() < 3);
 
 	XObjectFactory& 		theFactory =
@@ -124,7 +125,6 @@ SimpleNodeLocator::connectToNodes(
 	XObjectGuard			results(theFactory,
 									theFactory.createNodeSet(executionContext.createMutableNodeRefList()));
 
-#if 0
 	const XPathExpression&	currentExpression =
 		xpath.getExpression();
 
@@ -198,9 +198,10 @@ SimpleNodeLocator::connectToNodes(
 	{
 		executionContext.warn("No files matched the file specification!");
 	}
+	return results.release();
 #endif
 
-	return results.release();
+	return 0;
 }
 
 
@@ -212,15 +213,13 @@ SimpleNodeLocator::locationPath(
 			XalanNode&				context, 
 			int 					opPos)
 {
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::auto_ptr;
-#endif
+	typedef XPathExecutionContext::BorrowReturnMutableNodeRefList	BorrowReturnMutableNodeRefList;
 
-	auto_ptr<MutableNodeRefList>	mnl(executionContext.createMutableNodeRefList());
+	BorrowReturnMutableNodeRefList	mnl(executionContext);
 
 	step(xpath, executionContext, &context, opPos + 2, *mnl.get());
 
-	return executionContext.getXObjectFactory().createNodeSet(mnl.release());
+	return executionContext.getXObjectFactory().createNodeSet(mnl);
 }
 
 

@@ -71,6 +71,7 @@
 
 
 #include <XPath/XObject.hpp>
+#include <XPath/XPathExecutionContext.hpp>
 
 
 
@@ -88,6 +89,8 @@ class XObject;
 class XALAN_XPATH_EXPORT XObjectFactory
 {
 public:
+
+	typedef XPathExecutionContext::BorrowReturnMutableNodeRefList	BorrowReturnMutableNodeRefList;
 
 	XObjectFactory();
 
@@ -145,20 +148,8 @@ public:
 	 */
 	virtual XObject*
 	createNodeSet(
-			NodeRefListBase*	theValue,
-			bool				fOptimize = true) = 0;
-
-	/**
-	 * Create a node set XObject from a DOM node.
-	 * 
-	 * @param theValue  value used to create object
-	 * @param fOptimize not used
-	 * @return pointer to new object
-	 */
-	virtual XObject*
-	createNodeSet(
-			XalanNode&	theValue,
-			bool		fOptimize = true) = 0;
+			BorrowReturnMutableNodeRefList&		theValue,
+			bool								fOptimize = true) = 0;
 
 	/**
 	 * Create a null XObject.
@@ -228,20 +219,8 @@ public:
 	 */
 	virtual XObject*
 	createSpan(
-			NodeRefListBase*	theValue,
-			bool				fOptimize = true) = 0;
-
-	/**
-	 * Create a span XObject from a DOM node.
-	 * 
-	 * @param theValue  value used to create object
-	 * @param fOptimize not used
-	 * @return pointer to new object
-	 */
-	virtual XObject*
-	createSpan(
-			XalanNode&	theValue,
-			bool		fOptimize = true) = 0;
+			BorrowReturnMutableNodeRefList&		theValue,
+			bool								fOptimize = true) = 0;
 
 	/**
 	 *

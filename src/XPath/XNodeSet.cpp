@@ -75,40 +75,12 @@
 
 
 
-XNodeSet::XNodeSet(NodeRefListBase*		value) :
+XNodeSet::XNodeSet(BorrowReturnMutableNodeRefList&	value) :
 	XObject(),
-	m_value(value == 0 ? new NodeRefList : value),
+	m_value(value),
 	m_cachedStringValue(),
 	m_cachedNumberValue(0.0),
 	m_resultTreeFrag()
-{
-	assert(value != 0);
-}
-
-
-
-MutableNodeRefList*
-createNodeListWithNode(XalanNode*	node)
-{
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::auto_ptr;
-#endif
-
-	auto_ptr<MutableNodeRefList>	resultNodeList(new MutableNodeRefList);
-
-	resultNodeList->addNode(node);
-
-	return resultNodeList.release();
-}
-
-
-
-XNodeSet::XNodeSet(XalanNode&	value) :
-	XObject(),
-	m_value(createNodeListWithNode(&value)),
-	m_resultTreeFrag(),
-	m_cachedStringValue(),
-	m_cachedNumberValue(0.0)
 {
 }
 
@@ -117,7 +89,7 @@ XNodeSet::XNodeSet(XalanNode&	value) :
 XNodeSet::XNodeSet(const XNodeSet&	source,
 				   bool				deepClone) :
 	XObject(source),
-	m_value(source.m_value->clone()),
+	m_value(source.m_value.clone()),
 	m_resultTreeFrag(source.m_resultTreeFrag.get() == 0 ?
 						0 :
 						source.m_resultTreeFrag->clone(deepClone)),

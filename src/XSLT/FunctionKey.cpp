@@ -142,11 +142,10 @@ FunctionKey::execute(
 		const bool				argIsNodeSet =
 				XObject::eTypeNodeSet == arg->getType() ? true : false;
 
-#if !defined(XALAN_NO_NAMESPACES)
-		using std::auto_ptr;
-#endif
+		typedef XPathExecutionContext::BorrowReturnMutableNodeRefList	BorrowReturnMutableNodeRefList;
 
-		auto_ptr<MutableNodeRefList>	theNodeRefList(executionContext.createMutableNodeRefList());
+		// This list will hold the nodes...
+		BorrowReturnMutableNodeRefList	theNodeRefList(executionContext);
 
 		if(argIsNodeSet == true)
 		{
@@ -204,7 +203,7 @@ FunctionKey::execute(
 			}
 		}
 
-		return executionContext.getXObjectFactory().createNodeSet(theNodeRefList.release());
+		return executionContext.getXObjectFactory().createNodeSet(theNodeRefList);
 	}
 }
 

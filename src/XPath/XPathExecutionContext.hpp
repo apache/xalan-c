@@ -165,6 +165,16 @@ public:
 	getXObjectFactory() const = 0;
 
 	/**
+	 * Convenience function for creating a node set with
+	 * the supplied node as the only member.
+	 *
+	 * @param node	The  node queried
+	 * @return a pointer to the XObject instance.
+	 */
+	virtual XObject*
+	createNodeSet(XalanNode&	theNode) = 0;
+
+	/**
 	 * Tell if the node is ignorable whitespace. This should be in the DOM.
 	 * Return false if the parser doesn't handle this.
 	 * 
@@ -451,9 +461,31 @@ public:
 			assert(m_mutableNodeRefList != 0);
 		}
 
+		// N.B. Non-const copy constructor semantics (like std::auto_ptr)
+		BorrowReturnMutableNodeRefList(const BorrowReturnMutableNodeRefList&	theSource) :
+			m_xpathExecutionContext(theSource.m_xpathExecutionContext),
+			m_mutableNodeRefList(theSource.m_mutableNodeRefList)
+		{
+			assert(m_mutableNodeRefList != 0);
+
+			((BorrowReturnMutableNodeRefList&)theSource).m_mutableNodeRefList = 0;
+		}
+
+//		BorrowReturnMutableNodeRefList(const BorrowReturnMutableNodeRefList&	theSource) :
+//			m_xpathExecutionContext(theSource.m_xpathExecutionContext),
+//			m_mutableNodeRefList(theSource.m_mutableNodeRefList)
+//		{
+//			assert(m_mutableNodeRefList != 0);
+
+//			theSource.m_mutableNodeRefList = 0;
+//		}
+
 		~BorrowReturnMutableNodeRefList()
 		{
-			m_xpathExecutionContext.returnMutableNodeRefList(m_mutableNodeRefList);
+			if (m_mutableNodeRefList != 0)
+			{
+				m_xpathExecutionContext.returnMutableNodeRefList(m_mutableNodeRefList);
+			}
 		}
 
 		MutableNodeRefList&
@@ -463,9 +495,15 @@ public:
 		}
 
 		MutableNodeRefList*
-		operator->() const
+		get() const
 		{
 			return m_mutableNodeRefList;
+		}
+
+		MutableNodeRefList*
+		operator->() const
+		{
+			return get();
 		}
 
 		BorrowReturnMutableNodeRefList
