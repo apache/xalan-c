@@ -668,11 +668,12 @@ public:
 	}
 
 	/**
-	 * Retieve the latest XSLT version currently supported.
+	 * Get the latest XSLT version currently supported.
 	 *
 	 * @return XSLT version number
 	 */
-	static double getXSLTVerSupported();
+	static double
+	getXSLTVerSupported();
 
 	/**
 	 * Accessor method for hash table of XSLT IDs for attribute names.
@@ -698,7 +699,24 @@ public:
 
 	/**
 	 * Given an XSL tag name, return an integer token that corresponds to
-	 * ELEMNAME_XXX constants defined in Constants.java.
+	 * ELEMNAME_XXX constants defined in Constants.hpp
+	 *
+	 * @param name a probable xsl:xxx element
+	 * @return Constants.ELEMNAME_XXX token, -1 if in XSL or Xalan namespace,
+	 *		   or -2 if not in known namespace
+	 */
+	int
+	getElementToken(const XalanDOMString&	name) const
+	{
+		AttributeKeysMapType::const_iterator iter=
+			s_elementKeys.find(name);
+
+		return iter == s_elementKeys.end() ? -2 : (*iter).second;
+	}
+
+	/**
+	 * Given an XSL tag name, return an integer token that corresponds to
+	 * ELEMNAME_XXX constants defined in Constants.hpp.
 	 *
 	 * @param name a probable xsl:xxx element
 	 * @return Constants.ELEMNAME_XXX token, -1 if in XSL or Xalan namespace,
@@ -1590,7 +1608,7 @@ public:
 		push(StackEntry*	theEntry)
 		{
 			assert(theEntry != 0);
-			assert(theEntry->getType() < 4 && theEntry->getType() >= 0);
+			assert(theEntry->getType() < StackEntry::eNextValue && theEntry->getType() >= 0);
 
 			if(m_currentStackFrameIndex == m_stack.size())
 			{
@@ -1616,6 +1634,9 @@ public:
 				--m_currentStackFrameIndex;
 			}
 
+			// We can't really delete anything here, since
+			// the caller may still be referring to the
+			// stack entry...
 			m_stack.pop_back();
 		}
 
@@ -1626,6 +1647,23 @@ public:
 
 			return m_stack.back();
 		}
+
+		/**
+		 * Push a frame marker for an element.
+		 *
+		 * @param elem the element
+		 */
+		void
+		pushElementFrame(const ElemTemplateElement*		elem);
+
+		/**
+		 * Pop a frame marker for an element.
+		 *
+		 * @param elem the element
+		 */
+		void
+		popElementFrame(const ElemTemplateElement*	elem);
+
 
 		class InvalidStackContextException : public XSLTProcessorException
 		{

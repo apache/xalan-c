@@ -125,6 +125,7 @@
 #include "Constants.hpp"
 #include "ContextMarker.hpp"
 #include "ElemWithParam.hpp"
+#include "ElementFrameMarker.hpp"
 #include "ElementMarker.hpp"
 #include "FunctionCurrent.hpp"
 #include "FunctionDocument.hpp"
@@ -576,7 +577,7 @@ XSLTEngineImpl::processStylesheet(
 	{
 		theStylesheet = constructionContext.create(stylesheetSource);
 
-		StylesheetHandler	stylesheetProcessor(*this, *theStylesheet, constructionContext);
+		StylesheetHandler	stylesheetProcessor(*theStylesheet, constructionContext);
 
 		if(0 != stylesheetSource.getNode())
 		{
@@ -858,7 +859,7 @@ XSLTEngineImpl::getStylesheetFromPIURL(
 				stylesheet = new Stylesheet(*const_cast<StylesheetRoot*>(m_stylesheetRoot), stringHolder, constructionContext);
 			}
 
-			StylesheetHandler stylesheetProcessor(*this, *stylesheet, constructionContext);
+			StylesheetHandler stylesheetProcessor(*stylesheet, constructionContext);
 
 			FormatterTreeWalker tw(stylesheetProcessor);
 
@@ -897,7 +898,7 @@ XSLTEngineImpl::getStylesheetFromPIURL(
 			stylesheet = new Stylesheet(*const_cast<StylesheetRoot*>(m_stylesheetRoot), localXSLURLString, constructionContext);
 		}
 
-		StylesheetHandler stylesheetProcessor(*this, *stylesheet, constructionContext);
+		StylesheetHandler stylesheetProcessor(*stylesheet, constructionContext);
 
 		typedef StylesheetConstructionContext::URLAutoPtrType	URLAutoPtrType;
 
@@ -3844,10 +3845,10 @@ XSLTEngineImpl::VariableStack::popCurrentContext()
 	for(int i = (nElems - 1); i >= 0 && fFound == false; i--)
 	{
 		const StackEntry* const		theEntry = m_stack[i];
-		assert(theEntry != 0);
+		assert(theEntry != 0 && theEntry == back());
 
 		const StackEntry::eStackEntryType	type = theEntry->getType();
-		assert(type < 4 && type >= 0);
+		assert(type < StackEntry::eNextValue && type >= 0);
 
 		fFound = type == StackEntry::eContextMarker ? true : false;
 
@@ -4078,7 +4079,7 @@ XSLTEngineImpl::VariableStack::findArg(
 	const int	nElems = getCurrentStackFrameIndex();
 
 	// Sub 1 extra for the context marker.
-	for(int i = (nElems - 1); i >= 0; i--)
+	for(int i = nElems - 1; i >= 0; --i)
 	{
 		const StackEntry* const		theEntry =
 			m_stack[i];
@@ -4104,10 +4105,11 @@ XSLTEngineImpl::VariableStack::findArg(
 	if(0 == theResult && true == fSearchGlobalSpace)
 	{
 		// Look in the global space
-		for(int i = (m_globalStackFrameIndex-1); i >= 2; i--)
+		for(int i = m_globalStackFrameIndex - 1; i >= 2; i--)
 		{
 			const StackEntry* const		theEntry = m_stack[i];
 			assert(theEntry != 0);
+
 			if(theEntry->getType() == StackEntry::eArgument)
 			{
 				const Arg* const	theArg =
@@ -4127,6 +4129,61 @@ XSLTEngineImpl::VariableStack::findArg(
 	}
 
 	return theResult;
+}
+
+
+
+void
+XSLTEngineImpl::VariableStack::pushElementFrame(const ElemTemplateElement*	elem)
+{
+	StackEntry* const	theEntry = new ElementFrameMarker(elem);
+
+	m_stackEntries.insert(theEntry);
+
+	push(theEntry);
+}
+
+
+
+void
+XSLTEngineImpl::VariableStack::popElementFrame(const ElemTemplateElement*	elem)
+{
+	const int	nElems = getCurrentStackFrameIndex();
+
+	bool		fFound = false;
+
+	// Sub 1 extra for the context marker.
+	for(int i = nElems - 1; i >= 0 && fFound == false; --i)
+	{
+		const StackEntry* const		theEntry =
+			m_stack[i];
+		assert(theEntry != 0 && theEntry == back());
+
+		// Pop it off the stack...
+		pop();
+
+		if(theEntry->getType() == StackEntry::eContextMarker)
+		{
+			// Didn't really find it, but quit anyway...
+			// $$$ ToDo: Isn't this really a bad stack context???
+			fFound = true;
+		}
+		else if (theEntry->getType() == StackEntry::eElementFrameMarker)
+		{
+			const ElementFrameMarker* const		theMarker =
+					static_cast<const ElementFrameMarker*>(theEntry);
+
+			const ElemTemplateElement* const	theElement =
+				theMarker->getElement();
+
+			fFound = true;
+
+			if (theElement != elem)
+			{
+				throw InvalidStackContextException();
+			}
+		}
+    }
 }
 
 
