@@ -66,10 +66,11 @@
 
 #include <vector>
 
-#include <util/PlatformUtils.hpp>
 
-//#include <XSLT/XSLTInputSource.hpp>
-//#include <XSLT/XSLTResultTarget.hpp>
+
+#include <xercesc/util/PlatformUtils.hpp>
+
+
 
 #include <XalanTransformer/XalanTransformer.hpp>
 

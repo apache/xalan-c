@@ -67,8 +67,8 @@
 	using std::endl;
 #endif
 
-// XALAN HEADERS...
-#include <util/PlatformUtils.hpp>
+#include <xercesc/util/PlatformUtils.hpp>
+
 #include <PlatformSupport/DOMStringHelper.hpp>
 #include <XalanTransformer/XalanTransformer.hpp>
 

@@ -13,7 +13,7 @@
 
 
 
-#include <util/PlatformUtils.hpp>
+#include <xercesc/util/PlatformUtils.hpp>
 
 
 
@@ -23,29 +23,11 @@
 
 
 
-#include <DOMSupport/DOMSupportDefault.hpp>
-
-
-
-#include <XPath/XObjectFactoryDefault.hpp>
-#include <XPath/XPathFactoryDefault.hpp>
-#include <XPath/XPathProcessorImpl.hpp>
-
-
-
-#include <XalanSourceTree/XalanSourceTreeDOMSupport.hpp>
-#include <XalanSourceTree/XalanSourceTreeParserLiaison.hpp>
-
-
-
-#include <XSLT/XSLTEngineImpl.hpp>
-#include <XSLT/XSLTInit.hpp>
-#include <XSLT/XSLTInputSource.hpp>
-#include <XSLT/XSLTResultTarget.hpp>
-#include <XSLT/StylesheetConstructionContextDefault.hpp>
-#include <XSLT/StylesheetExecutionContextDefault.hpp>
 #include <XSLT/TraceListenerDefault.hpp>
-#include <XSLT/XSLTProcessorEnvSupportDefault.hpp>
+
+
+
+#include <XalanTransformer/XalanTransformer.hpp>
 
 
 
@@ -101,51 +83,16 @@ main(
  
 	try
 	{
-		// Call the static initializers...
+		// Initialize Xerces...
 		XMLPlatformUtils::Initialize();
 
+		// Initialize Xalan...
+		XalanTransformer::initialize();
+
 		{
-			// Initialize the Xalan XSLT subsystem...
-			XSLTInit						theInit;
+			// Create a XalanTransformer.
+			XalanTransformer	theXalanTransformer;
 
-			// Create some support objects that are necessary for running the processor...
-			XalanSourceTreeDOMSupport		theDOMSupport;
-			XalanSourceTreeParserLiaison	theParserLiaison(theDOMSupport);
-
-			// Hook the two together...
-			theDOMSupport.setParserLiaison(&theParserLiaison);
-
-			// Create some more support objects.
-			XSLTProcessorEnvSupportDefault	theXSLTProcessorEnvSupport;
-			XObjectFactoryDefault			theXObjectFactory;
-			XPathFactoryDefault				theXPathFactory;
-
-			// Create a processor...
-			XSLTEngineImpl	theProcessor(
-						theParserLiaison,
-						theXSLTProcessorEnvSupport,
-						theDOMSupport,
-						theXObjectFactory,
-						theXPathFactory);
-
-			// Connect the processor to the support object...
-			theXSLTProcessorEnvSupport.setProcessor(&theProcessor);
-
-			// Create a stylesheet construction context, and a stylesheet
-			// execution context...
-			StylesheetConstructionContextDefault	theConstructionContext(
-							theProcessor,
-							theXSLTProcessorEnvSupport,
-							theXPathFactory);
-
-			StylesheetExecutionContextDefault		theExecutionContext(
-							theProcessor,
-							theXSLTProcessorEnvSupport,
-							theDOMSupport,
-							theXObjectFactory);
-
-			// Our input files...The assumption is that the executable will be run
-			// from same directory as the input files.
 			const XalanDOMString	theXMLFileName("birds.xml");
 			const XalanDOMString	theXSLFileName("birds.xsl");
 
@@ -176,21 +123,23 @@ main(
 					traceGenerationEvent,
 					traceSelectionEvent);
 
-			// Add the TraceListener to the XSLT processor...
-			theProcessor.setTraceSelects(traceSelectionEvent);
-			theProcessor.addTraceListener(&theTraceListener);
+			// Add the TraceListener to the XalanTransformer instance...
+			theXalanTransformer.addTraceListener(&theTraceListener);
 
-			// Perform the transformation...
-			theProcessor.process(
-							theInputSource,
-							theStylesheetSource,
-							theResultTarget,
-							theConstructionContext,
-							theExecutionContext);
+			// Our input files assume the executable will be run
+			// from same directory as the input files.
+			const int	theResult = theXalanTransformer.transform("birds.xml", "birds.xsl", "birds.out");
 
+			if(theResult != 0)
+			{
+				cerr << "TraceListen Error: \n" << theXalanTransformer.getLastError()
+					 << endl
+					 << endl;
+			}
 		}
 
-		// Call the static terminator for Xerces...
+		XalanTransformer::terminate();
+
 		XMLPlatformUtils::Terminate();
 	}
 	catch(...)

@@ -11,7 +11,7 @@
 
 
 
-#include <util/PlatformUtils.hpp>
+#include <xercesc/util/PlatformUtils.hpp>
 
 
 

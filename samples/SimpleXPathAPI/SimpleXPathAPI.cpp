@@ -14,8 +14,8 @@
 
 
 
-#include <util/PlatformUtils.hpp>
-#include <framework/LocalFileInputSource.hpp>
+#include <xercesc/util/PlatformUtils.hpp>
+#include <xercesc/framework/LocalFileInputSource.hpp>
 
 
 

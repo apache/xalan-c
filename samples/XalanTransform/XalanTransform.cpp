@@ -1,4 +1,4 @@
-#include <util/PlatformUtils.hpp>
+#include <xercesc/util/PlatformUtils.hpp>
 
 
 
@@ -22,7 +22,6 @@ main(
 			const char*		 argv[])
 {
 #if !defined(XALAN_NO_NAMESPACES)
-	using std::ostrstream;
 	using std::cout;
 	using std::cerr;
     using std::endl;
@@ -40,31 +39,33 @@ main(
     // Initialize Xalan.
     XalanTransformer::initialize();
 
-    // Create a XalanTransformer.
-	XalanTransformer theXalanTransformer;
+	int		theResult = 0;
 
-    int				theResult = 0;
-
-    if (argc == 4)
 	{
-        // Do the transform.
-        theResult = theXalanTransformer.transform(argv[1], argv[2], argv[3]);
+		// Create a XalanTransformer.
+		XalanTransformer theXalanTransformer;
+
+		if (argc == 4)
+		{
+			// Do the transform.
+			theResult = theXalanTransformer.transform(argv[1], argv[2], argv[3]);
         
-        if(theResult != 0)
-	    {
-		    cerr << "XalanError: \n" << theXalanTransformer.getLastError();
-	    }
-    }
-    else
-    {
-        // Do the transform.
-        theResult = theXalanTransformer.transform(argv[1], argv[2], cout);
+			if(theResult != 0)
+			{
+				cerr << "XalanError: \n" << theXalanTransformer.getLastError();
+			}
+		}
+		else
+		{
+			// Do the transform.
+			theResult = theXalanTransformer.transform(argv[1], argv[2], cout);
         
-        if(theResult != 0)
-	    {
-		    cerr << "XalanError: \n" << theXalanTransformer.getLastError();
-	    }
-    }
+			if(theResult != 0)
+			{
+				cerr << "XalanError: \n" << theXalanTransformer.getLastError();
+			}
+		}
+	}
 
     // Terminate Xalan.
 	XalanTransformer::terminate();

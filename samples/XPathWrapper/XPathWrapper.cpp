@@ -14,10 +14,9 @@
 
 
 
-#include <framework/MemBufInputSource.hpp>
-#include <framework/URLInputSource.hpp>
-#include <parsers/DOMParser.hpp>
-#include <util/PlatformUtils.hpp>
+#include <xercesc/framework/MemBufInputSource.hpp>
+#include <xercesc/parsers/DOMParser.hpp>
+#include <xercesc/util/PlatformUtils.hpp>
 
 
 

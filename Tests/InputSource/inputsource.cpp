@@ -68,8 +68,7 @@
 #endif
 
 // XERCES HEADERS...
-//	Are included by HarnessInit.hpp
-#include <parsers/DOMParser.hpp>
+#include <xercesc/parsers/DOMParser.hpp>
 
 
 // XALAN HEADERS...

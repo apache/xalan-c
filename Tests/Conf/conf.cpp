@@ -57,11 +57,9 @@
 
 #if defined(XALAN_OLD_STREAM_HEADERS)
 #include <iostream.h>
-//#include <strstream.h>
 #include <sstream>
 #else
 #include <iostream>
-//#include <strstream>
 #include <sstream>
 #endif
 
@@ -76,7 +74,7 @@
 #endif
 
 
-#include <parsers/DOMParser.hpp>
+#include <xercesc/parsers/DOMParser.hpp>
 
 
 

@@ -15,7 +15,7 @@
 
 
 
-#include <util/PlatformUtils.hpp>
+#include <xercesc/util/PlatformUtils.hpp>
 
 
 
@@ -90,8 +90,12 @@ main(
 		istrstream	theXMLStream(theInputDocument, strlen(theInputDocument));
 		istrstream	theXSLStream(theStylesheet, strlen(theStylesheet));
 
+		XSLTInputSource	inputSource(&theXSLStream);
+
+		inputSource.setSystemId(c_wstr(XalanDOMString("foo")));
+
 		// Do the transform.
-		theResult = theXalanTransformer.transform(&theXMLStream, &theXSLStream, cout);
+		theResult = theXalanTransformer.transform(&theXMLStream, inputSource, cout);
     
 		if(theResult != 0)
 		{
