@@ -84,6 +84,7 @@ XercesDOMPrintWriter::XercesDOMPrintWriter(
 
 XercesDOMPrintWriter::~XercesDOMPrintWriter()
 {
+	flush();
 }
 
 
