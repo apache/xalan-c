@@ -1090,6 +1090,14 @@ SOURCE=..\..\..\..\src\XPath\XalanQNameByValue.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\XPath\XalanQNameByValueAllocator.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XPath\XalanQNameByValueAllocator.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\XPath\XalanXPathException.cpp
 # End Source File
 # Begin Source File
@@ -1247,6 +1255,22 @@ SOURCE=..\..\..\..\src\XPath\XPathAllocator.cpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\XPath\XPathAllocator.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XPath\XPathConstructionContext.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XPath\XPathConstructionContext.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XPath\XPathConstructionContextDefault.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XPath\XPathConstructionContextDefault.hpp
 # End Source File
 # Begin Source File
 
