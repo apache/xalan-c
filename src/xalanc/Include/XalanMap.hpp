@@ -290,12 +290,13 @@ public:
 	{
 		if (!m_buckets.empty())
 		{
-			size_type index = doHash(key);
+			const size_type     index = doHash(key);
+            assert(index < m_buckets.size());
 
 			iterator bucketPos = m_buckets[index];
 
 			while (bucketPos != m_entries.end() &&
-				bucketPos->bucketIndex == index)
+				   bucketPos->bucketIndex == index)
 			{
 				if (m_equals(key,bucketPos->first))
 				{
@@ -335,7 +336,7 @@ public:
 
     void insert(const key_type& key, const data_type& data)
 	{
-		iterator pos = find(key);
+		const const_iterator    pos = find(key);
 
 		if (pos == end())
 		{
@@ -354,7 +355,7 @@ public:
 
 	size_type erase(const key_type& key)
 	{
-		iterator pos = find(key);
+		const iterator  pos = find(key);
 
         if (pos != end())
         {
