@@ -80,6 +80,10 @@
 
 
 
+class PrefixResolver;
+
+
+
 /**
  * A SAX-based formatter interface for the XSL processor.  This interface 
  * will be called as result tree elements are constructed.
@@ -121,6 +125,28 @@ public:
 	getOutputFormat() const
 	{
 		return m_outputFormat;
+	}
+
+	/**
+	 * Get the PrefixResolver for the FormatterListener
+	 *
+	 * @return A pointer to the PrefixResolver, if any.
+	 */
+	const PrefixResolver*
+	getPrefixResolver() const
+	{
+		return m_prefixResolver;
+	}
+
+	/**
+	 * Set the PrefixResolver for the FormatterListener
+	 *
+	 * @param thePrefixResolver A pointer to the PrefixResolver, if any.
+	 */
+	void
+	setPrefixResolver(const PrefixResolver*		thePrefixResolver)
+	{
+		m_prefixResolver = thePrefixResolver;
 	}
 
 	/**
@@ -226,9 +252,13 @@ public:
 
 	static const XalanDOMString&	s_formatterListenerString;
 
+protected:
+
+	const PrefixResolver*	m_prefixResolver;
+
 private:
 
-	const eFormat	m_outputFormat;
+	const eFormat			m_outputFormat;
 };
 
 
