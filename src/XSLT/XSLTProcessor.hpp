@@ -219,16 +219,6 @@ public:
 			const XObject&					xobj) = 0;
 
 	/**
-	 * Reset the state of execution to node 'xmlNode' in source tree
-	 * 'sourceTree.'
-	 * 
-	 * @param xmlNode	 node to execute
-	 */
-	virtual void
-	resetCurrentState(
-			XalanNode*	xmlNode) = 0;
-
-	/**
 	 * Retrieve the root stylesheet.
 	 * 
 	 * @return pointer to root stylesheet

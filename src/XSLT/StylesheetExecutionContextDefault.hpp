@@ -276,10 +276,6 @@ public:
 	virtual	void
 	setCurrentMode(const QName* theMode); 
 
-	virtual void
-	resetCurrentState(
-			XalanNode*	xmlNode);
-
 	virtual bool
 	doDiagnosticsOutput() const;
 

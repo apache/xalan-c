@@ -257,9 +257,6 @@ public:
 			const XObject&					xobj);
 
 	virtual void
-	resetCurrentState(XalanNode*	xmlNode);
-
-	virtual void
 	resolveTopLevelParams(StylesheetExecutionContext&	executionContext);
 
 	virtual XMLParserLiaison&
@@ -1480,23 +1477,6 @@ protected:
 	XalanDOMString	m_resultNameSpaceURL;
 
 
-	/*
-	 * The current input element that is being processed.
-	 */
-	XalanNode*	m_currentNode;
-
-	/**
-	 * Given a tag name, an attribute name, and 
-	 * an attribute value, do a very crude recursive 
-	 * search and locate the first match.
-	 */
-	static XalanElement*
-	findElementByAttribute(
-			XalanElement&			elem,
-			const XalanDOMString&	targetElementName, 
-			const XalanDOMString&	targetAttributeName,
-			const XalanDOMString&	targetAttributeValue);
-
 	/**
 	 * Copy the attributes from the XSL element to the created 
 	 * output element, executing attribute templates and 
@@ -1674,16 +1654,6 @@ public:
 	clearTopLevelParams()
 	{
 		m_topLevelParams.clear();
-	}
-
-	/**
-	 * Returns the current input node that is being 
-	 * processed.
-	 */
-	XalanNode*
-	getSourceNode() const
-	{
-		return m_currentNode;
 	}
 
 private:

@@ -190,11 +190,6 @@ public:
 			const XObjectArgVectorType&		argVec) const;
 
 	virtual bool
-	shouldStripSourceNode(
-			XPathExecutionContext&	executionContext,
-			const XalanNode&		node) const;
-
-	virtual bool
 	problem(
 			eSource					where,
 			eClassification			classification,

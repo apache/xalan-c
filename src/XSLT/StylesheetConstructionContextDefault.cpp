@@ -88,11 +88,24 @@
 
 StylesheetConstructionContextDefault::StylesheetConstructionContextDefault(
 			XSLTEngineImpl&		processor,
-			XPathEnvSupport&	xpathEnvSupport,
+			XPathEnvSupport&	/* xpathEnvSupport */,
 			XPathFactory&		xpathFactory) :
 	StylesheetConstructionContext(),
 	m_processor(processor),
-	m_xpathEnvSupport(xpathEnvSupport),
+	m_xpathFactory(xpathFactory),
+	m_xpathProcessor(new XPathProcessorImpl),
+	m_stylesheets(),
+	m_tempBuffer()
+{
+}
+
+
+
+StylesheetConstructionContextDefault::StylesheetConstructionContextDefault(
+			XSLTEngineImpl&		processor,
+			XPathFactory&		xpathFactory) :
+	StylesheetConstructionContext(),
+	m_processor(processor),
 	m_xpathFactory(xpathFactory),
 	m_xpathProcessor(new XPathProcessorImpl),
 	m_stylesheets(),
@@ -331,8 +344,7 @@ StylesheetConstructionContextDefault::createMatchPattern(
 
 	m_xpathProcessor->initMatchPattern(*xpath,
 									   str,
-									   resolver,
-									   m_xpathEnvSupport);
+									   resolver);
 
 	xpath->setInStylesheet(true);
 
@@ -364,8 +376,7 @@ StylesheetConstructionContextDefault::createXPath(
 
 	m_xpathProcessor->initXPath(*xpath,
 								str,
-								resolver,
-								m_xpathEnvSupport);
+								resolver);
 
 	xpath->setInStylesheet(true);
 

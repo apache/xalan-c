@@ -290,23 +290,6 @@ XSLTProcessorEnvSupportDefault::extFunction(
 
 
 bool
-XSLTProcessorEnvSupportDefault::shouldStripSourceNode(
-			XPathExecutionContext&	executionContext,
-			const XalanNode&		node) const
-{
-	if (m_processor == 0)
-	{
-		return m_defaultSupport.shouldStripSourceNode(executionContext, node);
-	}
-	else
-	{
-		return m_processor->shouldStripSourceNode(executionContext, node);
-	}
-}
-
-
-
-bool
 XSLTProcessorEnvSupportDefault::problem(
 			eSource					/* where */,
 			eClassification			classification,

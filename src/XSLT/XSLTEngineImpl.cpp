@@ -180,7 +180,6 @@ XSLTEngineImpl::XSLTEngineImpl(
 	m_domResultTreeFactory(0),
 	m_resultNameSpacePrefix(),
 	m_resultNameSpaceURL(),
-	m_currentNode(),
 	m_xpathFactory(xpathFactory),
 	m_xobjectFactory(xobjectFactory),
 	m_xpathProcessor(new XPathProcessorImpl),
@@ -222,7 +221,6 @@ XSLTEngineImpl::reset()
 		m_domResultTreeFactory = 0;
 	}
 
-	m_currentNode = 0;
 	m_stylesheetRoot = 0;
 
 	m_outputContextStack.reset();
@@ -1676,7 +1674,7 @@ XSLTEngineImpl::flushPending()
 
 					setFormatterListenerImpl(
 						m_executionContext->createFormatterToHTML(
-							theFormatter->getWriter(),
+							*theFormatter->getWriter(),
 							theFormatter->getEncoding(),
 							theFormatter->getMediaType(),
 							theFormatter->getDoctypeSystem(),
@@ -2285,7 +2283,7 @@ XSLTEngineImpl::outputResultTreeFragment(
 {
 	const ResultTreeFragBase&	docFrag = theTree.rtree(executionContext);
 
-	const XalanNodeList*		nl = docFrag.getChildNodes();
+	const XalanNodeList* const	nl = docFrag.getChildNodes();
 	assert(nl != 0);
 
 	const unsigned int			nChildren = nl->getLength();
@@ -2542,6 +2540,8 @@ XSLTEngineImpl::evalXPathStr(
 			const XalanDOMString&	str,
 			XPathExecutionContext&	executionContext)
 {
+	assert(executionContext.getPrefixResolver() != 0);
+
 	XPath* const	theXPath = m_xpathFactory.create();
 
 	XPathGuard	theGuard(m_xpathFactory,
@@ -2549,8 +2549,7 @@ XSLTEngineImpl::evalXPathStr(
 
     m_xpathProcessor->initXPath(*theXPath,
 								str,
-								*executionContext.getPrefixResolver(),
-								m_xpathEnvSupport);
+								*executionContext.getPrefixResolver());
 
     return theXPath->execute(executionContext.getCurrentNode(),
 							 *executionContext.getPrefixResolver(),
@@ -2573,8 +2572,7 @@ XSLTEngineImpl::evalXPathStr(
 
     m_xpathProcessor->initXPath(*theXPath,
 								str,
-								prefixResolver,
-								m_xpathEnvSupport);
+								prefixResolver);
 
     return theXPath->execute(contextNode, prefixResolver, executionContext);
 }
@@ -2608,7 +2606,7 @@ XSLTEngineImpl::createMatchPattern(
 {
 	XPath* const	xpath = m_xpathFactory.create();
 
-	m_xpathProcessor->initMatchPattern(*xpath, str, resolver, m_xpathEnvSupport);
+	m_xpathProcessor->initMatchPattern(*xpath, str, resolver);
 
 	return xpath;
 }
@@ -2892,109 +2890,6 @@ void
 XSLTEngineImpl::resolveTopLevelParams(StylesheetExecutionContext&	executionContext)
 {
 	executionContext.pushTopLevelVariables(m_topLevelParams);
-}
-
-
-
-void
-XSLTEngineImpl::resetCurrentState(XalanNode*	xmlNode)
-{
-	if(0 != xmlNode)
-	{
-		//===============================================
-		// This will be used with callbacks from script, 
-		// in places like getAttributeCallback.
-		m_currentNode = xmlNode;
-	}
-}
-
-
-
-// $$$ ToDo: This really belongs in DOMServices or DOMSupport()
-XalanElement*
-XSLTEngineImpl::findElementByAttribute(
-			XalanElement& 			elem,
-			const XalanDOMString&	targetElementName, 
-			const XalanDOMString&	targetAttributeName,
-			const XalanDOMString&	targetAttributeValue)
-{
-	XalanElement* 			theFoundElement = 0;
-
-	const XalanDOMString 	tagName = elem.getTagName();
-
-	if(0 == length(targetElementName) || equals(tagName, targetElementName))
-	{
-		const XalanNamedNodeMap* const	attributes = elem.getAttributes();
-
-		try
-		{
-			const unsigned int	nAttributes = 0 != attributes ? attributes->getLength() : 0;
-
-			for(unsigned int i = 0; i < nAttributes; i++)  
-			{
-				const XalanAttr* const	attr =
-#if defined(XALAN_OLD_STYLE_CASTS)
-						  (const XalanAttr*)attributes->item(i);
-#else
-						  static_cast<const XalanAttr*>(attributes->item(i));
-#endif
-
-				const XalanDOMString& 	attrName = attr->getName();
-
-				if(equals(attrName, targetAttributeName))
-				{
-					const XalanDOMString&	attrVal = attr->getValue();
-
-					if(equals(attrVal, targetAttributeValue))
-					{
-						theFoundElement = &elem;
-						break;
-					}
-				}
-			}
-		}
-		catch(const XalanDOMException&)
-		{
-		}
-	}
-
-	if(0 == theFoundElement)
-	{
-		XalanNode*	childNode = elem.getFirstChild();
-
-		while(childNode != 0) 
-		{
-			if (childNode->getNodeType() == XalanNode::ELEMENT_NODE) 
-			{
-				XalanElement*	child = 
-#if defined(XALAN_OLD_STYLE_CASTS)
-						  (XalanElement*)childNode;
-#else
-						  static_cast<XalanElement*>(childNode);
-#endif
-
-				const XalanDOMString& 	childName = child->getTagName();
-
-				if(0 != length(childName))
-				{
-					theFoundElement = findElementByAttribute(
-													 *child,
-													 targetElementName, 
-													 targetAttributeName,
-													 targetAttributeValue);
-
-					if(0 != theFoundElement)
-					{
-						break;
-					}
-				}
-			}
-
-			childNode = childNode->getNextSibling();
-		}
-	}
-
-	return theFoundElement;
 }
 
 

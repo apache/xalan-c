@@ -110,6 +110,8 @@ public:
 	 * destroyed when the corresponding factories are destryed, leaving pointers to destroyed objects in the.
 	 * stylesheet(s).
 	 *
+	 * @deprecated This constructor is deprecated.
+	 *
 	 * @param processor a reference to an XSLTEngineImpl instance.  Used for error reporting.
 	 * @param xpathEnvSupport a reference to an XPathEnvSupport instance.
 	 * @param xpathFactory a reference to an XPathFactory instance.  See comments above for important details.
@@ -118,6 +120,21 @@ public:
 	StylesheetConstructionContextDefault(
 			XSLTEngineImpl&		processor,
 			XPathEnvSupport&	xpathEnvSupport,
+			XPathFactory&		xpathFactory);
+
+	/*
+	 * Construct an instance.  If the stylesheet(s) constructed is/are meant to be reused (a.k.a. "compiled"),
+	 * the XObjectFactory and XPathFactory instance must exist for the lifetime of the construction context
+	 * and, therefore, for the lifetime of the stylesheet(s).  Otherwise, XObject and XPath instance will be
+	 * destroyed when the corresponding factories are destryed, leaving pointers to destroyed objects in the.
+	 * stylesheet(s).
+	 *
+	 * @param processor a reference to an XSLTEngineImpl instance.  Used for error reporting.
+	 * @param xpathFactory a reference to an XPathFactory instance.  See comments above for important details.
+	 *
+	 */
+	StylesheetConstructionContextDefault(
+			XSLTEngineImpl&		processor,
 			XPathFactory&		xpathFactory);
 
 	virtual
@@ -259,7 +276,7 @@ public:
 private:
 
 	XSLTEngineImpl&						m_processor;
-	XPathEnvSupport&					m_xpathEnvSupport;
+
 	XPathFactory&						m_xpathFactory;
 
 	typedef XalanAutoPtr<XPathProcessor>	XPathProcessAutoPtr;

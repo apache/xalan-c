@@ -272,15 +272,6 @@ StylesheetExecutionContextDefault::setCurrentMode(const QName*	theMode)
 
 
 
-void
-StylesheetExecutionContextDefault::resetCurrentState(XalanNode*		xmlNode)
-{
-	assert(m_xsltProcessor != 0);
-
-	m_xsltProcessor->resetCurrentState(xmlNode);
-}
-
-
 bool
 StylesheetExecutionContextDefault::doDiagnosticsOutput() const
 {
@@ -934,8 +925,6 @@ StylesheetExecutionContextDefault::createXResultTreeFrag(
 	theFormatter->setDocumentFragment(theResultTreeFrag.get());
 
 	theFormatter->setPrefixResolver(m_xsltProcessor);
-
-	theResultTreeFrag->setOwnerDocument(theDocument);
 
 	StylesheetExecutionContext::OutputContextPushPop	theOutputContextPushPop(
 				*this,
@@ -1735,7 +1724,14 @@ StylesheetExecutionContextDefault::getUnparsedEntityURI(
 bool
 StylesheetExecutionContextDefault::shouldStripSourceNode(const XalanNode&	node)
 {
-	return m_xpathExecutionContextDefault.shouldStripSourceNode(node);
+	if (m_xsltProcessor == 0)
+	{
+		return m_xpathExecutionContextDefault.shouldStripSourceNode(node);
+	}
+	else
+	{
+		return m_xsltProcessor->shouldStripSourceNode(*this, node);
+	}
 }
 
 

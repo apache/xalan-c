@@ -223,15 +223,6 @@ public:
 	setCurrentMode(const QName* theMode) = 0; 
 
 	/**
-	 * Reset the state of execution to node 'xmlNode' in source tree 'sourceTree.'
-	 * 
-	 * @param xmlNode    node to execute
-	 */
-	virtual void
-	resetCurrentState(
-			XalanNode*	xmlNode) = 0;
-
-	/**
 	 * Whether diagnostic output is to be generated
 	 * 
 	 * @return true for diagnostics output 
