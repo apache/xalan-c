@@ -205,24 +205,13 @@ StylesheetRoot::process(
 		executionContext.pushTime(&sourceTree);
 	}
 
-	try
-	{
-		executionContext.resolveTopLevelParams();
-	}
-	// java: catch(Exception e)
-	catch(...)
-	{
-		throw SAXException("StylesheetRoot.process error");
-	}
+	executionContext.resolveTopLevelParams();
 
 #if defined(XALAN_VQ_SPECIAL_TRACE)
 	QuantifyStartRecordingData();
 #endif
 
 	executionContext.startDocument();
-
-	// why
-	//executionContext.setCurrentNode(sourceTree);
 
 	const QNameByValue	theDefaultMode;
 
