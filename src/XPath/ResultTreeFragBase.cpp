@@ -60,16 +60,14 @@
 
 
 ResultTreeFragBase::ResultTreeFragBase() :
-	XalanDocumentFragment(),
-	Cloneable()
+	XalanDocumentFragment()
 {
 }
 
 
 
 ResultTreeFragBase::ResultTreeFragBase(const ResultTreeFragBase&	theSource) :
-	XalanDocumentFragment(theSource),
-	Cloneable(theSource)
+	XalanDocumentFragment(theSource)
 {
 }
 

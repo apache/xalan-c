@@ -337,7 +337,7 @@ ResultTreeFrag::setPrefix(const XalanDOMString&		/* prefix */)
 
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-Cloneable*
+ResultTreeFragBase*
 #else
 ResultTreeFrag*
 #endif

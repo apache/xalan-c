@@ -206,9 +206,8 @@ public:
 	setPrefix(const XalanDOMString&		prefix);
 
 
-	// These interfaces are inherited from Cloneable...
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-	virtual Cloneable*
+	virtual ResultTreeFragBase*
 #else
 	virtual ResultTreeFrag*
 #endif

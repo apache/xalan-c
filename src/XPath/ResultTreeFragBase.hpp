@@ -68,10 +68,6 @@
 
 
 
-#include <PlatformSupport/Cloneable.hpp>
-
-
-
 class NodeRefListBase;
 class XMLParserLiaison;
 class XalanDocument;
@@ -81,7 +77,7 @@ class XalanDocument;
 /**
  * The holder of result tree fragments.
  */
-class XALAN_XPATH_EXPORT ResultTreeFragBase : public XalanDocumentFragment, public Cloneable
+class XALAN_XPATH_EXPORT ResultTreeFragBase : public XalanDocumentFragment
 {
 public:
 
@@ -186,12 +182,7 @@ public:
 	virtual void
 	setPrefix(const XalanDOMString&		prefix) = 0;
 
-
-#if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
-	virtual Cloneable*
-#else
 	virtual ResultTreeFragBase*
-#endif
 	clone(bool	deep) const = 0;
 
 protected:
@@ -199,8 +190,6 @@ protected:
 	ResultTreeFragBase&
 	operator=(const ResultTreeFragBase&		theRHS)
 	{
-		Cloneable::operator=(theRHS);
-
 		XalanDocumentFragment::operator=(theRHS);
 
 		return *this;
