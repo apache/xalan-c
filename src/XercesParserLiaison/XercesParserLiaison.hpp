@@ -359,7 +359,7 @@ public:
 	 */
 	XalanDocument*
 	createDocument(
-			const DOM_Document&		theXercesDocument,
+			const DOM_Document& 	theXercesDocument,
 			bool					threadSafe,
 			bool					buildBridge);
 
@@ -466,6 +466,7 @@ public:
 	struct DocumentEntry
 	{
 		bool	m_isDeprecated;
+		bool	m_isOwned;
 
 		union
 		{
@@ -474,11 +475,13 @@ public:
 		};
 
 		DocumentEntry&
-		operator=(XercesDocumentBridge*		theBridge)
+		operator=(XercesDocumentBridge* 	theBridge)
 		{
 			m_isDeprecated = true;
 
 			m_bridge = theBridge;
+
+			m_isOwned = true;
 
 			return *this;
 		}
@@ -490,6 +493,8 @@ public:
 
 			m_wrapper = theWrapper;
 
+			m_isOwned = true;
+
 			return *this;
 		}
 	};
@@ -500,7 +505,7 @@ public:
 				less<const XalanDocument*> >	DocumentMapType;
 #else
 	typedef std::map<const XalanDocument*,
-					 DocumentEntry>				DocumentMapType;
+					 DocumentEntry> 			DocumentMapType;
 #endif
 
 	/**
@@ -611,7 +616,7 @@ public:
 	}
 
 #if XERCES_VERSION_MAJOR >= 2
-	typedef XercesDOMParser		DOMParserType;
+	typedef XercesDOMParser 	DOMParserType;
 #else
 	typedef DOMParser	DOMParserType;
 #endif
@@ -621,7 +626,7 @@ protected:
 	static void
 	formatErrorMessage(
 			const SAXParseException&	e,
-			XalanDOMString&				theMessage);
+			XalanDOMString& 			theMessage);
 
 	DOMParserType*
 	CreateDOMParser();
@@ -639,7 +644,7 @@ protected:
 	 */
 	XercesDocumentBridge*
 	doCreateDocument(
-			const DOM_Document&		theXercesDocument,
+			const DOM_Document& 	theXercesDocument,
 			bool					threadSafe,
 			bool					buildBridge);
 
@@ -655,7 +660,8 @@ protected:
 	doCreateDocument(
 			const DOMDocument*	theXercesDocument,
 			bool				threadSafe,
-			bool				buildWrapper);
+			bool				buildWrapper,
+			bool				isOwned);
 
 private:
 

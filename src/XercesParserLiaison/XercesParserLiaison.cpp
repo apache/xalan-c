@@ -10,33 +10,33 @@
  * are met:
  *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
+ *	  notice, this list of conditions and the following disclaimer. 
  *
  * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in
- *    the documentation and/or other materials provided with the
- *    distribution.
+ *	  notice, this list of conditions and the following disclaimer in
+ *	  the documentation and/or other materials provided with the
+ *	  distribution.
  *
  * 3. The end-user documentation included with the redistribution,
- *    if any, must include the following acknowledgment:  
- *       "This product includes software developed by the
- *        Apache Software Foundation (http://www.apache.org/)."
- *    Alternately, this acknowledgment may appear in the software itself,
- *    if and wherever such third-party acknowledgments normally appear.
+ *	  if any, must include the following acknowledgment:  
+ *		 "This product includes software developed by the
+ *		  Apache Software Foundation (http://www.apache.org/)."
+ *	  Alternately, this acknowledgment may appear in the software itself,
+ *	  if and wherever such third-party acknowledgments normally appear.
  *
  * 4. The names "Xalan" and "Apache Software Foundation" must
- *    not be used to endorse or promote products derived from this
- *    software without prior written permission. For written 
- *    permission, please contact apache@apache.org.
+ *	  not be used to endorse or promote products derived from this
+ *	  software without prior written permission. For written 
+ *	  permission, please contact apache@apache.org.
  *
  * 5. Products derived from this software may not be called "Apache",
- *    nor may "Apache" appear in their name, without prior written
- *    permission of the Apache Software Foundation.
+ *	  nor may "Apache" appear in their name, without prior written
+ *	  permission of the Apache Software Foundation.
  *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED.  IN NO EVENT SHALL THE APACHE SOFTWARE FOUNDATION OR
+ * DISCLAIMED.	IN NO EVENT SHALL THE APACHE SOFTWARE FOUNDATION OR
  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
@@ -54,7 +54,6 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-// Class header file.
 #include "XercesParserLiaison.hpp"
 
 
@@ -156,7 +155,8 @@ XercesParserLiaison::reset()
 		i != m_documentMap.end();
 		++i)
 	{
-		if ((*i).second.m_isDeprecated == false)
+		if ((*i).second.m_isDeprecated == false &&
+			(*i).second.m_isOwned == true)
 		{
 #if defined(XALAN_CANNOT_DELETE_CONST)
 			delete (DOMDocument*)(*i).second.m_wrapper->getXercesDocument();
@@ -201,7 +201,7 @@ XercesParserLiaison::parseXMLStream(
 			DocumentHandler&		handler,
 			const XalanDOMString&	/* identifier */)
 {
-	XalanAutoPtr<SAXParser>		theParser(CreateSAXParser());
+	XalanAutoPtr<SAXParser> 	theParser(CreateSAXParser());
 
 	theParser->setDocumentHandler(&handler);
 
@@ -227,7 +227,7 @@ XercesParserLiaison::parseXMLStream(
 #if XERCES_VERSION_MAJOR >= 2
 	XalanAutoPtr<XercesDOMParser>	theParser(CreateDOMParser());
 #else
-	XalanAutoPtr<DOMParser>		theParser(CreateDOMParser());
+	XalanAutoPtr<DOMParser> 	theParser(CreateDOMParser());
 #endif
 
 	if (m_errorHandler == 0)
@@ -258,7 +258,7 @@ XercesParserLiaison::parseXMLStream(
 
 	if (theXercesDocument != 0)
 	{
-		theNewDocument = doCreateDocument(theXercesDocument, m_threadSafe, m_buildWrapper);
+		theNewDocument = doCreateDocument(theXercesDocument, m_threadSafe, m_buildWrapper, true);
 
 		theParser->adoptDocument();
 #else
@@ -266,10 +266,8 @@ XercesParserLiaison::parseXMLStream(
 
 	if (theXercesDocument.isNull() == false)
 	{
-		theNewDocument = doCreateDocument(theXercesDocument, m_threadSafe, m_buildBridge);
+		theNewDocument = doCreateDocument(theXercesDocument, m_threadSafe, m_buildBridge, true);
 #endif
-
-		m_documentMap[theNewDocument] = theNewDocument;
 	}
 
 	return theNewDocument;
@@ -297,7 +295,7 @@ XercesParserLiaison::createDOMFactory()
 
 
 void
-XercesParserLiaison::destroyDocument(XalanDocument*		theDocument)
+XercesParserLiaison::destroyDocument(XalanDocument* 	theDocument)
 {
 	if (mapDocument(theDocument) != 0)
 	{
@@ -358,7 +356,7 @@ XercesParserLiaison::getIncludeIgnorableWhitespace() const
 
 
 void
-XercesParserLiaison::setIncludeIgnorableWhitespace(bool	include)
+XercesParserLiaison::setIncludeIgnorableWhitespace(bool include)
 {
 	m_includeIgnorableWhitespace = include;
 }
@@ -477,7 +475,7 @@ XercesParserLiaison::setExternalNoNamespaceSchemaLocation(const XalanDOMChar*	lo
 
 XalanDocument*
 XercesParserLiaison::createDocument(
-			const DOM_Document&		theXercesDocument,
+			const DOM_Document& 	theXercesDocument,
 			bool					threadSafe,
 			bool					buildBridge)
 {
@@ -492,7 +490,9 @@ XercesParserLiaison::createDocument(
 			bool				threadSafe,
 			bool				buildWrapper)
 {
-	return doCreateDocument(theXercesDocument, threadSafe, buildWrapper);
+	// As we did not create the underlying DOMDocument - ensure we don't
+	// delete it later.
+	return doCreateDocument(theXercesDocument, threadSafe, buildWrapper, false);
 }
 
 
@@ -520,7 +520,7 @@ XercesParserLiaison::mapDocumentToWrapper(const XalanDocument*	theDocument) cons
 
 
 DOM_Document
-XercesParserLiaison::mapXercesDocument(const XalanDocument*		theDocument) const
+XercesParserLiaison::mapXercesDocument(const XalanDocument* 	theDocument) const
 {
 	const DocumentMapType::const_iterator	i =
 		m_documentMap.find(theDocument);
@@ -570,7 +570,7 @@ XercesParserLiaison::fatalError(const SAXParseException&	e)
 
 
 void
-XercesParserLiaison::error(const SAXParseException&		e)
+XercesParserLiaison::error(const SAXParseException& 	e)
 {
 	XalanDOMString	theMessage("Error ");
 
@@ -627,7 +627,7 @@ XercesParserLiaison::warning(const SAXParseException&	e)
 void
 XercesParserLiaison::formatErrorMessage(
 			const SAXParseException&	e,
-			XalanDOMString&				theMessage)
+			XalanDOMString& 			theMessage)
 {
 	append(theMessage, " at (file ");
 
@@ -727,11 +727,11 @@ XercesParserLiaison::CreateSAXParser()
 
 XercesDocumentBridge*
 XercesParserLiaison::doCreateDocument(
-			const DOM_Document&		theXercesDocument,
+			const DOM_Document& 	theXercesDocument,
 			bool					threadSafe,
 			bool					buildBridge)
 {
-	XercesDocumentBridge* const		theNewDocument =
+	XercesDocumentBridge* const 	theNewDocument =
 		new XercesDocumentBridge(theXercesDocument, threadSafe, buildBridge);
 
 	m_documentMap[theNewDocument] = theNewDocument;
@@ -745,12 +745,16 @@ XercesDocumentWrapper*
 XercesParserLiaison::doCreateDocument(
 			const DOMDocument*	theXercesDocument,
 			bool				threadSafe,
-			bool				buildWrapper)
+			bool				buildWrapper,
+			bool				isOwned)
 {
 	XercesDocumentWrapper* const		theNewDocument =
 		new XercesDocumentWrapper(theXercesDocument, threadSafe, buildWrapper);
 
-	m_documentMap[theNewDocument] = theNewDocument;
+	DocumentEntry&	theEntry = m_documentMap[theNewDocument];
+	
+	theEntry = theNewDocument;
+	theEntry.m_isOwned = isOwned;
 
 	return theNewDocument;
 }
