@@ -167,8 +167,10 @@ ElemCallTemplate::postConstruction(
 
 	if(m_template == 0)
 	{
-		constructionContext.error("Could not find template named: '" +
-				m_templateName.getLocalPart() + "'");
+		constructionContext.error(
+			"Could not find named template.",
+			0,
+			this);
 	}
 
 	// OK, now we can chain-up...
