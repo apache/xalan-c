@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -1443,18 +1443,22 @@ public:
 			const XalanElement&		theTemplate,
 			const NodeRefListBase&	nl) const = 0;
 
+	enum eCaseOrder { eDefault, eLowerFirst, eUpperFirst };
+
 	/**
 	 * Compare two strings using the collation of the
 	 * current locale.
 	 *
 	 * @param theLHS a string to compare
 	 * @param theRHS a string to compare
+	 * @param theCaseOrder the case order for the comparison
 	 * @return < 0 if theLHS is before theRHS, 0 if they are equal, or > 0 if theLHS is after theRHS
 	 */
 	virtual int
 	collationCompare(
 			const XalanDOMString&	theLHS,
-			const XalanDOMString&	theRHS) = 0;
+			const XalanDOMString&	theRHS,
+			eCaseOrder				theCaseOrder = eDefault) = 0;
 
 	/**
 	 * Compare two strings using the collation of the
@@ -1463,13 +1467,15 @@ public:
 	 * @param theLHS a string to compare
 	 * @param theRHS a string to compare
 	 * @param theLocal a string that specifies the locale
+	 * @param theCaseOrder the case order for the comparison
 	 * @return < 0 if theLHS is before theRHS, 0 if they are equal, or > 0 if theLHS is after theRHS
 	 */
 	virtual int
 	collationCompare(
 			const XalanDOMString&	theLHS,
 			const XalanDOMString&	theRHS,
-			const XalanDOMString&	theLocale) = 0;
+			const XalanDOMString&	theLocale,
+			eCaseOrder				theCaseOrder = eDefault) = 0;
 
 	/**
 	 * Compare two strings using the collation of the
@@ -1477,12 +1483,14 @@ public:
 	 *
 	 * @param theLHS a string to compare
 	 * @param theRHS a string to compare
+	 * @param theCaseOrder the case order for the comparison
 	 * @return < 0 if theLHS is before theRHS, 0 if they are equal, or > 0 if theLHS is after theRHS
 	 */
 	virtual int
 	collationCompare(
 			const XalanDOMChar*		theLHS,
-			const XalanDOMChar*		theRHS) = 0;
+			const XalanDOMChar*		theRHS,
+			eCaseOrder				theCaseOrder = eDefault) = 0;
 
 	/**
 	 * Compare two strings using the collation of the
@@ -1491,13 +1499,15 @@ public:
 	 * @param theLHS a string to compare
 	 * @param theRHS a string to compare
 	 * @param theLocal a string that specifies the locale
+	 * @param theCaseOrder the case order for the comparison
 	 * @return < 0 if theLHS is before theRHS, 0 if they are equal, or > 0 if theLHS is after theRHS
 	 */
 	virtual int
 	collationCompare(
 			const XalanDOMChar*		theLHS,
 			const XalanDOMChar*		theRHS,
-			const XalanDOMChar*		theLocale) = 0;
+			const XalanDOMChar*		theLocale,
+			eCaseOrder				theCaseOrder = eDefault) = 0;
 
 	/**
 	 * Determine if a KeyDeclaration is being constructed.

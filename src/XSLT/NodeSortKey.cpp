@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -75,12 +75,14 @@ NodeSortKey::NodeSortKey(
 			const XPath&			selectPat,
 			bool					treatAsNumbers,
 			bool					descending,
+			eCaseOrder				caseOrder,
 			const XalanDOMString&	langValue,
 			const PrefixResolver&	resolver) :
 	m_executionContext(&executionContext),
 	m_selectPat(&selectPat),
 	m_treatAsNumbers(treatAsNumbers),
 	m_descending(descending),
+	m_caseOrder(caseOrder),
 	m_prefixResolver(&resolver),
 	m_languageString(&langValue)
 {
@@ -93,6 +95,7 @@ NodeSortKey::NodeSortKey() :
 	m_selectPat(0),
 	m_treatAsNumbers(false),
 	m_descending(false),
+	m_caseOrder(eDefault),
 	m_prefixResolver(0),
 	m_languageString(&s_emptyString)
 {
@@ -105,6 +108,7 @@ NodeSortKey::NodeSortKey(const NodeSortKey&		theSource) :
 	m_selectPat(theSource.m_selectPat),
 	m_treatAsNumbers(theSource.m_treatAsNumbers),
 	m_descending(theSource.m_descending),
+	m_caseOrder(theSource.m_caseOrder),
 	m_prefixResolver(theSource.m_prefixResolver),
 	m_languageString(theSource.m_languageString)
 {
@@ -127,6 +131,7 @@ NodeSortKey::operator=(const NodeSortKey&	theRHS)
 		m_selectPat = theRHS.m_selectPat;
 		m_treatAsNumbers = theRHS.m_treatAsNumbers;
 		m_descending = theRHS.m_descending;
+		m_caseOrder = theRHS.m_caseOrder;
 		m_prefixResolver = theRHS.m_prefixResolver;
 		m_languageString = theRHS.m_languageString;
 
@@ -135,8 +140,3 @@ NodeSortKey::operator=(const NodeSortKey&	theRHS)
 
 	return *this;
 }
-
-
-/*
- *      $ Log: $
- */

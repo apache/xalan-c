@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -658,24 +658,28 @@ public:
 	virtual int
 	collationCompare(
 			const XalanDOMString&	theLHS,
-			const XalanDOMString&	theRHS);
+			const XalanDOMString&	theRHS,
+			eCaseOrder				theCaseOrder = eDefault);
 
 	virtual int
 	collationCompare(
 			const XalanDOMString&	theLHS,
 			const XalanDOMString&	theRHS,
-			const XalanDOMString&	theLocale);
-
-	virtual int
-	collationCompare(
-			const XalanDOMChar*		theLHS,
-			const XalanDOMChar*		theRHS);
+			const XalanDOMString&	theLocale,
+			eCaseOrder				theCaseOrder = eDefault);
 
 	virtual int
 	collationCompare(
 			const XalanDOMChar*		theLHS,
 			const XalanDOMChar*		theRHS,
-			const XalanDOMChar*		theLocale);
+			eCaseOrder				theCaseOrder = eDefault);
+
+	virtual int
+	collationCompare(
+			const XalanDOMChar*		theLHS,
+			const XalanDOMChar*		theRHS,
+			const XalanDOMChar*		theLocale,
+			eCaseOrder				theCaseOrder = eDefault);
 
 	class XALAN_XSLT_EXPORT CollationCompareFunctor
 	{
@@ -691,7 +695,8 @@ public:
 		virtual int
 		operator()(
 			const XalanDOMChar*		theLHS,
-			const XalanDOMChar*		theRHS) const = 0;
+			const XalanDOMChar*		theRHS,
+			eCaseOrder				theCaseOrder = eDefault) const = 0;
 
 		// Const version is suitable for use by
 		// multiple threads.
@@ -699,7 +704,8 @@ public:
 		operator()(
 			const XalanDOMChar*		theLHS,
 			const XalanDOMChar*		theRHS,
-			const XalanDOMChar*		theLocale) const = 0;
+			const XalanDOMChar*		theLocale,
+			eCaseOrder				theCaseOrder = eDefault) const = 0;
 	};
 
 	class XALAN_XSLT_EXPORT DefaultCollationCompareFunctor : public CollationCompareFunctor
@@ -714,13 +720,15 @@ public:
 		virtual int
 		operator()(
 			const XalanDOMChar*		theLHS,
-			const XalanDOMChar*		theRHS) const;
+			const XalanDOMChar*		theRHS,
+			eCaseOrder				theCaseOrder = eDefault) const;
 
 		virtual int
 		operator()(
 			const XalanDOMChar*		theLHS,
 			const XalanDOMChar*		theRHS,
-			const XalanDOMChar*		theLocale) const;
+			const XalanDOMChar*		theLocale,
+			eCaseOrder				theCaseOrder = eDefault) const;
 	};
 
 	const CollationCompareFunctor*

@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -1391,15 +1391,16 @@ StylesheetExecutionContextDefault::installXalanNumberFormatFactory(XalanNumberFo
 int
 StylesheetExecutionContextDefault::collationCompare(
 			const XalanDOMString&	theLHS,
-			const XalanDOMString&	theRHS)
+			const XalanDOMString&	theRHS,
+			eCaseOrder				theCaseOrder)
 {
 	if (m_collationCompareFunctor == 0)
 	{
-		return s_defaultCollationFunctor(c_wstr(theLHS), c_wstr(theRHS));
+		return s_defaultCollationFunctor(c_wstr(theLHS), c_wstr(theRHS), theCaseOrder);
 	}
 	else
 	{
-		return (*m_collationCompareFunctor)(c_wstr(theLHS), c_wstr(theRHS));
+		return (*m_collationCompareFunctor)(c_wstr(theLHS), c_wstr(theRHS), theCaseOrder);
 	}
 }
 
@@ -1409,34 +1410,16 @@ int
 StylesheetExecutionContextDefault::collationCompare(
 			const XalanDOMString&	theLHS,
 			const XalanDOMString&	theRHS,
-			const XalanDOMString&	theLocale)
+			const XalanDOMString&	theLocale,
+			eCaseOrder				theCaseOrder)
 {
 	if (m_collationCompareFunctor == 0)
 	{
-		return s_defaultCollationFunctor(c_wstr(theLHS), c_wstr(theRHS), c_wstr(theLocale));
+		return s_defaultCollationFunctor(c_wstr(theLHS), c_wstr(theRHS), c_wstr(theLocale), theCaseOrder);
 	}
 	else
 	{
-		return (*m_collationCompareFunctor)(c_wstr(theLHS), c_wstr(theRHS), c_wstr(theLocale));
-	}
-}
-
-
-
-int
-StylesheetExecutionContextDefault::collationCompare(
-			const XalanDOMChar*		theLHS,
-			const XalanDOMChar*		theRHS)
-{
-	assert(theLHS != 0 && theRHS != 0);
-
-	if (m_collationCompareFunctor == 0)
-	{
-		return s_defaultCollationFunctor(theLHS, theRHS);
-	}
-	else
-	{
-		return (*m_collationCompareFunctor)(theLHS, theRHS);
+		return (*m_collationCompareFunctor)(c_wstr(theLHS), c_wstr(theRHS), c_wstr(theLocale), theCaseOrder);
 	}
 }
 
@@ -1446,17 +1429,38 @@ int
 StylesheetExecutionContextDefault::collationCompare(
 			const XalanDOMChar*		theLHS,
 			const XalanDOMChar*		theRHS,
-			const XalanDOMChar*		theLocale)
+			eCaseOrder				theCaseOrder)
 {
 	assert(theLHS != 0 && theRHS != 0);
 
 	if (m_collationCompareFunctor == 0)
 	{
-		return s_defaultCollationFunctor(theLHS, theRHS, theLocale);
+		return s_defaultCollationFunctor(theLHS, theRHS, theCaseOrder);
 	}
 	else
 	{
-		return (*m_collationCompareFunctor)(theLHS, theRHS, theLocale);
+		return (*m_collationCompareFunctor)(theLHS, theRHS, theCaseOrder);
+	}
+}
+
+
+
+int
+StylesheetExecutionContextDefault::collationCompare(
+			const XalanDOMChar*		theLHS,
+			const XalanDOMChar*		theRHS,
+			const XalanDOMChar*		theLocale,
+			eCaseOrder				theCaseOrder)
+{
+	assert(theLHS != 0 && theRHS != 0);
+
+	if (m_collationCompareFunctor == 0)
+	{
+		return s_defaultCollationFunctor(theLHS, theRHS, theLocale, theCaseOrder);
+	}
+	else
+	{
+		return (*m_collationCompareFunctor)(theLHS, theRHS, theLocale, theCaseOrder);
 	}
 }
 
@@ -1489,7 +1493,8 @@ StylesheetExecutionContextDefault::DefaultCollationCompareFunctor::~DefaultColla
 int
 StylesheetExecutionContextDefault::DefaultCollationCompareFunctor::operator()(
 			const XalanDOMChar*		theLHS,
-			const XalanDOMChar*		theRHS) const
+			const XalanDOMChar*		theRHS,
+			eCaseOrder				/* theCaseOrder */) const
 {
 	return ::collationCompare(theLHS, theRHS);
 }
@@ -1500,9 +1505,10 @@ int
 StylesheetExecutionContextDefault::DefaultCollationCompareFunctor::operator()(
 			const XalanDOMChar*		theLHS,
 			const XalanDOMChar*		theRHS,
-			const XalanDOMChar*		/* theLocale */) const
+			const XalanDOMChar*		/* theLocale */,
+			eCaseOrder				theCaseOrder) const
 {
-	return (*this)(theLHS, theRHS);
+	return (*this)(theLHS, theRHS, theCaseOrder);
 }
 
 

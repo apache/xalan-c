@@ -72,9 +72,12 @@ class ICUBridgeCollationCompareFunctorImpl;
 
 
 
-class XALAN_ICUBRIDGE_EXPORT ICUBridgeCollationCompareFunctor  : public StylesheetExecutionContextDefault::CollationCompareFunctor
+class XALAN_ICUBRIDGE_EXPORT ICUBridgeCollationCompareFunctor : public StylesheetExecutionContextDefault::CollationCompareFunctor
 {
 public:
+
+	typedef StylesheetExecutionContextDefault::eCaseOrder	eCaseOrder;
+
 
 	ICUBridgeCollationCompareFunctor();
 
@@ -84,13 +87,15 @@ public:
 	virtual int
 	operator()(
 			const XalanDOMChar*		theLHS,
-			const XalanDOMChar*		theRHS) const;
+			const XalanDOMChar*		theRHS,
+			eCaseOrder				theCaseOrder = StylesheetExecutionContextDefault::eDefault) const;
 
 	virtual int
 	operator()(
 			const XalanDOMChar*		theLHS,
 			const XalanDOMChar*		theRHS,
-			const XalanDOMChar*		theLocale) const;
+			const XalanDOMChar*		theLocale,
+			eCaseOrder				theCaseOrder = StylesheetExecutionContextDefault::eDefault) const;
 private:
 
 	ICUBridgeCollationCompareFunctorImpl* const		m_impl;

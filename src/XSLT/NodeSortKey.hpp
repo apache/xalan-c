@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -92,6 +92,8 @@ class XALAN_XSLT_EXPORT NodeSortKey
 {
 public:
 
+	enum eCaseOrder { eDefault, eLowerFirst, eUpperFirst };
+
 	/**
 	 * Construct a node sort key.
 	 *
@@ -99,6 +101,7 @@ public:
 	 * @param selectPat        XPath for selection
 	 * @param treatAsNumbers   treat as numeric values if true
 	 * @param descending       sort in descending order if true
+	 * @param caseOrder        case sort order enum
 	 * @param langValue        language
 	 * @param resolver         resolver for namespace resolution
 	 */
@@ -107,6 +110,7 @@ public:
 			const XPath&			selectPat, 
 			bool					treatAsNumbers, 
 			bool					descending,
+			eCaseOrder				caseOrder,
 			const XalanDOMString&	langValue, 
 			const PrefixResolver&	resolver);
 
@@ -153,6 +157,17 @@ public:
 	}
 
 	/**
+	 * Get the enumeration value for the case order.
+	 * 
+	 * @return sort upper case before lower case if true
+	 */
+	eCaseOrder
+	getCaseOrder() const
+	{
+		return m_caseOrder;
+	}
+
+	/**
 	 * Retrieve the resolver for namespaces.
 	 * 
 	 * @return object for namespace resolution
@@ -176,7 +191,9 @@ private:
 	const XPath*			m_selectPat;
 
 	bool					m_treatAsNumbers;
-	bool					m_descending;	
+	bool					m_descending;
+
+	eCaseOrder				m_caseOrder;	
 
 	const PrefixResolver*	m_prefixResolver;
 

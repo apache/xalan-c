@@ -73,9 +73,12 @@
 
 
 
-class XALAN_ICUBRIDGE_EXPORT ICUBridgeCollationCompareFunctorImpl
+class XALAN_ICUBRIDGE_EXPORT ICUBridgeCollationCompareFunctorImpl : public StylesheetExecutionContextDefault::CollationCompareFunctor
 {
 public:
+
+	typedef StylesheetExecutionContextDefault::eCaseOrder	eCaseOrder;
+
 
 	ICUBridgeCollationCompareFunctorImpl();
 
@@ -84,13 +87,15 @@ public:
 	int
 	operator()(
 			const XalanDOMChar*		theLHS,
-			const XalanDOMChar*		theRHS) const;
+			const XalanDOMChar*		theRHS,
+			eCaseOrder				theCaseOrder = StylesheetExecutionContextDefault::eDefault) const;
 
 	int
 	operator()(
 			const XalanDOMChar*		theLHS,
 			const XalanDOMChar*		theRHS,
-			const XalanDOMChar*		theLocale) const;
+			const XalanDOMChar*		theLocale,
+			eCaseOrder				theCaseOrder = StylesheetExecutionContextDefault::eDefault) const;
 
 	bool
 	isValid() const
@@ -103,9 +108,10 @@ private:
 	int
 	doDefaultCompare(
 			const XalanDOMChar*		theLHS,
-			const XalanDOMChar*		theRHS) const;
+			const XalanDOMChar*		theRHS,
+			eCaseOrder				theCaseOrder) const;
 
-	bool		m_isValid;
+	bool	m_isValid;
 
 #if defined(XALAN_NO_NAMESPACES)
 	Collator*			m_defaultCollator;

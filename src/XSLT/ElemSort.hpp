@@ -124,6 +124,17 @@ public:
 	}
 
 	/**
+	 * Retrieve the case-order attribute value template(AVT) 
+	 * 
+	 * @return the case-order AVT
+	 */
+	const AVT*
+	getCaseOrderAVT() const
+	{
+		return m_caseOrderAVT;
+	}
+
+	/**
 	 * Retrieve the data type attribute value template(AVT) 
 	 * 
 	 * @return the data type AVT

@@ -77,17 +77,25 @@ const StylesheetExecutionContextDefault::DefaultCollationCompareFunctor		ICUBrid
 
 
 
+inline Collator*
+createCollator(UErrorCode&	theStatus)
+{
+#if defined(XALAN_ICU_DEFAULT_LOCALE_PROBLEM)
+	return Collator::createInstance(Locale::US, theStatus);
+#else
+	return Collator::createInstance(theStatus);
+#endif
+}
+
+
+
 ICUBridgeCollationCompareFunctorImpl::ICUBridgeCollationCompareFunctorImpl() :
 	m_isValid(false),
 	m_defaultCollator(0)
 {
 	UErrorCode	theStatus = U_ZERO_ERROR;
 
-#if defined(XALAN_ICU_DEFAULT_LOCALE_PROBLEM)
-	m_defaultCollator = Collator::createInstance(Locale::US, theStatus);
-#else
-	m_defaultCollator = Collator::createInstance(theStatus);
-#endif
+	m_defaultCollator = createCollator(theStatus);
 
 	if (theStatus == U_ZERO_ERROR ||
 	    (theStatus >= U_ERROR_INFO_START && theStatus < U_ERROR_INFO_LIMIT))
@@ -105,32 +113,91 @@ ICUBridgeCollationCompareFunctorImpl::~ICUBridgeCollationCompareFunctorImpl()
 
 
 
+inline int
+doCompare(
+			const Collator&			theCollator,
+			const XalanDOMChar*		theLHS,
+			const XalanDOMChar*		theRHS)
+{
+#if defined(XALAN_USE_WCHAR_CAST_HACK)
+	return theCollator.compare(
+				(const wchar_t*)theLHS,
+				length(theLHS),
+				(const wchar_t*)theRHS,
+				length(theRHS));
+#else
+	return theCollator.compare(
+				theLHS,
+				length(theLHS),
+				theRHS,
+				length(theRHS));
+#endif
+}
+
+
+
+inline UColAttributeValue
+caseOrderConvert(ICUBridgeCollationCompareFunctorImpl::eCaseOrder	theCaseOrder)
+{
+	switch(theCaseOrder)
+	{
+	case StylesheetExecutionContext::eLowerFirst:
+		return UCOL_LOWER_FIRST;
+		break;
+
+	case StylesheetExecutionContext::eUpperFirst:
+		return UCOL_UPPER_FIRST;
+		break;
+
+	case StylesheetExecutionContext::eDefault:
+		break;
+
+	default:
+		assert(false);
+		break;
+	}
+
+	return UCOL_DEFAULT;
+}
+
+
+
 int
 ICUBridgeCollationCompareFunctorImpl::doDefaultCompare(
 			const XalanDOMChar*		theLHS,
-			const XalanDOMChar*		theRHS) const
+			const XalanDOMChar*		theRHS,
+			eCaseOrder				theCaseOrder) const
 {
 	if (isValid() == false)
 	{
-		return s_defaultFunctor(theLHS, theRHS);
+		return s_defaultFunctor(theLHS, theRHS, theCaseOrder);
 	}
-	else
+	else if (theCaseOrder == StylesheetExecutionContext::eDefault)
 	{
 		assert(m_defaultCollator != 0);
 
-#if defined(XALAN_USE_WCHAR_CAST_HACK)
-		return m_defaultCollator->compare(
-					(const wchar_t*)theLHS,
-					length(theLHS),
-					(const wchar_t*)theRHS,
-					length(theRHS));
-#else
-		return m_defaultCollator->compare(
-					theLHS,
-					length(theLHS),
-					theRHS,
-					length(theRHS));
-#endif
+		return doCompare(*m_defaultCollator, theLHS, theRHS);
+	}
+	else
+	{
+		UErrorCode	theStatus = U_ZERO_ERROR;
+
+		XalanAutoPtr<Collator>	theCollator(createCollator(theStatus));
+
+		if (theStatus == U_ZERO_ERROR ||
+			(theStatus >= U_ERROR_INFO_START && theStatus < U_ERROR_INFO_LIMIT))
+		{
+			theCollator->setAttribute(
+					UCOL_CASE_FIRST,
+					caseOrderConvert(theCaseOrder),
+					theStatus);
+
+			return doCompare(*theCollator.get(), theLHS, theRHS);
+		}
+		else
+		{
+			return s_defaultFunctor(theLHS, theRHS, theCaseOrder);
+		}
 	}
 }
 
@@ -139,9 +206,10 @@ ICUBridgeCollationCompareFunctorImpl::doDefaultCompare(
 int
 ICUBridgeCollationCompareFunctorImpl::operator()(
 			const XalanDOMChar*		theLHS,
-			const XalanDOMChar*		theRHS) const
+			const XalanDOMChar*		theRHS,
+			eCaseOrder				theCaseOrder) const
 {
-	return doDefaultCompare(theLHS, theRHS);
+	return doDefaultCompare(theLHS, theRHS, theCaseOrder);
 }
 
 
@@ -189,7 +257,8 @@ int
 ICUBridgeCollationCompareFunctorImpl::operator()(
 			const XalanDOMChar*		theLHS,
 			const XalanDOMChar*		theRHS,
-			const XalanDOMChar*		theLocale) const
+			const XalanDOMChar*		theLocale,
+			eCaseOrder				theCaseOrder) const
 {
 	UErrorCode	theStatus = U_ZERO_ERROR;
 
@@ -199,6 +268,11 @@ ICUBridgeCollationCompareFunctorImpl::operator()(
 	    (theStatus >= U_ERROR_INFO_START && theStatus < U_ERROR_INFO_LIMIT))
 	{
 		assert(theCollator.get() != 0);
+
+		theCollator->setAttribute(
+				UCOL_CASE_FIRST,
+				caseOrderConvert(theCaseOrder),
+				theStatus);
 
 #if defined(XALAN_USE_WCHAR_CAST_HACK)
 		return theCollator->compare(
@@ -216,6 +290,6 @@ ICUBridgeCollationCompareFunctorImpl::operator()(
 	}
 	else
 	{
-		return s_defaultFunctor(theLHS, theRHS);
+		return s_defaultFunctor(theLHS, theRHS, theCaseOrder);
 	}
 }

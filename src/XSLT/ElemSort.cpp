@@ -116,8 +116,6 @@ ElemSort::ElemSort(
 		}
 		else if(equals(aname, Constants::ATTRNAME_CASEORDER))
 		{
-			constructionContext.warn("Xalan C++ does not yet handle the 'case-order' attribute!");
-
 			m_caseOrderAVT = new AVT(getLocator(), aname, atts.getType(i), atts.getValue(i),
 				*this, constructionContext);
 		}

@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -318,15 +318,46 @@ ElemForEach::transformSelectedChildren(
 
 			clear(scratchString);
 
+			avt = sort->getCaseOrderAVT();
+
+			if(0 != avt)
+			{
+				avt->evaluate(scratchString, sourceNodeContext, *this, executionContext);
+			}			
+
+			NodeSortKey::eCaseOrder		caseOrder = NodeSortKey::eDefault;
+
+			if (isEmpty(scratchString) == false)
+			{
+				if (equals(scratchString, Constants::ATTRVAL_CASEORDER_UPPER) == true)
+				{
+					caseOrder = NodeSortKey::eUpperFirst;
+				}
+				else if (equals(scratchString, Constants::ATTRVAL_CASEORDER_LOWER) == true)
+				{
+					caseOrder = NodeSortKey::eLowerFirst;
+				}
+				else
+				{
+					executionContext.error(
+						"xsl:sort case-order must be 'upper-first' or 'lower-first'",
+						sourceNodeContext,
+						sort->getLocator());
+				}
+			}
+
+			clear(scratchString);
+
 			assert(sort->getSelectPattern() != 0);
 
 			keys.push_back(
 					NodeSortKey(
-						executionContext, 
-						*sort->getSelectPattern(), 
-						treatAsNumbers, 
-						descending, 
-						langString, 
+						executionContext,
+						*sort->getSelectPattern(),
+						treatAsNumbers,
+						descending,
+						caseOrder,
+						langString,
 						*this));
 		}
 

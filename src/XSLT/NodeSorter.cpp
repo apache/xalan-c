@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -168,25 +168,54 @@ NodeSorter::sort(
 
 
 
+inline StylesheetExecutionContext::eCaseOrder
+caseOrderConvert(NodeSortKey::eCaseOrder	theCaseOrder)
+{
+	switch(theCaseOrder)
+	{
+	case NodeSortKey::eLowerFirst:
+		return StylesheetExecutionContext::eLowerFirst;
+		break;
+
+	case NodeSortKey::eUpperFirst:
+		return StylesheetExecutionContext::eUpperFirst;
+		break;
+
+	case NodeSortKey::eDefault:
+		break;
+
+	default:
+		assert(false);
+		break;
+	}
+
+	return StylesheetExecutionContext::eDefault;
+}
+
+
+
 static inline int
 doCollationCompare(
 			StylesheetExecutionContext&		executionContext,
 			const XalanDOMString&			theLHS,
 			const XalanDOMString&			theRHS,
-			const XalanDOMString&			theLanguage)
+			const XalanDOMString&			theLanguage,
+			NodeSortKey::eCaseOrder			theCaseOrder)
 {
 	if (length(theLanguage) == 0)
 	{
 		return executionContext.collationCompare(
 				theLHS,
-				theRHS);
+				theRHS,
+				caseOrderConvert(theCaseOrder));
 	}
 	else
 	{
 		return executionContext.collationCompare(
 				theLHS,
 				theRHS,
-				theLanguage);
+				theLanguage,
+				caseOrderConvert(theCaseOrder));
 	}
 }
 
@@ -206,7 +235,23 @@ NodeSorter::NodeSortKeyCompare::compare(
 	const NodeSortKey&	theKey = m_nodeSortKeys[theKeyIndex];
 
 	// Compare as numbers
-	if(theKey.getTreatAsNumbers() == true)
+	if(theKey.getTreatAsNumbers() == false)
+	{
+		// Compare as strings
+		const XalanDOMString&	theLHSString =
+			getStringResult(theKey, theKeyIndex, theLHS)->str();
+
+		const XalanDOMString&	theRHSString =
+			getStringResult(theKey, theKeyIndex, theRHS)->str();
+
+		theResult = doCollationCompare(
+				m_executionContext,
+				theLHSString,
+				theRHSString,
+				theKey.getLanguageString(),
+				theKey.getCaseOrder());
+	}
+	else
 	{
 		double	n1Num = getNumberResult(theKey, theKeyIndex, theLHS);
 		double	n2Num = getNumberResult(theKey, theKeyIndex, theRHS);
@@ -231,15 +276,6 @@ NodeSorter::NodeSortKeyCompare::compare(
 		{
 			theResult = 1;
 		}
-	}
-	// Compare as strings
-	else
-	{
-		theResult = doCollationCompare(
-				m_executionContext,
-				getStringResult(theKey, theKeyIndex, theLHS)->str(),
-				getStringResult(theKey, theKeyIndex, theRHS)->str(),
-				theKey.getLanguageString());
 	}
 
 	// If they're not equal, the flip things if the
