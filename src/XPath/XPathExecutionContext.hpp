@@ -53,6 +53,8 @@
  * Business Machines, Inc., http://www.ibm.com.  For more
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
+ *
+ * @author <a href="mailto:david_n_bertoni@lotus.com">David N. Bertoni</a>
  */
 #if !defined(XPATHEXECUTIONCONTEXT_HEADER_GUARD_1357924680)
 #define XPATHEXECUTIONCONTEXT_HEADER_GUARD_1357924680
@@ -188,6 +190,18 @@ public:
 	getParentOfNode(const XalanNode&	n) const = 0;
 
 	/**
+	 * Determine if a node is after another node, in document order.
+	 *
+	 * @param node1 The first node
+	 * @param node2 The second node
+	 * @return true if node1 one is after node2, or false if it is not.
+	 */
+	virtual bool
+	isNodeAfter(
+			const XalanNode&	node1,
+			const XalanNode&	node2) const = 0;
+
+	/**
 	 * Get node data recursively.
 	 * (Note whitespace issues.)
 	 * 
@@ -300,7 +314,8 @@ public:
 	virtual XObject*
 	extFunction(
 			const XalanDOMString&			theNamespace,
-			const XalanDOMString&			extensionName, 
+			const XalanDOMString&			extensionName,
+			XalanNode*						context,
 			const XObjectArgVectorType&		argVec) = 0;
 
 	/**

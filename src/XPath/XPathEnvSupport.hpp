@@ -53,6 +53,8 @@
  * Business Machines, Inc., http://www.ibm.com.  For more
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
+ *
+ * @author <a href="mailto:david_n_bertoni@lotus.com">David N. Bertoni</a>
  */
 #if !defined(XPATHENVSUPPORT_HEADER_GUARD_1357924680)
 #define XPATHENVSUPPORT_HEADER_GUARD_1357924680
@@ -230,6 +232,7 @@ public:
 			XPathExecutionContext&			executionContext,
 			const XalanDOMString&			theNamespace,
 			const XalanDOMString&			extensionName, 
+			XalanNode*						context,
 			const XObjectArgVectorType&		argVec) const = 0;
 
 	/**

@@ -53,7 +53,10 @@
  * Business Machines, Inc., http://www.ibm.com.  For more
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
+ *
+ * @author <a href="mailto:david_n_bertoni@lotus.com">David N. Bertoni</a>
  */
+
 #include "XPathEnvSupportDefault.hpp"
 
 
@@ -83,9 +86,14 @@
 		
 
 
+XPathEnvSupportDefault::NamespaceFunctionTablesType		XPathEnvSupportDefault::s_externalFunctions;
+
+
+
 XPathEnvSupportDefault::XPathEnvSupportDefault() :
 	XPathEnvSupport(),
-	m_sourceDocs()
+	m_sourceDocs(),
+	m_externalFunctions()
 {
 }
 
@@ -93,6 +101,109 @@ XPathEnvSupportDefault::XPathEnvSupportDefault() :
 
 XPathEnvSupportDefault::~XPathEnvSupportDefault()
 {
+}
+
+
+
+void
+XPathEnvSupportDefault::updateFunctionTable(
+			NamespaceFunctionTablesType&	theTable,
+			const XalanDOMString&			theNamespace,
+			const XalanDOMString&			extensionName,
+			const Function*					function)
+{
+	// See if there's a table for that namespace...
+	const NamespaceFunctionTablesType::iterator		i =
+		theTable.find(theNamespace);
+
+	if (i == theTable.end())
+	{
+		// The namespace was not found.  If function is not
+		// 0, then add a clone of the function.
+		if (function != 0)
+		{
+			theTable[theNamespace][extensionName] =
+				function->clone();
+		}
+	}
+	else
+	{
+		// There is already a table for the namespace,
+		// so look for the function...
+		const FunctionTableType::iterator	j =
+			i->second.find(extensionName);
+
+		if (j == i->second.end())
+		{
+			// The function was not found.  If function is not
+			// 0, then add a clone of the function.
+			if (function != 0)
+			{
+				i->second[extensionName] = function->clone();
+			}
+		}
+		else
+		{
+			// Found it, so delete the function...
+
+			delete j->second;
+
+			// If function is not 0, then we update
+			// the entry.  Otherwise, we erase it...
+			if (function != 0)
+			{
+				// Update it...
+				j->second = function->clone();
+			}
+			else
+			{
+				// Erase it...
+				i->second.erase(j);
+			}
+		}
+	}
+}
+
+
+
+void
+XPathEnvSupportDefault::installExternalFunctionGlobal(
+			const XalanDOMString&	theNamespace,
+			const XalanDOMString&	extensionName,
+			const Function&			function)
+{
+	updateFunctionTable(s_externalFunctions, theNamespace, extensionName, &function);
+}
+
+
+
+void
+XPathEnvSupportDefault::uninstallExternalFunctionGlobal(
+			const XalanDOMString&	theNamespace,
+			const XalanDOMString&	extensionName)
+{
+	updateFunctionTable(s_externalFunctions, theNamespace, extensionName, 0);
+}
+
+
+
+void
+XPathEnvSupportDefault::installExternalFunctionLocal(
+			const XalanDOMString&	theNamespace,
+			const XalanDOMString&	extensionName,
+			const Function&			function)
+{
+	updateFunctionTable(m_externalFunctions, theNamespace, extensionName, &function);
+}
+
+
+
+void
+XPathEnvSupportDefault::uninstallExternalFunctionLocal(
+			const XalanDOMString&	theNamespace,
+			const XalanDOMString&	extensionName)
+{
+	updateFunctionTable(m_externalFunctions, theNamespace, extensionName, 0);
 }
 
 
@@ -212,10 +323,87 @@ XPathEnvSupportDefault::elementAvailable(
 
 bool
 XPathEnvSupportDefault::functionAvailable(
-			const XalanDOMString&	/* theNamespace */,
-			const XalanDOMString&	/* extensionName */) const
+			const XalanDOMString&	theNamespace,
+			const XalanDOMString&	extensionName) const
 {
-	return false;
+	bool	theResult = false;
+
+	// See if there's a table for that namespace...
+	const NamespaceFunctionTablesType::iterator		i =
+		m_externalFunctions.find(theNamespace);
+
+	if (i != m_externalFunctions.end())
+	{
+		// There is a table for the namespace,
+		// so look for the function...
+		const FunctionTableType::iterator	j =
+			i->second.find(extensionName);
+
+		if (j != i->second.end())
+		{
+			theResult = true;
+		}
+	}
+
+	return theResult;
+}
+
+
+
+Function*
+XPathEnvSupportDefault::findFunction(
+			const XalanDOMString&	theNamespace,
+			const XalanDOMString&	extensionName) const
+{
+	// First, look locally...
+	Function*	theFunction = findFunction(
+			m_externalFunctions,
+			theNamespace,
+			extensionName);
+
+	if (theFunction == 0)
+	{
+		// Not found, so look in the global space...
+		theFunction = findFunction(
+			s_externalFunctions,
+			theNamespace,
+			extensionName);
+	}
+
+	return theFunction;
+}
+
+
+
+Function*
+XPathEnvSupportDefault::findFunction(
+			const NamespaceFunctionTablesType&	theTable,
+			const XalanDOMString&				theNamespace,
+			const XalanDOMString&				extensionName) const
+{
+	Function*	theFunction = 0;
+
+	// See if there's a table for that namespace...
+	const NamespaceFunctionTablesType::iterator		i =
+		theTable.find(theNamespace);
+
+	if (i != theTable.end())
+	{
+		// There is a table for the namespace,
+		// so look for the function...
+		const FunctionTableType::iterator	j =
+			i->second.find(extensionName);
+
+		if (j != i->second.end())
+		{
+			// Found the function...
+			assert(j->second != 0);
+
+			theFunction = j->second;
+		}
+	}
+
+	return theFunction;
 }
 
 
@@ -223,11 +411,30 @@ XPathEnvSupportDefault::functionAvailable(
 XObject*
 XPathEnvSupportDefault::extFunction(
 			XPathExecutionContext&			executionContext,
-			const XalanDOMString&			/* theNamespace */,
-			const XalanDOMString&			/* extensionName */,
-			const XObjectArgVectorType&		/* argVec */) const
+			const XalanDOMString&			theNamespace,
+			const XalanDOMString&			extensionName,
+			XalanNode*						context,
+			const XObjectArgVectorType&		argVec) const
 {
-	return executionContext.getXObjectFactory().createNull();
+	XObject*	theResult = 0;
+
+	Function* const		theFunction = findFunction(theNamespace, extensionName);
+
+	if (theFunction != 0)
+	{
+		theResult = theFunction->execute(
+					executionContext,
+					context,
+					0,
+					argVec);
+	}
+
+	if (theResult == 0)
+	{
+		theResult = executionContext.getXObjectFactory().createNull();
+	}
+
+	return theResult;
 }
 
 

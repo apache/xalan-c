@@ -53,6 +53,8 @@
  * Business Machines, Inc., http://www.ibm.com.  For more
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
+ *
+ * @author <a href="mailto:david_n_bertoni@lotus.com">David N. Bertoni</a>
  */
 
 // Class header file...
@@ -138,6 +140,16 @@ XalanNode*
 XPathExecutionContextDefault::getParentOfNode(const XalanNode&	n) const
 {
 	return m_xpathSupport.getParentOfNode(n);
+}
+
+
+
+bool
+XPathExecutionContextDefault::isNodeAfter(
+			const XalanNode&	node1,
+			const XalanNode&	node2) const
+{
+	return m_xpathSupport.isNodeAfter(node1, node2);
 }
 
 
@@ -238,11 +250,12 @@ XPathExecutionContextDefault::functionAvailable(
 
 XObject*
 XPathExecutionContextDefault::extFunction(
-			const XalanDOMString&					theNamespace,
-			const XalanDOMString&					extensionName, 
-			const Function::XObjectArgVectorType&	argVec)
+			const XalanDOMString&			theNamespace,
+			const XalanDOMString&			extensionName, 
+			XalanNode*						context,
+			const XObjectArgVectorType&		argVec)
 {
-	return m_xpathEnvSupport.extFunction(*this, theNamespace, extensionName, argVec);
+	return m_xpathEnvSupport.extFunction(*this, theNamespace, extensionName, context, argVec);
 }
 
 
@@ -549,7 +562,7 @@ XPathExecutionContextDefault::setSourceDocument(
 
 
 const DecimalFormatSymbols*
-XPathExecutionContextDefault::getDecimalFormatSymbols(const XalanDOMString&		name)
+XPathExecutionContextDefault::getDecimalFormatSymbols(const XalanDOMString&		/* name */)
 {
 	return 0;
 }

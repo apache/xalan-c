@@ -56,6 +56,8 @@
  *
  * $ Id: $
  *
+ *
+ * @author <a href="mailto:david_n_bertoni@lotus.com">David N. Bertoni</a>
  */
 #if !defined(XPATHEXECUTIONCONTEXTDEFAULT_HEADER_GUARD_1357924680)
 #define XPATHEXECUTIONCONTEXTDEFAULT_HEADER_GUARD_1357924680
@@ -128,6 +130,11 @@ public:
 	virtual XalanNode*
 	getParentOfNode(const XalanNode&	n) const;
 
+	virtual bool
+	isNodeAfter(
+			const XalanNode&	node1,
+			const XalanNode&	node2) const;
+
 	virtual XalanDOMString
 	getNodeData(const XalanNode&	n) const;
 
@@ -168,7 +175,8 @@ public:
 	virtual XObject*
 	extFunction(
 			const XalanDOMString&			theNamespace,
-			const XalanDOMString&			extensionName, 
+			const XalanDOMString&			extensionName,
+			XalanNode*						context,
 			const XObjectArgVectorType&		argVec);
 
 	virtual XLocator*
@@ -278,23 +286,23 @@ public:
 			const XalanNode* 		sourceNode = 0,
 			const XalanNode*		styleNode = 0) const;
 
-private:
+protected:
 
-	XPathEnvSupport&		m_xpathEnvSupport;
+	XPathEnvSupport&				m_xpathEnvSupport;
 
-	XPathSupport&			m_xpathSupport;
+	XPathSupport&					m_xpathSupport;
 
-	XObjectFactory&			m_xobjectFactory;
+	XObjectFactory&					m_xobjectFactory;
 
-	XalanNode*				m_currentNode;
+	XalanNode*						m_currentNode;
 
-	MutableNodeRefList		m_contextNodeList;
+	MutableNodeRefList				m_contextNodeList;
 
-	const PrefixResolver*	m_prefixResolver;
+	const PrefixResolver*			m_prefixResolver;
 
-	bool					m_throwFoundIndex;
+	bool							m_throwFoundIndex;
 
-	XalanDOMString			m_currentPattern;
+	XalanDOMString					m_currentPattern;
 };
 
 

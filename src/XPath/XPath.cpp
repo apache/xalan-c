@@ -53,7 +53,10 @@
  * Business Machines, Inc., http://www.ibm.com.  For more
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
+ *
+ * @author <a href="mailto:david_n_bertoni@lotus.com">David N. Bertoni</a>
  */
+
 // Class header file.
 #include "XPath.hpp"
 
@@ -1387,7 +1390,7 @@ XPath::runExtFunction(
 
 XObject*
 XPath::extfunction(
-			XalanNode*								/* context */,
+			XalanNode*								context,
 			int										/* opPos */,
 			const XalanDOMString&					theNamespace,
 			const XalanDOMString&					extensionName, 
@@ -1395,7 +1398,8 @@ XPath::extfunction(
 			XPathExecutionContext&					executionContext) const
 {
 	return 	executionContext.extFunction(theNamespace,
-										 extensionName, 
+										 extensionName,
+										 context,
 										 argVec);
 }
 

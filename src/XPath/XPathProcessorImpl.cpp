@@ -53,7 +53,10 @@
  * Business Machines, Inc., http://www.ibm.com.  For more
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
+ *
+ * @author <a href="mailto:david_n_bertoni@lotus.com">David N. Bertoni</a>
  */
+
 // Class header file...
 #include "XPathProcessorImpl.hpp"
 
@@ -1600,13 +1603,13 @@ XPathProcessorImpl::FunctionCall()
 
 		XPathExpression::OpCodeMapValueVectorType	theArgs(2);
 
-		theArgs[0] = m_expression->getTokenPosition();
+		theArgs[0] = m_expression->getTokenPosition() - 1;
 
 		nextToken();
 
 		consumeExpected(':');
 
-		theArgs[1] = m_expression->getTokenPosition();
+		theArgs[1] = m_expression->getTokenPosition() - 1;
 
 		nextToken();
 

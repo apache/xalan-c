@@ -53,6 +53,8 @@
  * Business Machines, Inc., http://www.ibm.com.  For more
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
+ *
+ * @author <a href="mailto:david_n_bertoni@lotus.com">David N. Bertoni</a>
  */
 #if !defined(XPATHENVSUPPORTDEFAULT_HEADER_GUARD_1357924680)
 #define XPATHENVSUPPORTDEFAULT_HEADER_GUARD_1357924680
@@ -84,6 +86,62 @@ public:
 
 	virtual
 	~XPathEnvSupportDefault();
+
+
+	// Interfaces to install and uninstall external functions globally.
+	// These calls are not thread-safe, and should happen during
+	// processing.
+
+	/**
+	 * Install an external function in the global space.
+	 *
+	 * @param theNamespace The namespace for the functionl
+	 * @param extensionName The name of the function.
+	 * @param function The function to install.
+	 */
+	static void
+	installExternalFunctionGlobal(
+			const XalanDOMString&	theNamespace,
+			const XalanDOMString&	extensionName,
+			const Function&			function);
+
+	/**
+	 * Uninstall an external function from the global space.
+	 *
+	 * @param theNamespace The namespace for the functionl
+	 * @param extensionName The name of the function.
+	 */
+	static void
+	uninstallExternalFunctionGlobal(
+			const XalanDOMString&	theNamespace,
+			const XalanDOMString&	extensionName);
+
+	// Interfaces to install and uninstall external functions in this instance.
+
+	/**
+	 * Install an external function in the local space.
+	 *
+	 * @param theNamespace The namespace for the functionl
+	 * @param extensionName The name of the function.
+	 * @param function The function to install.
+	 */
+	virtual void
+	installExternalFunctionLocal(
+			const XalanDOMString&	theNamespace,
+			const XalanDOMString&	extensionName,
+			const Function&			function);
+
+	/**
+	 * Uninstall an external function from the local space.
+	 *
+	 * @param theNamespace The namespace for the functionl
+	 * @param extensionName The name of the function.
+	 */
+	virtual void
+	uninstallExternalFunctionLocal(
+			const XalanDOMString&	theNamespace,
+			const XalanDOMString&	extensionName);
+
 
 	// These interfaces are inherited from XPathEnvSupport...
 
@@ -134,6 +192,7 @@ public:
 			XPathExecutionContext&			executionContext,
 			const XalanDOMString&			theNamespace,
 			const XalanDOMString&			extensionName, 
+			XalanNode*						context,
 			const XObjectArgVectorType&		argVec) const;
 
 	virtual XLocator*
@@ -172,6 +231,20 @@ public:
 	virtual void
 	reset();
 
+protected:
+
+	/**
+	 * Find an external function.
+	 *
+	 * @param theNamespace The namespace for the function.
+	 * @param extensionName The name of the function.
+	 * @return a pointer to the function if found, or 0 if not found.
+	 */
+	virtual Function*
+	findFunction(
+			const XalanDOMString&	theNamespace,
+			const XalanDOMString&	extensionName) const;
+
 private:
 
 	// These are not implemented...
@@ -183,18 +256,57 @@ private:
 	bool
 	operator==(const XPathEnvSupportDefault&) const;
 
-	// Data members...
-
-	// Table for storing source tree documents, which are keyed by
-	// URL.
-
 #if defined(XALAN_NO_NAMESPACES)
 	typedef map<XalanDOMString, XalanDocument*>			SourceDocsTableType;
+	typedef map<XalanDOMString, Function*>				FunctionTableType;
+	typedef map<XalanDOMString, FunctionTableType>		NamespaceFunctionTablesType;
 #else
 	typedef std::map<XalanDOMString, XalanDocument*>	SourceDocsTableType;
+	typedef std::map<XalanDOMString, Function*>			FunctionTableType;
+	typedef std::map<XalanDOMString, FunctionTableType>	NamespaceFunctionTablesType;
 #endif
 
-	SourceDocsTableType		m_sourceDocs;
+	/**
+	 * Update the supplied function table.  If the parameter
+	 * function is 0, and a function with the supplied
+	 * namespace and name exists in the table, it will be
+	 * removed.  If function is not 0, and a function with
+	 * the supplied namespace and name exists in the table,
+	 * it will be replaced with the new function.  Otherwise,
+	 * the function will be added.
+	 *
+	 * @param theNamespace The namespace for the functionl
+	 * @param extensionName The name of the function.
+	 * @param function The function to install.
+	 */
+	static void
+	updateFunctionTable(
+			NamespaceFunctionTablesType&	theTable,
+			const XalanDOMString&			theNamespace,
+			const XalanDOMString&			extensionName,
+			const Function*					function);
+
+	/**
+	 * Find an external function in the supplied table.
+	 *
+	 * @param theTable The table to search.
+	 * @param theNamespace The namespace for the function.
+	 * @param extensionName The name of the function.
+	 * @return a pointer to the function if found, or 0 if not found.
+	 */
+	Function*
+	findFunction(
+			const NamespaceFunctionTablesType&	theTable,
+			const XalanDOMString&				theNamespace,
+			const XalanDOMString&				extensionName) const;
+
+	// Data members...
+
+	SourceDocsTableType						m_sourceDocs;
+
+	NamespaceFunctionTablesType				m_externalFunctions;
+
+	static 	NamespaceFunctionTablesType		s_externalFunctions;
 };
 
 
