@@ -175,6 +175,20 @@ public:
 		m_uri.assign(uri, len);
 	}
 
+	bool
+	empty() const
+	{
+		return m_prefix.empty() && m_uri.empty();
+	}
+
+	void
+	clear()
+	{
+		m_prefix.clear();
+
+		m_uri.clear();
+	}
+
 	/**
 	 * Equality operator
 	 *
