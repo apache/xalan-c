@@ -84,7 +84,8 @@ ICUBridgeCollationCompareFunctor::ICUBridgeCollationCompareFunctor() :
 
 	m_collator = Collator::createInstance(theStatus);
 
-	if (theStatus == U_ZERO_ERROR || theStatus == U_USING_DEFAULT_ERROR)
+	if (theStatus == U_ZERO_ERROR ||
+	    (theStatus >= U_ERROR_INFO_START && theStatus < U_ERROR_INFO_LIMIT))
 	{
 		m_isValid = true;
 	}
@@ -108,7 +109,45 @@ ICUBridgeCollationCompareFunctor::operator()(
 
 	XalanAutoPtr<Collator>	theCollator(Collator::createInstance(theStatus));
 
-	if (theStatus == U_ZERO_ERROR || theStatus == U_USING_DEFAULT_ERROR)
+	if (theStatus == U_ZERO_ERROR ||
+	    (theStatus >= U_ERROR_INFO_START && theStatus < U_ERROR_INFO_LIMIT))
+	{
+		assert(theCollator.get() != 0);
+
+#if U_SIZEOF_WCHAR_T==2
+		return theCollator->compare(
+					(wchar_t*)theLHS,
+					length(theLHS),
+					(wchar_t*)theRHS,
+					length(theRHS));
+#else
+		return theCollator->compare(
+					theLHS,
+					length(theLHS),
+					theRHS,
+					length(theRHS));
+#endif
+	}
+	else
+	{
+		return s_defaultFunctor(theLHS, theRHS);
+	}
+}
+
+
+
+int
+ICUBridgeCollationCompareFunctor::operator()(
+			const XalanDOMChar*		theLHS,
+			const XalanDOMChar*		theRHS,
+			const XalanDOMChar*		theLocale) const
+{
+	UErrorCode	theStatus = U_ZERO_ERROR;
+
+	XalanAutoPtr<Collator>	theCollator(Collator::createInstance(Locale(UnicodeString(theLocale)), theStatus));
+
+	if (theStatus == U_ZERO_ERROR ||
+	    (theStatus >= U_ERROR_INFO_START && theStatus < U_ERROR_INFO_LIMIT))
 	{
 		assert(theCollator.get() != 0);
 

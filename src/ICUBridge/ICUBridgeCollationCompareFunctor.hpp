@@ -91,6 +91,12 @@ public:
 			const XalanDOMChar*		theLHS,
 			const XalanDOMChar*		theRHS) const;
 
+	virtual int
+	operator()(
+			const XalanDOMChar*		theLHS,
+			const XalanDOMChar*		theRHS,
+			const XalanDOMChar*		theLocale) const;
+
 	bool
 	isValid() const
 	{
