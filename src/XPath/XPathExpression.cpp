@@ -64,15 +64,11 @@
 
 
 
-#if !defined(XALAN_NO_IOSFWD)
-#include <ostream>
-#endif
-
-
-
 #if defined(XALAN_OLD_STREAM_HEADERS)
+#include <ostream.h>
 #include <strstream.h>
 #else
+#include <ostream>
 #include <strstream>
 #endif
 
