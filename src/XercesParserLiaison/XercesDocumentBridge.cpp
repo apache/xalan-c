@@ -1031,16 +1031,16 @@ XercesDocumentBridge::getElementById(const XalanDOMString&	elementId) const
 	// const...
 #if defined(XERCES_NO_MUTABLE)
 	const DOM_Node	theXercesNode((DOM_Document&)m_xercesDocument).getElementById(elementId));
-
 #else
 	const DOM_Node	theXercesNode(m_xercesDocument.getElementById(elementId));
-
 #endif
 
-	assert(mapNode(theXercesNode) == 0 ||
-			mapNode(theXercesNode)->getNodeType() == XalanNode::ELEMENT_NODE);
+	assert(theXercesNode.isNull() == true ||
+		   (mapNode(theXercesNode) != 0 &&
+		    mapNode(theXercesNode)->getNodeType() == XalanNode::ELEMENT_NODE));
 
-	return static_cast<XalanElement*>(mapNode(theXercesNode));
+	return theXercesNode.isNull() == true ? 0 :
+				static_cast<XalanElement*>(mapNode(theXercesNode));
 }
 
 
