@@ -57,7 +57,6 @@
 // Class header file.
 #include "DOMStringHelper.hpp"
 
-#include <util/XMLString.hpp>
 
 
 #include <cassert>
@@ -286,7 +285,10 @@ XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(void)
 OutputString(TextOutputStream&	theStream,
 			 const DOMString&	theString)
 {
-	theStream << c_wstr(theString);
+	if (isEmpty(theString) == false)
+	{
+		theStream << c_wstr(theString);
+	}
 }
 
 
