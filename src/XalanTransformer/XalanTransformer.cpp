@@ -105,13 +105,6 @@
 
 
 
-#include <XalanEXSLT/XalanEXSLTCommon.hpp>
-#include <XalanEXSLT/XalanEXSLTMath.hpp>
-#include <XalanEXSLT/XalanEXSLTSet.hpp>
-#include <XalanEXSLT/XalanEXSLTString.hpp>
-
-
-
 //#define XALAN_USE_ICU
 #if defined(XALAN_USE_ICU)
 #include <ICUBridge/FunctionICUFormatNumber.hpp>
@@ -196,10 +189,6 @@ XalanTransformer::initialize()
 	s_xsltInit = new XSLTInit;
 
 	XalanExtensionsInstaller::installGlobal();
-	XalanEXSLTCommonFunctionsInstaller::installGlobal();
-	XalanEXSLTMathFunctionsInstaller::installGlobal();
-	XalanEXSLTSetFunctionsInstaller::installGlobal();
-	XalanEXSLTStringFunctionsInstaller::installGlobal();
 
 #if defined(XALAN_USE_ICU)
 	theICUFunctor = new ICUBridgeCollationCompareFunctor;
