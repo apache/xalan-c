@@ -114,6 +114,14 @@ public:
 	const XalanDOMString&
 	getPrefixForNamespace(const XalanDOMString&		theNamespaceURI) const;
 
+
+	/**
+	 * See if the prefix has been mapped to a namespace in the current
+	 * context, without looking down the stack of namespaces.
+	 */
+	bool
+	prefixIsPresentLocal(const XalanDOMString&	thePrefix);
+
 	void
 	clear();
 

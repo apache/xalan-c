@@ -160,6 +160,43 @@ ResultNamespacesStack::getPrefixForNamespace(const XalanDOMString&	theNamespaceU
 
 
 
+bool
+ResultNamespacesStack::prefixIsPresentLocal(const XalanDOMString&	thePrefix)
+{
+	bool	fResult = false;
+
+	// Check to see if we need to create a new context.  If so, there are
+	// no prefixes mapped at this level, so return false...
+	if (m_createNewContextStack.back() == false)
+	{
+		const NamespaceVectorType&	theNamespaces =
+			m_resultNamespaces.back();
+
+		NamespaceVectorType::const_iterator			i = theNamespaces.begin();
+		const NamespaceVectorType::const_iterator	theEnd = theNamespaces.end();
+
+		while(i != theEnd && fResult == false)
+		{
+			const NameSpace&		ns = (*i);
+
+			const XalanDOMString&	thisPrefix = ns.getPrefix();
+
+			if(::equals(thePrefix, thisPrefix))
+			{
+				fResult = true;
+			}
+			else
+			{
+				++i;
+			}
+		}
+	}
+
+	return fResult;
+}
+
+
+
 void
 ResultNamespacesStack::clear()
 {
