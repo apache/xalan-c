@@ -75,7 +75,11 @@
 //	Are included by HarnessInit.hpp
 
 // XALAN HEADERS...
-//	Are included by FileUtility.hpp
+#include <XalanSourceTree/FormatterToSourceTree.hpp>
+#include <XalanSourceTree/XalanSourceTreeDOMSupport.hpp>
+#include <XalanSourceTree/XalanSourceTreeParserLiaison.hpp>
+
+#include <XalanTransformer/XalanTransformer.hpp>
 
 // HARNESS HEADERS...
 #include <Harness/XMLFileReporter.hpp>
@@ -93,12 +97,12 @@
 #include <crtdbg.h>
 #endif
 
-FileUtility		h;
+
 
 void
-setHelp()
+setHelp(FileUtility&	h)
 {
-	h.args.help << endl
+	h.args.getHelpStream() << endl
 		 << "compare dirname [-out -gold]"
 		 << endl
 		 << endl
@@ -121,112 +125,117 @@ main(int			argc,
 #endif
 
 	HarnessInit xmlPlatformUtils;
-	XalanTransformer::initialize();
 
 	{
+		FileUtility		h;
+
 		int transResult = 0;
 		bool setGold = true;
 		XalanDOMString fileName;
 
 		// Set the program help string,  then get the command line parameters.
 		//
-		setHelp();
+		setHelp(h);
 
 		if (h.getParams(argc, argv, "DOMCOM-RESULTS", setGold) == true)
 		{
-			//
-			// Call the static initializers for xerces and xalan, and create a transformer
-			//
-			XalanTransformer xalan;
+			XalanTransformer::initialize();
 
-			XalanSourceTreeDOMSupport domSupport;
-			XalanSourceTreeParserLiaison parserLiaison(domSupport);
-			domSupport.setParserLiaison(&parserLiaison);
-
-
-			// Generate Unique Run id and processor info
-			const XalanDOMString UniqRunid = h.generateUniqRunid();
-			const XalanDOMString  resultFilePrefix("cpp");
-			const XalanDOMString  resultsFile(h.args.output + resultFilePrefix + UniqRunid + XMLSuffix);
-
-
-			XMLFileReporter	logFile(resultsFile);
-			logFile.logTestFileInit("Comparison Testing:");
-				
-			// Specify the "test" directory for both input and output.
-			//
-			const XalanDOMString  currentDir("domcomtests");
-			const XalanDOMString  theOutputDir = h.args.output + currentDir;
-			h.checkAndCreateDir(theOutputDir);
-
-			// Get the files found in the test directory
-			//
-			logFile.logTestCaseInit(currentDir);
-			const FileNameVectorType files = h.getTestFileNames(h.args.base, currentDir, true);
-
-			for(FileNameVectorType::size_type i = 0; i < files.size(); i++)
 			{
-				fileName = files[i];
-				h.data.reset();
-				h.data.testOrFile = fileName;
-
-				const XalanDOMString  theXSLFile= h.args.base + currentDir + pathSep + fileName;
-				const XalanDOMString  theXMLFile = h.generateFileName(theXSLFile,"xml");
-				XalanDOMString  theGoldFile = h.args.gold + currentDir + pathSep + fileName;
-				theGoldFile = h.generateFileName(theGoldFile, "out");
-
-				const XalanDOMString  outbase =  h.args.output + currentDir + pathSep + fileName; 
-				const XalanDOMString  theOutputFile = h.generateFileName(outbase, "out");
-
-				const XSLTInputSource	xslInputSource(c_wstr(theXSLFile));
-				const XSLTInputSource	xmlInputSource(c_wstr(theXMLFile));
-				const XSLTInputSource	goldInputSource(c_wstr(theGoldFile));
-
-				// Use a XalanSourceTreeDocument to create the XSLTResultTarget. 
 				//
-				XalanSourceTreeDocument* dom = parserLiaison.createXalanSourceTreeDocument();
-				FormatterToSourceTree domOut(dom); 
-				XSLTResultTarget domResultTarget;
-				domResultTarget.setDocumentHandler(&domOut);
-
-				// Parsing(compile) the XSL stylesheet and report the results..
+				// Call the static initializers for xerces and xalan, and create a transformer
 				//
-				const XalanCompiledStylesheet*	compiledSS = 0;
-				xalan.compileStylesheet(xslInputSource, compiledSS);
-				if (compiledSS == 0 )
-				{  
-					continue;
-				}
+				XalanTransformer xalan;
 
-				// Parsing the input XML and report the results..
+				XalanSourceTreeDOMSupport domSupport;
+				XalanSourceTreeParserLiaison parserLiaison(domSupport);
+				domSupport.setParserLiaison(&parserLiaison);
+
+
+				// Generate Unique Run id and processor info
+				const XalanDOMString UniqRunid = h.generateUniqRunid();
+				const XalanDOMString  resultFilePrefix("cpp");
+				const XalanDOMString  resultsFile(h.args.output + resultFilePrefix + UniqRunid + FileUtility::s_xmlSuffix);
+
+
+				XMLFileReporter	logFile(resultsFile);
+				logFile.logTestFileInit("Comparison Testing:");
+					
+				// Specify the "test" directory for both input and output.
 				//
-				const XalanParsedSource*  parsedSource = 0;
-				xalan.parseSource(xmlInputSource, parsedSource);
-				if (parsedSource == 0)
+				const XalanDOMString  currentDir("domcomtests");
+				const XalanDOMString  theOutputDir = h.args.output + currentDir;
+				h.checkAndCreateDir(theOutputDir);
+
+				// Get the files found in the test directory
+				//
+				logFile.logTestCaseInit(currentDir);
+				const FileNameVectorType files = h.getTestFileNames(h.args.base, currentDir, true);
+
+				for(FileNameVectorType::size_type i = 0; i < files.size(); i++)
 				{
-					continue;
+					fileName = files[i];
+					h.data.reset();
+					h.data.testOrFile = fileName;
+
+					const XalanDOMString  theXSLFile= h.args.base + currentDir + FileUtility::s_pathSep + fileName;
+					const XalanDOMString  theXMLFile = h.generateFileName(theXSLFile,"xml");
+					XalanDOMString  theGoldFile = h.args.gold + currentDir + FileUtility::s_pathSep + fileName;
+					theGoldFile = h.generateFileName(theGoldFile, "out");
+
+					const XalanDOMString  outbase =  h.args.output + currentDir + FileUtility::s_pathSep + fileName; 
+					const XalanDOMString  theOutputFile = h.generateFileName(outbase, "out");
+
+					const XSLTInputSource	xslInputSource(c_wstr(theXSLFile));
+					const XSLTInputSource	xmlInputSource(c_wstr(theXMLFile));
+					const XSLTInputSource	goldInputSource(c_wstr(theGoldFile));
+
+					// Use a XalanSourceTreeDocument to create the XSLTResultTarget. 
+					//
+					XalanSourceTreeDocument* dom = parserLiaison.createXalanSourceTreeDocument();
+					FormatterToSourceTree domOut(dom); 
+					XSLTResultTarget domResultTarget;
+					domResultTarget.setDocumentHandler(&domOut);
+
+					// Parsing(compile) the XSL stylesheet and report the results..
+					//
+					const XalanCompiledStylesheet*	compiledSS = 0;
+					xalan.compileStylesheet(xslInputSource, compiledSS);
+					if (compiledSS == 0 )
+					{  
+						continue;
+					}
+
+					// Parsing the input XML and report the results..
+					//
+					const XalanParsedSource*  parsedSource = 0;
+					xalan.parseSource(xmlInputSource, parsedSource);
+					if (parsedSource == 0)
+					{
+						continue;
+					}
+
+					// Perform One transform using parsed stylesheet and unparsed xml source, report results...
+					// 
+					xalan.transform(*parsedSource, compiledSS, domResultTarget);
+					h.checkDOMResults(theOutputFile, compiledSS, dom, goldInputSource, logFile);
+
+					parserLiaison.reset();
+					xalan.destroyParsedSource(parsedSource);
+					xalan.destroyStylesheet(compiledSS);
 				}
 
-				// Perform One transform using parsed stylesheet and unparsed xml source, report results...
-				// 
-				xalan.transform(*parsedSource, compiledSS, domResultTarget);
-				h.checkDOMResults(theOutputFile, compiledSS, dom, goldInputSource, logFile);
+				logFile.logTestCaseClose("Done", "Pass");
+				h.reportPassFail(logFile, UniqRunid);
+				logFile.logTestFileClose("DomCom ", "Done");
+				logFile.close();
 
-				parserLiaison.reset();
-				xalan.destroyParsedSource(parsedSource);
-				xalan.destroyStylesheet(compiledSS);
+				h.analyzeResults(xalan, resultsFile);
 			}
 
-		logFile.logTestCaseClose("Done", "Pass");
-		h.reportPassFail(logFile, UniqRunid);
-		logFile.logTestFileClose("DomCom ", "Done");
-		logFile.close();
-
-		h.analyzeResults(xalan, resultsFile);
+			XalanTransformer::terminate();
 		}
 	}
-
-	XalanTransformer::terminate();
 
 
 	return 0;
