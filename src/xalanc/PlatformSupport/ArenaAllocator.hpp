@@ -20,7 +20,7 @@
 
 
 #include <algorithm>
-#include <vector>
+#include <list>
 
 
 
@@ -112,7 +112,7 @@ public:
 	size_type
 	getBlockCount() const
 	{
-		return m_blocks.size();
+		return (size_type)m_blocks.size();
 	}
 
 	/*
@@ -196,9 +196,9 @@ protected:
 
 	// data members...
 #if defined(XALAN_NO_STD_NAMESPACE)
-	typedef vector<ArenaBlockType*>			ArenaBlockListType;
+	typedef list<ArenaBlockType*>			ArenaBlockListType;
 #else
-	typedef std::vector<ArenaBlockType*>	ArenaBlockListType;
+	typedef std::list<ArenaBlockType*>	ArenaBlockListType;
 #endif
 
 	size_type			m_blockSize;

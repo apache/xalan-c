@@ -18,105 +18,26 @@
 #define ARENABLOCK_INCLUDE_GUARD_1357924680
 
 
-
-#include <algorithm>
-#include <cassert>
-#include <set>
-#include <memory>
-
-
-
-#if defined(XALAN_NO_STD_ALLOCATORS) && !defined(XALAN_NO_SELECTIVE_TEMPLATE_INSTANTIATION)
-#include <xalanc/PlatformSupport/XalanAllocator.hpp>
-#endif
+#include <xalanc/PlatformSupport/ArenaBlockBase.hpp>
 
 
 
 XALAN_CPP_NAMESPACE_BEGIN
 
 
-
-#if defined(XALAN_NO_SELECTIVE_TEMPLATE_INSTANTIATION)
-
-template <class Type>
-class ArenaBlockAllocator
-{
-public:
-
-	typedef size_t			size_type;
-	typedef ptrdiff_t		difference_type;
-	typedef Type*			pointer;
-	typedef const Type*		const_pointer;
-	typedef Type&			reference;
-	typedef const Type&		const_reference;
-	typedef Type			value_type;
-
-	ArenaBlockAllocator()
-	{
-	}
-
-	ArenaBlockAllocator(const ArenaBlockAllocator<Type>&)
-	{
-	};
-
-	~ArenaBlockAllocator()
-	{
-	}
-
-	pointer
-	allocate(
-			size_type		size,
-			const void*		/* hint */ = 0)
-	{
-		return (pointer)operator new(size * sizeof(Type));
-	}
-
-	void
-	deallocate(
-				pointer		p,
-				size_type	/* n */)
-	{
-		operator delete(p);
-	}
-};
-#endif
-
-
-
-template<class ObjectType>
-class ArenaBlockDestroy
-{
-public:
-
-	void
-	operator()(ObjectType&	theObject) const
-	{
-#if defined(XALAN_EXPLICIT_SCOPE_IN_TEMPLATE_BUG)
-		theObject.~ObjectType();
+template<class ObjectType,
+#if defined(XALAN_NO_DEFAULT_TEMPLATE_ARGUMENTS)
+		 class size_Type>
 #else
-		theObject.ObjectType::~ObjectType();
+		 class size_Type  = size_t >
 #endif
-	}
-};
-
-
-
-template<class ObjectType>
-class ArenaBlock
+class ArenaBlock : public ArenaBlockBase<ObjectType,size_Type>
 {
 public:
+	typedef ArenaBlockBase<ObjectType,size_Type>		BaseClassType;
+	
+	typedef typename BaseClassType::size_type		size_type;
 
-#if defined(XALAN_NO_SELECTIVE_TEMPLATE_INSTANTIATION)
-	typedef ArenaBlockAllocator<ObjectType>		AllocatorType;
-#elif defined(XALAN_NO_STD_ALLOCATORS)
-	typedef XalanAllocator<ObjectType>			AllocatorType;
-#else
-	typedef std::allocator<ObjectType>			AllocatorType;
-#endif
-
-	typedef ArenaBlockDestroy<ObjectType>		DestroyFunctionType;
-
-	typedef typename AllocatorType::size_type	size_type;
 
 	/*
 	 * Construct an ArenaBlock of the specified size
@@ -124,23 +45,22 @@ public:
 	 *
 	 * @param theBlockSize The size of the block (the number of objects it can contain).
 	 */
-	ArenaBlock(size_type	theBlockSize) :
-		m_destroyFunction(DestroyFunctionType()),
-		m_objectCount(0),
-		m_blockSize(theBlockSize),
-		m_objectBlock(0),
-		m_allocator()
+	ArenaBlock(size_type	theBlockSize) :	
+	BaseClassType(theBlockSize)
 	{
-		assert(theBlockSize > 0);
 	}
 
-	virtual 
+	 
 	~ArenaBlock()
-	{
-		destroyAll();
+	{	
+		assert( m_objectCount <= m_blockSize );
 
-		// Release the memory...
-		m_allocator.deallocate(m_objectBlock, m_blockSize);
+		
+		for ( size_type i = 0; i < m_objectCount  ; ++i )
+		{
+			m_objectBlock[i].~ObjectType();
+		}
+
 	}
 
 	/*
@@ -149,7 +69,7 @@ public:
 	 *
 	 * @return a pointer to the new block.
 	 */
-	virtual ObjectType*
+	ObjectType*
 	allocateBlock()
 	{
 		// Any space left?
@@ -159,15 +79,6 @@ public:
 		}
 		else
 		{
-			// If no memory has yet been allocated, then allocate it...
-			if (m_objectBlock == 0)
-			{
-#if defined(XALAN_NEW_STD_ALLOCATOR)
-				m_objectBlock = m_allocator.allocate(m_blockSize);
-#else
-				m_objectBlock = m_allocator.allocate(m_blockSize, 0);
-#endif
-			}
 			assert(m_objectBlock != 0);
 
 			return m_objectBlock + m_objectCount;
@@ -179,7 +90,7 @@ public:
 	 *
 	 * @param theBlock the address that was returned by allocateBlock()
 	 */
-	virtual void
+	void
 #if defined (NDEBUG)
 	commitAllocation(ObjectType*	/* theBlock */)
 #else
@@ -193,41 +104,6 @@ public:
 	}
 
 	/*
-	 * Find out if there is a block available.
-	 *
-	 * @return true if one is available, false if not.
-	 */
-	virtual bool
-	blockAvailable() const
-	{
-		return m_objectCount < m_blockSize ? true : false;
-	}
-
-	/*
-	 * Get the number of objects currently allocated in the
-	 * block.
-	 *
-	 * @return The number of objects allocated.
-	 */
-	virtual size_type
-	getCountAllocated() const
-	{
-		return m_objectCount;
-	}
-
-	/*
-	 * Get the block size, that is, the number
-	 * of objects in each block.
-	 *
-	 * @return The size of the block
-	 */
-	size_type
-	getBlockSize() const
-	{
-		return m_blockSize;
-	}
-
-	/*
 	 * Determine if this block owns the specified object.  Note
 	 * that even if the object address is within our block, this
 	 * call will return false if no object currently occupies the
@@ -236,144 +112,11 @@ public:
 	 * @param theObject the address of the object.
 	 * @return true if we own the object, false if not.
 	 */
-	virtual bool
+	bool
 	ownsObject(const ObjectType*	theObject) const
 	{
-		// Use less<>, since it's guaranteed to do pointer
-		// comparisons correctly...
-		XALAN_STD_QUALIFIER less<const ObjectType*>		functor;
-
-		if (functor(theObject, m_objectBlock) == false &&
-			functor(theObject, m_objectBlock + m_objectCount) == true)
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
+		return isInBorders(theObject, m_objectCount);
 	}
-
-	/*
-	 * Determine if this block owns the specified object block.
-	 * Note that, unlike ownsObject(), there does not need to
-	 * be an object at the address.
-	 *
-	 * @param theObject the address of the object
-	 * @return true if we own the object block, false if not.
-	 */
-	bool
-	ownsBlock(const ObjectType*		theObject) const
-	{
-		// Use less<>, since it's guaranteed to do pointer
-		// comparisons correctly...
-		XALAN_STD_QUALIFIER less<const ObjectType*>		functor;
-
-		if (functor(theObject, m_objectBlock) == false &&
-			functor(theObject, m_objectBlock + m_blockSize) == true)
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
-	}
-
-	/*
-	 * Destroy all objects in the block.  You can then reuse the
-	 * block.
-	 */
-	void
-	destroyAll()
-	{
-		// Destroy all existing objects...
-		XALAN_STD_QUALIFIER for_each(m_objectBlock,
-				 m_objectBlock + m_objectCount,
-				 DeleteFunctor(*this, m_destroyFunction));
-
-		m_objectCount = 0;
-	}
-
-protected:
-
-	/*
-	 * Determine if the block should be destroyed.  Called by
-	 * an instance of DeleteFunctor, this function is for
-	 * deriving classes that might want to control the destruction
-	 * of things.
-	 *
-	 * @param theObject the address of the object
-	 * @return true if block should be destroyed, false if not.
-	 */
-	virtual bool
-	shouldDestroyBlock(const ObjectType*	/* theObject */) const
-	{
-		return true;
-	}
-
-	/*
-	 * Determine the offset into the block for the given address.
-	 * Behavior is undefined if the address is not within our
-	 * block
-	 *
-	 * @param theObject the address of the object
-	 * @return the offset
-	 */
-	size_type
-	getBlockOffset(const ObjectType*	theObject) const
-	{
-		assert(size_type(theObject - m_objectBlock) < m_blockSize);
-
-		return theObject - m_objectBlock;
-	}
-
-	/*
-	 * Determine the address within our block of the object
-	 * at the specified offset.
-	 * Behavior is undefined if the offset is greater than the
-	 * block size.
-	 *
-	 * @param theObject the address of the object
-	 * @return the offset
-	 */
-	ObjectType*
-	getBlockAddress(size_type	theOffset) const
-	{
-		assert(theOffset < m_blockSize);
-
-		return m_objectBlock + theOffset;
-	}
-
-	struct DeleteFunctor
-	{
-		DeleteFunctor(
-				const ArenaBlock<ObjectType>&	theArenaBlock,
-				const DestroyFunctionType&		theDestroyFunction) :
-			m_arenaBlock(theArenaBlock),
-			m_destroyFunction(theDestroyFunction)
-		{
-		}
-
-		void
-		operator()(ObjectType&	theObject) const
-		{
-			if (m_arenaBlock.shouldDestroyBlock(&theObject) == true)
-			{
-				m_destroyFunction(theObject);
-			}
-		}
-
-	private:
-
-		const ArenaBlock<ObjectType>&	m_arenaBlock;
-		const DestroyFunctionType&		m_destroyFunction;
-	};
-
-	friend struct DeleteFunctor;
-
-	const DestroyFunctionType	m_destroyFunction;
-
 private:
 
 	// Not implemented...
@@ -385,15 +128,6 @@ private:
 	bool
 	operator==(const ArenaBlock<ObjectType>&) const;
 
-
-	// data members...
-	size_type			m_objectCount;
-
-	const size_type		m_blockSize;
-
-	ObjectType*			m_objectBlock;
-
-	AllocatorType		m_allocator;
 };
 
 

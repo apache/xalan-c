@@ -20,7 +20,7 @@
 
 
 #include <algorithm>
-#include <vector>
+#include <list>
 
 
 
@@ -47,19 +47,26 @@ public:
 						   ReusableArenaBlockType>		BaseClassType;
 
 #if defined (XALAN_NO_STD_NAMESPACE)
-	typedef	vector<ReusableArenaBlockType*>				ArenaBlockListType;
+	typedef	list<ReusableArenaBlockType*>				ArenaBlockListType;
+
 #else
-	typedef	std::vector<ReusableArenaBlockType*>		ArenaBlockListType;
+	typedef	std::list<ReusableArenaBlockType*>			ArenaBlockListType;
 #endif
+
+	typedef	typename ArenaBlockListType::iterator				iterator;
+	typedef	typename ArenaBlockListType::const_iterator			const_iterator;
+	typedef	typename ArenaBlockListType::reverse_iterator		reverse_iterator;
+	typedef	typename ArenaBlockListType::const_reverse_iterator  const_reverse_iterator;
+
 
 	/*
 	 * Construct an instance that will allocate blocks of the specified size.
 	 *
 	 * @param theBlockSize The block size.
 	 */
-	ReusableArenaAllocator(size_type	theBlockSize) :
+	ReusableArenaAllocator(size_type	theBlockSize, bool destroyBlocks = false) :
 		BaseClassType(theBlockSize),
-		m_lastBlockReferenced(0)
+		m_destroyBlocks(destroyBlocks)
 	{
 	}
 
@@ -77,42 +84,98 @@ public:
 	bool
 	destroyObject(ObjectType*	theObject)
 	{
-		bool	fSuccess = false;
+		bool bResult = false;
 
-		// Check this, just in case...
-		if (m_lastBlockReferenced != 0 && m_lastBlockReferenced->ownsObject(theObject) == true)
+		assert ( theObject != 0 );
+
+		if ( this->m_blocks.empty() )
+			return bResult;
+
+		iterator iTerator = this->m_blocks.begin();
+
+		iterator iEnd = this->m_blocks.end();
+
+		// first , run over unfull blocks ( that consentrated from the head )
+		while( iTerator != iEnd 
+					&& (*iTerator)->blockAvailable() )
 		{
-			m_lastBlockReferenced->destroyObject(theObject);
-
-			fSuccess = true;
-		}
-		else
-		{
-			// Note that this-> is required by template lookup rules.
-			const typename ArenaBlockListType::reverse_iterator	theEnd = this->m_blocks.rend();
-
-			typename ArenaBlockListType::reverse_iterator	i = this->m_blocks.rbegin();
-
-			while(i != theEnd)
+			if ((*iTerator)->ownsBlock(theObject) == true)
 			{
-				if ((*i)->ownsObject(theObject) == true)
+				(*iTerator)->destroyObject(theObject);
+				
+				// move the block we have just deleted to the head of the list
+				if (iTerator != this->m_blocks.begin())
 				{
-					m_lastBlockReferenced = *i;
+					// move the block to the beginning
+					ReusableArenaBlockType* block = *iTerator;
 
-					m_lastBlockReferenced->destroyObject(theObject);
+					assert(block != 0);
+					
+					this->m_blocks.erase(iTerator);
 
-					fSuccess = true;
-
-					break;
+					this->m_blocks.push_front(block);
 				}
-				else
+
+				if (m_destroyBlocks)
 				{
-					++i;
+					destroyBlock();
 				}
+
+				bResult = true;
+
+				break;
+			}
+
+			++iTerator;
+		}
+
+		reverse_iterator rIterator = this->m_blocks.rbegin();
+
+		reverse_iterator rEnd = this->m_blocks.rend();
+
+		// if the block hasn't been found from the head , start with full blocks ( from the taile)
+		while ( !bResult && rIterator != rEnd )
+		{
+			if ((*rIterator)->ownsBlock(theObject))
+			{
+				(*rIterator)->destroyObject(theObject);
+
+				if (rIterator != this->m_blocks.rbegin())
+				{
+					// move the block to the beginning
+					ReusableArenaBlockType* block = *iTerator;
+
+					assert(block != 0);
+					
+					this->m_blocks.erase(iTerator);
+
+					this->m_blocks.push_front(block);
+
+				}
+
+				if (m_destroyBlocks)
+				{
+					destroyBlock();
+				}
+
+				bResult = true;
+
+				break; 
+			}
+
+			if ( *rIterator == *iTerator)
+			{
+				break;
+			}
+			else
+			{
+				++rIterator;
 			}
 		}
 
-		return fSuccess;
+		return bResult;
+
+		assert ( bResult );
 	}
 
 	/*
@@ -121,51 +184,27 @@ public:
 	 * the object is successfully constructed.  You _must_
 	 * commit an allocation before performing any other
 	 * operation on the allocator.
+	 * 
 	 *
 	 * @return A pointer to a block of memory
 	 */
 	virtual ObjectType*
 	allocateBlock()
 	{
-		if (m_lastBlockReferenced == 0 ||
-			m_lastBlockReferenced->blockAvailable() == false)
+
+		if( this->m_blocks.empty() 
+			|| !this->m_blocks.front()->blockAvailable() )
 		{
-			// Search back for a block with some space available...		
-			const typename ArenaBlockListType::reverse_iterator	theEnd = this->m_blocks.rend();
+			this->m_blocks.push_front(new ReusableArenaBlockType(this->m_blockSize));
 			
-			// Note that this-> is required by template lookup rules.
-			typename ArenaBlockListType::reverse_iterator	i = this->m_blocks.rbegin();
-
-			while(i != theEnd)
-			{
-				assert(*i != 0);
-
-				if (*i != m_lastBlockReferenced && (*i)->blockAvailable() == true)
-				{
-					// Ahh, found one with free space.
-					m_lastBlockReferenced = *i;
-
-					break;
-				}
-				else
-				{
-					++i;
-				}
-			}
-
-			if (i == theEnd)
-			{
-				// No blocks have free space available, so create a new block, and
-				// push it on the list.
-				// Note that this-> is required by template lookup rules.
-				m_lastBlockReferenced = new ReusableArenaBlockType(this->m_blockSize);
-
-				this->m_blocks.push_back(m_lastBlockReferenced);
-			}
+			assert( this->m_blocks.front() != 0 );
 		}
-		assert(m_lastBlockReferenced != 0 && m_lastBlockReferenced->blockAvailable() == true);
 
-		return m_lastBlockReferenced->allocateBlock();
+		assert( this->m_blocks.front() != 0 );
+		assert( this->m_blocks.front()->blockAvailable() );
+
+		return this->m_blocks.front()->allocateBlock();
+
 	}
 
 	/*
@@ -178,40 +217,109 @@ public:
 	commitAllocation(ObjectType*	theObject)
 	{
 		// Note that this-> is required by template lookup rules.
-		assert(this->m_blocks.empty() == false && m_lastBlockReferenced != 0 && m_lastBlockReferenced->ownsBlock(theObject) == true);
+		assert( this->m_blocks.empty() == false );
+		assert( this->m_blocks.front() != 0 );
+		assert( this->m_blocks.front()->ownsBlock(theObject) == true );
 
-		m_lastBlockReferenced->commitAllocation(theObject);
-		assert(m_lastBlockReferenced->ownsObject(theObject) == true);
+		this->m_blocks.front()->commitAllocation(theObject);
+
+		if( !this->m_blocks.front()->blockAvailable() )
+		{
+			ReusableArenaBlockType* fullBlock = this->m_blocks.front();
+
+			assert ( fullBlock != 0 );
+
+			this->m_blocks.pop_front();
+
+			this->m_blocks.push_back( fullBlock );
+		}
 	}
 
-	virtual void
-	reset()
-	{
-		m_lastBlockReferenced = 0;
-
-		BaseClassType::reset();
-	}
 
 	virtual bool
 	ownsObject(const ObjectType*	theObject) const
 	{
-		bool	fResult = false;
+		if ( this->m_blocks.empty() )
+			return false;
 
-		// If no block has ever been referenced, then we haven't allocated
-		// any objects.
-		if (m_lastBlockReferenced != 0)
+		const_iterator iTerator = this->m_blocks.begin();
+
+		const_iterator iEnd = this->m_blocks.end();
+
+		while( iTerator != iEnd 
+					&& (*iTerator)->blockAvailable() )
 		{
-			// Check the last referenced block first.
-			fResult = m_lastBlockReferenced->ownsObject(theObject);
-
-			if (fResult == false)
+			if ((*iTerator)->ownsBlock(theObject) )
 			{
-				fResult = BaseClassType::ownsObject(theObject);
+				return true;
+			}
+
+			++iTerator;
+		}
+
+		const_reverse_iterator rIterator = this->m_blocks.rbegin();
+
+		const_reverse_iterator rEnd = this->m_blocks.rend();
+
+		while( rIterator != rEnd )
+		{
+			if ((*rIterator)->ownsBlock(theObject) )
+			{
+				return true;
+			}
+
+			if ( *iTerator == *rIterator )
+			{
+				break;
+			}
+			else
+			{
+				++rIterator;
 			}
 		}
 
-		return fResult;
+		return false;
 	}
+protected:
+	/*
+	 * The method destroys an empty block from the head of the list.
+	 * For eleminating multiple create/destroy operation , the block is destroyed 
+	 * only if the second one is not full
+	 *
+	 * @return  true if destroyed , fasle elsewhere
+	 */
+	bool
+	destroyBlock()
+	{
+		bool bResult = false;
+
+		if ( this->m_blocks.empty() )
+		{
+			return bResult;
+		}
+
+		const_iterator iTerator = this->m_blocks.begin();
+
+		if ( (*iTerator)->isEmpty() )
+		{
+			++iTerator;
+
+			if (iTerator == this->m_blocks.end() ||
+				(*iTerator)->blockAvailable() )
+			{
+				this->m_blocks.pop_front();
+				
+				bResult = true;
+			}
+
+		}
+
+		return bResult;
+	}
+
+	// data members
+
+	bool m_destroyBlocks;
 
 private:
 
@@ -221,8 +329,6 @@ private:
 	ReusableArenaAllocator<ObjectType>&
 	operator=(const ReusableArenaAllocator<ObjectType>&);
 
-	// Data members...
-	ReusableArenaBlockType*		m_lastBlockReferenced;
 };
 
 
