@@ -151,6 +151,15 @@ public:
 	nextToken();
 
 	/**
+	 * Retrieve the next token to be parsed; behavior is undefined if there are
+	 * no more tokens
+	 * 
+	 * @param theToken next token string
+	 */
+	virtual void
+	nextToken(XalanDOMString&	theToken);
+
+	/**
 	 * Count the number of tokens yet to be parsed
 	 * 
 	 * @return number of remaining tokens
