@@ -637,12 +637,12 @@ createFormatter(
 
 		if (stylesheet != 0)
 		{
-			version = stylesheet->m_version;
+			version = stylesheet->getOutputVersion();
 
-			mediatype = stylesheet->m_mediatype;
+			mediatype = stylesheet->getOutputMediaType();
 			doctypeSystem = stylesheet->getOutputDoctypeSystem();
 			doctypePublic = stylesheet->getOutputDoctypePublic();
-			standalone = stylesheet->m_standalone;
+			standalone = stylesheet->getOutputStandalone();
 		}
 
 		FormatterToXML* const	fToXML =
@@ -679,17 +679,17 @@ createFormatter(
 
 		if (stylesheet != 0)
 		{
-			version = stylesheet->m_version;
+			version = stylesheet->getOutputVersion();
 
 			if (noIndent == false)
 			{
 				outputIndent = stylesheet->getOutputIndent();
 			}
 
-			mediatype = stylesheet->m_mediatype;
+			mediatype = stylesheet->getOutputMediaType();
 			doctypeSystem = stylesheet->getOutputDoctypeSystem();
 			doctypePublic = stylesheet->getOutputDoctypePublic();
-			standalone = stylesheet->m_standalone;
+			standalone = stylesheet->getOutputStandalone();
 		}
 
 		FormatterToHTML* const	fToHTML =
