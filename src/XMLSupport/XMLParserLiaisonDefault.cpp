@@ -224,18 +224,17 @@ XMLParserLiaisonDefault::toMarkup(
 			XALAN_STATIC_UCODE_STRING("http://www.w3.org/TR/REC-html40")) == true)
 	{
 		FormatterToHTML* const	htmlFormatVisitor =
-				new FormatterToHTML(pw,
-						XalanDOMString(),
-						format,
-						m_Indent,
+				new FormatterToHTML(
+						pw,
 						XalanDOMString(),	// encoding
 						XalanDOMString(),	// media type
-						// @@ JMD: ??
-						// was: "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\">\n",
 						XalanDOMString(),	// doctypeSystem
 						XalanDOMString(),	// doctypePublic
-						false, // xmlDecl
-						XalanDOMString());	// standalone,
+						format,
+						m_Indent,
+						XalanDOMString(),	// version
+						XalanDOMString(),	// standalone
+						false); // xmlDecl
 				
 
 #if defined(XALAN_OLD_AUTO_PTR)
@@ -243,8 +242,6 @@ XMLParserLiaisonDefault::toMarkup(
 #else
 		visitor.reset(htmlFormatVisitor);
 #endif
-
-		htmlFormatVisitor->m_attrSpecialChars = m_SpecialCharacters;
 	}
 	else
 	{
@@ -265,8 +262,6 @@ XMLParserLiaisonDefault::toMarkup(
 #else
 		visitor.reset(fToXML);
 #endif
-
-		fToXML->m_attrSpecialChars = m_SpecialCharacters;
 	}
 
 	if(visitor.get() != 0)
@@ -289,18 +284,17 @@ XMLParserLiaisonDefault::setFormatterListener(
 			XALAN_STATIC_UCODE_STRING("http://www.w3.org/TR/REC-html40")) == true)
 	{
 		FormatterToHTML* const	htmlFormatVisitor =
-			new FormatterToHTML(pw,
-						XalanDOMString(),
-						format,
-						m_Indent,
+			new FormatterToHTML(
+						pw,
 						XalanDOMString(),	// encoding
 						XalanDOMString(),	// media type
-						// @@ JMD: ??
-						// was: "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\">\n",
 						XalanDOMString(),	// doctypeSystem
 						XalanDOMString(),	// doctypePublic
-						false, // xmlDecl
-						XalanDOMString());	// standalone
+						format,
+						m_Indent,
+						XalanDOMString(),	// version
+						XalanDOMString(),	// standalone
+						false); // xmlDecl
 
 		if (m_fOwnListener == true)
 		{
@@ -309,8 +303,6 @@ XMLParserLiaisonDefault::setFormatterListener(
 
 		m_FormatterListener =  htmlFormatVisitor;
 		m_fOwnListener = true;
-
-		htmlFormatVisitor->m_attrSpecialChars = m_SpecialCharacters;
 	}
 	else if(0 == m_FormatterListener)
 	{
@@ -325,8 +317,6 @@ XMLParserLiaisonDefault::setFormatterListener(
 					XalanDOMString(),	// doctypePublic
 					true,				// xmlDecl
 					XalanDOMString());	// standalone
-
-		fToXML->m_attrSpecialChars = m_SpecialCharacters;
 
 		m_FormatterListener = fToXML;
 		m_fOwnListener = true;

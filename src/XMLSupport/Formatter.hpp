@@ -79,34 +79,6 @@ class XALAN_XMLSUPPORT_EXPORT Formatter
 {
 public:
 
-#if defined(XALAN_INLINE_INITIALIZATION)
-
-	/**
-	 * Output results as XML.
-	 */
-	const int OUTPUT_METH_XML = 1;
-  
-	/**
-	 * Output results as HTML.
-	 */
-	const int OUTPUT_METH_HTML = 2;
-  
-	/**
-	 * Output results as TEXT.
-	 */
-	const int OUTPUT_METH_TEXT = 3;
-  
-#else
-
-	enum eFormats
-	{
-		OUTPUT_METH_XML = 1,
-		OUTPUT_METH_HTML = 2,
-		OUTPUT_METH_TEXT = 3
-	};
-
-#endif
-
 	Formatter();
 
 	virtual

@@ -87,6 +87,7 @@ FormatterToDOM::FormatterToDOM(
 			XalanDocument*			doc,
 			XalanDocumentFragment*	docFrag,
 			XalanElement*			currentElement) :
+	FormatterListener(OUTPUT_METHOD_DOM),
 	m_doc(doc),
 	m_docFrag(docFrag),
 	m_currentElem(currentElement),
@@ -100,6 +101,7 @@ FormatterToDOM::FormatterToDOM(
 FormatterToDOM::FormatterToDOM(
 			XalanDocument*	doc,
 			XalanElement*	elem) :
+	FormatterListener(OUTPUT_METHOD_DOM),
 	m_doc(doc),
 	m_docFrag(0),
 	m_currentElem(elem),

@@ -69,8 +69,9 @@
 
 
 
-FormatterListener::FormatterListener() :
-	DocumentHandler()
+FormatterListener::FormatterListener(eFormat	theFormat) :
+	DocumentHandler(),
+	m_outputFormat(theFormat)
 {
 }
 

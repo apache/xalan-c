@@ -67,8 +67,8 @@
 
 
 
-FormatterToText::FormatterToText(
-			Writer&		pw) :
+FormatterToText::FormatterToText(Writer&	pw) :
+	FormatterListener(OUTPUT_METHOD_TEXT),
 	m_pw(pw)
 {
 }

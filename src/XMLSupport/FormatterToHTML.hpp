@@ -81,7 +81,14 @@
 // Base class header file.
 #include <XMLSupport/FormatterToXML.hpp>
 
+
+
+#include <PlatformSupport/DOMStringHelper.hpp>
+
+
+
 #include <XPath/QName.hpp>
+
 
 
 /**
@@ -92,19 +99,6 @@ class XALAN_XMLSUPPORT_EXPORT FormatterToHTML : public FormatterToXML
 
 public:
 
-#if defined(XALAN_NO_NAMESPACES)
-#	define XALAN_STD
-#else
-#	define XALAN_STD std::
-#endif
-	typedef XALAN_STD set<XalanDOMString>		EmptiesSetType;
-	typedef XALAN_STD vector<XalanDOMString>	HTMLAttributesVectorType;
-	typedef XALAN_STD vector<XalanDOMString>	HTMLSymbolsVectorType;
-	typedef XALAN_STD set<XalanDOMString>		StringSetType;
-	typedef XALAN_STD map<XalanDOMString, StringSetType> AttributesMapType;
-#undef XALAN_STD
-
-
 	/**
 	 * Constructor for customized encoding and doctype.
 	 * @param writer        The character output stream to use.
@@ -114,15 +108,15 @@ public:
 	 */
 	FormatterToHTML(
 			Writer&					writer,
-			const XalanDOMString&	version,
-			bool					doIndent,
-			int						indent,
-			const XalanDOMString&	encoding,
-			const XalanDOMString&	mediaType,
-			const XalanDOMString&	doctypeSystem,
-			const XalanDOMString&	doctypePublic,
-			bool					xmlDecl,
-			const XalanDOMString&	standalone);
+			const XalanDOMString&	encoding = XalanDOMString(),
+			const XalanDOMString&	mediaType = XalanDOMString(),
+			const XalanDOMString&	doctypeSystem = XalanDOMString(),
+			const XalanDOMString&	doctypePublic = XalanDOMString(),
+			bool					doIndent = true,
+			int						indent = 4,
+			const XalanDOMString&	version = XalanDOMString(),
+			const XalanDOMString&	standalone = XalanDOMString(),
+			bool					xmlDecl = false);
 
 	virtual
 	~FormatterToHTML();
@@ -132,9 +126,6 @@ public:
 
 	virtual void
 	startDocument();
-
-	virtual void
-	endDocument();
 
 	virtual void
 	startElement(
@@ -167,71 +158,215 @@ public:
 			const XMLCh* const	data);
 
 
-	// These methods are new ...
-
-	/**
-	 * Initialize the list of HTML elements that do not contain text, for
-	 * example, "BR"
-	 *
-	 * @return set of strings for elements
-	 */
-	static EmptiesSetType
-	createEmpties();
-
-	/**
-	 * Initialize the list of attributes for HTML elements that do not contain
-	 * text, for example, "checked."
-	 *
-	 * @return set of strings for elements
-	 */
-	static EmptiesSetType
-	createAttrEmpties();
-
-	/**
-	 * Initialize the list of entity reference names, for example, "nbsp."
-	 *
-	 * @return vector of strings
-	 */
-	static HTMLAttributesVectorType
-	createAttributes();
-
-	/**
-	 * Initialize the list of HTML non-block elements, for example, "BR".
-	 * These are present alone and do not have the closing "/>" needed for
-	 * valid XML.
-	 *
-	 * @return vector of strings
-	 */
-	static StringSetType
-	createNonBlockElems();
-
-	/**
-	 * Initialize the list of symbols that must be escaped, for example, "<"
-	 *
-	 * @return set of strings
-	 */
-	static StringSetType
-	createEscapeElems();
-
-	/**
-	 * Initialize the map of valid attributes for HTML tags.  For example, the
-	 * tag "A" can have attributes of "HREF" and "NAME"
-	 *
-	 * @return map of attributes to vector of tags
-	 */
-	static AttributesMapType
-	createAttributesMap();
-
-	/**
-	 * Initialize the list of names for symbols, for example, "chi" for the
-	 * Greek letter Chi.
-	 *
-	 * @return vector of strings for symbol names
-	 */
-	static HTMLSymbolsVectorType
-	createSymbols();
-
 protected:
+
+	// These methods are new ...
+	/**
+	 * Write an attribute string.
+	 * @param string The string to write.
+	 * @param encoding The current encoding.
+	 */
+	virtual void
+	writeAttrString(
+			const XalanDOMChar*		string,
+			const XalanDOMString&	encoding);
+
+private:
+
+	class ElemDesc
+	{
+	public:
+
+		enum eFlags
+		{
+			EMPTY = (1 << 1),
+			FLOW = (1 << 2),
+			BLOCK = (1 << 3),
+			BLOCKFORM = (1 << 4),
+			BLOCKFORMFIELDSET = (1 << 5),
+			CDATA = (1 << 6),
+			PCDATA = (1 << 7),
+			RAW = (1 << 8),
+			INLINE = (1 << 9),
+			INLINEA = (1 << 10),
+			INLINELABEL = (1 << 11),
+			FONTSTYLE = (1 << 12),
+			PHRASE = (1 << 13),
+			FORMCTRL = (1 << 14),
+			SPECIAL = (1 << 15),
+			ASPECIAL = (1 << 16),
+			HEADMISC = (1 << 17),
+			HEAD = (1 << 18),
+			LIST = (1 << 19),
+			PREFORMATTED = (1 << 20),
+			WHITESPACESENSITIVE = (1 << 21),
+
+			ATTRURL = (1 << 1),
+			ATTREMPTY = (1 << 2)
+		};
+
+		ElemDesc(unsigned int	flags = 0) :
+			m_flags(flags)
+		{
+		}
+
+		~ElemDesc()
+		{
+		}
+
+		bool
+		is(unsigned int		flags) const
+		{
+			return m_flags & flags ? true : false;
+		}
+
+		void
+		setAttr(
+				const XalanDOMString&	name,
+				unsigned int			flags)
+		{
+			m_attrs.insert(AttributeMapType::value_type(name, flags));
+		}
+
+		bool
+		isAttrFlagSet(
+				const XalanDOMString&	name,
+				unsigned int			flags) const
+		{
+			const AttributeMapType::const_iterator	i =
+				m_attrs.find(name);
+
+			if (i == m_attrs.end())
+			{
+				return false;
+			}
+			else
+			{
+				return i->second & flags ? true : false;
+			}
+		}
+
+	private:
+
+	#if defined(XALAN_NO_NAMESPACES)
+		typedef map<DOMString, unsigned int>	AttributeMapType;
+	#else
+		typedef std::map<DOMString, unsigned int>	AttributeMapType;
+	#endif
+
+		const unsigned int	m_flags;
+
+		AttributeMapType	m_attrs;
+	};
+
+
+#if defined(XALAN_NO_NAMESPACES)
+	typedef map<DOMString, ElemDesc>	ElementFlagsMapType;
+#else
+	typedef std::map<DOMString, ElemDesc>	ElementFlagsMapType;
+#endif
+
+	static const ElementFlagsMapType	s_elementFlags;
+
+	/**
+	 * Dummy description for elements not found.
+	 */
+	static const ElemDesc				s_dummyDesc;
+
+	/**
+	 * The string "<!DOCTYPE  HTML".
+	 */
+	static const XalanDOMCharVectorType		s_doctypeHeaderStartString;
+
+	/**
+	 * The string " PUBLIC \"".
+	 */
+	static const XalanDOMCharVectorType		s_doctypeHeaderPublicString;
+
+	/**
+	 * The string " SYSTEM".
+	 */
+	static const XalanDOMCharVectorType		s_doctypeHeaderSystemString;
+
+	/**
+	 * The string "SCRIPT".
+	 */
+	static const XalanDOMCharVectorType		s_scriptString;
+
+	/**
+	 * The string "STYLE".
+	 */
+	static const XalanDOMCharVectorType		s_styleString;
+
+	/**
+	 * The string "lt".
+	 */
+	static const XalanDOMCharVectorType		s_ltString;
+
+	/**
+	 * The string "gt".
+	 */
+	static const XalanDOMCharVectorType		s_gtString;
+
+	/**
+	 * The string "amp.
+	 */
+	static const XalanDOMCharVectorType		s_ampString;
+
+	/**
+	 * The string "fnof".
+	 */
+	static const XalanDOMCharVectorType		s_fnofString;
+
+	/**
+	 * Set the attribute characters what will require special mapping.
+	 */
+	void
+	initAttrCharsMap();
+
+	/**
+	 * Set the output characters what will require special mapping.
+	 */
+	void
+	initCharsMap();
+
+	unsigned int
+	copyEntityIntoBuffer(
+			const XalanDOMChar*		s,
+			unsigned int			pos);
+
+	unsigned int
+	copyEntityIntoBuffer(
+			const XalanDOMString&	s,
+			unsigned int			pos)
+	{
+		return copyEntityIntoBuffer(c_wstr(s), pos);
+	}
+
+	unsigned int
+	copyEntityIntoBuffer(
+			const XalanDOMCharVectorType&	s,
+			unsigned int					pos)
+	{
+		return copyEntityIntoBuffer(c_wstr(s), pos);
+	}
+
+	/**
+	 * Get an ElemDesc instance for the specified name.
+	 *
+	 * @param name the name to search.
+	 * @return a const reference to the ElemDesc instance.
+	 */
+	static const ElemDesc&
+	getElemDesc(const XalanDOMString&	name);
+
+	/**
+	 * Initialize the map of element flags.
+	 *
+	 * @return map of element flags.
+	 */
+	static ElementFlagsMapType
+	createElementFlagsMap();
 
 	/**
 	 * Process an attribute.
@@ -241,39 +376,27 @@ protected:
 	virtual void
 	processAttribute(
 			const XalanDOMChar*		name,
-			const XalanDOMChar*		value);
+			const XalanDOMChar*		value,
+			const ElemDesc&			elemDesc);
 
 	/**
-	 * Returns the specified <var>string</var> after substituting non ASCII characters,
+	 * Write the specified <var>string</var> after substituting non ASCII characters,
 	 * with <CODE>%HH</CODE>, where HH is the hex of the byte value.
 	 *
 	 * @param   string      String to convert to XML format.
 	 * @param   specials    Chracters, should be represeted in chracter referenfces.
 	 * @param   encoding    CURRENTLY NOT IMPLEMENTED.
-	 * @return              XML-formatted string.
-	 * @see #backReference
-	 * NOTE: return value destroyed on subsequent calls
 	 */
-	const XalanDOMString
-	prepAttrURI(
-			const XalanDOMString&	string,
-			const XalanDOMString&	specials,
-			const XalanDOMString&	encoding);
-	// java: throws SAXException
+	void
+	writeAttrURI(
+			const XalanDOMChar*		string,
+			const XalanDOMString	encoding);
 
-private:
+	 XalanDOMString	m_currentElementName;
 
-	static const EmptiesSetType				s_empties;
-	static const EmptiesSetType				s_attrempties;
-	static const HTMLAttributesVectorType	s_HTMLlat1;
-	static const HTMLSymbolsVectorType		s_HTMLsymbol1;
-	static const StringSetType				s_nonblockelems;
-	static const AttributesMapType			s_attruris;
-	static const StringSetType				s_escapetb;
+	bool			m_inBlockElem;
 
-	XalanDOMString								m_currentElementName;
-	bool m_inBlockElem;
-
+	BoolStackType	m_isRawStack;
 };
 
 

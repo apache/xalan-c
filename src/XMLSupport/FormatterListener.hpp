@@ -84,10 +84,27 @@ class XALAN_XMLSUPPORT_EXPORT FormatterListener : public DocumentHandler
 {
 public:
 
-	FormatterListener();
-	virtual
+	enum eFormat
+	{
+		OUTPUT_METHOD_NONE = 0,
+		OUTPUT_METHOD_XML = 1,
+		OUTPUT_METHOD_HTML = 2,
+		OUTPUT_METHOD_TEXT = 3,
+		OUTPUT_METHOD_DOM = 4,
+		OUTPUT_METHOD_OTHER = 5
+	};
 
+	FormatterListener(eFormat	theFormat);
+
+	virtual
 	~FormatterListener();
+
+
+	eFormat
+	getOutputFormat() const
+	{
+		return m_outputFormat;
+	}
 
 	/**
 	 * Receive notification of character data. If available, when the
@@ -185,6 +202,9 @@ public:
 			const	XMLCh* const	name,
 			AttributeList&			attrs) = 0;
 
+private:
+
+	const eFormat	m_outputFormat;
 };
 
 
