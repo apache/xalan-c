@@ -70,6 +70,59 @@
 
 
 template<class ObjectType>
+class DefaultCacheCreateFunctor
+{
+public:
+
+	ObjectType*
+	operator()() const
+	{
+		return new ObjectType;
+	}
+};
+
+
+
+template<class ObjectType>
+class DefaultCacheResetFunctor
+{
+public:
+
+	void
+	operator()(ObjectType*) const
+	{
+	}
+};
+
+
+
+template<class ObjectType>
+class ClearCacheResetFunctor
+{
+public:
+
+	void
+	operator()(ObjectType*	theInstance) const
+	{
+		theInstance->clear();
+	}
+};
+
+
+
+#if defined(XALAN_OBJECT_CACHE_KEEP_BUSY_LIST)
+
+template<
+class ObjectType,
+#if defined(XALAN_NO_DEFAULT_TEMPLATE_ARGUMENTS)
+class CreateFunctorType,
+class DeleteFunctorType,
+class ResetFunctorType>
+#else
+class CreateFunctorType = DefaultCacheCreateFunctor<ObjectType>,
+class DeleteFunctorType = DeleteFunctor<ObjectType>,
+class ResetFunctorType = DefaultCacheResetFunctor<ObjectType> >
+#endif
 class XalanObjectCache
 {
 public:
@@ -80,14 +133,18 @@ public:
 	typedef std::vector<ObjectType*>	VectorType;
 #endif
 
+	typedef ObjectType	CacheObjectType;
+
 	explicit
-	XalanObjectCache() :
+	XalanObjectCache(unsigned int	initialListSize = 0) :
 		m_availableList(),
 		m_busyList()
 	{
+		m_availableList.reserve(initialListSize);
+
+		m_busyList.reserve(initialListSize);
 	}
 
-	virtual
 	~XalanObjectCache()
 	{
 		reset();
@@ -97,9 +154,9 @@ public:
 #endif
 
 		for_each(
-			m_availableList.begin(),
-			m_availableList.end(),
-			DeleteFunctor<ObjectType>());
+				m_availableList.begin(),
+				m_availableList.end(),
+				m_deleteFunctor);
 	}
 
 	ObjectType*
@@ -109,11 +166,11 @@ public:
 		// that's the cheapest thing.
 		if (m_availableList.size() == 0)
 		{
-			XalanAutoPtr<ObjectType>	theNewObject(create());
+			ObjectType* const	theNewObject = m_createFunctor();
 
-			m_busyList.push_back(theNewObject.get());
+			m_busyList.push_back(theNewObject);
 
-			return theNewObject.release();
+			return theNewObject;
 		}
 		else
 		{
@@ -148,6 +205,8 @@ public:
 		}
 		else
 		{
+			m_resetFunctor(theInstance);
+
 			m_availableList.push_back(theInstance);
 
 			m_busyList.erase(i);
@@ -156,14 +215,14 @@ public:
 		}
 	}
 
-	virtual void
+	void
 	reset()
 	{
 		while (m_busyList.size() != 0)
 		{
 			ObjectType* const	theInstance = m_busyList.back();
 
-			resetInstance(theInstance);
+			m_resetFunctor(theInstance);
 
 			m_availableList.push_back(theInstance);
 
@@ -171,40 +230,146 @@ public:
 		}
 	}
 
-protected:
+	// Functors for various operations...
+	CreateFunctorType	m_createFunctor;
 
-	virtual ObjectType*
-	create() = 0;
+	DeleteFunctorType	m_deleteFunctor;
 
-	virtual void
-	resetInstance(ObjectType*	/* theInstance */)
-	{
-	}
+	ResetFunctorType	m_resetFunctor;
 
 private:
 
 	// There are not defined...
-	XalanObjectCache(const XalanObjectCache<ObjectType>&	theRHS);
+	XalanObjectCache(const XalanObjectCache<ObjectType, CreateFunctorType, DeleteFunctorType, ResetFunctorType>&	theRHS);
 
-	XalanObjectCache<ObjectType>&
-	operator=(const XalanObjectCache<ObjectType>&	theRHS);
+	XalanObjectCache<ObjectType, CreateFunctorType, DeleteFunctorType, ResetFunctorType>&
+	operator=(const XalanObjectCache<ObjectType, CreateFunctorType, DeleteFunctorType, ResetFunctorType>&	theRHS);
 
 
-	// Data members
-	VectorType	m_availableList;
+	// Data members...
+	VectorType			m_availableList;
 
-	VectorType	m_busyList;
+	VectorType			m_busyList;
 };
 
 
-template<class ObjectType>
+
+#else
+
+
+
+template<
+class ObjectType,
+#if defined(XALAN_NO_DEFAULT_TEMPLATE_ARGUMENTS)
+class CreateFunctorType,
+class DeleteFunctorType,
+class ResetFunctorType>
+#else
+class CreateFunctorType = DefaultCacheCreateFunctor<ObjectType>,
+class DeleteFunctorType = DeleteFunctor<ObjectType>,
+class ResetFunctorType = DefaultCacheResetFunctor<ObjectType> >
+#endif
+class XalanObjectCache
+{
+public:
+
+#if defined(XALAN_NO_NAMESPACES)
+	typedef vector<ObjectType*>			VectorType;
+#else
+	typedef std::vector<ObjectType*>	VectorType;
+#endif
+
+	typedef ObjectType	CacheObjectType;
+
+	explicit
+	XalanObjectCache(unsigned int	initialListSize = 0) :
+		m_availableList()
+	{
+		m_availableList.reserve(initialListSize);
+	}
+
+	~XalanObjectCache()
+	{
+		reset();
+
+#if !defined(XALAN_NO_NAMESPACES)
+		using std::for_each;
+#endif
+
+		for_each(
+				m_availableList.begin(),
+				m_availableList.end(),
+				m_deleteFunctor);
+	}
+
+	ObjectType*
+	get()
+	{
+		// We'll always return the back of the free list, since
+		// that's the cheapest thing.
+		if (m_availableList.size() == 0)
+		{
+			return m_createFunctor();
+		}
+		else
+		{
+			ObjectType* const	theObject = m_availableList.back();
+
+			m_availableList.pop_back();
+
+			return theObject;
+		}
+	}
+
+	bool
+	release(ObjectType*		theInstance)
+	{
+		m_resetFunctor(theInstance);
+
+		m_availableList.push_back(theInstance);
+
+		return true;
+	}
+
+	void
+	reset()
+	{
+	}
+
+	// Functors for various operations...
+	CreateFunctorType	m_createFunctor;
+
+	DeleteFunctorType	m_deleteFunctor;
+
+	ResetFunctorType	m_resetFunctor;
+
+private:
+
+	// These are not defined...
+	XalanObjectCache(const XalanObjectCache<ObjectType, CreateFunctorType, DeleteFunctorType, ResetFunctorType>&	theRHS);
+
+	XalanObjectCache<ObjectType, CreateFunctorType, DeleteFunctorType, ResetFunctorType>&
+	operator=(const XalanObjectCache<ObjectType, CreateFunctorType, DeleteFunctorType, ResetFunctorType>&	theRHS);
+
+
+	// Data members...
+	VectorType			m_availableList;
+};
+
+
+
+#endif
+
+
+
+template<class XalanObjectCacheType>
 class GetReleaseCachedObject
 {
 public:
 
-	typedef XalanObjectCache<ObjectType>	CacheType;
+	typedef typename XalanObjectCacheType::CacheObjectType	CacheObjectType;
 
-	GetReleaseCachedObject(CacheType&	theCache) :
+	GetReleaseCachedObject(XalanObjectCacheType&	theCache) :
 		m_cache(theCache),
 		m_cachedObject(theCache.get())
 	{
@@ -215,7 +380,7 @@ public:
 		m_cache.release(m_cachedObject);
 	}
 
-	ObjectType*
+	CacheObjectType*
 	get() const
 	{
 		return m_cachedObject;
@@ -224,30 +389,29 @@ public:
 private:
 
 	// Not implemented...
-	GetReleaseCachedObject(const GetReleaseCachedObject<ObjectType>&);
+	GetReleaseCachedObject(const GetReleaseCachedObject<XalanObjectCacheType>&);
 
 
 	// Data members...
-	CacheType&			m_cache;
+	XalanObjectCacheType&	m_cache;
 
-	ObjectType* const	m_cachedObject;
+	CacheObjectType* const	m_cachedObject;
 };
 
 
+
 template<class ObjectType>
-class XalanObjectCacheDefault : public XalanObjectCache<ObjectType>
+class XalanObjectCacheDefault : public XalanObjectCache<ObjectType, DefaultCacheCreateFunctor<ObjectType>, DeleteFunctor<ObjectType>, DefaultCacheResetFunctor<ObjectType> >
 {
 public:
 
-protected:
+	typedef XalanObjectCache<ObjectType, DefaultCacheCreateFunctor<ObjectType>, DeleteFunctor<ObjectType>, DefaultCacheResetFunctor<ObjectType> >		BaseClassType;
 
-	virtual ObjectType*
-	create()
+	explicit
+	XalanObjectCacheDefault(unsigned int	initialListSize = 0) :
+		BaseClassType(initialListSize)
 	{
-		return new ObjectType;
 	}
-
-private:
 };
 
 
