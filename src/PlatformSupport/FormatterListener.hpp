@@ -88,6 +88,11 @@ class PrefixResolver;
 
 
 
+typedef XERCES_CPP_NAMESPACE_QUALIFIER Locator			LocatorType;
+typedef XERCES_CPP_NAMESPACE_QUALIFIER AttributeList	AttributeListType;
+
+
+
 /**
  * A SAX-based formatter interface for the XSL processor.  This interface 
  * will be called as result tree elements are constructed.
@@ -97,9 +102,6 @@ class XALAN_PLATFORMSUPPORT_EXPORT FormatterListener : public XERCES_CPP_NAMESPA
 public:
 
 	typedef XERCES_CPP_NAMESPACE_QUALIFIER DocumentHandler	ParentType;
-	typedef XERCES_CPP_NAMESPACE_QUALIFIER Locator			LocatorType;
-	typedef XERCES_CPP_NAMESPACE_QUALIFIER AttributeList	AttributeListType;
-
 
 	// A handy typedef...  Must match DocumentHandler's type for characters(), etc...
 	typedef unsigned int	size_type;
