@@ -102,11 +102,16 @@ using namespace std;
  * @version $Id$
  */
 
-#if defined HARNESS_EXPORTS
+#if !defined(WIN32)
+#define HARNESS_API
+#else
+#if defined(HARNESS_EXPORTS)
 #define HARNESS_API __declspec(dllexport)
 #else
 #define HARNESS_API __declspec(dllimport)
 #endif
+#endif
+
 
 // Misc typedefs and Global variables.
 // These structures hold vectors of directory names and file names.
@@ -120,7 +125,11 @@ using namespace std;
 const XalanDOMString	processorType(XALAN_STATIC_UCODE_STRING("XalanC"));
 const XalanDOMString	XSLSuffix(XALAN_STATIC_UCODE_STRING(".xsl"));
 const XalanDOMString	XMLSuffix(XALAN_STATIC_UCODE_STRING(".xml"));
+#if defined(WIN32)
+const XalanDOMString	pathSep(XALAN_STATIC_UCODE_STRING("/"));
+#else
 const XalanDOMString	pathSep(XALAN_STATIC_UCODE_STRING("\\"));
+#endif
 
 // This class is exported from the Harness.dll
 class HARNESS_API FileUtility 

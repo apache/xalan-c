@@ -336,10 +336,10 @@ XMLFileReporter::logStatistic (int level, long lVal, double dVal, const XalanDOM
 		sprintf(tmp, "%d", level);
         printToFile(STATISTIC_HDR + tmp + "\" " + ATTR_DESC + "=\"" + escapestring(msg) + "\">");
 		
-		sprintf(tmp, "%d", lVal);
+		sprintf(tmp, "%ld", lVal);
 		printToFile("<" + ELEM_LONGVAL + ">" + tmp + "</" + ELEM_LONGVAL + ">");
 		
-		sprintf(tmp, "%d", dVal);
+		sprintf(tmp, "%f", dVal);
         printToFile("<" + ELEM_DOUBLEVAL + ">" + tmp + "</" + ELEM_DOUBLEVAL + ">");
         
 		printToFile("</" + ELEM_STATISTIC + ">");

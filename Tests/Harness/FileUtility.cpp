@@ -7,17 +7,23 @@
 * Rights for U.S. government users and applicable export regulations.
 */
 
-#include <stdlib.h>
+#include <cstdlib>
 #include <cstdio>
 #include <ctime>
 #include <vector>
-#include <string.h>
-#include <time.h>
+#include <climits>
+#include <cstring>
 
 // Added for directory creation 
 #include <strstream>
-#include <stdio.h>
+#if defined(WIN32)
 #include <direct.h>
+#define PATH_MAX _MAX_PATH
+#define chdir _chdir
+#define getcwd _getcwd
+#else
+#include <unistd.h>
+#endif
 
 
 #if defined(XALAN_OLD_STREAM_HEADERS)
@@ -32,7 +38,7 @@
 
 // XERCES HEADERS...
 //	Are included by HarnessInit.hpp
-#include <HarnessInit.hpp>
+#include "HarnessInit.hpp"
 #include <sax/SAXException.hpp>
 
 // XALAN HEADERS...
@@ -56,7 +62,15 @@ char *xalanNodeTypes[]=
 	"NOTATION_NODE"};
 
 
-XalanDOMString FileUtility::getDrive()
+#if !defined(WIN32)
+XalanDOMString
+FileUtility::getDrive()
+{
+	return XalanDOMString();
+}
+#else
+XalanDOMString
+FileUtility::getDrive()
 {
 	char temp[2];
 	
@@ -70,6 +84,7 @@ XalanDOMString FileUtility::getDrive()
 	return(XalanDOMString(temp));
 
 }
+#endif
 
 //	This routine retrieves test file names from specified directories.
 //	Inputs: baseDir:	typically "conf" or "perf"
@@ -125,13 +140,13 @@ FileNameVectorType FileUtility::getDirectoryNames(const XalanDOMString&		rootDir
 
 bool FileUtility::checkDir(const XalanDOMString&	directory )
 {
-char buffer[_MAX_PATH];
+	char buffer[PATH_MAX];
 
-	_getcwd( buffer, _MAX_PATH );
+	getcwd(buffer, PATH_MAX);
 
-	if ( _chdir(c_str(TranscodeToLocalCodePage(directory))) )
+	if ( chdir(c_str(TranscodeToLocalCodePage(directory))) )
 	{
-		_chdir(buffer);
+		chdir(buffer);
 		return false;
 	}
 	else
@@ -143,11 +158,11 @@ char buffer[_MAX_PATH];
 
 void FileUtility::checkAndCreateDir(const XalanDOMString&	directory)
 {
-	char buffer[_MAX_PATH];
+	char buffer[PATH_MAX];
 
-	_getcwd( buffer, _MAX_PATH );
+	getcwd(buffer, PATH_MAX);
 
-	if ( (_chdir(c_str(TranscodeToLocalCodePage(directory)))) )
+	if ( (chdir(c_str(TranscodeToLocalCodePage(directory)))) )
 	{
 		//cout << "Couldn't change to " << directory << ", will create it." << endl;
 		if ( !(_mkdir(c_str(TranscodeToLocalCodePage(directory)))))
@@ -156,7 +171,7 @@ void FileUtility::checkAndCreateDir(const XalanDOMString&	directory)
 		}
 	}
 
-	_chdir(buffer);
+	chdir(buffer);
 }
 
 /*	This routine generates file names based on the provide suffix
@@ -1085,8 +1100,8 @@ FileUtility::analyzeResults(XalanTransformer& xalan, const XalanDOMString& resul
 
 	// Generate the input and output file names.
 	const XalanDOMString  theHTMLFile = generateFileName(resultsFile,"html");
-	const XalanDOMString  theStylesheet = data.testBase + XalanDOMString("\cconf.xsl");
-	const XalanDOMString  theXMLSource = data.testBase + XalanDOMString("\cconf.xml");
+	const XalanDOMString  theStylesheet = data.testBase + XalanDOMString("cconf.xsl");
+	const XalanDOMString  theXMLSource = data.testBase + XalanDOMString("cconf.xml");
 
 	// Create the InputSources and ResultTarget.
 	const XSLTInputSource	xslInputSource(c_wstr(theStylesheet));

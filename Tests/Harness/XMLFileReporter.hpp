@@ -73,10 +73,14 @@
  * @version $Id$
  */
 
-#if defined HARNESS_EXPORTS
+#if !defined(WIN32)
+#define HARNESS_API
+#else
+#if defined(HARNESS_EXPORTS)
 #define HARNESS_API __declspec(dllexport)
 #else
 #define HARNESS_API __declspec(dllimport)
+#endif
 #endif
 
 
@@ -103,7 +107,7 @@ public:
 	XMLFileReporter(const XalanDOMString& fileName);
 
 	// Construct and initialize this reporter with specified filename.
-	XMLFileReporter::XMLFileReporter(const char* fileName);
+	XMLFileReporter(const char* fileName);
 
 	// Initialize this XMLFileReporter.  Must be called before attempting to log anything.
 	bool initialize();
@@ -238,7 +242,7 @@ public:
 
 	void logElement(int level, const XalanDOMString& element, const XalanDOMString& msg);
 
-	void XMLFileReporter::logElement(const XalanDOMString& element, const XalanDOMString& msg);
+	void logElement(const XalanDOMString& element, const XalanDOMString& msg);
 	/**
 	* Report an arbitrary XalanDOMString to result file with specified severity.  
 	* <P>Appends and prepends \\n newline characters at the start and 
