@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<s1 title="About ApacheModuleXSLT">
+ <s2 title="Using ApacheModuleXSLT to perform XSL transfomrations">
+  <p>ApacheModuleXSLT is an Apache Web server module that responds to appropriate URLs by performing transformations and returning the output
+  to the client Web browser. The module responds to a request for a given output file (html or txt as configured below) by applying an xsl
+  stylesheet file with that name to an xml document with the same name. The requested "output file" is created on the fly and returned as a 
+  text stream to the client.</p>
+  <p>To use this module, do the following:</p>
+  <ol>
+    <li>Add LoadModule and (UNIX only) AddModule entries to the Apache configuration file: httpd.conf.<br/><br/>
+    Windows: <code>LoadModule mod_xslt xml-xalan\c\Build\Win32\VC6\Release\ApacheModuleXSLT.dll</code><br/><br/>
+    UNIX: <code>AddModule mod_xslt.c</code><br/>
+    &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;and<br/>
+    &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<code>LoadModule mod_xslt usr/lib/mod_xslt.<ref>xx</ref></code><br/><br/>
+    where <ref>xx</ref> is the appropriate library suffix for the UNIX platform.<br/><br/></li>
+    <li>Add a &lt;Location&gt; entry to httpd.conf that indicates where xml/xsl file pairs are to be found, and what target file extensions
+    to recognize. We suggest the following:<br/><br/>
+    <code>&lt;Location /xslt&gt;</code><br/>
+    &#160;&#160;<code>AddHandler .html</code><br/>
+    &#160;&#160;<code>AddHandler .txt</code><br/>
+    <code>&lt;/Location&gt;</code><br/><br/>
+    This &lt;Location&gt; element instructs the module to respond to requests for <ref>xxx</ref>.html and <ref>xxx</ref>.txt files in the 
+    in the xslt subdirectory (under the document root; see next item) by applying the <ref>xxx</ref>.xsl stylesheet to <ref>xxx</ref>.xml 
+    (both in that directory) and returning the transformation result to the browser.<br/><br/>
+    Note: It is up to the stylesheet to apply the appropriate xsl:output method to the output. Whether the user specifies html or txt is, of
+    itself, immaterial.<br/><br/></li>
+    <li>Put xml/xsl file pairs in the &lt;Location&gt; subdirectory (xslt in the example)) under the document root directory specified in httpd.conf by the 
+    DocumentRoot and &lt;Directory&gt; settings. Alternatively, you can modify these settings to point to xml-xalan/c/samples/ApacheModuleXSLT,
+    which includes an xslt subdirectory with xml/xsl file pairs.<br/><br/></li>
+    <li>Start the Apache server.<br/><br/></li>
+    <li>From a Web browser, call the module with a URL as follows:<br/>
+    <code>http://<ref>serverName</ref>/xslt/<ref>xxx</ref>.html</code><br/>
+    where <ref>serverName</ref> is the Apache server (such as www.myServer.com) and <ref>xxx</ref> is the name of an xml/xsl pair of files 
+    (such as foo.xml and foo.xsl) in the xslt subdirectory under the DocumentRoot directory.<br/><br/>
+    For example,<br/>
+    <code>http://www.myServer.com/xslt/foo.html</code><br/>
+    instructs ApacheModuleXSLT to apply the foo.xsl stylesheet to the foo.xml XML document (both files in the xslt directory under the 
+    Apache DocumentRoot directory) and return the transformation result to the browser.</li>
+  </ol>
+ </s2>  
+</s1>
