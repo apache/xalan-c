@@ -131,9 +131,11 @@ ElemLiteralResult::ElemLiteralResult(
 
 		if(needToProcess == true)
 		{
-			if(!(isAttrOK(aname, atts, i, constructionContext) ||
-				processUseAttributeSets(constructionContext, aname, atts, i) ||
-				processSpaceAttr(aname, atts, i)))
+			processSpaceAttr(aname, atts, i);
+			// Add xmlns attribute(except xmlns:xsl), xml:space, etc... 
+			// Ignore anything with xsl:xxx 
+			if(! processUseAttributeSets(constructionContext, aname, atts, i) &&
+					isAttrOK(aname, atts, i, constructionContext) )
 			{
 				m_avts.push_back(new AVT(aname, atts.getType(i), atts.getValue(i), 	
 							*this, constructionContext));
