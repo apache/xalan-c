@@ -85,7 +85,7 @@ XObject*
 FunctionElementAvailable::execute(
 			XPathExecutionContext&			executionContext,
 			XalanNode*						context,
-			int								opPos,
+			int								/* opPos */,
 			const XObjectArgVectorType&		args)
 {
 	if (args.size() != 1)
