@@ -76,7 +76,6 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 XercesWrapperToXalanNodeMap::XercesWrapperToXalanNodeMap() :
-	m_xalanMap(),
 	m_xercesMap()
 {
 }
@@ -95,7 +94,6 @@ XercesWrapperToXalanNodeMap::addAssociation(
 			XalanNode*			theXalanNode)
 {
 	m_xercesMap.insert(XercesNodeMapType::value_type(theXercesNode, theXalanNode));
-	m_xalanMap.insert(XalanNodeMapType::value_type(theXalanNode, theXercesNode));
 }
 
 
@@ -103,7 +101,6 @@ XercesWrapperToXalanNodeMap::addAssociation(
 void
 XercesWrapperToXalanNodeMap::clear()
 {
-	m_xalanMap.clear();
 	m_xercesMap.clear();
 }
 
@@ -122,24 +119,6 @@ XercesWrapperToXalanNodeMap::getNode(const DOMNodeType*		theXercesNode) const
 	else
 	{
 		return (*i).second;
-	}
-}
-
-
-
-const DOMNodeType*
-XercesWrapperToXalanNodeMap::getNode(XalanNode*		theXalanNode) const
-{
-	const XalanNodeMapType::const_iterator		i =
-		m_xalanMap.find(theXalanNode);
-
-	if (i != m_xalanMap.end())
-	{
-		return (*i).second;
-	}
-	else
-	{
-		return 0;
 	}
 }
 

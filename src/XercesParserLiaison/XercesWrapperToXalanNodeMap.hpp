@@ -63,7 +63,11 @@
 
 
 
+#if defined(XALAN_USE_HASH_MAP)
+#include <hash_map>
+#else
 #include <map>
+#endif
 
 
 
@@ -84,14 +88,15 @@ class XALAN_XERCESPARSERLIAISON_EXPORT XercesWrapperToXalanNodeMap
 public:
 
 #if defined(XALAN_NO_STD_NAMESPACE)
-	typedef map<XalanNode*, const DOMNodeType*, less<XalanNode*> >			XalanNodeMapType;
-
 	typedef map<const DOMNodeType*, XalanNode*, less<const DOMNodeType*> >	XercesNodeMapType;
 #else
-	typedef std::map<XalanNode*, const DOMNodeType*>	XalanNodeMapType;
-
+#if defined(XALAN_USE_HASH_MAP)
+	typedef std::hash_map<const DOMNodeType*, XalanNode*>	XercesNodeMapType;
+#else
 	typedef std::map<const DOMNodeType*, XalanNode*>	XercesNodeMapType;
 #endif
+#endif
+
 
 	XercesWrapperToXalanNodeMap();
 
@@ -108,12 +113,7 @@ public:
 	XalanNode*
 	getNode(const DOMNodeType*	theXercesNode) const;
 
-	const DOMNodeType*
-	getNode(XalanNode*	theXalanNode) const;
-
 private:
-
-	XalanNodeMapType	m_xalanMap;
 
 	XercesNodeMapType	m_xercesMap;
 };
