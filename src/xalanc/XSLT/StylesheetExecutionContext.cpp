@@ -86,30 +86,23 @@ StylesheetExecutionContext::~StylesheetExecutionContext()
 
 StylesheetExecutionContext::ParamsPushPop::doPush(
 			const ElemTemplateElement&		xslCallTemplateElement,
-			const ElemTemplateElement*		targetTemplate,
 			int								savedStackFrameIndex)
 {
 	if (xslCallTemplateElement.hasParams() == true)
 	{
 		getExecutionContext().setCurrentStackFrameIndex(savedStackFrameIndex);
 
-		getExecutionContext().pushParams(
-					xslCallTemplateElement,
-					targetTemplate);
+		getExecutionContext().pushParams(xslCallTemplateElement);
 	}
 }
 
 
 
-StylesheetExecutionContext::ParamsPushPop::doPush(
-			const ElemTemplateElement&		xslCallTemplateElement,
-			const ElemTemplateElement*		targetTemplate)
+StylesheetExecutionContext::ParamsPushPop::doPush(const ElemTemplateElement&	xslCallTemplateElement)
 {
 	if (xslCallTemplateElement.hasParams() == true)
 	{
-		getExecutionContext().pushParams(
-					xslCallTemplateElement,
-					targetTemplate);
+		getExecutionContext().pushParams(xslCallTemplateElement);
 	}
 }
 

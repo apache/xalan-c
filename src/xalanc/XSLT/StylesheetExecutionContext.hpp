@@ -892,12 +892,9 @@ public:
 	 * Also, push default arguments on the stack.
 	 *
 	 * @param xslCallTemplateElement "call-template" element
-	 * @param targetTemplate         target template
 	 */
 	virtual	void
-	pushParams(
-			const ElemTemplateElement&	xslCallTemplateElement,
-			const ElemTemplateElement*	targetTemplate) = 0;
+	pushParams(const ElemTemplateElement&	xslCallTemplateElement) = 0;
 
 	/**
 	 * Given a name, return a string representing the value, but don't look in
@@ -1014,25 +1011,20 @@ public:
 
 		ParamsPushPop(
 				StylesheetExecutionContext&		executionContext,
-				const ElemTemplateElement&		xslCallTemplateElement,
-				const ElemTemplateElement*		targetTemplate) :
+				const ElemTemplateElement&		xslCallTemplateElement) :
 			PushAndPopContextMarker(executionContext)
 		{
-			doPush(
-				xslCallTemplateElement,
-				targetTemplate);
+			doPush(xslCallTemplateElement);
 		}
 
 		ParamsPushPop(
 				StylesheetExecutionContext&		executionContext,
 				const ElemTemplateElement&		xslCallTemplateElement,
-				const ElemTemplateElement*		targetTemplate,
 				int&							savedStackFrameIndex) :
 			PushAndPopContextMarker(executionContext, savedStackFrameIndex)
 		{
 			doPush(
 				xslCallTemplateElement,
-				targetTemplate,
 				savedStackFrameIndex);
 		}
 
@@ -1044,12 +1036,9 @@ public:
 
 		doPush(
 			const ElemTemplateElement&		xslCallTemplateElement,
-			const ElemTemplateElement*		targetTemplate,
 			int								stackFrameIndex);
 
-		doPush(
-			const ElemTemplateElement&		xslCallTemplateElement,
-			const ElemTemplateElement*		targetTemplate);
+		doPush(const ElemTemplateElement&	xslCallTemplateElement);
 	};
 
 	/**

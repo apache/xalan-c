@@ -150,24 +150,17 @@ VariablesStack::pushContextMarker()
 void
 VariablesStack::popContextMarker()
 {
-	const VariableStackStackType::size_type		nElems = m_stack.size();
+	VariableStackStackType::iterator	i = m_stack.end();
 
-	VariableStackStackType::size_type i = nElems;
-
-	for(; i > 0; --i)
+	for(; ;)
 	{
-		assert(i >= m_stack.size());
+		assert(i != m_stack.begin());
 
-		const StackEntry&			theEntry = m_stack[i - 1];
+		const StackEntry&			theEntry = *--i;
 		assert(theEntry == back());
 
 		const StackEntry::eType		type = theEntry.getType();
 		assert(type < StackEntry::eNextValue && type >= 0);
-
-#if !defined(NDEBUG)
-		const ElemTemplateElement* const	theElement =
-			theEntry.getElement();
-#endif
 
 		pop();
 
@@ -175,64 +168,10 @@ VariablesStack::popContextMarker()
 		{
 			break;
 		}
-#if !defined(NDEBUG)
-		else if (type == StackEntry::eElementFrameMarker)
-		{
-			if (m_elementFrameStack.empty() == true)
-			{
-				throw InvalidStackContextException();
-			}
-
-			const ElemTemplateElement* const	theStackBack =
-				m_elementFrameStack.back();
-
-			m_elementFrameStack.pop_back();
-
-			if (theElement != theStackBack)
-			{
-				throw InvalidStackContextException();
-			}
-		}
-#endif
 	}
 
-	assert(m_stack.size() == i - 1);
-
-	m_currentStackFrameIndex = i - 1;
+	m_currentStackFrameIndex = m_stack.size();
 }
-
-
-
-class CommitPushElementFrame
-{
-public:
-
-	CommitPushElementFrame(
-			VariablesStack&								theVariableStack,
-			const ElemTemplateElement*					targetTemplate) :
-		m_variableStack(&theVariableStack)
-	{
-		theVariableStack.pushElementFrame(targetTemplate);
-	}
-
-	~CommitPushElementFrame()
-	{
-		if (m_variableStack != 0)
-		{
-			m_variableStack->popElementFrame();
-		}
-	}
-
-	void
-	commit()
-	{
-		m_variableStack = 0;
-	}
-
-private:
-
-	VariablesStack*						m_variableStack;
-};
 
 
 
@@ -294,20 +233,35 @@ VariablesStack::PushParamFunctor::operator()(const VariablesStack::ParamsVectorT
 
 
 
-void
-VariablesStack::pushParams(
-			const ParamsVectorType&		theParams,
-			const ElemTemplateElement*	targetTemplate)
+VariablesStack::CommitPushParams::CommitPushParams(VariablesStack&	theVariablesStack) :
+	m_variablesStack(&theVariablesStack),
+	m_stackSize(theVariablesStack.getStackSize())
 {
-	// This object will push an element marker, and pop it
+}
+
+
+
+VariablesStack::CommitPushParams::~CommitPushParams()
+{
+	if (m_variablesStack != 0)
+	{
+		while(m_variablesStack->getStackSize() > m_stackSize)
+		{
+			m_variablesStack->pop();
+		}
+	}
+}
+
+
+
+void
+VariablesStack::pushParams(const ParamsVectorType&	theParams)
+{
+	// This object will push the params and pop them
 	// if we don't call it's commit() member function.  So
 	// if an exception is thrown while transferring the
-	// parameters, the element marker will be popped.
-	// This keeps the stack in a consistent state.
-	// It will also delete things left in the temp stack
-	// as well.
-	CommitPushElementFrame		thePusher(*this,
-										  targetTemplate);
+	// parameters, the stack stays in a consistent state.
+	CommitPushParams	thePusher(*this);
 
 	XALAN_USING_STD(for_each)
 

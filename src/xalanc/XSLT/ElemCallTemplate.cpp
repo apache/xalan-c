@@ -155,10 +155,9 @@ ElemCallTemplate::execute(StylesheetExecutionContext&	executionContext) const
 
 	assert(m_template != 0);
 
-	StylesheetExecutionContext::ParamsPushPop	thePushPop(
+	const StylesheetExecutionContext::ParamsPushPop		thePushPop(
 				executionContext,
-				*this,			
-				m_template);
+				*this);
 
 	m_template->execute(executionContext);
 }

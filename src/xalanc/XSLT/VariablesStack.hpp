@@ -193,12 +193,9 @@ public:
 	 * popContextMarker() when you are done with the arguments.
 	 *
 	 * @param theParam The vector containing the parameters.
-	 * @param targetTemplate target template for the parameters
 	 */
 	void
-	pushParams(
-			const ParamsVectorType&		theParams,
-			const ElemTemplateElement*	targetTemplate);
+	pushParams(const ParamsVectorType&	theParams);
 
 	/**
 	 * Given a name, return a string representing the value, but don't look
@@ -513,9 +510,40 @@ public:
 	typedef std::vector<StackEntry>		VariableStackStackType;
 #endif
 
+	typedef VariableStackStackType::size_type	size_type;
+
+	size_type
+	getStackSize() const
+	{
+		return m_stack.size();
+	}
+
 	enum { eDefaultStackSize = 100 };
 
 private:
+
+	class CommitPushParams
+	{
+	public:
+
+		CommitPushParams(VariablesStack&	theVariablesStack);
+
+		~CommitPushParams();
+
+		void
+		commit()
+		{
+			m_variablesStack = 0;
+		}
+
+	private:
+
+		VariablesStack*		m_variablesStack;
+
+		size_type			m_stackSize;
+	};
+
+	friend class CommitPushParams;
 
 	/**
 	 * Check to see if an element frame for the particular element has already

@@ -785,9 +785,7 @@ StylesheetExecutionContextDefault::clearTopLevelParams()
 
 
 void
-StylesheetExecutionContextDefault::pushParams(
-			const ElemTemplateElement&	xslCallTemplateElement,
-			const ElemTemplateElement*	targetTemplate)
+StylesheetExecutionContextDefault::pushParams(const ElemTemplateElement&	xslCallTemplateElement)
 {
 	// We have a params vector that we reuse, but occasionally, a
 	// param will result in recursive execution, so we'll use a
@@ -807,9 +805,7 @@ StylesheetExecutionContextDefault::pushParams(
 
 		getParams(xslCallTemplateElement, m_paramsVector);
 
-		m_variablesStack.pushParams(
-					m_paramsVector,
-					targetTemplate);
+		m_variablesStack.pushParams(m_paramsVector);
 	}
 	else
 	{
@@ -817,9 +813,7 @@ StylesheetExecutionContextDefault::pushParams(
 
 		getParams(xslCallTemplateElement, tempParams);
 
-		m_variablesStack.pushParams(
-					tempParams,
-					targetTemplate);
+		m_variablesStack.pushParams(tempParams);
 	}
 }
 

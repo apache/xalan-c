@@ -219,10 +219,9 @@ ElemApplyTemplates::selectAndSortChildren(
 	// Push the params & stack frame, but then execute the select
 	// expression inside transformSelectedChildren, which must be
 	// executed in the stack frame before the new stack frame.
-	StylesheetExecutionContext::ParamsPushPop	thePushPop(
+	const StylesheetExecutionContext::ParamsPushPop		thePushPop(
 			executionContext,
 			*this,
-			this,
 			savedStackFrameIndex);
 
 	const XalanQName* const		currentMode = executionContext.getCurrentMode();

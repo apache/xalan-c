@@ -497,9 +497,7 @@ public:
 	clearTopLevelParams();
 
 	virtual	void
-	pushParams(
-			const ElemTemplateElement&	xslCallTemplateElement,
-			const ElemTemplateElement*	targetTemplate);
+	pushParams(const ElemTemplateElement&	xslCallTemplateElement);
 
 	virtual const XObjectPtr
 	getParamVariable(const XalanQName&	theName);
