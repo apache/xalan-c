@@ -39,7 +39,7 @@ struct ConstructWithNoMemoryManager
 {
     static C* construct(C* address, MemoryManagerType& /* mgr */)
     {
-        return (C*) new (address) C();
+        return (C*) new (address) C;
     }
 
     static C* construct(C* address, const C& theRhs, MemoryManagerType& /* mgr */)
