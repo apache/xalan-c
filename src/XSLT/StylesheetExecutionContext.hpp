@@ -1214,7 +1214,7 @@ public:
 	enum eDummy
 	{
 		eDefaultXMLIndentAmount = 0,
-		eDefaultHTMLIndentAmount = 0,
+		eDefaultHTMLIndentAmount = 0
 	};
 
 	/**
