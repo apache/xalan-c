@@ -58,11 +58,10 @@
 #include "XercesStdTextOutputStream.hpp"
 
 
-#include <strstream>
 
-#if  defined(__GNUC__)
 #include <cerrno>
-#endif
+#include <iostream>
+#include <strstream>
 
 
 
@@ -78,6 +77,15 @@ XercesStdTextOutputStream::XercesStdTextOutputStream(std::ostream&	theOutputStre
 	XercesTextOutputStream(),
 	m_outputStream(theOutputStream)
 {
+	// This will make sure that cerr is not buffered...
+#if defined(XALAN_NO_NAMESPACES)
+	if (&m_outputStream == &cerr)
+#else
+	if (&m_outputStream == &std::cerr)
+#endif
+	{
+		setBufferSize(0);
+	}
 }
 
 

@@ -68,11 +68,9 @@
 
 
 
-const XercesTextOutputStream::BufferType::size_type	XercesTextOutputStream::s_bufferSize = 512;
-
-
-
-XercesTextOutputStream::XercesTextOutputStream()
+XercesTextOutputStream::XercesTextOutputStream(BufferType::size_type	theBufferSize) :
+	m_buffer(),
+	m_bufferSize(theBufferSize)
 {
 }
 
@@ -117,12 +115,12 @@ XercesTextOutputStream::write(
 {
 	assert(theBuffer != 0);
 
-	if (theBufferLength + m_buffer.size() > s_bufferSize)
+	if (theBufferLength + m_buffer.size() > m_bufferSize)
 	{
 		flushBuffer();
 	}
 
-	if (theBufferLength > s_bufferSize)
+	if (theBufferLength > m_bufferSize)
 	{
 		doWrite(theBuffer);
 	}
@@ -199,6 +197,19 @@ XercesTextOutputStream::doWrite(const XalanDOMChar*		theBuffer)
 
 	writeData(theTranscodedString.get(),
 			  strlen(theTranscodedString.get()));
+}
+
+
+
+void
+XercesTextOutputStream::setBufferSize(BufferType::size_type		theBufferSize)
+{
+	m_bufferSize = theBufferSize;
+
+	if (m_buffer.size() > m_bufferSize)
+	{
+		flushBuffer();
+	}
 }
 
 

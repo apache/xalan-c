@@ -113,10 +113,20 @@ public :
 			const XalanDOMChar*		theBuffer,
 			unsigned long			theBufferLength);
 
+	enum
+	{
+		eDefaultBufferSize = 512
+	};
+
+	typedef std::vector<XalanDOMChar>	BufferType;
+
+	virtual void
+	setBufferSize(BufferType::size_type		theBufferSize);
+
 protected:
 
 	explicit
-    XercesTextOutputStream();
+    XercesTextOutputStream(BufferType::size_type	theBufferSize = eDefaultBufferSize);
 
 	virtual void
 	writeData(const char*		theBuffer,
@@ -140,12 +150,9 @@ private:
 	void
 	doWrite(const XalanDOMChar*		theBuffer);
 
-	// Data members...
-	typedef std::vector<XalanDOMChar>	BufferType;
+	BufferType				m_buffer;
 
-	BufferType							m_buffer;
-
-	static const BufferType::size_type	s_bufferSize;
+	BufferType::size_type	m_bufferSize;
 };
 
 
