@@ -666,7 +666,12 @@ public:
 	 * @return	error message const character pointer.
 	 */
 	const char*
-	getLastError() const;
+	getLastError() const
+	{
+		assert(m_errorMessage.size() > 0);
+
+		return &m_errorMessage[0]; 
+	}
 
 	/**
 	 * Get the current number of spaces to indent.

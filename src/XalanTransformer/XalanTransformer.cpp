@@ -67,7 +67,7 @@
 
 
 
-#include <xercesc/sax/SAXException.hpp>
+#include <xercesc/sax/SAXParseException.hpp>
 
 
 
@@ -262,8 +262,8 @@ XalanTransformer::ICUCleanUp()
 
 static void
 addTraceListeners(
-				  const XalanTransformer::TraceListenerVectorType&	theTraceListeners,
-				  XSLTEngineImpl&									theEngine)
+			 const XalanTransformer::TraceListenerVectorType&	theTraceListeners,
+			 XSLTEngineImpl&									theEngine)
 {
 	if (theTraceListeners.empty() == false)
 	{
@@ -316,9 +316,9 @@ XalanTransformer::transform(
 
 int
 XalanTransformer::transform(
-	const XSLTInputSource&		theInputSource, 
-	const XSLTInputSource&		theStylesheetSource,
-	const XSLTResultTarget& 	theResultTarget)
+			const XSLTInputSource&		theInputSource, 
+			const XSLTInputSource&		theStylesheetSource,
+			const XSLTResultTarget& 	theResultTarget)
 {
 	// Parse the source document.
 	const XalanParsedSource*	theParsedSource = 0;
@@ -433,7 +433,62 @@ XalanTransformer::transform(
 
 
 XALAN_USING_XERCES(XMLException)
+XALAN_USING_XERCES(SAXParseException)
 XALAN_USING_XERCES(SAXException)
+
+
+
+void
+FormatSAXParseException(
+			const SAXParseException&	theException,
+			XalanDOMString&				theErrorMessage)
+{
+	assert(theException.getMessage() != 0);
+
+	const XalanDOMChar	theDummy = 0;
+
+	const XalanDOMChar* const	theSystemID = theException.getSystemId();
+
+	XSLException::defaultFormat(
+				theException.getMessage(),
+				theSystemID == 0 ? &theDummy : theSystemID,
+				theException.getLineNumber(),
+				theException.getColumnNumber(),
+				c_wstr(XALAN_STATIC_UCODE_STRING("SAXParseException")),
+				theErrorMessage);
+}
+
+
+
+void
+FormatSAXParseException(
+			const SAXParseException&	theException,
+			CharVectorType&				theErrorMessage)
+{
+	XalanDOMString	theBuffer;
+
+	FormatSAXParseException(
+				theException,
+				theBuffer);
+
+	TranscodeToLocalCodePage(theBuffer, theErrorMessage, true);
+}
+
+
+
+void
+FormatXalanDOMException(
+			const XalanDOMException&	theException,
+			CharVectorType&				theErrorMessage)
+{
+	XalanDOMString	theBuffer("XalanDOMException caught.  The code is ");
+
+	append(theBuffer, LongToDOMString(long(theException.getExceptionCode())));
+
+	append(theBuffer, XalanDOMChar(XalanUnicode::charFullStop));
+
+	TranscodeToLocalCodePage(theBuffer, theErrorMessage, true);
+}
 
 
 
@@ -518,6 +573,19 @@ XalanTransformer::compileStylesheet(
 		}
 
 		theResult = -1;
+	}
+	catch(const SAXParseException&	e)
+	{
+		if (length(theErrorMessage) != 0)
+		{
+			TranscodeToLocalCodePage(theErrorMessage, m_errorMessage, true);
+		}
+		else
+		{
+			FormatSAXParseException(e, m_errorMessage);
+		}
+
+		theResult = -2;
 	}
 	catch(const SAXException&	e)
 	{
@@ -660,9 +728,15 @@ XalanTransformer::parseSource(
 	}
 	catch(const XSLException&	e)
 	{
-		TranscodeToLocalCodePage(e.getMessage(), m_errorMessage, true);
+		TranscodeToLocalCodePage(e.defaultFormat(), m_errorMessage, true);
 
 		theResult = -1;
+	}
+	catch(const SAXParseException&	e)
+	{
+		FormatSAXParseException(e, m_errorMessage);
+
+		theResult = -2;
 	}
 	catch(const SAXException&	e)
 	{
@@ -678,13 +752,7 @@ XalanTransformer::parseSource(
 	}
 	catch(const XalanDOMException&	e)
 	{
-		XalanDOMString theMessage("XalanDOMException caught.  The code is ");
-			
-		append(theMessage, LongToDOMString(long(e.getExceptionCode())));
-
-		append(theMessage, XalanDOMChar(XalanUnicode::charFullStop));
-
-		TranscodeToLocalCodePage(theMessage, m_errorMessage, true);
+		FormatXalanDOMException(e, m_errorMessage);
 
 		theResult = -4;
 	}
@@ -858,15 +926,6 @@ XalanTransformer::uninstallExternalFunctionGlobal(
 	XSLTProcessorEnvSupportDefault::uninstallExternalFunctionGlobal(
 			theNamespace,
 			functionName);
-}
-
-
-
-
-const char*
-XalanTransformer::getLastError() const
-{
-	return &m_errorMessage[0]; 
 }
 
 
@@ -1197,6 +1256,19 @@ XalanTransformer::doTransform(
 
 		theResult = -1;
 	}
+	catch(const SAXParseException&	e)
+	{
+		if (length(theErrorMessage) != 0)
+		{
+			TranscodeToLocalCodePage(theErrorMessage, m_errorMessage, true);
+		}
+		else
+		{
+			FormatSAXParseException(e, m_errorMessage);
+		}
+
+		theResult = -2;
+	}
 	catch(const SAXException&	e)
 	{
 		if (length(theErrorMessage) != 0)
@@ -1231,12 +1303,7 @@ XalanTransformer::doTransform(
 		}
 		else
 		{
-			XalanDOMString theMessage("XalanDOMException caught.  The code is ");
-			
-			append(theMessage, LongToDOMString(long(e.getExceptionCode())));
-			append(theMessage, XalanDOMChar(XalanUnicode::charFullStop));
-
-			TranscodeToLocalCodePage(theMessage, m_errorMessage, true);
+			FormatXalanDOMException(e, m_errorMessage);
 		}
 
 		theResult = -4;
