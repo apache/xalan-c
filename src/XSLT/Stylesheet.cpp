@@ -66,8 +66,8 @@
 
 
 
-#include <xercesc/sax/AttributeList.hpp>
-#include <xercesc/util/PlatformUtils.hpp>
+#include <sax/AttributeList.hpp>
+#include <util/PlatformUtils.hpp>
 
 
 
