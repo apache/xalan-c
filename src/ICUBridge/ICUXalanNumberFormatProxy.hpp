@@ -142,10 +142,10 @@ public:
 
 private:
 
-#if defined(XALAN_NO_NAMESPACES)
-	DecimalFormat*						m_decimalFormat;
-#else
+#if defined(XALAN_HAS_CPP_NAMESPACE)
 	U_ICU_NAMESPACE::DecimalFormat*		m_decimalFormat;
+#else
+	DecimalFormat*						m_decimalFormat;
 #endif
 };
 

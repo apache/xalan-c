@@ -82,7 +82,7 @@ XALAN_CPP_NAMESPACE_BEGIN
 
 
 
-#if defined(XALAN_NO_NAMESPACES)
+#if defined(XALAN_NO_STD_NAMESPACE)
 	typedef vector<UChar>					UCharVectorType;
 #else
 	typedef std::vector<UChar>				UCharVectorType;

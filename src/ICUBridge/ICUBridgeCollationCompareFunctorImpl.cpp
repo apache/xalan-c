@@ -157,9 +157,7 @@ ICUBridgeCollationCompareFunctorImpl::ICUBridgeCollationCompareFunctorImpl(bool	
 
 ICUBridgeCollationCompareFunctorImpl::~ICUBridgeCollationCompareFunctorImpl()
 {
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::for_each;
-#endif
+	XALAN_USING_STD(for_each)
 
 	delete m_defaultCollator;
 
@@ -434,9 +432,7 @@ ICUBridgeCollationCompareFunctorImpl::operator()(
 ICUBridgeCollationCompareFunctorImpl::CollatorType*
 ICUBridgeCollationCompareFunctorImpl::getCachedCollator(const XalanDOMChar*		theLocale) const
 {
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::find_if;
-#endif
+	XALAN_USING_STD(find_if)
 
 	CollatorCacheListType&		theNonConstCache =
 #if defined(XALAN_NO_MUTABLE)

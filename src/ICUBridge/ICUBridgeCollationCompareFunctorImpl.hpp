@@ -116,10 +116,10 @@ public:
 		return m_isValid;
 	}
 
-#if defined(XALAN_NO_NAMESPACES)
-	typedef Collator					CollatorType;
-#else
+#if defined(XALAN_HAS_CPP_NAMESPACE)
 	typedef U_ICU_NAMESPACE::Collator	CollatorType;
+#else
+	typedef Collator					CollatorType;
 #endif
 
 	struct CollationCacheStruct
@@ -180,7 +180,7 @@ public:
 		};
 	};
 
-#if defined(XALAN_NO_NAMESPACES)
+#if defined(XALAN_NO_STD_NAMESPACE)
 	typedef list<CollationCacheStruct>			CollatorCacheListType;
 #else
 	typedef std::list<CollationCacheStruct>		CollatorCacheListType;
