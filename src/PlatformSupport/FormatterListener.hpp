@@ -257,10 +257,21 @@ public:
 
 protected:
 
+	// Data membmers...
 	const PrefixResolver*	m_prefixResolver;
 
 private:
 
+	// Not implemented...
+	FormatterListener(const FormatterListener&);
+
+	FormatterListener&
+	operator=(const FormatterListener&);
+
+	bool
+	operator==(const FormatterListener&) const;
+
+	// Data membmers...
 	const eFormat			m_outputFormat;
 };
 
