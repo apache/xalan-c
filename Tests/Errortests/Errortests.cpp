@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -110,14 +110,14 @@ void
 printArgOptions()
 {
 	cerr << endl
-		 << "errortests dirname [-category -out -gold]"
+		 << "errortests dir [-sub -out]"
 		 << endl
 		 << endl
-		 << "dirname		(base directory for testcases)"
+		 << "dir		(location of conformance directory)"
 		 << endl
-		 << "-category dirname (specific directory)"
+		 << "-sub dir	(specific directory)"
 		 << endl
-		 << "-out dirname	(base directory for output)"
+		 << "-out dir	(base directory for output)"
 		 << endl;
 }
 
@@ -142,10 +142,15 @@ getParams(int argc,
 	}
 	else
 	{
-		if (f.checkDir(pathSep + XalanDOMString(argv[1])))
+		if (f.checkDir( XalanDOMString(argv[1])) )
 		{
 			assign(baseDir, XalanDOMString(argv[1]));
-			insert(baseDir, 0, pathSep);
+			if ( !endsWith(baseDir, XalanDOMString("conf")) )
+			{
+				cout << endl << "Given base directory \"" << argv[1] << "\" not valid conformance directory" << endl;
+				printArgOptions();
+				return false;
+			}
 		}
 		else
 		{
@@ -175,7 +180,7 @@ getParams(int argc,
 				fSuccess = false;
 			}
 		}
-		else if(!stricmp("-category", argv[i]))
+		else if(!stricmp("-sub", argv[i]))
 		{
 			++i;
 			if(i < argc && argv[i][0] != '-')
@@ -283,6 +288,7 @@ main(
 			logFile.logElementWAttrs(10, "Rundata", runAttrs, "xxx");
 
 			// Get the list of Directories that are below conf
+			bool foundDir = false;		// Flag indicates directory found. Used in conjunction with -sub cmd-line arg.
 			const FileNameVectorType	dirs = futil.getDirectoryNames(baseDir);
 
 			for(FileNameVectorType::size_type	j = 0; j < dirs.size(); ++j)
@@ -300,7 +306,8 @@ main(
 				futil.checkAndCreateDir(theOutputDir);
 
 				
-				// Get the files found in the test directory
+				// Indicate that directory was processed and get test files from the directory
+				foundDir = true;
 				const FileNameVectorType files = futil.getTestFileNames(baseDir, currentDir, false);
 				
 				logFile.logTestCaseInit(currentDir);
@@ -330,17 +337,23 @@ main(
 					//
 					// Parsing(compile) the XSL stylesheet and report the results..
 					//
-					cout << endl << "PARSING STYLESHEET FOR: " << currentFile << endl;
 					const XalanCompiledStylesheet*	compiledSS = 0;
-					xalan.compileStylesheet(xslInputSource, compiledSS);
-					if (compiledSS == 0 )
+					try 
 					{
-						cout << "FAILED to parse stylesheet for " << currentFile << endl;
-						cout << "Reason: " << xalan.getLastError() << endl;
-						logFile.logErrorResult(currentFile, XalanDOMString(xalan.getLastError()));
-						//logFile.logCheckFail(currentFile);
-						//logFile.logCheckErr(XalanDOMString(xalan.getLastError()));
-						continue;
+						cout << endl << "PARSING STYLESHEET FOR: " << currentFile << endl;
+
+						xalan.compileStylesheet(xslInputSource, compiledSS);
+						if (compiledSS == 0 )
+						{
+							cout << "FAILED to parse stylesheet for " << currentFile << endl;
+							cout << "Reason: " << xalan.getLastError() << endl;
+							logFile.logErrorResult(currentFile, XalanDOMString(xalan.getLastError()));
+							continue;
+						}
+					}
+					catch(...)
+					{
+						cerr << "Exception caught!!!" << endl << endl;
 					}
 
 					//
@@ -363,9 +376,6 @@ main(
 					if (!theResult)
 					{
 						logFile.logCheckPass(currentFile);
-//						futil.checkResults(theOutputFile, 
-//										  theGoldFile, 
-//										  logFile);
 					}
 
 					parserLiaison.reset();
@@ -377,6 +387,13 @@ main(
 				logFile.logTestCaseClose("Done", "Pass");
 
 			}		//for directories
+
+
+		// Check to see if -sub cmd-line directory was processed correctly.
+		if (!foundDir)
+		{
+			cout << "Specified test directory: \"" << c_str(TranscodeToLocalCodePage(category)) << "\" not found" << endl;
+		}
 
 		logFile.logTestFileClose("Conformance ", "Done");
 		logFile.close();
