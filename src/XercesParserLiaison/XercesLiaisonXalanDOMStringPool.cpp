@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -110,8 +110,8 @@ XercesLiaisonXalanDOMStringPool::get(const XalanDOMString&	theString)
 
 const XalanDOMString&
 XercesLiaisonXalanDOMStringPool::get(
-			const XalanDOMChar*		theString,
-			unsigned int			theLength)
+			const XalanDOMChar*			theString,
+			XalanDOMString::size_type	theLength)
 {
 	XMLMutexLock	theLock(&m_mutex);
 
