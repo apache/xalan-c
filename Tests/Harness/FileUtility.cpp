@@ -711,9 +711,11 @@ FileUtility::checkAPIResults(
 			const char*				msg,
 			XMLFileReporter&		logfile,
 			const XalanDOMString&	outputFile, 
-			const XalanDOMString&	goldFile)
+			const XalanDOMString&	goldFile,
+			bool					containsOnly)
 {
-	if(actual == expected)
+	if(actual == expected ||
+	   (containsOnly == true && indexOf(actual, expected) != XalanDOMString::npos))
 	{
 		data.pass += 1;
 		cout << "Passed: " << data.testOrFile << endl;

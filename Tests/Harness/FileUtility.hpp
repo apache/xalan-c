@@ -284,7 +284,8 @@ public:
 			const char*				msg,
 			XMLFileReporter&		logfile,
 			const XalanDOMString&	outputFile,
-			const XalanDOMString&	goldFile);
+			const XalanDOMString&	goldFile,
+			bool					containsOnly = false);
 
 	void
 	checkAPIResults(
@@ -293,7 +294,8 @@ public:
 			const char*				msg,
 			XMLFileReporter&		logfile,
 			const XalanDOMString&	outputFile,
-			const XalanDOMString&	goldFile)
+			const XalanDOMString&	goldFile,
+			bool					containsOnly = false)
 	{
 		checkAPIResults(
 			XalanDOMString(actual), 
@@ -301,7 +303,8 @@ public:
 			msg,
 			logfile,
 			outputFile,
-			goldFile);
+			goldFile,
+			containsOnly);
 	}
 
 	/**
