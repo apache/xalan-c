@@ -58,6 +58,9 @@
 # 
 #
 # $Log$
+# Revision 1.14  2002/11/05 05:15:59  dbertoni
+# Add extra hint about using GNU make.
+#
 # Revision 1.13  2002/10/04 23:42:48  dbertoni
 # Fixed getop problem.
 #
@@ -385,7 +388,9 @@ rm -f config.status
 
 echo
 echo If the result of the above commands look OK to you, go to the directory
-echo ${XALANCROOT}/src and type \"make\" to make the XALAN-C system.
+echo ${XALANCROOT}/src and type \"gmake\" or \"make\" to make the XALAN-C system.
+echo
+echo Note: You must use GNU make to use the Xalan Makefile.
 
 exit  0;
 
