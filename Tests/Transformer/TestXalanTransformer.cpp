@@ -140,7 +140,14 @@ main(
 
 	XalanTransformer xalan;
 
-	const XalanCompiledStylesheet* const	css = xalan.compileStylesheet(theXSLFileName);
+	const XalanCompiledStylesheet*	css = 0;
+	
+	if (xalan.compileStylesheet(theXSLFileName, css) != 0)
+	{
+		cout << xalan.getLastError();
+
+		return 0;	
+	}
 
 	for(int i=0; i<1; ++i)
 	{
@@ -223,8 +230,24 @@ main(
 	XalanInitialize();
 
 	XalanHandle xalan = CreateXalanTransformer();
-	XalanCSSHandle theXalanCSS2 = XalanCompileStylesheet(theXSLFileName2, xalan);
-	XalanCSSHandle theXalanCSS4 = XalanCompileStylesheet(theXSLFileName4, xalan);
+	XalanCSSHandle theXalanCSS2;
+	XalanCSSHandle theXalanCSS4;
+
+	if (XalanCompileStylesheet(theXSLFileName2, xalan, &theXalanCSS2) != 0)
+	{
+		puts("Error");
+		puts(XalanGetLastError(xalan));
+
+		return 0;	
+	}
+
+	XalanCompileStylesheet(theXSLFileName4, xalan, &theXalanCSS4) != 0)
+	{
+		puts("Error");
+		puts(XalanGetLastError(xalan));
+
+		return 0;	
+	}
 
 	for(int i=0; i<2; ++i)
 	{
