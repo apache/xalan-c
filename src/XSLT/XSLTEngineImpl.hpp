@@ -192,23 +192,14 @@ public:
    */
 	bool	m_outputCarriageReturns;
 
-  /**
-   * If true, output linefeeds.
-   */
+	/**
+	 * If true, output linefeeds.
+	 */
 	bool	m_outputLinefeeds;
 
 	/**
-	 * The formatter interface, which has the toMarkup 
-	 * method, and which will eventually hold other non-event 
-	 * methods.  Not to be confused with the DocumentHandler
-	 * interface.
-	*/
-	// @@ JMD: Temporarily public
-	Formatter*			m_formatter;
-  
-  /**
-   * The factory that will be used to create result tree fragments.
-   */
+	 * The factory that will be used to create result tree fragments.
+	 */
 	mutable XalanDocument*	m_resultTreeFactory;
 
   /**
@@ -1289,16 +1280,6 @@ public:
 		return m_xpathEnvSupport;
 	}
 
-	/**
-	 * Set the formatter interface, which has the toMarkup method, and which
-	 * will eventually hold other non-event methods.  Not to be confused with
-	 * the DocumentHandler interface.
-	 *
-	 * @param formatter pointer to formatter
-	 */
-	void
-	setFormatter(Formatter* 	formatter);
-
 	// $$$ ToDo: why isn't this just a NodeRefListBase?
 	const MutableNodeRefList&
 	getContextNodeList() const
@@ -1361,7 +1342,8 @@ public:
 	 *
 	 * @param l pointer to ProblemListener interface
 	 */
-	void setProblemListener(ProblemListener*		l)
+	void
+	setProblemListener(ProblemListener*		l)
 	{
 		m_problemListener = l;
 	}
@@ -1374,9 +1356,50 @@ public:
 	 *
 	 * @return pointer to ProblemListener interface
 	 */
-	ProblemListener* getProblemListener() const
+	ProblemListener*
+	getProblemListener() const
 	{
 		return m_problemListener;
+	}
+
+	/*
+	 * See if there is a pending start document event waiting.
+	 * @return true if there is a start document event waiting.
+	 */
+	bool
+	getHasPendingStartDocument() const
+	{
+		return m_hasPendingStartDocument;
+	}
+
+	/*
+	 * Set the pending start document event state.
+	 * @param the new value
+	 */
+	void
+	setHasPendingStartDocument(bool	b)
+	{
+		m_hasPendingStartDocument = b;
+	}
+
+	/*
+	 * See if a pending start document event must be flushed.
+	 * @return true if the event must be flushed.
+	 */
+	bool
+	getMustFlushPendingStartDocument() const
+	{
+		return m_mustFlushStartDocument;
+	}
+
+	/*
+	 * Set the pending start document event flush state.
+	 * @param the new value
+	 */
+	void
+	setMustFlushPendingStartDocument(bool	b)
+	{
+		m_hasPendingStartDocument = b;
 	}
 
 	/**
@@ -1603,6 +1626,19 @@ public:
 
 			return m_stack.back();
 		}
+
+		class InvalidStackContextException : public XSLTProcessorException
+		{
+		public:
+
+			InvalidStackContextException();
+
+			virtual
+			~InvalidStackContextException();
+
+		private:
+
+		};
 
 	private:
 
@@ -1854,6 +1890,11 @@ protected:
 	 */
 	bool				m_hasPendingStartDocument;
 
+	/*
+	 * true if a pending startDocument() must be flushed.
+	 */
+	bool				m_mustFlushStartDocument;
+
 	/**
 	 * NOTE: This replaces the ResultNameSpace class in java, since it is the
 	 * same as the NameSpace class
@@ -2009,26 +2050,6 @@ private:
 	 * be set by the caller.
 	 */
 	XalanDOMString m_outputFileName;
-	
-	/**
-	 * Write the children of a stylesheet element to the given listener.
-	 * @exception XSLProcessorException thrown if the active ProblemListener and XMLParserLiaison decide 
-	 * the error condition is severe enough to halt processing.
-	 * @param stylesheetTree The stylesheet object that holds the fragment.
-	 * @param templateParent The template element that holds the fragment.
-	 * @param sourceTree The source tree document context.
-	 * @param sourceNode The current source context node.
-	 * @param mode The mode under which the template is operating.
-	 * @return An object that represents the result tree fragment.
-	 */
-	void
-	writeChildren(
-			FormatterListener*				flistener,
-			StylesheetExecutionContext& 	executionContext,
-			const ElemTemplateElement&		templateParent,
-			XalanNode& 						sourceTree,
-			XalanNode& 						sourceNode,
-			const QName&					mode);
 
 
   //==========================================================

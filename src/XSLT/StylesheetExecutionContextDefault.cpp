@@ -384,6 +384,38 @@ StylesheetExecutionContextDefault::setFormatterListener(FormatterListener*	flist
 
 
 
+bool
+StylesheetExecutionContextDefault::getHasPendingStartDocument() const
+{
+	return m_xsltProcessor.getHasPendingStartDocument();
+}
+
+
+
+void
+StylesheetExecutionContextDefault::setHasPendingStartDocument(bool	b)
+{
+	m_xsltProcessor.setHasPendingStartDocument(b);
+}
+
+
+
+bool
+StylesheetExecutionContextDefault::getMustFlushPendingStartDocument() const
+{
+	return m_xsltProcessor.getMustFlushPendingStartDocument();
+}
+
+
+
+void
+StylesheetExecutionContextDefault::setMustFlushPendingStartDocument(bool	b)
+{
+	m_xsltProcessor.setMustFlushPendingStartDocument(b);
+}
+
+
+
 int
 StylesheetExecutionContextDefault::getIndent() const
 {

@@ -188,6 +188,18 @@ public:
 	virtual void
 	setFormatterListener(FormatterListener*		flistener);
 
+	virtual bool
+	getHasPendingStartDocument() const;
+
+	virtual void
+	setHasPendingStartDocument(bool	b);
+
+	virtual bool
+	getMustFlushPendingStartDocument() const;
+
+	virtual void
+	setMustFlushPendingStartDocument(bool	b);
+
 	virtual int
 	getIndent() const;
 

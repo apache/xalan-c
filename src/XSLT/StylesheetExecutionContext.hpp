@@ -301,9 +301,99 @@ public:
 	virtual void
 	setFormatterListener(FormatterListener*		flistener) = 0;
 
-	// These next four classes are used to save and restore
+	/*
+	 * See if there is a pending start document event waiting.
+	 * @return true if there is a start document event waiting.
+	 */
+	virtual bool
+	getHasPendingStartDocument() const = 0;
+
+	/**
+	 * Set the pending start document event state.
+	 * @param the new value
+	 */
+	virtual void
+	setHasPendingStartDocument(bool	b) = 0;
+
+	/**
+	 * See if a pending start document event must be flushed.
+	 * @return true if the event must be flushed.
+	 */
+	virtual bool
+	getMustFlushPendingStartDocument() const = 0;
+
+	/**
+	 * Set the pending start document event flush state.
+	 * @param the new value
+	 */
+	virtual void
+	setMustFlushPendingStartDocument(bool	b) = 0;
+
+	// This next group of classes are used to save and restore
 	// the execution state in an automated, and exception-safe
 	// manner.
+
+	class HasPendingStartDocumentSetAndRestore
+	{
+	public:
+
+		/**
+		 * Construct an object to set and restore the current pending start.
+		 * document state.
+		 * @param theExecutionContext a reference to the current execution context
+		 * @param theNewState the new state to set.
+		 */
+		HasPendingStartDocumentSetAndRestore(
+			StylesheetExecutionContext&		theExecutionContext,
+			bool							theNewState) :
+				m_executionContext(theExecutionContext),
+				m_savedState(theExecutionContext.getHasPendingStartDocument())
+		{
+			theExecutionContext.setHasPendingStartDocument(theNewState);
+		}
+
+		~HasPendingStartDocumentSetAndRestore()
+		{
+			m_executionContext.setHasPendingStartDocument(m_savedState);
+		}
+
+	private:
+
+		StylesheetExecutionContext&		m_executionContext;
+
+		const bool						m_savedState;
+	};
+
+	class MustFlushPendingStartDocumentSetAndRestore
+	{
+	public:
+
+		/**
+		 * Construct an object to set and restore the current flush pending start.
+		 * document state.
+		 * @param theExecutionContext a reference to the current execution context
+		 * @param theNewState the new state to set.
+		 */
+		MustFlushPendingStartDocumentSetAndRestore(
+			StylesheetExecutionContext&		theExecutionContext,
+			bool							theNewState) :
+				m_executionContext(theExecutionContext),
+				m_savedState(theExecutionContext.getMustFlushPendingStartDocument())
+		{
+			theExecutionContext.setMustFlushPendingStartDocument(theNewState);
+		}
+
+		~MustFlushPendingStartDocumentSetAndRestore()
+		{
+			m_executionContext.setMustFlushPendingStartDocument(m_savedState);
+		}
+
+	private:
+
+		StylesheetExecutionContext&		m_executionContext;
+
+		const bool						m_savedState;
+	};
 
 	class FormatterListenerSetAndRestore
 	{
@@ -413,8 +503,14 @@ public:
 		ExecutionStateSetAndRestore(
 			StylesheetExecutionContext&		theExecutionContext,
 			FormatterListener*				theNewListener = 0,
+			bool							hasPendingStartDocument = false,
+			bool							mustFlushPendingStartDocument = false,
 			const XalanDOMString&			theNewPendingElementName = XalanDOMString(),
 			const AttributeListImpl&		theNewPendingAttributes = AttributeListImpl()) :
+				m_hasPendingSetAndRestore(theExecutionContext,
+										  hasPendingStartDocument),
+				m_flushPendingSetAndRestore(theExecutionContext,
+											mustFlushPendingStartDocument),
 				m_formatterListenerSetAndRestore(theExecutionContext,
 												 theNewListener),
 				m_pendingElementNameSetAndRestore(theExecutionContext,
@@ -430,11 +526,15 @@ public:
 
 	private:
 
-		FormatterListenerSetAndRestore		m_formatterListenerSetAndRestore;
+		const HasPendingStartDocumentSetAndRestore			m_hasPendingSetAndRestore;
 
-		PendingElementNameSetAndRestore		m_pendingElementNameSetAndRestore;
+		const MustFlushPendingStartDocumentSetAndRestore	m_flushPendingSetAndRestore;
 
-		PendingAttributesSetAndRestore		m_pendingAttributesSetAndRestore;
+		const FormatterListenerSetAndRestore				m_formatterListenerSetAndRestore;
+
+		const PendingElementNameSetAndRestore				m_pendingElementNameSetAndRestore;
+
+		const PendingAttributesSetAndRestore				m_pendingAttributesSetAndRestore;
 	};
 
 	/**

@@ -192,7 +192,6 @@ XSLTEngineImpl::XSLTEngineImpl(
 	m_rootDoc(),
 	m_outputCarriageReturns(false),
 	m_outputLinefeeds(false),
-	m_formatter(0),
 	m_resultTreeFactory(0),
 	m_resultNameSpacePrefix(),
 	m_resultNameSpaceURL(),
@@ -201,6 +200,7 @@ XSLTEngineImpl::XSLTEngineImpl(
 	m_pendingElementName(),
 	m_pendingAttributes(),
 	m_hasPendingStartDocument(false),
+	m_mustFlushStartDocument(false),
 	m_resultNameSpaces(),
 	m_emptyNamespace(),
 	m_xpathFactory(xpathFactory),
@@ -270,6 +270,7 @@ XSLTEngineImpl::reset()
 	m_needToCheckForInfiniteLoops = false;
 	m_variableStacks.reset();
 	m_hasPendingStartDocument = false;
+	m_mustFlushStartDocument = false;
 
 	m_stackGuard.clear();
 	m_xpathSupport.reset();
@@ -1407,11 +1408,12 @@ XSLTEngineImpl::startDocument()
 	assert(m_flistener != 0);
 	assert(m_executionContext != 0);
 
-//	if (m_hasPendingStartDocument == false)
-//	{
-//		m_hasPendingStartDocument = true;
-//	}
-//	else
+	if (m_hasPendingStartDocument == false)
+	{
+		m_hasPendingStartDocument = true;
+		m_mustFlushStartDocument = false;
+	}
+	else if (m_mustFlushStartDocument == true)
 	{
 		m_flistener->startDocument();
 
@@ -1422,6 +1424,8 @@ XSLTEngineImpl::startDocument()
 			fireGenerateEvent(ge);
 		}
 
+		// Reset this, but leave m_mustFlushStartDocument alone,
+		// since it will still be needed.
 		m_hasPendingStartDocument = false;
 	}
 }
@@ -1547,12 +1551,7 @@ XSLTEngineImpl::pendingAttributesHasDefaultNS() const
 void
 XSLTEngineImpl::flushPending()
 {
-	if (m_hasPendingStartDocument == true)
-	{
-		startDocument();
-	}
-
-	if(0 != length(m_pendingElementName))
+	if(m_hasPendingStartDocument == true && 0 != length(m_pendingElementName))
 	{
 		assert(m_flistener != 0);
 		assert(m_executionContext != 0);
@@ -1561,7 +1560,6 @@ XSLTEngineImpl::flushPending()
 		{
 			if (equalsIgnoreCase(m_pendingElementName,
 								 Constants::ELEMNAME_HTML_STRING) == true &&
-//				m_hasPendingStartDocument == true &&
 				pendingAttributesHasDefaultNS() == false)
 			{
 				if (m_flistener->getOutputFormat() == FormatterListener::OUTPUT_METHOD_XML)
@@ -1584,6 +1582,17 @@ XSLTEngineImpl::flushPending()
 				}
 			}
 		}
+	}
+
+	if(m_hasPendingStartDocument == true && m_mustFlushStartDocument == true)
+	{
+		startDocument();
+	}
+
+	if(0 != length(m_pendingElementName) && m_mustFlushStartDocument == true)
+	{
+		assert(m_flistener != 0);
+		assert(m_executionContext != 0);
 
 		m_cdataStack.push_back(isCDataResultElem(m_pendingElementName)? true : false);
 		m_flistener->startElement(c_wstr(m_pendingElementName), m_pendingAttributes);
@@ -1617,6 +1626,8 @@ XSLTEngineImpl::startElement(const XMLCh* const	name)
 	nsVector.push_back(m_emptyNamespace);
 	m_resultNameSpaces.push_back(nsVector);
 	m_pendingElementName = name;
+
+	m_mustFlushStartDocument = true;
 }
 
 
@@ -1700,10 +1711,12 @@ XSLTEngineImpl::characters(
 	assert(m_flistener != 0);
 	assert(ch != 0);
 
+	m_mustFlushStartDocument = true;
+
 	flushPending();
 
 	const Stylesheet::QNameVectorType&	cdataElems =
-		m_stylesheetRoot->getCDATASectionElems();
+			m_stylesheetRoot->getCDATASectionElems();
 
 	if(0 != cdataElems.size() && 0 != m_cdataStack.size())
 	{
@@ -1722,11 +1735,12 @@ XSLTEngineImpl::characters(
 		if(getTraceListeners() > 0)
 		{
 			GenerateEvent ge(this, GenerateEvent::EVENTTYPE_CHARACTERS, ch,
-					start, length);
+						start, length);
 			fireGenerateEvent(ge);
 		}
 	}
 }
+
 
 
 
@@ -1736,6 +1750,8 @@ XSLTEngineImpl::charactersRaw (
 			const unsigned int	/* start */,
 			const unsigned int	length)
 {
+	m_mustFlushStartDocument = true;
+
 	flushPending();
 
 	m_flistener->charactersRaw(ch, length);
@@ -1771,6 +1787,8 @@ XSLTEngineImpl::ignorableWhitespace(
 	assert(m_flistener != 0);
 	assert(ch != 0);
 
+	m_mustFlushStartDocument = true;
+
 	flushPending();
 
 	m_flistener->ignorableWhitespace(ch, length);
@@ -1778,7 +1796,7 @@ XSLTEngineImpl::ignorableWhitespace(
 	if(getTraceListeners() > 0)
 	{
 		GenerateEvent ge(this, GenerateEvent::EVENTTYPE_IGNORABLEWHITESPACE,
-				ch, 0, length);
+					ch, 0, length);
 
 		fireGenerateEvent(ge);
 	}
@@ -1794,6 +1812,8 @@ XSLTEngineImpl::processingInstruction(
 	assert(m_flistener != 0);
 	assert(target != 0);
 	assert(data != 0);
+
+	m_mustFlushStartDocument = true;
 
 	flushPending();
 
@@ -1816,6 +1836,8 @@ XSLTEngineImpl::comment(const XMLCh* const	data)
 	assert(m_flistener != 0);
 	assert(data != 0);
 
+	m_mustFlushStartDocument = true;
+
 	flushPending();
 
 	m_flistener->comment(data);
@@ -1834,6 +1856,8 @@ XSLTEngineImpl::entityReference(const XMLCh* const	name)
 {
 	assert(m_flistener != 0);
 	assert(name != 0);
+
+	m_mustFlushStartDocument = true;
 
 	flushPending();
 
@@ -1858,6 +1882,8 @@ XSLTEngineImpl::cdata(
 {
 	assert(m_flistener != 0);
 	assert(ch != 0);
+
+	m_mustFlushStartDocument = true;
 
 	flushPending();
 
@@ -1889,7 +1915,6 @@ XSLTEngineImpl::cdata(
 		}
 	}
 }
-
 
 
 
@@ -2055,52 +2080,6 @@ XSLTEngineImpl::cloneToResultTree(
 
 
 
-class StatePushPop
-{
-public:
-
-	StatePushPop(
-		FormatterListener*&		theCurrentListener,
-		FormatterListener*		theNewListener,
-		DOMString&				thePendingElementName,
-		AttributeListImpl&		thePendingAttributes) :
-			m_listener(theCurrentListener),
-			m_savedListener(theCurrentListener),
-			m_pendingElementName(thePendingElementName),
-			m_savedPendingElementName(thePendingElementName),
-			m_pendingAttributes(thePendingAttributes),
-			m_savedPendingAttributes(thePendingAttributes)
-	{
-		theCurrentListener = theNewListener;
-
-		clear(m_pendingElementName);
-
-		m_pendingAttributes.clear();
-	}
-
-	~StatePushPop()
-	{
-		m_listener = m_savedListener;
-		m_pendingElementName = m_savedPendingElementName;
-		m_pendingAttributes = m_savedPendingAttributes;
-	}
-
-private:
-
-	FormatterListener*&			m_listener;
-	FormatterListener* const	m_savedListener;
-
-	DOMString&					m_pendingElementName;
-	const DOMString				m_savedPendingElementName;
-
-	AttributeListImpl&			m_pendingAttributes;
-	const AttributeListImpl		m_savedPendingAttributes;
-};
-
-
-
-
-// @@ java: DocumentFragment
 ResultTreeFragBase*
 XSLTEngineImpl::createResultTreeFrag(
 			StylesheetExecutionContext&		executionContext,
@@ -2118,40 +2097,17 @@ XSLTEngineImpl::createResultTreeFrag(
 	FormatterToDOM	tempFormatter(m_resultTreeFactory, 
 								  pfrag.get());
 
-	StatePushPop	theStateSaver(
-						m_flistener,
-						&tempFormatter,
-						m_pendingElementName,
-						m_pendingAttributes);
+	m_mustFlushStartDocument = true;
+
+	flushPending();
+
+	StylesheetExecutionContext::ExecutionStateSetAndRestore		theStateSaveAndRestore(
+			executionContext,
+			&tempFormatter);
 
 	templateChild.executeChildren(executionContext, sourceTree, sourceNode, mode);
 
 	return pfrag.release();
-}
-
-
-
-// $$$ ToDo: This is not called anywhere, can it be removed?
-void
-XSLTEngineImpl::writeChildren(
-			FormatterListener*				flistener,
-			StylesheetExecutionContext&		executionContext,
-	        const ElemTemplateElement&		templateParent,
-	        XalanNode&						sourceTree,
-	        XalanNode&						sourceNode,
-			const QName&					mode)
-{
-    flushPending();
-
-	StatePushPop	theStateSaver(
-						m_flistener,
-						flistener,
-						m_pendingElementName,
-						m_pendingAttributes);
-
-    templateParent.executeChildren(executionContext, &sourceTree, &sourceNode, mode);
-    
-    flushPending();
 }
 
 
@@ -2161,8 +2117,6 @@ XSLTEngineImpl::outputResultTreeFragment(const XObject&		theTree)
 {
 	const ResultTreeFragBase&	docFrag = theTree.rtree();
 
-	// $$$ ToDo: We should optimize this so that we don't have
-	// a node list.
 	const XalanNodeList*		nl = docFrag.getChildNodes();
 	assert(nl != 0);
 
@@ -2256,7 +2210,6 @@ XSLTEngineImpl::isCDataResultElem(const XalanDOMString&		elementName) const
 			if(0 == length(elemNS))
 			{
 				error(XalanDOMString("Prefix must resolve to a namespace: ") + prefix);
-			 // throw new RuntimeException(+prefix);
 			}
 
 			elemLocalName = substring(elementName, indexOfNSSep + 1);
@@ -3601,25 +3554,6 @@ XSLTEngineImpl::findElementByAttribute(
 
 
 
-void
-XSLTEngineImpl::setFormatter(Formatter*		formatter)
-{
-	flushPending();
-
-	m_formatter = formatter;
-
-	if(0 != formatter)
-	{
-		m_flistener = formatter->getFormatterListener();
-	}
-	else
-	{
-		m_flistener = 0;
-	}
-}
-
-
-
 FormatterListener*
 XSLTEngineImpl::getFormatterListener() const
 {
@@ -3631,6 +3565,13 @@ XSLTEngineImpl::getFormatterListener() const
 void
 XSLTEngineImpl::setFormatterListener(FormatterListener*		flistener)
 {
+	if (m_hasPendingStartDocument == true && m_flistener != 0)
+	{
+		m_mustFlushStartDocument = true;
+
+		flushPending();
+	}
+
 	m_flistener = flistener;
 }
 
@@ -3990,9 +3931,7 @@ XSLTEngineImpl::VariableStack::pushParams(
 
 	if (theStackEntry->getType() != StackEntry::eContextMarker)
 	{
-		// @@ $$$ ToDo: Fix this!!!
-		// throw InvalidStackContext();
-		return;
+		throw InvalidStackContextException();
 	}
 
 	VariableStackStackType		tempStack;
@@ -4187,6 +4126,20 @@ XSLTEngineImpl::VariableStack::findArg(
 	}
 
 	return theResult;
+}
+
+
+
+XSLTEngineImpl::VariableStack::InvalidStackContextException::InvalidStackContextException() :
+	XSLTProcessorException(XALAN_STATIC_UCODE_STRING("Invalid stack context"),
+						   XALAN_STATIC_UCODE_STRING("InvalidStackContextException"))
+{
+}
+
+
+
+XSLTEngineImpl::VariableStack::InvalidStackContextException::~InvalidStackContextException()
+{
 }
 
 
