@@ -344,7 +344,11 @@ DoubleSupport::toDouble(const XalanDOMString&	theString)
 void
 processWhitespace(const XalanDOMChar*&	theString)
 {
-	while(*theString != 0 && isSpace(*theString) == true)
+	while(*theString != 0 &&
+		  (*theString == 0x20 ||
+		   *theString == 0xD ||
+		   *theString == 0xA ||
+		   *theString == 0x9))
 	{
 		++theString;
 	}
@@ -367,7 +371,7 @@ accumulateNumbers(
 		// faster...
 		unsigned long	temp = 0;
 
-		while(*theString && isDigit(*theString) == true)
+		while(*theString && *theString >= '0' && *theString <= '9')
 		{
 			temp *= 10;
 			temp += char(*theString) - '0';
@@ -387,7 +391,7 @@ accumulateNumbers(
 		// faster...
 		unsigned long	temp = 0;
 
-		while(*theString && isDigit(*theString) == true)
+		while(*theString && *theString >= '0' && *theString <= '9')
 		{
 			theDivisor *= 10;
 
@@ -485,10 +489,20 @@ doConvert(const XalanDOMChar*	theString)
 			}
 			break;
 
-		case ' ':
-		case '\t':
-			fGotWhitespace = true;
-			processWhitespace(theCurrent);
+		case 0x20:
+		case 0xD:
+		case 0x9:
+		case 0xA:
+			if (fGotWhitespace == true)
+			{
+				fError = true;
+			}
+			else
+			{
+				fGotWhitespace = true;
+
+				processWhitespace(theCurrent);
+			}
 			break;
 
 		default:
