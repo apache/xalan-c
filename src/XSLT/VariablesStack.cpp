@@ -75,7 +75,8 @@ VariablesStack::VariablesStack() :
 	m_stack(),
 	m_globalStackFrameIndex(-1),
 	m_globalStackFrameMarked(false),
-	m_currentStackFrameIndex(0)
+	m_currentStackFrameIndex(0),
+	m_guardStack()
 {
 	m_stack.reserve(eDefaultStackSize);
 }
@@ -97,6 +98,7 @@ VariablesStack::reset()
 	}
 
 	m_stack.clear();
+	m_guardStack.clear();
 
 	m_globalStackFrameMarked = false;
 	m_globalStackFrameIndex = -1;
@@ -413,6 +415,21 @@ VariablesStack::findXObject(
 				XalanNode* const	doc = executionContext.getRootDocument();
 				assert(doc != 0);
 
+#if !defined (XALAN_NO_NAMESPACES)
+				using std::find;
+#endif
+
+				// See if the ElemVariable instance is already being evaluated...
+				if (find(m_guardStack.begin(), m_guardStack.end(), var) != m_guardStack.end())
+				{
+					executionContext.error(
+						"A circular variable definition was detected",
+						doc,
+						var->getLocator());
+				}
+
+				m_guardStack.push_back(var);
+
 				// We need to set up a stack frame for the variable's execution...
 				typedef StylesheetExecutionContext::PushAndPopContextMarker	PushAndPopContextMarker;
 
@@ -420,6 +437,10 @@ VariablesStack::findXObject(
 
 				theNewValue = var->getValue(executionContext, doc);
 				assert(theNewValue.null() == false);
+
+				assert(m_guardStack.empty() == false);
+
+				m_guardStack.pop_back();
 
 				theEntry->setValue(theNewValue);
 				theEntry->activate();

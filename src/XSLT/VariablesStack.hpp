@@ -176,8 +176,10 @@ public:
 
 #if defined(XALAN_NO_NAMESPACES)
 	typedef vector<ParamsVectorEntry>		ParamsVectorType;
+	typedef vector<const ElemVariable*>		RecursionGuardStackType;
 #else
-	typedef std::vector<ParamsVectorEntry>	ParamsVectorType;
+	typedef std::vector<ParamsVectorEntry>		ParamsVectorType;
+	typedef std::vector<const ElemVariable*>	RecursionGuardStackType;
 #endif
 
 	/**
@@ -569,18 +571,25 @@ private:
 			bool				fSearchGlobalSpace);
 
 
-	VariableStackStackType	m_stack;
+	VariableStackStackType		m_stack;
 
-	int						m_globalStackFrameIndex;
+	int							m_globalStackFrameIndex;
 
-	bool					m_globalStackFrameMarked;
+	bool						m_globalStackFrameMarked;
 
 	/**
 	 * This is the top of the stack frame from where a search 
 	 * for a variable or param should take place.  It may not 
 	 * be the real stack top.
 	 */
-	unsigned int			m_currentStackFrameIndex;	
+	unsigned int				m_currentStackFrameIndex;	
+
+	/**
+	 * This will be a stack for any variable definitions
+	 * that are being evaluated dynamically, to protect
+	 * against circular definitions.
+	 */
+	RecursionGuardStackType		m_guardStack;
 };
 
 
