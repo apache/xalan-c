@@ -107,11 +107,9 @@ typedef struct CONTROL_STRUCT_TAG
 
 
 
-static CallbackSizeType xalan_output_handler(const void *data, CallbackSizeType length, const void *handle)
+static CallbackSizeType xalan_output_handler(const char *data, CallbackSizeType length, void *handle)
 {
 	CONTROL_STRUCT* c = (CONTROL_STRUCT*)handle;
-
-	char* d = (char *)data;
 
 	if (c->fHeaderSent == 0)
 	{
@@ -120,12 +118,12 @@ static CallbackSizeType xalan_output_handler(const void *data, CallbackSizeType 
 		ap_send_http_header(c->r);
 	}
 
-	return ap_rwrite(d, length, c->r);
+	return ap_rwrite(data, length, c->r);
 }
 
 
 
-static void xalan_flush_handler(const void *handle)
+static void xalan_flush_handler(void *handle)
 {
 	CONTROL_STRUCT* c = (CONTROL_STRUCT*)handle;
 
