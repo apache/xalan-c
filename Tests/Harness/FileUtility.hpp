@@ -126,9 +126,9 @@ const XalanDOMString	processorType(XALAN_STATIC_UCODE_STRING("XalanC"));
 const XalanDOMString	XSLSuffix(XALAN_STATIC_UCODE_STRING(".xsl"));
 const XalanDOMString	XMLSuffix(XALAN_STATIC_UCODE_STRING(".xml"));
 #if defined(WIN32)
-const XalanDOMString	pathSep(XALAN_STATIC_UCODE_STRING("/"));
-#else
 const XalanDOMString	pathSep(XALAN_STATIC_UCODE_STRING("\\"));
+#else
+const XalanDOMString	pathSep(XALAN_STATIC_UCODE_STRING("/"));
 #endif
 
 // This class is exported from the Harness.dll
