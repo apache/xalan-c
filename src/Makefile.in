@@ -261,7 +261,7 @@ ifeq ($(PLATFORM), AIX)
 
   else
 
-	PLATFORM_COMPILE_OPTIONS = -D${PLATFORM} -D_THREAD_SAFE
+	PLATFORM_COMPILE_OPTIONS = -qthreaded -D${PLATFORM} -D_THREAD_SAFE
 	ALLLIBS = ${LIBS} -L/usr/lib 
 	CC1 = $(CXX) $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS) -I${STLPORTROOT}/stlport
 ifeq (-DNDEBUG,$(findstring -DNDEBUG,${CXXFLAGS}))
@@ -271,7 +271,7 @@ else
 endif
     CC4 = $(CC) $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS)
 
-	MAKE_SHARED = makeC++SharedLib_r -p 1024 -brtl ${bitstobuildLink}
+	MAKE_SHARED = makeC++SharedLib_r -p 512 -brtl ${bitstobuildLink}
 
 	LINK = $(CXX) -qnotempinc $(CXXFLAGS)  -brtl $(PLATFORM_COMPILE_OPTIONS) ${bitstobuildLink}
 
