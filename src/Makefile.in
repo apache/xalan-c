@@ -491,7 +491,7 @@ endif
 DocumentBuilder: lib $(BINTARGETDIR)/DocumentBuilder
 
 $(BINTARGETDIR)/DocumentBuilder: ${ALL_OBJECTS_DIR}/DocumentBuilder.o
-ifeq ($(PLATFORM), OS390)                                                       
+ifeq ($(PLATFORM), OS390)
 	${LINK} $(XSL_BUILD_OPTIONS) ${PLATFORM_LIB_LINK_OPTIONS} ${LIBRARY_SEARCH_PATHS} \
 	${EXTRA_LINK_OPTIONS} $(LIB_DIR)/lib$(PROJECT_NAME)$(VER).x $(ALLLIBS) $(CXXFLAGS) $^ -o $@	
 ${ALL_OBJECTS_DIR}/%.o:$(SAMPLES_DIR)/DocumentBuilder/%.cpp
@@ -506,7 +506,7 @@ endif
 ExternalFunction: lib $(BINTARGETDIR)/ExternalFunction
 
 $(BINTARGETDIR)/ExternalFunction: ${ALL_OBJECTS_DIR}/ExternalFunction.o
-ifeq ($(PLATFORM), OS390)                                                       
+ifeq ($(PLATFORM), OS390)
 	${LINK} $(XSL_BUILD_OPTIONS) ${PLATFORM_LIB_LINK_OPTIONS} ${LIBRARY_SEARCH_PATHS} \
 	${EXTRA_LINK_OPTIONS} $(LIB_DIR)/lib$(PROJECT_NAME)$(VER).x $(ALLLIBS) $(CXXFLAGS) $^ -o $@	
 ${ALL_OBJECTS_DIR}/%.o:$(SAMPLES_DIR)/ExternalFunction/%.cpp
@@ -520,8 +520,8 @@ endif
 
 SerializeNodeSet: lib $(BINTARGETDIR)/SerializeNodeSet.cpp
 
-$(BINTARGETDIR)/SerializeNodeSet.cpp: ${ALL_OBJECTS_DIR}/SerializeNodeSet.cpp.o
-ifeq ($(PLATFORM), OS390)                                                       
+$(BINTARGETDIR)/SerializeNodeSet.cpp: ${ALL_OBJECTS_DIR}/SerializeNodeSet.o
+ifeq ($(PLATFORM), OS390)
 	${LINK} $(XSL_BUILD_OPTIONS) ${PLATFORM_LIB_LINK_OPTIONS} ${LIBRARY_SEARCH_PATHS} \
 	${EXTRA_LINK_OPTIONS} $(LIB_DIR)/lib$(PROJECT_NAME)$(VER).x $(ALLLIBS) $(CXXFLAGS) $^ -o $@	
 ${ALL_OBJECTS_DIR}/%.o:$(SAMPLES_DIR)/SerializeNodeSet/%.cpp
@@ -529,14 +529,14 @@ ${ALL_OBJECTS_DIR}/%.o:$(SAMPLES_DIR)/SerializeNodeSet/%.cpp
 else
 	${LINK} $(XSL_BUILD_OPTIONS) ${PLATFORM_LIB_LINK_OPTIONS} ${LIBRARY_SEARCH_PATHS} \
 	${EXTRA_LINK_OPTIONS} -L$(LIB_DIR) -l$(PROJECT_NAME)$(VER) $(ALLLIBS) $(CXXFLAGS) $^ -o $@	
-${ALL_OBJECTS_DIR}/%.o:$(SAMPLES_DIR)/SerializeNodeSet.cpp/%.cpp
+${ALL_OBJECTS_DIR}/%.o:$(SAMPLES_DIR)/SerializeNodeSet/%.cpp
 	$(CC1) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $<
 endif
 
 SimpleTransform: lib $(BINTARGETDIR)/SimpleTransform
 
 $(BINTARGETDIR)/SimpleTransform: ${ALL_OBJECTS_DIR}/SimpleTransform.o
-ifeq ($(PLATFORM), OS390)                                                       
+ifeq ($(PLATFORM), OS390)
 	${LINK} $(XSL_BUILD_OPTIONS) ${PLATFORM_LIB_LINK_OPTIONS} ${LIBRARY_SEARCH_PATHS} \
 	${EXTRA_LINK_OPTIONS} $(LIB_DIR)/lib$(PROJECT_NAME)$(VER).x $(ALLLIBS) $(CXXFLAGS) $^ -o $@	
 ${ALL_OBJECTS_DIR}/%.o:$(SAMPLES_DIR)/SimpleTransform/%.cpp
@@ -551,7 +551,7 @@ endif
 SimpleXPathAPI: lib $(BINTARGETDIR)/SimpleXPathAPI
 
 $(BINTARGETDIR)/SimpleXPathAPI: ${ALL_OBJECTS_DIR}/SimpleXPathAPI.o
-ifeq ($(PLATFORM), OS390)                                                       
+ifeq ($(PLATFORM), OS390)
 	${LINK} $(XSL_BUILD_OPTIONS) ${PLATFORM_LIB_LINK_OPTIONS} ${LIBRARY_SEARCH_PATHS} \
 	${EXTRA_LINK_OPTIONS} $(LIB_DIR)/lib$(PROJECT_NAME)$(VER).x $(ALLLIBS) $(CXXFLAGS) $^ -o $@	
 ${ALL_OBJECTS_DIR}/%.o:$(SAMPLES_DIR)/SimpleXPathAPI/%.cpp
@@ -566,7 +566,7 @@ endif
 SimpleXPathCAPI: lib $(BINTARGETDIR)/SimpleXPathCAPI
 
 $(BINTARGETDIR)/SimpleXPathCAPI: ${ALL_OBJECTS_DIR}/SimpleXPathCAPI.o
-ifeq ($(PLATFORM), OS390)                                                       
+ifeq ($(PLATFORM), OS390)
 	${LINK} $(XSL_BUILD_OPTIONS) ${PLATFORM_LIB_LINK_OPTIONS} ${LIBRARY_SEARCH_PATHS} \
 	${EXTRA_LINK_OPTIONS} $(LIB_DIR)/lib$(PROJECT_NAME)$(VER).x $(ALLLIBS) $(CXXFLAGS) $^ -o $@	
 ${ALL_OBJECTS_DIR}/%.o:$(SAMPLES_DIR)/SimpleXPathCAPI/%.c
@@ -581,7 +581,7 @@ endif
 StreamTransform: lib $(BINTARGETDIR)/StreamTransform
 
 $(BINTARGETDIR)/StreamTransform: ${ALL_OBJECTS_DIR}/StreamTransform.o
-ifeq ($(PLATFORM), OS390)                                                       
+ifeq ($(PLATFORM), OS390)
 	${LINK} $(XSL_BUILD_OPTIONS) ${PLATFORM_LIB_LINK_OPTIONS} ${LIBRARY_SEARCH_PATHS} \
 	${EXTRA_LINK_OPTIONS} $(LIB_DIR)/lib$(PROJECT_NAME)$(VER).x $(ALLLIBS) $(CXXFLAGS) $^ -o $@	
 ${ALL_OBJECTS_DIR}/%.o:$(SAMPLES_DIR)/StreamTransform/%.cpp
@@ -596,7 +596,7 @@ endif
 TraceListen: lib $(BINTARGETDIR)/TraceListen
 
 $(BINTARGETDIR)/TraceListen: ${ALL_OBJECTS_DIR}/TraceListen.o
-ifeq ($(PLATFORM), OS390)                                                       
+ifeq ($(PLATFORM), OS390)
 	${LINK} $(XSL_BUILD_OPTIONS) ${PLATFORM_LIB_LINK_OPTIONS} ${LIBRARY_SEARCH_PATHS} \
 	${EXTRA_LINK_OPTIONS} $(LIB_DIR)/lib$(PROJECT_NAME)$(VER).x $(ALLLIBS) $(CXXFLAGS) $^ -o $@	
 ${ALL_OBJECTS_DIR}/%.o:$(SAMPLES_DIR)/TraceListen/%.cpp
@@ -611,7 +611,7 @@ endif
 UseStylesheetParam: lib $(BINTARGETDIR)/UseStylesheetParam
 
 $(BINTARGETDIR)/UseStylesheetParam: ${ALL_OBJECTS_DIR}/UseStylesheetParam.o
-ifeq ($(PLATFORM), OS390)                                                       
+ifeq ($(PLATFORM), OS390)
 	${LINK} $(XSL_BUILD_OPTIONS) ${PLATFORM_LIB_LINK_OPTIONS} ${LIBRARY_SEARCH_PATHS} \
 	${EXTRA_LINK_OPTIONS} $(LIB_DIR)/lib$(PROJECT_NAME)$(VER).x $(ALLLIBS) $(CXXFLAGS) $^ -o $@	
 ${ALL_OBJECTS_DIR}/%.o:$(SAMPLES_DIR)/UseStylesheetParam/%.cpp
@@ -626,7 +626,7 @@ endif
 XalanTransform: lib $(BINTARGETDIR)/XalanTransform
 
 $(BINTARGETDIR)/XalanTransform: ${ALL_OBJECTS_DIR}/XalanTransform.o
-ifeq ($(PLATFORM), OS390)                                                       
+ifeq ($(PLATFORM), OS390)
 	${LINK} $(XSL_BUILD_OPTIONS) ${PLATFORM_LIB_LINK_OPTIONS} ${LIBRARY_SEARCH_PATHS} \
 	${EXTRA_LINK_OPTIONS} $(LIB_DIR)/lib$(PROJECT_NAME)$(VER).x $(ALLLIBS) $(CXXFLAGS) $^ -o $@	
 ${ALL_OBJECTS_DIR}/%.o:$(SAMPLES_DIR)/XalanTransform/%.cpp
@@ -641,7 +641,7 @@ endif
 XalanTransformerCallback: lib $(BINTARGETDIR)/XalanTransformerCallback
 
 $(BINTARGETDIR)/XalanTransformerCallback: ${ALL_OBJECTS_DIR}/XalanTransformerCallback.o
-ifeq ($(PLATFORM), OS390)                                                       
+ifeq ($(PLATFORM), OS390)
 	${LINK} $(XSL_BUILD_OPTIONS) ${PLATFORM_LIB_LINK_OPTIONS} ${LIBRARY_SEARCH_PATHS} \
 	${EXTRA_LINK_OPTIONS} $(LIB_DIR)/lib$(PROJECT_NAME)$(VER).x $(ALLLIBS) $(CXXFLAGS) $^ -o $@	
 ${ALL_OBJECTS_DIR}/%.o:$(SAMPLES_DIR)/XalanTransformerCallback/%.cpp
@@ -656,7 +656,7 @@ endif
 XPathWrapper: lib $(BINTARGETDIR)/XPathWrapper
 
 $(BINTARGETDIR)/XPathWrapper: ${ALL_OBJECTS_DIR}/XPathWrapper.o ${ALL_OBJECTS_DIR}/TestDriver.o
-ifeq ($(PLATFORM), OS390)                                                       
+ifeq ($(PLATFORM), OS390)
 	${LINK} $(XSL_BUILD_OPTIONS) ${PLATFORM_LIB_LINK_OPTIONS} ${LIBRARY_SEARCH_PATHS} \
 	${EXTRA_LINK_OPTIONS} $(LIB_DIR)/lib$(PROJECT_NAME)$(VER).x $(ALLLIBS) $(CXXFLAGS) $^ -o $@	
 ${ALL_OBJECTS_DIR}/%.o:$(SAMPLES_DIR)/XPathWrapper/%.cpp
@@ -673,7 +673,7 @@ Tests: lib  ThreadTest Conf
 ThreadTest: lib $(BINTARGETDIR)/ThreadTest
 
 $(BINTARGETDIR)/ThreadTest: ${ALL_OBJECTS_DIR}/ThreadTest.o 
-ifeq ($(PLATFORM), OS390)                                                       
+ifeq ($(PLATFORM), OS390)
 	${LINK} $(XSL_BUILD_OPTIONS) ${PLATFORM_LIB_LINK_OPTIONS} ${LIBRARY_SEARCH_PATHS} \
 	${EXTRA_LINK_OPTIONS} $(LIB_DIR)/lib$(PROJECT_NAME)$(VER).x $(ALLLIBS) $(CXXFLAGS) $^ -o $@	
 ${ALL_OBJECTS_DIR}/%.o:$(TESTS_DIR)/Threads/%.cpp
@@ -709,7 +709,7 @@ endif
 Conf: Harness $(BINTARGETDIR)/Conf
 
 $(BINTARGETDIR)/Conf: ${ALL_OBJECTS_DIR}/conf.o ${ALL_OBJECTS_DIR}/FileUtility.o ${ALL_OBJECTS_DIR}/XMLFileReporter.o 
-ifeq ($(PLATFORM), OS390)                                                       
+ifeq ($(PLATFORM), OS390)
 	${LINK} $(XSL_BUILD_OPTIONS) ${PLATFORM_LIB_LINK_OPTIONS} ${LIBRARY_SEARCH_PATHS} \
 	${EXTRA_LINK_OPTIONS} $(LIB_DIR)/lib$(PROJECT_NAME)$(VER).x $(ALLLIBS) $(CXXFLAGS) $^ -o $@	
 ${ALL_OBJECTS_DIR}/%.o:$(TESTS_DIR)/Conf/%.cpp
@@ -725,7 +725,7 @@ lib:	prepare compile $(THISLIB)$(VER)$(SHLIBSUFFIX)
 
 $(THISLIB)$(VER)$(SHLIBSUFFIX): $(ALL_OBJECTS)
 	$(MAKE_SHARED) $(PLATFORM_LIBRARIES) $(EXTRA_LINK_OPTIONS) $(ALLLIBS) $^ -o $@ 
-ifeq ($(PLATFORM), OS390)            
+ifeq ($(PLATFORM), OS390)
 	cp -p *.x  ${LIB_DIR}        
 endif                                
 
@@ -746,4 +746,3 @@ endif
 	rm -f $(BINTARGETDIR)/UseStylesheetParam
 	rm -f $(BINTARGETDIR)/XalanTransform
 	rm -f $(BINTARGETDIR)/XPathWrapper
-
