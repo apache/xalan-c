@@ -76,6 +76,7 @@
 
 
 #include "ElemSort.hpp"
+#include "NodeSorter.hpp"
 #include "StylesheetConstructionContext.hpp"
 #include "StylesheetExecutionContext.hpp"
 
@@ -92,7 +93,7 @@ ElemForEach::ElemForEach(
 						lineNumber,
 						columnNumber,
 						Constants::ELEMNAME_FOREACH),
-	m_pSelectPattern(0)
+	m_selectPattern(0)
 {
 	const unsigned int	nAttrs = atts.getLength();
 		
@@ -102,7 +103,7 @@ ElemForEach::ElemForEach(
 
 		if(equals(aname, Constants::ATTRNAME_SELECT))
 		{
-			m_pSelectPattern = constructionContext.createXPath(atts.getValue(i), *this);
+			m_selectPattern = constructionContext.createXPath(atts.getValue(i), *this);
 		}
 		else if(!(isAttrOK(aname, atts, i, constructionContext) || processSpaceAttr(aname, atts, i)))
 		{
@@ -110,7 +111,7 @@ ElemForEach::ElemForEach(
 		}
 	}
 
-	if(0 == m_pSelectPattern)
+	if(0 == m_selectPattern)
 	{
 		constructionContext.error(Constants::ELEMNAME_FOREACH_WITH_PREFIX_STRING + " requires attribute: " + Constants::ATTRNAME_SELECT);
 	}
@@ -130,7 +131,7 @@ ElemForEach::ElemForEach(
 						lineNumber,
 						columnNumber,
 						xslToken),
-	m_pSelectPattern(0)
+	m_selectPattern(0)
 {
 }
 
@@ -158,9 +159,9 @@ ElemForEach::getElementName() const
 
 
 void
-ElemForEach::execute(StylesheetExecutionContext&		executionContext) const
+ElemForEach::execute(StylesheetExecutionContext&	executionContext) const
 {
-	assert(m_pSelectPattern != 0);
+	assert(m_selectPattern != 0);
 
 	XalanNode* const	sourceNode = executionContext.getCurrentNode();
 
@@ -168,11 +169,8 @@ ElemForEach::execute(StylesheetExecutionContext&		executionContext) const
 	{
 		transformSelectedChildren(
 			executionContext,
-			*this,
 			this,
 			sourceNode,
-			*m_pSelectPattern,
-			Constants::ELEMNAME_FOREACH,
 			executionContext.getCurrentStackFrameIndex());
 	}
     else
@@ -182,4 +180,111 @@ ElemForEach::execute(StylesheetExecutionContext&		executionContext) const
 			sourceNode, 
 			this);
     }
+}
+
+
+
+void
+ElemForEach::transformSelectedChildren(
+			StylesheetExecutionContext&		executionContext,
+			const ElemTemplateElement*		theTemplate,
+			XalanNode*						sourceNodeContext,
+			int								selectStackFrameIndex) const
+{
+	const unsigned int	nChildren = getSortElems().size();
+
+	if (nChildren == 0)
+	{
+		ElemTemplateElement::transformSelectedChildren(
+					executionContext,
+					*this,
+					theTemplate,
+					sourceNodeContext,
+					*m_selectPattern,
+					0,
+					selectStackFrameIndex);
+	}
+	else
+	{
+		typedef NodeSorter::NodeSortKeyVectorType					NodeSortKeyVectorType;
+		typedef StylesheetExecutionContext::BorrowReturnNodeSorter	BorrowReturnNodeSorter;
+
+		BorrowReturnNodeSorter	sorter(executionContext);
+
+		NodeSortKeyVectorType&	keys = sorter->getSortKeys();
+		assert(keys.size() == 0);
+
+		CollectionClearGuard<NodeSortKeyVectorType>		guard(keys);
+
+		// Reserve the space now...
+		keys.reserve(nChildren);
+
+		// Get some temporary strings to use for evaluting the AVTs...
+		XPathExecutionContext::GetAndReleaseCachedString	theTemp1(executionContext);
+
+		XalanDOMString&		langString = theTemp1.get();
+
+		XPathExecutionContext::GetAndReleaseCachedString	theTemp2(executionContext);
+
+		XalanDOMString&		scratchString = theTemp2.get();
+
+		// March backwards, performing a sort on each xsl:sort child.
+		// Probably not the most efficient method.
+		for(unsigned int i = 0; i < nChildren; i++)
+		{
+			const ElemSort* const	sort = getSortElems()[i];
+			assert(sort != 0);
+
+			const AVT* avt = sort->getLangAVT();
+
+			if(0 != avt)
+			{
+				avt->evaluate(langString, sourceNodeContext, *this, executionContext);
+			}
+
+			avt = sort->getDataTypeAVT();
+
+			if(0 != avt)
+			{
+				avt->evaluate(scratchString, sourceNodeContext, *this, executionContext);
+			}			
+
+			const bool	treatAsNumbers = !isEmpty(scratchString) && equals(scratchString, Constants::ATTRVAL_DATATYPE_NUMBER) ?
+					true : false;
+
+			clear(scratchString);
+
+			avt = sort->getOrderAVT();
+
+			if(0 != avt)
+			{
+				avt->evaluate(scratchString, sourceNodeContext, *this, executionContext);
+			}			
+
+			const bool	descending = !isEmpty(scratchString) && equals(scratchString, Constants::ATTRVAL_ORDER_DESCENDING) ?
+					true : false;
+
+			clear(scratchString);
+
+			assert(sort->getSelectPattern() != 0);
+
+			keys.push_back(
+					NodeSortKey(
+						executionContext, 
+						*sort->getSelectPattern(), 
+						treatAsNumbers, 
+						descending, 
+						langString, 
+						*this));
+		}
+
+		ElemTemplateElement::transformSelectedChildren(
+					executionContext,
+					*this,
+					theTemplate,
+					sourceNodeContext,
+					*m_selectPattern,
+					sorter.get(),
+					selectStackFrameIndex);
+	}
 }

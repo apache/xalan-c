@@ -149,7 +149,23 @@ protected:
 			int								columnNumber,
 			int								xslToken);
 
-	const XPath*		m_pSelectPattern;
+	/**
+	 * Perform a query if needed, and call transformChild for each child.
+	 * 
+	 * @param executionContext  The current execution context
+	 * @param template The owning template context.
+	 * @param sourceNodeContext The current source node context.
+	 * @param selectStackFrameIndex stack frame context for executing the
+	 *                              select statement
+	 */
+	void
+	transformSelectedChildren(
+			StylesheetExecutionContext&		executionContext,
+			const ElemTemplateElement*		theTemplate,
+			XalanNode*						sourceNodeContext,
+			int								selectStackFrameIndex) const;
+
+	const XPath*		m_selectPattern;
 
 private:
 

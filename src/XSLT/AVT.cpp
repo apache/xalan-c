@@ -72,6 +72,10 @@
 
 
 
+#include <DOMSupport/DOMServices.hpp>
+
+
+
 #include "AVTPartSimple.hpp"
 #include "AVTPartXPath.hpp"
 #include "StylesheetConstructionContext.hpp"
@@ -116,11 +120,11 @@ AVT::AVT(
 			const XalanDOMChar*				stringedValue,
 			const PrefixResolver&			resolver,
 			StylesheetConstructionContext&	constructionContext) :
-		AVTPart(),
 		m_parts(),
 		m_simpleString(),
 		// $$$ ToDo: Explicit XalanDOMString constructor
 		m_name(XalanDOMString(name)),
+		m_prefix(getPrefix(name)),
 		m_pcType(type)
 {
 	StringTokenizer		tokenizer(stringedValue, theTokenDelimiterCharacters, true);
@@ -135,11 +139,11 @@ AVT::AVT(
 	{
 		m_parts.reserve(nTokens + 1);
 
-		XalanDOMString buffer;
-		XalanDOMString exprBuffer;
-		XalanDOMString t; // base token
-		XalanDOMString lookahead; // next token
-		XalanDOMString error; // if non-null, break from loop
+		XalanDOMString	buffer;
+		XalanDOMString	exprBuffer;
+		XalanDOMString	t; // base token
+		XalanDOMString	lookahead; // next token
+		XalanDOMString	error; // if non-null, break from loop
 
 		while(tokenizer.hasMoreTokens())
 		{
@@ -235,12 +239,13 @@ AVT::AVT(
 								lookahead = tokenizer.nextToken();
 							} // end while(!equals(lookahead, "}"))
 							assert(equals(lookahead, theRightCurlyBracketString));
-							
+
 							// Proper close of attribute template. Evaluate the
 							// expression.
 							clear(buffer);
 
 							const XPath* const	xpath = constructionContext.createXPath(exprBuffer, resolver);
+							assert(xpath != 0);
 
 							m_parts.push_back(new AVTPartXPath(xpath));
 
@@ -345,21 +350,35 @@ AVT::evaluate(
 	{
 		buf = m_simpleString;
 	}
-	else if(!m_parts.empty())
-	{
-		clear(buf);
-
-		const AVTPartPtrVectorType::size_type	n = m_parts.size();
-
-		for(AVTPartPtrVectorType::size_type i = 0; i < n; i++)
-		{
-			assert(m_parts[i] != 0);
-
-			m_parts[i]->evaluate(buf, contextNode, prefixResolver, executionContext);
-		}
-	}
 	else
 	{
 		clear(buf);
+
+		if(m_parts.empty() == false)
+		{
+			const AVTPartPtrVectorType::size_type	n = m_parts.size();
+
+			for(AVTPartPtrVectorType::size_type i = 0; i < n; i++)
+			{
+				assert(m_parts[i] != 0);
+
+				m_parts[i]->evaluate(buf, contextNode, prefixResolver, executionContext);
+			}
+		}
+	}
+}
+
+
+
+XalanDOMString
+AVT::getPrefix(const XalanDOMChar*	theName)
+{
+	if (startsWith(theName, DOMServices::s_XMLNamespaceWithSeparator) == true)
+	{
+		return substring(theName, DOMServices::s_XMLNamespaceWithSeparatorLength);
+	}
+	else
+	{
+		return XalanDOMString();
 	}
 }

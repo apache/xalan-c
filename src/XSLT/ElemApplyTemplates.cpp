@@ -98,7 +98,7 @@ ElemApplyTemplates::ElemApplyTemplates(
 		switch(tok)
 		{
 		case Constants::TATTRNAME_SELECT:
-			m_pSelectPattern = constructionContext.createXPath(atts.getValue(i), *this);
+			m_selectPattern = constructionContext.createXPath(atts.getValue(i), *this);
 			break;
 
 		case Constants::TATTRNAME_MODE:
@@ -114,12 +114,12 @@ ElemApplyTemplates::ElemApplyTemplates(
 		}
 	}
 
-	if(0 == m_pSelectPattern)
+	if(0 == m_selectPattern)
 	{
-		m_pSelectPattern = constructionContext.createXPath(XALAN_STATIC_UCODE_STRING("node()"), *this);
+		m_selectPattern = constructionContext.createXPath(XALAN_STATIC_UCODE_STRING("node()"), *this);
 	}
 
-	assert(m_pSelectPattern != 0);
+	assert(m_selectPattern != 0);
 }
 
 
@@ -141,7 +141,7 @@ ElemApplyTemplates::getElementName() const
 void
 ElemApplyTemplates::execute(StylesheetExecutionContext&		executionContext) const
 {
-	assert(m_pSelectPattern != 0);
+	assert(m_selectPattern != 0);
 
 	if(0 != executionContext.getTraceListeners())
 	{
@@ -159,40 +159,33 @@ ElemApplyTemplates::execute(StylesheetExecutionContext&		executionContext) const
 		// depth-first searching, this gets worse.
 		StylesheetExecutionContext::ParamsPushPop	thePushPop(
 			executionContext,
-			this,
 			*this,		
 			sourceNode,
 			this);
 
 		assert(executionContext.getCurrentMode() != 0);
 
-		if (m_isDefaultTemplate == false &&           
-			!m_mode.equals(*executionContext.getCurrentMode()))
-		{
-			const QName* const	oldMode = executionContext.getCurrentMode();
+		const QName* const	currentMode = executionContext.getCurrentMode();
 
+		if (m_isDefaultTemplate == false &&
+			!m_mode.equals(*currentMode))
+		{
 			executionContext.setCurrentMode(&m_mode);
 
 			transformSelectedChildren(
 				executionContext,
-				*this,
 				0,
 				sourceNode,
-				*m_pSelectPattern,
-				Constants::ELEMNAME_APPLY_TEMPLATES,
 				thePushPop.getStackFrameIndex());
 
-			executionContext.setCurrentMode(oldMode);
+			executionContext.setCurrentMode(currentMode);
 		}
 		else
 		{
 			transformSelectedChildren(
 				executionContext,
-				*this,
 				0,
 				sourceNode,
-				*m_pSelectPattern,
-				Constants::ELEMNAME_APPLY_TEMPLATES,
 				thePushPop.getStackFrameIndex());
 		}
 	}

@@ -77,11 +77,10 @@
 
 
 
-#include <XSLT/AVTPart.hpp>
-
-
-
+class AVTPart;
 class PrefixResolver;
+class XPathExecutionContext;
+class XalanNode;
 class StylesheetConstructionContext;
 
 
@@ -89,7 +88,7 @@ class StylesheetConstructionContext;
 /**
  * Class to hold an Attribute Value Template.
  */
-class AVT: public AVTPart
+class AVT //: public AVTPart
 {
 public:
 
@@ -126,6 +125,18 @@ public:
 	}
 
 	/**
+	 * Retrieve the prefix of the name of the Attribute Value Template,
+	 * if any.
+	 * 
+	 * @return The prefix part of the AVT's name
+	 */
+    const XalanDOMString&
+	getPrefix() const
+	{
+		return m_prefix;
+	}
+
+	/**
 	 * Retrieve the type of the Attribute Value Template
 	 * 
 	 * @return type of AVT
@@ -136,9 +147,18 @@ public:
 		return m_pcType;
 	}
 
-   // These methods are inherited from AVTPart ...
+	/**
+	 * Retrieve the "simple" value
+	 * 
+	 * @return The "simple" value of the AVT.
+	 */
+	const XalanDOMString&
+	getSimpleValue() const
+	{
+		return m_simpleString;
+	}
 
-	virtual void
+	void
 	evaluate(
 			XalanDOMString&			buf,
 			XalanNode*				contextNode,
@@ -153,6 +173,16 @@ public:
 
 private:
 
+	/**
+	 * Get the prefix from theName, if any.
+	 * 
+	 * @param theName name of AVT
+	 *
+	 * @return A string containing the prefix.
+	 */
+	XalanDOMString
+	getPrefix(const XalanDOMChar*	theName);
+
 	// not implemented
 	AVT(const AVT &);
 	AVT& operator=(const AVT &);	
@@ -162,6 +192,8 @@ private:
 	XalanDOMString			m_simpleString;
 
 	const XalanDOMString	m_name;	
+
+	const XalanDOMString	m_prefix;
 
 	const XalanDOMString	m_pcType;
 };

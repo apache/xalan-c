@@ -89,6 +89,7 @@
 
 
 class AttributeList;
+class ElemTemplate;
 class NamespacesHandler;
 class NodeRefListBase;
 class NodeSorter;
@@ -223,12 +224,16 @@ public:
 
 	/** 
 	 * Take the contents of a template element, process it, and
-	 * convert it to a string.
+	 * convert it to a string.  Returns a const reference to
+	 * the resulting string value.  Note that this may _not_ be
+	 * the XalanDOMString instance passed in, if an optimization
+	 * is available to return a pre-existing string.
 	 * 
 	 * @param executionContext  The current execution context
 	 * @param result result of executing the elements children
+	 * @result a reference to a string containing the result.
 	 */
-	void
+	const XalanDOMString&
 	childrenToString(
 			StylesheetExecutionContext&		executionContext, 
 			XalanDOMString&					result) const;
@@ -256,17 +261,7 @@ public:
 	isWhitespace() const;
 
 	/** 
-	 * Tell if the string is whitespace.
-	 * 
-	 * @param string string in question
-	 * @return true if the string is pure whitespace
-	 */
-//	static bool
-//	isWhitespace(const XalanDOMString& theString);
-
-	/** 
 	 * Throw a template element runtime error.  
-	 * (Note: should we throw a SAXException instead?)
 	 * 
 	 * @param msg Description of the error that occurred
 	 */
@@ -275,7 +270,6 @@ public:
 
 	/** 
 	 * Throw a template element runtime error.  
-	 * (Note: should we throw a SAXException instead?)
 	 * 
 	 * @param msg Description of the error that occurred
 	 */
@@ -351,7 +345,9 @@ public:
 	 * Called after construction is completed.
 	 */
 	virtual void
-	postConstruction(const NamespacesHandler&	theParentHandler);
+	postConstruction(
+			StylesheetConstructionContext&	constructionContext,
+			const NamespacesHandler&		theParentHandler);
 
 	// Type-safe getters/setters...
 
@@ -633,6 +629,36 @@ public:
 	virtual const XalanDOMString&
 	getURI() const;
 
+	bool
+	hasParams() const
+	{
+		return m_optimizationFlags & eHasParams ? true : false;
+	}
+
+	bool
+	hasVariables() const
+	{
+		return m_optimizationFlags & eHasVariables ? true : false;
+	}
+
+	bool
+	hasSingleTextChild() const
+	{
+		return m_optimizationFlags & eHasSingleTextChild ? true : false;
+	}
+
+	bool
+	hasChildren() const
+	{
+		return m_firstChild != 0 ? true : false;
+	}
+
+	bool
+	hasDirectTemplate() const
+	{
+		return m_optimizationFlags & eHasDirectTemplate ? true : false;
+	}
+
 protected:
 
 	/**
@@ -656,7 +682,6 @@ protected:
 	 * @param template The owning template context.
 	 * @param sourceNodeContext The current source node context.
 	 * @param selectPattern The XPath with which to perform the selection.
-	 * @param xslToken The current XSLT instruction
 	 * @param selectStackFrameIndex stack frame context for executing the
 	 *                              select statement
 	 */
@@ -667,57 +692,8 @@ protected:
 			const ElemTemplateElement*		theTemplate,
 			XalanNode*						sourceNodeContext,
 			const XPath&					selectPattern,
-			int								xslToken,
-			int								selectStackFrameIndex) const;
-
-	/**
-	 * Perform a query if needed, and call transformChild for each child.
-	 * 
-	 * @param executionContext  The current execution context
-	 * @param xslInstruction The stylesheet element context (deprecated -- I do 
-	 *      not think we need this).
-	 * @param template The owning template context.
-	 * @param sourceNodeContext The current source node context.
-	 * @param selectPattern The XPath with which to perform the selection.
-	 * @param selectStackFrameIndex stack frame context for executing the
-	 *                              select statement
-	 */
-	void
-	doTransformSelectedChildren(
-			StylesheetExecutionContext&		executionContext,
-			const ElemTemplateElement&		xslInstruction,
-			const ElemTemplateElement*		theTemplate,
-			XalanNode*						sourceNodeContext,
-			const XPath&					selectPattern,
 			NodeSorter*						sorter,
 			int								selectStackFrameIndex) const;
-
-	/**
-	 * Perform a query if needed, and call transformChild for each child.
-	 * 
-	 * @param executionContext The current execution context
-	 * @param xslInstruction The stylesheet element context (deprecated -- I do 
-	 *      not think we need this).
-	 * @param template The owning template context.
-	 * @param sourceNodeContext The current source node context.
-	 * @param selectPattern The XPath with which to perform the selection.
-	 * @param xslToken The current XSLT instruction (deprecated -- I do not     
-	 *     think we want this).
-	 * @param selectStackFrameIndex stack frame context for executing the
-	 *                              select statement
-	 * @param sorter If non-null, use the sorter to sort the nodes.
-	 * @param sourceNodesCount The number of source nodes.
-	 */
-	void
-	doTransformSelectedChildren(
-			StylesheetExecutionContext&		executionContext,
-			const ElemTemplateElement&		xslInstruction,
-			const ElemTemplateElement*		theTemplate,
-			XalanNode*						sourceNodeContext,
-			int								selectStackFrameIndex,
-			NodeSorter*						sorter,
-			const NodeRefListBase&			sourceNodes,
-			unsigned int					sourceNodesCount) const;
 
 	/**
 	 * Perform a query if needed, and call transformChild for each child.
@@ -731,7 +707,7 @@ protected:
 	 * @param sourceNodesCount The count of source nodes to transform.
 	 */
 	void
-	doTransformSelectedChildren(
+	transformSelectedChildren(
 			StylesheetExecutionContext&			executionContext,
 			const ElemTemplateElement&			xslInstruction,
 			const ElemTemplateElement*			theTemplate,
@@ -797,13 +773,22 @@ private:
 	ElemTemplateElement*	m_parentNode;
 	ElemTemplateElement*	m_nextSibling;
 	ElemTemplateElement*	m_previousSibling;
-	ElemTemplateElement*	m_firstChild;
+
+	union
+	{
+		ElemTemplateElement*	m_firstChild;
+		const ElemTemplate*		m_directTemplate;
+	};
 
 	XalanNodeListSurrogate	m_surrogateChildren;
 
 	XalanEmptyNamedNodeMap	m_fakeAttributes;
 
 	const XalanDOMString	m_baseIndentifier;
+
+	enum { eHasParams = 1, eHasSingleTextChild = 2, eHasVariables = 4, eHasDirectTemplate = 8 };
+
+	unsigned				m_optimizationFlags;
 };
 
 

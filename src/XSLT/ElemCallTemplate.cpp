@@ -87,7 +87,8 @@ ElemCallTemplate::ElemCallTemplate(
 						lineNumber,
 						columnNumber,
 						Constants::ELEMNAME_CALLTEMPLATE),
-	m_templateName()
+	m_templateName(),
+	m_template(0)
 {
 	const unsigned int	nAttrs = atts.getLength();
 
@@ -128,34 +129,44 @@ ElemCallTemplate::getElementName() const
 
 
 void
-ElemCallTemplate::execute(StylesheetExecutionContext&		executionContext) const
+ElemCallTemplate::execute(StylesheetExecutionContext&	executionContext) const
 {
 	ElemTemplateElement::execute(executionContext);
 
-	XalanNode* sourceNode = executionContext.getCurrentNode();
+	XalanNode* const	sourceNode = executionContext.getCurrentNode();
+	assert(sourceNode != 0);
 
-	assert(isEmpty(m_templateName.getLocalPart()) == false);
+	assert(m_template != 0);
 
-	const ElemTemplate* const	theTemplate =
-			getStylesheet().getStylesheetRoot().findNamedTemplate(m_templateName,
-					executionContext);
-
-	if(0 != theTemplate)
-	{
-		StylesheetExecutionContext::ParamsPushPop	thePushPop(
+	StylesheetExecutionContext::ParamsPushPop	thePushPop(
 				executionContext,
-				theTemplate,
 				*this,			
 				sourceNode,
-				theTemplate);
+				m_template);
 
-		theTemplate->execute(executionContext);
-	}
-	else
+	m_template->execute(executionContext);
+}
+
+
+
+void
+ElemCallTemplate::postConstruction(
+			StylesheetConstructionContext&	constructionContext,
+			const NamespacesHandler&		theParentHandler)
+{
+	assert(m_templateName.isEmpty() == false);
+
+	m_template =
+		getStylesheet().getStylesheetRoot().findNamedTemplate(m_templateName);
+
+	if(m_template == 0)
 	{
-		executionContext.error("Could not find template named: '" +
+		constructionContext.error("Could not find template named: '" +
 				m_templateName.getLocalPart() + "'");
 	}
+
+	// OK, now we can chain-up...
+	ElemTemplateElement::postConstruction(constructionContext, theParentHandler);
 }
 
 

@@ -120,7 +120,8 @@ ElemApplyImport::execute(StylesheetExecutionContext&		executionContext) const
 {
 	ElemTemplateElement::execute(executionContext);
 
-	XalanNode* sourceNode = executionContext.getCurrentNode();
+	XalanNode* const	sourceNode = executionContext.getCurrentNode();
+	assert(sourceNode != 0);
 
 	transformChild(executionContext,
 				   *this, 

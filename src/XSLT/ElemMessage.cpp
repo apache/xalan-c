@@ -129,13 +129,10 @@ ElemMessage::execute(StylesheetExecutionContext&		executionContext) const
 
 	StylesheetExecutionContext::GetAndReleaseCachedString	theResult(executionContext);
 
-	XalanNode* sourceNode = executionContext.getCurrentNode();
-
-	childrenToString(
-			executionContext,
-			theResult.get());
-
-    executionContext.message(theResult.get(), sourceNode, this);
+    executionContext.message(
+		childrenToString(executionContext,theResult.get()),
+		executionContext.getCurrentNode(),
+		this);
 
 	if (m_terminate == true)
 	{

@@ -326,27 +326,29 @@ Stylesheet::popNamespaces()
 
 
 void
-Stylesheet::postConstruction()
+Stylesheet::postConstruction(StylesheetConstructionContext&		constructionContext)
 {
-	// Call postConstruction() on any imported stylesheets, the get any aliases
-	// in reverse order, to preserve import precedence. Also, get any key declarations.
-	const StylesheetVectorType::reverse_iterator	theEnd = m_imports.rend();
-	StylesheetVectorType::reverse_iterator	i = m_imports.rbegin();
-
-	while(i != theEnd)
 	{
-		(*i)->postConstruction();
+		// Call postConstruction() on any imported stylesheets, the get any aliases
+		// in reverse order, to preserve import precedence. Also, get any key declarations.
+		const StylesheetVectorType::reverse_iterator	theEnd = m_imports.rend();
+		StylesheetVectorType::reverse_iterator	i = m_imports.rbegin();
 
-		m_namespacesHandler.copyNamespaceAliases((*i)->getNamespacesHandler());
+		while(i != theEnd)
+		{
+			(*i)->postConstruction(constructionContext);
 
-		// $$ ToDo: Should we clear the imported stylesheet's key
-		// declarations after we copy them?
-		m_keyDeclarations.insert(
-			m_keyDeclarations.end(),
-			(*i)->m_keyDeclarations.begin(),
-			(*i)->m_keyDeclarations.end());
+			m_namespacesHandler.copyNamespaceAliases((*i)->getNamespacesHandler());
 
-		++i;
+			// $$ ToDo: Should we clear the imported stylesheet's key
+			// declarations after we copy them?
+			m_keyDeclarations.insert(
+				m_keyDeclarations.end(),
+				(*i)->m_keyDeclarations.begin(),
+				(*i)->m_keyDeclarations.end());
+
+			++i;
+		}
 	}
 
 	// We may need to build keys, since we may have inherited them from
@@ -359,16 +361,41 @@ Stylesheet::postConstruction()
 	// Call postConstruction() on our own namespaces handler...
 	m_namespacesHandler.postConstruction();
 
-	ElemTemplateElement* node = m_firstTemplate;
 
-    for (; node != 0; node = node->getNextSiblingElem())
-    {
-		node->postConstruction(m_namespacesHandler);
+	{
+		for (ElemTemplateElement* node = m_firstTemplate;
+			 node != 0;
+			 node = node->getNextSiblingElem())
+		{
+			node->postConstruction(constructionContext, m_namespacesHandler);
+		}
 	}
 
-    for (node = m_wrapperlessTemplate; node != 0; node = node->getNextSiblingElem())
-    {
-		node->postConstruction(m_namespacesHandler);
+	{
+		for (ElemVariableVectorType::iterator it = m_topLevelVariables.begin();
+			 it != m_topLevelVariables.end();
+			 ++it)
+		{
+			(*it)->postConstruction(constructionContext, m_namespacesHandler);
+		}
+	}
+
+	{
+		for (ElemTemplateElement* node = m_wrapperlessTemplate;
+			 node != 0;
+			 node = node->getNextSiblingElem())
+		{
+			node->postConstruction(constructionContext, m_namespacesHandler);
+		}
+	}
+
+	{
+		for (AttributeSetVectorType::size_type i = 0; i < m_attributeSets.size(); ++i)
+		{
+			assert(m_attributeSets[i] != 0);
+
+			m_attributeSets[i]->postConstruction(constructionContext, m_namespacesHandler);
+		}
 	}
 
 	m_patternCount = m_patternTable.size();
@@ -590,9 +617,7 @@ Stylesheet::addTemplate(
 
 
 const ElemTemplate*
-Stylesheet::findNamedTemplate(
-			const QName&					qname,
-			StylesheetExecutionContext& 	executionContext) const
+Stylesheet::findNamedTemplate(const QName&	qname) const
 {
 	const ElemTemplate*		namedTemplate = 0;
 
@@ -607,7 +632,7 @@ Stylesheet::findNamedTemplate(
 		{
 			const Stylesheet* const stylesheet = m_imports[i];
 
-			namedTemplate = stylesheet->findNamedTemplate(qname, executionContext);
+			namedTemplate = stylesheet->findNamedTemplate(qname);
 
 			if(0 != namedTemplate)
 				break;
@@ -616,11 +641,6 @@ Stylesheet::findNamedTemplate(
 	else
 	{
 		namedTemplate = (*it).second;
-	}
-
-	if(0 == namedTemplate)
-	{
-		executionContext.warn("Could not find xsl:template named: " + qname.getLocalPart());
 	}
 
 	return namedTemplate;

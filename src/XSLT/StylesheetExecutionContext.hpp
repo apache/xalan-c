@@ -796,7 +796,6 @@ public:
 
 		ParamsPushPop(
 			StylesheetExecutionContext&		executionContext,
-			const ElemTemplateElement*		contextElement,
 			const ElemTemplateElement&		xslCallTemplateElement,
 			XalanNode*						sourceNode,
 			const ElemTemplateElement*		targetTemplate);
@@ -814,6 +813,8 @@ public:
 		StylesheetExecutionContext&		m_executionContext;
 	
 		const int						m_savedStackFrameIndex;
+
+		const bool						m_pushContextMarker;
 	};
 
 	/**

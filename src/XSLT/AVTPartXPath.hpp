@@ -65,11 +65,15 @@
  */
 
 // Base include file.  Must be first.
-#include "XSLTDefinitions.hpp"
+#include <XSLT/XSLTDefinitions.hpp>
 
 
 
-#include "AVTPart.hpp"
+#include <XPath/XObject.hpp>
+
+
+
+#include <XSLT/AVTPart.hpp>
 
 
 
@@ -95,6 +99,12 @@ public:
 	 */
 	AVTPartXPath(const XPath*	xpath);
 
+
+	virtual XObjectPtr
+	evaluate(
+			XalanNode*				contextNode,
+			const PrefixResolver&	prefixResolver,
+			XPathExecutionContext&	executionContext) const;
 
 	// These methods are inherited from AVTPart ...
 	

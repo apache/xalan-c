@@ -198,7 +198,9 @@ ElemLiteralResult::getElementName() const
 
 
 void
-ElemLiteralResult::postConstruction(const NamespacesHandler&	theParentHandler)
+ElemLiteralResult::postConstruction(
+			StylesheetConstructionContext&	constructionContext,
+			const NamespacesHandler&		theParentHandler)
 {
 	// OK, now check all attribute AVTs to make sure
 	// our NamespacesHandler knows about any prefixes
@@ -220,7 +222,27 @@ ElemLiteralResult::postConstruction(const NamespacesHandler&	theParentHandler)
 	}
 
 	// OK, now we can chain-up...
-	ElemUse::postConstruction(theParentHandler);
+	ElemUse::postConstruction(constructionContext, theParentHandler);
+}
+
+
+
+inline void
+ElemLiteralResult::doAddResultAttribute(
+			StylesheetExecutionContext&		executionContext,
+			const XalanDOMString&			thePrefix,
+			const XalanDOMString&			theName,
+			const XalanDOMString&			theValue) const
+{
+	if (isEmpty(thePrefix) == true ||
+	    shouldExcludeResultNamespaceNode(
+			thePrefix,
+			theValue) == false)
+	{
+		executionContext.addResultAttribute(
+				theName, 
+				theValue);
+	}
 }
 
 
@@ -259,11 +281,9 @@ ElemLiteralResult::execute(StylesheetExecutionContext&		executionContext) const
 	{
 		const AVTVectorType::size_type	nAttrs = m_avts.size();
 
-		StylesheetExecutionContext::GetAndReleaseCachedString	theGuard1(executionContext);
-		StylesheetExecutionContext::GetAndReleaseCachedString	theGuard2(executionContext);
+		StylesheetExecutionContext::GetAndReleaseCachedString	theGuard(executionContext);
 
-		XalanDOMString&		thePrefix = theGuard1.get();
-		XalanDOMString&		theStringedValue = theGuard2.get();
+		XalanDOMString&		theStringedValue = theGuard.get();
 
 		for(AVTVectorType::size_type i = 0; i < nAttrs; ++i)
 		{
@@ -271,27 +291,20 @@ ElemLiteralResult::execute(StylesheetExecutionContext&		executionContext) const
 
 			const XalanDOMString&	theName = avt->getName();
 
-			if (startsWith(theName, DOMServices::s_XMLNamespaceWithSeparator) == true)
+			const XalanDOMString&	thePrefix = avt->getPrefix();
+
+			const XalanDOMString&	theSimpleValue = avt->getSimpleValue();
+
+			if (isEmpty(theSimpleValue) == false)
 			{
-				thePrefix = substring(theName, DOMServices::s_XMLNamespaceWithSeparatorLength);
+				doAddResultAttribute(executionContext, thePrefix, theName, theSimpleValue);
 			}
-
-			StylesheetExecutionContext::GetAndReleaseCachedString	theGuard2(executionContext);
-
-			avt->evaluate(theStringedValue, executionContext.getCurrentNode(), *this, executionContext);
-
-			if (isEmpty(thePrefix) == true ||
-			    shouldExcludeResultNamespaceNode(
-					thePrefix,
-					theStringedValue) == false)
+			else
 			{
-				executionContext.addResultAttribute(
-						theName, 
-						theStringedValue);
-			}
+				avt->evaluate(theStringedValue, executionContext.getCurrentNode(), *this, executionContext);
 
-			clear(thePrefix);
-			clear(theStringedValue);
+				doAddResultAttribute(executionContext, thePrefix, theName, theStringedValue);
+			}
 		}
 	}
 

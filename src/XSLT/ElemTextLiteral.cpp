@@ -90,15 +90,22 @@ ElemTextLiteral::ElemTextLiteral(
 	m_isCData(isCData),
 	m_preserveSpace(preserveSpace),	
 	m_disableOutputEscaping(disableOutputEscaping),
-	m_ch(ch + start, ch + start + length)
+	m_ch(ch + start, length)
 {
-	assert(XMLChVectorType::size_type(int(m_ch.size())) == m_ch.size());
 }
 
 
 
 ElemTextLiteral::~ElemTextLiteral()
 {
+}
+
+
+
+const XalanDOMString&
+ElemTextLiteral::getNodeValue() const
+{
+	return m_ch;
 }
 
 
@@ -114,7 +121,7 @@ ElemTextLiteral::getElementName() const
 bool
 ElemTextLiteral::isWhitespace() const
 {
-	return isXMLWhitespace(&*m_ch.begin(), 0, m_ch.size());
+	return isXMLWhitespace(m_ch);
 }
 
 
@@ -126,10 +133,10 @@ ElemTextLiteral::execute(StylesheetExecutionContext&		executionContext) const
 
     if(!m_disableOutputEscaping)
     {
-		executionContext.characters(&*m_ch.begin(), 0, unsigned(m_ch.size()));
+		executionContext.characters(toCharArray(m_ch), 0, length(m_ch));
     }
     else
     {
-		executionContext.charactersRaw(&*m_ch.begin(), 0, unsigned(m_ch.size()));
+		executionContext.charactersRaw(toCharArray(m_ch), 0, length(m_ch));
     }
 }

@@ -63,7 +63,7 @@
 
 
 
-#include <vector>
+#include <XalanDOM/XalanDOMString.hpp>
 
 
 
@@ -116,13 +116,7 @@ public:
 		return m_preserveSpace;
 	}
 
-#if defined(XALAN_NO_NAMESPACES)
-	typedef vector<XalanDOMChar>		XMLChVectorType;
-#else
-	typedef std::vector<XalanDOMChar>	XMLChVectorType;
-#endif
-
-	const XMLChVectorType&
+	const XalanDOMString&
 	getText() const
 	{
 		return m_ch;
@@ -133,6 +127,9 @@ public:
 
 	// These methods are inherited from ElemTemplateElement ...
 	
+	virtual const XalanDOMString&
+	getNodeValue() const;
+
 	virtual const XalanDOMString&
 	getElementName() const;
 
@@ -151,7 +148,7 @@ private:
 	const bool				m_preserveSpace;
 	const bool				m_disableOutputEscaping;
 
-	const XMLChVectorType	m_ch;
+	const XalanDOMString	m_ch;
 };
 
 

@@ -150,11 +150,9 @@ ElemPI::execute(StylesheetExecutionContext&		executionContext) const
 
 	StylesheetExecutionContext::GetAndReleaseCachedString	theResult(executionContext);
 
-	childrenToString(
-			executionContext,
-			theResult.get());
-
-	executionContext.processingInstruction(c_wstr(piName), c_wstr(theResult.get()));
+	executionContext.processingInstruction(
+		c_wstr(piName),
+		c_wstr(childrenToString(executionContext,theResult.get())));
 }
 
 

@@ -370,11 +370,9 @@ ElemAttribute::execute(StylesheetExecutionContext&		executionContext) const
 		{
 			StylesheetExecutionContext::GetAndReleaseCachedString	theResult(executionContext);
 
-			childrenToString(
-					executionContext,
-					theResult.get());
-
-			executionContext.addResultAttribute(attrName, theResult.get());
+			executionContext.addResultAttribute(
+				attrName,
+				childrenToString(executionContext, theResult.get()));
 		}
 	}
 }

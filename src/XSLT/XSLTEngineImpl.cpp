@@ -535,7 +535,7 @@ XSLTEngineImpl::processStylesheet(
 					displayDuration(XALAN_STATIC_UCODE_STRING("Parse of ") + xslIdentifier, &xslIdentifier);
 			}
 
-			theStylesheet->postConstruction();
+			theStylesheet->postConstruction(constructionContext);
 		}
 		catch(const XSLException&)
 		{
@@ -876,7 +876,7 @@ XSLTEngineImpl::getStylesheetFromPIURL(
 					localXSLURLString,
 					frag);
 
-			stylesheet->postConstruction();
+			stylesheet->postConstruction(constructionContext);
 
 			theGuard.release();
 		}
@@ -927,7 +927,7 @@ XSLTEngineImpl::getStylesheetFromPIURL(
 
 		m_parserLiaison.parseXMLStream(inputSource, stylesheetProcessor);
 
-		stylesheet->postConstruction();
+		stylesheet->postConstruction(constructionContext);
 
 		theGuard.release();
 

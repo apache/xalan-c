@@ -95,8 +95,7 @@
 
 
 #include "Constants.hpp"
-#include "ElemForEach.hpp"
-#include "ElemSort.hpp"
+#include "ElemCallTemplate.hpp"
 #include "ElemTemplate.hpp"
 #include "NamespacesHandler.hpp"
 #include "NodeSorter.hpp"
@@ -108,7 +107,7 @@
 
 
 
-const XalanDOMString						ElemTemplateElement::s_emptyString;
+const XalanDOMString	ElemTemplateElement::s_emptyString;
 
 
 
@@ -135,7 +134,8 @@ ElemTemplateElement::ElemTemplateElement(
 	m_firstChild(0),
 	m_surrogateChildren(*this),
 	m_fakeAttributes(),
-	m_baseIndentifier(stylesheetTree.getCurrentIncludeBaseIdentifier())
+	m_baseIndentifier(stylesheetTree.getCurrentIncludeBaseIdentifier()),
+	m_optimizationFlags(0)
 {
 }
 
@@ -145,7 +145,10 @@ ElemTemplateElement::~ElemTemplateElement()
 {
 	delete m_nextSibling;
 
-	delete m_firstChild;
+	if (hasDirectTemplate() == false)
+	{
+		delete m_firstChild;
+	}
 }
 
 
@@ -251,7 +254,7 @@ ElemTemplateElement::isValidNCName(const XalanDOMString&	s)
 	{
 		XalanDOMChar	c = charAt(s, 0);
 
-		if(!(XalanXMLChar::isLetter(c) || (c == XalanUnicode::charLowLine)))
+		if(!(XalanXMLChar::isLetter(c) || c == XalanUnicode::charLowLine))
 		  return false;
 
 		if(len > 1)
@@ -292,14 +295,36 @@ ElemTemplateElement::execute(StylesheetExecutionContext&	executionContext) const
 
 
 void
-ElemTemplateElement::executeChildren(StylesheetExecutionContext&		executionContext) const
+ElemTemplateElement::executeChildren(StylesheetExecutionContext&	executionContext) const
 {
-	StylesheetExecutionContext::PushAndPopElementFrame	thePushAndPop(executionContext, this);
+	if (hasChildren() == true)
+	{
+		if (hasDirectTemplate() == true)
+		{
+			assert(m_directTemplate != 0);
 
-    for (ElemTemplateElement* node = m_firstChild; node != 0; node = node->m_nextSibling) 
-    {
-		node->execute(executionContext);
-    }
+			m_directTemplate->execute(executionContext);
+		}
+		else
+		{
+			if (hasParams() == true || hasVariables() == true)
+			{
+				StylesheetExecutionContext::PushAndPopElementFrame	thePushAndPop(executionContext, this);
+
+				for (ElemTemplateElement* node = m_firstChild; node != 0; node = node->m_nextSibling) 
+				{
+					node->execute(executionContext);
+				}
+			}
+			else
+			{
+				for (ElemTemplateElement* node = m_firstChild; node != 0; node = node->m_nextSibling) 
+				{
+					node->execute(executionContext);
+				}
+			}
+		}
+	}
 }
 
 
@@ -309,43 +334,55 @@ ElemTemplateElement::executeChildren(
 		StylesheetExecutionContext&		executionContext,
 		XalanNode*						sourceNode) const
 {
-	const XPathExecutionContext::CurrentNodeSetAndRestore	theCurrentNodeSetAndRestore(executionContext, sourceNode);
+	if (hasChildren() == true)
+	{
+		const XPathExecutionContext::CurrentNodeSetAndRestore	theCurrentNodeSetAndRestore(executionContext, sourceNode);
 
-	executeChildren(executionContext);
+		executeChildren(executionContext);
+	}
 }
 
 
 
-void
+const XalanDOMString&
 ElemTemplateElement::childrenToString(
 			StylesheetExecutionContext&		executionContext,			
 			XalanDOMString&					result) const
 {
-	reserve(result, length(result) + 1024);
+	if (hasSingleTextChild() == true)
+	{
+		return m_firstChild->getNodeValue();
+	}
+	else
+	{
+		reserve(result, length(result) + 1024);
 
-	// Create a print writer and formatter to generate the children as
-	// a string.
-	DOMStringPrintWriter		thePrintWriter(result);
+		// Create a print writer and formatter to generate the children as
+		// a string.
+		DOMStringPrintWriter	thePrintWriter(result);
 
-	// Borrow a FormatterToText, and don't normalize CR/LF, since we don't want
-	// this text to be normalized.  Finally, have the formatter handle any ignorable
-	// whitespace events.
-	StylesheetExecutionContext::BorrowReturnFormatterToText	theFormatter(
-				executionContext,
-				thePrintWriter,
-				false,
-				true);
-
-	// Create an object to set and restore the execution state.
-	StylesheetExecutionContext::OutputContextPushPop	theOutputContextPushPop(
+		// Borrow a FormatterToText, and don't normalize CR/LF, since we don't want
+		// this text to be normalized.  Finally, have the formatter handle any ignorable
+		// whitespace events.
+		StylesheetExecutionContext::BorrowReturnFormatterToText	theFormatter(
 					executionContext,
-					theFormatter.get());
+					thePrintWriter,
+					false,
+					true);
 
-	theFormatter->startDocument();
+		// Create an object to set and restore the execution state.
+		StylesheetExecutionContext::OutputContextPushPop	theOutputContextPushPop(
+						executionContext,
+						theFormatter.get());
 
-	executeChildren(executionContext);
+		theFormatter->startDocument();
 
-	theFormatter->endDocument();
+		executeChildren(executionContext);
+
+		theFormatter->endDocument();
+
+		return result;
+	}
 }
 
 
@@ -576,139 +613,6 @@ ElemTemplateElement::transformSelectedChildren(
 			StylesheetExecutionContext&		executionContext,
 			const ElemTemplateElement&		xslInstruction,
 			const ElemTemplateElement*		theTemplate,
-			XalanNode*						sourceNodeContext,			
-			const XPath&					selectPattern,
-			int								xslToken,
-			int								selectStackFrameIndex) const
-{
-	// @@ JMD: Now in method processSortKeys in java ...
-	if(Constants::ELEMNAME_APPLY_TEMPLATES == xslToken ||
-	   Constants::ELEMNAME_FOREACH == xslToken)
-	{
-		const ElemForEach* foreach =
-#if defined(XALAN_OLD_STYLE_CASTS)
-			(const ElemForEach*)&xslInstruction;
-#else
-			static_cast<const ElemForEach*>(&xslInstruction);
-#endif
-
-		const unsigned int	nChildren = foreach->getSortElems().size();
-
-		if (nChildren == 0)
-		{
-			doTransformSelectedChildren(
-					executionContext,
-					xslInstruction,
-					theTemplate,
-					sourceNodeContext,
-					selectPattern,
-					0,
-					selectStackFrameIndex);
-		}
-		else
-		{
-			typedef NodeSorter::NodeSortKeyVectorType					NodeSortKeyVectorType;
-			typedef StylesheetExecutionContext::BorrowReturnNodeSorter	BorrowReturnNodeSorter;
-
-			BorrowReturnNodeSorter	sorter(executionContext);
-
-			NodeSortKeyVectorType&	keys = sorter->getSortKeys();
-			assert(keys.size() == 0);
-
-			CollectionClearGuard<NodeSortKeyVectorType>		guard(keys);
-
-			// Reserve the space now...
-			keys.reserve(nChildren);
-
-			// Get some temporary strings to use for evaluting the AVTs...
-			XPathExecutionContext::GetAndReleaseCachedString	theTemp1(executionContext);
-
-			XalanDOMString&		langString = theTemp1.get();
-
-			XPathExecutionContext::GetAndReleaseCachedString	theTemp2(executionContext);
-
-			XalanDOMString&		scratchString = theTemp2.get();
-
-			// March backwards, performing a sort on each xsl:sort child.
-			// Probably not the most efficient method.
-			for(unsigned int i = 0; i < nChildren; i++)
-			{
-				const ElemSort* const	sort = foreach->getSortElems()[i];
-				assert(sort != 0);
-
-				const AVT* avt = sort->getLangAVT();
-
-				if(0 != avt)
-				{
-					avt->evaluate(langString, sourceNodeContext, xslInstruction, executionContext);
-				}
-
-				avt = sort->getDataTypeAVT();
-
-				if(0 != avt)
-				{
-					avt->evaluate(scratchString, sourceNodeContext, xslInstruction, executionContext);
-				}			
-
-				const bool	treatAsNumbers = !isEmpty(scratchString) && equals(scratchString, Constants::ATTRVAL_DATATYPE_NUMBER) ?
-					true : false;
-
-				clear(scratchString);
-
-				avt = sort->getOrderAVT();
-
-				if(0 != avt)
-				{
-					avt->evaluate(scratchString, sourceNodeContext, xslInstruction, executionContext);
-				}			
-
-				const bool	descending = !isEmpty(scratchString) && equals(scratchString, Constants::ATTRVAL_ORDER_DESCENDING) ?
-					true : false;
-
-				clear(scratchString);
-
-				assert(sort->getSelectPattern() != 0);
-
-				keys.push_back(
-					NodeSortKey(
-						executionContext, 
-						*sort->getSelectPattern(), 
-						treatAsNumbers, 
-						descending, 
-						langString, 
-						xslInstruction));
-			}
-
-			doTransformSelectedChildren(
-					executionContext,
-					xslInstruction,
-					theTemplate,
-					sourceNodeContext,
-					selectPattern,
-					sorter.get(),
-					selectStackFrameIndex);
-		}
-	}
-	else
-	{
-		doTransformSelectedChildren(
-				executionContext,
-				xslInstruction,
-				theTemplate,
-				sourceNodeContext,
-				selectPattern,
-				0,
-				selectStackFrameIndex);
-	}
-}
-
-
-
-void
-ElemTemplateElement::doTransformSelectedChildren(
-			StylesheetExecutionContext&		executionContext,
-			const ElemTemplateElement&		xslInstruction,
-			const ElemTemplateElement*		theTemplate,
 			XalanNode*						sourceNodeContext,
 			const XPath&					selectPattern,
 			NodeSorter*						sorter,
@@ -723,14 +627,12 @@ ElemTemplateElement::doTransformSelectedChildren(
 					executionContext,
 					selectStackFrameIndex);
 
-		theXObject = 
-					selectPattern.execute(
+		theXObject = selectPattern.execute(
 						sourceNodeContext,
 						xslInstruction,
 						executionContext);
 	}
 
-	// @@ JMD: Should this be an assert ??
 	if (theXObject.null() == false)
 	{
 		const NodeRefListBase&	sourceNodes = theXObject->nodeset();
@@ -750,15 +652,48 @@ ElemTemplateElement::doTransformSelectedChildren(
 
 		if (nNodes > 0)
 		{
-			doTransformSelectedChildren(
+			// If there's not NodeSorter, or we've only selected one node,
+			// then just do the transform...
+			if (sorter == 0 || nNodes == 1)
+			{
+				transformSelectedChildren(
 					executionContext,
 					xslInstruction,
 					theTemplate,
 					sourceNodeContext,
-					selectStackFrameIndex,
-					sorter,
 					sourceNodes,
 					nNodes);
+			}
+			else
+			{
+				typedef StylesheetExecutionContext::SetAndRestoreCurrentStackFrameIndex		SetAndRestoreCurrentStackFrameIndex;
+				typedef StylesheetExecutionContext::ContextNodeListSetAndRestore			ContextNodeListSetAndRestore;
+				typedef StylesheetExecutionContext::BorrowReturnMutableNodeRefList			BorrowReturnMutableNodeRefList;
+
+				BorrowReturnMutableNodeRefList	sortedSourceNodes(executionContext);
+
+				*sortedSourceNodes = sourceNodes;
+
+				{
+					SetAndRestoreCurrentStackFrameIndex		theStackFrameSetAndRestore(
+							executionContext,
+							selectStackFrameIndex);
+
+					ContextNodeListSetAndRestore			theContextNodeListSetAndRestore(
+							executionContext,
+							sourceNodes);
+
+					sorter->sort(executionContext, *sortedSourceNodes);
+				}
+
+				transformSelectedChildren(
+					executionContext,
+					xslInstruction,
+					theTemplate,
+					sourceNodeContext,
+					*sortedSourceNodes,
+					nNodes);
+			}
 		}
 	}
 }
@@ -766,62 +701,7 @@ ElemTemplateElement::doTransformSelectedChildren(
 
 
 void
-ElemTemplateElement::doTransformSelectedChildren(
-			StylesheetExecutionContext&		executionContext,
-			const ElemTemplateElement&		xslInstruction,
-			const ElemTemplateElement*		theTemplate,
-			XalanNode*						sourceNodeContext,
-			int								selectStackFrameIndex,
-			NodeSorter*						sorter,
-			const NodeRefListBase&			sourceNodes,
-			unsigned int					sourceNodesCount) const
-{
-	if (sorter != 0)
-	{
-		typedef StylesheetExecutionContext::SetAndRestoreCurrentStackFrameIndex		SetAndRestoreCurrentStackFrameIndex;
-		typedef StylesheetExecutionContext::ContextNodeListSetAndRestore			ContextNodeListSetAndRestore;
-		typedef StylesheetExecutionContext::BorrowReturnMutableNodeRefList			BorrowReturnMutableNodeRefList;
-
-		BorrowReturnMutableNodeRefList	sortedSourceNodes(executionContext);
-
-		*sortedSourceNodes = sourceNodes;
-
-		{
-			SetAndRestoreCurrentStackFrameIndex		theStackFrameSetAndRestore(
-					executionContext,
-					selectStackFrameIndex);
-
-			ContextNodeListSetAndRestore			theContextNodeListSetAndRestore(
-					executionContext,
-					sourceNodes);
-
-			sorter->sort(executionContext, *sortedSourceNodes);
-		}
-
-		doTransformSelectedChildren(
-			executionContext,
-			xslInstruction,
-			theTemplate,
-			sourceNodeContext,
-			*sortedSourceNodes,
-			sourceNodesCount);
-	}
-	else
-	{
-		doTransformSelectedChildren(
-			executionContext,
-			xslInstruction,
-			theTemplate,
-			sourceNodeContext,
-			sourceNodes,
-			sourceNodesCount);
-	}
-}
-
-
-
-void
-ElemTemplateElement::doTransformSelectedChildren(
+ElemTemplateElement::transformSelectedChildren(
 			StylesheetExecutionContext&			executionContext,
 			const ElemTemplateElement&			xslInstruction,
 			const ElemTemplateElement*			theTemplate,
@@ -845,11 +725,6 @@ ElemTemplateElement::doTransformSelectedChildren(
 	{
 		XalanNode* const		childNode = sourceNodes.item(i);
 		assert(childNode != 0);
-
-		if(XalanNode::DOCUMENT_NODE != childNode->getNodeType() && childNode->getOwnerDocument() == 0)
-		{
-			error("Child node does not have an owner document!");
-		}
 
 		transformChild(
 				executionContext,
@@ -875,7 +750,7 @@ ElemTemplateElement::transformChild(
 	if(0 == theTemplate)
 	{
 		// Find the XSL template that is the best match for the 
-		// element, and call buildResultFromTemplate.
+		// element...
 		const Stylesheet*	foundStylesheet = 0;
 
 		const bool			isApplyImports = xslInstruction.getXSLToken() == Constants::ELEMNAME_APPLY_IMPORTS;
@@ -1302,13 +1177,62 @@ ElemTemplateElement::getAttributeNode(const XalanDOMString&		/* name */) const
 
 
 void
-ElemTemplateElement::postConstruction(const NamespacesHandler&	theParentHandler)
+ElemTemplateElement::postConstruction(
+			StylesheetConstructionContext&	constructionContext,
+			const NamespacesHandler&		theParentHandler)
 {
 	m_namespacesHandler.postConstruction(getElementName(), &theParentHandler);
 
     for (ElemTemplateElement* node = m_firstChild; node != 0; node = node->m_nextSibling) 
     {
-		node->postConstruction(m_namespacesHandler);
+		node->postConstruction(constructionContext, m_namespacesHandler);
+
+		if (hasVariables() == false &&
+			node->getXSLToken() == Constants::ELEMNAME_VARIABLE)
+		{
+			m_optimizationFlags |= eHasVariables;
+		}
+
+		if (hasParams() == false &&
+			node->getXSLToken() == Constants::ELEMNAME_WITHPARAM)
+		{
+			m_optimizationFlags |= eHasParams;
+		}
+	}
+
+	if (hasChildren() == true)
+	{
+		assert(m_firstChild != 0);
+
+		// There are opportunities for optimization if there's only one
+		// xsl:text child node.  See childrenToString()...
+		if (m_firstChild->getXSLToken() == Constants::ELEMNAME_TEXTLITERALRESULT &&
+			m_firstChild->getNextSibling() == 0)
+		{
+			m_optimizationFlags |= eHasSingleTextChild;
+		}
+		else if (m_firstChild->getXSLToken() == Constants::ELEMNAME_CALLTEMPLATE &&
+			m_firstChild->getNextSibling() == 0)
+		{
+			// Just a single xsl:call-template child, so we don't need to
+			// execute it if it has no params -- we can just execute the
+			// template directly...
+			if (m_firstChild->hasParams() == false)
+			{
+				m_optimizationFlags |= eHasDirectTemplate;
+
+				ElemCallTemplate* const		theCallTemplateChild =
+#if defined(XALAN_OLD_STYLE_CASTS)
+					(ElemCallTemplate*)m_firstChild;
+#else
+					static_cast<ElemCallTemplate*>(m_firstChild);
+#endif
+
+				m_directTemplate = theCallTemplateChild->getTemplate();
+
+				delete theCallTemplateChild;
+			}
+		}
 	}
 }
 

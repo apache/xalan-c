@@ -78,8 +78,19 @@ AVTPartXPath::AVTPartXPath(const XPath*		xpath) :
 
 
 
+XObjectPtr
+AVTPartXPath::evaluate(
+			XalanNode*				contextNode,
+			const PrefixResolver&	prefixResolver,
+			XPathExecutionContext&	executionContext) const
+{
+	return m_pXPath->execute(contextNode, prefixResolver, executionContext);
+}
+
+
+
 void
-AVTPartXPath::	evaluate(
+AVTPartXPath::evaluate(
 			XalanDOMString&			buf,
 			XalanNode*				contextNode,
 			const PrefixResolver&	prefixResolver,
@@ -89,6 +100,6 @@ AVTPartXPath::	evaluate(
 
 	if(0 != xobj.get())
 	{
-		append(buf, xobj->str());
+		xobj->str(buf);
 	}
 }

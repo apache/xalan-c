@@ -138,7 +138,7 @@ public:
 	typedef map<QNameByReference,
 				ElemTemplate*,
 				less<QName> >						ElemTemplateMapType;
-	typedef vector<ElemAttributeSet*> 				AttributeSetMapType;
+	typedef vector<ElemAttributeSet*> 				AttributeSetVectorType;
 	typedef vector<ElemVariable*> 					ElemVariableVectorType;
 	typedef vector<KeyDeclaration>					KeyDeclarationVectorType;
 	typedef map<const XalanNode*,
@@ -153,7 +153,7 @@ public:
 	typedef std::map<XalanDOMString, XalanDOMString>		StringToStringMapType;
 	typedef std::map<XalanDOMString, ExtensionNSHandler*>	ExtensionNamespacesMapType;
 	typedef std::map<QNameByReference, ElemTemplate*>		ElemTemplateMapType;
-	typedef std::vector<ElemAttributeSet*> 					AttributeSetMapType;
+	typedef std::vector<ElemAttributeSet*> 					AttributeSetVectorType;
 	typedef std::vector<ElemVariable*> 						ElemVariableVectorType;
 	typedef std::vector<KeyDeclaration>						KeyDeclarationVectorType;
 	typedef std::map<const XalanNode*, KeyTable*>			KeyTablesTableType;
@@ -314,7 +314,7 @@ public:
 	 * Called after construction is completed.
 	 */
 	virtual void
-	postConstruction();
+	postConstruction(StylesheetConstructionContext&		constructionContext);
 
 	/** 
 	 * See if this is a xmlns attribute, and, if so, process it.
@@ -663,13 +663,10 @@ public:
 	 * Locate a template via the "name" attribute.
 	 * 
 	 * @param name				 qualified name of template
-	 * @param executionContext	 current execution context
 	 * @return pointer to template found or 0 if none found
 	 */
 	const ElemTemplate*
-	findNamedTemplate(
-			const QName&					qname,
-			StylesheetExecutionContext& 	executionContext) const;
+	findNamedTemplate(const QName&	qname) const;
 
 	/**
 	 * Given a target element, find the template that best matches in the given
@@ -1267,10 +1264,7 @@ private:
 	 */
 	PatternTableMapType::size_type			m_patternCount;
 
-	/**
-	 * Table of attribute sets, keyed by set name.
-	 */
-	AttributeSetMapType 					m_attributeSets;
+	AttributeSetVectorType 					m_attributeSets;
 
 	XalanNodeListSurrogate					m_surrogateChildren;
 

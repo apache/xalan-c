@@ -105,7 +105,9 @@ public:
 	getElementName() const;
 
 	virtual void
-	postConstruction(const NamespacesHandler&	theParentHandler);
+	postConstruction(
+			StylesheetConstructionContext&	constructionContext,
+			const NamespacesHandler&		theParentHandler);
 
 	virtual bool
 	isAttrOK(
@@ -165,6 +167,21 @@ private:
 	shouldExcludeResultNamespaceNode(
 			const XalanDOMString&	thePrefix,
 			const XalanDOMString&	theURI) const;
+
+	/**
+	 * Add a result attribute, if necessary.
+	 *
+	 * @param executionContext  The current execution context
+	 * @param thePrefix The prefix of the attribute
+	 * @param theName The name of the attribute.
+	 * @param theValue The value of the attribute.
+	 */
+	void
+	doAddResultAttribute(
+			StylesheetExecutionContext&		executionContext,
+			const XalanDOMString&			thePrefix,
+			const XalanDOMString&			theName,
+			const XalanDOMString&			theValue) const;
 
 	/**
 	 * The name of the literal result element.

@@ -73,6 +73,10 @@
 
 
 
+class ElemTemplate;
+
+
+
 class ElemCallTemplate: public ElemTemplateElement
 {
 public:
@@ -104,6 +108,17 @@ public:
 	virtual void
 	execute(StylesheetExecutionContext&		executionContext) const;
 
+	virtual void
+	postConstruction(
+			StylesheetConstructionContext&	constructionContext,
+			const NamespacesHandler&		theParentHandler);
+
+	const ElemTemplate*
+	getTemplate() const
+	{
+		return m_template;
+	}
+
 protected:
 
 	virtual bool
@@ -118,7 +133,9 @@ private:
 	operator=(const ElemCallTemplate&);
 
 	// Data members...
-	QNameByValue	m_templateName;
+	QNameByValue			m_templateName;
+
+	const ElemTemplate*		m_template;
 };
 
 
