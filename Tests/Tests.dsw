@@ -81,6 +81,48 @@ Package=<4>
 
 ###############################################################################
 
+Project: "compare"=".\Compare\compare.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name Harness
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "dom2dom"=".\Dom2Dom\Dom2Dom.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "inputsource"=".\InputSource\inputsource.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name Harness
+    End Project Dependency
+}}}
+
+###############################################################################
+
 Project: "perf"=".\Performance\perf.dsp" - Package Owner=<4>
 
 Package=<5>
@@ -92,6 +134,30 @@ Package=<4>
     Begin Project Dependency
     Project_Dep_Name Harness
     End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "resultarget"=".\ResultTarget\resultarget.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "xdom"=".\XDom\xdom.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
 }}}
 
 ###############################################################################
