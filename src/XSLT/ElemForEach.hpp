@@ -116,7 +116,12 @@ public:
 
 	virtual ~ElemForEach();
 
+#if defined(XALAN_NO_NAMESPACES)
+	typedef vector<ElemSort*> SortElemsVector;
+#else
 	typedef std::vector<ElemSort*> SortElemsVector;
+#endif
+
 
 	const SortElemsVector& getSortElems() const
 	{

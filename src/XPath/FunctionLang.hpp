@@ -87,7 +87,9 @@
 
 
 
-// XPath FunctionLang implementation.
+/**
+ * XPath implementation of "lang" function.
+ */
 //
 // These are all inline, even though
 // there are virtual functions, because we expect that they will only be
@@ -96,15 +98,8 @@ class XALAN_XPATH_EXPORT FunctionLang : public Function
 {
 public:
 
-	/**
-	 * Execute an XPath function object.  The function must return 
-	 * a valid object.
-	 * @param path The executing xpath.
-	 * @param context The current context.
-	 * @param opPos The current op position.
-	 * @param args A list of XObject arguments.
-	 * @return A valid XObject.
-	 */
+	// These methods are inherited from Function ...
+
 	virtual XObject*
 	execute(
 			XPathExecutionContext&			executionContext,

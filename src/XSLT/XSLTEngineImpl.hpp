@@ -447,6 +447,16 @@ typedef XALAN_STD runtime_error               RuntimeError;
 			const PrefixResolver&	resolver,
 			XPathExecutionContext&	executionContext) const;
 
+	/**
+	 * Tells, through the combination of the default-space attribute on
+	 * xsl:stylesheet, xsl:strip-space, xsl:preserve-space, and the xml:space
+	 * attribute, whether or not extra whitespace should be stripped from the
+	 * node.  Literal elements from template elements should <em>not</em> be
+	 * tested with this function.
+	 *
+	 * @param textNode text node from the source tree
+	 * @return true if the text node should be stripped of extra whitespace
+	 */
 	virtual bool
 	shouldStripSourceNode(const DOM_Node&	textNode) const;
 
@@ -694,11 +704,10 @@ typedef XALAN_STD runtime_error               RuntimeError;
 	outputResultTreeFragment(const XObject&		theTree);
 
 	/**
-	 * Execute the function-available() function.
+	 * Determine if an external function is available.
 	 *
-	 * @param context The current source tree context node
-	 * @param opPos The current position in the m_opMap array
-	 * @param args The function args
+	 * @param theNamespace  namespace for function
+	 * @param extensionName name of extension function
 	 * @return whether the given function is available or not
 	 */
 	bool
@@ -2370,17 +2379,21 @@ private:
 	getXObjectVariable(const DOMString&	name) const;
 
 	/**
-	 * Get an XLocator provider keyed by node.  This get's
-	 * the association based on the root of the tree that the 
-	 * node is parented by.
+	 * Get an XLocator provider keyed by node.  This gets the association
+	 * based on the root of the tree that is the node's parent.
+	 *
+	 * @param node node for locator
+	 * @return pointer to locator
 	 */
 	XLocator*
 	getXLocatorFromNode(const DOM_Node&		node) const;
 
 	/**
-	 * Associate an XLocator provider to a node.  This makes
-	 * the association based on the root of the tree that the 
-	 * node is parented by.
+	 * Associate an XLocator provider to a node.  This makes the association
+	 * based on the root of the tree that is the node's parent.
+	 *
+	 * @param node     node for association
+	 * @param xlocator locator to associate with node
 	 */
 	 void
 	 associateXLocatorToNode(

@@ -78,7 +78,9 @@ class XALAN_XPATH_EXPORT NodeListImplSurrogate : public NodeListImpl
 public:
 
 	/**
-	 * Constructor.
+	 * Construct a surrogate object from a node list
+	 *
+	 * @param theNodeRefList source node list
 	 */
 	NodeListImplSurrogate(NodeRefListBase&	theNodeRefList);
 

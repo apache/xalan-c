@@ -89,29 +89,22 @@ public:
 	virtual
 	~XPathSupport();
 
-	// These interfaces are inherited from Resettable...
-
 	/**
-	 * Reset the instance.
-	 */
-	virtual void
-	reset() = 0;
-
-	// These interfaces are inherited from DOMServices::WhitespaceSupport...
-
-	/**
-	 * Tell if the node is ignorable whitespace.
-	 * This should be in the DOM.  Return false if the 
-	 * parser doesn't handle this.
+	 * Tell if the node is ignorable whitespace. This should be in the DOM.
+	 * Return false if the parser doesn't handle this.
+	 * 
+	 * @param node	text node queried
+	 * @return true if white space can be ignored
 	 */
 	virtual bool
 	isIgnorableWhitespace(const DOM_Text&	node) const = 0;
 
-
-	// These interfaces are new to XPathSupport...
-
 	/**
-	 * Given a namespace, get the corresponding prefix.
+	 * Retrieve the URI corresponding to a namespace prefix
+	 * 
+	 * @param prefix           prefix for a namespace
+	 * @param namespaceContext DOM element representing the context for namespace
+	 * @return URI corresponding to namespace
 	 */
 	virtual DOMString
 	getNamespaceForPrefix(
@@ -120,33 +113,50 @@ public:
 
 	/**
 	 * Returns the namespace of the given node.
+	 *
+	 * @param node	DOM node whose namespace is returned
+	 * @return namespace of node
 	 */
 	virtual DOMString
 	getNamespaceOfNode(const DOM_Node&	n) const = 0;
 
 	/**
-	 * Returns the local name of the given node.
+	 * Retrieve local name of node
+	 * 
+	 * @param node	DOM node whose name is returned
+	 * @return name of node without namespace
 	 */
 	virtual DOMString
 	getLocalNameOfNode(const DOM_Node&	n) const = 0;
 
 	/**
-	 * Get node data recursively.
+	 * Retrieves data for node recursively.
 	 * (Note whitespace issues.)
+	 * 
+	 * @param node        DOM node whose data is to be returned
+	 * @param theResolver prefix resolver to use
+
+	 * @return a string representation of the node's data
 	 */
 	virtual DOMString
 	getNodeData(const DOM_Node&		n) const = 0;
 
 	/**
-	 * This function has to be implemented, 
-	 * because the DOM WG decided that attributes don't 
-	 * have parents.
+	 * Retrieve the parent of a node. This function has to be implemented,
+	 * because the DOM WG decided that attributes don't have parents.
+	 *
+	 * @param node child node
+	 * @return parent node
 	 */
 	virtual DOM_Node
 	getParentOfNode(const DOM_Node&		n) const = 0;
 
 	/**
-	 * Get an element from an ID.
+	 * Given a valid element id, return the corresponding element.
+	 *
+	 * @param id  string representing ID
+	 * @param doc document to search
+	 * @return element for ID
 	 */
 	virtual DOM_Element
 	getElementByID(
@@ -156,12 +166,16 @@ public:
 	/**
 	 * Set whether or not the liaison attempts to expand namespaces.	Used 
 	 * for optimization.
+	 *
+	 * @param processNamespaces true to process namespaces
 	 */
 	virtual void
 	setProcessNamespaces(bool	processNamespaces) = 0;
 
 	/**
 	 * Tells if namespaces should be supported.  For optimization purposes.
+	 *
+	 * @return true if namespaces processed
 	 */
 	virtual bool
 	getProcessNamespaces() const = 0;
@@ -172,15 +186,20 @@ public:
 	 * node (see [3.3 Unparsed Entities]). It returns the empty string if
 	 * there is no such entity.
 	 *
-	 * Since it states in the DOM draft: "An XML processor may choose to
-	 * completely expand entities before the structure model is passed
-	 * to the DOM; in this case, there will be no EntityReferences in the DOM tree."
-	 * So I'm not sure how well this is going to work.
+	 * @param theName     name of entity
+	 * @param theDocument document containing entity
+	 * @return URI for the entity
 	 */
 	virtual DOMString
 	getUnparsedEntityURI(
 			const DOMString&		theName,
 			const DOM_Document&		theDocument) const = 0;
+
+
+	// These interfaces are inherited from Resettable...
+
+	virtual void
+	reset() = 0;
 
 private:
 

@@ -87,6 +87,9 @@ class XObject;
 
 
 
+/**
+ * This class handles the creation of XObjects and manages their lifetime.
+ */
 class XALAN_XPATH_EXPORT XObjectFactory : public Factory
 {
 public:
@@ -96,83 +99,160 @@ public:
 	virtual
 	~XObjectFactory();
 
-	// These interfaces are inherited from Resetable...
-
 	/**
-	 * Reset the instance.  This invalidates all existing FactoryObject
-	 * instances created with this Factory.
+	 * Create a boolean XObject from a boolean value.
+	 * 
+	 * @param theValue  value used to create object
+	 * @param fOptimize true to use static objects rather than creating new
+	 *                  instances, default true
+	 * @return pointer to new object
 	 */
-	virtual void
-	reset() = 0;
-
-	// These interfaces are inherited from Factory...
-
-	/*
-	 * Return an object to the factory.
-	 *
-	 */
-	virtual bool
-	returnObject(const FactoryObject*	theFactoryObject) = 0;
-
-
-	// These interfaces are new to XObjectFactory...
 	virtual XObject*
 	createBoolean(
 			bool	theValue,
 			bool	fOptimize = true) = 0;
 
+	/**
+	 * Create a node set XObject from a node list.
+	 * 
+	 * @param theValue  value used to create object
+	 * @param fOptimize not used
+	 * @return pointer to new object
+	 */
 	virtual XObject*
 	createNodeSet(
-			const NodeRefListBase&	value,
+			const NodeRefListBase&	theValue,
 			bool					fOptimize = true) = 0;
 
+	/**
+	 * Create a node set XObject from a mutable node list.
+	 * 
+	 * @param theValue  value used to create object
+	 * @param fOptimize not used
+	 * @return pointer to new object
+	 */
 	virtual XObject*
 	createNodeSet(
-			const MutableNodeRefList&	value,
+			const MutableNodeRefList&	theValue,
 			bool						fOptimize = true) = 0;
 
+	/**
+	 * Create a node set XObject from a DOM node.
+	 * 
+	 * @param theValue  value used to create object
+	 * @param fOptimize not used
+	 * @return pointer to new object
+	 */
 	virtual XObject*
 	createNodeSet(
-			const DOM_Node&		value,
+			const DOM_Node&		theValue,
 			bool				fOptimize = true) = 0;
 
+	/**
+	 * Create a null XObject.
+	 * 
+	 * @param theValue  value used to create object
+	 * @param fOptimize true to use static objects rather than creating new
+	 *                  instances, default true
+	 * @return pointer to new object
+	 */
 	virtual XObject*
 	createNull(bool	fOptimize = true) = 0;
 
+	/**
+	 * Create a numeric XObject from a number.
+	 * 
+	 * @param theValue  value used to create object
+	 * @param fOptimize not used
+	 * @return pointer to new object
+	 */
 	virtual XObject*
 	createNumber(
 			double	theValue,
 			bool	fOptimize = true) = 0;
 
+	/**
+	 * Create a string XObject from a string.
+	 * 
+	 * @param theValue  value used to create object
+	 * @param fOptimize not used
+	 * @return pointer to new object
+	 */
 	virtual XObject*
 	createString(
 			const DOMString&	theValue,
 			bool				fOptimize = true) = 0;
 
+	/**
+	 * Create an "unknown" XObject from a string.
+	 * 
+	 * @param theValue  value used to create object
+	 * @param fOptimize not used
+	 * @return pointer to new object
+	 */
 	virtual XObject*
 	createUnknown(
 			const DOMString&	theValue,
 			bool				fOptimize = true) = 0;
 
+	/**
+	 * Create a result tree fragment XObject from a result tree fragment.
+	 * 
+	 * @param theValue  value used to create object
+	 * @param fOptimize not used
+	 * @return pointer to new object
+	 */
 	virtual XObject*
 	createResultTreeFrag(
 			const ResultTreeFragBase&	theValue,
 			bool						fOptimize = true) = 0;
 
+	/**
+	 * Create a span XObject from a node list.
+	 * 
+	 * @param theValue  value used to create object
+	 * @param fOptimize not used
+	 * @return pointer to new object
+	 */
 	virtual XObject*
 	createSpan(
-			const NodeRefListBase&	value,
+			const NodeRefListBase&	theValue,
 			bool					fOptimize = true) = 0;
 
+	/**
+	 * Create a span XObject from a mutable node list.
+	 * 
+	 * @param theValue  value used to create object
+	 * @param fOptimize not used
+	 * @return pointer to new object
+	 */
 	virtual XObject*
 	createSpan(
-			const MutableNodeRefList&	value,
+			const MutableNodeRefList&	theValue,
 			bool						fOptimize = true) = 0;
 
+	/**
+	 * Create a span XObject from a DOM node.
+	 * 
+	 * @param theValue  value used to create object
+	 * @param fOptimize not used
+	 * @return pointer to new object
+	 */
 	virtual XObject*
 	createSpan(
-			const DOM_Node&		value,
+			const DOM_Node&		theValue,
 			bool				fOptimize = true) = 0;
+
+
+	// These interfaces are inherited from Factory...
+
+	virtual bool
+	returnObject(const FactoryObject*	theFactoryObject) = 0;
+
+	// These interfaces are inherited from Resetable...
+
+	virtual void
+	reset() = 0;
 
 private:
 
@@ -188,10 +268,19 @@ private:
 
 
 
+/**
+ * Manages the ownership of an objected pointed to by an XObject pointer
+ */
 class XObjectGuard
 {
 public:
 
+	/**
+	 * Construct an XObjectGuard instance from a factory object and an XObject.
+	 * 
+	 * @param theFactory object that manages lifetime of XObjects
+	 * @param theXObject pointer to XObject managed
+	 */
 	XObjectGuard(XObjectFactory&	theFactory,
 			     XObject*			theXObject) :
 		m_factory(&theFactory),
@@ -221,6 +310,11 @@ public:
 		reset();
 	}
 
+	/**
+	 * Retrieve the object pointer (must not be null)
+	 * 
+	 * @return pointer to XObject
+	 */
 	XObject*
 	operator->() const
 	{
@@ -229,12 +323,20 @@ public:
 		return m_object;
 	}
 
+	/**
+	 * Retrieve the object pointer (may be null)
+	 * 
+	 * @return pointer to XObject
+	 */
 	XObject*
 	get() const
 	{
 		return m_object;
 	}
 
+	/**
+	 * Return the referenced object to the factory and set pointers to null.
+	 */
 	void
 	reset()
 	{
@@ -250,6 +352,11 @@ public:
 		m_factory = 0;
 	}
 
+	/**
+	 * Transfers ownership of XObject to caller
+	 * 
+	 * @return pointer to XObject
+	 */
 	XObject*
 	release()
 	{

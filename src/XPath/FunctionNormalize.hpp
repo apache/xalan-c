@@ -78,7 +78,9 @@
 
 
 
-// XPath normalize-space() implementation.
+/**
+ * XPath implementation of "normalize-space" function.
+ */
 //
 // These are all inline, even though
 // there are virtual functions, because we expect that they will only be
@@ -87,15 +89,8 @@ class XALAN_XPATH_EXPORT FunctionNormalizeSpace : public FunctionDefaultStringAr
 {
 public:
 
-	/**
-	 * Execute an XPath function object.  The function must return 
-	 * a valid object.
-	 * @param path The executing xpath.
-	 * @param context The current context.
-	 * @param opPos The current op position.
-	 * @param args A list of XObject arguments.
-	 * @return A valid XObject.
-	 */
+	// These methods are inherited from FunctionDefaultStringArgument ...
+
 	virtual XObject*
 	execute(
 			XPathExecutionContext&			executionContext,

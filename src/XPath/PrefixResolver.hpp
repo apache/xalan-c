@@ -68,6 +68,10 @@
 
 
 
+/**
+ * This class defines an interface for classes that resolve namespace prefixes
+ * to their URIs 
+ */
 class XALAN_XPATH_EXPORT PrefixResolver
 {
 public:
@@ -78,9 +82,22 @@ public:
 	virtual
 	~PrefixResolver();
 
+	/**
+	 * Retrieve a namespace corresponding to a prefix.  This assumes that 
+	 * the PrevixResolver hold's its own namespace context, or is a namespace
+	 * context itself.
+	 *
+	 * @param prefix Prefix to resolve
+	 * @return namespace that prefix resolves to, or null if prefix is not found
+	 */
 	virtual DOMString
 	getNamespaceForPrefix(const DOMString&	prefix) const = 0;
 
+	/**
+	 * Retrieve the base URI for the resolver.
+	 * 
+	 * @return URI string
+	 */
 	virtual DOMString
 	getURI() const = 0;
 };

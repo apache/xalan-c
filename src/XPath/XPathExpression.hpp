@@ -92,23 +92,31 @@ class XALAN_XPATH_EXPORT XPathExpression
 {
 public:
 
-	// List of operations codes.
-	//
-	// Code for the descriptions of the operations codes:
-	// [UPPER CASE] indicates a literal value,
-	// [lower case] is a description of a value,
-	//		([length] always indicates the length of the operation,
-	//		 including the operations code and the length integer.)
-	// {UPPER CASE} indicates the given production,
-	// {description} is the description of a new production,
-	//		(For instance, {boolean expression} means some expression 
-	//		 that should be resolved to a boolean.)
-	//	* means that it occurs zero or more times,
-	//	+ means that it occurs one or more times,
-	//	? means that it is optional.
-	//
-	// returns: indicates what the production should return.
+#if defined(XALAN_NO_NAMESPACES)
+#	define XALAN_STD
+#else
+#	define XALAN_STD std::
+#endif
 
+
+	/**
+	 * List of operations codes.
+	 *
+	 * Code for the descriptions of the operations codes:
+	 * [UPPER CASE] indicates a literal value,
+	 * [lower case] is a description of a value,
+	 *		([length] always indicates the length of the operation,
+	 *		 including the operations code and the length integer.)
+	 * {UPPER CASE} indicates the given production,
+	 * {description} is the description of a new production,
+	 *		(For instance, {boolean expression} means some expression 
+	 *		 that should be resolved to a boolean.)
+	 *	* means that it occurs zero or more times,
+	 *	+ means that it occurs one or more times,
+	 *	? means that it is optional.
+	 *
+	 * returns: indicates what the production should return.
+	 */
 	enum eOpCodes
 	{
 		/**
@@ -596,11 +604,10 @@ public:
 	};	// enum eOpCodes
 
 	/**
-	 * The length is always the opcode position + 1.
-	 * Length is always expressed as the opcode+length bytes, 
-	 * so it is always 2 or greater.  This is the offset
-	 * from the op code where the length is stored.  It will
-	 * always remain one.
+	 * The length is always the opcode position + 1. Length is always expressed
+	 * as the opcode+length bytes, so it is always 2 or greater.  This is the
+	 * offset from the op code where the length is stored.  It will always
+	 * remain one.
 	 */
 #if defined(XALAN_INLINE_INITIALIZATION)
 	const int	s__opCodeMapLengthIndex = 1;
@@ -611,20 +618,36 @@ public:
 	};
 #endif
 
+	/**
+	 * Exception class thrown when an invalid XPath expression is encountered
+	 */
 	class XALAN_XPATH_EXPORT XPathExpressionException : public XPathException
 	{
 	public:
 
-		XPathExpressionException(const std::string&		theMessage);
+		/**
+		 * Construct an XPathExpressionException object.
+		 * 
+		 * @param theMessage string error message
+		 */
+		XPathExpressionException(const XALAN_STD string&		theMessage);
 
 		virtual~
 		XPathExpressionException();
 	};
 
+	/**
+	 * Exception class thrown when an invalid XPath operation code is encountered
+	 */
 	class XALAN_XPATH_EXPORT InvalidOpCodeException : public XPathExpressionException
 	{
 	public:
 
+		/**
+		 * Construct an InvalidOpCodeException object.
+		 * 
+		 * @param theOpCode operation code that caused the exception
+		 */
 		InvalidOpCodeException(int	theOpCode);
 
 		virtual~
@@ -632,14 +655,25 @@ public:
 
 	private:
 
-		static std::string
+		static XALAN_STD string
 		FormatErrorMessage(int	theOpCode);
 	};
 
+	/**
+	 * Exception class thrown when an invalid number of XPath arguments is
+	 * encountered
+	 */
 	class XALAN_XPATH_EXPORT InvalidArgumentCountException : public XPathExpressionException
 	{
 	public:
 
+		/**
+		 * Construct an InvalidArgumentCountException object.
+		 * 
+		 * @param theOpCode operation code that caused the exception
+		 * @param theExpectedCount the correct number of arguments for "opcode"
+		 * @param theSuppliedCount the number of arguments supplied
+		 */
 		InvalidArgumentCountException(
 			int		theOpCode,
 			int		theExpectedCount,
@@ -650,17 +684,26 @@ public:
 
 	private:
 
-		static std::string
+		static XALAN_STD string
 		FormatErrorMessage(
 			int		theOpCode,
 			int		theExpectedCount,
 			int		theSuppliedCount);
 	};
 
+	/**
+	 * Exception class thrown when an invalid XPath argument is encountered
+	 */
 	class XALAN_XPATH_EXPORT InvalidArgumentException : public XPathExpressionException
 	{
 	public:
 
+		/**
+		 * Construct an InvalidArgumentException object.
+		 * 
+		 * @param theOpCode operation code that caused the exception
+		 * @param theValue invalid argument value
+		 */
 		InvalidArgumentException(
 			int	theOpCode,
 			int	theValue);
@@ -670,17 +713,17 @@ public:
 
 	private:
 
-		static std::string
+		static XALAN_STD string
 		FormatErrorMessage(
 				int		theOpCode,
 				int		theValue);
 	};
 
 
-	typedef std::vector<int>				OpCodeMapType;
-	typedef std::vector<XObject*>			TokenQueueType;
-	typedef std::vector<int>				PatternMapType;
-	typedef std::map<int, int>				OpCodeLengthMapType;
+	typedef XALAN_STD vector<int>				OpCodeMapType;
+	typedef XALAN_STD vector<XObject*>			TokenQueueType;
+	typedef XALAN_STD vector<int>				PatternMapType;
+	typedef XALAN_STD map<int, int>				OpCodeLengthMapType;
 
 	typedef OpCodeMapType::value_type		OpCodeMapValueType;
 	typedef OpCodeMapType::size_type		OpCodeMapSizeType;
@@ -689,37 +732,53 @@ public:
 	typedef PatternMapType::value_type		PatternMapValueType;
 	typedef PatternMapType::size_type		PatternMapSizeType;
 
-	typedef std::set<OpCodeMapValueType>	NodeTestSetType;
+	typedef XALAN_STD set<OpCodeMapValueType>	NodeTestSetType;
+	typedef XALAN_STD vector<OpCodeMapValueType> OpCodeMapValueVectorType;
 
+#undef XALAN_STD
+	
 	explicit
 	XPathExpression();
 
 	~XPathExpression();
 
+	/**
+	 * Reset the expression.
+	 */
 	void
 	reset();
 
+	/**
+	 * Shrink internal tables.
+	 */
 	void
 	shrink();
 
+	/**
+	 * Retrieve number of elements in the operations code map.
+	 * 
+	 * @return size of operations code map
+	 */
 	OpCodeMapSizeType
 	opCodeMapSize() const
 	{
 		return m_opMap.size();
 	}
 
+	/**
+	 * Retrieve length of the operations code map stored in the map. The length
+	 * of the entire map is stored after the first op code.  That offset is
+	 * determined by this const static member.  Note that as expressions are
+	 * defined recursively, this is really just the length of the first
+	 * expression in the map, which is the top of the parse tree. Any
+	 * subexpression will also have a length entry at the same offset from the
+	 * beginning of the subexpression.
+	 * 
+	 * @return length of operations code map
+	 */
 	OpCodeMapValueType
 	opCodeMapLength() const
 	{
-		// The length of the entire map is stored after
-		// the first op code.  That offset is determined
-		// by this const static member.  Note that as
-		// expressions are defined recursively, this is
-		// really just the length of the first expression
-		// in the map, which is the top of the parse tree.
-		// Any subexpression will also have a length entry
-		// at the same offset from the beginning of the
-		// subexpression.
 		const OpCodeMapSizeType		theSize = opCodeMapSize();
 
 		if (theSize > s__opCodeMapLengthIndex)
@@ -735,27 +794,58 @@ public:
 		}
 	}
 
+	/**
+	 * Retrieve number of elements in the token queue.
+	 * 
+	 * @return size of token queue
+	 */
 	TokenQueueSizeType
 	tokenQueueSize() const
 	{
 		return m_tokenQueue.size();
 	}
 
+	/**
+	 * Retrieve number of elements in the pattern map.
+	 * 
+	 * @return size of pattern map
+	 */
 	PatternMapSizeType
 	patternMapSize() const
 	{
 		return m_patternMap.size();
 	}
 
+	/**
+	 * Retrieve the value of an operation code at a specified position in the
+	 * list.
+	 * 
+	 * @param opPos position in list
+	 * @return value of operation code
+	 */
 	OpCodeMapValueType
 	getOpCodeMapValue(OpCodeMapSizeType		opPos) const
 	{
 		return m_opMap[opPos];
 	}
 
+	/**
+	 * Retrieve the length of an operation code at a specified position in the
+	 * list.
+	 * 
+	 * @param opPos position in list
+	 * @return length of operation code
+	 */
 	OpCodeMapValueType
 	getOpCodeLength(OpCodeMapSizeType	opPos) const;
 
+	/**
+	 * Retrieve the position of the next operation code at a specified position
+	 * in the list.
+	 * 
+	 * @param opPos position in list
+	 * @return position of next operation code
+	 */
 	OpCodeMapValueType
 	getNextOpCodePosition(OpCodeMapSizeType		opPos) const
 	{
@@ -764,18 +854,38 @@ public:
 		return opPos + m_opMap[opPos + s__opCodeMapLengthIndex];
 	}
 
+	/**
+	 * Set the arguments for an operation code at a specified index in the
+	 * list.
+	 * 
+	 * @param opPos position in list
+	 * @param theOpCode operation code
+	 * @param theIndex  index in list
+	 * @param theArgs   vector or arguments to supply
+	 */
 	void
 	setOpCodeArgs(
 			eOpCodes								theOpCode,
 			OpCodeMapSizeType						theIndex,
-			const std::vector<OpCodeMapValueType>&	theArgs);
+			const OpCodeMapValueVectorType&	theArgs);
 
+	/**
+	 * Add an operation code to the list.
+	 * 
+	 * @param theOpCode operation code
+	 */
 	void
 	appendOpCode(eOpCodes	theOpCode);
 
+	/**
+	 * Add an operation code with supplied arguments to the list.
+	 * 
+	 * @param theOpCode operation code
+	 * @param theArgs   vector or arguments to supply
+	 */
 	void
 	appendOpCode(eOpCodes									theOpCode,
-				 const std::vector<OpCodeMapValueType>&		theArgs)
+				 const OpCodeMapValueVectorType&		theArgs)
 	{
 		appendOpCode(theOpCode);
 
@@ -784,60 +894,118 @@ public:
 					  theArgs);
 	}
 
+	/**
+	 * Insert an operation code at a specified index in the list.
+	 * 
+	 * @param theOpCode operation code
+	 * @param theIndex  index in list
+	 */
 	OpCodeMapValueType
 	insertOpCode(
 			eOpCodes			theOpCode,
 			OpCodeMapSizeType	theIndex);
 
+	/**
+	 * Update the length of an operation code at a specified index in the list.
+	 * This presumes that the other opcodes have been appended to the
+	 * expression, and that the specified op code's length needs to be set.
+	 * The size includes the normal length of the opcode, plus the length of
+	 * its subexpressions.
+	 * 
+	 * @param theIndex  index in list
+	 */
 	void
 	updateOpCodeLength(OpCodeMapSizeType	theIndex)
 	{
 		assert(theIndex < opCodeMapSize());
 
-		// This presumes that the other opcodes
-		// have been appended to the expression,
-		// and that the specified op code's length
-		// needs to be set.  The size includes the
-		// normal length of the opcode, plus the
-		// length of its subexpressions.
 		updateOpCodeLength(m_opMap[theIndex], theIndex);
 	}
 
+	/**
+	 * Update the length of an operation code that has moved to a new index in
+	 * the list.
+	 * 
+	 * @param theOpCode        operation code
+	 * @param theOriginalIndex original index in list
+	 * @param theNewIndex      new index in list
+	 */
 	void
 	updateShiftedOpCodeLength(
 			OpCodeMapValueType	theOpCode,
 			OpCodeMapSizeType	theOriginalIndex,
 			OpCodeMapSizeType	theNewIndex);
 
+	/**
+	 * Update the length of an operation code at a specified index in the list.
+	 * This presumes that the other opcodes have been appended to the
+	 * expression, and that the specified op code's length needs to be set.
+	 * The size includes the normal length of the opcode, plus the length of
+	 * its subexpressions.
+	 * 
+	 * @param theOpCode operation code at specified index
+	 * @param theIndex  index in list
+	 */
 	void
 	updateOpCodeLength(
 			OpCodeMapValueType	theOpCode,
 			OpCodeMapSizeType	theIndex);
 
+	/**
+	 * Whether the operation code is one of the node test types, for example,
+	 * "ancestor::" or "child::"
+	 *
+	 * @param theOpCode operation code
+	 * @return true if code represents a node test
+	 */
 	static bool
 	isNodeTestOpCode(OpCodeMapValueType		theOpCode);
 
+	/**
+	 * Update the length of an operation code after a node test code.
+	 * $$$: ??
+	 * 
+	 * @param theIndex  index in list
+	 */
 	void
 	updateOpCodeLengthAfterNodeTest(OpCodeMapSizeType	theIndex);
 
+	/**
+	 * Whether there are any more tokens in the token queue.
+	 *
+	 * @return true if there are more tokens
+	 */
 	bool
 	hasMoreTokens() const
 	{
 		return tokenQueueSize() - m_currentPosition > 0 ? true : false;
 	}
 
+	/**
+	 * Retrieve the current position in the token queue.
+	 *
+	 * @return position in queue
+	 */
 	TokenQueueSizeType
 	getTokenPosition() const
 	{
 		return m_currentPosition;
 	}
 
+	/**
+	 * Set the current position in the token queue to zero.
+	 */
 	void
 	resetTokenPosition()
 	{
 		m_currentPosition = 0;
 	}
 
+	/**
+	 * Set the current position in the token queue to a specified value.
+	 *
+	 * @param thePosition value of position to set
+	 */
 	void
 	setTokenPosition(TokenQueueSizeType		thePosition)
 	{
@@ -846,12 +1014,23 @@ public:
 		m_currentPosition = thePosition > theSize ? theSize : thePosition;
 	}
 
+	/**
+	 * Set the current position in the token queue to a specified value.
+	 *
+	 * @param thePosition value of position to set
+	 */
 	void
 	setTokenPosition(int	thePosition)
 	{
 		setTokenPosition(thePosition > 0 ? static_cast<TokenQueueSizeType>(thePosition) : 0);
 	}
 
+	/**
+	 * Retrieve a token at the specified position in the token queue.
+	 * 
+	 * @param thePosition position in queue
+	 * @return pointer to XObject token
+	 */
 	XObject*
 	getToken(TokenQueueSizeType		thePosition) const
 	{
@@ -860,6 +1039,11 @@ public:
 		return m_tokenQueue[thePosition];
 	}
 
+	/**
+	 * Retrieve the next token in the token queue.
+	 * 
+	 * @return pointer to XObject token
+	 */
 	XObject*
 	getNextToken()
 	{
@@ -873,6 +1057,11 @@ public:
 		}
 	}
 
+	/**
+	 * Retrieve the previous token in the token queue.
+	 * 
+	 * @return pointer to XObject token
+	 */
 	XObject*
 	getPreviousToken()
 	{
@@ -886,6 +1075,13 @@ public:
 		}
 	}
 
+	/**
+	 * Retrieve a token at the specified offset relative to the current
+	 * position in the token queue.
+	 * 
+	 * @param theOffset offset from current position
+	 * @return pointer to XObject token
+	 */
 	XObject*
 	getRelativeToken(int	theOffset) const
 	{
@@ -903,6 +1099,11 @@ public:
 		}
 	}
 
+	/**
+	 * Push a token onto the token queue.
+	 * 
+	 * @param theToken pointer to XObject token to push
+	 */
 	void
 	pushToken(XObject*	theToken)
 	{
@@ -911,23 +1112,57 @@ public:
 		m_tokenQueue.push_back(theToken);
 	}
 
+	/**
+	 * Diagnostic function to output the operation code map.
+	 * 
+	 * @param thePrintWriter   output device
+	 * @param theStartPosition starting position in map
+	 */
 	void
 	dumpOpCodeMap(PrintWriter&			thePrintWriter,
 				  OpCodeMapSizeType		theStartPosition = 0) const;
 
+	/**
+	 * Diagnostic function to output the token queue.
+	 * 
+	 * @param thePrintWriter   output device
+	 * @param theStartPosition starting position in token queue
+	 */
 	void
 	dumpTokenQueue(PrintWriter&			thePrintWriter,
 				   TokenQueueSizeType	theStartPosition = 0) const;
 
+	/**
+	 * Diagnostic function to output the remaining tokens in the token queue.
+	 * 
+	 * @param thePrintWriter   output device
+	 */
 	void
 	dumpRemainingTokenQueue(PrintWriter&	thePrintWriter) const;
 
+	/**
+	 * Push a token onto the token queue and its index onto the operations code
+	 * map.
+	 *
+	 * @param theToken pointer to XObject token to push
+	 */
 	void
 	pushArgumentOnOpCodeMap(XObject*	theToken);
 
+	/**
+	 * Push the current position in the token queue onto the operations code
+	 * map.
+	 */
 	void
 	pushCurrentTokenOnOpCodeMap();
 
+	/**
+	 * Retrieve a pattern in the pattern map at the specified position.
+	 * position in the token queue.
+	 * 
+	 * @param thePatternPosition position in pattern map
+	 * @return match pattern
+	 */
 	PatternMapValueType
 	getPattern(int	thePatternPosition) const
 	{
@@ -936,6 +1171,13 @@ public:
 		return m_patternMap[thePatternPosition];
 	}
 
+	/**
+	 * Retrieve a pattern in the pattern map at the specified position.
+	 * position in the token queue.
+	 * 
+	 * @param thePatternPosition position in pattern map
+	 * @return match pattern
+	 */
 	PatternMapValueType
 	getPattern(PatternMapSizeType	thePatternPosition) const
 	{
@@ -944,12 +1186,23 @@ public:
 		return m_patternMap[thePatternPosition];
 	}
 
+	/**
+	 * Push a pattern onto the pattern map.
+	 *
+	 * @param thePattern match pattern to push
+	 */
 	void
 	pushPattern(PatternMapValueType	thePattern)
 	{
 		m_patternMap.push_back(thePattern);
 	}
 
+	/**
+	 * Adjust the value of a pattern at a specified index in the pattern map.
+	 *
+	 * @param theIndex      index in map
+	 * @param theAdjustment value of adjustment to add
+	 */
 	void
 	adjustPattern(
 			OpCodeMapSizeType	theIndex,
@@ -958,12 +1211,22 @@ public:
 		m_patternMap[theIndex] += theAdjustment;
 	}
 
+	/**
+	 * Change the current pattern in the pattern map.
+	 *
+	 * @param thePattern match pattern to make current
+	 */
 	void
 	setCurrentPattern(const DOMString&	thePattern)
 	{
 		m_currentPattern = thePattern;
 	}
 
+	/**
+	 * Retrieve the current pattern in the pattern map.
+	 * 
+	 * @return string for current match pattern
+	 */
 	const DOMString&
 	getCurrentPattern() const
 	{
@@ -971,43 +1234,43 @@ public:
 	}
 
 	/**
-	 * An operations map is used instead of a proper parse tree.  It contains 
-	 * operations codes and indexes into the m_tokenQueue.
-	 * We use an array instead of a full parse tree in order to cut down 
-	 * on the number of objects created.
+	 * An operations map is used instead of a proper parse tree.  It contains
+	 * operations codes and indexes into the m_tokenQueue. We use an array
+	 * instead of a full parse tree in order to cut down on the number of
+	 * objects created.
 	 */
 	OpCodeMapType			m_opMap;
 
 	/**
-	 * This is the index of the last opcode that was appended or inserted.
+	 * The index of the last opcode that was appended or inserted.
 	 *
 	 */
 	OpCodeMapSizeType		m_lastOpCodeIndex;
 
 	/**
-	 *  This is the queue of used tokens. The current token is the token at the 
-	 * end of the m_tokenQueue. The idea is that the queue can be marked and a
+	 * The queue of used tokens. The current token is the token at the end of
+	 * the m_tokenQueue. The idea is that the queue can be marked and a
 	 * sequence of tokens can be reused.
 	 */
 	TokenQueueType			m_tokenQueue;
 
 	/**
-	 *  This is the current position in the token queue.
+	 *  The current position in the token queue.
 	 */
 	TokenQueueSizeType		m_currentPosition;
 
 	/**
-	 * Ignore this, it is going away.
-	 * This holds a map to the m_tokenQueue that tells where the top-level elements are.
-	 * It is used for pattern matching so the m_tokenQueue can be walked backwards.
-	 * Each element that is a 'target', (right-most top level element name) has 
-	 * TARGETEXTRA added to it.
+	 * This holds a map to the m_tokenQueue that tells where the top-level
+	 * elements are. It is used for pattern matching so the m_tokenQueue can be
+	 * walked backwards. Each element that is a 'target', (right-most top level
+	 * element name) has TARGETEXTRA added to it.
 	 * 
 	 */
+	 // Ignore this, it is going away.
 	PatternMapType			m_patternMap;
 
 	/**
-	 * The current pattern string, for diagnostics purposes
+	 * The current pattern string, for diagnostics purposes.
 	 */
 	DOMString				m_currentPattern;
 

@@ -53,6 +53,9 @@
  * Business Machines, Inc., http://www.ibm.com.  For more
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
+ *
+ * $ Id: $
+ *
  */
 #if !defined(XPATHEXECUTIONCONTEXTDEFAULT_HEADER_GUARD_1357924680)
 #define XPATHEXECUTIONCONTEXTDEFAULT_HEADER_GUARD_1357924680
@@ -75,13 +78,23 @@
 class XPathEnvSupport;
 
 
-//
-// A basic implementation of the class XPathExecutionContext.
-//
+/**
+ * A basic implementation of the class XPathExecutionContext.
+ */
 class XALAN_XPATH_EXPORT XPathExecutionContextDefault : public XPathExecutionContext
 {
 public:
 
+	/**
+	 * Construct an XPathExecutionContextDefault object
+	 *
+	 * @param theXpathEnvSupport XPath environment support class instance
+	 * @param theXPathSupport    XPath support class instance
+	 * @param theXobjectFactory  factory class instance for XObjects
+	 * @param theCurrentNode     current node in the source tree
+	 * @param theContextNodeList node list for current context
+	 * @param thePrefixResolver  prefix resolver to use
+	 */
 	explicit
 	XPathExecutionContextDefault(
 			XPathEnvSupport&		theXPathEnvSupport,
@@ -94,36 +107,6 @@ public:
 	virtual
 	~XPathExecutionContextDefault();
 
-	// These interfaces are inherited from ExecutionContext...
-
-	/**
-	 * Tell the user of an error, and probably throw an 
-	 * exception.
-	 */
-	virtual void
-	error(
-			const DOMString&	msg,
-			const DOM_Node& 	sourceNode = DOM_Node(),
-			const DOM_Node&		styleNode = DOM_Node()) const;
-
-	/**
-	 * Tell the user of an warning, and probably throw an 
-	 * exception.
-	 */
-	virtual void
-	warn(
-			const DOMString&	msg,
-			const DOM_Node& 	sourceNode = DOM_Node(),
-			const DOM_Node&		styleNode = DOM_Node()) const;
-
-	/**
-	 * Output a message.
-	 */
-	virtual void
-	message(
-			const DOMString&	msg,
-			const DOM_Node& 	sourceNode = DOM_Node(),
-			const DOM_Node&		styleNode = DOM_Node()) const;
 
 	// These interfaces are inherited from XPathExecutionContext...
 
@@ -136,78 +119,40 @@ public:
 	virtual XObjectFactory&
 	getXObjectFactory() const;
 
-	/**
-	 * Returns the namespace of the given node.
-	 */
 	virtual DOMString
 	getNamespaceOfNode(const DOM_Node&	n) const;
 
-	/**
-	 * Returns the local name of the given node.
-	 */
 	virtual DOMString
 	getLocalNameOfNode(const DOM_Node&	n) const;
 
-	/**
-	 * Returns the parent of the given node.
-	 */
 	virtual DOM_Node
 	getParentOfNode(const DOM_Node&	n) const;
 
-	/**
-	 * Get node data recursively.
-	 * (Note whitespace issues.)
-	 */
 	virtual DOMString
 	getNodeData(const DOM_Node&	n) const;
 
-	/**
-	 * Get an element from an ID.
-	 */
 	virtual DOM_Element
 	getElementByID(
 			const DOMString&		id,
 			const DOM_Document&		doc) const;
 
-	/*
-	 * Get the current context node list.
-	 *
-	 */
 	virtual const NodeRefListBase&
 	getContextNodeList() const;
 
-	/*
-	 * Set the current context node list.
-	 *
-	 */
 	virtual void	
 	setContextNodeList(const NodeRefListBase&	theList);
 
-	/*
-	 * Get the count of nodes in the current context node list.
-	 *
-	 */
 	virtual int
 	getContextNodeListLength() const;
 
-	/*
-	 * Get the position of the node in the current context node list.
-	 *
-	 */
 	virtual int
 	getContextNodeListPosition(const DOM_Node&	contextNode) const;
 
-	/**
-	 * Determine if an external function is available.
-	 */
 	virtual bool
 	functionAvailable(
 			const DOMString&	theNamespace, 
 			const DOMString&	extensionName) const;
 
-	/**
-	 * Handle an extension function.
-	 */
 	virtual XObject*
 	extFunction(
 			const DOMString&				theNamespace,
@@ -222,23 +167,14 @@ public:
 			const DOM_Node&		node,
 			XLocator*			xlocator);
 
-	/**
-	 * Provides support for XML parsing service.
-	 */
 	virtual DOM_Document
 	parseXML(
 			const DOMString&	urlString,
 			const DOMString&	base) const;
 
-	/**
-	 * Create a MutableNodeRefList with the appropriate context.
-	 */
 	virtual MutableNodeRefList
 	createMutableNodeRefList() const;
 
-	/**
-	 * Tells if namespaces should be supported.  For optimization purposes.
-	 */
 	virtual bool
 	getProcessNamespaces() const;
 
@@ -262,10 +198,6 @@ public:
 			const DOMString&		ref,
 			const PrefixResolver&	resolver);
 
-	/**
-	 * Given a name, locate a variable in the current context, and return 
-	 * the Object.
-	 */
 	virtual XObject*
 	getVariable(
 			const QName&			name) const;
@@ -279,39 +211,17 @@ public:
 	virtual DOMString
 	getNamespaceForPrefix(const DOMString&	prefix) const;
 
-	/**
-	 * Given a DOM Document, tell what URI was used to parse it.
-	 * Needed for relative resolution.
-	 */
 	virtual DOMString
 	findURIFromDoc(const DOM_Document&	owner) const;
 
-	/**
-	 * The getUnparsedEntityURI function returns the URI of the unparsed
-	 * entity with the specified name in the same document as the context
-	 * node (see [3.3 Unparsed Entities]). It returns the empty string if
-	 * there is no such entity.
-	 */
 	virtual DOMString
 	getUnparsedEntityURI(
 			const DOMString&		theName,
 			const DOM_Document&		theDocument) const;
 
-	/**
-	 * Tells, through the combination of the default-space attribute
-	 * on xsl:stylesheet, xsl:strip-space, xsl:preserve-space, and the
-	 * xml:space attribute, whether or not extra whitespace should be stripped
-	 * from the node.  Literal elements from template elements should
-	 * <em>not</em> be tested with this function.
-	 * @param textNode A text node from the source tree.
-	 * @return true if the text node should be stripped of extra whitespace.
-	 */
 	virtual bool
 	shouldStripSourceNode(const DOM_Node&	node) const;
 
-	/**
-	 * These get and set a state to optimize certain XPath operations.
-	 */
 	virtual bool
 	getThrowFoundIndex() const;
 
@@ -331,6 +241,27 @@ public:
 	setSourceDocument(
 			const DOMString&		theURI,
 			const DOM_Document&		theDocument);
+
+
+	// These interfaces are inherited from ExecutionContext...
+
+	virtual void
+	error(
+			const DOMString&	msg,
+			const DOM_Node& 	sourceNode = DOM_Node(),
+			const DOM_Node&		styleNode = DOM_Node()) const;
+
+	virtual void
+	warn(
+			const DOMString&	msg,
+			const DOM_Node& 	sourceNode = DOM_Node(),
+			const DOM_Node&		styleNode = DOM_Node()) const;
+
+	virtual void
+	message(
+			const DOMString&	msg,
+			const DOM_Node& 	sourceNode = DOM_Node(),
+			const DOM_Node&		styleNode = DOM_Node()) const;
 
 private:
 

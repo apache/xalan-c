@@ -82,24 +82,33 @@ public:
 	~NodeRefListBase();
 
 	/**
-	 * Returns the <code>index</code>th item in the collection. If 
-	 * <code>index</code> is greater than or equal to the number of nodes in 
+	 * Returns the <code>index</code>th item in the collection. If
+	 * <code>index</code> is greater than or equal to the number of nodes in
 	 * the list, this returns <code>null</code>.
-	 * @param index Index into the collection.
-	 * @return The node at the <code>index</code>th position in the 
-	 *   <code>NodeList</code>, or <code>null</code> if that is not a valid 
-	 *   index.
+	 *
+	 * @param index index into the collection
+	 * @return node at the <code>index</code>th position in the
+	 *         <code>NodeList</code>, or <code>null</code> if that is not a
+	 *         valid index
 	 */
 	virtual DOM_Node
 	item(unsigned int	index) const = 0;
 
 	/**
-	 * The number of nodes in the list. The range of valid child node indices is 
-	 * 0 to <code>length-1</code> inclusive. 
+	 * Determine the number of nodes in the list. The range of valid child node
+	 * indices is 0 to <code>length-1</code> inclusive. 
+	 *
+	 * @return number of nodes
 	 */
 	virtual unsigned int
 	getLength() const = 0;
 
+	/**
+	 * Retrieve the zero based index of the node in the list
+	 * 
+	 * @param theNode node whose index to find
+	 * @return index of node
+	 */
 	virtual unsigned int
 	indexOf(const DOM_Node&		theNode) const = 0;
 

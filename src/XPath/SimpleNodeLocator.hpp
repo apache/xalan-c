@@ -75,11 +75,10 @@ class XPathExpression;
 
 
 /**
- * SimpleNodeLocator implements a search of one or more DOM trees.
- * By using the connect function as an extension, the user may 
- * specify a directory and a filter specification for XML files 
- * that will be searched.
- * This is a singleton class.
+ * SimpleNodeLocator implements a search of one or more DOM trees. By using
+ * the connect function as an extension, the user may specify a directory and
+ * a filter specification for XML files that will be searched. This is a
+ * singleton class.
  */
 class XALAN_XPATH_EXPORT SimpleNodeLocator : public XLocator
 {
@@ -88,7 +87,7 @@ public:
 	static SimpleNodeLocator*
 	getDefaultInstance();
 
-	/**
+	/*
 	 * Create a SimpleNodeLocator object.
 	 */
 	explicit
@@ -96,6 +95,8 @@ public:
 
 	virtual
 	~SimpleNodeLocator();
+
+	// These methods are inherited from XLocator ...
 
 	virtual XObject*
 	connectToNodes(
@@ -105,17 +106,6 @@ public:
 			int 							opPos,
 			const ConnectArgsVectorType&	connectArgs);
   
-	/**
-	 * Execute a location path.  Normally, this method simply 
-	 * moves past the OP_LOCATIONPATH and it's length member, 
-	 * and calls the Step function, which will recursivly process 
-	 * the rest of the LocationPath, and then wraps the NodeList result
-	 * in an XNodeSet object.
-	 * @param xpath The xpath that is executing.
-	 * @param context The current source tree context node.
-	 * @param opPos The current position in the xpath.m_opMap array.
-	 * @returns the result of the query in an XNodeSet object.
-	 */
 	virtual XObject*
 	locationPath(
 			const XPath&			xpath,
@@ -123,16 +113,6 @@ public:
 			const DOM_Node& 		context, 
 			int 					opPos);
 
-	/**
-	 * Execute a a location path pattern.  This will return a score
-	 * of MATCH_SCORE_NONE, MATCH_SCORE_NODETEST, 
-	 * MATCH_SCORE_OTHER, MATCH_SCORE_QNAME.
-	 * @param xpath The xpath that is executing.
-	 * @param context The current source tree context node.
-	 * @param opPos The current position in the xpath.m_opMap array.
-	 * @returns score, one of MATCH_SCORE_NODETEST, 
-	 * MATCH_SCORE_NONE, MATCH_SCORE_OTHER, MATCH_SCORE_QNAME.
-	 */
 	virtual double
 	locationPathPattern(
 			const XPath&			xpath,
@@ -152,10 +132,11 @@ protected:
 
 	/**
 	 * Execute a step in a location path.
-	 * @param xpath The xpath that is executing.
-	 * @param context The current source tree context node.
-	 * @param opPos The current position in the xpath.m_opMap array.
-	 * @returns the last matched context node.
+	 *
+	 * @param xpath The xpath that is executing
+	 * @param context The current source tree context node
+	 * @param opPos The current position in the xpath operation map array
+	 * @return the last matched context node
 	 */
 	DOM_Node
 	stepPattern(

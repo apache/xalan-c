@@ -90,6 +90,8 @@ public:
 
 	/**
 	 * Create an XObject.
+	 *
+	 * @param envSupport XPath environment support class instance
 	 */
 	explicit
 	XObject(XPathEnvSupport*	envSupport = 0);
@@ -99,55 +101,80 @@ public:
 	/**
 	 * Given a request type, return the equivalent string. 
 	 * For diagnostic purposes.
+	 *
+	 * @return string for type
 	 */
 	virtual DOMString
 	getTypeString() const = 0;
 
 	/**
 	 * Cast result object to a number.
+	 *
+	 * @return numeric value
 	 */
 	virtual double
 	num() const = 0;
 
 	/**
 	 * Cast result object to a boolean.
+	 *
+	 * @return boolean value
 	 */
 	virtual bool
 	boolean() const = 0;
 
 	/**
 	 * Cast result object to a string.
+	 *
+	 * @return string value
 	 */
 	virtual DOMString
 	str() const = 0;
 
 	/**
 	 * Cast result object to a result tree fragment.
+	 *
+	 * @return result tree fragment
 	 */
 	virtual const ResultTreeFragBase&
 	rtree() const = 0;
 
+	/**
+	 * Cast result object to a result tree fragment.
+	 *
+	 * @return result tree fragment
+	 */
 	virtual ResultTreeFragBase&
 	rtree() = 0;
 
 	/**
 	 * Cast result object to a nodelist.
+	 *
+	 * @return node list
 	 */
 	virtual const NodeRefListBase&
 	nodeset() const = 0;
 
 	/**
 	 * Cast result object to a nodelist that is mutable.
+	 *
+	 * @return mutable node list
 	 */
 	virtual const MutableNodeRefList&
 	mutableNodeset() const = 0;
 
+	/**
+	 * Cast result object to a nodelist that is mutable.
+	 *
+	 * @return mutable node list
+	 */
 	virtual MutableNodeRefList&
 	mutableNodeset() = 0;
 
 	/**
-	 * Process a callback request for preferred type information
+	 * Process a callback request for preferred type information.
 	 *
+	 * @param theCallbackObject object to call back
 	 */
 	virtual void
 	ProcessXObjectTypeCallback(XObjectTypeCallback&		theCallbackObject) = 0;
@@ -157,10 +184,16 @@ public:
 
 	/**
 	 * Tell if two objects are functionally equal.
+	 *
+	 * @param theRHS object to compare
+	 * @return true if they are equal
 	 */
 	virtual bool
 	equals(const XObject&	theRHS) const = 0;
 
+	/**
+	 * Enumeration of possible object types
+	 */
 	enum	eObjectType { eTypeNull = -1,
 						  eTypeUnknown = 0,
 						  eTypeBoolean = 1,
@@ -172,6 +205,8 @@ public:
 
 	/**
 	 * Tell what kind of class this is.
+	 *
+	 * @return numeric type value
 	 */
 	virtual	eObjectType
 	getType() const = 0;

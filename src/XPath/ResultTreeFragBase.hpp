@@ -88,12 +88,209 @@ class XALAN_XPATH_EXPORT ResultTreeFragBase : public UnimplementedDocumentFragme
 {
 public:
 
+	/**
+	 * Construct a result tree fragment object from a DOM document.
+	 * 
+	 * @param theOwnerDocument document used to construct result tree fragment
+	 */
 	ResultTreeFragBase(const DOM_Document&	theOwnerDocument);
 
-	ResultTreeFragBase(const ResultTreeFragBase&);
+	/**
+	 * Construct a result tree fragment object from another.
+	 * 
+	 * @param theSource source to copy
+	 */
+	ResultTreeFragBase(const ResultTreeFragBase& theSource);
 
 	virtual
 	~ResultTreeFragBase();
+
+	// Many of these interfaces duplicate ones that are inherited from the
+	// Xerces DOM implementation classes.  In general, they take and/or return
+	// instances of the Xerces smart-pointer classes.  Other are const, which
+	// many of the Xerces functions are not.
+
+	/**
+	 * A <code>NodeList</code> that contains all children of this node. If there 
+	 * are no children, this is a <code>NodeList</code> containing no nodes. 
+	 * The content of the returned <code>NodeList</code> is "live" in the sense 
+	 * that, for instance, changes to the children of the node object that 
+	 * it was created from are immediately reflected in the nodes returned by 
+	 * the <code>NodeList</code> accessors; it is not a static snapshot of the 
+	 * content of the node. This is true for every <code>NodeList</code>, 
+	 * including the ones returned by the <code>getElementsByTagName</code> 
+	 * method.
+	 * 
+	 * @return node list
+	 */
+	virtual const NodeRefListBase&
+	getChildNodesAsNodeRefList() const = 0;
+
+	/**
+	 * Returns the <code>index</code>th item in the collection. If
+	 * <code>index</code> is greater than or equal to the number of nodes in
+	 * the list, this returns <code>null</code>.
+	 *
+	 * @param index index into the collection
+	 * @return node at the <code>index</code>th position in the
+	 *         <code>NodeList</code>, or <code>null</code> if that is not a
+	 *         valid index
+	 */
+	virtual DOM_Node
+	item(unsigned int	index) const = 0;
+
+	/**
+	 * Determine the number of nodes in the list. The range of valid child node
+	 * indices is 0 to <code>length-1</code> inclusive. 
+	 *
+	 * @return number of nodes
+	 */
+	virtual unsigned int
+	getLength() const = 0;
+
+	/**
+	 * The first child of this node. If there is no such node, this returns 
+	 * <code>null</code>.
+	 * 
+	 * @return first child node of this node
+	 */
+	virtual DOM_Node
+	getFirstChild() const = 0;
+
+	/**
+	 * The last child of this node. If there is no such node, this returns 
+	 * <code>null</code>.
+	 *
+	 * @return last child node
+	 */
+	virtual DOM_Node
+	getLastChild() const = 0;
+
+    /**
+     * The <code>Document</code> object associated with this node. This is 
+     * also the <code>Document</code> object used to create new nodes. When 
+     * this node is a <code>Document</code> or a <code>DocumentType</code> 
+     * which is not used with any <code>Document</code> yet, this is 
+     * <code>null</code>.
+	 *
+	 * @return owner document
+     */
+	virtual DOM_Document
+	getOwnerDocument() const = 0;
+
+	/**
+	 * Inserts the node <code>newChild</code> before the existing child node 
+	 * <code>refChild</code>. If <code>refChild</code> is <code>null</code>, 
+	 * insert <code>newChild</code> at the end of the list of children.
+	 * <br>If <code>newChild</code> is a <code>DocumentFragment</code> object, 
+	 * all of its children are inserted, in the same order, before 
+	 * <code>refChild</code>. If the <code>newChild</code> is already in the 
+	 * tree, it is first removed.
+	 *
+	 * @param newChild node to insert
+	 * @param refChild reference node, i.e., the node before which the new 
+	 *                 node must be inserted
+	 * @return node being inserted
+	 * @exception DOMException
+	 *   HIERARCHY_REQUEST_ERR: Raised if this node is of a type that does not 
+	 *   allow children of the type of the <code>newChild</code> node, or if 
+	 *   the node to insert is one of this node's ancestors
+	 *   <br>WRONG_DOCUMENT_ERR: Raised if <code>newChild</code> was created 
+	 *   from a different document than the one that created this node
+	 *   <br>NO_MODIFICATION_ALLOWED_ERR: Raised if this node is readonly
+	 *   <br>NOT_FOUND_ERR: Raised if <code>refChild</code> is not a child of 
+	 *   this node
+	 */
+	virtual DOM_Node
+	insertBefore(
+			const DOM_Node&		newChild, 
+			const DOM_Node&		refChild) = 0;
+
+	/**
+	 * Replaces the child node <code>oldChild</code> with <code>newChild</code> 
+	 * in the list of children, and returns the <code>oldChild</code> node. If 
+	 * the <code>newChild</code> is already in the tree, it is first removed.
+	 *
+	 * @param newChild new node to put in the child list
+	 * @param oldChild node being replaced in the list
+	 * @return node replaced
+	 * @exception DOMException
+	 *   HIERARCHY_REQUEST_ERR: Raised if this node is of a type that does not 
+	 *   allow children of the type of the <code>newChild</code> node, or it 
+	 *   the node to put in is one of this node's ancestors
+	 *   <br>WRONG_DOCUMENT_ERR: Raised if <code>newChild</code> was created 
+	 *   from a different document than the one that created this node
+	 *   <br>NO_MODIFICATION_ALLOWED_ERR: Raised if this node is readonly
+	 *   <br>NOT_FOUND_ERR: Raised if <code>oldChild</code> is not a child of 
+	 *   this node
+	 */
+	virtual DOM_Node
+	replaceChild(
+			const DOM_Node&		newChild,
+			const DOM_Node&		oldChild) = 0;
+
+	/**
+	 * Removes the child node indicated by <code>oldChild</code> from the list 
+	 * of children, and returns it.
+	 *
+	 * @param oldChild node being removed
+	 * @return node removed
+	 * @exception DOMException
+	 *   NO_MODIFICATION_ALLOWED_ERR: Raised if this node is readonly
+	 *   <br>NOT_FOUND_ERR: Raised if <code>oldChild</code> is not a child of 
+	 *   this node
+	 */
+	virtual DOM_Node
+	removeChild(const DOM_Node&		oldChild) = 0;
+  
+	/**
+	 * Adds the node <code>newChild</code> to the end of the list of children of 
+	 * this node. If the <code>newChild</code> is already in the tree, it is 
+	 * first removed.
+	 *
+	 * @param newChild node to add, if it is a  <code>DocumentFragment</code> 
+	 *   object, the entire contents of the document fragment are moved into 
+	 *   the child list of this node
+	 * @return node added
+	 * @exception DOMException
+	 *   HIERARCHY_REQUEST_ERR: Raised if this node is of a type that does not 
+	 *   allow children of the type of the <code>newChild</code> node, or if 
+	 *   the node to append is one of this node's ancestors
+	 *   <br>WRONG_DOCUMENT_ERR: Raised if <code>newChild</code> was created 
+	 *   from a different document than the one that created this node
+	 *   <br>NO_MODIFICATION_ALLOWED_ERR: Raised if this node is readonly
+	 */
+	virtual DOM_Node
+	appendChild(const DOM_Node&		newChild) = 0;
+
+	/**
+	 * Convenience method to allow easy determination of whether a node has any
+	 * children.
+	 *
+	 * @return  <code>true</code> if the node has any children, 
+	 *   <code>false</code> if the node has no children
+	 */
+	virtual bool
+	hasChildNodes() const = 0;
+
+	/**
+	 * Returns a duplicate of this node, i.e., serves as a generic copy 
+	 * constructor for nodes. The duplicate node has no parent (
+	 * <code>parentNode</code> returns <code>null</code>.).
+	 * <br>Cloning an <code>Element</code> copies all attributes and their 
+	 * values, including those generated by the  XML processor to represent 
+	 * defaulted attributes, but this method does not copy any text it contains 
+	 * unless it is a deep clone, since the text is contained in a child 
+	 * <code>Text</code> node. Cloning any other type of node simply returns a 
+	 * copy of this node. 
+	 *
+	 * @param deep if <code>true</code>, recursively clone the subtree under the 
+	 *   specified node; if <code>false</code>, clone only the node itself (and 
+	 *   its attributes, if it is an <code>Element</code>)
+	 * @return The duplicate node.
+	 */
+	virtual DOM_Node
+	cloneNode(bool	deep) const = 0;
 
 	// These interfaces are inherited from UnimplementedDocumentFragment...
 
@@ -197,164 +394,8 @@ public:
 	virtual DOMString
 	toString() = 0;
 
-	// These interfaces are new to ResultTreeFragBase
-
-	// Many of these interfaces duplicate ones that are inherited from the Xerces DOM
-	// implementation classes.  In general, they take and/or return instances of the
-	// Xerces smart-pointer classes.  Other are const, which many of the Xerces functions
-	// are not.
-
-	/**
-	 * A <code>NodeList</code> that contains all children of this node. If there 
-	 * are no children, this is a <code>NodeList</code> containing no nodes. 
-	 * The content of the returned <code>NodeList</code> is "live" in the sense 
-	 * that, for instance, changes to the children of the node object that 
-	 * it was created from are immediately reflected in the nodes returned by 
-	 * the <code>NodeList</code> accessors; it is not a static snapshot of the 
-	 * content of the node. This is true for every <code>NodeList</code>, 
-	 * including the ones returned by the <code>getElementsByTagName</code> 
-	 * method.
-	 */
-	virtual const NodeRefListBase&
-	getChildNodesAsNodeRefList() const = 0;
-
-	virtual DOM_Node
-	item(unsigned int	index) const = 0;
-
-	virtual unsigned int
-	getLength() const = 0;
-
-	/**
-	 * The first child of this node. If there is no such node, this returns 
-	 * <code>null</code>.
-	 */
-	virtual DOM_Node
-	getFirstChild() const = 0;
-
-	/**
-	 * The last child of this node. If there is no such node, this returns 
-	 * <code>null</code>.
-	 */
-	virtual DOM_Node
-	getLastChild() const = 0;
-
-	/**
-	 * The <code>Document</code> object associated with this node. This is also 
-	 * the <code>Document</code> object used to create new nodes. When this 
-	 * node is a <code>Document</code> this is <code>null</code>.
-	 */
-	virtual DOM_Document
-	getOwnerDocument() const = 0;
-
-	/**
-	 * Inserts the node <code>newChild</code> before the existing child node 
-	 * <code>refChild</code>. If <code>refChild</code> is <code>null</code>, 
-	 * insert <code>newChild</code> at the end of the list of children.
-	 * <br>If <code>newChild</code> is a <code>DocumentFragment</code> object, 
-	 * all of its children are inserted, in the same order, before 
-	 * <code>refChild</code>. If the <code>newChild</code> is already in the 
-	 * tree, it is first removed.
-	 * @param newChild The node to insert.
-	 * @param refChild The reference node, i.e., the node before which the new 
-	 *   node must be inserted.
-	 * @return The node being inserted.
-	 * @exception DOMException
-	 *   HIERARCHY_REQUEST_ERR: Raised if this node is of a type that does not 
-	 *   allow children of the type of the <code>newChild</code> node, or if 
-	 *   the node to insert is one of this node's ancestors.
-	 *   <br>WRONG_DOCUMENT_ERR: Raised if <code>newChild</code> was created 
-	 *   from a different document than the one that created this node.
-	 *   <br>NO_MODIFICATION_ALLOWED_ERR: Raised if this node is readonly.
-	 *   <br>NOT_FOUND_ERR: Raised if <code>refChild</code> is not a child of 
-	 *   this node.
-	 */
-	virtual DOM_Node
-	insertBefore(
-			const DOM_Node&		newChild, 
-			const DOM_Node&		refChild) = 0;
-
-	/**
-	 * Replaces the child node <code>oldChild</code> with <code>newChild</code> 
-	 * in the list of children, and returns the <code>oldChild</code> node. If 
-	 * the <code>newChild</code> is already in the tree, it is first removed.
-	 * @param newChild The new node to put in the child list.
-	 * @param oldChild The node being replaced in the list.
-	 * @return The node replaced.
-	 * @exception DOMException
-	 *   HIERARCHY_REQUEST_ERR: Raised if this node is of a type that does not 
-	 *   allow children of the type of the <code>newChild</code> node, or it 
-	 *   the node to put in is one of this node's ancestors.
-	 *   <br>WRONG_DOCUMENT_ERR: Raised if <code>newChild</code> was created 
-	 *   from a different document than the one that created this node.
-	 *   <br>NO_MODIFICATION_ALLOWED_ERR: Raised if this node is readonly.
-	 *   <br>NOT_FOUND_ERR: Raised if <code>oldChild</code> is not a child of 
-	 *   this node.
-	 */
-	virtual DOM_Node
-	replaceChild(
-			const DOM_Node&		newChild,
-			const DOM_Node&		oldChild) = 0;
-
-	/**
-	 * Removes the child node indicated by <code>oldChild</code> from the list 
-	 * of children, and returns it.
-	 * @param oldChild The node being removed.
-	 * @return The node removed.
-	 * @exception DOMException
-	 *   NO_MODIFICATION_ALLOWED_ERR: Raised if this node is readonly.
-	 *   <br>NOT_FOUND_ERR: Raised if <code>oldChild</code> is not a child of 
-	 *   this node.
-	 */
-	virtual DOM_Node
-	removeChild(const DOM_Node&		oldChild) = 0;
-  
-	/**
-	 * Adds the node <code>newChild</code> to the end of the list of children of 
-	 * this node. If the <code>newChild</code> is already in the tree, it is 
-	 * first removed.
-	 * @param newChild The node to add.If it is a  <code>DocumentFragment</code> 
-	 *   object, the entire contents of the document fragment are moved into 
-	 *   the child list of this node
-	 * @return The node added.
-	 * @exception DOMException
-	 *   HIERARCHY_REQUEST_ERR: Raised if this node is of a type that does not 
-	 *   allow children of the type of the <code>newChild</code> node, or if 
-	 *   the node to append is one of this node's ancestors.
-	 *   <br>WRONG_DOCUMENT_ERR: Raised if <code>newChild</code> was created 
-	 *   from a different document than the one that created this node.
-	 *   <br>NO_MODIFICATION_ALLOWED_ERR: Raised if this node is readonly.
-	 */
-	virtual DOM_Node
-	appendChild(const DOM_Node&		newChild) = 0;
-
-	/**
-	 *  This is a convenience method to allow easy determination of whether a 
-	 * node has any children.
-	 * @return  <code>true</code> if the node has any children, 
-	 *   <code>false</code> if the node has no children.
-	 */
-	virtual bool
-	hasChildNodes() const = 0;
-
-	/**
-	 * Returns a duplicate of this node, i.e., serves as a generic copy 
-	 * constructor for nodes. The duplicate node has no parent (
-	 * <code>parentNode</code> returns <code>null</code>.).
-	 * <br>Cloning an <code>Element</code> copies all attributes and their 
-	 * values, including those generated by the  XML processor to represent 
-	 * defaulted attributes, but this method does not copy any text it contains 
-	 * unless it is a deep clone, since the text is contained in a child 
-	 * <code>Text</code> node. Cloning any other type of node simply returns a 
-	 * copy of this node. 
-	 * @param deep If <code>true</code>, recursively clone the subtree under the 
-	 *   specified node; if <code>false</code>, clone only the node itself (and 
-	 *   its attributes, if it is an <code>Element</code>).  
-	 * @return The duplicate node.
-	 */
-	virtual DOM_Node
-	cloneNode(bool	deep) const = 0;
-
-	// these interfaces are inherited from Cloneable...
+	// These interfaces are inherited from Cloneable...
+	
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
 	virtual Cloneable*
 #else
@@ -383,6 +424,9 @@ protected:
 
 
 
+/**
+ * The holder of result tree fragments, derived from Xerces DOM.
+ */
 class XALAN_XPATH_EXPORT DOM_ResultTreeFragBase : public DOM_UnimplementedDocumentFragment
 {
 public:
@@ -415,15 +459,14 @@ public:
 	}
 
 	/**
-	 * Assignment operator.  This overloaded variant is provided for
-	 *	 the sole purpose of setting a DOM_Node reference variable to
-	 *	 zero.	Nulling out a reference variable in this way will decrement
-	 *	 the reference count on the underlying Node object that the variable
-	 *	 formerly referenced.	This effect is normally obtained when reference
-	 *	 variable goes out of scope, but zeroing them can be useful for
-	 *	 global instances, or for local instances that will remain in scope
-	 *	 for an extended time,	when the storage belonging to the underlying
-	 *	 node needs to be reclaimed.
+	 * Assignment operator.  This overloaded variant is provided for the sole
+	 * purpose of setting a DOM_Node reference variable to zero.	Nulling out
+	 * a reference variable in this way will decrement the reference count on
+	 * the underlying Node object that the variable formerly referenced.	This
+	 * effect is normally obtained when reference variable goes out of scope,
+	 * but zeroing them can be useful for global instances, or for local
+	 * instances that will remain in scope for an extended time,	when the
+	 * storage belonging to the underlying node needs to be reclaimed.
 	 *
 	 * @param val.	Only a value of 0, or null, is allowed.
 	 */

@@ -83,6 +83,13 @@ class XALAN_XPATH_EXPORT ElementPrefixResolverProxy : public PrefixResolver
 {
 public:
 
+	/**
+	 * Construct an instance of an element prefix resolver proxy
+	 * 
+	 * @param namespaceContext context object for namespace resolution
+	 * @param EnvSupport       XPath environment support class instance
+	 * @param support          XPath support class instance
+	 */
 	ElementPrefixResolverProxy(
 			const DOM_Element&		namespaceContext,
 			const XPathEnvSupport&	envSupport,
@@ -90,6 +97,8 @@ public:
 
 	virtual
 	~ElementPrefixResolverProxy();
+
+	// These methods are inherited from PrefixResolver ...
 
 	virtual DOMString
 	getNamespaceForPrefix(const DOMString&	prefix) const;

@@ -78,6 +78,12 @@ class XALAN_XPATH_EXPORT XPathException : public XSLException
 {
 public:
 
+	/**
+	 * Construct an XPath exeption object.
+	 * 
+	 * @param message message explaining the problem. 
+	 * @param styleNode style tree node where the problem occurred
+	 */
 	explicit
 	XPathException(
 			const DOMString&	message = DOMString(),

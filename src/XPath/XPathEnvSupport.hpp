@@ -100,18 +100,19 @@ public:
 	virtual
 	~XPathEnvSupport();
 
-	// These interfaces are inherited from Resettable...
-
-	/**
-	 * Reset the instance.
-	 */
-	virtual void
-	reset() = 0;
-
-	// These interfaces are new to XPathEnvSupport...
-
 	/**
 	 * Given a valid element key, return the corresponding node list.
+	 *
+	 * @param doc              source document
+	 * @param name             name of the key, which must match the 'name'
+	 *                         attribute on xsl:key
+	 * @param ref              value that must match the value found by the
+	 *                         'match' attribute on xsl:key
+	 * @param nscontext        context node for namespace resolution
+	 * @param executionContext current execution context
+	 * @return if the name was not declared with xsl:key, this will return
+	 *         null, if the identifier is not found, it will return an empty
+	 *         node set, otherwise it will return a nodeset of nodes.
 	 */
 	virtual const NodeRefListBase*
 	getNodeSetByKey(
@@ -123,6 +124,17 @@ public:
 
 	/**
 	 * Given a valid element key, return the corresponding node list.
+	 *
+	 * @param doc              source document
+	 * @param name             name of the key, which must match the 'name'
+	 *                         attribute on xsl:key
+	 * @param ref              value that must match the value found by the
+	 *                         'match' attribute on xsl:key
+	 * @param resolver         resolver for namespace resolution
+	 * @param executionContext current execution context
+	 * @return if the name was not declared with xsl:key, this will return
+	 *         null, if the identifier is not found, it will return an empty
+	 *         node set, otherwise it will return a nodeset of nodes.
 	 */
 	virtual const NodeRefListBase*
 	getNodeSetByKey(
@@ -134,7 +146,10 @@ public:
 
 	/**
 	 * Given a name, locate a variable in the current context, and return 
-	 * the Object.
+	 * a pointer to the object.
+	 *
+	 * @param theName name of variable
+	 * @return pointer to an XObject if the variable was found, 0 if it was not
 	 */
 	virtual XObject*
 	getVariable(
@@ -143,6 +158,10 @@ public:
 
 	/**
 	 * Provides support for XML parsing service.
+	 *
+	 * @param urlString location of the XML
+	 * @param base base location for URI
+	 * @return parsed document
 	 */
 	virtual DOM_Document
 	parseXML(
@@ -151,12 +170,18 @@ public:
 
 	/**
 	 * Get the source document for the given URI.
+	 *
+	 * @param theURI document URI
+	 * @return source document
 	 */
 	virtual DOM_Document
 	getSourceDocument(const DOMString&	theURI) const = 0;
 
 	/**
-	 * Associate a document with a given URI
+	 * Associate a document with a given URI.
+	 *
+	 * @param theURI      document URI
+	 * @param theDocument source document
 	 */
 	virtual void
 	setSourceDocument(
@@ -164,21 +189,29 @@ public:
 			const DOM_Document&		theDocument) = 0;
 
 	/**
-	 * Given a DOM Document, tell what URI was used to parse it.
-	 * Needed for relative resolution.
+	 * Given a DOM Document, tell what URI was used to parse it. Needed for
+	 * relative resolution.
+	 *
+	 * @param owner source document
+	 * @return document URI
 	 */
 	virtual DOMString
 	findURIFromDoc(const DOM_Document&	owner) const = 0;
 
 	/**
-	 * Get a DOM document, primarily for creating result 
-	 * tree fragments.
+	 * Get a DOM document, primarily for creating result tree fragments.
+	 *
+	 * @return DOM document
 	 */
 	virtual DOM_Document
 	getDOMFactory() const = 0;
 
 	/**
-	 * Execute the function-available() function.
+	 * Determine if an external function is available.
+	 *
+	 * @param theNamespace  namespace for function
+	 * @param extensionName name of extension function
+	 * @return whether the given function is available or not
 	 */
 	virtual bool
 	functionAvailable(
@@ -187,6 +220,12 @@ public:
 
 	/**
 	 * Handle an extension function.
+	 * 
+	 * @param executionContext  current execution context
+	 * @param theNamespace  namespace of function    
+	 * @param extensionName extension function name
+	 * @param argVec        vector of arguments to function
+	 * @return pointer to XObject result
 	 */
 	virtual XObject*
 	extFunction(
@@ -195,25 +234,50 @@ public:
 			const DOMString&				extensionName, 
 			const std::vector<XObject*>&	argVec) const = 0;
 
+	/**
+	 * Get an XLocator provider keyed by node.  This gets the association
+	 * based on the root of the tree that is the node's parent.
+	 *
+	 * @param node node for locator
+	 * @return pointer to locator
+	 */
 	virtual XLocator*
 	getXLocatorFromNode(const DOM_Node&	node) const = 0;
 
+	/**
+	 * Associate an XLocator provider to a node.  This makes the association
+	 * based on the root of the tree that is the node's parent.
+	 *
+	 * @param node     node for association
+	 * @param xlocator locator to associate with node
+	 */
 	virtual void
 	associateXLocatorToNode(
 			const DOM_Node&		node,
 			XLocator*			xlocator) const = 0;
 
 	/**
-	 * Tells, through the combination of the default-space attribute
-	 * on xsl:stylesheet, xsl:strip-space, xsl:preserve-space, and the
-	 * xml:space attribute, whether or not extra whitespace should be stripped
-	 * from the node.  Literal elements from template elements should
-	 * <em>not</em> be tested with this function.
-	 * @param textNode A text node from the source tree.
-	 * @return true if the text node should be stripped of extra whitespace.
+	 * Tells, through the combination of the default-space attribute on
+	 * xsl:stylesheet, xsl:strip-space, xsl:preserve-space, and the xml:space
+	 * attribute, whether or not extra whitespace should be stripped from the
+	 * node.  Literal elements from template elements should <em>not</em> be
+	 * tested with this function.
+	 *
+	 * @param node text node from the source tree
+	 * @return true if the text node should be stripped of extra whitespace
 	 */
 	virtual bool
 	shouldStripSourceNode(const DOM_Node&	node) const = 0;
+
+	enum eSource { eXMLParser		= 1,
+				   eXSLTProcessor	= 2,
+				   eXPATHParser		= 3,
+				   eXPATHProcessor	= 4,
+				   eDataSource		= 5 };
+
+	enum eClassification { eMessage = 0,
+						   eWarning = 1,
+						   eError = 2 };
 
 	/**
 	 * Function that is called when a problem event occurs.
@@ -237,16 +301,25 @@ public:
 	 *		  continue to process.
 	 */
 
-	enum eSource { eXMLParser		= 1,
-				   eXSLTProcessor	= 2,
-				   eXPATHParser		= 3,
-				   eXPATHProcessor	= 4,
-				   eDataSource		= 5 };
-
-	enum eClassification { eMessage = 0,
-						   eWarning = 1,
-						   eError = 2 };
-
+  /**
+   * Function that is called when a problem event occurs.
+   * 
+	* @param   where 			     either eXMLParser, eXSLTProcessor,
+	*							        eXPATHParser, eXPATHProcessor, or eDataSource.
+	* @param   classification	  either eWarning, or eError
+	* @param   styleNode         style tree node where the problem occurred
+	*                            (may be null)
+	* @param   sourceNode        source tree node where the problem occurred
+	*                            (may be null)
+   * @param   msg               string message explaining the problem.
+   * @param   lineNo            line number where the problem occurred,  
+   *                            if it is known, else zero
+   * @param   charOffset        character offset where the problem,  
+   *                            occurred if it is known, else zero
+   * @return  true if the return is an ERROR, in which case
+   *          exception will be thrown.  Otherwise the processor will 
+   *          continue to process.
+   */
 	virtual bool
 	problem(
 			eSource				where,
@@ -257,6 +330,25 @@ public:
 			int					lineNo,
 			int					charOffset) const = 0;
 
+  /**
+   * Function that is called when a problem event occurs.
+   * 
+	* @param where 			either eXMLParser, eXSLTProcessor,
+	*			 			      eXPATHParser, eXPATHProcessor, or eDataSource.
+	* @param classification	either eWarning, or eError
+	* @param resolver       resolver for namespace resolution
+	* @param styleNode      style tree node where the problem occurred
+	*                       (may be null)
+	* @param sourceNode     source tree node where the problem occurred
+	*                       (may be null)
+   * @param msg            string message explaining the problem.
+   * @param lineNo         line number where the problem occurred,  
+   *                       if it is known, else zero
+   * @param charOffset     character offset where the problem,  
+   *                       occurred if it is known, else zero
+	* @return true if the return is an ERROR, in which case exception will be
+	*         thrown.  Otherwise the processor will continue to process.
+   */
 	virtual bool
 	problem(
 			eSource					where,
@@ -270,7 +362,7 @@ public:
 	/**
 	 * Query the value of the extend support instance.
 	 * 
-	 * @return  A pointer to the  extended support instance.  May be 0.
+	 * @return pointer to the  extended support instance, may be 0
 	 */
 	virtual XPathEnvSupport*
 	GetExtendedEnvSupport() const = 0;
@@ -278,14 +370,19 @@ public:
 	/**
 	 * This call is intended to allow extending via delegation.
 	 * 
-	 * @param   theExtendedSupport 		A pointer to another XPathEnvSupport
-	 *									instance to delegate to.  This may be
-	 *									0.
+	 * @param   theExtendedSupport pointer to another XPathEnvSupport
+	 *									    instance to delegate to, may be 0
 	 * 
-	 * @return  A pointer to the previous extended instance.  May be 0.
+	 * @return  pointer to the previous extended instance, may be 0
 	 */
 	virtual XPathEnvSupport*
 	SetExtendedEnvSupport(XPathEnvSupport*	theExtendedSupport) = 0;
+
+
+	// These interfaces are inherited from Resettable...
+
+	virtual void
+	reset() = 0;
 
 private:
 

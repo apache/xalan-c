@@ -290,7 +290,11 @@ public:
 		return m_columnNumber;
 	}
 
+#if defined(XALAN_NO_NAMESPACES)
+	typedef	vector<NameSpace>		NamespaceVectorType;
+#else
 	typedef	std::vector<NameSpace>		NamespaceVectorType;
+#endif
 
 	/** 
 	 * Get the list of namespaces for this element.

@@ -72,12 +72,14 @@ class XObject;
 
 
 
-// The purpose of this class is to provide a way to get the "preferred" or closest-
-// matching type for XObject-derived classes.  The idea is to pass a reference to
-// an instance of this class to an XObject instance.  It will then call back to the
-// member function that most closely matches its type.  This makes it possible to
-// get preferred typing information without doing RTTI or other such type
-// introspections.
+/**
+ * The purpose of this class is to provide a way to get the "preferred" or
+ * closest matching type for XObject-derived classes.  The idea is to pass a
+ * reference to an instance of this class to an XObject instance.  It will
+ * then call back to the member function that most closely matches its type.
+ * This makes it possible to get preferred typing information without doing
+ * RTTI or other such type introspections.
+ */
 class XALAN_XPATH_EXPORT XObjectTypeCallback
 {
 public:
@@ -87,34 +89,82 @@ public:
 	virtual
 	~XObjectTypeCallback();
 
+	/**
+	 * Call back the XObject with a numeric value.
+	 *
+	 * @param theXObject
+	 * @param theValue
+	 */
 	virtual void
 	Number(const XObject&	theXObject,
 		   double			theValue) = 0;
 
+	/**
+	 * Call back the XObject with a boolean value.
+	 *
+	 * @param theXObject
+	 * @param theValue
+	 */
 	virtual void
 	Boolean(const XObject&	theXObject,
 		    bool			theValue) = 0;
 
+	/**
+	 * Call back the XObject with a string value.
+	 *
+	 * @param theXObject
+	 * @param theValue
+	 */
 	virtual void
 	String(const XObject&		theXObject,
 		   const DOMString&		theValue) = 0;
 
+	/**
+	 * Call back the XObject with a result tree fragment value.
+	 *
+	 * @param theXObject
+	 * @param theValue
+	 */
 	virtual void
 	ResultTreeFragment(const XObject&				theXObject,
 					   const ResultTreeFragBase&	theValue) = 0;
 
+	/**
+	 * Call back the XObject with a result tree fragment value.
+	 *
+	 * @param theXObject
+	 * @param theValue
+	 */
 	virtual void
 	ResultTreeFragment(const XObject&		theXObject,
 					   ResultTreeFragBase&	theValue) = 0;
 
+	/**
+	 * Call back the XObject with a node set value.
+	 *
+	 * @param theXObject
+	 * @param theValue
+	 */
 	virtual void
 	NodeSet(const XObject&			theXObject,
 			const NodeRefListBase&	theValue) = 0;
 
+	/**
+	 * Call back the XObject with an unknown value.
+	 *
+	 * @param theXObject
+	 * @param theValue
+	 */
 	virtual void
 	Unknown(const XObject&		theObject,
 			const DOMString&	theName) = 0;
 
+	/**
+	 * Call back the XObject with a null value.
+	 *
+	 * @param theXObject
+	 * @param theValue
+	 */
 	virtual void
 	Null(const XObject&		theObject) = 0;
 };

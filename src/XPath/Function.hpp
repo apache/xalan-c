@@ -95,13 +95,14 @@ public:
 #endif
 
 	/**
-	 * Execute an XPath function object.  The function must return 
-	 * a valid object.
-	 * @param executionContext The executing context.
-	 * @param context The current context node.
-	 * @param opPos The current op position.
-	 * @param args A vector of pointers to XObject arguments.
-	 * @return A pointer to the result XObject.
+	 * Execute an XPath function object.  The function must return a valid
+	 * object.
+	 *
+	 * @param executionContext executing context
+	 * @param context          current context node
+	 * @param opPos            current op position
+	 * @param args             vector of pointers to XObject arguments
+	 * @return                 pointer to the result XObject
 	 */
 	virtual XObject*
 	execute(
@@ -110,6 +111,11 @@ public:
 			int								opPos,
 			const XObjectArgVectorType&		args) = 0;
 
+	/**
+	 * Create a copy of the function object.
+	 *
+	 * @return pointer to the new object
+	 */
 	virtual Function*
 	clone() const = 0;
 

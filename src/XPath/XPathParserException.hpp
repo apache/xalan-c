@@ -68,10 +68,19 @@
 
 
 
+/**
+ * Exception class thrown when a problem parsing an XPath is encountered
+ */
 class XALAN_XPATH_EXPORT XPathParserException : public XPathException
 {
 public:
 
+	/**
+	 * Construct an XPathParserException object.
+	 * 
+	 * @param message string error message
+	 * @param styleNode The style tree node where the problem occurred
+	 */
 	explicit
 	XPathParserException(
 			const DOMString&	message = DOMString(),

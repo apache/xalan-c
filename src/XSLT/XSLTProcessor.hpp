@@ -301,17 +301,17 @@ public:
 	 * fragment.
 	 *
 	 * @param r result tree fragment to use
-	 * @return XObject instance
+	 * @return pointer to XObject
 	 */
    virtual XObject*
    createXResultTreeFrag(const ResultTreeFragBase&  r) const = 0;
 
 	/**
 	 * Given a name, locate a variable in the current context, and return 
-	 * the object.
+	 * a pointer to the object.
 	 *
 	 * @param theName name of variable
-	 * @return An XObject if the variable was found, 0 if it was not.
+	 * @return pointer to an XObject if the variable was found, 0 if it was not
 	 */
    virtual XObject*
    getVariable(const QName& qname) const = 0;
@@ -373,8 +373,8 @@ public:
 	 * @param resolver         resolver for namespace resolution
 	 * @param executionContext current execution context
 	 * @return if the name was not declared with xsl:key, this will return
-	 * null, if the identifier is not found, it will return an empty node set,
-	 * otherwise it will return a nodeset of nodes.
+	 *         null, if the identifier is not found, it will return an empty
+	 *         node set, otherwise it will return a nodeset of nodes.
 	 */
    virtual const NodeRefListBase*
    getNodeSetByKey(

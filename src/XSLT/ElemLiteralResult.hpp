@@ -128,16 +128,22 @@ private:
 	ElemLiteralResult&
 	operator=(const ElemLiteralResult &);
 
+#if defined(XALAN_NO_NAMESPACES)
+#     define XALAN_STD
+#else
+#     define XALAN_STD std::
+#endif
+	typedef XALAN_STD vector<const AVT*> AVTsVectorType;
+	typedef XALAN_STD vector<DOMString>	ExtensionElementPrefixesVectoryType;
+#undef XALAN_STD	
+
 	/**
 	 * A stack to keep track of the attribute elements.
 	 */
-	typedef	std::vector<const AVT*> AVTsVectorType;
-
 	AVTsVectorType							m_avts;
 
 	DOMString								m_QName;
 
-	typedef std::vector<DOMString>	ExtensionElementPrefixesVectoryType;
 
 	ExtensionElementPrefixesVectoryType		m_extensionElementPrefixes;
 };

@@ -82,6 +82,9 @@
 
 
 
+/**
+ * Exception class thrown when a function table problem is encountered
+ */
 class XALAN_XPATH_EXPORT XPathFunctionTableException : public XPathException
 {
 public:
@@ -91,15 +94,28 @@ public:
 
 protected:
 
+	/**
+	 * Construct an XPathFunctionTableException object
+	 * 
+	 * @param theMessage string error message
+	 */
 	XPathFunctionTableException(const DOMString&	theMessage);
 };
 
 
 
+/**
+ * Exception class thrown when an invalid function is encountered
+ */
 class XALAN_XPATH_EXPORT XPathFunctionTableInvalidFunctionException : public XPathFunctionTableException
 {
 public:
 
+	/**
+	 * Construct an XPathFunctionTableException object
+	 * 
+	 * @param theMessage function name string
+	 */
 	XPathFunctionTableInvalidFunctionException(const DOMString&		theFunctionName); 
 
 	virtual
@@ -112,18 +128,30 @@ private:
 };
 
 
-
+/**
+ * Class defines a table of functions that can be called in XPath expresions.
+ */
 class XALAN_XPATH_EXPORT XPathFunctionTable
 {
 public:
 
+#if defined(XALAN_NO_NAMESPACES)
+	typedef map<DOMString, Function*>			CollectionType;
+#else
 	typedef std::map<DOMString, Function*>			CollectionType;
+#endif
 	typedef MapValueDeleteFunctor<CollectionType>	DeleteFunctorType;
 
 	XPathFunctionTable();
 
 	~XPathFunctionTable();
 
+	/**
+	 * Retrieve the function object for a specified function name.
+	 * 
+	 * @param theFunctionName name of function
+	 * @return function named
+	 */
 	Function&
 	operator[](const DOMString&		theFunctionName) const
 	{
@@ -140,12 +168,24 @@ public:
 		}
 	}
 
+	/**
+	 * Insert a named function into the function table.
+	 * 
+	 * @param theFunctionName name of function
+	 * @param theFunction     function object corresponding to name
+	 */
 	void
 	InstallFunction(
 			const DOMString&	theFunctionName,
 			const Function&		theFunction);
 
 
+	/**
+	 * Whether a named function is in the function table.
+	 * 
+	 * @param theFunctionName name of function
+	 * @return true if function is in table
+	 */
 	bool
 	isInstalledFunction(const DOMString&	theFunctionName) const
 	{
@@ -162,6 +202,11 @@ public:
 #if defined(XALAN_NO_MEMBER_TEMPLATES)
 	typedef vector<DOMString>	InstalledFunctionNameVectorType;
 
+	/**
+	 * Add a list of the names of installed functions to a vector of names.
+	 * 
+	 * @param theVector vector of function name strings added to
+	 */
 	void
 	getInstalledFunctionNames(InstalledFunctionNameVectorType&	theVector) const
 	{
@@ -176,6 +221,11 @@ public:
 		}
 	}
 #else
+	/**
+	 * Add a list of the names of installed functions to a vector of names.
+	 * 
+	 * @param theIterator function table iterator to append names to
+	 */
 	template<class OutputIteratorType>
 	void
 	getInstalledFunctionNames(OutputIteratorType	theIterator) const

@@ -116,20 +116,19 @@ public:
   /**
    * Function that is called when a problem event occurs.
    * 
-   * @param   where             either in XMLPARSER, XSLPROCESSOR, or QUERYENGINE
-   * @param   classification    either MESSAGE, ERROR or WARNING
-	* @param   styleNode         style tree node where the problem occurred
-	*                            (may be null)
-	* @param   sourceNode        source tree node where the problem occurred
-	*                            (may be null)
-   * @param   msg               string message explaining the problem.
-   * @param   lineNo            line number where the problem occurred,  
-   *                            if it is known, else zero
-   * @param   charOffset        character offset where the problem,  
-   *                            occurred if it is known, else zero
-   * @return  true if the return is an ERROR, in which case
-   *          exception will be thrown.  Otherwise the processor will 
-   *          continue to process.
+   * @param   where          either in XMLPARSER, XSLPROCESSOR, or QUERYENGINE
+   * @param   classification either MESSAGE, ERROR or WARNING
+	* @param   styleNode      style tree node where the problem occurred
+	*                         (may be null)
+	* @param   sourceNode     source tree node where the problem occurred
+	*                         (may be null)
+   * @param   msg            string message explaining the problem.
+   * @param   lineNo         line number where the problem occurred,  
+   *                         if it is known, else zero
+   * @param   charOffset     character offset where the problem,  
+   *                         occurred if it is known, else zero
+	* @return  true if the return is an ERROR, in which case exception will be
+	*          thrown.  Otherwise the processor will continue to process.
    */
 	virtual bool
 	problem(

@@ -133,7 +133,12 @@ public:
 
 private:
 
-	std::vector<QName> m_attributeSetsNames;
+#if defined(XALAN_NO_NAMESPACES)
+	typedef vector<QName> QNameVectorType;
+#else
+	typedef std::vector<QName> QNameVectorType;
+#endif
+	QNameVectorType m_attributeSetsNames;
 };
 
 

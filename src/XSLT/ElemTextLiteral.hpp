@@ -147,7 +147,11 @@ private:
 	const bool				m_preserveSpace;
 	const bool				m_disableOutputEscaping;
 
+#if defined(XALAN_NO_NAMESPACES)
+	typedef vector<XMLCh>	XMLChVectorType;
+#else
 	typedef std::vector<XMLCh>	XMLChVectorType;
+#endif
 
 	const XMLChVectorType	m_ch;
 };

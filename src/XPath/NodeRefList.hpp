@@ -75,7 +75,6 @@
 /**
  * Local implementation of NodeRefList.  This class is for internal use only.
  */
-
 class XALAN_XPATH_EXPORT NodeRefList : public NodeRefListBase
 {
 public:
@@ -83,9 +82,19 @@ public:
 	explicit
 	NodeRefList();
 
+	/**
+	 * Construct a node list from another
+	 *
+	 * @param theSource source node list
+	 */
 	explicit
 	NodeRefList(const NodeRefList&	theSource);
 
+	/**
+	 * Construct a node list from another
+	 *
+	 * @param theSource source node list
+	 */
 	explicit
 	NodeRefList(const NodeRefListBase&	theSource);
 
@@ -98,22 +107,11 @@ public:
 	NodeRefList&
 	operator=(const NodeRefList&	theRHS);
 
-	/**
-	 * Returns the <code>index</code>th item in the collection. If 
-	 * <code>index</code> is greater than or equal to the number of nodes in 
-	 * the list, this returns <code>null</code>.
-	 * @param index Index into the collection.
-	 * @return The node at the <code>index</code>th position in the 
-	 *   <code>NodeList</code>, or <code>null</code> if that is not a valid 
-	 *   index.
-	 */
+	// These methods are inherited from NodeRefListBase ...
+
 	virtual DOM_Node
 	item(unsigned int	index) const;
 
-	/**
-	 * The number of nodes in the list. The range of valid child node indices is 
-	 * 0 to <code>length-1</code> inclusive. 
-	 */
 	virtual unsigned int
 	getLength() const;
 

@@ -98,7 +98,14 @@ class ElemNumber: public ElemTemplateElement
 {
 public:
 
-	typedef std::vector<int> IntArrayType;
+#if defined(XALAN_NO_NAMESPACES)
+#     define XALAN_STD
+#else
+#     define XALAN_STD std::
+#endif
+	typedef XALAN_STD vector<int> IntArrayType;
+	typedef XALAN_STD locale LocaleType;
+#undef XALAN_STD	
 
 	/**
 	 * Construct an object corresponding to an "xsl:number" element
@@ -275,7 +282,7 @@ protected:
 	/**
 	 * Get the locale we should be using.
 	 */
-	std::locale
+	LocaleType
 	getLocale(
 			StylesheetExecutionContext&		executionContext,
 			const DOM_Node&					contextNode) const;

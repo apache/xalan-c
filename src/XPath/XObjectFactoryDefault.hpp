@@ -83,10 +83,20 @@ class XPathSupport;
 
 
 
+/**
+ * This class handles the creation of XObjects and manages their lifetime.
+ */
 class XALAN_XPATH_EXPORT XObjectFactoryDefault : public XObjectFactory
 {
 public:
 
+	/**
+	 * Construct a factory for creating XObjects.
+	 * 
+	 * @param constructionContext context for construction of object
+	 * @param theEnvSupport XPath environment support class instance
+	 * @param theSupport XPath support class instance
+	 */
 	XObjectFactoryDefault(
 			XPathEnvSupport&	theEnvSupport,
 			XPathSupport&		theSupport);
@@ -95,23 +105,36 @@ public:
 	~XObjectFactoryDefault();
 
 
-	// Inherited from Factory...
+#if defined(XALAN_NO_NAMESPACES)
+#	define XALAN_STD
+#else
+#	define XALAN_STD std::
+#endif
+
+#if defined(XALAN_HASH_CONTAINERS_AVAILABLE)
+	typedef XALAN_STD hash_set<const FactoryObject*>		CollectionType;
+#elif !defined(XALAN_XTREE_BUG)
+	typedef XALAN_STD slist<const FactoryObject*>		CollectionType;
+#else
+	typedef XALAN_STD vector<const FactoryObject*>		CollectionType;
+#endif
+
+#undef XALAN_STD
 
 	/**
-	 * Reset the factory, deleting all objects that it owns.
+	 * Retrieve the number of instances in existence
+	 * 
+	 * @return number of objects
 	 */
-	virtual void
-	reset();
-
-	/*
-	 * Return an object to the factory.
-	 *
-	 */
-	virtual bool
-	returnObject(const FactoryObject*	theFactoryObject);
+	CollectionType::size_type
+	instanceCount() const
+	{
+		return m_xobjects.size();
+	}
 
 
-	// Inherited from XObjectFactory...
+	// These methods are inherited from XObjectFactory ...
+	
 	virtual XObject*
 	createBoolean(
 			bool	theValue,
@@ -170,20 +193,17 @@ public:
 			const DOM_Node&		value,
 			bool				fOptimize = true);
 
+	
+	// These methods are inherited from Factory ...
+	
+	virtual bool
+	returnObject(const FactoryObject*	theFactoryObject);
 
-#if defined(XALAN_HASH_CONTAINERS_AVAILABLE)
-	typedef std::hash_set<const FactoryObject*>		CollectionType;
-#elif !defined(XALAN_XTREE_BUG)
-	typedef std::slist<const FactoryObject*>		CollectionType;
-#else
-	typedef std::vector<const FactoryObject*>		CollectionType;
-#endif
 
-	CollectionType::size_type
-	instanceCount() const
-	{
-		return m_xobjects.size();
-	}
+	// These methods are inherited from Resettable ...
+	
+	virtual void
+	reset();
 
 private:
 

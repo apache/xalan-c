@@ -114,7 +114,7 @@ public:
 	operator=(const NodeSortKey&	theRHS);
 
 	/**
-	 * Retrieve the selection XPath
+	 * Retrieve the selection XPath.
 	 * 
 	 * @return XPath for selection
 	 */
@@ -125,7 +125,7 @@ public:
 	}
 
 	/**
-	 * Whether to treat values as numbers
+	 * Whether to treat values as numbers.
 	 * 
 	 * @return treat as numeric values if true
 	 */
@@ -136,7 +136,7 @@ public:
 	}
 
 	/**
-	 * Whether to sort in descending order
+	 * Whether to sort in descending order.
 	 * 
 	 * @return sort in descending order if true
 	 */
@@ -147,7 +147,7 @@ public:
 	}
 
 	/**
-	 * Retrieve the resolver for namespaces
+	 * Retrieve the resolver for namespaces.
 	 * 
 	 * @return object for namespace resolution
 	 */

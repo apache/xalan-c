@@ -76,14 +76,16 @@
 
 
 
-// XPath FunctionDefaultStringArgument implementation.
+/**
+ * XPath FunctionDefaultStringArgument implementation. This is a base class
+ * for all string functions which have a default argument.  It is NOT a
+ * concrete class.
+ */
 //
 // These are all inline, even though
 // there are virtual functions, because we expect that they will only be
 // needed by the XPath class.
 //
-// This is a base class for all string functions which have a default
-// argument.  It is _not_ a concrete class.
 class XALAN_XPATH_EXPORT FunctionDefaultStringArgument : public Function
 {
 public:
@@ -91,11 +93,11 @@ public:
 	/**
 	 * Execute an XPath function object.  The function must return 
 	 * a valid object.
-	 * @param path The executing xpath.
-	 * @param context The current context.
-	 * @param opPos The current op position.
-	 * @param args A list of XObject arguments.
-	 * @return A valid XObject.
+	 *
+	 * @param executionContext current context
+	 * @param opPos            current op position
+	 * @param args             list of XObject arguments
+	 * @return valid XObject
 	 */
 	virtual XObject*
 	execute(
@@ -103,6 +105,8 @@ public:
 			const DOM_Node&					context,
 			int								opPos,
 			const XObjectArgVectorType&		args) = 0;
+
+	// These methods are inherited from Function ...
 
 	virtual Function*
 	clone() const = 0;

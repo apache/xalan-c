@@ -86,6 +86,12 @@ public:
 	/**
 	 * Given a string, make an XPath object, in order that a parse doesn't 
 	 * have to be done each time the expression is executed.
+	 *
+	 * @param pathObj        XPath object to be initialized
+	 * @param expression     expression that will be evaluated
+	 * @param resolver       prefix resolver to use
+	 * @param xobjectFactory factory class instance for XObjects
+	 * @param envSupport     XPath environment support class instance
 	 */
 	virtual void
 	initXPath(
@@ -96,7 +102,13 @@ public:
 			const XPathEnvSupport&	envSupport) = 0;
 
 	/**
-	 * Given a string, make an XSLT Match Pattern object.
+	 * Given a string, create an XSLT Match Pattern object.
+	 *
+	 * @param pathObj        XPath object to be initialized
+	 * @param expression     expression that will be evaluated
+	 * @param resolver       prefix resolver to use
+	 * @param xobjectFactory factory class instance for XObjects
+	 * @param envSupport     XPath environment support class instance
 	 */
 	virtual void
 	initMatchPattern(
@@ -107,8 +119,11 @@ public:
 			const XPathEnvSupport&	envSupport) = 0;
 
 	/**
-	 * Given a string, and a reference to a function object, install
-	 * the function with the given name.
+	 * Given a string, and a reference to a function object, install the
+	 * function with the given name.
+	 *
+	 * @param theFunctionName name of function
+	 * @param theFunction     function object corresponding to name
 	 */
 	static void
 	installFunction(

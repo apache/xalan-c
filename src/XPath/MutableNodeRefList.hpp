@@ -72,22 +72,39 @@ class DOM_NodeList;
 
 
 
-/**
- * Local implementation of MutableNodeRefList.  This class is for internal use only.
- */
 class XPathSupport;
 
 
 
+/**
+ * Local implementation of MutableNodeRefList.  This class is for internal use
+ * only.
+ */
 class XALAN_XPATH_EXPORT MutableNodeRefList : public NodeRefList
 {
 public:
 
+	/**
+	 * Construct an empty mutable node list.
+	 * 
+	 * @param theSupport XPath support class instance
+	 */
 	explicit
 	MutableNodeRefList(XPathSupport*	theSupport = 0);
 
+	/**
+	 * Construct a mutable node list from another list.
+	 * 
+	 * @param theSource source list
+	 */
 	MutableNodeRefList(const MutableNodeRefList&	theSource);
 
+	/**
+	 * Construct a mutable node list from another list.
+	 * 
+	 * @param theSource  source list
+	 * @param theSupport XPath support class instance
+	 */
 	explicit
 	MutableNodeRefList(const NodeRefListBase&	theSource,
 					   XPathSupport*			theSupport = 0);
@@ -107,11 +124,19 @@ public:
 	MutableNodeRefList&
 	operator=(const DOM_NodeList&	theRHS);
 
+	/**
+	 * Add a node at to the list.
+	 * 
+	 * @param n node to add
+	 */
 	virtual void
 	addNode(const DOM_Node&		n);
 
 	/**
 	 * Insert a node at a given position.
+	 * 
+	 * @param n   node to insert
+	 * @param pos position of insertion
 	 */
 	virtual void
 	insertNode(
@@ -119,11 +144,18 @@ public:
 			unsigned int		pos);
 
 	/**
-	 * Remove a node.
+	 * Remove a node from the list.
+	 * 
+	 * @param n   node to insert
 	 */
 	virtual void
 	removeNode(const DOM_Node&	n);
 
+	/**
+	 * Remove a node from the list.
+	 * 
+	 * @param pos position of node in list
+	 */
 	virtual void
 	removeNode(unsigned int		pos);
 
@@ -135,44 +167,52 @@ public:
 
 	/**
 	 * Set a item.
+	 * 
+	 * @param pos position of node to modify
+	 * @param n   node to insert, default is empty node
 	 */
 	virtual void
 	setNode(unsigned int		pos,
 			const DOM_Node&		n = DOM_Node());
 
 	/**
-	 * Copy NodeList members into this nodelist, adding in 
-	 * document order.  If a node is null, don't add it.
+	 * Copy NodeList members into this nodelist, adding in document order.  If
+	 * a node is null, don't add it.
+	 * 
+	 * @param nodelist node list to add
 	 */
 	virtual void
 	addNodes(const DOM_NodeList&	nodelist);
 
 	/**
-	 * Copy NodeList members into this nodelist, adding in 
-	 * document order.  If a node is null, don't add it.
+	 * Copy NodeList members into this nodelist, adding in document order.  If
+	 * a node is null, don't add it.
+	 * 
+	 * @param nodelist node list to add
 	 */
 	virtual void
 	addNodes(const NodeRefListBase&		nodelist);
 
 	/**
-	 * Copy NodeList members into this nodelist, adding in 
-	 * document order.
+	 * Copy NodeList members into this nodelist, adding in document order.
+	 * 
+	 * @param nodelist node list to add
 	 */
 	virtual void
 	addNodesInDocOrder(const DOM_NodeList&	nodelist);
   
 	/**
-	 * Copy NodeList members into this nodelist, adding in 
-	 * document order.
+	 * Copy NodeList members into this nodelist, adding in document order.
+	 * 
+	 * @param nodelist node list to add
 	 */
 	virtual void
 	addNodesInDocOrder(const NodeRefListBase&	nodelist);
   
 	/**
-	 * Add the node into a vector of nodes where it should occur in 
-	 * document order.
-	 * @param v Vector of nodes, presumably containing Nodes
-	 * @param obj Node object.
+	 * Add a node into list where it should occur in document order.
+	 *
+	 * @param node node object to add
 	 * @param test true if we should test for doc order
 	 */
 	virtual void

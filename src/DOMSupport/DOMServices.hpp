@@ -111,7 +111,6 @@ public:
 		 * @param node	text node queried
 		 * @return true if white space can be ignored
 		 */
-
 		virtual bool
 		isIgnorableWhitespace(const DOM_Text&	node) const = 0;
 	};
@@ -120,7 +119,7 @@ public:
 	 * Retrieves data for node
 	 * 
 	 * @param node        DOM node whose data is to be returned
-	 * @param theResolver $$$
+	 * @param theResolver prefix resolver to use
 	 * @return a string representation of the node's data
 	 */
 	static DOMString
@@ -138,10 +137,8 @@ public:
 	getLocalNameOfNode(const DOM_Node&		n);
 
 	/**
-	 * I have to write this silly, and expensive function, 
-	 * because the DOM WG decided that attributes don't 
-	 * have parents.  If this function is used with a DOM implementation
-	 * that reuses attribute nodes, this will not work correctly.
+	 * Retrieve the parent of a node. This function has to be implemented,
+	 * because the DOM WG decided that attributes don't have parents.
 	 * 
 	 * @param node child node
 	 * @return parent node

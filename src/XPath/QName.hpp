@@ -100,34 +100,43 @@ class XALAN_XPATH_EXPORT QName
 {
 public:
 
+#if defined(XALAN_NO_NAMESPACES)
+	typedef	vector<NameSpace>                NamespaceVectorType;
+	typedef	vector<NamespaceVectorType>      NamespacesStackType;
+#else
+	typedef	std::vector<NameSpace>           NamespaceVectorType;
+	typedef	std::vector<NamespaceVectorType> NamespacesStackType;
+#endif
+
 	/**
 	 * Construct a QName, with the supplied namespace and local part.
+	 *
+	 * @param theNamespace namespace string
+	 * @param theLocalPart local part string
 	 */
 	QName(
 			const DOMString&	theNamespace = DOMString(),
 			const DOMString&	theLocalPart = DOMString());
 
-#if defined(XALAN_NO_NAMESPACES)
-	typedef	vector<NameSpace>					NamespaceVectorType;
-	typedef	vector<NamespaceVectorType>			NamespacesStackType;
-#else
-	typedef	std::vector<NameSpace>				NamespaceVectorType;
-	typedef	std::vector<NamespaceVectorType>	NamespacesStackType;
-#endif
-
 	/**
-	 * Construct a QName from a string, resolving the prefix 
-	 * using the given namespace stack. The default namespace is 
-	 * not resolved.
+	 * Construct a QName from a string, resolving the prefix using the given
+	 * namespace vector stack. The default namespace is not resolved.
+	 *
+	 * @param qname      QName string
+	 * @param namespaces namespace vector stack to use
 	 */
 	QName(
 			const DOMString&				qname,
 			const NamespacesStackType&	namespaces);
 
 	/**
-	 * Construct a QName from a string, resolving the prefix 
-	 * using the given namespace stack. The default namespace is 
-	 * not resolved.
+	 * Construct a QName from a string, resolving the prefix using the given
+	 * namespace context. The default namespace is not resolved.
+	 *
+	 * @param qname            QName string
+	 * @param namespaceContext context object for namespace resolution
+	 * @param envSupport       XPath environment support class instance
+	 * @param support          XPath support class instance
 	 */
 	QName(
 			const DOMString&		qname,
@@ -136,9 +145,11 @@ public:
 			const XPathSupport&		support);
 
 	/**
-	 * Construct a QName from a string, resolving the prefix 
-	 * using the given prefix resolver. The default namespace is 
-	 * not resolved.
+	 * Construct a QName from a string, resolving the prefix using the given
+	 * prefix resolver. The default namespace is not resolved.
+	 *
+	 * @param qname            QName string
+	 * @param theResolver prefix resolver to use
 	 */
 	QName(
 			const DOMString&		qname,
@@ -146,31 +157,55 @@ public:
 
 	~QName();
 
+	/**
+	 * Retrieve the local part of qualified name.
+	 * 
+	 * @return local part string
+	 */
 	const DOMString&
 	getLocalPart() const
 	{
 		return m_localpart;
 	}
 
+	/**
+	 * Retrieve the namespace of qualified name.
+	 * 
+	 * @return namespace string
+	 */
 	const DOMString&
 	getNamespace() const
 	{
 		return m_namespace;
 	}
 
+	/**
+	 * Whether the qualified name is empty.
+	 * 
+	 * @return true if namespace and local part are both empty
+	 */
 	bool isEmpty() const
 	{
 		return (::isEmpty(m_namespace) && ::isEmpty(m_localpart));
 	}
 
 	/**
-	 * Override equals and agree that we're equal if 
-	 * the passed object is a string and it matches 
-	 * the name of the arg.
+	 * Override equals and agree that we're equal if the passed object is a
+	 * string and it matches the name of the arg.
+	 * 
+	 * @param theRHS namespace to compare
+	 * @return true if namespace and local part are both empty
 	 */
 	bool
 	equals(const QName&		theRHS) const;
 
+	/**
+	 * Override equals and agree that we're equal if the passed object is a
+	 * string and it matches the name of the arg.
+	 * 
+	 * @param theRHS namespace to compare
+	 * @return true if namespace and local part are both empty
+	 */
 	bool
 	operator==(const QName&		theRHS) const
 	{
@@ -178,29 +213,43 @@ public:
 	}
 
 	/**
-	 * Get the namespace from a prefix by searching a vector of namespaces, of
-	 * if reverse is true, search vector from last to first
+	 * Get the namespace from a prefix by searching a vector of namespaces.
+	 *
+	 * @param namespaces vector of namespaces to search
+	 * @param prefix     namespace prefix to find
+	 * @param reverse    true to search vector from last to first, default true
 	 */
 	static DOMString getNamespaceForPrefix(const NamespaceVectorType& namespaces,
 			const DOMString& prefix, bool reverse=true);
 
 	/**
-	 * Get the namespace from a prefix by searching a vector of namespace
-	 * vectors, if reverse is true, search vector from last to first
+	 * Get the namespace from a prefix by searching a stack of namespace
+	 * vectors.
+	 *
+	 * @param nsStack stack of namespace vectors to search
+	 * @param prefix  namespace prefix to find
+	 * @param reverse true to search vector from last to first, default true
 	 */
 	static DOMString getNamespaceForPrefix(const NamespacesStackType& nsStack,
 			const DOMString& prefix, bool reverse=true);
 
 	/**
-	 * Get the prefix from a namespace by searching a vector of namespaces, of
-	 * if reverse is true, search vector from last to first
+	 * Get the prefix for a namespace by searching a vector of namespaces.
+	 *
+	 * @param namespaces vector of namespaces to search
+	 * @param uri        URI string for namespace to find
+	 * @param reverse    true to search vector from last to first, default true
 	 */
 	static DOMString getPrefixForNamespace(const NamespaceVectorType& namespaces,
 			const DOMString& uri, bool reverse=true);
 
 	/**
-	 * Get the prefix from a namespace by searching a vector of namespace
-	 * vectors, if reverse is true, search vector from last to first
+	 * Get the prefix for a namespace by searching a stack of namespace
+	 * vectors.
+	 *
+	 * @param nsStack stack of namespace vectors to search
+	 * @param uri     URI string for namespace to find
+	 * @param reverse true to search vector from last to first, default true
 	 */
 	static DOMString getPrefixForNamespace(const NamespacesStackType& nsStack,
 			const DOMString& uri, bool reverse=true);

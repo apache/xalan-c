@@ -73,9 +73,8 @@
 
 
 /**
- * A representation of a namespace.  One of these will 
- * be pushed on the namespace stack for each
- * element.
+ * A representation of a namespace.  One of these will be pushed on the
+ * namespace stack for each element.
  */
 class XALAN_XPATH_EXPORT NameSpace
 {
@@ -84,6 +83,9 @@ public:
 	/**
 	 * Construct a namespace for placement on the 
 	 * result tree namespace stack.
+	 *
+	 * @param prefix namespace prefix
+	 * @param uri    URI of namespace
 	 */
 	NameSpace(
 			const DOMString&	prefix = DOMString(),
@@ -94,31 +96,55 @@ public:
 	{
 	}
 
+	/**
+	 * Retrieve the prefix for namespace
+	 * 
+	 * @return prefix string
+	 */
 	const DOMString&
 	getPrefix() const
 	{
 		return m_prefix;
 	}
 
+	/**
+	 * Retrieve the URI for namespace
+	 * 
+	 * @return URI string
+	 */
 	const DOMString&
 	getURI() const
 	{
 		return m_uri;
 	}
 
+	/**
+	 * Whether the namespace is a candidate for result namespace.
+	 * 
+	 * @return true if it is a candidate
+	 */
 	bool
 	getResultCandidate() const
 	{
 		return m_resultCandidate;
 	}
 
+	/**
+	 * Set whether the namespace is a candidate for result namespace.
+	 * 
+	 * @param fResultCandidate true to set namespace as candidate
+	 */
 	void
 	setResultCandidate(bool		fResultCandidate)
 	{
 		m_resultCandidate = fResultCandidate;
 	}
 
-	// Required for STL vector
+	/**
+	 * Assignment operator, required for STL vector.
+	 * 
+	 * @param theRHS namespace to assign
+	 */
 	NameSpace& operator=(const NameSpace& theRHS)
 	{
 		if (&theRHS != this)

@@ -77,6 +77,11 @@ class XALAN_XPATH_EXPORT XBooleanStatic : public XBoolean
 {
 public:
 
+	/**
+	 * Construct an XBooleanStatic object from a boolean value
+	 * 
+	 * @param val     boolean value to initialize object
+	 */
 	XBooleanStatic(bool		val);
 
 	XBooleanStatic(const XBooleanStatic&	source);

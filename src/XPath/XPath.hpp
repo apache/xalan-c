@@ -102,64 +102,76 @@ class XPathSupport;
 
 
 /**
- * The XPath class represents the semantic parse tree of the XPath pattern.
- * It is the representation of the grammar which filters out
- * the choice for replacement order of the production rules.
- * In order to conserve memory and reduce object creation, the 
- * tree is represented as an array of integers:
+ * The XPath class represents the semantic parse tree of the XPath pattern. It
+ * is the representation of the grammar which filters out the choice for
+ * replacement order of the production rules. In order to conserve memory and
+ * reduce object creation, the tree is represented as an array of integers:
  *	  [op code][length][...]
- * where strings are represented within the array as 
- * indexes into the token tree.
+ * where strings are represented within the array as indices into the token
+ * tree.
  */
-
 class XALAN_XPATH_EXPORT XPath : public FactoryObject
 {
 public:
 
 #if defined(XALAN_INLINE_INITIALIZATION)
-
 	const char* const	PSEUDONAME_ANY = "*";
 	const char* const	PSEUDONAME_ROOT = "/";
 	const char* const	PSEUDONAME_TEXT = "#text";
 	const char* const	PSEUDONAME_COMMENT = "#comment";
 	const char* const	PSEUDONAME_PI = "#pi";
 	const char* const	PSEUDONAME_OTHER = "*";
-
 #else
-
 	static const char* const	PSEUDONAME_ANY;
 	static const char* const	PSEUDONAME_ROOT;
 	static const char* const	PSEUDONAME_TEXT;
 	static const char* const	PSEUDONAME_COMMENT;
 	static const char* const	PSEUDONAME_PI;
 	static const char* const	PSEUDONAME_OTHER;
-
 #endif
 
+#if defined(XALAN_NO_NAMESPACES)
+#	define XALAN_STD
+#else
+#	define XALAN_STD std::
+#endif
+	typedef XALAN_STD vector<DOMString>	TargetElementStringsVectorType;
+	typedef XALAN_STD vector<XObject*> XObjectPtrVectorType;
+#undef XALAN_STD
+
+
+	/**
+	 * Construct an XPath and optionally a default locator 
+	 * 
+	 * @param createDefaultLocator true to create a default locator object,
+	 *                             default true
+	 */
 	explicit
 	XPath(bool	createDefaultLocator = true);
 
+	/**
+	 * Shrink internal tables.
+	 */
 	virtual void
 	shrink();
 
 	/**
-	 * Given an expression and a context, return the result.
-	 * @param expression The expression.
-	 * @param node The node that "." expresses.
-	 * @param namespaceContext The context in which namespaces in the 
-	 * queries are supposed to be expanded.
-	 * @exception XSLProcessorException thrown if the active ProblemListener and XMLParserLiaison decide 
-	 * the error condition is severe enough to halt processing.
+	 * Execute the XPath from the provided context.
+	 *
+	 * @param executionContext current execution context
+	 * @exception exception
+	 * @return pointer to result XObject
 	 */
 	virtual XObject*
 	execute(XPathExecutionContext&	executionContext) const;
 
 	/**
 	 * Execute the XPath from the provided context.
-	 * @param context The current source tree context node.
-	 * @param opPos The current position in the m_opMap array.
-	 * @param executionContext The current execution context.
-	 * @returns the union of node-set operands.
+	 *
+	 * @param context          current source tree context node
+	 * @param opPos            current position in the m_opMap array
+	 * @param executionContext current execution context
+	 * @return pointer to union of node-set operands
 	 */
 	virtual XObject*
 	execute(
@@ -169,10 +181,11 @@ public:
 
 	/**
 	 * Execute the XPath from the provided context.
-	 * @param context The current source tree context node.
-	 * @param prefixResolver The prefix resolver ti use.
-	 * @param executionContext The current execution context.
-	 * @returns the union of node-set operands.
+	 *
+	 * @param context          current source tree context node
+	 * @param prefixResolver   prefix resolver to use
+	 * @param executionContext current execution context
+	 * @return pointer to union of node-set operands
 	 */
 	virtual XObject*
 	execute(
@@ -182,10 +195,12 @@ public:
 
 	/**
 	 * Execute the XPath from the provided context.
-	 * @param context The current source tree context node.
-	 * @param prefixResolver The prefix resolver ti use.
-	 * @param executionContext The current execution context.
-	 * @returns the union of node-set operands.
+	 *
+	 * @param context          current source tree context node
+	 * @param prefixResolver   prefix resolver to use
+	 * @param contextNodeList  node list for current context
+	 * @param executionContext current execution context
+	 * @return pointer to union of node-set operands
 	 */
 	virtual XObject*
 	execute(
@@ -196,9 +211,11 @@ public:
 
 	/**
 	 * Execute a location path.
-	 * @param context The current source tree context node.
-	 * @param opPos The current position in the m_opMap array.
-	 * @returns a node-set.
+	 *
+	 * @param context          current source tree context node
+	 * @param opPos            current position in the m_opMap array
+	 * @param executionContext current execution context
+	 * @return node-set
 	 */
 	virtual XObject*
 	locationPath(
@@ -206,14 +223,22 @@ public:
 			int						opPos,
 			XPathExecutionContext&	executionContext) const;
 
-	// Get a reference to the current expression.
+	/**
+	 * Retrieve a reference to the current expression.
+	 * 
+	 * @return current expression
+	 */
 	XPathExpression&
 	getExpression()
 	{
 		return m_expression;
 	}
 
-	// Get a reference to the current expression.
+	/**
+	 * Retrieve a reference to the current expression.
+	 * 
+	 * @return current expression
+	 */
 	const XPathExpression&
 	getExpression() const
 	{
@@ -278,9 +303,10 @@ public:
 
 	/**
 	 * Computes the union of its operands which must be node-sets.
-	 * @param context The current source tree context node.
-	 * @param opPos The current position in the m_opMap array.
-	 * @returns the union of node-set operands.
+	 *
+	 * @param context current source tree context node
+	 * @param executionContext current execution context
+	 * @return union of node-set operands
 	 */
 	virtual double
 	getMatchScore(const DOM_Node&			context,
@@ -288,8 +314,15 @@ public:
 
 	/**
 	 * Test a node.  This should be implemented by a derived class.
-	 * The default just returns s_MatchScoreNone.
-	 * @return one of s_MatchScoreNone, s_MatchScoreNodeTest, s_MatchScoreQName
+	 * Returns s_MatchScoreNone by default.
+	 *
+	 * @param context  current source tree context node
+	 * @param opPos    current position in the m_opMap array
+	 * @param argLen   argument length
+	 * @param stepType type of step
+	 * @param executionContext current execution context
+	 * @return      one of s_MatchScoreNone, s_MatchScoreNodeTest,
+	 *              s_MatchScoreQName
 	 */
 	virtual double
 	nodeTest(
@@ -301,9 +334,11 @@ public:
 
 	/**
 	 * Evaluate a predicate.
-	 * @param context The current source tree context node.
-	 * @param opPos The current position in the m_opMap array.
-	 * @returns either a boolean or a number.
+	 *
+	 * @param context          current source tree context node
+	 * @param opPos            current position in the m_opMap array
+	 * @param executionContext current execution context
+	 * @return pointer to either a boolean or a number
 	 */
 	virtual XObject*
 	predicate(
@@ -311,30 +346,45 @@ public:
 			int						opPos,
 			XPathExecutionContext&	executionContext) const;
 
-	typedef std::vector<DOMString>	TargetElementStringsVectorType;
-
+	/**
+	 * Add the strings for the target element to a vector of strings.
+	 * 
+	 * @param targetStrings vector of strings
+	 */
 	virtual void
 	getTargetElementStrings(TargetElementStringsVectorType&		targetStrings) const;
 
 	/**
 	 * Install a built-in function.
-	 * @param funcName The unqualified name of the function.
-	 * @param func An instance of an XPath function object.
-	 * @return Nothing.
+	 *
+	 * @param funcName  unqualified name of the function
+	 * @param func      instance of an XPath function object
 	 */
 	static void
 	installFunction(
 			const DOMString&	funcName,
 			const Function& 	func);
 
+	/**
+	 * Whether the named function is installed in the function table.
+	 * 
+	 * @param name of function
+	 * @return true if the function has been installed
+	 */
 	static bool
 	isInstalledFunction(const DOMString&	theFunctionName)
 	{
 		return s_functions.isInstalledFunction(theFunctionName);
 	}
 
+	// $$$ What's this typedef for?
 	typedef XPathFunctionTable	FunctionTableType;
 
+	/**
+	 * Retrieve the table of installed functions.
+	 * 
+	 * @return function table
+	 */
 	static const FunctionTableType&
 	getFunctionTable()
 	{
@@ -345,12 +395,22 @@ public:
 	typedef XPathFunctionTable::InstalledFunctionNameVectorType
 					InstalledFunctionNameVectorType;
 
+	/**
+	 * Add the names for the installed functions to a vector strings.
+	 * 
+	 * @param theVector added to
+	 */
 	static void
 	getInstalledFunctionNames(InstalledFunctionNameVectorType&	theVector)
 	{
 		s_functions.getInstalledFunctionNames(theVector);
 	}
 #else
+	/**
+	 * Add the names for the installed functions to a vector strings.
+	 * 
+	 * @param theIterator vector added to
+	 */
 	template<class OutputIteratorType>
 	static void
 	getInstalledFunctionNames(OutputIteratorType	theIterator)
@@ -374,7 +434,7 @@ protected:
 	 * Execute from the beginning of the xpath.
 	 * @param context The current source tree context node.
 	 * @param opPos The current position in the m_opMap array.
-	 * @returns The result of the expression.
+	 * @return The result of the expression.
 	 */
 	virtual XObject*
 	xpath(
@@ -386,7 +446,7 @@ protected:
 	 * Computes the union of its operands which must be node-sets.
 	 * @param context The current source tree context node.
 	 * @param opPos The current position in the m_opMap array.
-	 * @returns the match score in the form of an XObject.
+	 * @return the match score in the form of an XObject.
 	 */
 	virtual XObject*
 	matchPattern(
@@ -400,7 +460,7 @@ protected:
 	 * from the derived implementation of locationPath()).
 	 * @param context The current source tree context node.
 	 * @param opPos The current position in the m_opMap array.
-	 * @returns a node-set.
+	 * @return a node-set.
 	 */
 	MutableNodeRefList*
 	step(
@@ -412,7 +472,7 @@ protected:
 	 * OR two expressions and return the boolean result.
 	 * @param context The current source tree context node.
 	 * @param opPos The current position in the m_opMap array.
-	 * @returns XBoolean set to true if the one of the two arguments are true.
+	 * @return XBoolean set to true if the one of the two arguments are true.
 	 */
 	virtual XObject*
 	or(
@@ -424,7 +484,7 @@ protected:
 	 * OR two expressions and return the boolean result.
 	 * @param context The current source tree context node.
 	 * @param opPos The current position in the m_opMap array.
-	 * @returns XBoolean set to true if the two arguments are both true.
+	 * @return XBoolean set to true if the two arguments are both true.
 	 */
 	virtual XObject*
 	and(
@@ -436,7 +496,7 @@ protected:
 	 * Tell if two expressions are functionally not equal.
 	 * @param context The current source tree context node.
 	 * @param opPos The current position in the m_opMap array.
-	 * @returns XBoolean set to true if the two arguments are not equal.
+	 * @return XBoolean set to true if the two arguments are not equal.
 	 */
 	virtual XObject*
 	notequals(
@@ -448,7 +508,7 @@ protected:
 	 * Tell if two expressions are functionally equal.
 	 * @param context The current source tree context node.
 	 * @param opPos The current position in the m_opMap array.
-	 * @returns XBoolean set to true if the two arguments are equal.
+	 * @return XBoolean set to true if the two arguments are equal.
 	 */
 	virtual XObject*
 	equals(
@@ -460,7 +520,7 @@ protected:
 	 * Tell if one argument is less than or equal to the other argument.
 	 * @param context The current source tree context node.
 	 * @param opPos The current position in the m_opMap array.
-	 * @returns XBoolean set to true if arg 1 is less than or equal to arg 2.
+	 * @return XBoolean set to true if arg 1 is less than or equal to arg 2.
 	 */
 	virtual XObject*
 	lte(
@@ -472,7 +532,7 @@ protected:
 	 * Tell if one argument is less than the other argument.
 	 * @param context The current source tree context node.
 	 * @param opPos The current position in the m_opMap array.
-	 * @returns XBoolean set to true if arg 1 is less than arg 2.
+	 * @return XBoolean set to true if arg 1 is less than arg 2.
 	 */
 	virtual XObject*
 	lt(
@@ -484,7 +544,7 @@ protected:
 	 * Tell if one argument is greater than or equal to the other argument.
 	 * @param context The current source tree context node.
 	 * @param opPos The current position in the m_opMap array.
-	 * @returns XBoolean set to true if arg 1 is greater than or equal to arg 2.
+	 * @return XBoolean set to true if arg 1 is greater than or equal to arg 2.
 	 */
 	virtual XObject*
 	gte(
@@ -496,7 +556,7 @@ protected:
 	 * Tell if one argument is greater than the other argument.
 	 * @param context The current source tree context node.
 	 * @param opPos The current position in the m_opMap array.
-	 * @returns XBoolean set to true if arg 1 is greater than arg 2.
+	 * @return XBoolean set to true if arg 1 is greater than arg 2.
 	 */
 	virtual XObject*
 	gt(
@@ -508,7 +568,7 @@ protected:
 	 * Give the sum of two arguments.
 	 * @param context The current source tree context node.
 	 * @param opPos The current position in the m_opMap array.
-	 * @returns sum of arg1 and arg2.
+	 * @return sum of arg1 and arg2.
 	 */
 	virtual XObject*
 	plus(
@@ -520,7 +580,7 @@ protected:
 	 * Give the difference of two arguments.
 	 * @param context The current source tree context node.
 	 * @param opPos The current position in the m_opMap array.
-	 * @returns difference of arg1 and arg2.
+	 * @return difference of arg1 and arg2.
 	 */
 	virtual XObject*
 	minus(
@@ -532,7 +592,7 @@ protected:
 	 * Multiply two arguments.
 	 * @param context The current source tree context node.
 	 * @param opPos The current position in the m_opMap array.
-	 * @returns arg1 * arg2.
+	 * @return arg1 * arg2.
 	 */
 	virtual XObject*
 	mult(
@@ -544,7 +604,7 @@ protected:
 	 * Divide a number.
 	 * @param context The current source tree context node.
 	 * @param opPos The current position in the m_opMap array.
-	 * @returns arg1 / arg2.
+	 * @return arg1 / arg2.
 	 */
 	virtual XObject*
 	div(
@@ -556,7 +616,7 @@ protected:
 	 * Return the remainder from a truncating division.
 	 * @param context The current source tree context node.
 	 * @param opPos The current position in the m_opMap array.
-	 * @returns arg1 mod arg2.
+	 * @return arg1 mod arg2.
 	 */
 	virtual XObject*
 	mod(
@@ -569,7 +629,7 @@ protected:
 	 * (Quo is no longer supported by xpath).
 	 * @param context The current source tree context node.
 	 * @param opPos The current position in the m_opMap array.
-	 * @returns arg1 mod arg2.
+	 * @return arg1 mod arg2.
 	 */
 	virtual XObject*
 	quo(
@@ -581,7 +641,7 @@ protected:
 	 * Return the negation of a number.
 	 * @param context The current source tree context node.
 	 * @param opPos The current position in the m_opMap array.
-	 * @returns -arg.
+	 * @return -arg.
 	 */
 	virtual XObject*
 	neg(
@@ -593,7 +653,7 @@ protected:
 	 * Cast an expression to a string.
 	 * @param context The current source tree context node.
 	 * @param opPos The current position in the m_opMap array.
-	 * @returns arg cast to a string.
+	 * @return arg cast to a string.
 	 */
 	virtual XObject*
 	string(
@@ -605,7 +665,7 @@ protected:
 	 * Cast an expression to a boolean.
 	 * @param context The current source tree context node.
 	 * @param opPos The current position in the m_opMap array.
-	 * @returns arg cast to a boolean.
+	 * @return arg cast to a boolean.
 	 */
 	virtual XObject*
 	boolean(
@@ -617,7 +677,7 @@ protected:
 	 * Cast an expression to a number.
 	 * @param context The current source tree context node.
 	 * @param opPos The current position in the m_opMap array.
-	 * @returns arg cast to a number.
+	 * @return arg cast to a number.
 	 */
 	virtual XObject*
 	number(
@@ -629,7 +689,7 @@ protected:
 	 * Computes the union of its operands which must be node-sets.
 	 * @param context The current source tree context node.
 	 * @param opPos The current position in the m_opMap array.
-	 * @returns the union of node-set operands.
+	 * @return the union of node-set operands.
 	 */
 	virtual XObject*
 	Union(
@@ -641,7 +701,7 @@ protected:
 	 * Get a literal value.
 	 * @param context The current source tree context node.
 	 * @param opPos The current position in the m_opMap array.
-	 * @returns an XObject object.
+	 * @return an XObject object.
 	 */
 	virtual XObject*
 	literal(
@@ -653,7 +713,7 @@ protected:
 	 * Get a literal value.
 	 * @param context The current source tree context node.
 	 * @param opPos The current position in the m_opMap array.
-	 * @returns an XObject object.
+	 * @return an XObject object.
 	 */
 	virtual XObject*
 	variable(
@@ -665,7 +725,7 @@ protected:
 	 * Execute an expression as a group.
 	 * @param context The current source tree context node.
 	 * @param opPos The current position in the m_opMap array.
-	 * @returns arg.
+	 * @return arg.
 	 */
 	virtual XObject*
 	group(
@@ -677,7 +737,7 @@ protected:
 	 * Get a literal value.
 	 * @param context The current source tree context node.
 	 * @param opPos The current position in the m_opMap array.
-	 * @returns an XObject object.
+	 * @return an XObject object.
 	 */
 	virtual XObject*
 	numberlit(
@@ -689,7 +749,7 @@ protected:
 	 * Execute a function argument.
 	 * @param context The current source tree context node.
 	 * @param opPos The current position in the m_opMap array.
-	 * @returns the result of the argument expression.
+	 * @return the result of the argument expression.
 	 */
 	virtual XObject*
 	arg(
@@ -701,7 +761,7 @@ protected:
 	 * Execute a location path.
 	 * @param context The current source tree context node.
 	 * @param opPos The current position in the m_opMap array.
-	 * @returns score in an XNumber, one of MATCH_SCORE_NODETEST, 
+	 * @return score in an XNumber, one of MATCH_SCORE_NODETEST, 
 	 * MATCH_SCORE_NONE, MATCH_SCORE_OTHER, MATCH_SCORE_QNAME.
 	 */
 	virtual XObject*
@@ -728,7 +788,7 @@ protected:
 			int								opPos,
 			const DOMString&				theNamespace,
 			const DOMString&				extensionName, 
-			const std::vector<XObject*>&	argVec,
+			const XObjectPtrVectorType&	argVec,
 			XPathExecutionContext&			executionContext) const;
 
 	/**
@@ -748,7 +808,7 @@ protected:
 			const DOM_Node&					context,
 			int								opPos,
 			int								funcID,
-			const std::vector<XObject*>&	argVec,
+			const XObjectPtrVectorType&	argVec,
 			XPathExecutionContext&			executionContext) const;
 
 #if 0

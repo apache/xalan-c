@@ -85,23 +85,26 @@
 
 
 /**
- * The XPathProcessorImpl class responsibilities include 
- * tokenizing and parsing the XPath expression, and acting 
- * as a general interface to XPaths.
+ * The XPathProcessorImpl class responsibilities include tokenizing and
+ * parsing the XPath expression, and acting as a general interface to XPaths.
  */
 class XALAN_XPATH_EXPORT XPathProcessorImpl : public XPathProcessor
 {
 public:
 
-	typedef std::map<DOMString, int>						KeywordsMapType;
-	typedef std::map<DOMString, XPathExpression::eOpCodes>	FunctionNameMapType;
-	typedef std::map<DOMString, XPathExpression::eOpCodes>	AxisNamesMapType;
-	typedef std::map<DOMString, XPathExpression::eOpCodes>	NodeTypesMapType;
+#if defined(XALAN_NO_NAMESPACES)
+#	define XALAN_STD
+#else
+#	define XALAN_STD std::
+#endif
+	typedef XALAN_STD map<DOMString, int>						KeywordsMapType;
+	typedef XALAN_STD map<DOMString, XPathExpression::eOpCodes>	FunctionNameMapType;
+	typedef XALAN_STD map<DOMString, XPathExpression::eOpCodes>	AxisNamesMapType;
+	typedef XALAN_STD map<DOMString, XPathExpression::eOpCodes>	NodeTypesMapType;
+	typedef XALAN_STD vector<DOMString> DOMStringVectorType;
+#undef XALAN_STD
+	
 
-
-	/**
-	 * The parser constructor.
-	 */
 	explicit
 	XPathProcessorImpl();
 
@@ -111,10 +114,6 @@ public:
 
 	// These are inherited from XPathProcessor...
 
-	/**
-	 * Given a string, make an XPath object, in order that a parse doesn't 
-	 * have to be done each time the expression is executed.
-	 */
 	virtual void
 	initXPath(
 			XPath&					pathObj,
@@ -123,9 +122,6 @@ public:
 			XObjectFactory&			xobjectFactory,
 			const XPathEnvSupport&	envSupport);
 
-	/**
-	 * Given a string, make an XSLT Match Pattern object.
-	 */
 	virtual void
 	initMatchPattern(
 			XPath&					pathObj,
@@ -134,25 +130,24 @@ public:
 			XObjectFactory&			xobjectFactory,
 			const XPathEnvSupport&	envSupport);
 
-	// The rest of these interfaces are new...
-
 private:
 
 	/**
-	 * Walk through the expression and build a token queue, and a map of the top-level 
-	 * elements.
+	 * Walk through the expression and build a token queue, and a map of the
+	 * top-level elements.
+	 *
 	 * @param pat XSLT Expression.
 	 * @param targetStrings Vector to hold Strings, may be null.
 	 */
 	void
 	tokenize(
 			const DOMString&			pat,
-			std::vector<DOMString>*		targetStrings = 0);
+			DOMStringVectorType*		targetStrings = 0);
   
 	/**
-	 * Record the current position on the token queue as long as 
-	 * this is a top-level element.  Must be called before the 
-	 * next token is added to the m_tokenQueue.
+	 * Record the current position on the token queue as long as this is a
+	 * top-level element.  Must be called before the next token is added to the
+	 * m_tokenQueue.
 	 */
 	bool
 	mapPatternElemPos(
@@ -164,14 +159,14 @@ private:
 	 * Record the correct token string in the passed vector.
 	 */
 	void
-	recordTokenString(std::vector<DOMString>&	targetStrings);
+	recordTokenString(DOMStringVectorType&	targetStrings);
 
 	void
 	addToTokenQueue(const DOMString&	s) const;
 
 	/**
-	 * When a seperator token is found, see if there's a element name or 
-	 * the like to map.
+	 * When a separator token is found, see if there's a element name or the
+	 * like to map.
 	 */
 	int
 	mapNSTokens(
@@ -187,10 +182,9 @@ private:
 	getTokenQueuePosFromMap(int		i) const;
 
 	/**
-	 * This will return the index above the passed index that 
-	 * is the target element, i.e. it holds a value >= TARGETEXTRA.
-	 * If there is no next target, it will return -1.
-	 * Pass -1 in to start testing from zero.
+	 * This will return the index above the passed index that is the target
+	 * element, i.e. it holds a value >= TARGETEXTRA. If there is no next
+	 * target, it will return -1. Pass -1 in to start testing from zero.
 	 */
 	int
 	getNextTargetIndexInMap(int		i) const;

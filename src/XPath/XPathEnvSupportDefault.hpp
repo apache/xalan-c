@@ -85,19 +85,8 @@ public:
 	virtual
 	~XPathEnvSupportDefault();
 
-	// These interfaces are inherited from Resettable...
-
-	/**
-	 * Reset the instance.
-	 */
-	virtual void
-	reset();
-
 	// These interfaces are inherited from XPathEnvSupport...
 
-	/**
-	 * Given a valid element key, return the corresponding node list.
-	 */
 	virtual const NodeRefListBase*
 	getNodeSetByKey(
 			const DOM_Node&			doc,
@@ -106,9 +95,6 @@ public:
 			const DOM_Element&		nscontext,
 			XPathExecutionContext&	executionContext) const;
 
-	/**
-	 * Given a valid element key, return the corresponding node list.
-	 */
 	virtual const NodeRefListBase*
 	getNodeSetByKey(
 			const DOM_Node&			doc,
@@ -117,63 +103,36 @@ public:
 			const PrefixResolver&	resolver,
 			XPathExecutionContext&	executionContext) const;
 
-	/**
-	 * Given a name, locate a variable in the current context, and return 
-	 * the Object.
-	 */
 	virtual XObject*
 	getVariable(
 			XObjectFactory&		factory,
 			const QName&		name) const;
 
-	/**
-	 * Provides support for XML parsing service.
-	 */
 	virtual DOM_Document
 	parseXML(
 			const DOMString&	urlString,
 			const DOMString&	base) const;
 
-	/**
-	 * Get the source document for the given URI.
-	 */
 	virtual DOM_Document
 	getSourceDocument(const DOMString&	theURI) const;
 
-	/**
-	 * Associate a document with a given URI
-	 */
 	virtual void
 	setSourceDocument(
 			const DOMString&		theURI,
 			const DOM_Document&		theDocument);
 
-	/**
-	 * Given a DOM Document, tell what URI was used to parse it.
-	 * Needed for relative resolution.
-	 */
 	virtual DOMString
 	findURIFromDoc(const DOM_Document&	owner) const;
 
-	/**
-	 * Get a DOM document, primarily for creating result 
-	 * tree fragments.
-	 */
 	virtual DOM_Document
 	getDOMFactory() const;
 
-	/**
-	 * Execute the function-available() function.
-	 */
 	virtual bool
 	functionAvailable(
 			const DOMString&	theNamespace, 
 			const DOMString&	extensionName) const;
 
 	// $$$ ToDo: How do we implement this?
-	/**
-	 * Handle an extension function.
-	 */
 	virtual XObject*
 	extFunction(
 			XPathExecutionContext&			executionContext,
@@ -189,39 +148,8 @@ public:
 			const DOM_Node&		node,
 			XLocator*			xlocator) const;
 
-	/**
-	 * Tells, through the combination of the default-space attribute
-	 * on xsl:stylesheet, xsl:strip-space, xsl:preserve-space, and the
-	 * xml:space attribute, whether or not extra whitespace should be stripped
-	 * from the node.  Literal elements from template elements should
-	 * <em>not</em> be tested with this function.
-	 * @param textNode A text node from the source tree.
-	 * @return true if the text node should be stripped of extra whitespace.
-	 */
 	virtual bool
 	shouldStripSourceNode(const DOM_Node&	node) const;
-
-	/**
-	 * Function that is called when a problem event occurs.
-	 * 
-	 * @param   where 			Either eXMLParser, eXSLTProcessor,
-	 *							eXPATHParser, eXPATHProcessor, or
-	 *							eDataSource.
-	 * @param   classification	Either eWarning, or eError
-	 * @param   styleNode 		The style tree node where the problem
-	 *							occurred.  May be null.
-	 * @param   sourceNode		The source tree node where the problem	
-	 *							occurred.  May be null.
-	 * @param   msg				A string message explaining the problem.
-	 * @param   lineNo			The line number where the problem occurred,  
-	 *							if it is known. May be zero.
-	 * @param   charOffset		The character offset where the problem,  
-	 *							occurred if it is known. May be zero.
-	 * 
-	 * @return  true if the return is an ERROR, in which case
-	 *		  exception will be thrown.  Otherwise the processor will 
-	 *		  continue to process.
-	 */
 
 	virtual bool
 	problem(
@@ -243,25 +171,16 @@ public:
 			int						lineNo,
 			int						charOffset) const;
 
-	/**
-	 * Query the value of the extend support instance.
-	 * 
-	 * @return  A pointer to the  extended support instance.  May be 0.
-	 */
 	virtual XPathEnvSupport*
 	GetExtendedEnvSupport() const;
 
-	/**
-	 * This call is intended to allow extending via delegation.
-	 * 
-	 * @param   theExtendedSupport 		A pointer to another XPathEnvSupport
-	 *									instance to delegate to.  This may be
-	 *									0.
-	 * 
-	 * @return  A pointer to the previous extended instance.  May be 0.
-	 */
 	virtual XPathEnvSupport*
 	SetExtendedEnvSupport(XPathEnvSupport*	theExtendedSupport);
+
+	// These interfaces are inherited from Resettable...
+
+	virtual void
+	reset();
 
 private:
 

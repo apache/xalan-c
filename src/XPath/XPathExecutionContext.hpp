@@ -105,62 +105,53 @@ public:
 	virtual
 	~XPathExecutionContext();
 
-	// These interfaces are inherited from ExecutionContext...
-
 	/**
-	 * Tell the user of an error, and probably throw an 
-	 * exception.
+	 * Retrieve the node currently being executed.
+	 * 
+	 * @return current node
 	 */
-	virtual void
-	error(
-			const DOMString&	msg,
-			const DOM_Node& 	sourceNode = DOM_Node(),
-			const DOM_Node&		styleNode = DOM_Node()) const = 0;
-
-	/**
-	 * Tell the user of an warning, and probably throw an 
-	 * exception.
-	 */
-	virtual void
-	warn(
-			const DOMString&	msg,
-			const DOM_Node& 	sourceNode = DOM_Node(),
-			const DOM_Node&		styleNode = DOM_Node()) const = 0;
-
-	/**
-	 * Output a message.
-	 */
-	virtual void
-	message(
-			const DOMString&	msg,
-			const DOM_Node& 	sourceNode = DOM_Node(),
-			const DOM_Node&		styleNode = DOM_Node()) const = 0;
-
-	// These interfaces are new to XPathExecutionContext...
-
 	virtual DOM_Node
 	getCurrentNode() const = 0;
 
+	/**
+	 * Change the node currently being executed.
+	 * 
+	 * @param theCurrentNode new current node
+	 */
 	virtual void
 	setCurrentNode(const DOM_Node&	theCurrentNode) = 0;
 
+	/**
+	 * Retrieve the factory object for creating XObjects.
+	 * 
+	 * @return factory object instance
+	 */
 	virtual XObjectFactory&
 	getXObjectFactory() const = 0;
 
 	/**
-	 * Returns the namespace of the given node.
+	 * Retrieve namespace corresponding to a DOM node.
+	 * 
+	 * @param n DOM node queried
+	 * @return namespace string corresponding to 'n'
 	 */
 	virtual DOMString
 	getNamespaceOfNode(const DOM_Node&	n) const = 0;
 
 	/**
 	 * Returns the local name of the given node.
+	 * 
+	 * @param n node queried
+	 * @return local name string corresponding to 'n'
 	 */
 	virtual DOMString
 	getLocalNameOfNode(const DOM_Node&	n) const = 0;
 
 	/**
 	 * Returns the parent of the given node.
+	 * 
+	 * @param n DOM node queried
+	 * @return parent node for 'n'
 	 */
 	virtual DOM_Node
 	getParentOfNode(const DOM_Node&	n) const = 0;
@@ -168,28 +159,37 @@ public:
 	/**
 	 * Get node data recursively.
 	 * (Note whitespace issues.)
+	 * 
+	 * @param n DOM node queried
+	 * @return string of data for node 'n'
 	 */
 	virtual DOMString
 	getNodeData(const DOM_Node&	n) const = 0;
 
 	/**
-	 * Get an element from an ID.
+	 * Given a valid element id, return the corresponding element.
+	 *
+	 * @param id  string representing ID
+	 * @param doc document to search
+	 * @return element for ID
 	 */
 	virtual DOM_Element
 	getElementByID(
 			const DOMString&		id,
 			const DOM_Document&		doc) const = 0;
 
-	/*
-	 * Get the current context node list.
-	 *
+	/**
+	 * Retrieve node list for current context.
+	 * 
+	 * @return node list
 	 */
 	virtual const NodeRefListBase&
 	getContextNodeList() const = 0;
 
-	/*
-	 * Set the current context node list.
-	 *
+	/**
+	 * Set node list for current context.
+	 * 
+	 * @param theList new node list
 	 */
 	virtual void	
 	setContextNodeList(const NodeRefListBase&	theList) = 0;
@@ -197,6 +197,7 @@ public:
 	/*
 	 * Get the count of nodes in the current context node list.
 	 *
+	 * @return length of list
 	 */
 	virtual int
 	getContextNodeListLength() const = 0;
@@ -204,12 +205,17 @@ public:
 	/*
 	 * Get the position of the node in the current context node list.
 	 *
+	 * @return position in list
 	 */
 	virtual int
 	getContextNodeListPosition(const DOM_Node&	contextNode) const = 0;
 
 	/**
 	 * Determine if an external function is available.
+	 *
+	 * @param theNamespace  namespace for function
+	 * @param extensionName name of extension function
+	 * @return whether the given function is available or not
 	 */
 	virtual bool
 	functionAvailable(
@@ -218,6 +224,11 @@ public:
 
 	/**
 	 * Handle an extension function.
+	 * 
+	 * @param theNamespace  namespace of function    
+	 * @param extensionName extension function name
+	 * @param argVec        vector of arguments to function
+	 * @return pointer to XObject result
 	 */
 	virtual XObject*
 	extFunction(
@@ -225,9 +236,23 @@ public:
 			const DOMString&				extensionName, 
 			const std::vector<XObject*>&	argVec) = 0;
 
+	/**
+	 * Get an XLocator provider keyed by node.  This gets the association
+	 * based on the root of the tree that is the node's parent.
+	 *
+	 * @param node node for locator
+	 * @return pointer to locator
+	 */
 	virtual XLocator*
 	getXLocatorFromNode(const DOM_Node&		node) const = 0;
 
+	/**
+	 * Associate an XLocator provider to a node.  This makes the association
+	 * based on the root of the tree that is the node's parent.
+	 *
+	 * @param node     node for association
+	 * @param xlocator locator to associate with node
+	 */
 	virtual void
 	associateXLocatorToNode(
 			const DOM_Node&		node,
@@ -235,6 +260,10 @@ public:
 
 	/**
 	 * Provides support for XML parsing service.
+	 *
+	 * @param urlString location of the XML
+	 * @param base base location for URI
+	 * @return parsed document
 	 */
 	virtual DOM_Document
 	parseXML(
@@ -243,16 +272,33 @@ public:
 
 	/**
 	 * Create a MutableNodeRefList with the appropriate context.
+	 *
+	 * @return node list created
 	 */
 	virtual MutableNodeRefList
 	createMutableNodeRefList() const = 0;
 
 	/**
 	 * Tells if namespaces should be supported.  For optimization purposes.
+	 *
+	 * @return true if namespaces supported
 	 */
 	virtual bool
 	getProcessNamespaces() const = 0;
 
+	/**
+	 * Given a valid element key, return the corresponding node list.
+	 *
+	 * @param doc              source document
+	 * @param name             name of the key, which must match the 'name'
+	 *                         attribute on xsl:key
+	 * @param ref              value that must match the value found by the
+	 *                         'match' attribute on xsl:key
+	 * @param nscontext        context node for namespace resolution
+	 * @return if the name was not declared with xsl:key, this will return
+	 *         null, if the identifier is not found, it will return an empty
+	 *         node set, otherwise it will return a nodeset of nodes.
+	 */
 	virtual const NodeRefListBase*
 	getNodeSetByKey(
 			const DOM_Node&		doc,
@@ -260,12 +306,37 @@ public:
 			const DOMString&	ref,
 			const DOM_Element&	nscontext) = 0;
 
+	/**
+	 * Given a valid element key, return the corresponding node list.
+	 *
+	 * @param doc              source document
+	 * @param name             name of the key, which must match the 'name'
+	 *                         attribute on xsl:key
+	 * @param ref              value that must match the value found by the
+	 *                         'match' attribute on xsl:key
+	 * @return if the name was not declared with xsl:key, this will return
+	 *         null, if the identifier is not found, it will return an empty
+	 *         node set, otherwise it will return a nodeset of nodes.
+	 */
 	virtual const NodeRefListBase*
 	getNodeSetByKey(
 			const DOM_Node&			doc,
 			const DOMString&		name,
 			const DOMString&		ref) = 0;
 
+	/**
+	 * Given a valid element key, return the corresponding node list.
+	 *
+	 * @param doc              source document
+	 * @param name             name of the key, which must match the 'name'
+	 *                         attribute on xsl:key
+	 * @param ref              value that must match the value found by the
+	 *                         'match' attribute on xsl:key
+	 * @param resolver         resolver for namespace resolution
+	 * @return if the name was not declared with xsl:key, this will return
+	 *         null, if the identifier is not found, it will return an empty
+	 *         node set, otherwise it will return a nodeset of nodes.
+	 */
 	virtual const NodeRefListBase*
 	getNodeSetByKey(
 			const DOM_Node&			doc,
@@ -275,24 +346,46 @@ public:
 
 	/**
 	 * Given a name, locate a variable in the current context, and return 
-	 * the Object.
+	 * a pointer to the object.
+	 *
+	 * @param theName name of variable
+	 * @return pointer to an XObject if the variable was found, 0 if it was not
 	 */
 	virtual XObject*
 	getVariable(
 			const QName&			name) const = 0;
 
+	/**
+	 * Retrieve the resolver for namespaces.
+	 * 
+	 * @return object for namespace resolution
+	 */
 	virtual const PrefixResolver*
 	getPrefixResolver() const = 0;
 
+	/**
+	 * Change the resolver for namespaces.
+	 * 
+	 * @param thePrefixResolver new object for namespace resolution
+	 */
 	virtual void
 	setPrefixResolver(const PrefixResolver*		thePrefixResolver) = 0;
 
+	/**
+	 * Retrieve the URI corresponding to a namespace prefix
+	 * 
+	 * @param prefix prefix for a namespace
+	 * @return URI corresponding to namespace
+	 */
 	virtual DOMString
 	getNamespaceForPrefix(const DOMString&	prefix) const = 0;
 
 	/**
-	 * Given a DOM Document, tell what URI was used to parse it.
-	 * Needed for relative resolution.
+	 * Given a DOM Document, tell what URI was used to parse it. Needed for
+	 * relative resolution.
+	 *
+	 * @param owner source document
+	 * @return document URI
 	 */
 	virtual DOMString
 	findURIFromDoc(const DOM_Document&	owner) const = 0;
@@ -302,6 +395,10 @@ public:
 	 * entity with the specified name in the same document as the context
 	 * node (see [3.3 Unparsed Entities]). It returns the empty string if
 	 * there is no such entity.
+	 *
+	 * @param theName     name of entity
+	 * @param theDocument document containing entity
+	 * @return URI for the entity
 	 */
 	virtual DOMString
 	getUnparsedEntityURI(
@@ -314,34 +411,84 @@ public:
 	 * xml:space attribute, whether or not extra whitespace should be stripped
 	 * from the node.  Literal elements from template elements should
 	 * <em>not</em> be tested with this function.
-	 * @param textNode A text node from the source tree.
-	 * @return true if the text node should be stripped of extra whitespace.
+	 *
+	 * @param textNode text node from the source tree
+	 * @return true if the text node should be stripped of extra whitespace
 	 */
 	virtual bool
 	shouldStripSourceNode(const DOM_Node&	node) const = 0;
 
 	/**
-	 * These get and set a state to optimize certain XPath operations.
+	 * Tells if FoundIndex should be thrown if index is found. This is an
+	 * optimization for match patterns, and is used internally by the XPath
+	 * engine.
+	 *
+	 * @return true to throw FoundIndex
 	 */
 	virtual bool
 	getThrowFoundIndex() const = 0;
 
+	/**
+	 * Changes whether FoundIndex should be thrown if index is found. This is an
+	 * optimization for match patterns, and is used internally by the XPath
+	 * engine.
+	 *
+	 * @param fThrow true to throw FoundIndex
+	 */
 	virtual void
 	setThrowFoundIndex(bool 	fThrow) = 0;
 
+	/**
+	 * Sets the current match pattern.
+	 *
+	 * @param thePattern new match pattern
+	 */
 	virtual void
 	setCurrentPattern(const DOMString&	thePattern) = 0;
 
+	/**
+	 * Retrieve the current match pattern.
+	 *
+	 * @return current match pattern
+	 */
 	virtual DOMString
 	getCurrentPattern() const = 0;
 
 	virtual DOM_Document
 	getSourceDocument(const DOMString&	theURI) const = 0;
 
+	/**
+	 * Associate a document with a given URI.
+	 *
+	 * @param theURI      document URI
+	 * @param theDocument source document
+	 */
 	virtual void
 	setSourceDocument(
 			const DOMString&		theURI,
 			const DOM_Document&		theDocument) = 0;
+
+
+	// These interfaces are inherited from ExecutionContext...
+
+	virtual void
+	error(
+			const DOMString&	msg,
+			const DOM_Node& 	sourceNode = DOM_Node(),
+			const DOM_Node&		styleNode = DOM_Node()) const = 0;
+
+	virtual void
+	warn(
+			const DOMString&	msg,
+			const DOM_Node& 	sourceNode = DOM_Node(),
+			const DOM_Node&		styleNode = DOM_Node()) const = 0;
+
+	virtual void
+	message(
+			const DOMString&	msg,
+			const DOM_Node& 	sourceNode = DOM_Node(),
+			const DOM_Node&		styleNode = DOM_Node()) const = 0;
+
 };
 
 
