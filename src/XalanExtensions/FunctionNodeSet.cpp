@@ -157,11 +157,11 @@ FunctionNodeSet::execute(
 
 XObjectPtr
 FunctionNodeSet::execute(
-		XPathExecutionContext&	executionContext,
-		XalanNode*				/* context */,			
+		XPathExecutionContext&	/* executionContext */,
+		XalanNode*				/* context */,
 		const XObjectPtr		arg1)
 {
-	assert(arg1.null() == false);	
+	assert(arg1.null() == false);
 
 	if (arg1->getType() != XObject::eTypeResultTreeFrag)
 	{
@@ -178,7 +178,7 @@ FunctionNodeSet::execute(
 XObjectPtr
 FunctionNodeSet::execute(
 			XPathExecutionContext&	executionContext,
-			XalanNode*				context,			
+			XalanNode*				context,
 			const XObjectPtr		/* arg1 */,
 			const XObjectPtr		/* arg2 */)
 {
@@ -192,7 +192,7 @@ FunctionNodeSet::execute(
 XObjectPtr
 FunctionNodeSet::execute(
 			XPathExecutionContext&	executionContext,
-			XalanNode*				context,			
+			XalanNode*				context,
 			const XObjectPtr		/* arg1 */,
 			const XObjectPtr		/* arg2 */,
 			const XObjectPtr		/* arg3 */)
@@ -208,12 +208,19 @@ XObjectPtr
 FunctionNodeSet::execute(
 			XPathExecutionContext&			executionContext,
 			XalanNode*						context,
-			int								/* opPos */,
-			const XObjectArgVectorType&		/* args */)
+			int								opPos,
+			const XObjectArgVectorType&		args)
 {
-	executionContext.error(getError(), context);
+	if (args.size() != 1)
+	{
+		executionContext.error(getError(), context);
 
-	return XObjectPtr(0);
+		return XObjectPtr(0);
+	}
+	else
+	{
+		return execute(executionContext, context, args[0]);
+	}
 }
 
 
@@ -233,6 +240,5 @@ FunctionNodeSet::clone() const
 const XalanDOMString
 FunctionNodeSet::getError() const
 {
-	return XALAN_STATIC_UCODE_STRING(
-		"The node-set() function takes one argument!");
+	return XALAN_STATIC_UCODE_STRING("The node-set() function takes one argument");
 }

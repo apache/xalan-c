@@ -186,11 +186,18 @@ FunctionDistinct::execute(
 			XPathExecutionContext&			executionContext,
 			XalanNode*						context,
 			int								/* opPos */,
-			const XObjectArgVectorType&		/* args */)
+			const XObjectArgVectorType&		args)
 {
-	executionContext.error(getError(), context);
+	if (args.size() != 1)
+	{
+		executionContext.error(getError(), context);
 
-	return XObjectPtr(0);
+		return XObjectPtr(0);
+	}
+	else
+	{
+		return execute(executionContext, context, args[0]);
+	}
 }
 
 
@@ -210,6 +217,5 @@ FunctionDistinct::clone() const
 const XalanDOMString
 FunctionDistinct::getError() const
 {
-	return XALAN_STATIC_UCODE_STRING(
-		"The distinct() function takes one argument!");
+	return XALAN_STATIC_UCODE_STRING("The distinct() function takes one argument");
 }

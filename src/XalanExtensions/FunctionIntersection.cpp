@@ -152,11 +152,18 @@ FunctionIntersection::execute(
 			XPathExecutionContext&			executionContext,
 			XalanNode*						context,
 			int								/* opPos */,
-			const XObjectArgVectorType&		/* args */)
+			const XObjectArgVectorType&		args)
 {
-	executionContext.error(getError(), context);
+	if (args.size() != 2)
+	{
+		executionContext.error(getError(), context);
 
-	return XObjectPtr(0);
+		return XObjectPtr(0);
+	}
+	else
+	{
+		return execute(executionContext, context, args[0], args[1]);
+	}
 }
 
 
@@ -176,6 +183,5 @@ FunctionIntersection::clone() const
 const XalanDOMString
 FunctionIntersection::getError() const
 {
-	return XALAN_STATIC_UCODE_STRING(
-		"The intersection() function takes two arguments!");
+	return XALAN_STATIC_UCODE_STRING("The intersection() function takes two arguments");
 }
