@@ -496,7 +496,8 @@ private:
 			const AttributeListType&	attrs,
 			size_t						theStartIndex,
 			XalanSourceTreeElement*		theOwnerElement,
-			bool						fCreateNamespaces);
+			bool						fCreateNamespaces,
+			const PrefixResolver*		thePrefixResolver = 0);
 
 	XalanSourceTreeElement*
 	createElementNode(
@@ -533,7 +534,8 @@ private:
 			const XalanDOMChar*		theName,
 			const PrefixResolver&	thePrefixResolver,
 			XalanDOMString&			thePrefix,
-			bool					fUseDefault);
+			bool					fUseDefault,
+            const XalanDOMChar**    theLocalName = 0);
 
 	// Not implemented...
 	XalanSourceTreeDocument(const XalanSourceTreeDocument&	theSource);

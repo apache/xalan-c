@@ -643,7 +643,8 @@ XalanSourceTreeDocument::createAttributes(
 			const AttributeListType&	attrs,
 			size_t						theStartIndex,
 			XalanSourceTreeElement*		theOwnerElement,
-			bool						fCreateNamespaces)
+			bool						fCreateNamespaces,
+			const PrefixResolver*		thePrefixResolver)
 {
 	const unsigned int	theSAXAttributeCount = attrs.getLength();
 
@@ -664,14 +665,59 @@ XalanSourceTreeDocument::createAttributes(
 				attrs.getValue(i);
 			assert(theValue != 0);
 
-			theAttributeVector[theStartIndex] =
-				m_attributeAllocator.create(
-					m_namesStringPool.get(theName),
-					m_valuesStringPool.get(theValue),
-					theOwnerElement,
-					m_nextIndexValue++);
+			if (thePrefixResolver == 0)
+			{
+				theAttributeVector[theStartIndex] =
+					m_attributeAllocator.create(
+						m_namesStringPool.get(theName),
+						m_valuesStringPool.get(theValue),
+						theOwnerElement,
+						m_nextIndexValue++);
 
-			assert(theAttributeVector[theStartIndex] != 0);
+				assert(theAttributeVector[theStartIndex] != 0);
+			}
+			else
+			{
+                const XalanDOMChar*    theLocalName = 0;
+
+				const XalanDOMString* const		theNamespace =
+					getNamespaceForPrefix(
+							theName,
+							*thePrefixResolver,
+							m_stringBuffer,
+							false,
+                            &theLocalName);
+
+				if (theNamespace == 0 || length(*theNamespace) == 0)
+				{
+					// the prefix was returned by getNamespaceForPrefix()...
+					assert(length(m_stringBuffer) == 0);
+
+					theAttributeVector[theStartIndex] =
+						m_attributeAllocator.create(
+							m_namesStringPool.get(theName),
+							m_valuesStringPool.get(theValue),
+							theOwnerElement,
+							m_nextIndexValue++);
+
+					assert(theAttributeVector[theStartIndex] != 0);
+				}
+				else
+				{
+                    assert(theLocalName != 0);
+
+					theAttributeVector[theStartIndex] =
+						m_attributeNSAllocator.create(
+								m_namesStringPool.get(theName),
+								m_namesStringPool.get(theLocalName),
+								m_namesStringPool.get(*theNamespace),
+								// This is the prefix...
+								m_namesStringPool.get(m_stringBuffer),
+								m_valuesStringPool.get(theValue),
+								theOwnerElement,
+								m_nextIndexValue++);
+				}
+			}
 
 			++theStartIndex;
 		}
@@ -866,7 +912,8 @@ XalanSourceTreeDocument::createElementNode(
 				attrs,
 				theIndex,
 				theNewElement,
-				true);
+				true,
+                &thePrefixResolver);
 
 	// Now, create the attribute "nodes"...
 	theIndex = createAttributes(
@@ -874,7 +921,8 @@ XalanSourceTreeDocument::createElementNode(
 				attrs,
 				theIndex,
 				theNewElement,
-				false);
+				false,
+                &thePrefixResolver);
 
 	return theNewElement;
 }
@@ -1114,7 +1162,8 @@ XalanSourceTreeDocument::getNamespaceForPrefix(
 			const XalanDOMChar*		theName,
 			const PrefixResolver&	thePrefixResolver,
 			XalanDOMString&			thePrefix,
-			bool					fUseDefault)
+			bool					fUseDefault,
+            const XalanDOMChar**    theLocalName)
 {
 	const XalanDOMString::size_type		theLength = length(theName);
 	const XalanDOMString::size_type		theColonIndex = indexOf(theName, XalanUnicode::charColon);
@@ -1125,11 +1174,21 @@ XalanSourceTreeDocument::getNamespaceForPrefix(
 		assign(thePrefix, theName, theColonIndex);
 		assert(length(thePrefix) != 0);
 
+        if (theLocalName != 0)
+        {
+            *theLocalName = theName + theColonIndex + 1;
+        }
+
 		return thePrefixResolver.getNamespaceForPrefix(thePrefix);
 	}
 	else
 	{
 		clear(thePrefix);
+
+        if (theLocalName != 0)
+        {
+            *theLocalName = theName;
+        }
 
 		if (fUseDefault == false)
 		{
