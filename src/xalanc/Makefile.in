@@ -910,9 +910,18 @@ ${ALL_OBJECTS_DIR}/%.o:$(TESTS_DIR)/Threads/%.cpp
 	$(CC1) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $<
 endif
 
-Harness : lib ${ALL_OBJECTS_DIR}/XMLFileReporter.o ${ALL_OBJECTS_DIR}/FileUtility.o
+Harness : lib ${ALL_OBJECTS_DIR}/XMLFileReporter.o ${ALL_OBJECTS_DIR}/HarnessInit.o  ${ALL_OBJECTS_DIR}/FileUtility.o
 
 ${ALL_OBJECTS_DIR}/FileUtility.o:
+ifeq ($(PLATFORM), OS390)
+${ALL_OBJECTS_DIR}/%.o:$(TESTS_DIR)/Harness/%.cpp
+	$(CC3) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) -I$(TESTS_DIR) $(EXTRA_COMPILE_OPTIONS) -o $@ $<
+else
+${ALL_OBJECTS_DIR}/%.o:$(TESTS_DIR)/Harness/%.cpp
+	$(CC1) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) -I$(TESTS_DIR) $(EXTRA_COMPILE_OPTIONS) -o $@ $<
+endif
+
+${ALL_OBJECTS_DIR}/HarnessInit.o:
 ifeq ($(PLATFORM), OS390)
 ${ALL_OBJECTS_DIR}/%.o:$(TESTS_DIR)/Harness/%.cpp
 	$(CC3) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) -I$(TESTS_DIR) $(EXTRA_COMPILE_OPTIONS) -o $@ $<
@@ -933,7 +942,7 @@ endif
 
 Conf: Harness $(BINTARGETDIR)/Conf
 
-$(BINTARGETDIR)/Conf: ${ALL_OBJECTS_DIR}/conf.o ${ALL_OBJECTS_DIR}/FileUtility.o ${ALL_OBJECTS_DIR}/XMLFileReporter.o 
+$(BINTARGETDIR)/Conf: ${ALL_OBJECTS_DIR}/conf.o ${ALL_OBJECTS_DIR}/HarnessInit.o ${ALL_OBJECTS_DIR}/FileUtility.o ${ALL_OBJECTS_DIR}/XMLFileReporter.o 
 ifeq ($(PLATFORM), OS390)
 	${LINK} $(XSL_BUILD_OPTIONS) ${PLATFORM_LIB_LINK_OPTIONS} ${LIBRARY_SEARCH_PATHS} \
 	${EXTRA_LINK_OPTIONS} $(THISLIB).x $(ALLLIBS) $(CXXFLAGS) $^ -o $@	
