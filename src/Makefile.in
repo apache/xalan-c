@@ -95,6 +95,7 @@ ICUBRIDGE_DIR = ICUBridge
 PLATFORMSUPPORT_DIR = PlatformSupport
 XALANSOURCETREE_DIR = XalanSourceTree
 TESTXPATH_DIR = TestXPath
+XALANEXE_DIR = XalanExe
 TESTXSLT_DIR = TestXSLT
 XMLSUPPORT_DIR = XMLSupport
 XPATH_DIR = XPath
@@ -369,7 +370,7 @@ endif
 
 ALL_OBJECTS = $(addprefix $(ALL_OBJECTS_DIR)/,$(addsuffix .o,$(basename $(notdir $(ALLSOURCE)))))
 
-all:	 lib  testXSLT testXPath
+all:	 lib  testXSLT testXPath XalanExe
 
 prepare:
 	@echo Preparing the directory structure for a build ...
@@ -397,6 +398,22 @@ templates: ${ALL_OBJECTS_DIR}/XalanTemplate.o
 ${ALL_OBJECTS_DIR}/XalanTemplate.o:$(XSLT_DIR)/XalanTemplate.cpp
 	$(CC2) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) -o $@ $<
 endif
+endif
+
+XalanExe: lib  $(BINTARGETDIR)/Xalan
+
+ifeq ($(PLATFORM), OS390)                                                       
+$(BINTARGETDIR)/Xalan: ${ALL_OBJECTS_DIR}/XalanExe.o                          
+	${LINK} $(XSL_BUILD_OPTIONS) ${PLATFORM_LIB_LINK_OPTIONS} ${LIBRARY_SEARCH_PATHS} \
+	${EXTRA_LINK_OPTIONS} $(LIB_DIR)/lib$(PROJECT_NAME)$(VER).x $(ALLLIBS) $^ -o $@	
+${ALL_OBJECTS_DIR}/XalanExe.o: $(XALANEXE_DIR)/XalanExe.cpp                       
+	$(CC3) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $<
+else                                                            
+$(BINTARGETDIR)/Xalan: ${ALL_OBJECTS_DIR}/XalanExe.o
+	${LINK} $(XSL_BUILD_OPTIONS) ${PLATFORM_LIB_LINK_OPTIONS} ${LIBRARY_SEARCH_PATHS} \
+	${EXTRA_LINK_OPTIONS} -L$(LIB_DIR) -l$(PROJECT_NAME)$(VER) $(ALLLIBS) $^ -o $@	
+${ALL_OBJECTS_DIR}/XalanExe.o: $(XALANEXE_DIR)/XalanExe.cpp
+	$(CC1) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $<
 endif
 
 testXSLT: lib  $(BINTARGETDIR)/testXSLT
