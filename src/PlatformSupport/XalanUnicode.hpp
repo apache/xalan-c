@@ -175,6 +175,10 @@ namespace XalanUnicode
 		charLowLine				= 0x5F,
 
 		charLetter_a			= 0x61,
+		charLetter_b			= 0x62,
+		charLetter_c			= 0x63,
+		charLetter_d			= 0x64,
+		charLetter_e			= 0x65,
 		charLetter_f			= 0x66,
 		charLetter_g			= 0x67,
 		charLetter_i			= 0x69,
@@ -296,6 +300,10 @@ namespace XalanUnicode
 	static const XalanDOMChar	charLowLine				= 0x5F;
 
 	static const XalanDOMChar	charLetter_a			= 0x61;
+	static const XalanDOMChar	charLetter_b			= 0x62;
+	static const XalanDOMChar	charLetter_c			= 0x63;
+	static const XalanDOMChar	charLetter_d			= 0x64;
+	static const XalanDOMChar	charLetter_e			= 0x65;
 	static const XalanDOMChar	charLetter_f			= 0x66;
 	static const XalanDOMChar	charLetter_g			= 0x67;
 	static const XalanDOMChar	charLetter_i			= 0x69;
