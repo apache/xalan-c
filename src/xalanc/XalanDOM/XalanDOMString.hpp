@@ -231,7 +231,10 @@ public:
 	{
 		invariants();
 
-		return size_type(m_data.capacity()) - 1;
+        const XalanDOMCharVectorType::size_type     theCapacity =
+                m_data.capacity();
+
+        return theCapacity == 0 ? 0 : size_type(theCapacity - 1);
 	}
 
 	void
