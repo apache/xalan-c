@@ -88,7 +88,6 @@
 #include "TracerEvent.hpp"
 
 
-
 /** 
  * @param processor The XSLT Processor.
  * @param stylesheetTree The owning stylesheet.
@@ -133,6 +132,7 @@ NodeImpl* ElemTemplateElement::getParentNode()
 
 void ElemTemplateElement::setParentNode(NodeImpl* elem)
 {
+	assert(!elem || dynamic_cast<ElemTemplateElement *>(elem));
 	m_parentNode = dynamic_cast<ElemTemplateElement *>(elem);
 }
 
@@ -145,6 +145,7 @@ NodeImpl* ElemTemplateElement::getNextSibling()
 
 void ElemTemplateElement::setNextSibling(NodeImpl* elem)
 {
+	assert(!elem || dynamic_cast<ElemTemplateElement *>(elem));
 	m_nextSibling = dynamic_cast<ElemTemplateElement *>(elem);
 }
 
@@ -204,6 +205,8 @@ ElemTemplateElement::getNamespaceForPrefix(const DOMString& prefix) const
 				 NamespaceVectorType nsVector = elem->getNameSpace();
 				 nameSpace = QName::getNamespaceForPrefix(nsVector, prefix);
 				 if (! isEmpty(nameSpace)) break;
+				 assert(elem);
+				 assert(dynamic_cast<ElemTemplateElement *>(elem->getParentNode()));
 				 elem = dynamic_cast<ElemTemplateElement *>(elem->getParentNode());
 			 }
 		 }
@@ -857,14 +860,14 @@ NodeImpl* ElemTemplateElement::appendChild(NodeImpl* newChild)
 	
 	if(0 == m_firstChild)
 	{
+		assert(dynamic_cast<ElemTemplateElement*>(elem));
 		m_firstChild = dynamic_cast<ElemTemplateElement*>(elem);
 	}
 	else
 	{
+		assert(dynamic_cast<ElemTemplateElement*>(getLastChild()));
 		ElemTemplateElement* last = dynamic_cast<ElemTemplateElement*>(getLastChild());
-
 		assert(last != 0);
-		
 		last->setNextSibling(elem);
 	}
 	
@@ -950,10 +953,13 @@ NodeImpl* ElemTemplateElement::getFirstChild()
 NodeImpl* ElemTemplateElement::getLastChild()
 {
 	ElemTemplateElement* lastChild = 0;
+	assert(!m_firstChild || dynamic_cast<ElemTemplateElement*>(m_firstChild));
 
 	for (ElemTemplateElement* node = m_firstChild; 
 		node != 0; node = node->m_nextSibling) 
 	{
+		assert(dynamic_cast<ElemTemplateElement*>(node));
+
 		lastChild = node;
 	}
 
