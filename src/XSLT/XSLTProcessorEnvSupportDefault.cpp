@@ -336,40 +336,80 @@ XSLTProcessorEnvSupportDefault::shouldStripSourceNode(
 
 bool
 XSLTProcessorEnvSupportDefault::problem(
-			eSource					where,
+			eSource					/* where */,
 			eClassification			classification,
 			const XalanNode*		styleNode,
 			const XalanNode*		sourceNode,
 			const XalanDOMString&	msg,
-			int						lineNo,
-			int						charOffset) const
+			int						/* lineNo */,
+			int						/* charOffset */) const
 {
-	return m_defaultSupport.problem(where,
-									classification,
-									styleNode,
-									sourceNode,
-									msg,
-									lineNo,
-									charOffset);
+	if (classification == XPathEnvSupport::eError)
+	{
+		m_processor->error(
+					msg,
+					styleNode,
+					sourceNode);
+
+		return true;
+	}
+	else if (classification == XPathEnvSupport::eWarning)
+	{
+		m_processor->warn(
+					msg,
+					styleNode,
+					sourceNode);
+
+		return false;
+	}
+	else
+	{
+		m_processor->message(
+					msg,
+					styleNode,
+					sourceNode);
+
+		return false;
+	}
 }
 
 
 
 bool
 XSLTProcessorEnvSupportDefault::problem(
-			eSource					where,
+			eSource					/* where */,
 			eClassification			classification,
-			const PrefixResolver*	resolver,
+			const PrefixResolver*	/* resolver */,
 			const XalanNode*		sourceNode,
 			const XalanDOMString&	msg,
-			int						lineNo,
-			int						charOffset) const
+			int						/* lineNo */,
+			int						/* charOffset */) const
 {
-	return m_defaultSupport.problem(where,
-									classification,
-									resolver,
-									sourceNode,
-									msg,
-									lineNo,
-									charOffset);
+	if (classification == XPathEnvSupport::eError)
+	{
+		m_processor->error(
+					msg,
+					0,
+					sourceNode);
+
+		return true;
+	}
+	else if (classification == XPathEnvSupport::eWarning)
+	{
+		m_processor->warn(
+					msg,
+					0,
+					sourceNode);
+
+		return false;
+	}
+	else
+	{
+		m_processor->message(
+					msg,
+					0,
+					sourceNode);
+
+		return false;
+	}
 }
