@@ -84,7 +84,7 @@ ifndef ICUROOT
 ICUROOT=/usr/local
 endif
 ifndef ICUI18NROOT
-ICUI18NROOT=/usr/local
+ICUI18NROOT=${ICUROOT}
 endif
 endif
 
