@@ -1400,6 +1400,35 @@ TranscodeNumber(
 
 
 
+static const char* const	thePrintfStrings[] =
+{
+	"%.15f",
+	"%.16f",
+	"%.17f",
+	"%.18f",
+	"%.19f",
+	"%.20f",
+	"%.21f",
+	"%.22f",
+	"%.23f",
+	"%.24f",
+	"%.25f",
+	"%.26f",
+	"%.27f",
+	"%.28f",
+	"%.29f",
+	"%.30f",
+	"%.31f",
+	"%.32f",
+	"%.33f",
+	"%.34f",
+	"%.35f",
+	0
+};
+
+
+
+
 XALAN_PLATFORMSUPPORT_EXPORT_FUNCTION(XalanDOMString)&
 PointerToDOMString(
 			const void*			theValue,
@@ -1461,10 +1490,21 @@ DoubleToDOMString(
 
 #if defined(XALAN_STRICT_ANSI_HEADERS)
 		using std::sprintf;
+		using std::atof;
 #endif
 
-		unsigned int	theCharsWritten = sprintf(theBuffer, "%f", theDouble);
-		assert(theCharsWritten != 0);
+		const char* const *		thePrintfString = thePrintfStrings;
+
+		unsigned int	theCharsWritten = 0;
+
+		do
+		{
+			theCharsWritten = sprintf(theBuffer, *thePrintfString, theDouble);
+			assert(theCharsWritten != 0);
+
+			++thePrintfString;
+		}
+		while(atof(theBuffer) != theDouble && *thePrintfString != 0);
 
 		// First, cleanup the output to conform to the XPath standard,
 		// which says no trailing '0's for the decimal portion.
