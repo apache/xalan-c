@@ -869,6 +869,10 @@ doClean:
 ifeq ($(PLATFORM), TRU64)
 	rm -rf $(OUTDIR)/so_locations
 endif
+ifeq ($(PLATFORM), SOLARIS)
+	rm -rf $(OUTDIR)/bin/SunWS_cache
+	rm -rf $(OUTDIR)/lib/SunWS_cache
+endif
 	rm -f $(THISLIB)$(VER)$(SHLIBSUFFIX)
 	rm -f $(THISLIB)$(VER).map1
 	rm -f $(BINTARGETDIR)/testXSLT
