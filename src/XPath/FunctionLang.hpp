@@ -88,11 +88,38 @@ public:
 
 	// These methods are inherited from Function ...
 
+	XObjectPtr
+	execute(
+			XPathExecutionContext&		executionContext,
+			XalanNode*					context);
+
 	virtual XObjectPtr
 	execute(
-			XPathExecutionContext&			executionContext,
-			XalanNode*						context,			
-			const XObjectPtr				arg1);
+			XPathExecutionContext&		executionContext,
+			XalanNode*					context,			
+			const XObjectPtr			arg1);
+
+	XObjectPtr
+	execute(
+			XPathExecutionContext&		executionContext,
+			XalanNode*					context,			
+			const XObjectPtr			/* arg1 */,
+			const XObjectPtr			/* arg2 */);
+
+	XObjectPtr
+	execute(
+			XPathExecutionContext&		executionContext,
+			XalanNode*					context,			
+			const XObjectPtr			/* arg1 */,
+			const XObjectPtr			/* arg2 */,
+			const XObjectPtr			/* arg3 */);
+
+	XObjectPtr
+	execute(
+			XPathExecutionContext&		executionContext,
+			XalanNode*					context,
+			int							/* opPos */,
+			const XObjectArgVectorType&	/* args */);
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
 	virtual Function*

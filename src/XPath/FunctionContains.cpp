@@ -76,6 +76,31 @@ FunctionContains::~FunctionContains()
 
 XObjectPtr
 FunctionContains::execute(
+			XPathExecutionContext&	executionContext,
+			XalanNode*				context)
+{
+	executionContext.error(getError(), context);
+
+	return XObjectPtr(0);
+}
+
+
+
+XObjectPtr
+FunctionContains::execute(
+			XPathExecutionContext&	executionContext,
+			XalanNode*				context,			
+			const XObjectPtr		/* arg1 */)
+{
+	executionContext.error(getError(), context);
+
+	return XObjectPtr(0);
+}
+
+
+
+XObjectPtr
+FunctionContains::execute(
 		XPathExecutionContext&			executionContext,
 		XalanNode*						/* context */,			
 		const XObjectPtr					arg1,
@@ -107,6 +132,35 @@ FunctionContains::execute(
 	}
 
 	return executionContext.getXObjectFactory().createBoolean(fResult);
+}
+
+
+
+XObjectPtr
+FunctionContains::execute(
+			XPathExecutionContext&	executionContext,
+			XalanNode*				context,			
+			const XObjectPtr		/* arg1 */,
+			const XObjectPtr		/* arg2 */,
+			const XObjectPtr		/* arg3 */)
+{
+	executionContext.error(getError(), context);
+
+	return XObjectPtr(0);
+}
+
+
+
+XObjectPtr
+FunctionContains::execute(
+			XPathExecutionContext&			executionContext,
+			XalanNode*						context,
+			int								/* opPos */,
+			const XObjectArgVectorType&		/* args */)
+{
+	executionContext.error(getError(), context);
+
+	return XObjectPtr(0);
 }
 
 

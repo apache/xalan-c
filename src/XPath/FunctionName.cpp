@@ -77,6 +77,27 @@ FunctionName::~FunctionName()
 XObjectPtr
 FunctionName::execute(
 		XPathExecutionContext&			executionContext,
+		XalanNode*						context)
+{
+	XalanDOMString	theData;
+
+	if (context == 0)
+	{
+		executionContext.error("The name() function requires a non-null context node!");
+	}
+	else
+	{	
+		theData = executionContext.getNameOfNode(*context);		
+	}
+
+	return executionContext.getXObjectFactory().createString(theData);	
+}
+
+
+
+XObjectPtr
+FunctionName::execute(
+		XPathExecutionContext&			executionContext,
 		XalanNode*						/* context */,			
 		const XObjectPtr					arg1)
 {
@@ -99,21 +120,43 @@ FunctionName::execute(
 
 XObjectPtr
 FunctionName::execute(
-		XPathExecutionContext&			executionContext,
-		XalanNode*						context)
+			XPathExecutionContext&	executionContext,
+			XalanNode*				context,			
+			const XObjectPtr		/* arg1 */,
+			const XObjectPtr		/* arg2 */)
 {
-	XalanDOMString	theData;
+	executionContext.error(getError(), context);
 
-	if (context == 0)
-	{
-		executionContext.error("The name() function requires a non-null context node!");
-	}
-	else
-	{	
-		theData = executionContext.getNameOfNode(*context);		
-	}
+	return XObjectPtr(0);
+}
 
-	return executionContext.getXObjectFactory().createString(theData);	
+
+
+XObjectPtr
+FunctionName::execute(
+			XPathExecutionContext&	executionContext,
+			XalanNode*				context,			
+			const XObjectPtr		/* arg1 */,
+			const XObjectPtr		/* arg2 */,
+			const XObjectPtr		/* arg3 */)
+{
+	executionContext.error(getError(), context);
+
+	return XObjectPtr(0);
+}
+
+
+
+XObjectPtr
+FunctionName::execute(
+			XPathExecutionContext&			executionContext,
+			XalanNode*						context,
+			int								/* opPos */,
+			const XObjectArgVectorType&		/* args */)
+{
+	executionContext.error(getError(), context);
+
+	return XObjectPtr(0);
 }
 
 

@@ -81,19 +81,6 @@ FunctionStringLength::~FunctionStringLength()
 XObjectPtr
 FunctionStringLength::execute(
 		XPathExecutionContext&	executionContext,
-		XalanNode*				/* context */,			
-		const XObjectPtr		arg1)
-{
-	assert(arg1.null() == false);	
-
-	return executionContext.getXObjectFactory().createNumber(length(arg1->str()));
-}
-
-
-
-XObjectPtr
-FunctionStringLength::execute(
-		XPathExecutionContext&	executionContext,
 		XalanNode*				context)
 {
 	if (context == 0)
@@ -118,6 +105,62 @@ FunctionStringLength::execute(
 
 		return executionContext.getXObjectFactory().createNumber(length(theData));
 	}
+}
+
+
+
+XObjectPtr
+FunctionStringLength::execute(
+		XPathExecutionContext&	executionContext,
+		XalanNode*				/* context */,			
+		const XObjectPtr		arg1)
+{
+	assert(arg1.null() == false);	
+
+	return executionContext.getXObjectFactory().createNumber(length(arg1->str()));
+}
+
+
+
+XObjectPtr
+FunctionStringLength::execute(
+			XPathExecutionContext&	executionContext,
+			XalanNode*				context,			
+			const XObjectPtr		/* arg1 */,
+			const XObjectPtr		/* arg2 */)
+{
+	executionContext.error(getError(), context);
+
+	return XObjectPtr(0);
+}
+
+
+
+XObjectPtr
+FunctionStringLength::execute(
+			XPathExecutionContext&	executionContext,
+			XalanNode*				context,			
+			const XObjectPtr		/* arg1 */,
+			const XObjectPtr		/* arg2 */,
+			const XObjectPtr		/* arg3 */)
+{
+	executionContext.error(getError(), context);
+
+	return XObjectPtr(0);
+}
+
+
+
+XObjectPtr
+FunctionStringLength::execute(
+			XPathExecutionContext&			executionContext,
+			XalanNode*						context,
+			int								/* opPos */,
+			const XObjectArgVectorType&		/* args */)
+{
+	executionContext.error(getError(), context);
+
+	return XObjectPtr(0);
 }
 
 

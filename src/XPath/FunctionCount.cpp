@@ -76,6 +76,18 @@ FunctionCount::~FunctionCount()
 
 XObjectPtr
 FunctionCount::execute(
+			XPathExecutionContext&	executionContext,
+			XalanNode*				context)
+{
+	executionContext.error(getError(), context);
+
+	return XObjectPtr(0);
+}
+
+
+
+XObjectPtr
+FunctionCount::execute(
 		XPathExecutionContext&			executionContext,
 		XalanNode*						/* context */,			
 		const XObjectPtr					arg1)
@@ -85,6 +97,49 @@ FunctionCount::execute(
 	const NodeRefListBase&	theNodeList = arg1->nodeset();
 
 	return executionContext.getXObjectFactory().createNumber(theNodeList.getLength());
+}
+
+
+
+XObjectPtr
+FunctionCount::execute(
+			XPathExecutionContext&	executionContext,
+			XalanNode*				context,			
+			const XObjectPtr		/* arg1 */,
+			const XObjectPtr		/* arg2 */)
+{
+	executionContext.error(getError(), context);
+
+	return XObjectPtr(0);
+}
+
+
+
+XObjectPtr
+FunctionCount::execute(
+			XPathExecutionContext&	executionContext,
+			XalanNode*				context,			
+			const XObjectPtr		/* arg1 */,
+			const XObjectPtr		/* arg2 */,
+			const XObjectPtr		/* arg3 */)
+{
+	executionContext.error(getError(), context);
+
+	return XObjectPtr(0);
+}
+
+
+
+XObjectPtr
+FunctionCount::execute(
+			XPathExecutionContext&			executionContext,
+			XalanNode*						context,
+			int								/* opPos */,
+			const XObjectArgVectorType&		/* args */)
+{
+	executionContext.error(getError(), context);
+
+	return XObjectPtr(0);
 }
 
 

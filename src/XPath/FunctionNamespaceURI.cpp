@@ -77,6 +77,29 @@ FunctionNamespaceURI::~FunctionNamespaceURI()
 XObjectPtr
 FunctionNamespaceURI::execute(
 		XPathExecutionContext&	executionContext,
+		XalanNode*				context)
+{
+	if (context == 0)
+	{
+		executionContext.error("The namespace-uri() function requires a non-null context node!");
+
+		// Dummy return value...
+		return XObjectPtr(0);
+	}
+	else
+	{
+		// The XPath standard says that if there are no arguments,
+		// the argument defaults to a node set with the context node
+		// as the only member.
+		return executionContext.getXObjectFactory().createString(executionContext.getNamespaceOfNode(*context));
+	}
+}
+
+
+
+XObjectPtr
+FunctionNamespaceURI::execute(
+		XPathExecutionContext&	executionContext,
 		XalanNode*				/* context */,			
 		const XObjectPtr		arg1)
 {
@@ -100,23 +123,43 @@ FunctionNamespaceURI::execute(
 
 XObjectPtr
 FunctionNamespaceURI::execute(
-		XPathExecutionContext&	executionContext,
-		XalanNode*				context)
+			XPathExecutionContext&	executionContext,
+			XalanNode*				context,			
+			const XObjectPtr		/* arg1 */,
+			const XObjectPtr		/* arg2 */)
 {
-	if (context == 0)
-	{
-		executionContext.error("The namespace-uri() function requires a non-null context node!");
+	executionContext.error(getError(), context);
 
-		// Dummy return value...
-		return XObjectPtr(0);
-	}
-	else
-	{
-		// The XPath standard says that if there are no arguments,
-		// the argument defaults to a node set with the context node
-		// as the only member.
-		return executionContext.getXObjectFactory().createString(executionContext.getNamespaceOfNode(*context));
-	}
+	return XObjectPtr(0);
+}
+
+
+
+XObjectPtr
+FunctionNamespaceURI::execute(
+			XPathExecutionContext&	executionContext,
+			XalanNode*				context,			
+			const XObjectPtr		/* arg1 */,
+			const XObjectPtr		/* arg2 */,
+			const XObjectPtr		/* arg3 */)
+{
+	executionContext.error(getError(), context);
+
+	return XObjectPtr(0);
+}
+
+
+
+XObjectPtr
+FunctionNamespaceURI::execute(
+			XPathExecutionContext&			executionContext,
+			XalanNode*						context,
+			int								/* opPos */,
+			const XObjectArgVectorType&		/* args */)
+{
+	executionContext.error(getError(), context);
+
+	return XObjectPtr(0);
 }
 
 

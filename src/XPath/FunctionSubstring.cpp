@@ -165,6 +165,45 @@ createEmptyString(XPathExecutionContext&	executionContext)
 
 XObjectPtr
 FunctionSubstring::execute(
+			XPathExecutionContext&	executionContext,
+			XalanNode*				context)
+{
+	executionContext.error(getError(), context);
+
+	return XObjectPtr(0);
+}
+
+
+
+XObjectPtr
+FunctionSubstring::execute(
+			XPathExecutionContext&	executionContext,
+			XalanNode*				context,			
+			const XObjectPtr		/* arg1 */)
+{
+	executionContext.error(getError(), context);
+
+	return XObjectPtr(0);
+}
+
+
+
+XObjectPtr
+FunctionSubstring::execute(
+		XPathExecutionContext&	executionContext,
+		XalanNode*				context,			
+		const XObjectPtr		arg1,
+		const XObjectPtr		arg2)
+{
+	assert(arg1.null() == false && arg2.null() == false);
+
+	return execute(executionContext, context, arg1, arg2, XObjectPtr());
+}
+
+
+
+XObjectPtr
+FunctionSubstring::execute(
 		XPathExecutionContext&	executionContext,
 		XalanNode*				/* context */,			
 		const XObjectPtr		arg1,
@@ -225,14 +264,14 @@ FunctionSubstring::execute(
 
 XObjectPtr
 FunctionSubstring::execute(
-		XPathExecutionContext&	executionContext,
-		XalanNode*				context,			
-		const XObjectPtr		arg1,
-		const XObjectPtr		arg2)
+			XPathExecutionContext&			executionContext,
+			XalanNode*						context,
+			int								/* opPos */,
+			const XObjectArgVectorType&		/* args */)
 {
-	assert(arg1.null() == false && arg2.null() == false);
+	executionContext.error(getError(), context);
 
-	return execute(executionContext, context, arg1, arg2, XObjectPtr());
+	return XObjectPtr(0);
 }
 
 

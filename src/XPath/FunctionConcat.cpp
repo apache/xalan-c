@@ -76,6 +76,31 @@ FunctionConcat::~FunctionConcat()
 
 XObjectPtr
 FunctionConcat::execute(
+			XPathExecutionContext&	executionContext,
+			XalanNode*				context)
+{
+	executionContext.error(getError(), context);
+
+	return XObjectPtr(0);
+}
+
+
+
+XObjectPtr
+FunctionConcat::execute(
+			XPathExecutionContext&	executionContext,
+			XalanNode*				context,			
+			const XObjectPtr		/* arg1 */)
+{
+	executionContext.error(getError(), context);
+
+	return XObjectPtr(0);
+}
+
+
+
+XObjectPtr
+FunctionConcat::execute(
 		XPathExecutionContext&			executionContext,
 		XalanNode*						/* context */,			
 		const XObjectPtr				arg1,

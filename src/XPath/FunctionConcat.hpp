@@ -79,31 +79,42 @@ public:
 	FunctionConcat();
 
 	virtual
-	~FunctionConcat();
+	~FunctionConcat();	
 
 	// These methods are inherited from Function ...
 
-	virtual XObjectPtr
+	XObjectPtr
 	execute(
-			XPathExecutionContext&			executionContext,
-			XalanNode*						/* context */,			
-			const XObjectPtr				arg1,
-			const XObjectPtr				arg2);
+			XPathExecutionContext&		executionContext,
+			XalanNode*					context);
 
 	virtual XObjectPtr
 	execute(
-			XPathExecutionContext&			executionContext,
-			XalanNode*						/* context */,			
-			const XObjectPtr				arg1,
-			const XObjectPtr				arg2,
-			const XObjectPtr				arg3);
+			XPathExecutionContext&		executionContext,
+			XalanNode*					context,			
+			const XObjectPtr			arg1);
 
-	virtual XObjectPtr
+	XObjectPtr
 	execute(
-		XPathExecutionContext&			executionContext,
-		XalanNode*						/* context */,
-		int								/* opPos */,
-		const XObjectArgVectorType&		args);
+			XPathExecutionContext&		executionContext,
+			XalanNode*					context,			
+			const XObjectPtr			/* arg1 */,
+			const XObjectPtr			/* arg2 */);
+
+	XObjectPtr
+	execute(
+			XPathExecutionContext&		executionContext,
+			XalanNode*					context,			
+			const XObjectPtr			/* arg1 */,
+			const XObjectPtr			/* arg2 */,
+			const XObjectPtr			/* arg3 */);
+
+	XObjectPtr
+	execute(
+			XPathExecutionContext&		executionContext,
+			XalanNode*					context,
+			int							/* opPos */,
+			const XObjectArgVectorType&	/* args */);
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
 	virtual Function*

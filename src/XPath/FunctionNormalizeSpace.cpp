@@ -82,19 +82,6 @@ FunctionNormalizeSpace::~FunctionNormalizeSpace()
 XObjectPtr
 FunctionNormalizeSpace::execute(
 		XPathExecutionContext&	executionContext,
-		XalanNode*				/* context */,			
-		const XObjectPtr		arg1)
-{
-	assert(arg1.null() == false);	
-		
-	return normalize(executionContext, arg1);
-}
-
-
-
-XObjectPtr
-FunctionNormalizeSpace::execute(
-		XPathExecutionContext&	executionContext,
 		XalanNode*				context)
 {
 	if (context == 0)
@@ -118,6 +105,62 @@ FunctionNormalizeSpace::execute(
 
 		return normalize(executionContext, theData);
 	}
+}
+
+
+
+XObjectPtr
+FunctionNormalizeSpace::execute(
+		XPathExecutionContext&	executionContext,
+		XalanNode*				/* context */,			
+		const XObjectPtr		arg1)
+{
+	assert(arg1.null() == false);	
+		
+	return normalize(executionContext, arg1);
+}
+
+
+
+XObjectPtr
+FunctionNormalizeSpace::execute(
+			XPathExecutionContext&	executionContext,
+			XalanNode*				context,			
+			const XObjectPtr		/* arg1 */,
+			const XObjectPtr		/* arg2 */)
+{
+	executionContext.error(getError(), context);
+
+	return XObjectPtr(0);
+}
+
+
+
+XObjectPtr
+FunctionNormalizeSpace::execute(
+			XPathExecutionContext&	executionContext,
+			XalanNode*				context,			
+			const XObjectPtr		/* arg1 */,
+			const XObjectPtr		/* arg2 */,
+			const XObjectPtr		/* arg3 */)
+{
+	executionContext.error(getError(), context);
+
+	return XObjectPtr(0);
+}
+
+
+
+XObjectPtr
+FunctionNormalizeSpace::execute(
+			XPathExecutionContext&			executionContext,
+			XalanNode*						context,
+			int								/* opPos */,
+			const XObjectArgVectorType&		/* args */)
+{
+	executionContext.error(getError(), context);
+
+	return XObjectPtr(0);
 }
 
 

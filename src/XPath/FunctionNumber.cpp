@@ -81,28 +81,6 @@ FunctionNumber::~FunctionNumber()
 XObjectPtr
 FunctionNumber::execute(
 		XPathExecutionContext&	executionContext,
-		XalanNode*				/* context */,			
-		const XObjectPtr		arg1)
-{
-	assert(arg1.null() == false);	
-
-	if (arg1->getType() == XObject::eTypeNumber)
-	{
-		// Since XObjects are reference counted, just return the
-		// argument.
-		return arg1;
-	}
-	else
-	{
-		return executionContext.getXObjectFactory().createNumber(arg1->num());
-	}
-}
-
-
-
-XObjectPtr
-FunctionNumber::execute(
-		XPathExecutionContext&	executionContext,
 		XalanNode*				context)
 {
 	if (context == 0)
@@ -127,6 +105,71 @@ FunctionNumber::execute(
 
 		return executionContext.getXObjectFactory().createNumber(DOMStringToDouble(theData));
 	}
+}
+
+
+
+XObjectPtr
+FunctionNumber::execute(
+		XPathExecutionContext&	executionContext,
+		XalanNode*				/* context */,			
+		const XObjectPtr		arg1)
+{
+	assert(arg1.null() == false);	
+
+	if (arg1->getType() == XObject::eTypeNumber)
+	{
+		// Since XObjects are reference counted, just return the
+		// argument.
+		return arg1;
+	}
+	else
+	{
+		return executionContext.getXObjectFactory().createNumber(arg1->num());
+	}
+}
+
+
+
+XObjectPtr
+FunctionNumber::execute(
+			XPathExecutionContext&	executionContext,
+			XalanNode*				context,			
+			const XObjectPtr		/* arg1 */,
+			const XObjectPtr		/* arg2 */)
+{
+	executionContext.error(getError(), context);
+
+	return XObjectPtr(0);
+}
+
+
+
+XObjectPtr
+FunctionNumber::execute(
+			XPathExecutionContext&	executionContext,
+			XalanNode*				context,			
+			const XObjectPtr		/* arg1 */,
+			const XObjectPtr		/* arg2 */,
+			const XObjectPtr		/* arg3 */)
+{
+	executionContext.error(getError(), context);
+
+	return XObjectPtr(0);
+}
+
+
+
+XObjectPtr
+FunctionNumber::execute(
+			XPathExecutionContext&			executionContext,
+			XalanNode*						context,
+			int								/* opPos */,
+			const XObjectArgVectorType&		/* args */)
+{
+	executionContext.error(getError(), context);
+
+	return XObjectPtr(0);
 }
 
 
