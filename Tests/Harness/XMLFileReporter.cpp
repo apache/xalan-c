@@ -628,38 +628,42 @@ XMLFileReporter::startResultsFile()
 bool 
 XMLFileReporter::closeResultsFile()
 {
-    if (isReady())
+    if (isReady() == false)
+	{
+        return false;
+	}
+	else
     {            
 		printToFile("</" + ELEM_RESULTSFILE + ">");
         return true;
     }
-    else
-        return false;
 }
 
 
 bool 
 XMLFileReporter::printToFile(const XalanDOMString&	output) 
 {
-	CharVectorType	theResult(TranscodeToLocalCodePage(output));
-
-    if (isReady())
+    if (isReady() == false)
+	{
+		return false;
+	}
+	else
     {
+		CharVectorType	theResult(TranscodeToLocalCodePage(output));
+
 		if(!theResult.size())
 		{
-			fprintf(m_fileHandle, "Error transcoding text to local codepage");
-			fprintf(m_fileHandle, "\n");
+			fputs("Error transcoding text to local codepage", m_fileHandle);
 		}
 		else 
 		{
-			fprintf(m_fileHandle, c_str(theResult));
-			fprintf(m_fileHandle, "\n");
+			fputs(c_str(theResult), m_fileHandle);
 		}
+
+		fputs("\n", m_fileHandle);
 
         return true;
     }
-    else
-        return false;
 }
 
 

@@ -220,17 +220,14 @@ FileUtility::getDrive()
 XalanDOMString
 FileUtility::getDrive()
 {
-	char temp[2];
+	const char temp[] =
+	{
+		char(_getdrive() + 'A' - 1),
+		':',
+		'\0'
+	};
 	
-	// This query of the base drive is Window's specific. At some point it'll need to be IFDEF'ed for 
-	// other platforms.  It is needed to set up the base-URL for the stylesheet that processes the results
-	// of the conformance tests cconf.xsl found in \\xml-xalan\\c\\Tests\\cconf.xsl
-
-	int drv = _getdrive();
-	sprintf( temp, "%c:", drv + 'A' - 1 );
-
-	return XalanDOMString(temp);
-
+	return XalanDOMString(temp, sizeof(temp) - 1);
 }
 #endif
 
