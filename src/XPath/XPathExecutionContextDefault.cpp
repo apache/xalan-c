@@ -109,7 +109,8 @@ XPathExecutionContextDefault::XPathExecutionContextDefault(
 	m_prefixResolver(thePrefixResolver),
 	m_throwFoundIndex(false),
 	m_nodeListCache(eNodeListCacheListSize),
-	m_stringCache()
+	m_stringCache(),
+	m_cachedPosition()
 {
 }
 
@@ -167,6 +168,8 @@ XPathExecutionContextDefault::reset()
 	m_nodeListCache.reset(),
 
 	m_stringCache.reset();
+
+	m_cachedPosition.clear();
 }
 
 
@@ -221,9 +224,14 @@ XPathExecutionContextDefault::getContextNodeList() const
 
 
 void	
-XPathExecutionContextDefault::setContextNodeList(const NodeRefListBase&	theList)
+XPathExecutionContextDefault::setContextNodeList(const NodeRefListBase&		theList)
 {
-	m_contextNodeList = &theList;
+	if (&theList != m_contextNodeList)
+	{
+		m_contextNodeList = &theList;
+
+		m_cachedPosition.clear();
+	}
 }
 
 
@@ -249,11 +257,27 @@ XPathExecutionContextDefault::getContextNodeListPosition(const XalanNode&	contex
 		throw FoundIndex();
 	}
 
-	// Get the index of the node...
-	const size_type		theIndex = m_contextNodeList->indexOf(&contextNode);
+	if (m_cachedPosition.m_node == &contextNode)
+	{
+		assert((m_cachedPosition.m_index == 0 && m_contextNodeList->indexOf(&contextNode) == NodeRefListBase::npos) ||
+				(m_contextNodeList->indexOf(&contextNode) + 1 == m_cachedPosition.m_index));
+	}
+	else
+	{
+		// Get the index of the node...
+		const size_type		theIndex = m_contextNodeList->indexOf(&contextNode);
 
-	// If not found return 0.  Otherwise, return the index + 1
-	return theIndex == NodeRefListBase::npos ? 0 : theIndex + 1;
+		// If not found, it's 0.  Otherwise, it's the index + 1
+#if defined(XALAN_NO_MUTABLE)
+		(XPathExecutionContextDefault*(this))->m_cachedPosition.m_index = theIndex == NodeRefListBase::npos ? 0 : theIndex + 1;
+		(XPathExecutionContextDefault*(this))->m_cachedPosition.m_node = &contextNode;
+#else
+		m_cachedPosition.m_index = theIndex == NodeRefListBase::npos ? 0 : theIndex + 1;
+		m_cachedPosition.m_node = &contextNode;
+#endif
+	}
+
+	return m_cachedPosition.m_index;
 }
 
 

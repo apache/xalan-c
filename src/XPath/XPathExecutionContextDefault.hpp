@@ -353,23 +353,47 @@ protected:
 
 	enum { eNodeListCacheListSize = 50 };
 
-	XPathEnvSupport*			m_xpathEnvSupport;
+	struct ContextNodeListPositionCache
+	{
+		ContextNodeListPositionCache() :
+			m_node(0),
+			m_index(0)
+		{
+		}
 
-	DOMSupport*					m_domSupport;
+		void
+		clear()
+		{
+			if (m_node != 0)
+			{
+				m_node = 0;
+			}
+		}
 
-	XalanNode*					m_currentNode;
+		const XalanNode*	m_node;
 
-	const NodeRefListBase*		m_contextNodeList;
+		size_type			m_index;
+	};
 
-	const PrefixResolver*		m_prefixResolver;
+	XPathEnvSupport*						m_xpathEnvSupport;
 
-	bool						m_throwFoundIndex;
+	DOMSupport*								m_domSupport;
 
-	XalanDOMString				m_currentPattern;
+	XalanNode*								m_currentNode;
 
-	NodeListCacheType			m_nodeListCache;
+	const NodeRefListBase*					m_contextNodeList;
 
-	XalanDOMStringCache			m_stringCache;
+	const PrefixResolver*					m_prefixResolver;
+
+	bool									m_throwFoundIndex;
+
+	XalanDOMString							m_currentPattern;
+
+	NodeListCacheType						m_nodeListCache;
+
+	XalanDOMStringCache						m_stringCache;
+
+	mutable ContextNodeListPositionCache	m_cachedPosition;
 
 	static const NodeRefList	s_dummyList;
 };
