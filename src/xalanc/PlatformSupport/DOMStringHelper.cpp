@@ -348,7 +348,7 @@ OutputString(
 {
 	if (theString.empty() == false)
 	{
-		theStream << c_str(theString);
+		theStream.write(&*theString.begin(), theString.size());
 	}
 }
 
@@ -371,7 +371,11 @@ OutputString(
 			ostream&				theStream,
 			const XalanDOMChar*		theString)
 {
-	OutputString(theStream, TranscodeToLocalCodePage(theString));
+    CharVectorType  theVector;
+
+    TranscodeToLocalCodePage(theString, theVector);
+
+	OutputString(theStream, theVector);
 }
 
 
