@@ -243,6 +243,10 @@ FormatterToHTML::initAttrCharsMap()
 
 	m_attrCharsMap[XalanUnicode::charLF] = 'S';
 
+	// These should _not_ be escaped...
+	m_attrCharsMap[XalanUnicode::charLessThanSign] = 0;
+	m_attrCharsMap[XalanUnicode::charGreaterThanSign] = 0;
+
 	for(unsigned int i = 160; i < SPECIALSSIZE; i++)
 	{
 		m_attrCharsMap[i] = 'S';
