@@ -114,7 +114,7 @@ TESTS_DIR = ${XALANCROOT}/Tests
 PROJECT_NAME = xalan-c
 LIBNAME = lib${PROJECT_NAME}
 THISLIB = ${LIB_DIR}/${LIBNAME}
-VER = 1_4_0
+VER = 1_3_1
 
 PRODUCTNAME = xalan
 PRODUCTVERSION = ${VER}
@@ -142,21 +142,30 @@ PREFIX = @prefix@
 ifeq ($(PLATFORM), LINUX)
 
   SUPPORTED = TRUE
-  PLATFORM_COMPILE_OPTIONS = -fpic -Wall -D${PLATFORM} -D_REENTRANT
   ALLLIBS = ${LIBS} -L/usr/lib
   SHLIBSUFFIX=.so
 
-  # We need the ICU library if we are using the ICUBridge
-  ifdef XALAN_USE_ICU
-  LD_RPATH_PRE=	-Wl,-rpath,
-  PLATFORM_LIB_LINK_OPTIONS=$(LD_RPATH_PRE)${ICUROOT}/lib 
+  ifeq (${CXX}, icpc)
+
+    PLATFORM_COMPILE_OPTIONS = -w1 -Xa -mp -prec_div -KPIC -D${PLATFORM} -D_REENTRANT
+
+  else
+
+    PLATFORM_COMPILE_OPTIONS = -fPIC -Wall -D${PLATFORM} -D_REENTRANT
+
   endif
 
-  EXTRA_LINK_OPTIONS=-lc
+  # We need the ICU library if we are using the ICUBridge
+  ifdef XALAN_USE_ICU
+    LD_RPATH_PRE= -Wl,-rpath,
+    PLATFORM_LIB_LINK_OPTIONS=$(LD_RPATH_PRE)${ICUROOT}/lib 
+  endif
+
+  EXTRA_LINK_OPTIONS=
   CC1 = $(CXX) $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS)
   CC4 = $(CC) $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS)
-  MAKE_SHARED = ${CXX} $(CXXFLAGS) -D${PLATFORM} -shared -fpic
-  LINK =  g++ -D${PLATFORM} -fpic
+  MAKE_SHARED = ${CXX} $(CXXFLAGS) -D${PLATFORM} -shared -fPIC
+  LINK = $(CXX) -D${PLATFORM} -fpic
 
 endif
 
@@ -323,9 +332,9 @@ endif
 
 # We need the Xerces library
 ifeq ($(PLATFORM), OS390)
-  ALLLIBS += $(XERCESCROOT)/lib/libxerces-c1_7_0.x
+  ALLLIBS += $(XERCESCROOT)/lib/libxerces-c1_6_0.x
 else
-  ALLLIBS += -L$(XERCESCROOT)/lib -lxerces-c1_7_0
+  ALLLIBS += -L$(XERCESCROOT)/lib -lxerces-c1_6_0
 endif
 
 # We need the ICU library if we are using the ICUBridge
