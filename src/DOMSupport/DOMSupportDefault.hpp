@@ -89,11 +89,6 @@ public:
 
 	// These interfaces are inherited from DOMSupport...
 
-	virtual const XalanDOMString*
-	getNamespaceForPrefix(
-			const XalanDOMString&	prefix, 
-			const XalanElement&		namespaceContext) const;
-
 	virtual const XalanDOMString&
 	getUnparsedEntityURI(
 			const XalanDOMString&	theName,

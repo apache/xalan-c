@@ -99,16 +99,6 @@ DOMSupportDefault::reset()
 
 
 
-const XalanDOMString*
-DOMSupportDefault::getNamespaceForPrefix(
-			const XalanDOMString&	prefix, 
-			const XalanElement&		namespaceContext) const
-{
-	return DOMServices::getNamespaceForPrefix(prefix, namespaceContext);
-}
-
-
-
 const XalanDOMString&
 DOMSupportDefault::getUnparsedEntityURI(
 			const XalanDOMString&	theName,
