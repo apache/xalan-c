@@ -100,6 +100,12 @@ public:
 	virtual void
 	reset();
 
+	virtual ExecutionContext*
+	getExecutionContext() const;
+
+	virtual void
+	setExecutionContext(ExecutionContext&	theContext);
+
 	virtual bool
 	supportsSAX() const;
 

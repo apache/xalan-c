@@ -122,6 +122,22 @@ XalanSourceTreeParserLiaison::reset()
 
 
 
+ExecutionContext*
+XalanSourceTreeParserLiaison::getExecutionContext() const
+{
+	return m_xercesParserLiaison.getExecutionContext();
+}
+
+
+
+void
+XalanSourceTreeParserLiaison::setExecutionContext(ExecutionContext&		theContext)
+{
+	m_xercesParserLiaison.setExecutionContext(theContext);
+}
+
+
+
 bool
 XalanSourceTreeParserLiaison::supportsSAX() const
 {
