@@ -1491,22 +1491,6 @@ StylesheetExecutionContextDefault::functionAvailable(
 
 
 
-StylesheetExecutionContextDefault::XObjectArgVectorType&
-StylesheetExecutionContextDefault::pushArgVector()
-{
-	return m_xpathExecutionContextDefault.pushArgVector();
-}
-
-
-
-void
-StylesheetExecutionContextDefault::popArgVector()
-{
-	m_xpathExecutionContextDefault.popArgVector();
-}
-
-
-
 const XObject*
 StylesheetExecutionContextDefault::extFunction(
 			const XalanDOMString&			theNamespace,

@@ -828,8 +828,7 @@ private:
 	// Default vector allocation sizes.
 	enum
 	{
-		eDefaultTargetStringsSize = 5,
-		eDefaultArgVectorSize = 5	// for function call parameters
+		eDefaultTargetStringsSize = 5
 	};
 
 	// Data members...

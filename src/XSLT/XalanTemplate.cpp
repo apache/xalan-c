@@ -176,7 +176,6 @@ static allocator<DOMString> theAllocator;
 static vector<pair<const XalanNode*,NSInfo> > theXalanNodeVector;
 static FormatterToHTML::ElemDesc theElemDesc;
 static FormatterToHTML::ElementFlagsMapType theElementFlagsMapType;
-static XPathExecutionContextDefault::XObjectArgVectorStackType theXObjectArgVectorStackType; 
 static XPathExpression::TokenQueueType theTokenQueueType;
 static set<const XalanNode*,less<const XalanNode*> > theXalanNodeSet;
 static XPathExpression::OpCodeLengthMapType theOpCodeLengthMapType;

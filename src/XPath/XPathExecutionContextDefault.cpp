@@ -95,9 +95,7 @@ XPathExecutionContextDefault::XPathExecutionContextDefault(
 	m_prefixResolver(thePrefixResolver),
 	m_throwFoundIndex(false),
 	m_availableCachedNodeLists(),
-	m_busyCachedNodeLists(),
-	m_argVectorsStack(),
-	m_argVectorsStackPosition(m_argVectorsStack.end())
+	m_busyCachedNodeLists()
 {
 	m_availableCachedNodeLists.reserve(eMutableNodeRefListCacheMax);
 
@@ -121,8 +119,6 @@ XPathExecutionContextDefault::reset()
 	m_xobjectFactory.reset();
 
 	assert(m_busyCachedNodeLists.size() == 0);
-	assert(m_argVectorsStackPosition == m_argVectorsStack.begin() ||
-		   m_argVectorsStack.size() == 0);
 
 #if !defined(XALAN_NO_NAMESPACES)
 	using std::for_each;
@@ -134,10 +130,6 @@ XPathExecutionContextDefault::reset()
 		DeleteFunctor<MutableNodeRefList>());
 
 	m_availableCachedNodeLists.clear();
-
-	m_argVectorsStack.clear();
-
-	m_argVectorsStackPosition = m_argVectorsStack.end();
 }
 
 
@@ -311,53 +303,6 @@ XPathExecutionContextDefault::functionAvailable(
 			const XalanDOMString&	functionName) const
 {
 	return m_xpathEnvSupport.functionAvailable(theNamespace, functionName);
-}
-
-
-
-XPathExecutionContextDefault::XObjectArgVectorType&
-XPathExecutionContextDefault::pushArgVector()
-{
-	// m_argVectorsStackPosition always points one past
-	// the current top of the stack.
-	if (m_argVectorsStackPosition != m_argVectorsStack.end())
-	{
-		return *m_argVectorsStackPosition++;
-	}
-	else
-	{
-		m_argVectorsStack.push_back(XObjectArgVectorType());
-
-		m_argVectorsStackPosition = m_argVectorsStack.end();
-
-		XObjectArgVectorType&	theResult =
-			m_argVectorsStack.back();
-
-		theResult.reserve(eCachedArgVectorDefaultSize);
-
-		return theResult;
-	}
-}
-
-
-
-void
-XPathExecutionContextDefault::popArgVector()
-{
-	assert(m_argVectorsStackPosition != m_argVectorsStack.begin());	
-
-	if (m_argVectorsStack.size() > eArgVectorStackMax)
-	{
-		m_argVectorsStack.pop_back();
-
-		m_argVectorsStackPosition = m_argVectorsStack.end();
-	}
-	else
-	{
-		--m_argVectorsStackPosition;
-
-		(*m_argVectorsStackPosition).clear();
-	}
 }
 
 

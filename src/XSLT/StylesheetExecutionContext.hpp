@@ -1395,12 +1395,6 @@ public:
 			const XalanDOMString&	theNamespace, 
 			const XalanDOMString&	functionName) const = 0;
 
-	virtual XObjectArgVectorType&
-	pushArgVector() = 0;
-
-	virtual void
-	popArgVector() = 0;
-
 	virtual const XObject*
 	extFunction(
 			const XalanDOMString&			theNamespace,
