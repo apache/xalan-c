@@ -1231,8 +1231,12 @@ FormatterToXML::processAttribute(
 void
 FormatterToXML::outputLineSep()
 {
-	// $$$ ToDo: Does this need to be CR/LF on some platforms?
+#if defined(XALAN_NEWLINE_IS_CRLF)
+	accum(XalanUnicode::charCR);
 	accum(XalanUnicode::charLF);
+#else
+	accum(XalanUnicode::charLF);
+#endif
 }
 
 
