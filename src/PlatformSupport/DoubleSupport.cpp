@@ -207,3 +207,123 @@ DoubleSupport::greaterThanOrEqual(
 		return theLHS >= theRHS;
 	}
 }
+
+
+
+double
+DoubleSupport::add(
+			double	theLHS,
+			double	theRHS)
+{
+	if (isNaN(theLHS) == true || isNaN(theRHS) == true)
+	{
+		return getNaN();
+	}
+	else
+	{
+		return theLHS + theRHS;
+	}
+}
+
+
+
+double
+DoubleSupport::subtract(
+			double	theLHS,
+			double	theRHS)
+{
+	if (isNaN(theLHS) == true || isNaN(theRHS) == true)
+	{
+		return getNaN();
+	}
+	else
+	{
+		return theLHS - theRHS;
+	}
+}
+
+
+
+double
+DoubleSupport::multiply(
+			double	theLHS,
+			double	theRHS)
+{
+	if (isNaN(theLHS) == true || isNaN(theRHS) == true)
+	{
+		return getNaN();
+	}
+	else
+	{
+		return theLHS * theRHS;
+	}
+}
+
+
+
+double
+DoubleSupport::divide(
+			double	theLHS,
+			double	theRHS)
+{
+	if (isNaN(theLHS) == true || isNaN(theRHS) == true)
+	{
+		return getNaN();
+	}
+	else if (theRHS != 0)
+	{
+		return theLHS / theRHS;
+	}
+	else
+	{
+		// These are special cases, since we can't actually
+		// do the division...
+		if (theLHS == 0)
+		{
+			// This is NaN...
+			return DoubleSupport::getNaN();
+		}
+		else if (theLHS > 0.0)
+		{
+			// This is positive infinity...
+			return DoubleSupport::getPositiveInfinity();
+		}
+		else
+		{
+			// This is positive infinity...
+			return DoubleSupport::getNegativeInfinity();
+		}
+	}
+}
+
+
+
+double
+DoubleSupport::modulus(
+			double	theLHS,
+			double	theRHS)
+{
+	if (isNaN(theLHS) == true || isNaN(theRHS) == true)
+	{
+		return getNaN();
+	}
+	else
+	{
+		return static_cast<long>(theLHS) % static_cast<long>(theRHS);
+	}
+}
+
+
+
+double
+DoubleSupport::negative(double	theDouble)
+{
+	if (isNaN(theDouble) == true)
+	{
+		return getNaN();
+	}
+	else
+	{
+		return -theDouble;
+	}
+}

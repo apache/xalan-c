@@ -68,12 +68,13 @@
 
 
 
+// A class to help us support IEEE 754.
 class XALAN_PLATFORMSUPPORT_EXPORT DoubleSupport
 {
 public:
 
 	// Use these functions to determine if a value represents one of these
-	// values.  It seems that under the IA32 architecture, NaN will compare
+	// values.  It seems that under some architectures, NaN will compare
 	// as equal to any number, which is a big problem.  Hence these helper
 	// functions.
 
@@ -175,8 +176,8 @@ public:
 	 * Compare two double values, taking into account
 	 * the fact that we must support IEEE 754
 	 *
-	 * *param theLHS a number to compare
-	 * *param theRHS a number to compare
+	 * @param theLHS a number to compare
+	 * @param theRHS a number to compare
 	 * @return the result of the compare
 	 */
 	static bool
@@ -188,8 +189,8 @@ public:
 	 * Compare two double values, taking into account
 	 * the fact that we must support IEEE 754
 	 *
-	 * *param theLHS a number to compare
-	 * *param theRHS a number to compare
+	 * @param theLHS a number to compare
+	 * @param theRHS a number to compare
 	 * @return the result of the compare
 	 */
 	static bool
@@ -201,8 +202,8 @@ public:
 	 * Compare two double values, taking into account
 	 * the fact that we must support IEEE 754
 	 *
-	 * *param theLHS a number to compare
-	 * *param theRHS a number to compare
+	 * @param theLHS a number to compare
+	 * @param theRHS a number to compare
 	 * @return the result of the compare
 	 */
 	static bool
@@ -214,8 +215,8 @@ public:
 	 * Compare two double values, taking into account
 	 * the fact that we must support IEEE 754
 	 *
-	 * *param theLHS a number to compare
-	 * *param theRHS a number to compare
+	 * @param theLHS a number to compare
+	 * @param theRHS a number to compare
 	 * @return the result of the compare
 	 */
 	static bool
@@ -227,8 +228,8 @@ public:
 	 * Compare two double values, taking into account
 	 * the fact that we must support IEEE 754
 	 *
-	 * *param theLHS a number to compare
-	 * *param theRHS a number to compare
+	 * @param theLHS a number to compare
+	 * @param theRHS a number to compare
 	 * @return the result of the compare
 	 */
 	static bool
@@ -240,14 +241,91 @@ public:
 	 * Compare two double values, taking into account
 	 * the fact that we must support IEEE 754
 	 *
-	 * *param theLHS a number to compare
-	 * *param theRHS a number to compare
+	 * @param theLHS a number to compare
+	 * @param theRHS a number to compare
 	 * @return the result of the compare
 	 */
 	static bool
 	greaterThanOrEqual(
 			double	theLHS,
 			double	theRHS);
+
+	/**
+	 * Add two double values, taking into account
+	 * the fact that we must support IEEE 754
+	 *
+	 * @param theLHS a number to add
+	 * @param theRHS a number to add
+	 * @return the result of the addition
+	 */
+	static double
+	add(
+			double	theLHS,
+			double	theRHS);
+
+	/**
+	 * Subtract two double values, taking into account
+	 * the fact that we must support IEEE 754
+	 *
+	 * @param theLHS a number to subtract
+	 * @param theRHS a number to subtract
+	 * @return the result of the subtraction
+	 */
+	static double
+	subtract(
+			double	theLHS,
+			double	theRHS);
+
+	/**
+	 * Multiply two double values, taking into account
+	 * the fact that we must support IEEE 754
+	 *
+	 * @param theLHS a number to multiply
+	 * @param theRHS a number to multiply
+	 * @return the result of the multiplication
+	 */
+	static double
+	multiply(
+			double	theLHS,
+			double	theRHS);
+
+	/**
+	 * Divide two double values, taking into account
+	 * the fact that we must support IEEE 754
+	 *
+	 * @param theLHS a number to divide
+	 * @param theRHS a number to divide
+	 * @return the result of the division
+	 */
+	static double
+	divide(
+			double	theLHS,
+			double	theRHS);
+
+	/**
+	 * Determine the modulus two double values,
+	 * taking into account the fact that we must
+	 * support IEEE 754
+	 *
+	 * @param theLHS a number to divide
+	 * @param theRHS a number to divide
+	 * @return the result of the modulus
+	 */
+	static double
+	modulus(
+			double	theLHS,
+			double	theRHS);
+
+	/**
+	 * Determine the negative of a double value,
+	 * taking into account the fact that we must
+	 * support IEEE 754
+	 *
+	 * @param theDouble a number to negate
+	 * @return the result of the negation
+	 */
+	static double
+	negative(double	theDouble);
 
 	// Some functors to do the same thing.  This is for
 	// STL integration...
@@ -338,6 +416,94 @@ public:
 			second_argument_type	theRHS) const
 		{
 			return greaterThanOrEqual(theLHS, theRHS);
+		}
+	};
+
+	#if defined(XALAN_NO_NAMESPACES)
+	struct addFunction : public binary_function<const double&, const double&, double>
+	#else
+	struct addFunction : public std::binary_function<const double&, const double&, double>
+	#endif
+	{
+		result_type
+		operator()(
+			first_argument_type		theLHS,
+			second_argument_type	theRHS) const
+		{
+			return add(theLHS, theRHS);
+		}
+	};
+
+	#if defined(XALAN_NO_NAMESPACES)
+	struct subtractFunction : public binary_function<const double&, const double&, double>
+	#else
+	struct subtractFunction : public std::binary_function<const double&, const double&, double>
+	#endif
+	{
+		result_type
+		operator()(
+			first_argument_type		theLHS,
+			second_argument_type	theRHS) const
+		{
+			return subtract(theLHS, theRHS);
+		}
+	};
+
+	#if defined(XALAN_NO_NAMESPACES)
+	struct multiplyFunction : public binary_function<const double&, const double&, double>
+	#else
+	struct multiplyFunction : public std::binary_function<const double&, const double&, double>
+	#endif
+	{
+		result_type
+		operator()(
+			first_argument_type		theLHS,
+			second_argument_type	theRHS) const
+		{
+			return multiply(theLHS, theRHS);
+		}
+	};
+
+	#if defined(XALAN_NO_NAMESPACES)
+	struct divideFunction : public binary_function<const double&, const double&, double>
+	#else
+	struct divideFunction : public std::binary_function<const double&, const double&, double>
+	#endif
+	{
+		result_type
+		operator()(
+			first_argument_type		theLHS,
+			second_argument_type	theRHS) const
+		{
+			return divide(theLHS, theRHS);
+		}
+	};
+
+	#if defined(XALAN_NO_NAMESPACES)
+	struct modulusFunction : public binary_function<const double&, const double&, double>
+	#else
+	struct modulusFunction : public std::binary_function<const double&, const double&, double>
+	#endif
+	{
+		result_type
+		operator()(
+			first_argument_type		theLHS,
+			second_argument_type	theRHS) const
+		{
+			return modulus(theLHS, theRHS);
+		}
+	};
+
+	#if defined(XALAN_NO_NAMESPACES)
+	struct negativeFunction : public unary_function<const double&, double>
+	#else
+	struct negativeFunction : public std::unary_function<const double&, double>
+	#endif
+	{
+		result_type
+		operator()(argument_type	theDouble) const
+		{
+			return negative(theDouble);
 		}
 	};
 
