@@ -74,6 +74,7 @@
 
 
 #include <XPath/XObjectFactory.hpp>
+#include <XPath/XPath.hpp>
 #include <XPath/XPathEvaluator.hpp>
 #include <XPath/XPathExecutionContextDefault.hpp>
 #include <XPath/XPathFactoryDefault.hpp>
@@ -229,7 +230,7 @@ getEvaluator(XalanXPathEvaluatorHandle	theHandle)
 #if defined(XALAN_OLD_STYLE_CASTS)
 	return (XPathEvaluator*)theHandle;
 #else
-	return reinterpret_cast<XPathEvaluator*>(theHandle);
+	return static_cast<XPathEvaluator*>(theHandle);
 #endif
 }
 
@@ -243,7 +244,7 @@ getXPath(XalanXPathHandle	theHandle)
 #if defined(XALAN_OLD_STYLE_CASTS)
 	return (XPath*)theHandle;
 #else
-	return reinterpret_cast<XPath*>(theHandle);
+	return static_cast<XPath*>(theHandle);
 #endif
 }
 
