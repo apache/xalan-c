@@ -105,6 +105,11 @@ public:
 
 private:
 
+	int
+	doDefaultCompare(
+			const XalanDOMChar*		theLHS,
+			const XalanDOMChar*		theRHS) const;
+
 	bool		m_isValid;
 
 	Collator*	m_defaultCollator;
