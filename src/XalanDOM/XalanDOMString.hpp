@@ -799,7 +799,7 @@ protected:
 	void
 	invariants() const
 	{
-#if !defined(NDEBUG
+#if !defined(NDEBUG)
 
 #if defined(XALAN_DOMSTRING_CACHE_SIZE)
 		assert(m_data.size() == 0 || m_size == m_data.size() - 1);
@@ -850,7 +850,7 @@ private:
 
 	XalanDOMCharVectorType		m_data;
 
-#if defined(XALAN_DOMSTRING_CACHE_SIZE
+#if defined(XALAN_DOMSTRING_CACHE_SIZE)
 	unsigned long				m_size;
 #endif
 
