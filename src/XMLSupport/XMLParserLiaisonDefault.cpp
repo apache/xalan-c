@@ -142,28 +142,6 @@ XMLParserLiaisonDefault::getDOMFactory()
 
 
 
-/**
- * Returns the element name with the namespace expanded.
- */
-const XalanDOMString&
-XMLParserLiaisonDefault::getExpandedElementName(const XalanElement&		elem) const
-{
-	return m_DOMSupport.getExpandedElementName(elem);
-}
-
-
-
-/**
- * Returns the attribute name with the namespace expanded.
- */
-const XalanDOMString&
-XMLParserLiaisonDefault::getExpandedAttributeName(const XalanAttr&	attr) const
-{
-	return m_DOMSupport.getExpandedAttributeName(attr);
-}
-
-
-
 const XalanDOMString
 XMLParserLiaisonDefault::getParserDescription() const
 {

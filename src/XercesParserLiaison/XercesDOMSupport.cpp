@@ -104,22 +104,6 @@ XercesDOMSupport::getNamespaceOfNode(const XalanNode&	theNode) const
 
 
 const XalanDOMString&
-XercesDOMSupport::getExpandedElementName(const XalanElement&	elem) const
-{
-	return m_domSupportDefault.getExpandedElementName(elem);
-}
-
-
-
-const XalanDOMString&
-XercesDOMSupport::getExpandedAttributeName(const XalanAttr&		attr) const
-{
-	return m_domSupportDefault.getExpandedAttributeName(attr);
-}
-
-
-
-const XalanDOMString&
 XercesDOMSupport::getUnparsedEntityURI(
 			const XalanDOMString&	theName,
 			const XalanDocument&	theDocument) const

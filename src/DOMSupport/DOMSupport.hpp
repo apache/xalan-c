@@ -106,24 +106,6 @@ public:
 	getNamespaceOfNode(const XalanNode&	theNode) const = 0;
 
 	/**
-	 * Retrieves expanded name of a DOM element, including namespace
-	 * 
-	 * @param elem	DOM element queried
-	 * @return expanded name corresponding to 'elem'
-	 */
-	virtual const XalanDOMString&
-	getExpandedElementName(const XalanElement&	elem) const = 0;
-
-	/**
-	 * Retrieves expanded name of a DOM attribute, including namespace
-	 * 
-	 * @param attr DOM attribute queried
-	 * @return expanded name corresponding to 'attr'
-	 */
-	virtual const XalanDOMString&
-	getExpandedAttributeName(const XalanAttr&	attr) const = 0;
-
-	/**
 	 * Retrieves the URI of the named unparsed entity
 	 * from the supplied document.
 	 * 

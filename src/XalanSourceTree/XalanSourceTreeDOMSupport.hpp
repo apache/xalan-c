@@ -91,12 +91,6 @@ public:
 	getNamespaceOfNode(const XalanNode&		theNode) const;
 
 	virtual const XalanDOMString&
-	getExpandedElementName(const XalanElement&	elem) const;
-
-	virtual const XalanDOMString&
-	getExpandedAttributeName(const XalanAttr&	attr) const;
-
-	virtual const XalanDOMString&
 	getUnparsedEntityURI(
 			const XalanDOMString&	theName,
 			const XalanDocument&	theDocument) const;

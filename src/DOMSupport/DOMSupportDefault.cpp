@@ -110,59 +110,6 @@ DOMSupportDefault::getNamespaceOfNode(const XalanNode&	theNode) const
 
 
 const XalanDOMString&
-DOMSupportDefault::getExpandedElementName(const XalanElement&	elem) const
-{
-	return getExpandedName(elem);
-}
-
-
-
-const XalanDOMString&
-DOMSupportDefault::getExpandedAttributeName(const XalanAttr&	attr) const
-{
-	return getExpandedName(attr);
-}
-
-
-
-const XalanDOMString&
-DOMSupportDefault::getExpandedName(const XalanNode&		node) const
-{
-	const XalanDOMString&	theNamespace = getNamespaceOfNode(node);
-
-	const unsigned int		theNamespaceLength = length(theNamespace);
-
-	if (0 == theNamespaceLength)
-	{
-		return DOMServices::getLocalNameOfNode(node);
-	}
-	else
-	{
-		const XalanDOMString&	theLocalName = DOMServices::getLocalNameOfNode(node);
-
-		XalanDOMString	theResult;
-
-		reserve(
-				theResult,
-				theNamespaceLength + DOMServices::s_XMLNamespaceSeparatorStringLength + length(theLocalName) + 1);
-
-		theResult = theNamespace;
-
-		append(theResult, DOMServices::s_XMLNamespaceSeparatorString);
-
-		append(theResult, theLocalName);
-
-#if defined(XALAN_NO_MUTABLE)
-		return ((DOMSupportDefault*)this)->m_pool.get(theResult);
-#else
-		return m_pool.get(theResult);
-#endif
-	}
-}
-
-
-
-const XalanDOMString&
 DOMSupportDefault::getUnparsedEntityURI(
 			const XalanDOMString&	theName,
 			const XalanDocument&	theDocument) const

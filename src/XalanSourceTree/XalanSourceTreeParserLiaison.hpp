@@ -118,12 +118,6 @@ public:
 	virtual XalanDocument*
 	getDOMFactory();
 
-	virtual const XalanDOMString&
-	getExpandedElementName(const XalanElement&	elem) const;
-
-	virtual const XalanDOMString&
-	getExpandedAttributeName(const XalanAttr&	attr) const;
-
 	virtual void
 	setSpecialCharacters(const XalanDOMString&	str);
 

@@ -186,28 +186,6 @@ XalanSourceTreeParserLiaison::getDOMFactory()
 
 
 
-/**
- * Returns the element name with the namespace expanded.
- */
-const XalanDOMString&
-XalanSourceTreeParserLiaison::getExpandedElementName(const XalanElement&	elem) const
-{
-	return m_domSupport.getExpandedElementName(elem);
-}
-
-
-
-/**
- * Returns the attribute name with the namespace expanded.
- */
-const XalanDOMString&
-XalanSourceTreeParserLiaison::getExpandedAttributeName(const XalanAttr&		attr) const
-{
-	return m_domSupport.getExpandedAttributeName(attr);
-}
-
-
-
 void
 XalanSourceTreeParserLiaison::setSpecialCharacters(const XalanDOMString&	str)
 {

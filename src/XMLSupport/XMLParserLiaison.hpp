@@ -158,24 +158,6 @@ public:
 	getDOMFactory() = 0;
 
 	/**
-	 * Return the expanded element name.
-	 *
-	 * @param elem DOM element queried
-	 * @return string for expanded name of element
-	 */
-	virtual const XalanDOMString&
-	getExpandedElementName(const XalanElement&	elem) const = 0;
-
-	/**
-	 * Returns the attribute name with the namespace expanded.
-	 *
-	 * @param attr attribute queried
-	 * @return string for expanded name of attribute
-	 */
-	virtual const XalanDOMString&
-	getExpandedAttributeName(const XalanAttr&	attr) const = 0;
-
-	/**
 	 * Get special characters for attributes that will be escaped.
 	 *
 	 * @return string containing characters

@@ -223,28 +223,6 @@ XercesParserLiaison::getDOMFactory()
 
 
 
-/**
- * Returns the element name with the namespace expanded.
- */
-const XalanDOMString&
-XercesParserLiaison::getExpandedElementName(const XalanElement&		elem) const
-{
-	return m_DOMSupport.getExpandedElementName(elem);
-}
-
-
-
-/**
- * Returns the attribute name with the namespace expanded.
- */
-const XalanDOMString&
-XercesParserLiaison::getExpandedAttributeName(const XalanAttr&	attr) const
-{
-	return m_DOMSupport.getExpandedAttributeName(attr);
-}
-
-
-
 void
 XercesParserLiaison::setSpecialCharacters(const XalanDOMString&	str)
 {

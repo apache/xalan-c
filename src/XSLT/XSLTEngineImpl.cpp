@@ -2686,12 +2686,11 @@ XSLTEngineImpl::copyAttributesToAttList(
 {
 	assert(m_stylesheetRoot != 0);
 	assert(stylesheetTree != 0);
+
 	const XalanNamedNodeMap* const	attributes =
 		templateChild.getAttributes();
 
 	const unsigned int	nAttributes = (0 != attributes) ? attributes->getLength() : 0;
-
-	XalanDOMString	attrSetUseVal;
 
 	for(unsigned int	i = 0; i < nAttributes; i++)  
 	{	
@@ -2703,20 +2702,12 @@ XSLTEngineImpl::copyAttributesToAttList(
 #endif
 		assert(attr != 0);
 
-		const XalanDOMString	theTemp(s_XSLNameSpaceURL + ":use");
-
-		if(equals(m_parserLiaison.getExpandedAttributeName(*attr), theTemp))
-		{
-			attrSetUseVal = attr->getValue();
-		}
-		else
-		{
-			copyAttributeToTarget(*attr,
-								  contextNode,
-								  stylesheetTree, 
-								  attList,
-								  templateChild);
-		}
+		copyAttributeToTarget(
+				*attr,
+				contextNode,
+				stylesheetTree, 
+				attList,
+				templateChild);
 	}
 }
 
