@@ -2167,7 +2167,7 @@ StylesheetExecutionContextDefault::charactersRaw(const XObjectPtr&	xobject)
 
 
 
-StylesheetExecutionContextDefault::size_t
+StylesheetExecutionContextDefault::tl_size_type
 StylesheetExecutionContextDefault::getTraceListeners() const
 {
 	assert(m_xsltProcessor != 0);
