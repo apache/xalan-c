@@ -139,7 +139,8 @@ private:
 
 
 
-FunctionNodeSet::FunctionNodeSet()
+FunctionNodeSet::FunctionNodeSet(bool	convertString) :
+	m_convertString(convertString)
 {
 }
 
@@ -165,18 +166,21 @@ FunctionNodeSet::execute(
 
 	assert(args[0].null() == false);
 
-	if (args[0]->getType() != XObject::eTypeResultTreeFrag)
+	const XObject::eObjectType	theType = args[0]->getType();
+
+	if (theType == XObject::eTypeResultTreeFrag ||
+		(theType == XObject::eTypeString && m_convertString == true))
+	{
+		return XObjectPtr(new XResultTreeFragNodeSetProxy(args[0]));
+	}
+	else
 	{
 		executionContext.warn(
-			"Invalid argument type in function nodeset()!",
+			getInvalidArgumentTypeError(),
 			context,
 			locator);
 
 		return args[0];
-	}
-	else
-	{
-		return XObjectPtr(new XResultTreeFragNodeSetProxy(args[0]));
 	}
 }
 
@@ -197,5 +201,13 @@ FunctionNodeSet::clone() const
 const XalanDOMString
 FunctionNodeSet::getError() const
 {
-	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The node-set() function accepts one argument"));
+	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("The nodeset() function accepts one argument"));
+}
+
+
+
+const XalanDOMString
+FunctionNodeSet::getInvalidArgumentTypeError() const
+{
+	return StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("Invalid argument type in function nodeset()"));
 }

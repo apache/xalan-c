@@ -140,7 +140,7 @@ FunctionDistinct::execute(
 
 			if (theStrings.find(theCachedString) == theStrings.end())
 			{
-				theResult->addNode(theNode);
+				theResult->addNodeInDocOrder(theNode, executionContext);
 
 				theStrings.insert(theCachedString);
 			}
@@ -148,6 +148,8 @@ FunctionDistinct::execute(
 			clear(theCachedString);
 		}
 	}
+
+	theResult->setDocumentOrder();
 
 	return executionContext.getXObjectFactory().createNodeSet(theResult);
 }

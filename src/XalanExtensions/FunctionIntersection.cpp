@@ -105,9 +105,11 @@ FunctionIntersection::execute(
 
 		if (nodeset2.indexOf(theNode) != NodeRefListBase::npos)
 		{
-			theResult->addNode(theNode);
+			theResult->addNodeInDocOrder(theNode, executionContext);
 		}
 	}
+
+	theResult->setDocumentOrder();
 
 	return executionContext.getXObjectFactory().createNodeSet(theResult);
 }

@@ -80,7 +80,12 @@ class XALAN_XALANEXTENSIONS_EXPORT FunctionNodeSet : public Function
 {
 public:
 
-	FunctionNodeSet();
+	/**
+	 * Constructor.
+	 * 
+	 * @param convertString If true, strings as well as result tree fragments will be converted to nodesets.
+	 */
+	FunctionNodeSet(bool	convertString = true);
 
 	virtual
 	~FunctionNodeSet();
@@ -103,8 +108,11 @@ public:
 
 protected:
 
-	const XalanDOMString
+	virtual const XalanDOMString
 	getError() const;
+
+	virtual const XalanDOMString
+	getInvalidArgumentTypeError() const;
 
 private:
 
@@ -114,6 +122,10 @@ private:
 
 	bool
 	operator==(const FunctionNodeSet&) const;
+
+
+	// Data members...
+	const bool	m_convertString;
 };
 
 

@@ -59,12 +59,66 @@
 
 
 
-#include <XalanExtensions/FunctionDifference.hpp>
-#include <XalanExtensions/FunctionDistinct.hpp>
-#include <XalanExtensions/FunctionEvaluate.hpp>
-#include <XalanExtensions/FunctionHasSameNodes.hpp>
-#include <XalanExtensions/FunctionIntersection.hpp>
-#include <XalanExtensions/FunctionNodeSet.hpp>
+// Base header file.  Must be first.
+#include <XalanExtensions/XalanExtensionsDefinitions.hpp>
+
+
+
+#include <XalanDOM/XalanDOMString.hpp>
+
+
+
+class Function;
+class XPathEnvSupportDefault;
+
+
+
+class XALAN_XALANEXTENSIONS_EXPORT XalanExtensionsInstaller
+{
+public:
+
+	struct FunctionTableEntry
+	{
+		const XalanDOMChar*		theFunctionName;
+		const Function*			theFunction;
+	};
+
+	static void
+	installLocal(XPathEnvSupportDefault&	theSupport);
+
+	static void
+	installGlobal();
+
+	static void
+	uninstallLocal(XPathEnvSupportDefault&	theSupport);
+
+	static void
+	uninstallGlobal();
+
+protected:
+
+	static void
+	doInstallLocal(
+			const XalanDOMChar*			theNamespace,
+			const FunctionTableEntry	theFunctionTable[],
+			XPathEnvSupportDefault&		theSupport);
+
+	static void
+	doInstallGlobal(
+			const XalanDOMChar*			theNamespace,
+			const FunctionTableEntry	theFunctionTable[]);
+
+	static void
+	doUninstallLocal(
+			const XalanDOMChar*			theNamespace,
+			const FunctionTableEntry	theFunctionTable[],
+			XPathEnvSupportDefault&		theSupport);
+
+	static void
+	doUninstallGlobal(
+			const XalanDOMChar*			theNamespace,
+			const FunctionTableEntry	theFunctionTable[]);
+};
 
 
 
