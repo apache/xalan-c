@@ -106,7 +106,8 @@ protected:
 			double								theNumber,
 			const XalanDOMString&				thePattern,
 			const XalanDecimalFormatSymbols*	theDFS,
-			XalanDOMString&						theResult);
+			XalanDOMString&						theResult,
+			const Locator*						locator) const;
 
 private:
 

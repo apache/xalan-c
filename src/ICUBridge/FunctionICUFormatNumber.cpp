@@ -123,7 +123,8 @@ FunctionICUFormatNumber::doFormat(
 			double								theNumber,
 			const XalanDOMString&				thePattern,
 			const XalanDecimalFormatSymbols*	theDFS,
-			XalanDOMString&						theResult)
+			XalanDOMString&						theResult,
+			const Locator*						locator) const
 {
 	unsigned long	theResultCode =
 		ICUBridge::FormatNumber(
@@ -138,7 +139,8 @@ FunctionICUFormatNumber::doFormat(
 			XALAN_STATIC_UCODE_STRING("Warning!  ICUBridge::FormatNumber failed. (") +
 				UnsignedLongToDOMString(theResultCode) +
 				XALAN_STATIC_UCODE_STRING(")."),
-			context);
+			context,
+			locator);
 
 		FunctionFormatNumber::doFormat(
 						executionContext,
@@ -146,6 +148,7 @@ FunctionICUFormatNumber::doFormat(
 						theNumber,
 						thePattern,
 						theDFS,
-						theResult);
+						theResult,
+						locator);
 	}
 }
