@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -85,6 +85,14 @@ static const XalanDOMString		s_emptyString;
 XalanSourceTreeDOMSupport::XalanSourceTreeDOMSupport() :
 	DOMSupport(),
 	m_parserLiaison(0)
+{
+}
+
+
+
+XalanSourceTreeDOMSupport::XalanSourceTreeDOMSupport(const XalanSourceTreeParserLiaison&	theParserLiaison) :
+	DOMSupport(),
+	m_parserLiaison(&theParserLiaison)
 {
 }
 
