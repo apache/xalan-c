@@ -118,7 +118,7 @@ public:
 	typedef XalanSourceTreeElement::AttributesCountType		AttributesCountType;
 	typedef XalanArrayAllocator<XalanSourceTreeAttr*>		AttributesArrayAllocatorType;
 
-#if defined (XALAN_NO_NAMESPACES)
+#if defined(XALAN_NO_STD_NAMESPACE)
 	typedef map<
 				const XalanDOMChar*,
 				XalanSourceTreeElement*,

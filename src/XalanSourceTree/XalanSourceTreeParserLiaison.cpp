@@ -515,10 +515,6 @@ XalanSourceTreeParserLiaison::XalanSourceTreeParserLiaison() :
 XalanSourceTreeParserLiaison::~XalanSourceTreeParserLiaison()
 {
 	reset();
-
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::for_each;
-#endif
 }
 
 
@@ -526,14 +522,13 @@ XalanSourceTreeParserLiaison::~XalanSourceTreeParserLiaison()
 void
 XalanSourceTreeParserLiaison::reset()
 {
-#if !defined(XALAN_NO_NAMESPACES)
-	using std::for_each;
-#endif
+	XALAN_USING_STD(for_each)
 
 	// Delete any documents.
-	for_each(m_documentMap.begin(),
-			 m_documentMap.end(),
-			 makeMapValueDeleteFunctor(m_documentMap));
+	for_each(
+			m_documentMap.begin(),
+			m_documentMap.end(),
+			makeMapValueDeleteFunctor(m_documentMap));
 
 	m_documentMap.clear();
 

@@ -113,7 +113,7 @@ class XALAN_XALANSOURCETREE_EXPORT XalanSourceTreeContentHandler :
 {
 public:
 
-#if defined(XALAN_NO_NAMESPACES)
+#if defined(XALAN_NO_STD_NAMESPACE)
 	typedef vector<XalanSourceTreeElement*> 		ElementStackType;
 	typedef vector<XalanNode*> 						LastChildStackType;
 #else
