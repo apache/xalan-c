@@ -509,20 +509,6 @@ XPath::matchPattern(
 
 
 
-MutableNodeRefList*
-XPath::step(
-			XalanNode*				context,
-			int						/* opPos */,
-			XPathExecutionContext&	executionContext) const
-{    
-	executionContext.warn(TranscodeFromLocalCodePage("XPath needs a derived object to implement step!"),
-						  context);
-
-	return 0;
-}
-
-
-
 const XObjectPtr
 XPath::Or(
 			XalanNode*				context,
@@ -937,17 +923,6 @@ XPath::variable(
 
 
 const XObjectPtr
-XPath::group(
-			XalanNode*				context,
-			int						opPos,
-			XPathExecutionContext&	executionContext) const
-{    
-	return executeMore(context, opPos + 2, executionContext);
-}
-
-
-
-const XObjectPtr
 XPath::numberlit(
 			XalanNode*				/* context */,
 			int						opPos,
@@ -971,17 +946,6 @@ XPath::numberlit(
 
 
 const XObjectPtr
-XPath::arg(
-			XalanNode*				context,
-			int						opPos,
-			XPathExecutionContext&	executionContext) const
-{    
-	return executeMore(context, opPos + 2, executionContext);
-}
-
-
-
-const XObjectPtr
 XPath::locationPath(
 			XalanNode*				context,
 			int						opPos,
@@ -990,17 +954,6 @@ XPath::locationPath(
 	assert(context != 0);
 
 	return SimpleNodeLocator::locationPath(*this, executionContext, *context, opPos);
-}
-
-
-
-const XObjectPtr
-XPath::predicate(
-			XalanNode*				context,
-			int						opPos,
-			XPathExecutionContext&	executionContext) const
-{
-	return executeMore(context, opPos + 2, executionContext);
 }
 
 
@@ -1053,23 +1006,6 @@ XPath::runExtFunction(
 	}
 
 	return extfunction(context, opPos, ns, funcName, args, executionContext);
-}
-
-
-
-const XObjectPtr
-XPath::extfunction(
-			XalanNode*								context,
-			int										/* opPos */,
-			const XalanDOMString&					theNamespace,
-			const XalanDOMString&					functionName, 
-			const Function::XObjectArgVectorType&	argVec,
-			XPathExecutionContext&					executionContext) const
-{
-	return 	executionContext.extFunction(theNamespace,
-										 functionName,
-										 context,
-										 argVec);
 }
 
 
@@ -1175,20 +1111,6 @@ XPath::runFunction(
 
 		return function(context, opPos, funcID, args, executionContext);
 	}
-}
-
-
-
-const XObjectPtr
-XPath::function(
-			XalanNode*								context,
-			int										opPos,
-			int										funcID,
-			const Function::XObjectArgVectorType&	argVec,
-			XPathExecutionContext&					executionContext) const
- 
-{
-	return s_functions[funcID].execute(executionContext, context, opPos, argVec);
 }
 
 

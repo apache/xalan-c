@@ -307,7 +307,10 @@ public:
 	predicate(
 			XalanNode*				context,
 			int						opPos,
-			XPathExecutionContext&	executionContext) const;
+			XPathExecutionContext&	executionContext) const
+	{
+		return executeMore(context, opPos + 2, executionContext);
+	}
 
 	/**
 	 * Add the strings for the target element to a vector of strings.
@@ -436,20 +439,6 @@ protected:
 	 */
 	const XObjectPtr
 	matchPattern(
-			XalanNode*				context,
-			int						opPos,
-			XPathExecutionContext&	executionContext) const;
-
-	/**
-	 * Execute a step in a location path.  This must be implemented 
-	 * by a derived class of XPath (or don't call at all 
-	 * from the derived implementation of locationPath()).
-	 * @param context The current source tree context node.
-	 * @param opPos The current position in the m_opMap array.
-	 * @return a node-set.
-	 */
-	MutableNodeRefList*
-	step(
 			XalanNode*				context,
 			int						opPos,
 			XPathExecutionContext&	executionContext) const;
@@ -706,7 +695,10 @@ protected:
 	group(
 			XalanNode*				context,
 			int						opPos,
-			XPathExecutionContext&	executionContext) const;
+			XPathExecutionContext&	executionContext) const
+	{
+		return executeMore(context, opPos + 2, executionContext);
+	}
 
 	/**
 	 * Get a literal value.
@@ -730,7 +722,10 @@ protected:
 	arg(
 			XalanNode*				context,
 			int						opPos,
-			XPathExecutionContext&	executionContext) const;
+			XPathExecutionContext&	executionContext) const
+	{
+		return executeMore(context, opPos + 2, executionContext);
+	}
 
 	/**
 	 * Execute a location path.
@@ -760,11 +755,17 @@ protected:
 	const XObjectPtr
 	extfunction(
 			XalanNode*								context,
-			int										opPos,
+			int										/* opPos */,
 			const XalanDOMString&					theNamespace,
 			const XalanDOMString&					functionName, 
 			const Function::XObjectArgVectorType&	argVec,
-			XPathExecutionContext&					executionContext) const;
+			XPathExecutionContext&					executionContext) const
+	{
+		return 	executionContext.extFunction(theNamespace,
+											 functionName,
+											 context,
+											 argVec);
+	}
 
 	/**
 	 * Setup for and run a function.
@@ -784,7 +785,10 @@ protected:
 			int										opPos,
 			int										funcID,
 			const Function::XObjectArgVectorType&	argVec,
-			XPathExecutionContext&					executionContext) const;
+			XPathExecutionContext&					executionContext) const
+	{
+		return s_functions[funcID].execute(executionContext, context, opPos, argVec);
+	}
 
 	double
 	getNumericOperand(

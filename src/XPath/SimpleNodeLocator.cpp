@@ -147,8 +147,7 @@ SimpleNodeLocator::step(
 	case XPathExpression::eOP_EXTFUNCTION:
 	case XPathExpression::eOP_FUNCTION:
 	case XPathExpression::eOP_GROUP:
-		argLen = findNodeSet(xpath, executionContext, context, opPos, 
-							  stepType, *subQueryResults);
+		argLen = findNodeSet(xpath, executionContext, context, opPos, stepType, *subQueryResults);
 		break;
 
 	case XPathExpression::eFROM_ROOT:
@@ -640,7 +639,6 @@ SimpleNodeLocator::findNodeSet(
 
 	const NodeRefListBase&	nl = obj->nodeset();
 
-	// $$$ ToDo: Should this be adding in doc order?
 	subQueryResults.addNodes(nl);
 
 	return currentExpression.getOpCodeLengthFromOpMap(opPos);
@@ -721,6 +719,8 @@ SimpleNodeLocator::findParent(
 		}
 	}
 
+	subQueryResults.setDocumentOrder();
+
 	return argLen + 3;
 }
 
@@ -764,6 +764,8 @@ SimpleNodeLocator::findSelf(
 	{
 		subQueryResults.addNode(context);
 	}
+
+	subQueryResults.setDocumentOrder();
 
 	return argLen + 3;
 }
@@ -809,6 +811,8 @@ SimpleNodeLocator::findAncestors(
 
 		contextNode = DOMServices::getParentOfNode(*contextNode);
 	}
+
+	subQueryResults.setReverseDocumentOrder();
 
 	return argLen + 3;
 }
@@ -856,6 +860,8 @@ SimpleNodeLocator::findAncestorsOrSelf(
 
 		contextNode = DOMServices::getParentOfNode(*contextNode);
 	}
+
+	subQueryResults.setReverseDocumentOrder();
 
 	return argLen + 3;
 }
@@ -961,6 +967,8 @@ SimpleNodeLocator::findChildren(
 		child = child->getNextSibling();
 	}
 
+	subQueryResults.setDocumentOrder();
+
 	return argLen + 3;
 }
 
@@ -1029,6 +1037,8 @@ SimpleNodeLocator::findDescendants(
 
 		pos = nextNode;
 	}
+
+	subQueryResults.setDocumentOrder();
 
 	return argLen + 3;
 }
@@ -1121,6 +1131,8 @@ SimpleNodeLocator::findFollowing(
 		pos = nextNode;
 	}
 
+	subQueryResults.setDocumentOrder();
+
 	return argLen + 3;
 }
 
@@ -1164,6 +1176,8 @@ SimpleNodeLocator::findFollowingSiblings(
 
 		pos = pos->getNextSibling();
 	}
+
+	subQueryResults.setDocumentOrder();
 
 	return argLen + 3;
 }
@@ -1239,7 +1253,7 @@ SimpleNodeLocator::findPreceeding(
 
 			if(isParent == false)
 			{
-				subQueryResults.insertNode(pos, 0);
+				subQueryResults.addNode(pos);
 			}
 		}
 
@@ -1276,8 +1290,16 @@ SimpleNodeLocator::findPreceeding(
 		pos = nextNode;
 	}
 
+	// Now, reverse the order of the nodes, since
+	// preceeding is a reverse axis, and we searched
+	// the document from the root to this node.
+	subQueryResults.reverse();
+
+	subQueryResults.setReverseDocumentOrder();
+
 	return argLen + 3;
 }
+
 
 
 int
@@ -1318,6 +1340,8 @@ SimpleNodeLocator::findPreceedingSiblings(
 
 		pos = pos->getPreviousSibling();
 	}
+
+	subQueryResults.setReverseDocumentOrder();
 
 	return argLen + 3;
 }

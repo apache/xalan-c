@@ -77,21 +77,24 @@
 
 
 MutableNodeRefList::MutableNodeRefList() :
-	NodeRefList()
+	NodeRefList(),
+	m_order(eUnknownOrder)
 {
 }
 
 
 
 MutableNodeRefList::MutableNodeRefList(const MutableNodeRefList&	theSource) :
-	NodeRefList(theSource)
+	NodeRefList(theSource),
+	m_order(theSource.m_order)
 {
 }
 
 
 
 MutableNodeRefList::MutableNodeRefList(const NodeRefListBase&	theSource) :
-	NodeRefList(theSource)
+	NodeRefList(theSource),
+	m_order(eUnknownOrder)
 {
 }
 
@@ -110,6 +113,8 @@ MutableNodeRefList::operator=(const MutableNodeRefList&		theRHS)
 	{
 		// Chain up...
 		NodeRefList::operator=(theRHS);
+
+		m_order = theRHS.m_order;
 	}
 
 	return *this;
@@ -124,6 +129,8 @@ MutableNodeRefList::operator=(const NodeRefList&		theRHS)
 	{
 		// Chain up...
 		NodeRefList::operator=(theRHS);
+
+		m_order = eUnknownOrder;
 	}
 
 	return *this;
@@ -138,6 +145,8 @@ MutableNodeRefList::operator=(const NodeRefListBase&	theRHS)
 	{
 		// Chain up...
 		NodeRefList::operator=(theRHS);
+
+		m_order = eUnknownOrder;
 	}
 
 	return *this;
@@ -165,8 +174,6 @@ MutableNodeRefList::addNode(XalanNode*	n)
 {
 	if (n != 0)
 	{
-		// ensureAllocation();
-
 		m_nodeList.push_back(n);
 	}
 }
@@ -182,8 +189,6 @@ MutableNodeRefList::insertNode(
 
 	if (n != 0)
 	{
-		// ensureAllocation();
-
 		m_nodeList.insert(m_nodeList.begin() + pos, n);
 	}
 }
@@ -224,6 +229,8 @@ void
 MutableNodeRefList::clear()
 {
 	m_nodeList.clear();
+
+	m_order = eUnknownOrder;
 }
 
 
@@ -240,46 +247,20 @@ MutableNodeRefList::setNode(
 
 
 
-inline void
-MutableNodeRefList::ensureAllocation(NodeListVectorType::size_type	/* theSize */)
-{
-	// This code is commmented out for now, since it appears to actual hurt
-	// performance, rather than help.
-#if 0
-	const unsigned int	theNodeListSize = m_nodeList.size();
-
-	if (theSize > theNodeListSize)
-	{
-		const unsigned int	theNewSize = theNodeListSize * 2;
-
-		if (theSize > theNewSize)
-		{
-			m_nodeList.reserve(theSize * 2);
-		}
-		else
-		{
-			m_nodeList.reserve(theNewSize);
-		}
-	}
-	else
-	{
-		m_nodeList.reserve(eDefaultVectorSize);
-	}
-#endif
-}
-
-
-
 void
 MutableNodeRefList::addNodes(const XalanNodeList&	nodelist)
 {
 	const unsigned int	theLength = nodelist.getLength();
 
-	// ensureAllocation(m_nodeList.size() + theLength);
-
 	for (unsigned int i = 0; i < theLength; i++)
 	{
-		addNode(nodelist.item(i));
+		XalanNode* const	theNode = nodelist.item(i);
+
+		if (theNode != 0)
+		{
+
+			m_nodeList.push_back(theNode);
+		}
 	}
 }
 
@@ -290,11 +271,15 @@ MutableNodeRefList::addNodes(const NodeRefListBase&		nodelist)
 {
 	const unsigned int	theLength = nodelist.getLength();
 
-	// ensureAllocation(m_nodeList.size() + theLength);
-
 	for (unsigned int i = 0; i < theLength; i++)
 	{
-		addNode(nodelist.item(i));
+		XalanNode* const	theNode = nodelist.item(i);
+
+		if (theNode != 0)
+		{
+
+			m_nodeList.push_back(theNode);
+		}
 	}
 }
 
@@ -305,11 +290,9 @@ MutableNodeRefList::addNodesInDocOrder(
 			const XalanNodeList&	nodelist,
 			XPathExecutionContext&	executionContext)
 {
-	const unsigned int	theLength = nodelist.getLength();
+	const unsigned int	theOtherLength = nodelist.getLength();
 
-	// ensureAllocation(m_nodeList.size() + theLength);
-
-	for(unsigned int i = 0; i < theLength; i++)
+	for(unsigned int i = 0; i < theOtherLength; i++)
 	{
 		addNodeInDocOrder(nodelist.item(i), executionContext);
 	}
@@ -322,13 +305,68 @@ MutableNodeRefList::addNodesInDocOrder(
 			const NodeRefListBase&	nodelist,
 			XPathExecutionContext&	executionContext)
 {
-	const unsigned int	theLength = nodelist.getLength();
+	const unsigned int	theOtherLength = nodelist.getLength();
 
-	// ensureAllocation(m_nodeList.size() + theLength);
-
-	for(unsigned int i = 0; i < theLength; i++)
+	for(unsigned int i = 0; i < theOtherLength; i++)
 	{
 		addNodeInDocOrder(nodelist.item(i), executionContext);
+	}
+}
+
+
+
+void
+MutableNodeRefList::addNodesInDocOrder(
+			const MutableNodeRefList&	nodelist,
+			XPathExecutionContext&		executionContext)
+{
+#if !defined(XALAN_NO_NAMESPACES)
+	using std::back_inserter;
+	using std::copy;
+	using std::for_each;
+#endif
+
+	const eOrder		theOtherOrder = nodelist.m_order;
+
+	if (theOtherOrder == eUnknownOrder)
+	{
+		for_each(
+			nodelist.m_nodeList.begin(),
+			nodelist.m_nodeList.end(),
+			addNodeInDocOrderFunctor(*this, executionContext));
+	}
+	else if (theOtherOrder == eDocumentOrder)
+	{
+		if (m_nodeList.empty() == true)
+		{
+			m_nodeList = nodelist.m_nodeList;
+		}
+		else
+		{
+			for_each(
+				nodelist.m_nodeList.begin(),
+				nodelist.m_nodeList.end(),
+				addNodeInDocOrderFunctor(*this, executionContext));
+		}
+	}
+	else
+	{
+		assert(theOtherOrder == eReverseDocumentOrder);
+
+		if (m_nodeList.empty() == true)
+		{
+			copy(
+				nodelist.m_nodeList.rbegin(),
+				nodelist.m_nodeList.rend(),
+				back_inserter(m_nodeList));
+		}
+		else
+		{
+			for_each(
+				nodelist.m_nodeList.rbegin(),
+				nodelist.m_nodeList.rend(),
+				addNodeInDocOrderFunctor(*this, executionContext));
+		}
 	}
 }
 
@@ -555,8 +593,6 @@ MutableNodeRefList::addNodeInDocOrder(
 	{
 		const unsigned int	size = m_nodeList.size();
 
-		// ensureAllocation(size + 1);
-
 		if (size == 0)
 		{
 			addNode(node);
@@ -646,7 +682,6 @@ MutableNodeRefList::addNodeInDocOrder(
 void
 MutableNodeRefList::clearNulls()
 {
-#if 1
 #if !defined(XALAN_NO_NAMESPACES)
 	using std::remove;
 #endif
@@ -658,29 +693,20 @@ MutableNodeRefList::clearNulls()
 			NodeListVectorType::value_type(0)),
 		m_nodeList.end());
 
-#else
-	NodeListVectorType::iterator	i =
-		m_nodeList.begin();
+	assert(checkForDuplicates() == false);
+}
 
-	while(i != m_nodeList.end())
-	{
-		if (*i == 0)
-		{
-			NodeListVectorType::iterator	j = i + 1;
 
-			while(j != m_nodeList.end() && *j == 0)
-			{
-				++j;
-			}
 
-			i = m_nodeList.erase(i, j);
-		}
-		else
-		{
-			++i;
-		}
-	}
+void
+MutableNodeRefList::reverse()
+{
+#if !defined(XALAN_NO_NAMESPACES)
+	using std::reverse;
 #endif
 
-	assert(checkForDuplicates() == false);
+	reverse(
+		m_nodeList.begin(),
+		m_nodeList.end());
+
 }

@@ -193,7 +193,7 @@ public:
 	 * @param nodelist node list to add
 	 * @param executionContext the current execution context
 	 */
-	virtual void
+	void
 	addNodesInDocOrder(
 			const XalanNodeList&	nodelist,
 			XPathExecutionContext&	executionContext);
@@ -204,10 +204,21 @@ public:
 	 * @param nodelist node list to add
 	 * @param executionContext the current execution context
 	 */
-	virtual void
+	void
 	addNodesInDocOrder(
 			const NodeRefListBase&	nodelist,
 			XPathExecutionContext&	executionContext);
+
+	/**
+	 * Copy NodeList members into this nodelist, adding in document order.
+	 * 
+	 * @param nodelist node list to add
+	 * @param executionContext the current execution context
+	 */
+	void
+	addNodesInDocOrder(
+			const MutableNodeRefList&	nodelist,
+			XPathExecutionContext&		executionContext);
   
 	/**
 	 * Add a node into list where it should occur in document order.
@@ -215,7 +226,7 @@ public:
 	 * @param node node object to add
 	 * @param executionContext the current execution context
 	 */
-	virtual void
+	void
 	addNodeInDocOrder(
 			XalanNode*				node,
 			XPathExecutionContext&	executionContext);
@@ -226,12 +237,87 @@ public:
 	void
 	clearNulls();
 
+	/**
+	 * Reverse the nodes in the list.
+	 */
+	void
+	reverse();
+
+	/**
+	 * Reserve space for the supplied number of nodes.
+	 * This is taken as an optimization, and may be
+	 * ignored.  You might want to call this when you
+	 * know the number of nodes you're about to add to
+	 * this list.
+	 *
+	 * Remember to take into account the current size of
+	 * the list when calling this.  That means you will
+	 * probably want to add the result of getLength() to
+	 * the number of nodes you're planning to add.
+	 *
+	 * @param theCount the number of nodes to reserve space for
+	 */
+	void
+	reserve(unsigned int	theCount)
+	{
+		m_nodeList.reserve(theCount);
+	}
+
+	/**
+	 * Set the known order of the nodes.  This should
+	 * only be done when the order is known. Otherwise,
+	 * disaster will ensue.
+	 */
+	void
+	setDocumentOrder()
+	{
+		m_order = eDocumentOrder;
+	}
+
+	/**
+	 * Set the known order of the nodes.  This should
+	 * only be done when the order is known. Otherwise,
+	 * disaster will ensue.
+	 */
+	void
+	setReverseDocumentOrder()
+	{
+		m_order = eReverseDocumentOrder;
+	}
+
 	typedef NodeListVectorType::iterator	NodeListIteratorType;
+
+	class addNodeInDocOrderFunctor
+	{
+	public:
+
+		addNodeInDocOrderFunctor(
+				MutableNodeRefList&		theList,
+				XPathExecutionContext&	theExecutionContext) :
+			m_list(theList),
+			m_executionContext(theExecutionContext)
+		{
+		}
+
+		void
+		operator()(XalanNode*	theNode) const
+		{
+			m_list.addNodeInDocOrder(theNode, m_executionContext);
+		}
+
+	private:
+
+		MutableNodeRefList&		m_list;
+
+		XPathExecutionContext&	m_executionContext;
+	};
 
 private:
 
-	void
-	ensureAllocation(NodeListVectorType::size_type	theSize = 0);
+	// An enum to determine what the order of the nodes is...
+	enum eOrder { eUnknownOrder, eDocumentOrder, eReverseDocumentOrder };
+
+	eOrder	m_order;
 };
 
 
