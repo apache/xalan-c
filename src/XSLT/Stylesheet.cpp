@@ -209,21 +209,6 @@ Stylesheet::~Stylesheet()
 
 
 
-/**
- * Process the xsl:key element.
- * 
- * (Notes to myself)
- * What we need to do is:
- * 1) As this function is called, build a table of KeyDeclarations.
- * 2) During either XML processing, or upon request, walk the XML 
- * document tree, and build a hash table:
- * a) keyed by name,
- * b) each with a value of a hashtable, keyed by the value returned by 
- *	  the use attribute,
- * c) each with a value that is a nodelist.
- * Thus, for a given key or keyref, look up hashtable by name, 
- * look up the nodelist by the given reference.
- */
 void
 Stylesheet::processKeyElement(
 			ElemTemplateElement*			nsContext,
@@ -247,13 +232,16 @@ Stylesheet::processKeyElement(
 		else if(equals(aname, Constants::ATTRNAME_MATCH))
 		{
 			matchAttr =
-			constructionContext.createMatchPattern(XalanDOMString(atts.getValue(i)),
-			*nsContext);
+					constructionContext.createMatchPattern(
+						XalanDOMString(atts.getValue(i)),
+						*nsContext);
 		}
 		else if(equals(aname, Constants::ATTRNAME_USE))
 		{
-			useAttr = constructionContext.createXPath(atts.getValue(i),
-				*nsContext);
+			useAttr =
+					constructionContext.createXPath(
+						atts.getValue(i),
+						*nsContext);
 		}
 		else if (isAttrOK(aname, atts, i, constructionContext) == false)
 		{
@@ -463,9 +451,6 @@ Stylesheet::getYesOrNo(
 
 
 
-/**
- * Add a template to the template list.
- */
 void
 Stylesheet::addTemplate(
 			ElemTemplate*					tmpl,
@@ -481,6 +466,7 @@ Stylesheet::addTemplate(
 	{
 		ElemTemplateElement*	next = m_firstTemplate;
 
+		// Find the last one, then append the new one.
 		while(0 != next)
 		{
 			if(0 == next->getNextSiblingElem())
@@ -497,12 +483,19 @@ Stylesheet::addTemplate(
 		}
 	}
 
+	// If it's a named template, then we need to
+	// and it to the map of named templates.
 	const QName&	theName = tmpl->getName();
 
 	if(theName.isEmpty() == false)
 	{
-		if (m_namedTemplates.find(theName) != m_namedTemplates.end())
+		if (m_namedTemplates.find(theName) == m_namedTemplates.end())
 		{
+			m_namedTemplates[theName] = tmpl;
+		}
+		else
+		{
+			// This is an error...
 			XalanDOMString	theMessage("The stylesheet already has a template with the name ");
 
 			const XalanDOMString&	theNamespace = theName.getNamespace();
@@ -517,34 +510,30 @@ Stylesheet::addTemplate(
 
 			constructionContext.error(theMessage, 0, tmpl);
 		}
-		else
-		{
-			m_namedTemplates[theName] = tmpl;
-		}
 	}
 
+	// Now, process the match pattern associated with the
+	// template.
 	const XPath* const	xp = tmpl->getMatchPattern();
 
 	if(0 != xp)
 	{
+		/* Each string has a list of pattern tables associated with it; if the
+		 * string is not in the map, then create a list of pattern tables with one
+		 * entry for the string, otherwise add to the existing pattern table list
+		 * for that string
+		 */
 		typedef XPath::TargetElementStringsVectorType	TargetElementStringsVectorType;
 
 		TargetElementStringsVectorType		strings;
 
 		xp->getTargetElementStrings(strings);
 
-		/* Each string has a list of pattern tables associated with it; if the
-		 * string is not in the map, then create a list of pattern tables with one
-		 * entry for the string, otherwise add to the existing pattern table list
-		 * for that string
-		 * NOTE: C++ version uses a map keyed on string to a vector of match patterns
-		 * while the java version uses a map to a linked list
-		 */
-		if(0 != strings.size())
-		{
-			TargetElementStringsVectorType::size_type	nTargets =
+		TargetElementStringsVectorType::size_type	nTargets =
 				strings.size();
 
+		if(nTargets != 0)
+		{
 			for(TargetElementStringsVectorType::size_type stringIndex = 0;
 								stringIndex < nTargets; stringIndex++) 
 			{
@@ -554,7 +543,9 @@ Stylesheet::addTemplate(
 					new MatchPattern2(xp->getExpression().getCurrentPattern(), 
 						xp, tmpl, pos, target, this);
 
-				// Put it in the map...
+				// Put it in the map, on the front of the list for that
+				// target string, so that templates later in the stylesheet
+				// are always selected first.
 				m_patternTable[target].push_front(newMatchPat);
 			}
 		}
@@ -585,9 +576,9 @@ Stylesheet::findNamedTemplate(
 	// Look for the template in the imports
 	if(it == m_namedTemplates.end())
 	{
-		const int	nImports = m_imports.size();
+		const StylesheetVectorType::size_type	nImports = m_imports.size();
 
-		for(int i = 0; i < nImports; i++)
+		for(StylesheetVectorType::size_type i = 0; i < nImports; ++i)
 		{
 			const Stylesheet* const stylesheet = m_imports[i];
 
@@ -604,7 +595,7 @@ Stylesheet::findNamedTemplate(
 
 	if(0 == namedTemplate)
 	{
-		executionContext.warn(XalanDOMString("Could not find macro def named: ") +
+		executionContext.warn(XalanDOMString("Could not find xsl:template named: ") +
 											  qname.getLocalPart());
 	}
 
@@ -916,18 +907,16 @@ Stylesheet::addObjectIfNotFound(
 	const PatternTableVectorType::size_type 	n =
 		theVector.size();
 
-	bool		addIt = true;
-
 	for(PatternTableVectorType::size_type i = 0; i < n; i++)
 	{
 		if(theVector[i] == thePattern)
 		{
-			addIt = false;
 			break;
 		}
 	}
 
-	if(addIt == true)
+	// Did we find it?
+	if(i == n)
 	{
 		theVector.push_back(thePattern);
 	}
@@ -1044,6 +1033,7 @@ Stylesheet::MatchPattern2::~MatchPattern2()
 }
 
 
+
 void
 Stylesheet::addExtensionNamespace(
 			const XalanDOMString&	uri,
@@ -1061,82 +1051,73 @@ Stylesheet::pushTopLevelVariables(
 			StylesheetExecutionContext& 	executionContext,
 			const ParamVectorType&			topLevelParams) const
 {
-//	try
+	ParamVectorType::size_type			i = 0;
+	const ParamVectorType::size_type	nVars = m_topLevelVariables.size();
+
+	for(; i < nVars; i++)
 	{
-		ParamVectorType::size_type			i = 0;
-		const ParamVectorType::size_type	nImports = m_imports.size();
+		ElemVariable* const 	var = m_topLevelVariables[i];
 
-		for(; i < nImports; i++)
-		{
-			const Stylesheet* const stylesheet = m_imports[i];
-
-			stylesheet->pushTopLevelVariables(executionContext, topLevelParams);
-		}
-
-		const ParamVectorType::size_type	nVars = m_topLevelVariables.size();
-
-		for(i = 0; i < nVars; i++)
-		{
-			ElemVariable* const 	var = m_topLevelVariables[i];
-
-			bool					isParam =
+		bool					isParam =
 				Constants::ELEMNAME_PARAMVARIABLE == var->getXSLToken();
 
-			if(isParam == true)
+		if(isParam == true)
+		{
+			isParam = false;
+
+			const ParamVectorType::size_type	n = topLevelParams.size();
+
+			for(ParamVectorType::size_type k = 0; k < n; k++)
 			{
-				isParam = false;
+				const ParamVectorType::value_type&	arg = topLevelParams[k];
 
-				const ParamVectorType::size_type	n = topLevelParams.size();
-
-				for(ParamVectorType::size_type k = 0; k < n; k++)
+				if(arg.getName().equals(var->getName()))
 				{
-					const ParamVectorType::value_type&	arg = topLevelParams[k];
+					isParam = true;
 
-					if(arg.getName().equals(var->getName()))
+					const XObject* const	theXObject = arg.getXObject();
+
+					if (theXObject != 0)
 					{
-						isParam = true;
-
-						const XObject* const	theXObject = arg.getXObject();
-
-						if (theXObject != 0)
-						{
-							executionContext.pushVariable(arg.getName(),
-														  theXObject,
-														  0);
-						}
-						else
-						{
-							executionContext.pushVariable(arg.getName(),
-														  0,
-														  arg.getExpression(),
-														  executionContext.getRootDocument(),
-														  *this);
-						}
-
-						break;
+						executionContext.pushVariable(arg.getName(),
+													  theXObject,
+													  0);
 					}
+					else
+					{
+						executionContext.pushVariable(arg.getName(),
+													  0,
+													  arg.getExpression(),
+													  executionContext.getRootDocument(),
+													  *this);
+					}
+
+					break;
 				}
 			}
+		}
 
-			if (isParam == false)
-			{
-				XalanNode* const	doc = executionContext.getRootDocument();
-				assert(doc != 0);
+		if (isParam == false)
+		{
+			XalanNode* const	doc = executionContext.getRootDocument();
+			assert(doc != 0);
 
-				var->execute(executionContext,
-							 doc,
-							 doc,
-							 QName());
-			}
+			var->execute(executionContext,
+						 doc,
+						 doc,
+						 QName());
 		}
 	}
-/*
-	catch(Exception e)
+
+	// Now, push any imports...
+	const ParamVectorType::size_type	nImports = m_imports.size();
+
+	for(i = 0; i < nImports; i++)
 	{
-		// Turn it into a runtime exception.
-		throw new XSLProcessorException(e);
+		const Stylesheet* const stylesheet = m_imports[i];
+
+		stylesheet->pushTopLevelVariables(executionContext, topLevelParams);
 	}
- */
 }
 
 
