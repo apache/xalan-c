@@ -77,15 +77,17 @@
     <li><link anchor="to-do">To-do tasks for future &xslt4c; releases</link></li>
    </ul>
      <anchor name="done"/>
-  <s3 title="Changes since &xslt4c; version 1.2">
-    <p>Major updates since version 1.2 include:</p>
+   <s3 title="Changes since &xslt4c; version 1.3">
+     <p>Major updates since version 1.3 include [details and links to be added]:</p>
      <ul>
-       <li>A new and simplified command-line utility: <link idref="commandline" anchor="xalanexe">the Xalan executable</link></li>
-       <li>New XPath samples exploiting the XPathEvaluator C API and illustrating serialization of an XPath result set: <link idref="samples" anchor="simplexpathcapi">SimpleXPathCAPI</link> and <link idref="samples" anchor="serializenodeset">SerializeNodeSet</link></li>
-       <li>A new <link idref="usagepatterns" anchor="xercesdomwrapperparsedsource">wrapper class</link> that lets you pass in a Xerces DOM as input for a transformation</li>
-<li>Bug fixes.</li>
-<li>Changed XPathException to XalanXPathException because of a clash with a new Xerces class of the same name.</li>
-      </ul>
+       <li>Bug fixes</li>
+       <li>Distribution changes</li>
+       <li>Simplified Windows build procedure</li>       
+       <li>64-bit support for HP-11</li>
+       <li>New Linux platform and compiler: Redhat 7.2 with gcc 3.1</li> 
+       <li>Alpha support for a number of EXSLT functions</li>       
+       <li>New samples</li>
+     </ul>  
    </s3>  
      <anchor name="bugs"/>
    <s3 title="Bug reporting">
