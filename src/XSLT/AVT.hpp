@@ -132,6 +132,14 @@ public:
 		return m_name;
 	}
 
+	/**
+	 * Append the value to the buffer.
+	 *
+	 * @param buf              buffer to write into
+	 * @param contextNode      current context node
+	 * @param prefixResolver   prefix resolver to use
+	 * @param executionContext execution context
+	 */
 	void
 	evaluate(
 			XalanDOMString&			buf,
@@ -149,7 +157,36 @@ public:
 		}
 	}
 
+	/**
+	 * Append the value to the buffer.
+	 *
+	 * @param buf              buffer to write into
+	 * @param prefixResolver   prefix resolver to use
+	 * @param executionContext execution context
+	 */
+	void
+	evaluate(
+			XalanDOMString&			buf,
+			const PrefixResolver&	prefixResolver,
+			XPathExecutionContext&	executionContext) const
+	{
+		if(m_simpleString != 0)
+		{
+			buf.assign(m_simpleString, m_simpleStringLength);
+		}
+		else
+		{
+			doEvaluate(buf, prefixResolver, executionContext);
+		}
+	}
+
 private:
+
+	void
+	doEvaluate(
+			XalanDOMString&			buf,
+			const PrefixResolver&	prefixResolver,
+			XPathExecutionContext&	executionContext) const;
 
 	void
 	doEvaluate(

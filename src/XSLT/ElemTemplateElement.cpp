@@ -306,9 +306,18 @@ ElemTemplateElement::executeChildren(
 {
 	if (hasChildren() == true)
 	{
-		const XPathExecutionContext::CurrentNodeSetAndRestore	theCurrentNodeSetAndRestore(executionContext, sourceNode);
+		XalanNode* const	theCurrentNode = executionContext.getCurrentNode();
+		
+		if (theCurrentNode == sourceNode)
+		{
+			executeChildren(executionContext);
+		}
+		else
+		{
+			const XPathExecutionContext::CurrentNodeSetAndRestore	theCurrentNodeSetAndRestore(executionContext, theCurrentNode, sourceNode);
 
-		executeChildren(executionContext);
+			executeChildren(executionContext);
+		}
 	}
 }
 
@@ -694,8 +703,7 @@ ElemTemplateElement::transformChild(
 				executionContext.fireTraceEvent(te);
 			}
 
-			theTemplate->executeChildren(executionContext, 
-										 child);
+			theTemplate->executeChildren(executionContext, child);
 		}
 	}
 

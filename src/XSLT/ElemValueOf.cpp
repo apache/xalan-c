@@ -308,7 +308,7 @@ ElemValueOf::execute(StylesheetExecutionContext&	executionContext) const
 		XPath::MemberFunctionPtr	theFunction = disableOutputEscaping() == false ?
 			&FormatterListener::characters : &FormatterListener::charactersRaw;
 
-		m_selectPattern->execute(sourceNode, *this, executionContext, theAdapter, theFunction);
+		m_selectPattern->execute(*this, executionContext, theAdapter, theFunction);
 
 		if(0 != executionContext.getTraceListeners())
 		{

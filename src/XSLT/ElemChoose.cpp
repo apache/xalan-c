@@ -147,7 +147,7 @@ ElemChoose::execute(StylesheetExecutionContext&		executionContext) const
 
 			bool	test;
 
-			theXPath->execute(sourceNode, *this, executionContext, test);
+			theXPath->execute(*this, executionContext, test);
 
 			if(0 != executionContext.getTraceListeners())
 			{

@@ -390,9 +390,11 @@ ElemLiteralResult::execute(StylesheetExecutionContext&	executionContext) const
 
 			const XalanDOMString&	theName = avt->getName();
 
-			avt->evaluate(theStringedValue, executionContext.getCurrentNode(), *this, executionContext);
+			avt->evaluate(theStringedValue, *this, executionContext);
 
 			executionContext.addResultAttribute(theName, theStringedValue);
+
+			theStringedValue.clear();
 		}
 	}
 

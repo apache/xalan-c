@@ -158,15 +158,13 @@ ElemAttribute::execute(StylesheetExecutionContext&	executionContext) const
 
 	XalanDOMString&		attrName = attrNameGuard.get();
 
-	XalanNode* sourceNode = executionContext.getCurrentNode();
-
-	m_nameAVT->evaluate(attrName, sourceNode, *this, executionContext);
+	m_nameAVT->evaluate(attrName, *this, executionContext);
 
 	if(XalanQName::isValidQName(attrName) == false)
 	{
 		executionContext.warn(
 			"The attribute name is invalid",
-			sourceNode,
+			executionContext.getCurrentNode(),
 			getLocator());
 	}
 	else
@@ -188,7 +186,7 @@ ElemAttribute::execute(StylesheetExecutionContext&	executionContext) const
 
 		if(0 != m_namespaceAVT)
 		{
-			m_namespaceAVT->evaluate(attrNameSpace, sourceNode, *this, executionContext);
+			m_namespaceAVT->evaluate(attrNameSpace, *this, executionContext);
 
 			indexOfNSSep = indexOf(origAttrName, XalanUnicode::charColon);
 
@@ -350,7 +348,7 @@ ElemAttribute::execute(StylesheetExecutionContext&	executionContext) const
 						// Could not resolve prefix
 						executionContext.warn(
 							"Warning: Could not resolve prefix",
-							sourceNode,
+							executionContext.getCurrentNode(),
 							getLocator());
 					}
 					else
@@ -383,7 +381,7 @@ ElemAttribute::execute(StylesheetExecutionContext&	executionContext) const
 		{
 			executionContext.warn(
 				"Attributes cannot be added after a child has been added.  The attribute(s) will not be added",
-				sourceNode,
+				executionContext.getCurrentNode(),
 				getLocator());
 		}
 

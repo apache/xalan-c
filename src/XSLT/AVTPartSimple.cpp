@@ -98,4 +98,16 @@ AVTPartSimple::evaluate(
 
 
 
+void
+AVTPartSimple::evaluate(
+			XalanDOMString&			buf,
+			const PrefixResolver&	/* prefixResolver */,
+			XPathExecutionContext&	/* executionContext */) const
+
+{
+	append(buf, m_val, m_len);
+}
+
+
+
 XALAN_CPP_NAMESPACE_END

@@ -294,7 +294,20 @@ ElemVariable::getValue(
 	}
 	else
 	{
-		const XObjectPtr	theValue(m_selectPattern->execute(sourceNode, *this, executionContext));
+		XObjectPtr	theValue;
+
+		XalanNode* const	theCurrentNode = executionContext.getCurrentNode();
+		
+		if (theCurrentNode == sourceNode)
+		{
+			theValue = m_selectPattern->execute(*this, executionContext);
+		}
+		else
+		{
+			const XPathExecutionContext::CurrentNodeSetAndRestore	theCurrentNodeSetAndRestore(executionContext, theCurrentNode, sourceNode);
+
+			theValue = m_selectPattern->execute(*this, executionContext);
+		}
 
 		if(0 != executionContext.getTraceListeners())
 		{

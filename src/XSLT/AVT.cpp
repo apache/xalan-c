@@ -330,8 +330,6 @@ AVT::doEvaluate(
 			const PrefixResolver&	prefixResolver,
 			XPathExecutionContext&	executionContext) const
 {
-	clear(buf);
-
 	if(m_partsSize != 0)
 	{
 		for(size_type i = 0; i < m_partsSize; i++)
@@ -339,6 +337,25 @@ AVT::doEvaluate(
 			assert(m_parts[i] != 0);
 
 			m_parts[i]->evaluate(buf, contextNode, prefixResolver, executionContext);
+		}
+	}
+}
+
+
+
+void
+AVT::doEvaluate(
+			XalanDOMString&			buf,
+			const PrefixResolver&	prefixResolver,
+			XPathExecutionContext&	executionContext) const
+{
+	if(m_partsSize != 0)
+	{
+		for(size_type i = 0; i < m_partsSize; i++)
+		{
+			assert(m_parts[i] != 0);
+
+			m_parts[i]->evaluate(buf, prefixResolver, executionContext);
 		}
 	}
 }

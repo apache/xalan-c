@@ -140,10 +140,11 @@ ElemPI::execute(StylesheetExecutionContext&		executionContext) const
 {
 	ElemTemplateElement::execute(executionContext);
 	
-	XalanDOMString	piName;
-	XalanNode* sourceNode = executionContext.getCurrentNode();
-	
-	m_nameAVT->evaluate(piName, sourceNode, *this, executionContext);
+	StylesheetExecutionContext::GetAndReleaseCachedString	theGuard(executionContext);
+
+	XalanDOMString&		piName = theGuard.get();
+
+	m_nameAVT->evaluate(piName, *this, executionContext);
 
 	if(equalsIgnoreCaseASCII(piName, Constants::ATTRVAL_OUTPUT_METHOD_XML))
 	{

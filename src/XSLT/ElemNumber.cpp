@@ -344,9 +344,6 @@ ElemNumber::getCountMatchPattern(
 
 			if (isEmpty(theNamespaceURI) == true)
 			{
-				// No namespace URI means no prefix, so this is easy...
-//				assert(isEmpty(contextNode->getLocalName()) == true);
-
 				// We can pass any PrefixResolver instance, so just
 				// pass ourself...
 				countMatchPattern =
@@ -466,7 +463,6 @@ ElemNumber::getCountMatchPattern(
 inline void
 ElemNumber::getCountString(
 			StylesheetExecutionContext&		executionContext,
-			XalanNode*						sourceNode,
 			const MutableNodeRefList&		ancestors,
 			CountersTable&					ctable,
 			CountType						numberList[],
@@ -487,7 +483,6 @@ ElemNumber::getCountString(
 			executionContext,
 			numberList,
 			numberListLength,
-			sourceNode,
 			theResult);
 }
 
@@ -506,7 +501,7 @@ ElemNumber::getCountString(
 	{
 		double	theValue;
 
-		m_valueExpr->execute(sourceNode, *this, executionContext, theValue);
+		m_valueExpr->execute(*this, executionContext, theValue);
 
 		CountType	theNumber = 0;
 
@@ -519,7 +514,6 @@ ElemNumber::getCountString(
 				executionContext,
 				&theNumber,
 				1,
-				sourceNode,
 				theResult);
 	}
 	else
@@ -535,7 +529,6 @@ ElemNumber::getCountString(
 				executionContext,
 				&theNumber,
 				1,
-				sourceNode,
 				theResult);
 		}
 		else
@@ -562,7 +555,6 @@ ElemNumber::getCountString(
 
 					getCountString(
 						executionContext,
-						sourceNode,
 						*ancestors.get(),
 						ctable,
 						numberList,
@@ -577,7 +569,6 @@ ElemNumber::getCountString(
 
 					getCountString(
 						executionContext,
-						sourceNode,
 						*ancestors.get(),
 						ctable,
 						&*numberList.begin(),
@@ -796,9 +787,7 @@ ElemNumber::getMatchingAncestors(
 
 
 XalanNumberFormat*
-ElemNumber::getNumberFormatter(
-			StylesheetExecutionContext&		executionContext,
-			XalanNode*						contextNode) const
+ElemNumber::getNumberFormatter(StylesheetExecutionContext&	executionContext) const
 {
     // Helper to format local specific numbers to strings.
 	XalanAutoPtr<XalanNumberFormat>		formatter(executionContext.createXalanNumberFormat());
@@ -810,14 +799,13 @@ ElemNumber::getNumberFormatter(
 	XalanDOMString&				digitGroupSepValue = theGuard1.get();
 
 	if (0 != m_groupingSeparator_avt)
-		m_groupingSeparator_avt->evaluate(digitGroupSepValue, contextNode,
-				 *this, executionContext);
+		m_groupingSeparator_avt->evaluate(digitGroupSepValue, *this, executionContext);
 									 
 	if (length(digitGroupSepValue) > 1)
 	{
 		executionContext.error(
 			"The grouping-separator value must be one character in length",
-			contextNode,
+			executionContext.getCurrentNode(),
 			getLocator());
 	}
 
@@ -826,10 +814,8 @@ ElemNumber::getNumberFormatter(
 	XalanDOMString&				nDigitsPerGroupValue = theGuard2.get();
 
 	if (0 != m_groupingSize_avt)
-		m_groupingSize_avt->evaluate(nDigitsPerGroupValue, contextNode, *this,
-				executionContext);
+		m_groupingSize_avt->evaluate(nDigitsPerGroupValue, *this, executionContext);
 
-    // TODO: Handle digit-group attributes
 	// 7.7.1 If one is empty, it is ignored	(numb81 conf test)
 	if(!isEmpty(digitGroupSepValue) && !isEmpty(nDigitsPerGroupValue))
 	{
@@ -848,13 +834,9 @@ ElemNumber::formatNumberList(
 			StylesheetExecutionContext&		executionContext,
 			const CountType					theList[],
 			NodeRefListBase::size_type		theListLength,
-			XalanNode*						contextNode,
 			XalanDOMString&					theResult) const
 {
 	assert(theListLength > 0);
-
-	// Pathological cases
-	if (contextNode == 0) return;
 
 	XalanDOMChar	numberType = XalanUnicode::charDigit_1;
 
@@ -883,7 +865,7 @@ ElemNumber::formatNumberList(
 
 		if (m_format_avt != 0)
 		{
-			 m_format_avt->evaluate(formatValue, contextNode, *this, executionContext);
+			 m_format_avt->evaluate(formatValue, *this, executionContext);
 		}
 
 		if(isEmpty(formatValue) == true)
@@ -979,7 +961,6 @@ ElemNumber::formatNumberList(
 
 		getFormattedNumber(
 				executionContext,
-				contextNode,
 				numberType,
 				numberWidth,
 				theList[i],
@@ -1014,7 +995,6 @@ ElemNumber::formatNumberList(
 void
 ElemNumber::evaluateLetterValueAVT(
 			StylesheetExecutionContext&		executionContext,
-			XalanNode* 						contextNode,
 			XalanDOMString&					value) const
 {
 	if (m_lettervalue_avt == 0)
@@ -1025,7 +1005,6 @@ ElemNumber::evaluateLetterValueAVT(
 	{
 		m_lettervalue_avt->evaluate(
 				value,
-				contextNode,
 				*this,
 				executionContext);
 	}
@@ -1302,7 +1281,6 @@ const XalanDOMChar	elalphaNumberType = 0x03B1;
 void
 ElemNumber::getFormattedNumber(
 			StylesheetExecutionContext&		executionContext,
-			XalanNode*						contextNode,
 			XalanDOMChar					numberType,
 			XalanDOMString::size_type		numberWidth,
 			CountType						listElement,
@@ -1342,7 +1320,7 @@ ElemNumber::getFormattedNumber(
 		case 0x0430:
 			executionContext.error(
 				"Numbering format not supported yet",
-				contextNode,
+				executionContext.getCurrentNode(),
 				getLocator());
 			break;
 
@@ -1353,7 +1331,7 @@ ElemNumber::getFormattedNumber(
 
 				XalanDOMString&		letterVal = theGuard.get();
 
-				evaluateLetterValueAVT(executionContext, contextNode, letterVal);
+				evaluateLetterValueAVT(executionContext, letterVal);
 
 				if (equals(letterVal, s_traditionalString) == true)
 				{
@@ -1367,7 +1345,7 @@ ElemNumber::getFormattedNumber(
 				{
 					executionContext.error(
 						"The legal values for letter-value are 'alphabetic' and 'traditional'",
-						contextNode,
+						executionContext.getCurrentNode(),
 						getLocator());
 				}
 			}
@@ -1376,7 +1354,7 @@ ElemNumber::getFormattedNumber(
 		default: // "1"
 			{
 				StylesheetExecutionContext::XalanNumberFormatAutoPtr	formatter(
-						getNumberFormatter(executionContext, contextNode));
+						getNumberFormatter(executionContext));
 
 				formatter->format(listElement, theResult);
 

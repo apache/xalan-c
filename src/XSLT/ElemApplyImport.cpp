@@ -135,7 +135,7 @@ ElemApplyImport::execute(StylesheetExecutionContext&	executionContext) const
 
 	ElemTemplateElement::execute(executionContext);
 
-	const StylesheetExecutionContext::PushAndPopContextMarker	thePusPop(executionContext);
+	const StylesheetExecutionContext::PushAndPopContextMarker	thePushPop(executionContext);
 
 	transformChild(
 			executionContext,

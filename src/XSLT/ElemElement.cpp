@@ -155,9 +155,7 @@ ElemElement::execute(StylesheetExecutionContext&		executionContext) const
 
 	XalanDOMString&		elemName = elemNameGuard.get();
 
-	XalanNode* const	sourceNode = executionContext.getCurrentNode();
-
-	m_nameAVT->evaluate(elemName, sourceNode, *this, executionContext);
+	m_nameAVT->evaluate(elemName, *this, executionContext);
 
 	bool	isIllegalElement = !XalanQName::isValidQName(elemName);
 
@@ -165,7 +163,7 @@ ElemElement::execute(StylesheetExecutionContext&		executionContext) const
 	{
 		executionContext.warn(
 			"Illegal element name",
-			sourceNode,
+			executionContext.getCurrentNode(),
 			getLocator());
 
 		ElemUse::doExecute(executionContext, false);
@@ -180,7 +178,7 @@ ElemElement::execute(StylesheetExecutionContext&		executionContext) const
 
 		if (m_namespaceAVT != 0)
 		{
-			m_namespaceAVT->evaluate(elemNameSpace, sourceNode, *this, executionContext);
+			m_namespaceAVT->evaluate(elemNameSpace, *this, executionContext);
 		}
 
 		XalanDOMString::size_type	namespaceLen = length(elemNameSpace);
@@ -219,7 +217,7 @@ ElemElement::execute(StylesheetExecutionContext&		executionContext) const
 				{
 					executionContext.warn(
 						"Could not resolve prefix",
-						sourceNode,
+						executionContext.getCurrentNode(),
 						getLocator());
 
 					if (m_namespaceAVT != 0)
@@ -234,7 +232,7 @@ ElemElement::execute(StylesheetExecutionContext&		executionContext) const
 
 						executionContext.warn(
 							"Illegal element name",
-							sourceNode,
+							executionContext.getCurrentNode(),
 							getLocator());
 					}
 				}

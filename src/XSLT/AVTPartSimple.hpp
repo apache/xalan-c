@@ -114,6 +114,12 @@ public:
 			const PrefixResolver&	prefixResolver,
 			XPathExecutionContext&	executionContext) const;
 
+	virtual void
+	evaluate(
+			XalanDOMString&			buf,
+			const PrefixResolver&	prefixResolver,
+			XPathExecutionContext&	executionContext) const;
+
 private:
 
 	/**

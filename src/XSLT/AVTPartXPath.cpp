@@ -94,4 +94,15 @@ AVTPartXPath::evaluate(
 
 
 
+void
+AVTPartXPath::evaluate(
+			XalanDOMString&			buf,
+			const PrefixResolver&	prefixResolver,
+			XPathExecutionContext&	executionContext) const
+{
+	m_pXPath->execute(prefixResolver, executionContext, buf);
+}
+
+
+
 XALAN_CPP_NAMESPACE_END

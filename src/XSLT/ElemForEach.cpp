@@ -215,28 +215,16 @@ void
 ElemForEach::execute(StylesheetExecutionContext&	executionContext) const
 {
 	assert(m_selectPattern != 0);
+	assert(executionContext.getCurrentNode() != 0);
 
 	StylesheetExecutionContext::SetAndRestoreCurrentTemplate	theSetAndRestore(executionContext, 0);
 
 	if (hasChildren() == true)
 	{
-		XalanNode* const	sourceNode = executionContext.getCurrentNode();
-
-		if (sourceNode != 0)
-		{
-			transformSelectedChildren(
-				executionContext,
-				this,
-				sourceNode,
-				executionContext.getCurrentStackFrameIndex());
-		}
-		else
-		{
-			executionContext.error(
-				"There is no current node in ElemForEach::execute()",
-				sourceNode, 
-				getLocator());
-		}
+		transformSelectedChildren(
+			executionContext,
+			this,
+			executionContext.getCurrentStackFrameIndex());
 	}
 }
 
@@ -246,7 +234,6 @@ void
 ElemForEach::transformSelectedChildren(
 			StylesheetExecutionContext&		executionContext,
 			const ElemTemplateElement*		theTemplate,
-			XalanNode*						sourceNodeContext,
 			int								selectStackFrameIndex) const
 {
 	assert(m_selectPattern != 0);
@@ -257,7 +244,6 @@ ElemForEach::transformSelectedChildren(
 		transformSelectedChildren(
 					executionContext,
 					theTemplate,
-					sourceNodeContext,
 					0,
 					selectStackFrameIndex);
 	}
@@ -296,14 +282,14 @@ ElemForEach::transformSelectedChildren(
 
 			if(0 != avt)
 			{
-				avt->evaluate(langString, sourceNodeContext, *this, executionContext);
+				avt->evaluate(langString, *this, executionContext);
 			}
 
 			avt = sort->getDataTypeAVT();
 
 			if(0 != avt)
 			{
-				avt->evaluate(scratchString, sourceNodeContext, *this, executionContext);
+				avt->evaluate(scratchString, *this, executionContext);
 			}			
 
 			bool	treatAsNumbers = false;
@@ -322,14 +308,14 @@ ElemForEach::transformSelectedChildren(
 					{
 						executionContext.error(
 							"xsl:sort data-type must be 'text', 'number' or a prefixed name",
-							sourceNodeContext,
+							executionContext.getCurrentNode(),
 							sort->getLocator());
 					}
 					else
 					{
 						executionContext.warn(
 							"xsl:sort has an unknown data-type.  The data-type will be 'text'",
-							sourceNodeContext,
+							executionContext.getCurrentNode(),
 							sort->getLocator());
 					}
 				}
@@ -341,7 +327,7 @@ ElemForEach::transformSelectedChildren(
 
 			if(0 != avt)
 			{
-				avt->evaluate(scratchString, sourceNodeContext, *this, executionContext);
+				avt->evaluate(scratchString, *this, executionContext);
 			}			
 
 			bool	descending = false;
@@ -356,7 +342,7 @@ ElemForEach::transformSelectedChildren(
 				{
 					executionContext.error(
 						"xsl:sort order must be 'ascending' or 'descending'",
-						sourceNodeContext,
+						executionContext.getCurrentNode(),
 						sort->getLocator());
 				}
 			}
@@ -367,7 +353,7 @@ ElemForEach::transformSelectedChildren(
 
 			if(0 != avt)
 			{
-				avt->evaluate(scratchString, sourceNodeContext, *this, executionContext);
+				avt->evaluate(scratchString, *this, executionContext);
 			}			
 
 			NodeSortKey::eCaseOrder		caseOrder = NodeSortKey::eDefault;
@@ -386,7 +372,7 @@ ElemForEach::transformSelectedChildren(
 				{
 					executionContext.error(
 						"xsl:sort case-order must be 'upper-first' or 'lower-first'",
-						sourceNodeContext,
+						executionContext.getCurrentNode(),
 						sort->getLocator());
 				}
 			}
@@ -409,7 +395,6 @@ ElemForEach::transformSelectedChildren(
 		transformSelectedChildren(
 					executionContext,
 					theTemplate,
-					sourceNodeContext,
 					sorter.get(),
 					selectStackFrameIndex);
 	}
@@ -421,7 +406,6 @@ void
 ElemForEach::transformSelectedChildren(
 			StylesheetExecutionContext&		executionContext,
 			const ElemTemplateElement*		theTemplate,
-			XalanNode*						sourceNodeContext,
 			NodeSorter*						sorter,
 			int								selectStackFrameIndex) const
 {
@@ -443,7 +427,6 @@ ElemForEach::transformSelectedChildren(
 					selectStackFrameIndex);
 
 		xobjectResult = m_selectPattern->execute(
-						sourceNodeContext,
 						*this,
 						executionContext,
 						*theGuard);
@@ -465,7 +448,7 @@ ElemForEach::transformSelectedChildren(
 		executionContext.fireSelectEvent(
 				SelectionEvent(
 					executionContext, 
-					sourceNodeContext,
+					executionContext.getCurrentNode(),
 					*this,
 					StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("select")),
 					*m_selectPattern,
@@ -535,7 +518,7 @@ ElemForEach::transformSelectedChildren(
 	}
 
 	// Create an object to set and restore the context node list...
-	StylesheetExecutionContext::ContextNodeListSetAndRestore	theSetAndRestore(
+	const StylesheetExecutionContext::ContextNodeListSetAndRestore	theContextNodeListSetAndRestore(
 				executionContext,
 				sourceNodes);
 

@@ -94,7 +94,7 @@ public:
 	~AVTPart();
 
 	/**
-	 * Write the value into the buffer.
+	 * Append the value to the buffer.
 	 *
 	 * @param buf              buffer to write into
 	 * @param contextNode      current context node
@@ -105,6 +105,19 @@ public:
 	evaluate(
 			XalanDOMString&			buf,
 			XalanNode*				contextNode,
+			const PrefixResolver&	prefixResolver,
+			XPathExecutionContext&	executionContext) const = 0;
+
+	/**
+	 * Append the value to the buffer.
+	 *
+	 * @param buf              buffer to write into
+	 * @param prefixResolver   prefix resolver to use
+	 * @param executionContext execution context
+	 */
+	virtual void
+	evaluate(
+			XalanDOMString&			buf,
 			const PrefixResolver&	prefixResolver,
 			XPathExecutionContext&	executionContext) const = 0;
 };

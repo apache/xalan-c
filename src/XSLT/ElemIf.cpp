@@ -143,17 +143,15 @@ ElemIf::execute(StylesheetExecutionContext&		executionContext) const
 
 	ElemTemplateElement::execute(executionContext);
 
-	XalanNode* sourceNode = executionContext.getCurrentNode();
-
 	bool	fResult;
 
-	m_test->execute(sourceNode, *this, executionContext, fResult);
+	m_test->execute(*this, executionContext, fResult);
 
 	if(0 != executionContext.getTraceListeners())
 	{
 		executionContext.fireSelectEvent(
 			SelectionEvent(executionContext,
-			sourceNode,
+			executionContext.getCurrentNode(),
 			*this,
 			StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("test")),
 			*m_test,

@@ -193,7 +193,6 @@ ElemApplyTemplates::execute(StylesheetExecutionContext&		executionContext) const
 		transformSelectedChildren(
 				executionContext,
 				0,
-				sourceNode,
 				thePushPop.getStackFrameIndex());
 
 		executionContext.setCurrentMode(currentMode);
@@ -203,7 +202,6 @@ ElemApplyTemplates::execute(StylesheetExecutionContext&		executionContext) const
 		transformSelectedChildren(
 				executionContext,
 				0,
-				sourceNode,
 				thePushPop.getStackFrameIndex());
 	}
 }

@@ -175,7 +175,7 @@ ElemCopyOf::execute(StylesheetExecutionContext&		executionContext) const
 	}
 	else
 	{
-		const XObjectPtr	value(m_selectPattern->execute(sourceNode, *this, executionContext));
+		const XObjectPtr	value(m_selectPattern->execute(*this, executionContext));
 		assert(value.null() == false);
 
 		if(0 != executionContext.getTraceListeners())

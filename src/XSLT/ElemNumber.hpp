@@ -233,7 +233,6 @@ protected:
 	void
 	getCountString(
 			StylesheetExecutionContext&		executionContext,
-			XalanNode*						sourceNode,
 			const MutableNodeRefList&		ancestors,
 			CountersTable&					ctable,
 			CountType						numberList[],
@@ -260,13 +259,10 @@ protected:
 	/**
 	 * Get a formatter.
 	 * @param executionContext The current execution context.
-	 * @param contextNode The current context node.
 	 * @return A new XalanNumberFormat instance.  The caller owns the memory.
 	 */
 	XalanNumberFormat*
-	getNumberFormatter(
-			StylesheetExecutionContext&		executionContext,
-			XalanNode*						contextNode) const;
+	getNumberFormatter(StylesheetExecutionContext&		executionContext) const;
 
 	/**
 	 * Format an array of integrals into a formatted string.
@@ -274,7 +270,6 @@ protected:
 	 * @param executionContext The current execution context.
 	 * @param theList Array of one or more integer numbers.
 	 * @param theListLength The length of the array.
-	 * @param contextNode The context node.
 	 * @param formattedNumber The formatted number result.
 	 */
 	void
@@ -282,7 +277,6 @@ protected:
 			StylesheetExecutionContext&		executionContext,
 			const CountType					theList[],
 			NodeRefListBase::size_type		theListLength,
-			XalanNode*						contextNode,
 			XalanDOMString&					formattedNumber) const;
 
 	/**
@@ -356,7 +350,6 @@ private:
 	void
 	evaluateLetterValueAVT(
 			StylesheetExecutionContext&		executionContext,
-			XalanNode* 						contextNode,
 			XalanDOMString&					value) const;
 
 	void
@@ -371,7 +364,6 @@ private:
 	void
 	getFormattedNumber(
 			StylesheetExecutionContext&		executionContext,
-			XalanNode*						contextNode,
 			XalanDOMChar					numberType,
 			XalanDOMString::size_type		numberWidth,
 			CountType						listElement,

@@ -173,7 +173,6 @@ protected:
 	transformSelectedChildren(
 			StylesheetExecutionContext&		executionContext,
 			const ElemTemplateElement*		theTemplate,
-			XalanNode*						sourceNodeContext,
 			int								selectStackFrameIndex) const;
 
 	/**
@@ -181,7 +180,7 @@ protected:
 	 * 
 	 * @param executionContext	The current execution context
 	 * @param template The owning template context.
-	 * @param sourceNodeContext The current source node context.
+	 * @param sorter The NodeSorter instance, if any.
 	 * @param selectStackFrameIndex stack frame context for executing the
 	 *								select statement
 	 */
@@ -189,7 +188,6 @@ protected:
 	transformSelectedChildren(
 			StylesheetExecutionContext& 	executionContext,
 			const ElemTemplateElement*		theTemplate,
-			XalanNode*						sourceNodeContext,
 			NodeSorter* 					sorter,
 			int 							selectStackFrameIndex) const;
 
