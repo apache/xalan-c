@@ -212,7 +212,14 @@ FunctionNormalizeSpace::normalize(
 
 	if (needsNormalization(theString) == false)
 	{
-		return theArg;
+		if (theArg->getType() == XObject::eTypeString)
+		{
+			return theArg;
+		}
+		else
+		{
+			return executionContext.getXObjectFactory().createStringAdapter(theArg);
+		}
 	}
 	else
 	{
