@@ -867,6 +867,8 @@ Stylesheet::addObjectIfNotFound(
 			const MatchPattern2* 	thePatternArray[],
 			unsigned int&			thePatternArraySize)
 {
+	assert(thePattern != 0 && thePatternArray != 0);
+
 	if (thePatternArraySize == 0)
 	{
 		thePatternArray[0] = thePattern;
@@ -1232,7 +1234,7 @@ Stylesheet::findTemplate(
 
 				if(nConflicts > 0)
 				{
-					assert(conflicts != 0);
+					assert(conflicts != 0 && nConflicts <= m_patternCount);
 
 					XalanDOMString	conflictsString(XALAN_STATIC_UCODE_STRING("Specificity conflicts found: "));
 					
