@@ -1709,75 +1709,79 @@ XSLTEngineImpl::addResultAttribute(
 			const XalanDOMString&	aname,
 			const XalanDOMString&	value)
 {
-	bool	fExcludeAttribute = false;
-
-	if (equals(aname, DOMServices::s_XMLNamespace)) 
+	// Always exclude the implicit XML declaration...
+	if (equals(aname, DOMServices::s_XMLNamespacePrefix) == false) 
 	{
-		// OK, we're adding a default namespace declaration.  So see if the length
-		// of the namespace is 0.  If it's not, go ahead and add the declaration.
-		// If it's not, it means we're "turning off" the previous default
-		// declaration.
+		bool	fExcludeAttribute = false;
 
-		const XalanDOMString* const		currentDefaultNamespace =
-					getNamespaceForPrefix(s_emptyString);
-
-		// Note that we use an empty string for the prefix, instead of "xmlns", since the
-		// prefix really is "".
-		if (length(value) != 0)
+		if (equals(aname, DOMServices::s_XMLNamespace) == true)
 		{
-			if (currentDefaultNamespace != 0 &&
-				equals(*currentDefaultNamespace, value) == true)
+			// OK, we're adding a default namespace declaration.  So see if the length
+			// of the namespace is 0.  If it's not, go ahead and add the declaration.
+			// If it's not, it means we're "turning off" the previous default
+			// declaration.
+
+			const XalanDOMString* const		currentDefaultNamespace =
+						getNamespaceForPrefix(s_emptyString);
+
+			// Note that we use an empty string for the prefix, instead of "xmlns", since the
+			// prefix really is "".
+			if (length(value) != 0)
 			{
-				fExcludeAttribute = true;
+				if (currentDefaultNamespace != 0 &&
+					equals(*currentDefaultNamespace, value) == true)
+				{
+					fExcludeAttribute = true;
+				}
+				else
+				{
+					addResultNamespaceDecl(s_emptyString, value);
+				}
 			}
 			else
 			{
-				addResultNamespaceDecl(s_emptyString, value);
+				// OK, we're turning of the previous default namespace declaration.
+				// Check to see if there is one, and if there isn't, don't add
+				// the namespace declaration _and_ don't add the attribute.
+				if (currentDefaultNamespace != 0 && length(*currentDefaultNamespace) != 0)
+				{
+					addResultNamespaceDecl(s_emptyString, value);
+				}
+				else
+				{
+					fExcludeAttribute = true;
+				}
 			}
 		}
-		else
+		else if (startsWith(aname, DOMServices::s_XMLNamespaceWithSeparator) == true)
 		{
-			// OK, we're turning of the previous default namespace declaration.
-			// Check to see if there is one, and if there isn't, don't add
-			// the namespace declaration _and_ don't add the attribute.
-			if (currentDefaultNamespace != 0 && length(*currentDefaultNamespace) != 0)
+			assert(m_executionContext != 0);
+
+			StylesheetExecutionContext::GetAndReleaseCachedString	prefixGuard(*m_executionContext);
+
+			XalanDOMString&		prefix = prefixGuard.get();
+
+			prefix = substring(aname, DOMServices::s_XMLNamespaceWithSeparatorLength);
+
+			const XalanDOMString* const	theNamespace = getResultNamespaceForPrefix(prefix);
+
+			if (theNamespace == 0 || equals(*theNamespace, value) == false)
 			{
-				addResultNamespaceDecl(s_emptyString, value);
+				addResultNamespaceDecl(prefix, value);
 			}
 			else
 			{
 				fExcludeAttribute = true;
 			}
 		}
-	}
-	else if (startsWith(aname, DOMServices::s_XMLNamespaceWithSeparator) == true)
-	{
-		assert(m_executionContext != 0);
 
-		StylesheetExecutionContext::GetAndReleaseCachedString	prefixGuard(*m_executionContext);
-
-		XalanDOMString&		prefix = prefixGuard.get();
-
-		prefix = substring(aname, DOMServices::s_XMLNamespaceWithSeparatorLength);
-
-		const XalanDOMString* const	theNamespace = getResultNamespaceForPrefix(prefix);
-
-		if (theNamespace == 0 || equals(*theNamespace, value) == false)
+		if (fExcludeAttribute == false)
 		{
-			addResultNamespaceDecl(prefix, value);
+			attList.addAttribute(
+				c_wstr(aname),
+				c_wstr(Constants::ATTRTYPE_CDATA),
+				c_wstr(value));
 		}
-		else
-		{
-			fExcludeAttribute = true;
-		}
-	}
-
-	if (fExcludeAttribute == false)
-	{
-		attList.addAttribute(
-			c_wstr(aname),
-			c_wstr(Constants::ATTRTYPE_CDATA),
-			c_wstr(value));
 	}
 }
 
