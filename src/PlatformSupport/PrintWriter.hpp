@@ -69,7 +69,7 @@
 
 
 
-#include <util/XercesDefs.hpp>
+#include <util/XML4CDefs.hpp>
 
 
 

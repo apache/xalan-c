@@ -82,7 +82,7 @@ FormatterToText::~FormatterToText()
 
 
 void
-FormatterToText::setDocumentLocator(const Locator* const	/* locator */)
+FormatterToText::setDocumentLocator(Locator* const	/* locator */)
 {
 	// No action for the moment.
 }
