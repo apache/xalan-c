@@ -110,7 +110,7 @@
 #if !defined(NDEBUG) && defined(_MSC_VER)
 #include <crtdbg.h>
 #endif
-
+/*
 char *xalanNodeTypes[]=
 	{"UNKNOWN_NODE",
 	"ELEMENT_NODE",
@@ -128,7 +128,7 @@ char *xalanNodeTypes[]=
 
 bool 
 domCompare(const XalanNode& gold ,const XalanNode& doc, XalanDOMString fileName);
-
+*/
 void
 printArgOptions()
 {
@@ -264,7 +264,7 @@ getParams(int argc,
 	return fSuccess;
 }
 
-
+/*
 void
 reportError( XalanDOMString file, XalanDOMString node, char* msg)
 {
@@ -301,35 +301,35 @@ bool diffATTR(const XalanNode* gAttr, const XalanNode* dAttr, const XalanDOMStri
 
 	if (goldAttrValue != docAttrValue)
 	{
-		reportError(fileName, docAttrName, "Error: Wrong Attribute Value. Expected: ");
+		reportError(fileName, docAttrName, "Error: Attribute Value mismatch. Expected: ");
 		cout << c_str(TranscodeToLocalCodePage(goldAttrValue));							
 		return false;
 	}
 
 	if (goldAttrNsUri != docAttrNsUri)
 	{
-		reportError(fileName, docAttrName, "Error: Wrong Attribute NamespaceURI. Expected: ");
+		reportError(fileName, docAttrName, "Error: Attribute NamespaceURI mismatch. Expected: ");
 		cout << c_str(TranscodeToLocalCodePage(goldAttrNsUri)); 						
 		return false;
 	}
 
-/*	I think that these are not necessary. I assume that they will be caught earlier when
-	checking for named attributes.
+//	I think that these are not necessary. I assume that they will be caught earlier when
+//	checking for named attributes.
 
-	if (goldAttrPrefix != docAttrPrefix)
-	{
-		reportError(fileName, "Error: Wrong Attribute Namespace Prefix. Expected: ",errAttrName);
-		cout << c_str(TranscodeToLocalCodePage(goldAttrPrefix));							
-		return false;
-	}
+//	if (goldAttrPrefix != docAttrPrefix)
+//	{
+//		reportError(fileName, "Error: Attribute Namespace Prefix mismatch. Expected: ",errAttrName);
+//		cout << c_str(TranscodeToLocalCodePage(goldAttrPrefix));							
+//		return false;
+//	}
 
-	if (goldAttrLName != docAttrLName)
-	{
-		reportError(fileName, "Error: Wrong Attribute LocalName. Expected: ",errAttrName);
-		cout << c_str(TranscodeToLocalCodePage(goldAttrLName)); 						
-		return false;
-	}
-*/
+//	if (goldAttrLName != docAttrLName)
+//	{
+//		reportError(fileName, "Error: Attribute LocalName mismatch. Expected: ",errAttrName);
+//		cout << c_str(TranscodeToLocalCodePage(goldAttrLName)); 						
+//		return false;
+//	}
+
 	return true;
 }
 
@@ -567,7 +567,8 @@ domCompare(const XalanNode& gold ,const XalanNode& doc, const XalanDOMString fil
 
 	return true;
 }
-
+ 
+*/
 FormatterListener* 
 getXMLFormatter(bool					shouldWriteXMLHeader,
 				bool					stripCData,
@@ -685,7 +686,6 @@ main(
 
 				for(FileNameVectorType::size_type i = 0; i < files.size(); i++)
 				{
-
 					Hashtable attrs;
 
 					attrs.insert(Hashtable::value_type(XalanDOMString("idref"), files[i]));
@@ -699,6 +699,7 @@ main(
 
 					const XalanDOMString  outbase =  outputRoot + xDir + pathSep + files[i]; 
 					const XalanDOMString  theOutputFile = futil.GenerateFileName(outbase, "out");
+					cout << endl << endl << "Processing: " << files[i] << endl;
 
 					const XSLTInputSource	xslInputSource(c_wstr(theXSLFile));
 					const XSLTInputSource	xmlInputSource(c_wstr(theXMLFile));
@@ -751,9 +752,9 @@ main(
 
 						
 						XalanDocument* goldDom = parserLiaison.parseXMLStream(goldInputSource);
-						if (domCompare(*goldDom, *dom, files[i]))
+						if ( futil.domCompare(*goldDom, *dom, files[i]) )
 						{
-							cout << "Passed: " << c_str(TranscodeToLocalCodePage(files[i]));
+							cout << endl << "Passed: " << c_str(TranscodeToLocalCodePage(files[i]));
 						}
 
 					}
