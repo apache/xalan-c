@@ -312,7 +312,7 @@ ICUBridgeCollationCompareFunctor	theICUFunctor;
 theExecutionContext.installCollationCompareFunctor(&amp;theICUFunctor);</source>
  </s3></s2><anchor name="capi"/>
  <s2 title="Basic XalanTransformer usage pattern with the C API">
-<p>We also include a simple C interface for using the XalanTransformer class. See XalanTransformer/XalanCAPI.h in the source tree. 
+<p>We also include a simple C interface for using the XalanTransformer class. See <jump href="apidocs/XalanCAPI.h.html">XalanTransformer/XalanCAPI.h</jump>. 
 The <link idref="samples" anchor="apachemodulexslt">ApacheModuleXSLT</link> sample illustrates the use of this C API.</p>
 <p>Basic strategy:</p>
 
