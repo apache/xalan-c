@@ -114,16 +114,21 @@ public:
 	 * Destroy the object, and free the block for re-use.
 	 *
 	 * @param theObject the address of the object.
+	 * @return true if the object was deleted, false if not.
 	 */
-	void
+	bool
 	destroyObject(ObjectType*	theObject)
 	{
 		assert(m_blocks.size() != 0);
+
+		bool	fSucess = false;
 
 		// Check this, just in case...
 		if (m_lastBlockReferenced != 0 && m_lastBlockReferenced->ownsObject(theObject) == true)
 		{
 			m_lastBlockReferenced->destroyObject(theObject);
+
+			fSucess = true;
 		}
 		else
 		{
@@ -140,6 +145,8 @@ public:
 
 					m_lastBlockReferenced->destroyObject(theObject);
 
+					fSucess = true;
+
 					break;
 				}
 				else
@@ -148,6 +155,8 @@ public:
 				}
 			}
 		}
+
+		return fSucess;
 	}
 
 	/*
