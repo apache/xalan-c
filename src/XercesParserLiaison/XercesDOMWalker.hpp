@@ -90,9 +90,23 @@ public:
 	 * Perform a pre-order traversal non-recursive style.
 	 */
 	virtual void
+	traverse(DOMNodeType*	pos);
+
+	/**
+	 * Perform a pre-order traversal non-recursive style.
+	 */
+	virtual void
 	traverse(
 			const DOMNodeType*	pos,
 			const DOMNodeType*	parent);
+
+	/**
+	 * Perform a pre-order traversal non-recursive style.
+	 */
+	virtual void
+	traverse(
+			DOMNodeType*	pos,
+			DOMNodeType*	parent);
 
 protected:
 
@@ -100,7 +114,13 @@ protected:
 	startNode(const DOMNodeType*	node) = 0;
 
 	virtual void
+	startNode(DOMNodeType*	node);
+
+	virtual void
 	endNode(const DOMNodeType*	node) = 0;
+
+	virtual void
+	endNode(DOMNodeType*	node);
 };
 
 
