@@ -1,28 +1,16 @@
 #include <cassert>
 #include <fstream>
-#include <fstream>
 #include <iostream>
 #include <strstream>
 
-
-
 #include <util/PlatformUtils.hpp>
 
-
-
 #include <PlatformSupport/DOMStringHelper.hpp>
-
-
-
 #include <DOMSupport/DOMSupportDefault.hpp>
-
-
 
 #include <XPath/XObjectFactoryDefault.hpp>
 #include <XPath/XPathSupportDefault.hpp>
 #include <XPath/XPathFactoryDefault.hpp>
-
-
 
 #include <XSLT/StylesheetConstructionContextDefault.hpp>
 #include <XSLT/StylesheetExecutionContextDefault.hpp>
@@ -32,11 +20,7 @@
 #include <XSLT/XSLTProcessorEnvSupportDefault.hpp>
 #include <XSLT/XSLTResultTarget.hpp>
 
-
-
 #include <XercesParserLiaison/XercesParserLiaison.hpp>
-
-
 
 #include <XercesPlatformSupport/TextFileOutputStream.hpp>
 #include <XercesPlatformSupport/XercesDOMPrintWriter.hpp>
@@ -59,7 +43,7 @@ main(
 
 	if (argc != 1)
 	{
-		cerr << "Usage: SimpleTransform"
+		cerr << "Usage: CompileStylesheet"
 			 << endl
 			 << endl;
 	}
@@ -96,8 +80,8 @@ main(
 			theProcessor.setFormatter(&theParserLiaison);
 
 			// Create separate factory support objects so the stylesheet's
-			// factory-created instances are independent from those of the
-			// processor's.
+			// factory-created XObject and XPath instances are independent 
+      // from processor's.
 			XObjectFactoryDefault			theStylesheetXObjectFactory(
 						theXSLTProcessorEnvSupport,
 						theXPathSupport);
@@ -113,7 +97,7 @@ main(
 
 			// The execution context uses the same factory support objects as
 			// the processor, since those objects have the same lifetime as
-			// other objects created as a result of the exection.
+			// other objects created as a result of the execution.
 			StylesheetExecutionContextDefault		theExecutionContext(
 						theProcessor,
 						theXSLTProcessorEnvSupport,
@@ -122,8 +106,8 @@ main(
 
 			// Our input files.  The assumption is that the executable will be run
 			// from same directory as the input files.
-			const DOMString		theXMLFileName("foo.xml");
-			const DOMString		theXSLFileName("foo.xsl");
+			const XalanDOMString		theXMLFileName("foo.xml");
+			const XalanDOMString		theXSLFileName("foo.xsl");
 
 			// Our stylesheet input source...
 			XSLTInputSource			theStylesheetSource(c_wstr(theXSLFileName));
@@ -138,36 +122,28 @@ main(
 							theConstructionContext);
 			assert(theStylesheetRoot != 0);
 
-			// Our source tree input source...
-			XSLTInputSource		theInputSource(c_wstr(theXMLFileName));
-
-			// Create the source tree...
-			XalanNode* const	theSourceTree =
-				theProcessor.getSourceTreeFromInput(theInputSource);
-			assert(theSourceTree != 0);
-
 			for (unsigned int i = 0; i < 10; i++)
 			{
-				// Generate a unique file name based on i...
-				ostrstream			theFormatter;
+        // Generate the input and output file names.
+        ostrstream theFormatterIn, theFormatterOut;
+        theFormatterIn << "foo" << i + 1 << ".xml" << '\0';
+				theFormatterOut << "foo" << i + 1 << ".out" << '\0';
 
-				theFormatter << "foo" << i + 1 << ".out" << '\0';
+        //Generate the XML input and output objects.
+        XSLTInputSource   theInputSource(theFormatterIn.str());
+				XSLTResultTarget	theResultTarget(theFormatterOut.str());
 
-				// Our output target is specified as a file name...
-				XSLTResultTarget	theResultTarget(theFormatter.str());
-
-				// Unfreeze the ostrstream, so the memory is returned...
-				theFormatter.freeze(false);
+				// Unfreeze the ostrstreams, so the memory is returned...
+        theFormatterIn.freeze(false);
+				theFormatterOut.freeze(false);
 
 				// Do the tranformation...
-				theStylesheetRoot->process(
-							theSourceTree,
-							theResultTarget,
-							theExecutionContext);
-
-				// Reset things, so we can go again...
-				theProcessor.reset();
-				theExecutionContext.reset();
+        theProcessor.process(
+             theInputSource,
+             0,     //Use the StylesheetRoot
+             theResultTarget,
+             theConstructionContext,
+             theExecutionContext);
 			}
 		}
 		catch(...)
