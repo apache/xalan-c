@@ -630,7 +630,7 @@ TransformXalanDOMString(
 		const XalanDOMChar* const	theBuffer = c_wstr(theInputString);
 		assert(theBuffer != 0);
 
-		return TransformString(theBuffer, unsigned(theStringLength), theFunction);
+		return TransformString(theBuffer, theStringLength, theFunction);
 	}
 }
 
