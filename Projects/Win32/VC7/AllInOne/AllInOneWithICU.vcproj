@@ -261,6 +261,18 @@
 			<File
 				RelativePath="..\..\..\..\src\xalanc\Include\XalanVersion.hpp">
 			</File>
+			<File
+				RelativePath="..\..\..\..\src\xalanc\Include\XalanMemMgrAutoPtr.hpp">
+			</File>			
+			<File
+				RelativePath="..\..\..\..\src\xalanc\Include\XalanMemMgrHelper.hpp">
+			</File>			
+			<File
+				RelativePath="..\..\..\..\src\xalanc\Include\XalanMemMngArrayAllocate.hpp">
+			</File>			
+			<File
+				RelativePath="..\..\..\..\src\xalanc\Include\XalanMemoryManagement.hpp">
+			</File>
 		</Filter>
 		<Filter
 			Name="XalanDOM"
@@ -713,6 +725,9 @@
 			<File
 				RelativePath="..\..\..\..\src\xalanc\PlatformSupport\XalanXMLChar.hpp">
 			</File>
+			<File
+				RelativePath="..\..\..\..\src\xalanc\PlatformSupport\XalanMemoryManagement.cpp">
+			</File>	
 		</Filter>
 		<Filter
 			Name="DOMSupport"
