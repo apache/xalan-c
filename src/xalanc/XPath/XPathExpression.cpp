@@ -282,7 +282,7 @@ XPathExpression::InvalidArgumentCountException::FormatErrorMessage(
 			int		theExpectedCount,
 			int		theSuppliedCount)
 {
-	XalanDOMString	theResult("An invalid number of arguments for op code ");
+	XalanDOMString	theResult;
 
 	LongToDOMString(theOpCode, theResult);
 

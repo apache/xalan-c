@@ -1969,9 +1969,7 @@ StylesheetExecutionContextDefault::getVariable(
 
 		XalanDOMString&		theString = theGuard.get();
 
-		theString = XALAN_STATIC_UCODE_STRING("The variable '");
-		theString += name.getLocalPart();
-		theString += XALAN_STATIC_UCODE_STRING("' is not defined.");
+		theString = XalanMessageLoader::getMessage(XalanMessages::VariableIsNotDefined_1Param,name.getLocalPart());
 
 		error(
 			theString,

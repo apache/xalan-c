@@ -948,7 +948,7 @@ StylesheetRoot::executeAttributeSet(
 	if (i == m_attributeSetsMap.end())
 	{
 		theExecutionContext.error(
-			"Unknown xsl:attribute-set",
+			XalanMessageLoader::getMessage(XalanMessages::UnknownNodeType_1Param,Constants::ELEMNAME_ATTRIBUTESET_WITH_PREFIX_STRING),
 			theExecutionContext.getCurrentNode(),
 			theLocator);
 	}

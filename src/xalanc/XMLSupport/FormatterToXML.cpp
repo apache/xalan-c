@@ -754,9 +754,9 @@ XALAN_USING_XERCES(SAXException)
 void
 FormatterToXML::throwInvalidUTF16SurrogateException(XalanDOMChar	ch)
 {
-	const XalanDOMString	theMessage(TranscodeFromLocalCodePage("Invalid UTF-16 surrogate detected: ") +
-									   UnsignedLongToHexDOMString(ch) +
-									   TranscodeFromLocalCodePage(" ?"));
+	const XalanDOMString chStr = UnsignedLongToHexDOMString(ch);
+	const XalanDOMString	theMessage = XalanMessageLoader::getMessage(XalanMessages::InvalidSurrogate_1Param,chStr);
+
 
 	throw SAXException(c_wstr(theMessage));
 }
