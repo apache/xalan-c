@@ -186,7 +186,7 @@ getParams(int argc,
 	if (fsetGold)
 	{
 		goldRoot = baseDir;
-		append(goldRoot,XalanDOMString("\\xout"));
+		append(goldRoot,XalanDOMString("-gold"));
 		futil.checkAndCreateDir(goldRoot);
 		append(goldRoot,pathSep);
 	}
@@ -400,12 +400,12 @@ main(
 					
 				// Check that output directory is there.
 				XalanDOMString		  fileName;
-				const XalanDOMString  xDir("capi");
+				const XalanDOMString  xDir("smoke");
 				const XalanDOMString  theOutputDir = outputRoot + xDir;
 				futil.checkAndCreateDir(theOutputDir);
 
 				// Get the files found in the "simpletests" directory
-				const FileNameVectorType	files = futil.getTestFileNames(baseDir, xDir, false);
+				const FileNameVectorType	files = futil.getTestFileNames(baseDir, xDir, true);
 
 				for(FileNameVectorType::size_type i = 0; i < files.size(); ++i)
 				{
