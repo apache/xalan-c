@@ -93,13 +93,13 @@ public:
 	 * to the document fragment.
 	 *
 	 * @param doc            document for nodes
-	 * @param docFrag        document fragment for nodes, default none
-	 * @param currentElement current element for nodes, default none
+	 * @param docFrag        document fragment for nodes
+	 * @param currentElement current element for nodes
 	 */
 	FormatterToDOM(
 			XalanDocument*			doc,
 			XalanDocumentFragment*	docFrag,
-			XalanElement*			currentElement = 0);
+			XalanElement*			currentElement);
 
 	/**
 	 * Construct a FormatterToDOM instance.  it will add the DOM nodes 
@@ -168,6 +168,24 @@ public:
 
 	virtual void
 	resetDocument();
+
+	XalanDocument*
+	getDocument() const
+	{
+		return m_doc;
+	}
+
+	XalanDocumentFragment*
+	getDocumentFragment() const
+	{
+		return m_docFrag;
+	}
+
+	XalanElement*
+	getCurrentElement() const
+	{
+		return m_currentElem;
+	}
 
 private:
 

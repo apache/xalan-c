@@ -158,7 +158,7 @@ FormatterToDOM::startElement(
 
 	append(elem);
 
-	m_elemStack.push(elem);
+	m_elemStack.push(m_currentElem);
 
 	m_currentElem = elem;
 }
@@ -169,11 +169,11 @@ void
 FormatterToDOM::endElement(
 			const	XMLCh* const	/* name */)
 {
-	m_elemStack.pop();
-
 	if(m_elemStack.empty() == false)
 	{
 		m_currentElem = m_elemStack.top();
+
+		m_elemStack.pop();
 	}
 	else
 	{
