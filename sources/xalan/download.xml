@@ -24,9 +24,8 @@
   <li>32-bit and 64-bit HP-UX 11 builds with the aCC v3.52 compiler</li>
   <li>32-bit Red Hat Linux 8.0 build with the gcc 3.2 compiler</li>
   <li>32-bit and 64-bit Solaris 2.8 builds with the Forte C++ 6 Update 2 compiler</li>
-  <li>32-bit SuSE Linux 8.1 for IA-32 build with the gcc 3.2.2 compiler</li>
   <li>64-bit SuSE Linux 8.1 for AMD-64 build with the gcc 3.2.2 compiler</li>
-  <li>32-bit Windows build with the Microsoft Visual Studio .NET 7.1 compiler</li>
+  <li>32-bit Windows build with the Microsoft Visual C++ 6.0 compiler with Service Pack 5</li>
 </ul>
 </p>
 <!-- Leave this section in for future releases 
@@ -60,15 +59,20 @@
   <td>AIX 5.1 (64 bit)</td>
   </tr>
   <tr>
-  <td>&xslt4c-hpux11a-dist;</td>
-  <td>&xml4c-hpux11a-dist;</td>
-  <td>HP-UX 11.0 (32 bit)</td>
+  <td>&xslt4c-hpux11i-dist;</td>
+  <td>&xml4c-hpux11i-dist;</td>
+  <td>HP-UX 11.i (32 bit)</td>
   </tr>
   <tr>
-  <td>&xslt4c-hpux11a_64-dist;</td>
-  <td>&xml4c-hpux11a_64-dist;</td>
-  <td>HP-UX 11.0 (64 bit)</td>
+  <td>&xslt4c-hpux11i_64-dist;</td>
+  <td>&xml4c-hpux11i_64-dist;</td>
+  <td>HP-UX 11.i (64 bit)</td>
   </tr>    
+  <tr>
+  <td>&xslt4c-redhat80-dist;</td>
+  <td>&xml4c-redhat80-dist;</td>
+  <td>RedHat 8.0 IA (32-bit)</td>
+  </tr>
   <tr>
   <td>&xslt4c-solaris28-dist;</td>
   <td>&xml4c-solaris28-dist;</td>
@@ -80,14 +84,14 @@
   <td>Solaris 2.8 (64-bit)</td>
   </tr>
   <tr>
-  <td>&xslt4c-suse81_IA-dist;</td>
-  <td>&xml4c-suse81_IA-dist;</td>
-  <td>SuSE Linux 8.1 (32-bit)</td>
+  <td>&xslt4c-suse80_AMD_64-dist; </td>
+  <td>&xml4c-suse80_AMD_64-dist; </td>
+  <td>SuSE 8.0 on AMD (64-bit)</td>
   </tr>
   <tr>
   <td>&xslt4c-win2k-dist;<br/></td>
   <td>&xml4c-winnt-dist;<br/></td>
-  <td>Windows 2000<br/></td>
+  <td>Windows 2000 (32-bit)<br/></td>
   </tr>
   <tr>
   <td>&xslt4c-src_dist_zip; <br/>&xslt4c-src_dist_targz;</td>
@@ -111,21 +115,24 @@
          <td>IBM C and C++ for AIX 6.00</td>
        </tr>
        <tr>
-         <td>HP/UX 11.0</td>
+         <td>HP/UX 11.i</td>
          <td>aCC A.03.52</td>
+       </tr>
+       <tr>
+         <td>RedHat Linux 8.0</td>
+         <td>gcc Compiler, version 3.2</td>
        </tr>
        <tr>
          <td>Solaris 2.8</td>
          <td>Sun Workshop 6 update 2</td>
        </tr>
        <tr>
-         <td>SuSE Linux 8.1</td>
+         <td>SuSE 8.0</td>
          <td>gcc Compiler, version 3.2.2</td>
        </tr>
        <tr>
          <td>Windows NT, 2000, and XP</td>
-         <td>Microsoft Visual C++ with SP5 (for 32-bit)<br/>
-         Intel C++ Compiler, version 7.1 (for 64-bit)</td>
+         <td>Microsoft Visual C++ with SP5</td>
        </tr>
     </table>
 </p>
