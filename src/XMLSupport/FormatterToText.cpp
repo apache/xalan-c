@@ -77,6 +77,7 @@ FormatterToText::FormatterToText(Writer&	pw) :
 
 FormatterToText::~FormatterToText()
 {
+	m_pw.flush();
 }
 
 
@@ -100,14 +101,7 @@ FormatterToText::startDocument()
 void
 FormatterToText::endDocument()
 {
-	try
-	{
-		m_pw.close();
-	}
-	catch(...)
-	{
-		throw SAXException();
-    }
+	m_pw.close();
 }
 
 
@@ -136,14 +130,7 @@ FormatterToText::characters(
 			const XMLCh* const	chars,
 			const unsigned int	length)
 {
-	try
-	{
 		m_pw.write(chars, 0, length);
-	}
-	catch(...)
-	{
-		throw SAXException();
-	}
 }
 
 void
@@ -204,12 +191,5 @@ FormatterToText::cdata(
 			const XMLCh* const	ch,
 			const unsigned int 	length)
 {
-	try
-	{
-		m_pw.write(ch, 0, length);
-	}
-	catch(...)
-	{
-		throw SAXException();
-	}
+	m_pw.write(ch, 0, length);
 }
