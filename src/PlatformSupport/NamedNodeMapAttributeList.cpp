@@ -59,7 +59,7 @@
 
 
 #include <dom/DOM_Attr.hpp>
-
+#include <util/Janitor.hpp>
 
 
 #include "DOMStringHelper.hpp"
@@ -167,9 +167,15 @@ NamedNodeMapAttributeList::getValue(const XMLCh* const name) const
 	return c_wstr(m_cachedData.back());
 }
 
+
+
 const XMLCh* 
 NamedNodeMapAttributeList::getValue(const char* const name) const
 {
-	return getValue(XMLString::transcode(name));
+	XMLCh* const	theTranscodedName =
+		XMLString::transcode(name);
 
+	ArrayJanitor<XMLCh>	theJanitor(theTranscodedName);
+
+	return getValue(theTranscodedName);
 }

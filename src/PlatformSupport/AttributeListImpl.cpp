@@ -64,6 +64,10 @@
 
 
 
+#include <util/Janitor.hpp>
+
+
+
 AttributeListImpl::AttributeListImpl() :
 	AttributeList(),
 	m_AttributeKeyMap(),
@@ -247,10 +251,17 @@ AttributeListImpl::getType(const XMLCh* const name) const
 	}
 }
 
+
+
 const XMLCh*
 AttributeListImpl::getValue(const char* const name) const
 {
-	return getValue(XMLString::transcode(name));
+	XMLCh* const	theTranscodedName =
+		XMLString::transcode(name);
+
+	ArrayJanitor<XMLCh>	theJanitor(theTranscodedName);
+
+	return getValue(theTranscodedName);
 }
 
 
