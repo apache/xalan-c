@@ -80,26 +80,11 @@ XSLTInit*	XalanTransformer::m_xsltInit = 0;
 
 
 XalanTransformer::XalanTransformer():
-	m_domSupport(),
-	m_parserLiaison(m_domSupport),
-	m_xsltprocessorEnvSupport(),
-	m_xobjectFactory(),
-	m_xpathFactory(),
-	m_processor(m_parserLiaison, 
-				m_xsltprocessorEnvSupport,
-				m_domSupport,
-				m_xobjectFactory,
-				m_xpathFactory),
-	m_stylesheetExecutionContext(
-				m_processor,
-				m_xsltprocessorEnvSupport,
-				m_domSupport,
-				m_xobjectFactory),
+	m_stylesheetExecutionContext(),
 	m_compiledStylesheets(),
+	m_parsedSources(),
 	m_errorMessage()
 {
-	m_domSupport.setParserLiaison(&m_parserLiaison);
-	m_xsltprocessorEnvSupport.setProcessor(&m_processor);
 	m_errorMessage.push_back(0);
 }
 
@@ -115,6 +100,11 @@ XalanTransformer::~XalanTransformer()
 	for_each(m_compiledStylesheets.begin(),
 			 m_compiledStylesheets.end(),
 			 DeleteFunctor<XalanCompiledStylesheet>());
+
+	// Clean up all entries in the compliledStylesheets vector.
+	for_each(m_parsedSources.begin(),
+			 m_parsedSources.end(),
+			 DeleteFunctor<XalanParsedSource>());
 }
 
 
@@ -139,7 +129,7 @@ XalanTransformer::terminate()
 
 int
 XalanTransformer::transform(
-	const XSLTInputSource&		theInputSource, 
+	XalanParsedSource&			theParsedXML, 
 	const XSLTInputSource&		theStylesheetSource,
 	const XSLTResultTarget&		theResultTarget)
 {
@@ -153,32 +143,56 @@ XalanTransformer::transform(
 	XalanDOMString	theErrorMessage;
 
 	try
-	{
+	{		
+		// Create some support objects that are necessary for running the processor...
+		DOMSupport&			theDOMSupport = *theParsedXML.getDOMSupport();
+		XMLParserLiaison&	theParserLiaison = *theParsedXML.getParserLiaison();
+
+		// Create some more support objects...
+		XSLTProcessorEnvSupportDefault	theXSLTProcessorEnvSupport;
+		XObjectFactoryDefault			theXObjectFactory;
+		XPathFactoryDefault				theXPathFactory;
+
+		// Create a processor...
+		XSLTEngineImpl	theProcessor(
+				theParserLiaison,
+				theXSLTProcessorEnvSupport,
+				theDOMSupport,
+				theXObjectFactory,
+				theXPathFactory);
+
 		// Create a problem listener and send output to a XalanDOMString.
 		DOMStringPrintWriter	thePrintWriter(theErrorMessage);
 		
 		ProblemListenerDefault	theProblemListener(&thePrintWriter);
 
-		m_processor.setProblemListener(&theProblemListener);
+		theProcessor.setProblemListener(&theProblemListener);
 
-		m_parserLiaison.setExecutionContext(m_stylesheetExecutionContext);
+		theParserLiaison.setExecutionContext(m_stylesheetExecutionContext);
 
 		// Create a stylesheet construction context, using the
 		// stylesheet's factory support objects.
 		StylesheetConstructionContextDefault	theStylesheetConstructionContext(
-					m_processor,
-					m_xsltprocessorEnvSupport,
-					m_xpathFactory);
+					theProcessor,
+					theXSLTProcessorEnvSupport,
+					theXPathFactory);
 
-		XSLTResultTarget	temp(theResultTarget);
+		XSLTResultTarget	tempResultTarget(theResultTarget);
+
+		m_stylesheetExecutionContext.setXPathEnvSupport(&theXSLTProcessorEnvSupport);
+		m_stylesheetExecutionContext.setDOMSupport(&theDOMSupport);
+		m_stylesheetExecutionContext.setXObjectFactory(&theXObjectFactory);
+		m_stylesheetExecutionContext.setXSLTProcessor(&theProcessor);
 
 		// Do the transformation...
-		m_processor.process(
-					theInputSource,
+		theProcessor.process(
+					theParsedXML.getParsedSource(),
 					theStylesheetSource,
-					temp,
+					tempResultTarget,
 					theStylesheetConstructionContext,
 					m_stylesheetExecutionContext);
+
+		reset();
 	}
 	catch (XSLException& e)
 	{
@@ -238,8 +252,11 @@ XalanTransformer::transform(
 		theResult = -4;
 	}
 
-	reset();
-	
+	m_stylesheetExecutionContext.setXPathEnvSupport(0);
+	m_stylesheetExecutionContext.setDOMSupport(0);
+	m_stylesheetExecutionContext.setXObjectFactory(0);
+	m_stylesheetExecutionContext.setXSLTProcessor(0);
+
 	return theResult;
 }
 
@@ -247,7 +264,7 @@ XalanTransformer::transform(
 
 int
 XalanTransformer::transform(
-			const XSLTInputSource&			theInputSource, 
+			XalanParsedSource&				theParsedXML, 
 			const XalanCompiledStylesheet*	theCompiledStylesheet,
 			const XSLTResultTarget&			theResultTarget)
 {
@@ -262,22 +279,44 @@ XalanTransformer::transform(
 
 	try
 	{
+		// Create some support objects that are necessary for running the processor...
+		DOMSupport&			theDOMSupport = *theParsedXML.getDOMSupport();
+		XMLParserLiaison&	theParserLiaison = *theParsedXML.getParserLiaison();
+
+		// Create some more support objects...
+		XSLTProcessorEnvSupportDefault	theXSLTProcessorEnvSupport;
+		XObjectFactoryDefault			theXObjectFactory;
+		XPathFactoryDefault				theXPathFactory;
+
+		// Create a processor...
+		XSLTEngineImpl	theProcessor(
+				theParserLiaison,
+				theXSLTProcessorEnvSupport,
+				theDOMSupport,
+				theXObjectFactory,
+				theXPathFactory);
+
 		// Create a problem listener and send output to a XalanDOMString.
 		DOMStringPrintWriter	thePrintWriter(theErrorMessage);
 		
 		ProblemListenerDefault	theProblemListener(&thePrintWriter);
 
-		m_processor.setProblemListener(&theProblemListener);
+		theProcessor.setProblemListener(&theProblemListener);
+
+		XSLTResultTarget	tempResultTarget(theResultTarget);
+
+		m_stylesheetExecutionContext.setXPathEnvSupport(&theXSLTProcessorEnvSupport);
+		m_stylesheetExecutionContext.setDOMSupport(&theDOMSupport);
+		m_stylesheetExecutionContext.setXObjectFactory(&theXObjectFactory);
+		m_stylesheetExecutionContext.setXSLTProcessor(&theProcessor);
 
 		// Set the compiled stylesheet.
 		theCompiledStylesheet->setStylesheetRoot(m_stylesheetExecutionContext);
 
-		XSLTResultTarget	temp(theResultTarget);
-
 		// Do the transformation...
-		m_processor.process(
-					theInputSource,				
-					temp,					
+		theProcessor.process(
+					theParsedXML.getParsedSource(),		
+					tempResultTarget,					
 					m_stylesheetExecutionContext);
 	}
 	catch (XSLException& e)
@@ -338,9 +377,50 @@ XalanTransformer::transform(
 		theResult = -4;
 	}
 
+	m_stylesheetExecutionContext.setXPathEnvSupport(0);
+	m_stylesheetExecutionContext.setDOMSupport(0);
+	m_stylesheetExecutionContext.setXObjectFactory(0);
+	m_stylesheetExecutionContext.setXSLTProcessor(0);
+
 	reset();
 	
 	return theResult;
+}
+
+
+
+int
+XalanTransformer::transform(
+	const XSLTInputSource&		theInputSource, 
+	const XSLTInputSource&		theStylesheetSource,
+	const XSLTResultTarget&		theResultTarget)
+{
+	// Parse the source document.
+	XalanParsedSource* theParsedXML = parseSource(theInputSource);
+
+	// Do the transformation...
+	return transform(
+					*theParsedXML, 
+					theStylesheetSource,
+					theResultTarget);
+}
+
+
+
+int
+XalanTransformer::transform(
+			const XSLTInputSource&			theInputSource, 
+			const XalanCompiledStylesheet*	theCompiledStylesheet,
+			const XSLTResultTarget&			theResultTarget)
+{
+	// Parse the source document.
+	XalanParsedSource* theParsedXML = parseSource(theInputSource);
+
+	// Do the transformation...
+	return transform(
+					*theParsedXML, 
+					theCompiledStylesheet,
+					theResultTarget);
 }
 
 
@@ -436,12 +516,33 @@ XalanTransformer::compileStylesheet(const XSLTInputSource&		theStylesheetSource)
 
 	try
 	{	
+
+		// Create some support objects that are necessary for running the processor...
+		XalanSourceTreeDOMSupport		theDOMSupport;
+		XalanSourceTreeParserLiaison	theParserLiaison(theDOMSupport);
+
+		// Hook the two together...
+		theDOMSupport.setParserLiaison(&theParserLiaison);
+
+		// Create some more support objects...
+		XSLTProcessorEnvSupportDefault	theXSLTProcessorEnvSupport;
+		XObjectFactoryDefault			theXObjectFactory;
+		XPathFactoryDefault				theXPathFactory;
+
+		// Create a processor...
+		XSLTEngineImpl	theProcessor(
+				theParserLiaison,
+				theXSLTProcessorEnvSupport,
+				theDOMSupport,
+				theXObjectFactory,
+				theXPathFactory);
+
 		// Create a new XalanCompiledStylesheet.
 		XalanCompiledStylesheet* const theCompiledStylesheet =
 			new XalanCompiledStylesheet(
 						theStylesheetSource, 
-						m_xsltprocessorEnvSupport,
-						m_processor);
+						theXSLTProcessorEnvSupport,
+						theProcessor);
 
 		// Store it in a vector.
 		m_compiledStylesheets.push_back(theCompiledStylesheet);
@@ -505,13 +606,100 @@ XalanTransformer::compileStylesheet(const XSLTInputSource&		theStylesheetSource)
 
 
 
+XalanParsedSource*
+XalanTransformer::parseSource(
+			const XSLTInputSource&	theInputSource, 
+			bool					useXercesDOM)
+{
+	// Clear the error message.
+	m_errorMessage.clear();
+	m_errorMessage.push_back(0);
+
+	// Store error messages from problem listener.
+	XalanDOMString	theErrorMessage;
+
+	try
+	{	
+		XalanParsedSource* theParsedDocument = 0;
+
+		if(useXercesDOM == 1)
+		{
+			theParsedDocument = new XercesDOMParsedSource(theInputSource);
+		}
+		else
+		{
+			theParsedDocument = new XalanDefaultParsedSource(theInputSource);
+		}
+
+		// Store it in a vector.
+		m_parsedSources.push_back(theParsedDocument);		
+
+		return theParsedDocument;
+	}	
+	catch (XSLException& e)
+	{
+		if (length(theErrorMessage) != 0)
+		{
+			TranscodeToLocalCodePage(theErrorMessage, m_errorMessage, true);
+		}
+		else
+		{
+			TranscodeToLocalCodePage(e.getMessage(), m_errorMessage, true);
+		}
+		
+	}
+	catch (SAXException& e)
+	{
+		if (length(theErrorMessage) != 0)
+		{
+			TranscodeToLocalCodePage(theErrorMessage, m_errorMessage, true);
+		}
+		else
+		{
+			TranscodeToLocalCodePage(e.getMessage(), m_errorMessage, true);
+		}
+		
+	}
+	catch (XMLException& e)
+	{
+		if (length(theErrorMessage) != 0)
+		{
+			TranscodeToLocalCodePage(theErrorMessage, m_errorMessage, true);
+		}
+		else
+		{
+			TranscodeToLocalCodePage(e.getMessage(), m_errorMessage, true);
+		}
+		
+	}
+	catch(const XalanDOMException&	e)
+	{
+		if (length(theErrorMessage) != 0)
+		{
+			TranscodeToLocalCodePage(theErrorMessage, m_errorMessage, true);
+		}
+		else
+		{
+			XalanDOMString theMessage("XalanDOMException caught.  The code is ");
+			
+			append(theMessage,  LongToDOMString(long(e.getExceptionCode())));
+			append(theMessage,  XalanDOMString("."));						 
+
+			TranscodeToLocalCodePage(theMessage, m_errorMessage, true);
+		}
+	}
+	return 0;
+}
+
+
+
 void
 XalanTransformer::setStylesheetParam(
 			const XalanDOMString&	key,
 			const XalanDOMString&	expression)
 {
 	// Set the stylesheet parameter.
-	m_processor.setStylesheetParam(key,  expression);
+//	m_processor.setStylesheetParam(key,  expression);
 }
 
 
@@ -522,9 +710,9 @@ XalanTransformer::setStylesheetParam(
 			const char*				expression)
 {
 	// Set the stylesheet parameter.
-	m_processor.setStylesheetParam(
-					XalanDOMString(key),  
-					XalanDOMString(expression));
+//	m_processor.setStylesheetParam(
+//					XalanDOMString(key),  
+//					XalanDOMString(expression));
 }
 
 
@@ -543,12 +731,12 @@ XalanTransformer::reset()
 	try
 	{
 		// Reset objects.
-		m_stylesheetExecutionContext.reset();
-		
-		m_parserLiaison.reset();
+		m_stylesheetExecutionContext.setXPathEnvSupport(0);
+		m_stylesheetExecutionContext.setDOMSupport(0);
+		m_stylesheetExecutionContext.setXObjectFactory(0);
+		m_stylesheetExecutionContext.setXSLTProcessor(0);
 
-		// Clear the problem listener before it goes out of scope.
-		m_processor.setProblemListener(0);
+		m_stylesheetExecutionContext.reset();
 	}
 	catch(...)
 	{

@@ -95,6 +95,9 @@
 
 
 #include <XalanTransformer/XalanCompiledStylesheet.hpp>
+#include <XalanTransformer/XalanDefaultParsedSource.hpp>
+#include <XalanTransformer/XalanParsedSource.hpp>
+#include <XalanTransformer/XercesDOMParsedSource.hpp>
 #include <XalanTransformer/XalanTransformerOutputStream.hpp>
 
 
@@ -143,6 +146,36 @@ public:
 	 */
 	static void
 	terminate();
+
+	/**
+	 * Transform will apply the stylesheet source to the parsed xml source
+	 * and write the transformation output to the target. 
+	 *
+	 * @param theParsedXML			the parsed input source
+	 * @param theStylesheetSource	stylesheet source
+	 * @param theResultTarget		output source
+	 * @return	0 for success
+	 */
+	int
+	transform(
+			XalanParsedSource&			theParsedXML, 
+			const XSLTInputSource&		theStylesheetSource,
+			const XSLTResultTarget&		theResultTarget);
+
+	/**
+	 * Transform will apply the compiled stylesheet to the parsed xml source
+	 * and write the transformation output to the target. 
+	 *
+	 * @param theParsedXML			the parsed input source
+	 * @param theCompiledStylesheet	pointer to a compiled stylesheet
+	 * @param theResultTarget		output source 
+	 * @return	0 for success
+	 */
+	int
+	transform(
+			XalanParsedSource&				theParsedXML, 
+			const XalanCompiledStylesheet*	theCompiledStylesheet,
+			const XSLTResultTarget&			theResultTarget);
 
 	/**
 	 * Transform will apply the stylesheet source to the input source
@@ -296,6 +329,19 @@ public:
 			const char*				expression);
 
 	/**
+	 * Parse source document.  The input source can be 
+	 * a file name, a stream or a root node.
+	 *
+	 * @param theInputSource	input source
+	 * @param useXercesDOM		input use default or xerces dom source tree
+	 * @return	a pointer to a XalanParsedSource or 0 for failure.
+	 */
+	XalanParsedSource*
+	parseSource(
+			const XSLTInputSource&	theInputSource, 
+			bool  useXercesDOM = 0);
+
+	/**
 	 * Returns the last error that occurred as a 
 	 * result of calling transform.	
 	 *
@@ -307,8 +353,10 @@ public:
 
 #if defined(XALAN_NO_NAMESPACES)
 	typedef vector<const XalanCompiledStylesheet*>		CompiledStylesheetPtrVectorType;
+	typedef vector<const ParsedDocument*>				ParsedSourcePtrVectorType;
 #else
 	typedef std::vector<const XalanCompiledStylesheet*>	CompiledStylesheetPtrVectorType;
+	typedef std::vector<const XalanParsedSource*>		ParsedSourcePtrVectorType;
 #endif
 
 protected:
@@ -318,21 +366,11 @@ private:
 	void 
 	reset();
 
-	XalanSourceTreeDOMSupport				m_domSupport;
-
-	XalanSourceTreeParserLiaison			m_parserLiaison;
-	
-	XSLTProcessorEnvSupportDefault			m_xsltprocessorEnvSupport;
-	
-	XObjectFactoryDefault					m_xobjectFactory;
-	
-	XPathFactoryDefault						m_xpathFactory;
-	
-	XSLTEngineImpl							m_processor;
-
 	StylesheetExecutionContextDefault		m_stylesheetExecutionContext;
 
 	CompiledStylesheetPtrVectorType			m_compiledStylesheets;
+
+	ParsedSourcePtrVectorType				m_parsedSources;
 
 	CharVectorType							m_errorMessage;
 

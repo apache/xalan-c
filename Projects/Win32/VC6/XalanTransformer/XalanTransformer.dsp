@@ -134,11 +134,23 @@ SOURCE=..\..\..\..\src\XalanTransformer\XalanCompiledStylesheet.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\XalanTransformer\XalanDefaultParsedSource.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XalanTransformer\XalanParsedSource.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\XalanTransformer\XalanTransformer.cpp
 # End Source File
 # Begin Source File
 
 SOURCE=..\..\..\..\src\XalanTransformer\XalanTransformerOutputStream.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XalanTransformer\XercesDOMParsedSource.cpp
 # End Source File
 # End Group
 # Begin Group "Header Files"
@@ -154,6 +166,14 @@ SOURCE=..\..\..\..\src\XalanTransformer\XalanCompiledStylesheet.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\XalanTransformer\XalanDefaultParsedSource.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XalanTransformer\XalanParsedSource.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\XalanTransformer\XalanTransformer.hpp
 # End Source File
 # Begin Source File
@@ -163,6 +183,10 @@ SOURCE=..\..\..\..\src\XalanTransformer\XalanTransformerDefinitions.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\XalanTransformer\XalanTransformerOutputStream.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XalanTransformer\XercesDOMParsedSource.hpp
 # End Source File
 # End Group
 # Begin Group "Resource Files"

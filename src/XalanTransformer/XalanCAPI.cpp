@@ -296,6 +296,32 @@ XalanCompileStylesheet(
 
 
 
+XALAN_TRANSFORMER_EXPORT_FUNCTION(XalanPSHandle)
+XalanParseSource(
+			const char*				theXMLFileName,
+			XalanHandle				theXalanHandle)
+{
+#if defined(XALAN_OLD_STYLE_CASTS)
+	return ((XalanTransformer*)theXalanHandle)->parseSource(theXMLFileName);
+#else
+	return 	static_cast<XalanTransformer*>(theXalanHandle)->parseSource(theXMLFileName);
+#endif
+}
+
+
+
+XALAN_TRANSFORMER_EXPORT_FUNCTION(XalanPSHandle)
+XalanParseSourceUseXerceDOM(
+			const char*				theXMLFileName,
+			XalanHandle				theXalanHandle)
+{
+#if defined(XALAN_OLD_STYLE_CASTS)
+	return ((XalanTransformer*)theXalanHandle)->parseSource(theXMLFileName, 1);
+#else
+	return 	static_cast<XalanTransformer*>(theXalanHandle)->parseSource(theXMLFileName, 1);
+#endif
+}
+
 XALAN_TRANSFORMER_EXPORT_FUNCTION(void)
 XalanSetStylesheetParam(
 			const char*				key,

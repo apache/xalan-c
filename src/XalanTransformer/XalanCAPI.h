@@ -87,6 +87,11 @@ extern "C"
 	typedef void* XalanCSSHandle;
 
 	/**
+	 * Handle used to store the address of Parsed Source instance.
+	 */
+	typedef void* XalanPSHandle;
+
+	/**
 	 * Callback function passed to XalanTransformToHandler. 
 	 * Used to process transformation output in blocks of data.
 	 * Caller is responsible for streaming or copying data to a user  
@@ -305,6 +310,7 @@ extern "C"
 	 * a file name, a stream or a root node.
 	 *
 	 * @param theXSLFileName	filename of stylesheet source
+	 * @param theXalanHandle	handle of XalanTransformer instance.
 	 * @return	a CSSHandle or 0 for failure.
 	 */
 	XALAN_TRANSFORMER_EXPORT_FUNCTION(XalanCSSHandle)
@@ -313,11 +319,30 @@ extern "C"
 				XalanHandle				theXalanHandle);
 
 	/**
+	 * Parse source document.  The input source can be 
+	 * a file name, a stream or a root node.
+	 *
+	 * @param theInputSource	input source	
+	 * @param theXalanHandle	handle of XalanTransformer instance.	 
+	 * @return	a pointer to a XalanParsedSource or 0 for failure.
+	 */	
+	XALAN_TRANSFORMER_EXPORT_FUNCTION(XalanPSHandle)
+	XalanParseSource(
+			const char*				theXMLFileName,
+			XalanHandle				theXalanHandle);
+
+	XALAN_TRANSFORMER_EXPORT_FUNCTION(XalanPSHandle)
+	XalanParseSourceUseXerceDOM(
+			const char*				theXMLFileName,
+			XalanHandle				theXalanHandle);
+
+	/**
 	 * Set a top-level stylesheet parameter.  This value can be evaluated via
 	 * xsl:param-variable.
 	 *
 	 * @param key name of the param
 	 * @param expression expression that will be evaluated
+	 * @param theXalanHandle	handle of XalanTransformer instance.
 	 */
 	XALAN_TRANSFORMER_EXPORT_FUNCTION(void)
 	XalanSetStylesheetParam(
