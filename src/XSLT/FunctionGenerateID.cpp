@@ -129,12 +129,16 @@ getSuffix(
 
 XObjectPtr
 FunctionGenerateID::execute(
-			XPathExecutionContext&		executionContext,
-			XalanNode*					context)
+			XPathExecutionContext&	executionContext,
+			XalanNode*				context,
+			const Locator*			locator) const
 {
 	if (context == 0)
 	{
-		executionContext.error("The function generate-id requires a non-null node!");
+		executionContext.error(
+				"The generate-id() function requires a non-null context node!",
+				context,
+				locator);
 
 		return XObjectPtr();
 	}
@@ -155,8 +159,9 @@ FunctionGenerateID::execute(
 XObjectPtr
 FunctionGenerateID::execute(
 			XPathExecutionContext&	executionContext,
-			XalanNode*				/* context */,			
-			const XObjectPtr		arg1)
+			XalanNode*				/* context */,
+			const XObjectPtr		arg1,
+			const Locator*			locator) const
 {
 	assert(arg1.null() == false);
 
@@ -168,51 +173,8 @@ FunctionGenerateID::execute(
 	}
 	else
 	{
-		return execute(executionContext, theNodeList.item(0));
+		return execute(executionContext, theNodeList.item(0), locator);
 	}
-}
-
-
-
-XObjectPtr
-FunctionGenerateID::execute(
-			XPathExecutionContext&	executionContext,
-			XalanNode*				context,			
-			const XObjectPtr		/* arg1 */,
-			const XObjectPtr		/* arg2 */)
-{
-	executionContext.error(getError(), context);
-
-	return XObjectPtr(0);
-}
-
-
-
-XObjectPtr
-FunctionGenerateID::execute(
-			XPathExecutionContext&	executionContext,
-			XalanNode*				context,			
-			const XObjectPtr		/* arg1 */,
-			const XObjectPtr		/* arg2 */,
-			const XObjectPtr		/* arg3 */)
-{
-	executionContext.error(getError(), context);
-
-	return XObjectPtr(0);
-}
-
-
-
-XObjectPtr
-FunctionGenerateID::execute(
-			XPathExecutionContext&			executionContext,
-			XalanNode*						context,
-			int								/* opPos */,
-			const XObjectArgVectorType&		/* args */)
-{
-	executionContext.error(getError(), context);
-
-	return XObjectPtr(0);
 }
 
 
@@ -232,6 +194,5 @@ FunctionGenerateID::clone() const
 const XalanDOMString
 FunctionGenerateID::getError() const
 {
-	return XALAN_STATIC_UCODE_STRING(
-		"The generate-id function takes zero or one arguments!");
+	return XALAN_STATIC_UCODE_STRING("The generate-id function takes zero or one arguments!");
 }

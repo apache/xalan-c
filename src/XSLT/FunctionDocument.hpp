@@ -81,38 +81,20 @@ public:
 
 	// These methods are inherited from Function ...
 
-	XObjectPtr
+	virtual XObjectPtr
 	execute(
-			XPathExecutionContext&		executionContext,
-			XalanNode*					context);
+			XPathExecutionContext&	executionContext,
+			XalanNode*				context,
+			const XObjectPtr		arg,
+			const Locator*			locator) const;
 
 	virtual XObjectPtr
 	execute(
-			XPathExecutionContext&		executionContext,
-			XalanNode*					context,			
-			const XObjectPtr			arg1);
-
-	XObjectPtr
-	execute(
-			XPathExecutionContext&		executionContext,
-			XalanNode*					context,			
-			const XObjectPtr			/* arg1 */,
-			const XObjectPtr			/* arg2 */);
-
-	XObjectPtr
-	execute(
-			XPathExecutionContext&		executionContext,
-			XalanNode*					context,			
-			const XObjectPtr			/* arg1 */,
-			const XObjectPtr			/* arg2 */,
-			const XObjectPtr			/* arg3 */);
-
-	XObjectPtr
-	execute(
-			XPathExecutionContext&		executionContext,
-			XalanNode*					context,
-			int							/* opPos */,
-			const XObjectArgVectorType&	/* args */);
+			XPathExecutionContext&	executionContext,
+			XalanNode*				context,
+			const XObjectPtr		arg1,
+			const XObjectPtr		arg2,
+			const Locator*			locator) const;
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
 	virtual Function*
@@ -121,18 +103,20 @@ public:
 #endif
 	clone() const;
 
+protected:
+
+	const XalanDOMString
+	getError() const;
+
 private:
 
 	XObjectPtr
-	execute(
+	doExecute(
 			XPathExecutionContext&			executionContext,
 			XalanNode*						context,			
 			const XObjectPtr				arg,
 			XalanDOMString*					base,
-			int								argCount);
-
-	const XalanDOMString
-	getError() const;
+			int								argCount) const;
 
 	// Not implemented...
 	FunctionDocument&

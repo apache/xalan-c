@@ -136,11 +136,40 @@ StylesheetConstructionContextDefault::error(
 
 void
 StylesheetConstructionContextDefault::error(
+			const XalanDOMString&	msg,
+			const XalanNode* 		sourceNode,
+			const Locator* 			locator) const
+{
+	if (locator != 0)
+	{
+		m_processor.error(msg, *locator, sourceNode);
+	}
+	else
+	{
+		m_processor.error(msg, sourceNode);
+	}
+}
+
+
+
+void
+StylesheetConstructionContextDefault::error(
 			const char*					msg,
 			const XalanNode* 			sourceNode,
 			const ElemTemplateElement*	styleNode) const
 {
 	error(TranscodeFromLocalCodePage(msg), sourceNode, styleNode);
+}
+
+
+
+void
+StylesheetConstructionContextDefault::error(
+			const char*			msg,
+			const XalanNode* 	sourceNode,
+			const Locator* 		locator) const
+{
+	error(TranscodeFromLocalCodePage(msg), sourceNode, locator);
 }
 
 
@@ -158,11 +187,40 @@ StylesheetConstructionContextDefault::warn(
 
 void
 StylesheetConstructionContextDefault::warn(
+			const XalanDOMString&	msg,
+			const XalanNode* 		sourceNode,
+			const Locator* 			locator) const
+{
+	if (locator != 0)
+	{
+		m_processor.warn(msg, *locator, sourceNode);
+	}
+	else
+	{
+		m_processor.warn(msg, sourceNode);
+	}
+}
+
+
+
+void
+StylesheetConstructionContextDefault::warn(
 			const char*					msg,
 			const XalanNode* 			sourceNode,
 			const ElemTemplateElement*	styleNode) const
 {
 	warn(TranscodeFromLocalCodePage(msg), sourceNode, styleNode);
+}
+
+
+
+void
+StylesheetConstructionContextDefault::warn(
+			const char*			msg,
+			const XalanNode* 	sourceNode,
+			const Locator* 		locator) const
+{
+	warn(TranscodeFromLocalCodePage(msg), sourceNode, locator);
 }
 
 
@@ -180,11 +238,40 @@ StylesheetConstructionContextDefault::message(
 
 void
 StylesheetConstructionContextDefault::message(
+			const XalanDOMString&	msg,
+			const XalanNode* 		sourceNode,
+			const Locator* 			locator) const
+{
+	if (locator != 0)
+	{
+		m_processor.message(msg, *locator, sourceNode);
+	}
+	else
+	{
+		m_processor.message(msg, sourceNode);
+	}
+}
+
+
+
+void
+StylesheetConstructionContextDefault::message(
 			const char*					msg,
 			const XalanNode* 			sourceNode,
 			const ElemTemplateElement*	styleNode) const
 {
 	message(TranscodeFromLocalCodePage(msg), sourceNode, styleNode);
+}
+
+
+
+void
+StylesheetConstructionContextDefault::message(
+			const char*			msg,
+			const XalanNode* 	sourceNode,
+			const Locator* 		locator) const
+{
+	message(TranscodeFromLocalCodePage(msg), sourceNode, locator);
 }
 
 

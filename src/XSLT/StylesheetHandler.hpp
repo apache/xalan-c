@@ -89,6 +89,7 @@ class ElemTemplateElement;
 class ElemTextLiteral;
 class ExtensionNSHandler;
 class StylesheetConstructionContext;
+class XalanQName;
 
 
 
@@ -117,9 +118,16 @@ public:
 #endif
 
 	/**
-	 * Stack to keep track of the current include base.
+	 * Perform static initialization.  See class XMLSupportInit.
 	 */
-	XalanDOMString m_includeBase;
+	static void
+	initialize();
+
+	/**
+	 * Perform static shut down.  See class XMLSupportInit.
+	 */
+	static void
+	terminate();
 
 	/**
 	 * Construct a StylesheetHandler ... it will add the DOM nodes 
@@ -378,6 +386,7 @@ protected:
 	 * @param aname The name of the attribute in question.
 	 * @param atts The attribute list that owns the attribute.
 	 * @param which The index of the attribute into the attribute list.
+	 * @param locator A Locator instance for error reporting.
 	 * @param fPreserve set to true if the attribute value is "preserve"
 	 * @return True if this is a xml:space attribute.
 	 */
@@ -386,18 +395,21 @@ protected:
 			const XalanDOMChar*		aname,
 			const AttributeList&	atts,
 			int						which,
+			const Locator*			locator,
 			bool&					fPreserve);
 
 	/** 
 	 * Tell whether or not this is a xml:space attribute and, if so, process it.
 	 * 
 	 * @param atts The attribute list that owns the attribute.
+	 * @param locator A Locator instance for error reporting.
 	 * @param fPreserve set to true if an xml:space attribute value is "preserve"
 	 * @return True if this is a xml:space attribute.
 	 */
 	bool
 	processSpaceAttr(
 			const AttributeList&	atts,
+			const Locator*			locator,
 			bool&					fPreserve);
 
 	/**
@@ -406,20 +418,17 @@ protected:
 	void
 	processImport(
 			const XalanDOMChar*		name,
-			const AttributeList&	atts);
+			const AttributeList&	atts,
+			const Locator*			locator);
 
 	/**
 	 * Process xsl:include.
 	 */
 	void
-	processInclude(const XalanDOMChar*		name,
-				   const AttributeList&		atts);
-
-	void
-	error(
-			const XalanDOMString&	theMessage,
-			int						theLineNumber,
-			int						theColumnNumber) const;
+	processInclude(
+			const XalanDOMChar*		name,
+			const AttributeList&	atts,
+			const Locator*			locator);
 
 	void
 	doCleanup();
@@ -432,7 +441,17 @@ private:
 	StylesheetHandler&
 	operator=(const StylesheetHandler&);
 
-	// Utility function...
+	// Utility functions...
+	void
+	error(
+			const char*		theMessage,
+			const Locator*	theLocator) const;
+
+	void
+	error(
+			const XalanDOMString&	theMessage,
+			const Locator*			theLocator) const;
+
 	void
 	processText(
 			const XMLCh* const	chars,
@@ -453,8 +472,7 @@ private:
 			const XalanDOMString&	ns,
 			const AttributeList&	atts,
 			int						xslToken,
-			int						lineNumber,
-			int						columnNumber,
+			const Locator*			locator,
 			bool&					fPreserveSpace,
 			bool&					fSpaceAttrProcessed);
 
@@ -462,8 +480,7 @@ private:
 	processStylesheet(
 			const XalanDOMChar*		name,
 			const AttributeList&	atts,
-			int						lineNumber,
-			int						columnNumber,
+			const Locator*			locator,
 			bool&					fPreserveSpace,
 			bool&					fSpaceAttrProcessed);
 
@@ -471,15 +488,13 @@ private:
 	processPreserveStripSpace(
 			const XalanDOMChar*		name,
 			const AttributeList&	atts,
-			int						lineNumber,
-			int						columnNumber,
+			const Locator*			locator,
 			int						xslToken);
 
 	void
 	appendChildElementToParent(
 			ElemTemplateElement*	elem,
-			int						lineNumber,
-			int						columnNumber);
+			const Locator*			locator);
 
 	bool
 	inExtensionElement() const;
@@ -488,12 +503,10 @@ private:
 	processExtensionElement(
 			const XalanDOMChar*		name,
 			const XalanDOMString&	localName,
-			const AttributeList&	atts);
+			const AttributeList&	atts,
+			const Locator*			locator);
 
 	// Data members...
-	XalanDOMString	m_pendingException;
-
-	bool			m_exceptionPending;
 
 	/**
 	 * The owning stylesheet.
@@ -563,6 +576,8 @@ private:
 	 * where possible.
 	 */
 	XalanDOMString	m_accumulateText;
+
+	XalanDOMString	m_includeBase;
 
 	BoolStackType	m_inExtensionElementStack;
 
@@ -637,6 +652,8 @@ private:
 	friend class PushPopIncludeState;
 
 	static const XalanDOMString				s_emptyString;
+
+	static const XalanQName&				s_spaceAttrQName;
 };
 
 

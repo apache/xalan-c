@@ -104,41 +104,19 @@ FunctionKey::~FunctionKey()
 XObjectPtr
 FunctionKey::execute(
 			XPathExecutionContext&	executionContext,
-			XalanNode*				context)
-{
-	executionContext.error(getError(), context);
-
-	return XObjectPtr(0);
-}
-
-
-
-XObjectPtr
-FunctionKey::execute(
-			XPathExecutionContext&	executionContext,
 			XalanNode*				context,			
-			const XObjectPtr		/* arg1 */)
-{
-	executionContext.error(getError(), context);
-
-	return XObjectPtr(0);
-}
-
-
-
-XObjectPtr
-FunctionKey::execute(
-		XPathExecutionContext&			executionContext,
-		XalanNode*						context,			
-		const XObjectPtr				arg1,
-		const XObjectPtr				arg2)
+			const XObjectPtr		arg1,
+			const XObjectPtr		arg2,
+			const Locator*			locator) const
 {
 	assert(arg1.null() == false && arg2.null() == false);
 
 	if (context == 0)
 	{
-		executionContext.error("The key() function requires a non-null context node!",
-							   context);
+		executionContext.error(
+			"The key() function requires a non-null context node!",
+			context,
+			locator);
 
 		return XObjectPtr();
 	}
@@ -155,8 +133,10 @@ FunctionKey::execute(
 
 		if(0 == docContext)
 		{
-			executionContext.error("Context does not have an owner document!",
-								   context);
+			executionContext.error(
+				"Context does not have an owner document!",
+				context,
+				locator);
 		}
 
 		assert(executionContext.getPrefixResolver() != 0);
@@ -234,35 +214,6 @@ FunctionKey::execute(
 
 
 
-XObjectPtr
-FunctionKey::execute(
-			XPathExecutionContext&	executionContext,
-			XalanNode*				context,			
-			const XObjectPtr		/* arg1 */,
-			const XObjectPtr		/* arg2 */,
-			const XObjectPtr		/* arg3 */)
-{
-	executionContext.error(getError(), context);
-
-	return XObjectPtr(0);
-}
-
-
-
-XObjectPtr
-FunctionKey::execute(
-			XPathExecutionContext&			executionContext,
-			XalanNode*						context,
-			int								/* opPos */,
-			const XObjectArgVectorType&		/* args */)
-{
-	executionContext.error(getError(), context);
-
-	return XObjectPtr(0);
-}
-
-
-
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
 Function*
 #else
@@ -278,6 +229,5 @@ FunctionKey::clone() const
 const XalanDOMString
 FunctionKey::getError() const
 {
-	return XALAN_STATIC_UCODE_STRING(
-		"The key() function takes two arguments!");
+	return XALAN_STATIC_UCODE_STRING("The key() function takes two arguments!");
 }

@@ -1543,9 +1543,10 @@ StylesheetExecutionContextDefault::extFunction(
 			const XalanDOMString&			theNamespace,
 			const XalanDOMString&			functionName,
 			XalanNode*						context,
-			const XObjectArgVectorType&		argVec)
+			const XObjectArgVectorType&		argVec,
+			const Locator*					locator)
 {
-	return m_xpathExecutionContextDefault.extFunction(theNamespace, functionName, context, argVec);
+	return m_xpathExecutionContextDefault.extFunction(theNamespace, functionName, context, argVec, locator);
 }
 
 
@@ -1632,7 +1633,9 @@ StylesheetExecutionContextDefault::getNodeSetByKey(
 
 
 const XObjectPtr
-StylesheetExecutionContextDefault::getVariable(const XalanQName&	name)
+StylesheetExecutionContextDefault::getVariable(
+			const XalanQName&	name,
+			const Locator*		locator)
 {
 	bool				fFound;
 
@@ -1648,7 +1651,9 @@ StylesheetExecutionContextDefault::getVariable(const XalanQName&	name)
 	{
 		error(
 			TranscodeFromLocalCodePage("Variable reference given for variable out of context or without definition!  Name = '") +
-			name.getLocalPart() + "'");
+			name.getLocalPart() + "'",
+			getCurrentNode(),
+			locator);
 
 		return getXObjectFactory().createUnknown(name.getLocalPart());
 	}
@@ -1917,7 +1922,14 @@ StylesheetExecutionContextDefault::error(
 {
 	assert(m_xsltProcessor != 0);
 
-	m_xsltProcessor->error(msg, sourceNode);
+	if (locator != 0)
+	{
+		m_xsltProcessor->error(msg, *locator, sourceNode);
+	}
+	else
+	{
+		m_xsltProcessor->error(msg, sourceNode);
+	}
 }
 
 
@@ -1965,7 +1977,14 @@ StylesheetExecutionContextDefault::warn(
 {
 	assert(m_xsltProcessor != 0);
 
-	m_xsltProcessor->warn(msg, sourceNode);
+	if (locator != 0)
+	{
+		m_xsltProcessor->warn(msg, *locator, sourceNode);
+	}
+	else
+	{
+		m_xsltProcessor->warn(msg, sourceNode);
+	}
 }
 
 
@@ -2013,7 +2032,14 @@ StylesheetExecutionContextDefault::message(
 {
 	assert(m_xsltProcessor != 0);
 
-	m_xsltProcessor->message(msg, sourceNode);
+	if (locator != 0)
+	{
+		m_xsltProcessor->message(msg, *locator, sourceNode);
+	}
+	else
+	{
+		m_xsltProcessor->message(msg, sourceNode);
+	}
 }
 
 

@@ -111,38 +111,22 @@ public:
 
 	// These methods are inherited from Function ...
 
-	XObjectPtr
+	virtual XObjectPtr
 	execute(
-			XPathExecutionContext&		executionContext,
-			XalanNode*					context);
+			XPathExecutionContext&	executionContext,
+			XalanNode*				context,			
+			const XObjectPtr		arg1,
+			const XObjectPtr		arg2,
+			const Locator*			locator) const;
 
 	virtual XObjectPtr
 	execute(
-			XPathExecutionContext&		executionContext,
-			XalanNode*					context,			
-			const XObjectPtr			arg1);
-
-	XObjectPtr
-	execute(
-			XPathExecutionContext&		executionContext,
-			XalanNode*					context,			
-			const XObjectPtr			/* arg1 */,
-			const XObjectPtr			/* arg2 */);
-
-	XObjectPtr
-	execute(
-			XPathExecutionContext&		executionContext,
-			XalanNode*					context,			
-			const XObjectPtr			/* arg1 */,
-			const XObjectPtr			/* arg2 */,
-			const XObjectPtr			/* arg3 */);
-
-	XObjectPtr
-	execute(
-			XPathExecutionContext&		executionContext,
-			XalanNode*					context,
-			int							/* opPos */,
-			const XObjectArgVectorType&	/* args */);
+			XPathExecutionContext&	executionContext,
+			XalanNode*				context,			
+			const XObjectPtr		arg1,
+			const XObjectPtr		arg2,
+			const XObjectPtr		arg3,
+			const Locator*			locator) const;
 
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
 	virtual Function*
@@ -160,7 +144,8 @@ protected:
 			double								theNumber,
 			const XalanDOMString&				thePattern,
 			const XalanDecimalFormatSymbols*	theDFS,
-			XalanDOMString&						theResult);
+			XalanDOMString&						theResult,
+			const Locator*						locator) const;
 
 private:
 
@@ -174,6 +159,7 @@ private:
 	bool
 	operator==(const FunctionFormatNumber&) const;
 
+	// Data members...
 	const XalanDecimalFormatSymbols		m_decimalFormatSymbols;
 
 	static const XalanDOMString&		s_warningNotImplementedString;

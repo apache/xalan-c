@@ -81,89 +81,39 @@ FunctionUnparsedEntityURI::~FunctionUnparsedEntityURI()
 XObjectPtr
 FunctionUnparsedEntityURI::execute(
 			XPathExecutionContext&	executionContext,
-			XalanNode*				context)
+			XalanNode*				context,			
+			const XObjectPtr		arg,
+			const Locator*			locator) const
 {
-	executionContext.error(getError(), context);
-
-	return XObjectPtr(0);
-}
-
-
-
-XObjectPtr
-FunctionUnparsedEntityURI::execute(
-		XPathExecutionContext&			executionContext,
-		XalanNode*						context,			
-		const XObjectPtr				arg1)
-{
-	assert(arg1.null() == false);
+	assert(arg.null() == false);
 
 	if (context == 0)
 	{
-		executionContext.error("The unparsed-entity-uri() function requires a non-null context node!",
-							   context);
+		executionContext.error(
+			"The unparsed-entity-uri() function requires a non-null context node!",
+			context,
+			locator);
 
 		return XObjectPtr();
 	}
+	else
+	{
+		const XalanDOMString&	name = arg->str();
 
-	const XalanDOMString&	name = arg1->str();
-
-	XalanDocument* const	doc =
-			XalanNode::DOCUMENT_NODE == context->getNodeType() ?
+		XalanDocument* const	doc =
+				XalanNode::DOCUMENT_NODE == context->getNodeType() ?
 #if defined(XALAN_OLD_STYLE_CASTS)
-				(XalanDocument*)context :
+					(XalanDocument*)context :
 #else
-				static_cast<XalanDocument*>(context) :
+					static_cast<XalanDocument*>(context) :
 #endif
-				context->getOwnerDocument();
-	assert(doc != 0);
+					context->getOwnerDocument();
+		assert(doc != 0);
 
-	const XalanDOMString&	uri = executionContext.getUnparsedEntityURI(name, *doc);
+		const XalanDOMString&	uri = executionContext.getUnparsedEntityURI(name, *doc);
 
-	return executionContext.getXObjectFactory().createStringReference(uri);
-}
-
-
-
-XObjectPtr
-FunctionUnparsedEntityURI::execute(
-			XPathExecutionContext&	executionContext,
-			XalanNode*				context,			
-			const XObjectPtr		/* arg1 */,
-			const XObjectPtr		/* arg2 */)
-{
-	executionContext.error(getError(), context);
-
-	return XObjectPtr(0);
-}
-
-
-
-XObjectPtr
-FunctionUnparsedEntityURI::execute(
-			XPathExecutionContext&	executionContext,
-			XalanNode*				context,			
-			const XObjectPtr		/* arg1 */,
-			const XObjectPtr		/* arg2 */,
-			const XObjectPtr		/* arg3 */)
-{
-	executionContext.error(getError(), context);
-
-	return XObjectPtr(0);
-}
-
-
-
-XObjectPtr
-FunctionUnparsedEntityURI::execute(
-			XPathExecutionContext&			executionContext,
-			XalanNode*						context,
-			int								/* opPos */,
-			const XObjectArgVectorType&		/* args */)
-{
-	executionContext.error(getError(), context);
-
-	return XObjectPtr(0);
+		return executionContext.getXObjectFactory().createStringReference(uri);
+	}
 }
 
 
@@ -171,6 +121,5 @@ FunctionUnparsedEntityURI::execute(
 const XalanDOMString
 FunctionUnparsedEntityURI::getError() const
 {
-	return XALAN_STATIC_UCODE_STRING(
-		"The unparsed-entity-uri function should take one argument!");
+	return XALAN_STATIC_UCODE_STRING("The unparsed-entity-uri function accepts one argument!");
 }

@@ -1229,6 +1229,17 @@ XSLTEngineImpl::message(
 
 void
 XSLTEngineImpl::message(
+			const XalanDOMString&	msg,
+			const Locator&			locator,
+			const XalanNode*		sourceNode) const
+{
+	problem(msg, ProblemListener::eMESSAGE, locator, sourceNode);
+}
+
+
+
+void
+XSLTEngineImpl::message(
 			const char*			msg,
 			const XalanNode*	sourceNode,
 			const XalanNode*	styleNode) const
@@ -1344,8 +1355,8 @@ XSLTEngineImpl::problem(
 		m_problemListener->problem(
 					ProblemListener::eXSLPROCESSOR,
 					classification,
-					styleNode,
 					sourceNode,
+					styleNode,
 					msg,
 					id,
 					lineNumber,
@@ -1355,6 +1366,39 @@ XSLTEngineImpl::problem(
 	if (classification == ProblemListener::eERROR)
 	{
 		throw XSLTProcessorException(msg, uri, lineNumber, columnNumber);
+	}
+}
+
+
+
+void
+XSLTEngineImpl::problem(
+			const XalanDOMString&				msg, 
+			ProblemListener::eClassification	classification,
+			const Locator&						locator,
+			const XalanNode*					sourceNode) const
+{
+	const XalanDOMChar* const	id = locator.getSystemId();
+
+	const int					lineNumber = locator.getLineNumber();
+	const int 					columnNumber = locator.getColumnNumber();
+
+	if (m_problemListener != 0)
+	{
+		m_problemListener->problem(
+					ProblemListener::eXSLPROCESSOR,
+					classification,
+					sourceNode,
+					0,
+					msg,
+					id,
+					lineNumber,
+					columnNumber);
+	}
+
+	if (classification == ProblemListener::eERROR)
+	{
+		throw XSLTProcessorException(msg, XalanDOMString(id), lineNumber, columnNumber);
 	}
 }
 
@@ -1378,6 +1422,17 @@ XSLTEngineImpl::warn(
 			const ElemTemplateElement*	styleNode) const
 {
 	problem(msg, ProblemListener::eWARNING, sourceNode, styleNode);
+}
+
+
+
+void
+XSLTEngineImpl::warn(
+			const XalanDOMString&		msg,
+			const Locator&				locator,
+			const XalanNode*			sourceNode) const
+{
+	problem(msg, ProblemListener::eWARNING, locator, sourceNode);
 }
 
 
@@ -1411,6 +1466,17 @@ XSLTEngineImpl::error(
 			const ElemTemplateElement*	styleNode) const
 {
 	problem(msg, ProblemListener::eERROR, sourceNode, styleNode);
+}
+
+
+
+void
+XSLTEngineImpl::error(
+			const XalanDOMString&		msg,
+			const Locator&				locator,
+			const XalanNode*			sourceNode) const
+{
+	problem(msg, ProblemListener::eERROR, locator, sourceNode);
 }
 
 

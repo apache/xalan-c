@@ -75,6 +75,7 @@
 class ElemTemplateElement;
 class FormatterListener;
 class GenerateEvent;
+class Locator;
 class NodeRefListBase;
 class PrefixResolver;
 class PrintWriter;
@@ -446,11 +447,24 @@ public:
 			const ElemTemplateElement*	styleNode) const = 0;
 
 	/**
+	 * Report a message.
+	 * 
+	 * @param msg		 text of message to output
+	 * @param locator  A Locator for error reporting
+	 * @param sourceNode node in source where message occurred
+	 */
+	virtual void
+	message(
+			const XalanDOMString&	msg,
+			const Locator&			locator,
+			const XalanNode*		sourceNode = 0) const = 0;
+
+	/**
 	 * Report a warning.
 	 * 
 	 * @param msg		 text of message to output
-	 * @param sourceNode node in source where error occurred
-	 * @param styleNode  node in stylesheet where error occurred
+	 * @param sourceNode node in source where the warning occurred
+	 * @param styleNode  node in stylesheet where the warning occurred
 	 */
 	virtual void
 	warn(
@@ -462,14 +476,27 @@ public:
 	 * Report a warning.
 	 * 
 	 * @param msg		 text of message to output
-	 * @param sourceNode node in source where error occurred
-	 * @param styleNode  node in stylesheet where error occurred
+	 * @param sourceNode node in source where warning occurred
+	 * @param styleNode  node in stylesheet where warning occurred
 	 */
 	virtual void
 	warn(
 			const XalanDOMString&		msg,
 			const XalanNode*			sourceNode,
 			const ElemTemplateElement*	styleNode) const = 0;
+
+	/**
+	 * Report a warning.
+	 * 
+	 * @param msg		 text of message to output
+	 * @param locator  A Locator for error reporting
+	 * @param sourceNode node in source where error occurred
+	 */
+	virtual void
+	warn(
+			const XalanDOMString&	msg,
+			const Locator&			locator,
+			const XalanNode*		sourceNode = 0) const = 0;
 
 	/**
 	 * Report an error and throw an exception.
@@ -496,6 +523,19 @@ public:
 			const XalanDOMString&		msg,
 			const XalanNode*			sourceNode,
 			const ElemTemplateElement*	styleNode) const = 0;
+
+	/**
+	 * Report an error and throw an exception.
+	 * 
+	 * @param msg		 text of message to output
+	 * @param locator  A Locator for error reporting
+	 * @param sourceNode node in source where error occurred
+	 */
+	virtual void
+	error(
+			const XalanDOMString&	msg,
+			const Locator&			locator,
+			const XalanNode*		sourceNode = 0) const = 0;
 };
 
 

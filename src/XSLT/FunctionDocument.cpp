@@ -139,60 +139,57 @@ getDoc(
 
 
 
+
 XObjectPtr
 FunctionDocument::execute(
 			XPathExecutionContext&	executionContext,
-			XalanNode*				context)
-{
-	executionContext.error(getError(), context);
-
-	return XObjectPtr(0);
-}
-
-
-
-XObjectPtr
-FunctionDocument::execute(
-		XPathExecutionContext&			executionContext,
-		XalanNode*						context,			
-		const XObjectPtr				arg1)
+			XalanNode*				context,			
+			const XObjectPtr		arg1,
+			const Locator*			locator) const
 {
 	assert(arg1.null() == false);
 
 	if (context == 0)
 	{
-		executionContext.error("The document() function requires a non-null context node!",
-							   context);
+		executionContext.error(
+			"The document() function requires a non-null context node!",
+			context,
+			locator);
 
 		return XObjectPtr();
 	}
+	else
+	{
+		XalanDOMString				base;
 
-	XalanDOMString				base;
+		assert(executionContext.getPrefixResolver() != 0);
 
-	assert(executionContext.getPrefixResolver() != 0);
+		base = executionContext.getPrefixResolver()->getURI();
 
-	base = executionContext.getPrefixResolver()->getURI();
-
-	return execute(executionContext, context, arg1, &base, 1);
+		return doExecute(executionContext, context, arg1, &base, 1);
+	}
 }
 
 
 
 XObjectPtr
 FunctionDocument::execute(
-		XPathExecutionContext&			executionContext,
-		XalanNode*						context,			
-		const XObjectPtr				arg1,
-		const XObjectPtr				arg2)
+			XPathExecutionContext&	executionContext,
+			XalanNode*				context,			
+			const XObjectPtr		arg1,
+			const XObjectPtr		arg2,
+			const Locator*			locator) const
 {
 	assert(arg1.null() == false && arg2.null() == false);
 
-	XalanDOMString				base;
+	XalanDOMString	base;
 
 	if (context == 0)
 	{
-		executionContext.error("The document() function requires a non-null context node!",
-							   context);
+		executionContext.error(
+			"The document() function requires a non-null context node!",
+			context,
+			locator);
 
 		return XObjectPtr();
 	}
@@ -233,47 +230,18 @@ FunctionDocument::execute(
 		}
 	}
 
-	return execute(executionContext, context, arg1, &base, 2);
+	return doExecute(executionContext, context, arg1, &base, 2);
 }
 
 
 
 XObjectPtr
-FunctionDocument::execute(
-			XPathExecutionContext&	executionContext,
-			XalanNode*				context,			
-			const XObjectPtr		/* arg1 */,
-			const XObjectPtr		/* arg2 */,
-			const XObjectPtr		/* arg3 */)
-{
-	executionContext.error(getError(), context);
-
-	return XObjectPtr(0);
-}
-
-
-
-XObjectPtr
-FunctionDocument::execute(
-			XPathExecutionContext&			executionContext,
-			XalanNode*						context,
-			int								/* opPos */,
-			const XObjectArgVectorType&		/* args */)
-{
-	executionContext.error(getError(), context);
-
-	return XObjectPtr(0);
-}
-
-
-
-XObjectPtr
-FunctionDocument::execute(
+FunctionDocument::doExecute(
 		XPathExecutionContext&			executionContext,
 		XalanNode*						context,			
 		const XObjectPtr				arg,
 		XalanDOMString*					base,
-		int								argCount)
+		int								argCount) const
 {
 	typedef XPathExecutionContext::BorrowReturnMutableNodeRefList	BorrowReturnMutableNodeRefList;
 
@@ -375,6 +343,5 @@ FunctionDocument::clone() const
 const XalanDOMString
 FunctionDocument::getError() const
 {
-	return XALAN_STATIC_UCODE_STRING(
-		"The document() function requires at least one argument!");
+	return XALAN_STATIC_UCODE_STRING("The document() function accepts one or two arguments!");
 }

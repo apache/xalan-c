@@ -187,7 +187,8 @@ public:
 			const XalanDOMString&			theNamespace,
 			const XalanDOMString&			functionName,
 			XalanNode*						context,
-			const XObjectArgVectorType&		argVec) const;
+			const XObjectArgVectorType&		argVec,
+			const Locator*					locator) const;
 
 	virtual bool
 	problem(

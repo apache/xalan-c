@@ -63,7 +63,7 @@
 
 
 #include <sax/Locator.hpp>
-#include <sax/SAXException.hpp>
+#include <sax/SAXParseException.hpp>
 #include <util/XMLURL.hpp>
 
 
@@ -128,17 +128,11 @@
 #include <Include/XalanAutoPtr.hpp>
 
 
-const XalanDOMString	StylesheetHandler::s_emptyString;
-
-
 
 StylesheetHandler::StylesheetHandler(
 			Stylesheet&						stylesheetTree,
 			StylesheetConstructionContext&	constructionContext) :
 	FormatterListener(OUTPUT_METHOD_OTHER),
-	m_includeBase(stylesheetTree.getBaseIdentifier()),
-	m_pendingException(),
-	m_exceptionPending(false),
 	m_stylesheet(stylesheetTree),
 	m_constructionContext(constructionContext),
 	m_elemStack(),
@@ -151,6 +145,7 @@ StylesheetHandler::StylesheetHandler(
 	m_foundStylesheet(false),
 	m_foundNotImport(false),
 	m_accumulateText(),
+	m_includeBase(stylesheetTree.getBaseIdentifier()),
 	m_inExtensionElementStack(),
 	m_inLXSLTScript(false),
 	m_LXSLTScriptBody(),
@@ -221,9 +216,6 @@ void StylesheetHandler::setDocumentLocator(const Locator* const		locator)
 
 void StylesheetHandler::startDocument()
 {
-	m_exceptionPending = false;
-
-	clear(m_pendingException);
 }
 
 
@@ -237,11 +229,6 @@ void StylesheetHandler::endDocument()
 	}
 
 	m_inExtensionElementStack.clear();
-
-	if (m_exceptionPending == true)
-	{
-		throw SAXException(c_wstr(m_pendingException));
-	}
 }
 
 
@@ -262,9 +249,12 @@ StylesheetHandler::processSpaceAttr(
 			const XalanDOMChar*		aname,
 			const AttributeList&	atts,
 			int						which,
+			const Locator*			locator,
 			bool&					fPreserve)
 {
-	const bool	isSpaceAttr = equals(aname, Constants::ATTRNAME_XMLSPACE);
+	const XalanQNameByValue		theName(XalanDOMString(aname), m_stylesheet.getNamespaces());
+
+	const bool					isSpaceAttr = s_spaceAttrQName.equals(theName);
 
 	if(isSpaceAttr == false)
 	{
@@ -284,7 +274,7 @@ StylesheetHandler::processSpaceAttr(
 		}
 		else
 		{
-			throw SAXException("xml:space has an illegal value");
+			error("xml:space has an illegal value", locator);
 		}
 	}
 
@@ -293,16 +283,33 @@ StylesheetHandler::processSpaceAttr(
 
 
 
+inline int
+getLineNumber(const Locator*	theLocator)
+{
+	return theLocator == 0 ? -1 : theLocator->getLineNumber();
+}
+
+
+
+inline int
+getColumnNumber(const Locator*	theLocator)
+{
+	return theLocator == 0 ? -1 : theLocator->getColumnNumber();
+}
+
+
+
 bool
 StylesheetHandler::processSpaceAttr(
 			const AttributeList&	atts,
+			const Locator*			locator,
 			bool&					fPreserve)
 {
 	const unsigned int	len = atts.getLength();
 
 	for (unsigned int i = 0; i < len; ++i)
 	{
-		if (processSpaceAttr(atts.getName(i), atts, i, fPreserve) == true)
+		if (processSpaceAttr(atts.getName(i), atts, i, locator, fPreserve) == true)
 		{
 			return true;
 		}
@@ -318,10 +325,6 @@ StylesheetHandler::startElement(
 			const XMLCh* const	name,
 			AttributeList&		atts)
 {
-	// if we have apending exception, we don't want to even try to process this
-	if (m_exceptionPending == true)
-		return;
-
 	m_inExtensionElementStack.push_back(false);
 
 	if (m_preserveSpaceStack.empty() == true)
@@ -354,8 +357,8 @@ StylesheetHandler::startElement(
 
 		const Locator* const	locator = m_constructionContext.getLocatorFromStack();
 
-		const int	lineNumber = 0 != locator ? locator->getLineNumber() : 0;
-		const int	columnNumber = 0 != locator ? locator->getColumnNumber() : 0;
+		const int	lineNumber = getLineNumber(locator);
+		const int	columnNumber = getColumnNumber(locator);
 
 		// First push namespaces
 		m_stylesheet.pushNamespaces(atts);
@@ -388,11 +391,11 @@ StylesheetHandler::startElement(
 				m_stylesheet.setWrapperless(false);
 			}
 
-			const int xslToken = m_constructionContext.getElementToken(localName);
+			const int	xslToken = m_constructionContext.getElementToken(localName);
 
 			if(!m_inTemplate)
 			{
-				processTopLevelElement(name, localName, ns, atts, xslToken, lineNumber, columnNumber, fPreserveSpace, fSpaceAttrProcessed);
+				processTopLevelElement(name, localName, ns, atts, xslToken, locator, fPreserveSpace, fSpaceAttrProcessed);
 			}
 			else
 			{
@@ -424,16 +427,33 @@ StylesheetHandler::startElement(
           
 				case Constants::ELEMNAME_SORT:
 					{
+						if (m_elemStack.empty() == true)
+						{
+							error("Misplaced xsl:sort.", locator);
+						}
+
+						ElemTemplateElement* const	theElement =
+								m_elemStack.back();
+						assert(theElement != 0);
+
+						const int	xslToken = theElement->getXSLToken();
+
+						if (xslToken != Constants::ELEMNAME_FOREACH &&
+							xslToken != Constants::ELEMNAME_APPLY_TEMPLATES)
+						{
+							error("Misplaced xsl:sort.", locator);
+						}
+
 						ElemForEach* foreach =
 #if defined(XALAN_OLD_STYLE_CASTS)
-							(ElemForEach*)m_elemStack.back();
+								(ElemForEach*)theElement;
 #else
-							static_cast<ElemForEach*>(m_elemStack.back());
+								static_cast<ElemForEach*>(theElement);
 #endif
 
 						ElemSort* sortElem = new ElemSort(m_constructionContext,
-													 m_stylesheet,
-													 atts, lineNumber, columnNumber);
+														 m_stylesheet,
+														 atts, lineNumber, columnNumber);
 
 						// Note: deleted in ElemForEach destructor
 						foreach->getSortElems().push_back(sortElem);
@@ -513,12 +533,12 @@ StylesheetHandler::startElement(
 							}
 							else
 							{
-								throw SAXException("(StylesheetHandler) misplaced xsl:when!");
+								error("(StylesheetHandler) misplaced xsl:when.", locator);
 							}
 						}
 						else
 						{
-							throw SAXException("(StylesheetHandler) xsl:when not parented by xsl:choose!");
+							error("(StylesheetHandler) xsl:when not parented by xsl:choose.", locator);
 						}
 					}
 					break;
@@ -541,12 +561,12 @@ StylesheetHandler::startElement(
 							}
 							else
 							{
-								throw SAXException("(StylesheetHandler) misplaced xsl:otherwise!");
+								error("Misplaced xsl:otherwise.", locator);
 							}
 						}
 						else
 						{
-							throw SAXException("(StylesheetHandler) xsl:otherwise not parented by xsl:choose!");
+							error("xsl:otherwise not parented by xsl:choose.", locator);
 						}
 					}
 					break;
@@ -620,14 +640,15 @@ StylesheetHandler::startElement(
 				case Constants::ELEMNAME_PRESERVESPACE:
 				case Constants::ELEMNAME_STRIPSPACE:
 					{
-						XalanDOMString msg("(StylesheetHandler) " + XalanDOMString(name) + " is not allowed inside a template!");
-						throw SAXException(c_wstr(msg));
+						const XalanDOMString	msg(XalanDOMString(name) + " is not allowed inside a template.");
+
+						error(msg, locator);
 					}
 					break;
 
 				default:
 					{
-						XalanDOMString msg("Unknown XSL element: " + localName);
+						const XalanDOMString	msg("Unknown XSL element: " + localName);
 
 						// If this stylesheet is declared to be of a higher version than the one
 						// supported, don't flag an error.
@@ -637,7 +658,7 @@ StylesheetHandler::startElement(
 						}
 						else
 						{
-							throw SAXException(c_wstr(msg));
+							error(msg, locator);
 						}
 					}
 				}
@@ -645,7 +666,7 @@ StylesheetHandler::startElement(
 		}
 		else if (!m_inTemplate && startsWith(ns, m_constructionContext.getXalanXSLNameSpaceURL()))
 		{
-			processExtensionElement(name, localName, atts);
+			processExtensionElement(name, localName, atts, locator);
 		}
 		else
 		{
@@ -694,7 +715,7 @@ StylesheetHandler::startElement(
 				// Guard against an exception in appendChildElem()...
 				XalanAutoPtr<ElemTemplateElement>	theGuard(elem);
 
-				appendChildElementToParent(elem, lineNumber, columnNumber);
+				appendChildElementToParent(elem, locator);
 
 				// The element is parented and will now be
 				// deleted when the parent is delete...
@@ -707,7 +728,7 @@ StylesheetHandler::startElement(
 		// If we haven't processed an xml:space attribute already, look for one...
 		if (fSpaceAttrProcessed == false)
 		{
-			fSpaceAttrProcessed = processSpaceAttr(atts, fPreserveSpace);
+			fSpaceAttrProcessed = processSpaceAttr(atts, locator, fPreserveSpace);
 		}
 
 		// Only update the stack if we actually processed an xml:space attribute...
@@ -733,24 +754,8 @@ StylesheetHandler::startElement(
 			}
 		}
 	} // end try
-
-	// Here's the story.  startElement throws exceptions for certain malformed constructs.  These
-	// exceptions need to reach the end user.  But the parser eats all exceptions and we lose
-	// the error messages and exit silently.  So, I'll eat the exceptions first, store the message
-	// and then throw the exception during endDocument
-	catch(SAXException&		e)
-	{
-		m_exceptionPending = true;
-
-		m_pendingException = e.getMessage();
-
-		doCleanup();
-	}
 	catch(...)
 	{
-		// $$$ ToDo: This probably should't happen, but it does...
-		m_exceptionPending = true;
-
 		doCleanup();
 
 		throw;
@@ -857,8 +862,7 @@ StylesheetHandler::processTopLevelElement(
 			const XalanDOMString&	ns,
 			const AttributeList&	atts,
 			int						xslToken,
-			int						lineNumber,
-			int						columnNumber,
+			const Locator*			locator,
 			bool&					fPreserveSpace,
 			bool&					fSpaceAttrProcessed)
 {
@@ -867,12 +871,18 @@ StylesheetHandler::processTopLevelElement(
 		m_foundNotImport = true;
 	}
 
+	const int	lineNumber = getLineNumber(locator);
+	const int	columnNumber = getColumnNumber(locator);
+
 	switch(xslToken)
 	{
 	case Constants::ELEMNAME_TEMPLATE:
-		m_pTemplate = new ElemTemplate(m_constructionContext,
-									m_stylesheet,
-									atts, lineNumber, columnNumber);
+		m_pTemplate = new ElemTemplate(
+				m_constructionContext,
+				m_stylesheet,
+				atts,
+				lineNumber,
+				columnNumber);
 	
 		m_elemStack.push_back(m_pTemplate);
 		m_elemStackParentedElements.insert(m_pTemplate);
@@ -909,12 +919,12 @@ StylesheetHandler::processTopLevelElement(
 	break;
 
 	case Constants::ELEMNAME_LOCALE:
-		m_constructionContext.warn(StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("xsl:locale not yet supported!")));
+		m_constructionContext.warn(StaticStringToDOMString(XALAN_STATIC_UCODE_STRING("xsl:locale not yet supported.")));
 		break;
 
 	case Constants::ELEMNAME_PRESERVESPACE:
 	case Constants::ELEMNAME_STRIPSPACE:
-		processPreserveStripSpace(name, atts, lineNumber, columnNumber, xslToken);
+		processPreserveStripSpace(name, atts, locator, xslToken);
 		break;
 
 	case Constants::ELEMNAME_KEY:
@@ -940,11 +950,11 @@ StylesheetHandler::processTopLevelElement(
 		break;
 
 	case Constants::ELEMNAME_INCLUDE:
-		processInclude(name, atts);
+		processInclude(name, atts, locator);
 		break;
 
 	case Constants::ELEMNAME_IMPORT:
-		processImport(name, atts);
+		processImport(name, atts, locator);
 		break;
 
 	case Constants::ELEMNAME_OUTPUT:
@@ -1000,21 +1010,22 @@ StylesheetHandler::processTopLevelElement(
 	case Constants::ELEMNAME_APPLY_IMPORTS:
 		if (inExtensionElement() == false)
 		{
-			XalanDOMString msg("(StylesheetHandler) " + XalanDOMString(name) + " not allowed inside a stylesheet!");
-				throw SAXException(c_wstr(msg));
+			const XalanDOMString	msg("(StylesheetHandler) " + XalanDOMString(name) + " not allowed inside a stylesheet.");
+				
+			error(msg, locator);
 		}
 		break;
 
 	case Constants::ELEMNAME_STYLESHEET:
-		processStylesheet(name, atts, lineNumber, columnNumber, fPreserveSpace, fSpaceAttrProcessed);
+		processStylesheet(name, atts, locator, fPreserveSpace, fSpaceAttrProcessed);
 		break;
 
 	default:
 		if (inExtensionElement() == false)
 		{
-			XalanDOMString msg("Unknown XSL element: " + localName);
+			const XalanDOMString	msg("Unknown XSL element: " + localName);
 
-			throw SAXException(c_wstr(TranscodeFromLocalCodePage("Unknown XSL element: ") + localName));
+			error(msg, locator);
 		}
 		break;
 	}
@@ -1025,8 +1036,7 @@ void
 StylesheetHandler::processStylesheet(
 			const XalanDOMChar*		name,
 			const AttributeList&	atts,
-			int						/* lineNumber */,
-			int						/* columnNumber */,
+			const Locator*			locator,
 			bool&					fPreserveSpace,
 			bool&					fSpaceAttrProcessed)
 {
@@ -1076,7 +1086,7 @@ StylesheetHandler::processStylesheet(
 
 			fVersionFound = true;
 		}
-		else if(processSpaceAttr(aname, atts, i, fPreserveSpace) == true)
+		else if(processSpaceAttr(aname, atts, i, locator, fPreserveSpace) == true)
 		{
 			fSpaceAttrProcessed = true;
 		}
@@ -1090,7 +1100,7 @@ StylesheetHandler::processStylesheet(
 					" has an illegal attribute: " +
 					aname);
 
-				throw SAXException(c_wstr(msg));
+				error(msg, locator);
 			}
 		}
 
@@ -1102,7 +1112,7 @@ StylesheetHandler::processStylesheet(
 
 	if (fVersionFound == false)
 	{
-		throw SAXException(c_wstr(TranscodeFromLocalCodePage("The stylesheet element did not specify a version attribute!")));
+		error("The stylesheet element did not specify a version attribute.", locator);
 	}
 }
 
@@ -1112,7 +1122,8 @@ void
 StylesheetHandler::processExtensionElement(
 			const XalanDOMChar*		name,
 			const XalanDOMString&	localName,
-			const AttributeList&	atts)
+			const AttributeList&	atts,
+			const Locator*			locator)
 {
 	if (equals(localName, Constants::ATTRNAME_COMPONENTS))
 	{
@@ -1140,15 +1151,17 @@ StylesheetHandler::processExtensionElement(
 			}
 			else if(!isAttrOK(aname, atts, i))
 			{
-				m_constructionContext.error(XalanDOMString(name) + " has an illegal attribute: " + aname);
+				const XalanDOMString	msg(XalanDOMString(name) + " has an illegal attribute: " + aname);
+
+				error(msg, locator);
 			}
 		}
 
-		if (isEmpty(prefix)) 
+		if (isEmpty(prefix) == true) 
 		{
-			XalanDOMString msg("StylesheetHandler) " + XalanDOMString(name) + " attribute 'prefix' is missing");
+			const XalanDOMString	msg("StylesheetHandler) " + XalanDOMString(name) + " attribute 'prefix' is missing");
 
-			throw SAXException(c_wstr(msg));
+			error(msg, locator);
 		}
 
 		// SCOTT: is the line below correct?
@@ -1206,7 +1219,9 @@ StylesheetHandler::processExtensionElement(
 			}
 			else if(!isAttrOK(aname, atts, i))
 			{
-				m_constructionContext.error(XalanDOMString(name) + " has an illegal attribute: " + aname);
+				const XalanDOMString	msg(XalanDOMString(name) + " has an illegal attribute: " + aname);
+
+				error(msg, locator);
 			}
 		}
 	}
@@ -1222,11 +1237,10 @@ void
 StylesheetHandler::processPreserveStripSpace(
 			const XalanDOMChar*		name,
 			const AttributeList&	atts,
-			int						lineNumber,
-			int						columnNumber,
+			const Locator*			locator,
 			int						xslToken)
 {
-	ElemEmpty nsNode(m_constructionContext, m_stylesheet, lineNumber, columnNumber);
+	ElemEmpty nsNode(m_constructionContext, m_stylesheet, getLineNumber(locator), getColumnNumber(locator));
 
 	const unsigned int	nAttrs = atts.getLength();
 
@@ -1269,16 +1283,18 @@ StylesheetHandler::processPreserveStripSpace(
 		}
 		else if(!isAttrOK(aname, atts, i))
 		{
-			m_constructionContext.error(XalanDOMString(name) + " has an illegal attribute: " + aname);
+			const XalanDOMString	msg(XalanDOMString(name) + " has an illegal attribute: " + aname);
+
+			error(msg, locator);
 		}
 	}
 
 	if(!foundIt && inExtensionElement() == false)
 	{
-		XalanDOMString msg("(StylesheetHandler) " + XalanDOMString(name) +
-			" requires a " + Constants::ATTRNAME_ELEMENTS + " attribute!");
+		const XalanDOMString	msg("(StylesheetHandler) " + XalanDOMString(name) +
+			" requires a " + Constants::ATTRNAME_ELEMENTS + " attribute.");
 
-		throw SAXException(c_wstr(msg));
+		error(msg, locator);
 	}
 }
 
@@ -1287,8 +1303,7 @@ StylesheetHandler::processPreserveStripSpace(
 void
 StylesheetHandler::appendChildElementToParent(
 			ElemTemplateElement*	elem,
-			int						lineNumber,
-			int						columnNumber)
+			const Locator*			locator)
 {
 	ElemTemplateElement* const	parent = m_elemStack.back();
 
@@ -1316,7 +1331,7 @@ StylesheetHandler::appendChildElementToParent(
 			append(theMessage, " is not a valid child of ");
 			append(theMessage, parent->getElementName());
 
-			error(theMessage, lineNumber, columnNumber);
+			error(theMessage, locator);
 		}
 
 		throw;
@@ -1373,7 +1388,8 @@ stackContains(
 void
 StylesheetHandler::processImport(
 			const XalanDOMChar*		name,
-			const AttributeList&	atts)
+			const AttributeList&	atts,
+			const Locator*			locator)
 {
 	const unsigned int	nAttrs = atts.getLength();
 
@@ -1389,7 +1405,7 @@ StylesheetHandler::processImport(
 			
 			if(m_foundNotImport)
 			{
-				throw SAXException("Imports can only occur as the first elements in the stylesheet!");
+				error("Imports can only occur as the first elements in the stylesheet.", locator);
 			}
 
 			const XalanDOMString	saved_XSLNameSpaceURL = m_stylesheet.getXSLTNamespaceURI();
@@ -1406,9 +1422,9 @@ StylesheetHandler::processImport(
 
 			if(stackContains(importStack, hrefUrl))
 			{
-				XalanDOMString msg(hrefUrl + " is directly or indirectly importing itself!");
+				const XalanDOMString	msg(hrefUrl + " is directly or indirectly importing itself.");
 
-				throw SAXException(c_wstr(msg));
+				error(msg, locator);
 			}
 
 			importStack.push_back(hrefUrl);
@@ -1434,15 +1450,17 @@ StylesheetHandler::processImport(
 		}
 		else if(!isAttrOK(aname, atts, i))
 		{
-			m_constructionContext.error(XalanDOMString(name) + " has an illegal attribute: " + aname);
+			const XalanDOMString	msg(XalanDOMString(name) + " has an illegal attribute: " + aname);
+
+			error(msg, locator);
 		}
 	}
 
 	if(!foundIt)
 	{
-		XalanDOMString msg("Could not find href attribute for " + XalanDOMString(name));
+		const XalanDOMString	msg("Could not find href attribute for " + XalanDOMString(name));
 
-		throw SAXException(c_wstr(msg));
+		error(msg, locator);
 	}
 }
 
@@ -1450,7 +1468,8 @@ StylesheetHandler::processImport(
 void
 StylesheetHandler::processInclude(
 			const XalanDOMChar*		name,
-			const AttributeList&	atts)
+			const AttributeList&	atts,
+			const Locator*			locator)
 {
 	const unsigned int	nAttrs = atts.getLength();
 
@@ -1473,9 +1492,9 @@ StylesheetHandler::processInclude(
 
 			if(stackContains(m_stylesheet.getIncludeStack(), hrefUrl))
 			{
-				XalanDOMString msg(hrefUrl + " is directly or indirectly including itself!");
+				XalanDOMString msg(hrefUrl + " is directly or indirectly including itself.");
 
-				throw SAXException(c_wstr(msg));
+				error(msg, locator);
 			}
 
 			m_stylesheet.getIncludeStack().push_back(hrefUrl);
@@ -1487,15 +1506,17 @@ StylesheetHandler::processInclude(
 		}
 		else if(!isAttrOK(aname, atts, i))
 		{
-			m_constructionContext.error(XalanDOMString(name) + " has an illegal attribute: " + aname);
+			const XalanDOMString	msg(XalanDOMString(name) + " has an illegal attribute: " + aname);
+
+			error(msg, locator);
 		}
 	}
 
 	if(!foundIt)
 	{
-		XalanDOMString msg("Could not find href attribute for " + XalanDOMString(name));
+		const XalanDOMString	msg("Could not find href attribute for " + XalanDOMString(name));
 
-		throw SAXException(c_wstr(msg));
+		error(msg, locator);
 	}
 }
 
@@ -1504,9 +1525,7 @@ StylesheetHandler::processInclude(
 void
 StylesheetHandler::endElement(const XMLCh* const name)
 {
-	// if we have apending exception, we don't want to even try to process this
-	if (m_exceptionPending == true)
-		return;
+	const Locator* const	locator = m_constructionContext.getLocatorFromStack();
 
 #if !defined(XALAN_NO_NAMESPACES)
 	using std::for_each;
@@ -1568,15 +1587,15 @@ StylesheetHandler::endElement(const XMLCh* const name)
 	{
 		if (isEmpty(m_LXSLTScriptLang)) 
 		{
-			XalanDOMString msg(XalanDOMString(name) + " attribute \'lang\' is missing");
+			const XalanDOMString	msg(XalanDOMString(name) + " attribute \'lang\' is missing");
 
-			throw SAXException(c_wstr(msg));
+			error(msg, locator);
 		}
 		if (m_pLXSLTExtensionNSH == 0) 
 		{
-			XalanDOMString msg("(StylesheetHandler) misplaced " + XalanDOMString(name) + " element?? Missing container element " + "'component'");
+			const XalanDOMString	msg("(StylesheetHandler) misplaced " + XalanDOMString(name) + " element?? Missing container element " + "'component'");
 
-			throw SAXException(c_wstr(msg));
+			error(msg, locator);
 		}
 
 		m_pLXSLTExtensionNSH->setScript(m_LXSLTScriptLang, m_LXSLTScriptSrcURL, m_LXSLTScriptBody);
@@ -1606,10 +1625,6 @@ StylesheetHandler::characters(
 			const XMLCh* const	chars,
 			const unsigned int	length)
 {
-	// if we have apending exception, we don't want to even try to process this
-	if (m_exceptionPending == true)
-		return;
-
 	accumulateText(chars, length);
 }
 
@@ -1620,10 +1635,6 @@ StylesheetHandler::cdata(
 			const XMLCh* const	chars,
 			const unsigned int	length)
 {
-	// if we have apending exception, we don't want to even try to process this
-	if (m_exceptionPending == true)
-		return;
-
 	accumulateText(chars, length);
 
 	processText(chars, length);
@@ -1638,10 +1649,6 @@ StylesheetHandler::ignorableWhitespace(
 			const XMLCh* const	/*chars*/,
 			const unsigned int	/*length*/)
 {
-	// if we have apending exception, we don't want to even try to process this
-	if (m_exceptionPending == true)
-		return;
-
 	// Ignore!
 	m_lastPopped = 0;
 }
@@ -1653,10 +1660,6 @@ StylesheetHandler::processingInstruction(
 			const XMLCh* const	/*target*/,
 			const XMLCh* const	/*data*/)
 {
-	// if we have apending exception, we don't want to even try to process this
-	if (m_exceptionPending == true)
-		return;
-
 	if (isXMLWhitespace(m_accumulateText) == false)
 	{
 		processAccumulatedText();
@@ -1672,11 +1675,7 @@ StylesheetHandler::processingInstruction(
 void
 StylesheetHandler::comment(const XMLCh* const /*data*/)
 {
-	// if we have apending exception, we don't want to even try to process this
-	if (m_exceptionPending == false)
-	{
-		processAccumulatedText();
-	}
+	processAccumulatedText();
 }
 
 
@@ -1684,11 +1683,7 @@ StylesheetHandler::comment(const XMLCh* const /*data*/)
 void
 StylesheetHandler::entityReference(const XMLCh* const /*name*/)
 {
-	// if we have apending exception, we don't want to even try to process this
-	if (m_exceptionPending == false)
-	{
-		processAccumulatedText();
-	}
+	processAccumulatedText();
 }
 
 
@@ -1696,11 +1691,7 @@ StylesheetHandler::entityReference(const XMLCh* const /*name*/)
 void
 StylesheetHandler::resetDocument()
 {
-	// if we have apending exception, we don't want to even try to process this
-	if (m_exceptionPending == false)
-	{
-		clear(m_accumulateText);
-	}
+	clear(m_accumulateText);
 }
 
 
@@ -1710,10 +1701,6 @@ StylesheetHandler::charactersRaw(
 			const XMLCh* const	/* chars */,
 			const unsigned int	/* length */)
 {
-	// if we have a pending exception, we don't want to even try to process this
-	if (m_exceptionPending == true)
-		return;
-
   // No action for the moment.
 }
 
@@ -1866,21 +1853,20 @@ StylesheetHandler::inExtensionElement() const
 
 void
 StylesheetHandler::error(
-			const XalanDOMString&	theMessage,
-			int						theLineNumber,
-			int						theColumnNumber) const
+			const char*		theMessage,
+			const Locator*	theLocator) const
 {
-	XalanDOMString	theErrorMessage(theMessage);
-	
-	append(theErrorMessage, ", at line ");
-	LongToDOMString(theLineNumber, theErrorMessage);
+	m_constructionContext.error(theMessage, 0, theLocator);
+}
 
-	append(theErrorMessage, ", offset ");
-	LongToDOMString(theColumnNumber, theErrorMessage);
 
-	append(theErrorMessage, ".");
 
-	throw SAXException(c_wstr(theErrorMessage));
+void
+StylesheetHandler::error(
+			const XalanDOMString&	theMessage,
+			const Locator*			theLocator) const
+{
+	m_constructionContext.error(theMessage, 0, theLocator);
 }
 
 
@@ -1948,4 +1934,36 @@ StylesheetHandler::PushPopIncludeState::~PushPopIncludeState()
 	m_handler.m_stylesheet.getNamespacesHandler().swap(m_namespacesHandler);
 	m_handler.m_inExtensionElementStack.swap(m_inExtensionElementStack);
 	m_handler.m_preserveSpaceStack.swap(m_preserveSpaceStack);
+}
+
+
+
+const XalanDOMString			StylesheetHandler::s_emptyString;
+
+XalanDOMString					s_localPart;
+
+XalanQNameByReference			s_spaceAttrQName;
+
+const XalanQName&				StylesheetHandler::s_spaceAttrQName = ::s_spaceAttrQName;
+
+
+
+void
+StylesheetHandler::initialize()
+{
+	::s_localPart = XALAN_STATIC_UCODE_STRING("space");
+
+	::s_spaceAttrQName.setLocalPart(::s_localPart);
+
+	::s_spaceAttrQName.setNamespace(DOMServices::s_XMLNamespaceURI);
+}
+
+
+
+void
+StylesheetHandler::terminate()
+{
+	releaseMemory(::s_localPart);
+
+	::s_spaceAttrQName.clear();
 }

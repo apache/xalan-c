@@ -88,34 +88,10 @@ FunctionFormatNumber::~FunctionFormatNumber()
 XObjectPtr
 FunctionFormatNumber::execute(
 			XPathExecutionContext&	executionContext,
-			XalanNode*				context)
-{
-	executionContext.error(getError(), context);
-
-	return XObjectPtr(0);
-}
-
-
-
-XObjectPtr
-FunctionFormatNumber::execute(
-			XPathExecutionContext&	executionContext,
-			XalanNode*				context,			
-			const XObjectPtr		/* arg1 */)
-{
-	executionContext.error(getError(), context);
-
-	return XObjectPtr(0);
-}
-
-
-
-XObjectPtr
-FunctionFormatNumber::execute(
-		XPathExecutionContext&			executionContext,
-		XalanNode*						context,			
-		const XObjectPtr				arg1,
-		const XObjectPtr				arg2)
+			XalanNode*				context,
+			const XObjectPtr		arg1,
+			const XObjectPtr		arg2,
+			const Locator*			locator) const
 {
 	assert(arg1.null() == false && arg2.null() == false);	
 	
@@ -139,7 +115,8 @@ FunctionFormatNumber::execute(
 			theNumber,
 			thePattern,
 			theDFS,
-			theString.get());
+			theString.get(),
+			locator);
 
 	return executionContext.getXObjectFactory().createString(theString);
 }
@@ -148,11 +125,12 @@ FunctionFormatNumber::execute(
 
 XObjectPtr
 FunctionFormatNumber::execute(
-		XPathExecutionContext&			executionContext,
-		XalanNode*						context,			
-		const XObjectPtr				arg1, 
-		const XObjectPtr				arg2,
-		const XObjectPtr				arg3)
+			XPathExecutionContext&	executionContext,
+			XalanNode*				context,
+			const XObjectPtr		arg1,
+			const XObjectPtr		arg2,
+			const XObjectPtr		arg3,
+			const Locator*			locator) const
 {
 	assert(arg1.null() == false && arg2.null() == false && arg3.null() == false);
 	
@@ -167,8 +145,10 @@ FunctionFormatNumber::execute(
 
 	if (theDFS == 0)
 	{
-		executionContext.warn(s_warningNotFoundString,
-							  context);
+		executionContext.warn(
+				s_warningNotFoundString,
+				context,
+				locator);
 
 		theDFS = executionContext.getDecimalFormatSymbols(Constants::DEFAULT_DECIMAL_FORMAT);
 	
@@ -184,23 +164,10 @@ FunctionFormatNumber::execute(
 			theNumber,
 			thePattern,
 			theDFS,
-			theString.get());
+			theString.get(),
+			locator);
 
 	return executionContext.getXObjectFactory().createString(theString);
-}
-
-
-
-XObjectPtr
-FunctionFormatNumber::execute(
-			XPathExecutionContext&			executionContext,
-			XalanNode*						context,
-			int								/* opPos */,
-			const XObjectArgVectorType&		/* args */)
-{
-	executionContext.error(getError(), context);
-
-	return XObjectPtr(0);
 }
 
 
@@ -212,7 +179,8 @@ FunctionFormatNumber::doFormat(
 			double								theNumber,
 			const XalanDOMString&				thePattern,
 			const XalanDecimalFormatSymbols*	theDFS,
-			XalanDOMString&						theResult)
+			XalanDOMString&						theResult,
+			const Locator*						locator) const
 {
 	if (DoubleSupport::isNaN(theNumber) == true)
 	{
@@ -250,7 +218,7 @@ FunctionFormatNumber::doFormat(
 	}
 	else
 	{
-		executionContext.warn(s_warningNotImplementedString, context);
+		executionContext.warn(s_warningNotImplementedString, context, locator);
 
 		if (theDFS != 0)
 		{

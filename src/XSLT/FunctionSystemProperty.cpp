@@ -89,20 +89,9 @@ FunctionSystemProperty::~FunctionSystemProperty()
 XObjectPtr
 FunctionSystemProperty::execute(
 			XPathExecutionContext&	executionContext,
-			XalanNode*				context)
-{
-	executionContext.error(getError(), context);
-
-	return XObjectPtr(0);
-}
-
-
-
-XObjectPtr
-FunctionSystemProperty::execute(
-		XPathExecutionContext&			executionContext,
-		XalanNode*						/* context */,			
-		const XObjectPtr				arg1)
+			XalanNode*				context,			
+			const XObjectPtr		arg1,
+			const Locator*			locator) const
 {
 	assert(arg1.null() == false);
 
@@ -149,7 +138,10 @@ FunctionSystemProperty::execute(
 			}
 			else
 			{
-				executionContext.warn("Don't currently do anything with namespace " + *nspace + " in property: " + fullName);
+				executionContext.warn(
+					"Don't currently do anything with namespace " + *nspace + " in property: " + fullName,
+					context,
+					locator);
 
 				result = TranscodeFromLocalCodePage(::getenv(c_str(TranscodeToLocalCodePage(propName))));
 			}
@@ -172,49 +164,6 @@ FunctionSystemProperty::execute(
 
 
 
-XObjectPtr
-FunctionSystemProperty::execute(
-			XPathExecutionContext&	executionContext,
-			XalanNode*				context,			
-			const XObjectPtr		/* arg1 */,
-			const XObjectPtr		/* arg2 */)
-{
-	executionContext.error(getError(), context);
-
-	return XObjectPtr(0);
-}
-
-
-
-XObjectPtr
-FunctionSystemProperty::execute(
-			XPathExecutionContext&	executionContext,
-			XalanNode*				context,			
-			const XObjectPtr		/* arg1 */,
-			const XObjectPtr		/* arg2 */,
-			const XObjectPtr		/* arg3 */)
-{
-	executionContext.error(getError(), context);
-
-	return XObjectPtr(0);
-}
-
-
-
-XObjectPtr
-FunctionSystemProperty::execute(
-			XPathExecutionContext&			executionContext,
-			XalanNode*						context,
-			int								/* opPos */,
-			const XObjectArgVectorType&		/* args */)
-{
-	executionContext.error(getError(), context);
-
-	return XObjectPtr(0);
-}
-
-
-
 #if defined(XALAN_NO_COVARIANT_RETURN_TYPE)
 Function*
 #else
@@ -230,6 +179,5 @@ FunctionSystemProperty::clone() const
 const XalanDOMString
 FunctionSystemProperty::getError() const
 {
-	return XALAN_STATIC_UCODE_STRING(
-		"The system-property() function takes a single argument!");
+	return XALAN_STATIC_UCODE_STRING("The system-property() function accepts one argument!");
 }

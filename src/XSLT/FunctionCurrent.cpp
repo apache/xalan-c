@@ -72,15 +72,18 @@ FunctionCurrent::~FunctionCurrent()
 
 XObjectPtr
 FunctionCurrent::execute(
-		XPathExecutionContext&			executionContext,
-		XalanNode*						context)
+			XPathExecutionContext&	executionContext,
+			XalanNode*				context,
+			const Locator*			locator) const
 {
 	assert(executionContext.getCurrentNode() != 0);
 
 	if (context == 0)
 	{
-		executionContext.error("The current() function is not allowed in patterns!",
-							   context);
+		executionContext.error(
+			"The current() function is not allowed in patterns!",
+			context,
+			locator);
 
 		return XObjectPtr();
 	}
@@ -88,62 +91,6 @@ FunctionCurrent::execute(
 	{
 		return executionContext.createNodeSet(*executionContext.getCurrentNode());
 	}
-}
-
-
-
-XObjectPtr
-FunctionCurrent::execute(
-			XPathExecutionContext&	executionContext,
-			XalanNode*				context,			
-			const XObjectPtr		/* arg1 */)
-{
-	executionContext.error(getError(), context);
-
-	return XObjectPtr(0);
-}
-
-
-
-XObjectPtr
-FunctionCurrent::execute(
-			XPathExecutionContext&	executionContext,
-			XalanNode*				context,			
-			const XObjectPtr		/* arg1 */,
-			const XObjectPtr		/* arg2 */)
-{
-	executionContext.error(getError(), context);
-
-	return XObjectPtr(0);
-}
-
-
-
-XObjectPtr
-FunctionCurrent::execute(
-			XPathExecutionContext&	executionContext,
-			XalanNode*				context,			
-			const XObjectPtr		/* arg1 */,
-			const XObjectPtr		/* arg2 */,
-			const XObjectPtr		/* arg3 */)
-{
-	executionContext.error(getError(), context);
-
-	return XObjectPtr(0);
-}
-
-
-
-XObjectPtr
-FunctionCurrent::execute(
-			XPathExecutionContext&			executionContext,
-			XalanNode*						context,
-			int								/* opPos */,
-			const XObjectArgVectorType&		/* args */)
-{
-	executionContext.error(getError(), context);
-
-	return XObjectPtr(0);
 }
 
 
@@ -163,6 +110,5 @@ FunctionCurrent::clone() const
 const XalanDOMString
 FunctionCurrent::getError() const
 {
-	return XALAN_STATIC_UCODE_STRING(
-		"The current() function does not take any arguments!");
+	return XALAN_STATIC_UCODE_STRING("The current() function does not accept any arguments!");
 }

@@ -780,7 +780,8 @@ public:
 			const XalanDOMString&			theNamespace,
 			const XalanDOMString&			functionName,
 			XalanNode*						context,
-			const XObjectArgVectorType&		argVec);
+			const XObjectArgVectorType&		argVec,
+			const Locator*					locator);
 
 	virtual XalanDocument*
 	parseXML(
@@ -817,7 +818,9 @@ public:
 			MutableNodeRefList&		nodelist);
 
 	virtual const XObjectPtr
-	getVariable(const XalanQName&	name);
+	getVariable(
+			const XalanQName&	name,
+			const Locator*		locator = 0);
 
 	virtual const PrefixResolver*
 	getPrefixResolver() const;

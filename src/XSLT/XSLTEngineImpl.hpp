@@ -773,6 +773,12 @@ public:
 			const XalanNode*	styleNode = 0) const;
 
 	virtual void
+	message(
+			const XalanDOMString&	msg,
+			const Locator&			locator,
+			const XalanNode*		sourceNode = 0) const;
+
+	virtual void
 	warn(
 			const XalanDOMString&	msg,
 			const XalanNode*		sourceNode = 0,
@@ -798,6 +804,12 @@ public:
 			const XalanNode*	styleNode = 0) const;
 
 	virtual void
+	warn(
+			const XalanDOMString&	msg,
+			const Locator&			locator,
+			const XalanNode*		sourceNode = 0) const;
+
+	virtual void
 	error(
 			const XalanDOMString&	msg,
 			const XalanNode*		sourceNode = 0,
@@ -808,6 +820,12 @@ public:
 			const XalanDOMString&		msg,
 			const XalanNode*			sourceNode,
 			const ElemTemplateElement*	styleNode) const;
+
+	virtual void
+	error(
+			const XalanDOMString&	msg,
+			const Locator&			locator,
+			const XalanNode*		sourceNode = 0) const;
 
 	/**
 	 * Report an error, and throw an exception.
@@ -1591,6 +1609,13 @@ private:
 			ProblemListener::eClassification	classification,
 			const XalanNode*					sourceNode,
 			const ElemTemplateElement*			styleNode) const;
+
+	void
+	problem(
+			const XalanDOMString&				msg, 
+			ProblemListener::eClassification	classification,
+			const Locator&						locator,
+			const XalanNode*					sourceNode) const;
 
   //==========================================================
   // SECTION: Function to do with attribute handling
