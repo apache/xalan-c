@@ -106,7 +106,7 @@ getDoc(
 
 		try
 		{
-			newDoc = executionContext.parseXML(base, localURI);
+			newDoc = executionContext.parseXML(localURI, base);
 
 		}
 		catch(...)
@@ -187,10 +187,18 @@ FunctionDocument::execute(
 			base = executionContext.getPrefixResolver()->getURI();
 		}
 
-		// Chop off the file name part of the URI, this does not include the
+		// Chop off the file name part of the URI, this includes the
 		// trailing separator
-		int ix = lastIndexOf(base, '/');
-		base = substring(base, 0, ix);
+		DOMString newBase;
+		{
+			int indexOfSlash = lastIndexOf(base, '/');
+#if defined(WIN32)				
+			const int indexOfBackSlash = lastIndexOf(base, '\\');
+			if(indexOfBackSlash > indexOfSlash)
+				indexOfSlash = indexOfBackSlash;
+#endif				
+				newBase = substring(base, 0, indexOfSlash+1);
+		}
 
 		MutableNodeRefList		mnl(executionContext.createMutableNodeRefList());
 
@@ -218,15 +226,20 @@ FunctionDocument::execute(
 				// unencoded slashes in their naming schemes.  If they do, absolute URIs
 				// will still work, but confusion may result.
 				const int indexOfColon = indexOf(ref, ':');
-				const int indexOfSlash = indexOf(ref, '/');
+				int indexOfSlash = indexOf(ref, '/');
+#if defined(WIN32)				
+				const int indexOfBackSlash = indexOf(ref, '\\');
+				if(indexOfBackSlash > indexOfSlash)
+					indexOfSlash = indexOfBackSlash;
+#endif				
 
 				if(indexOfColon != -1 && indexOfSlash != -1 && indexOfColon < indexOfSlash)
 				{
 					// The url (or filename, for that matter) is absolute.
-					base = DOMString();
+					newBase = DOMString();
 				}
 
-				const DOM_Document	newDoc = getDoc(executionContext, ref, base);
+				const DOM_Document	newDoc = getDoc(executionContext, ref, newBase);
 
 				if(newDoc != 0)
 				{
