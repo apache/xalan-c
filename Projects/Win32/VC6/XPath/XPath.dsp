@@ -290,10 +290,6 @@ SOURCE=..\..\..\..\src\XPath\XBoolean.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\XLocator.cpp
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\..\..\src\XPath\XNodeSet.cpp
 # End Source File
 # Begin Source File
@@ -659,10 +655,6 @@ SOURCE=..\..\..\..\src\XPath\XalanXPathException.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\XPath\XBoolean.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\src\XPath\XLocator.hpp
 # End Source File
 # Begin Source File
 
