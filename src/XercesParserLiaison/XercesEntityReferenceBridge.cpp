@@ -258,7 +258,7 @@ XercesEntityReferenceBridge::isSupported(
 			const XalanDOMString&	feature,
 			const XalanDOMString&	version) const
 {
-	return m_xercesNode.isSupported(
+	return m_xercesNode.supports(
 				XercesBridgeHelper::XalanDOMStringToXercesDOMString(feature),
 				XercesBridgeHelper::XalanDOMStringToXercesDOMString(version));
 }
