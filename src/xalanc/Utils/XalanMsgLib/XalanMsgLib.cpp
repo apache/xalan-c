@@ -13,13 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+ 
+#include <xalanc/Utils/XalanMsgLib/XalanMsgLib.hpp>
 
-// Base include file.  Must be first.
-#include <xalanc/Include/PlatformDefinitions.hpp>
 
 #include <xalanc/PlatformSupport/XalanUnicode.hpp>
 
-#include <xalanc/Utils/XalanMsgLib/XalanMsgLib.hpp>
 
 #include <LocalMsgData.hpp>
 

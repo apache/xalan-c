@@ -20,7 +20,6 @@
 
 #include <xalanc/Utils/XalanMsgLib/XalanMsgLibDefinitions.hpp>
 
-#include <xalanc/XalanDOM/XalanDOMString.hpp>
 
 
 XALAN_CPP_NAMESPACE_BEGIN
