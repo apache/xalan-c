@@ -3,12 +3,6 @@
 
 
 
-#if !defined(NDEBUG) && defined(_MSC_VER)
-#include <crtdbg.h>
-#endif
-
-
-
 #include <sax2/ContentHandler.hpp>
 #include <util/PlatformUtils.hpp>
 
@@ -107,13 +101,6 @@ main(
 		  int			argc,
 		  const char*	/* argv */ [])
 {
-#if !defined(XALAN_USE_ICU) && !defined(NDEBUG) && defined(_MSC_VER)
-	_CrtSetDbgFlag(_CrtSetDbgFlag(_CRTDBG_REPORT_FLAG) | _CRTDBG_LEAK_CHECK_DF);
-
-	_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_FILE);
-	_CrtSetReportFile(_CRT_WARN, _CRTDBG_FILE_STDERR);
-#endif
-
 #if !defined(XALAN_NO_NAMESPACES)
   using std::cerr;
   using std::endl;
@@ -139,20 +126,16 @@ main(
 			// Create a XalanTransformer.
 			XalanTransformer	theXalanTransformer;
 
-			// Our stylesheet file.  The assumption is that the executable will be run
-			// from same directory as the file.
-			const char* const	theXSLFileName = "foo.xsl";
-
-			// Our output target...
-			const char*	const	theOutputFileName = "foo.out";
-
 			// Get a document builder from the transformer...
 			XalanDocumentBuilder* const		theBuilder = theXalanTransformer.createDocumentBuilder();
 
 			BuildDocument(theBuilder);
 
+			// The assumption is that the executable will be run
+			// from same directory as the stylesheet file.
+
 			// Do the transform.
-			theResult = theXalanTransformer.transform(*theBuilder, theXSLFileName, theOutputFileName);
+			theResult = theXalanTransformer.transform(*theBuilder, "foo.xsl", "foo.out");
     
 			if(theResult != 0)
 			{

@@ -168,6 +168,7 @@ public:
 		time(&theTime);
 
 		char* const	theTimeString = asctime(localtime(&theTime));
+		assert(theTimeString != 0);
 
 		// The resulting string has a newline character at the end,
 		// so get rid of it.
@@ -238,43 +239,29 @@ main(
 		// Create a XalanTransformer.
 		XalanTransformer theXalanTransformer;
 
-		// Our input files...The assumption is that the executable will be run
-		// from same directory as the input files.
-		const char*		theXMLFileName = "foo.xml";
-		const char*		theXSLFileName = "foo.xsl";
-
-		// Our output target...
-		const char*	theOutputFileName = "foo.out";
-
 		// The namespace for our functions...
 		const XalanDOMString	theNamespace("http://ExternalFunction.xalan-c++.xml.apache.org");
 
-		// Install the function in the local space.  It will only
+		// Install the functions in the local space.  They will only
 		// be installed in this instance, so no other instances
-		// will know about the function...
+		// will know about them...
 		theXalanTransformer.installExternalFunction(
 			theNamespace,
 			XalanDOMString("asctime"),
 			FunctionAsctime());
 
-		// Install the function in the local space.  It will only
-		// be installed in this instance, so no other instances
-		// will know about the function...
 		theXalanTransformer.installExternalFunction(
 			theNamespace,
 			XalanDOMString("square-root"),
 			FunctionSquareRoot());
 
-		// Install the function in the local space.  It will only
-		// be installed in this instance, so no other instances
-		// will know about the function...
 		theXalanTransformer.installExternalFunction(
 			theNamespace,
 			XalanDOMString("cube"),
 			FunctionCube());
 
 		// Do the transform.
-		theResult = theXalanTransformer.transform(theXMLFileName, theXSLFileName, theOutputFileName);
+		theResult = theXalanTransformer.transform("foo.xml", "foo.xsl", "foo.out");
     
 		if(theResult != 0)
 		{
