@@ -663,7 +663,7 @@ XalanDOMString::length(const char*	theString)
 {
 	assert(theString != 0);
 
-	assert(strlen(theString) < npos);
+	assert(strlen(theString) < real_size_type(npos));
 
 	return size_type(strlen(theString));
 }
@@ -791,7 +791,7 @@ doTranscodeToLocalCodePage(
 		}
 		else
 		{
-			theTargetVector.resize(0);
+			theTargetVector.clear();
 		}
 
         return true;
@@ -857,6 +857,8 @@ doTranscodeToLocalCodePage(
 		//
 		if (wcstombs(&theTargetVector[0], theTempSource, targetLen) == size_t(-1))
 		{
+			theTargetVector.clear();
+
 			return false;
 		}
 		else
@@ -918,7 +920,7 @@ doTranscodeFromLocalCodePage(
 		}
 		else
 		{
-			theTargetVector.resize(0);
+			theTargetVector.clear();
 		}
 
         return true;
@@ -968,6 +970,8 @@ doTranscodeFromLocalCodePage(
 
 		if (mbstowcs(theTargetPointer, theSourceString, size_t(theSourceStringLength)) == size_t(-1))
 		{
+			theTargetVector.clear();
+
 			return false;
 		}
 		else
