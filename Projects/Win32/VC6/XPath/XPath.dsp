@@ -283,6 +283,19 @@ SOURCE=..\..\..\..\src\XPath\ResultTreeFragBase.cpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\XPath\SimpleNodeLocator.cpp
+
+!IF  "$(CFG)" == "XPath - Win32 Release"
+
+# ADD CPP /Ob1
+
+!ELSEIF  "$(CFG)" == "XPath - Win32 Debug"
+
+!ELSEIF  "$(CFG)" == "XPath - Win32 Release with symbols"
+
+# ADD CPP /Ob1
+
+!ENDIF 
+
 # End Source File
 # Begin Source File
 
