@@ -224,7 +224,7 @@ public:
 	{
 		m_keyData.push_back(VectorHolderType::value_type(thePair.first, thePair.first + (length(thePair.first) + 1)));
 
-		return m_map.insert(value_type(m_keyData.back().begin(), thePair.second));
+		return m_map.insert(value_type(&*m_keyData.back().begin(), thePair.second));
 	}
 
 	referent_type&
