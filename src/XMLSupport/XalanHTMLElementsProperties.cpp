@@ -184,1090 +184,1090 @@ const XalanHTMLElementsProperties::InternalElementProperties	XalanHTMLElementsPr
 	// defined in the header file which indicate the maximum size of each.
 	{
 		{ XalanUnicode::charLetter_A, 0 },
-		{ ElemDesc::SPECIAL },
+		ElemDesc::SPECIAL,
 		{
 			{
 				{ XalanUnicode::charLetter_H, XalanUnicode::charLetter_R, XalanUnicode::charLetter_E, XalanUnicode::charLetter_F, 0 },
-				{ ElemDesc::ATTRURL },
+				ElemDesc::ATTRURL,
 			},
 			{
 				{ XalanUnicode::charLetter_N, XalanUnicode::charLetter_A, XalanUnicode::charLetter_M, XalanUnicode::charLetter_E, 0 },
-				{ ElemDesc::ATTRURL },
+				ElemDesc::ATTRURL,
 			},
 			// This is a dummy entry and it must be the last one!!! Each array of
 			// InternalAttributesProperties must be terminated by a dummy entry.
 			{
 				{ 0 },
-				{ 0 },
+				0,
 			},
 		},
 	},
 	{
 		{ XalanUnicode::charLetter_B, 0 },
-		{ ElemDesc::FONTSTYLE },
+		ElemDesc::FONTSTYLE,
 		{
 			{
 				{ 0 },
-				{ 0 },
+				0,
 			},
 		},
 	},
 	{
 		{ XalanUnicode::charLetter_I, 0 },
-		{ ElemDesc::FONTSTYLE },
+		ElemDesc::FONTSTYLE,
 		{
 			{
 				{ 0 },
-				{ 0 },
+				0,
 			},
 		},
 	},
 	{
 		{ XalanUnicode::charLetter_P, 0 },
-		{ ElemDesc::BLOCK | ElemDesc::BLOCKFORM | ElemDesc::BLOCKFORMFIELDSET },
+		ElemDesc::BLOCK | ElemDesc::BLOCKFORM | ElemDesc::BLOCKFORMFIELDSET,
 		{
 			{
 				{ 0 },
-				{ 0 },
+				0,
 			},
 		},
 	},
 	{
 		{ XalanUnicode::charLetter_Q, 0 },
-		{ ElemDesc::SPECIAL | ElemDesc::ASPECIAL },
+		ElemDesc::SPECIAL | ElemDesc::ASPECIAL,
 		{
 			{
 			
 				{ XalanUnicode::charLetter_C, XalanUnicode::charLetter_I, XalanUnicode::charLetter_T, XalanUnicode::charLetter_E, 0 },
-				{ ElemDesc::ATTRURL },
+				ElemDesc::ATTRURL,
 			},
 			{
 				{ 0 },
-				{ 0 },
+				0,
 			},
 		},
 	},
 	{
 		{ XalanUnicode::charLetter_S, 0 },
-		{ ElemDesc::FONTSTYLE },
+		ElemDesc::FONTSTYLE,
 		{
 			{
 				{ 0 },
-				{ 0 },
+				0,
 			},
 		},
 	},
 	{
 		{ XalanUnicode::charLetter_U, 0 },
-		{ ElemDesc::FONTSTYLE },
+		ElemDesc::FONTSTYLE,
 		{
 			{
 				{ 0 },
-				{ 0 },
+				0,
 			},
 		},
 	},
 	{
 		{ XalanUnicode::charLetter_B, XalanUnicode::charLetter_R, 0 },
-		{ ElemDesc::EMPTY | ElemDesc::BLOCK | ElemDesc::SPECIAL | ElemDesc::ASPECIAL },
+		ElemDesc::EMPTY | ElemDesc::BLOCK | ElemDesc::SPECIAL | ElemDesc::ASPECIAL,
 		{
 			{
 				{ 0 },
-				{ 0 },
+				0,
 			},
 		},
 	},
 	{
 		{ XalanUnicode::charLetter_D, XalanUnicode::charLetter_D, 0 },
-		{ ElemDesc::BLOCK },
+		ElemDesc::BLOCK,
 		{
 			{
 				{ 0 },
-				{ 0 },
+				0,
 			},
 		},
 	},
 	{
 		{ XalanUnicode::charLetter_D, XalanUnicode::charLetter_L, 0 },
-		{ ElemDesc::BLOCK | ElemDesc::BLOCKFORM | ElemDesc::BLOCKFORMFIELDSET },
+		ElemDesc::BLOCK | ElemDesc::BLOCKFORM | ElemDesc::BLOCKFORMFIELDSET,
 		{
 			{
 				{ 0 },
-				{ 0 },
+				0,
 			},
 		},
 	},
 	{
 		{ XalanUnicode::charLetter_D, XalanUnicode::charLetter_T, 0 },
-		{ ElemDesc::BLOCK },
+		ElemDesc::BLOCK,
 		{
 			{
 				{ 0 },
-				{ 0 },
+				0,
 			},
 		},
 	},
 	{
 		{ XalanUnicode::charLetter_E, XalanUnicode::charLetter_M, 0 },
-		{ ElemDesc::PHRASE },
+		ElemDesc::PHRASE,
 		{
 			{
 				{ 0 },
-				{ 0 },
+				0,
 			},
 		},
 	},
 	{
 		{ XalanUnicode::charLetter_H, XalanUnicode::charDigit_1, 0 },
-		{ ElemDesc::BLOCK | ElemDesc::HEAD },
+		ElemDesc::BLOCK | ElemDesc::HEAD,
 		{
 			{
 				{ 0 },
-				{ 0 },
+				0,
 			},
 		},
 	},
 	{
 		{ XalanUnicode::charLetter_H, XalanUnicode::charDigit_2, 0 },
-		{ ElemDesc::BLOCK | ElemDesc::HEAD },
+		ElemDesc::BLOCK | ElemDesc::HEAD,
 		{
 			{
 				{ 0 },
-				{ 0 },
+				0,
 			},
 		},
 	},
 	{
 		{ XalanUnicode::charLetter_H, XalanUnicode::charDigit_3, 0 },
-		{ ElemDesc::BLOCK | ElemDesc::HEAD },
+		ElemDesc::BLOCK | ElemDesc::HEAD,
 		{
 			{
 				{ 0 },
-				{ 0 },
+				0,
 			},
 		},
 	},
 	{
 		{ XalanUnicode::charLetter_H, XalanUnicode::charDigit_4, 0 },
-		{ ElemDesc::BLOCK | ElemDesc::HEAD },
+		ElemDesc::BLOCK | ElemDesc::HEAD,
 		{
 			{
 				{ 0 },
-				{ 0 },
+				0,
 			},
 		},
 	},
 	{
 		{ XalanUnicode::charLetter_H, XalanUnicode::charDigit_5, 0 },
-		{ ElemDesc::BLOCK | ElemDesc::HEAD },
+		ElemDesc::BLOCK | ElemDesc::HEAD,
 		{
 			{
 				{ 0 },
-				{ 0 },
+				0,
 			},
 		},
 	},
 	{
 		{ XalanUnicode::charLetter_H, XalanUnicode::charDigit_6, 0 },
-		{ ElemDesc::BLOCK | ElemDesc::HEAD },
+		ElemDesc::BLOCK | ElemDesc::HEAD,
 		{
 			{
 				{ 0 },
-				{ 0 },
+				0,
 			},
 		},
 	},
 	{
 		{ XalanUnicode::charLetter_H, XalanUnicode::charLetter_R, 0 },
-		{ ElemDesc::EMPTY | ElemDesc::BLOCK | ElemDesc::BLOCKFORM | ElemDesc::BLOCKFORMFIELDSET },
+		ElemDesc::EMPTY | ElemDesc::BLOCK | ElemDesc::BLOCKFORM | ElemDesc::BLOCKFORMFIELDSET,
 		{
 			{
 				{ 0 },
-				{ 0 },
+				0,
 			},
 		},
 	},
 	{
 		{ XalanUnicode::charLetter_L, XalanUnicode::charLetter_I, 0 },
-		{ ElemDesc::BLOCK },
+		ElemDesc::BLOCK,
 		{
 			{
 				{ 0 },
-				{ 0 },
+				0,
 			},
 		},
 	},
 	{
 		{ XalanUnicode::charLetter_O, XalanUnicode::charLetter_L, 0 },
-		{ ElemDesc::BLOCK | ElemDesc::LIST },
+		ElemDesc::BLOCK | ElemDesc::LIST,
 		{
 			{
 				{ 0 },
-				{ 0 },
+				0,
 			},
 		},
 	},
 	{
 		{ XalanUnicode::charLetter_T, XalanUnicode::charLetter_D, 0 },
-		{ 0 },
+		0,
 		{
 			{
 				{ 0 },
-				{ 0 },
+				0,
 			},
 		},
 	},
 	{
 		{ XalanUnicode::charLetter_T, XalanUnicode::charLetter_H, 0 },
-		{ 0 },
+		0,
 		{
 			{
 				{ 0 },
-				{ 0 },
+				0,
 			},
 		},
 	},
 	{
 		{ XalanUnicode::charLetter_T, XalanUnicode::charLetter_R, 0 },
-		{ ElemDesc::BLOCK },
+		ElemDesc::BLOCK,
 		{
 			{
 				{ 0 },
-				{ 0 },
+				0,
 			},
 		},
 	},
 	{
 		{ XalanUnicode::charLetter_T, XalanUnicode::charLetter_T, 0 },
-		{ ElemDesc::FONTSTYLE },
+		ElemDesc::FONTSTYLE,
 		{
 			{
 				{ 0 },
-				{ 0 },
+				0,
 			},
 		},
 	},
 	{
 		{ XalanUnicode::charLetter_U, XalanUnicode::charLetter_L, 0 },
-		{ ElemDesc::BLOCK | ElemDesc::LIST },
+		ElemDesc::BLOCK | ElemDesc::LIST,
 		{
 			{
 				{ 0 },
-				{ 0 },
+				0,
 			},
 		},
 	},
 	{
 		{ XalanUnicode::charLetter_B, XalanUnicode::charLetter_D, XalanUnicode::charLetter_O, 0 },
-		{ ElemDesc::SPECIAL | ElemDesc::ASPECIAL },
+		ElemDesc::SPECIAL | ElemDesc::ASPECIAL,
 		{
 			{
 				{ 0 },
-				{ 0 },
+				0,
 			},
 		},
 	},
 	{
 		{ XalanUnicode::charLetter_B, XalanUnicode::charLetter_I, XalanUnicode::charLetter_G, 0 },
-		{ ElemDesc::FONTSTYLE },
+		ElemDesc::FONTSTYLE,
 		{
 			{
 				{ 0 },
-				{ 0 },
+				0,
 			},
 		},
 	},
 	{
 		{ XalanUnicode::charLetter_C, XalanUnicode::charLetter_O, XalanUnicode::charLetter_L, 0 },
-		{ ElemDesc::EMPTY | ElemDesc::BLOCK },
+		ElemDesc::EMPTY | ElemDesc::BLOCK,
 		{
 			{
 				{ 0 },
-				{ 0 },
+				0,
 			},
 		},
 	},
 	{
 		{ XalanUnicode::charLetter_D, XalanUnicode::charLetter_E, XalanUnicode::charLetter_L, 0 },
-		{ 0 },
+		0,
 		{
 			{
 			
 				{ XalanUnicode::charLetter_C, XalanUnicode::charLetter_I, XalanUnicode::charLetter_T, XalanUnicode::charLetter_E, 0 },
-				{ ElemDesc::ATTRURL },
+				ElemDesc::ATTRURL,
 			},
 			{
 				{ 0 },
-				{ 0 },
+				0,
 			},
 		},
 	},
 	{
 		{ XalanUnicode::charLetter_D, XalanUnicode::charLetter_F, XalanUnicode::charLetter_N, 0 },
-		{ ElemDesc::PHRASE },
+		ElemDesc::PHRASE,
 		{
 			{
 				{ 0 },
-				{ 0 },
+				0,
 			},
 		},
 	},
 	{
 		{ XalanUnicode::charLetter_D, XalanUnicode::charLetter_I, XalanUnicode::charLetter_R, 0 },
-		{ ElemDesc::BLOCK },
+		ElemDesc::BLOCK,
 		{
 			{
 				{ 0 },
-				{ 0 },
+				0,
 			},
 		},
 	},
 	{
 		{ XalanUnicode::charLetter_D, XalanUnicode::charLetter_I, XalanUnicode::charLetter_V, 0 },
-		{ ElemDesc::BLOCK | ElemDesc::BLOCKFORM | ElemDesc::BLOCKFORMFIELDSET },
+		ElemDesc::BLOCK | ElemDesc::BLOCKFORM | ElemDesc::BLOCKFORMFIELDSET,
 		{
 			{
 				{ 0 },
-				{ 0 },
+				0,
 			},
 		},
 	},
 	{
 		{ XalanUnicode::charLetter_I, XalanUnicode::charLetter_M, XalanUnicode::charLetter_G, 0 },
-		{ ElemDesc::EMPTY | ElemDesc::SPECIAL | ElemDesc::ASPECIAL | ElemDesc::WHITESPACESENSITIVE },
+		ElemDesc::EMPTY | ElemDesc::SPECIAL | ElemDesc::ASPECIAL | ElemDesc::WHITESPACESENSITIVE,
 		{
 			{
 			
 				{ XalanUnicode::charLetter_S, XalanUnicode::charLetter_R, XalanUnicode::charLetter_C, 0 },
-				{ ElemDesc::ATTRURL },
+				ElemDesc::ATTRURL,
 			},
 			{
 			
 				{ XalanUnicode::charLetter_I, XalanUnicode::charLetter_S, XalanUnicode::charLetter_M, XalanUnicode::charLetter_A, XalanUnicode::charLetter_P, 0 },
-				{ ElemDesc::ATTREMPTY },
+				ElemDesc::ATTREMPTY,
 			},
 			{
 			
 				{ XalanUnicode::charLetter_U, XalanUnicode::charLetter_S, XalanUnicode::charLetter_E, XalanUnicode::charLetter_M, XalanUnicode::charLetter_A, XalanUnicode::charLetter_P, 0 },
-				{ ElemDesc::ATTRURL },
+				ElemDesc::ATTRURL,
 			},
 			{
 			
 				{ XalanUnicode::charLetter_L, XalanUnicode::charLetter_O, XalanUnicode::charLetter_N, XalanUnicode::charLetter_G, XalanUnicode::charLetter_D, XalanUnicode::charLetter_E, XalanUnicode::charLetter_S, XalanUnicode::charLetter_C, 0 },
-				{ ElemDesc::ATTRURL },
+				ElemDesc::ATTRURL,
 			},
 			{
 				{ 0 },
-				{ 0 },
+				0,
 			},
 		},
 	},
 	{
 		{ XalanUnicode::charLetter_I, XalanUnicode::charLetter_N, XalanUnicode::charLetter_S, 0 },
-		{ 0 },
+		0,
 		{
 			{
 				{ XalanUnicode::charLetter_C, XalanUnicode::charLetter_I, XalanUnicode::charLetter_T, XalanUnicode::charLetter_E, 0 },
-				{ ElemDesc::ATTRURL },
+				ElemDesc::ATTRURL,
 			},
 			{
 				{ 0 },
-				{ 0 },
+				0,
 			},
 		},
 	},
 	{
 		{ XalanUnicode::charLetter_K, XalanUnicode::charLetter_B, XalanUnicode::charLetter_D, 0 },
-		{ ElemDesc::PHRASE },
+		ElemDesc::PHRASE,
 		{
 			{
 				{ 0 },
-				{ 0 },
+				0,
 			},
 		},
 	},
 	{
 		{ XalanUnicode::charLetter_M, XalanUnicode::charLetter_A, XalanUnicode::charLetter_P, 0 },
-		{ ElemDesc::BLOCK | ElemDesc::SPECIAL | ElemDesc::ASPECIAL },
+		ElemDesc::BLOCK | ElemDesc::SPECIAL | ElemDesc::ASPECIAL,
 		{
 			{
 				{ 0 },
-				{ 0 },
+				0,
 			},
 		},
 	},
 	{
 		{ XalanUnicode::charLetter_P, XalanUnicode::charLetter_R, XalanUnicode::charLetter_E, 0 },
-		{ ElemDesc::BLOCK | ElemDesc::PREFORMATTED },
+		ElemDesc::BLOCK | ElemDesc::PREFORMATTED,
 		{
 			{
 				{ 0 },
-				{ 0 },
+				0,
 			},
 		},
 	},
 	{
 		{ XalanUnicode::charLetter_S, XalanUnicode::charLetter_U, XalanUnicode::charLetter_B, 0 },
-		{ ElemDesc::SPECIAL | ElemDesc::ASPECIAL },
+		ElemDesc::SPECIAL | ElemDesc::ASPECIAL,
 		{
 			{
 				{ 0 },
-				{ 0 },
+				0,
 			},
 		},
 	},
 	{
 		{ XalanUnicode::charLetter_S, XalanUnicode::charLetter_U, XalanUnicode::charLetter_P, 0 },
-		{ ElemDesc::SPECIAL | ElemDesc::ASPECIAL },
+		ElemDesc::SPECIAL | ElemDesc::ASPECIAL,
 		{
 			{
 				{ 0 },
-				{ 0 },
+				0,
 			},
 		},
 	},
 	{
 		{ XalanUnicode::charLetter_V, XalanUnicode::charLetter_A, XalanUnicode::charLetter_R, 0 },
-		{ ElemDesc::PHRASE },
+		ElemDesc::PHRASE,
 		{
 			{
 				{ 0 },
-				{ 0 },
+				0,
 			},
 		},
 	},
 	{
 		{ XalanUnicode::charLetter_A, XalanUnicode::charLetter_B, XalanUnicode::charLetter_B, XalanUnicode::charLetter_R, 0 },
-		{ ElemDesc::PHRASE },
+		ElemDesc::PHRASE,
 		{
 			{
 				{ 0 },
-				{ 0 },
+				0,
 			},
 		},
 	},
 	{
 		{ XalanUnicode::charLetter_A, XalanUnicode::charLetter_R, XalanUnicode::charLetter_E, XalanUnicode::charLetter_A, 0 },
-		{ ElemDesc::EMPTY | ElemDesc::BLOCK },
+		ElemDesc::EMPTY | ElemDesc::BLOCK,
 		{
 			{
 				{ XalanUnicode::charLetter_H, XalanUnicode::charLetter_R, XalanUnicode::charLetter_E, XalanUnicode::charLetter_F, 0 },
-				{ ElemDesc::ATTRURL },
+				ElemDesc::ATTRURL,
 			},
 			{
 				{ XalanUnicode::charLetter_N, XalanUnicode::charLetter_O, XalanUnicode::charLetter_H, XalanUnicode::charLetter_R, XalanUnicode::charLetter_E, XalanUnicode::charLetter_F, 0 },
-				{ ElemDesc::ATTREMPTY },
+				ElemDesc::ATTREMPTY,
 			},
 			{
 				{ 0 },
-				{ 0 },
+				0,
 			},
 		},
 	},
 	{
 		{ XalanUnicode::charLetter_B, XalanUnicode::charLetter_A, XalanUnicode::charLetter_S, XalanUnicode::charLetter_E, 0 },
-		{ ElemDesc::EMPTY | ElemDesc::BLOCK },
+		ElemDesc::EMPTY | ElemDesc::BLOCK,
 		{
 			{
 				{ XalanUnicode::charLetter_H, XalanUnicode::charLetter_R, XalanUnicode::charLetter_E, XalanUnicode::charLetter_F, 0 },
-				{ ElemDesc::ATTRURL },
+				ElemDesc::ATTRURL,
 			},
 			{
 				{ 0 },
-				{ 0 },
+				0,
 			},
 		},
 	},
 	{
 		{ XalanUnicode::charLetter_B, XalanUnicode::charLetter_O, XalanUnicode::charLetter_D, XalanUnicode::charLetter_Y, 0 },
-		{ ElemDesc::BLOCK },
+		ElemDesc::BLOCK,
 		{
 			{
 				{ 0 },
-				{ 0 },
+				0,
 			},
 		},
 	},
 	{
 		{ XalanUnicode::charLetter_C, XalanUnicode::charLetter_I, XalanUnicode::charLetter_T, XalanUnicode::charLetter_E, 0 },
-		{ ElemDesc::PHRASE },
+		ElemDesc::PHRASE,
 		{
 			{
 				{ 0 },
-				{ 0 },
+				0,
 			},
 		},
 	},
 	{
 		{ XalanUnicode::charLetter_C, XalanUnicode::charLetter_O, XalanUnicode::charLetter_D, XalanUnicode::charLetter_E, 0 },
-		{ ElemDesc::PHRASE },
+		ElemDesc::PHRASE,
 		{
 			{
 				{ 0 },
-				{ 0 },
+				0,
 			},
 		},
 	},
 	{
 		{ XalanUnicode::charLetter_F, XalanUnicode::charLetter_O, XalanUnicode::charLetter_N, XalanUnicode::charLetter_T, 0 },
-		{ ElemDesc::FONTSTYLE },
+		ElemDesc::FONTSTYLE,
 		{
 			{
 				{ 0 },
-				{ 0 },
+				0,
 			},
 		},
 	},
 	{
 		{ XalanUnicode::charLetter_F, XalanUnicode::charLetter_O, XalanUnicode::charLetter_R, XalanUnicode::charLetter_M, 0 },
-		{ ElemDesc::BLOCK },
+		ElemDesc::BLOCK,
 		{
 			{
 				{ XalanUnicode::charLetter_A, XalanUnicode::charLetter_C, XalanUnicode::charLetter_T, XalanUnicode::charLetter_I, XalanUnicode::charLetter_O, XalanUnicode::charLetter_N, 0 },
-				{ ElemDesc::ATTRURL },
+				ElemDesc::ATTRURL,
 			},
 			{
 				{ 0 },
-				{ 0 },
+				0,
 			},
 		},
 	},
 	{
 		{ XalanUnicode::charLetter_H, XalanUnicode::charLetter_E, XalanUnicode::charLetter_A, XalanUnicode::charLetter_D, 0 },
-		{ ElemDesc::BLOCK | ElemDesc::HEADELEM },
+		ElemDesc::BLOCK | ElemDesc::HEADELEM,
 		{
 			{
 				{ XalanUnicode::charLetter_P, XalanUnicode::charLetter_R, XalanUnicode::charLetter_O, XalanUnicode::charLetter_F, XalanUnicode::charLetter_I, XalanUnicode::charLetter_L, XalanUnicode::charLetter_E, 0 },
-				{ ElemDesc::ATTRURL },
+				ElemDesc::ATTRURL,
 			},
 			{
 				{ 0 },
-				{ 0 },
+				0,
 			},
 		},
 	},
 	{
 		{ XalanUnicode::charLetter_H, XalanUnicode::charLetter_T, XalanUnicode::charLetter_M, XalanUnicode::charLetter_L, 0 },
-		{ ElemDesc::BLOCK },
+		ElemDesc::BLOCK,
 		{
 			{
 				{ 0 },
-				{ 0 },
+				0,
 			},
 		},
 	},
 	{
 		{ XalanUnicode::charLetter_L, XalanUnicode::charLetter_I, XalanUnicode::charLetter_N, XalanUnicode::charLetter_K, 0 },
-		{ ElemDesc::EMPTY | ElemDesc::BLOCK | ElemDesc::HEADMISC },
+		ElemDesc::EMPTY | ElemDesc::BLOCK | ElemDesc::HEADMISC,
 		{
 			{
 				{ 0 },
-				{ 0 },
+				0,
 			},
 		},
 	},
 	{
 		{ XalanUnicode::charLetter_M, XalanUnicode::charLetter_E, XalanUnicode::charLetter_N, XalanUnicode::charLetter_U, 0 },
-		{ ElemDesc::BLOCK },
+		ElemDesc::BLOCK,
 		{
 			{
 				{ 0 },
-				{ 0 },
+				0,
 			},
 		},
 	},
 	{
 		{ XalanUnicode::charLetter_M, XalanUnicode::charLetter_E, XalanUnicode::charLetter_T, XalanUnicode::charLetter_A, 0 },
-		{ ElemDesc::EMPTY | ElemDesc::BLOCK | ElemDesc::HEADMISC },
+		ElemDesc::EMPTY | ElemDesc::BLOCK | ElemDesc::HEADMISC,
 		{
 			{
 				{ 0 },
-				{ 0 },
+				0,
 			},
 		},
 	},
 	{
 		{ XalanUnicode::charLetter_N, XalanUnicode::charLetter_O, XalanUnicode::charLetter_B, XalanUnicode::charLetter_R, 0 },
-		{ ElemDesc::FONTSTYLE },
+		ElemDesc::FONTSTYLE,
 		{
 			{
 				{ 0 },
-				{ 0 },
+				0,
 			},
 		},
 	},
 	{
 		{ XalanUnicode::charLetter_S, XalanUnicode::charLetter_A, XalanUnicode::charLetter_M, XalanUnicode::charLetter_P, 0 },
-		{ ElemDesc::PHRASE },
+		ElemDesc::PHRASE,
 		{
 			{
 				{ 0 },
-				{ 0 },
+				0,
 			},
 		},
 	},
 	{
 		{ XalanUnicode::charLetter_S, XalanUnicode::charLetter_P, XalanUnicode::charLetter_A, XalanUnicode::charLetter_N, 0 },
-		{ ElemDesc::SPECIAL | ElemDesc::ASPECIAL },
+		ElemDesc::SPECIAL | ElemDesc::ASPECIAL,
 		{
 			{
 				{ 0 },
-				{ 0 },
+				0,
 			},
 		},
 	},
 	{
 		{ XalanUnicode::charLetter_F, XalanUnicode::charLetter_R, XalanUnicode::charLetter_A, XalanUnicode::charLetter_M, XalanUnicode::charLetter_E, 0 },
-		{ ElemDesc::EMPTY | ElemDesc::BLOCK },
+		ElemDesc::EMPTY | ElemDesc::BLOCK,
 		{
 			{
 				{ XalanUnicode::charLetter_S, XalanUnicode::charLetter_R, XalanUnicode::charLetter_C, 0 },
-				{ ElemDesc::ATTRURL },
+				ElemDesc::ATTRURL,
 			},
 			{
 				{ 0 },
-				{ 0 },
+				0,
 			},
 		},
 	},
 	{
 		{ XalanUnicode::charLetter_I, XalanUnicode::charLetter_N, XalanUnicode::charLetter_P, XalanUnicode::charLetter_U, XalanUnicode::charLetter_T, 0 },
-		{ ElemDesc::EMPTY | ElemDesc::INLINELABEL | ElemDesc::FORMCTRL },
+		ElemDesc::EMPTY | ElemDesc::INLINELABEL | ElemDesc::FORMCTRL,
 		{
 			{
 				{ XalanUnicode::charLetter_S, XalanUnicode::charLetter_R, XalanUnicode::charLetter_C, 0 },
-				{ ElemDesc::ATTRURL },
+				ElemDesc::ATTRURL,
 			},
 			{
 				{ XalanUnicode::charLetter_I, XalanUnicode::charLetter_S, XalanUnicode::charLetter_M, XalanUnicode::charLetter_A, XalanUnicode::charLetter_P, 0 },
-				{ ElemDesc::ATTREMPTY },
+				ElemDesc::ATTREMPTY,
 			},
 			{
 				{ XalanUnicode::charLetter_U, XalanUnicode::charLetter_S, XalanUnicode::charLetter_E, XalanUnicode::charLetter_M, XalanUnicode::charLetter_A, XalanUnicode::charLetter_P, 0 },
-				{ ElemDesc::ATTRURL },
+				ElemDesc::ATTRURL,
 			},
 			{
 				{ XalanUnicode::charLetter_C, XalanUnicode::charLetter_H, XalanUnicode::charLetter_E, XalanUnicode::charLetter_C, XalanUnicode::charLetter_K, XalanUnicode::charLetter_E, XalanUnicode::charLetter_D, 0 },
-				{ ElemDesc::ATTREMPTY },
+				ElemDesc::ATTREMPTY,
 			},
 			{
 				{ XalanUnicode::charLetter_D, XalanUnicode::charLetter_I, XalanUnicode::charLetter_S, XalanUnicode::charLetter_A, XalanUnicode::charLetter_B, XalanUnicode::charLetter_L, XalanUnicode::charLetter_E, XalanUnicode::charLetter_D, 0 },
-				{ ElemDesc::ATTREMPTY },
+				ElemDesc::ATTREMPTY,
 				},
 			{
 				{ XalanUnicode::charLetter_R, XalanUnicode::charLetter_E, XalanUnicode::charLetter_A, XalanUnicode::charLetter_D, XalanUnicode::charLetter_O, XalanUnicode::charLetter_N, XalanUnicode::charLetter_L, XalanUnicode::charLetter_Y, 0 },
-				{ ElemDesc::ATTREMPTY },
+				ElemDesc::ATTREMPTY,
 			},
 			{
 				{ 0 },
-				{ 0 },
+				0,
 			},
 		},
 	},
 	{
 		{ XalanUnicode::charLetter_L, XalanUnicode::charLetter_A, XalanUnicode::charLetter_B, XalanUnicode::charLetter_E, XalanUnicode::charLetter_L, 0 },
-		{ ElemDesc::FORMCTRL },
+		ElemDesc::FORMCTRL,
 		{
 			{
 				{ 0 },
-				{ 0 },
+				0,
 			},
 		},
 	},
 	{
 		{ XalanUnicode::charLetter_P, XalanUnicode::charLetter_A, XalanUnicode::charLetter_R, XalanUnicode::charLetter_A, XalanUnicode::charLetter_M, 0 },
-		{ ElemDesc::EMPTY },
+		ElemDesc::EMPTY,
 		{
 			{
 				{ 0 },
-				{ 0 },
+				0,
 			},
 		},
 	},
 	{
 		{ XalanUnicode::charLetter_S, XalanUnicode::charLetter_M, XalanUnicode::charLetter_A, XalanUnicode::charLetter_L, XalanUnicode::charLetter_L, 0 },
-		{ ElemDesc::FONTSTYLE },
+		ElemDesc::FONTSTYLE,
 		{
 			{
 				{ 0 },
-				{ 0 },
+				0,
 			},
 		},
 	},
 	{
 		{ XalanUnicode::charLetter_S, XalanUnicode::charLetter_T, XalanUnicode::charLetter_Y, XalanUnicode::charLetter_L, XalanUnicode::charLetter_E, 0 },
-		{ ElemDesc::BLOCK | ElemDesc::RAW | ElemDesc::HEADMISC },
+		ElemDesc::BLOCK | ElemDesc::RAW | ElemDesc::HEADMISC,
 		{
 			{
 				{ 0 },
-				{ 0 },
+				0,
 			},
 		},
 	},
 	{
 		{ XalanUnicode::charLetter_T, XalanUnicode::charLetter_A, XalanUnicode::charLetter_B, XalanUnicode::charLetter_L, XalanUnicode::charLetter_E, 0 },
-		{ ElemDesc::BLOCK | ElemDesc::BLOCKFORM | ElemDesc::BLOCKFORMFIELDSET },
+		ElemDesc::BLOCK | ElemDesc::BLOCKFORM | ElemDesc::BLOCKFORMFIELDSET,
 		{
 			{
 				{ 0 },
-				{ 0 },
+				0,
 			},
 		},
 	},
 	{
 		{ XalanUnicode::charLetter_T, XalanUnicode::charLetter_B, XalanUnicode::charLetter_O, XalanUnicode::charLetter_D, XalanUnicode::charLetter_Y, 0 },
-		{ ElemDesc::BLOCK },
+		ElemDesc::BLOCK,
 		{
 			{
 				{ 0 },
-				{ 0 },
+				0,
 			},
 		},
 	},
 	{
 		{ XalanUnicode::charLetter_T, XalanUnicode::charLetter_F, XalanUnicode::charLetter_O, XalanUnicode::charLetter_O, XalanUnicode::charLetter_T, 0 },
-		{ ElemDesc::BLOCK },
+		ElemDesc::BLOCK,
 		{
 			{
 				{ 0 },
-				{ 0 },
+				0,
 			},
 		},
 	},
 	{
 		{ XalanUnicode::charLetter_T, XalanUnicode::charLetter_H, XalanUnicode::charLetter_E, XalanUnicode::charLetter_A, XalanUnicode::charLetter_D, 0 },
-		{ ElemDesc::BLOCK },
+		ElemDesc::BLOCK,
 		{
 			{
 				{ 0 },
-				{ 0 },
+				0,
 			},
 		},
 	},
 	{
 		{ XalanUnicode::charLetter_T, XalanUnicode::charLetter_I, XalanUnicode::charLetter_T, XalanUnicode::charLetter_L, XalanUnicode::charLetter_E, 0 },
-		{ ElemDesc::BLOCK },
+		ElemDesc::BLOCK,
 		{
 			{
 				{ 0 },
-				{ 0 },
+				0,
 			},
 		},
 	},
 	{
 		{ XalanUnicode::charLetter_A, XalanUnicode::charLetter_P, XalanUnicode::charLetter_P, XalanUnicode::charLetter_L, XalanUnicode::charLetter_E, XalanUnicode::charLetter_T, 0 },
-		{ ElemDesc::WHITESPACESENSITIVE },
+		ElemDesc::WHITESPACESENSITIVE,
 		{
 			{
 				{ 0 },
-				{ 0 },
+				0,
 			},
 		},
 	},
 	{
 		{ XalanUnicode::charLetter_B, XalanUnicode::charLetter_U, XalanUnicode::charLetter_T, XalanUnicode::charLetter_T, XalanUnicode::charLetter_O, XalanUnicode::charLetter_N, 0 },
-		{ ElemDesc::INLINELABEL | ElemDesc::FORMCTRL },
+		ElemDesc::INLINELABEL | ElemDesc::FORMCTRL,
 		{
 			{
 			
 				{ XalanUnicode::charLetter_D, XalanUnicode::charLetter_I, XalanUnicode::charLetter_S, XalanUnicode::charLetter_A, XalanUnicode::charLetter_B, XalanUnicode::charLetter_L, XalanUnicode::charLetter_E, XalanUnicode::charLetter_D, 0 },
-				{ ElemDesc::ATTREMPTY },
+				ElemDesc::ATTREMPTY,
 			},
 			{
 				{ 0 },
-				{ 0 },
+				0,
 			},
 		},
 	},
 	{
 		{ XalanUnicode::charLetter_C, XalanUnicode::charLetter_E, XalanUnicode::charLetter_N, XalanUnicode::charLetter_T, XalanUnicode::charLetter_E, XalanUnicode::charLetter_R, 0 },
-		{ ElemDesc::BLOCK },
+		ElemDesc::BLOCK,
 		{
 			{
 				{ 0 },
-				{ 0 },
+				0,
 			},
 		},
 	},
 	{
 		{ XalanUnicode::charLetter_L, XalanUnicode::charLetter_E, XalanUnicode::charLetter_G, XalanUnicode::charLetter_E, XalanUnicode::charLetter_N, XalanUnicode::charLetter_D, 0 },
-		{ 0 },
+		0,
 		{
 			{
 				{ 0 },
-				{ 0 },
+				0,
 			},
 		},
 	},
 	{
 		{ XalanUnicode::charLetter_O, XalanUnicode::charLetter_B, XalanUnicode::charLetter_J, XalanUnicode::charLetter_E, XalanUnicode::charLetter_C, XalanUnicode::charLetter_T, 0 },
-		{ ElemDesc::SPECIAL | ElemDesc::ASPECIAL | ElemDesc::HEADMISC | ElemDesc::WHITESPACESENSITIVE },
+		ElemDesc::SPECIAL | ElemDesc::ASPECIAL | ElemDesc::HEADMISC | ElemDesc::WHITESPACESENSITIVE,
 		{
 			{
 				{ XalanUnicode::charLetter_D, XalanUnicode::charLetter_A, XalanUnicode::charLetter_T, XalanUnicode::charLetter_A, 0 },
-				{ ElemDesc::ATTRURL },
+				ElemDesc::ATTRURL,
 			},
 			{
 				{ XalanUnicode::charLetter_U, XalanUnicode::charLetter_S, XalanUnicode::charLetter_E, XalanUnicode::charLetter_M, XalanUnicode::charLetter_A, XalanUnicode::charLetter_P, 0 },
-				{ ElemDesc::ATTRURL },
+				ElemDesc::ATTRURL,
 			},
 			{
 				{ XalanUnicode::charLetter_A, XalanUnicode::charLetter_R, XalanUnicode::charLetter_C, XalanUnicode::charLetter_H, XalanUnicode::charLetter_I, XalanUnicode::charLetter_V, XalanUnicode::charLetter_E, 0 },
-				{ ElemDesc::ATTRURL },
+				ElemDesc::ATTRURL,
 			},
 			{
 				{ XalanUnicode::charLetter_C, XalanUnicode::charLetter_L, XalanUnicode::charLetter_A, XalanUnicode::charLetter_S, XalanUnicode::charLetter_S, XalanUnicode::charLetter_I, XalanUnicode::charLetter_D, 0 },
-				{ ElemDesc::ATTRURL },
+				ElemDesc::ATTRURL,
 			},
 			{
 				{ XalanUnicode::charLetter_D, XalanUnicode::charLetter_E, XalanUnicode::charLetter_C, XalanUnicode::charLetter_L, XalanUnicode::charLetter_A, XalanUnicode::charLetter_R, XalanUnicode::charLetter_E, 0 },
-				{ ElemDesc::ATTREMPTY },
+				ElemDesc::ATTREMPTY,
 			},
 			{
 				{ XalanUnicode::charLetter_C, XalanUnicode::charLetter_O, XalanUnicode::charLetter_D, XalanUnicode::charLetter_E, XalanUnicode::charLetter_B, XalanUnicode::charLetter_A, XalanUnicode::charLetter_S, XalanUnicode::charLetter_E, 0 },
-				{ ElemDesc::ATTRURL },
+				ElemDesc::ATTRURL,
 			},
 			{
 				{ 0 },
-				{ 0 },
+				0,
 			},
 		},
 	},
 	{
 		{ XalanUnicode::charLetter_O, XalanUnicode::charLetter_P, XalanUnicode::charLetter_T, XalanUnicode::charLetter_I, XalanUnicode::charLetter_O, XalanUnicode::charLetter_N, 0 },
-		{ 0 },
+		0,
 		{
 			{
 				{ XalanUnicode::charLetter_D, XalanUnicode::charLetter_I, XalanUnicode::charLetter_S, XalanUnicode::charLetter_A, XalanUnicode::charLetter_B, XalanUnicode::charLetter_L, XalanUnicode::charLetter_E, XalanUnicode::charLetter_D, 0 },
-				{ ElemDesc::ATTREMPTY },
+				ElemDesc::ATTREMPTY,
 			},
 			{	
 				{ XalanUnicode::charLetter_S, XalanUnicode::charLetter_E, XalanUnicode::charLetter_L, XalanUnicode::charLetter_E, XalanUnicode::charLetter_C, XalanUnicode::charLetter_T, XalanUnicode::charLetter_E, XalanUnicode::charLetter_D, 0 },
-				{ ElemDesc::ATTREMPTY },
+				ElemDesc::ATTREMPTY,
 			},
 			{
 				{ 0 },
-				{ 0 },
+				0,
 			},
 		},
 	},
 	{
 		{ XalanUnicode::charLetter_S, XalanUnicode::charLetter_C, XalanUnicode::charLetter_R, XalanUnicode::charLetter_I, XalanUnicode::charLetter_P, XalanUnicode::charLetter_T, 0 },
-		{ ElemDesc::RAW | ElemDesc::SPECIAL | ElemDesc::ASPECIAL | ElemDesc::HEADMISC },
+		ElemDesc::RAW | ElemDesc::SPECIAL | ElemDesc::ASPECIAL | ElemDesc::HEADMISC,
 		{
 			{
 				{ XalanUnicode::charLetter_F, XalanUnicode::charLetter_O, XalanUnicode::charLetter_R, 0 },
-				{ ElemDesc::ATTRURL },
+				ElemDesc::ATTRURL,
 			},
 			{
 				{ XalanUnicode::charLetter_S, XalanUnicode::charLetter_R, XalanUnicode::charLetter_C, 0 },
-				{ ElemDesc::ATTRURL },
+				ElemDesc::ATTRURL,
 			},
 			{
 				{ XalanUnicode::charLetter_D, XalanUnicode::charLetter_E, XalanUnicode::charLetter_F, XalanUnicode::charLetter_E, XalanUnicode::charLetter_R, 0 },
-				{ ElemDesc::ATTREMPTY },
+				ElemDesc::ATTREMPTY,
 			},
 			{
 				{ 0 },
-				{ 0 },
+				0,
 			},
 		},
 	},
 	{
 		{ XalanUnicode::charLetter_S, XalanUnicode::charLetter_E, XalanUnicode::charLetter_L, XalanUnicode::charLetter_E, XalanUnicode::charLetter_C, XalanUnicode::charLetter_T, 0 },
-		{ ElemDesc::INLINELABEL | ElemDesc::FORMCTRL },
+		ElemDesc::INLINELABEL | ElemDesc::FORMCTRL,
 		{
 			{
 			
 				{ XalanUnicode::charLetter_D, XalanUnicode::charLetter_I, XalanUnicode::charLetter_S, XalanUnicode::charLetter_A, XalanUnicode::charLetter_B, XalanUnicode::charLetter_L, XalanUnicode::charLetter_E, XalanUnicode::charLetter_D, 0 },
-				{ ElemDesc::ATTREMPTY },
+				ElemDesc::ATTREMPTY,
 			},
 			{
 			
 				{ XalanUnicode::charLetter_M, XalanUnicode::charLetter_U, XalanUnicode::charLetter_L, XalanUnicode::charLetter_T, XalanUnicode::charLetter_I, XalanUnicode::charLetter_P, XalanUnicode::charLetter_L, XalanUnicode::charLetter_E, 0 },
-				{ ElemDesc::ATTREMPTY },
+				ElemDesc::ATTREMPTY,
 			},
 			{
 				{ 0 },
-				{ 0 },
+				0,
 			},
 		},
 	},
 	{
 		{ XalanUnicode::charLetter_S, XalanUnicode::charLetter_T, XalanUnicode::charLetter_R, XalanUnicode::charLetter_I, XalanUnicode::charLetter_K, XalanUnicode::charLetter_E, 0 },
-		{ ElemDesc::FONTSTYLE },
+		ElemDesc::FONTSTYLE,
 		{
 			{
 				{ 0 },
-				{ 0 },
+				0,
 			},
 		},
 	},
 	{
 		{ XalanUnicode::charLetter_S, XalanUnicode::charLetter_T, XalanUnicode::charLetter_R, XalanUnicode::charLetter_O, XalanUnicode::charLetter_N, XalanUnicode::charLetter_G, 0 },
-		{ ElemDesc::PHRASE },
+		ElemDesc::PHRASE,
 		{
 			{
 				{ 0 },
-				{ 0 },
+				0,
 			},
 		},
 	},
 	{
 		{ XalanUnicode::charLetter_A, XalanUnicode::charLetter_C, XalanUnicode::charLetter_R, XalanUnicode::charLetter_O, XalanUnicode::charLetter_N, XalanUnicode::charLetter_Y, XalanUnicode::charLetter_M, 0 },
-		{ ElemDesc::PHRASE },
+		ElemDesc::PHRASE,
 		{
 			{
 				{ 0 },
-				{ 0 },
+				0,
 			},
 		},
 	},
 	{
 		{ XalanUnicode::charLetter_A, XalanUnicode::charLetter_D, XalanUnicode::charLetter_D, XalanUnicode::charLetter_R, XalanUnicode::charLetter_E, XalanUnicode::charLetter_S, XalanUnicode::charLetter_S, 0 },
-		{ ElemDesc::BLOCK | ElemDesc::BLOCKFORM | ElemDesc::BLOCKFORMFIELDSET },
+		ElemDesc::BLOCK | ElemDesc::BLOCKFORM | ElemDesc::BLOCKFORMFIELDSET,
 		{
 			{
 				{ 0 },
-				{ 0 },
+				0,
 			},
 		},
 	},
 	{
 		{ XalanUnicode::charLetter_C, XalanUnicode::charLetter_A, XalanUnicode::charLetter_P, XalanUnicode::charLetter_T, XalanUnicode::charLetter_I, XalanUnicode::charLetter_O, XalanUnicode::charLetter_N, 0 },
-		{ ElemDesc::BLOCK },
+		ElemDesc::BLOCK,
 		{
 			{
 				{ 0 },
-				{ 0 },
+				0,
 			},
 		},
 	},
 	{
 		{ XalanUnicode::charLetter_I, XalanUnicode::charLetter_S, XalanUnicode::charLetter_I, XalanUnicode::charLetter_N, XalanUnicode::charLetter_D, XalanUnicode::charLetter_E, XalanUnicode::charLetter_X, 0 },
-		{ ElemDesc::EMPTY | ElemDesc::BLOCK },
+		ElemDesc::EMPTY | ElemDesc::BLOCK,
 		{
 			{
 				{ 0 },
-				{ 0 },
+				0,
 			},
 		},
 	},
 	{
 		{ XalanUnicode::charLetter_B, XalanUnicode::charLetter_A, XalanUnicode::charLetter_S, XalanUnicode::charLetter_E, XalanUnicode::charLetter_F, XalanUnicode::charLetter_O, XalanUnicode::charLetter_N, XalanUnicode::charLetter_T, 0 },
-		{ ElemDesc::EMPTY },
+		ElemDesc::EMPTY,
 		{
 			{
 				{ 0 },
-				{ 0 },
+				0,
 			},
 		},
 	},
 	{
 		{ XalanUnicode::charLetter_C, XalanUnicode::charLetter_O, XalanUnicode::charLetter_L, XalanUnicode::charLetter_G, XalanUnicode::charLetter_R, XalanUnicode::charLetter_O, XalanUnicode::charLetter_U, XalanUnicode::charLetter_P, 0 },
-		{ ElemDesc::BLOCK },
+		ElemDesc::BLOCK,
 		{
 			{
 				{ 0 },
-				{ 0 },
+				0,
 			},
 		},
 	},
 	{
 		{ XalanUnicode::charLetter_F, XalanUnicode::charLetter_I, XalanUnicode::charLetter_E, XalanUnicode::charLetter_L, XalanUnicode::charLetter_D, XalanUnicode::charLetter_S, XalanUnicode::charLetter_E, XalanUnicode::charLetter_T, 0 },
-		{ ElemDesc::BLOCK | ElemDesc::BLOCKFORM },
+		ElemDesc::BLOCK | ElemDesc::BLOCKFORM,
 		{
 			{
 				{ 0 },
-				{ 0 },
+				0,
 			},
 		},
 	},
 	{
 		{ XalanUnicode::charLetter_F, XalanUnicode::charLetter_R, XalanUnicode::charLetter_A, XalanUnicode::charLetter_M, XalanUnicode::charLetter_E, XalanUnicode::charLetter_S, XalanUnicode::charLetter_E, XalanUnicode::charLetter_T, 0 },
-		{ ElemDesc::BLOCK },
+		ElemDesc::BLOCK,
 		{
 			{
 				{ 0 },
-				{ 0 },
+				0,
 			},
 		},
 	},
 	{
 		{ XalanUnicode::charLetter_N, XalanUnicode::charLetter_O, XalanUnicode::charLetter_F, XalanUnicode::charLetter_R, XalanUnicode::charLetter_A, XalanUnicode::charLetter_M, XalanUnicode::charLetter_E, XalanUnicode::charLetter_S, 0 },
-		{ ElemDesc::BLOCK },
+		ElemDesc::BLOCK,
 		{
 			{
 				{ 0 },
-				{ 0 },
+				0,
 			},
 		},
 	},
 	{
 		{ XalanUnicode::charLetter_N, XalanUnicode::charLetter_O, XalanUnicode::charLetter_S, XalanUnicode::charLetter_C, XalanUnicode::charLetter_R, XalanUnicode::charLetter_I, XalanUnicode::charLetter_P, XalanUnicode::charLetter_T, 0 },
-		{ ElemDesc::BLOCK | ElemDesc::BLOCKFORM | ElemDesc::BLOCKFORMFIELDSET },
+		ElemDesc::BLOCK | ElemDesc::BLOCKFORM | ElemDesc::BLOCKFORMFIELDSET,
 		{
 			{
 				{ 0 },
-				{ 0 },
+				0,
 			},
 		},
 	},
 	{
 		{ XalanUnicode::charLetter_O, XalanUnicode::charLetter_P, XalanUnicode::charLetter_T, XalanUnicode::charLetter_G, XalanUnicode::charLetter_R, XalanUnicode::charLetter_O, XalanUnicode::charLetter_U, XalanUnicode::charLetter_P, 0 },
-		{ 0 },
+		0,
 		{
 			{
 				{ XalanUnicode::charLetter_D, XalanUnicode::charLetter_I, XalanUnicode::charLetter_S, XalanUnicode::charLetter_A, XalanUnicode::charLetter_B, XalanUnicode::charLetter_L, XalanUnicode::charLetter_E, XalanUnicode::charLetter_D, 0 },
-				{ ElemDesc::ATTREMPTY },
+				ElemDesc::ATTREMPTY,
 			},
 			{
 				{ 0 },
-				{ 0 },
+				0,
 			},
 		},
 	},
 	{
 		{ XalanUnicode::charLetter_T, XalanUnicode::charLetter_E, XalanUnicode::charLetter_X, XalanUnicode::charLetter_T, XalanUnicode::charLetter_A, XalanUnicode::charLetter_R, XalanUnicode::charLetter_E, XalanUnicode::charLetter_A, 0 },
-		{ ElemDesc::INLINELABEL | ElemDesc::FORMCTRL },
+		ElemDesc::INLINELABEL | ElemDesc::FORMCTRL,
 		{
 			{
 				{ XalanUnicode::charLetter_D, XalanUnicode::charLetter_I, XalanUnicode::charLetter_S, XalanUnicode::charLetter_A, XalanUnicode::charLetter_B, XalanUnicode::charLetter_L, XalanUnicode::charLetter_E, XalanUnicode::charLetter_D, 0 },
-				{ ElemDesc::ATTREMPTY },
+				ElemDesc::ATTREMPTY,
 			},
 			{
 				{ XalanUnicode::charLetter_R, XalanUnicode::charLetter_E, XalanUnicode::charLetter_A, XalanUnicode::charLetter_D, XalanUnicode::charLetter_O, XalanUnicode::charLetter_N, XalanUnicode::charLetter_L, XalanUnicode::charLetter_Y, 0 },
-				{ ElemDesc::ATTREMPTY },
+				ElemDesc::ATTREMPTY,
 			},
 			{
 				{ 0 },
-				{ 0 },
+				0,
 			},
 		},
 	},
 	{
 		{ XalanUnicode::charLetter_B, XalanUnicode::charLetter_L, XalanUnicode::charLetter_O, XalanUnicode::charLetter_C, XalanUnicode::charLetter_K, XalanUnicode::charLetter_Q, XalanUnicode::charLetter_U, XalanUnicode::charLetter_O, XalanUnicode::charLetter_T, XalanUnicode::charLetter_E, 0 },
-		{ ElemDesc::BLOCK | ElemDesc::BLOCKFORM | ElemDesc::BLOCKFORMFIELDSET },
+		ElemDesc::BLOCK | ElemDesc::BLOCKFORM | ElemDesc::BLOCKFORMFIELDSET,
 		{
 			{
 			
 				{ XalanUnicode::charLetter_C, XalanUnicode::charLetter_I, XalanUnicode::charLetter_T, XalanUnicode::charLetter_E, 0 },
-				{ ElemDesc::ATTRURL },
+				ElemDesc::ATTRURL,
 			},
 			{
 				{ 0 },
-				{ 0 },
+				0,
 			},
 		},
 	},
 	// This is a dummy entry and it must be the last one!!!
 	{
 		{ 0 },
-		{ ElemDesc::BLOCK },
+		ElemDesc::BLOCK,
 		{
 			{
 				{ 0 },
-				{ 0 },
+				0,
 			},
 		},
 	},
