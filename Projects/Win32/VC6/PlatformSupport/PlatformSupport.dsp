@@ -167,6 +167,10 @@ SOURCE=..\..\..\..\src\PlatformSupport\PlatformSupportInit.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\PlatformSupport\PrefixResolver.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\PlatformSupport\PrintWriter.cpp
 # End Source File
 # Begin Source File
