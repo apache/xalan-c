@@ -72,7 +72,7 @@
 #endif
 
 
-#define XALAN_NO_SELECTIVE_TEMPLATE_INSTANTIATION
+
 #if defined(XALAN_NO_SELECTIVE_TEMPLATE_INSTANTIATION)
 
 template <class Type>
@@ -140,11 +140,11 @@ class ArenaBlock
 public:
 
 #if defined(XALAN_NO_SELECTIVE_TEMPLATE_INSTANTIATION)
-	typedef ArenaBlockAllocator<ObjectType>	AllocatorType;
+	typedef ArenaBlockAllocator<ObjectType>		AllocatorType;
 #elif defined(XALAN_NO_STD_ALLOCATORS)
-	typedef XalanAllocator<ObjectType>		AllocatorType;
+	typedef XalanAllocator<ObjectType>			AllocatorType;
 #else
-	typedef std::allocator<ObjectType>		AllocatorType;
+	typedef std::allocator<ObjectType>			AllocatorType;
 #endif
 
 	typedef ArenaBlockDestroy<ObjectType>		DestroyFunctionType;
@@ -185,13 +185,6 @@ public:
 	virtual ObjectType*
 	allocateBlock()
 	{
-		// If no memory has yet been allocated, then allocate it...
-		if (m_objectBlock == 0)
-		{
-			m_objectBlock = m_allocator.allocate(m_blockSize, 0);
-		}
-		assert(m_objectBlock != 0);
-
 		// Any space left?
 		if (m_objectCount == m_blockSize)
 		{
@@ -199,6 +192,13 @@ public:
 		}
 		else
 		{
+			// If no memory has yet been allocated, then allocate it...
+			if (m_objectBlock == 0)
+			{
+				m_objectBlock = m_allocator.allocate(m_blockSize, 0);
+			}
+			assert(m_objectBlock != 0);
+
 			return m_objectBlock + m_objectCount;
 		}
 	}
@@ -413,7 +413,7 @@ protected:
 
 	friend struct DeleteFunctor;
 
-	const DestroyFunctionType		m_destroyFunction;
+	const DestroyFunctionType	m_destroyFunction;
 
 private:
 
@@ -428,13 +428,13 @@ private:
 
 
 	// data members...
-	size_type				m_objectCount;
+	size_type			m_objectCount;
 
-	const size_type			m_blockSize;
+	const size_type		m_blockSize;
 
-	ObjectType*				m_objectBlock;
+	ObjectType*			m_objectBlock;
 
-	AllocatorType			m_allocator;
+	AllocatorType		m_allocator;
 };
 
 
