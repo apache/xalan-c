@@ -131,32 +131,35 @@ void doThreads(int x)
 
 	std::vector<HANDLE> hThreads;
 	hThreads.reserve(nThreads);
- 	int i=0;
+ 	int i = 0;
 	
 	try
 	{
 		cout << endl << "Clock before starting threads: " << clock() << endl;
 
 		for (i=0; i< nThreads; i++)
-			{
-				HANDLE hThread;
-				DWORD  threadID;
+		{
+			HANDLE hThread;
+			DWORD  threadID;
 
-				hThread = CreateThread(
+			hThread = CreateThread(
 					0, dwStackSize,
 					lpStartAddress,					      // pointer to thread function
 					reinterpret_cast<LPVOID>(i),	// argument for new thread
 					dwCreationFlags,				      // creation flags
 					&threadID);
-				assert(hThread != 0);
-				hThreads.push_back(hThread);
-			}
+			assert(hThread != 0);
+			hThreads.push_back(hThread);
+		}
+
 		WaitForMultipleObjects(hThreads.size(), &hThreads[0], TRUE, INFINITE);
 
 		cout << endl << "Clock after threads: " << clock() << endl;
 
-		for (i=0; i< nThreads; i++)
+		for (i = 0; i < nThreads; ++i)
+		{
 			CloseHandle(hThreads[i]);
+		}
 	}
 	catch(...)
 	{
@@ -185,17 +188,17 @@ int main(int argc, const char*	/* argv */[])
 			XSLTEngineImpl::Initialize();
 
 			// Create the support objects required to run the processor...
-			DOMSupportDefault				        ssDOMSupport;
-			XercesParserLiaison				      ssParserLiaison(ssDOMSupport);
-			XPathSupportDefault				      ssXPathSupport(ssDOMSupport);
+			DOMSupportDefault				ssDOMSupport;
+			XercesParserLiaison				ssParserLiaison(ssDOMSupport);
+			XPathSupportDefault				ssXPathSupport(ssDOMSupport);
 			XSLTProcessorEnvSupportDefault	ssXSLTProcessorEnvSupport;
-			XObjectFactoryDefault			      ssXObjectFactory(ssXSLTProcessorEnvSupport,
-															                         ssXPathSupport);
-			XPathFactoryDefault				      ssXPathFactory;
+			XObjectFactoryDefault			ssXObjectFactory(ssXSLTProcessorEnvSupport,
+															 ssXPathSupport);
+			XPathFactoryDefault				ssXPathFactory;
 
 			// Create a processor...
-      // This processor is used to compile the stylesheet and the source document. 
-      // Each thread uses its own processor to perform a transformation.
+			// This processor is used to compile the stylesheet and the source document. 
+			// Each thread uses its own processor to perform a transformation.
 
 			XSLTEngineImpl	ssProcessor(
       					  ssParserLiaison,
@@ -224,7 +227,7 @@ int main(int argc, const char*	/* argv */[])
 			const XalanDOMString  theXMLFileName("birds.xml");
 
 			// Our stylesheet XML input document and XSL stylesheet
-      XSLTInputSource   xmlDocSource(c_wstr(theXMLFileName));
+			XSLTInputSource   xmlDocSource(c_wstr(theXMLFileName));
 			XSLTInputSource		xslStylesheetSource(c_wstr(theXSLFileName));
 
 			// Use the processor to create a StylesheetRoot for the specified
@@ -236,14 +239,18 @@ int main(int argc, const char*	/* argv */[])
 			assert(glbStylesheetRoot != 0);
 			
 			// Compile the XML source document as well. All threads will use
-      // this binary representation of the source tree.
+			// this binary representation of the source tree.
 			glbDocSource = ssProcessor.getSourceTreeFromInput(xmlDocSource);
-      assert(glbDocSource != 0);
+			assert(glbDocSource != 0);
 
-      // Create and run the threads...
-      // Each thread uses the same XalanNode and 
-      // StylesheetRoot to perform a transformation.
+			// Create and run the threads...
+			// Each thread uses the same XalanNode and 
+			// StylesheetRoot to perform a transformation.
 			doThreads(10);
+
+			// Call the static terminators...
+			XMLPlatformUtils::Terminate();
+			XSLTEngineImpl::Terminate();
 		}
 		catch(...)
 		{
