@@ -89,6 +89,9 @@ public:
 	typedef QName::NamespaceVectorType		NamespaceVectorType;
 	typedef QName::NamespacesStackType		NamespacesStackType;
 
+	typedef NamespacesStackType::size_type	size_type;
+
+
 	explicit
 	ResultNamespacesStack();
 
@@ -113,6 +116,12 @@ public:
 
 	void
 	clear();
+
+	size_type
+	size() const
+	{
+		return m_resultNamespaces.size();
+	}
 
 private:
 
