@@ -400,6 +400,8 @@ endif
 
 samples : Samples
 
+tests : ThreadTest
+
 Samples: lib  CompileStylesheet  ExternalFunction  SimpleTransform  StreamTransform  TraceListen  UseStylesheetParam  XalanTransform XPathWrapper #  ThreadSafe
 
 ApacheModuleXSLT: lib ${LIB_DIR}/mod_xslt$(SHLIBSUFFIX) 
