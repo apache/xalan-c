@@ -257,10 +257,6 @@ SOURCE=..\..\..\..\src\XPath\NodeRefListBase.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\src\XPath\PrefixResolver.cpp
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\..\..\src\XPath\QName.cpp
 # End Source File
 # Begin Source File
@@ -610,10 +606,6 @@ SOURCE=..\..\..\..\src\XPath\NodeRefList.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\XPath\NodeRefListBase.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\src\XPath\PrefixResolver.hpp
 # End Source File
 # Begin Source File
 
