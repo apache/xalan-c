@@ -131,6 +131,10 @@ SOURCE=..\..\..\..\src\PlatformSupport\AttributeListImpl.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\PlatformSupport\AttributesImpl.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\PlatformSupport\DOMStringHelper.cpp
 # End Source File
 # Begin Source File
@@ -264,6 +268,14 @@ SOURCE=..\..\..\..\src\PlatformSupport\ArenaBlock.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\PlatformSupport\AttributeListImpl.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\PlatformSupport\AttributesImpl.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\PlatformSupport\AttributeVectorEntryExtended.hpp
 # End Source File
 # Begin Source File
 

@@ -346,6 +346,10 @@ SOURCE=..\..\..\..\src\XPath\XPathEnvSupportDefault.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\src\XPath\XPathEvaluator.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\src\XPath\XPathException.cpp
 # End Source File
 # Begin Source File
@@ -707,6 +711,10 @@ SOURCE=..\..\..\..\src\XPath\XPathEnvSupport.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\src\XPath\XPathEnvSupportDefault.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\src\XPath\XPathEvaluator.hpp
 # End Source File
 # Begin Source File
 
