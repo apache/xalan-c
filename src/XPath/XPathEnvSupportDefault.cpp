@@ -74,7 +74,11 @@
 #include "XObjectFactory.hpp"
 #include "XPathExecutionContext.hpp"
 
-
+#if !defined(XALAN_NO_NAMESPACES)
+	using std::cerr;
+	using std::endl;
+#endif
+		
 
 XPathEnvSupportDefault::XPathEnvSupportDefault() :
 	XPathEnvSupport(),
@@ -291,7 +295,7 @@ XPathEnvSupportDefault::extFunction(
 			XPathExecutionContext&			executionContext,
 			const DOMString&				theNamespace,
 			const DOMString&				extensionName,
-			const std::vector<XObject*>&	argVec) const
+			const XObjectPtrVectorType&	argVec) const
 {
 	if (m_extendedSupport != 0)
 	{
@@ -374,12 +378,12 @@ XPathEnvSupportDefault::problem(
 	}
 	else
 	{
-		std::cerr << msg
+		cerr << msg
 				  << ", at line number "
 				  << static_cast<long>(lineNo)
 				  << " at offset "
 				  << static_cast<long>(charOffset)
-				  << std::endl;
+				  << endl;
 
 		return classification == XPathEnvSupport::eError ? true : false;
 	}

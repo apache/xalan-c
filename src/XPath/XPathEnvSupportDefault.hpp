@@ -80,6 +80,15 @@ class XALAN_XPATH_EXPORT XPathEnvSupportDefault : public XPathEnvSupport
 {
 public:
 
+#if defined(XALAN_NO_NAMESPACES)
+	typedef vector<XObject*> XObjectPtrVectorType;
+	typedef map<DOMString, DOM_Document>	SourceDocsTableType;
+#else
+	typedef std::vector<XObject*> XObjectPtrVectorType;
+	typedef std::map<DOMString, DOM_Document>	SourceDocsTableType;
+#endif
+
+
 	XPathEnvSupportDefault();
 
 	virtual
@@ -199,8 +208,6 @@ private:
 
 	// Table for storing source tree documents, which are keyed by
 	// URL.
-	typedef std::map<DOMString, DOM_Document, DOMStringEqualsFunction>	SourceDocsTableType;
-
 	SourceDocsTableType		m_sourceDocs;
 };
 
