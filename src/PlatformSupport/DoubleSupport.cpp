@@ -84,35 +84,35 @@ const double	DoubleSupport::s_negativeZero = modf(-7.0, &theDummy);
 
 
 
-const unsigned long*	DoubleSupport::s_NaNFirstDWORD =
+const unsigned int*	const	DoubleSupport::s_NaNFirstDWORD =
 #if defined(XALAN_OLD_STYLE_CASTS)
-					(const unsigned long*)&s_NaN;
+					(const unsigned int*)&s_NaN;
 #else
-					reinterpret_cast<const unsigned long*>(&s_NaN);
+					reinterpret_cast<const unsigned int*>(&s_NaN);
 #endif
 
-const unsigned long*	DoubleSupport::s_NaNSecondDWORD =
+const unsigned int*	const	DoubleSupport::s_NaNSecondDWORD =
 					s_NaNFirstDWORD + 1;
 
 
-const unsigned long*	DoubleSupport::s_positiveZeroFirstDWORD =
+const unsigned int*	const	DoubleSupport::s_positiveZeroFirstDWORD =
 #if defined(XALAN_OLD_STYLE_CASTS)
-					(const unsigned long*)&s_positiveZero;
+					(const unsigned int*)&s_positiveZero;
 #else
-					reinterpret_cast<const unsigned long*>(&s_positiveZero);
+					reinterpret_cast<const unsigned int*>(&s_positiveZero);
 #endif
 
-const unsigned long*	DoubleSupport::s_positiveZeroSecondDWORD = s_positiveZeroFirstDWORD + 1;
+const unsigned int*	const	DoubleSupport::s_positiveZeroSecondDWORD = s_positiveZeroFirstDWORD + 1;
 
 
-const unsigned long*	DoubleSupport::s_negativeZeroFirstDWORD =
+const unsigned int*	const	DoubleSupport::s_negativeZeroFirstDWORD =
 #if defined(XALAN_OLD_STYLE_CASTS)
-					(const unsigned long*)&s_negativeZero;
+					(const unsigned int*)&s_negativeZero;
 #else
-					reinterpret_cast<const unsigned long*>(&s_negativeZero);
+					reinterpret_cast<const unsigned int*>(&s_negativeZero);
 #endif
 
-const unsigned long*	DoubleSupport::s_negativeZeroSecondDWORD = s_negativeZeroFirstDWORD + 1;
+const unsigned int*	const	DoubleSupport::s_negativeZeroSecondDWORD = s_negativeZeroFirstDWORD + 1;
 
 
 

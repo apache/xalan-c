@@ -92,14 +92,14 @@ public:
 	isNaN(double	theNumber)
 	{
 		// Compare the two DWORDs of the double as unsigned longs.
-		const unsigned long* const	theFirstDWORD =
+		const unsigned int* const	theFirstDWORD =
 #if defined(XALAN_OLD_STYLE_CASTS)
-			(const unsigned long*)&theNumber;
+			(const unsigned int*)&theNumber;
 #else
-			reinterpret_cast<const unsigned long*>(&theNumber);
+			reinterpret_cast<const unsigned int*>(&theNumber);
 #endif
 
-		const unsigned long* const	theSecondDWORD =
+		const unsigned int* const	theSecondDWORD =
 							theFirstDWORD + 1;
 
 		return *theFirstDWORD == *s_NaNFirstDWORD &&
@@ -140,14 +140,14 @@ public:
 	isPositiveZero(double	theNumber)
 	{
 		// Compare the two DWORDs of the double as unsigned longs.
-		const unsigned long* const	theFirstDWORD =
+		const unsigned int* const	theFirstDWORD =
 #if defined(XALAN_OLD_STYLE_CASTS)
-			(const unsigned long*)&theNumber;
+			(const unsigned int*)&theNumber;
 #else
-			reinterpret_cast<const unsigned long*>(&theNumber);
+			reinterpret_cast<const unsigned int*>(&theNumber);
 #endif
 
-		const unsigned long* const	theSecondDWORD =
+		const unsigned int* const	theSecondDWORD =
 							theFirstDWORD + 1;
 
 		return *theFirstDWORD == *s_positiveZeroFirstDWORD &&
@@ -164,14 +164,14 @@ public:
 	isNegativeZero(double	theNumber)
 	{
 		// Compare the two DWORDs of the double as unsigned longs.
-		const unsigned long* const	theFirstDWORD =
+		const unsigned int* const	theFirstDWORD =
 #if defined(XALAN_OLD_STYLE_CASTS)
-			(const unsigned long*)&theNumber;
+			(const unsigned int*)&theNumber;
 #else
-			reinterpret_cast<const unsigned long*>(&theNumber);
+			reinterpret_cast<const unsigned int*>(&theNumber);
 #endif
 
-		const unsigned long* const	theSecondDWORD =
+		const unsigned int* const	theSecondDWORD =
 							theFirstDWORD + 1;
 
 		return *theFirstDWORD == *s_negativeZeroFirstDWORD &&
@@ -605,20 +605,20 @@ public:
 
 private:
 
-	static const double				s_NaN;
-	static const double				s_positiveInfinity;
-	static const double				s_negativeInfinity;
-	static const double				s_positiveZero;
-	static const double				s_negativeZero;
+	static const double					s_NaN;
+	static const double					s_positiveInfinity;
+	static const double					s_negativeInfinity;
+	static const double					s_positiveZero;
+	static const double					s_negativeZero;
 
-	static const unsigned long*		s_NaNFirstDWORD;
-	static const unsigned long*		s_NaNSecondDWORD;
+	static const unsigned int* const	s_NaNFirstDWORD;
+	static const unsigned int* const	s_NaNSecondDWORD;
 
-	static const unsigned long*		s_positiveZeroFirstDWORD;
-	static const unsigned long*		s_positiveZeroSecondDWORD;
+	static const unsigned int* const	s_positiveZeroFirstDWORD;
+	static const unsigned int* const	s_positiveZeroSecondDWORD;
 
-	static const unsigned long*		s_negativeZeroFirstDWORD;
-	static const unsigned long*		s_negativeZeroSecondDWORD;
+	static const unsigned int* const	s_negativeZeroFirstDWORD;
+	static const unsigned int* const	s_negativeZeroSecondDWORD;
 };
 
 

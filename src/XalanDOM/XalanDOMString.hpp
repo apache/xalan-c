@@ -102,14 +102,21 @@ public:
 	typedef XalanDOMChar&				reference;
 	typedef const XalanDOMChar&			const_reference;
 
-	typedef XalanDOMCharVectorType::size_type				size_type;
+	// We're stuck with 32-bit lengths because of the DOMs IDL
+	// bindings.  Ideally, we'ed like to re-visit this in the
+	// future.
+	typedef unsigned int									size_type;
 
 	typedef XalanDOMCharVectorType::iterator				iterator;
 	typedef XalanDOMCharVectorType::const_iterator			const_iterator;
 	typedef XalanDOMCharVectorType::reverse_iterator		reverse_iterator;
 	typedef XalanDOMCharVectorType::const_reverse_iterator	const_reverse_iterator;
 
+#if defined(XALAN_INLINE_INITIALIZATION)
+	static const size_type	npos = size_type(-1);
+#else
 	enum { npos = -1 };
+#endif
 
 	explicit
 	XalanDOMString();
