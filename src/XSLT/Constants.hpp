@@ -127,9 +127,6 @@ public:
 	/*---------------------------------------------
 	 * Literals for XSL attribute names.
 	 */
-	static const XalanDOMString&	ATTRNAME_AMOUNT;
-	static const XalanDOMString&	ATTRNAME_ANCESTOR;
-	static const XalanDOMString&	ATTRNAME_ATTRIBUTE;
 	static const XalanDOMString&	ATTRNAME_ATTRIBUTE_SET;
 	static const XalanDOMString&	ATTRNAME_CASEORDER;
 	static const XalanDOMString&	ATTRNAME_COUNT;
@@ -182,14 +179,6 @@ public:
 	static const XalanDOMString&	ATTRNAME_SPACE;
 	static const XalanDOMString&	ATTRNAME_ZERODIGIT;
  
-	  // Atributes on the functions element
-	static const XalanDOMString&	ATTRNAME_NS;
-	static const XalanDOMString&	ATTRNAME_CLASSID;
-	static const XalanDOMString&	ATTRNAME_ARCHIVE;
-	static const XalanDOMString&	ATTRNAME_CODETYPE;
-	static const XalanDOMString&	ATTRNAME_CODEBASE;
-	static const XalanDOMString&	ATTRNAME_METHOD;
-  
 	static const XalanDOMString&	ATTRTYPE_CDATA;
 
 	  // For space-att
