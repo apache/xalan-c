@@ -1050,10 +1050,11 @@ StylesheetHandler::processStylesheet(
 			StringTokenizer tokenizer(atts.getValue(i),
 									  Constants::DEFAULT_WHITESPACE_SEPARATOR_STRING);
 
+			XalanDOMString	prefix;
+
 			while(tokenizer.hasMoreTokens() == true)
 			{
-				const XalanDOMString	prefix = tokenizer.nextToken();
-				// SANJIVA: ask Scott: is the line below correct?
+				tokenizer.nextToken(prefix);
 
 				const XalanDOMString&	extns = getNamespaceForPrefixFromStack(prefix);
 
@@ -1231,6 +1232,8 @@ StylesheetHandler::processPreserveStripSpace(
 
 	bool foundIt = false;
 
+	const bool	isPreserveSpace = Constants::ELEMNAME_PRESERVESPACE == xslToken? true : false;
+
 	for(unsigned int i = 0; i < nAttrs; i++)
 	{
 		const XalanDOMChar* const	aname = atts.getName(i);
@@ -1249,13 +1252,12 @@ StylesheetHandler::processPreserveStripSpace(
 
 				/**
 				 * Creating a match pattern is too much overhead, but it's a reasonably 
-				 * easy and safe way to do this right now.  TODO: Validate the pattern 
-				 * to make sure it's a WildcardName.
+				 * easy and safe way to do this right now.
 				 */
 				const XPath* const	matchPat =
 						m_constructionContext.createMatchPattern(0, wildcardName, nsNode);
 
-				if(Constants::ELEMNAME_PRESERVESPACE == xslToken)
+				if(isPreserveSpace == true)
 				{
 					m_stylesheet.getStylesheetRoot().pushWhitespacePreservingElement(matchPat);
 				}
@@ -1351,11 +1353,11 @@ stackContains(
 			const Stylesheet::URLStackType&		stack, 
 			const XalanDOMString&				urlString)
 {
-	const int	n = stack.size();
+	const unsigned int	n = stack.size();
 
-	bool		contains = false;
+	bool				contains = false;
 
-	for(int i = 0; i < n && contains == false; i++)
+	for(unsigned int i = 0; i < n && contains == false; ++i)
 	{
 		if(equals(stack[i], urlString))
 		{
@@ -1538,12 +1540,12 @@ StylesheetHandler::endElement(const XMLCh* const name)
 		Constants::ELEMNAME_VARIABLE == tok)
 	{
 #if defined(XALAN_OLD_STYLE_CASTS)
-		ElemVariable* const		var = (ElemVariable*)m_lastPopped;
+		const ElemVariable* const	var = (const ElemVariable*)m_lastPopped;
 #else
-		ElemVariable* const		var = static_cast<ElemVariable*>(m_lastPopped);
+		const ElemVariable* const	var = static_cast<const ElemVariable*>(m_lastPopped);
 #endif
 
-		if(var->isTopLevel())
+		if(var->isTopLevel() == true)
 		{
 			// Top-level param or variable
 			m_inTemplate = false;
@@ -1839,6 +1841,7 @@ StylesheetHandler::inExtensionElement() const
 #if !defined(XALAN_NO_NAMESPACES)
 	using std::find;
 #endif
+
 	if (find(
 			m_inExtensionElementStack.rbegin(),
 			m_inExtensionElementStack.rend(),

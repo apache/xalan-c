@@ -738,7 +738,7 @@ XSLTEngineImpl::getStylesheetFromPIURL(
 		const XObjectPtr	xobj(evalXPathStr(ds, theExecutionContext));
 		assert(xobj.null() == false);
 
-		MutableNodeRefList	nl(xobj->nodeset());
+		NodeRefList		nl(xobj->nodeset());
 
 		if(nl.getLength() == 0)
 		{
@@ -2372,8 +2372,7 @@ XSLTEngineImpl::isCDataResultElem(const XalanDOMString&		elementName) const
 
 		if(indexOfNSSep == length(elementName))
 		{
-			fResult =
-				m_stylesheetRoot->isCDATASectionElementName(QNameByReference(s_emptyString, elementName));
+			fResult = m_stylesheetRoot->isCDATASectionElementName(QNameByReference(s_emptyString, elementName));
 		}
 		else
 		{
