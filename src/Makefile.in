@@ -55,6 +55,9 @@
 # 
 #
 # $Log$
+# Revision 1.8  2000/08/24 17:23:44  auriemma
+# Added support for AIX and ICU support for Linux and AIX.
+#
 # Revision 1.7  2000/07/07 15:04:23  dbertoni
 # Updated library name.
 #
@@ -120,28 +123,68 @@ PREFIX = @prefix@
 
 #=============== LINUX SPECIFIC OPTIONS =========================
 ifeq ($(PLATFORM), LINUX)
+
+SUPPORTED = TRUE
 PLATFORM_COMPILE_OPTIONS = -fpic -instances=static -D${PLATFORM} -D_REENTRANT
-MAKE_SHARED = ${CXX} $(CXXFLAGS) -D${PLATFORM} -shared -fpic
-ALLLIBS = ${LIBS} -L/usr/lib -L/usr/local/lib -L/usr/ccs/lib -lc
+#ALLLIBS = ${LIBS} -L/usr/lib -L/usr/local/lib -L/usr/ccs/lib -lc
+ALLLIBS = ${LIBS} -L/usr/lib -L/usr/local/lib 
 SHLIBSUFFIX=.so
-LINK =  g++ -D${PLATFORM} -fpic
-PLATFORM_LIB_LINK_OPTIONS=-L/usr/lib -L/usr/local/lib
+
+# We need the ICU library if we are using the ICUBridge
+ifdef XALAN_USE_ICU
+LD_RPATH_PRE=	-Wl,-rpath,
+PLATFORM_LIB_LINK_OPTIONS=$(LD_RPATH_PRE)/usr/lib $(LD_RPATH_PRE)/usr/local/lib 
+endif
+
 EXTRA_LINK_OPTIONS=-lc
 CC1 = $(CXX) $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS)
-else
+MAKE_SHARED = ${CXX} $(CXXFLAGS) -D${PLATFORM} -shared -fpic
+LINK =  g++ -D${PLATFORM} -fpic
+
+endif
+
+#=============== AIX SPECIFIC OPTIONS =========================
+ifeq ($(PLATFORM), AIX)
+
+ifndef STLPORTROOT 
+nostlportroot:
+	@echo STLPORTROOT must be defined
+endif
+
+SUPPORTED = TRUE
+PLATFORM_COMPILE_OPTIONS = -qnotempinc -D${PLATFORM} -D_THREAD_SAFE -I ${STLPORTROOT}/stlport
+ALLLIBS = ${LIBS} -L/usr/lib 
+SHLIBSUFFIX=.a
+CC1 = $(CXX) $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS)
+MAKE_SHARED = makeC++SharedLib_r -p 5000 
+LINK = $(CXX) $(CXXFLAGS) $(PLATFORM_COMPILE_OPTIONS)
+
+endif
+
+ifndef SUPPORTED
 nogood:
-	@echo Linux only unix platform supported
+	@echo Linux and AIX are the only unix platforms supported.
 endif
 
 # We need the Xerces library
 ALLLIBS += -L$(XERCESCROOT)/lib -lxerces-c1_2
-XERCESLIB = $(XERCESCROOT)/lib/libxerces-c1_2.so
+
+# We need the ICU library if we are using the ICUBridge
+ifdef XALAN_USE_ICU
+ALLLIBS += -L/usr/local/lib -licu-uc
+ALLLIBS += -L/usr/local/lib -licu-i18n
+endif
 
 
-XSL_BUILD_OPTIONS =
 # We have to use the includes from the source distribution, since we use
 # headers that others normally wouldn't
 XSL_INCL = -I . -I $(XERCESCROOT)/src/
+
+# We need the ICU library if we are using the ICUBridge
+ifdef XALAN_USE_ICU
+XSL_INCL += -I /usr/local/include/
+XSL_BUILD_OPTIONS += -DXALAN_USE_ICU
+endif
 
 ###################################################################
 #                    IMPORTANT NOTE                               #
@@ -172,6 +215,7 @@ endif
 XALANDOM_DIR = XalanDOM
 DOMSUPPORT_DIR = DOMSupport
 INCLUDE_DIR = Include
+ICUBRIDGE_DIR = ICUBridge
 PLATFORMSUPPORT_DIR = PlatformSupport
 TESTXPATH_DIR = TestXPath
 TESTXSLT_DIR = TestXSLT
@@ -193,16 +237,24 @@ PRODUCTNAME=xalan
 PRODUCTVERSION=${VER}
 BINTARGETDIR=${XALANCROOT}/bin
 
-vpath %.cpp \
+ALL_VPATH_CPP = \
 $(XALANDOM_DIR):$(DOMSUPPORT_DIR):$(PLATFORMSUPPORT_DIR):$(TESTXPATH_DIR):$(TESTXSLT_DIR):\
 $(XMLSUPPORT_DIR):$(XPATH_DIR):$(XSLT_DIR):$(XERCESINIT_DIR):\
 $(XERCESPARSERLIAISON_DIR):$(XERCESPLATFORMSUPPORT_DIR)
 
+# Using ICUBridge
+ifdef XALAN_USE_ICU
+ALL_VPATH_CPP+=:$(ICUBRIDGE_DIR) 
+endif
+
+vpath %.cpp \
+$(ALL_VPATH_CPP)
+
 ${ALL_OBJECTS_DIR}/%.o:%.cpp
-	$(CC1) -c $(XSL_BUILD_OPTIONS) $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $<
+	$(CC1) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $<
 
 ${ALL_OBJECTS_DIR}/%.o:%.hpp
-	$(CC1) -c $(XSL_BUILD_OPTIONS) $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $(patsubst .hpp,.cpp,$<)
+	$(CC1) $(XSL_BUILD_OPTIONS) -c $(XSL_INCL) $(EXTRA_COMPILE_OPTIONS) -o $@ $(patsubst .hpp,.cpp,$<)
 
 ALLSOURCE = \
 	$(wildcard $(XALANDOM_DIR)/*.cpp) \
@@ -213,7 +265,13 @@ ALLSOURCE = \
 	$(wildcard $(XSLT_DIR)/*.cpp) \
 	$(wildcard $(XERCESINIT_DIR)/*.cpp) \
 	$(wildcard $(XERCESPARSERLIAISON_DIR)/*.cpp) \
-	$(wildcard $(XERCESPLATFORMSUPPORT_DIR)/*.cpp) 
+	$(wildcard $(XERCESPLATFORMSUPPORT_DIR)/*.cpp)
+
+# Using ICUBridge
+ifdef XALAN_USE_ICU
+ALLSOURCE += \
+	$(wildcard $(ICUBRIDGE_DIR)/*.cpp) 
+endif
 
 ALL_OBJECTS = $(addprefix $(ALL_OBJECTS_DIR)/,$(addsuffix .o,$(basename $(notdir $(ALLSOURCE)))))
 
@@ -236,32 +294,24 @@ compile:	 $(ALL_OBJECTS)
 
 testXSLT: $(BINTARGETDIR)/testXSLT
 
-testXPath: $(BINTARGETDIR)/testXPath
-
 $(BINTARGETDIR)/testXSLT: $(TESTXSLT_DIR)/process.cpp
-	  ${LINK} ${PLATFORM_LIB_LINK_OPTIONS} $^ -o $@ $(XSL_INCL) \
-	  ${LIBRARY_SEARCH_PATHS} ${EXTRA_LINK_OPTIONS} -L$(LIB_DIR) -l$(PROJECT_NAME)$(VER) $(ALLLIBS) $(CXXFLAGS)
+	${LINK} $(XSL_BUILD_OPTIONS) ${PLATFORM_LIB_LINK_OPTIONS} $(XSL_INCL) ${LIBRARY_SEARCH_PATHS} \
+	${EXTRA_LINK_OPTIONS} -L$(LIB_DIR) -l$(PROJECT_NAME)$(VER) $(ALLLIBS) $(CXXFLAGS) $^ -o $@
+
+testXPath: $(BINTARGETDIR)/testXPath
 
 $(BINTARGETDIR)/testXPath: $(TESTXPATH_DIR)/TestXPath.cpp \
 	$(TESTXPATH_DIR)/NodeNameTreeWalker.cpp
-	${LINK} ${PLATFORM_LIB_LINK_OPTIONS} $^ -o $@ $(XSL_INCL) \
-	${LIBRARY_SEARCH_PATHS} ${EXTRA_LINK_OPTIONS} -L$(LIB_DIR) -l$(PROJECT_NAME)$(VER) $(ALLLIBS) $(CXXFLAGS)
-
+	${LINK} $(XSL_BUILD_OPTIONS) ${PLATFORM_LIB_LINK_OPTIONS} $(XSL_INCL) ${LIBRARY_SEARCH_PATHS} \
+	${EXTRA_LINK_OPTIONS} -L$(LIB_DIR) -l$(PROJECT_NAME)$(VER) $(ALLLIBS) $(CXXFLAGS) $^ -o $@
 
 lib:	$(THISLIB)$(VER)$(SHLIBSUFFIX)
 
 $(THISLIB)$(VER)$(SHLIBSUFFIX): $(ALL_OBJECTS)
-	$(MAKE_SHARED) -o $@ $^ $(PLATFORM_LIBRARIES) $(EXTRA_LINK_OPTIONS) $(ALLLIBS)
+	$(MAKE_SHARED) $(PLATFORM_LIBRARIES) $(EXTRA_LINK_OPTIONS) $(ALLLIBS) $^ -o $@ 
 
 clean:
 	rm $(ALL_OBJECTS_DIR)/*.o
 	rm $(THISLIB)$(VER)$(SHLIBSUFFIX)
 	rm  $(BINTARGETDIR)/testXSLT
 	rm  $(BINTARGETDIR)/testXPath
-
-
-
-
-
-
-
