@@ -355,7 +355,7 @@ private:
 	 * Retrieve the next token from the command and
 	 * store it in m_token string.
 	 */
-	XalanDOMString
+	const XalanDOMString&
 	getTokenRelative(int	theOffset) const;
 
 	/**
@@ -388,6 +388,24 @@ private:
 
 	bool
 	isCurrentLiteral() const;
+
+	/**
+	 * Determine if the token is an axis
+	 *
+	 * @param theToken The token to test
+	 * @return true if the token is a valid axis, false if not.
+	 */
+	static bool
+	isAxis(const XalanDOMString&	theToken);
+
+	/**
+	 * Determine if the token could be a node test
+	 *
+	 * @param theToken The token to test
+	 * @return true if the token is a valid node test, false if not.
+	 */
+	static bool
+	isNodeTest(const XalanDOMString&	theToken);
 
 	/**
 	 * Throw an exception using the provided message text.
@@ -805,6 +823,8 @@ private:
 	{
 		TARGETEXTRA = 10000
 	};
+
+	static const XalanDOMString		s_emptyString;
 
 	// This shouldn't really be here, since it duplicates a string that is part
 	// of the information that is maintained by the class XPathFunctionTable,

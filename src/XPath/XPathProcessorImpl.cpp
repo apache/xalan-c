@@ -2,7 +2,7 @@
  * The Apache Software License, Version 1.1
  *
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -715,7 +715,7 @@ XPathProcessorImpl::lookahead(
 			XalanDOMChar	c,
 			int 			n) const
 {
-	const XalanDOMString 	tok =
+	const XalanDOMString& 	tok =
 		getTokenRelative(n - 1);
 
 	if (length(tok) == 1 &&
@@ -738,7 +738,7 @@ XPathProcessorImpl::lookahead(
 {
 	assert(s != 0);
 
-	const XalanDOMString 	tok =
+	const XalanDOMString& 	tok =
 		getTokenRelative(n - 1);
 
 	return equals(tok, s);
@@ -751,7 +751,7 @@ XPathProcessorImpl::lookahead(
 			const XalanDOMString&	s,
 			int						n) const
 {
-	const XalanDOMString 	tok =
+	const XalanDOMString& 	tok =
 		getTokenRelative(n - 1);
 
 	return equals(tok, s);
@@ -764,7 +764,7 @@ XPathProcessorImpl::lookbehind(
 			char	c,
 			int 	n) const
 {
-	const XalanDOMString 	tok =
+	const XalanDOMString& 	tok =
 		getTokenRelative(-(n + 1));
 
 	if (length(tok) == 1 &&
@@ -783,7 +783,7 @@ XPathProcessorImpl::lookbehind(
 bool
 XPathProcessorImpl::lookbehindHasToken(int	n) const
 {
-	const XalanDOMString 	tok =
+	const XalanDOMString& 	tok =
 		getTokenRelative(-(n + 1));
 
 	const XalanDOMChar 		c0 = length(tok) == 0 ? XalanUnicode::charVerticalLine : charAt(tok, 0);
@@ -844,7 +844,7 @@ XPathProcessorImpl::prevToken()
 
 
 
-XalanDOMString
+const XalanDOMString&
 XPathProcessorImpl::getTokenRelative(int	theOffset) const
 {
 	assert(m_expression != 0);
@@ -852,7 +852,7 @@ XPathProcessorImpl::getTokenRelative(int	theOffset) const
 	const XObject* const	theToken =
 		m_expression->getRelativeToken(theOffset);
 
-	return theToken == 0 ? XalanDOMString() : theToken->str();
+	return theToken == 0 ? s_emptyString : theToken->str();
 }
 
 
@@ -1905,13 +1905,18 @@ XPathProcessorImpl::Basis()
 	}
 	else if(tokenIs(XalanUnicode::charSolidus) == true)
 	{
-		axisType = XPathExpression::eFROM_DESCENDANTS_OR_SELF;
+		// Check the current token in the expression.  It's
+		// actually the next token in this context.
+		//
+		const XalanDOMString&	theNextToken = getTokenRelative(0);
 
-		// Have to fix up for patterns such as '//@foo' or '//attribute::foo',
-		// which translate to 'descendant-or-self::node()/attribute::foo'.
-		// notice I leave the '/' on the queue, so the next will be processed 
-		// by a regular step pattern.
-		// if(lookahead(XalanUnicode::charCommercialAt, 1) == true || lookahead("::", 2) == true)
+		if (isAxis(theNextToken) == false && isNodeTest(theNextToken) == false)
+		{
+			nextToken();
+
+			error("Expected axis or node test!");
+		}
+		else
 		{
 			// Tell how long the step is without the predicate
 			const XPathExpression::OpCodeMapValueVectorType		theArgs(1, 4);
@@ -1926,10 +1931,6 @@ XPathProcessorImpl::Basis()
 
 			return; // make a quick exit...
 		}
-		//else
-		//{
-		//	nextToken();
-		//}
 	}
 	else
 	{
@@ -1952,7 +1953,7 @@ XPathProcessorImpl::AxisName()
 	assert(m_xpath != 0);
 	assert(m_expression != 0);
 
-	AxisNamesMapType::const_iterator	i =
+	const AxisNamesMapType::const_iterator	i =
 		s_axisNames.find(m_token);
 
 	if (i == s_axisNames.end())
@@ -2033,6 +2034,10 @@ XPathProcessorImpl::NodeTest(int	axisType)
 		if(tokenIs(XalanUnicode::charAsterisk) == true)
 		{
 			m_expression->appendOpCode(XPathExpression::eELEMWILDCARD);
+		}
+		else if (isNodeTest(m_token) == false)
+		{
+			error("Expected node test!");
 		}
 		else
 		{
@@ -2455,6 +2460,65 @@ XPathProcessorImpl::isCurrentLiteral() const
 
 
 
+bool
+XPathProcessorImpl::isAxis(const XalanDOMString&	theToken)
+{
+	const XalanDOMString::size_type		theLength = length(theToken);
+
+	if (theLength == 0)
+	{
+		return false;
+	}
+	else if (theLength == 1 &&
+			 charAt(theToken, 0) == XalanUnicode::charCommercialAt)
+	{
+		return true;
+	}
+	else
+	{
+		const AxisNamesMapType::const_iterator	i =
+			s_axisNames.find(theToken);
+
+		if (i != s_axisNames.end())
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+}
+
+
+
+bool
+XPathProcessorImpl::isNodeTest(const XalanDOMString&	theToken)
+{
+	const XalanDOMString::size_type		theLength = length(theToken);
+
+	if (theLength == 0)
+	{
+		return false;
+	}
+	else if (theLength == 1 &&
+			 charAt(theToken, 0) == XalanUnicode::charAsterisk)
+	{
+		return true;
+	}
+	else if (charAt(theToken, 0) == XalanUnicode::charLowLine ||
+			 XalanXMLChar::isLetter(charAt(theToken, 0)) == true)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+
+
 void
 XPathProcessorImpl::initializeKeywordsTable(KeywordsMapType&	/* theKeywords */)
 {
@@ -2540,6 +2604,10 @@ static XalanDOMString	s_axisString;
 static XalanDOMString	s_attributeString;
 
 static XalanDOMString	s_childString;
+
+
+const XalanDOMString	XPathProcessorImpl::s_emptyString;
+
 
 
 const XalanDOMString&	XPathProcessorImpl::s_functionIDString = ::s_functionIDString;
