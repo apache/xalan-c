@@ -106,7 +106,7 @@ public:
 			XPathExecutionContext&			executionContext,
 			const DOM_Node&					context,
 			int								/* opPos */,
-			const std::vector<XObject*>&	args)
+			const XObjectArgVectorType&		args)
 	{
 		if(args.size() != 2)
 		{

@@ -105,10 +105,11 @@ public:
 			XPathExecutionContext&			executionContext,
 			const DOM_Node&					context,
 			int								/* opPos */,
-			const std::vector<XObject*>&	args)
+			const XObjectArgVectorType&		args)
 	{
-			executionContext.error("Document() function implementation has been replaced by xslt/FunctionDocument!",
-								   context);
+		executionContext.error("Document() function implementation has been replaced by xslt/FunctionDocument!",
+							   context);
+
 		return executionContext.getXObjectFactory().createNull();
 	}
 

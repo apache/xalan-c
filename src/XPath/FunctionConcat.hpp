@@ -106,9 +106,9 @@ public:
 			XPathExecutionContext&			executionContext,
 			const DOM_Node&					context,
 			int								/* opPos */,
-			const std::vector<XObject*>&	args)
+			const XObjectArgVectorType&		args)
 	{
-		const std::vector<XObject*>::size_type	theArgCount = args.size();
+		const XObjectArgVectorType::size_type	theArgCount = args.size();
 
 		if (theArgCount < 2)
 		{
@@ -118,7 +118,7 @@ public:
 
 		DOMString	theResult;
 
-		for(std::vector<XObject*>::size_type i = 0; i < theArgCount; i++)
+		for(XObjectArgVectorType::size_type i = 0; i < theArgCount; i++)
 		{
 			theResult += args[i]->str();
 		}

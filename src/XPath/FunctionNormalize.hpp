@@ -101,7 +101,7 @@ public:
 			XPathExecutionContext&			executionContext,
 			const DOM_Node&					context,
 			int								opPos,
-			const std::vector<XObject*>&	args)
+			const XObjectArgVectorType&		args)
 	{
 		DOMString	theSourceString;
 
@@ -127,7 +127,11 @@ public:
 
 		// A vector to contain the new characters.  We'll use it to construct
 		// the result string.
-		std::vector<XMLCh>	theVector;
+#if !defined(XALAN_NO_NAMESPACES)
+		using std::vector;
+#endif
+
+		vector<XMLCh>	theVector;
 
 		// The result string can only be as large as the source string, so
 		// just reserve the space now.  Also reserve a space for the

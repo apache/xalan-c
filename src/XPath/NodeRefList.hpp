@@ -122,7 +122,13 @@ public:
 
 protected:
 
-	std::vector<DOM_Node>	m_nodeList;
+#if defined(XALAN_NO_NAMESPACES)
+	typedef vector<DOM_Node>		NodeListVectorType;
+#else
+	typedef std::vector<DOM_Node>	NodeListVectorType;
+#endif
+
+	NodeListVectorType	m_nodeList;
 };
 
 

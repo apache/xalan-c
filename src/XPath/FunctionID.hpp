@@ -126,7 +126,7 @@ public:
 			XPathExecutionContext&			executionContext,
 			const DOM_Node&					context,
 			int								/* opPos */,
-			const std::vector<XObject*>&	args)
+			const XObjectArgVectorType&		args)
 	{
 		if (args.size() != 1)
 		{
@@ -148,7 +148,7 @@ public:
 									context.getOwnerDocument();
 
 		// This list will hold the nodes we find.
-		MutableNodeRefList	theNodeList;
+		MutableNodeRefList	theNodeList(executionContext.createMutableNodeRefList());
 
 		// If there is no context, we cannot continue.
 		if(0 == theDocContext)
@@ -158,9 +158,15 @@ public:
         }
 		else if (length(m_resultString) > 0)
 		{
+#if !defined(XALAN_NO_NAMESPACES)
+			using std::set;
+#endif
+
+			typedef set<DOMString>	TokenSetType;
+
 			// This set will hold tokens that we've previously found, so
 			// we can avoid looking more than once.
-			std::set<DOMString>		thePreviousTokens;
+			TokenSetType		thePreviousTokens;
 
 			StringTokenizer		theTokenizer(m_resultString);
 
@@ -172,7 +178,7 @@ public:
 				if (length(theToken) > 0)
 				{
 					// See if we've already seen this one...
-					std::set<DOMString>::const_iterator	i =
+					TokenSetType::const_iterator	i =
 						thePreviousTokens.find(theToken);
 
 					if (i != thePreviousTokens.end())

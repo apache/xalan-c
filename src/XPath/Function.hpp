@@ -88,6 +88,12 @@ public:
 	{
 	}
 
+#if defined(XALAN_NO_NAMESPACES)
+	typedef vector<XObject*>		XObjectArgVectorType;
+#else
+	typedef std::vector<XObject*>	XObjectArgVectorType;
+#endif
+
 	/**
 	 * Execute an XPath function object.  The function must return 
 	 * a valid object.
@@ -102,7 +108,7 @@ public:
 			XPathExecutionContext&			executionContext,
 			const DOM_Node&					context,
 			int								opPos,
-			const std::vector<XObject*>&	args) = 0;
+			const XObjectArgVectorType&		args) = 0;
 
 	virtual Function*
 	clone() const = 0;

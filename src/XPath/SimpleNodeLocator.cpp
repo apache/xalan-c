@@ -105,11 +105,11 @@ SimpleNodeLocator::~SimpleNodeLocator()
 
 XObject*
 SimpleNodeLocator::connectToNodes(
-			const XPath&			xpath,
-			XPathExecutionContext&	executionContext,
-			const DOM_Node& 		/* context */, 
-			int 					opPos,
-			std::vector<XObject*>	connectArgs)
+			const XPath&					xpath,
+			XPathExecutionContext&			executionContext,
+			const DOM_Node& 				/* context */, 
+			int 							opPos,
+			const ConnectArgsVectorType&	connectArgs)
 {
 	assert(connectArgs.size() > 0 && connectArgs.size() < 3);
 
@@ -127,11 +127,15 @@ SimpleNodeLocator::connectToNodes(
 	const DOMString 	filterSpec = connectArgs.size() > 1 ? connectArgs[0]->str() : "";
 	const int			filterSpecLength = length(filterSpec);
 
-	DirectoryEnumeratorFunctor<std::vector<DOMString> > 	theEnumerator;
+#if !defined(XALAN_NO_NAMESPACES)
+	using std::vector;
+#endif
 
-	const std::vector<DOMString>		theFiles = theEnumerator(theFileSpec);
+	DirectoryEnumeratorFunctor<vector<DOMString> > 	theEnumerator;
 
-	const int							nFiles = theFiles.size();
+	const vector<DOMString>		theFiles = theEnumerator(theFileSpec);
+
+	const int					nFiles = theFiles.size();
 
 	if (nFiles > 0)
 	{
@@ -1623,9 +1627,14 @@ SimpleNodeLocator::predicates(
 
 		const int	theLength = subQueryResults.getLength();
 
+#if defined(XALAN_NO_NAMESPACES)
+		typedef vector<int>			FailedEntriesVectorType;
+#else
+		typedef std::vector<int>	FailedEntriesVectorType;
+#endif
 		// We'll accumulate the entries that we want to remove
 		// here, then remove them all at once.
-		std::vector<int>	theFailedEntries;
+		FailedEntriesVectorType		theFailedEntries;
 
 		// Might as well reserve some space now, although it's
 		// probably bad to reserve the entire size of the
@@ -1652,7 +1661,7 @@ SimpleNodeLocator::predicates(
 		// Erase from the back to the front, to preserve the validity
 		// of the indesing, and so that we don't end up moving entries
 		// that we would already be erasing...
-		std::vector<int>::reverse_iterator	theIterator =
+		FailedEntriesVectorType::reverse_iterator	theIterator =
 			theFailedEntries.rbegin();
 
 		while(theIterator != theFailedEntries.rend())

@@ -99,11 +99,11 @@ public:
 
 	virtual XObject*
 	connectToNodes(
-			const XPath&			xpath,
-			XPathExecutionContext&	executionContext,
-			const DOM_Node& 		context, 
-			int 					opPos,
-			std::vector<XObject*>	connectArgs);
+			const XPath&					xpath,
+			XPathExecutionContext&			executionContext,
+			const DOM_Node& 				context, 
+			int 							opPos,
+			const ConnectArgsVectorType&	connectArgs);
   
 	/**
 	 * Execute a location path.  Normally, this method simply 

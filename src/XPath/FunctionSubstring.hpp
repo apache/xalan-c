@@ -106,9 +106,9 @@ public:
 			XPathExecutionContext&			executionContext,
 			const DOM_Node&					context,
 			int								/* opPos */,
-			const std::vector<XObject*>&	args)
+			const XObjectArgVectorType&		args)
 	{
-		const std::vector<XObject*>::size_type	theArgCount =
+		const XObjectArgVectorType::size_type	theArgCount =
 				args.size();
 
 		if (theArgCount < 2 || theArgCount > 3)
@@ -120,8 +120,12 @@ public:
 		const DOMString		theSourceString = args[0]->str();
 		const int			theSourceStringLength = length(theSourceString);
 
+#if !defined(XALAN_NO_NAMESPACES)
+		using std::vector;
+#endif
+
 		// This buffer will hold the output characters.
-		std::vector<XMLCh>	theBuffer;
+		vector<XMLCh>	theBuffer;
 
 		if (theSourceStringLength > 0)
 		{

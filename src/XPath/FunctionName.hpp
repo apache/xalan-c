@@ -113,9 +113,9 @@ public:
 			XPathExecutionContext&			executionContext,
 			const DOM_Node&					context,
 			int								/* opPos */,
-			const std::vector<XObject*>&	args)
+			const XObjectArgVectorType&		args)
 	{
-		const std::vector<XObject*>::size_type	theSize = args.size();
+		const XObjectArgVectorType::size_type	theSize = args.size();
 
 		DOMString								theResult;
 

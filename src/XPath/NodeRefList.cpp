@@ -162,11 +162,12 @@ NodeRefList::getLength() const
 unsigned int
 NodeRefList::indexOf(const DOM_Node&	theNode) const
 {
-	using std::vector;
+#if !defined(XALAN_NO_NAMESPACES)
 	using std::find;
+#endif
 
 	// Look for the node in the list.
-	std::vector<DOM_Node>::const_iterator	i =
+	NodeListVectorType::const_iterator	i =
 		find(m_nodeList.begin(),
 			 m_nodeList.end(),
 			 theNode);

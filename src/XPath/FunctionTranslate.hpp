@@ -106,7 +106,7 @@ public:
 			XPathExecutionContext&			executionContext,
 			const DOM_Node&					context,
 			int								/* opPos */,
-			const std::vector<XObject*>&	args)
+			const XObjectArgVectorType&		args)
 	{
 		if (args.size() != 3)
 		{
@@ -121,9 +121,13 @@ public:
 		const int			theFirstStringLength = length(theFirstString);
 		const int			theThirdStringLength = length(theThirdString);
 
+#if !defined(XALAN_NO_NAMESPACES)
+		using std::vector;
+#endif
+
 		// A vector to contain the new characters.  We'll use it to construct
 		// the result string.
-		std::vector<XMLCh>	theVector;
+		vector<XMLCh>	theVector;
 
 		// The result string can only be as large as the first string, so
 		// just reserve the space now.  Also reserve space for the

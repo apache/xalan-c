@@ -107,8 +107,13 @@ public:
 			const DOMString&	theNamespace = DOMString(),
 			const DOMString&	theLocalPart = DOMString());
 
-	typedef	std::vector<NameSpace>		NamespaceVectorType;
-	typedef	std::vector<NamespaceVectorType>		NamespacesStackType;
+#if defined(XALAN_NO_NAMESPACES)
+	typedef	vector<NameSpace>					NamespaceVectorType;
+	typedef	vector<NamespaceVectorType>			NamespacesStackType;
+#else
+	typedef	std::vector<NameSpace>				NamespaceVectorType;
+	typedef	std::vector<NamespaceVectorType>	NamespacesStackType;
+#endif
 
 	/**
 	 * Construct a QName from a string, resolving the prefix 

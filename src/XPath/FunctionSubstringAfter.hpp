@@ -102,7 +102,7 @@ public:
 			XPathExecutionContext&			executionContext,
 			const DOM_Node&					context,
 			int								/* opPos */,
-			const std::vector<XObject*>&	args)
+			const XObjectArgVectorType&		args)
 	{
 		if (args.size() != 2)
 		{
@@ -116,8 +116,12 @@ public:
 		const int			theIndex = indexOf(theFirstString,
 											   theSecondString);
 
+#if !defined(XALAN_NO_NAMESPACES)
+		using std::vector;
+#endif
+
 		// This buffer will hold the output characters.
-		std::vector<XMLCh>	theBuffer;
+		vector<XMLCh>	theBuffer;
 
 		if (theIndex != -1)
 		{

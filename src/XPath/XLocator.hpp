@@ -85,13 +85,19 @@ public:
 	virtual
 	~XLocator();
 
+#if defined(XALAN_NO_NAMESPACES)
+	typedef	vector<XObject*>		ConnectArgsVectorType;
+#else
+	typedef	std::vector<XObject*>	ConnectArgsVectorType;
+#endif
+
 	virtual XObject*
 	connectToNodes(
-			const XPath&			xpath,
-			XPathExecutionContext&	executionContext,
-			const DOM_Node&			context, 
-            int						opPos,
-			std::vector<XObject*>	connectArgs) = 0;
+			const XPath&					xpath,
+			XPathExecutionContext&			executionContext,
+			const DOM_Node&					context, 
+            int								opPos,
+			const ConnectArgsVectorType&	connectArgs) = 0;
   
 	/**
 	 * Execute a location path.  Normally, this method simply 

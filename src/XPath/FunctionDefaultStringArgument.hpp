@@ -101,8 +101,8 @@ public:
 	execute(
 			XPathExecutionContext&			executionContext,
 			const DOM_Node&					context,
-			int								/* opPos */,
-			const std::vector<XObject*>&	args) = 0;
+			int								opPos,
+			const XObjectArgVectorType&		args) = 0;
 
 	virtual Function*
 	clone() const = 0;
@@ -125,7 +125,7 @@ protected:
 		// once we've converted the context node to an XObject.
 
 		// A vector for the args.  The size will always be one.
-		std::vector<XObject*>	theNewArgs(1);
+		XObjectArgVectorType	theNewArgs(1);
 
 		// A node set that contains the context node.
 		FactoryObjectAutoPointer<XObject>		theArg(&executionContext.getXObjectFactory(),
