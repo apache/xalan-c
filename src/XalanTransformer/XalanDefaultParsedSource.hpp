@@ -84,7 +84,9 @@ class XalanDefaultParsedSourceDOMSupport : public XalanSourceTreeDOMSupport
 {
 public:
 
-	XalanDefaultParsedSourceDOMSupport(const XalanSourceTreeDOMSupport&		theDOMSupport);
+	XalanDefaultParsedSourceDOMSupport(
+			const XalanSourceTreeParserLiaison&		theParserLiaison,
+			const XalanSourceTreeDOMSupport&		theDOMSupport);
 
 	virtual
 	~XalanDefaultParsedSourceDOMSupport();
@@ -123,9 +125,7 @@ class XALAN_TRANSFORMER_EXPORT XalanDefaultParsedSourceHelper : public XalanPars
 {
 public:
 
-	XalanDefaultParsedSourceHelper(
-			const XalanSourceTreeDOMSupport&		theSourceDOMSupport,
-			const XalanSourceTreeParserLiaison&		theSourceParserLiaison);
+	XalanDefaultParsedSourceHelper(const XalanSourceTreeDOMSupport&		theSourceDOMSupport);
 
 	~XalanDefaultParsedSourceHelper();
 
@@ -145,9 +145,9 @@ private:
 
 
 	// Data members...
-	XalanDefaultParsedSourceDOMSupport	m_domSupport;
-
 	XalanSourceTreeParserLiaison		m_parserLiaison;
+
+	XalanDefaultParsedSourceDOMSupport	m_domSupport;
 };
 
 
@@ -188,9 +188,9 @@ private:
 
 
 	// Data members...
-	XalanSourceTreeDOMSupport		m_domSupport;
-
 	XalanSourceTreeParserLiaison	m_parserLiaison;
+
+	XalanSourceTreeDOMSupport		m_domSupport;
 
 	XalanSourceTreeDocument*		m_parsedSource;
 

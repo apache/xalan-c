@@ -78,8 +78,10 @@
 
 
 
-XalanDefaultParsedSourceDOMSupport::XalanDefaultParsedSourceDOMSupport(const XalanSourceTreeDOMSupport&		theDOMSupport) :
-	XalanSourceTreeDOMSupport(),
+XalanDefaultParsedSourceDOMSupport::XalanDefaultParsedSourceDOMSupport(
+			const XalanSourceTreeParserLiaison&		theParserLiaison,
+			const XalanSourceTreeDOMSupport&		theDOMSupport) :
+	XalanSourceTreeDOMSupport(theParserLiaison),
 	m_domSupport(theDOMSupport)
 {
 }
@@ -137,13 +139,10 @@ XalanDefaultParsedSourceDOMSupport::isNodeAfter(
 
 
 
-XalanDefaultParsedSourceHelper::XalanDefaultParsedSourceHelper(
-			const XalanSourceTreeDOMSupport&		theSourceDOMSupport,
-			const XalanSourceTreeParserLiaison&		theSourceParserLiaison) :
-	m_domSupport(theSourceDOMSupport),
-	m_parserLiaison()
+XalanDefaultParsedSourceHelper::XalanDefaultParsedSourceHelper(const XalanSourceTreeDOMSupport&		theSourceDOMSupport) :
+	m_parserLiaison(),
+	m_domSupport(m_parserLiaison, theSourceDOMSupport)
 {
-	m_domSupport.setParserLiaison(&m_parserLiaison);
 }
 
 
@@ -176,8 +175,8 @@ XalanDefaultParsedSource::XalanDefaultParsedSource(
 			ErrorHandler*		theErrorHandler,
 			EntityResolver*		theEntityResolver) :
 	XalanParsedSource(),
-	m_domSupport(),
 	m_parserLiaison(),
+	m_domSupport(m_parserLiaison),
 	m_parsedSource(0)
 {
 	m_parserLiaison.setUseValidation(fValidate);
@@ -227,7 +226,7 @@ XalanDefaultParsedSource::getDocument() const
 XalanParsedSourceHelper*
 XalanDefaultParsedSource::createHelper() const
 {
-	return new XalanDefaultParsedSourceHelper(m_domSupport, m_parserLiaison);
+	return new XalanDefaultParsedSourceHelper(m_domSupport);
 }
 
 
